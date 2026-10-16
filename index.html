@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Virtual Physics Demos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #e9edf2; --surface: #f8fafc; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --pos: #c23f2c; --neg: #2b60b5; --accent: #2b60b5;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0d1218; --surface: #151c25; --ink: #e3e8ef; --muted: #96a2b2; --line: #283241;
+          --pos: #ff7660; --neg: #69a0ff; --accent: #69a0ff; color-scheme: dark; }
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.5; }
+main { max-width: 860px; margin: 0 auto; padding: 48px max(16px, env(safe-area-inset-right, 0px)) 64px max(16px, env(safe-area-inset-left, 0px)); }
+h1 { margin: 0 0 6px; font-size: 2rem; letter-spacing: -0.01em; }
+.lede { margin: 0 0 32px; color: var(--muted); max-width: 60ch; }
+h2 { margin: 0 0 12px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.list { display: grid; gap: 10px; margin: 0 0 32px; padding: 0; list-style: none; }
+.demo { display: block; padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; color: inherit; text-decoration: none; }
+.demo:hover { border-color: var(--accent); }
+.demo:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.demo strong { display: block; font-size: 1.1rem; }
+.demo span { color: var(--muted); }
+.tags { margin-top: 6px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+footer { color: var(--muted); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Virtual Physics Demos</h1>
+  <p class="lede">Interactive demonstrations for introductory physics. Each one runs in the browser with nothing to install.</p>
+
+  <h2>Electricity and magnetism</h2>
+  <ul class="list">
+    <li>
+      <a class="demo" href="demos/coulomb-sandbox.html">
+        <strong>Coulomb Sandbox</strong>
+        <span>Drag point charges and watch the field lines, equipotentials and potential update live, as a 2D map or a rotatable 3D landscape.</span>
+        <div class="tags">electric field · potential · superposition</div>
+      </a>
+    </li>
+  </ul>
+
+  <footer>Steven Anderson · Louisiana Tech University</footer>
+</main>
+</body>
+</html>

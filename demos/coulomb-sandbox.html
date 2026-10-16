@@ -1,0 +1,1049 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Coulomb Sandbox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: lab bench. The field canvas fills the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); }
+.units { color: var(--muted); font-size: 0.8rem; }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 380px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; }
+#over { touch-action: none; cursor: crosshair; outline: none; }
+#gl { touch-action: none; cursor: grab; outline: none; }
+#over:focus-visible, #gl:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
+.seg { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button, .spin {
+  font: inherit; font-size: 0.86rem; font-weight: 700; color: var(--muted); background: none; border: 0;
+  border-radius: 6px; padding: 5px 11px; cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.spin { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.spin[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.hint3d {
+  position: absolute; right: 10px; bottom: 10px; z-index: 2; max-width: calc(100% - 20px); box-sizing: border-box;
+  font-size: 0.8rem; color: var(--muted); background: var(--surface); border: 1px solid var(--line);
+  border-radius: 6px; padding: 4px 9px;
+}
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; }
+.btn .dot { width: 10px; height: 10px; border-radius: 50%; }
+.btn.pos .dot { background: var(--pos); }
+.btn.neg .dot { background: var(--neg); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.sel { display: flex; flex-direction: column; gap: 6px; }
+.selhead, .selfoot, .slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.selhead output { font-weight: 600; font-size: 1.05rem; }
+.selfoot { font-size: 0.82rem; color: var(--muted); }
+.link { font: inherit; font-size: 0.85rem; background: none; border: 0; padding: 0; color: var(--pos); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.25rem; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input { accent-color: var(--accent); margin: 0; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); }
+
+.legend-bar { height: 10px; border-radius: 5px; background: linear-gradient(90deg, var(--neg), var(--canvas) 50%, var(--pos)); border: 1px solid var(--line); }
+.legend-scale { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--muted); margin-top: 3px; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.equi { border-color: var(--equi); }
+.swatch.zero { border-top-style: dashed; border-color: var(--muted); }
+.swatch.line { border-color: var(--field); }
+
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 64vh; min-height: 340px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Coulomb Sandbox</h1>
+      <p>Drag the charges around. Switch to 3D to see the potential as a landscape of hills and wells.</p>
+    </div>
+    <div class="units mono">1 grid square = 1 cm · q in nC · k = 8.99×10⁹ N·m²/C²</div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="base" aria-hidden="true"></canvas>
+      <canvas id="over" tabindex="0" role="application" aria-label="Field of point charges. Drag charges to move them; select one and use arrow keys to nudge it."></canvas>
+      <div class="viewbar">
+        <div class="seg" role="group" aria-label="View">
+          <button type="button" data-v="2d" aria-pressed="true">2D map</button>
+          <button type="button" data-v="3d" aria-pressed="false">3D landscape</button>
+        </div>
+        <button type="button" class="spin" id="spin" aria-pressed="false" hidden>Spin</button>
+      </div>
+      <div class="hint3d" id="hint3d" hidden>Drag to orbit · Scroll or pinch to zoom · Drag a sphere to move its charge · Double-click to reset</div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="dipole" aria-pressed="true">Dipole</button>
+          <button type="button" data-p="like" aria-pressed="false">Like pair</button>
+          <button type="button" data-p="uneven" aria-pressed="false">+3 and −1</button>
+          <button type="button" data-p="trio" aria-pressed="false">Triangle</button>
+          <button type="button" data-p="quad" aria-pressed="false">Quadrupole</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Charges</h2>
+        <div class="row2">
+          <button type="button" class="btn pos" id="addPos"><span class="dot"></span>Add +1 nC</button>
+          <button type="button" class="btn neg" id="addNeg"><span class="dot"></span>Add −1 nC</button>
+        </div>
+        <div class="sel" id="selEditor" hidden>
+          <div class="selhead"><label for="q">Selected charge</label><output id="qOut" class="mono" for="q">+2.0 nC</output></div>
+          <input type="range" id="q" min="-5" max="5" step="0.5" value="2">
+          <div class="selfoot"><span id="selPos" class="mono"></span><button type="button" class="link" id="del">Remove</button></div>
+        </div>
+        <p class="hint" id="selHint">Click a charge to change its value. Arrow keys nudge the selected charge.</p>
+      </section>
+
+      <section>
+        <h2>Probe</h2>
+        <dl class="readout">
+          <div class="big"><dt>Potential V</dt><dd id="rV">—</dd></div>
+          <div class="big"><dt>Field |E|</dt><dd id="rE">—</dd></div>
+          <div><dt>E direction</dt><dd id="rDir">—</dd></div>
+          <div><dt>Position (cm)</dt><dd id="rPos">—</dd></div>
+        </dl>
+        <p class="hint">Hover over the field, or tap to place the probe.</p>
+      </section>
+
+      <section>
+        <h2>Layers</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tShade" checked>Potential shading</label>
+          <label><input type="checkbox" id="tEqui" checked>Equipotentials</label>
+          <label><input type="checkbox" id="tLines" checked>Field lines</label>
+          <label><input type="checkbox" id="tGrid" checked>1 cm grid</label>
+        </div>
+        <div>
+          <div class="slider-head"><label for="dV">Equipotential spacing ΔV</label><output id="dVOut" class="mono" for="dV">250 V</output></div>
+          <input type="range" id="dV" min="100" max="1000" step="50" value="250">
+        </div>
+        <div>
+          <div class="slider-head"><label for="dens">Field lines per nC</label><output id="densOut" class="mono" for="dens">6</output></div>
+          <input type="range" id="dens" min="2" max="12" step="1" value="6">
+        </div>
+        <div>
+          <div class="slider-head"><label for="relief">3D height scale</label><output id="reliefOut" class="mono" for="relief">1.0×</output></div>
+          <input type="range" id="relief" min="0.25" max="2" step="0.05" value="1">
+        </div>
+      </section>
+
+      <section>
+        <h2>Key</h2>
+        <div>
+          <div class="legend-bar"></div>
+          <div class="legend-scale mono"><span>V &lt; 0</span><span>0</span><span>V &gt; 0</span></div>
+        </div>
+        <div class="key">
+          <span><i class="swatch line"></i>Field lines, + to −</span>
+          <span><i class="swatch equi"></i>Equipotentials, every ΔV</span>
+          <span><i class="swatch zero"></i>The V = 0 equipotential</span>
+        </div>
+        <p class="hint">In 3D, height is the potential: hills at positive charges, wells at negative ones. Heights are compressed near each charge, where V grows without bound.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  const C_V = 898.755;   // V·cm per nC   (k q / r)
+  const C_E = 89875.5;   // V/m · cm² per nC (k q / r²)
+  const MAX_CHARGES = 8;
+  const $ = (id) => document.getElementById(id);
+
+  const stage = $('stage'), base = $('base'), over = $('over');
+  const bctx = base.getContext('2d'), octx = over.getContext('2d');
+  const off = document.createElement('canvas'), offctx = off.getContext('2d');
+
+  let W = 0, H = 0, dpr = 1, s = 40, cx = 0, cy = 0;
+  let charges = [], sel = null, drag = null, nextId = 1;
+  let probe = { x: 0, y: 2.5 };
+  const layers = { shade: true, equi: true, lines: true, grid: true };
+  let dV = 250, density = 6, reliefMult = 1;
+  let view = '2d';
+  let baseDirty = true, overDirty = true, raf = 0;
+
+  const mk = (x, y, q) => ({ id: nextId++, x, y, q });
+  const PRESETS = {
+    dipole: () => [mk(-3, 0, 2), mk(3, 0, -2)],
+    like:   () => [mk(-3, 0, 2), mk(3, 0, 2)],
+    uneven: () => [mk(-2.5, 0, 3), mk(2.5, 0, -1)],
+    trio:   () => [mk(-3, 2, 2), mk(3, 2, 2), mk(0, -2.5, -2)],
+    quad:   () => [mk(-2.5, 2.5, 2), mk(2.5, 2.5, -2), mk(2.5, -2.5, 2), mk(-2.5, -2.5, -2)]
+  };
+
+  // ---------- helpers ----------
+  const monoFont = () => getComputedStyle(document.body).getPropertyValue('--font-mono') || 'monospace';
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    return { pos: g('--pos'), neg: g('--neg'), field: g('--field'), equi: g('--equi'), grid: g('--grid'),
+             gridStrong: g('--grid-strong'), canvas: g('--canvas'), relief: g('--relief'), ink: g('--ink'),
+             muted: g('--muted'), accent: g('--accent'), line: g('--line'), onCharge: g('--on-charge') };
+  }
+  function rgb(hex) {
+    hex = hex.replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map((c) => c + c).join('');
+    const n = parseInt(hex, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  const toPx = (x, y) => [cx + x * s, cy - y * s];
+  const toW = (px, py) => ({ x: (px - cx) / s, y: (cy - py) / s });
+  const radius = (c) => 11 + 4 * Math.sqrt(Math.abs(c.q));
+  const minus = (str) => str.replace(/-/g, '−');
+  const fmtQ = (q) => (q > 0 ? '+' : q < 0 ? '−' : '') + (Number.isInteger(Math.abs(q)) ? Math.abs(q) : Math.abs(q).toFixed(1));
+
+  function potential(x, y) {
+    let v = 0;
+    for (const c of charges) {
+      if (!c.q) continue;
+      v += c.q / Math.max(Math.hypot(x - c.x, y - c.y), 0.12);
+    }
+    return v * C_V;
+  }
+  function field(x, y) { // V/m
+    let ex = 0, ey = 0;
+    for (const c of charges) {
+      if (!c.q) continue;
+      const dx = x - c.x, dy = y - c.y;
+      const r2 = Math.max(dx * dx + dy * dy, 1e-4), r3 = r2 * Math.sqrt(r2);
+      ex += c.q * dx / r3; ey += c.q * dy / r3;
+    }
+    return [ex * C_E, ey * C_E];
+  }
+  function bounds() {
+    return { x0: -cx / s, x1: (W - cx) / s, y0: -(H - cy) / s, y1: cy / s };
+  }
+
+  // ---------- shared geometry: contours and field lines ----------
+  const SEG = [[], [[3, 0]], [[0, 1]], [[3, 1]], [[1, 2]], [[3, 0], [1, 2]], [[0, 2]], [[3, 2]],
+               [[2, 3]], [[0, 2]], [[0, 1], [2, 3]], [[1, 2]], [[1, 3]], [[0, 1]], [[3, 0]], []];
+
+  // returns flat array of segments [ai, aj, bi, bj, k] in grid index coordinates
+  function contourSegments(V, nx, ny) {
+    const nMax = Math.min(60, Math.floor(4000 / dV));
+    const out = [];
+    const edge = (e, i, j, v0, v1, v2, v3, L) => {
+      switch (e) {
+        case 0: return [i + (L - v0) / (v1 - v0), j];
+        case 1: return [i + 1, j + (L - v1) / (v2 - v1)];
+        case 2: return [i + 1 - (L - v2) / (v3 - v2), j + 1];
+        default: return [i, j + 1 - (L - v3) / (v0 - v3)];
+      }
+    };
+    for (let j = 0; j < ny - 1; j++) {
+      for (let i = 0; i < nx - 1; i++) {
+        const v0 = V[j * nx + i], v1 = V[j * nx + i + 1], v2 = V[(j + 1) * nx + i + 1], v3 = V[(j + 1) * nx + i];
+        const mn = Math.min(v0, v1, v2, v3), mx = Math.max(v0, v1, v2, v3);
+        const kLo = Math.max(-nMax, Math.ceil(mn / dV)), kHi = Math.min(nMax, Math.floor(mx / dV));
+        for (let k = kLo; k <= kHi; k++) {
+          const L = k * dV;
+          const idx = (v0 > L ? 1 : 0) | (v1 > L ? 2 : 0) | (v2 > L ? 4 : 0) | (v3 > L ? 8 : 0);
+          if (idx === 0 || idx === 15) continue;
+          for (const [ea, eb] of SEG[idx]) {
+            const a = edge(ea, i, j, v0, v1, v2, v3, L), b = edge(eb, i, j, v0, v1, v2, v3, L);
+            out.push([a[0], a[1], b[0], b[1], k]);
+          }
+        }
+      }
+    }
+    return out;
+  }
+
+  function trace(x, y, sgn, from) {
+    const pts = [[x, y]];
+    const h = 2.5 / s, b = bounds(), m = 1.5;
+    for (let n = 0; n < 4000; n++) {
+      let [ex, ey] = field(x, y); let mag = Math.hypot(ex, ey);
+      if (mag < 1e-6) break;
+      const mx = x + sgn * 0.5 * h * ex / mag, my = y + sgn * 0.5 * h * ey / mag;
+      [ex, ey] = field(mx, my); mag = Math.hypot(ex, ey);
+      if (mag < 1e-6) break;
+      x += sgn * h * ex / mag; y += sgn * h * ey / mag;
+      pts.push([x, y]);
+      if (x < b.x0 - m || x > b.x1 + m || y < b.y0 - m || y > b.y1 + m) return { pts, end: null };
+      for (const c of charges) {
+        if (!c.q || c === from) continue;
+        if (Math.hypot(x - c.x, y - c.y) < (radius(c) * 0.7) / s) {
+          pts.push([c.x, c.y]);
+          return { pts, end: c };
+        }
+      }
+    }
+    return { pts, end: null };
+  }
+
+  // field lines in world cm, each oriented along E
+  function computeLines() {
+    const active = charges.filter((c) => c.q !== 0);
+    if (!active.length) return [];
+    const nFor = (c) => Math.max(2, Math.round(Math.abs(c.q) * density));
+    const lines = [], arrivals = new Map();
+    for (const c of active) {
+      if (c.q <= 0) continue;
+      const n = nFor(c), r0 = radius(c) / s;
+      for (let k = 0; k < n; k++) {
+        const a = (k + 0.5) * 2 * Math.PI / n;
+        const res = trace(c.x + r0 * Math.cos(a), c.y + r0 * Math.sin(a), 1, c);
+        lines.push(res.pts);
+        if (res.end && res.end.q < 0) {
+          const p = res.pts[res.pts.length - 2];
+          if (!arrivals.has(res.end)) arrivals.set(res.end, []);
+          arrivals.get(res.end).push(Math.atan2(p[1] - res.end.y, p[0] - res.end.x));
+        }
+      }
+    }
+    for (const c of active) {
+      if (c.q >= 0) continue;
+      const n = nFor(c), arr = arrivals.get(c) || [], rem = n - arr.length;
+      if (rem <= 0) continue;
+      const slots = [];
+      for (let k = 0; k < n; k++) {
+        const a = (k + 0.5) * 2 * Math.PI / n;
+        let d = Infinity;
+        for (const b of arr) { const t = Math.abs(a - b) % (2 * Math.PI); d = Math.min(d, Math.min(t, 2 * Math.PI - t)); }
+        slots.push([a, d]);
+      }
+      slots.sort((p, q) => q[1] - p[1]);
+      const r0 = radius(c) / s;
+      for (let k = 0; k < rem; k++) {
+        const a = slots[k][0];
+        const res = trace(c.x + r0 * Math.cos(a), c.y + r0 * Math.sin(a), -1, c);
+        lines.push(res.pts.reverse());
+      }
+    }
+    return lines;
+  }
+
+  // index along a polyline where an arrow should sit
+  function arrowIndex(pts, lenFn) {
+    let total = 0;
+    for (let i = 1; i < pts.length; i++) total += lenFn(pts[i - 1], pts[i]);
+    if (total < 30 / s) return -1;
+    const target = Math.min(total * 0.5, 110 / s);
+    let acc = 0;
+    for (let i = 1; i < pts.length; i++) {
+      acc += lenFn(pts[i - 1], pts[i]);
+      if (acc >= target) return i;
+    }
+    return -1;
+  }
+  const len2 = (a, b) => Math.hypot(b[0] - a[0], b[1] - a[1]);
+
+  // ---------- sizing ----------
+  function resize() {
+    const r = stage.getBoundingClientRect();
+    W = r.width; H = r.height; dpr = window.devicePixelRatio || 1;
+    for (const c of [base, over]) {
+      c.width = Math.round(W * dpr); c.height = Math.round(H * dpr);
+      c.style.width = W + 'px'; c.style.height = H + 'px';
+    }
+    s = Math.min(W / (W < 640 ? 11 : 20), H / 12);
+    cx = W / 2; cy = H / 2;
+    if (G.ready) {
+      G.renderer.setPixelRatio(dpr); G.renderer.setSize(W, H);
+      G.cam.aspect = W / H; G.cam.updateProjectionMatrix();
+    }
+    markBase();
+  }
+
+  // ---------- 2D base layer ----------
+  function drawGrid(ctx, T) {
+    const b = bounds();
+    ctx.lineWidth = 1;
+    for (let pass = 0; pass < 2; pass++) {
+      ctx.strokeStyle = pass ? T.gridStrong : T.grid;
+      ctx.beginPath();
+      for (let x = Math.ceil(b.x0); x <= b.x1; x++) {
+        if ((x % 5 === 0) !== !!pass) continue;
+        const px = Math.round(cx + x * s) + 0.5; ctx.moveTo(px, 0); ctx.lineTo(px, H);
+      }
+      for (let y = Math.ceil(b.y0); y <= b.y1; y++) {
+        if ((y % 5 === 0) !== !!pass) continue;
+        const py = Math.round(cy - y * s) + 0.5; ctx.moveTo(0, py); ctx.lineTo(W, py);
+      }
+      ctx.stroke();
+    }
+  }
+
+  function arrowHead(ctx, x, y, ang, size) {
+    ctx.beginPath();
+    ctx.moveTo(x + Math.cos(ang) * size, y + Math.sin(ang) * size);
+    ctx.lineTo(x + Math.cos(ang + 2.5) * size, y + Math.sin(ang + 2.5) * size);
+    ctx.lineTo(x + Math.cos(ang - 2.5) * size, y + Math.sin(ang - 2.5) * size);
+    ctx.closePath(); ctx.fill();
+  }
+
+  function drawCharges(ctx, T) {
+    for (const c of charges) {
+      const [px, py] = toPx(c.x, c.y), r = radius(c);
+      ctx.beginPath(); ctx.arc(px, py, r + 2.5, 0, 2 * Math.PI); ctx.fillStyle = T.canvas; ctx.fill();
+      ctx.beginPath(); ctx.arc(px, py, r, 0, 2 * Math.PI);
+      ctx.fillStyle = c.q > 0 ? T.pos : c.q < 0 ? T.neg : T.muted; ctx.fill();
+      ctx.fillStyle = T.onCharge; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = `600 ${r > 17 ? 13 : 12}px ${monoFont()}`;
+      ctx.fillText(fmtQ(c.q), px, py + 0.5);
+      if (c === sel) {
+        ctx.save(); ctx.setLineDash([4, 3]); ctx.lineWidth = 2; ctx.strokeStyle = T.accent;
+        ctx.beginPath(); ctx.arc(px, py, r + 6, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+      }
+    }
+  }
+
+  function drawBase() {
+    const T = tokens(), ctx = bctx;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (layers.grid) drawGrid(ctx, T);
+
+    const g = 4, nx = Math.ceil(W / g) + 2, ny = Math.ceil(H / g) + 2;
+    const V = new Float32Array(nx * ny);
+    for (let j = 0; j < ny; j++) {
+      const y = (cy - j * g) / s;
+      for (let i = 0; i < nx; i++) V[j * nx + i] = potential((i * g - cx) / s, y);
+    }
+    if (layers.shade) {
+      off.width = nx; off.height = ny;
+      const img = offctx.createImageData(nx, ny), d = img.data, P = rgb(T.pos), N = rgb(T.neg);
+      for (let k = 0; k < nx * ny; k++) {
+        const t = Math.tanh(V[k] / 1600), c = t > 0 ? P : N, o = k * 4;
+        d[o] = c[0]; d[o + 1] = c[1]; d[o + 2] = c[2]; d[o + 3] = Math.abs(t) * 150;
+      }
+      offctx.putImageData(img, 0, 0);
+      ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(off, -g / 2, -g / 2, nx * g, ny * g);
+    }
+    if (layers.equi) {
+      const main = new Path2D(), zero = new Path2D();
+      for (const [ai, aj, bi, bj, k] of contourSegments(V, nx, ny)) {
+        const p = k === 0 ? zero : main;
+        p.moveTo(ai * g, aj * g); p.lineTo(bi * g, bj * g);
+      }
+      ctx.save(); ctx.lineCap = 'round';
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 1.2; ctx.globalAlpha = 0.9; ctx.stroke(main);
+      ctx.globalAlpha = 1; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5; ctx.setLineDash([6, 5]); ctx.stroke(zero);
+      ctx.restore();
+    }
+    if (layers.lines) {
+      ctx.save();
+      ctx.strokeStyle = T.field; ctx.fillStyle = T.field; ctx.lineWidth = 1.3; ctx.globalAlpha = 0.82; ctx.lineJoin = 'round';
+      for (const pts of computeLines()) {
+        if (pts.length < 2) continue;
+        ctx.beginPath();
+        pts.forEach((p, i) => { const [x, y] = toPx(p[0], p[1]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+        ctx.stroke();
+        const ai = arrowIndex(pts, len2);
+        if (ai > 0) {
+          const [x1, y1] = toPx(...pts[ai - 1]), [x2, y2] = toPx(...pts[ai]);
+          arrowHead(ctx, x2, y2, Math.atan2(y2 - y1, x2 - x1), 6);
+        }
+      }
+      ctx.restore();
+    }
+    drawCharges(ctx, T);
+
+    ctx.save();
+    const x0 = 14, y0 = H - 16, len = 5 * s;
+    ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(x0, y0 - 4); ctx.lineTo(x0, y0); ctx.lineTo(x0 + len, y0); ctx.lineTo(x0 + len, y0 - 4); ctx.stroke();
+    ctx.font = '600 11px ' + monoFont();
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('5 cm', x0 + len / 2, y0 - 3);
+    ctx.restore();
+  }
+
+  // ---------- 2D overlay ----------
+  function fmtV(v) {
+    const a = Math.abs(v);
+    return minus(a >= 1000 ? (v / 1000).toFixed(2) + ' kV' : v.toFixed(0) + ' V');
+  }
+  function fmtE(e) {
+    if (e >= 1e6) return (e / 1e6).toFixed(2) + ' MV/m';
+    if (e >= 1e3) return (e / 1e3).toFixed(e >= 1e5 ? 0 : 1) + ' kV/m';
+    return e.toFixed(0) + ' V/m';
+  }
+
+  function drawOver() {
+    const ctx = octx, T = tokens();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    if (!probe || !charges.some((c) => c.q)) return;
+    const [px, py] = toPx(probe.x, probe.y);
+    const [ex, ey] = field(probe.x, probe.y), m = Math.hypot(ex, ey);
+    if (m > 0) {
+      const len = Math.min(72, 18 + 11 * Math.log10(1 + m / 500));
+      const ang = Math.atan2(-ey, ex);
+      const tx = px + Math.cos(ang) * len, ty = py + Math.sin(ang) * len;
+      ctx.strokeStyle = T.canvas; ctx.lineWidth = 5; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(tx, ty); ctx.stroke();
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(tx, ty); ctx.stroke();
+      ctx.fillStyle = T.accent; arrowHead(ctx, tx, ty, ang, 8);
+    }
+    ctx.beginPath(); ctx.arc(px, py, 5, 0, 2 * Math.PI);
+    ctx.fillStyle = T.canvas; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = T.ink; ctx.stroke();
+
+    const label = 'V = ' + fmtV(potential(probe.x, probe.y));
+    ctx.font = '600 12px ' + monoFont();
+    const tw = ctx.measureText(label).width + 14, th = 22;
+    let lx = px + 12, ly = py - 12 - th;
+    if (lx + tw > W - 6) lx = px - 12 - tw;
+    if (ly < 6) ly = py + 12;
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = T.line; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(lx, ly, tw, th, 5) : ctx.rect(lx, ly, tw, th); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(label, lx + 7, ly + th / 2 + 0.5);
+  }
+
+  // ---------- 3D landscape ----------
+  const G = { ready: false, nx: 0, ny: 0 };
+  const orbit = { theta: -Math.PI / 2 - 0.35, phi: 0.95, zoom: 1, spin: false };
+  const VC = 2500;                         // volts where height starts to compress
+  const height = (v) => 4 * reliefMult * Math.tanh(v / VC);
+
+  function init3D() {
+    if (G.ready) return true;
+    if (!window.THREE) return false;
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const el = renderer.domElement;
+    el.id = 'gl'; el.tabIndex = 0; el.hidden = true;
+    el.setAttribute('role', 'application');
+    el.setAttribute('aria-label', 'Potential landscape in 3D. Drag to orbit, scroll to zoom, drag a sphere to move its charge.');
+    stage.insertBefore(el, stage.querySelector('.viewbar'));
+
+    const scene = new THREE.Scene();
+    const cam = new THREE.PerspectiveCamera(38, 1, 0.1, 1000);
+    cam.up.set(0, 0, 1);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x7a8696, 0.8); hemi.position.set(0, 0, 1); scene.add(hemi);
+    const sun = new THREE.DirectionalLight(0xffffff, 0.65); sun.position.set(-8, -10, 16); scene.add(sun);
+
+    const surf = new THREE.Mesh(new THREE.BufferGeometry(),
+      new THREE.MeshStandardMaterial({ vertexColors: true, side: THREE.DoubleSide, roughness: 0.92, metalness: 0 }));
+    scene.add(surf);
+    const mkLines = (opts) => { const l = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial(opts)); scene.add(l); return l; };
+
+    Object.assign(G, {
+      ready: true, renderer, el, scene, cam, surf,
+      gridL: mkLines({ transparent: true, opacity: 0.35 }),
+      equiL: mkLines({}),
+      zeroL: mkLines({ transparent: true, opacity: 0.9 }),
+      fieldL: mkLines({ transparent: true, opacity: 0.85 }),
+      frame: mkLines({}),
+      stem: mkLines({}),
+      cones: new THREE.Group(), coneGeo: new THREE.ConeGeometry(0.11, 0.34, 12), coneMat: new THREE.MeshBasicMaterial(),
+      spheres: new THREE.Group(), sphGeo: new THREE.SphereGeometry(1, 28, 18),
+      posMat: new THREE.MeshStandardMaterial({ roughness: 0.35 }),
+      negMat: new THREE.MeshStandardMaterial({ roughness: 0.35 }),
+      zeroMat: new THREE.MeshStandardMaterial({ roughness: 0.35 }),
+      ring: new THREE.Mesh(new THREE.TorusGeometry(1, 0.045, 8, 56), new THREE.MeshBasicMaterial()),
+      probeDot: new THREE.Mesh(new THREE.SphereGeometry(0.13, 16, 12), new THREE.MeshBasicMaterial())
+    });
+    scene.add(G.cones, G.spheres, G.ring, G.probeDot);
+    renderer.setPixelRatio(dpr); renderer.setSize(W, H);
+    cam.aspect = W / H; cam.updateProjectionMatrix();
+    bind3D(el);
+    return true;
+  }
+
+  function setLineGeo(obj, arr) {
+    obj.geometry.dispose();
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(arr, 3));
+    obj.geometry = g;
+  }
+
+  function setSurfaceSize(nx, ny) {
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(nx * ny * 3), 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(nx * ny * 3), 3));
+    const idx = new (nx * ny < 65536 ? Uint16Array : Uint32Array)((nx - 1) * (ny - 1) * 6);
+    let o = 0;
+    for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) {
+      const a = j * nx + i, b = a + 1, c = a + nx, d = c + 1;
+      idx[o++] = a; idx[o++] = c; idx[o++] = b; idx[o++] = b; idx[o++] = c; idx[o++] = d;
+    }
+    geo.setIndex(new THREE.BufferAttribute(idx, 1));
+    G.surf.geometry.dispose(); G.surf.geometry = geo; G.nx = nx; G.ny = ny;
+  }
+
+  function build3D() {
+    const T = tokens(), b = bounds();
+    const w = b.x1 - b.x0, h = b.y1 - b.y0;
+    const nx = 161, ny = Math.max(40, Math.round(160 * h / w) + 1);
+    if (nx !== G.nx || ny !== G.ny) setSurfaceSize(nx, ny);
+    const dx = w / (nx - 1), dy = h / (ny - 1);
+    const gx = (i) => b.x0 + i * dx, gy = (j) => b.y1 - j * dy;
+
+    const pos = G.surf.geometry.attributes.position.array, col = G.surf.geometry.attributes.color.array;
+    const R = rgb(T.relief).map((v) => v / 255), P = rgb(T.pos).map((v) => v / 255), N = rgb(T.neg).map((v) => v / 255);
+    const V = new Float32Array(nx * ny);
+    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+      const k = j * nx + i, x = gx(i), y = gy(j), v = potential(x, y);
+      V[k] = v;
+      pos[k * 3] = x; pos[k * 3 + 1] = y; pos[k * 3 + 2] = height(v);
+      const t = Math.tanh(v / 1600), a = layers.shade ? Math.abs(t) * 0.9 : 0, C = t > 0 ? P : N;
+      col[k * 3] = R[0] + (C[0] - R[0]) * a; col[k * 3 + 1] = R[1] + (C[1] - R[1]) * a; col[k * 3 + 2] = R[2] + (C[2] - R[2]) * a;
+    }
+    G.surf.geometry.attributes.position.needsUpdate = true;
+    G.surf.geometry.attributes.color.needsUpdate = true;
+    G.surf.geometry.computeVertexNormals();
+    G.surf.geometry.computeBoundingSphere();
+
+    // 1 cm grid draped on the surface
+    const grid = [];
+    if (layers.grid) {
+      const zAt = (x, y) => height(potential(x, y)) + 0.012;
+      for (let x = Math.ceil(b.x0); x <= b.x1; x++) {
+        let py = b.y0, pz = zAt(x, py);
+        for (let j = 1; j <= 120; j++) { const y = b.y0 + h * j / 120, z = zAt(x, y); grid.push(x, py, pz, x, y, z); py = y; pz = z; }
+      }
+      for (let y = Math.ceil(b.y0); y <= b.y1; y++) {
+        let px = b.x0, pz = zAt(px, y);
+        for (let i = 1; i <= 200; i++) { const x = b.x0 + w * i / 200, z = zAt(x, y); grid.push(px, y, pz, x, y, z); px = x; pz = z; }
+      }
+    }
+    setLineGeo(G.gridL, grid);
+
+    // equipotentials sit at their own height: horizontal slices of the landscape
+    const eq = [], zr = [];
+    if (layers.equi) {
+      for (const [ai, aj, bi, bj, k] of contourSegments(V, nx, ny)) {
+        const z = height(k * dV) + 0.02, arr = k === 0 ? zr : eq;
+        arr.push(gx(ai), gy(aj), z, gx(bi), gy(bj), z);
+      }
+    }
+    setLineGeo(G.equiL, eq); setLineGeo(G.zeroL, zr);
+
+    // field lines draped on the surface: paths of steepest descent
+    const fl = [];
+    G.cones.clear();
+    if (layers.lines) {
+      for (const pts of computeLines()) {
+        const p3 = pts.map((p) => [p[0], p[1], height(potential(p[0], p[1])) + 0.035]);
+        for (let i = 1; i < p3.length; i++) fl.push(...p3[i - 1], ...p3[i]);
+        const ai = arrowIndex(pts, len2);
+        if (ai > 0) {
+          const a = p3[ai - 1], c = p3[ai];
+          const d = new THREE.Vector3(c[0] - a[0], c[1] - a[1], c[2] - a[2]).normalize();
+          const cone = new THREE.Mesh(G.coneGeo, G.coneMat);
+          cone.position.set(c[0], c[1], c[2]);
+          cone.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d);
+          G.cones.add(cone);
+        }
+      }
+    }
+    setLineGeo(G.fieldL, fl);
+
+    // V = 0 reference frame around the region
+    setLineGeo(G.frame, [b.x0, b.y0, 0, b.x1, b.y0, 0, b.x1, b.y0, 0, b.x1, b.y1, 0,
+                         b.x1, b.y1, 0, b.x0, b.y1, 0, b.x0, b.y1, 0, b.x0, b.y0, 0]);
+
+    // charges as spheres on the peaks and in the wells
+    G.spheres.clear();
+    for (const c of charges) {
+      const m = new THREE.Mesh(G.sphGeo, c.q > 0 ? G.posMat : c.q < 0 ? G.negMat : G.zeroMat);
+      const rr = 0.2 + 0.08 * Math.sqrt(Math.abs(c.q));
+      m.scale.setScalar(rr);
+      m.position.set(c.x, c.y, Math.sign(c.q) * 4 * reliefMult);
+      m.userData.c = c;
+      G.spheres.add(m);
+      if (c === sel) {
+        G.ring.position.copy(m.position); G.ring.scale.setScalar(rr * 1.7);
+      }
+    }
+    G.ring.visible = !!sel;
+
+    // colors from the theme
+    G.renderer.setClearColor(T.canvas);
+    G.gridL.material.color.set(T.muted);
+    G.equiL.material.color.set(T.equi);
+    G.zeroL.material.color.set(T.muted);
+    G.fieldL.material.color.set(T.field);
+    G.coneMat.color.set(T.field);
+    G.frame.material.color.set(T.gridStrong);
+    G.posMat.color.set(T.pos); G.negMat.color.set(T.neg); G.zeroMat.color.set(T.muted);
+    G.ring.material.color.set(T.accent);
+    G.probeDot.material.color.set(T.accent);
+    G.stem.material.color.set(T.accent);
+  }
+
+  function updateProbe3D() {
+    const live = probe && charges.some((c) => c.q);
+    G.probeDot.visible = !!live;
+    if (!live) { setLineGeo(G.stem, []); return; }
+    const z = height(potential(probe.x, probe.y));
+    G.probeDot.position.set(probe.x, probe.y, z + 0.06);
+    setLineGeo(G.stem, [probe.x, probe.y, 0, probe.x, probe.y, z]);
+  }
+
+  function render3D() {
+    const b = bounds();
+    const w = b.x1 - b.x0, h = b.y1 - b.y0;
+    const tanHalf = Math.tan((G.cam.fov * Math.PI / 180) / 2);
+    const fit = Math.max((w / 2) / (tanHalf * G.cam.aspect), (h / 2) / tanHalf) * 1.08;
+    const r = fit * orbit.zoom;
+    const tx = (b.x0 + b.x1) / 2, ty = (b.y0 + b.y1) / 2;
+    G.cam.position.set(
+      tx + r * Math.sin(orbit.phi) * Math.cos(orbit.theta),
+      ty + r * Math.sin(orbit.phi) * Math.sin(orbit.theta),
+      r * Math.cos(orbit.phi));
+    G.cam.lookAt(tx, ty, 0);
+    G.renderer.render(G.scene, G.cam);
+  }
+
+  function bind3D(el) {
+    const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+    const pointers = new Map();
+    let mode = null;
+    const setRay = (e) => {
+      const r = el.getBoundingClientRect();
+      ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+      ray.setFromCamera(ndc, G.cam);
+    };
+    const hitSphere = () => { const h = ray.intersectObjects(G.spheres.children); return h.length ? h[0] : null; };
+    const hitSurface = () => { const h = ray.intersectObject(G.surf); return h.length ? h[0].point : null; };
+    const pinchDist = () => { const p = [...pointers.values()]; return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y); };
+
+    el.addEventListener('pointerdown', (e) => {
+      el.focus({ preventScroll: true });
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      el.setPointerCapture(e.pointerId);
+      if (pointers.size === 2) { mode = { type: 'pinch', d0: pinchDist(), z0: orbit.zoom }; return; }
+      setRay(e);
+      const h = hitSphere();
+      if (h) {
+        const c = h.object.userData.c;
+        sel = c;
+        const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), -h.object.position.z);
+        const p = new THREE.Vector3(); ray.ray.intersectPlane(plane, p);
+        mode = { type: 'charge', c, plane, ox: p.x - c.x, oy: p.y - c.y };
+        el.style.cursor = 'grabbing';
+        markBase();
+      } else {
+        mode = { type: 'orbit', lx: e.clientX, ly: e.clientY, moved: 0 };
+        el.style.cursor = 'grabbing';
+      }
+    });
+    el.addEventListener('pointermove', (e) => {
+      if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (mode && mode.type === 'pinch' && pointers.size === 2) {
+        orbit.zoom = Math.min(3, Math.max(0.3, mode.z0 * mode.d0 / pinchDist())); schedule(); return;
+      }
+      if (mode && mode.type === 'charge') {
+        setRay(e);
+        const p = new THREE.Vector3();
+        if (ray.ray.intersectPlane(mode.plane, p)) {
+          mode.c.x = p.x - mode.ox; mode.c.y = p.y - mode.oy; clampToView(mode.c);
+          setPreset(null); markBase();
+        }
+        return;
+      }
+      if (mode && mode.type === 'orbit') {
+        const dx = e.clientX - mode.lx, dy = e.clientY - mode.ly;
+        mode.lx = e.clientX; mode.ly = e.clientY; mode.moved += Math.abs(dx) + Math.abs(dy);
+        orbit.theta -= dx * 0.008;
+        orbit.phi = Math.min(1.52, Math.max(0.05, orbit.phi - dy * 0.008));
+        schedule(); return;
+      }
+      if (e.pointerType === 'mouse') {
+        setRay(e);
+        if (hitSphere()) { el.style.cursor = 'grab'; return; }
+        el.style.cursor = 'move';
+        const p = hitSurface();
+        if (p) { probe = { x: p.x, y: p.y }; markOver(); }
+      }
+    });
+    const end = (e) => {
+      if (mode && mode.type === 'orbit' && mode.moved < 5 && e.pointerType !== 'mouse') {
+        setRay(e); const p = hitSurface(); if (p) { probe = { x: p.x, y: p.y }; markOver(); }
+      }
+      pointers.delete(e.pointerId);
+      if (pointers.size < 2 && mode && mode.type === 'pinch') mode = null;
+      if (!pointers.size) { mode = null; el.style.cursor = 'grab'; }
+    };
+    el.addEventListener('pointerup', end);
+    el.addEventListener('pointercancel', end);
+    el.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      orbit.zoom = Math.min(3, Math.max(0.3, orbit.zoom * Math.exp(e.deltaY * 0.0012)));
+      schedule();
+    }, { passive: false });
+    el.addEventListener('dblclick', () => { orbit.theta = -Math.PI / 2 - 0.35; orbit.phi = 0.95; orbit.zoom = 1; schedule(); });
+    el.addEventListener('keydown', onKey);
+  }
+
+  // ---------- panel ----------
+  const rV = $('rV'), rE = $('rE'), rDir = $('rDir'), rPos = $('rPos');
+  function updateReadout() {
+    if (!probe || !charges.some((c) => c.q)) { rV.textContent = rE.textContent = rDir.textContent = rPos.textContent = '—'; return; }
+    const [ex, ey] = field(probe.x, probe.y), m = Math.hypot(ex, ey);
+    rV.textContent = fmtV(potential(probe.x, probe.y));
+    rE.textContent = fmtE(m);
+    let deg = Math.atan2(ey, ex) * 180 / Math.PI; if (deg < 0) deg += 360;
+    rDir.textContent = m > 0 ? deg.toFixed(0) + '° from +x' : '—';
+    rPos.textContent = minus(`(${probe.x.toFixed(1)}, ${probe.y.toFixed(1)})`);
+  }
+  const selEditor = $('selEditor'), selHint = $('selHint'), qIn = $('q'), qOut = $('qOut'), selPos = $('selPos');
+  function updateSel() {
+    selEditor.hidden = !sel; selHint.hidden = !!sel;
+    if (sel) {
+      if (document.activeElement !== qIn) qIn.value = sel.q;
+      qOut.textContent = (sel.q > 0 ? '+' : sel.q < 0 ? '−' : '') + Math.abs(sel.q).toFixed(1) + ' nC';
+      selPos.textContent = minus(`x = ${sel.x.toFixed(1)} cm, y = ${sel.y.toFixed(1)} cm`);
+    }
+    $('addPos').disabled = $('addNeg').disabled = charges.length >= MAX_CHARGES;
+  }
+  function setPreset(name) {
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+  }
+
+  // ---------- scheduling ----------
+  function markBase() { baseDirty = true; overDirty = true; schedule(); }
+  function markOver() { overDirty = true; schedule(); }
+  function schedule() {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = 0;
+      if (!W || !H) return;
+      if (view === '3d' && G.ready) {
+        if (baseDirty) { build3D(); baseDirty = false; }
+        if (overDirty) { updateProbe3D(); overDirty = false; }
+        if (orbit.spin) orbit.theta += 0.004;
+        render3D();
+        if (orbit.spin) schedule();
+      } else {
+        if (baseDirty) { drawBase(); baseDirty = false; }
+        if (overDirty) { drawOver(); overDirty = false; }
+      }
+      updateReadout(); updateSel();
+    });
+  }
+
+  // ---------- 2D interaction ----------
+  function eventW(e) { const r = over.getBoundingClientRect(); return toW(e.clientX - r.left, e.clientY - r.top); }
+  function hit(p) {
+    for (let i = charges.length - 1; i >= 0; i--) {
+      const c = charges[i];
+      if (Math.hypot(p.x - c.x, p.y - c.y) * s <= radius(c) + 4) return c;
+    }
+    return null;
+  }
+  function clampToView(c) {
+    const b = bounds(), m = 0.4;
+    c.x = Math.min(b.x1 - m, Math.max(b.x0 + m, c.x));
+    c.y = Math.min(b.y1 - m, Math.max(b.y0 + m, c.y));
+  }
+
+  over.addEventListener('pointerdown', (e) => {
+    over.focus({ preventScroll: true });
+    const p = eventW(e), c = hit(p);
+    if (c) {
+      sel = c; drag = { type: 'charge', c, dx: p.x - c.x, dy: p.y - c.y };
+      charges = charges.filter((k) => k !== c).concat(c);
+      over.style.cursor = 'grabbing';
+    } else {
+      drag = { type: 'probe' }; probe = p;
+    }
+    over.setPointerCapture(e.pointerId);
+    markBase();
+  });
+  over.addEventListener('pointermove', (e) => {
+    const p = eventW(e);
+    if (drag && drag.type === 'charge') {
+      drag.c.x = p.x - drag.dx; drag.c.y = p.y - drag.dy; clampToView(drag.c);
+      setPreset(null); markBase();
+    } else if (drag && drag.type === 'probe') {
+      probe = p; markOver();
+    } else if (e.pointerType === 'mouse') {
+      const h = hit(p);
+      over.style.cursor = h ? 'grab' : 'crosshair';
+      if (!h) { probe = p; markOver(); }
+    }
+  });
+  const endDrag = () => { drag = null; over.style.cursor = 'crosshair'; };
+  over.addEventListener('pointerup', endDrag);
+  over.addEventListener('pointercancel', endDrag);
+
+  function onKey(e) {
+    if (!sel) return;
+    const step = e.shiftKey ? 0.1 : 0.5;
+    const moves = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, step], ArrowDown: [0, -step] };
+    if (moves[e.key]) {
+      sel.x += moves[e.key][0]; sel.y += moves[e.key][1]; clampToView(sel); setPreset(null);
+    } else if (e.key === 'Delete' || e.key === 'Backspace') {
+      charges = charges.filter((c) => c !== sel); sel = null; setPreset(null);
+    } else if (e.key === 'Escape') {
+      sel = null;
+    } else if (e.key === '+' || e.key === '=') {
+      sel.q = Math.min(5, sel.q + 0.5); setPreset(null);
+    } else if (e.key === '-' || e.key === '_') {
+      sel.q = Math.max(-5, sel.q - 0.5); setPreset(null);
+    } else return;
+    e.preventDefault(); markBase();
+  }
+  over.addEventListener('keydown', onKey);
+
+  function addCharge(q) {
+    if (charges.length >= MAX_CHARGES) return;
+    const b = bounds();
+    let best = null, bestD = -1;
+    for (let t = 0; t < 40; t++) {
+      const x = (Math.random() - 0.5) * Math.min(12, b.x1 - b.x0 - 2);
+      const y = (Math.random() - 0.5) * Math.min(8, b.y1 - b.y0 - 2);
+      const d = charges.length ? Math.min(...charges.map((c) => Math.hypot(c.x - x, c.y - y))) : 99;
+      if (d > bestD) { bestD = d; best = { x, y }; }
+    }
+    const c = mk(Math.round(best.x * 2) / 2, Math.round(best.y * 2) / 2, q);
+    charges.push(c); sel = c; setPreset(null); markBase();
+  }
+  $('addPos').addEventListener('click', () => addCharge(1));
+  $('addNeg').addEventListener('click', () => addCharge(-1));
+  $('del').addEventListener('click', () => { charges = charges.filter((c) => c !== sel); sel = null; setPreset(null); markBase(); });
+  qIn.addEventListener('input', () => { if (sel) { sel.q = +qIn.value; setPreset(null); markBase(); } });
+
+  for (const b of document.querySelectorAll('#presets button')) {
+    b.addEventListener('click', () => {
+      charges = PRESETS[b.dataset.p](); sel = null; probe = { x: 0, y: 2.5 };
+      setPreset(b.dataset.p); markBase();
+    });
+  }
+  const bindToggle = (id, key) => $(id).addEventListener('change', (e) => { layers[key] = e.target.checked; markBase(); });
+  bindToggle('tShade', 'shade'); bindToggle('tEqui', 'equi'); bindToggle('tLines', 'lines'); bindToggle('tGrid', 'grid');
+  $('dV').addEventListener('input', (e) => { dV = +e.target.value; $('dVOut').textContent = dV + ' V'; markBase(); });
+  $('dens').addEventListener('input', (e) => { density = +e.target.value; $('densOut').textContent = density; markBase(); });
+  $('relief').addEventListener('input', (e) => { reliefMult = +e.target.value; $('reliefOut').textContent = reliefMult.toFixed(1) + '×'; markBase(); });
+
+  // ---------- view switching ----------
+  const viewBtns = document.querySelectorAll('.seg button'), spinBtn = $('spin'), hint3d = $('hint3d');
+  function setView(v) {
+    if (v === '3d' && !init3D()) {
+      hint3d.textContent = 'The 3D view could not load its graphics library. Check your connection and reload the page.';
+      hint3d.hidden = false; return;
+    }
+    view = v;
+    const is3 = v === '3d';
+    base.hidden = over.hidden = is3;
+    if (G.ready) G.el.hidden = !is3;
+    spinBtn.hidden = hint3d.hidden = !is3;
+    if (is3) hint3d.textContent = 'Drag to orbit · Scroll or pinch to zoom · Drag a sphere to move its charge · Double-click to reset';
+    for (const b of viewBtns) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    if (!is3) { orbit.spin = false; spinBtn.setAttribute('aria-pressed', 'false'); }
+    markBase();
+  }
+  for (const b of viewBtns) b.addEventListener('click', () => setView(b.dataset.v));
+  spinBtn.addEventListener('click', () => {
+    orbit.spin = !orbit.spin; spinBtn.setAttribute('aria-pressed', String(orbit.spin)); schedule();
+  });
+
+  // theme changes
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', markBase); } catch (_) {}
+  new MutationObserver(markBase).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class', 'style'] });
+
+  // ---------- boot ----------
+  charges = PRESETS.dipole();
+  new ResizeObserver(resize).observe(stage);
+  resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(markBase);
+})();
+</script>
+</body>
+</html>
