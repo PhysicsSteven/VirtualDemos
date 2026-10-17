@@ -55,7 +55,7 @@ SUITES['20M_pre_ms_to_core_collapse'] = dict(SUITES['12M_pre_ms_to_core_collapse
 # a 0.6 Msun C/O white dwarf cooling until it freezes (Skye EOS, phase separation on); it already lists
 # every isotope (add_abundances), so its own column list is kept and the demo's columns are appended
 SUITES['wd_cool_0.6M'] = {'stages': ['wd_cool_0.6M'], 'models': ['final.mod'], 'mass_files': [],
-                          'isotopes': None, 'interval': 5}
+                          'isotopes': None, 'interval': 1}
 WD_EXTRA = ['mass', 'logR', 'logT', 'logRho', 'mixing_type', 'log_conv_vel', 'eps_nuc', 'gam', 'eos_phase',
             'eps_phase_separation']
 
@@ -122,10 +122,10 @@ def main():
                                 ignore=lambda d, names: [n for n in names if n.startswith('LOGS') or n in ('photos', 'png')])
             work = src if a.dry_run else dst
             f = os.path.join(work, 'inlist_wd_cool_0.6M')
-            new = set_namelist(open(f).read(), 'controls', {'log_directory': "'LOGS_wd_cool'", 'profile_interval': 5,
+            new = set_namelist(open(f).read(), 'controls', {'log_directory': "'LOGS_wd_cool'", 'profile_interval': 1,
                                                               'max_num_profile_models': MAX_PROFILES})
             new = set_namelist(new, 'star_job', {'pgstar_flag': '.false.'})
-            print('  inlist_wd_cool_0.6M                 log_directory=LOGS_wd_cool, profile_interval=5')
+            print('  inlist_wd_cool_0.6M                 log_directory=LOGS_wd_cool, profile_interval=1')
             pc = open(os.path.join(work, 'profile_columns.list')).read()
             active = {l.split('!')[0].split()[0] for l in pc.splitlines() if l.split('!')[0].split()}
             add = [c for c in WD_EXTRA if c in valid and c not in active]
