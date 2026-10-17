@@ -10,6 +10,8 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Reasons for Seasons](demos/seasons.html) | Astronomy | Axial tilt, Sun paths, day length and insolation through the year, and the distance misconception |
 | [Moon Phases](demos/moon-phases.html) | Astronomy | Phases from orbit geometry, Moon rise and set times, sidereal and synodic months, and eclipse seasons |
 | [Kepler's Laws](demos/kepler-orbits.html) | Astronomy | Orbits from a launch velocity, equal areas in equal times, and P² = a³/M against the solar system |
+| [Stellar Evolution](demos/hr-diagram.html) | Astronomy | Evolution tracks on the HR diagram, white dwarf cooling, and cluster turnoff ages |
+| [Finding Exoplanets](demos/exoplanets.html) | Astronomy | Transit light curves and radial velocity curves, side by side |
 | [Spectra Explorer](demos/spectra.html) | Modern physics and astronomy | Emission and absorption lines of 99 elements from NIST data, the Bohr model of hydrogen, and a mystery spectrum game |
 | [Photoelectric Effect](demos/photoelectric.html) | Modern physics | Photon energy, work function, stopping voltage, and measuring Planck's constant |
 | [Projectile Range](demos/projectile-drag.html) | Mechanics | Projectile motion with and without quadratic air drag |

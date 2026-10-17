@@ -1,0 +1,985 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Finding Exoplanets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: lab bench. Top view and telescope view side by side, the two light curves below, a narrow instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --star: #e79a2c;
+  --planet: #26303c;
+  --canvas-scale: 1;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+    --star: #f4b450; --planet: #05080c;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  --star: #f4b450; --planet: #05080c;
+}
+:root[data-projector="on"] { font-size: 125%; --canvas-scale: 1.45; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 18.75px; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); }
+.units { color: var(--muted); font-size: 0.8rem; }
+.barside { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+:root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; }
+.stage {
+  position: relative; min-height: 620px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
+  display: grid; grid-template-rows: minmax(0, 1fr) 160px 160px;
+}
+.views { display: grid; grid-template-columns: 1fr 1fr; min-height: 0; }
+.pane { position: relative; min-height: 0; min-width: 0; }
+.views .pane + .pane { border-left: 1px solid var(--line); }
+.stage > .pane, .stage > .views + .pane { border-top: 1px solid var(--line); }
+.stage canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; }
+#top { cursor: grab; }
+#lc, #rv { cursor: ew-resize; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.tag {
+  position: absolute; top: 8px; left: 10px; z-index: 2; pointer-events: none;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted);
+}
+.viewbar { position: absolute; top: 6px; right: 8px; z-index: 2; display: flex; gap: 6px; }
+.seg { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button {
+  font: inherit; font-size: 0.8rem; font-weight: 700; color: var(--muted); background: none; border: 0;
+  border-radius: 6px; padding: 3px 9px; cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.hint.warn { color: var(--pos); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn.primary:hover { opacity: 0.9; }
+.btn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bar .btn { font-size: 0.8rem; padding: 3px 10px; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.25rem; }
+.readout dd.pos { color: var(--pos); }
+.readout dd.neg { color: var(--neg); }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input { accent-color: var(--accent); margin: 0; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); }
+
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.lc { border-color: var(--field); border-top-width: 2.5px; }
+.swatch.pos { border-color: var(--pos); border-top-width: 2.5px; }
+.swatch.neg { border-color: var(--neg); border-top-width: 2.5px; }
+.swatch.equi { border-color: var(--equi); border-top-style: dashed; }
+.swatch.ghost { border-color: var(--muted); border-top-style: dashed; opacity: 0.8; }
+.swatch.cur { border-color: var(--accent); }
+.swatch.dots { width: 22px; height: 6px; border: 0; background: radial-gradient(circle, var(--muted) 1.6px, transparent 2px) 0 0 / 7px 6px repeat-x; }
+kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--canvas); }
+
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench, :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; grid-template-rows: auto 190px 170px; }
+  .views { grid-template-columns: minmax(0, 1fr); }
+  .views .pane.topv { height: 320px; }
+  .views .pane.side { height: 230px; }
+  .views .pane + .pane { border-left: 0; border-top: 1px solid var(--line); }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Finding Exoplanets</h1>
+      <p>A planet dims its star when it crosses in front and tugs the star back and forth as it orbits. Watch both signals at once.</p>
+    </div>
+    <div class="barside">
+      <div class="units mono">AU · M☉ · R☉ · M⊕ · R⊕ · ppm · m/s</div>
+      <button type="button" class="btn" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="views">
+        <div class="pane topv">
+          <canvas id="top" tabindex="0" role="application" aria-label="Top view of the orbit. Drag to move the planet along its orbit. Left and right arrows step time, up and down change the inclination, space plays or pauses."></canvas>
+          <div class="tag">Top view, looking down on the orbit</div>
+        </div>
+        <div class="pane side">
+          <canvas id="side" tabindex="0" role="application" aria-label="What a distant telescope sees: the star disk and the planet. Up and down arrows change the inclination."></canvas>
+          <div class="tag">What the telescope sees</div>
+        </div>
+      </div>
+      <div class="pane">
+        <canvas id="lc" tabindex="0" role="application" aria-label="Transit light curve: relative brightness against time. Drag across to move in time."></canvas>
+        <div class="viewbar">
+          <div class="seg" role="group" aria-label="Light curve time span" id="lcSeg">
+            <button type="button" data-lc="orbit" aria-pressed="true">Full orbit</button>
+            <button type="button" data-lc="zoom" aria-pressed="false">Zoom on transit</button>
+          </div>
+        </div>
+      </div>
+      <div class="pane">
+        <canvas id="rv" tabindex="0" role="application" aria-label="Radial velocity curve of the star in meters per second against time. Drag across to move in time."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Systems</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="hotj" aria-pressed="true">Hot Jupiter</button>
+          <button type="button" data-p="earth" aria-pressed="false">Earth and Sun</button>
+          <button type="button" data-p="jupiter" aria-pressed="false">Jupiter and Sun</button>
+          <button type="button" data-p="ecc" aria-pressed="false">Eccentric planet</button>
+          <button type="button" data-p="tilt" aria-pressed="false">Not edge on</button>
+          <button type="button" data-p="trappist" aria-pressed="false">TRAPPIST-1 like</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Time</h2>
+        <div class="row2">
+          <button type="button" class="btn primary" id="play">Pause</button>
+          <button type="button" class="btn" id="reset">Reset</button>
+        </div>
+        <div class="slider-head" style="align-items: center"><span>Speed</span>
+          <div class="seg" role="group" aria-label="Animation speed" id="speedSeg">
+            <button type="button" data-s="0.25" aria-pressed="false">0.25×</button>
+            <button type="button" data-s="1" aria-pressed="true">1×</button>
+            <button type="button" data-s="4" aria-pressed="false">4×</button>
+          </div>
+        </div>
+        <div class="toggles">
+          <label><input type="checkbox" id="tSlow" checked>Slow motion in transit</label>
+          <label><input type="checkbox" id="tModel" checked>True curves</label>
+        </div>
+        <p class="hint">One orbit takes about 12 s at 1×. Drag the planet or either chart to move in time.</p>
+      </section>
+
+      <section>
+        <h2>Star</h2>
+        <div>
+          <div class="slider-head"><label for="ms">Mass M<sub>s</sub></label><output id="msOut" class="mono" for="ms"></output></div>
+          <input type="range" id="ms" min="0.08" max="2" step="0.01">
+        </div>
+        <div>
+          <div class="slider-head"><label for="rs">Radius R<sub>s</sub></label><output id="rsOut" class="mono" for="rs"></output></div>
+          <input type="range" id="rs" min="0" max="1000" step="1">
+        </div>
+      </section>
+
+      <section>
+        <h2>Planet</h2>
+        <div>
+          <div class="slider-head"><label for="mp">Mass M<sub>p</sub></label><output id="mpOut" class="mono" for="mp"></output></div>
+          <input type="range" id="mp" min="0" max="1000" step="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="rp">Radius R<sub>p</sub></label><output id="rpOut" class="mono" for="rp"></output></div>
+          <input type="range" id="rp" min="0" max="1000" step="1">
+        </div>
+        <p class="hint">1 M<sub>J</sub> = 318 M⊕ and 1 R<sub>J</sub> = 11.2 R⊕. Both sliders are logarithmic.</p>
+      </section>
+
+      <section>
+        <h2>Orbit</h2>
+        <div>
+          <div class="slider-head"><label for="a">Semi major axis a</label><output id="aOut" class="mono" for="a"></output></div>
+          <input type="range" id="a" min="0" max="1000" step="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="e">Eccentricity e</label><output id="eOut" class="mono" for="e"></output></div>
+          <input type="range" id="e" min="0" max="0.8" step="0.01">
+        </div>
+        <div>
+          <div class="slider-head"><label for="inc">Inclination i</label><output id="incOut" class="mono" for="inc"></output></div>
+          <input type="range" id="inc" min="0" max="90" step="0.1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="w">Argument of periastron ω</label><output id="wOut" class="mono" for="w"></output></div>
+          <input type="range" id="w" min="0" max="359" step="1">
+        </div>
+        <p class="hint">i = 90° is edge on. ω is measured for the star's orbit, as radial velocity catalogs quote it; it only matters when e &gt; 0.</p>
+        <p class="hint warn" id="insideWarn" hidden>The planet's closest approach is inside the star. Move it out or shrink the star.</p>
+      </section>
+
+      <section>
+        <h2>Measurement noise</h2>
+        <div>
+          <div class="slider-head"><label for="noise">Noise</label><output id="noiseOut" class="mono" for="noise"></output></div>
+          <input type="range" id="noise" min="0" max="1" step="0.01" value="0">
+        </div>
+        <p class="hint">Adds random scatter to each measurement. For scale: Kepler reached about 30 ppm per 6 hours on bright stars, and the best spectrographs reach about 0.3 m/s.</p>
+      </section>
+
+      <section>
+        <h2>What we would measure</h2>
+        <dl class="readout">
+          <div class="big"><dt>Transit depth (R<sub>p</sub>/R<sub>s</sub>)²</dt><dd id="rDepth">—</dd></div>
+          <div class="big"><dt>RV semi amplitude K</dt><dd id="rK">—</dd></div>
+          <div><dt>Period</dt><dd id="rP">—</dd></div>
+          <div><dt>Transit duration</dt><dd id="rDur">—</dd></div>
+          <div><dt>Transits?</dt><dd id="rTr">—</dd></div>
+          <div><dt>Transit probability ≈ R<sub>s</sub>/a</dt><dd id="rProb">—</dd></div>
+          <div><dt>M<sub>p</sub> sin i (from RV)</dt><dd id="rMsini">—</dd></div>
+          <div><dt>Planet density</dt><dd id="rRho">—</dd></div>
+          <div><dt>Star velocity now</dt><dd id="rVnow">—</dd></div>
+          <div><dt>Brightness now</dt><dd id="rFnow">—</dd></div>
+        </dl>
+        <p class="hint"><b>Transits measure the radius; radial velocity measures the mass times sin i.</b> A transit also tells you i is near 90°, so together they give the true mass, and mass over volume gives the density: rock, water or gas.</p>
+      </section>
+
+      <section>
+        <h2>Key</h2>
+        <div class="key">
+          <span><i class="swatch lc"></i>Brightness, drawn as it is measured</span>
+          <span><i class="swatch pos"></i>Star moving away from us (redshift)</span>
+          <span><i class="swatch neg"></i>Star moving toward us (blueshift)</span>
+          <span><i class="swatch ghost"></i>True curve for the full orbit</span>
+          <span><i class="swatch dots"></i>Noisy measurements</span>
+          <span><i class="swatch equi"></i>Path of the star (wobble exaggerated)</span>
+          <span><i class="swatch cur"></i>Now</span>
+        </div>
+        <p class="hint">Model: one planet and its star in a two body orbit. The planet's own light is ignored, so there is no secondary eclipse. Limb darkening is quadratic with fixed Sun like coefficients (u₁ = 0.40, u₂ = 0.26), so the true dip is a little deeper than (R<sub>p</sub>/R<sub>s</sub>)². The duration readout uses the standard approximation for eccentric orbits. Noise is white and Gaussian. In the top view the star and planet are drawn larger than scale.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const DEG = Math.PI / 180, TAU = 2 * Math.PI;
+  // constants (SI)
+  const GM_SUN = 1.32712440018e20, GM_EARTH = 3.986004418e14, GM_JUP = 1.26686534e17, G = 6.6743e-11;
+  const AU = 1.495978707e11, R_SUN = 6.957e8, R_EARTH = 6.371e6, R_JUP = 7.1492e7;
+  const DAY = 86400, YEAR = 365.25 * DAY;
+  const MJ = GM_JUP / GM_EARTH;          // Earth masses per Jupiter mass, 317.8
+  const RJ = R_JUP / R_EARTH;            // Earth radii per Jupiter radius, 11.2
+  const U1 = 0.40, U2 = 0.26;            // quadratic limb darkening
+  const ORBIT_SECONDS = 12;              // real seconds per orbit at 1x
+
+  // ---------- state ----------
+  // ms, rs in solar units; mp, rp in Earth units; a in AU; inc, w in degrees
+  const P = {};
+  const PRESETS = {
+    hotj:     { ms: 1.11, rs: 1.15, mp: 0.47 * MJ, rp: 1.2 * RJ, a: 0.0527, e: 0, inc: 90, w: 90 },
+    earth:    { ms: 1, rs: 1, mp: 1, rp: 1, a: 1, e: 0, inc: 90, w: 90 },
+    jupiter:  { ms: 1, rs: 1, mp: MJ, rp: 11.21, a: 5.203, e: 0.048, inc: 90, w: 90 },
+    ecc:      { ms: 1.0, rs: 1.0, mp: 4.1 * MJ, rp: RJ, a: 0.45, e: 0.8, inc: 89.6, w: 301 },
+    tilt:     { ms: 1.11, rs: 1.15, mp: 0.47 * MJ, rp: 1.2 * RJ, a: 0.0527, e: 0, inc: 60, w: 90 },
+    trappist: { ms: 0.09, rs: 0.119, mp: 0.69, rp: 0.92, a: 0.0293, e: 0, inc: 89.7, w: 90 }
+  };
+  const HINTS = {
+    hotj: 'A giant planet very close to its star: a deep, short transit every four days and a big, fast wobble. 51 Peg b itself does not transit; it is turned edge on here so both methods work.',
+    earth: 'From far away, Earth dims the Sun by 84 ppm for 13 hours once a year and moves it at only 9 cm/s. Add a little noise and both signals disappear.',
+    jupiter: 'Jupiter swings the Sun at about 12.5 m/s, easy for a good spectrograph if you wait 12 years. Its 1% transit lines up for only about 0.1% of random viewers.',
+    ecc: 'A stretched orbit makes the velocity curve lopsided: a sharp swing at periastron, then a long slow drift. Like HD 80606 b, which has e = 0.93; the slider stops at 0.8.',
+    tilt: 'The same hot Jupiter tilted to i = 60°. It passes above the star, so there is no transit, but the star still wobbles along our line of sight and K only drops by sin i.',
+    trappist: 'A tiny, cool star about 12% the size of the Sun. An Earth sized planet blocks 0.5% of its light, 60 times deeper than Earth crossing the Sun.'
+  };
+  let D = null;                 // derived quantities and sampled curves
+  let tau = 0;                  // time since the start of the window, s (0..Per)
+  let playing = true, speed = 1, slowmo = true, showModel = true, lcMode = 'orbit';
+  let raf = 0, last = null, scrub = null, dirty = true, slowNow = false;
+
+  // ---------- orbit ----------
+  function solveE(M, e) {
+    M = ((M % TAU) + TAU) % TAU;
+    let E = e < 0.8 ? M : Math.PI;
+    for (let i = 0; i < 50; i++) {
+      const d = (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E));
+      E -= d;
+      if (Math.abs(d) < 1e-13) break;
+    }
+    return E;
+  }
+  // time is measured from mid transit (conjunction, planet nearest us): t = 0 there
+  function state(t) {
+    const e = P.e, E = solveE(D.n * (t - D.tp), e);
+    const nu = 2 * Math.atan2(Math.sqrt(1 + e) * Math.sin(E / 2), Math.sqrt(1 - e) * Math.cos(E / 2));
+    const r = D.a * (1 - e * Math.cos(E));
+    return { r, th: nu + D.w, nu };
+  }
+  const vr = (s) => D.K * (Math.cos(s.th) + P.e * Math.cos(D.w));   // + means star moving away
+
+  // fraction of the star's light hidden by a planet disk of radius p at distance d (both in stellar radii)
+  const I = (r) => { const mu = Math.sqrt(Math.max(0, 1 - r * r)); return 1 - U1 * (1 - mu) - U2 * (1 - mu) * (1 - mu); };
+  const F0 = Math.PI * (1 - U1 / 3 - U2 / 6);
+  function blocked(d, p) {
+    if (d >= 1 + p) return 0;
+    const lo = Math.max(0, d - p), hi = Math.min(1, d + p), N = 90, dr = (hi - lo) / N;
+    let sum = 0;
+    for (let k = 0; k < N; k++) {
+      const r = lo + (k + 0.5) * dr;
+      let ang;
+      if (r + d <= p) ang = TAU;
+      else if (r <= d - p || r >= d + p) ang = 0;
+      else ang = 2 * Math.acos(Math.max(-1, Math.min(1, (r * r + d * d - p * p) / (2 * r * d))));
+      sum += I(r) * r * ang * dr;
+    }
+    return sum / F0;
+  }
+  function flux(t) {
+    const s = state(t);
+    if (Math.sin(s.th) <= 0) return 1;             // planet behind the star
+    const X = s.r * Math.cos(s.th), Y = s.r * Math.sin(s.th) * Math.cos(D.i);
+    return 1 - blocked(Math.hypot(X, Y) / D.Rs, D.k);
+  }
+
+  function derive() {
+    const e = P.e, i = P.inc * DEG, w = P.w * DEG;
+    const mu = GM_SUN * P.ms + GM_EARTH * P.mp;
+    const a = P.a * AU, Per = TAU * Math.sqrt(a * a * a / mu), n = TAU / Per;
+    const Rs = P.rs * R_SUN, Rp = P.rp * R_EARTH, k = Rp / Rs;
+    const q = GM_EARTH * P.mp / mu;                     // m_p / (M_s + m_p)
+    const K = Math.cbrt(TAU / Per) * GM_EARTH * P.mp * Math.sin(i) / Math.pow(mu, 2 / 3) / Math.sqrt(1 - e * e);
+    const esw = 1 + e * Math.sin(w);
+    const rc = a * (1 - e * e) / esw;                   // separation at conjunction
+    const b = rc * Math.cos(i) / Rs;
+    const inside = a * (1 - e) < Rs + Rp;
+    const transits = b < 1 + k && Math.sin(i) > 0;
+    const full = b < 1 - k;
+    const durFor = (bb) => Per / Math.PI * Math.asin(Math.min(1, (Rs / a) * Math.sqrt(Math.max(0, (1 + k) ** 2 - bb * bb)) / Math.max(Math.sin(i), 1e-9))) * Math.sqrt(1 - e * e) / esw;
+    const T14 = transits ? durFor(b) : 0;
+    const Tcen = Per / Math.PI * Math.asin(Math.min(1, Rs / a)) * Math.sqrt(1 - e * e) / esw;
+    // periastron time so that conjunction (theta = 90 deg) falls at t = 0
+    const nuc = Math.PI / 2 - w;
+    const Ec = 2 * Math.atan2(Math.sqrt(1 - e) * Math.sin(nuc / 2), Math.sqrt(1 + e) * Math.cos(nuc / 2));
+    const tp = -(Ec - e * Math.sin(Ec)) / n;
+    const zh = Math.min(0.24 * Per, transits ? Math.max(T14, 1e-6 * Per) : Math.max(Tcen, 1e-4 * Per));
+    D = { a, Per, n, Rs, Rp, k, q, K, b, inside, transits, full, T14, tp, zh, i, w, mu,
+          mpKg: GM_EARTH * P.mp / G, depth: k * k, prob: Rs / a };
+
+    // sampled curves; t runs from -Per/4 to 3Per/4
+    const t0 = -Per / 4;
+    const rvS = [];
+    for (let j = 0; j <= 1500; j++) { const t = t0 + Per * j / 1500; rvS.push([t, vr(state(t))]); }
+    D.rvS = rvS;
+    let vmax = 0; for (const p of rvS) vmax = Math.max(vmax, Math.abs(p[1]));
+    D.vmax = vmax;
+
+    const ts = [];
+    for (let j = 0; j <= 1000; j++) ts.push(t0 + Per * j / 1000);
+    if (transits) for (let j = 0; j <= 500; j++) ts.push(-0.65 * T14 + 1.3 * T14 * j / 500);
+    ts.sort((x, y) => x - y);
+    D.lcOrbit = ts.map((t) => [t, flux(t)]);
+    const zs = [];
+    for (let j = 0; j <= 700; j++) { const t = -zh + 2 * zh * j / 700; zs.push([t, flux(t)]); }
+    D.lcZoom = zs;
+    let fmin = 1; for (const p of zs) fmin = Math.min(fmin, p[1]);
+    for (const p of D.lcOrbit) fmin = Math.min(fmin, p[1]);
+    D.fmin = fmin;
+
+    // simulated observations, uniform in time; noise deviates are fixed so the scatter changes smoothly
+    D.obsOrbit = OBS_T.orbit.map((u, j) => { const t = t0 + Per * u; return [t, flux(t), vr(state(t)), Z1[j], Z2[j]]; });
+    D.obsZoom = OBS_T.zoom.map((u, j) => { const t = -zh + 2 * zh * u; return [t, flux(t), 0, Z1[j + 300], 0]; });
+
+    // top view path of the planet relative to the star, by eccentric anomaly
+    const path = [];
+    for (let j = 0; j <= 360; j++) {
+      const E = TAU * j / 360, nu = 2 * Math.atan2(Math.sqrt(1 + e) * Math.sin(E / 2), Math.sqrt(1 - e) * Math.cos(E / 2));
+      path.push([a * (1 - e * Math.cos(E)), nu + w]);
+    }
+    D.path = path;
+    // wobble exaggeration: a power of ten so the star's path is drawn at a few percent of the orbit
+    D.F = q > 0.05 ? 1 : Math.pow(10, Math.round(Math.log10(0.05 / q)));
+  }
+
+  // seeded normal deviates
+  function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const R = rng(20261016);
+  const gauss = () => { let u = 0; while (!u) u = R(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(TAU * R()); };
+  const Z1 = Array.from({ length: 500 }, gauss), Z2 = Array.from({ length: 500 }, gauss);
+  const OBS_T = { orbit: Array.from({ length: 260 }, (_, j) => (j + 0.5) / 260), zoom: Array.from({ length: 160 }, (_, j) => (j + 0.5) / 160) };
+  const sigF = () => 1e-3 * P.noise * P.noise;    // relative flux, up to 1000 ppm
+  const sigV = () => 10 * P.noise * P.noise;      // m/s, up to 10 m/s
+
+  // ---------- formatting ----------
+  const minus = (s) => s.replace(/-/g, '−');
+  const sig = (x, n = 3) => { if (x === 0) return '0'; const s = x.toPrecision(n); return s.includes('e') ? (+s).toString() : s; };
+  const comma = (x) => Math.round(x).toLocaleString('en-US');
+  function fmtPeriod(sec) {
+    const d = sec / DAY;
+    if (d < 1) return sig(d * 24) + ' h';
+    if (d < 1000) return sig(d) + ' d';
+    return sig(sec / YEAR) + ' yr';
+  }
+  const fmtV = (v) => { const a = Math.abs(v); return minus(a < 1 ? v.toFixed(3) : a < 10 ? v.toFixed(2) : a < 100 ? v.toFixed(1) : v.toFixed(0)) + ' m/s'; };
+  const fmtPpm = (x) => x >= 1e4 ? comma(x) + ' ppm' : x >= 100 ? comma(x) + ' ppm' : sig(x, 2) + ' ppm';
+  const fmtMp = (m) => m < 30 ? sig(m) + ' M⊕' : sig(m / MJ) + ' M<sub>J</sub>';
+  const fmtRp = (r) => r < 4 ? sig(r) + ' R⊕' : sig(r / RJ) + ' R<sub>J</sub> (' + sig(r, 3) + ' R⊕)';
+  function niceStep(raw) {
+    const e = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / e;
+    return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * e;
+  }
+  const fmtTick = (v, step) => { const dp = Math.max(0, Math.ceil(-Math.log10(step) - 1e-9)); return minus(v.toFixed(dp)); };
+
+  // ---------- canvas setup ----------
+  const stage = $('stage');
+  const cv = { top: $('top'), side: $('side'), lc: $('lc'), rv: $('rv') };
+  const ctxs = {}, dims = {};
+  for (const k in cv) ctxs[k] = cv[k].getContext('2d');
+  let dpr = 1;
+  const monoFont = () => getComputedStyle(document.body).getPropertyValue('--font-mono') || 'monospace';
+  const uiFont = () => getComputedStyle(document.body).getPropertyValue('--font-ui') || 'sans-serif';
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    return { pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), grid: g('--grid'), gridStrong: g('--grid-strong'), field: g('--field'),
+             canvas: g('--canvas'), relief: g('--relief'), ink: g('--ink'), muted: g('--muted'), accent: g('--accent'), line: g('--line'),
+             star: g('--star'), planet: g('--planet'), S: parseFloat(g('--canvas-scale')) || 1 };
+  }
+  function rgb(hex) {
+    hex = hex.replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map((c) => c + c).join('');
+    const n = parseInt(hex, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const k in cv) {
+      const c = cv[k], r = c.parentElement.getBoundingClientRect();
+      c.width = Math.round(r.width * dpr); c.height = Math.round(r.height * dpr);
+      c.style.width = r.width + 'px'; c.style.height = r.height + 'px';
+      dims[k] = { W: r.width, H: r.height };
+    }
+    schedule();
+  }
+  function begin(k, T) {
+    const ctx = ctxs[k], { W, H } = dims[k];
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    return [ctx, W, H];
+  }
+  function arrow(ctx, x0, y0, x1, y1, color, lw) {
+    const len = Math.hypot(x1 - x0, y1 - y0);
+    if (len < 3) return;
+    const ang = Math.atan2(y1 - y0, x1 - x0), head = 3 + lw * 2.4;
+    ctx.save();
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - Math.cos(ang) * head * 0.6, y1 - Math.sin(ang) * head * 0.6); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x1 + Math.cos(ang + 2.6) * head, y1 + Math.sin(ang + 2.6) * head);
+    ctx.lineTo(x1 + Math.cos(ang - 2.6) * head, y1 + Math.sin(ang - 2.6) * head);
+    ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+  function label(ctx, T, text, x, y, align, color, font) {
+    ctx.save();
+    ctx.font = font; ctx.textAlign = align; ctx.textBaseline = 'middle';
+    const w = ctx.measureText(text).width, h = parseFloat(font.match(/(\d+(\.\d+)?)px/)[1]) + 4;
+    const lx = align === 'center' ? x - w / 2 : align === 'right' ? x - w : x;
+    ctx.globalAlpha = 0.85; ctx.fillStyle = T.canvas; ctx.fillRect(lx - 3, y - h / 2, w + 6, h); ctx.globalAlpha = 1;
+    ctx.fillStyle = color; ctx.fillText(text, x, y);
+    ctx.restore();
+  }
+  const nowT = () => tau - D.Per / 4;
+
+  // ---------- top view ----------
+  let TV = { cx: 0, cy: 0, s: 1 };
+  function drawTop(T) {
+    const [ctx, W, H] = begin('top', T), S = T.S, mono = monoFont();
+    const Ms = 1 - D.q, F = D.F;
+    // planet path relative to barycenter: -(1-q) r u ; screen y up = away from Earth
+    const pts = D.path.map(([r, th]) => [-Ms * r * Math.cos(th), -Ms * r * Math.sin(th)]);
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    for (const [x, y] of pts) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+    const padT = 34 * S, padB = 58 * S, padX = 18 * S;
+    const s = Math.min((W - 2 * padX) / (x1 - x0), (H - padT - padB) / (y1 - y0));
+    const cx = W / 2 - s * (x0 + x1) / 2, cy = padT + (H - padT - padB) / 2 + s * (y0 + y1) / 2;
+    TV = { cx, cy, s };
+    const P2 = (x, y) => [cx + x * s, cy - y * s];
+
+    // line of sight through the barycenter
+    ctx.save(); ctx.strokeStyle = T.grid; ctx.lineWidth = 1 * S; ctx.setLineDash([3 * S, 4 * S]);
+    ctx.beginPath(); ctx.moveTo(cx, padT - 6 * S); ctx.lineTo(cx, H - padB + 8 * S); ctx.stroke(); ctx.restore();
+
+    // planet orbit
+    ctx.save(); ctx.strokeStyle = T.field; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.4 * S; ctx.beginPath();
+    pts.forEach(([x, y], j) => { const [px, py] = P2(x, y); j ? ctx.lineTo(px, py) : ctx.moveTo(px, py); });
+    ctx.closePath(); ctx.stroke(); ctx.restore();
+
+    // star path, exaggerated by F
+    const sq = D.q * F;
+    ctx.save(); ctx.strokeStyle = T.equi; ctx.lineWidth = 1.5 * S; ctx.setLineDash([4 * S, 3 * S]); ctx.beginPath();
+    D.path.forEach(([r, th], j) => { const [px, py] = P2(sq * r * Math.cos(th), sq * r * Math.sin(th)); j ? ctx.lineTo(px, py) : ctx.moveTo(px, py); });
+    ctx.closePath(); ctx.stroke(); ctx.restore();
+
+    // conjunction and periastron marks on the planet orbit
+    const rc = D.a * (1 - P.e * P.e) / (1 + P.e * Math.sin(D.w));
+    const [qx, qy] = P2(0, -Ms * rc);
+    ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * S;
+    ctx.beginPath(); ctx.moveTo(qx - 6 * S, qy); ctx.lineTo(qx + 6 * S, qy); ctx.stroke(); ctx.restore();
+    const f11 = `600 ${11 * S}px ${mono}`;
+    label(ctx, T, D.transits ? 'transit here' : 'nearest our line of sight', qx + 9 * S, qy + 9 * S, 'left', T.muted, f11);
+    if (P.e > 0.04) {
+      const rper = D.a * (1 - P.e);
+      const [px, py] = P2(-Ms * rper * Math.cos(D.w), -Ms * rper * Math.sin(D.w));
+      ctx.fillStyle = T.muted; ctx.beginPath(); ctx.arc(px, py, 3 * S, 0, TAU); ctx.fill();
+      label(ctx, T, 'periastron', px, py - 11 * S, 'center', T.muted, f11);
+    }
+
+    // barycenter
+    ctx.save(); ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * S;
+    ctx.beginPath(); ctx.moveTo(cx - 5 * S, cy); ctx.lineTo(cx + 5 * S, cy); ctx.moveTo(cx, cy - 5 * S); ctx.lineTo(cx, cy + 5 * S); ctx.stroke(); ctx.restore();
+
+    // bodies now
+    const st = state(nowT()), ux = Math.cos(st.th), uy = Math.sin(st.th);
+    const [sx, sy] = P2(sq * st.r * ux, sq * st.r * uy);
+    const [px, py] = P2(-Ms * st.r * ux, -Ms * st.r * uy);
+    const rsPx = Math.max(D.Rs * s, 7 * S), rpPx = Math.max(D.Rp * s, 3.5 * S);
+    // star glow and disk
+    ctx.save();
+    ctx.fillStyle = T.star; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(sx, sy, rsPx + 4 * S, 0, TAU); ctx.fill();
+    ctx.globalAlpha = 1; ctx.beginPath(); ctx.arc(sx, sy, rsPx, 0, TAU); ctx.fill();
+    ctx.restore();
+    // star velocity arrow, colored by line of sight motion
+    const v = vr(st), vs = D.vmax > 0 ? Math.min(1, Math.hypot(-uy - P.e * Math.sin(D.w), ux + P.e * Math.cos(D.w)) / (1 + P.e)) : 0;
+    if (D.K > 0 || D.q > 0) {
+      const vx = -uy - P.e * Math.sin(D.w), vy = ux + P.e * Math.cos(D.w), m = Math.hypot(vx, vy) || 1;
+      const L = (16 + 22 * vs) * S;
+      arrow(ctx, sx + vx / m * (rsPx + 3 * S), sy - vy / m * (rsPx + 3 * S), sx + vx / m * (rsPx + 3 * S + L), sy - vy / m * (rsPx + 3 * S + L),
+            v >= 0 ? T.pos : T.neg, 2 * S);
+    }
+    ctx.fillStyle = T.field; ctx.beginPath(); ctx.arc(px, py, rpPx, 0, TAU); ctx.fill();
+    ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5 * S; ctx.stroke();
+
+    // observer
+    const ay0 = H - padB + 14 * S, ay1 = H - 26 * S;
+    if (P.inc > 0.05) arrow(ctx, cx, ay0, cx, ay1, T.ink, 2 * S);
+    const f12 = `700 ${12 * S}px ${uiFont()}`;
+    const elev = 90 - P.inc;
+    const obsTxt = P.inc <= 0.05 ? 'Earth is straight above the page' : elev < 0.05 ? 'To Earth, in this plane' : `To Earth, ${elev.toFixed(1)}° above this plane`;
+    label(ctx, T, obsTxt, cx, H - 14 * S, 'center', T.ink, f12);
+    ctx.save(); ctx.font = `${10.5 * S}px ${mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText('star wobble ×' + comma(F), 8 * S, H - padB + 4 * S);
+    ctx.fillText('sizes not to scale', 8 * S, H - padB + 18 * S);
+    ctx.restore();
+  }
+
+  // ---------- telescope view ----------
+  function drawSide(T) {
+    const [ctx, W, H] = begin('side', T), S = T.S, mono = monoFont();
+    const padT = 30 * S, padB = 26 * S;
+    const R0 = Math.max(10, Math.min(W * 0.28, (H - padT - padB) * 0.36));
+    const cx = W / 2, cy = padT + (H - padT - padB) / 2;
+    const sc = R0 / D.Rs;
+    const sky = (st) => [cx - st.r * Math.cos(st.th) * sc, cy + st.r * Math.sin(st.th) * Math.cos(D.i) * sc];
+
+    // projected orbit, far half first, then star, then near half
+    const proj = D.path.map(([r, th]) => ({ r, th }));
+    const halfPath = (near) => {
+      ctx.beginPath(); let pen = false;
+      for (const p of proj) {
+        const ok = (Math.sin(p.th) > 0) === near;
+        if (!ok) { pen = false; continue; }
+        const [x, y] = sky(p);
+        if (pen) ctx.lineTo(x, y); else { ctx.moveTo(x, y); pen = true; }
+      }
+      ctx.stroke();
+    };
+    ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * S; ctx.globalAlpha = 0.6; ctx.setLineDash([4 * S, 4 * S]);
+    halfPath(false); ctx.restore();
+
+    const st = state(nowT());
+    const [px, py] = sky(st), rpPx = Math.max(D.Rp * sc, 1.5 * S), behind = Math.sin(st.th) <= 0;
+    const drawPlanet = () => {
+      ctx.fillStyle = T.planet; ctx.beginPath(); ctx.arc(px, py, rpPx, 0, TAU); ctx.fill();
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * S; ctx.stroke();
+    };
+    if (behind) drawPlanet();
+
+    // limb darkened star
+    const C = rgb(T.star), g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R0);
+    for (let j = 0; j <= 10; j++) {
+      const r = Math.min(j / 10, 0.999), f = I(r);
+      g.addColorStop(r, `rgb(${Math.round(C[0] * f)},${Math.round(C[1] * f)},${Math.round(C[2] * f)})`);
+    }
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R0, 0, TAU); ctx.fill();
+
+    ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * S; ctx.globalAlpha = 0.9; ctx.setLineDash([4 * S, 4 * S]);
+    halfPath(true); ctx.restore();
+    if (!behind) drawPlanet();
+
+    const f11 = `600 ${11 * S}px ${mono}`;
+    ctx.save(); ctx.font = f11; ctx.fillStyle = T.muted; ctx.textBaseline = 'bottom'; ctx.textAlign = 'left';
+    ctx.fillText(minus(`b = ${D.b < 100 ? D.b.toFixed(2) : sig(D.b, 3)}`), 8 * S, H - 8 * S);
+    ctx.textAlign = 'right';
+    ctx.fillText('planet to scale with star', W - 8 * S, H - 8 * S);
+    ctx.restore();
+    if (slowNow) label(ctx, T, 'slow motion', W - 10 * S, padT - 12 * S, 'right', T.accent, `700 ${11 * S}px ${uiFont()}`);
+    if (!D.transits && P.inc > 0) {
+      label(ctx, T, 'no transit from here', cx, cy + R0 + 12 * S > H - padB ? padT : cy + R0 + 12 * S, 'center', T.ink, `700 ${12 * S}px ${uiFont()}`);
+    }
+  }
+
+  // ---------- charts ----------
+  const CH = { lc: { x0: 0, x1: 1, t0: 0, t1: 1 }, rv: { x0: 0, x1: 1, t0: 0, t1: 1 } };
+  function timeUnit(span) {
+    if (span < 3 * DAY) return { f: 3600, name: 'h' };
+    if (span < 3 * YEAR) return { f: DAY, name: 'd' };
+    return { f: YEAR, name: 'yr' };
+  }
+  function axes(ctx, T, W, H, pad, t0, t1, yLo, yHi, ytick, title, xname) {
+    const S = T.S, mono = monoFont();
+    const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+    const X = (t) => pad.l + (t - t0) / (t1 - t0) * pw, Y = (y) => pad.t + (yHi - y) / (yHi - yLo) * ph;
+    const u = timeUnit(t1 - t0), xs = niceStep((t1 - t0) / u.f / Math.max(3, pw / (90 * S)));
+    ctx.lineWidth = 1; ctx.strokeStyle = T.grid; ctx.beginPath();
+    const xticks = [];
+    for (let v = Math.ceil(t0 / u.f / xs) * xs; v * u.f <= t1 + 1e-9; v += xs) { xticks.push(v); const px = Math.round(X(v * u.f)) + 0.5; ctx.moveTo(px, pad.t); ctx.lineTo(px, pad.t + ph); }
+    const ys = niceStep((yHi - yLo) / 3);
+    const yticks = [];
+    for (let v = Math.ceil(yLo / ys) * ys; v <= yHi + 1e-12; v += ys) { yticks.push(v); const py = Math.round(Y(v)) + 0.5; ctx.moveTo(pad.l, py); ctx.lineTo(pad.l + pw, py); }
+    ctx.stroke();
+    ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(pad.l + 0.5, pad.t); ctx.lineTo(pad.l + 0.5, pad.t + ph); ctx.lineTo(pad.l + pw, pad.t + ph + 0.5); ctx.stroke();
+    ctx.font = `${10.5 * S}px ${mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    xticks.forEach((v, j) => {
+      const lab = fmtTick(v, xs) + (j === xticks.length - 1 ? ' ' + u.name : '');
+      const x = X(v * u.f);
+      ctx.textAlign = x > pad.l + pw - 24 * S ? 'right' : 'center';
+      ctx.fillText(lab, x, pad.t + ph + 4 * S);
+    });
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (const v of yticks) ctx.fillText(ytick(v, ys), pad.l - 6 * S, Y(v));
+    ctx.font = `700 ${11.5 * S}px ${uiFont()}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = T.muted;
+    ctx.fillText(title, pad.l, pad.t - 8 * S);
+    const tw = ctx.measureText(title).width;
+    ctx.font = `${10.5 * S}px ${uiFont()}`; ctx.textAlign = 'right';
+    if (tw + ctx.measureText(xname).width + 16 * S < pw) ctx.fillText(xname, pad.l + pw, pad.t - 8 * S);
+    return { X, Y, pw, ph };
+  }
+  function polyline(ctx, pts, X, Y, upto) {
+    ctx.beginPath(); let n = 0;
+    for (const p of pts) {
+      if (upto != null && p[0] > upto) break;
+      const x = X(p[0]), y = Y(p[1]);
+      n++ ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+  }
+  function cursor(ctx, T, X, pad, ph, t, t0, t1) {
+    if (t < t0 || t > t1) return;
+    ctx.save(); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * T.S;
+    const x = X(t); ctx.beginPath(); ctx.moveTo(x, pad.t); ctx.lineTo(x, pad.t + ph); ctx.stroke(); ctx.restore();
+  }
+
+  function drawLC(T) {
+    const [ctx, W, H] = begin('lc', T), S = T.S;
+    const pad = { l: 66 * S, r: 12 * S, t: (W < 560 ? 58 : 34) * S, b: 22 * S };   // narrow: title goes under the span buttons
+    const zoom = lcMode === 'zoom';
+    const t0 = zoom ? -D.zh : -D.Per / 4, t1 = zoom ? D.zh : 0.75 * D.Per;
+    CH.lc = { x0: pad.l, x1: W - pad.r, t0, t1 };
+    const sf = sigF(), dip = Math.max(1 - D.fmin, D.depth, 1e-6);
+    const span = Math.max(dip * 1.25, 4 * sf);
+    const yLo = 1 - span, yHi = 1 + Math.max(0.25 * dip, 3 * sf);
+    const ppm = span < 0.02;
+    const ytick = (v, st) => ppm ? minus(comma((v - 1) * 1e6)) : fmtTick(v, st);
+    const { X, Y, ph } = axes(ctx, T, W, H, pad, t0, t1, yLo, yHi, ytick, ppm ? 'Brightness change (ppm)' : 'Relative brightness', zoom ? 'time from mid transit' : 'time from conjunction');
+    const pts = zoom ? D.lcZoom : D.lcOrbit, now = nowT();
+
+    ctx.save();
+    ctx.beginPath(); ctx.rect(pad.l, pad.t - 2, W - pad.l - pad.r, ph + 4); ctx.clip();
+    if (!D.transits) {   // what an edge on transit would show
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * S; ctx.setLineDash([2 * S, 4 * S]);
+      ctx.beginPath(); ctx.moveTo(pad.l, Y(1 - D.depth)); ctx.lineTo(W - pad.r, Y(1 - D.depth)); ctx.stroke(); ctx.setLineDash([]);
+    }
+    if (showModel) {
+      ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.7; ctx.lineWidth = 1.2 * S; ctx.setLineDash([5 * S, 4 * S]);
+      polyline(ctx, pts, X, Y); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    }
+    if (sf > 0) {
+      const obs = zoom ? D.obsZoom : D.obsOrbit;
+      ctx.fillStyle = T.muted;
+      for (const o of obs) { if (o[0] > now) break; ctx.beginPath(); ctx.arc(X(o[0]), Y(o[1] + sf * o[3]), 1.9 * S, 0, TAU); ctx.fill(); }
+    }
+    if (showModel || sf === 0) {
+      ctx.strokeStyle = T.field; ctx.lineWidth = 2.2 * S; ctx.lineJoin = 'round';
+      polyline(ctx, pts, X, Y, now);
+    }
+    ctx.restore();
+    if (!D.transits) label(ctx, T, 'depth if it transited', W - pad.r - 4 * S, Y(1 - D.depth) - 9 * S, 'right', T.muted, `${10.5 * S}px ${monoFont()}`);
+    cursor(ctx, T, X, pad, ph, now, t0, t1);
+  }
+
+  function drawRV(T) {
+    const [ctx, W, H] = begin('rv', T), S = T.S;
+    const pad = { l: 66 * S, r: 12 * S, t: 34 * S, b: 22 * S };
+    const t0 = -D.Per / 4, t1 = 0.75 * D.Per;
+    CH.rv = { x0: pad.l, x1: W - pad.r, t0, t1 };
+    const sv = sigV(), top = Math.max(D.vmax * 1.2, 3.2 * sv, 1e-4);
+    const { X, Y, ph } = axes(ctx, T, W, H, pad, t0, t1, -top, top, (v, st) => fmtTick(v, st),
+      'Star radial velocity (m/s), + away', 'time from conjunction');
+    const now = nowT();
+    ctx.save(); ctx.beginPath(); ctx.rect(pad.l, pad.t - 2, W - pad.l - pad.r, ph + 4); ctx.clip();
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(pad.l, Math.round(Y(0)) + 0.5); ctx.lineTo(W - pad.r, Math.round(Y(0)) + 0.5); ctx.stroke();
+    if (showModel) {
+      ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.7; ctx.lineWidth = 1.2 * S; ctx.setLineDash([5 * S, 4 * S]);
+      polyline(ctx, D.rvS, X, Y); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    }
+    if (sv > 0) {
+      ctx.fillStyle = T.muted;
+      for (const o of D.obsOrbit) { if (o[0] > now) break; ctx.beginPath(); ctx.arc(X(o[0]), Y(o[2] + sv * o[4]), 1.9 * S, 0, TAU); ctx.fill(); }
+    }
+    if (showModel || sv === 0) {
+      ctx.lineWidth = 2.4 * S; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      const pts = D.rvS;
+      for (let j = 1; j < pts.length; j++) {
+        if (pts[j][0] > now) break;
+        ctx.strokeStyle = pts[j][1] + pts[j - 1][1] >= 0 ? T.pos : T.neg;
+        ctx.beginPath(); ctx.moveTo(X(pts[j - 1][0]), Y(pts[j - 1][1])); ctx.lineTo(X(pts[j][0]), Y(pts[j][1])); ctx.stroke();
+      }
+    }
+    ctx.restore();
+    // K marker
+    if (D.K > 0) {
+      ctx.save(); ctx.strokeStyle = T.equi; ctx.lineWidth = 1 * S; ctx.setLineDash([2 * S, 3 * S]);
+      const mid = D.K * P.e * Math.cos(D.w);
+      for (const v of [mid + D.K, mid - D.K]) { ctx.beginPath(); ctx.moveTo(pad.l, Y(v)); ctx.lineTo(W - pad.r, Y(v)); ctx.stroke(); }
+      ctx.restore();
+      label(ctx, T, 'K = ' + fmtV(D.K), pad.l + 6 * S, Y(mid - D.K) - 9 * S, 'left', T.equi, `600 ${10.5 * S}px ${monoFont()}`);
+    }
+    cursor(ctx, T, X, pad, ph, now, t0, t1);
+  }
+
+  // ---------- panel ----------
+  function updateReadouts() {
+    $('msOut').textContent = P.ms.toFixed(2) + ' M☉';
+    $('rsOut').textContent = sig(P.rs) + ' R☉';
+    $('mpOut').innerHTML = fmtMp(P.mp);
+    $('rpOut').innerHTML = fmtRp(P.rp);
+    $('aOut').textContent = sig(P.a) + ' AU';
+    $('eOut').textContent = P.e.toFixed(2);
+    $('incOut').textContent = P.inc.toFixed(1) + '°';
+    $('wOut').textContent = P.w.toFixed(0) + '°';
+    $('noiseOut').textContent = P.noise === 0 ? 'none' : `${sig(sigF() * 1e6, 2)} ppm, ${sig(sigV(), 2)} m/s`;
+    $('rP').textContent = fmtPeriod(D.Per);
+    $('rK').textContent = fmtV(D.K);
+    $('rDepth').textContent = fmtPpm(D.depth * 1e6);
+    $('rDur').textContent = D.transits ? sig(D.T14 / 3600) + ' h' : '—';
+    $('rTr').textContent = D.transits ? (D.full ? 'yes' : 'grazing') : 'no';
+    $('rTr').className = D.transits ? 'pos' : '';
+    const pr = D.prob * 100;
+    $('rProb').textContent = (pr >= 100 ? '100' : pr >= 10 ? pr.toFixed(0) : pr >= 1 ? pr.toFixed(1) : sig(pr, 2)) + '%';
+    $('rMsini').innerHTML = fmtMp(P.mp * Math.sin(D.i));
+    const rho = D.mpKg / (4 / 3 * Math.PI * D.Rp ** 3) / 1000;
+    $('rRho').textContent = sig(rho, 3) + ' g/cm³';
+    const st = state(nowT()), v = vr(st);
+    $('rVnow').textContent = (v > 0 ? '+' : '') + fmtV(v);
+    $('rVnow').className = v > 1e-9 ? 'pos' : v < -1e-9 ? 'neg' : '';
+    const f = flux(nowT());
+    $('rFnow').textContent = f === 1 ? '1' : minus('−' + fmtPpm((1 - f) * 1e6));
+    $('insideWarn').hidden = !D.inside;
+  }
+
+  // ---------- scheduling ----------
+  function schedule() { if (!raf) raf = requestAnimationFrame(frame); }
+  function rate() {
+    const base = D.Per / ORBIT_SECONDS * speed;
+    slowNow = false;
+    if (slowmo && D.transits && Math.abs(nowT()) < D.zh) {
+      const slow = 2 * D.zh / 4 * speed;   // about 4 s across the zoom window at 1x
+      if (slow < base) { slowNow = true; return slow; }
+    }
+    return base;
+  }
+  function frame(now) {
+    raf = 0;
+    if (dirty) { const frac = D ? tau / D.Per : 0.03; derive(); tau = ((frac % 1) + 1) % 1 * D.Per; dirty = false; }
+    if (playing && !scrub) {
+      if (last != null) { tau += rate() * Math.min(0.1, (now - last) / 1000); tau %= D.Per; }
+      last = now;
+    } else { last = null; rate(); }
+    const T = tokens();
+    if (dims.top && dims.top.W) drawTop(T);
+    if (dims.side && dims.side.W) drawSide(T);
+    if (dims.lc && dims.lc.W) drawLC(T);
+    if (dims.rv && dims.rv.W) drawRV(T);
+    updateReadouts();
+    if (playing) schedule();
+  }
+  function changed() { dirty = true; schedule(); }
+
+  // ---------- controls ----------
+  const LOG = { rs: [0.08, 3], mp: [0.1, 13 * MJ], rp: [0.3, 2.2 * RJ], a: [0.01, 5.21] };
+  const toU = (k, v) => 1000 * Math.log(v / LOG[k][0]) / Math.log(LOG[k][1] / LOG[k][0]);
+  const fromU = (k, u) => LOG[k][0] * Math.pow(LOG[k][1] / LOG[k][0], u / 1000);
+  const IDS = ['ms', 'rs', 'mp', 'rp', 'a', 'e', 'inc', 'w', 'noise'];
+  function syncSliders() { for (const k of IDS) $(k).value = LOG[k] ? toU(k, P[k]) : P[k]; }
+  function setPressed(sel, attr, val) {
+    for (const b of document.querySelectorAll(sel + ' button')) b.setAttribute('aria-pressed', String(b.dataset[attr] === val));
+  }
+  function applyPreset(name) {
+    Object.assign(P, PRESETS[name]);
+    setPressed('#presets', 'p', name);
+    $('presetHint').textContent = HINTS[name];
+    syncSliders(); D = null; tau = 0; changed();
+  }
+  for (const k of IDS) {
+    $(k).addEventListener('input', (e) => {
+      P[k] = LOG[k] ? +sig(fromU(k, +e.target.value), 3) : +e.target.value;
+      if (k !== 'noise') { setPressed('#presets', 'p', null); $('presetHint').textContent = 'Your own system. Pick a preset to start from a known one.'; }
+      changed();
+    });
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => { speed = +b.dataset.s; setPressed('#speedSeg', 's', b.dataset.s); });
+  for (const b of document.querySelectorAll('#lcSeg button')) b.addEventListener('click', () => { lcMode = b.dataset.lc; setPressed('#lcSeg', 'lc', lcMode); schedule(); });
+  $('tSlow').addEventListener('change', (e) => { slowmo = e.target.checked; schedule(); });
+  $('tModel').addEventListener('change', (e) => { showModel = e.target.checked; schedule(); });
+  function setPlaying(p) { playing = p; $('play').textContent = p ? 'Pause' : 'Play'; last = null; schedule(); }
+  $('play').addEventListener('click', () => setPlaying(!playing));
+  $('reset').addEventListener('click', () => { tau = 0; schedule(); });
+
+  // time scrubbing
+  const setT = (t) => { tau = (((t + D.Per / 4) % D.Per) + D.Per) % D.Per; schedule(); };
+  function topAt(e) {
+    const r = cv.top.getBoundingClientRect();
+    const x = (e.clientX - r.left - TV.cx) / TV.s, y = -(e.clientY - r.top - TV.cy) / TV.s;
+    if (Math.hypot(x, y) < 1e-12) return;
+    const th = Math.atan2(y, x) + Math.PI, nu = th - D.w, e2 = P.e;   // planet sits opposite the star
+    const E = 2 * Math.atan2(Math.sqrt(1 - e2) * Math.sin(nu / 2), Math.sqrt(1 + e2) * Math.cos(nu / 2));
+    setT(D.tp + (E - e2 * Math.sin(E)) / D.n);
+  }
+  function chartAt(k, e) {
+    const r = cv[k].getBoundingClientRect(), c = CH[k];
+    const u = Math.min(1, Math.max(0, (e.clientX - r.left - c.x0) / (c.x1 - c.x0)));
+    setT(c.t0 + u * (c.t1 - c.t0));
+  }
+  function bindScrub(k, fn) {
+    const c = cv[k];
+    c.addEventListener('pointerdown', (e) => { c.focus({ preventScroll: true }); scrub = k; c.setPointerCapture(e.pointerId); if (k === 'top') c.style.cursor = 'grabbing'; fn(e); });
+    c.addEventListener('pointermove', (e) => { if (scrub === k) fn(e); });
+    const end = () => { if (scrub === k) { scrub = null; last = null; if (k === 'top') c.style.cursor = 'grab'; schedule(); } };
+    c.addEventListener('pointerup', end); c.addEventListener('pointercancel', end);
+  }
+  bindScrub('top', topAt);
+  bindScrub('lc', (e) => chartAt('lc', e));
+  bindScrub('rv', (e) => chartAt('rv', e));
+
+  function onKey(e) {
+    const big = e.shiftKey;
+    const stepT = (lcMode === 'zoom' && e.currentTarget === cv.lc ? 2 * D.zh : D.Per) / (big ? 20 : 200);
+    if (e.key === 'ArrowRight') setT(nowT() + stepT);
+    else if (e.key === 'ArrowLeft') setT(nowT() - stepT);
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      const d = (big ? 1 : 0.1) * (e.key === 'ArrowUp' ? 1 : -1);
+      P.inc = Math.round(Math.min(90, Math.max(0, P.inc + d)) * 10) / 10; $('inc').value = P.inc;
+      setPressed('#presets', 'p', null); changed();
+    } else if (e.key === ' ') setPlaying(!playing);
+    else return;
+    e.preventDefault();
+  }
+  for (const k in cv) cv[k].addEventListener('keydown', onKey);
+
+  // projector mode
+  const root = document.documentElement;
+  function setProjector(on) {
+    if (on) root.setAttribute('data-projector', 'on'); else root.removeAttribute('data-projector');
+    $('proj').setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('virtualdemos.projector', on ? 'on' : 'off'); } catch (_) {}
+  }
+  $('proj').addEventListener('click', () => setProjector(root.getAttribute('data-projector') !== 'on'));
+  try { if (localStorage.getItem('virtualdemos.projector') === 'on') setProjector(true); } catch (_) {}
+
+  // theme changes
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', schedule); } catch (_) {}
+  new MutationObserver(schedule).observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-projector', 'class', 'style'] });
+
+  // ---------- boot ----------
+  try { if (matchMedia('(prefers-reduced-motion: reduce)').matches) playing = false; } catch (_) {}
+  $('play').textContent = playing ? 'Pause' : 'Play';
+  Object.assign(P, PRESETS.hotj, { noise: 0 });
+  $('presetHint').textContent = HINTS.hotj;
+  syncSliders();
+  derive(); tau = 0.03 * D.Per; dirty = false;
+  new ResizeObserver(resize).observe(stage);
+  resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+
+  // exposed for testing
+  window.__exo = { P, get D() { return D; }, derive, flux, blocked, PRESETS, applyPreset };
+})();
+</script>
+</body>
+</html>
