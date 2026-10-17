@@ -161,12 +161,15 @@ def main():
              "--ignore-gpu-blocklist"]
     total, failed = 0, []
     with sync_playwright() as p:
-        browser = p.chromium.launch(args=flags)
+        # software WebGL only for the three.js demos: it slows 2D animation to a few frames per second
+        browser_gl = p.chromium.launch(args=flags)
+        browser_2d = p.chromium.launch()
         for demo in demos:
             text = demo.read_text(encoding="utf-8", errors="replace")
             if "</html>" not in text[-2000:]:
                 print(f"skip {demo.name}: looks unfinished")
                 continue
+            browser = browser_gl if "three" in text and "cdnjs" in text else browser_2d
             for scheme in ("light", "dark"):
                 out = OUT / f"{demo.stem}-{scheme}.webp"
                 try:
@@ -179,7 +182,8 @@ def main():
                 total += size
                 note = f"  page errors: {errors[0][:80]}" if errors else ""
                 print(f"{out.name:34s} {size/1000:5.1f} kB  q{q}{note}")
-        browser.close()
+        browser_gl.close()
+        browser_2d.close()
     print(f"total {total/1000:.0f} kB")
     if failed:
         print("failed:", " ".join(sorted(set(failed))))
