@@ -1,0 +1,1524 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Black Holes and Lensing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one canvas in the stage. Left: the lensed sky, the ray traced view or the radial diagram; right: plots. Instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --hole: #05070a;
+  --sky: #03050a;
+  --sky-ink: #e3e8ef;
+  --sky-muted: #8d99ab;
+  --sky-accent: #7fb0ff;
+  --sky-gold: #f0c35a;
+  --sky-pos: #ff8a70;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --hole: #000000; color-scheme: dark;
+    --sky: #020307; --sky-ink: #e3e8ef; --sky-muted: #8d99ab; --sky-accent: #7fb0ff; --sky-gold: #f0c35a; --sky-pos: #ff8a70;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --hole: #000000; color-scheme: dark;
+  --sky: #020307; --sky-ink: #e3e8ef; --sky-muted: #8d99ab; --sky-accent: #7fb0ff; --sky-gold: #f0c35a; --sky-pos: #ff8a70;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.nw { white-space: nowrap; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#can { touch-action: none; outline: none; }
+#can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .list dd { font-size: 0.88rem; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.flag { margin: 0; font-size: 0.88rem; font-weight: 700; border: 1px solid var(--pos); color: var(--pos); border-radius: 6px; padding: 7px 10px; }
+.flag.safe { border-color: var(--accent); color: var(--accent); }
+.flag span { display: block; font-weight: 400; color: var(--ink); margin-top: 2px; }
+.formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.ring { border-color: var(--accent); border-top-style: dashed; }
+.swatch.gold { border-color: var(--equi); border-top-width: 3px; }
+.swatch.dash { border-color: var(--muted); border-top-style: dashed; }
+.swatch.dot { width: 10px; height: 10px; border: 0; border-radius: 50%; margin: 0 6px; background: var(--accent); }
+.swatch.red { border-color: var(--pos); border-top-width: 3px; }
+kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 4px; background: var(--canvas); color: var(--ink); }
+
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 92vh; min-height: 680px; }
+  .rail { overflow: visible; }
+}
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Black Holes and Lensing</h1>
+      <p>Mass bends light. Slide a background galaxy behind a lens to make an Einstein ring, watch a microlensing event, ray trace a black hole's shadow, and see what gravity does to clocks, light and a person near the horizon.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono"><span class="nw">r<sub>s</sub> = 2GM/c²</span> · <span class="nw">θ<sub>E</sub>² = 2r<sub>s</sub> D<sub>LS</sub>/(D<sub>L</sub>D<sub>S</sub>)</span> · <span class="nw">M<sub>sun</sub> = 1.989 × 10³⁰ kg</span></div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View">
+          <button type="button" data-v="lens" aria-pressed="true">Lensing</button>
+          <button type="button" data-v="ray" aria-pressed="false">Ray traced</button>
+          <button type="button" data-v="near" aria-pressed="false">Near the hole</button>
+        </div>
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="reset">Reset</button>
+        <span class="count mono" id="count" aria-live="off"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="Lensing view: a background sky and source seen through a point mass lens, with a microlensing light curve and the image positions. Drag the true position of the source, its edge to change its size, an image marker, or the time marker on the light curve. Ray traced view: the exact view of a Schwarzschild black hole from a static observer, with light paths on the right; drag the galaxy's true position. Near the hole view: drag the observer along the radial axis or along a plot. Keys: arrows move the source or the observer, Shift for bigger steps, space plays or pauses, V changes the view, G changes the source shape, R resets."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="ring" aria-pressed="false">Einstein ring</button>
+          <button type="button" data-p="two" aria-pressed="false">Two images</button>
+          <button type="button" data-p="micro" aria-pressed="true">Microlensing event</button>
+          <button type="button" data-p="stellar" aria-pressed="false">Close to a stellar black hole</button>
+          <button type="button" data-p="sgr" aria-pressed="false">Sagittarius A*</button>
+          <button type="button" data-p="m87" aria-pressed="false">M87*</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2 id="massH">Lens mass</h2>
+        <div>
+          <div class="slider-head"><label for="logM">Mass M</label><output id="mOut" class="mono" for="logM"></output></div>
+          <input type="range" id="logM" min="-1" max="13" step="0.01" value="0">
+        </div>
+        <dl class="readout">
+          <div class="wide big"><dt>Schwarzschild radius r<sub>s</sub> = 2GM/c²</dt><dd id="rRs">—</dd></div>
+          <div><dt>Photon sphere 1.5 r<sub>s</sub></dt><dd id="rPh">—</dd></div>
+          <div><dt>ISCO 3 r<sub>s</sub></dt><dd id="rIsco">—</dd></div>
+          <div class="wide" id="objRow" hidden><dt id="objLab">Seen from Earth</dt><dd id="rObj" class="list">—</dd></div>
+        </dl>
+        <p class="hint">For scale: 10 M<sub>sun</sub> gives r<sub>s</sub> = 29.5 km, Sagittarius A* (4.3 × 10⁶ M<sub>sun</sub>) 0.085 AU, M87* (6.5 × 10⁹ M<sub>sun</sub>) 128 AU. r<sub>s</sub> grows in proportion to M.</p>
+      </section>
+
+      <section id="secLens">
+        <h2>Lens and distances</h2>
+        <div>
+          <div class="slider-head"><label for="logDL">Lens distance D<sub>L</sub></label><output id="dlOut" class="mono" for="logDL"></output></div>
+          <input type="range" id="logDL" min="-1" max="6.5" step="0.01" value="0.6">
+        </div>
+        <div>
+          <div class="slider-head"><label for="logDS">Source distance D<sub>S</sub></label><output id="dsOut" class="mono" for="logDS"></output></div>
+          <input type="range" id="logDS" min="-0.9" max="6.6" step="0.01" value="0.9">
+        </div>
+        <dl class="readout">
+          <div class="wide big"><dt>Einstein radius θ<sub>E</sub></dt><dd id="rTE">—</dd></div>
+          <div><dt>At the lens, R<sub>E</sub> = θ<sub>E</sub>D<sub>L</sub></dt><dd id="rRE">—</dd></div>
+          <div><dt>Crossing time t<sub>E</sub> at 200 km/s</dt><dd id="rtE">—</dd></div>
+        </dl>
+        <p class="hint">The angles in the picture are in units of θ<sub>E</sub>, so the picture itself depends only on where the source is. The mass and distances set what θ<sub>E</sub> is in arcseconds.</p>
+      </section>
+
+      <section id="secSrc">
+        <h2>Source</h2>
+        <div class="inline">
+          <span class="lab">Shape</span>
+          <div class="seg" role="group" aria-label="Source shape">
+            <button type="button" id="shGal" aria-pressed="true">Spiral galaxy</button>
+            <button type="button" id="shDisk" aria-pressed="false">Uniform disk</button>
+          </div>
+        </div>
+        <div>
+          <div class="slider-head"><label for="rho">Source radius ρ</label><output id="rhoOut" class="mono" for="rho"></output></div>
+          <input type="range" id="rho" min="0.02" max="1" step="0.005" value="0.08">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sx">Along the track, x = (t − t₀)/t<sub>E</sub></label><output id="sxOut" class="mono" for="sx"></output></div>
+          <input type="range" id="sx" min="-2.5" max="2.5" step="0.001" value="-2">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sy">Track offset u₀</label><output id="syOut" class="mono" for="sy"></output></div>
+          <input type="range" id="sy" min="-1.5" max="1.5" step="0.001" value="0.3">
+        </div>
+        <label class="check"><input type="checkbox" id="stars" checked>Background stars and faint galaxies</label>
+        <dl class="readout">
+          <div><dt>Source offset u</dt><dd id="rU">—</dd></div>
+          <div><dt>Image separation</dt><dd id="rSep">—</dd></div>
+          <div><dt>Image 1, θ₊ (outside)</dt><dd id="rT1">—</dd></div>
+          <div><dt>Image 2, θ₋ (inside)</dt><dd id="rT2">—</dd></div>
+          <div><dt>μ₊</dt><dd id="rM1">—</dd></div>
+          <div><dt>μ₋ (negative: flipped)</dt><dd id="rM2">—</dd></div>
+          <div class="wide big"><dt>Point source A = |μ₊| + |μ₋| = (u² + 2)/(u√(u² + 4))</dt><dd id="rA">—</dd></div>
+          <div class="wide"><dt>This source, exact; and measured from the picture</dt><dd id="rAfs">—</dd></div>
+        </dl>
+        <p class="hint" id="srcHint">θ± = (u ± √(u² + 4))/2 and μ = 1/(1 − 1/θ⁴), all in units of θ<sub>E</sub>. Each pixel of the picture is traced back to the source plane with β = θ − 1/θ and takes the brightness found there, because lensing keeps surface brightness. Bigger images therefore mean more light.</p>
+      </section>
+
+      <section id="secRay" hidden>
+        <h2>Observer near the hole</h2>
+        <div>
+          <div class="slider-head"><label for="logRo">Observer distance r<sub>o</sub></label><output id="roOut" class="mono" for="logRo"></output></div>
+          <input type="range" id="logRo" min="0.08" max="2.3" step="0.001" value="1.176">
+        </div>
+        <div>
+          <div class="slider-head"><label for="gsz">Galaxy angular radius</label><output id="gszOut" class="mono" for="gsz"></output></div>
+          <input type="range" id="gsz" min="1" max="30" step="0.5" value="4">
+        </div>
+        <label class="check"><input type="checkbox" id="rayStars" checked>Stars and Milky Way band</label>
+        <dl class="readout">
+          <div class="wide big"><dt>Shadow radius seen by this observer</dt><dd id="rSh">—</dd></div>
+          <div class="wide"><dt>Far away estimate, b<sub>c</sub>/r<sub>o</sub> with b<sub>c</sub> = (√27/2) r<sub>s</sub> = 2.598 r<sub>s</sub></dt><dd id="rShFar">—</dd></div>
+          <div class="wide"><dt>Einstein ring for a source straight behind: exact; thin lens √(2r<sub>s</sub>/r<sub>o</sub>)</dt><dd id="rER">—</dd></div>
+          <div class="wide"><dt>Galaxy true direction from straight behind</dt><dd id="rGal">—</dd></div>
+        </dl>
+        <p class="hint">Every pixel's light ray is followed backward with the exact Schwarzschild orbit equation d²u/dφ² = −u + (3/2) r<sub>s</sub>u², u = 1/r. Rays with impact parameter below b<sub>c</sub> fall into the hole: that is the shadow. Rays just above b<sub>c</sub> circle the photon sphere and pile up thin copies of the whole sky at the shadow's edge.</p>
+      </section>
+
+      <section id="secNear" hidden>
+        <h2>Static observer</h2>
+        <div>
+          <div class="slider-head"><label for="logR">Distance from the center r</label><output id="rOut" class="mono" for="logR"></output></div>
+          <input type="range" id="logR" min="0.0005" max="3" step="0.0005" value="1.477">
+        </div>
+        <dl class="readout">
+          <div class="big"><dt>Clock rate √(1 − r<sub>s</sub>/r)</dt><dd id="rRate">—</dd></div>
+          <div class="big"><dt>1 + z = 1/√(1 − r<sub>s</sub>/r)</dt><dd id="rZ">—</dd></div>
+          <div class="wide"><dt>One hour on your clock lasts, far away</dt><dd id="rHour">—</dd></div>
+          <div class="wide"><dt>Green light (500 nm) you send outward arrives at</dt><dd id="rLam">—</dd></div>
+          <div class="wide"><dt>Rocket thrust to hover, GM/(r²√(1 − r<sub>s</sub>/r))</dt><dd id="rHov">—</dd></div>
+          <div class="wide big"><dt>Tidal stretch on a 2 m person, ΔA = 2GML/r³</dt><dd id="rTid">—</dd></div>
+          <div class="wide"><dt>Same person at the horizon</dt><dd id="rTidH">—</dd></div>
+        </dl>
+        <p class="flag" id="verdict"></p>
+        <p class="hint">A static observer hovers at fixed r with a rocket and compares clocks with someone far away. The tidal stretch is for a person falling feet first; in general relativity it is exactly 2GML/r³ along the fall, the same as Newton's estimate, and half that as a squeeze sideways.</p>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint" id="modelHint"></p>
+        <div class="key" id="key"></div>
+      </section>
+
+      <section>
+        <h2>Controls</h2>
+        <p class="hint">With the drawing focused, <kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> move the source or the observer (<kbd>Shift</kbd> for bigger steps), <kbd>Space</kbd> plays or pauses, <kbd>V</kbd> changes the view, <kbd>G</kbd> changes the source shape, <kbd>R</kbd> resets the setup.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  // SI units unless stated. Lensing angles are in units of the Einstein radius θ_E; ray tracing lengths in units of r_s.
+  const GM_SUN = 1.32712440018e20;     // m³/s² (IAU)
+  const C = 299792458;                  // m/s
+  const PC = 3.0856775814913673e16, AU = 1.495978707e11, DAY = 86400, YEAR = 365.25 * DAY, G0 = 9.80665;
+  const BC = Math.sqrt(27) / 2;         // critical impact parameter, r_s units
+  const rsOf = (M) => 2 * GM_SUN * M / (C * C);                         // M in solar masses → m
+  const clockRate = (x) => Math.sqrt(1 - 1 / x);                         // x = r/r_s, static observer
+  const onePlusZ = (x) => 1 / Math.sqrt(1 - 1 / x);                      // light sent from x to infinity
+  const tidal = (M, r, L) => 2 * GM_SUN * M * L / (r * r * r);           // m/s² across length L at r (m)
+  const hoverAcc = (M, r) => GM_SUN * M / (r * r * Math.sqrt(1 - rsOf(M) / r));
+  const thetaE = (M, DL, DS) => Math.sqrt(2 * rsOf(M) * (DS - DL) / (DL * DS));   // rad; Euclidean distances (m)
+  const shadowDiam = (M, D) => 2 * BC * rsOf(M) / D;                     // rad, Schwarzschild, distant observer
+  // point lens in units of θ_E: β = θ − 1/θ; images along the source direction (θ₋ < 0 lies on the far side)
+  const images = (u) => { const s = Math.sqrt(u * u + 4); return [(u + s) / 2, (u - s) / 2]; };
+  const mu = (t) => { const q = 1 / (t * t); return 1 / (1 - q * q); };
+  const Apoint = (u) => (u * u + 2) / (u * Math.sqrt(u * u + 4));
+  // Uniform disk source of radius ρ at offset d: (1/πρ²) ∫ A(r) × (arc of the circle r inside the disk) r dr; A(r) r is finite at r = 0
+  function Adisk(d, rho, n = 800) {
+    // r = r₀ + (r₁ − r₀)(1 − cos t)/2 smooths the square root behaviour of the arc at both ends
+    const r0 = Math.max(0, d - rho), r1 = d + rho; let s = 0;
+    for (let i = 0; i < n; i++) {
+      const t = Math.PI * (i + 0.5) / n, r = r0 + (r1 - r0) * (1 - Math.cos(t)) / 2, dr = (r1 - r0) / 2 * Math.sin(t);
+      let ang;
+      if (r <= rho - d) ang = 2 * Math.PI;
+      else { const c = (r * r + d * d - rho * rho) / (2 * r * d); ang = c >= 1 ? 0 : c <= -1 ? 2 * Math.PI : 2 * Math.acos(c); }
+      s += (r * r + 2) / Math.sqrt(r * r + 4) * ang * dr;
+    }
+    return s * Math.PI / n / (Math.PI * rho * rho);
+  }
+  // Any source: brightness I(x, y) in source units (center 0, radius 1, scaled by ρ), polar integration about the lens
+  function Asource(bx, by, rho, I, F, nr = 48, nf = 48) {
+    const d = Math.hypot(bx, by), r0 = Math.max(0, d - rho), r1 = d + rho;
+    let f0 = 0, f1 = 2 * Math.PI;
+    if (d > rho) { const a = Math.atan2(by, bx), w = Math.asin(rho / d); f0 = a - w; f1 = a + w; }
+    let s = 0;
+    for (let i = 0; i < nr; i++) {
+      const r = r0 + (r1 - r0) * (i + 0.5) / nr, ar = (r * r + 2) / Math.sqrt(r * r + 4);
+      for (let j = 0; j < nf; j++) {
+        const f = f0 + (f1 - f0) * (j + 0.5) / nf;
+        s += ar * I((r * Math.cos(f) - bx) / rho, (r * Math.sin(f) - by) / rho);
+      }
+    }
+    return s * (r1 - r0) / nr * (f1 - f0) / nf / (F * rho * rho);       // F = ∫ I over the unit source
+  }
+
+  // ---- textures with mip levels; mode 0: zero outside, 1: periodic, 2: clamp to edge ----
+  function makeTex(w, d, mode) {
+    const levels = [{ w, d }];
+    while (levels[levels.length - 1].w > 1) {
+      const P = levels[levels.length - 1], n = P.w >> 1, q = new Float32Array(n * n * 3);
+      for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+        const a = ((2 * y) * P.w + 2 * x) * 3, b = a + 3, c = a + P.w * 3, e = c + 3, o = (y * n + x) * 3;
+        for (let k = 0; k < 3; k++) q[o + k] = 0.25 * (P.d[a + k] + P.d[b + k] + P.d[c + k] + P.d[e + k]);
+      }
+      levels.push({ w: n, d: q });
+    }
+    return { w0: w, levels, mode };
+  }
+  function bilin(L, mode, x, y, wt, out) {
+    const w = L.w, d = L.d;
+    x -= 0.5; y -= 0.5;
+    const xf = Math.floor(x), yf = Math.floor(y), fx = x - xf, fy = y - yf;
+    let x0 = xf, x1 = xf + 1, y0 = yf, y1 = yf + 1;
+    if (mode === 1) { x0 = ((x0 % w) + w) % w; x1 = ((x1 % w) + w) % w; y0 = ((y0 % w) + w) % w; y1 = ((y1 % w) + w) % w; }
+    else if (mode === 2) { x0 = x0 < 0 ? 0 : x0 >= w ? w - 1 : x0; x1 = x1 < 0 ? 0 : x1 >= w ? w - 1 : x1; y0 = y0 < 0 ? 0 : y0 >= w ? w - 1 : y0; y1 = y1 < 0 ? 0 : y1 >= w ? w - 1 : y1; }
+    const ws = [(1 - fx) * (1 - fy), fx * (1 - fy), (1 - fx) * fy, fx * fy], xs = [x0, x1, x0, x1], ys = [y0, y0, y1, y1];
+    for (let k = 0; k < 4; k++) {
+      const xx = xs[k], yy = ys[k];
+      if (xx < 0 || yy < 0 || xx >= w || yy >= w) continue;
+      const o = (yy * w + xx) * 3, q = ws[k] * wt;
+      out[0] += q * d[o]; out[1] += q * d[o + 1]; out[2] += q * d[o + 2];
+    }
+  }
+  // trilinear sample; x, y in level 0 texel units; lod = log2(footprint in level 0 texels)
+  function sampleTex(T, x, y, lod, out) {
+    out[0] = out[1] = out[2] = 0;
+    const nL = T.levels.length - 1;
+    if (!(lod > 0)) lod = 0; if (lod > nL) lod = nL;
+    const l0 = Math.floor(lod), t = lod - l0, l1 = Math.min(nL, l0 + 1);
+    const s0 = 1 / (1 << l0), s1 = 1 / (1 << l1);
+    bilin(T.levels[l0], T.mode, x * s0, y * s0, 1 - t, out);
+    if (t > 0) bilin(T.levels[l1], T.mode, x * s1, y * s1, t, out);
+    return out;
+  }
+
+  // ---- thin lens renderer: each image pixel θ maps back to β = θ(1 − 1/|θ|²) ----
+  function lensMap(bw, bh, cx, cy, h) {
+    const n = bw * bh, bx = new Float32Array(n), by = new Float32Array(n), fp = new Float32Array(n);
+    for (let j = 0; j < bh; j++) for (let i = 0; i < bw; i++) {
+      const k = j * bw + i, tx = (i + 0.5 - cx) * h, ty = (cy - j - 0.5) * h, t2 = tx * tx + ty * ty;
+      if (t2 < 1e-10) { bx[k] = 1e9; by[k] = 1e9; fp[k] = 1e9; continue; }
+      const q = 1 - 1 / t2; bx[k] = tx * q; by[k] = ty * q;
+      fp[k] = h * (1 + 1 / t2);      // the larger stretch of the inverse map (radial), so sampling never aliases
+    }
+    return { bw, bh, n, bx, by, fp, h, cx, cy };
+  }
+  // add the lensed source to an RGBA buffer; returns the added flux (sum of R + G + B times pixel area, θ_E² units)
+  // src: { kind: 'disk' | 'tex', x, y, rho, col: [r, g, b] (disk), tex (texture covering the unit source) }
+  function addSource(map, src, buf) {
+    const { bx, by, fp, n, h } = map, R = src.rho, R2 = R * R, x0 = src.x, y0 = src.y, out = [0, 0, 0];
+    let flux = 0;
+    const tex = src.tex, s = tex ? tex.w0 / (2 * R) : 0;
+    for (let i = 0; i < n; i++) {
+      const dx = bx[i] - x0; if (dx > R || dx < -R) continue;
+      const dy = by[i] - y0; if (dy > R || dy < -R) continue;
+      let r, g, b;
+      if (src.kind === 'disk') { if (dx * dx + dy * dy > R2) continue; r = src.col[0]; g = src.col[1]; b = src.col[2]; }
+      else {
+        sampleTex(tex, (dx * s + tex.w0 / 2), (tex.w0 / 2 - dy * s), Math.log2(Math.max(1e-9, fp[i] * s)), out);
+        r = out[0]; g = out[1]; b = out[2]; if (r + g + b <= 0) continue;
+      }
+      if (buf) { const j = 4 * i; buf[j] += r; buf[j + 1] += g; buf[j + 2] += b; }
+      flux += r + g + b;
+    }
+    return flux * h * h;
+  }
+  const texFlux = (T, rho) => { const L = T.levels[0], d = L.d; let s = 0; for (let i = 0; i < d.length; i++) s += d[i]; return s * (2 * rho / L.w) * (2 * rho / L.w); };
+
+  // ---- Schwarzschild null geodesics, r_s = 1; observer static at r_o, ray at local angle α from the hole direction ----
+  // u = 1/r, w = du/dφ: d²u/dφ² = −u + 1.5u²; (du/dφ)² = 1/b² − u²(1 − u); b = r_o sin α / √(1 − 1/r_o)
+  const acc = (u) => -u + 1.5 * u * u;
+  function rk4(u, w, h) {
+    const k1u = w, k1w = acc(u);
+    const k2u = w + 0.5 * h * k1w, k2w = acc(u + 0.5 * h * k1u);
+    const k3u = w + 0.5 * h * k2w, k3w = acc(u + 0.5 * h * k2u);
+    const k4u = w + h * k3w, k4w = acc(u + h * k3u);
+    return [u + h / 6 * (k1u + 2 * k2u + 2 * k3u + k4u), w + h / 6 * (k1w + 2 * k2w + 2 * k3w + k4w)];
+  }
+  // returns { cap, phi }: phi is the total angle swept about the hole until the ray escapes (u = 0) or crosses r = r_s
+  function traceRay(ro, alpha, path, hstep) {
+    const sa = Math.sin(alpha), ca = Math.cos(alpha), f = Math.sqrt(Math.max(0, 1 - 1 / ro));
+    if (sa < 1e-12) return { cap: ca > 0, phi: 0 };
+    let u = 1 / ro, w = ca * f / (ro * sa), phi = 0;
+    const h = hstep || 0.004;
+    if (path) path.push(ro, 0);
+    for (let k = 0; k < 200000; k++) {
+      const [un, wn] = rk4(u, w, h);
+      if (un <= 0 || un >= 1) {
+        const target = un <= 0 ? 0 : 1;
+        let s = h * (u - target) / (u - un);                    // Newton on the RK4 step length for the exact crossing
+        for (let it = 0; it < 4; it++) { const [us, ws] = rk4(u, w, s); if (Math.abs(ws) < 1e-300) break; s -= (us - target) / ws; }
+        phi += s;
+        if (path) path.push(target === 0 ? Infinity : 1, phi);
+        return { cap: target === 1, phi };
+      }
+      u = un; w = wn; phi += h;
+      if (path && k % 4 === 3) path.push(1 / u, phi);
+      if (phi > 90) return { cap: true, phi, stuck: true };
+    }
+    return { cap: true, phi };
+  }
+  // the shadow edge: rays with α < α_c fall in (b < b_c going inward, or b > b_c going outward inside 1.5 r_s)
+  function critAlpha(ro) { const s = Math.min(1, BC * Math.sqrt(1 - 1 / ro) / ro), a = Math.asin(s); return ro >= 1.5 ? a : Math.PI - a; }
+  // table of the escape angle φ_∞(α) for α in (α_c, π], spaced in ln(α − α_c)
+  function buildTable(ro, N = 900) {
+    const ac = critAlpha(ro), s0 = Math.log(1e-7), s1 = Math.log(Math.max(1e-6, Math.PI - ac)), phi = new Float64Array(N);
+    for (let i = 0; i < N; i++) { const a = ac + Math.exp(s0 + (s1 - s0) * i / (N - 1)); phi[i] = traceRay(ro, Math.min(Math.PI, a), null, 0.005).phi; }
+    return { ro, ac, s0, s1, N, phi };
+  }
+  // φ_∞ and dφ/dα at α (NaN if captured)
+  function lookPhi(T, a, out) {
+    if (a <= T.ac) { out[0] = NaN; out[1] = 0; return out; }
+    let s = Math.log(a - T.ac); const ds = (T.s1 - T.s0) / (T.N - 1);
+    let x = (s - T.s0) / ds; if (x < 0) x = 0; if (x > T.N - 1.000001) x = T.N - 1.000001;
+    const i = Math.floor(x), t = x - i, p0 = T.phi[i], p1 = T.phi[i + 1];
+    out[0] = p0 + (p1 - p0) * t; out[1] = (p1 - p0) / ds / (a - T.ac);
+    return out;
+  }
+  // α at which a ray ends up straight behind the hole (φ_∞ = π, or 3π for the next ring): the Einstein ring
+  function ringAlpha(ro, target = Math.PI) {
+    let lo = critAlpha(ro) + 1e-9, hi = Math.PI;
+    if (traceRay(ro, lo).phi < target) return NaN;
+    for (let i = 0; i < 60; i++) { const m = 0.5 * (lo + hi); if (traceRay(ro, m).phi > target) lo = m; else hi = m; }
+    return 0.5 * (lo + hi);
+  }
+  // cube map faces: direction ↔ (face, u, v), u, v in [−1, 1]
+  function dirToFace(x, y, z, o) {
+    const ax = Math.abs(x), ay = Math.abs(y), az = Math.abs(z);
+    if (ax >= ay && ax >= az) { if (x > 0) { o[0] = 0; o[1] = -z / ax; o[2] = -y / ax; } else { o[0] = 1; o[1] = z / ax; o[2] = -y / ax; } }
+    else if (ay >= az) { if (y > 0) { o[0] = 2; o[1] = x / ay; o[2] = z / ay; } else { o[0] = 3; o[1] = x / ay; o[2] = -z / ay; } }
+    else if (z > 0) { o[0] = 4; o[1] = x / az; o[2] = -y / az; } else { o[0] = 5; o[1] = -x / az; o[2] = -y / az; }
+    return o;
+  }
+  function faceToDir(f, u, v) {
+    let d;
+    switch (f) { case 0: d = [1, -v, -u]; break; case 1: d = [-1, -v, u]; break; case 2: d = [u, 1, v]; break; case 3: d = [u, -1, -v]; break; case 4: d = [u, -v, 1]; break; default: d = [-u, -v, -1]; }
+    const n = Math.hypot(d[0], d[1], d[2]); return [d[0] / n, d[1] / n, d[2] / n];
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.BH = { GM_SUN, C, PC, AU, DAY, YEAR, G0, BC, rsOf, clockRate, onePlusZ, tidal, hoverAcc, thetaE, shadowDiam, images, mu, Apoint, Adisk, Asource,
+      makeTex, sampleTex, lensMap, addSource, texFlux, rk4, traceRay, critAlpha, buildTable, lookPhi, ringAlpha, dirToFace, faceToDir };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const KPC = 1000 * PC, L_PERSON = 2, LETHAL = 100 * G0, V_PERP = 2e5;
+  const OBJ = {
+    sgr: { name: 'Sagittarius A*', M: 4.3e6, D: 8.28 * KPC, Dtxt: '8.28 kpc', eht: 'EHT 2022 ring: 51.8 ± 2.3 µas' },
+    m87: { name: 'M87*', M: 6.5e9, D: 16.8e3 * KPC, Dtxt: '16.8 Mpc', eht: 'EHT 2019 ring: 42 ± 3 µas' }
+  };
+
+  // ---------- state ----------
+  const S = { view: 'lens', preset: 'micro', logM: Math.log10(0.5), logDL: Math.log10(4), logDS: Math.log10(8),
+    shape: 'disk', rho: 0.08, bx: -2, by: 0.3, stars: true,
+    logRo: Math.log10(15), gx: 0.03, gy: 0.012, gsz: 4, rayStars: true,
+    logR: Math.log10(30), obj: null };
+  let playing = !reduce;
+  const M = () => Math.pow(10, S.logM);
+  const PRESETS = {
+    ring: { view: 'lens', logM: 12, logDL: 6, logDS: Math.log10(2e6), shape: 'gal', rho: 0.35, bx: 0, by: 0, play: false,
+      hint: 'A background galaxy sits exactly behind a massive galaxy, here treated as a point mass of 10¹² M_sun halfway to a source 2 Gpc away. Light passes on every side and arrives as an Einstein ring about 2″ across. Drag the true position off center and the ring breaks into two arcs.' },
+    two: { view: 'lens', logM: 12, logDL: 6, logDS: Math.log10(2e6), shape: 'gal', rho: 0.32, bx: 0.55, by: 0.3, play: false,
+      hint: 'Off center the source makes two images on opposite sides of the lens: a bright one outside the Einstein ring and a fainter, mirror flipped one inside it. Both are stretched along the ring. Drag an image marker and the source follows.' },
+    micro: { view: 'lens', logM: Math.log10(0.5), logDL: Math.log10(4), logDS: Math.log10(8), shape: 'disk', rho: 0.08, bx: -2, by: 0.3, play: true,
+      hint: 'A 0.5 M_sun star 4 kpc away drifts in front of a star 8 kpc away. Its two images are only about a milliarcsecond apart, so a telescope sees one point of light that brightens and fades again in about a month. The source star is drawn much bigger than a real one so its images can be seen.' },
+    stellar: { view: 'near', logM: 1, logR: Math.log10(30), play: true,
+      hint: 'A 10 M_sun black hole has r_s = 29.5 km. At 30 r_s, still almost 900 km out, the difference in gravity between your head and feet is about 800 g: you are torn apart long before the horizon. Drag the observer to watch clocks slow and light redden.' },
+    sgr: { view: 'near', logM: Math.log10(4.3e6), logR: Math.log10(1.2), obj: 'sgr', play: true,
+      hint: 'The Milky Way’s central black hole, 4.3 million M_sun (GRAVITY and EHT, approximate). Its horizon is 0.085 AU across in radius, and the tidal stretch there is about a thousandth of a meter per second squared: you would cross it without feeling anything, but the outside world would never see you arrive.' },
+    m87: { view: 'ray', logM: Math.log10(6.5e9), logRo: Math.log10(15), gx: 0.03, gy: 0.012, gsz: 4, obj: 'm87', play: false,
+      hint: 'M87*, 6.5 billion M_sun (EHT 2019). In units of r_s every Schwarzschild black hole looks the same, so this is the view from 15 r_s of any of them. From Earth the shadow of M87* spans about 40 µas, close to the 42 µas ring the Event Horizon Telescope imaged.' }
+  };
+
+  // ---------- canvas, theme ----------
+  let T = null, dpr = 1;
+  const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), hole: g('--hole'), sky: g('--sky'), skyInk: g('--sky-ink'), skyMuted: g('--sky-muted'),
+      skyAccent: g('--sky-accent'), skyGold: g('--sky-gold'), skyPos: g('--sky-pos'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+    const m = /^#?([0-9a-f]{6})$/i.exec(T.sky);
+    T.skyRGB = m ? [parseInt(m[1].slice(0, 2), 16), parseInt(m[1].slice(2, 4), 16), parseInt(m[1].slice(4, 6), 16)] : [3, 5, 10];
+  }
+  const projOn = () => document.documentElement.getAttribute('data-projector') === 'on';
+  let W = 0, H = 0, LY = null;
+  // label scale: projector makes labels bigger, capped by the pane size so they do not pile up
+  const psFor = (r) => (projOn() ? Math.min(1.4, Math.max(1, Math.min(r.w, r.h) / 300)) : 1);
+
+  function layout() {
+    if (W >= 700) {
+      const mw = Math.round(Math.min(W * 0.6, Math.max(H, W * 0.5)));
+      return { wide: true, main: { x: 0, y: 0, w: mw, h: H }, side: { x: mw, y: 0, w: W - mw, h: H } };
+    }
+    const mh = Math.round(Math.min(W * 1.0, H * 0.56));
+    return { wide: false, main: { x: 0, y: 0, w: W, h: mh }, side: { x: 0, y: mh, w: W, h: H - mh } };
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = pane.getBoundingClientRect();
+    W = Math.max(1, r.width); H = Math.max(1, r.height);
+    can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(H * dpr));
+    can.style.width = W + 'px'; can.style.height = H + 'px';
+    LY = layout();
+    lensImg = null; rayImg = null; dirty = true;
+  }
+
+  // ---------- canvas text with _{sub} markup ----------
+  const SUBRE = /_\{([^}]*)\}/;
+  function parts(s) { const out = []; s = String(s); let m; while ((m = SUBRE.exec(s))) { if (m.index) out.push([s.slice(0, m.index), 0]); out.push([m[1], 1]); s = s.slice(m.index + m[0].length); } if (s) out.push([s, 0]); return out; }
+  let fontPx = 11, fontW = '', fontFam = '';
+  function font(c, px, bold, ui) { fontPx = px; fontW = bold ? '600 ' : ''; fontFam = ui ? T.ui : T.mono; c.font = `${fontW}${px}px ${fontFam}`; }
+  function tw(c, s) { let w = 0; for (const [t, sub] of parts(s)) { if (sub) c.font = `${fontW}${fontPx * 0.74}px ${fontFam}`; w += c.measureText(t).width; c.font = `${fontW}${fontPx}px ${fontFam}`; } return w; }
+  function text(c, s, x, y) {
+    const al = c.textAlign, w = tw(c, s); let x0 = al === 'center' ? x - w / 2 : al === 'right' ? x - w : x;
+    c.textAlign = 'left';
+    for (const [t, sub] of parts(s)) {
+      if (sub) c.font = `${fontW}${fontPx * 0.74}px ${fontFam}`;
+      c.fillText(t, x0, sub ? y + fontPx * 0.3 : y); x0 += c.measureText(t).width; c.font = `${fontW}${fontPx}px ${fontFam}`;
+    }
+    c.textAlign = al;
+  }
+  // label on a halo box, drawn last where lines might cross it; kept inside clampR when set
+  let clampR = null;
+  function label(c, s, x, y, col, opt = {}) {
+    const ps = opt.ps || 1, al = opt.align || 'left', bg = opt.bg || T.canvas;
+    font(c, (opt.size || 11) * ps, opt.bold);
+    c.textAlign = al; c.textBaseline = 'middle';
+    const w = tw(c, s), h = 15 * ps * (opt.size || 11) / 11;
+    let x0 = al === 'left' ? x : al === 'right' ? x - w : x - w / 2;
+    if (clampR) {
+      const lo = clampR.x + 5, hi = clampR.x + clampR.w - 5 - w;
+      const nx = Math.max(lo, Math.min(hi, x0)); x += nx - x0; x0 = nx;
+      y = Math.max(clampR.y + h / 2 + 2, Math.min(clampR.y + clampR.h - h / 2 - 2, y));
+    }
+    c.fillStyle = bg; c.globalAlpha = opt.alpha === undefined ? 0.82 : opt.alpha; c.fillRect(x0 - 3, y - h / 2, w + 6, h); c.globalAlpha = 1;
+    c.fillStyle = col; text(c, s, x, y + 0.5);
+    return w;
+  }
+
+  // ---------- formatting ----------
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  const sup = (n) => String(n).split('').map((ch) => SUP[ch] || ch).join('');
+  const trim = (s) => { if (s.includes('e')) { const v = +s; return Math.abs(v) >= 1e-6 && Math.abs(v) < 1e21 ? String(v) : s; } return s.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, ''); };
+  function sci(v, d = 3) {
+    if (v === 0) return '0'; if (!isFinite(v)) return '∞';
+    const a = Math.abs(v);
+    if (a >= 1e-3 && a < 1e5) return trim(v.toPrecision(d));
+    let e = Math.floor(Math.log10(a)), m = v / Math.pow(10, e);
+    if (Math.abs(+m.toPrecision(d)) >= 10) { m /= 10; e++; }
+    return `${trim(m.toPrecision(d))} × 10${sup(e)}`;
+  }
+  function fmtMass(Mv, html) {
+    const u = html ? ' M<sub>sun</sub>' : ' M_{sun}';
+    if (Mv >= 1e4) { const e = Math.floor(Math.log10(Mv)), m = Mv / Math.pow(10, e); return `${trim(m.toFixed(2))} × 10${sup(e)}${u}`; }
+    return trim(Mv.toPrecision(3)) + u;
+  }
+  function fmtLen(m) {
+    if (m < 1e3) return `${trim(m.toPrecision(3))} m`;
+    if (m < 1e8) return `${trim((m / 1e3).toPrecision(3))} km`;
+    if (m < 0.05 * PC) return `${sci(m / AU)} AU`;
+    if (m < 1e3 * PC) return `${trim((m / PC).toPrecision(3))} pc`;
+    return `${sci(m / KPC)} kpc`;
+  }
+  function fmtDist(kpc) {
+    if (kpc < 1) return `${trim((kpc * 1000).toPrecision(3))} pc`;
+    if (kpc < 1000) return `${trim(kpc.toPrecision(3))} kpc`;
+    if (kpc < 1e6) return `${trim((kpc / 1e3).toPrecision(3))} Mpc`;
+    return `${trim((kpc / 1e6).toPrecision(3))} Gpc`;
+  }
+  function fmtAngle(rad) {
+    const as = rad * 206264.80625;
+    if (as >= 3600) return `${trim((as / 3600).toPrecision(3))}°`;
+    if (as >= 60) return `${trim((as / 60).toPrecision(3))}′`;
+    if (as >= 1) return `${trim(as.toPrecision(3))}″`;
+    if (as >= 1e-4) return `${trim((as * 1e3).toPrecision(3))} mas`;
+    return `${sci(as * 1e6)} µas`;
+  }
+  function fmtTime(s) {
+    if (s < 120) return `${trim(s.toPrecision(3))} s`;
+    if (s < 7200) return `${trim((s / 60).toPrecision(3))} min`;
+    if (s < 3 * DAY) return `${trim((s / 3600).toPrecision(3))} h`;
+    if (s < 2 * YEAR) return `${trim((s / DAY).toPrecision(3))} days`;
+    return `${sci(s / YEAR)} yr`;
+  }
+  const fmtDeg = (rad) => `${(rad * 180 / Math.PI).toFixed(rad < 0.1745 ? 2 : 1)}°`;
+  const fmtAcc = (a) => `${sci(a)} m/s² = ${sci(a / G0)} g`;
+
+  // ---------- procedural textures ----------
+  function rng(seed) { let a = seed >>> 0; return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  const STAR_COLS = [[155, 176, 255], [202, 216, 255], [248, 247, 255], [255, 244, 234], [255, 222, 180], [255, 196, 140]];
+  function splat(d, w, wrap, x, y, sig, amp, col, sx, sy, rot) {
+    // elliptical Gaussian; sx, sy stretch factors, rot rotation (rad)
+    const ex = sx || 1, ey = sy || 1, cr = Math.cos(rot || 0), sr = Math.sin(rot || 0), R = Math.ceil(3 * sig * Math.max(ex, ey));
+    for (let j = -R; j <= R; j++) for (let i = -R; i <= R; i++) {
+      let X = Math.floor(x) + i, Y = Math.floor(y) + j;
+      const dx = X + 0.5 - x, dy = Y + 0.5 - y, u = (dx * cr + dy * sr) / ex, v = (-dx * sr + dy * cr) / ey;
+      const g = amp * Math.exp(-(u * u + v * v) / (2 * sig * sig)); if (g < 0.05) continue;
+      if (wrap) { X = ((X % w) + w) % w; Y = ((Y % w) + w) % w; } else if (X < 0 || Y < 0 || X >= w || Y >= w) continue;
+      const o = (Y * w + X) * 3; d[o] += g * col[0] / 255; d[o + 1] += g * col[1] / 255; d[o + 2] += g * col[2] / 255;
+    }
+  }
+  // the movable source galaxy, covering x, y ∈ [−1, 1]: bulge, exponential disk and two logarithmic spiral arms, tilted 44°
+  function galaxyTexture(N) {
+    const d = new Float32Array(N * N * 3), pa = 0.5, ci = 0.72, R = rng(7);
+    const knots = []; for (let k = 0; k < 70; k++) { const r = 0.12 + 0.7 * R(), arm = R() < 0.5 ? 0 : Math.PI; knots.push([r, arm + Math.log(r) / 0.32 + (R() - 0.5) * 0.5, 0.4 + 0.6 * R()]); }
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+      const x = (i + 0.5) / N * 2 - 1, y = 1 - (j + 0.5) / N * 2;
+      const xr = x * Math.cos(pa) + y * Math.sin(pa), yr = (-x * Math.sin(pa) + y * Math.cos(pa)) / ci;
+      const r = Math.hypot(xr, yr), pr = Math.hypot(x, y); if (pr >= 1) continue;
+      const taper = pr < 0.8 ? 1 : 0.5 + 0.5 * Math.cos(Math.PI * (pr - 0.8) / 0.2);
+      const th = Math.atan2(yr, xr);
+      const ph = 2 * (th - Math.log(r + 1e-4) / 0.32), arm = Math.pow(0.5 + 0.5 * Math.cos(ph), 3);
+      const disk = Math.exp(-r / 0.24) * taper, bulge = Math.exp(-(r * r) / 0.006);
+      let kn = 0; for (const [kr, ka, kw] of knots) { const kx = kr * Math.cos(ka) - xr, ky = kr * Math.sin(ka) - yr, q = kx * kx + ky * ky; if (q < 0.004) kn += kw * Math.exp(-q / 0.0006); }
+      const a = 2.1 * (disk * (0.25 + 0.95 * arm) + 1.2 * kn * disk), o = (j * N + i) * 3;
+      d[o] = 235 * (0.95 * bulge + 0.75 * a); d[o + 1] = 235 * (0.82 * bulge + 0.82 * a); d[o + 2] = 235 * (0.55 * bulge + 1.0 * a);
+    }
+    return makeTex(N, d, 0);
+  }
+  // background tile for the lens view, periodic with period P θ_E: a few hundred stars and faint distant galaxies
+  const TILE = 1024, TILE_P = 8;
+  function tileTexture() {
+    const d = new Float32Array(TILE * TILE * 3), R = rng(42);
+    for (let k = 0; k < 70; k++) {
+      const x = R() * TILE, y = R() * TILE, sz = 1.6 + 3.5 * R(), e = 1.3 + 1.8 * R(), rot = R() * Math.PI, amp = 40 + 70 * R();
+      splat(d, TILE, true, x, y, sz, amp, R() < 0.6 ? [255, 214, 170] : [190, 205, 255], e, 1, rot);
+    }
+    for (let k = 0; k < 420; k++) {
+      const x = R() * TILE, y = R() * TILE, b = Math.pow(R(), 3), amp = 60 + 900 * b;
+      splat(d, TILE, true, x, y, 0.75 + 0.6 * b, amp, STAR_COLS[Math.floor(R() * STAR_COLS.length)]);
+    }
+    for (let i = 0; i < d.length; i++) if (d[i] > 255) d[i] = 255;
+    return makeTex(TILE, d, 1);
+  }
+  // celestial sphere for the ray traced view: cube map of stars and a Milky Way band
+  const CUBE = 512;
+  function cubeTextures() {
+    const faces = [], R = rng(99), pole = [0.42, 0.78, 0.46], pn = Math.hypot(...pole);
+    for (let f = 0; f < 6; f++) {
+      const d = new Float32Array(CUBE * CUBE * 3);
+      for (let j = 0; j < CUBE; j++) for (let i = 0; i < CUBE; i++) {
+        const [x, y, z] = faceToDir(f, (i + 0.5) / CUBE * 2 - 1, (j + 0.5) / CUBE * 2 - 1);
+        const b = (x * pole[0] + y * pole[1] + z * pole[2]) / pn;
+        const mott = 0.55 + 0.25 * Math.sin(9 * x + 4 * y) * Math.sin(7 * z - 3 * x) + 0.2 * Math.sin(23 * y + 17 * z) * Math.sin(19 * x);
+        const g = Math.exp(-b * b / 0.018) * Math.max(0, mott) * 30, o = (j * CUBE + i) * 3;
+        d[o] = g * 1.0; d[o + 1] = g * 0.93; d[o + 2] = g * 0.82;
+      }
+      faces.push(d);
+    }
+    const o3 = [0, 0, 0];
+    for (let k = 0; k < 4000; k++) {
+      const z = 2 * R() - 1, a = 2 * Math.PI * R(), s = Math.sqrt(1 - z * z), x = s * Math.cos(a), y = s * Math.sin(a);
+      dirToFace(x, y, z, o3);
+      const u = o3[1], v = o3[2], st = 1 + u * u + v * v, b = Math.pow(R(), 3.2);
+      splat(faces[o3[0]], CUBE, false, (u + 1) / 2 * CUBE, (v + 1) / 2 * CUBE, (0.7 + 0.5 * b) * st, 70 + 900 * b, STAR_COLS[Math.floor(R() * STAR_COLS.length)]);
+    }
+    return faces.map((d) => { for (let i = 0; i < d.length; i++) if (d[i] > 255) d[i] = 255; return makeTex(CUBE, d, 2); });
+  }
+  let GAL = null, GAL_F = 0, GAL_COARSE = null, TILE_T = null, CUBE_T = null;
+  function galaxy() {
+    if (!GAL) {
+      GAL = galaxyTexture(512);
+      const L = GAL.levels[3], n = L.w; GAL_COARSE = { n, d: new Float32Array(n * n) }; let s = 0;
+      for (let i = 0; i < n * n; i++) { GAL_COARSE.d[i] = L.d[3 * i] + L.d[3 * i + 1] + L.d[3 * i + 2]; s += GAL_COARSE.d[i]; }
+      GAL_F = s * (2 / n) * (2 / n);            // ∫ I over the unit source (R + G + B)
+    }
+    return GAL;
+  }
+  function galI(x, y) {        // coarse luminance of the galaxy at source units (x, y), bilinear, 0 outside
+    const g = GAL_COARSE, n = g.n, X = (x + 1) / 2 * n - 0.5, Y = (1 - y) / 2 * n - 0.5;
+    const i = Math.floor(X), j = Math.floor(Y), fx = X - i, fy = Y - j; let s = 0;
+    const at = (a, b) => (a < 0 || b < 0 || a >= n || b >= n ? 0 : g.d[b * n + a]);
+    s = (1 - fx) * (1 - fy) * at(i, j) + fx * (1 - fy) * at(i + 1, j) + (1 - fx) * fy * at(i, j + 1) + fx * fy * at(i + 1, j + 1);
+    return s;
+  }
+  const DISK_COL = [255, 226, 168];
+
+  // ---------- lens view: image, curves ----------
+  const VIEW_HALF = 2.6;
+  let lensImg = null, dirty = true, measured = [], measA = NaN, curve = null, curveKey = '';
+  function lensGeom() {
+    const m = LY.main, q0 = Math.min(dpr, 1.5), q = Math.min(q0, Math.sqrt(4.5e5 / (m.w * m.h)));
+    const bw = Math.max(2, Math.round(m.w * q)), bh = Math.max(2, Math.round(m.h * q));
+    const h = 2 * VIEW_HALF / Math.min(bw, bh);
+    return { bw, bh, h, q: bw / m.w, cx: bw / 2, cy: bh / 2, pxPerTE: Math.min(m.w, m.h) / (2 * VIEW_HALF) };
+  }
+  function ensureLensImg() {
+    if (lensImg && lensImg.stars === S.stars) return;
+    const g = lensGeom(), map = lensMap(g.bw, g.bh, g.cx, g.cy, g.h), base = new Uint8ClampedArray(map.n * 4), out = [0, 0, 0], sk = T.skyRGB;
+    if (S.stars && !TILE_T) TILE_T = tileTexture();
+    const s = TILE / TILE_P;
+    for (let i = 0; i < map.n; i++) {
+      let r = sk[0], gg = sk[1], b = sk[2];
+      if (S.stars && map.bx[i] < 1e8) {
+        sampleTex(TILE_T, map.bx[i] * s, -map.by[i] * s, Math.log2(map.fp[i] * s), out);
+        r += out[0]; gg += out[1]; b += out[2];
+      }
+      base[4 * i] = r; base[4 * i + 1] = gg; base[4 * i + 2] = b; base[4 * i + 3] = 255;
+    }
+    const off = document.createElement('canvas'); off.width = g.bw; off.height = g.bh;
+    lensImg = { g, map, base, off, octx: off.getContext('2d'), id: new ImageData(g.bw, g.bh), stars: S.stars };
+    dirty = true;
+  }
+  function srcDesc() { return S.shape === 'disk' ? { kind: 'disk', x: S.bx, y: S.by, rho: S.rho, col: DISK_COL } : { kind: 'tex', x: S.bx, y: S.by, rho: S.rho, tex: galaxy() }; }
+  function srcFlux() { return S.shape === 'disk' ? (DISK_COL[0] + DISK_COL[1] + DISK_COL[2]) * Math.PI * S.rho * S.rho : GAL_F * S.rho * S.rho; }
+  function composeLens() {
+    const L = lensImg, buf = L.id.data;
+    buf.set(L.base);
+    const f = addSource(L.map, srcDesc(), buf);
+    measA = f / srcFlux();
+    L.octx.putImageData(L.id, 0, 0);
+  }
+  function Aexact(bx, by) { if (S.shape === 'disk') return Adisk(Math.hypot(bx, by), S.rho, 400); galaxy(); return Asource(bx, by, S.rho, galI, GAL_F, 56, 64); }
+  function ensureCurve() {
+    const key = `${S.shape}|${S.rho}|${S.by}`;
+    if (curve && curveKey === key) return;
+    const n = 161, ts = new Float64Array(n), A = new Float64Array(n);
+    for (let i = 0; i < n; i++) { const t = -2.5 + 5 * i / (n - 1); ts[i] = t; A[i] = Aexact(t, S.by); }
+    curve = { ts, A }; curveKey = key; measured = [];
+  }
+
+  // ---------- ray traced view ----------
+  let rayImg = null, table = null, tableRo = NaN, ringA = NaN, ring2A = NaN;
+  const ro = () => Math.pow(10, S.logRo);
+  function rayFov() { const ac = table.ac, ae = isFinite(ringA) ? ringA : ac; return Math.min(Math.PI, Math.max(2.4 * ac, 1.9 * ae, 0.05)); }
+  function ensureTable() {
+    if (table && tableRo === S.logRo) return;
+    table = buildTable(ro()); tableRo = S.logRo;
+    ringA = ringAlpha(ro()); ring2A = ringAlpha(ro(), 3 * Math.PI);
+    rayImg = null;
+  }
+  function rayGeom() {
+    const m = LY.main, q0 = Math.min(dpr, 1.5), q = Math.min(q0, Math.sqrt(4.5e5 / (m.w * m.h)));
+    const bw = Math.max(2, Math.round(m.w * q)), bh = Math.max(2, Math.round(m.h * q)), fov = rayFov();
+    return { bw, bh, q: bw / m.w, k: fov / (Math.min(bw, bh) / 2), kc: fov / (Math.min(m.w, m.h) / 2), fov };
+  }
+  function ensureRayImg() {
+    ensureTable();
+    if (rayImg && rayImg.stars === S.rayStars) return;
+    const g = rayGeom(), n = g.bw * g.bh, nx = new Float32Array(n), ny = new Float32Array(n), nz = new Float32Array(n), fp = new Float32Array(n), flag = new Uint8Array(n);
+    const base = new Uint8ClampedArray(n * 4), out = [0, 0, 0], o3 = [0, 0, 0], ph = [0, 0], sk = T.skyRGB, texel = (Math.PI / 2) / CUBE;
+    if (S.rayStars && !CUBE_T) CUBE_T = cubeTextures();
+    const hole = /^#?([0-9a-f]{6})$/i.exec(T.hole), hc = hole ? [0, 2, 4].map((k) => parseInt(hole[1].slice(k, k + 2), 16)) : [0, 0, 0];
+    for (let j = 0; j < g.bh; j++) for (let i = 0; i < g.bw; i++) {
+      const p = j * g.bw + i, dx = i + 0.5 - g.bw / 2, dy = g.bh / 2 - j - 0.5, rp = Math.hypot(dx, dy), a = rp * g.k;
+      let r = sk[0], gg = sk[1], b = sk[2];
+      if (a > Math.PI) { flag[p] = 2; r = sk[0] * 0.5; gg = sk[1] * 0.5; b = sk[2] * 0.5; }
+      else if (a <= table.ac) { flag[p] = 1; r = hc[0]; gg = hc[1]; b = hc[2]; }
+      else {
+        lookPhi(table, a, ph);
+        const P = ph[0], cx = rp > 0 ? dx / rp : 1, cy = rp > 0 ? dy / rp : 0, s = Math.sin(P);
+        // sky direction: cos φ ẑ + sin φ ê, observer on +z looking toward −z, ê the pixel's direction across the sky
+        nx[p] = s * cx; ny[p] = s * cy; nz[p] = Math.cos(P);
+        fp[p] = g.k * Math.max(Math.abs(ph[1]), Math.abs(s) / Math.max(a, 1e-6), 1e-3);
+        if (S.rayStars) {
+          dirToFace(nx[p], ny[p], nz[p], o3);
+          sampleTex(CUBE_T[o3[0]], (o3[1] + 1) / 2 * CUBE, (o3[2] + 1) / 2 * CUBE, Math.log2(fp[p] / texel), out);
+          r += out[0]; gg += out[1]; b += out[2];
+        }
+      }
+      base[4 * p] = r; base[4 * p + 1] = gg; base[4 * p + 2] = b; base[4 * p + 3] = 255;
+    }
+    const off = document.createElement('canvas'); off.width = g.bw; off.height = g.bh;
+    rayImg = { g, nx, ny, nz, fp, flag, base, off, octx: off.getContext('2d'), id: new ImageData(g.bw, g.bh), stars: S.rayStars };
+    dirty = true;
+  }
+  function galDir() {
+    const psi = Math.hypot(S.gx, S.gy), chi = Math.atan2(S.gy, S.gx), s = Math.sin(psi);
+    const gv = [s * Math.cos(chi), s * Math.sin(chi), -Math.cos(psi)];
+    // tangent basis: e1 along +x projected, e2 = e1 × g (screen up for a galaxy straight behind)
+    let e1 = [1 - gv[0] * gv[0], -gv[0] * gv[1], -gv[0] * gv[2]]; const n1 = Math.hypot(...e1); e1 = e1.map((v) => v / n1);
+    const e2 = [e1[1] * gv[2] - e1[2] * gv[1], e1[2] * gv[0] - e1[0] * gv[2], e1[0] * gv[1] - e1[1] * gv[0]];
+    return { gv, e1, e2, psi };
+  }
+  function composeRay() {
+    const R = rayImg, buf = R.id.data, n = R.g.bw * R.g.bh, G = galaxy(), out = [0, 0, 0];
+    buf.set(R.base);
+    const { gv, e1, e2 } = galDir(), tr = Math.tan(S.gsz * Math.PI / 180), cmax = Math.cos(Math.atan(tr * 1.42)), s = G.w0 / 2;
+    for (let p = 0; p < n; p++) {
+      if (R.flag[p]) continue;
+      const x = R.nx[p], y = R.ny[p], z = R.nz[p], d = x * gv[0] + y * gv[1] + z * gv[2];
+      if (d < cmax) continue;
+      const X = (x * e1[0] + y * e1[1] + z * e1[2]) / d / tr, Y = (x * e2[0] + y * e2[1] + z * e2[2]) / d / tr;
+      if (X <= -1 || X >= 1 || Y <= -1 || Y >= 1) continue;
+      sampleTex(G, (X + 1) * s, (1 - Y) * s, Math.log2(Math.max(1e-9, R.fp[p] / (d * d) / tr * s)), out);
+      const j = 4 * p; buf[j] += out[0]; buf[j + 1] += out[1]; buf[j + 2] += out[2];
+    }
+    R.octx.putImageData(R.id, 0, 0);
+  }
+
+  // ---------- near view geometry ----------
+  const nearR = () => Math.pow(10, S.logR);
+  function nearGeom() {
+    const m = LY.main, ps = psFor(m), Rh = Math.max(16, Math.min(m.h * 0.11, m.w * 0.085));
+    const cx = m.x + Math.max(Rh + 18 * ps, m.w * 0.1), cy = m.y + m.h * 0.56, xr = m.x + m.w - 46 * ps;
+    // radial scale: x = R_h + K ln(1 + (r − r_s)/(0.5 r_s)), close to linear near the hole and logarithmic far out
+    const K = (xr - cx - Rh) / Math.log(1 + 999 / 0.5);
+    return { m, ps, Rh, cx, cy, K, xr, X: (r) => cx + Rh + K * Math.log(1 + Math.max(0, r - 1) / 0.5), R: (x) => 1 + 0.5 * (Math.exp((x - cx - Rh) / K) - 1) };
+  }
+
+  // ---------- drawing ----------
+  let clockFar = 0, clockNear = 0, wavePhase = 0, hoverRay = null, hoverAlpha = NaN;
+  function drawAll() {
+    if (!T || !LY) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    clampR = LY.main;
+    if (S.view === 'lens') drawLens(); else if (S.view === 'ray') drawRay(); else drawNear();
+    clampR = LY.side;
+    if (S.view === 'lens') drawLensPlots(); else if (S.view === 'ray') drawRaySide(); else drawNearPlots();
+    clampR = null;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath();
+    if (LY.wide) { ctx.moveTo(LY.side.x + 0.5, 0); ctx.lineTo(LY.side.x + 0.5, H); } else { ctx.moveTo(0, LY.side.y + 0.5); ctx.lineTo(W, LY.side.y + 0.5); }
+    ctx.stroke();
+  }
+  function grip(c, x, y, hot, col, ps, bg) {
+    c.fillStyle = bg || T.canvas; c.strokeStyle = col; c.lineWidth = (hot ? 2.4 : 1.6) * ps;
+    c.beginPath(); c.arc(x, y, (hot ? 7 : 5.5) * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+    if (hot) { c.globalAlpha = 0.3; c.lineWidth = 7 * ps; c.beginPath(); c.arc(x, y, 11 * ps, 0, 2 * Math.PI); c.stroke(); c.globalAlpha = 1; }
+  }
+  const isHot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+  // screen position of a lens plane angle (θ_E units)
+  function lensXY(tx, ty) { const m = LY.main, g = lensGeom(); return [m.x + m.w / 2 + tx * g.pxPerTE, m.y + m.h / 2 - ty * g.pxPerTE]; }
+  function drawLens() {
+    ensureLensImg(); if (dirty) { composeLens(); dirty = false; }
+    const c = ctx, m = LY.main, ps = psFor(m), g = lensImg.g, k = g.pxPerTE, sk = { bg: T.sky, ps };
+    c.save(); c.beginPath(); c.rect(m.x, m.y, m.w, m.h); c.clip();
+    c.imageSmoothingEnabled = true; c.drawImage(lensImg.off, m.x, m.y, m.w, m.h);
+    const [lx, ly] = lensXY(0, 0);
+    // Einstein ring (critical curve)
+    c.strokeStyle = T.skyAccent; c.lineWidth = 1.2 * ps; c.setLineDash([5, 5]); c.globalAlpha = 0.75;
+    c.beginPath(); c.arc(lx, ly, k, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+    // track
+    const [, ty] = lensXY(0, S.by);
+    c.strokeStyle = T.skyMuted; c.lineWidth = 1 * ps; c.globalAlpha = 0.5; c.setLineDash([2, 5]);
+    c.beginPath(); c.moveTo(m.x, ty); c.lineTo(m.x + m.w, ty); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+    // lens and caustic (a point for a point lens)
+    c.fillStyle = T.skyInk; c.beginPath(); c.arc(lx, ly, 2.5 * ps, 0, 2 * Math.PI); c.fill();
+    c.strokeStyle = T.skyGold; c.lineWidth = 1.6 * ps; c.beginPath();
+    c.moveTo(lx - 6 * ps, ly); c.lineTo(lx, ly - 6 * ps); c.lineTo(lx + 6 * ps, ly); c.lineTo(lx, ly + 6 * ps); c.closePath(); c.stroke();
+    // true (unlensed) position of the source
+    const [sx, sy] = lensXY(S.bx, S.by), sr = S.rho * k;
+    c.strokeStyle = T.skyInk; c.lineWidth = 1.2 * ps; c.setLineDash([3, 4]); c.globalAlpha = 0.8;
+    c.beginPath(); c.arc(sx, sy, sr, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+    // image positions of the source center
+    const u = Math.hypot(S.bx, S.by), [tp, tm] = images(u), ux = u > 1e-9 ? S.bx / u : 1, uy = u > 1e-9 ? S.by / u : 0;
+    const ims = [];
+    if (u > 2e-3) {
+      ims.push({ id: 'im1', t: tp, x: tp * ux, y: tp * uy, m: mu(tp) }, { id: 'im2', t: tm, x: tm * ux, y: tm * uy, m: mu(tm) });
+      for (const im of ims) {
+        const [x, y] = lensXY(im.x, im.y); im.sx = x; im.sy = y;
+        const hot = isHot(im.id);
+        c.strokeStyle = im.id === 'im1' ? T.skyAccent : T.skyPos; c.lineWidth = (hot ? 2.2 : 1.5) * ps;
+        c.beginPath(); c.arc(x, y, (hot ? 7.5 : 6) * ps, 0, 2 * Math.PI); c.stroke();
+        c.beginPath(); c.moveTo(x - 3 * ps, y); c.lineTo(x + 3 * ps, y); c.moveTo(x, y - 3 * ps); c.lineTo(x, y + 3 * ps); c.stroke();
+      }
+    }
+    grip(c, sx, sy, isHot('src'), T.skyInk, ps, T.sky);
+    // size grip on the right edge of the true position circle
+    grip(c, sx + sr, sy, isHot('rho'), T.skyMuted, ps * 0.75, T.sky);
+    // labels last
+    { // on the ring, a quarter turn away from the images so the label never covers them
+      let a = (u > 2e-3 ? Math.atan2(uy, ux) : 0) + Math.PI / 2; if (Math.sin(a) < 0) a += Math.PI;
+      if (Math.abs(Math.cos(a)) < 0.35) a = Math.PI / 2 - 0.6 * (Math.cos(a) >= 0 ? 1 : -1);
+      const ex = lx + k * Math.cos(a), ey = ly - k * Math.sin(a);
+      label(c, 'Einstein ring θ_{E}', ex + (Math.cos(a) >= 0 ? 8 : -8) * ps, ey - 10 * ps, T.skyAccent, { ...sk, align: Math.cos(a) >= 0 ? 'left' : 'right' }); }
+    const above = (S.by < 0 || u < 2e-3) && sy - sr - 12 * ps > m.y + 20 * ps;   // away from image 1, which lies beyond the source
+    const tpy = above ? sy - sr - 11 * ps : sy + sr + 13 * ps;
+    { let a = (u > 2e-3 ? Math.atan2(uy, ux) : 0) - Math.PI / 2; if (Math.sin(a) > 0) a += Math.PI;
+      const place = (a) => { const dl = (Math.abs(Math.cos(a)) > 0.3 ? 16 : 26) * ps; return [lx + dl * Math.cos(a), ly - dl * Math.sin(a) + 4 * ps]; };
+      let [tx, ty] = place(a);
+      if (Math.abs(ty - tpy) < 16 * ps && Math.abs(tx - sx) < 120 * ps) { a += Math.PI; [tx, ty] = place(a); }   // keep clear of the "true position" label
+      label(c, m.w >= 500 ? 'lens; caustic at its center' : 'lens and caustic', tx, ty, T.skyGold, { ...sk, align: Math.cos(a) > 0.3 ? 'left' : Math.cos(a) < -0.3 ? 'right' : 'center' }); }
+    label(c, 'true position', sx, tpy, T.skyInk, { ...sk, align: 'center' });
+    for (const im of ims) {
+      const outw = im.id === 'im1', dir = outw ? 1 : -1, off = (outw ? 16 : 14) * ps;
+      const lxp = im.sx + (Math.abs(ux) > 0.3 ? dir * Math.sign(ux || 1) * off : 0), lyp = im.sy - (Math.abs(ux) > 0.3 ? 0 : dir * Math.sign(uy || 1) * off);
+      const al = Math.abs(ux) > 0.3 ? (dir * Math.sign(ux || 1) > 0 ? 'left' : 'right') : 'center';
+      label(c, `${outw ? '1' : '2'}: μ = ${im.m.toFixed(2)}`, lxp, lyp, outw ? T.skyAccent : T.skyPos, { ...sk, align: al });
+    }
+    // scale bar: 1 θ_E as an angle
+    const te = thetaE(M(), Math.pow(10, S.logDL) * KPC, Math.pow(10, S.logDS) * KPC);
+    const bx0 = m.x + 14 * ps, by0 = m.y + m.h - 16 * ps;
+    c.strokeStyle = T.skyInk; c.lineWidth = 1.5 * ps; c.beginPath(); c.moveTo(bx0, by0 - 4 * ps); c.lineTo(bx0, by0); c.lineTo(bx0 + k, by0); c.lineTo(bx0 + k, by0 - 4 * ps); c.stroke();
+    label(c, `θ_{E} = ${fmtAngle(te)}`, bx0 + k + 8 * ps, by0 - 2 * ps, T.skyInk, sk);
+    label(c, 'thin lens, point mass', m.x + m.w - 10 * ps, m.y + 14 * ps, T.skyMuted, { ...sk, align: 'right' });
+    c.restore();
+  }
+  function plotBox(r, ps, top) { return { L: r.x + 50 * ps, R: r.x + r.w - 14 * ps, T: r.y + (top || 30) * ps, B: r.y + r.h - 34 * ps }; }
+  function title(b, s, ps) { ctx.fillStyle = T.ink; font(ctx, 11.5 * ps, true); ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; text(ctx, s, b.L - 42 * ps, b.T - 9 * ps); }
+  function frame(b) { ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(b.L + 0.5, b.T + 0.5, b.R - b.L, b.B - b.T); }
+  function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  function splitSide(n) {
+    const s = LY.side, gap = 0, hs = (s.h - gap) / n;
+    return Array.from({ length: n }, (_, i) => ({ x: s.x, y: s.y + i * hs, w: s.w, h: hs }));
+  }
+  let lcBox = null, nearBoxes = null;
+  function drawLensPlots() {
+    const [r1, r2] = splitSide(2), ps = psFor(LY.side), c = ctx;
+    ensureCurve();
+    // light curve
+    const b = plotBox(r1, ps, 34); lcBox = b;
+    if (b.R - b.L > 60 && b.B - b.T > 50) {
+      let peak = 0; for (const v of curve.A) peak = Math.max(peak, v);
+      for (const p of measured) peak = Math.max(peak, p[1]);
+      const yTop = Math.min(60, Math.max(2, peak * 1.12)), X = (t) => b.L + (t + 2.5) / 5 * (b.R - b.L), Y = (A) => b.B - (A - 1) / (yTop - 1) * (b.B - b.T);
+      title(b, 'Light curve: magnification A against time', ps);
+      font(c, 10.5 * ps); c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+      const ys = niceStep((yTop - 1) / 4);
+      for (let v = 1; v <= yTop + 1e-9; v += ys) { const y = Math.round(Y(v)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(b.L, y); c.lineTo(b.R, y); c.stroke(); c.fillText(trim(v.toPrecision(3)), b.L - 5, y); }
+      c.textAlign = 'center'; c.textBaseline = 'top';
+      for (let t = -2; t <= 2; t++) { const x = Math.round(X(t)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, b.T); c.lineTo(x, b.B); c.stroke(); c.fillText(String(t), x, b.B + 5); }
+      const tE = tEsec();
+      c.textAlign = 'right'; text(c, `(t − t_{0})/t_{E}; t_{E} = ${fmtTime(tE)} at 200 km/s`, b.R, b.B + 19 * ps);
+      c.save(); c.beginPath(); c.rect(b.L, b.T, b.R - b.L, b.B - b.T); c.clip();
+      // point source, through the source center (dashed)
+      c.strokeStyle = T.muted; c.lineWidth = 1.3 * ps; c.setLineDash([5, 4]); c.beginPath();
+      for (let i = 0; i <= 300; i++) { const t = -2.5 + 5 * i / 300, A = Apoint(Math.max(1e-6, Math.hypot(t, S.by))), y = Math.max(b.T - 20, Y(A)); i ? c.lineTo(X(t), y) : c.moveTo(X(t), y); }
+      c.stroke(); c.setLineDash([]);
+      // this source, exact
+      c.strokeStyle = T.equi; c.lineWidth = 2.2 * ps; c.beginPath();
+      for (let i = 0; i < curve.ts.length; i++) { const x = X(curve.ts[i]), y = Y(curve.A[i]); i ? c.lineTo(x, y) : c.moveTo(x, y); }
+      c.stroke();
+      // measured from the picture
+      c.fillStyle = T.accent;
+      for (const [t, A] of measured) { c.beginPath(); c.arc(X(t), Y(A), 2.3 * ps, 0, 2 * Math.PI); c.fill(); }
+      c.restore();
+      // time marker (draggable)
+      const xm = X(S.bx), hot = isHot('tPlot');
+      c.strokeStyle = T.accent; c.lineWidth = (hot ? 2 : 1.2) * ps; c.beginPath(); c.moveTo(xm, b.T); c.lineTo(xm, b.B); c.stroke();
+      const Am = Aexact(S.bx, S.by);
+      grip(c, xm, Math.max(b.T + 4, Math.min(b.B - 4, Y(Am))), hot, T.accent, ps);
+      label(c, `A = ${Am.toFixed(3)}`, xm + (xm > (b.L + b.R) / 2 ? -11 : 11) * ps, b.T + 12 * ps, T.accent, { ps, align: xm > (b.L + b.R) / 2 ? 'right' : 'left', bold: true });
+      frame(b);
+    }
+    // image positions against source offset
+    const b2 = plotBox(r2, ps, 34);
+    if (b2.R - b2.L > 60 && b2.B - b2.T > 50) {
+      const X = (u) => b2.L + (u + 2.5) / 5 * (b2.R - b2.L), Y = (t) => b2.B - (t + 3) / 6 * (b2.B - b2.T);
+      title(b2, 'Image positions θ against source offset u', ps);
+      font(c, 10.5 * ps); c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+      for (let t = -3; t <= 3; t++) { const y = Math.round(Y(t)) + 0.5; c.strokeStyle = Math.abs(t) === 1 ? T.gridStrong : T.grid; c.beginPath(); c.moveTo(b2.L, y); c.lineTo(b2.R, y); c.stroke(); c.fillText(String(t), b2.L - 5, y); }
+      c.textAlign = 'center'; c.textBaseline = 'top';
+      for (let t = -2; t <= 2; t++) { const x = Math.round(X(t)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, b2.T); c.lineTo(x, b2.B); c.stroke(); c.fillText(String(t), x, b2.B + 5); }
+      c.textAlign = 'right'; text(c, 'u, in units of θ_{E}', b2.R, b2.B + 19 * ps);
+      c.save(); c.beginPath(); c.rect(b2.L, b2.T, b2.R - b2.L, b2.B - b2.T); c.clip();
+      c.strokeStyle = T.accent; c.globalAlpha = 0.6; c.setLineDash([4, 4]); c.lineWidth = 1 * ps;
+      for (const t of [1, -1]) { c.beginPath(); c.moveTo(b2.L, Y(t)); c.lineTo(b2.R, Y(t)); c.stroke(); }
+      c.setLineDash([]); c.globalAlpha = 1;
+      for (const br of [1, -1]) {
+        c.strokeStyle = br > 0 ? T.accent : T.pos; c.lineWidth = 2 * ps; c.beginPath();
+        for (let i = 0; i <= 300; i++) { const u = -2.5 + 5 * i / 300, s = Math.sqrt(u * u + 4), t = (u + br * s) / 2; i ? c.lineTo(X(u), Y(t)) : c.moveTo(X(u), Y(t)); }
+        c.stroke();
+      }
+      const u = Math.hypot(S.bx, S.by), [tp, tm] = images(u);
+      c.strokeStyle = T.muted; c.lineWidth = 1; c.setLineDash([3, 3]); c.beginPath(); c.moveTo(X(u), b2.T); c.lineTo(X(u), b2.B); c.stroke(); c.setLineDash([]);
+      c.fillStyle = T.accent; c.beginPath(); c.arc(X(u), Y(tp), 4.5 * ps, 0, 2 * Math.PI); c.fill();
+      c.fillStyle = T.pos; c.beginPath(); c.arc(X(u), Y(tm), 4.5 * ps, 0, 2 * Math.PI); c.fill();
+      c.restore();
+      label(c, 'θ = ±1: the Einstein ring', b2.L + 6 * ps, Y(1) - 10 * ps, T.accent, { ps });
+      label(c, `θ₊ = ${tp.toFixed(3)}`, X(u) + (u > 1 ? -8 : 8) * ps, Y(tp) - 12 * ps, T.accent, { ps, align: u > 1 ? 'right' : 'left' });
+      label(c, `θ₋ = ${tm.toFixed(3)}`, X(u) + (u > 1 ? -8 : 8) * ps, Y(tm) + 12 * ps, T.pos, { ps, align: u > 1 ? 'right' : 'left' });
+      frame(b2);
+    }
+  }
+  const tEsec = () => thetaE(M(), Math.pow(10, S.logDL) * KPC, Math.pow(10, S.logDS) * KPC) * Math.pow(10, S.logDL) * KPC / V_PERP;
+
+  function raySX(a, chi) { const m = LY.main, k = rayGeom().kc; return [m.x + m.w / 2 + a / k * Math.cos(chi), m.y + m.h / 2 - a / k * Math.sin(chi)]; }
+  function drawRay() {
+    ensureRayImg(); if (dirty) { composeRay(); dirty = false; }
+    const c = ctx, m = LY.main, ps = psFor(m), g = rayImg.g, k = g.kc, cx = m.x + m.w / 2, cy = m.y + m.h / 2, sk = { bg: T.sky, ps };
+    c.save(); c.beginPath(); c.rect(m.x, m.y, m.w, m.h); c.clip();
+    c.imageSmoothingEnabled = true; c.drawImage(rayImg.off, m.x, m.y, m.w, m.h);
+    // shadow edge and Einstein ring
+    c.lineWidth = 1.2 * ps; c.setLineDash([5, 5]);
+    c.strokeStyle = T.skyGold; c.globalAlpha = 0.85; c.beginPath(); c.arc(cx, cy, table.ac / k, 0, 2 * Math.PI); c.stroke();
+    if (isFinite(ringA)) { c.strokeStyle = T.skyAccent; c.beginPath(); c.arc(cx, cy, ringA / k, 0, 2 * Math.PI); c.stroke(); }
+    c.setLineDash([]); c.globalAlpha = 1;
+    // galaxy true direction
+    const psi = Math.hypot(S.gx, S.gy), chi = Math.atan2(S.gy, S.gx), [gx, gy] = raySX(psi, chi), gr = S.gsz * Math.PI / 180 / k;
+    c.strokeStyle = T.skyInk; c.lineWidth = 1.2 * ps; c.setLineDash([3, 4]); c.globalAlpha = 0.8; c.beginPath(); c.arc(gx, gy, gr, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+    grip(c, gx, gy, isHot('gsrc'), T.skyInk, ps, T.sky);
+    grip(c, gx + gr, gy, isHot('gsz'), T.skyMuted, ps * 0.75, T.sky);
+    if (isFinite(hoverAlpha)) { c.strokeStyle = T.skyPos; c.lineWidth = 1 * ps; c.beginPath(); c.arc(cx, cy, hoverAlpha / k, 0, 2 * Math.PI); c.globalAlpha = 0.5; c.stroke(); c.globalAlpha = 1; }
+    // labels
+    const a45 = -Math.PI / 4;
+    label(c, `shadow edge, ${fmtDeg(table.ac)}`, cx + table.ac / k * Math.cos(a45) + 6 * ps, cy - table.ac / k * Math.sin(a45) + 8 * ps, T.skyGold, sk);
+    if (isFinite(ringA)) label(c, `Einstein ring, ${fmtDeg(ringA)}`, cx + ringA / k * Math.cos(Math.PI * 0.75) - 6 * ps, cy - ringA / k * Math.sin(Math.PI * 0.75) - 8 * ps, T.skyAccent, { ...sk, align: 'right' });
+    label(c, 'true direction', gx, gy - gr - 11 * ps > m.y + 26 * ps ? gy - gr - 11 * ps : gy + gr + 13 * ps, T.skyInk, { ...sk, align: 'center' });
+    label(c, `exact Schwarzschild, static observer at ${trim(ro().toPrecision(3))} r_{s}`, m.x + 10 * ps, m.y + 14 * ps, T.skyMuted, sk);
+    label(c, `fisheye: distance from center ∝ angle; field ±${fmtDeg(g.fov)}`, m.x + 10 * ps, m.y + m.h - 14 * ps, T.skyMuted, sk);
+    c.restore();
+  }
+  // light paths in the plane of a ray, seen from above; the observer is on the right
+  const FAN = [0.35, 0.8, 0.97, 0.999, 1.0006, 1.01, 1.12, 1.45, 2.2];
+  let fanCache = { key: '', rays: [] };
+  function drawRaySide() {
+    const c = ctx, s = LY.side, ps = psFor(s), r0 = ro();
+    const Rv = Math.min(r0 * 1.12, 6.5), box = { L: s.x + 14 * ps, R: s.x + s.w - 14 * ps, T: s.y + 40 * ps, B: s.y + s.h - 48 * ps };
+    if (box.R - box.L < 60 || box.B - box.T < 60) return;
+    const sc = Math.min(box.R - box.L, box.B - box.T) / (2 * Rv), ox = (box.L + box.R) / 2, oy = (box.T + box.B) / 2;
+    const P = (r, f) => [ox + r * Math.cos(f) * sc, oy - r * Math.sin(f) * sc];
+    title({ L: box.L + 42 * ps, T: box.T - 6 * ps }, 'Light paths, traced back from the observer', ps);
+    c.save(); c.beginPath(); c.rect(s.x + 1, box.T, s.w - 2, box.B - box.T); c.clip();
+    // ISCO, photon sphere, horizon
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1 * ps; c.setLineDash([2, 4]); c.beginPath(); c.arc(ox, oy, 3 * sc, 0, 2 * Math.PI); c.stroke();
+    c.strokeStyle = T.equi; c.setLineDash([5, 4]); c.beginPath(); c.arc(ox, oy, 1.5 * sc, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]);
+    c.fillStyle = T.hole; c.beginPath(); c.arc(ox, oy, sc, 0, 2 * Math.PI); c.fill();
+    c.strokeStyle = T.muted; c.lineWidth = 1; c.stroke();
+    // fan of rays
+    const key = `${S.logRo}`;
+    if (fanCache.key !== key) {
+      const ac = critAlpha(r0); fanCache = { key, rays: [] };
+      for (const f of FAN) { const a = Math.min(Math.PI * 0.999, ac * f), path = []; const res = traceRay(r0, a, path, 0.01); fanCache.rays.push({ f, a, path, cap: res.cap }); }
+      if (isFinite(ringA)) { const path = []; traceRay(r0, ringA, path, 0.01); fanCache.rays.push({ f: 'ring', a: ringA, path, cap: false }); }
+    }
+    const drawPath = (path, col, lw, alpha) => {
+      c.strokeStyle = col; c.lineWidth = lw * ps; c.globalAlpha = alpha; c.beginPath(); let on = false;
+      for (let i = 0; i < path.length; i += 2) {
+        let r = path[i]; if (!isFinite(r)) r = Rv * 4; if (r > Rv * 4) { if (on) { const [x, y] = P(Rv * 4, path[i + 1]); c.lineTo(x, y); } break; }
+        const [x, y] = P(r, path[i + 1]); on ? c.lineTo(x, y) : c.moveTo(x, y); on = true;
+      }
+      c.stroke(); c.globalAlpha = 1;
+    };
+    for (const r of fanCache.rays) {
+      const crit = r.f === 0.999 || r.f === 1.0006, col = r.f === 'ring' ? T.accent : crit ? T.equi : r.cap ? T.pos : T.muted;
+      drawPath(r.path, col, r.f === 'ring' || crit ? 1.8 : 1.2, r.f === 'ring' || crit ? 1 : 0.75);
+    }
+    if (hoverRay) drawPath(hoverRay, T.ink, 2.2, 1);
+    c.restore();
+    // observer
+    const [oxs, oys] = P(Math.min(r0, Rv), 0);
+    if (r0 <= Rv) { c.fillStyle = T.ink; c.beginPath(); c.arc(oxs, oys, 4 * ps, 0, 2 * Math.PI); c.fill(); label(c, 'observer', oxs, oys + 14 * ps, T.ink, { ps, align: 'center' }); }
+    else label(c, `observer at ${trim(r0.toPrecision(3))} r_{s} →`, box.R, oy + 14 * ps, T.ink, { ps, align: 'right' });
+    label(c, 'photon sphere 1.5 r_{s}', ox, oy - 1.5 * sc - 9 * ps, T.equi, { ps, align: 'center' });
+    if (3 * sc < Math.min(box.R - box.L, box.B - box.T) / 2 - 10) label(c, 'ISCO 3 r_{s}', ox, oy + 3 * sc + 10 * ps, T.muted, { ps, align: 'center' });
+    // key
+    font(c, 10.5 * ps); c.textBaseline = 'middle'; c.textAlign = 'left';
+    const ky = box.B + 14 * ps, items = [[T.pos, 'falls in'], [T.equi, 'just inside or outside b_{c}'], [T.muted, 'escapes'], [T.accent, 'Einstein ring ray']];
+    let kx = box.L, kyy = ky;
+    for (const [col, t] of items) {
+      const wI = 26 * ps + tw(c, t);
+      if (kx > box.L && kx + wI - 8 * ps > box.R) { kx = box.L; kyy += 16 * ps; }
+      c.strokeStyle = col; c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(kx, kyy); c.lineTo(kx + 14 * ps, kyy); c.stroke(); c.fillStyle = T.muted; text(c, t, kx + 18 * ps, kyy); kx += wI;
+    }
+  }
+
+  // wavelength (nm) to an sRGB color, for the outgoing light
+  function waveColor(nm) {
+    let r = 0, g = 0, b = 0;
+    if (nm < 440) { r = (440 - nm) / 60; b = 1; } else if (nm < 490) { g = (nm - 440) / 50; b = 1; } else if (nm < 510) { g = 1; b = (510 - nm) / 20; }
+    else if (nm < 580) { r = (nm - 510) / 70; g = 1; } else if (nm < 645) { r = 1; g = (645 - nm) / 65; } else if (nm <= 780) { r = 1; }
+    let f = nm < 420 ? 0.3 + 0.7 * (nm - 380) / 40 : nm > 700 ? Math.max(0.35, 0.3 + 0.7 * (780 - nm) / 80) : 1;
+    if (nm > 780) return null;
+    return `rgb(${Math.round(255 * r * f)},${Math.round(255 * g * f)},${Math.round(255 * b * f)})`;
+  }
+  function drawClock(c, x, y, R, ang, col, ps) {
+    c.fillStyle = T.canvas; c.strokeStyle = col; c.lineWidth = 1.5 * ps; c.beginPath(); c.arc(x, y, R, 0, 2 * Math.PI); c.fill(); c.stroke();
+    for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6; c.beginPath(); c.moveTo(x + R * 0.78 * Math.cos(a), y + R * 0.78 * Math.sin(a)); c.lineTo(x + R * 0.92 * Math.cos(a), y + R * 0.92 * Math.sin(a)); c.lineWidth = 1 * ps; c.stroke(); }
+    c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(x, y); c.lineTo(x + R * 0.8 * Math.sin(ang), y - R * 0.8 * Math.cos(ang)); c.stroke();
+  }
+  function drawNear() {
+    const c = ctx, g = nearGeom(), m = g.m, ps = g.ps, r = nearR(), Mv = M(), rs = rsOf(Mv);
+    c.save(); c.beginPath(); c.rect(m.x, m.y, m.w, m.h); c.clip();
+    // lethal region (stretch above 100 g)
+    const rk = Math.cbrt(2 * GM_SUN * Mv * L_PERSON / LETHAL) / rs;
+    if (rk > 1) { c.fillStyle = T.pos; c.globalAlpha = 0.05; c.beginPath(); c.arc(g.cx, g.cy, g.X(Math.min(rk, 2000)) - g.cx, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1; }
+    // circles: ISCO, photon sphere
+    const circ = (rr, col, dash, lw) => { c.strokeStyle = col; c.lineWidth = lw * ps; c.setLineDash(dash); c.beginPath(); c.arc(g.cx, g.cy, g.X(rr) - g.cx, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]); };
+    circ(3, T.muted, [2, 4], 1.2); circ(1.5, T.equi, [5, 4], 1.6);
+    if (rk > 1 && rk < 1000) circ(rk, T.pos, [6, 4], 1.4);
+    c.fillStyle = T.hole; c.beginPath(); c.arc(g.cx, g.cy, g.Rh, 0, 2 * Math.PI); c.fill(); c.strokeStyle = T.muted; c.lineWidth = 1; c.stroke();
+    // radial axis, log scale
+    c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(g.cx + g.Rh, g.cy); c.lineTo(g.xr, g.cy); c.stroke();
+    font(c, 10.5 * ps); c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'top';
+    const ticks = [1, 1.5, 2, 3, 5, 10, 20, 50, 100, 200, 500, 1000], major = new Set([1, 1.5, 3, 10, 100, 1000]);
+    for (const t of ticks) { const x = g.X(t); c.strokeStyle = T.ink; c.lineWidth = 1; c.beginPath(); c.moveTo(x, g.cy - (major.has(t) ? 5 : 3) * ps); c.lineTo(x, g.cy + (major.has(t) ? 5 : 3) * ps); c.stroke(); if (major.has(t) || g.K > 50 * ps) c.fillText(String(t), x, g.cy + 8 * ps); }
+    c.textAlign = 'right'; text(c, 'r/r_{s}, compressed scale', g.xr, g.cy + 24 * ps);
+    // outgoing light from the observer
+    const x0 = g.X(r), wy = g.cy - 22 * ps, amp = 5 * ps, base = 11 * ps, z0 = clockRate(r);
+    let ph = 0;
+    c.lineWidth = 2 * ps;
+    for (let x = x0; x < g.xr - 2; x += 2) {
+      const rr = g.R(x), ratio = clockRate(rr) / z0, lam = 500 * ratio, col = waveColor(lam);
+      const y1 = wy + amp * Math.sin(ph - wavePhase); ph += 2 * Math.PI * 2 / (base * ratio);
+      const y2 = wy + amp * Math.sin(ph - wavePhase);
+      c.strokeStyle = col || T.muted; c.globalAlpha = col ? 1 : 0.6; c.beginPath(); c.moveTo(x, y1); c.lineTo(x + 2, y2); c.stroke();
+    }
+    c.globalAlpha = 1;
+    // clocks
+    const CR = 15 * ps;
+    drawClock(c, x0, g.cy - 62 * ps, CR, clockNear * 2 * Math.PI, T.accent, ps);
+    drawClock(c, g.xr + 4 * ps, g.cy - 62 * ps, CR, clockFar * 2 * Math.PI, T.ink, ps);
+    // tidal arrows below the axis
+    const dA = tidal(Mv, r * rs, L_PERSON), lg = Math.log10(dA / G0), len = Math.max(3, Math.min(34, 10 + 3 * lg)) * ps, ay = g.cy + 50 * ps;
+    c.strokeStyle = dA > LETHAL ? T.pos : T.accent; c.lineWidth = 2 * ps;
+    for (const s of [-1, 1]) { const xa = x0 + s * len; c.beginPath(); c.moveTo(x0 + s * 3 * ps, ay); c.lineTo(xa, ay); c.moveTo(xa, ay); c.lineTo(xa - s * 5 * ps, ay - 4 * ps); c.moveTo(xa, ay); c.lineTo(xa - s * 5 * ps, ay + 4 * ps); c.stroke(); }
+    c.fillStyle = dA > LETHAL ? T.pos : T.accent; c.beginPath(); c.arc(x0, ay, 2.5 * ps, 0, 2 * Math.PI); c.fill();
+    // observer handle
+    grip(c, x0, g.cy, isHot('obs'), T.accent, ps);
+    // labels last
+    const lab = (rr, s, col, ang) => { const R = g.X(rr) - g.cx; label(c, s, g.cx + R * Math.cos(ang) + 5 * ps, g.cy - R * Math.sin(ang) + 6 * ps, col, { ps, align: 'left' }); };
+    lab(1.5, 'photon sphere 1.5 r_{s}', T.equi, -Math.PI * 0.4);
+    lab(3, 'ISCO 3 r_{s}', T.muted, -Math.PI * 0.4);
+    font(c, 10.5 * ps); c.fillStyle = T.skyInk; c.textAlign = 'center'; c.textBaseline = 'middle'; text(c, 'horizon', g.cx, g.cy - 9 * ps);
+    if (rk > 1 && rk < 1000) lab(rk, `stretch over 100 g inside ${trim(rk.toPrecision(3))} r_{s}`, T.pos, -Math.PI * 0.3);
+    label(c, `your clock ×${z0.toFixed(3)}`, x0, g.cy - 62 * ps - CR - (x0 > g.xr - 150 * ps ? 28 : 11) * ps, T.accent, { ps, align: x0 > g.xr - 110 * ps ? 'right' : 'center', bold: true });
+    label(c, 'far away', g.xr + 4 * ps, g.cy - 62 * ps - CR - 11 * ps, T.ink, { ps, align: 'right' });
+    const lamFar = 500 / z0;
+    label(c, `arrives at ${lamFar < 1e4 ? Math.round(lamFar) + ' nm' : sci(lamFar / 1000) + ' µm'}`, g.xr + 4 * ps, wy - 13 * ps, T.muted, { ps, align: 'right' });
+    label(c, `ΔA = ${sci(dA / G0)} g`, x0, ay + 16 * ps, dA > LETHAL ? T.pos : T.accent, { ps, align: x0 > g.xr - 70 * ps ? 'right' : 'center', bold: true });
+    label(c, `${fmtMass(Mv)}: r_{s} = ${fmtLen(rs)}`, m.x + 10 * ps, m.y + 14 * ps, T.muted, { ps });
+    label(c, 'radial scale compressed; nothing drawn inside the horizon', m.x + 10 * ps, m.y + 32 * ps, T.muted, { ps, size: 10 });
+    c.restore();
+  }
+  function drawNearPlots() {
+    const [r1, r2] = splitSide(2), ps = psFor(LY.side), c = ctx, r = nearR(), Mv = M(), rs = rsOf(Mv);
+    nearBoxes = [];
+    const lx = (b) => (rr) => b.L + Math.log10(rr) / 3 * (b.R - b.L);
+    const xAxis = (b, X) => {
+      font(c, 10.5 * ps); c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'top';
+      for (const t of [1, 10, 100, 1000]) { const x = Math.round(X(t)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, b.T); c.lineTo(x, b.B); c.stroke(); c.fillText(String(t), x, b.B + 5); }
+      for (const t of [2, 3, 5, 20, 30, 50, 200, 300, 500]) { const x = Math.round(X(t)) + 0.5; c.strokeStyle = T.grid; c.globalAlpha = 0.5; c.beginPath(); c.moveTo(x, b.T); c.lineTo(x, b.B); c.stroke(); c.globalAlpha = 1; }
+      c.textAlign = 'right'; text(c, 'r/r_{s}', b.R, b.B + 19 * ps);
+    };
+    // clock rate
+    const b = plotBox(r1, ps, 34);
+    if (b.R - b.L > 60 && b.B - b.T > 50) {
+      nearBoxes.push(b);
+      const X = lx(b), Y = (v) => b.B - v * (b.B - b.T);
+      title(b, 'Static clock rate, √(1 − r_{s}/r)', ps);
+      font(c, 10.5 * ps); c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+      for (let v = 0; v <= 1.0001; v += 0.25) { const y = Math.round(Y(v)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(b.L, y); c.lineTo(b.R, y); c.stroke(); c.fillText(v.toFixed(2), b.L - 5, y); }
+      xAxis(b, X);
+      c.strokeStyle = T.equi; c.lineWidth = 2.2 * ps; c.beginPath();
+      for (let i = 0; i <= 400; i++) { const rr = Math.pow(10, 3 * i / 400), v = clockRate(rr); i ? c.lineTo(X(rr), Y(v)) : c.moveTo(X(rr), Y(v)); }
+      c.stroke();
+      const xm = X(r), ym = Y(clockRate(r));
+      c.strokeStyle = T.accent; c.lineWidth = 1; c.setLineDash([3, 3]); c.beginPath(); c.moveTo(xm, b.T); c.lineTo(xm, b.B); c.stroke(); c.setLineDash([]);
+      grip(c, xm, ym, isHot('obsPlot0'), T.accent, ps);
+      label(c, `${clockRate(r).toFixed(3)}, 1 + z = ${sci(onePlusZ(r), 4)}`, xm + (xm > (b.L + b.R) / 2 ? -11 : 11) * ps, Math.min(b.B - 12 * ps, ym + 16 * ps), T.accent, { ps, bold: true, align: xm > (b.L + b.R) / 2 ? 'right' : 'left' });
+      frame(b);
+    }
+    // tidal stretch (log)
+    const b2 = plotBox(r2, ps, 34);
+    if (b2.R - b2.L > 60 && b2.B - b2.T > 50) {
+      nearBoxes.push(b2);
+      const X = lx(b2), eB = -14, eT = 10, Y = (gv) => b2.B - (Math.log10(gv) - eB) / (eT - eB) * (b2.B - b2.T);
+      title(b2, 'Tidal stretch on a 2 m person, in g', ps);
+      font(c, 10.5 * ps); c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+      for (let e = eB; e <= eT; e += 2) { const y = Math.round(Y(Math.pow(10, e))) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(b2.L, y); c.lineTo(b2.R, y); c.stroke(); if (((e % 4) + 4) % 4 === 0) c.fillText(e === 0 ? '1' : `10${sup(e)}`, b2.L - 5, y); }
+      xAxis(b2, X);
+      c.save(); c.beginPath(); c.rect(b2.L, b2.T, b2.R - b2.L, b2.B - b2.T); c.clip();
+      c.fillStyle = T.pos; c.globalAlpha = 0.09; c.fillRect(b2.L, b2.T, b2.R - b2.L, Y(100) - b2.T); c.globalAlpha = 1;
+      c.strokeStyle = T.pos; c.lineWidth = 1; c.setLineDash([4, 4]); c.beginPath(); c.moveTo(b2.L, Y(100)); c.lineTo(b2.R, Y(100)); c.stroke();
+      c.strokeStyle = T.muted; c.beginPath(); c.moveTo(b2.L, Y(1)); c.lineTo(b2.R, Y(1)); c.stroke(); c.setLineDash([]);
+      const line = (Mm, col, lw) => { const rsm = rsOf(Mm); c.strokeStyle = col; c.lineWidth = lw * ps; c.beginPath(); c.moveTo(X(1), Y(tidal(Mm, rsm, L_PERSON) / G0)); c.lineTo(X(1000), Y(tidal(Mm, 1000 * rsm, L_PERSON) / G0)); c.stroke(); };
+      const refs = [[10, '10 M_{sun}'], [4.3e6, 'Sgr A*'], [6.5e9, 'M87*']];
+      for (const [Mm] of refs) line(Mm, T.gridStrong, 1.3);
+      line(Mv, T.pos, 2.4);
+      c.restore();
+      for (const [Mm, nm] of refs) { if (Math.abs(Math.log10(Mm / Mv)) < 0.01) continue; const y0 = Y(tidal(Mm, rsOf(Mm), L_PERSON) / G0); if (y0 > b2.T + 8 && y0 < b2.B - 8) label(c, nm, b2.L + 6 * ps, y0 + 10 * ps, T.muted, { ps, size: 10 }); }
+      label(c, 'lethal, roughly above 100 g', b2.R - 6 * ps, Y(100) - 10 * ps, T.pos, { ps, align: 'right', size: 10 });
+      label(c, '1 g', b2.R - 6 * ps, Y(1) + 10 * ps, T.muted, { ps, align: 'right', size: 10 });
+      const gv = tidal(Mv, r * rs, L_PERSON) / G0, xm = X(r), ym = Math.max(b2.T + 4, Math.min(b2.B - 4, Y(gv)));
+      grip(c, xm, ym, isHot('obsPlot1'), T.pos, ps);
+      label(c, `${sci(gv)} g`, xm + (xm > (b2.L + b2.R) / 2 ? -11 : 11) * ps, ym + (ym < b2.T + 40 * ps ? 16 : -16) * ps, T.pos, { ps, bold: true, align: xm > (b2.L + b2.R) / 2 ? 'right' : 'left' });
+      frame(b2);
+    }
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const Mv = M(), rs = rsOf(Mv);
+    $('mOut').innerHTML = fmtMass(Mv, true);
+    $('massH').textContent = S.view === 'lens' ? 'Lens mass' : 'Black hole mass';
+    $('rRs').textContent = fmtLen(rs);
+    $('rPh').textContent = fmtLen(1.5 * rs); $('rIsco').textContent = fmtLen(3 * rs);
+    const ob = S.obj && OBJ[S.obj] && Math.abs(Math.log10(OBJ[S.obj].M) - S.logM) < 0.006 ? OBJ[S.obj] : null;
+    $('objRow').hidden = !ob;
+    if (ob) {
+      $('objLab').innerHTML = `${ob.name} seen from Earth (D = ${ob.Dtxt}): shadow diameter 2√27 GM/(c²D)`;
+      $('rObj').innerHTML = `${fmtAngle(shadowDiam(Mv, ob.D))} <span class="ok">${ob.eht}</span>`;
+    }
+    // lens
+    const DL = Math.pow(10, S.logDL), DS = Math.pow(10, S.logDS), te = thetaE(Mv, DL * KPC, DS * KPC);
+    $('dlOut').textContent = fmtDist(DL); $('dsOut').textContent = fmtDist(DS);
+    $('rTE').textContent = fmtAngle(te);
+    $('rRE').textContent = fmtLen(te * DL * KPC);
+    $('rtE').textContent = fmtTime(tEsec());
+    $('rhoOut').innerHTML = `${S.rho.toFixed(3)} θ<sub>E</sub>`;
+    $('sxOut').textContent = S.bx.toFixed(3); $('syOut').textContent = S.by.toFixed(3);
+    const u = Math.hypot(S.bx, S.by), [tp, tm] = images(u);
+    $('rU').innerHTML = `${u.toFixed(3)} θ<sub>E</sub>`;
+    $('rSep').textContent = fmtAngle((tp - tm) * te);
+    $('rT1').innerHTML = `${tp.toFixed(3)} θ<sub>E</sub>`; $('rT2').innerHTML = `${tm.toFixed(3)} θ<sub>E</sub>`;
+    $('rM1').textContent = u > 1e-6 ? mu(tp).toFixed(3) : '∞'; $('rM2').textContent = u > 1e-6 ? mu(tm).toFixed(3) : '−∞';
+    $('rA').textContent = u > 1e-6 ? Apoint(u).toFixed(3) : '∞ (ring)';
+    lensReadoutsA();
+    $('shGal').setAttribute('aria-pressed', String(S.shape === 'gal')); $('shDisk').setAttribute('aria-pressed', String(S.shape === 'disk'));
+    // ray
+    $('roOut').innerHTML = `${trim(ro().toPrecision(3))} r<sub>s</sub> = ${fmtLen(ro() * rs)}`;
+    $('gszOut').textContent = `${S.gsz.toFixed(1)}°`;
+    if (S.view === 'ray') {
+      ensureTable();
+      $('rSh').textContent = fmtDeg(table.ac) + (ro() < 1.5 ? ' (more than half the sky)' : '');
+      $('rShFar').textContent = BC / ro() < 1 ? fmtDeg(Math.asin(Math.min(1, BC / ro()))) : 'not valid this close';
+      $('rER').innerHTML = isFinite(ringA) ? `${fmtDeg(ringA)} <span class="ok">thin lens ${fmtDeg(Math.sqrt(2 / ro()))}${isFinite(ring2A) ? `; next ring ${fmtDeg(ring2A)}` : ''}</span>` : '—';
+      $('rGal').textContent = fmtDeg(Math.hypot(S.gx, S.gy));
+    }
+    // near
+    const r = nearR(), rr = r * rs, rate = clockRate(r), zz = onePlusZ(r), dA = tidal(Mv, rr, L_PERSON), dAh = tidal(Mv, rs, L_PERSON);
+    $('rOut').innerHTML = `${trim(r.toPrecision(4))} r<sub>s</sub> = ${fmtLen(rr)}`;
+    $('rRate').textContent = rate.toFixed(4); $('rZ').textContent = sci(zz, 4);
+    $('rHour').textContent = fmtTime(3600 * zz);
+    const lam = 500 * zz; $('rLam').innerHTML = `${lam < 1e4 ? lam.toFixed(0) + ' nm' : sci(lam / 1000) + ' µm'} <span class="ok">${lam > 780 ? 'infrared or longer, invisible to the eye' : lam > 500.5 ? 'redder' : ''}</span>`;
+    $('rHov').textContent = fmtAcc(hoverAcc(Mv, rr));
+    $('rTid').textContent = fmtAcc(dA);
+    $('rTidH').textContent = fmtAcc(dAh);
+    const v = $('verdict');
+    if (dAh > LETHAL) {
+      const rk = Math.cbrt(2 * GM_SUN * Mv * L_PERSON / LETHAL);
+      v.className = 'flag'; v.innerHTML = `${dA > LETHAL ? 'Torn apart here.' : 'Safe here, but not for long.'}<span>The stretch passes 100 g at ${fmtLen(rk)} = ${trim((rk / rs).toPrecision(3))} r<sub>s</sub>, outside the horizon: falling in, you are pulled apart before you reach it.</span>`;
+    } else {
+      v.className = 'flag safe'; v.innerHTML = `You survive the horizon.<span>Even at r<sub>s</sub> the stretch is only ${sci(dAh / G0)} g. The more massive the hole, the gentler its horizon: ΔA at r<sub>s</sub> falls as 1/M².</span>`;
+    }
+    countLine();
+  }
+  function lensReadoutsA() { $('rAfs').innerHTML = `${Aexact(S.bx, S.by).toFixed(3)}; <span class="ok">picture ${isFinite(measA) ? measA.toFixed(3) : '—'} (images in view, pixel sampled)</span>`; }
+  function countLine() {
+    const el = $('count');
+    if (S.view === 'lens') el.innerHTML = `A = ${isFinite(measA) ? measA.toFixed(2) : '—'} <small>u = ${Math.hypot(S.bx, S.by).toFixed(2)}</small>`;
+    else if (S.view === 'ray') el.innerHTML = table ? `shadow ${fmtDeg(table.ac)} <small>r<sub>o</sub> = ${trim(ro().toPrecision(3))} r<sub>s</sub></small>` : '';
+    else el.innerHTML = `clock ×${clockRate(nearR()).toFixed(3)} <small>1 + z = ${sci(onePlusZ(nearR()), 3)}</small>`;
+  }
+  const MODEL = {
+    lens: 'Thin lens, point mass, small angles: the lens equation β = θ − θ_E²/θ is exact for a point mass far from the light path (impact parameter ≫ r_s). A galaxy is not a point mass, so real galaxy lenses differ in detail. Distances are ordinary distances; at cosmological distances use angular diameter distances. The background stars and galaxies are placed at the source distance. Pixels are traced back exactly; the picture shows only what lies inside the view.',
+    ray: 'Exact light paths of a Schwarzschild (not rotating) black hole for an observer hovering at r_o, looking at the hole. Sky directions are exact; the sky is infinitely far away. Not included: the observer’s gravitational blueshift of the incoming light (a factor 1/√(1 − r_s/r_o) in frequency), any accretion disk, and spin. The EHT images show glowing gas around the shadow, which this view leaves out.',
+    near: 'Schwarzschild black hole, not rotating. Clock rates and redshift are for static observers, exact. The tidal stretch 2GML/r³ is exact for a body falling along a radius, as long as it is small compared with r. The 100 g line is a rough guide, not a medical limit. The diagram’s radial scale is compressed, x ∝ ln(1 + 2(r − r_s)/r_s): nearly even close to the hole, logarithmic far out.'
+  };
+  const KEYS = {
+    lens: '<span><i class="swatch ring"></i>Einstein ring θ = θ<sub>E</sub>, the critical curve</span><span><i class="swatch dash"></i>True position of the source and its track</span><span><i class="swatch gold"></i>This source, exact light curve</span><span><i class="swatch dash"></i>Point source through the center</span><span><i class="swatch dot"></i>Measured from the picture</span>',
+    ray: '<span><i class="swatch gold"></i>Shadow edge and photon sphere</span><span><i class="swatch ring"></i>Einstein ring for a source straight behind</span><span><i class="swatch red"></i>Rays that fall in</span><span><i class="swatch dash"></i>Rays that escape; hover the picture to trace one</span>',
+    near: '<span><i class="swatch gold"></i>Photon sphere 1.5 r<sub>s</sub>; clock rate</span><span><i class="swatch dash"></i>ISCO 3 r<sub>s</sub>, innermost stable circular orbit</span><span><i class="swatch red"></i>Tidal stretch for this mass</span><span><i class="swatch dot"></i>Drag the observer, on the drawing or a plot</span>'
+  };
+  const htmlSub = (s) => s.replace(/θ_E/g, 'θ<sub>E</sub>').replace(/r_s/g, 'r<sub>s</sub>').replace(/r_o/g, 'r<sub>o</sub>').replace(/M_sun/g, 'M<sub>sun</sub>');
+
+  // ---------- controls ----------
+  function syncUI() {
+    for (const b of document.querySelectorAll('[data-v]')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    $('secLens').hidden = S.view !== 'lens'; $('secSrc').hidden = S.view !== 'lens'; $('secRay').hidden = S.view !== 'ray'; $('secNear').hidden = S.view !== 'near';
+    $('logM').value = S.logM; $('logDL').value = S.logDL; $('logDS').value = S.logDS; $('rho').value = S.rho; $('sx').value = S.bx; $('sy').value = S.by;
+    $('stars').checked = S.stars; $('logRo').value = S.logRo; $('gsz').value = S.gsz; $('rayStars').checked = S.rayStars; $('logR').value = S.logR;
+    $('modelHint').innerHTML = htmlSub(MODEL[S.view]); $('key').innerHTML = KEYS[S.view];
+  }
+  function markPreset(name) {
+    S.preset = name;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint').innerHTML = name ? htmlSub(PRESETS[name].hint) : 'Your own setup. Pick a preset to return to a known one.';
+  }
+  function custom() { if (S.preset) markPreset(null); }
+  function applyPreset(name) {
+    const p = PRESETS[name];
+    for (const k of ['view', 'logM', 'logDL', 'logDS', 'shape', 'rho', 'bx', 'by', 'logRo', 'gx', 'gy', 'gsz', 'logR']) if (p[k] !== undefined) S[k] = p[k];
+    S.obj = p.obj || null;
+    measured = []; curve = null; hoverRay = null; hoverAlpha = NaN;
+    markPreset(name); syncUI(); dirty = true; readouts();
+    setPlaying(!!p.play && !reduce);
+  }
+  const snap = (el, v) => { const lo = +el.min, hi = +el.max, st = +el.step || 0; v = Math.max(lo, Math.min(hi, v)); if (st) v = lo + Math.round((v - lo) / st) * st; return +Math.max(lo, Math.min(hi, v)).toFixed(6); };
+  function setSrc(x, y) { S.bx = snap($('sx'), x); S.by = snap($('sy'), y); $('sx').value = S.bx; $('sy').value = S.by; dirty = true; custom(); readouts(); }
+  function setRho(v) { S.rho = snap($('rho'), v); $('rho').value = S.rho; dirty = true; custom(); readouts(); }
+  function setGal(x, y) { const psi = Math.hypot(x, y), lim = Math.PI * 0.95; if (psi > lim) { x *= lim / psi; y *= lim / psi; } S.gx = x; S.gy = y; dirty = true; custom(); readouts(); }
+  function setGsz(v) { S.gsz = snap($('gsz'), v); $('gsz').value = S.gsz; dirty = true; custom(); readouts(); }
+  function setR(r) { S.logR = snap($('logR'), Math.log10(Math.max(1, r))); $('logR').value = S.logR; custom(); readouts(); }
+  function setView(v) { if (S.view === v) return; S.view = v; hoverRay = null; hoverAlpha = NaN; syncUI(); dirty = true; readouts(); if (v === 'near' && !reduce) setPlaying(true); }
+  for (const b of document.querySelectorAll('[data-v]')) b.addEventListener('click', () => { setView(b.dataset.v); custom(); });
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('logM').addEventListener('input', (e) => { S.logM = +e.target.value; custom(); readouts(); });
+  $('logDL').addEventListener('input', (e) => { S.logDL = +e.target.value; if (S.logDS < S.logDL + 0.05) { S.logDS = Math.min(+$('logDS').max, S.logDL + 0.05); $('logDS').value = S.logDS; } custom(); readouts(); });
+  $('logDS').addEventListener('input', (e) => { S.logDS = +e.target.value; if (S.logDS < S.logDL + 0.05) { S.logDL = Math.max(+$('logDL').min, S.logDS - 0.05); $('logDL').value = S.logDL; } custom(); readouts(); });
+  $('rho').addEventListener('input', (e) => setRho(+e.target.value));
+  $('sx').addEventListener('input', (e) => setSrc(+e.target.value, S.by));
+  $('sy').addEventListener('input', (e) => setSrc(S.bx, +e.target.value));
+  $('stars').addEventListener('change', (e) => { S.stars = e.target.checked; dirty = true; });
+  $('shGal').addEventListener('click', () => setShape('gal'));
+  $('shDisk').addEventListener('click', () => setShape('disk'));
+  function setShape(sh) { if (S.shape === sh) return; S.shape = sh; if (sh === 'gal' && S.rho < 0.15) setRho(0.3); dirty = true; custom(); readouts(); }
+  $('logRo').addEventListener('input', (e) => { S.logRo = +e.target.value; custom(); dirty = true; readouts(); });
+  $('gsz').addEventListener('input', (e) => setGsz(+e.target.value));
+  $('rayStars').addEventListener('change', (e) => { S.rayStars = e.target.checked; dirty = true; });
+  $('logR').addEventListener('input', (e) => { S.logR = +e.target.value; custom(); readouts(); });
+  const playBtn = $('play');
+  function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); }
+  playBtn.addEventListener('click', () => setPlaying(!playing));
+  $('reset').addEventListener('click', () => applyPreset(S.preset || (S.view === 'lens' ? 'micro' : S.view === 'ray' ? 'm87' : 'stellar')));
+
+  // ---------- dragging on the drawing ----------
+  let drag = null, hoverId = null;
+  function dragHandles() {
+    const out = [];
+    if (!LY) return out;
+    if (S.view === 'lens') {
+      const g = lensGeom(), k = g.pxPerTE, [sx, sy] = lensXY(S.bx, S.by), m = LY.main;
+      const toT = (x, y) => [(x - m.x - m.w / 2) / k, (m.y + m.h / 2 - y) / k];
+      out.push({ id: 'src', cursor: 'move', pt: [sx, sy], set: (x, y) => { const [a, b] = toT(x, y); setSrc(a, b); } });
+      out.push({ id: 'rho', cursor: 'ew-resize', pt: [sx + S.rho * k, sy], set: (x) => setRho((x - sx) / k) });
+      const u = Math.hypot(S.bx, S.by);
+      if (u > 2e-3) {
+        const [tp, tm] = images(u), ux = S.bx / u, uy = S.by / u;
+        for (const [id, t] of [['im1', tp], ['im2', tm]]) {
+          const [x, y] = lensXY(t * ux, t * uy);
+          out.push({ id, cursor: 'move', pt: [x, y], set: (px, py) => { const [a, b] = toT(px, py), q = a * a + b * b; if (q < 1e-6) return; const f = 1 - 1 / q; setSrc(a * f, b * f); } });
+        }
+      }
+      if (lcBox) { const X = lcBox.L + (S.bx + 2.5) / 5 * (lcBox.R - lcBox.L); out.push({ id: 'tPlot', cursor: 'ew-resize', seg: [X, lcBox.T, X, lcBox.B], set: (x) => setSrc((x - lcBox.L) / (lcBox.R - lcBox.L) * 5 - 2.5, S.by) }); }
+    } else if (S.view === 'ray') {
+      if (!table) return out;
+      const k = rayGeom().kc, m = LY.main, psi = Math.hypot(S.gx, S.gy), chi = Math.atan2(S.gy, S.gx), [gx, gy] = raySX(psi, chi), gr = S.gsz * Math.PI / 180 / k;
+      out.push({ id: 'gsrc', cursor: 'move', pt: [gx, gy], set: (x, y) => setGal((x - m.x - m.w / 2) * k, (m.y + m.h / 2 - y) * k) });
+      out.push({ id: 'gsz', cursor: 'ew-resize', pt: [gx + gr, gy], set: (x) => setGsz((x - gx) * k * 180 / Math.PI) });
+    } else {
+      const g = nearGeom(), x0 = g.X(nearR());
+      out.push({ id: 'obs', cursor: 'ew-resize', pt: [x0, g.cy], seg: [x0, g.cy - 70 * g.ps, x0, g.cy + 60 * g.ps], set: (x) => setR(g.R(x)) });
+      (nearBoxes || []).forEach((b, i) => { const X = b.L + Math.log10(nearR()) / 3 * (b.R - b.L); out.push({ id: 'obsPlot' + i, cursor: 'ew-resize', seg: [X, b.T, X, b.B], set: (x) => setR(Math.pow(10, 3 * (x - b.L) / (b.R - b.L))) }); });
+    }
+    return out;
+  }
+  function handleAt(ev) {
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 9 * psFor(LY.main) * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of dragHandles()) {
+      let d = Infinity;
+      if (h.pt) d = Math.hypot(x - h.pt[0], y - h.pt[1]) - 2;
+      if (h.seg) { const [x1, y1, , y2] = h.seg; if (y >= Math.min(y1, y2) - 4 && y <= Math.max(y1, y2) + 4) d = Math.min(d, Math.abs(x - x1) + (h.pt ? 1 : 0)); }
+      if (h.id === 'rho' || h.id === 'gsz') d -= 1;          // the small size grip wins a tie with the center
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  let dragQ = null, dragFrame = false;
+  can.addEventListener('pointermove', (ev) => {
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    if (drag) {
+      dragQ = [x, y];
+      if (!dragFrame) { dragFrame = true; requestAnimationFrame(() => { dragFrame = false; if (!drag || !dragQ) return; const h = dragHandles().find((k) => k.id === drag.id); if (h) h.set(dragQ[0], dragQ[1]); dragQ = null; }); }
+      return;
+    }
+    const h = handleAt(ev); hoverId = h ? h.id : null; can.style.cursor = h ? h.cursor : (S.view === 'ray' && inMain(x, y) ? 'crosshair' : 'default');
+    if (S.view === 'ray' && table && !h) {
+      const m = LY.main;
+      if (inMain(x, y)) {
+        const a = Math.hypot(x - m.x - m.w / 2, y - m.y - m.h / 2) * rayGeom().kc;
+        if (a <= Math.PI) { hoverAlpha = a; hoverRay = []; traceRay(ro(), a, hoverRay, 0.01); } else { hoverAlpha = NaN; hoverRay = null; }
+      } else { hoverAlpha = NaN; hoverRay = null; }
+    }
+  });
+  const inMain = (x, y) => { const m = LY.main; return x >= m.x && x <= m.x + m.w && y >= m.y && y <= m.y + m.h; };
+  can.addEventListener('pointerdown', (ev) => {
+    const h = handleAt(ev); if (!h) return;
+    drag = { id: h.id }; hoverId = h.id;
+    try { can.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault();
+  });
+  const endDrag = () => { drag = null; };
+  can.addEventListener('pointerup', endDrag);
+  can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('pointerleave', () => { if (!drag) { hoverId = null; hoverRay = null; hoverAlpha = NaN; } });
+  can.addEventListener('keydown', (e) => {
+    const big = e.shiftKey ? 5 : 1, k = e.key;
+    if (k === 'ArrowLeft' || k === 'ArrowRight' || k === 'ArrowUp' || k === 'ArrowDown') {
+      const dx = k === 'ArrowLeft' ? -1 : k === 'ArrowRight' ? 1 : 0, dy = k === 'ArrowUp' ? 1 : k === 'ArrowDown' ? -1 : 0;
+      if (S.view === 'lens') setSrc(S.bx + dx * 0.02 * big, S.by + dy * 0.02 * big);
+      else if (S.view === 'ray') { const st = rayFov() * 0.01 * big; setGal(S.gx + dx * st, S.gy + dy * st); }
+      else setR(Math.pow(10, S.logR + (dx || dy) * 0.01 * big));
+    } else if (k === ' ') setPlaying(!playing);
+    else if (k === 'v' || k === 'V') { const vs = ['lens', 'ray', 'near']; setView(vs[(vs.indexOf(S.view) + 1) % 3]); custom(); }
+    else if (k === 'g' || k === 'G') { if (S.view === 'lens') setShape(S.shape === 'gal' ? 'disk' : 'gal'); }
+    else if (k === 'r' || k === 'R') $('reset').click();
+    else return;
+    e.preventDefault();
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(() => { resize(); });
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  const retheme = () => { tokens(); lensImg = null; rayImg = null; dirty = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), frameMs = 0, lastRead = 0, lastMeasT = -99;
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (playing && !drag) {
+      if (S.view === 'lens') {
+        let x = S.bx + 0.42 * dt;
+        if (x > 2.5) { x = -2.5; measured = []; lastMeasT = -99; }
+        S.bx = +x.toFixed(4); $('sx').value = S.bx; dirty = true;
+      } else if (S.view === 'ray' && table) {
+        const lim = rayFov() * 0.85; let x = S.gx + lim * dt / 7; if (x > lim) x = -lim; S.gx = x; dirty = true;
+      }
+    }
+    if (S.view === 'near' && playing) { const rate = clockRate(nearR()); clockFar += dt * 0.25; clockNear += dt * 0.25 * rate; wavePhase += dt * 6; }
+    drawAll();
+    if (S.view === 'lens' && isFinite(measA)) {
+      if (playing && !drag && S.bx - lastMeasT >= 0.04) { measured.push([S.bx, measA]); lastMeasT = S.bx; if (measured.length > 400) measured.shift(); }
+      if (!playing || drag) lastMeasT = -99;
+    }
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastRead > 120) {
+      lastRead = now;
+      if (S.view === 'lens') { $('sxOut').textContent = S.bx.toFixed(3); const u = Math.hypot(S.bx, S.by), [tp, tm] = images(u);
+        $('rU').innerHTML = `${u.toFixed(3)} θ<sub>E</sub>`; $('rT1').innerHTML = `${tp.toFixed(3)} θ<sub>E</sub>`; $('rT2').innerHTML = `${tm.toFixed(3)} θ<sub>E</sub>`;
+        $('rM1').textContent = mu(tp).toFixed(3); $('rM2').textContent = mu(tm).toFixed(3); $('rA').textContent = Apoint(u).toFixed(3); lensReadoutsA(); }
+      if (S.view === 'ray') $('rGal').textContent = fmtDeg(Math.hypot(S.gx, S.gy));
+      countLine();
+    }
+    requestAnimationFrame(loop);
+  }
+  window.__bh = { get frameMs() { return frameMs; }, get S() { return S; }, get measA() { return measA; }, get table() { return table; }, get measured() { return measured; },
+    applyPreset, setView, setPlaying, setSrc, handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt, seg: h.seg })); } };
+
+  tokens();
+  new ResizeObserver(() => resize()).observe(pane);
+  resize();
+  applyPreset('micro');
+  if (reduce) { S.bx = -0.4; $('sx').value = S.bx; dirty = true; readouts(); }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

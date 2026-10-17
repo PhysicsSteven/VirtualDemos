@@ -51,6 +51,7 @@ OVERRIDES = {
     "quantum-waves": {"click": ['[data-p="barrier"]'], "wait": 3000},
     "circuit-builder": {"click": ['[data-p="compare"]'], "wait": 1500},
     "gauss-law": {"click": ['[data-p="outside"]'], "wait": 1500},
+    "black-holes": {"click": ['[data-p="ring"]'], "wait": 2500},
     "capacitors": {"click": ['[data-p="energy"]'], "wait": 1500,
                    "js": "['tPane', 'ePane', 'gPane'].forEach((id) => { document.getElementById(id).hidden = true; }); __cap.setRunning(false); __cap.setGeom({ A: 0.03 })"},
 }
