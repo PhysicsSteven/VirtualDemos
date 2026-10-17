@@ -1,0 +1,1516 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Hydrogen Orbitals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the orbital (3D point cloud or a 2D slice) on top, the radial distribution below it; instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --cloud-bg: #0b111a;
+  --cloud-ink: #e6ecf3;
+  --cloud-muted: #93a0b2;
+  --cloud-line: #2b3646;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --cloud-bg: #070b11; --cloud-ink: #e6ecf3; --cloud-muted: #93a0b2;
+    --cloud-line: #263040; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --cloud-bg: #070b11; --cloud-ink: #e6ecf3; --cloud-muted: #93a0b2;
+  --cloud-line: #263040; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: minmax(0, 64fr) minmax(0, 36fr); }
+.pane { position: relative; min-height: 0; }
+.pane + .pane { border-top: 1px solid var(--line); }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#vPane { background: var(--cloud-bg); color: var(--cloud-ink); }
+#gl { touch-action: none; cursor: grab; outline: none; }
+#gl:active { cursor: grabbing; }
+#gl:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+#slice { touch-action: none; cursor: crosshair; }
+#rCan { touch-action: none; cursor: crosshair; }
+.stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
+.stage-ctl > * { pointer-events: auto; }
+.tclock { margin-left: auto; font-size: 0.86rem; font-weight: 600; color: var(--cloud-ink); background: color-mix(in srgb, var(--cloud-bg) 80%, transparent); padding: 2px 6px; border-radius: 6px; }
+.tag { position: absolute; left: 12px; bottom: 10px; z-index: 2; pointer-events: none; color: var(--cloud-ink); text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7); }
+.tag .nm { font-size: 1.7rem; font-weight: 700; line-height: 1.1; }
+.tag .nm sub { font-size: 0.62em; }
+.tag .nm .mpart { font-size: 0.6em; font-weight: 400; color: var(--cloud-muted); }
+.tag .sub2 { font-size: 0.8rem; color: var(--cloud-muted); }
+.scalebar { position: absolute; right: 12px; bottom: 12px; z-index: 2; pointer-events: none; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; font-size: 0.76rem; color: var(--cloud-muted); }
+.scalebar i { display: block; height: 6px; border: 1.5px solid var(--cloud-ink); border-top: 0; opacity: 0.8; }
+.axlab { position: absolute; left: 0; top: 0; z-index: 1; pointer-events: none; font-family: var(--font-mono); font-size: 0.8rem; font-style: italic; color: var(--cloud-muted); }
+.vnote { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2; max-width: min(360px, calc(100% - 32px)); text-align: center; font-size: 0.9rem; color: var(--cloud-ink); background: color-mix(in srgb, var(--cloud-bg) 85%, transparent); border: 1px solid var(--cloud-line); border-radius: 8px; padding: 10px 14px; }
+.fail { position: absolute; left: 10px; right: 10px; top: 56px; z-index: 2; font-size: 0.82rem; color: var(--cloud-ink); background: color-mix(in srgb, var(--cloud-bg) 85%, transparent); border: 1px solid var(--cloud-line); border-radius: 6px; padding: 5px 9px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail h3 { margin: 2px 0 0; font-size: 0.8rem; font-weight: 700; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.hint a { color: var(--accent); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.chips sub, .readout sub { font-size: 0.72em; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
+.btn.spin[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+
+.shells { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 5px 8px; align-items: center; }
+.shells .nl { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+.shells .chips { gap: 3px; }
+.shells .chips button { font-family: var(--font-mono); font-size: 0.8rem; padding: 3px 4px; min-width: 31px; }
+#mChips button { font-size: 0.84rem; padding: 4px 8px; }
+
+select { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; width: 100%; }
+select:disabled { opacity: 0.5; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.25rem; font-family: var(--font-ui); }
+.readout .wide { grid-column: 1 / -1; }
+.readout .small dd { font-size: 0.88rem; font-weight: 400; font-family: var(--font-ui); }
+.formula { margin: 0; font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.dot { width: 12px; height: 12px; border: 0; border-radius: 50%; margin: 0 5px; }
+.swatch.fill { height: 10px; border: 1px solid var(--accent); background: color-mix(in srgb, var(--accent) 25%, transparent); }
+.swatch.mean { border-top-style: dashed; border-color: var(--accent); }
+.swatch.bohr { border-top-style: dashed; border-color: var(--equi); }
+.swatch.node { width: 10px; height: 10px; border: 2px solid var(--ink); border-radius: 50%; margin: 0 6px; }
+.swatch.wheel { width: 14px; height: 14px; border: 0; border-radius: 50%; margin: 0 4px; background: conic-gradient(from 90deg, hsl(0 90% 60%), hsl(270 90% 60%), hsl(180 90% 60%), hsl(90 90% 60%), hsl(0 90% 60%)); }
+
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 86vh; min-height: 600px; grid-template-rows: minmax(0, 62fr) minmax(0, 38fr); }
+  .rail { overflow: visible; }
+  .tag .nm { font-size: 1.35rem; }
+  .scalebar { top: 54px; bottom: auto; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Hydrogen Orbitals</h1>
+      <p>The quantum mechanical hydrogen atom. Each point in the cloud is one place the electron could be found, drawn at random from |ψ|².</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">r in a₀ = 0.0529 nm · E in eV · t in fs</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="pane" id="vPane">
+        <canvas id="slice" hidden aria-label="Slice through the atom: probability density |ψ|² in a plane through the nucleus, with nodal lines dashed. Hover to read values."></canvas>
+        <span class="axlab" id="axX" hidden>x</span>
+        <span class="axlab" id="axY" hidden>y</span>
+        <span class="axlab" id="axZ" hidden>z</span>
+        <div class="stage-ctl">
+          <div class="seg" role="group" aria-label="View" id="viewSeg">
+            <button type="button" data-v="3d" aria-pressed="true">3D cloud</button>
+            <button type="button" data-v="slice" aria-pressed="false">Slice</button>
+          </div>
+          <button type="button" class="btn spin" id="spin" aria-pressed="false">Spin</button>
+          <div class="seg" role="group" aria-label="Slice plane" id="planeSeg" hidden>
+            <button type="button" data-p="xz" aria-pressed="true">xz</button>
+            <button type="button" data-p="xy" aria-pressed="false">xy</button>
+            <button type="button" data-p="diag" aria-pressed="false">x = y</button>
+          </div>
+          <button type="button" class="btn" id="play" hidden>Play</button>
+          <button type="button" class="btn" id="reset" hidden>Reset</button>
+          <div class="seg" role="group" aria-label="Speed" id="speedSeg" hidden>
+            <button type="button" data-s="0.25" aria-pressed="false">¼×</button>
+            <button type="button" data-s="1" aria-pressed="true">1×</button>
+            <button type="button" data-s="4" aria-pressed="false">4×</button>
+          </div>
+          <span class="tclock mono" id="tclock" hidden>t = 0 fs</span>
+        </div>
+        <div class="tag" id="tag"><div class="nm" id="tagName"></div><div class="sub2 mono" id="tagSub"></div></div>
+        <div class="scalebar mono" id="scaleBar"><i id="scaleLine"></i><span id="scaleText"></span></div>
+        <div class="vnote" id="nodalNote" hidden></div>
+        <div class="fail" id="failNote" hidden>The 3D view could not load its graphics library. Check your connection and reload the page. The slice view works without it.</div>
+      </div>
+      <div class="pane" id="rPane">
+        <canvas id="rCan" aria-label="Radial probability distribution P(r) = r²|R(r)|² against r in Bohr radii, with the mean radius, the Bohr model radius and the radial nodes marked. Hover to read values."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Presets</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="1s" aria-pressed="false">1s</button>
+          <button type="button" data-p="2s" aria-pressed="false">2s</button>
+          <button type="button" data-p="2pz" aria-pressed="false">2p<sub>z</sub></button>
+          <button type="button" data-p="3dz2" aria-pressed="true">3d<sub>z²</sub></button>
+          <button type="button" data-p="4fxyz" aria-pressed="false">4f<sub>xyz</sub></button>
+          <button type="button" data-p="mix" aria-pressed="false">1s + 2p<sub>z</sub></button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>State</h2>
+        <h3>Shell n and subshell l</h3>
+        <div class="shells" id="shells"></div>
+        <div class="inline">
+          <h3>Orbital m</h3>
+          <div class="seg" role="group" aria-label="Basis" id="basisSeg">
+            <button type="button" data-b="real" aria-pressed="true">Real</button>
+            <button type="button" data-b="complex" aria-pressed="false">Complex</button>
+          </div>
+        </div>
+        <div class="chips" id="mChips"></div>
+        <p class="hint" id="basisHint"></p>
+      </section>
+
+      <section>
+        <h2>This state</h2>
+        <dl class="readout">
+          <div class="wide big"><dt>Orbital</dt><dd id="rName">—</dd></div>
+          <div><dt>Energy E<sub>n</sub></dt><dd id="rE">—</dd></div>
+          <div><dt>Quantum numbers</dt><dd id="rQ">—</dd></div>
+          <div><dt>Radial nodes n − l − 1</dt><dd id="rRad">—</dd></div>
+          <div><dt>Angular nodes l</dt><dd id="rAng">—</dd></div>
+          <div><dt>Mean radius ⟨r⟩</dt><dd id="rMean">—</dd></div>
+          <div><dt>Most probable r</dt><dd id="rMP">—</dd></div>
+          <div><dt>Angular momentum |L|</dt><dd id="rL">—</dd></div>
+          <div><dt>L<sub>z</sub></dt><dd id="rLz">—</dd></div>
+          <div class="wide"><dt>Total probability ∫P(r) dr, computed</dt><dd id="rNorm">—</dd></div>
+        </dl>
+        <p class="formula mono">E<sub>n</sub> = −13.6 eV / n² · ⟨r⟩ = (a₀/2)[3n² − l(l + 1)]</p>
+        <p class="hint" id="nodeHint"></p>
+      </section>
+
+      <section>
+        <h2>Superposition</h2>
+        <label class="check"><input type="checkbox" id="mixOn">Add a second state, half and half</label>
+        <select id="mixSel" aria-label="Second state" disabled></select>
+        <dl class="readout" id="mixRead">
+          <div><dt>ΔE = E<sub>B</sub> − E<sub>A</sub></dt><dd id="rDE">—</dd></div>
+          <div><dt>Beat period h/ΔE</dt><dd id="rBeat">—</dd></div>
+          <div><dt>Photon λ = hc/ΔE</dt><dd id="rLam">—</dd></div>
+          <div><dt>Swing of ⟨r⟩</dt><dd id="rDip">—</dd></div>
+          <div class="wide small"><dt>Electric dipole</dt><dd id="rRule">—</dd></div>
+        </dl>
+        <p class="hint">ψ = (ψ<sub>A</sub> e<sup>−iE<sub>A</sub>t/ħ</sup> + ψ<sub>B</sub> e<sup>−iE<sub>B</sub>t/ħ</sup>)/√2, evolved exactly. The two parts interfere, and the pattern repeats once per beat period. Colors drop the common phase e<sup>−iE<sub>A</sub>t/ħ</sup>, which nothing can measure.</p>
+      </section>
+
+      <section>
+        <h2>Display</h2>
+        <div class="inline">
+          <span class="lab">Points</span>
+          <div class="seg" role="group" aria-label="Number of points" id="countSeg">
+            <button type="button" data-c="20000" aria-pressed="false">20k</button>
+            <button type="button" data-c="40000" aria-pressed="true">40k</button>
+            <button type="button" data-c="60000" aria-pressed="false">60k</button>
+          </div>
+        </div>
+        <button type="button" class="btn" id="resample">Draw new points</button>
+        <div class="inline">
+          <span class="lab">Slice color</span>
+          <div class="seg" role="group" aria-label="Slice color" id="colorSeg">
+            <button type="button" data-c="density" aria-pressed="false">Density</button>
+            <button type="button" data-c="phase" aria-pressed="true" id="phaseBtn">Sign</button>
+          </div>
+        </div>
+        <div class="inline">
+          <span class="lab">Slice scale</span>
+          <div class="seg" role="group" aria-label="Slice brightness scale" id="scaleSeg">
+            <button type="button" data-s="lin" aria-pressed="false">Linear</button>
+            <button type="button" data-s="sqrt" aria-pressed="true">√</button>
+            <button type="button" data-s="log" aria-pressed="false">Log</button>
+          </div>
+        </div>
+        <div class="toggles">
+          <label><input type="checkbox" id="tAxes" checked>Axes</label>
+          <label><input type="checkbox" id="tNodes" checked>Nodal lines</label>
+          <label><input type="checkbox" id="tBohr" checked>Bohr radius</label>
+          <label><input type="checkbox" id="tSame">Same n, other l</label>
+          <label><input type="checkbox" id="tR">R(r) curve</label>
+          <label><input type="checkbox" id="tLock">Lock scale</label>
+        </div>
+        <div class="key" id="key">
+          <span id="kSign"><i class="swatch dot" style="background:#ff7a5c"></i><i class="swatch dot" style="background:#5ea2ff;margin-left:-6px"></i>ψ positive, ψ negative</span>
+          <span id="kPhase" hidden><i class="swatch wheel"></i>Phase of ψ: red 0, cyan π, around the wheel</span>
+          <span><i class="swatch fill"></i>P(r) = r²|R(r)|², per a₀</span>
+          <span><i class="swatch mean"></i>Mean radius ⟨r⟩</span>
+          <span><i class="swatch bohr"></i>Bohr model orbit, r = n²a₀</span>
+          <span><i class="swatch node"></i>Radial node</span>
+        </div>
+        <p class="hint" id="viewHint">Drag to orbit, scroll or pinch to zoom, double click to reset. With the cloud focused, arrow keys orbit and + and − zoom. Hover the radial plot to see that radius as a shell.</p>
+      </section>
+
+      <section>
+        <h2>About the model</h2>
+        <p class="hint">Exact solutions of the Schrödinger equation for one electron and a point nucleus: ψ = R<sub>nl</sub>(r) Y<sub>lm</sub>(θ, φ), with R from associated Laguerre polynomials and Y from associated Legendre functions with the Condon–Shortley phase. Spin, fine structure and the Lamb shift are left out.</p>
+        <p class="hint">Distances use the Bohr radius a₀ for an infinitely heavy nucleus. Energies use 13.598 eV, the measured value for hydrogen, which includes the small correction for the moving proton.</p>
+        <p class="hint">The Bohr model puts the electron on a circle of radius n²a₀. Here the electron has no orbit, only a probability cloud, and the energies still come out as −13.6 eV/n². Compare with the Bohr model in <a href="spectra.html">Atomic Spectra</a>.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  // ==CORE START==
+  // Units: r in Bohr radii a₀ (infinitely heavy nucleus), energy in eV, time in fs.
+  const A0_NM = 0.0529177;
+  const RY = 13.598;                 // hydrogen ionization energy, eV (includes the reduced mass)
+  const HC = 1239.842;               // eV nm
+  const H_EVFS = 4.135668;           // h in eV fs
+  const HBAR_EVFS = H_EVFS / (2 * Math.PI);
+  const LETTERS = 'spdfgh';
+
+  function fact(k) { let f = 1; for (let i = 2; i <= k; i++) f *= i; return f; }
+  // Generalized Laguerre polynomial L_k^a(x) by the three term recurrence
+  function laguerre(k, a, x) {
+    if (k === 0) return 1;
+    let L0 = 1, L1 = 1 + a - x;
+    for (let j = 1; j < k; j++) { const L2 = ((2 * j + 1 + a - x) * L1 - (j + a) * L0) / (j + 1); L0 = L1; L1 = L2; }
+    return L1;
+  }
+  const radialNorm = (n, l) => Math.sqrt(Math.pow(2 / n, 3) * fact(n - l - 1) / (2 * n * fact(n + l)));
+  // R_nl(r) = N e^{−ρ/2} ρ^l L_{n−l−1}^{2l+1}(ρ), ρ = 2r/(n a₀); ∫ R² r² dr = 1
+  function radialR(n, l, r, N) {
+    const rho = 2 * r / n;
+    return (N === undefined ? radialNorm(n, l) : N) * Math.exp(-rho / 2) * Math.pow(rho, l) * laguerre(n - l - 1, 2 * l + 1, rho);
+  }
+  // Associated Legendre P_l^m(x), m ≥ 0, with the Condon–Shortley phase (−1)^m
+  function assocP(l, m, x) {
+    let pmm = 1;
+    if (m > 0) { const s = Math.sqrt(Math.max(0, (1 - x) * (1 + x))); let f = 1; for (let i = 1; i <= m; i++) { pmm *= -f * s; f += 2; } }
+    if (l === m) return pmm;
+    let pm1 = x * (2 * m + 1) * pmm;
+    if (l === m + 1) return pm1;
+    let pll = 0;
+    for (let ll = m + 2; ll <= l; ll++) { pll = (x * (2 * ll - 1) * pm1 - (ll + m - 1) * pmm) / (ll - m); pmm = pm1; pm1 = pll; }
+    return pll;
+  }
+  const ylmNorm = (l, am) => Math.sqrt((2 * l + 1) / (4 * Math.PI) * fact(l - am) / fact(l + am));
+
+  // Angular factor from P = P_l^{|m|}(cos θ) and φ, written into out = [re, im].
+  // Complex: Y_lm = N P e^{imφ}, and Y_{l,−m} = (−1)^m Y_lm*.
+  // Real: m > 0 → √2 (−1)^m N P cos mφ, m < 0 → √2 (−1)^|m| N P sin |m|φ (so p_x ∝ +x, p_y ∝ +y).
+  function angular(st, P, phi, out) {
+    const am = st.am, base = st.Nlm * P;
+    if (st.m === 0) { out[0] = base; out[1] = 0; return; }
+    const sg = am % 2 ? -1 : 1;
+    if (st.real) {
+      out[0] = Math.SQRT2 * sg * base * (st.m > 0 ? Math.cos(am * phi) : Math.sin(am * phi)); out[1] = 0;
+    } else if (st.m > 0) {
+      out[0] = base * Math.cos(am * phi); out[1] = base * Math.sin(am * phi);
+    } else {
+      out[0] = sg * base * Math.cos(am * phi); out[1] = -sg * base * Math.sin(am * phi);
+    }
+  }
+  function psiAt(st, x, y, z, out) {
+    const r = Math.sqrt(x * x + y * y + z * z), u = r > 0 ? z / r : 1, phi = Math.atan2(y, x);
+    const R = radialR(st.n, st.l, r, st.RN);
+    angular(st, assocP(st.l, st.am, u), phi, out);
+    out[0] *= R; out[1] *= R;
+    return out;
+  }
+
+  // Tables for exact sampling: inverse CDF of P(r) = r²R², inverse CDF of |P_l^m(u)|² in u = cos θ.
+  function makeState(n, l, m, real) {
+    const am = Math.abs(m);
+    const st = { n, l, m, am, real, E: -RY / (n * n), Nlm: ylmNorm(l, am), RN: radialNorm(n, l) };
+    const M = 6000, rBig = n * (2 * n + 14), h = rBig / M;
+    const P = new Float64Array(M + 1), C = new Float64Array(M + 1);
+    let mean = 0, pk = 0, rmp = 0, prevRP = 0, lastR = 0, lastr = 0;
+    const nodes = [];
+    for (let i = 1; i <= M; i++) {
+      const r = i * h, R = radialR(n, l, r, st.RN), p = r * r * R * R;
+      P[i] = p; C[i] = C[i - 1] + 0.5 * h * (p + P[i - 1]);
+      mean += 0.5 * h * (r * p + prevRP); prevRP = r * p;
+      if (p > pk) { pk = p; rmp = r; }
+      // a node is a sign change between the last nonzero value and this one (a node can land exactly on a grid point)
+      if (R === 0) continue;
+      if (lastR * R < 0) {
+        let a = lastr, b = r, fa = lastR;
+        for (let k = 0; k < 60; k++) { const c = 0.5 * (a + b), fc = radialR(n, l, c, st.RN); if (fa * fc <= 0) b = c; else { a = c; fa = fc; } }
+        nodes.push(0.5 * (a + b));
+      }
+      lastR = R; lastr = r;
+    }
+    // refine the peak with a parabola through the three grid points around it
+    const ip = Math.round(rmp / h);
+    if (ip > 0 && ip < M) { const y0 = P[ip - 1], y1 = P[ip], y2 = P[ip + 1], d = y0 - 2 * y1 + y2; if (d < 0) rmp += 0.5 * h * (y0 - y2) / d; }
+    st.rad = { M, h, P, C, rBig };
+    st.norm = C[M];
+    st.rMean = mean / C[M];
+    st.rMeanExact = 0.5 * (3 * n * n - l * (l + 1));
+    st.rMP = rmp; st.pPeak = pk; st.nodes = nodes;
+    st.q = (p) => invCdf(C, h, p * C[M]);
+    st.r99 = st.q(0.99); st.r995 = st.q(0.995); st.r999 = st.q(0.999);
+    const K = 2000, Cu = new Float64Array(K + 1);
+    let pv = Math.pow(assocP(l, am, -1), 2);
+    for (let i = 1; i <= K; i++) { const u = -1 + 2 * i / K, v = Math.pow(assocP(l, am, u), 2); Cu[i] = Cu[i - 1] + (v + pv) / K; pv = v; }
+    st.angC = Cu; st.angH = 2 / K;
+    return st;
+  }
+  function invCdf(C, h, v) {
+    let lo = 0, hi = C.length - 1;
+    while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (C[mid] <= v) lo = mid; else hi = mid; }
+    const d = C[hi] - C[lo];
+    return (lo + (d > 0 ? (v - C[lo]) / d : 0.5)) * h;
+  }
+  function samplePoint(st, rnd, out) {
+    const r = invCdf(st.rad.C, st.rad.h, rnd() * st.rad.C[st.rad.M]);
+    const u = Math.max(-1, Math.min(1, -1 + invCdf(st.angC, st.angH, rnd() * st.angC[st.angC.length - 1])));
+    let phi;
+    if (st.real && st.m !== 0) {
+      // |Y|² ∝ cos² mφ or sin² |m|φ: rejection sampling, half the tries are accepted
+      for (;;) { phi = 2 * Math.PI * rnd(); const c = st.m > 0 ? Math.cos(st.am * phi) : Math.sin(st.am * phi); if (rnd() < c * c) break; }
+    } else phi = 2 * Math.PI * rnd();
+    const s = Math.sqrt(1 - u * u);
+    out[0] = r * s * Math.cos(phi); out[1] = r * s * Math.sin(phi); out[2] = r * u;
+    return out;
+  }
+  // N points from |ψ_A|², or for a superposition from the mixture (|ψ_A|² + |ψ_B|²)/2, with ψ_A and ψ_B stored at each point
+  function sampleCloud(A, B, N, rnd) {
+    const pos = new Float32Array(3 * N), aRe = new Float32Array(N), aIm = new Float32Array(N);
+    const bRe = B ? new Float32Array(N) : null, bIm = B ? new Float32Array(N) : null;
+    const p = [0, 0, 0], o = [0, 0];
+    for (let i = 0; i < N; i++) {
+      samplePoint(!B || rnd() < 0.5 ? A : B, rnd, p);
+      pos[3 * i] = p[0]; pos[3 * i + 1] = p[1]; pos[3 * i + 2] = p[2];
+      psiAt(A, p[0], p[1], p[2], o); aRe[i] = o[0]; aIm[i] = o[1];
+      if (B) { psiAt(B, p[0], p[1], p[2], o); bRe[i] = o[0]; bIm[i] = o[1]; }
+    }
+    return { N, pos, aRe, aIm, bRe, bIm };
+  }
+  // d = ⟨A| r |B⟩ (vector, complex components). For ψ = (A + B e^{−iδ})/√2, ⟨r⟩(t) = Re(d e^{−iδ}).
+  function dipole(A, B) {
+    const rmax = Math.max(A.rad.rBig, B.rad.rBig), M = 12000, h = rmax / M;
+    let rad = 0;
+    for (let i = 0; i <= M; i++) {
+      const r = i * h, w = i === 0 || i === M ? 1 : i % 2 ? 4 : 2;
+      rad += w * radialR(A.n, A.l, r, A.RN) * radialR(B.n, B.l, r, B.RN) * r * r * r;
+    }
+    rad *= h / 3;
+    const nu = 240, nf = 240, oa = [0, 0], ob = [0, 0];
+    const d = [[0, 0], [0, 0], [0, 0]], w = (2 / nu) * (2 * Math.PI / nf);
+    for (let i = 0; i < nu; i++) {
+      const u = -1 + (i + 0.5) * 2 / nu, s = Math.sqrt(1 - u * u);
+      const PA = assocP(A.l, A.am, u), PB = assocP(B.l, B.am, u);
+      for (let j = 0; j < nf; j++) {
+        const phi = (j + 0.5) * 2 * Math.PI / nf;
+        angular(A, PA, phi, oa); angular(B, PB, phi, ob);
+        const cr = oa[0] * ob[0] + oa[1] * ob[1], ci = oa[0] * ob[1] - oa[1] * ob[0];
+        const c = [s * Math.cos(phi), s * Math.sin(phi), u];
+        for (let k = 0; k < 3; k++) { d[k][0] += w * cr * c[k]; d[k][1] += w * ci * c[k]; }
+      }
+    }
+    for (let k = 0; k < 3; k++) { d[k][0] *= rad; d[k][1] *= rad; }
+    // the path Re(d) cos δ + Im(d) sin δ is an ellipse; its semi axes are the singular values of [Re d, Im d]
+    let aa = 0, bb = 0, ab = 0;
+    for (let k = 0; k < 3; k++) { aa += d[k][0] * d[k][0]; bb += d[k][1] * d[k][1]; ab += d[k][0] * d[k][1]; }
+    const tr = aa + bb, det = aa * bb - ab * ab, disc = Math.sqrt(Math.max(0, tr * tr / 4 - det));
+    return { d, amp: Math.sqrt(Math.max(0, tr / 2 + disc)), minor: Math.sqrt(Math.max(0, tr / 2 - disc)) };
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.HO = { A0_NM, RY, HC, H_EVFS, HBAR_EVFS, fact, laguerre, radialNorm, radialR, assocP, ylmNorm, angular, psiAt, makeState, invCdf, samplePoint, sampleCloud, dipole };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const minus = (s) => String(s).replace(/-/g, '−');
+  const fmtM = (m) => (m > 0 ? '+' + m : minus(m));
+
+  // ---------- names ----------
+  const REAL_SUB = {
+    1: { 1: 'x', '-1': 'y', 0: 'z' },
+    2: { 0: 'z²', 1: 'xz', '-1': 'yz', 2: 'x²−y²', '-2': 'xy' },
+    3: { 0: 'z³', 1: 'xz²', '-1': 'yz²', 2: 'z(x²−y²)', '-2': 'xyz', 3: 'x(x²−3y²)', '-3': 'y(3x²−y²)' },
+    4: { 0: 'z⁴' }, 5: { 0: 'z⁵' }
+  };
+  // { main: '3d', sub: 'z²', tail: '' }
+  function nameOf(n, l, m, real) {
+    const main = n + LETTERS[l];
+    if (l === 0) return { main, sub: '', tail: '' };
+    if (!real) return { main, sub: '', tail: 'm = ' + fmtM(m) };
+    const s = REAL_SUB[l] && REAL_SUB[l][m];
+    if (s) return { main, sub: s, tail: '' };
+    return { main, sub: '', tail: (m > 0 ? 'cos ' : 'sin ') + (Math.abs(m) === 1 ? '' : Math.abs(m)) + 'φ' };
+  }
+  const nameHTML = (nm, tailCls) => nm.main + (nm.sub ? `<sub>${nm.sub}</sub>` : '') + (nm.tail ? ` <span class="${tailCls || ''}">${nm.tail}</span>` : '');
+  const nameText = (nm) => nm.main + nm.sub + (nm.tail ? ' ' + nm.tail : '');
+  function mOrder(l, real) {
+    const out = [];
+    if (!real) { for (let m = -l; m <= l; m++) out.push(m); return out; }
+    if (l === 1) return [1, -1, 0];
+    out.push(0);
+    for (let k = 1; k <= l; k++) out.push(k, -k);
+    return out;
+  }
+  function mChipHTML(l, m, real) {
+    if (l === 0) return real ? 's' : '0';
+    if (!real) return minus(m > 0 ? '+' + m : String(m));
+    const nm = nameOf(1, l, m, true);
+    if (nm.sub) return LETTERS[l] + `<sub>${nm.sub}</sub>`;
+    return nm.tail;
+  }
+
+  // ---------- state ----------
+  const S = {
+    n: 3, l: 2, m: 0, real: true,
+    mix: false, B: { n: 2, l: 1, m: 0 },
+    view: '3d', plane: 'xz', color: 'phase', scale: 'sqrt', count: 40000,
+    layers: { axes: true, nodes: true, bohr: true, same: false, R: false }, lock: false,
+    t: 0, playing: false, speed: 1, preset: '3dz2'
+  };
+  const cache = new Map();
+  function getState(n, l, m, real) {
+    const k = [n, l, m, real ? 'r' : 'c'].join(',');
+    if (!cache.has(k)) cache.set(k, makeState(n, l, m, real));
+    return cache.get(k);
+  }
+  let stA = null, stB = null, dip = null, cloud = null;
+  const mixActive = () => !!stB;
+  const dE = () => (stB ? stB.E - stA.E : 0);
+  const beatT = () => { const d = Math.abs(dE()); return d > 1e-9 ? H_EVFS / d : Infinity; };
+
+  let targetFit = 10, curFit = 10;
+  function fitFor() {
+    let f = stA.r99;
+    if (stB) f = Math.max(f, stB.r99);
+    return f;
+  }
+
+  // ---------- presets ----------
+  const PRESETS = {
+    '1s': { n: 1, l: 0, m: 0, hint: 'The ground state. The cloud is densest right at the nucleus, yet P(r) peaks at exactly one Bohr radius, because a shell farther out holds more volume.' },
+    '2s': { n: 2, l: 0, m: 0, hint: 'One radial node: a sphere at r = 2a₀ where the electron is never found. Inside and outside it ψ has opposite signs. Turn on "Same n, other l" to compare with 2p.' },
+    '2pz': { n: 2, l: 1, m: 0, hint: 'Two lobes along z with opposite signs, split by a nodal plane, the xy plane. No radial node. Its most probable radius is 4a₀, the Bohr orbit for n = 2.' },
+    '3dz2': { n: 3, l: 2, m: 0, hint: 'Two lobes along z and a ring around the middle. Its two angular nodes are cones at 54.7° from the z axis, where 3cos²θ = 1. Try the slice view to see them as lines.' },
+    '4fxyz': { n: 4, l: 3, m: -2, hint: 'Eight lobes, one in each octant, with signs alternating like a 3D checkerboard. Its three angular nodes are the xy, yz and xz planes, so in the slice view only the x = y plane shows it.' },
+    mix: { n: 1, l: 0, m: 0, mix: { n: 2, l: 1, m: 0 }, scale: 'log', hint: 'Half 1s and half 2p<sub>z</sub>. The two parts interfere, so the cloud sloshes up and down along z once every h/ΔE = 0.41 fs. That oscillating charge radiates the Lyman α line at 121.6 nm.' }
+  };
+  function applyPreset(key) {
+    const p = PRESETS[key];
+    S.preset = key;
+    S.n = p.n; S.l = p.l; S.m = p.m; S.real = true;
+    S.mix = !!p.mix;
+    if (p.mix) S.B = { ...p.mix };
+    S.t = 0;
+    S.playing = !!p.mix && !reduce;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === key));
+    $('presetHint').innerHTML = p.hint;
+    setScale(p.scale || 'sqrt');
+    update({ refit: true });
+  }
+  function clearPreset() {
+    S.preset = null;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', 'false');
+    $('presetHint').textContent = 'Pick a preset to jump to a teachable state, or choose any n, l and m below.';
+  }
+
+  // ---------- rail: state pickers ----------
+  function buildShells() {
+    const box = $('shells'); box.innerHTML = '';
+    for (let n = 1; n <= 6; n++) {
+      const lab = document.createElement('span'); lab.className = 'nl'; lab.textContent = 'n=' + n;
+      const row = document.createElement('div'); row.className = 'chips';
+      for (let l = 0; l < n; l++) {
+        const b = document.createElement('button'); b.type = 'button';
+        b.textContent = n + LETTERS[l]; b.dataset.n = n; b.dataset.l = l;
+        b.setAttribute('aria-label', `n = ${n}, l = ${l}, ${n}${LETTERS[l]}`);
+        b.addEventListener('click', () => {
+          S.n = n; S.l = l; if (Math.abs(S.m) > l) S.m = 0;
+          clearPreset(); update({ refit: true });
+        });
+        row.appendChild(b);
+      }
+      box.append(lab, row);
+    }
+  }
+  function syncPickers() {
+    for (const b of document.querySelectorAll('#shells button')) b.setAttribute('aria-pressed', String(+b.dataset.n === S.n && +b.dataset.l === S.l));
+    const mc = $('mChips'); mc.innerHTML = '';
+    for (const m of mOrder(S.l, S.real)) {
+      const b = document.createElement('button'); b.type = 'button';
+      b.innerHTML = mChipHTML(S.l, m, S.real);
+      b.setAttribute('aria-pressed', String(m === S.m));
+      b.setAttribute('aria-label', 'm = ' + m + (S.real ? ', ' + nameText(nameOf(S.n, S.l, m, true)) : ''));
+      b.addEventListener('click', () => { S.m = m; clearPreset(); update({ refit: false }); });
+      mc.appendChild(b);
+    }
+    for (const b of document.querySelectorAll('#basisSeg button')) b.setAttribute('aria-pressed', String((b.dataset.b === 'real') === S.real));
+    $('basisHint').innerHTML = S.real
+      ? (S.l === 0 ? 'An s state has l = 0 and only m = 0. It is spherical.' : 'Real orbitals are the chemistry shapes: for m ≠ 0 they add the +m and −m states, so they are real functions with a sign (two colors) and lobes along fixed directions.')
+      : (S.l === 0 ? 'An s state has l = 0 and only m = 0. It is spherical.' : 'Complex states have a definite L<sub>z</sub> = mħ. Their |ψ|² is symmetric around the z axis; the phase winds m times around it, shown as color.');
+    // the superposition picker
+    const sel = $('mixSel'), keep = S.B.n + ',' + S.B.l + ',' + S.B.m;
+    sel.innerHTML = '';
+    for (let n = 1; n <= 6; n++) {
+      const g = document.createElement('optgroup'); g.label = 'n = ' + n;
+      for (let l = 0; l < n; l++) for (const m of mOrder(l, S.real)) {
+        const o = document.createElement('option'); o.value = n + ',' + l + ',' + m;
+        o.textContent = 'B = ' + nameText(nameOf(n, l, m, S.real));
+        if (n === S.n && l === S.l && m === S.m) o.textContent += ' (same as A)';
+        g.appendChild(o);
+      }
+      sel.appendChild(g);
+    }
+    sel.value = keep;
+    sel.disabled = !S.mix;
+    $('mixOn').checked = S.mix;
+  }
+
+  // ---------- update everything after a state change ----------
+  function update(opt) {
+    stA = getState(S.n, S.l, S.m, S.real);
+    stB = null; dip = null;
+    if (S.mix) {
+      const B = S.B;
+      if (!(B.n === S.n && B.l === S.l && B.m === S.m)) { stB = getState(B.n, B.l, B.m, S.real); dip = dipole(stA, stB); }
+    }
+    if (!stB) { S.playing = false; }
+    if (!isFinite(beatT())) S.playing = false;
+    if (!S.lock || opt.force) targetFit = fitFor();
+    if (opt.refit === false && !S.lock) { /* same size class: still refit gently */ }
+    syncPickers();
+    resample();
+    dirty.sliceField = true; dirty.slice = true; dirty.radial = true;
+    updateReadouts();
+    updatePlayUI();
+    schedule();
+  }
+
+  function updateReadouts() {
+    const nm = nameOf(S.n, S.l, S.m, S.real), st = stA;
+    $('rName').innerHTML = nameHTML(nm);
+    $('tagName').innerHTML = stB ? nameHTML(nm, 'mpart') + ' + ' + nameHTML(nameOf(S.B.n, S.B.l, S.B.m, S.real), 'mpart') : nameHTML(nm, 'mpart');
+    $('tagSub').textContent = stB
+      ? `ΔE = ${minus(dE().toFixed(2))} eV · beat ${isFinite(beatT()) ? beatT().toFixed(3) + ' fs' : 'none'}`
+      : `n = ${S.n}, l = ${S.l}, m = ${minus(S.m)} · E = ${minus(st.E.toFixed(3))} eV`;
+    $('rE').textContent = minus(st.E.toFixed(3)) + ' eV';
+    $('rQ').textContent = `${S.n}, ${S.l}, ${minus(S.m)}`;
+    $('rRad').textContent = String(S.n - S.l - 1) + (st.nodes.length !== S.n - S.l - 1 ? ' (found ' + st.nodes.length + ')' : '');
+    $('rAng').textContent = String(S.l);
+    $('rMean').innerHTML = `${st.rMeanExact.toFixed(1)} a₀ <span class="ok">${(st.rMeanExact * A0_NM).toFixed(3)} nm</span>`;
+    $('rMP').textContent = st.rMP.toFixed(2) + ' a₀';
+    $('rL').textContent = S.l === 0 ? '0' : `√${S.l * (S.l + 1)} ħ = ${Math.sqrt(S.l * (S.l + 1)).toFixed(3)} ħ`;
+    $('rLz').textContent = S.real && S.m !== 0 ? `±${Math.abs(S.m)}ħ, not definite` : minus(S.m) + (S.m === 0 ? '' : ' ħ');
+    $('rNorm').innerHTML = `${st.norm.toFixed(6)} <span class="ok">mean radius from P(r): ${st.rMean.toFixed(4)} a₀</span>`;
+
+    let nh = '';
+    if (S.n - S.l - 1 > 0) nh += `Radial nodes at r = ${st.nodes.map((r) => r.toFixed(2)).join(', ')} a₀. `;
+    if (S.l > 0) {
+      if (S.real) {
+        const cones = S.l - Math.abs(S.m), planes = Math.abs(S.m);
+        nh += `Angular nodes: ${cones ? cones + (cones === 1 ? (S.l - Math.abs(S.m) === 1 && planes === 0 ? ' plane (the xy plane)' : ' cone or plane through z') : ' cones or planes') : ''}${cones && planes ? ' and ' : ''}${planes ? planes + ' plane' + (planes > 1 ? 's' : '') + ' containing the z axis' : ''}.`;
+      } else if (S.m !== 0) {
+        nh += `In a complex state ψ vanishes on ${S.l - Math.abs(S.m)} cone${S.l - Math.abs(S.m) === 1 ? '' : 's'} and along the z axis; the ${Math.abs(S.m)} nodal plane${Math.abs(S.m) > 1 ? 's' : ''} of the real orbitals become a phase that winds ${Math.abs(S.m)} time${Math.abs(S.m) > 1 ? 's' : ''} around z.`;
+      } else nh += `With m = 0 the complex state is real, the same as the real orbital.`;
+    } else nh += 'An s state has no angular nodes.';
+    $('nodeHint').textContent = nh.trim();
+
+    // superposition
+    if (stB) {
+      const d = dE(), T = beatT();
+      $('rDE').textContent = minus(d.toFixed(3)) + ' eV';
+      $('rBeat').textContent = isFinite(T) ? T.toFixed(3) + ' fs' : 'none';
+      $('rLam').textContent = Math.abs(d) > 1e-9 ? fmtLam(HC / Math.abs(d)) : 'none';
+      if (dip.amp > 1e-4) {
+        $('rDip').textContent = '±' + dip.amp.toFixed(3) + ' a₀';
+        const shape = dip.minor < 1e-3 * dip.amp ? 'back and forth on a line' : Math.abs(dip.minor - dip.amp) < 1e-3 * dip.amp ? 'around a circle' : 'around an ellipse';
+        $('rRule').textContent = isFinite(T)
+          ? `Yes. The center of the electron cloud (gold dot) moves ${shape}, so the atom radiates at λ = ${fmtLam(HC / Math.abs(d))}.`
+          : `The two states have the same energy, so nothing moves: the cloud is stationary and does not radiate.`;
+      } else {
+        $('rDip').textContent = '0';
+        $('rRule').textContent = isFinite(T)
+          ? `No. ⟨r⟩ stays at the nucleus, so this pair does not radiate as a dipole. That needs Δl = ±1 (and Δm = 0 or ±1), the selection rule.`
+          : 'The two states have the same energy, so nothing moves: the cloud is stationary.';
+      }
+    } else {
+      for (const id of ['rDE', 'rBeat', 'rLam', 'rDip']) $(id).textContent = '—';
+      $('rRule').textContent = S.mix ? 'Pick a state B different from A.' : 'Turn on a second state to see the cloud move.';
+    }
+    $('phaseBtn').textContent = S.real && !stB ? 'Sign' : 'Phase';
+    const usePhase = !S.real || !!stB;
+    $('kSign').hidden = usePhase; $('kPhase').hidden = !usePhase;
+  }
+  function fmtLam(nm) { return nm >= 1e5 ? (nm / 1e6).toFixed(nm >= 1e7 ? 1 : 2) + ' mm' : nm >= 1000 ? (nm / 1000).toFixed(2) + ' μm' : nm.toFixed(1) + ' nm'; }
+
+  // ---------- colors ----------
+  let T = null, dpr = 1;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
+      gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'),
+      cbg: g('--cloud-bg'), cink: g('--cloud-ink'), cmuted: g('--cloud-muted'), cline: g('--cloud-line'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+  }
+  function hsl2rgb(h, s, l) {
+    const a = s * Math.min(l, 1 - l), f = (n) => { const k = (n + h / 30) % 12; return l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); };
+    return [f(0), f(8), f(4)];
+  }
+  // The cloud and the slice sit on a dark panel in both themes, so their colors are fixed.
+  const HUE = new Float32Array(360 * 3);
+  for (let h = 0; h < 360; h++) { const c = hsl2rgb(h, 0.9, 0.6); HUE[3 * h] = c[0]; HUE[3 * h + 1] = c[1]; HUE[3 * h + 2] = c[2]; }
+  const POSC = [1.0, 0.478, 0.361], NEGC = [0.369, 0.635, 1.0];   // #ff7a5c and #5ea2ff
+  const GOLD = [1.0, 0.82, 0.4];
+  const hueIdx = (re, im) => { let a = Math.atan2(im, re) * 180 / Math.PI; if (a < 0) a += 360; return (Math.round(a) % 360) * 3; };
+  // magma, sampled at nine stops
+  const MAGMA = [[0, 0, 4], [28, 16, 68], [79, 18, 123], [129, 37, 129], [181, 54, 122], [229, 80, 100], [251, 135, 97], [254, 194, 135], [252, 253, 191]];
+  const CMAP = new Uint8ClampedArray(256 * 3);
+  for (let i = 0; i < 256; i++) {
+    const x = i / 255 * 8, k = Math.min(7, Math.floor(x)), f = x - k;
+    for (let c = 0; c < 3; c++) CMAP[3 * i + c] = MAGMA[k][c] + (MAGMA[k + 1][c] - MAGMA[k][c]) * f;
+  }
+  function scaleV(v) {
+    if (v <= 0) return 0;
+    if (S.scale === 'lin') return Math.min(1, v);
+    if (S.scale === 'sqrt') return Math.min(1, Math.sqrt(v));
+    return Math.max(0, Math.min(1, 1 + Math.log10(v) / 4));
+  }
+
+  // ---------- cloud data ----------
+  function resample() {
+    cloud = sampleCloud(stA, stB, S.count, Math.random);
+    if (G.ready) uploadCloud();
+    dirty.cloudColor = true;
+  }
+
+  // ---------- 3D ----------
+  const G = { ready: false, failed: false };
+  const ORBIT0 = { theta: -1.05, phi: 1.2, zoom: 1 };
+  const orbit = { ...ORBIT0, spin: !reduce };
+  let dragging = false;
+  const vPane = $('vPane'), sliceCan = $('slice'), rCan = $('rCan'), rPane = $('rPane');
+  let VW = 0, VH = 0, RW = 0, RH = 0;
+  const MAXN = 60000;
+
+  function init3D() {
+    if (G.ready) return true;
+    if (G.failed || !window.THREE) { G.failed = true; return false; }
+    let renderer;
+    try { renderer = new THREE.WebGLRenderer({ antialias: true }); }
+    catch (_) { G.failed = true; return false; }
+    const el = renderer.domElement;
+    el.id = 'gl'; el.tabIndex = 0;
+    el.setAttribute('role', 'application');
+    el.setAttribute('aria-label', 'Probability cloud in 3D. Drag to orbit, scroll to zoom. Arrow keys orbit, plus and minus zoom, 0 resets the view.');
+    vPane.insertBefore(el, sliceCan);
+    const scene = new THREE.Scene();
+    const cam = new THREE.PerspectiveCamera(36, 1, 0.01, 5000);
+    cam.up.set(0, 0, 1);
+
+    const geo = new THREE.BufferGeometry();
+    const posA = new THREE.BufferAttribute(new Float32Array(MAXN * 3), 3); posA.setUsage(THREE.DynamicDrawUsage);
+    const colA = new THREE.BufferAttribute(new Float32Array(MAXN * 3), 3); colA.setUsage(THREE.DynamicDrawUsage);
+    const wA = new THREE.BufferAttribute(new Float32Array(MAXN), 1); wA.setUsage(THREE.DynamicDrawUsage);
+    geo.setAttribute('position', posA); geo.setAttribute('aCol', colA); geo.setAttribute('aW', wA);
+    const mat = new THREE.ShaderMaterial({
+      uniforms: { uSize: { value: 10 }, uAlpha: { value: 0.2 } },
+      vertexShader: [
+        'attribute vec3 aCol; attribute float aW;',
+        'uniform float uSize; uniform float uAlpha;',
+        'varying vec3 vCol; varying float vA;',
+        'void main() {',
+        '  vec4 mv = modelViewMatrix * vec4(position, 1.0);',
+        '  gl_Position = projectionMatrix * mv;',
+        '  float s = uSize / -mv.z;',
+        '  gl_PointSize = max(1.5, s);',
+        '  vCol = aCol; vA = uAlpha * aW * min(1.0, s * s / 2.25);',
+        '}'].join('\n'),
+      fragmentShader: [
+        'varying vec3 vCol; varying float vA;',
+        'void main() {',
+        '  vec2 c = gl_PointCoord - 0.5; float d2 = dot(c, c) * 4.0;',
+        '  if (d2 > 1.0) discard;',
+        '  float g = exp(-3.2 * d2);',
+        '  gl_FragColor = vec4(vCol, vA * g);',
+        '}'].join('\n'),
+      transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending
+    });
+    const pts = new THREE.Points(geo, mat); pts.frustumCulled = false; scene.add(pts);
+
+    // nucleus
+    const ng = new THREE.BufferGeometry(); ng.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0], 3));
+    const nucleus = new THREE.Points(ng, new THREE.PointsMaterial({ color: 0xffffff, size: 4, sizeAttenuation: false, transparent: true, opacity: 0.95, depthTest: false }));
+    nucleus.renderOrder = 2; scene.add(nucleus);
+
+    // unit axes, scaled with the view
+    const ag = new THREE.BufferGeometry();
+    ag.setAttribute('position', new THREE.Float32BufferAttribute([-1, 0, 0, 1, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, -1, 0, 0, 1], 3));
+    const axes = new THREE.LineSegments(ag, new THREE.LineBasicMaterial({ color: 0x5a6a80, transparent: true, opacity: 0.55, depthTest: false }));
+    scene.add(axes);
+
+    // shell of radius r (from hovering the radial plot): three great circles
+    const sp = [];
+    for (let c = 0; c < 3; c++) for (let i = 0; i < 96; i++) {
+      for (const k of [i, i + 1]) {
+        const a = k / 96 * 2 * Math.PI, ca = Math.cos(a), sa = Math.sin(a);
+        sp.push(...(c === 0 ? [ca, sa, 0] : c === 1 ? [ca, 0, sa] : [0, ca, sa]));
+      }
+    }
+    const sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3));
+    const shell = new THREE.LineSegments(sg, new THREE.LineBasicMaterial({ color: 0xe2b350, transparent: true, opacity: 0.8, depthTest: false }));
+    shell.visible = false; scene.add(shell);
+
+    // center of charge ⟨r⟩(t)
+    const dmark = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), new THREE.MeshBasicMaterial({ color: 0xffd166, depthTest: false }));
+    dmark.renderOrder = 3; dmark.visible = false; scene.add(dmark);
+    const dlg = new THREE.BufferGeometry(); dlg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(6), 3));
+    const dline = new THREE.LineSegments(dlg, new THREE.LineBasicMaterial({ color: 0xffd166, depthTest: false }));
+    dline.visible = false; scene.add(dline);
+
+    Object.assign(G, { ready: true, renderer, el, scene, cam, geo, posA, colA, wA, mat, pts, axes, shell, dmark, dline, nucleus });
+    renderer.setPixelRatio(dpr); renderer.setSize(Math.max(1, VW), Math.max(1, VH));
+    bind3D(el);
+    if (cloud) uploadCloud();
+    return true;
+  }
+  function uploadCloud() {
+    G.posA.array.set(cloud.pos);
+    G.posA.needsUpdate = true;
+    G.geo.setDrawRange(0, cloud.N);
+    dirty.cloudColor = true;
+  }
+  function colorPoints() {
+    if (!G.ready || !cloud) return;
+    const N = cloud.N, col = G.colA.array, w = G.wA.array, aRe = cloud.aRe, aIm = cloud.aIm;
+    if (cloud.bRe) {
+      const del = dE() * S.t / HBAR_EVFS, c = Math.cos(del), s = -Math.sin(del), bRe = cloud.bRe, bIm = cloud.bIm;
+      for (let i = 0; i < N; i++) {
+        const br = bRe[i] * c - bIm[i] * s, bi = bRe[i] * s + bIm[i] * c;
+        const re = aRe[i] + br, im = aIm[i] + bi;
+        const q = aRe[i] * aRe[i] + aIm[i] * aIm[i] + bRe[i] * bRe[i] + bIm[i] * bIm[i];
+        w[i] = q > 0 ? (re * re + im * im) / (2 * q) : 0;
+        const h = hueIdx(re, im);
+        col[3 * i] = HUE[h]; col[3 * i + 1] = HUE[h + 1]; col[3 * i + 2] = HUE[h + 2];
+      }
+    } else if (S.real) {
+      for (let i = 0; i < N; i++) {
+        const C = aRe[i] >= 0 ? POSC : NEGC;
+        col[3 * i] = C[0]; col[3 * i + 1] = C[1]; col[3 * i + 2] = C[2]; w[i] = 1;
+      }
+    } else {
+      for (let i = 0; i < N; i++) {
+        const h = hueIdx(aRe[i], aIm[i]);
+        col[3 * i] = HUE[h]; col[3 * i + 1] = HUE[h + 1]; col[3 * i + 2] = HUE[h + 2]; w[i] = 1;
+      }
+    }
+    G.colA.needsUpdate = true; G.wA.needsUpdate = true;
+  }
+  const tanHalf = () => Math.tan((G.cam.fov * Math.PI / 180) / 2);
+  function camDist() { return curFit * 1.08 / (tanHalf() * Math.min(1, G.cam.aspect)) / orbit.zoom; }
+  function dipoleNow() {
+    if (!dip || dip.amp < 1e-4 || !isFinite(beatT())) return null;
+    const del = dE() * S.t / HBAR_EVFS, c = Math.cos(del), s = Math.sin(del);
+    // Re(d e^{−iδ}) = Re d cos δ + Im d sin δ
+    return dip.d.map((v) => v[0] * c + v[1] * s);
+  }
+  function render3D() {
+    const D = camDist(), ps = projScale();
+    G.cam.aspect = VW / Math.max(1, VH); G.cam.updateProjectionMatrix();
+    G.cam.position.set(D * Math.sin(orbit.phi) * Math.cos(orbit.theta), D * Math.sin(orbit.phi) * Math.sin(orbit.theta), D * Math.cos(orbit.phi));
+    G.cam.lookAt(0, 0, 0);
+    G.cam.near = D * 0.02; G.cam.far = D * 10; G.cam.updateProjectionMatrix();
+    const N = cloud ? cloud.N : 40000;
+    const pxPerWorld = VH * dpr / (2 * tanHalf());
+    G.mat.uniforms.uSize.value = curFit * 0.024 * ps * pxPerWorld;
+    G.mat.uniforms.uAlpha.value = 0.22 * Math.sqrt(40000 / N) * (cloud && cloud.bRe ? 1.6 : 1);
+    G.axes.visible = S.layers.axes; G.axes.scale.setScalar(curFit * 1.12);
+    G.renderer.setClearColor(T.cbg || '#070b11');
+    G.shell.visible = hoverR !== null; if (hoverR !== null) G.shell.scale.setScalar(Math.max(1e-3, hoverR));
+    const dv = dipoleNow();
+    G.dmark.visible = G.dline.visible = !!dv;
+    if (dv) {
+      G.dmark.position.set(dv[0], dv[1], dv[2]); G.dmark.scale.setScalar(curFit * 0.022 * ps);
+      const a = G.dline.geometry.attributes.position.array; a.set([0, 0, 0, dv[0], dv[1], dv[2]]); G.dline.geometry.attributes.position.needsUpdate = true;
+    }
+    G.nucleus.material.size = 4 * ps;
+    G.renderer.render(G.scene, G.cam);
+    // axis labels and the scale bar
+    const ax = [['axX', [1, 0, 0]], ['axY', [0, 1, 0]], ['axZ', [0, 0, 1]]];
+    for (const [id, d] of ax) {
+      const e = $(id);
+      if (!S.layers.axes) { e.hidden = true; continue; }
+      const v = new THREE.Vector3(d[0], d[1], d[2]).multiplyScalar(curFit * 1.2).project(G.cam);
+      e.hidden = v.z > 1;
+      e.style.transform = `translate(${Math.round((v.x + 1) / 2 * VW - 4)}px, ${Math.round((1 - v.y) / 2 * VH - 9)}px)`;
+    }
+    setScaleBar(VH / (2 * D * tanHalf()));
+  }
+  function niceStep(raw) {
+    const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p;
+    return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p;
+  }
+  function setScaleBar(pxPerA0) {
+    const len = niceStep(Math.min(110, VW * 0.22) / pxPerA0);
+    $('scaleLine').style.width = Math.round(len * pxPerA0) + 'px';
+    const nm = len * A0_NM;
+    $('scaleText').textContent = `${len} a₀ = ${nm < 0.1 ? nm.toFixed(3) : nm.toFixed(2)} nm`;
+  }
+
+  function bind3D(el) {
+    const pointers = new Map();
+    let mode = null;
+    const pinchDist = () => { const p = [...pointers.values()]; return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y); };
+    el.addEventListener('pointerdown', (e) => {
+      el.setPointerCapture(e.pointerId);
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pointers.size === 2) { mode = { type: 'pinch', d0: pinchDist(), z0: orbit.zoom }; return; }
+      mode = { type: 'orbit', lx: e.clientX, ly: e.clientY }; dragging = true;
+    });
+    el.addEventListener('pointermove', (e) => {
+      if (!pointers.has(e.pointerId)) return;
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (mode && mode.type === 'pinch' && pointers.size === 2) { orbit.zoom = Math.min(6, Math.max(0.4, mode.z0 * pinchDist() / mode.d0)); schedule(); return; }
+      if (mode && mode.type === 'orbit') {
+        const dx = e.clientX - mode.lx, dy = e.clientY - mode.ly; mode.lx = e.clientX; mode.ly = e.clientY;
+        orbit.theta -= dx * 0.008;
+        orbit.phi = Math.min(Math.PI - 0.02, Math.max(0.02, orbit.phi - dy * 0.008));
+        schedule();
+      }
+    });
+    const end = (e) => {
+      pointers.delete(e.pointerId);
+      if (pointers.size === 0) { mode = null; dragging = false; schedule(); }
+      else if (mode && mode.type === 'pinch') mode = null;
+    };
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+    el.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      orbit.zoom = Math.min(6, Math.max(0.4, orbit.zoom * Math.exp(-e.deltaY * 0.0012)));
+      schedule();
+    }, { passive: false });
+    el.addEventListener('dblclick', () => { Object.assign(orbit, { theta: ORBIT0.theta, phi: ORBIT0.phi, zoom: 1 }); schedule(); });
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') orbit.theta += 0.12;
+      else if (e.key === 'ArrowRight') orbit.theta -= 0.12;
+      else if (e.key === 'ArrowUp') orbit.phi = Math.max(0.02, orbit.phi - 0.1);
+      else if (e.key === 'ArrowDown') orbit.phi = Math.min(Math.PI - 0.02, orbit.phi + 0.1);
+      else if (e.key === '+' || e.key === '=') orbit.zoom = Math.min(6, orbit.zoom * 1.15);
+      else if (e.key === '-' || e.key === '_') orbit.zoom = Math.max(0.4, orbit.zoom / 1.15);
+      else if (e.key === '0') Object.assign(orbit, { theta: ORBIT0.theta, phi: ORBIT0.phi, zoom: 1 });
+      else if (e.key === ' ' && mixActive()) setPlaying(!S.playing);
+      else return;
+      e.preventDefault(); schedule();
+    });
+  }
+
+  // ---------- slice ----------
+  const SL = { res: 0, L: 1, plane: null, a: null, ai: null, b: null, bi: null, g: null, segs: [], nodal: false, dmax: 1, zAxis: false, img: null, off: null, box: null };
+  function planeXYZ(plane, a, b) {
+    if (plane === 'xy') return [a, b, 0];
+    if (plane === 'diag') return [a * Math.SQRT1_2, a * Math.SQRT1_2, b];
+    return [a, 0, b];
+  }
+  const planeAxes = (plane) => (plane === 'xy' ? ['x', 'y'] : plane === 'diag' ? ['s', 'z'] : ['x', 'z']);
+  function buildSlice() {
+    const res = 300, L = targetFit * 1.02, n = res * res, o = [0, 0];
+    Object.assign(SL, { res, L, plane: S.plane });
+    SL.a = new Float32Array(n); SL.ai = new Float32Array(n);
+    SL.b = stB ? new Float32Array(n) : null; SL.bi = stB ? new Float32Array(n) : null;
+    SL.g = new Float32Array(n);
+    let dmax = 0, gmax = 0;
+    const cplx = !S.real && S.m !== 0;
+    for (let j = 0; j < res; j++) {
+      const bv = L - (j + 0.5) * 2 * L / res;
+      for (let i = 0; i < res; i++) {
+        const av = -L + (i + 0.5) * 2 * L / res, k = j * res + i;
+        const [x, y, z] = planeXYZ(S.plane, av, bv);
+        psiAt(stA, x, y, z, o); SL.a[k] = o[0]; SL.ai[k] = o[1];
+        let d = o[0] * o[0] + o[1] * o[1];
+        if (stB) {
+          psiAt(stB, x, y, z, o); SL.b[k] = o[0]; SL.bi[k] = o[1];
+          const ma = Math.sqrt(d), mb = Math.hypot(o[0], o[1]);
+          d = (ma + mb) * (ma + mb) / 2;
+        }
+        if (d > dmax) dmax = d;
+        // a real function with the same zero set as ψ, for the nodal lines
+        if (cplx) { const r = Math.hypot(x, y, z); SL.g[k] = radialR(stA.n, stA.l, r, stA.RN) * assocP(stA.l, stA.am, r > 0 ? z / r : 1); }
+        else SL.g[k] = SL.a[k];
+        gmax = Math.max(gmax, Math.abs(SL.g[k]));
+      }
+    }
+    SL.dmax = dmax || 1;
+    // reference: the largest |ψ|² anywhere, from the sampled points
+    let ref = 0;
+    if (cloud) for (let i = 0; i < cloud.N; i += 7) ref = Math.max(ref, cloud.aRe[i] * cloud.aRe[i] + cloud.aIm[i] * cloud.aIm[i]);
+    SL.nodal = !stB && dmax < 1e-12 * Math.max(ref, 1e-30);
+    SL.zAxis = cplx && S.plane !== 'xy';
+    SL.segs = (!stB && !SL.nodal) ? contour(SL.g, res, L) : [];
+    SL.off = SL.off || document.createElement('canvas');
+    SL.off.width = res; SL.off.height = res;
+    SL.img = SL.off.getContext('2d').createImageData(res, res);
+    dirty.sliceField = false;
+  }
+  // zero contour of g on the pixel center grid (marching squares), in plane coordinates
+  function contour(g, res, L) {
+    const segs = [], step = 2 * L / res, X = (i) => -L + (i + 0.5) * step, Y = (j) => L - (j + 0.5) * step;
+    for (let j = 0; j < res - 1; j++) for (let i = 0; i < res - 1; i++) {
+      const v = [g[j * res + i], g[j * res + i + 1], g[(j + 1) * res + i + 1], g[(j + 1) * res + i]];
+      const P = [[X(i), Y(j)], [X(i + 1), Y(j)], [X(i + 1), Y(j + 1)], [X(i), Y(j + 1)]];
+      const pts = [];
+      for (let e = 0; e < 4; e++) {
+        const a = v[e], b = v[(e + 1) % 4];
+        if ((a < 0) !== (b < 0)) {
+          const t = a / (a - b), p = P[e], q = P[(e + 1) % 4];
+          pts.push([p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t]);
+        }
+      }
+      if (pts.length >= 2) segs.push(pts[0][0], pts[0][1], pts[1][0], pts[1][1]);
+      if (pts.length === 4) segs.push(pts[2][0], pts[2][1], pts[3][0], pts[3][1]);
+    }
+    return segs;
+  }
+  function paintSlice() {
+    const res = SL.res, data = SL.img.data, n = res * res, dmax = SL.dmax;
+    const del = stB ? dE() * S.t / HBAR_EVFS : 0, c = Math.cos(del), s = -Math.sin(del);
+    const mode = S.color, sign = S.real && !stB;
+    for (let k = 0; k < n; k++) {
+      let re = SL.a[k], im = SL.ai[k], d;
+      if (stB) { re += SL.b[k] * c - SL.bi[k] * s; im += SL.b[k] * s + SL.bi[k] * c; d = (re * re + im * im) / 2; }
+      else d = re * re + im * im;
+      const v = scaleV(d / dmax), o = 4 * k;
+      if (mode === 'density') {
+        const ci = 3 * Math.round(v * 255);
+        data[o] = CMAP[ci]; data[o + 1] = CMAP[ci + 1]; data[o + 2] = CMAP[ci + 2];
+      } else {
+        let C;
+        if (sign) C = re >= 0 ? POSC : NEGC;
+        else { const h = hueIdx(re, im); C = [HUE[h], HUE[h + 1], HUE[h + 2]]; }
+        data[o] = 255 * C[0] * v; data[o + 1] = 255 * C[1] * v; data[o + 2] = 255 * C[2] * v;
+      }
+      data[o + 3] = 255;
+    }
+    SL.off.getContext('2d').putImageData(SL.img, 0, 0);
+  }
+  let sliceHover = null;
+  function sliceBox() {
+    const ps = projScale(), W = VW, H = VH;
+    const top = (W < 520 ? 100 : 74) * (ps > 1 ? 1.25 : 1), bot = (W < 520 ? 82 : 58) * ps, left = 40 * ps, right = (W < 520 ? 44 : 64) * ps;
+    const side = Math.max(60, Math.min(W - left - right, H - top - bot));
+    const x0 = left + Math.max(0, (W - left - right - side) / 2), y0 = top + Math.max(0, (H - top - bot - side) / 2);
+    return { x0, y0, side };
+  }
+  function drawSlice() {
+    const ctx = sliceCan.getContext('2d'), W = VW, H = VH, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.cbg; ctx.fillRect(0, 0, W, H);
+    if (!SL.img) return;
+    paintSlice();
+    const bx = sliceBox(); SL.box = bx;
+    const L = SL.L, sc = bx.side / (2 * L), cx = bx.x0 + bx.side / 2, cy = bx.y0 + bx.side / 2;
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(SL.off, bx.x0, bx.y0, bx.side, bx.side);
+    ctx.save();
+    ctx.beginPath(); ctx.rect(bx.x0, bx.y0, bx.side, bx.side); ctx.clip();
+    // axes through the nucleus
+    if (S.layers.axes) {
+      ctx.strokeStyle = 'rgba(150,165,185,0.35)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(bx.x0, cy); ctx.lineTo(bx.x0 + bx.side, cy); ctx.moveTo(cx, bx.y0); ctx.lineTo(cx, bx.y0 + bx.side); ctx.stroke();
+    }
+    // nodal lines
+    if (S.layers.nodes && (SL.segs.length || SL.zAxis)) {
+      ctx.strokeStyle = 'rgba(235,242,250,0.75)'; ctx.lineWidth = 1.3 * ps; ctx.setLineDash([4 * ps, 3 * ps]);
+      ctx.beginPath();
+      const sg = SL.segs;
+      for (let i = 0; i < sg.length; i += 4) { ctx.moveTo(cx + sg[i] * sc, cy - sg[i + 1] * sc); ctx.lineTo(cx + sg[i + 2] * sc, cy - sg[i + 3] * sc); }
+      if (SL.zAxis) { ctx.moveTo(cx, bx.y0); ctx.lineTo(cx, bx.y0 + bx.side); }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    // shell from the radial plot hover
+    if (hoverR !== null) {
+      ctx.strokeStyle = 'rgba(226,179,80,0.9)'; ctx.lineWidth = 1.5 * ps;
+      ctx.beginPath(); ctx.arc(cx, cy, hoverR * sc, 0, 2 * Math.PI); ctx.stroke();
+    }
+    // center of charge, projected onto the plane
+    const dv = dipoleNow();
+    if (dv) {
+      const pa = S.plane === 'xy' ? dv[0] : S.plane === 'diag' ? (dv[0] + dv[1]) * Math.SQRT1_2 : dv[0];
+      const pb = S.plane === 'xy' ? dv[1] : dv[2];
+      ctx.strokeStyle = '#ffd166'; ctx.lineWidth = 1.5 * ps;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + pa * sc, cy - pb * sc); ctx.stroke();
+      ctx.fillStyle = '#ffd166'; ctx.beginPath(); ctx.arc(cx + pa * sc, cy - pb * sc, 4.5 * ps, 0, 2 * Math.PI); ctx.fill();
+    }
+    ctx.restore();
+    // nucleus
+    ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(cx, cy, 2 * ps, 0, 2 * Math.PI); ctx.fill();
+    // frame and ticks in a₀
+    ctx.strokeStyle = T.cline; ctx.lineWidth = 1; ctx.strokeRect(bx.x0 + 0.5, bx.y0 + 0.5, bx.side - 1, bx.side - 1);
+    const st = niceStep(2 * L / (bx.side < 300 ? 4 : 6));
+    ctx.fillStyle = T.cmuted; ctx.font = `${10.5 * ps}px ${T.mono}`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = Math.ceil(-L / st) * st; v <= L + 1e-9; v += st) {
+      const x = cx + v * sc; ctx.fillRect(x - 0.5, bx.y0 + bx.side, 1, 4);
+      ctx.fillText(minus(+v.toFixed(6)), x, bx.y0 + bx.side + 6);
+    }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = Math.ceil(-L / st) * st; v <= L + 1e-9; v += st) {
+      const y = cy - v * sc; ctx.fillRect(bx.x0 - 4, y - 0.5, 4, 1);
+      ctx.fillText(minus(+v.toFixed(6)), bx.x0 - 6, y);
+    }
+    const [ha, va] = planeAxes(SL.plane);
+    ctx.font = `italic ${12 * ps}px ${T.mono}`; ctx.fillStyle = T.cink;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const hl = ha + ' / a₀', hw = ctx.measureText(hl).width;
+    if (bx.x0 + bx.side + 6 + hw < W - 4) ctx.fillText(hl, bx.x0 + bx.side + 6, bx.y0 + bx.side + 6);
+    else { ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(hl, bx.x0 + bx.side - 4, bx.y0 + bx.side - 4); }
+    ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(va + ' / a₀', bx.x0 + 4, bx.y0 - 4);
+    if (SL.plane === 'diag') { ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.cmuted; ctx.textAlign = 'right'; ctx.fillText('s along x = y', bx.x0 + bx.side - 2, bx.y0 - 4); }
+    drawLegend(ctx, bx, ps);
+    // hover readout
+    if (sliceHover) {
+      const { px, py } = sliceHover;
+      const a = (px - cx) / sc, b = -(py - cy) / sc;
+      if (Math.abs(a) <= L && Math.abs(b) <= L) {
+        const [x, y, z] = planeXYZ(SL.plane, a, b), o = [0, 0];
+        psiAt(stA, x, y, z, o);
+        let d = o[0] * o[0] + o[1] * o[1];
+        if (stB) {
+          const o2 = [0, 0]; psiAt(stB, x, y, z, o2);
+          const del = dE() * S.t / HBAR_EVFS, c = Math.cos(del), s = -Math.sin(del);
+          const re = o[0] + o2[0] * c - o2[1] * s, im = o[1] + o2[0] * s + o2[1] * c; d = (re * re + im * im) / 2;
+        }
+        const lines = [`${ha} = ${minus(a.toFixed(2))}, ${va} = ${minus(b.toFixed(2))} a₀`, `r = ${Math.hypot(a, b).toFixed(2)} a₀ = ${(Math.hypot(a, b) * A0_NM).toFixed(3)} nm`, `|ψ|² = ${fmtSci(d)} a₀⁻³`];
+        tipBox(ctx, px, py, lines, ps, W, H, true);
+      }
+    }
+  }
+  function drawLegend(ctx, bx, ps) {
+    const x = bx.x0 + bx.side + 14 * ps, w = 10 * ps;
+    if (x + w + 30 * ps > VW) return;
+    const y0 = bx.y0 + 18 * ps, h = Math.min(140 * ps, bx.side * 0.5);
+    ctx.font = `${10 * ps}px ${T.mono}`; ctx.fillStyle = T.cmuted; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    if (S.color === 'density') {
+      for (let i = 0; i < h; i++) { const ci = 3 * Math.round((1 - i / h) * 255); ctx.fillStyle = `rgb(${CMAP[ci]},${CMAP[ci + 1]},${CMAP[ci + 2]})`; ctx.fillRect(x, y0 + i, w, 1.5); }
+      ctx.fillStyle = T.cmuted; ctx.fillText('|ψ|²', x - 2, y0 - 3);
+      ctx.textBaseline = 'top'; ctx.fillText(S.scale === 'log' ? 'log' : S.scale === 'sqrt' ? '√' : 'lin', x - 2, y0 + h + 3);
+    } else if (S.real && !stB) {
+      const sw = [[POSC, '+'], [NEGC, '−']];
+      sw.forEach(([C, lab], k) => {
+        ctx.fillStyle = `rgb(${C.map((v) => Math.round(255 * v)).join(',')})`; ctx.fillRect(x, y0 + k * 22 * ps, w, w);
+        ctx.fillStyle = T.cmuted; ctx.textBaseline = 'middle'; ctx.fillText(lab, x + w + 4, y0 + k * 22 * ps + w / 2);
+      });
+      ctx.textBaseline = 'bottom'; ctx.fillText('ψ', x, y0 - 3);
+    } else {
+      const R = 10 * ps, ccx = x + R - 2, ccy = y0 + R;
+      for (let a = 0; a < 360; a += 3) {
+        const h = 3 * a; ctx.fillStyle = `rgb(${Math.round(255 * HUE[h])},${Math.round(255 * HUE[h + 1])},${Math.round(255 * HUE[h + 2])})`;
+        ctx.beginPath(); ctx.moveTo(ccx, ccy); ctx.arc(ccx, ccy, R, -(a + 2) * Math.PI / 180, -(a - 1) * Math.PI / 180); ctx.fill();
+      }
+      ctx.fillStyle = T.cmuted; ctx.textBaseline = 'bottom'; ctx.fillText('phase', x - 4, y0 - 3);
+    }
+  }
+  function fmtSci(v) {
+    if (v === 0) return '0';
+    const e = Math.floor(Math.log10(Math.abs(v))), m = v / Math.pow(10, e);
+    if (e >= -2 && e <= 2) return v.toPrecision(3);
+    const sup = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+    return m.toFixed(2) + ' × 10' + String(e).split('').map((c) => sup[c]).join('');
+  }
+  function tipBox(ctx, px, py, lines, ps, W, H, dark) {
+    ctx.font = `${11 * ps}px ${T.mono}`;
+    const tw = Math.max(...lines.map((s) => ctx.measureText(s).width)) + 14, lh = 15 * ps, th = lines.length * lh + 8;
+    let lx = px + 14, ly = py + 14;
+    if (lx + tw > W - 6) lx = px - 14 - tw;
+    if (ly + th > H - 6) ly = py - 14 - th;
+    lx = Math.max(4, lx); ly = Math.max(4, ly);
+    ctx.fillStyle = dark ? 'rgba(10,15,22,0.92)' : T.canvas; ctx.strokeStyle = dark ? T.cline : T.line; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(lx, ly, tw, th, 5) : ctx.rect(lx, ly, tw, th); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = dark ? T.cink : T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    lines.forEach((s, i) => ctx.fillText(s, lx + 7, ly + 5 + i * lh));
+  }
+  sliceCan.addEventListener('pointermove', (e) => { const r = sliceCan.getBoundingClientRect(); sliceHover = { px: e.clientX - r.left, py: e.clientY - r.top }; dirty.slice = true; schedule(); });
+  sliceCan.addEventListener('pointerdown', (e) => { const r = sliceCan.getBoundingClientRect(); sliceHover = { px: e.clientX - r.left, py: e.clientY - r.top }; dirty.slice = true; schedule(); });
+  sliceCan.addEventListener('pointerleave', () => { sliceHover = null; dirty.slice = true; schedule(); });
+
+  // ---------- radial plot ----------
+  let hoverR = null, rHoverPx = null;
+  function radialCurves() {
+    const cs = [{ st: stA, role: 'A', name: nameOf(S.n, S.l, S.m, S.real) }];
+    if (stB) cs.push({ st: stB, role: 'B', name: nameOf(S.B.n, S.B.l, S.B.m, S.real) });
+    if (S.layers.same) {
+      for (let l = 0; l < S.n; l++) if (l !== S.l) cs.push({ st: getState(S.n, l, 0, true), role: 'ghost', name: { main: S.n + LETTERS[l], sub: '', tail: '' } });
+    }
+    return cs;
+  }
+  function rGeom() {
+    const ps = projScale(), W = RW, H = RH;
+    const pad = { L: 50 * ps, R: 16 * ps, T: 46 * ps, B: 30 * ps };
+    const cs = radialCurves();
+    let xMax = 0, yMax = 0;
+    for (const c of cs) { xMax = Math.max(xMax, c.st.r995); yMax = Math.max(yMax, c.st.pPeak); }
+    if (S.layers.bohr) xMax = Math.max(xMax, S.n * S.n * 1.1);
+    xMax = Math.max(xMax, 1);
+    yMax *= 1.08;
+    const yMin = S.layers.R ? -0.45 * yMax : 0;
+    const X = (r) => pad.L + r / xMax * (W - pad.L - pad.R);
+    const Y = (v) => H - pad.B - (v - yMin) / (yMax - yMin) * (H - pad.T - pad.B);
+    return { ps, W, H, pad, cs, xMax, yMax, yMin, X, Y, inv: (px) => (px - pad.L) / (W - pad.L - pad.R) * xMax };
+  }
+  function drawRadial() {
+    const ctx = rCan.getContext('2d'), gm = rGeom(), { ps, W, H, pad, cs, xMax, yMax, yMin, X, Y } = gm;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (W < 40 || H < 40) return;
+    // grid and ticks
+    const xs = niceStep(xMax / (W < 520 ? 4 : 8)), ys = niceStep(yMax / 3);
+    ctx.lineWidth = 1; ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = 0; v <= xMax + 1e-9; v += xs) {
+      const x = X(v); ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(x, pad.T); ctx.lineTo(x, H - pad.B); ctx.stroke();
+      ctx.fillText(+v.toFixed(6), x, H - pad.B + 5);
+    }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = 0; v <= yMax + 1e-12; v += ys) {
+      const y = Y(v); ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(pad.L, y); ctx.lineTo(W - pad.R, y); ctx.stroke();
+      ctx.fillText(+v.toPrecision(3), pad.L - 6, y);
+    }
+    ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(pad.L, Y(0)); ctx.lineTo(W - pad.R, Y(0)); ctx.moveTo(pad.L, pad.T); ctx.lineTo(pad.L, H - pad.B); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.font = `${11 * ps}px ${T.ui}`;
+    ctx.fillText('Radial probability P(r) = r²|R(r)|² per a₀, against r in a₀', pad.L + 6, 6 * ps);
+
+    const n = Math.max(200, Math.round(W - pad.L - pad.R));
+    const path = (st, f) => { ctx.beginPath(); for (let i = 0; i <= n; i++) { const r = xMax * i / n, v = f(st, r); i ? ctx.lineTo(X(r), Y(v)) : ctx.moveTo(X(r), Y(v)); } };
+    const Pf = (st, r) => { const R = radialR(st.n, st.l, r, st.RN); return r * r * R * R; };
+    // ghosts first
+    ctx.lineWidth = 1.4 * ps;
+    for (const c of cs.filter((c) => c.role === 'ghost')) {
+      ctx.strokeStyle = T.muted; ctx.setLineDash([5 * ps, 3 * ps]); path(c.st, Pf); ctx.stroke(); ctx.setLineDash([]);
+      label(ctx, c.name.main, X(c.st.rMP), Y(c.st.pPeak) - 4, T.muted, ps);
+    }
+    // state B
+    const cB = cs.find((c) => c.role === 'B');
+    if (cB) {
+      ctx.strokeStyle = T.pos; ctx.lineWidth = 2 * ps; path(cB.st, Pf); ctx.stroke();
+      label(ctx, 'B ' + cB.name.main + cB.name.sub, X(cB.st.rMP), Y(cB.st.pPeak) - 4, T.pos, ps);
+    }
+    // state A, filled
+    path(stA, Pf); ctx.lineTo(X(xMax), Y(0)); ctx.lineTo(X(0), Y(0)); ctx.closePath();
+    ctx.fillStyle = withAlpha(T.accent, 0.18); ctx.fill();
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 2.2 * ps; path(stA, Pf); ctx.stroke();
+    if (cB || S.layers.same) label(ctx, (cB ? 'A ' : '') + nameText(nameOf(S.n, S.l, S.m, S.real)).replace(/ m = .*/, ''), X(stA.rMP), Y(stA.pPeak) - 4, T.accent, ps);
+    // R(r), signed, scaled to fit
+    if (S.layers.R) {
+      let mx = 0; for (let i = 0; i <= n; i++) { const r = xMax * i / n; mx = Math.max(mx, Math.abs(radialR(stA.n, stA.l, r, stA.RN))); }
+      let mxP = 0, mxN = 0; for (let i = 0; i <= n; i++) { const v = radialR(stA.n, stA.l, xMax * i / n, stA.RN); mxP = Math.max(mxP, v); mxN = Math.min(mxN, v); }
+      const k = Math.min(0.92 * yMax / Math.max(mxP, 1e-12), mxN < 0 ? 0.92 * -yMin / -mxN : Infinity);
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps; path(stA, (st, r) => k * radialR(st.n, st.l, r, st.RN)); ctx.stroke();
+      ctx.fillStyle = T.ink; ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+      ctx.fillText('R(r), scaled', W - pad.R - 4, Y(0) + 4);
+    }
+    // markers: nodes, ⟨r⟩, Bohr radius
+    for (const rn of stA.nodes) {
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * ps; ctx.fillStyle = T.canvas;
+      ctx.beginPath(); ctx.arc(X(rn), Y(0), 4.2 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    }
+    const tags = [];
+    tags.push({ x: X(stA.rMeanExact), text: '⟨r⟩ = ' + stA.rMeanExact.toFixed(1) + ' a₀', color: T.accent });
+    if (S.layers.bohr) tags.push({ x: X(S.n * S.n), text: 'Bohr n²a₀ = ' + S.n * S.n + ' a₀', color: T.equi });
+    tags.sort((a, b) => a.x - b.x);
+    ctx.font = `600 ${10.5 * ps}px ${T.mono}`;
+    tags.forEach((t, i) => {
+      ctx.strokeStyle = t.color; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([5 * ps, 4 * ps]);
+      ctx.beginPath(); ctx.moveTo(t.x, Y(0)); ctx.lineTo(t.x, pad.T - 24 * ps + i * 14 * ps); ctx.stroke(); ctx.setLineDash([]);
+    });
+    // labels in a band at the top, nudged apart
+    tags.forEach((t, i) => {
+      const w = ctx.measureText(t.text).width;
+      let lx = t.x + 4; const ly = pad.T - 14 * ps + i * 14 * ps;
+      if (lx + w > W - pad.R) lx = t.x - 4 - w;
+      ctx.fillStyle = withAlpha(T.canvas, 0.85); ctx.fillRect(lx - 2, ly - 11 * ps, w + 4, 13 * ps);
+      ctx.fillStyle = t.color; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillText(t.text, lx, ly);
+    });
+    // hover
+    if (rHoverPx !== null) {
+      const r = Math.max(0, Math.min(xMax, gm.inv(rHoverPx)));
+      const p = Pf(stA, r), x = X(r);
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, pad.T); ctx.lineTo(x, H - pad.B); ctx.stroke();
+      ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(x, Y(p), 4 * ps, 0, 2 * Math.PI); ctx.fill();
+      const inside = Math.min(1, invCdfInverse(stA, r));
+      const lines = [`r = ${r.toFixed(2)} a₀ = ${(r * A0_NM).toFixed(3)} nm`, `P(r) = ${p.toFixed(4)} per a₀`, `inside r: ${(100 * inside).toFixed(1)}%`];
+      if (stB) lines.push(`B: P(r) = ${Pf(stB, r).toFixed(4)}`);
+      tipBox(ctx, x, Math.max(pad.T + 10, Y(p) - 20), lines, ps, W, H, false);
+    }
+  }
+  // cumulative probability inside radius r, from the table
+  function invCdfInverse(st, r) {
+    const h = st.rad.h, i = Math.min(st.rad.M - 1, Math.floor(r / h)), f = r / h - i;
+    return (st.rad.C[i] + (st.rad.C[i + 1] - st.rad.C[i]) * f) / st.rad.C[st.rad.M];
+  }
+  // curve name just right of its peak, on a backing so dashed lines do not cut through it
+  function label(ctx, text, x, y, color, ps) {
+    ctx.font = `600 ${11 * ps}px ${T.mono}`;
+    const w = ctx.measureText(text).width;
+    let lx = x + 8 * ps; if (lx + w > RW - 18 * ps) lx = x - 8 * ps - w;
+    const ly = Math.max(y + 2, 50 * ps);
+    ctx.fillStyle = withAlpha(T.canvas, 0.85); ctx.fillRect(lx - 2, ly - 12 * ps, w + 4, 14 * ps);
+    ctx.fillStyle = color; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(text, lx, ly);
+  }
+  function withAlpha(c, a) {
+    const ctx = withAlpha.ctx || (withAlpha.ctx = document.createElement('canvas').getContext('2d'));
+    ctx.fillStyle = '#000'; ctx.fillStyle = c; const v = ctx.fillStyle;
+    if (v.startsWith('#')) { const n = parseInt(v.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; }
+    return v.replace(/rgba?\(([^)]+)\)/, (m, s) => `rgba(${s.split(',').slice(0, 3).join(',')},${a})`);
+  }
+  function rHover(e) {
+    const r = rCan.getBoundingClientRect(), px = e.clientX - r.left, gm = rGeom();
+    rHoverPx = Math.max(gm.pad.L, Math.min(gm.W - gm.pad.R, px));
+    hoverR = Math.max(0, Math.min(gm.xMax, gm.inv(rHoverPx)));
+    dirty.radial = true; dirty.slice = true; schedule();
+  }
+  rCan.addEventListener('pointermove', rHover);
+  rCan.addEventListener('pointerdown', rHover);
+  rCan.addEventListener('pointerleave', () => { rHoverPx = null; hoverR = null; dirty.radial = true; dirty.slice = true; schedule(); });
+
+  // ---------- view switching ----------
+  const spinBtn = $('spin');
+  function setView(v) {
+    if (v === '3d' && !init3D()) { $('failNote').hidden = false; v = 'slice'; }
+    else if (v === '3d') $('failNote').hidden = true;
+    S.view = v;
+    const is3 = v === '3d';
+    if (G.ready) G.el.hidden = !is3;
+    sliceCan.hidden = is3;
+    spinBtn.hidden = !is3;
+    $('planeSeg').hidden = is3;
+    $('scaleBar').hidden = !is3;
+    for (const id of ['axX', 'axY', 'axZ']) if (!is3) $(id).hidden = true;
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    $('viewHint').textContent = is3
+      ? 'Drag to orbit, scroll or pinch to zoom, double click to reset. With the cloud focused, arrow keys orbit and + and − zoom. Hover the radial plot to see that radius as a shell.'
+      : 'A cut through the nucleus. Dashed lines are nodes, where ψ = 0. Hover to read |ψ|². Try the xy plane for orbitals that vanish in the xz plane.';
+    dirty.slice = true;
+    schedule();
+  }
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => setView(b.dataset.v));
+  spinBtn.addEventListener('click', () => { orbit.spin = !orbit.spin; spinBtn.setAttribute('aria-pressed', String(orbit.spin)); schedule(); });
+  for (const b of document.querySelectorAll('#planeSeg button')) b.addEventListener('click', () => {
+    S.plane = b.dataset.p;
+    for (const c of document.querySelectorAll('#planeSeg button')) c.setAttribute('aria-pressed', String(c === b));
+    dirty.sliceField = true; dirty.slice = true; schedule();
+  });
+
+  // ---------- time ----------
+  const playBtn = $('play');
+  function setPlaying(on) { S.playing = on && mixActive() && isFinite(beatT()); updatePlayUI(); schedule(); }
+  function updatePlayUI() {
+    const show = mixActive() && isFinite(beatT());
+    playBtn.hidden = $('reset').hidden = $('speedSeg').hidden = $('tclock').hidden = !show;
+    playBtn.textContent = S.playing ? 'Pause' : 'Play';
+    playBtn.classList.toggle('primary', !S.playing);
+  }
+  playBtn.addEventListener('click', () => setPlaying(!S.playing));
+  $('reset').addEventListener('click', () => { S.t = 0; dirty.cloudColor = true; dirty.slice = true; schedule(); });
+  for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => {
+    S.speed = +b.dataset.s;
+    for (const c of document.querySelectorAll('#speedSeg button')) c.setAttribute('aria-pressed', String(c === b));
+  });
+  function updateClock() {
+    if (!mixActive() || !isFinite(beatT())) return;
+    const Tb = beatT();
+    $('tclock').textContent = `t = ${S.t.toFixed(3)} fs · ${(S.t / Tb).toFixed(2)} beats`;
+  }
+
+  // ---------- rail controls ----------
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#basisSeg button')) b.addEventListener('click', () => {
+    S.real = b.dataset.b === 'real'; clearPreset(); update({ refit: false });
+  });
+  $('mixOn').addEventListener('change', (e) => {
+    S.mix = e.target.checked; S.t = 0; clearPreset();
+    if (S.mix && S.B.n === S.n && S.B.l === S.l && S.B.m === S.m) S.B = S.n < 6 ? { n: S.n + 1, l: Math.min(S.l + 1, S.n), m: 0 } : { n: S.n - 1, l: Math.max(0, S.l - 1), m: 0 };
+    if (S.mix && Math.abs(S.B.m) > S.B.l) S.B.m = 0;
+    S.playing = S.mix && !reduce;
+    update({ refit: true });
+  });
+  $('mixSel').addEventListener('change', (e) => {
+    const [n, l, m] = e.target.value.split(',').map(Number); S.B = { n, l, m }; S.t = 0; clearPreset();
+    S.playing = !reduce; update({ refit: true });
+  });
+  for (const b of document.querySelectorAll('#countSeg button')) b.addEventListener('click', () => {
+    S.count = +b.dataset.c;
+    for (const c of document.querySelectorAll('#countSeg button')) c.setAttribute('aria-pressed', String(c === b));
+    resample(); schedule();
+  });
+  $('resample').addEventListener('click', () => { resample(); schedule(); });
+  for (const b of document.querySelectorAll('#colorSeg button')) b.addEventListener('click', () => {
+    S.color = b.dataset.c;
+    for (const c of document.querySelectorAll('#colorSeg button')) c.setAttribute('aria-pressed', String(c === b));
+    dirty.slice = true; schedule();
+  });
+  function setScale(v) {
+    S.scale = v;
+    for (const c of document.querySelectorAll('#scaleSeg button')) c.setAttribute('aria-pressed', String(c.dataset.s === v));
+    dirty.slice = true; schedule();
+  }
+  for (const b of document.querySelectorAll('#scaleSeg button')) b.addEventListener('click', () => setScale(b.dataset.s));
+  const bindToggle = (id, key) => $(id).addEventListener('change', (e) => { S.layers[key] = e.target.checked; dirty.radial = true; dirty.slice = true; schedule(); });
+  bindToggle('tAxes', 'axes'); bindToggle('tNodes', 'nodes'); bindToggle('tBohr', 'bohr'); bindToggle('tSame', 'same'); bindToggle('tR', 'R');
+  $('tLock').addEventListener('change', (e) => { S.lock = e.target.checked; if (!S.lock) { targetFit = fitFor(); dirty.sliceField = true; dirty.slice = true; schedule(); } });
+
+  // ---------- frame loop ----------
+  const dirty = { cloudColor: true, slice: true, sliceField: true, radial: true };
+  let raf = 0, lastT = 0;
+  function schedule() { if (!raf) raf = requestAnimationFrame(frame); }
+  function frame(now) {
+    raf = 0;
+    const dt = lastT ? Math.min(0.05, (now - lastT) / 1000) : 0; lastT = now;
+    let again = false;
+    if (!VW || !VH) { lastT = 0; return; }
+    if (S.playing && mixActive()) { S.t += dt * S.speed * beatT() / 4; dirty.cloudColor = true; dirty.slice = true; again = true; }
+    if (S.view === '3d' && G.ready) {
+      if (orbit.spin && !dragging) { orbit.theta += dt * 0.22; again = true; }
+      if (Math.abs(curFit - targetFit) > 1e-3 * targetFit) { curFit += (targetFit - curFit) * (dt ? Math.min(1, dt * 7) : 0); again = true; }
+      else curFit = targetFit;
+      if (dirty.cloudColor) { colorPoints(); dirty.cloudColor = false; }
+      render3D();
+    } else {
+      curFit = targetFit;
+      if (dirty.sliceField) buildSlice();
+      if (dirty.slice) { drawSlice(); dirty.slice = false; }
+      $('nodalNote').hidden = !SL.nodal;
+      if (SL.nodal) $('nodalNote').textContent = `ψ = 0 everywhere in the ${SL.plane === 'diag' ? 'x = y' : SL.plane} plane: it is a nodal plane of this orbital. Pick another plane.`;
+    }
+    if (S.view === '3d') $('nodalNote').hidden = true;
+    if (dirty.radial) { drawRadial(); dirty.radial = false; }
+    updateClock();
+    if (again) schedule(); else lastT = 0;
+  }
+
+  // ---------- sizing, theme, projector ----------
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const v = vPane.getBoundingClientRect(), r = rPane.getBoundingClientRect();
+    VW = v.width; VH = v.height; RW = r.width; RH = r.height;
+    sliceCan.width = Math.max(1, Math.round(VW * dpr)); sliceCan.height = Math.max(1, Math.round(VH * dpr));
+    sliceCan.style.width = VW + 'px'; sliceCan.style.height = VH + 'px';
+    rCan.width = Math.max(1, Math.round(RW * dpr)); rCan.height = Math.max(1, Math.round(RH * dpr));
+    rCan.style.width = RW + 'px'; rCan.style.height = RH + 'px';
+    if (G.ready) { G.renderer.setPixelRatio(dpr); G.renderer.setSize(Math.max(1, VW), Math.max(1, VH)); }
+    dirty.slice = true; dirty.radial = true;
+    schedule();
+  }
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  const retheme = () => { tokens(); dirty.slice = true; dirty.radial = true; schedule(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  window.__ho = {
+    S, get stA() { return stA; }, get stB() { return stB; }, get dip() { return dip; }, get cloud() { return cloud; },
+    get three() { return G.ready; }, get fit() { return curFit; }, orbit, applyPreset, setView, setPlaying, update,
+    hover(r) { hoverR = r; rHoverPx = r === null ? null : rGeom().X(r); dirty.radial = true; dirty.slice = true; schedule(); }
+  };
+
+  // ---------- start ----------
+  tokens();
+  buildShells();
+  const ro = new ResizeObserver(resize);
+  ro.observe(vPane); ro.observe(rPane);
+  resize();
+  spinBtn.setAttribute('aria-pressed', String(orbit.spin));
+  applyPreset('3dz2');
+  curFit = targetFit;
+  setView('3d');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty.radial = true; dirty.slice = true; schedule(); });
+})();
+</script>
+</body>
+</html>

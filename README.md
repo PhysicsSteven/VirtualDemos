@@ -16,6 +16,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Spectra Explorer](demos/spectra.html) | Modern physics and astronomy | Emission and absorption lines of 99 elements from NIST data, the Bohr model of hydrogen, and a mystery spectrum game |
 | [Spacetime Diagrams](demos/spacetime.html) | Modern physics | Minkowski diagrams: light cones, the interval, Lorentz boosts, simultaneity, time dilation, length contraction and the twin paradox |
 | [Quantum Wave Packets](demos/quantum-waves.html) | Modern physics | The 1D time dependent Schrödinger equation for an electron: spreading, tunneling, bound states, superpositions, uncertainty and measurement |
+| [Hydrogen Orbitals](demos/hydrogen-orbitals.html) | Modern physics | Exact hydrogen wave functions: 3D probability clouds, slices with nodes, radial probability, real and complex orbitals, and a 1s + 2p superposition |
 | [Photoelectric Effect](demos/photoelectric.html) | Modern physics | Photon energy, work function, stopping voltage, and measuring Planck's constant |
 | [Projectile Range](demos/projectile-drag.html) | Mechanics | Projectile motion with and without quadratic air drag |
 | [Gas in a Box](demos/ideal-gas.html) | Thermodynamics | Kinetic theory of a 2D gas: pressure, temperature, Maxwell-Boltzmann speeds, adiabatic compression |
