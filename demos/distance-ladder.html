@@ -1,0 +1,1568 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Cosmic Distance Ladder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: lab bench. A strip of the whole ladder sits above the canvas for the current rung; a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --sun: #e9a817;
+  --sky: #0b1017;
+  --sky-ink: #dfe6ef;
+  --jan: #7fb0ff;
+  --jul: #ff8a70;
+  --ruler: #f0c75e;
+  --green: #17855f;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+    --sun: #f5c451; --sky: #04070b; --sky-ink: #dfe6ef; --jan: #7fb0ff; --jul: #ff8a70; --ruler: #f0c75e; --green: #4fd1a0;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  --sun: #f5c451; --sky: #04070b; --sky-ink: #dfe6ef; --jan: #7fb0ff; --jul: #ff8a70; --ruler: #f0c75e; --green: #4fd1a0;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+:root[data-projector="on"] .stage { min-height: 780px; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 600px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.stage-ctl .chips { flex: 1 1 auto; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#can { touch-action: none; outline: none; }
+#can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+.row { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .list dd { font-size: 0.86rem; font-weight: 400; }
+.flag { margin: 0; font-size: 0.88rem; font-weight: 700; border: 1px solid var(--pos); color: var(--pos); border-radius: 6px; padding: 7px 10px; }
+.flag span { display: block; font-weight: 400; color: var(--ink); margin-top: 2px; }
+.formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.dot { width: 10px; height: 10px; border: 0; border-radius: 50%; margin: 0 6px; }
+.swatch.cep { background: var(--neg); }
+.swatch.sn { background: var(--pos); }
+.swatch.fit { border-color: var(--ink); border-top-width: 3px; }
+.swatch.ref { border-color: var(--muted); border-top-style: dotted; }
+
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Cosmic Distance Ladder</h1>
+      <p>No single method measures every distance. Each rung reaches farther, and each is calibrated by the rung below it.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">pc · kpc · Mpc · ″ and mas · km/s · 1 pc = 206,265 AU = 3.262 ly</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="chips" id="presets" role="group" aria-label="Rung of the ladder">
+          <button type="button" data-p="par" aria-pressed="true">1 Parallax</button>
+          <button type="button" data-p="cep" aria-pressed="false">2 Cepheids</button>
+          <button type="button" data-p="sn" aria-pressed="false">3 Type Ia</button>
+          <button type="button" data-p="hub" aria-pressed="false">4 Hubble's law</button>
+          <button type="button" data-p="all" aria-pressed="false">Whole ladder</button>
+        </div>
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="reset">Reset</button>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="The distance ladder. A strip at the top shows the distance range of each method on a logarithmic axis; click a bar to open that rung. Below it is the current rung. Parallax: drag Earth around its orbit and drag the ruler ends onto the January and July images of the star. Cepheids: click a Cepheid in the galaxy, then click two peaks of its light curve; drag the detector in the inverse square strip. Type Ia: drag the line to the peak of the light curve. Hubble's law: drag a galaxy sideways to change its distance, click one to see its spectrum, drag the comb of rest wavelengths to match the lines. Keys: space plays or pauses, arrows move the selected item, number keys pick an object."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2 id="rungTitle">Rung 1: parallax</h2>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <!-- ===== parallax ===== -->
+      <section data-tab="par">
+        <h2>Star</h2>
+        <div class="chips" id="starChips" role="group" aria-label="Star">
+          <button type="button" data-s="proxima" aria-pressed="true">Proxima Centauri</button>
+          <button type="button" data-s="sirius" aria-pressed="false">Sirius</button>
+          <button type="button" data-s="vega" aria-pressed="false">Vega</button>
+          <button type="button" data-s="custom" aria-pressed="false">Any distance</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="dist">Distance d</label><output id="distOut" class="mono" for="dist"></output></div>
+          <input type="range" id="dist" min="0" max="4.5" step="0.01" value="0.11">
+        </div>
+        <h2>Instrument</h2>
+        <div class="seg" id="instSeg" role="group" aria-label="Instrument">
+          <button type="button" data-i="ground" aria-pressed="false">Ground</button>
+          <button type="button" data-i="hip" aria-pressed="true">Hipparcos</button>
+          <button type="button" data-i="gaia" aria-pressed="false">Gaia</button>
+        </div>
+        <p class="hint" id="instHint"></p>
+        <dl class="readout">
+          <div><dt>Parallax p</dt><dd id="pP">—</dd></div>
+          <div><dt>d = 1/p</dt><dd id="pD">—</dd></div>
+          <div><dt>January to July shift, 2p</dt><dd id="pShift">—</dd></div>
+          <div><dt>Distance uncertainty σ<sub>d</sub>/d = σ<sub>p</sub>/p</dt><dd id="pFrac">—</dd></div>
+          <div class="wide"><dt>Your ruler: shift s, so p = s/2 and d = 2/s</dt><dd id="pRuler">—</dd></div>
+          <div class="wide"><dt>Earth's position</dt><dd id="pDate">—</dd></div>
+        </dl>
+        <p class="flag" id="pFlag" hidden></p>
+      </section>
+
+      <!-- ===== cepheids ===== -->
+      <section data-tab="cep" hidden>
+        <h2>Galaxy</h2>
+        <div class="seg" id="galSeg" role="group" aria-label="Galaxy">
+          <button type="button" data-g="lmc" aria-pressed="true">LMC</button>
+          <button type="button" data-g="m31" aria-pressed="false">M31</button>
+          <button type="button" data-g="m100" aria-pressed="false">M100</button>
+        </div>
+        <p class="hint" id="galHint"></p>
+        <h2>Cepheid</h2>
+        <div class="chips" id="cepChips" role="group" aria-label="Cepheid"></div>
+        <div class="inline">
+          <span class="lab">Cycles between the markers</span>
+          <div class="seg" id="cycSeg" role="group" aria-label="Cycles between markers">
+            <button type="button" data-n="1" aria-pressed="true">1</button>
+            <button type="button" data-n="2" aria-pressed="false">2</button>
+            <button type="button" data-n="3" aria-pressed="false">3</button>
+          </div>
+        </div>
+        <dl class="readout">
+          <div><dt>Marker gap Δt</dt><dd id="cDt">—</dd></div>
+          <div><dt>Period P = Δt/n</dt><dd id="cP">—</dd></div>
+          <div><dt>Absolute M<sub>V</sub> (Leavitt law)</dt><dd id="cM">—</dd></div>
+          <div><dt>Mean apparent m<sub>V</sub></dt><dd id="cm">—</dd></div>
+          <div><dt>Distance modulus m − M</dt><dd id="cMu">—</dd></div>
+          <div class="big"><dt>Distance d</dt><dd id="cD">—</dd></div>
+        </dl>
+        <div class="row">
+          <button type="button" class="btn" id="cRec">Record this Cepheid</button>
+          <button type="button" class="btn" id="cClr">Clear</button>
+        </div>
+        <dl class="readout">
+          <div class="wide"><dt>Recorded for this galaxy</dt><dd id="cRecList" class="list">none yet</dd></div>
+          <div class="wide big"><dt>Mean distance of recorded Cepheids</dt><dd id="cMean">—</dd></div>
+        </dl>
+        <p class="formula">M<sub>V</sub> = −2.43 (log₁₀P − 1) + a<br>m − M = 5 log₁₀(d / 10 pc)</p>
+        <div>
+          <div class="slider-head"><label for="calA">Leavitt law zero point a</label><output id="calAOut" class="mono" for="calA"></output></div>
+          <input type="range" id="calA" min="-4.35" max="-3.75" step="0.01" value="-4.05">
+        </div>
+        <p class="hint">Slope and zero point a = −4.05 from Benedict et al. (2007), who measured Hubble Space Telescope parallaxes of ten Milky Way Cepheids: rung 1 calibrating rung 2. Moving a moves every Cepheid distance, and everything above it.</p>
+        <h2>Inverse square law</h2>
+        <div>
+          <div class="slider-head"><label for="isr">Distance, in units of the first square</label><output id="isrOut" class="mono" for="isr"></output></div>
+          <input type="range" id="isr" min="1" max="4" step="0.01" value="2">
+        </div>
+        <p class="hint">The same light spreads over an area that grows as d², so the flux is F = L/4πd². Twice as far means a quarter of the flux, which is 5 log₁₀2 = 1.51 magnitudes fainter.</p>
+      </section>
+
+      <!-- ===== type Ia ===== -->
+      <section data-tab="sn" hidden>
+        <h2>Supernova</h2>
+        <div class="chips" id="snChips" role="group" aria-label="Supernova"></div>
+        <div>
+          <div class="slider-head"><label for="snM">Assumed peak absolute M</label><output id="snMOut" class="mono" for="snM"></output></div>
+          <input type="range" id="snM" min="-19.8" max="-18.8" step="0.01" value="-19.3">
+        </div>
+        <p class="hint">About −19.3 in the B band, set by supernovae in galaxies whose distances come from Cepheids. Real analyses also correct for the light curve width (brighter ones fade more slowly) and color; this demo skips both.</p>
+        <dl class="readout">
+          <div><dt>Your peak m</dt><dd id="sm">—</dd></div>
+          <div><dt>m − M</dt><dd id="sMu">—</dd></div>
+          <div class="big"><dt>Distance d</dt><dd id="sD">—</dd></div>
+          <div><dt>Host redshift z</dt><dd id="sZ">—</dd></div>
+          <div class="wide"><dt>Brighter than a 30 day Cepheid by</dt><dd id="sRatio">—</dd></div>
+        </dl>
+      </section>
+
+      <!-- ===== hubble ===== -->
+      <section data-tab="hub" hidden>
+        <h2>Distances from</h2>
+        <div class="seg" id="setSeg" role="group" aria-label="Which rung measured the distances">
+          <button type="button" data-set="cep" aria-pressed="false">Cepheids</button>
+          <button type="button" data-set="sn" aria-pressed="false">Type Ia</button>
+          <button type="button" data-set="both" aria-pressed="true">Both</button>
+        </div>
+        <dl class="readout">
+          <div class="wide big"><dt>Fit v = H₀d (least squares, through the origin)</dt><dd id="hH">—</dd></div>
+          <div><dt>Hubble time 1/H₀</dt><dd id="hT">—</dd></div>
+          <div><dt>Galaxies in the fit</dt><dd id="hN">—</dd></div>
+        </dl>
+        <div class="row"><button type="button" class="btn" id="hRestore">Restore distances</button></div>
+        <h2>Calibration</h2>
+        <div>
+          <div class="slider-head"><label for="calA2">Leavitt law zero point a</label><output id="calA2Out" class="mono" for="calA2"></output></div>
+          <input type="range" id="calA2" min="-4.35" max="-3.75" step="0.01" value="-4.05">
+        </div>
+        <div>
+          <div class="slider-head"><label for="snM2">Type Ia peak M</label><output id="snM2Out" class="mono" for="snM2"></output></div>
+          <input type="range" id="snM2" min="-19.8" max="-18.8" step="0.01" value="-19.3">
+        </div>
+        <label class="check"><input type="checkbox" id="link" checked> Supernova calibration follows the Cepheids</label>
+        <p class="hint">The supernova peak M is measured in galaxies with Cepheid distances, so shifting a shifts it by the same amount. A calibration 0.1 mag too bright makes every distance 4.7% too large and H₀ 4.5% too small.</p>
+        <h2>Selected galaxy</h2>
+        <dl class="readout">
+          <div><dt>Distance</dt><dd id="gD">—</dd></div>
+          <div><dt>Catalog z</dt><dd id="gZ">—</dd></div>
+          <div class="wide"><dt>Your comb: z = Δλ/λ, v ≈ cz</dt><dd id="gComb">—</dd></div>
+        </dl>
+        <p class="hint">Measured values today: about 67 to 68 km/s/Mpc from the cosmic microwave background with the standard cosmological model (Planck 2018: 67.4 ± 0.5), and about 73 from the Cepheid and supernova ladder (SH0ES, Riess et al. 2022: 73.0 ± 1.0). Other ladder calibrations, such as the tip of the red giant branch, give values near 70. Why they differ is not settled.</p>
+      </section>
+
+      <!-- ===== overview ===== -->
+      <section data-tab="all" hidden>
+        <h2>Reading the ladder</h2>
+        <p class="hint">Bars show roughly where each method works well; the faded ends are where it still works with larger errors. Where two bars overlap, the same objects can be measured both ways, and that overlap is how the farther method is calibrated.</p>
+        <p class="hint">An error in a low rung carries up to every rung above it. That is why so much effort goes into parallaxes of nearby Cepheids.</p>
+        <p class="hint">The ringed dots are your current measurements from each rung. Click a bar to open that rung.</p>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint" id="modelText"></p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const AU_PER_PC = 648000 / Math.PI;             // IAU 2015: 1 pc = 648000/π au exactly
+  const AS_PER_RAD = 648000 / Math.PI;
+  const LY_PER_PC = 3.261563777;
+  const C_KMS = 299792.458;
+  const KM_PER_MPC = 3.0856775814913673e19;
+  const S_PER_GYR = 1e9 * 365.25 * 86400;         // Julian years
+  const HUBBLE_GYR = KM_PER_MPC / S_PER_GYR;      // 977.79 Gyr per (km/s/Mpc)
+  const A0 = -4.05, B_LL = -2.43;                 // Benedict et al. 2007, V band
+  const MSN0 = -19.3;
+  const H_SIM = 70;                               // H0 used to simulate the illustrative data
+
+  const distFromParallax = (pArcsec) => 1 / pArcsec;          // pc
+  const parallaxFromDist = (dPc) => 1 / dPc;                   // arcsec
+  // Apparent offset (arcsec) of a star d pc away in the plane of Earth's circular 1 AU orbit, in the
+  // direction +y from the Sun, seen from Earth at orbital angle phi, measured from its direction from the Sun.
+  function apparentOffset(dPc, phi) {
+    const D = dPc * AU_PER_PC;
+    return Math.atan2(-Math.cos(phi), D - Math.sin(phi)) * AS_PER_RAD;
+  }
+  const distModulus = (dPc) => 5 * Math.log10(dPc / 10);
+  const distFromModulus = (mu) => Math.pow(10, mu / 5 + 1);   // pc
+  const leavitt = (P, a = A0) => B_LL * (Math.log10(P) - 1) + a;
+  const fluxRatio = (r) => 1 / (r * r);
+  const deltaMag = (r) => 5 * Math.log10(r);
+  // least squares line through the origin, y = H x: H = Σxy/Σx², standard error from the residuals
+  function fitOrigin(xs, ys) {
+    let sxy = 0, sxx = 0; const n = xs.length;
+    for (let i = 0; i < n; i++) { sxy += xs[i] * ys[i]; sxx += xs[i] * xs[i]; }
+    const H = sxx > 0 ? sxy / sxx : NaN;
+    let ss = 0; for (let i = 0; i < n; i++) { const r = ys[i] - H * xs[i]; ss += r * r; }
+    const se = n > 1 ? Math.sqrt(ss / (n - 1) / sxx) : NaN;
+    return { H, se, n };
+  }
+  const hubbleTimeGyr = (H) => HUBBLE_GYR / H;
+  const velocityFromZ = (z) => C_KMS * z;                      // v ≈ cz, small z only
+
+  // Cepheid light curve shape: brightness b in [0, 1], maximum at phase 0, a slow fall over 75% of the cycle
+  // and a fast rise over 25%. Each half is a half cosine, so the cycle average of b is exactly 1/2.
+  function cepShape(ph) {
+    ph = ph - Math.floor(ph);
+    return ph < 0.75 ? 0.5 * (1 + Math.cos(Math.PI * ph / 0.75)) : 0.5 * (1 - Math.cos(Math.PI * (ph - 0.75) / 0.25));
+  }
+  const cepMag = (t, c) => c.m + c.A * (0.5 - cepShape((t - c.t0) / c.P));
+  // Schematic Type Ia light curve: magnitudes below peak against days from peak
+  function snDelta(t) {
+    if (t <= 0) return 0.011 * t * t;
+    return 2.7 * (1 - Math.exp(-Math.pow(t / 21, 1.6))) + 0.012 * Math.max(0, t - 30);
+  }
+
+  function rng(seed) {
+    let a = seed >>> 0;
+    return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  }
+  function gauss(r) { let u = 0; while (u === 0) u = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * r()); }
+
+  const GALAXIES = {
+    lmc: { name: 'Large Magellanic Cloud', mu: 18.48, P: [3.2, 6.1, 11.4, 22.0, 41.0], noise: 0.02, seed: 11, kind: 'irr',
+      note: 'Our neighbor, about 50 kpc away (49.6 kpc, Pietrzyński et al. 2019). Henrietta Leavitt found the period luminosity relation here, in the Small Magellanic Cloud, in 1912.' },
+    m31: { name: 'Andromeda galaxy, M31', mu: 24.40, P: [8.4, 14.2, 21.6, 33.0, 52.0], noise: 0.04, seed: 23, kind: 'incl',
+      note: 'About 0.76 Mpc away. Hubble found Cepheids here in 1923 and showed it lies far outside the Milky Way.' },
+    m100: { name: 'M100, Virgo cluster', mu: 30.91, P: [20.5, 27.8, 36.0, 47.5, 61.0], noise: 0.08, seed: 37, kind: 'face',
+      note: 'About 15 Mpc away (Hubble Space Telescope Key Project). Only long period, bright Cepheids can be seen this far.' },
+  };
+  function makeCepheids(key) {
+    const g = GALAXIES[key], r = rng(g.seed), out = [];
+    g.P.forEach((P, i) => {
+      const A = Math.min(0.95, Math.max(0.45, 0.45 + 0.4 * (Math.log10(P) - 0.5)));
+      const m = leavitt(P) + g.mu + 0.1 * gauss(r);     // 0.1 mag: width of the instability strip
+      const t0 = (0.15 + 0.7 * r()) * P;
+      const T = Math.max(30, Math.ceil(3.4 * P));
+      const c = { i, P, A, m, t0, T, obs: [] };
+      for (let k = 0; k < T; k++) { const t = k + 0.1 + 0.6 * r(); c.obs.push([t, cepMag(t, c) + g.noise * gauss(r)]); }
+      out.push(c);
+    });
+    return out;
+  }
+  const SN_LIST = [
+    { name: 'SN A', d: 22, seed: 5 }, { name: 'SN B', d: 75, seed: 6 }, { name: 'SN C', d: 180, seed: 7 }, { name: 'SN D', d: 390, seed: 8 },
+  ];
+  function makeSN(k) {
+    const s = SN_LIST[k], r = rng(s.seed * 101);
+    const mPeak = MSN0 + distModulus(s.d * 1e6) + 0.12 * gauss(r);
+    const z = (H_SIM * s.d + 250 * gauss(r)) / C_KMS;
+    const obs = [];
+    for (let t = -14; t <= 60; t += 2) {
+      const tt = t + 0.6 * (r() - 0.5), m = mPeak + snDelta(tt);
+      obs.push([tt, m + (0.02 + 0.015 * Math.max(0, m - 14)) * gauss(r)]);
+    }
+    return Object.assign({}, s, { mPeak, z, obs });
+  }
+  // Illustrative Hubble diagram data: simulated with H0 = 70 km/s/Mpc and 250 km/s rms peculiar velocities
+  function makeHubbleData() {
+    const r = rng(5), pts = [];
+    const add = (grp, d, sigMag) => {
+      const v = H_SIM * d + 250 * gauss(r);
+      const dObs = d * Math.pow(10, 0.2 * sigMag * gauss(r));
+      pts.push({ grp, dTrue: d, dObs, sig: 0.2 * Math.LN10 * sigMag, z: v / C_KMS });
+    };
+    for (let i = 0; i < 10; i++) add('cep', Math.pow(10, Math.log10(7) + (Math.log10(40) - Math.log10(7)) * (i + r()) / 10), 0.1);
+    for (let i = 0; i < 24; i++) add('sn', 40 + 380 * Math.pow((i + r()) / 24, 0.8), 0.15);
+    return pts;
+  }
+  // ==CORE END==
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  // ---------- formatting ----------
+  const sig = (v, n = 3) => Number(v).toLocaleString('en-US', { maximumSignificantDigits: n });
+  const grp = (v, d = 0) => Number(v).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+  function fmtDist(pc, n = 3) {
+    if (!isFinite(pc)) return '—';
+    if (pc < 1e3) return sig(pc, n) + ' pc';
+    if (pc < 1e6) return sig(pc / 1e3, n) + ' kpc';
+    if (pc < 1e9) return sig(pc / 1e6, n) + ' Mpc';
+    return sig(pc / 1e9, n) + ' Gpc';
+  }
+  function fmtAng(as) {
+    if (!isFinite(as)) return '—';
+    const a = Math.abs(as);
+    if (a >= 0.1) return as.toFixed(3) + '″';
+    if (a >= 1e-4) return sig(as * 1e3, 3) + ' mas';
+    return sig(as * 1e6, 3) + ' µas';
+  }
+  const fmtMag = (m) => (m < 0 ? '−' : '') + Math.abs(m).toFixed(2);
+  const minus = (s) => String(s).replace(/-/g, '−');
+
+  // ---------- state ----------
+  const STARS = {
+    proxima: { name: 'Proxima Centauri', p: 0.768 },
+    sirius: { name: 'Sirius', p: 0.379 },
+    vega: { name: 'Vega', p: 0.130 },
+  };
+  const INST = {
+    ground: { name: 'Ground', sig: 0.010, hint: 'Ground based photographic parallaxes before the 1990s: roughly 10 mas at best, so about 10% distances out to about 10 pc.' },
+    hip: { name: 'Hipparcos', sig: 0.001, hint: 'Hipparcos satellite (1989 to 1993): roughly 1 mas, so about 10% distances out to about 100 pc.' },
+    gaia: { name: 'Gaia', sig: 0.00002, hint: 'Gaia (Data Release 3): roughly 0.02 mas for bright stars, about 0.5 mas at 20th magnitude. About 10% distances to a few kpc for bright stars.' },
+  };
+  const HINTS = {
+    par: ['Rung 1: parallax', 'Earth moves 2 AU between January and July, so a nearby star shifts against the distant ones. Drag Earth or play a year, then drag the ruler ends onto the two images in the overlay. Try a star at 1 kpc and 10 kpc with each instrument.'],
+    cep: ['Rung 2: Cepheid variables', 'Brighter Cepheids pulse more slowly. Click two neighboring peaks of the light curve to measure the period, the Leavitt law gives the true brightness, and the apparent brightness gives the distance. Record a few and compare.'],
+    sn: ['Rung 3: Type Ia supernovae', 'A Type Ia supernova at peak outshines a Cepheid about 400,000 times, so it can be seen hundreds of Mpc away. Drag the line to the top of the light curve.'],
+    hub: ["Rung 4: Hubble's law", 'Farther galaxies recede faster. The slope of the fit is H₀. Drag a galaxy sideways to see how one distance moves the fit, or change the calibration below and watch every point move together.'],
+    all: ['The whole ladder', 'Each method covers a range of distances. The overlaps are where one rung calibrates the next.'],
+  };
+  const MODEL = {
+    par: 'Earth on a circular orbit of exactly 1 AU, the star in the plane of the orbit, placed so that January and July are the extremes of its shift; then the shift is 2p. A real star off the plane traces a small ellipse instead. The top view is not to scale: a star 1 pc away would sit 206,265 orbit radii from the Sun. The photos zoom so the shift fills the frame; the dashed circles show the instrument’s position uncertainty.',
+    cep: 'Cepheids and their light curves are simulated from the Leavitt law with a 0.1 mag spread for the width of the instability strip, nightly photometry with noise, and a schematic light curve shape (fast rise, slow decline). Extinction by dust is ignored; real work uses infrared light and corrects for it. The galaxy pictures are drawings.',
+    sn: 'Supernovae are simulated with peak M = −19.3 plus a 0.12 mag spread, on a schematic light curve, not a fitted template. No extinction, no light curve width or color correction, and no K correction. For these small redshifts (z < 0.1) the distance modulus with the plain distance is a fair approximation.',
+    hub: 'Illustrative data, simulated with H₀ = 70 km/s/Mpc, 250 km/s random peculiar velocities, and distance errors of 0.10 mag for Cepheids and 0.15 mag for supernovae. Velocities are v = cz, accurate for small z; at z = 0.1 relativistic and cosmological corrections are several percent. The Hubble time 1/H₀ is not the age of the universe (about 13.8 Gyr in the standard model), since the expansion rate has changed. The spectrum is schematic, with lab wavelengths in air: Ca II K 393.37 and H 396.85 nm, Hβ 486.13, Mg b 517.3, Na D 589.3, Hα 656.28, [N II] 658.35.',
+    all: 'Ranges are approximate and depend on the telescope and the object. Not shown: other rungs such as eclipsing binaries, the tip of the red giant branch, masers and the Tully Fisher relation.',
+  };
+
+  const S = {
+    tab: 'par', running: !reduce, calA: A0, snM: MSN0, link: true,
+    par: { star: 'proxima', d: 1 / 0.768, inst: 'hip', phi: Math.PI + 0.9, ruler: [0, 0], rulerSet: false },
+    cep: { gal: 'lmc', sel: 2, t1: null, t2: null, n: 1, time: 0, r: 2, last: 2, saved: { lmc: [], m31: [], m100: [] } },
+    sn: { sel: 1, peak: null, time: -16 },
+    hub: { set: 'both', sel: 20, over: {}, zc: 0 },
+  };
+  const CEP = { lmc: makeCepheids('lmc'), m31: makeCepheids('m31'), m100: makeCepheids('m100') };
+  const SNE = SN_LIST.map((_, k) => makeSN(k));
+  const HUB = makeHubbleData();
+
+  // ---------- derived ----------
+  const parP = () => 1 / S.par.d;
+  const parSig = () => INST[S.par.inst].sig;
+  function niceUp(v) { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p; }
+  const parFOV = () => niceUp(4.5 * Math.max(parP(), parSig()));
+  const curCep = () => CEP[S.cep.gal][S.cep.sel];
+  function cepMeasure() {
+    const c = S.cep;
+    if (c.t1 === null || c.t2 === null) return null;
+    const dt = Math.abs(c.t2 - c.t1); if (dt < 0.05) return null;
+    const P = dt / c.n, M = leavitt(P, S.calA), m = curCep().m, mu = m - M;
+    return { dt, P, M, m, mu, d: distFromModulus(mu) };
+  }
+  const curSN = () => SNE[S.sn.sel];
+  function snMeasure() {
+    if (S.sn.peak === null) return null;
+    const mu = S.sn.peak - S.snM;
+    return { m: S.sn.peak, mu, d: distFromModulus(mu) };
+  }
+  const calFactor = (g) => g === 'cep' ? Math.pow(10, -0.2 * (S.calA - A0)) : Math.pow(10, -0.2 * (S.snM - MSN0));
+  const hubD = (i) => (S.hub.over[i] !== undefined ? S.hub.over[i] : HUB[i].dObs) * calFactor(HUB[i].grp);
+  const hubOn = (i) => S.hub.set === 'both' || S.hub.set === HUB[i].grp;
+  function hubFit() {
+    const xs = [], ys = [];
+    HUB.forEach((p, i) => { if (hubOn(i)) { xs.push(hubD(i)); ys.push(velocityFromZ(p.z)); } });
+    return fitOrigin(xs, ys);
+  }
+
+  // ---------- theme and canvas ----------
+  let T = null, dpr = 1, W = 0, H = 0;
+  const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.4 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {};
+    for (const k of ['canvas', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'pos', 'neg', 'equi', 'accent', 'sun', 'sky', 'sky-ink', 'jan', 'jul', 'ruler', 'relief', 'surface', 'green'])
+      T[k.replace('-s', 'S').replace('-i', 'I')] = g('--' + k);
+    T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'sans-serif';
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = pane.getBoundingClientRect();
+    W = r.width; H = r.height;
+    can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(H * dpr));
+    can.style.width = W + 'px'; can.style.height = H + 'px';
+    dirty = true;
+  }
+  const narrowMQ = (() => { try { return matchMedia('(max-width: 820px)'); } catch (_) { return { matches: false }; } })();
+  const PHONE_H = { par: 980, cep: 1180, sn: 900, hub: 960, all: 860 };
+  function stageHeight() {
+    const st = $('stage');
+    if (narrowMQ.matches) { st.style.height = Math.round(PHONE_H[S.tab] * (projScale() > 1 ? 1.15 : 1) + 60) + 'px'; }
+    else st.style.height = '';
+  }
+
+  const F = (s, w = 400, fam) => `${w} ${s * projScale()}px ${fam || T.mono}`;
+  function rr(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
+  // panel title; on narrow canvases it drops a parenthetical, then the part after the colon, to fit
+  function title(txt, x, y, color) {
+    ctx.save(); ctx.font = F(10.5, 700); ctx.fillStyle = color || T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    if ('letterSpacing' in ctx) ctx.letterSpacing = '0.06em';
+    const maxW = W - x - 8;
+    const a = txt.replace(/\s*\([^)]*\)/, ''), b = a.split(':')[0];
+    let t = txt;
+    for (const c of [txt, a, b]) { t = c; if (ctx.measureText(c.toUpperCase()).width <= maxW) break; }
+    ctx.fillText(t.toUpperCase(), x, y); ctx.restore();
+  }
+  function text(txt, x, y, o = {}) {
+    ctx.font = o.font || F(10.5); ctx.fillStyle = o.color || T.muted; ctx.textAlign = o.align || 'left'; ctx.textBaseline = o.base || 'middle';
+    if (o.bg) {
+      const w = ctx.measureText(txt).width, h = parseFloat(ctx.font.match(/([\d.]+)px/)[1]) + 4;
+      const lx = ctx.textAlign === 'center' ? x - w / 2 : ctx.textAlign === 'right' ? x - w : x;
+      const ty = ctx.textBaseline === 'top' ? y : ctx.textBaseline === 'bottom' ? y - h + 2 : y - h / 2;
+      ctx.save(); ctx.globalAlpha = 0.85; ctx.fillStyle = o.bg; ctx.fillRect(lx - 3, ty, w + 6, h); ctx.restore();
+      ctx.fillStyle = o.color || T.muted;
+    }
+    ctx.fillText(txt, x, y);
+  }
+  function line(x1, y1, x2, y2, color, w = 1, dash) {
+    ctx.strokeStyle = color; ctx.lineWidth = w * projScale(); ctx.setLineDash(dash ? dash.map((d) => d * projScale()) : []);
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.setLineDash([]);
+  }
+  function dot(x, y, r, fill, stroke, sw = 1.5) {
+    ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI);
+    if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+    if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = sw * projScale(); ctx.stroke(); }
+  }
+  function arrow(x1, y1, x2, y2, color, w = 1.4) {
+    const ps = projScale(), a = Math.atan2(y2 - y1, x2 - x1), hd = 7 * ps;
+    line(x1, y1, x2, y2, color, w);
+    ctx.fillStyle = color; ctx.beginPath(); ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - hd * Math.cos(a - 0.4), y2 - hd * Math.sin(a - 0.4)); ctx.lineTo(x2 - hd * Math.cos(a + 0.4), y2 - hd * Math.sin(a + 0.4)); ctx.closePath(); ctx.fill();
+  }
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  function frame(x, y, w, h) { ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(Math.round(x) + 0.5, Math.round(y) + 0.5, Math.round(w), Math.round(h)); }
+  // grip: three short bars across a draggable line
+  function grip(x, y, vertical, color, hot) {
+    const ps = projScale();
+    ctx.strokeStyle = color; ctx.lineWidth = 1.5 * ps; ctx.globalAlpha = hot ? 1 : 0.8; ctx.beginPath();
+    for (let k = -1; k <= 1; k++) {
+      if (vertical) { ctx.moveTo(x - 5 * ps, y + k * 3.5 * ps); ctx.lineTo(x + 5 * ps, y + k * 3.5 * ps); }
+      else { ctx.moveTo(x + k * 3.5 * ps, y - 5 * ps); ctx.lineTo(x + k * 3.5 * ps, y + 5 * ps); }
+    }
+    ctx.stroke(); ctx.globalAlpha = 1;
+  }
+  const isHot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+
+  // seeded scenery
+  const BG = (() => { const r = rng(77), a = []; for (let i = 0; i < 46; i++) { let y; do { y = r(); } while (Math.abs(y - 0.5) < 0.13); a.push([r(), y, 0.5 + 1.6 * r() * r()]); } return a; })();
+  const ROW = (() => { const r = rng(78), a = []; for (let i = 0; i < 40; i++) a.push([r(), r(), 0.6 + 1.2 * r()]); return a; })();
+  function galaxyDots(kind, seed) {
+    const r = rng(seed), pts = [];
+    if (kind === 'irr') {
+      for (let i = 0; i < 900; i++) { const u = gauss(r) * 0.55, v = gauss(r) * 0.12; const a = 0.35; pts.push([u * Math.cos(a) - v * Math.sin(a), u * Math.sin(a) + v * Math.cos(a), r()]); }
+      for (let i = 0; i < 900; i++) pts.push([gauss(r) * 0.42 + 0.08, gauss(r) * 0.36 - 0.05, r() * 0.7]);
+    } else {
+      const squash = kind === 'incl' ? 0.36 : 0.92, tilt = kind === 'incl' ? -0.6 : 0.3;
+      for (let i = 0; i < 500; i++) { const rr2 = Math.abs(gauss(r)) * 0.12; const t = r() * 2 * Math.PI; pts.push([rr2 * Math.cos(t), rr2 * Math.sin(t), 1]); }
+      for (let arm = 0; arm < 2; arm++) for (let i = 0; i < 700; i++) {
+        const s = r(), rad = 0.1 + 0.85 * s, th = arm * Math.PI + 4.2 * Math.log(rad / 0.1) * 0.55 + gauss(r) * 0.18;
+        pts.push([rad * Math.cos(th), rad * Math.sin(th), 0.4 + 0.6 * r()]);
+      }
+      for (let i = 0; i < 400; i++) { const rad = Math.sqrt(r()) * 0.9, t = r() * 2 * Math.PI; pts.push([rad * Math.cos(t), rad * Math.sin(t), r() * 0.5]); }
+      for (const p of pts) { const x = p[0], y = p[1] * squash; p[0] = x * Math.cos(tilt) - y * Math.sin(tilt); p[1] = x * Math.sin(tilt) + y * Math.cos(tilt); }
+    }
+    return pts;
+  }
+  const GDOTS = { lmc: galaxyDots('irr', 4), m31: galaxyDots('incl', 5), m100: galaxyDots('face', 6), sn: galaxyDots('face', 9) };
+  const CEP_POS = { lmc: [[-0.32, -0.14], [0.18, 0.05], [-0.05, 0.22], [0.42, 0.18], [-0.48, 0.3]],
+    m31: [[-0.52, 0.28], [0.36, -0.2], [-0.2, 0.05], [0.6, -0.38], [0.12, 0.16]],
+    m100: [[-0.4, -0.3], [0.45, 0.2], [0.1, -0.5], [-0.3, 0.42], [0.58, -0.22]] };
+  function drawGalaxy(kind, x, y, w, h, scale) {
+    ctx.fillStyle = T.sky; rr(x, y, w, h, 6 * projScale()); ctx.fill();
+    const cx = x + w / 2, cy = y + h / 2, s = scale;
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, s * 0.9);
+    g.addColorStop(0, 'rgba(255,236,200,0.55)'); g.addColorStop(0.25, 'rgba(220,210,200,0.16)'); g.addColorStop(1, 'rgba(160,180,220,0)');
+    ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+    ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
+    const pts = GDOTS[kind];
+    for (const p of pts) {
+      ctx.globalAlpha = 0.18 + 0.5 * p[2];
+      ctx.fillStyle = p[2] > 0.8 ? '#ffe9c8' : '#c9d8ff';
+      ctx.fillRect(cx + p[0] * s, cy + p[1] * s, 1.3, 1.3);
+    }
+    ctx.globalAlpha = 1; ctx.restore();
+  }
+  function starGlow(x, y, r, color) {
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r * 2.6);
+    g.addColorStop(0, color); g.addColorStop(0.35, color); g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.save(); ctx.globalAlpha = 0.45; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * 2.6, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+    dot(x, y, r, color);
+  }
+
+  // ---------- the ladder (strip and overview) ----------
+  const RUNGS = [
+    { key: 'par', name: 'Parallax', lo: 1, a: 1, b: 3e3, hi: 1.5e4, note: 'Gaia: about 10% at a few kpc for bright stars' },
+    { key: 'cep', name: 'Cepheids', lo: 1e2, a: 3e2, b: 4e7, hi: 6e7, note: 'Hubble Space Telescope: out to about 40 Mpc' },
+    { key: 'sn', name: 'Type Ia supernovae', lo: 3e6, a: 6e6, b: 2e9, hi: 6e9, note: 'calibrated in galaxies that also have Cepheids' },
+    { key: 'hub', name: "Hubble's law", lo: 1e7, a: 3e7, b: 4e8, hi: 1e10, note: 'v = H₀d at small z; farther needs a cosmological model' },
+  ];
+  const LANDMARKS = [['Proxima Cen', 1.30], ['Vega', 7.68], ['Pleiades', 136], ['Galactic center', 8.2e3], ['LMC', 4.96e4], ['M31', 7.6e5], ['Virgo cluster', 1.65e7], ['Coma cluster', 1.0e8]];
+  function currentMarks() {
+    const m = { par: S.par.d };
+    const saved = S.cep.saved[S.cep.gal];
+    const cm = cepMeasure();
+    if (saved.length) m.cep = saved.reduce((s, q) => s + q.d, 0) / saved.length; else if (cm) m.cep = cm.d;
+    const sm = snMeasure(); if (sm) m.sn = sm.d;
+    let mx = 0; HUB.forEach((p, i) => { if (hubOn(i)) mx = Math.max(mx, hubD(i)); }); m.hub = mx * 1e6;
+    return m;
+  }
+  function drawLadder(x, y, w, h, big) {
+    const ps = projScale(), L = x + (big ? 14 : 8) * ps, R = x + w - (big ? 14 : 8) * ps;
+    const X = (pc) => L + (Math.log10(pc) - 0) / 10 * (R - L);
+    const axisH = (big ? 22 : 15) * ps;
+    const topPad = big ? 40 * ps : 4 * ps;
+    const levels = W < 640 ? 4 : 2;
+    const lmH = big ? (40 + levels * 20) * ps : 0;
+    const rowsH = h - topPad - axisH - lmH - (big ? 8 * ps : 2 * ps);
+    const rh = rowsH / 4, bh = Math.min(rh * (big ? 0.42 : 0.74), (big ? 26 : 14) * ps);
+    const marks = currentMarks();
+    G.ladder = { rows: [], big };
+    if (big) title('The distance ladder, log scale, 1 pc to 10 Gpc', x + 14 * ps, y + 12 * ps);
+    // decade grid
+    for (let k = 0; k <= 10; k++) {
+      const px = Math.round(X(Math.pow(10, k))) + 0.5;
+      line(px, y + topPad, px, y + topPad + rowsH, k % 3 === 0 ? T.gridStrong : T.grid, 1);
+    }
+    RUNGS.forEach((g, i) => {
+      const cy = y + topPad + rh * (i + 0.5) - (big ? 6 * ps : 0);
+      const active = !big && g.key === S.tab;
+      const col = big ? [T.neg, T.equi, T.pos, T.green][i] : (active ? T.accent : T.muted);
+      const x0 = X(g.lo), xa = X(g.a), xb = X(g.b), x1 = Math.min(R, X(g.hi));
+      const grd = ctx.createLinearGradient(x0, 0, x1, 0);
+      const fa = (xa - x0) / Math.max(1, x1 - x0), fb = (xb - x0) / Math.max(1, x1 - x0);
+      const alpha = big || active ? 1 : 0.38;
+      grd.addColorStop(0, 'rgba(0,0,0,0)'); grd.addColorStop(Math.max(0.001, Math.min(0.99, fa)), col); grd.addColorStop(Math.max(0.002, Math.min(0.995, fb)), col); grd.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.save(); ctx.globalAlpha = alpha * (big ? 0.85 : 1); ctx.fillStyle = grd; rr(x0, cy - bh / 2, x1 - x0, bh, bh / 2); ctx.fill(); ctx.restore();
+      const hot = isHot('rung-' + g.key);
+      if (hot || active) { ctx.strokeStyle = col; ctx.lineWidth = (hot ? 2 : 1.2) * ps; rr(xa, cy - bh / 2, xb - xa, bh, bh / 2); ctx.stroke(); }
+      // label
+      ctx.font = F(big ? 12.5 : 10, 700, big ? T.ui : T.mono);
+      const tw = ctx.measureText(g.name).width;
+      let lx = Math.max(L + 2 * ps, xa + 6 * ps);
+      if (lx + tw > R - 2 * ps) lx = R - 2 * ps - tw;
+      if (big) {
+        text(g.name, lx, cy - bh / 2 - 9 * ps, { font: F(12.5, 700, T.ui), color: T.ink });
+        ctx.font = F(10.5); const nw = ctx.measureText(g.note).width;
+        text(g.note, Math.max(L, Math.min(lx, R - nw)), cy + bh / 2 + 10 * ps, { font: F(10.5), color: T.muted });
+      } else {
+        const inside = lx + tw < xb - 4 * ps;
+        if (inside) text(g.name, lx, cy + 0.5, { font: F(10, 700), color: active ? T.canvas : T.ink });
+        else if (x0 - 6 * ps - tw > L) text(g.name, x0 - 6 * ps, cy + 0.5, { font: F(10, 700), align: 'right', color: active ? T.accent : T.ink });
+        else text(g.name, lx, cy + 0.5, { font: F(10, 700), color: active ? T.accent : T.ink, bg: T.canvas });
+      }
+      // current measurement marker
+      const mv = marks[g.key];
+      if (mv && isFinite(mv) && mv > 1 && big) {
+        const mx = X(Math.min(mv, 9.9e9));
+        dot(mx, cy, 6 * ps, T.canvas, T.ink, 2); dot(mx, cy, 2 * ps, T.ink);
+      } else if (mv && isFinite(mv) && mv > 1) {
+        const mx = X(Math.min(mv, 9.9e9)), ty = cy - bh / 2 - 1 * ps, s = (big ? 7 : 5) * ps;
+        ctx.fillStyle = big ? T.ink : (active ? T.ink : T.muted);
+        ctx.beginPath(); ctx.moveTo(mx, ty); ctx.lineTo(mx - s * 0.8, ty - s); ctx.lineTo(mx + s * 0.8, ty - s); ctx.closePath(); ctx.fill();
+      }
+      G.ladder.rows.push({ key: g.key, x: x0, y: cy - rh / 2, w: x1 - x0, h: rh, cy, bh, xa, xb });
+    });
+    // "calibrates" arrows in the overview
+    if (big) {
+      for (let i = 0; i < 3; i++) {
+        const a = RUNGS[i], b = RUNGS[i + 1], ra = G.ladder.rows[i], rb = G.ladder.rows[i + 1];
+        const lo = Math.max(a.lo, b.lo), hi = Math.min(a.hi, b.hi);
+        const xm = X(Math.sqrt(lo * Math.max(lo * 1.0001, hi)));
+        const y1 = ra.cy + ra.bh / 2 + 18 * ps, y2 = rb.cy - rb.bh / 2 - 20 * ps;
+        if (y2 - y1 > 10 * ps) { arrow(xm, y1, xm, y2, T.ink, 1.3); text('calibrates', xm + 6 * ps, (y1 + y2) / 2, { font: F(10, 700), color: T.ink, bg: T.canvas }); }
+      }
+    }
+    // axis
+    const ay = y + topPad + rowsH + (big ? 4 * ps : 0);
+    line(L, ay, R, ay, T.gridStrong, 1);
+    const units = [[1, '1 pc'], [1e3, '1 kpc'], [1e6, '1 Mpc'], [1e9, '1 Gpc']];
+    for (let k = 0; k <= 10; k++) { const px = X(Math.pow(10, k)); line(px, ay, px, ay + 3 * ps, T.muted, 1); }
+    for (const [v, s] of units) text(s, X(v), ay + (big ? 11 : 8) * ps, { font: F(big ? 10.5 : 9), align: v === 1 ? 'left' : 'center', color: T.muted });
+    if (big) {
+      if (R - L > 560 * ps) {
+        text('10 pc', X(10), ay + 11 * ps, { font: F(9.5), align: 'center' }); text('100 pc', X(100), ay + 11 * ps, { font: F(9.5), align: 'center' });
+        text('10 Gpc', R, ay + 11 * ps, { font: F(10.5), align: 'right' });
+      }
+      // landmarks, staggered
+      // greedy placement: each label goes on the first level where it does not overlap an earlier one
+      const used = [];
+      ctx.font = F(10);
+      LANDMARKS.forEach(([nm, d]) => {
+        const px = X(d), lab = `${nm} ${fmtDist(d, 2)}`, tw = ctx.measureText(lab).width;
+        const align = px - tw / 2 < x + 4 * ps ? 'left' : px + tw / 2 > R ? 'right' : 'center';
+        const x0 = align === 'left' ? px : align === 'right' ? px - tw : px - tw / 2;
+        let lev = 0;
+        while (lev < levels + 2 && used.some((u) => u[0] === lev && x0 < u[2] + 8 * ps && x0 + tw > u[1] - 8 * ps)) lev++;
+        used.push([lev, x0, x0 + tw]);
+        const ly = ay + 30 * ps + lev * 20 * ps;
+        line(px, ay, px, ly - 7 * ps, T.muted, 1, [2, 3]);
+        dot(px, ay, 2.6 * ps, T.ink);
+        text(lab, px, ly, { font: F(10), align, color: T.ink, bg: T.canvas });
+      });
+    }
+  }
+
+  // ---------- geometry for hit tests ----------
+  let G = {};
+  let drag = null, hoverId = null, dirty = true;
+
+  // ---------- rung 1: parallax ----------
+  function drawPar(x, y, w, h) {
+    const ps = projScale(), wide = w >= 640;
+    const A = wide ? [x, y, w * 0.48, h] : [x, y, w, h * 0.44];
+    const B = wide ? [x + w * 0.48, y, w * 0.52, h] : [x, y + h * 0.44, w, h * 0.56];
+    const g = (G.par = {});
+    // --- top view ---
+    title('Top view of Earth’s orbit, not to scale', A[0] + 12 * ps, A[1] + 10 * ps);
+    const bgY = A[1] + 44 * ps;
+    for (const s of ROW) dot(A[0] + 14 * ps + s[0] * (A[2] - 28 * ps), bgY - 6 * ps + s[1] * 12 * ps, s[2] * ps, T.muted);
+    text('distant background stars', A[0] + A[2] - 12 * ps, bgY + 18 * ps, { align: 'right', font: F(10), bg: T.canvas });
+    const cx = A[0] + A[2] / 2, starY = A[1] + A[3] * 0.38, cy = A[1] + A[3] * 0.73;
+    const R = Math.max(20, Math.min(A[2] * 0.3, A[1] + A[3] - cy - 26 * ps, (cy - starY) * 0.72));
+    const phi = S.par.phi, E = [cx + R * Math.cos(phi), cy - R * Math.sin(phi)];
+    const Ej = [cx - R, cy], El = [cx + R, cy];
+    const proj = (P) => [P[0] + (cx - P[0]) * (bgY - P[1]) / (starY - P[1]), bgY];
+    // Jan and Jul sight lines
+    const pj = proj(Ej), pl = proj(El);
+    line(Ej[0], Ej[1], pj[0], pj[1], T.neg, 1.1, [5, 4]);
+    line(El[0], El[1], pl[0], pl[1], T.pos, 1.1, [5, 4]);
+    // Sun to star, and the parallax angle at the star
+    line(cx, cy, cx, starY, T.muted, 1, [2, 3]);
+    const angJ = Math.atan2(Ej[1] - starY, Ej[0] - cx);
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.arc(cx, starY, 26 * ps, Math.PI / 2, angJ, false); ctx.stroke();
+    text('p', cx - 14 * ps, starY + 36 * ps, { font: F(12, 700, T.ui), color: T.ink, align: 'center' });
+    // 1 AU label
+    line(cx, cy, Ej[0], Ej[1], T.muted, 1);
+    text('1 AU', (cx + Ej[0]) / 2, cy + 10 * ps, { align: 'center', font: F(10) });
+    // orbit
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.stroke();
+    text('January', Ej[0] - 8 * ps, Ej[1], { align: 'right', font: F(10.5, 700), color: T.neg, bg: T.canvas });
+    text('July', El[0] + 8 * ps, El[1], { align: 'left', font: F(10.5, 700), color: T.pos, bg: T.canvas });
+    dot(cx, cy, 9 * ps, T.sun);
+    text('Sun', cx + 12 * ps, cy + 14 * ps, { font: F(10), bg: T.canvas });
+    // current sight line
+    const pe = proj(E);
+    line(E[0], E[1], pe[0], pe[1], T.accent, 1.6);
+    dot(pe[0], pe[1], 4 * ps, null, T.accent, 1.6);
+    // star
+    starGlow(cx, starY, 5 * ps, T.sun);
+    text(S.par.star === 'custom' ? 'nearby star' : STARS[S.par.star].name, cx + 10 * ps, starY - 10 * ps, { font: F(10.5, 700), color: T.ink, bg: T.canvas });
+    // Earth (draggable)
+    const hot = isHot('earth');
+    if (hot) { ctx.save(); ctx.globalAlpha = 0.25; dot(E[0], E[1], 13 * ps, T.accent); ctx.restore(); }
+    dot(E[0], E[1], (hot ? 7.5 : 6.5) * ps, T.neg, T.canvas, 2);
+    dot(E[0], E[1], (hot ? 10 : 9) * ps, null, T.accent, hot ? 2 : 1.3);
+    text('Earth', E[0] + 13 * ps, E[1] - 11 * ps, { font: F(10.5, 700), color: T.ink, bg: T.canvas });
+    g.earth = { cx, cy, R, E };
+    text(`angles exaggerated: a star at ${fmtDist(S.par.d)} is ${sig(S.par.d * AU_PER_PC, 3)} AU away`, A[0] + 12 * ps, A[1] + A[3] - 12 * ps, { font: F(9.5) });
+
+    // --- photos ---
+    if (wide) line(B[0], B[1] + 10 * ps, B[0], B[1] + B[3] - 10 * ps, T.line, 1);
+    const pad = 12 * ps, gap = 10 * ps;
+    title('What the telescope sees, zoomed', B[0] + pad, B[1] + 10 * ps);
+    const top = B[1] + 30 * ps, pw = (B[2] - 2 * pad - gap) / 2;
+    const ph = Math.min(pw * 0.62, (B[3] - 30 * ps - pad) * 0.36);
+    const FOV = parFOV(), sigp = parSig();
+    const offJ = apparentOffset(S.par.d, Math.PI), offL = apparentOffset(S.par.d, 0), offNow = apparentOffset(S.par.d, phi);
+    const photo = (px, py, w2, h2, lab, color, offs) => {
+      ctx.fillStyle = T.sky; rr(px, py, w2, h2, 6 * ps); ctx.fill();
+      ctx.save(); ctx.beginPath(); ctx.rect(px, py, w2, h2); ctx.clip();
+      for (const s of BG) { ctx.globalAlpha = 0.5 + 0.25 * s[2]; dot(px + s[0] * w2, py + s[1] * h2, s[2] * ps, '#cfd9ea'); }
+      ctx.globalAlpha = 1;
+      const sx = (o) => px + w2 / 2 + o / FOV * w2, sy = py + h2 / 2;
+      const er = sigp / FOV * w2;
+      for (const [o, col] of offs) {
+        if (er > 2.5) { ctx.strokeStyle = col; ctx.lineWidth = 1 * ps; ctx.setLineDash([3 * ps, 3 * ps]); ctx.beginPath(); ctx.arc(sx(o), sy, er, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]); }
+        starGlow(sx(o), sy, 3.6 * ps, col);
+      }
+      ctx.restore();
+      text(lab, px + 8 * ps, py + 12 * ps, { font: F(10.5, 700), color: color });
+      // scale bar
+      const sb = nice(FOV / 4), sbw = sb / FOV * w2;
+      line(px + 8 * ps, py + h2 - 10 * ps, px + 8 * ps + sbw, py + h2 - 10 * ps, T.skyInk, 2);
+      text(fmtAng(sb), px + 12 * ps + sbw, py + h2 - 10 * ps, { font: F(9.5), color: T.skyInk });
+      return { sx, sy, px, py, w: w2, h: h2 };
+    };
+    photo(B[0] + pad, top, pw, ph, 'January', T.jan, [[offJ, T.jan]]);
+    photo(B[0] + pad + pw + gap, top, pw, ph, 'July', T.jul, [[offL, T.jul]]);
+    const oy = top + ph + 34 * ps, ow = B[2] - 2 * pad, oh = Math.max(80 * ps, B[1] + B[3] - oy - pad - 20 * ps);
+    title('Both photos overlaid: measure the shift', B[0] + pad, oy - 20 * ps);
+    const ov = photo(B[0] + pad, oy, ow, oh, '', T.skyInk, [[offJ, T.jan], [offL, T.jul]]);
+    // where the star appears now
+    const nx = ov.sx(offNow);
+    ctx.save(); ctx.beginPath(); ctx.rect(ov.px, ov.py, ov.w, ov.h); ctx.clip();
+    dot(nx, ov.sy, 8 * ps, null, T.skyInk, 1.3);
+    text('now', nx, ov.sy - 15 * ps, { align: 'center', font: F(9.5), color: T.skyInk });
+    // ruler
+    const rx = S.par.ruler.map((o) => ov.sx(o)), ry = ov.sy + 22 * ps;
+    line(rx[0], ry, rx[1], ry, T.ruler, 1.6);
+    rx.forEach((px2, k) => {
+      const hot2 = isHot('ruler' + k);
+      if (hot2) { ctx.save(); ctx.globalAlpha = 0.3; line(px2, ov.sy - 14 * ps, px2, ry + 12 * ps, T.ruler, 7); ctx.restore(); }
+      line(px2, ov.sy - 14 * ps, px2, ry + 12 * ps, T.ruler, hot2 ? 2 : 1.4);
+      grip(px2, ry + 4 * ps, true, T.ruler, hot2);
+    });
+    const shift = Math.abs(S.par.ruler[1] - S.par.ruler[0]);
+    text(`ruler: ${fmtAng(shift)}`, (rx[0] + rx[1]) / 2, ry + 22 * ps, { align: 'center', font: F(10.5, 700), color: T.ruler });
+    ctx.restore();
+    text(`field ${fmtAng(FOV)} wide · dashed circles: ±σ = ${fmtAng(sigp)} (${INST[S.par.inst].name})`, ov.px, ov.py + ov.h + 12 * ps, { font: F(9.5) });
+    g.ov = { ...ov, FOV, ry };
+  }
+
+  // ---------- rung 2: Cepheids ----------
+  function drawCep(x, y, w, h) {
+    const ps = projScale(), wide = w >= 640, pad = 12 * ps;
+    const g = (G.cep = {});
+    let gal, lv, lc, is;
+    if (wide) {
+      const h1 = h * 0.42, h2 = h * 0.34;
+      gal = [x + pad, y + 28 * ps, w * 0.5 - 1.5 * pad, h1 - 36 * ps];
+      lv = [x + w * 0.5 + 44 * ps, y + 44 * ps, w * 0.5 - 58 * ps, h1 - 76 * ps];
+      lc = [x + 52 * ps, y + h1 + 40 * ps, w - 72 * ps, h2 - 72 * ps];
+      is = [x + pad, y + h1 + h2 + 24 * ps, w - 2 * pad, h - h1 - h2 - 30 * ps];
+    } else {
+      const h1 = h * 0.25, h2 = h * 0.22, h3 = h * 0.29;
+      gal = [x + pad, y + 28 * ps, w - 2 * pad, h1 - 34 * ps];
+      lv = [x + 50 * ps, y + h1 + 40 * ps, w - 66 * ps, h2 - 74 * ps];
+      lc = [x + 50 * ps, y + h1 + h2 + 40 * ps, w - 66 * ps, h3 - 72 * ps];
+      is = [x + pad, y + h1 + h2 + h3 + 24 * ps, w - 2 * pad, h - h1 - h2 - h3 - 30 * ps];
+    }
+    const key = S.cep.gal, list = CEP[key], c = curCep();
+    // galaxy
+    title(`${GALAXIES[key].name} (drawing): click a Cepheid`, x + pad, y + 10 * ps);
+    const gs = Math.min(gal[2] * 0.48, gal[3] * 0.62);
+    drawGalaxy(key, gal[0], gal[1], gal[2], gal[3], gs);
+    g.stars = [];
+    const gcx = gal[0] + gal[2] / 2, gcy = gal[1] + gal[3] / 2;
+    list.forEach((cc, i) => {
+      const p = CEP_POS[key][i], sx = gcx + p[0] * gs * 1.1, sy = gcy + p[1] * gs * 1.1;
+      const sel = i === S.cep.sel, hot = isHot('cstar' + i);
+      const br = 0.5 - cepShape((S.cep.time - cc.t0) / cc.P);   // −0.5 bright to +0.5 faint
+      const rad = (2.2 + (sel ? 1.6 : 0.6) * (0.5 - br) * 2) * ps;
+      starGlow(sx, sy, rad, '#fff3d6');
+      dot(sx, sy, (sel ? 11 : 9) * ps, null, sel ? T.ruler : hot ? T.skyInk : 'rgba(223,230,239,0.55)', sel || hot ? 1.8 : 1);
+      text('C' + (i + 1), sx + 12 * ps, sy - 9 * ps, { font: F(10, 700), color: sel ? T.ruler : T.skyInk });
+      g.stars.push([sx, sy]);
+    });
+    text(GALAXIES[key].name === 'Large Magellanic Cloud' ? 'LMC' : key.toUpperCase(), gal[0] + gal[2] - 8 * ps, gal[1] + gal[3] - 10 * ps, { align: 'right', font: F(10), color: T.skyInk });
+
+    // Leavitt law plot
+    title('Leavitt law: period against true brightness', lv[0] - (wide ? 32 : 38) * ps, lv[1] - 34 * ps);
+    const lx0 = Math.log10(2), lx1 = Math.log10(90), My0 = -1.0, My1 = -7.8;
+    const LX = (lp) => lv[0] + (lp - lx0) / (lx1 - lx0) * lv[2], LY = (M) => lv[1] + (M - My1) / (My0 - My1) * lv[3];
+    for (const P of [2, 3, 5, 10, 20, 50]) { const px = LX(Math.log10(P)); line(px, lv[1], px, lv[1] + lv[3], T.grid, 1); text(String(P), px, lv[1] + lv[3] + 9 * ps, { align: 'center', font: F(9.5) }); }
+    for (let M = -2; M >= -7; M--) { const py = LY(M); line(lv[0], py, lv[0] + lv[2], py, T.grid, 1); text(minus(M), lv[0] - 5 * ps, py, { align: 'right', font: F(9.5) }); }
+    frame(lv[0], lv[1], lv[2], lv[3]);
+    text('period P (days, log scale)', lv[0] + lv[2], lv[1] + lv[3] + 21 * ps, { align: 'right', font: F(9.5) });
+    text('M (V band), brighter up', lv[0] - 30 * ps, lv[1] - 10 * ps, { font: F(9.5) });
+    ctx.save(); ctx.beginPath(); ctx.rect(lv[0], lv[1], lv[2], lv[3]); ctx.clip();
+    // ±0.1 mag band and the line
+    ctx.globalAlpha = 0.15; ctx.fillStyle = T.equi; ctx.beginPath();
+    ctx.moveTo(LX(lx0), LY(leavitt(2, S.calA) - 0.1)); ctx.lineTo(LX(lx1), LY(leavitt(90, S.calA) - 0.1));
+    ctx.lineTo(LX(lx1), LY(leavitt(90, S.calA) + 0.1)); ctx.lineTo(LX(lx0), LY(leavitt(2, S.calA) + 0.1)); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+    line(LX(lx0), LY(leavitt(2, S.calA)), LX(lx1), LY(leavitt(90, S.calA)), T.equi, 2);
+    for (const q of S.cep.saved[key]) dot(LX(Math.log10(q.P)), LY(q.M), 3.5 * ps, T.muted);
+    const cm = cepMeasure();
+    if (cm && cm.P > 2 && cm.P < 90) {
+      const px = LX(Math.log10(cm.P)), py = LY(cm.M);
+      line(px, lv[1] + lv[3], px, py, T.accent, 1, [3, 3]); line(lv[0], py, px, py, T.accent, 1, [3, 3]);
+      dot(px, py, 5 * ps, T.accent, T.canvas, 1.5);
+    }
+    ctx.restore();
+    text(`M = −2.43(log P − 1) ${S.calA <= 0 ? '−' : '+'} ${Math.abs(S.calA).toFixed(2)}`, lv[0] + 6 * ps, lv[1] + lv[3] - 10 * ps, { font: F(9.5), color: T.equi, bg: T.canvas });
+    if (cm) text(`P = ${cm.P.toFixed(2)} d → M = ${fmtMag(cm.M)}`, lv[0] + 6 * ps, lv[1] + 11 * ps, { font: F(10, 700), color: T.accent, bg: T.canvas });
+
+    // light curve
+    title(`Light curve of C${S.cep.sel + 1}: click two peaks`, lc[0] - 40 * ps, lc[1] - 34 * ps);
+    const mlo = c.m - c.A / 2 - 0.15 - 2 * GALAXIES[key].noise, mhi = c.m + c.A / 2 + 0.15 + 2 * GALAXIES[key].noise;
+    const TX = (t) => lc[0] + t / c.T * lc[2], TY = (m) => lc[1] + (m - mlo) / (mhi - mlo) * lc[3];
+    const st = nice(c.T / (lc[2] < 400 ? 4 : 9));
+    for (let t = 0; t <= c.T + 1e-9; t += st) { const px = TX(t); line(px, lc[1], px, lc[1] + lc[3], T.grid, 1); text(String(Math.round(t)), px, lc[1] + lc[3] + 9 * ps, { align: 'center', font: F(9.5) }); }
+    const ms = nice((mhi - mlo) / 3);
+    for (let m = Math.ceil(mlo / ms) * ms; m <= mhi; m += ms) { const py = TY(m); line(lc[0], py, lc[0] + lc[2], py, T.grid, 1); text(m.toFixed(ms < 0.1 ? 2 : 1), lc[0] - 5 * ps, py, { align: 'right', font: F(9.5) }); }
+    frame(lc[0], lc[1], lc[2], lc[3]);
+    text('time (days)', lc[0] + lc[2], lc[1] + lc[3] + 21 * ps, { align: 'right', font: F(9.5) });
+    text('m (V band), brighter up', lc[0] - 40 * ps, lc[1] - 10 * ps, { align: 'left', font: F(9.5) });
+    ctx.save(); ctx.beginPath(); ctx.rect(lc[0], lc[1], lc[2], lc[3]); ctx.clip();
+    line(lc[0], TY(c.m), lc[0] + lc[2], TY(c.m), T.muted, 1, [4, 4]);
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.2 * ps; ctx.beginPath();
+    for (let px = 0; px <= lc[2]; px += 2) { const t = px / lc[2] * c.T, py = TY(cepMag(t, c)); px === 0 ? ctx.moveTo(lc[0] + px, py) : ctx.lineTo(lc[0] + px, py); }
+    ctx.stroke();
+    for (const [t, m] of c.obs) dot(TX(t), TY(m), 2.3 * ps, T.ink);
+    // time cursor
+    const tc = ((S.cep.time % c.T) + c.T) % c.T;
+    line(TX(tc), lc[1], TX(tc), lc[1] + lc[3], T.muted, 1, [1, 3]);
+    ctx.restore();
+    text(`mean m = ${c.m.toFixed(2)}`, lc[0] + lc[2] - 6 * ps, TY(c.m) - 9 * ps, { align: 'right', font: F(9.5), color: T.muted, bg: T.canvas });
+    g.lc = { r: lc, TX, c };
+    ['t1', 't2'].forEach((k, j) => {
+      const t = S.cep[k]; if (t === null) return;
+      const px = TX(t), hot = isHot('m' + j);
+      if (hot) { ctx.save(); ctx.globalAlpha = 0.3; line(px, lc[1], px, lc[1] + lc[3], T.accent, 7); ctx.restore(); }
+      line(px, lc[1], px, lc[1] + lc[3], T.accent, hot ? 2.2 : 1.6);
+      grip(px, lc[1] + 10 * ps, true, T.accent, hot);
+    });
+    if (cm) {
+      const a = TX(Math.min(S.cep.t1, S.cep.t2)), b = TX(Math.max(S.cep.t1, S.cep.t2)), ya = lc[1] + lc[3] - 12 * ps;
+      line(a, ya, b, ya, T.accent, 1.2);
+      text(`Δt = ${cm.dt.toFixed(2)} d${S.cep.n > 1 ? ` = ${S.cep.n} cycles` : ''}`, (a + b) / 2, ya - 10 * ps, { align: 'center', font: F(10, 700), color: T.accent, bg: T.canvas });
+    } else {
+      text(S.cep.t1 === null ? 'click a peak' : 'now click the next peak', lc[0] + 8 * ps, lc[1] + lc[3] - 12 * ps, { font: F(10, 700), color: T.accent, bg: T.canvas });
+    }
+
+    // inverse square strip
+    drawInverseSquare(is[0], is[1], is[2], is[3]);
+  }
+  function drawInverseSquare(x, y, w, h) {
+    const ps = projScale(), g = G.cep;
+    if (h < 60 * ps) return;
+    line(x, y - 8 * ps, x + w, y - 8 * ps, T.line, 1);
+    title('Inverse square law: drag the screen', x, y);
+    const bx = x + 26 * ps, by = y + 18 * ps + (h - 18 * ps) / 2;
+    const unit = (w - 150 * ps) / 4.15, half = Math.min((h - 30 * ps) / 2 / 4, unit * 0.5);
+    const r = S.cep.r, X = (d) => bx + d * unit;
+    // cone of light
+    ctx.save(); ctx.globalAlpha = 0.16; ctx.fillStyle = T.sun; ctx.beginPath();
+    ctx.moveTo(bx, by); ctx.lineTo(X(4.15), by - half * 4.15); ctx.lineTo(X(4.15), by + half * 4.15); ctx.closePath(); ctx.fill(); ctx.restore();
+    line(bx, by, X(4.15), by - half * 4.15, T.sun, 1); line(bx, by, X(4.15), by + half * 4.15, T.sun, 1);
+    starGlow(bx, by, 6 * ps, T.sun);
+    text('star, luminosity L', bx - 14 * ps, by + 26 * ps, { font: F(9.5), color: T.muted, bg: T.canvas });
+    // reference square at d = 1
+    line(X(1), by - half, X(1), by + half, T.ink, 2.4);
+    text('d', X(1), by - half - 9 * ps, { align: 'center', font: F(10, 700), color: T.ink });
+    // detector at r: r tiles across (r² tiles in area)
+    const hot = isHot('screen'), sx = X(r);
+    if (hot) { ctx.save(); ctx.globalAlpha = 0.3; line(sx, by - half * r, sx, by + half * r, T.accent, 8); ctx.restore(); }
+    line(sx, by - half * r, sx, by + half * r, T.accent, hot ? 3 : 2.4);
+    for (let k = 1; k < r; k++) { const ty = by - half * r + 2 * half * k; line(sx - 4 * ps, ty, sx + 4 * ps, ty, T.accent, 1.2); }
+    grip(sx, by, false, T.accent, hot);
+    text(`${r.toFixed(2)} d`, sx, by - half * r - 9 * ps, { align: 'center', font: F(10, 700), color: T.accent, bg: T.canvas });
+    // face on grid
+    const gx = x + w - 112 * ps, gsz = Math.min(100 * ps, h - 34 * ps), gy = y + 22 * ps, cell = gsz / 4;
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1;
+    ctx.save(); ctx.globalAlpha = 0.22; ctx.fillStyle = T.accent; ctx.fillRect(gx, gy, cell * r, cell * r); ctx.restore();
+    ctx.fillStyle = T.ink; ctx.fillRect(gx, gy, cell, cell);
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 1.4 * ps; ctx.strokeRect(gx, gy, cell * r, cell * r);
+    text(`area ×${(r * r).toFixed(2)}`, gx, gy + gsz + 8 * ps, { font: F(9.5), color: T.ink });
+    text(`flux ×${fluxRatio(r).toFixed(3)} · ${deltaMag(r).toFixed(2)} mag fainter`, X(0.15), y + h - 4 * ps, { font: F(10, 700), color: T.ink, base: 'bottom' });
+    g.screen = { sx, by, half: half * r, X, unit, bx };
+  }
+
+  // ---------- rung 3: Type Ia ----------
+  function drawSN(x, y, w, h) {
+    const ps = projScale(), wide = w >= 640, pad = 12 * ps;
+    const g = (G.sn = {});
+    let host, lc, reach;
+    if (wide) {
+      const h1 = h * 0.6;
+      host = [x + pad, y + 28 * ps, w * 0.38, h1 - 36 * ps];
+      lc = [x + w * 0.38 + 66 * ps, y + 44 * ps, w * 0.62 - 86 * ps, h1 - 80 * ps];
+      reach = [x + pad, y + h1 + 14 * ps, w - 2 * pad, h - h1 - 20 * ps];
+    } else {
+      const h1 = h * 0.3, h2 = h * 0.38;
+      host = [x + pad, y + 28 * ps, w - 2 * pad, h1 - 34 * ps];
+      lc = [x + 50 * ps, y + h1 + 40 * ps, w - 66 * ps, h2 - 74 * ps];
+      reach = [x + pad, y + h1 + h2 + 12 * ps, w - 2 * pad, h - h1 - h2 - 18 * ps];
+    }
+    const sn = curSN();
+    title(`Host galaxy of ${sn.name} (drawing)`, x + pad, y + 10 * ps);
+    const gs = Math.min(host[2] * 0.45, host[3] * 0.5);
+    drawGalaxy('sn', host[0], host[1], host[2], host[3], gs);
+    const t = S.sn.time, m = sn.mPeak + snDelta(t), sx = host[0] + host[2] / 2 + gs * 0.42, sy = host[1] + host[3] / 2 - gs * 0.3;
+    if (t > -16) {
+      const b = Math.pow(10, -0.4 * (m - sn.mPeak));
+      starGlow(sx, sy, (1.4 + 5 * b) * ps, '#fff6e0');
+    }
+    text(`${sn.name}, ${t <= -16 ? 'before the explosion' : (t < 0 ? `${Math.round(-t)} d before peak` : `${Math.round(t)} d after peak`)}`, host[0] + 8 * ps, host[1] + host[3] - 10 * ps, { font: F(10), color: T.skyInk });
+
+    // light curve
+    title('Light curve: drag the line to the peak', lc[0] - (wide ? 52 : 38) * ps, lc[1] - 34 * ps);
+    const mlo = sn.mPeak - 0.6, mhi = sn.mPeak + 3.6, t0 = -16, t1 = 60;
+    const TX = (tt) => lc[0] + (tt - t0) / (t1 - t0) * lc[2], TY = (mm) => lc[1] + (mm - mlo) / (mhi - mlo) * lc[3];
+    for (let tt = -10; tt <= 60; tt += (lc[2] < 400 ? 20 : 10)) { const px = TX(tt); line(px, lc[1], px, lc[1] + lc[3], tt === 0 ? T.gridStrong : T.grid, 1); text(minus(tt), px, lc[1] + lc[3] + 9 * ps, { align: 'center', font: F(9.5) }); }
+    for (let mm = Math.ceil(mlo * 2) / 2; mm <= mhi; mm += 0.5) { const py = TY(mm); line(lc[0], py, lc[0] + lc[2], py, T.grid, 1); if (Math.abs(mm - Math.round(mm)) < 1e-6 || lc[3] > 220) text(mm.toFixed(1), lc[0] - 5 * ps, py, { align: 'right', font: F(9.5) }); }
+    frame(lc[0], lc[1], lc[2], lc[3]);
+    text('days from peak', lc[0] + lc[2], lc[1] + lc[3] + 21 * ps, { align: 'right', font: F(9.5) });
+    text('m (B band), brighter up', lc[0] - (wide ? 52 : 38) * ps, lc[1] - 10 * ps, { align: 'left', font: F(9.5) });
+    ctx.save(); ctx.beginPath(); ctx.rect(lc[0], lc[1], lc[2], lc[3]); ctx.clip();
+    for (const [tt, mm] of sn.obs) dot(TX(tt), TY(mm), 2.6 * ps, T.ink);
+    line(TX(t), lc[1], TX(t), lc[1] + lc[3], T.muted, 1, [1, 3]);
+    ctx.restore();
+    g.lc = { r: lc, TY, mlo, mhi };
+    const sm = snMeasure();
+    if (sm) {
+      const py = TY(sm.m), hot = isHot('peak');
+      if (hot) { ctx.save(); ctx.globalAlpha = 0.3; line(lc[0], py, lc[0] + lc[2], py, T.accent, 7); ctx.restore(); }
+      line(lc[0], py, lc[0] + lc[2], py, T.accent, hot ? 2.2 : 1.6);
+      grip(lc[0] + lc[2] * 0.62, py, false, T.accent, hot);
+      text(`peak m = ${sm.m.toFixed(2)} → d = ${fmtDist(sm.d)}`, lc[0] + lc[2] - 6 * ps, py - 11 * ps, { align: 'right', font: F(10, 700), color: T.accent, bg: T.canvas });
+    } else text('click the peak of the light curve', lc[0] + 8 * ps, lc[1] + 12 * ps, { font: F(10, 700), color: T.accent, bg: T.canvas });
+
+    // reach: how bright is each standard candle at this distance
+    const ry = reach[1];
+    line(reach[0], ry - 6 * ps, reach[0] + reach[2], ry - 6 * ps, T.line, 1);
+    const d = sm ? sm.d : sn.d * 1e6, mu = distModulus(d);
+    title(`Why supernovae reach farther: both candles at ${fmtDist(d)}`, reach[0], ry + 4 * ps);
+    const ax0 = reach[0] + 10 * ps, ax1 = reach[0] + reach[2] - 14 * ps, m0 = 0, m1 = 36;
+    const MX = (mm) => ax0 + (Math.min(m1, Math.max(m0, mm)) - m0) / (m1 - m0) * (ax1 - ax0);
+    const ay = ry + Math.max(92 * ps, reach[3] * 0.5);
+    // limits
+    const lims = [[6, 'naked eye ≈ 6'], [25, 'big ground telescope ≈ 25'], [29, 'Hubble, long exposure ≈ 29']];
+    ctx.save(); ctx.globalAlpha = 0.12; ctx.fillStyle = T.muted; ctx.fillRect(MX(29), ay - 26 * ps, MX(m1) - MX(29), 52 * ps); ctx.restore();
+    line(ax0, ay, ax1, ay, T.gridStrong, 1.2);
+    for (let mm = 0; mm <= m1; mm += 5) { line(MX(mm), ay, MX(mm), ay + 4 * ps, T.muted, 1); text(String(mm), MX(mm), ay + 12 * ps, { align: 'center', font: F(9.5) }); }
+    text('apparent magnitude, fainter →', ax0, ay + 24 * ps, { font: F(9.5) });
+    ctx.font = F(9.5);
+    lims.forEach(([mm, s], i) => {
+      const ly = ay + 40 * ps + i * 14 * ps, tw = ctx.measureText(s).width, right = MX(mm) + 4 * ps + tw > ax1;
+      line(MX(mm), ay - 4 * ps, MX(mm), ly, T.muted, 1, [2, 3]);
+      text(s, MX(mm) + (right ? -4 : 4) * ps, ly, { font: F(9.5), color: T.muted, bg: T.canvas, align: right ? 'right' : 'left' });
+    });
+    text('out of reach', MX(m1) - 3 * ps, ay + 21 * ps, { align: 'right', font: F(9.5), color: T.muted });
+    const mSN = S.snM + mu, mC = leavitt(30, S.calA) + mu;
+    const mark = (mm, lab, col, up) => {
+      const px = MX(mm), yy = ay - 6 * ps;
+      ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(px, yy); ctx.lineTo(px - 6 * ps, yy - 10 * ps); ctx.lineTo(px + 6 * ps, yy - 10 * ps); ctx.closePath(); ctx.fill();
+      const off = mm > m1 ? ` (${mm.toFixed(1)}, off the scale)` : ` ${mm.toFixed(1)}`;
+      ctx.font = F(10, 700); const tw = ctx.measureText(lab + off).width;
+      text(lab + off, px, yy - (up ? 30 : 17) * ps, { align: px + tw / 2 > ax1 ? 'right' : px - tw / 2 < ax0 ? 'left' : 'center', font: F(10, 700), color: col, bg: T.canvas });
+    };
+    mark(mSN, 'Type Ia at peak', T.pos, false);
+    mark(mC, '30 day Cepheid', T.neg, true);
+    const dM = mC - mSN;
+    const msg = [`At the same distance the supernova is ${dM.toFixed(1)} mag brighter:`, `${sig(Math.pow(10, 0.4 * dM), 2)} times the flux.`];
+    ctx.font = F(10.5);
+    if (ctx.measureText(msg.join(' ')).width < reach[2]) text(msg.join(' '), reach[0], ry + 28 * ps, { font: F(10.5), color: T.ink });
+    else { text(msg[0], reach[0], ry + 26 * ps, { font: F(10.5), color: T.ink }); text(msg[1], reach[0], ry + 41 * ps, { font: F(10.5), color: T.ink }); }
+  }
+
+  // ---------- rung 4: Hubble's law ----------
+  const LINES = [['K', 393.366, -0.55, 1.2], ['H', 396.847, -0.5, 1.2], ['Hβ', 486.133, -0.12, 0.8], ['Mg', 517.3, -0.16, 1.0], ['Na', 589.3, -0.18, 0.9], ['Hα', 656.281, 0.75, 0.55], ['', 658.345, 0.25, 0.55]];
+  function restSpec(lr) {
+    const sgm = 1 / (1 + Math.exp(-(lr - 400) / 3));
+    let f = 0.42 + 0.36 * sgm + 0.22 * Math.max(0, Math.min(1, (lr - 380) / 380));
+    for (const [, l0, a, s] of LINES) { const q = (lr - l0) / s; f *= a < 0 ? 1 + a * Math.exp(-0.5 * q * q) : 1; if (a > 0) f += a * Math.exp(-0.5 * q * q); }
+    return f;
+  }
+  function wlRGB(l) {
+    let r = 0, g = 0, b = 0;
+    if (l < 440) { r = -(l - 440) / 60; b = 1; } else if (l < 490) { g = (l - 440) / 50; b = 1; } else if (l < 510) { g = 1; b = -(l - 510) / 20; }
+    else if (l < 580) { r = (l - 510) / 70; g = 1; } else if (l < 645) { r = 1; g = -(l - 645) / 65; } else r = 1;
+    const fade = l < 420 ? 0.3 + 0.7 * (l - 380) / 40 : l > 700 ? 0.3 + 0.7 * (780 - l) / 80 : 1;
+    return [r, g, b].map((v) => Math.max(0, v * Math.max(0.15, fade)));
+  }
+  function drawHub(x, y, w, h) {
+    const ps = projScale(), pad = 12 * ps;
+    const g = (G.hub = {});
+    const h1 = h * 0.62;
+    const P = [x + (w < 520 ? 58 : 70) * ps, y + 36 * ps, w - (w < 520 ? 72 : 92) * ps, h1 - 76 * ps];
+    title('Hubble diagram (simulated galaxies): drag a point sideways', x + pad, y + 10 * ps);
+    let dmax = 0, vmax = 0;
+    // the scale follows the catalog distances and the calibration, not a dragged point, so it holds still while dragging
+    HUB.forEach((p, i) => { if (hubOn(i)) { dmax = Math.max(dmax, p.dObs * calFactor(p.grp) * (1 + p.sig)); vmax = Math.max(vmax, velocityFromZ(p.z)); } });
+    const sx = nice(dmax / 5), dTop = Math.ceil(dmax * 1.06 / sx) * sx;
+    vmax = Math.max(vmax * 1.08, 74 * dTop);   // room for the reference lines to reach the right edge
+    const sy = nice(vmax / 4), vTop = Math.ceil(vmax / sy) * sy;
+    const X = (d) => P[0] + d / dTop * P[2], Y = (v) => P[1] + P[3] - v / vTop * P[3];
+    for (let d = 0; d <= dTop + 1e-9; d += sx) { line(X(d), P[1], X(d), P[1] + P[3], T.grid, 1); text(String(sig(d, 3)), X(d), P[1] + P[3] + 9 * ps, { align: 'center', font: F(9.5) }); }
+    for (let v = 0; v <= vTop + 1e-9; v += sy) { line(P[0], Y(v), P[0] + P[2], Y(v), T.grid, 1); text(grp(v), P[0] - 5 * ps, Y(v), { align: 'right', font: F(9.5) }); }
+    frame(P[0], P[1], P[2], P[3]);
+    text('distance d (Mpc)', P[0] + P[2], P[1] + P[3] + 21 * ps, { align: 'right', font: F(9.5) });
+    text('v = cz (km/s)', P[0] - 5 * ps, P[1] - 10 * ps, { align: 'left', font: F(9.5) });
+    const fit = hubFit();
+    ctx.save(); ctx.beginPath(); ctx.rect(P[0], P[1], P[2], P[3]); ctx.clip();
+    for (const [H0, lab] of [[67.4, 'Planck 67.4'], [73.0, 'SH0ES 73.0']]) {
+      line(X(0), Y(0), X(dTop), Y(H0 * dTop), T.muted, 1, [1.5, 3]);
+    }
+    if (isFinite(fit.H)) line(X(0), Y(0), X(dTop), Y(fit.H * dTop), T.ink, 2);
+    g.pts = [];
+    HUB.forEach((p, i) => {
+      if (!hubOn(i)) return;
+      const d = hubD(i), v = velocityFromZ(p.z), px = X(d), py = Y(v);
+      const col = p.grp === 'cep' ? T.neg : T.pos;
+      line(X(d * (1 - p.sig)), py, X(d * (1 + p.sig)), py, col, 1.2);
+      line(X(d * (1 - p.sig)), py - 3 * ps, X(d * (1 - p.sig)), py + 3 * ps, col, 1.2);
+      line(X(d * (1 + p.sig)), py - 3 * ps, X(d * (1 + p.sig)), py + 3 * ps, col, 1.2);
+      const hot = isHot('hp' + i), sel = S.hub.sel === i;
+      if (hot) { ctx.save(); ctx.globalAlpha = 0.25; dot(px, py, 10 * ps, col); ctx.restore(); }
+      dot(px, py, (hot ? 5 : 4) * ps, col, T.canvas, 1.2);
+      if (S.hub.over[i] !== undefined) dot(px, py, 7 * ps, null, col, 1.2);
+      if (sel) dot(px, py, 9 * ps, null, T.ink, 1.6);
+      g.pts.push({ i, px, py });
+    });
+    ctx.restore();
+    // reference labels at the right edge
+    for (const [H0, lab] of [[67.4, 'Planck 67.4'], [73.0, 'SH0ES 73.0']]) {
+      const vy = H0 * dTop;
+      text(lab, P[0] + P[2] - 4 * ps, Math.max(P[1] + 9 * ps, Y(vy) + (H0 > 70 ? -10 : 10) * ps), { align: 'right', font: F(9.5), color: T.muted, bg: T.canvas });
+    }
+    if (isFinite(fit.H)) {
+      text(`H₀ = ${fit.H.toFixed(1)} ± ${fit.se.toFixed(1)} km/s/Mpc`, P[0] + 10 * ps, P[1] + 14 * ps, { font: F(12.5, 700), color: T.ink, bg: T.canvas });
+      text(`1/H₀ = ${hubbleTimeGyr(fit.H).toFixed(1)} Gyr`, P[0] + 10 * ps, P[1] + 32 * ps, { font: F(10.5), color: T.ink, bg: T.canvas });
+    }
+    g.plot = { P, X, Y, dTop };
+
+    // spectrum of the selected galaxy
+    const p = HUB[S.hub.sel], z = p.z;
+    const sp = [x + 26 * ps, y + h1 + 30 * ps, w - 52 * ps, h - h1 - 64 * ps];
+    line(x + pad, y + h1 - 4 * ps, x + w - pad, y + h1 - 4 * ps, T.line, 1);
+    title(`Spectrum of the selected galaxy: drag the comb to match`, x + pad, y + h1 + 6 * ps);
+    const l0 = 370, l1 = 760, LX = (l) => sp[0] + (l - l0) / (l1 - l0) * sp[2];
+    const band = 16 * ps, plotTop = sp[1] + band + 22 * ps, plotH = sp[3] - band - 22 * ps;
+    // colored strip
+    for (let px = 0; px < sp[2]; px += 1) {
+      const l = l0 + px / sp[2] * (l1 - l0), f = restSpec(l / (1 + z));
+      const [r, gg, b] = wlRGB(l), k = Math.min(1, f / 1.2);
+      ctx.fillStyle = `rgb(${Math.round(255 * r * k)},${Math.round(255 * gg * k)},${Math.round(255 * b * k)})`;
+      ctx.fillRect(sp[0] + px, sp[1], 1.2, band);
+    }
+    // flux plot
+    let fmax = 0; const N = Math.max(80, Math.round(sp[2]));
+    const fl = []; for (let k = 0; k <= N; k++) { const l = l0 + k / N * (l1 - l0); const f = restSpec(l / (1 + z)) + 0.012 * Math.sin(k * 12.9898) * Math.sin(k * 4.1414); fl.push(f); fmax = Math.max(fmax, f); }
+    const FY = (f) => plotTop + plotH - f / (fmax * 1.05) * plotH;
+    for (let l = 400; l <= 750; l += 50) { line(LX(l), plotTop, LX(l), plotTop + plotH, T.grid, 1); text(String(l), LX(l), plotTop + plotH + 9 * ps, { align: 'center', font: F(9.5) }); }
+    frame(sp[0], plotTop, sp[2], plotH);
+    text('observed wavelength (nm)', sp[0] + sp[2], plotTop + plotH + 21 * ps, { align: 'right', font: F(9.5) });
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.3 * ps; ctx.beginPath();
+    fl.forEach((f, k) => { const px = sp[0] + k / N * sp[2], py = FY(f); k ? ctx.lineTo(px, py) : ctx.moveTo(px, py); });
+    ctx.stroke();
+    // comb of rest wavelengths shifted by the user's z
+    const zc = S.hub.zc, hot = isHot('comb');
+    ctx.save(); ctx.beginPath(); ctx.rect(sp[0], sp[1] - 2, sp[2], sp[3] + 4); ctx.clip();
+    for (const [nm, lr] of LINES) {
+      if (!nm) continue;
+      const px = LX(lr * (1 + zc));
+      line(px, sp[1] + band, px, plotTop + plotH, T.accent, hot ? 1.8 : 1.2, [4, 3]);
+      text(nm, px, sp[1] + band + 10 * ps, { align: 'center', font: F(10, 700), color: T.accent, bg: T.canvas });
+    }
+    ctx.restore();
+    const hx = LX(656.281 * (1 + zc));
+    grip(hx, plotTop + plotH - 12 * ps, false, T.accent, hot);
+    g.spec = { sp, LX, plotTop, plotH, band };
+    const match = Math.abs(zc - z) < 0.0006;
+    text(`comb z = ${zc.toFixed(4)}  →  v ≈ cz = ${grp(velocityFromZ(zc))} km/s${match ? '  (lines match)' : ''}`, sp[0] + 6 * ps, plotTop + plotH - 10 * ps, { font: F(10, 700), color: match ? T.accent : T.ink, bg: T.canvas });
+  }
+
+  // ---------- master draw ----------
+  function draw() {
+    if (!W || !H) return;
+    const ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    G = {};
+    if (S.tab === 'all') { drawLadder(0, 0, W, H, true); return; }
+    const sh = 86 * ps;
+    drawLadder(0, 4 * ps, W, sh, false);
+    line(0, sh + 8 * ps, W, sh + 8 * ps, T.line, 1);
+    const y0 = sh + 10 * ps, hh = H - y0;
+    if (S.tab === 'par') drawPar(0, y0, W, hh);
+    else if (S.tab === 'cep') drawCep(0, y0, W, hh);
+    else if (S.tab === 'sn') drawSN(0, y0, W, hh);
+    else drawHub(0, y0, W, hh);
+  }
+
+  // ---------- handles ----------
+  function handles() {
+    const out = [], ps = projScale();
+    if (G.ladder) for (const r of G.ladder.rows) out.push({ id: 'rung-' + r.key, cursor: 'pointer', rect: [r.xa - 4, r.cy - Math.max(r.bh, 12 * ps) / 2 - 4, r.xb - r.xa + 8, Math.max(r.bh, 12 * ps) + 8], prio: 1, press: () => { openRung(r.key); return null; } });
+    if (S.tab === 'par' && G.par) {
+      const e = G.par.earth;
+      out.push({ id: 'earth', cursor: 'grab', pt: e.E, r: 9 * ps, drag: (x, y) => { S.par.phi = Math.atan2(-(y - e.cy), x - e.cx); changed(); } });
+      const ov = G.par.ov;
+      S.par.ruler.forEach((o, k) => {
+        out.push({ id: 'ruler' + k, cursor: 'ew-resize', vseg: [ov.sx(o), ov.sy - 14 * ps, ov.ry + 12 * ps],
+          drag: (x) => { S.par.ruler[k] = Math.max(-0.49, Math.min(0.49, (x - ov.px - ov.w / 2) / ov.w)) * ov.FOV; S.par.rulerSet = true; changed(); } });
+      });
+    }
+    if (S.tab === 'cep' && G.cep) {
+      const g = G.cep;
+      g.stars.forEach((s, i) => out.push({ id: 'cstar' + i, cursor: 'pointer', pt: s, r: 10 * ps, press: () => { selectCepheid(i); return null; } }));
+      const lc = g.lc;
+      ['t1', 't2'].forEach((k, j) => {
+        if (S.cep[k] === null) return;
+        out.push({ id: 'm' + j, cursor: 'ew-resize', vseg: [lc.TX(S.cep[k]), lc.r[1], lc.r[1] + lc.r[3]], drag: (x) => { S.cep[k] = tFromX(x); S.cep.last = j; changed(); } });
+      });
+      out.push({ id: 'lcArea', cursor: 'crosshair', rect: lc.r, prio: 2, press: (x) => {
+        const t = tFromX(x);
+        let k;
+        if (S.cep.t1 === null) k = 't1'; else if (S.cep.t2 === null) k = 't2';
+        else k = Math.abs(lc.TX(S.cep.t1) - x) < Math.abs(lc.TX(S.cep.t2) - x) ? 't1' : 't2';
+        S.cep[k] = t; S.cep.last = k === 't1' ? 0 : 1; changed();
+        return 'm' + S.cep.last;
+      } });
+      if (g.screen) {
+        const s = g.screen;
+        out.push({ id: 'screen', cursor: 'ew-resize', vseg: [s.sx, s.by - s.half, s.by + s.half], drag: (x) => setSlider('isr', (x - s.bx) / s.unit) });
+      }
+    }
+    if (S.tab === 'sn' && G.sn) {
+      const lc = G.sn.lc;
+      if (S.sn.peak !== null) out.push({ id: 'peak', cursor: 'ns-resize', hseg: [lc.TY(S.sn.peak), lc.r[0], lc.r[0] + lc.r[2]], drag: (x, y) => { S.sn.peak = mFromY(y); changed(); } });
+      out.push({ id: 'snArea', cursor: 'crosshair', rect: lc.r, prio: 2, press: (x, y) => { S.sn.peak = mFromY(y); changed(); return 'peak'; } });
+    }
+    if (S.tab === 'hub' && G.hub) {
+      const pl = G.hub.plot;
+      for (const q of G.hub.pts) out.push({ id: 'hp' + q.i, cursor: 'ew-resize', pt: [q.px, q.py], r: 5 * ps,
+        press: () => { S.hub.sel = q.i; changed(); return 'hp' + q.i; },
+        drag: (x) => {
+          const p = HUB[q.i], d = Math.max(0.5, Math.min(pl.dTop / (1 + p.sig), (x - pl.P[0]) / pl.P[2] * pl.dTop));
+          const base = d / calFactor(p.grp);
+          S.hub.over[q.i] = Math.max(p.dObs * 0.4, Math.min(p.dObs * 2.5, base)); changed();
+        } });
+      const s = G.hub.spec;
+      out.push({ id: 'comb', cursor: 'ew-resize', rect: [s.sp[0], s.sp[1], s.sp[2], s.sp[3]], prio: 1,
+        press: (x) => { combGrab = x - s.LX(656.281 * (1 + S.hub.zc)); return 'comb'; },
+        drag: (x) => { const l = 370 + (x - combGrab - s.sp[0]) / s.sp[2] * 390; S.hub.zc = Math.max(0, Math.min(0.15, Math.round((l / 656.281 - 1) * 1e4) / 1e4)); changed(); } });
+    }
+    return out;
+  }
+  let combGrab = 0;
+  function tFromX(x) { const lc = G.cep.lc; return Math.max(0, Math.min(lc.c.T, (x - lc.r[0]) / lc.r[2] * lc.c.T)); }
+  function mFromY(y) { const lc = G.sn.lc; return Math.round(Math.max(lc.mlo, Math.min(lc.mhi, lc.mlo + (y - lc.r[1]) / lc.r[3] * (lc.mhi - lc.mlo))) * 100) / 100; }
+  function handleAt(ev) {
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 8 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of handles()) {
+      let d = Infinity;
+      if (h.pt) d = Math.hypot(x - h.pt[0], y - h.pt[1]) - (h.r || 4);
+      else if (h.vseg) { if (y >= h.vseg[1] - 4 && y <= h.vseg[2] + 4) d = Math.abs(x - h.vseg[0]); }
+      else if (h.hseg) { if (x >= h.hseg[1] - 4 && x <= h.hseg[2] + 4) d = Math.abs(y - h.hseg[0]); }
+      else if (h.rect) { const [rx, ry, rw, rh] = h.rect; if (x >= rx && x <= rx + rw && y >= ry && y <= ry + rh) d = tol - 0.5 - (h.prio === 1 ? 0.25 : 0); }
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best ? { h: best, x, y } : null;
+  }
+  let dragQueued = null, dragFrame = false;
+  can.addEventListener('pointerdown', (ev) => {
+    const hit = handleAt(ev); if (!hit) return;
+    can.focus({ preventScroll: true });
+    let id = hit.h.id;
+    if (hit.h.press) { id = hit.h.press(hit.x, hit.y); if (!id) return; }
+    drag = { id }; can.setPointerCapture(ev.pointerId); ev.preventDefault();
+    if (!hit.h.press && hit.h.drag) hit.h.drag(hit.x, hit.y);
+    dirty = true;
+  });
+  can.addEventListener('pointermove', (ev) => {
+    if (drag) {
+      const r = can.getBoundingClientRect();
+      dragQueued = [ev.clientX - r.left, ev.clientY - r.top];
+      if (!dragFrame) {
+        dragFrame = true;
+        requestAnimationFrame(() => {
+          dragFrame = false; if (!drag || !dragQueued) return;
+          const h = handles().find((k) => k.id === drag.id);
+          if (h && h.drag) h.drag(dragQueued[0], dragQueued[1]);
+          dragQueued = null;
+        });
+      }
+      return;
+    }
+    const hit = handleAt(ev), id = hit ? hit.h.id : null;
+    can.style.cursor = hit ? (hit.h.cursor === 'grab' ? 'grab' : hit.h.cursor) : 'default';
+    if (id !== hoverId) { hoverId = id; dirty = true; }
+  });
+  const endDrag = () => { if (drag) { drag = null; dirty = true; } };
+  can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('pointerleave', () => { if (!drag && hoverId) { hoverId = null; dirty = true; } });
+
+  // ---------- rail wiring ----------
+  function setPressed(container, attr, val) { for (const b of $(container).querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset[attr] === String(val))); }
+  function setSlider(id, v) {
+    const el = $(id), mn = +el.min, mx = +el.max, st = +el.step;
+    v = Math.max(mn, Math.min(mx, Math.round((v - mn) / st) * st + mn));
+    el.value = v; el.dispatchEvent(new Event('input'));
+  }
+  function setStar(k) {
+    S.par.star = k;
+    if (k !== 'custom') { S.par.d = 1 / STARS[k].p; $('dist').value = Math.log10(S.par.d).toFixed(2); }
+    resetRuler(false); changed();
+  }
+  function resetRuler(onImages) {
+    const F0 = parFOV();
+    S.par.ruler = onImages ? [apparentOffset(S.par.d, Math.PI), apparentOffset(S.par.d, 0)].sort((a, b) => a - b) : [-0.42 * F0, 0.42 * F0];
+    S.par.rulerSet = onImages;
+  }
+  $('starChips').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setStar(b.dataset.s); });
+  $('dist').addEventListener('input', () => { S.par.star = 'custom'; S.par.d = Math.pow(10, +$('dist').value); resetRuler(false); changed(); });
+  $('instSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.par.inst = b.dataset.i; resetRuler(false); changed(); });
+
+  function buildCepChips() {
+    $('cepChips').innerHTML = CEP[S.cep.gal].map((c, i) => `<button type="button" data-c="${i}" aria-pressed="${i === S.cep.sel}">C${i + 1}</button>`).join('');
+  }
+  function selectCepheid(i) { S.cep.sel = i; S.cep.t1 = null; S.cep.t2 = null; changed(); }
+  function setGalaxy(k) { S.cep.gal = k; S.cep.sel = 2; S.cep.t1 = null; S.cep.t2 = null; buildCepChips(); changed(); }
+  $('galSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setGalaxy(b.dataset.g); });
+  $('cepChips').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) selectCepheid(+b.dataset.c); });
+  $('cycSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.cep.n = +b.dataset.n; changed(); });
+  $('cRec').addEventListener('click', () => {
+    const m = cepMeasure(); if (!m) return;
+    const arr = S.cep.saved[S.cep.gal].filter((q) => q.i !== S.cep.sel);
+    arr.push({ i: S.cep.sel, P: m.P, M: m.M, mu: m.mu, d: m.d }); arr.sort((a, b) => a.i - b.i);
+    S.cep.saved[S.cep.gal] = arr; changed();
+  });
+  $('cClr').addEventListener('click', () => { S.cep.saved[S.cep.gal] = []; changed(); });
+  function setCalA(v) {
+    const old = S.calA; S.calA = v;
+    if (S.link) S.snM = Math.max(-19.8, Math.min(-18.8, +(S.snM + (v - old)).toFixed(2)));
+    changed();
+  }
+  $('calA').addEventListener('input', () => setCalA(+$('calA').value));
+  $('calA2').addEventListener('input', () => setCalA(+$('calA2').value));
+  $('isr').addEventListener('input', () => { S.cep.r = +$('isr').value; changed(); });
+  $('snChips').innerHTML = SN_LIST.map((s, i) => `<button type="button" data-n="${i}" aria-pressed="${i === S.sn.sel}">${s.name}</button>`).join('');
+  $('snChips').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.sn.sel = +b.dataset.n; S.sn.peak = null; S.sn.time = -16; changed(); });
+  $('snM').addEventListener('input', () => { S.snM = +$('snM').value; changed(); });
+  $('snM2').addEventListener('input', () => { S.snM = +$('snM2').value; changed(); });
+  $('link').addEventListener('change', () => { S.link = $('link').checked; changed(); });
+  $('setSeg').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return; S.hub.set = b.dataset.set;
+    if (!hubOn(S.hub.sel)) S.hub.sel = HUB.findIndex((_, i) => hubOn(i));
+    changed();
+  });
+  $('hRestore').addEventListener('click', () => { S.hub.over = {}; changed(); });
+
+  function refresh() {
+    // shared
+    setPressed('presets', 'p', S.tab);
+    $('rungTitle').textContent = HINTS[S.tab][0];
+    $('presetHint').textContent = HINTS[S.tab][1];
+    $('modelText').textContent = MODEL[S.tab];
+    for (const s of document.querySelectorAll('section[data-tab]')) s.hidden = s.dataset.tab !== S.tab;
+    const anim = S.tab === 'par' || S.tab === 'cep' || S.tab === 'sn';
+    $('play').hidden = !anim;
+    $('play').textContent = S.running ? 'Pause' : 'Play';
+    $('play').classList.toggle('primary', !S.running);
+    for (const id of ['calA', 'calA2']) $(id).value = S.calA;
+    for (const id of ['snM', 'snM2']) $(id).value = S.snM;
+    $('calAOut').textContent = minus(S.calA.toFixed(2)); $('calA2Out').textContent = minus(S.calA.toFixed(2));
+    $('snMOut').textContent = minus(S.snM.toFixed(2)); $('snM2Out').textContent = minus(S.snM.toFixed(2));
+    $('link').checked = S.link;
+    // parallax
+    const p = parP(), sg = parSig();
+    setPressed('starChips', 's', S.par.star); setPressed('instSeg', 'i', S.par.inst);
+    $('distOut').textContent = fmtDist(S.par.d);
+    $('instHint').textContent = INST[S.par.inst].hint;
+    $('pP').textContent = fmtAng(p);
+    $('pD').textContent = `${fmtDist(S.par.d)} = ${sig(S.par.d * LY_PER_PC, 3)} ly`;
+    $('pShift').textContent = fmtAng(2 * p);
+    const frac = sg / p;
+    $('pFrac').textContent = frac < 10 ? `${sig(frac * 100, 2)}%` : `${sig(frac, 2)}×`;
+    const s = Math.abs(S.par.ruler[1] - S.par.ruler[0]);
+    $('pRuler').textContent = s > 0 ? `s = ${fmtAng(s)} → d = ${fmtDist(2 / s)}` : '—';
+    const tY = ((S.par.phi - Math.PI) / (2 * Math.PI) % 1 + 1) % 1;
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const CUM = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365.25], day = tY * 365.25;
+    let mi = 0; while (mi < 11 && day >= CUM[mi + 1]) mi++;
+    const part = (day - CUM[mi]) / (CUM[mi + 1] - CUM[mi]);
+    $('pDate').textContent = `${part < 0.33 ? 'early' : part < 0.67 ? 'mid' : 'late'} ${months[mi]}`;
+    const fl = $('pFlag');
+    if (frac >= 1) { fl.hidden = false; fl.innerHTML = 'Not measurable with this instrument<span>The parallax is no bigger than the position uncertainty, so the two images cannot be told apart.</span>'; }
+    else if (frac > 0.2) { fl.hidden = false; fl.innerHTML = `Poorly measured: ±${Math.round(frac * 100)}% in distance<span>Parallax distances are only trusted when p is at least about 5σ.</span>`; }
+    else fl.hidden = true;
+    // cepheids
+    setPressed('galSeg', 'g', S.cep.gal); setPressed('cepChips', 'c', S.cep.sel); setPressed('cycSeg', 'n', S.cep.n);
+    $('galHint').textContent = GALAXIES[S.cep.gal].note;
+    const cm = cepMeasure();
+    $('cDt').textContent = cm ? `${cm.dt.toFixed(2)} d` : '—';
+    $('cP').textContent = cm ? `${cm.P.toFixed(2)} d` : '—';
+    $('cM').textContent = cm ? fmtMag(cm.M) : '—';
+    $('cm').textContent = curCep().m.toFixed(2);
+    $('cMu').textContent = cm ? cm.mu.toFixed(2) : '—';
+    $('cD').textContent = cm ? fmtDist(cm.d) : '—';
+    $('cRec').disabled = !cm;
+    const sv = S.cep.saved[S.cep.gal];
+    $('cRecList').innerHTML = sv.length ? sv.map((q) => `C${q.i + 1}: P ${q.P.toFixed(1)} d, ${fmtDist(q.d)}`).join('<br>') : 'none yet';
+    if (sv.length) {
+      const mean = sv.reduce((a, q) => a + q.d, 0) / sv.length;
+      const sd = sv.length > 1 ? Math.sqrt(sv.reduce((a, q) => a + (q.d - mean) ** 2, 0) / (sv.length - 1)) : NaN;
+      $('cMean').textContent = `${fmtDist(mean)}${isFinite(sd) ? ` ± ${fmtDist(sd / Math.sqrt(sv.length), 2)}` : ''}`;
+    } else $('cMean').textContent = '—';
+    $('isrOut').textContent = `${S.cep.r.toFixed(2)} d`;
+    $('isr').value = S.cep.r;
+    // supernovae
+    setPressed('snChips', 'n', S.sn.sel);
+    const sm = snMeasure(), sn = curSN();
+    $('sm').textContent = sm ? sm.m.toFixed(2) : '—';
+    $('sMu').textContent = sm ? sm.mu.toFixed(2) : '—';
+    $('sD').textContent = sm ? fmtDist(sm.d) : '—';
+    $('sZ').textContent = sn.z.toFixed(4);
+    const dM = leavitt(30, S.calA) - S.snM;
+    $('sRatio').textContent = `${dM.toFixed(1)} mag = ${sig(Math.pow(10, 0.4 * dM), 2)} times`;
+    // hubble
+    setPressed('setSeg', 'set', S.hub.set);
+    const fit = hubFit();
+    $('hH').textContent = isFinite(fit.H) ? `${fit.H.toFixed(1)} ± ${fit.se.toFixed(1)} km/s/Mpc` : '—';
+    $('hT').textContent = isFinite(fit.H) ? `${hubbleTimeGyr(fit.H).toFixed(1)} Gyr` : '—';
+    $('hN').textContent = String(fit.n);
+    const hp = HUB[S.hub.sel];
+    $('gD').textContent = `${sig(hubD(S.hub.sel), 3)} Mpc ±${Math.round(hp.sig * 100)}%`;
+    $('gZ').textContent = `${hp.z.toFixed(4)} (${grp(velocityFromZ(hp.z))} km/s)`;
+    $('gComb').textContent = `z = ${S.hub.zc.toFixed(4)}, v = ${grp(velocityFromZ(S.hub.zc))} km/s${Math.abs(S.hub.zc - hp.z) < 0.0006 ? ', lines match' : ''}`;
+  }
+  function changed() { refresh(); dirty = true; }
+
+  // ---------- presets ----------
+  const visited = new Set();
+  // switching rungs keeps what was done there; the first visit and the Reset button load the rung's setup
+  function openRung(k) { if (visited.has(k)) { const prev = S.tab; S.tab = k; if (prev !== k) stageHeight(); changed(); } else applyPreset(k); }
+  function applyPreset(k) {
+    const prevTab = S.tab;
+    S.tab = k; visited.add(k);
+    if (k === 'par') {
+      S.par.inst = 'hip'; setStar('proxima'); S.par.phi = Math.PI + 0.9; resetRuler(true);
+    } else if (k === 'cep') {
+      S.cep.gal = 'lmc'; S.cep.sel = 2; S.cep.n = 1; S.cep.r = 2; buildCepChips();
+      const c = curCep(); S.cep.t1 = c.t0; S.cep.t2 = c.t0 + c.P; S.cep.time = 0;
+    } else if (k === 'sn') {
+      S.sn.sel = 1; S.sn.peak = Math.round(curSN().mPeak * 100) / 100; S.sn.time = -16;
+    } else if (k === 'hub') {
+      S.hub.set = 'both'; S.hub.over = {}; S.hub.sel = 20; S.hub.zc = 0;
+      S.calA = A0; S.snM = MSN0; S.link = true;
+    }
+    if (prevTab !== k) stageHeight();
+    changed();
+  }
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) openRung(b.dataset.p); });
+  $('reset').addEventListener('click', () => applyPreset(S.tab));
+  function setRunning(on) { S.running = on; refresh(); }
+  $('play').addEventListener('click', () => setRunning(!S.running));
+
+  // ---------- keyboard ----------
+  can.addEventListener('keydown', (e) => {
+    const big = e.shiftKey ? 10 : 1;
+    const k = e.key;
+    if (k === ' ') { if (!$('play').hidden) setRunning(!S.running); }
+    else if (S.tab === 'all' && /^[1-4]$/.test(k)) openRung(RUNGS[+k - 1].key);
+    else if (S.tab === 'par' && (k === 'ArrowLeft' || k === 'ArrowRight')) { S.par.phi += (k === 'ArrowLeft' ? 1 : -1) * 2 * Math.PI / 96 * big; changed(); }
+    else if (S.tab === 'par' && /^[1-3]$/.test(k)) setStar(['proxima', 'sirius', 'vega'][+k - 1]);
+    else if (S.tab === 'cep' && /^[1-5]$/.test(k)) selectCepheid(+k - 1);
+    else if (S.tab === 'cep' && (k === 'ArrowLeft' || k === 'ArrowRight')) {
+      const key = S.cep.last ? 't2' : 't1', c = curCep();
+      if (S.cep[key] === null) S.cep[key] = c.T / 2;
+      S.cep[key] = Math.max(0, Math.min(c.T, S.cep[key] + (k === 'ArrowLeft' ? -0.1 : 0.1) * big)); changed();
+    }
+    else if (S.tab === 'cep' && (k === 'ArrowUp' || k === 'ArrowDown')) { S.cep.last = S.cep.last ? 0 : 1; changed(); }
+    else if (S.tab === 'sn' && /^[1-4]$/.test(k)) { S.sn.sel = +k - 1; S.sn.peak = null; S.sn.time = -16; changed(); }
+    else if (S.tab === 'sn' && (k === 'ArrowUp' || k === 'ArrowDown')) {
+      if (S.sn.peak === null) S.sn.peak = Math.round(curSN().mPeak + 1);
+      S.sn.peak = Math.round((S.sn.peak + (k === 'ArrowUp' ? -0.02 : 0.02) * big) * 100) / 100; changed();
+    }
+    else if (S.tab === 'hub' && (k === 'ArrowUp' || k === 'ArrowDown')) {
+      const on = HUB.map((_, i) => i).filter(hubOn).sort((a, b) => hubD(a) - hubD(b));
+      const j = on.indexOf(S.hub.sel); S.hub.sel = on[(j + (k === 'ArrowUp' ? 1 : -1) + on.length) % on.length]; changed();
+    }
+    else if (S.tab === 'hub' && (k === 'ArrowLeft' || k === 'ArrowRight')) {
+      const i = S.hub.sel, p = HUB[i], cur = S.hub.over[i] !== undefined ? S.hub.over[i] : p.dObs;
+      S.hub.over[i] = Math.max(p.dObs * 0.4, Math.min(p.dObs * 2.5, cur * (1 + (k === 'ArrowLeft' ? -0.01 : 0.01) * big))); changed();
+    }
+    else if (S.tab === 'hub' && (k === '[' || k === ']')) { S.hub.zc = Math.max(0, Math.min(0.15, +(S.hub.zc + (k === '[' ? -0.0005 : 0.0005) * big).toFixed(4))); changed(); }
+    else return;
+    e.preventDefault();
+  });
+
+  // ---------- projector mode and theme ----------
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    stageHeight();
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); dirty = true; }); } catch (_) {}
+  try { narrowMQ.addEventListener('change', stageHeight); } catch (_) {}
+  new MutationObserver(() => { tokens(); dirty = true; }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), frameMs = 0;
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (S.running && dt > 0) {
+      if (S.tab === 'par') { S.par.phi += 2 * Math.PI * dt / 10; if (S.par.phi > 3 * Math.PI) S.par.phi -= 2 * Math.PI; parTick += dt; if (parTick > 0.15) { parTick = 0; refresh(); } dirty = true; }
+      else if (S.tab === 'cep') { const c = curCep(); S.cep.time = (S.cep.time + dt * c.T / 14) % c.T; dirty = true; }
+      else if (S.tab === 'sn') { S.sn.time += dt * 76 / 9; if (S.sn.time > 64) S.sn.time = -18; dirty = true; }
+    }
+    if (dirty) { dirty = false; draw(); frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0); }
+    requestAnimationFrame(loop);
+  }
+  let parTick = 0;
+  window.__dl = { get frameMs() { return frameMs; }, S, HUB, CEP, SNE, hubFit, cepMeasure, snMeasure, applyPreset, openRung, handles: () => handles(), get G() { return G; },
+    core: { apparentOffset, distModulus, distFromModulus, leavitt, fitOrigin, hubbleTimeGyr } };
+
+  tokens();
+  buildCepChips();
+  applyPreset('par');
+  stageHeight();
+  const ro = new ResizeObserver(resize);
+  ro.observe(pane);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

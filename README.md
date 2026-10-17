@@ -12,6 +12,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Kepler's Laws](demos/kepler-orbits.html) | Astronomy | Orbits from a launch velocity, equal areas in equal times, and P² = a³/M against the solar system |
 | [Stellar Evolution](demos/hr-diagram.html) | Astronomy | Evolution tracks on the HR diagram, white dwarf cooling, and cluster turnoff ages |
 | [Finding Exoplanets](demos/exoplanets.html) | Astronomy | Transit light curves and radial velocity curves, side by side |
+| [Cosmic Distance Ladder](demos/distance-ladder.html) | Astronomy | Parallax, Cepheid period luminosity, Type Ia supernovae and Hubble's law, each rung calibrating the next |
 | [Star Slice](demos/star-slice.html) | Astronomy | Cross section of a MESA stellar model: composition, convection, burning shells and white dwarf crystallization (data tools in `tools/star-slice`) |
 | [Spectra Explorer](demos/spectra.html) | Modern physics and astronomy | Emission and absorption lines of 99 elements from NIST data, the Bohr model of hydrogen, and a mystery spectrum game |
 | [Spacetime Diagrams](demos/spacetime.html) | Modern physics | Minkowski diagrams: light cones, the interval, Lorentz boosts, simultaneity, time dilation, length contraction and the twin paradox |
