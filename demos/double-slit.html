@@ -136,7 +136,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.s1 { background: #ff7660; }
 .swatch.s2 { background: #69a0ff; }
 
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
 @media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
   html, body { height: auto; }
   .app { height: auto; }
   .bench { grid-template-columns: minmax(0, 1fr); }
@@ -772,7 +779,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const g = appGeom(), A = LY.app, now = performance.now() / 1000;
     const beamTop = g.cy - (S.d / 2 + S.a) * g.bs - 14 * ps, beamBot = g.cy + (S.d / 2 + S.a) * g.bs + 14 * ps;
     // title
-    label(LY.wide ? 'Top view (slits enlarged)' : 'Top view', A.x + 10 * ps, A.labelY, T.muted, 'left', 'top', 11);
+    // the view title is drawn with the d and a labels below, since they share the top line when space is short
     // beam band
     ctx.fillStyle = waveColor(0.07); ctx.globalAlpha = 1;
     ctx.fillRect(g.srcX + g.srcW, beamTop, g.xb - g.srcX - g.srcW, beamBot - beamTop);
@@ -781,8 +788,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.fillStyle = T.surface; ctx.strokeStyle = T.wall; ctx.lineWidth = 1.5 * ps;
     roundRect(g.srcX, sy, g.srcW, sh, 5 * ps); ctx.fill(); ctx.stroke();
     ctx.fillStyle = waveColor(1); ctx.fillRect(g.srcX + g.srcW - 3 * ps, g.cy - 6 * ps, 3 * ps, 12 * ps);
-    const gunLab = FAM[S.kind].gun;
-    label(gunLab, g.srcX + g.srcW / 2, sy + sh + 6 * ps, T.muted, 'center', 'top', 10.5);
     // wavefronts of particles in flight
     ctx.save();
     const clipT = A.labelY + 16 * ps, clipB = LY.wide ? A.bot : A.bot - 20 * ps;
@@ -811,6 +816,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       }
     }
     ctx.restore();
+    // source label on a halo, so the beam band and wavefronts do not run through it
+    {
+      const gunLab = FAM[S.kind].gun, gy = sy + sh + 6 * ps;
+      ctx.font = `${10.5 * ps}px ${T.ui}`;
+      const gw = ctx.measureText(gunLab).width, gx = Math.max(A.x + 4 * ps + gw / 2, g.srcX + g.srcW / 2);
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.9; ctx.fillRect(gx - gw / 2 - 3, gy - 2 * ps, gw + 6, 15 * ps); ctx.globalAlpha = 1;
+      label(gunLab, gx, gy, T.muted, 'center', 'top', 10.5);
+    }
     // barrier with slits
     const bx = g.xb - g.thick / 2, btop = g.cy - g.half - 6 * ps, bbot = g.cy + g.half + 6 * ps;
     ctx.fillStyle = T.wall;
@@ -861,13 +874,25 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const dTxt = `d = ${trim(sig(S.d / f.unit))} ${f.uname}`, aTxt = `a = ${trim(sig(S.a / f.unit))} ${f.uname}`;
     ctx.font = `${11 * ps}px ${T.mono}`;
     const room = dimX - 12 * ps - (g.srcX + g.srcW + 6 * ps);
+    const longT = LY.wide ? 'Top view (slits enlarged)' : 'Top view';
     if (Math.max(ctx.measureText(dTxt).width, ctx.measureText(aTxt).width) <= room) {
       const lx = dimX - 12 * ps;
       const pill = (t, y, col) => { ctx.font = `${11 * ps}px ${T.mono}`; const tw = ctx.measureText(t).width; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(lx - tw - 3, y - 8 * ps, tw + 6, 16 * ps); ctx.globalAlpha = 1; label(t, lx, y, col, 'right', 'middle', 11, T.mono); };
       pill(dTxt, g.cy, T.ink);
       pill(aTxt, Math.min(s1.c, g.cy - 18 * ps) - 4 * ps, T.muted);
+      label(longT, A.x + 10 * ps, A.labelY, T.muted, 'left', 'top', 11);
     } else {
-      label(`${dTxt} · ${aTxt}`, A.x + A.w - 10 * ps, A.labelY, T.ink, 'right', 'top', 10.5, T.mono);
+      // d and a at the top right; shorten the title, or drop to a second line on a halo, when they would collide
+      const both = `${dTxt} · ${aTxt}`;
+      ctx.font = `${10.5 * ps}px ${T.mono}`; const bw = ctx.measureText(both).width;
+      ctx.font = `${11 * ps}px ${T.ui}`;
+      const fits = (t) => A.x + 10 * ps + ctx.measureText(t).width + 12 * ps <= A.x + A.w - 10 * ps - bw;
+      const title = fits(longT) ? longT : fits('Top view') ? 'Top view' : longT;
+      const second = !fits(title);
+      label(title, A.x + 10 * ps, A.labelY, T.muted, 'left', 'top', 11);
+      const by = A.labelY + (second ? 16 * ps : 0);
+      if (second) { ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.9; ctx.fillRect(A.x + A.w - 10 * ps - bw - 4, by - 2 * ps, bw + 8, 15 * ps); ctx.globalAlpha = 1; }
+      label(both, A.x + A.w - 10 * ps, by, T.ink, 'right', 'top', 10.5, T.mono);
     }
     // scale bar for the enlarged slits
     const sbLen = nice(0.25 * g.half / g.bs), sbPx = sbLen * g.bs, sbX = g.srcX + 4 * ps, sbY = g.cy + g.half - 2 * ps;

@@ -48,7 +48,7 @@ OVERRIDES = {
     "rutherford": {"click": ['[data-p="gm"]'], "wait": 6000},
     "ideal-gas": {"wait": 2500},
     "magnetic-force": {"wait": 5000},
-    "quantum-waves": {"click": ['[data-p="barrier"]'], "wait": 8000},
+    "quantum-waves": {"click": ['[data-p="barrier"]'], "wait": 3000},
 }
 
 DEFAULT_CROP = """() => {
