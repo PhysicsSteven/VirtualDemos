@@ -122,10 +122,10 @@ def main():
                                 ignore=lambda d, names: [n for n in names if n.startswith('LOGS') or n in ('photos', 'png')])
             work = src if a.dry_run else dst
             f = os.path.join(work, 'inlist_wd_cool_0.6M')
-            new = set_namelist(open(f).read(), 'controls', {'log_directory': "'LOGS_wd_cool'", 'profile_interval': 1,
+            new = set_namelist(open(f).read(), 'controls', {'log_directory': "'LOGS_wd_cool'", 'profile_interval': 1, 'history_interval': 1,
                                                               'max_num_profile_models': MAX_PROFILES})
             new = set_namelist(new, 'star_job', {'pgstar_flag': '.false.'})
-            print('  inlist_wd_cool_0.6M                 log_directory=LOGS_wd_cool, profile_interval=1')
+            print('  inlist_wd_cool_0.6M                 log_directory=LOGS_wd_cool, profile_interval=1, history_interval=1')
             pc = open(os.path.join(work, 'profile_columns.list')).read()
             active = {l.split('!')[0].split()[0] for l in pc.splitlines() if l.split('!')[0].split()}
             add = [c for c in WD_EXTRA if c in valid and c not in active]
@@ -158,6 +158,7 @@ def main():
             f = os.path.join(work, 'inlist_' + st)
             new = set_namelist(open(f).read(), 'controls',
                                {'log_directory': "'LOGS_%s'" % st, 'profile_interval': cfg['interval'],
+                                'history_interval': 1,   # MESA only writes a profile on a step that also logs history
                                 'max_num_profile_models': MAX_PROFILES})
             new = set_namelist(new, 'star_job', {'pgstar_flag': '.false.'})
             print('  inlist_%-28s log_directory=LOGS_%s, profile_interval=%d' % (st, st, cfg['interval']))
