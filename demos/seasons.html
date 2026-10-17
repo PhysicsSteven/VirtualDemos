@@ -67,9 +67,12 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 }
 .bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
-.bar p { margin: 2px 0 0; color: var(--muted); }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
 .units { color: var(--muted); font-size: 0.8rem; }
-.barside { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
 
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
 :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 360px; }
@@ -79,6 +82,10 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
   grid-template-areas: "orbit earth" "orbit sky" "chart chart";
 }
 :root[data-projector="on"] .stage { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) 240px; }
+@media (max-height: 820px) {
+  :root[data-projector="on"] .stage { min-height: 520px; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) 190px; }
+  :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 320px; }
+}
 .pane { position: relative; min-height: 0; min-width: 0; }
 .pane.orbit { grid-area: orbit; }
 .pane.earth { grid-area: earth; border-left: 1px solid var(--line); }
@@ -157,6 +164,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--canvas); }
 
 @media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
   html, body { height: auto; }
   .app { height: auto; }
   .bench, :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr); }
@@ -164,10 +172,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     min-height: 0; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto auto;
     grid-template-areas: "orbit" "earth" "sky" "chart";
   }
-  .pane.orbit { height: 46vh; min-height: 300px; }
+  .pane.orbit { height: 40vh; min-height: 290px; }
   .pane.earth { height: 300px; border-left: 0; border-top: 1px solid var(--line); }
   .pane.sky { height: 260px; border-left: 0; }
-  .pane.chart { height: 200px; }
+  .pane.chart { height: 225px; }
   :root[data-projector="on"] .pane.chart { height: 250px; }
   .rail { overflow: visible; }
 }
@@ -180,9 +188,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       <h1>Reasons for Seasons</h1>
       <p>Seasons come from the tilt of Earth's axis, not from its distance to the Sun. Earth is closest to the Sun in January.</p>
     </div>
-    <div class="barside">
+    <div class="bar-right">
       <div class="units mono">AU · W/m² · S₀ = 1361 W/m² · e = 0.0167 · ε = 23.44°</div>
-      <button type="button" class="btn" id="proj" aria-pressed="false">Projector</button>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
     </div>
   </header>
 
@@ -443,6 +451,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     }
     schedule();
   }
+  // In projector mode labels grow by --canvas-scale, but a small pane (a short projector screen) cannot take
+  // that much: cap the scale by the pane's smaller side so the drawing keeps its room.
+  const paneScale = (ps, W, H, d = 240) => Math.min(ps, Math.max(1, Math.min(W, H) / d));
   function begin(k, C) {
     const ctx = ctxs[k], { W, H } = size[k];
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -488,7 +499,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // ---------- orbit view ----------
   let OM = null;   // orbit mapping for hit tests
   function orbitMapping() {
-    const { W, H } = size.orbit, C = { ps: parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--canvas-scale')) || 1 };
+    const { W, H } = size.orbit, C = { ps: paneScale(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--canvas-scale')) || 1, size.orbit.W, size.orbit.H, 300) };
     const cyw = Math.cos(view.yaw), syw = Math.sin(view.yaw), ce = Math.cos(view.el), se = Math.sin(view.el);
     const narrowO = W < 560 * C.ps;
     const eR = 11 * C.ps, top = (narrowO ? 48 : 64) * C.ps, bot = (narrowO ? 60 : 26) * C.ps;
@@ -509,9 +520,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   }
 
   function drawOrbit() {
-    const C = tokens(), ps = C.ps;
+    const C = tokens();
     const [ctx, W, H] = begin('orbit', C);
     if (!W || !H) return;
+    const ps = C.ps = paneScale(C.ps, W, H, 300);
     const M = orbitMapping(); OM = M;
     const { R, eR, proj, dir } = M;
 
@@ -620,8 +632,13 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const nl = Math.hypot(n[0], n[1]) || 1;
     ctx.fillText('N', p[0] + (L + 7 * ps) * n[0] + (nl < 0.3 ? 8 * ps : 0), p[1] + (L + 7 * ps) * n[1] - (nl < 0.3 ? 8 * ps : 0));
     if (label) {
+      // label under the dot, or on the Sun side at the ends of the orbit (clear of the month names), with a halo over the orbit line
       ctx.font = `${10 * ps}px ${C.mono}`; ctx.fillStyle = C.muted;
-      ctx.fillText(label, p[0], p[1] + r + L * 0.5 + 10 * ps);
+      const pS = M.proj(0, 0, 0), vx = pS[0] - p[0], vy = pS[1] - p[1];
+      let lx = p[0], ly = p[1] + r + L * 0.5 + 10 * ps;
+      if (Math.abs(vx) > 1.5 * Math.abs(vy)) { ctx.textAlign = vx > 0 ? 'left' : 'right'; lx = p[0] + Math.sign(vx) * (r + 8 * ps); ly = p[1] + r + 6 * ps; }
+      ctx.lineJoin = 'round'; ctx.strokeStyle = C.canvas; ctx.lineWidth = 3 * ps; ctx.strokeText(label, lx, ly);
+      ctx.fillText(label, lx, ly);
     }
     ctx.restore();
   }
@@ -629,9 +646,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // ---------- Earth closeup ----------
   let EM = null;
   function drawEarth() {
-    const C = tokens(), ps = C.ps;
+    const C = tokens();
     const [ctx, W, H] = begin('earth', C);
     if (!W || !H) return;
+    const ps = C.ps = paneScale(C.ps, W, H);
     const top = 30 * ps;
     const R = Math.max(30, Math.min(W * 0.29, (H - top - 16 * ps) / 2 / 1.22));
     const cx = W * 0.5 + R * 0.05, cy = top + (H - top) / 2;
@@ -739,9 +757,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   // ---------- sky dome ----------
   function drawSky() {
-    const C = tokens(), ps = C.ps;
+    const C = tokens();
     const [ctx, W, H] = begin('sky', C);
     if (!W || !H) return;
+    const ps = C.ps = paneScale(C.ps, W, H);
     const el = 22 * DEG, ce = Math.cos(el), se = Math.sin(el);
     const top = 64 * ps;
     const cyR = 0.72;
@@ -845,11 +864,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * e;
   }
   function drawChart() {
-    const C = tokens(), ps = C.ps;
+    const C = tokens();
     const [ctx, W, H] = begin('chart', C);
     if (!W || !H || !year) return;
+    const ps = C.ps = paneScale(C.ps, W, H, 150);
     const narrow = W < 640 * ps;
-    const padL = 44 * ps, padR = (S.chart === 'day' ? 40 : 14) * ps, padT = (narrow ? 70 : 40) * ps, padB = 22 * ps;
+    const padL = 44 * ps, padR = (S.chart === 'day' ? 40 : 14) * ps, padT = (narrow ? 80 : 54) * ps, padB = 22 * ps;
     const pw = W - padL - padR, ph = H - padT - padB;
     if (pw < 40 || ph < 30) return;
     CL = { x0: padL, x1: padL + pw };
@@ -915,7 +935,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     ctx.restore();
 
     ctx.save(); ctx.font = `700 ${12 * ps}px ${C.ui}`; ctx.fillStyle = C.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-    ctx.fillText(title, narrow ? 12 : padL, narrow ? 60 * ps : 22 * ps);
+    ctx.fillText(title, narrow ? 12 : padL, narrow ? 66 * ps : 22 * ps);
     ctx.restore();
   }
 

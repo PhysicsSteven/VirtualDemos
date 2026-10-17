@@ -65,17 +65,22 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 }
 .bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
-.bar p { margin: 2px 0 0; color: var(--muted); }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
 .units { color: var(--muted); font-size: 0.8rem; }
-.barside { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
 
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
 :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 360px; }
+@media (max-height: 820px) and (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 320px; } }
 .stage {
   position: relative; min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
   display: grid; grid-template-rows: minmax(0, 1fr) 210px;
 }
 :root[data-projector="on"] .stage { grid-template-rows: minmax(0, 1fr) 260px; }
+@media (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 520px; grid-template-rows: minmax(0, 1fr) 190px; } }
 .pane { position: relative; min-height: 0; min-width: 0; }
 .pane + .pane { border-top: 1px solid var(--line); }
 .stage canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; }
@@ -151,6 +156,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--canvas); }
 
 @media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
   html, body { height: auto; }
   .app { height: auto; }
   .bench, :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr); }
@@ -169,9 +175,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       <h1>Kepler's Laws</h1>
       <p>Drag the arrow tip to launch a planet. Gravity alone turns the launch into an ellipse, a parabola or a hyperbola.</p>
     </div>
-    <div class="barside">
+    <div class="bar-right">
       <div class="units mono">AU · yr · M☉ · G = 4π² AU³/(M☉·yr²) · 1 AU/yr = 4.74 km/s</div>
-      <button type="button" class="btn" id="proj" aria-pressed="false">Projector</button>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
     </div>
   </header>
 
@@ -301,6 +307,66 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   </main>
 </div>
 
+<script>
+// Sun and Earth unit symbols. The glyphs ☉ and ⊕ render small or as a circled plus in many fonts, so the
+// code keeps them in its strings and the page shows them as subscripts: M☉ appears as M with subscript "sun",
+// R⊕ as R with subscript "E"; T_eff is shown with a subscript too. The canvas text calls and the HTML text are both converted here.
+(() => {
+  const SYM = /[☉⊕]|[A-Za-z]_[a-z]/, SUB = { '☉': 'sun', '⊕': 'E' };
+  const parts = (s) => String(s).split(/([☉⊕]|(?<=[A-Za-z])_[a-z]+)/).filter(Boolean)
+    .map((t) => (SUB[t] ? [SUB[t], true] : t[0] === '_' && t.length > 1 ? [t.slice(1), true] : [t, false]));
+  const P = CanvasRenderingContext2D.prototype, fill = P.fillText, stroke = P.strokeText, measure = P.measureText;
+  const size = (ctx) => { const m = /([\d.]+)px/.exec(ctx.font); return m ? +m[1] : 10; };
+  const subFont = (ctx) => ctx.font.replace(/([\d.]+)px/, (m, n) => (n * 0.72).toFixed(2) + 'px');
+  function width(ctx, s) {
+    const f = ctx.font, sf = subFont(ctx); let w = 0;
+    for (const [t, sub] of parts(s)) { if (sub) ctx.font = sf; w += measure.call(ctx, t).width; ctx.font = f; }
+    return w;
+  }
+  function draw(ctx, fn, s, x, y) {
+    const al = ctx.textAlign, f = ctx.font, sf = subFont(ctx), dy = size(ctx) * 0.3, w = width(ctx, s);
+    let x0 = al === 'center' ? x - w / 2 : al === 'right' || al === 'end' ? x - w : x;
+    ctx.textAlign = 'left';
+    for (const [t, sub] of parts(s)) {
+      if (sub) ctx.font = sf;
+      fn.call(ctx, t, x0, sub ? y + dy : y);
+      x0 += measure.call(ctx, t).width; ctx.font = f;
+    }
+    ctx.textAlign = al;
+  }
+  P.fillText = function (s, x, y, ...rest) { return SYM.test(s) ? draw(this, fill, s, x, y) : fill.call(this, s, x, y, ...rest); };
+  P.strokeText = function (s, x, y, ...rest) { return SYM.test(s) ? draw(this, stroke, s, x, y) : stroke.call(this, s, x, y, ...rest); };
+  P.measureText = function (s) {
+    if (!SYM.test(s)) return measure.call(this, s);
+    const m = measure.call(this, String(s).replace(/[☉⊕_]/g, 'x')), o = {};
+    for (const k in m) o[k] = m[k];
+    o.width = width(this, s);
+    return o;
+  };
+  function fixText(root) {
+    const skip = (n) => n.parentNode && /^(SCRIPT|STYLE|TEXTAREA)$/.test(n.parentNode.nodeName);
+    const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), hits = [];
+    for (let n = walk.nextNode(); n; n = walk.nextNode()) if (SYM.test(n.data) && !skip(n)) hits.push(n);
+    for (const n of hits) {
+      const frag = document.createDocumentFragment();
+      for (const [t, sub] of parts(n.data)) {
+        if (sub) { const e = document.createElement('sub'); e.textContent = t; frag.appendChild(e); } else frag.appendChild(document.createTextNode(t));
+      }
+      n.replaceWith(frag);
+    }
+  }
+  const start = () => {
+    fixText(document.body);
+    new MutationObserver((list) => {
+      for (const m of list) {
+        if (m.type === 'characterData') { if (SYM.test(m.target.data) && m.target.isConnected) fixText(m.target.parentNode); }
+        else for (const n of m.addedNodes) { if (n.nodeType === 1 && n.isConnected) fixText(n); else if (n.nodeType === 3 && SYM.test(n.data) && n.parentNode) fixText(n.parentNode); }
+      }
+    }).observe(document.body, { childList: true, characterData: true, subtree: true });
+  };
+  if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
+})();
+</script>
 <script>
 (() => {
   const TAU = 2 * Math.PI;
@@ -485,12 +551,14 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const V = { s: 100, cx: 0, cy: 0 }, VT = { s: 100, cx: 0, cy: 0 };
   let autoView = true;
 
+  // Projector labels grow by --canvas-scale; on a short screen the orbit view caps that so the labels keep apart.
+  const paneScale = (ps) => (W && H ? Math.min(ps, Math.max(1, Math.min(W, H) / 290)) : ps);
   function tokens() {
     const cs = getComputedStyle(document.documentElement);
     const g = (n) => cs.getPropertyValue(n).trim();
     return { pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), grid: g('--grid'), gridStrong: g('--grid-strong'),
              canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), accent: g('--accent'), line: g('--line'),
-             sun: g('--sun'), mono: g('--font-mono') || 'monospace', ps: parseFloat(g('--canvas-scale')) || 1 };
+             sun: g('--sun'), mono: g('--font-mono') || 'monospace', ps: paneScale(parseFloat(g('--canvas-scale')) || 1) };
   }
   const toPx = (x, y) => [V.cx + x * V.s, V.cy - y * V.s];
   const toW = (px, py) => ({ x: (px - V.cx) / V.s, y: (V.cy - py) / V.s });
@@ -529,7 +597,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const T = tokens(), ps = T.ps;
     const box = orbitBox(S.launch);
     if (S.Blaunch) { const b2 = orbitBox(S.Blaunch); box.x0 = Math.min(box.x0, b2.x0); box.x1 = Math.max(box.x1, b2.x1); box.y0 = Math.min(box.y0, b2.y0); box.y1 = Math.max(box.y1, b2.y1); }
-    const mL = 26 * ps, mR = 26 * ps, mT = 56 * ps, mB = 34 * ps;
+    const mL = 26 * ps, mR = 26 * ps, mT = 50 * ps, mB = 30 * ps;
     const w = Math.max(box.x1 - box.x0, 1e-3), h = Math.max(box.y1 - box.y0, 1e-3);
     const s = Math.min((W - mL - mR) / w, (H - mT - mB) / h);
     VT.s = s;
@@ -731,6 +799,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     };
     if (S.layers.trail) { if (S.B) drawTrail(S.B, T.pos); drawTrail(A, T.neg); }
 
+    let aBox = null;   // where the semi major axis label went, so the star label can avoid it
     // foci, axis, perihelion, aphelion
     if (S.layers.foci && !elA.radial && elA.e > 1e-4) {
       const c = Math.cos(elA.w), s = Math.sin(elA.w);
@@ -753,19 +822,26 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         ctx.beginPath(); ctx.moveTo(cx + ox, cy + oy); ctx.lineTo(Qx + ox, Qy + oy); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(cx + ox * 0.5, cy + oy * 0.5); ctx.lineTo(cx + ox * 1.5, cy + oy * 1.5);
         ctx.moveTo(Qx + ox * 0.5, Qy + oy * 0.5); ctx.lineTo(Qx + ox * 1.5, Qy + oy * 1.5); ctx.stroke();
-        if (Math.hypot(Qx - cx, Qy - cy) > 40 * ps)
-          text(ctx, T, 'a = ' + sig(elA.a, 3) + ' AU', (cx + Qx) / 2 + ox * 2.4, (cy + Qy) / 2 + oy * 2.4, 'center', 'middle', T.ink, fs, 600, true);
+        if (Math.hypot(Qx - cx, Qy - cy) > 40 * ps) {
+          const aTxt = 'a = ' + sig(elA.a, 3) + ' AU', ax = (cx + Qx) / 2 + ox * 2.4, ay = (cy + Qy) / 2 + oy * 2.4;
+          text(ctx, T, aTxt, ax, ay, 'center', 'middle', T.ink, fs, 600, true);
+          ctx.font = `600 ${fs}px ${T.mono}`; aBox = { x0: ax - ctx.measureText(aTxt).width / 2 - 6 * ps, x1: ax + ctx.measureText(aTxt).width / 2 + 6 * ps, y: ay };
+        }
         // empty focus
         ctx.strokeStyle = T.muted; ctx.lineWidth = 1.6 * ps;
         ctx.beginPath(); ctx.arc(fx, fy, 5 * ps, 0, TAU); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(fx - 3 * ps, fy - 3 * ps); ctx.lineTo(fx + 3 * ps, fy + 3 * ps);
         ctx.moveTo(fx + 3 * ps, fy - 3 * ps); ctx.lineTo(fx - 3 * ps, fy + 3 * ps); ctx.stroke();
         const [sx0, sy0] = toPx(0, 0);
-        if (Math.hypot(fx - sx0, fy - sy0) > 24 * ps)
+        // aphelion; the empty focus label is left out when the two would overlap on a small view
+        const aphTxt = 'aphelion ' + sig(elA.Q, 3) + ' AU';
+        ctx.font = `400 ${fs}px ${T.mono}`;
+        const wA = ctx.measureText(aphTxt).width, gap = (wA + ctx.measureText('empty focus').width) / 2 + 8 * ps;
+        const aphX = Math.max(4 * ps + wA / 2, Math.min(W - 4 * ps - wA / 2, Qx - ox * 1.8));   // where text() will put it
+        if (Math.hypot(fx - sx0, fy - sy0) > 24 * ps && (Math.abs(fx - ox * 1.8 - aphX) > gap || Math.abs(fy - Qy) > 2 * fs))
           text(ctx, T, 'empty focus', fx - ox * 1.8, fy - oy * 1.8, 'center', 'middle', T.muted, fs, 400);
-        // aphelion
         ctx.fillStyle = T.muted; ctx.beginPath(); ctx.arc(Qx, Qy, 3 * ps, 0, TAU); ctx.fill();
-        text(ctx, T, 'aphelion ' + sig(elA.Q, 3) + ' AU', Qx - ox * 1.8, Qy - oy * 1.8, 'center', 'middle', T.muted, fs, 400);
+        text(ctx, T, aphTxt, Qx - ox * 1.8, Qy - oy * 1.8, 'center', 'middle', T.muted, fs, 400);
       } else {
         const [sx0, sy0] = toPx(0, 0);
         ctx.moveTo(sx0, sy0); ctx.lineTo(sx0 - (qx - sx0) * 4, sy0 - (qy - sy0) * 4); ctx.stroke(); ctx.setLineDash([]);
@@ -782,7 +858,13 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     glow.addColorStop(0, alpha(T.sun, 0.45)); glow.addColorStop(1, alpha(T.sun, 0));
     ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(sx, sy, sr * 3, 0, TAU); ctx.fill();
     ctx.fillStyle = T.sun; ctx.beginPath(); ctx.arc(sx, sy, sr, 0, TAU); ctx.fill();
-    text(ctx, T, 'star ' + S.M.toFixed(2) + ' M☉', sx, sy - sr - 9 * ps, 'center', 'bottom', T.ink, 11 * ps, 600);
+    // star label above the star, or below it when the semi major axis label is in the way
+    const sTxt = 'star ' + S.M.toFixed(2) + ' M☉';
+    ctx.font = `600 ${11 * ps}px ${T.mono}`;
+    const sw = ctx.measureText(sTxt).width / 2;
+    const clash = aBox && aBox.x1 > sx - sw && aBox.x0 < sx + sw && Math.abs(aBox.y - (sy - sr - 15 * ps)) < 20 * ps;
+    if (clash) text(ctx, T, sTxt, sx, sy + sr + 8 * ps, 'center', 'top', T.ink, 11 * ps, 600);
+    else text(ctx, T, sTxt, sx, sy - sr - 9 * ps, 'center', 'bottom', T.ink, 11 * ps, 600);
 
     // launch: speed circles, launch velocity arrow and marker
     const L = S.launch, [lx, ly] = toPx(L.x, L.y);

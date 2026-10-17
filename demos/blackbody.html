@@ -66,17 +66,21 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 }
 .bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
-.bar p { margin: 2px 0 0; color: var(--muted); }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
 .units { color: var(--muted); font-size: 0.8rem; }
-.barside { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
 
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
 :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 360px; }
+@media (max-height: 820px) and (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 320px; } }
 .stage {
   position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
   display: grid; grid-template-rows: minmax(0, 1fr) 170px;
 }
-:root[data-projector="on"] .stage { grid-template-rows: minmax(0, 1fr) 245px; }
+:root[data-projector="on"] .stage { grid-template-rows: minmax(0, 1fr) 200px; }
 .pane { position: relative; min-height: 0; }
 .pane + .pane { border-top: 1px solid var(--line); }
 .stage canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; }
@@ -146,13 +150,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--canvas); }
 
 @media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
   html, body { height: auto; }
   .app { height: auto; }
   .bench, :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr); }
-  .stage { min-height: 0; grid-template-rows: auto auto; }
+  .stage { min-height: 0; grid-template-rows: auto auto auto; }
+  .viewbar { position: static; justify-content: flex-start; padding: 10px 10px 0; }
   .pane.main { height: 56vh; min-height: 330px; }
   .pane.strip { height: 170px; }
-  :root[data-projector="on"] .stage { grid-template-rows: auto auto; }
+  :root[data-projector="on"] .stage { grid-template-rows: auto auto auto; }
   :root[data-projector="on"] .pane.strip { height: 245px; }
   .rail { overflow: visible; }
 }
@@ -165,28 +171,28 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       <h1>Blackbody Radiation</h1>
       <p>Heat something and it glows. Hotter means brighter everywhere, a peak at shorter wavelength, and a bluer color.</p>
     </div>
-    <div class="barside">
+    <div class="bar-right">
       <div class="units mono">B<sub>λ</sub> in W·m⁻²·sr⁻¹·nm⁻¹ · b = 2.898×10⁻³ m·K · σ = 5.670×10⁻⁸ W·m⁻²·K⁻⁴</div>
-      <button type="button" class="btn" id="proj" aria-pressed="false">Projector</button>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
     </div>
   </header>
 
   <main class="bench">
     <div class="stage" id="stage">
+      <div class="viewbar">
+        <div class="seg" role="group" aria-label="Wavelength axis">
+          <span class="seglabel">λ</span>
+          <button type="button" data-x="lin" aria-pressed="true">Linear</button>
+          <button type="button" data-x="log" aria-pressed="false">Log</button>
+        </div>
+        <div class="seg" role="group" aria-label="Radiance axis">
+          <span class="seglabel">B</span>
+          <button type="button" data-y="lin" aria-pressed="true">Linear</button>
+          <button type="button" data-y="log" aria-pressed="false">Log</button>
+        </div>
+      </div>
       <div class="pane main">
         <canvas id="chart" tabindex="0" role="application" aria-label="Planck spectrum chart. Drag the peak marker sideways to change the temperature. Arrow keys up and down change the temperature, left and right move the peak."></canvas>
-        <div class="viewbar">
-          <div class="seg" role="group" aria-label="Wavelength axis">
-            <span class="seglabel">λ</span>
-            <button type="button" data-x="lin" aria-pressed="true">Linear</button>
-            <button type="button" data-x="log" aria-pressed="false">Log</button>
-          </div>
-          <div class="seg" role="group" aria-label="Radiance axis">
-            <span class="seglabel">B</span>
-            <button type="button" data-y="lin" aria-pressed="true">Linear</button>
-            <button type="button" data-y="log" aria-pressed="false">Log</button>
-          </div>
-        </div>
       </div>
       <div class="pane strip">
         <canvas id="strip" aria-label="Perceived color of a blackbody at this temperature, and the blackbody color scale from 1000 K to 40,000 K with spectral classes."></canvas>
@@ -226,12 +232,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <dl class="readout">
           <div class="big"><dt>Temperature</dt><dd id="rT">—</dd></div>
           <div class="big"><dt>Peak λ<sub>max</sub> = b/T</dt><dd id="rPk">—</dd></div>
-          <div><dt>Spectral class</dt><dd id="rCls">—</dd></div>
+          <div class="wide"><dt>Spectral class</dt><dd id="rCls">—</dd></div>
           <div><dt>Traditional color</dt><dd id="rCol">—</dd></div>
+          <div><dt>Peak B<sub>λ</sub></dt><dd id="rB">—</dd></div>
           <div class="wide"><dt>Flux from the surface σT⁴</dt><dd id="rF">—</dd></div>
           <div class="wide"><dt>Luminosity L = 4πR²σT⁴</dt><dd id="rL">—</dd></div>
-          <div><dt>Visible share, 380 to 750 nm</dt><dd id="rVis">—</dd></div>
-          <div><dt>Peak B<sub>λ</sub></dt><dd id="rB">—</dd></div>
+          <div class="wide"><dt>Visible share, 380 to 750 nm</dt><dd id="rVis">—</dd></div>
         </dl>
         <p class="hint">Doubling T multiplies the flux by 16 and halves the peak wavelength.</p>
       </section>
@@ -278,6 +284,66 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   </main>
 </div>
 
+<script>
+// Sun and Earth unit symbols. The glyphs ☉ and ⊕ render small or as a circled plus in many fonts, so the
+// code keeps them in its strings and the page shows them as subscripts: M☉ appears as M with subscript "sun",
+// R⊕ as R with subscript "E"; T_eff is shown with a subscript too. The canvas text calls and the HTML text are both converted here.
+(() => {
+  const SYM = /[☉⊕]|[A-Za-z]_[a-z]/, SUB = { '☉': 'sun', '⊕': 'E' };
+  const parts = (s) => String(s).split(/([☉⊕]|(?<=[A-Za-z])_[a-z]+)/).filter(Boolean)
+    .map((t) => (SUB[t] ? [SUB[t], true] : t[0] === '_' && t.length > 1 ? [t.slice(1), true] : [t, false]));
+  const P = CanvasRenderingContext2D.prototype, fill = P.fillText, stroke = P.strokeText, measure = P.measureText;
+  const size = (ctx) => { const m = /([\d.]+)px/.exec(ctx.font); return m ? +m[1] : 10; };
+  const subFont = (ctx) => ctx.font.replace(/([\d.]+)px/, (m, n) => (n * 0.72).toFixed(2) + 'px');
+  function width(ctx, s) {
+    const f = ctx.font, sf = subFont(ctx); let w = 0;
+    for (const [t, sub] of parts(s)) { if (sub) ctx.font = sf; w += measure.call(ctx, t).width; ctx.font = f; }
+    return w;
+  }
+  function draw(ctx, fn, s, x, y) {
+    const al = ctx.textAlign, f = ctx.font, sf = subFont(ctx), dy = size(ctx) * 0.3, w = width(ctx, s);
+    let x0 = al === 'center' ? x - w / 2 : al === 'right' || al === 'end' ? x - w : x;
+    ctx.textAlign = 'left';
+    for (const [t, sub] of parts(s)) {
+      if (sub) ctx.font = sf;
+      fn.call(ctx, t, x0, sub ? y + dy : y);
+      x0 += measure.call(ctx, t).width; ctx.font = f;
+    }
+    ctx.textAlign = al;
+  }
+  P.fillText = function (s, x, y, ...rest) { return SYM.test(s) ? draw(this, fill, s, x, y) : fill.call(this, s, x, y, ...rest); };
+  P.strokeText = function (s, x, y, ...rest) { return SYM.test(s) ? draw(this, stroke, s, x, y) : stroke.call(this, s, x, y, ...rest); };
+  P.measureText = function (s) {
+    if (!SYM.test(s)) return measure.call(this, s);
+    const m = measure.call(this, String(s).replace(/[☉⊕_]/g, 'x')), o = {};
+    for (const k in m) o[k] = m[k];
+    o.width = width(this, s);
+    return o;
+  };
+  function fixText(root) {
+    const skip = (n) => n.parentNode && /^(SCRIPT|STYLE|TEXTAREA)$/.test(n.parentNode.nodeName);
+    const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), hits = [];
+    for (let n = walk.nextNode(); n; n = walk.nextNode()) if (SYM.test(n.data) && !skip(n)) hits.push(n);
+    for (const n of hits) {
+      const frag = document.createDocumentFragment();
+      for (const [t, sub] of parts(n.data)) {
+        if (sub) { const e = document.createElement('sub'); e.textContent = t; frag.appendChild(e); } else frag.appendChild(document.createTextNode(t));
+      }
+      n.replaceWith(frag);
+    }
+  }
+  const start = () => {
+    fixText(document.body);
+    new MutationObserver((list) => {
+      for (const m of list) {
+        if (m.type === 'characterData') { if (SYM.test(m.target.data) && m.target.isConnected) fixText(m.target.parentNode); }
+        else for (const n of m.addedNodes) { if (n.nodeType === 1 && n.isConnected) fixText(n); else if (n.nodeType === 3 && SYM.test(n.data) && n.parentNode) fixText(n.parentNode); }
+      }
+    }).observe(document.body, { childList: true, characterData: true, subtree: true });
+  };
+  if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
+})();
+</script>
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
@@ -497,7 +563,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const mono = monoFont(), ui = uiFont();
     const R = range();
     const narrow = W < 560;
-    const padL = 64 * ps, padR = 18 * ps, padT = (narrow ? 84 : 58) * ps, padB = 46 * ps;
+    const padL = 64 * ps, padR = 18 * ps, padT = (narrow && matchMedia("(min-width: 821px)").matches ? 84 : 58) * ps, padB = 46 * ps;
     const pw = Math.max(10, W - padL - padR), ph = Math.max(10, H - padT - padB);
     const xlog = R.xMode === 'log', ylog = R.yMode === 'log';
     const lx0 = xlog ? Math.log10(R.x0) : 0, lx1 = xlog ? Math.log10(R.x1) : 0;
