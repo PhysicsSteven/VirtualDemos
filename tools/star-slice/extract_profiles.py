@@ -33,12 +33,21 @@ WANT = {
     'o16':         ['o16'],
     'ne20':        ['ne20'],
     'ne22':        ['ne22'],
+    'mg24':        ['mg24'],
+    'si28':        ['si28'],
+    # massive star networks (approx21): grouped below into s_ca, fe_grp and np to keep the file small
+    's32': ['s32'], 'ar36': ['ar36'], 'ca40': ['ca40'],
+    'ti44': ['ti44'], 'cr48': ['cr48'], 'cr56': ['cr56'], 'cr60': ['cr60'], 'fe52': ['fe52'], 'fe54': ['fe54'],
+    'fe56': ['fe56'], 'co56': ['co56'], 'ni56': ['ni56'],
+    'neut': ['neut'], 'prot': ['prot'],
     'mixing_type': ['mixing_type'],
     'conv_vel':    ['conv_vel', 'log_conv_vel'],
     'eps_nuc':     ['eps_nuc', 'log_eps_nuc'],
     'pp':          ['pp'],
     'cno':         ['cno'],
     'tri_alpha':   ['tri_alpha', 'tri_alfa'],
+    'c12_c12': ['c12_c12'], 'c12_o16': ['c12_o16'], 'o16_o16': ['o16_o16'],   # grouped into burn_c, burn_o
+    'velocity':    ['velocity'],                   # cm/s, for infall at core collapse
     'phase':       ['eos_phase', 'phase'],             # 0 liquid, 1 solid (Skye)
     'eps_phase_sep': ['eps_phase_separation'],
     'gamma':       ['gamma', 'gam', 'log_gamma'],
@@ -51,6 +60,12 @@ HEADER_WANT = ['model_number', 'star_age', 'star_mass', 'photosphere_L', 'Teff',
                'log_center_T', 'log_center_Rho', 'center_h1', 'center_he4', 'center_c12', 'center_o16',
                'version_number', 'num_zones']
 CATEGORICAL = {'mixing_type'}
+# summed into one column each (mass fractions, or erg/g/s for the burn_ groups)
+GROUPS = {'s_ca': ['s32', 'ar36', 'ca40'],
+          'fe_grp': ['ti44', 'cr48', 'cr56', 'cr60', 'fe52', 'fe54', 'fe56', 'co56', 'ni56'],
+          'np': ['neut', 'prot'],
+          'burn_c': ['c12_c12', 'c12_o16'],
+          'burn_o': ['o16_o16']}
 
 def opener(path):
     return gzip.open(path, 'rt', errors='replace') if path.endswith('.gz') else open(path, errors='replace')
@@ -211,15 +226,32 @@ def main():
             col[k] = [int(x) if k in CATEGORICAL and isinstance(x, float) else sig(x) for x in v]
         if 'logR' not in col:
             col['logR'] = [sig(logr[i]) for i in idx]
+        for g, members in GROUPS.items():
+            have_m = [k for k in members if k in col]
+            if not have_m:
+                continue
+            col[g] = [sig(float(sum((col[k][z] or 0) for k in have_m))) for z in range(len(idx))]
+            for k in have_m:
+                del col[k]
+            if max(abs(v or 0) for v in col[g]) == 0:
+                del col[g]
+        if 'velocity' in col and max(abs(v or 0) for v in col['velocity']) == 0:
+            del col['velocity']
         moments.append({'run': os.path.basename(os.path.normpath(d)),
                         'h': {k: sig(header[k], 10 if k == 'star_age' else 4) if isinstance(header.get(k), float) else header.get(k)
                               for k in HEADER_WANT if k in header},
                         'c': col})
         print('  model %-7s age %-10.4g zones %d -> %d' % (header.get('model_number'), header.get('star_age', float('nan')),
                                                        len(rows), len(idx)))
+    mesa_columns = {k: have[k] for k in keep_cols}
+    for g, members in GROUPS.items():
+        if any(k in mesa_columns for k in members):
+            mesa_columns[g] = ' + '.join(have[k] for k in members if k in mesa_columns)
+            for k in members:
+                mesa_columns.pop(k, None)
     out = {'label': a.label or ' + '.join(os.path.basename(os.path.normpath(d)) for d in a.runs),
            'source': [os.path.basename(os.path.normpath(d)) for d in a.runs],
-           'mesa_columns': {k: have[k] for k in keep_cols},
+           'mesa_columns': mesa_columns,
            'moments': moments}
     if os.path.dirname(a.out):
         os.makedirs(os.path.dirname(a.out), exist_ok=True)

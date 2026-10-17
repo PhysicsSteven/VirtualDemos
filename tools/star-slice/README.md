@@ -33,6 +33,18 @@ The Star Slice demo plays back real MESA profiles: composition, temperature, den
 
 3. Put the `.json.gz` files in `tools/star-slice/data/` and push.
 
+## More masses (the mass slider)
+
+`make_mass_grid.py` copies MESA's own test suite cases that run a whole life: `1M_pre_ms_to_wd` (1 M☉ to a white dwarf), `12M_pre_ms_to_core_collapse` (12 and 15 M☉) and `20M_pre_ms_to_core_collapse` (20 and 25 M☉, envelope removal stage skipped). Each copy logs every stage to its own folder, keeps only the profile columns the demo reads, and gets an `rn_slice` script.
+
+```
+export MESA_DIR=~/mesa-26.04.1
+python3 make_mass_grid.py --dest ~/runs            # add --dry-run to look first
+cd ~/runs/slice_grid_12M && ./mk && ./rn_slice > run.log 2>&1
+```
+
+When `run.log` ends with `finished`, the script's printed `extract_profiles.py` line packs that run. Massive star networks are grouped to keep files small: `s_ca` is ³²S + ³⁶Ar + ⁴⁰Ca, `fe_grp` is ⁴⁴Ti through ⁵⁶Ni, `np` is free neutrons and protons, `burn_c` is c12_c12 + c12_o16 and `burn_o` is o16_o16. The massive suites run with no winds (`Dutch_scaling_factor = 0`).
+
 ## Columns
 
 Needed: `mass`, `logR` (or `radius`), `logT`, `logRho`, `h1`, `he4`, `c12`, `o16`.
