@@ -1,0 +1,1812 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Springs and Oscillations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the mass and spring drawing top left, energy bars or the resonance curve below it, x, v, a and energy against time on the right; instrument rail on the right; stacks on narrow screens. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --xcol: #7a45c0;
+  --vcol: #1d8a5a;
+  --acol: #c0601a;
+  --wire: #3b4655;
+  --block: #cdd6e1;
+  --oil: #c99a1e;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #aab4c2;
+    --block: #2c3a4c; --oil: #d9a93a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #aab4c2;
+  --block: #2c3a4c; --oil: #d9a93a;
+  color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 640px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
+  display: grid; grid-template-columns: minmax(0, 50fr) minmax(0, 50fr); grid-template-rows: minmax(0, 57fr) minmax(0, 43fr); }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#pPane { grid-column: 2; grid-row: 1 / 3; border-left: 1px solid var(--line); }
+#ePane { grid-column: 1; grid-row: 2; border-top: 1px solid var(--line); }
+#cCan, #eCan { touch-action: none; outline: none; }
+#cCan:focus-visible, #eCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
+.stage-ctl > * { pointer-events: auto; }
+.stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
+.tclock { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; font-size: 0.86rem; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--canvas) 85%, transparent); padding: 2px 6px; border-radius: 6px; white-space: nowrap; line-height: 1.25; }
+.tclock small { font-size: 0.74rem; font-weight: 400; color: var(--muted); }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.row3 .btn { padding: 5px 4px; font-size: 0.84rem; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg.full { display: flex; }
+.seg.full button { flex: 1; padding: 4px 4px; }
+.seg button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.ctl { display: flex; flex-direction: column; gap: 4px; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .wide { grid-column: 1 / -1; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.formula { margin: 0; font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
+.regime { font-family: var(--font-ui); font-weight: 700; }
+.c-x { color: var(--xcol); } .c-v { color: var(--vcol); } .c-a { color: var(--acol); } .c-1 { color: var(--pos); } .c-2 { color: var(--neg); }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid var(--xcol); }
+.swatch.dash { border-top-style: dashed; border-color: var(--muted); }
+.swatch.ghost { border-color: var(--muted); opacity: 0.6; }
+.swatch.wall { border-top-style: dashed; border-color: var(--equi); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 1060px) {
+  .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: 380px 620px 270px; min-height: 0; }
+  #pPane { grid-column: 1; grid-row: 2; border-left: 0; border-top: 1px solid var(--line); }
+  #ePane { grid-column: 1; grid-row: 3; }
+}
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { grid-template-rows: 350px 580px 270px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Springs and Oscillations</h1>
+      <p>A mass on a spring is pulled back toward equilibrium with a force proportional to how far it is displaced. That one fact gives simple harmonic motion, and with damping and a drive, decay and resonance.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units · x in cm, from equilibrium · F = −kx</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="pane" id="cPane">
+        <canvas id="cCan" tabindex="0" aria-label="Mass and spring drawing. Drag a block to pull it from equilibrium and let go; moving the pointer as you let go gives it a starting velocity. Drag the small grips to change the spring constant, the mass, the damping (the oil) and, when driven, the drive force. Keys: left and right arrows (up and down when hanging) move the block 1 cm and release it from rest, shift with the arrows moves block 2, page up and page down change k, space plays or pauses, R resets."></canvas>
+        <div class="stage-ctl">
+          <button type="button" class="btn" id="play">Pause</button>
+          <button type="button" class="btn" id="reset">Reset</button>
+          <span class="tclock mono" id="tclock">t = 0<small id="rateTag">real time</small></span>
+        </div>
+      </div>
+      <div class="pane" id="ePane">
+        <canvas id="eCan" tabindex="0" aria-label="Energy bars"></canvas>
+      </div>
+      <div class="pane" id="pPane">
+        <canvas id="pCan" aria-label="Displacement, velocity, acceleration and energy against time."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="shm" aria-pressed="true">Simple harmonic motion</button>
+          <button type="button" data-p="hang" aria-pressed="false">Hanging spring</button>
+          <button type="button" data-p="damp" aria-pressed="false">Three kinds of damping</button>
+          <button type="button" data-p="res" aria-pressed="false">Resonance</button>
+          <button type="button" data-p="modes" aria-pressed="false">Normal modes</button>
+          <button type="button" data-p="beats" aria-pressed="false">Beats</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>System</h2>
+        <div class="seg full" role="group" aria-label="System" id="sysSeg">
+          <button type="button" data-s="free" aria-pressed="true">Free</button>
+          <button type="button" data-s="driven" aria-pressed="false">Driven</button>
+          <button type="button" data-s="coupled" aria-pressed="false">Two masses</button>
+        </div>
+        <div class="seg full" role="group" aria-label="Orientation" id="oriSeg">
+          <button type="button" data-o="h" aria-pressed="true">Horizontal track</button>
+          <button type="button" data-o="v" aria-pressed="false">Hanging</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Spring and mass</h2>
+        <div class="ctl">
+          <div class="slider-head"><label for="sK">Spring constant k</label><output id="oK" class="mono" for="sK"></output></div>
+          <input type="range" id="sK" min="1" max="100" step="0.5">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sM">Mass m</label><output id="oM" class="mono" for="sM"></output></div>
+          <input type="range" id="sM" min="0.1" max="5" step="0.05">
+        </div>
+        <dl class="readout" id="natBox"></dl>
+      </section>
+
+      <section id="coupSec" hidden>
+        <h2>Two coupled masses</h2>
+        <div class="ctl">
+          <div class="slider-head"><label for="sKc">Coupling spring k<sub>c</sub></label><output id="oKc" class="mono" for="sKc"></output></div>
+          <input type="range" id="sKc" min="0" max="40" step="0.5">
+        </div>
+        <div class="slider-head"><span style="font-size:0.88rem">Start from</span></div>
+        <div class="row3">
+          <button type="button" class="btn" data-start="m1">Mode 1</button>
+          <button type="button" class="btn" data-start="m2">Mode 2</button>
+          <button type="button" class="btn" data-start="one">One block</button>
+        </div>
+        <dl class="readout" id="coupBox"></dl>
+        <p class="hint">Mode 1: both blocks move together and the middle spring never stretches. Mode 2: they move opposite, and the middle spring is stretched twice as much as each block moves, so it adds 2k<sub>c</sub> to the stiffness. Any motion is a sum of these two.</p>
+      </section>
+
+      <section>
+        <h2>Damping</h2>
+        <div class="ctl">
+          <div class="slider-head"><label for="sB">Damping constant b</label><output id="oB" class="mono" for="sB"></output></div>
+          <input type="range" id="sB" min="0" max="120" step="1">
+        </div>
+        <div class="row3" role="group" aria-label="Set the damping ratio">
+          <button type="button" class="btn" data-z="0.2">ζ = 0.2</button>
+          <button type="button" class="btn" data-z="1">ζ = 1</button>
+          <button type="button" class="btn" data-z="2.5">ζ = 2.5</button>
+        </div>
+        <label class="check" id="cmpWrap"><input type="checkbox" id="tCmp">Compare ζ = 0.2, 1 and 2.5 from the same start</label>
+        <dl class="readout" id="dampBox"></dl>
+        <p class="hint">The oil pushes on each block with a force −bv. The damping ratio ζ = b/(2√(km)) sorts the motion: ζ &lt; 1 underdamped, ζ = 1 critically damped, ζ &gt; 1 overdamped. Drag the grip on the oil to change b.</p>
+      </section>
+
+      <section id="driveSec" hidden>
+        <h2>Drive</h2>
+        <div class="ctl">
+          <div class="slider-head"><label for="sF">Drive force amplitude F₀</label><output id="oF" class="mono" for="sF"></output></div>
+          <input type="range" id="sF" min="0" max="2" step="0.05">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sW">Drive frequency ω</label><output id="oW" class="mono" for="sW"></output></div>
+          <input type="range" id="sW" min="0.5" max="25" step="0.05">
+        </div>
+        <div class="row2">
+          <button type="button" class="btn" id="sweep">Sweep ω</button>
+          <button type="button" class="btn" id="clearSweep">Clear sweep</button>
+        </div>
+        <dl class="readout" id="driveBox"></dl>
+        <p class="hint">The wall at the end of the spring moves as X<sub>w</sub> cos ωt. That pulls on the block exactly like a force F₀ cos ωt with F₀ = kX<sub>w</sub>. The sweep starts at the steady state for its first ω and raises ω slowly; if b is small the oscillator needs time 2m/b to catch up, so the measured dots fall a little below the peak and ring just after it, more so for a lightly damped spring.</p>
+      </section>
+
+      <section>
+        <h2>Measurements</h2>
+        <dl class="readout" id="measBox"></dl>
+        <p class="formula mono" id="mFormula"></p>
+      </section>
+
+      <section>
+        <h2>Time and plots</h2>
+        <div class="ctl">
+          <div class="slider-head"><label for="sRate">Playback rate</label><output id="oRate" class="mono" for="sRate"></output></div>
+          <input type="range" id="sRate" min="0" max="7" step="1">
+        </div>
+        <div class="toggles" id="plotToggles">
+          <label><input type="checkbox" id="tX" checked><span id="tXlab">x(t)</span></label>
+          <label id="tVwrap"><input type="checkbox" id="tV" checked>v(t)</label>
+          <label id="tAwrap"><input type="checkbox" id="tA" checked>a(t)</label>
+          <label><input type="checkbox" id="tE" checked>Energy</label>
+        </div>
+        <div class="row2">
+          <button type="button" class="btn" id="keep">Keep trace</button>
+          <button type="button" class="btn" id="clearG">Clear traces</button>
+        </div>
+        <p class="hint">Keep a trace, then drag the block farther out and let go: the peaks move apart in height but not in time.</p>
+      </section>
+
+      <section>
+        <h2>Display</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tCircle" checked>Reference circle</label>
+          <label><input type="checkbox" id="tArrows" checked>Force and velocity</label>
+          <label><input type="checkbox" id="tEnv" checked>Envelope</label>
+          <label><input type="checkbox" id="tFling" checked>Release with drag speed</label>
+        </div>
+        <div class="key">
+          <span><i class="swatch"></i>What happened, x(t)</span>
+          <span><i class="swatch dash"></i>Envelope ±A e<sup>−bt/2m</sup></span>
+          <span><i class="swatch wall"></i>Wall motion X<sub>w</sub> cos ωt (driven)</span>
+          <span><i class="swatch ghost"></i><span id="ghostTxt">Kept trace</span></span>
+        </div>
+        <p class="hint" id="modelHint">Model: ideal massless springs that obey Hooke's law, a frictionless track, a damping force −bv on each block, g = 9.80665 m/s². The curves are the exact solution of the linear equation of motion, not a step by step integration; two coupled blocks move as the sum of their two normal modes. Positions are drawn to scale; the block's size grows with its mass but is not to scale. The drawing never shows a spring pressed solid, and the model has no such limit.</p>
+      </section>
+    </aside>
+  </main>
+  <p class="sr" aria-live="polite" id="live"></p>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.80665;
+  // Free motion of m x'' + b x' + k x = 0 written as x'' + 2β x' + ω₀² x = 0, from x = y0, v = u0 at s = 0.
+  // One formula for all three regimes, exact: with q = ω₀² − β², C = cos √q s or cosh √−q s, Sn = sin(√q s)/√q or sinh(√−q s)/√−q.
+  function homog(y0, u0, beta, w0sq, s) {
+    const q = w0sq - beta * beta;
+    if (q > 0) {
+      const w = Math.sqrt(q), E = Math.exp(-beta * s), C = Math.cos(w * s), Sn = Math.sin(w * s) / w;
+      return [E * (y0 * C + (u0 + beta * y0) * Sn), E * (u0 * C - (beta * u0 + w0sq * y0) * Sn)];
+    }
+    if (q < 0) {   // e^(−βs) cosh and e^(−βs) sinh/w written so that nothing overflows and nothing cancels near ζ = 1
+      const w = Math.sqrt(-q), e1 = Math.exp((w - beta) * s), em = -Math.expm1(-2 * w * s);
+      const EC = e1 * (2 - em) / 2, ES = e1 * em / (2 * w);
+      return [y0 * EC + (u0 + beta * y0) * ES, u0 * EC - (beta * u0 + w0sq * y0) * ES];
+    }
+    const E = Math.exp(-beta * s);
+    return [E * (y0 + (u0 + beta * y0) * s), E * (u0 - (beta * u0 + w0sq * y0) * s)];
+  }
+  // steady state of m x'' + b x' + k x = F₀ cos ωt: x = A cos(ωt − δ)
+  function steady(m, k, b, F0, w) {
+    const re = k / m - w * w, im = b * w / m, D = Math.hypot(re, im);
+    return { A: F0 === 0 ? 0 : D > 0 ? F0 / m / D : Infinity, delta: Math.atan2(im, re) };
+  }
+  // One stretch of time with fixed settings, starting from x, v and drive phase θ at t0.
+  function makeSingle(t0, x, v, th, p) {
+    const m = p.m, k = p.k, b = p.b, drive = !!p.drive, F0 = drive ? p.F0 : 0, w = drive ? p.w : 0;
+    const g = { sys: 'single', t0, x0: x, v0: v, th0: th, m, k, b, F0, w, drive, beta: b / (2 * m), w0sq: k / m, A: 0, delta: 0, res: false, C: 0 };
+    if (F0 !== 0) {
+      if (b === 0 && Math.abs(g.w0sq - w * w) <= 1e-12 * g.w0sq) { g.res = true; g.C = F0 / (2 * m * w); }   // undamped and exactly at ω₀: x_p = (F₀/2mω) s sin θ
+      else { const st = steady(m, k, b, F0, w); g.A = st.A; g.delta = st.delta; }
+    }
+    const pp = partic(g, 0);
+    g.y0 = x - pp[0]; g.u0 = v - pp[1];
+    return g;
+  }
+  function partic(g, s) {
+    if (g.F0 === 0) return [0, 0];
+    const th = g.th0 + g.w * s;
+    if (g.res) { const sn = Math.sin(th), cs = Math.cos(th); return [g.C * s * sn, g.C * sn + g.C * s * g.w * cs]; }
+    const ph = th - g.delta;
+    return [g.A * Math.cos(ph), -g.A * g.w * Math.sin(ph)];
+  }
+  function singleState(g, t) {
+    const s = t - g.t0, h = homog(g.y0, g.u0, g.beta, g.w0sq, s), pp = partic(g, s);
+    const x = h[0] + pp[0], v = h[1] + pp[1], th = g.th0 + g.w * s, F = g.F0 * Math.cos(th);
+    return { x, v, a: (F - g.b * v - g.k * x) / g.m, th, F };
+  }
+  // Two equal masses between walls: k, k_c, k. Normal coordinates q₁ = (x₁ + x₂)/2 at ω₁² = k/m, q₂ = (x₁ − x₂)/2 at ω₂² = (k + 2k_c)/m.
+  function makeCoupled(t0, x1, v1, x2, v2, p) {
+    const m = p.m, k = p.k, kc = p.kc, b = p.b;
+    return { sys: 'coupled', t0, m, k, kc, b, beta: b / (2 * m), w1sq: k / m, w2sq: (k + 2 * kc) / m,
+      q1: (x1 + x2) / 2, p1: (v1 + v2) / 2, q2: (x1 - x2) / 2, p2: (v1 - v2) / 2 };
+  }
+  function coupledState(g, t) {
+    const s = t - g.t0, a = homog(g.q1, g.p1, g.beta, g.w1sq, s), c = homog(g.q2, g.p2, g.beta, g.w2sq, s);
+    const x1 = a[0] + c[0], x2 = a[0] - c[0], v1 = a[1] + c[1], v2 = a[1] - c[1];
+    return { x1, x2, v1, v2, q1: a[0], q2: c[0], p1: a[1], p2: c[1],
+      a1: (-g.k * x1 - g.kc * (x1 - x2) - g.b * v1) / g.m, a2: (-g.k * x2 - g.kc * (x2 - x1) - g.b * v2) / g.m };
+  }
+  const segState = (g, t) => (g.sys === 'coupled' ? coupledState(g, t) : singleState(g, t));
+  // Energies. Hanging and free: spring ½k(x + d)², gravity −mgx (x down, zero at equilibrium), d = mg/k.
+  // Driven: the oscillator's own energy ½mv² + ½kx², x from equilibrium; the drive's work is ∫F v dt.
+  function energy(g, st, vertical) {
+    if (g.sys === 'coupled') {
+      const E1 = 0.5 * g.m * st.v1 * st.v1 + 0.5 * g.k * st.x1 * st.x1, E2 = 0.5 * g.m * st.v2 * st.v2 + 0.5 * g.k * st.x2 * st.x2;
+      const Ec = 0.5 * g.kc * (st.x2 - st.x1) * (st.x2 - st.x1);
+      return { E1, E2, Ec, total: E1 + E2 + Ec, M1: g.m * (st.p1 * st.p1 + g.w1sq * st.q1 * st.q1), M2: g.m * (st.p2 * st.p2 + g.w2sq * st.q2 * st.q2) };
+    }
+    const grav = vertical && !g.drive, d = grav ? g.m * G / g.k : 0;
+    const K = 0.5 * g.m * st.v * st.v, Us = 0.5 * g.k * (st.x + d) * (st.x + d), Ug = grav ? -g.m * G * st.x : 0;
+    return { K, Us, Ug, total: K + Us + Ug };
+  }
+  const GL4 = [[-0.8611363115940526, 0.3478548451374538], [-0.3399810435848563, 0.6521451548625461], [0.3399810435848563, 0.6521451548625461], [0.8611363115940526, 0.3478548451374538]];
+  // largest step that resolves every time scale of a segment: 1/48 of the shortest period or decay time
+  function hmaxOf(g) {
+    const w2 = Math.max(g.w0sq || 0, g.w2sq || 0, g.w1sq || 0, (g.w || 0) * (g.w || 0), 4 * g.beta * g.beta, 1e-12);
+    return 2 * Math.PI / Math.sqrt(w2) / 48;
+  }
+  // heat ∫b v² dt and drive work ∫F v dt over [ta, tb] within one segment, 4 point Gauss–Legendre on short pieces
+  function powerIntegrals(g, ta, tb) {
+    let D = 0, W = 0;
+    if (!(tb > ta)) return { D, W };
+    const n = Math.max(1, Math.ceil((tb - ta) / hmaxOf(g))), h = (tb - ta) / n;
+    for (let i = 0; i < n; i++) {
+      const c = ta + (i + 0.5) * h;
+      for (const [xi, wi] of GL4) {
+        const st = segState(g, c + xi * h / 2), f = wi * h / 2;
+        if (g.sys === 'coupled') D += f * g.b * (st.v1 * st.v1 + st.v2 * st.v2);
+        else { D += f * g.b * st.v * st.v; W += f * st.F * st.v; }
+      }
+    }
+    return { D, W };
+  }
+  // times in (ta, tb] where coordinate `key` passes zero going up, found by bisection on the exact solution
+  function upCrossings(g, ta, tb, key) {
+    const out = [];
+    if (!(tb > ta)) return out;
+    const n = Math.max(1, Math.ceil((tb - ta) / hmaxOf(g))), h = (tb - ta) / n;
+    let fa = segState(g, ta)[key];
+    for (let i = 0; i < n; i++) {
+      const t0 = ta + i * h, t1 = ta + (i + 1) * h, f1 = segState(g, t1)[key];
+      if (fa < 0 && f1 >= 0) {
+        let lo = t0, hi = t1;
+        for (let j = 0; j < 60 && hi - lo > 1e-15 * Math.max(1, hi); j++) { const md = (lo + hi) / 2; if (segState(g, md)[key] < 0) lo = md; else hi = md; }
+        out.push((lo + hi) / 2);
+      }
+      fa = f1;
+    }
+    return out;
+  }
+  // free underdamped motion as the shadow of a point on a circle: x = R e^(−βs) cos(ω_d s + φ)
+  function phasor(g) {
+    const q = g.w0sq - g.beta * g.beta;
+    if (q <= 0) return null;
+    const wd = Math.sqrt(q), c = (g.u0 + g.beta * g.y0) / wd;
+    return { R: Math.hypot(g.y0, c), phi: Math.atan2(-c, g.y0), wd };
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.SP = { G, homog, steady, makeSingle, partic, singleState, makeCoupled, coupledState, segState, energy, powerIntegrals, upCrossings, phasor, hmaxOf };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const SPEEDS = [0.1, 0.25, 0.5, 1, 2, 4, 8, 16];
+  const XMAX = { h: 0.25, v: 0.2, c: 0.15 };        // how far a block can be dragged from equilibrium, m
+  const LNAT = { h: 0.4, v: 0.3, c: 0.4 };          // drawn unstretched spring lengths, m
+  const B_N = 120;                                  // damping slider: 0 is b = 0, 1..120 is 0.01 to 100 kg/s on a log scale
+  const bOfPos = (p) => (p <= 0 ? 0 : +(0.01 * Math.pow(10, 4 * (p - 1) / (B_N - 1))).toPrecision(3));
+  const posOfB = (b) => (b <= 0 ? 0 : clamp(Math.round(1 + Math.log10(b / 0.01) / 4 * (B_N - 1)), 1, B_N));
+  const SL = { k: { el: 'sK', min: 1, max: 100, step: 0.5 }, m: { el: 'sM', min: 0.1, max: 5, step: 0.05 }, b: { el: 'sB', min: 0, max: B_N, step: 1 },
+    kc: { el: 'sKc', min: 0, max: 40, step: 0.5 }, F0: { el: 'sF', min: 0, max: 2, step: 0.05 }, w: { el: 'sW', min: 0.5, max: 25, step: 0.05 } };
+
+  // ---------- setups ----------
+  const PRESETS = {
+    shm: { sys: 'free', vert: false, m: 1, k: 40, zeta: 0, ic: { x: 0.15, v: 0 },
+      hint: 'Drag the block to a new start and let go. The amplitude changes, the measured period does not: T = 2π√(m/k). The reference circle shows x(t) as the shadow of a point going around at ω₀, which is where cos ω₀t comes from.' },
+    hang: { sys: 'free', vert: true, m: 0.5, k: 20, zeta: 0, ic: { x: 0.1, v: 0 },
+      hint: 'Gravity stretches the spring by mg/k to a new equilibrium. Measured from there, the motion is the same SHM with the same ω₀ = √(k/m): gravity moves the center, not the period. Spring and gravitational PE trade back and forth while the total stays fixed.' },
+    damp: { sys: 'free', vert: false, m: 1, k: 40, zeta: 0.2, ic: { x: 0.2, v: 0 }, compare: true,
+      hint: 'The gray traces start from the same point with ζ = 0.2, 1 and 2.5. Critical damping returns to equilibrium fastest without overshooting; overdamping creeps back more slowly. Underdamped, the swings shrink inside the envelope e^(−bt/2m).' },
+    res: { sys: 'driven', vert: false, m: 1, k: 40, zeta: 0.05, F0: 0.5, w: 5, ic: { x: 0, v: 0 },
+      hint: 'The moving wall drives the block. The transient dies away and the block settles at the drive frequency, with the amplitude on the resonance curve below. Drag the ω marker on the curve, or press Sweep ω to trace the whole curve.' },
+    modes: { sys: 'coupled', m: 0.5, k: 20, kc: 10, zeta: 0, ic: { x1: 0.1, v1: 0, x2: 0.1, v2: 0 },
+      hint: 'Both blocks start displaced the same way, so the middle spring never stretches: mode 1 at ω₁ = √(k/m). Press Mode 2: the blocks move opposite and the middle spring adds stiffness, ω₂ = √((k + 2k_c)/m).' },
+    beats: { sys: 'coupled', m: 0.5, k: 20, kc: 2, zeta: 0, ic: { x1: 0.12, v1: 0, x2: 0, v2: 0 },
+      hint: 'Only block 1 is displaced. That start is an equal mix of the two modes, and their slightly different frequencies beat: the energy moves to block 2 and back with period 2π/(ω₂ − ω₁).' }
+  };
+
+  // ---------- state ----------
+  const S = { preset: 'shm', sys: 'free', vert: false, p: { m: 1, k: 40, b: 0, F0: 0.5, w: 5, kc: 2 },
+    layers: { x: true, v: true, a: true, E: true, circle: true, arrows: true, env: true, compare: false, fling: true }, speedIdx: 3 };
+  let segs = [], t = 0, running = !reduce, held = null, ghosts = [], compare = [], book = null, crossings = [], lastIC = { x: 0.15, v: 0 };
+  let Av = 0.25, amp = null, sweep = null, sweepPts = [], speedBeforeSweep = null;
+  const view = { tL: 0, L: 5, tLshow: 0 };
+  let ranges = {};
+  const cfg = () => PRESETS[S.preset];
+  const P = () => ({ m: S.p.m, k: S.p.k, b: S.p.b, F0: S.p.F0, w: S.p.w, kc: S.p.kc, drive: S.sys === 'driven' });
+  const lastSeg = () => segs[segs.length - 1];
+  const ori = () => (S.sys === 'coupled' ? 'c' : S.vert ? 'v' : 'h');
+  const w0 = () => Math.sqrt(S.p.k / S.p.m);
+  const zeta = () => S.p.b / (2 * Math.sqrt(S.p.k * S.p.m));
+  function stateAt(t1, list) {
+    list = list || segs;
+    let lo = 0, hi = list.length - 1;
+    while (lo < hi) { const md = (lo + hi + 1) >> 1; if (list[md].t0 <= t1) lo = md; else hi = md - 1; }
+    return segState(list[lo], t1);
+  }
+
+  // ---------- formatting ----------
+  const MIN = (s) => s.replace(/-/g, '−');
+  const fx = (v, d) => (isFinite(v) ? MIN(v.toFixed(d)) : '—');
+  function sig(v, n) {
+    if (!isFinite(v)) return '—';
+    if (v === 0) return '0';
+    const d = clamp(n - 1 - Math.floor(Math.log10(Math.abs(v)) + 1e-12), 0, 9);
+    return MIN(v.toFixed(d));
+  }
+  const cm = (x, d) => `${fx(x * 100, d === undefined ? 1 : d)} cm`;
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  function fmtSci(v) {
+    if (v === 0) return '0';
+    const e = Math.floor(Math.log10(Math.abs(v))), m = v / Math.pow(10, e);
+    return `${MIN(m.toFixed(1))} × 10${String(e).split('').map((c) => SUP[c]).join('')}`;
+  }
+  function fmtRate(r) {
+    if (r === 1) return 'real time';
+    if (r < 1) return `slow motion ×${+(1 / r).toFixed(1)}`;
+    return `fast forward ×${r}`;
+  }
+  function fmtE(v) { if (!isFinite(v)) return '—'; const a = Math.abs(v); return a >= 1 || a === 0 ? `${sig(v, 3)} J` : a >= 1e-3 ? `${sig(v * 1e3, 3)} mJ` : `${sig(v * 1e6, 3)} µJ`; }
+  const deg = (r) => `${(r * 180 / Math.PI).toFixed(1)}°`;
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+
+  // ---------- running the oscillator ----------
+  function segFrom(t0, st) {
+    return S.sys === 'coupled' ? makeCoupled(t0, st.x1, st.v1, st.x2, st.v2, P()) : makeSingle(t0, st.x, st.v, st.th || 0, P());
+  }
+  function ampBound(g) {
+    if (g.sys === 'coupled') return Math.hypot(g.q1, g.p1 / Math.sqrt(g.w1sq)) + Math.hypot(g.q2, g.p2 / Math.sqrt(g.w2sq));
+    return Math.hypot(g.y0, g.u0 / Math.sqrt(g.w0sq)) + (isFinite(g.A) ? g.A : 0);
+  }
+  function newRun(ic) {
+    lastIC = { ...ic };
+    t = 0;
+    const st = S.sys === 'coupled' ? { x1: ic.x1, v1: ic.v1 || 0, x2: ic.x2, v2: ic.v2 || 0 } : { x: ic.x, v: ic.v || 0, th: 0 };
+    segs = [segFrom(0, st)];
+    crossings = [];
+    amp = { cyc: 0, max: 0, last: null, lastW: null };
+    resetBook();
+    view.tL = 0; view.tLshow = 0; view.L = winLen(); ranges = {};
+    Av = Math.max(XMAX[ori()], Math.min(ampBound(segs[0]), 3));
+    buildCompare();
+    updateReadouts();
+  }
+  function resetBook() { const g = lastSeg(); book = { E0: energy(g, segState(g, t), S.vert).total, D: 0, W: 0 }; }
+  // a change of setting at time t: the state carries on from where it is, under the new settings
+  function branch(resetEnergy) {
+    const g = lastSeg(), st = segState(g, t), ng = segFrom(t, st);
+    if (t === g.t0) segs[segs.length - 1] = ng; else segs.push(ng);
+    if (resetEnergy) resetBook();
+    if (S.sys === 'driven' && isFinite(ng.A)) Av = Math.max(Av, Math.min(ng.A, 3));
+  }
+  function winLen() {
+    const c = cfg(), wz = w0(), T0 = 2 * Math.PI / wz;
+    if (S.sys === 'coupled') {
+      const w2 = Math.sqrt((S.p.k + 2 * S.p.kc) / S.p.m), Tb = 2 * Math.PI / (w2 - wz);
+      return clamp(Math.max(6 * T0, Tb < 22 ? 2.1 * Tb : 0), 3, 48);
+    }
+    if (S.sys === 'driven') return clamp(Math.max(4 * T0, 8 * 2 * Math.PI / S.p.w), 4, 40);
+    let L = 5 * T0;
+    const be = S.p.b / (2 * S.p.m);
+    if (be > 0) {
+      const q = be * be - wz * wz, slow = q > 0 ? be - Math.sqrt(q) : be;
+      if (q >= 0) L = Math.max(2.5 * T0, 5 / slow);
+    }
+    if (c.compare && S.layers.compare) L = Math.max(L, 4 * T0);
+    return clamp(L, 2, 40);
+  }
+  function refitWindow() {
+    const L = winLen();
+    if (L > view.L * 2.2 || L < view.L / 2.2) { view.L = L; view.tL = Math.max(0, t - 0.15 * L); ranges = {}; }
+  }
+  function buildCompare() {
+    compare = [];
+    if (!S.layers.compare || S.sys !== 'free' || held) return;
+    const bc = 2 * Math.sqrt(S.p.k * S.p.m);
+    [[0.2, [6, 4]], [1, [2, 3]], [2.5, [11, 3, 2, 3]]].forEach(([z, dash]) => {
+      compare.push({ segs: [makeSingle(0, lastIC.x, lastIC.v || 0, 0, { ...P(), b: z * bc, drive: false })], tEnd: Infinity, dash, label: `ζ = ${z}` });
+    });
+  }
+  // advance the clock by dts: energy bookkeeping, zero crossings for the period, measured drive amplitude
+  function advance(dts) {
+    if (!(dts > 0)) return;
+    if (sweep) {
+      const nw = Math.min(sweep.w1, S.p.w + sweep.rate * dts);
+      S.p.w = nw; branch(false);
+      if (nw >= sweep.w1) stopSweep(true);
+    }
+    const g = lastSeg(), t1 = t + dts;
+    const pi = powerIntegrals(g, t, t1);
+    book.D += pi.D; book.W += pi.W;
+    for (const tc of upCrossings(g, t, t1, g.sys === 'coupled' ? 'x1' : 'x')) { crossings.push(tc); if (crossings.length > 4) crossings.shift(); }
+    if (g.sys === 'single' && g.drive) trackAmp(g, t, t1);
+    t = t1;
+    const st = segState(g, t), xm = g.sys === 'coupled' ? Math.max(Math.abs(st.x1), Math.abs(st.x2)) : Math.abs(st.x);
+    if (xm > Av && xm < 3) Av = Math.min(3, xm * 1.08);
+  }
+  // largest |x| over each whole drive cycle (cycles counted by the drive phase θ)
+  function trackAmp(g, ta, tb) {
+    const h = hmaxOf(g) / 3, n = Math.max(1, Math.ceil((tb - ta) / h)), dh = (tb - ta) / n;
+    for (let i = 1; i <= n; i++) {
+      const st = segState(g, ta + i * dh), cyc = Math.floor(st.th / (2 * Math.PI));
+      if (cyc !== amp.cyc) {
+        if (amp.cyc > 0 || amp.started) { amp.last = amp.max; amp.lastW = g.w; if (sweep) sweepPts.push([g.w, amp.max]); }
+        amp.started = true; amp.cyc = cyc; amp.max = 0;
+      }
+      amp.max = Math.max(amp.max, Math.abs(st.x));
+    }
+  }
+  function startSweep() {
+    if (S.sys !== 'driven') return;
+    const wz = w0(), w1 = Math.min(SL.w.max, Math.max(2 * wz, 1)), wa = Math.max(SL.w.min, Math.min(0.3 * wz, w1 / 3));
+    const be = S.p.b / (2 * S.p.m), span = w1 - wa;
+    const rate = clamp(be * be / 4, span / 600, span / 40);     // crossing the resonance width 2β takes about 8/β, when that is affordable
+    S.p.w = wa;
+    const st0 = steady(S.p.m, S.p.k, S.p.b, S.p.F0, wa);
+    sweepPts = [];
+    newRun(isFinite(st0.A) ? { x: st0.A * Math.cos(st0.delta), v: st0.A * wa * Math.sin(st0.delta) } : { x: 0, v: 0 });
+    sweep = { w1, rate };
+    speedBeforeSweep = S.speedIdx;
+    setSpeed(SPEEDS.indexOf(span / rate > 240 ? 16 : 8));
+    view.L = clamp(10 * 2 * Math.PI / wz, 4, 30);
+    syncSliders(); staticText();
+    $('sweep').textContent = 'Stop sweep';
+    setRunning(true);
+  }
+  function stopSweep(done) {
+    if (!sweep) return;
+    sweep = null;
+    $('sweep').textContent = 'Sweep ω';
+    if (speedBeforeSweep !== null) { setSpeed(speedBeforeSweep); speedBeforeSweep = null; }
+    if (done) $('live').textContent = 'Sweep finished.';
+    syncSliders(); staticText();
+  }
+
+  // ---------- canvases ----------
+  let T = null, dpr = 1;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), xcol: g('--xcol'), vcol: g('--vcol'), acol: g('--acol'),
+      wire: g('--wire'), block: g('--block'), oil: g('--oil'), ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace' };
+  }
+  const cans = { c: $('cCan'), e: $('eCan'), p: $('pCan') };
+  const panes = { c: $('cPane'), e: $('ePane'), p: $('pPane') };
+  const ctxs = { c: cans.c.getContext('2d'), e: cans.e.getContext('2d'), p: cans.p.getContext('2d') };
+  const dims = { c: [0, 0], e: [0, 0], p: [0, 0] };
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const k of ['c', 'e', 'p']) {
+      const r = panes[k].getBoundingClientRect();
+      cans[k].width = Math.max(1, Math.round(r.width * dpr)); cans[k].height = Math.max(1, Math.round(r.height * dpr));
+      cans[k].style.width = r.width + 'px'; cans[k].style.height = r.height + 'px';
+      dims[k] = [r.width, r.height];
+    }
+    drawAll();
+  }
+  // text with one level of subscripts: "x_1" or "k_{c}"
+  function richParts(str) {
+    const out = []; const re = /_\{([^}]*)\}|_(\S)/g; let i = 0, m;
+    while ((m = re.exec(str))) { if (m.index > i) out.push([str.slice(i, m.index), false]); out.push([m[1] || m[2], true]); i = re.lastIndex; }
+    if (i < str.length) out.push([str.slice(i), false]);
+    return out;
+  }
+  function richText(ctx, str, x, y, size, weight, align, fam) {
+    const parts = richParts(str); fam = fam || T.ui;
+    const f0 = `${weight || 400} ${size}px ${fam}`, f1 = `${weight || 400} ${size * 0.72}px ${fam}`;
+    let w = 0;
+    for (const [s, sub] of parts) { ctx.font = sub ? f1 : f0; w += ctx.measureText(s).width; }
+    let x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    const ta = ctx.textAlign; ctx.textAlign = 'left';
+    for (const [s, sub] of parts) { ctx.font = sub ? f1 : f0; ctx.fillText(s, x0, y + (sub ? size * 0.28 : 0)); x0 += ctx.measureText(s).width; }
+    ctx.textAlign = ta;
+    return w;
+  }
+  function richWidth(ctx, str, size, weight) {
+    let w = 0;
+    for (const [s, sub] of richParts(str)) { ctx.font = `${weight || 400} ${sub ? size * 0.72 : size}px ${T.ui}`; w += ctx.measureText(s).width; }
+    return w;
+  }
+  function roundRect(ctx, x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+  }
+  function arrow(ctx, x0, y0, x1, y1, col, lw) {
+    const L = Math.hypot(x1 - x0, y1 - y0); if (L < 2) return;
+    const ux = (x1 - x0) / L, uy = (y1 - y0) / L, hd = Math.min(9 * projScale(), L * 0.6), hw = hd * 0.5;
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = lw; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - ux * hd * 0.8, y1 - uy * hd * 0.8); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - ux * hd - uy * hw, y1 - uy * hd + ux * hw); ctx.lineTo(x1 - ux * hd + uy * hw, y1 - uy * hd - ux * hw); ctx.closePath(); ctx.fill();
+  }
+  // grip: a small box with two arrows along the drag direction
+  function grip(ctx, x, y, hot, vertical) {
+    const ps = projScale(), w = (vertical ? 13 : 20) * ps, h = (vertical ? 20 : 13) * ps;
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = hot ? T.accent : T.muted; ctx.lineWidth = (hot ? 2 : 1.2) * ps;
+    roundRect(ctx, x - w / 2, y - h / 2, w, h, 4 * ps); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = hot ? T.accent : T.muted;
+    const a = 3.5 * ps;
+    ctx.beginPath();
+    if (vertical) {
+      ctx.moveTo(x, y - 7 * ps); ctx.lineTo(x - a, y - 2.5 * ps); ctx.lineTo(x + a, y - 2.5 * ps); ctx.closePath();
+      ctx.moveTo(x, y + 7 * ps); ctx.lineTo(x - a, y + 2.5 * ps); ctx.lineTo(x + a, y + 2.5 * ps); ctx.closePath();
+    } else {
+      ctx.moveTo(x - 7 * ps, y); ctx.lineTo(x - 2.5 * ps, y - a); ctx.lineTo(x - 2.5 * ps, y + a); ctx.closePath();
+      ctx.moveTo(x + 7 * ps, y); ctx.lineTo(x + 2.5 * ps, y - a); ctx.lineTo(x + 2.5 * ps, y + a); ctx.closePath();
+    }
+    ctx.fill();
+  }
+  // a coil spring from (ax, ay) to (bx, by): fixed number of coils, the pitch stretches with the length
+  function drawSpring(ctx, ax, ay, bx, by, o) {
+    const dx = bx - ax, dy = by - ay, len = Math.hypot(dx, dy); if (len < 1) return;
+    const ux = dx / len, uy = dy / len, nx = -uy, ny = ux, ps = projScale();
+    const r = o.r, lead = Math.min(10 * ps, len * 0.12), tilt = 0.55;
+    const minLc = o.n * (o.lw + 0.6) * 1.15;                // never drawn tighter than coils touching
+    const Lc = Math.max(len - 2 * lead - 2 * tilt * r * 0, minLc), M = o.n * 22;
+    const path = () => {
+      ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax + ux * lead, ay + uy * lead);
+      for (let i = 0; i <= M; i++) {
+        const tau = i / M, ph = 2 * Math.PI * o.n * tau - Math.PI / 2;
+        const al = lead + (Lc - 2 * tilt * r) * tau + tilt * r * (Math.sin(ph) + 1), pe = r * Math.cos(ph);
+        ctx.lineTo(ax + ux * al + nx * pe, ay + uy * al + ny * pe);
+      }
+      ctx.lineTo(bx, by);
+    };
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    if (o.hot) { path(); ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.3; ctx.lineWidth = o.lw + 7 * ps; ctx.stroke(); ctx.globalAlpha = 1; }
+    path(); ctx.strokeStyle = o.col || T.wire; ctx.lineWidth = o.lw; ctx.stroke();
+  }
+  const springLW = (k) => (1.1 + 0.75 * Math.log10(Math.max(k, 0.5))) * projScale();
+  function wallH(ctx, x, y0, y1, side) {          // a hatched wall, the hatching on the far side
+    const ps = projScale(), d = side * 10 * ps;
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x, y1); ctx.stroke();
+    ctx.lineWidth = 1 * ps; ctx.strokeStyle = T.muted; ctx.beginPath();
+    for (let y = y0 + 4 * ps; y < y1; y += 8 * ps) { ctx.moveTo(x, y); ctx.lineTo(x + d, y - 7 * ps); }
+    ctx.stroke();
+  }
+  function wallV(ctx, y, x0, x1) {
+    const ps = projScale();
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
+    ctx.lineWidth = 1 * ps; ctx.strokeStyle = T.muted; ctx.beginPath();
+    for (let x = x0 + 4 * ps; x < x1; x += 8 * ps) { ctx.moveTo(x, y); ctx.lineTo(x + 7 * ps, y - 10 * ps); }
+    ctx.stroke();
+  }
+  const blockSide = (m) => (30 + 22 * Math.cbrt(m)) * Math.min(projScale(), 1.2);
+
+  // ---------- the mass and spring drawing ----------
+  let sg = null, ctlH = 44, cHandles = [], cHover = null, cDrag = null;
+  const isHot = (id) => (cDrag && cDrag.id === id) || (!cDrag && cHover === id) || (held && held.id === id);
+  function drawScene() {
+    const [W, H] = dims.c; if (!W || !H || !segs.length) return;
+    const ctx = ctxs.c, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    cHandles = [];
+    const st = stateAt(t), g = lastSeg();
+    if (S.sys === 'coupled') drawCoupled(ctx, W, H, st, g, ps);
+    else if (S.vert) drawVertical(ctx, W, H, st, g, ps);
+    else drawHorizontal(ctx, W, H, st, g, ps);
+  }
+  const fsOf = (W) => (W < 420 ? 11.5 : 12.5) * Math.min(projScale(), 1.25);
+  function labelBox(ctx, txt, x, y, align, col, size, weight) {
+    const w = richWidth(ctx, txt, size, weight), x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(x0 - 3, y - size * 0.95, w + 6, size * 1.3); ctx.globalAlpha = 1;
+    ctx.fillStyle = col; ctx.textBaseline = 'alphabetic'; richText(ctx, txt, x0, y, size, weight, 'left');
+  }
+  function oilAlpha() { const b = S.p.b; return b <= 0 ? 0 : clamp(0.12 + 0.14 * (Math.log10(b) + 2), 0.12, 0.7); }
+  function drawBlock(ctx, x, y, side, id, label, col) {
+    const ps = projScale(), hot = isHot(id);
+    if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.22; roundRect(ctx, x - side / 2 - 5 * ps, y - side / 2 - 5 * ps, side + 10 * ps, side + 10 * ps, 7 * ps); ctx.fill(); ctx.globalAlpha = 1; }
+    ctx.fillStyle = T.block; ctx.strokeStyle = col || T.ink; ctx.lineWidth = (hot ? 2.4 : 1.6) * ps;
+    roundRect(ctx, x - side / 2, y - side / 2, side, side, 4 * ps); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.font = `600 ${Math.min(11.5 * ps, side * 0.19)}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(label, x, y);
+    cHandles.push({ id, box: [x - side / 2, y - side / 2, side, side], cursor: held ? 'grabbing' : 'grab', mass: true });
+  }
+  // a small tab on a block for changing m: drag away from the block for more mass
+  function massTab(ctx, x, y, dir, vertical) {
+    const ps = projScale(), hot = isHot('m');
+    grip(ctx, x, y, hot, vertical);
+    cHandles.push({ id: 'm', box: [x - 11 * ps, y - 11 * ps, 22 * ps, 22 * ps], cursor: vertical ? 'ns-resize' : 'ew-resize', param: 'm', axis: vertical ? 'y' : 'x', dir });
+  }
+  function springGrip(ctx, x, y, id, perpVertical, dir, box) {
+    grip(ctx, x, y, isHot(id), perpVertical);
+    cHandles.push({ id, box, cursor: perpVertical ? 'ns-resize' : 'ew-resize', param: id, axis: perpVertical ? 'y' : 'x', dir });
+  }
+  function ruler(ctx, x0px, xAt, y, lo, hi, s, ps, horizontal) {
+    // ticks in cm relative to equilibrium; horizontal along x at height y, or vertical along y at x
+    const step = nice(42 * ps / s * 100) / 100, fs = 9.5 * ps;
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.font = `${fs}px ${T.mono}`;
+    ctx.beginPath();
+    if (horizontal) { ctx.moveTo(xAt(lo), y); ctx.lineTo(xAt(hi), y); } else { ctx.moveTo(x0px, xAt(lo)); ctx.lineTo(x0px, xAt(hi)); }
+    ctx.stroke();
+    for (let k = Math.ceil(lo / step - 1e-9); k * step <= hi + 1e-9; k++) {
+      const v = k * step, p = xAt(v), big = k % 2 === 0;
+      ctx.beginPath();
+      if (horizontal) { ctx.moveTo(p, y); ctx.lineTo(p, y + (big ? 5 : 3) * ps); } else { ctx.moveTo(x0px, p); ctx.lineTo(x0px - (big ? 5 : 3) * ps, p); }
+      ctx.stroke();
+      if (big) {
+        const txt = k === 0 ? '0' : MIN(String(+(v * 100).toFixed(1)));
+        if (horizontal) { ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(txt, p, y + 6 * ps); }
+        else { ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(txt, x0px - 7 * ps, p); }
+      }
+    }
+  }
+  function drawHorizontal(ctx, W, H, st, g, ps) {
+    const fs = fsOf(W), pad = 12 * ps, L0 = LNAT.h, side = blockSide(S.p.m), drv = S.sys === 'driven';
+    const top = ctlH + 6, rulerH = 46 * ps, troughH = 20 * ps;
+    const wallX = pad + 12 * ps + (drv ? 12 * ps : 0);
+    const sW = (W - wallX - pad - side - 30 * ps) / (L0 + Av);
+    // free motion keeps room above the block for the reference circle; driven motion puts the track higher instead
+    const trackY = H - 8 * ps - rulerH - troughH;
+    const sH = drv ? Infinity : (trackY - side - top - 30 * ps) / (2 * Av);
+    const s = Math.max(20, Math.min(sW, sH, 1400));
+    const cx0 = wallX + L0 * s + side / 2, by = trackY - side / 2;
+    const X = (x) => cx0 + x * s;
+    sg = { kind: 'h', s, X, cx0, toM: (px) => (px - cx0) / s };
+    const x = st.x, bx = X(x);
+    const xw = drv ? (S.p.F0 / S.p.k) * Math.cos(st.th) : 0, ax = wallX + xw * s;
+    // equilibrium line and label
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(cx0 + 0.5, top + 4 * ps); ctx.lineTo(cx0 + 0.5, trackY + troughH); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = T.muted; ctx.font = `${fs * 0.9}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('equilibrium', cx0 + 4 * ps, top + 2 * ps);
+    // track, oil trough, ruler
+    const tx0 = X(-Av) - side / 2 - 6 * ps, tx1 = X(Av) + side / 2 + 6 * ps;
+    const oa = oilAlpha();
+    if (oa > 0) { ctx.fillStyle = T.oil; ctx.globalAlpha = oa; ctx.fillRect(tx0, trackY + 4 * ps, tx1 - tx0, troughH - 6 * ps); ctx.globalAlpha = 1; }
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.beginPath();
+    ctx.moveTo(tx0, trackY + 2 * ps); ctx.lineTo(tx0, trackY + troughH - 2 * ps); ctx.lineTo(tx1, trackY + troughH - 2 * ps); ctx.lineTo(tx1, trackY + 2 * ps); ctx.stroke();
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(pad, trackY); ctx.lineTo(W - pad, trackY); ctx.stroke();
+    // the oil's grip: drag up for more damping
+    { const gx = tx1 + 12 * ps, gy = trackY + troughH / 2;
+      springGrip(ctx, Math.min(W - 10 * ps, gx), gy, 'b', true, -1, [tx0, trackY, Math.min(W - 2, gx + 10 * ps) - tx0, troughH]);
+      ctx.fillStyle = T.muted; ctx.font = `${fs * 0.85}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      if (tx0 - 8 * ps > wallX + 40 * ps) ctx.fillText(S.p.b > 0 ? 'oil' : 'no oil', tx0 - 6 * ps, gy);
+    }
+    ruler(ctx, 0, X, trackY + troughH + 4 * ps, -Math.min(Av, L0 * 0.9), Av, s, ps, true);
+    // vane from the block into the oil
+    if (oa > 0) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(bx, trackY); ctx.lineTo(bx, trackY + troughH - 6 * ps); ctx.stroke(); ctx.fillStyle = T.ink; ctx.fillRect(bx - 4 * ps, trackY + troughH - 12 * ps, 8 * ps, 6 * ps); }
+    // wall, or the moving wall of the drive
+    wallH(ctx, pad + 12 * ps, by - side / 2 - 14 * ps, trackY, -1);
+    if (drv) {
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(pad + 12 * ps, by); ctx.lineTo(ax, by); ctx.stroke();
+      ctx.fillStyle = T.equi; ctx.fillRect(ax - 2.5 * ps, by - 15 * ps, 5 * ps, 30 * ps);
+      const gx = ax, gy = by - 25 * ps;
+      grip(ctx, gx, gy, isHot('F0'), true);
+      cHandles.push({ id: 'F0', box: [gx - 11 * ps, gy - 12 * ps, 22 * ps, 24 * ps], cursor: 'ns-resize', param: 'F0', axis: 'y', dir: -1 });
+      ctx.textBaseline = 'alphabetic';
+      labelBox(ctx, `wall moves ±X_w = ±${cm(S.p.F0 / S.p.k, 2)}`, pad + 4, top + fs * 1.4, 'left', T.equi, fs * 0.9, 600);
+    }
+    // spring
+    const sx1 = bx - side / 2;
+    drawSpring(ctx, ax, by, sx1, by, { r: Math.min(8 * ps, side * 0.2), n: 12, lw: springLW(S.p.k), hot: isHot('k') });
+    { const mx = (ax + sx1) / 2, gy = by - Math.min(8 * ps, side * 0.2) - 16 * ps;
+      springGrip(ctx, mx, gy, 'k', true, -1, [Math.min(ax, sx1), gy - 11 * ps, Math.abs(sx1 - ax), by + 12 * ps - (gy - 11 * ps)]);
+      ctx.fillStyle = T.ink; ctx.textBaseline = 'alphabetic';
+      const kl = `k = ${sig(S.p.k, 3)} N/m`, kw = richWidth(ctx, kl, fs, 600);
+      labelBox(ctx, kl, Math.max(pad + 14 * ps + kw / 2, Math.min(mx, sx1 - kw / 2 - 6 * ps)), gy - 16 * ps, 'center', T.ink, fs, 600);
+    }
+    // reference circle
+    drawCircle(ctx, g, st, cx0, by - side / 2 - 12 * ps - Av * s, s, 'h', bx, by - side / 2, fs);
+    // block
+    drawBlock(ctx, bx, by, side, 'mass', `${fx(S.p.m, 2)} kg`);
+    massTab(ctx, bx, by - side / 2 - 12 * ps, -1, true);
+    // displacement along the ruler, labeled under it
+    { const yy = trackY + troughH + 4 * ps;
+      ctx.strokeStyle = T.xcol; ctx.lineWidth = 4 * ps; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.moveTo(cx0, yy); ctx.lineTo(bx, yy); ctx.stroke(); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.xcol; ctx.beginPath(); ctx.arc(bx, yy, 3.5 * ps, 0, 2 * Math.PI); ctx.fill();
+      labelBox(ctx, `x = ${cm(x)}`, clamp(bx, pad + 40 * ps, W - pad - 40 * ps), yy + 18 * ps + fs, 'center', T.xcol, fs, 700);
+    }
+    if (S.layers.arrows) forceArrows(ctx, g, st, bx, by, side, 'h');
+  }
+  function forceArrows(ctx, g, st, bx, by, side, o) {
+    const ps = projScale(), Fref = S.p.k * Av, vref = w0() * Av, len = 52 * ps;
+    const Fnet = S.p.m * st.a, v = st.v;
+    const fl = clamp(Fnet / Fref, -1.6, 1.6) * len, vl = clamp(v / vref, -1.6, 1.6) * len;
+    faceArrows(ctx, bx, by, side, fl, vl, o === 'v');
+  }
+  // net force (red) and velocity (green), each starting at the face of the block it points out of
+  function faceArrows(ctx, bx, by, side, fl, vl, vert, noLabel) {
+    const ps = projScale(), off = side * 0.3, h = side / 2;
+    const one = (L, o, col, lab) => {
+      if (Math.abs(L) <= 2) return;
+      const s0 = Math.sign(L) * h;
+      if (vert) arrow(ctx, bx + o, by + s0, bx + o, by + s0 + L, col, 2.6 * ps);
+      else arrow(ctx, bx + s0, by + o, bx + s0 + L, by + o, col, 2.6 * ps);
+      if (noLabel) return;
+      ctx.fillStyle = col; ctx.font = `700 ${10.5 * Math.min(ps, 1.25)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      if (vert) ctx.fillText(lab, bx + o + (o > 0 ? 9 : -9) * ps, by + s0 + L / 2);
+      else ctx.fillText(lab, bx + s0 + L / 2, by + o + (o > 0 ? 9 : -9) * ps);
+    };
+    one(fl, off, T.pos, 'F');
+    one(vl, -off, T.vcol, 'v');
+  }
+  // the reference circle: the block's x is the shadow of a point moving around a circle at ω (free, underdamped motion only)
+  function drawCircle(ctx, g, st, cx, cy, s, o, bx, byEdge, fs) {
+    if (!S.layers.circle) return;
+    const ps = projScale();
+    if (g.sys !== 'single' || g.drive || held) {
+      if (g.drive && !held) { ctx.fillStyle = T.muted; ctx.font = `${fs * 0.85}px ${T.ui}`; ctx.textAlign = o === 'h' ? 'center' : 'left'; ctx.textBaseline = 'middle'; }
+      return;
+    }
+    const ph = phasor(g);
+    if (!ph) {
+      ctx.fillStyle = T.muted; ctx.font = `${fs * 0.85}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('ζ ≥ 1: no oscillation, so no reference circle', o === 'h' ? cx : cx + 40 * ps, cy);
+      return;
+    }
+    const sT = t - g.t0, R = ph.R * Math.exp(-g.beta * sT), ang = ph.wd * sT + ph.phi, Rp = R * s;
+    const ax = (u) => (o === 'h' ? cx + u : cx), ay = (u) => (o === 'h' ? cy : cy + u);
+    // circle center sits on the equilibrium line; for hanging it is beside the block
+    const ccx = o === 'h' ? cx : cx, ccy = cy;
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.2 * ps;
+    if (g.beta > 0) { ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.arc(ccx, ccy, ph.R * s, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]); }
+    ctx.strokeStyle = T.muted; ctx.beginPath(); ctx.arc(ccx, ccy, Math.max(Rp, 0.5), 0, 2 * Math.PI); ctx.stroke();
+    // point: along the motion axis R cos(angle), across it R sin(angle)
+    const along = Rp * Math.cos(ang), across = Rp * Math.sin(ang);
+    const px = o === 'h' ? ccx + along : ccx + across, py = o === 'h' ? ccy - across : ccy + along;
+    ctx.strokeStyle = T.xcol; ctx.lineWidth = 1.5 * ps; ctx.globalAlpha = 0.8;
+    ctx.beginPath(); ctx.moveTo(ccx, ccy); ctx.lineTo(px, py); ctx.stroke(); ctx.globalAlpha = 1;
+    // angle arc
+    ctx.strokeStyle = T.xcol; ctx.lineWidth = 1 * ps; ctx.beginPath();
+    const a0 = o === 'h' ? 0 : Math.PI / 2, aa = ((ang % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+    const rr = Math.min(16 * ps, Rp * 0.45);
+    if (rr > 4) { if (o === 'h') ctx.arc(ccx, ccy, rr, -aa, 0); else ctx.arc(ccx, ccy, rr, a0, a0 - aa, true); ctx.stroke(); }
+    // shadow line to the block
+    ctx.setLineDash([3, 3]); ctx.strokeStyle = T.xcol; ctx.globalAlpha = 0.7;
+    ctx.beginPath(); ctx.moveTo(px, py); if (o === 'h') ctx.lineTo(px, byEdge); else ctx.lineTo(bx, py); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.xcol; ctx.beginPath(); ctx.arc(px, py, 4.5 * ps, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.arc(px, py, 1.8 * ps, 0, 2 * Math.PI); ctx.fill();
+    // label
+    const lab = g.beta > 0 ? 'angle ω_d t + φ, radius shrinks as e^(−bt/2m)' : 'angle ω_0 t + φ, radius A';
+    ctx.textBaseline = 'alphabetic';
+    const Rl = Math.max(ph.R * s, Rp);
+    if (o === 'h') labelBox(ctx, lab, ccx, Math.max(ccy - Rl - 6 * ps, ctlH + fs + 4), 'center', T.muted, fs * 0.85, 400);
+    else labelBox(ctx, lab, Math.min(ccx, dims.c[0] - richWidth(ctx, lab, fs * 0.85, 400) / 2 - 6), ccy - Rl - 8 * ps, 'center', T.muted, fs * 0.85, 400);
+  }
+  function drawVertical(ctx, W, H, st, g, ps) {
+    const fs = fsOf(W), pad = 12 * ps, L0 = LNAT.v, side = blockSide(S.p.m), drv = S.sys === 'driven';
+    const d = drv ? S.p.m * G / S.p.k : S.p.m * G / S.p.k;      // the static stretch is there whether or not the ceiling moves
+    const top = ctlH + 8, ceilY = top + 10 * ps + (drv ? 14 * ps : 0);
+    const bx = Math.max(pad + 150 * ps, W * 0.34);
+    const sH = (H - 18 * ps - side - ceilY) / (L0 + d + Av);
+    const sW = (W - pad - bx - side / 2 - 40 * ps) / (2 * Av);
+    const s = Math.max(4, Math.min(sH, sW, 1400));
+    const yEq = ceilY + (L0 + d) * s + side / 2;
+    const Y = (x) => yEq + x * s;
+    sg = { kind: 'v', s, Y, yEq, toM: (py) => (py - yEq) / s };
+    const x = st.x, byc = Y(x);
+    const xw = drv ? (S.p.F0 / S.p.k) * Math.cos(st.th) : 0, ay = ceilY + xw * s;
+    // ceiling
+    wallV(ctx, top + 10 * ps, bx - 60 * ps, bx + 60 * ps);
+    if (drv) {
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(bx, top + 10 * ps); ctx.lineTo(bx, ay); ctx.stroke();
+      ctx.fillStyle = T.equi; ctx.fillRect(bx - 15 * ps, ay - 2.5 * ps, 30 * ps, 5 * ps);
+      const gx = bx + 34 * ps, gy = ay;
+      grip(ctx, gx, gy, isHot('F0'), false);
+      cHandles.push({ id: 'F0', box: [gx - 12 * ps, gy - 11 * ps, 24 * ps, 22 * ps], cursor: 'ew-resize', param: 'F0', axis: 'x', dir: 1 });
+      ctx.fillStyle = T.equi; ctx.font = `${fs * 0.88}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText(`Xw = ${cm(S.p.F0 / S.p.k, 2)}`, gx + 14 * ps, gy);
+    }
+    // beaker of oil around the block's range
+    const bkTop = Y(-Av) - side / 2 - 6 * ps, bkBot = Math.min(H - 6 * ps, Y(Av) + side / 2 + 8 * ps), bkL = bx - side / 2 - 12 * ps, bkR = bx + side / 2 + 12 * ps;
+    const oa = oilAlpha();
+    if (oa > 0) { ctx.fillStyle = T.oil; ctx.globalAlpha = oa; ctx.fillRect(bkL, bkTop + 8 * ps, bkR - bkL, bkBot - bkTop - 8 * ps); ctx.globalAlpha = 1; }
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.moveTo(bkL, bkTop); ctx.lineTo(bkL, bkBot); ctx.lineTo(bkR, bkBot); ctx.lineTo(bkR, bkTop); ctx.stroke();
+    springGrip(ctx, bkR + 12 * ps, (bkTop + bkBot) / 2, 'b', true, -1, [bkR - 4 * ps, bkTop, 26 * ps, bkBot - bkTop]);
+    ctx.fillStyle = T.muted; ctx.font = `${fs * 0.85}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText(S.p.b > 0 ? 'oil' : 'no oil', bx, bkBot - 3 * ps);
+    // ruler, cm below equilibrium
+    ruler(ctx, bkL - 8 * ps, Y, 0, -Av, Av, s, ps, false);
+    // unstretched length and equilibrium
+    const yNat = ceilY + L0 * s;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(bx - side / 2 - 70 * ps, yNat + 0.5); ctx.lineTo(bx + side / 2 + 6 * ps, yNat + 0.5); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(bx - side / 2 - 70 * ps, yEq + 0.5); ctx.lineTo(W - pad, yEq + 0.5); ctx.stroke(); ctx.setLineDash([]);
+    ctx.textBaseline = 'alphabetic';
+    labelBox(ctx, 'unstretched', bx - side / 2 - 72 * ps, yNat - 3 * ps, 'left', T.muted, fs * 0.85, 400);
+    if (!drv) {
+      // the static stretch d = mg/k, from the unstretched end to the block's top at equilibrium
+      const yT = yEq - side / 2, xb = bkL - 52 * ps;
+      if (yT - yNat > 8 * ps) {
+        ctx.strokeStyle = T.equi; ctx.lineWidth = 1.4 * ps; ctx.beginPath(); ctx.moveTo(xb, yNat); ctx.lineTo(xb, yT); ctx.moveTo(xb - 4 * ps, yNat); ctx.lineTo(xb + 4 * ps, yNat); ctx.moveTo(xb - 4 * ps, yT); ctx.lineTo(xb + 4 * ps, yT); ctx.stroke();
+      }
+      const ym = Math.max(yNat + fs * 1.4, (yNat + yT) / 2);
+      labelBox(ctx, 'mg/k', xb - 6 * ps, ym - 1 * ps, 'right', T.equi, fs * 0.88, 600);
+      labelBox(ctx, cm(d), xb - 6 * ps, ym + fs * 1.1, 'right', T.equi, fs * 0.88, 600);
+    }
+    // spring
+    drawSpring(ctx, bx, ay, bx, byc - side / 2, { r: Math.min(10 * ps, side * 0.32), n: 12, lw: springLW(S.p.k), hot: isHot('k') });
+    { const my = (ay + byc - side / 2) / 2, gx = bx + 24 * ps;
+      springGrip(ctx, gx, my, 'k', false, 1, [bx - 12 * ps, Math.min(ay, byc - side / 2), 48 * ps, Math.abs(byc - side / 2 - ay)]);
+      labelBox(ctx, `k = ${sig(S.p.k, 3)} N/m`, gx + 14 * ps, my + fs * 0.35, 'left', T.ink, fs, 600);
+    }
+    // block and labels
+    drawCircle(ctx, g, st, bkR + 40 * ps + Av * s, yEq, s, 'v', bx + side / 2, 0, fs);
+    drawBlock(ctx, bx, byc, side, 'mass', `${fx(S.p.m, 2)} kg`);
+    massTab(ctx, bx, byc + side / 2 + 12 * ps, 1, true);
+    { const xr = bkL - 8 * ps;
+      ctx.strokeStyle = T.xcol; ctx.lineWidth = 4 * ps; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.moveTo(xr, yEq); ctx.lineTo(xr, byc); ctx.stroke(); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.xcol; ctx.beginPath(); ctx.arc(xr, byc, 3.5 * ps, 0, 2 * Math.PI); ctx.fill(); }
+    labelBox(ctx, `x = ${cm(x)}`, bkR + 26 * ps, Math.min(H - 6 * ps, bkBot + 0 * ps), 'left', T.xcol, fs, 700);
+    ctx.textBaseline = 'alphabetic';
+    labelBox(ctx, 'equilibrium', pad, yEq + fs * 1.15, 'left', T.muted, fs * 0.85, 400);
+    if (S.layers.arrows) forceArrows(ctx, g, st, bx, byc, side, 'v');
+  }
+  function drawCoupled(ctx, W, H, st, g, ps) {
+    const fs = fsOf(W), pad = 12 * ps, L0 = LNAT.c, side = blockSide(S.p.m) * 0.9;
+    const top = ctlH + 6, rulerH = 30 * ps, troughH = 20 * ps;
+    const trackY = Math.min(H - 8 * ps - rulerH - troughH, top + (H - top) * 0.66);
+    const wl = pad + 12 * ps, wr = W - pad - 12 * ps;
+    const s = Math.max(20, (wr - wl - 2 * side) / (3 * L0));
+    const c1 = wl + L0 * s + side / 2, c2 = wr - L0 * s - side / 2, by = trackY - side / 2;
+    sg = { kind: 'c', s, c1, c2, toM: (px, id) => (px - (id === 'm2' ? c2 : c1)) / s };
+    const b1 = c1 + st.x1 * s, b2 = c2 + st.x2 * s;
+    // equilibria
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+    for (const c of [c1, c2]) { ctx.beginPath(); ctx.moveTo(c + 0.5, top + 26 * ps); ctx.lineTo(c + 0.5, trackY + troughH); ctx.stroke(); }
+    ctx.setLineDash([]);
+    // oil and track
+    const tx0 = c1 - Av * s - side / 2 - 6 * ps, tx1 = c2 + Av * s + side / 2 + 6 * ps, oa = oilAlpha();
+    if (oa > 0) { ctx.fillStyle = T.oil; ctx.globalAlpha = oa; ctx.fillRect(tx0, trackY + 4 * ps, tx1 - tx0, troughH - 6 * ps); ctx.globalAlpha = 1; }
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.beginPath();
+    ctx.moveTo(tx0, trackY + 2 * ps); ctx.lineTo(tx0, trackY + troughH - 2 * ps); ctx.lineTo(tx1, trackY + troughH - 2 * ps); ctx.lineTo(tx1, trackY + 2 * ps); ctx.stroke();
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(wl, trackY); ctx.lineTo(wr, trackY); ctx.stroke();
+    springGrip(ctx, (c1 + c2) / 2, trackY + troughH / 2 + 1 * ps, 'b', true, -1, [tx0, trackY, tx1 - tx0, troughH]);
+    for (const [c, xv] of [[c1, st.x1], [c2, st.x2]]) {
+      ruler(ctx, 0, (v) => c + v * s, trackY + troughH + 4 * ps, -Av, Av, s, ps, true);
+      if (oa > 0) { const bxx = c + xv * s; ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(bxx, trackY); ctx.lineTo(bxx, trackY + troughH - 6 * ps); ctx.stroke(); ctx.fillStyle = T.ink; ctx.fillRect(bxx - 4 * ps, trackY + troughH - 12 * ps, 8 * ps, 6 * ps); }
+    }
+    wallH(ctx, wl, by - side / 2 - 14 * ps, trackY, -1);
+    wallH(ctx, wr, by - side / 2 - 14 * ps, trackY, 1);
+    const r = Math.min(7 * ps, side * 0.18);
+    drawSpring(ctx, wl, by, b1 - side / 2, by, { r, n: 9, lw: springLW(S.p.k), hot: isHot('k') });
+    drawSpring(ctx, b1 + side / 2, by, b2 - side / 2, by, { r: r * 0.8, n: 9, lw: springLW(Math.max(S.p.kc, 0.5)), hot: isHot('kc'), col: S.p.kc > 0 ? T.equi : T.gridStrong });
+    drawSpring(ctx, b2 + side / 2, by, wr, by, { r, n: 9, lw: springLW(S.p.k), hot: isHot('k') });
+    { const mx = (wl + b1 - side / 2) / 2, gy = by - r - 14 * ps;
+      springGrip(ctx, mx, gy, 'k', true, -1, [wl, gy - 11 * ps, b1 - side / 2 - wl, by + 12 * ps - gy + 11 * ps]);
+      labelBox(ctx, 'k', mx, gy - 16 * ps, 'center', T.ink, fs, 700);
+      const mc = (b1 + b2) / 2, gc = by - r - 14 * ps;
+      springGrip(ctx, mc, gc, 'kc', true, -1, [b1 + side / 2, gc - 11 * ps, b2 - b1 - side, by + 12 * ps - gc + 11 * ps]);
+      labelBox(ctx, `k_c = ${sig(S.p.kc, 3)} N/m`, mc, gc - 40 * ps, 'center', T.equi, fs, 700);
+      const mr = (b2 + side / 2 + wr) / 2;
+      labelBox(ctx, 'k', mr, gy - 16 * ps, 'center', T.ink, fs, 700);
+    }
+    drawBlock(ctx, b1, by, side, 'm1', '1', T.pos);
+    drawBlock(ctx, b2, by, side, 'm2', '2', T.neg);
+    massTab(ctx, b2, by - side / 2 - 12 * ps, -1, true);
+    for (const [c, bxx, xv, col, lab] of [[c1, b1, st.x1, T.pos, 'x_1'], [c2, b2, st.x2, T.neg, 'x_2']]) {
+      const yy = trackY + troughH + 4 * ps;
+      ctx.strokeStyle = col; ctx.lineWidth = 4 * ps; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.moveTo(c, yy); ctx.lineTo(bxx, yy); ctx.stroke(); ctx.globalAlpha = 1;
+      labelBox(ctx, `${lab} = ${cm(xv)}`, bxx, by - side / 2 - 28 * ps, 'center', col, fs, 700);
+    }
+    // what k and m are, top line
+    ctx.fillStyle = T.muted; ctx.font = `${fs * 0.88}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(`k = ${sig(S.p.k, 3)} N/m, m = ${fx(S.p.m, 2)} kg each`, W / 2, top + 4 * ps);
+    if (S.layers.arrows) {
+      const Fref = S.p.k * Av, vref = w0() * Av, len = 46 * ps;
+      for (const [bxx, a, v] of [[b1, st.a1, st.v1], [b2, st.a2, st.v2]]) {
+        const fl = clamp(S.p.m * a / Fref, -1.6, 1.6) * len, vl = clamp(v / vref, -1.6, 1.6) * len;
+        faceArrows(ctx, bxx, by, side, fl, vl, false, true);
+      }
+    }
+  }
+
+  // ---------- plots against time ----------
+  function panelsFor() {
+    const out = [], Ly = S.layers;
+    if (S.sys === 'coupled') {
+      if (Ly.x) {
+        out.push({ id: 'x1', title: 'x_1, block 1 (cm)', sc: 100, sym: true, series: [{ f: (o) => o.st.x1, col: 'pos' }], ghostF: (o) => o.st.x1 });
+        out.push({ id: 'x2', title: 'x_2, block 2 (cm)', sc: 100, sym: true, series: [{ f: (o) => o.st.x2, col: 'neg' }], ghostF: (o) => o.st.x2 });
+      }
+      if (Ly.E) out.push({ id: 'E', title: 'Energy (J)', sc: 1, energy: true, series: [{ f: (o) => o.en.E1, col: 'pos', lab: 'block 1' }, { f: (o) => o.en.E2, col: 'neg', lab: 'block 2' }, { f: (o) => o.en.total, col: 'ink', lab: 'total' }] });
+      return out;
+    }
+    const xt = S.vert ? 'x, below equilibrium (cm)' : 'x, displacement (cm)';
+    if (Ly.x) out.push({ id: 'x', title: xt, sc: 100, sym: true, series: [{ f: (o) => o.st.x, col: 'xcol' }], ghostF: (o) => o.st.x, xpanel: true });
+    if (Ly.v) out.push({ id: 'v', title: 'v, velocity (m/s)', sc: 1, sym: true, series: [{ f: (o) => o.st.v, col: 'vcol' }], ghostF: (o) => o.st.v });
+    if (Ly.a) out.push({ id: 'a', title: 'a, acceleration (m/s²)', sc: 1, sym: true, series: [{ f: (o) => o.st.a, col: 'acol' }], ghostF: (o) => o.st.a });
+    if (Ly.E) {
+      const ser = [{ f: (o) => o.en.K, col: 'pos', lab: 'kinetic' }, { f: (o) => o.en.Us, col: 'neg', lab: S.sys === 'driven' ? '½kx²' : 'spring' }];
+      if (S.vert && S.sys === 'free') ser.push({ f: (o) => o.en.Ug, col: 'equi', lab: 'gravity' });
+      ser.push({ f: (o) => o.en.total, col: 'ink', lab: 'total' });
+      out.push({ id: 'E', title: 'Energy (J)', sc: 1, energy: true, series: ser });
+    }
+    return out;
+  }
+  // samples of a run at the given times (only up to tEnd), plus its exact end point
+  function sampleList(list, ts, tEnd, withEnergy) {
+    const out = [];
+    let k = 0;
+    const push = (tt) => {
+      while (k + 1 < list.length && list[k + 1].t0 <= tt) k++;
+      const st = segState(list[k], tt);
+      out.push({ t: tt, st, en: withEnergy ? energy(list[k], st, S.vert) : null, g: list[k] });
+    };
+    for (let j = 0; j < ts.length && ts[j] <= tEnd; j++) push(ts[j]);
+    if (isFinite(tEnd) && tEnd >= ts[0] && tEnd <= ts[ts.length - 1] && (!out.length || out[out.length - 1].t < tEnd)) push(tEnd);
+    return out;
+  }
+  function rangeSym(id, hi) {
+    const r = ranges[id];
+    if (!r || hi > r || hi < 0.3 * r) { const st = nice(Math.max(hi, 1e-12) * 1.1 / 2); ranges[id] = Math.ceil(Math.max(hi, 1e-12) * 1.08 / st) * st; }
+    return [-ranges[id], ranges[id]];
+  }
+  function rangeLH(id, lo, hi) {
+    const r = ranges[id];
+    if (!r || lo < r[0] || hi > r[1] || (hi - lo) < 0.3 * (r[1] - r[0])) {
+      const span = Math.max(hi - lo, 1e-12), pad = 0.08 * span;
+      let a = lo < 0 ? lo - pad : 0, b = hi > 0 ? hi + pad : 0;
+      if (b - a <= 0) b = 1;
+      const st = nice((b - a) / 4);
+      a = Math.floor(a / st + 1e-9) * st; b = Math.ceil(b / st - 1e-9) * st;
+      ranges[id] = [a, b];
+    }
+    return ranges[id];
+  }
+  function line(ctx, pts, f, X, Y) {
+    if (!pts || pts.length < 2) return;
+    ctx.beginPath();
+    for (let j = 0; j < pts.length; j++) { const px = X(pts[j].t), py = Y(f(pts[j])); j ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+    ctx.stroke();
+  }
+  function drawPlots() {
+    const [W, H] = dims.p; if (!W || !H || !segs.length) return;
+    const ctx = ctxs.p, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const panels = panelsFor();
+    const Lm = (W < 460 ? 46 : 54) * ps, R = W - 14 * ps, top = 14 * ps, bot = H - 34 * ps, gap = 10 * ps, head = 19 * ps;
+    if (!panels.length) {
+      ctx.fillStyle = T.muted; ctx.font = `${13 * ps}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('Turn on a plot under Time and plots.', W / 2, H / 2); return;
+    }
+    const n = panels.length, ph = (bot - top - (n - 1) * gap) / n;
+    const tL = view.tLshow, Lw = view.L, tR = tL + Lw;
+    const X = (tt) => Lm + (tt - tL) / Lw * (R - Lm);
+    const cols = Math.max(2, Math.floor((R - Lm) / 1.5));
+    const ts = new Float64Array(cols + 1);
+    for (let j = 0; j <= cols; j++) ts[j] = tL + Lw * j / cols;
+    const past = sampleList(segs, ts, held ? 0 : t, true);
+    const gh = ghosts.map((G) => ({ G, pts: sampleList(G.segs, ts, G.tEnd, false) }));
+    const cp = compare.map((G) => ({ G, pts: sampleList(G.segs, ts, Infinity, false) }));
+    const g = lastSeg(), stNow = held ? segState(segs[0], 0) : stateAt(t), enNow = energy(held ? segs[0] : g, stNow, S.vert);
+    // time grid
+    const tst = nice(Lw / (W < 460 ? 4 : 7));
+    const boxes = panels.map((p, i) => { const y0 = top + i * (ph + gap); return { y0: y0 + head, y1: y0 + ph }; });
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    let lastPx = -1e9;
+    for (let kk = Math.ceil(tL / tst - 1e-9); kk * tst <= tR + tst * 1e-6; kk++) {
+      const v = kk * tst, px = Math.round(X(v)) + 0.5;
+      ctx.strokeStyle = T.grid; ctx.lineWidth = 1;
+      for (const b of boxes) { ctx.beginPath(); ctx.moveTo(px, b.y0); ctx.lineTo(px, b.y1); ctx.stroke(); }
+      const txt = String(+v.toPrecision(6)), tw = ctx.measureText(txt).width;
+      if (px - tw / 2 > lastPx + 6) { ctx.fillText(txt, Math.min(px, R - tw / 2), boxes[n - 1].y1 + 4 * ps); lastPx = px + tw / 2; }
+    }
+    ctx.textAlign = 'right'; ctx.fillText('t (s)', R, boxes[n - 1].y1 + 18 * ps);
+    const ph0 = g.sys === 'single' && !g.drive && S.layers.env && g.b > 0 ? phasor(g) : null;
+    panels.forEach((P, i) => {
+      const b = boxes[i];
+      // range
+      let lo = 0, hi = 0;
+      const scan = (pts, f) => { for (const o of pts) { const v = f(o); if (v < lo) lo = v; if (v > hi) hi = v; } };
+      for (const sr of P.series) scan(past, sr.f);
+      if (P.ghostF) { for (const q of gh) scan(q.pts, P.ghostF); for (const q of cp) scan(q.pts, P.ghostF); }
+      if (P.xpanel && g.drive) hi = Math.max(hi, S.p.F0 / S.p.k, isFinite(g.A) ? g.A : 0);
+      if (P.energy) hi = Math.max(hi, book ? book.E0 : 0, enNow.total);
+      if (P.sym) { const m0 = Math.max(Math.abs(lo), Math.abs(hi), P.id === 'x' || P.id === 'x1' || P.id === 'x2' ? 0.01 : 1e-3); [lo, hi] = rangeSym(P.id, m0); }
+      else [lo, hi] = rangeLH(P.id, lo, hi);
+      const Y = (v) => b.y1 - (v - lo) / (hi - lo) * (b.y1 - b.y0);
+      // y grid
+      const yst = nice((hi - lo) / ((b.y1 - b.y0) < 90 * ps ? 2 : 4));
+      ctx.font = `${10 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      for (let kk = Math.ceil(lo / yst - 1e-9); kk * yst <= hi + yst * 1e-6; kk++) {
+        const v = kk * yst, py = Math.round(Y(v)) + 0.5;
+        ctx.strokeStyle = kk === 0 ? T.gridStrong : T.grid; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(Lm, py); ctx.lineTo(R, py); ctx.stroke();
+        ctx.fillStyle = T.muted; ctx.fillText(kk === 0 ? '0' : MIN(String(+(v * P.sc).toPrecision(4))), Lm - 5 * ps, py);
+      }
+      // title, value now, legend
+      const col0 = T[P.series[0].col];
+      ctx.fillStyle = P.energy ? T.ink : col0; ctx.textBaseline = 'alphabetic';
+      const tw = richText(ctx, P.title, Lm, b.y0 - 6 * ps, 11.5 * ps, 700, 'left');
+      if (P.energy) {
+        let xx = R; ctx.font = `600 ${10.5 * ps}px ${T.ui}`; ctx.textAlign = 'right';
+        for (let j = P.series.length - 1; j >= 0; j--) {
+          const sr = P.series[j], w = ctx.measureText(sr.lab).width;
+          if (xx - w < Lm + tw + 10 * ps) break;
+          ctx.fillStyle = T[sr.col]; ctx.fillText(sr.lab, xx, b.y0 - 6 * ps); xx -= w + 10 * ps;
+        }
+      } else {
+        const nowTxt = held ? '' : `${MIN((P.series[0].f({ st: stNow }) * P.sc).toFixed(P.sc === 100 ? 2 : 3))}`;
+        ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'right';
+        if (Lm + tw + ctx.measureText(nowTxt).width + 14 * ps < R) ctx.fillText(nowTxt, R, b.y0 - 6 * ps);
+      }
+      ctx.save(); ctx.beginPath(); ctx.rect(Lm, b.y0 - 1, R - Lm, b.y1 - b.y0 + 2); ctx.clip();
+      // comparison runs and kept traces
+      if (P.ghostF) {
+        ctx.strokeStyle = T.muted; ctx.lineWidth = 1.6 * ps;
+        for (const q of cp) { ctx.globalAlpha = 0.85; ctx.setLineDash(q.G.dash.map((d) => d * ps)); line(ctx, q.pts, P.ghostF, X, Y); }
+        ctx.setLineDash([]); ctx.globalAlpha = 0.5;
+        for (const q of gh) line(ctx, q.pts, P.ghostF, X, Y);
+        ctx.globalAlpha = 1;
+      }
+      if (P.xpanel) {
+        // wall motion of the drive, same units as x
+        if (g.drive && S.p.F0 > 0) {
+          ctx.strokeStyle = T.equi; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([5 * ps, 4 * ps]); ctx.globalAlpha = 0.9;
+          line(ctx, past, (o) => (o.g.drive ? o.g.F0 / o.g.k * Math.cos(o.st.th) : 0), X, Y); ctx.setLineDash([]); ctx.globalAlpha = 1;
+        }
+        // envelope of free underdamped motion since the last change
+        if (ph0) {
+          ctx.strokeStyle = T.xcol; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([3 * ps, 3 * ps]);
+          for (const sgn of [1, -1]) {
+            ctx.beginPath();
+            for (let j = 0; j <= 80; j++) { const tt = Math.max(g.t0, tL) + (tR - Math.max(g.t0, tL)) * j / 80, v = sgn * ph0.R * Math.exp(-g.beta * (tt - g.t0)); j ? ctx.lineTo(X(tt), Y(v)) : ctx.moveTo(X(tt), Y(v)); }
+            ctx.stroke();
+          }
+          ctx.setLineDash([]); ctx.globalAlpha = 1;
+        }
+      }
+      // what happened
+      for (let j = P.series.length - 1; j >= 0; j--) {
+        const sr = P.series[j];
+        ctx.strokeStyle = T[sr.col]; ctx.lineWidth = (P.energy && sr.col === 'ink' ? 2 : 2.3) * ps; ctx.lineJoin = 'round';
+        line(ctx, past, sr.f, X, Y);
+      }
+      // now
+      if (!held && t >= tL && t <= tR) {
+        for (const sr of P.series) {
+          const v = P.energy ? sr.f({ en: enNow }) : sr.f({ st: stNow });
+          ctx.fillStyle = T.canvas; ctx.strokeStyle = T[sr.col]; ctx.lineWidth = 2 * ps;
+          ctx.beginPath(); ctx.arc(X(t), Y(v), 3.6 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+        }
+      }
+      ctx.restore();
+      // compare legend in the x panel
+      if (P.xpanel && cp.length) {
+        ctx.font = `${10 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        let xx = Lm + 8 * ps; const yy = b.y0 + 10 * ps;
+        ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(Lm + 3 * ps, yy - 8 * ps, Math.min(R - Lm - 6 * ps, 300 * ps), 16 * ps); ctx.globalAlpha = 1;
+        for (const q of cp) {
+          ctx.strokeStyle = T.muted; ctx.lineWidth = 1.6 * ps; ctx.setLineDash(q.G.dash.map((d) => d * ps));
+          ctx.beginPath(); ctx.moveTo(xx, yy); ctx.lineTo(xx + 22 * ps, yy); ctx.stroke(); ctx.setLineDash([]);
+          ctx.fillStyle = T.muted; ctx.fillText(q.G.label, xx + 26 * ps, yy); xx += 30 * ps + ctx.measureText(q.G.label).width + 10 * ps;
+        }
+      }
+      if (P.xpanel && ph0 && !cp.length) {
+        ctx.font = `${10 * ps}px ${T.ui}`; ctx.fillStyle = T.xcol; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+        ctx.fillText('dashed: envelope ±A e^(−bt/2m)', R - 4 * ps, b.y0 + 3 * ps);
+      }
+      if (P.xpanel && g.drive && S.p.F0 > 0) {
+        ctx.font = `${10 * ps}px ${T.ui}`; ctx.fillStyle = T.equi; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+        ctx.fillText('dashed: wall, Xw cos ωt', R - 4 * ps, b.y0 + 3 * ps);
+      }
+      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(Lm + 0.5, b.y0 + 0.5, R - Lm, b.y1 - b.y0);
+    });
+    if (held) {
+      ctx.fillStyle = T.muted; ctx.font = `${12 * ps}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('Let go to start a new run at t = 0', (Lm + R) / 2, (boxes[0].y0 + boxes[0].y1) / 2);
+    }
+  }
+
+  // ---------- energy bars (free and two masses) ----------
+  let eMax = 0;
+  function drawBars() {
+    const [W, H] = dims.e; if (!W || !H || !segs.length) return;
+    const ctx = ctxs.e, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const g = held ? segs[0] : lastSeg(), st = held ? segState(segs[0], 0) : segState(g, t), E = energy(g, st, S.vert);
+    const rows = [];
+    if (S.sys === 'coupled') {
+      rows.push({ lab: 'Block 1, ½mv_1² + ½kx_1²', v: E.E1, col: T.pos }, { lab: 'Block 2, ½mv_2² + ½kx_2²', v: E.E2, col: T.neg },
+        { lab: 'Middle spring, ½k_c(x_2 − x_1)²', v: E.Ec, col: T.equi }, { lab: 'Total', v: E.total, col: T.ink });
+      if (S.p.b > 0 || book.D > 0) rows.push({ lab: 'Lost to the oil, ∫bv² dt', v: book.D, col: T.muted });
+      rows.push({ lab: 'Mode 1 (in phase)', v: E.M1, col: T.xcol, sep: true }, { lab: 'Mode 2 (opposite)', v: E.M2, col: T.vcol });
+    } else {
+      rows.push({ lab: 'Kinetic, ½mv²', v: E.K, col: T.pos }, { lab: S.vert ? 'Spring, ½k(x + mg/k)²' : 'Spring, ½kx²', v: E.Us, col: T.neg });
+      if (S.vert) rows.push({ lab: 'Gravity, −mgx', v: E.Ug, col: T.equi });
+      rows.push({ lab: 'Total', v: E.total, col: T.ink });
+      if (S.p.b > 0 || book.D > 0) rows.push({ lab: 'Lost to the oil, ∫bv² dt', v: book.D, col: T.muted });
+    }
+    const neg = rows.some((r) => r.v < -1e-15);
+    const big = Math.max(...rows.map((r) => Math.abs(r.v)), book.E0, 1e-12);
+    if (big > eMax || big < eMax * 0.25) eMax = big * 1.05;
+    const L = 14 * ps, R = W - 14 * ps, fs = (W < 400 ? 10.5 : 11.5) * ps;
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(held ? 'Energy at the release point' : 'Energy now', L, 20 * ps);
+    const avail = H - 64 * ps, rowH = Math.min(46 * ps, avail / (rows.length + (rows.some((r) => r.sep) ? 0.4 : 0))), bh = Math.max(5 * ps, Math.min(14 * ps, rowH - fs - 9 * ps));
+    const z = neg ? L + (R - L) * 0.28 : L, sc = (R - z) / eMax;
+    let y = 28 * ps;
+    for (const r of rows) {
+      if (r.sep) { y += rowH * 0.4; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, y - rowH * 0.2); ctx.lineTo(R, y - rowH * 0.2); ctx.stroke(); }
+      ctx.fillStyle = T.muted; ctx.textBaseline = 'alphabetic';
+      richText(ctx, r.lab, L, y + fs, fs, 400, 'left');
+      ctx.fillStyle = T.ink; ctx.font = `600 ${fs * 0.95}px ${T.mono}`; ctx.textAlign = 'right';
+      ctx.fillText(fmtE(r.v), R, y + fs);
+      const by = y + fs + 4 * ps;
+      ctx.fillStyle = T.grid; ctx.fillRect(L, by, R - L, bh);
+      const w = clamp(r.v * sc, -(z - L), R - z);
+      ctx.fillStyle = r.col; ctx.globalAlpha = 0.85; ctx.fillRect(w >= 0 ? z : z + w, by, Math.abs(w), bh); ctx.globalAlpha = 1;
+      if (neg) { ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(z + 0.5, by - 2 * ps); ctx.lineTo(z + 0.5, by + bh + 2 * ps); ctx.stroke(); }
+      y += rowH;
+    }
+    // bookkeeping
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    const chk = book.E0 - E.total - book.D;
+    const txt = held ? 'Let go: this energy is what the motion starts with.' : `E₀ − E − ∫bv² dt = ${fmtSci(chk)} J`;
+    ctx.fillText(txt, L, Math.min(H - 10 * ps, y + 16 * ps));
+  }
+
+  // ---------- resonance curve (driven) ----------
+  let rGeom = null, rHover = false, rDrag = false;
+  function drawRes() {
+    const [W, H] = dims.e; if (!W || !H) return;
+    const ctx = ctxs.e, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const m = S.p.m, k = S.p.k, b = S.p.b, F0 = S.p.F0, w = S.p.w, wz = w0();
+    const L = (W < 420 ? 44 : 52) * ps, R = W - 14 * ps, top = 52 * ps, bot = H - 30 * ps;
+    const split = top + (bot - top) * 0.64;
+    const A = { y0: top, y1: split - 10 * ps }, D = { y0: split + 14 * ps, y1: bot };
+    const wmax = Math.min(SL.w.max, Math.max(2.2 * wz, 1.12 * w, sweep ? sweep.w1 * 1.03 : 0, ...sweepPts.map((p) => p[0] * 1.03)));
+    const X = (om) => L + om / wmax * (R - L);
+    const invX = (px) => (px - L) / (R - L) * wmax;
+    rGeom = { L, R, A, D, invX, X, mx: X(w) };
+    const n = Math.floor(R - L), Acur = [];
+    let peak = 0;
+    for (let j = 0; j <= n; j++) { const om = wmax * j / n, a = steady(m, k, b, F0, om).A; Acur.push(a); if (isFinite(a)) peak = Math.max(peak, a); }
+    const cap = 25 * F0 / k;
+    let ymax = Math.max(Math.min(peak, cap), F0 / k * 1.2, amp && amp.last ? amp.last : 0, ...sweepPts.map((p) => p[1]));
+    if (!(ymax > 0)) ymax = 0.01;
+    const yst = nice(ymax * 100 / 3) / 100;
+    ymax = Math.ceil(ymax * 1.08 / yst) * yst;
+    const YA = (a) => A.y1 - a / ymax * (A.y1 - A.y0);
+    const YD = (dl) => D.y0 + dl / Math.PI * (D.y1 - D.y0);
+    // grids
+    ctx.font = `${10 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let kk = 0; kk * yst <= ymax + 1e-12; kk++) {
+      const py = Math.round(YA(kk * yst)) + 0.5;
+      ctx.strokeStyle = kk === 0 ? T.gridStrong : T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, py); ctx.lineTo(R, py); ctx.stroke();
+      ctx.fillStyle = T.muted; ctx.fillText(String(+(kk * yst * 100).toPrecision(4)), L - 5 * ps, py);
+    }
+    for (const dv of [0, 90, 180]) {
+      const py = Math.round(YD(dv * Math.PI / 180)) + 0.5;
+      ctx.strokeStyle = dv === 90 ? T.gridStrong : T.grid; ctx.beginPath(); ctx.moveTo(L, py); ctx.lineTo(R, py); ctx.stroke();
+      ctx.fillStyle = T.muted; ctx.fillText(`${dv}°`, L - 5 * ps, py);
+    }
+    const wst = nice(wmax / (W < 420 ? 4 : 7));
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let kk = 0; kk * wst <= wmax + 1e-9; kk++) {
+      const px = Math.round(X(kk * wst)) + 0.5;
+      ctx.strokeStyle = T.grid; for (const bx of [A, D]) { ctx.beginPath(); ctx.moveTo(px, bx.y0); ctx.lineTo(px, bx.y1); ctx.stroke(); }
+      ctx.fillStyle = T.muted; ctx.fillText(String(+(kk * wst).toPrecision(4)), px, D.y1 + 4 * ps);
+    }
+    ctx.textAlign = 'right'; ctx.fillText('ω (rad/s)', R, D.y1 + 16 * ps);
+    // titles
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = T.xcol; const tw = richText(ctx, 'Steady amplitude A(ω) (cm)', L, A.y0 - 32 * ps, 11.5 * ps, 700, 'left');
+    ctx.fillStyle = T.ink; richText(ctx, 'Phase lag δ of x behind the drive', L, D.y0 - 4 * ps, 10.5 * ps, 700, 'left');
+    // ω₀ marker and the static level F₀/k
+    ctx.save(); ctx.beginPath(); ctx.rect(L, A.y0 - 1, R - L, D.y1 - A.y0 + 2); ctx.clip();
+    const x0 = Math.round(X(wz)) + 0.5;
+    ctx.strokeStyle = T.muted; ctx.setLineDash([3 * ps, 3 * ps]); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x0, A.y0); ctx.lineTo(x0, A.y1); ctx.moveTo(x0, D.y0); ctx.lineTo(x0, D.y1); ctx.stroke();
+    const ys = Math.round(YA(F0 / k)) + 0.5;
+    ctx.beginPath(); ctx.moveTo(L, ys); ctx.lineTo(R, ys); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText('F₀/k', R - 30 * ps, ys - 2);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('ω₀', x0 + 3 * ps, A.y0 + 2 * ps);
+    // curves
+    ctx.strokeStyle = T.xcol; ctx.lineWidth = 2.3 * ps; ctx.lineJoin = 'round'; ctx.beginPath();
+    for (let j = 0; j <= n; j++) { const px = L + j, a = Acur[j], py = isFinite(a) ? YA(Math.min(a, ymax * 3)) : A.y0 - 10; j ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+    ctx.stroke();
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.8 * ps; ctx.beginPath();
+    for (let j = 0; j <= n; j++) { const om = wmax * j / n, py = YD(steady(m, k, b, 1, om).delta); j ? ctx.lineTo(L + j, py) : ctx.moveTo(L + j, py); }
+    ctx.stroke();
+    // sweep trace
+    if (sweepPts.length) {
+      ctx.fillStyle = T.accent; ctx.globalAlpha = 0.8;
+      for (const [om, a] of sweepPts) { ctx.beginPath(); ctx.arc(X(om), YA(a), 2.2 * ps, 0, 2 * Math.PI); ctx.fill(); }
+      ctx.globalAlpha = 1;
+    }
+    // current ω
+    const mx = X(w), hot = rDrag || rHover;
+    ctx.strokeStyle = T.accent; ctx.lineWidth = (hot ? 2.6 : 1.6) * ps;
+    ctx.beginPath(); ctx.moveTo(mx, A.y0); ctx.lineTo(mx, A.y1); ctx.moveTo(mx, D.y0); ctx.lineTo(mx, D.y1); ctx.stroke();
+    const At = steady(m, k, b, F0, w);
+    if (isFinite(At.A)) { ctx.fillStyle = T.canvas; ctx.strokeStyle = T.xcol; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.arc(mx, YA(At.A), 4 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); }
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = T.ink; ctx.beginPath(); ctx.arc(mx, YD(At.delta), 4 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    if (amp && amp.last !== null && amp.lastW !== null) {
+      ctx.fillStyle = T.equi; ctx.beginPath(); ctx.arc(X(amp.lastW), YA(amp.last), 5 * ps, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * ps; ctx.stroke();
+    }
+    ctx.restore();
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(L + 0.5, A.y0 + 0.5, R - L, A.y1 - A.y0); ctx.strokeRect(L + 0.5, D.y0 + 0.5, R - L, D.y1 - D.y0);
+    // handle on the marker
+    const txt = `ω = ${fx(w, 2)}`, bw = (ctx.font = `700 ${11 * ps}px ${T.ui}`, ctx.measureText(txt).width + 26 * ps), bh = 17 * ps;
+    const bx = clamp(mx - bw / 2, L + 1, R - bw - 1), byy = A.y0 - 22 * ps;
+    if (bx > L + tw + 6 * ps || true) {
+      ctx.fillStyle = T.canvas; ctx.strokeStyle = T.accent; ctx.lineWidth = (hot ? 2 : 1.3) * ps;
+      roundRect(ctx, bx, byy, bw, bh, 4 * ps); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, bx + 5 * ps, byy + bh / 2 + 0.5);
+      ctx.fillStyle = T.accent;
+      const ax = bx + bw - 10 * ps, ay = byy + bh / 2;
+      ctx.beginPath(); ctx.moveTo(ax - 4 * ps, ay); ctx.lineTo(ax - 1 * ps, ay - 3.5 * ps); ctx.lineTo(ax - 1 * ps, ay + 3.5 * ps); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(ax + 5 * ps, ay); ctx.lineTo(ax + 2 * ps, ay - 3.5 * ps); ctx.lineTo(ax + 2 * ps, ay + 3.5 * ps); ctx.closePath(); ctx.fill();
+      rGeom.box = [bx, byy, bw, bh];
+    }
+    // key line
+    ctx.font = `${10 * ps}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = T.equi;
+    const keyTxt = sweepPts.length ? 'gold: last cycle · blue dots: sweep' : 'gold dot: amplitude of the last full cycle';
+    if (ctx.measureText(keyTxt).width < R - L - tw - 16 * ps) ctx.fillText(keyTxt, R, A.y0 - 32 * ps);
+  }
+
+  function drawAll() {
+    if (!segs.length || !T) return;
+    { const c = $('cPane').querySelector('.stage-ctl'); ctlH = c.offsetTop + c.offsetHeight; }
+    drawScene(); drawPlots();
+    if (S.sys === 'driven') drawRes(); else drawBars();
+  }
+
+  // ---------- readouts ----------
+  function syncSliders() {
+    const sync = (id, v) => { const el = $(id); if (document.activeElement !== el || dragging()) el.value = v; };
+    sync('sK', S.p.k); sync('sM', S.p.m); sync('sB', posOfB(S.p.b)); sync('sKc', S.p.kc); sync('sF', S.p.F0); sync('sW', S.p.w); sync('sRate', S.speedIdx);
+    $('oK').textContent = `${fx(S.p.k, 1)} N/m`; $('oM').textContent = `${fx(S.p.m, 2)} kg`;
+    $('oB').textContent = S.p.b === 0 ? '0 (none)' : `${sig(S.p.b, 3)} kg/s`;
+    $('oKc').textContent = `${fx(S.p.kc, 1)} N/m`; $('oF').textContent = `${fx(S.p.F0, 2)} N`; $('oW').textContent = `${fx(S.p.w, 2)} rad/s`;
+    $('oRate').textContent = fmtRate(SPEEDS[S.speedIdx]); $('rateTag').textContent = fmtRate(SPEEDS[S.speedIdx]);
+  }
+  const dd = (lab, val, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${lab}</dt><dd>${val}</dd></div>`;
+  function regimeText(z) { return S.p.b === 0 ? 'undamped' : Math.abs(z - 1) < 1e-9 ? 'critically damped, ζ = 1' : z < 1 ? 'underdamped, ζ < 1' : 'overdamped, ζ > 1'; }
+  function staticText() {
+    const m = S.p.m, k = S.p.k, b = S.p.b, wz = w0(), T0 = 2 * Math.PI / wz, cp = S.sys === 'coupled';
+    let h = dd('ω₀ = √(k/m)', `${sig(wz, 4)} rad/s`) + dd('f₀ = ω₀/2π', `${sig(wz / (2 * Math.PI), 4)} Hz`);
+    h += dd('Period T = 2π√(m/k)', `${sig(T0, 4)} s <span class="ok">for any amplitude</span>`, 'wide');
+    if (S.vert && !cp) h += dd('Static stretch mg/k', cm(m * G / k, 1), 'wide');
+    $('natBox').innerHTML = h;
+    // damping
+    const z = zeta(), be = b / (2 * m), q = wz * wz - be * be;
+    let dh = dd('Damping ratio ζ = b/(2√(km))', `${b === 0 ? '0' : sig(z, 3)} <span class="regime">${regimeText(z)}</span>`, 'wide');
+    dh += dd('Quality factor Q = √(km)/b', b === 0 ? '∞' : sig(Math.sqrt(k * m) / b, 3));
+    dh += dd('Critical b = 2√(km)', `${sig(2 * Math.sqrt(k * m), 3)} kg/s`);
+    if (b > 0 && q > 0) dh += dd('Damped ω_d = √(ω₀² − (b/2m)²)'.replace('ω_d', 'ω<sub>d</sub>'), `${sig(Math.sqrt(q), 4)} rad/s`) + dd('Damped period 2π/ω<sub>d</sub>', `${sig(2 * Math.PI / Math.sqrt(q), 4)} s`);
+    if (b > 0) dh += dd('Amplitude decay time 2m/b', `${sig(1 / be, 3)} s`, 'wide');
+    $('dampBox').innerHTML = dh;
+    // drive
+    if (S.sys === 'driven') {
+      const st = steady(m, k, b, S.p.F0, S.p.w), r2 = wz * wz - 2 * be * be;
+      let h2 = dd('ω/ω₀', sig(S.p.w / wz, 3)) + dd('Wall amplitude X<sub>w</sub> = F₀/k', cm(S.p.F0 / k, 2));
+      h2 += dd('Steady amplitude A(ω)', isFinite(st.A) ? cm(st.A, 2) : 'grows without limit');
+      h2 += dd('Measured, last cycle', '<span id="ampMeas">—</span>');
+      h2 += dd('Phase lag δ', deg(st.delta)) + dd('Peak at ω<sub>r</sub>', r2 > 0 ? `${sig(Math.sqrt(r2), 4)} rad/s` : 'ω = 0 (no peak)');
+      h2 += `<div class="wide formula">A = (F₀/m) / √((ω₀² − ω²)² + (bω/m)²), tan δ = (bω/m)/(ω₀² − ω²)</div>`;
+      $('driveBox').innerHTML = h2;
+    }
+    if (cp) {
+      const w1 = wz, w2 = Math.sqrt((k + 2 * S.p.kc) / m);
+      let h3 = dd('ω₁ = √(k/m), in phase', `${sig(w1, 4)} rad/s`) + dd('ω₂ = √((k + 2k<sub>c</sub>)/m)', `${sig(w2, 4)} rad/s`);
+      h3 += dd('Beat period 2π/(ω₂ − ω₁)', S.p.kc > 0 ? `${sig(2 * Math.PI / (w2 - w1), 4)} s` : '∞ (no coupling)', 'wide');
+      $('coupBox').innerHTML = h3;
+    }
+    // sections shown
+    $('driveSec').hidden = S.sys !== 'driven';
+    $('coupSec').hidden = !cp;
+    $('cmpWrap').hidden = S.sys !== 'free';
+    for (const bt of $('oriSeg').querySelectorAll('button')) { bt.disabled = cp; bt.setAttribute('aria-pressed', String(!cp && (bt.dataset.o === 'v') === S.vert)); }
+    for (const bt of $('sysSeg').querySelectorAll('button')) bt.setAttribute('aria-pressed', String(bt.dataset.s === S.sys));
+    $('tVwrap').hidden = cp; $('tAwrap').hidden = cp;
+    $('tXlab').textContent = cp ? 'x₁(t), x₂(t)' : 'x(t)';
+    cans.e.setAttribute('aria-label', S.sys === 'driven'
+      ? 'Resonance curve: steady amplitude and phase lag against drive frequency. Drag the ω marker sideways, or use the left and right arrow keys, to change the drive frequency. S starts or stops a sweep.'
+      : 'Energy bars: kinetic, spring and gravitational energy, the total, and the energy lost to damping.');
+    $('tCircle').disabled = S.sys !== 'free';
+    ghostKey();
+  }
+  function updateReadouts() {
+    if (!segs.length) return;
+    const g = held ? segs[0] : lastSeg(), st = held ? segState(segs[0], 0) : segState(g, t), cp = g.sys === 'coupled';
+    $('tclock').firstChild.nodeValue = held ? 't = 0, holding' : `t = ${t.toFixed(2)} s`;
+    let h = dd('Time t', `${t.toFixed(3)} s`);
+    if (cp) {
+      h += dd('x₁', `<span class="c-1">${cm(st.x1, 2)}</span>`) + dd('x₂', `<span class="c-2">${cm(st.x2, 2)}</span>`) + dd('v₁', `${fx(st.v1, 3)} m/s`) + dd('v₂', `${fx(st.v2, 3)} m/s`);
+      h += dd('Mode 1, q₁ = (x₁ + x₂)/2', cm(st.q1, 2)) + dd('Mode 2, q₂ = (x₁ − x₂)/2', cm(st.q2, 2));
+      $('mFormula').innerHTML = 'x₁ = q₁ + q₂, x₂ = q₁ − q₂; each q oscillates at its own ω with its own amplitude.';
+    } else {
+      h += dd('Displacement x', `<span class="c-x">${cm(st.x, 2)}</span>`) + dd('Velocity v', `<span class="c-v">${fx(st.v, 3)} m/s</span>`);
+      h += dd('Acceleration a', `<span class="c-a">${fx(st.a, 3)} m/s²</span>`) + dd('Release', `${cm(lastIC.x, 1)}, ${fx(lastIC.v || 0, 2)} m/s`);
+      const ph = phasor(g);
+      if (!g.drive && ph) {
+        const phi0 = ph.phi - ph.wd * g.t0, phi = Math.atan2(Math.sin(phi0), Math.cos(phi0));
+        h += dd(g.beta > 0 ? 'Amplitude A at t = 0' : 'Amplitude A', cm(ph.R * Math.exp(g.beta * g.t0), 2)) + dd('Phase φ', deg(phi));
+        $('mFormula').innerHTML = g.beta > 0 ? 'x = A e<sup>−bt/2m</sup> cos(ω<sub>d</sub>t + φ)' : 'x = A cos(ω₀t + φ), A = √(x₀² + (v₀/ω₀)²), tan φ = −v₀/(ω₀x₀)';
+      } else if (g.drive) {
+        $('mFormula').innerHTML = 'x = transient + A cos(ωt − δ); the transient dies away as e<sup>−bt/2m</sup>.';
+      } else $('mFormula').innerHTML = 'Overdamped or critically damped: x returns to 0 without oscillating.';
+    }
+    const Tm = crossings.length >= 2 ? crossings[crossings.length - 1] - crossings[crossings.length - 2] : null;
+    h += dd('Period, measured between upward zero crossings', Tm ? `${Tm.toFixed(4)} s` : '—', 'wide');
+    $('measBox').innerHTML = h;
+    const am = $('ampMeas'); if (am) am.textContent = amp && amp.last !== null ? cm(amp.last, 2) : '—';
+  }
+  function ghostKey() { $('ghostTxt').textContent = ghosts.length ? 'Kept: ' + ghosts.map((G) => G.label).join('; ') : 'Kept trace'; }
+
+  // ---------- presets and settings ----------
+  function applyPreset(name) {
+    stopSweep(false);
+    S.preset = name;
+    const c = cfg();
+    S.sys = c.sys; S.vert = !!c.vert;
+    S.p.m = c.m; S.p.k = c.k; S.p.b = c.zeta * 2 * Math.sqrt(c.k * c.m);
+    if (c.F0 !== undefined) S.p.F0 = c.F0;
+    if (c.w !== undefined) S.p.w = c.w;
+    if (c.kc !== undefined) S.p.kc = c.kc;
+    S.layers.compare = !!c.compare; $('tCmp').checked = S.layers.compare;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint').textContent = c.hint;
+    ghosts = []; sweepPts = [];
+    held = null;
+    newRun(c.ic);
+    syncSliders(); staticText();
+    setRunning(!reduce || running);
+  }
+  function setParam(key, v) {
+    if (S.p[key] === v) return;
+    if (key !== 'w' || !sweep) stopSweep(false);
+    S.p[key] = v;
+    if (held) rebuildHeld(); else { branch(key === 'm' || key === 'k' || key === 'kc'); buildCompare(); }
+    refitWindow(); syncSliders(); staticText(); updateReadouts();
+  }
+  function setPos(key, pos) {
+    const d = SL[key];
+    pos = clamp(Math.round((pos - d.min) / d.step) * d.step + d.min, d.min, d.max);
+    pos = +pos.toFixed(4);
+    setParam(key, key === 'b' ? bOfPos(pos) : pos);
+  }
+  const posOf = (key) => (key === 'b' ? posOfB(S.p.b) : S.p[key]);
+  function setSys(sys) {
+    if (sys === S.sys) return;
+    stopSweep(false);
+    const was = S.sys; S.sys = sys;
+    if (sys === 'coupled' || was === 'coupled') {
+      newRun(sys === 'coupled' ? { x1: 0.1, v1: 0, x2: 0, v2: 0 } : { x: 0.12, v: 0 });
+    } else { branch(true); buildCompare(); view.L = winLen(); ranges = {}; }
+    sweepPts = []; ghosts = [];
+    syncSliders(); staticText(); updateReadouts();
+    $('live').textContent = sys === 'driven' ? 'Drive on: the wall moves.' : sys === 'coupled' ? 'Two coupled blocks.' : 'Free oscillator.';
+  }
+  function setVert(v) {
+    if (S.sys === 'coupled' || v === S.vert) return;
+    stopSweep(false);
+    S.vert = v;
+    const x0 = clamp(lastIC.x, -XMAX[ori()], XMAX[ori()]);
+    newRun({ x: x0, v: 0 });
+    staticText();
+  }
+
+  // ---------- controls ----------
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#sysSeg button')) b.addEventListener('click', () => setSys(b.dataset.s));
+  for (const b of document.querySelectorAll('#oriSeg button')) b.addEventListener('click', () => setVert(b.dataset.o === 'v'));
+  $('sK').addEventListener('input', (e) => setParam('k', +e.target.value));
+  $('sM').addEventListener('input', (e) => setParam('m', +e.target.value));
+  $('sB').addEventListener('input', (e) => setParam('b', bOfPos(+e.target.value)));
+  $('sKc').addEventListener('input', (e) => setParam('kc', +e.target.value));
+  $('sF').addEventListener('input', (e) => setParam('F0', +e.target.value));
+  $('sW').addEventListener('input', (e) => setParam('w', +e.target.value));
+  for (const b of document.querySelectorAll('[data-z]')) b.addEventListener('click', () => {
+    const z = +b.dataset.z; setParam('b', z * 2 * Math.sqrt(S.p.k * S.p.m));
+    if (S.sys !== 'driven' && !held) { newRun(S.sys === 'coupled' ? lastIC : lastIC); }
+  });
+  for (const b of document.querySelectorAll('[data-start]')) b.addEventListener('click', () => {
+    const A = 0.1, k = b.dataset.start;
+    newRun(k === 'm1' ? { x1: A, v1: 0, x2: A, v2: 0 } : k === 'm2' ? { x1: A, v1: 0, x2: -A, v2: 0 } : { x1: A, v1: 0, x2: 0, v2: 0 });
+    setRunning(true);
+  });
+  $('tCmp').addEventListener('change', (e) => { S.layers.compare = e.target.checked; buildCompare(); ranges = {}; });
+  function setSpeed(i) { S.speedIdx = clamp(i, 0, SPEEDS.length - 1); syncSliders(); }
+  $('sRate').addEventListener('input', (e) => setSpeed(+e.target.value));
+  $('sweep').addEventListener('click', () => { if (sweep) stopSweep(false); else startSweep(); });
+  $('clearSweep').addEventListener('click', () => { sweepPts = []; });
+  const lay = { tX: 'x', tV: 'v', tA: 'a', tE: 'E', tCircle: 'circle', tArrows: 'arrows', tEnv: 'env', tFling: 'fling' };
+  for (const [id, key] of Object.entries(lay)) $(id).addEventListener('change', (e) => { S.layers[key] = e.target.checked; ranges = {}; });
+  $('keep').addEventListener('click', () => {
+    if (t <= 0 || held) return;
+    const lab = S.sys === 'coupled' ? `k_c = ${S.p.kc} N/m` : `x₀ = ${cm(lastIC.x, 1)}${S.p.b ? `, ζ = ${sig(zeta(), 2)}` : ''}`;
+    ghosts.push({ segs: segs.map((g) => ({ ...g })), tEnd: t, label: lab });
+    if (ghosts.length > 3) ghosts.shift();
+    ghostKey();
+  });
+  $('clearG').addEventListener('click', () => { ghosts = []; ghostKey(); });
+  const playBtn = $('play');
+  let last = performance.now();
+  function setRunning(r) { running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now(); }
+  playBtn.addEventListener('click', () => setRunning(!running));
+  function doReset() { stopSweep(false); held = null; newRun(lastIC); if (!running) setRunning(true); }
+  $('reset').addEventListener('click', doReset);
+
+  // ---------- dragging on the drawing ----------
+  const dragging = () => !!(cDrag || held || rDrag);
+  function cHit(ev) {
+    const r = cans.c.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 5 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = Infinity;
+    for (const h of cHandles) {
+      const [bx, by, bw, bh] = h.box;
+      const dx = Math.max(bx - x, 0, x - bx - bw), dy = Math.max(by - y, 0, y - by - bh);
+      let d = Math.hypot(dx, dy);
+      if (d === 0 && !h.mass) d = -1 + Math.hypot(x - (bx + bw / 2), y - (by + bh / 2)) / 1e4;   // small grips win over what is under them
+      if (h.id === 'k' || h.id === 'kc' || h.id === 'b') { if (d === 0) d = 0.5; }
+      if (d <= tol && d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  const along = (ev) => {
+    const r = cans.c.getBoundingClientRect();
+    return sg.kind === 'v' ? ev.clientY - r.top : ev.clientX - r.left;
+  };
+  function beginHold(id, ev) {
+    stopSweep(false);
+    const st = stateAt(t);
+    const xNow = S.sys === 'coupled' ? (id === 'm2' ? st.x2 : st.x1) : st.x;
+    held = { id, off: sg.toM(along(ev), id) - xNow, samples: [], x1: st.x1, x2: st.x2, x: st.x };
+    if (S.sys === 'coupled') { held.x1 = clamp(st.x1, -XMAX.c, XMAX.c); held.x2 = clamp(st.x2, -XMAX.c, XMAX.c); }
+    else held.x = clamp(st.x, -XMAX[ori()], XMAX[ori()]);
+    compare = [];
+    rebuildHeld();
+  }
+  function rebuildHeld() {
+    t = 0; crossings = [];
+    segs = [S.sys === 'coupled' ? makeCoupled(0, held.x1, 0, held.x2, 0, P()) : makeSingle(0, held.x, 0, 0, P())];
+    lastIC = S.sys === 'coupled' ? { x1: held.x1, v1: 0, x2: held.x2, v2: 0 } : { x: held.x, v: 0 };
+    amp = { cyc: 0, max: 0, last: null, lastW: null };
+    resetBook();
+    view.tL = view.tLshow = 0; ranges = {};
+  }
+  function holdTo(pxAlong) {
+    const lim = XMAX[ori()], xm = clamp(Math.round((sg.toM(pxAlong, held.id) - held.off) * 1000) / 1000, -lim, lim);
+    if (S.sys === 'coupled') { if (held.id === 'm2') held.x2 = xm; else held.x1 = xm; } else held.x = xm;
+    held.samples.push([performance.now(), xm]);
+    if (held.samples.length > 12) held.samples.shift();
+    rebuildHeld(); updateReadouts();
+  }
+  function releaseHold() {
+    if (!held) return;
+    let v = 0;
+    const sm = held.samples, now = performance.now();
+    if (S.layers.fling && sm.length >= 2 && now - sm[sm.length - 1][0] < 60) {
+      let j = sm.length - 1; while (j > 0 && now - sm[j - 1][0] < 90) j--;
+      const dt = (sm[sm.length - 1][0] - sm[j][0]) / 1000;
+      if (dt > 0.008) v = (sm[sm.length - 1][1] - sm[j][1]) / dt;
+    }
+    const wz = S.sys === 'coupled' ? Math.sqrt((S.p.k + 2 * S.p.kc) / S.p.m) : w0(), lim = XMAX[ori()] * 1.2;
+    const xr = S.sys === 'coupled' ? (held.id === 'm2' ? held.x2 : held.x1) : held.x;
+    const vmax = wz * Math.sqrt(Math.max(0, lim * lim - xr * xr));
+    v = clamp(v, -vmax, vmax);
+    v = Math.round(v * 1000) / 1000;
+    const ic = S.sys === 'coupled' ? { x1: held.x1, v1: held.id === 'm1' ? v : 0, x2: held.x2, v2: held.id === 'm2' ? v : 0 } : { x: held.x, v };
+    held = null;
+    newRun(ic);
+    setRunning(true);
+    $('live').textContent = `Released from ${S.sys === 'coupled' ? `${cm(ic.x1)} and ${cm(ic.x2)}` : cm(ic.x)}${v ? ` with ${fx(v, 2)} m/s` : ' at rest'}.`;
+  }
+  let cQueued = null, cFrame = false;
+  function cDragTo(ev) {
+    cQueued = { a: along(ev), cx: ev.clientX, cy: ev.clientY };
+    if (cFrame) return; cFrame = true;
+    requestAnimationFrame(() => {
+      cFrame = false; const q = cQueued; cQueued = null;
+      if (!q) return;
+      if (held) { holdTo(q.a); return; }
+      if (!cDrag) return;
+      const d = cDrag, delta = (d.axis === 'y' ? q.cy - d.cy0 : q.cx - d.cx0) * d.dir;
+      const sl = SL[d.param];
+      setPos(d.param, d.pos0 + delta * (sl.max - sl.min) / (220 * projScale()));
+    });
+  }
+  cans.c.addEventListener('pointermove', (ev) => {
+    if (held || cDrag) { cDragTo(ev); return; }
+    const h = cHit(ev); cHover = h ? h.id : null; cans.c.style.cursor = h ? h.cursor : 'default';
+  });
+  cans.c.addEventListener('pointerdown', (ev) => {
+    cans.c.focus({ preventScroll: true });
+    const h = cHit(ev);
+    if (!h || !sg) return;
+    if (h.mass) beginHold(h.id, ev);
+    else cDrag = { id: h.id, param: h.param, axis: h.axis, dir: h.dir, cx0: ev.clientX, cy0: ev.clientY, pos0: posOf(h.param) };
+    try { cans.c.setPointerCapture(ev.pointerId); } catch (_) {}
+    cans.c.style.cursor = h.mass ? 'grabbing' : h.cursor; ev.preventDefault();
+  });
+  const endC = () => { if (held) releaseHold(); if (cDrag) { cDrag = null; syncSliders(); } cHover = null; };
+  cans.c.addEventListener('pointerup', endC);
+  cans.c.addEventListener('pointercancel', endC);
+  cans.c.addEventListener('pointerleave', () => { if (!cDrag && !held) cHover = null; });
+  function nudgeMass(which, dir) {
+    stopSweep(false);
+    const lim = XMAX[ori()], st = stateAt(t), r2 = (v) => Math.round(v * 100) / 100;
+    if (S.sys === 'coupled') {
+      const ic = { x1: r2(st.x1), v1: 0, x2: r2(st.x2), v2: 0 };
+      if (which === 2) ic.x2 = clamp(r2(st.x2 + 0.01 * dir), -lim, lim); else ic.x1 = clamp(r2(st.x1 + 0.01 * dir), -lim, lim);
+      newRun(ic);
+    } else newRun({ x: clamp(r2(st.x + 0.01 * dir), -lim, lim), v: 0 });
+    setRunning(true);
+  }
+  cans.c.addEventListener('keydown', (e) => {
+    const k = e.key, vert = S.sys !== 'coupled' && S.vert;
+    if ((!vert && (k === 'ArrowLeft' || k === 'ArrowRight')) || (vert && (k === 'ArrowUp' || k === 'ArrowDown'))) nudgeMass(e.shiftKey ? 2 : 1, k === 'ArrowRight' || k === 'ArrowDown' ? 1 : -1);
+    else if (k === 'PageUp' || k === 'PageDown') setPos('k', S.p.k + (k === 'PageUp' ? 1 : -1) * SL.k.step * 2);
+    else if (k === ' ') setRunning(!running);
+    else if (k === 'r' || k === 'R') doReset();
+    else return;
+    e.preventDefault();
+  });
+
+  // ---------- dragging ω on the resonance curve ----------
+  function rHit(ev) {
+    if (!rGeom || S.sys !== 'driven') return false;
+    const r = cans.e.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 7 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    if (rGeom.box) { const [bx, by, bw, bh] = rGeom.box; if (x >= bx - tol && x <= bx + bw + tol && y >= by - tol && y <= by + bh + tol) return true; }
+    return x >= rGeom.L - tol && x <= rGeom.R + tol && y >= rGeom.A.y0 && y <= rGeom.D.y1;
+  }
+  let rQueued = null, rFrame = false;
+  cans.e.addEventListener('pointermove', (ev) => {
+    if (rDrag) {
+      const r = cans.e.getBoundingClientRect(); rQueued = ev.clientX - r.left;
+      if (rFrame) return; rFrame = true;
+      requestAnimationFrame(() => { rFrame = false; if (!rDrag || rQueued === null) return; setPos('w', rGeom.invX(rQueued)); rQueued = null; });
+      return;
+    }
+    rHover = rHit(ev); cans.e.style.cursor = rHover ? 'ew-resize' : 'default';
+  });
+  cans.e.addEventListener('pointerdown', (ev) => {
+    cans.e.focus({ preventScroll: true });
+    if (!rHit(ev)) return;
+    rDrag = true;
+    const r = cans.e.getBoundingClientRect(); setPos('w', rGeom.invX(ev.clientX - r.left));
+    try { cans.e.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault();
+  });
+  const endR = () => { if (!rDrag) return; rDrag = false; rHover = false; syncSliders(); };
+  cans.e.addEventListener('pointerup', endR);
+  cans.e.addEventListener('pointercancel', endR);
+  cans.e.addEventListener('pointerleave', () => { if (!rDrag) rHover = false; });
+  cans.e.addEventListener('keydown', (e) => {
+    if (S.sys !== 'driven') { if (e.key === ' ') { setRunning(!running); e.preventDefault(); } return; }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') setPos('w', S.p.w + (e.key === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 1 : 0.1));
+    else if (e.key === 's' || e.key === 'S') { if (sweep) stopSweep(false); else startSweep(); }
+    else if (e.key === ' ') setRunning(!running);
+    else return;
+    e.preventDefault();
+  });
+
+  // ---------- projector and theme ----------
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    ranges = {};
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); drawAll(); }); } catch (_) {}
+  new MutationObserver(() => { tokens(); drawAll(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let lastRead = 0, frameMs = 0;
+  function loop(now) {
+    const dtr = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (running && !held && dtr > 0) {
+      advance(dtr * SPEEDS[S.speedIdx]);
+      view.tL = Math.max(view.tL, t - 0.85 * view.L);
+      // drop segments that have scrolled off the plots
+      while (segs.length > 1 && segs[1].t0 < view.tLshow - 0.05 * view.L) segs.shift();
+    }
+    if (view.tLshow !== view.tL) { const d = view.tL - view.tLshow; view.tLshow = reduce || Math.abs(d) < view.L * 0.002 || d > 0 ? view.tL : view.tLshow + d * Math.min(1, dtr * 10); }
+    drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastRead > 120) { if (sweep) { syncSliders(); staticText(); } updateReadouts(); lastRead = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__sp = {
+    get frameMs() { return frameMs; }, get t() { return t; }, get S() { return S; }, get segs() { return segs; }, get running() { return running; },
+    get handles() { return cHandles; }, get rGeom() { return rGeom; }, get book() { return book; }, get amp() { return amp; }, get sweepPts() { return sweepPts; },
+    get sweep() { return sweep; }, get crossings() { return crossings; }, get held() { return held; }, get view() { return view; },
+    applyPreset, setRunning, setParam, setSys, setVert, startSweep, stopSweep,
+    go(dts, step) { step = step || 0.05; for (let x = 0; x < dts - 1e-12; x += step) advance(Math.min(step, dts - x)); updateReadouts(); },
+    state() { const g = lastSeg(), st = segState(g, t); return { t, st, en: energy(g, st, S.vert), book: { ...book } }; }
+  };
+
+  tokens();
+  const ro = new ResizeObserver(resize);
+  for (const k of ['c', 'e', 'p']) ro.observe(panes[k]);
+  applyPreset('shm');
+  setRunning(!reduce);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
