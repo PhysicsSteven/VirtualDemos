@@ -1,0 +1,1247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Hanging Chains and Arches</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the chain or arch across the top of the stage, the free body diagram of a chosen piece and the tension against sag graph below it; instrument rail on the right; stacks on narrow screens. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --wire: #3b4655;
+  --block: #cdd6e1;
+  --wcol: #1d8a5a;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --wire: #aab4c2; --block: #2c3a4c; --wcol: #4cc38a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --wire: #aab4c2; --block: #2c3a4c; --wcol: #4cc38a;
+  color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 640px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
+  display: grid; grid-template-columns: minmax(0, 52fr) minmax(0, 48fr); grid-template-rows: minmax(0, 62fr) minmax(0, 38fr); }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#mPane { grid-column: 1 / 3; grid-row: 1; }
+#fPane { grid-column: 1; grid-row: 2; border-top: 1px solid var(--line); }
+#gPane { grid-column: 2; grid-row: 2; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+#mCan, #gCan { touch-action: none; outline: none; }
+#mCan:focus-visible, #gCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.warn { margin: 0; color: var(--pos); font-size: 0.85rem; font-weight: 700; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg.full { display: flex; }
+.seg.full button { flex: 1; padding: 4px 4px; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.ctl { display: flex; flex-direction: column; gap: 4px; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .wide { grid-column: 1 / -1; }
+.formula { margin: 0; font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.toggles label.dis, .check.dis { opacity: 0.5; cursor: not-allowed; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid var(--ink); }
+.swatch.par { border-top-style: dashed; border-color: var(--equi); }
+.swatch.dir { border-top-style: dashed; border-color: var(--muted); }
+.swatch.w { border-color: var(--wcol); }
+.swatch.f { border-color: var(--accent); }
+.ramp { flex: none; width: 22px; height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--neg), var(--pos)); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: 380px 300px 270px; min-height: 0; }
+  #mPane { grid-column: 1; }
+  #fPane { grid-column: 1; grid-row: 2; }
+  #gPane { grid-column: 1; grid-row: 3; border-left: 0; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Hanging Chains and Arches</h1>
+      <p>A chain hanging under its own weight takes the shape of a hyperbolic cosine, the catenary. Turn it upside down and you have the arch that stands in pure compression.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units · lengths in m, forces in N · g = 9.80665 m/s²</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="pane" id="mPane">
+        <canvas id="mCan" tabindex="0" aria-label="The chain or arch. Drag the two supports, drag the grip at the middle of the chain to pull it down or up (this changes the chain length), and drag the two small markers on the chain to choose the piece shown in the free body diagram. Keys: 1 and 2 select the supports, 3 the middle grip, 4 and 5 the markers; arrow keys move the selection, shift moves it farther; plus and minus change the length."></canvas>
+      </div>
+      <div class="pane" id="fPane">
+        <canvas id="fCan" aria-label="Free body diagram of the chosen piece of chain, with its force triangle."></canvas>
+      </div>
+      <div class="pane" id="gPane">
+        <canvas id="gCan" tabindex="0" aria-label="Largest tension and its horizontal part against the sag, for these supports. Drag the marker or use the left and right arrow keys to change the sag."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="hang" aria-pressed="true">Hanging chain</button>
+          <button type="button" data-p="uneven" aria-pressed="false">Uneven supports</button>
+          <button type="button" data-p="parab" aria-pressed="false">Chain vs parabola</button>
+          <button type="button" data-p="tension" aria-pressed="false">Tension along the chain</button>
+          <button type="button" data-p="arch" aria-pressed="false">Arch</button>
+          <button type="button" data-p="tight" aria-pressed="false">Pull it tight</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Chain</h2>
+        <div class="seg full" role="group" aria-label="Shape" id="modeSeg">
+          <button type="button" data-m="hang" aria-pressed="true">Hanging chain</button>
+          <button type="button" data-m="arch" aria-pressed="false">Arch (flipped)</button>
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sS">Length S</label><output id="oS" class="mono" for="sS"></output></div>
+          <input type="range" id="sS" min="1" max="16" step="0.01">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sL">Mass per length λ</label><output id="oL" class="mono" for="sL"></output></div>
+          <input type="range" id="sL" min="0.1" max="20" step="0.1">
+        </div>
+        <p class="warn" id="tautMsg" hidden>Taut: the length equals the distance between the supports. A perfectly straight heavy chain would need infinite tension, so the length is held at that distance.</p>
+        <dl class="readout" id="shapeBox"></dl>
+        <p class="formula mono" id="shapeFormula"></p>
+      </section>
+
+      <section>
+        <h2 id="forceTitle">Tension</h2>
+        <dl class="readout" id="forceBox"></dl>
+        <div class="toggles">
+          <label><input type="checkbox" id="tColor" checked>Color by tension</label>
+          <label><input type="checkbox" id="tArrows" checked>Force arrows</label>
+          <label><input type="checkbox" id="tDir">Directrix</label>
+          <label><input type="checkbox" id="tLinks" checked>Draw links</label>
+        </div>
+        <p class="hint" id="forceHint">Every bit of chain pulls on its neighbors along the chain. The horizontal part H = λga is the same everywhere, because nothing pushes sideways. The vertical part at any point holds up the chain between there and the lowest point: V = λg s. Together T = λg × (height above the directrix).</p>
+      </section>
+
+      <section>
+        <h2>Free body diagram</h2>
+        <dl class="readout" id="fbdBox"></dl>
+        <p class="hint">Drag the two markers on the chain to choose a piece. Only three forces act on it: the pulls at its two ends and its weight. Placed tip to tail they close into a triangle, so the piece is in equilibrium.</p>
+      </section>
+
+      <section>
+        <h2>Chain vs parabola</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tPar">Parabola</label>
+          <label id="bridgeWrap"><input type="checkbox" id="tBridge">Suspension bridge</label>
+        </div>
+        <dl class="readout" id="parBox"></dl>
+        <p class="hint">The parabola goes through both supports and has the same lowest height as the chain. A cable that carries a load spread evenly along the horizontal, like a bridge deck, hangs as a parabola. A chain carries its own weight spread evenly along its length, and that gives the catenary. For a shallow chain the two differ by about d³/(12L²), with d the sag and L the half span.</p>
+        <p class="hint" id="bridgeHint" hidden>Bridge drawing: the main cable is the parabola, assuming the deck's weight per horizontal meter is much larger than the cable's own weight (the cable's weight is ignored). The faint curve is the bare chain. The force readouts above are for the bare chain.</p>
+      </section>
+
+      <section id="archSec" hidden>
+        <h2>Arch</h2>
+        <div class="toggles">
+          <label id="gwWrap"><input type="checkbox" id="tGw">Gateway Arch</label>
+          <label id="semiWrap"><input type="checkbox" id="tSemi">Semicircle</label>
+        </div>
+        <button type="button" class="btn" id="gwShape">Gateway proportions</button>
+        <dl class="readout" id="archBox"></dl>
+        <p class="hint">Turn a hanging chain upside down and every pull becomes a push of the same size along the curve. An arch of uniform blocks in this shape carries its own weight in pure compression, with no bending: the line of thrust runs along the middle of every block.</p>
+        <p class="hint" id="gwHint">Gateway Arch, St. Louis: 630 ft tall and 630 ft wide at the outside. Its legs are heavier than its top, so it is a weighted (flattened) catenary. The centroid curve on the original drawings is y = 693.8597 − 68.7672 cosh(0.0100333 x) ft for |x| ≤ 299.2239 ft (R. Osserman, Notices of the AMS 57, 220, 2010). The gold dashed curve is that formula scaled to this arch's span and rise.</p>
+        <p class="hint" id="semiHint" hidden>Semicircle (qualitative): blocks in a half circle of the same span, with the dashed chain shape of the same span and rise. Hooke's rule: the arch stands if a hanging chain loaded like the arch fits inside the blocks. The dashed curve is a uniform chain, not the exact thrust line of these blocks, so read the red stretches as where the push wants to leave thin blocks. Heyman found that a semicircular arch needs a thickness of about 0.11 of its radius to stand.</p>
+      </section>
+
+      <section>
+        <h2>Display</h2>
+        <div class="key" id="key">
+          <span><i class="ramp"></i><span id="keyRamp">Tension, low to high</span></span>
+          <span><i class="swatch f"></i>Forces on the chosen piece</span>
+          <span><i class="swatch w"></i>Weight</span>
+          <span><i class="swatch par"></i>Parabola or Gateway Arch</span>
+          <span><i class="swatch dir"></i>Directrix</span>
+        </div>
+        <p class="hint" id="modelHint">Model: a perfectly flexible chain that does not stretch, with uniform mass per length λ, at rest. The curve is the exact catenary y = a cosh((x − x₀)/a) + c through both supports with arc length S. The links are drawn for looks; the chain is treated as continuous. Arch: rigid blocks, uniform weight per length, no friction limit considered. Keys on the drawing: 1 and 2 supports, 3 middle grip, 4 and 5 markers, arrows move, shift moves farther, + and − change S.</p>
+      </section>
+    </aside>
+  </main>
+  <p class="sr" aria-live="polite" id="live"></p>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.80665;
+  const S_MIN = 1, S_MAX = 16, DX_MIN = 0.5;
+  const LN2 = Math.LN2;
+  // ln(sinh u / u) and its derivative coth u − 1/u, accurate for small and large u
+  function lnShc(u) {
+    if (u < 0.5) { const q = u * u; return Math.log1p(q / 6 * (1 + q / 20 * (1 + q / 42 * (1 + q / 72 * (1 + q / 110))))); }
+    return u + Math.log1p(-Math.exp(-2 * u)) - LN2 - Math.log(u);
+  }
+  function dlnShc(u) {
+    if (u < 0.5) { const q = u * u; return u / 3 - u * q / 45 + 2 * u * q * q / 945 - u * q * q * q / 4725; }
+    return 1 / Math.tanh(u) - 1 / u;
+  }
+  // Catenary y = a cosh((x − x0)/a) + c through (xa, ya) and (xb, yb), xa < xb, with arc length S.
+  // With Δx = xb − xa, Δy = yb − ya: √(S² − Δy²) = 2a sinh(Δx/2a). Writing u = Δx/2a this is sinh(u)/u = r, solved in log form.
+  function solveCatenary(xa, ya, xb, yb, S) {
+    const dx = xb - xa, dy = yb - ya, D = Math.hypot(dx, dy);
+    const base = { xa, ya, xb, yb, S, dx, dy, D };
+    if (!(dx > 0) || S <= D * (1 + 1e-12)) return { ...base, taut: true, S: Math.max(S, D) };
+    const rm1 = (S - D) * (S + D) / (dx * (Math.sqrt(S * S - dy * dy) + dx));   // r − 1 without cancellation
+    const target = Math.log1p(rm1);
+    let lo = 0, hi = Math.max(1e-3, Math.sqrt(6 * rm1));
+    while (lnShc(hi) < target) { lo = hi; hi *= 2; }
+    let u = rm1 < 0.1 ? Math.sqrt(6 * rm1) : 0.5 * (lo + hi);
+    if (!(u > lo && u < hi)) u = 0.5 * (lo + hi);
+    for (let i = 0; i < 100; i++) {
+      const f = lnShc(u) - target;
+      if (f > 0) hi = u; else lo = u;
+      let un = u - f / dlnShc(u);
+      if (!(un > lo && un < hi)) un = 0.5 * (lo + hi);
+      const done = Math.abs(un - u) <= 1e-15 * un;
+      u = un;
+      if (done || hi - lo <= 1e-16 * hi) break;
+    }
+    const a = dx / (2 * u);
+    const xm = 0.5 * (xa + xb);
+    const m = a * Math.atanh(dy / S);          // midpoint offset from the vertex: Δy/S = tanh(m/a)
+    const x0 = xm - m;
+    const c = ya - a * Math.cosh((xa - x0) / a);
+    const sA = a * Math.sinh((xa - x0) / a);   // arc coordinate of A measured from the vertex
+    return { ...base, taut: false, a, x0, c, u, sA, sB: sA + S };
+  }
+  const catY = (k, x) => (k.taut ? k.ya + (x - k.xa) / k.dx * k.dy : k.c + k.a * Math.cosh((x - k.x0) / k.a));
+  const arcOf = (k, x) => k.a * Math.sinh((x - k.x0) / k.a);           // signed arc length from the vertex
+  const xOfArc = (k, s) => k.x0 + k.a * Math.asinh(s / k.a);
+  // point and unit tangent at arc coordinate s from the vertex (taut: along the straight line)
+  function pointAt(k, s) {
+    if (k.taut) { const f = (s - 0) / k.D; return { x: k.xa + f * k.dx, y: k.ya + f * k.dy, tx: k.dx / k.D, ty: k.dy / k.D }; }
+    const h = Math.hypot(k.a, s);
+    return { x: xOfArc(k, s), y: k.c + h, tx: k.a / h, ty: s / h };
+  }
+  // tension at arc coordinate s: H = λga, V = λg s, T = λg √(a² + s²) = λg (y − c)
+  function tensionAt(k, s, lam) {
+    if (k.taut) return { H: Infinity, V: Infinity, T: Infinity };
+    const w = lam * G;
+    return { H: w * k.a, V: w * s, T: w * Math.hypot(k.a, s) };
+  }
+  // forces on the piece of chain between arc coordinates s1 < s2: pulls −T t̂ at s1 and +T t̂ at s2, weight λg(s2 − s1) at the center of mass
+  function pieceForces(k, s1, s2, lam) {
+    const w = lam * G, a = k.a;
+    const F1 = [-w * a, -w * s1], F2 = [w * a, w * s2], W = [0, -w * (s2 - s1)];
+    const Ix = (s) => s * Math.asinh(s / a) - Math.hypot(s, a);
+    const Iy = (s) => 0.5 * (s * Math.hypot(s, a) + a * a * Math.asinh(s / a));
+    const L = s2 - s1;
+    const xc = k.x0 + a * (Ix(s2) - Ix(s1)) / L, yc = k.c + (Iy(s2) - Iy(s1)) / L;
+    return { F1, F2, W, sum: [F1[0] + F2[0] + W[0], F1[1] + F2[1] + W[1]], xc, yc, len: L };
+  }
+  // depth of the chain below the chord through the supports, at its deepest (where the slope equals the chord's)
+  function sagOf(k) {
+    if (k.taut) return { d: 0, x: 0.5 * (k.xa + k.xb) };
+    const sl = k.dy / k.dx, x = k.x0 + k.a * Math.asinh(sl);
+    return { d: k.ya + (x - k.xa) * sl - catY(k, x), x };
+  }
+  // lowest point of the chain: the vertex if it lies between the supports, else the lower support
+  function lowest(k) {
+    if (k.taut) return k.ya <= k.yb ? { x: k.xa, y: k.ya, s: 0, inside: false } : { x: k.xb, y: k.yb, s: k.S, inside: false };
+    if (k.x0 > k.xa && k.x0 < k.xb) return { x: k.x0, y: k.c + k.a, s: 0, inside: true };
+    return k.x0 <= k.xa ? { x: k.xa, y: k.ya, s: k.sA, inside: false } : { x: k.xb, y: k.yb, s: k.sB, inside: false };
+  }
+  // parabola through both supports whose lowest height equals the chain's: y = yv + q (x − xv)²
+  function parabolaFor(k) {
+    const lo = lowest(k), yv = lo.y;
+    const p = Math.sqrt(Math.max(0, k.ya - yv)), r = Math.sqrt(Math.max(0, k.yb - yv));
+    if (p + r === 0) return { xv: 0.5 * (k.xa + k.xb), yv, q: 0 };
+    const xv = (r * k.xa + p * k.xb) / (p + r);
+    const q = p > r ? (k.ya - yv) / ((k.xa - xv) * (k.xa - xv)) : (k.yb - yv) / ((k.xb - xv) * (k.xb - xv));
+    return { xv, yv, q };
+  }
+  const parY = (P, x) => P.yv + P.q * (x - P.xv) * (x - P.xv);
+  // largest vertical gap between the chain and the parabola (dense scan, then golden section refinement)
+  function maxGap(k, P) {
+    if (k.taut) return { gap: 0, x: 0.5 * (k.xa + k.xb) };
+    const f = (x) => Math.abs(catY(k, x) - parY(P, x));
+    const N = 400; let bi = 0, bv = -1;
+    for (let i = 0; i <= N; i++) { const v = f(k.xa + k.dx * i / N); if (v > bv) { bv = v; bi = i; } }
+    let lo = k.xa + k.dx * Math.max(0, bi - 1) / N, hi = k.xa + k.dx * Math.min(N, bi + 1) / N;
+    const gr = (Math.sqrt(5) - 1) / 2;
+    for (let i = 0; i < 80; i++) {
+      const m1 = hi - gr * (hi - lo), m2 = lo + gr * (hi - lo);
+      if (f(m1) > f(m2)) hi = m2; else lo = m1;
+    }
+    const x = 0.5 * (lo + hi);
+    return { gap: Math.max(bv, f(x)), x };
+  }
+  // the length S for which the chain passes through height yt at the horizontal midpoint of the supports
+  function lengthThroughMid(xa, ya, xb, yb, yt) {
+    const dx = xb - xa, dy = yb - ya, chordMid = 0.5 * (ya + yb);
+    if (!(yt < chordMid)) return Math.hypot(dx, dy);
+    const yMid = (a) => {
+      const u = dx / (2 * a), m = a * Math.asinh(dy / (2 * a * Math.sinh(u)));
+      return ya + 2 * a * Math.sinh(m / a - u / 2) * Math.sinh(u / 2);      // a[cosh(m/a) − cosh(m/a − u)]
+    };
+    let lo = Math.log(dx / 400), hi = Math.log(1e7);
+    for (let i = 0; i < 200; i++) { const md = 0.5 * (lo + hi); if (yMid(Math.exp(md)) < yt) lo = md; else hi = md; if (hi - lo < 1e-14) break; }
+    const a = Math.exp(0.5 * (lo + hi)), u = dx / (2 * a), m = a * Math.asinh(dy / (2 * a * Math.sinh(u)));
+    return 2 * a * Math.cosh(m / a) * Math.sinh(u);
+  }
+  // Gateway Arch centroid curve as given on the original drawings (Osserman 2010), in feet:
+  // y = 693.8597 − 68.7672 cosh(0.0100333 x), |x| ≤ 299.2239; that is y = f_c − A [cosh(C x / L) − 1] with
+  // f_c = 625.0925 (centroid height), A = f_c / (Q_b/Q_t − 1), C = arccosh(Q_b/Q_t), Q_b = 1262.6651, Q_t = 125.1406 (section areas, ft²).
+  const GW = (() => {
+    const top = 693.8597, A = 68.7672, k = 0.0100333, L = 299.2239;
+    const y = (x) => top - A * Math.cosh(k * x);
+    return { top, A, k, L, fc: top - A, rise: y(0) - y(L), y };
+  })();
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.CT = { G, S_MIN, S_MAX, lnShc, dlnShc, solveCatenary, catY, arcOf, xOfArc, pointAt, tensionAt, pieceForces, sagOf, lowest, parabolaFor, parY, maxGap, lengthThroughMid, GW };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
+  const BOX = { x: [-6, 6], y: [-3, 1] };          // where the supports may go (hanging coordinates, m)
+  const SL = { S: { el: 'sS', min: S_MIN, max: S_MAX, step: 0.01 }, lam: { el: 'sL', min: 0.1, max: 20, step: 0.1 } };
+  const snap = (key, v) => { const d = SL[key]; return +clamp(Math.round(v / d.step) * d.step, d.min, d.max).toFixed(4); };
+
+  // ---------- setups ----------
+  const PRESETS = {
+    hang: { mode: 'hang', A: [-4, 0], B: [4, 0], S: 11, lam: 2, f: [0.55, 0.8], par: false, dir: false,
+      hint: 'Drag the supports and the grip at the bottom. Whatever you do, the chain settles into a cosh curve. The color shows the tension: smallest at the lowest point, largest at the supports.' },
+    uneven: { mode: 'hang', A: [-5, 0.8], B: [3.5, -2.2], S: 12, lam: 2, f: [0.2, 0.45], par: false, dir: false,
+      hint: 'With one support lower, the lowest point moves toward it, and the higher support carries more of the weight. Pull the low support up and in: once the vertex leaves the span, the chain runs downhill all the way to the lower support.' },
+    parab: { mode: 'hang', A: [-5, 0], B: [5, 0], S: 12, lam: 2, f: [0.55, 0.8], par: true, dir: false,
+      hint: 'The gold dashed parabola has the same supports and the same lowest point. Shallow, the two are nearly identical; pull the middle down and the chain becomes clearly fuller near the supports. Try the suspension bridge.' },
+    tension: { mode: 'hang', A: [-4, 0], B: [4, 0], S: 12.5, lam: 2, f: [0.5, 0.86], par: false, dir: true,
+      hint: 'Slide the markers. The pull at each end of the piece has the same horizontal part H; the difference of the vertical parts is exactly the piece\'s weight. The tension equals λg times the height above the dashed directrix, a distance a below the lowest point.' },
+    arch: { mode: 'arch', A: [-3, 0], B: [3, 0], S: null, lam: 2, f: [0.55, 0.8], par: false, dir: false, gw: true,
+      hint: 'The flipped chain: every block pushes on its neighbor along the curve, so nothing bends. The Gateway Arch is a weighted catenary, a little flatter at the top than a uniform one of the same span and rise. Try the semicircle.' },
+    tight: { mode: 'hang', A: [-4, 0], B: [4, 0], S: 8.5, lam: 2, f: [0.55, 0.8], par: false, dir: false,
+      hint: 'Drag the grip up or the marker on the graph to the left. As the sag goes to zero, the tension grows like λgΔx²/(8d) and never stops growing. No chain, however strong, can hang perfectly straight.' }
+  };
+
+  // ---------- state ----------
+  const S = { preset: 'hang', mode: 'hang', A: [-4, 0], B: [4, 0], S: 11, lam: 2, f: [0.55, 0.8],
+    layers: { color: true, arrows: true, dir: false, links: true, par: false, bridge: false, gw: false, semi: false } };
+  let K = null, sel = 'mid', hoverId = null, drag = null;
+  const cfg = () => PRESETS[S.preset];
+  function solve() {
+    K = solveCatenary(S.A[0], S.A[1], S.B[0], S.B[1], S.S);
+    if (K.taut) S.S = K.S;
+  }
+
+  // ---------- formatting ----------
+  const MIN = (s) => s.replace(/-/g, '−');
+  function sig(v, n) {
+    if (!isFinite(v)) return '∞';
+    if (v === 0) return '0';
+    const d = clamp(n - 1 - Math.floor(Math.log10(Math.abs(v)) + 1e-12), 0, 9);
+    return MIN(v.toFixed(d));
+  }
+  const fN = (v) => (!isFinite(v) ? '∞' : Math.abs(v) >= 1e4 ? `${sig(v / 1e3, 3)} kN` : `${sig(v, 3)} N`);
+  const fm = (v, d) => (isFinite(v) ? `${MIN(v.toFixed(d === undefined ? 2 : d))} m` : '∞');
+  function fLen(v) { if (!isFinite(v)) return '∞'; const a = Math.abs(v); return a >= 1 ? `${sig(v, 3)} m` : a >= 0.01 ? `${sig(v * 100, 3)} cm` : `${sig(v * 1000, 3)} mm`; }
+
+  // ---------- colors ----------
+  let T = {};
+  function hexRGB(c) {
+    c = c.trim();
+    if (c[0] === '#') { if (c.length === 4) c = '#' + c[1] + c[1] + c[2] + c[2] + c[3] + c[3]; return [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)]; }
+    const m = c.match(/\d+(\.\d+)?/g); return m ? m.slice(0, 3).map(Number) : [128, 128, 128];
+  }
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), wire: g('--wire'), block: g('--block'), wcol: g('--wcol'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+    T.ramp = [hexRGB(T.neg), hexRGB(T.pos)];
+  }
+  function rampCol(f) {
+    f = clamp(f, 0, 1);
+    const [c0, c1] = T.ramp, t = f;
+    return `rgb(${Math.round(c0[0] + (c1[0] - c0[0]) * t)},${Math.round(c0[1] + (c1[1] - c0[1]) * t)},${Math.round(c0[2] + (c1[2] - c0[2]) * t)})`;
+  }
+
+  // ---------- canvases ----------
+  const cans = { m: $('mCan'), f: $('fCan'), g: $('gCan') };
+  const panes = { m: $('mPane'), f: $('fPane'), g: $('gPane') };
+  const ctxs = { m: cans.m.getContext('2d'), f: cans.f.getContext('2d'), g: cans.g.getContext('2d') };
+  const dims = { m: [0, 0], f: [0, 0], g: [0, 0] };
+  let dpr = 1;
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const key of ['m', 'f', 'g']) {
+      const r = panes[key].getBoundingClientRect();
+      cans[key].width = Math.max(1, Math.round(r.width * dpr)); cans[key].height = Math.max(1, Math.round(r.height * dpr));
+      cans[key].style.width = r.width + 'px'; cans[key].style.height = r.height + 'px';
+      dims[key] = [r.width, r.height];
+    }
+    if (K && !drag) { const e = extent(); Object.assign(view, { x0: e.x0, x1: e.x1, y0: e.y0, y1: e.y1, anim: null }); }
+    drawNow();
+  }
+  let drawQueued = false;
+  function requestDraw() { if (drawQueued) return; drawQueued = true; requestAnimationFrame(() => { drawQueued = false; drawNow(); }); }
+  let frameMs = 0;
+  function drawNow() {
+    const t0 = performance.now();
+    drawMain(); drawFBD(); drawGraph();
+    frameMs = 0.8 * frameMs + 0.2 * (performance.now() - t0);
+  }
+
+  // ---------- view of the main drawing: fits the support box and the chain; grows during a drag, refits after ----------
+  const view = { x0: -6.5, x1: 6.5, y0: -5, y1: 1.5, target: null, anim: null };
+  const arch = () => S.mode === 'arch';
+  const disp = (y) => (arch() ? -y : y);         // hanging coordinates to drawn coordinates
+  function extent() {
+    let y0 = Math.min(BOX.y[0], S.A[1], S.B[1]) - 0.4, y1 = Math.max(BOX.y[1], S.A[1], S.B[1]) + 0.5;
+    const lo = lowest(K);
+    y0 = Math.min(y0, lo.y - 0.6);
+    if (S.layers.bridge && !arch() && S.layers.par) y0 = Math.min(y0, lo.y - 1.6);
+    if (arch() && S.layers.semi) y0 = Math.min(y0, 0.5 * (K.ya + K.yb) - 0.6 * K.dx - 0.4);
+    if (arch() && S.layers.gw && !K.taut) y0 = Math.min(y0, lo.y - 0.4);
+    if (S.layers.dir && !K.taut && K.c > lo.y - 6) y0 = Math.min(y0, K.c - 0.5);
+    // narrow screens: fit the span rather than the whole support box
+    let xl = BOX.x[0] - 0.7, xr = BOX.x[1] + 0.7;
+    if (dims.m[0] && dims.m[0] < 600) { xl = Math.max(xl, S.A[0] - 1.2); xr = Math.min(xr, S.B[0] + 1.2); }
+    // drawn coordinates: flip for the arch, with room for the ground or the ceiling posts
+    const r = arch() ? { x0: xl, x1: xr, y0: -y1 + 0.3, y1: -y0 } : { x0: xl, x1: xr, y0, y1: y1 + 0.3 };
+    return r;
+  }
+  function fitView(grow) {
+    const e = extent();
+    if (grow) { view.x0 = Math.min(view.x0, e.x0); view.x1 = Math.max(view.x1, e.x1); view.y0 = Math.min(view.y0, e.y0); view.y1 = Math.max(view.y1, e.y1); return; }
+    if (reduce) { Object.assign(view, { x0: e.x0, x1: e.x1, y0: e.y0, y1: e.y1 }); return; }
+    view.anim = { from: { x0: view.x0, x1: view.x1, y0: view.y0, y1: view.y1 }, to: e, t0: performance.now() };
+    animStep();
+  }
+  function animStep() {
+    const a = view.anim; if (!a) return;
+    const f = clamp((performance.now() - a.t0) / 220, 0, 1), e = 1 - Math.pow(1 - f, 3);
+    for (const k of ['x0', 'x1', 'y0', 'y1']) view[k] = a.from[k] + (a.to[k] - a.from[k]) * e;
+    drawNow();
+    if (f < 1) requestAnimationFrame(animStep); else view.anim = null;
+  }
+  function mGeom() {
+    const [W, H] = dims.m, ps = projScale(), pad = 12 * ps, top = 30 * ps;
+    const k = Math.min((W - 2 * pad) / (view.x1 - view.x0), (H - pad - top) / (view.y1 - view.y0));
+    const cx = 0.5 * (view.x0 + view.x1), cy = 0.5 * (view.y0 + view.y1);
+    return { W, H, ps, k, ox: W / 2 - k * cx, oy: top + (H - pad - top) / 2 + k * cy };
+  }
+  const PX = (g, x, y) => [g.ox + g.k * x, g.oy - g.k * disp(y)];
+  const unPX = (g, px, py) => [(px - g.ox) / g.k, disp((g.oy - py) / g.k)];
+
+  // ---------- main drawing ----------
+  function arrow(ctx, x1, y1, x2, y2, col, lw, head) {
+    const L = Math.hypot(x2 - x1, y2 - y1); if (L < 0.5) return;
+    const ux = (x2 - x1) / L, uy = (y2 - y1) / L, h = Math.min(head, L * 0.6);
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = lw;
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - ux * h * 0.7, y2 - uy * h * 0.7); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - ux * h - uy * h * 0.42, y2 - uy * h + ux * h * 0.42); ctx.lineTo(x2 - ux * h + uy * h * 0.42, y2 - uy * h - ux * h * 0.42); ctx.closePath(); ctx.fill();
+  }
+  function label(ctx, txt, x, y, col, align, base, size) {
+    ctx.font = `${(size || 11.5) * projScale()}px ${T.mono}`; ctx.textAlign = align || 'left'; ctx.textBaseline = base || 'middle';
+    const w = ctx.measureText(txt).width, h = (size || 11.5) * projScale();
+    const bx = align === 'center' ? x - w / 2 : align === 'right' ? x - w : x;
+    let by = base === 'top' ? y : base === 'bottom' ? y - h : y - h / 2;
+    // keep the label inside the canvas (and below the title line of the lower panes)
+    const cw = ctx.canvas.width / dpr, ch = ctx.canvas.height / dpr, minTop = (ctx === ctxs.m ? 26 : 28) * projScale();
+    const sx = clamp(bx, 4, cw - w - 6) - bx, sy = clamp(by, minTop, ch - h - 4) - by;
+    x += sx; y += sy; by += sy; const bx2 = bx + sx;
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.82; ctx.fillRect(bx2 - 3, by - 2, w + 6, h + 4); ctx.globalAlpha = 1;
+    ctx.fillStyle = col; ctx.fillText(txt, x, y);
+  }
+  const sOfF = (f) => (K.taut ? f * K.D : K.sA + f * K.S);
+  function tensionRange() {
+    if (K.taut) return [0, 1];
+    const lo = lowest(K), tmin = Math.hypot(K.a, lo.s), tmax = Math.max(Math.hypot(K.a, K.sA), Math.hypot(K.a, K.sB));
+    return [tmin, tmax];
+  }
+  const tFrac = (s, R) => (R[1] - R[0] < 1e-9 * R[1] ? 0.5 : (Math.hypot(K.a, s) - R[0]) / (R[1] - R[0]));
+
+  function drawMain() {
+    const [W, H] = dims.m; if (!W || !H || !K) return;
+    const ctx = ctxs.m, g = mGeom(), ps = g.ps;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const L = S.layers, isArch = arch();
+    const pA = PX(g, S.A[0], S.A[1]), pB = PX(g, S.B[0], S.B[1]);
+
+    // ground (arch) or ceiling posts (hanging)
+    if (isArch) {
+      const gy = Math.max(pA[1], pB[1]) + 0.5 * g.k;
+      ctx.fillStyle = T.grid; ctx.fillRect(0, gy, W, H - gy);
+      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke();
+      for (const p of [pA, pB]) {   // abutments: a block from the ground up to the springing point
+        const w = 0.55 * g.k;
+        ctx.fillStyle = T.block; ctx.strokeStyle = T.wire; ctx.lineWidth = 1.2 * ps;
+        ctx.beginPath(); ctx.rect(p[0] - w / 2, p[1], w, gy - p[1]); ctx.fill(); ctx.stroke();
+      }
+    } else {
+      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1 * ps;
+      ctx.setLineDash([4 * ps, 4 * ps]); ctx.beginPath(); ctx.moveTo(0, 24 * ps); ctx.lineTo(W, 24 * ps); ctx.stroke(); ctx.setLineDash([]);
+      for (const p of [pA, pB]) {
+        ctx.strokeStyle = T.wire; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(p[0], 24 * ps); ctx.lineTo(p[0], p[1]); ctx.stroke();
+      }
+    }
+
+    // chord through the supports (faint)
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1 * ps; ctx.beginPath(); ctx.moveTo(pA[0], pA[1]); ctx.lineTo(pB[0], pB[1]); ctx.stroke();
+
+    // directrix: T = λg × distance to this line
+    if (L.dir && !K.taut) {
+      const yd = PX(g, 0, K.c)[1];
+      if (yd > 0 && yd < H) {
+        ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([7 * ps, 5 * ps]);
+        ctx.beginPath(); ctx.moveTo(0, yd); ctx.lineTo(W, yd); ctx.stroke(); ctx.setLineDash([]);
+        label(ctx, `directrix, a = ${fm(K.a)} ${isArch ? 'above the top' : 'below the lowest point'}`, 10 * ps, yd + (isArch ? 10 : -10) * ps, T.muted, 'left', 'middle', 10.5);
+        // a sample height bar at the selected marker: T = λg h
+        const s2 = sOfF(S.f[1]), p = pointAt(K, s2), q1 = PX(g, p.x, p.y), q0 = PX(g, p.x, K.c);
+        ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps; ctx.beginPath(); ctx.moveTo(q0[0], q0[1]); ctx.lineTo(q1[0], q1[1]); ctx.stroke();
+        label(ctx, `h = ${fm(p.y - K.c)}`, q0[0] + 5 * ps, (q0[1] + q1[1]) / 2, T.muted, 'left', 'middle', 10.5);
+      } else {
+        label(ctx, `directrix: ${fm(K.a)} ${isArch ? 'above the top' : 'below the lowest point'} (off the drawing)`, 10 * ps, isArch ? 40 * ps : H - 14 * ps, T.muted, 'left', 'middle', 10.5);
+      }
+    }
+
+    // suspension bridge: parabolic main cable, vertical hangers, deck; the bare chain faint
+    const P = parabolaFor(K);
+    const bridge = L.bridge && L.par && !isArch;
+    if (bridge) {
+      const lo = lowest(K), deckY = Math.min(K.ya, K.yb, lo.y) - 1.1;
+      const d0 = PX(g, K.xa, deckY), d1 = PX(g, K.xb, deckY);
+      ctx.strokeStyle = T.wire; ctx.lineWidth = 1 * ps;
+      const n = Math.max(4, Math.round(K.dx / 0.45));
+      ctx.beginPath();
+      for (let i = 1; i < n; i++) { const x = K.xa + K.dx * i / n, a = PX(g, x, parY(P, x)), b = PX(g, x, deckY); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); }
+      ctx.stroke();
+      ctx.fillStyle = T.block; ctx.strokeStyle = T.wire; ctx.lineWidth = 1.2 * ps;
+      ctx.beginPath(); ctx.rect(d0[0] - 0.8 * g.k, d0[1], d1[0] - d0[0] + 1.6 * g.k, 0.22 * g.k); ctx.fill(); ctx.stroke();
+      for (const p of [pA, pB]) { ctx.strokeStyle = T.wire; ctx.lineWidth = 5 * ps; ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(p[0], d0[1] + 0.9 * g.k); ctx.stroke(); }
+      ctx.strokeStyle = T.wire; ctx.lineWidth = 3 * ps; ctx.beginPath();
+      for (let i = 0; i <= 160; i++) { const x = K.xa + K.dx * i / 160, p = PX(g, x, parY(P, x)); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
+      ctx.stroke();
+      label(ctx, 'deck: load spread evenly along the horizontal', (d0[0] + d1[0]) / 2, d0[1] + 0.22 * g.k + 10 * ps, T.muted, 'center', 'top', 10.5);
+    }
+
+    // the semicircular arch for comparison (arch mode)
+    let semiInfo = null;
+    if (isArch && L.semi) semiInfo = drawSemi(ctx, g);
+
+    // the chain or arch
+    const R = tensionRange();
+    if (!semiInfo) {
+      if (isArch) drawArchBlocks(ctx, g, R, bridge);
+      else drawChain(ctx, g, R, bridge);
+    }
+
+    // parabola overlay
+    if (L.par && !bridge) {
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 2 * ps; ctx.setLineDash([8 * ps, 5 * ps]); ctx.beginPath();
+      const n = 160;
+      for (let i = 0; i <= n; i++) { const x = K.xa + K.dx * i / n, p = PX(g, x, parY(P, x)); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
+      ctx.stroke(); ctx.setLineDash([]);
+      if (!K.taut) {
+        const mg = maxGap(K, P), a = PX(g, mg.x, catY(K, mg.x)), b = PX(g, mg.x, parY(P, mg.x));
+        if (Math.abs(a[1] - b[1]) > 3) { ctx.strokeStyle = T.equi; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.moveTo(a[0] - 6 * ps, a[1]); ctx.lineTo(a[0] + 6 * ps, a[1]); ctx.moveTo(b[0] - 6 * ps, b[1]); ctx.lineTo(b[0] + 6 * ps, b[1]); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+        label(ctx, `largest gap ${fLen(mg.gap)}`, a[0] + 9 * ps, (a[1] + b[1]) / 2, T.equi, 'left', 'middle', 10.5);
+      }
+    }
+
+    // Gateway Arch, scaled to this arch's span and rise (level supports only)
+    if (isArch && L.gw && !L.semi && gwOk()) {
+      const lo = lowest(K), xm = 0.5 * (K.xa + K.xb), half = K.dx / 2, rise = 0.5 * (K.ya + K.yb) - lo.y;
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 2.2 * ps; ctx.setLineDash([8 * ps, 5 * ps]); ctx.beginPath();
+      for (let i = 0; i <= 160; i++) { const xf = -GW.L + 2 * GW.L * i / 160, x = xm + xf / GW.L * half, y = 0.5 * (K.ya + K.yb) - (GW.y(xf) - GW.y(GW.L)) / GW.rise * rise, p = PX(g, x, y); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
+      ctx.stroke(); ctx.setLineDash([]);
+      const tp = PX(g, xm, lo.y);
+      label(ctx, 'Gateway Arch, scaled', tp[0], tp[1] - 12 * ps, T.equi, 'center', 'bottom', 10.5);
+    }
+
+    // forces at the markers and the lowest point
+    if (!K.taut && !semiInfo) drawForceArrows(ctx, g);
+
+    // handles
+    for (const h of handles()) {
+      const hot = (drag && drag.id === h.id) || (!drag && hoverId === h.id) || (!drag && !hoverId && focusOn && sel === h.id);
+      const r = (h.small ? 4.5 : 6) * ps * (hot ? 1.25 : 1);
+      ctx.fillStyle = h.small ? T.accent : T.canvas; ctx.strokeStyle = h.small ? T.canvas : T.accent; ctx.lineWidth = (hot ? 2.6 : 1.8) * ps;
+      if (hot) { ctx.globalAlpha = 0.25; ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(h.pt[0], h.pt[1], r + 6 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1; ctx.fillStyle = h.small ? T.accent : T.canvas; }
+      ctx.beginPath(); ctx.arc(h.pt[0], h.pt[1], r, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      if (h.id === 'mid') {   // up and down chevrons
+        ctx.strokeStyle = T.accent; ctx.lineWidth = 1.4 * ps; ctx.beginPath();
+        const y = h.pt[1], x = h.pt[0], o = r + 4 * ps, c = 3.5 * ps;
+        ctx.moveTo(x - c, y - o + c); ctx.lineTo(x, y - o); ctx.lineTo(x + c, y - o + c);
+        ctx.moveTo(x - c, y + o - c); ctx.lineTo(x, y + o); ctx.lineTo(x + c, y + o - c); ctx.stroke();
+      }
+    }
+    label(ctx, 'A', pA[0] + (isArch ? -14 : -12) * ps, pA[1] + (isArch ? 10 : -10) * ps, T.ink, 'right', 'middle', 12);
+    label(ctx, 'B', pB[0] + 12 * ps, pB[1] + (isArch ? 10 : -10) * ps, T.ink, 'left', 'middle', 12);
+
+    // header line
+    ctx.font = `700 ${12.5 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    if (K.taut) {
+      ctx.fillStyle = T.pos;
+      ctx.fillText(W < 520 ? 'Taut: tension would be infinite' : 'Taut: a straight heavy chain would need infinite tension (length held at the support distance)', 10 * ps, 13 * ps);
+    } else {
+      ctx.fillStyle = T.muted; ctx.font = `${11.5 * ps}px ${T.mono}`;
+      const sag = sagOf(K).d;
+      const txt = `S = ${fm(S.S)}   span ${fm(K.dx)}   sag ${fm(sag)}`;
+      ctx.fillText(W < 440 ? `S = ${fm(S.S)}   sag ${fm(sag)}` : txt, 10 * ps, 13 * ps);
+      if (semiInfo && W > 560) { ctx.textAlign = 'right'; ctx.fillStyle = T.pos; ctx.fillText(semiInfo, W - 10 * ps, 13 * ps); }
+    }
+  }
+
+  function chainPts(n) {   // n + 1 points at equal arc spacing from A to B
+    const out = [];
+    for (let i = 0; i <= n; i++) { const s = sOfF(i / n), p = pointAt(K, s); out.push({ s, x: p.x, y: p.y, tx: p.tx, ty: p.ty }); }
+    return out;
+  }
+  function drawChain(ctx, g, R, faint) {
+    const ps = g.ps, L = S.layers;
+    const pitchPx = 13 * ps, len = K.taut ? K.D : K.S, n = Math.max(6, Math.round(len * g.k / pitchPx));
+    const pts = chainPts(n);
+    const colOf = (s) => (K.taut ? T.pos : L.color ? rampCol(tFrac(s, R)) : T.wire);
+    if (faint) ctx.globalAlpha = 0.28;
+    if (!L.links || faint) {
+      ctx.lineWidth = 3 * ps; ctx.lineCap = 'round';
+      for (let i = 0; i < n; i++) {
+        const a = PX(g, pts[i].x, pts[i].y), b = PX(g, pts[i + 1].x, pts[i + 1].y);
+        ctx.strokeStyle = colOf(0.5 * (pts[i].s + pts[i + 1].s)); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+      }
+      ctx.lineCap = 'butt'; ctx.globalAlpha = 1; return;
+    }
+    // links: alternate oval links seen face on and edge on, each along the local tangent
+    for (let i = 0; i < n; i++) {
+      const a = PX(g, pts[i].x, pts[i].y), b = PX(g, pts[i + 1].x, pts[i + 1].y);
+      const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, ang = Math.atan2(b[1] - a[1], b[0] - a[0]), l = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      const col = colOf(0.5 * (pts[i].s + pts[i + 1].s));
+      ctx.save(); ctx.translate(mx, my); ctx.rotate(ang);
+      const hl = l / 2 + 2.6 * ps;
+      if (i % 2 === 0) {
+        const hw = 3.4 * ps;
+        ctx.strokeStyle = col; ctx.lineWidth = 2.2 * ps;
+        ctx.beginPath(); ctx.moveTo(-hl + hw, -hw); ctx.lineTo(hl - hw, -hw); ctx.arc(hl - hw, 0, hw, -Math.PI / 2, Math.PI / 2); ctx.lineTo(-hl + hw, hw); ctx.arc(-hl + hw, 0, hw, Math.PI / 2, 3 * Math.PI / 2); ctx.closePath(); ctx.stroke();
+      } else {
+        ctx.strokeStyle = col; ctx.lineWidth = 2.6 * ps; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(-hl + 1.5 * ps, 0); ctx.lineTo(hl - 1.5 * ps, 0); ctx.stroke(); ctx.lineCap = 'butt';
+      }
+      ctx.restore();
+    }
+  }
+  function drawArchBlocks(ctx, g, R) {
+    const ps = g.ps, L = S.layers, len = K.taut ? K.D : K.S;
+    const half = Math.max(0.16, Math.min(0.32, 7 * ps / g.k));   // half thickness of the blocks, m
+    const n = Math.max(7, Math.min(48, Math.round(len / 0.5)));
+    const pts = chainPts(n);
+    for (let i = 0; i < n; i++) {
+      const p = pts[i], q = pts[i + 1];
+      // normal to the curve in hanging coordinates (−ty, tx); flipped drawing handled by PX
+      const c = [PX(g, p.x - p.ty * half, p.y + p.tx * half), PX(g, q.x - q.ty * half, q.y + q.tx * half), PX(g, q.x + q.ty * half, q.y - q.tx * half), PX(g, p.x + p.ty * half, p.y - p.tx * half)];
+      ctx.beginPath(); ctx.moveTo(c[0][0], c[0][1]); for (let j = 1; j < 4; j++) ctx.lineTo(c[j][0], c[j][1]); ctx.closePath();
+      ctx.fillStyle = T.block; ctx.fill();
+      ctx.strokeStyle = K.taut ? T.pos : L.color ? rampCol(tFrac(0.5 * (p.s + q.s), R)) : T.wire; ctx.lineWidth = 1.6 * ps; ctx.stroke();
+    }
+    // line of thrust: the curve itself, through the middle of every block
+    ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.55; ctx.lineWidth = 1 * ps; ctx.setLineDash([3 * ps, 3 * ps]); ctx.beginPath();
+    for (let i = 0; i <= n * 4; i++) { const pp = pointAt(K, sOfF(i / (n * 4))), a = PX(g, pp.x, pp.y); i ? ctx.lineTo(a[0], a[1]) : ctx.moveTo(a[0], a[1]); }
+    ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+  }
+  // semicircle of blocks over the same span, with the uniform chain shape of the same span and rise
+  function drawSemi(ctx, g) {
+    const ps = g.ps, xm = 0.5 * (K.xa + K.xb), ym = 0.5 * (K.ya + K.yb), Rr = K.dx / 2, t = 0.12 * Rr, n = 15;
+    // blocks (hanging coordinates: the circle hangs below the springing line, drawn flipped)
+    for (let i = 0; i < n; i++) {
+      const a0 = Math.PI * i / n, a1 = Math.PI * (i + 1) / n;
+      const P = (r, an) => PX(g, xm - r * Math.cos(an), ym - r * Math.sin(an));
+      const c = [P(Rr - t / 2, a0), P(Rr - t / 2, a1), P(Rr + t / 2, a1), P(Rr + t / 2, a0)];
+      ctx.beginPath(); ctx.moveTo(c[0][0], c[0][1]); for (let j = 1; j < 4; j++) ctx.lineTo(c[j][0], c[j][1]); ctx.closePath();
+      ctx.fillStyle = T.block; ctx.fill(); ctx.strokeStyle = T.wire; ctx.lineWidth = 1.2 * ps; ctx.stroke();
+    }
+    const Sc = lengthThroughMid(xm - Rr, ym, xm + Rr, ym, ym - Rr), kc = solveCatenary(xm - Rr, ym, xm + Rr, ym, Sc);
+    let outside = 0, prev = null;
+    ctx.lineWidth = 2.2 * ps; ctx.setLineDash([6 * ps, 4 * ps]);
+    const N = 160;
+    let run = null;   // stroke runs of one color so the dashes stay continuous
+    const flush = () => { if (run && run.pts.length > 1) { ctx.strokeStyle = run.out ? T.pos : T.accent; ctx.beginPath(); run.pts.forEach((q, j) => (j ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.stroke(); } };
+    for (let i = 0; i <= N; i++) {
+      const x = xm - Rr + 2 * Rr * i / N, y = catY(kc, x), r = Math.hypot(x - xm, y - ym), out = Math.abs(r - Rr) > t / 2;
+      const p = PX(g, x, y);
+      if (!run || run.out !== out) { flush(); run = { out, pts: prev ? [prev] : [] }; }
+      run.pts.push(p);
+      if (out && i > 0 && i < N) outside++;
+      prev = p;
+    }
+    flush();
+    ctx.setLineDash([]);
+    const top = PX(g, xm, ym - Rr - t / 2);
+    label(ctx, 'semicircle of blocks; dashed: chain shape, same span and rise', top[0], top[1] - 10 * ps, T.muted, 'center', 'bottom', 10.5);
+    return outside ? 'the chain shape leaves the blocks near the haunches' : '';
+  }
+  function drawForceArrows(ctx, g) {
+    const ps = g.ps, L = S.layers, isArch = arch();
+    const s1 = sOfF(S.f[0]), s2 = sOfF(S.f[1]);
+    const pf = pieceForces(K, s1, s2, S.lam);
+    // the chosen piece, highlighted
+    ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.3; ctx.lineWidth = 9 * ps; ctx.lineCap = 'round'; ctx.beginPath();
+    for (let i = 0; i <= 40; i++) { const p = pointAt(K, s1 + (s2 - s1) * i / 40), a = PX(g, p.x, p.y); i ? ctx.lineTo(a[0], a[1]) : ctx.moveTo(a[0], a[1]); }
+    ctx.stroke(); ctx.globalAlpha = 1; ctx.lineCap = 'butt';
+    if (!L.arrows) return;
+    // arrow scale: the largest end force is 1.6 m on the drawing, at most 90 px
+    const Fmax = Math.max(Math.hypot(...pf.F1), Math.hypot(...pf.F2), 1e-9), sc = Math.min(1.6 * g.k, 90 * ps) / Fmax;
+    const fl = (F) => (isArch ? [-F[0], F[1]] : F);     // arch: compression, the flipped and reversed pull
+    const ends = [[s1, fl(pf.F1)], [s2, fl(pf.F2)]];
+    for (const [s, F] of ends) {
+      const p = pointAt(K, s), a = PX(g, p.x, p.y);
+      const v = [F[0] * sc, -F[1] * sc];   // screen vector (F is in drawn coordinates)
+      if (isArch) arrow(ctx, a[0] - v[0], a[1] - v[1], a[0], a[1], T.accent, 2.2 * ps, 9 * ps);   // pushes into the piece
+      else arrow(ctx, a[0], a[1], a[0] + v[0], a[1] + v[1], T.accent, 2.2 * ps, 9 * ps);
+      // components H and V (dashed)
+      ctx.setLineDash([4 * ps, 3 * ps]); ctx.globalAlpha = 0.75;
+      const o = isArch ? [a[0] - v[0], a[1] - v[1]] : a;
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.moveTo(o[0], o[1]); ctx.lineTo(o[0] + v[0], o[1]); ctx.lineTo(o[0] + v[0], o[1] + v[1]); ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+    }
+    const tip = PX(g, pointAt(K, s2).x, pointAt(K, s2).y);
+    const T2 = Math.hypot(...pf.F2);
+    label(ctx, `${isArch ? 'C' : 'T'} = ${fN(T2)}`, tip[0] + 10 * ps, tip[1] + (isArch ? 14 : -14) * ps, T.accent, 'left', 'middle', 11);
+    // weight at the center of mass
+    const cm = PX(g, pf.xc, pf.yc), wl = Math.abs(pf.W[1]) * sc;
+    ctx.fillStyle = T.wcol; ctx.beginPath(); ctx.arc(cm[0], cm[1], 3 * ps, 0, 2 * Math.PI); ctx.fill();
+    arrow(ctx, cm[0], cm[1], cm[0], cm[1] + Math.max(wl, 1), T.wcol, 2.2 * ps, 8 * ps);
+    // H at the lowest point, if it lies inside the span
+    const lo = lowest(K);
+    if (lo.inside) {
+      const p = PX(g, lo.x, lo.y), h = K.a * S.lam * G * sc;
+      const dir = isArch ? -1 : 1;
+      ctx.globalAlpha = 0.85;
+      const yo = (isArch ? 34 : 16) * ps;
+      arrow(ctx, p[0], p[1] + yo, p[0] + dir * Math.min(h, 80 * ps), p[1] + yo, T.muted, 1.6 * ps, 7 * ps);
+      ctx.globalAlpha = 1;
+      label(ctx, `H = ${fN(K.a * S.lam * G)}`, p[0] - 6 * ps, p[1] + yo, T.muted, 'right', 'middle', 10.5);
+    }
+  }
+
+  // ---------- handles on the main drawing ----------
+  let focusOn = false;
+  function handles() {
+    if (!K || !dims.m[0]) return [];
+    const g = mGeom(), out = [];
+    out.push({ id: 'A', pt: PX(g, S.A[0], S.A[1]), cursor: 'move' });
+    out.push({ id: 'B', pt: PX(g, S.B[0], S.B[1]), cursor: 'move' });
+    if (!(arch() && S.layers.semi)) {
+      const xm = 0.5 * (K.xa + K.xb);
+      out.push({ id: 'mid', pt: PX(g, xm, catY(K, xm)), cursor: 'ns-resize' });
+      if (!K.taut) for (const j of [0, 1]) { const p = pointAt(K, sOfF(S.f[j])); out.push({ id: j ? 'f2' : 'f1', pt: PX(g, p.x, p.y), cursor: 'grab', small: true }); }
+    }
+    return out;
+  }
+  function handleAt(ev) {
+    const r = cans.m.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 10 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of handles()) { const d = Math.hypot(x - h.pt[0], y - h.pt[1]) - (h.small ? 1 : 3); if (d < bd) { bd = d; best = h; } }
+    return best;
+  }
+  function moveSupport(id, x, y) {
+    const other = id === 'A' ? S.B : S.A;
+    x = clamp(x, BOX.x[0], BOX.x[1]); y = clamp(y, BOX.y[0], BOX.y[1]);
+    if (id === 'A') x = Math.min(x, other[0] - DX_MIN); else x = Math.max(x, other[0] + DX_MIN);
+    // the chain cannot reach farther than its length: hold the support on the circle of radius S, and the chain goes taut
+    const d = Math.hypot(x - other[0], y - other[1]);
+    if (d > S.S) { const f = S.S / d; x = other[0] + (x - other[0]) * f; y = other[1] + (y - other[1]) * f; }
+    x = +x.toFixed(3); y = +y.toFixed(3);
+    if (id === 'A') S.A = [x, y]; else S.B = [x, y];
+    update();
+  }
+  function setLength(v, fromSlider) {
+    const D = Math.hypot(S.B[0] - S.A[0], S.B[1] - S.A[1]);
+    v = clamp(v, S_MIN, S_MAX);
+    S.S = v <= D ? D : Math.max(fromSlider ? v : snap('S', v), D);
+    update();
+  }
+  function setMid(yHang) {
+    const v = lengthThroughMid(S.A[0], S.A[1], S.B[0], S.B[1], yHang);
+    setLength(v);
+  }
+  // nearest arc fraction on the chain to a drawn point
+  function fracAt(px, py) {
+    const g = mGeom(), N = 300; let best = 0, bd = Infinity;
+    for (let i = 0; i <= N; i++) { const p = pointAt(K, sOfF(i / N)), q = PX(g, p.x, p.y), d = Math.hypot(q[0] - px, q[1] - py); if (d < bd) { bd = d; best = i / N; } }
+    return best;
+  }
+  function setFrac(j, f) {
+    const gap = 0.03;
+    f = j === 0 ? clamp(f, 0, S.f[1] - gap) : clamp(f, S.f[0] + gap, 1);
+    S.f[j] = +f.toFixed(4); update();
+  }
+  let dragQueued = null, dragFrame = false;
+  function dragTo(ev) {
+    const r = cans.m.getBoundingClientRect();
+    dragQueued = [ev.clientX - r.left, ev.clientY - r.top];
+    if (dragFrame) return;
+    dragFrame = true;
+    requestAnimationFrame(() => {
+      dragFrame = false;
+      if (!drag || !dragQueued) return;
+      const [px, py] = dragQueued; dragQueued = null;
+      const g = mGeom(), [x, y] = unPX(g, px - drag.off[0], py - drag.off[1]);
+      if (drag.id === 'A' || drag.id === 'B') moveSupport(drag.id, x, y);
+      else if (drag.id === 'mid') setMid(y);
+      else if (drag.id === 'f1') setFrac(0, fracAt(px, py));
+      else if (drag.id === 'f2') setFrac(1, fracAt(px, py));
+      // the view stays still while dragging on the drawing (so the pointer keeps its meaning); it refits on release
+    });
+  }
+  cans.m.addEventListener('pointermove', (ev) => {
+    if (drag) { dragTo(ev); return; }
+    const h = handleAt(ev), id = h ? h.id : null;
+    if (id !== hoverId) { hoverId = id; requestDraw(); }
+    cans.m.style.cursor = h ? h.cursor : 'default';
+  });
+  cans.m.addEventListener('pointerdown', (ev) => {
+    const h = handleAt(ev); if (!h) return;
+    const r = cans.m.getBoundingClientRect();
+    drag = { id: h.id, off: h.id === 'f1' || h.id === 'f2' ? [0, 0] : [ev.clientX - r.left - h.pt[0], ev.clientY - r.top - h.pt[1]] };
+    sel = h.id;
+    try { cans.m.setPointerCapture(ev.pointerId); } catch (_) {}
+    cans.m.style.cursor = h.cursor === 'grab' ? 'grabbing' : h.cursor; ev.preventDefault(); requestDraw();
+  });
+  const endDrag = () => { if (!drag) return; drag = null; hoverId = null; fitView(false); requestDraw(); };
+  cans.m.addEventListener('pointerup', endDrag);
+  cans.m.addEventListener('pointercancel', endDrag);
+  cans.m.addEventListener('pointerleave', () => { if (!drag && hoverId) { hoverId = null; requestDraw(); } });
+  cans.m.addEventListener('focus', () => { focusOn = true; requestDraw(); });
+  cans.m.addEventListener('blur', () => { focusOn = false; requestDraw(); });
+  const SEL_NAMES = { A: 'support A', B: 'support B', mid: 'middle grip', f1: 'first marker', f2: 'second marker' };
+  cans.m.addEventListener('keydown', (e) => {
+    const big = e.shiftKey ? 10 : 1;
+    const keySel = { 1: 'A', 2: 'B', 3: 'mid', 4: 'f1', 5: 'f2' };
+    if (keySel[e.key]) { sel = keySel[e.key]; say(`Selected ${SEL_NAMES[sel]}`); requestDraw(); e.preventDefault(); return; }
+    if (e.key === '+' || e.key === '=') { setLength(S.S + 0.05 * big); fitView(false); say(`Length ${fm(S.S)}`); e.preventDefault(); return; }
+    if (e.key === '-' || e.key === '_') { setLength(S.S - 0.05 * big); fitView(false); say(`Length ${fm(S.S)}`); e.preventDefault(); return; }
+    const dirs = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] };
+    const d = dirs[e.key]; if (!d) return;
+    e.preventDefault();
+    const dy = arch() ? -d[1] : d[1];   // up on the screen is up in the drawing
+    if (sel === 'A' || sel === 'B') { const p = sel === 'A' ? S.A : S.B; moveSupport(sel, p[0] + 0.05 * big * d[0], p[1] + 0.05 * big * dy); }
+    else if (sel === 'mid') { if (dy) setLength(S.S - 0.05 * big * dy); }
+    else { const j = sel === 'f1' ? 0 : 1; setFrac(j, S.f[j] + 0.01 * big * (d[0] || d[1])); }
+    fitView(false);
+  });
+
+  // ---------- free body diagram pane ----------
+  function drawFBD() {
+    const [W, H] = dims.f; if (!W || !H || !K) return;
+    const ctx = ctxs.f, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    ctx.font = `700 ${11 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('FREE BODY DIAGRAM OF THE CHOSEN PIECE', 10 * ps, 9 * ps);
+    if (K.taut || (arch() && S.layers.semi)) {
+      ctx.font = `${12 * ps}px ${T.ui}`; ctx.fillStyle = K.taut ? T.pos : T.muted;
+      ctx.fillText(K.taut ? 'Taut: the end forces would be infinite.' : 'Turn off the semicircle to see the forces.', 10 * ps, 32 * ps);
+      return;
+    }
+    const isArch = arch(), s1 = sOfF(S.f[0]), s2 = sOfF(S.f[1]), pf = pieceForces(K, s1, s2, S.lam);
+    const fl = (F) => (isArch ? [-F[0], F[1]] : F);
+    const F1 = fl(pf.F1), F2 = fl(pf.F2), Wt = pf.W;
+    const top = 30 * ps, bot = H - 10 * ps, split = W * 0.6;
+    // left: the piece at its own scale, with the three forces
+    const pts = []; for (let i = 0; i <= 40; i++) { const p = pointAt(K, s1 + (s2 - s1) * i / 40); pts.push([p.x, disp(p.y)]); }
+    const cmY = disp(pf.yc);
+    let x0 = Math.min(...pts.map((p) => p[0]), pf.xc), x1 = Math.max(...pts.map((p) => p[0]), pf.xc);
+    let y0 = Math.min(...pts.map((p) => p[1]), cmY), y1 = Math.max(...pts.map((p) => p[1]), cmY);
+    const bw = split - 20 * ps, bh = bot - top;
+    // room for arrows: the piece takes the middle half of the box
+    const sc = Math.min(bw * 0.34 / Math.max(x1 - x0, 1e-6), bh * 0.34 / Math.max(y1 - y0, 1e-6));
+    const cx = 10 * ps + bw / 2, cy = top + bh / 2, mx = (x0 + x1) / 2, my = (y0 + y1) / 2;
+    const Q = (x, y) => [cx + (x - mx) * sc, cy - (y - my) * sc];
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 3 * ps; ctx.lineCap = 'round'; ctx.beginPath();
+    pts.forEach((p, i) => { const q = Q(p[0], p[1]); i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); }); ctx.stroke(); ctx.lineCap = 'butt';
+    const Fm = Math.max(Math.hypot(...F1), Math.hypot(...F2), Math.abs(Wt[1]), 1e-9), fs = Math.min(bw * 0.3, bh * 0.36) / Fm;
+    const e1 = Q(pts[0][0], pts[0][1]), e2 = Q(pts[40][0], pts[40][1]), cm = Q(pf.xc, cmY);
+    const draw = (o, F, col, lab, push) => {
+      const v = [F[0] * fs, -F[1] * fs];
+      if (push) arrow(ctx, o[0] - v[0], o[1] - v[1], o[0], o[1], col, 2.2 * ps, 9 * ps);
+      else arrow(ctx, o[0], o[1], o[0] + v[0], o[1] + v[1], col, 2.2 * ps, 9 * ps);
+      const t = push ? [o[0] - v[0], o[1] - v[1]] : [o[0] + v[0], o[1] + v[1]];
+      const ux = v[0] / (Math.hypot(...v) || 1), uy = v[1] / (Math.hypot(...v) || 1), off = push ? -1 : 1;
+      label(ctx, lab, t[0] + ux * 10 * ps * off, t[1] + uy * 10 * ps * off, col, ux * off < -0.3 ? 'right' : ux * off > 0.3 ? 'left' : 'center', 'middle', 10.5);
+    };
+    draw(e1, F1, T.accent, `F₁ ${fN(Math.hypot(...F1))}`, isArch);
+    draw(e2, F2, T.accent, `F₂ ${fN(Math.hypot(...F2))}`, isArch);
+    ctx.fillStyle = T.wcol; ctx.beginPath(); ctx.arc(cm[0], cm[1], 3 * ps, 0, 2 * Math.PI); ctx.fill();
+    draw(cm, Wt, T.wcol, `W ${fN(Math.abs(Wt[1]))}`, false);
+    // right: force triangle F₁ + W + F₂ = 0, tip to tail
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(split, top); ctx.lineTo(split, bot); ctx.stroke();
+    ctx.font = `${10.5 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('tip to tail: it closes', split + (W - split) / 2, top - 2 * ps);
+    const vs = [F1, Wt, F2];
+    let px = 0, py = 0, xs = [0], ys = [0];
+    for (const v of vs) { px += v[0]; py += v[1]; xs.push(px); ys.push(py); }
+    const tw = W - split - 24 * ps, th = bot - top - 22 * ps;
+    const ts = Math.min(tw / Math.max(Math.max(...xs) - Math.min(...xs), 1e-9), th / Math.max(Math.max(...ys) - Math.min(...ys), 1e-9)) * 0.9;
+    const tcx = split + (W - split) / 2, tcy = top + 16 * ps + th / 2;
+    const mxs = (Math.max(...xs) + Math.min(...xs)) / 2, mys = (Math.max(...ys) + Math.min(...ys)) / 2;
+    const R2 = (x, y) => [tcx + (x - mxs) * ts, tcy - (y - mys) * ts];
+    const cols = [T.accent, T.wcol, T.accent];
+    for (let i = 0; i < 3; i++) { const a = R2(xs[i], ys[i]), b = R2(xs[i + 1], ys[i + 1]); arrow(ctx, a[0], a[1], b[0], b[1], cols[i], 2 * ps, 8 * ps); }
+    // the horizontal parts are equal and opposite
+    ctx.setLineDash([3 * ps, 3 * ps]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps;
+    const a0 = R2(0, 0), a1 = R2(xs[1], 0); ctx.beginPath(); ctx.moveTo(a0[0], a0[1]); ctx.lineTo(a1[0], a1[1]); ctx.stroke(); ctx.setLineDash([]);
+    label(ctx, `H ${fN(Math.abs(F1[0]))}`, (a0[0] + a1[0]) / 2, a0[1] + (F1[1] < 0 ? -9 : 9) * ps, T.muted, 'center', 'middle', 10);
+  }
+
+  // ---------- tension against sag graph ----------
+  let curve = null, curveKey = '', gGeom = null, gDrag = false, gHold = null;
+  function buildCurve() {
+    const key = [S.A, S.B, S.lam].join(',');
+    if (key === curveKey && curve) return;
+    curveKey = key;
+    const D = Math.hypot(S.B[0] - S.A[0], S.B[1] - S.A[1]), pts = [];
+    const emax = S_MAX / D - 1;
+    for (let i = 0; i <= 240; i++) {
+      const e = 1e-6 * Math.pow(emax / 1e-6, i / 240), Sv = D * (1 + e);
+      const k = solveCatenary(S.A[0], S.A[1], S.B[0], S.B[1], Sv);
+      if (k.taut) continue;
+      const w = S.lam * G;
+      pts.push({ S: Sv, d: sagOf(k).d, T: w * Math.max(Math.hypot(k.a, k.sA), Math.hypot(k.a, k.sB)), H: w * k.a });
+    }
+    curve = pts;
+  }
+  function gRanges() {
+    if (gHold) return gHold;
+    const dx = S.B[0] - S.A[0], w = S.lam * G, cur = K.taut ? 0 : sagOf(K).d;
+    return { xm: Math.max(0.5 * dx, 1.15 * cur), ym: 8 * w * dx };
+  }
+  function drawGraph() {
+    const [W, H] = dims.g; if (!W || !H || !K) return;
+    buildCurve();
+    const ctx = ctxs.g, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const isArch = arch(), word = isArch ? 'compression' : 'tension';
+    ctx.font = `700 ${11 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(`LARGEST ${word.toUpperCase()} AGAINST SAG`, 10 * ps, 9 * ps);
+    const L = 52 * ps, R = W - 14 * ps, top = 30 * ps, bot = H - 30 * ps;
+    if (R - L < 60 || bot - top < 40) return;
+    const rg = gRanges();
+    gGeom = { L, R, top, bot, xm: rg.xm, ym: rg.ym };
+    const X = (d) => L + d / rg.xm * (R - L), Y = (t) => bot - t / rg.ym * (bot - top);
+    // grid and ticks
+    const sx = niceStep(rg.xm / (W < 420 ? 3 : 5)), sy = niceStep(rg.ym / 4);
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.font = `${10 * ps}px ${T.mono}`; ctx.fillStyle = T.muted;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = 0; v <= rg.xm + 1e-9; v += sx) { const x = X(v); ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bot); ctx.stroke(); ctx.fillText(tick(v, sx), x, bot + 4 * ps); }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    const unit = rg.ym >= 2e4 ? 1e3 : 1;
+    for (let v = 0; v <= rg.ym + 1e-9; v += sy) { const y = Y(v); ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(R, y); ctx.stroke(); ctx.fillText(tick(v / unit, sy / unit), L - 5 * ps, y); }
+    ctx.strokeStyle = T.gridStrong; ctx.strokeRect(L + 0.5, top + 0.5, R - L, bot - top);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillStyle = T.muted;
+    ctx.fillText('sag d below the line through the supports (m)', (L + R) / 2, H - 2 * ps);
+    ctx.save(); ctx.translate(12 * ps, (top + bot) / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = 'middle';
+    ctx.fillText(unit === 1 ? 'force (N)' : 'force (kN)', 0, 0); ctx.restore();
+    // curves: largest tension (solid) and horizontal part H (dashed)
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
+    for (const [key, dash, col] of [['T', [], T.pos], ['H', [6 * ps, 4 * ps], T.neg]]) {
+      ctx.strokeStyle = col; ctx.lineWidth = 2 * ps; ctx.setLineDash(dash); ctx.beginPath();
+      let st = false;
+      for (const p of curve) { if (p.d > rg.xm * 1.05) break; const x = X(p.d), y = Math.max(top - 50, Y(p[key])); st ? ctx.lineTo(x, y) : ctx.moveTo(x, y); st = true; }
+      ctx.stroke();
+    }
+    ctx.setLineDash([]); ctx.restore();
+    // legend
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = T.pos; ctx.fillText(`largest ${word}`, R - 6 * ps, top + 10 * ps);
+    ctx.fillStyle = T.neg; ctx.fillText('H, horizontal part', R - 6 * ps, top + 24 * ps);
+    ctx.fillStyle = T.muted; ctx.fillText('both → ∞ as d → 0', R - 6 * ps, top + 38 * ps);
+    // current state
+    const d = K.taut ? 0 : sagOf(K).d, w = S.lam * G;
+    const Tm = K.taut ? Infinity : w * Math.max(Math.hypot(K.a, K.sA), Math.hypot(K.a, K.sB));
+    const x = X(d), y = isFinite(Tm) ? Y(Tm) : top;
+    const hot = gDrag || gHover || gFocus;
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 1 * ps; ctx.setLineDash([3 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(x, bot); ctx.lineTo(x, Math.max(top, y)); ctx.stroke(); ctx.setLineDash([]);
+    if (isFinite(Tm) && y >= top) {
+      ctx.fillStyle = T.canvas; ctx.strokeStyle = T.accent; ctx.lineWidth = (hot ? 2.6 : 1.8) * ps;
+      ctx.beginPath(); ctx.arc(x, y, (hot ? 7 : 5.5) * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    } else arrow(ctx, x, top + 18 * ps, x, top + 2 * ps, T.accent, 2 * ps, 7 * ps);
+    // grip on the axis to drag the sag
+    ctx.fillStyle = T.accent; ctx.beginPath(); ctx.moveTo(x, bot - 1); ctx.lineTo(x - 6 * ps, bot + 9 * ps); ctx.lineTo(x + 6 * ps, bot + 9 * ps); ctx.closePath(); ctx.globalAlpha = hot ? 1 : 0.75; ctx.fill(); ctx.globalAlpha = 1;
+  }
+  function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  function tick(v, st) { const d = Math.max(0, -Math.floor(Math.log10(st) + 1e-9)); return (Math.abs(v) < st / 1e6 ? 0 : v).toFixed(d); }
+  function setSag(d) {
+    buildCurve();
+    if (d <= 0 || !curve.length) { setLength(0); return; }
+    let i = curve.findIndex((p) => p.d >= d);
+    if (i < 0) { setLength(S_MAX); return; }
+    if (i === 0) { setLength(curve[0].S); return; }
+    const a = curve[i - 1], b = curve[i], f = (d - a.d) / (b.d - a.d);
+    setLength(a.S + f * (b.S - a.S));
+  }
+  let gHover = false, gFocus = false;
+  function gNear(ev) {
+    if (!gGeom) return false;
+    const r = cans.g.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, g = gGeom;
+    const tol = 10 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    const d = K.taut ? 0 : sagOf(K).d, px = g.L + d / g.xm * (g.R - g.L);
+    return Math.abs(x - px) < tol && y > g.top - tol && y < g.bot + 14 * projScale() + tol;
+  }
+  let gQueued = null, gFrame = false;
+  cans.g.addEventListener('pointerdown', (ev) => {
+    if (!gNear(ev)) return;
+    gDrag = true; gHold = gRanges();
+    try { cans.g.setPointerCapture(ev.pointerId); } catch (_) {}
+    cans.g.style.cursor = 'ew-resize'; ev.preventDefault(); requestDraw();
+  });
+  cans.g.addEventListener('pointermove', (ev) => {
+    if (gDrag) {
+      const r = cans.g.getBoundingClientRect(); gQueued = ev.clientX - r.left;
+      if (gFrame) return; gFrame = true;
+      requestAnimationFrame(() => {
+        gFrame = false; if (!gDrag || gQueued === null) return;
+        const g = gGeom; setSag(clamp((gQueued - g.L) / (g.R - g.L), 0, 1) * g.xm); gQueued = null; fitView(true);
+      });
+      return;
+    }
+    const n = gNear(ev); if (n !== gHover) { gHover = n; requestDraw(); }
+    cans.g.style.cursor = n ? 'ew-resize' : 'default';
+  });
+  const gEnd = () => { if (!gDrag) return; gDrag = false; gHold = null; fitView(false); requestDraw(); };
+  cans.g.addEventListener('pointerup', gEnd);
+  cans.g.addEventListener('pointercancel', gEnd);
+  cans.g.addEventListener('pointerleave', () => { if (gHover && !gDrag) { gHover = false; requestDraw(); } });
+  cans.g.addEventListener('focus', () => { gFocus = true; requestDraw(); });
+  cans.g.addEventListener('blur', () => { gFocus = false; requestDraw(); });
+  cans.g.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    const d = K.taut ? 0 : sagOf(K).d, st = (e.shiftKey ? 0.1 : 0.02) * (S.B[0] - S.A[0]) * 0.25;
+    setSag(Math.max(0, d + (e.key === 'ArrowRight' ? st : -st))); fitView(false);
+    say(`Sag ${fm(K.taut ? 0 : sagOf(K).d)}`); e.preventDefault();
+  });
+
+  // ---------- readouts ----------
+  const dl = (rows) => rows.map(([t, v, wide]) => `<div${wide ? ' class="wide"' : ''}><dt>${t}</dt><dd>${v}</dd></div>`).join('');
+  function updateReadouts() {
+    const isArch = arch(), w = S.lam * G, word = isArch ? 'Compression' : 'Tension', sym = isArch ? 'C' : 'T';
+    $('oS').textContent = fm(S.S); $('oL').textContent = `${sig(S.lam, 3)} kg/m`;
+    $('sS').value = S.S; $('sL').value = S.lam;
+    $('tautMsg').hidden = !K.taut;
+    $('forceTitle').textContent = isArch ? 'Compression' : 'Tension';
+    $('keyRamp').textContent = `${word}, low to high`;
+    $('forceHint').textContent = isArch
+      ? 'Every block pushes on its neighbors along the curve. The horizontal thrust H = λga is the same everywhere, and the supports must hold it back. The vertical part at any point carries the arch above it: V = λg s. The push is largest at the base.'
+      : 'Every bit of chain pulls on its neighbors along the chain. The horizontal part H = λga is the same everywhere, because nothing pushes sideways. The vertical part at any point holds up the chain between there and the lowest point: V = λg s. Together T = λg × (height above the directrix).';
+    const lo = lowest(K), sg = sagOf(K);
+    if (K.taut) {
+      $('shapeBox').innerHTML = dl([['Span Δx', fm(K.dx)], ['Height difference', fm(Math.abs(K.dy))], ['Sag', '0 m'], ['Catenary a', '∞']]);
+      $('shapeFormula').textContent = 'Straight line: no finite tension can hold it.';
+      $('forceBox').innerHTML = dl([[`H, horizontal part`, '∞'], [`${sym} at A`, '∞'], [`${sym} at B`, '∞'], ['Weight λgS', fN(w * S.S)]]);
+      $('fbdBox').innerHTML = dl([['Piece length', fm((S.f[1] - S.f[0]) * K.D)], ['Its weight', fN(w * (S.f[1] - S.f[0]) * K.D)]]);
+    } else {
+      $('shapeBox').innerHTML = dl([['Span Δx', fm(K.dx)], ['Height difference', fm(Math.abs(K.dy))], ['Sag d', fm(sg.d)], ['Catenary a', fm(K.a)],
+        [isArch ? 'Top' : 'Lowest point', lo.inside ? `${fm(lo.x)}, ${fm(disp(lo.y))}` : `support ${lo.x === K.xa ? 'A' : 'B'} (vertex outside the span)`, true]]);
+      $('shapeFormula').textContent = MIN(`y = ${isArch ? '−' : ''}(${K.a.toFixed(3)} cosh((x ${K.x0 >= 0 ? '−' : '+'} ${Math.abs(K.x0).toFixed(3)})/${K.a.toFixed(3)}) ${K.c >= 0 ? '+' : '−'} ${Math.abs(K.c).toFixed(3)}) m`);
+      const TA = w * Math.hypot(K.a, K.sA), TB = w * Math.hypot(K.a, K.sB), VA = -w * K.sA, VB = w * K.sB;
+      $('forceBox').innerHTML = dl([['H, the same everywhere', fN(w * K.a)], [lo.inside ? `${sym} at the ${isArch ? 'top' : 'lowest point'}` : `${sym} at the lower support`, fN(w * Math.hypot(K.a, lo.s))],
+        [`${sym} at A`, fN(TA)], [`${sym} at B`, fN(TB)],
+        ['Supports hold up (vertical)', `${fN(VA)} + ${fN(VB)}`, true], ['Weight λgS', fN(w * K.S)]]);
+      const s1 = sOfF(S.f[0]), s2 = sOfF(S.f[1]), pf = pieceForces(K, s1, s2, S.lam);
+      const sum = Math.hypot(...pf.sum), scale = Math.max(Math.hypot(...pf.F1), Math.hypot(...pf.F2));
+      $('fbdBox').innerHTML = dl([['Piece length', fm(pf.len)], ['Its weight W', fN(Math.abs(pf.W[1]))],
+        ['End 1 (H, V)', `${fN(Math.abs(pf.F1[0]))}, ${fN(Math.abs(pf.F1[1]))}`, true], ['End 2 (H, V)', `${fN(Math.abs(pf.F2[0]))}, ${fN(Math.abs(pf.F2[1]))}`, true],
+        ['V₂ − V₁ (signed)', fN(pf.F2[1] + pf.F1[1])], ['Net force', sum <= 1e-9 * scale ? '0 N' : fN(sum)]]);
+    }
+    // parabola
+    const P = parabolaFor(K), mg = maxGap(K, P);
+    const est = Math.abs(K.dy) < 1e-9 && !K.taut ? Math.pow(sg.d, 3) / (12 * Math.pow(K.dx / 2, 2)) : NaN;
+    $('parBox').innerHTML = dl([['Largest gap', fLen(mg.gap)], ['Gap / sag', sg.d > 0 ? `${sig(100 * mg.gap / sg.d, 2)} %` : '—'],
+      ['Shallow estimate d³/12L²', isFinite(est) ? fLen(est) : 'level supports only', true]]);
+    $('bridgeWrap').classList.toggle('dis', isArch || !S.layers.par);
+    $('tBridge').disabled = isArch || !S.layers.par;
+    $('bridgeHint').hidden = !(S.layers.bridge && S.layers.par && !isArch);
+    // arch
+    $('archSec').hidden = !isArch;
+    const ok = gwOk();
+    $('gwWrap').classList.toggle('dis', !ok); $('tGw').disabled = !ok;
+    $('gwShape').disabled = !ok;
+    $('semiHint').hidden = !S.layers.semi;
+    if (isArch) {
+      const rise = K.taut ? 0 : 0.5 * (K.ya + K.yb) - lo.y;
+      $('archBox').innerHTML = dl([['Rise / span', K.taut ? '0' : sig(rise / K.dx, 3)], ['Gateway rise / span', sig(GW.fc / (2 * GW.L), 3)],
+        ['Thrust on each support', K.taut ? '∞' : `${fN(w * K.a)} sideways`, true]]);
+      if (!ok) $('archBox').innerHTML += dl([['Gateway overlay', 'level the supports', true]]);
+    }
+  }
+  const gwOk = () => !K.taut && Math.abs(K.dy) < 0.02 && lowest(K).inside;
+
+  function update() {
+    solve();
+    updateReadouts();
+    requestDraw();
+  }
+  const live = $('live');
+  function say(t) { live.textContent = t; }
+
+  // ---------- controls ----------
+  function applyPreset(name) {
+    S.preset = name; const p = PRESETS[name];
+    S.mode = p.mode; S.A = [...p.A]; S.B = [...p.B]; S.lam = p.lam; S.f = [...p.f];
+    S.layers.par = p.par; S.layers.dir = p.dir; S.layers.bridge = false; S.layers.semi = false; S.layers.gw = !!p.gw;
+    if (p.S === null) S.S = snap('S', lengthThroughMid(S.A[0], S.A[1], S.B[0], S.B[1], S.A[1] - (S.B[0] - S.A[0]) * GW.fc / (2 * GW.L)));
+    else S.S = p.S;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint').textContent = p.hint;
+    syncControls();
+    solve();
+    const e = extent(); Object.assign(view, { x0: e.x0, x1: e.x1, y0: e.y0, y1: e.y1, anim: null });
+    update();
+  }
+  function syncControls() {
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
+    $('tColor').checked = S.layers.color; $('tArrows').checked = S.layers.arrows; $('tDir').checked = S.layers.dir; $('tLinks').checked = S.layers.links;
+    $('tPar').checked = S.layers.par; $('tBridge').checked = S.layers.bridge; $('tGw').checked = S.layers.gw; $('tSemi').checked = S.layers.semi;
+  }
+  document.querySelectorAll('#presets button').forEach((b) => b.addEventListener('click', () => applyPreset(b.dataset.p)));
+  document.querySelectorAll('#modeSeg button').forEach((b) => b.addEventListener('click', () => {
+    if (S.mode === b.dataset.m) return;
+    S.mode = b.dataset.m; syncControls(); solve();
+    const e = extent(); Object.assign(view, { x0: e.x0, x1: e.x1, y0: e.y0, y1: e.y1, anim: null });
+    update();
+  }));
+  $('sS').addEventListener('input', (e) => { setLength(+e.target.value, true); fitView(true); });
+  $('sS').addEventListener('change', () => fitView(false));
+  $('sL').addEventListener('input', (e) => { S.lam = snap('lam', +e.target.value); update(); });
+  const tog = (id, key, refit) => $(id).addEventListener('change', (e) => { S.layers[key] = e.target.checked; update(); if (refit) fitView(false); });
+  tog('tColor', 'color'); tog('tArrows', 'arrows'); tog('tDir', 'dir'); tog('tLinks', 'links');
+  tog('tPar', 'par', true); tog('tBridge', 'bridge', true); tog('tGw', 'gw', true); tog('tSemi', 'semi', true);
+  $('gwShape').addEventListener('click', () => {
+    const half = (S.B[0] - S.A[0]) / 2, yS = 0.5 * (S.A[1] + S.B[1]);
+    setLength(lengthThroughMid(S.A[0], S.A[1], S.B[0], S.B[1], yS - 2 * half * GW.fc / (2 * GW.L)));
+    S.layers.gw = true; syncControls(); update(); fitView(false);
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); drawNow(); }); } catch (_) {}
+  new MutationObserver(() => { tokens(); drawNow(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  window.__ct = { get K() { return K; }, get S() { return S; }, get frameMs() { return frameMs; }, get view() { return view; },
+    handles, mGeom, PX, drawNow, applyPreset, setLength, moveSupport, setSag };
+
+  tokens();
+  const ro = new ResizeObserver(resize);
+  for (const k of ['m', 'f', 'g']) ro.observe(panes[k]);
+  applyPreset('hang');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawNow());
+})();
+</script>
+</body>
+</html>
