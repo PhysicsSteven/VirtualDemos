@@ -207,12 +207,18 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </div>
         <div>
           <div class="slider-head"><label for="cd">Drag coefficient C<sub>d</sub></label><output id="cdOut" class="mono" for="cd"></output></div>
-          <input type="range" id="cd" min="0.05" max="1.2" step="0.01" value="0.35">
+          <input type="range" id="cd" min="0" max="1.2" step="0.01" value="0.35">
         </div>
       </section>
 
       <section>
         <h2>Air</h2>
+        <div class="slider-head" style="align-items: center"><span>Air resistance</span>
+          <div class="chips" id="dragSw" role="group" aria-label="Air resistance">
+            <button type="button" data-d="on" aria-pressed="true">On</button>
+            <button type="button" data-d="off" aria-pressed="false">Off</button>
+          </div>
+        </div>
         <div class="chips" id="airs">
           <button type="button" data-a="sea" aria-pressed="true">Sea level</button>
           <button type="button" data-a="denver" aria-pressed="false">Denver</button>
@@ -222,7 +228,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div class="slider-head"><label for="rho">Air density ρ</label><output id="rhoOut" class="mono" for="rho"></output></div>
           <input type="range" id="rho" min="0" max="1.4" step="0.005" value="1.225">
         </div>
-        <p class="hint">Moon removes the air but keeps g = 9.81 m/s², so only the drag changes.</p>
+        <p class="hint">Turning air resistance off keeps you on Earth with the same ball and the same air; only the drag force is switched off. Moon removes the air itself but keeps g = 9.81 m/s². A drag coefficient of 0 does the same thing gradually.</p>
       </section>
 
       <section>
@@ -283,7 +289,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const DEG = Math.PI / 180;
 
   // ---------- state ----------
-  const P = { v: 40, th: 45, h: 0, m: 0.145, d: 0.074, cd: 0.35, rho: 1.225 };
+  const P = { v: 40, th: 45, h: 0, m: 0.145, d: 0.074, cd: 0.35, rho: 1.225, drag: true };
   const PRESETS = {
     baseball: { m: 0.145,  d: 0.074, cd: 0.35, v: 40, h: 0 },
     pingpong: { m: 0.0027, d: 0.040, cd: 0.47, v: 20, h: 0 },
@@ -300,7 +306,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   // ---------- physics ----------
   // k = (½ ρ C_d A) / m, so the drag acceleration is −k |v| v
-  const kDrag = (p) => p.rho * p.cd * Math.PI * p.d * p.d / (8 * p.m);
+  const kDrag = (p) => p.drag === false ? 0 : p.rho * p.cd * Math.PI * p.d * p.d / (8 * p.m);
   const vTerm = (p) => { const k = kDrag(p); return k > 0 ? Math.sqrt(G / k) : Infinity; };
   const herm = (p0, m0, p1, m1, u, h) => {
     const u2 = u * u, u3 = u2 * u;
@@ -720,7 +726,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     $('rVt').textContent = isFinite(vt) ? fmtV(vt) : '∞';
     const ratio = P.v / vt;
     $('rRatio').textContent = isFinite(vt) ? ratio.toFixed(2) : '0';
-    $('dragHint').textContent = !isFinite(vt) ? 'No air, so no drag. Both paths are the same parabola.'
+    $('dragHint').textContent = !P.drag ? 'Air resistance is off, so both paths are the same parabola, and the mass and size of the ball no longer matter.'
+      : !isFinite(vt) ? 'No drag, so both paths are the same parabola.'
       : ratio < 0.3 ? 'Here v₀ is much smaller than vₜ, so drag barely changes the shot.'
       : ratio < 0.8 ? 'Here v₀ is a sizable fraction of vₜ, so drag is noticeable.'
       : 'Here v₀ is comparable to or above vₜ, so drag changes the shot a lot.';
@@ -729,7 +736,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   }
 
   // ---------- scheduling ----------
-  const keyOf = () => [P.v, P.th, P.h, P.m, P.d, P.cd, P.rho].join('|');
+  const keyOf = () => [P.v, P.th, P.h, P.m, P.d, P.cd, P.rho, P.drag].join('|');
   function schedule() {
     if (raf) return;
     raf = requestAnimationFrame(frame);
@@ -788,9 +795,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   for (const b of document.querySelectorAll('#presets button')) {
     b.addEventListener('click', () => {
-      Object.assign(P, PRESETS[b.dataset.p]);
+      Object.assign(P, PRESETS[b.dataset.p]); P.drag = true; setPressed('#dragSw', 'd', 'on');
       ghosts = []; setPressed('#presets', 'p', b.dataset.p); syncSliders(); changed(true);
     });
+  }
+  for (const b of document.querySelectorAll('#dragSw button')) {
+    b.addEventListener('click', () => { P.drag = b.dataset.d === 'on'; setPressed('#dragSw', 'd', b.dataset.d); changed(true); });
   }
   for (const b of document.querySelectorAll('#airs button')) {
     b.addEventListener('click', () => { P.rho = AIRS[b.dataset.a]; syncSliders(); syncAirChips(); changed(true); });
