@@ -1,0 +1,1181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Spacetime Diagrams</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: lab bench. The Minkowski diagram fills the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --twin: #7a45b8;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+    --twin: #bb94ff;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  --twin: #bb94ff;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+:root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 360px; }
+.stage { position: relative; min-height: 520px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; cursor: crosshair; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.stage-top { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 2; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; pointer-events: none; }
+.stage-top > * { pointer-events: auto; }
+.stage-ctl { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.seg { display: inline-flex; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button {
+  font: inherit; font-size: 0.86rem; font-weight: 700; color: var(--muted); background: none; border: 0;
+  border-radius: 6px; padding: 5px 11px; cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.verdict { margin: 0; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; background: var(--canvas); border: 1px solid var(--line); border-left-width: 4px; }
+.verdict.timelike { border-left-color: var(--neg); }
+.verdict.lightlike { border-left-color: var(--equi); }
+.verdict.spacelike { border-left-color: var(--pos); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.evchips button { font-family: var(--font-mono); font-weight: 600; min-width: 36px; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .s dd { color: var(--neg); }
+.readout .p dd { color: var(--pos); }
+.readout .tw dd { color: var(--twin); }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input { accent-color: var(--accent); margin: 0; }
+
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.s { border-color: var(--neg); border-top-width: 3px; }
+.swatch.p { border-color: var(--pos); border-top-width: 3px; }
+.swatch.light { border-color: var(--equi); border-top-style: dashed; }
+.swatch.tw { border-color: var(--twin); border-top-width: 3px; }
+.swatch.hyp { border-color: var(--muted); opacity: 0.6; border-top-width: 1px; }
+.swatch.sim { border-color: var(--pos); border-top-style: dashed; }
+.swatch.cone { height: 10px; border: 0; border-radius: 2px; background: var(--equi); opacity: 0.35; }
+kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--canvas); }
+
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench, :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 78vh; min-height: 480px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Spacetime Diagrams</h1>
+      <p>Place events in time and space, then change observers. Light stays at 45° for everyone; clocks, lengths and simultaneity do not.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">c = 1 · ct in years, x in light years · γ = 1/√(1 − β²) · t′ = γ(t − βx), x′ = γ(x − βt)</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="dia" tabindex="0" role="application" aria-label="Spacetime diagram, ct up and x across. Click empty space to add an event, drag events to move them, drag empty space to pan, scroll or pinch to zoom. Arrow keys move the selected event, square brackets switch events, Delete removes one, space plays or pauses."></canvas>
+      <div class="stage-top" id="stageTop">
+        <div class="stage-ctl">
+          <button type="button" class="btn primary" id="play">Play</button>
+          <button type="button" class="btn" id="reset">Reset</button>
+          <button type="button" class="btn" id="fit">Fit view</button>
+        </div>
+        <div class="seg" role="group" aria-label="Diagram view">
+          <button type="button" data-mode="both" aria-pressed="true">Both frames</button>
+          <button type="button" data-mode="moving" aria-pressed="false">Moving frame's view</button>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Scenarios</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="cone" aria-pressed="true">Light cone basics</button>
+          <button type="button" data-p="simul" aria-pressed="false">Relativity of simultaneity</button>
+          <button type="button" data-p="dilate" aria-pressed="false">Time dilation</button>
+          <button type="button" data-p="length" aria-pressed="false">Length contraction</button>
+          <button type="button" data-p="twin" aria-pressed="false">Twin paradox</button>
+          <button type="button" data-p="cause" aria-pressed="false">Causality</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Moving observer S′</h2>
+        <div>
+          <div class="slider-head"><label for="beta">Speed β = v/c</label><output id="betaOut" class="mono" for="beta"></output></div>
+          <input type="range" id="beta" min="-0.95" max="0.95" step="0.01" value="0">
+        </div>
+        <dl class="readout">
+          <div class="big"><dt>β</dt><dd id="rBeta">—</dd></div>
+          <div class="big"><dt>γ = 1/√(1 − β²)</dt><dd id="rGamma">—</dd></div>
+          <div><dt>Axis tilt, tan θ = |β|</dt><dd id="rTilt">—</dd></div>
+          <div><dt>Clock rate 1/γ</dt><dd id="rInv">—</dd></div>
+        </dl>
+        <p class="hint">S′ moves along x at speed v. Its ct′ axis is its own worldline, tilted by an angle whose tangent is β; its x′ axis tilts by the same angle, so the light line always bisects them.</p>
+      </section>
+
+      <section>
+        <h2>Events</h2>
+        <div class="chips evchips" id="evList"></div>
+        <div class="row3">
+          <button type="button" class="btn" id="evAdd">Add</button>
+          <button type="button" class="btn" id="evDel">Delete</button>
+          <button type="button" class="btn" id="evClear">Clear</button>
+        </div>
+        <p class="hint" id="evHint">Click empty space to add an event, drag to move it. Select two events to compare them.</p>
+      </section>
+
+      <section>
+        <h2>Selected</h2>
+        <dl class="readout">
+          <div class="wide"><dt>Event</dt><dd id="rEv">—</dd></div>
+          <div class="s"><dt>In S: (ct, x)</dt><dd id="rEvS">—</dd></div>
+          <div class="p"><dt>In S′: (ct′, x′)</dt><dd id="rEvP">—</dd></div>
+          <div class="wide"><dt>s² from origin, (ct)² − x², in S and in S′</dt><dd id="rEvS2">—</dd></div>
+        </dl>
+        <dl class="readout" id="pairBox">
+          <div class="wide"><dt>Pair</dt><dd id="rPair">—</dd></div>
+          <div class="big"><dt>Δs² = (cΔt)² − Δx²</dt><dd id="rDs2">—</dd></div>
+          <div class="big"><dt>Separation</dt><dd id="rType">—</dd></div>
+          <div class="s"><dt>In S: cΔt, Δx</dt><dd id="rDS">—</dd></div>
+          <div class="p"><dt>In S′: cΔt′, Δx′</dt><dd id="rDP">—</dd></div>
+          <div class="wide"><dt id="rExtraL">Proper time between them</dt><dd id="rExtra">—</dd></div>
+        </dl>
+        <p class="verdict" id="verdict">Select a second event to compare.</p>
+      </section>
+
+      <section>
+        <h2>Worldlines and clocks</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="wHome">Home</label>
+          <label><input type="checkbox" id="wRocket">Rocket at β</label>
+          <label><input type="checkbox" id="wTwin">Traveling twin</label>
+          <label><input type="checkbox" id="wRod">Rod at rest in S′</label>
+        </div>
+        <div>
+          <div class="slider-head"><label for="tend">Trip length, home clock</label><output id="tendOut" class="mono" for="tend"></output></div>
+          <input type="range" id="tend" min="2" max="20" step="0.5" value="10">
+        </div>
+        <div id="rodBox">
+          <div class="slider-head"><label for="rodL">Rod length in its own frame</label><output id="rodOut" class="mono" for="rodL"></output></div>
+          <input type="range" id="rodL" min="1" max="8" step="0.5" value="5">
+        </div>
+        <dl class="readout">
+          <div class="s"><dt id="nHome">Home clock</dt><dd id="rHome">—</dd></div>
+          <div class="p"><dt id="nRocket">Rocket clock</dt><dd id="rRocket">—</dd></div>
+          <div class="tw"><dt id="nTwin">Traveling twin</dt><dd id="rTwin">—</dd></div>
+          <div><dt>Rod length in S, S′</dt><dd id="rRod">—</dd></div>
+        </dl>
+        <p class="hint" id="twinNote">Each tick on a worldline is one year on that clock, so wider spacing means a slower clock in this frame. The twin flies out at β and back at −β.</p>
+      </section>
+
+      <section>
+        <h2>Layers</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="lCones" checked>Light cones</label>
+          <label><input type="checkbox" id="lHyper" checked>Hyperbolas</label>
+          <label><input type="checkbox" id="lSimul" checked>Simultaneity</label>
+          <label><input type="checkbox" id="lTicks" checked>Clock ticks</label>
+          <label><input type="checkbox" id="lPrime" checked>S′ axes</label>
+          <label><input type="checkbox" id="lTwinLines" checked>Twin's now lines</label>
+        </div>
+        <p class="hint">The faint hyperbolas are (ct)² − x² = ±1, ±4, ±9 and so on. A Lorentz boost slides every event along its hyperbola, so each frame's tick n lands where its axis crosses the n² hyperbola. That is why the primed ticks look stretched.</p>
+      </section>
+
+      <section>
+        <h2>Key</h2>
+        <div class="key">
+          <span><i class="swatch s"></i>Frame S: axes ct, x and its simultaneity lines</span>
+          <span><i class="swatch p"></i>Frame S′: axes ct′, x′ and its simultaneity lines</span>
+          <span><i class="swatch light"></i>Light lines, x = ±ct</span>
+          <span><i class="swatch cone"></i>Light cones of the selected events</span>
+          <span><i class="swatch tw"></i>Traveling twin</span>
+          <span><i class="swatch hyp"></i>Invariant hyperbolas</span>
+          <span><i class="swatch sim"></i>Dashed: lines of simultaneity</span>
+        </div>
+      </section>
+
+      <section>
+        <h2>Controls and model</h2>
+        <p class="hint">On the diagram: drag empty space to pan, scroll or pinch to zoom. With the diagram focused, <kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> move the selected event (<kbd>Shift</kbd> for bigger steps), <kbd>[</kbd> <kbd>]</kbd> switch events, <kbd>Del</kbd> removes it, <kbd>N</kbd> adds one, <kbd>M</kbd> switches the view, <kbd>Space</kbd> plays.</p>
+        <p class="hint">Model: exact special relativity in one space dimension with c = 1, so light covers one light year per year. All coordinates come from the Lorentz transformation. The twin's turnaround is treated as instantaneous.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  // ---------- special relativity, c = 1 ----------
+  const gammaOf = (b) => 1 / Math.sqrt(1 - b * b);
+  // Lorentz transformation into a frame moving at velocity b along x
+  const boost = (t, x, b) => { const g = gammaOf(b); return [g * (t - b * x), g * (x - b * t)]; };
+
+  // ---------- state ----------
+  const LETTERS = 'ABCDEFGHJKLMNPQRSUVWXYZ';
+  const MAXEV = 10;
+  const S = {
+    beta: 0, mode: 'both', events: [], sel: [],
+    wl: { home: false, rocket: false, twin: false, rod: false },
+    names: { home: 'Home', rocket: 'Rocket', twin: 'Twin' },
+    Tend: 10, L0: 5, rodT: 2,
+    layers: { cones: true, hyper: true, simul: true, ticks: true, prime: true, twinlines: true }
+  };
+  let preset = 'cone';
+  let phiD = 0;                    // rapidity of the frame the diagram is drawn in (animated)
+  let V = { cx: 0, ct: 0, s: 40 }; // display coordinates at canvas center, pixels per unit
+  let fitBox = [-7, 7, -4, 8];
+  let userMoved = false;
+  let nowOn = false, nowT = 0, playing = false;
+  let dirty = true;
+
+  const targetPhi = () => (S.mode === 'moving' ? Math.atanh(S.beta) : 0);
+  const toD = (t, x) => { const c = Math.cosh(phiD), s = Math.sinh(phiD); return [c * t - s * x, c * x - s * t]; };
+  const fromD = (t, x) => { const c = Math.cosh(phiD), s = Math.sinh(phiD); return [c * t + s * x, c * x + s * t]; };
+
+  // ---------- theme ----------
+  let C = null;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    C = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
+      gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'),
+      twin: g('--twin'), mono: g('--font-mono') || 'monospace' };
+    dirty = true;
+  }
+  function alpha(col, a) {
+    if (col.startsWith('#')) {
+      let h = col.slice(1); if (h.length === 3) h = h.split('').map((c) => c + c).join('');
+      const n = parseInt(h, 16);
+      return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
+    }
+    return col;
+  }
+
+  // ---------- canvas ----------
+  const cv = $('dia'), ctx = cv.getContext('2d');
+  let W = 0, H = 0, dpr = 1, topPad = 50;
+  function resize() {
+    const r = $('stage').getBoundingClientRect();
+    dpr = window.devicePixelRatio || 1;
+    W = r.width; H = r.height;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    topPad = $('stageTop').offsetHeight + 18;
+    if (!userMoved) fitView();
+    dirty = true;
+  }
+  function fitView() {
+    if (!W || !H) return;
+    let [x0, x1, t0, t1] = fitBox;
+    const pad = 14, bottom = 16;
+    const ph = targetPhi();
+    if (Math.abs(ph) > 1e-6) {
+      // moving frame's view: fit what the scenario contains, as S′ sees it
+      const pts = [[0, 0], ...S.events.map((e) => [e.t, e.x])];
+      for (const w of worldlines()) pts.push(...w.pts);
+      if (S.wl.rod) { const m = rodMeasure(); pts.push(m.back, m.frontS, m.frontP); }
+      const c = Math.cosh(ph), sn = Math.sinh(ph);
+      const tr = pts.map(([t, x]) => [c * t - sn * x, c * x - sn * t]);
+      const ts = tr.map((p) => p[0]), xs = tr.map((p) => p[1]);
+      t0 = Math.min(...ts) - 1.5; t1 = Math.max(...ts) + 1.5; x0 = Math.min(...xs) - 2; x1 = Math.max(...xs) + 2;
+      if (t1 - t0 < 8) { const m = (t0 + t1) / 2; t0 = m - 4; t1 = m + 4; }
+      if (x1 - x0 < 10) { const m = (x0 + x1) / 2; x0 = m - 5; x1 = m + 5; }
+    }
+    const s = Math.min((W - 2 * pad) / (x1 - x0), (H - topPad - bottom) / (t1 - t0));
+    V.s = Math.max(4, Math.min(220, s));
+    V.cx = (x0 + x1) / 2;
+    // center the box in the area below the toolbar
+    const midY = topPad + (H - topPad - bottom) / 2;
+    V.ct = (t0 + t1) / 2 + (midY - H / 2) / V.s;
+    dirty = true;
+  }
+  const sx = (x) => W / 2 + (x - V.cx) * V.s;
+  const sy = (t) => H / 2 - (t - V.ct) * V.s;
+  const scr = (td, xd) => [sx(xd), sy(td)];
+  const scrLab = (t, x) => { const [td, xd] = toD(t, x); return scr(td, xd); };
+  const unscr = (px, py) => [V.ct + (H / 2 - py) / V.s, V.cx + (px - W / 2) / V.s];  // [td, xd]
+  function viewBounds() {
+    return { x0: V.cx - W / 2 / V.s, x1: V.cx + W / 2 / V.s, t0: V.ct - H / 2 / V.s, t1: V.ct + H / 2 / V.s };
+  }
+  function tickStep() {
+    for (const st of [1, 2, 5, 10, 20, 50]) if (st * V.s >= 16) return st;
+    return 100;
+  }
+  const BIG = () => 3 * (W + H) / V.s + 50;
+
+  // ---------- drawing helpers ----------
+  let ps = 1;
+  function font(size, weight = 400) { return `${weight} ${size * ps}px ${C.mono}`; }
+  function text(str, x, y, color, opt = {}) {
+    ctx.font = font(opt.size || 11, opt.weight || 400);
+    ctx.textAlign = opt.align || 'left'; ctx.textBaseline = opt.base || 'middle';
+    ctx.lineJoin = 'round'; ctx.lineWidth = 3.5 * ps; ctx.strokeStyle = C.canvas;
+    ctx.strokeText(str, x, y);
+    ctx.fillStyle = color; ctx.fillText(str, x, y);
+  }
+  function line(a, b, color, w, dash) {
+    ctx.strokeStyle = color; ctx.lineWidth = w; ctx.setLineDash(dash || []);
+    ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); ctx.setLineDash([]);
+  }
+  // a full line through lab point P with lab direction D, in screen coordinates
+  function labLine(P, D) {
+    const [pt, px] = toD(P[0], P[1]); let [dt, dx] = toD(D[0], D[1]);
+    const n = Math.hypot(dt, dx); dt /= n; dx /= n;
+    const R = BIG();
+    return [scr(pt - R * dt, px - R * dx), scr(pt + R * dt, px + R * dx), [pt, px], [dt, dx]];
+  }
+  // where a screen line enters and leaves the inner rectangle (slab method)
+  function clipSeg(a, b, m) {
+    const x0 = m, y0 = Math.max(m, topPad - 6), x1 = W - m, y1 = H - m;
+    let lo = 0, hi = 1; const dx = b[0] - a[0], dy = b[1] - a[1];
+    for (const [p, q] of [[-dx, a[0] - x0], [dx, x1 - a[0]], [-dy, a[1] - y0], [dy, y1 - a[1]]]) {
+      if (Math.abs(p) < 1e-12) { if (q < 0) return null; continue; }
+      const r = q / p;
+      if (p < 0) { if (r > hi) return null; if (r > lo) lo = r; } else { if (r < lo) return null; if (r < hi) hi = r; }
+    }
+    return [[a[0] + lo * dx, a[1] + lo * dy], [a[0] + hi * dx, a[1] + hi * dy]];
+  }
+  const fmt = (v, d = 2) => { const r = Math.abs(v) < 0.5 * Math.pow(10, -d) ? 0 : v; return r.toFixed(d).replace('-', '−'); };
+  const fmtS = (v, d = 1) => fmt(v, d);
+
+  // ---------- worldlines (lab coordinates) ----------
+  function worldlines() {
+    const b = S.beta, T = S.Tend, out = [];
+    if (S.wl.home) out.push({ key: 'home', name: S.names.home, color: C.neg, pts: [[0, 0], [T, 0]], side: -1 });
+    if (S.wl.rocket) out.push({ key: 'rocket', name: S.names.rocket, color: C.pos, pts: [[0, 0], [T, b * T]], side: 1 });
+    if (S.wl.twin) out.push({ key: 'twin', name: S.names.twin, color: C.twin, pts: [[0, 0], [T / 2, b * T / 2], [T, 0]], side: 1 });
+    return out;
+  }
+  function properTimes(pts) {
+    const tau = [0];
+    for (let i = 1; i < pts.length; i++) {
+      const dt = pts[i][0] - pts[i - 1][0], dx = pts[i][1] - pts[i - 1][1];
+      tau.push(tau[i - 1] + Math.sqrt(Math.max(0, dt * dt - dx * dx)));
+    }
+    return tau;
+  }
+  function pointAtTau(pts, tau, k) {
+    for (let i = 1; i < pts.length; i++) {
+      if (k <= tau[i] + 1e-9 || i === pts.length - 1) {
+        const span = tau[i] - tau[i - 1], f = span > 0 ? (k - tau[i - 1]) / span : 0;
+        return { t: pts[i - 1][0] + f * (pts[i][0] - pts[i - 1][0]), x: pts[i - 1][1] + f * (pts[i][1] - pts[i - 1][1]), seg: i };
+      }
+    }
+    return null;
+  }
+
+  // ---------- draw ----------
+  function draw() {
+    if (!W || !H || !C) return;
+    ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = C.canvas; ctx.fillRect(0, 0, W, H);
+    const step = tickStep();
+    edgeLabels = [];
+    drawGrid(step);
+    if (S.layers.hyper) drawHyperbolas(step);
+    if (S.layers.cones) drawCones();
+    if (S.wl.rod) drawRod();
+    drawLightLines();
+    if (S.wl.twin && S.layers.twinlines) drawTwinLines();
+    if (S.layers.simul) drawSimul();
+    const showPrime = Math.abs(S.beta) > 0.004 && (S.mode === 'moving' || S.layers.prime || Math.abs(phiD) > 1e-3);
+    const etaP = Math.atanh(S.beta);
+    const tk = S.layers.ticks;
+    drawAxes(0, C.neg, '', step, showPrime ? (etaP > 0 ? -1 : 1) : -1, tk && S.wl.home);
+    if (showPrime) drawAxes(etaP, C.pos, '′', step, etaP > 0 ? 1 : -1, tk && S.wl.rocket);
+    drawWorldlines();
+    if (S.wl.rod) drawRodMeasure();
+    if (nowOn) drawNow();
+    drawPair();
+    drawEvents();
+    flushEdgeLabels();
+    drawFrameTag();
+  }
+
+  function drawGrid(step) {
+    const b = viewBounds();
+    ctx.lineWidth = 1;
+    for (let k = Math.ceil(b.x0 / step); k * step <= b.x1; k++) {
+      const X = Math.round(sx(k * step)) + 0.5;
+      ctx.strokeStyle = k % 5 === 0 ? C.gridStrong : C.grid;
+      ctx.beginPath(); ctx.moveTo(X, 0); ctx.lineTo(X, H); ctx.stroke();
+    }
+    for (let k = Math.ceil(b.t0 / step); k * step <= b.t1; k++) {
+      const Y = Math.round(sy(k * step)) + 0.5;
+      ctx.strokeStyle = k % 5 === 0 ? C.gridStrong : C.grid;
+      ctx.beginPath(); ctx.moveTo(0, Y); ctx.lineTo(W, Y); ctx.stroke();
+    }
+  }
+
+  function drawHyperbolas(step) {
+    const b = viewBounds();
+    const M = Math.max(Math.abs(b.x0), Math.abs(b.x1), Math.abs(b.t0), Math.abs(b.t1)) * 1.42;
+    let hs = step; while (M / hs > 14) hs *= 2;
+    ctx.strokeStyle = alpha(C.muted, 0.28); ctx.lineWidth = 1 * ps;
+    for (let r = hs; r < M; r += hs) {
+      const U = Math.acosh(Math.max(1.0001, M / r));
+      for (const [ft, fx] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        ctx.beginPath();
+        for (let i = 0; i <= 90; i++) {
+          const u = -U + 2 * U * i / 90, ch = r * Math.cosh(u), sh = r * Math.sinh(u);
+          // timelike branches t = ±r cosh u; spacelike branches x = ±r cosh u
+          const t = ft ? ft * ch : sh, x = ft ? sh : fx * ch;
+          const X = sx(x), Y = sy(t);
+          i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y);
+        }
+        ctx.stroke();
+      }
+    }
+  }
+
+  function drawCones() {
+    const R = BIG();
+    for (const e of S.events) {
+      const isSel = S.sel.includes(e.id);
+      const [td, xd] = toD(e.t, e.x);
+      const o = scr(td, xd);
+      for (const dir of [1, -1]) {
+        const a = scr(td + dir * R, xd - R), c = scr(td + dir * R, xd + R);
+        if (isSel) {
+          ctx.fillStyle = alpha(C.equi, dir > 0 ? 0.11 : 0.05);
+          ctx.beginPath(); ctx.moveTo(o[0], o[1]); ctx.lineTo(a[0], a[1]); ctx.lineTo(c[0], c[1]); ctx.closePath(); ctx.fill();
+        }
+        ctx.strokeStyle = alpha(C.equi, isSel ? 0.85 : 0.35); ctx.lineWidth = (isSel ? 1.4 : 1) * ps;
+        ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(o[0], o[1]); ctx.lineTo(c[0], c[1]); ctx.stroke();
+      }
+      if (isSel && S.sel.length && e.id === S.sel[S.sel.length - 1]) {
+        const d = 70 / V.s;
+        const p = scr(td + d, xd + 0.5 * d);
+        if (p[1] > topPad + 10) text('future', p[0], p[1], alpha(C.equi, 0.95), { align: 'center', size: 10 });
+        const q = scr(td - d, xd + 0.5 * d);
+        if (q[1] < H - 10) text('past', q[0], q[1], alpha(C.equi, 0.95), { align: 'center', size: 10 });
+      }
+    }
+  }
+
+  function drawLightLines() {
+    const R = BIG();
+    for (const sgn of [1, -1]) {
+      const a = scr(-R, -sgn * R), b = scr(R, sgn * R);
+      line(a, b, alpha(C.equi, 0.9), 1.3 * ps, [6 * ps, 5 * ps]);
+      const seg = clipSeg(a, b, 8);
+      if (seg) {
+        const p = seg[1];
+        const lab = sgn > 0 ? 'light, x = ct' : 'light, x = −ct';
+        ctx.font = font(10);
+        const w = ctx.measureText(lab).width;
+        const atTop = p[1] < topPad + 4;
+        const px = sgn > 0 ? Math.min(p[0] - 6, W - 8) : Math.max(p[0] + 6, 8);
+        text(lab, sgn > 0 ? px : px, atTop ? p[1] + 10 * ps : p[1] + (sgn > 0 ? 12 : 12) * ps, C.equi,
+          { align: sgn > 0 ? 'right' : 'left', size: 10 });
+        void w;
+      }
+    }
+  }
+
+  // axes of a frame with rapidity eta, drawn in the display frame
+  function drawAxes(eta, color, prime, step, side, skipT) {
+    const er = eta - phiD, ch = Math.cosh(er), sh = Math.sinh(er);
+    const R = BIG();
+    const tA = scr(-R * ch, -R * sh), tB = scr(R * ch, R * sh);      // time axis: (t, x) = n (cosh, sinh)
+    const xA = scr(-R * sh, -R * ch), xB = scr(R * sh, R * ch);      // space axis: (t, x) = n (sinh, cosh)
+    const lw = 1.7 * ps;
+    line(tA, tB, color, lw); line(xA, xB, color, lw);
+    // screen unit vectors
+    const tv = [sh, -ch], xv = [ch, -sh];
+    const nt = Math.hypot(tv[0], tv[1]), nx = Math.hypot(xv[0], xv[1]);
+    const tu = [tv[0] / nt, tv[1] / nt], xu = [xv[0] / nx, xv[1] / nx];
+    const spacing = step * V.s * nt;
+    const every = spacing >= 30 * ps ? 1 : spacing >= 15 * ps ? 2 : 5;
+    const tk = 4.5 * ps;
+    const b = viewBounds();
+    const M = Math.max(Math.abs(b.x0), Math.abs(b.x1), Math.abs(b.t0), Math.abs(b.t1)) * 1.5;
+    const nmax = Math.min(400, Math.ceil(M / step));
+    ctx.strokeStyle = color; ctx.lineWidth = 1.4 * ps;
+    for (let n = -nmax; n <= nmax; n++) {
+      if (!n) continue;
+      const v = n * step;
+      for (const axis of ['t', 'x']) {
+        const p = axis === 't' ? scr(v * ch, v * sh) : scr(v * sh, v * ch);
+        if (p[0] < -20 || p[0] > W + 20 || p[1] < -20 || p[1] > H + 20) continue;
+        const d = axis === 't' ? xu : tu;   // ticks run parallel to the other axis
+        ctx.beginPath(); ctx.moveTo(p[0] - d[0] * tk, p[1] - d[1] * tk); ctx.lineTo(p[0] + d[0] * tk, p[1] + d[1] * tk); ctx.stroke();
+        if (axis === 't' && skipT) continue;   // a worldline's clock ticks already label this axis
+        if (n % every === 0 && p[1] > topPad && p[1] < H - 6 && p[0] > 6 && p[0] < W - 6) {
+          // time axis numbers to one side, space axis numbers above or below
+          if (axis === 't') text(String(v), p[0] + side * 14 * ps, p[1], color, { align: side > 0 ? 'left' : 'right', size: 10 });
+          else text(String(v), p[0], p[1] - side * 14 * ps, color, { align: 'center', size: 10 });
+        }
+      }
+    }
+    // axis names at the ends
+    const segT = clipSeg(tA, tB, 10), segX = clipSeg(xA, xB, 10);
+    if (segT) {
+      const p = segT[1];
+      text('ct' + prime, p[0] + side * 14 * ps, Math.max(p[1] + 8 * ps, topPad + 4), color, { align: 'center', size: 13, weight: 600 });
+    }
+    if (segX) {
+      const p = segX[1];
+      text('x' + prime, Math.min(p[0] - 10 * ps, W - 14), p[1] - side * 14 * ps, color, { align: 'right', size: 13, weight: 600 });
+    }
+  }
+
+  // lines of simultaneity through selected events
+  let edgeLabels = [];
+  function edgeLabel(a, b, str, color) {
+    const seg = clipSeg(a, b, 4);
+    if (!seg) return;
+    const p = seg[0][0] > seg[1][0] ? seg[0] : seg[1];
+    if (edgeLabels.some((L) => L.str === str)) return;
+    edgeLabels.push({ x: Math.min(p[0], W - 6), y: p[1], str, color });
+  }
+  function flushEdgeLabels() {
+    edgeLabels.sort((a, b) => a.y - b.y);
+    const gap = 15 * ps;
+    for (let i = 1; i < edgeLabels.length; i++) {
+      if (edgeLabels[i].y - edgeLabels[i - 1].y < gap) edgeLabels[i].y = edgeLabels[i - 1].y + gap;
+    }
+    for (const L of edgeLabels) {
+      const y = Math.max(topPad + 2, Math.min(H - 8, L.y - 8 * ps));
+      text(L.str, L.x - 4, y, L.color, { align: 'right', size: 10.5, weight: 600 });
+    }
+  }
+  function drawSimul() {
+    const b = S.beta;
+    for (const id of S.sel) {
+      const e = S.events.find((v) => v.id === id); if (!e) continue;
+      const [pt] = boost(e.t, e.x, b);
+      const lab = labLine([e.t, e.x], [0, 1]);
+      line(lab[0], lab[1], alpha(C.neg, 0.75), 1.3 * ps, [7 * ps, 5 * ps]);
+      edgeLabel(lab[0], lab[1], `ct = ${fmt(e.t)}`, C.neg);
+      if (Math.abs(b) > 0.004) {
+        const pr = labLine([e.t, e.x], [b, 1]);
+        line(pr[0], pr[1], alpha(C.pos, 0.85), 1.3 * ps, [7 * ps, 5 * ps]);
+        edgeLabel(pr[0], pr[1], `ct′ = ${fmt(pt)}`, C.pos);
+      }
+    }
+  }
+
+  function drawTwinLines() {
+    const b = S.beta, Th = S.Tend / 2;
+    if (Math.abs(b) < 0.004) return;
+    const g = gammaOf(b), tauH = Th / g;
+    const R = BIG();
+    // traveler's simultaneity lines at each year of traveler time, from the traveler to the home worldline
+    const n = Math.floor(2 * tauH + 1e-9);
+    ctx.save();
+    for (let k = 1; k <= n; k++) {
+      const out = k < tauH - 1e-9 || Math.abs(k - tauH) < 1e-9;
+      if (Math.abs(k - tauH) < 1e-9) continue;
+      const tl = out ? k * g : S.Tend - (2 * tauH - k) * g;
+      const xl = out ? b * tl : b * (S.Tend - tl);
+      const tE = out ? tl - b * xl : tl + b * xl;     // t − βx = const outbound, t + βx = const inbound
+      line(scrLab(tl, xl), scrLab(tE, 0), alpha(C.twin, 0.45), 1.1 * ps);
+    }
+    // turnaround: the two lines and the jump in home time
+    const xT = b * Th, tE1 = Th - b * xT, tE2 = Th + b * xT;
+    const P = scrLab(Th, xT);
+    line(P, scrLab(tE1, 0), C.twin, 1.8 * ps, [5 * ps, 4 * ps]);
+    line(P, scrLab(tE2, 0), C.twin, 1.8 * ps, [5 * ps, 4 * ps]);
+    const A = scrLab(tE1, 0), B = scrLab(tE2, 0);
+    ctx.lineCap = 'round';
+    line(A, B, alpha(C.twin, 0.35), 9 * ps);
+    ctx.lineCap = 'butt';
+    const mid = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2];
+    const side = b > 0 ? -1 : 1;
+    text(`home clock jumps`, mid[0] + side * 30 * ps, mid[1] - 8 * ps, C.twin, { align: side < 0 ? 'right' : 'left', size: 10.5, weight: 600 });
+    text(`${fmt(tE1, 1)} → ${fmt(tE2, 1)} yr`, mid[0] + side * 30 * ps, mid[1] + 8 * ps, C.twin, { align: side < 0 ? 'right' : 'left', size: 10.5, weight: 600 });
+    void R;
+    ctx.restore();
+  }
+
+  function drawWorldlines() {
+    for (const w of worldlines()) {
+      const tau = properTimes(w.pts);
+      const sp = w.pts.map((p) => scrLab(p[0], p[1]));
+      ctx.strokeStyle = w.color; ctx.lineWidth = 3 * ps; ctx.lineJoin = 'round';
+      ctx.beginPath(); sp.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.stroke();
+      const total = tau[tau.length - 1];
+      if (S.layers.ticks && total > 0) {
+        // screen distance per year of proper time on the first segment decides label density
+        const p1 = pointAtTau(w.pts, tau, Math.min(1, total));
+        const a = scrLab(w.pts[0][0], w.pts[0][1]), b1 = scrLab(p1.t, p1.x);
+        const perYear = Math.hypot(b1[0] - a[0], b1[1] - a[1]) / Math.min(1, total);
+        const step = perYear >= 7 ? 1 : perYear >= 3 ? 2 : 5;
+        const every = perYear * step >= 22 * ps ? 1 : perYear * step >= 11 * ps ? 2 : 5;
+        for (let k = step, i = 1; k <= total + 1e-9; k += step, i++) {
+          const q = pointAtTau(w.pts, tau, k);
+          const A = scrLab(w.pts[q.seg - 1][0], w.pts[q.seg - 1][1]), B = scrLab(w.pts[q.seg][0], w.pts[q.seg][1]);
+          let dx = B[0] - A[0], dy = B[1] - A[1]; const n = Math.hypot(dx, dy) || 1; dx /= n; dy /= n;
+          const nrm = [-dy, dx];  // screen normal
+          const P = scrLab(q.t, q.x), L = 6 * ps;
+          line([P[0] - nrm[0] * L, P[1] - nrm[1] * L], [P[0] + nrm[0] * L, P[1] + nrm[1] * L], w.color, 2 * ps);
+          const last = Math.abs(k - total) < 1e-6;
+          if (i % every === 0 && !last && P[1] > topPad && P[1] < H - 6) {
+            const rn = nrm[0] >= 0 ? nrm : [-nrm[0], -nrm[1]];   // normal pointing to screen right
+            text(String(k), P[0] + w.side * rn[0] * 16 * ps, P[1] + w.side * rn[1] * 16 * ps, w.color, { align: 'center', size: 10 });
+          }
+        }
+      }
+      // name and elapsed proper time at the end
+      const E = sp[sp.length - 1];
+      const lab1 = w.name, lab2 = `τ = ${fmt(total, 2)} yr`;
+      const Pv = sp[sp.length - 2];
+      const lean = Math.abs(E[1] - Pv[1]) > 1 ? (E[0] - Pv[0]) / Math.abs(E[1] - Pv[1]) : 0;   // screen x per px of rise
+      const al = w.side < 0 ? 'right' : 'left';
+      const ox = w.side * 10 * ps + (lean * w.side > 0 ? lean * 30 * ps : 0);   // clear a line leaning toward the label
+      const y = Math.max(topPad + 8 + 13 * ps, E[1] - 14 * ps);
+      text(lab1, E[0] + ox, y - 13 * ps, w.color, { align: al, size: 11.5, weight: 600 });
+      text(lab2, E[0] + ox, y, w.color, { align: al, size: 11, weight: 600 });
+    }
+  }
+
+  function rodCorners(T) {
+    const b = S.beta, g = gammaOf(b), Lc = S.L0 / g;
+    return [[-T, -b * T], [T, b * T], [T, b * T + Lc], [-T, -b * T + Lc]];
+  }
+  function drawRod() {
+    const R = BIG() * 1.2;
+    const cs = rodCorners(R).map((p) => scrLab(p[0], p[1]));
+    ctx.fillStyle = alpha(C.pos, 0.12);
+    ctx.beginPath(); cs.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.closePath(); ctx.fill();
+    line(cs[0], cs[1], alpha(C.pos, 0.7), 1.6 * ps);
+    line(cs[3], cs[2], alpha(C.pos, 0.7), 1.6 * ps);
+  }
+  function rodMeasure() {
+    const b = S.beta, g = gammaOf(b), tm = S.rodT;
+    const back = [tm, b * tm];                         // trailing end at lab time tm
+    const frontS = [tm, b * tm + S.L0 / g];            // leading end at the same lab time
+    const tp = tm / g;                                 // trailing end's t′ (x′ = 0)
+    const frontP = [g * (tp + b * S.L0), g * (S.L0 + b * tp)];  // leading end, x′ = L0, same t′
+    return { back, frontS, frontP };
+  }
+  function drawRodMeasure() {
+    const m = rodMeasure(), g = gammaOf(S.beta);
+    const A = scrLab(...m.back), B = scrLab(...m.frontS), Cp = scrLab(...m.frontP);
+    line(A, B, C.neg, 3 * ps); line(A, Cp, C.pos, 3 * ps);
+    for (const p of [A, B, Cp]) { ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(p[0], p[1], 3.5 * ps, 0, Math.PI * 2); ctx.fill(); }
+    const mS = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2], mP = [(A[0] + Cp[0]) / 2, (A[1] + Cp[1]) / 2];
+    const below = mP[1] < mS[1];
+    text(`${fmt(S.L0 / g)} ly in S`, mS[0], mS[1] + (below ? 13 : -13) * ps, C.neg, { align: 'center', size: 11, weight: 600 });
+    text(`${fmt(S.L0)} ly in S′`, mP[0], mP[1] + (below ? -13 : 13) * ps, C.pos, { align: 'center', size: 11, weight: 600 });
+    const top = rodCorners(S.Tend + 1)[1];
+    void top;
+  }
+
+  function drawNow() {
+    const R = BIG();
+    const col = S.mode === 'moving' ? C.pos : C.neg;
+    // light pulses from events already reached
+    for (const e of S.events) {
+      const [td, xd] = toD(e.t, e.x);
+      const d = nowT - td;
+      if (d <= 0) continue;
+      const o = scr(td, xd), a = scr(nowT, xd - d), c = scr(nowT, xd + d);
+      ctx.fillStyle = alpha(C.equi, 0.14);
+      ctx.beginPath(); ctx.moveTo(o[0], o[1]); ctx.lineTo(a[0], a[1]); ctx.lineTo(c[0], c[1]); ctx.closePath(); ctx.fill();
+      line(a, c, alpha(C.equi, 0.9), 3 * ps);
+      for (const p of [a, c]) { ctx.fillStyle = C.equi; ctx.beginPath(); ctx.arc(p[0], p[1], 4 * ps, 0, Math.PI * 2); ctx.fill(); }
+      if (d < 0.6) { ctx.strokeStyle = alpha(C.equi, 1 - d / 0.6); ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.arc(o[0], o[1], (8 + 30 * d) * ps, 0, Math.PI * 2); ctx.stroke(); }
+    }
+    const a = scr(nowT, -R), b = scr(nowT, R);
+    line(a, b, col, 2.2 * ps);
+    const y = sy(nowT);
+    if (y > topPad && y < H - 4) text(`now, ct${S.mode === 'moving' ? '′' : ''} = ${fmt(nowT, 1)} yr`, 10, y - 10 * ps, col, { size: 11, weight: 600 });
+    // where each clock is now, and what it reads
+    for (const w of worldlines()) {
+      const tau = properTimes(w.pts);
+      for (let i = 1; i < w.pts.length; i++) {
+        const A = toD(...w.pts[i - 1]), B = toD(...w.pts[i]);
+        if ((nowT - A[0]) * (nowT - B[0]) <= 0 && A[0] !== B[0]) {
+          const f = (nowT - A[0]) / (B[0] - A[0]);
+          const xd = A[1] + f * (B[1] - A[1]), tv = tau[i - 1] + f * (tau[i] - tau[i - 1]);
+          const P = scr(nowT, xd);
+          ctx.fillStyle = w.color; ctx.beginPath(); ctx.arc(P[0], P[1], 6 * ps, 0, Math.PI * 2); ctx.fill();
+          ctx.strokeStyle = C.canvas; ctx.lineWidth = 2 * ps; ctx.stroke();
+          text(`${fmt(tv, 1)}`, P[0] + w.side * 10 * ps, P[1] + 12 * ps, w.color, { align: w.side < 0 ? 'right' : 'left', size: 11, weight: 600 });
+          break;
+        }
+      }
+    }
+  }
+
+  function drawPair() {
+    if (S.sel.length < 2) return;
+    const P = S.events.find((e) => e.id === S.sel[0]), Q = S.events.find((e) => e.id === S.sel[1]);
+    if (!P || !Q) return;
+    const a = scrLab(P.t, P.x), b = scrLab(Q.t, Q.x);
+    line(a, b, alpha(C.ink, 0.7), 1.3 * ps, [2 * ps, 4 * ps]);
+  }
+
+  function drawEvents() {
+    const cur = S.sel[S.sel.length - 1];
+    for (const e of S.events) {
+      const p = scrLab(e.t, e.x);
+      const isSel = S.sel.includes(e.id);
+      if (isSel) {
+        ctx.strokeStyle = C.ink; ctx.lineWidth = (e.id === cur ? 2.4 : 1.4) * ps;
+        ctx.beginPath(); ctx.arc(p[0], p[1], 10 * ps, 0, Math.PI * 2); ctx.stroke();
+      }
+      ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(p[0], p[1], (isSel ? 5.5 : 4.5) * ps, 0, Math.PI * 2); ctx.fill();
+      text(e.id, p[0] + 12 * ps, p[1] - 12 * ps, C.ink, { size: 13, weight: 600 });
+    }
+  }
+
+  function drawFrameTag() {
+    const moving = S.mode === 'moving';
+    const str = moving ? 'Drawn in S′: its axes are square, S is tilted' : 'Drawn in S';
+    text(str, 10, H - 12 * ps, moving ? C.pos : C.neg, { size: 10.5, weight: 600 });
+  }
+
+  // ---------- readouts ----------
+  function evById(id) { return S.events.find((e) => e.id === id); }
+  function pairText(P, Q) {
+    const dt = Q.t - P.t, dx = Q.x - P.x, s2 = dt * dt - dx * dx;
+    const tol = 1e-6 * (dt * dt + dx * dx) + 1e-9;
+    const [dtp, dxp] = boost(dt, dx, S.beta);
+    const out = { dt, dx, s2, dtp, dxp };
+    if (Math.abs(dt) < 1e-9 && Math.abs(dx) < 1e-9) { out.type = 'same event'; out.cls = 'lightlike'; out.say = `${P.id} and ${Q.id} are the same event.`; return out; }
+    const [a, b] = dt >= 0 ? [P.id, Q.id] : [Q.id, P.id];
+    if (Math.abs(s2) <= tol) {
+      out.type = 'lightlike'; out.cls = 'lightlike';
+      out.say = `${b} is on ${a}'s light cone: only a light signal can connect them. ${a} can influence ${b}, and every observer agrees ${a} comes first.`;
+      out.extraL = 'Proper time between them'; out.extra = '0 (light)';
+    } else if (s2 > 0) {
+      out.type = 'timelike'; out.cls = 'timelike';
+      out.say = `${b} is in ${a}'s future light cone: ${a} can influence ${b}. Every observer agrees ${a} comes first.`;
+      out.extraL = 'Proper time, a clock going from one to the other'; out.extra = `${fmt(Math.sqrt(s2))} yr`;
+    } else {
+      out.type = 'spacelike'; out.cls = 'spacelike';
+      const ord = (d) => (Math.abs(d) < 5e-3 ? 'they are simultaneous' : d > 0 ? `${P.id} happens first` : `${Q.id} happens first`);
+      const bs = dt / dx;
+      out.say = `No signal can connect ${P.id} and ${Q.id}; observers disagree on their order. In S ${ord(dt)}; in S′ ${ord(dtp)}. They are simultaneous for an observer moving at β = ${fmt(bs)}.`;
+      out.extraL = 'Proper distance, measured where they are simultaneous'; out.extra = `${fmt(Math.sqrt(-s2))} ly`;
+    }
+    return out;
+  }
+  function updateReadouts() {
+    const b = S.beta, g = gammaOf(b);
+    $('betaOut').textContent = b > 0 ? `${fmt(b)}, rightward` : b < 0 ? `${fmt(b)}, leftward` : '0.00, at rest';
+    $('rBeta').textContent = fmt(b);
+    $('rGamma').textContent = g.toFixed(3);
+    $('rTilt').textContent = `${fmt(Math.atan(Math.abs(b)) * 180 / Math.PI, 1)}°`;
+    $('rInv').textContent = (1 / g).toFixed(3);
+    $('tendOut').textContent = `${fmt(S.Tend, 1)} yr`;
+    $('rodOut').textContent = `${fmt(S.L0, 1)} ly`;
+    $('rodBox').hidden = !S.wl.rod;
+    // events list
+    const box = $('evList'); box.textContent = '';
+    for (const e of S.events) {
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.textContent = e.id; btn.setAttribute('aria-pressed', String(S.sel.includes(e.id)));
+      btn.setAttribute('aria-label', `Event ${e.id} at ct ${fmt(e.t)}, x ${fmt(e.x)}`);
+      btn.addEventListener('click', () => { select(e.id); changed(); });
+      box.appendChild(btn);
+    }
+    $('evDel').disabled = !S.sel.length; $('evClear').disabled = !S.events.length; $('evAdd').disabled = S.events.length >= MAXEV;
+    // selected event
+    const cur = evById(S.sel[S.sel.length - 1]);
+    if (cur) {
+      const [tp, xp] = boost(cur.t, cur.x, b);
+      $('rEv').textContent = cur.id;
+      $('rEvS').textContent = `(${fmt(cur.t)}, ${fmt(cur.x)})`;
+      $('rEvP').textContent = `(${fmt(tp)}, ${fmt(xp)})`;
+      $('rEvS2').textContent = `${fmt(cur.t * cur.t - cur.x * cur.x)} in S  ·  ${fmt(tp * tp - xp * xp)} in S′`;
+    } else {
+      for (const id of ['rEv', 'rEvS', 'rEvP', 'rEvS2']) $(id).textContent = '—';
+      $('rEv').textContent = 'none selected';
+    }
+    const P = evById(S.sel[0]), Q = evById(S.sel[1]);
+    const vd = $('verdict');
+    if (P && Q) {
+      const r = pairText(P, Q);
+      $('rPair').textContent = `${P.id} to ${Q.id}`;
+      $('rDs2').textContent = fmt(r.s2);
+      $('rType').textContent = r.type;
+      $('rDS').textContent = `${fmt(r.dt)}, ${fmt(r.dx)}`;
+      $('rDP').textContent = `${fmt(r.dtp)}, ${fmt(r.dxp)}`;
+      $('rExtraL').textContent = r.extraL || 'Proper time between them';
+      $('rExtra').textContent = r.extra || '—';
+      vd.textContent = r.say; vd.className = 'verdict ' + r.cls;
+    } else {
+      for (const id of ['rPair', 'rDs2', 'rType', 'rDS', 'rDP', 'rExtra']) $(id).textContent = '—';
+      vd.textContent = S.events.length >= 2 ? 'Select a second event to compare.' : 'Add a second event to compare.';
+      vd.className = 'verdict';
+    }
+    // clocks
+    const T = S.Tend;
+    $('nHome').textContent = `${S.names.home} clock`;
+    $('nRocket').textContent = `${S.names.rocket} clock`;
+    $('rHome').textContent = S.wl.home ? `${fmt(T)} yr` : 'off';
+    $('rRocket').textContent = S.wl.rocket ? `${fmt(T / g)} yr` : 'off';
+    $('rTwin').textContent = S.wl.twin ? `${fmt(T / g)} yr` : 'off';
+    $('rRod').textContent = S.wl.rod ? `${fmt(S.L0 / g)}, ${fmt(S.L0)} ly` : 'off';
+    const tn = $('twinNote');
+    if (S.wl.twin && Math.abs(b) > 0.004) {
+      const Th = T / 2, xT = b * Th;
+      tn.textContent = `Home ages ${fmt(T)} yr, the twin ${fmt(T / g)} yr. At the turnaround the twin's line of simultaneity swings across the home worldline, from home time ${fmt(Th - b * xT)} to ${fmt(Th + b * xT)} yr. That jump, caused by changing frames, is where the missing home years go.`;
+    } else {
+      tn.textContent = 'Each tick on a worldline is one year on that clock, so wider spacing means a slower clock in this frame. The twin flies out at β and back at −β, turning around halfway through the trip.';
+    }
+    // sync inputs
+    $('beta').value = S.beta; $('tend').value = S.Tend; $('rodL').value = S.L0;
+    $('wHome').checked = S.wl.home; $('wRocket').checked = S.wl.rocket; $('wTwin').checked = S.wl.twin; $('wRod').checked = S.wl.rod;
+    $('lCones').checked = S.layers.cones; $('lHyper').checked = S.layers.hyper; $('lSimul').checked = S.layers.simul;
+    $('lTicks').checked = S.layers.ticks; $('lPrime').checked = S.layers.prime; $('lTwinLines').checked = S.layers.twinlines;
+    for (const btn of document.querySelectorAll('.seg button')) btn.setAttribute('aria-pressed', String(btn.dataset.mode === S.mode));
+  }
+  function changed() { dirty = true; updateReadouts(); }
+
+  // ---------- events ----------
+  function select(id) {
+    S.sel = S.sel.filter((v) => v !== id); S.sel.push(id);
+    if (S.sel.length > 2) S.sel.shift();
+  }
+  function nextLabel() {
+    for (const c of LETTERS) if (!S.events.some((e) => e.id === c)) return c;
+    return null;
+  }
+  const snap = (v, q = 0.25) => Math.round(v / q) * q;
+  function addEventAtDisplay(td, xd) {
+    const id = nextLabel();
+    if (!id || S.events.length >= MAXEV) { $('evHint').textContent = `Up to ${MAXEV} events. Delete one to add another.`; return; }
+    const [t, x] = fromD(snap(td), snap(xd));
+    S.events.push({ id, t: clean(t), x: clean(x) });
+    select(id); changed();
+  }
+  const clean = (v) => (Math.abs(v - Math.round(v * 1e6) / 1e6) < 1e-9 ? Math.round(v * 1e6) / 1e6 : v);
+  function deleteCurrent() {
+    const id = S.sel[S.sel.length - 1]; if (!id) return;
+    S.events = S.events.filter((e) => e.id !== id); S.sel = S.sel.filter((v) => v !== id); changed();
+  }
+
+  // ---------- presets ----------
+  const PRESETS = {
+    cone: {
+      beta: 0, mode: 'both', events: [['O', 0, 0], ['A', 4, 1.5], ['B', 1.5, 4], ['C', 3, -3], ['D', -3, 1]], sel: ['O', 'A'],
+      wl: {}, layers: { hyper: false, simul: false, prime: true }, view: [-7, 7, -4.5, 7],
+      hint: 'Light from O travels along the gold 45° lines. A lies inside O\'s future light cone, so O can influence A. B lies outside: no signal from O can reach it. C sits on the cone itself, and D is in O\'s past. Click B or C to compare it with A, or drag the events.'
+    },
+    simul: {
+      beta: 0.5, mode: 'both', events: [['A', 0, -4], ['B', 0, 4]], sel: ['A', 'B'],
+      wl: { home: true, rocket: true }, names: { home: 'Platform', rocket: 'Train' }, Tend: 9,
+      layers: { hyper: false, simul: true, prime: true, cones: true }, view: [-6.5, 7.5, -2, 11],
+      hint: 'Lightning strikes the rear (A) and front (B) of a train at the same platform time. Both flashes reach the platform observer together. The middle of the train runs toward B\'s light and meets it first, so on the train B happened first. The red dashed lines of simultaneity show it: A and B do not share one in S′.'
+    },
+    dilate: {
+      beta: 0.6, mode: 'both', events: [['R', 5, 3]], sel: ['R'],
+      wl: { home: true, rocket: true }, Tend: 10, layers: { hyper: true, simul: true, prime: false }, view: [-4, 9, -1, 11],
+      hint: 'Each tick is one year on that clock. At R the rocket clock reads 4 years, but R happens at lab time 5: the rocket ticks are spread out in S. Over 10 lab years the rocket ages 8. Switch to the moving frame\'s view: now the home ticks are the spread out ones. Each observer finds the other\'s clock slow.'
+    },
+    length: {
+      beta: 0.6, mode: 'both', events: [], sel: [], wl: { rod: true }, L0: 5, Tend: 10,
+      layers: { hyper: false, simul: false, prime: true }, view: [-3, 9, -2.5, 8],
+      hint: 'The shaded strip is the worldsheet of a rod 5 ly long in its own frame, moving at 0.6c. Mark both ends at the same S time (blue) and it spans 4 ly. Mark them at the same S′ time (red) and it spans 5. A length is a distance between simultaneous events, and the frames disagree about which events are simultaneous.'
+    },
+    twin: {
+      beta: 0.8, mode: 'both', events: [['T', 5, 4]], sel: ['T'], wl: { home: true, twin: true }, names: { home: 'Home twin', twin: 'Traveler' },
+      Tend: 10, layers: { hyper: false, simul: false, prime: false, twinlines: true, cones: false }, view: [-4, 8, -1, 11],
+      hint: 'The traveler leaves at 0.8c and turns around at T, 5 years after leaving by the home clock. Home ages 10 years, the traveler 6. The purple lines are the traveler\'s lines of simultaneity, one per traveler year. At the turnaround they swing across the home worldline, skipping 6.4 years of home time. The turn breaks the symmetry.'
+    },
+    cause: {
+      beta: 0.5, mode: 'both', events: [['A', 1, -2], ['B', 2, 2], ['C', 5, -1]], sel: ['A', 'B'],
+      wl: {}, layers: { hyper: false, simul: true, prime: true, cones: true }, view: [-6, 7, -2.5, 8],
+      hint: 'B is outside A\'s light cone: the pair is spacelike. In S, A happens first. For any observer moving right faster than 0.25c, B happens first. Slide β through 0.25 and watch the red simultaneity line through A sweep past B. Then select A and C: C is inside A\'s future cone, and no β can flip that order.'
+    }
+  };
+  function applyPreset(name) {
+    const p = PRESETS[name]; preset = name;
+    S.beta = p.beta; S.mode = p.mode;
+    S.events = p.events.map(([id, t, x]) => ({ id, t, x }));
+    S.sel = p.sel.slice();
+    S.wl = { home: false, rocket: false, twin: false, rod: false, ...p.wl };
+    S.names = { home: 'Home', rocket: 'Rocket', twin: 'Twin', ...(p.names || {}) };
+    S.Tend = p.Tend || 10; S.L0 = p.L0 || 5;
+    S.layers = { cones: true, hyper: true, simul: true, ticks: true, prime: true, twinlines: true, ...p.layers };
+    phiD = targetPhi();
+    fitBox = p.view; userMoved = false; fitView();
+    nowOn = false; setPlaying(false);
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint').textContent = p.hint;
+    $('evHint').textContent = 'Click empty space to add an event, drag to move it. Select two events to compare them.';
+    changed();
+  }
+
+  // ---------- controls ----------
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('beta').addEventListener('input', (e) => { S.beta = +e.target.value; if (reduce) phiD = targetPhi(); changed(); });
+  $('tend').addEventListener('input', (e) => { S.Tend = +e.target.value; changed(); });
+  $('rodL').addEventListener('input', (e) => { S.L0 = +e.target.value; changed(); });
+  const wmap = { wHome: 'home', wRocket: 'rocket', wTwin: 'twin', wRod: 'rod' };
+  for (const [id, k] of Object.entries(wmap)) $(id).addEventListener('change', (e) => { S.wl[k] = e.target.checked; changed(); });
+  const lmap = { lCones: 'cones', lHyper: 'hyper', lSimul: 'simul', lTicks: 'ticks', lPrime: 'prime', lTwinLines: 'twinlines' };
+  for (const [id, k] of Object.entries(lmap)) $(id).addEventListener('change', (e) => { S.layers[k] = e.target.checked; changed(); });
+  function setMode(m) { S.mode = m; if (reduce) phiD = targetPhi(); if (!userMoved) fitView(); if (nowOn) nowT = Math.max(nowT, viewBounds().t0); changed(); }
+  for (const b of document.querySelectorAll('.seg button')) b.addEventListener('click', () => setMode(b.dataset.mode));
+  $('evAdd').addEventListener('click', () => {
+    // place near the view center, avoiding existing events
+    let [td, xd] = [V.ct, V.cx];
+    for (let k = 0; k < 20 && S.events.some((e) => { const d = toD(e.t, e.x); return Math.abs(d[0] - snap(td)) < 0.3 && Math.abs(d[1] - snap(xd)) < 0.3; }); k++) { xd += 1; td += 0.5; }
+    addEventAtDisplay(td, xd);
+  });
+  $('evDel').addEventListener('click', deleteCurrent);
+  $('evClear').addEventListener('click', () => { S.events = []; S.sel = []; changed(); });
+  $('fit').addEventListener('click', () => { userMoved = false; fitView(); });
+  $('reset').addEventListener('click', () => applyPreset(preset));
+  const playBtn = $('play');
+  function setPlaying(p) {
+    playing = p;
+    playBtn.textContent = p ? 'Pause' : 'Play';
+    playBtn.classList.toggle('primary', !p);
+    if (p && !nowOn) { nowOn = true; nowT = Math.min(viewBounds().t0 + 0.5, -1); }
+    lastTime = performance.now(); dirty = true;
+  }
+  playBtn.addEventListener('click', () => setPlaying(!playing));
+
+  // ---------- pointer ----------
+  const ptrs = new Map(); let drag = null;
+  const pos = (e) => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+  function hitEvent(px, py, rad) {
+    let best = null, bd = rad;
+    for (const e of S.events) { const p = scrLab(e.t, e.x); const d = Math.hypot(p[0] - px, p[1] - py); if (d < bd) { bd = d; best = e; } }
+    return best;
+  }
+  function zoomAt(px, py, f) {
+    const [td, xd] = unscr(px, py);
+    V.s = Math.max(4, Math.min(220, V.s * f));
+    V.cx = xd - (px - W / 2) / V.s; V.ct = td + (py - H / 2) / V.s;
+    userMoved = true; dirty = true;
+  }
+  cv.addEventListener('pointerdown', (e) => {
+    cv.focus({ preventScroll: true });
+    try { cv.setPointerCapture(e.pointerId); } catch (_) {}
+    const p = pos(e); ptrs.set(e.pointerId, p);
+    if (ptrs.size === 2) {
+      const [a, b] = [...ptrs.values()];
+      drag = { type: 'pinch', d0: Math.hypot(a.x - b.x, a.y - b.y), s0: V.s, w0: unscr((a.x + b.x) / 2, (a.y + b.y) / 2) };
+      return;
+    }
+    if (ptrs.size > 2) return;
+    const hit = hitEvent(p.x, p.y, (e.pointerType === 'touch' ? 22 : 13) * ps);
+    if (hit) { select(hit.id); drag = { type: 'event', id: hit.id }; changed(); }
+    else drag = { type: 'pan', x0: p.x, y0: p.y, cx: V.cx, ct: V.ct, moved: false };
+  });
+  cv.addEventListener('pointermove', (e) => {
+    const p = pos(e);
+    if (!ptrs.has(e.pointerId)) {
+      cv.style.cursor = hitEvent(p.x, p.y, 13 * ps) ? 'grab' : 'crosshair';
+      return;
+    }
+    ptrs.set(e.pointerId, p);
+    if (!drag) return;
+    if (drag.type === 'pinch' && ptrs.size >= 2) {
+      const [a, b] = [...ptrs.values()];
+      const d = Math.hypot(a.x - b.x, a.y - b.y), mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      V.s = Math.max(4, Math.min(220, drag.s0 * d / Math.max(1, drag.d0)));
+      V.cx = drag.w0[1] - (mx - W / 2) / V.s; V.ct = drag.w0[0] + (my - H / 2) / V.s;
+      userMoved = true; dirty = true;
+    } else if (drag.type === 'event') {
+      const ev = evById(drag.id); if (!ev) return;
+      const [td, xd] = unscr(p.x, p.y);
+      const [t, x] = fromD(snap(td), snap(xd));
+      ev.t = clean(t); ev.x = clean(x);
+      cv.style.cursor = 'grabbing';
+      changed();
+    } else if (drag.type === 'pan') {
+      const dx = p.x - drag.x0, dy = p.y - drag.y0;
+      if (!drag.moved && Math.hypot(dx, dy) > 6) drag.moved = true;
+      if (drag.moved) { V.cx = drag.cx - dx / V.s; V.ct = drag.ct + dy / V.s; userMoved = true; dirty = true; cv.style.cursor = 'move'; }
+    }
+  });
+  function endPtr(e) {
+    const p = pos(e);
+    const wasSingle = ptrs.size === 1;
+    ptrs.delete(e.pointerId);
+    if (drag && drag.type === 'pan' && !drag.moved && wasSingle && e.type === 'pointerup') {
+      const [td, xd] = unscr(p.x, p.y);
+      addEventAtDisplay(td, xd);
+    }
+    if (drag && drag.type === 'pinch') { drag = ptrs.size ? { type: 'none' } : null; return; }
+    if (!ptrs.size) drag = null;
+    cv.style.cursor = 'crosshair';
+  }
+  cv.addEventListener('pointerup', endPtr);
+  cv.addEventListener('pointercancel', endPtr);
+  cv.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const p = pos(e);
+    zoomAt(p.x, p.y, Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0015)));
+  }, { passive: false });
+
+  cv.addEventListener('keydown', (e) => {
+    const cur = evById(S.sel[S.sel.length - 1]);
+    const st = e.shiftKey ? 1 : 0.25;
+    const arrows = { ArrowLeft: [0, -1], ArrowRight: [0, 1], ArrowUp: [1, 0], ArrowDown: [-1, 0] };
+    if (arrows[e.key]) {
+      const [a, b] = arrows[e.key];
+      if (cur) {
+        const [td, xd] = toD(cur.t, cur.x);
+        const [t, x] = fromD(snap(td + a * st), snap(xd + b * st));
+        cur.t = clean(t); cur.x = clean(x); changed();
+      } else { V.cx += b * 40 / V.s; V.ct += a * 40 / V.s; userMoved = true; dirty = true; }
+    } else if (e.key === 'Delete' || e.key === 'Backspace') deleteCurrent();
+    else if (e.key === '[' || e.key === ']') {
+      if (!S.events.length) return;
+      const i = S.events.findIndex((v) => v.id === S.sel[S.sel.length - 1]);
+      const n = S.events.length, j = i < 0 ? 0 : (i + (e.key === ']' ? 1 : -1) + n) % n;
+      select(S.events[j].id); changed();
+    } else if (e.key === 'Escape') { S.sel = []; changed(); }
+    else if (e.key === 'n' || e.key === 'N') $('evAdd').click();
+    else if (e.key === 'm' || e.key === 'M') setMode(S.mode === 'both' ? 'moving' : 'both');
+    else if (e.key === '+' || e.key === '=') zoomAt(W / 2, H / 2, 1.2);
+    else if (e.key === '-' || e.key === '_') zoomAt(W / 2, H / 2, 1 / 1.2);
+    else if (e.key === '0') { userMoved = false; fitView(); }
+    else if (e.key === ' ') setPlaying(!playing);
+    else return;
+    e.preventDefault();
+  });
+
+  // ---------- projector and theme ----------
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', tokens); } catch (_) {}
+  new MutationObserver(tokens).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let lastTime = performance.now();
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - lastTime) / 1000)); lastTime = now;
+    const tp = targetPhi();
+    if (phiD !== tp) {
+      phiD += (tp - phiD) * (1 - Math.exp(-dt / 0.16));
+      if (Math.abs(tp - phiD) < 1e-4) phiD = tp;
+      dirty = true;
+    }
+    if (playing) {
+      const b = viewBounds();
+      nowT += dt * Math.max(1, (b.t1 - b.t0) / 9);
+      if (nowT > b.t1 + 0.5) nowT = b.t0;
+      dirty = true;
+    }
+    if (dirty) { dirty = false; draw(); }
+    requestAnimationFrame(loop);
+  }
+
+  tokens();
+  new ResizeObserver(resize).observe($('stage'));
+  new ResizeObserver(() => { const tp = $('stageTop').offsetHeight + 18; if (tp !== topPad) { topPad = tp; if (!userMoved) fitView(); dirty = true; } }).observe($('stageTop'));
+  applyPreset('cone');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
