@@ -67,7 +67,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 }
 .bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
-.bar p { margin: 2px 0 0; color: var(--muted); }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
 .bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .units { color: var(--muted); font-size: 0.8rem; }
 .proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
@@ -290,6 +290,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       return [b, mk('semi', 2, 0, { r: 9, rot: 90 })];
     }
   };
+  // what each preset should show: [center x, center y, width, height] in cm
+  const FRAMES = {
+    converging: [1, 0, 54, 22], magnifier: [3, 0, 34, 18], diverging: [-4, 0, 38, 18], concave: [-2, 0, 41, 18],
+    telescope: [-4, 0, 44, 18], prism: [0, 0, 50, 22], tir: [0, 0, 36, 24]
+  };
+  let frame = FRAMES.converging;
   function placeOnPivot(it) {
     if (!it.pivot) return;
     const a = rad(it.rot);
@@ -591,8 +597,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     W = r.width; H = r.height; dpr = window.devicePixelRatio || 1;
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
     cv.style.width = W + 'px'; cv.style.height = H + 'px';
-    s = Math.min(W / 50, H / 22);
-    cx = W / 2; cy = H / 2;
+    // fit the preset's frame: [center x, center y, width, height] in cm, whichever limits first
+    const [fx, fy, fw, fh] = frame;
+    s = Math.min(W / fw, H / fh);
+    cx = W / 2 - fx * s; cy = H / 2 + fy * s;
     schedule();
   }
 
@@ -1319,7 +1327,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('del').addEventListener('click', removeSel);
 
   for (const b of document.querySelectorAll('#presets button')) {
-    b.addEventListener('click', () => { items = PRESETS[b.dataset.p](); sel = null; setPreset(b.dataset.p); schedule(); });
+    b.addEventListener('click', () => { items = PRESETS[b.dataset.p](); sel = null; setPreset(b.dataset.p); frame = FRAMES[b.dataset.p] || frame; resize(); });
   }
   const bindToggle = (id, key) => $(id).addEventListener('change', (e) => { layers[key] = e.target.checked; schedule(); });
   bindToggle('tPrincipal', 'principal'); bindToggle('tImage', 'image'); bindToggle('tFaint', 'faint'); bindToggle('tGrid', 'grid');
