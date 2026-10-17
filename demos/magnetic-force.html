@@ -1,0 +1,1853 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Charges in Magnetic Fields</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one canvas with the apparatus (left or top) and a plot (right or bottom); instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --force: #7a3fc0;
+  --iso1: #17855f;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --force: #c49bff; --iso1: #4fd1a0; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --force: #c49bff; --iso1: #4fd1a0; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#can { touch-action: none; outline: none; }
+#can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .list dd { font-size: 0.88rem; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.flag { margin: 0; font-size: 0.88rem; font-weight: 700; border: 1px solid var(--pos); color: var(--pos); border-radius: 6px; padding: 7px 10px; }
+.flag span { display: block; font-weight: 400; color: var(--ink); margin-top: 2px; }
+.iso { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+.iso th { text-align: left; font-weight: 400; color: var(--muted); font-size: 0.76rem; padding: 0 4px 4px 0; }
+.iso td { font-family: var(--font-mono); font-variant-numeric: tabular-nums; padding: 2px 4px 2px 0; white-space: nowrap; }
+.iso td:first-child { font-family: var(--font-ui); font-weight: 700; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.pos { border-color: var(--pos); border-top-width: 3px; }
+.swatch.neg { border-color: var(--neg); border-top-width: 3px; }
+.swatch.ghost { border-color: var(--muted); border-top-style: dashed; }
+.swatch.force { border-color: var(--force); border-top-width: 3px; }
+.swatch.vel { border-color: var(--ink); border-top-width: 3px; }
+.swatch.efield { border-color: var(--equi); border-top-width: 3px; }
+.swatch.grad { height: 8px; border: 0; border-radius: 2px; background: linear-gradient(90deg, var(--neg), var(--equi), var(--pos)); }
+.sym { flex: none; width: 22px; text-align: center; font-size: 1rem; line-height: 1; color: var(--muted); }
+
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 86vh; min-height: 640px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Charges in Magnetic Fields</h1>
+      <p>The magnetic force on a moving charge is always at right angles to its velocity, so it turns the charge without speeding it up. Add an electric field and build a velocity selector, a mass spectrometer and a cyclotron.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units · e = 1.602 × 10⁻¹⁹ C · ⊗ into the page, ⊙ out of the page</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="restart">Restart</button>
+        <button type="button" class="btn" id="fit">Fit view</button>
+        <button type="button" class="btn" id="fire" hidden>Fire 20</button>
+        <button type="button" class="btn" id="clear" hidden>Clear</button>
+        <span class="count mono" id="count" aria-live="off"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="A charged particle moving in magnetic and electric fields, with a plot. In the free setups, drag the arrow tip to set the launch velocity, drag the launch ring to move it, drag the edges of the field rectangle, drag empty space to pan and use the wheel to zoom. Keys: left and right turn the launch velocity, up and down change the speed, space plays or pauses, R restarts, F fits the view or fires, C clears, plus and minus zoom."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="circle" aria-pressed="true">Circular motion</button>
+          <button type="button" data-p="ep" aria-pressed="false">Electron vs proton</button>
+          <button type="button" data-p="drift" aria-pressed="false">E × B drift</button>
+          <button type="button" data-p="sel" aria-pressed="false">Velocity selector</button>
+          <button type="button" data-p="spec" aria-pressed="false">Mass spectrometer</button>
+          <button type="button" data-p="cyc" aria-pressed="false">Cyclotron</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section id="secPart">
+        <h2>Particle</h2>
+        <div class="chips" id="parts" role="group" aria-label="Particle">
+          <button type="button" data-k="p" aria-pressed="true">Proton</button>
+          <button type="button" data-k="e" aria-pressed="false">Electron</button>
+          <button type="button" data-k="a" aria-pressed="false">Alpha</button>
+          <button type="button" data-k="d" aria-pressed="false">Deuteron</button>
+          <button type="button" data-k="c" aria-pressed="false">Custom</button>
+        </div>
+        <div id="customRows" hidden>
+          <div class="slider-head"><label for="cq">Charge q</label><output id="cqOut" class="mono" for="cq"></output></div>
+          <input type="range" id="cq" min="-3" max="3" step="1" value="1">
+          <div class="slider-head" style="margin-top:8px"><label for="cm">Mass m</label><output id="cmOut" class="mono" for="cm"></output></div>
+          <input type="range" id="cm" min="-3.26" max="2.38" step="0.01" value="0">
+        </div>
+        <dl class="readout"><div class="wide list"><dt>Charge and mass</dt><dd id="rPart">—</dd></div></dl>
+        <div id="cmpRows">
+          <div class="inline"><span class="lab">Compare with</span></div>
+          <div class="chips" id="cmps" role="group" aria-label="Second particle for comparison">
+            <button type="button" data-c="none" aria-pressed="true">None</button>
+            <button type="button" data-c="2v" aria-pressed="false">Same, twice as fast</button>
+            <button type="button" data-c="e" aria-pressed="false">Electron</button>
+            <button type="button" data-c="p" aria-pressed="false">Proton</button>
+          </div>
+          <div class="inline" id="sameRow" style="margin-top:8px">
+            <span class="lab">Launched with the same</span>
+            <div class="seg" role="group" aria-label="What the two particles share">
+              <button type="button" id="sameV" aria-pressed="true">Velocity</button>
+              <button type="button" id="sameK" aria-pressed="false">Kinetic energy</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="secLaunch">
+        <h2>Launch</h2>
+        <div>
+          <div class="slider-head"><label for="lv">Speed in the page, v⊥</label><output id="lvOut" class="mono" for="lv"></output></div>
+          <input type="range" id="lv" min="1.99" max="7" step="0.01" value="5">
+        </div>
+        <div>
+          <div class="slider-head"><label for="ang">Direction</label><output id="angOut" class="mono" for="ang"></output></div>
+          <input type="range" id="ang" min="0" max="359" step="1" value="0">
+        </div>
+        <div>
+          <div class="slider-head"><label for="par">Velocity along B, v∥</label><output id="parOut" class="mono" for="par"></output></div>
+          <input type="range" id="par" min="-1" max="1" step="0.05" value="0">
+        </div>
+        <div class="inline">
+          <span class="lab">View</span>
+          <div class="seg" role="group" aria-label="View">
+            <button type="button" id="vTop" aria-pressed="true">Along B</button>
+            <button type="button" id="v3d" aria-pressed="false">Oblique, 3D</button>
+          </div>
+        </div>
+        <p class="hint">Drag the arrow tip on the drawing to aim and set the speed, and the ring to move the launch point. Speeds stop at 10⁷ m/s (v/c = 0.033) so the nonrelativistic motion stays accurate.</p>
+      </section>
+
+      <section id="secFields">
+        <h2>Fields</h2>
+        <div class="inline">
+          <span class="lab">B</span>
+          <div class="seg" role="group" aria-label="Magnetic field direction">
+            <button type="button" id="bIn" aria-pressed="true">⊗ Into page</button>
+            <button type="button" id="bOut" aria-pressed="false">⊙ Out</button>
+            <button type="button" id="bOff" aria-pressed="false">Off</button>
+          </div>
+        </div>
+        <div id="bRow">
+          <div class="slider-head"><label for="lb">Magnitude |B|</label><output id="lbOut" class="mono" for="lb"></output></div>
+          <input type="range" id="lb" min="-5" max="0.3" step="0.01" value="-1">
+        </div>
+        <div class="inline">
+          <span class="lab">E</span>
+          <div class="seg" role="group" aria-label="Electric field">
+            <button type="button" id="eOff" aria-pressed="true">Off</button>
+            <button type="button" id="eOn" aria-pressed="false">On</button>
+          </div>
+        </div>
+        <div id="eRows" hidden>
+          <div class="slider-head"><label for="le">Magnitude |E|</label><output id="leOut" class="mono" for="le"></output></div>
+          <input type="range" id="le" min="0" max="6" step="0.01" value="4">
+          <div class="slider-head" style="margin-top:8px"><label for="ea">Direction of E</label><output id="eaOut" class="mono" for="ea"></output></div>
+          <input type="range" id="ea" min="0" max="355" step="5" value="270">
+        </div>
+        <div class="inline">
+          <span class="lab">Fields fill</span>
+          <div class="seg" role="group" aria-label="Where the fields are">
+            <button type="button" id="rAll" aria-pressed="true">Everywhere</button>
+            <button type="button" id="rBox" aria-pressed="false">A rectangle</button>
+          </div>
+        </div>
+        <p class="hint" id="fieldHint"></p>
+      </section>
+
+      <section id="secSel" hidden>
+        <h2>Velocity selector</h2>
+        <div>
+          <div class="slider-head"><label for="sV">Plate voltage</label><output id="sVOut" class="mono" for="sV"></output></div>
+          <input type="range" id="sV" min="0" max="1500" step="10" value="400">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sB">Magnetic field B (⊗)</label><output id="sBOut" class="mono" for="sB"></output></div>
+          <input type="range" id="sB" min="0.01" max="0.4" step="0.005" value="0.1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sW">Exit slit width</label><output id="sWOut" class="mono" for="sW"></output></div>
+          <input type="range" id="sW" min="0.1" max="5" step="0.1" value="2">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sC">Source speeds, center</label><output id="sCOut" class="mono" for="sC"></output></div>
+          <input type="range" id="sC" min="0.5" max="5" step="0.05" value="2">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sS">Spread of speeds, ±</label><output id="sSOut" class="mono" for="sS"></output></div>
+          <input type="range" id="sS" min="5" max="60" step="1" value="30">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sR">Rate</label><output id="sROut" class="mono" for="sR"></output></div>
+          <input type="range" id="sR" min="1" max="60" step="1" value="12">
+        </div>
+      </section>
+
+      <section id="secSpec" hidden>
+        <h2>Mass spectrometer</h2>
+        <div class="inline">
+          <span class="lab">Element</span>
+          <div class="seg" role="group" aria-label="Element">
+            <button type="button" id="elNe" aria-pressed="true">Neon</button>
+            <button type="button" id="elC" aria-pressed="false">Carbon</button>
+          </div>
+        </div>
+        <div class="inline">
+          <span class="lab">Mix</span>
+          <div class="seg" role="group" aria-label="Isotope mix">
+            <button type="button" id="mixNat" aria-pressed="true">Natural</button>
+            <button type="button" id="mixEq" aria-pressed="false">Equal numbers</button>
+          </div>
+        </div>
+        <div>
+          <div class="slider-head"><label for="pV">Accelerating voltage V</label><output id="pVOut" class="mono" for="pV"></output></div>
+          <input type="range" id="pV" min="100" max="5000" step="50" value="1000">
+        </div>
+        <div>
+          <div class="slider-head"><label for="pB">Magnetic field B (⊗)</label><output id="pBOut" class="mono" for="pB"></output></div>
+          <input type="range" id="pB" min="0.05" max="1" step="0.005" value="0.2">
+        </div>
+        <div>
+          <div class="slider-head"><label for="pA">Spread of directions at the slit, ±</label><output id="pAOut" class="mono" for="pA"></output></div>
+          <input type="range" id="pA" min="0" max="15" step="0.5" value="2">
+        </div>
+        <div>
+          <div class="slider-head"><label for="pR">Rate</label><output id="pROut" class="mono" for="pR"></output></div>
+          <input type="range" id="pR" min="1" max="40" step="1" value="8">
+        </div>
+      </section>
+
+      <section id="secCyc" hidden>
+        <h2>Cyclotron</h2>
+        <div>
+          <div class="slider-head"><label for="cB">Magnetic field B (⊗)</label><output id="cBOut" class="mono" for="cB"></output></div>
+          <input type="range" id="cB" min="0.3" max="2" step="0.05" value="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="cV">Gap voltage V</label><output id="cVOut" class="mono" for="cV"></output></div>
+          <input type="range" id="cV" min="10" max="200" step="5" value="100">
+        </div>
+        <div>
+          <div class="slider-head"><label for="cG">Gap width</label><output id="cGOut" class="mono" for="cG"></output></div>
+          <input type="range" id="cG" min="0.2" max="3" step="0.1" value="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="cR">Dee radius R</label><output id="cROut" class="mono" for="cR"></output></div>
+          <input type="range" id="cR" min="0.1" max="0.6" step="0.01" value="0.3">
+        </div>
+        <div>
+          <div class="slider-head"><label for="cF">Gap voltage frequency f / f<sub>c</sub></label><output id="cFOut" class="mono" for="cF"></output></div>
+          <input type="range" id="cF" min="0.95" max="1.05" step="0.002" value="1">
+        </div>
+      </section>
+
+      <section id="secRead">
+        <h2>Readouts</h2>
+        <dl class="readout" id="readFree">
+          <div><dt id="rRLab">Radius r = mv⊥/|q|B</dt><dd id="rR">—</dd></div>
+          <div><dt>Period T = 2πm/|q|B</dt><dd id="rT">—</dd></div>
+          <div><dt>Frequency f = 1/T</dt><dd id="rF">—</dd></div>
+          <div><dt>Turns so far</dt><dd id="rN">—</dd></div>
+          <div><dt>Speed now |v|</dt><dd id="rV">—</dd></div>
+          <div><dt>Kinetic energy K</dt><dd id="rK">—</dd></div>
+          <div class="wide"><dt id="rWLab">Change in K since launch</dt><dd id="rW">—</dd></div>
+          <div class="wide" id="rDriftRow"><dt>Drift velocity E × B / B², size E/B</dt><dd id="rDrift">—</dd></div>
+          <div class="wide" id="rPitchRow"><dt>Helix pitch v∥T</dt><dd id="rPitch">—</dd></div>
+          <div class="wide list" id="rCmpRow"><dt id="rCmpLab">Second particle</dt><dd id="rCmp">—</dd></div>
+        </dl>
+        <dl class="readout" id="readSel" hidden>
+          <div><dt>E = V / plate gap</dt><dd id="sE">—</dd></div>
+          <div><dt>Goes straight: v = E/B</dt><dd id="sVs">—</dd></div>
+          <div class="wide"><dt>Speeds that get through this slit</dt><dd id="sBand">—</dd></div>
+          <div><dt>Fired</dt><dd id="sN">0</dd></div>
+          <div><dt>Through the slit</dt><dd id="sP">0</dd></div>
+          <div><dt>Hit a plate</dt><dd id="sH">0</dd></div>
+          <div><dt>Stopped by the screen</dt><dd id="sX">0</dd></div>
+        </dl>
+        <div id="readSpec" hidden>
+          <table class="iso" id="isoTable"></table>
+          <dl class="readout" style="margin-top:10px">
+            <div class="wide list"><dt>Landing distance from the slit, 2r = (2/B)√(2mV/q)</dt><dd id="pSep">—</dd></div>
+            <div class="wide list"><dt>Ion speed into the field √(2qV/m)</dt><dd id="pSpd">—</dd></div>
+          </dl>
+        </div>
+        <dl class="readout" id="readCyc" hidden>
+          <div><dt>f<sub>c</sub> = qB/2πm</dt><dd id="cFc">—</dd></div>
+          <div><dt>Gap voltage frequency</dt><dd id="cFrf">—</dd></div>
+          <div><dt>Kinetic energy now</dt><dd id="cK">—</dd></div>
+          <div><dt>Turns</dt><dd id="cN">—</dd></div>
+          <div class="wide"><dt>Gain at the last gap crossing, against qV</dt><dd id="cGain">—</dd></div>
+          <div class="wide"><dt>Largest energy K<sub>max</sub> = (qBR)²/2m</dt><dd id="cKmax">—</dd></div>
+          <div class="wide list"><dt>At K<sub>max</sub>: v/c and γ</dt><dd id="cRel">—</dd></div>
+        </dl>
+      </section>
+
+      <section>
+        <h2>Playback</h2>
+        <div>
+          <div class="slider-head"><label for="pb">Speed</label><output id="pbOut" class="mono" for="pb"></output></div>
+          <input type="range" id="pb" min="-4" max="4" step="1" value="0">
+        </div>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint" id="modelHint"></p>
+        <div class="key" id="key"></div>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  // SI throughout. CODATA 2018 constants; atomic masses from AME2020.
+  const QE = 1.602176634e-19;        // C
+  const ME = 9.1093837015e-31;       // kg
+  const MP = 1.67262192369e-27;      // kg
+  const MD = 3.3435837724e-27;       // kg, deuteron
+  const MA = 6.6446573357e-27;       // kg, alpha particle
+  const U = 1.66053906660e-27;       // kg, atomic mass unit
+  const C = 299792458;               // m/s
+  const PARTICLES = {
+    p: { name: 'Proton', short: 'p', q: QE, m: MP },
+    e: { name: 'Electron', short: 'e⁻', q: -QE, m: ME },
+    a: { name: 'Alpha particle', short: 'α', q: 2 * QE, m: MA },
+    d: { name: 'Deuteron', short: 'd', q: QE, m: MD }
+  };
+  // singly charged ions: atomic mass minus one electron (the 21.6 eV or 11.3 eV binding energy is 10⁻⁸ u and left out)
+  const ISOTOPES = {
+    ne: [{ A: 20, name: '²⁰Ne⁺', mu: 19.9924401762, ab: 0.9048 }, { A: 21, name: '²¹Ne⁺', mu: 20.993846685, ab: 0.0027 }, { A: 22, name: '²²Ne⁺', mu: 21.991385114, ab: 0.0925 }],
+    c: [{ A: 12, name: '¹²C⁺', mu: 12, ab: 0.9893 }, { A: 13, name: '¹³C⁺', mu: 13.00335483507, ab: 0.0107 }]
+  };
+  const ionMass = (iso) => iso.mu * U - ME;
+
+  const radius = (m, v, q, B) => m * v / Math.abs(q * B);          // r = mv/|q|B
+  const period = (m, q, B) => 2 * Math.PI * m / Math.abs(q * B);   // T = 2πm/|q|B
+  const specRadius = (m, V, q, B) => Math.sqrt(2 * m * V / q) / Math.abs(B);   // r = √(2mV/q)/B
+
+  // Exact motion in uniform fields, B along z, E in the plane, nonrelativistic.
+  // With w = vx + i vy, a = (q/m)(Ex + i Ey), ω = qBz/m:  dw/dt = a − iωw, so
+  //   w(t) = w₀ e^(−iθ) + a t F1(θ),   z(t) = z₀ + w₀ t F1(θ) + a t² F2(θ),   θ = ωt,
+  //   F1 = (1 − e^(−iθ))/(iθ),  F2 = (1 − F1)/(iθ), both finite as θ → 0 (ballistic limit).
+  const sinc = (x) => (Math.abs(x) < 1e-4 ? 1 - x * x / 6 : Math.sin(x) / x);
+  function F12(th) {
+    const h = sinc(th / 2), f1r = sinc(th), f1i = -th / 2 * h * h;        // (1 − cos θ)/θ = (θ/2) sinc²(θ/2)
+    const f2r = 0.5 * h * h;                                               // (1 − cos θ)/θ²
+    let f2i;                                                               // −(θ − sin θ)/θ²
+    if (Math.abs(th) < 0.2) { const t2 = th * th; f2i = -th * (1 / 6 - t2 / 120 + t2 * t2 / 5040 - t2 * t2 * t2 / 362880 + t2 * t2 * t2 * t2 / 39916800); }
+    else f2i = -(th - Math.sin(th)) / (th * th);
+    return [f1r, f1i, f2r, f2i];
+  }
+  // s = {x, y, vx, vy}; f = {ax, ay, om}; returns the state a time t later
+  function advance(s, f, t) {
+    const th = f.om * t, c = Math.cos(th), sn = Math.sin(th);
+    const [f1r, f1i, f2r, f2i] = F12(th);
+    const t2 = t * t;
+    return {
+      x: s.x + t * (s.vx * f1r - s.vy * f1i) + t2 * (f.ax * f2r - f.ay * f2i),
+      y: s.y + t * (s.vx * f1i + s.vy * f1r) + t2 * (f.ax * f2i + f.ay * f2r),
+      vx: s.vx * c + s.vy * sn + t * (f.ax * f1r - f.ay * f1i),
+      vy: -s.vx * sn + s.vy * c + t * (f.ax * f1i + f.ay * f1r)
+    };
+  }
+  const fieldsFor = (part, F) => ({ ax: part.q * F.Ex / part.m, ay: part.q * F.Ey / part.m, om: part.q * F.Bz / part.m });
+  // guiding center of the gyration: g = z − i(w − v_d)/ω, drift v_d = −i a/ω = E × B / B²
+  function gyroCenter(s, f) {
+    if (!f.om) return null;
+    const dx = f.ay / f.om, dy = -f.ax / f.om;           // v_d
+    const ux = s.vx - dx, uy = s.vy - dy;
+    return { x: s.x + uy / f.om, y: s.y - ux / f.om, vdx: dx, vdy: dy, r: Math.hypot(ux, uy) / Math.abs(f.om) };
+  }
+
+  // A trajectory through fields that are uniform piece by piece. The model says which zone a point is in, the
+  // fields in each zone, any times at which fields switch, and what happens on entering a zone. Each piece is
+  // the exact solution above; zone crossings are found by stepping (at most 0.06 rad of gyration or L/600 of
+  // path per step) and then bisecting to the last bit.
+  function makeTraj(model, part, s0, z0, vz) {
+    const T = { part, model, segs: [], ended: false, endT: Infinity, endTag: null, log: [], vz: vz || 0, z0: z0 || 0 };
+    const key0 = model.zone(s0.x, s0.y);
+    T.segs.push(newSeg(0, s0, key0, 0));
+    function newSeg(t0, s, key, idx) {
+      const f = fieldsFor(part, model.fields(key, idx));
+      const tEv = model.timeEvent ? model.timeEvent(idx) : Infinity;
+      return { t0, s, key, idx, f, t1: Infinity, scanT: 0, scanS: s, tEv: tEv - t0, uniform: !!model.uniform && tEv === Infinity };
+    }
+    function stepFor(s, f) {
+      const v = Math.hypot(s.vx, s.vy), a = Math.hypot(f.ax, f.ay), Ls = model.L / 600;
+      let dt = Infinity;
+      if (f.om) dt = 0.06 / Math.abs(f.om);
+      if (v > 0) dt = Math.min(dt, Ls / v);
+      if (a > 0) dt = Math.min(dt, Math.sqrt(2 * Ls / a));
+      return dt === Infinity ? 1e-6 : dt;
+    }
+    // scan the last segment forward to relative time tau (or until it ends)
+    function scan(tau) {
+      let guard = 0;
+      while (!T.ended) {
+        if (guard++ > 2000000) { const g = T.segs[T.segs.length - 1]; T.ended = true; T.endT = g.t0 + g.scanT; T.endTag = 'limit'; T.endS = g.scanS; return; }
+        const g = T.segs[T.segs.length - 1];
+        if (g.uniform) return;
+        if (g.scanT >= tau) return;
+        const dt = stepFor(g.scanS, g.f);
+        let tn = g.scanT + dt, timeEv = false;
+        if (tn >= g.tEv) { tn = g.tEv; timeEv = true; }
+        const sn = advance(g.s, g.f, tn), kn = model.zone(sn.x, sn.y);
+        if (kn !== g.key) {
+          let lo = g.scanT, hi = tn;
+          for (let i = 0; i < 80 && hi - lo > 1e-15 * hi; i++) { const mid = 0.5 * (lo + hi), sm = advance(g.s, g.f, mid); if (model.zone(sm.x, sm.y) === g.key) lo = mid; else hi = mid; }
+          const sc = advance(g.s, g.f, hi), kc = model.zone(sc.x, sc.y);
+          g.t1 = g.t0 + hi;
+          const r = model.onEnter ? model.onEnter(kc, g.key, sc, g.t1, T) : null;
+          if (r && r.stop) { T.ended = true; T.endT = g.t1; T.endTag = r.tag || 'stop'; T.endS = sc; return; }
+          T.segs.push(newSeg(g.t1, (r && r.state) || sc, kc, g.idx));
+          if (T.segs.length > 200000) { T.ended = true; T.endT = g.t1; T.endTag = 'limit'; T.endS = sc; return; }
+          continue;
+        }
+        if (timeEv) {
+          g.t1 = g.t0 + tn;
+          T.segs.push(newSeg(g.t1, sn, g.key, g.idx + 1));
+          continue;
+        }
+        g.scanT = tn; g.scanS = sn;
+      }
+    }
+    T.extend = (t) => { while (!T.ended) { const g = T.segs[T.segs.length - 1]; if (g.uniform || g.t0 + g.scanT >= t) break; scan(t - g.t0); } };
+    T.segAt = (t) => {
+      const sg = T.segs; let lo = 0, hi = sg.length - 1;
+      while (lo < hi) { const m = (lo + hi + 1) >> 1; if (sg[m].t0 <= t) lo = m; else hi = m - 1; }
+      return sg[lo];
+    };
+    // state at time t (held at the end point once the trajectory has ended)
+    T.at = (t) => {
+      T.extend(t);
+      if (T.ended && t >= T.endT) { const e = T.endS; return { x: e.x, y: e.y, vx: e.vx, vy: e.vy, key: null, f: { ax: 0, ay: 0, om: 0 }, z: T.z0 + T.vz * T.endT }; }
+      const g = T.segAt(Math.max(0, t)), s = advance(g.s, g.f, Math.max(0, t) - g.t0);
+      s.key = g.key; s.f = g.f; s.z = T.z0 + T.vz * t;
+      return s;
+    };
+    // sample points between t0 and t1, at most dθ = 0.05 rad and a path step ds apart
+    T.sample = (t0, t1, ds, maxN) => {
+      T.extend(t1);
+      if (T.ended) t1 = Math.min(t1, T.endT);
+      const pts = [];
+      if (!(t1 > t0)) { const e = T.at(t0); return [[e.x, e.y, e.z, t0]]; }
+      let t = t0, n = 0;
+      maxN = maxN || 4000;
+      while (t < t1 && n < maxN) {
+        const g = T.segAt(t), s = advance(g.s, g.f, t - g.t0);
+        pts.push([s.x, s.y, T.z0 + T.vz * t, t]); n++;
+        const v = Math.hypot(s.vx, s.vy, T.vz), a = Math.hypot(g.f.ax, g.f.ay);
+        let dt = Infinity;
+        if (g.f.om) dt = 0.05 / Math.abs(g.f.om);
+        if (v > 0) dt = Math.min(dt, ds / v);
+        if (a > 0) dt = Math.min(dt, Math.sqrt(2 * ds / a));
+        if (!isFinite(dt)) dt = t1 - t0;
+        dt = Math.max(dt, (t1 - t0) / maxN);
+        const segEnd = g.t1 === Infinity ? Infinity : g.t1;
+        t = (t < segEnd && t + dt > segEnd) ? segEnd : t + dt;
+      }
+      const e = T.at(t1); pts.push([e.x, e.y, e.z, t1]);
+      return pts;
+    };
+    return T;
+  }
+
+  // ---- models ----
+  // Free space with fields everywhere, or inside a rectangle only
+  function freeModel(F, rect, L) {
+    const none = { Ex: 0, Ey: 0, Bz: 0 };
+    if (!rect) return { L, uniform: true, zone: () => 'f', fields: () => F };
+    return { L, zone: (x, y) => (x > rect.x0 && x < rect.x1 && y > rect.y0 && y < rect.y1 ? 'f' : 'o'), fields: (k) => (k === 'f' ? F : none) };
+  }
+  // Velocity selector: crossed fields between plates 0 < x < L, |y| < h; slit of width w in a screen at xs; detector at xd
+  function selectorModel(c) {
+    const F = { Ex: 0, Ey: -c.E, Bz: -c.B }, none = { Ex: 0, Ey: 0, Bz: 0 };
+    return {
+      L: c.L,
+      zone(x, y) {
+        if (x >= c.xd) return 'det';
+        if (x >= c.xs) return 'past';
+        if (x > 0 && x < c.L) return Math.abs(y) < c.h ? 'fld' : 'plate';
+        return 'free';
+      },
+      fields: (k) => (k === 'fld' ? F : none),
+      onEnter(k, prev, s) {
+        if (k === 'plate') return { stop: true, tag: 'plate' };
+        if (k === 'past' && Math.abs(s.y) > c.w / 2) return { stop: true, tag: 'slit' };
+        if (k === 'det') return { stop: true, tag: 'pass' };
+        return null;
+      }
+    };
+  }
+  // the selector run for one speed: launched at (x0, 0) along +x
+  function selectorRun(c, part, v) {
+    const T = makeTraj(selectorModel(c), part, { x: c.x0, y: 0, vx: v, vy: 0 });
+    T.extend(Infinity);
+    return T;
+  }
+  // band of speeds that pass, found by scanning and bisection
+  function selectorBand(c, part) {
+    const v0 = c.E / c.B, ok = (v) => selectorRun(c, part, v).endTag === 'pass';
+    if (!(v0 > 0) || !ok(v0)) return null;
+    const edge = (dir) => {
+      let a = v0, step = v0 * 0.002, b = v0 + dir * step, k = 0;
+      while (ok(b) && k++ < 60) { a = b; step *= 1.6; b = v0 + dir * step; if (b <= 0) return 0; }
+      for (let i = 0; i < 50; i++) { const m = 0.5 * (a + b); if (ok(m)) a = m; else b = m; }
+      return a;
+    };
+    return [edge(-1), edge(1)];
+  }
+  // Mass spectrometer: ions start at rest at y = d, accelerate through V to a slit at the origin, then turn in B (y < 0)
+  // and land on the plate y = 0. The slit passes ions within ±alpha of straight down; spread rotates the direction at the slit.
+  function specModel(c, angleFn) {
+    const none = { Ex: 0, Ey: 0, Bz: 0 }, Facc = { Ex: 0, Ey: -c.V / c.d, Bz: 0 }, FB = { Ex: 0, Ey: 0, Bz: -c.B };
+    return {
+      L: c.L,
+      zone: (x, y) => (y < 0 ? 'B' : y < c.d ? 'acc' : 'src'),
+      fields: (k) => (k === 'acc' ? Facc : k === 'B' ? FB : none),
+      onEnter(k, prev, s) {
+        if (k === 'B' && prev === 'acc') { const a = angleFn ? angleFn() : 0, v = Math.hypot(s.vx, s.vy); return { state: { x: s.x, y: s.y, vx: v * Math.sin(a), vy: -v * Math.cos(a) } }; }
+        if (prev === 'B' && k !== 'B') return { stop: true, tag: 'plate' };
+        return null;
+      }
+    };
+  }
+  function specRun(c, part, angle) {
+    const T = makeTraj(specModel(c, () => angle || 0), part, { x: 0, y: c.d * (1 - 1e-12), vx: 0, vy: 0 });
+    T.extend(Infinity);
+    return T;
+  }
+  // Cyclotron: two dees of radius R with a gap |x| < g/2 between them, B everywhere inside R. The gap voltage is a
+  // square wave at frequency fRF that switches polarity at fRF·t = 1/4, 3/4, 5/4, ... (midway through each dee for a
+  // tuned particle), so the field in the gap is steady while the particle crosses. The particle starts at rest at the center.
+  function cycModel(c) {
+    const Tr = 1 / c.fRF, none = { Ex: 0, Ey: 0, Bz: 0 };
+    return {
+      L: c.g * 2,
+      zone(x, y) { if (x * x + y * y >= c.R * c.R) return 'out'; return Math.abs(x) < c.g / 2 ? 'gap' : 'dee'; },
+      fields(k, idx) {
+        if (k === 'out') return none;
+        if (k === 'dee') return { Ex: 0, Ey: 0, Bz: -c.B };
+        return { Ex: (idx % 2 ? -1 : 1) * c.V / c.g, Ey: 0, Bz: -c.B };
+      },
+      timeEvent: (idx) => Tr * (0.25 + 0.5 * idx),
+      onEnter(k, prev, s, t, T) {
+        const K = 0.5 * T.part.m * (s.vx * s.vx + s.vy * s.vy);
+        if (prev === 'gap' && k === 'dee') T.log.push({ t, K });
+        if (k === 'out') { T.log.push({ t, K, out: true }); return { stop: true, tag: 'out' }; }
+        return null;
+      }
+    };
+  }
+  // The orbit centers wander: each crossing moves the center along the line to the crossing point. Started from
+  // rest at the middle they settle about 0.55 r₁ to one side (r₁ = √(m|q|V)/|q|B, the first orbit), so the source
+  // sits that far to the other side and the late orbits are centered.
+  const cycSourceY = (c, part) => -0.55 * Math.sqrt(part.m * Math.abs(part.q) * c.V) / Math.abs(part.q * c.B);
+  function cycRun(c, part) {
+    const T = makeTraj(cycModel(c), part, { x: 0, y: cycSourceY(c, part), vx: 0, vy: 0 });
+    T.extend(Infinity);
+    return T;
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.MF = { QE, ME, MP, MD, MA, U, C, PARTICLES, ISOTOPES, ionMass, radius, period, specRadius, F12, advance, fieldsFor, gyroCenter, makeTraj, freeModel, selectorModel, selectorRun, selectorBand, specModel, specRun, cycModel, cycRun, cycSourceY };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  // ---------- geometry of the fixed apparatus (m) ----------
+  const SEL = { L: 0.06, h: 0.01, xs: 0.07, xd: 0.095, x0: -0.025 };
+  const SPEC = { d: 0.02 };
+
+  const PRESETS = {
+    circle: { mode: 'free', hint: 'A proton at 1.0 × 10⁵ m/s in a 0.10 T field moves in a circle 2 cm across. Drag the arrow tip to change the speed: the circle grows in proportion, but the period stays 0.656 µs. The force arrow always points to the center.' },
+    ep: { mode: 'free', hint: 'A proton and an electron with the same kinetic energy, 100 eV, in 1 mT. They curl in opposite directions. The electron circle is 43 times smaller (r ∝ √(mK) at equal K) and the electron goes around 1836 times for each proton turn (T ∝ m).' },
+    drift: { mode: 'free', hint: 'A proton released at rest in crossed fields. E starts it moving, B turns it, and it traces a cycloid, stopping at each cusp. On average it drifts at E/B = 1.0 × 10⁵ m/s at right angles to both fields, whatever its charge or mass.' },
+    sel: { mode: 'sel', hint: 'Between the plates qE pushes down and qv × B pushes up. They cancel only for v = E/B, so only those protons go straight through the slit. Slower ones curve down, faster ones curve up. Narrow the slit to sharpen the selection.' },
+    spec: { mode: 'spec', hint: 'Neon ions are accelerated through 1000 V and enter a 0.20 T field. Each turns a half circle of radius r = √(2mV/q)/B, so the heavier ²²Ne⁺ lands about 1 cm farther out than ²⁰Ne⁺. Try Equal numbers to see the rare ²¹Ne⁺ line.' },
+    cyc: { mode: 'cyc', hint: 'A proton spirals out in a 1.0 T field. Each time it crosses the gap the voltage has just flipped, so it gains qV = 100 keV. The time per half turn, πm/qB, does not depend on speed, so one fixed frequency keeps it in step all the way out.' }
+  };
+
+  // ---------- state ----------
+  const S = {
+    mode: 'free', preset: 'circle', play: 0,
+    f: { part: 'p', cq: 1, cm: 0, lv: 5, ang: 0, par: 0, view3d: false, bdir: -1, lb: -1, eon: false, le: 4, ea: 270, region: false,
+      rect: { x0: 0, x1: 0.03, y0: -0.02, y1: 0.02 }, lx: 0, ly: 0, cmp: 'none', same: 'v' },
+    sel: { part: 'p', V: 400, B: 0.1, w: 2, c: 2, sp: 30, rate: 12 },
+    spec: { el: 'ne', mix: 'nat', V: 1000, B: 0.2, al: 2, rate: 8 },
+    cyc: { part: 'p', B: 1, V: 100, g: 1, R: 0.3, det: 1 }
+  };
+  let playing = !reduce, simT = 0, tScale = 1e-7;
+
+  // ---------- particles ----------
+  function partOf(k, mode) {
+    if (k === 'c') { const m = Math.pow(10, S.f.cm) * U; return { name: 'Custom', short: 'q', q: S.f.cq * QE, m }; }
+    return PARTICLES[k];
+  }
+  const curPart = () => partOf(S.mode === 'free' ? S.f.part : S.mode === 'sel' ? S.sel.part : S.cyc.part);
+  const chargeCol = (q) => (q > 0 ? T.pos : q < 0 ? T.neg : T.muted);
+
+  // ---------- formatting ----------
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  const sup = (n) => String(n).split('').map((ch) => SUP[ch] || ch).join('');
+  const trim = (s) => (s.includes('e') ? s : s.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, ''));
+  function sci(v, d = 3) {
+    if (v === 0) return '0';
+    if (!isFinite(v)) return '∞';
+    const e = Math.floor(Math.log10(Math.abs(v)) + 1e-12);
+    if (e >= -2 && e <= 3) return String(+v.toPrecision(Math.max(d, e + 1)));
+    let mnt = v / Math.pow(10, e); let mm = mnt.toFixed(d - 1);
+    if (Math.abs(+mm) >= 10) { mnt /= 10; mm = mnt.toFixed(d - 1); return `${mm} × 10${sup(e + 1)}`; }
+    return `${mm} × 10${sup(e)}`;
+  }
+  const PFX = [[-15, 'f'], [-12, 'p'], [-9, 'n'], [-6, 'µ'], [-3, 'm'], [0, ''], [3, 'k'], [6, 'M'], [9, 'G']];
+  function si(v, unit, d = 3) {
+    if (v === 0) return `0 ${unit}`;
+    if (!isFinite(v)) return `∞`;
+    const a = Math.abs(v); let best = PFX[0];
+    for (const p of PFX) if (a >= Math.pow(10, p[0]) * 0.9995) best = p;
+    const x = v / Math.pow(10, best[0]);
+    return `${trim(x.toPrecision(d))} ${best[1]}${unit}`;
+  }
+  function fmtLen(m, d = 3) { const a = Math.abs(m); if (a >= 0.01 && a < 1) return `${trim((m * 100).toPrecision(d))} cm`; return si(m, 'm', d); }
+  const fmtV = (v, d = 3) => `${sci(v, d)} m/s`;
+  const fmtK = (J, d = 3) => si(J / QE, 'eV', d);
+  const fmtB = (B) => si(B, 'T', 3);
+  const fmtE = (E) => (E >= 1000 ? `${sci(E / 1000, 3)} kV/m` : `${trim(E.toPrecision(3))} V/m`);
+  const fmtAng = (deg) => `${Math.round(deg)}°`;
+
+  // ---------- free mode ----------
+  const vPerp = () => (S.f.lv < 2 ? 0 : Math.pow(10, S.f.lv));
+  const Bz = () => (S.f.bdir === 0 ? 0 : S.f.bdir * Math.pow(10, S.f.lb));
+  const Emag = () => (S.f.eon ? Math.pow(10, S.f.le) : 0);
+  const freeF = () => { const E = Emag(), a = S.f.ea * Math.PI / 180; return { Ex: E * Math.cos(a), Ey: E * Math.sin(a), Bz: Bz() }; };
+  let FV = { cx: 0, cy: 0.01, sc: 10000 };     // free view: world center and px per m
+  let main = null, cmp = null, vRef = 1e5;
+  function cmpPart() {
+    const c = S.f.cmp, p = partOf(S.f.part);
+    if (c === 'none') return null;
+    if (c === '2v') return { ...p, name: p.name + ', twice as fast' };
+    return PARTICLES[c];
+  }
+  function cmpSpeedFactor(p, q) {
+    if (S.f.cmp === '2v') return 2;
+    return S.f.same === 'K' ? Math.sqrt(p.m / q.m) : 1;
+  }
+  function freeModelNow() { return freeModel(freeF(), S.f.region ? S.f.rect : null, viewSpanW()); }
+  function launchState(sf = 1) { const v = vPerp() * sf, a = S.f.ang * Math.PI / 180; return { x: S.f.lx, y: S.f.ly, vx: v * Math.cos(a), vy: v * Math.sin(a) }; }
+  function buildFree() {
+    const p = partOf(S.f.part), mdl = freeModelNow();
+    main = makeTraj(mdl, p, launchState(), 0, S.f.par * vPerp());
+    const q = cmpPart();
+    if (q) { const k = cmpSpeedFactor(p, q); cmp = makeTraj(mdl, q, launchState(k), 0, S.f.par * vPerp() * k); cmp.speedFactor = k; } else cmp = null;
+  }
+  const viewSpanW = () => (LY ? LY.scene.w / FV.sc : 0.1);
+  // the natural time unit: a period if B acts, else the time to cross the view
+  function freePeriod(p) { p = p || partOf(S.f.part); const B = Bz(); return B && p.q ? period(p.m, p.q, B) : 0; }
+  function setFreeTimeScale() {
+    const Tp = freePeriod();
+    if (Tp) tScale = Tp / 4;
+    else { const p = partOf(S.f.part), a = Math.abs(p.q) * Emag() / p.m, Wv = viewSpanW(), v = Math.max(vPerp(), Math.sqrt(a * Wv * 0.5), 1); tScale = Wv / v / 5; }
+  }
+  // fit the view to the next stretch of path (a full orbit, a few cycloid arches, or the field rectangle)
+  function fitFree() {
+    if (!LY) return;
+    const p = partOf(S.f.part), Tp = freePeriod(p), mdl = freeModelNow();
+    const tr = makeTraj(mdl, p, launchState(), 0, 0);
+    let xs = [S.f.lx], ys = [S.f.ly];
+    let span;
+    if (Tp && !S.f.region) span = (S.f.eon ? 2.4 : 1) * Tp;
+    else if (S.f.region) { xs.push(S.f.rect.x0, S.f.rect.x1); ys.push(S.f.rect.y0, S.f.rect.y1); span = 0; }
+    else span = 0;
+    if (span) {
+      // a guess at the size, used only to set the sampling step
+      const pts = tr.sample(0, span, 1e-9 + Math.max(vPerp() * span, 1e-6) / 400, 3000);
+      for (const q of pts) { xs.push(q[0]); ys.push(q[1]); }
+    }
+    let x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+    if (S.f.cmp !== 'none' && cmp && Tp && !S.f.region) {
+      const q = cmpPart(), Tq = freePeriod(q), k = cmpSpeedFactor(p, q);
+      const tq = makeTraj(mdl, q, launchState(k), 0, 0);
+      const qs = tq.sample(0, (S.f.eon ? 2.4 : 1) * Tq, Math.max(vPerp() * k * Tq, 1e-6) / 400, 3000);
+      for (const r of qs) { x0 = Math.min(x0, r[0]); x1 = Math.max(x1, r[0]); y0 = Math.min(y0, r[1]); y1 = Math.max(y1, r[1]); }
+    }
+    let w = x1 - x0, h = y1 - y0;
+    if (!(w > 0) && !(h > 0)) { w = h = 0.1; }
+    const s = LY.scene, ps = projScale();
+    const sc = Math.min((s.w - 60 * ps) / Math.max(w, 1e-12), (s.h - 110 * ps) / Math.max(h, 1e-12));
+    const lim = Math.min(s.w, s.h) / Math.max(w, h, 1e-12);
+    FV = { cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, sc: isFinite(sc) && sc > 0 ? Math.min(sc, lim * 0.9) : 1000 };
+    if (!(w > 0) || !(h > 0)) { const d = Math.max(w, h) || 0.1; FV.sc = Math.min(s.w, s.h) * 0.7 / d; }
+  }
+  function defaultRect() {
+    const p = partOf(S.f.part), B = Bz(), v = vPerp() || 1e5;
+    const r = B && p.q ? radius(p.m, v, p.q, B) : 0.02;
+    S.f.rect = { x0: 0, x1: 1.6 * r, y0: -2.6 * r, y1: 2.6 * r };
+    S.f.lx = -0.8 * r; S.f.ly = 0;
+  }
+
+  // ---------- velocity selector ----------
+  const selCfg = () => ({ E: S.sel.V / (2 * SEL.h), B: S.sel.B, L: SEL.L, h: SEL.h, xs: SEL.xs, xd: SEL.xd, w: S.sel.w / 1000, x0: SEL.x0 });
+  let streams = [], doneTracks = [], hist = null, counts = { fired: 0, pass: 0, plate: 0, slit: 0 }, carry = 0, band = null, bandTimer = 0;
+  function selRange() { const c = S.sel.c * 1e5, s = S.sel.sp / 100; return [c * (1 - s), c * (1 + s)]; }
+  function fireSel() {
+    const c = selCfg(), p = partOf(S.sel.part), [a, b] = selRange(), v = a + (b - a) * Math.random();
+    const tr = selectorRun(c, p, v);
+    streams.push({ tr, born: simT, v, tag: tr.endTag });
+  }
+  function updBand() {
+    clearTimeout(bandTimer);
+    $('sBand').textContent = '…';
+    bandTimer = setTimeout(() => { band = selectorBand(selCfg(), partOf(S.sel.part)); readouts(); }, 120);
+  }
+
+  // ---------- mass spectrometer ----------
+  const specCfg = () => ({ V: S.spec.V, B: S.spec.B, d: SPEC.d, L: 0.05 });
+  const isos = () => ISOTOPES[S.spec.el];
+  function fireSpec() {
+    const list = isos(); let u = Math.random(), i = 0;
+    if (S.spec.mix === 'eq') i = Math.floor(u * list.length);
+    else { const tot = list.reduce((s, x) => s + x.ab, 0); u *= tot; while (i < list.length - 1 && u > list[i].ab) { u -= list[i].ab; i++; } }
+    const iso = list[i], part = { q: QE, m: ionMass(iso) }, al = (2 * Math.random() - 1) * S.spec.al * Math.PI / 180;
+    const tr = specRun(specCfg(), part, al);
+    streams.push({ tr, born: simT, iso: i, tag: tr.endTag, x: tr.endS.x });
+  }
+  function specMaxR() { return Math.max(...isos().map((iso) => specRadius(ionMass(iso), S.spec.V, QE, S.spec.B))); }
+  function specMinR() { return Math.min(...isos().map((iso) => specRadius(ionMass(iso), S.spec.V, QE, S.spec.B))); }
+
+  // ---------- cyclotron ----------
+  let cyc = null;
+  function cycCfg() { const p = partOf(S.cyc.part); const fc = Math.abs(p.q) * S.cyc.B / (2 * Math.PI * p.m); return { B: S.cyc.B, V: S.cyc.V * 1000, g: S.cyc.g / 100, R: S.cyc.R, fRF: fc * S.cyc.det, fc }; }
+  function buildCyc() { const c = cycCfg(), p = partOf(S.cyc.part); cyc = makeTraj(cycModel(c), p, { x: 0, y: cycSourceY(c, p), vx: 0, vy: 0 }); cyc.cfg = c; }
+  const CYC_MAX_TURNS = 400;
+  // position at time t, continuing in a straight line after it leaves the dees
+  function cycAt(t) {
+    const s = cyc.at(t);
+    if (cyc.ended && t > cyc.endT) { const dt = t - cyc.endT; return { ...s, x: s.x + s.vx * dt, y: s.y + s.vy * dt }; }
+    return s;
+  }
+
+  // ---------- theme, canvas, layout ----------
+  let T = null, dpr = 1;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.4 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), force: g('--force'), iso1: g('--iso1'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+    T.isoCols = [T.iso1, T.equi, T.force];
+  }
+  const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  const trails = document.createElement('canvas'), tctx = trails.getContext('2d');
+  let W = 0, Hh = 0, LY = null;
+  function layout(W, H) {
+    const ps = projScale(), m = S.mode;
+    const stacked = m === 'sel' || m === 'spec' || W < 700;
+    if (!stacked) { const sw = Math.round(W * (m === 'free' ? 0.72 : 0.6)); return { wide: true, scene: { x: 0, y: 0, w: sw, h: H }, plot: { x: sw, y: 0, w: W - sw, h: H } }; }
+    const sh = Math.round(H * (m === 'sel' ? 0.56 : m === 'spec' ? 0.62 : 0.64));
+    return { wide: false, scene: { x: 0, y: 0, w: W, h: sh }, plot: { x: 0, y: sh, w: W, h: H - sh } };
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = pane.getBoundingClientRect();
+    const oldW = LY ? LY.scene.w : 0, oldH = LY ? LY.scene.h : 0;
+    W = r.width; Hh = r.height;
+    can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(Hh * dpr));
+    can.style.width = W + 'px'; can.style.height = Hh + 'px';
+    trails.width = can.width; trails.height = can.height;
+    LY = layout(W, Hh);
+    if (S.mode === 'free') { if (oldW && oldH) FV.sc *= Math.min(LY.scene.w / oldW, LY.scene.h / oldH); else fitFree(); }
+    fixedView();
+    restamp();
+    drawAll();
+  }
+  // world box to screen for the fixed apparatus
+  let AV = { cx: 0, cy: 0, sc: 1 }, labelClip = null;
+  function fixedView() {
+    if (!LY || S.mode === 'free') return;
+    const s = LY.scene, ps = projScale();
+    let box;
+    if (S.mode === 'sel') box = [-0.034, 0.104, -0.021, 0.026];
+    else if (S.mode === 'spec') { const r = specMaxR(); box = [-0.05 * Math.max(1, r / 0.1), 2 * r + 0.035 * Math.max(1, r / 0.1), -r - 0.01, SPEC.d + 0.012]; }
+    else { const R = S.cyc.R; box = [-R * 1.08, R * 1.08, -R * 1.08, R * 1.08]; }
+    const padT = 30 * ps, padB = 40 * ps, padX = 16 * ps;
+    const sc = Math.min((s.w - 2 * padX) / (box[1] - box[0]), (s.h - padT - padB) / (box[3] - box[2]));
+    AV = { cx: (box[0] + box[1]) / 2, cy: (box[2] + box[3]) / 2, sc, oy: (padT - padB) / 2 };
+  }
+  const view = () => (S.mode === 'free' ? FV : AV);
+  const X = (x) => { const v = view(), s = LY.scene; return s.x + s.w / 2 + (x - v.cx) * v.sc; };
+  const Y = (y) => { const v = view(), s = LY.scene; return s.y + s.h / 2 + (v.oy || 0) - (y - v.cy) * v.sc; };
+  const wx = (px) => { const v = view(), s = LY.scene; return v.cx + (px - s.x - s.w / 2) / v.sc; };
+  const wy = (py) => { const v = view(), s = LY.scene; return v.cy - (py - s.y - s.h / 2 - (v.oy || 0)) / v.sc; };
+
+  // ---------- drawing helpers ----------
+  function label(c, txt, x, y, col, align = 'left', base = 'middle', bold = false, size = 11) {
+    const ps = projScale();
+    c.font = `${bold ? '600 ' : ''}${size * ps}px ${T.mono}`; c.textAlign = align; c.textBaseline = base;
+    const w = c.measureText(txt).width, h = (size + 3) * ps;
+    let x0 = align === 'left' ? x : align === 'right' ? x - w : x - w / 2;
+    if (labelClip) { const lo = labelClip.x + 4, hi = labelClip.x + labelClip.w - 4 - w; const nx = Math.max(lo, Math.min(hi, x0)); x += nx - x0; x0 = nx; }
+    const y0 = base === 'middle' ? y - h / 2 : base === 'bottom' ? y - h : y;
+    c.fillStyle = T.canvas; c.globalAlpha = 0.85; c.fillRect(x0 - 3, y0, w + 6, h); c.globalAlpha = 1;
+    c.fillStyle = col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
+  }
+  function arrow(c, x0, y0, x1, y1, col, lw, head) {
+    const ps = projScale(), L = Math.hypot(x1 - x0, y1 - y0); if (L < 0.5) return;
+    head = Math.min(head || 9 * ps, L * 0.6);
+    const ux = (x1 - x0) / L, uy = (y1 - y0) / L;
+    c.strokeStyle = col; c.fillStyle = col; c.lineWidth = lw; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1 - ux * head * 0.7, y1 - uy * head * 0.7); c.stroke();
+    c.beginPath(); c.moveTo(x1, y1); c.lineTo(x1 - ux * head - uy * head * 0.45, y1 - uy * head + ux * head * 0.45); c.lineTo(x1 - ux * head + uy * head * 0.45, y1 - uy * head - ux * head * 0.45); c.closePath(); c.fill();
+    c.lineCap = 'butt';
+  }
+  // ⊗ or ⊙ lattice over a screen rectangle (or a clip already set), fixed to the world so it pans with the view
+  function bLattice(c, x0, y0, w, h, bz, alpha = 0.5) {
+    if (!bz) return;
+    const ps = projScale(), sp = 30 * ps, r = 4.2 * ps;
+    c.save(); c.beginPath(); c.rect(x0, y0, w, h); c.clip();
+    c.strokeStyle = T.muted; c.fillStyle = T.muted; c.globalAlpha = alpha; c.lineWidth = 1.1 * ps;
+    const ox = ((X(0) % sp) + sp) % sp, oy = ((Y(0) % sp) + sp) % sp;
+    for (let x = x0 - sp + ((ox - x0) % sp + sp) % sp; x < x0 + w + sp; x += sp)
+      for (let y = y0 - sp + ((oy - y0) % sp + sp) % sp; y < y0 + h + sp; y += sp) {
+        c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.stroke();
+        if (bz < 0) { const k = r * 0.62; c.beginPath(); c.moveTo(x - k, y - k); c.lineTo(x + k, y + k); c.moveTo(x - k, y + k); c.lineTo(x + k, y - k); c.stroke(); }
+        else { c.beginPath(); c.arc(x, y, 1.4 * ps, 0, 2 * Math.PI); c.fill(); }
+      }
+    c.restore();
+  }
+  function eLattice(c, x0, y0, w, h, ang, alpha = 0.6) {
+    const ps = projScale(), sp = 30 * ps, L = 13 * ps, ux = Math.cos(ang), uy = -Math.sin(ang);
+    c.save(); c.beginPath(); c.rect(x0, y0, w, h); c.clip(); c.globalAlpha = alpha;
+    const ox = ((X(0) + sp / 2) % sp + sp) % sp, oy = ((Y(0) + sp / 2) % sp + sp) % sp;
+    for (let x = x0 - sp + ((ox - x0) % sp + sp) % sp; x < x0 + w + sp; x += sp)
+      for (let y = y0 - sp + ((oy - y0) % sp + sp) % sp; y < y0 + h + sp; y += sp)
+        arrow(c, x - ux * L / 2, y - uy * L / 2, x + ux * L / 2, y + uy * L / 2, T.equi, 1.3 * ps, 5 * ps);
+    c.restore();
+  }
+  function polyline(c, pts, fx = X, fy = Y) { c.beginPath(); for (let i = 0; i < pts.length; i++) { const x = fx(pts[i][0], pts[i]), y = fy(pts[i][1], pts[i]); i ? c.lineTo(x, y) : c.moveTo(x, y); } }
+  function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  function scaleBar(sc) {
+    const c = ctx, ps = projScale(), s = LY.scene;
+    const L = niceStep(s.w * 0.2 / sc), px = L * sc, x0 = s.x + 14 * ps, y0 = s.y + s.h - 14 * ps;
+    c.strokeStyle = T.ink; c.lineWidth = 1.5 * ps; c.beginPath();
+    c.moveTo(x0, y0 - 4 * ps); c.lineTo(x0, y0); c.lineTo(x0 + px, y0); c.lineTo(x0 + px, y0 - 4 * ps); c.stroke();
+    c.fillStyle = T.ink; c.font = `${11 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    c.fillText(fmtLen(L), x0 + px + 6 * ps, y0 + 3 * ps);
+  }
+  function grip(c, x, y, hot, col) {
+    const ps = projScale();
+    c.fillStyle = T.canvas; c.strokeStyle = col || T.accent; c.lineWidth = (hot ? 2.4 : 1.6) * ps;
+    c.beginPath(); c.arc(x, y, (hot ? 6.5 : 5) * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+  }
+  function segGrip(c, x1, y1, x2, y2, hot, col) {
+    const ps = projScale();
+    c.strokeStyle = col || T.accent;
+    if (hot) { c.globalAlpha = 0.3; c.lineWidth = 7 * ps; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); c.globalAlpha = 1; }
+    const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, vert = Math.abs(x2 - x1) < Math.abs(y2 - y1);
+    c.lineWidth = 1.6 * ps; c.globalAlpha = hot ? 1 : 0.8; c.beginPath();
+    for (let k = -1; k <= 1; k++) {
+      if (vert) { c.moveTo(mx - 4.5 * ps, my + k * 3.5 * ps); c.lineTo(mx + 4.5 * ps, my + k * 3.5 * ps); }
+      else { c.moveTo(mx + k * 3.5 * ps, my - 4.5 * ps); c.lineTo(mx + k * 3.5 * ps, my + 4.5 * ps); }
+    }
+    c.stroke(); c.globalAlpha = 1;
+  }
+  const isHot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+  function mix(a, b, t) {
+    const pa = hex(a), pb = hex(b);
+    return `rgb(${Math.round(pa[0] + (pb[0] - pa[0]) * t)},${Math.round(pa[1] + (pb[1] - pa[1]) * t)},${Math.round(pa[2] + (pb[2] - pa[2]) * t)})`;
+  }
+  function hex(h) { h = h.replace('#', ''); if (h.length === 3) h = h.split('').map((x) => x + x).join(''); const n = parseInt(h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+  function speedCol(v) { const [a, b] = selRange(), t = Math.max(0, Math.min(1, (v - a) / (b - a))); return t < 0.5 ? mix(T.neg, T.equi, t * 2) : mix(T.equi, T.pos, t * 2 - 1); }
+
+  // ---------- drawing ----------
+  function drawAll() {
+    if (!T || !LY || (S.mode === 'free' && !main) || (S.mode === 'cyc' && !cyc)) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const s = LY.scene;
+    ctx.save(); ctx.beginPath(); ctx.rect(s.x, s.y, s.w, s.h); ctx.clip(); labelClip = s;
+    if (S.mode === 'free') { if (S.f.view3d) drawOblique(); else drawFree(); }
+    else if (S.mode === 'sel') drawSel();
+    else if (S.mode === 'spec') drawSpec();
+    else drawCyc();
+    ctx.restore();
+    labelClip = LY.plot; drawPlot(); labelClip = null;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath();
+    if (LY.wide) { ctx.moveTo(LY.plot.x + 0.5, 0); ctx.lineTo(LY.plot.x + 0.5, Hh); } else { ctx.moveTo(0, LY.plot.y + 0.5); ctx.lineTo(W, LY.plot.y + 0.5); }
+    ctx.stroke();
+  }
+  function fieldTag() {
+    const c = ctx, ps = projScale(), s = LY.scene, B = Bz(), E = Emag();
+    const parts = [B ? `B = ${fmtB(Math.abs(B))} ${B < 0 ? '⊗ into page' : '⊙ out of page'}` : 'B off'];
+    if (E) parts.push(`E = ${fmtE(E)}`);
+    label(c, parts.join(' · '), s.x + 12 * ps, s.y + 16 * ps, T.muted, 'left', 'middle');
+  }
+  // pixels per (m/s) for velocity arrows, and the time τ over which force arrows show the change in velocity
+  const pxPerV = () => 60 * projScale() / vRef;
+  function forceTau(p) { const B = Bz(); if (B && p.q) return 0.5 / Math.abs(p.q * B / p.m); return 0.25 * tScale * 4; }
+  function drawFree() {
+    const c = ctx, ps = projScale(), s = LY.scene, p = partOf(S.f.part), F = freeF();
+    // fields
+    let fx0 = s.x, fy0 = s.y, fw = s.w, fh = s.h;
+    if (S.f.region) {
+      const r = S.f.rect; fx0 = X(r.x0); fy0 = Y(r.y1); fw = X(r.x1) - fx0; fh = Y(r.y0) - fy0;
+      c.fillStyle = T.accent; c.globalAlpha = 0.05; c.fillRect(fx0, fy0, fw, fh); c.globalAlpha = 1;
+    }
+    bLattice(c, fx0, fy0, fw, fh, F.Bz, Emag() ? 0.26 : 0.34);
+    if (Emag()) eLattice(c, fx0, fy0, fw, fh, S.f.ea * Math.PI / 180, 0.38);
+    if (S.f.region) {
+      c.strokeStyle = T.muted; c.lineWidth = 1.2 * ps; c.setLineDash([5, 4]); c.strokeRect(fx0, fy0, fw, fh); c.setLineDash([]);
+      for (const h of dragHandles()) if (h.seg) segGrip(c, ...h.seg, isHot(h.id));
+    }
+    const col = chargeCol(p.q), ds = 1.5 / FV.sc;
+    // future path (ghost) and trail
+    const Tp = freePeriod(p);
+    const ahead = Tp ? (S.f.region || Emag() ? 3 * Tp : Tp) : 6 * tScale * 4;
+    const pathOf = (tr, t, aheadT, colr, dash, lwMain) => {
+      const trailSpan = Tp ? 3 * Tp : Infinity;
+      const ghost = tr.sample(t, t + aheadT, ds, 3000);
+      c.strokeStyle = colr; c.globalAlpha = 0.38; c.lineWidth = 1.2 * ps; c.setLineDash([4, 4]); polyline(c, ghost); c.stroke(); c.setLineDash([]);
+      const tail = tr.sample(Math.max(0, t - trailSpan), t, ds, 3000);
+      c.globalAlpha = 1; c.lineWidth = lwMain * ps; if (dash) c.setLineDash(dash); polyline(c, tail); c.stroke(); c.setLineDash([]);
+    };
+    // the second particle
+    let cs = null;
+    if (cmp) {
+      const q = cmp.part, Tq = freePeriod(q);
+      const fast = Tq && tScale / 60 > Tq;       // more than a turn per frame: show the orbit, not a strobe
+      const qc = S.f.cmp === '2v' ? col : chargeCol(q.q);
+      if (fast && !S.f.region) {
+        const ring = cmp.sample(simT, simT + Tq * (Emag() ? 3 : 1), ds, 3000);
+        c.strokeStyle = qc; c.lineWidth = 2.2 * ps; c.globalAlpha = 0.85; polyline(c, ring); c.stroke(); c.globalAlpha = 1;
+      } else pathOf(cmp, simT, Tq ? (S.f.region || Emag() ? 3 * Tq : Tq) : ahead, qc, [7, 4], 2.2);
+      cs = cmp.at(simT);
+      const gq = cs.key === 'f' ? gyroCenter(cs, cs.f) : null;
+      if (gq && !fast) { c.strokeStyle = qc; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(X(gq.x) - 4 * ps, Y(gq.y)); c.lineTo(X(gq.x) + 4 * ps, Y(gq.y)); c.moveTo(X(gq.x), Y(gq.y) - 4 * ps); c.lineTo(X(gq.x), Y(gq.y) + 4 * ps); c.stroke(); }
+      c.fillStyle = qc; c.beginPath(); c.arc(X(cs.x), Y(cs.y), 4 * ps, 0, 2 * Math.PI); c.fill();
+      const rq = Tq ? radius(q.m, vPerp() * cmp.speedFactor, q.q, Bz()) : 0;
+      const lbl = `${S.f.cmp === '2v' ? '2v' : q.name.toLowerCase()}${rq ? ', r = ' + fmtLen(rq) : ''}${fast ? ', ' + Math.round(tScale / Tq) + ' turns per second here' : ''}`;
+      const cxp = gq ? X(gq.x) : X(cs.x), cyp = gq ? Y(gq.y) : Y(cs.y), below = cyp + rq * FV.sc + 16 * ps;
+      label(c, lbl, cxp, below < s.y + s.h - 40 * ps ? below : cyp - rq * FV.sc - 16 * ps, qc, 'center', 'middle', true);
+    }
+    pathOf(main, simT, ahead, col, null, 2.4);
+    const st = main.at(simT);
+    // center of the circle and the radius
+    const inF = st.key === 'f';
+    const gc = inF ? gyroCenter(st, st.f) : null;
+    if (gc) {
+      const gx = X(gc.x), gy = Y(gc.y);
+      c.strokeStyle = T.muted; c.lineWidth = 1 * ps; c.setLineDash([3, 3]); c.beginPath(); c.moveTo(gx, gy); c.lineTo(X(st.x), Y(st.y)); c.stroke(); c.setLineDash([]);
+      c.strokeStyle = T.ink; c.lineWidth = 1.4 * ps; c.beginPath(); c.moveTo(gx - 5 * ps, gy); c.lineTo(gx + 5 * ps, gy); c.moveTo(gx, gy - 5 * ps); c.lineTo(gx, gy + 5 * ps); c.stroke();
+      const rpx = gc.r * FV.sc;
+      if (rpx > 60 * ps && !Emag()) label(c, `r = ${fmtLen(gc.r)}`, gx + (X(st.x) - gx) * 0.35, gy + (Y(st.y) - gy) * 0.35 - 10 * ps, T.muted, 'center', 'middle');
+      if (Emag()) {   // drift of the center
+        const dx = gc.vdx, dy = gc.vdy, L = Math.hypot(dx, dy);
+        if (L > 0) { const ux = dx / L, uy = dy / L, big = 4 * s.w / FV.sc; c.strokeStyle = T.equi; c.globalAlpha = 0.6; c.lineWidth = 1 * ps; c.setLineDash([2, 5]); c.beginPath(); c.moveTo(X(gc.x - ux * big), Y(gc.y - uy * big)); c.lineTo(X(gc.x + ux * big), Y(gc.y + uy * big)); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+          arrow(c, gx, gy, gx + ux * 34 * ps, gy - uy * 34 * ps, T.equi, 2 * ps); label(c, 'center drifts at E/B', gx + ux * 20 * ps, gy - uy * 20 * ps + 26 * ps, T.equi, 'center', 'middle'); }
+      }
+    }
+    // launch ring and v₀ arrow
+    const l0 = launchState(), lx = X(l0.x), ly = Y(l0.y), k = pxPerV();
+    const tx = lx + l0.vx * k, ty = ly - l0.vy * k;
+    c.globalAlpha = 0.75; c.setLineDash([5, 3]); arrow(c, lx, ly, tx, ty, T.accent, 1.6 * ps); c.setLineDash([]); c.globalAlpha = 1;
+    grip(c, lx, ly, isHot('launch'), T.muted);
+    grip(c, tx, ty, isHot('v0'), T.accent);
+    label(c, vPerp() ? `v₀ = ${fmtV(vPerp())}` : 'v₀ = 0', tx + (l0.vx >= 0 ? 10 : -10) * ps, ty + (l0.vy >= 0 ? -12 : 14) * ps, T.accent, l0.vx >= 0 ? 'left' : 'right', 'middle');
+    // particle, v and F
+    const px = X(st.x), py = Y(st.y);
+    const v = Math.hypot(st.vx, st.vy);
+    if (v > 0) { arrow(c, px, py, px + st.vx * k, py - st.vy * k, T.ink, 2.4 * ps); label(c, 'v', px + st.vx * k + 9 * ps * Math.sign(st.vx || 1), py - st.vy * k, T.ink, 'center', 'middle', true); }
+    const ax = st.f.ax + st.f.om * st.vy, ay = st.f.ay - st.f.om * st.vx, aL = Math.hypot(ax, ay);
+    if (aL > 0 && p.q) {
+      const tau = forceTau(p), fx = ax * tau * k, fy = ay * tau * k, L = Math.hypot(fx, fy), Lc = Math.min(L, 140 * ps), sc2 = L > 0 ? Lc / L : 0;
+      arrow(c, px, py, px + fx * sc2, py - fy * sc2, T.force, 2.6 * ps);
+      label(c, Emag() && st.key === 'f' ? 'F = q(E + v × B)' : 'F = qv × B', px + fx * sc2 + (fx >= 0 ? 8 : -8) * ps, py - fy * sc2 + (fy >= 0 ? -10 : 10) * ps, T.force, fx >= 0 ? 'left' : 'right', 'middle', true);
+    }
+    c.fillStyle = col; c.beginPath(); c.arc(px, py, 5.5 * ps, 0, 2 * Math.PI); c.fill();
+    c.strokeStyle = T.canvas; c.lineWidth = 1.2 * ps; c.stroke();
+    c.fillStyle = T.canvas; c.font = `700 ${8 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(p.q > 0 ? '+' : p.q < 0 ? '−' : '', px, py + 0.5);
+    if (Emag()) drawEDial();
+    fieldTag();
+    scaleBar(FV.sc);
+  }
+  function eDialGeom() { const s = LY.scene, ps = projScale(), R = 24 * ps; return { cx: s.x + s.w - R - 16 * ps, cy: s.y + R + 30 * ps, R }; }
+  function drawEDial() {
+    const c = ctx, ps = projScale(), g = eDialGeom(), a = S.f.ea * Math.PI / 180;
+    c.fillStyle = T.canvas; c.strokeStyle = T.gridStrong; c.lineWidth = 1 * ps; c.beginPath(); c.arc(g.cx, g.cy, g.R + 6 * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+    const tx = g.cx + g.R * Math.cos(a), ty = g.cy - g.R * Math.sin(a);
+    arrow(c, g.cx - g.R * 0.6 * Math.cos(a), g.cy + g.R * 0.6 * Math.sin(a), tx, ty, T.equi, 2.2 * ps);
+    grip(c, tx, ty, isHot('edial'), T.equi);
+    label(c, 'E', g.cx - g.R - 14 * ps, g.cy, T.equi, 'right', 'middle', true);
+  }
+  // oblique view: B along the vertical, the plane of the page tilted toward the viewer, the camera rising with the particle
+  const PHI = 22 * Math.PI / 180;
+  function drawOblique() {
+    const c = ctx, ps = projScale(), s = LY.scene, p = partOf(S.f.part), B = Bz(), col = chargeCol(p.q);
+    const st = main.at(simT), zc = st.z, sp = Math.sin(PHI), cp = Math.cos(PHI);
+    const ox = (x) => s.x + s.w / 2 + (x - FV.cx) * FV.sc;
+    const oy = (y, z) => s.y + s.h * 0.55 - ((y - FV.cy) * sp + (z - zc) * cp) * FV.sc;
+    // field lines: vertical, a few rows deep
+    if (B) {
+      const stepPx = 64 * ps;
+      for (const row of [1.2, 0, -1.2]) {
+        const yW = FV.cy + row * s.h / (2 * FV.sc) / Math.max(sp, 0.3) * 0.5;
+        for (let x = s.x + (stepPx / 2) * (row === 0 ? 1 : 2) % stepPx; x < s.x + s.w; x += stepPx) {
+          const yy = oy(yW, zc);
+          c.strokeStyle = T.muted; c.globalAlpha = row === 1.2 ? 0.18 : row === 0 ? 0.3 : 0.42; c.lineWidth = 1 * ps;
+          c.beginPath(); c.moveTo(x, s.y); c.lineTo(x, s.y + s.h); c.stroke();
+          for (let k = -2; k <= 2; k++) { const ay = yy + k * 110 * ps + ((zc * FV.sc * cp) % (110 * ps)) * (B > 0 ? 1 : 1); arrow(c, x, ay + (B > 0 ? 6 : -6) * ps, x, ay + (B > 0 ? -6 : 6) * ps, T.muted, 1 * ps, 6 * ps); }
+          c.globalAlpha = 1;
+        }
+      }
+      label(c, `B ${B > 0 ? 'up (out of the page)' : 'down (into the page)'}`, s.x + 12 * ps, s.y + 16 * ps, T.muted, 'left', 'middle');
+    } else label(c, 'B off', s.x + 12 * ps, s.y + 16 * ps, T.muted, 'left', 'middle');
+    const ds = 1.5 / FV.sc, Tp = freePeriod(p);
+    const tail = main.sample(Math.max(0, simT - (Tp ? 4 * Tp : 1e9)), simT, ds, 4000);
+    const ghost = main.sample(simT, simT + (Tp || tScale * 4), ds, 3000);
+    const PX = (x) => ox(x), PY = (y, q) => oy(y, q[2]);
+    // the current orbit as a horizontal ring
+    const gc = st.key === 'f' ? gyroCenter(st, st.f) : null;
+    if (gc) {
+      c.strokeStyle = T.muted; c.lineWidth = 1 * ps; c.setLineDash([2, 4]); c.beginPath();
+      for (let i = 0; i <= 96; i++) { const a = 2 * Math.PI * i / 96, x = ox(gc.x + gc.r * Math.cos(a)), y = oy(gc.y + gc.r * Math.sin(a), zc); i ? c.lineTo(x, y) : c.moveTo(x, y); }
+      c.stroke(); c.setLineDash([]);
+      c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps; const gx = ox(gc.x), gy = oy(gc.y, zc); c.beginPath(); c.moveTo(gx - 4 * ps, gy); c.lineTo(gx + 4 * ps, gy); c.moveTo(gx, gy - 4 * ps); c.lineTo(gx, gy + 4 * ps); c.stroke();
+    }
+    c.strokeStyle = col; c.globalAlpha = 0.38; c.lineWidth = 1.2 * ps; c.setLineDash([4, 4]); polyline(c, ghost, PX, PY); c.stroke(); c.setLineDash([]);
+    c.globalAlpha = 1; c.lineWidth = 2.4 * ps; polyline(c, tail, PX, PY); c.stroke();
+    const px = ox(st.x), py = oy(st.y, st.z), k = pxPerV();
+    const vz = main.vz;
+    arrow(c, px, py, px + st.vx * k, py - (st.vy * sp + vz * cp) * k, T.ink, 2.4 * ps);
+    const ax = st.f.ax + st.f.om * st.vy, ay = st.f.ay - st.f.om * st.vx;
+    if ((ax || ay) && p.q) { const tau = forceTau(p); let fx = ax * tau * k, fy = ay * sp * tau * k; const L = Math.hypot(fx, fy), m = L > 140 * ps ? 140 * ps / L : 1; arrow(c, px, py, px + fx * m, py - fy * m, T.force, 2.6 * ps); }
+    c.fillStyle = col; c.beginPath(); c.arc(px, py, 5.5 * ps, 0, 2 * Math.PI); c.fill();
+    label(c, 'Oblique view, looking 22° down onto the page; the camera rises with the particle', s.x + 12 * ps, s.y + s.h - 16 * ps, T.muted, 'left', 'middle', false, 10);
+  }
+
+  // velocity selector
+  function drawSel() {
+    const c = ctx, ps = projScale(), s = LY.scene, cfg = selCfg(), h = SEL.h;
+    // field region
+    const x0 = X(0), x1 = X(SEL.L), yT = Y(h), yB = Y(-h);
+    c.fillStyle = T.accent; c.globalAlpha = 0.04; c.fillRect(x0, yT, x1 - x0, yB - yT); c.globalAlpha = 1;
+    bLattice(c, x0, yT, x1 - x0, yB - yT, -1, 0.42);
+    if (cfg.E > 0) eLattice(c, x0, yT, x1 - x0, yB - yT, -Math.PI / 2, 0.45);
+    // plates
+    const pt = 6 * ps;
+    c.fillStyle = T.pos; c.fillRect(x0, yT - pt, x1 - x0, pt);
+    c.fillStyle = T.neg; c.fillRect(x0, yB, x1 - x0, pt);
+    label(c, `+${S.sel.V} V`, x0 + 4 * ps, yT - pt - 10 * ps, T.pos, 'left', 'middle', true);
+    label(c, '0 V', x0 + 4 * ps, yB + pt + 10 * ps, T.neg, 'left', 'middle', true);
+    // beam axis, source
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1 * ps; c.setLineDash([4, 5]); c.beginPath(); c.moveTo(X(SEL.x0), Y(0)); c.lineTo(X(SEL.xd), Y(0)); c.stroke(); c.setLineDash([]);
+    const sx = X(SEL.x0);
+    c.fillStyle = T.surface; c.strokeStyle = T.muted; c.lineWidth = 1.2 * ps; c.fillRect(sx - 30 * ps, Y(0) - 11 * ps, 30 * ps, 22 * ps); c.strokeRect(sx - 30 * ps, Y(0) - 11 * ps, 30 * ps, 22 * ps);
+    label(c, 'source', sx - 15 * ps, Y(0) + 22 * ps, T.muted, 'center', 'middle');
+    // screen with slit
+    const xs = X(SEL.xs), wy = cfg.w / 2, sw = 5 * ps, top = Y(h * 1.7), bot = Y(-h * 1.7);
+    c.fillStyle = T.muted; c.fillRect(xs, top, sw, Y(wy) - top); c.fillRect(xs, Y(-wy), sw, bot - Y(-wy));
+    label(c, `slit ${trim(S.sel.w.toFixed(1))} mm`, xs + sw / 2, top - 10 * ps, T.muted, 'center', 'middle');
+    for (const hd of dragHandles()) grip(c, hd.pt[0], hd.pt[1], isHot(hd.id));
+    // detector
+    const xd = X(SEL.xd);
+    c.fillStyle = T.ink; c.fillRect(xd, Y(h * 1.2), 4 * ps, Y(-h * 1.2) - Y(h * 1.2));
+    label(c, 'detector', xd + 2 * ps, Y(-h * 1.2) + 12 * ps, T.ink, 'center', 'middle');
+    // finished tracks
+    c.drawImage(trails, 0, 0, trails.width, trails.height, 0, 0, W, Hh);
+    // particles in flight
+    const ds = 1.5 / AV.sc;
+    for (const q of streams) {
+      const t = simT - q.born, pts = q.tr.sample(0, Math.min(t, q.tr.endT), ds, 600), e = pts[pts.length - 1], colr = speedCol(q.v);
+      c.strokeStyle = colr; c.lineWidth = 1.6 * ps; polyline(c, pts); c.stroke();
+      c.fillStyle = colr; c.beginPath(); c.arc(X(e[0]), Y(e[1]), 3.6 * ps, 0, 2 * Math.PI); c.fill();
+    }
+    // the force balance, drawn once above the plates
+    const fx = X(SEL.L * 0.5), fy = yT - pt - 34 * ps, Lf = 22 * ps;
+    if (fy > s.y + 30 * ps) {
+      c.fillStyle = T.pos; c.beginPath(); c.arc(fx, fy, 4 * ps, 0, 2 * Math.PI); c.fill();
+      arrow(c, fx, fy, fx, fy + Lf, T.equi, 2.2 * ps); arrow(c, fx, fy, fx, fy - Lf, T.force, 2.2 * ps);
+      label(c, 'qv × B', fx + 8 * ps, fy - Lf + 4 * ps, T.force, 'left', 'middle', true); label(c, 'qE', fx + 8 * ps, fy + Lf - 4 * ps, T.equi, 'left', 'middle', true);
+      label(c, 'equal when v = E/B', fx - 12 * ps, fy, T.muted, 'right', 'middle');
+    }
+    label(c, `B = ${fmtB(S.sel.B)} ⊗ · E = ${fmtE(cfg.E)} ↓`, s.x + 12 * ps, s.y + 16 * ps, T.muted, 'left', 'middle');
+    scaleBar(AV.sc);
+  }
+  // mass spectrometer
+  function drawSpec() {
+    const c = ctx, ps = projScale(), s = LY.scene, cfg = specCfg(), list = isos();
+    const y0 = Y(0);
+    c.fillStyle = T.accent; c.globalAlpha = 0.04; c.fillRect(s.x, y0, s.w, s.y + s.h - y0); c.globalAlpha = 1;
+    bLattice(c, s.x, y0 + 6 * ps, s.w, s.y + s.h - y0, -1, 0.4);
+    // accelerating plates
+    const xa0 = X(-0.012), xa1 = X(0.012), yd = Y(SPEC.d), slit = 3 * ps;
+    eLattice(c, xa0, yd, xa1 - xa0, y0 - yd, -Math.PI / 2, 0.5);
+    c.fillStyle = T.pos; c.fillRect(xa0, yd - 5 * ps, xa1 - xa0, 5 * ps);
+    label(c, `+${S.spec.V} V`, xa0 - 6 * ps, yd - 2 * ps, T.pos, 'right', 'middle', true);
+    label(c, 'ion source', xa1 + 6 * ps, yd - 2 * ps, T.muted, 'left', 'middle');
+    // the plate at y = 0: grounded, with the slit; the detector to the right
+    c.fillStyle = T.neg; c.fillRect(xa0 - 20 * ps, y0, X(0) - slit - (xa0 - 20 * ps), 4 * ps); c.fillRect(X(0) + slit, y0, xa1 - X(0) - slit, 4 * ps);
+    label(c, '0 V', xa0 - 22 * ps, y0 + 2 * ps, T.neg, 'right', 'middle', true);
+    c.fillStyle = T.ink; c.fillRect(xa1 + 2 * ps, y0, s.x + s.w - xa1, 4 * ps);
+    label(c, 'detector plate', s.x + s.w - 12 * ps, y0 + 16 * ps, T.ink, 'right', 'middle');
+    // spread of directions at the slit
+    if (S.spec.al > 0) {
+      const a = S.spec.al * Math.PI / 180, L = 0.03;
+      c.strokeStyle = T.muted; c.lineWidth = 1 * ps; c.setLineDash([3, 3]); c.beginPath();
+      c.moveTo(X(0), y0); c.lineTo(X(L * Math.sin(a)), Y(-L * Math.cos(a))); c.moveTo(X(0), y0); c.lineTo(X(-L * Math.sin(a)), Y(-L * Math.cos(a))); c.stroke(); c.setLineDash([]);
+    }
+    for (const hd of dragHandles()) grip(c, hd.pt[0], hd.pt[1], isHot(hd.id));
+    // predicted landing points
+    list.forEach((iso, i) => {
+      const r = specRadius(ionMass(iso), S.spec.V, QE, S.spec.B), x = X(2 * r), lyy = y0 - 14 * ps - 15 * ps * (list.length - 1 - i);
+      c.strokeStyle = T.isoCols[i]; c.lineWidth = 1 * ps; c.beginPath(); c.moveTo(x, lyy); c.lineTo(x, y0); c.stroke();
+      c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(x, y0 - 4 * ps); c.lineTo(x, y0 + 12 * ps); c.stroke();
+      label(c, `${iso.name} ${fmtLen(2 * r, 4)}`, x - 5 * ps, lyy, T.isoCols[i], 'right', 'middle', true);
+    });
+    c.drawImage(trails, 0, 0, trails.width, trails.height, 0, 0, W, Hh);
+    const ds = 1.5 / AV.sc;
+    for (const q of streams) {
+      const t = simT - q.born, pts = q.tr.sample(0, Math.min(t, q.tr.endT), ds, 1500), e = pts[pts.length - 1], colr = T.isoCols[q.iso];
+      c.strokeStyle = colr; c.lineWidth = 1.8 * ps; polyline(c, pts); c.stroke();
+      c.fillStyle = colr; c.beginPath(); c.arc(X(e[0]), Y(e[1]), 3.6 * ps, 0, 2 * Math.PI); c.fill();
+    }
+    label(c, `B = ${fmtB(S.spec.B)} ⊗ below the plate`, s.x + 12 * ps, s.y + s.h - 40 * ps, T.muted, 'left', 'middle');
+    scaleBar(AV.sc);
+  }
+  // cyclotron
+  function cycPolarity(t) { const c = cyc.cfg, Tr = 1 / c.fRF; return Math.floor(t / Tr * 2 + 0.5) % 2 === 0 ? 1 : -1; }   // +1: E along +x in the gap
+  function drawCyc() {
+    const c = ctx, ps = projScale(), s = LY.scene, cfg = cyc.cfg, R = cfg.R, g = cfg.g, p = cyc.part, col = chargeCol(p.q);
+    const cx = X(0), cy = Y(0), Rp = R * AV.sc, gp = g / 2 * AV.sc;
+    const pol = cycPolarity(simT);
+    // dees
+    for (const side of [-1, 1]) {
+      c.beginPath();
+      const a = Math.asin(Math.min(1, gp / Rp));
+      if (side > 0) c.arc(cx, cy, Rp, -Math.PI / 2 + a, Math.PI / 2 - a); else c.arc(cx, cy, Rp, Math.PI / 2 + a, 3 * Math.PI / 2 - a);
+      c.closePath();
+      const high = (side < 0) === (pol > 0);        // E points from the high dee to the low one
+      c.fillStyle = high ? T.pos : T.neg; c.globalAlpha = 0.07; c.fill(); c.globalAlpha = 1;
+      c.strokeStyle = T.muted; c.lineWidth = 1.4 * ps; c.stroke();
+      label(c, `${side < 0 ? 'D₁' : 'D₂'} ${high ? '+' : '−'}`, cx + side * Rp * 0.72, cy - Rp * 0.78, high ? T.pos : T.neg, 'center', 'middle', true, 12);
+    }
+    c.save(); c.beginPath(); c.arc(cx, cy, Rp, 0, 2 * Math.PI); c.clip();
+    bLattice(c, cx - Rp, cy - Rp, 2 * Rp, 2 * Rp, -1, 0.28);
+    c.restore();
+    // E in the gap
+    c.save(); c.beginPath(); c.rect(cx - gp, cy - Rp, 2 * gp, 2 * Rp); c.clip();
+    const n = Math.max(3, Math.floor(2 * Rp / (34 * ps)));
+    for (let i = 0; i < n; i++) { const yy = cy - Rp + (i + 0.5) * 2 * Rp / n, L = Math.max(6 * ps, Math.min(2 * gp - 2 * ps, 16 * ps)); arrow(c, cx - pol * L / 2, yy, cx + pol * L / 2, yy, T.equi, 1.4 * ps, Math.min(5 * ps, L * 0.5)); }
+    c.restore();
+    for (const hd of dragHandles()) { if (hd.seg) segGrip(c, ...hd.seg, isHot(hd.id)); else grip(c, hd.pt[0], hd.pt[1], isHot(hd.id)); }
+    // path
+    const tEnd = cyc.ended ? Math.min(simT, cyc.endT) : simT, ds = 1.5 / AV.sc;
+    if (!cyc.cache || tEnd < cyc.cache.t || cyc.cache.sc !== AV.sc) cyc.cache = { t: 0, pts: [], sc: AV.sc };
+    if (tEnd > cyc.cache.t) { const add = cyc.sample(cyc.cache.t, tEnd, ds, 20000); for (const q of add) cyc.cache.pts.push(q); cyc.cache.t = tEnd; }
+    c.strokeStyle = col; c.lineWidth = 1.5 * ps; polyline(c, cyc.cache.pts); c.stroke();
+    const st = cycAt(simT);
+    if (cyc.ended && simT > cyc.endT) { c.beginPath(); c.moveTo(X(cyc.endS.x), Y(cyc.endS.y)); c.lineTo(X(st.x), Y(st.y)); c.stroke(); }
+    // source
+    const s0 = cyc.segs[0].s;
+    c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps; c.beginPath(); c.arc(X(s0.x), Y(s0.y), 3 * ps, 0, 2 * Math.PI); c.stroke();
+    c.fillStyle = col; c.beginPath(); c.arc(X(st.x), Y(st.y), 5 * ps, 0, 2 * Math.PI); c.fill();
+    label(c, `B = ${fmtB(cfg.B)} ⊗ · V = ${trim(S.cyc.V.toFixed(0))} kV · f = ${si(cfg.fRF, 'Hz', 4)}`, s.x + 12 * ps, s.y + 16 * ps, T.muted, 'left', 'middle');
+    if (cyc.ended && simT > cyc.endT) label(c, `out at ${fmtK(cyc.log[cyc.log.length - 1].K)}`, X(st.x), Y(st.y) + 16 * ps, col, 'center', 'middle', true);
+    drawRF(pol);
+    scaleBar(AV.sc);
+  }
+  // a strip showing the gap voltage against time, with the particle's gap crossings
+  function drawRF(pol) {
+    const c = ctx, ps = projScale(), s = LY.scene, cfg = cyc.cfg, Tr = 1 / cfg.fRF;
+    const w = Math.min(220 * ps, s.w * 0.4), h = 26 * ps, x0 = s.x + s.w - w - 14 * ps, y0 = s.y + s.h - h - 22 * ps;
+    if (x0 < s.x + 200 * ps && s.w < 520 * ps) return;
+    c.fillStyle = T.canvas; c.globalAlpha = 0.9; c.fillRect(x0 - 6 * ps, y0 - 18 * ps, w + 12 * ps, h + 30 * ps); c.globalAlpha = 1;
+    const span = 2 * Tr, t0 = simT - span * 0.75, Xt = (t) => x0 + (t - t0) / span * w;
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.beginPath(); c.moveTo(x0, y0 + h / 2); c.lineTo(x0 + w, y0 + h / 2); c.stroke();
+    c.strokeStyle = T.equi; c.lineWidth = 1.6 * ps; c.beginPath();
+    for (let i = 0; i <= 200; i++) { const t = t0 + span * i / 200, v = cycPolarity(t), y = y0 + h / 2 - v * h * 0.4; i ? c.lineTo(Xt(t), y) : c.moveTo(Xt(t), y); }
+    c.stroke();
+    for (const e of cyc.log) if (e.t > t0 && e.t < simT) { c.fillStyle = chargeCol(cyc.part.q); c.beginPath(); c.arc(Xt(e.t), y0 + h / 2, 3 * ps, 0, 2 * Math.PI); c.fill(); }
+    c.strokeStyle = T.ink; c.lineWidth = 1 * ps; c.beginPath(); c.moveTo(Xt(simT), y0 - 2 * ps); c.lineTo(Xt(simT), y0 + h + 2 * ps); c.stroke();
+    c.fillStyle = T.muted; c.font = `${10 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText('gap voltage; dots: leaving the gap', x0, y0 - 3 * ps);
+  }
+
+  // ---------- trails canvas (finished stream tracks) ----------
+  function stamp(q) {
+    if (!LY) return;
+    tctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const s = LY.scene, ps = projScale();
+    tctx.save(); tctx.beginPath(); tctx.rect(s.x, s.y, s.w, s.h); tctx.clip();
+    const pass = q.tag === 'pass' || S.mode === 'spec';
+    tctx.strokeStyle = S.mode === 'sel' ? speedCol(q.v) : T.isoCols[q.iso];
+    tctx.globalAlpha = S.mode === 'sel' ? (pass ? 0.8 : 0.22) : 0.18; tctx.lineWidth = (pass && S.mode === 'sel' ? 1.6 : 1.1) * ps;
+    polyline(tctx, q.tr.sample(0, q.tr.endT, 2 / AV.sc, 1500)); tctx.stroke();
+    if (S.mode === 'spec') { tctx.globalAlpha = 0.6; tctx.fillStyle = T.isoCols[q.iso]; tctx.fillRect(X(q.x) - 1, Y(0) - 7 * ps, 2, 7 * ps); }
+    tctx.restore();
+  }
+  function restamp() { tctx.setTransform(1, 0, 0, 1, 0, 0); tctx.clearRect(0, 0, trails.width, trails.height); if (S.mode === 'sel' || S.mode === 'spec') for (const q of doneTracks) stamp(q); }
+  function clearStreams() {
+    streams = []; doneTracks = []; counts = { fired: 0, pass: 0, plate: 0, slit: 0 }; carry = 0;
+    hist = { sel: new Float64Array(40), selPass: new Float64Array(40), spec: [] };
+    restamp();
+  }
+  function finishStreams() {
+    const keep = [];
+    for (const q of streams) {
+      if (simT - q.born >= q.tr.endT) {
+        counts.fired++;
+        if (S.mode === 'sel') {
+          counts[q.tag === 'pass' ? 'pass' : q.tag === 'plate' ? 'plate' : 'slit']++;
+          const [a, b] = selRange(), i = Math.min(39, Math.max(0, Math.floor((q.v - a) / (b - a) * 40)));
+          hist.sel[i]++; if (q.tag === 'pass') hist.selPass[i]++;
+        } else { hist.spec.push([q.x, q.iso]); if (hist.spec.length > 20000) hist.spec.shift(); }
+        stamp(q); doneTracks.push(q); if (doneTracks.length > 250) doneTracks.shift();
+      } else keep.push(q);
+    }
+    streams = keep;
+  }
+
+  // ---------- plots ----------
+  function plotBox() { const p = LY.plot, ps = projScale(); return { L: p.x + 58 * ps, R: p.x + p.w - 16 * ps, T: p.y + 36 * ps, B: p.y + p.h - 40 * ps }; }
+  function plotTitle(box, t) { const c = ctx, ps = projScale(); c.fillStyle = T.ink; c.font = `600 ${11.5 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(t, box.L - 50 * ps, box.T - 14 * ps); }
+  function frame(box) { ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(box.L + 0.5, box.T + 0.5, box.R - box.L, box.B - box.T); }
+  // axes with nice ticks; fx and fy format tick values
+  function axes(box, x0, x1, y0, y1, fx, fy, xl, yl) {
+    const c = ctx, ps = projScale();
+    const Xp = (v) => box.L + (v - x0) / (x1 - x0) * (box.R - box.L), Yp = (v) => box.B - (v - y0) / (y1 - y0) * (box.B - box.T);
+    c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.lineWidth = 1;
+    const xs = niceStep((x1 - x0) / Math.max(2, Math.floor((box.R - box.L) / (70 * ps)))), ys = niceStep((y1 - y0) / Math.max(2, Math.floor((box.B - box.T) / (40 * ps))));
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let v = Math.ceil(x0 / xs - 1e-9) * xs; v <= x1 + 1e-9 * xs; v += xs) { const x = Math.round(Xp(v)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.fillText(fx(v), x, box.B + 5); }
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let v = Math.ceil(y0 / ys - 1e-9) * ys; v <= y1 + 1e-9 * ys; v += ys) { const y = Math.round(Yp(v)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(box.L, y); c.lineTo(box.R, y); c.stroke(); c.fillText(fy(v), box.L - 5, y); }
+    c.textAlign = 'right'; c.textBaseline = 'top'; c.fillText(xl, box.R, box.B + 21 * ps);
+    if (yl) { c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(yl, box.L - 50 * ps, box.T - 1 * ps); }
+    return { Xp, Yp };
+  }
+  const tickFmt = (v) => trim(String(+v.toPrecision(6)));
+  function drawPlot() {
+    const box = plotBox();
+    if (box.R - box.L < 60 || box.B - box.T < 50) return;
+    if (S.mode === 'free') plotFree(box); else if (S.mode === 'sel') plotSel(box); else if (S.mode === 'spec') plotSpec(box); else plotCyc(box);
+  }
+  function plotFree(box) {
+    const c = ctx, ps = projScale(), p = partOf(S.f.part), Tp = freePeriod(p);
+    const span = Tp ? 3 * Tp : tScale * 12, t1 = Math.max(simT, span), t0 = t1 - span;
+    const pts = main.sample(Math.max(0, t0), simT, 1e-12 + (FV ? 3 / FV.sc : 1e-4), 1500);
+    const K = (q) => { const s = main.at(q[3]); return 0.5 * p.m * (s.vx * s.vx + s.vy * s.vy + main.vz * main.vz); };
+    const ks = pts.map((q) => [q[3], K(q)]);
+    const K0 = 0.5 * p.m * (vPerp() ** 2 + main.vz ** 2);
+    let kmax = K0; for (const q of ks) kmax = Math.max(kmax, q[1]);
+    if (!(kmax > 0)) kmax = 1e-19;
+    const eV = kmax / QE, pw = Math.pow(10, 3 * Math.floor(Math.log10(eV) / 3)), unit = { 1: 'eV', 1000: 'keV', 1000000: 'MeV', 0.001: 'meV', 1e-6: 'µeV' }[pw] || `10${sup(Math.log10(pw))} eV`;
+    const tu = Tp ? Tp : 1, tl = Tp ? 't / T' : 't (s)';
+    plotTitle(box, 'Kinetic energy against time');
+    const a = axes(box, t0 / tu, t1 / tu, 0, kmax / QE / pw * 1.25, (v) => (Tp ? tickFmt(v) : sci(v, 2)), tickFmt, tl, `K (${unit})`);
+    c.save(); c.beginPath(); c.rect(box.L, box.T - 2, box.R - box.L, box.B - box.T + 4); c.clip();
+    c.strokeStyle = chargeCol(p.q); c.lineWidth = 2.2 * ps; c.beginPath();
+    ks.forEach((q, i) => { const x = a.Xp(q[0] / tu), y = a.Yp(q[1] / QE / pw); i ? c.lineTo(x, y) : c.moveTo(x, y); });
+    c.stroke(); c.restore();
+    frame(box);
+    c.fillStyle = T.muted; c.font = `${10.5 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(Emag() ? 'E does work, B does none' : (Bz() ? 'Flat: B does no work' : 'No force: K is fixed'), box.L + 6, box.T + 6);
+  }
+  function plotSel(box) {
+    const c = ctx, ps = projScale(), [a, b] = selRange(), cfg = selCfg(), v0 = cfg.E / cfg.B;
+    let mx = 1; for (const v of hist.sel) mx = Math.max(mx, v);
+    plotTitle(box, 'Speeds fired and speeds through the slit');
+    const ax = axes(box, a / 1e5, b / 1e5, 0, Math.ceil(mx * 1.15), tickFmt, (v) => (Number.isInteger(v) ? String(v) : ''), 'v (10⁵ m/s)', 'count');
+    c.save(); c.beginPath(); c.rect(box.L, box.T, box.R - box.L, box.B - box.T); c.clip();
+    if (band) { const x0 = ax.Xp(band[0] / 1e5), x1 = ax.Xp(band[1] / 1e5); c.fillStyle = T.equi; c.globalAlpha = 0.14; c.fillRect(x0, box.T, Math.max(1.5, x1 - x0), box.B - box.T); c.globalAlpha = 1; }
+    const bw = (b - a) / 40;
+    for (let i = 0; i < 40; i++) {
+      const x0 = ax.Xp((a + i * bw) / 1e5) + 0.5, x1 = ax.Xp((a + (i + 1) * bw) / 1e5) - 0.5, vm = a + (i + 0.5) * bw;
+      if (hist.sel[i]) { const y = ax.Yp(hist.sel[i]); c.strokeStyle = T.muted; c.lineWidth = 1 * ps; c.strokeRect(x0, y, x1 - x0, box.B - y); }
+      if (hist.selPass[i]) { const y = ax.Yp(hist.selPass[i]); c.fillStyle = speedCol(vm); c.fillRect(x0, y, x1 - x0, box.B - y); }
+    }
+    if (v0 >= a && v0 <= b) { const x = ax.Xp(v0 / 1e5); c.strokeStyle = T.ink; c.setLineDash([4, 4]); c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.setLineDash([]); label(c, 'E/B', x + 4 * ps, box.T + 10 * ps, T.ink, 'left', 'middle', true); }
+    c.restore();
+    frame(box);
+    if (!counts.fired) { c.fillStyle = T.muted; c.font = `${11 * ps}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Counts appear as particles arrive', (box.L + box.R) / 2, (box.T + box.B) / 2); }
+    else if (v0 < a || v0 > b) { c.fillStyle = T.pos; c.font = `${11 * ps}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(`E/B = ${fmtV(v0)} is outside the speeds fired`, (box.L + box.R) / 2, box.T + 16 * ps); }
+  }
+  function plotSpec(box) {
+    const c = ctx, ps = projScale(), list = isos();
+    const rs = list.map((iso) => 2 * specRadius(ionMass(iso), S.spec.V, QE, S.spec.B));
+    const lo0 = Math.min(...rs), hi0 = Math.max(...rs), sp = hi0 - lo0;
+    const lo = lo0 - Math.max(sp * 0.5, lo0 * (1 - Math.cos(S.spec.al * Math.PI / 180)) + sp * 0.3), hi = hi0 + sp * 0.4;
+    const nb = 90, bw = (hi - lo) / nb, bins = list.map(() => new Float64Array(nb));
+    for (const [x, i] of hist.spec) { const k = Math.floor((x - lo) / bw); if (k >= 0 && k < nb) bins[i][k]++; }
+    let mx = 1; for (let k = 0; k < nb; k++) { let t = 0; for (const b of bins) t += b[k]; mx = Math.max(mx, t); }
+    plotTitle(box, 'Ions counted along the detector plate');
+    const ax = axes(box, lo * 100, hi * 100, 0, Math.ceil(mx * 1.15), tickFmt, (v) => (Number.isInteger(v) ? String(v) : ''), 'distance from the slit (cm)', 'count');
+    c.save(); c.beginPath(); c.rect(box.L, box.T, box.R - box.L, box.B - box.T); c.clip();
+    for (let k = 0; k < nb; k++) {
+      let base = 0;
+      list.forEach((_, i) => { const n = bins[i][k]; if (!n) return; const x0 = ax.Xp((lo + k * bw) * 100) + 0.5, x1 = ax.Xp((lo + (k + 1) * bw) * 100) - 0.5, yA = ax.Yp(base + n), yB = ax.Yp(base); c.fillStyle = T.isoCols[i]; c.fillRect(x0, yA, x1 - x0, yB - yA); base += n; });
+    }
+    rs.forEach((r, i) => { const x = ax.Xp(r * 100); c.strokeStyle = T.isoCols[i]; c.setLineDash([4, 4]); c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.setLineDash([]); label(c, list[i].name, x, box.T + 10 * ps + 15 * ps * (i % 2), T.isoCols[i], 'center', 'middle', true); });
+    c.restore();
+    frame(box);
+    if (!hist.spec.length) { c.fillStyle = T.muted; c.font = `${11 * ps}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Counts appear as ions land', (box.L + box.R) / 2, (box.T + box.B) / 2 + 10 * ps); }
+  }
+  function plotCyc(box) {
+    const c = ctx, ps = projScale(), cfg = cyc.cfg, p = cyc.part, qV = Math.abs(p.q) * cfg.V;
+    const Kmax = (p.q * cfg.B * cfg.R) ** 2 / (2 * p.m), nMax = Math.max(4, Math.ceil(Kmax / qV + 1));
+    const pw = Kmax / QE >= 1e6 ? 1e6 : 1e3, unit = pw === 1e6 ? 'MeV' : 'keV';
+    plotTitle(box, 'Kinetic energy at each gap crossing');
+    const ax = axes(box, 0, nMax / 2, 0, Kmax / QE / pw * 1.12, tickFmt, tickFmt, 'turns', `K (${unit})`);
+    c.save(); c.beginPath(); c.rect(box.L, box.T - 2, box.R - box.L, box.B - box.T + 4); c.clip();
+    // ideal: qV/2 from the source to the first gap edge, then qV per crossing
+    c.strokeStyle = T.muted; c.setLineDash([5, 4]); c.lineWidth = 1.2 * ps; c.beginPath();
+    for (let n = 0; n <= nMax; n++) { const x = ax.Xp(n / 2), y = ax.Yp(Math.min(Kmax * 1.12, qV * (n + 0.5)) / QE / pw); n ? c.lineTo(x, y) : c.moveTo(x, y); }
+    c.stroke();
+    const yk = ax.Yp(Kmax / QE / pw); c.strokeStyle = T.equi; c.beginPath(); c.moveTo(box.L, yk); c.lineTo(box.R, yk); c.stroke(); c.setLineDash([]);
+    label(c, 'K_max = (qBR)²/2m', box.L + 6 * ps, yk - 10 * ps, T.equi, 'left', 'middle');
+    c.strokeStyle = chargeCol(p.q); c.fillStyle = chargeCol(p.q); c.lineWidth = 1.8 * ps; c.beginPath();
+    let k = 0; const pts = [];
+    for (const e of cyc.log) { if (e.t > simT) break; pts.push([k / 2, e.K]); k++; }
+    pts.forEach((q, i) => { const x = ax.Xp(q[0]), y = ax.Yp(q[1] / QE / pw); i ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke();
+    for (const q of pts) { c.beginPath(); c.arc(ax.Xp(q[0]), ax.Yp(q[1] / QE / pw), 2.6 * ps, 0, 2 * Math.PI); c.fill(); }
+    c.restore();
+    frame(box);
+    c.fillStyle = T.muted; c.font = `${10.5 * ps}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillText('dashed: qV/2, then qV per crossing', box.R - 4, box.B - 4);
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const m = S.mode;
+    $('readFree').hidden = m !== 'free'; $('readSel').hidden = m !== 'sel'; $('readSpec').hidden = m !== 'spec'; $('readCyc').hidden = m !== 'cyc';
+    if (m !== 'spec') { const pp = curPart(); $('rPart').textContent = `q = ${pp.q ? sci(pp.q, 4) : '0'} C, m = ${sci(pp.m, 4)} kg`; }
+    $('pbOut').textContent = `×${S.play >= 0 ? 2 ** S.play : '1/' + 2 ** -S.play} · 1 s here = ${si(tScale * 2 ** S.play, 's', 3)}`;
+    if (m === 'free') freeReadouts(true);
+    else if (m === 'sel') {
+      const c = selCfg(), v0 = c.E / c.B;
+      $('sVOut').textContent = `${S.sel.V} V`; $('sBOut').textContent = fmtB(S.sel.B); $('sWOut').textContent = `${S.sel.w.toFixed(1)} mm`;
+      $('sCOut').textContent = fmtV(S.sel.c * 1e5); $('sSOut').textContent = `${S.sel.sp}%`; $('sROut').textContent = `${S.sel.rate} per second`;
+      $('sE').textContent = fmtE(c.E); $('sVs').textContent = fmtV(v0);
+      if (band) $('sBand').innerHTML = `${sci(band[0], 4)} to ${sci(band[1], 4)} m/s <span class="ok">±${(50 * (band[1] - band[0]) / v0).toPrecision(2)}% about E/B</span>`;
+      else if ($('sBand').textContent !== '…') $('sBand').textContent = 'none: E/B is blocked';
+    } else if (m === 'spec') specReadouts();
+    else cycReadouts(true);
+  }
+  function freeReadouts(full) {
+    const p = partOf(S.f.part), B = Bz(), st = main.at(simT), v = Math.hypot(st.vx, st.vy), Tp = freePeriod(p);
+    if (full) {
+      $('lvOut').textContent = vPerp() ? fmtV(vPerp()) : '0, at rest';
+      $('angOut').textContent = fmtAng(S.f.ang);
+      $('parOut').textContent = S.f.par ? `${fmtV(S.f.par * vPerp())} (${S.f.par > 0 ? '+' : ''}${S.f.par.toFixed(2)} v⊥)` : '0';
+      $('lbOut').textContent = fmtB(Math.pow(10, S.f.lb)); $('leOut').textContent = fmtE(Math.pow(10, S.f.le)); $('eaOut').textContent = fmtAng(S.f.ea);
+      $('cqOut').textContent = `${S.f.cq > 0 ? '+' : ''}${S.f.cq} e`; $('cmOut').textContent = `${sci(Math.pow(10, S.f.cm), 3)} u`;
+      if (Emag() && Tp) { const g0 = gyroCenter(launchState(), fieldsFor(p, freeF())); $('rRLab').textContent = 'Gyration radius m|v − v_d|/|q|B'; $('rR').textContent = fmtLen(g0.r); }
+      else { $('rRLab').textContent = 'Radius r = mv⊥/|q|B'; $('rR').textContent = Tp ? fmtLen(radius(p.m, vPerp(), p.q, B)) : '—'; }
+      $('rT').textContent = Tp ? si(Tp, 's') : '—';
+      $('rF').textContent = Tp ? si(1 / Tp, 'Hz') : '—';
+      $('rDriftRow').hidden = !(Emag() && B);
+      if (Emag() && B) $('rDrift').textContent = fmtV(Emag() / Math.abs(B));
+      $('rPitchRow').hidden = !S.f.par;
+      if (S.f.par) $('rPitch').textContent = Tp ? fmtLen(Math.abs(S.f.par * vPerp()) * Tp) : '— (no B)';
+      $('rCmpRow').hidden = !cmp;
+      if (cmp) {
+        const q = cmp.part, Tq = freePeriod(q), vq = vPerp() * cmp.speedFactor;
+        $('rCmpLab').textContent = q.name;
+        $('rCmp').innerHTML = Tq ? `v = ${fmtV(vq)}, K = ${fmtK(0.5 * q.m * vq * vq)}<br>r = ${fmtLen(radius(q.m, vq, q.q, B))}, T = ${si(Tq, 's')} <span class="ok">(${trim((Tq / Tp).toPrecision(4))} T)</span>` : `v = ${fmtV(vq)}`;
+      }
+      $('fieldHint').textContent = !B ? 'With B off there is no magnetic force. With only E on, the charge moves on a parabola like a ball thrown in gravity.'
+        : Emag() ? 'E is in the page and B is at right angles to it, so the guiding center drifts at E/B along E × B. A positive and a negative charge drift the same way.'
+        : 'Uniform B at right angles to the page. Drag the edges of the rectangle in rectangle mode; outside it the particle moves in a straight line.';
+    }
+    const K = 0.5 * p.m * (v * v + main.vz * main.vz), K0 = 0.5 * p.m * (vPerp() ** 2 + main.vz ** 2);
+    $('rN').textContent = Tp && !S.f.region ? `${Math.floor(simT / Tp)}` : '—';
+    $('rV').textContent = fmtV(v);
+    $('rK').textContent = fmtK(K);
+    if (Emag()) { $('rWLab').textContent = 'Change in K since launch = work done by E'; $('rW').textContent = `${K - K0 >= 0 ? '+' : '−'}${fmtK(Math.abs(K - K0))}`; }
+    else { $('rWLab').textContent = 'Change in |v| since launch (the magnetic force does no work)'; const d = K0 ? Math.abs(v - vPerp()) / vPerp() : 0; $('rW').innerHTML = d < 1e-15 ? `0 <span class="ok">to all 16 digits</span>` : `${d.toExponential(1)} of |v| <span class="ok">rounding only</span>`; }
+  }
+  function specReadouts() {
+    $('pVOut').textContent = `${S.spec.V} V`; $('pBOut').textContent = fmtB(S.spec.B); $('pAOut').textContent = `${S.spec.al.toFixed(1)}°`; $('pROut').textContent = `${S.spec.rate} per second`;
+    const list = isos(), n = list.map(() => 0);
+    for (const [, i] of hist.spec) n[i]++;
+    const tot = n.reduce((a, b) => a + b, 0);
+    let html = '<tr><th>Ion</th><th>m (u)</th><th>r</th><th>2r</th><th>Counted</th></tr>';
+    const rs = [];
+    list.forEach((iso, i) => { const m = ionMass(iso), r = specRadius(m, S.spec.V, QE, S.spec.B); rs.push(r); html += `<tr><td style="color:${T.isoCols[i]}">${iso.name}</td><td>${(m / U).toFixed(4)}</td><td>${fmtLen(r, 4)}</td><td>${fmtLen(2 * r, 4)}</td><td>${n[i]}${tot ? ` <span class="ok">${(100 * n[i] / tot).toFixed(1)}%</span>` : ''}</td></tr>`; });
+    $('isoTable').innerHTML = html;
+    const parts = []; for (let i = 1; i < rs.length; i++) parts.push(`${list[i].name} lands ${fmtLen(2 * (rs[i] - rs[i - 1]), 3)} beyond ${list[i - 1].name}`);
+    $('pSep').textContent = parts.join('; ');
+    $('pSpd').textContent = list.map((iso) => `${iso.name} ${fmtV(Math.sqrt(2 * QE * S.spec.V / ionMass(iso)))}`).join(', ');
+  }
+  function cycReadouts(full) {
+    const cfg = cyc.cfg, p = cyc.part, qV = Math.abs(p.q) * cfg.V;
+    if (full) {
+      $('cBOut').textContent = fmtB(S.cyc.B); $('cVOut').textContent = `${S.cyc.V} kV`; $('cGOut').textContent = `${S.cyc.g.toFixed(1)} cm`; $('cROut').textContent = fmtLen(S.cyc.R);
+      $('cFOut').textContent = S.cyc.det === 1 ? '1 (tuned)' : S.cyc.det.toFixed(3);
+      $('cFc').textContent = si(cfg.fc, 'Hz', 4); $('cFrf').textContent = si(cfg.fRF, 'Hz', 4);
+      const Kmax = (p.q * cfg.B * cfg.R) ** 2 / (2 * p.m), g = 1 + Kmax / (p.m * C * C), vc = Math.sqrt(1 - 1 / (g * g));
+      $('cKmax').innerHTML = `${fmtK(Kmax, 4)} <span class="ok">about ${Math.round(Kmax / (2 * qV))} turns at 2qV per turn</span>`;
+      $('cRel').innerHTML = `v/c = ${vc.toFixed(3)}, γ = ${g.toFixed(4)} <span class="ok">the true cyclotron frequency there is f<sub>c</sub>/γ, ${((1 - 1 / g) * 100).toPrecision(2)}% lower</span>`;
+    }
+    const st = cycAt(simT), K = 0.5 * p.m * (st.vx ** 2 + st.vy ** 2);
+    $('cK').textContent = fmtK(K, 4);
+    let n = 0, last = null, prev = null; for (const e of cyc.log) { if (e.t > simT) break; prev = last; last = e; n++; }
+    $('cN').textContent = (n / 2).toFixed(1);
+    if (last && prev) { const gq = (last.K - prev.K) / qV; $('cGain').innerHTML = `${fmtK(last.K - prev.K, 4)} <span class="ok">= ${gq.toFixed(9)} qV</span>`; }
+    else if (last) $('cGain').innerHTML = `${fmtK(last.K, 4)} <span class="ok">from the source to the gap edge: ${(last.K / qV).toFixed(6)} qV</span>`;
+    else $('cGain').textContent = '—';
+  }
+  function countText() {
+    if (S.mode === 'sel') {
+      $('count').innerHTML = `${counts.fired} <small>fired</small> · ${counts.pass} <small>through</small>`;
+      $('sN').textContent = counts.fired; $('sP').textContent = counts.fired ? `${counts.pass} (${(100 * counts.pass / counts.fired).toFixed(1)}%)` : '0'; $('sH').textContent = counts.plate; $('sX').textContent = counts.slit;
+    } else if (S.mode === 'spec') { $('count').innerHTML = `${hist.spec.length} <small>ions counted</small>`; specReadouts(); }
+    else if (S.mode === 'free') { const p = partOf(S.f.part), Tp = freePeriod(p); $('count').innerHTML = `t = ${si(simT, 's')}${Tp ? ` <small>= ${(simT / Tp).toFixed(2)} T</small>` : ''}`; freeReadouts(false); }
+    else { $('count').innerHTML = `t = ${si(simT, 's')}`; cycReadouts(false); }
+  }
+
+  // ---------- controls ----------
+  const press = (sel, test) => { for (const b of document.querySelectorAll(sel)) b.setAttribute('aria-pressed', String(test(b))); };
+  function syncUI() {
+    const m = S.mode;
+    $('secPart').hidden = m === 'spec';
+    $('secLaunch').hidden = m !== 'free'; $('secFields').hidden = m !== 'free';
+    $('secSel').hidden = m !== 'sel'; $('secSpec').hidden = m !== 'spec'; $('secCyc').hidden = m !== 'cyc';
+    $('fit').hidden = m !== 'free'; $('fire').hidden = !(m === 'sel' || m === 'spec'); $('clear').hidden = !(m === 'sel' || m === 'spec');
+    const pk = m === 'free' ? S.f.part : m === 'sel' ? S.sel.part : S.cyc.part;
+    for (const b of document.querySelectorAll('#parts button')) {
+      const k = b.dataset.k;
+      b.hidden = (k === 'd' && m !== 'cyc') || (k === 'c' && m !== 'free') || (k === 'e' && m === 'cyc');
+      b.setAttribute('aria-pressed', String(k === pk));
+    }
+    $('customRows').hidden = !(m === 'free' && S.f.part === 'c');
+    $('cmpRows').hidden = m !== 'free';
+    press('#cmps button', (b) => b.dataset.c === S.f.cmp);
+    $('sameRow').hidden = !(S.f.cmp === 'e' || S.f.cmp === 'p');
+    $('sameV').setAttribute('aria-pressed', String(S.f.same === 'v')); $('sameK').setAttribute('aria-pressed', String(S.f.same === 'K'));
+    $('lv').value = S.f.lv; $('ang').value = S.f.ang; $('par').value = S.f.par;
+    $('vTop').setAttribute('aria-pressed', String(!S.f.view3d)); $('v3d').setAttribute('aria-pressed', String(S.f.view3d));
+    $('bIn').setAttribute('aria-pressed', String(S.f.bdir === -1)); $('bOut').setAttribute('aria-pressed', String(S.f.bdir === 1)); $('bOff').setAttribute('aria-pressed', String(S.f.bdir === 0));
+    $('bRow').hidden = S.f.bdir === 0; $('lb').value = S.f.lb;
+    $('eOff').setAttribute('aria-pressed', String(!S.f.eon)); $('eOn').setAttribute('aria-pressed', String(S.f.eon)); $('eRows').hidden = !S.f.eon;
+    $('le').value = S.f.le; $('ea').value = S.f.ea;
+    $('rAll').setAttribute('aria-pressed', String(!S.f.region)); $('rBox').setAttribute('aria-pressed', String(S.f.region));
+    $('rAll').disabled = $('rBox').disabled = S.f.view3d;
+    $('cq').value = S.f.cq; $('cm').value = S.f.cm;
+    $('sV').value = S.sel.V; $('sB').value = S.sel.B; $('sW').value = S.sel.w; $('sC').value = S.sel.c; $('sS').value = S.sel.sp; $('sR').value = S.sel.rate;
+    $('elNe').setAttribute('aria-pressed', String(S.spec.el === 'ne')); $('elC').setAttribute('aria-pressed', String(S.spec.el === 'c'));
+    $('mixNat').setAttribute('aria-pressed', String(S.spec.mix === 'nat')); $('mixEq').setAttribute('aria-pressed', String(S.spec.mix === 'eq'));
+    $('pV').value = S.spec.V; $('pB').value = S.spec.B; $('pA').value = S.spec.al; $('pR').value = S.spec.rate;
+    $('cB').value = S.cyc.B; $('cV').value = S.cyc.V; $('cG').value = S.cyc.g; $('cR').value = S.cyc.R; $('cF').value = S.cyc.det;
+    $('pb').value = S.play;
+    modelText();
+  }
+  function modelText() {
+    const m = S.mode;
+    const hints = {
+      free: 'Nonrelativistic, with uniform fields: B at right angles to the page and E in the page. The path is the exact solution, a circle in pure B and a cycloid or trochoid with E as well, evaluated at each frame, so |v| in pure B stays fixed to rounding error. In rectangle mode the field edges are sharp; real magnets have fringe fields. The particle does not radiate.',
+      sel: 'Uniform crossed fields between the plates and none outside, with sharp edges. Nonrelativistic, exact motion. Each track is colored by its speed. Speeds are spread evenly over the range; a real source has a smoother spread.',
+      spec: 'Ions start at rest at the top plate and fall through V in a uniform field, then move in uniform B below the slit; the edges are sharp. The slit passes ions heading within ± the spread angle of straight down. Ion mass = atomic mass − one electron mass. Nonrelativistic: v/c < 10⁻³.',
+      cyc: 'Uniform B inside the dees and the gap, nothing outside R. The gap voltage is a square wave that flips at the frequency set below, so the field in the gap is steady while the particle crosses; with a sine wave the gain is qV sin φ. The source sits just below center so the late orbits are centered. Nonrelativistic motion: the readout shows how far that is off at K_max.'
+    };
+    $('modelHint').textContent = hints[m];
+    const keys = {
+      free: '<span><i class="swatch pos"></i>Positive charge path (dashed: where it goes next)</span><span><i class="swatch neg"></i>Negative charge path</span><span><i class="swatch vel"></i>Velocity v</span><span><i class="swatch force"></i>Force F, shown as the change in v over 1/(2ω)</span><span><i class="swatch efield"></i>Electric field E</span><span><i class="sym">⊗</i>B into the page, ⊙ out of the page</span>',
+      sel: '<span><i class="swatch grad"></i>Speed, slow to fast</span><span><i class="swatch efield"></i>Electric field E</span><span><i class="sym">⊗</i>B into the page</span>',
+      spec: '<span><i class="swatch efield"></i>Accelerating field</span><span><i class="sym">⊗</i>B into the page</span><span><i class="swatch ghost"></i>Spread of directions leaving the slit</span>',
+      cyc: '<span><i class="swatch pos"></i>Particle path</span><span><i class="swatch efield"></i>Gap field, reverses each half period</span><span><i class="sym">⊗</i>B into the page</span>'
+    };
+    $('key').innerHTML = keys[m];
+  }
+  function markPreset(name) {
+    S.preset = name;
+    press('#presets button', (b) => b.dataset.p === name);
+    $('presetHint').textContent = name ? PRESETS[name].hint : 'Your own setup. Pick a setup above to return to a known one.';
+  }
+  function custom() { if (S.preset) markPreset(null); }
+  // rebuild everything for the current settings; fit = refit the view and the time scale
+  function rebuild(fit) {
+    if (S.mode === 'free') {
+      if (fit) { fitFree(); vRef = Math.max(vPerp(), Emag() && Bz() ? Emag() / Math.abs(Bz()) : 0, 1); }
+      buildFree();
+      if (fit) setFreeTimeScale();
+      simT = 0;
+    } else if (S.mode === 'cyc') { buildCyc(); fixedView(); if (fit || true) tScale = 1 / cyc.cfg.fc; simT = 0; }
+    else {
+      fixedView();
+      if (S.mode === 'sel') { tScale = SEL.L / (S.sel.c * 1e5) / 1.6; updBand(); }
+      else { const m = ionMass(isos()[0]); tScale = Math.PI * m / (QE * S.spec.B) / 2.2; }
+      streams = streams.filter(() => false);
+    }
+    syncUI(); readouts(); countText(); drawAll();
+  }
+  function applyPreset(name) {
+    const P = PRESETS[name];
+    S.mode = P.mode; S.play = 0;
+    if (name === 'circle') Object.assign(S.f, { part: 'p', lv: 5, ang: 0, par: 0, view3d: false, bdir: -1, lb: -1, eon: false, region: false, lx: 0, ly: 0, cmp: 'none', same: 'v' });
+    if (name === 'ep') Object.assign(S.f, { part: 'p', lv: Math.log10(Math.sqrt(2 * 100 * QE / MP)), ang: 90, par: 0, view3d: false, bdir: -1, lb: -3, eon: false, region: false, lx: 0, ly: 0, cmp: 'e', same: 'K' });
+    if (name === 'drift') Object.assign(S.f, { part: 'p', lv: 1.99, ang: 0, par: 0, view3d: false, bdir: -1, lb: -1, eon: true, le: 4, ea: 270, region: false, lx: 0, ly: 0, cmp: 'none', same: 'v' });
+    if (name === 'sel') Object.assign(S.sel, { part: 'p', V: 400, B: 0.1, w: 2, c: 2, sp: 30, rate: 12 });
+    if (name === 'spec') Object.assign(S.spec, { el: 'ne', mix: 'nat', V: 1000, B: 0.2, al: 2, rate: 8 });
+    if (name === 'cyc') Object.assign(S.cyc, { part: 'p', B: 1, V: 100, g: 1, R: 0.3, det: 1 });
+    markPreset(name);
+    LY = layout(W, Hh);
+    clearStreams();
+    rebuild(true);
+    restamp();
+  }
+
+  // particle chips
+  for (const b of document.querySelectorAll('#parts button')) b.addEventListener('click', () => {
+    const k = b.dataset.k; custom();
+    if (S.mode === 'free') { S.f.part = k; if (S.f.cmp === k) S.f.cmp = 'none'; if (S.f.region) defaultRect(); rebuild(true); }
+    else if (S.mode === 'sel') { S.sel.part = k; clearStreams(); rebuild(true); }
+    else { S.cyc.part = k; rebuild(true); }
+  });
+  for (const b of document.querySelectorAll('#cmps button')) b.addEventListener('click', () => { S.f.cmp = b.dataset.c; if (S.f.cmp === S.f.part) S.f.cmp = 'none'; custom(); rebuild(true); });
+  $('sameV').addEventListener('click', () => { S.f.same = 'v'; custom(); rebuild(true); });
+  $('sameK').addEventListener('click', () => { S.f.same = 'K'; custom(); rebuild(true); });
+  $('cq').addEventListener('input', (e) => { S.f.cq = +e.target.value; custom(); rebuild(false); });
+  $('cm').addEventListener('input', (e) => { S.f.cm = +e.target.value; custom(); rebuild(false); });
+  $('cm').addEventListener('change', () => rebuild(true));
+  $('lv').addEventListener('input', (e) => { S.f.lv = +e.target.value; custom(); const v = vPerp(); if (v && (v > 3 * vRef || v < vRef / 6)) vRef = v; rebuild(false); });
+  $('ang').addEventListener('input', (e) => { S.f.ang = +e.target.value; custom(); rebuild(false); });
+  $('par').addEventListener('input', (e) => { S.f.par = +e.target.value; custom(); rebuild(false); });
+  $('vTop').addEventListener('click', () => { S.f.view3d = false; custom(); rebuild(false); });
+  $('v3d').addEventListener('click', () => { S.f.view3d = true; if (S.f.region) S.f.region = false; if (!S.f.par) S.f.par = 0.3; custom(); rebuild(false); });
+  const setB = (d) => { S.f.bdir = d; custom(); rebuild(true); };
+  $('bIn').addEventListener('click', () => setB(-1)); $('bOut').addEventListener('click', () => setB(1)); $('bOff').addEventListener('click', () => setB(0));
+  $('lb').addEventListener('input', (e) => { S.f.lb = +e.target.value; custom(); rebuild(false); });
+  $('eOff').addEventListener('click', () => { S.f.eon = false; custom(); rebuild(false); });
+  $('eOn').addEventListener('click', () => { S.f.eon = true; custom(); rebuild(false); });
+  $('le').addEventListener('input', (e) => { S.f.le = +e.target.value; custom(); rebuild(false); });
+  $('ea').addEventListener('input', (e) => { S.f.ea = +e.target.value; custom(); rebuild(false); });
+  $('rAll').addEventListener('click', () => { S.f.region = false; S.f.lx = 0; S.f.ly = 0; custom(); rebuild(true); });
+  $('rBox').addEventListener('click', () => { if (S.f.region) return; S.f.region = true; defaultRect(); custom(); rebuild(true); });
+  const selIn = (id, key, clear) => $(id).addEventListener('input', (e) => { S.sel[key] = +e.target.value; custom(); if (clear) clearStreams(); if (key === 'c') rebuild(true); else { updBand(); readouts(); } });
+  selIn('sV', 'V', true); selIn('sB', 'B', true); selIn('sW', 'w', true); selIn('sC', 'c', true); selIn('sS', 'sp', true); selIn('sR', 'rate', false);
+  const specIn = (id, key, clear) => $(id).addEventListener('input', (e) => { S.spec[key] = +e.target.value; custom(); if (clear) { clearStreams(); fixedView(); restamp(); } readouts(); });
+  specIn('pV', 'V', true); specIn('pB', 'B', true); specIn('pA', 'al', true); specIn('pR', 'rate', false);
+  $('elNe').addEventListener('click', () => { S.spec.el = 'ne'; custom(); clearStreams(); rebuild(true); });
+  $('elC').addEventListener('click', () => { S.spec.el = 'c'; custom(); clearStreams(); rebuild(true); });
+  $('mixNat').addEventListener('click', () => { S.spec.mix = 'nat'; custom(); syncUI(); });
+  $('mixEq').addEventListener('click', () => { S.spec.mix = 'eq'; custom(); syncUI(); });
+  const cycIn = (id, key) => $(id).addEventListener('input', (e) => { S.cyc[key] = +e.target.value; custom(); rebuild(true); });
+  cycIn('cB', 'B'); cycIn('cV', 'V'); cycIn('cG', 'g'); cycIn('cR', 'R'); cycIn('cF', 'det');
+  $('pb').addEventListener('input', (e) => { S.play = +e.target.value; readouts(); });
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => { applyPreset(b.dataset.p); if (!reduce) setPlaying(true); else stillFrame(); });
+  const playBtn = $('play');
+  function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); }
+  playBtn.addEventListener('click', () => setPlaying(!playing));
+  $('restart').addEventListener('click', () => { simT = 0; if (S.mode === 'sel' || S.mode === 'spec') streams = []; drawAll(); countText(); });
+  $('fit').addEventListener('click', () => { rebuild(true); });
+  $('fire').addEventListener('click', () => { for (let i = 0; i < 20; i++) { if (S.mode === 'sel') fireSel(); else fireSpec(); streams[streams.length - 1].born = simT - i * 0.02 * tScale; } if (!playing) setPlaying(true); });
+  $('clear').addEventListener('click', () => { clearStreams(); countText(); readouts(); drawAll(); });
+  // reduced motion: a meaningful still picture
+  function stillFrame() {
+    if (S.mode === 'free') { const Tp = freePeriod(); simT = Tp ? (S.f.eon ? 1.6 : 0.7) * Tp : 2 * tScale; }
+    else if (S.mode === 'cyc') { simT = cyc.cfg ? 8 / cyc.cfg.fRF : 0; }
+    else { for (let i = 0; i < 40; i++) { if (S.mode === 'sel') fireSel(); else fireSpec(); } simT = 1e3 * tScale; finishStreams(); simT = 0; }
+    drawAll(); countText();
+  }
+
+  // ---------- dragging on the drawing ----------
+  let drag = null, hoverId = null;
+  const snap = (v, el) => { const mn = +el.min, mx = +el.max, st = +el.step; return Math.max(mn, Math.min(mx, +(Math.round((v - mn) / st) * st + mn).toFixed(6))); };
+  function dragHandles() {
+    if (!LY) return [];
+    const out = [], ps = projScale();
+    if (S.mode === 'free' && !S.f.view3d) {
+      const l0 = launchState(), lx = X(l0.x), ly = Y(l0.y), k = pxPerV();
+      out.push({ id: 'v0', pt: [lx + l0.vx * k, ly - l0.vy * k], cursor: 'grab', set: (x, y) => {
+        const dx = x - lx, dy = ly - y, d = Math.hypot(dx, dy), v = d / k;
+        const lvEl = $('lv'), angEl = $('ang');
+        S.f.lv = v < 10 ** 1.995 ? 1.99 : snap(Math.log10(v), lvEl);
+        if (d > 3) S.f.ang = snap(((Math.atan2(dy, dx) * 180 / Math.PI) + 360) % 360, angEl) % 360;
+        custom(); rebuild(false);
+      } });
+      out.push({ id: 'launch', pt: [lx, ly], cursor: 'move', set: (x, y) => { S.f.lx = wx(x); S.f.ly = wy(y); custom(); rebuild(false); } });
+      if (S.f.region) {
+        const r = S.f.rect, xa = X(r.x0), xb = X(r.x1), ya = Y(r.y1), yb = Y(r.y0), min = 12 / FV.sc;
+        out.push({ id: 'rL', seg: [xa, ya, xa, yb], cursor: 'ew-resize', set: (x) => { r.x0 = Math.min(wx(x), r.x1 - min); custom(); rebuild(false); } });
+        out.push({ id: 'rR', seg: [xb, ya, xb, yb], cursor: 'ew-resize', set: (x) => { r.x1 = Math.max(wx(x), r.x0 + min); custom(); rebuild(false); } });
+        out.push({ id: 'rT', seg: [xa, ya, xb, ya], cursor: 'ns-resize', set: (x, y) => { r.y1 = Math.max(wy(y), r.y0 + min); custom(); rebuild(false); } });
+        out.push({ id: 'rB', seg: [xa, yb, xb, yb], cursor: 'ns-resize', set: (x, y) => { r.y0 = Math.min(wy(y), r.y1 - min); custom(); rebuild(false); } });
+      }
+      if (Emag()) { const g = eDialGeom(), a = S.f.ea * Math.PI / 180; out.push({ id: 'edial', pt: [g.cx + g.R * Math.cos(a), g.cy - g.R * Math.sin(a)], cursor: 'grab', set: (x, y) => { const an = (Math.atan2(g.cy - y, x - g.cx) * 180 / Math.PI + 360) % 360; S.f.ea = snap(an, $('ea')) % 360; custom(); rebuild(false); } }); }
+    } else if (S.mode === 'sel') {
+      const w = S.sel.w / 2000, setW = (x, y) => { S.sel.w = snap(2000 * Math.abs(wy(y)), $('sW')); $('sW').value = S.sel.w; custom(); clearStreams(); updBand(); readouts(); };
+      out.push({ id: 'jawT', pt: [X(SEL.xs) + 2.5 * ps, Y(w)], cursor: 'ns-resize', set: setW });
+      out.push({ id: 'jawB', pt: [X(SEL.xs) + 2.5 * ps, Y(-w)], cursor: 'ns-resize', set: setW });
+    } else if (S.mode === 'spec') {
+      const a = S.spec.al * Math.PI / 180, L = 0.03;
+      out.push({ id: 'fan', pt: [X(L * Math.sin(a)), Y(-L * Math.cos(a))], cursor: 'ew-resize', set: (x, y) => { const an = Math.abs(Math.atan2(wx(x), -wy(y))) * 180 / Math.PI; S.spec.al = snap(an, $('pA')); $('pA').value = S.spec.al; custom(); clearStreams(); readouts(); } });
+    } else if (S.mode === 'cyc' && cyc) {
+      const R = S.cyc.R, g = S.cyc.g / 200;
+      out.push({ id: 'gap', seg: [X(g), Y(R * 0.55), X(g), Y(R * 0.2)], cursor: 'ew-resize', set: (x) => { S.cyc.g = snap(Math.max(0, wx(x)) * 200, $('cG')); custom(); rebuild(true); } });
+      out.push({ id: 'rim', pt: [X(R * Math.cos(-Math.PI / 4)), Y(R * Math.sin(-Math.PI / 4))], cursor: 'nwse-resize', set: (x, y) => { S.cyc.R = snap(Math.hypot(wx(x), wy(y)), $('cR')); custom(); rebuild(true); } });
+    }
+    return out;
+  }
+  function handleAt(ev) {
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 9 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of dragHandles()) {
+      let d = Infinity;
+      if (h.pt) d = Math.hypot(x - h.pt[0], y - h.pt[1]) - 2;
+      else { const [x1, y1, x2, y2] = h.seg; if (Math.abs(x2 - x1) < 1) { if (y >= Math.min(y1, y2) - 4 && y <= Math.max(y1, y2) + 4) d = Math.abs(x - x1); } else if (x >= Math.min(x1, x2) - 4 && x <= Math.max(x1, x2) + 4) d = Math.abs(y - y1); }
+      if (h.id === 'launch') d += 1.5;    // the arrow tip wins a tie (at zero speed they coincide)
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  const inScene = (x, y) => LY && x >= LY.scene.x && x <= LY.scene.x + LY.scene.w && y >= LY.scene.y && y <= LY.scene.y + LY.scene.h;
+  let dragQ = null, dragFrame = false;
+  can.addEventListener('pointermove', (ev) => {
+    const r = can.getBoundingClientRect();
+    if (drag) {
+      dragQ = [ev.clientX - r.left, ev.clientY - r.top];
+      if (!dragFrame) {
+        dragFrame = true;
+        requestAnimationFrame(() => {
+          dragFrame = false; if (!drag || !dragQ) return;
+          if (drag.id === 'pan') { FV.cx = drag.cx - (dragQ[0] - drag.x) / FV.sc; FV.cy = drag.cy + (dragQ[1] - drag.y) / FV.sc; drawAll(); }
+          else { const h = dragHandles().find((k) => k.id === drag.id); if (h) h.set(dragQ[0], dragQ[1]); }
+          dragQ = null;
+        });
+      }
+      return;
+    }
+    const h = handleAt(ev); hoverId = h ? h.id : null;
+    can.style.cursor = h ? h.cursor : (S.mode === 'free' && !S.f.view3d && inScene(ev.clientX - r.left, ev.clientY - r.top) ? 'grab' : 'default');
+  });
+  can.addEventListener('pointerdown', (ev) => {
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const h = handleAt(ev);
+    if (h) drag = { id: h.id };
+    else if (S.mode === 'free' && inScene(x, y)) { drag = { id: 'pan', x, y, cx: FV.cx, cy: FV.cy }; can.style.cursor = 'grabbing'; }
+    else return;
+    hoverId = drag.id;
+    try { can.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault();
+  });
+  const endDrag = () => { drag = null; };
+  can.addEventListener('pointerup', endDrag);
+  can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
+  function zoom(f, px, py) {
+    if (S.mode !== 'free' || !LY) return;
+    const s = LY.scene; if (px === undefined) { px = s.x + s.w / 2; py = s.y + s.h / 2; }
+    const x = wx(px), y = wy(py); FV.sc *= f; FV.cx = x - (px - s.x - s.w / 2) / FV.sc; FV.cy = y + (py - s.y - s.h / 2) / FV.sc; drawAll();
+  }
+  can.addEventListener('wheel', (ev) => {
+    if (S.mode !== 'free') return;
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top; if (!inScene(x, y)) return;
+    ev.preventDefault(); zoom(Math.exp(-ev.deltaY * 0.0015), x, y);
+  }, { passive: false });
+  can.addEventListener('keydown', (e) => {
+    const big = e.shiftKey ? 5 : 1;
+    if (S.mode === 'free' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { S.f.ang = ((S.f.ang + (e.key === 'ArrowLeft' ? 5 : -5) * big) % 360 + 360) % 360; custom(); rebuild(false); }
+    else if (S.mode === 'free' && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) { S.f.lv = Math.max(1.99, Math.min(7, +(S.f.lv + (e.key === 'ArrowUp' ? 0.02 : -0.02) * big).toFixed(2))); if (S.f.lv < 2 && e.key === 'ArrowUp') S.f.lv = 2; custom(); rebuild(false); }
+    else if (S.mode === 'sel' && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) { S.sel.w = snap(S.sel.w + (e.key === 'ArrowUp' ? 0.1 : -0.1) * big, $('sW')); custom(); clearStreams(); updBand(); syncUI(); readouts(); }
+    else if (S.mode === 'spec' && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) { S.spec.al = snap(S.spec.al + (e.key === 'ArrowUp' ? 0.5 : -0.5) * big, $('pA')); custom(); clearStreams(); syncUI(); readouts(); }
+    else if (S.mode === 'cyc' && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) { S.cyc.det = snap(S.cyc.det + (e.key === 'ArrowUp' ? 0.002 : -0.002) * big, $('cF')); custom(); rebuild(true); }
+    else if (e.key === ' ') setPlaying(!playing);
+    else if (e.key === 'r' || e.key === 'R') $('restart').click();
+    else if (e.key === 'f' || e.key === 'F') { if (S.mode === 'free') rebuild(true); else if (S.mode !== 'cyc') $('fire').click(); }
+    else if ((e.key === 'c' || e.key === 'C') && (S.mode === 'sel' || S.mode === 'spec')) $('clear').click();
+    else if (e.key === '+' || e.key === '=') zoom(1.25);
+    else if (e.key === '-' || e.key === '_') zoom(0.8);
+    else return;
+    e.preventDefault();
+  });
+
+  // ---------- projector mode and theme ----------
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(() => { resize(); if (S.mode === 'free') fitFree(); drawAll(); });
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  const retheme = () => { tokens(); restamp(); readouts(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, frameMs = 0;
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (playing) {
+      const dts = dt * tScale * 2 ** S.play;
+      simT += dts;
+      if (S.mode === 'free') {
+        // start over when the particle has left the view and is not coming back on a circle
+        const st = main.at(simT), s = LY.scene, x = X(st.x), y = Y(st.y), far = Math.max(s.w, s.h);
+        const Tp = freePeriod(); const closed = Tp && !Emag() && !S.f.region;
+        if (!closed && !S.f.view3d && (x < s.x - far * 0.3 || x > s.x + s.w + far * 0.3 || y < s.y - far * 0.3 || y > s.y + s.h + far * 0.3)) simT = 0;
+        if (simT > 1e6 * (Tp || tScale)) simT = 0;
+      } else if (S.mode === 'sel' || S.mode === 'spec') {
+        carry += S[S.mode].rate * dt * 2 ** Math.min(0, S.play);
+        let k = Math.floor(carry); carry -= k;
+        const t1 = performance.now();
+        for (; k > 0 && streams.length < 120; k--) { if (S.mode === 'sel') fireSel(); else fireSpec(); if (performance.now() - t1 > 8) { carry = 0; break; } }
+        finishStreams();
+      } else if (S.mode === 'cyc') {
+        const tMax = (cyc.ended ? cyc.endT : Infinity), turns = simT * cyc.cfg.fc;
+        if (simT > tMax + 3 / cyc.cfg.fc || turns > CYC_MAX_TURNS) simT = 0;
+      }
+    }
+    drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastRead > 150) { countText(); lastRead = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__mf = { get frameMs() { return frameMs; }, get S() { return S; }, get simT() { return simT; }, set simT(v) { simT = v; }, get counts() { return counts; }, get band() { return band; },
+    get cyc() { return cyc; }, get main() { return main; }, get tScale() { return tScale; }, get hist() { return hist; }, setPlaying, applyPreset, rebuild,
+    handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt, seg: h.seg })); }, get view() { return { ...view() }; } };
+
+  tokens();
+  clearStreams();
+  const ro = new ResizeObserver(() => resize());
+  ro.observe(pane);
+  resize();
+  applyPreset('circle');
+  setPlaying(!reduce);
+  if (reduce) stillFrame();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
