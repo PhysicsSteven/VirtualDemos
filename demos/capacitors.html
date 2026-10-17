@@ -1,0 +1,1661 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Capacitors and Dielectrics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the capacitor drawing across the top of the stage; under it the "since the start" table, the energy bars and the C and U plots; instrument rail on the right; stacks on narrow screens. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --capq: #7a45c0;
+  --resq: #1d8a5a;
+  --wire: #3b4655;
+  --plate: #8b96a6;
+  --diel: #12877a;
+  --fline: #66727f;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --capq: #b48cff; --resq: #4cc38a; --wire: #aab4c2;
+    --plate: #6f7b8c; --diel: #46c7b4; --fline: #7d8a9a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --capq: #b48cff; --resq: #4cc38a; --wire: #aab4c2;
+  --plate: #6f7b8c; --diel: #46c7b4; --fline: #7d8a9a;
+  color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 640px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
+  display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.94fr) minmax(0, 0.94fr); grid-template-rows: minmax(280px, 1fr) auto; }
+.pane { position: relative; min-height: 0; min-width: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#dPane { grid-column: 1 / -1; grid-row: 1; }
+#tPane { grid-column: 1; grid-row: 2; border-top: 1px solid var(--line); padding: 10px 14px 12px; display: flex; flex-direction: column; gap: 6px; }
+#ePane { grid-column: 2; grid-row: 2; border-top: 1px solid var(--line); border-left: 1px solid var(--line); min-height: 220px; }
+#gPane { grid-column: 3; grid-row: 2; border-top: 1px solid var(--line); border-left: 1px solid var(--line); min-height: 220px; }
+#cbPane { grid-column: 1 / -1; grid-row: 2; border-top: 1px solid var(--line); padding: 10px 14px 12px; overflow-x: auto; }
+#dCan { touch-action: none; outline: none; }
+#dCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
+.stage-ctl > * { pointer-events: auto; }
+.stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
+.stage-ctl .seg { margin-left: auto; }
+.pane-seg { position: absolute; top: 8px; right: 8px; z-index: 2; }
+.pane-seg button { padding: 2px 9px; font-size: 0.78rem; }
+.ptitle { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.ptitle span { text-transform: none; letter-spacing: 0; font-weight: 400; }
+
+.chg { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+.chg th { text-align: right; font-weight: 400; color: var(--muted); font-size: 0.74rem; padding: 0 0 2px 6px; }
+.chg th:first-child { text-align: left; padding-left: 0; }
+.chg td { text-align: right; padding: 2px 0 2px 6px; font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; border-top: 1px solid var(--grid); }
+.chg td:first-child { text-align: left; padding-left: 0; font-family: var(--font-ui); }
+.chg td.up, .chg td.dn { font-weight: 600; }
+.chg td.same { color: var(--muted); }
+.chg .ar { display: inline-block; width: 1.1em; text-align: center; }
+.cmb { max-width: 680px; }
+.cmb td, .cmb th { padding-left: 14px; }
+.modeline { margin: 0; font-size: 0.84rem; }
+.kirch { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.82rem; line-height: 1.55; overflow-wrap: anywhere; }
+.kirch .eq { font-size: 0.92rem; font-weight: 600; }
+.kirch .res { color: var(--muted); font-size: 0.76rem; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.chips.small button { font-size: 0.82rem; padding: 3px 8px; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg.full { display: flex; }
+.seg.full button { flex: 1; padding: 4px 4px; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.ctl { display: flex; flex-direction: column; gap: 4px; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .wide { grid-column: 1 / -1; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.formula { margin: 0; font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key > span { display: flex; align-items: center; gap: 8px; }
+.sym { flex: none; width: 16px; height: 16px; border-radius: 50%; color: #fff; font-weight: 700; font-size: 12px; line-height: 16px; text-align: center; background: var(--pos); }
+.sym.n { background: var(--neg); }
+.sym.b { background: none; color: var(--diel); border: 1.5px solid var(--diel); line-height: 13px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid var(--fline); }
+.swatch.fill { height: 12px; border: 1.5px solid var(--diel); background: color-mix(in srgb, var(--diel) 20%, transparent); }
+.swatch.u { height: 12px; border: 0; background: color-mix(in srgb, var(--equi) 45%, transparent); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 1060px) {
+  .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: 420px auto 230px 260px; min-height: 0; }
+  #dPane { grid-row: 1; }
+  #tPane { grid-column: 1; grid-row: 2; }
+  #ePane { grid-column: 1; grid-row: 3; border-left: 0; }
+  #gPane { grid-column: 1; grid-row: 4; border-left: 0; }
+  #cbPane { grid-row: 2; }
+  .stage.combo { grid-template-rows: 420px auto; }
+}
+/* projector on a short screen: let the stage shrink so it stays above the fold */
+@media (min-width: 1061px) { :root[data-projector="on"] .stage { min-height: 440px; } :root[data-projector="on"] #ePane, :root[data-projector="on"] #gPane { min-height: 0; } }
+@media (min-width: 1061px) and (max-height: 820px) {
+  :root[data-projector="on"] .stage { grid-template-rows: minmax(250px, 1fr) auto; }
+  :root[data-projector="on"] #tPane { padding: 6px 12px 8px; gap: 3px; }
+  :root[data-projector="on"] .chg { font-size: 0.74rem; }
+  :root[data-projector="on"] .chg td { padding-top: 1px; padding-bottom: 1px; }
+  :root[data-projector="on"] .modeline, :root[data-projector="on"] .book-note, :root[data-projector="on"] .chg .long { display: none; }
+  :root[data-projector="on"] .kirch { font-size: 0.74rem; line-height: 1.4; }
+  :root[data-projector="on"] .kirch .eq { font-size: 0.8rem; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { grid-template-rows: 320px auto 220px 250px; }
+  .stage.combo { grid-template-rows: 340px auto; }
+  .rail { overflow: visible; }
+  .pane-seg button { min-height: 30px; }
+}
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Capacitors and Dielectrics</h1>
+      <p>A parallel plate capacitor stores charge and energy in the field between its plates. Whether the battery stays connected decides what changes when you move the plates or slide in a dielectric.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units · C = κε₀A/d · ε₀ = 8.8541878188 × 10⁻¹² F/m</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="pane" id="dPane">
+        <canvas id="dCan" tabindex="0" aria-label="Side view of a parallel plate capacitor with a battery and a switch. Drag the grip on the top plate to change the separation d, the grip on the right end of the top plate to change the plate area A, the dielectric slab sideways to slide it in or out, and the battery up or down to change its voltage. Click the switch to connect or disconnect the battery. Keys: up and down arrows change d, left and right arrows slide the slab, page up and page down change A, plus and minus change the battery voltage, M connects or disconnects, space plays or pauses, R resets."></canvas>
+        <div class="stage-ctl">
+          <button type="button" class="btn" id="play">Pause</button>
+          <button type="button" class="btn" id="reset">Reset</button>
+          <button type="button" class="btn" id="mark">Mark start</button>
+          <div class="seg" role="group" aria-label="View" id="viewSeg">
+            <button type="button" data-v="single" aria-pressed="true">One capacitor</button>
+            <button type="button" data-v="combo" aria-pressed="false">Combinations</button>
+          </div>
+        </div>
+      </div>
+      <div class="pane" id="tPane">
+        <p class="ptitle">Since the start <span id="modeTag"></span></p>
+        <table class="chg" id="chg" aria-live="off"></table>
+        <p class="modeline" id="modeLine"></p>
+        <p class="kirch" id="book"></p>
+      </div>
+      <div class="pane" id="ePane">
+        <canvas id="eCan" aria-label="Energy bars since the start: work done by your hand, work done by the battery, heat in the wires, and the change in stored energy."></canvas>
+      </div>
+      <div class="pane" id="gPane">
+        <canvas id="gCan" aria-label="Capacitance and stored energy plotted against the plate separation or the insertion of the slab, with the present state marked."></canvas>
+        <div class="seg pane-seg" role="group" aria-label="Plot against" id="gSeg">
+          <button type="button" data-g="d" aria-pressed="true">against d</button>
+          <button type="button" data-g="x" aria-pressed="false">against x</button>
+        </div>
+      </div>
+      <div class="pane" id="cbPane" hidden>
+        <p class="ptitle">Each capacitor <span id="cbTag"></span></p>
+        <table class="chg cmb" id="cbTable"></table>
+        <p class="kirch" id="cbBook"></p>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="apartV" aria-pressed="true">Pull apart, connected</button>
+          <button type="button" data-p="apartQ" aria-pressed="false">Pull apart, isolated</button>
+          <button type="button" data-p="slide" aria-pressed="false">Slide in a dielectric</button>
+          <button type="button" data-p="water" aria-pressed="false">Water dielectric</button>
+          <button type="button" data-p="combo" aria-pressed="false">Series and parallel</button>
+          <button type="button" data-p="energy" aria-pressed="false">Energy in the field</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section data-view="single">
+        <h2>Battery</h2>
+        <div class="seg full" role="group" aria-label="Battery connection" id="modeSeg">
+          <button type="button" data-m="battery" aria-pressed="true">Connected</button>
+          <button type="button" data-m="iso" aria-pressed="false">Isolated</button>
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sV">Battery voltage V<sub>b</sub></label><output id="oV" class="mono" for="sV"></output></div>
+          <input type="range" id="sV" min="10" max="300" step="10">
+        </div>
+        <p class="hint" id="modeHint"></p>
+      </section>
+
+      <section data-view="single">
+        <h2>Plates</h2>
+        <div class="ctl">
+          <div class="slider-head"><label for="sD">Separation d</label><output id="oD" class="mono" for="sD"></output></div>
+          <input type="range" id="sD" min="0.5" max="4" step="0.05">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sA">Plate area A</label><output id="oA" class="mono" for="sA"></output></div>
+          <input type="range" id="sA" min="25" max="400" step="1">
+        </div>
+        <p class="hint">Square plates of side s, so A = s². Changing A counts like sliding one plate sideways to change the overlap: your hand does the work.</p>
+      </section>
+
+      <section data-view="single">
+        <h2>Dielectric slab</h2>
+        <div class="chips small" id="mats"></div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sK">Dielectric constant κ</label><output id="oK" class="mono" for="sK"></output></div>
+          <input type="range" id="sK" min="1" max="100" step="0.1">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sF">Inserted x/s</label><output id="oF" class="mono" for="sF"></output></div>
+          <input type="range" id="sF" min="0" max="100" step="1">
+        </div>
+        <dl class="readout" id="slabBox"></dl>
+        <p class="hint" id="slabHint">The slab is cut to fill the gap when it goes in. With the slab in, the plates can be pulled apart, which leaves an air gap above it, but not pushed closer than its thickness. A partly inserted slab makes two capacitors in parallel: C(x) = ε₀(s/d)(s − x) + ε₀(s/d<sub>in</sub>)x, with d<sub>in</sub> = (d − t) + t/κ.</p>
+      </section>
+
+      <section data-view="single">
+        <h2>Measurements</h2>
+        <dl class="readout" id="meas"></dl>
+      </section>
+
+      <section data-view="single">
+        <h2>Energy in the field</h2>
+        <dl class="readout" id="fieldE"></dl>
+        <p class="formula mono" id="fieldEq"></p>
+        <p class="hint">The energy density is u = ½κε₀E² (or ½E·D). In the ideal model the field is uniform in each region, so u times the volume of each region, summed, gives exactly ½CV².</p>
+      </section>
+
+      <section data-view="combo" hidden>
+        <h2>Combination</h2>
+        <div class="seg full" role="group" aria-label="How the capacitors are connected" id="topSeg">
+          <button type="button" data-t="series" aria-pressed="true">Series</button>
+          <button type="button" data-t="parallel" aria-pressed="false">Parallel</button>
+          <button type="button" data-t="mixed" aria-pressed="false">Mixed</button>
+        </div>
+        <div class="seg full" role="group" aria-label="Number of capacitors" id="numSeg">
+          <button type="button" data-n="2" aria-pressed="false">Two</button>
+          <button type="button" data-n="3" aria-pressed="true">Three</button>
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sC1">C<sub>1</sub></label><output id="oC1" class="mono" for="sC1"></output></div>
+          <input type="range" id="sC1" min="0" max="18" step="1">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sC2">C<sub>2</sub></label><output id="oC2" class="mono" for="sC2"></output></div>
+          <input type="range" id="sC2" min="0" max="18" step="1">
+        </div>
+        <div class="ctl" id="c3Ctl">
+          <div class="slider-head"><label for="sC3">C<sub>3</sub></label><output id="oC3" class="mono" for="sC3"></output></div>
+          <input type="range" id="sC3" min="0" max="18" step="1">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sCV">Battery voltage V</label><output id="oCV" class="mono" for="sCV"></output></div>
+          <input type="range" id="sCV" min="10" max="300" step="10">
+        </div>
+        <p class="hint" id="topHint"></p>
+        <p class="hint">Capacitor values step through the E6 series from 1 pF to 1 nF. Drag a plate on the drawing to change that capacitor, or the battery up and down to change V. The plate gap is drawn on a log scale.</p>
+      </section>
+
+      <section>
+        <h2>Display</h2>
+        <div class="toggles" data-view="single">
+          <label><input type="checkbox" id="tLines" checked>Field lines</label>
+          <label><input type="checkbox" id="tCharges" checked>Free charges</label>
+          <label><input type="checkbox" id="tBound" checked>Bound charges</label>
+          <label><input type="checkbox" id="tEnergy">Energy density</label>
+        </div>
+        <div class="key">
+          <span><i class="sym">+</i><span id="keyQ">Free charge</span></span>
+          <span data-view="single"><i class="sym b">−</i>Bound charge on the slab faces</span>
+          <span data-view="single"><i class="swatch"></i><span id="keyE">Field line</span></span>
+          <span data-view="single"><i class="swatch fill"></i>Dielectric slab</span>
+          <span data-view="single"><i class="swatch u"></i>Energy density, darker is larger</span>
+        </div>
+        <p class="hint" data-view="single">Model: the readouts use the ideal parallel plate model with a uniform field and no fringing. The field lines come from a numerical solution of Laplace's equation for this cross section (plates infinitely deep, inside an insulating box at the edge of the drawing, so no field line leaves it), so they show the fringing at the edges honestly; lines start in proportion to the free charge and a share 1 − 1/κ of them ends on the bound charge where they enter the slab, so line density matches E in the uniform regions (near the slab's ends it is only approximate). The few lines that leave the outer faces fade out away from the plates. The wires and the battery are not part of that solution. All changes are slow (quasi static), the battery and wires are ideal, and the slab slides without friction.</p>
+      </section>
+    </aside>
+  </main>
+  <p class="sr" aria-live="polite" id="live"></p>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const EPS0 = 8.8541878188e-12;            // F/m, CODATA 2022
+  // Ideal parallel plate capacitor with square plates (A = s²) and a slab of constant κ and thickness t lying on the
+  // bottom plate, inserted a fraction f of the plate length. The inserted part is a stack: an air gap d − t over the slab.
+  function capOf(g) {
+    const dIn = (g.d - g.t) + g.t / g.kap;
+    const Ce = EPS0 * g.A * (1 - g.f) / g.d, Ci = EPS0 * g.A * g.f / dIn;
+    return { C: Ce + Ci, Ce, Ci, dIn };
+  }
+  // the full state; mode 'battery' holds V = Vb, mode 'iso' holds the charge Q
+  function stateOf(g, mode, Vb, Qiso) {
+    const c = capOf(g);
+    const V = mode === 'battery' ? Vb : Qiso / c.C, Q = c.C * V;
+    const s = Math.sqrt(g.A), gap = g.d - g.t;
+    const Ee = V / g.d, Ea = V / c.dIn, Ed = Ea / g.kap;              // empty part, air gap above the slab, inside the slab
+    const sigE = EPS0 * Ee, sigI = EPS0 * Ea, sigB = sigI * (1 - 1 / g.kap);
+    const U = 0.5 * c.C * V * V;
+    // force on the slab along the insertion direction, F = ½V² dC/dx (the same at constant Q or constant V); zero when centered
+    const Fslab = g.f >= 1 ? 0 : 0.5 * V * V * EPS0 * s * (1 / c.dIn - 1 / g.d);
+    // attraction between the plates, F = ½V² |dC/dd|
+    const Fplate = 0.5 * V * V * EPS0 * g.A * ((1 - g.f) / (g.d * g.d) + g.f / (c.dIn * c.dIn));
+    // energy in the field, region by region
+    const vE = (1 - g.f) * g.A * g.d, vA = g.f * g.A * gap, vD = g.f * g.A * g.t;
+    const uE = 0.5 * EPS0 * Ee * Ee, uA = 0.5 * EPS0 * Ea * Ea, uD = 0.5 * g.kap * EPS0 * Ed * Ed;
+    return { ...c, V, Q, s, gap, Ee, Ea, Ed, sigE, sigI, sigB, U, Fslab, Fplate, vE, vA, vD, uE, uA, uD, Ufield: uE * vE + uA * vA + uD * vD };
+  }
+  // Energy bookkeeping, accumulated over every change: your hand Wh, the battery Wb and heat H in the wires. ΔU = Wh + Wb − H.
+  function newLedger() { return { Wh: 0, Wb: 0, H: 0 }; }
+  // the capacitor itself changes (plates, slab): slow, so the hand does the work. Exact for any step: at fixed V, Wb = VΔQ.
+  function moveStep(L, g1, g2, mode, Vb, Q) {
+    const C1 = capOf(g1).C, C2 = capOf(g2).C;
+    if (mode === 'battery') {
+      const dQ = (C2 - C1) * Vb, dU = 0.5 * (C2 - C1) * Vb * Vb;
+      L.Wb += Vb * dQ; L.Wh += dU - Vb * dQ;
+    } else L.Wh += Q * Q / 2 * (1 / C2 - 1 / C1);
+  }
+  // the battery voltage is turned slowly from V1 to V2 while connected: Wb = ∫V dQ = ½C(V2² − V1²)
+  function batteryStep(L, C, V1, V2) { L.Wb += 0.5 * C * (V2 * V2 - V1 * V1); }
+  // connecting a capacitor at charge Q1 to the battery: the charge jumps to C·Vb through the wires, which get the difference as heat
+  function connectStep(L, C, Q1, Vb) {
+    const Q2 = C * Vb, Wb = Vb * (Q2 - Q1), dU = (Q2 * Q2 - Q1 * Q1) / (2 * C);
+    L.Wb += Wb; L.H += Wb - dU;
+    return Q2;
+  }
+
+  // Series and parallel combinations of 2 or 3 capacitors across a battery V.
+  function combo(top, n, C, V) {
+    const c = C.slice(0, top === 'mixed' ? 3 : n);
+    let Ceq, out;
+    if (top === 'series') {
+      Ceq = 1 / c.reduce((a, x) => a + 1 / x, 0);
+      const Q = Ceq * V; out = c.map((x) => ({ C: x, Q, V: Q / x }));
+    } else if (top === 'parallel') {
+      Ceq = c.reduce((a, x) => a + x, 0); out = c.map((x) => ({ C: x, Q: x * V, V }));
+    } else {            // C1 in series with C2 ∥ C3
+      const Cp = c[1] + c[2]; Ceq = c[0] * Cp / (c[0] + Cp);
+      const Q1 = Ceq * V, V1 = Q1 / c[0], Vp = V - V1;
+      out = [{ C: c[0], Q: Q1, V: V1 }, { C: c[1], Q: c[1] * Vp, V: Vp }, { C: c[2], Q: c[2] * Vp, V: Vp }];
+    }
+    for (const o of out) o.U = 0.5 * o.C * o.V * o.V;
+    return { Ceq, caps: out, Q: Ceq * V, U: 0.5 * Ceq * V * V };
+  }
+
+  // Laplace's equation ∇·(κ∇φ) = 0 on a node grid (finite volume, κ per cell), red black SOR.
+  // fix: 0 free, 1 top plate (φ = +1), 2 bottom plate (φ = −1), 3 grounded box (φ = 0).
+  function makeField(nx, ny) {
+    const N = nx * ny;
+    return { nx, ny, phi: new Float64Array(N), fix: new Uint8Array(N), wx: new Float64Array(N), wy: new Float64Array(N), kc: new Float64Array(N), it: 0, resid: 1, smooth: 0, omega: 2 / (1 + Math.sin(Math.PI / Math.max(nx, ny))) };
+  }
+  // geo in node units: top plate rows t0..t1 and bottom rows b0..b1 over columns i0..i1; slab cells rows s0..s1−1, columns c0..c1−1
+  function setupField(F, geo) {
+    const { nx, ny, fix, kc, wx, wy, phi } = F;
+    const was = F.fix.slice();
+    fix.fill(0); kc.fill(1);
+    for (let i = 0; i < nx; i++) { fix[i] = 3; fix[(ny - 1) * nx + i] = 3; }
+    for (let j = 0; j < ny; j++) { fix[j * nx] = 3; fix[j * nx + nx - 1] = 3; }
+    const clampI = (i) => Math.max(1, Math.min(nx - 2, i)), clampJ = (j) => Math.max(1, Math.min(ny - 2, j));
+    const i0 = clampI(geo.i0), i1 = clampI(geo.i1);
+    for (let j = clampJ(geo.t0); j <= clampJ(geo.t1); j++) for (let i = i0; i <= i1; i++) fix[j * nx + i] = 1;
+    for (let j = clampJ(geo.b0); j <= clampJ(geo.b1); j++) for (let i = i0; i <= i1; i++) fix[j * nx + i] = 2;
+    if (geo.kap > 1 && geo.c1 > geo.c0 && geo.s1 > geo.s0) {
+      for (let j = Math.max(0, geo.s0); j < Math.min(ny - 1, geo.s1); j++) for (let i = Math.max(0, geo.c0); i < Math.min(nx - 1, geo.c1); i++) kc[j * nx + i] = geo.kap;
+    }
+    const cell = (i, j) => (i < 0 || j < 0 || i >= nx - 1 || j >= ny - 1 ? null : kc[j * nx + i]);
+    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+      const id = j * nx + i;
+      const avg = (a, b) => (a === null ? (b === null ? 1 : b) : b === null ? a : (a + b) / 2);
+      wx[id] = i < nx - 1 ? avg(cell(i, j - 1), cell(i, j)) : 0;
+      wy[id] = j < ny - 1 ? avg(cell(i - 1, j), cell(i, j)) : 0;
+    }
+    // insulating box: no flux through the outer edge, so every line from the + plate ends on the − plate
+    for (let j = 0; j < ny; j++) { wx[j * nx] = 0; wx[j * nx + nx - 2] = 0; }
+    for (let i = 0; i < nx; i++) { wy[i] = 0; wy[(ny - 2) * nx + i] = 0; }
+    for (let id = 0; id < nx * ny; id++) {
+      if (fix[id] === 1) phi[id] = 1; else if (fix[id] === 2) phi[id] = -1; else if (fix[id] === 3) phi[id] = 0;
+      else if (was[id] === 1) phi[id] = 1; else if (was[id] === 2) phi[id] = -1;     // a node a plate just left
+    }
+    // between the plates start from the exact one dimensional solution of each column (layers in series)
+    const ta = clampJ(geo.t1), ba = clampJ(geo.b0);
+    for (let i = i0; i <= i1; i++) {
+      let tot = 0; for (let j = ta; j < ba; j++) tot += 1 / wy[j * nx + i];
+      let acc = 0;
+      for (let j = ta + 1; j < ba; j++) { acc += 1 / wy[(j - 1) * nx + i]; phi[j * nx + i] = 1 - 2 * acc / tot; }
+    }
+    F.smooth = 6; F.resid = 1;
+  }
+  function relax(F, iters) {
+    const { nx, ny, phi, fix, wx, wy } = F;
+    let maxd = 0;
+    for (let it = 0; it < iters; it++) {
+      maxd = 0;
+      const om = F.smooth > 0 ? (F.smooth--, 1) : F.omega;     // a few plain Gauss Seidel sweeps first damp the local jolt of a moved plate
+      for (let par = 0; par < 2; par++) {
+        for (let j = 1; j < ny - 1; j++) {
+          for (let i = 1 + ((j + par) & 1); i < nx - 1; i += 2) {
+            const id = j * nx + i;
+            if (fix[id]) continue;
+            const wE = wx[id], wW = wx[id - 1], wS = wy[id], wN = wy[id - nx];
+            const v = (wE * phi[id + 1] + wW * phi[id - 1] + wS * phi[id + nx] + wN * phi[id - nx]) / (wE + wW + wS + wN);
+            const d = v - phi[id];
+            phi[id] += om * d;
+            if (d > maxd) maxd = d; else if (-d > maxd) maxd = -d;
+          }
+        }
+      }
+      F.it++;
+    }
+    F.resid = maxd;
+    return maxd;
+  }
+  // free charge leaving the top plate through each boundary edge, walking round the plate: inner face, right end, outer face, left end
+  function plateSites(F, P) {
+    const { nx, phi, wx, wy } = F, out = [], v = 1;
+    const push = (q, x0, y0, x1, y1, dx, dy) => { if (q > 0) out.push({ q, x0, y0, x1, y1, dx, dy }); };
+    for (let i = P.i0; i <= P.i1; i++) { const id = P.t1 * nx + i; push(wy[id] * (v - phi[id + nx]), Math.max(P.i0, i - 0.5), P.t1, Math.min(P.i1, i + 0.5), P.t1, 0, 1); }
+    for (let j = P.t1; j >= P.t0; j--) { const id = j * nx + P.i1; push(wx[id] * (v - phi[id + 1]), P.i1, Math.min(P.t1, j + 0.5), P.i1, Math.max(P.t0, j - 0.5), 1, 0); }
+    for (let i = P.i1; i >= P.i0; i--) { const id = P.t0 * nx + i; push(wy[id - nx] * (v - phi[id - nx]), Math.min(P.i1, i + 0.5), P.t0, Math.max(P.i0, i - 0.5), P.t0, 0, -1); }
+    for (let j = P.t0; j <= P.t1; j++) { const id = j * nx + P.i0; push(wx[id - 1] * (v - phi[id - 1]), P.i0, Math.max(P.t0, j - 0.5), P.i0, Math.min(P.t1, j + 0.5), -1, 0); }
+    return out;
+  }
+  // E = −∇φ from the bilinear interpolation inside a cell, in node units
+  function eAt(F, x, y, out) {
+    const { nx, ny, phi } = F;
+    const i = Math.floor(x), j = Math.floor(y);
+    if (i < 0 || j < 0 || i >= nx - 1 || j >= ny - 1) return false;
+    const u = x - i, v = y - j, id = j * nx + i;
+    const p00 = phi[id], p10 = phi[id + 1], p01 = phi[id + nx], p11 = phi[id + nx + 1];
+    out[0] = -((1 - v) * (p10 - p00) + v * (p11 - p01));
+    out[1] = -((1 - u) * (p01 - p00) + u * (p11 - p10));
+    return true;
+  }
+  const kAt = (F, x, y) => { const i = Math.floor(x), j = Math.floor(y); return i < 0 || j < 0 || i >= F.nx - 1 || j >= F.ny - 1 ? 1 : F.kc[j * F.nx + i]; };
+  // follow a field line from (x, y). A line that crosses into a region of larger κ goes on with probability κ_before/κ_after
+  // (the rest end on bound charge); acc carries the deterministic share from line to line.
+  function traceLine(F, x, y, acc, maxSteps) {
+    const pts = [x, y], e = [0, 0], h = 0.45;
+    let kPrev = kAt(F, x, y), end = 'max';
+    if (kPrev > 1) { acc.v += 1 / kPrev; if (acc.v < 1) return { pts, end: 'bound' }; acc.v -= 1; }
+    for (let s = 0; s < maxSteps; s++) {
+      if (!eAt(F, x, y, e)) { end = 'out'; break; }
+      let n = Math.hypot(e[0], e[1]); if (n < 1e-12) { end = 'null'; break; }
+      const xm = x + 0.5 * h * e[0] / n, ym = y + 0.5 * h * e[1] / n;
+      if (!eAt(F, xm, ym, e)) { end = 'out'; break; }
+      n = Math.hypot(e[0], e[1]); if (n < 1e-12) { end = 'null'; break; }
+      x += h * e[0] / n; y += h * e[1] / n;
+      const ri = Math.round(x), rj = Math.round(y);
+      if (ri < 0 || rj < 0 || ri >= F.nx || rj >= F.ny) { end = 'out'; break; }
+      const fx = F.fix[rj * F.nx + ri];
+      if (fx === 2 || fx === 3 || (fx === 1 && s > 3)) { pts.push(x, y); end = fx === 2 ? 'minus' : fx === 3 ? 'box' : 'plus'; break; }
+      const k = kAt(F, x, y);
+      if (k > kPrev + 1e-9) {
+        acc.v += kPrev / k;
+        if (acc.v < 1) { pts.push(x, y); return { pts, end: 'bound' }; }
+        acc.v -= 1;
+      }
+      kPrev = k;
+      pts.push(x, y);
+    }
+    return { pts, end };
+  }
+  // n lines spread over the sites in proportion to their charge (scale: lines per unit of site charge)
+  function fieldLines(F, sites, scale, maxSteps) {
+    const lines = [], acc = { v: 0.5 };
+    let cum = 0, next = 0.5;
+    for (const st of sites) {
+      const c1 = cum + st.q * scale;
+      while (next < c1 && lines.length < 4000) {
+        const u = (next - cum) / (c1 - cum);
+        const x = st.x0 + (st.x1 - st.x0) * u + st.dx * 0.55, y = st.y0 + (st.y1 - st.y0) * u + st.dy * 0.55;
+        lines.push(traceLine(F, x, y, acc, maxSteps));
+        next += 1;
+      }
+      cum = c1;
+    }
+    return lines;
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.CAP = { EPS0, capOf, stateOf, newLedger, moveStep, batteryStep, connectStep, combo, makeField, setupField, relax, plateSites, eAt, traceLine, fieldLines };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const D_MIN = 0.5, D_MAX = 4, A_MIN = 25, A_MAX = 400, V_MIN = 10, V_MAX = 300;     // cm, cm², V
+
+  // ---------- materials, κ at 20 °C and low frequency ----------
+  const MATS = [
+    { id: 'vacuum', name: 'Vacuum', k: 1 },
+    { id: 'air', name: 'Air', k: 1.0006, note: 'dry air at 1 atm' },
+    { id: 'teflon', name: 'Teflon', k: 2.1 },
+    { id: 'paper', name: 'Paper', k: 3.7 },
+    { id: 'pyrex', name: 'Pyrex glass', k: 5.6 },
+    { id: 'water', name: 'Water', k: 80.1, note: 'pure water at 20 °C' }
+  ];
+  const E6 = [1, 1.5, 2.2, 3.3, 4.7, 6.8];
+  const CVALS = []; for (let dd = 0; dd < 3; dd++) for (const m of E6) CVALS.push(+(m * Math.pow(10, dd)).toPrecision(3) * 1e-12); CVALS.push(1000e-12);
+  const nearestIdx = (list, v) => { let b = 0, bd = Infinity; for (let i = 0; i < list.length; i++) { const d = Math.abs(Math.log(v / list[i])); if (d < bd) { bd = d; b = i; } } return b; };
+
+  // ---------- setups ----------
+  const PRESETS = {
+    apartV: { mode: 'battery', Vb: 100, A: 144, d: 1, mat: 'vacuum', f: 0, sweep: { key: 'd', a: 1, b: 3, P: 10 }, graph: 'd',
+      hint: 'The battery holds V fixed. As d grows, C = ε₀A/d falls, so charge flows back into the battery and E = V/d weakens. Your hand still does positive work, because the plates attract. The stored energy goes down, and the battery takes in both your work and the energy the field gave up: W<sub>battery</sub> = VΔQ = 2ΔU.' },
+    apartQ: { mode: 'iso', Vb: 100, A: 144, d: 1, mat: 'vacuum', f: 0, sweep: { key: 'd', a: 1, b: 3, P: 10 }, graph: 'd',
+      hint: 'Charged to 100 V and then disconnected, the charge has nowhere to go. E = σ/ε₀ stays the same, V = Ed grows in proportion to d, and the stored energy grows by exactly the work your hand does against the attraction.' },
+    slide: { mode: 'iso', Vb: 100, A: 144, d: 1.5, mat: 'pyrex', f: 0, sweep: { key: 'f', a: 0, b: 1, P: 12 }, graph: 'x',
+      hint: 'Isolated plates and a Pyrex slab (κ = 5.6). Bound charges on the slab faces cancel part of the field of the free charge, so E inside is E/κ. The fringe field pulls the slab in: going in, U falls and your hand, holding the slab back, takes that energy (W<sub>hand</sub> &lt; 0). Try it with the battery connected too.' },
+    water: { mode: 'battery', Vb: 100, A: 144, d: 1.5, mat: 'water', f: 0, sweep: { key: 'f', a: 0, b: 1, P: 12 }, graph: 'x',
+      hint: 'Battery connected and pure water (κ = 80.1 at 20 °C). As the water goes in the battery pushes on 80 times as much charge per area, so the charge key changes scale: read it. Only 1 field line in 80 gets through the bound charge. Tap water conducts, and the charge would leak through it.' },
+    combo: { view: 'combo', top: 'series', n: 3, C: [10e-12, 22e-12, 47e-12], V: 100,
+      hint: 'In series every capacitor carries the same charge and the voltages add up to the battery voltage, so C<sub>eq</sub> is smaller than the smallest C. In parallel every capacitor has the full V and the charges add up. Drag a plate to change that capacitor.' },
+    energy: { mode: 'battery', Vb: 100, A: 144, d: 2, t: 1.5, mat: 'paper', f: 0.5, energy: true, sweep: { key: 'd', a: 2, b: 3, P: 12 }, graph: 'd',
+      hint: 'The energy can be counted in the field: u = ½κε₀E² in each region times its volume. Below the measurements the three regions add up to ½CV² exactly. The energy density in the air gap above the paper is κ times that inside the paper, because D is the same in both and u = D²/(2κε₀).' }
+  };
+
+  // ---------- state ----------
+  const S = {
+    view: 'single', preset: 'apartV', mode: 'battery', Vb: 100, Q: 0, mat: 'vacuum',
+    g: { A: 144e-4, d: 0.01, kap: 1, f: 0, t: 0.01 },
+    start: null, L: null, graph: 'd',
+    layers: { lines: true, charges: true, bound: true, energy: false },
+    sweep: null, sweepT: 0,
+    cb: { top: 'series', n: 3, C: [10e-12, 22e-12, 47e-12], V: 100 },
+    qSym: 0, eLine: 0, qcSym: 0
+  };
+  let running = !reduce, flowAcc = 0, flowShow = 0;
+  const cfg = () => PRESETS[S.preset];
+  const cur = () => stateOf(S.g, S.mode, S.Vb, S.Q);
+
+  // ---------- formatting ----------
+  const PFX = [[1e6, 'M'], [1e3, 'k'], [1, ''], [1e-3, 'm'], [1e-6, 'µ'], [1e-9, 'n'], [1e-12, 'p'], [1e-15, 'f']];
+  function sigStr(x, sig) {
+    const a = Math.abs(x);
+    if (a === 0) return '0';
+    const d = Math.max(0, sig - 1 - Math.floor(Math.log10(a) + 1e-12));
+    return x.toFixed(d);
+  }
+  function fmtSI(v, unit, sig) {
+    sig = sig || 3;
+    if (!isFinite(v)) return '—';
+    const a = Math.abs(v);
+    if (a < 1e-21) return `0 ${unit}`;
+    const f = PFX.find(([m]) => a >= m * 0.9995) || PFX[PFX.length - 1];
+    let s = sigStr(v / f[0], sig);
+    if (Math.abs(+s) >= 1000 && f[0] < 1e6) { const g = PFX[PFX.indexOf(f) - 1]; s = sigStr(v / g[0], sig); return `${s.replace('-', '−')} ${g[1]}${unit}`; }
+    return `${s.replace('-', '−')} ${f[1]}${unit}`;
+  }
+  const fmtC = (v) => fmtSI(v, 'F', 3);
+  const fmtE = (v) => (Math.abs(v) >= 999.5 ? fmtSI(v, 'V/m', 3) : `${sigStr(v, 3)} V/m`);
+  const fmtCm = (m) => `${(m * 100).toFixed(2)} cm`;
+  const fmtK = (k) => (k < 1.01 ? k.toFixed(4) : k < 10 ? k.toFixed(2) : k.toFixed(1));
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  function fmtSci(v) {
+    if (v === 0) return '0';
+    const e = Math.floor(Math.log10(Math.abs(v))), m = v / Math.pow(10, e);
+    return `${m.toFixed(1).replace('-', '−')} × 10${String(e).split('').map((c) => SUP[c]).join('')}`;
+  }
+  // smallest 1, 2, 5 × 10ⁿ at or above x
+  function ladderUp(x) { const p = Math.pow(10, Math.floor(Math.log10(x))), m = x / p; return (m <= 1.0000001 ? 1 : m <= 2.0000001 ? 2 : m <= 5.0000001 ? 5 : 10) * p; }
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+
+  // ---------- changes to the capacitor ----------
+  function snapshot() { const st = cur(); return { Q: st.Q, V: st.V, Ee: st.Ee, C: st.C, U: st.U, mode: S.mode }; }
+  function markStart(silent) {
+    S.start = snapshot(); S.L = newLedger();
+    if (!silent) $('live').textContent = 'New start marked: the table and the energy bars count from here.';
+    updateReadouts();
+  }
+  function setGeom(patch, fromUser) {
+    const g1 = S.g, g2 = { ...g1, ...patch };
+    g2.d = Math.max(D_MIN / 100, Math.min(D_MAX / 100, g2.d));
+    g2.A = Math.max(A_MIN * 1e-4, Math.min(A_MAX * 1e-4, g2.A));
+    g2.f = Math.max(0, Math.min(1, g2.f));
+    if (g2.f <= 0) { g2.f = 0; g2.t = g2.d; }                 // slab fully out: it is cut to the present gap
+    else if (g2.d < g2.t) g2.d = g2.t;                        // the top plate rests on the slab
+    if (g2.d === g1.d && g2.A === g1.A && g2.f === g1.f && g2.t === g1.t && g2.kap === g1.kap) return false;
+    const C1 = capOf(g1).C;
+    moveStep(S.L, g1, g2, S.mode, S.Vb, S.Q);
+    S.g = g2;
+    const C2 = capOf(g2).C;
+    if (S.mode === 'battery') { flowAcc += (C2 - C1) * S.Vb; S.Q = C2 * S.Vb; }
+    if (fromUser) stopSweep();
+    syncSliders();
+    return true;
+  }
+  function setMode(m) {
+    if (m === S.mode) return;
+    const C = capOf(S.g).C;
+    if (m === 'battery') {
+      const Q1 = S.Q, Q2 = connectStep(S.L, C, Q1, S.Vb);
+      flowAcc += Q2 - Q1; S.Q = Q2;
+      const heat = Math.abs(Q2 - Q1) > 1e-18 ? (Q2 - Q1) * (Q2 - Q1) / (2 * C) : 0;
+      $('live').textContent = heat > 0 ? `Connected: ${fmtSI(Q2 - Q1, 'C')} flowed at once, and ${fmtSI(heat, 'J')} became heat in the wires.` : 'Connected: the capacitor was already at the battery voltage, so no charge flowed.';
+    } else $('live').textContent = 'Disconnected: the charge on the plates is now fixed.';
+    S.mode = m;
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === m));
+    staticText(); updateReadouts();
+  }
+  function setVb(v) {
+    v = Math.max(V_MIN, Math.min(V_MAX, Math.round(v / 10) * 10));
+    if (v === S.Vb) return;
+    if (S.mode === 'battery') {
+      const C = capOf(S.g).C;
+      batteryStep(S.L, C, S.Vb, v);
+      flowAcc += C * (v - S.Vb); S.Q = C * v;
+    }
+    S.Vb = v; syncSliders();
+  }
+  function setMat(id) {
+    const m = MATS.find((x) => x.id === id);
+    S.mat = id;
+    setGeom({ kap: m.k });
+    matChips(); staticText();
+  }
+  function setKappa(k) {
+    S.mat = (MATS.find((x) => Math.abs(x.k - k) < 1e-9) || { id: 'custom' }).id;
+    setGeom({ kap: k }); matChips(); staticText();
+  }
+
+  // ---------- sweep animation: one quantity eased back and forth, slowly enough to count as quasi static ----------
+  function stopSweep() { if (running) setRunning(false); }
+  function sweepValue(T) {
+    const sw = S.sweep, u = (1 - Math.cos(2 * Math.PI * T / sw.P)) / 2;
+    return sw.a + (sw.b - sw.a) * u;
+  }
+  function stepSweep(dt) {
+    if (!S.sweep || S.view !== 'single') return;
+    S.sweepT += dt;
+    const v = sweepValue(S.sweepT);
+    if (S.sweep.key === 'd') setGeom({ d: v / 100 }); else setGeom({ f: v });
+  }
+
+  // ---------- canvases ----------
+  let T = null, dpr = 1;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), capq: g('--capq'), resq: g('--resq'), wire: g('--wire'),
+      plate: g('--plate'), diel: g('--diel'), fline: g('--fline'),
+      ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace' };
+  }
+  const cans = { d: $('dCan'), e: $('eCan'), g: $('gCan') };
+  const panes = { d: $('dPane'), e: $('ePane'), g: $('gPane') };
+  const ctxs = { d: cans.d.getContext('2d'), e: cans.e.getContext('2d'), g: cans.g.getContext('2d') };
+  const dims = { d: [0, 0], e: [0, 0], g: [0, 0] };
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const k of ['d', 'e', 'g']) {
+      const r = panes[k].getBoundingClientRect();
+      cans[k].width = Math.max(1, Math.round(r.width * dpr)); cans[k].height = Math.max(1, Math.round(r.height * dpr));
+      cans[k].style.width = r.width + 'px'; cans[k].style.height = r.height + 'px';
+      dims[k] = [r.width, r.height];
+    }
+    field = null;
+    drawAll();
+  }
+  function richParts(str) {
+    const out = []; const re = /_\{([^}]*)\}|_(\S)/g; let i = 0, m;
+    while ((m = re.exec(str))) { if (m.index > i) out.push([str.slice(i, m.index), false]); out.push([m[1] || m[2], true]); i = re.lastIndex; }
+    if (i < str.length) out.push([str.slice(i), false]);
+    return out;
+  }
+  function richWidth(ctx, str, size, weight, fam) {
+    let w = 0;
+    for (const [s, sub] of richParts(str)) { ctx.font = `${weight || 400} ${sub ? size * 0.72 : size}px ${fam || T.ui}`; w += ctx.measureText(s).width; }
+    return w;
+  }
+  function richText(ctx, str, x, y, size, weight, align, fam) {
+    const parts = richParts(str), F = fam || T.ui;
+    const w = richWidth(ctx, str, size, weight, F);
+    let x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    const ta = ctx.textAlign; ctx.textAlign = 'left';
+    for (const [s, sub] of parts) { ctx.font = `${weight || 400} ${sub ? size * 0.72 : size}px ${F}`; ctx.fillText(s, x0, y + (sub ? size * 0.28 : 0)); x0 += ctx.measureText(s).width; }
+    ctx.textAlign = ta;
+    return w;
+  }
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+  }
+  // a label on a halo box; lines: array of strings (with _ subscripts); returns the box
+  function haloLabel(ctx, lines, x, y, size, opts) {
+    opts = opts || {};
+    const pad = 3 * (opts.ps || 1), lh = size * 1.25;
+    const w = Math.max(...lines.map((s) => richWidth(ctx, s, size, opts.weight || 600, opts.fam))) + 2 * pad;
+    const h = lines.length * lh + 2 * pad - (lh - size) ;
+    let bx = opts.align === 'right' ? x - w : opts.align === 'center' ? x - w / 2 : x;
+    let by = opts.valign === 'bottom' ? y - h : opts.valign === 'middle' ? y - h / 2 : y;
+    if (opts.clamp) { bx = Math.max(opts.clamp[0], Math.min(opts.clamp[2] - w, bx)); by = Math.max(opts.clamp[1], Math.min(opts.clamp[3] - h, by)); }
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.88; roundRect(ctx, bx, by, w, h, 3 * (opts.ps || 1)); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = opts.color || T.ink; ctx.textBaseline = 'alphabetic';
+    lines.forEach((s, i) => richText(ctx, s, bx + pad, by + pad + size * 0.85 + i * lh, size, opts.weight || 600, 'left', opts.fam));
+    return [bx, by, w, h];
+  }
+  function grip(ctx, x, y, hot, vertical) {
+    const ps = projScale(), w = (vertical ? 14 : 22) * ps, h = (vertical ? 22 : 14) * ps;
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = hot ? T.accent : T.muted; ctx.lineWidth = (hot ? 2 : 1.3) * ps;
+    roundRect(ctx, x - w / 2, y - h / 2, w, h, 4 * ps); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = hot ? T.accent : T.muted;
+    const a = 3.5 * ps;
+    ctx.beginPath();
+    if (vertical) {
+      ctx.moveTo(x, y - 7.5 * ps); ctx.lineTo(x - a, y - 2.5 * ps); ctx.lineTo(x + a, y - 2.5 * ps); ctx.closePath();
+      ctx.moveTo(x, y + 7.5 * ps); ctx.lineTo(x - a, y + 2.5 * ps); ctx.lineTo(x + a, y + 2.5 * ps); ctx.closePath();
+    } else {
+      ctx.moveTo(x - 7.5 * ps, y); ctx.lineTo(x - 2.5 * ps, y - a); ctx.lineTo(x - 2.5 * ps, y + a); ctx.closePath();
+      ctx.moveTo(x + 7.5 * ps, y); ctx.lineTo(x + 2.5 * ps, y - a); ctx.lineTo(x + 2.5 * ps, y + a); ctx.closePath();
+    }
+    ctx.fill();
+    return [x - w / 2, y - h / 2, w, h];
+  }
+  function arrow(ctx, x0, y0, x1, y1, col, lw, head) {
+    const a = Math.atan2(y1 - y0, x1 - x0);
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = lw; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - Math.cos(a) * head * 0.6, y1 - Math.sin(a) * head * 0.6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - head * Math.cos(a - 0.42), y1 - head * Math.sin(a - 0.42)); ctx.lineTo(x1 - head * Math.cos(a + 0.42), y1 - head * Math.sin(a + 0.42)); ctx.closePath(); ctx.fill();
+  }
+  function chargeSym(ctx, x, y, r, sign, bound) {
+    if (bound) {
+      ctx.strokeStyle = T.diel; ctx.lineWidth = 1.3; ctx.fillStyle = T.canvas;
+      ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = T.diel;
+    } else {
+      ctx.fillStyle = sign > 0 ? T.pos : T.neg;
+      ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = '#fff';
+    }
+    ctx.lineWidth = Math.max(1.2, r * 0.32); ctx.lineCap = 'butt';
+    ctx.beginPath(); ctx.moveTo(x - r * 0.55, y); ctx.lineTo(x + r * 0.55, y);
+    if (sign > 0) { ctx.moveTo(x, y - r * 0.55); ctx.lineTo(x, y + r * 0.55); }
+    ctx.stroke();
+  }
+
+  // ---------- single capacitor: layout ----------
+  let ctlH = 44, lay = null;
+  function layoutSingle() {
+    const [W, H] = dims.d, ps = projScale();
+    const top = ctlH + 6, avail = Math.max(120, H - top - 8);
+    const bz = (W < 560 ? 84 : 128) * Math.min(ps, 1.2);       // battery zone on the left
+    const k = Math.max(4, Math.min((W - bz - 30) / (W < 560 ? 21 : 24), avail / 11));     // px per cm
+    const g = S.g, s = Math.sqrt(g.A) * 100, d = g.d * 100, t = g.t * 100;
+    const xL = bz + 14, xR = xL + s * k;
+    const yBot = top + avail * 0.5 + 1.1 * k;      // inner face of the bottom plate; the top plate moves
+    const yTop = yBot - d * k;
+    const pt = Math.max(5, Math.min(10, 0.32 * k)) * Math.min(ps, 1.2);       // drawn plate thickness
+    const depth = [0.20 * s * k, -0.11 * s * k];    // receding depth of the plates, a perspective hint
+    const xSlab = xR - g.f * s * k;                 // left (leading) end of the slab
+    return { W, H, top, k, s, d, t, xL, xR, yTop, yBot, pt, depth, xSlab, slabW: s * k, bz, ps };
+  }
+
+  // ---------- numerical field (Laplace) for the drawing ----------
+  let field = null, fieldKey = '', fieldGeo = null, lines = [], linesKey = '';
+  function fieldFor(L) {
+    const hp = Math.max(2.5, Math.min(5, L.k * 0.5 / 3));
+    const nx = Math.max(8, Math.ceil(L.W / hp) + 1), ny = Math.max(8, Math.ceil(L.H / hp) + 1);
+    if (!field || field.nx !== nx || field.ny !== ny || field.hp !== hp) { field = makeField(nx, ny); field.hp = hp; fieldKey = ''; }
+    const tp = Math.max(1, Math.round(L.pt / hp));
+    const t1 = Math.round(L.yTop / hp);
+    let b0 = Math.round(L.yBot / hp); if (b0 - t1 < 2) b0 = t1 + 2;
+    const i0 = Math.round(L.xL / hp), i1 = Math.round(L.xR / hp);
+    const nGap = b0 - t1;
+    let nt = Math.round(L.t * L.k / hp); nt = Math.max(1, Math.min(nGap, nt));
+    if (S.g.d - S.g.t < 1e-9) nt = nGap;
+    const c0 = Math.round(L.xSlab / hp), c1 = Math.round((L.xSlab + L.slabW) / hp);
+    const geo = { t0: t1 - tp + 1, t1, b0, b1: b0 + tp - 1, i0, i1, s0: b0 - nt, s1: b0, c0, c1, kap: S.g.kap, nGap, hp };
+    const key = JSON.stringify(geo);
+    if (key !== fieldKey) {
+      const fresh = !fieldKey;
+      setupField(field, geo); fieldKey = key; fieldGeo = geo;
+      if (fresh) relax(field, Math.min(700, 3 * Math.max(nx, ny)));
+      linesKey = '';
+    }
+    return field;
+  }
+  function updateField(L, budget) {
+    const F = fieldFor(L);
+    if (F.resid > 2e-5) { relax(F, budget); linesKey = ''; }
+    return F;
+  }
+  function computeLines(L, st) {
+    const F = field, G = fieldGeo;
+    const key = `${fieldKey}|${F.it}|${st.V.toPrecision(6)}|${S.eLine}`;
+    if (key === linesKey) return;
+    linesKey = key;
+    const sites = plateSites(F, { i0: G.i0, i1: G.i1, t0: G.t0, t1: G.t1 });
+    // lines per unit of site charge: a site's free charge per depth is ε₀ Σ w Δφ (V/2); one line per cm of plate where E = eLine.
+    // cf corrects for the gap snapping to whole grid rows.
+    const cf = (G.nGap * G.hp) / (S.g.d * 100 * L.k);
+    const scale = 100 * (st.V / 2) * cf / S.eLine;
+    lines = fieldLines(F, sites, scale, 6 * (F.nx + F.ny));
+  }
+  // charge per symbol and field per line: 1, 2, 5 steps, changed only when the picture would crowd or thin out a lot
+  function fitScales(L, st, force) {
+    const sp = 11 * Math.min(projScale(), 1.25);
+    const sigMax = Math.max(S.g.f < 1 ? st.sigE : 0, S.g.f > 0 ? st.sigI : 0);
+    const needQ = sigMax * Math.sqrt(S.g.A) * (sp / L.k / 100);
+    if (force || !S.qSym || S.qSym < needQ * 0.999 || S.qSym > 6 * needQ) S.qSym = ladderUp(needQ);
+    const Emax = Math.max(S.g.f < 1 ? st.Ee : 0, S.g.f > 0 && st.gap > 1e-9 ? st.Ea : 0, S.g.f > 0 ? st.Ed : 0);
+    const needE = Emax * (13 * Math.min(projScale(), 1.25)) / L.k;
+    if (force || !S.eLine || S.eLine < needE * 0.999 || S.eLine > 6 * needE) S.eLine = ladderUp(needE);
+  }
+
+  // ---------- single capacitor: drawing ----------
+  let handles = [], hoverId = null, drag = null;
+  function drawSingle() {
+    const [W, H] = dims.d; if (!W || !H) return;
+    const ctx = ctxs.d, L = layoutSingle(), ps = L.ps, st = cur(), g = S.g;
+    lay = L;
+    fitScales(L, st, false);
+    updateField(L, 30);
+    if (S.layers.lines) computeLines(L, st);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const fs = Math.max(11, Math.min(13.5, L.k * 0.5)) * Math.min(ps, 1.22);
+    const isHot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+    const { xL, xR, yTop, yBot, pt, depth, xSlab, k } = L;
+    const xIn = Math.max(xL, xSlab);                    // where the inserted region starts on the plates
+    const slabTop = yBot - L.t * k;
+    handles = [];
+
+    // back faces: the top faces of the plates and of the slab, receding to the upper right
+    const para = (x0, x1, y, col, alpha) => {
+      ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.lineTo(x1 + depth[0], y + depth[1]); ctx.lineTo(x0 + depth[0], y + depth[1]); ctx.closePath();
+      ctx.fillStyle = col; ctx.globalAlpha = alpha; ctx.fill(); ctx.globalAlpha = 1;
+    };
+    const sideFace = (x, y0, y1, col, alpha) => {
+      ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x + depth[0], y0 + depth[1]); ctx.lineTo(x + depth[0], y1 + depth[1]); ctx.lineTo(x, y1); ctx.closePath();
+      ctx.fillStyle = col; ctx.globalAlpha = alpha; ctx.fill(); ctx.globalAlpha = 1;
+    };
+    para(xL, xR, yBot, T.plate, 0.28);
+    ctx.strokeStyle = T.plate; ctx.globalAlpha = 0.55; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(xL, yBot); ctx.lineTo(xL + depth[0], yBot + depth[1]); ctx.lineTo(xR + depth[0], yBot + depth[1]); ctx.lineTo(xR, yBot); ctx.stroke(); ctx.globalAlpha = 1;
+    // slab body (back and top faces)
+    const slabOn = g.kap > 1, slabVis = slabOn && xSlab < W;
+    let slabGrip = null;
+    if (slabVis) {
+      para(xSlab, xSlab + L.slabW, slabTop, T.diel, 0.13);
+      sideFace(xSlab, slabTop, yBot, T.diel, 0.1);
+    }
+    // energy density shading (ideal model), in the front plane
+    if (S.layers.energy) {
+      const uMax = Math.max(g.f < 1 ? st.uE : 0, g.f > 0 && st.gap > 1e-9 ? st.uA : 0, g.f > 0 ? st.uD : 0, 1e-300);
+      const shade = (x0, x1, y0, y1, u) => { if (x1 - x0 < 0.5 || y1 - y0 < 0.5) return; ctx.fillStyle = T.equi; ctx.globalAlpha = 0.08 + 0.42 * u / uMax; ctx.fillRect(x0, y0, x1 - x0, y1 - y0); ctx.globalAlpha = 1; };
+      shade(xL, xIn, yTop, yBot, st.uE);
+      if (g.f > 0) { shade(xIn, xR, yTop, slabTop, st.uA); shade(xIn, xR, slabTop, yBot, st.uD); }
+    }
+    // the top plate's top face
+    para(xL, xR, yTop - pt, T.plate, 0.32);
+    ctx.strokeStyle = T.plate; ctx.globalAlpha = 0.6; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(xL, yTop - pt); ctx.lineTo(xL + depth[0], yTop - pt + depth[1]); ctx.lineTo(xR + depth[0], yTop - pt + depth[1]); ctx.lineTo(xR, yTop - pt); ctx.stroke(); ctx.globalAlpha = 1;
+    sideFace(xR, yTop - pt, yTop, T.plate, 0.45);
+    sideFace(xR, yBot, yBot + pt, T.plate, 0.45);
+
+    // field lines
+    if (S.layers.lines && field) {
+      const hp = field.hp;
+      ctx.strokeStyle = T.fline; ctx.lineWidth = 1.25 * Math.min(ps, 1.3); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      // far from the plates the few outer lines fade out, so the drawing is not ruled by the box they live in
+      const bx0 = xL, bx1 = xR, by0 = yTop - pt, by1 = yBot + pt, D0 = Math.max(26, 0.8 * L.d * k);
+      const alphaAt = (x, y) => {
+        const dx = Math.max(bx0 - x, 0, x - bx1), dy = Math.max(by0 - y, 0, y - by1), dist = Math.hypot(dx, dy);
+        return dist <= D0 ? 1 : Math.max(0, Math.round(4 * (1 - (dist - D0) / D0)) / 4);
+      };
+      for (const ln of lines) {
+        const p = ln.pts; if (p.length < 4) continue;
+        let aCur = alphaAt(p[0] * hp, p[1] * hp);
+        ctx.globalAlpha = aCur; ctx.beginPath(); ctx.moveTo(p[0] * hp, p[1] * hp);
+        for (let i = 2; i < p.length; i += 2) {
+          const x = p[i] * hp, y = p[i + 1] * hp, a = alphaAt(x, y);
+          ctx.lineTo(x, y);
+          if (a !== aCur) { if (aCur > 0) ctx.stroke(); aCur = a; ctx.globalAlpha = a; ctx.beginPath(); ctx.moveTo(x, y); }
+        }
+        if (aCur > 0) ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+      // one arrowhead at the middle of each line long enough
+      ctx.fillStyle = T.fline;
+      const ah = 4.5 * Math.min(ps, 1.3);
+      for (const ln of lines) {
+        const p = ln.pts, n = p.length / 2; if (n < 6) continue;
+        let len = 0; for (let i = 1; i < n; i++) len += Math.hypot(p[2 * i] - p[2 * i - 2], p[2 * i + 1] - p[2 * i - 1]);
+        if (len * hp < 22) continue;
+        let acc = 0, half = len / 2;
+        for (let i = 1; i < n; i++) {
+          const dl = Math.hypot(p[2 * i] - p[2 * i - 2], p[2 * i + 1] - p[2 * i - 1]);
+          if (acc + dl >= half) {
+            const x = p[2 * i] * hp, y = p[2 * i + 1] * hp, a = Math.atan2(p[2 * i + 1] - p[2 * i - 1], p[2 * i] - p[2 * i - 2]);
+            if (alphaAt(x, y) < 1) break;
+            ctx.beginPath(); ctx.moveTo(x + ah * Math.cos(a), y + ah * Math.sin(a));
+            ctx.lineTo(x - ah * Math.cos(a - 0.5), y - ah * Math.sin(a - 0.5)); ctx.lineTo(x - ah * Math.cos(a + 0.5), y - ah * Math.sin(a + 0.5)); ctx.closePath(); ctx.fill();
+            break;
+          }
+          acc += dl;
+        }
+      }
+    }
+
+    // slab front face, translucent so the lines show through
+    if (slabVis) {
+      const hot = isHot('f');
+      ctx.fillStyle = T.diel; ctx.globalAlpha = 0.16; ctx.fillRect(xSlab, slabTop, L.slabW, yBot - slabTop); ctx.globalAlpha = 1;
+      ctx.strokeStyle = T.diel; ctx.lineWidth = (hot ? 2.4 : 1.4) * Math.min(ps, 1.3);
+      ctx.strokeRect(xSlab, slabTop, L.slabW, yBot - slabTop);
+      ctx.beginPath(); ctx.moveTo(xSlab, slabTop); ctx.lineTo(xSlab + depth[0], slabTop + depth[1]); ctx.lineTo(xSlab + L.slabW + depth[0], slabTop + depth[1]); ctx.stroke();
+      ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.moveTo(xSlab + depth[0], slabTop + depth[1]); ctx.lineTo(xSlab + depth[0], yBot + depth[1]); ctx.stroke(); ctx.globalAlpha = 1;
+      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.1; ctx.fillRect(xSlab, slabTop, L.slabW, yBot - slabTop); ctx.globalAlpha = 1; }
+    }
+    // plate front faces
+    for (const [y0, y1] of [[yTop - pt, yTop], [yBot, yBot + pt]]) {
+      ctx.fillStyle = T.plate; ctx.fillRect(xL, y0, xR - xL, y1 - y0);
+      ctx.strokeStyle = T.wire; ctx.lineWidth = 1; ctx.strokeRect(xL + 0.5, y0 + 0.5, xR - xL - 1, y1 - y0 - 1);
+    }
+    if (isHot('d')) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2.4 * ps; ctx.strokeRect(xL - 1, yTop - pt - 1, xR - xL + 2, pt + 2); }
+    if (isHot('A')) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2.4 * ps; ctx.beginPath(); ctx.moveTo(xR, yTop - pt - 2); ctx.lineTo(xR, yTop + 1); ctx.moveTo(xR, yBot - 1); ctx.lineTo(xR, yBot + pt + 2); ctx.stroke(); }
+
+    // free charges on the inner faces, bound charges on the slab faces (ideal model: uniform in each region)
+    const w = Math.sqrt(g.A), r = Math.max(2.6, Math.min(4.6, pt * 0.45)) * Math.min(ps, 1.15);
+    const row = (x0, x1, y, n, sign, bound) => {
+      if (n <= 0 || x1 - x0 < 1) return;
+      const step = (x1 - x0) / n;
+      for (let i = 0; i < n; i++) chargeSym(ctx, x0 + step * (i + 0.5), y, r, sign, bound);
+    };
+    const nOf = (sig, x0, x1) => Math.round(sig * w * ((x1 - x0) / k / 100) / S.qSym);
+    if (S.layers.charges) {
+      const nE = nOf(st.sigE, xL, xIn), nI = g.f > 0 ? nOf(st.sigI, xIn, xR) : 0;
+      row(xL, xIn, yTop - pt / 2, nE, +1); row(xIn, xR, yTop - pt / 2, nI, +1);
+      row(xL, xIn, yBot + pt / 2, nE, -1); row(xIn, xR, yBot + pt / 2, nI, -1);
+    }
+    if (S.layers.bound && g.f > 0 && g.kap > 1) {
+      const nB = nOf(st.sigB, xIn, xR), rb = r * 0.92, inset = rb + 2;
+      row(xIn, xR, slabTop + inset, nB, -1, true); row(xIn, xR, yBot - inset, nB, +1, true);
+    }
+
+    // battery, wires and switch (the switch sits in the bottom wire)
+    const conn = S.mode === 'battery', ps2 = Math.min(ps, 1.2);
+    const bh = 16 * Math.min(ps, 1.25);
+    const xB = Math.max(L.bz * 0.5, 50 * ps2), yC = yBot - Math.max(bh + 14, 1.5 * k);
+    const yTw = yTop - pt / 2, yBw = yBot + pt / 2;
+    const xV = xL - 22 * ps2, yH = Math.min(yTw, yC - bh - 16);
+    const xSwA = xB + (xL - xB) * 0.3, xSwB = xSwA + 20 * Math.min(ps, 1.25);
+    ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * Math.min(ps, 1.3); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath(); ctx.moveTo(xB, yC - bh); ctx.lineTo(xB, yH); ctx.lineTo(xV, yH); ctx.lineTo(xV, yTw); ctx.lineTo(xL, yTw); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(xB, yC + bh); ctx.lineTo(xB, yBw); ctx.lineTo(xSwA, yBw); ctx.moveTo(xSwB, yBw); ctx.lineTo(xL, yBw); ctx.stroke();
+    {
+      const hot = isHot('sw'), ang = conn ? 0 : -0.6, y = yBw;
+      ctx.fillStyle = T.wire; ctx.beginPath(); ctx.arc(xSwA, y, 2.8 * Math.min(ps, 1.3), 0, 2 * Math.PI); ctx.arc(xSwB, y, 2.8 * Math.min(ps, 1.3), 0, 2 * Math.PI); ctx.fill();
+      const len = (xSwB - xSwA) * 1.05;
+      if (hot) { ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.3; ctx.lineWidth = 9 * ps; ctx.beginPath(); ctx.moveTo(xSwA, y); ctx.lineTo(xSwA + len * Math.cos(ang), y + len * Math.sin(ang)); ctx.stroke(); ctx.globalAlpha = 1; }
+      ctx.strokeStyle = hot ? T.accent : T.ink; ctx.lineWidth = 2.4 * Math.min(ps, 1.3);
+      ctx.beginPath(); ctx.moveTo(xSwA, y); ctx.lineTo(xSwA + len * Math.cos(ang), y + len * Math.sin(ang)); ctx.stroke();
+      ctx.fillStyle = T.muted; ctx.font = `${fs * 0.82}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillText(conn ? 'switch closed' : 'switch open', (xSwA + xSwB) / 2, y + 7 * ps2);
+      handles.push({ id: 'sw', click: true, cursor: 'pointer', box: [xSwA - 6, y - 18 * ps2, xSwB - xSwA + 12, 28 * ps2] });
+    }
+    // battery cells
+    {
+      const hot = isHot('V');
+      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.14; ctx.fillRect(xB - 16 * ps2, yC - bh - 4, 32 * ps2, 2 * bh + 8); ctx.globalAlpha = 1; }
+      ctx.strokeStyle = T.canvas; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(xB, yC - bh + 3); ctx.lineTo(xB, yC + bh - 3); ctx.stroke();
+      for (const [dy, hw] of [[-0.75, 1], [-0.3, 0.5], [0.3, 1], [0.75, 0.5]]) {
+        ctx.strokeStyle = conn ? T.ink : T.wire; ctx.lineWidth = (hw > 0.7 ? 2 : 4) * Math.min(ps, 1.3); ctx.lineCap = 'butt';
+        ctx.beginPath(); ctx.moveTo(xB - hw * 12 * ps2, yC + dy * bh); ctx.lineTo(xB + hw * 12 * ps2, yC + dy * bh); ctx.stroke();
+      }
+      ctx.lineCap = 'round';
+      ctx.fillStyle = T.muted; ctx.font = `700 ${fs}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText('+', xB + 14 * ps2, yC - bh * 0.75); ctx.fillText('−', xB + 14 * ps2, yC + bh * 0.75);
+      ctx.fillStyle = T.ink; ctx.textAlign = 'right';
+      ctx.font = `600 ${fs * 0.92}px ${T.mono}`;
+      ctx.fillText(`${S.Vb} V`, xB - 15 * ps2, yC);
+      handles.push({ id: 'V', cursor: 'ns-resize', box: [xB - 16 * ps2, yC - bh - 6, 32 * ps2, 2 * bh + 12] });
+    }
+    // charge flowing in the wires (connected, while Q changes): conventional current toward the top plate while Q grows
+    if (conn && Math.abs(flowShow) > 0.02) {
+      const dir = flowShow > 0 ? 1 : -1, a = Math.min(1, Math.abs(flowShow));
+      const x1 = yH < yTw - 1 ? xV : xL, xm = (xB + x1) / 2, al = Math.min(12 * ps2, (x1 - xB) / 3);
+      ctx.globalAlpha = 0.35 + 0.65 * a;
+      arrow(ctx, xm - dir * al, yH - 8 * ps2, xm + dir * al, yH - 8 * ps2, T.pos, 2 * Math.min(ps, 1.3), 7 * Math.min(ps, 1.3));
+      ctx.globalAlpha = 1;
+    }
+
+    // dimension labels
+    const lab = (lines, x, y, o) => haloLabel(ctx, lines, x, y, fs, { ps: Math.min(ps, 1.2), clamp: [2, L.top, W - 2, H - 2], ...o });
+    // d: on the left, between the plates' left ends and the wire
+    {
+      const xd = xL - 9 * Math.min(ps, 1.2);
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(xd, yTop + 2); ctx.lineTo(xd, yBot - 2); ctx.stroke();
+      if (yBot - yTop > 14) { arrow(ctx, xd, (yTop + yBot) / 2, xd, yTop + 1, T.muted, 1, 5); arrow(ctx, xd, (yTop + yBot) / 2, xd, yBot - 1, T.muted, 1, 5); }
+    }
+    // s and A under the bottom plate
+    {
+      const ys = yBot + pt + 12 * Math.min(ps, 1.2);
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(xL, ys - 4); ctx.lineTo(xL, ys + 4); ctx.moveTo(xR, ys - 4); ctx.lineTo(xR, ys + 4); ctx.moveTo(xL, ys); ctx.lineTo(xR, ys); ctx.stroke();
+      ctx.fillStyle = T.muted; ctx.font = `${fs * 0.92}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      const txt = `s = ${L.s.toFixed(1)} cm, A = ${(g.A * 1e4).toFixed(0)} cm²`;
+      ctx.fillStyle = T.canvas; const tw = ctx.measureText(txt).width;
+      ctx.globalAlpha = 0.85; ctx.fillRect((xL + xR) / 2 - tw / 2 - 3, ys + 3, tw + 6, fs * 1.2); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.muted; ctx.fillText(txt, (xL + xR) / 2, ys + 4);
+    }
+
+    // grips: separation on the top plate, area at its right end, the slab on its visible part
+    const gd = [xL + (xR - xL) * 0.62, yTop - pt - 15 * Math.min(ps, 1.2)];
+    handles.push({ id: 'd', cursor: 'ns-resize', box: grip(ctx, gd[0], gd[1], isHot('d'), true) });
+    handles.push({ id: 'd', cursor: 'ns-resize', box: [xL, yTop - pt - 3, xR - xL, pt + 5], quiet: true });
+    const gA = [xR + 14 * Math.min(ps, 1.2), yTop - pt / 2];
+    handles.push({ id: 'A', cursor: 'ew-resize', box: grip(ctx, gA[0], gA[1], isHot('A'), false) });
+    if (slabVis) {
+      const ps2 = Math.min(ps, 1.2), vx0 = Math.max(xSlab, 0), vx1 = Math.min(xSlab + L.slabW, W), out0 = Math.max(xR, vx0);
+      // the grip on the part sticking out when there is room, else on the part between the plates
+      const gxx = vx1 - out0 >= 90 * ps2 ? out0 + Math.min(70 * ps2, (vx1 - out0) / 2) : (Math.max(xSlab, xL) + Math.min(xR, vx1)) / 2 - 10 * ps2;
+      const gy = (slabTop + yBot) / 2;
+      slabGrip = [gxx, gy];
+      handles.push({ id: 'f', cursor: 'ew-resize', box: grip(ctx, gxx, gy, isHot('f'), false) });
+      handles.push({ id: 'f', cursor: 'ew-resize', box: [xSlab, slabTop, L.slabW, yBot - slabTop], quiet: true });
+    }
+
+    // forces and labels, last, on halo boxes
+    {
+      lab([`d = ${L.d.toFixed(2)} cm`, `hand holds the plate: ${fmtSI(st.Fplate, 'N')}`], gd[0], gd[1] - 14 * Math.min(ps, 1.2), { valign: 'bottom', align: 'center' });
+    }
+    if (slabOn) {
+      const lines2 = [`κ = ${fmtK(g.kap)}, x = ${(g.f * L.s).toFixed(1)} cm`];
+      if (g.f > 0 && st.gap > 1e-9) lines2.push(`t = ${L.t.toFixed(2)} cm, air gap ${(L.d - L.t).toFixed(2)} cm`);
+      const Fx = st.Fslab;
+      lines2.push(g.f >= 1 ? 'slab centered: no net pull' : g.kap > 1 ? `pulled in with F = ${fmtSI(Fx, 'N')}` : 'κ = 1: no force');
+      const ly = yBot + pt + 30 * Math.min(ps, 1.2);
+      lab(lines2, Math.min(W - 8, Math.max(xR + 20, (Math.max(xSlab, xR) + Math.min(W, xSlab + L.slabW)) / 2)), ly, { align: 'center' });
+      // the pull on the slab, toward the plates: an arrow just left of the slab grip
+      if (g.f < 1 && g.kap > 1 && slabGrip) {
+        const [gx, gy] = slabGrip, x0 = gx - 15 * Math.min(ps, 1.2), x1 = x0 - 30 * Math.min(ps, 1.2);
+        if (x1 > xSlab + 3) arrow(ctx, x0, gy, x1, gy, T.accent, 2.4 * Math.min(ps, 1.3), 8 * Math.min(ps, 1.3));
+      }
+    }
+    // capacitance readout, top left of the drawing under the controls
+    {
+      const lines3 = [`C = κε_0A/d = ${fmtC(st.C)}`, `Q = ${fmtSI(st.Q, 'C')}   V = ${fmtSI(st.V, 'V')}`, `E = ${fmtE(st.Ee)}${g.f > 0 ? ' (empty part)' : ''}`];
+      if (S.layers.energy) {
+        lines3.push('u × volume, by region:', `  empty part  ${fmtSI(st.uE * st.vE, 'J', 4)}`);
+        if (g.f > 0 && st.gap > 1e-9) lines3.push(`  air gap     ${fmtSI(st.uA * st.vA, 'J', 4)}`);
+        if (g.f > 0) lines3.push(`  in slab     ${fmtSI(st.uD * st.vD, 'J', 4)}`);
+        lines3.push(`  sum         ${fmtSI(st.Ufield, 'J', 4)}`, `CV²/2         ${fmtSI(st.U, 'J', 4)}`);
+      }
+      lab(lines3, W - 10, L.top + 2, { align: 'right', fam: T.mono, weight: 600 });
+    }
+  }
+
+  // ---------- combinations: layout and drawing ----------
+  function capGap(C) { return 0.22 + 0.5 * Math.log(CVALS[CVALS.length - 1] / C) / Math.log(1000); }
+  function comboGeom() {
+    const cb = S.cb, n = cb.top === 'mixed' ? 3 : cb.n, caps = [];
+    if (cb.top === 'series') {
+      const xs = n === 2 ? [3.6, 6.6] : [2.9, 5.3, 7.7];
+      xs.forEach((x, i) => caps.push({ i, x, y: 1, orient: 'v' }));
+    } else if (cb.top === 'parallel') {
+      const xs = n === 2 ? [5, 8.4] : [3.6, 6.1, 8.6];
+      xs.forEach((x, i) => caps.push({ i, x, y: 3, orient: 'h' }));
+    } else {
+      caps.push({ i: 0, x: 3.4, y: 1, orient: 'v' }, { i: 1, x: 6.1, y: 3, orient: 'h' }, { i: 2, x: 8.6, y: 3, orient: 'h' });
+    }
+    return { n, caps };
+  }
+  let cbg = null;
+  function drawCombo() {
+    const [W, H] = dims.d; if (!W || !H) return;
+    const ctx = ctxs.d, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const top = ctlH + 8, avail = H - top - 8;
+    const xl = -1.0, xr = 10.6, yt = 0.2, yb = 5.8;
+    const s = Math.max(10, Math.min((W - 10) / (xr - xl), avail / (yb - yt)));
+    const ox = (W - s * (xr - xl)) / 2 - xl * s, oy = top + (avail - s * (yb - yt)) / 2 - yt * s;
+    const X = (u) => ox + u * s, Y = (v) => oy + v * s;
+    const res = combo(S.cb.top, S.cb.n, S.cb.C, S.cb.V), G = comboGeom();
+    cbg = { X, Y, s, G };
+    const fs = Math.max(11, Math.min(14, s * 0.24)) * Math.min(ps, 1.2);
+    const isHot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+    handles = [];
+    ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * Math.min(ps, 1.3); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    const wire = (pts) => { ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y)))); ctx.stroke(); };
+    const xEnd = G.caps.reduce((m, c) => Math.max(m, c.x), 0) + (S.cb.top === 'series' ? 1.3 : 0);
+    // battery on the left from y = 1 (top rail, + side) to y = 5
+    wire([[0.6, 2.55], [0.6, 1], [xEnd, 1]]);
+    wire([[0.6, 3.45], [0.6, 5], [xEnd, 5]]);
+    if (S.cb.top === 'series') wire([[xEnd, 1], [xEnd, 5]]);
+    for (const c of G.caps) if (c.orient === 'h') { wire([[c.x, 1], [c.x, 5]]); ctx.fillStyle = T.wire; for (const yy of [1, 5]) if (c.x < xEnd - 0.01) { ctx.beginPath(); ctx.arc(X(c.x), Y(yy), 3.2 * Math.min(ps, 1.3), 0, 2 * Math.PI); ctx.fill(); } }
+    // battery
+    {
+      const hot = isHot('cV');
+      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.14; ctx.fillRect(X(0.1), Y(2.4), s, 1.2 * s); ctx.globalAlpha = 1; }
+      ctx.strokeStyle = T.canvas; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(X(0.6), Y(2.6)); ctx.lineTo(X(0.6), Y(3.4)); ctx.stroke();
+      for (const [dy, hw] of [[-0.4, 0.4], [-0.16, 0.2], [0.16, 0.4], [0.4, 0.2]]) {
+        ctx.strokeStyle = T.ink; ctx.lineWidth = (hw > 0.3 ? 2 : 4) * Math.min(ps, 1.3); ctx.lineCap = 'butt';
+        ctx.beginPath(); ctx.moveTo(X(0.6 - hw), Y(3 + dy)); ctx.lineTo(X(0.6 + hw), Y(3 + dy)); ctx.stroke();
+      }
+      ctx.lineCap = 'round';
+      ctx.fillStyle = T.muted; ctx.font = `700 ${fs}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText('+', X(1.1), Y(2.55));
+      ctx.fillStyle = T.ink; ctx.font = `600 ${fs}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      ctx.fillText(`${S.cb.V} V`, X(0.1), Y(3));
+      handles.push({ id: 'cV', cursor: 'ns-resize', box: [X(0.1), Y(2.4), s, 1.2 * s] });
+    }
+    // charge symbol scale for this circuit
+    const qMax = Math.max(...res.caps.map((c) => c.Q));
+    const needQ = qMax / 6;
+    if (!S.qcSym || S.qcSym < needQ * 0.999 || S.qcSym > 6 * needQ) S.qcSym = ladderUp(needQ);
+    // capacitors
+    for (const c of G.caps) {
+      const r = res.caps[c.i], gap = capGap(r.C), half = 0.5, hot = isHot('c' + c.i);
+      const cx = X(c.x), cy = Y(c.y), gp = gap * s / 2, hl = half * s;
+      // clear the wire between the plates
+      ctx.strokeStyle = T.canvas; ctx.lineWidth = 6;
+      ctx.beginPath(); if (c.orient === 'v') { ctx.moveTo(cx - gp, cy); ctx.lineTo(cx + gp, cy); } else { ctx.moveTo(cx, cy - gp); ctx.lineTo(cx, cy + gp); } ctx.stroke();
+      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.12; if (c.orient === 'v') ctx.fillRect(cx - gp - 6, cy - hl - 4, 2 * gp + 12, 2 * hl + 8); else ctx.fillRect(cx - hl - 4, cy - gp - 6, 2 * hl + 8, 2 * gp + 12); ctx.globalAlpha = 1; }
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 3.2 * Math.min(ps, 1.3); ctx.lineCap = 'butt';
+      ctx.beginPath();
+      if (c.orient === 'v') { ctx.moveTo(cx - gp, cy - hl); ctx.lineTo(cx - gp, cy + hl); ctx.moveTo(cx + gp, cy - hl); ctx.lineTo(cx + gp, cy + hl); }
+      else { ctx.moveTo(cx - hl, cy - gp); ctx.lineTo(cx + hl, cy - gp); ctx.moveTo(cx - hl, cy + gp); ctx.lineTo(cx + hl, cy + gp); }
+      ctx.stroke(); ctx.lineCap = 'round';
+      // charges: + on the side toward the battery's + terminal
+      const nq = Math.min(14, Math.round(r.Q / S.qcSym)), rr = Math.max(2.5, Math.min(4.2, s * 0.06)) * Math.min(ps, 1.15);
+      for (let k2 = 0; k2 < nq; k2++) {
+        const u = -hl + 2 * hl * (k2 + 0.5) / nq;
+        if (c.orient === 'v') { chargeSym(ctx, cx - gp - rr - 2, cy + u, rr, +1); chargeSym(ctx, cx + gp + rr + 2, cy + u, rr, -1); }
+        else { chargeSym(ctx, cx + u, cy - gp - rr - 2, rr, +1); chargeSym(ctx, cx + u, cy + gp + rr + 2, rr, -1); }
+      }
+      // grip on the second plate, along the plate normal
+      const gx = c.orient === 'v' ? cx + gp + 2 * rr + 12 * Math.min(ps, 1.2) : cx + hl + 14 * Math.min(ps, 1.2);
+      const gy = c.orient === 'v' ? cy + hl + 14 * Math.min(ps, 1.2) : cy + gp + 2 * rr + 10 * Math.min(ps, 1.2);
+      handles.push({ id: 'c' + c.i, cursor: c.orient === 'v' ? 'ew-resize' : 'ns-resize', axis: c.orient === 'v' ? 'x' : 'y', box: grip(ctx, gx, gy, hot, c.orient !== 'v') });
+      handles.push({ id: 'c' + c.i, cursor: c.orient === 'v' ? 'ew-resize' : 'ns-resize', axis: c.orient === 'v' ? 'x' : 'y', quiet: true,
+        box: c.orient === 'v' ? [cx - gp - 8, cy - hl - 4, 2 * gp + 16, 2 * hl + 8] : [cx - hl - 4, cy - gp - 8, 2 * hl + 8, 2 * gp + 16] });
+      // label
+      const lines = [`C_${c.i + 1} = ${fmtC(r.C)}`, `Q = ${fmtSI(r.Q, 'C')}`, `V = ${fmtSI(r.V, 'V')}`];
+      // series labels sit under their capacitors; when neighbors would overlap, every second one drops a row
+      let stagger = 0;
+      if (c.orient === 'v') {
+        const others = G.caps.filter((o) => o.orient === 'v' && o !== c), sp = others.length ? Math.min(...others.map((o) => Math.abs(o.x - c.x))) * s : Infinity;
+        const lw = Math.max(...lines.map((t2) => richWidth(ctx, t2, fs * 0.95, 600, T.mono))) + 10;
+        if (lw > sp) stagger = (c.i % 2) * (3 * fs * 0.95 * 1.25 + 8);
+      }
+      const lx = c.orient === 'v' ? cx : cx + hl + 26 * Math.min(ps, 1.2), ly = c.orient === 'v' ? cy + hl + 28 * Math.min(ps, 1.2) + stagger : cy - 1.4 * fs * 1.25;
+      haloLabel(ctx, lines, lx, ly, fs * 0.95, { ps: Math.min(ps, 1.2), align: c.orient === 'v' ? 'center' : 'left', fam: T.mono, clamp: [2, top, W - 2, H - 2] });
+    }
+    // equivalent capacitance
+    haloLabel(ctx, [`C_{eq} = ${fmtC(res.Ceq)}`, `Q from the battery = ${fmtSI(res.Q, 'C')}`], W - 10, top + 2, fs, { ps: Math.min(ps, 1.2), align: 'right', fam: T.mono });
+  }
+
+  // ---------- energy bars ----------
+  let eMax = 0;
+  function drawEnergy() {
+    const [W, H] = dims.e; if (!W || !H || S.view !== 'single') return;
+    const ctx = ctxs.e, ps = Math.min(projScale(), 1.3);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const st = cur(), Lg = S.L, dU = st.U - S.start.U;
+    const rows = [
+      { lab: 'Your hand, W_{hand}', v: Lg.Wh, col: T.accent },
+      { lab: 'Battery, W_{battery}', v: Lg.Wb, col: T.ink },
+      { lab: 'Stored energy, ΔU', v: dU, col: T.capq }
+    ];
+    if (Lg.H > 1e-18) rows.splice(2, 0, { lab: 'Heat in the wires', v: -Lg.H, col: T.resq, note: 'leaves as heat' });
+    const big = Math.max(...rows.map((r) => Math.abs(r.v)), 1e-21);
+    if (big > eMax || big < eMax * 0.05) eMax = big * 1.15;
+    const L = 14 * ps, R = W - 14 * ps, mid = (L + R) / 2;
+    ctx.fillStyle = T.muted; ctx.font = `700 ${10.5 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('ENERGY SINCE THE START', L, 18 * ps);
+    const top = 28 * ps, bottom = H - 44 * ps;
+    const rowH = Math.min(46 * ps, (bottom - top) / rows.length), bh = Math.min(13 * ps, rowH * 0.32);
+    let y = top;
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(mid + 0.5, top); ctx.lineTo(mid + 0.5, top + rowH * rows.length); ctx.stroke();
+    for (const r of rows) {
+      ctx.fillStyle = T.muted; ctx.textBaseline = 'alphabetic';
+      richText(ctx, r.lab, L, y + rowH - bh - 6 * ps, 11 * ps, 400, 'left');
+      ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'right';
+      ctx.fillText(fmtSI(r.v, 'J'), R, y + rowH - bh - 6 * ps);
+      const by = y + rowH - bh - 1 * ps, wHalf = (R - L) / 2;
+      ctx.fillStyle = T.grid; ctx.fillRect(L, by, R - L, bh);
+      const w = Math.min(1, Math.abs(r.v) / eMax) * wHalf;
+      ctx.fillStyle = r.col; ctx.globalAlpha = 0.85;
+      if (r.v >= 0) ctx.fillRect(mid, by, w, bh); else ctx.fillRect(mid - w, by, w, bh);
+      ctx.globalAlpha = 1;
+      y += rowH;
+    }
+    ctx.font = `${10 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left';
+    ctx.fillText('← energy out', L, y + 13 * ps); ctx.textAlign = 'right'; ctx.fillText('energy in →', R, y + 13 * ps);
+    const resid = dU - (Lg.Wh + Lg.Wb - Lg.H);
+    ctx.textAlign = 'left'; ctx.font = `${10 * ps}px ${T.mono}`;
+    const yr = y + 28 * ps;
+    ctx.font = `${9.5 * ps}px ${T.mono}`;
+    ctx.fillText('check: W_hand + W_batt − heat − ΔU', L, yr);
+    ctx.fillText(`     = ${fmtSci(-resid)} J`, L, yr + 13 * ps);
+  }
+
+  // ---------- C and U against d or x ----------
+  function drawGraph() {
+    const [W, H] = dims.g; if (!W || !H || S.view !== 'single') return;
+    const ctx = ctxs.g, ps = Math.min(projScale(), 1.3);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const g = S.g, st = cur(), byD = S.graph === 'd';
+    const lo = byD ? Math.max(D_MIN, g.f > 0 ? g.t * 100 : D_MIN) : 0, hi = byD ? D_MAX : 1;
+    const at = (v) => (byD ? { ...g, d: v / 100 } : { ...g, f: v, t: v > 0 ? g.t : g.d });
+    const Ufor = (gg) => { const C = capOf(gg).C; return S.mode === 'battery' ? 0.5 * C * S.Vb * S.Vb : S.Q * S.Q / (2 * C); };
+    const N = 120, xs = [], Cs = [], Us = [];
+    for (let i = 0; i <= N; i++) { const v = lo + (hi - lo) * i / N; xs.push(v); const gg = at(v); Cs.push(capOf(gg).C); Us.push(Ufor(gg)); }
+    const L = 50 * ps, R = W - 16 * ps, top = 40 * ps, bot = H - 30 * ps, midGap = 22 * ps;
+    const h1 = (bot - top - midGap) / 2;
+    const boxes = [{ y0: top, y1: top + h1, vals: Cs, col: T.ink, lab: 'C', unit: 'F', now: st.C }, { y0: top + h1 + midGap, y1: bot, vals: Us, col: T.capq, lab: S.mode === 'battery' ? 'U = ½CV_b², V fixed' : 'U = Q²/2C, Q fixed', unit: 'J', now: st.U }];
+    const X = (v) => L + (v - lo) / (hi - lo) * (R - L);
+    const xNow = byD ? g.d * 100 : g.f;
+    ctx.fillStyle = T.muted; ctx.font = `700 ${10.5 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(byD ? 'AGAINST d' : 'AGAINST INSERTION x/s', L - 36 * ps, 18 * ps);
+    for (const b of boxes) {
+      let mx = Math.max(...b.vals) * 1.08, mn = 0;
+      if (!(mx > 0)) mx = 1;
+      const Yb = (v) => b.y1 - (v - mn) / (mx - mn) * (b.y1 - b.y0);
+      // y ticks in a scaled unit
+      const f = PFX.find(([m]) => mx >= m * 0.9995) || PFX[PFX.length - 1];
+      const stp = nice(mx / f[0] / 3) * f[0];
+      ctx.font = `${9.5 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      for (let v = 0; v <= mx + 1e-30; v += stp) {
+        const py = Math.round(Yb(v)) + 0.5;
+        ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, py); ctx.lineTo(R, py); ctx.stroke();
+        ctx.fillStyle = T.muted; ctx.fillText(sigStr(v / f[0], 2), L - 4, py);
+      }
+      ctx.fillStyle = b.col; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+      richText(ctx, `${b.lab} (${f[1]}${b.unit})`, L + 4, b.y0 + 12 * ps, 10.5 * ps, 600, 'left');
+      ctx.save(); ctx.beginPath(); ctx.rect(L, b.y0, R - L, b.y1 - b.y0); ctx.clip();
+      ctx.strokeStyle = b.col; ctx.lineWidth = 2 * ps; ctx.beginPath();
+      for (let i = 0; i <= N; i++) { const px = X(xs[i]), py = Yb(b.vals[i]); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+      ctx.stroke(); ctx.restore();
+      // present state
+      ctx.fillStyle = T.canvas; ctx.strokeStyle = b.col; ctx.lineWidth = 2 * ps;
+      ctx.beginPath(); ctx.arc(X(xNow), Yb(b.now), 4 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(L + 0.5, b.y0 + 0.5, R - L, b.y1 - b.y0);
+    }
+    // x ticks
+    ctx.fillStyle = T.muted; ctx.font = `${9.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const ticks = byD ? [0.5, 1, 2, 3, 4].filter((v) => v >= lo - 1e-9) : [0, 0.25, 0.5, 0.75, 1];
+    for (const v of ticks) ctx.fillText(byD ? `${v}` : `${Math.round(v * 100)}%`, X(v), bot + 5 * ps);
+    ctx.textAlign = 'right'; ctx.fillText(byD ? 'd (cm)' : '', R, bot + 16 * ps);
+    ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.6; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(X(xNow) + 0.5, top); ctx.lineTo(X(xNow) + 0.5, bot); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+  }
+
+  function drawAll() {
+    if (!T || !S.start) return;
+    { const c = $('dPane').querySelector('.stage-ctl'); ctlH = c.offsetTop + c.offsetHeight; }
+    if (S.view === 'single') { drawSingle(); drawEnergy(); drawGraph(); } else drawCombo();
+  }
+
+  // ---------- readouts ----------
+  function matChips() {
+    $('mats').innerHTML = MATS.map((m) => `<button type="button" data-mat="${m.id}" aria-pressed="${S.mat === m.id}">${m.name} ${fmtK(m.k)}</button>`).join('');
+  }
+  function syncSliders() {
+    const sync = (id, v) => { const el = $(id); if (document.activeElement !== el || drag) el.value = v; };
+    sync('sV', S.Vb); sync('sD', (S.g.d * 100).toFixed(2)); sync('sA', Math.round(S.g.A * 1e4)); sync('sK', Math.min(100, S.g.kap)); sync('sF', Math.round(S.g.f * 100));
+    $('oV').textContent = `${S.Vb} V`;
+    $('oD').textContent = fmtCm(S.g.d);
+    $('oA').textContent = `${(S.g.A * 1e4).toFixed(0)} cm², s = ${(Math.sqrt(S.g.A) * 100).toFixed(1)} cm`;
+    $('oK').textContent = fmtK(S.g.kap);
+    $('oF').textContent = `${Math.round(S.g.f * 100)}%`;
+  }
+  function staticText() {
+    const iso = S.mode === 'iso';
+    $('modeHint').innerHTML = iso
+      ? 'The switch is open: the charge on the plates cannot change, so V = Q/C follows every change of C. The battery slider sets what you reconnect to; if V differs, charge rushes in at once and ½C(ΔV)² becomes heat in the wires.'
+      : 'The switch is closed: the battery holds V at V<sub>b</sub>, so Q = CV follows every change of C. Charge moving at the battery voltage means the battery does work W<sub>battery</sub> = V<sub>b</sub>ΔQ (negative when charge is pushed back into it).';
+    const m = MATS.find((x) => x.id === S.mat);
+    void m;
+  }
+  function chgRow(name, a, b, fmt) {
+    const r = b / a;
+    let cls = 'same', txt = '<span class="ar">=</span>same';
+    if (!(Math.abs(r - 1) < 5e-4)) { cls = r > 1 ? 'up' : 'dn'; txt = `<span class="ar">${r > 1 ? '↑' : '↓'}</span>×${r >= 10 ? r.toFixed(1) : r.toFixed(2)}`; }
+    return `<tr><td>${name}</td><td>${fmt(a)}</td><td>${fmt(b)}</td><td class="${cls}">${txt}</td></tr>`;
+  }
+  function updateReadouts() {
+    if (!S.start) return;
+    if (S.view === 'combo') { comboReadouts(); return; }
+    const st = cur(), s0 = S.start, Lg = S.L, g = S.g;
+    $('modeTag').textContent = S.mode === 'battery' ? '· battery connected' : '· isolated';
+    $('chg').innerHTML = '<tr><th></th><th>start</th><th>now</th><th>change</th></tr>' +
+      chgRow('<span class="long">Charge </span>Q', s0.Q, st.Q, (v) => fmtSI(v, 'C')) +
+      chgRow('<span class="long">Voltage </span>V', s0.V, st.V, (v) => fmtSI(v, 'V')) +
+      chgRow(g.f > 0 ? 'E<span class="long">, empty part</span>' : '<span class="long">Field </span>E', s0.Ee, st.Ee, fmtE) +
+      chgRow('<span class="long">Capacitance </span>C', s0.C, st.C, fmtC) +
+      chgRow('<span class="long">Energy </span>U', s0.U, st.U, (v) => fmtSI(v, 'J'));
+    $('modeLine').textContent = S.mode === 'battery'
+      ? `Connected: V stays at ${S.Vb} V, so Q = CV follows C.`
+      : 'Isolated: Q cannot change, so V = Q/C follows 1/C.';
+    const dU = st.U - s0.U, f = (v) => fmtSI(v, 'J');
+    const par = (v) => (v < 0 ? `(${f(v)})` : f(v));
+    const heat = Lg.H > 1e-18;
+    $('book').innerHTML = `<span class="eq">W<sub>hand</sub> = ΔU − W<sub>battery</sub>${heat ? ' + heat' : ''}</span><br>${f(Lg.Wh)} = ${par(dU)} − ${par(Lg.Wb)}${heat ? ` + ${f(Lg.H)}` : ''}<span class="book-note"><br><span class="res">W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>`;
+    // slab box
+    const sl = [];
+    sl.push(`<div><dt>Slab thickness t</dt><dd>${fmtCm(g.t)}</dd></div>`);
+    sl.push(`<div><dt>Inserted x</dt><dd>${(g.f * Math.sqrt(g.A) * 100).toFixed(1)} cm</dd></div>`);
+    sl.push(`<div class="wide"><dt>Force pulling the slab in, ½V² dC/dx</dt><dd>${g.f >= 1 ? '0 N <span class="ok">centered</span>' : g.kap > 1 ? fmtSI(st.Fslab, 'N') : '0 N <span class="ok">κ = 1</span>'}</dd></div>`);
+    sl.push(`<div class="wide"><dt>dC/dx</dt><dd>${g.f >= 1 ? '—' : fmtSI(EPS0 * Math.sqrt(g.A) * (1 / st.dIn - 1 / g.d), 'F/m')}</dd></div>`);
+    $('slabBox').innerHTML = sl.join('');
+    // measurements
+    const ms = [];
+    ms.push(`<div><dt>Capacitance C</dt><dd>${fmtC(st.C)}</dd></div>`);
+    ms.push(`<div><dt>Charge Q</dt><dd>${fmtSI(st.Q, 'C')}</dd></div>`);
+    ms.push(`<div><dt>Voltage V</dt><dd>${fmtSI(st.V, 'V')}</dd></div>`);
+    ms.push(`<div><dt>Stored U = ½CV²</dt><dd>${fmtSI(st.U, 'J')}</dd></div>`);
+    ms.push(`<div><dt>E${g.f > 0 ? ', empty part' : ''} = V/d</dt><dd>${fmtE(st.Ee)}</dd></div>`);
+    ms.push(`<div><dt>σ${g.f > 0 ? ', empty part' : ''} = ε₀E</dt><dd>${fmtSI(st.sigE, 'C/m²')}</dd></div>`);
+    if (g.f > 0) {
+      if (st.gap > 1e-9) ms.push(`<div><dt>E in the air gap</dt><dd>${fmtE(st.Ea)}</dd></div>`);
+      ms.push(`<div><dt>E in the slab = E/κ</dt><dd>${fmtE(st.Ed)}</dd></div>`);
+      ms.push(`<div><dt>Free σ over the slab</dt><dd>${fmtSI(st.sigI, 'C/m²')}</dd></div>`);
+      ms.push(`<div><dt>Bound σ<sub>b</sub> = σ(1 − 1/κ)</dt><dd>${fmtSI(st.sigB, 'C/m²')}</dd></div>`);
+    }
+    ms.push(`<div class="wide"><dt>Attraction between the plates, ½V² |dC/dd|</dt><dd>${fmtSI(st.Fplate, 'N')}${g.f === 0 ? ' <span class="ok">= Q²/(2ε₀A)</span>' : ''}</dd></div>`);
+    $('meas').innerHTML = ms.join('');
+    // energy in the field
+    const fe = [];
+    fe.push(`<div><dt>u, empty part</dt><dd>${fmtSI(st.uE, 'J/m³')}</dd></div><div><dt>× volume</dt><dd>${fmtSI(st.uE * st.vE, 'J')}</dd></div>`);
+    if (g.f > 0) {
+      if (st.gap > 1e-9) fe.push(`<div><dt>u, air gap</dt><dd>${fmtSI(st.uA, 'J/m³')}</dd></div><div><dt>× volume</dt><dd>${fmtSI(st.uA * st.vA, 'J')}</dd></div>`);
+      fe.push(`<div><dt>u, in the slab</dt><dd>${fmtSI(st.uD, 'J/m³')}</dd></div><div><dt>× volume</dt><dd>${fmtSI(st.uD * st.vD, 'J')}</dd></div>`);
+    }
+    fe.push(`<div><dt>Sum of u × volume</dt><dd>${fmtSI(st.Ufield, 'J', 5)}</dd></div><div><dt>½CV²</dt><dd>${fmtSI(st.U, 'J', 5)}</dd></div>`);
+    $('fieldE').innerHTML = fe.join('');
+    $('fieldEq').textContent = `difference ${fmtSci(st.Ufield - st.U)} J`;
+    // key
+    $('keyQ').textContent = `Free charge, each symbol ${fmtSI(S.qSym, 'C', 2)}`;
+    $('keyE').textContent = `Field line; lines are 1 cm apart where E = ${fmtE(S.eLine)}`;
+  }
+  function comboReadouts() {
+    const cb = S.cb, res = combo(cb.top, cb.n, cb.C, cb.V);
+    $('cbTag').textContent = cb.top === 'series' ? '· in series' : cb.top === 'parallel' ? '· in parallel' : '· C₁ in series with C₂ ∥ C₃';
+    let html = '<tr><th></th><th>C</th><th>Q</th><th>V</th><th>U = ½CV²</th></tr>';
+    res.caps.forEach((c, i) => { html += `<tr><td>C<sub>${i + 1}</sub></td><td>${fmtC(c.C)}</td><td>${fmtSI(c.Q, 'C')}</td><td>${fmtSI(c.V, 'V')}</td><td>${fmtSI(c.U, 'J')}</td></tr>`; });
+    html += `<tr><td><b>Equivalent</b></td><td>${fmtC(res.Ceq)}</td><td>${fmtSI(res.Q, 'C')}</td><td>${fmtSI(cb.V, 'V')}</td><td>${fmtSI(res.U, 'J')}</td></tr>`;
+    $('cbTable').innerHTML = html;
+    const sumU = res.caps.reduce((a, c) => a + c.U, 0);
+    let rule;
+    if (cb.top === 'series') rule = `1/C<sub>eq</sub> = ${res.caps.map((_, i) => `1/C<sub>${i + 1}</sub>`).join(' + ')}; same Q on each, ${res.caps.map((_, i) => `V<sub>${i + 1}</sub>`).join(' + ')} = ${fmtSI(res.caps.reduce((a, c) => a + c.V, 0), 'V', 4)}`;
+    else if (cb.top === 'parallel') rule = `C<sub>eq</sub> = ${res.caps.map((_, i) => `C<sub>${i + 1}</sub>`).join(' + ')}; same V on each, ${res.caps.map((_, i) => `Q<sub>${i + 1}</sub>`).join(' + ')} = ${fmtSI(res.caps.reduce((a, c) => a + c.Q, 0), 'C', 4)}`;
+    else rule = `C<sub>eq</sub> = C<sub>1</sub>(C<sub>2</sub> + C<sub>3</sub>)/(C<sub>1</sub> + C<sub>2</sub> + C<sub>3</sub>); Q<sub>1</sub> = Q<sub>2</sub> + Q<sub>3</sub>, V<sub>1</sub> + V<sub>2</sub> = ${fmtSI(res.caps[0].V + res.caps[1].V, 'V', 4)}`;
+    $('cbBook').innerHTML = `<span class="eq">${rule}</span><br>sum of the stored energies ${fmtSI(sumU, 'J', 5)} = ½C<sub>eq</sub>V² = ${fmtSI(res.U, 'J', 5)}`;
+    $('topHint').textContent = cb.top === 'series'
+      ? 'One path for the charge: whatever leaves one plate arrives at the next, so the charges are equal and the smallest capacitor takes the largest voltage.'
+      : cb.top === 'parallel' ? 'Each capacitor connects straight across the battery, so each has the full V and holds its own Q = CV.'
+        : 'C₂ and C₃ in parallel act like one capacitor C₂ + C₃, which is then in series with C₁.';
+    for (let i = 0; i < 3; i++) { const el = $('sC' + (i + 1)); if (document.activeElement !== el || drag) el.value = nearestIdx(CVALS, cb.C[i]); $('oC' + (i + 1)).textContent = fmtC(cb.C[i]); }
+    $('sCV').value = cb.V; $('oCV').textContent = `${cb.V} V`;
+    $('c3Ctl').hidden = cb.top !== 'mixed' && cb.n === 2;
+    $('numSeg').hidden = cb.top === 'mixed';
+    for (const b of document.querySelectorAll('#topSeg button')) b.setAttribute('aria-pressed', String(b.dataset.t === cb.top));
+    for (const b of document.querySelectorAll('#numSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.n === cb.n));
+    $('keyQ').textContent = `Charge, each symbol ${fmtSI(S.qcSym || 1e-10, 'C', 2)}`;
+  }
+
+  // ---------- views and presets ----------
+  function setView(v) {
+    S.view = v;
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    for (const el of document.querySelectorAll('[data-view]')) el.hidden = el.dataset.view !== v;
+    $('tPane').hidden = $('ePane').hidden = $('gPane').hidden = v !== 'single';
+    $('cbPane').hidden = v !== 'combo';
+    $('stage').classList.toggle('combo', v === 'combo');
+    $('mark').hidden = v !== 'single';
+    $('play').disabled = v !== 'single' || !S.sweep;
+    hoverId = null;
+    updateReadouts();
+    requestAnimationFrame(resize);
+  }
+  function applyPreset(name) {
+    S.preset = name;
+    const c = cfg();
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint').innerHTML = c.hint;
+    if (c.view === 'combo') {
+      S.cb = { top: c.top, n: c.n, C: c.C.slice(), V: c.V }; S.qcSym = 0;
+      S.sweep = null; setRunning(false);
+      setView('combo');
+      return;
+    }
+    const m = MATS.find((x) => x.id === c.mat);
+    S.mat = c.mat; S.mode = c.mode; S.Vb = c.Vb;
+    S.g = { A: c.A * 1e-4, d: c.d / 100, kap: m.k, f: c.f, t: (c.t || c.d) / 100 };
+    S.Q = capOf(S.g).C * c.Vb;              // charged by the battery to Vb (and then, if isolated, disconnected)
+    S.sweep = c.sweep ? { ...c.sweep } : null; S.sweepT = 0;
+    S.graph = c.graph || 'd';
+    S.layers.energy = !!c.energy; $('tEnergy').checked = S.layers.energy;
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
+    for (const b of document.querySelectorAll('#gSeg button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.graph));
+    flowAcc = 0; flowShow = 0; S.qSym = 0; S.lastSingle = name; S.eLine = 0;
+    markStart(true);
+    matChips(); syncSliders(); staticText();
+    setView('single');
+    if (lay) fitScales(lay, cur(), true);
+    setRunning(!reduce);
+  }
+
+  // ---------- controls ----------
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => setMode(b.dataset.m));
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { if (b.dataset.v === S.view) return; if (b.dataset.v === 'combo') applyPreset('combo'); else applyPreset(S.lastSingle || 'apartV'); });
+  for (const b of document.querySelectorAll('#gSeg button')) b.addEventListener('click', () => { S.graph = b.dataset.g; for (const c of document.querySelectorAll('#gSeg button')) c.setAttribute('aria-pressed', String(c.dataset.g === S.graph)); });
+  $('mats').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { stopSweep(); setMat(b.dataset.mat); } });
+  $('sV').addEventListener('input', (e) => setVb(+e.target.value));
+  $('sD').addEventListener('input', (e) => { setGeom({ d: +e.target.value / 100 }, true); S.graph = 'd'; graphSeg(); });
+  $('sA').addEventListener('input', (e) => setGeom({ A: +e.target.value * 1e-4 }, true));
+  $('sK').addEventListener('input', (e) => { stopSweep(); setKappa(+e.target.value); });
+  $('sF').addEventListener('input', (e) => { setGeom({ f: +e.target.value / 100 }, true); S.graph = 'x'; graphSeg(); });
+  function graphSeg() { for (const c of document.querySelectorAll('#gSeg button')) c.setAttribute('aria-pressed', String(c.dataset.g === S.graph)); }
+  $('tLines').addEventListener('change', (e) => { S.layers.lines = e.target.checked; linesKey = ''; });
+  $('tCharges').addEventListener('change', (e) => { S.layers.charges = e.target.checked; });
+  $('tBound').addEventListener('change', (e) => { S.layers.bound = e.target.checked; });
+  $('tEnergy').addEventListener('change', (e) => { S.layers.energy = e.target.checked; });
+  for (const b of document.querySelectorAll('#topSeg button')) b.addEventListener('click', () => { S.cb.top = b.dataset.t; S.qcSym = 0; comboReadouts(); });
+  for (const b of document.querySelectorAll('#numSeg button')) b.addEventListener('click', () => { S.cb.n = +b.dataset.n; S.qcSym = 0; comboReadouts(); });
+  for (let i = 0; i < 3; i++) $('sC' + (i + 1)).addEventListener('input', (e) => { S.cb.C[i] = CVALS[+e.target.value]; comboReadouts(); });
+  $('sCV').addEventListener('input', (e) => { S.cb.V = +e.target.value; comboReadouts(); });
+  const playBtn = $('play');
+  function setRunning(r) {
+    if (r && (!S.sweep || S.view !== 'single')) r = false;
+    running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now();
+  }
+  playBtn.addEventListener('click', () => setRunning(!running));
+  function doReset() { applyPreset(S.preset); }
+  $('reset').addEventListener('click', doReset);
+  $('mark').addEventListener('click', () => markStart(false));
+
+  // ---------- dragging on the drawing ----------
+  function hitAt(ev) {
+    const r = cans.d.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 5 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = Infinity;
+    for (const h of handles) {
+      const [bx, by, bw, bh] = h.box;
+      const dx = Math.max(bx - x, 0, x - bx - bw), dy = Math.max(by - y, 0, y - by - bh), d = Math.hypot(dx, dy) + (h.quiet ? 0.5 : 0);
+      if (d <= tol && d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  let dragQ = null, dragFrame = false;
+  function dragTo(ev) {
+    const r = cans.d.getBoundingClientRect();
+    dragQ = [ev.clientX - r.left, ev.clientY - r.top];
+    if (dragFrame) return; dragFrame = true;
+    requestAnimationFrame(() => {
+      dragFrame = false; if (!drag || !dragQ) return;
+      const [x, y] = dragQ, d = drag, dx = x - d.x0, dy = y - d.y0;
+      if (S.view === 'single') {
+        const k = d.k;
+        if (d.id === 'd') { setGeom({ d: Math.round((d.v0 - dy / k) / 0.05) * 0.05 / 100 }, true); S.graph = 'd'; graphSeg(); }
+        else if (d.id === 'A') { const s = d.v0 + dx / k; setGeom({ A: Math.round(Math.max(5, s) ** 2) * 1e-4 }, true); }
+        else if (d.id === 'f') { setGeom({ f: Math.round((d.v0 - dx / (d.k * d.s)) * 100) / 100 }, true); S.graph = 'x'; graphSeg(); }
+        else if (d.id === 'V') setVb(d.v0 - dy * 1.5);
+      } else {
+        if (d.id === 'cV') { S.cb.V = Math.max(V_MIN, Math.min(V_MAX, Math.round((d.v0 - dy * 1.5) / 10) * 10)); }
+        else {
+          const i = +d.id.slice(1), mv = d.axis === 'x' ? dx : dy;      // moving the second plate away opens the gap: smaller C
+          S.cb.C[i] = CVALS[Math.max(0, Math.min(CVALS.length - 1, Math.round(d.v0 - mv / 10)))];
+        }
+        comboReadouts();
+      }
+      dragQ = null;
+      updateReadouts();
+    });
+  }
+  cans.d.addEventListener('pointermove', (ev) => {
+    if (drag) { dragTo(ev); return; }
+    const h = hitAt(ev); hoverId = h ? h.id : null; cans.d.style.cursor = h ? h.cursor : 'default';
+  });
+  cans.d.addEventListener('pointerdown', (ev) => {
+    const h = hitAt(ev);
+    cans.d.focus({ preventScroll: true });
+    if (!h) return;
+    if (h.click) { setMode(S.mode === 'battery' ? 'iso' : 'battery'); ev.preventDefault(); return; }
+    const r = cans.d.getBoundingClientRect();
+    let v0 = 0;
+    if (S.view === 'single') {
+      v0 = h.id === 'd' ? S.g.d * 100 : h.id === 'A' ? Math.sqrt(S.g.A) * 100 : h.id === 'f' ? S.g.f : S.Vb;
+      if (h.id !== 'V') stopSweep();
+    } else v0 = h.id === 'cV' ? S.cb.V : nearestIdx(CVALS, S.cb.C[+h.id.slice(1)]);
+    drag = { id: h.id, axis: h.axis, x0: ev.clientX - r.left, y0: ev.clientY - r.top, v0, k: lay ? lay.k : 30, s: Math.sqrt(S.g.A) * 100 };
+    try { cans.d.setPointerCapture(ev.pointerId); } catch (_) {}
+    cans.d.style.cursor = h.cursor; ev.preventDefault();
+  });
+  const endDrag = () => { if (!drag) return; drag = null; hoverId = null; syncSliders(); updateReadouts(); };
+  cans.d.addEventListener('pointerup', endDrag);
+  cans.d.addEventListener('pointercancel', endDrag);
+  cans.d.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
+  cans.d.addEventListener('keydown', (e) => {
+    const k = e.key, big = e.shiftKey ? 5 : 1;
+    if (S.view === 'single') {
+      if (k === 'ArrowUp' || k === 'ArrowDown') { setGeom({ d: (Math.round(S.g.d * 100 / 0.05) + (k === 'ArrowUp' ? big : -big)) * 0.05 / 100 }, true); S.graph = 'd'; graphSeg(); }
+      else if (k === 'ArrowLeft' || k === 'ArrowRight') { setGeom({ f: (Math.round(S.g.f * 100) + (k === 'ArrowLeft' ? 5 : -5) * big) / 100 }, true); S.graph = 'x'; graphSeg(); }
+      else if (k === 'PageUp' || k === 'PageDown') setGeom({ A: (Math.round(S.g.A * 1e4) + (k === 'PageUp' ? 5 : -5) * big) * 1e-4 }, true);
+      else if (k === '+' || k === '=') setVb(S.Vb + 10 * big);
+      else if (k === '-' || k === '_') setVb(S.Vb - 10 * big);
+      else if (k === 'm' || k === 'M' || k === 'Enter') setMode(S.mode === 'battery' ? 'iso' : 'battery');
+      else if (k === ' ') setRunning(!running);
+      else if (k === 'r' || k === 'R') doReset();
+      else return;
+    } else {
+      if (k === '+' || k === '=' || k === '-' || k === '_') { S.cb.V = Math.max(V_MIN, Math.min(V_MAX, S.cb.V + (k === '+' || k === '=' ? 10 : -10))); }
+      else if (k === 'ArrowUp' || k === 'ArrowDown') { const i = 0; S.cb.C[i] = CVALS[Math.max(0, Math.min(CVALS.length - 1, nearestIdx(CVALS, S.cb.C[i]) + (k === 'ArrowUp' ? 1 : -1)))]; }
+      else if (k === 'ArrowLeft' || k === 'ArrowRight') { const i = 1; S.cb.C[i] = CVALS[Math.max(0, Math.min(CVALS.length - 1, nearestIdx(CVALS, S.cb.C[i]) + (k === 'ArrowRight' ? 1 : -1)))]; }
+      else if (k === 'PageUp' || k === 'PageDown') { const i = 2; S.cb.C[i] = CVALS[Math.max(0, Math.min(CVALS.length - 1, nearestIdx(CVALS, S.cb.C[i]) + (k === 'PageUp' ? 1 : -1)))]; }
+      else return;
+      comboReadouts();
+    }
+    updateReadouts();
+    e.preventDefault();
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    S.qSym = 0; S.eLine = 0;
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); drawAll(); }); } catch (_) {}
+  new MutationObserver(() => { tokens(); drawAll(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, frameMs = 0;
+  function loop(now) {
+    const dt = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (running && dt > 0) stepSweep(dt);
+    // charge flow indicator: dQ per second relative to the charge on the plates, smoothed
+    const Qn = Math.max(1e-30, cur().Q);
+    const target = dt > 0 ? flowAcc / Math.max(dt, 1e-3) / Qn * 3 : 0;
+    flowAcc = 0;
+    flowShow = reduce ? target : flowShow + (target - flowShow) * Math.min(1, dt * 6);
+    drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastRead > 120) { updateReadouts(); lastRead = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__cap = {
+    get frameMs() { return frameMs; }, get S() { return S; }, get handles() { return handles; }, get running() { return running; },
+    get field() { return field && { nx: field.nx, ny: field.ny, it: field.it, resid: field.resid, hp: field.hp }; }, get lines() { return lines; }, get lay() { return lay; },
+    applyPreset, setRunning, setGeom, setMode, setVb, setMat, markStart, stepSweep,
+    state() { const st = cur(); return { ...st, L: { ...S.L }, start: { ...S.start }, mode: S.mode, g: { ...S.g } }; },
+    lineStats() { const c = {}; for (const l of lines) c[l.end] = (c[l.end] || 0) + 1; return { n: lines.length, ends: c }; }
+  };
+
+  tokens();
+  const ro = new ResizeObserver(resize);
+  for (const k of ['d', 'e', 'g']) ro.observe(panes[k]);
+  applyPreset('apartV');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
