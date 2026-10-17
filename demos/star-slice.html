@@ -2268,7 +2268,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- boot ----------
   const massFromLabel = (s) => { const m = /(\d+(?:\.\d+)?)/.exec(s || ''); return m ? +m[1] : null; };
-  S.datasets = EMBED.map((d) => ({ label: d.label, file: d.file, b64: d.b64, mass: isNum(d.mass) ? d.mass : massFromLabel(d.label),
+  S.datasets = EMBED.map((d) => ({ label: d.label, file: d.file, b64: d.b64, mass: isNum(d.mass) ? d.mass : d.mass === null ? null : massFromLabel(d.label),   // null: a white dwarf only run (build.py), kept off the slider
     track: d.track, zams: d.zams, source: d.source }));
   renderDatasetChips(); renderMassSlider();
   new ResizeObserver(() => renderMassSlider()).observe($('massBox'));
