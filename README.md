@@ -34,6 +34,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Charges in Magnetic Fields](demos/magnetic-force.html) | Electricity and magnetism | Circular and helical motion, E × B drift, a velocity selector, a mass spectrometer and a cyclotron |
 | [Faraday's and Lenz's Laws](demos/faraday.html) | Electricity and magnetism | A magnet and coil with exact flux, EMF and current, Lenz's law, an AC generator and a sliding bar on rails |
 | [Gauss's Law](demos/gauss-law.html) | Electricity and magnetism | Flux through any closed surface from a numerical integral, and the sphere, line and plane derivations |
+| [DC Circuit Builder](demos/circuit-builder.html) | Electricity and magnetism | Build circuits on a grid, solved exactly: series and parallel, dividers, a Wheatstone bridge and Kirchhoff's rules |
 | [Optics Bench](demos/optics-bench.html) | Optics | Ray tracing through lenses, mirrors and glass, with image formation, total internal reflection and dispersion |
 
 ## Viewing
