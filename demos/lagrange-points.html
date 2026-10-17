@@ -1,0 +1,1204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+<title>Lagrange Points</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one canvas with the restricted three body problem in the rotating (or inertial) frame; instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --stable: #17855f;
+  --violet: #7a4fbf;
+  --sun: #e9a817;
+  --forbid: #8792a3;
+  --contour: #cfd6e0;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --stable: #4fd1a0; --violet: #b994ff; --sun: #f5c451;
+    --forbid: #5d6878; --contour: #2c3747; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --stable: #4fd1a0; --violet: #b994ff; --sun: #f5c451;
+  --forbid: #5d6878; --contour: #2c3747; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#can { touch-action: none; outline: none; }
+#can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn.sq { min-width: 32px; padding-inline: 8px; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .list dd { font-size: 0.88rem; }
+.readout dd.prose { font-family: var(--font-ui); font-weight: 400; font-size: 0.9rem; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.good { color: var(--stable); }
+.bad { color: var(--pos); }
+
+.lpts { margin: 0; display: grid; gap: 8px; }
+.lpts div { display: grid; grid-template-columns: 2.4em minmax(0, 1fr); gap: 2px 8px; align-items: baseline; }
+.lpts dt { font-family: var(--font-mono); font-weight: 600; font-size: 0.95rem; }
+.lpts dd { margin: 0; font-size: 0.84rem; font-family: var(--font-mono); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.lpts dd > span { display: block; font-family: var(--font-ui); color: var(--muted); font-size: 0.82rem; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.zvc { border-color: var(--equi); border-top-width: 3px; }
+.swatch.forb { height: 10px; border: 1px solid var(--equi); background: color-mix(in srgb, var(--forbid) 40%, transparent); }
+.swatch.cont { border-color: var(--contour); }
+.swatch.sep { border-color: var(--muted); border-top-style: dashed; }
+.swatch.trail { border-color: var(--accent); border-top-width: 3px; }
+.swatch.dot { width: 10px; height: 10px; border: 0; border-radius: 50%; margin: 0 6px; }
+.swatch.dot.st { background: var(--stable); }
+.swatch.dot.un { background: none; border: 2px solid var(--pos); }
+kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--canvas); }
+
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 86vh; min-height: 600px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Lagrange Points</h1>
+      <p>Two bodies circle their center of mass. In the frame that turns with them, gravity and the centrifugal effect balance at five points. Drop a test particle and see where it can go.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">lengths in a (separation) · time in P (orbital period) · μ = m₂/(m₁ + m₂) · G(m₁ + m₂) = 1, n = 2π/P = 1</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="reset">Reset</button>
+        <button type="button" class="btn" id="clear">Clear</button>
+        <div class="seg" role="group" aria-label="Frame">
+          <button type="button" id="fRot" aria-pressed="true">Rotating</button>
+          <button type="button" id="fIn" aria-pressed="false">Inertial</button>
+        </div>
+        <div class="seg" role="group" aria-label="View">
+          <button type="button" id="vWhole" aria-pressed="true">Whole</button>
+          <button type="button" id="vNear" aria-pressed="false">Near m₂</button>
+        </div>
+        <button type="button" class="btn sq" id="zOut" aria-label="Zoom out">−</button>
+        <button type="button" class="btn sq" id="zIn" aria-label="Zoom in">+</button>
+        <span class="count mono" id="count" aria-live="off"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="The restricted three body problem. In the rotating frame: contours of the effective potential, the five Lagrange points, the zero velocity curve with its forbidden region shaded, and test particles with trails. Click or tap empty space to drop a particle at rest, or press and drag to throw it. Drag the newest particle's start ring or arrow tip to relaunch it, and drag the zero velocity curve to change the Jacobi constant. Keys: arrows turn and speed up the newest particle's launch, Shift with arrows pans, plus and minus zoom, brackets change C, space plays or pauses, I switches frame, F shows the whole system, N zooms near the second mass, X clears."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="jwst" aria-pressed="false">Sun–Earth: JWST at L2</button>
+          <button type="button" data-p="em" aria-pressed="false">Earth–Moon</button>
+          <button type="button" data-p="trojans" aria-pressed="true">Jupiter's Trojans</button>
+          <button type="button" data-p="tadpole" aria-pressed="false">Tadpole orbit</button>
+          <button type="button" data-p="horseshoe" aria-pressed="false">Horseshoe orbit</button>
+          <button type="button" data-p="l1" aria-pressed="false">Unstable L1</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>The two masses</h2>
+        <div class="chips" id="systems" role="group" aria-label="System">
+          <button type="button" data-s="se" aria-pressed="false">Sun–Earth</button>
+          <button type="button" data-s="em" aria-pressed="false">Earth–Moon</button>
+          <button type="button" data-s="sj" aria-pressed="true">Sun–Jupiter</button>
+          <button type="button" data-s="x" aria-pressed="false">μ = 0.1</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="mu">Mass ratio μ</label><output id="muOut" class="mono" for="mu"></output></div>
+          <input type="range" id="mu" min="-7" max="-0.302" step="0.001" value="-3.02">
+        </div>
+        <dl class="readout">
+          <div><dt>Separation a</dt><dd id="rA">—</dd></div>
+          <div><dt>Period P</dt><dd id="rP">—</dd></div>
+          <div class="wide"><dt>L4 and L5, Routh's test μ &lt; (1 − √(23/27))/2 = 0.03852</dt><dd id="rRouth">—</dd></div>
+        </dl>
+        <p class="hint" id="sysHint"></p>
+      </section>
+
+      <section>
+        <h2>Lagrange points</h2>
+        <dl class="lpts" id="lpts"></dl>
+        <dl class="readout">
+          <div class="wide"><dt>Distance from m₂ to L2: Hill's estimate a(μ/3)<sup>1/3</sup> and the exact root</dt><dd id="rHill" class="list">—</dd></div>
+        </dl>
+        <p class="hint">L1, L2 and L3 sit on the line through the masses; their positions are roots of a fifth degree equation, solved here by Newton's method. L4 and L5 make equilateral triangles with the two masses for any μ. Growth times and libration periods come from the linearized motion about each point.</p>
+      </section>
+
+      <section>
+        <h2>Zero velocity curve</h2>
+        <div>
+          <div class="slider-head"><label for="cj">Jacobi constant C</label><output id="cjOut" class="mono" for="cj"></output></div>
+          <input type="range" id="cj" min="0" max="500" step="1" value="150">
+        </div>
+        <label class="check"><input type="checkbox" id="follow" checked> Follow the newest particle</label>
+        <dl class="readout">
+          <div class="wide"><dt>Where a particle with this C can go</dt><dd id="rRegion" class="prose">—</dd></div>
+        </dl>
+        <p class="hint">In the rotating frame C = 2Ω − v² stays fixed, so v² = 2Ω − C. Where 2Ω &lt; C the speed would be imaginary: that shaded region is forbidden, and the gold curve where v = 0 is its edge. The slider steps through the five Lagrange values in order, C(L1) &gt; C(L2) &gt; C(L3) &gt; C(L4) = C(L5) = 3. Drag the curve on the drawing to move it.</p>
+      </section>
+
+      <section>
+        <h2>Test particle</h2>
+        <p class="hint" id="partHint">Click or tap empty space to drop a particle at rest; press and drag to throw it. The arrow shows how far it would go in 0.1 P at its launch speed.</p>
+        <div>
+          <div class="slider-head"><label for="vs">Launch speed, rotating frame</label><output id="vsOut" class="mono" for="vs"></output></div>
+          <input type="range" id="vs" min="0" max="1000" step="1" value="0">
+        </div>
+        <div>
+          <div class="slider-head"><label for="vd">Launch direction</label><output id="vdOut" class="mono" for="vd"></output></div>
+          <input type="range" id="vd" min="0" max="359" step="1" value="90">
+        </div>
+        <dl class="readout">
+          <div class="wide big"><dt>Jacobi constant C of the newest particle</dt><dd id="rC">—</dd></div>
+          <div class="wide"><dt>Drift since launch, |ΔC/C|</dt><dd id="rDC">—</dd></div>
+          <div class="wide"><dt>Now</dt><dd id="rNow" class="prose">—</dd></div>
+        </dl>
+        <div>
+          <div class="slider-head"><label for="sp">Time speed</label><output id="spOut" class="mono" for="sp"></output></div>
+          <input type="range" id="sp" min="0" max="9" step="1" value="5">
+        </div>
+      </section>
+
+      <section>
+        <h2>Show</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tCont" checked> Contours</label>
+          <label><input type="checkbox" id="tLab" checked> Labels</label>
+          <label><input type="checkbox" id="tTrail" checked> Trails</label>
+          <label><input type="checkbox" id="tReal" checked> Real examples</label>
+        </div>
+        <div class="key">
+          <span><i class="swatch cont"></i>Contours of the effective potential −Ω</span>
+          <span><i class="swatch sep"></i>Contours through L1, L2, L3</span>
+          <span><i class="swatch zvc"></i>Zero velocity curve for C</span>
+          <span><i class="swatch forb"></i>Forbidden region, 2Ω &lt; C</span>
+          <span><i class="swatch dot st"></i>Stable point</span>
+          <span><i class="swatch dot un"></i>Unstable point</span>
+        </div>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint">The circular restricted three body problem: two masses on circular orbits about their center of mass, and a test particle too light to disturb them. Motion is in their orbital plane only. Real L1 and L2 spacecraft such as JWST fly three dimensional halo orbits; the planar Lyapunov orbits here are their flat relatives. Other planets, the Sun's pull on the Moon, the eccentricity of the real orbits and radiation pressure are left out.</p>
+        <p class="hint">The exact equations in the rotating frame, ẍ − 2ẏ = ∂Ω/∂x and ÿ + 2ẋ = ∂Ω/∂y, include the Coriolis (2ẏ, 2ẋ) and centrifugal terms. They are integrated with an adaptive Dormand–Prince 5(4) method with local error 10⁻¹² (10⁻¹⁰ for the swarm); the drift readout checks it. A particle that touches a body stops there. The Sun–Earth system uses the Earth–Moon barycenter as m₂.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  // Circular restricted three body problem in the frame rotating with the primaries.
+  // Units: separation a = 1, total mass M = 1, G = 1, so the angular speed n = 1 and one orbital period is 2π.
+  // m1 = 1 − μ sits at (−μ, 0), m2 = μ at (1 − μ, 0), the barycenter at the origin.
+  // Ω = ½[(1 − μ) r1² + μ r2²] + (1 − μ)/r1 + μ/r2 = ½(x² + y²) + ½μ(1 − μ) + (1 − μ)/r1 + μ/r2 (Szebehely's form, so C(L4) = 3).
+  // Equations of motion: ẍ − 2ẏ = ∂Ω/∂x, ÿ + 2ẋ = ∂Ω/∂y. Jacobi constant C = 2Ω − (ẋ² + ẏ²) is conserved.
+  const ROUTH = (1 - Math.sqrt(23 / 27)) / 2;     // 0.0385209: L4 and L5 are linearly stable for μ below this
+  const TWO_PI = 2 * Math.PI;
+
+  function omega2(mu, x, y) {                      // 2Ω
+    const r1 = Math.hypot(x + mu, y), r2 = Math.hypot(x - 1 + mu, y);
+    return x * x + y * y + mu * (1 - mu) + 2 * (1 - mu) / r1 + 2 * mu / r2;
+  }
+  function gradOmega(mu, x, y) {                   // (∂Ω/∂x, ∂Ω/∂y)
+    const dx1 = x + mu, dx2 = x - 1 + mu, y2 = y * y;
+    const r1 = Math.sqrt(dx1 * dx1 + y2), r2 = Math.sqrt(dx2 * dx2 + y2);
+    const k1 = (1 - mu) / (r1 * r1 * r1), k2 = mu / (r2 * r2 * r2);
+    return [x - k1 * dx1 - k2 * dx2, y - k1 * y - k2 * y];
+  }
+  function hessOmega(mu, x, y) {                   // [Ωxx, Ωyy, Ωxy]
+    const d1 = [x + mu, y], d2 = [x - 1 + mu, y];
+    let xx = 1, yy = 1, xy = 0;
+    for (const [d, m] of [[d1, 1 - mu], [d2, mu]]) {
+      const r2 = d[0] * d[0] + d[1] * d[1], r = Math.sqrt(r2), r5 = r2 * r2 * r;
+      xx += m * (3 * d[0] * d[0] - r2) / r5; yy += m * (3 * d[1] * d[1] - r2) / r5; xy += m * 3 * d[0] * d[1] / r5;
+    }
+    return [xx, yy, xy];
+  }
+  const jacobi = (mu, s) => omega2(mu, s[0], s[1]) - (s[2] * s[2] + s[3] * s[3]);
+
+  // Collinear points from Szebehely's quintics in γ (distance from m2 for L1 and L2, from m1 for L3), by Newton's method.
+  function newton(f, df, x) { for (let i = 0; i < 100; i++) { const dx = f(x) / df(x); x -= dx; if (Math.abs(dx) < 1e-16 * Math.max(1, Math.abs(x))) break; } return x; }
+  function poly(c) { return [(g) => c.reduce((a, k) => a * g + k, 0), (g) => { let a = 0; const n = c.length - 1; for (let i = 0; i < n; i++) a = a * g + c[i] * (n - i); return a; }]; }
+  function lagrange(mu) {
+    const h = Math.cbrt(mu / 3);
+    const q1 = poly([1, -(3 - mu), 3 - 2 * mu, -mu, 2 * mu, -mu]);
+    const q2 = poly([1, 3 - mu, 3 - 2 * mu, -mu, -2 * mu, -mu]);
+    const q3 = poly([1, 2 + mu, 1 + 2 * mu, -(1 - mu), -2 * (1 - mu), -(1 - mu)]);
+    // starting guesses: Hill's approximation for L1/L2 (refined by a bracketed step), 1 − 7μ/12 for L3
+    const g1 = newton(q1[0], q1[1], Math.min(h * (1 - h / 3), 0.5));
+    const g2 = newton(q2[0], q2[1], h * (1 + h / 3));
+    const g3 = newton(q3[0], q3[1], 1 - 7 * mu / 12);
+    const yT = Math.sqrt(3) / 2;
+    return {
+      L1: { x: 1 - mu - g1, y: 0, g: g1 }, L2: { x: 1 - mu + g2, y: 0, g: g2 }, L3: { x: -mu - g3, y: 0, g: g3 },
+      L4: { x: 0.5 - mu, y: yT, g: 1 }, L5: { x: 0.5 - mu, y: -yT, g: 1 }
+    };
+  }
+  // Linear stability at an equilibrium: λ⁴ + (4 − Ωxx − Ωyy) λ² + (Ωxx Ωyy − Ωxy²) = 0.
+  // Returns growth rate (largest Re λ, per unit time) and the oscillation frequencies.
+  function stability(mu, x, y) {
+    const [xx, yy, xy] = hessOmega(mu, x, y);
+    const b = 4 - xx - yy, c = xx * yy - xy * xy, disc = b * b - 4 * c;
+    if (disc >= 0) {
+      const s = Math.sqrt(disc), A = (-b + s) / 2, B = (-b - s) / 2;   // λ² roots
+      const growth = Math.max(A > 0 ? Math.sqrt(A) : 0, B > 0 ? Math.sqrt(B) : 0);
+      const freqs = [A, B].filter((v) => v < 0).map((v) => Math.sqrt(-v));
+      return { stable: growth === 0, growth, freqs, complex: false };
+    }
+    // complex λ²: λ = ±(p ± iq), always one root with positive real part
+    const re = -b / 2, im = Math.sqrt(-disc) / 2, mod = Math.hypot(re, im);
+    const p = Math.sqrt((mod + re) / 2), q = Math.sqrt((mod - re) / 2);
+    return { stable: false, growth: p, freqs: [q], complex: true };
+  }
+
+  // Equations of motion
+  function deriv(mu, s, o) {
+    const x = s[0], y = s[1], vx = s[2], vy = s[3];
+    const dx1 = x + mu, dx2 = x - 1 + mu, y2 = y * y;
+    const q1 = dx1 * dx1 + y2, q2 = dx2 * dx2 + y2;
+    const k1 = (1 - mu) / (q1 * Math.sqrt(q1)), k2 = mu / (q2 * Math.sqrt(q2));
+    o[0] = vx; o[1] = vy;
+    o[2] = 2 * vy + x - k1 * dx1 - k2 * dx2;
+    o[3] = -2 * vx + y - (k1 + k2) * y;
+  }
+
+  // Dormand–Prince 5(4) with local error control (FSAL). p = { s: [x, y, vx, vy], t, h, k1? }.
+  const A21 = 1 / 5,
+    A31 = 3 / 40, A32 = 9 / 40,
+    A41 = 44 / 45, A42 = -56 / 15, A43 = 32 / 9,
+    A51 = 19372 / 6561, A52 = -25360 / 2187, A53 = 64448 / 6561, A54 = -212 / 729,
+    A61 = 9017 / 3168, A62 = -355 / 33, A63 = 46732 / 5247, A64 = 49 / 176, A65 = -5103 / 18656,
+    B1 = 35 / 384, B3 = 500 / 1113, B4 = 125 / 192, B5 = -2187 / 6784, B6 = 11 / 84,
+    E1 = 71 / 57600, E3 = -71 / 16695, E4 = 71 / 1920, E5 = -17253 / 339200, E6 = 22 / 525, E7 = -1 / 40;
+  const K = Array.from({ length: 7 }, () => new Float64Array(4)), Y = new Float64Array(4), Y5 = new Float64Array(4);
+  // One attempted step from p; returns true if accepted. Updates p.s, p.t, p.h (next step), p.k (FSAL derivative).
+  function dpStep(mu, p, hTry, tol) {
+    const s = p.s, h = hTry;
+    if (!p.k) { p.k = new Float64Array(4); deriv(mu, s, p.k); }
+    const k1 = p.k, [, k2, k3, k4, k5, k6, k7] = K;
+    for (let i = 0; i < 4; i++) Y[i] = s[i] + h * A21 * k1[i]; deriv(mu, Y, k2);
+    for (let i = 0; i < 4; i++) Y[i] = s[i] + h * (A31 * k1[i] + A32 * k2[i]); deriv(mu, Y, k3);
+    for (let i = 0; i < 4; i++) Y[i] = s[i] + h * (A41 * k1[i] + A42 * k2[i] + A43 * k3[i]); deriv(mu, Y, k4);
+    for (let i = 0; i < 4; i++) Y[i] = s[i] + h * (A51 * k1[i] + A52 * k2[i] + A53 * k3[i] + A54 * k4[i]); deriv(mu, Y, k5);
+    for (let i = 0; i < 4; i++) Y[i] = s[i] + h * (A61 * k1[i] + A62 * k2[i] + A63 * k3[i] + A64 * k4[i] + A65 * k5[i]); deriv(mu, Y, k6);
+    for (let i = 0; i < 4; i++) Y5[i] = s[i] + h * (B1 * k1[i] + B3 * k3[i] + B4 * k4[i] + B5 * k5[i] + B6 * k6[i]);
+    deriv(mu, Y5, k7);
+    let err = 0;
+    for (let i = 0; i < 4; i++) {
+      const e = h * (E1 * k1[i] + E3 * k3[i] + E4 * k4[i] + E5 * k5[i] + E6 * k6[i] + E7 * k7[i]);
+      const sc = tol * (1 + Math.max(Math.abs(s[i]), Math.abs(Y5[i])));
+      const r = Math.abs(e) / sc; if (r > err) err = r;
+    }
+    const fac = err === 0 ? 5 : Math.min(5, Math.max(0.2, 0.9 * Math.pow(err, -0.2)));
+    if (err <= 1 && isFinite(err)) {
+      for (let i = 0; i < 4; i++) { s[i] = Y5[i]; k1[i] = k7[i]; }
+      p.t += h; p.hNext = h * fac; return true;
+    }
+    p.hNext = h * Math.max(0.1, fac); return false;
+  }
+  // Advance particle p to time tEnd (or stop on impact / escape). opts: { tol, hMax, radii: [R1, R2], rEsc, onStep(p), maxSteps }
+  function advance(mu, p, tEnd, opts) {
+    const tol = opts.tol || 1e-12, hMax = opts.hMax || 0.02, R = opts.radii || [0, 0], rEsc = opts.rEsc || 6;
+    let n = 0; const maxSteps = opts.maxSteps || 1e6;
+    if (!p.hNext) p.hNext = 1e-3;
+    while (p.alive && p.t < tEnd - 1e-15 && n < maxSteps) {
+      let h = Math.min(p.hNext, hMax), clamp = false;
+      if (p.t + h > tEnd) { h = tEnd - p.t; clamp = true; }
+      const keep = p.hNext;
+      if (dpStep(mu, p, h, tol)) {
+        n++;
+        if (clamp) p.hNext = Math.max(p.hNext, Math.min(keep, hMax));
+        const s = p.s, r1 = Math.hypot(s[0] + mu, s[1]), r2 = Math.hypot(s[0] - 1 + mu, s[1]);
+        if (r1 < R[0]) { p.alive = false; p.end = 'hit1'; }
+        else if (r2 < R[1]) { p.alive = false; p.end = 'hit2'; }
+        else if (Math.hypot(s[0], s[1]) > rEsc) { p.alive = false; p.end = 'escape'; }
+        if (opts.onStep) opts.onStep(p);
+      } else if (p.hNext < 1e-14) { p.alive = false; p.end = 'stuck'; }
+      n += 0;
+    }
+    return n;
+  }
+  const makeParticle = (x, y, vx, vy, t) => ({ s: [x, y, vx, vy], t: t || 0, alive: true, hNext: 1e-3, k: null });
+
+  // One fixed Dormand–Prince step (fifth order solution), used to land exactly on a crossing.
+  function fixedStep(mu, s, h) { const q = { s: s.slice(), t: 0, k: null }; dpStep(mu, q, h, Infinity); return q.s; }
+  // Integrate from the state s (y = 0 at the start) to the next crossing of y = 0; returns the state there and the time taken.
+  function toCrossing(mu, s0) {
+    const p = makeParticle(s0[0], s0[1], s0[2], s0[3], 0);
+    let prev = p.s.slice(), tPrev = 0;
+    for (let n = 0; n < 2e5; n++) {
+      prev = p.s.slice(); tPrev = p.t;
+      let h = Math.min(p.hNext, 0.01);
+      while (!dpStep(mu, p, h, 1e-13)) h = p.hNext;
+      if (n > 3 && (prev[1] < 0) !== (p.s[1] < 0)) {
+        let a = 0, b = p.t - tPrev, ya = prev[1], yb = p.s[1], st = p.s;
+        for (let it = 0; it < 50; it++) {           // secant (Illinois) on the step length
+          const m = b - yb * (b - a) / (yb - ya); st = fixedStep(mu, prev, m);
+          if (Math.abs(st[1]) < 1e-15) { b = m; break; }
+          if ((st[1] < 0) === (yb < 0)) { b = m; yb = st[1]; ya /= 2; } else { a = b; ya = yb; b = m; yb = st[1]; }
+        }
+        return { s: st, t: tPrev + b };
+      }
+    }
+    return null;
+  }
+  // Planar Lyapunov orbit about L1 or L2 by single shooting: start at (xL + Ax, 0) moving along y, choose ẏ so that ẋ = 0 at the
+  // next crossing of y = 0 (the orbit is then symmetric about the x axis and closes). Continuation in amplitude from the linear orbit.
+  function lyapunov(mu, which, Ax) {
+    const L = lagrange(mu)[which], xL = L.x;
+    const w = stability(mu, xL, 0).freqs[0], xx = hessOmega(mu, xL, 0)[0];
+    const kk = (w * w + xx) / (2 * w);              // linear orbit: x = A cos wt, y = −k A sin wt
+    const a0 = Math.min(Ax, L.g * 0.01), nStep = Math.max(1, Math.ceil(Math.log(Ax / a0) / Math.log(1.5)));
+    let vy = -kk * w * a0, aPrev = a0, T = 2 * Math.PI / w;
+    for (let s = 0; s <= nStep; s++) {
+      const a = a0 * Math.pow(Ax / a0, s / nStep);
+      vy *= a / aPrev; aPrev = a;
+      for (let it = 0; it < 40; it++) {
+        const c0 = toCrossing(mu, [xL + a, 0, 0, vy]); if (!c0) return null;
+        const dv = 1e-7 * Math.abs(vy), c1 = toCrossing(mu, [xL + a, 0, 0, vy + dv]); if (!c1) return null;
+        const step = c0.s[2] / ((c1.s[2] - c0.s[2]) / dv);
+        vy -= step; T = 2 * c0.t;
+        if (Math.abs(step) < 1e-12 * Math.abs(vy)) break;
+      }
+    }
+    return { x0: xL + Ax, vy0: vy, T };
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.LP = { ROUTH, omega2, gradOmega, hessOmega, jacobi, lagrange, stability, deriv, dpStep, advance, makeParticle, lyapunov, toCrossing };
+    return;
+  }
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  // ---------- systems (GM values from the IAU/JPL constants; the Sun–Earth m₂ is the Earth–Moon barycenter) ----------
+  const AU_KM = 149597870.7;
+  const SYS = {
+    se: { name: 'Sun–Earth', mu: 3.04042e-6, m1: 'Sun', m2: 'Earth', aKm: AU_KM, Pd: 365.256, R1km: 695700, R2km: 6371, au: true,
+      tags: { L1: 'SOHO', L2: 'JWST', L4: '2010 TK7' }, moon: 384400,
+      hint: 'μ = (M_E + M_Moon)/(M_sun + M_E + M_Moon) = 3.040 × 10⁻⁶. L1 and L2 are 1.5 million km from Earth, four times the distance to the Moon: SOHO watches the Sun from L1, JWST and Gaia look outward from L2.' },
+    em: { name: 'Earth–Moon', mu: 0.0121506, m1: 'Earth', m2: 'Moon', aKm: 384400, Pd: 27.3217, R1km: 6371, R2km: 1737.4, c1: 'neg', c2: 'muted',
+      tags: { L2: 'Queqiao' },
+      hint: 'μ = M_Moon/(M_E + M_Moon) = 0.01215, large enough that the structure shows at full scale. China’s Queqiao relay satellite flies a halo orbit about Earth–Moon L2, behind the Moon, to talk to the Chang’e 4 lander on the far side.' },
+    sj: { name: 'Sun–Jupiter', mu: 9.53875e-4, m1: 'Sun', m2: 'Jupiter', aKm: 5.2038 * AU_KM, Pd: 4332.59, R1km: 695700, R2km: 69911, au: true,
+      tags: { L4: 'Greek camp', L5: 'Trojan camp' },
+      hint: 'μ = M_J/(M_sun + M_J) = 9.54 × 10⁻⁴. More than ten thousand Trojan asteroids are known, gathered about L4 (the Greek camp, ahead of Jupiter) and L5 (the Trojan camp, behind). NASA’s Lucy spacecraft is on its way to visit several.' },
+    x: { name: 'μ = 0.1', mu: 0.1, m1: 'm₁', m2: 'm₂', R1: 0.035, R2: 0.016,
+      hint: 'An exaggerated mass ratio, about eight times the Earth–Moon value, so every feature is easy to see. With μ above 0.0385 even L4 and L5 are unstable. Body sizes are made up for the drawing.' }
+  };
+  const SPEEDS = [0.05, 0.1, 0.2, 0.5, 1, 2, 4, 8, 16, 32];   // orbital periods per second
+  const ARW = 0.1 * TWO_PI;                                    // launch arrow = distance covered in 0.1 P
+
+  // ---------- presets ----------
+  const deg = Math.PI / 180;
+  function circ(mu, r, thDeg) {   // circular orbit of radius r about m₁, in the rotating frame
+    const th = thDeg * deg, vt = Math.sqrt((1 - mu) / r) - r;
+    return [r * Math.cos(th) - mu, r * Math.sin(th), -vt * Math.sin(th), vt * Math.cos(th)];
+  }
+  function restOnZvc(mu, C, fromX, thDeg, r0, r1) {   // point at rest on the curve 2Ω = C along a ray from (fromX, 0)
+    const th = thDeg * deg, g = (r) => omega2(mu, fromX + r * Math.cos(th), r * Math.sin(th)) - C;
+    let lo = r0, hi = r1;
+    for (let i = 0; i < 80; i++) { const m = 0.5 * (lo + hi); if (g(m) > 0) lo = m; else hi = m; }
+    const r = lo * 0.999;
+    return [fromX + r * Math.cos(th), r * Math.sin(th), 0, 0];
+  }
+  const PRESETS = {
+    jwst: { sys: 'se', view: 'near', speed: 2, follow: true,
+      hint: 'Two planar Lyapunov orbits, about L1 (SOHO’s neighborhood) and L2 (JWST’s), each about 0.004 AU across. L1 and L2 are saddles: after two or three loops the tiny numerical error has grown enough that each particle leaves. JWST fires its thrusters about every three weeks to stay.',
+      make(mu) { const out = []; for (const [w, A, col] of [['L1', -0.0011, 1], ['L2', 0.0012, 0]]) { const ly = lyapunov(mu, w, A); if (ly) out.push({ s: [ly.x0, 0, 0, ly.vy0], col }); } return out; } },
+    em: { sys: 'em', view: 'whole', speed: 3, follow: true,
+      hint: 'C is between C(L2) and C(L1): the neck at L1 is open but L2 is closed. The particle, released at rest on its own zero velocity curve, wanders between Earth and the Moon and back, and can never leave the shaded boundary.',
+      make(mu, CL) { return [{ s: restOnZvc(mu, CL.L1 - 0.7 * (CL.L1 - CL.L2), -mu, 105, 0.05, 0.9), col: 0 }]; } },
+    trojans: { sys: 'sj', view: 'whole', speed: 5, follow: true, cPos: 50,
+      hint: 'A swarm of test asteroids near L4 and L5, each started at rest up to 22° from the point. They do not settle on L4 and L5 but librate around them in tadpole shaped paths, about 150 years per swing. Real Trojans also have tilted, eccentric orbits; this swarm is illustrative.',
+      make(mu) {
+        let seed = 7; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+        const out = [];
+        for (const side of [1, -1]) for (let i = 0; i < 70; i++) {
+          const th = side * (60 + (rnd() * 2 - 1) * 22), r = 1 + (rnd() * 2 - 1) * 0.007;
+          out.push({ s: [r * Math.cos(th * deg) - mu, r * Math.sin(th * deg), 0, 0], swarm: true });
+        }
+        return out;
+      } },
+    tadpole: { sys: 'sj', view: 'whole', speed: 6, follow: true,
+      hint: 'A particle starts at rest 35° behind L4. It librates around L4 between about 40° and 95° from Jupiter, never reaching it, once every 150 years or so, while its own zero velocity curve encloses the forbidden island it circles. Earth has Trojans like this too: 2010 TK7 and 2020 XL5 librate about Sun–Earth L4.',
+      make(mu) { const th = 95 * deg; return [{ s: [Math.cos(th) - mu, Math.sin(th), 0, 0], col: 0 }]; } },
+    horseshoe: { sys: 'sj', view: 'whole', speed: 6, follow: true,
+      hint: 'Start on a circular orbit 1% outside Jupiter’s, opposite it. The particle drifts slowly backward, is turned around before it reaches Jupiter, drifts the other way past L3, and turns again: a horseshoe enclosing L3, L4 and L5. Saturn’s moons Janus and Epimetheus swap orbits like this every four years.',
+      make(mu) { return [{ s: circ(mu, 1.01, 180), col: 0 }]; } },
+    l1: { sys: 'x', view: 'whole', speed: 3, follow: true,
+      hint: 'Particles at rest 10⁻⁵ a from L1, on either side, and 10⁻³ a from L4. L1 is a saddle: the offset grows by a factor e every 1/λ, readout above, and one falls toward each mass. With μ = 0.1, above Routh’s 0.0385, even L4 is unstable: that particle spirals away too.',
+      make(mu, CL, L) { return [{ s: [L.L1.x + 1e-5, 0, 0, 0], col: 1 }, { s: [L.L4.x + 1e-3, L.L4.y, 0, 0], col: 2 }, { s: [L.L1.x - 1e-5, 0, 0, 0], col: 0 }]; } }
+  };
+
+  // ---------- state ----------
+  const S = { preset: 'trojans', sys: 'sj', mu: SYS.sj.mu, frame: 'rot', view: 'whole', speed: 5, cPos: 150, C: 3, follow: true,
+    show: { cont: true, lab: true, trail: true, real: true } };
+  let playing = !reduce, t = 0, parts = [], sel = null, LPT = null, CL = null;
+  const sysNow = () => {
+    if (S.sys !== 'custom') return SYS[S.sys];
+    const mu = S.mu; return { name: 'Custom', mu, m1: 'm₁', m2: 'm₂', R1: 0.035, R2: Math.max(0.006, 0.035 * Math.cbrt(mu / (1 - mu))), hint: 'Your own mass ratio. Body sizes assume equal densities and are not to scale with any real system.' };
+  };
+  const radii = () => { const s = sysNow(); return s.aKm ? [s.R1km / s.aKm, s.R2km / s.aKm] : [s.R1, s.R2]; };
+  function refreshPoints() {
+    LPT = lagrange(S.mu); CL = {};
+    for (const k of ['L1', 'L2', 'L3', 'L4', 'L5']) { const p = LPT[k]; CL[k] = omega2(S.mu, p.x, p.y); p.st = stability(S.mu, p.x, p.y); }
+  }
+
+  // Jacobi slider: piecewise linear between landmarks, so each of the five topologies gets the same slider length
+  function marks() { const d = Math.max(CL.L1 - 3, 1e-12); return [3 - 0.6 * d, 3, CL.L3, CL.L2, CL.L1, CL.L1 + 0.8 * d]; }
+  function cOfPos(v) { const m = marks(), k = Math.min(4, Math.floor(v / 100)), f = (v - 100 * k) / 100; return m[k] + (m[k + 1] - m[k]) * f; }
+  function posOfC(C) { const m = marks(); if (C <= m[0]) return 0; for (let k = 0; k < 5; k++) if (C <= m[k + 1]) { const d = m[k + 1] - m[k]; return 100 * k + (d > 0 ? 100 * (C - m[k]) / d : 100); } return 500; }
+
+  // ---------- particles ----------
+  const COLS = ['accent', 'pos', 'stable', 'violet'];
+  let colNext = 0;
+  function newPart(s, opts = {}) {
+    const p = makeParticle(s[0], s[1], s[2], s[3], t);
+    p.s0 = s.slice(); p.t0 = t; p.C0 = jacobi(S.mu, s); p.swarm = !!opts.swarm;
+    p.col = opts.col !== undefined ? opts.col : colNext++ % COLS.length;
+    p.cap = p.swarm ? 360 : 40000; p.buf = new Float64Array(p.cap * 3); p.n = 0; p.head = 0;
+    record(p, true);
+    return p;
+  }
+  function record(p, force) {
+    const s = p.s;
+    if (!force && p.n) {
+      const i = ((p.head - 1 + p.cap) % p.cap) * 3, b = p.buf, dt = p.t - b[i + 2];
+      if (dt < (p.swarm ? 0.06 : 0.01) && Math.hypot(s[0] - b[i], s[1] - b[i + 1]) < 2e-5) return;
+    }
+    const j = p.head * 3; p.buf[j] = s[0]; p.buf[j + 1] = s[1]; p.buf[j + 2] = p.t;
+    p.head = (p.head + 1) % p.cap; if (p.n < p.cap) p.n++;
+  }
+  const onStep = (p) => record(p, false);
+  function addParticle(s, opts = {}) {
+    const [R1, R2] = radii();
+    if (Math.hypot(s[0] + S.mu, s[1]) < R1 || Math.hypot(s[0] - 1 + S.mu, s[1]) < R2) return null;
+    const p = newPart(s, opts); parts.push(p);
+    if (!p.swarm) {
+      const own = parts.filter((q) => !q.swarm);
+      if (own.length > 10) parts.splice(parts.indexOf(own[0]), 1);
+      sel = p; if (S.follow) setC(p.C0, false);
+      syncLaunch();
+    }
+    return p;
+  }
+  function relaunch(p, s) {
+    const q = newPart(s, { col: p.col, swarm: p.swarm });
+    parts[parts.indexOf(p)] = q; if (sel === p) sel = q;
+    if (S.follow && sel === q) setC(q.C0, false);
+    syncLaunch(); readouts(); drawAll();
+  }
+  let stepsFrame = 0;
+  function stepParticles(dtSim) {
+    const tEnd = t + dtSim, R = radii(); stepsFrame = 0;
+    for (const p of parts) {
+      if (!p.alive) continue;
+      stepsFrame += advance(S.mu, p, tEnd, { tol: p.swarm ? 1e-10 : 1e-12, hMax: p.swarm ? 0.03 : 0.02, radii: R, rEsc: 4, onStep, maxSteps: p.swarm ? 4000 : 30000 });
+      if (!p.alive) record(p, true);
+    }
+    t = tEnd;
+  }
+
+  // ---------- theme, canvas, view ----------
+  let T = null, dpr = 1, W = 0, H = 0;
+  const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on';
+  // projector labels grow, capped by the pane so they keep apart on a short screen
+  const projScale = () => (proj() ? Math.min(1.45, Math.max(1, Math.min(W, H) / 330)) : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'grid', 'pos', 'neg', 'equi', 'accent', 'stable', 'violet', 'sun', 'forbid', 'contour']) T[k] = g('--' + k);
+    T.gridStrong = g('--grid-strong'); T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'sans-serif';
+    field.key = ''; zvc.key = '';
+  }
+  const V = { x0: 0, y0: 0, s: 300 };
+  function fitView(mode) {
+    if (mode) S.view = mode;
+    const pad = 18 * projScale();
+    if (S.view === 'near') {
+      const h = 2.3 * Math.max(LPT.L1.g, LPT.L2.g);
+      V.x0 = 1 - S.mu; V.y0 = 0; V.s = Math.min((W / 2 - pad) / h, (H / 2 - pad) / (h * 0.8));
+    } else if (S.view === 'whole') {
+      V.x0 = 0.02; V.y0 = 0; V.s = Math.min((W / 2 - pad) / 1.36, (H / 2 - pad) / 1.04);
+    }
+    syncView();
+  }
+  function syncView() { $('vWhole').setAttribute('aria-pressed', String(S.view === 'whole')); $('vNear').setAttribute('aria-pressed', String(S.view === 'near')); }
+  function zoom(f, px, py) {
+    if (px === undefined) { px = W / 2; py = H / 2; }
+    const w = toW(px, py), sMin = Math.min(W, H) / 8, sMax = Math.min(W, H) * 2e7;
+    const ns = Math.max(sMin, Math.min(sMax, V.s * f)); if (ns === V.s) return;
+    V.s = ns;
+    const c = S.frame === 'rot' ? [w.x, w.y] : null;
+    if (c) { V.x0 = w.x - (px - W / 2) / V.s; V.y0 = w.y + (py - H / 2) / V.s; }
+    else { const cn = viewCenter(), nx = w.X - (px - W / 2) / V.s, ny = w.Y + (py - H / 2) / V.s; shiftCenterInertial(nx - cn[0], ny - cn[1]); }
+    S.view = 'free'; syncView(); drawAll();
+  }
+  // In the inertial frame the camera keeps its rotating frame target (the near view follows m₂ around its orbit).
+  function viewCenter() { if (S.frame === 'rot') return [V.x0, V.y0]; const c = Math.cos(t), s = Math.sin(t); return [V.x0 * c - V.y0 * s, V.x0 * s + V.y0 * c]; }
+  function shiftCenterInertial(dX, dY) { const c = Math.cos(t), s = Math.sin(t); V.x0 += dX * c + dY * s; V.y0 += -dX * s + dY * c; }
+  function toPx(x, y) { const c = viewCenter(); return [W / 2 + (x - c[0]) * V.s, H / 2 - (y - c[1]) * V.s]; }
+  function toW(px, py) { const c = viewCenter(), X = c[0] + (px - W / 2) / V.s, Y = c[1] - (py - H / 2) / V.s; return { x: X, y: Y, X, Y }; }
+  const rot = (x, y, a) => { const c = Math.cos(a), s = Math.sin(a); return [x * c - y * s, x * s + y * c]; };
+  const P = (x, y, tt) => (S.frame === 'rot' ? toPx(x, y) : toPx(...rot(x, y, tt === undefined ? t : tt)));
+
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = pane.getBoundingClientRect(); W = r.width; H = r.height;
+    can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(H * dpr));
+    can.style.width = W + 'px'; can.style.height = H + 'px';
+    if (S.view !== 'free') fitView(); else drawAll();
+    drawAll();
+  }
+
+  // ---------- potential field on a grid (rotating frame) ----------
+  const GS = 3;   // grid spacing, CSS px
+  const field = { key: '' }, zvc = { key: '' }, fimg = document.createElement('canvas'), layer = document.createElement('canvas');
+  layer.key = '';
+  function hexRgb(h) { const m = /^#?([0-9a-f]{6})$/i.exec(h || ''); if (!m) return [128, 128, 128]; const n = parseInt(m[1], 16); return [n >> 16, (n >> 8) & 255, n & 255]; }
+  function buildField() {
+    const key = [S.mu, V.x0, V.y0, V.s, W, H].join('|');
+    if (field.key === key) return;
+    const nx = Math.ceil(W / GS) + 2, ny = Math.ceil(H / GS) + 2, v = new Float64Array(nx * ny);
+    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) { const w = toW(i * GS, j * GS); const f = omega2(S.mu, w.x, w.y); v[j * nx + i] = isFinite(f) ? Math.min(f, 1e9) : 1e9; }
+    // contour levels at evenly spaced quantiles of the values in view, plus the collinear points
+    const sm = []; for (let k = 0; k < 4000; k++) sm.push(v[Math.floor((k + 0.5) / 4000 * v.length)]);
+    sm.sort((a, b) => a - b);
+    const lv = []; const N = 13;
+    for (let k = 1; k < N; k++) { const q = sm[Math.floor(k / N * sm.length)]; if (!lv.length || q - lv[lv.length - 1] > 1e-9 * Math.abs(q)) lv.push(q); }
+    Object.assign(field, { key, nx, ny, v, lines: lv.map((L) => march(v, nx, ny, L)), seps: ['L1', 'L2', 'L3'].map((k) => march(v, nx, ny, CL[k])) });
+    fimg.width = nx; fimg.height = ny; zvc.key = '';
+  }
+  function march(v, nx, ny, L) {     // marching squares: segments in CSS px
+    const out = [];
+    const ip = (a, b) => (L - a) / (b - a);
+    for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) {
+      const a = v[j * nx + i], b = v[j * nx + i + 1], c = v[(j + 1) * nx + i + 1], d = v[(j + 1) * nx + i];
+      const idx = (a > L ? 1 : 0) | (b > L ? 2 : 0) | (c > L ? 4 : 0) | (d > L ? 8 : 0);
+      if (idx === 0 || idx === 15) continue;
+      const x = i * GS, y = j * GS;
+      const top = () => [x + GS * ip(a, b), y], right = () => [x + GS, y + GS * ip(b, c)], bot = () => [x + GS * ip(d, c), y + GS], left = () => [x, y + GS * ip(a, d)];
+      const seg = (p, q) => out.push(p[0], p[1], q[0], q[1]);
+      switch (idx) {
+        case 1: case 14: seg(left(), top()); break;
+        case 2: case 13: seg(top(), right()); break;
+        case 3: case 12: seg(left(), right()); break;
+        case 4: case 11: seg(right(), bot()); break;
+        case 6: case 9: seg(top(), bot()); break;
+        case 7: case 8: seg(left(), bot()); break;
+        case 5: { const m = (a + b + c + d) / 4; if (m > L) { seg(left(), bot()); seg(top(), right()); } else { seg(left(), top()); seg(right(), bot()); } break; }
+        case 10: { const m = (a + b + c + d) / 4; if (m > L) { seg(left(), top()); seg(right(), bot()); } else { seg(top(), right()); seg(left(), bot()); } break; }
+      }
+    }
+    return new Float32Array(out);
+  }
+  function buildZvc() {
+    buildField();
+    const key = field.key + '|' + S.C + '|' + T.forbid;
+    if (zvc.key === key) return;
+    const { nx, ny, v } = field, fx = fimg.getContext('2d'), im = fx.createImageData(nx, ny), [r, g, b] = hexRgb(T.forbid);
+    for (let k = 0; k < nx * ny; k++) { const o = k * 4; im.data[o] = r; im.data[o + 1] = g; im.data[o + 2] = b; im.data[o + 3] = v[k] < S.C ? 110 : 0; }
+    fx.putImageData(im, 0, 0);
+    zvc.key = key; zvc.segs = march(v, nx, ny, S.C);
+  }
+  function strokeSegs(c, segs) { c.beginPath(); for (let k = 0; k < segs.length; k += 4) { c.moveTo(segs[k], segs[k + 1]); c.lineTo(segs[k + 2], segs[k + 3]); } c.stroke(); }
+
+  // ---------- formatting ----------
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  const supNum = (n) => String(n).split('').map((ch) => SUP[ch] || ch).join('');
+  function sci(v, d = 3) {
+    if (v === 0) return '0';
+    const e = Math.floor(Math.log10(Math.abs(v))); if (e >= -2 && e <= 3) return v.toPrecision(d);
+    const m = v / Math.pow(10, e); return `${m.toFixed(d - 1)} × 10${supNum(e)}`;
+  }
+  function fmtLen(d, prec = 4) {   // d in units of a
+    const s = sysNow();
+    if (!s.aKm) return `${trimz(d.toPrecision(prec))} a`;
+    const km = d * s.aKm;
+    if (s.au && km >= 3e7) return `${(km / AU_KM).toPrecision(prec)} AU`;
+    if (km >= 1e6) return `${(km / 1e6).toPrecision(prec)} million km`;
+    return `${Math.round(km).toLocaleString('en-US')} km`;
+  }
+  const minus = (s) => String(s).replace(/^-/, '−');
+  const trimz = (s) => (s.includes('e') ? s : s.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, ''));
+  function fmtT(tu, prec = 3) {    // time in units 1/n, shown in P and in days or years
+    const P = tu / TWO_PI, s = sysNow();
+    if (!s.Pd) return `${trimz(P.toPrecision(prec))} P`;
+    const dd = P * s.Pd;
+    return dd < 700 ? `${trimz(dd.toPrecision(prec))} d` : `${trimz((dd / 365.25).toPrecision(prec))} yr`;
+  }
+  function fmtSpeed(v) { const s = sysNow(); if (!s.aKm) return `${sci(v, 3)} a·n`; const kms = v * s.aKm * TWO_PI / (s.Pd * 86400); return kms >= 0.1 ? `${kms.toPrecision(3)} km/s` : `${(kms * 1000).toPrecision(3)} m/s`; }
+  function fmtC(C) { if (CL.L1 - 3 < 0.01) { const d = C - 3; return `3 ${d < 0 ? '−' : '+'} ${sci(Math.abs(d), 4)}`; } return C.toFixed(5); }
+
+  // ---------- drawing ----------
+  function label(c, txt, x, y, col, align = 'left', base = 'middle', bold = false) {
+    const ps = projScale();
+    c.font = `${bold ? '600 ' : ''}${11 * ps}px ${T.mono}`; c.textAlign = align; c.textBaseline = base;
+    const w = c.measureText(txt).width, h = 14 * ps;
+    const x0 = align === 'left' ? x : align === 'right' ? x - w : x - w / 2;
+    const y0 = base === 'middle' ? y - h / 2 : base === 'bottom' ? y - h : y;
+    c.fillStyle = T.canvas; c.globalAlpha = 0.85; c.fillRect(x0 - 3, y0, w + 6, h); c.globalAlpha = 1;
+    c.fillStyle = col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
+    return [x0 - 3, y0, w + 6, h];
+  }
+  let throwing = null, hover = null, drag = null, hoverId = null, zvcGrip = null;
+  function drawAll() {
+    if (!T || !W || !LPT) return;
+    const c = ctx, ps = projScale(), mu = S.mu, rotF = S.frame === 'rot', sys = sysNow(), [R1, R2] = radii();
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.fillStyle = T.canvas; c.fillRect(0, 0, W, H);
+    const labels = [];   // drawn last on halos
+    if (rotF) {
+      buildZvc();
+      const lkey = zvc.key + '|' + S.show.cont + '|' + ps + '|' + dpr + '|' + T.contour + T.muted + T.equi;
+      if (layer.key !== lkey) {   // the static map is drawn once per view, μ, C and theme, then copied every frame
+        layer.key = lkey; layer.width = can.width; layer.height = can.height;
+        const g = layer.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+        g.imageSmoothingEnabled = true;
+        g.drawImage(fimg, -GS / 2, -GS / 2, field.nx * GS, field.ny * GS);
+        if (S.show.cont) {
+          g.strokeStyle = T.contour; g.lineWidth = 1; for (const sg of field.lines) strokeSegs(g, sg);
+          g.strokeStyle = T.muted; g.globalAlpha = 0.7; g.setLineDash([4, 4]); for (const sg of field.seps) strokeSegs(g, sg); g.setLineDash([]); g.globalAlpha = 1;
+        }
+        g.strokeStyle = T.equi; g.lineWidth = 2.2 * ps; g.lineJoin = 'round'; strokeSegs(g, zvc.segs);
+      }
+      c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(layer, 0, 0); c.setTransform(dpr, 0, 0, dpr, 0, 0);
+      zvcGrip = gripPoint();
+    } else {
+      zvcGrip = null;
+      // the circular orbits of the two masses
+      c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.setLineDash([4, 5]);
+      for (const r of [mu, 1 - mu]) { const o = toPx(0, 0); c.beginPath(); c.arc(o[0], o[1], r * V.s, 0, TWO_PI); c.stroke(); }
+      c.setLineDash([]);
+    }
+    // barycenter
+    { const [bx, by] = P(0, 0); c.strokeStyle = T.muted; c.lineWidth = 1; c.beginPath(); c.moveTo(bx - 4, by); c.lineTo(bx + 4, by); c.moveTo(bx, by - 4); c.lineTo(bx, by + 4); c.stroke(); }
+    // the Moon's orbit for scale near Earth
+    if (sys.moon && S.show.real) {
+      const r = sys.moon / sys.aKm * V.s, [ex, ey] = P(1 - mu, 0);
+      if (r > 12 && r < Math.max(W, H)) { c.strokeStyle = T.muted; c.globalAlpha = 0.6; c.setLineDash([2, 4]); c.lineWidth = 1; c.beginPath(); c.arc(ex, ey, r, 0, TWO_PI); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+        labels.push({ t: `Moon's orbit`, x: ex, y: ey + r, r: 0, dir: 1, col: T.muted }); }
+    }
+    // trails
+    if (S.show.trail) for (const p of parts) drawTrail(c, p);
+    // bodies
+    const [x1, y1] = P(-mu, 0), [x2, y2] = P(1 - mu, 0);
+    const r1 = Math.max(R1 * V.s, 7 * ps), r2 = Math.max(R2 * V.s, 4 * ps);
+    c.fillStyle = T[sys.c1 || 'sun']; c.beginPath(); c.arc(x1, y1, Math.min(r1, 4 * Math.max(W, H)), 0, TWO_PI); c.fill();
+    c.fillStyle = T[sys.c2 || 'neg']; c.beginPath(); c.arc(x2, y2, Math.min(r2, 4 * Math.max(W, H)), 0, TWO_PI); c.fill();
+    if (S.show.lab) {
+      labels.push({ t: sys.m1, x: x1, y: y1, r: r1, dir: 1, col: T.ink, bold: true });
+      labels.push({ t: sys.m2, x: x2, y: y2, r: r2, dir: 1, col: T.ink, bold: true });
+    }
+    // Lagrange points
+    const keys = ['L1', 'L2', 'L3', 'L4', 'L5'], pts = {};
+    for (const k of keys) pts[k] = P(LPT[k].x, LPT[k].y);
+    const close = Math.hypot(pts.L1[0] - pts.L2[0], pts.L1[1] - pts.L2[1]) < 44 * ps;
+    for (const k of keys) {
+      const [px, py] = pts[k], st = LPT[k].st.stable, rr = 4.2 * ps;
+      if (px < -20 || px > W + 20 || py < -20 || py > H + 20) continue;
+      c.lineWidth = 1.6 * ps;
+      if (st) { c.fillStyle = T.stable; c.beginPath(); c.arc(px, py, rr, 0, TWO_PI); c.fill(); }
+      else { c.strokeStyle = T.pos; c.fillStyle = T.canvas; c.beginPath(); c.arc(px, py, rr, 0, TWO_PI); c.fill(); c.stroke(); }
+      if (!S.show.lab || (close && (k === 'L1' || k === 'L2'))) continue;
+      const tag = S.show.real && sys.tags && sys.tags[k] ? ` · ${sys.tags[k]}` : '';
+      const dir = k === 'L4' ? 1 : -1;   // L4 and L5 labels toward the center, where the drawing is emptier
+      labels.push({ t: k + tag, x: px, y: py, r: rr, dir, col: st ? T.stable : T.pos, bold: true });
+    }
+    if (S.show.lab && close) labels.push({ t: 'L1, L2: zoom in', x: x2, y: y2, r: r2 + 2 * ps, dir: -1, col: T.pos, bold: true });
+    // particles
+    for (const p of parts) drawParticle(c, p);
+    // newest particle's launch handles
+    if (rotF) drawHandles(c);
+    if (throwing) {
+      const a = throwing; c.strokeStyle = T.accent; c.fillStyle = T.accent; c.lineWidth = 2 * ps;
+      c.beginPath(); c.arc(a.x0, a.y0, 5 * ps, 0, TWO_PI); c.stroke();
+      if (Math.hypot(a.x1 - a.x0, a.y1 - a.y0) > 5) arrow(c, a.x0, a.y0, a.x1, a.y1, ps);
+    }
+    placeLabels(c, labels, [[x1, y1, r1], [x2, y2, r2]]);
+    // ZVC grip (always visible in the rotating frame)
+    if (zvcGrip) {
+      const hot = (drag && drag.id === 'zvc') || (!drag && hoverId === 'zvc');
+      c.fillStyle = T.canvas; c.strokeStyle = T.equi; c.lineWidth = (hot ? 2.6 : 1.8) * ps;
+      c.beginPath(); c.arc(zvcGrip[0], zvcGrip[1], (hot ? 6.5 : 5) * ps, 0, TWO_PI); c.fill(); c.stroke();
+      if (hot) label(c, `C = ${fmtC(S.C)}`, zvcGrip[0] + 10 * ps, zvcGrip[1] - 12 * ps, T.equi, 'left', 'middle', true);
+    }
+    drawScale(c, ps);
+    if (!rotF) label(c, 'Inertial frame: the potential map belongs to the rotating frame', 10 * ps, 14 * ps, T.muted, 'left', 'middle');
+    else if (hover) {
+      const d = Math.hypot(hover.x - 1 + mu, hover.y);
+      label(c, `${fmtLen(d, 4)} from ${sys.m2}`, 10 * ps, 14 * ps, T.muted, 'left', 'middle');
+    }
+  }
+  // labels on halos, each moved to the first free spot: its preferred side, the opposite side, right, left
+  function placeLabels(c, labels, discs) {
+    const ps = projScale(), placed = [], h = 14 * ps, gap = 6 * ps;
+    const obst = discs.map(([x, y, r]) => [x - r, y - r, 2 * r, 2 * r]);
+    const L = S.frame === 'rot' ? launchPx() : null;
+    if (L) for (const p of [L.a, L.b]) obst.push([p[0] - 8 * ps, p[1] - 8 * ps, 16 * ps, 16 * ps]);
+    const hit = (b) => placed.concat(obst).some((q) => b[0] < q[0] + q[2] && q[0] < b[0] + b[2] && b[1] < q[1] + q[3] && q[1] < b[1] + b[3]);
+    for (const lb of labels) {
+      c.font = `${lb.bold ? '600 ' : ''}${11 * ps}px ${T.mono}`;
+      const w = c.measureText(lb.t).width + 6, off = lb.r + gap + h / 2;
+      const cands = [[lb.x, lb.y + lb.dir * off], [lb.x, lb.y - lb.dir * off], [lb.x + lb.r + gap + w / 2, lb.y], [lb.x - lb.r - gap - w / 2, lb.y]];
+      let pick = cands[0];
+      for (const cd of cands) { if (!hit([cd[0] - w / 2, cd[1] - h / 2, w, h])) { pick = cd; break; } }
+      placed.push([pick[0] - w / 2, pick[1] - h / 2, w, h]);
+      label(c, lb.t, pick[0], pick[1], lb.col, 'center', 'middle', lb.bold);
+    }
+  }
+  function arrow(c, x0, y0, x1, y1, ps) {
+    const a = Math.atan2(y1 - y0, x1 - x0), L = 9 * ps;
+    c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1 - Math.cos(a) * L * 0.6, y1 - Math.sin(a) * L * 0.6); c.stroke();
+    c.beginPath(); c.moveTo(x1, y1); c.lineTo(x1 - L * Math.cos(a - 0.4), y1 - L * Math.sin(a - 0.4)); c.lineTo(x1 - L * Math.cos(a + 0.4), y1 - L * Math.sin(a + 0.4)); c.closePath(); c.fill();
+  }
+  function drawTrail(c, p) {
+    if (p.n < 2) return;
+    const ps = projScale(), b = p.buf, start = (p.head - p.n + p.cap) % p.cap;
+    c.strokeStyle = p.swarm ? T.stable : T[COLS[p.col]]; c.lineWidth = (p.swarm ? 1 : 1.6) * ps; c.globalAlpha = p.swarm ? 0.32 : 0.9; c.lineJoin = 'round';
+    c.beginPath();
+    let lx = -1e9, ly = -1e9, k0 = 0;
+    for (let k = 0; k < p.n; k++) {
+      const i = ((start + k) % p.cap) * 3, q = P(b[i], b[i + 1], b[i + 2]);
+      if (k === 0) { c.moveTo(q[0], q[1]); lx = q[0]; ly = q[1]; continue; }
+      if (k < p.n - 1 && Math.abs(q[0] - lx) + Math.abs(q[1] - ly) < 1.2) continue;
+      c.lineTo(q[0], q[1]); lx = q[0]; ly = q[1]; k0 = k;
+    }
+    c.stroke(); c.globalAlpha = 1;
+  }
+  function drawParticle(c, p) {
+    const ps = projScale(), q = P(p.s[0], p.s[1], p.t);
+    if (p.swarm) { c.fillStyle = T.stable; c.beginPath(); c.arc(q[0], q[1], 2.2 * ps, 0, TWO_PI); c.fill(); return; }
+    c.fillStyle = T[COLS[p.col]]; c.strokeStyle = T.canvas; c.lineWidth = 1.5 * ps;
+    c.beginPath(); c.arc(q[0], q[1], 4.5 * ps, 0, TWO_PI); c.fill(); c.stroke();
+    if (!p.alive && p.end && p.end !== 'escape') { c.strokeStyle = T[COLS[p.col]]; c.lineWidth = 1.5 * ps; c.beginPath(); c.moveTo(q[0] - 6 * ps, q[1] - 6 * ps); c.lineTo(q[0] + 6 * ps, q[1] + 6 * ps); c.moveTo(q[0] + 6 * ps, q[1] - 6 * ps); c.lineTo(q[0] - 6 * ps, q[1] + 6 * ps); c.stroke(); }
+  }
+  function launchPx() {
+    if (!sel) return null;
+    const ps = projScale(), s0 = sel.s0, a = toPx(s0[0], s0[1]);
+    let b = toPx(s0[0] + s0[2] * ARW, s0[1] + s0[3] * ARW), knob = false;
+    if (Math.hypot(b[0] - a[0], b[1] - a[1]) < 14 * ps) { b = [a[0] + 18 * ps, a[1]]; knob = true; }
+    return { a, b, knob };
+  }
+  function drawHandles(c) {
+    const L = launchPx(); if (!L) return;
+    const ps = projScale(), col = T[COLS[sel.col]], hs = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+    c.strokeStyle = col; c.fillStyle = col; c.lineWidth = 1.8 * ps;
+    if (!L.knob) arrow(c, L.a[0], L.a[1], L.b[0], L.b[1], ps);
+    else { c.globalAlpha = 0.6; c.setLineDash([2, 3]); c.beginPath(); c.moveTo(L.a[0], L.a[1]); c.lineTo(L.b[0], L.b[1]); c.stroke(); c.setLineDash([]); c.globalAlpha = 1; }
+    // start ring
+    const hs1 = hs('start'); c.fillStyle = T.canvas; c.lineWidth = (hs1 ? 2.6 : 1.8) * ps;
+    c.beginPath(); c.arc(L.a[0], L.a[1], (hs1 ? 7.5 : 6) * ps, 0, TWO_PI); c.fill(); c.stroke();
+    // tip grip
+    const hs2 = hs('tip'); c.fillStyle = hs2 ? col : T.canvas; c.lineWidth = (hs2 ? 2.4 : 1.6) * ps;
+    c.beginPath(); c.arc(L.b[0], L.b[1], (hs2 ? 6 : 4.5) * ps, 0, TWO_PI); c.fill(); c.stroke();
+  }
+  function gripPoint() {
+    const sg = zvc.segs; if (!sg || !sg.length) return null;
+    const ax = drag && drag.id === 'zvc' && drag.px !== undefined ? drag.px : W * 0.5, ay = drag && drag.id === 'zvc' && drag.py !== undefined ? drag.py : H * 0.12;
+    const m = 14 * projScale();
+    let best = null, bd = Infinity;
+    for (let k = 0; k < sg.length; k += 4) {
+      const x = sg[k], y = sg[k + 1]; if (x < m || x > W - m || y < m || y > H - m) continue;
+      const d = (x - ax) * (x - ax) + (y - ay) * (y - ay); if (d < bd) { bd = d; best = [x, y]; }
+    }
+    return best;
+  }
+  function niceLen(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p; }
+  function drawScale(c, ps) {
+    const L = niceLen(110 * ps / V.s), px = L * V.s, x1 = W - 14 * ps, x0 = x1 - px, y = H - 14 * ps;
+    c.strokeStyle = T.ink; c.lineWidth = 1.5 * ps; c.beginPath(); c.moveTo(x0, y - 4 * ps); c.lineTo(x0, y); c.lineTo(x1, y); c.lineTo(x1, y - 4 * ps); c.stroke();
+    const s = sysNow(), txt = s.aKm ? `${trimz(L.toPrecision(3))} a = ${fmtLen(L, 3)}` : `${trimz(L.toPrecision(3))} a`;
+    label(c, txt, x1, y - 13 * ps, T.ink, 'right', 'middle');
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const s = sysNow(), mu = S.mu;
+    $('muOut').textContent = sci(mu, 4);
+    $('rA').textContent = s.aKm ? (s.au ? `${(s.aKm / AU_KM).toFixed(4)} AU` : `${s.aKm.toLocaleString('en-US')} km`) : '1 a';
+    $('rP').textContent = s.Pd ? (s.Pd > 700 ? `${(s.Pd / 365.25).toFixed(2)} yr` : `${s.Pd.toFixed(2)} d`) : '1 P';
+    const ok = mu < ROUTH;
+    $('rRouth').innerHTML = ok ? `<span class="good">stable</span> <span class="ok">μ = ${sci(mu, 3)} is below 0.03852</span>` : `<span class="bad">unstable</span> <span class="ok">μ = ${sci(mu, 3)} is above 0.03852</span>`;
+    $('sysHint').textContent = s.hint;
+    // Lagrange points
+    const rows = [];
+    for (const k of ['L1', 'L2', 'L3', 'L4', 'L5']) {
+      const p = LPT[k], st = p.st;
+      let where;
+      if (k === 'L1') where = `${fmtLen(p.g)} from ${s.m2}, toward ${s.m1}`;
+      else if (k === 'L2') where = `${fmtLen(p.g)} from ${s.m2}, away from ${s.m1}`;
+      else if (k === 'L3') where = `${fmtLen(p.g, 7)} from ${s.m1}, opposite ${s.m2}`;
+      else where = `60° ${k === 'L4' ? 'ahead of' : 'behind'} ${s.m2}, ${fmtLen(1, 4)} from both`;
+      let how;
+      if (st.stable) { const f = Math.min(...st.freqs); how = `<span class="good">stable</span>: small librations take ${fmtT(TWO_PI / f)}`; }
+      else how = `<span class="bad">unstable</span>${k <= 'L3' ? ' saddle' : ''}: offsets grow ×e every ${fmtT(1 / st.growth)}`;
+      rows.push(`<div><dt>${k}</dt><dd>x = ${minus(p.x.toFixed(k === 'L3' ? 7 : 5))}${k > 'L3' ? `, y = ${p.y > 0 ? '' : '−'}0.86603` : ''}<span>${where}</span><span>${how}</span></dd></div>`);
+    }
+    $('lpts').innerHTML = rows.join('');
+    $('rHill').innerHTML = `${fmtLen(Math.cbrt(mu / 3), 4)} and ${fmtLen(LPT.L2.g, 4)} <span class="ok">(Hill is ${minus(((Math.cbrt(mu / 3) / LPT.L2.g - 1) * 100).toFixed(2))}% off)</span>`;
+    // zero velocity curve
+    $('cjOut').textContent = fmtC(S.C);
+    $('rRegion').innerHTML = regionText(S.C);
+    // speed
+    const sp = SPEEDS[S.speed]; $('spOut').textContent = `${sp} P per second` + (s.Pd ? ` = ${fmtT(sp * TWO_PI, 2)}` : '');
+    partReadouts();
+  }
+  function regionText(C) {
+    const s = sysNow(), m1 = s.m1, m2 = s.m2;
+    if (C < 3) return 'Everywhere. C is below C(L4) = 3, so 2Ω ≥ C holds at every point and nothing is forbidden.';
+    if (C < CL.L3) return 'Forbidden islands around L4 and L5. Every Lagrange point on the line is open.';
+    if (C < CL.L2) return `Forbidden horseshoe through L4, L3 and L5. The gaps at L1 and L2 are open, so a particle can still leave the ${m2} region.`;
+    if (C < CL.L1) return `L2 closed. A particle near ${m1} or ${m2} can cross between them through L1 but cannot escape; one outside stays outside.`;
+    return `L1 closed too. A particle near ${m1} stays near ${m1}, one near ${m2} stays near ${m2}, and one outside stays outside.`;
+  }
+  function partReadouts() {
+    const s = sysNow();
+    const own = parts.filter((p) => !p.swarm);
+    const sw = parts.length - own.length;
+    $('count').innerHTML = `t = ${(t / TWO_PI).toFixed(2)} <small>P</small>${s.Pd ? ` · ${fmtT(t, 3)}` : ''}${sw ? ` · ${sw} <small>asteroids</small>` : ''}`;
+    if (!sel) { $('rC').textContent = '—'; $('rDC').textContent = '—'; $('rNow').textContent = sw ? 'The swarm has no single launch to edit. Click to add your own particle.' : 'No particle yet.'; return; }
+    const C = jacobi(S.mu, sel.s), dC = Math.abs((C - sel.C0) / sel.C0);
+    $('rC').textContent = fmtC(C);
+    $('rDC').innerHTML = `${dC === 0 ? '0' : sci(dC, 2)} <span class="ok">after ${(Math.max(0, sel.t - sel.t0) / TWO_PI).toFixed(1)} P</span>`;
+    const d2 = Math.hypot(sel.s[0] - 1 + S.mu, sel.s[1]), v = Math.hypot(sel.s[2], sel.s[3]);
+    let status = '';
+    if (!sel.alive) status = sel.end === 'hit1' ? `Hit ${s.m1}.` : sel.end === 'hit2' ? `Hit ${s.m2}.` : sel.end === 'escape' ? 'Left the system (beyond 4 a); stopped.' : 'Stopped.';
+    $('rNow').innerHTML = `${fmtLen(d2, 4)} from ${s.m2}, speed ${fmtSpeed(v)} in the rotating frame${status ? `<br>${status}` : ''}`;
+  }
+  // launch sliders <-> newest particle
+  const vOf = (k) => (k <= 0 ? 0 : Math.pow(10, -6 + 6.5 * k / 1000));
+  const kOf = (v) => (v <= 1e-6 ? 0 : Math.max(1, Math.min(1000, Math.round((Math.log10(v) + 6) / 6.5 * 1000))));
+  function syncLaunch() {
+    const on = !!sel; $('vs').disabled = !on; $('vd').disabled = !on;
+    if (!sel) { $('vsOut').textContent = '—'; $('vdOut').textContent = '—'; return; }
+    const v = Math.hypot(sel.s0[2], sel.s0[3]), a = ((Math.atan2(sel.s0[3], sel.s0[2]) / deg) + 360) % 360;
+    $('vs').value = kOf(v); if (v > 0) $('vd').value = Math.round(a) % 360;
+    $('vsOut').textContent = v > 0 ? `${fmtSpeed(v)}` : 'at rest';
+    $('vdOut').textContent = `${$('vd').value}°`;
+  }
+  function setLaunch(k, dDeg) {
+    if (!sel) return;
+    k = Math.max(0, Math.min(1000, Math.round(k))); dDeg = ((Math.round(dDeg) % 360) + 360) % 360;
+    const v = vOf(k), s0 = sel.s0;
+    relaunch(sel, [s0[0], s0[1], v * Math.cos(dDeg * deg), v * Math.sin(dDeg * deg)]);
+    $('vd').value = dDeg; $('vs').value = k;
+    $('vsOut').textContent = v > 0 ? fmtSpeed(v) : 'at rest'; $('vdOut').textContent = `${dDeg}°`;
+    custom();
+  }
+
+  // ---------- controls ----------
+  function setC(C, fromUser) {
+    S.C = C; S.cPos = posOfC(C); $('cj').value = Math.round(S.cPos);
+    if (fromUser) { S.follow = false; $('follow').checked = false; }
+    zvc.key = ''; readouts(); drawAll();
+  }
+  function setCPos(v) { v = Math.max(0, Math.min(500, Math.round(v))); setC(cOfPos(v), true); S.cPos = v; $('cj').value = v; }
+  function markPreset(name) {
+    S.preset = name;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint').textContent = name && PRESETS[name] ? PRESETS[name].hint : 'Your own setup. Pick a setup above to return to a known one.';
+  }
+  const custom = () => { if (S.preset) markPreset(null); };
+  function syncSys() {
+    for (const b of document.querySelectorAll('#systems button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.sys));
+    $('mu').value = Math.log10(S.mu).toFixed(3);
+    $('vNear').textContent = `Near ${sysNow().m2}`;
+  }
+  function setMu(mu, sys) {
+    S.mu = mu; S.sys = sys; refreshPoints();
+    parts = []; sel = null; t = 0; colNext = 0;
+    S.C = cOfPos(S.cPos);
+    field.key = ''; syncSys(); syncLaunch();
+    if (S.view !== 'free') fitView(); else fitView('whole');
+    readouts(); drawAll();
+  }
+  function applyPreset(name) {
+    const p = PRESETS[name];
+    S.frame = 'rot'; syncFrame();
+    S.view = p.view; S.speed = p.speed; $('sp').value = p.speed;
+    S.follow = p.follow; $('follow').checked = p.follow;
+    if (p.cPos !== undefined) S.cPos = p.cPos;
+    setMu(SYS[p.sys].mu, p.sys);
+    markPreset(name);
+    for (const q of p.make(S.mu, CL, LPT)) addParticle(q.s, { swarm: q.swarm, col: q.col });
+    if (!sel || !S.follow) setC(cOfPos(S.cPos), false);
+    syncLaunch(); readouts(); drawAll();
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => { applyPreset(b.dataset.p); if (!reduce) setPlaying(true); });
+  for (const b of document.querySelectorAll('#systems button')) b.addEventListener('click', () => { custom(); S.view = S.view === 'free' ? 'whole' : S.view; setMu(SYS[b.dataset.s].mu, b.dataset.s); });
+  $('mu').addEventListener('input', (e) => {
+    custom();
+    let mu = Math.pow(10, +e.target.value), sys = 'custom';
+    for (const k of Object.keys(SYS)) if (Math.abs(Math.log10(SYS[k].mu) - +e.target.value) < 0.0008) { mu = SYS[k].mu; sys = k; }
+    setMu(Math.min(0.5, mu), sys);
+  });
+  $('cj').addEventListener('input', (e) => { custom(); setCPos(+e.target.value); });
+  $('follow').addEventListener('change', (e) => { S.follow = e.target.checked; if (S.follow && sel) setC(jacobi(S.mu, sel.s0), false); });
+  $('vs').addEventListener('input', (e) => setLaunch(+e.target.value, +$('vd').value));
+  $('vd').addEventListener('input', (e) => setLaunch(+$('vs').value, +e.target.value));
+  $('sp').addEventListener('input', (e) => { S.speed = +e.target.value; readouts(); });
+  for (const [id, k] of [['tCont', 'cont'], ['tLab', 'lab'], ['tTrail', 'trail'], ['tReal', 'real']]) $(id).addEventListener('change', (e) => { S.show[k] = e.target.checked; drawAll(); });
+  function syncFrame() { $('fRot').setAttribute('aria-pressed', String(S.frame === 'rot')); $('fIn').setAttribute('aria-pressed', String(S.frame === 'in'));
+    $('partHint').textContent = S.frame === 'rot' ? 'Click or tap empty space to drop a particle at rest; press and drag to throw it. The arrow shows how far it would go in 0.1 P at its launch speed.' : 'Inertial frame: the same motion seen from the stars, with both masses going around. Switch back to the rotating frame to drop or edit particles.'; }
+  function setFrame(f) { S.frame = f; syncFrame(); hoverId = null; drawAll(); }
+  $('fRot').addEventListener('click', () => setFrame('rot'));
+  $('fIn').addEventListener('click', () => setFrame('in'));
+  $('vWhole').addEventListener('click', () => { fitView('whole'); drawAll(); });
+  $('vNear').addEventListener('click', () => { fitView('near'); drawAll(); });
+  $('zIn').addEventListener('click', () => zoom(1.5));
+  $('zOut').addEventListener('click', () => zoom(1 / 1.5));
+  const playBtn = $('play');
+  function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); }
+  playBtn.addEventListener('click', () => setPlaying(!playing));
+  $('reset').addEventListener('click', () => { if (S.preset) applyPreset(S.preset); else { const keep = parts.map((p) => ({ s: p.s0, swarm: p.swarm, col: p.col })); t = 0; parts = []; sel = null; for (const q of keep) addParticle(q.s, q); readouts(); drawAll(); } });
+  function clearParts() { parts = []; sel = null; custom(); syncLaunch(); readouts(); drawAll(); }
+  $('clear').addEventListener('click', clearParts);
+
+  // ---------- dragging on the drawing ----------
+  function dragHandles() {
+    const out = []; if (S.frame !== 'rot') return out;
+    const L = launchPx();
+    if (L) {
+      out.push({ id: 'tip', pt: L.b, cursor: 'grab', set: (w) => { const s0 = sel.s0, vx = (w.x - s0[0]) / ARW, vy = (w.y - s0[1]) / ARW; setLaunch(kOf(Math.hypot(vx, vy)), Math.atan2(vy, vx) / deg); } });
+      out.push({ id: 'start', pt: L.a, cursor: 'move', set: (w) => { const s0 = sel.s0; const [R1, R2] = radii(); if (Math.hypot(w.x + S.mu, w.y) < R1 || Math.hypot(w.x - 1 + S.mu, w.y) < R2) return; relaunch(sel, [w.x, w.y, s0[2], s0[3]]); custom(); } });
+    }
+    if (zvcGrip) out.push({ id: 'zvc', pt: zvcGrip, curve: true, cursor: 'grab', set: (w) => { const v = posOfC(omega2(S.mu, w.x, w.y)); custom(); setCPos(v); } });
+    return out;
+  }
+  function handleAt(x, y, touch) {
+    const tol = 9 * projScale() * (touch ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of dragHandles()) {
+      let d = Math.hypot(x - h.pt[0], y - h.pt[1]) - 3;
+      if (h.curve) {   // anywhere on the curve: distance ≈ |2Ω − C| / |∇2Ω| in px
+        const w = toW(x, y), g = gradOmega(S.mu, w.x, w.y), f = omega2(S.mu, w.x, w.y);
+        const dc = Math.abs(f - S.C) / (2 * Math.hypot(g[0], g[1]) + 1e-30) * V.s;
+        if (dc < tol * 0.55) d = Math.min(d, dc + 2);    // a narrower band than the grips, so clicks beside the curve still drop particles; the particle handles win a tie
+      }
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  const evXY = (ev) => { const r = can.getBoundingClientRect(); return [ev.clientX - r.left, ev.clientY - r.top]; };
+  let dragQ = null, dragFrame = false;
+  can.addEventListener('pointermove', (ev) => {
+    const [x, y] = evXY(ev);
+    if (drag) {
+      dragQ = [x, y];
+      if (!dragFrame) { dragFrame = true; requestAnimationFrame(() => { dragFrame = false; if (!drag || !dragQ) return; drag.px = dragQ[0]; drag.py = dragQ[1]; const h = dragHandles().find((k) => k.id === drag.id); if (h) h.set(toW(dragQ[0], dragQ[1])); dragQ = null; drawAll(); }); }
+      return;
+    }
+    if (throwing) { throwing.x1 = x; throwing.y1 = y; drawAll(); return; }
+    const h = handleAt(x, y, ev.pointerType === 'touch'); hoverId = h ? h.id : null;
+    can.style.cursor = h ? h.cursor : (S.frame === 'rot' ? 'crosshair' : 'default');
+    hover = S.frame === 'rot' ? toW(x, y) : null;
+    if (!playing) drawAll();
+  });
+  can.addEventListener('pointerdown', (ev) => {
+    const [x, y] = evXY(ev);
+    can.focus({ preventScroll: true });
+    const h = handleAt(x, y, ev.pointerType === 'touch');
+    if (h) { drag = { id: h.id }; hoverId = h.id; if (h.id !== 'zvc') can.style.cursor = 'grabbing'; }
+    else if (S.frame === 'rot') throwing = { x0: x, y0: y, x1: x, y1: y };
+    else return;
+    try { can.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault();
+  });
+  function endPointer() {
+    if (throwing) {
+      const a = throwing; throwing = null;
+      const w0 = toW(a.x0, a.y0), w1 = toW(a.x1, a.y1), moved = Math.hypot(a.x1 - a.x0, a.y1 - a.y0) > 5;
+      const vx = moved ? (w1.x - w0.x) / ARW : 0, vy = moved ? (w1.y - w0.y) / ARW : 0;
+      if (addParticle([w0.x, w0.y, vx, vy])) { custom(); if (!reduce && !playing) setPlaying(true); }
+      readouts(); drawAll();
+    }
+    if (drag) { drag = null; drawAll(); }
+  }
+  can.addEventListener('pointerup', endPointer);
+  can.addEventListener('pointercancel', () => { throwing = null; drag = null; drawAll(); });
+  can.addEventListener('pointerleave', () => { if (!drag) { hoverId = null; hover = null; if (!playing) drawAll(); } });
+  can.addEventListener('wheel', (ev) => { ev.preventDefault(); const [x, y] = evXY(ev); zoom(Math.exp(-ev.deltaY * 0.0015), x, y); }, { passive: false });
+  can.addEventListener('keydown', (e) => {
+    const k = e.key, big = e.shiftKey;
+    if (k.startsWith('Arrow')) {
+      if (big || !sel || S.frame !== 'rot') {
+        const step = 0.08 * Math.min(W, H) / V.s, dx = k === 'ArrowLeft' ? -step : k === 'ArrowRight' ? step : 0, dy = k === 'ArrowDown' ? -step : k === 'ArrowUp' ? step : 0;
+        if (S.frame === 'rot') { V.x0 += dx; V.y0 += dy; } else shiftCenterInertial(dx, dy);
+        S.view = 'free'; syncView(); drawAll();
+      } else if (k === 'ArrowLeft' || k === 'ArrowRight') setLaunch(+$('vs').value, +$('vd').value + (k === 'ArrowLeft' ? 5 : -5));
+      else setLaunch(+$('vs').value + (k === 'ArrowUp' ? 10 : -10), +$('vd').value);
+    } else if (k === '+' || k === '=') zoom(1.25);
+    else if (k === '-' || k === '_') zoom(0.8);
+    else if (k === '[' || k === ']') { custom(); setCPos(S.cPos + (k === ']' ? 5 : -5)); }
+    else if (k === ' ') setPlaying(!playing);
+    else if (k === 'i' || k === 'I') setFrame(S.frame === 'rot' ? 'in' : 'rot');
+    else if (k === 'f' || k === 'F') { fitView('whole'); drawAll(); }
+    else if (k === 'n' || k === 'N') { fitView('near'); drawAll(); }
+    else if (k === 'x' || k === 'X') clearParts();
+    else return;
+    e.preventDefault();
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(() => resize());
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  const retheme = () => { tokens(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, frameMs = 0;
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (playing) { stepParticles(SPEEDS[S.speed] * TWO_PI * dt); drawAll(); }
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastRead > 150) { partReadouts(); lastRead = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__lp = { get frameMs() { return frameMs; }, get S() { return S; }, get t() { return t; }, get parts() { return parts; }, get sel() { return sel; }, get L() { return LPT; }, get CL() { return CL; },
+    get V() { return V; }, get grip() { return zvcGrip; }, toPx, handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt })); }, setPlaying, applyPreset, run(P) { stepParticles(P * TWO_PI); readouts(); drawAll(); }, step(P) { stepParticles(P * TWO_PI); }, draw: () => drawAll() };
+
+  tokens();
+  refreshPoints();
+  const ro = new ResizeObserver(() => resize());
+  ro.observe(pane);
+  resize();
+  applyPreset('trojans');
+  if (reduce) { setPlaying(false); stepParticles(14 * TWO_PI); readouts(); drawAll(); }   // a still picture: the tadpoles already traced
+  else setPlaying(true);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
