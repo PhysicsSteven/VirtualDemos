@@ -114,8 +114,33 @@ def find_profiles(run_dir):
 def pick_evenly(items, n):
     if len(items) <= n:
         return items
+    if n <= 0:
+        return []
+    if n == 1:
+        return [items[len(items) // 2]]
     step = (len(items) - 1) / (n - 1)
     return [items[round(i * step)] for i in range(n)]
+
+def pick_mixed(items, n, age_share):
+    """n items: a share spread evenly in star age, the rest evenly in saved model order. Model order alone
+    puts most moments where MESA takes many short steps (a helium flash); age alone skips those moments."""
+    if len(items) <= n or age_share <= 0:
+        return pick_evenly(items, n)
+    ages = [t[2].get('star_age') for t in items]
+    if not all(isinstance(a, float) for a in ages) or ages[-1] <= ages[0]:
+        return pick_evenly(items, n)
+    n_age = int(round(n * age_share))
+    keep = {id(t) for t in pick_evenly(items, n - n_age)}
+    out = [t for t in items if id(t) in keep]
+    a0, a1 = ages[0], ages[-1]
+    for i in range(n_age):
+        target = a0 + (a1 - a0) * (i + 0.5) / n_age
+        free = [k for k in range(len(items)) if id(items[k]) not in keep]
+        if not free:
+            break
+        j = min(free, key=lambda k: abs(ages[k] - target))
+        keep.add(id(items[j])); out.append(items[j])
+    return [t for t in items if id(t) in keep]
 
 def choose_zones(mass, logr, n):
     """Indices of real zones spread evenly in enclosed mass AND in log radius, so both the core and the
@@ -157,6 +182,8 @@ def main():
     ap.add_argument('--moments', type=int, default=150)
     ap.add_argument('--zones', type=int, default=200)
     ap.add_argument('--label')
+    ap.add_argument('--age-share', type=float, default=0,
+                    help='fraction of each stage\'s moments spread evenly in star age instead of model order (e.g. 0.5)')
     ap.add_argument('--weights', help='comma separated share of moments for each RUN_DIR in order, e.g. 0.5,1,1,1,1,1 '
                     '(default: moments spread evenly over all profiles, so a stage with many profiles gets many moments)')
     a = ap.parse_args()
@@ -215,11 +242,11 @@ def main():
         for d, wi in zip(a.runs, w):
             mine = [t for t in heads if t[0] == d]
             k = max(2, round(a.moments * wi / sum(w))) if mine else 0
-            got = pick_evenly(mine, min(k, len(mine)))
+            got = pick_mixed(mine, min(k, len(mine)), a.age_share)
             print('  %-40s %4d profiles -> %d moments' % (os.path.basename(os.path.normpath(d)), len(mine), len(got)))
             chosen += got
     else:
-        chosen = pick_evenly(heads, a.moments)
+        chosen = pick_mixed(heads, a.moments, a.age_share)
     keep_cols = [k for k in WANT if have[k]]
     moments = []
     for d, fp, h, _ in chosen:

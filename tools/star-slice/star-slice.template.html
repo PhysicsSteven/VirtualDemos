@@ -588,9 +588,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (mo.stage !== 'Core helium burning') continue;
       const coreHe = mo.shells.some((s) => s.core && /^He burning/.test(s.name));
       if (!coreHe && !(mo.cHe < peak - 0.01)) mo.stage = 'Hydrogen shell burning';
-    }    // massive stars: a single saved moment whose label differs from equal neighbors on both sides is
+    }    // low mass stars light helium off center in a degenerate core: the helium flash, then smaller flashes that
+    // step inward until helium burns at the center. Read from where tri_alpha peaks.
+    for (const mo of ms) {
+      if (!mo.ta || !(mo.cH != null && mo.cH < 1e-3) || !(mo.cHe != null && mo.cHe > 0.5)) continue;
+      let ip = 0; for (let i = 1; i < mo.n; i++) if ((mo.ta[i] || 0) > (mo.ta[ip] || 0)) ip = i;
+      const peak = mo.ta[ip] || 0, offCenter = mo.mass[ip] > 0.01 * mo.M && (mo.ta[0] || 0) < 0.1 * peak;
+      if (peak > 1e4 && offCenter) mo.stage = peak > 1e8 ? 'Helium flash' : 'Helium burning moving inward';
+    }
+    // a single saved moment whose label differs from equal neighbors on both sides is
     // the core burning detection flickering near its threshold, so it takes the neighbors' label
-    if (D.has.massive) {
+    {
       const st = ms.map((mo) => mo.stage);
       for (let i = 1; i + 1 < ms.length; i++) if (st[i - 1] === st[i + 1] && st[i] !== st[i - 1]) ms[i].stage = st[i - 1];
     }
