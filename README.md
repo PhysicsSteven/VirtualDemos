@@ -4,9 +4,12 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 
 ## Demos
 
-| Demo | Topic |
-| --- | --- |
-| [Coulomb Sandbox](demos/coulomb-sandbox.html) | Electric field and potential of point charges, as a 2D map and a 3D potential landscape |
+| Demo | Subject | Topic |
+| --- | --- | --- |
+| [Projectile Range](demos/projectile-drag.html) | Mechanics | Projectile motion with and without quadratic air drag |
+| [Gas in a Box](demos/ideal-gas.html) | Thermodynamics | Kinetic theory of a 2D gas: pressure, temperature, Maxwell-Boltzmann speeds, adiabatic compression |
+| [Coulomb Sandbox](demos/coulomb-sandbox.html) | Electricity and magnetism | Electric field and potential of point charges, as a 2D map and a 3D potential landscape |
+| [Optics Bench](demos/optics-bench.html) | Optics | Ray tracing through lenses, mirrors and glass, with image formation, total internal reflection and dispersion |
 
 ## Viewing
 

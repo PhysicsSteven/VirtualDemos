@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Gas in a Box</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); }
+.units { color: var(--muted); font-size: 0.8rem; }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: flex; flex-direction: column; }
+.pane { position: relative; min-height: 0; }
+.pane.box { flex: 1.7 1 0; }
+.pane.hist { flex: 1 1 0; min-height: 190px; border-top: 1px solid var(--line); }
+.stage canvas { position: absolute; inset: 0; display: block; }
+#box { touch-action: none; cursor: crosshair; outline: none; }
+#box:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
+.seg { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button, .spin {
+  font: inherit; font-size: 0.86rem; font-weight: 700; color: var(--muted); background: none; border: 0;
+  border-radius: 6px; padding: 5px 11px; cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.spin { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; min-width: 64px; }
+.spin:hover { border-color: var(--muted); }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.clock {
+  position: absolute; top: 10px; right: 10px; z-index: 2; font-size: 0.8rem; color: var(--muted);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 9px;
+}
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.seg.full { display: grid; grid-template-columns: 1fr 1fr; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.25rem; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input { accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); }
+
+.legend-bar { height: 10px; border-radius: 5px; background: linear-gradient(90deg, var(--neg), var(--pos)); border: 1px solid var(--line); }
+.legend-scale { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--muted); margin-top: 3px; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.equi { border-color: var(--equi); }
+.swatch.trail { border-color: var(--accent); }
+.swatch.wall { border-top-width: 4px; border-color: var(--ink); }
+
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; }
+  .pane.box { flex: none; height: calc((100vw - 34px) * 0.6 + 86px); max-height: 72vh; min-height: 260px; }
+  .pane.hist { flex: none; height: 230px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Gas in a Box</h1>
+      <p>Pressure and temperature come from molecules hitting the walls. Push the piston and watch the gas heat up.</p>
+    </div>
+    <div class="units mono">argon, m = 6.63×10⁻²⁶ kg · box height 30 nm · 1 s on screen = 80 ps</div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="pane box" id="boxPane">
+        <canvas id="box" tabindex="0" role="application" aria-label="Gas in a box. Drag the right wall to compress or expand the gas. Arrow keys move the wall, space plays or pauses. Click a molecule to follow it."></canvas>
+        <div class="viewbar">
+          <button type="button" class="spin" id="play">Pause</button>
+          <button type="button" class="spin" id="reset">Reset</button>
+        </div>
+        <div class="clock mono" id="clock">t = 0 ps</div>
+      </div>
+      <div class="pane hist" id="histPane">
+        <canvas id="hist" role="img" aria-label="Histogram of molecular speeds with the two dimensional Maxwell-Boltzmann curve overlaid."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="relax" aria-pressed="true">Relax to equilibrium</button>
+          <button type="button" data-p="hotcold" aria-pressed="false">Hot vs cold</button>
+          <button type="button" data-p="compress" aria-pressed="false">Compress</button>
+          <button type="button" data-p="dilute" aria-pressed="false">Dilute gas</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Measurements</h2>
+        <dl class="readout">
+          <div class="big"><dt>Temperature T</dt><dd id="rT">—</dd></div>
+          <div class="big"><dt>Molecules N</dt><dd id="rN">—</dd></div>
+          <div><dt>P measured</dt><dd id="rP">—</dd></div>
+          <div><dt>P ideal, NkT/A</dt><dd id="rPi">—</dd></div>
+          <div><dt>P / P ideal</dt><dd id="rRatio">—</dd></div>
+          <div><dt>Box area A</dt><dd id="rA">—</dd></div>
+          <div><dt>Mean speed</dt><dd id="rMean">—</dd></div>
+          <div><dt>rms speed</dt><dd id="rRms">—</dd></div>
+        </dl>
+        <p class="hint">T comes from the kinetic energy: in two dimensions the average is ⟨KE⟩ = kT. P measured is the momentum the molecules deliver to the walls, per unit wall length per unit time, averaged over about a second. In 2D, pressure is force per length (N/m).</p>
+      </section>
+
+      <section>
+        <h2>Gas</h2>
+        <div>
+          <div class="slider-head"><label for="nIn">Molecules N</label><output id="nOut" class="mono" for="nIn">150</output></div>
+          <input type="range" id="nIn" min="20" max="400" step="5" value="150">
+        </div>
+        <div>
+          <div class="slider-head"><label for="tIn">Temperature</label><output id="tOut" class="mono" for="tIn">300 K</output></div>
+          <input type="range" id="tIn" min="50" max="1000" step="10" value="300">
+        </div>
+        <div class="seg full" role="group" aria-label="Starting speeds" id="startSeg">
+          <button type="button" data-m="equal" aria-pressed="true">Equal speeds</button>
+          <button type="button" data-m="thermal" aria-pressed="false">Random (thermal)</button>
+        </div>
+        <p class="hint">Moving the temperature slider rescales every speed at once. Picking a start restarts the gas.</p>
+      </section>
+
+      <section>
+        <h2>Piston</h2>
+        <div>
+          <div class="slider-head"><label for="wIn">Box width</label><output id="wOut" class="mono" for="wIn">50.0 nm</output></div>
+          <input type="range" id="wIn" min="15" max="50" step="0.5" value="50">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sIn">Piston top speed</label><output id="sOut" class="mono" for="sIn">300 m/s</output></div>
+          <input type="range" id="sIn" min="25" max="1000" step="25" value="300">
+        </div>
+        <p class="hint">Drag the right wall, or use the arrow keys on the box. A molecule bouncing off a wall that moves toward it comes back faster. For a slow squeeze of this 2D gas, T × A stays about constant. Pull the wall out faster than the molecules move and the gas barely cools.</p>
+      </section>
+
+      <section>
+        <h2>Display</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tColor" checked>Color by speed</label>
+          <label><input type="checkbox" id="tTrail" checked>Tracer trail</label>
+        </div>
+        <div>
+          <div class="legend-bar"></div>
+          <div class="legend-scale mono"><span>0</span><span>450</span><span>900+ m/s</span></div>
+        </div>
+        <div class="key">
+          <span><i class="swatch equi"></i>2D Maxwell-Boltzmann curve at measured T</span>
+          <span><i class="swatch trail"></i>Tracer path; click a molecule to follow it</span>
+          <span><i class="swatch wall"></i>Piston, the movable right wall</span>
+        </div>
+        <p class="hint">Molecules are hard disks 0.5 nm across, a bit larger than real argon (about 0.34 nm), drawn at that size or larger. Their finite size makes P run a few percent above NkT/A, more when the box is crowded.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ---------- constants (SI where it matters) ----------
+  const KB = 1.380649e-23;        // J/K
+  const M = 6.63e-26;             // kg, argon
+  const LX = 50, LY = 30;         // nm, largest box
+  const MIN_W = 15;               // nm
+  const R = 0.25, D2 = 4 * R * R; // nm, hard disk radius
+  const PS_PER_S = 80;            // ps of simulated time per second on screen
+  const NMAX = 400, NB = 30;
+  const P_TAU = 1.2, H_TAU = 0.35; // smoothing windows, seconds on screen
+  const CS = 1, GX = Math.ceil(LX / CS), GY = Math.ceil(LY / CS);
+  const AXES = [400, 600, 800, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 7000];
+  const PAL = 24, V_COLOR = 900;  // m/s at the hot end of the color scale
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  // ---------- state ----------
+  const px = new Float64Array(NMAX), py = new Float64Array(NMAX);
+  const vx = new Float64Array(NMAX), vy = new Float64Array(NMAX);
+  const head = new Int32Array(GX * GY), next = new Int32Array(NMAX);
+  let N = 150, Tset = 300, mode = 'equal', preset = 'relax';
+  let wallX = LX, wallTarget = LX, wallV = 0, pistonMax = 300, pistonTouched = false;
+  let running = !reduce, simT = 0, tracer = 0, trail = [];
+  let showTrail = true, colorBySpeed = true;
+  let impAcc = 0, ltAcc = 0;
+  const hist = new Float32Array(NB), counts = new Float32Array(NB);
+  let histFresh = true, vAxis = 1000, yMax = 0, overflow = 0;
+  const stats = { T: 0, mean: 0, rms: 0, vmax: 0 };
+  let dirty = true, drag = null, tDragging = false;
+
+  // ---------- theme ----------
+  let tok = null, palette = [];
+  const monoFont = () => getComputedStyle(document.body).getPropertyValue('--font-mono') || 'monospace';
+  function rgb(hex) {
+    hex = hex.replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map((c) => c + c).join('');
+    const n = parseInt(hex, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  function refreshTokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    tok = { pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+            canvas: g('--canvas'), relief: g('--relief'), ink: g('--ink'), muted: g('--muted'), accent: g('--accent'),
+            line: g('--line'), surface: g('--surface'), mono: monoFont() };
+    const a = rgb(tok.neg), b = rgb(tok.pos);
+    palette = [];
+    for (let k = 0; k < PAL; k++) {
+      const t = k / (PAL - 1);
+      palette.push(`rgb(${Math.round(a[0] + (b[0] - a[0]) * t)},${Math.round(a[1] + (b[1] - a[1]) * t)},${Math.round(a[2] + (b[2] - a[2]) * t)})`);
+    }
+    dirty = true;
+  }
+  const colorIndex = (v) => Math.min(PAL - 1, Math.floor(v / V_COLOR * PAL));
+
+  // ---------- setup ----------
+  function gauss() { let u = 0; while (!u) u = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * Math.random()); }
+  function freeSpot(x0, x1, upto) {
+    const w = x1 - x0 - 2 * R, h = LY - 2 * R;
+    for (let t = 0; t < 300; t++) {
+      const x = x0 + R + Math.random() * w, y = R + Math.random() * h;
+      let ok = true;
+      for (let j = 0; j < upto; j++) {
+        const dx = px[j] - x, dy = py[j] - y;
+        if (dx * dx + dy * dy < D2 * 1.3) { ok = false; break; }
+      }
+      if (ok) return [x, y];
+    }
+    return [x0 + R + Math.random() * w, R + Math.random() * h];
+  }
+  function scaleGroup(i0, i1, T) {
+    let s2 = 0;
+    for (let i = i0; i < i1; i++) s2 += vx[i] * vx[i] + vy[i] * vy[i];
+    const Tg = M * s2 / (2 * KB * (i1 - i0));
+    if (Tg > 0) { const f = Math.sqrt(T / Tg); for (let i = i0; i < i1; i++) { vx[i] *= f; vy[i] *= f; } }
+  }
+  function setVel(i0, i1, T, how) {
+    if (how === 'equal') {
+      const v = Math.sqrt(2 * KB * T / M);
+      for (let i = i0; i < i1; i++) { const a = 2 * Math.PI * Math.random(); vx[i] = v * Math.cos(a); vy[i] = v * Math.sin(a); }
+    } else {
+      const sg = Math.sqrt(KB * T / M);
+      for (let i = i0; i < i1; i++) { vx[i] = sg * gauss(); vy[i] = sg * gauss(); }
+      scaleGroup(i0, i1, T);
+    }
+  }
+  function resetGas() {
+    simT = 0; impAcc = 0; ltAcc = 0; trail = []; tracer = 0; wallV = 0; wallX = wallTarget;
+    if (mode === 'hotcold') {
+      const half = Math.floor(N / 2);
+      for (let i = 0; i < N; i++) { const p = i < half ? freeSpot(0, wallX / 2, i) : freeSpot(wallX / 2, wallX, i); px[i] = p[0]; py[i] = p[1]; }
+      setVel(0, half, 700, 'thermal'); setVel(half, N, 100, 'thermal');
+    } else {
+      for (let i = 0; i < N; i++) { const p = freeSpot(0, wallX, i); px[i] = p[0]; py[i] = p[1]; }
+      setVel(0, N, Tset, mode);
+    }
+    computeStats(); histFresh = true; updateHist(0); syncT(true); dirty = true;
+  }
+  function setN(n) {
+    if (n > N) {
+      const T = stats.T || Tset;
+      for (let i = N; i < n; i++) { const p = freeSpot(0, wallX, i); px[i] = p[0]; py[i] = p[1]; }
+      setVel(N, n, T, 'thermal');
+      N = n; scaleGroup(0, N, T);
+    } else {
+      N = n;
+      if (tracer >= N) { tracer = 0; trail = []; }
+    }
+    computeStats(); histFresh = true; updateHist(0); dirty = true;
+  }
+
+  // ---------- physics ----------
+  function computeStats() {
+    let s2 = 0, s1 = 0, vm = 0;
+    for (let i = 0; i < N; i++) {
+      const v2 = vx[i] * vx[i] + vy[i] * vy[i], v = Math.sqrt(v2);
+      s2 += v2; s1 += v; if (v > vm) vm = v;
+    }
+    stats.T = M * s2 / (2 * KB * N);   // <KE> = kT in two dimensions
+    stats.mean = s1 / N; stats.rms = Math.sqrt(s2 / N); stats.vmax = vm;
+  }
+
+  function pair(i, j) {
+    const dx = px[j] - px[i], dy = py[j] - py[i], d2 = dx * dx + dy * dy;
+    if (d2 >= D2 || d2 === 0) return;
+    const d = Math.sqrt(d2), nx = dx / d, ny = dy / d;
+    const dvn = (vx[j] - vx[i]) * nx + (vy[j] - vy[i]) * ny;
+    if (dvn < 0) { // approaching: equal masses swap their velocity components along the line of centers
+      vx[i] += dvn * nx; vy[i] += dvn * ny; vx[j] -= dvn * nx; vy[j] -= dvn * ny;
+    }
+    const push = (2 * R - d) / 2;
+    px[i] -= nx * push; py[i] -= ny * push; px[j] += nx * push; py[j] += ny * push;
+  }
+  function collidePairs() {
+    head.fill(-1);
+    for (let i = 0; i < N; i++) {
+      const cx = Math.min(GX - 1, Math.max(0, Math.floor(px[i] / CS)));
+      const cy = Math.min(GY - 1, Math.max(0, Math.floor(py[i] / CS)));
+      const c = cy * GX + cx; next[i] = head[c]; head[c] = i;
+    }
+    for (let cy = 0; cy < GY; cy++) for (let cx = 0; cx < GX; cx++) {
+      for (let i = head[cy * GX + cx]; i !== -1; i = next[i]) {
+        for (let j = next[i]; j !== -1; j = next[j]) pair(i, j);
+        if (cx + 1 < GX) for (let j = head[cy * GX + cx + 1]; j !== -1; j = next[j]) pair(i, j);
+        if (cy + 1 < GY) {
+          const r = (cy + 1) * GX;
+          if (cx > 0) for (let j = head[r + cx - 1]; j !== -1; j = next[j]) pair(i, j);
+          for (let j = head[r + cx]; j !== -1; j = next[j]) pair(i, j);
+          if (cx + 1 < GX) for (let j = head[r + cx + 1]; j !== -1; j = next[j]) pair(i, j);
+        }
+      }
+    }
+  }
+  function step(dt) { // dt in ps; positions in nm; velocities in m/s (1 m/s = 1e-3 nm/ps)
+    const diff = wallTarget - wallX, maxStep = pistonMax * 1e-3 * dt;
+    if (Math.abs(diff) <= maxStep) { wallV = diff / (dt * 1e-3); wallX = wallTarget; }
+    else { const sg = Math.sign(diff); wallV = sg * pistonMax; wallX += sg * maxStep; }
+    const k = 1e-3 * dt;
+    for (let i = 0; i < N; i++) { px[i] += vx[i] * k; py[i] += vy[i] * k; }
+    collidePairs();
+    let imp = 0;
+    const xr = wallX - R, yt = LY - R;
+    for (let i = 0; i < N; i++) {
+      if (px[i] < R) { px[i] = R; if (vx[i] < 0) { imp -= 2 * M * vx[i]; vx[i] = -vx[i]; } }
+      else if (px[i] > xr) { // piston: reflect relative to the moving wall
+        px[i] = xr;
+        if (vx[i] > wallV) { imp += 2 * M * (vx[i] - wallV); vx[i] = 2 * wallV - vx[i]; }
+      }
+      if (py[i] < R) { py[i] = R; if (vy[i] < 0) { imp -= 2 * M * vy[i]; vy[i] = -vy[i]; } }
+      else if (py[i] > yt) { py[i] = yt; if (vy[i] > 0) { imp += 2 * M * vy[i]; vy[i] = -vy[i]; } }
+    }
+    impAcc += imp;                        // kg m/s
+    ltAcc += 2 * (wallX + LY) * dt;       // nm ps of wall length times time
+  }
+  const pMeasured = () => ltAcc > 0 ? impAcc / (ltAcc * 1e-21) : NaN;   // N/m
+  const pIdeal = () => N * KB * stats.T / (wallX * LY * 1e-18);         // N/m
+
+  function updateHist(dtS) {
+    const need = 3.6 * Math.sqrt(KB * Math.max(stats.T, 1) / M);
+    const target = AXES.find((a) => a >= need) || AXES[AXES.length - 1];
+    if (target > vAxis || need < 0.6 * vAxis) { if (target !== vAxis) { vAxis = target; histFresh = true; } }
+    counts.fill(0); overflow = 0;
+    const bw = vAxis / NB;
+    for (let i = 0; i < N; i++) {
+      const b = Math.floor(Math.hypot(vx[i], vy[i]) / bw);
+      if (b >= NB) overflow++; else counts[b]++;
+    }
+    const a = histFresh ? 1 : 1 - Math.exp(-dtS / H_TAU);
+    let hm = 0;
+    for (let b = 0; b < NB; b++) { hist[b] += (counts[b] - hist[b]) * a; hm = Math.max(hm, hist[b]); }
+    const vp = Math.sqrt(KB * Math.max(stats.T, 1) / M);
+    const peak = N * bw * Math.exp(-0.5) / vp;
+    const want = Math.max(peak * 1.4, Math.min(hm * 1.1, peak * 2.6), 3);
+    yMax = histFresh || !yMax ? want : yMax + (want - yMax) * (1 - Math.exp(-dtS / 0.6));
+    histFresh = false;
+  }
+
+  // ---------- canvases ----------
+  const boxPane = $('boxPane'), histPane = $('histPane');
+  const box = $('box'), hc = $('hist'), bctx = box.getContext('2d'), hctx = hc.getContext('2d');
+  const G = { W: 0, H: 0, s: 10, bx0: 0, by0: 0 }, HG = { W: 0, H: 0 };
+  let dpr = 1;
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const [c, pane, o] of [[box, boxPane, G], [hc, histPane, HG]]) {
+      const r = pane.getBoundingClientRect();
+      o.W = r.width; o.H = r.height;
+      c.width = Math.round(r.width * dpr); c.height = Math.round(r.height * dpr);
+      c.style.width = r.width + 'px'; c.style.height = r.height + 'px';
+    }
+    const padT = 50, padB = 32, padL = 22, padR = 22;
+    G.s = Math.max(1, Math.min((G.W - padL - padR) / LX, (G.H - padT - padB) / LY));
+    G.bx0 = padL + (G.W - padL - padR - LX * G.s) / 2;
+    G.by0 = padT + (G.H - padT - padB - LY * G.s) / 2;
+    dirty = true;
+  }
+  const toX = (x) => G.bx0 + x * G.s, toY = (y) => G.by0 + (LY - y) * G.s;
+
+  function drawBox() {
+    const ctx = bctx, T = tok, s = G.s;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, G.W, G.H);
+    const x0 = toX(0), x1 = toX(LX), yTop = toY(LY), yBot = toY(0), wp = toX(wallX);
+
+    // 5 nm grid inside the gas
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath();
+    for (let x = 5; x < wallX; x += 5) { const p = Math.round(toX(x)) + 0.5; ctx.moveTo(p, yTop); ctx.lineTo(p, yBot); }
+    for (let y = 5; y < LY; y += 5) { const p = Math.round(toY(y)) + 0.5; ctx.moveTo(x0, p); ctx.lineTo(wp, p); }
+    ctx.stroke();
+
+    // piston body beyond the wall
+    ctx.fillStyle = T.relief; ctx.fillRect(wp, yTop, x1 - wp, yBot - yTop);
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(wp, yTop, x1 - wp, yBot - yTop);
+
+    // fixed walls
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2; ctx.lineJoin = 'miter';
+    ctx.beginPath(); ctx.moveTo(wp, yTop - 1); ctx.lineTo(x0 - 1, yTop - 1); ctx.lineTo(x0 - 1, yBot + 1); ctx.lineTo(wp, yBot + 1); ctx.stroke();
+
+    // target ghost while the piston catches up
+    if (Math.abs(wallTarget - wallX) > 0.02) {
+      const tp = toX(wallTarget);
+      ctx.save(); ctx.setLineDash([5, 4]); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(tp, yTop); ctx.lineTo(tp, yBot); ctx.stroke(); ctx.restore();
+    }
+
+    // tracer trail
+    if (showTrail && trail.length > 1) {
+      ctx.save(); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      const chunks = 10, n = trail.length, per = Math.ceil(n / chunks);
+      for (let c = 0; c < chunks; c++) {
+        const a = c * per, b = Math.min(n - 1, (c + 1) * per);
+        if (b <= a) continue;
+        ctx.globalAlpha = 0.08 + 0.8 * (c + 1) / chunks;
+        ctx.beginPath(); ctx.moveTo(toX(trail[a][0]), toY(trail[a][1]));
+        for (let k = a + 1; k <= b; k++) ctx.lineTo(toX(trail[k][0]), toY(trail[k][1]));
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // molecules, batched by color
+    const pr = Math.max(R * s, 2.2);
+    if (colorBySpeed) {
+      const paths = palette.map(() => new Path2D());
+      for (let i = 0; i < N; i++) {
+        if (i === tracer && showTrail) continue;
+        const X = toX(px[i]), Y = toY(py[i]), p = paths[colorIndex(Math.hypot(vx[i], vy[i]))];
+        p.moveTo(X + pr, Y); p.arc(X, Y, pr, 0, 2 * Math.PI);
+      }
+      paths.forEach((p, k) => { ctx.fillStyle = palette[k]; ctx.fill(p); });
+    } else {
+      const p = new Path2D();
+      for (let i = 0; i < N; i++) {
+        if (i === tracer && showTrail) continue;
+        const X = toX(px[i]), Y = toY(py[i]); p.moveTo(X + pr, Y); p.arc(X, Y, pr, 0, 2 * Math.PI);
+      }
+      ctx.fillStyle = T.muted; ctx.fill(p);
+    }
+    if (showTrail && tracer < N) {
+      const X = toX(px[tracer]), Y = toY(py[tracer]), tr = Math.max(pr * 1.5, 4.5);
+      ctx.beginPath(); ctx.arc(X, Y, tr + 2, 0, 2 * Math.PI); ctx.fillStyle = T.canvas; ctx.fill();
+      ctx.beginPath(); ctx.arc(X, Y, tr, 0, 2 * Math.PI); ctx.fillStyle = T.accent; ctx.fill();
+      ctx.lineWidth = 1.5; ctx.strokeStyle = T.ink; ctx.stroke();
+    }
+
+    // piston face and handle
+    ctx.fillStyle = T.ink; ctx.fillRect(wp, yTop - 2, 4, yBot - yTop + 4);
+    const hh = Math.min(48, (yBot - yTop) * 0.4), hy = (yTop + yBot) / 2 - hh / 2, hx = wp - 3;
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(hx, hy, 10, hh, 4) : ctx.rect(hx, hy, 10, hh);
+    ctx.fillStyle = drag ? T.ink : T.accent; ctx.fill();
+    ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.2; ctx.beginPath();
+    for (let k = -1; k <= 1; k++) { const yy = hy + hh / 2 + k * 6; ctx.moveTo(hx + 2.5, yy); ctx.lineTo(hx + 7.5, yy); }
+    ctx.stroke();
+
+    // dimensions
+    ctx.font = '600 11px ' + T.mono; ctx.fillStyle = T.muted; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2;
+    const dy = yBot + 15;
+    ctx.beginPath(); ctx.moveTo(x0, dy - 4); ctx.lineTo(x0, dy + 4); ctx.moveTo(x0, dy); ctx.lineTo(wp + 2, dy);
+    ctx.moveTo(wp + 2, dy - 4); ctx.lineTo(wp + 2, dy + 4); ctx.stroke();
+    const lab = wallX.toFixed(1) + ' nm', lw = ctx.measureText(lab).width + 10, lx = (x0 + wp) / 2;
+    ctx.fillStyle = T.canvas; ctx.fillRect(lx - lw / 2, dy - 8, lw, 16);
+    ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(lab, lx, dy + 0.5);
+    ctx.save(); ctx.translate(x0 - 11, (yTop + yBot) / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('30 nm', 0, 0); ctx.restore();
+
+    // invitation to use the piston
+    if (preset === 'compress' && !pistonTouched) {
+      ctx.font = '700 13px ' + T.mono; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      const msg = '← drag the wall', mw = ctx.measureText(msg).width + 14, my = hy - 18;
+      ctx.fillStyle = T.surface; ctx.strokeStyle = T.accent; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(wp - 10 - mw, my - 12, mw, 24, 5) : ctx.rect(wp - 10 - mw, my - 12, mw, 24);
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = T.accent; ctx.fillText(msg, wp - 17, my + 0.5);
+    }
+  }
+
+  function niceStep(raw) {
+    const p = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / p;
+    return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p;
+  }
+  function drawHist() {
+    const ctx = hctx, T = tok, W = HG.W, H = HG.H;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const L = 46, Rr = 14, Tp = 36, B = 40, pw = Math.max(10, W - L - Rr), ph = Math.max(10, H - Tp - B);
+    const bw = vAxis / NB, Tm = Math.max(stats.T, 1), ym = yMax || 1;
+    const X = (v) => L + v / vAxis * pw, Y = (c) => Tp + ph - c / ym * ph;
+    ctx.font = '11px ' + T.mono;
+
+    // y grid
+    const ys = niceStep(ym / 4);
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.beginPath();
+    for (let c = ys; c <= ym; c += ys) { const yy = Math.round(Y(c)) + 0.5; ctx.moveTo(L, yy); ctx.lineTo(L + pw, yy); }
+    ctx.stroke();
+    for (let c = 0; c <= ym; c += ys) ctx.fillText(String(Math.round(c * 100) / 100), L - 6, Y(c));
+
+    // bars
+    const gap = pw / NB > 6 ? 1 : 0;
+    for (let b = 0; b < NB; b++) {
+      const c = hist[b]; if (c <= 0.001) continue;
+      const xa = X(b * bw), w = pw / NB - gap, top = Y(Math.min(c, ym));
+      ctx.globalAlpha = 0.8;
+      ctx.fillStyle = colorBySpeed ? palette[colorIndex((b + 0.5) * bw)] : T.muted;
+      ctx.fillRect(xa + gap / 2, top, w, Tp + ph - top);
+      ctx.globalAlpha = 1;
+      if (c > ym * 1.001) {
+        ctx.fillStyle = T.ink; ctx.textAlign = xa + w + 40 > L + pw ? 'right' : 'left'; ctx.textBaseline = 'top';
+        ctx.font = '600 11px ' + T.mono;
+        ctx.fillText('↑ ' + Math.round(c), ctx.textAlign === 'left' ? xa + w + 4 : xa - 4, Tp + 2);
+        ctx.font = '11px ' + T.mono;
+      }
+    }
+
+    // Maxwell-Boltzmann curve, expected molecules per bin = N f(v) dv
+    ctx.save(); ctx.beginPath(); ctx.rect(L, Tp - 2, pw, ph + 2); ctx.clip();
+    ctx.strokeStyle = T.equi; ctx.lineWidth = 2.2; ctx.lineJoin = 'round'; ctx.beginPath();
+    for (let k = 0; k <= 200; k++) {
+      const v = vAxis * k / 200, f = (M * v / (KB * Tm)) * Math.exp(-M * v * v / (2 * KB * Tm));
+      const yy = Y(N * bw * f);
+      k ? ctx.lineTo(X(v), yy) : ctx.moveTo(X(v), yy);
+    }
+    ctx.stroke(); ctx.restore();
+
+    // axes
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath();
+    ctx.moveTo(L, Tp + ph + 0.5); ctx.lineTo(L + pw, Tp + ph + 0.5); ctx.stroke();
+    const xs = niceStep(vAxis / (pw < 300 ? 4 : 6));
+    ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = 0; v <= vAxis + 1e-6; v += xs) ctx.fillText(String(v), X(v), Tp + ph + 5);
+    ctx.fillText('speed (m/s)', L + pw / 2, Tp + ph + 22);
+    ctx.textAlign = 'right'; ctx.fillText('bin ' + Math.round(bw) + ' m/s', L + pw, Tp + ph + 22);
+    ctx.save(); ctx.translate(12, Tp + ph / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('molecules per bin', 0, 0); ctx.restore();
+
+    // legend
+    ctx.font = '600 11.5px ' + T.mono; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+    let lx = L, ly = 17;
+    ctx.globalAlpha = 0.8; ctx.fillStyle = colorBySpeed ? palette[8] : T.muted; ctx.fillRect(lx, ly - 5, 10, 10); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.ink; ctx.fillText('measured', lx + 15, ly); lx += 15 + ctx.measureText('measured').width + 16;
+    ctx.strokeStyle = T.equi; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 18, ly); ctx.stroke();
+    const mb = (pw < 330 ? 'M-B at ' : '2D Maxwell-Boltzmann at ') + Math.round(stats.T) + ' K';
+    ctx.fillStyle = T.ink; ctx.fillText(mb, lx + 23, ly);
+    if (overflow) {
+      ctx.textAlign = 'right'; ctx.fillStyle = T.muted; ctx.font = '11px ' + T.mono;
+      ctx.fillText('+' + overflow + ' off scale →', L + pw, Tp + 10);
+    }
+  }
+
+  // ---------- readouts ----------
+  const out = { rN: $('rN'), rT: $('rT'), rP: $('rP'), rPi: $('rPi'), rRatio: $('rRatio'), rA: $('rA'), rMean: $('rMean'), rRms: $('rRms') };
+  function fmtPair(pm, pi) {
+    const micro = pi < 1e-3, f = micro ? 1e6 : 1e3, u = micro ? ' µN/m' : ' mN/m';
+    const g = (v) => { if (!isFinite(v)) return '—'; v *= f; return (v >= 100 ? v.toFixed(0) : v >= 10 ? v.toFixed(1) : v.toFixed(2)) + u; };
+    return [g(pm), g(pi)];
+  }
+  function updateReadouts() {
+    const pm = pMeasured(), pi = pIdeal(), [a, b] = fmtPair(pm, pi);
+    out.rN.textContent = N;
+    out.rT.textContent = Math.round(stats.T) + ' K';
+    out.rP.textContent = simT > 0 ? a : '—';
+    out.rPi.textContent = b;
+    out.rRatio.textContent = simT > 0 && isFinite(pm) ? (pm / pi).toFixed(3) : '—';
+    out.rA.textContent = Math.round(wallX * LY) + ' nm²';
+    out.rMean.textContent = Math.round(stats.mean) + ' m/s';
+    out.rRms.textContent = Math.round(stats.rms) + ' m/s';
+    $('clock').textContent = 't = ' + (simT < 1000 ? Math.round(simT) + ' ps' : (simT / 1000).toFixed(2) + ' ns');
+  }
+  const tIn = $('tIn'), tOut = $('tOut'), wIn = $('wIn'), wOut = $('wOut'), nIn = $('nIn'), nOut = $('nOut');
+  function syncT(force) {
+    if (tDragging && !force) return;
+    const v = Math.max(50, Math.min(1000, Math.round(stats.T / 10) * 10));
+    tIn.value = v; tOut.textContent = Math.round(stats.T) + ' K';
+  }
+  function syncW() { wIn.value = wallTarget; wOut.textContent = wallTarget.toFixed(1) + ' nm'; }
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, lastSync = 0;
+  function frame(now) {
+    const dtS = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    if (running && dtS > 0) {
+      const simDt = dtS * PS_PER_S;
+      const vlim = stats.vmax + pistonMax + 50;
+      const nsub = Math.min(150, Math.max(1, Math.ceil(simDt * vlim * 1e-3 / (0.4 * R))));
+      const f = Math.exp(-dtS / P_TAU); impAcc *= f; ltAcc *= f;
+      for (let k = 0; k < nsub; k++) step(simDt / nsub);
+      simT += simDt;
+      computeStats(); updateHist(dtS);
+      if (tracer < N) { trail.push([px[tracer], py[tracer]]); if (trail.length > 360) trail.shift(); }
+      dirty = true;
+    }
+    if (dirty && G.W && HG.W) { drawBox(); drawHist(); dirty = false; }
+    if (now - lastRead > 200) { updateReadouts(); lastRead = now; }
+    if (running && now - lastSync > 400) { syncT(false); lastSync = now; }
+    requestAnimationFrame(frame);
+  }
+
+  // ---------- controls ----------
+  const playBtn = $('play');
+  function setRunning(r) {
+    running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('attn', !r);
+    last = performance.now();
+  }
+  playBtn.addEventListener('click', () => setRunning(!running));
+  $('reset').addEventListener('click', () => { Tset = +tIn.value; resetGas(); });
+
+  const PRESETS = {
+    relax:    { N: 150, T: 300, W: 50, mode: 'equal',
+                hint: 'Every molecule starts with the same speed, so the histogram is one tall spike. Collisions share energy around, and within a few seconds the bars settle onto the Maxwell-Boltzmann curve.' },
+    hotcold:  { N: 200, T: 400, W: 50, mode: 'hotcold',
+                hint: 'Fast molecules (700 K) start on the left and slow ones (100 K) on the right. Collisions mix them until the whole box sits at one temperature, near 400 K.' },
+    compress: { N: 150, T: 300, W: 50, mode: 'thermal',
+                hint: 'Drag the right wall inward and watch T rise. Halve the area slowly and T about doubles, since T × A stays constant for a 2D gas. Then pull the wall back out.' },
+    dilute:   { N: 25, T: 300, W: 50, mode: 'equal',
+                hint: 'Only 25 molecules. Collisions are rare, so the spike takes much longer to relax, and the measured pressure jumps around more.' }
+  };
+  function setPresetUI(name) {
+    preset = name;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    if (name) $('presetHint').textContent = PRESETS[name].hint;
+  }
+  function setModeUI() {
+    for (const b of document.querySelectorAll('#startSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === mode));
+  }
+  function applyPreset(name) {
+    const p = PRESETS[name];
+    N = p.N; Tset = p.T; wallTarget = p.W; mode = p.mode; pistonTouched = false;
+    nIn.value = N; nOut.textContent = N; tIn.value = Tset; syncW();
+    setPresetUI(name); setModeUI(); resetGas();
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#startSeg button')) b.addEventListener('click', () => {
+    mode = b.dataset.m; Tset = +tIn.value; setModeUI(); setPresetUI(null); resetGas();
+  });
+
+  nIn.addEventListener('input', () => { nOut.textContent = nIn.value; setN(+nIn.value); setPresetUI(null); });
+  tIn.addEventListener('pointerdown', () => { tDragging = true; });
+  for (const ev of ['pointerup', 'pointercancel', 'change', 'blur']) tIn.addEventListener(ev, () => { tDragging = false; });
+  tIn.addEventListener('input', () => {
+    Tset = +tIn.value; tOut.textContent = Tset + ' K';
+    scaleGroup(0, N, Tset); computeStats(); histFresh = true; updateHist(0); dirty = true; setPresetUI(null);
+  });
+  wIn.addEventListener('input', () => { wallTarget = +wIn.value; pistonTouched = true; syncW(); dirty = true; });
+  $('sIn').addEventListener('input', (e) => { pistonMax = +e.target.value; $('sOut').textContent = pistonMax + ' m/s'; });
+  $('tColor').addEventListener('change', (e) => { colorBySpeed = e.target.checked; dirty = true; });
+  $('tTrail').addEventListener('change', (e) => { showTrail = e.target.checked; trail = []; dirty = true; });
+
+  // pointer on the box: drag the piston, or pick a molecule to trace
+  const local = (e) => { const r = box.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  const nearWall = (mx, my) => Math.abs(mx - (toX(wallX) + 2)) < 18 && my > toY(LY) - 12 && my < toY(0) + 12;
+  const clampW = (w) => Math.min(LX, Math.max(MIN_W, w));
+  box.addEventListener('pointerdown', (e) => {
+    box.focus({ preventScroll: true });
+    const [mx, my] = local(e);
+    if (nearWall(mx, my)) {
+      drag = { off: mx - toX(wallX) };
+      pistonTouched = true; box.setPointerCapture(e.pointerId); box.style.cursor = 'grabbing'; dirty = true;
+      return;
+    }
+    let best = -1, bd = Math.max(14, R * G.s * 3);
+    for (let i = 0; i < N; i++) { const d = Math.hypot(toX(px[i]) - mx, toY(py[i]) - my); if (d < bd) { bd = d; best = i; } }
+    if (best >= 0) {
+      tracer = best; trail = [];
+      if (!showTrail) { showTrail = true; $('tTrail').checked = true; }
+      dirty = true;
+    }
+  });
+  box.addEventListener('pointermove', (e) => {
+    const [mx, my] = local(e);
+    if (drag) {
+      wallTarget = Math.round(clampW((mx - drag.off - G.bx0) / G.s) * 10) / 10;
+      syncW(); dirty = true; return;
+    }
+    if (e.pointerType === 'mouse') box.style.cursor = nearWall(mx, my) ? 'ew-resize' : 'crosshair';
+  });
+  const endDrag = () => { if (drag) { drag = null; box.style.cursor = 'crosshair'; dirty = true; } };
+  box.addEventListener('pointerup', endDrag);
+  box.addEventListener('pointercancel', endDrag);
+  box.addEventListener('keydown', (e) => {
+    const stepW = e.shiftKey ? 0.2 : 1;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      wallTarget = Math.round(clampW(wallTarget + (e.key === 'ArrowLeft' ? -stepW : stepW)) * 10) / 10;
+      pistonTouched = true; syncW(); dirty = true;
+    } else if (e.key === ' ' || e.key === 'k') {
+      setRunning(!running);
+    } else return;
+    e.preventDefault();
+  });
+
+  // theme changes
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', refreshTokens); } catch (_) {}
+  new MutationObserver(refreshTokens).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class', 'style'] });
+
+  // ---------- boot ----------
+  refreshTokens();
+  new ResizeObserver(resize).observe(boxPane);
+  new ResizeObserver(resize).observe(histPane);
+  resize();
+  setRunning(running);
+  applyPreset('relax');
+  updateReadouts();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(refreshTokens);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

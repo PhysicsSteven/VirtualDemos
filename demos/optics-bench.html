@@ -1,0 +1,1120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Optics Bench</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: lab bench. The optics canvas fills the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --ray: #a7740b;
+  --pr-green: #2f8a46;
+  --glass: rgba(43, 96, 181, 0.10);
+  --glass-edge: #7d9cc9;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+    --ray: #e2b350; --pr-green: #5fcf7a; --glass: rgba(105, 160, 255, 0.13); --glass-edge: #5576a6;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  --ray: #e2b350; --pr-green: #5fcf7a; --glass: rgba(105, 160, 255, 0.13); --glass-edge: #5576a6;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); }
+.units { color: var(--muted); font-size: 0.8rem; }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 380px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; }
+#view { touch-action: none; cursor: default; outline: none; }
+#view:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; }
+.btn .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ray); }
+.btn .dot.glass { border-radius: 2px; background: var(--glass); border: 1px solid var(--glass-edge); }
+.btn .dot.optic { border-radius: 1px; width: 3px; height: 12px; background: var(--ink); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.sel { display: flex; flex-direction: column; gap: 10px; }
+.selhead, .selfoot, .slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.selhead output { font-weight: 600; font-size: 1.05rem; }
+.selfoot { font-size: 0.82rem; color: var(--muted); }
+.link { font: inherit; font-size: 0.85rem; background: none; border: 0; padding: 0; color: var(--pos); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.25rem; }
+.readout .wide { grid-column: 1 / -1; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input { accent-color: var(--accent); margin: 0; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); }
+
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.ray { border-color: var(--ray); }
+.swatch.faint { border-color: var(--ray); opacity: 0.35; }
+.swatch.ext { border-top-style: dashed; border-color: var(--ray); }
+.swatch.p1 { border-color: var(--pos); }
+.swatch.p2 { border-color: var(--pr-green); }
+.swatch.p3 { border-color: var(--neg); }
+.spectrum { flex: none; width: 22px; height: 8px; border-radius: 2px; background: linear-gradient(90deg, #7b3fe4, #2f6bff, #13b5c7, #36b24a, #f0b400, #f06a1f, #d42232); }
+
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 64vh; min-height: 340px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Optics Bench</h1>
+      <p>Drag light sources, lenses, mirrors and glass. Rays bend and bounce live, and images form where rays cross.</p>
+    </div>
+    <div class="units mono">1 grid square = 1 cm · n quoted at 550 nm · angles from the normal</div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="view" tabindex="0" role="application" aria-label="Optics bench. Drag sources and optical elements to move them; select one and use arrow keys to nudge it, brackets to rotate it, Delete to remove it."></canvas>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="converging" aria-pressed="true">Converging lens</button>
+          <button type="button" data-p="magnifier" aria-pressed="false">Magnifier</button>
+          <button type="button" data-p="diverging" aria-pressed="false">Diverging lens</button>
+          <button type="button" data-p="concave" aria-pressed="false">Concave mirror</button>
+          <button type="button" data-p="telescope" aria-pressed="false">Telescope</button>
+          <button type="button" data-p="prism" aria-pressed="false">Prism</button>
+          <button type="button" data-p="tir" aria-pressed="false">Total internal reflection</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Add</h2>
+        <div class="row2" id="adders">
+          <button type="button" class="btn" data-add="lens"><span class="dot optic"></span>Lens</button>
+          <button type="button" class="btn" data-add="mirror"><span class="dot optic"></span>Mirror</button>
+          <button type="button" class="btn" data-add="block"><span class="dot glass"></span>Glass block</button>
+          <button type="button" class="btn" data-add="prism"><span class="dot glass"></span>Prism</button>
+          <button type="button" class="btn" data-add="semi"><span class="dot glass"></span>Semicircle</button>
+          <button type="button" class="btn" data-add="object"><span class="dot"></span>Object arrow</button>
+          <button type="button" class="btn" data-add="beam"><span class="dot"></span>Parallel beam</button>
+          <button type="button" class="btn" data-add="point"><span class="dot"></span>Point source</button>
+        </div>
+        <div class="sel" id="selEditor" hidden>
+          <div class="selhead"><span>Selected</span><output id="selName" class="mono"></output></div>
+          <div class="sel" id="selFields"></div>
+          <div class="selfoot"><span id="selPos" class="mono"></span><button type="button" class="link" id="del">Remove</button></div>
+        </div>
+        <p class="hint" id="selHint">Click anything on the bench to edit it. Arrow keys nudge it, [ and ] rotate it, Delete removes it.</p>
+      </section>
+
+      <section id="imgSec">
+        <h2>Image</h2>
+        <dl class="readout" id="imgDl">
+          <div class="big"><dt>Object distance d<sub>o</sub></dt><dd id="rDo">—</dd></div>
+          <div class="big"><dt>Image distance d<sub>i</sub> (traced)</dt><dd id="rDi">—</dd></div>
+          <div><dt>d<sub>i</sub> from 1/d<sub>o</sub> + 1/d<sub>i</sub> = 1/f</dt><dd id="rDiEq">—</dd></div>
+          <div><dt>Focal length f</dt><dd id="rF">—</dd></div>
+          <div><dt>Magnification m</dt><dd id="rM">—</dd></div>
+          <div><dt>m = −d<sub>i</sub>/d<sub>o</sub></dt><dd id="rMEq">—</dd></div>
+          <div class="wide"><dt>Image</dt><dd id="rKind">—</dd></div>
+        </dl>
+        <p class="hint" id="imgHint">Signs: d<sub>o</sub> &gt; 0 for a real object. d<sub>i</sub> &gt; 0 for a real image (far side of a lens, in front of a mirror) and d<sub>i</sub> &lt; 0 for a virtual one. f &gt; 0 for a converging lens or concave mirror. m &lt; 0 means inverted.</p>
+        <p class="hint" id="imgNone" hidden></p>
+      </section>
+
+      <section id="refSec" hidden>
+        <h2>Refraction</h2>
+        <dl class="readout">
+          <div class="big"><dt>Index n</dt><dd id="rN">—</dd></div>
+          <div class="big"><dt>Critical angle θ<sub>c</sub></dt><dd id="rCrit">—</dd></div>
+          <div><dt>Angle inside, at exit face</dt><dd id="rInc">—</dd></div>
+          <div><dt>Result</dt><dd id="rRes">—</dd></div>
+        </dl>
+        <p class="hint">θ<sub>c</sub> = arcsin(1/n). Past it, light inside the glass cannot get out: total internal reflection. The angle shown is for the middle ray of the beam.</p>
+      </section>
+
+      <section>
+        <h2>Layers</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tPrincipal" checked>Principal rays</label>
+          <label><input type="checkbox" id="tImage" checked>Show image</label>
+          <label><input type="checkbox" id="tFaint" checked>Faint reflection</label>
+          <label><input type="checkbox" id="tGrid" checked>1 cm grid</label>
+        </div>
+      </section>
+
+      <section>
+        <h2>Key</h2>
+        <div class="key">
+          <span><i class="swatch ray"></i>Light rays</span>
+          <span><i class="swatch faint"></i>Faint reflection at a glass face</span>
+          <span><i class="swatch ext"></i>Rays traced back to a virtual image</span>
+          <span><i class="swatch p1"></i>Principal ray: parallel to the axis</span>
+          <span><i class="swatch p2"></i>Principal ray: through the center (C for a mirror)</span>
+          <span><i class="swatch p3"></i>Principal ray: through the focal point F</span>
+          <span><i class="spectrum"></i>White light, split from 400 to 700 nm</span>
+        </div>
+        <p class="hint">Lenses follow the ideal thin lens rule. Mirrors use the exact spherical surface, so wide ray fans show a little spherical aberration. Dispersion is a few times stronger than in ordinary crown glass so the spectrum is easy to see.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  const MAX_ITEMS = 8, MAX_BOUNCES = 30, EPS = 1e-6;
+  const LAMBDAS = [400, 450, 500, 550, 600, 650, 700];
+  const SPECTRUM = ['#7b3fe4', '#2f6bff', '#13b5c7', '#36b24a', '#f0b400', '#f06a1f', '#d42232'];
+  const $ = (id) => document.getElementById(id);
+
+  const stage = $('stage'), cv = $('view'), ctx = cv.getContext('2d');
+  let W = 0, H = 0, dpr = 1, s = 20, cx = 0, cy = 0;
+  let items = [], sel = null, drag = null, nextId = 1, raf = 0;
+  const layers = { principal: true, image: true, faint: true, grid: true };
+
+  // ---------- model ----------
+  const DEFAULTS = {
+    lens:   () => ({ f: 10, ap: 10 }),
+    mirror: () => ({ shape: 'concave', R: 20, ap: 10, rot: 180 }),
+    block:  () => ({ n: 1.5, w: 8, h: 5 }),
+    prism:  () => ({ n: 1.5, side: 10 }),
+    semi:   () => ({ n: 1.5, r: 6, rot: 90 }),
+    object: () => ({ h: 3, rays: 9, spread: 12, white: false }),
+    beam:   () => ({ w: 4, rays: 7, white: false }),
+    point:  () => ({ rays: 24, spread: 360, white: false })
+  };
+  const NAMES = { lens: 'Lens', mirror: 'Mirror', block: 'Glass block', prism: 'Prism', semi: 'Semicircle',
+                  object: 'Object arrow', beam: 'Parallel beam', point: 'Point source' };
+  const mk = (kind, x, y, props) => Object.assign({ id: nextId++, kind, x, y, rot: 0 }, DEFAULTS[kind](), props || {});
+  const isSource = (it) => it.kind === 'object' || it.kind === 'beam' || it.kind === 'point';
+  const isGlass = (it) => it.kind === 'block' || it.kind === 'prism' || it.kind === 'semi';
+
+  const PRESETS = {
+    converging: () => [mk('object', -22, 0, { h: 3, rays: 9, spread: 11, rot: -5.5 }), mk('lens', 8, 0, { f: 10, ap: 12 })],
+    magnifier:  () => [mk('object', -2, 0, { h: 2, rays: 9, spread: 40, rot: -10 }), mk('lens', 4, 0, { f: 12, ap: 12 })],
+    diverging:  () => [mk('object', -18, 0, { h: 4, rays: 9, spread: 15, rot: -10 }), mk('lens', 2, 0, { f: -10, ap: 12 })],
+    concave:    () => [mk('object', -16, 0, { h: 3, rays: 9, spread: 7.5, rot: -5.6 }), mk('mirror', 14, 0, { R: 24, ap: 8 })],
+    telescope:  () => [mk('beam', -22, 0, { w: 6, rays: 7, rot: 3 }), mk('lens', -14, 0, { f: 16, ap: 10 }), mk('lens', 7, 0, { f: 5, ap: 8 })],
+    prism:      () => [mk('beam', -18, -4, { w: 0, rays: 1, rot: 18.6, white: true }), mk('prism', 2, 0, { side: 12 })],
+    tir:        () => {
+      const b = mk('beam', 0, 0, { w: 0.6, rays: 3, rot: 30, pivot: { x: 2, y: 0, dist: 15 } });
+      placeOnPivot(b);
+      return [b, mk('semi', 2, 0, { r: 9, rot: 90 })];
+    }
+  };
+  function placeOnPivot(it) {
+    if (!it.pivot) return;
+    const a = rad(it.rot);
+    it.x = it.pivot.x - it.pivot.dist * Math.cos(a); it.y = it.pivot.y - it.pivot.dist * Math.sin(a);
+  }
+
+  // ---------- helpers ----------
+  const rad = (d) => d * Math.PI / 180;
+  const deg = (r) => r * 180 / Math.PI;
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1];
+  const norm = (v) => { const m = Math.hypot(v[0], v[1]) || 1; return [v[0] / m, v[1] / m]; };
+  const minus = (str) => str.replace(/-/g, '−');
+  const monoFont = () => getComputedStyle(document.body).getPropertyValue('--font-mono') || 'monospace';
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    return { canvas: g('--canvas'), grid: g('--grid'), gridStrong: g('--grid-strong'), ink: g('--ink'), muted: g('--muted'),
+             accent: g('--accent'), line: g('--line'), pos: g('--pos'), neg: g('--neg'), green: g('--pr-green'),
+             ray: g('--ray'), glass: g('--glass'), glassEdge: g('--glass-edge') };
+  }
+  const toPx = (x, y) => [cx + x * s, cy - y * s];
+  const toW = (px, py) => ({ x: (px - cx) / s, y: (cy - py) / s });
+  function bounds() { return { x0: -cx / s, x1: (W - cx) / s, y0: -(H - cy) / s, y1: cy / s }; }
+  function frameOf(it) { const a = rad(it.rot); return { u: [Math.cos(a), Math.sin(a)], w: [-Math.sin(a), Math.cos(a)] }; }
+  function local(it, lx, ly) { const { u, w } = frameOf(it); return [it.x + lx * u[0] + ly * w[0], it.y + lx * u[1] + ly * w[1]]; }
+  const signedR = (it) => it.shape === 'concave' ? it.R : -it.R;
+  function focal(it) {
+    if (it.kind === 'lens') return it.f;
+    if (it.kind === 'mirror') return it.shape === 'plane' ? Infinity : signedR(it) / 2;
+    return NaN;
+  }
+  function nAt(el, lam) {
+    if (lam == null) return el.n;
+    const B = 10000 * (el.n - 1) / 0.5;           // nm², Cauchy B scaled with n − 1
+    return el.n + B * (1 / (lam * lam) - 1 / (550 * 550));
+  }
+
+  // ---------- geometry primitives (world cm) ----------
+  function polyLocal(it) {
+    if (it.kind === 'block') return [[-it.w / 2, -it.h / 2], [it.w / 2, -it.h / 2], [it.w / 2, it.h / 2], [-it.w / 2, it.h / 2]];
+    const Hh = it.side * Math.sqrt(3) / 2;
+    return [[-it.side / 2, -Hh / 3], [it.side / 2, -Hh / 3], [0, 2 * Hh / 3]];
+  }
+  function primsOf(it, extend) {
+    const out = [];
+    const { u, w } = frameOf(it);
+    if (it.kind === 'lens' || (it.kind === 'mirror' && it.shape === 'plane')) {
+      const half = extend ? 400 : it.ap / 2;
+      out.push({ type: 'seg', a: [it.x - w[0] * half, it.y - w[1] * half], b: [it.x + w[0] * half, it.y + w[1] * half],
+                 el: it, role: it.kind === 'lens' ? 'lens' : 'mirror' });
+    } else if (it.kind === 'mirror') {
+      const Rs = signedR(it), c = [it.x + Rs * u[0], it.y + Rs * u[1]];
+      out.push({ type: 'arc', c, r: it.R, a0: Math.atan2(it.y - c[1], it.x - c[0]),
+                 half: extend ? Math.PI * 0.45 : Math.asin(Math.min(1, it.ap / 2 / it.R)),
+                 el: it, role: 'mirror', concave: it.shape === 'concave' });
+    } else if (it.kind === 'block' || it.kind === 'prism') {
+      const v = polyLocal(it).map((p) => local(it, p[0], p[1]));
+      for (let i = 0; i < v.length; i++) {
+        const a = v[i], b = v[(i + 1) % v.length];
+        out.push({ type: 'seg', a, b, nOut: norm([b[1] - a[1], -(b[0] - a[0])]), el: it, role: 'face' });
+      }
+    } else if (it.kind === 'semi') {
+      out.push({ type: 'seg', a: local(it, -it.r, 0), b: local(it, it.r, 0), nOut: [-w[0], -w[1]], el: it, role: 'face' });
+      out.push({ type: 'arc', c: [it.x, it.y], r: it.r, a0: Math.atan2(w[1], w[0]), half: Math.PI / 2, el: it, role: 'face' });
+    }
+    return out;
+  }
+  function hitSeg(p, d, pr) {
+    const ex = pr.b[0] - pr.a[0], ey = pr.b[1] - pr.a[1];
+    const den = d[0] * ey - d[1] * ex;
+    if (Math.abs(den) < 1e-12) return null;
+    const qx = pr.a[0] - p[0], qy = pr.a[1] - p[1];
+    const t = (qx * ey - qy * ex) / den, u = (qx * d[1] - qy * d[0]) / den;
+    return t > EPS && u >= 0 && u <= 1 ? t : null;
+  }
+  function hitArc(p, d, pr) {
+    const ox = p[0] - pr.c[0], oy = p[1] - pr.c[1];
+    const b = ox * d[0] + oy * d[1], c = ox * ox + oy * oy - pr.r * pr.r, disc = b * b - c;
+    if (disc < 0) return null;
+    const sq = Math.sqrt(disc);
+    for (const t of [-b - sq, -b + sq]) {
+      if (t <= EPS) continue;
+      let da = Math.atan2(oy + t * d[1], ox + t * d[0]) - pr.a0;
+      da = Math.atan2(Math.sin(da), Math.cos(da));
+      if (Math.abs(da) <= pr.half + 1e-9) return t;
+    }
+    return null;
+  }
+  function tExit(p, d) {
+    const b = bounds(), m = 1;
+    let t = Infinity;
+    if (d[0] > 1e-12) t = Math.min(t, (b.x1 + m - p[0]) / d[0]); else if (d[0] < -1e-12) t = Math.min(t, (b.x0 - m - p[0]) / d[0]);
+    if (d[1] > 1e-12) t = Math.min(t, (b.y1 + m - p[1]) / d[1]); else if (d[1] < -1e-12) t = Math.min(t, (b.y0 - m - p[1]) / d[1]);
+    return Math.max(t, 0);
+  }
+  const reflect = (d, N) => { const k = 2 * dot(d, N); return [d[0] - k * N[0], d[1] - k * N[1]]; };
+  function lensBend(el, q, d) {
+    const { u, w } = frameOf(el);
+    const du = dot(d, u), dw = dot(d, w);
+    if (Math.abs(du) < 1e-9) return d;
+    const sg = du > 0 ? 1 : -1, h = (q[0] - el.x) * w[0] + (q[1] - el.y) * w[1];
+    const slope = dw / Math.abs(du) - h / el.f;    // thin lens: slope_out = slope_in − h/f
+    return norm([sg * u[0] + slope * w[0], sg * u[1] + slope * w[1]]);
+  }
+
+  // ---------- tracer ----------
+  // start: { p, d, lam, white, central, src, tag }
+  function traceAll(starts, prims, opt) {
+    const paths = [], internal = opt.internal || null;
+    const stack = starts.map((r) => Object.assign({ faint: false, pts: [r.p], hits: [], bounces: 0, pending: null }, r));
+    let budget = 3000;
+    while (stack.length && budget-- > 0) {
+      const r = stack.pop();
+      let p = r.p, d = r.d, end = 'out';
+      for (;;) {
+        let best = null, q;
+        if (r.pending) { best = r.pending; q = p; r.pending = null; }
+        else {
+          if (r.bounces >= MAX_BOUNCES) { end = 'max'; break; }
+          let bt = tExit(p, d);
+          for (const pr of prims) {
+            const t = pr.type === 'seg' ? hitSeg(p, d, pr) : hitArc(p, d, pr);
+            if (t !== null && t < bt) { bt = t; best = pr; }
+          }
+          q = [p[0] + bt * d[0], p[1] + bt * d[1]];
+          r.pts.push(q);
+          if (!best) break;
+          r.bounces++;
+        }
+        p = q;
+        if (best.role === 'lens') {
+          d = lensBend(best.el, q, d); r.hits.push(best.el);
+        } else if (best.role === 'mirror') {
+          let N, front;
+          if (best.type === 'seg') { N = frameOf(best.el).u; front = N; }
+          else { N = [(q[0] - best.c[0]) / best.r, (q[1] - best.c[1]) / best.r]; front = best.concave ? [-N[0], -N[1]] : N; }
+          if (dot(d, front) > 0) { end = 'absorbed'; break; }
+          d = norm(reflect(d, N)); r.hits.push(best.el);
+        } else {
+          const el = best.el;
+          if (r.white && el.n !== 1) {
+            for (const lam of LAMBDAS) {
+              stack.push({ p: q, d, lam, white: false, faint: r.faint, central: r.central && lam === 550, src: r.src, tag: r.tag,
+                           pts: [q], hits: r.hits.slice(), bounces: r.bounces, pending: best });
+            }
+            end = 'split'; break;
+          }
+          const nOut = best.type === 'seg' ? best.nOut : [(q[0] - best.c[0]) / best.r, (q[1] - best.c[1]) / best.r];
+          const n = nAt(el, r.lam), entering = dot(d, nOut) < 0;
+          const N = entering ? nOut : [-nOut[0], -nOut[1]];
+          const cosi = -dot(d, N), eta = entering ? 1 / n : n;
+          const k = 1 - eta * eta * (1 - cosi * cosi);
+          if (!entering && r.central && internal && !internal.has(el)) internal.set(el, { theta: Math.acos(Math.min(1, cosi)), tir: k < 0 });
+          const refl = norm(reflect(d, N));
+          r.hits.push(el);
+          if (k < 0) d = refl;
+          else {
+            if (!r.faint && opt.faint) {
+              stack.push({ p: q, d: refl, lam: r.lam, white: r.white, faint: true, central: false, src: r.src, tag: r.tag,
+                           pts: [q], hits: r.hits.slice(), bounces: r.bounces, pending: null });
+            }
+            const sk = Math.sqrt(k);
+            d = norm([eta * d[0] + (eta * cosi - sk) * N[0], eta * d[1] + (eta * cosi - sk) * N[1]]);
+          }
+        }
+      }
+      paths.push({ pts: r.pts, lam: r.lam, white: r.white, faint: r.faint, hits: r.hits, end, last: { p, d }, src: r.src, tag: r.tag });
+    }
+    return paths;
+  }
+
+  function fanAngles(n, center, half) {
+    if (n <= 1) return [center];
+    const out = [];
+    for (let k = 0; k < n; k++) out.push(center - half + 2 * half * k / (n - 1));
+    return out;
+  }
+  function sourceStarts(src, from, tag) {
+    const out = [], white = !!src.white;
+    if (src.kind === 'object') {
+      const p = from || [src.x, src.y + src.h];
+      const angs = fanAngles(src.rays, src.rot, src.spread), mid = (angs.length - 1) >> 1;
+      angs.forEach((a, i) => out.push({ p, d: [Math.cos(rad(a)), Math.sin(rad(a))], lam: null, white, central: i === mid, src, tag }));
+    } else if (src.kind === 'beam') {
+      const { u, w } = frameOf(src), n = src.rays, mid = (n - 1) >> 1;
+      for (let i = 0; i < n; i++) {
+        const o = n === 1 ? 0 : -src.w / 2 + src.w * i / (n - 1);
+        out.push({ p: [src.x + w[0] * o, src.y + w[1] * o], d: u, lam: null, white, central: i === mid, src, tag });
+      }
+    } else if (src.kind === 'point') {
+      let angs;
+      if (src.spread >= 360) { angs = []; for (let k = 0; k < src.rays; k++) angs.push(src.rot + 360 * k / src.rays); }
+      else angs = fanAngles(src.rays, src.rot, src.spread / 2);
+      const mid = src.spread >= 360 ? 0 : (angs.length - 1) >> 1;
+      angs.forEach((a, i) => out.push({ p: [src.x, src.y], d: [Math.cos(rad(a)), Math.sin(rad(a))], lam: null, white, central: i === mid, src, tag }));
+    }
+    return out;
+  }
+
+  // ---------- image finding ----------
+  function lsq(lines) {
+    let a = 0, b = 0, c = 0, ex = 0, ey = 0;
+    for (const { p, d } of lines) {
+      const m00 = 1 - d[0] * d[0], m01 = -d[0] * d[1], m11 = 1 - d[1] * d[1];
+      a += m00; b += m01; c += m11; ex += m00 * p[0] + m01 * p[1]; ey += m01 * p[0] + m11 * p[1];
+    }
+    const det = a * c - b * b;
+    if (Math.abs(det) < 1e-12) return null;
+    return [(c * ex - b * ey) / det, (a * ey - b * ex) / det];
+  }
+  function singleElementLines(paths) {
+    const hit = paths.filter((p) => !p.faint && p.hits.length && p.end !== 'absorbed');
+    if (hit.length < 2) return { why: 'few' };
+    const E = hit[0].hits[0];
+    if (E.kind !== 'lens' && E.kind !== 'mirror') return { why: 'multi' };
+    if (!hit.every((p) => p.hits.length === 1 && p.hits[0] === E && p.end !== 'max')) return { why: 'multi' };
+    return { E, lines: hit.map((p) => p.last) };
+  }
+  function computeImage(fr) {
+    const obj = (sel && sel.kind === 'object') ? sel : items.find((i) => i.kind === 'object');
+    if (!obj) return { why: 'none' };
+    const tip = [obj.x, obj.y + obj.h], base = [obj.x, obj.y];
+    const res = singleElementLines(fr.paths.filter((p) => p.src === obj && p.tag === 'fan'));
+    if (!res.E) return { why: res.why, obj };
+    const { E, lines } = res, { u, w } = frameOf(E), C = [E.x, E.y];
+    const f = focal(E);
+    const toward = E.kind === 'mirror' ? [-u[0], -u[1]] : (dot([C[0] - tip[0], C[1] - tip[1]], u) >= 0 ? u : [-u[0], -u[1]]);
+    const dO = dot([C[0] - base[0], C[1] - base[1]], toward);      // > 0 means object faces the element
+    if (dO <= 0.05) return { why: 'behind', obj };
+    let imgTip = lsq(lines);
+    const far = imgTip && Math.hypot(imgTip[0] - C[0], imgTip[1] - C[1]) > 2000;
+    const out = { obj, E, f, tip, base, dO, toward, lines };
+    if (!imgTip || far) { out.inf = true; return finishPred(out); }
+    const tMean = lines.reduce((acc, l) => acc + dot([imgTip[0] - l.p[0], imgTip[1] - l.p[1]], l.d), 0) / lines.length;
+    out.real = tMean > 0;
+    // image of the base point, traced with the same fan but not drawn
+    const bp = traceAll(sourceStarts(obj, base, 'base'), fr.prims, { faint: false });
+    const bres = singleElementLines(bp);
+    let imgBase = bres.E === E ? lsq(bres.lines) : null;
+    if (!imgBase || Math.hypot(imgBase[0] - C[0], imgBase[1] - C[1]) > 2000) {
+      const along = dot([imgTip[0] - C[0], imgTip[1] - C[1]], u), off = dot([base[0] - C[0], base[1] - C[1]], w);
+      imgBase = [C[0] + u[0] * along + w[0] * off, C[1] + u[1] * along + w[1] * off];
+    }
+    out.imgTip = imgTip; out.imgBase = imgBase;
+    const distI = Math.abs(dot([imgTip[0] - C[0], imgTip[1] - C[1]], u));
+    out.dI = out.real ? distI : -distI;
+    out.m = dot([imgTip[0] - imgBase[0], imgTip[1] - imgBase[1]], w) / dot([tip[0] - base[0], tip[1] - base[1]], w);
+    return finishPred(out);
+  }
+  function finishPred(out) {
+    const inv = (isFinite(out.f) ? 1 / out.f : 0) - 1 / out.dO;
+    out.dIeq = Math.abs(inv) < 1e-9 ? Infinity : 1 / inv;
+    out.mEq = isFinite(out.dIeq) ? -out.dIeq / out.dO : Infinity;
+    return out;
+  }
+  function principalStarts(im) {
+    const { E, tip, toward } = im, C = [E.x, E.y], u = frameOf(E).u, f = focal(E);
+    const thru = (X) => {
+      if (!X) return null;
+      let d = norm([X[0] - tip[0], X[1] - tip[1]]);
+      if (dot(d, toward) < 0) d = [-d[0], -d[1]];
+      return Math.abs(dot(d, toward)) < 0.05 ? null : d;
+    };
+    let dirs;
+    if (E.kind === 'lens') {
+      const o = [-toward[0], -toward[1]];             // from the lens back toward the object side
+      dirs = [toward, thru(C), thru([C[0] + o[0] * f, C[1] + o[1] * f])];
+    } else if (E.shape === 'plane') {
+      dirs = [toward, thru(C), null];
+    } else {
+      const R = signedR(E);
+      dirs = [toward, thru([C[0] + u[0] * R, C[1] + u[1] * R]), thru([C[0] + u[0] * R / 2, C[1] + u[1] * R / 2])];
+    }
+    return dirs.map((d, i) => d && { p: tip, d, lam: null, white: false, central: false, src: im.obj, tag: 'pr' + i }).filter(Boolean);
+  }
+
+  // ---------- full scene trace ----------
+  let frameData = null;
+  function solve() {
+    const optics = items.filter((i) => !isSource(i));
+    const prims = optics.flatMap((it) => primsOf(it, false));
+    const internal = new Map();
+    let starts = [];
+    for (const src of items.filter(isSource)) starts = starts.concat(sourceStarts(src, null, 'fan'));
+    const paths = traceAll(starts, prims, { faint: layers.faint, internal });
+    const fr = { prims, paths, internal };
+    fr.image = computeImage(fr);
+    fr.principal = [];
+    if (fr.image.E && layers.principal) {
+      fr.principal = traceAll(principalStarts(fr.image), primsOf(fr.image.E, true), { faint: false });
+    }
+    return fr;
+  }
+
+  // ---------- sizing ----------
+  function resize() {
+    const r = stage.getBoundingClientRect();
+    W = r.width; H = r.height; dpr = window.devicePixelRatio || 1;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    s = Math.min(W / 50, H / 22);
+    cx = W / 2; cy = H / 2;
+    schedule();
+  }
+
+  // ---------- drawing ----------
+  function drawGrid(T) {
+    const b = bounds();
+    ctx.lineWidth = 1;
+    for (let pass = 0; pass < 2; pass++) {
+      ctx.strokeStyle = pass ? T.gridStrong : T.grid;
+      ctx.beginPath();
+      for (let x = Math.ceil(b.x0); x <= b.x1; x++) {
+        if ((x % 5 === 0) !== !!pass) continue;
+        const px = Math.round(cx + x * s) + 0.5; ctx.moveTo(px, 0); ctx.lineTo(px, H);
+      }
+      for (let y = Math.ceil(b.y0); y <= b.y1; y++) {
+        if ((y % 5 === 0) !== !!pass) continue;
+        const py = Math.round(cy - y * s) + 0.5; ctx.moveTo(0, py); ctx.lineTo(W, py);
+      }
+      ctx.stroke();
+    }
+  }
+  function arrowHead(x, y, ang, size) {
+    ctx.beginPath();
+    ctx.moveTo(x + Math.cos(ang) * size, y + Math.sin(ang) * size);
+    ctx.lineTo(x + Math.cos(ang + 2.5) * size, y + Math.sin(ang + 2.5) * size);
+    ctx.lineTo(x + Math.cos(ang - 2.5) * size, y + Math.sin(ang - 2.5) * size);
+    ctx.closePath(); ctx.fill();
+  }
+  function polyline(pts) {
+    ctx.beginPath();
+    pts.forEach((p, i) => { const [x, y] = toPx(p[0], p[1]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+    ctx.stroke();
+  }
+  function arcPts(c, r, a0, half, n) {
+    const out = [];
+    for (let i = 0; i <= n; i++) { const a = a0 - half + 2 * half * i / n; out.push([c[0] + r * Math.cos(a), c[1] + r * Math.sin(a)]); }
+    return out;
+  }
+  function outline(it) {
+    if (it.kind === 'block' || it.kind === 'prism') return polyLocal(it).map((p) => local(it, p[0], p[1]));
+    if (it.kind === 'semi') { const w = frameOf(it).w; return arcPts([it.x, it.y], it.r, Math.atan2(w[1], w[0]), Math.PI / 2, 48); }
+    if (it.kind === 'mirror' && it.shape !== 'plane') { const pr = primsOf(it, false)[0]; return arcPts(pr.c, pr.r, pr.a0, pr.half, 40); }
+    if (it.kind === 'lens' || it.kind === 'mirror') return [local(it, 0, -it.ap / 2), local(it, 0, it.ap / 2)];
+    if (it.kind === 'object') return [[it.x, it.y], [it.x, it.y + it.h]];
+    if (it.kind === 'beam') return [local(it, 0, -Math.max(it.w, 0.6) / 2), local(it, 0, Math.max(it.w, 0.6) / 2)];
+    return [[it.x - 0.3, it.y - 0.3], [it.x + 0.3, it.y + 0.3]];
+  }
+
+  function drawGlass(it, T) {
+    const pts = outline(it);
+    ctx.beginPath();
+    pts.forEach((p, i) => { const [x, y] = toPx(p[0], p[1]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+    ctx.closePath();
+    ctx.fillStyle = T.glass; ctx.fill();
+    ctx.strokeStyle = T.glassEdge; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = '600 11px ' + monoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const lp = it.kind === 'semi' ? local(it, 0, it.r * 0.45) : [it.x, it.y];
+    const [lx, ly] = toPx(lp[0], lp[1]);
+    if (s * (it.kind === 'semi' ? it.r : 3) > 30) ctx.fillText('n = ' + it.n.toFixed(2), lx, ly);
+  }
+  function tick(p, dirW, label, T) {
+    const [x, y] = toPx(p[0], p[1]);
+    const ox = dirW[0] * 6, oy = -dirW[1] * 6;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(x - ox, y - oy); ctx.lineTo(x + ox, y + oy); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = '600 10px ' + monoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(label, x + ox * 1.6 + 2, y + Math.abs(oy) + 3);
+  }
+  function drawLens(it, T) {
+    const { u, w } = frameOf(it);
+    const a = toPx(...local(it, 0, -it.ap / 2)), b = toPx(...local(it, 0, it.ap / 2));
+    // faint lens body
+    // half thickness: thick middle for converging, thick edges for diverging
+    const bulge = Math.min(it.ap * 0.12, 1.2), half = it.ap / 2, n = 24;
+    const thick = (t) => it.f > 0 ? 0.12 + bulge * (1 - (t / half) ** 2) : 0.18 + bulge * (t / half) ** 2;
+    ctx.beginPath();
+    for (let i = 0; i <= n; i++) {
+      const t = -half + it.ap * i / n, [px, py] = toPx(...local(it, thick(t), t));
+      i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+    }
+    for (let i = n; i >= 0; i--) {
+      const t = -half + it.ap * i / n, [px, py] = toPx(...local(it, -thick(t), t));
+      ctx.lineTo(px, py);
+    }
+    ctx.closePath(); ctx.fillStyle = T.glass; ctx.fill();
+    // double arrow line
+    ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+    const ang = Math.atan2(b[1] - a[1], b[0] - a[0]);
+    if (it.f > 0) { arrowHead(b[0], b[1], ang, 8); arrowHead(a[0], a[1], ang + Math.PI, 8); }
+    else {
+      arrowHead(b[0] - Math.cos(ang) * 6, b[1] - Math.sin(ang) * 6, ang + Math.PI, 8);
+      arrowHead(a[0] + Math.cos(ang) * 6, a[1] + Math.sin(ang) * 6, ang, 8);
+    }
+    const fa = Math.abs(it.f);
+    tick([it.x + u[0] * fa, it.y + u[1] * fa], w, 'F', T);
+    tick([it.x - u[0] * fa, it.y - u[1] * fa], w, 'F', T);
+  }
+  function drawMirror(it, T) {
+    const pts = outline(it), { u, w } = frameOf(it);
+    // hatching on the back side
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1;
+    ctx.beginPath();
+    const step = Math.max(1, Math.round(pts.length / 12));
+    if (pts.length > 2) for (let i = 0; i < pts.length; i += step) {
+      const p = pts[i];
+      const [x, y] = toPx(p[0], p[1]);
+      const bx = -u[0] * 0.5 - w[0] * 0.35, by = -u[1] * 0.5 - w[1] * 0.35;
+      ctx.moveTo(x, y); ctx.lineTo(x + bx * Math.min(s, 22), y - by * Math.min(s, 22));
+    }
+    if (pts.length === 2) {
+      for (let k = 0; k <= 10; k++) {
+        const p = local(it, 0, -it.ap / 2 + it.ap * k / 10), [x, y] = toPx(p[0], p[1]);
+        const bx = -u[0] * 0.5 - w[0] * 0.35, by = -u[1] * 0.5 - w[1] * 0.35;
+        ctx.moveTo(x, y); ctx.lineTo(x + bx * Math.min(s, 22), y - by * Math.min(s, 22));
+      }
+    }
+    ctx.stroke();
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 3; ctx.lineCap = 'round';
+    polyline(pts);
+    if (it.shape !== 'plane') {
+      const R = signedR(it);
+      tick([it.x + u[0] * R / 2, it.y + u[1] * R / 2], w, 'F', T);
+      tick([it.x + u[0] * R, it.y + u[1] * R], w, 'C', T);
+    }
+  }
+  function drawObjectArrow(base, tip, color, dashed, alpha) {
+    const [bx, by] = toPx(base[0], base[1]), [tx, ty] = toPx(tip[0], tip[1]);
+    ctx.save();
+    ctx.globalAlpha = alpha; ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 3; ctx.lineCap = 'round';
+    if (dashed) ctx.setLineDash([6, 4]);
+    const ang = Math.atan2(ty - by, tx - bx), L = Math.hypot(tx - bx, ty - by), hd = Math.min(10, L * 0.4);
+    ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(tx - Math.cos(ang) * hd * 0.8, ty - Math.sin(ang) * hd * 0.8); ctx.stroke();
+    ctx.setLineDash([]);
+    arrowHead(tx - Math.cos(ang) * hd * 0.3, ty - Math.sin(ang) * hd * 0.3, ang, hd);
+    ctx.beginPath(); ctx.arc(bx, by, 3, 0, 2 * Math.PI); ctx.fill();
+    ctx.restore();
+  }
+  function drawSource(it, T) {
+    if (it.kind === 'object') { drawObjectArrow([it.x, it.y], [it.x, it.y + it.h], T.pos, false, 1); return; }
+    const [px, py] = toPx(it.x, it.y);
+    if (it.kind === 'point') {
+      ctx.beginPath(); ctx.arc(px, py, 6.5, 0, 2 * Math.PI);
+      ctx.fillStyle = it.white ? T.canvas : T.ray; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = T.ink; ctx.stroke();
+      return;
+    }
+    const pts = outline(it), a = toPx(...pts[0]), b = toPx(...pts[1]);
+    const { u } = frameOf(it);
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 5; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+    ctx.lineWidth = 2;
+    const bx = (a[0] + b[0]) / 2 - u[0] * 12, by = (a[1] + b[1]) / 2 + u[1] * 12;
+    ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo((a[0] + b[0]) / 2, (a[1] + b[1]) / 2); ctx.stroke();
+  }
+  function drawSelection(it, T) {
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (const p of outline(it)) { const [x, y] = toPx(p[0], p[1]); x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+    const pad = 9;
+    ctx.save(); ctx.setLineDash([4, 3]); ctx.lineWidth = 2; ctx.strokeStyle = T.accent;
+    ctx.beginPath();
+    const rx = x0 - pad, ry = y0 - pad, rw = x1 - x0 + 2 * pad, rh = y1 - y0 + 2 * pad;
+    ctx.roundRect ? ctx.roundRect(rx, ry, rw, rh, 6) : ctx.rect(rx, ry, rw, rh);
+    ctx.stroke(); ctx.restore();
+  }
+  function rayColor(p, T) { return p.lam ? SPECTRUM[LAMBDAS.indexOf(p.lam)] : p.white ? T.ink : T.ray; }
+  function drawPaths(paths, T) {
+    ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    for (const p of paths) {
+      if (!p.faint) continue;
+      ctx.strokeStyle = rayColor(p, T); ctx.globalAlpha = 0.28; ctx.lineWidth = 1;
+      polyline(p.pts);
+    }
+    for (const p of paths) {
+      if (p.faint || p.pts.length < 2) continue;
+      const c = rayColor(p, T);
+      ctx.strokeStyle = c; ctx.fillStyle = c; ctx.globalAlpha = p.white ? 0.8 : 0.9; ctx.lineWidth = p.lam ? 1.3 : 1.4;
+      polyline(p.pts);
+      if (p.tag === 'fan' && !p.lam) {
+        const [x1, y1] = toPx(...p.pts[0]), [x2, y2] = toPx(...p.pts[1]);
+        const L = Math.hypot(x2 - x1, y2 - y1);
+        if (L > 60) {
+          const t = Math.min(0.5, 70 / L), ang = Math.atan2(y2 - y1, x2 - x1);
+          arrowHead(x1 + (x2 - x1) * t, y1 + (y2 - y1) * t, ang, 5);
+        }
+      }
+    }
+    ctx.restore();
+  }
+  function drawExtensions(lines, P, color, alpha, width) {
+    ctx.save(); ctx.strokeStyle = color; ctx.globalAlpha = alpha; ctx.lineWidth = width; ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    for (const l of lines) {
+      const t = dot([P[0] - l.p[0], P[1] - l.p[1]], l.d);
+      if (t >= 0) continue;
+      const [ax, ay] = toPx(l.p[0], l.p[1]), [bx, by] = toPx(l.p[0] + l.d[0] * t, l.p[1] + l.d[1] * t);
+      ctx.moveTo(ax, ay); ctx.lineTo(bx, by);
+    }
+    ctx.stroke(); ctx.restore();
+  }
+
+  function draw() {
+    const T = tokens();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (layers.grid) drawGrid(T);
+    // optical axis
+    ctx.save(); ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.7; ctx.lineWidth = 1; ctx.setLineDash([10, 6]);
+    ctx.beginPath(); ctx.moveTo(0, Math.round(cy) + 0.5); ctx.lineTo(W, Math.round(cy) + 0.5); ctx.stroke(); ctx.restore();
+
+    const fr = frameData = solve();
+    for (const it of items) if (isGlass(it)) drawGlass(it, T);
+    drawPaths(fr.paths, T);
+
+    const im = fr.image;
+    const showImg = layers.image && im.E && !im.inf;
+    if (showImg && !im.real) {
+      drawExtensions(im.lines, im.imgTip, T.ray, 0.6, 1.1);
+    }
+    // principal rays
+    const PC = [T.pos, T.green, T.neg];
+    for (const p of fr.principal) {
+      const i = +p.tag.slice(2);
+      ctx.save(); ctx.strokeStyle = PC[i]; ctx.lineWidth = 2; ctx.globalAlpha = 0.95; ctx.lineJoin = 'round';
+      polyline(p.pts); ctx.restore();
+      if (im.E && !im.inf && !im.real && p.hits.length && p.end !== 'absorbed') drawExtensions([p.last], im.imgTip, PC[i], 0.9, 1.6);
+    }
+    for (const it of items) {
+      if (it.kind === 'lens') drawLens(it, T);
+      else if (it.kind === 'mirror') drawMirror(it, T);
+    }
+    for (const it of items) if (isSource(it)) drawSource(it, T);
+    if (showImg) {
+      drawObjectArrow(im.imgBase, im.imgTip, T.pos, !im.real, 0.7);
+      const [x, y] = toPx(im.imgTip[0], im.imgTip[1]), up = im.imgTip[1] >= im.imgBase[1];
+      ctx.fillStyle = T.muted; ctx.font = '600 11px ' + monoFont(); ctx.textAlign = 'center';
+      ctx.textBaseline = up ? 'bottom' : 'top';
+      ctx.fillText(im.real ? 'real image' : 'virtual image', x, y + (up ? -8 : 8));
+    }
+    if (sel) drawSelection(sel, T);
+
+    // scale bar
+    ctx.save();
+    const x0 = 14, y0 = H - 16, len = 5 * s;
+    ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(x0, y0 - 4); ctx.lineTo(x0, y0); ctx.lineTo(x0 + len, y0); ctx.lineTo(x0 + len, y0 - 4); ctx.stroke();
+    ctx.font = '600 11px ' + monoFont();
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('5 cm', x0 + len / 2, y0 - 3);
+    ctx.restore();
+  }
+
+  // ---------- readouts ----------
+  const fmtCm = (v) => !isFinite(v) ? '∞' : minus((v > 0 ? '+' : '') + v.toFixed(1) + ' cm');
+  const fmtM = (v) => !isFinite(v) ? '∞' : minus((v > 0 ? '+' : '') + v.toFixed(2) + '×');
+  function updateReadouts() {
+    const im = frameData ? frameData.image : { why: 'none' };
+    const ok = !!im.E;
+    $('imgDl').hidden = $('imgHint').hidden = !ok;
+    $('imgNone').hidden = ok;
+    if (!ok) {
+      $('imgNone').textContent = im.why === 'none'
+        ? 'Add an object arrow to measure an image.'
+        : im.why === 'few'
+          ? 'Aim more of the object rays at a lens or mirror to form an image.'
+          : im.why === 'behind'
+            ? 'The object is behind the mirror.'
+            : 'Image readouts need the object rays to pass through exactly one lens or mirror.';
+    } else {
+      $('rDo').textContent = fmtCm(im.dO);
+      $('rDi').textContent = im.inf ? '∞' : fmtCm(im.dI);
+      $('rDiEq').textContent = fmtCm(im.dIeq);
+      $('rF').textContent = isFinite(im.f) ? fmtCm(im.f) : '∞ (plane)';
+      $('rM').textContent = im.inf ? '∞' : fmtM(im.m);
+      $('rMEq').textContent = fmtM(im.mEq);
+      if (im.inf) $('rKind').textContent = 'At infinity: rays leave parallel';
+      else {
+        const am = Math.abs(im.m);
+        $('rKind').textContent = (im.real ? 'Real' : 'Virtual') + ', ' + (im.m > 0 ? 'upright' : 'inverted') + ', ' +
+          (am > 1.02 ? 'enlarged' : am < 0.98 ? 'reduced' : 'same size');
+      }
+    }
+    const glass = (sel && isGlass(sel)) ? sel : items.find(isGlass);
+    $('refSec').hidden = !glass;
+    if (glass) {
+      $('rN').textContent = glass.n.toFixed(2);
+      $('rCrit').textContent = glass.n > 1 ? deg(Math.asin(1 / glass.n)).toFixed(1) + '°' : 'none';
+      const ev = frameData && frameData.internal.get(glass);
+      $('rInc').textContent = ev ? deg(ev.theta).toFixed(1) + '°' : '—';
+      $('rRes').textContent = ev ? (ev.tir ? 'Total internal reflection' : 'Refracts out') : '—';
+    }
+  }
+
+  // ---------- selected element editor ----------
+  const SPECS = {
+    lens: [
+      { chips: [['conv', 'Converging'], ['div', 'Diverging']], get: (it) => it.f > 0 ? 'conv' : 'div', set: (it, v) => { it.f = (v === 'conv' ? 1 : -1) * Math.abs(it.f); } },
+      { label: 'Focal length', min: 5, max: 30, step: 0.5, get: (it) => Math.abs(it.f), set: (it, v) => { it.f = Math.sign(it.f) * v; }, fmt: (it) => 'f = ' + fmtCm(it.f) },
+      { label: 'Aperture height', min: 2, max: 20, step: 0.5, key: 'ap', unit: ' cm' },
+      { label: 'Rotate', min: -90, max: 90, step: 1, key: 'rot', unit: '°' }
+    ],
+    mirror: [
+      { chips: [['concave', 'Concave'], ['convex', 'Convex'], ['plane', 'Plane']], get: (it) => it.shape, set: (it, v) => { it.shape = v; } },
+      { label: 'Radius R', min: 10, max: 60, step: 1, key: 'R', show: (it) => it.shape !== 'plane',
+        fmt: (it) => 'R = ' + it.R.toFixed(0) + ' cm · f = ' + minus((signedR(it) / 2).toFixed(1)) + ' cm' },
+      { label: 'Aperture height', min: 2, max: 20, step: 0.5, key: 'ap', unit: ' cm' },
+      { label: 'Rotate', min: -180, max: 180, step: 1, key: 'rot', unit: '°' }
+    ],
+    block: [
+      { label: 'Refractive index n', min: 1, max: 2.4, step: 0.01, key: 'n', digits: 2 },
+      { label: 'Width', min: 2, max: 20, step: 0.5, key: 'w', unit: ' cm' },
+      { label: 'Height', min: 2, max: 20, step: 0.5, key: 'h', unit: ' cm' },
+      { label: 'Rotate', min: -180, max: 180, step: 1, key: 'rot', unit: '°' }
+    ],
+    prism: [
+      { label: 'Refractive index n', min: 1, max: 2.4, step: 0.01, key: 'n', digits: 2 },
+      { label: 'Side length', min: 4, max: 20, step: 0.5, key: 'side', unit: ' cm' },
+      { label: 'Rotate', min: -180, max: 180, step: 1, key: 'rot', unit: '°' }
+    ],
+    semi: [
+      { label: 'Refractive index n', min: 1, max: 2.4, step: 0.01, key: 'n', digits: 2 },
+      { label: 'Radius', min: 2, max: 12, step: 0.5, key: 'r', unit: ' cm' },
+      { label: 'Rotate', min: -180, max: 180, step: 1, key: 'rot', unit: '°' }
+    ],
+    object: [
+      { label: 'Height', min: 1, max: 8, step: 0.5, key: 'h', unit: ' cm' },
+      { label: 'Ray count', min: 3, max: 21, step: 1, key: 'rays', digits: 0 },
+      { label: 'Fan half angle', min: 2, max: 60, step: 1, key: 'spread', unit: '°' },
+      { label: 'Aim', min: -60, max: 60, step: 0.5, key: 'rot', unit: '°' },
+      { toggle: 'White light', key: 'white' }
+    ],
+    beam: [
+      { label: 'Width', min: 0, max: 12, step: 0.2, key: 'w', unit: ' cm' },
+      { label: 'Ray count', min: 1, max: 21, step: 1, key: 'rays', digits: 0 },
+      { label: 'Angle', altLabel: 'Angle (pivots on the glass)', min: -180, max: 180, step: 0.5, key: 'rot', unit: '°' },
+      { toggle: 'White light', key: 'white' }
+    ],
+    point: [
+      { label: 'Ray count', min: 4, max: 72, step: 1, key: 'rays', digits: 0 },
+      { label: 'Spread', min: 10, max: 360, step: 5, key: 'spread', unit: '°' },
+      { label: 'Aim', min: -180, max: 180, step: 1, key: 'rot', unit: '°' },
+      { toggle: 'White light', key: 'white' }
+    ]
+  };
+  const getV = (spec, it) => spec.get ? spec.get(it) : it[spec.key];
+  function fmtSpec(spec, it) {
+    if (spec.fmt) return spec.fmt(it);
+    const v = getV(spec, it);
+    const digits = spec.digits != null ? spec.digits : (spec.unit === '°' ? (spec.step < 1 ? 1 : 0) : 1);
+    return minus(v.toFixed(digits)) + (spec.unit || '');
+  }
+  function itemName(it) {
+    if (it.kind === 'lens') return it.f > 0 ? 'Converging lens' : 'Diverging lens';
+    if (it.kind === 'mirror') return { concave: 'Concave mirror', convex: 'Convex mirror', plane: 'Plane mirror' }[it.shape];
+    return NAMES[it.kind];
+  }
+  let editorFor = null, editorRefs = [];
+  function buildEditor() {
+    const box = $('selFields');
+    box.textContent = ''; editorRefs = []; editorFor = sel;
+    if (!sel) return;
+    SPECS[sel.kind].forEach((spec, idx) => {
+      if (spec.show && !spec.show(sel)) return;
+      if (spec.chips) {
+        const wrap = document.createElement('div'); wrap.className = 'chips'; wrap.setAttribute('role', 'group');
+        for (const [v, label] of spec.chips) {
+          const b = document.createElement('button'); b.type = 'button'; b.textContent = label;
+          b.setAttribute('aria-pressed', String(spec.get(sel) === v));
+          b.addEventListener('click', () => { spec.set(sel, v); setPreset(null); buildEditor(); schedule(); });
+          wrap.appendChild(b);
+        }
+        box.appendChild(wrap);
+      } else if (spec.toggle) {
+        const wrap = document.createElement('div'); wrap.className = 'toggles';
+        const lab = document.createElement('label'), inp = document.createElement('input');
+        inp.type = 'checkbox'; inp.checked = !!sel[spec.key];
+        inp.addEventListener('change', () => { sel[spec.key] = inp.checked; setPreset(null); schedule(); });
+        lab.append(inp, spec.toggle); wrap.appendChild(lab); box.appendChild(wrap);
+      } else {
+        const id = 'f' + idx, wrap = document.createElement('div');
+        const head = document.createElement('div'); head.className = 'slider-head';
+        const lab = document.createElement('label'); lab.htmlFor = id;
+        lab.textContent = spec.altLabel && sel.pivot ? spec.altLabel : spec.label;
+        const out = document.createElement('output'); out.className = 'mono'; out.htmlFor = id;
+        const inp = document.createElement('input'); inp.type = 'range'; inp.id = id;
+        inp.min = spec.min; inp.max = spec.max; inp.step = spec.step; inp.value = getV(spec, sel);
+        inp.addEventListener('input', () => {
+          const v = +inp.value;
+          if (spec.set) spec.set(sel, v); else sel[spec.key] = v;
+          if (spec.key === 'rot') placeOnPivot(sel);
+          setPreset(null); schedule();
+        });
+        head.append(lab, out); wrap.append(head, inp); box.appendChild(wrap);
+        editorRefs.push({ spec, inp, out });
+      }
+    });
+  }
+  function updateSel() {
+    $('selEditor').hidden = !sel; $('selHint').hidden = !!sel;
+    if (sel !== editorFor) buildEditor();
+    if (sel) {
+      $('selName').textContent = itemName(sel);
+      for (const { spec, inp, out } of editorRefs) {
+        if (document.activeElement !== inp) inp.value = getV(spec, sel);
+        out.textContent = fmtSpec(spec, sel);
+      }
+      $('selPos').textContent = minus(`x = ${sel.x.toFixed(1)} cm, y = ${sel.y.toFixed(1)} cm`);
+    }
+    for (const b of document.querySelectorAll('#adders button')) b.disabled = items.length >= MAX_ITEMS;
+  }
+  function setPreset(name) {
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+  }
+
+  // ---------- scheduling ----------
+  function schedule() {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = 0;
+      if (!W || !H) return;
+      draw(); updateReadouts(); updateSel();
+    });
+  }
+
+  // ---------- interaction ----------
+  function segDist(p, a, b) {
+    const ex = b[0] - a[0], ey = b[1] - a[1], L2 = ex * ex + ey * ey || 1e-12;
+    const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * ex + (p[1] - a[1]) * ey) / L2));
+    return Math.hypot(p[0] - a[0] - t * ex, p[1] - a[1] - t * ey);
+  }
+  function inPoly(p, v) {
+    let inside = false;
+    for (let i = 0, j = v.length - 1; i < v.length; j = i++) {
+      if ((v[i][1] > p[1]) !== (v[j][1] > p[1]) && p[0] < (v[j][0] - v[i][0]) * (p[1] - v[i][1]) / (v[j][1] - v[i][1]) + v[i][0]) inside = !inside;
+    }
+    return inside;
+  }
+  function hitItem(it, p) {
+    const tol = 11 / s, pts = outline(it);
+    if (it.kind === 'point') return Math.hypot(p[0] - it.x, p[1] - it.y) <= tol;
+    if (isGlass(it)) {
+      if (inPoly(p, pts)) return true;
+    }
+    for (let i = 1; i < pts.length; i++) if (segDist(p, pts[i - 1], pts[i]) <= tol) return true;
+    if (isGlass(it) && segDist(p, pts[pts.length - 1], pts[0]) <= tol) return true;
+    return false;
+  }
+  function hit(p) {
+    const order = items.filter(isSource).concat(items.filter((i) => !isSource(i) && !isGlass(i)), items.filter(isGlass));
+    return order.find((it) => hitItem(it, [p.x, p.y])) || null;
+  }
+  function clampToView(it) {
+    const b = bounds(), m = 0.4;
+    it.x = Math.min(b.x1 - m, Math.max(b.x0 + m, it.x));
+    it.y = Math.min(b.y1 - m, Math.max(b.y0 + m, it.y));
+  }
+  function eventW(e) { const r = cv.getBoundingClientRect(); return toW(e.clientX - r.left, e.clientY - r.top); }
+
+  cv.addEventListener('pointerdown', (e) => {
+    cv.focus({ preventScroll: true });
+    const p = eventW(e), it = hit(p);
+    if (it) {
+      sel = it; drag = { it, dx: p.x - it.x, dy: p.y - it.y };
+      cv.style.cursor = 'grabbing';
+      cv.setPointerCapture(e.pointerId);
+    } else sel = null;
+    schedule();
+  });
+  cv.addEventListener('pointermove', (e) => {
+    const p = eventW(e);
+    if (drag) {
+      drag.it.x = p.x - drag.dx; drag.it.y = p.y - drag.dy; drag.it.pivot = null; clampToView(drag.it);
+      if (sel === drag.it && editorFor === sel && sel.kind === 'beam') editorFor = null;
+      setPreset(null); schedule();
+    } else if (e.pointerType === 'mouse') {
+      cv.style.cursor = hit(p) ? 'grab' : 'default';
+    }
+  });
+  const endDrag = () => { drag = null; cv.style.cursor = 'default'; };
+  cv.addEventListener('pointerup', endDrag);
+  cv.addEventListener('pointercancel', endDrag);
+
+  function removeSel() { items = items.filter((i) => i !== sel); sel = null; setPreset(null); schedule(); }
+  cv.addEventListener('keydown', (e) => {
+    if (!sel) return;
+    const step = e.shiftKey ? 0.1 : 0.5;
+    const moves = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, step], ArrowDown: [0, -step] };
+    if (moves[e.key]) {
+      sel.x += moves[e.key][0]; sel.y += moves[e.key][1]; if (sel.pivot) { sel.pivot = null; editorFor = null; }
+      clampToView(sel); setPreset(null);
+    } else if (e.key === 'Delete' || e.key === 'Backspace') {
+      removeSel();
+    } else if (e.key === 'Escape') {
+      sel = null;
+    } else if (e.key === '[' || e.key === ']') {
+      const lim = sel.kind === 'lens' ? 90 : sel.kind === 'object' ? 60 : 180;
+      let r = sel.rot + (e.key === ']' ? 1 : -1) * (e.shiftKey ? 1 : 5);
+      if (lim === 180) { if (r > 180) r -= 360; if (r < -180) r += 360; } else r = Math.max(-lim, Math.min(lim, r));
+      sel.rot = r; placeOnPivot(sel); setPreset(null);
+    } else return;
+    e.preventDefault(); schedule();
+  });
+
+  function addItem(kind) {
+    if (items.length >= MAX_ITEMS) return;
+    const b = bounds();
+    let best = null, bestD = -1;
+    for (let t = 0; t < 40; t++) {
+      const x = (Math.random() - 0.5) * Math.min(30, b.x1 - b.x0 - 4);
+      const y = (Math.random() - 0.5) * Math.min(10, b.y1 - b.y0 - 4);
+      const d = items.length ? Math.min(...items.map((c) => Math.hypot(c.x - x, c.y - y))) : 99;
+      if (d > bestD) { bestD = d; best = { x, y }; }
+    }
+    const it = mk(kind, Math.round(best.x), Math.round(best.y));
+    items.push(it); sel = it; setPreset(null); schedule();
+  }
+  for (const b of document.querySelectorAll('#adders button')) b.addEventListener('click', () => addItem(b.dataset.add));
+  $('del').addEventListener('click', removeSel);
+
+  for (const b of document.querySelectorAll('#presets button')) {
+    b.addEventListener('click', () => { items = PRESETS[b.dataset.p](); sel = null; setPreset(b.dataset.p); schedule(); });
+  }
+  const bindToggle = (id, key) => $(id).addEventListener('change', (e) => { layers[key] = e.target.checked; schedule(); });
+  bindToggle('tPrincipal', 'principal'); bindToggle('tImage', 'image'); bindToggle('tFaint', 'faint'); bindToggle('tGrid', 'grid');
+
+  // theme changes
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', schedule); } catch (_) {}
+  new MutationObserver(schedule).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class', 'style'] });
+
+  // ---------- boot ----------
+  items = PRESETS.converging();
+  new ResizeObserver(resize).observe(stage);
+  resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+})();
+</script>
+</body>
+</html>
