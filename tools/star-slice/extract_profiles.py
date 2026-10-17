@@ -75,7 +75,8 @@ def read_profile(path):
     return header, names, rows
 
 def find_profiles(run_dir):
-    logs = os.path.join(run_dir, 'LOGS')
+    # accept a run folder (with LOGS/ inside) or a log folder itself (e.g. LOGS_zams from make_slice_runs.py)
+    logs = run_dir if os.path.exists(os.path.join(run_dir, 'profiles.index')) else os.path.join(run_dir, 'LOGS')
     idx = os.path.join(logs, 'profiles.index')
     out = []
     if os.path.exists(idx):
