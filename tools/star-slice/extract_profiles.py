@@ -39,13 +39,14 @@ WANT = {
     'pp':          ['pp'],
     'cno':         ['cno'],
     'tri_alpha':   ['tri_alpha', 'tri_alfa'],
-    'phase':       ['phase'],
+    'phase':       ['eos_phase', 'phase'],             # 0 liquid, 1 solid (Skye)
+    'eps_phase_sep': ['eps_phase_separation'],
     'gamma':       ['gamma', 'gam', 'log_gamma'],
     'eta':         ['eta'],
     'zbar_div_abar': ['zbar_div_abar'],
 }
 NEEDED = ['mass', 'logT', 'logRho', 'h1', 'he4', 'c12', 'o16']        # demo cannot run without these
-GOOD = ['mixing_type', 'eps_nuc', 'conv_vel', 'ne22', 'phase', 'gamma']  # demo is much better with these
+GOOD = ['mixing_type', 'eps_nuc', 'conv_vel', 'ne22', 'phase', 'gamma']  # white dwarf runs: phase, gamma  # demo is much better with these
 HEADER_WANT = ['model_number', 'star_age', 'star_mass', 'photosphere_L', 'Teff', 'photosphere_r',
                'log_center_T', 'log_center_Rho', 'center_h1', 'center_he4', 'center_c12', 'center_o16',
                'version_number', 'num_zones']
@@ -176,8 +177,8 @@ def main():
     missing_good = [k for k in GOOD if not have[k]]
     if missing_needed or missing_good:
         print('\nTo record these in a rerun, add to the run\'s profile_columns.list:')
-        add = {'logR': 'logR', 'mixing_type': 'mixing_type', 'conv_vel': 'conv_vel', 'eps_nuc': 'eps_nuc',
-               'phase': 'phase', 'gamma': 'gamma', 'ne22': 'ne22', 'h1': 'h1', 'he4': 'he4', 'c12': 'c12', 'o16': 'o16',
+        add = {'logR': 'logR', 'mixing_type': 'mixing_type', 'conv_vel': 'log_conv_vel', 'eps_nuc': 'eps_nuc',
+               'phase': 'eos_phase', 'gamma': 'gam', 'ne22': 'ne22', 'h1': 'h1', 'he4': 'he4', 'c12': 'c12', 'o16': 'o16',
                'mass': 'mass', 'logT': 'logT', 'logRho': 'logRho'}
         for k in missing_needed + missing_good:
             print('    ' + add.get(k, k))

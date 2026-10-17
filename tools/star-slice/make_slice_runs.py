@@ -18,7 +18,8 @@ import argparse, os, re, shutil, sys
 STAGES = ['zams', 'to_end_he_core_burn', 'co_core', 'remove_env', 'settle']   # time order
 PROG_INTERVAL, WD_INTERVAL, MAX_PROFILES = 10, 10, 5000
 WANT_COLS = ['mass', 'logR', 'logT', 'logRho', 'h1', 'he4', 'c12', 'o16', 'ne20', 'ne22',
-             'mixing_type', 'log_conv_vel', 'eps_nuc', 'pp', 'cno', 'tri_alpha', 'eta', 'phase', 'gam', 'gamma']
+             'mixing_type', 'log_conv_vel', 'eps_nuc', 'pp', 'cno', 'tri_alpha', 'eta', 'gam', 'eos_phase',
+             'eps_phase_separation']
 SKIP = {'LOGS', 'photos', 'png', 'run.log', 'mk.log'}
 
 def copy_run(src, dst, dry):
