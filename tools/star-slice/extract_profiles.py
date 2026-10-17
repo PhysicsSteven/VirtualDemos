@@ -212,7 +212,7 @@ def main():
         if 'logR' not in col:
             col['logR'] = [sig(logr[i]) for i in idx]
         moments.append({'run': os.path.basename(os.path.normpath(d)),
-                        'h': {k: sig(header[k]) if isinstance(header.get(k), float) else header.get(k)
+                        'h': {k: sig(header[k], 10 if k == 'star_age' else 4) if isinstance(header.get(k), float) else header.get(k)
                               for k in HEADER_WANT if k in header},
                         'c': col})
         print('  model %-7s age %-10.4g zones %d -> %d' % (header.get('model_number'), header.get('star_age', float('nan')),
