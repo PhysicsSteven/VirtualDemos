@@ -1,0 +1,1333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Double Slit, One Particle at a Time</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one canvas with the apparatus seen from above, the detector screen seen face on, and a histogram of hits, all sharing the screen coordinate y; instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --wall: #4a5566;
+  --scr: #0a0f15;
+  --scr-edge: #2a3442;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --wall: #8693a5; --scr: #05080c; --scr-edge: #344052; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --wall: #8693a5; --scr: #05080c; --scr-edge: #344052; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#can { touch-action: none; outline: none; }
+#can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .list dd { font-size: 0.88rem; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.lamsw { display: inline-block; width: 0.8em; height: 0.8em; border-radius: 50%; vertical-align: -0.05em; margin-right: 6px; border: 1px solid var(--line); }
+
+.formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
+.fwrap { position: relative; height: 176px; }
+:root[data-projector="on"] .fwrap { height: 210px; }
+.fwrap canvas { position: absolute; inset: 0; display: block; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.curve { border-color: var(--equi); border-top-width: 3px; }
+.swatch.env { border-color: var(--muted); border-top-style: dashed; }
+.swatch.hist { height: 10px; border: 1px solid var(--accent); background: color-mix(in srgb, var(--accent) 22%, transparent); }
+.swatch.mark { width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 9px solid var(--equi); margin-right: 13px; }
+.swatch.dot { width: 10px; height: 10px; border: 0; border-radius: 50%; margin: 0 6px; }
+.swatch.s1 { background: #ff7660; }
+.swatch.s2 { background: #69a0ff; }
+
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 86vh; min-height: 620px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Double Slit, One Particle at a Time</h1>
+      <p>Send photons, electrons or C₆₀ molecules through two slits one at a time. Each one lands at a single point; only the pile of many points shows the interference pattern.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">λ = h/p · Δy ≈ λL/d · envelope zero at sin θ = λ/a</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <button type="button" class="btn" id="stream">Pause</button>
+        <button type="button" class="btn" id="fire1">Fire 1</button>
+        <button type="button" class="btn" id="fire10">Fire 10</button>
+        <button type="button" class="btn" id="clear">Clear</button>
+        <span class="count mono" id="count" aria-live="off">0 <small>detected</small></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="Double slit apparatus seen from above, the detector screen seen face on, and a histogram of where particles landed. Drag a slit up or down to change the separation d, drag its outer edge to change the width a, click a slit to close or open it. Keys: space streams or pauses, F fires one, C clears, 1 and 2 close or open a slit, W toggles the which slit detector, up and down change d, left and right change a, plus and minus zoom the screen."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="laser" aria-pressed="false">Light, red laser</button>
+          <button type="button" data-p="electron" aria-pressed="true">Electrons (Jönsson 1961 style)</button>
+          <button type="button" data-p="c60" aria-pressed="false">Buckyballs (Arndt 1999 style, grating)</button>
+          <button type="button" data-p="one" aria-pressed="false">One slit</button>
+          <button type="button" data-p="which" aria-pressed="false">Which slit detector on</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Source</h2>
+        <div class="chips" id="kinds" role="group" aria-label="Particle">
+          <button type="button" data-k="photon" aria-pressed="false">Photons</button>
+          <button type="button" data-k="electron" aria-pressed="true">Electrons</button>
+          <button type="button" data-k="c60" aria-pressed="false">C₆₀</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="src" id="srcLab">Accelerating voltage</label><output id="srcOut" class="mono" for="src"></output></div>
+          <input type="range" id="src" min="1" max="5.30103" step="0.001" value="4.69897">
+        </div>
+        <dl class="readout">
+          <div class="wide big"><dt id="lamLab">de Broglie wavelength λ</dt><dd id="rLam">—</dd></div>
+          <div class="wide"><dt id="rXLab">Speed</dt><dd id="rX">—</dd></div>
+          <div class="wide"><dt>Momentum p</dt><dd id="rP">—</dd></div>
+        </dl>
+        <p class="hint" id="srcHint"></p>
+      </section>
+
+      <section>
+        <h2>Slits and screen</h2>
+        <div>
+          <div class="slider-head"><label for="sa">Slit width a</label><output id="saOut" class="mono" for="sa"></output></div>
+          <input type="range" id="sa" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sd">Slit separation d (center to center)</label><output id="sdOut" class="mono" for="sd"></output></div>
+          <input type="range" id="sd" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sL">Screen distance L</label><output id="sLOut" class="mono" for="sL"></output></div>
+          <input type="range" id="sL" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <div class="row2">
+          <button type="button" class="btn" id="slit1" aria-pressed="true">Slit 1 open</button>
+          <button type="button" class="btn" id="slit2" aria-pressed="true">Slit 2 open</button>
+        </div>
+        <p class="hint">On the drawing: drag a slit up or down to change d, drag its outer edge to change a, and click a slit to close or open it. Any change clears the screen, since old hits came from a different setup.</p>
+      </section>
+
+      <section>
+        <h2>Which slit detector</h2>
+        <label class="check"><input type="checkbox" id="det">Detector at the slits</label>
+        <div id="etaRow">
+          <div class="slider-head"><label for="eta">Detector efficiency η</label><output id="etaOut" class="mono" for="eta"></output></div>
+          <input type="range" id="eta" min="0" max="100" step="1" value="100">
+        </div>
+        <p class="hint">An idealized detector: when it fires, it records which slit the particle went through and does nothing else. That record alone removes the interference: those particles form the sum of two single slit patterns. It fires for a fraction η of the particles, so the pattern is η(I₁ + I₂) + (1 − η)I₁₂ and the fringe contrast drops to 1 − η.</p>
+      </section>
+
+      <section>
+        <h2>Firing</h2>
+        <div>
+          <div class="slider-head"><label for="rate">Stream rate</label><output id="rateOut" class="mono" for="rate"></output></div>
+          <input type="range" id="rate" min="0" max="10" step="1" value="5">
+        </div>
+        <dl class="readout">
+          <div><dt>Detected</dt><dd id="rN">0</dd></div>
+          <div><dt>In the last second</dt><dd id="rRate">0</dd></div>
+        </dl>
+        <p class="hint">Only one particle is in the apparatus at a time in a real single particle experiment, and each one is detected at one point. With a few dozen hits the screen looks random. The pattern shows up only after hundreds to thousands.</p>
+      </section>
+
+      <section>
+        <h2>Predicted pattern</h2>
+        <dl class="readout">
+          <div class="wide big"><dt>Fringe spacing Δy ≈ λL/d</dt><dd id="rDy">—</dd></div>
+          <div class="wide list"><dt>Bright fringes, sin θ = mλ/d, m = 1, 2, 3</dt><dd id="rMax">—</dd></div>
+          <div class="wide list"><dt>Dark fringes, sin θ = (m + ½)λ/d, m = 0, 1, 2</dt><dd id="rMin">—</dd></div>
+          <div><dt>Envelope zero, sin θ = λ/a</dt><dd id="rEnv">—</dd></div>
+          <div><dt>Bright fringes in central envelope ≈ 2d/a − 1</dt><dd id="rNb">—</dd></div>
+          <div class="wide"><dt>Far field check (d + a)²/λL</dt><dd id="rFF">—</dd></div>
+        </dl>
+        <p class="hint">Positions are y = L tan θ, measured from the center of the screen. The orders that land exactly on an envelope zero are missing. The falling envelope pulls each actual peak slightly toward the center, most visibly when d/a is small.</p>
+      </section>
+
+      <section>
+        <h2>Intensity on the screen</h2>
+        <p class="formula">I(θ) = I₀ · cos²(πd sin θ/λ) · [sin β/β]², β = πa sin θ/λ</p>
+        <div class="fwrap"><canvas id="fCan" aria-label="The two factors of the double slit intensity and their product, for the current wavelength and slits."></canvas></div>
+        <p class="hint">The first factor is two slit interference: fringes spaced λL/d. The second is the diffraction of each slit: a broad envelope whose first zero sits at sin θ = λ/a. The pattern is their product, so the envelope sets how bright each fringe can be.</p>
+      </section>
+
+      <section>
+        <h2>Display</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tCurve" checked>Predicted curve</label>
+          <label><input type="checkbox" id="tMarks" checked>Maxima marks</label>
+          <label><input type="checkbox" id="tEnv">Envelope</label>
+          <label><input type="checkbox" id="tColor" checked>Color by slit</label>
+        </div>
+        <div class="inline">
+          <span class="lab">Screen range</span>
+          <div class="seg" role="group" aria-label="Screen range">
+            <button type="button" id="zOut" aria-pressed="false">Wider</button>
+            <button type="button" id="zFit" aria-pressed="false">Fit</button>
+            <button type="button" id="zIn" aria-pressed="false">Narrower</button>
+          </div>
+        </div>
+        <div class="key">
+          <span><i class="swatch hist"></i>Hits per bin</span>
+          <span><i class="swatch curve"></i>Prediction for this many hits</span>
+          <span><i class="swatch env"></i>Single slit envelope, scaled to the fringe peaks</span>
+          <span><i class="swatch mark"></i>Predicted bright fringes</span>
+          <span><i class="swatch dot s1"></i><i class="swatch dot s2" style="margin-left:-8px"></i>Recorded at slit 1 or slit 2</span>
+        </div>
+        <p class="hint">Model: a monochromatic plane wave falls on two slits, and the screen pattern is the paraxial Fresnel calculation, which matches the formula above in the far field. Each hit is drawn at random from that pattern; its position along the slits is just spread out for display. Slits are drawn enlarged and L is not to scale. Hits count only if they land on the screen shown.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  // SI units throughout. CODATA 2018 exact and recommended values.
+  const H = 6.62607015e-34, QE = 1.602176634e-19, ME = 9.1093837015e-31, C = 299792458, U = 1.66053906660e-27;
+  const M_C60 = 720 * U;   // twelve times sixty carbon 12 atoms
+
+  function photon(lamNm) { const lam = lamNm * 1e-9; return { lam, p: H / lam }; }
+  // Electron accelerated through V volts, with the relativistic correction:
+  // p = √(2m eV (1 + eV/2mc²)), λ = h/p
+  function electron(V) {
+    const K = QE * V, mc2 = ME * C * C;
+    const p = Math.sqrt(2 * ME * K * (1 + K / (2 * mc2)));
+    const lamNR = H / Math.sqrt(2 * ME * K);
+    const v = p * C * C / (K + mc2);
+    return { lam: H / p, p, lamNR, v, K };
+  }
+  function massive(m, v) { const p = m * v; return { lam: H / p, p, v }; }
+
+  // Fresnel integrals C(x) = ∫₀ˣ cos(πt²/2) dt, S(x) = ∫₀ˣ sin(πt²/2) dt.
+  // Power series for small |x|, continued fraction (modified Lentz) for large |x|.
+  function fresnel(x) {
+    const ax = Math.abs(x);
+    let c, s;
+    if (ax < 1e-12) { c = ax; s = 0; }
+    else if (ax <= 1.5) {
+      const fact = Math.PI / 2 * ax * ax;
+      let sum = 0, sums = 0, sumc = ax, sign = 1, odd = true, term = ax, n = 3;
+      for (let k = 1; k < 120; k++) {
+        term *= fact / k;
+        sum += sign * term / n;
+        const test = Math.abs(sum) * 1e-16;
+        if (odd) { sign = -sign; sums = sum; sum = sumc; } else { sumc = sum; sum = sums; }
+        if (term < test) break;
+        odd = !odd; n += 2;
+      }
+      s = sums; c = sumc;
+    } else {
+      const pix2 = Math.PI * ax * ax;
+      let br = 1, bi = -pix2;
+      let m = br * br + bi * bi, dr = br / m, di = -bi / m, hr = dr, hi = di;
+      let ccr = 1e30, cci = 0, n = -1;
+      for (let k = 2; k < 300; k++) {
+        n += 2;
+        const a = -n * (n + 1);
+        br += 4;
+        let tr = a * dr + br, ti = a * di + bi;
+        m = tr * tr + ti * ti; dr = tr / m; di = -ti / m;
+        m = ccr * ccr + cci * cci;
+        tr = br + a * ccr / m; ti = bi - a * cci / m; ccr = tr; cci = ti;
+        const delr = ccr * dr - cci * di, deli = ccr * di + cci * dr;
+        tr = hr * delr - hi * deli; hi = hr * deli + hi * delr; hr = tr;
+        if (Math.abs(delr - 1) + Math.abs(deli) < 1e-15) break;
+      }
+      const tr = (hr + hi) * ax, ti = (hi - hr) * ax;
+      const cr = Math.cos(0.5 * pix2), ci = Math.sin(0.5 * pix2);
+      const ur = 1 - (cr * tr - ci * ti), ui = -(cr * ti + ci * tr);
+      c = 0.5 * (ur - ui); s = 0.5 * (ur + ui);
+    }
+    return x < 0 ? [-c, -s] : [c, s];
+  }
+
+  // Slit 1 is centered at +d/2, slit 2 at −d/2 (y measured along the screen, across the slits).
+  function slitEdges(a, d) { return [[d / 2 - a / 2, d / 2 + a / 2], [-d / 2 - a / 2, -d / 2 + a / 2]]; }
+  // Paraxial Fresnel amplitude at screen position y from one slit [lo, hi] under plane wave illumination,
+  // up to a factor common to every y and both slits: ∫ exp(iπ(s − y)²/λL) ds ∝ [C + iS] between the edges.
+  function slitAmp(y, lo, hi, k) {
+    const f1 = fresnel(k * (lo - y)), f2 = fresnel(k * (hi - y));
+    return [f2[0] - f1[0], f2[1] - f1[1]];
+  }
+  function gridSize(o) {
+    const fine = o.lam * o.L / (o.d + o.a);        // shortest period in the far field intensity
+    const need = Math.ceil(28 * 2 * o.Y / fine);
+    return Math.max(4096, Math.min(65536, need));
+  }
+  // Tabulate the three patterns on [−Y, Y]: both slits together |U₁ + U₂|², and each slit alone.
+  function buildPattern(o) {
+    const M = o.M || gridSize(o), Y = o.Y, h = 2 * Y / M, k = Math.sqrt(2 / (o.lam * o.L));
+    const ed = slitEdges(o.a, o.d), op = o.open;
+    const y = new Float64Array(M + 1), I12 = new Float64Array(M + 1), I1 = new Float64Array(M + 1), I2 = new Float64Array(M + 1);
+    for (let j = 0; j <= M; j++) {
+      const yy = -Y + j * h; y[j] = yy;
+      let r1 = 0, i1 = 0, r2 = 0, i2 = 0;
+      if (op[0]) { const u = slitAmp(yy, ed[0][0], ed[0][1], k); r1 = u[0]; i1 = u[1]; }
+      if (op[1]) { const u = slitAmp(yy, ed[1][0], ed[1][1], k); r2 = u[0]; i2 = u[1]; }
+      I1[j] = r1 * r1 + i1 * i1; I2[j] = r2 * r2 + i2 * i2;
+      I12[j] = (r1 + r2) * (r1 + r2) + (i1 + i2) * (i1 + i2);
+    }
+    const cum = (I) => { const c = new Float64Array(M + 1); for (let j = 1; j <= M; j++) c[j] = c[j - 1] + 0.5 * h * (I[j - 1] + I[j]); return c; };
+    const C12 = cum(I12), C1 = cum(I1), C2 = cum(I2);
+    return { M, Y, h, y, I12, I1, I2, C12, C1, C2, F12: C12[M], F1: C1[M], F2: C2[M] };
+  }
+  // Exact inverse CDF of the piecewise linear density through the tabulated points.
+  function sampleFrom(pat, I, Cm, u01) {
+    const M = pat.M, u = u01 * Cm[M];
+    let lo = 0, hi = M - 1;
+    while (lo < hi) { const mid = (lo + hi) >> 1; if (Cm[mid + 1] < u) lo = mid + 1; else hi = mid; }
+    const j = lo, r = u - Cm[j], f0 = I[j], f1 = I[j + 1], h = pat.h, df = f1 - f0;
+    let t;
+    if (Math.abs(df) < 1e-9 * (f0 + f1) || f0 + f1 === 0) t = (f0 + f1) > 0 ? r / (0.5 * (f0 + f1) * h) : 0.5;
+    else t = (-f0 + Math.sqrt(Math.max(0, f0 * f0 + 2 * df * r / h))) / df;
+    return pat.y[j] + Math.max(0, Math.min(1, t)) * h;
+  }
+  // One detection. eta is the chance that the which slit detector fires (0 when it is off).
+  // P(y) ∝ η(|U₁|² + |U₂|²) + (1 − η)|U₁ + U₂|² on the screen shown.
+  function sampleHit(pat, eta, rnd) {
+    const A1 = eta * pat.F1, A2 = eta * pat.F2, B = (1 - eta) * pat.F12, tot = A1 + A2 + B;
+    if (!(tot > 0)) return null;
+    const u = rnd() * tot;
+    if (u < A1) return { y: sampleFrom(pat, pat.I1, pat.C1, rnd()), slit: 1 };
+    if (u < A1 + A2) return { y: sampleFrom(pat, pat.I2, pat.C2, rnd()), slit: 2 };
+    return { y: sampleFrom(pat, pat.I12, pat.C12, rnd()), slit: 0 };
+  }
+  function mixture(pat, eta) {
+    const M = pat.M, P = new Float64Array(M + 1), Cm = new Float64Array(M + 1);
+    for (let j = 0; j <= M; j++) { P[j] = eta * (pat.I1[j] + pat.I2[j]) + (1 - eta) * pat.I12[j]; Cm[j] = eta * (pat.C1[j] + pat.C2[j]) + (1 - eta) * pat.C12[j]; }
+    return { P, Cm, F: Cm[M] };
+  }
+  // Far field (Fraunhofer) predictions for the readouts and marks.
+  function predict(lam, L, a, d) {
+    const yAt = (s) => (Math.abs(s) < 1 ? L * Math.tan(Math.asin(s)) : NaN);
+    const maxima = [], minima = [];
+    for (let m = 1; m <= 400; m++) {
+      const s = m * lam / d; if (s >= 1) break;
+      const q = m * a / d, missing = Math.abs(q - Math.round(q)) < 1e-6 && Math.round(q) > 0;
+      maxima.push({ m, y: yAt(s), missing });
+    }
+    for (let m = 0; m <= 400; m++) { const s = (m + 0.5) * lam / d; if (s >= 1) break; minima.push({ m, y: yAt(s) }); }
+    const ratio = d / a;
+    return {
+      dy: lam * L / d, maxima, minima, env: lam / a < 1 ? yAt(lam / a) : NaN,
+      nBright: 2 * Math.ceil(ratio - 1e-9) - 1, ff: (d + a) * (d + a) / (lam * L)
+    };
+  }
+  // Fraunhofer intensity, normalized to 1 at the center
+  function fraunhofer(sinT, lam, a, d) {
+    const b = Math.PI * a * sinT / lam, c = Math.cos(Math.PI * d * sinT / lam), e = Math.abs(b) < 1e-9 ? 1 : Math.sin(b) / b;
+    return c * c * e * e;
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.DS = { H, QE, ME, C, U, M_C60, photon, electron, massive, fresnel, slitAmp, slitEdges, gridSize, buildPattern, sampleFrom, sampleHit, mixture, predict, fraunhofer };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  // ---------- particle families: units and slider ranges ----------
+  // a, d in the family's length unit; L in m
+  const FAM = {
+    photon: { unit: 1e-3, uname: 'mm', a: [0.01, 0.2, 0.005], d: [0.05, 1, 0.01], L: [0.2, 5, 0.05],
+      src: { lab: 'Wavelength λ', min: 250, max: 1000, step: 1 }, gun: 'Laser',
+      hint: 'A photon has p = h/λ. Visible light is drawn in its color; ultraviolet and infrared are drawn gray.' },
+    electron: { unit: 1e-6, uname: 'µm', a: [0.05, 1, 0.01], d: [0.2, 4, 0.02], L: [0.05, 2, 0.01],
+      src: { lab: 'Accelerating voltage', min: 1, max: 5.30103, step: 0.001 }, gun: 'Electron gun',
+      hint: 'λ = h/p with the relativistic momentum p = √(2m eV(1 + eV/2mc²)). Above a few kV the correction matters: at 50 kV the nonrelativistic formula gives a λ about 2.4% too long.' },
+    c60: { unit: 1e-9, uname: 'nm', a: [10, 200, 1], d: [40, 500, 2], L: [0.2, 3, 0.01],
+      src: { lab: 'Molecule speed v', min: 50, max: 500, step: 1 }, gun: 'C₆₀ oven',
+      hint: 'λ = h/mv with m = 720 u for C₆₀ (60 carbon 12 atoms). A whole molecule of 60 atoms still interferes with itself.' }
+  };
+  const RATES = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000];
+
+  const PRESETS = {
+    laser: { kind: 'photon', src: 650, a: 0.05e-3, d: 0.25e-3, L: 1, open: [true, true], det: false, eta: 1, rate: 7,
+      hint: 'A very faint red laser, one photon at a time, as in G. I. Taylor’s 1909 experiment. Fringes 2.6 mm apart, nine bright ones inside the central envelope, which ends 13 mm from the center.' },
+    electron: { kind: 'electron', src: Math.log10(50000), a: 0.2e-6, d: 1e-6, L: 0.35, open: [true, true], det: false, eta: 1, rate: 5,
+      hint: '50 kV electrons, λ = 5.36 pm, slits 0.2 µm wide and 1 µm apart. The fringes are under 2 µm apart, so Jönsson magnified them with electron lenses; this screen shows them before magnification. Watch the first few dozen hits: no pattern yet.' },
+    c60: { kind: 'c60', src: 220, a: 50e-9, d: 100e-9, L: 1.25, open: [true, true], det: false, eta: 1, rate: 6,
+      hint: 'C₆₀ at 220 m/s, λ = 2.5 pm. Arndt and colleagues used a grating with a 100 nm period; two slits with that spacing put the peaks in the same places, and many slits would only sharpen them. With d = 2a the second order falls on an envelope zero and is missing. The real beam had a wide spread of speeds that blurred the side peaks; here every molecule has the same speed.' },
+    one: { kind: 'electron', src: Math.log10(50000), a: 0.2e-6, d: 1e-6, L: 0.35, open: [true, false], det: false, eta: 1, rate: 6,
+      hint: 'Slit 2 is closed, so the fringes are gone and only the single slit pattern remains. Points that were dark with both slits open now get hits: opening a second slit can lower the count at a point. Click slit 2 on the drawing to open it again.' },
+    which: { kind: 'electron', src: Math.log10(50000), a: 0.2e-6, d: 1e-6, L: 0.35, open: [true, true], det: true, eta: 1, rate: 6,
+      hint: 'Each electron is now recorded at slit 1 or slit 2 (the flash). The fringes vanish: red and blue hits each form a single slit pattern and they simply add. Lower the efficiency η and partial fringes return.' }
+  };
+
+  // ---------- state ----------
+  const S = { preset: 'electron', kind: 'electron', src: Math.log10(50000), a: 0.2e-6, d: 1e-6, L: 0.35, open: [true, true],
+    det: false, eta: 1, rate: 5, Y: 15e-6 };
+  const show = { curve: true, marks: true, env: false, color: true };
+  let phys = null, pat = null, mix = null, pred = null, streaming = !reduce;
+
+  const CAP = 1000000;
+  const hitY = new Float64Array(CAP), hitZ = new Float32Array(CAP), hitTag = new Uint8Array(CAP);
+  let nHits = 0, carry = 0, recent = [];
+
+  function source() {
+    if (S.kind === 'photon') return photon(S.src);
+    if (S.kind === 'electron') return electron(Math.pow(10, S.src));
+    return massive(M_C60, S.src);
+  }
+  const eta = () => (S.det ? S.eta : 0);
+
+  function rebuild(keepHits) {
+    phys = source();
+    pat = buildPattern({ lam: phys.lam, L: S.L, a: S.a, d: S.d, open: S.open, Y: S.Y });
+    mix = mixture(pat, eta());
+    pred = predict(phys.lam, S.L, S.a, S.d);
+    if (!keepHits) clearHits();
+    flights = [];
+    histDirty = true;
+    physReadouts();
+    drawFormula();
+  }
+  function fitY() {
+    const p = source(), s = Math.min(0.95, p.lam / S.a);
+    let Y = 1.6 * S.L * Math.tan(Math.asin(s));
+    Y = Math.max(Y, 1.3 * (S.d + S.a) / 2, 3 * p.lam * S.L / S.d);
+    S.Y = niceUp(Y);
+  }
+  function niceUp(v) {
+    const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p;
+    const steps = [1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10];
+    for (const s of steps) if (m <= s + 1e-9) return s * p;
+    return 10 * p;
+  }
+
+  // ---------- hits ----------
+  function clearHits() { nHits = 0; carry = 0; recent = []; gridClear(); histDirty = true; rateLog = []; }
+  function randZ() {
+    // spread along the slit length for display: nearly uniform with soft ends
+    let z = 0.8 * (2 * Math.random() - 1) + 0.05 * gauss();
+    return Math.max(-0.97, Math.min(0.97, z));
+  }
+  function gauss() { let u = 0, v = 0; while (u === 0) u = Math.random(); v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+  function draw1() { const h = sampleHit(pat, eta(), Math.random); if (!h) return null; h.z = randZ(); return h; }
+  let rateLog = [];
+  function commit(h, flash) {
+    if (nHits >= CAP) { setStreaming(false); return; }
+    hitY[nHits] = h.y; hitZ[nHits] = h.z; hitTag[nHits] = h.slit; nHits++;
+    stamp(h.y, h.z, h.slit);
+    if (histCounts) { const b = binOf(h.y); if (b >= 0) histCounts[b]++; }
+    if (h.slit) slitFlash[h.slit - 1] = 1;
+    if (flash) recent.push({ t: performance.now(), y: h.y, z: h.z, slit: h.slit });
+    rateLog.push(performance.now());
+    dotsDirty = true;
+  }
+
+  // flights: the wave of one particle crossing the apparatus, for display
+  const T1 = 0.24, T2 = 0.34;
+  let flights = [];
+  const slitFlash = [0, 0];
+  function launch(h, delay) {
+    // h: a sampled hit (real) or null (a ghost wave drawn to show the beam)
+    let arcs;
+    if (h && h.slit) arcs = [h.slit];
+    else if (!h && S.det && Math.random() < S.eta) arcs = [S.open[0] && S.open[1] ? (Math.random() < 0.5 ? 1 : 2) : (S.open[0] ? 1 : 2)];
+    else arcs = [1, 2].filter((s) => S.open[s - 1]);
+    flights.push({ t0: performance.now() / 1000 + (delay || 0), h, arcs, flashed: false, ghostFlash: !h && arcs.length === 1 && S.det });
+  }
+  function fire(n) {
+    if (!S.open[0] && !S.open[1]) return;
+    for (let i = 0; i < n; i++) { const h = draw1(); if (h) launch(h, i * 0.06); }
+  }
+  let ghostCarry = 0;
+  function stepStream(dt) {
+    if (!streaming || (!S.open[0] && !S.open[1])) return;
+    const r = RATES[S.rate];
+    carry += r * dt;
+    let k = Math.floor(carry); carry -= k;
+    if (r <= 10) { for (; k > 0; k--) { const h = draw1(); if (h) launch(h, Math.random() * dt); } }
+    else {
+      for (; k > 0; k--) { const h = draw1(); if (h) commit(h, r <= 100); }
+      ghostCarry += 5 * dt;
+      for (; ghostCarry >= 1; ghostCarry--) launch(null, 0);
+    }
+  }
+  function stepFlights() {
+    const now = performance.now() / 1000;
+    const keep = [];
+    for (const f of flights) {
+      const t = now - f.t0;
+      if (t >= T1 && !f.flashed) {
+        f.flashed = true;
+        if (f.ghostFlash) slitFlash[f.arcs[0] - 1] = 1;
+      }
+      if (t >= T1 + T2 && f.h) { commit(f.h, true); f.h = null; f.done = true; }
+      if (t < T1 + T2 + 0.02) keep.push(f);
+    }
+    flights = keep;
+  }
+
+  // ---------- density grid for the face on screen (CSS pixels) ----------
+  let gw = 0, gh = 0, G = [null, null, null], gmax = 0, dotsDirty = true;
+  const dotCan = document.createElement('canvas'), dotCtx = dotCan.getContext('2d');
+  const bloomCan = document.createElement('canvas'), bloomCtx = bloomCan.getContext('2d');
+  let img = null;
+  function gridClear() { if (G[0]) for (const g of G) g.fill(0); gmax = 0; dotsDirty = true; }
+  function gridAlloc(w, h) {
+    gw = Math.max(1, Math.round(w)); gh = Math.max(1, Math.round(h));
+    G = [new Float32Array(gw * gh), new Float32Array(gw * gh), new Float32Array(gw * gh)];
+    dotCan.width = gw; dotCan.height = gh; img = dotCtx.createImageData(gw, gh);
+    bloomCan.width = Math.max(1, Math.round(gw / 4)); bloomCan.height = Math.max(1, Math.round(gh / 4));
+    gmax = 0;
+    for (let i = 0; i < nHits; i++) stamp(hitY[i], hitZ[i], hitTag[i]);
+    dotsDirty = true;
+  }
+  const KW = [0.2, 0.6, 1, 0.6, 0.2];
+  function stamp(y, z, tag) {
+    if (!gw) return;
+    const fx = (z + 1) / 2 * (gw - 1), fy = (1 - (y / S.Y + 1) / 2) * (gh - 1);
+    const ix = Math.round(fx), iy = Math.round(fy);
+    if (iy < 0 || iy >= gh) return;
+    const g = G[tag];
+    for (let dy = -2; dy <= 2; dy++) {
+      const yy = iy + dy; if (yy < 0 || yy >= gh) continue;
+      for (let dx = -2; dx <= 2; dx++) {
+        const xx = ix + dx; if (xx < 0 || xx >= gw) continue;
+        g[yy * gw + xx] += KW[dy + 2] * KW[dx + 2];
+      }
+    }
+    const c = iy * gw + ix;
+    const tot = G[0][c] + G[1][c] + G[2][c];
+    if (tot > gmax) gmax = tot;
+  }
+  function baseRGB() {
+    if (S.kind === 'electron') return [110, 240, 165];
+    if (S.kind === 'c60') return [255, 196, 110];
+    return lamRGB(S.src);
+  }
+  const S1 = [255, 118, 96], S2 = [105, 160, 255];
+  function renderDots() {
+    if (!img || !dotsDirty) return;
+    dotsDirty = false;
+    const d = img.data, n0 = Math.max(0.45, 0.3 * gmax), c0 = baseRGB(), byS = show.color;
+    const A = G[0], B = G[1], Cc = G[2], N = gw * gh;
+    for (let i = 0, q = 0; i < N; i++, q += 4) {
+      const a = A[i], b = B[i], c = Cc[i], t = a + b + c;
+      if (t <= 0) { d[q + 3] = 0; continue; }
+      const br = 1 - Math.exp(-t / n0);
+      let r, g, bl;
+      if (byS && (b > 0 || c > 0)) {
+        r = (a * c0[0] + b * S1[0] + c * S2[0]) / t; g = (a * c0[1] + b * S1[1] + c * S2[1]) / t; bl = (a * c0[2] + b * S1[2] + c * S2[2]) / t;
+      } else { r = c0[0]; g = c0[1]; bl = c0[2]; }
+      const w = Math.max(0, br - 0.82) * 1.8;
+      d[q] = r + (255 - r) * w; d[q + 1] = g + (255 - g) * w; d[q + 2] = bl + (255 - bl) * w;
+      d[q + 3] = Math.min(255, 275 * br);
+    }
+    dotCtx.putImageData(img, 0, 0);
+    bloomCtx.clearRect(0, 0, bloomCan.width, bloomCan.height);
+    bloomCtx.imageSmoothingEnabled = true;
+    bloomCtx.drawImage(dotCan, 0, 0, bloomCan.width, bloomCan.height);
+  }
+
+  // ---------- histogram ----------
+  let nb = 0, histCounts = null, histDirty = true, hx = 10, expBins = null;
+  function binOf(y) { const b = Math.floor((y + S.Y) / (2 * S.Y) * nb); return b >= 0 && b < nb ? b : -1; }
+  function rebin(hpx) {
+    const minByFringe = Math.ceil(7 * 2 * S.Y / pred.dy);
+    nb = Math.max(40, Math.min(Math.round(hpx / 1.6), Math.max(Math.round(hpx / 4), minByFringe)));
+    histCounts = new Float64Array(nb);
+    for (let i = 0; i < nHits; i++) { const b = binOf(hitY[i]); if (b >= 0) histCounts[b]++; }
+    // expected fraction of hits in each bin, from the mixture CDF (linear between grid points)
+    expBins = new Float64Array(nb);
+    const cdfAt = (y) => {
+      const f = (y + pat.Y) / pat.h, j = Math.max(0, Math.min(pat.M - 1, Math.floor(f))), t = Math.max(0, Math.min(1, f - j));
+      const P = mix.P, h = pat.h;
+      return mix.Cm[j] + h * (P[j] * t + 0.5 * (P[j + 1] - P[j]) * t * t);
+    };
+    let prev = cdfAt(-S.Y);
+    for (let b = 0; b < nb; b++) { const c = cdfAt(-S.Y + (b + 1) * 2 * S.Y / nb); expBins[b] = mix.F > 0 ? (c - prev) / mix.F : 0; prev = c; }
+    histDirty = false;
+  }
+
+  // ---------- theme and canvas ----------
+  let T = null, dpr = 1;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.4 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
+      gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'),
+      wall: g('--wall'), scr: g('--scr'), scrEdge: g('--scr-edge'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+  }
+  function lamRGB(l) {
+    if (l < 380 || l > 750) return [196, 201, 209];
+    let r = 0, g = 0, b = 0;
+    if (l < 440) { r = -(l - 440) / 60; b = 1; }
+    else if (l < 490) { g = (l - 440) / 50; b = 1; }
+    else if (l < 510) { g = 1; b = -(l - 510) / 20; }
+    else if (l < 580) { r = (l - 510) / 70; g = 1; }
+    else if (l < 645) { r = 1; g = -(l - 645) / 65; }
+    else { r = 1; }
+    let f = 1;
+    if (l < 420) f = 0.55 + 0.45 * (l - 380) / 40; else if (l > 700) f = 0.55 + 0.45 * (750 - l) / 50;
+    const c = (v) => Math.round(255 * Math.pow(Math.max(0, v * f), 0.8));
+    return [Math.max(40, c(r)), Math.max(40, c(g)), Math.max(40, c(b))];
+  }
+  function hexRGB(h) {
+    h = (h || '#888888').replace('#', '').trim();
+    if (h.length === 3) h = h.split('').map((ch) => ch + ch).join('');
+    const n = parseInt(h.slice(0, 6), 16);
+    return isFinite(n) ? [(n >> 16) & 255, (n >> 8) & 255, n & 255] : [128, 128, 128];
+  }
+  const rgb = (c, a = 1) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+  const bandName = (l) => l < 380 ? 'ultraviolet' : l < 450 ? 'violet' : l < 495 ? 'blue' : l < 570 ? 'green' : l < 590 ? 'yellow' : l < 620 ? 'orange' : l <= 750 ? 'red' : 'infrared';
+
+  const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  let W = 0, Hh = 0, LY = null;
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = pane.getBoundingClientRect();
+    W = r.width; Hh = r.height;
+    can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(Hh * dpr));
+    can.style.width = W + 'px'; can.style.height = Hh + 'px';
+    LY = layout(W, Hh);
+    gridAlloc(LY.scr.w, LY.scr.h);
+    histDirty = true;
+    drawAll();
+  }
+  // regions: app (top view), scr (face on screen), hist (counts), all sharing the y axis in the wide layout
+  function layout(W, H) {
+    const ps = projScale(), top = 34 * ps, bot = H - 40 * ps;
+    if (W >= 640) {
+      const appW = Math.round(W * 0.4), tick = 50 * ps, histW = Math.round(W * 0.25);
+      const scrX = appW + tick, scrW = W - scrX - histW - 16 - 14 * ps;
+      const app = { x: 0, w: appW, cy: (top + bot) / 2, half: (bot - top) / 2, top: 0, bot: H, labelY: 12 * ps };
+      return { wide: true, app, scr: { x: scrX, y: top, w: scrW, h: bot - top }, hist: { x: scrX + scrW + 14 * ps, y: top, w: histW, h: bot - top } };
+    }
+    const appH = Math.round(H * 0.36), top2 = appH + 30 * ps, bot2 = H - 40 * ps;
+    const tick = 44 * ps, scrW = Math.round((W - tick - 12 - 10 * ps) * 0.5);
+    const app = { x: 0, w: W, cy: appH / 2 + 4 * ps, half: appH / 2 - 32 * ps, top: 0, bot: appH, labelY: 10 * ps };
+    return { wide: false, app, scr: { x: tick, y: top2, w: scrW, h: bot2 - top2 }, hist: { x: tick + scrW + 10 * ps, y: top2, w: W - tick - scrW - 10 * ps - 12, h: bot2 - top2 } };
+  }
+  const yPx = (y) => LY.scr.y + (1 - (y / S.Y + 1) / 2) * LY.scr.h;
+  function appGeom() {
+    const a = LY.app, f = FAM[S.kind], ps = projScale();
+    const srcX = a.x + 14 * ps, srcW = Math.min(60 * ps, a.w * 0.16);
+    const xb = a.x + Math.round(a.w * (LY.wide ? 0.42 : 0.4)), xs = a.x + a.w - (LY.wide ? 6 : 20 * ps);
+    const Rb = (f.d[1] + f.a[1]) * f.unit / 2 * 1.04;
+    const bs = 0.94 * a.half / Rb;    // px per meter at the slits
+    const thick = Math.max(8, 10 * ps);
+    const slits = slitEdges(S.a, S.d).map(([lo, hi], i) => ({ i: i + 1, top: a.cy - hi * bs, bot: a.cy - lo * bs, c: a.cy - (lo + hi) / 2 * bs }));
+    return { srcX, srcW, xb, xs, bs, thick, slits, cy: a.cy, half: a.half };
+  }
+  const edgeY = (y) => (LY.wide ? yPx(y) : LY.app.cy - y / S.Y * LY.app.half);
+
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  // length formatting with SI prefixes
+  const PFX = [[1, 'm'], [1e-3, 'mm'], [1e-6, 'µm'], [1e-9, 'nm'], [1e-12, 'pm']];
+  function unitFor(v) { const a = Math.abs(v); for (const [f, n] of PFX) if (a >= f * 0.9999) return [f, n]; return [1e-12, 'pm']; }
+  function sig(v, n = 3) { if (v === 0) return '0'; const dgt = Math.max(0, n - 1 - Math.floor(Math.log10(Math.abs(v)))); return v.toFixed(Math.min(6, dgt)); }
+  function trim(t) { return t.includes('.') ? t.replace(/\.?0+$/, '') : t; }
+  function fmtLen(v, n = 3) { if (!isFinite(v)) return '—'; const [f, u] = unitFor(v); return `${sig(v / f, n)} ${u}`; }
+  function fmtList(vals) {
+    const ok = vals.filter((v) => isFinite(v.y));
+    if (!ok.length) return '—';
+    const [f, u] = unitFor(ok[ok.length - 1].y);
+    return ok.map((v) => (v.missing ? `(${sig(v.y / f)})` : sig(v.y / f))).join(', ') + ' ' + u;
+  }
+
+  function drawAll() {
+    if (!T || !LY || !pat) return;
+    const ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    drawApparatus(ps);
+    drawScreen(ps);
+    drawHist(ps);
+  }
+
+  function label(txt, x, y, color, align = 'left', base = 'alphabetic', size = 11.5, font) {
+    const ps = projScale();
+    ctx.font = `${size * ps}px ${font || T.ui}`; ctx.textAlign = align; ctx.textBaseline = base; ctx.fillStyle = color; ctx.fillText(txt, x, y);
+  }
+  function waveColor(a) {
+    if (S.kind === 'photon') return rgb(lamRGB(S.src), a);
+    return rgb(hexRGB(T.accent), a);
+  }
+
+  function drawApparatus(ps) {
+    const g = appGeom(), A = LY.app, now = performance.now() / 1000;
+    const beamTop = g.cy - (S.d / 2 + S.a) * g.bs - 14 * ps, beamBot = g.cy + (S.d / 2 + S.a) * g.bs + 14 * ps;
+    // title
+    label(LY.wide ? 'Top view (slits enlarged)' : 'Top view', A.x + 10 * ps, A.labelY, T.muted, 'left', 'top', 11);
+    // beam band
+    ctx.fillStyle = waveColor(0.07); ctx.globalAlpha = 1;
+    ctx.fillRect(g.srcX + g.srcW, beamTop, g.xb - g.srcX - g.srcW, beamBot - beamTop);
+    // source
+    const sh = Math.min(46 * ps, A.half * 0.5), sy = g.cy - sh / 2;
+    ctx.fillStyle = T.surface; ctx.strokeStyle = T.wall; ctx.lineWidth = 1.5 * ps;
+    roundRect(g.srcX, sy, g.srcW, sh, 5 * ps); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = waveColor(1); ctx.fillRect(g.srcX + g.srcW - 3 * ps, g.cy - 6 * ps, 3 * ps, 12 * ps);
+    const gunLab = FAM[S.kind].gun;
+    label(gunLab, g.srcX + g.srcW / 2, sy + sh + 6 * ps, T.muted, 'center', 'top', 10.5);
+    // wavefronts of particles in flight
+    ctx.save();
+    const clipT = A.labelY + 16 * ps, clipB = LY.wide ? A.bot : A.bot - 20 * ps;
+    ctx.beginPath(); ctx.rect(g.srcX + g.srcW, clipT, g.xs - g.srcX - g.srcW, clipB - clipT); ctx.clip();
+    for (const f of flights) {
+      const t = now - f.t0; if (t < 0) continue;
+      if (t < T1) {
+        const x = g.srcX + g.srcW + (t / T1) * (g.xb - g.srcX - g.srcW);
+        for (let k = 0; k < 2; k++) {
+          const xx = x - k * 8 * ps; if (xx < g.srcX + g.srcW) continue;
+          ctx.strokeStyle = waveColor(0.75 - 0.22 * k); ctx.lineWidth = 1.6 * ps;
+          ctx.beginPath(); ctx.moveTo(xx, beamTop + 4); ctx.lineTo(xx, beamBot - 4); ctx.stroke();
+        }
+      } else if (t < T1 + T2) {
+        const u = (t - T1) / T2, R = u * (g.xs - g.xb) * 1.02;
+        ctx.save(); ctx.beginPath(); ctx.rect(g.xb + g.thick / 2, clipT, g.xs - g.xb, clipB - clipT); ctx.clip();
+        for (const s of f.arcs) {
+          const sl = g.slits[s - 1];
+          for (let k = 0; k < 2; k++) {
+            const r = R - k * 8 * ps; if (r <= 2) continue;
+            ctx.strokeStyle = waveColor((0.6 - 0.25 * k) * (1 - 0.6 * u)); ctx.lineWidth = 1.3 * ps;
+            ctx.beginPath(); ctx.arc(g.xb, sl.c, r, -1.25, 1.25); ctx.stroke();
+          }
+        }
+        ctx.restore();
+      }
+    }
+    ctx.restore();
+    // barrier with slits
+    const bx = g.xb - g.thick / 2, btop = g.cy - g.half - 6 * ps, bbot = g.cy + g.half + 6 * ps;
+    ctx.fillStyle = T.wall;
+    const s1 = g.slits[0], s2 = g.slits[1];
+    ctx.fillRect(bx, btop, g.thick, s1.top - btop);
+    ctx.fillRect(bx, s1.bot, g.thick, s2.top - s1.bot);
+    ctx.fillRect(bx, s2.bot, g.thick, bbot - s2.bot);
+    for (const sl of g.slits) {
+      const open = S.open[sl.i - 1], hot = (drag && drag.id === 'd' + sl.i) || (!drag && hoverId === 'd' + sl.i);
+      if (!open) {
+        const sx = bx - 4 * ps, sw = g.thick + 8 * ps, st = sl.top - 2 * ps, sb = sl.bot + 2 * ps;
+        ctx.fillStyle = T.canvas; ctx.fillRect(sx, st, sw, sb - st);
+        ctx.strokeStyle = T.pos; ctx.lineWidth = 1.5 * ps; ctx.strokeRect(sx, st, sw, sb - st);
+        ctx.beginPath(); ctx.moveTo(sx, st); ctx.lineTo(sx + sw, sb); ctx.moveTo(sx + sw, st); ctx.lineTo(sx, sb); ctx.stroke();
+      }
+      if (hot) {
+        ctx.fillStyle = T.accent; ctx.globalAlpha = 0.25;
+        ctx.fillRect(bx - 5 * ps, sl.top, g.thick + 10 * ps, Math.max(2, sl.bot - sl.top)); ctx.globalAlpha = 1;
+      }
+      // slit number
+      label(String(sl.i), bx - 6 * ps, sl.c, open ? T.ink : T.muted, 'right', 'middle', 11, T.mono);
+      // which slit detector and its flash
+      if (S.det) {
+        const dx = g.xb + g.thick / 2 + 9 * ps, fl = slitFlash[sl.i - 1];
+        const col = sl.i === 1 ? T.pos : T.neg;
+        if (fl > 0.02) {
+          ctx.fillStyle = col; ctx.globalAlpha = 0.85 * fl;
+          ctx.beginPath(); ctx.arc(dx, sl.c, (5 + 6 * fl) * ps, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1;
+        }
+        ctx.strokeStyle = col; ctx.lineWidth = 1.6 * ps; ctx.fillStyle = T.canvas;
+        ctx.beginPath(); ctx.arc(dx, sl.c, 4 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      }
+    }
+    // grips on the outer edges (drag to change a)
+    for (const id of ['a1', 'a2']) {
+      const sl = g.slits[id === 'a1' ? 0 : 1], y = id === 'a1' ? sl.top : sl.bot;
+      const hot = (drag && drag.id === id) || (!drag && hoverId === id);
+      if (hot) { ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.4; ctx.lineWidth = 6 * ps; ctx.beginPath(); ctx.moveTo(bx - 6 * ps, y); ctx.lineTo(bx + g.thick + 6 * ps, y); ctx.stroke(); ctx.globalAlpha = 1; }
+      ctx.strokeStyle = hot ? T.accent : T.canvas; ctx.lineWidth = 1.3 * ps; ctx.beginPath();
+      for (let k = -1; k <= 1; k++) { ctx.moveTo(g.xb + k * 2.6 * ps, y + (id === 'a1' ? -2 : 2) * ps); ctx.lineTo(g.xb + k * 2.6 * ps, y + (id === 'a1' ? -6 : 6) * ps); }
+      ctx.stroke();
+    }
+    // dimension labels for d and a, left of the barrier
+    const f = FAM[S.kind];
+    const dimX = bx - 22 * ps;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps;
+    arrowV(dimX, s1.c, s2.c, ps);
+    const dTxt = `d = ${trim(sig(S.d / f.unit))} ${f.uname}`, aTxt = `a = ${trim(sig(S.a / f.unit))} ${f.uname}`;
+    ctx.font = `${11 * ps}px ${T.mono}`;
+    const room = dimX - 12 * ps - (g.srcX + g.srcW + 6 * ps);
+    if (Math.max(ctx.measureText(dTxt).width, ctx.measureText(aTxt).width) <= room) {
+      const lx = dimX - 12 * ps;
+      const pill = (t, y, col) => { ctx.font = `${11 * ps}px ${T.mono}`; const tw = ctx.measureText(t).width; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(lx - tw - 3, y - 8 * ps, tw + 6, 16 * ps); ctx.globalAlpha = 1; label(t, lx, y, col, 'right', 'middle', 11, T.mono); };
+      pill(dTxt, g.cy, T.ink);
+      pill(aTxt, Math.min(s1.c, g.cy - 18 * ps) - 4 * ps, T.muted);
+    } else {
+      label(`${dTxt} · ${aTxt}`, A.x + A.w - 10 * ps, A.labelY, T.ink, 'right', 'top', 10.5, T.mono);
+    }
+    // scale bar for the enlarged slits
+    const sbLen = nice(0.25 * g.half / g.bs), sbPx = sbLen * g.bs, sbX = g.srcX + 4 * ps, sbY = g.cy + g.half - 2 * ps;
+    if (sbPx > 6) {
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * ps; ctx.beginPath();
+      ctx.moveTo(sbX, sbY); ctx.lineTo(sbX, sbY - sbPx); ctx.moveTo(sbX - 3 * ps, sbY); ctx.lineTo(sbX + 3 * ps, sbY); ctx.moveTo(sbX - 3 * ps, sbY - sbPx); ctx.lineTo(sbX + 3 * ps, sbY - sbPx); ctx.stroke();
+      label(fmtLen(sbLen, 2), sbX + 6 * ps, sbY - sbPx / 2, T.muted, 'left', 'middle', 10, T.mono);
+    }
+    // screen seen edge on
+    const et = edgeY(S.Y), eb = edgeY(-S.Y);
+    ctx.strokeStyle = T.scrEdge; ctx.lineWidth = 4 * ps; ctx.beginPath(); ctx.moveTo(g.xs, et); ctx.lineTo(g.xs, eb); ctx.stroke();
+    // recent hits on the screen edge
+    const tn = performance.now();
+    for (const r of recent) {
+      const age = (tn - r.t) / 1000; if (age > 0.5) continue;
+      ctx.strokeStyle = r.slit && show.color ? (r.slit === 1 ? T.pos : T.neg) : waveColor(1); ctx.globalAlpha = 1 - age / 0.5; ctx.lineWidth = 2 * ps;
+      const y = edgeY(r.y); ctx.beginPath(); ctx.moveTo(g.xs - 7 * ps, y); ctx.lineTo(g.xs + 3 * ps, y); ctx.stroke(); ctx.globalAlpha = 1;
+    }
+    // L, not to scale
+    const ly = LY.wide ? Math.min(A.bot - 14 * ps, g.cy + g.half + 22 * ps) : A.bot - 10 * ps;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps; arrowH(g.xb, g.xs, ly, ps);
+    const lt = `L = ${sig(S.L)} m, not to scale`;
+    ctx.font = `${10.5 * ps}px ${T.mono}`;
+    const tw = ctx.measureText(lt).width;
+    ctx.fillStyle = T.canvas; ctx.fillRect((g.xb + g.xs) / 2 - tw / 2 - 4, ly - 7 * ps, tw + 8, 14 * ps);
+    label(lt, (g.xb + g.xs) / 2, ly, T.muted, 'center', 'middle', 10.5, T.mono);
+    if (!S.open[0] && !S.open[1]) label('Both slits closed', g.xb + 14 * ps, g.cy - g.half + 4 * ps, T.pos, 'left', 'top', 11.5);
+  }
+  function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  function arrowV(x, y1, y2, ps) {
+    const a = 4 * ps;
+    ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x, y2);
+    ctx.moveTo(x - a, y1 + a); ctx.lineTo(x, y1); ctx.lineTo(x + a, y1 + a);
+    ctx.moveTo(x - a, y2 - a); ctx.lineTo(x, y2); ctx.lineTo(x + a, y2 - a);
+    ctx.moveTo(x - 2 * a, y1); ctx.lineTo(x + 2 * a, y1); ctx.moveTo(x - 2 * a, y2); ctx.lineTo(x + 2 * a, y2);
+    ctx.stroke();
+  }
+  function arrowH(x1, x2, y, ps) {
+    const a = 4 * ps;
+    ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y);
+    ctx.moveTo(x1 + a, y - a); ctx.lineTo(x1, y); ctx.lineTo(x1 + a, y + a);
+    ctx.moveTo(x2 - a, y - a); ctx.lineTo(x2, y); ctx.lineTo(x2 - a, y + a);
+    ctx.stroke();
+  }
+
+  function yTicks() {
+    const step = nice(2 * S.Y / (LY.scr.h < 300 ? 4 : 7)), [f, u] = unitFor(step * 2);
+    const out = [];
+    for (let v = -Math.floor(S.Y / step) * step; v <= S.Y + 1e-12 * S.Y; v += step) out.push(v);
+    return { out, f, u, step };
+  }
+  function drawScreen(ps) {
+    const s = LY.scr;
+    // perspective cue from the edge on screen to the face on view
+    if (LY.wide) {
+      const g = appGeom();
+      ctx.strokeStyle = T.gridStrong; ctx.setLineDash([3, 4]); ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(g.xs + 3, s.y); ctx.lineTo(s.x, s.y); ctx.moveTo(g.xs + 3, s.y + s.h); ctx.lineTo(s.x, s.y + s.h); ctx.stroke(); ctx.setLineDash([]);
+    }
+    label('Detector screen, face on', s.x, s.y - 8 * ps, T.muted, 'left', 'bottom', 11);
+    ctx.fillStyle = T.scr; roundRect(s.x, s.y, s.w, s.h, 4 * ps); ctx.fill();
+    renderDots();
+    ctx.save(); roundRect(s.x, s.y, s.w, s.h, 4 * ps); ctx.clip();
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(dotCan, s.x, s.y, s.w, s.h);
+    ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.6;
+    ctx.drawImage(bloomCan, s.x, s.y, s.w, s.h);
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+    // fresh hits
+    const tn = performance.now(), keep = [];
+    for (const r of recent) {
+      const age = (tn - r.t) / 1000; if (age > 0.5) continue; keep.push(r);
+      if (recent.length > 120) continue;
+      const x = s.x + (r.z + 1) / 2 * s.w, y = yPx(r.y), c = r.slit && show.color ? (r.slit === 1 ? S1 : S2) : baseRGB();
+      ctx.strokeStyle = rgb(c, 1 - age / 0.5); ctx.lineWidth = 1.5 * ps;
+      ctx.beginPath(); ctx.arc(x, y, (2 + 10 * age) * ps, 0, 2 * Math.PI); ctx.stroke();
+      ctx.fillStyle = `rgba(255,255,255,${0.9 * (1 - age / 0.5)})`; ctx.beginPath(); ctx.arc(x, y, 1.6 * ps, 0, 2 * Math.PI); ctx.fill();
+    }
+    recent = keep;
+    // predicted maxima marks on both edges
+    if (show.marks) {
+      ctx.fillStyle = T.equi;
+      const tri = 6 * ps;
+      const mark = (y, faint) => {
+        if (Math.abs(y) > S.Y) return;
+        const py = yPx(y); ctx.globalAlpha = faint ? 0.35 : 1;
+        ctx.beginPath(); ctx.moveTo(s.x, py - tri * 0.7); ctx.lineTo(s.x + tri, py); ctx.lineTo(s.x, py + tri * 0.7); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(s.x + s.w, py - tri * 0.7); ctx.lineTo(s.x + s.w - tri, py); ctx.lineTo(s.x + s.w, py + tri * 0.7); ctx.fill();
+        ctx.globalAlpha = 1;
+      };
+      if (S.open[0] && S.open[1]) {
+        const vis = S.det ? 1 - S.eta : 1;
+        if (vis > 0.02) { mark(0, false); for (const m of pred.maxima) { mark(m.y, m.missing); mark(-m.y, m.missing); } }
+      } else if (S.open[0] || S.open[1]) {
+        // one slit: its central maximum sits behind the open slit
+        mark(S.open[0] ? S.d / 2 : -S.d / 2, false);
+      }
+    }
+    ctx.restore();
+    ctx.strokeStyle = T.scrEdge; ctx.lineWidth = 1; roundRect(s.x + 0.5, s.y + 0.5, s.w - 1, s.h - 1, 4 * ps); ctx.stroke();
+    // y axis
+    const tk = yTicks();
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1;
+    for (const v of tk.out) {
+      const py = yPx(v);
+      ctx.beginPath(); ctx.moveTo(s.x - 5 * ps, py); ctx.lineTo(s.x, py); ctx.stroke();
+      label(trim(sig(v / tk.f, 3)), s.x - 7 * ps, py, T.muted, 'right', 'middle', 10.5, T.mono);
+    }
+    label(`y (${tk.u})`, s.x - 7 * ps, s.y + s.h + 8 * ps, T.muted, 'right', 'top', 10.5, T.mono);
+    label('along the slits →', s.x + s.w / 2, s.y + s.h + 8 * ps, T.muted, 'center', 'top', 10.5);
+    if (!S.open[0] && !S.open[1]) label('No particle gets through', s.x + s.w / 2, s.y + s.h / 2, '#c8ccd2', 'center', 'middle', 12);
+  }
+
+  function drawHist(ps) {
+    const hs = LY.hist;
+    if (histDirty || !histCounts) rebin(hs.h);
+    label('Hits per bin', hs.x, hs.y - 8 * ps, T.muted, 'left', 'bottom', 11);
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(hs.x + 0.5, hs.y + 0.5, hs.w - 1, hs.h - 1);
+    // zero line of the screen
+    const ny = nb, bh = hs.h / ny;
+    let maxC = 0, maxE = 0;
+    for (let b = 0; b < ny; b++) { if (histCounts[b] > maxC) maxC = histCounts[b]; if (expBins[b] > maxE) maxE = expBins[b]; }
+    const total = nHits;
+    // scale: the larger of the data and the prediction, eased so it does not jump
+    const target = Math.max(4, 1.12 * Math.max(maxC, maxE * total * (show.curve || show.env ? 1 : 0)));
+    hx = target > hx ? target : hx + (target - hx) * 0.08;
+    const X = (c) => hs.x + Math.min(1, c / hx) * hs.w;
+    // grid ticks on counts
+    const st = nice(hx / 3);
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1;
+    for (let v = st; v < hx; v += st) {
+      const px = X(v); ctx.beginPath(); ctx.moveTo(px, hs.y); ctx.lineTo(px, hs.y + hs.h); ctx.stroke();
+      label(String(Math.round(v)), px, hs.y + hs.h + 6 * ps, T.muted, 'center', 'top', 10, T.mono);
+    }
+    label('0', hs.x, hs.y + hs.h + 6 * ps, T.muted, 'center', 'top', 10, T.mono);
+    // bars
+    ctx.fillStyle = T.accent; ctx.globalAlpha = 0.28;
+    for (let b = 0; b < ny; b++) {
+      const c = histCounts[b]; if (!c) continue;
+      const y0 = hs.y + hs.h - (b + 1) * bh;
+      ctx.fillRect(hs.x, y0, X(c) - hs.x, bh);
+    }
+    ctx.globalAlpha = 0.9; ctx.strokeStyle = T.accent; ctx.lineWidth = Math.min(1.2, bh * 0.5) * ps; ctx.beginPath();
+    let started = false;
+    for (let b = 0; b < ny; b++) {
+      const y0 = hs.y + hs.h - (b + 1) * bh, x = X(histCounts[b]);
+      if (!started) { ctx.moveTo(hs.x, y0 + bh); started = true; }
+      ctx.lineTo(x, y0 + bh); ctx.lineTo(x, y0);
+    }
+    ctx.lineTo(hs.x, hs.y); ctx.stroke(); ctx.globalAlpha = 1;
+    // marks for maxima
+    if (show.marks && S.open[0] && S.open[1] && (!S.det || S.eta < 0.98)) {
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 1; ctx.setLineDash([2, 4]);
+      const ln = (y, faint) => { if (Math.abs(y) > S.Y) return; const py = yPx(y); ctx.globalAlpha = faint ? 0.25 : 0.55; ctx.beginPath(); ctx.moveTo(hs.x, py); ctx.lineTo(hs.x + hs.w, py); ctx.stroke(); };
+      ln(0); for (const m of pred.maxima) { ln(m.y, m.missing); ln(-m.y, m.missing); }
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+    }
+    // envelope: the no interference pattern doubled, which touches the fringe peaks
+    if (show.env && total > 0 && pat.F12 > 0) {
+      const scale = total / mix.F;
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([5, 4]); ctx.beginPath();
+      for (let b = 0; b < ny; b++) {
+        const yc = -S.Y + (b + 0.5) * 2 * S.Y / ny, j = Math.round((yc + pat.Y) / pat.h);
+        const v = 2 * (pat.I1[j] + pat.I2[j]) * scale * (2 * S.Y / ny);
+        const px = X(v), py = hs.y + hs.h - (b + 0.5) * bh;
+        b ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+      }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    // prediction: expected hits per bin for this many hits
+    if (show.curve && total > 0) {
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 2 * ps; ctx.lineJoin = 'round'; ctx.beginPath();
+      for (let b = 0; b < ny; b++) {
+        const px = X(expBins[b] * total), py = hs.y + hs.h - (b + 0.5) * bh;
+        b ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+      }
+      ctx.stroke();
+    }
+    if (total === 0) label('Fire some particles', hs.x + hs.w / 2, hs.y + hs.h / 2, T.muted, 'center', 'middle', 11);
+  }
+
+  // ---------- formula inset ----------
+  const fCan = $('fCan'), fCtx = fCan.getContext('2d');
+  function drawFormula() {
+    if (!T || !phys) return;
+    const r = fCan.parentElement.getBoundingClientRect(), w = r.width, h = r.height, ps = projScale();
+    if (w < 10) return;
+    const dp = window.devicePixelRatio || 1;
+    if (fCan.width !== Math.round(w * dp) || fCan.height !== Math.round(h * dp)) { fCan.width = Math.round(w * dp); fCan.height = Math.round(h * dp); fCan.style.width = w + 'px'; fCan.style.height = h + 'px'; }
+    const c = fCtx; c.setTransform(dp, 0, 0, dp, 0, 0);
+    c.fillStyle = T.canvas; c.fillRect(0, 0, w, h);
+    const lam = phys.lam, a = S.a, d = S.d, both = S.open[0] && S.open[1];
+    const smax = Math.min(0.99, 2.2 * lam / a), rows = 3, rh = h / rows, padL = 6, padR = 6;
+    const X = (s) => padL + (s + smax) / (2 * smax) * (w - padL - padR);
+    const fns = [
+      { f: (s) => { const v = Math.cos(Math.PI * d * s / lam); return both ? v * v : 1; }, col: T.accent, lab: both ? 'cos²(πd sin θ/λ): fringes' : 'one slit open: no fringe factor' },
+      { f: (s) => { const b = Math.PI * a * s / lam, e = Math.abs(b) < 1e-9 ? 1 : Math.sin(b) / b; return e * e; }, col: T.equi, lab: '[sin β/β]²: envelope' },
+      { f: (s) => fns[0].f(s) * fns[1].f(s), col: T.ink, lab: 'product: the pattern' }
+    ];
+    const n = Math.min(1600, Math.round((w - padL - padR) * 2));
+    fns.forEach((fn, i) => {
+      const top = i * rh + 16 * ps, bot = (i + 1) * rh - 4;
+      c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(padL, bot + 0.5); c.lineTo(w - padR, bot + 0.5); c.stroke();
+      c.font = `${10.5 * ps}px ${T.ui}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(fn.lab, padL, i * rh + 2);
+      if (i === 2) { c.fillStyle = T.ink; c.globalAlpha = 0.12; c.beginPath(); c.moveTo(X(-smax), bot); }
+      else c.beginPath();
+      for (let k = 0; k <= n; k++) {
+        const s = -smax + 2 * smax * k / n, v = fn.f(s), px = X(s), py = bot - v * (bot - top);
+        if (i === 2) c.lineTo(px, py); else k ? c.lineTo(px, py) : c.moveTo(px, py);
+      }
+      if (i === 2) { c.lineTo(X(smax), bot); c.closePath(); c.fill(); c.globalAlpha = 1; c.beginPath();
+        for (let k = 0; k <= n; k++) { const s = -smax + 2 * smax * k / n, v = fn.f(s), px = X(s), py = bot - v * (bot - top); k ? c.lineTo(px, py) : c.moveTo(px, py); } }
+      c.strokeStyle = fn.col; c.lineWidth = (i === 2 ? 1.6 : 1.3) * ps; c.stroke();
+      if (i === 1) { // envelope also drawn faintly on the product row
+        c.save(); c.translate(0, rh); c.setLineDash([3, 3]); c.globalAlpha = 0.7; c.stroke(); c.restore();
+      }
+    });
+    // envelope zero ticks
+    c.strokeStyle = T.muted; c.fillStyle = T.muted; c.font = `${10 * ps}px ${T.mono}`; c.textBaseline = 'bottom';
+    for (const sg of [-1, 1]) {
+      const px = X(sg * lam / a);
+      c.beginPath(); c.moveTo(px, h - 14 * ps); c.lineTo(px, h - 4); c.stroke();
+      c.textAlign = sg < 0 ? 'left' : 'right'; c.fillText(sg < 0 ? '−λ/a' : 'λ/a', px + (sg < 0 ? 3 : -3), h - 4);
+    }
+    c.textAlign = 'center'; c.fillText('sin θ', w / 2, h - 2);
+  }
+
+  // ---------- readouts ----------
+  function physReadouts() {
+    const f = FAM[S.kind], p = phys;
+    if (S.kind === 'photon') {
+      const c = lamRGB(S.src);
+      $('srcOut').textContent = `${Math.round(S.src)} nm`;
+      $('lamLab').textContent = 'Wavelength λ';
+      $('rLam').innerHTML = `<span class="lamsw" style="background:${rgb(c)}"></span>${S.src.toFixed(0)} nm <span class="ok">${bandName(S.src)}</span>`;
+      $('rXLab').textContent = 'Photon energy';
+      $('rX').textContent = `${(H * C / p.lam / QE).toFixed(3)} eV`;
+    } else if (S.kind === 'electron') {
+      const V = Math.pow(10, S.src);
+      $('srcOut').textContent = V >= 1000 ? `${(V / 1000).toFixed(V >= 1e4 ? 1 : 2)} kV` : `${V.toFixed(V >= 100 ? 0 : 1)} V`;
+      $('lamLab').textContent = 'de Broglie wavelength λ (relativistic)';
+      const corr = (p.lamNR / p.lam - 1) * 100;
+      $('rLam').innerHTML = `${fmtLen(p.lam, 4)} <span class="ok">nonrelativistic ${fmtLen(p.lamNR, 4)}${corr >= 0.05 ? `, +${corr.toFixed(1)}%` : ''}</span>`;
+      $('rXLab').textContent = 'Speed v';
+      $('rX').textContent = p.v / C >= 0.01 ? `${(p.v / C).toFixed(3)} c` : `${(p.v / 1e6).toFixed(2)} × 10⁶ m/s`;
+    } else {
+      $('srcOut').textContent = `${Math.round(S.src)} m/s`;
+      $('lamLab').textContent = 'de Broglie wavelength λ';
+      $('rLam').textContent = fmtLen(p.lam, 3);
+      $('rXLab').textContent = 'Mass m';
+      $('rX').textContent = `720 u = ${(M_C60 * 1e24).toFixed(3)} × 10⁻²⁴ kg`;
+    }
+    $('rP').textContent = `${sci(p.p)} kg·m/s`;
+    $('srcHint').textContent = f.hint;
+    $('rDy').textContent = fmtLen(pred.dy, 3);
+    $('rMax').textContent = fmtList(pred.maxima.slice(0, 3));
+    $('rMin').textContent = fmtList(pred.minima.slice(0, 3));
+    $('rEnv').textContent = fmtLen(pred.env, 3);
+    $('rNb').textContent = String(pred.nBright);
+    const ffTxt = pred.ff < 0.3 ? 'far field: the formulas hold' : pred.ff < 3 ? 'near the far field limit: the screen pattern (Fresnel) departs a little from the formulas' : 'near field: the screen pattern differs from the formulas';
+    $('rFF').innerHTML = `${pred.ff < 0.01 ? pred.ff.toExponential(1) : pred.ff.toFixed(pred.ff < 1 ? 3 : 2)} <span class="ok">${ffTxt}</span>`;
+    // slider outputs
+    $('saOut').textContent = `${trim(sig(S.a / f.unit))} ${f.uname}`;
+    $('sdOut').textContent = `${trim(sig(S.d / f.unit))} ${f.uname}`;
+    $('sLOut').textContent = `${trim(sig(S.L))} m`;
+    $('etaOut').textContent = `${Math.round(S.eta * 100)}%`;
+    $('rateOut').textContent = `${RATES[S.rate]} per second`;
+    for (const i of [0, 1]) { const b = $('slit' + (i + 1)); b.setAttribute('aria-pressed', String(S.open[i])); b.textContent = `Slit ${i + 1} ${S.open[i] ? 'open' : 'closed'}`; }
+    $('etaRow').style.opacity = S.det ? 1 : 0.5; $('eta').disabled = !S.det;
+  }
+  function sci(v) { const e = Math.floor(Math.log10(Math.abs(v))); return `${(v / Math.pow(10, e)).toFixed(3)} × 10${sup(e)}`; }
+  function sup(n) { const m = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' }; return String(n).split('').map((ch) => m[ch]).join(''); }
+  function countReadouts() {
+    const now = performance.now();
+    while (rateLog.length && now - rateLog[0] > 1000) rateLog.shift();
+    const txt = nHits.toLocaleString('en-US');
+    $('count').innerHTML = `${txt} <small>detected</small>`;
+    $('rN').textContent = txt + (nHits >= CAP ? ' (full)' : '');
+    $('rRate').textContent = String(rateLog.length);
+  }
+
+  // ---------- controls ----------
+  function syncSliders() {
+    const f = FAM[S.kind], set = (id, r, v) => { const el = $(id); el.min = r[0]; el.max = r[1]; el.step = r[2]; el.value = v; };
+    set('sa', f.a, S.a / f.unit); set('sd', f.d, S.d / f.unit); set('sL', f.L, S.L);
+    const s = f.src; const el = $('src'); el.min = s.min; el.max = s.max; el.step = s.step; el.value = S.src;
+    $('srcLab').textContent = s.lab;
+    $('det').checked = S.det; $('eta').value = Math.round(S.eta * 100); $('rate').value = S.rate;
+    for (const b of document.querySelectorAll('#kinds button')) b.setAttribute('aria-pressed', String(b.dataset.k === S.kind));
+  }
+  function markPreset(name) {
+    S.preset = name;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    if (name && PRESETS[name]) $('presetHint').textContent = PRESETS[name].hint;
+  }
+  function applyPreset(name) {
+    const p = PRESETS[name];
+    Object.assign(S, { kind: p.kind, src: p.src, a: p.a, d: p.d, L: p.L, open: p.open.slice(), det: p.det, eta: p.eta, rate: p.rate });
+    markPreset(name); syncSliders(); fitY(); rebuild(false);
+  }
+  function custom() { markPreset(null); $('presetHint').textContent = 'Your own setup. Pick a preset to return to a known experiment.'; }
+  // set a or d (meters) keeping the slits apart: a ≤ 0.9 d
+  function setGeom(key, v) {
+    const f = FAM[S.kind], r = f[key];
+    v = Math.max(r[0], Math.min(r[1], Math.round(v / f.unit / r[2]) * r[2])) * f.unit;
+    if (key === 'a') v = Math.min(v, Math.floor(0.9 * S.d / f.unit / r[2]) * r[2] * f.unit);
+    else v = Math.max(v, Math.ceil(S.a / 0.9 / f.unit / r[2]) * r[2] * f.unit);
+    v = +v.toPrecision(10);
+    if (v === S[key]) return false;
+    S[key] = v; $(key === 'a' ? 'sa' : 'sd').value = v / f.unit;
+    custom(); rebuild(false); return true;
+  }
+  $('sa').addEventListener('input', (e) => { if (!setGeom('a', +e.target.value * FAM[S.kind].unit)) e.target.value = S.a / FAM[S.kind].unit; });
+  $('sd').addEventListener('input', (e) => { if (!setGeom('d', +e.target.value * FAM[S.kind].unit)) e.target.value = S.d / FAM[S.kind].unit; });
+  $('sL').addEventListener('input', (e) => { S.L = +e.target.value; custom(); rebuild(false); });
+  $('src').addEventListener('input', (e) => { S.src = +e.target.value; custom(); rebuild(false); });
+  for (const b of document.querySelectorAll('#kinds button')) b.addEventListener('click', () => {
+    if (b.dataset.k === S.kind) return;
+    // switch particle with a sensible geometry for that scale
+    const base = { photon: 'laser', electron: 'electron', c60: 'c60' }[b.dataset.k];
+    const p = PRESETS[base];
+    Object.assign(S, { kind: p.kind, src: p.src, a: p.a, d: p.d, L: p.L });
+    syncSliders(); custom(); fitY(); rebuild(false);
+  });
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  function toggleSlit(i) { S.open[i] = !S.open[i]; custom(); rebuild(false); }
+  $('slit1').addEventListener('click', () => toggleSlit(0));
+  $('slit2').addEventListener('click', () => toggleSlit(1));
+  function setDet(on) { S.det = on; $('det').checked = on; custom(); rebuild(false); }
+  $('det').addEventListener('change', (e) => setDet(e.target.checked));
+  $('eta').addEventListener('input', (e) => { S.eta = +e.target.value / 100; custom(); rebuild(false); });
+  $('rate').addEventListener('input', (e) => { S.rate = +e.target.value; carry = 0; physReadouts(); });
+  const streamBtn = $('stream');
+  function setStreaming(on) { streaming = on; streamBtn.textContent = on ? 'Pause' : 'Stream'; streamBtn.classList.toggle('primary', !on); }
+  streamBtn.addEventListener('click', () => setStreaming(!streaming));
+  $('fire1').addEventListener('click', () => fire(1));
+  $('fire10').addEventListener('click', () => fire(10));
+  $('clear').addEventListener('click', () => { flights = []; clearHits(); });
+  $('tCurve').addEventListener('change', (e) => { show.curve = e.target.checked; });
+  $('tMarks').addEventListener('change', (e) => { show.marks = e.target.checked; });
+  $('tEnv').addEventListener('change', (e) => { show.env = e.target.checked; });
+  $('tColor').addEventListener('change', (e) => { show.color = e.target.checked; dotsDirty = true; });
+  function zoom(f) {
+    const p = source(), minY = 2 * p.lam * S.L / S.d, maxY = 10 * S.L * Math.tan(Math.asin(Math.min(0.95, p.lam / S.a))) + S.d;
+    S.Y = Math.max(minY, Math.min(maxY, niceUp(S.Y * f * 0.999)));
+    rebuild(false); gridAlloc(LY.scr.w, LY.scr.h);
+  }
+  $('zOut').addEventListener('click', () => zoom(2));
+  $('zIn').addEventListener('click', () => { const p = source(); S.Y = Math.max(2 * p.lam * S.L / S.d, S.Y / 2); S.Y = niceUp(S.Y); rebuild(false); gridAlloc(LY.scr.w, LY.scr.h); });
+  $('zFit').addEventListener('click', () => { fitY(); rebuild(false); gridAlloc(LY.scr.w, LY.scr.h); });
+
+  // ---------- dragging the slits on the drawing ----------
+  let drag = null, hoverId = null;
+  function handleAt(ev) {
+    if (!LY) return null;
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const g = appGeom(), ps = projScale(), tol = 7 * ps * (ev.pointerType === 'touch' ? 2 : 1);
+    if (Math.abs(x - g.xb) > g.thick / 2 + tol + 8 * ps) return null;
+    let best = null, bd = Infinity;
+    // outer edges change a; they win when close
+    for (const [id, yy] of [['a1', g.slits[0].top], ['a2', g.slits[1].bot]]) {
+      const dd = Math.abs(y - yy); if (dd < tol * 0.8 && dd < bd) { bd = dd; best = { id, cursor: 'ns-resize' }; }
+    }
+    if (best) return best;
+    for (const sl of g.slits) {
+      const dd = Math.max(0, Math.abs(y - sl.c) - (sl.bot - sl.top) / 2);
+      if (dd < tol && dd < bd) { bd = dd; best = { id: 'd' + sl.i, cursor: 'ns-resize' }; }
+    }
+    return best;
+  }
+  function applyDrag(py) {
+    const g = appGeom(), f = FAM[S.kind];
+    const off = (g.cy - py) / g.bs;   // meters from the center line
+    if (drag.id === 'd1' || drag.id === 'd2') setGeom('d', 2 * Math.abs(off));
+    else setGeom('a', 2 * (Math.abs(off) - S.d / 2));
+  }
+  let dragQ = null, dragFrame = false;
+  can.addEventListener('pointermove', (ev) => {
+    if (drag) {
+      const r = can.getBoundingClientRect(), py = ev.clientY - r.top;
+      if (!drag.moved && Math.abs(py - drag.y0) < 3) return;
+      drag.moved = true; dragQ = py;
+      if (!dragFrame) { dragFrame = true; requestAnimationFrame(() => { dragFrame = false; if (drag && dragQ !== null) applyDrag(dragQ); dragQ = null; }); }
+      return;
+    }
+    const h = handleAt(ev);
+    hoverId = h ? h.id : null;
+    can.style.cursor = h ? h.cursor : 'default';
+  });
+  can.addEventListener('pointerdown', (ev) => {
+    const h = handleAt(ev);
+    if (!h) return;
+    const r = can.getBoundingClientRect();
+    drag = { id: h.id, y0: ev.clientY - r.top, moved: false };
+    try { can.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault();
+  });
+  const endDrag = () => {
+    if (!drag) return;
+    if (!drag.moved && drag.id[0] === 'd') toggleSlit(+drag.id[1] - 1);
+    drag = null; hoverId = null;
+  };
+  can.addEventListener('pointerup', endDrag);
+  can.addEventListener('pointercancel', () => { drag = null; hoverId = null; });
+  can.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
+  can.addEventListener('keydown', (e) => {
+    const f = FAM[S.kind], big = e.shiftKey ? 5 : 1;
+    if (e.key === ' ') setStreaming(!streaming);
+    else if (e.key === 'f' || e.key === 'F') fire(1);
+    else if (e.key === 'c' || e.key === 'C') { flights = []; clearHits(); }
+    else if (e.key === '1' || e.key === '2') toggleSlit(+e.key - 1);
+    else if (e.key === 'w' || e.key === 'W') setDet(!S.det);
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') setGeom('d', S.d + (e.key === 'ArrowUp' ? 1 : -1) * f.d[2] * f.unit * big);
+    else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') setGeom('a', S.a + (e.key === 'ArrowRight' ? 1 : -1) * f.a[2] * f.unit * big);
+    else if (e.key === '+' || e.key === '=') $('zIn').click();
+    else if (e.key === '-' || e.key === '_') $('zOut').click();
+    else return;
+    e.preventDefault();
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(() => { resize(); drawFormula(); });
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+
+  const retheme = () => { tokens(); dotsDirty = true; drawAll(); drawFormula(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, frameMs = 0;
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    stepStream(dt);
+    stepFlights();
+    const k = Math.exp(-dt / 0.16); slitFlash[0] *= k; slitFlash[1] *= k;
+    drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastRead > 140) { countReadouts(); lastRead = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__ds = { get frameMs() { return frameMs; }, get n() { return nHits; }, get S() { return S; }, get pat() { return pat; }, get pred() { return pred; },
+    geom() { const g = appGeom(); return { xb: g.xb, slits: g.slits }; }, setRate(i) { S.rate = i; $('rate').value = i; physReadouts(); }, setStreaming, fire, commitMany(n) { for (let i = 0; i < n; i++) { const h = draw1(); if (h) commit(h, false); } } };
+
+  tokens();
+  syncSliders();
+  applyPreset('electron');
+  setStreaming(streaming);
+  const ro = new ResizeObserver(() => { resize(); drawFormula(); });
+  ro.observe(pane); ro.observe(fCan.parentElement);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { drawAll(); drawFormula(); });
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
