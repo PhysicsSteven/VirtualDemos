@@ -80,7 +80,8 @@ def ensure_columns(run, dry):
     add, bad = [], []
     for c in WANT_COLS:
         if c in active: continue
-        if valid is not None and c not in valid:
+        isotope = re.fullmatch(r'[a-z]{1,2}\d{1,3}', c) is not None   # e.g. ne22: valid if it is in the net
+        if valid is not None and c not in valid and not isotope:
             bad.append(c); continue
         add.append(c)
     if valid is None:

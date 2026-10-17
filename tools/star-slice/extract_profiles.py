@@ -220,6 +220,8 @@ def main():
            'source': [os.path.basename(os.path.normpath(d)) for d in a.runs],
            'mesa_columns': {k: have[k] for k in keep_cols},
            'moments': moments}
+    if os.path.dirname(a.out):
+        os.makedirs(os.path.dirname(a.out), exist_ok=True)
     with gzip.open(a.out, 'wt') as f:
         json.dump(out, f, separators=(',', ':'))
     print('\nwrote %s  (%d moments, %.1f MB)' % (a.out, len(moments), os.path.getsize(a.out) / 1e6))
