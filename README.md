@@ -15,6 +15,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Star Slice](demos/star-slice.html) | Astronomy | Cross section of a MESA stellar model: composition, convection, burning shells and white dwarf crystallization (data tools in `tools/star-slice`) |
 | [Spectra Explorer](demos/spectra.html) | Modern physics and astronomy | Emission and absorption lines of 99 elements from NIST data, the Bohr model of hydrogen, and a mystery spectrum game |
 | [Spacetime Diagrams](demos/spacetime.html) | Modern physics | Minkowski diagrams: light cones, the interval, Lorentz boosts, simultaneity, time dilation, length contraction and the twin paradox |
+| [Quantum Wave Packets](demos/quantum-waves.html) | Modern physics | The 1D time dependent Schrödinger equation for an electron: spreading, tunneling, bound states, superpositions, uncertainty and measurement |
 | [Photoelectric Effect](demos/photoelectric.html) | Modern physics | Photon energy, work function, stopping voltage, and measuring Planck's constant |
 | [Projectile Range](demos/projectile-drag.html) | Mechanics | Projectile motion with and without quadratic air drag |
 | [Gas in a Box](demos/ideal-gas.html) | Thermodynamics | Kinetic theory of a 2D gas: pressure, temperature, Maxwell-Boltzmann speeds, adiabatic compression |
