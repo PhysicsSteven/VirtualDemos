@@ -157,6 +157,8 @@ def main():
     ap.add_argument('--moments', type=int, default=150)
     ap.add_argument('--zones', type=int, default=200)
     ap.add_argument('--label')
+    ap.add_argument('--weights', help='comma separated share of moments for each RUN_DIR in order, e.g. 0.5,1,1,1,1,1 '
+                    '(default: moments spread evenly over all profiles, so a stage with many profiles gets many moments)')
     a = ap.parse_args()
     if not a.report and not a.out:
         ap.error('give -o OUTPUT.json.gz, or --report to only look')
@@ -205,7 +207,19 @@ def main():
     if missing_needed:
         sys.exit('\nstopping: columns the demo needs are missing (see above)')
 
-    chosen = pick_evenly(heads, a.moments)
+    if a.weights:
+        w = [float(x) for x in a.weights.split(',')]
+        if len(w) != len(a.runs):
+            sys.exit('--weights needs one number per RUN_DIR (%d given for %d)' % (len(w), len(a.runs)))
+        chosen = []
+        for d, wi in zip(a.runs, w):
+            mine = [t for t in heads if t[0] == d]
+            k = max(2, round(a.moments * wi / sum(w))) if mine else 0
+            got = pick_evenly(mine, min(k, len(mine)))
+            print('  %-40s %4d profiles -> %d moments' % (os.path.basename(os.path.normpath(d)), len(mine), len(got)))
+            chosen += got
+    else:
+        chosen = pick_evenly(heads, a.moments)
     keep_cols = [k for k in WANT if have[k]]
     moments = []
     for d, fp, h, _ in chosen:
