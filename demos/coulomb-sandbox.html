@@ -47,8 +47,10 @@ img { max-width: 100%; }
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
   --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
 }
+:root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
 .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 
 .app {
@@ -60,7 +62,10 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
 .bar p { margin: 2px 0 0; color: var(--muted); }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
 
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
 .stage { position: relative; min-height: 380px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
@@ -138,6 +143,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.zero { border-top-style: dashed; border-color: var(--muted); }
 .swatch.line { border-color: var(--field); }
 
+@media (min-width: 821px) {
+  :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 340px; }
+}
 @media (max-width: 820px) {
   html, body { height: auto; }
   .app { height: auto; }
@@ -154,7 +162,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <h1>Coulomb Sandbox</h1>
       <p>Drag the charges around, and drag the knob on a selected charge to change its value. Switch to 3D to see the potential as a landscape of hills and wells.</p>
     </div>
-    <div class="units mono">1 grid square = 1 cm · q in nC · k = 8.99×10⁹ N·m²/C²</div>
+    <div class="bar-right">
+      <div class="units mono">1 grid square = 1 cm · q in nC · k = 8.99×10⁹ N·m²/C²</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
   </header>
 
   <main class="bench">
@@ -279,6 +290,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   };
 
   // ---------- helpers ----------
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
+  const chargeScale = () => Math.min(projScale(), 1.3);   // charge discs grow a little less so close charges stay apart
   const monoFont = () => getComputedStyle(document.body).getPropertyValue('--font-mono') || 'monospace';
   function tokens() {
     const cs = getComputedStyle(document.documentElement);
@@ -296,6 +309,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const toPx = (x, y) => [cx + x * s, cy - y * s];
   const toW = (px, py) => ({ x: (px - cx) / s, y: (cy - py) / s });
   const radius = (c) => 11 + 4 * Math.sqrt(Math.abs(c.q));
+  const drawRadius = (c) => radius(c) * chargeScale();   // drawn and grabbed size; field lines still start from radius()
   const minus = (str) => str.replace(/-/g, '−');
   const fmtQ = (q) => (q > 0 ? '+' : q < 0 ? '−' : '') + (Number.isInteger(Math.abs(q)) ? Math.abs(q) : Math.abs(q).toFixed(1));
 
@@ -481,23 +495,24 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   function drawCharges(ctx, T) {
+    const ps = projScale(), cs = chargeScale();
     for (const c of charges) {
-      const [px, py] = toPx(c.x, c.y), r = radius(c);
-      ctx.beginPath(); ctx.arc(px, py, r + 2.5, 0, 2 * Math.PI); ctx.fillStyle = T.canvas; ctx.fill();
+      const [px, py] = toPx(c.x, c.y), r = drawRadius(c);
+      ctx.beginPath(); ctx.arc(px, py, r + 2.5 * ps, 0, 2 * Math.PI); ctx.fillStyle = T.canvas; ctx.fill();
       ctx.beginPath(); ctx.arc(px, py, r, 0, 2 * Math.PI);
       ctx.fillStyle = c.q > 0 ? T.pos : c.q < 0 ? T.neg : T.muted; ctx.fill();
       ctx.fillStyle = T.onCharge; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.font = `600 ${r > 17 ? 13 : 12}px ${monoFont()}`;
+      ctx.font = `600 ${(radius(c) > 17 ? 13 : 12) * cs}px ${monoFont()}`;
       ctx.fillText(fmtQ(c.q), px, py + 0.5);
       if (c === sel) {
-        ctx.save(); ctx.setLineDash([4, 3]); ctx.lineWidth = 2; ctx.strokeStyle = T.accent;
-        ctx.beginPath(); ctx.arc(px, py, r + 6, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+        ctx.save(); ctx.setLineDash([4 * ps, 3 * ps]); ctx.lineWidth = 2 * ps; ctx.strokeStyle = T.accent;
+        ctx.beginPath(); ctx.arc(px, py, r + 6 * ps, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
       }
     }
   }
 
   function drawBase() {
-    const T = tokens(), ctx = bctx;
+    const T = tokens(), ctx = bctx, ps = projScale();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
@@ -527,13 +542,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         p.moveTo(ai * g, aj * g); p.lineTo(bi * g, bj * g);
       }
       ctx.save(); ctx.lineCap = 'round';
-      ctx.strokeStyle = T.equi; ctx.lineWidth = 1.2; ctx.globalAlpha = 0.9; ctx.stroke(main);
-      ctx.globalAlpha = 1; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5; ctx.setLineDash([6, 5]); ctx.stroke(zero);
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 1.2 * ps; ctx.globalAlpha = 0.9; ctx.stroke(main);
+      ctx.globalAlpha = 1; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * ps; ctx.setLineDash([6 * ps, 5 * ps]); ctx.stroke(zero);
       ctx.restore();
     }
     if (layers.lines) {
       ctx.save();
-      ctx.strokeStyle = T.field; ctx.fillStyle = T.field; ctx.lineWidth = 1.3; ctx.globalAlpha = 0.82; ctx.lineJoin = 'round';
+      ctx.strokeStyle = T.field; ctx.fillStyle = T.field; ctx.lineWidth = 1.3 * ps; ctx.globalAlpha = 0.82; ctx.lineJoin = 'round';
       for (const pts of computeLines()) {
         if (pts.length < 2) continue;
         ctx.beginPath();
@@ -542,7 +557,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         const ai = arrowIndex(pts, len2);
         if (ai > 0) {
           const [x1, y1] = toPx(...pts[ai - 1]), [x2, y2] = toPx(...pts[ai]);
-          arrowHead(ctx, x2, y2, Math.atan2(y2 - y1, x2 - x1), 6);
+          arrowHead(ctx, x2, y2, Math.atan2(y2 - y1, x2 - x1), 6 * ps);
         }
       }
       ctx.restore();
@@ -550,11 +565,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     drawCharges(ctx, T);
 
     ctx.save();
-    const x0 = 14, y0 = H - 16, len = 5 * s;
-    ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.moveTo(x0, y0 - 4); ctx.lineTo(x0, y0); ctx.lineTo(x0 + len, y0); ctx.lineTo(x0 + len, y0 - 4); ctx.stroke();
-    ctx.font = '600 11px ' + monoFont();
-    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('5 cm', x0 + len / 2, y0 - 3);
+    const x0 = 14, y0 = H - 16 * ps, len = 5 * s;
+    ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1.5 * ps;
+    ctx.beginPath(); ctx.moveTo(x0, y0 - 4 * ps); ctx.lineTo(x0, y0); ctx.lineTo(x0 + len, y0); ctx.lineTo(x0 + len, y0 - 4 * ps); ctx.stroke();
+    ctx.font = `600 ${11 * ps}px ` + monoFont();
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('5 cm', x0 + len / 2, y0 - 3 * ps);
     ctx.restore();
   }
 
@@ -581,31 +596,31 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const KNOB_STEP_PX = 12;                 // pointer travel per slider step while dragging the knob
   function knobGeom() {
     if (!sel || view !== '2d') return null;
-    const [px, py] = toPx(sel.x, sel.y), r = radius(sel);
-    const dir = py - r - 33 >= 6 ? -1 : 1;
-    return { px, py, x: px, y: py + dir * (r + 24), y0: py + dir * (r + 7) };
+    const [px, py] = toPx(sel.x, sel.y), r = drawRadius(sel), ps = projScale();
+    const dir = py - r - 33 * ps >= 6 ? -1 : 1;
+    return { px, py, x: px, y: py + dir * (r + 24 * ps), y0: py + dir * (r + 7 * ps) };
   }
   function drawKnob(ctx, T) {
     const k = knobGeom();
     if (!k) return;
-    const hot = !!qDrag || hoverKnob;
+    const hot = !!qDrag || hoverKnob, ps = projScale();
     ctx.save();
     ctx.lineCap = 'round';
-    ctx.strokeStyle = T.canvas; ctx.lineWidth = 5;
+    ctx.strokeStyle = T.canvas; ctx.lineWidth = 5 * ps;
     ctx.beginPath(); ctx.moveTo(k.x, k.y0); ctx.lineTo(k.x, k.y); ctx.stroke();
-    ctx.strokeStyle = T.accent; ctx.lineWidth = 2;
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * ps;
     ctx.beginPath(); ctx.moveTo(k.x, k.y0); ctx.lineTo(k.x, k.y); ctx.stroke();
     if (hot) {
       ctx.globalAlpha = 0.28; ctx.fillStyle = T.accent;
-      ctx.beginPath(); ctx.arc(k.x, k.y, 13, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.beginPath(); ctx.arc(k.x, k.y, 13 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1;
     }
-    const kr = hot ? 8 : 7;
-    ctx.fillStyle = T.canvas; ctx.lineWidth = hot ? 2.4 : 2;
+    const kr = (hot ? 8 : 7) * ps;
+    ctx.fillStyle = T.canvas; ctx.lineWidth = (hot ? 2.4 : 2) * ps;
     ctx.beginPath(); ctx.arc(k.x, k.y, kr, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
     // grip: two short bars across the knob, it moves up and down
-    ctx.lineWidth = 1.4;
+    ctx.lineWidth = 1.4 * ps;
     ctx.beginPath();
-    for (const d of [-1.8, 1.8]) { ctx.moveTo(k.x - 3, k.y + d); ctx.lineTo(k.x + 3, k.y + d); }
+    for (const d of [-1.8 * ps, 1.8 * ps]) { ctx.moveTo(k.x - 3 * ps, k.y + d); ctx.lineTo(k.x + 3 * ps, k.y + d); }
     ctx.stroke();
     ctx.restore();
   }
@@ -613,36 +628,36 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const k = knobGeom();
     if (!k) return false;
     const r = over.getBoundingClientRect();
-    const tol = 10 * (e.pointerType === 'touch' ? 2 : 1);
+    const tol = 10 * projScale() * (e.pointerType === 'touch' ? 2 : 1);
     return Math.hypot(e.clientX - r.left - k.x, e.clientY - r.top - k.y) <= tol;
   }
 
   function drawProbe(ctx, T) {
     const [px, py] = toPx(probe.x, probe.y);
-    const [ex, ey] = field(probe.x, probe.y), m = Math.hypot(ex, ey);
+    const [ex, ey] = field(probe.x, probe.y), m = Math.hypot(ex, ey), ps = projScale();
     if (m > 0) {
-      const len = Math.min(72, 18 + 11 * Math.log10(1 + m / 500));
+      const len = Math.min(72, 18 + 11 * Math.log10(1 + m / 500)) * ps;
       const ang = Math.atan2(-ey, ex);
       const tx = px + Math.cos(ang) * len, ty = py + Math.sin(ang) * len;
-      ctx.strokeStyle = T.canvas; ctx.lineWidth = 5; ctx.lineCap = 'round';
+      ctx.strokeStyle = T.canvas; ctx.lineWidth = 5 * ps; ctx.lineCap = 'round';
       ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(tx, ty); ctx.stroke();
-      ctx.strokeStyle = T.accent; ctx.lineWidth = 2.5;
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 2.5 * ps;
       ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(tx, ty); ctx.stroke();
-      ctx.fillStyle = T.accent; arrowHead(ctx, tx, ty, ang, 8);
+      ctx.fillStyle = T.accent; arrowHead(ctx, tx, ty, ang, 8 * ps);
     }
-    ctx.beginPath(); ctx.arc(px, py, 5, 0, 2 * Math.PI);
-    ctx.fillStyle = T.canvas; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = T.ink; ctx.stroke();
+    ctx.beginPath(); ctx.arc(px, py, 5 * ps, 0, 2 * Math.PI);
+    ctx.fillStyle = T.canvas; ctx.fill(); ctx.lineWidth = 2 * ps; ctx.strokeStyle = T.ink; ctx.stroke();
 
     const label = 'V = ' + fmtV(potential(probe.x, probe.y));
-    ctx.font = '600 12px ' + monoFont();
-    const tw = ctx.measureText(label).width + 14, th = 22;
-    let lx = px + 12, ly = py - 12 - th;
-    if (lx + tw > W - 6) lx = px - 12 - tw;
-    if (ly < 6) ly = py + 12;
-    ctx.fillStyle = T.canvas; ctx.strokeStyle = T.line; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(lx, ly, tw, th, 5) : ctx.rect(lx, ly, tw, th); ctx.fill(); ctx.stroke();
+    ctx.font = `600 ${12 * ps}px ` + monoFont();
+    const tw = ctx.measureText(label).width + 14 * ps, th = 22 * ps;
+    let lx = px + 12 * ps, ly = py - 12 * ps - th;
+    if (lx + tw > W - 6) lx = px - 12 * ps - tw;
+    if (ly < 6) ly = py + 12 * ps;
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = T.line; ctx.lineWidth = ps;
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(lx, ly, tw, th, 5 * ps) : ctx.rect(lx, ly, tw, th); ctx.fill(); ctx.stroke();
     ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-    ctx.fillText(label, lx + 7, ly + th / 2 + 0.5);
+    ctx.fillText(label, lx + 7 * ps, ly + th / 2 + 0.5);
   }
 
   // ---------- 3D landscape ----------
@@ -778,7 +793,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           const a = p3[ai - 1], c = p3[ai];
           const d = new THREE.Vector3(c[0] - a[0], c[1] - a[1], c[2] - a[2]).normalize();
           const cone = new THREE.Mesh(G.coneGeo, G.coneMat);
-          cone.position.set(c[0], c[1], c[2]);
+          cone.position.set(c[0], c[1], c[2]); cone.scale.setScalar(projScale());
           cone.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d);
           G.cones.add(cone);
         }
@@ -794,7 +809,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     G.spheres.clear();
     for (const c of charges) {
       const m = new THREE.Mesh(G.sphGeo, c.q > 0 ? G.posMat : c.q < 0 ? G.negMat : G.zeroMat);
-      const rr = 0.2 + 0.08 * Math.sqrt(Math.abs(c.q));
+      const rr = (0.2 + 0.08 * Math.sqrt(Math.abs(c.q))) * chargeScale();
       m.scale.setScalar(rr);
       m.position.set(c.x, c.y, Math.sign(c.q) * 4 * reliefMult);
       m.userData.c = c;
@@ -852,7 +867,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ty + r * Math.sin(orbit.phi) * Math.sin(orbit.theta),
       r * Math.cos(orbit.phi));
     G.cam.lookAt(tx, ty, 0);
-    G.knob.scale.setScalar(qDrag || hoverKnob ? 1.45 : 1);
+    G.knob.scale.setScalar((qDrag || hoverKnob ? 1.45 : 1) * projScale());
+    G.probeDot.scale.setScalar(projScale());
     G.renderer.render(G.scene, G.cam);
   }
 
@@ -871,7 +887,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const onKnob3D = (e) => {
       const k = knobScreen();
       if (!k) return false;
-      const r = el.getBoundingClientRect(), tol = 12 * (e.pointerType === 'touch' ? 2 : 1);
+      const r = el.getBoundingClientRect(), tol = 12 * projScale() * (e.pointerType === 'touch' ? 2 : 1);
       return Math.hypot(e.clientX - r.left - k.x, e.clientY - r.top - k.y) <= tol;
     };
 
@@ -1057,7 +1073,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function hit(p) {
     for (let i = charges.length - 1; i >= 0; i--) {
       const c = charges[i];
-      if (Math.hypot(p.x - c.x, p.y - c.y) * s <= radius(c) + 4) return c;
+      if (Math.hypot(p.x - c.x, p.y - c.y) * s <= drawRadius(c) + 4 * projScale()) return c;
     }
     return null;
   }
@@ -1203,6 +1219,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // theme changes
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', markBase); } catch (_) {}
   new MutationObserver(markBase).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class', 'style'] });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
 
   // ---------- boot ----------
   charges = PRESETS.dipole();

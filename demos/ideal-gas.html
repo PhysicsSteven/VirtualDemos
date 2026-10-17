@@ -47,8 +47,10 @@ img { max-width: 100%; }
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
   --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
 }
+:root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
 .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 
 .app {
@@ -60,7 +62,10 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
 .bar p { margin: 2px 0 0; color: var(--muted); }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
 
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
 .stage { position: relative; min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: flex; flex-direction: column; }
@@ -125,6 +130,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.trail { border-color: var(--accent); }
 .swatch.wall { border-top-width: 4px; border-color: var(--ink); }
 
+@media (min-width: 821px) {
+  :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 340px; }
+}
 @media (max-width: 820px) {
   html, body { height: auto; }
   .app { height: auto; }
@@ -144,7 +152,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <h1>Gas in a Box</h1>
       <p>Pressure and temperature come from molecules hitting the walls. Push the piston and watch the gas heat up.</p>
     </div>
-    <div class="units mono">argon, m = 6.63×10⁻²⁶ kg · box height 30 nm · 1 s on screen = <span id="rate">80 ps</span></div>
+    <div class="bar-right">
+      <div class="units mono">argon, m = 6.63×10⁻²⁶ kg · box height 30 nm · 1 s on screen = <span id="rate">80 ps</span></div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
   </header>
 
   <main class="bench">
@@ -297,6 +308,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- theme ----------
   let tok = null, palette = [];
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
   const monoFont = () => getComputedStyle(document.body).getPropertyValue('--font-mono') || 'monospace';
   function rgb(hex) {
     hex = hex.replace('#', '');
@@ -475,7 +487,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       c.width = Math.round(r.width * dpr); c.height = Math.round(r.height * dpr);
       c.style.width = r.width + 'px'; c.style.height = r.height + 'px';
     }
-    const padT = 50, padB = 32, padL = 22, padR = 22;
+    const ps = projScale();
+    const padT = ps > 1 ? 64 : 50, padB = 32 * ps, padL = 22 * ps, padR = 22;
     G.s = Math.max(1, Math.min((G.W - padL - padR) / LX, (G.H - padT - padB) / LY));
     G.bx0 = padL + (G.W - padL - padR - LX * G.s) / 2;
     G.by0 = padT + (G.H - padT - padB - LY * G.s) / 2;
@@ -484,7 +497,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const toX = (x) => G.bx0 + x * G.s, toY = (y) => G.by0 + (LY - y) * G.s;
 
   function drawBox() {
-    const ctx = bctx, T = tok, s = G.s;
+    const ctx = bctx, T = tok, s = G.s, ps = projScale();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, G.W, G.H);
     const x0 = toX(0), x1 = toX(LX), yTop = toY(LY), yBot = toY(0), wp = toX(wallX);
@@ -497,22 +510,22 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
     // piston body beyond the wall
     ctx.fillStyle = T.relief; ctx.fillRect(wp, yTop, x1 - wp, yBot - yTop);
-    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(wp, yTop, x1 - wp, yBot - yTop);
+    ctx.strokeStyle = T.line; ctx.lineWidth = ps; ctx.strokeRect(wp, yTop, x1 - wp, yBot - yTop);
 
     // fixed walls
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 2; ctx.lineJoin = 'miter';
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.lineJoin = 'miter';
     ctx.beginPath(); ctx.moveTo(wp, yTop - 1); ctx.lineTo(x0 - 1, yTop - 1); ctx.lineTo(x0 - 1, yBot + 1); ctx.lineTo(wp, yBot + 1); ctx.stroke();
 
     // target ghost while the piston catches up
     if (Math.abs(wallTarget - wallX) > 0.02) {
       const tp = toX(wallTarget);
-      ctx.save(); ctx.setLineDash([5, 4]); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5;
+      ctx.save(); ctx.setLineDash([5 * ps, 4 * ps]); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * ps;
       ctx.beginPath(); ctx.moveTo(tp, yTop); ctx.lineTo(tp, yBot); ctx.stroke(); ctx.restore();
     }
 
     // tracer trail
     if (showTrail && trail.length > 1) {
-      ctx.save(); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      ctx.save(); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * ps; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
       const chunks = 10, n = trail.length, per = Math.ceil(n / chunks);
       for (let c = 0; c < chunks; c++) {
         const a = c * per, b = Math.min(n - 1, (c + 1) * per);
@@ -526,7 +539,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
 
     // molecules, batched by color
-    const pr = Math.max(R * s, 2.2);
+    const pr = Math.max(R * s, 2.2 * ps);   // true disk size; only the floor for tiny boxes grows in projector mode
     if (colorBySpeed) {
       const paths = palette.map(() => new Path2D());
       for (let i = 0; i < N; i++) {
@@ -544,39 +557,39 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.fillStyle = T.muted; ctx.fill(p);
     }
     if (showTrail && tracer < N) {
-      const X = toX(px[tracer]), Y = toY(py[tracer]), tr = Math.max(pr * 1.5, 4.5);
-      ctx.beginPath(); ctx.arc(X, Y, tr + 2, 0, 2 * Math.PI); ctx.fillStyle = T.canvas; ctx.fill();
+      const X = toX(px[tracer]), Y = toY(py[tracer]), tr = Math.max(pr * 1.5, 4.5) * ps;
+      ctx.beginPath(); ctx.arc(X, Y, tr + 2 * ps, 0, 2 * Math.PI); ctx.fillStyle = T.canvas; ctx.fill();
       ctx.beginPath(); ctx.arc(X, Y, tr, 0, 2 * Math.PI); ctx.fillStyle = T.accent; ctx.fill();
-      ctx.lineWidth = 1.5; ctx.strokeStyle = T.ink; ctx.stroke();
+      ctx.lineWidth = 1.5 * ps; ctx.strokeStyle = T.ink; ctx.stroke();
     }
 
     // piston face and handle
-    ctx.fillStyle = T.ink; ctx.fillRect(wp, yTop - 2, 4, yBot - yTop + 4);
-    const hh = Math.min(48, (yBot - yTop) * 0.4), hy = (yTop + yBot) / 2 - hh / 2, hx = wp - 3;
-    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(hx, hy, 10, hh, 4) : ctx.rect(hx, hy, 10, hh);
+    ctx.fillStyle = T.ink; ctx.fillRect(wp, yTop - 2, 4 * ps, yBot - yTop + 4);
+    const hw = 10 * ps, hh = Math.min(48 * ps, (yBot - yTop) * 0.4), hy = (yTop + yBot) / 2 - hh / 2, hx = wp + 2 * ps - hw / 2;
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(hx, hy, hw, hh, 4 * ps) : ctx.rect(hx, hy, hw, hh);
     ctx.fillStyle = drag ? T.ink : T.accent; ctx.fill();
-    ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.2; ctx.beginPath();
-    for (let k = -1; k <= 1; k++) { const yy = hy + hh / 2 + k * 6; ctx.moveTo(hx + 2.5, yy); ctx.lineTo(hx + 7.5, yy); }
+    ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.2 * ps; ctx.beginPath();
+    for (let k = -1; k <= 1; k++) { const yy = hy + hh / 2 + k * 6 * ps; ctx.moveTo(hx + 2.5 * ps, yy); ctx.lineTo(hx + hw - 2.5 * ps, yy); }
     ctx.stroke();
 
     // dimensions
-    ctx.font = '600 11px ' + T.mono; ctx.fillStyle = T.muted; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2;
-    const dy = yBot + 15;
-    ctx.beginPath(); ctx.moveTo(x0, dy - 4); ctx.lineTo(x0, dy + 4); ctx.moveTo(x0, dy); ctx.lineTo(wp + 2, dy);
-    ctx.moveTo(wp + 2, dy - 4); ctx.lineTo(wp + 2, dy + 4); ctx.stroke();
-    const lab = wallX.toFixed(1) + ' nm', lw = ctx.measureText(lab).width + 10, lx = (x0 + wp) / 2;
-    ctx.fillStyle = T.canvas; ctx.fillRect(lx - lw / 2, dy - 8, lw, 16);
+    ctx.font = `600 ${11 * ps}px ` + T.mono; ctx.fillStyle = T.muted; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps;
+    const dy = yBot + 15 * ps;
+    ctx.beginPath(); ctx.moveTo(x0, dy - 4 * ps); ctx.lineTo(x0, dy + 4 * ps); ctx.moveTo(x0, dy); ctx.lineTo(wp + 2, dy);
+    ctx.moveTo(wp + 2, dy - 4 * ps); ctx.lineTo(wp + 2, dy + 4 * ps); ctx.stroke();
+    const lab = wallX.toFixed(1) + ' nm', lw = ctx.measureText(lab).width + 10 * ps, lx = (x0 + wp) / 2;
+    ctx.fillStyle = T.canvas; ctx.fillRect(lx - lw / 2, dy - 8 * ps, lw, 16 * ps);
     ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(lab, lx, dy + 0.5);
-    ctx.save(); ctx.translate(x0 - 11, (yTop + yBot) / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('30 nm', 0, 0); ctx.restore();
+    ctx.save(); ctx.translate(x0 - 11 * ps, (yTop + yBot) / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('30 nm', 0, 0); ctx.restore();
 
     // invitation to use the piston
     if (preset === 'compress' && !pistonTouched) {
-      ctx.font = '700 13px ' + T.mono; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-      const msg = '← drag the wall', mw = ctx.measureText(msg).width + 14, my = hy - 18;
-      ctx.fillStyle = T.surface; ctx.strokeStyle = T.accent; ctx.lineWidth = 1.2;
-      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(wp - 10 - mw, my - 12, mw, 24, 5) : ctx.rect(wp - 10 - mw, my - 12, mw, 24);
+      ctx.font = `700 ${13 * ps}px ` + T.mono; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      const msg = '← drag the wall', mw = ctx.measureText(msg).width + 14 * ps, my = hy - 18 * ps;
+      ctx.fillStyle = T.surface; ctx.strokeStyle = T.accent; ctx.lineWidth = 1.2 * ps;
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(wp - 10 * ps - mw, my - 12 * ps, mw, 24 * ps, 5 * ps) : ctx.rect(wp - 10 * ps - mw, my - 12 * ps, mw, 24 * ps);
       ctx.fill(); ctx.stroke();
-      ctx.fillStyle = T.accent; ctx.fillText(msg, wp - 17, my + 0.5);
+      ctx.fillStyle = T.accent; ctx.fillText(msg, wp - 10 * ps - 7 * ps, my + 0.5);
     }
   }
 
@@ -585,13 +598,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p;
   }
   function drawHist() {
-    const ctx = hctx, T = tok, W = HG.W, H = HG.H;
+    const ctx = hctx, T = tok, W = HG.W, H = HG.H, ps = projScale();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    const L = 46, Rr = 14, Tp = 36, B = 40, pw = Math.max(10, W - L - Rr), ph = Math.max(10, H - Tp - B);
+    const L = 46 * ps, Rr = 14 * ps, Tp = 36 * ps, B = 40 * ps, pw = Math.max(10, W - L - Rr), ph = Math.max(10, H - Tp - B);
     const bw = vAxis / NB, Tm = Math.max(stats.T, 1e-5), ym = yMax || 1;
     const X = (v) => L + v / vAxis * pw, Y = (c) => Tp + ph - c / ym * ph;
-    ctx.font = '11px ' + T.mono;
+    const f11 = `${11 * ps}px ` + T.mono;
+    ctx.font = f11;
 
     // y grid
     const ys = niceStep(ym / 4);
@@ -599,7 +613,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.beginPath();
     for (let c = ys; c <= ym; c += ys) { const yy = Math.round(Y(c)) + 0.5; ctx.moveTo(L, yy); ctx.lineTo(L + pw, yy); }
     ctx.stroke();
-    for (let c = 0; c <= ym; c += ys) ctx.fillText(String(Math.round(c * 100) / 100), L - 6, Y(c));
+    for (let c = 0; c <= ym; c += ys) ctx.fillText(String(Math.round(c * 100) / 100), L - 6 * ps, Y(c));
 
     // bars
     const gap = pw / NB > 6 ? 1 : 0;
@@ -611,16 +625,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.fillRect(xa + gap / 2, top, w, Tp + ph - top);
       ctx.globalAlpha = 1;
       if (c > ym * 1.001) {
-        ctx.fillStyle = T.ink; ctx.textAlign = xa + w + 40 > L + pw ? 'right' : 'left'; ctx.textBaseline = 'top';
-        ctx.font = '600 11px ' + T.mono;
+        ctx.fillStyle = T.ink; ctx.textAlign = xa + w + 40 * ps > L + pw ? 'right' : 'left'; ctx.textBaseline = 'top';
+        ctx.font = '600 ' + f11;
         ctx.fillText('↑ ' + Math.round(c), ctx.textAlign === 'left' ? xa + w + 4 : xa - 4, Tp + 2);
-        ctx.font = '11px ' + T.mono;
+        ctx.font = f11;
       }
     }
 
     // Maxwell-Boltzmann curve, expected molecules per bin = N f(v) dv
     ctx.save(); ctx.beginPath(); ctx.rect(L, Tp - 2, pw, ph + 2); ctx.clip();
-    ctx.strokeStyle = T.equi; ctx.lineWidth = 2.2; ctx.lineJoin = 'round'; ctx.beginPath();
+    ctx.strokeStyle = T.equi; ctx.lineWidth = 2.2 * ps; ctx.lineJoin = 'round'; ctx.beginPath();
     for (let k = 0; k <= 200; k++) {
       const v = vAxis * k / 200, f = (M * v / (KB * Tm)) * Math.exp(-M * v * v / (2 * KB * Tm));
       const yy = Y(N * bw * f);
@@ -629,27 +643,30 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.stroke(); ctx.restore();
 
     // axes
-    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath();
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = ps; ctx.beginPath();
     ctx.moveTo(L, Tp + ph + 0.5); ctx.lineTo(L + pw, Tp + ph + 0.5); ctx.stroke();
-    const xs = niceStep(vAxis / (pw < 300 ? 4 : 6));
+    const xs = niceStep(vAxis / (pw < 300 * ps ? 4 : 6));
     ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    for (let v = 0; v <= vAxis + 1e-6; v += xs) ctx.fillText(String(+v.toPrecision(6)), X(v), Tp + ph + 5);
-    ctx.fillText('speed (m/s)', L + pw / 2, Tp + ph + 22);
-    ctx.textAlign = 'right'; ctx.fillText('bin ' + (bw >= 10 ? Math.round(bw) : +bw.toPrecision(2)) + ' m/s', L + pw, Tp + ph + 22);
-    ctx.save(); ctx.translate(12, Tp + ph / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (let v = 0; v <= vAxis + 1e-6; v += xs) ctx.fillText(String(+v.toPrecision(6)), X(v), Tp + ph + 5 * ps);
+    const binLab = 'bin ' + (bw >= 10 ? Math.round(bw) : +bw.toPrecision(2)) + ' m/s';
+    const spW = ctx.measureText('speed (m/s)').width, binW = ctx.measureText(binLab).width;
+    if (L + pw / 2 + spW / 2 + 8 > L + pw - binW) { ctx.textAlign = 'left'; ctx.fillText('speed (m/s)', L, Tp + ph + 22 * ps); }   // narrow chart: keep the two labels apart
+    else ctx.fillText('speed (m/s)', L + pw / 2, Tp + ph + 22 * ps);
+    ctx.textAlign = 'right'; ctx.fillText(binLab, L + pw, Tp + ph + 22 * ps);
+    ctx.save(); ctx.translate(12 * ps, Tp + ph / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText('molecules per bin', 0, 0); ctx.restore();
 
     // legend
-    ctx.font = '600 11.5px ' + T.mono; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
-    let lx = L, ly = 17;
-    ctx.globalAlpha = 0.8; ctx.fillStyle = colorBySpeed ? palette[8] : T.muted; ctx.fillRect(lx, ly - 5, 10, 10); ctx.globalAlpha = 1;
-    ctx.fillStyle = T.ink; ctx.fillText('measured', lx + 15, ly); lx += 15 + ctx.measureText('measured').width + 16;
-    ctx.strokeStyle = T.equi; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 18, ly); ctx.stroke();
-    const mb = (pw < 330 ? 'M-B at ' : '2D Maxwell-Boltzmann at ') + fmtK(stats.T);
-    ctx.fillStyle = T.ink; ctx.fillText(mb, lx + 23, ly);
+    ctx.font = `600 ${11.5 * ps}px ` + T.mono; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+    let lx = L, ly = 17 * ps;
+    ctx.globalAlpha = 0.8; ctx.fillStyle = colorBySpeed ? palette[8] : T.muted; ctx.fillRect(lx, ly - 5 * ps, 10 * ps, 10 * ps); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.ink; ctx.fillText('measured', lx + 15 * ps, ly); lx += (15 + 16) * ps + ctx.measureText('measured').width;
+    ctx.strokeStyle = T.equi; ctx.lineWidth = 2.2 * ps; ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 18 * ps, ly); ctx.stroke();
+    const mb = (pw < 330 * ps ? 'M-B at ' : '2D Maxwell-Boltzmann at ') + fmtK(stats.T);
+    ctx.fillStyle = T.ink; ctx.fillText(mb, lx + 23 * ps, ly);
     if (overflow) {
-      ctx.textAlign = 'right'; ctx.fillStyle = T.muted; ctx.font = '11px ' + T.mono;
-      ctx.fillText('+' + overflow + ' off scale →', L + pw, Tp + 10);
+      ctx.textAlign = 'right'; ctx.fillStyle = T.muted; ctx.font = f11;
+      ctx.fillText('+' + overflow + ' off scale →', L + pw, Tp + 10 * ps);
     }
   }
 
@@ -768,7 +785,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // pointer on the box: drag the piston, or pick a molecule to trace
   const local = (e) => { const r = box.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-  const nearWall = (mx, my) => Math.abs(mx - (toX(wallX) + 2)) < 18 && my > toY(LY) - 12 && my < toY(0) + 12;
+  const nearWall = (mx, my) => Math.abs(mx - (toX(wallX) + 2)) < 18 * projScale() && my > toY(LY) - 12 && my < toY(0) + 12;
   const clampW = (w) => Math.min(LX, Math.max(MIN_W, w));
   box.addEventListener('pointerdown', (e) => {
     box.focus({ preventScroll: true });
@@ -811,6 +828,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // theme changes
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', refreshTokens); } catch (_) {}
   new MutationObserver(refreshTokens).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class', 'style'] });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
 
   // ---------- boot ----------
   refreshTokens();

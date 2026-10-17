@@ -24,8 +24,6 @@ Every demo in this collection follows the same house style, so the site reads as
 
 Every new demo has a Projector toggle in the `.bar`. It sets `data-projector="on"` on the root element, scales the UI text up (about 1.25x), and makes canvas lines thicker and labels larger, so the demo reads from the back of a lecture hall and in a recorded video. The choice is remembered in localStorage, wrapped in try/catch.
 
-Demos built before this rule (Coulomb Sandbox, Gas in a Box, Optics Bench, Projectile Range) still need projector mode added.
-
 ## Physics and writing
 
 - Real units and real numbers in the readouts: SI, or the field's standard units (AU, solar masses, years, parsecs, nm, K). Use tabular numbers.
