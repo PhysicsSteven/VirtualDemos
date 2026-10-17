@@ -529,6 +529,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (ru.code === 1) { if (ru.i1 >= n - 4) mo.env = { i0: ru.i0, mBase: ru.i0 ? mo.mass[ru.i0 - 1] : 0, rBase: ru.i0 ? mo.r[ru.i0 - 1] : 0 }; break; }
       if (ru.i0 < n - 4) break;
     }
+    // other convective zones (cores and interior zones), from the same mixing runs; tiny one or two zone runs are skipped
+    mo.convZones = [];
+    for (const ru of mo.runs) {
+      if (ru.code !== 1 || (mo.env && ru.i0 === mo.env.i0) || ru.i1 - ru.i0 < 2) continue;
+      const mLo = ru.i0 ? mo.mass[ru.i0 - 1] : 0, mHi = mo.mass[ru.i1];
+      mo.convZones.push({ core: ru.i0 === 0, mLo, mHi, rHi: mo.r[ru.i1] });
+    }
     // burning shells
     mo.shells = []; mo.epsMax = 0; mo.epsMaxI = -1;
     if (mo.eps) {
@@ -1210,7 +1217,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const D = S.D, mo = cur(); if (!mo) return;
     $('scrub').max = D.N - 1; $('scrub').value = S.idx;
     $('tlPos').textContent = `${S.idx + 1} / ${D.N}`;
-    $('stageLabel').innerHTML = mo.stage + ' <small>inferred</small>';
+    const runName = (mo.run || '').replace(/^LOGS_?/, '').replace(/_/g, ' ');
+    const multiRun = new Set(D.moments.map((x) => x.run)).size > 1;
+    $('stageLabel').innerHTML = mo.stage + ' <small>inferred</small>' + (multiRun && runName ? ' <small>· MESA stage: ' + runName + '</small>' : '');
     $('oAge').textContent = mo.age != null ? fmtAge(mo.age) : '—';
     $('oModel').textContent = mo.model != null ? grp(mo.model) : '—';
     $('oM').textContent = sci(mo.M, 4) + ' M☉';
@@ -1223,6 +1232,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const F = [], M = mapper(mo);
     const small = (r) => M.px(r) < 2 ? ' (too small at this zoom: zoom in or use Log radius)' : '';
     if (mo.env) F.push(`Convective envelope from m = ${sci(mo.env.mBase, 4)} M☉ (r = ${fmtRsun(mo.env.rBase)}) to the surface`);
+    for (const z of mo.convZones) F.push(z.core
+      ? `Convective core out to m = ${sci(z.mHi, 4)} M☉ (r = ${fmtRsun(z.rHi)})${small(z.rHi)}`
+      : `Convective zone from m = ${sci(z.mLo, 4)} to ${sci(z.mHi, 4)} M☉${small(z.rHi)}`);
     for (const s of mo.shells) F.push(`${s.name} at m = ${sci(mo.mass[s.pi], 4)} M☉, r = ${fmtRsun(mo.r[s.pi])}, peak ε_nuc ${sci(s.peak)} erg g⁻¹ s⁻¹${s.chanText ? ' (' + s.chanText + ')' : ''}${small(mo.r[s.pi])}`);
     if (D.has.eps && !mo.shells.length) F.push(`No zone above the burning threshold; peak ε_nuc ${sci(mo.epsMax)} erg g⁻¹ s⁻¹`);
     if (mo.front) {
@@ -1235,7 +1247,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // ages
     const tie = (S.idx > 0 && D.moments[S.idx - 1].age === mo.age) || (S.idx < D.N - 1 && D.moments[S.idx + 1].age === mo.age);
     $('ageHint').textContent = 'Readouts always show the saved moment. The stage label is inferred from the center abundances and the radius.' +
-      (tie ? ' Ages are stored to 4 significant figures, so neighboring moments can show the same age.' : '');
+      (tie ? ' Neighboring moments can show the same age when MESA takes many short steps.' : '') +
+      (multiRun && D.moments.some((x, i) => i > 0 && x.age != null && D.moments[i - 1].age != null && x.age < D.moments[i - 1].age)
+        ? ' This run was made in stages, and the age restarts where a stage resets it (for example at the zero age main sequence), so ages before that point are pre main sequence time.' : '');
     // zoom
     const z = $('zoom'), zm = zoomMax(mo); z.max = zm.toFixed(2);
     z.value = clamp(Math.log10(mo.R / viewR(mo)), 0, zm);
