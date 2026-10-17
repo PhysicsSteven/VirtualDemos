@@ -83,6 +83,11 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
   font-size: 0.8rem; color: var(--muted); background: var(--surface); border: 1px solid var(--line);
   border-radius: 6px; padding: 4px 9px;
 }
+.qtag {
+  position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; white-space: nowrap;
+  font-size: 0.8rem; font-weight: 600; color: var(--ink); background: var(--surface);
+  border: 1.5px solid var(--accent); border-radius: 6px; padding: 2px 7px;
+}
 
 .rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
 .rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
@@ -147,7 +152,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <header class="bar">
     <div>
       <h1>Coulomb Sandbox</h1>
-      <p>Drag the charges around. Switch to 3D to see the potential as a landscape of hills and wells.</p>
+      <p>Drag the charges around, and drag the knob on a selected charge to change its value. Switch to 3D to see the potential as a landscape of hills and wells.</p>
     </div>
     <div class="units mono">1 grid square = 1 cm · q in nC · k = 8.99×10⁹ N·m²/C²</div>
   </header>
@@ -155,7 +160,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <main class="bench">
     <div class="stage" id="stage">
       <canvas id="base" aria-hidden="true"></canvas>
-      <canvas id="over" tabindex="0" role="application" aria-label="Field of point charges. Drag charges to move them; select one and use arrow keys to nudge it."></canvas>
+      <canvas id="over" tabindex="0" role="application" aria-label="Field of point charges. Drag charges to move them; select one and use arrow keys to nudge it, plus and minus keys to change its charge."></canvas>
       <div class="viewbar">
         <div class="seg" role="group" aria-label="View">
           <button type="button" data-v="2d" aria-pressed="true">2D map</button>
@@ -163,7 +168,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </div>
         <button type="button" class="spin" id="spin" aria-pressed="false" hidden>Spin</button>
       </div>
-      <div class="hint3d" id="hint3d" hidden>Drag to orbit · Scroll or pinch to zoom · Drag a sphere to move its charge · Double-click to reset</div>
+      <div class="qtag mono" id="qTag" hidden></div>
+      <div class="hint3d" id="hint3d" hidden></div>
     </div>
 
     <aside class="rail">
@@ -189,7 +195,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <input type="range" id="q" min="-5" max="5" step="0.5" value="2">
           <div class="selfoot"><span id="selPos" class="mono"></span><button type="button" class="link" id="del">Remove</button></div>
         </div>
-        <p class="hint" id="selHint">Click a charge to change its value. Arrow keys nudge the selected charge.</p>
+        <p class="hint" id="selHint">Click a charge to select it.</p>
       </section>
 
       <section>
@@ -256,6 +262,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   let W = 0, H = 0, dpr = 1, s = 40, cx = 0, cy = 0;
   let charges = [], sel = null, drag = null, nextId = 1;
+  let qDrag = null, hoverKnob = false, tagUntil = 0, tagTimer = 0;   // dragging a charge's value
   let probe = { x: 0, y: 2.5 };
   const layers = { shade: true, equi: true, lines: true, grid: true };
   let dV = 250, density = 6, reliefMult = 1;
@@ -566,7 +573,51 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const ctx = octx, T = tokens();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
-    if (!probe || !charges.some((c) => c.q)) return;
+    if (probe && charges.some((c) => c.q)) drawProbe(ctx, T);
+    drawKnob(ctx, T);
+  }
+
+  // the value knob of the selected charge: a short stalk off the rim, straight up (down near the top edge)
+  const KNOB_STEP_PX = 12;                 // pointer travel per slider step while dragging the knob
+  function knobGeom() {
+    if (!sel || view !== '2d') return null;
+    const [px, py] = toPx(sel.x, sel.y), r = radius(sel);
+    const dir = py - r - 33 >= 6 ? -1 : 1;
+    return { px, py, x: px, y: py + dir * (r + 24), y0: py + dir * (r + 7) };
+  }
+  function drawKnob(ctx, T) {
+    const k = knobGeom();
+    if (!k) return;
+    const hot = !!qDrag || hoverKnob;
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = T.canvas; ctx.lineWidth = 5;
+    ctx.beginPath(); ctx.moveTo(k.x, k.y0); ctx.lineTo(k.x, k.y); ctx.stroke();
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(k.x, k.y0); ctx.lineTo(k.x, k.y); ctx.stroke();
+    if (hot) {
+      ctx.globalAlpha = 0.28; ctx.fillStyle = T.accent;
+      ctx.beginPath(); ctx.arc(k.x, k.y, 13, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1;
+    }
+    const kr = hot ? 8 : 7;
+    ctx.fillStyle = T.canvas; ctx.lineWidth = hot ? 2.4 : 2;
+    ctx.beginPath(); ctx.arc(k.x, k.y, kr, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    // grip: two short bars across the knob, it moves up and down
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    for (const d of [-1.8, 1.8]) { ctx.moveTo(k.x - 3, k.y + d); ctx.lineTo(k.x + 3, k.y + d); }
+    ctx.stroke();
+    ctx.restore();
+  }
+  function onKnob(e) {
+    const k = knobGeom();
+    if (!k) return false;
+    const r = over.getBoundingClientRect();
+    const tol = 10 * (e.pointerType === 'touch' ? 2 : 1);
+    return Math.hypot(e.clientX - r.left - k.x, e.clientY - r.top - k.y) <= tol;
+  }
+
+  function drawProbe(ctx, T) {
     const [px, py] = toPx(probe.x, probe.y);
     const [ex, ey] = field(probe.x, probe.y), m = Math.hypot(ex, ey);
     if (m > 0) {
@@ -635,9 +686,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       negMat: new THREE.MeshStandardMaterial({ roughness: 0.35 }),
       zeroMat: new THREE.MeshStandardMaterial({ roughness: 0.35 }),
       ring: new THREE.Mesh(new THREE.TorusGeometry(1, 0.045, 8, 56), new THREE.MeshBasicMaterial()),
-      probeDot: new THREE.Mesh(new THREE.SphereGeometry(0.13, 16, 12), new THREE.MeshBasicMaterial())
+      probeDot: new THREE.Mesh(new THREE.SphereGeometry(0.13, 16, 12), new THREE.MeshBasicMaterial()),
+      knob: new THREE.Mesh(new THREE.SphereGeometry(0.15, 18, 12), new THREE.MeshBasicMaterial()),
+      knobStem: mkLines({})
     });
-    scene.add(G.cones, G.spheres, G.ring, G.probeDot);
+    scene.add(G.cones, G.spheres, G.ring, G.probeDot, G.knob);
     renderer.setPixelRatio(dpr); renderer.setSize(W, H);
     cam.aspect = W / H; cam.updateProjectionMatrix();
     bind3D(el);
@@ -748,9 +801,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       G.spheres.add(m);
       if (c === sel) {
         G.ring.position.copy(m.position); G.ring.scale.setScalar(rr * 1.7);
+        // value knob on a short vertical stalk above the sphere
+        const z0 = m.position.z + rr, z1 = z0 + 0.75;
+        G.knob.position.set(c.x, c.y, z1);
+        setLineGeo(G.knobStem, [c.x, c.y, z0, c.x, c.y, z1]);
       }
     }
-    G.ring.visible = !!sel;
+    G.ring.visible = G.knob.visible = G.knobStem.visible = !!sel;
 
     // colors from the theme
     G.renderer.setClearColor(T.canvas);
@@ -764,6 +821,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     G.ring.material.color.set(T.accent);
     G.probeDot.material.color.set(T.accent);
     G.stem.material.color.set(T.accent);
+    G.knob.material.color.set(T.accent);
+    G.knobStem.material.color.set(T.accent);
+  }
+  function knobScreen() {
+    if (!G.ready || !sel || !G.knob.visible) return null;
+    const v = G.knob.position.clone().project(G.cam);
+    if (v.z > 1) return null;
+    return { x: (v.x + 1) / 2 * W, y: (1 - v.y) / 2 * H };
   }
 
   function updateProbe3D() {
@@ -787,6 +852,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ty + r * Math.sin(orbit.phi) * Math.sin(orbit.theta),
       r * Math.cos(orbit.phi));
     G.cam.lookAt(tx, ty, 0);
+    G.knob.scale.setScalar(qDrag || hoverKnob ? 1.45 : 1);
     G.renderer.render(G.scene, G.cam);
   }
 
@@ -802,12 +868,21 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const hitSphere = () => { const h = ray.intersectObjects(G.spheres.children); return h.length ? h[0] : null; };
     const hitSurface = () => { const h = ray.intersectObject(G.surf); return h.length ? h[0].point : null; };
     const pinchDist = () => { const p = [...pointers.values()]; return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y); };
+    const onKnob3D = (e) => {
+      const k = knobScreen();
+      if (!k) return false;
+      const r = el.getBoundingClientRect(), tol = 12 * (e.pointerType === 'touch' ? 2 : 1);
+      return Math.hypot(e.clientX - r.left - k.x, e.clientY - r.top - k.y) <= tol;
+    };
 
     el.addEventListener('pointerdown', (e) => {
       el.focus({ preventScroll: true });
       pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
       el.setPointerCapture(e.pointerId);
-      if (pointers.size === 2) { mode = { type: 'pinch', d0: pinchDist(), z0: orbit.zoom }; return; }
+      if (pointers.size === 2) { endQDrag(); mode = { type: 'pinch', d0: pinchDist(), z0: orbit.zoom }; return; }
+      if (onKnob3D(e)) {
+        startQDrag(e); mode = { type: 'q' }; el.style.cursor = 'ns-resize'; return;
+      }
       setRay(e);
       const h = hitSphere();
       if (h) {
@@ -828,6 +903,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (mode && mode.type === 'pinch' && pointers.size === 2) {
         orbit.zoom = Math.min(3, Math.max(0.3, mode.z0 * mode.d0 / pinchDist())); schedule(); return;
       }
+      if (mode && mode.type === 'q') { queueQ(e); return; }
       if (mode && mode.type === 'charge') {
         setRay(e);
         const p = new THREE.Vector3();
@@ -845,6 +921,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         schedule(); return;
       }
       if (e.pointerType === 'mouse') {
+        const k = onKnob3D(e);
+        if (k !== hoverKnob) { hoverKnob = k; schedule(); }
+        if (k) { el.style.cursor = 'ns-resize'; return; }
         setRay(e);
         if (hitSphere()) { el.style.cursor = 'grab'; return; }
         el.style.cursor = 'move';
@@ -856,12 +935,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (mode && mode.type === 'orbit' && mode.moved < 5 && e.pointerType !== 'mouse') {
         setRay(e); const p = hitSurface(); if (p) { probe = { x: p.x, y: p.y }; markOver(); }
       }
+      if (mode && mode.type === 'q') endQDrag();
       pointers.delete(e.pointerId);
       if (pointers.size < 2 && mode && mode.type === 'pinch') mode = null;
       if (!pointers.size) { mode = null; el.style.cursor = 'grab'; }
     };
     el.addEventListener('pointerup', end);
     el.addEventListener('pointercancel', end);
+    el.addEventListener('pointerleave', () => { if (hoverKnob && !qDrag) { hoverKnob = false; schedule(); } });
     el.addEventListener('wheel', (e) => {
       e.preventDefault();
       orbit.zoom = Math.min(3, Math.max(0.3, orbit.zoom * Math.exp(e.deltaY * 0.0012)));
@@ -883,8 +964,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     rPos.textContent = minus(`(${probe.x.toFixed(1)}, ${probe.y.toFixed(1)})`);
   }
   const selEditor = $('selEditor'), selHint = $('selHint'), qIn = $('q'), qOut = $('qOut'), selPos = $('selPos');
+  const HINT_NONE = 'Click a charge to select it.';
+  const HINT_SEL = 'Drag the knob above the charge up or down, scroll over the charge, or press + and − to change its value. Arrow keys nudge it.';
   function updateSel() {
-    selEditor.hidden = !sel; selHint.hidden = !!sel;
+    selEditor.hidden = !sel;
+    const hintText = sel ? HINT_SEL : HINT_NONE;
+    if (selHint.textContent !== hintText) selHint.textContent = hintText;
     if (sel) {
       if (document.activeElement !== qIn) qIn.value = sel.q;
       qOut.textContent = (sel.q > 0 ? '+' : sel.q < 0 ? '−' : '') + Math.abs(sel.q).toFixed(1) + ' nC';
@@ -894,6 +979,55 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   function setPreset(name) {
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+  }
+
+  // ---------- changing a charge's value on the drawing (knob, wheel, keys) ----------
+  // clamp and round to the slider's own min, max and step; returns the value actually set
+  function setQ(c, v) {
+    const mn = +qIn.min, mx = +qIn.max, st = +qIn.step;
+    v = +(Math.max(mn, Math.min(mx, Math.round(v / st) * st))).toFixed(4);
+    if (v !== c.q) { c.q = v; setPreset(null); markBase(); }
+    return v;
+  }
+  function flashTag(ms) {
+    tagUntil = performance.now() + (ms || 1000);
+    clearTimeout(tagTimer); tagTimer = setTimeout(schedule, (ms || 1000) + 40);
+    schedule();
+  }
+  function startQDrag(e) {
+    qDrag = { c: sel, y0: e.clientY, q0: sel.q };
+    flashTag(); markOver();
+  }
+  let qQueued = null, qFrame = false;      // apply at most one value update per frame
+  function queueQ(e) {
+    qQueued = e.clientY;
+    if (qFrame) return;
+    qFrame = true;
+    requestAnimationFrame(() => {
+      qFrame = false;
+      if (!qDrag || qQueued === null) return;
+      const st = +qIn.step, want = qDrag.q0 + Math.round((qDrag.y0 - qQueued) / KNOB_STEP_PX) * st;
+      const got = setQ(qDrag.c, want);
+      if (Math.abs(got - want) > 1e-6) { qDrag.q0 = got; qDrag.y0 = qQueued; }   // re-anchor at the ends so reversing responds at once
+      qQueued = null; flashTag();
+    });
+  }
+  function endQDrag() {
+    if (!qDrag) return;
+    qDrag = null; qQueued = null; flashTag(700); markOver();
+  }
+  const qTag = $('qTag');
+  function updateTag() {
+    const live = sel && (qDrag || performance.now() < tagUntil);
+    const k = !live ? null : view === '3d' ? (G.ready ? knobScreen() : null) : knobGeom();
+    if (!k) { qTag.hidden = true; return; }
+    qTag.textContent = 'q = ' + (sel.q > 0 ? '+' : sel.q < 0 ? '−' : '') + Math.abs(sel.q).toFixed(1) + ' nC';
+    qTag.hidden = false;
+    const tw = qTag.offsetWidth, th = qTag.offsetHeight;
+    let x = k.x + 16;
+    if (x + tw > W - 6) x = k.x - 16 - tw;
+    const y = Math.min(H - th - 4, Math.max(4, k.y - th / 2));
+    qTag.style.transform = `translate(${Math.round(Math.max(4, x))}px, ${Math.round(y)}px)`;
   }
 
   // ---------- scheduling ----------
@@ -914,7 +1048,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         if (baseDirty) { drawBase(); baseDirty = false; }
         if (overDirty) { drawOver(); overDirty = false; }
       }
-      updateReadout(); updateSel();
+      updateReadout(); updateSel(); updateTag();
     });
   }
 
@@ -935,6 +1069,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   over.addEventListener('pointerdown', (e) => {
     over.focus({ preventScroll: true });
+    if (onKnob(e)) {
+      startQDrag(e); hoverKnob = true;
+      over.setPointerCapture(e.pointerId); over.style.cursor = 'ns-resize';
+      e.preventDefault(); return;
+    }
     const p = eventW(e), c = hit(p);
     if (c) {
       sel = c; drag = { type: 'charge', c, dx: p.x - c.x, dy: p.y - c.y };
@@ -947,7 +1086,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     markBase();
   });
   over.addEventListener('pointermove', (e) => {
+    if (qDrag) { queueQ(e); return; }
     const p = eventW(e);
+    if (!drag && e.pointerType === 'mouse') {
+      const k = onKnob(e);
+      if (k !== hoverKnob) { hoverKnob = k; markOver(); }
+      if (k) { over.style.cursor = 'ns-resize'; return; }
+    }
     if (drag && drag.type === 'charge') {
       drag.c.x = p.x - drag.dx; drag.c.y = p.y - drag.dy; clampToView(drag.c);
       setPreset(null); markBase();
@@ -959,9 +1104,29 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (!h) { probe = p; markOver(); }
     }
   });
-  const endDrag = () => { drag = null; over.style.cursor = 'crosshair'; };
+  const endDrag = (e) => {
+    drag = null; endQDrag();
+    hoverKnob = e.pointerType === 'mouse' && onKnob(e);
+    over.style.cursor = hoverKnob ? 'ns-resize' : 'crosshair'; markOver();
+  };
   over.addEventListener('pointerup', endDrag);
   over.addEventListener('pointercancel', endDrag);
+  over.addEventListener('pointerleave', () => { if (hoverKnob && !qDrag) { hoverKnob = false; markOver(); } });
+
+  // scrolling over a charge (or the selected charge's knob) steps its value; elsewhere the page scrolls
+  let wheelAcc = 0, wheelId = null;
+  over.addEventListener('wheel', (e) => {
+    const c = onKnob(e) ? sel : hit(eventW(e));
+    if (!c) { wheelAcc = 0; return; }
+    e.preventDefault();
+    if (wheelId !== c.id) { wheelAcc = 0; wheelId = c.id; }
+    wheelAcc += e.deltaY * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? 400 : 1);
+    if (Math.abs(wheelAcc) < 60) return;      // trackpads send many small deltas; one wheel notch is one step
+    const dir = wheelAcc > 0 ? -1 : 1;
+    wheelAcc = 0;
+    if (sel !== c) { sel = c; markBase(); }
+    setQ(c, c.q + dir * +qIn.step); flashTag();
+  }, { passive: false });
 
   function onKey(e) {
     if (!sel) return;
@@ -974,9 +1139,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     } else if (e.key === 'Escape') {
       sel = null;
     } else if (e.key === '+' || e.key === '=') {
-      sel.q = Math.min(5, sel.q + 0.5); setPreset(null);
-    } else if (e.key === '-' || e.key === '_') {
-      sel.q = Math.max(-5, sel.q - 0.5); setPreset(null);
+      setQ(sel, sel.q + +qIn.step); flashTag();
+    } else if (e.key === '-' || e.key === '_' || e.key === '−') {
+      setQ(sel, sel.q - +qIn.step); flashTag();
     } else return;
     e.preventDefault(); markBase();
   }
@@ -1024,7 +1189,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     base.hidden = over.hidden = is3;
     if (G.ready) G.el.hidden = !is3;
     spinBtn.hidden = hint3d.hidden = !is3;
-    if (is3) hint3d.textContent = 'Drag to orbit · Scroll or pinch to zoom · Drag a sphere to move its charge · Double-click to reset';
+    if (is3) hint3d.textContent = 'Drag to orbit · Scroll or pinch to zoom · Drag a sphere to move it · Drag its knob up or down to change its charge · Double-click to reset';
+    hoverKnob = false; qDrag = null;
     for (const b of viewBtns) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     if (!is3) { orbit.spin = false; spinBtn.setAttribute('aria-pressed', 'false'); }
     markBase();
