@@ -134,6 +134,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .pane.hist { flex: none; height: 230px; }
   .rail { overflow: visible; }
 }
+.slider-scale { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
 </style>
 </head>
 <body>
@@ -143,7 +144,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <h1>Gas in a Box</h1>
       <p>Pressure and temperature come from molecules hitting the walls. Push the piston and watch the gas heat up.</p>
     </div>
-    <div class="units mono">argon, m = 6.63×10⁻²⁶ kg · box height 30 nm · 1 s on screen = 80 ps</div>
+    <div class="units mono">argon, m = 6.63×10⁻²⁶ kg · box height 30 nm · 1 s on screen = <span id="rate">80 ps</span></div>
   </header>
 
   <main class="bench">
@@ -169,6 +170,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="hotcold" aria-pressed="false">Hot vs cold</button>
           <button type="button" data-p="compress" aria-pressed="false">Compress</button>
           <button type="button" data-p="dilute" aria-pressed="false">Dilute gas</button>
+          <button type="button" data-p="cold" aria-pressed="false">Near absolute zero</button>
         </div>
         <p class="hint" id="presetHint"></p>
       </section>
@@ -196,7 +198,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </div>
         <div>
           <div class="slider-head"><label for="tIn">Temperature</label><output id="tOut" class="mono" for="tIn">300 K</output></div>
-          <input type="range" id="tIn" min="50" max="1000" step="10" value="300">
+          <input type="range" id="tIn" min="0" max="1000" step="1" value="895">
+          <div class="slider-scale mono"><span>0.01 K</span><span>1 K</span><span>100 K</span><span>1000 K</span></div>
+        </div>
+        <div>
+          <div class="slider-head"><span>Playback</span><output id="rateOut" class="mono">80 ps per second</output></div>
+          <div class="seg full" role="group" aria-label="Playback speed" id="playSeg">
+            <button type="button" data-r="fixed" aria-pressed="true">Fixed rate</button>
+            <button type="button" data-r="follow" aria-pressed="false">Slow motion follows T</button>
+          </div>
         </div>
         <div class="seg full" role="group" aria-label="Starting speeds" id="startSeg">
           <button type="button" data-m="equal" aria-pressed="true">Equal speeds</button>
@@ -247,11 +257,26 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const LX = 50, LY = 30;         // nm, largest box
   const MIN_W = 15;               // nm
   const R = 0.25, D2 = 4 * R * R; // nm, hard disk radius
-  const PS_PER_S = 80;            // ps of simulated time per second on screen
+  const BASE_PS = 80;             // ps of simulated time per second on screen at the fixed rate
+  const T_LO = 0.01, T_HI = 1000; // temperature slider range, K (log scale)
+  let psPerS = BASE_PS, playMode = 'fixed', Tsmooth = 300;
+  const tFromSlider = (u) => T_LO * Math.pow(T_HI / T_LO, u / 1000);
+  const sliderFromT = (T) => Math.round(1000 * Math.log(Math.min(T_HI, Math.max(T_LO, T)) / T_LO) / Math.log(T_HI / T_LO));
+  function fmtK(T) {
+    if (!(T > 0)) return '0 K';
+    if (T >= 99.5) return Math.round(T) + ' K';
+    if (T >= 9.95) return T.toFixed(1) + ' K';
+    if (T >= 0.995) return T.toFixed(2) + ' K';
+    return T.toPrecision(2) + ' K';
+  }
+  const fmtSpeed = (v) => (v >= 99.5 ? Math.round(v) : v >= 9.95 ? v.toFixed(1) : v.toFixed(2)) + ' m/s';
+  function fmtRate(ps) { return ps >= 1000 ? (ps / 1000).toPrecision(3) + ' ns' : Math.round(ps) + ' ps'; }
   const NMAX = 400, NB = 30;
   const P_TAU = 1.2, H_TAU = 0.35; // smoothing windows, seconds on screen
   const CS = 1, GX = Math.ceil(LX / CS), GY = Math.ceil(LY / CS);
-  const AXES = [400, 600, 800, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 7000];
+  const AXES = [];
+  for (let e = -1; e <= 3; e++) for (const m of [1, 1.5, 2, 2.5, 3, 4, 5, 7]) AXES.push(+(m * Math.pow(10, e)).toPrecision(3));
+  AXES.push(10000);
   const PAL = 24, V_COLOR = 900;  // m/s at the hot end of the color scale
   const $ = (id) => document.getElementById(id);
   const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
@@ -418,7 +443,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const pIdeal = () => N * KB * stats.T / (wallX * LY * 1e-18);         // N/m
 
   function updateHist(dtS) {
-    const need = 3.6 * Math.sqrt(KB * Math.max(stats.T, 1) / M);
+    const need = 3.6 * Math.sqrt(KB * Math.max(stats.T, 1e-5) / M);
     const target = AXES.find((a) => a >= need) || AXES[AXES.length - 1];
     if (target > vAxis || need < 0.6 * vAxis) { if (target !== vAxis) { vAxis = target; histFresh = true; } }
     counts.fill(0); overflow = 0;
@@ -430,7 +455,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const a = histFresh ? 1 : 1 - Math.exp(-dtS / H_TAU);
     let hm = 0;
     for (let b = 0; b < NB; b++) { hist[b] += (counts[b] - hist[b]) * a; hm = Math.max(hm, hist[b]); }
-    const vp = Math.sqrt(KB * Math.max(stats.T, 1) / M);
+    const vp = Math.sqrt(KB * Math.max(stats.T, 1e-5) / M);
     const peak = N * bw * Math.exp(-0.5) / vp;
     const want = Math.max(peak * 1.4, Math.min(hm * 1.1, peak * 2.6), 3);
     yMax = histFresh || !yMax ? want : yMax + (want - yMax) * (1 - Math.exp(-dtS / 0.6));
@@ -564,7 +589,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const L = 46, Rr = 14, Tp = 36, B = 40, pw = Math.max(10, W - L - Rr), ph = Math.max(10, H - Tp - B);
-    const bw = vAxis / NB, Tm = Math.max(stats.T, 1), ym = yMax || 1;
+    const bw = vAxis / NB, Tm = Math.max(stats.T, 1e-5), ym = yMax || 1;
     const X = (v) => L + v / vAxis * pw, Y = (c) => Tp + ph - c / ym * ph;
     ctx.font = '11px ' + T.mono;
 
@@ -608,9 +633,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.moveTo(L, Tp + ph + 0.5); ctx.lineTo(L + pw, Tp + ph + 0.5); ctx.stroke();
     const xs = niceStep(vAxis / (pw < 300 ? 4 : 6));
     ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    for (let v = 0; v <= vAxis + 1e-6; v += xs) ctx.fillText(String(v), X(v), Tp + ph + 5);
+    for (let v = 0; v <= vAxis + 1e-6; v += xs) ctx.fillText(String(+v.toPrecision(6)), X(v), Tp + ph + 5);
     ctx.fillText('speed (m/s)', L + pw / 2, Tp + ph + 22);
-    ctx.textAlign = 'right'; ctx.fillText('bin ' + Math.round(bw) + ' m/s', L + pw, Tp + ph + 22);
+    ctx.textAlign = 'right'; ctx.fillText('bin ' + (bw >= 10 ? Math.round(bw) : +bw.toPrecision(2)) + ' m/s', L + pw, Tp + ph + 22);
     ctx.save(); ctx.translate(12, Tp + ph / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText('molecules per bin', 0, 0); ctx.restore();
 
@@ -620,7 +645,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.globalAlpha = 0.8; ctx.fillStyle = colorBySpeed ? palette[8] : T.muted; ctx.fillRect(lx, ly - 5, 10, 10); ctx.globalAlpha = 1;
     ctx.fillStyle = T.ink; ctx.fillText('measured', lx + 15, ly); lx += 15 + ctx.measureText('measured').width + 16;
     ctx.strokeStyle = T.equi; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 18, ly); ctx.stroke();
-    const mb = (pw < 330 ? 'M-B at ' : '2D Maxwell-Boltzmann at ') + Math.round(stats.T) + ' K';
+    const mb = (pw < 330 ? 'M-B at ' : '2D Maxwell-Boltzmann at ') + fmtK(stats.T);
     ctx.fillStyle = T.ink; ctx.fillText(mb, lx + 23, ly);
     if (overflow) {
       ctx.textAlign = 'right'; ctx.fillStyle = T.muted; ctx.font = '11px ' + T.mono;
@@ -631,27 +656,26 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // ---------- readouts ----------
   const out = { rN: $('rN'), rT: $('rT'), rP: $('rP'), rPi: $('rPi'), rRatio: $('rRatio'), rA: $('rA'), rMean: $('rMean'), rRms: $('rRms') };
   function fmtPair(pm, pi) {
-    const micro = pi < 1e-3, f = micro ? 1e6 : 1e3, u = micro ? ' µN/m' : ' mN/m';
+    const f = pi < 1e-6 ? 1e9 : pi < 1e-3 ? 1e6 : 1e3, u = pi < 1e-6 ? ' nN/m' : pi < 1e-3 ? ' µN/m' : ' mN/m';
     const g = (v) => { if (!isFinite(v)) return '—'; v *= f; return (v >= 100 ? v.toFixed(0) : v >= 10 ? v.toFixed(1) : v.toFixed(2)) + u; };
     return [g(pm), g(pi)];
   }
   function updateReadouts() {
     const pm = pMeasured(), pi = pIdeal(), [a, b] = fmtPair(pm, pi);
     out.rN.textContent = N;
-    out.rT.textContent = Math.round(stats.T) + ' K';
+    out.rT.textContent = fmtK(stats.T);
     out.rP.textContent = simT > 0 ? a : '—';
     out.rPi.textContent = b;
     out.rRatio.textContent = simT > 0 && isFinite(pm) ? (pm / pi).toFixed(3) : '—';
     out.rA.textContent = Math.round(wallX * LY) + ' nm²';
-    out.rMean.textContent = Math.round(stats.mean) + ' m/s';
-    out.rRms.textContent = Math.round(stats.rms) + ' m/s';
+    out.rMean.textContent = fmtSpeed(stats.mean);
+    out.rRms.textContent = fmtSpeed(stats.rms);
     $('clock').textContent = 't = ' + (simT < 1000 ? Math.round(simT) + ' ps' : (simT / 1000).toFixed(2) + ' ns');
   }
   const tIn = $('tIn'), tOut = $('tOut'), wIn = $('wIn'), wOut = $('wOut'), nIn = $('nIn'), nOut = $('nOut');
   function syncT(force) {
     if (tDragging && !force) return;
-    const v = Math.max(50, Math.min(1000, Math.round(stats.T / 10) * 10));
-    tIn.value = v; tOut.textContent = Math.round(stats.T) + ' K';
+    tIn.value = sliderFromT(stats.T); tOut.textContent = fmtK(stats.T);
   }
   function syncW() { wIn.value = wallTarget; wOut.textContent = wallTarget.toFixed(1) + ' nm'; }
 
@@ -660,9 +684,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function frame(now) {
     const dtS = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
     if (running && dtS > 0) {
-      const simDt = dtS * PS_PER_S;
-      const vlim = stats.vmax + pistonMax + 50;
-      const nsub = Math.min(150, Math.max(1, Math.ceil(simDt * vlim * 1e-3 / (0.4 * R))));
+      Tsmooth += (Math.max(stats.T, 1e-5) - Tsmooth) * Math.min(1, dtS * 1.5);
+      psPerS = playMode === 'follow' ? BASE_PS * Math.min(300, Math.max(1, Math.sqrt(300 / Tsmooth))) : BASE_PS;
+      const simDt = dtS * psPerS;
+      const vlim = stats.vmax + (Math.abs(wallTarget - wallX) > 1e-9 ? pistonMax : 0) + 5;
+      const nsub = Math.min(300, Math.max(1, Math.ceil(simDt * vlim * 1e-3 / (0.4 * R))));
       const f = Math.exp(-dtS / P_TAU); impAcc *= f; ltAcc *= f;
       for (let k = 0; k < nsub; k++) step(simDt / nsub);
       simT += simDt;
@@ -671,7 +697,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       dirty = true;
     }
     if (dirty && G.W && HG.W) { drawBox(); drawHist(); dirty = false; }
-    if (now - lastRead > 200) { updateReadouts(); lastRead = now; }
+    if (now - lastRead > 200) { updateReadouts(); updateRate(); lastRead = now; }
     if (running && now - lastSync > 400) { syncT(false); lastSync = now; }
     requestAnimationFrame(frame);
   }
@@ -683,7 +709,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     last = performance.now();
   }
   playBtn.addEventListener('click', () => setRunning(!running));
-  $('reset').addEventListener('click', () => { Tset = +tIn.value; resetGas(); });
+  $('reset').addEventListener('click', () => { Tset = tFromSlider(+tIn.value); resetGas(); });
 
   const PRESETS = {
     relax:    { N: 150, T: 300, W: 50, mode: 'equal',
@@ -693,7 +719,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     compress: { N: 150, T: 300, W: 50, mode: 'thermal',
                 hint: 'Drag the right wall inward and watch T rise. Halve the area slowly and T about doubles, since T × A stays constant for a 2D gas. Then pull the wall back out.' },
     dilute:   { N: 25, T: 300, W: 50, mode: 'equal',
-                hint: 'Only 25 molecules. Collisions are rare, so the spike takes much longer to relax, and the measured pressure jumps around more.' }
+                hint: 'Only 25 molecules. Collisions are rare, so the spike takes much longer to relax, and the measured pressure jumps around more.' },
+    cold:     { N: 150, T: 0.01, W: 50, mode: 'equal', play: 'follow',
+                hint: 'The gas at 0.01 K. Molecules average about 2 m/s instead of 350 m/s, but they never stop: speeds still spread out into a Maxwell-Boltzmann curve, and the walls still feel a pressure. Slow motion is on so you can see it. Switch to Fixed rate to see how sluggish the gas really is. Classically, motion only stops at exactly 0 K.' }
   };
   function setPresetUI(name) {
     preset = name;
@@ -706,19 +734,31 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function applyPreset(name) {
     const p = PRESETS[name];
     N = p.N; Tset = p.T; wallTarget = p.W; mode = p.mode; pistonTouched = false;
-    nIn.value = N; nOut.textContent = N; tIn.value = Tset; syncW();
+    nIn.value = N; nOut.textContent = N; tIn.value = sliderFromT(Tset); syncW();
+    setPlay(p.play || 'fixed');
     setPresetUI(name); setModeUI(); resetGas();
   }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   for (const b of document.querySelectorAll('#startSeg button')) b.addEventListener('click', () => {
-    mode = b.dataset.m; Tset = +tIn.value; setModeUI(); setPresetUI(null); resetGas();
+    mode = b.dataset.m; Tset = tFromSlider(+tIn.value); setModeUI(); setPresetUI(null); resetGas();
   });
 
+  function updateRate() {
+    const r = fmtRate(psPerS);
+    $('rate').textContent = r; $('rateOut').textContent = r + ' per second';
+  }
+  function setPlay(m) {
+    playMode = m; Tsmooth = Math.max(stats.T || Tset, 1e-5);
+    for (const b of document.querySelectorAll('#playSeg button')) b.setAttribute('aria-pressed', String(b.dataset.r === m));
+    psPerS = m === 'follow' ? BASE_PS * Math.min(300, Math.max(1, Math.sqrt(300 / Tsmooth))) : BASE_PS;
+    updateRate();
+  }
+  for (const b of document.querySelectorAll('#playSeg button')) b.addEventListener('click', () => setPlay(b.dataset.r));
   nIn.addEventListener('input', () => { nOut.textContent = nIn.value; setN(+nIn.value); setPresetUI(null); });
   tIn.addEventListener('pointerdown', () => { tDragging = true; });
   for (const ev of ['pointerup', 'pointercancel', 'change', 'blur']) tIn.addEventListener(ev, () => { tDragging = false; });
   tIn.addEventListener('input', () => {
-    Tset = +tIn.value; tOut.textContent = Tset + ' K';
+    Tset = tFromSlider(+tIn.value); tOut.textContent = fmtK(Tset);
     scaleGroup(0, N, Tset); computeStats(); histFresh = true; updateHist(0); dirty = true; setPresetUI(null);
   });
   wIn.addEventListener('input', () => { wallTarget = +wIn.value; pistonTouched = true; syncW(); dirty = true; });
