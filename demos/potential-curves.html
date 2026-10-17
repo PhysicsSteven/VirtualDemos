@@ -1,0 +1,1558 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Potential Energy Curves</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the energy diagram U(x) with the particle's line below it, an optional phase space panel, instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --pot: #dde2e9;
+  --pot-edge: #4f5b6b;
+  --kin: #2e8a57;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --pot: #1f2834; --pot-edge: #a9b4c3; --kin: #5bc98c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --pot: #1f2834; --pot-edge: #a9b4c3; --kin: #5bc98c; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 520px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: minmax(0, 1fr); }
+.stage.ph-on { grid-template-rows: minmax(0, 60fr) minmax(0, 40fr); }
+.pane { position: relative; min-height: 0; }
+.pane + .pane { border-top: 1px solid var(--line); }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#mCan { touch-action: none; outline: none; }
+#mCan:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
+.stage-ctl > * { pointer-events: auto; }
+.tclock { margin-left: auto; font-size: 0.88rem; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--canvas) 85%, transparent); padding: 2px 6px; border-radius: 6px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--canvas); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg.full { display: flex; }
+.seg.full button { flex: 1; padding: 4px 4px; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.sub { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.status { margin: 0; font-size: 0.88rem; padding: 6px 8px; border-radius: 6px; background: var(--canvas); border: 1px solid var(--line); }
+
+.eq-table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.8rem; }
+.eq-table th { font-family: var(--font-ui); font-weight: 400; color: var(--muted); text-align: right; padding: 2px 4px; font-size: 0.76rem; }
+.eq-table td { text-align: right; padding: 2px 4px; border-top: 1px solid var(--grid-strong); }
+.eq-table th:first-child, .eq-table td:first-child { text-align: left; }
+.eq-table td.k { font-family: var(--font-ui); text-align: left; }
+
+.chart { position: relative; height: 150px; border: 1px solid var(--line); border-radius: 8px; background: var(--canvas); overflow: hidden; }
+:root[data-projector="on"] .chart { height: 190px; }
+.chart canvas { position: absolute; inset: 0; display: block; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.u { border-color: var(--pot-edge); border-top-width: 2.5px; }
+.swatch.e { border-top-style: dashed; border-color: var(--accent); }
+.swatch.k { height: 12px; width: 10px; margin: 0 6px; border: 1.5px solid var(--kin); background: color-mix(in srgb, var(--kin) 35%, transparent); }
+.swatch.forb { height: 12px; border: 0; background: color-mix(in srgb, var(--muted) 22%, transparent); }
+.swatch.f { border-color: var(--pos); border-top-width: 3px; }
+.swatch.v { border-color: var(--ink); }
+.swatch.fit { border-top-style: dashed; border-color: var(--equi); }
+.dot { flex: none; width: 10px; height: 10px; border-radius: 50%; margin: 0 6px; border: 2px solid var(--ink); }
+.dot.fill { background: var(--ink); }
+
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 78vh; min-height: 520px; }
+  .stage.ph-on { height: 96vh; min-height: 720px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Potential Energy Curves</h1>
+      <p>Read the motion off the graph of U(x). The gap between the energy line and the curve is the kinetic energy, the particle turns around where they meet, and the slope pushes it downhill.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="unitsLine">SI units · g = 9.81 m/s²</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="pane" id="mPane">
+        <canvas id="mCan" tabindex="0" role="application" aria-label="Energy diagram: the potential energy U(x), the total energy E, and the particle on the x axis below. Drag the energy line, the particle and the round grips. Keys: up and down change E, left and right move the starting point, space plays or pauses, R resets."></canvas>
+        <div class="stage-ctl">
+          <button type="button" class="btn" id="play">Pause</button>
+          <button type="button" class="btn" id="reset">Reset</button>
+          <div class="seg" role="group" aria-label="Speed" id="speedSeg">
+            <button type="button" data-s="0.25" aria-pressed="false">¼×</button>
+            <button type="button" data-s="1" aria-pressed="true">1×</button>
+            <button type="button" data-s="4" aria-pressed="false">4×</button>
+          </div>
+          <span class="tclock mono" id="tclock">t = 0.00 s</span>
+        </div>
+      </div>
+      <div class="pane" id="pPane" hidden>
+        <canvas id="pCan" aria-label="Phase space: velocity against position. Each closed loop is one bound orbit."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="spring" aria-pressed="true">Spring</button>
+          <button type="button" data-p="coaster" aria-pressed="false">Roller coaster</button>
+          <button type="button" data-p="dwell" aria-pressed="false">Double well</button>
+          <button type="button" data-p="lj" aria-pressed="false">Molecule (Lennard Jones)</button>
+          <button type="button" data-p="pend" aria-pressed="false">Pendulum</button>
+          <button type="button" data-p="custom" aria-pressed="false">Draw your own</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Potential energy</h2>
+        <p class="mono" id="formula" style="margin:0;font-size:0.84rem;overflow-wrap:anywhere"></p>
+        <div id="s1Row">
+          <div class="slider-head"><label for="s1" id="s1Lab">k</label><output id="s1Out" class="mono" for="s1"></output></div>
+          <input type="range" id="s1" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <div id="s2Row">
+          <div class="slider-head"><label for="s2" id="s2Lab">m</label><output id="s2Out" class="mono" for="s2"></output></div>
+          <input type="range" id="s2" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <div id="ptsRow" class="inline">
+          <span class="lab">Control points</span>
+          <div class="seg" role="group" aria-label="Number of control points" id="ptsSeg">
+            <button type="button" data-n="5" aria-pressed="false">5</button>
+            <button type="button" data-n="7" aria-pressed="true">7</button>
+            <button type="button" data-n="9" aria-pressed="false">9</button>
+          </div>
+          <button type="button" class="btn" id="flatten">Reset shape</button>
+        </div>
+        <p class="hint" id="potHint"></p>
+      </section>
+
+      <section>
+        <h2>Motion</h2>
+        <div>
+          <div class="slider-head"><label for="eS">Total energy E</label><output id="eOut" class="mono" for="eS"></output></div>
+          <input type="range" id="eS" min="0" max="1" step="0.001" value="0.5">
+        </div>
+        <div>
+          <div class="slider-head"><label for="xS" id="xLab">Starting point x₀</label><output id="xOut" class="mono" for="xS"></output></div>
+          <input type="range" id="xS" min="0" max="1" step="0.001" value="0.5">
+        </div>
+        <div class="inline">
+          <span class="lab">Start moving</span>
+          <div class="seg" role="group" aria-label="Starting direction" id="dirSeg">
+            <button type="button" data-d="-1" aria-pressed="false">← left</button>
+            <button type="button" data-d="1" aria-pressed="true">right →</button>
+          </div>
+        </div>
+        <div class="seg full" role="group" aria-label="Picture" id="viewSeg">
+          <button type="button" data-v="line" aria-pressed="true">Particle on a line</button>
+          <button type="button" data-v="track" aria-pressed="false">Ball on a track</button>
+        </div>
+        <p class="hint" id="viewHint"></p>
+        <p class="hint">Drag the dashed energy line, or drag the particle to a new starting point; dropped where U &gt; E, it starts from rest with E = U. Keys on the diagram: <kbd>↑</kbd> <kbd>↓</kbd> energy, <kbd>←</kbd> <kbd>→</kbd> starting point, <kbd>Space</kbd> play or pause, <kbd>R</kbd> reset.</p>
+      </section>
+
+      <section>
+        <h2>At the particle</h2>
+        <dl class="readout">
+          <div><dt>Total energy E</dt><dd id="rE">—</dd></div>
+          <div><dt>Position <span id="rXl">x</span></dt><dd id="rX">—</dd></div>
+          <div><dt>Potential energy U</dt><dd id="rU">—</dd></div>
+          <div><dt>Kinetic energy K = E − U</dt><dd id="rK">—</dd></div>
+          <div><dt id="rVl">Velocity v</dt><dd id="rV">—</dd></div>
+          <div><dt id="rFl">Force F = −dU/dx</dt><dd id="rF">—</dd></div>
+          <div class="wide"><dt>Turning points, where U = E</dt><dd id="rTP">—</dd></div>
+        </dl>
+        <p class="status" id="status"></p>
+      </section>
+
+      <section>
+        <h2>Period</h2>
+        <dl class="readout">
+          <div class="big"><dt id="rTl">This orbit, 2∫dx/v</dt><dd id="rT">—</dd></div>
+          <div class="big"><dt>Timed in the simulation</dt><dd id="rTm">—</dd></div>
+          <div><dt>Small oscillations 2π/ω₀</dt><dd id="rT0">—</dd></div>
+          <div><dt>Ratio T/T₀</dt><dd id="rRatio">—</dd></div>
+          <div class="wide"><dt id="rW0l">ω₀ = √(U″/m) at the bottom of the well</dt><dd id="rW0">—</dd></div>
+        </dl>
+        <div class="chart" id="tChart"><canvas id="tCan" aria-label="Period of the orbit against total energy for the current well, with the small oscillation period as a dashed line."></canvas></div>
+        <p class="hint" id="periodHint">The curve shows the period at every energy in this well. Flat means harmonic: U is a parabola and the period does not depend on the amplitude.</p>
+      </section>
+
+      <section>
+        <h2>Equilibrium points, dU/dx = 0</h2>
+        <table class="eq-table" id="eqTable"></table>
+        <p class="hint">At a minimum a push brings the particle back (stable). At a maximum a nudge sends it away (unstable). On a flat stretch it stays wherever it is put (neutral). Near a stable minimum U ≈ U₀ + ½U″(x − x₀)², a spring with k = U″, so ω₀ = √(U″/m).</p>
+      </section>
+
+      <section>
+        <h2>Display</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tPhase">Phase space</label>
+          <label><input type="checkbox" id="tForb" checked>Forbidden regions</label>
+          <label><input type="checkbox" id="tEq" checked>Equilibria</label>
+          <label><input type="checkbox" id="tFit" checked>Harmonic fit</label>
+          <label><input type="checkbox" id="tArrows" checked>Force and velocity</label>
+          <label><input type="checkbox" id="tTurn" checked>Turning points</label>
+        </div>
+        <div class="key">
+          <span><i class="swatch u"></i>Potential energy U(x)</span>
+          <span><i class="swatch e"></i>Total energy E (constant)</span>
+          <span><i class="swatch k"></i>Kinetic energy K = E − U at the particle</span>
+          <span><i class="swatch forb"></i>Forbidden: U &gt; E would need K &lt; 0</span>
+          <span><i class="swatch f"></i>Force F = −dU/dx, points downhill</span>
+          <span><i class="swatch v"></i>Velocity v</span>
+          <span><i class="swatch fit"></i>Parabola with the same U″ at the minimum</span>
+          <span><i class="dot fill"></i>Stable equilibrium</span>
+          <span><i class="dot"></i>Unstable equilibrium</span>
+        </div>
+        <p class="hint" id="phaseHint">Phase space plots velocity against position. Each energy is one curve v = ±√(2(E − U)/m). Bound motion is a closed loop; the gold separatrix, at the energy of a hilltop, divides orbits trapped in one well from orbits that cross the top.</p>
+        <p class="hint" id="modelHint"></p>
+        <dl class="readout">
+          <div class="wide"><dt>Energy check: simulated K + U minus E</dt><dd id="rDrift">—</dd></div>
+        </dl>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.81;                                    // m/s², as in the other mechanics demos
+  const EV = 1.602176634e-19;                        // J
+  const AMU = 1.66053906660e-27;                     // kg
+  const LJ_MU = 1e-3 * EV * 1e-24 / 1e-18;           // kg in one meV·ps²/nm² (the molecule's mass unit)
+  const AR_MU = (39.948 / 2) * AMU / LJ_MU;          // reduced mass of two argon atoms, meV·ps²/nm²
+
+  // smooth bump (1 − u²)³ for |u| < 1, with its first two derivatives; it joins flat ground with U' = U'' = 0
+  function bump(u) {
+    if (u <= -1 || u >= 1) return [0, 0, 0];
+    const w = 1 - u * u;
+    return [w * w * w, -6 * u * w * w, w * (30 * u * u - 6)];
+  }
+  // natural cubic spline through (xs, ys); straight lines beyond the end points (U'' = 0 there, so U stays C²)
+  function makeSpline(xs, ys) {
+    const n = xs.length, M = new Float64Array(n);
+    if (n > 2) {
+      const a = new Float64Array(n), b = new Float64Array(n), c = new Float64Array(n), d = new Float64Array(n);
+      for (let i = 1; i < n - 1; i++) {
+        const h0 = xs[i] - xs[i - 1], h1 = xs[i + 1] - xs[i];
+        a[i] = h0; b[i] = 2 * (h0 + h1); c[i] = h1;
+        d[i] = 6 * ((ys[i + 1] - ys[i]) / h1 - (ys[i] - ys[i - 1]) / h0);
+      }
+      for (let i = 2; i < n - 1; i++) { const w = a[i] / b[i - 1]; b[i] -= w * c[i - 1]; d[i] -= w * d[i - 1]; }
+      for (let i = n - 2; i >= 1; i--) M[i] = (d[i] - (i < n - 2 ? c[i] * M[i + 1] : 0)) / b[i];
+    }
+    const h0 = xs[1] - xs[0], hn = xs[n - 1] - xs[n - 2];
+    const s0 = (ys[1] - ys[0]) / h0 - h0 * M[1] / 6;
+    const sn = (ys[n - 1] - ys[n - 2]) / hn + hn * M[n - 2] / 6;
+    const seg = (x) => { let i = 0; while (i < n - 2 && x > xs[i + 1]) i++; return i; };
+    return {
+      U(x) {
+        if (x <= xs[0]) return ys[0] + s0 * (x - xs[0]);
+        if (x >= xs[n - 1]) return ys[n - 1] + sn * (x - xs[n - 1]);
+        const i = seg(x), h = xs[i + 1] - xs[i], A = (xs[i + 1] - x) / h, B = 1 - A;
+        return A * ys[i] + B * ys[i + 1] + ((A * A * A - A) * M[i] + (B * B * B - B) * M[i + 1]) * h * h / 6;
+      },
+      dU(x) {
+        if (x <= xs[0]) return s0;
+        if (x >= xs[n - 1]) return sn;
+        const i = seg(x), h = xs[i + 1] - xs[i], A = (xs[i + 1] - x) / h, B = 1 - A;
+        return (ys[i + 1] - ys[i]) / h - (3 * A * A - 1) / 6 * h * M[i] + (3 * B * B - 1) / 6 * h * M[i + 1];
+      },
+      d2U(x) {
+        if (x <= xs[0] || x >= xs[n - 1]) return 0;
+        const i = seg(x), h = xs[i + 1] - xs[i], A = (xs[i + 1] - x) / h;
+        return A * M[i] + (1 - A) * M[i + 1];
+      }
+    };
+  }
+  // Each potential works in its own consistent units (listed in UNITS), so F = −dU/dx and a = F/m need no factors.
+  function coasterH(p) {
+    // heights in m: a first hill, a flat station, a middle hill, a dip, and a last hill; flat ground (5 m) beyond
+    const B = 5, parts = [[40, -3, 25], [p.H - B, 48, 16], [p.D - B, 72, 10], [33, 122, 42]];
+    return {
+      h(x) { let s = B; for (const [A, c, w] of parts) s += A * bump((x - c) / w)[0]; return s; },
+      h1(x) { let s = 0; for (const [A, c, w] of parts) s += A * bump((x - c) / w)[1] / w; return s; },
+      h2(x) { let s = 0; for (const [A, c, w] of parts) s += A * bump((x - c) / w)[2] / (w * w); return s; }
+    };
+  }
+  function makePotential(name, p) {
+    switch (name) {
+      case 'spring': { const k = p.k; return { m: p.m, U: (x) => 0.5 * k * x * x, dU: (x) => k * x, d2U: () => k }; }
+      case 'coaster': {
+        const c = coasterH(p), mg = 0.5 * G;      // 500 kg car; U in kJ, so the mass is 0.5 in units of 1000 kg
+        return { m: 0.5, U: (x) => mg * c.h(x), dU: (x) => mg * c.h1(x), d2U: (x) => mg * c.h2(x), h: c.h };
+      }
+      case 'dwell': {
+        const U0 = p.U0, a = p.a, a2 = a * a, a4 = a2 * a2;
+        return { m: 1, U: (x) => { const q = x * x / a2 - 1; return U0 * q * q; }, dU: (x) => 4 * U0 * x * (x * x - a2) / a4, d2U: (x) => 4 * U0 * (3 * x * x - a2) / a4 };
+      }
+      case 'lj': {
+        const e = p.eps, s = p.sig;
+        const q6 = (r) => { const q = s / r, q2 = q * q; return q2 * q2 * q2; };
+        return { m: AR_MU, xmin: 0.02,
+          U: (r) => { const t = q6(r); return 4 * e * (t * t - t); },
+          dU: (r) => { const t = q6(r); return 4 * e * (-12 * t * t + 6 * t) / r; },
+          d2U: (r) => { const t = q6(r); return 4 * e * (156 * t * t - 42 * t) / (r * r); } };
+      }
+      case 'pend': {
+        // x is the angle θ; the "mass" is the moment of inertia mL² of a 1 kg bob
+        const L = p.L, mgL = 1 * G * L;
+        return { m: L * L, period: 2 * Math.PI, U: (t) => mgL * (1 - Math.cos(t)), dU: (t) => mgL * Math.sin(t), d2U: (t) => mgL * Math.cos(t) };
+      }
+      case 'custom': { const sp = makeSpline(p.xs, p.ys); return { m: p.m, U: sp.U, dU: sp.dU, d2U: sp.d2U }; }
+    }
+    throw new Error('unknown potential ' + name);
+  }
+
+  // Turning points of the allowed region (U < E) that contains x. Returns ±Infinity on a side with no turning point.
+  // Steps of 1/4000 of the view width inside and near the view, growing steps far outside it, then bisection.
+  function turning(P, x, E, V) {
+    const W = V.x1 - V.x0, h0 = W / 4000, n0 = V.x0 - 0.25 * W, n1 = V.x1 + 0.25 * W;
+    const side = (dir) => {
+      let xp = x, h = h0, dist = 0;
+      const lim = P.period ? P.period : 3000 * W;
+      for (let it = 0; it < 400000; it++) {
+        let xn = xp + dir * h;
+        if (P.xmin !== undefined && xn < P.xmin) xn = P.xmin;
+        if (P.U(xn) >= E) {
+          let lo = xp, hi = xn;
+          for (let k = 0; k < 200; k++) {
+            const mid = 0.5 * (lo + hi);
+            if (mid === lo || mid === hi) break;
+            if (P.U(mid) >= E) hi = mid; else lo = mid;
+          }
+          return lo;
+        }
+        dist += h; if (dist > lim) return dir * Infinity;
+        xp = xn;
+        if (!P.period && (xp < n0 || xp > n1)) h = Math.min(h * 1.05, W);
+      }
+      return dir * Infinity;
+    };
+    const a = side(-1), b = side(1);
+    return { a, b, rot: !!P.period && !isFinite(a) && !isFinite(b), unboundL: !P.period && !isFinite(a), unboundR: !P.period && !isFinite(b) };
+  }
+  // T = 2∫ dx / v between turning points a and b, v = √(2(E − U)/m).
+  // With x = c − h cos φ the 1/√ end singularities cancel and the integrand is smooth and even in φ,
+  // so the midpoint rule converges very fast.
+  function periodBetween(P, E, a, b, m, N) {
+    N = N || 2000;
+    const c = 0.5 * (a + b), h = 0.5 * (b - a);
+    if (!(h > 0)) return NaN;
+    let s = 0;
+    for (let i = 0; i < N; i++) {
+      const ph = (i + 0.5) * Math.PI / N, x = c - h * Math.cos(ph), k = E - P.U(x);
+      s += Math.sin(ph) / Math.sqrt(Math.max(k, 1e-300) * 2 / m);
+    }
+    return 2 * h * s * Math.PI / N;
+  }
+  // a pendulum going over the top: time for one full turn, ∫ dθ/θ̇ over one period of U
+  function revolutionTime(P, E, m, N) {
+    N = N || 2000;
+    const L = P.period; let s = 0;
+    for (let i = 0; i < N; i++) { const x = -L / 2 + (i + 0.5) * L / N; s += 1 / Math.sqrt(2 * Math.max(E - P.U(x), 1e-300) / m); }
+    return s * L / N;
+  }
+  // Equilibria in [x0, x1]: sign changes of U' refined by bisection, and flat stretches where U' = 0 (neutral).
+  function equilibria(P, x0, x1, n) {
+    n = n || 3000;
+    const h = (x1 - x0) / n, d = new Float64Array(n + 1), xs = new Float64Array(n + 1);
+    let scale = 0, cscale = 0;
+    for (let i = 0; i <= n; i++) { xs[i] = x0 + i * h; d[i] = P.dU(xs[i]); scale = Math.max(scale, Math.abs(d[i])); cscale = Math.max(cscale, Math.abs(P.d2U(xs[i]))); }
+    const tol = 1e-12 * scale, sg = (v) => (Math.abs(v) <= tol ? 0 : v > 0 ? 1 : -1);
+    const out = [];
+    const classify = (x) => {
+      const c = P.d2U(x);
+      if (c > 1e-7 * cscale) return 'stable';
+      if (c < -1e-7 * cscale) return 'unstable';
+      const dl = P.U(x - 2 * h) - P.U(x), dr = P.U(x + 2 * h) - P.U(x);
+      return dl > 0 && dr > 0 ? 'stable' : dl < 0 && dr < 0 ? 'unstable' : 'neutral';
+    };
+    const root = (lo, hi) => {
+      let flo = P.dU(lo);
+      for (let k = 0; k < 100; k++) {
+        const mid = 0.5 * (lo + hi); if (mid === lo || mid === hi) break;
+        const fm = P.dU(mid);
+        if ((fm > 0) === (flo > 0)) { lo = mid; flo = fm; } else hi = mid;
+      }
+      return 0.5 * (lo + hi);
+    };
+    let i = 0, prev = sg(d[0]), prevI = 0;
+    if (prev === 0) prev = null;
+    while (i <= n) {
+      const s = sg(d[i]);
+      if (s === 0) {
+        let j = i; while (j <= n && sg(d[j]) === 0) j++;
+        const run = j - i;
+        const after = j <= n ? sg(d[j]) : null;
+        if (run >= 3) out.push({ type: 'neutral', x: 0.5 * (xs[i] + xs[j - 1]), lo: xs[i], hi: xs[j - 1], U: P.U(0.5 * (xs[i] + xs[j - 1])) });
+        else if (i > 0 && j <= n && prev !== null && after !== null && prev !== after) { const x = root(xs[i - 1], xs[j]); out.push({ type: classify(x), x, U: P.U(x) }); }
+        else if (i > 0 && j <= n) { const x = xs[i + ((run - 1) >> 1)]; out.push({ type: classify(x), x, U: P.U(x) }); }
+        prev = null; i = j; continue;
+      }
+      if (prev !== null && s !== prev) { const x = root(xs[prevI], xs[i]); out.push({ type: classify(x), x, U: P.U(x) }); }
+      prev = s; prevI = i; i++;
+    }
+    for (const e of out) if (e.type === 'stable') { e.k = P.d2U(e.x); }
+    return out;
+  }
+  // Velocity Verlet (symplectic). Records the time between successive stops at the right turning point
+  // (v going from + to −, interpolated within the step), and for a periodic U the time per full turn.
+  function run(P, s, dt, n) {
+    const m = P.m, per = P.period;
+    let x = s.x, v = s.v, a = -P.dU(x) / m, t = s.t;
+    for (let i = 0; i < n; i++) {
+      const vh = v + 0.5 * dt * a;
+      x += dt * vh;
+      a = -P.dU(x) / m;
+      const vn = vh + 0.5 * dt * a;
+      if (v > 0 && vn <= 0) {
+        const tc = t + dt * v / (v - vn);
+        if (s.tTurn !== null) { s.Tmeas = tc - s.tTurn; s.nMeas++; }
+        s.tTurn = tc;
+      }
+      t += dt; v = vn;
+      if (per) {
+        let w = 0;
+        if (x > per / 2) w = 1; else if (x < -per / 2) w = -1;
+        if (w) {
+          // the moment it passed θ = ±π, interpolated within the step
+          const tc = t - dt * (x - w * per / 2) / (dt * vh);
+          x -= w * per;
+          if (s.wrapDir === w && s.tWrap !== null) { s.Trev = tc - s.tWrap; s.nMeas++; }
+          s.wrapDir = w; s.tWrap = tc;
+        }
+      }
+    }
+    s.x = x; s.v = v; s.t = t;
+    return s;
+  }
+  function newState(x, v) { return { x, v, t: 0, tTurn: null, Tmeas: null, tWrap: null, wrapDir: 0, Trev: null, nMeas: 0 }; }
+  // Complete elliptic integral of the first kind K(k) by the arithmetic geometric mean
+  function ellipK(k) { let a = 1, b = Math.sqrt(1 - k * k); for (let i = 0; i < 40; i++) { const an = 0.5 * (a + b); b = Math.sqrt(a * b); a = an; } return Math.PI / (2 * a); }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.PC = { G, AR_MU, LJ_MU, makePotential, makeSpline, turning, periodBetween, revolutionTime, equilibria, run, newState, ellipK, coasterH };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  // ---------- setups ----------
+  const U_SI = { x: 'm', U: 'J', t: 's', v: 'm/s', vf: 1, F: 'N', Ff: 1, xs: 'x', vs: 'v', Fs: 'F', Fname: 'Force F = −dU/dx', m: 'm', w: 'rad/s' };
+  const CUSTOM_XS = (n) => Array.from({ length: n }, (_, i) => +(6 * i / (n - 1)).toFixed(4));
+  const CUSTOM_SHAPE = (x) => {
+    // the default drawing: a shallow well on the left, a hump, a deeper well on the right, and walls
+    const sp = makeSpline([0, 1, 2, 3, 4, 5, 6], [3.2, 0.9, 1.5, 2.3, 0.3, 1.0, 3.6]); return +sp.U(x).toFixed(3);
+  };
+  const PRESETS = {
+    spring: {
+      units: U_SI, view: () => ({ x0: -0.6, x1: 0.6, u0: -0.25, u1: 4 }), rate: 1,
+      params: { k: 20, m: 0.5 }, start: { x: -0.3, dir: 1 },
+      sliders: [['k', 'Spring constant k', 2, 50, 0.5, 'N/m'], ['m', 'Mass m', 0.1, 2, 0.05, 'kg']],
+      formula: (p) => `U = ½kx², k = ${p.k} N/m`,
+      dragHint: 'Grab the parabola to change k.',
+      hint: 'U = ½kx² is a parabola, so the period 2π√(m/k) is the same for every amplitude. Raise E: the orbit gets wider, the speed at the middle grows, and the period curve stays flat.',
+      model: 'An ideal spring obeying Hooke\'s law for any stretch, and no friction.'
+    },
+    coaster: {
+      units: { x: 'm', U: 'kJ', t: 's', v: 'm/s', vf: 1, F: 'kN', Ff: 1, xs: 'x', vs: 'v', Fs: 'F', Fname: 'Force F = −dU/dx', m: 'm', w: 'rad/s' },
+      view: () => ({ x0: 0, x1: 120, u0: -12, u1: 0.5 * G * 42 }), rate: 2, hAxis: true,
+      params: { H: 25, D: 1 }, start: { x: 8, dir: 1 },
+      sliders: [['H', 'Middle hilltop height', 5, 40, 0.5, 'm'], ['D', 'Bottom of the dip', 0, 5, 0.1, 'm']],
+      formula: () => 'U = mgh(x), m = 500 kg',
+      dragHint: 'Drag the top of the middle hill and the bottom of the dip.',
+      hint: 'Released from rest on the first hill, the car speeds up where U is low and crawls over the tops. The flat station is neutral: a car at rest there stays put. Lower E below the middle hilltop and the car is trapped on one side.',
+      model: 'U = mgh(x) with no friction or air drag. Beyond the last hill the ground is flat at 5 m, so a car with E above that hill rolls away for good. The exact motion is a particle moving along x in this U; a real car on a track of this shape has the same speed at each height and the same turning points, but its speed is along the slope, so it takes longer on steep parts.'
+    },
+    dwell: {
+      units: U_SI, view: () => ({ x0: -1.6, x1: 1.6, u0: -0.15, u1: 2.6 }), rate: 1,
+      params: { U0: 1, a: 0.8 }, start: { x: -1.08, dir: 1 },
+      sliders: [['U0', 'Barrier height U₀', 0.2, 2, 0.02, 'J'], ['a', 'Minima at ±a', 0.4, 1.1, 0.01, 'm']],
+      formula: (p) => `U = U₀[(x/a)² − 1]², m = 1 kg`,
+      dragHint: 'Drag the barrier top and the bottoms of the wells.',
+      hint: 'Two stable states with a barrier between them. With E below the barrier top the particle stays in one well; above it, it visits both. Near the barrier energy the period grows without limit: the particle lingers at the top.',
+      model: 'A quartic double well for a 1 kg particle with no friction. Classically the barrier cannot be crossed with E below its top (no tunneling).'
+    },
+    lj: {
+      units: { x: 'nm', U: 'meV', t: 'ps', v: 'm/s', vf: 1000, F: 'pN', Ff: 1e-3 * EV / 1e-9 * 1e12, xs: 'r', vs: 'v', Fs: 'F', Fname: 'Force F = −dU/dr', m: 'μ', w: 'rad/ps' },
+      view: () => ({ x0: 0.28, x1: 0.95, u0: -13, u1: 5 }), rate: 0.5,
+      params: { eps: 10.4, sig: 0.34 }, start: { x: 0.36, dir: 1 },
+      sliders: [['eps', 'Well depth ε', 2, 12, 0.1, 'meV'], ['sig', 'Size σ', 0.28, 0.42, 0.002, 'nm']],
+      formula: () => 'U = 4ε[(σ/r)¹² − (σ/r)⁶]',
+      dragHint: 'Drag the bottom of the well to change the bond length and depth.',
+      hint: 'Two argon atoms; x is their separation r. With E < 0 they vibrate between turning points: a bound molecule. With E > 0 nothing turns them around, and the molecule breaks apart. The bond length is the minimum at r₀ = 2^(1/6)σ, the dissociation energy is ε.',
+      model: 'Lennard Jones parameters for argon (ε = 10.4 meV, σ = 0.340 nm). The motion is relative motion with the reduced mass μ = m_Ar/2 = 19.97 u. Classical: a real Ar₂ molecule is quantum, with a zero point energy and only a few vibrational levels.'
+    },
+    pend: {
+      units: { x: 'rad', U: 'J', t: 's', v: 'rad/s', vf: 1, F: 'N·m', Ff: 1, xs: 'θ', vs: 'dθ/dt', Fs: 'τ', Fname: 'Torque τ = −dU/dθ', m: 'mL²', w: 'rad/s' },
+      view: (p) => ({ x0: -1.15 * Math.PI, x1: 1.15 * Math.PI, u0: -0.12 * G * p.L, u1: 2.6 * G * p.L }), rate: 1, angle: true,
+      params: { L: 1 }, start: { x: Math.PI / 3, dir: 1 },
+      sliders: [['L', 'Length L', 0.25, 2, 0.05, 'm']],
+      formula: (p) => `U = mgL(1 − cos θ), m = 1 kg, L = ${p.L.toFixed(2)} m`,
+      dragHint: 'Drag the top of the curve at θ = ±π to change L.',
+      hint: 'Small swings take 2π√(L/g). Bigger swings take longer; the exact period is 4√(L/g)·K(sin(θ₀/2)). Raise E above 2mgL and the pendulum goes over the top and keeps turning.',
+      model: 'A point bob of 1 kg on a light rigid rod (so it can go over the top), frictionless pivot. The coordinate is the angle θ, the inertia is mL², and −dU/dθ is a torque. θ is shown between −π and π, so a pendulum going round reappears on the other side.'
+    },
+    custom: {
+      units: U_SI, view: () => ({ x0: -0.3, x1: 6.3, u0: -0.6, u1: 4.2 }), rate: 1,
+      params: { m: 1, n: 7 }, start: { x: 0.5, dir: 1 },
+      sliders: [['m', 'Mass m', 0.2, 5, 0.1, 'kg']],
+      formula: () => 'U(x): a natural cubic spline through the points',
+      dragHint: 'Drag the round points. The end points move up and down only.',
+      hint: 'Drag the points to shape U(x), then predict the motion before you press Play. Each minimum gets a stable mark and its own small oscillation period.',
+      model: 'A natural cubic spline: smooth through every point, with continuous slope and curvature. Beyond the end points U continues as a straight line, so if it slopes down outward the particle escapes.'
+    }
+  };
+
+  // ---------- state ----------
+  const S = { preset: 'spring', params: {}, E: 0, x0: 0, dir: 1, view: 'line', mult: 1 };
+  const layers = { phase: false, forb: true, eq: true, fit: true, arrows: true, turn: true };
+  let P = null, V = null, eqs = [], st = null, info = null, dt = 1e-3, acc = 0, running = !reduce, escaped = false;
+  let trail = [], tCurve = null, tKey = '', holdV = null, sel = -1;
+
+  const cfg = () => PRESETS[S.preset];
+  const units = () => cfg().units;
+  const curView = () => holdV || V;
+
+  function buildPotential() {
+    const p = S.params;
+    if (S.preset === 'custom') P = makePotential('custom', { xs: p.xs, ys: p.ys, m: p.m });
+    else P = makePotential(S.preset, p);
+    V = cfg().view(p);
+    const v = curView();
+    eqs = equilibria(P, v.x0, v.x1, 3000).filter((e) => e.U <= v.u1 + 0.5 * (v.u1 - v.u0));
+  }
+  // lowest U in the view (the bottom of the E slider)
+  function viewMinU() {
+    const v = curView(); let mn = Infinity, xm = v.x0;
+    for (let i = 0; i <= 1200; i++) { const x = v.x0 + (v.x1 - v.x0) * i / 1200, u = P.U(x); if (u < mn) { mn = u; xm = x; } }
+    for (const e of eqs) if (e.U < mn && e.x >= v.x0 && e.x <= v.x1) { mn = e.U; xm = e.x; }
+    return { U: mn, x: xm };
+  }
+  const speedFor = (x, E) => Math.sqrt(Math.max(0, 2 * (E - P.U(x)) / P.m));
+
+  // Put the particle at x with energy E (moving in direction dir). If U(x) > E it starts from rest with E = U(x).
+  function place(x, E, dir) {
+    const v = curView();
+    if (P.U(x) > E) E = P.U(x);
+    if (E > v.u1) E = v.u1;
+    if (P.U(x) > E) return false;
+    S.E = E; S.x0 = x; S.dir = dir;
+    st = newState(x, dir * speedFor(x, E));
+    trail = []; escaped = false; acc = 0;
+    analyze();
+    syncMotion();
+    return true;
+  }
+  // Change E keeping the particle where it is (its speed changes); if E < U there, move it to the nearest allowed point.
+  function setEnergy(E) {
+    const v = curView(), mn = viewMinU();
+    E = Math.max(mn.U, Math.min(v.u1, E));
+    let x = st.x;
+    if (P.U(x) > E) {
+      const W = v.x1 - v.x0; let found = null;
+      for (let k = 1; k <= 4000 && found === null; k++) {
+        const d = k * W / 4000;
+        for (const xx of [x - d, x + d]) if (found === null && P.U(xx) <= E) found = xx;
+      }
+      x = found === null ? mn.x : found;
+      // land just inside the allowed side of the turning point
+      if (found !== null) { let lo = x, hi = x + (x < st.x ? W / 4000 : -W / 4000); for (let i = 0; i < 60; i++) { const mid = 0.5 * (lo + hi); if (P.U(mid) <= E) lo = mid; else hi = mid; } x = lo; }
+    }
+    const dir = st.v !== 0 ? Math.sign(st.v) : S.dir;
+    const t = st.t;
+    S.E = E; S.x0 = x; S.dir = dir;
+    st = newState(x, dir * speedFor(x, E)); st.t = t;
+    escaped = false; trail = [];
+    analyze(); syncMotion();
+  }
+
+  // turning points, period, the well's minimum and the time step for the current orbit
+  function analyze() {
+    const v = curView(), E = S.E, x = st.x;
+    const tp = turning(P, x, E, v);
+    const W = v.x1 - v.x0;
+    let T = NaN, kind = 'bound';
+    // at rest where the force is zero: it stays put (on a hilltop or a flat stretch as much as at a bottom)
+    const atEq = st.v === 0 && Math.abs(P.dU(x)) <= 1e-9 * fRef();
+    if (atEq) { kind = 'rest'; tp.a = tp.b = x; tp.rot = tp.unboundL = tp.unboundR = false; }
+    else if (tp.rot) { kind = 'rot'; T = revolutionTime(P, E, P.m, 4000); }
+    else if (tp.unboundL || tp.unboundR) { kind = 'unbound'; T = Infinity; }
+    else if (tp.b - tp.a < 1e-9 * W) kind = 'rest';
+    else T = periodBetween(P, E, tp.a, tp.b, P.m, 4000);
+    // the well: the lowest stable equilibrium inside the allowed region
+    let ref = null;
+    const lo = isFinite(tp.a) ? tp.a : -Infinity, hi = isFinite(tp.b) ? tp.b : Infinity;
+    for (const e of eqs) if (e.type === 'stable' && e.x >= lo - 1e-9 * W && e.x <= hi + 1e-9 * W && (!ref || e.U < ref.U)) ref = e;
+    // at rest on a hilltop or a flat stretch
+    if (kind === 'rest') ref = eqs.find((q) => q.type === 'stable' && Math.abs(q.x - x) < 2e-3 * W) || null;
+    const restOn = kind === 'rest' && !ref ? eqs.find((q) => Math.abs(q.x - x) < 2e-3 * W || (q.lo !== undefined && x >= q.lo - 1e-3 * W && x <= q.hi + 1e-3 * W)) || null : null;
+    const T0 = ref ? 2 * Math.PI * Math.sqrt(P.m / ref.k) : NaN;
+    if (kind === 'rest' && ref) T = T0;
+    // time step: 4000 steps per period of the stiffest local oscillation in the orbit, and short enough to cross it in 3000 steps
+    const sa = isFinite(tp.a) ? tp.a : v.x0 - 0.5 * W, sb = isFinite(tp.b) ? tp.b : v.x1 + 0.5 * W;
+    const ra = tp.rot ? -Math.PI : sa, rb = tp.rot ? Math.PI : sb;
+    let cmax = 0, umin = Infinity;
+    for (let i = 0; i <= 400; i++) { const xx = ra + (rb - ra) * i / 400; cmax = Math.max(cmax, Math.abs(P.d2U(xx))); umin = Math.min(umin, P.U(xx)); }
+    const wmax = Math.sqrt(cmax / P.m), vmax = Math.sqrt(Math.max(0, 2 * (E - umin) / P.m));
+    let d = Infinity;
+    if (wmax > 0) d = Math.min(d, 2 * Math.PI / wmax / 4000);
+    if (vmax > 0) d = Math.min(d, Math.min(rb - ra, W) / vmax / 3000);
+    if (!isFinite(d)) d = cfg().rate / 2000;
+    dt = d;
+    info = { tp, T, kind, ref, T0, restOn };
+  }
+
+  // the period against energy for orbits through the current well's minimum
+  function periodCurve() {
+    if (!info || !info.ref) { tCurve = null; return; }
+    const v = curView(), ref = info.ref;
+    const key = [S.preset, JSON.stringify(S.params), ref.x.toFixed(6), v.u1].join('|');
+    if (key === tKey && tCurve) return;
+    tKey = key;
+    const Es = [], Ts = [], n = 90, span = v.u1 - ref.U;
+    let esc = null;
+    for (let i = 0; i < n; i++) {
+      const E = ref.U + span * (0.003 + 0.997 * Math.pow(i / (n - 1), 1));
+      const tp = turning(P, ref.x, E, v);
+      let T;
+      if (tp.rot) T = revolutionTime(P, E, P.m, 600);
+      else if (tp.unboundL || tp.unboundR) { esc = E; break; }
+      else T = periodBetween(P, E, tp.a, tp.b, P.m, 600);
+      Es.push(E); Ts.push(T);
+    }
+    tCurve = { Es, Ts, esc, T0: 2 * Math.PI * Math.sqrt(P.m / ref.k), E0: ref.U, E1: v.u1 };
+  }
+
+  // ---------- theme and canvases ----------
+  let T = null, dpr = 1;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
+      gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'),
+      pot: g('--pot'), potEdge: g('--pot-edge'), kin: g('--kin'), mono: g('--font-mono') || 'monospace' };
+  }
+  const cans = { m: $('mCan'), p: $('pCan'), t: $('tCan') };
+  const boxes = { m: $('mPane'), p: $('pPane'), t: $('tChart') };
+  const ctxs = { m: cans.m.getContext('2d'), p: cans.p.getContext('2d'), t: cans.t.getContext('2d') };
+  const dims = { m: [0, 0], p: [0, 0], t: [0, 0] };
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const key of ['m', 'p', 't']) {
+      const r = boxes[key].getBoundingClientRect();
+      cans[key].width = Math.max(1, Math.round(r.width * dpr)); cans[key].height = Math.max(1, Math.round(r.height * dpr));
+      cans[key].style.width = r.width + 'px'; cans[key].style.height = r.height + 'px';
+      dims[key] = [r.width, r.height];
+    }
+    drawAll();
+  }
+  function nice(raw) {
+    const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p;
+    return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p;
+  }
+  function fmtTick(v, step) { const d = Math.max(0, -Math.floor(Math.log10(step) + 1e-9)); return (Math.abs(v) < step / 1e6 ? 0 : v).toFixed(d); }
+  function pads(W) { const ps = projScale(); return { L: (W < 520 ? 44 : 54) * ps, R: (cfg().hAxis ? (W < 520 ? 34 : 42) : (W < 520 ? 16 : 22)) * ps }; }
+  function X(xv, W) { const p = pads(W), v = curView(); return p.L + (xv - v.x0) / (v.x1 - v.x0) * (W - p.L - p.R); }
+  function invX(px, W) { const p = pads(W), v = curView(); return v.x0 + (px - p.L) / (W - p.L - p.R) * (v.x1 - v.x0); }
+
+  // x axis ticks: multiples of π/2 for the pendulum
+  function xTicks(W) {
+    const v = curView(), out = [];
+    if (cfg().angle) {
+      const lab = ['−π', '−π/2', '0', 'π/2', 'π'];
+      for (let k = -2; k <= 2; k++) out.push([k * Math.PI / 2, lab[k + 2]]);
+      return out;
+    }
+    const st2 = nice((v.x1 - v.x0) / (W < 520 ? 4 : 8));
+    for (let x = Math.ceil(v.x0 / st2) * st2; x <= v.x1 + 1e-9; x += st2) out.push([x, fmtTick(x, st2)]);
+    return out;
+  }
+
+  // ---------- number formatting ----------
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  function sci(v, d) {
+    if (!isFinite(v)) return v > 0 ? '∞' : '−∞';
+    if (v === 0) return '0';
+    const a = Math.abs(v);
+    if (a >= 1e-3 && a < 1e5) {
+      const dec = Math.max(0, (d || 3) - 1 - Math.floor(Math.log10(a)));
+      return (v < 0 ? '−' : '') + a.toFixed(Math.min(dec, 6));
+    }
+    const e = Math.floor(Math.log10(a)), m = a / Math.pow(10, e);
+    return (v < 0 ? '−' : '') + m.toFixed(Math.max(0, (d || 3) - 1)) + '×10' + String(e).split('').map((c) => SUP[c]).join('');
+  }
+  const decU = () => { const v = curView(), s = v.u1 - v.u0; return Math.max(0, 3 - Math.floor(Math.log10(s))); };
+  const fU = (u) => { const d = decU(), z = Math.abs(u) < 0.5 * Math.pow(10, -d) ? 0 : u; return (z < 0 ? '−' : '') + Math.abs(z).toFixed(d) + ' ' + units().U; };
+  function fX(x) {
+    if (cfg().angle) return `${(x * 180 / Math.PI).toFixed(1)}° (${x.toFixed(3)} rad)`;
+    const v = curView(), d = Math.max(0, 3 - Math.floor(Math.log10(v.x1 - v.x0)));
+    return (x < 0 ? '−' : '') + Math.abs(x).toFixed(d) + ' ' + units().x;
+  }
+  const fT = (t) => (isFinite(t) ? sci(t, 4) + ' ' + units().t : '∞');
+  const minus = (s) => s.replace(/^-/, '−');
+
+  // ---------- main diagram ----------
+  let ctlH = 44, G2 = null, drag = null, hoverId = null;
+  function drawMain() {
+    const [W, H] = dims.m; if (!W || !H || !P) return;
+    const ctx = ctxs.m, ps = projScale(), p = pads(W), v = curView(), un = units();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const top = ctlH + 26 * ps, tickH = 34 * ps, stripH = 54 * ps;
+    const sBot = H - tickH, sTop = sBot - stripH, bot = sTop - 12 * ps, L = p.L, R = W - p.R;
+    if (bot - top < 40) return;
+    const Y = (u) => bot - (u - v.u0) / (v.u1 - v.u0) * (bot - top);
+    const sy = sTop + stripH * 0.6;
+    G2 = { W, H, L, R, top, bot, sTop, sBot, sy, Y, invY: (py) => v.u0 + (bot - py) / (bot - top) * (v.u1 - v.u0) };
+    const E = S.E, x = st.x, Ux = P.U(x), tp = info.tp;
+    const xt = xTicks(W);
+    // grid
+    ctx.lineWidth = 1;
+    for (const [xv] of xt) { const px = Math.round(X(xv, W)) + 0.5; ctx.strokeStyle = Math.abs(xv) < 1e-12 ? T.gridStrong : T.grid; ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bot); ctx.stroke(); }
+    const ust = nice((v.u1 - v.u0) / (H < 420 ? 4 : 6));
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let u = Math.ceil(v.u0 / ust) * ust; u <= v.u1 + 1e-9; u += ust) {
+      const py = Math.round(Y(u)) + 0.5;
+      ctx.strokeStyle = Math.abs(u) < ust / 1e6 ? T.gridStrong : T.grid; ctx.beginPath(); ctx.moveTo(L, py); ctx.lineTo(R, py); ctx.stroke();
+      ctx.fillStyle = T.muted; ctx.fillText(minus(fmtTick(u, ust)), L - 5, py);
+    }
+    if (cfg().hAxis) {
+      // the coaster's height axis on the right: h = U/mg
+      const mg = 0.5 * G, hst = nice((v.u1 - v.u0) / mg / (H < 420 ? 4 : 6));
+      ctx.textAlign = 'left';
+      for (let h = Math.ceil(v.u0 / mg / hst) * hst; h * mg <= v.u1 + 1e-9; h += hst) { ctx.fillStyle = T.muted; ctx.fillText(minus(fmtTick(h, hst)), R + 5, Y(h * mg)); }
+      ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillStyle = T.muted; ctx.font = `${10.5 * ps}px ${T.mono}`;
+      ctx.fillText('h (m)', W - 4, top - 6 * ps);
+    }
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(`Energy (${un.U})`, L, top - 6 * ps);
+
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
+    // sample U once per pixel column
+    const cols = Math.max(2, Math.ceil(R - L)), us = new Float64Array(cols + 1), pxs = new Float64Array(cols + 1);
+    for (let c = 0; c <= cols; c++) { pxs[c] = L + (R - L) * c / cols; us[c] = P.U(invX(pxs[c], W)); }
+    const yc = (u) => Math.max(top - 20, Math.min(bot + 20, Y(u)));
+    let forbLab = null;
+    // forbidden regions: columns where U > E
+    if (layers.forb) {
+      ctx.fillStyle = T.muted; ctx.globalAlpha = 0.13;
+      let c0 = -1, widest = null;
+      for (let c = 0; c <= cols + 1; c++) {
+        const f = c <= cols && us[c] > E;
+        if (f && c0 < 0) c0 = c;
+        if (!f && c0 >= 0) { ctx.fillRect(pxs[c0], top, pxs[c - 1] - pxs[c0] + 1, bot - top); if (!widest || c - c0 > widest[1] - widest[0]) widest = [c0, c - 1]; c0 = -1; }
+      }
+      ctx.globalAlpha = 1;
+      if (widest && pxs[widest[1]] - pxs[widest[0]] > 90 * ps) forbLab = 0.5 * (pxs[widest[0]] + pxs[widest[1]]);
+    }
+    // the ground under the curve, in the track picture
+    if (S.view === 'track') {
+    ctx.beginPath(); ctx.moveTo(pxs[0], bot + 20);
+    for (let c = 0; c <= cols; c++) ctx.lineTo(pxs[c], yc(us[c]));
+    ctx.lineTo(pxs[cols], bot + 20); ctx.closePath();
+    ctx.fillStyle = T.pot; ctx.globalAlpha = 0.9; ctx.fill(); ctx.globalAlpha = 1;
+    }
+    // harmonic fit at the current well's minimum
+    if (layers.fit && info.ref && info.ref.k > 0 && wellsIn() < 2) {
+      const r = info.ref;
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 1.6 * ps; ctx.setLineDash([6 * ps, 4 * ps]); ctx.beginPath();
+      let first = true;
+      for (let c = 0; c <= cols; c++) {
+        const xx = invX(pxs[c], W), u = r.U + 0.5 * r.k * (xx - r.x) * (xx - r.x);
+        if (u > Math.max(E, r.U) + 0.15 * (v.u1 - v.u0)) { first = true; continue; }
+        first ? ctx.moveTo(pxs[c], Y(u)) : ctx.lineTo(pxs[c], Y(u)); first = false;
+      }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    // U(x)
+    const dragPot = drag && drag.kind === 'pot', hotPot = dragPot || (!drag && hoverId && hoverId.startsWith('pot'));
+    ctx.strokeStyle = T.potEdge; ctx.lineWidth = (hotPot && hoverId === 'potCurve' ? 3.4 : 2.4) * ps; ctx.lineJoin = 'round';
+    ctx.beginPath(); for (let c = 0; c <= cols; c++) c ? ctx.lineTo(pxs[c], yc(us[c])) : ctx.moveTo(pxs[c], yc(us[c])); ctx.stroke();
+    if (S.preset === 'spring' && (hoverId === 'potCurve' || (drag && drag.id === 'potCurve'))) {
+      ctx.globalAlpha = 0.3; ctx.lineWidth = 8 * ps; ctx.stroke(); ctx.globalAlpha = 1;
+    }
+    if (forbLab !== null) {
+      ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      const ty = top + 6 * ps;
+      if (Y(E) > ty + 34 * ps || Y(E) < ty - 4 * ps) {
+        for (const [txt, dy] of [['forbidden', 0], ['U > E', 13 * ps]]) {
+          const tw = ctx.measureText(txt).width;
+          ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.7; ctx.fillRect(forbLab - tw / 2 - 2, ty + dy - 1, tw + 4, 13 * ps); ctx.globalAlpha = 1;
+          ctx.fillStyle = T.muted; ctx.fillText(txt, forbLab, ty + dy);
+        }
+      }
+    }
+    // turning points
+    const xa = tp.a, xb = tp.b, inV = (xx) => isFinite(xx) && xx >= v.x0 && xx <= v.x1;
+    if (layers.turn && info.kind !== 'rest') {
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([3 * ps, 3 * ps]);
+      for (const xx of [xa, xb]) if (inV(xx)) { const px = X(xx, W); ctx.beginPath(); ctx.moveTo(px, Y(E)); ctx.lineTo(px, bot); ctx.stroke(); }
+      ctx.setLineDash([]);
+    }
+    // E line
+    const eHot = (drag && drag.id === 'E') || (!drag && hoverId === 'E');
+    const ey = Y(E);
+    if (eHot) { ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.25; ctx.lineWidth = 8 * ps; ctx.beginPath(); ctx.moveTo(L, ey); ctx.lineTo(R, ey); ctx.stroke(); ctx.globalAlpha = 1; }
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 2.2 * ps; ctx.setLineDash([8 * ps, 5 * ps]);
+    ctx.beginPath(); ctx.moveTo(L, ey); ctx.lineTo(R, ey); ctx.stroke(); ctx.setLineDash([]);
+    if (layers.turn && info.kind !== 'rest') {
+      for (const xx of [xa, xb]) if (inV(xx)) { ctx.fillStyle = T.canvas; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.8 * ps; ctx.beginPath(); ctx.arc(X(xx, W), ey, 4.5 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); }
+    }
+    // equilibria
+    if (layers.eq) {
+      for (const e of eqs) {
+        if (e.U > v.u1 || e.U < v.u0) continue;
+        if (e.type === 'neutral' && e.lo !== undefined) {
+          ctx.strokeStyle = T.ink; ctx.lineWidth = 4 * ps; ctx.globalAlpha = 0.55; ctx.beginPath(); ctx.moveTo(X(e.lo, W), Y(e.U)); ctx.lineTo(X(e.hi, W), Y(e.U)); ctx.stroke(); ctx.globalAlpha = 1;
+          continue;
+        }
+        const px = X(e.x, W), py = Y(e.U);
+        ctx.lineWidth = 2 * ps; ctx.strokeStyle = T.ink; ctx.fillStyle = e.type === 'stable' ? T.ink : T.canvas;
+        ctx.beginPath();
+        if (e.type === 'neutral') ctx.rect(px - 4 * ps, py - 4 * ps, 8 * ps, 8 * ps); else ctx.arc(px, py, 5 * ps, 0, 2 * Math.PI);
+        ctx.fill(); ctx.stroke();
+      }
+    }
+    // kinetic energy bar at the particle
+    const pxp = X(x, W), inViewP = x >= v.x0 && x <= v.x1;
+    if (inViewP) {
+      const yU = Y(Ux), bw = 12 * ps;
+      if (S.view === 'line') { ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps; ctx.setLineDash([2 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(pxp, Math.max(ey, yU)); ctx.lineTo(pxp, bot); ctx.stroke(); ctx.setLineDash([]); }
+      if (yU - ey > 0.5) {
+        ctx.fillStyle = T.kin; ctx.globalAlpha = 0.35; ctx.fillRect(pxp - bw / 2, ey, bw, yU - ey); ctx.globalAlpha = 1;
+        ctx.strokeStyle = T.kin; ctx.lineWidth = 1.6 * ps; ctx.strokeRect(pxp - bw / 2, ey, bw, yU - ey);
+      }
+      ctx.fillStyle = T.ink; ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.4 * ps;
+      ctx.beginPath(); ctx.arc(pxp, yU, 3 * ps, 0, 2 * Math.PI); ctx.fill();
+    }
+    // ball on a track (illustration)
+    if (S.view === 'track' && inViewP) {
+      const d = (v.x1 - v.x0) / 2000;
+      const slope = (Y(P.U(x + d)) - Y(P.U(x - d))) / (X(x + d, W) - X(x - d, W));
+      const nn = Math.hypot(slope, 1), r = 10 * ps;
+      const cx = pxp + r * slope / nn, cy = Y(Ux) - r / nn;
+      const hot = (drag && drag.id === 'ball') || (!drag && hoverId === 'ball');
+      ctx.fillStyle = T.pos; ctx.strokeStyle = T.ink; ctx.lineWidth = (hot ? 2.6 : 1.6) * ps;
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.arc(cx - r * 0.35, cy - r * 0.35, r * 0.28, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1;
+      G2.ball = [cx, cy];
+    } else G2.ball = null;
+    // potential grips
+    for (const h of dragHandles()) {
+      if (!h.pt || h.kind !== 'pot') continue;
+      const hot = (drag && drag.id === h.id) || (!drag && hoverId === h.id) || sel === h.idx;
+      // a ring around the point, so an equilibrium mark underneath stays visible
+      ctx.strokeStyle = sel === h.idx && h.idx !== undefined ? T.accent : T.potEdge; ctx.lineWidth = (hot ? 2.6 : 1.8) * ps;
+      if (hot) { ctx.fillStyle = T.potEdge; ctx.globalAlpha = 0.18; ctx.beginPath(); ctx.arc(h.pt[0], h.pt[1], 11 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1; }
+      ctx.beginPath(); ctx.arc(h.pt[0], h.pt[1], (hot ? 9.5 : 8.5) * ps, 0, 2 * Math.PI); ctx.stroke();
+      if (h.idx !== undefined) { ctx.fillStyle = T.potEdge; ctx.beginPath(); ctx.arc(h.pt[0], h.pt[1], 2.6 * ps, 0, 2 * Math.PI); ctx.fill(); }
+    }
+    // grip on the E line
+    {
+      const gx = L + 0.9 * (R - L);
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 1.6 * ps; ctx.globalAlpha = eHot ? 1 : 0.8; ctx.beginPath();
+      for (let k = -1; k <= 1; k++) { ctx.moveTo(gx + k * 4 * ps, ey - 5 * ps); ctx.lineTo(gx + k * 4 * ps, ey + 5 * ps); }
+      ctx.stroke(); ctx.globalAlpha = 1;
+    }
+    ctx.restore();
+    // labels outside the clip
+    ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textBaseline = 'bottom'; ctx.textAlign = 'left';
+    {
+      const txt = `E = ${fU(E)}`, tw = ctx.measureText(txt).width, ly = ey - 5 > top + 14 * ps ? ey - 5 : ey + 18 * ps;
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(L + 4, ly - 14 * ps, tw + 6, 15 * ps); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.accent; ctx.fillText(txt, L + 7, ly - 1);
+    }
+    if (inViewP && Y(Ux) - ey > 16 * ps) {
+      ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.fillStyle = T.kin; ctx.textBaseline = 'middle';
+      const right = pxp < R - 40 * ps;
+      ctx.textAlign = right ? 'left' : 'right';
+      ctx.fillText('K', pxp + (right ? 1 : -1) * 10 * ps, 0.5 * (ey + Y(Ux)));
+    }
+    if (layers.eq) {
+      ctx.font = `${10 * ps}px ${T.mono}`; ctx.textAlign = 'center';
+      const placed = [];
+      for (const e of eqs) {
+        if (e.U > v.u1 || e.U < v.u0 || e.x < v.x0 || e.x > v.x1) continue;
+        const px = X(e.x, W), py = Y(e.U), below = e.type === 'stable';
+        const ly = below ? py + 9 * ps : py - 9 * ps;
+        if (placed.some(([a, b]) => Math.abs(a - px) < 52 * ps && Math.abs(b - ly) < 13 * ps)) continue;
+        if (below && ly + 12 * ps > bot) continue;
+        placed.push([px, ly]);
+        ctx.textBaseline = below ? 'top' : 'bottom';
+        const txt = e.type, tw = ctx.measureText(txt).width;
+        ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.75; ctx.fillRect(px - tw / 2 - 2, below ? ly : ly - 12 * ps, tw + 4, 12 * ps); ctx.globalAlpha = 1;
+        ctx.fillStyle = T.muted; ctx.fillText(txt, px, ly);
+      }
+    }
+    if (S.view === 'track') {
+      ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.pos; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+      const msg = W < 640 ? 'ball: illustration only' : 'Ball on a track: an illustration. The exact motion is the particle below.';
+      ctx.fillText(msg, R, top - 6 * ps);
+    }
+    if (S.preset === 'pend') drawPendulumInset(ctx, ps, L, R, top);
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(L + 0.5, top + 0.5, R - L, bot - top);
+
+    // ----- the particle's line -----
+    ctx.font = `${10 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(S.preset === 'lj' ? 'separation r of the two atoms' : S.preset === 'pend' ? 'angle θ of the pendulum' : 'particle on the x axis', L + 2, sTop + 1);
+    if (layers.forb) {
+      ctx.fillStyle = T.muted; ctx.globalAlpha = 0.22;
+      for (let c = 0, c0 = -1; c <= cols + 1; c++) {
+        const f = c <= cols && us[c] > E;
+        if (f && c0 < 0) c0 = c;
+        if (!f && c0 >= 0) { ctx.fillRect(pxs[c0], sy - 5 * ps, pxs[c - 1] - pxs[c0] + 1, 10 * ps); c0 = -1; }
+      }
+      ctx.globalAlpha = 1;
+    }
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.moveTo(L, sy); ctx.lineTo(R, sy); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (const [xv, lab] of xt) { const px = X(xv, W); ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, sy); ctx.lineTo(px, sy + 4 * ps); ctx.stroke(); ctx.fillText(minus(lab), px, sBot + 6 * ps); }
+    ctx.textAlign = 'right'; ctx.fillText(`${un.xs} (${un.x})`, R, sBot + 19 * ps);
+    if (layers.turn && info.kind !== 'rest') {
+      ctx.fillStyle = T.ink; ctx.font = `${10 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+      const sub = ['₁', '₂'];
+      [xa, xb].forEach((xx, i) => { if (!inV(xx)) return; const px = X(xx, W); ctx.beginPath(); ctx.moveTo(px, sy - 7 * ps); ctx.lineTo(px, sy + 7 * ps); ctx.lineWidth = 2 * ps; ctx.strokeStyle = T.ink; ctx.stroke(); ctx.fillText(un.xs + sub[i], px, sy - 8 * ps); });
+    }
+    // the bead, its force and velocity
+    const pHot = (drag && drag.id === 'P') || (!drag && hoverId === 'P');
+    if (inViewP) {
+      if (layers.arrows) {
+        const F = -P.dU(x), Fr = Math.max(1e-30, fRef()), vr = vRef();
+        arrow(ctx, pxp, sy + 13 * ps, Math.max(-150, Math.min(150, F / Fr * 46)) * ps, T.pos, 2.6 * ps, un.Fs, ps);
+        arrow(ctx, pxp, sy - 13 * ps, Math.max(-150, Math.min(150, st.v / vr * 80)) * ps, T.ink, 1.8 * ps, un.vs, ps);
+      }
+      ctx.fillStyle = S.view === 'line' ? T.pos : T.canvas; ctx.strokeStyle = T.ink; ctx.lineWidth = (pHot ? 2.6 : 1.6) * ps;
+      ctx.beginPath(); ctx.arc(pxp, sy, (pHot ? 8.5 : 7) * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    } else {
+      // off the edge of the view: an arrow at the edge shows where it went
+      const right = x > v.x1, ex = right ? R - 4 * ps : L + 4 * ps, s2 = right ? 1 : -1;
+      ctx.fillStyle = T.pos; ctx.beginPath(); ctx.moveTo(ex, sy); ctx.lineTo(ex - s2 * 10 * ps, sy - 7 * ps); ctx.lineTo(ex - s2 * 10 * ps, sy + 7 * ps); ctx.closePath(); ctx.fill();
+      ctx.font = `600 ${10.5 * ps}px ${T.mono}`; ctx.textAlign = right ? 'right' : 'left'; ctx.textBaseline = 'bottom'; ctx.fillStyle = T.ink;
+      ctx.fillText(`${un.xs} = ${fX(x)}`, ex - s2 * 14 * ps, sy - 6 * ps);
+    }
+  }
+  function arrow(ctx, x0, y0, dx, col, lw, lab, ps) {
+    if (Math.abs(dx) < 3 * ps) return;
+    const s = Math.sign(dx), hl = Math.min(8 * ps, Math.abs(dx) * 0.6);
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = lw;
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 + dx - s * hl, y0); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x0 + dx, y0); ctx.lineTo(x0 + dx - s * hl, y0 - hl * 0.6); ctx.lineTo(x0 + dx - s * hl, y0 + hl * 0.6); ctx.closePath(); ctx.fill();
+    if (Math.abs(dx) > 14 * ps) {
+      ctx.font = `600 ${10.5 * ps}px ${T.mono}`; ctx.textBaseline = 'middle'; ctx.textAlign = s > 0 ? 'left' : 'right';
+      ctx.fillText(lab, x0 + dx + s * 4 * ps, y0);
+    }
+  }
+  // reference sizes for the arrows: the typical force and speed for this view
+  const wellsIn = () => eqs.filter((e) => e.type === 'stable' && e.x >= info.tp.a && e.x <= info.tp.b).length;
+  const fRef = () => { const v = curView(); return (v.u1 - v.u0) / (v.x1 - v.x0) * 1.5; };
+  const vRef = () => { const v = curView(); return Math.sqrt(2 * (v.u1 - v.u0) / P.m); };
+  function drawPendulumInset(ctx, ps, L, R, top) {
+    const r = 30 * ps, cx = 0.5 * (L + R), cy = top + r + 16 * ps;
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.arc(cx, cy, r + 12 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.stroke();
+    ctx.setLineDash([2 * ps, 3 * ps]); ctx.strokeStyle = T.muted; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, cy + r + 6 * ps); ctx.stroke(); ctx.setLineDash([]);
+    const th = st.x, bx = cx + r * Math.sin(th), by = cy + r * Math.cos(th);
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(bx, by); ctx.stroke();
+    ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(bx, by, 6 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 2.5 * ps, 0, 2 * Math.PI); ctx.fill();
+  }
+
+  // ---------- drag handles on the diagram ----------
+  function dragHandles() {
+    if (!G2 || !P) return [];
+    const g = G2, W = g.W, p = S.params, out = [], v = curView();
+    const Xp = (x) => X(x, W), Yc = (u) => Math.max(g.top, Math.min(g.bot, g.Y(u)));
+    switch (S.preset) {
+      case 'spring':
+        out.push({ id: 'potCurve', kind: 'pot', cursor: 'move', curve: true,
+          set: (x, u) => { if (Math.abs(x) > 0.06 && u > 0) setParam('k', 2 * u / (x * x)); } }); break;
+      case 'coaster': {
+        const mg = 0.5 * G;
+        out.push({ id: 'potH', kind: 'pot', cursor: 'ns-resize', pt: [Xp(48), Yc(mg * p.H)], set: (x, u) => setParam('H', u / mg) });
+        out.push({ id: 'potD', kind: 'pot', cursor: 'ns-resize', pt: [Xp(72), Yc(mg * p.D)], set: (x, u) => setParam('D', u / mg) });
+        break;
+      }
+      case 'dwell':
+        out.push({ id: 'potU0', kind: 'pot', cursor: 'ns-resize', pt: [Xp(0), Yc(p.U0)], set: (x, u) => setParam('U0', u) });
+        out.push({ id: 'potAl', kind: 'pot', cursor: 'ew-resize', pt: [Xp(-p.a), Yc(0)], set: (x) => setParam('a', -x) });
+        out.push({ id: 'potAr', kind: 'pot', cursor: 'ew-resize', pt: [Xp(p.a), Yc(0)], set: (x) => setParam('a', x) });
+        break;
+      case 'lj': {
+        const r0 = Math.pow(2, 1 / 6) * p.sig;
+        out.push({ id: 'potMin', kind: 'pot', cursor: 'move', pt: [Xp(r0), Yc(-p.eps)], set: (x, u) => { setParams({ sig: x / Math.pow(2, 1 / 6), eps: -u }); } });
+        break;
+      }
+      case 'pend': {
+        const top = 2 * G * p.L;
+        for (const s of [-1, 1]) out.push({ id: 'potTop' + s, kind: 'pot', cursor: 'ns-resize', pt: [Xp(s * Math.PI), Yc(top)], set: (x, u) => setParam('L', u / (2 * G)) });
+        break;
+      }
+      case 'custom':
+        p.xs.forEach((xx, i) => out.push({ id: 'potP' + i, idx: i, kind: 'pot', cursor: i === 0 || i === p.xs.length - 1 ? 'ns-resize' : 'move', pt: [Xp(xx), Yc(p.ys[i])], set: (x, u) => movePoint(i, x, u) }));
+        break;
+    }
+    out.push({ id: 'E', kind: 'E', cursor: 'ns-resize', seg: [g.L, g.Y(S.E), g.R, g.Y(S.E)], set: (x, u) => setEnergyUI(u) });
+    if (st.x >= v.x0 && st.x <= v.x1) {
+      out.push({ id: 'P', kind: 'P', cursor: 'ew-resize', pt: [Xp(st.x), g.sy], set: (x) => setStartUI(x) });
+      if (g.ball) out.push({ id: 'ball', kind: 'P', cursor: 'ew-resize', pt: g.ball, set: (x) => setStartUI(x) });
+    }
+    return out;
+  }
+  function handleAt(ev) {
+    if (!G2) return null;
+    const r = cans.m.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 9 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of dragHandles()) {
+      let d = Infinity;
+      if (h.seg) { const [x1, y1, x2] = h.seg; if (x >= x1 - 4 && x <= x2 + 4) d = Math.abs(y - y1) + 2; }
+      else if (h.pt) d = Math.hypot(x - h.pt[0], y - h.pt[1]) - (h.kind === 'P' ? 6 : 3);
+      else if (h.curve) { const xv = invX(x, G2.W); if (y < G2.bot && y > G2.top) d = Math.abs(y - G2.Y(P.U(xv))) + 1; }
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  let dragQueued = null, dragFrame = false;
+  function dragTo(ev) {
+    const r = cans.m.getBoundingClientRect();
+    dragQueued = [invX(ev.clientX - r.left, G2.W), G2.invY(ev.clientY - r.top)];
+    if (dragFrame) return;
+    dragFrame = true;
+    requestAnimationFrame(() => {
+      dragFrame = false;
+      if (!drag || !dragQueued) return;
+      const h = dragHandles().find((k) => k.id === drag.id);
+      if (h) h.set(dragQueued[0], dragQueued[1]);
+      dragQueued = null;
+    });
+  }
+
+  // ---------- changing things ----------
+  function snapTo(v, min, max, step) { v = Math.max(min, Math.min(max, Math.round((v - min) / step) * step + min)); return +v.toFixed(6); }
+  function sliderDef(key) { return (cfg().sliders || []).find((d) => d[0] === key); }
+  function setParams(obj) {
+    let changed = false;
+    for (const key in obj) {
+      const d = sliderDef(key); if (!d || !isFinite(obj[key])) continue;
+      const v = snapTo(obj[key], d[2], d[3], d[4]);
+      if (v !== S.params[key]) { S.params[key] = v; changed = true; }
+    }
+    if (changed) potentialChanged();
+  }
+  const setParam = (key, v) => setParams({ [key]: v });
+  // reshape U: keep the particle where it is and keep E; if U there is now above E, it is at rest with E = U
+  function potentialChanged() {
+    buildPotential();
+    const v = curView();
+    let x = st.x, E = Math.min(S.E, v.u1);
+    if (P.U(x) > v.u1 || x < v.x0 || x > v.x1) { const mn = viewMinU(); x = mn.x; }
+    if (P.U(x) > E) E = P.U(x);
+    const dir = st.v !== 0 ? Math.sign(st.v) : S.dir, t = st.t;
+    S.E = E; S.x0 = x; S.dir = dir;
+    st = newState(x, dir * speedFor(x, E)); st.t = t;
+    escaped = false; trail = [];
+    analyze();
+    tKey = '';
+    syncSliders(); syncMotion(); updateReadouts(true);
+  }
+  function movePoint(i, x, u) {
+    const p = S.params, n = p.xs.length, v = curView();
+    u = Math.max(v.u0 + 0.05, Math.min(v.u1 - 0.05, +u.toFixed(3)));
+    if (i > 0 && i < n - 1) { const gap = 0.25; x = Math.max(p.xs[i - 1] + gap, Math.min(p.xs[i + 1] - gap, +x.toFixed(3))); p.xs[i] = x; }
+    p.ys[i] = u;
+    potentialChanged();
+  }
+  function setEnergyUI(u) {
+    const v = curView(), step = (v.u1 - v.u0) / 1000;
+    setEnergy(Math.round(u / step) * step);
+    updateReadouts(true);
+  }
+  function setStartUI(x) {
+    const v = curView(), xs = $('xS');
+    x = snapTo(x, +xs.min, +xs.max, +xs.step);
+    if (P.U(x) > v.u1) return;   // too high to start from: stays where it was
+    place(x, S.E, S.dir);
+    updateReadouts(true);
+  }
+
+  // ---------- phase space ----------
+  function drawPhase() {
+    if (!layers.phase) return;
+    const [W, H] = dims.p; if (!W || !H || !P) return;
+    const ctx = ctxs.p, ps = projScale(), p = pads(W), v = curView(), un = units();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const top = 30 * ps, bot = H - 32 * ps, L = p.L, R = W - p.R;
+    if (bot - top < 30) return;
+    const umin = viewMinU().U;
+    const vmax = Math.sqrt(2 * (v.u1 - umin) / P.m) * 1.08;
+    const Yv = (vv) => (top + bot) / 2 - vv / vmax * (bot - top) / 2;
+    for (const [xv, lab] of xTicks(W)) {
+      const px = Math.round(X(xv, W)) + 0.5;
+      ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bot); ctx.stroke();
+      ctx.fillStyle = T.muted; ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(minus(lab), px, bot + 4);
+    }
+    const vf = un.vf, vst = nice(vmax * vf / (H < 220 ? 1.5 : 2.5));
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let k = -Math.floor(vmax * vf / vst); k * vst <= vmax * vf; k++) {
+      const py = Math.round(Yv(k * vst / vf)) + 0.5;
+      ctx.strokeStyle = k === 0 ? T.gridStrong : T.grid; ctx.beginPath(); ctx.moveTo(L, py); ctx.lineTo(R, py); ctx.stroke();
+      ctx.fillStyle = T.muted; ctx.fillText(minus(fmtTick(k * vst, vst)), L - 5, py);
+    }
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(`Phase space: ${un.vs} (${un.v}) against ${un.xs}`, L, top - 6 * ps);
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
+    const cols = Math.max(2, Math.ceil((R - L) / 1.5)), xs = new Float64Array(cols + 1), us = new Float64Array(cols + 1);
+    for (let c = 0; c <= cols; c++) { xs[c] = v.x0 + (v.x1 - v.x0) * c / cols; us[c] = P.U(xs[c]); }
+    const contour = (E) => {
+      ctx.beginPath();
+      let c = 0;
+      while (c <= cols) {
+        while (c <= cols && us[c] >= E) c++;
+        if (c > cols) break;
+        const c0 = c; while (c <= cols && us[c] < E) c++;
+        const c1 = c - 1;
+        const edge = (i, j) => { let lo = xs[i], hi = xs[j]; for (let k = 0; k < 40; k++) { const m = 0.5 * (lo + hi); if (P.U(m) < E) lo = m; else hi = m; } return lo; };
+        const xa = c0 > 0 ? edge(c0, c0 - 1) : null, xb = c1 < cols ? edge(c1, c1 + 1) : null;
+        const up = [], dn = [];
+        if (xa !== null) up.push([xa, 0]);
+        for (let i = c0; i <= c1; i++) { const s = Math.sqrt(2 * (E - us[i]) / P.m); up.push([xs[i], s]); }
+        if (xb !== null) up.push([xb, 0]);
+        for (let i = up.length - 1; i >= 0; i--) dn.push([up[i][0], -up[i][1]]);
+        if (xa !== null && xb !== null) {
+          up.concat(dn).forEach(([xx, vv], i) => (i ? ctx.lineTo(X(xx, W), Yv(vv)) : ctx.moveTo(X(xx, W), Yv(vv))));
+          ctx.closePath();
+        } else {
+          up.forEach(([xx, vv], i) => (i ? ctx.lineTo(X(xx, W), Yv(vv)) : ctx.moveTo(X(xx, W), Yv(vv))));
+          dn.forEach(([xx, vv], i) => (i ? ctx.lineTo(X(xx, W), Yv(vv)) : ctx.moveTo(X(xx, W), Yv(vv))));
+        }
+      }
+    };
+    ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.45; ctx.lineWidth = 1 * ps;
+    for (let k = 1; k <= 8; k++) { contour(umin + (v.u1 - umin) * k / 8.5); ctx.stroke(); }
+    ctx.globalAlpha = 1;
+    // separatrices: the energies of the hilltops
+    ctx.strokeStyle = T.equi; ctx.lineWidth = 1.8 * ps; ctx.setLineDash([6 * ps, 4 * ps]);
+    for (const e of eqs) if (e.type === 'unstable' && e.U < v.u1 && e.U > umin) { contour(e.U * (1 - 1e-9 * Math.sign(e.U)) + 0); ctx.stroke(); }
+    ctx.setLineDash([]);
+    // this orbit
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 2.4 * ps; contour(S.E); ctx.stroke();
+    // trail and the particle
+    if (trail.length > 1) {
+      ctx.strokeStyle = T.pos; ctx.lineWidth = 2 * ps;
+      for (let i = 1; i < trail.length; i++) {
+        if (Math.abs(trail[i][0] - trail[i - 1][0]) > 0.3 * (v.x1 - v.x0)) continue;
+        ctx.globalAlpha = i / trail.length * 0.8;
+        ctx.beginPath(); ctx.moveTo(X(trail[i - 1][0], W), Yv(trail[i - 1][1])); ctx.lineTo(X(trail[i][0], W), Yv(trail[i][1])); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+    ctx.fillStyle = T.pos; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps;
+    ctx.beginPath(); ctx.arc(X(st.x, W), Yv(st.v), 5.5 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillText(`${un.xs} (${un.x})`, R, bot + 17 * ps);
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(L + 0.5, top + 0.5, R - L, bot - top);
+  }
+
+  // ---------- period against energy ----------
+  function drawTChart() {
+    const [W, H] = dims.t; if (!W || !H) return;
+    const ctx = ctxs.t, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    periodCurve();
+    const L = 40 * ps, R = W - 10 * ps, top = 20 * ps, bot = H - 26 * ps, un = units();
+    ctx.font = `${10 * ps}px ${T.mono}`;
+    if (!tCurve || !tCurve.Es.length) {
+      ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('No well here: no small oscillations', W / 2, H / 2);
+      return;
+    }
+    const c = tCurve, fin = c.Ts.filter((t) => isFinite(t));
+    const tmax = Math.max(1.6 * c.T0, Math.min(3 * c.T0, Math.max(...fin) * 1.08));
+    const Xe = (e) => L + (e - c.E0) / (c.E1 - c.E0) * (R - L), Yt = (t) => bot - t / tmax * (bot - top);
+    const est = nice((c.E1 - c.E0) / 3), tst = nice(tmax / 3);
+    ctx.lineWidth = 1;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let t = 0; t <= tmax + 1e-12; t += tst) { const py = Math.round(Yt(t)) + 0.5; ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(L, py); ctx.lineTo(R, py); ctx.stroke(); ctx.fillStyle = T.muted; ctx.fillText(fmtTick(t, tst), L - 4, py); }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let e = Math.ceil(c.E0 / est) * est; e <= c.E1 + 1e-9; e += est) { const px = Xe(e); ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bot); ctx.stroke(); ctx.fillStyle = T.muted; ctx.fillText(minus(fmtTick(e, est)), px, bot + 3); }
+    ctx.fillStyle = T.ink; ctx.font = `600 ${10 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(`T (${un.t})`, 4, top - 5 * ps);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillStyle = T.muted; ctx.font = `${10 * ps}px ${T.mono}`;
+    ctx.fillText(`E (${un.U})`, R, H - 1);
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
+    ctx.strokeStyle = T.equi; ctx.lineWidth = 1.5 * ps; ctx.setLineDash([5 * ps, 4 * ps]); ctx.beginPath(); ctx.moveTo(L, Yt(c.T0)); ctx.lineTo(R, Yt(c.T0)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * ps; ctx.beginPath();
+    let first = true;
+    for (let i = 0; i < c.Es.length; i++) { const y = Yt(Math.min(c.Ts[i], tmax * 3)); first ? ctx.moveTo(Xe(c.Es[i]), y) : ctx.lineTo(Xe(c.Es[i]), y); first = false; }
+    ctx.stroke();
+    if (c.esc !== null) { ctx.fillStyle = T.muted; ctx.globalAlpha = 0.15; ctx.fillRect(Xe(c.esc), top, R - Xe(c.esc), bot - top); ctx.globalAlpha = 1; }
+    // the current orbit
+    if (info.ref) {
+      const ex = Xe(S.E);
+      ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(ex, top); ctx.lineTo(ex, bot); ctx.stroke(); ctx.globalAlpha = 1;
+      if (isFinite(info.T)) { ctx.fillStyle = T.pos; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.arc(ex, Yt(Math.min(info.T, tmax)), 4 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); }
+    }
+    ctx.restore();
+    ctx.font = `${10 * ps}px ${T.mono}`; ctx.fillStyle = T.equi; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    const ty = Yt(c.T0) - 3; if (ty > top + 10 * ps) ctx.fillText('T₀', L + 4, ty); else { ctx.textBaseline = 'top'; ctx.fillText('T₀', L + 4, Yt(c.T0) + 3); }
+    if (c.esc !== null) { ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('escapes', R - 3, top + 3); }
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(L + 0.5, top + 0.5, R - L, bot - top);
+  }
+
+  function drawAll() {
+    if (!P || !T || !st) return;
+    { const c = $('mPane').querySelector('.stage-ctl'); ctlH = c.offsetTop + c.offsetHeight; }
+    drawMain(); drawPhase(); drawTChart();
+  }
+
+  // ---------- readouts ----------
+  function updateReadouts(full) {
+    if (!st) return;
+    const un = units(), x = st.x, U = P.U(x), K = 0.5 * P.m * st.v * st.v, F = -P.dU(x);
+    $('tclock').textContent = 't = ' + sci(st.t, st.t >= 100 ? 4 : 3).replace(/^(\d+)$/, '$1') + ' ' + un.t;
+    $('rE').textContent = fU(S.E);
+    $('rX').textContent = fX(x);
+    $('rU').textContent = fU(U);
+    $('rK').textContent = fU(Math.max(0, S.E - U));
+    $('rV').textContent = minus(sci(st.v * un.vf, 3)) + ' ' + un.v;
+    $('rF').textContent = minus(sci(F * un.Ff, 3)) + ' ' + un.F;
+    const v = curView(), drift = (K + U - S.E) / (v.u1 - v.u0);
+    $('rDrift').innerHTML = `${minus(sci(drift, 2))} <span class="sub">of the energy scale</span>`;
+    if (!full) {
+      $('rTm').innerHTML = measText();
+      return;
+    }
+    const tp = info.tp, sub = ['₁', '₂'];
+    let tpt;
+    if (info.kind === 'rot') tpt = 'none: it goes all the way round';
+    else if (info.kind === 'rest') tpt = 'at rest: E = U here';
+    else tpt = [tp.a, tp.b].map((xx, i) => `${un.xs}${sub[i]} ${isFinite(xx) ? fX(xx) : (i ? '+' : '−') + '∞ (none)'}`).join(', ');
+    $('rTP').textContent = minus(tpt);
+    $('rTl').textContent = info.kind === 'rot' ? 'Time per turn, ∫dθ/(dθ/dt)' : 'This orbit, 2∫dx/v';
+    $('rT').textContent = info.kind === 'unbound' ? '∞, never returns' : isFinite(info.T) ? fT(info.T) : '—';
+    $('rTm').innerHTML = measText();
+    $('rT0').textContent = isFinite(info.T0) ? fT(info.T0) : '—';
+    $('rRatio').textContent = isFinite(info.T0) && isFinite(info.T) && info.kind === 'bound' ? (info.T / info.T0).toFixed(4) : '—';
+    if (info.ref) {
+      const w0 = Math.sqrt(info.ref.k / P.m);
+      $('rW0').textContent = `${sci(w0, 4)} ${un.w} at ${un.xs} = ${minus(fX(info.ref.x))}`;
+    } else $('rW0').textContent = 'no minimum in this region';
+    $('rW0l').textContent = S.preset === 'pend' ? 'ω₀ = √(U″/mL²) = √(g/L) at the bottom' : `ω₀ = √(U″/${un.m}) at the bottom of the well`;
+    $('status').textContent = statusText();
+    // equilibria table
+    let html = `<tr><th>type</th><th>${un.xs} (${un.x})</th><th>U (${un.U})</th><th>2π/ω₀ (${un.t})</th></tr>`;
+    const vv = curView(), d = Math.max(0, 3 - Math.floor(Math.log10(vv.x1 - vv.x0)));
+    for (const e of eqs) {
+      if (e.x < vv.x0 || e.x > vv.x1) continue;
+      const xx = e.type === 'neutral' && e.lo !== undefined ? `${e.lo.toFixed(d)} to ${e.hi.toFixed(d)}` : e.x.toFixed(d);
+      const tt = e.type === 'stable' ? sci(2 * Math.PI * Math.sqrt(P.m / e.k), 4) : '';
+      html += `<tr><td class="k">${e.type}</td><td>${minus(xx.replace(/-/g, '−'))}</td><td>${minus(e.U.toFixed(decU()))}</td><td>${tt}</td></tr>`;
+    }
+    $('eqTable').innerHTML = html;
+  }
+  function measText() {
+    if (info.kind === 'rot') return st.Trev ? fT(st.Trev) : '<span class="sub">after one full turn</span>';
+    if (info.kind === 'unbound') return '—';
+    if (info.kind === 'rest') return '—';
+    return st.Tmeas ? fT(st.Tmeas) : '<span class="sub">after one full cycle</span>';
+  }
+  function statusText() {
+    const v = curView();
+    if (escaped) return S.preset === 'lj' ? 'The molecule has broken apart: the atoms keep separating. Press Reset or lower E below 0.' : 'The particle has left for good: nothing turns it around on that side. Press Reset or lower E.';
+    if (info.kind === 'unbound') return S.preset === 'lj' ? `E > 0: unbound. The atoms fly apart and end up moving at v = √(2E/μ) = ${sci(Math.sqrt(2 * S.E / P.m) * units().vf, 3)} m/s.` : 'Unbound: on one side U never rises above E, so the particle leaves and does not come back.';
+    if (info.kind === 'rot') return 'E is above the top: no turning points, the pendulum goes over the top and keeps turning.';
+    if (info.kind === 'rest') {
+      if (info.ref) return 'At rest at the bottom of a well: a stable equilibrium.';
+      if (info.restOn && info.restOn.type === 'neutral') return 'At rest on a flat stretch: neutral equilibrium. Nothing pushes it either way.';
+      return 'At rest on a hilltop: an unstable equilibrium. The tiniest nudge sends it off.';
+    }
+    const nWells = wellsIn();
+    const sep = eqs.filter((e) => e.type === 'unstable' && e.x > info.tp.a && e.x < info.tp.b);
+    if (sep.length && nWells >= 2) return 'Bound, and above the barrier: the particle moves between both wells.';
+    if (info.ref && Math.abs(S.E - info.ref.U) < 0.02 * (v.u1 - v.u0)) return 'Bound, close to the bottom of the well: nearly harmonic, so T ≈ T₀.';
+    return 'Bound: the particle moves back and forth between the two turning points.';
+  }
+
+  // ---------- controls ----------
+  function setPresetPressed(name) { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name)); }
+  function syncSliders() {
+    const defs = cfg().sliders || [];
+    ['s1', 's2'].forEach((id, i) => {
+      const row = $(id + 'Row'), d = defs[i];
+      row.hidden = !d; if (!d) return;
+      const el = $(id); el.min = d[2]; el.max = d[3]; el.step = d[4]; el.value = S.params[d[0]];
+      $(id + 'Lab').textContent = d[1];
+      const dec = Math.max(0, -Math.floor(Math.log10(d[4]) + 1e-9));
+      $(id + 'Out').textContent = (+S.params[d[0]]).toFixed(dec) + ' ' + d[5];
+      el.dataset.key = d[0];
+    });
+    $('ptsRow').hidden = S.preset !== 'custom';
+    if (S.preset === 'custom') for (const b of document.querySelectorAll('#ptsSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.n === S.params.xs.length));
+    $('formula').textContent = cfg().formula(S.params);
+    $('potHint').textContent = cfg().dragHint + (S.preset === 'custom' ? ' Keys: digits pick a point, then arrows move it; Esc returns the arrows to E and x₀.' : '');
+    $('modelHint').textContent = 'Model: ' + cfg().model + ` Time steps: velocity Verlet with Δt = ${sci(dt, 2)} ${units().t}.`;
+  }
+  function syncMotion() {
+    const v = curView(), es = $('eS'), xs = $('xS'), un = units();
+    const mn = viewMinU().U;
+    es.min = mn; es.max = v.u1; es.step = (v.u1 - v.u0) / 1000; es.value = S.E;
+    $('eOut').textContent = fU(S.E);
+    const W = v.x1 - v.x0;
+    let lo = v.x0, hi = v.x1;
+    if (S.preset === 'pend') { lo = -Math.PI; hi = Math.PI; }
+    const step = +(W / 600).toPrecision(1);
+    xs.min = lo; xs.max = hi; xs.step = step; xs.value = S.x0;
+    $('xLab').textContent = `Starting point ${un.xs}₀`;
+    $('xOut').textContent = fX(S.x0);
+    for (const b of document.querySelectorAll('#dirSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.d === S.dir));
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    $('viewHint').textContent = S.view === 'line'
+      ? 'Exact: the particle moves along the line under the diagram with F = −dU/dx. The bar above it is K = E − U.'
+      : 'Illustration: the ball is drawn on the curve at the particle\'s position. A real ball on a hill shaped like U would turn around at the same points, but part of its motion is vertical, so it takes a different time. The exact motion is the particle on the line.';
+    $('unitsLine').textContent = `${un.xs} in ${un.x} · U, E in ${un.U} · t in ${un.t}` + (S.preset === 'coaster' || S.preset === 'pend' ? ' · g = 9.81 m/s²' : '');
+    $('rXl').textContent = un.xs; $('rVl').textContent = `${S.preset === 'pend' ? 'Angular velocity' : 'Velocity'} ${un.vs}`; $('rFl').textContent = un.Fname;
+  }
+
+  function applyPreset(name) {
+    S.preset = name; sel = -1; holdV = null;
+    const c = cfg();
+    S.params = Object.assign({}, c.params);
+    if (name === 'custom') { const xs = CUSTOM_XS(7); S.params.xs = xs; S.params.ys = xs.map(CUSTOM_SHAPE); }
+    buildPotential();
+    setPresetPressed(name);
+    $('presetHint').textContent = c.hint;
+    st = newState(c.start.x, 0);
+    place(c.start.x, P.U(c.start.x), c.start.dir);
+    tKey = '';
+    syncSliders(); syncMotion(); updateReadouts(true);
+  }
+  for (const id of ['s1', 's2']) $(id).addEventListener('input', (e) => setParam(e.target.dataset.key, +e.target.value));
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => { applyPreset(b.dataset.p); setRunning(!reduce || running); });
+  $('eS').addEventListener('input', (e) => { setEnergy(+e.target.value); updateReadouts(true); });
+  $('xS').addEventListener('input', (e) => { const x = +e.target.value; if (P.U(x) <= curView().u1) { place(x, S.E, S.dir); updateReadouts(true); } else syncMotion(); });
+  for (const b of document.querySelectorAll('#dirSeg button')) b.addEventListener('click', () => { place(S.x0, S.E, +b.dataset.d); updateReadouts(true); });
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { S.view = b.dataset.v; syncMotion(); });
+  for (const b of document.querySelectorAll('#ptsSeg button')) b.addEventListener('click', () => {
+    const n = +b.dataset.n, p = S.params, sp = makeSpline(p.xs, p.ys), xs = CUSTOM_XS(n);
+    p.ys = xs.map((x) => +sp.U(x).toFixed(3)); p.xs = xs; sel = -1;
+    potentialChanged();
+  });
+  $('flatten').addEventListener('click', () => { const xs = CUSTOM_XS(S.params.xs.length); S.params.xs = xs; S.params.ys = xs.map(CUSTOM_SHAPE); sel = -1; potentialChanged(); });
+  $('reset').addEventListener('click', () => { place(S.x0, S.E, S.dir); updateReadouts(true); });
+  const playBtn = $('play');
+  function setRunning(r) { running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now(); }
+  playBtn.addEventListener('click', () => { if (escaped) { place(S.x0, S.E, S.dir); updateReadouts(true); } setRunning(!running); });
+  for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => {
+    S.mult = +b.dataset.s; for (const o of document.querySelectorAll('#speedSeg button')) o.setAttribute('aria-pressed', String(o === b));
+  });
+  const toggle = (id, key, after) => $(id).addEventListener('change', (e) => { layers[key] = e.target.checked; if (after) after(); });
+  toggle('tPhase', 'phase', () => { $('pPane').hidden = !layers.phase; $('stage').classList.toggle('ph-on', layers.phase); requestAnimationFrame(resize); });
+  toggle('tForb', 'forb'); toggle('tEq', 'eq'); toggle('tFit', 'fit'); toggle('tArrows', 'arrows'); toggle('tTurn', 'turn');
+
+  // pointer on the diagram
+  cans.m.addEventListener('pointermove', (ev) => {
+    if (drag) { dragTo(ev); return; }
+    const h = handleAt(ev);
+    hoverId = h ? h.id : null;
+    cans.m.style.cursor = h ? h.cursor : inStrip(ev) ? 'pointer' : 'default';
+  });
+  function inStrip(ev) { if (!G2) return false; const r = cans.m.getBoundingClientRect(), y = ev.clientY - r.top, x = ev.clientX - r.left; return y > G2.sTop && y < G2.sBot && x > G2.L && x < G2.R; }
+  cans.m.addEventListener('pointerdown', (ev) => {
+    const h = handleAt(ev);
+    if (h) {
+      drag = { id: h.id, kind: h.kind, wasRunning: running };
+      if (h.kind === 'pot') holdV = Object.assign({}, curView());
+      if (h.kind === 'P') setRunning(false);
+      if (h.idx !== undefined) sel = h.idx;
+      try { cans.m.setPointerCapture(ev.pointerId); } catch (_) {}
+      cans.m.style.cursor = h.cursor; ev.preventDefault(); return;
+    }
+    if (inStrip(ev)) { const r = cans.m.getBoundingClientRect(); setStartUI(invX(ev.clientX - r.left, G2.W)); }
+  });
+  const endDrag = () => {
+    if (!drag) return;
+    const d = drag; drag = null; hoverId = null;
+    if (d.kind === 'pot') { holdV = null; buildPotential(); potentialChanged(); }
+    if (d.kind === 'P' && d.wasRunning) setRunning(true);
+  };
+  cans.m.addEventListener('pointerup', endDrag);
+  cans.m.addEventListener('pointercancel', endDrag);
+  cans.m.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
+  cans.m.addEventListener('keydown', (e) => {
+    const big = e.shiftKey ? 5 : 1, v = curView();
+    if (S.preset === 'custom' && /^[1-9]$/.test(e.key) && +e.key <= S.params.xs.length) { sel = +e.key - 1; }
+    else if (e.key === 'Escape') { sel = -1; }
+    else if (sel >= 0 && S.preset === 'custom' && e.key.startsWith('Arrow')) {
+      const p = S.params, du = (v.u1 - v.u0) / 100 * big, dx = 0.05 * big;
+      const x = p.xs[sel] + (e.key === 'ArrowLeft' ? -dx : e.key === 'ArrowRight' ? dx : 0);
+      const u = p.ys[sel] + (e.key === 'ArrowUp' ? du : e.key === 'ArrowDown' ? -du : 0);
+      movePoint(sel, x, u);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      const xs = $('xS'), stp = +xs.step * 5 * big;
+      const x = Math.max(+xs.min, Math.min(+xs.max, S.x0 + (e.key === 'ArrowLeft' ? -stp : stp)));
+      if (P.U(x) <= v.u1) { place(x, S.E, S.dir); updateReadouts(true); }
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      setEnergyUI(S.E + (e.key === 'ArrowUp' ? 1 : -1) * (v.u1 - v.u0) / 200 * big);
+    } else if (e.key === ' ') { playBtn.click(); }
+    else if (e.key === 'r' || e.key === 'R') $('reset').click();
+    else return;
+    e.preventDefault();
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); drawAll(); }); } catch (_) {}
+  new MutationObserver(() => { tokens(); drawAll(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, frameMs = 0, lastTrail = 0;
+  function advance(simTime) {
+    acc += simTime;
+    let n = Math.floor(acc / dt);
+    if (n <= 0) return;
+    if (n > 200000) { n = 200000; acc = 0; } else acc -= n * dt;
+    run(P, st, dt, n);
+    const v = curView(), W = v.x1 - v.x0;
+    if ((info.tp.unboundR && st.x > v.x1 + 0.1 * W) || (info.tp.unboundL && st.x < v.x0 - 0.1 * W)) { escaped = true; setRunning(false); updateReadouts(true); }
+  }
+  function loop(now) {
+    const dtr = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (running && dtr > 0 && !drag) advance(cfg().rate * S.mult * dtr);
+    if (now - lastTrail > 30) { trail.push([st.x, st.v]); if (trail.length > 90) trail.shift(); lastTrail = now; }
+    drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastRead > 100) { updateReadouts(false); lastRead = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__pc = { get frameMs() { return frameMs; }, get st() { return st; }, get info() { return info; }, get S() { return S; }, get eqs() { return eqs; },
+    get P() { return P; }, get dt() { return dt; }, get escaped() { return escaped; }, get handles() { return dragHandles(); }, get tCurve() { return tCurve; },
+    pix: (x) => [X(x, G2.W), G2.Y(P.U(x))], advance, setRunning, applyPreset, place: (x, E, d) => { place(x, E, d); updateReadouts(true); } };
+
+  tokens();
+  applyPreset('spring');
+  const ro = new ResizeObserver(resize);
+  for (const k of ['m', 'p', 't']) ro.observe(boxes[k]);
+  setRunning(running);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

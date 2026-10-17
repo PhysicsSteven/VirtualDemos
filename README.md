@@ -25,6 +25,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Photoelectric Effect](demos/photoelectric.html) | Modern physics | Photon energy, work function, stopping voltage, and measuring Planck's constant |
 | [Projectile Range](demos/projectile-drag.html) | Mechanics | Projectile motion with and without quadratic air drag |
 | [Springs and Oscillations](demos/springs.html) | Mechanics | Simple harmonic motion, hanging springs, damping regimes, driven resonance and coupled normal modes and beats |
+| [Potential Energy Curves](demos/potential-curves.html) | Mechanics | Motion read from U(x): turning points, equilibria, small oscillation periods, phase space, and a curve you can draw |
 | [Rotation and Torque](demos/rotation.html) | Mechanics | Torque and lever arms, a rolling race set by I/mR², angular momentum conservation, and seesaw balance |
 | [Gas in a Box](demos/ideal-gas.html) | Thermodynamics | Kinetic theory of a 2D gas: pressure, temperature, Maxwell-Boltzmann speeds, adiabatic compression |
 | [Coulomb Sandbox](demos/coulomb-sandbox.html) | Electricity and magnetism | Electric field and potential of point charges, as a 2D map and a 3D potential landscape |
