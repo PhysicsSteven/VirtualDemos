@@ -915,6 +915,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (bot - top < 30) return;
     const yt = curTop();
     const Y = (e) => bot - e / yt * (bot - top);
+    eGeom = { top, bot, yt, W, L, R };
     xGrid(ctx, W, top, bot, false);
     // y ticks
     const st = nice(yt / (H < 260 ? 3 : 5));
@@ -1007,9 +1008,126 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         ctx.fillText(`⟨E⟩ = ${fmtE(o.E)}, above the top of the scale`, L + 7, top + 3);
       }
     }
+    // draggable parts of the diagram: grips always, the hovered or dragged one highlighted
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top - 2, R - L, bot - top + 4); ctx.clip();
+    for (const h of dragHandles()) {
+      const hot = (drag && drag.id === h.id) || (!drag && hoverId === h.id);
+      ctx.strokeStyle = h.kind === 'E' ? T.accent : T.potEdge;
+      if (h.seg) {
+        const [x1, y1, x2, y2] = h.seg;
+        if (hot) { ctx.globalAlpha = 0.35; ctx.lineWidth = 7 * ps; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.globalAlpha = 1; }
+        // a small grip in the middle: three short bars across the line
+        const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, vert = Math.abs(x2 - x1) < Math.abs(y2 - y1);
+        ctx.lineWidth = 1.4 * ps; ctx.globalAlpha = hot ? 1 : 0.7; ctx.beginPath();
+        for (let k = -1; k <= 1; k++) {
+          if (vert) { ctx.moveTo(mx - 4 * ps, my + k * 3.5 * ps); ctx.lineTo(mx + 4 * ps, my + k * 3.5 * ps); }
+          else { ctx.moveTo(mx + k * 3.5 * ps, my - 4 * ps); ctx.lineTo(mx + k * 3.5 * ps, my + 4 * ps); }
+        }
+        ctx.stroke(); ctx.globalAlpha = 1;
+      } else if (h.pt) {
+        ctx.fillStyle = T.canvas; ctx.lineWidth = (hot ? 2.4 : 1.6) * ps;
+        ctx.beginPath(); ctx.arc(h.pt[0], h.pt[1], (hot ? 6 : 4.5) * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      } else if (h.curve && hot) {
+        ctx.globalAlpha = 0.35; ctx.lineWidth = 7 * ps; ctx.beginPath();
+        for (let px = L; px <= R; px += 2) { const py = Y(Vf(invX(px, W))); px === L ? ctx.moveTo(px, py) : ctx.lineTo(px, py); }
+        ctx.stroke(); ctx.globalAlpha = 1;
+      }
+    }
+    ctx.restore();
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(L + 0.5, top + 0.5, R - L, bot - top);
   }
-  function curTop() { return cfg().kind === 'well' ? eTop() : scatterTop; }
+  function curTop() { if (drag && drag.hold) return drag.hold; return cfg().kind === 'well' ? eTop() : scatterTop; }
+
+  // ---------- dragging the potential and the packet energy on the energy diagram ----------
+  let eGeom = null, drag = null, hoverId = null;
+  function eY(e) { const g = eGeom; return g.bot - e / g.yt * (g.bot - g.top); }
+  function eE(py) { const g = eGeom; return (g.bot - py) / (g.bot - g.top) * g.yt; }
+  function sliderDef(key) { return (SLIDERS[S.preset] || []).find((d) => d[0] === key); }
+  function setParam(key, v) {
+    const d = sliderDef(key); if (!d) return;
+    v = Math.max(d[2], Math.min(d[3], Math.round(v / d[4]) * d[4]));
+    v = +v.toFixed(4);
+    if (v === S.params[key]) return;
+    if (S.preset === 'ho') cohSigmaPrev = cohSigma();
+    S.params[key] = v; rebuildKeepingState();
+  }
+  // every draggable part for the current setup, in canvas pixels
+  function dragHandles() {
+    if (!eGeom || !sim) return [];
+    const g = eGeom, W = g.W, p = S.params, out = [], Xp = (x) => X(x, W);
+    const Yc = (e) => Math.max(g.top, Math.min(g.bot, eY(e)));
+    const vline = (id, x, e0, e1, set) => out.push({ id, kind: 'w', cursor: 'ew-resize', seg: [Xp(x), Yc(e0), Xp(x), Yc(e1)], set });
+    const hline = (id, x0, x1, e, set) => out.push({ id, kind: 'h', cursor: 'ns-resize', seg: [Xp(x0), Yc(e), Xp(x1), Yc(e)], set });
+    const setH = (x, e) => setParam('h', e);
+    switch (S.preset) {
+      case 'step': hline('h', 0, view[1], p.h, setH); break;
+      case 'barrier':
+        hline('h', -p.w / 2, p.w / 2, p.h, setH);
+        vline('wl', -p.w / 2, 0, p.h, (x) => setParam('w', -2 * x)); vline('wr', p.w / 2, 0, p.h, (x) => setParam('w', 2 * x)); break;
+      case 'dbar': {
+        const a = p.g / 2, b = p.g / 2 + p.w;
+        hline('hl', -b, -a, p.h, setH); hline('hr', a, b, p.h, setH);
+        vline('gl', -a, 0, p.h, (x) => setParam('g', -2 * x)); vline('gr', a, 0, p.h, (x) => setParam('g', 2 * x));
+        vline('ol', -b, 0, p.h, (x) => setParam('w', -x - p.g / 2)); vline('or', b, 0, p.h, (x) => setParam('w', x - p.g / 2)); break;
+      }
+      case 'fwell':
+        hline('hl', view[0], -p.w / 2, p.h, setH); hline('hr', p.w / 2, view[1], p.h, setH);
+        vline('wl', -p.w / 2, 0, p.h, (x) => setParam('w', -2 * x)); vline('wr', p.w / 2, 0, p.h, (x) => setParam('w', 2 * x)); break;
+      case 'iwell':
+        vline('wl', -p.w / 2, 0, g.yt, (x) => setParam('w', -2 * x)); vline('wr', p.w / 2, 0, g.yt, (x) => setParam('w', 2 * x)); break;
+      case 'ho':   // grab the parabola anywhere: ħω from the point dragged to, V = (ħω)² x² / (4 ħ²/2m)
+        out.push({ id: 'curve', kind: 'h', cursor: 'move', curve: true,
+          set: (x, e) => { if (Math.abs(x) > 0.15 && e > 0) setParam('h', Math.sqrt(4 * KIN * e / (x * x))); } }); break;
+      case 'dwell': {
+        const b = p.g / 2;
+        out.push({ id: 'h', kind: 'h', cursor: 'ns-resize', pt: [Xp(0), Yc(p.h)], set: setH });
+        out.push({ id: 'ml', kind: 'w', cursor: 'ew-resize', pt: [Xp(-b), Yc(0)], set: (x) => setParam('g', -2 * x) });
+        out.push({ id: 'mr', kind: 'w', cursor: 'ew-resize', pt: [Xp(b), Yc(0)], set: (x) => setParam('g', 2 * x) });
+        break;
+      }
+    }
+    // the packet's mean energy line sets E₀ for a launched packet in the scattering setups
+    if (cfg().kind === 'scatter' && lastObs && lastObs.norm > 1e-6 && lastObs.E !== undefined && eY(lastObs.E) >= g.top) {
+      out.push({ id: 'E', kind: 'E', cursor: 'ns-resize', seg: [g.L, eY(lastObs.E), g.R, eY(lastObs.E)],
+        set: (x, e) => {
+          const v = Math.max(0, Math.min(3, +e.toFixed(3)));
+          S.packet.E0 = v; $('pE').value = v; packetOuts(); sTopCache = null; launch();
+        } });
+    }
+    return out;
+  }
+  function handleAt(ev) {
+    if (!eGeom) return null;
+    const r = cans.e.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 8 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of dragHandles()) {
+      let d = Infinity;
+      if (h.seg) {
+        const [x1, y1, x2, y2] = h.seg;
+        if (Math.abs(x2 - x1) < 1) { if (y >= Math.min(y1, y2) - 4 && y <= Math.max(y1, y2) + 4) d = Math.abs(x - x1); }
+        else if (x >= Math.min(x1, x2) - 4 && x <= Math.max(x1, x2) + 4) d = Math.abs(y - y1);
+      } else if (h.pt) d = Math.hypot(x - h.pt[0], y - h.pt[1]) - 3;
+      else if (h.curve) d = Math.abs(y - eY(Vf(invX(x, eGeom.W))));
+      if (h.kind === 'E') d += 2;   // the potential wins a tie with the energy line
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  let dragQueued = null, dragFrame = false;   // apply at most one drag update per frame (wells rediagonalize)
+  function dragTo(ev) {
+    const r = cans.e.getBoundingClientRect();
+    dragQueued = [invX(ev.clientX - r.left, eGeom.W), eE(ev.clientY - r.top)];
+    if (dragFrame) return;
+    dragFrame = true;
+    requestAnimationFrame(() => {
+      dragFrame = false;
+      if (!drag || !dragQueued) return;
+      const h = dragHandles().find((k) => k.id === drag.id);
+      if (h) h.set(dragQueued[0], dragQueued[1]);
+      dragQueued = null;
+    });
+  }
 
   // ---------- wave function pane ----------
   function drawWave() {
@@ -1330,7 +1448,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       $(id + 'Out').textContent = (+S.params[d[0]]).toFixed(d[4] < 0.01 ? 3 : 2) + ' ' + d[5];
       el.dataset.key = d[0];
     });
-    $('potHint').textContent = POT_HINT[S.preset];
+    $('potHint').textContent = POT_HINT[S.preset] + (S.preset === 'free' ? ' Drag the ⟨E⟩ line on the energy diagram to set E₀.' : S.preset === 'ho'
+      ? ' You can also drag the parabola on the energy diagram.' : ' You can also drag the edges of the potential on the energy diagram' + (cfg().kind === 'scatter' ? ', and the ⟨E⟩ line to set E₀.' : '.'));
     const pk = S.packet, c = cfg();
     const lo = S.preset === 'iwell' ? -0.45 * S.params.w : view[0] + 0.05 * (view[1] - view[0]);
     const hi = S.preset === 'iwell' ? 0.45 * S.params.w : view[1] - 0.05 * (view[1] - view[0]);
@@ -1473,8 +1592,25 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     return best;
   }
-  cans.e.addEventListener('pointermove', (ev) => { cans.e.style.cursor = levelAt(ev) ? 'pointer' : 'default'; });
-  cans.e.addEventListener('pointerdown', (ev) => { const h = levelAt(ev); if (h) toggleLevel(h.j); });
+  cans.e.addEventListener('pointermove', (ev) => {
+    if (drag) { dragTo(ev); return; }
+    const h = handleAt(ev);
+    hoverId = h ? h.id : null;
+    cans.e.style.cursor = h ? h.cursor : levelAt(ev) ? 'pointer' : 'default';
+  });
+  cans.e.addEventListener('pointerdown', (ev) => {
+    const h = handleAt(ev);
+    if (h) {
+      drag = { id: h.id, hold: curTop() };   // hold the energy scale still while dragging
+      try { cans.e.setPointerCapture(ev.pointerId); } catch (_) {}
+      cans.e.style.cursor = h.cursor; ev.preventDefault(); return;
+    }
+    const lv = levelAt(ev); if (lv) toggleLevel(lv.j);
+  });
+  const endDrag = () => { if (!drag) return; drag = null; sTopCache = null; hoverId = null; };
+  cans.e.addEventListener('pointerup', endDrag);
+  cans.e.addEventListener('pointercancel', endDrag);
+  cans.e.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
   cans.e.addEventListener('keydown', (e) => {
     const big = e.shiftKey ? 5 : 1, pk = S.packet;
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
