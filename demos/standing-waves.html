@@ -1,0 +1,1563 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+<title>Standing Waves</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one canvas that shows one of four views (two traveling waves, a string, an air column, beats); instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --tube: #dfe5ec;
+  --tube-edge: #6f7b8b;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --tube: #1c2530; --tube-edge: #7d8999; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --tube: #1c2530; --tube-edge: #7d8999; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.88rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#can { touch-action: none; outline: none; }
+#can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail h3 { margin: 4px 0 0; font-size: 0.82rem; font-weight: 700; }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.chips.harm button { font-family: var(--font-mono); font-size: 0.82rem; min-width: 34px; padding: 4px 8px; }
+.chips.harm button[aria-pressed="true"] { background: var(--equi); border-color: var(--equi); color: var(--canvas); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+
+.ftab { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.8rem; }
+.ftab th { font-family: var(--font-ui); font-weight: 400; color: var(--muted); text-align: right; padding: 2px 4px; font-size: 0.76rem; }
+.ftab td { text-align: right; padding: 2px 4px; border-top: 1px solid var(--grid-strong); }
+.ftab th:first-child, .ftab td:first-child { text-align: left; }
+.ftab tr.on td { color: var(--equi); font-weight: 600; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.pos { border-color: var(--pos); }
+.swatch.neg { border-color: var(--neg); }
+.swatch.ink { border-color: var(--ink); border-top-width: 3px; }
+.swatch.env { border-color: var(--muted); border-top-style: dashed; }
+.swatch.gold { border-color: var(--equi); border-top-width: 3px; }
+.swatch.acc { border-color: var(--accent); border-top-width: 3px; }
+.swatch.comp { height: 10px; border: 0; background: linear-gradient(90deg, color-mix(in srgb, var(--pos) 45%, transparent), color-mix(in srgb, var(--neg) 45%, transparent)); }
+
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 80vh; min-height: 600px; }
+  .rail { overflow: visible; }
+  .count { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Standing Waves</h1>
+      <p>Two waves moving in opposite directions add up to a standing wave. Find the harmonics of a guitar string and an air column, drive a string into resonance, pluck it, and hear two close tones beat.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">x in m · f in Hz · v = fλ · string v = √(T/μ)</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="waves" aria-pressed="true">Two waves</button>
+          <button type="button" data-v="string" aria-pressed="false">String</button>
+          <button type="button" data-v="pipe" aria-pressed="false">Air column</button>
+          <button type="button" data-v="beats" aria-pressed="false">Beats</button>
+        </div>
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="reset">Reset</button>
+        <div class="seg" role="group" aria-label="Speed" id="speedSeg">
+          <button type="button" data-s="0.25" aria-pressed="false">¼×</button>
+          <button type="button" data-s="1" aria-pressed="true">1×</button>
+          <button type="button" data-s="4" aria-pressed="false">4×</button>
+        </div>
+        <span class="count mono" id="clock">t = 0.00 s</span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="Wave drawing. Space plays or pauses. Two waves view: up and down arrows change A₁, left and right change A₂. String and air column views: digits 1 to 8 pick a harmonic and left and right arrows step through them; with a pluck the arrows move the pluck point and height, with the driver they change the drive frequency. Beats view: left and right change f₂ − f₁, up and down change A₂. Drag the grips to change amplitudes, lengths and frequencies."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="standing" aria-pressed="true">Two waves make a standing wave</button>
+          <button type="button" data-p="harmonics" aria-pressed="false">Harmonics of a string</button>
+          <button type="button" data-p="resonance" aria-pressed="false">Find the resonances</button>
+          <button type="button" data-p="pluck" aria-pressed="false">Pluck at the middle</button>
+          <button type="button" data-p="closed" aria-pressed="false">Closed pipe: odd harmonics only</button>
+          <button type="button" data-p="beats" aria-pressed="false">Beats</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <!-- two traveling waves -->
+      <section id="secWaves">
+        <h2>Two traveling waves</h2>
+        <div>
+          <div class="slider-head"><label for="wA1">Amplitude A₁ (moving right)</label><output id="wA1Out" class="mono" for="wA1"></output></div>
+          <input type="range" id="wA1" min="0" max="2" step="0.05" value="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="wA2">Amplitude A₂ (moving left)</label><output id="wA2Out" class="mono" for="wA2"></output></div>
+          <input type="range" id="wA2" min="0" max="2" step="0.05" value="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="wF1">Frequency f₁</label><output id="wF1Out" class="mono" for="wF1"></output></div>
+          <input type="range" id="wF1" min="0.25" max="2" step="0.05" value="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="wF2">Frequency f₂</label><output id="wF2Out" class="mono" for="wF2"></output></div>
+          <input type="range" id="wF2" min="0.25" max="2" step="0.05" value="1">
+        </div>
+        <dl class="readout">
+          <div><dt>Wavelength λ₁</dt><dd id="rwL1">—</dd></div>
+          <div><dt>Wavelength λ₂</dt><dd id="rwL2">—</dd></div>
+          <div><dt>Node spacing</dt><dd id="rwNode">—</dd></div>
+          <div><dt>Node drift speed</dt><dd id="rwDrift">—</dd></div>
+          <div><dt>Standing wave ratio</dt><dd id="rwSWR">—</dd></div>
+          <div><dt>Standing / traveling part</dt><dd id="rwParts">—</dd></div>
+        </dl>
+        <div class="toggles">
+          <label><input type="checkbox" id="wEnv" checked>Envelope</label>
+          <label><input type="checkbox" id="wMarks" checked>Nodes N, antinodes A</label>
+        </div>
+        <p class="hint">y₁ = A₁ sin(k₁x − ω₁t), y₂ = A₂ sin(k₂x + ω₂t), both at v = 2 m/s. With A₁ ≠ A₂ the sum is a standing wave of amplitude 2·min(A) plus a traveling wave of amplitude |A₁ − A₂|. The standing wave ratio is the largest over the smallest amplitude along x, (A₁ + A₂)/|A₁ − A₂|.</p>
+      </section>
+
+      <!-- string -->
+      <section id="secString" hidden>
+        <h2>String with fixed ends</h2>
+        <div class="seg" role="group" aria-label="String motion" id="strMode">
+          <button type="button" data-m="harm" aria-pressed="true">Harmonic</button>
+          <button type="button" data-m="pluck" aria-pressed="false">Pluck</button>
+          <button type="button" data-m="drive" aria-pressed="false">Driven</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="sL">Length L</label><output id="sLOut" class="mono" for="sL"></output></div>
+          <input type="range" id="sL" min="0.3" max="1" step="0.001" value="0.648">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sT">Tension T</label><output id="sTOut" class="mono" for="sT"></output></div>
+          <input type="range" id="sT" min="10" max="150" step="0.5" value="70">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sMu">Linear density μ</label><output id="sMuOut" class="mono" for="sMu"></output></div>
+          <input type="range" id="sMu" min="0.3" max="15" step="0.01" value="6.14">
+        </div>
+        <div id="harmBlock">
+          <div class="chips harm" id="sHarm" role="group" aria-label="Harmonic number"></div>
+        </div>
+        <div id="pluckBlock" hidden>
+          <div>
+            <div class="slider-head"><label for="pD">Pluck point d</label><output id="pDOut" class="mono" for="pD"></output></div>
+            <input type="range" id="pD" min="0.05" max="0.95" step="0.01" value="0.5">
+          </div>
+          <div>
+            <div class="slider-head"><label for="pH">Pluck height h</label><output id="pHOut" class="mono" for="pH"></output></div>
+            <input type="range" id="pH" min="-10" max="10" step="0.1" value="6">
+          </div>
+          <p class="hint">Drag the string anywhere to pull it into a triangle, then let go. bₙ = 2hL² sin(nπd/L) / (n²π² d(L − d)).</p>
+        </div>
+        <div id="driveBlock" hidden>
+          <div>
+            <div class="slider-head"><label for="dF">Drive frequency f</label><output id="dFOut" class="mono" for="dF"></output></div>
+            <input type="range" id="dF" min="20" max="720" step="0.1" value="60">
+          </div>
+          <div>
+            <div class="slider-head"><label for="dQ">Quality factor Q of mode 1</label><output id="dQOut" class="mono" for="dQ"></output></div>
+            <input type="range" id="dQ" min="10" max="300" step="1" value="30">
+          </div>
+          <p class="hint">A driver at x = L/20 pushes with F₀ cos(2πft), F₀ = 0.25 N. Drag the red marker on the plot to sweep the frequency.</p>
+        </div>
+        <dl class="readout">
+          <div><dt>Wave speed v = √(T/μ)</dt><dd id="rsV">—</dd></div>
+          <div><dt>Fundamental f₁ = v/2L</dt><dd id="rsF1">—</dd></div>
+          <div class="wide" id="rsExtraRow"><dt id="rsExtraLab">—</dt><dd id="rsExtra">—</dd></div>
+        </dl>
+        <table class="ftab" id="sTab"></table>
+      </section>
+
+      <!-- air column -->
+      <section id="secPipe" hidden>
+        <h2>Air column</h2>
+        <div class="seg" role="group" aria-label="Pipe ends" id="pipeKind">
+          <button type="button" data-k="oo" aria-pressed="false">Both ends open</button>
+          <button type="button" data-k="oc" aria-pressed="true">One end closed</button>
+        </div>
+        <div class="chips harm" id="pHarm" role="group" aria-label="Harmonic number"></div>
+        <div>
+          <div class="slider-head"><label for="aL">Length L</label><output id="aLOut" class="mono" for="aL"></output></div>
+          <input type="range" id="aL" min="0.1" max="2" step="0.005" value="0.6">
+        </div>
+        <div>
+          <div class="slider-head"><label for="aD">Inner diameter 2r</label><output id="aDOut" class="mono" for="aD"></output></div>
+          <input type="range" id="aD" min="5" max="60" step="0.5" value="15">
+        </div>
+        <div>
+          <div class="slider-head"><label for="aT">Air temperature</label><output id="aTOut" class="mono" for="aT"></output></div>
+          <input type="range" id="aT" min="-10" max="40" step="0.5" value="20">
+        </div>
+        <label class="check"><input type="checkbox" id="aEnd">End correction 0.6 r at each open end</label>
+        <dl class="readout">
+          <div><dt>Sound speed v</dt><dd id="raV">—</dd></div>
+          <div><dt>Acoustic length</dt><dd id="raLe">—</dd></div>
+          <div><dt id="raFLab">Frequency</dt><dd id="raF">—</dd></div>
+          <div><dt id="raLamLab">Wavelength</dt><dd id="raLam">—</dd></div>
+        </dl>
+        <table class="ftab" id="aTab"></table>
+        <p class="hint">v = 331.3 √(1 + T/273.15) m/s, 343 m/s at 20 °C. An open end is a pressure node (the air there stays at room pressure) and a displacement antinode; a closed end is a displacement node and a pressure antinode.</p>
+      </section>
+
+      <!-- beats -->
+      <section id="secBeats" hidden>
+        <h2>Beats</h2>
+        <div>
+          <div class="slider-head"><label for="bF1">Frequency f₁</label><output id="bF1Out" class="mono" for="bF1"></output></div>
+          <input type="range" id="bF1" min="100" max="1000" step="1" value="440">
+        </div>
+        <div>
+          <div class="slider-head"><label for="bDf">Difference f₂ − f₁</label><output id="bDfOut" class="mono" for="bDf"></output></div>
+          <input type="range" id="bDf" min="-20" max="20" step="0.1" value="3">
+        </div>
+        <div>
+          <div class="slider-head"><label for="bA2">Amplitude A₂ / A₁</label><output id="bA2Out" class="mono" for="bA2"></output></div>
+          <input type="range" id="bA2" min="0" max="1" step="0.01" value="1">
+        </div>
+        <dl class="readout">
+          <div><dt>Frequency f₂</dt><dd id="rbF2">—</dd></div>
+          <div><dt>Pitch heard (f₁ + f₂)/2</dt><dd id="rbFm">—</dd></div>
+          <div class="big"><dt>Beat frequency |f₁ − f₂|</dt><dd id="rbFb">—</dd></div>
+          <div class="big"><dt>Beat period</dt><dd id="rbTb">—</dd></div>
+        </dl>
+        <p class="hint">y = A₁ cos(2πf₁t) + A₂ cos(2πf₂t). The loudness envelope is √(A₁² + A₂² + 2A₁A₂ cos 2π(f₂ − f₁)t), which repeats every 1/|f₁ − f₂|. The top two strips zoom in on the moment at the playhead.</p>
+      </section>
+
+      <section>
+        <h2>Sound</h2>
+        <div class="inline">
+          <button type="button" class="btn" id="sound" aria-pressed="false">Sound off</button>
+          <label for="vol" class="lab" style="flex:1;min-width:120px">Volume <input type="range" id="vol" min="0" max="1" step="0.01" value="0.3"></label>
+        </div>
+        <p class="hint" id="soundHint"></p>
+      </section>
+
+      <section>
+        <h2>Key</h2>
+        <div class="key" id="key"></div>
+        <p class="hint" id="modelHint"></p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const PI = Math.PI, TAU = 2 * Math.PI;
+  const WAVE_V = 2;            // m/s, the two traveling waves
+  const DRIVE_F0 = 0.25;       // N, driver force amplitude
+  const DRIVE_XD = 0.05;       // driver position as a fraction of L
+  const DRIVE_M = 40;          // modes kept in the driven solution
+  const PLUCK_N = 200;         // modes kept in the plucked string
+
+  const waveSpeed = (T, mu) => Math.sqrt(T / mu);
+  const stringFreq = (n, L, T, mu) => n * Math.sqrt(T / mu) / (2 * L);
+  const soundSpeed = (Tc) => 331.3 * Math.sqrt(1 + Tc / 273.15);
+  // acoustic length: L plus 0.6 r at each open end when the end correction is on
+  const pipeLeff = (kind, L, r, endc) => (endc ? L + (kind === 'oo' ? 2 : 1) * 0.6 * r : L);
+  // open–open: f = n v / 2L (all n); open–closed: f = n v / 4L (odd n only)
+  const pipeFreq = (kind, n, v, Leff) => (kind === 'oo' ? n * v / (2 * Leff) : n * v / (4 * Leff));
+
+  // Σ_{n=1}^{N} c[n] sin(nθ), with sin(nθ) from the Chebyshev recurrence
+  function sineSeries(c, N, th) {
+    const c2 = 2 * Math.cos(th); let s0 = 0, s1 = Math.sin(th), sum = 0;
+    for (let n = 1; n <= N; n++) { sum += c[n] * s1; const s2 = c2 * s1 - s0; s0 = s1; s1 = s2; }
+    return sum;
+  }
+  function cosineSeries(c, N, th) {
+    const c2 = 2 * Math.cos(th); let s0 = 1, s1 = Math.cos(th), sum = 0;
+    for (let n = 1; n <= N; n++) { sum += c[n] * s1; const s2 = c2 * s1 - s0; s0 = s1; s1 = s2; }
+    return sum;
+  }
+  // a string plucked at d to height h: b_n = 2 h L² sin(nπd/L) / (n² π² d (L − d))
+  function pluckCoeffs(h, d, L, N) {
+    const b = new Float64Array(N + 1);
+    for (let n = 1; n <= N; n++) b[n] = 2 * h * L * L * Math.sin(n * PI * d / L) / (n * n * PI * PI * d * (L - d));
+    return b;
+  }
+  const triangle = (x, h, d, L) => (x <= d ? h * x / d : h * (L - x) / (L - d));
+  // energy of a free string y = Σ b_n sin(nπx/L) cos(ω_n t): Σ (μL/4) ω_n² b_n²
+  function modalEnergy(b, N, L, T, mu) {
+    const v = Math.sqrt(T / mu); let E = 0;
+    for (let n = 1; n <= N; n++) { const w = n * PI * v / L; E += mu * L / 4 * w * w * b[n] * b[n]; }
+    return E;
+  }
+  // ∫ (½μ y_t² + ½T y_x²) dx by Simpson's rule on the modal sum at time t
+  function fieldEnergy(b, N, L, T, mu, t, M) {
+    const v = Math.sqrt(T / mu), cv = new Float64Array(N + 1), cx = new Float64Array(N + 1);
+    for (let n = 1; n <= N; n++) { const w = n * PI * v / L; cv[n] = -b[n] * w * Math.sin(w * t); cx[n] = b[n] * (n * PI / L) * Math.cos(w * t); }
+    const h = L / M; let s = 0;
+    for (let i = 0; i <= M; i++) {
+      const th = PI * i / M, yt = sineSeries(cv, N, th), yx = cosineSeries(cx, N, th);
+      const e = 0.5 * mu * yt * yt + 0.5 * T * yx * yx;
+      s += (i === 0 || i === M ? 1 : i % 2 ? 4 : 2) * e;
+    }
+    return s * h / 3;
+  }
+
+  // Driven damped string: q_n'' + γ q_n' + ω_n² q_n = F_n cos φ, φ' = Ω, F_n = 2F₀ sin(nπx_d/L)/(μL).
+  // q_n = steady part Re(G_n e^{iφ}) + a free damped part (h_n, h_n') that carries the transient exactly.
+  function makeDriven(L, T, mu, Q1, M) {
+    const v = Math.sqrt(T / mu), w1 = PI * v / L, gam = w1 / Q1;
+    const D = { L, T, mu, Q1, M, v, w1, gam, wn: new Float64Array(M + 1), Fn: new Float64Array(M + 1),
+      Gr: new Float64Array(M + 1), Gi: new Float64Array(M + 1), h: new Float64Array(M + 1), hp: new Float64Array(M + 1), Om: 0, phi: 0 };
+    for (let n = 1; n <= M; n++) { D.wn[n] = n * w1; D.Fn[n] = 2 * DRIVE_F0 * Math.sin(n * PI * DRIVE_XD) / (mu * L); }
+    return D;
+  }
+  function steadyG(D, Om, n) {
+    const a = D.wn[n] * D.wn[n] - Om * Om, b = D.gam * Om, m = a * a + b * b;
+    return [D.Fn[n] * a / m, -D.Fn[n] * b / m];
+  }
+  function setOmega(D, Om) { D.Om = Om; for (let n = 1; n <= D.M; n++) { const g = steadyG(D, Om, n); D.Gr[n] = g[0]; D.Gi[n] = g[1]; } }
+  // total coordinate and velocity of mode n
+  function drivenQ(D, n) {
+    const c = Math.cos(D.phi), s = Math.sin(D.phi);
+    return [D.Gr[n] * c - D.Gi[n] * s + D.h[n], D.Om * (-D.Gr[n] * s - D.Gi[n] * c) + D.hp[n]];
+  }
+  // move to new parameters (or a new Ω) keeping every q_n and q_n' continuous
+  function retarget(Dold, Dnew, Om) {
+    Dnew.phi = Dold.phi;
+    const qs = [];
+    for (let n = 1; n <= Dnew.M; n++) qs[n] = n <= Dold.M ? drivenQ(Dold, n) : [0, 0];
+    setOmega(Dnew, Om);
+    const c = Math.cos(Dnew.phi), s = Math.sin(Dnew.phi);
+    for (let n = 1; n <= Dnew.M; n++) {
+      Dnew.h[n] = qs[n][0] - (Dnew.Gr[n] * c - Dnew.Gi[n] * s);
+      Dnew.hp[n] = qs[n][1] - Om * (-Dnew.Gr[n] * s - Dnew.Gi[n] * c);
+    }
+    return Dnew;
+  }
+  function restDriven(D) {   // string at rest at the current drive phase
+    const c = Math.cos(D.phi), s = Math.sin(D.phi);
+    for (let n = 1; n <= D.M; n++) { D.h[n] = -(D.Gr[n] * c - D.Gi[n] * s); D.hp[n] = -D.Om * (-D.Gr[n] * s - D.Gi[n] * c); }
+  }
+  // exact step of the free damped part over dt (every mode is underdamped here)
+  function stepDriven(D, dt) {
+    const a = D.gam / 2, ea = Math.exp(-a * dt);
+    for (let n = 1; n <= D.M; n++) {
+      const w0 = D.wn[n], wd = Math.sqrt(Math.max(1e-12, w0 * w0 - a * a)), c = Math.cos(wd * dt), s = Math.sin(wd * dt);
+      const h = D.h[n], hp = D.hp[n];
+      D.h[n] = ea * (h * (c + a / wd * s) + hp * s / wd);
+      D.hp[n] = ea * (hp * (c - a / wd * s) - h * w0 * w0 / wd * s);
+    }
+    D.phi = (D.phi + D.Om * dt) % (TAU * 1e6);
+  }
+  // steady state amplitude A = √(Σ|G_n|²) = √((2/L)∫|Y|² dx) with Y = Σ G_n sin(nπx/L): for one mode it is the antinode amplitude
+  function steadyAmp(D, Om) {
+    let s = 0;
+    for (let n = 1; n <= D.M; n++) { const g = steadyG(D, Om, n); s += g[0] * g[0] + g[1] * g[1]; }
+    return Math.sqrt(s);
+  }
+  // resonance curve on [fa, fb], refined around every mode inside
+  function resonanceCurve(D, fa, fb) {
+    const fs = [], n0 = 600;
+    for (let i = 0; i <= n0; i++) fs.push(fa + (fb - fa) * i / n0);
+    const width = D.gam / TAU;   // full width at half power of a mode, in Hz
+    for (let n = 1; n <= D.M; n++) {
+      const fn = D.wn[n] / TAU; if (fn < fa || fn > fb) continue;
+      for (let j = -40; j <= 40; j++) { const f = fn + j * width / 8; if (f > fa && f < fb) fs.push(f); }
+    }
+    fs.sort((a, b) => a - b);
+    return fs.filter((f, i) => i === 0 || f - fs[i - 1] > 1e-6 * (fb - fa)).map((f) => [f, steadyAmp(D, TAU * f)]);
+  }
+
+  // Two traveling waves, same speed
+  function waveSum(x, t, A1, A2, f1, f2, v) {
+    const k1 = TAU * f1 / v, k2 = TAU * f2 / v;
+    return A1 * Math.sin(k1 * x - TAU * f1 * t) + A2 * Math.sin(k2 * x + TAU * f2 * t);
+  }
+  // envelope over the fast phase: √((A1 + A2)² sin²Σ + (A1 − A2)² cos²Σ), Σ = k̄x + (ω₂ − ω₁)t/2
+  function waveEnvelope(x, t, A1, A2, f1, f2, v) {
+    const S = PI * (f1 + f2) / v * x + PI * (f2 - f1) * t, s = Math.sin(S), c = Math.cos(S);
+    return Math.sqrt((A1 + A2) * (A1 + A2) * s * s + (A1 - A2) * (A1 - A2) * c * c);
+  }
+  const beatEnvelope = (t, A1, A2, f1, f2) => Math.sqrt(Math.max(0, A1 * A1 + A2 * A2 + 2 * A1 * A2 * Math.cos(TAU * (f2 - f1) * t)));
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.SWV = { PI, TAU, WAVE_V, DRIVE_F0, DRIVE_XD, DRIVE_M, PLUCK_N, waveSpeed, stringFreq, soundSpeed, pipeLeff, pipeFreq,
+      sineSeries, cosineSeries, pluckCoeffs, triangle, modalEnergy, fieldEnergy, makeDriven, steadyG, setOmega, drivenQ, retarget,
+      restDriven, stepDriven, steadyAmp, resonanceCurve, waveSum, waveEnvelope, beatEnvelope };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const SUB = '₀₁₂₃₄₅₆₇₈₉';
+  const sub = (n) => String(n).split('').map((c) => SUB[+c]).join('');
+
+  // ---------- state ----------
+  const S = {
+    view: 'waves', speed: 1,
+    w: { A1: 1, A2: 1, f1: 1, f2: 1, env: true, marks: true },
+    s: { L: 0.648, T: 70, mu: 6.14, mode: 'harm', n: 1, d: 0.5, h: 6, f: 60, Q: 30 },
+    p: { kind: 'oc', n: 1, L: 0.6, D: 15, Tc: 20, endc: false },
+    b: { f1: 440, df: 3, a2: 1 }
+  };
+  let running = !reduce, t = 0, frameMs = 0;
+  let pluckB = null, pluckDrag = false, D = null, curve = null, curveMax = 1, holdSpan = null;
+
+  const PRESETS = {
+    standing: { view: 'waves', set: () => Object.assign(S.w, { A1: 1, A2: 1, f1: 1, f2: 1 }),
+      hint: 'Two equal waves moving in opposite directions add up to a standing wave: the nodes never move and sit half a wavelength apart. Drag one wave\'s amplitude grip down and the nodes no longer reach zero, because part of the wave now travels.' },
+    harmonics: { view: 'string', set: () => Object.assign(S.s, { L: 0.648, T: 70, mu: 6.14, mode: 'harm', n: 3 }),
+      hint: 'A guitar\'s low E string, 0.648 m long at about 70 N, sounds E2 at 82.4 Hz. Harmonic n fits n half wavelengths between the fixed ends, so fₙ = n v/2L = n f₁. Pick other harmonics, or drag the bridge to shorten the string, as a fret does.' },
+    resonance: { view: 'string', set: () => Object.assign(S.s, { L: 0.648, T: 70, mu: 6.14, mode: 'drive', f: 60, Q: 30 }),
+      hint: 'A driver near one end shakes the string at 60 Hz, and the string hardly moves. Sweep the frequency: the amplitude jumps each time f lands on one of the harmonics fₙ = n f₁ (82.4, 164.8, 247.2 Hz, ...). The string needs a few damping times 2/γ to build up; a higher Q gives taller, narrower peaks and a slower build up.' },
+    pluck: { view: 'string', set: () => Object.assign(S.s, { L: 0.648, T: 70, mu: 6.14, mode: 'pluck', d: 0.5, h: 6 }),
+      hint: 'A string plucked at the middle is symmetric about the center, so every even harmonic, which has a node there, is missing. Drag the pluck point toward the bridge, as a guitarist does for a brighter tone, and the high harmonics come back.' },
+    closed: { view: 'pipe', set: () => Object.assign(S.p, { kind: 'oc', n: 1, L: 0.6, D: 15, Tc: 20, endc: true }),
+      hint: 'A pipe closed at one end has a displacement node at the closed end and an antinode at the open end, so it holds an odd number of quarter wavelengths: f = n v/4L with n = 1, 3, 5, ... A clarinet, about 0.6 m long and closed at the reed, comes close: v/4L ≈ 142 Hz against its lowest note D3 at 147 Hz.' },
+    beats: { view: 'beats', set: () => Object.assign(S.b, { f1: 440, df: 3, a2: 1 }),
+      hint: 'Tones at 440 and 443 Hz drift in and out of step, so the loudness swells and fades 3 times a second: f_beat = |f₁ − f₂|. Musicians tune by ear this way, adjusting until the beats slow down and stop.' }
+  };
+  let presetId = 'standing';
+
+  const MODEL = {
+    waves: 'Ideal waves on a long string with no loss, both moving at v = 2 m/s. Amplitudes in cm, drawn larger than true scale.',
+    string: 'Ideal flexible string: small amplitude, fixed ends, no stiffness. Harmonic and pluck motion have no damping, so the energy stays constant; the pluck is a sum of 200 modes. The driven string is a point force at x = L/20 with the same damping rate γ = ω₁/Q for every mode, solved exactly with 40 modes, transients included. Up and down displacement is exaggerated.',
+    pipe: 'Plane sound waves in a narrow pipe with ideal ends. The end correction 0.6 r per open unflanged end (Levine and Schwinger) makes the pipe sound a little longer than it is. Air parcel displacement and the pipe width are exaggerated.',
+    beats: 'Two pure tones added; nothing else. The close up strips show about five cycles; the long strip is too dense to resolve single cycles, so it shows the band the signal fills.'
+  };
+
+  // ---------- derived quantities ----------
+  const muSI = () => S.s.mu * 1e-3;
+  const sV = () => waveSpeed(S.s.T, muSI());
+  const sF = (n) => stringFreq(n, S.s.L, S.s.T, muSI());
+  const pV = () => soundSpeed(S.p.Tc);
+  const pR = () => S.p.D / 2000;
+  const pLe = () => pipeLeff(S.p.kind, S.p.L, pR(), S.p.endc);
+  const pF = (n) => pipeFreq(S.p.kind, n, pV(), pLe());
+  const pipeNs = () => (S.p.kind === 'oo' ? [1, 2, 3, 4, 5, 6, 7, 8] : [1, 3, 5, 7, 9, 11, 13, 15]);
+
+  // slow motion: the fundamental is shown at about 0.6 Hz on screen at 1×; a driven string at about 1.8 Hz, so its build up is quick enough to watch
+  function slowFactor() {
+    if (S.view === 'string') return S.s.mode === 'drive' ? 1.8 / Math.max(1, S.s.f) : 0.6 / sF(1);
+    if (S.view === 'pipe') return 0.6 / pF(1);
+    return 1;
+  }
+
+  function rebuildPluck() { pluckB = pluckCoeffs(S.s.h * 1e-3, S.s.d * S.s.L, S.s.L, PLUCK_N); }
+  function fRange() { const f1 = sF(1); return [Math.max(1, +(0.25 * f1).toFixed(1)), +(8.75 * f1).toFixed(1)]; }
+  function rebuildDriven(keep) {
+    const nd = makeDriven(S.s.L, S.s.T, muSI(), S.s.Q, DRIVE_M);
+    if (keep && D) retarget(D, nd, TAU * S.s.f);
+    else { setOmega(nd, TAU * S.s.f); restDriven(nd); }
+    D = nd;
+    curveDirty = true;
+  }
+  let curveDirty = true;
+  function ensureCurve() {
+    if (!curveDirty) return;
+    const [fa, fb] = fRange();
+    curve = resonanceCurve(D, fa, fb);
+    curveMax = Math.max(...curve.map((c) => c[1]));
+    curveDirty = false;
+  }
+
+  // ---------- theme and canvas ----------
+  let T = null, dpr = 1, W = 0, H = 0;
+  const can = $('can'), ctx = can.getContext('2d'), pane = $('pane');
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
+  let ls = 1;
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
+      gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'),
+      tube: g('--tube'), tubeEdge: g('--tube-edge'), mono: g('--font-mono') || 'monospace' };
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = pane.getBoundingClientRect();
+    can.width = Math.max(1, Math.round(r.width * dpr)); can.height = Math.max(1, Math.round(r.height * dpr));
+    can.style.width = r.width + 'px'; can.style.height = r.height + 'px';
+    W = r.width; H = r.height;
+    drawAll();
+  }
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  function fmtTick(v, st) { const d = Math.max(0, -Math.floor(Math.log10(st) + 1e-9)); return (Math.abs(v) < st / 1e6 ? 0 : v).toFixed(d); }
+  const font = (px, bold) => `${bold ? '600 ' : ''}${px * ls}px ${T.mono}`;
+  // a label on a halo box, drawn last so curves never cover it
+  function tag(txt, x, y, color, align, base, bold, size) {
+    ctx.font = font(size || 11, bold);
+    const w = ctx.measureText(txt).width, h = (size || 11) * ls * 1.2;
+    const x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    const y0 = base === 'top' ? y : base === 'bottom' ? y - h : y - h / 2;
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.86; ctx.fillRect(x0 - 3, y0 - 1, w + 6, h + 2); ctx.globalAlpha = 1;
+    ctx.fillStyle = color; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, x0, y0 + h / 2);
+    return w;
+  }
+  // the first of several wordings that fits the width
+  function pick(opts, maxW, size, bold) { ctx.font = font(size || 11.5, bold !== false); for (const o of opts) if (ctx.measureText(o).width <= maxW) return o; return opts[opts.length - 1]; }
+  function frame(x0, y0, x1, y1) { ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(Math.round(x0) + 0.5, Math.round(y0) + 0.5, Math.round(x1 - x0), Math.round(y1 - y0)); }
+  function hline(x0, x1, y, color, dash, lw) {
+    ctx.strokeStyle = color; ctx.lineWidth = lw || 1; ctx.setLineDash(dash || []);
+    ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke(); ctx.setLineDash([]);
+  }
+  function plot(x0, x1, fn, color, lw, dash, step) {
+    ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.setLineDash(dash || []); ctx.lineJoin = 'round';
+    ctx.beginPath(); const st = step || 1.5;
+    for (let px = x0; px <= x1 + 0.01; px += st) { const py = fn(Math.min(px, x1)); px === x0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py); }
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+  function xTicks(x0, x1, va, vb, yb, unit, every) {
+    const st = nice((vb - va) / (every || ((x1 - x0) < 420 ? 4 : 8)));
+    ctx.fillStyle = T.muted; ctx.font = font(10.5); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = Math.ceil(va / st - 1e-9) * st; v <= vb + 1e-9; v += st) {
+      const px = x0 + (v - va) / (vb - va) * (x1 - x0);
+      ctx.fillText(fmtTick(v, st), px, yb + 4 * ls);
+    }
+    if (unit) { ctx.textAlign = 'right'; ctx.fillText(unit, x1, yb + 17 * ls); }
+  }
+  function vGrid(x0, x1, va, vb, y0, y1) {
+    const st = nice((vb - va) / ((x1 - x0) < 420 ? 4 : 8));
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1;
+    for (let v = Math.ceil(va / st - 1e-9) * st; v <= vb + 1e-9; v += st) {
+      const px = Math.round(x0 + (v - va) / (vb - va) * (x1 - x0)) + 0.5;
+      ctx.beginPath(); ctx.moveTo(px, y0); ctx.lineTo(px, y1); ctx.stroke();
+    }
+  }
+
+  // ---------- drag handles ----------
+  // each: { id, cursor, pt:[x,y] | seg:[x1,y1,x2,y2] | path:{x0,x1,fn}, grip:[x,y], set(mx, my) }
+  let handles = [], drag = null, hoverId = null;
+  function snap(v, el) {
+    const mn = +el.min, mx = +el.max, st = +el.step;
+    v = Math.max(mn, Math.min(mx, mn + Math.round((v - mn) / st) * st));
+    return +v.toFixed(6);
+  }
+  function drawGrips() {
+    for (const h of handles) {
+      const hot = (drag && drag.id === h.id) || (!drag && hoverId === h.id);
+      const col = h.color || T.accent;
+      ctx.strokeStyle = col;
+      if (h.seg) {
+        const [x1, y1, x2, y2] = h.seg;
+        if (hot) { ctx.globalAlpha = 0.3; ctx.lineWidth = 8 * ls; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.globalAlpha = 1; }
+        const mx = h.grip ? h.grip[0] : (x1 + x2) / 2, my = h.grip ? h.grip[1] : (y1 + y2) / 2, horiz = h.cursor === 'ew-resize';
+        ctx.fillStyle = T.canvas; ctx.lineWidth = (hot ? 2.4 : 1.7) * ls;
+        ctx.beginPath(); ctx.arc(mx, my, (hot ? 9 : 8) * ls, 0, TAU); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = col; ctx.beginPath();
+        for (const sg of [-1, 1]) {
+          const a = 2 * ls, b = 5.5 * ls, w = 3 * ls;   // arrowhead from a to b along the drag axis
+          if (horiz) { ctx.moveTo(mx + sg * b, my); ctx.lineTo(mx + sg * a, my - w); ctx.lineTo(mx + sg * a, my + w); }
+          else { ctx.moveTo(mx, my + sg * b); ctx.lineTo(mx - w, my + sg * a); ctx.lineTo(mx + w, my + sg * a); }
+          ctx.closePath();
+        }
+        ctx.fill();
+      } else {
+        const p = h.pt || h.grip;
+        ctx.fillStyle = T.canvas; ctx.lineWidth = (hot ? 2.6 : 1.8) * ls;
+        ctx.beginPath(); ctx.arc(p[0], p[1], (hot ? 7 : 5.5) * ls, 0, TAU); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = col; ctx.beginPath(); ctx.arc(p[0], p[1], 2 * ls, 0, TAU); ctx.fill();
+      }
+    }
+  }
+  function handleAt(ev) {
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 9 * ls * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of handles) {
+      let d = Infinity;
+      if (h.seg) {
+        const [x1, y1, x2, y2] = h.seg, dx = x2 - x1, dy = y2 - y1, L2 = dx * dx + dy * dy;
+        const u = L2 ? Math.max(0, Math.min(1, ((x - x1) * dx + (y - y1) * dy) / L2)) : 0;
+        d = Math.hypot(x - x1 - u * dx, y - y1 - u * dy);
+        if (h.grip) d = Math.min(d, Math.hypot(x - h.grip[0], y - h.grip[1]) - 6 * ls);
+      } else if (h.pt) d = Math.hypot(x - h.pt[0], y - h.pt[1]) - 4 * ls;
+      else if (h.path) {
+        if (x >= h.path.x0 - 4 && x <= h.path.x1 + 4) d = Math.abs(y - h.path.fn(Math.max(h.path.x0, Math.min(h.path.x1, x)))) + 1;
+        if (h.grip) d = Math.min(d, Math.hypot(x - h.grip[0], y - h.grip[1]) - 5 * ls);
+      }
+      if (h.region && x >= h.region[0] && x <= h.region[2] && y >= h.region[1] && y <= h.region[3]) d = Math.min(d, tol - 0.5);
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  let dragQueued = null, dragFrame = false;
+  function dragTo(ev) {
+    const r = can.getBoundingClientRect();
+    dragQueued = [ev.clientX - r.left, ev.clientY - r.top];
+    if (dragFrame) return;
+    dragFrame = true;
+    requestAnimationFrame(() => {
+      dragFrame = false;
+      if (!drag || !dragQueued) return;
+      const h = handles.find((k) => k.id === drag.id) || drag.h;
+      if (h) h.set(dragQueued[0], dragQueued[1]);
+      dragQueued = null;
+      if (!running) drawAll();
+    });
+  }
+
+  // ---------- view: two traveling waves ----------
+  function drawWaves() {
+    const w = S.w, v = WAVE_V, xa = 0, xb = 6;
+    const L = 46 * ls, R = W - 18 * ls, top = 12 * ls, bot = H - 34 * ls;
+    const gap = 30 * ls, avail = bot - top - 3 * gap;
+    const hs = [avail * 0.27, avail * 0.27, avail * 0.46];
+    const strips = []; let y = top;
+    for (let i = 0; i < 3; i++) { y += gap; strips.push([y, y + hs[i]]); y += hs[i]; }
+    const X = (x) => L + (x - xa) / (xb - xa) * (R - L), invX = (px) => xa + (px - L) / (R - L) * (xb - xa);
+    const scales = [2.4, 2.4, 4.4];
+    const Ys = strips.map(([a, b], i) => (val) => (a + b) / 2 - val / scales[i] * (b - a) / 2);
+    const titles = [
+      [pick([`Wave 1, moving right →   y₁ = A₁ sin(k₁x − ω₁t)`, 'Wave 1, moving right →'], R - L), T.pos],
+      [pick([`Wave 2, moving left ←   y₂ = A₂ sin(k₂x + ω₂t)`, 'Wave 2, moving left ←'], R - L), T.neg],
+      [`Sum y₁ + y₂`, T.ink]];
+    for (let i = 0; i < 3; i++) {
+      const [a, b] = strips[i], Y = Ys[i];
+      vGrid(L, R, xa, xb, a, b);
+      hline(L, R, Y(0), T.gridStrong);
+      // y ticks in cm
+      ctx.fillStyle = T.muted; ctx.font = font(10); ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      const st = i < 2 ? 2 : 4;
+      for (const tv of [-st, 0, st]) ctx.fillText(String(tv), L - 5 * ls, Y(tv));
+      frame(L, a, R, b);
+    }
+    ctx.fillStyle = T.muted; ctx.font = font(10); ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    // curves
+    const y1 = (x) => w.A1 * Math.sin(TAU * w.f1 / v * x - TAU * w.f1 * t);
+    const y2 = (x) => w.A2 * Math.sin(TAU * w.f2 / v * x + TAU * w.f2 * t);
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
+    // amplitude guides
+    hline(L, R, Ys[0](w.A1), T.pos, [3 * ls, 4 * ls], 1); hline(L, R, Ys[0](-w.A1), T.pos, [3 * ls, 4 * ls], 1);
+    hline(L, R, Ys[1](w.A2), T.neg, [3 * ls, 4 * ls], 1); hline(L, R, Ys[1](-w.A2), T.neg, [3 * ls, 4 * ls], 1);
+    plot(L, R, (px) => Ys[0](y1(invX(px))), T.pos, 2.4 * ls);
+    plot(L, R, (px) => Ys[1](y2(invX(px))), T.neg, 2.4 * ls);
+    const Y3 = Ys[2];
+    if (w.env) {
+      const env = (px) => waveEnvelope(invX(px), t, w.A1, w.A2, w.f1, w.f2, v);
+      ctx.fillStyle = T.accent; ctx.globalAlpha = 0.08; ctx.beginPath();
+      for (let px = L; px <= R; px += 2) ctx.lineTo(px, Y3(env(px)));
+      for (let px = R; px >= L; px -= 2) ctx.lineTo(px, Y3(-env(px)));
+      ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+      plot(L, R, (px) => Y3(env(px)), T.muted, 1.2 * ls, [5 * ls, 4 * ls], 2);
+      plot(L, R, (px) => Y3(-env(px)), T.muted, 1.2 * ls, [5 * ls, 4 * ls], 2);
+    }
+    // faint copies of the two waves behind the sum
+    ctx.globalAlpha = 0.22; plot(L, R, (px) => Y3(y1(invX(px))), T.pos, 1.4 * ls); plot(L, R, (px) => Y3(y2(invX(px))), T.neg, 1.4 * ls); ctx.globalAlpha = 1;
+    plot(L, R, (px) => { const x = invX(px); return Y3(y1(x) + y2(x)); }, T.ink, 3 * ls);
+    ctx.restore();
+    // nodes and antinodes: sin Σ = 0 at nodes, cos Σ = 0 at antinodes, with Σ = k̄x + (ω₂ − ω₁)t/2
+    const marks = [];
+    if (w.marks && w.A1 + w.A2 > 0) {
+      const kb = PI * (w.f1 + w.f2) / v, ph = PI * (w.f2 - w.f1) * t, half = PI / kb;   // node spacing λ̄/2
+      const kmin = Math.ceil((kb * xa + ph) / PI - 0.5 - 1e-9), kmax = Math.floor((kb * xb + ph) / PI);
+      if ((X(half) - X(0)) > 16 * ls) {
+        for (let m = kmin; m <= kmax; m++) {
+          const xn = (m * PI - ph) / kb, xa2 = ((m + 0.5) * PI - ph) / kb;
+          if (xn >= xa - 1e-9 && xn <= xb + 1e-9) marks.push(['N', xn]);
+          if (xa2 >= xa && xa2 <= xb) marks.push(['A', xa2]);
+        }
+      }
+      const [a3, b3] = strips[2];
+      for (const [kind, xm] of marks) {
+        const px = X(xm), e = waveEnvelope(xm, t, w.A1, w.A2, w.f1, w.f2, v);
+        if (kind === 'N') {
+          ctx.strokeStyle = T.ink; ctx.fillStyle = T.canvas; ctx.lineWidth = 1.6 * ls;
+          ctx.beginPath(); ctx.arc(px, Y3(0), 4 * ls, 0, TAU); ctx.fill(); ctx.stroke();
+          if (e > 0.02) { ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, Y3(e)); ctx.lineTo(px, Y3(-e)); ctx.stroke(); }
+        }
+        tag(kind, px, b3 - 2 * ls, kind === 'N' ? T.ink : T.muted, 'center', 'bottom', kind === 'N', 10.5);
+      }
+    }
+    // titles last
+    for (let i = 0; i < 3; i++) tag(titles[i][0], L, strips[i][0] - 5 * ls, titles[i][1], 'left', 'bottom', true, 11.5);
+    const [a3] = strips[2];
+    const swr = w.A1 === w.A2 ? (w.A1 > 0 ? 'pure standing wave' : '') : 'standing ' + (2 * Math.min(w.A1, w.A2)).toFixed(2) + ' cm + traveling ' + Math.abs(w.A1 - w.A2).toFixed(2) + ' cm';
+    {
+      ctx.font = font(11.5, true); const tw = ctx.measureText(titles[2][0]).width, room = R - L - tw - 18 * ls;
+      const swrShort = w.A1 === w.A2 ? swr : `SWR ${((w.A1 + w.A2) / Math.abs(w.A1 - w.A2)).toFixed(2)}`;
+      const note = w.f1 !== w.f2 ? pick(['f₁ ≠ f₂: the nodes drift', 'nodes drift'], room, 10.5, false) : swr ? pick([swr, swrShort], room, 10.5, false) : '';
+      if (note) tag(note, L + tw + 18 * ls, a3 - 5 * ls, T.muted, 'left', 'bottom', false, 10.5);
+    }
+    ctx.fillStyle = T.muted; ctx.font = font(10); ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+    ctx.save(); ctx.translate(12 * ls, (top + bot) / 2); ctx.rotate(-PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('y (cm)', 0, 0); ctx.restore();
+    xTicks(L, R, xa, xb, strips[2][1], 'x (m)');
+    // amplitude grips, on the +A guide line near the right edge
+    const gx = R - 34 * ls;
+    const mk = (id, i, A, key, color) => {
+      const Y = Ys[i], [a, b] = strips[i];
+      handles.push({ id, cursor: 'ns-resize', color, seg: [R - 80 * ls, Y(A), R - 4 * ls, Y(A)], grip: [gx, Y(A)],
+        set: (mx, my) => { const val = ((a + b) / 2 - my) / ((b - a) / 2) * scales[i]; setSlider(key, val); } });
+    };
+    mk('A1', 0, w.A1, 'wA1', T.pos); mk('A2', 1, w.A2, 'wA2', T.neg);
+  }
+
+  // ---------- view: string ----------
+  function stringY(xm) {   // displacement in m at x (m), current time
+    const s = S.s, L = s.L;
+    if (s.mode === 'harm') { const w = TAU * sF(s.n); return 5e-3 * Math.sin(s.n * PI * xm / L) * Math.cos(w * t); }
+    return 0;
+  }
+  let strCoef = null, strCoefN = 0;
+  function prepareStringCoef() {
+    const s = S.s;
+    if (s.mode === 'pluck') {
+      strCoefN = PLUCK_N; strCoef = new Float64Array(PLUCK_N + 1);
+      const w1 = TAU * sF(1);
+      for (let n = 1; n <= PLUCK_N; n++) strCoef[n] = pluckB[n] * Math.cos(n * w1 * t);
+    } else if (s.mode === 'drive') {
+      strCoefN = D.M; strCoef = new Float64Array(D.M + 1);
+      for (let n = 1; n <= D.M; n++) strCoef[n] = drivenQ(D, n)[0];
+    }
+  }
+  function drawString() {
+    const s = S.s, L = s.L, f1 = sF(1);
+    const Lp = 50 * ls, Rp = W - 26 * ls, top = 12 * ls, bot = H - 30 * ls;
+    const splitY = top + (bot - top) * 0.56;
+    const sTop = top + 26 * ls, sBot = splitY - 34 * ls;
+    const span = holdSpan || Math.max(0.3, L * 1.04);
+    const X = (x) => Lp + x / span * (Rp - Lp), invX = (px) => (px - Lp) / (Rp - Lp) * span;
+    let ymax;   // half height of the string panel, in mm
+    if (s.mode === 'drive') { ensureCurve(); ymax = Math.max(0.05, curveMax * 1e3 * 1.3); } else ymax = 12;
+    const mid = (sTop + sBot) / 2, half = (sBot - sTop) / 2;
+    const Y = (ym) => mid - ym * 1e3 / ymax * half;   // ym in m
+    const invYmm = (py) => (mid - py) / half * ymax;
+    vGrid(Lp, Rp, 0, span, sTop, sBot);
+    // y ticks in mm
+    const st = nice(ymax / 2.2);
+    ctx.fillStyle = T.muted; ctx.font = font(10); ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = -Math.floor(ymax / st) * st; v <= ymax + 1e-9; v += st) { ctx.fillText(fmtTick(v, st), Lp - 6 * ls, mid - v / ymax * half); }
+    ctx.save(); ctx.translate(12 * ls, mid); ctx.rotate(-PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('y (mm)', 0, 0); ctx.restore();
+    frame(Lp, sTop, Rp, sBot);
+    hline(X(0), X(L), mid, T.muted, [4 * ls, 4 * ls], 1);
+    xTicks(Lp, Rp, 0, span, sBot, 'x (m)');
+    prepareStringCoef();
+    const yAt = (xm) => {
+      if (s.mode === 'harm') return stringY(xm);
+      if (s.mode === 'pluck' && pluckDrag) return triangle(xm, s.h * 1e-3, s.d * L, L);
+      return sineSeries(strCoef, strCoefN, PI * xm / L);
+    };
+    ctx.save(); ctx.beginPath(); ctx.rect(Lp, sTop, Rp - Lp, sBot - sTop); ctx.clip();
+    // ghosts: envelope of the harmonic, the release shape, the steady state envelope
+    if (s.mode === 'harm') {
+      plot(X(0), X(L), (px) => Y(5e-3 * Math.sin(s.n * PI * invX(px) / L)), T.muted, 1.2 * ls, [5 * ls, 4 * ls]);
+      plot(X(0), X(L), (px) => Y(-5e-3 * Math.sin(s.n * PI * invX(px) / L)), T.muted, 1.2 * ls, [5 * ls, 4 * ls]);
+    } else if (s.mode === 'pluck' && !pluckDrag) {
+      ctx.globalAlpha = 0.6; plot(X(0), X(L), (px) => Y(triangle(invX(px), s.h * 1e-3, s.d * L, L)), T.muted, 1.2 * ls, [5 * ls, 4 * ls]); ctx.globalAlpha = 1;
+    } else if (s.mode === 'drive') {
+      const gr = new Float64Array(D.M + 1), gi = new Float64Array(D.M + 1);
+      for (let n = 1; n <= D.M; n++) { gr[n] = D.Gr[n]; gi[n] = D.Gi[n]; }
+      const env = (px) => { const th = PI * invX(px) / L; const a = sineSeries(gr, D.M, th), b = sineSeries(gi, D.M, th); return Math.hypot(a, b); };
+      plot(X(0), X(L), (px) => Y(env(px)), T.muted, 1.2 * ls, [5 * ls, 4 * ls], 2);
+      plot(X(0), X(L), (px) => Y(-env(px)), T.muted, 1.2 * ls, [5 * ls, 4 * ls], 2);
+    }
+    const strFn = (px) => Y(yAt(invX(px)));
+    plot(X(0), X(L), strFn, T.ink, 3 * ls, null, 1.5);
+    ctx.restore();
+    // nut and bridge
+    ctx.fillStyle = T.tubeEdge;
+    ctx.fillRect(X(0) - 5 * ls, mid - 14 * ls, 5 * ls, 28 * ls);
+    ctx.beginPath(); ctx.moveTo(X(L), mid); ctx.lineTo(X(L) + 9 * ls, mid + 16 * ls); ctx.lineTo(X(L) - 9 * ls, mid + 16 * ls); ctx.closePath(); ctx.fill();
+    // nodes and antinodes of a harmonic
+    if (s.mode === 'harm') {
+      for (let m = 0; m <= s.n; m++) {
+        const px = X(m * L / s.n);
+        ctx.strokeStyle = T.equi; ctx.fillStyle = T.canvas; ctx.lineWidth = 1.8 * ls;
+        ctx.beginPath(); ctx.arc(px, mid, 4.2 * ls, 0, TAU); ctx.fill(); ctx.stroke();
+      }
+      if ((X(L / s.n) - X(0)) > 20 * ls) for (let m = 0; m < s.n; m++) tag('A', X((m + 0.5) * L / s.n), sBot - 3 * ls, T.muted, 'center', 'bottom', false, 10);
+      if ((X(L / s.n) - X(0)) > 20 * ls) for (let m = 1; m < s.n; m++) tag('N', X(m * L / s.n), sBot - 3 * ls, T.equi, 'center', 'bottom', true, 10);
+    }
+    // driver
+    if (s.mode === 'drive') {
+      const xd = X(DRIVE_XD * L), fy = Math.cos(D.phi);
+      ctx.strokeStyle = T.pos; ctx.fillStyle = T.pos; ctx.lineWidth = 2 * ls;
+      const y0 = Y(sineSeries(strCoef, strCoefN, PI * DRIVE_XD));
+      const ay = y0 - fy * 18 * ls;
+      ctx.beginPath(); ctx.moveTo(xd, y0); ctx.lineTo(xd, ay); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(xd, ay - 6 * ls * Math.sign(fy || 1)); ctx.lineTo(xd - 4.5 * ls, ay); ctx.lineTo(xd + 4.5 * ls, ay); ctx.closePath();
+      if (Math.abs(fy) > 0.15) ctx.fill();
+      ctx.beginPath(); ctx.arc(xd, y0, 3.5 * ls, 0, TAU); ctx.fill();
+    }
+    // title
+    let title;
+    if (s.mode === 'harm') title = pick([`Harmonic n = ${s.n}:  f${sub(s.n)} = ${s.n} v/2L = ${sF(s.n).toFixed(1)} Hz,  λ${sub(s.n)} = 2L/${s.n} = ${(2 * L / s.n).toFixed(3)} m`,
+      `n = ${s.n}:  f${sub(s.n)} = ${sF(s.n).toFixed(1)} Hz,  λ${sub(s.n)} = ${(2 * L / s.n).toFixed(3)} m`], Rp - Lp);
+    else if (s.mode === 'pluck') title = pluckDrag ? pick([`Pulled to h = ${s.h.toFixed(1)} mm at d = ${(s.d * L).toFixed(3)} m: let go`, `h = ${s.h.toFixed(1)} mm, d = ${fracName(s.d)}: let go`], Rp - Lp)
+      : pick([`Plucked at d = ${(s.d * L).toFixed(3)} m (${fracName(s.d)}), sum of ${PLUCK_N} modes`, `Plucked at d = ${fracName(s.d)}`], Rp - Lp);
+    else title = pick([`Driven at f = ${s.f.toFixed(1)} Hz  (f/f₁ = ${(s.f / f1).toFixed(3)})`, `Driven at ${s.f.toFixed(1)} Hz`], Rp - Lp);
+    tag(title, Lp, sTop - 5 * ls, T.ink, 'left', 'bottom', true, 11.5);
+    if (s.mode === 'drive') tag('dashed: steady state envelope', Rp, sTop + 4 * ls, T.muted, 'right', 'top', false, 10);
+    // handles: bridge (length), and the string itself (pluck)
+    handles.push({ id: 'bridge', cursor: 'ew-resize', color: T.tubeEdge, seg: [X(L), sTop + 4 * ls, X(L), sBot - 4 * ls], grip: [X(L), mid + 30 * ls < sBot - 10 * ls ? mid + 30 * ls : mid - 30 * ls],
+      start: () => { holdSpan = span; },
+      set: (mx) => setSlider('sL', invX(mx)) });
+    if (s.mode !== 'drive') {
+      const gx = s.mode === 'pluck' ? X(s.d * L) : X(L / 2);
+      handles.push({ id: 'string', cursor: 'grab', color: T.accent, path: { x0: X(0) + 8 * ls, x1: X(L) - 8 * ls, fn: strFn }, grip: [gx, strFn(gx)],
+        start: (mx, my) => { startPluck(); },
+        set: (mx, my) => { setPluckFromPointer(invX(mx) / S.s.L, invYmm(my)); } });
+    }
+    // lower panel
+    if (s.mode === 'drive') drawResonance(Lp, Rp, splitY + 30 * ls, bot);
+    else drawBars(Lp, Rp, splitY + 30 * ls, bot);
+  }
+  function fracName(d) {
+    const fr = [[1, 2], [1, 3], [2, 3], [1, 4], [3, 4], [1, 5], [2, 5], [3, 5], [4, 5], [1, 6], [5, 6], [1, 8], [3, 8], [5, 8], [7, 8], [1, 10], [3, 10], [7, 10], [9, 10]];
+    for (const [a, b] of fr) if (Math.abs(d - a / b) < 0.004) return `${a}/${b} of L`;
+    return `${d.toFixed(2)} L`;
+  }
+  function drawBars(x0, x1, y0, y1) {
+    const s = S.s, NB = 12;
+    const vals = [];
+    for (let n = 1; n <= NB; n++) vals.push(s.mode === 'harm' ? (n === s.n ? 5 : 0) : Math.abs(pluckB[n]) * 1e3);
+    const vmax = Math.max(1e-9, ...vals) * 1.12;
+    const pb = y1 - 18 * ls, pt = y0 + 4 * ls;
+    tag(s.mode === 'harm' ? pick(['Mode amplitudes bₙ (mm): one mode only', 'Mode amplitudes bₙ (mm)'], x1 - x0) : 'Mode amplitudes |bₙ| (mm), fₙ = n f₁', x0, y0 - 5 * ls, T.ink, 'left', 'bottom', true, 11.5);
+    frame(x0, pt, x1, pb);
+    const bw = (x1 - x0) / NB;
+    // y ticks
+    const st = nice(vmax / 3);
+    ctx.font = font(10); ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = 0; v <= vmax; v += st) { const py = pb - v / vmax * (pb - pt); hline(x0, x1, Math.round(py) + 0.5, T.grid); ctx.fillText(fmtTick(v, st), x0 - 6 * ls, py); }
+    for (let n = 1; n <= NB; n++) {
+      const v = vals[n - 1], cx = x0 + (n - 0.5) * bw, h = v / vmax * (pb - pt);
+      const zero = v < 1e-6 * vmax;
+      ctx.fillStyle = s.mode === 'harm' ? T.equi : T.accent;
+      ctx.fillRect(cx - bw * 0.3, pb - h, bw * 0.6, h);
+      ctx.fillStyle = zero ? T.muted : T.ink; ctx.font = font(10.5, !zero); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillText(String(n), cx, pb + 4 * ls);
+      if (zero && s.mode === 'pluck') { ctx.fillStyle = T.muted; ctx.textBaseline = 'bottom'; ctx.fillText('0', cx, pb - 2 * ls); }
+    }
+    ctx.fillStyle = T.muted; ctx.font = font(10); ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('n', x1, pb + 16 * ls);
+  }
+  function drawResonance(x0, x1, y0, y1) {
+    ensureCurve();
+    const s = S.s, [fa, fb] = fRange(), f1 = sF(1);
+    const pt = y0 + 4 * ls, pb = y1 - 18 * ls;
+    let amin = Infinity, amax = 0;
+    for (const c of curve) { amin = Math.min(amin, c[1]); amax = Math.max(amax, c[1]); }
+    const lo = Math.floor(Math.log10(amin * 1e3)), hi = Math.ceil(Math.log10(amax * 1e3 * 1.3));
+    const X = (f) => x0 + (f - fa) / (fb - fa) * (x1 - x0), invF = (px) => fa + (px - x0) / (x1 - x0) * (fb - fa);
+    const Y = (a) => pb - (Math.log10(Math.max(1e-12, a * 1e3)) - lo) / (hi - lo) * (pb - pt);
+    tag(pick(['Steady amplitude against drive frequency (log scale)', 'Steady amplitude (log scale)'], x1 - x0), x0, y0 - 5 * ls, T.ink, 'left', 'bottom', true, 11.5);
+    vGrid(x0, x1, fa, fb, pt, pb);
+    ctx.font = font(10); ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let e = lo; e <= hi; e++) {
+      const py = pb - (e - lo) / (hi - lo) * (pb - pt);
+      hline(x0, x1, Math.round(py) + 0.5, T.grid);
+      if ((hi - lo) <= 5 || (e - lo) % 2 === 0) ctx.fillText(e >= 0 ? String(Math.pow(10, e)) : Math.pow(10, e).toFixed(-e), x0 - 6 * ls, py);
+    }
+    ctx.save(); ctx.translate(12 * ls, (pt + pb) / 2); ctx.rotate(-PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('mm', 0, 0); ctx.restore();
+    frame(x0, pt, x1, pb);
+    xTicks(x0, x1, fa, fb, pb, 'f (Hz)');
+    ctx.save(); ctx.beginPath(); ctx.rect(x0, pt, x1 - x0, pb - pt); ctx.clip();
+    // harmonics
+    for (let n = 1; n <= 8; n++) { const px = X(n * f1); ctx.strokeStyle = T.equi; ctx.globalAlpha = 0.6; ctx.setLineDash([3 * ls, 4 * ls]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, pt); ctx.lineTo(px, pb); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 2.2 * ls; ctx.lineJoin = 'round'; ctx.beginPath();
+    curve.forEach((c, i) => { const px = X(c[0]), py = Y(c[1]); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); });
+    ctx.stroke();
+    const a = steadyAmp(D, TAU * s.f), fx = X(s.f);
+    ctx.strokeStyle = T.pos; ctx.lineWidth = 1.6 * ls; ctx.beginPath(); ctx.moveTo(fx, pt); ctx.lineTo(fx, pb); ctx.stroke();
+    ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(fx, Y(a), 4.5 * ls, 0, TAU); ctx.fill();
+    ctx.restore();
+    for (let n = 1; n <= 8; n++) { const px = X(n * f1); if (px > x0 + 8 && px < x1 - 8) tag(`f${sub(n)}`, px, pt + 3 * ls, T.equi, 'center', 'top', true, 10); }
+    const txt = `${s.f.toFixed(1)} Hz, ${fmtMM(a)}`;
+    ctx.font = font(10.5, true); const tw = ctx.measureText(txt).width;
+    tag(txt, fx + 8 * ls + tw > x1 ? fx - 8 * ls : fx + 8 * ls, Math.min(pb - 10 * ls, Math.max(pt + 22 * ls, Y(a))), T.pos, fx + 8 * ls + tw > x1 ? 'right' : 'left', 'middle', true, 10.5);
+    handles.push({ id: 'freq', cursor: 'ew-resize', color: T.pos, seg: [fx, pt, fx, pb], grip: [fx, pb - 12 * ls], region: [x0, pt, x1, pb],
+      set: (mx) => setSlider('dF', invF(mx)) });
+  }
+  function fmtMM(a) { const mm = a * 1e3; return mm >= 1 ? mm.toFixed(2) + ' mm' : mm >= 0.01 ? mm.toFixed(3) + ' mm' : (mm * 1e3).toFixed(1) + ' µm'; }
+
+  // ---------- view: air column ----------
+  function drawPipe() {
+    const p = S.p, L = p.L, r = pR(), Le = pLe(), dl = p.endc ? 0.6 * r : 0, n = p.n;
+    const k = S.p.kind === 'oo' ? n * PI / Le : n * PI / (2 * Le);
+    const w = TAU * pF(n);
+    const xs0 = p.kind === 'oo' ? -dl : 0;    // where the standing wave pattern starts (open end: just outside)
+    const span = holdSpan || Math.max(0.3, (L + dl) * 1.06);
+    const xa = -0.04 * span - (p.kind === 'oo' ? dl : 0), xb = span;
+    const Lp = 50 * ls, Rp = W - 26 * ls, top = 12 * ls, bot = H - 30 * ls;
+    const X = (x) => Lp + (x - xa) / (xb - xa) * (Rp - Lp), invX = (px) => xa + (px - Lp) / (Rp - Lp) * (xb - xa);
+    const gap = 30 * ls, avail = bot - top - 3 * gap;
+    const h0 = avail * 0.4, h1 = avail * 0.3;
+    const tubeA = top + gap, tubeB = tubeA + h0, sA = tubeB + gap, sB = sA + h1, pA = sB + gap, pB = pA + h1;
+    const sh = (x) => (p.kind === 'oo' ? Math.cos(k * (x - xs0)) : Math.sin(k * x));      // displacement shape
+    const ph = (x) => (p.kind === 'oo' ? Math.sin(k * (x - xs0)) : -Math.cos(k * x));     // pressure shape, ∝ −ds/dx
+    const ct = Math.cos(w * t);
+    // tube
+    const th = Math.min(h0 * 0.8, 120 * ls), tm = (tubeA + tubeB) / 2, ty0 = tm - th / 2, ty1 = tm + th / 2;
+    const x0 = X(0), x1 = X(L);
+    ctx.fillStyle = T.tube; ctx.fillRect(x0, ty0, x1 - x0, th);
+    // pressure shading: compression warm, rarefaction cool
+    const NS = Math.max(20, Math.round((x1 - x0) / 4));
+    for (let i = 0; i < NS; i++) {
+      const xm = L * (i + 0.5) / NS, pv = ph(xm) * ct;
+      ctx.fillStyle = pv > 0 ? T.pos : T.neg; ctx.globalAlpha = 0.42 * Math.abs(pv);
+      ctx.fillRect(x0 + (x1 - x0) * i / NS, ty0, (x1 - x0) / NS + 0.6, th);
+    }
+    ctx.globalAlpha = 1;
+    // air parcels
+    const nc = Math.max(12, Math.min(56, Math.round((x1 - x0) / (11 * ls)))), nr = Math.max(3, Math.min(7, Math.round(th / (14 * ls))));
+    const dxp = (x1 - x0) / nc, amp = 0.42 * dxp * 2.2;
+    ctx.fillStyle = T.ink;
+    for (let i = 0; i < nc; i++) {
+      const xm = L * (i + 0.5) / nc, sx = X(xm) + amp * sh(xm) * ct;
+      for (let j = 0; j < nr; j++) {
+        const py = ty0 + th * (j + 0.5) / nr;
+        ctx.beginPath(); ctx.arc(Math.max(x0 + 2, Math.min(x1 - 2, sx)), py, 1.9 * ls, 0, TAU); ctx.fill();
+      }
+    }
+    // walls and ends
+    ctx.strokeStyle = T.tubeEdge; ctx.lineWidth = 3 * ls;
+    ctx.beginPath(); ctx.moveTo(x0, ty0); ctx.lineTo(x1, ty0); ctx.moveTo(x0, ty1); ctx.lineTo(x1, ty1); ctx.stroke();
+    if (p.kind === 'oc') { ctx.fillStyle = T.tubeEdge; ctx.fillRect(x0 - 7 * ls, ty0 - 1.5 * ls, 7 * ls, th + 3 * ls); }
+    if (p.endc) {
+      for (const xe of p.kind === 'oo' ? [-dl, L + dl] : [L + dl]) { ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ls; ctx.setLineDash([3 * ls, 3 * ls]); ctx.beginPath(); ctx.moveTo(X(xe), ty0 - 8 * ls); ctx.lineTo(X(xe), ty1 + 8 * ls); ctx.stroke(); ctx.setLineDash([]); }
+    }
+    // strips for s and p
+    const strip = (a, b, fn, color, title) => {
+      const Y = (v) => (a + b) / 2 - v * (b - a) / 2 * 0.82;
+      vGrid(Lp, Rp, Math.max(0, xa), xb, a, b);
+      hline(Lp, Rp, Y(0), T.gridStrong);
+      frame(Lp, a, Rp, b);
+      ctx.save(); ctx.beginPath(); ctx.rect(Lp, a, Rp - Lp, b - a); ctx.clip();
+      const ea = X(xs0), eb = X(xs0 + Le);
+      plot(ea, eb, (px) => Y(Math.abs(fn(invX(px)))), T.muted, 1.1 * ls, [5 * ls, 4 * ls], 2);
+      plot(ea, eb, (px) => Y(-Math.abs(fn(invX(px)))), T.muted, 1.1 * ls, [5 * ls, 4 * ls], 2);
+      if (dl > 0) {
+        ctx.globalAlpha = 0.5;
+        if (p.kind === 'oo') plot(ea, X(0), (px) => Y(fn(invX(px)) * ct), color, 2 * ls, [3 * ls, 3 * ls], 1);
+        plot(X(L), eb, (px) => Y(fn(invX(px)) * ct), color, 2 * ls, [3 * ls, 3 * ls], 1);
+        ctx.globalAlpha = 1;
+      }
+      plot(X(0), X(L), (px) => Y(fn(invX(px)) * ct), color, 2.6 * ls, null, 1.5);
+      // tube extent
+      ctx.strokeStyle = T.tubeEdge; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.setLineDash([2, 3]);
+      ctx.beginPath(); ctx.moveTo(X(0), a); ctx.lineTo(X(0), b); ctx.moveTo(X(L), a); ctx.lineTo(X(L), b); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+      ctx.restore();
+      // nodes N and antinodes A of this quantity: zeros and extremes of fn on [xs0, xs0 + Le]
+      const spacing = PI / k;
+      const pts = [];
+      const zeroStart = (p.kind === 'oo') === (fn === sh) ? spacing / 2 : 0;   // first zero after the pattern start
+      for (let x = xs0 + zeroStart; x <= xs0 + Le + 1e-9; x += spacing) pts.push(['N', x]);
+      for (let x = xs0 + (zeroStart ? 0 : spacing / 2); x <= xs0 + Le + 1e-9; x += spacing) pts.push(['A', x]);
+      if (X(spacing) - X(0) > 14 * ls) for (const [kind, xm] of pts) {
+        if (kind === 'N') { ctx.strokeStyle = color; ctx.fillStyle = T.canvas; ctx.lineWidth = 1.6 * ls; ctx.beginPath(); ctx.arc(X(xm), Y(0), 3.8 * ls, 0, TAU); ctx.fill(); ctx.stroke(); }
+        tag(kind, X(xm), b - 2 * ls, kind === 'N' ? color : T.muted, 'center', 'bottom', kind === 'N', 10);
+      }
+      tag(title, Lp, a - 5 * ls, color, 'left', 'bottom', true, 11.5);
+    };
+    strip(sA, sB, sh, T.equi, 'Air displacement s(x, t)');
+    strip(pA, pB, ph, T.pos, 'Pressure change Δp(x, t)');
+    xTicks(Lp, Rp, Math.max(0, xa), xb, pB, 'x (m)');
+    // tube labels last
+    const lw = p.kind === 'oc' ? 'closed end' : 'open end';
+    tag(lw, x0, ty1 + 6 * ls, T.muted, 'left', 'top', false, 10);
+    tag('open end', x1, ty1 + 6 * ls, T.muted, 'right', 'top', false, 10);
+    const ord = pick([p.kind === 'oo' ? `n = ${n}: f${sub(n)} = n v/2L = ${pF(n).toFixed(1)} Hz, λ = 2L/${n} = ${(2 * Le / n).toFixed(3)} m`
+      : `n = ${n}: f${sub(n)} = n v/4L = ${pF(n).toFixed(1)} Hz, λ = 4L/${n} = ${(4 * Le / n).toFixed(3)} m`,
+      `n = ${n}: f${sub(n)} = ${pF(n).toFixed(1)} Hz, λ = ${((p.kind === 'oo' ? 2 : 4) * Le / n).toFixed(3)} m`], Rp - Lp);
+    const ow = tag(ord, Lp, tubeA - 5 * ls, T.ink, 'left', 'bottom', true, 11.5);
+    ctx.font = font(10); const dw = ctx.measureText('dashed: effective ends').width;
+    if (p.endc && Lp + ow + dw + 20 * ls < Rp) tag('dashed: effective ends', Rp, tubeA - 5 * ls, T.muted, 'right', 'bottom', false, 10);
+    handles.push({ id: 'pipeEnd', cursor: 'ew-resize', color: T.tubeEdge, seg: [x1, ty0 - 10 * ls, x1, ty1 + 10 * ls], grip: [x1 + 12 * ls, tm],
+      start: () => { holdSpan = span; },
+      set: (mx) => setSlider('aL', invX(mx)) });
+  }
+
+  // ---------- view: beats ----------
+  let beatHold = null;
+  function drawBeats() {
+    const b = S.b, f1 = b.f1, f2 = b.f1 + b.df, A1 = 1, A2 = b.a2, df = Math.abs(b.df);
+    const Lp = 46 * ls, Rp = W - 22 * ls, top = 12 * ls, bot = H - 30 * ls;
+    const gap = 30 * ls, avail = bot - top - 3 * gap;
+    const h1 = avail * 0.27, h2 = avail * 0.27;
+    const aA = top + gap, aB = aA + h1, bA = aB + gap, bB = bA + h2, cA = bB + gap, cB = bot - 4 * ls;
+    const fm = (f1 + f2) / 2, zw = 5 / fm;      // close up window
+    const tz0 = t - zw / 2;
+    const Xz = (tt) => Lp + (tt - tz0) / zw * (Rp - Lp), invTz = (px) => tz0 + (px - Lp) / (Rp - Lp) * zw;
+    const y1 = (tt) => A1 * Math.cos(TAU * f1 * tt), y2 = (tt) => A2 * Math.cos(TAU * f2 * tt);
+    const YA = (v) => (aA + aB) / 2 - v / 1.25 * (aB - aA) / 2, YB = (v) => (bA + bB) / 2 - v / 2.3 * (bB - bA) / 2;
+    const YC = (v) => (cA + cB) / 2 - v / 2.3 * (cB - cA) / 2;
+    for (const [a, c] of [[aA, aB], [bA, bB], [cA, cB]]) { hline(Lp, Rp, (a + c) / 2, T.gridStrong); frame(Lp, a, Rp, c); }
+    ctx.save(); ctx.beginPath(); ctx.rect(Lp, aA, Rp - Lp, aB - aA); ctx.clip();
+    hline(Lp, Rp, YA(A2), T.neg, [3 * ls, 4 * ls]);
+    plot(Lp, Rp, (px) => YA(y1(invTz(px))), T.pos, 2.2 * ls, null, 1);
+    plot(Lp, Rp, (px) => YA(y2(invTz(px))), T.neg, 2.2 * ls, null, 1);
+    ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(Lp, bA, Rp - Lp, bB - bA); ctx.clip();
+    const ez = beatEnvelope(t, A1, A2, f1, f2);
+    hline(Lp, Rp, YB(ez), T.muted, [5 * ls, 4 * ls], 1.1 * ls); hline(Lp, Rp, YB(-ez), T.muted, [5 * ls, 4 * ls], 1.1 * ls);
+    plot(Lp, Rp, (px) => { const tt = invTz(px); return YB(y1(tt) + y2(tt)); }, T.ink, 2.6 * ls, null, 1);
+    ctx.restore();
+    // long window: band the signal fills, the envelope, the beat period
+    // a sweep: the window spans whole beat periods, so the envelope stands still and the playhead sweeps across
+    let wl = 2;
+    if (beatHold) wl = beatHold;
+    else if (df > 0) {
+      const Tb = 1 / df;
+      if (Tb >= 4) wl = 4;
+      else { let k = Math.max(2, Math.ceil(0.4 / Tb)); while (k > 1 && k * Tb > 4) k--; wl = k * Tb; }
+    }
+    const tl0 = drag && drag.id === 'beat' && drag.tl0 !== undefined ? drag.tl0 : Math.floor(t / wl + 1e-9) * wl;
+    const Xl = (tt) => Lp + (tt - tl0) / wl * (Rp - Lp), invTl = (px) => tl0 + (px - Lp) / (Rp - Lp) * wl;
+    const ppx = wl / (Rp - Lp), Tc = 1 / Math.max(f1, f2);
+    ctx.save(); ctx.beginPath(); ctx.rect(Lp, cA, Rp - Lp, cB - cA); ctx.clip();
+    // close up window shading
+    ctx.fillStyle = T.accent; ctx.globalAlpha = 0.1; ctx.fillRect(Xl(tz0), cA, Math.max(2, Xl(tz0 + zw) - Xl(tz0)), cB - cA); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.ink; ctx.globalAlpha = 0.32; ctx.beginPath();
+    const lo = [], hi = [];
+    for (let px = Lp; px <= Rp; px += 1) {
+      const ta = invTl(px), tb = ta + ppx;
+      let mn = Infinity, mx = -Infinity;
+      if (ppx > Tc / 4) { const e = Math.max(beatEnvelope(ta, A1, A2, f1, f2), beatEnvelope(tb, A1, A2, f1, f2)); mn = -e; mx = e; }
+      else for (let j = 0; j <= 10; j++) { const tt = ta + (tb - ta) * j / 10, v = y1(tt) + y2(tt); mn = Math.min(mn, v); mx = Math.max(mx, v); }
+      hi.push([px, YC(mx)]); lo.push([px, YC(mn)]);
+    }
+    hi.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+    for (let i = lo.length - 1; i >= 0; i--) ctx.lineTo(lo[i][0], lo[i][1] + 0.6);
+    ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+    plot(Lp, Rp, (px) => YC(beatEnvelope(invTl(px), A1, A2, f1, f2)), T.accent, 1.8 * ls, [6 * ls, 4 * ls], 2);
+    plot(Lp, Rp, (px) => YC(-beatEnvelope(invTl(px), A1, A2, f1, f2)), T.accent, 1.8 * ls, [6 * ls, 4 * ls], 2);
+    // playhead
+    ctx.strokeStyle = T.pos; ctx.lineWidth = 1.6 * ls; ctx.beginPath(); ctx.moveTo(Xl(t), cA); ctx.lineTo(Xl(t), cB); ctx.stroke();
+    ctx.restore();
+    // beat bracket between the loud moments just before the playhead
+    let bx0 = null, bx1 = null;
+    if (df > 0) {
+      const Tb = 1 / df;
+      let ta = Math.ceil(tl0 / Tb - 1e-6) * Tb;
+      if (drag && drag.id === 'beat' && drag.ta !== undefined) ta = drag.ta;
+      const tb = ta + Tb;
+      bx0 = Xl(ta); bx1 = Xl(tb);
+      if (bx1 <= Rp - 2) {
+        const by = cA + 14 * ls;
+        ctx.strokeStyle = T.accent; ctx.lineWidth = 1.6 * ls;
+        ctx.beginPath(); ctx.moveTo(bx0, by - 6 * ls); ctx.lineTo(bx0, by + 6 * ls); ctx.moveTo(bx0, by); ctx.lineTo(bx1, by); ctx.moveTo(bx1, by - 6 * ls); ctx.lineTo(bx1, by + 6 * ls); ctx.stroke();
+        const bt = pick([`T_beat = 1/|f₁ − f₂| = ${fmtT(Tb)}`, `T_beat = ${fmtT(Tb)}`], Math.max(bx1 - bx0, 0.6 * (Rp - Lp)), 10.5);
+        ctx.font = font(10.5, true); const bw2 = ctx.measureText(bt).width / 2 + 4 * ls;
+        tag(bt, Math.max(Lp + bw2, Math.min(Rp - bw2, (bx0 + bx1) / 2)), by + 5 * ls, T.accent, 'center', 'top', true, 10.5);
+        handles.push({ id: 'beat', cursor: 'ew-resize', color: T.accent, seg: [bx1, cA + 4 * ls, bx1, cB - 4 * ls], grip: [bx1, by],
+          start: () => { beatHold = wl; drag.ta = ta; drag.tl0 = tl0; },
+          set: (mx) => { const Tn = Math.max(0.05, invTl(mx) - ta); setSlider('bDf', Math.sign(S.b.df || 1) / Tn); } });
+      }
+    } else tag('f₁ = f₂: no beats, the loudness stays constant', Lp + 8 * ls, cA + 8 * ls, T.accent, 'left', 'top', true, 10.5);
+    // titles and ticks
+    tag(pick([`Close up: f₁ = ${f1.toFixed(1)} Hz and f₂ = ${f2.toFixed(1)} Hz`, `f₁ = ${f1.toFixed(1)} Hz, f₂ = ${f2.toFixed(1)} Hz`], Rp - Lp), Lp, aA - 5 * ls, T.ink, 'left', 'bottom', true, 11.5);
+    tag('Their sum', Lp, bA - 5 * ls, T.ink, 'left', 'bottom', true, 11.5);
+    tag(pick([`Sum over ${wl.toFixed(wl < 1 ? 2 : 1)} s, with its envelope; the red playhead sweeps across`, `Sum over ${wl.toFixed(wl < 1 ? 2 : 1)} s, with its envelope`], Rp - Lp), Lp, cA - 5 * ls, T.ink, 'left', 'bottom', true, 11.5);
+    // close up time ticks (ms from the playhead)
+    tag(`${(zw * 1e3).toFixed(1)} ms shown`, Rp - 4 * ls, bB - 3 * ls, T.muted, 'right', 'bottom', false, 10);
+    xTicks(Lp, Rp, tl0, tl0 + wl, cB, 't (s)');
+    // amplitude grip
+    handles.push({ id: 'A2', cursor: 'ns-resize', color: T.neg, seg: [Rp - 80 * ls, YA(A2), Rp - 4 * ls, YA(A2)], grip: [Rp - 34 * ls, YA(A2)],
+      set: (mx, my) => setSlider('bA2', ((aA + aB) / 2 - my) / ((aB - aA) / 2) * 1.25) });
+  }
+  const fmtT = (s) => (s >= 1 ? s.toFixed(2) + ' s' : (s * 1e3).toFixed(0) + ' ms');
+
+  // ---------- draw ----------
+  function drawAll() {
+    if (!W || !H || !T) return;
+    const ps = projScale();
+    ls = Math.min(ps, Math.max(1, Math.min(W / 640, H / 470)));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const keep = drag ? handles.find((h) => h.id === drag.id) : null;
+    handles = [];
+    if (S.view === 'waves') drawWaves();
+    else if (S.view === 'string') drawString();
+    else if (S.view === 'pipe') drawPipe();
+    else drawBeats();
+    if (drag && !handles.find((h) => h.id === drag.id) && keep) drag.h = keep;
+    drawGrips();
+  }
+
+  // ---------- controls ----------
+  const SL = {
+    wA1: [() => S.w.A1, (v) => { S.w.A1 = v; }, (v) => v.toFixed(2) + ' cm'],
+    wA2: [() => S.w.A2, (v) => { S.w.A2 = v; }, (v) => v.toFixed(2) + ' cm'],
+    wF1: [() => S.w.f1, (v) => { S.w.f1 = v; }, (v) => v.toFixed(2) + ' Hz'],
+    wF2: [() => S.w.f2, (v) => { S.w.f2 = v; }, (v) => v.toFixed(2) + ' Hz'],
+    sL: [() => S.s.L, (v) => { S.s.L = v; stringChanged(); }, (v) => v.toFixed(3) + ' m'],
+    sT: [() => S.s.T, (v) => { S.s.T = v; stringChanged(); }, (v) => v.toFixed(1) + ' N'],
+    sMu: [() => S.s.mu, (v) => { S.s.mu = v; stringChanged(); }, (v) => v.toFixed(2) + ' g/m'],
+    pD: [() => S.s.d, (v) => { S.s.d = v; rebuildPluck(); buildTables(); t = 0; }, (v) => `${(v * S.s.L).toFixed(3)} m = ${v.toFixed(2)} L`],
+    pH: [() => S.s.h, (v) => { S.s.h = v; rebuildPluck(); t = 0; }, (v) => v.toFixed(1) + ' mm'],
+    dF: [() => S.s.f, (v) => { S.s.f = v; if (D) retarget(D, D, TAU * v); }, (v) => `${v.toFixed(1)} Hz`],
+    dQ: [() => S.s.Q, (v) => { S.s.Q = v; rebuildDriven(true); }, (v) => v.toFixed(0)],
+    aL: [() => S.p.L, (v) => { S.p.L = v; }, (v) => v.toFixed(3) + ' m'],
+    aD: [() => S.p.D, (v) => { S.p.D = v; }, (v) => v.toFixed(1) + ' mm'],
+    aT: [() => S.p.Tc, (v) => { S.p.Tc = v; }, (v) => v.toFixed(1) + ' °C'],
+    bF1: [() => S.b.f1, (v) => { S.b.f1 = v; }, (v) => v.toFixed(0) + ' Hz'],
+    bDf: [() => S.b.df, (v) => { S.b.df = v; }, (v) => (v > 0 ? '+' : '') + v.toFixed(1) + ' Hz'],
+    bA2: [() => S.b.a2, (v) => { S.b.a2 = v; }, (v) => v.toFixed(2)]
+  };
+  function outs() { for (const id in SL) $(id + 'Out').textContent = SL[id][2](SL[id][0]()); }
+  function setSlider(id, v) {
+    const el = $(id); v = snap(v, el);
+    if (v === SL[id][0]()) return;
+    el.value = v; SL[id][1](v); outs(); updateReadouts(); soundUpdate();
+    if (!running) drawAll();
+  }
+  for (const id in SL) $(id).addEventListener('input', () => { SL[id][1](+$(id).value); outs(); updateReadouts(); soundUpdate(); if (!running) drawAll(); });
+  function syncSliders() { for (const id in SL) $(id).value = SL[id][0](); outs(); }
+
+  function stringChanged() {
+    // keep the drive slider range at 0.25 f₁ to 8.75 f₁, and the drive frequency inside it
+    const [fa, fb] = fRange(), el = $('dF');
+    el.min = fa; el.max = fb;
+    if (S.s.f < fa || S.s.f > fb) { S.s.f = Math.max(fa, Math.min(fb, S.s.f)); }
+    el.value = S.s.f;
+    rebuildPluck();
+    rebuildDriven(true);
+    buildTables();
+  }
+
+  function setView(v) {
+    S.view = v;
+    for (const b of $('viewSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    $('secWaves').hidden = v !== 'waves'; $('secString').hidden = v !== 'string'; $('secPipe').hidden = v !== 'pipe'; $('secBeats').hidden = v !== 'beats';
+    $('modelHint').textContent = MODEL[v];
+    buildKey(); updateReadouts(); soundRebuild();
+    t = 0; holdSpan = null;
+    if (v === 'string' && S.s.mode === 'drive') restDriven(D);
+    drawAll();
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; setView(b.dataset.v); markPreset(null); });
+
+  function setStrMode(m) {
+    S.s.mode = m;
+    for (const b of $('strMode').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.m === m));
+    $('harmBlock').hidden = m !== 'harm'; $('pluckBlock').hidden = m !== 'pluck'; $('driveBlock').hidden = m !== 'drive';
+    t = 0;
+    if (m === 'drive') { if (D) restDriven(D); }
+    buildKey(); updateReadouts(); buildTables(); soundRebuild();
+    if (!running) drawAll();
+  }
+  $('strMode').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; markPreset(null); setStrMode(b.dataset.m); });
+
+  function buildHarmChips() {
+    const sh = $('sHarm'); sh.innerHTML = '';
+    for (let n = 1; n <= 8; n++) {
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = 'n=' + n; b.dataset.n = n;
+      b.setAttribute('aria-pressed', String(S.s.n === n)); sh.appendChild(b);
+    }
+    const ph = $('pHarm'); ph.innerHTML = '';
+    for (const n of pipeNs()) {
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = 'n=' + n; b.dataset.n = n;
+      b.setAttribute('aria-pressed', String(S.p.n === n)); ph.appendChild(b);
+    }
+  }
+  function setStrN(n) { S.s.n = n; for (const b of $('sHarm').children) b.setAttribute('aria-pressed', String(+b.dataset.n === n)); t = 0; updateReadouts(); buildTables(); soundUpdate(); if (!running) drawAll(); }
+  function setPipeN(n) { S.p.n = n; for (const b of $('pHarm').children) b.setAttribute('aria-pressed', String(+b.dataset.n === n)); t = 0; updateReadouts(); buildTables(); soundUpdate(); if (!running) drawAll(); }
+  $('sHarm').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setStrN(+b.dataset.n); });
+  $('pHarm').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setPipeN(+b.dataset.n); });
+  function setPipeKind(k) {
+    S.p.kind = k;
+    for (const b of $('pipeKind').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.k === k));
+    const ns = pipeNs(); if (!ns.includes(S.p.n)) S.p.n = k === 'oc' ? (S.p.n % 2 ? S.p.n : S.p.n - 1 || 1) : Math.min(8, S.p.n);
+    buildHarmChips(); updateReadouts(); buildTables(); soundUpdate(); if (!running) drawAll();
+  }
+  $('pipeKind').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { markPreset(null); setPipeKind(b.dataset.k); } });
+  $('aEnd').addEventListener('change', () => { S.p.endc = $('aEnd').checked; updateReadouts(); buildTables(); soundUpdate(); if (!running) drawAll(); });
+  $('wEnv').addEventListener('change', () => { S.w.env = $('wEnv').checked; if (!running) drawAll(); });
+  $('wMarks').addEventListener('change', () => { S.w.marks = $('wMarks').checked; if (!running) drawAll(); });
+
+  function buildTables() {
+    const s = S.s, rows = ['<tr><th>n</th><th>fₙ (Hz)</th><th>λₙ = 2L/n (m)</th></tr>'];
+    for (let n = 1; n <= 8; n++) {
+      const on = s.mode === 'harm' && n === s.n;
+      const miss = s.mode === 'pluck' && Math.abs(pluckB[n]) < 1e-6 * Math.max(...Array.from(pluckB).map(Math.abs));
+      rows.push(`<tr class="${on ? 'on' : ''}"><td>${n}</td><td>${sF(n).toFixed(1)}${miss ? ' <span style="color:var(--muted)">(missing)</span>' : ''}</td><td>${(2 * s.L / n).toFixed(3)}</td></tr>`);
+    }
+    $('sTab').innerHTML = rows.join('');
+    const p = S.p, Le = pLe(), ar = [`<tr><th>n</th><th>fₙ (Hz)</th><th>λ (m)</th></tr>`];
+    for (const n of pipeNs().slice(0, 6)) ar.push(`<tr class="${n === p.n ? 'on' : ''}"><td>${n}</td><td>${pF(n).toFixed(1)}</td><td>${((p.kind === 'oo' ? 2 : 4) * Le / n).toFixed(3)}</td></tr>`);
+    $('aTab').innerHTML = ar.join('');
+  }
+
+  function updateReadouts() {
+    const w = S.w, v = WAVE_V;
+    $('rwL1').textContent = (v / w.f1).toFixed(2) + ' m';
+    $('rwL2').textContent = (v / w.f2).toFixed(2) + ' m';
+    $('rwNode').textContent = (v / (w.f1 + w.f2)).toFixed(2) + ' m';
+    const drift = -v * (w.f2 - w.f1) / (w.f1 + w.f2);
+    $('rwDrift').textContent = Math.abs(drift) < 1e-9 ? '0 (fixed)' : `${Math.abs(drift).toFixed(3)} m/s ${drift > 0 ? '→' : '←'}`;
+    const dA = Math.abs(w.A1 - w.A2);
+    $('rwSWR').textContent = w.A1 + w.A2 === 0 ? '—' : dA < 1e-9 ? '∞' : ((w.A1 + w.A2) / dA).toFixed(2);
+    $('rwParts').textContent = `${(2 * Math.min(w.A1, w.A2)).toFixed(2)} / ${dA.toFixed(2)} cm`;
+    const s = S.s;
+    $('rsV').textContent = sV().toFixed(1) + ' m/s';
+    $('rsF1').textContent = sF(1).toFixed(1) + ' Hz';
+    if (s.mode === 'harm') { $('rsExtraLab').textContent = `Harmonic ${s.n}: fₙ = n f₁`; $('rsExtra').textContent = `${sF(s.n).toFixed(1)} Hz, λ = ${(2 * s.L / s.n).toFixed(3)} m`; }
+    else if (s.mode === 'pluck') {
+      const E = modalEnergy(pluckB, PLUCK_N, s.L, s.T, muSI()), Ex = s.T * Math.pow(s.h * 1e-3, 2) * s.L / (2 * s.d * s.L * (s.L - s.d * s.L));
+      $('rsExtraLab').textContent = 'Energy (sum of 200 modes / triangle)';
+      $('rsExtra').textContent = `${(E * 1e3).toFixed(3)} / ${(Ex * 1e3).toFixed(3)} mJ`;
+    } else if (D) {
+      const a = steadyAmp(D, TAU * s.f), g = D.gam;
+      $('rsExtraLab').textContent = `Steady amplitude; damping time 2/γ = ${(2 / g * 1e3).toFixed(0)} ms`;
+      $('rsExtra').textContent = fmtMM(a);
+    }
+    const p = S.p;
+    $('raV').textContent = pV().toFixed(1) + ' m/s';
+    $('raLe').textContent = pLe().toFixed(4) + ' m';
+    $('raFLab').textContent = `Frequency f${sub(p.n)}`; $('raF').textContent = pF(p.n).toFixed(1) + ' Hz';
+    $('raLamLab').textContent = `Wavelength λ = ${p.kind === 'oo' ? '2L' : '4L'}/${p.n}`; $('raLam').textContent = ((p.kind === 'oo' ? 2 : 4) * pLe() / p.n).toFixed(3) + ' m';
+    const b = S.b, f2 = b.f1 + b.df;
+    $('rbF2').textContent = f2.toFixed(1) + ' Hz';
+    $('rbFm').textContent = ((b.f1 + f2) / 2).toFixed(2) + ' Hz';
+    $('rbFb').textContent = Math.abs(b.df).toFixed(1) + ' Hz';
+    $('rbTb').textContent = Math.abs(b.df) > 0 ? fmtT(1 / Math.abs(b.df)) : '∞';
+    soundHintText();
+  }
+
+  function buildKey() {
+    const k = $('key'), v = S.view, rows = [];
+    if (v === 'waves') rows.push(['pos', 'Wave 1, moving right'], ['neg', 'Wave 2, moving left'], ['ink', 'Their sum'], ['env', 'Envelope: the largest |y| at each x']);
+    else if (v === 'string') {
+      rows.push(['ink', 'String'], ['env', S.s.mode === 'drive' ? 'Steady state envelope' : S.s.mode === 'pluck' ? 'Shape at release' : 'Envelope of the harmonic']);
+      if (S.s.mode === 'drive') rows.push(['acc', 'Resonance curve'], ['gold', 'Harmonics fₙ = n v/2L'], ['pos', 'Drive frequency and the driver']);
+      else rows.push(['gold', 'Nodes'], ['acc', 'Mode amplitudes']);
+    } else if (v === 'pipe') rows.push(['comp', 'Pressure: compression red, rarefaction blue'], ['gold', 'Air displacement'], ['pos', 'Pressure change'], ['env', 'Envelope']);
+    else rows.push(['pos', 'Tone 1'], ['neg', 'Tone 2'], ['ink', 'Their sum'], ['acc', 'Envelope and beat period'], ['pos', 'Playhead (shown in the close up)']);
+    k.innerHTML = rows.map(([c, t]) => `<span><i class="swatch ${c}"></i>${t}</span>`).join('');
+  }
+
+  // presets
+  const VIEW_HINT = {
+    waves: 'Two waves of the same frequency moving in opposite directions make a standing wave. Change one amplitude or one frequency and see what survives.',
+    string: 'A string fixed at both ends vibrates only at fₙ = n v/2L. A guitar\'s low E string sounds E2 at 82.4 Hz; its high E string, about 0.4 g/m at a similar tension, sounds E4 at 329.6 Hz.',
+    pipe: 'Open ends are pressure nodes and closed ends are displacement nodes. A flute is close to a pipe open at both ends; a clarinet is close to one closed at one end.',
+    beats: 'Two tones a few hertz apart swell and fade in loudness at the difference frequency.'
+  };
+  function markPreset(id) { presetId = id; for (const b of $('presets').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.p === id)); $('presetHint').textContent = id ? PRESETS[id].hint : VIEW_HINT[S.view]; }
+  function applyPreset(id) {
+    const P = PRESETS[id]; P.set();
+    markPreset(id);
+    $('aEnd').checked = S.p.endc;
+    stringChanged(); syncSliders();
+    buildHarmChips();
+    for (const b of $('pipeKind').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.k === S.p.kind));
+    setStrMode(S.s.mode);
+    rebuildDriven(false);
+    setView(P.view);
+    setRunning(!reduce);
+  }
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) applyPreset(b.dataset.p); });
+
+  // play, reset, speed
+  function setRunning(on) { running = on; $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('primary', !on); }
+  $('play').addEventListener('click', () => setRunning(!running));
+  function doReset() { t = 0; if (S.view === 'string' && S.s.mode === 'drive' && D) { D.phi = 0; restDriven(D); } drawAll(); }
+  $('reset').addEventListener('click', doReset);
+  $('speedSeg').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    S.speed = +b.dataset.s; for (const x of $('speedSeg').children) x.setAttribute('aria-pressed', String(x === b));
+  });
+
+  // ---------- pluck by dragging ----------
+  function startPluck() {
+    if (S.s.mode !== 'pluck') { markPreset(null); setStrMode('pluck'); }
+    pluckDrag = true;
+  }
+  function setPluckFromPointer(dfrac, hmm) {
+    const ed = $('pD'), eh = $('pH');
+    S.s.d = snap(dfrac, ed); S.s.h = snap(hmm, eh);
+    ed.value = S.s.d; eh.value = S.s.h; outs(); rebuildPluck();
+  }
+  function endPluck() { if (!pluckDrag) return; pluckDrag = false; rebuildPluck(); t = 0; updateReadouts(); buildTables(); soundRebuild(); }
+
+  // ---------- pointer and keys ----------
+  can.addEventListener('pointermove', (ev) => {
+    if (drag) { dragTo(ev); return; }
+    const h = handleAt(ev); hoverId = h ? h.id : null;
+    can.style.cursor = h ? h.cursor : 'default';
+    if (!running) drawAll();
+  });
+  can.addEventListener('pointerdown', (ev) => {
+    const h = handleAt(ev);
+    if (!h) return;
+    drag = { id: h.id, h };
+    if (h.start) { const r = can.getBoundingClientRect(); h.start(ev.clientX - r.left, ev.clientY - r.top); }
+    try { can.setPointerCapture(ev.pointerId); } catch (_) {}
+    can.style.cursor = h.cursor === 'grab' ? 'grabbing' : h.cursor;
+    ev.preventDefault();
+    dragTo(ev);
+  });
+  const endDrag = () => {
+    if (!drag) return;
+    const id = drag.id; drag = null; hoverId = null;
+    if (id === 'string') endPluck();
+    if (id === 'pipeEnd' || id === 'bridge') holdSpan = null;
+    if (id === 'beat') beatHold = null;
+    drawAll();
+  };
+  can.addEventListener('pointerup', endDrag);
+  can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('pointerleave', () => { if (!drag) { hoverId = null; if (!running) drawAll(); } });
+  function nudge(id, steps) { const el = $(id); setSlider(id, +el.value + steps * +el.step); }
+  can.addEventListener('keydown', (e) => {
+    const big = e.shiftKey ? 10 : 1, v = S.view, up = e.key === 'ArrowUp' ? 1 : e.key === 'ArrowDown' ? -1 : 0, lr = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+    if (e.key === ' ') setRunning(!running);
+    else if (v === 'waves' && up) nudge('wA1', up * big);
+    else if (v === 'waves' && lr) nudge('wA2', lr * big);
+    else if (v === 'string' && S.s.mode === 'drive' && (lr || up)) nudge('dF', (lr || up) * big);
+    else if (v === 'string' && S.s.mode === 'pluck' && lr) nudge('pD', lr * big);
+    else if (v === 'string' && S.s.mode === 'pluck' && up) nudge('pH', up * big);
+    else if (v === 'string' && S.s.mode === 'harm' && lr) setStrN(Math.max(1, Math.min(8, S.s.n + lr)));
+    else if (v === 'string' && /^[1-8]$/.test(e.key)) { if (S.s.mode !== 'harm') setStrMode('harm'); setStrN(+e.key); }
+    else if (v === 'pipe' && lr) { const ns = pipeNs(), i = ns.indexOf(S.p.n); setPipeN(ns[Math.max(0, Math.min(ns.length - 1, i + lr))]); }
+    else if (v === 'pipe' && up) nudge('aL', up * big);
+    else if (v === 'pipe' && /^[1-8]$/.test(e.key)) setPipeN(pipeNs()[+e.key - 1]);
+    else if (v === 'beats' && lr) nudge('bDf', lr * big);
+    else if (v === 'beats' && up) nudge('bA2', up * big);
+    else return;
+    e.preventDefault();
+  });
+
+  // ---------- sound (Web Audio, off until the button is pressed) ----------
+  const snd = { ac: null, master: null, voices: [], on: false, sig: '' };
+  function voicesWanted() {
+    const v = S.view;
+    if (v === 'waves') return [];
+    if (v === 'beats') return [{ f: S.b.f1, a: 0.5 }, { f: S.b.f1 + S.b.df, a: 0.5 * S.b.a2 }];
+    if (v === 'pipe') return [{ f: pF(S.p.n), a: 0.8 }];
+    const s = S.s;
+    if (s.mode === 'harm') return [{ f: sF(s.n), a: 0.8 }];
+    if (s.mode === 'pluck') return [{ f: sF(1), a: 0.8, wave: true }];
+    // driven: loudness follows the string's steady amplitude
+    ensureCurve();
+    return [{ f: s.f, a: 0.8 * Math.max(0.02, steadyAmp(D, TAU * s.f) / curveMax) }];
+  }
+  function soundRebuild() {
+    if (!snd.ac) return;
+    for (const o of snd.voices) { try { o.osc.stop(); o.osc.disconnect(); o.g.disconnect(); } catch (_) {} }
+    snd.voices = [];
+    if (!snd.on) return;
+    const now = snd.ac.currentTime;
+    for (const vw of voicesWanted()) {
+      const osc = snd.ac.createOscillator(), g = snd.ac.createGain();
+      if (vw.wave && pluckB) {
+        // harmonic amplitudes of the plucked string (up to 3 kHz)
+        const N = Math.max(1, Math.min(60, Math.floor(3000 / vw.f)));
+        const re = new Float32Array(N + 1), im = new Float32Array(N + 1);
+        for (let n = 1; n <= N; n++) im[n] = pluckB[n];
+        try { osc.setPeriodicWave(snd.ac.createPeriodicWave(re, im)); } catch (_) {}
+      }
+      osc.frequency.value = vw.f; g.gain.setValueAtTime(0, now); g.gain.setTargetAtTime(vw.a, now, 0.03);
+      osc.connect(g); g.connect(snd.master); osc.start();
+      snd.voices.push({ osc, g });
+    }
+  }
+  function soundUpdate() {
+    if (!snd.ac || !snd.on) return;
+    const want = voicesWanted();
+    if (want.length !== snd.voices.length) { soundRebuild(); return; }
+    const now = snd.ac.currentTime;
+    want.forEach((vw, i) => { snd.voices[i].osc.frequency.setTargetAtTime(vw.f, now, 0.02); snd.voices[i].g.gain.setTargetAtTime(vw.a, now, 0.03); });
+    if (S.view === 'string' && S.s.mode === 'pluck') soundRebuild();
+  }
+  function setVolume() { if (snd.master) snd.master.gain.setTargetAtTime(0.25 * Math.pow(+$('vol').value, 2), snd.ac.currentTime, 0.03); }
+  function setSound(on) {
+    if (on && !snd.ac) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) { $('soundHint').textContent = 'This browser has no Web Audio.'; return; }
+      snd.ac = new AC(); snd.master = snd.ac.createGain(); snd.master.gain.value = 0; snd.master.connect(snd.ac.destination);
+    }
+    snd.on = on;
+    $('sound').setAttribute('aria-pressed', String(on)); $('sound').textContent = on ? 'Sound on' : 'Sound off';
+    if (snd.ac) { if (on && snd.ac.state === 'suspended') snd.ac.resume(); setVolume(); soundRebuild(); }
+    soundHintText();
+  }
+  function soundHintText() {
+    const v = S.view; let txt;
+    if (v === 'waves') txt = 'Nothing to hear in this view: 1 Hz is far below hearing, which runs from about 20 Hz to 20 kHz.';
+    else if (v === 'beats') txt = 'Plays both tones, the second at the relative amplitude A₂/A₁. Listen for the loudness to swell and fade.';
+    else if (v === 'pipe') txt = `Plays a pure tone at f${sub(S.p.n)} = ${pF(S.p.n).toFixed(1)} Hz.`;
+    else if (S.s.mode === 'harm') txt = `Plays a pure tone at f${sub(S.s.n)} = ${sF(S.s.n).toFixed(1)} Hz.`;
+    else if (S.s.mode === 'pluck') txt = 'Plays the plucked string\'s harmonics with their amplitudes bₙ, held without decay. Move the pluck point and hear the tone color change.';
+    else txt = 'Plays the drive frequency, as loud as the string\'s steady amplitude relative to the highest peak.';
+    $('soundHint').textContent = txt + ' Sound stops when you leave the page.';
+  }
+  $('sound').addEventListener('click', () => setSound(!snd.on));
+  $('vol').addEventListener('input', setVolume);
+  document.addEventListener('visibilitychange', () => { if (document.hidden && snd.on) setSound(false); });
+  window.addEventListener('pagehide', () => { if (snd.on) setSound(false); });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); drawAll(); }); } catch (_) {}
+  new MutationObserver(() => { tokens(); drawAll(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, lastSnd = 0;
+  function clockText() {
+    const el = $('clock');
+    if (S.view === 'string' || S.view === 'pipe') {
+      const sf = 1 / slowFactor();
+      el.innerHTML = `t = ${(t * 1e3).toFixed(1)} ms <small>shown ${sf.toFixed(0)}× slower</small>`;
+    } else el.innerHTML = `t = ${t.toFixed(2)} s${S.view === 'beats' ? ' <small>real time at 1×</small>' : ''}`;
+  }
+  function loop(now) {
+    const dtr = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (running && dtr > 0 && !pluckDrag && !(drag && drag.id === 'beat')) {
+      const dts = dtr * S.speed * slowFactor();
+      t += dts;
+      if (S.view === 'string' && S.s.mode === 'drive' && D) stepDriven(D, dts);
+    }
+    drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastRead > 120) { clockText(); lastRead = now; }
+    if (S.view === 'string' && S.s.mode === 'drive' && snd.on && now - lastSnd > 150) { soundUpdate(); lastSnd = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__sw = { get frameMs() { return frameMs; }, get t() { return t; }, get S() { return S; }, get D() { return D; }, get handles() { return handles; },
+    setRunning, applyPreset, setView, get curveMax() { return curveMax; } };
+
+  tokens();
+  rebuildPluck();
+  rebuildDriven(false);
+  buildHarmChips();
+  const ro = new ResizeObserver(resize);
+  ro.observe(pane);
+  applyPreset('standing');
+  setRunning(!reduce);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
