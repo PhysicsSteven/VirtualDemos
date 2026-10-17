@@ -1,0 +1,978 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Blackbody Radiation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: lab bench. The spectrum chart and the star color strip fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --sky: #0b1017;
+  --band-alpha: 0.13;
+  --canvas-scale: 1;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+    --sky: #04070b; --band-alpha: 0.17;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  --sky: #04070b; --band-alpha: 0.17;
+}
+:root[data-projector="on"] { font-size: 125%; --canvas-scale: 1.5; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 18.75px; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); }
+.units { color: var(--muted); font-size: 0.8rem; }
+.barside { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+:root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 360px; }
+.stage {
+  position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
+  display: grid; grid-template-rows: minmax(0, 1fr) 170px;
+}
+:root[data-projector="on"] .stage { grid-template-rows: minmax(0, 1fr) 245px; }
+.pane { position: relative; min-height: 0; }
+.pane + .pane { border-top: 1px solid var(--line); }
+.stage canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; }
+#chart { cursor: crosshair; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+
+.viewbar { position: absolute; top: 10px; right: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.seg { display: inline-flex; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg .seglabel { font-size: 0.8rem; color: var(--muted); padding: 0 6px 0 7px; font-weight: 700; }
+.seg button {
+  font: inherit; font-size: 0.86rem; font-weight: 700; color: var(--muted); background: none; border: 0;
+  border-radius: 6px; padding: 5px 11px; cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.25rem; }
+.readout .wide { grid-column: 1 / -1; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input { accent-color: var(--accent); margin: 0; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); }
+
+.pins { display: flex; flex-wrap: wrap; gap: 6px; }
+.pins button { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 4px 9px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
+.pins button:hover { border-color: var(--muted); }
+.pins .x { color: var(--muted); }
+.pins .tone { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--line); flex: none; }
+
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.cur { border-color: var(--pos); border-top-width: 3px; }
+.swatch.p0 { border-color: var(--neg); }
+.swatch.p1 { border-color: var(--equi); }
+.swatch.p2 { border-color: var(--field); }
+.swatch.rj { border-color: var(--pos); border-top-style: dashed; }
+.swatch.eye { border-color: var(--muted); border-top-style: dotted; }
+.swatch.band { height: 8px; border: 0; border-radius: 2px; background: linear-gradient(90deg, #7a00c8, #2a40ff, #00b4ff, #00d060, #e8e800, #ff8a00, #e00000); }
+kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--canvas); }
+
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench, :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; grid-template-rows: auto auto; }
+  .pane.main { height: 56vh; min-height: 330px; }
+  .pane.strip { height: 170px; }
+  :root[data-projector="on"] .stage { grid-template-rows: auto auto; }
+  :root[data-projector="on"] .pane.strip { height: 245px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Blackbody Radiation</h1>
+      <p>Heat something and it glows. Hotter means brighter everywhere, a peak at shorter wavelength, and a bluer color.</p>
+    </div>
+    <div class="barside">
+      <div class="units mono">B<sub>λ</sub> in W·m⁻²·sr⁻¹·nm⁻¹ · b = 2.898×10⁻³ m·K · σ = 5.670×10⁻⁸ W·m⁻²·K⁻⁴</div>
+      <button type="button" class="btn" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="pane main">
+        <canvas id="chart" tabindex="0" role="application" aria-label="Planck spectrum chart. Drag the peak marker sideways to change the temperature. Arrow keys up and down change the temperature, left and right move the peak."></canvas>
+        <div class="viewbar">
+          <div class="seg" role="group" aria-label="Wavelength axis">
+            <span class="seglabel">λ</span>
+            <button type="button" data-x="lin" aria-pressed="true">Linear</button>
+            <button type="button" data-x="log" aria-pressed="false">Log</button>
+          </div>
+          <div class="seg" role="group" aria-label="Radiance axis">
+            <span class="seglabel">B</span>
+            <button type="button" data-y="lin" aria-pressed="true">Linear</button>
+            <button type="button" data-y="log" aria-pressed="false">Log</button>
+          </div>
+        </div>
+      </div>
+      <div class="pane strip">
+        <canvas id="strip" aria-label="Perceived color of a blackbody at this temperature, and the blackbody color scale from 1000 K to 40,000 K with spectral classes."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Glowing objects</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="human" aria-pressed="false">Human body</button>
+          <button type="button" data-p="bulb" aria-pressed="false">Light bulb</button>
+          <button type="button" data-p="sun" aria-pressed="true">Sun</button>
+          <button type="button" data-p="betel" aria-pressed="false">Betelgeuse</button>
+          <button type="button" data-p="sirius" aria-pressed="false">Sirius A</button>
+          <button type="button" data-p="rigel" aria-pressed="false">Rigel</button>
+          <button type="button" data-p="cmb" aria-pressed="false">Cosmic background</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Temperature and size</h2>
+        <div>
+          <div class="slider-head"><label for="temp">Temperature T</label><output id="tempOut" class="mono" for="temp"></output></div>
+          <input type="range" id="temp" min="0" max="1000" step="1" value="500">
+        </div>
+        <div>
+          <div class="slider-head"><label for="rad">Star radius R</label><output id="radOut" class="mono" for="rad"></output></div>
+          <input type="range" id="rad" min="0" max="1000" step="1" value="400">
+        </div>
+        <p class="hint">Both sliders are logarithmic. Drag the peak on the chart, or focus the chart and use <kbd>↑</kbd> <kbd>↓</kbd>.</p>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout">
+          <div class="big"><dt>Temperature</dt><dd id="rT">—</dd></div>
+          <div class="big"><dt>Peak λ<sub>max</sub> = b/T</dt><dd id="rPk">—</dd></div>
+          <div><dt>Spectral class</dt><dd id="rCls">—</dd></div>
+          <div><dt>Traditional color</dt><dd id="rCol">—</dd></div>
+          <div class="wide"><dt>Flux from the surface σT⁴</dt><dd id="rF">—</dd></div>
+          <div class="wide"><dt>Luminosity L = 4πR²σT⁴</dt><dd id="rL">—</dd></div>
+          <div><dt>Visible share, 380 to 750 nm</dt><dd id="rVis">—</dd></div>
+          <div><dt>Peak B<sub>λ</sub></dt><dd id="rB">—</dd></div>
+        </dl>
+        <p class="hint">Doubling T multiplies the flux by 16 and halves the peak wavelength.</p>
+      </section>
+
+      <section>
+        <h2>Compare</h2>
+        <div class="row2">
+          <button type="button" class="btn" id="pin">Pin this curve</button>
+          <button type="button" class="btn" id="unpin">Clear pins</button>
+        </div>
+        <div class="pins" id="pins"></div>
+        <p class="hint">Pin up to 3 curves. Try the Sun against Betelgeuse with a log B axis: the cool star is fainter at every wavelength per square meter.</p>
+      </section>
+
+      <section>
+        <h2>Layers</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tRJ">Rayleigh-Jeans</label>
+          <label><input type="checkbox" id="tBand" checked>Visible band</label>
+          <label><input type="checkbox" id="tEye">Eye response</label>
+          <label><input type="checkbox" id="tLock">Lock axes</label>
+        </div>
+        <p class="hint" id="rjHint">Rayleigh-Jeans is the classical prediction, 2ckT/λ⁴. It matches at long wavelengths but grows without limit at short ones: the ultraviolet catastrophe. Planck fixed it by letting light carry energy only in quanta hf.</p>
+        <p class="hint">Lock the axes, then raise T: the whole curve grows, and the area under it grows as T⁴.</p>
+      </section>
+
+      <section>
+        <h2>Why no green stars?</h2>
+        <p class="hint">A Planck curve is broad. When its peak sits in the green, near 5000 to 6000 K, it still sends out nearly as much red and blue light, and the eye sees the mix as white. No temperature gives a spectrum narrow enough to look green, so the color scale runs red, orange, yellow, white, blue and skips green entirely.</p>
+      </section>
+
+      <section>
+        <h2>Key</h2>
+        <div class="key">
+          <span><i class="swatch cur"></i>Current temperature</span>
+          <span><i class="swatch p0"></i><i class="swatch p1"></i><i class="swatch p2"></i>Pinned curves</span>
+          <span><i class="swatch rj"></i>Rayleigh-Jeans, same T</span>
+          <span><i class="swatch eye"></i>Eye response, CIE 1931</span>
+          <span><i class="swatch band"></i>Visible light, 380 to 750 nm</span>
+        </div>
+        <p class="hint">Model: ideal blackbodies. Real stars have absorption lines and are classified by them; T here is the effective temperature. Colors use an analytic fit to the CIE 1931 observer (Wyman, Sloan and Shirley 2013) and sRGB with a D65 white point, so a 6500 K body shows as white. Each swatch is scaled to full brightness; your screen and eye adaptation change what you see.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+
+  // ---------- constants (SI) ----------
+  const C1 = 1.191042972e-16;   // 2hc², W·m²/sr
+  const C2 = 1.438776877e-2;    // hc/k, m·K
+  const BW = 2.897771955e-3;    // Wien b, m·K
+  const SIG = 5.670374419e-8;   // Stefan-Boltzmann, W·m⁻²·K⁻⁴
+  const KB = 1.380649e-23, CL = 299792458;
+  const LSUN = 3.828e26, RSUN = 6.957e8;
+  const TMIN = 300, TMAX = 50000, RMIN = 0.01, RMAX = 1000;
+  const LN10 = Math.LN10;
+
+  // ---------- physics ----------
+  // spectral radiance per unit wavelength, W·m⁻²·sr⁻¹·m⁻¹
+  function planck(lam, T) {
+    const x = C2 / (lam * T);
+    if (x > 700) return C1 / Math.pow(lam, 5) * Math.exp(-x);
+    return C1 / Math.pow(lam, 5) / Math.expm1(x);
+  }
+  function logPlanck(lam, T) {   // natural log, safe for any T
+    const x = C2 / (lam * T);
+    const le = x > 30 ? x + Math.log1p(-Math.exp(-x)) : Math.log(Math.expm1(x));
+    return Math.log(C1) - 5 * Math.log(lam) - le;
+  }
+  const rayleighJeans = (lam, T) => 2 * CL * KB * T / Math.pow(lam, 4);
+  const wien = (T) => BW / T;
+
+  // fraction of σT⁴ emitted between 380 and 750 nm (Simpson's rule)
+  function visibleFraction(T) {
+    const a = 380e-9, b = 750e-9, n = 370, h = (b - a) / n;
+    let s = planck(a, T) + planck(b, T);
+    for (let i = 1; i < n; i++) s += (i % 2 ? 4 : 2) * planck(a + i * h, T);
+    return (s * h / 3) / (SIG * T ** 4 / Math.PI);
+  }
+
+  // CIE 1931 2° color matching functions, multi lobe Gaussian fit (Wyman, Sloan, Shirley 2013)
+  const gl = (x, mu, s1, s2) => { const t = (x - mu) / (x < mu ? s1 : s2); return Math.exp(-0.5 * t * t); };
+  function cie(l) {
+    return [
+      1.056 * gl(l, 599.8, 37.9, 31.0) + 0.362 * gl(l, 442.0, 16.0, 26.7) - 0.065 * gl(l, 501.1, 20.4, 26.2),
+      0.821 * gl(l, 568.8, 46.9, 40.5) + 0.286 * gl(l, 530.9, 16.3, 31.1),
+      1.217 * gl(l, 437.0, 11.8, 36.0) + 0.681 * gl(l, 459.0, 26.0, 13.8)
+    ];
+  }
+  // XYZ to gamma encoded sRGB, desaturated into gamut by adding white, then scaled to full brightness
+  function xyzToSrgb(X, Y, Z) {
+    let r = 3.2406 * X - 1.5372 * Y - 0.4986 * Z;
+    let g = -0.9689 * X + 1.8758 * Y + 0.0415 * Z;
+    let b = 0.0557 * X - 0.2040 * Y + 1.0570 * Z;
+    const mn = Math.min(r, g, b);
+    if (mn < 0) { r -= mn; g -= mn; b -= mn; }
+    const mx = Math.max(r, g, b) || 1;
+    return [r, g, b].map((v) => {
+      v /= mx;
+      v = v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055;
+      return Math.round(255 * Math.min(1, Math.max(0, v)));
+    });
+  }
+  // perceived color of a blackbody: integrate the Planck spectrum against the CIE functions
+  function bbXYZ(T) {
+    const ls = [], lb = [];
+    let mx = -Infinity;
+    for (let l = 360; l <= 830; l += 2) { const v = logPlanck(l * 1e-9, T); ls.push(l); lb.push(v); if (v > mx) mx = v; }
+    let X = 0, Y = 0, Z = 0;
+    for (let i = 0; i < ls.length; i++) {
+      const w = Math.exp(lb[i] - mx), [x, y, z] = cie(ls[i]);
+      X += w * x; Y += w * y; Z += w * z;
+    }
+    return [X, Y, Z];
+  }
+  const bbColor = (T) => xyzToSrgb(...bbXYZ(T));
+
+  const CLASSES = [
+    { c: 'O', lo: 30000, hi: Infinity, col: 'blue' },
+    { c: 'B', lo: 10000, hi: 30000, col: 'blue white' },
+    { c: 'A', lo: 7500, hi: 10000, col: 'white' },
+    { c: 'F', lo: 6000, hi: 7500, col: 'yellow white' },
+    { c: 'G', lo: 5200, hi: 6000, col: 'yellow' },
+    { c: 'K', lo: 3700, hi: 5200, col: 'orange' },
+    { c: 'M', lo: 2400, hi: 3700, col: 'red' }
+  ];
+  const classOf = (T) => CLASSES.find((k) => T >= k.lo && T < k.hi) || null;
+
+  // ---------- state ----------
+  const PRESETS = {
+    human:  { T: 310,   hint: 'Your skin at 310 K peaks near 9.3 μm, deep in the infrared. Thermal cameras see this glow; your eyes do not. Switch B to log to find the tiny visible tail.' },
+    bulb:   { T: 2800,  hint: 'A tungsten filament at 2800 K peaks near 1 μm, just past red. Only about 8% of its power lands in the visible band; the rest is heat.' },
+    sun:    { T: 5772, R: 1, hint: 'The Sun at 5772 K peaks near 500 nm, right in the visible band, and about 44% of its power is visible light. Its color is close to white, not yellow.' },
+    betel:  { T: 3600, R: 760, hint: 'Betelgeuse is a red supergiant: cooler than the Sun, so each square meter emits about 15% as much, but 760 times wider, so it outshines the Sun nearly 90,000 times.' },
+    sirius: { T: 9940, R: 1.711, hint: 'Sirius A at 9940 K is a white A star. Its peak is in the ultraviolet near 290 nm, yet it looks white because the visible part of the curve is nearly flat.' },
+    rigel:  { T: 12100, R: 78.9, hint: 'Rigel is a blue supergiant at 12,100 K. Most of its output is ultraviolet, and the visible part tilts toward blue.' },
+    cmb:    { T: 2.725, hint: 'The cosmic microwave background is the most perfect blackbody known, at 2.725 K. Its peak sits near 1 mm, in microwaves. The slider stops at 300 K, so this preset is a special case.' }
+  };
+  const S = { T: 5772, R: 1, xMode: 'lin', yMode: 'lin', rj: false, band: true, eye: false, lock: false };
+  let pins = [];
+  let locked = null, frozen = null;
+  let probe = null, drag = null, hoverPeak = false;
+  let raf = 0;
+
+  // ---------- formatting ----------
+  const SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  const sup = (n) => String(n).split('').map((ch) => SUP[ch] || ch).join('');
+  const trim = (s) => s.includes('.') && !s.includes('e') ? s.replace(/\.?0+$/, '') : s;
+  function sci(v, sig = 3, plainLo = -2, plainHi = 4) {
+    if (!isFinite(v)) return '∞';
+    if (v === 0) return '0';
+    let e = Math.floor(Math.log10(Math.abs(v)));
+    let m = v / Math.pow(10, e);
+    let ms = m.toPrecision(sig);
+    if (Math.abs(+ms) >= 10) { e += 1; ms = (m / 10).toPrecision(sig); }
+    if (e >= plainLo && e <= plainHi) {
+      const dp = Math.max(0, sig - 1 - e);
+      return (+v.toFixed(dp)).toLocaleString('en-US', { maximumFractionDigits: dp });
+    }
+    return trim(ms) + '×10' + sup(e);
+  }
+  function fmtLen(m, sig = 3) {
+    const [v, u] = m < 1e-6 ? [m * 1e9, 'nm'] : m < 1e-3 ? [m * 1e6, 'μm'] : [m * 1e3, 'mm'];
+    return trim((+v.toPrecision(sig)).toString()) + ' ' + u;
+  }
+  function fmtT(T) {
+    if (T < 10) return T.toFixed(3) + ' K';
+    return Math.round(T).toLocaleString('en-US') + ' K';
+  }
+  const fmtR = (R) => (R < 10 ? trim(R.toPrecision(3)) : Math.round(R).toLocaleString('en-US')) + ' R☉';
+  function niceUp(v) {
+    const e = Math.pow(10, Math.floor(Math.log10(v))), f = v / e;
+    for (const s of [1, 1.5, 2, 3, 4, 5, 6, 8, 10]) if (s >= f - 1e-9) return s * e;
+    return 10 * e;
+  }
+  function niceStep(raw) {
+    const e = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / e;
+    return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * e;
+  }
+
+  // ---------- slider maps ----------
+  const tToU = (T) => Math.round(1000 * Math.log(Math.min(TMAX, Math.max(TMIN, T)) / TMIN) / Math.log(TMAX / TMIN));
+  const uToT = (u) => { const T = TMIN * Math.pow(TMAX / TMIN, u / 1000); return T < 1000 ? Math.round(T) : Math.round(T / 10) * 10; };
+  const rToU = (R) => Math.round(1000 * Math.log(R / RMIN) / Math.log(RMAX / RMIN));
+  const uToR = (u) => +(RMIN * Math.pow(RMAX / RMIN, u / 1000)).toPrecision(3);
+
+  // ---------- canvas plumbing ----------
+  const chart = $('chart'), strip = $('strip'), stage = $('stage');
+  const cctx = chart.getContext('2d'), sctx = strip.getContext('2d');
+  let dpr = 1, CW = 0, CH = 0, SW = 0, SH = 0;
+  let M = null;   // current chart mapping
+
+  const monoFont = () => getComputedStyle(document.body).getPropertyValue('--font-mono') || 'monospace';
+  const uiFont = () => getComputedStyle(document.body).getPropertyValue('--font-ui') || 'sans-serif';
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    return { pos: g('--pos'), neg: g('--neg'), field: g('--field'), equi: g('--equi'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+             canvas: g('--canvas'), relief: g('--relief'), ink: g('--ink'), muted: g('--muted'), accent: g('--accent'), line: g('--line'),
+             sky: g('--sky'), bandA: parseFloat(g('--band-alpha')) || 0.13, ps: parseFloat(g('--canvas-scale')) || 1 };
+  }
+  const pinColor = (T, i) => [T.neg, T.equi, T.field][i % 3];
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const c of [chart, strip]) {
+      const r = c.parentElement.getBoundingClientRect();
+      c.width = Math.round(r.width * dpr); c.height = Math.round(r.height * dpr);
+      c.style.width = r.width + 'px'; c.style.height = r.height + 'px';
+      if (c === chart) { CW = r.width; CH = r.height; } else { SW = r.width; SH = r.height; }
+    }
+    schedule();
+  }
+
+  // spectral colors for the visible band (per nm), and blackbody color scale
+  const BAND = [];
+  for (let l = 380; l <= 750; l++) {
+    const rgb = xyzToSrgb(...cie(l));
+    const fade = Math.min(1, (l - 375) / 45, (755 - l) / 60);
+    BAND.push({ rgb, a: Math.max(0.15, fade) });
+  }
+  const BAR_T0 = 1000, BAR_T1 = 40000, BAR_N = 300;
+  const BAR = [];
+  for (let i = 0; i <= BAR_N; i++) BAR.push(bbColor(BAR_T0 * Math.pow(BAR_T1 / BAR_T0, i / BAR_N)));
+  const css = (c, a = 1) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+
+  // ---------- ranges ----------
+  function autoRange() {
+    const temps = [S.T, ...pins.map((p) => p.T)];
+    const pk = temps.map(wien);
+    const pkB = temps.map((t) => planck(wien(t), t) * 1e-9);
+    const r = { xMode: S.xMode, yMode: S.yMode };
+    if (S.xMode === 'lin') { r.x0 = 0; r.x1 = Math.max(niceUp(4 * Math.max(...pk)), 1e-6); }
+    else {
+      r.x0 = Math.min(Math.pow(10, Math.floor(Math.log10(Math.min(...pk) / 4))), 1e-7);
+      r.x1 = Math.max(Math.pow(10, Math.ceil(Math.log10(Math.max(...pk) * 20))), 1e-5);
+    }
+    if (S.yMode === 'lin') { r.y0 = 0; r.y1 = niceUp(1.08 * Math.max(...pkB)); }
+    else {
+      const hi = Math.log10(Math.max(...pkB)), lo = Math.log10(Math.min(...pkB));
+      r.y1 = Math.ceil(hi + 0.3);
+      r.y0 = Math.max(Math.floor(lo) - 4, r.y1 - 44);
+    }
+    return r;
+  }
+  function range() {
+    if (frozen) return frozen;
+    if (S.lock) {
+      if (!locked || locked.xMode !== S.xMode || locked.yMode !== S.yMode) locked = autoRange();
+      return locked;
+    }
+    return autoRange();
+  }
+
+  // ---------- chart ----------
+  function drawChart() {
+    const ctx = cctx, T = tokens(), W = CW, H = CH, ps = T.ps;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const mono = monoFont(), ui = uiFont();
+    const R = range();
+    const narrow = W < 560;
+    const padL = 64 * ps, padR = 18 * ps, padT = (narrow ? 84 : 58) * ps, padB = 46 * ps;
+    const pw = Math.max(10, W - padL - padR), ph = Math.max(10, H - padT - padB);
+    const xlog = R.xMode === 'log', ylog = R.yMode === 'log';
+    const lx0 = xlog ? Math.log10(R.x0) : 0, lx1 = xlog ? Math.log10(R.x1) : 0;
+    const X = (lam) => padL + (xlog ? (Math.log10(lam) - lx0) / (lx1 - lx0) : (lam - R.x0) / (R.x1 - R.x0)) * pw;
+    const Xinv = (px) => { const u = (px - padL) / pw; return xlog ? Math.pow(10, lx0 + u * (lx1 - lx0)) : R.x0 + u * (R.x1 - R.x0); };
+    const clampY = (y) => Math.max(-5000, Math.min(5000, y));
+    // y from radiance per nm; logs handled through logB10 to avoid underflow
+    const Ylin = (b) => clampY(padT + ph - b / R.y1 * ph);
+    const Ylog = (l10) => clampY(padT + ph - (l10 - R.y0) / (R.y1 - R.y0) * ph);
+    const yOfCurve = (lam, t) => ylog ? Ylog(logPlanck(lam, t) / LN10 - 9) : Ylin(planck(lam, t) * 1e-9);
+    const yOfRJ = (lam, t) => ylog ? Ylog(Math.log10(rayleighJeans(lam, t)) - 9) : Ylin(rayleighJeans(lam, t) * 1e-9);
+    M = { padL, padT, pw, ph, X, Xinv, yOfCurve, R };
+
+    // visible band
+    if (S.band) {
+      const xa = Math.max(padL, X(380e-9)), xb = Math.min(padL + pw, X(750e-9));
+      if (xb > xa) {
+        for (let px = Math.floor(xa); px < xb; px++) {
+          const l = Xinv(px + 0.5) * 1e9;
+          const k = Math.round(l) - 380;
+          if (k < 0 || k >= BAND.length) continue;
+          const c = BAND[k];
+          ctx.fillStyle = css(c.rgb, T.bandA * c.a); ctx.fillRect(px, padT, 1, ph);
+          ctx.fillStyle = css(c.rgb, c.a); ctx.fillRect(px, padT + ph - 7 * ps, 1, 7 * ps);
+        }
+        if (xb - xa > 46 * ps) {
+          ctx.font = `600 ${11 * ps}px ${mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+          ctx.fillText('visible', (xa + xb) / 2, padT + ph - 10 * ps);
+        }
+      }
+    }
+
+    // grid and ticks
+    ctx.lineWidth = 1; ctx.font = `${11 * ps}px ${mono}`; ctx.fillStyle = T.muted;
+    const gridV = [], labelsX = [];
+    if (!xlog) {
+      const step = niceStep((R.x1 - R.x0) / Math.max(2, Math.floor(pw / (78 * ps))));
+      const [f, unit] = R.x1 <= 2.01e-6 ? [1e9, 'nm'] : R.x1 <= 2.01e-3 ? [1e6, 'μm'] : [1e3, 'mm'];
+      for (let v = 0; v <= R.x1 + step * 1e-6; v += step) {
+        gridV.push(X(v));
+        labelsX.push([X(v), trim((+(v * f).toPrecision(4)).toString())]);
+      }
+      M.xTitle = 'Wavelength λ (' + unit + ')';
+    } else {
+      const decades = lx1 - lx0;
+      const minor = pw / decades > 150 * ps;
+      for (let d = Math.floor(lx0); d <= Math.ceil(lx1); d++) {
+        for (const m of [1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+          const v = m * Math.pow(10, d);
+          if (v < R.x0 * 0.999 || v > R.x1 * 1.001) continue;
+          gridV.push(X(v), m === 1);
+          if (m === 1 || (minor && (m === 2 || m === 5))) labelsX.push([X(v), fmtLen(v * 1.0000001, 2)]);
+        }
+      }
+      M.xTitle = 'Wavelength λ, log scale';
+    }
+    ctx.strokeStyle = T.grid; ctx.beginPath();
+    for (let i = 0; i < gridV.length; i++) {
+      const x = gridV[i];
+      if (typeof x !== 'number') continue;
+      const px = Math.round(x) + 0.5; ctx.moveTo(px, padT); ctx.lineTo(px, padT + ph);
+    }
+    let ylabels = [];
+    if (!ylog) {
+      const step = niceStep(R.y1 / Math.max(2, Math.floor(ph / (48 * ps))));
+      for (let v = 0; v <= R.y1 * 1.0001; v += step) {
+        const py = Math.round(Ylin(v)) + 0.5; ctx.moveTo(padL, py); ctx.lineTo(padL + pw, py);
+        ylabels.push([py, v === 0 ? '0' : sci(v, 2, 0, 3)]);
+      }
+    } else {
+      const span = R.y1 - R.y0, every = Math.max(1, Math.ceil(span / Math.max(2, Math.floor(ph / (26 * ps)))));
+      for (let d = R.y0; d <= R.y1; d++) {
+        const py = Math.round(Ylog(d)) + 0.5; ctx.moveTo(padL, py); ctx.lineTo(padL + pw, py);
+        if ((d - R.y0) % every === 0) ylabels.push([py, d === 0 ? '1' : '10' + sup(d)]);
+      }
+    }
+    ctx.stroke();
+    ctx.strokeStyle = T.gridStrong; ctx.beginPath();
+    ctx.moveTo(padL + 0.5, padT); ctx.lineTo(padL + 0.5, padT + ph + 0.5); ctx.lineTo(padL + pw, padT + ph + 0.5); ctx.stroke();
+
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillStyle = T.muted;
+    let lastR = -Infinity;
+    for (const [x, s] of labelsX) {
+      const w = ctx.measureText(s).width;
+      if (x - w / 2 < lastR + 8 * ps) continue;
+      const xx = Math.min(padL + pw - w / 2, x);
+      ctx.fillText(s, xx, padT + ph + 7 * ps); lastR = xx + w / 2;
+    }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (const [py, s] of ylabels) ctx.fillText(s, padL - 7 * ps, py);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+    ctx.font = `700 ${11.5 * ps}px ${ui}`;
+    ctx.fillText(M.xTitle, padL + pw, H - 4 * ps);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.font = `700 ${12.5 * ps}px ${ui}`;
+    const ty = narrow ? padT - 30 * ps : 22 * ps;
+    ctx.fillText('Spectral radiance Bλ' + (ylog ? ', log scale' : ''), padL - 52 * ps, ty);
+    ctx.font = `${11 * ps}px ${mono}`;
+    ctx.fillText('W·m⁻²·sr⁻¹·nm⁻¹', padL - 52 * ps, ty + 15 * ps);
+
+    // curves
+    ctx.save();
+    ctx.beginPath(); ctx.rect(padL, padT - 2, pw, ph + 4); ctx.clip();
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    const N = Math.max(200, Math.round(pw / 1.2));
+    const lamAt = (i) => Xinv(padL + pw * i / N);
+    const stroke = (fn, color, lw, dash) => {
+      ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.setLineDash(dash || []);
+      ctx.beginPath();
+      let started = false;
+      for (let i = 0; i <= N; i++) {
+        const lam = lamAt(i);
+        if (!(lam > 0)) continue;
+        const x = padL + pw * i / N, y = fn(lam);
+        if (!isFinite(y)) continue;
+        if (started) ctx.lineTo(x, y); else { ctx.moveTo(x, y); started = true; }
+      }
+      ctx.stroke(); ctx.setLineDash([]);
+    };
+
+    // eye response overlay
+    if (S.eye) {
+      const xa = X(380e-9), xb = X(780e-9);
+      if (xb - xa > 40 * ps) {
+        const sc = ph * 0.38 / 1.06;
+        ctx.globalAlpha = 0.85;
+        for (let k = 0; k < 3; k++) {
+          ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([2 * ps, 3 * ps]);
+          ctx.beginPath();
+          for (let l = 380; l <= 780; l += 2) { const x = X(l * 1e-9), y = padT + ph - cie(l)[k] * sc; l === 380 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+          ctx.stroke();
+        }
+        ctx.setLineDash([]); ctx.globalAlpha = 1;
+        ctx.font = `600 ${10.5 * ps}px ${mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+        for (const [l, k, s] of [[445, 2, 'z̄'], [555, 1, 'ȳ'], [600, 0, 'x̄']]) ctx.fillText(s, X(l * 1e-9), padT + ph - cie(l)[k] * sc - 3 * ps);
+      }
+    }
+
+    pins.forEach((p, i) => stroke((l) => yOfCurve(l, p.T), pinColor(T, i), 2 * ps));
+    if (S.rj) stroke((l) => yOfRJ(l, S.T), T.pos, 1.8 * ps, [7 * ps, 5 * ps]);
+    stroke((l) => yOfCurve(l, S.T), T.pos, 2.8 * ps);
+    ctx.restore();
+
+    // peak markers
+    const marks = [...pins.map((p, i) => ({ T: p.T, c: pinColor(T, i), cur: false })), { T: S.T, c: T.pos, cur: true }];
+    const placed = [];
+    ctx.font = `600 ${11.5 * ps}px ${mono}`;
+    for (const mk of marks) {
+      const lam = wien(mk.T), x = X(lam), y = yOfCurve(lam, mk.T);
+      if (x < padL - 1 || x > padL + pw + 1 || y < padT - 2 || y > padT + ph + 2) { mk.vis = false; continue; }
+      mk.vis = true; mk.x = x; mk.y = y;
+      ctx.save(); ctx.strokeStyle = mk.c; ctx.globalAlpha = 0.6; ctx.lineWidth = 1 * ps; ctx.setLineDash([3 * ps, 3 * ps]);
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, padT + ph); ctx.stroke(); ctx.restore();
+    }
+    for (const mk of marks) {
+      if (!mk.vis) continue;
+      const txt = (mk.cur ? 'λmax ' : '') + fmtLen(wien(mk.T)) + (mk.cur ? '' : ' · ' + fmtT(mk.T));
+      const w = ctx.measureText(txt).width, h = 15 * ps;
+      let tx = Math.min(padL + pw - w - 2, Math.max(padL + 2, mk.x - w / 2)), tyy = mk.y - 12 * ps;
+      if (tyy - h < padT - 4 * ps) tyy = padT - 4 * ps + h;
+      for (let k = 0; k < 6; k++) {
+        const hit = placed.find((p) => tx < p.x + p.w + 4 && tx + w + 4 > p.x && Math.abs(tyy - p.y) < h);
+        if (!hit) break;
+        tyy = hit.y + h + 2 * ps;
+      }
+      placed.push({ x: tx, y: tyy, w });
+      ctx.save(); ctx.globalAlpha = 0.85; ctx.fillStyle = T.canvas; ctx.fillRect(tx - 3, tyy - h + 1, w + 6, h); ctx.restore();
+      ctx.fillStyle = mk.c; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+      ctx.fillText(txt, tx, tyy);
+    }
+    for (const mk of marks) {
+      if (!mk.vis) continue;
+      ctx.beginPath(); ctx.arc(mk.x, mk.y, (mk.cur ? 6 : 4) * ps, 0, 2 * Math.PI);
+      ctx.fillStyle = mk.cur ? T.canvas : mk.c; ctx.fill();
+      if (mk.cur) { ctx.lineWidth = 2.5 * ps; ctx.strokeStyle = (drag || hoverPeak) ? T.accent : T.pos; ctx.stroke(); }
+    }
+    if (S.rj) {
+      let lamTop = null;
+      for (let i = N; i >= 0; i--) { const l = lamAt(i); if (l > 0 && yOfRJ(l, S.T) <= padT + 4) { lamTop = l; break; } }
+      if (lamTop) {
+        const txt = 'Rayleigh-Jeans → ∞', w = ctx.measureText(txt).width, h = 15 * ps;
+        let tx = Math.min(padL + pw - w - 4, Math.max(padL + 4, X(lamTop) + 6 * ps)), tyy = padT + h;
+        for (let k = 0; k < 8; k++) {
+          const hit = placed.find((p) => tx < p.x + p.w + 4 && tx + w + 4 > p.x && Math.abs(tyy - p.y) < h);
+          if (!hit) break;
+          tyy = hit.y + h + 2 * ps;
+        }
+        ctx.save(); ctx.globalAlpha = 0.85; ctx.fillStyle = T.canvas; ctx.fillRect(tx - 3, tyy - h + 1, w + 6, h); ctx.restore();
+        ctx.fillStyle = T.pos; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(txt, tx, tyy);
+      }
+    }
+    const cm = marks[marks.length - 1];
+    M.peak = cm.vis ? { x: cm.x, y: cm.y } : null;
+
+    // probe
+    if (probe && probe.lam > 0) {
+      const x = X(probe.lam);
+      if (x >= padL && x <= padL + pw) {
+        const y = yOfCurve(probe.lam, S.T);
+        ctx.save(); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([4 * ps, 3 * ps]);
+        ctx.beginPath(); ctx.moveTo(x, padT); ctx.lineTo(x, padT + ph); ctx.stroke(); ctx.restore();
+        if (y >= padT && y <= padT + ph) {
+          ctx.beginPath(); ctx.arc(x, y, 4 * ps, 0, 2 * Math.PI); ctx.fillStyle = T.accent; ctx.fill();
+        }
+        const lines = ['λ = ' + fmtLen(probe.lam), 'B = ' + sci(planck(probe.lam, S.T) * 1e-9, 3)];
+        if (S.rj) lines.push('RJ = ' + sci(rayleighJeans(probe.lam, S.T) * 1e-9, 3));
+        ctx.font = `600 ${11.5 * ps}px ${mono}`;
+        const lh = 16 * ps, bw = Math.max(...lines.map((s) => ctx.measureText(s).width)) + 14 * ps, bh = lines.length * lh + 8 * ps;
+        let bx = x + 10 * ps, by = padT + 8 * ps;
+        if (bx + bw > padL + pw) bx = x - 10 * ps - bw;
+        ctx.fillStyle = T.canvas; ctx.strokeStyle = T.line; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx, by, bw, bh, 5) : ctx.rect(bx, by, bw, bh); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+        lines.forEach((s, i) => ctx.fillText(s, bx + 7 * ps, by + 5 * ps + i * lh));
+      }
+    }
+  }
+
+  // ---------- star color strip ----------
+  function drawStrip() {
+    const ctx = sctx, T = tokens(), W = SW, H = SH, ps = T.ps;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const mono = monoFont(), ui = uiFont();
+    const pad = 12 * ps;
+    const box = Math.min(H - 2 * pad, Math.max(110 * ps, W * 0.32));
+    const bx = pad, by = (H - box) / 2;
+
+    // sky box with glowing disk
+    ctx.fillStyle = T.sky;
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx, by, box, box, 8) : ctx.rect(bx, by, box, box); ctx.fill();
+    // below about 1000 K the visible tail is pure deep red; the CIE fit is unreliable that far out, so use the 1000 K hue
+    const col = bbColor(Math.max(S.T, 1000));
+    const dim = S.T < 700 ? 0 : S.T < 1000 ? (S.T - 700) / 300 : 1;
+    const cx = bx + box / 2, cy = by + box * 0.44, r = box * 0.2;
+    if (dim === 0) {
+      ctx.fillStyle = '#161c24'; ctx.strokeStyle = '#3a4554'; ctx.lineWidth = 1.5 * ps; ctx.setLineDash([4 * ps, 4 * ps]);
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); ctx.setLineDash([]);
+    }
+    ctx.save();
+    ctx.globalAlpha = dim;
+    const halo = ctx.createRadialGradient(cx, cy, r * 0.8, cx, cy, r * 2.3);
+    halo.addColorStop(0, css(col, 0.55)); halo.addColorStop(0.4, css(col, 0.16)); halo.addColorStop(1, css(col, 0));
+    ctx.fillStyle = halo; ctx.fillRect(bx, by, box, box);
+    const core = col.map((v) => Math.round(v + (255 - v) * 0.3));
+    const disk = ctx.createRadialGradient(cx - r * 0.15, cy - r * 0.15, 0, cx, cy, r);
+    disk.addColorStop(0, css(core)); disk.addColorStop(0.75, css(col)); disk.addColorStop(1, css(col.map((v) => Math.round(v * 0.85))));
+    ctx.fillStyle = disk; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fill();
+    ctx.restore();
+    ctx.fillStyle = '#e3e8ef'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.font = `600 ${11.5 * ps}px ${mono}`;
+    ctx.fillText(fmtT(S.T), cx, by + box - 22 * ps);
+    ctx.font = `${10 * ps}px ${mono}`; ctx.fillStyle = '#96a2b2';
+    const hex = '#' + col.map((v) => v.toString(16).padStart(2, '0')).join('');
+    const note = S.T < 100 ? 'microwaves, no glow' : S.T < 700 ? 'infrared, no visible glow' : S.T < 1000 ? 'dull red glow' : hex;
+    ctx.fillText(note, cx, by + box - 8 * ps);
+
+    // color scale bar
+    const x0 = bx + box + 18 * ps, x1 = W - pad;
+    if (x1 - x0 < 80) return;
+    const lt0 = Math.log(BAR_T0), lt1 = Math.log(BAR_T1);
+    const XT = (t) => x0 + (Math.log(t) - lt0) / (lt1 - lt0) * (x1 - x0);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = T.muted;
+    ctx.font = `700 ${12 * ps}px ${ui}`;
+    ctx.fillText('Blackbody color by temperature', x0, pad + 10 * ps);
+    const lettersY = pad + 34 * ps, barY = pad + 42 * ps, barH = 30 * ps;
+    for (let px = Math.floor(x0); px < x1; px++) {
+      const u = (px - x0) / (x1 - x0), k = Math.round(u * BAR_N);
+      ctx.fillStyle = css(BAR[Math.max(0, Math.min(BAR_N, k))]); ctx.fillRect(px, barY, 1.5, barH);
+    }
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(x0 + 0.5, barY + 0.5, x1 - x0 - 1, barH - 1);
+    // class bands
+    ctx.font = `700 ${11 * ps}px ${mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    for (const k of CLASSES) {
+      const a = Math.max(BAR_T0, k.lo), b = Math.min(BAR_T1, k.hi);
+      const xa = XT(a), xb = XT(b);
+      const on = classOf(S.T) === k;
+      ctx.fillStyle = on ? T.ink : T.muted;
+      ctx.fillText(k.c, (xa + xb) / 2, lettersY);
+      ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(Math.round(xa) + 0.5, lettersY - 12 * ps); ctx.lineTo(Math.round(xa) + 0.5, barY); ctx.stroke();
+    }
+    // temperature ticks
+    ctx.font = `${10.5 * ps}px ${mono}`; ctx.fillStyle = T.muted; ctx.textBaseline = 'top';
+    let lastR = -Infinity;
+    for (const t of [1000, 2000, 3000, 5000, 10000, 20000, 40000]) {
+      const x = XT(t), s = t >= 10000 ? (t / 1000) + 'k' : String(t), w = ctx.measureText(s).width;
+      const xx = Math.min(x1 - w / 2, Math.max(x0 + w / 2, x));
+      if (xx - w / 2 < lastR + 6 * ps) continue;
+      ctx.fillRect(Math.round(x), barY + barH, 1, 4 * ps);
+      ctx.fillText(s, xx, barY + barH + 5 * ps); lastR = xx + w / 2;
+    }
+    ctx.textAlign = 'right'; ctx.fillText('K', x1, barY + barH + 19 * ps);
+    // pins and current marker
+    pins.forEach((p, i) => {
+      if (p.T < BAR_T0 || p.T > BAR_T1) return;
+      const x = XT(p.T);
+      ctx.fillStyle = pinColor(T, i);
+      ctx.beginPath(); ctx.moveTo(x, barY + barH - 1); ctx.lineTo(x - 5 * ps, barY + barH + 8 * ps); ctx.lineTo(x + 5 * ps, barY + barH + 8 * ps); ctx.closePath(); ctx.fill();
+    });
+    const tc = Math.min(BAR_T1, Math.max(BAR_T0, S.T)), xc = XT(tc);
+    ctx.strokeStyle = T.canvas; ctx.lineWidth = 5 * ps; ctx.beginPath(); ctx.moveTo(xc, barY - 3 * ps); ctx.lineTo(xc, barY + barH + 3 * ps); ctx.stroke();
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2.2 * ps; ctx.beginPath(); ctx.moveTo(xc, barY - 3 * ps); ctx.lineTo(xc, barY + barH + 3 * ps); ctx.stroke();
+    if (S.T < BAR_T0 || S.T > BAR_T1) {
+      ctx.fillStyle = T.ink; ctx.font = `600 ${10.5 * ps}px ${mono}`; ctx.textBaseline = 'middle';
+      ctx.textAlign = S.T < BAR_T0 ? 'left' : 'right';
+      ctx.fillText(S.T < BAR_T0 ? '◀ off scale' : 'off scale ▶', xc + (S.T < BAR_T0 ? 6 : -6) * ps, barY + barH / 2);
+    }
+    ctx.font = `${11 * ps}px ${ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    let msg = 'Red, orange, yellow, white, blue. Never green.';
+    if (ctx.measureText(msg).width > x1 - x0) msg = 'Never green.';
+    if (H - pad > barY + barH + 40 * ps) ctx.fillText(msg, x0, Math.min(H - pad, barY + barH + 44 * ps));
+  }
+
+  // ---------- panel ----------
+  function updatePanel() {
+    $('tempOut').textContent = fmtT(S.T);
+    $('radOut').textContent = fmtR(S.R);
+    $('rT').textContent = fmtT(S.T);
+    $('rPk').textContent = fmtLen(wien(S.T));
+    const k = classOf(S.T);
+    $('rCls').textContent = k ? `${k.c}, ${k.lo.toLocaleString('en-US')}${isFinite(k.hi) ? '–' + k.hi.toLocaleString('en-US') : '+'} K` : (S.T < 2400 ? 'cooler than M' : '—');
+    $('rCol').textContent = k ? k.col : S.T >= 1000 ? 'deep red' : S.T >= 700 ? 'dull red' : 'no visible glow';
+    const F = SIG * Math.pow(S.T, 4);
+    $('rF').textContent = sci(F, 3) + ' W/m²';
+    const L = 4 * Math.PI * Math.pow(S.R * RSUN, 2) * F / LSUN;
+    $('rL').textContent = sci(L, 3) + ' L☉';
+    const vf = visibleFraction(S.T);
+    $('rVis').textContent = vf > 0 ? (vf >= 1e-3 ? (vf * 100).toFixed(vf > 0.1 ? 1 : 2) + '%' : sci(vf * 100, 2) + '%') : '≈ 0';
+    $('rB').textContent = sci(planck(wien(S.T), S.T) * 1e-9, 3);
+    $('pin').disabled = pins.length >= 3 || pins.some((p) => p.T === S.T);
+    $('unpin').disabled = !pins.length;
+  }
+  function renderPins() {
+    const box = $('pins'), T = tokens();
+    box.textContent = '';
+    pins.forEach((p, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', 'Remove pinned curve at ' + fmtT(p.T));
+      const sw = document.createElement('i'); sw.className = 'swatch p' + (i % 3);
+      const tone = document.createElement('i'); tone.className = 'tone';
+      tone.style.background = css(bbColor(p.T));
+      const lab = document.createElement('span'); lab.className = 'mono'; lab.textContent = fmtT(p.T);
+      const x = document.createElement('span'); x.className = 'x'; x.textContent = '×';
+      b.append(sw, tone, lab, x);
+      b.addEventListener('click', () => { pins.splice(i, 1); renderPins(); schedule(); });
+      box.append(b);
+    });
+  }
+
+  // ---------- scheduling ----------
+  function schedule() {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = 0;
+      if (CW && CH) drawChart();
+      if (SW && SH) drawStrip();
+      updatePanel();
+    });
+  }
+
+  // ---------- controls ----------
+  function setPressed(sel, attr, val) {
+    for (const b of document.querySelectorAll(sel + ' button')) b.setAttribute('aria-pressed', String(b.dataset[attr] === val));
+  }
+  function setT(T, fromSlider) {
+    S.T = T;
+    if (!fromSlider) $('temp').value = tToU(T);
+    schedule();
+  }
+  function applyPreset(name) {
+    const p = PRESETS[name];
+    if (p.R) { S.R = p.R; $('rad').value = rToU(p.R); }
+    setT(p.T);
+    setPressed('#presets', 'p', name);
+    $('presetHint').textContent = p.hint;
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('temp').addEventListener('input', (e) => {
+    setT(uToT(+e.target.value), true);
+    setPressed('#presets', 'p', null);
+    $('presetHint').textContent = 'Slide T and watch the peak shift as 1/T while the height of the curve climbs much faster.';
+  });
+  $('rad').addEventListener('input', (e) => { S.R = uToR(+e.target.value); schedule(); });
+  for (const b of document.querySelectorAll('[data-x]')) b.addEventListener('click', () => { S.xMode = b.dataset.x; setPressed('.seg:nth-child(1)', 'x', S.xMode); schedule(); });
+  for (const b of document.querySelectorAll('[data-y]')) b.addEventListener('click', () => { S.yMode = b.dataset.y; setPressed('.seg:nth-child(2)', 'y', S.yMode); schedule(); });
+  $('tRJ').addEventListener('change', (e) => { S.rj = e.target.checked; schedule(); });
+  $('tBand').addEventListener('change', (e) => { S.band = e.target.checked; schedule(); });
+  $('tEye').addEventListener('change', (e) => { S.eye = e.target.checked; schedule(); });
+  $('tLock').addEventListener('change', (e) => { S.lock = e.target.checked; locked = S.lock ? autoRange() : null; schedule(); });
+  $('pin').addEventListener('click', () => {
+    if (pins.length >= 3 || pins.some((p) => p.T === S.T)) return;
+    pins.push({ T: S.T }); renderPins(); schedule();
+  });
+  $('unpin').addEventListener('click', () => { pins = []; renderPins(); schedule(); });
+
+  // chart pointer: drag the peak to set T, otherwise probe the curve
+  function local(e) { const r = chart.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+  const nearPeak = (x, y) => M && M.peak && Math.hypot(x - M.peak.x, y - M.peak.y) < 16 * tokens().ps;
+  function setFromPeakX(x) {
+    if (!M) return;
+    const px = Math.min(M.padL + M.pw, Math.max(M.padL + 1, x));
+    const lam = M.Xinv(px);
+    if (!(lam > 0)) return;
+    let T = Math.min(TMAX, Math.max(TMIN, BW / lam));
+    T = T < 1000 ? Math.round(T) : Math.round(T / 10) * 10;
+    setPressed('#presets', 'p', null);
+    setT(T);
+  }
+  chart.addEventListener('pointerdown', (e) => {
+    chart.focus({ preventScroll: true });
+    const [x, y] = local(e);
+    chart.setPointerCapture(e.pointerId);
+    if (nearPeak(x, y)) {
+      drag = 'peak'; frozen = range(); chart.style.cursor = 'grabbing'; probe = null;
+    } else {
+      drag = 'probe'; probe = M ? { lam: M.Xinv(x) } : null;
+    }
+    schedule();
+  });
+  chart.addEventListener('pointermove', (e) => {
+    const [x, y] = local(e);
+    if (drag === 'peak') { setFromPeakX(x); return; }
+    if (drag === 'probe' || e.pointerType === 'mouse') {
+      const hp = !drag && nearPeak(x, y);
+      if (hp !== hoverPeak) { hoverPeak = hp; chart.style.cursor = hp ? 'grab' : 'crosshair'; }
+      probe = hp || !M ? null : { lam: M.Xinv(x) };
+      schedule();
+    }
+  });
+  const endDrag = () => {
+    if (drag === 'peak') { frozen = null; if (S.lock) locked = locked || autoRange(); }
+    drag = null; chart.style.cursor = hoverPeak ? 'grab' : 'crosshair'; schedule();
+  };
+  chart.addEventListener('pointerup', endDrag);
+  chart.addEventListener('pointercancel', endDrag);
+  chart.addEventListener('pointerleave', (e) => { if (!drag && e.pointerType === 'mouse') { probe = null; hoverPeak = false; schedule(); } });
+  chart.addEventListener('keydown', (e) => {
+    const f = e.shiftKey ? 1.1 : 1.01;
+    let T = S.T < TMIN ? TMIN : S.T;
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') T *= f;
+    else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') T /= f;
+    else return;
+    e.preventDefault();
+    T = Math.min(TMAX, Math.max(TMIN, T));
+    setPressed('#presets', 'p', null);
+    setT(T < 1000 ? Math.round(T) : Math.round(T / 10) * 10);
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    if (on) document.documentElement.setAttribute('data-projector', 'on');
+    else document.documentElement.removeAttribute('data-projector');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('virtualdemos.projector', on ? 'on' : 'off'); } catch (_) {}
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('virtualdemos.projector') === 'on') setProjector(true); } catch (_) {}
+
+  // theme changes
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { renderPins(); schedule(); }); } catch (_) {}
+  new MutationObserver(() => { schedule(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector', 'class', 'style'] });
+
+  // ---------- boot ----------
+  applyPreset('sun');
+  renderPins();
+  new ResizeObserver(resize).observe(stage);
+  resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+
+  // exposed for testing
+  window.__blackbody = { planck, logPlanck, rayleighJeans, wien, visibleFraction, bbColor, classOf, S };
+})();
+</script>
+</body>
+</html>
