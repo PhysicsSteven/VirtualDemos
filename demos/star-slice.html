@@ -584,6 +584,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (mo.stage !== 'Core helium burning') continue;
       const coreHe = mo.shells.some((s) => s.core && /^He burning/.test(s.name));
       if (!coreHe && !(mo.cHe < peak - 0.01)) mo.stage = 'Hydrogen shell burning';
+    }    // massive stars: a single saved moment whose label differs from equal neighbors on both sides is
+    // the core burning detection flickering near its threshold, so it takes the neighbors' label
+    if (D.has.massive) {
+      const st = ms.map((mo) => mo.stage);
+      for (let i = 1; i + 1 < ms.length; i++) if (st[i - 1] === st[i + 1] && st[i] !== st[i - 1]) ms[i].stage = st[i - 1];
     }
   }
   // iron group core and infall, for the core collapse ending
@@ -688,17 +693,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return t.join(', ');
   }
   function stageOf(mo, D) {
+    const at = (k) => (mo[k] ? Math.max(0, mo[k][0] || 0) : 0);
+    // a silicon or iron center comes first: photodisintegration near collapse puts a little free ⁴He back at the center
+    if (D.has.massive && at('si28') + at('s_ca') + at('fe_grp') + at('np') > 0.5) {
+      if (mo.fe) return mo.fe.vIn >= 1e7 ? 'Iron core collapse begins' : 'Iron core';
+      return 'Silicon burning';   // the core is silicon rich; it burns in the core and in shells by turns
+    }
     if (mo.cH != null && mo.cH > 1e-3) return 'Core hydrogen burning';
     if (mo.cHe != null && mo.cHe > 1e-3) return 'Core helium burning';
     if (D.has.massive) {
-      const at = (k) => (mo[k] ? Math.max(0, mo[k][0] || 0) : 0), cs = mo.shells.find((s) => s.core);
-      if (mo.fe) return mo.fe.vIn >= 1e7 ? 'Iron core collapse begins' : 'Iron core';
-      if (at('si28') + at('s_ca') > 0.5) return cs && /other/.test(cs.name) ? 'Core silicon burning' : 'Silicon core';
+      const cs = mo.shells.find((s) => s.core);
       if (cs && /^O burning/.test(cs.name)) return 'Core oxygen burning';
       if (cs && /^C burning/.test(cs.name)) return 'Core carbon burning';
       if (cs && /other/.test(cs.name) && at('ne20') > 0.02 && at('o16') > 0.3) return 'Core neon burning';
       const big = mo.L > 1e4 ? 'Supergiant' : 'Giant';
-      return at('ne20') + at('mg24') > 0.15 ? big + ' with O/Ne core' : big + ' with C/O core';
+      // between burning stages: name the core by what is at the center now
+      const core = at('c12') > 0.1 ? 'C/O' : at('ne20') + at('mg24') > 0.1 ? 'O/Ne/Mg' : 'oxygen';
+      return big + ' with ' + core + ' core';
     }
     if (mo.R > 1) return 'Giant with C/O core';
     if (mo.solidAny) return 'Crystallizing white dwarf';
@@ -776,7 +787,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (D.collapse) {
       const iC = D.N - 1, mo = ms[iC], fe = mo.fe;
       P.push({ label: 'Core collapse', idx: iC, mode: 'comp', log: false, zoom: clamp(Math.log10(mo.R / (4 * fe.r)), 0, zoomCap(D)),
-        hint: `Model ${mo.model ?? iC + 1}, the last one saved: an iron group core of ${sci(fe.m, 3)} M☉ (fe_grp ≥ 0.5 inside), radius ${fmtKm(fe.r)}, falling inward at up to ${grp(fe.vIn / 1e5)} km/s. The view is to scale: its edge is ${sci((4 * fe.r) / EARTH_RSUN, 2)} Earth radii from the center. Next the core collapses, which can drive a core collapse supernova. This MESA run stops here and does not model that.` });
+        hint: `Model ${mo.model ?? iC + 1}, the last one saved: an iron group core of ${sci(fe.m, 3)} M☉ (fe_grp ≥ 0.5 inside), radius ${fmtKm(fe.r)}, falling inward at up to ${grp(fe.vIn / 1e5)} km/s. The view is to scale: its edge is ${sci((4 * fe.r) / EARTH_RSUN, 2)} Earth ${+sci((4 * fe.r) / EARTH_RSUN, 2) === 1 ? 'radius' : 'radii'} from the center. Next the core collapses, which can drive a core collapse supernova. This MESA run stops here and does not model that.` });
     }
     return P.slice(0, 7);
   }
