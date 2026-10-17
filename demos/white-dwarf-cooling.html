@@ -1,0 +1,1386 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+<title>White Dwarf Cooling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one canvas with the cooling curve (top left), a slice through the star with its coupling profile (bottom left)
+   and a schematic Gaia HR diagram (right); instrument rail on the right; everything stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --liquid: #c8641c;
+  --solid: #137f9e;
+  --track: #8d97a6;
+  --dot: #46566b;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --liquid: #f39a52; --solid: #4fc6e6; --track: #5f6b7c; --dot: #a9b6c7; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --liquid: #f39a52; --solid: #4fc6e6; --track: #5f6b7c; --dot: #a9b6c7; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#can { touch-action: none; outline: none; }
+#can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
+
+.toggles { display: grid; grid-template-columns: 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; width: 16px; height: 16px; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.liq { border-color: var(--liquid); border-top-width: 3px; }
+.swatch.sol { border-color: var(--solid); border-top-width: 3px; }
+.swatch.mes { border-color: var(--muted); border-top-style: dashed; }
+.swatch.nolat { border-color: var(--muted); border-top-style: dotted; border-top-width: 3px; }
+.swatch.trk { border-color: var(--track); }
+.swatch.age { border-color: var(--accent); }
+.swatch.disk { border-color: var(--equi); border-top-style: dashed; }
+.swatch.on { width: 10px; height: 10px; border: 2px solid var(--solid); border-radius: 50%; margin: 0 6px; background: var(--canvas); }
+.swatch.now { width: 10px; height: 10px; border: 0; border-radius: 50%; margin: 0 6px; background: var(--pos); }
+.swatch.pop { width: 6px; height: 6px; border: 0; border-radius: 50%; margin: 0 8px; background: var(--dot); }
+
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 1320px; min-height: 0; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>White Dwarf Cooling</h1>
+      <p>A white dwarf has no fuel left. It shines by leaking the heat stored in its ions, fades for billions of years, and freezes into a crystal from the center out.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">M in M☉ · L in L☉ · ages in yr · T_c = core temperature · Γ_m = 175</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="restart">Restart</button>
+        <div class="seg" role="group" aria-label="Clock speed">
+          <button type="button" data-s="0" aria-pressed="false">Slow</button>
+          <button type="button" data-s="1" aria-pressed="true">Normal</button>
+          <button type="button" data-s="2" aria-pressed="false">Fast</button>
+        </div>
+        <div class="seg" role="group" aria-label="Cooling plot shows">
+          <button type="button" id="yL" aria-pressed="true">Luminosity</button>
+          <button type="button" id="yT" aria-pressed="false">Core T</button>
+        </div>
+        <span class="count mono" id="count" aria-live="off"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="Three views of one cooling white dwarf. Top left, its luminosity or core temperature against age on log scales, with the Mestel power law. Bottom left, a slice through the star showing the crystallized core, and the ion coupling parameter Gamma against radius. Right, a schematic Gaia HR diagram with cooling tracks for 0.5 to 1.2 solar masses. Drag the age line on the cooling plot or the dot on the HR diagram to change the age, the gold line to change the disk age, and the handle on the star's surface to change its mass. Keys: left and right change the age, up and down change the mass, space plays or pauses, T switches the plot, C toggles crystallization, L toggles latent heat, H switches helium and carbon/oxygen, P shows the simulated population."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="young" aria-pressed="true">Hot young white dwarf</button>
+          <button type="button" data-p="mestel" aria-pressed="false">Mestel cooling law</button>
+          <button type="button" data-p="cryst" aria-pressed="false">Crystallization begins</button>
+          <button type="button" data-p="heavy" aria-pressed="false">Heavier dwarfs crystallize first</button>
+          <button type="button" data-p="he" aria-pressed="false">Helium vs carbon/oxygen</button>
+          <button type="button" data-p="clock" aria-pressed="false">Cosmic clock</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>The white dwarf</h2>
+        <div>
+          <div class="slider-head"><label for="mass">Mass M</label><output id="massOut" class="mono" for="mass"></output></div>
+          <input type="range" id="mass" min="0.5" max="1.2" step="0.01" value="0.6">
+        </div>
+        <div class="inline">
+          <span class="lab">Core</span>
+          <div class="seg" role="group" aria-label="Core composition">
+            <button type="button" id="cCO" aria-pressed="true">Carbon/oxygen</button>
+            <button type="button" id="cHe" aria-pressed="false">Helium</button>
+          </div>
+        </div>
+        <dl class="readout">
+          <div class="wide"><dt>Radius (zero temperature Chandrasekhar model, μ<sub>e</sub> = 2)</dt><dd id="rR">—</dd></div>
+          <div><dt>Central density</dt><dd id="rRho">—</dd></div>
+          <div><dt>Ions; mean A</dt><dd id="rN">—</dd></div>
+        </dl>
+      </section>
+
+      <section>
+        <h2>Age</h2>
+        <div>
+          <div class="slider-head"><label for="age">Cooling age t (log scale)</label><output id="ageOut" class="mono" for="age"></output></div>
+          <input type="range" id="age" min="4" max="10.3" step="0.01" value="4.5">
+        </div>
+        <dl class="readout">
+          <div class="wide big"><dt>Luminosity L</dt><dd id="rL">—</dd></div>
+          <div><dt>Core T<sub>c</sub></dt><dd id="rT">—</dd></div>
+          <div><dt>Surface T<sub>eff</sub></dt><dd id="rTe">—</dd></div>
+          <div><dt>M<sub>G</sub>, G<sub>BP</sub> − G<sub>RP</sub></dt><dd id="rG">—</dd></div>
+          <div><dt>Slope d log L / d log t</dt><dd id="rS">—</dd></div>
+          <div class="wide"><dt>Heat capacity per ion, dU/dT<sub>c</sub> ÷ Nk</dt><dd id="rC">—</dd></div>
+        </dl>
+        <p class="formula" id="fEnv"></p>
+        <p class="formula" id="fMes"></p>
+        <p class="hint">Mestel (1952): the degenerate core conducts heat so well that it sits at one temperature T<sub>c</sub>. The thin nondegenerate envelope on top is the insulation, and it sets L. The ions hold the heat; the degenerate electrons hold almost none.</p>
+      </section>
+
+      <section>
+        <h2>Crystallization</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tCr" checked>Ions freeze where Γ ≥ 175</label>
+          <label><input type="checkbox" id="tLat" checked>Release latent heat 0.77 kT per ion</label>
+        </div>
+        <div class="inline">
+          <span class="lab">Liquid ions</span>
+          <div class="seg" role="group" aria-label="Heat capacity of the liquid ions">
+            <button type="button" id="lId" aria-pressed="false">Ideal gas</button>
+            <button type="button" id="lCo" aria-pressed="true">Coulomb liquid</button>
+          </div>
+        </div>
+        <dl class="readout">
+          <div><dt>Γ at the center</dt><dd id="rGam">—</dd></div>
+          <div><dt>Center freezes at</dt><dd id="rTm">—</dd></div>
+          <div class="wide big"><dt>Solid fraction of the mass</dt><dd id="rFs">—</dd></div>
+          <div class="wide"><dt>Crystallization begins</dt><dd id="rOn">—</dd></div>
+          <div class="wide"><dt>Delay from latent heat, at this L</dt><dd id="rDel">—</dd></div>
+        </dl>
+        <p class="formula">Γ = (Ze)² / (4πε₀ a kT), a = (3/4πn<sub>ion</sub>)<sup>1/3</sup></p>
+        <p class="hint" id="crHint"></p>
+      </section>
+
+      <section>
+        <h2>Cosmic clock</h2>
+        <label class="check"><input type="checkbox" id="tPop">Show a simulated population</label>
+        <div>
+          <div class="slider-head"><label for="disk">Age of the disk</label><output id="diskOut" class="mono" for="disk"></output></div>
+          <input type="range" id="disk" min="1" max="13.5" step="0.1" value="9">
+        </div>
+        <dl class="readout">
+          <div><dt>White dwarfs shown</dt><dd id="rPn">—</dd></div>
+          <div><dt>Faintest 1%</dt><dd id="rPf">—</dd></div>
+        </dl>
+        <p class="hint">Stars form at a steady rate over the disk age, with Salpeter masses 1.0 to 7.3 M☉ and main sequence lives of 10 Gyr (M/M☉)<sup>−2.5</sup>. Each leaves a white dwarf of 0.109 M<sub>i</sub> + 0.394 M☉ (Kalirai et al. 2008) that cools on this page's tracks. The dots and the histogram are simulated from this model, not Gaia data.</p>
+        <p class="hint">Real white dwarf counts drop sharply below about 10<sup>−4.5</sup> L☉ (Liebert, Dahn &amp; Monet 1988): none has had time to fade further. Detailed cooling models turn that cutoff into an age for the local disk of about 8 to 10 Gyr (Winget et al. 1987, 9.3 ± 2 Gyr; Leggett, Ruiz &amp; Bergeron 1998, 8 ± 1.5 Gyr).</p>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint"><b>Core.</b> Isothermal at T<sub>c</sub>, with the density profile of a zero temperature Chandrasekhar white dwarf (ideal degenerate electrons, μ<sub>e</sub> = 2, no Coulomb corrections), held fixed as it cools. Carbon/oxygen is 50:50 by mass. The radius stays fixed; real hot white dwarfs are a few percent larger.</p>
+        <p class="hint"><b>Envelope.</b> The textbook Kramers opacity relation with Shapiro and Teukolsky's envelope X = 0, Y = 0.9, Z = 0.1. Real envelopes are hydrogen or helium, and detailed models are brighter at a given T<sub>c</sub>; this relation is the largest simplification here. Neutrino cooling, which dominates for hot white dwarfs above about 25,000 K, is left out, and so is any energy from contraction.</p>
+        <p class="hint"><b>Heat.</b> Ions only. Liquid: ideal gas 3/2 k (Mestel), or the Coulomb liquid fit U<sub>ex</sub>/NkT = −0.8992Γ + 0.596Γ<sup>0.3253</sup> − 0.268 (DeWitt, Slattery &amp; Stringfellow; fit range 1 ≤ Γ ≤ 220, held at 220 above), linear mixing for C/O. Solid: 3k per ion (Dulong–Petit).</p>
+        <p class="hint"><b>Crystallization.</b> One melting value Γ<sub>m</sub> = 175 for a one component plasma (Potekhin &amp; Chabrier 2000), applied to C/O with ⟨Z<sup>5/3</sup>⟩. Real mixtures melt at a somewhat different Γ and separate as they freeze (the solid is richer in oxygen); that phase separation and the settling of ²²Ne both release extra energy and are left out. Latent heat 0.77 kT per ion (Salaris et al. 2000). Debye cooling, when the lattice heat capacity drops below 3k, is marked where T<sub>c</sub> ≈ 0.1 θ<sub>D</sub>, θ<sub>D</sub> ≈ 4×10³ ρ<sup>1/2</sup> K (Althaus et al. 2010), but not modeled.</p>
+        <p class="hint"><b>HR diagram.</b> Schematic: each white dwarf is a blackbody seen through flat bands (BP 330 to 680 nm, RP 630 to 1050 nm, G 330 to 1050 nm), with zero points set by the Sun (M<sub>G</sub> = 4.67, G<sub>BP</sub> − G<sub>RP</sub> = 0.82). Real white dwarf spectra and Gaia passbands shift these colors by a few tenths of a magnitude.</p>
+        <div class="key">
+          <span><i class="swatch liq"></i>Core all liquid</span>
+          <span><i class="swatch sol"></i>Core freezing or solid</span>
+          <span><i class="swatch on"></i>Crystallization begins</span>
+          <span><i class="swatch now"></i>This white dwarf now</span>
+          <span><i class="swatch mes"></i>Mestel law, ideal ions, L ∝ t<sup>−7/5</sup></span>
+          <span><i class="swatch nolat"></i>Same, without latent heat</span>
+          <span><i class="swatch trk"></i>Tracks for 0.5 to 1.2 M☉</span>
+          <span><i class="swatch disk"></i>Disk age (population on)</span>
+          <span><i class="swatch pop"></i>Simulated white dwarf</span>
+        </div>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+// Sun and Earth unit symbols and subscripts. The glyphs ☉ and ⊕ render small or as a circled plus in many fonts, so the
+// code keeps them in its strings and the page shows them as subscripts: M☉ appears as M with subscript "sun",
+// R⊕ as R with subscript "E"; T_c, T_eff, M_G and G_BP are drawn with subscripts too. Canvas text and HTML text are both converted.
+(() => {
+  const SYM = /[☉⊕]|[A-Za-zΓθ]_[A-Za-z]/, SUB = { '☉': 'sun', '⊕': 'E' };
+  const parts = (s) => String(s).split(/([☉⊕]|(?<=[A-Za-zΓθ])_[A-Za-z]+)/).filter(Boolean)
+    .map((t) => (SUB[t] ? [SUB[t], true] : t[0] === '_' && t.length > 1 ? [t.slice(1), true] : [t, false]));
+  const P = CanvasRenderingContext2D.prototype, fill = P.fillText, stroke = P.strokeText, measure = P.measureText;
+  const size = (ctx) => { const m = /([\d.]+)px/.exec(ctx.font); return m ? +m[1] : 10; };
+  const subFont = (ctx) => ctx.font.replace(/([\d.]+)px/, (m, n) => (n * 0.72).toFixed(2) + 'px');
+  function width(ctx, s) {
+    const f = ctx.font, sf = subFont(ctx); let w = 0;
+    for (const [t, sub] of parts(s)) { if (sub) ctx.font = sf; w += measure.call(ctx, t).width; ctx.font = f; }
+    return w;
+  }
+  function draw(ctx, fn, s, x, y) {
+    const al = ctx.textAlign, f = ctx.font, sf = subFont(ctx), dy = size(ctx) * 0.3, w = width(ctx, s);
+    let x0 = al === 'center' ? x - w / 2 : al === 'right' || al === 'end' ? x - w : x;
+    ctx.textAlign = 'left';
+    for (const [t, sub] of parts(s)) {
+      if (sub) ctx.font = sf;
+      fn.call(ctx, t, x0, sub ? y + dy : y);
+      x0 += measure.call(ctx, t).width; ctx.font = f;
+    }
+    ctx.textAlign = al;
+  }
+  P.fillText = function (s, x, y, ...rest) { return SYM.test(s) ? draw(this, fill, s, x, y) : fill.call(this, s, x, y, ...rest); };
+  P.strokeText = function (s, x, y, ...rest) { return SYM.test(s) ? draw(this, stroke, s, x, y) : stroke.call(this, s, x, y, ...rest); };
+  P.measureText = function (s) {
+    if (!SYM.test(s)) return measure.call(this, s);
+    const m = measure.call(this, String(s).replace(/[☉⊕_]/g, 'x')), o = {};
+    for (const k in m) o[k] = m[k];
+    o.width = width(this, s);
+    return o;
+  };
+  function fixText(root) {
+    const skip = (n) => n.parentNode && /^(SCRIPT|STYLE|TEXTAREA)$/.test(n.parentNode.nodeName);
+    const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), hits = [];
+    for (let n = walk.nextNode(); n; n = walk.nextNode()) if (SYM.test(n.data) && !skip(n)) hits.push(n);
+    for (const n of hits) {
+      const frag = document.createDocumentFragment();
+      for (const [t, sub] of parts(n.data)) {
+        if (sub) { const e = document.createElement('sub'); e.textContent = t; frag.appendChild(e); } else frag.appendChild(document.createTextNode(t));
+      }
+      n.replaceWith(frag);
+    }
+  }
+  const start = () => {
+    fixText(document.body);
+    new MutationObserver((list) => {
+      for (const m of list) {
+        if (m.type === 'characterData') { if (SYM.test(m.target.data) && m.target.isConnected) fixText(m.target.parentNode); }
+        else for (const n of m.addedNodes) { if (n.nodeType === 1 && n.isConnected) fixText(n); else if (n.nodeType === 3 && SYM.test(n.data) && n.parentNode) fixText(n.parentNode); }
+      }
+    }).observe(document.body, { childList: true, characterData: true, subtree: true });
+  };
+  if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
+})();
+</script>
+<script>
+(() => {
+  // ==CORE START==
+  // SI units throughout (CODATA 2018), astronomy units only at the edges: M in M☉, L in L☉, t in yr.
+  const G = 6.67430e-11, CL = 299792458, H = 6.62607015e-34, ME = 9.1093837015e-31, MU = 1.66053906660e-27;
+  const KB = 1.380649e-23, QE = 1.602176634e-19, EPS0 = 8.8541878128e-12;
+  const KE = QE * QE / (4 * Math.PI * EPS0);                         // e²/4πε₀, J·m
+  const MSUN = 1.98841e30, RSUN = 6.957e8, LSUN = 3.828e26, REARTH = 6.371e6, YR = 3.15576e7, SIGMA = 5.670374419e-8;
+  const GAMMA_M = 175;            // one component plasma melting value (Potekhin & Chabrier 2000)
+  const Q_LAT = 0.77;             // latent heat per ion, in units of kT at melting (Salaris et al. 2000)
+  const T0 = 1e8;                 // core temperature at t = 0, K
+  const LOGT_MIN = 5;             // the cooling table runs from 10⁸ K down to 10⁵ K
+  const DLOGT = 0.002;
+
+  // Envelope (Shapiro & Teukolsky 1983, eq. 4.1.12; Althaus et al. 2010, eq. 12): Kramers opacity, radiative zero solution
+  // L = 5.7×10⁵ (μ/μe²) (1/(Z(1+X))) (M/M☉) Tc^3.5 erg/s, with S&T's envelope X = 0, Y = 0.9, Z = 0.1.
+  const ENV = { X: 0, Y: 0.9, Z: 0.1 };
+  const MU_ENV = 1 / (2 * ENV.X + 0.75 * ENV.Y + 0.5 * ENV.Z), MUE_ENV = 2 / (1 + ENV.X);
+  const C_ERG = 5.7e5 * MU_ENV / (MUE_ENV * MUE_ENV) / (ENV.Z * (1 + ENV.X));   // erg/s per M☉ per K^3.5
+  const C_ENV = C_ERG * 1e-7 / LSUN;                                         // L☉ per M☉ per K^3.5
+  const lumOf = (M, T) => C_ENV * M * Math.pow(T, 3.5);                      // L☉, M in M☉
+  const tcOfL = (M, L) => Math.pow(L / (C_ENV * M), 2 / 7);
+
+  // Compositions: mass fractions X of each ion. Both have μe = 2.
+  const COMPS = {
+    co: { key: 'co', name: 'Carbon/oxygen', short: 'C/O', sp: [{ Z: 6, A: 12, X: 0.5 }, { Z: 8, A: 16, X: 0.5 }] },
+    he: { key: 'he', name: 'Helium', short: 'He', sp: [{ Z: 2, A: 4, X: 1 }] }
+  };
+  function compInfo(c) {
+    const s = c.sp, inv = s.reduce((a, q) => a + q.X / q.A, 0), A = 1 / inv;
+    const x = s.map((q) => q.X / q.A * A);                                  // number fractions
+    const Z53 = s.reduce((a, q, i) => a + x[i] * Math.pow(q.Z, 5 / 3), 0);
+    const mue = 1 / s.reduce((a, q) => a + q.X * q.Z / q.A, 0);
+    return { A, x, Z53, mue, sp: s };
+  }
+
+  // Zero temperature Chandrasekhar white dwarf: ideal degenerate electrons at any degree of relativity, μe = 2,
+  // no Coulomb corrections. P(x) and ρ(x) with x = pF/(me c).
+  const MUE = 2;
+  const AP = Math.PI * Math.pow(ME, 4) * Math.pow(CL, 5) / (3 * H * H * H);
+  const BP = MUE * MU * 8 * Math.PI * Math.pow(ME * CL, 3) / (3 * H * H * H);
+  const pressure = (x) => AP * (x * (2 * x * x - 3) * Math.sqrt(1 + x * x) + 3 * Math.asinh(x));
+  const dPdx = (x) => AP * 8 * Math.pow(x, 4) / Math.sqrt(1 + x * x);
+  const rhoOfX = (x) => BP * x * x * x;
+  function integrateStar(xc, keep) {
+    const rc = rhoOfX(xc);
+    let r = 10, x = xc, m = 4 / 3 * Math.PI * r * r * r * rc, dr = 1e3;
+    const R = keep ? [0] : null, Ms = keep ? [0] : null, RH = keep ? [rc] : null;
+    const f = (r, x, m) => { const rh = rhoOfX(x); return [-G * m * rh / (r * r * dPdx(x)), 4 * Math.PI * r * r * rh]; };
+    for (let it = 0; it < 200000 && x > xc * 1e-4; it++) {
+      const h = Math.min(dr, 0.004 * r + 2e3);
+      const k1 = f(r, x, m);
+      const x2 = x + h / 2 * k1[0]; if (x2 <= 0) { dr = h / 2; continue; }
+      const k2 = f(r + h / 2, x2, m + h / 2 * k1[1]);
+      const x3 = x + h / 2 * k2[0]; if (x3 <= 0) { dr = h / 2; continue; }
+      const k3 = f(r + h / 2, x3, m + h / 2 * k2[1]);
+      const x4 = x + h * k3[0]; if (x4 <= 0) { dr = h / 2; continue; }
+      const k4 = f(r + h, x4, m + h * k3[1]);
+      const xn = x + h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]);
+      if (xn <= 0 || (Math.abs(xn - x) > 0.02 * x && h > 10)) { dr = h / 2; if (h <= 10) break; continue; }
+      m += h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]); x = xn; r += h; dr = h * 1.2;
+      if (keep) { R.push(r); Ms.push(m); RH.push(rhoOfX(x)); }
+    }
+    return { M: m, R: r, r: R, m: Ms, rho: RH, rhoC: rc, xc };
+  }
+  const STRUCT = new Map();
+  // M(xc) on a coarse grid once, then a few secant steps on ln xc with the full integration
+  let MXC = null;
+  function structure(Msun) {
+    const key = Msun.toFixed(4);
+    if (STRUCT.has(key)) return STRUCT.get(key);
+    if (!MXC) { MXC = []; for (let i = 0; i <= 36; i++) { const lx = Math.log(0.05) + i * (Math.log(60) - Math.log(0.05)) / 36; MXC.push([lx, integrateStar(Math.exp(lx), false).M / MSUN]); } }
+    let j = 1; while (j < MXC.length - 1 && MXC[j][1] < Msun) j++;
+    let a = MXC[j - 1][0], fa = MXC[j - 1][1] - Msun, b = MXC[j][0], fb = MXC[j][1] - Msun;
+    for (let it = 0; it < 30 && Math.abs(fb) > 1e-9; it++) {
+      const c = b - fb * (b - a) / (fb - fa);
+      a = b; fa = fb; b = c; fb = integrateStar(Math.exp(b), false).M / MSUN - Msun;
+    }
+    const s = integrateStar(Math.exp(b), true);
+    // 150 shells of equal mass for the heat capacity sums
+    const NSH = 150, sh = [];
+    let j2 = 1;
+    for (let i = 0; i < NSH; i++) {
+      const mm = (i + 0.5) / NSH * s.M;
+      while (j2 < s.m.length - 1 && s.m[j2] < mm) j2++;
+      const f = (mm - s.m[j2 - 1]) / (s.m[j2] - s.m[j2 - 1]);
+      sh.push({ m0: i / NSH * s.M, m1: (i + 1) / NSH * s.M, rho: s.rho[j2 - 1] + f * (s.rho[j2] - s.rho[j2 - 1]) });
+    }
+    s.shells = sh;
+    STRUCT.set(key, s);
+    return s;
+  }
+  // Mass inside the point where the density has fallen to rho (density decreases outward)
+  function massAtRho(s, rho) {
+    const RH = s.rho, Ms = s.m, n = RH.length;
+    if (rho >= RH[0]) return 0;
+    if (rho <= RH[n - 1]) return s.M;
+    let lo = 0, hi = n - 1;
+    while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (RH[mid] > rho) lo = mid; else hi = mid; }
+    const f = (RH[lo] - rho) / (RH[lo] - RH[hi]);
+    return Ms[lo] + f * (Ms[hi] - Ms[lo]);
+  }
+  function radiusAtMass(s, mm) {
+    const Ms = s.m, n = Ms.length;
+    if (mm <= 0) return 0; if (mm >= s.M) return s.R;
+    let lo = 0, hi = n - 1;
+    while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (Ms[mid] < mm) lo = mid; else hi = mid; }
+    return s.r[lo] + (mm - Ms[lo]) / (Ms[hi] - Ms[lo]) * (s.r[hi] - s.r[lo]);
+  }
+
+  // Coulomb coupling. Electron sphere radius a_e = (3/4πn_e)^(1/3); for one ion species Z, Γ = Z^(5/3) e²/(4πε₀ a_e kT)
+  // equals the usual Z²e²/(4πε₀ a kT) with the ion sphere a = Z^(1/3) a_e. A mixture uses ⟨Z^(5/3)⟩ (linear mixing).
+  const neOf = (rho, mue) => rho / (mue * MU);
+  const aeOf = (rho, mue) => Math.cbrt(3 / (4 * Math.PI * neOf(rho, mue)));
+  const gammaOf = (Z53, rho, T, mue = 2) => Z53 * KE / (aeOf(rho, mue) * KB * T);
+  const gammaIon = (Z, A, rho, T) => { const a = Math.cbrt(3 * A * MU / (4 * Math.PI * rho)); return Z * Z * KE / (a * KB * T); };
+  const tMelt = (Z53, rho, mue = 2) => Z53 * KE / (aeOf(rho, mue) * KB * GAMMA_M);
+  function rhoMelt(Z53, T, mue = 2) { const ae = Z53 * KE / (KB * T * GAMMA_M); return 3 / (4 * Math.PI * ae * ae * ae) * mue * MU; }
+
+  // Excess heat capacity of the Coulomb liquid per ion, in k, from the fit U_ex/NkT = AΓ + BΓ^s + C
+  // (DeWitt, Slattery & Stringfellow; valid 1 ≤ Γ ≤ 220): C_ex = B(1 − s)Γ^s + C. Below Γ = 1 it is scaled as Γ^(3/2) (Debye–Hückel).
+  const OCP = { A: -0.8992, B: 0.596, s: 0.3253, C: -0.268 };
+  const CEX1 = OCP.B * (1 - OCP.s) + OCP.C;
+  const cex = (g) => (g >= 1 ? OCP.B * (1 - OCP.s) * Math.pow(Math.min(g, 220), OCP.s) + OCP.C : CEX1 * Math.pow(g, 1.5));
+
+  // the same as a lookup in ln Γ, for speed (relative error below 10⁻⁵)
+  const CEXT = (() => { const lo = -10, hi = Math.log(220), n = 4000, a = new Float64Array(n + 1); for (let i = 0; i <= n; i++) a[i] = cex(Math.exp(lo + (hi - lo) * i / n)); return { lo, hi, n, a, d: (hi - lo) / n }; })();
+  function cexFast(lg) {
+    const T = CEXT; if (lg >= T.hi) return T.a[T.n]; if (lg <= T.lo) return 0;
+    const u = (lg - T.lo) / T.d, i = Math.floor(u), f = u - i; return T.a[i] + f * (T.a[i + 1] - T.a[i]);
+  }
+  // Debye cooling criterion (Althaus et al. 2010): θD ≈ 4×10³ ρ^(1/2) K with ρ in g/cm³; rapid once Tc ≈ 0.1 θD. Marked, not modeled.
+  const thetaD = (rhoSI) => 4e3 * Math.sqrt(rhoSI / 1000);
+
+  // Cooling: the isothermal core holds the heat, the envelope sets L(Tc). dU/dt = −L with Tc as the variable:
+  // dt = [C_V dTc + q dN_solid] / L, summed from Tc = 10⁸ K (t = 0) downward on a fine grid in log Tc.
+  // opts: { liquid: 'ideal' | 'coulomb', cryst: bool, latent: bool }
+  function coolTrack(Msun, compKey, opts) {
+    const s = structure(Msun), ci = compInfo(COMPS[compKey]), M = s.M, Mm = M / MSUN;
+    const nIon = M / (ci.A * MU), perMass = 1 / (ci.A * MU);
+    const sh = s.shells.map((q) => ({ m0: q.m0, m1: q.m1, dN: (q.m1 - q.m0) * perMass, g: KE / (aeOf(q.rho, ci.mue) * KB) }));
+    const z53 = ci.sp.map((q) => Math.pow(q.Z, 5 / 3)), nsp = z53.length;
+    const cryst = !!opts.cryst, coul = opts.liquid === 'coulomb', lat = cryst && !!opts.latent;
+    const mSolid = (T) => (cryst ? massAtRho(s, rhoMelt(ci.Z53, T, ci.mue)) : 0);
+    const lnZG = z53.map((z) => sh.map((q) => Math.log(z * q.g)));
+    function heatCap(T, ms) {   // J/K, whole star
+      let c = 3 * ms * perMass; const lnT = Math.log(T);
+      for (let k = 0; k < sh.length; k++) {
+        const q = sh[k];
+        if (q.m1 <= ms) continue;
+        const fl = q.m0 >= ms ? 1 : (q.m1 - ms) / (q.m1 - q.m0);
+        let cl = 1.5;
+        if (coul) for (let j = 0; j < nsp; j++) cl += ci.x[j] * cexFast(lnZG[j][k] - lnT);
+        c += fl * q.dN * cl;
+      }
+      return c * KB;
+    }
+    const n = Math.round((Math.log10(T0) - LOGT_MIN) / DLOGT) + 1;
+    const lT = new Float64Array(n), t = new Float64Array(n), lL = new Float64Array(n), fs = new Float64Array(n), cv = new Float64Array(n);
+    let ms0 = mSolid(T0);
+    lT[0] = Math.log10(T0); t[0] = 0; lL[0] = Math.log10(lumOf(Mm, T0)); fs[0] = ms0 / M; cv[0] = heatCap(T0, ms0);
+    let latentE = 0;
+    for (let i = 1; i < n; i++) {
+      const lt = Math.log10(T0) - i * DLOGT, Th = Math.pow(10, lt + DLOGT), Tl = Math.pow(10, lt), Tm = Math.sqrt(Th * Tl);
+      const ms1 = mSolid(Tl), msm = mSolid(Tm);
+      let dE = heatCap(Tm, msm) * (Th - Tl);
+      if (lat) { const e = Q_LAT * KB * Tm * (ms1 - ms0) * perMass; dE += e; latentE += e; }
+      t[i] = t[i - 1] + dE / (lumOf(Mm, Tm) * LSUN) / YR;
+      lT[i] = lt; lL[i] = Math.log10(lumOf(Mm, Tl)); fs[i] = ms1 / M; cv[i] = dE / (Th - Tl);
+      ms0 = ms1;
+    }
+    const Tm0 = tMelt(ci.Z53, s.rhoC, ci.mue);
+    const on = cryst ? stateAtT(lT, t, Math.log10(Tm0)) : null;
+    const tD = 0.1 * thetaD(s.rhoC);
+    return { M: Mm, comp: compKey, opts: { ...opts }, s, ci, nIon, lT, t, lL, fs, cv, n, latentE, Tm0,
+      tOn: on, lLon: Math.log10(lumOf(Mm, Tm0)), TD: tD, tD: stateAtT(lT, t, Math.log10(tD)), lLD: Math.log10(lumOf(Mm, tD)), R: s.R, rhoC: s.rhoC };
+  }
+  // time at a given log Tc (the table runs downward in T)
+  function stateAtT(lT, t, lt) {
+    const n = lT.length;
+    if (lt >= lT[0]) return 0;
+    if (lt <= lT[n - 1]) return t[n - 1];
+    const i = Math.floor((lT[0] - lt) / (lT[0] - lT[1]));
+    const f = (lT[i] - lt) / (lT[i] - lT[i + 1]);
+    return t[i] + f * (t[i + 1] - t[i]);
+  }
+  // state of a track at time ty (yr): log Tc, log L, solid fraction, index
+  function atTime(tr, ty) {
+    const t = tr.t, n = tr.n;
+    if (ty <= 0) return { lT: tr.lT[0], lL: tr.lL[0], fs: tr.fs[0], i: 0, f: 0 };
+    if (ty >= t[n - 1]) return { lT: tr.lT[n - 1], lL: tr.lL[n - 1], fs: tr.fs[n - 1], i: n - 2, f: 1, end: true };
+    let lo = 0, hi = n - 1;
+    while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (t[mid] <= ty) lo = mid; else hi = mid; }
+    const f = (ty - t[lo]) / (t[hi] - t[lo]);
+    return { lT: tr.lT[lo] + f * (tr.lT[hi] - tr.lT[lo]), lL: tr.lL[lo] + f * (tr.lL[hi] - tr.lL[lo]), fs: tr.fs[lo] + f * (tr.fs[hi] - tr.fs[lo]), i: lo, f };
+  }
+  // local slope d log L / d log t from the table
+  function slopeAt(tr, ty) {
+    const a = atTime(tr, ty / 1.05), b = atTime(tr, ty * 1.05);
+    return (b.lL - a.lL) / (2 * Math.log10(1.05));
+  }
+  // Mestel's analytic result for ideal ions and no crystallization: t = (3/5) N k (Tc^(−5/2) − T0^(−5/2)) / (C M)
+  function mestelT(Msun, compKey, T) {
+    const ci = compInfo(COMPS[compKey]), N = Msun * MSUN / (ci.A * MU), Cw = C_ENV * LSUN * Msun;
+    return 0.6 * N * KB / Cw * (Math.pow(T, -2.5) - Math.pow(T0, -2.5)) / YR;
+  }
+  // Mestel law constant: t = K/A (M/M☉)^(5/7) (L/L☉)^(−5/7) yr, the late time limit (T0 → ∞)
+  const MESTEL_K = 0.6 * KB * MSUN / (MU * LSUN) * Math.pow(C_ENV, -2 / 7) / YR;
+  const teffOf = (Lsun, R) => Math.pow(Lsun * LSUN / (4 * Math.PI * R * R * SIGMA), 0.25);
+
+  // Schematic Gaia photometry: blackbody spectra through flat bands (BP 330–680 nm, RP 630–1050 nm, G 330–1050 nm),
+  // photon counting, zero points set by the Sun (M_G = 4.67, BP − RP = 0.82 for a 5772 K blackbody of 1 R☉).
+  const C2 = H * CL / KB;
+  function photBand(l1, l2, T) {
+    const n = 240, h = (l2 - l1) / n; let s = 0;
+    for (let i = 0; i <= n; i++) {
+      const l = (l1 + i * h) * 1e-9, x = C2 / (l * T), w = i === 0 || i === n ? 1 : i % 2 ? 4 : 2;
+      s += w * (x > 700 ? 0 : 1 / (l * l * l * l * Math.expm1(x)));       // B_λ·λ ∝ 1/(λ⁴(e^x − 1)) photons
+    }
+    return s * h / 3;
+  }
+  const PHOT = (() => {
+    const lo = 3.0, hi = 5.4, st = 0.005, n = Math.round((hi - lo) / st) + 1;
+    const g = new Float64Array(n), c = new Float64Array(n);
+    const sun = { g: photBand(330, 1050, 5772), c: photBand(330, 680, 5772) / photBand(630, 1050, 5772) };
+    for (let i = 0; i < n; i++) {
+      const T = Math.pow(10, lo + i * st);
+      g[i] = Math.log10(photBand(330, 1050, T) / sun.g);
+      c[i] = 0.82 - 2.5 * Math.log10(photBand(330, 680, T) / photBand(630, 1050, T) / sun.c);
+    }
+    return { lo, st, n, g, c };
+  })();
+  function gaia(Teff, R) {
+    const p = PHOT, u = Math.max(0, Math.min(p.n - 1.000001, (Math.log10(Teff) - p.lo) / p.st)), i = Math.floor(u), f = u - i;
+    const lg = p.g[i] + f * (p.g[i + 1] - p.g[i]), col = p.c[i] + f * (p.c[i + 1] - p.c[i]);
+    return { MG: 4.67 - 2.5 * (2 * Math.log10(R / RSUN) + lg), BR: col };
+  }
+  // Eggleton's fit to the zero temperature mass radius relation (Verbunt & Rappaport 1988), for a cross check
+  function eggleton(M) { const mc = 1.44, mp = 0.00057; return 0.0114 * Math.sqrt(Math.pow(M / mc, -2 / 3) - Math.pow(M / mc, 2 / 3)) * Math.pow(1 + 3.5 * Math.pow(M / mp, -2 / 3) + mp / M, -2 / 3); }
+
+  // Simulated population for the cosmic clock: constant star formation over the disk age, Salpeter initial masses
+  // 1.0–7.3 M☉, main sequence lifetime 10 Gyr (M/M☉)^−2.5, white dwarf mass from Kalirai et al. (2008), M_WD = 0.109 M_i + 0.394.
+  const ifmr = (Mi) => 0.109 * Mi + 0.394;
+  const tMS = (Mi) => 1e10 * Math.pow(Mi, -2.5);
+  function salpeter(u) { const a = -1.35, lo = Math.pow(1.0, a), hi = Math.pow(7.3, a); return Math.pow(lo + u * (hi - lo), 1 / a); }
+  function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  // ==CORE END==
+  if (typeof document === 'undefined') {
+    globalThis.WD = { G, KB, KE, MU, MSUN, RSUN, LSUN, YR, GAMMA_M, Q_LAT, T0, C_ERG, C_ENV, MU_ENV, lumOf, tcOfL, COMPS, compInfo, pressure, rhoOfX, integrateStar, structure, massAtRho, radiusAtMass,
+      gammaOf, gammaIon, tMelt, rhoMelt, cex, cexFast, thetaD, coolTrack, stateAtT, atTime, slopeAt, mestelT, MESTEL_K, teffOf, photBand, gaia, eggleton, ifmr, tMS, salpeter, rng };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const LT_MIN = 4, LT_MAX = 10.3, SPEEDS = [0.18, 0.4, 0.9];          // clock speeds in decades of age per second
+  const GRID = Array.from({ length: 15 }, (_, i) => +(0.5 + 0.05 * i).toFixed(2));
+  const HR_MASSES = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2];
+
+  const PRESETS = {
+    young: { M: 0.6, comp: 'co', liquid: 'coulomb', cryst: true, latent: true, pop: false, plot: 'L', lt: 4.3, play: true,
+      hint: 'A 0.6 M☉ carbon/oxygen white dwarf just after it forms, its core at 10⁸ K. With no fusion it shines only by leaking stored heat, so it fades fast while hot and ever more slowly later. Watch the dot slide down its track on the HR diagram.' },
+    mestel: { M: 0.6, comp: 'co', liquid: 'ideal', cryst: false, latent: true, pop: false, plot: 'L', lt: 8.0, play: true,
+      hint: 'Mestel’s model: ideal gas ions and L ∝ M T_c^3.5. The heat is U = (3/2)NkT_c, and integrating dU/dt = −L gives t = (2/5)U/L at late times, so L ∝ t^−7/5. Once it has forgotten its starting temperature the curve lies on the dashed line and the slope reads −1.40.' },
+    cryst: { M: 0.8, comp: 'co', liquid: 'coulomb', cryst: true, latent: true, pop: false, plot: 'L', lt: 9.8, play: false,
+      hint: 'Γ grows as the core cools, as ρ^1/3 / T. Where it passes 175 the ions lock into a crystal, first at the dense center, and the front moves outward. Each ion that freezes gives up about 0.77 kT, which slows the fading: compare the dotted curve without latent heat.' },
+    heavy: { M: 1.0, comp: 'co', liquid: 'coulomb', cryst: true, latent: true, pop: false, plot: 'L', lt: 9.12, play: false,
+      hint: 'A denser core reaches Γ = 175 at a higher temperature, so heavier white dwarfs crystallize first, while still bright. Gaia found this as a pile up of 0.9 to 1.1 M☉ white dwarfs near M_G ≈ 13, the Q branch (Tremblay et al. 2019, Nature). Here the 1.0 M☉ onset lands at M_G ≈ 13.0.' },
+    he: { M: 0.6, comp: 'he', liquid: 'coulomb', cryst: true, latent: true, pop: false, plot: 'L', lt: 9.5, play: false,
+      hint: 'A helium ion (A = 4) is 3.4 times lighter than the average carbon/oxygen ion, so the same mass holds 3.4 times as many ions and as much heat: helium dwarfs fade more slowly (t ∝ 1/A). With Z = 2, Γ stays far below 175, so the core never freezes. Real helium white dwarfs come from binaries and weigh under about 0.45 M☉.' },
+    clock: { M: 0.6, comp: 'co', liquid: 'coulomb', cryst: true, latent: true, pop: true, disk: 9, plot: 'L', lt: 9.843, play: false,
+      hint: 'A simulated disk that has formed stars at a steady rate for 9 Gyr. The oldest white dwarfs have had the longest to fade, so the counts end abruptly at the faint end; drag the gold line and the cutoff moves. The red dot is the oldest 0.6 M☉ white dwarf this disk can hold: its 1.9 M☉ parent lived 2 Gyr first. Here the faintest 1% reach 10^−4.5 L☉ for a disk of about 11 Gyr, near the 8 to 10 Gyr of detailed models, which is partly luck given this rough envelope.' }
+  };
+
+  // ---------- state ----------
+  const S = { preset: 'young', M: 0.6, comp: 'co', liquid: 'coulomb', cryst: true, latent: true, lt: 4.3, plot: 'L', pop: false, disk: 9, speed: 1 };
+  let playing = !reduce, holdT = 0, dirty = true;
+
+  // ---------- tracks (cached) ----------
+  const CACHE = new Map();
+  const optKey = () => `${S.comp}|${S.liquid}|${S.cryst ? 1 : 0}|${S.latent ? 1 : 0}`;
+  function track(M, comp = S.comp, o = { liquid: S.liquid, cryst: S.cryst, latent: S.latent }) {
+    const key = `${M.toFixed(2)}|${comp}|${o.liquid}|${o.cryst ? 1 : 0}|${o.cryst && o.latent ? 1 : 0}`;
+    let tr = CACHE.get(key);
+    if (!tr) { tr = coolTrack(M, comp, o); CACHE.set(key, tr); if (CACHE.size > 160) CACHE.delete(CACHE.keys().next().value); }
+    return tr;
+  }
+  function hrLine(tr) {
+    if (tr.hr) return tr.hr;
+    const n = Math.ceil(tr.n / 3), x = new Float32Array(n), y = new Float32Array(n), lt = new Float32Array(n), sol = new Uint8Array(n);
+    for (let k = 0; k < n; k++) {
+      const i = Math.min(tr.n - 1, k * 3), g = gaia(teffOf(Math.pow(10, tr.lL[i]), tr.R), tr.R);
+      x[k] = g.BR; y[k] = g.MG; lt[k] = tr.t[i] > 0 ? Math.log10(tr.t[i]) : -1; sol[k] = tr.fs[i] > 0 ? 1 : 0;
+    }
+    tr.hr = { x, y, lt, sol, n };
+    return tr.hr;
+  }
+  let sel = null, selNoLat = null, selOther = null;
+  function refreshSel() {
+    sel = track(S.M);
+    selNoLat = S.cryst && S.latent ? track(S.M, S.comp, { liquid: S.liquid, cryst: true, latent: false }) : null;
+    selOther = S.comp === 'he' ? track(S.M, 'co') : null;
+  }
+  // the mass grid for HR tracks and the population, filled a few tracks per frame
+  let gridKey = '', grid = [];
+  function gridReady() { return grid.length === GRID.length && grid.every(Boolean); }
+  function gridStep(budget) {
+    const k = optKey();
+    if (k !== gridKey) { gridKey = k; grid = GRID.map(() => null); popDirty = true; }
+    const t0 = performance.now();
+    for (let i = 0; i < GRID.length; i++) {
+      if (grid[i]) continue;
+      grid[i] = track(GRID[i]); hrLine(grid[i]); dirty = true;
+      if (performance.now() - t0 > budget) break;
+    }
+    if (gridReady() && popDirty && S.pop) popCompute();
+  }
+
+  // ---------- simulated population ----------
+  const NPOP = 8000, popU = (() => { const r = rng(20190109), a = new Float64Array(NPOP * 2); for (let i = 0; i < a.length; i++) a[i] = r(); return a; })();
+  let pop = { n: 0, x: new Float32Array(NPOP), y: new Float32Array(NPOP), l: new Float32Array(NPOP) }, popDirty = true;
+  function popCompute() {
+    popDirty = false;
+    if (!gridReady()) { popDirty = true; return; }
+    const tau = S.disk * 1e9; let n = 0;
+    for (let k = 0; k < NPOP; k++) {
+      const age = popU[2 * k] * tau, Mi = salpeter(popU[2 * k + 1]), tc = age - tMS(Mi);
+      if (tc <= 0) continue;
+      const Mw = ifmr(Mi), u = Math.max(0, Math.min(GRID.length - 1.0001, (Mw - 0.5) / 0.05)), j = Math.floor(u), f = u - j;
+      const a = grid[j], b = grid[j + 1];
+      const lL = (1 - f) * atTime(a, tc).lL + f * atTime(b, tc).lL, R = (1 - f) * a.R + f * b.R;
+      const g = gaia(teffOf(Math.pow(10, lL), R), R);
+      pop.x[n] = g.BR; pop.y[n] = g.MG; pop.l[n] = lL; n++;
+    }
+    pop.n = n; dirty = true;
+  }
+
+  // ---------- theme, canvas ----------
+  let T = null, dpr = 1;
+  const isProj = () => document.documentElement.getAttribute('data-projector') === 'on';
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), liquid: g('--liquid'), solid: g('--solid'), track: g('--track'), dot: g('--dot'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif', dark: /^#[01]/.test(g('--canvas')) };
+    dirty = true;
+  }
+  const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  let W = 0, Hh = 0, LY = null, PS = 1;
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = pane.getBoundingClientRect(); W = r.width; Hh = r.height;
+    can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(Hh * dpr));
+    can.style.width = W + 'px'; can.style.height = Hh + 'px';
+    // projector labels grow by up to 1.4, capped by the pane size so they do not pile up on a small stage
+    PS = isProj() ? Math.max(1, Math.min(1.4, Math.min(W / 780, Hh / 500))) : 1;
+    LY = layout(W, Hh); dirty = true; drawAll();
+  }
+  function layout(W, H) {
+    if (W >= 760) {
+      const lw = Math.round(W * 0.56), ch = Math.round(H * 0.6);
+      return { wide: true, cool: { x: 0, y: 0, w: lw, h: ch }, slice: { x: 0, y: ch, w: lw, h: H - ch }, hr: { x: lw, y: 0, w: W - lw, h: H } };
+    }
+    const a = Math.round(H * 0.33), b = Math.round(H * 0.32);
+    return { wide: false, cool: { x: 0, y: 0, w: W, h: a }, hr: { x: 0, y: a, w: W, h: b }, slice: { x: 0, y: a + b, w: W, h: H - a - b } };
+  }
+
+  // ---------- formatting ----------
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹', '.': '·' };
+  const sup = (n) => String(n).split('').map((c) => SUP[c] || c).join('');
+  function sci(v, d = 2) {
+    if (!(v > 0)) return '0';
+    const e = Math.floor(Math.log10(v)), m = v / Math.pow(10, e);
+    let ms = m.toFixed(d - 1), ee = e; if (+ms >= 10) { ee++; ms = (m / 10).toFixed(d - 1); }
+    return ee === 0 ? ms : `${ms} × 10${sup(ee)}`;
+  }
+  function fmtAge(y) {
+    if (y < 1e6) return `${Math.round(y).toLocaleString('en-US')} yr`;
+    if (y < 1e9) return `${+(y / 1e6).toPrecision(3)} Myr`;
+    return `${(y / 1e9).toFixed(y < 1e10 ? 2 : 1)} Gyr`;
+  }
+  const fmtL = (lL) => `${sci(Math.pow(10, lL), 2)} L☉`;
+  const fmtK = (T) => (T < 1e5 ? `${Math.round(T).toLocaleString('en-US')} K` : `${sci(T, 3)} K`);
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  // perceived color of a blackbody (CIE 1931 fit, as in the Blackbody demo), for the surface of the drawn star
+  const gl = (x, mu, s1, s2) => { const t = (x - mu) / (x < mu ? s1 : s2); return Math.exp(-0.5 * t * t); };
+  function bbRGB(Tk) {
+    let X = 0, Y = 0, Z = 0;
+    for (let l = 380; l <= 780; l += 5) {
+      const x = C2 / (l * 1e-9 * Tk), w = x > 700 ? 0 : 1 / (Math.pow(l / 500, 5) * Math.expm1(x));
+      X += w * (1.056 * gl(l, 599.8, 37.9, 31.0) + 0.362 * gl(l, 442.0, 16.0, 26.7) - 0.065 * gl(l, 501.1, 20.4, 26.2));
+      Y += w * (0.821 * gl(l, 568.8, 46.9, 40.5) + 0.286 * gl(l, 530.9, 16.3, 31.1));
+      Z += w * (1.217 * gl(l, 437.0, 11.8, 36.0) + 0.681 * gl(l, 459.0, 26.0, 13.8));
+    }
+    let r = 3.2406 * X - 1.5372 * Y - 0.4986 * Z, g = -0.9689 * X + 1.8758 * Y + 0.0415 * Z, b = 0.0557 * X - 0.2040 * Y + 1.0570 * Z;
+    const mn = Math.min(r, g, b); if (mn < 0) { r -= mn; g -= mn; b -= mn; }
+    const mx = Math.max(r, g, b) || 1;
+    return [r, g, b].map((v) => { v /= mx; v = v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055; return Math.round(255 * clamp(v, 0, 1)); });
+  }
+
+  // ---------- current state ----------
+  function now() {
+    const ty = Math.pow(10, S.lt), st = atTime(sel, ty), Tc = Math.pow(10, st.lT), L = Math.pow(10, st.lL);
+    const Teff = teffOf(L, sel.R), g = gaia(Teff, sel.R);
+    return { ty, st, Tc, L, Teff, g, fs: st.fs };
+  }
+
+  // ---------- drawing helpers ----------
+  function label(c, txt, x, y, col, align = 'left', base = 'middle', bold = false, size = 11) {
+    const ps = PS;
+    c.font = `${bold ? '600 ' : ''}${size * ps}px ${T.mono}`; c.textAlign = align; c.textBaseline = base;
+    const w = c.measureText(txt).width, h = (size + 3) * ps;
+    const x0 = align === 'left' ? x : align === 'right' ? x - w : x - w / 2;
+    const y0 = base === 'middle' ? y - h / 2 : base === 'bottom' ? y - h : y;
+    c.fillStyle = T.canvas; c.globalAlpha = 0.86; c.fillRect(x0 - 3, y0, w + 6, h); c.globalAlpha = 1;
+    c.fillStyle = col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
+    return { x0: x0 - 3, x1: x0 + w + 3, y0, y1: y0 + h };
+  }
+  const labelW = (c, txt, size = 11, bold = false) => { c.font = `${bold ? '600 ' : ''}${size * PS}px ${T.mono}`; return c.measureText(txt).width; };
+  function frame(c, box) { c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.strokeRect(Math.round(box.L) + 0.5, Math.round(box.T) + 0.5, Math.round(box.R - box.L), Math.round(box.B - box.T)); }
+  function title(c, box, txt, sub) {
+    c.fillStyle = T.ink; c.font = `600 ${11.5 * PS}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    c.fillText(txt, box.tx, box.T - 9 * PS);
+    if (sub) { const w = c.measureText(txt).width; c.fillStyle = T.muted; c.font = `${10.5 * PS}px ${T.mono}`; if (box.tx + w + 14 * PS + c.measureText(sub).width < box.R) c.fillText(sub, box.tx + w + 12 * PS, box.T - 9 * PS); }
+  }
+  const tickPow = (e) => (e === 0 ? '1' : e === 1 ? '10' : `10${sup(e)}`);
+
+  // ---------- cooling plot ----------
+  const GEO = {};
+  function coolGeom() {
+    const p = LY.cool, ps = PS, lf = S.pop && S.plot === 'L';
+    const box = { L: p.x + 56 * ps, R: p.x + p.w - (lf ? Math.max(58, p.w * 0.13) : 16 * ps), T: p.y + 34 * ps, B: p.y + p.h - 40 * ps, tx: p.x + 12 * ps };
+    const yr = S.plot === 'L' ? [-6, 1] : [6, 8.1];
+    box.X = (lt) => box.L + (lt - LT_MIN) / (LT_MAX - LT_MIN) * (box.R - box.L);
+    box.invX = (x) => LT_MIN + (x - box.L) / (box.R - box.L) * (LT_MAX - LT_MIN);
+    box.Y = (v) => box.B - (v - yr[0]) / (yr[1] - yr[0]) * (box.B - box.T);
+    box.yr = yr; box.lf = lf ? { L: box.R + 6, R: p.x + p.w - 10 * ps } : null;
+    return box;
+  }
+  function curveVal(tr, i) { return S.plot === 'L' ? tr.lL[i] : tr.lT[i]; }
+  function strokeTrack(c, tr, box, from, color, lw, dash, onlySolid) {
+    c.strokeStyle = color; c.lineWidth = lw; c.setLineDash(dash || []); c.beginPath(); let on = false;
+    for (let i = 1; i < tr.n; i++) {
+      const t = tr.t[i]; if (t < Math.pow(10, LT_MIN - 0.05)) continue;
+      const lt = Math.log10(t); if (lt > LT_MAX + 0.05) break;
+      if (lt < from) continue;
+      if (onlySolid !== undefined && (tr.fs[i] > 0) !== onlySolid) { if (on) { c.stroke(); c.beginPath(); on = false; } continue; }
+      const x = box.X(lt), y = box.Y(curveVal(tr, i));
+      on ? c.lineTo(x, y) : c.moveTo(x, y); on = true;
+    }
+    if (on) c.stroke(); c.setLineDash([]);
+  }
+  function drawCool(nw) {
+    const c = ctx, box = coolGeom(), ps = PS; GEO.cool = box;
+    const yr = box.yr, Lmode = S.plot === 'L';
+    title(c, box, Lmode ? 'Luminosity against cooling age' : 'Core temperature against cooling age', 'log scales');
+    // grid
+    c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let e = Math.ceil(yr[0]); e <= Math.floor(yr[1]); e++) {
+      const y = Math.round(box.Y(e)) + 0.5; c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(box.L, y); c.lineTo(box.R, y); c.stroke();
+      if (!Lmode || (e - yr[0]) % 1 === 0) c.fillText(tickPow(e), box.L - 5, y);
+    }
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    const xl = { 4: '10⁴', 5: '10⁵', 6: '1 Myr', 7: '10 Myr', 8: '100 Myr', 9: '1 Gyr', 10: '10 Gyr' };
+    for (let e = LT_MIN; e <= LT_MAX; e++) {
+      const x = Math.round(box.X(e)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke();
+      if (box.R - box.L > 330 || e % 2 === 0) c.fillText(xl[e], x, box.B + 5);
+    }
+    c.textAlign = 'right'; c.fillText('cooling age t (yr)', box.R, box.B + 20 * ps);
+    c.save(); c.translate(box.L - 42 * ps, (box.T + box.B) / 2); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillText(Lmode ? 'L (L☉)' : 'T_c (K)', 0, 0); c.restore();
+    // age of the universe
+    const xU = box.X(Math.log10(1.38e10));
+    c.strokeStyle = T.gridStrong; c.setLineDash([2, 3]); c.lineWidth = 1.2; c.beginPath(); c.moveTo(xU, box.T); c.lineTo(xU, box.B); c.stroke(); c.setLineDash([]);
+    c.save(); c.beginPath(); c.rect(box.L, box.T, box.R - box.L, box.B - box.T); c.clip();
+    // observed cutoff and the population's histogram
+    if (box.lf) {
+      const y = box.Y(-4.5); c.strokeStyle = T.muted; c.setLineDash([6, 4]); c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(box.L, y); c.lineTo(box.R, y); c.stroke(); c.setLineDash([]);
+    }
+    // Mestel law: t = (2/5)U/L for ideal ions, the late time limit
+    const ci = sel.ci, K = MESTEL_K / ci.A * Math.pow(S.M, 5 / 7);
+    c.strokeStyle = T.muted; c.lineWidth = 1.3 * ps; c.setLineDash([7, 5]); c.beginPath();
+    for (let k = 0; k <= 60; k++) {
+      const lt = LT_MIN + k / 60 * (LT_MAX - LT_MIN), lL = (Math.log10(K) - lt) * 7 / 5;
+      const v = Lmode ? lL : Math.log10(tcOfL(S.M, Math.pow(10, lL)));
+      const x = box.X(lt), y = box.Y(v); k ? c.lineTo(x, y) : c.moveTo(x, y);
+    }
+    c.stroke(); c.setLineDash([]);
+    // ghosts
+    if (selOther) strokeTrack(c, selOther, box, LT_MIN, T.muted, 1.6 * ps, [2, 3, 8, 3]);
+    if (selNoLat && sel.tOn > 0) strokeTrack(c, selNoLat, box, Math.log10(sel.tOn) - 0.02, T.muted, 2 * ps, [1.5, 3.5]);
+    // the track, liquid then freezing
+    strokeTrack(c, sel, box, LT_MIN, T.liquid, 2.6 * ps, null, false);
+    strokeTrack(c, sel, box, LT_MIN, T.solid, 2.8 * ps, null, true);
+    c.restore();
+    const labels = [];
+    // markers: crystallization onset, Debye onset
+    if (S.cryst && sel.tOn > 0 && sel.tOn < sel.t[sel.n - 1]) {
+      const lt = Math.log10(sel.tOn), v = Lmode ? sel.lLon : Math.log10(sel.Tm0);
+      if (lt < LT_MAX && box.Y(v) < box.B) {
+        const x = box.X(lt), y = box.Y(v);
+        c.fillStyle = T.canvas; c.strokeStyle = T.solid; c.lineWidth = 2 * ps; c.beginPath(); c.arc(x, y, 5 * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+        labels.push({ x: x - 9 * ps, y: y - 2 * ps, txt: 'crystallization begins', col: T.solid, al: 'right' });
+      }
+    }
+    if (S.cryst && sel.tD > 0) {
+      const lt = Math.log10(sel.tD), v = Lmode ? sel.lLD : Math.log10(sel.TD);
+      if (lt < LT_MAX && v > yr[0]) {
+        const x = box.X(lt), y = box.Y(v);
+        c.fillStyle = T.muted; c.beginPath(); c.moveTo(x, y - 6 * ps); c.lineTo(x + 5 * ps, y + 3 * ps); c.lineTo(x - 5 * ps, y + 3 * ps); c.closePath(); c.fill();
+        labels.push({ x: x - 8 * ps, y: y + 10 * ps, txt: 'Debye cooling would start (not modeled)', col: T.muted, al: 'right' });
+      }
+    }
+    // Mestel label under the dashed line at late times, where no curve runs (they lie above it)
+    {
+      const lt = 7.6, lL = (Math.log10(K) - lt) * 7 / 5, v = Lmode ? lL : Math.log10(tcOfL(S.M, Math.pow(10, lL)));
+      labels.push({ x: box.X(lt) - 6 * ps, y: box.Y(v) + 16 * ps, txt: Lmode ? 'Mestel: L ∝ t^−7/5' : 'Mestel: T_c ∝ t^−2/5', col: T.muted, al: 'right' });
+    }
+    if (selOther) {
+      const ty = Math.pow(10, 9.6), st = atTime(selOther, ty), x = box.X(9.6), y = box.Y(Lmode ? st.lL : st.lT);
+      labels.push({ x: x - 6 * ps, y: y + 12 * ps, txt: 'C/O, same mass', col: T.muted, al: 'right' });
+    }
+    if (box.lf) labels.push({ x: box.L + 6 * ps, y: box.Y(-4.5) + 10 * ps, txt: 'observed cutoff ≈ 10^−4.5 L☉', col: T.muted, al: 'left' });
+    labels.push({ x: xU - 4 * ps, y: box.T + 27 * ps, txt: 'age of the universe', col: T.muted, al: 'right' });
+    // population histogram (luminosity function) on its own strip, sharing the L axis
+    if (box.lf && pop.n) {
+      const lf = box.lf, bw = 0.25, nb = Math.round(7 / bw), cnt = new Float64Array(nb);
+      for (let k = 0; k < pop.n; k++) { const b = Math.floor((pop.l[k] + 6) / bw); if (b >= 0 && b < nb) cnt[b]++; }
+      let mx = 0; for (const v of cnt) mx = Math.max(mx, v);
+      c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.beginPath(); c.moveTo(lf.L + 0.5, box.T); c.lineTo(lf.L + 0.5, box.B); c.stroke();
+      for (let b = 0; b < nb; b++) {
+        if (!cnt[b]) continue;
+        const y0 = box.Y(-6 + (b + 1) * bw) + 1, y1 = box.Y(-6 + b * bw) - 1, w = (lf.R - lf.L - 2) * cnt[b] / mx;
+        c.fillStyle = T.dot; c.globalAlpha = 0.55; c.fillRect(lf.L + 1, y0, w, y1 - y0); c.globalAlpha = 1;
+      }
+      c.fillStyle = T.muted; c.font = `${10 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
+      c.fillText('number', (lf.L + lf.R) / 2, box.B + 5); c.fillText('(sim.)', (lf.L + lf.R) / 2, box.B + 18 * ps);
+    }
+    // disk age line (population)
+    if (S.pop) {
+      const x = box.X(Math.log10(S.disk * 1e9)), hot = isHot('disk');
+      c.strokeStyle = T.equi; c.lineWidth = (hot ? 2.4 : 1.6) * ps; c.setLineDash([6, 4]); c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.setLineDash([]);
+      grip(c, x, box.T + (box.B - box.T) * 0.62, true, T.equi, hot);
+      labels.push({ x: x + 6 * ps, y: box.T + (box.B - box.T) * 0.62 - 16 * ps, txt: `disk ${S.disk.toFixed(1)} Gyr`, col: T.equi, al: 'left', bold: true });
+    }
+    // current age: line, grip, dot
+    {
+      const x = box.X(S.lt), st = nw.st, y = box.Y(Lmode ? st.lL : st.lT), hot = isHot('age');
+      c.strokeStyle = T.accent; c.lineWidth = (hot ? 2.4 : 1.4) * ps; c.globalAlpha = 0.85; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.globalAlpha = 1;
+      if (hot) { c.globalAlpha = 0.25; c.lineWidth = 8 * ps; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.globalAlpha = 1; }
+      grip(c, x, box.B - 16 * ps, true, T.accent, hot);
+      if (y >= box.T - 2 && y <= box.B + 2) { c.fillStyle = T.pos; c.strokeStyle = T.canvas; c.lineWidth = 2 * ps; c.beginPath(); c.arc(x, y, 5.5 * ps, 0, 2 * Math.PI); c.fill(); c.stroke(); }
+      const txt = `${fmtAge(nw.ty)} · ${Lmode ? fmtL(st.lL) : fmtK(nw.Tc)}`, w = labelW(c, txt, 11, true);
+      const right = x + 8 * ps + w < box.R;
+      labels.push({ x: right ? x + 8 * ps : x - 8 * ps, y: box.T + 10 * ps, txt, col: T.accent, al: right ? 'left' : 'right', bold: true, top: true });
+    }
+    // hover crosshair
+    if (hover && hover.pane === 'cool' && !drag && !hoverId) {
+      const lt = clamp(box.invX(hover.x), LT_MIN, LT_MAX), st = atTime(sel, Math.pow(10, lt)), x = box.X(lt), y = box.Y(Lmode ? st.lL : st.lT);
+      c.strokeStyle = T.muted; c.lineWidth = 1; c.setLineDash([3, 3]); c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.setLineDash([]);
+      if (y > box.T && y < box.B) { c.fillStyle = T.ink; c.beginPath(); c.arc(x, y, 3.5 * ps, 0, 2 * Math.PI); c.fill(); }
+      const txt = `${fmtAge(Math.pow(10, lt))}: ${Lmode ? fmtL(st.lL) : fmtK(Math.pow(10, st.lT))}${st.fs > 0 ? `, ${Math.round(100 * st.fs)}% solid` : ''}`;
+      const w = labelW(c, txt), right = x + 8 * ps + w < box.R;
+      labels.push({ x: right ? x + 8 * ps : x - 8 * ps, y: clamp(y - 14 * ps, box.T + 30 * ps, box.B - 10 * ps), txt, col: T.ink, al: right ? 'left' : 'right' });
+    }
+    frame(c, box);
+    // labels last, on halo boxes, skipping any that would land on one already placed
+    const placed = [];
+    labels.sort((a, b) => (b.top ? 1 : 0) - (a.top ? 1 : 0)); // the moving readout wins
+    for (const l of labels) {
+      const w = labelW(c, l.txt, 11, l.bold), h = 14 * PS, x0 = l.al === 'left' ? l.x : l.al === 'right' ? l.x - w : l.x - w / 2;
+      const base = l.base || 'middle', y0 = base === 'middle' ? l.y - h / 2 : base === 'bottom' ? l.y - h : l.y;
+      if (x0 < box.L + 2 || x0 + w > box.R - 2 || y0 < box.T + 1 || y0 + h > box.B - 1) { if (!l.top) continue; }
+      if (!l.top && placed.some((p) => x0 < p.x1 && x0 + w > p.x0 && y0 < p.y1 && y0 + h > p.y0)) continue;
+      placed.push(label(c, l.txt, l.x, l.y, l.col, l.al, base, l.bold));
+    }
+  }
+  function grip(c, x, y, vert, col, hot) {
+    const ps = PS;
+    c.fillStyle = T.canvas; c.strokeStyle = col; c.lineWidth = (hot ? 2 : 1.4) * ps;
+    const w = 8 * ps, h = 18 * ps;
+    c.beginPath(); if (c.roundRect) c.roundRect(x - w / 2, y - h / 2, w, h, 3 * ps); else c.rect(x - w / 2, y - h / 2, w, h); c.fill(); c.stroke();
+    c.lineWidth = 1.2 * ps; c.beginPath();
+    for (let k = -1; k <= 1; k++) { c.moveTo(x - 2 * ps, y + k * 3.5 * ps); c.lineTo(x + 2 * ps, y + k * 3.5 * ps); }
+    c.stroke();
+  }
+
+  // ---------- slice and coupling profile ----------
+  const R05 = () => structure(0.5).R;
+  function drawSlice(nw) {
+    const c = ctx, p = LY.slice, ps = PS, s = sel.s, ci = sel.ci;
+    // wide: disk on the left, Γ profile on the right; narrow: disk on top, profile below
+    const split = LY.wide ? Math.round(p.x + p.w * 0.5) : p.x + p.w, dh = LY.wide ? p.h : Math.round(p.h * 0.48);
+    const Rmax = Math.max(30, Math.min((split - p.x) / 2 - 14 * ps, dh - 64 * ps));
+    const cx = p.x + (split - p.x) / 2, cy = p.y + 30 * ps + Rmax + 6 * ps;
+    const Rpx = s.R / R05() * Rmax, rE = REARTH / R05() * Rmax;
+    GEO.slice = { cx, cy, Rmax, Rpx };
+    c.fillStyle = T.ink; c.font = `600 ${11.5 * PS}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    c.fillText('Slice through the star', p.x + 12 * ps, p.y + 22 * ps);
+    // liquid core: warm, brighter when hot
+    const heat = clamp((Math.log10(nw.Tc) - 6) / 2, 0, 1);
+    c.save(); c.beginPath(); c.arc(cx, cy, Rpx, Math.PI, 2 * Math.PI); c.closePath(); c.clip();
+    const rg = c.createRadialGradient(cx, cy, 0, cx, cy, Rpx);
+    rg.addColorStop(0, T.liquid); rg.addColorStop(1, T.canvas);
+    c.fillStyle = rg; c.globalAlpha = 0.35 + 0.5 * heat; c.fillRect(cx - Rpx, cy - Rpx, 2 * Rpx, Rpx); c.globalAlpha = 1;
+    // solid core
+    const ms = nw.fs * s.M, rs = radiusAtMass(s, ms) / s.R * Rpx;
+    if (rs > 0.5) {
+      c.beginPath(); c.arc(cx, cy, rs, Math.PI, 2 * Math.PI); c.closePath();
+      c.fillStyle = T.solid; c.globalAlpha = 0.5; c.fill(); c.globalAlpha = 1;
+      // a hexagonal lattice, the bcc crystal seen in projection
+      c.save(); c.clip();
+      const a = 9 * ps; c.strokeStyle = T.canvas; c.globalAlpha = 0.55; c.lineWidth = 1 * ps; c.beginPath();
+      for (let row = 0; row * a * 0.866 < rs + a; row++) {
+        const y = cy - row * a * 0.866 * 1.0, off = row % 2 ? a / 2 : 0;
+        for (let x = cx - rs - a + off; x < cx + rs + a; x += a) { c.moveTo(x + 1.6 * ps, y); c.arc(x, y, 1.6 * ps, 0, 2 * Math.PI); }
+      }
+      c.stroke(); c.globalAlpha = 1; c.restore();
+      // freezing front
+      if (nw.fs < 0.999) { c.strokeStyle = T.solid; c.lineWidth = 2.6 * ps; c.beginPath(); c.arc(cx, cy, rs, Math.PI, 2 * Math.PI); c.stroke(); }
+    }
+    c.restore();
+    // envelope rim in the blackbody color of the surface (thickness not to scale)
+    const [r, g, b] = bbRGB(clamp(nw.Teff, 1000, 60000));
+    c.strokeStyle = `rgb(${r},${g},${b})`; c.lineWidth = 4 * ps; c.beginPath(); c.arc(cx, cy, Rpx, Math.PI, 2 * Math.PI); c.stroke();
+    c.strokeStyle = T.ink; c.globalAlpha = 0.5; c.lineWidth = 1; c.beginPath(); c.arc(cx, cy, Rpx + 2 * ps, Math.PI, 2 * Math.PI); c.stroke(); c.globalAlpha = 1;
+    // base line, Earth for scale
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.beginPath(); c.moveTo(cx - Rmax - 6, cy + 0.5); c.lineTo(cx + Rmax + 6, cy + 0.5); c.stroke();
+    c.strokeStyle = T.muted; c.setLineDash([4, 4]); c.lineWidth = 1.2 * ps; c.beginPath(); c.arc(cx, cy, rE, Math.PI, 2 * Math.PI); c.stroke(); c.setLineDash([]);
+    // mass handle on the surface
+    const ang = -Math.PI * 0.28, hx = cx + Rpx * Math.cos(ang), hy = cy + Rpx * Math.sin(ang), hot = isHot('mass');
+    GEO.slice.handle = [hx, hy];
+    if (hot) { c.strokeStyle = T.accent; c.globalAlpha = 0.3; c.lineWidth = 8 * ps; c.beginPath(); c.arc(cx, cy, Rpx, Math.PI, 2 * Math.PI); c.stroke(); c.globalAlpha = 1; }
+    c.fillStyle = T.canvas; c.strokeStyle = T.accent; c.lineWidth = (hot ? 2.4 : 1.8) * ps; c.beginPath(); c.arc(hx, hy, (hot ? 7 : 5.5) * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+    // labels
+    c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'top';
+    c.fillText(`R = ${Math.round(s.R / 1000).toLocaleString('en-US')} km`, cx, cy + 5 * ps);
+    label(c, 'Earth', cx - rE * 0.74, cy - rE * 0.74 - 2 * ps, T.muted, 'right', 'bottom', false, 10);
+    label(c, `M = ${S.M.toFixed(2)} M☉`, hx + 9 * ps, hy - 6 * ps, T.accent, 'left', 'bottom', true, 10.5);
+    const comp = COMPS[S.comp].short;
+    if (rs > 14 * ps) label(c, `solid ${Math.round(100 * nw.fs)}%`, cx, cy - Math.min(rs * 0.45, rs - 8 * ps), T.ink, 'center', 'middle', true, 10.5);
+    if (Rpx - rs > 20 * ps) label(c, `liquid ${comp}`, cx, cy - (rs + Rpx) / 2 - (rs > 0 ? 0 : Rpx * 0.1), T.ink, 'center', 'middle', false, 10.5);
+    else if (nw.fs > 0.999) label(c, 'all solid', cx, cy - Rpx * 0.5, T.ink, 'center', 'middle', true, 10.5);
+
+    // coupling profile Γ(r) at this T_c
+    const box = LY.wide ? { L: split + 44 * ps, R: p.x + p.w - 14 * ps, T: p.y + 34 * ps, B: p.y + p.h - 36 * ps, tx: split + 10 * ps }
+      : { L: p.x + 56 * ps, R: p.x + p.w - 16 * ps, T: p.y + dh + 30 * ps, B: p.y + p.h - 36 * ps, tx: p.x + 12 * ps };
+    if (box.R - box.L < 60 || box.B - box.T < 40) return;
+    const yr = [-1, 4], X = (u) => box.L + u * (box.R - box.L), Y = (lg) => box.B - (lg - yr[0]) / (yr[1] - yr[0]) * (box.B - box.T);
+    c.fillStyle = T.ink; c.font = `600 ${11.5 * PS}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    c.fillText('Coupling Γ through the star', box.tx, box.T - 9 * ps);
+    c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let e = yr[0]; e <= yr[1]; e++) { const y = Math.round(Y(e)) + 0.5; c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(box.L, y); c.lineTo(box.R, y); c.stroke(); c.fillText(e === -1 ? '0.1' : tickPow(e), box.L - 5, y); }
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let u = 0; u <= 1.0001; u += 0.25) { const x = Math.round(X(u)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.fillText(u === 0 ? '0' : u === 1 ? '1' : u.toFixed(2), x, box.B + 5); }
+    c.textAlign = 'right'; c.fillText('r / R', box.R, box.B + 19 * ps);
+    c.save(); c.translate(box.L - 34 * ps, (box.T + box.B) / 2); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Γ', 0, 0); c.restore();
+    c.save(); c.beginPath(); c.rect(box.L, box.T, box.R - box.L, box.B - box.T); c.clip();
+    // solid region shading
+    if (S.cryst && rs > 0) { c.fillStyle = T.solid; c.globalAlpha = 0.13; c.fillRect(box.L, box.T, X(rs / Rpx) - box.L, box.B - box.T); c.globalAlpha = 1; }
+    const ym = Y(Math.log10(GAMMA_M));
+    c.strokeStyle = T.solid; c.lineWidth = 1.4 * ps; c.setLineDash([6, 4]); c.beginPath(); c.moveTo(box.L, ym); c.lineTo(box.R, ym); c.stroke(); c.setLineDash([]);
+    c.strokeStyle = T.ink; c.lineWidth = 2.2 * ps; c.beginPath(); let on = false;
+    const st = s.r.length, step = Math.max(1, Math.floor(st / 300));
+    for (let i = 0; i < st; i += step) {
+      const lg = Math.log10(gammaOf(ci.Z53, s.rho[i], nw.Tc, ci.mue)), x = X(s.r[i] / s.R), y = Y(lg);
+      on ? c.lineTo(x, y) : c.moveTo(x, y); on = true;
+    }
+    c.stroke(); c.restore();
+    const gc = gammaOf(ci.Z53, s.rhoC, nw.Tc, ci.mue);
+    {
+      const mTxt = S.cryst ? 'Γ_m = 175: freezes above' : 'Γ_m = 175 (freezing off)';
+      const cTxt = `center Γ = ${gc < 10 ? gc.toFixed(1) : Math.round(gc)}`;
+      const cy0 = Y(Math.log10(gc));
+      // in a narrow pane the two labels meet when the center is near Γ_m: put one above, one below
+      const tight = labelW(c, mTxt, 10) + labelW(c, cTxt, 10, true) + 24 * ps > box.R - box.L && Math.abs(cy0 - ym) < 30 * ps;
+      const my = tight ? (cy0 <= ym ? ym + 12 * ps : ym - 12 * ps) : ym - 10 * ps;
+      const cy = tight ? (cy0 <= ym ? Math.min(cy0, ym) - 14 * ps : Math.max(cy0, ym) + 14 * ps) : cy0 + 14 * ps;
+      label(c, mTxt, box.R - 4 * ps, my, T.solid, 'right', 'middle', false, 10);
+      label(c, cTxt, box.L + 6 * ps, clamp(cy, box.T + 9 * ps, box.B - 9 * ps), T.ink, 'left', 'middle', true, 10);
+    }
+    frame(c, box);
+  }
+
+  // ---------- HR diagram ----------
+  function hrGeom() {
+    const p = LY.hr, ps = PS;
+    const box = { L: p.x + 50 * ps, R: p.x + p.w - 16 * ps, T: p.y + 34 * ps, B: p.y + p.h - 40 * ps, tx: p.x + 12 * ps };
+    const xr = [-1.0, 1.9], yr = [7.5, 17.5];
+    box.X = (v) => box.L + (v - xr[0]) / (xr[1] - xr[0]) * (box.R - box.L);
+    box.Y = (v) => box.T + (v - yr[0]) / (yr[1] - yr[0]) * (box.B - box.T);
+    box.xr = xr; box.yr = yr;
+    return box;
+  }
+  function polyHR(c, hr, box, from, to, filt) {
+    c.beginPath(); let on = false;
+    for (let k = 0; k < hr.n; k++) {
+      if (hr.lt[k] > to) break;
+      if (hr.lt[k] < from && k < hr.n - 1 && hr.lt[k + 1] < from) continue;
+      if (filt && !filt(k)) { if (on) { c.stroke(); c.beginPath(); on = false; } continue; }
+      const x = box.X(hr.x[k]), y = box.Y(hr.y[k]); on ? c.lineTo(x, y) : c.moveTo(x, y); on = true;
+    }
+    if (on) c.stroke();
+  }
+  function drawHR(nw) {
+    const c = ctx, box = hrGeom(), ps = PS; GEO.hr = box;
+    title(c, box, 'Schematic Gaia HR diagram', 'blackbody colors');
+    c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let v = 8; v <= 17; v++) { const y = Math.round(box.Y(v)) + 0.5; c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(box.L, y); c.lineTo(box.R, y); c.stroke(); if (v % (box.B - box.T > 300 ? 1 : 2) === 0) c.fillText(String(v), box.L - 5, y); }
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let v = -1.0; v <= 1.51; v += 0.5) { const x = Math.round(box.X(v)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.fillText(v.toFixed(1).replace('-', '−'), x, box.B + 5); }
+    c.textAlign = 'right'; c.fillText('G_BP − G_RP (bluer ← → redder)', box.R, box.B + 20 * ps);
+    c.save(); c.translate(box.L - 36 * ps, (box.T + box.B) / 2); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('M_G (brighter up)', 0, 0); c.restore();
+    c.save(); c.beginPath(); c.rect(box.L, box.T, box.R - box.L, box.B - box.T); c.clip();
+    // population
+    if (S.pop && pop.n) {
+      c.fillStyle = T.dot; c.globalAlpha = pop.n > 2500 ? 0.4 : 0.55; const r = 1.6 * ps;
+      for (let k = 0; k < pop.n; k++) { c.fillRect(box.X(pop.x[k]) - r / 2, box.Y(pop.y[k]) - r / 2, r, r); }
+      c.globalAlpha = 1;
+    }
+    // tracks
+    const labels = [];
+    const hovM = hover && hover.pane === 'hr' && hover.track != null ? hover.track : null;
+    for (const M of HR_MASSES) {
+      const i = GRID.indexOf(M), tr = grid[i]; if (!tr) continue;
+      const hr = tr.hr || hrLine(tr), hv = hovM === M;
+      c.strokeStyle = hv ? T.ink : T.track; c.lineWidth = (hv ? 2 : 1.2) * ps; polyHR(c, hr, box, -2, 99);
+      // onset marker
+      if (S.cryst && tr.tOn > 0 && tr.tOn < tr.t[tr.n - 1]) {
+        const g = gaia(teffOf(Math.pow(10, tr.lLon), tr.R), tr.R), x = box.X(g.BR), y = box.Y(g.MG);
+        c.fillStyle = T.canvas; c.strokeStyle = T.solid; c.lineWidth = 1.8 * ps; c.beginPath(); c.arc(x, y, 3.6 * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+      }
+      // label where the track crosses BP − RP = −0.35
+      let k = 0; while (k < hr.n - 1 && hr.x[k] < -0.35) k++;
+      if (M === 0.5 || M === 1.2 || hv || box.B - box.T > 260) labels.push({ x: box.X(hr.x[k]) - 6 * ps, y: box.Y(hr.y[k]), txt: M === 0.5 || M === 1.2 || hv ? `${M.toFixed(1)} M☉` : M.toFixed(1), col: hv ? T.ink : T.muted, al: 'right' });
+    }
+    // the selected white dwarf: its own track, colored by phase, and the dot
+    const hr = hrLine(sel);
+    c.lineWidth = 2.6 * ps; c.strokeStyle = T.liquid; polyHR(c, hr, box, -2, 99, (k) => !hr.sol[k]);
+    c.strokeStyle = T.solid; polyHR(c, hr, box, -2, 99, (k) => hr.sol[k]);
+    c.restore();
+    const x = box.X(nw.g.BR), y = box.Y(nw.g.MG), hot = isHot('hr');
+    const inside = y >= box.T && y <= box.B && x >= box.L && x <= box.R;
+    if (inside) {
+      if (hot) { c.fillStyle = T.pos; c.globalAlpha = 0.22; c.beginPath(); c.arc(x, y, 14 * ps, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1; }
+      c.fillStyle = T.pos; c.strokeStyle = T.canvas; c.lineWidth = 2.2 * ps; c.beginPath(); c.arc(x, y, (hot ? 7.5 : 6.5) * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+    }
+    GEO.hr.dot = inside ? [x, y] : null;
+    const placed = [];
+    labels.sort((a, b) => (b.top ? 1 : 0) - (a.top ? 1 : 0)); // the moving readout wins
+    for (const l of labels) {
+      const w = labelW(c, l.txt), x0 = l.x - w, y0 = l.y - 7 * ps;
+      if (x0 < box.L + 2 || y0 < box.T || y0 + 14 * ps > box.B) continue;
+      if (placed.some((p) => x0 < p.x1 && x0 + w > p.x0 && y0 < p.y1 && y0 + 14 * ps > p.y0)) continue;
+      placed.push(label(c, l.txt, l.x, l.y, l.col, 'right', 'middle', false, 10.5));
+    }
+    if (inside) {
+      const txt = `${S.M.toFixed(2)} M☉ · T_eff ${Math.round(nw.Teff).toLocaleString('en-US')} K`, w = labelW(c, txt, 11, true);
+      const right = x + 12 * ps + w < box.R;
+      label(c, txt, right ? x + 12 * ps : x - 12 * ps, y - 14 * ps, T.pos, right ? 'left' : 'right', 'middle', true);
+    } else {
+      const where = nw.g.MG < box.yr[0] ? 'above the top' : nw.g.MG > box.yr[1] ? 'below the bottom' : 'off the side';
+      label(c, `${S.M.toFixed(2)} M☉ is ${where}: M_G = ${nw.g.MG.toFixed(1)}`, box.R - 6 * ps, box.T + 12 * ps, T.pos, 'right', 'middle', true);
+    }
+    // legend in the box
+    let ly = box.B - 12 * ps;
+    if (S.pop) { label(c, 'dots: simulated from this model, not Gaia data', box.L + 6 * ps, ly, T.muted, 'left', 'middle', false, 10); ly -= 16 * ps; }
+    if (S.cryst) {
+      c.fillStyle = T.canvas; c.strokeStyle = T.solid; c.lineWidth = 1.8 * ps; c.beginPath(); c.arc(box.L + 11 * ps, ly, 3.6 * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+      label(c, 'crystallization begins', box.L + 19 * ps, ly, T.muted, 'left', 'middle', false, 10);
+    }
+    if (hovM != null) {
+      const tr = grid[GRID.indexOf(hovM)];
+      if (tr) label(c, `${hovM.toFixed(1)} M☉ track${tr.tOn > 0 && S.cryst ? `: freezing starts at ${fmtAge(tr.tOn)}` : ''}`, box.R - 6 * ps, box.T + 12 * ps, T.ink, 'right', 'middle', true, 10.5);
+    }
+    frame(c, box);
+  }
+
+  function drawAll() {
+    if (!T || !LY || !sel) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const nw = now();
+    drawCool(nw); drawSlice(nw); drawHR(nw);
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath();
+    if (LY.wide) { ctx.moveTo(LY.hr.x + 0.5, 0); ctx.lineTo(LY.hr.x + 0.5, Hh); ctx.moveTo(0, LY.slice.y + 0.5); ctx.lineTo(LY.hr.x, LY.slice.y + 0.5); }
+    else { ctx.moveTo(0, LY.hr.y + 0.5); ctx.lineTo(W, LY.hr.y + 0.5); ctx.moveTo(0, LY.slice.y + 0.5); ctx.lineTo(W, LY.slice.y + 0.5); }
+    ctx.stroke();
+    dirty = false;
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const nw = now(), s = sel.s, ci = sel.ci, st = nw.st;
+    $('massOut').textContent = `${S.M.toFixed(2)} M☉`;
+    $('ageOut').textContent = fmtAge(nw.ty);
+    $('count').innerHTML = `${fmtAge(nw.ty)} <small>cooling age</small>`;
+    $('rR').innerHTML = `${Math.round(s.R / 1000).toLocaleString('en-US')} km <span class="ok">${(s.R / RSUN).toFixed(4)} R☉ = ${(s.R / REARTH).toFixed(2)} R⊕</span>`;
+    $('rRho').textContent = `${sci(s.rhoC / 1000, 2)} g/cm³`;
+    $('rN').innerHTML = `${sci(sel.nIon, 2)} <span class="ok">A = ${ci.A.toFixed(1)}</span>`;
+    $('rL').textContent = fmtL(st.lL);
+    $('rT').textContent = fmtK(nw.Tc);
+    $('rTe').textContent = fmtK(nw.Teff);
+    $('rG').textContent = `${nw.g.MG.toFixed(2)}, ${nw.g.BR.toFixed(2).replace('-', '−')}`;
+    $('rS').textContent = nw.ty > 1e4 ? slopeAt(sel, nw.ty).toFixed(2).replace('-', '−') : '—';
+    const i = Math.min(sel.n - 1, st.i + 1), cv = sel.cv[i] / (sel.nIon * KB);
+    $('rC').innerHTML = `${cv.toFixed(2)} k <span class="ok">${st.fs > 0 && st.fs < 0.999 && S.latent ? 'incl. latent' : ''}</span>`;
+    const gc = gammaOf(ci.Z53, s.rhoC, nw.Tc, ci.mue);
+    $('rGam').textContent = gc < 10 ? gc.toFixed(2) : gc < 1000 ? gc.toFixed(0) : sci(gc, 2);
+    $('rTm').textContent = fmtK(sel.Tm0);
+    $('rFs').innerHTML = S.cryst ? `${(100 * st.fs).toFixed(1)}% <span class="ok">${st.fs > 0 ? `front at r = ${(radiusAtMass(s, st.fs * s.M) / s.R).toFixed(2)} R` : 'all liquid'}</span>` : '<span class="ok">crystallization off</span>';
+    if (!S.cryst) $('rOn').innerHTML = '<span class="ok">off</span>';
+    else if (sel.tOn >= sel.t[sel.n - 1] || sel.Tm0 < Math.pow(10, sel.lT[sel.n - 1])) $('rOn').innerHTML = `<span class="ok">only below ${fmtK(sel.Tm0)}, after ${fmtAge(sel.t[sel.n - 1])}</span>`;
+    else { const Te = teffOf(Math.pow(10, sel.lLon), sel.R); $('rOn').innerHTML = `${fmtAge(sel.tOn)} <span class="ok">at ${fmtL(sel.lLon)}, T_eff ${Math.round(Te).toLocaleString('en-US')} K</span>`; }
+    if (selNoLat && st.fs > 0) {
+      const t0 = stateAtT(selNoLat.lT, selNoLat.t, st.lT), d = nw.ty - t0;
+      $('rDel').innerHTML = `+${fmtAge(Math.max(0, d))} <span class="ok">${(100 * d / t0).toFixed(1)}% of the age without it</span>`;
+    } else $('rDel').innerHTML = `<span class="ok">${!S.cryst ? 'crystallization off' : !S.latent ? 'latent heat off' : 'none yet'}</span>`;
+    $('crHint').textContent = S.comp === 'he'
+      ? 'Helium has Z = 2, so Γ is about 8 times smaller than for carbon/oxygen at the same density and temperature. Its center would freeze only near ' + fmtK(sel.Tm0) + '.'
+      : 'Γ compares the Coulomb energy of neighboring ions with their thermal energy. Γ ∝ Z² ρ^(1/3) / T, so freezing starts at the dense center, and sooner in heavier white dwarfs.';
+    $('diskOut').textContent = `${S.disk.toFixed(1)} Gyr`;
+    if (S.pop && pop.n) {
+      const a = Array.from(pop.l.subarray(0, pop.n)).sort((x, y) => x - y), f = a[Math.floor(0.01 * a.length)];
+      $('rPn').textContent = pop.n.toLocaleString('en-US'); $('rPf').textContent = `L < ${fmtL(f)}`;
+    } else { $('rPn').textContent = S.pop ? '…' : '—'; $('rPf').textContent = '—'; }
+  }
+  function formulas() {
+    $('fEnv').textContent = `L = 5.7×10⁵ (μ/μ_e²) M T_c^3.5 / [Z(1+X)] erg/s = ${(C_ERG / 1e6).toFixed(2)}×10⁶ (M/M☉) T_c^3.5 erg/s (Shapiro & Teukolsky 1983)`;
+    $('fMes').textContent = `t → (2/5) U/L = ${(MESTEL_K / 1e7).toFixed(1)}×10⁷ yr · A⁻¹ (M/M☉)^5/7 (L/L☉)^−5/7 for ideal ions`;
+  }
+
+  // ---------- controls ----------
+  function syncUI() {
+    $('mass').value = S.M; $('age').value = S.lt; $('disk').value = S.disk;
+    $('cCO').setAttribute('aria-pressed', String(S.comp === 'co')); $('cHe').setAttribute('aria-pressed', String(S.comp === 'he'));
+    $('lId').setAttribute('aria-pressed', String(S.liquid === 'ideal')); $('lCo').setAttribute('aria-pressed', String(S.liquid === 'coulomb'));
+    $('tCr').checked = S.cryst; $('tLat').checked = S.latent; $('tLat').disabled = !S.cryst; $('tPop').checked = S.pop;
+    $('yL').setAttribute('aria-pressed', String(S.plot === 'L')); $('yT').setAttribute('aria-pressed', String(S.plot === 'T'));
+    for (const b of document.querySelectorAll('[data-s]')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+  }
+  function markPreset(name) {
+    S.preset = name;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint').textContent = name && PRESETS[name] ? PRESETS[name].hint : 'Your own setup. Pick a setup above to return to a known one.';
+  }
+  function rebuild() { refreshSel(); gridStep(4); if (S.pop) popDirty = true; if (S.pop && gridReady()) popCompute(); syncUI(); readouts(); dirty = true; }
+  function custom() { if (S.preset) markPreset(null); }
+  function applyPreset(name) {
+    const p = PRESETS[name];
+    Object.assign(S, { M: p.M, comp: p.comp, liquid: p.liquid, cryst: p.cryst, latent: p.latent, pop: p.pop, plot: p.plot, lt: p.lt });
+    if (p.disk) S.disk = p.disk;
+    markPreset(name); rebuild(); holdT = 0;
+    setPlaying(p.play && !reduce);
+  }
+  function setMass(M) { M = clamp(Math.round(M * 100) / 100, 0.5, 1.2); if (M === S.M) return; S.M = M; custom(); refreshSel(); syncUI(); readouts(); dirty = true; }
+  function setAge(lt) { lt = clamp(Math.round(lt * 100) / 100, LT_MIN, LT_MAX); S.lt = lt; holdT = 0; $('age').value = lt; readouts(); dirty = true; }
+  function setDisk(g) { g = clamp(Math.round(g * 10) / 10, 1, 13.5); if (g === S.disk) return; S.disk = g; custom(); $('disk').value = g; popDirty = true; if (gridReady()) popCompute(); readouts(); dirty = true; }
+  $('mass').addEventListener('input', (e) => setMass(+e.target.value));
+  $('age').addEventListener('input', (e) => { setAge(+e.target.value); });
+  $('disk').addEventListener('input', (e) => setDisk(+e.target.value));
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const setComp = (c) => { if (S.comp === c) return; S.comp = c; custom(); rebuild(); };
+  const setLiquid = (l) => { if (S.liquid === l) return; S.liquid = l; custom(); rebuild(); };
+  $('cCO').addEventListener('click', () => setComp('co')); $('cHe').addEventListener('click', () => setComp('he'));
+  $('lId').addEventListener('click', () => setLiquid('ideal')); $('lCo').addEventListener('click', () => setLiquid('coulomb'));
+  $('tCr').addEventListener('change', (e) => { S.cryst = e.target.checked; custom(); rebuild(); });
+  $('tLat').addEventListener('change', (e) => { S.latent = e.target.checked; custom(); rebuild(); });
+  $('tPop').addEventListener('change', (e) => { S.pop = e.target.checked; custom(); popDirty = true; rebuild(); });
+  const setPlot = (p) => { S.plot = p; syncUI(); dirty = true; };
+  $('yL').addEventListener('click', () => setPlot('L')); $('yT').addEventListener('click', () => setPlot('T'));
+  for (const b of document.querySelectorAll('[data-s]')) b.addEventListener('click', () => { S.speed = +b.dataset.s; syncUI(); });
+  const playBtn = $('play');
+  function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); if (on && S.lt >= LT_MAX - 1e-6) S.lt = LT_MIN; holdT = 0; }
+  playBtn.addEventListener('click', () => setPlaying(!playing));
+  $('restart').addEventListener('click', () => { setAge(LT_MIN); if (!playing && !reduce) setPlaying(true); });
+
+  // ---------- dragging on the drawing ----------
+  let drag = null, hoverId = null, hover = null;
+  const isHot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+  function dragHandles() {
+    const out = [];
+    if (GEO.cool) {
+      const b = GEO.cool;
+      out.push({ id: 'age', cursor: 'ew-resize', seg: [b.X(S.lt), b.T, b.X(S.lt), b.B], set: (x) => setAge(b.invX(x)) });
+      if (S.pop) { const x = b.X(Math.log10(S.disk * 1e9)); out.push({ id: 'disk', cursor: 'ew-resize', seg: [x, b.T, x, b.B], set: (x) => setDisk(Math.pow(10, b.invX(x)) / 1e9) }); }
+    }
+    if (GEO.slice && GEO.slice.handle) {
+      const g = GEO.slice;
+      out.push({ id: 'mass', cursor: 'nesw-resize', pt: g.handle, ring: true, set: (x, y) => setMass(massOfRadius(Math.hypot(x - g.cx, y - g.cy) / g.Rmax * R05())) });
+    }
+    if (GEO.hr && GEO.hr.dot) out.push({ id: 'hr', cursor: 'grab', pt: GEO.hr.dot, set: (x, y) => setAgeFromHR(x, y) });
+    return out;
+  }
+  // invert R(M) on the mass grid (R falls with M), then refine on the selected structure
+  function massOfRadius(R) {
+    const ms = GRID.map((M) => [M, structure(M).R]);
+    if (R >= ms[0][1]) return 0.5; if (R <= ms[ms.length - 1][1]) return 1.2;
+    let j = 1; while (j < ms.length - 1 && ms[j][1] > R) j++;
+    const [m0, r0] = ms[j - 1], [m1, r1] = ms[j];
+    return m0 + (R - r0) / (r1 - r0) * (m1 - m0);
+  }
+  function setAgeFromHR(px, py) {
+    const hr = hrLine(sel), b = GEO.hr; let best = -1, bd = Infinity;
+    for (let k = 0; k < hr.n; k++) { if (hr.lt[k] < LT_MIN) continue; const d = Math.hypot(b.X(hr.x[k]) - px, b.Y(hr.y[k]) - py); if (d < bd) { bd = d; best = k; } }
+    if (best >= 0) setAge(Math.min(LT_MAX, hr.lt[best]));
+  }
+  function handleAt(x, y, touch) {
+    const tol = 9 * PS * (touch ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of dragHandles()) {
+      let d = Infinity;
+      if (h.seg) { const [x1, y1, , y2] = h.seg; if (y >= y1 - 4 && y <= y2 + 4) d = Math.abs(x - x1); }
+      else if (h.pt) d = Math.max(0, Math.hypot(x - h.pt[0], y - h.pt[1]) - 4 * PS);
+      if (h.id === 'disk') d += 1;
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  function paneAt(x, y) { for (const k of ['cool', 'hr', 'slice']) { const p = LY[k]; if (x >= p.x && x < p.x + p.w && y >= p.y && y < p.y + p.h) return k; } return null; }
+  function nearestTrack(x, y) {
+    const b = GEO.hr; if (!b || x < b.L || x > b.R || y < b.T || y > b.B) return null;
+    let best = null, bd = 8 * PS;
+    for (const M of HR_MASSES) {
+      const tr = grid[GRID.indexOf(M)]; if (!tr || !tr.hr) continue; const hr = tr.hr;
+      for (let k = 0; k < hr.n; k += 2) { const d = Math.hypot(b.X(hr.x[k]) - x, b.Y(hr.y[k]) - y); if (d < bd) { bd = d; best = M; } }
+    }
+    return best;
+  }
+  let dragQ = null, dragFrame = false;
+  const local = (ev) => { const r = can.getBoundingClientRect(); return [ev.clientX - r.left, ev.clientY - r.top]; };
+  can.addEventListener('pointermove', (ev) => {
+    const [x, y] = local(ev);
+    if (drag) {
+      dragQ = [x, y];
+      if (!dragFrame) { dragFrame = true; requestAnimationFrame(() => { dragFrame = false; if (!drag || !dragQ) return; const h = dragHandles().find((k) => k.id === drag.id); if (h) h.set(dragQ[0], dragQ[1]); dragQ = null; }); }
+      return;
+    }
+    const h = handleAt(x, y, ev.pointerType === 'touch');
+    hoverId = h ? h.id : null; can.style.cursor = h ? h.cursor : 'default';
+    const pn = paneAt(x, y);
+    hover = pn ? { pane: pn, x, y, track: pn === 'hr' && !h ? nearestTrack(x, y) : null } : null;
+    if (pn === 'cool' && !h && GEO.cool && (x < GEO.cool.L || x > GEO.cool.R || y < GEO.cool.T || y > GEO.cool.B)) hover = null;
+    dirty = true;
+  });
+  can.addEventListener('pointerdown', (ev) => {
+    const [x, y] = local(ev), h = handleAt(x, y, ev.pointerType === 'touch');
+    if (!h) {
+      // click on an HR track selects that mass
+      const pn = paneAt(x, y);
+      if (pn === 'hr') { const M = nearestTrack(x, y); if (M != null) { setMass(M); } }
+      return;
+    }
+    drag = { id: h.id }; hoverId = h.id; if (h.id === 'hr') can.style.cursor = 'grabbing';
+    if (h.id === 'age' || h.id === 'hr') { if (playing) setPlaying(false); }
+    try { can.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault(); dirty = true;
+  });
+  const endDrag = () => { if (drag && drag.id === 'hr') can.style.cursor = 'grab'; drag = null; dirty = true; };
+  can.addEventListener('pointerup', endDrag);
+  can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('pointerleave', () => { if (!drag) { hoverId = null; hover = null; dirty = true; } });
+  can.addEventListener('keydown', (e) => {
+    const big = e.shiftKey ? 5 : 1;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { setAge(S.lt + (e.key === 'ArrowRight' ? 1 : -1) * 0.05 * big); custom(); }
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') setMass(S.M + (e.key === 'ArrowUp' ? 1 : -1) * 0.01 * big);
+    else if (e.key === ' ') setPlaying(!playing);
+    else if (e.key === 't' || e.key === 'T') setPlot(S.plot === 'L' ? 'T' : 'L');
+    else if (e.key === 'c' || e.key === 'C') { S.cryst = !S.cryst; custom(); rebuild(); }
+    else if (e.key === 'l' || e.key === 'L') { if (S.cryst) { S.latent = !S.latent; custom(); rebuild(); } }
+    else if (e.key === 'h' || e.key === 'H') setComp(S.comp === 'he' ? 'co' : 'he');
+    else if (e.key === 'p' || e.key === 'P') { S.pop = !S.pop; custom(); popDirty = true; rebuild(); }
+    else return;
+    e.preventDefault();
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(() => resize());
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+
+  const retheme = () => { tokens(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, frameMs = 0;
+  function loop(ts) {
+    const dt = Math.min(0.05, Math.max(0, (ts - last) / 1000)); last = ts;
+    const t0 = performance.now();
+    if (!gridReady()) gridStep(8);
+    if (playing && !drag) {
+      if (S.lt < LT_MAX) { S.lt = Math.min(LT_MAX, S.lt + SPEEDS[S.speed] * dt); dirty = true; }
+      else { holdT += dt; if (holdT > 1.6) { S.lt = LT_MIN; holdT = 0; dirty = true; } }
+      if (ts - lastRead > 100) { $('age').value = S.lt; readouts(); lastRead = ts; }
+    }
+    if (dirty) drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    requestAnimationFrame(loop);
+  }
+  window.__wd = { get S() { return S; }, get frameMs() { return frameMs; }, get sel() { return sel; }, get pop() { return pop; }, gridReady, setAge, setMass, setDisk, setPlaying,
+    handles() { return dragHandles().map((h) => ({ id: h.id, seg: h.seg, pt: h.pt })); }, now };
+
+  tokens(); formulas();
+  refreshSel();
+  const ro = new ResizeObserver(() => resize());
+  ro.observe(pane);
+  applyPreset('young');
+  if (reduce) { S.lt = 9.0; syncUI(); readouts(); }
+  resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

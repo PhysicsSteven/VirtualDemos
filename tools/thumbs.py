@@ -46,6 +46,7 @@ OVERRIDES = {
     "double-slit": {"wait": 4000},
     "radioactive-decay": {"wait": 3000},
     "rutherford": {"click": ['[data-p="gm"]'], "wait": 6000},
+    "white-dwarf-cooling": {"click": ['[data-p="cryst"]'], "wait": 1500},
     "ideal-gas": {"wait": 2500},
     "magnetic-force": {"wait": 5000},
     "quantum-waves": {"click": ['[data-p="barrier"]'], "wait": 3000},

@@ -18,6 +18,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Galaxy Rotation Curves](demos/rotation-curves.html) | Astronomy | Rotation curves from a bulge, exact exponential disk, gas and dark matter halo, measured by Doppler shifts, against the Milky Way and NGC 3198 |
 | [Black Holes and Lensing](demos/black-holes.html) | Astronomy | Point lens images and microlensing, an exact Schwarzschild ray traced shadow, and clocks, redshift and tides near real black holes |
 | [Lagrange Points](demos/lagrange-points.html) | Astronomy | The exact restricted three body problem in the rotating frame: Lagrange points, zero velocity curves, Trojans, tadpoles and horseshoes |
+| [White Dwarf Cooling](demos/white-dwarf-cooling.html) | Astronomy | Mestel cooling, crystallization at Γ = 175 with latent heat, a schematic Gaia HR diagram and the white dwarf age clock |
 | [Spectra Explorer](demos/spectra.html) | Modern physics and astronomy | Emission and absorption lines of 99 elements from NIST data, the Bohr model of hydrogen, and a mystery spectrum game |
 | [Spacetime Diagrams](demos/spacetime.html) | Modern physics | Minkowski diagrams: light cones, the interval, Lorentz boosts, simultaneity, time dilation, length contraction and the twin paradox |
 | [Quantum Wave Packets](demos/quantum-waves.html) | Modern physics | The 1D time dependent Schrödinger equation for an electron: spreading, tunneling, bound states, superpositions, uncertainty and measurement |
