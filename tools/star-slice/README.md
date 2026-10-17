@@ -45,6 +45,17 @@ cd ~/runs/slice_grid_12M && ./mk && ./rn_slice > run.log 2>&1
 
 When `run.log` ends with `finished`, the script's printed `extract_profiles.py` line packs that run. Massive star networks are grouped to keep files small: `s_ca` is ³²S + ³⁶Ar + ⁴⁰Ca, `fe_grp` is ⁴⁴Ti through ⁵⁶Ni, `np` is free neutrons and protons, `burn_c` is c12_c12 + c12_o16 and `burn_o` is o16_o16. The massive suites run with no winds (`Dutch_scaling_factor = 0`).
 
+On the page, every embedded dataset with an initial mass sits on the Star mass slider (ticks on a log mass scale, spread apart where labels would touch). Switching mass keeps the color mode and jumps to the same inferred stage at the same progress through it (for example halfway through core hydrogen burning, or the last moment), and otherwise to the zero age main sequence. The other masses' HR tracks show faintly behind the current one. Runs that end at iron core collapse get a Core collapse preset (iron core mass and fastest infall from the data, no explosion drawn) and an Onion shells preset. A run from this kit with a mass of 8 M☉ or more is labeled as a MESA test suite model; its metallicity (1 − X − Y at the surface) and the absence of mass loss are read from the data. The page recognizes these runs by their source folders: `slice_grid_*`, or the stage log folders `LOGS_make_late_pre_zams`, `LOGS_to_end_core_c_burn`, `LOGS_to_lgTmax`, `LOGS_to_cc`.
+
+## Building the page
+
+```
+python3 build.py                                                    # data/ -> demos/star-slice.html
+python3 build.py --data /tmp/test --out /tmp/test/star-slice.html   # a test build from another folder
+```
+
+The build embeds each dataset with its initial mass and HR track, so the slider and the faint tracks work before a dataset is unpacked; each dataset is unpacked the first time it is shown.
+
 ## Columns
 
 Needed: `mass`, `logR` (or `radius`), `logT`, `logRho`, `h1`, `he4`, `c12`, `o16`.

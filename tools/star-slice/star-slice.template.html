@@ -37,6 +37,11 @@ img { max-width: 100%; }
   --el-c: #1595a8;
   --el-o: #d6402b;
   --el-ne: #9a4fd0;
+  --el-mg: #2e9a52;
+  --el-si: #8a5a30;
+  --el-sca: #e24f93;
+  --el-fe: #3b4048;
+  --el-np: #9fb20e;
   --liquid: #8fb6dc;
   --solid: #eef6ff;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
@@ -48,6 +53,7 @@ img { max-width: 100%; }
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
     --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218;
     --el-h: #6f9bff; --el-he: #f2c14e; --el-c: #3cc6d6; --el-o: #ff7a5e; --el-ne: #c08cf5;
+    --el-mg: #62d688; --el-si: #a47a55; --el-sca: #ff8fb8; --el-fe: #d2d7dd; --el-np: #dff07a;
     --liquid: #2c5580; --solid: #d6eaff; color-scheme: dark;
   }
 }
@@ -56,6 +62,7 @@ img { max-width: 100%; }
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
   --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218;
   --el-h: #6f9bff; --el-he: #f2c14e; --el-c: #3cc6d6; --el-o: #ff7a5e; --el-ne: #c08cf5;
+  --el-mg: #62d688; --el-si: #a47a55; --el-sca: #ff8fb8; --el-fe: #d2d7dd; --el-np: #dff07a;
   --liquid: #2c5580; --solid: #d6eaff; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -168,6 +175,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 :root[data-projector="on"] .chart { height: 260px; }
 :root[data-projector="on"] .hr { height: 210px; }
 
+/* mass slider: thumb positions and tick labels share one scale (log mass, spread so labels never touch) */
+.massbox { display: grid; gap: 4px; }
+.massbox input:disabled { opacity: 0.5; cursor: not-allowed; }
+.mticks { position: relative; height: 1.9em; margin: 0 8px; font-size: 0.78rem; color: var(--muted); }
+.mticks span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; padding-top: 6px; }
+.mticks span::before { content: ""; position: absolute; left: 50%; top: 0; width: 1px; height: 4px; background: var(--muted); }
+.mticks span.on { color: var(--ink); font-weight: 600; }
+.chan { display: inline-flex; align-items: center; gap: 4px; margin-right: 8px; white-space: nowrap; }
+.chan i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.features li.next { color: var(--ink); font-weight: 600; }
+
 .datanote { margin: 0; font-size: 0.82rem; color: var(--muted); display: grid; gap: 4px; }
 .datanote b { color: var(--ink); font-weight: 600; }
 .evidence { margin: 0; font-size: 0.85rem; border-left: 3px solid var(--accent); padding-left: 9px; }
@@ -271,6 +289,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     <aside class="rail">
       <section>
         <h2>Star</h2>
+        <div class="massbox" id="massBox">
+          <div class="slider-head"><label for="mass">Star mass</label><output id="massOut" class="mono" for="mass">—</output></div>
+          <input type="range" id="mass" min="0" max="1000" step="1" value="500" aria-describedby="massHint">
+          <div class="mticks mono" id="massTicks" aria-hidden="true"></div>
+          <p class="hint" id="massHint"></p>
+        </div>
         <div class="chips" id="datasets"></div>
         <div class="filebtn">
           <button type="button" class="btn" id="loadBtn">Load MESA file…</button>
@@ -313,6 +337,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="wide"><dt>Mass fractions</dt><dd id="pX">—</dd></div>
           <div class="wide" id="pMixW"><dt>Mixing (MESA mixing_type)</dt><dd id="pMix">—</dd></div>
           <div class="wide" id="pEpsW"><dt>ε<sub>nuc</sub></dt><dd id="pEps">—</dd></div>
+          <div class="wide" id="pVelW" hidden><dt>Radial velocity</dt><dd id="pVel">—</dd></div>
           <div id="pEtaW"><dt>Degeneracy η</dt><dd id="pEta">—</dd></div>
           <div id="pZoneW"><dt>Zone</dt><dd id="pZone">—</dd></div>
           <div id="pPhW" hidden><dt>Phase (eos_phase)</dt><dd id="pPh">—</dd></div>
@@ -361,8 +386,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     { key: 'he4', name: 'He', tok: '--el-he', label: 'He (⁴He)' },
     { key: 'c12', name: 'C', tok: '--el-c', label: 'C (¹²C)' },
     { key: 'o16', name: 'O', tok: '--el-o', label: 'O (¹⁶O)' },
-    { key: 'ne', name: 'Ne', tok: '--el-ne', label: 'Ne (²⁰Ne + ²²Ne)' }
+    { key: 'ne', name: 'Ne', tok: '--el-ne', label: 'Ne (²⁰Ne + ²²Ne)' },
+    // massive star networks; grouped by extract_profiles.py
+    { key: 'mg24', name: 'Mg', tok: '--el-mg', label: 'Mg (²⁴Mg)' },
+    { key: 'si28', name: 'Si', tok: '--el-si', label: 'Si (²⁸Si)' },
+    { key: 's_ca', name: 'S–Ca', tok: '--el-sca', label: 'S–Ca (³²S + ³⁶Ar + ⁴⁰Ca)' },
+    { key: 'fe_grp', name: 'Fe group', tok: '--el-fe', label: 'Fe group (⁴⁴Ti to ⁵⁶Ni, incl. ⁵⁶Fe)' },
+    { key: 'np', name: 'n + p', tok: '--el-np', label: 'Free neutrons and protons' }
   ];
+  const EL_MASSIVE = ['si28', 's_ca', 'fe_grp'];   // a run that makes these (above 5%) gets the late burning features
   const VIRIDIS = ['#440154', '#482878', '#3e4989', '#31688e', '#26828e', '#1f9e89', '#35b779', '#6ece58', '#b5de2b', '#fde725'];
   const INFERNO = ['#000004', '#1b0c41', '#4a0c6b', '#781c6d', '#a52c60', '#cf4446', '#ed6925', '#fb9b06', '#f7d13d', '#fcffa4'];
 
@@ -417,6 +449,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (y >= 1e3) return +(y / 1e3).toPrecision(4) + ' kyr';
     return +y.toPrecision(4) + ' yr';
   }
+  function fmtDur(y) {
+    if (y >= 1e3) return fmtAge(y);
+    if (y >= 1) return +y.toPrecision(3) + ' yr';
+    const d = y * 365.25;
+    if (d >= 1) return +d.toPrecision(3) + ' days';
+    const hr = d * 24;
+    return hr >= 1 ? +hr.toPrecision(3) + ' hours' : +(hr * 60).toPrecision(2) + ' minutes';
+  }
   function fmtRsun(r) { return sci(r, 3) + ' R☉'; }
   function fmtKm(r) { const km = r * RSUN_KM; return (km < 1e5 ? grp(km) : sci(km, 3)) + ' km'; }
   function fmtRfull(r) {
@@ -467,7 +507,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         logT: col('logT'), logRho: col('logRho'),
         h1: col('h1'), he4: col('he4'), c12: col('c12'), o16: col('o16'), ne20: col('ne20'), ne22: col('ne22'),
         mix: col('mixing_type'), cv: col('conv_vel'), eps: col('eps_nuc'), pp: col('pp'), cno: col('cno'), ta: col('tri_alpha'),
-        eta: col('eta'), phase: col('phase'), gam: col('gamma'), psep: col('eps_phase_sep')
+        eta: col('eta'), phase: col('phase'), gam: col('gamma'), psep: col('eps_phase_sep'),
+        mg24: col('mg24'), si28: col('si28'), s_ca: col('s_ca'), fe_grp: col('fe_grp'), np: col('np'),
+        bc: col('burn_c'), bo: col('burn_o'), vel: col('velocity')
       };
       if (mo.cv && cvIsLinear) mo.cv = mo.cv.map((v) => (v > 0 ? Math.log10(v) : -99));
       if (mo.eps && epsIsLog) mo.eps = mo.eps.map((v) => (v == null ? null : 10 ** v));
@@ -486,9 +528,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const D = { label: raw.label || fallbackLabel || 'MESA run', source: raw.source || [], mc, moments, N: moments.length };
     const any = (k) => moments.some((mo) => mo[k]);
     D.has = { logT: any('logT'), logRho: any('logRho'), mix: any('mix'), cv: any('cv'), eps: any('eps'), eta: any('eta'),
-      chan: any('pp') || any('cno') || any('ta'), phase: any('phase'), gam: any('gam'), psep: any('psep'),
-      hr: moments.filter((mo) => mo.L > 0 && mo.Teff > 0).length >= 2 };
+      chan: any('pp') || any('cno') || any('ta') || any('bc') || any('bo'), phase: any('phase'), gam: any('gam'), psep: any('psep'),
+      hr: moments.filter((mo) => mo.L > 0 && mo.Teff > 0).length >= 2,
+      hhe: any('pp') || any('cno') || any('ta'), cburn: any('bc'), oburn: any('bo'), vel: any('vel') };
     D.has.el = ELS.map((e) => any(e.key));
+    D.has.massive = moments.some((mo) => EL_MASSIVE.some((k) => mo[k] && mo[k].some((v) => v > 0.05)));
     const rng = (k, f = (v) => v, test = () => true) => {
       let lo = Infinity, hi = -Infinity;
       for (const mo of moments) { const a = mo[k]; if (!a) continue; for (let i = 0; i < mo.n; i++) { const v = a[i]; if (v == null || !test(v, mo, i)) continue; const y = f(v); if (isFinite(y)) { if (y < lo) lo = y; if (y > hi) hi = y; } } }
@@ -509,8 +553,58 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     D.ageTies = moments.some((mo, i) => i && mo.age != null && mo.age === moments[i - 1].age);
     D.codes = new Set(); for (const mo of moments) if (mo.mix) for (const v of mo.mix) if (v != null) D.codes.add(v);
     for (const mo of moments) derive(D, mo);
+    refineStages(D);
+    const last = moments[moments.length - 1];
+    D.collapse = !!(last.fe && D.has.vel && last.fe.vIn > 0);
+    // ages count up without a reset from this moment to the end (staged runs can restart the clock)
+    D.ageMonoFrom = D.N - 1;
+    while (D.ageMonoFrom > 0 && moments[D.ageMonoFrom - 1].age != null && moments[D.ageMonoFrom].age != null && moments[D.ageMonoFrom - 1].age <= moments[D.ageMonoFrom].age) D.ageMonoFrom--;
     D.presets = makePresets(D);
     return D;
+  }
+
+  // stage labels that need the whole run: pre main sequence, and helium core burning only once it has started
+  function refineStages(D) {
+    const ms = D.moments, cH0 = ms[0].cH;
+    D.msStart = 0;
+    if (cH0 != null) {
+      const k = ms.findIndex((mo) => mo.cH != null && mo.cH < cH0 - 0.005);
+      D.msStart = k < 0 ? 0 : k;
+      for (let i = 0; i < D.msStart; i++) {
+        const mo = ms[i];
+        // a run that starts on the main sequence: nuclear burning already supplies the luminosity
+        const lnuc = mo.eps ? mo.mass.reduce((s, m, j) => s + Math.max(0, mo.eps[j] || 0) * (m - (j ? mo.mass[j - 1] : 0)), 0) * 0.5196 : null;
+        if (mo.stage === 'Core hydrogen burning' && !(lnuc != null && mo.L > 0 && lnuc > 0.6 * mo.L)) mo.stage = 'Pre main sequence';
+      }
+    }
+    let peak = 0;
+    for (const mo of ms) {
+      if (mo.cH != null && mo.cH > 1e-3) continue;
+      if (mo.cHe != null) peak = Math.max(peak, mo.cHe);
+      if (mo.stage !== 'Core helium burning') continue;
+      const coreHe = mo.shells.some((s) => s.core && /^He burning/.test(s.name));
+      if (!coreHe && !(mo.cHe < peak - 0.01)) mo.stage = 'Hydrogen shell burning';
+    }
+  }
+  // iron group core and infall, for the core collapse ending
+  function ironOf(mo) {
+    if (!mo.fe_grp || !(mo.fe_grp[0] > 0.5)) return null;
+    let i = 0; while (i + 1 < mo.n && mo.fe_grp[i + 1] >= 0.5) i++;
+    const out = { i, m: mo.mass[i], r: mo.r[i], vIn: 0, vInI: -1 };
+    if (mo.vel) for (let j = 0; j < mo.n; j++) { const v = -(mo.vel[j] || 0); if (v > out.vIn) { out.vIn = v; out.vInI = j; } }
+    return out;
+  }
+  // runs of zones with the same most abundant element, kept when they hold at least 0.2% of the mass
+  function layersOf(mo) {
+    const out = [];
+    for (let i = 0; i < mo.n; i++) {
+      const k = domOf(mo, i)[0], last = out[out.length - 1];
+      if (last && last.k === k) last.i1 = i; else out.push({ k, i0: i, i1: i });
+    }
+    const big = out.filter((L) => L.k >= 0 && mo.mass[L.i1] - (L.i0 ? mo.mass[L.i0 - 1] : 0) >= 0.002 * mo.M);
+    const merged = [];
+    for (const L of big) { const p = merged[merged.length - 1]; if (p && p.k === L.k) p.i1 = L.i1; else merged.push({ ...L }); }
+    return merged;
   }
 
   // per moment derived features
@@ -551,24 +645,29 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         }
       }
       for (const s of mo.shells) {
-        let tot = 0, H = 0, He = 0, pk = 0, pi = s.i0;
+        let tot = 0, H = 0, He = 0, Cb = 0, Ob = 0, pk = 0, pi = s.i0;
         for (let i = s.i0; i <= s.i1; i++) {
           const dm = mo.mass[i] - (i ? mo.mass[i - 1] : 0), e = Math.max(0, mo.eps[i] || 0);
           tot += e * dm;
           H += ((mo.pp ? mo.pp[i] || 0 : 0) + (mo.cno ? mo.cno[i] || 0 : 0)) * dm;
           He += (mo.ta ? mo.ta[i] || 0 : 0) * dm;
+          Cb += (mo.bc ? mo.bc[i] || 0 : 0) * dm;
+          Ob += (mo.bo ? mo.bo[i] || 0 : 0) * dm;
           if (e > pk) { pk = e; pi = i; }
         }
         s.peak = pk; s.pi = pi; s.core = s.i0 === 0;
-        s.fH = tot > 0 ? H / tot : 0; s.fHe = tot > 0 ? He / tot : 0;
+        s.fH = tot > 0 ? H / tot : 0; s.fHe = tot > 0 ? He / tot : 0; s.fC = tot > 0 ? Cb / tot : 0; s.fO = tot > 0 ? Ob / tot : 0;
         const where = s.core ? 'core' : 'shell';
+        // the largest channel names the shell (ties go to the lighter fuel)
+        let best = null, bf = 0;
+        for (const [nm, f] of [['H', s.fH], ['He', s.fHe], ['C', s.fC], ['O', s.fO]]) if (f > bf) { best = nm; bf = f; }
         if (!D.has.chan) s.name = 'Burning ' + where;
-        else if (s.fH >= s.fHe && s.fH >= 0.25) s.name = 'H burning ' + where;
-        else if (s.fHe > s.fH && s.fHe >= 0.25) s.name = 'He burning ' + where;
-        else s.name = 'Burning ' + where + ', other channels';
-        s.chanText = D.has.chan ? `pp+CNO ${Math.round(s.fH * 100)}%, 3α ${Math.round(s.fHe * 100)}%` : '';
+        else if (best && bf >= 0.25) s.name = best + ' burning ' + where;
+        else s.name = 'Burning ' + where + ', other reactions';
+        s.chanText = chanText(D, s.fH, s.fHe, s.fC, s.fO);
       }
     }
+    mo.fe = ironOf(mo);
     // crystallization
     mo.solidAny = false; mo.front = null;
     if (mo.phase) {
@@ -576,11 +675,31 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       for (let i = 0; i < n; i++) if ((mo.phase[i] ?? 0) >= 0.5) { last = i; mo.solidAny = true; }
       if (last >= 0) mo.front = { i: last, m: mo.mass[last], r: mo.r[last], gam: mo.gam ? mo.gam[last] : null };
     }
-    mo.stage = stageOf(mo);
+    mo.stage = stageOf(mo, D);
   }
-  function stageOf(mo) {
+  // channel shares as text; the C and O parts and the remainder appear only when the file has burn_c / burn_o
+  function chanText(D, fH, fHe, fC, fO) {
+    if (!D.has.chan) return '';
+    const pc = (f) => Math.round(clamp(f, -9.99, 9.99) * 100) + '%', t = [];
+    if (D.has.hhe) t.push('pp+CNO ' + pc(fH), '3α ' + pc(fHe));
+    if (D.has.cburn) t.push('C ' + pc(fC));
+    if (D.has.oburn) t.push('O ' + pc(fO));
+    if (D.has.cburn || D.has.oburn) { const r = 1 - fH - fHe - fC - fO; if (Math.abs(r) >= 0.005) t.push('other ' + pc(r)); }
+    return t.join(', ');
+  }
+  function stageOf(mo, D) {
     if (mo.cH != null && mo.cH > 1e-3) return 'Core hydrogen burning';
     if (mo.cHe != null && mo.cHe > 1e-3) return 'Core helium burning';
+    if (D.has.massive) {
+      const at = (k) => (mo[k] ? Math.max(0, mo[k][0] || 0) : 0), cs = mo.shells.find((s) => s.core);
+      if (mo.fe) return mo.fe.vIn >= 1e7 ? 'Iron core collapse begins' : 'Iron core';
+      if (at('si28') + at('s_ca') > 0.5) return cs && /other/.test(cs.name) ? 'Core silicon burning' : 'Silicon core';
+      if (cs && /^O burning/.test(cs.name)) return 'Core oxygen burning';
+      if (cs && /^C burning/.test(cs.name)) return 'Core carbon burning';
+      if (cs && /other/.test(cs.name) && at('ne20') > 0.02 && at('o16') > 0.3) return 'Core neon burning';
+      const big = mo.L > 1e4 ? 'Supergiant' : 'Giant';
+      return at('ne20') + at('mg24') > 0.15 ? big + ' with O/Ne core' : big + ' with C/O core';
+    }
     if (mo.R > 1) return 'Giant with C/O core';
     if (mo.solidAny) return 'Crystallizing white dwarf';
     return 'White dwarf / post AGB';
@@ -614,7 +733,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const iB = argmax((mo) => mo.epsMax || null);
       if (iB >= 0 && ms[iB].epsMax > 10) {
         const mo = ms[iB], s = mo.shells.find((x) => mo.epsMaxI >= x.i0 && mo.epsMaxI <= x.i1);
-        const z = clamp(Math.log10(mo.R / (mo.r[mo.epsMaxI] * 4)), 0, 4.5);
+        const z = clamp(Math.log10(mo.R / (mo.r[mo.epsMaxI] * 4)), 0, zoomCap(D));
         P.push({ label: 'Strongest burning', idx: iB, mode: 'burn', log: false, zoom: z,
           hint: `Peak ε_nuc = ${sci(mo.epsMax)} erg g⁻¹ s⁻¹ at m = ${sci(mo.mass[mo.epsMaxI], 4)} M☉${s ? ', ' + s.name.toLowerCase() + (s.chanText ? ' (' + s.chanText + ')' : '') : ''}.` });
       }
@@ -638,6 +757,26 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
             hint: `First saved moment with half the mass solid: front at m = ${sci(g.m, 4)} M☉ (${(g.m / ms[ih].M).toFixed(2)} M), r = ${fmtKm(g.r)}.` });
         }
       }
+    }
+    // massive stars: the onion of burning ashes late in the run, and the core collapse moment
+    if (D.has.massive) {
+      let best = -1, bc = 0;
+      // the latest moment with the most layers, leaving the last one to the Core collapse preset when an earlier one ties
+      const end = D.collapse ? D.N - 1 : D.N;
+      for (let i = Math.floor(D.N / 2); i < end; i++) { const c = new Set(layersOf(ms[i]).map((L) => L.k)).size; if (c >= bc) { bc = c; best = i; } }
+      if (D.collapse && new Set(layersOf(ms[D.N - 1]).map((L) => L.k)).size > bc) { best = D.N - 1; bc = new Set(layersOf(ms[best]).map((L) => L.k)).size; }
+      if (best >= 0 && bc >= 4) {
+        const mo = ms[best], Ls = layersOf(mo), env = Ls.find((L) => L.k === 0);
+        const rEnv = env ? (env.i0 ? mo.r[env.i0 - 1] : 0) : 0;
+        const desc = Ls.map((L) => `${ELS[L.k].name} to ${sci(mo.mass[L.i1], 3)}`).join(', ');
+        P.push({ label: 'Onion shells', idx: best, mode: 'comp', log: true, zoom: rEnv > 0 ? clamp(Math.log10(mo.R / (3 * rEnv)), 0, zoomCap(D)) : 0,
+          hint: `Model ${mo.model ?? best + 1}: ${bc} layers, each named by its most abundant element, from the center out (outer edge in M☉): ${desc}. Each layer is the ash of the burning stage before it. Log radius is on, so this view is not to scale.` });
+      }
+    }
+    if (D.collapse) {
+      const iC = D.N - 1, mo = ms[iC], fe = mo.fe;
+      P.push({ label: 'Core collapse', idx: iC, mode: 'comp', log: false, zoom: clamp(Math.log10(mo.R / (4 * fe.r)), 0, zoomCap(D)),
+        hint: `Model ${mo.model ?? iC + 1}, the last one saved: an iron group core of ${sci(fe.m, 3)} M☉ (fe_grp ≥ 0.5 inside), radius ${fmtKm(fe.r)}, falling inward at up to ${grp(fe.vIn / 1e5)} km/s. The view is to scale: its edge is ${sci((4 * fe.r) / EARTH_RSUN, 2)} Earth radii from the center. Next the core collapses, which can drive a core collapse supernova. This MESA run stops here and does not model that.` });
     }
     return P.slice(0, 7);
   }
@@ -673,7 +812,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return { up, cx: ml, cy: H / 2, R, a0: -Math.PI / 2 };
   }
   function viewR(mo) { return S.hold ? S.viewAbs : mo.R * 10 ** -S.zoomDec; }
-  function zoomMax(mo) { return clamp(Math.log10(mo.R / (5 * mo.r[0])), 1, 4.5); }
+  // a supergiant's iron core is about 10⁻⁶ of its radius, so massive runs may zoom further
+  const zoomCap = (D) => (D && D.has.massive ? 7 : 4.5);
+  function zoomMax(mo) { return clamp(Math.log10(mo.R / (5 * mo.r[0])), 1, zoomCap(S.D)); }
   function logRange(mo) {
     const Lout = Math.log10(viewR(mo));
     const Lin = Math.log10(S.hold ? S.D.rInnerMin : mo.r[0]) - 0.25;
@@ -790,13 +931,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const HEX_S = 6, SQ3 = Math.sqrt(3);
   function hexPath(c, cx, cy, s) { c.moveTo(cx + s, cy); for (let k = 1; k < 6; k++) c.lineTo(cx + s * Math.cos(k * Math.PI / 3), cy + s * Math.sin(k * Math.PI / 3)); c.closePath(); }
   function hexCenters(cols, rows, s) { const out = []; for (let i = -1; i <= cols; i++) for (let j = -1; j <= rows; j++) out.push([1.5 * s * i, SQ3 * s * (j + (i & 1 ? 0.5 : 0))]); return out; }
-  // one drawer per element: H fine stipple, He soft swirls, C dots, O faceted hex cells, Ne tiny diamonds
-  const EL_TILE = [[48, 48], [48, 48], [36, 36], [36, 3 * SQ3 * HEX_S], [48, 48]];
+  // one drawer per element: H fine stipple, He soft swirls, C dots, O faceted hex cells, Ne tiny diamonds,
+  // Mg small rings, Si diagonal strata, S–Ca small triangles, Fe group a square lattice, free n + p tiny crosses
+  const EL_TILE = [[48, 48], [48, 48], [36, 36], [36, 3 * SQ3 * HEX_S], [48, 48], [36, 36], [36, 36], [40, 40], [32, 32], [40, 40]];
   function elDrawers() {
     const R = rngOf(7);
     const stip = Array.from({ length: 170 }, () => [R() * 48, R() * 48, 0.45 + R() * 0.5, R() < 0.3]);
     const swirl = Array.from({ length: 8 }, () => [R() * 48, R() * 48, R() * 6.28, R() < 0.5 ? 1 : -1, 0.8 + 0.4 * R()]);
     const dia = Array.from({ length: 20 }, () => [R() * 48, R() * 48, 1.3 + R() * 1.1, R() * 0.6]);
+    const tri = Array.from({ length: 14 }, () => [R() * 40, R() * 40, 2 + R() * 1.2, R() * 2.1]);
+    const crs = Array.from({ length: 26 }, () => [R() * 40, R() * 40, R() < 0.5]);
+    const twoTone = (c, sh, li, path, lw = 1.4) => {
+      for (const [col, w, off] of [[sh, lw, 0.45], [li, lw * 0.5, -0.25]]) { c.strokeStyle = col; c.lineWidth = w; c.beginPath(); path(c, off); c.stroke(); }
+    };
     return [
       (c, sh, li) => { for (const [x, y, r, l] of stip) { c.fillStyle = l ? li : sh; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); } },
       (c, sh, li) => {
@@ -822,6 +969,28 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         for (const [x, y, s, rot] of dia) {
           c.save(); c.translate(x, y); c.rotate(rot); c.beginPath(); c.moveTo(0, -s); c.lineTo(s * 0.68, 0); c.lineTo(0, s); c.lineTo(-s * 0.68, 0); c.closePath();
           c.fillStyle = li; c.fill(); c.strokeStyle = sh; c.lineWidth = 0.8; c.stroke(); c.restore();
+        }
+      },
+      (c, sh, li) => twoTone(c, sh, li, (k, o) => {
+        for (let j = 0; j < 4; j++) for (let i = 0; i < 4; i++) { const x = 4.5 + i * 9 + (j & 1 ? 4.5 : 0) + o, y = 4.5 + j * 9 + o; k.moveTo(x + 2.4, y); k.arc(x, y, 2.4, 0, 2 * Math.PI); }
+      }, 1.3),
+      (c, sh, li) => twoTone(c, sh, li, (k, o) => { for (let q = -36; q <= 36; q += 9) { k.moveTo(q + o, o); k.lineTo(q + 36 + o, 36 + o); } }, 1.5),
+      (c, sh, li) => {
+        for (const [x, y, s, rot] of tri) {
+          c.save(); c.translate(x, y); c.rotate(rot); c.beginPath();
+          for (let k = 0; k < 3; k++) { const a = -Math.PI / 2 + (k * 2 * Math.PI) / 3; k ? c.lineTo(s * Math.cos(a), s * Math.sin(a)) : c.moveTo(s * Math.cos(a), s * Math.sin(a)); }
+          c.closePath(); c.fillStyle = li; c.fill(); c.strokeStyle = sh; c.lineWidth = 0.8; c.stroke(); c.restore();
+        }
+      },
+      (c, sh, li) => {
+        twoTone(c, sh, li, (k, o) => { for (let j = 0; j < 4; j++) for (let i = 0; i < 4; i++) k.rect(1.5 + i * 8 + o, 1.5 + j * 8 + o, 5, 5); }, 1.2);
+        c.fillStyle = sh; for (let j = 0; j < 4; j++) for (let i = 0; i < 4; i++) { c.beginPath(); c.arc(8 + i * 8, 8 + j * 8, 0.9, 0, 7); c.fill(); }
+      },
+      (c, sh, li) => {
+        c.lineCap = 'round';
+        for (const [x, y, plus] of crs) {
+          if (plus) { c.strokeStyle = sh; c.lineWidth = 0.9; c.beginPath(); c.moveTo(x - 1.6, y); c.lineTo(x + 1.6, y); c.moveTo(x, y - 1.6); c.lineTo(x, y + 1.6); c.stroke(); }
+          else { c.fillStyle = li; c.beginPath(); c.arc(x, y, 1.1, 0, 7); c.fill(); c.strokeStyle = sh; c.lineWidth = 0.5; c.stroke(); }
         }
       }
     ];
@@ -875,10 +1044,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const QMAX = 0.62;
   const qa = (x) => (x > 0.008 ? Math.max(1, Math.round(Math.pow(Math.min(1, x), 0.65) * 32)) : 0);
   // burning channel colors (glow, label)
+  const CHAN = {
+    H: { glow: [255, 176, 60], label: '#e08a00', name: 'H burning' },
+    He: { glow: [105, 196, 255], label: '#2b8fd8', name: 'He burning' },
+    C: { glow: [120, 235, 120], label: '#2f9e44', name: 'C burning' },
+    O: { glow: [176, 140, 255], label: '#7b5ce0', name: 'O burning' },
+    other: { glow: [255, 110, 210], label: '#c650b4', name: 'other reactions' }
+  };
   function chanOf(s) {
-    if (/^H burning/.test(s.name)) return { glow: [255, 176, 60], label: '#e08a00' };
-    if (/^He burning/.test(s.name)) return { glow: [105, 196, 255], label: '#2b8fd8' };
-    return { glow: [255, 110, 210], label: '#c650b4' };
+    const m = /^(H|He|C|O) burning/.exec(s.name);
+    return CHAN[m ? m[1] : 'other'];
   }
 
   // ---------- static layer ----------
@@ -1064,12 +1239,29 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (surf && mo.env && S.layers.cells && rs > 20) { const th = clamp(rs * 0.05, 5 * p, 16 * p); rim = { r0: Math.max(0, rs - th), r1: rs }; }
 
     // annotations go on their own layer so glow and particles stay underneath
-    if (S.layers.glow) mo.shells.forEach((s, k) => {
-      const r = (rin(s.pi) + rout(s.pi)) / 2;
-      if (r > Rp || rout(s.i1) < 1.5) return;
-      labels.push({ r, f: 0.55 + 0.17 * k, text: s.name, color: chanOf(s).label });
-    });
+    if (S.layers.glow) {
+      const shown = mo.shells.filter((s) => (rin(s.pi) + rout(s.pi)) / 2 <= Rp && rout(s.i1) >= 1.5);
+      // up to three labels keep their old spots; more are spread over the rest of the half disk
+      shown.forEach((s, k) => labels.push({ r: (rin(s.pi) + rout(s.pi)) / 2, f: shown.length <= 3 ? 0.55 + 0.17 * k : 0.42 + (0.53 * k) / (shown.length - 1),
+        text: s.name, color: chanOf(s).label }));
+    }
+    const boxes = [];
+    o.font = `700 ${12 * p}px ${uiFont()}`;
     for (const L of labels) {
+      // where the box would land at angle f; when it hits an earlier label, try other angles along the same radius
+      const at = (f) => {
+        const [x, y] = polar(L.r, f), ang = G.a0 + f * Math.PI, d = 20 * p, lx = x + Math.cos(ang) * d, ly = y + Math.sin(ang) * d;
+        const w = o.measureText(L.text).width + 12 * p, h = 20 * p, right = Math.cos(ang) < -0.2;
+        const bx = clamp(right ? lx - w : lx, 4, W - w - 4), by = clamp(ly - h / 2, 4, H - h - 4);
+        return { f, box: [bx - 3, by - 3, bx + w + 3, by + h + 3] };
+      };
+      const hit = (b) => boxes.some((q) => b[0] < q[2] && b[2] > q[0] && b[1] < q[3] && b[3] > q[1]);
+      let pick = at(L.f);
+      for (let k = 1; k <= 8 && hit(pick.box); k++) {
+        const f = L.f + (k % 2 ? 1 : -1) * Math.ceil(k / 2) * 0.09;
+        if (f > 0.06 && f < 0.97) { const t = at(f); if (!hit(t.box)) { pick = t; break; } }
+      }
+      boxes.push(pick.box); L.f = pick.f;
       const [x, y] = polar(L.r, L.f);
       const ang = G.a0 + L.f * Math.PI, d = 20 * p;
       const [lx, ly] = [x + Math.cos(ang) * d, y + Math.sin(ang) * d];
@@ -1360,8 +1552,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function xOf(mo, i) { return S.xmode === 'm' ? mo.mass[i] : mo.logR[i]; }
   function xRange(mo) { return S.xmode === 'm' ? [0, mo.mass[mo.n - 1]] : [mo.logR[0], mo.logR[mo.n - 1]]; }
 
-  function chartAxes(c, w, h, T, p, xr, yr, title, ylab) {
-    const pl = 40 * p, pr = 12, pt = 24 * p, pb = 30 * p, pw = w - pl - pr, ph = h - pt - pb;
+  function chartAxes(c, w, h, T, p, xr, yr, title, ylab, extraTop = 0) {
+    const pl = 40 * p, pr = 12, pt = 24 * p + extraTop, pb = 30 * p, pw = w - pl - pr, ph = h - pt - pb;
     const X = (x) => pl + ((x - xr[0]) / (xr[1] - xr[0] || 1)) * pw, Y = (y) => pt + ph - ((y - yr[0]) / (yr[1] - yr[0] || 1)) * ph;
     c.fillStyle = T.canvas; c.fillRect(0, 0, w, h);
     const xs = niceStep((xr[1] - xr[0]) / 4), ys = niceStep((yr[1] - yr[0]) / 4);
@@ -1422,7 +1614,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const T = tokens(), p = ps(), xr = xRange(mo);
     {
       const [c, w, h] = fitCanvas($('chComp'));
-      const A = chartAxes(c, w, h, T, p, xr, [0, 1], 'Mass fractions', '');
+      // legend rows, right aligned; the first row shares its line with the title
+      const items = ELS.map((e, k) => [e.name, T.elHex[k], !!mo[e.key]]).filter((x) => x[2]);
+      if (mo.phase) items.push(['phase', T.accent, true]);
+      c.font = `700 ${12 * p}px ${uiFont()}`; const titleW = c.measureText('Mass fractions').width;
+      c.font = `${10.5 * p}px ${uiFont()}`;
+      const pwL = w - 40 * p - 12, rows = [[]]; let used = 0;
+      for (const it of items) {
+        const iw = c.measureText(it[0]).width + 20 * p, cap = rows.length === 1 ? pwL - titleW - 14 * p : pwL;
+        if (used + iw > cap && rows[rows.length - 1].length) { rows.push([]); used = 0; }
+        rows[rows.length - 1].push(it); used += iw;
+      }
+      const A = chartAxes(c, w, h, T, p, xr, [0, 1], 'Mass fractions', '', (rows.length - 1) * 14 * p);
       chartGeo.comp = A;
       c.save(); c.beginPath(); c.rect(A.pl, A.pt - 2, A.pw, A.ph + 4); c.clip();
       shadeContext(c, mo, A, T);
@@ -1432,13 +1635,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       c.restore();
       // legend
       c.font = `${10.5 * p}px ${uiFont()}`; c.textBaseline = 'middle'; c.textAlign = 'left';
-      let lx = A.pl + A.pw; const items = ELS.map((e, k) => [e.name, T.elHex[k], !!mo[e.key]]).filter((x) => x[2]);
-      if (mo.phase) items.push(['phase', T.accent, true]);
-      for (let k = items.length - 1; k >= 0; k--) {
-        const tw = c.measureText(items[k][0]).width; lx -= tw;
-        c.fillStyle = T.muted; c.fillText(items[k][0], lx, 11 * p);
-        lx -= 12 * p; c.fillStyle = items[k][1]; c.fillRect(lx, 9 * p, 9 * p, 4 * p); lx -= 8 * p;
-      }
+      rows.forEach((row, r) => {
+        let lx = A.pl + A.pw; const y = 11 * p + r * 14 * p;
+        for (let k = row.length - 1; k >= 0; k--) {
+          const tw = c.measureText(row[k][0]).width; lx -= tw;
+          c.fillStyle = T.muted; c.fillText(row[k][0], lx, y);
+          lx -= 12 * p; c.fillStyle = row[k][1]; c.fillRect(lx, y - 2 * p, 9 * p, 4 * p); lx -= 8 * p;
+        }
+      });
     }
     {
       const [c, w, h] = fitCanvas($('chTR'));
@@ -1463,7 +1667,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     wrap.hidden = !D.has.hr; if (!D.has.hr) return;
     const [c, w, h] = fitCanvas($('hr')), T = tokens(), p = ps();
     const pts = D.moments.map((mo) => (mo.L > 0 && mo.Teff > 0 ? [Math.log10(mo.Teff), Math.log10(mo.L)] : null));
-    const good = pts.filter(Boolean);
+    // the other embedded masses, faint behind this one; the axes then cover every track so switching keeps them
+    const ghosts = S.datasets.filter((d) => !d.local && d.D !== D && trackOf(d)).map((d) => ({ d, t: trackOf(d) }));
+    const good = pts.filter(Boolean).concat(...ghosts.map((g) => g.t.pts.filter(Boolean)));
     let x0 = Math.min(...good.map((q) => q[0])), x1 = Math.max(...good.map((q) => q[0]));
     let y0 = Math.min(...good.map((q) => q[1])), y1 = Math.max(...good.map((q) => q[1]));
     const px = Math.max(0.1, (x1 - x0) * 0.08), py = Math.max(0.2, (y1 - y0) * 0.08);
@@ -1480,12 +1686,44 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (let x = Math.ceil(x0 / xs) * xs; x <= x1; x += xs) c.fillText(tickFmt(x, xs), X(x), pt + ph + 3);
     c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText('log Teff (K)', pl, h - 1);
     c.font = `700 ${11.5 * p}px ${uiFont()}`; c.textBaseline = 'alphabetic'; c.fillText('HR diagram · log L (L☉)', pl - 30 * p + 4, 13 * p);
-    c.strokeStyle = T.muted; c.lineWidth = 1.2 * p; c.beginPath();
-    let on = false; pts.forEach((q) => { if (!q) { on = false; return; } on ? c.lineTo(X(q[0]), Y(q[1])) : c.moveTo(X(q[0]), Y(q[1])); on = true; }); c.stroke();
+    const line = (P) => { c.beginPath(); let on = false; P.forEach((q) => { if (!q) { on = false; return; } on ? c.lineTo(X(q[0]), Y(q[1])) : c.moveTo(X(q[0]), Y(q[1])); on = true; }); c.stroke(); };
+    const placed = [];   // label boxes, so labels of close tracks do not overprint
+    const tag = (P, i, text, color, weight) => {
+      // at the zero age main sequence if free, otherwise at the track's end or its brightest point
+      c.font = `${weight} ${9.5 * p}px ${monoFont()}`;
+      const tw = c.measureText(text).width, hh = 6 * p, good = P.filter(Boolean);
+      const cands = [P[i] || good[0], good[good.length - 1], good.reduce((a, b) => (b[1] > a[1] ? b : a), good[0])];
+      for (const q of cands) {
+        if (!q) continue;
+        const x = clamp(X(q[0]) - 5 * p, pl + tw + 2, w), y = clamp(Y(q[1]), pt + 5 * p, pt + ph - 5 * p);
+        if (placed.some((B) => x - tw < B[2] && x > B[0] && y - hh < B[3] && y + hh > B[1])) continue;
+        placed.push([x - tw, y - hh, x, y + hh]);
+        c.fillStyle = color; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(text, x, y);
+        return;
+      }
+    };
+    if (ghosts.length) {
+      c.save(); c.strokeStyle = T.muted; c.lineWidth = 1 * p; c.globalAlpha = 0.32;
+      for (const g of ghosts) line(g.t.pts);
+      c.restore();
+    }
+    c.strokeStyle = ghosts.length ? T.ink : T.muted; c.lineWidth = 1.2 * p; c.globalAlpha = ghosts.length ? 0.75 : 1; line(pts); c.globalAlpha = 1;
     c.fillStyle = T.muted; pts.forEach((q) => { if (q) { c.beginPath(); c.arc(X(q[0]), Y(q[1]), 1.8 * p, 0, 2 * Math.PI); c.fill(); } });
+    if (ghosts.length) {
+      tag(pts, D.msStart, fmtMass(D.moments[0].M), T.ink, 700);
+      c.save(); c.globalAlpha = 0.85;
+      for (const g of ghosts) tag(g.t.pts, g.t.zams, String(+g.d.mass.toPrecision(3)), T.muted, 400);
+      c.restore();
+    }
     const q = pts[S.idx];
     if (q) { c.beginPath(); c.arc(X(q[0]), Y(q[1]), 5.5 * p, 0, 2 * Math.PI); c.fillStyle = T.accent; c.fill(); c.lineWidth = 2 * p; c.strokeStyle = T.canvas; c.stroke(); }
   }
+  // HR track of a dataset: from the build (before unpacking) or from the unpacked data
+  function trackOf(d) {
+    if (d.D) return { pts: d.D.moments.map((mo) => (mo.L > 0 && mo.Teff > 0 ? [Math.log10(mo.Teff), Math.log10(mo.L)] : null)), zams: d.D.msStart };
+    return Array.isArray(d.track) && d.track.filter(Boolean).length >= 2 ? { pts: d.track, zams: d.zams || 0 } : null;
+  }
+  const fmtMass = (m) => (isNum(m) ? +m.toPrecision(3) + ' M☉' : '?');
 
   // ---------- panel ----------
   function updatePanel() {
@@ -1502,6 +1740,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('oL').textContent = mo.L != null ? sci(mo.L, 4) + ' L☉' : '—';
     $('oTeff').textContent = mo.Teff != null ? grp(mo.Teff) + ' K' : '—';
     const cc = [['H', mo.cH], ['He', mo.cHe], ['C', mo.cC], ['O', mo.cO]].filter((x) => x[1] != null);
+    for (const e of ELS.slice(4)) if (mo[e.key] && mo[e.key][0] >= 0.01) cc.push([e.name, mo[e.key][0]]);
     $('oCenter').textContent = cc.length ? cc.map(([k, v]) => k + ' ' + sci(v, 3)).join(' · ') : '—';
     // features of this moment
     const F = [], M = mapper(mo);
@@ -1518,7 +1757,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       F.push(t + small(mo.front.r));
     } else if (mo.phase) F.push('No solid zone yet (eos_phase below 0.5 everywhere)');
     if (mo.psep) { let mx = 0, mi = -1; mo.psep.forEach((v, i) => { if (v > mx) { mx = v; mi = i; } }); if (mi >= 0) F.push(`Peak ε_phase sep ${sci(mx)} erg g⁻¹ s⁻¹ at m = ${sci(mo.mass[mi], 4)} M☉`); }
-    $('features').innerHTML = F.map((x) => '<li>' + x + '</li>').join('');
+    if (mo.fe) {
+      F.push(`Iron group core (fe_grp ≥ 0.5) out to m = ${sci(mo.fe.m, 3)} M☉, r = ${fmtKm(mo.fe.r)}${small(mo.fe.r)}`);
+      if (mo.fe.vIn > 0) F.push(`Fastest infall ${grp(mo.fe.vIn / 1e5)} km/s at m = ${sci(mo.mass[mo.fe.vInI], 3)} M☉ (MESA velocity)`);
+    }
+    let next = '';
+    if (D.collapse) {
+      const last = D.moments[D.N - 1];
+      if (S.idx === D.N - 1) next = 'This is the last saved moment: the iron core has begun to collapse. Next comes a core collapse supernova, which this MESA run does not model, so nothing past this moment is shown.';
+      else if (S.idx >= D.ageMonoFrom && mo.age != null && last.age != null && mo.stage !== 'Pre main sequence') {
+        const dt = last.age - mo.age, res = Math.abs(last.age) * 5e-10;   // ages are stored to 10 significant figures
+        F.push(dt > 4 * res ? `Time left before core collapse: ${fmtDur(dt)}` : `Time left before core collapse: less than the stored age resolution (about ${fmtDur(4 * res)})`);
+      }
+    }
+    $('features').innerHTML = F.map((x) => '<li>' + x + '</li>').join('') + (next ? `<li class="next">${next}</li>` : '');
     // ages
     const tie = (S.idx > 0 && D.moments[S.idx - 1].age === mo.age) || (S.idx < D.N - 1 && D.moments[S.idx + 1].age === mo.age);
     $('ageHint').textContent = 'Readouts always show the saved moment. The stage label is inferred from the center abundances and the radius.' +
@@ -1538,14 +1790,21 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const mo = cur(), D = S.D, set = (id, t) => { $(id).innerHTML = t; };
     const i = probeZone(mo);
     $('pMixW').hidden = !D.has.mix; $('pEpsW').hidden = !D.has.eps; $('pEtaW').hidden = !D.has.eta;
-    $('pPhW').hidden = !D.has.phase; $('pGamW').hidden = !D.has.gam; $('pPsW').hidden = !D.has.psep;
-    if (i < 0) { for (const id of ['pR', 'pM', 'pT', 'pRho', 'pX', 'pMix', 'pEps', 'pEta', 'pZone', 'pPh', 'pGam', 'pPs']) set(id, '—'); return; }
+    $('pPhW').hidden = !D.has.phase; $('pGamW').hidden = !D.has.gam; $('pPsW').hidden = !D.has.psep; $('pVelW').hidden = !D.has.vel;
+    if (i < 0) { for (const id of ['pR', 'pM', 'pT', 'pRho', 'pX', 'pMix', 'pEps', 'pEta', 'pZone', 'pPh', 'pGam', 'pPs', 'pVel']) set(id, '—'); return; }
     const r = mo.r[i];
     set('pR', `${fmtRsun(r)} <small>· ${fmtKm(r)} · ${sci(r / mo.R, 3)} R</small>`);
     set('pM', `${sci(mo.mass[i], 4)} M☉ <small>· ${sci(mo.mass[i] / mo.M, 3)} M</small>`);
     set('pT', mo.logT && mo.logT[i] != null ? sci(10 ** mo.logT[i]) + ' K' : '—');
     set('pRho', mo.logRho && mo.logRho[i] != null ? sci(10 ** mo.logRho[i]) + ' g/cm³' : '—');
-    set('pX', ELS.filter((e) => mo[e.key]).map((e) => `${e.name} ${sci(mo[e.key][i], 2)}`).join(' · ') || '—');
+    {
+      // with a big network, list only the fractions that matter here
+      const els = ELS.filter((e) => mo[e.key]), many = els.length > 6;
+      const keep = many ? els.filter((e) => (mo[e.key][i] || 0) >= 1e-4) : els;
+      set('pX', (keep.map((e) => `${e.name} ${sci(mo[e.key][i], 2)}`).join(' · ') || '—') + (many && keep.length < els.length ? ' <small>· others below 10⁻⁴</small>' : ''));
+    }
+    if (mo.vel) { const v = mo.vel[i] || 0; set('pVel', `${sci(v / 1e5, 3)} km/s <small>· ${v < 0 ? 'inward' : v > 0 ? 'outward' : 'at rest'}</small>`); }
+    else set('pVel', '—');
     if (mo.mix) {
       let t = mixName(mo.mix[i] ?? 0);
       if (mo.cv && mo.cv[i] != null && mo.cv[i] > -50) { const v = 10 ** mo.cv[i]; t += ` <small>· v<sub>conv</sub> ${v >= 1e5 ? sci(v / 1e5) + ' km/s' : sci(v) + ' cm/s'}</small>`; }
@@ -1554,8 +1813,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (mo.eps) {
       const e = mo.eps[i]; let t = sci(e) + ' erg g⁻¹ s⁻¹';
       if (e > 0 && D.has.chan) {
-        const fH = ((mo.pp ? mo.pp[i] || 0 : 0) + (mo.cno ? mo.cno[i] || 0 : 0)) / e, fHe = (mo.ta ? mo.ta[i] || 0 : 0) / e;
-        t += ` <small>· pp+CNO ${Math.round(clamp(fH, 0, 9.99) * 100)}%, 3α ${Math.round(clamp(fHe, 0, 9.99) * 100)}%</small>`;
+        const f = (a) => (a ? a[i] || 0 : 0) / e;
+        t += ` <small>· ${chanText(D, clamp(f(mo.pp) + f(mo.cno), 0, 9.99), clamp(f(mo.ta), 0, 9.99), clamp(f(mo.bc), 0, 9.99), clamp(f(mo.bo), 0, 9.99))}</small>`;
       }
       set('pEps', t);
     } else set('pEps', '—');
@@ -1599,6 +1858,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       for (const cvs of K.querySelectorAll('canvas')) swatch(cvs, cvs.dataset.t, T);
     }
     $('burnHint').hidden = !D.has.eps;
+    if (D.has.eps) {
+      const cols = [];
+      if (D.has.hhe) cols.push('pp, cno and tri_alpha');
+      if (D.has.cburn) cols.push('c12_c12 + c12_o16 (carbon burning)');
+      if (D.has.oburn) cols.push('o16_o16 (oxygen burning)');
+      const late = D.has.cburn || D.has.oburn;
+      const keys = [...(D.has.hhe ? ['H', 'He'] : []), ...(D.has.cburn ? ['C'] : []), ...(D.has.oburn ? ['O'] : []), 'other'];
+      $('burnHint').innerHTML = 'Glow marks zones with ε<sub>nuc</sub> above 10 erg g⁻¹ s⁻¹ and above 10⁻⁴ of the moment\'s peak.' +
+        (D.has.chan ? ` Channel shares use MESA's ${D.has.hhe ? cols[0] + ' columns' + (cols.length > 1 ? ', ' + cols.slice(1).join(' and ') : '') : cols.join(' and ')}; any remainder is other reactions` +
+          (late ? ' (in a massive star this includes neon and silicon burning, which MESA files under categories this file does not keep).' : '.') +
+          '<br>' + keys.map((k) => `<span class="chan"><i style="background:${css(CHAN[k].glow)}"></i>${CHAN[k].name}</span>`).join('') : '');
+    }
   }
   function swatch(cvs, t, T) {
     const w = 30, h = 14; cvs.width = w * dpr; cvs.height = h * dpr; const c = cvs.getContext('2d');
@@ -1639,8 +1910,24 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ];
     let h = rows.map(([k, v]) => `<div><b>${k}</b> ${escapeHtml(v)}</div>`).join('');
     if (D.ageTies) h += '<div>Ages are stored to 4 significant figures, so short phases can show equal ages.</div>';
-    if (!D.has.phase) h += '<div>No eos_phase column: the white dwarf crystal layer is hidden.</div>';
+    const kit = massiveNote(D);
+    if (kit) h += `<div><b>Model</b> ${escapeHtml(kit)}</div>`;
+    if (D.collapse) h += `<div><b>Ending</b> iron core collapse: MESA stops the run once the iron core falls inward faster than the inlist's fe_core_infall_limit. Fastest infall in the last moment: ${grp(D.moments[D.N - 1].fe.vIn / 1e5)} km/s.</div>`;
+    if (!D.has.phase && !D.has.massive) h += '<div>No eos_phase column: the white dwarf crystal layer is hidden.</div>';
     $('notes').innerHTML = h;
+  }
+  // for runs from make_mass_grid.py (MESA's own test suite cases); metallicity and mass loss are read from the data
+  function massiveNote(D) {
+    const kit = (D.source || []).some((s) => /^slice_grid_/.test(s) || /^LOGS_(make_late_pre_zams|to_end_core_c_burn|to_lgTmax|to_cc)$/.test(s));
+    const mo0 = D.moments[0], last = D.moments[D.N - 1];
+    if (!kit || !(mo0.M >= 8)) return '';
+    const parts = ['MESA test suite model'];
+    if (mo0.h1 && mo0.he4) {
+      const Z = 1 - (mo0.h1[mo0.n - 1] || 0) - (mo0.he4[mo0.n - 1] || 0);
+      if (Z > 0 && Z < 0.1) parts.push((Z >= 0.012 && Z <= 0.022 ? 'about solar metallicity ' : 'metallicity ') + `(surface Z = ${Z.toFixed(3)} at the start)`);
+    }
+    if (Math.abs(last.M - mo0.M) <= 1e-3 * mo0.M) parts.push(`no mass loss (M stays ${sci(mo0.M, 4)} M☉)`);
+    return parts.join(', ');
   }
   const escapeHtml = (s) => String(s).replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
 
@@ -1705,32 +1992,126 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function resetZoom() { const mo = cur(); S.zoomDec = 0; S.viewAbs = mo.R; S.preset = -1; markAll(); }
 
   // ---------- datasets ----------
+  // embedded datasets with a known initial mass sit on the mass slider; a loaded file is its own choice
+  const embedded = () => S.datasets.filter((d) => !d.local && isNum(d.mass) && d.mass > 0).sort((a, b) => a.mass - b.mass);
+  let massPos = [];   // slider position (0 to 1) of each embedded dataset, in mass order
+  function massPositions(list, gap) {
+    if (list.length < 2) return list.map(() => 0.5);
+    const lg = list.map((d) => Math.log10(d.mass)), a = lg[0], b = lg[lg.length - 1];
+    const p = lg.map((v) => (b > a ? (v - a) / (b - a) : 0));
+    const g = Math.min(gap, 1 / (list.length - 1));   // log mass, but pushed apart where tick labels would touch
+    for (let k = 1; k < p.length; k++) p[k] = Math.max(p[k], p[k - 1] + g);
+    p[p.length - 1] = 1;
+    for (let k = p.length - 2; k >= 0; k--) p[k] = Math.min(p[k], p[k + 1] - g);
+    return p;
+  }
+  function renderMassSlider() {
+    const list = embedded(), box = $('massBox'), ticks = $('massTicks');
+    box.hidden = !list.length;
+    if (!list.length) return;
+    ticks.innerHTML = list.map((d) => `<span>${+d.mass.toPrecision(3)}</span>`).join('');
+    const spans = [...ticks.children], tw = ticks.clientWidth || 240;
+    const lw = Math.max(16, ...spans.map((s) => s.getBoundingClientRect().width - 0));
+    massPos = massPositions(list, (lw + 6) / tw);
+    spans.forEach((s, k) => { s.style.left = (massPos[k] * 100).toFixed(2) + '%'; });
+    $('mass').disabled = list.length < 2;
+    syncMassSlider();
+  }
+  function syncMassSlider(busy) {
+    const list = embedded(), inp = $('mass'); if (!list.length) return;
+    const k = list.findIndex((d) => d.D && d.D === S.D);
+    [...$('massTicks').children].forEach((s, j) => s.classList.toggle('on', j === k));
+    if (k >= 0) {
+      inp.value = Math.round(massPos[k] * 1000);
+      inp.setAttribute('aria-valuetext', `${+list[k].mass.toPrecision(3)} solar masses`);
+    } else inp.setAttribute('aria-valuetext', 'Your loaded file is shown. Move the slider to pick a mass.');
+    $('massOut').textContent = busy ? 'unpacking…' : k >= 0 ? fmtMass(list[k].mass) : S.D ? 'Your file' : '—';
+    const hint = [k >= 0 && S.D ? massiveNote(S.D) : '', list.length < 2 ? 'More masses appear here as MESA runs are added' : ''].filter(Boolean).join('. ');
+    $('massHint').textContent = hint ? hint + '.' : ''; $('massHint').hidden = !hint;
+  }
+  let massTarget = null;   // the dataset being unpacked, so quick key presses keep stepping from it
+  function massPick(k) {
+    const list = embedded(), d = list[clamp(k, 0, list.length - 1)];
+    massTarget = d && !(d.D && d.D === S.D) ? d : null;
+    if (!d || (d.D && d.D === S.D)) { syncMassSlider(); return; }
+    selectDataset(S.datasets.indexOf(d), true);
+  }
+  $('mass').addEventListener('input', (e) => {
+    const v = +e.target.value / 1000; let best = 0;
+    massPos.forEach((q, k) => { if (Math.abs(q - v) < Math.abs(massPos[best] - v)) best = k; });
+    e.target.value = Math.round(massPos[best] * 1000);   // snap to a mass that has a run
+    massPick(best);
+  });
+  $('mass').addEventListener('keydown', (e) => {
+    const list = embedded(); if (list.length < 2) return;
+    let k = massTarget ? list.indexOf(massTarget) : list.findIndex((d) => d.D && d.D === S.D);
+    const step = { ArrowRight: 1, ArrowUp: 1, PageUp: 1, ArrowLeft: -1, ArrowDown: -1, PageDown: -1 }[e.key];
+    if (step) k = k < 0 ? (step > 0 ? 0 : list.length - 1) : k + step;
+    else if (e.key === 'Home') k = 0;
+    else if (e.key === 'End') k = list.length - 1;
+    else return;
+    e.preventDefault(); massPick(k);
+  });
+
+  // the comparable moment in another run: same inferred stage at the same progress through it
+  function stageKeys(D) {
+    if (D.keys) return D.keys;
+    const ms = D.moments, cH0 = ms[0].cH, byStage = new Map();
+    ms.forEach((mo, i) => { if (!byStage.has(mo.stage)) byStage.set(mo.stage, []); byStage.get(mo.stage).push(i); });
+    const hePk = Math.max(0, ...ms.filter((mo) => mo.stage === 'Core helium burning').map((mo) => mo.cHe || 0));
+    return (D.keys = ms.map((mo, i) => {
+      let f;
+      if (mo.stage === 'Core hydrogen burning' && cH0 > 1e-3 && mo.cH != null) f = clamp((cH0 - mo.cH) / (cH0 - 1e-3), 0, 1);
+      else if (mo.stage === 'Core helium burning' && hePk > 0 && mo.cHe != null) f = clamp(1 - mo.cHe / hePk, 0, 1);
+      else { const same = byStage.get(mo.stage); f = same.length > 1 ? same.indexOf(i) / (same.length - 1) : 0; }
+      return { st: mo.stage.replace(/^Supergiant/, 'Giant'), f };
+    }));
+  }
+  function matchMoment(A, ia, B) {
+    if (ia >= A.N - 1) return B.N - 1;   // the end of one life to the end of the other
+    const a = stageKeys(A)[ia], kb = stageKeys(B);
+    let best = -1, bd = Infinity;
+    kb.forEach((b, j) => { if (b.st === a.st && Math.abs(b.f - a.f) < bd) { bd = Math.abs(b.f - a.f); best = j; } });
+    return best >= 0 ? best : B.msStart;   // no such stage: start near the zero age main sequence
+  }
+
   function renderDatasetChips() {
     const box = $('datasets'); box.innerHTML = '';
+    const slider = embedded().length >= 2;
     S.datasets.forEach((d, k) => {
+      if (slider && !d.local && isNum(d.mass) && d.mass > 0) return;
       const b = document.createElement('button'); b.type = 'button';
-      b.textContent = d.label + (d.local ? ' (local file)' : '');
-      b.setAttribute('aria-pressed', String(S.D && d.D === S.D));
-      b.addEventListener('click', () => selectDataset(k)); box.appendChild(b);
+      b.textContent = d.local ? 'Your file: ' + d.label : d.label;
+      b.setAttribute('aria-pressed', String(!!(S.D && d.D === S.D)));
+      b.addEventListener('click', () => (d.local ? (useDataset(d.D, matchMoment(S.D, S.idx, d.D)), renderDatasetChips(), syncMassSlider()) : selectDataset(k, true)));
+      box.appendChild(b);
     });
+    box.hidden = !box.children.length;
   }
-  async function selectDataset(k) {
-    const d = S.datasets[k]; const msg = $('msg');
+  let selSeq = 0;
+  async function selectDataset(k, match) {
+    const d = S.datasets[k], msg = $('msg'), seq = ++selSeq;
     try {
       if (!d.D) {
-        msg.hidden = false; msg.textContent = 'Unpacking the MESA profiles…';
-        const bytes = Uint8Array.from(atob(d.b64), (ch) => ch.charCodeAt(0));
-        d.D = prepare(JSON.parse(await bytesToText(bytes)), d.label);
-        d.D.fileName = d.file;
+        if (!S.D) { msg.hidden = false; msg.textContent = 'Unpacking the MESA profiles…'; } else syncMassSlider(true);
+        d.pending = d.pending || (async () => {
+          const bytes = Uint8Array.from(atob(d.b64), (ch) => ch.charCodeAt(0));
+          const D = prepare(JSON.parse(await bytesToText(bytes)), d.label);
+          D.fileName = d.file; d.D = D;
+        })();
+        await d.pending;
       }
-      useDataset(d.D);
+      if (seq !== selSeq) return;      // a later pick won
+      massTarget = null;
+      useDataset(d.D, match && S.D ? matchMoment(S.D, S.idx, d.D) : null);
       msg.hidden = true;
-    } catch (err) { msg.hidden = false; msg.textContent = String(err.message || err); }
-    renderDatasetChips();
+    } catch (err) { d.pending = null; msg.hidden = false; msg.textContent = String(err.message || err); }
+    renderDatasetChips(); syncMassSlider();
   }
-  function useDataset(D) {
+  function useDataset(D, start) {
     setPlaying(false);
-    S.D = D; S.idx = 0; S.zoomDec = 0; S.hold = false; $('tHold').checked = false; S.viewAbs = D.moments[0].R; S.preset = -1;
+    S.D = D; S.idx = start != null ? clamp(start, 0, D.N - 1) : 0;
+    S.zoomDec = 0; S.hold = false; $('tHold').checked = false; S.viewAbs = D.moments[S.idx].R; S.preset = -1;
     S.probe = null; S.fade = null;
     const showBtn = (m, on) => { document.querySelector(`#modes button[data-m="${m}"]`).hidden = !on; };
     showBtn('glow', D.has.logT); showBtn('temp', D.has.logT); showBtn('dens', D.has.logRho); showBtn('burn', D.has.eps); showBtn('phase', D.has.phase); showBtn('gam', D.has.gam);
@@ -1753,7 +2134,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         const D = prepare(JSON.parse(await bytesToText(bytes)), f.name.replace(/\.json(\.gz)?$/, ''));
         D.fileName = f.name;
         S.datasets.push({ label: D.label, local: true, D, file: f.name });
-        useDataset(D); $('msg').hidden = true; renderDatasetChips();
+        useDataset(D, S.D ? matchMoment(S.D, S.idx, D) : null); $('msg').hidden = true; renderDatasetChips(); syncMassSlider();
       } catch (ex) { err.hidden = false; err.textContent = 'Could not read ' + f.name + ': ' + (ex.message || ex); }
       e.target.value = '';
     };
@@ -1853,7 +2234,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
     projBtn.setAttribute('aria-pressed', String(on));
     try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
-    requestAnimationFrame(() => { resize(); });
+    requestAnimationFrame(() => { resize(); renderMassSlider(); });
   }
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
@@ -1865,10 +2246,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   new ResizeObserver(() => { chartsDirty = true; schedule(); }).observe(document.querySelector('.charts'));
 
   // ---------- boot ----------
-  S.datasets = EMBED.map((d) => ({ label: d.label, file: d.file, b64: d.b64 }));
-  renderDatasetChips();
+  const massFromLabel = (s) => { const m = /(\d+(?:\.\d+)?)/.exec(s || ''); return m ? +m[1] : null; };
+  S.datasets = EMBED.map((d) => ({ label: d.label, file: d.file, b64: d.b64, mass: isNum(d.mass) ? d.mass : massFromLabel(d.label),
+    track: d.track, zams: d.zams, source: d.source }));
+  renderDatasetChips(); renderMassSlider();
+  new ResizeObserver(() => renderMassSlider()).observe($('massBox'));
   resize();
-  if (S.datasets.length) selectDataset(0);
+  if (S.datasets.length) {
+    // open on the run closest to the Sun's mass when there are several
+    const list = embedded(), first = list.length ? list.reduce((a, b) => (Math.abs(Math.log10(b.mass)) < Math.abs(Math.log10(a.mass)) ? b : a)) : S.datasets[0];
+    selectDataset(S.datasets.indexOf(first));
+  }
   else $('msg').textContent = 'No datasets are embedded in this page. Use Load MESA file to open a .json.gz from extract_profiles.py.';
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(markAll);
 })();
