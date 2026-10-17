@@ -1,0 +1,1660 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Magnetic Fields of Currents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one canvas (straight wires in cross section, or a loop or solenoid seen side on with B along its axis plotted below); instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --fout: #17855f;
+  --fin: #7a45c0;
+  --bline: #4c5866;
+  --shade: #2b60b5;
+  --on-wire: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --fout: #4fd1a0; --fin: #b48cff; --bline: #9aa7b8; --shade: #69a0ff; --on-wire: #10161e; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --fout: #4fd1a0; --fin: #b48cff; --bline: #9aa7b8; --shade: #69a0ff; --on-wire: #10161e; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px; border-bottom: 1px solid var(--line); }
+.headline { margin-left: auto; font-size: 0.95rem; font-weight: 600; white-space: nowrap; text-align: right; line-height: 1.3; }
+.headline small { display: block; font-weight: 400; color: var(--muted); font-size: 0.78rem; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#can { touch-action: none; outline: none; }
+#can:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible, li:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.row3 .btn, .row2 .btn { padding: 5px 4px; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg.full { display: flex; }
+.seg.full button { flex: 1; padding: 4px 4px; }
+
+.wi { width: 1.05em; height: 1.05em; vertical-align: -0.17em; fill: none; stroke: currentColor; stroke-width: 1.6; margin-right: 4px; }
+.wi .f { fill: currentColor; stroke: none; }
+.wi.out { color: var(--pos); } .wi.in { color: var(--neg); } .wi.off { color: var(--muted); }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.ctl { display: flex; flex-direction: column; gap: 4px; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .big dd { font-size: 1.15rem; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.8rem; }
+.readout dd.note { font-family: var(--font-ui); font-weight: 400; font-size: 0.85rem; color: var(--muted); }
+.flag { margin: 0; font-size: 0.86rem; font-weight: 700; border: 1px solid var(--pos); color: var(--pos); border-radius: 6px; padding: 6px 10px; }
+.flag span { display: block; font-weight: 400; color: var(--ink); margin-top: 2px; }
+
+.qlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.qlist li { display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 2px 8px; font-size: 0.84rem; padding: 4px 6px; border-radius: 6px; border: 1px solid transparent; cursor: pointer; }
+.qlist li[aria-selected="true"] { border-color: var(--accent); }
+.qlist .wi { align-self: center; margin: 0; }
+.qlist .qv { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 600; }
+.qlist .qs { grid-column: 2 / 4; color: var(--muted); font-size: 0.78rem; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 3px solid; }
+.swatch.bl { border-color: var(--bline); border-top-width: 1.5px; }
+.swatch.out { border-color: var(--fout); } .swatch.in { border-color: var(--fin); }
+.swatch.force { border-color: var(--equi); }
+.swatch.exact { border-color: var(--accent); }
+.swatch.sheet { border-color: var(--equi); border-top-style: dashed; }
+.swatch.ideal { border-color: var(--muted); border-top-style: dashed; border-top-width: 2px; }
+.swatch.needle { height: 6px; border: 0; background: linear-gradient(90deg, var(--muted) 50%, var(--pos) 50%); clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%); }
+.swatch.grip { width: 14px; height: 10px; border: 1.5px solid var(--muted); border-radius: 3px; margin: 0 4px; }
+.swatch.shade { height: 10px; border: 0; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--shade) 55%, transparent)); border-radius: 2px; }
+.rhr { display: block; width: 100%; max-width: 280px; height: auto; color: var(--ink); }
+.rhr .wire { stroke: var(--ink); stroke-width: 2.4; fill: none; }
+.rhr .ring { stroke: var(--accent); stroke-width: 2.2; fill: none; }
+.rhr .ringbg { stroke: var(--surface); stroke-width: 6; fill: none; }
+.rhr .tip { fill: var(--accent); }
+.rhr .itip { fill: var(--ink); }
+.rhr .o { fill: var(--pos); } .rhr .n { fill: var(--neg); }
+.rhr .on { fill: var(--on-wire); } .rhr .onl { stroke: var(--on-wire); stroke-width: 1.8; }
+.rhr text { font-family: var(--font-ui); font-size: 12px; fill: var(--muted); }
+.rhr text.b { font-weight: 700; fill: var(--ink); font-size: 13px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; }
+  .pane { height: 74vh; min-height: 480px; }
+  .stage.side .pane { height: 82vh; min-height: 560px; }
+  .rail { overflow: visible; }
+  .headline { margin-left: 0; text-align: left; white-space: normal; flex-basis: 100%; }
+}
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Magnetic Fields of Currents</h1>
+      <p>Every current is circled by a magnetic field. Move wires to see their fields add and the forces between them, test Ampère's law on any loop, and bend the current into a loop or a solenoid.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">lengths in cm · I in A · B in µT or mT · μ₀ = 1.25663706212×10⁻⁶ N/A² ≈ 4π×10⁻⁷</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View">
+          <button type="button" id="scWires" aria-pressed="true">Straight wires</button>
+          <button type="button" id="scSide" aria-pressed="false">Loop and solenoid</button>
+        </div>
+        <button type="button" class="btn" id="ampBtn" aria-pressed="false">Amperian loop</button>
+        <span class="headline mono" id="headline"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="Magnetic field drawing. Straight wires view: wires cross the page, drag a wire, the probe or the Amperian loop. Keys: N selects the next object, arrow keys move it, plus and minus change the selected wire's current, R reverses it, Delete removes it, A shows or hides the Amperian loop. Loop and solenoid view: drag the grips to change the radius and length, drag the probe or click the plot below to place it on the axis; arrow keys move the probe, plus and minus change the number of turns."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="one" aria-pressed="false">One wire</button>
+          <button type="button" data-p="par" aria-pressed="true">Two wires, parallel currents</button>
+          <button type="button" data-p="anti" aria-pressed="false">Two wires, opposite currents</button>
+          <button type="button" data-p="amp" aria-pressed="false">Ampère's law</button>
+          <button type="button" data-p="loop" aria-pressed="false">Current loop</button>
+          <button type="button" data-p="sol" aria-pressed="false">Solenoid</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <!-- straight wires -->
+      <section data-scene="wires" data-amp id="secAmp" hidden>
+        <h2>Ampère's law</h2>
+        <div class="seg full" role="group" aria-label="Loop shape">
+          <button type="button" id="shCircle" aria-pressed="true">Circle</button>
+          <button type="button" id="shRect" aria-pressed="false">Rectangle</button>
+        </div>
+        <div class="seg full" role="group" aria-label="Direction around the loop">
+          <button type="button" id="dirCcw" aria-pressed="true">Counterclockwise</button>
+          <button type="button" id="dirCw" aria-pressed="false">Clockwise</button>
+        </div>
+        <dl class="readout">
+          <div class="wide"><dt>Loop</dt><dd id="aShape">—</dd></div>
+          <div class="wide"><dt>Current through the loop I<sub>enc</sub></dt><dd id="aIenc">—</dd></div>
+          <div class="wide big"><dt>Numerical ∮B·dl around the loop</dt><dd id="aNum">—</dd></div>
+          <div class="wide big"><dt>μ₀ I<sub>enc</sub></dt><dd id="aMu">—</dd></div>
+          <div class="wide"><dt>Difference, relative to μ₀ Σ|I|</dt><dd id="aDiff">—</dd></div>
+        </dl>
+        <p class="flag" id="onLoop" hidden>A wire sits on the loop.<span>B·dl grows without limit there, so ∮B·dl is not defined. Move the wire or the loop a little.</span></p>
+        <p class="hint">Sign rule: curl the fingers of your right hand along the loop's direction; a current along your thumb counts as positive. For a counterclockwise loop that means out of the page. The loop color shows B·dl: green where B runs along the loop's direction, purple where it runs against it.</p>
+      </section>
+      <section data-scene="wires">
+        <h2>Wires</h2>
+        <div class="row2">
+          <button type="button" class="btn" id="addOut"><svg class="wi out" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><circle class="f" cx="8" cy="8" r="1.9"/></svg>Add out</button>
+          <button type="button" class="btn" id="addIn"><svg class="wi in" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><path d="M4.6 4.6 11.4 11.4 M11.4 4.6 4.6 11.4"/></svg>Add in</button>
+        </div>
+        <div class="ctl" id="iCtl">
+          <div class="slider-head"><label for="sI" id="lI">Current in wire 1</label><output id="oI" class="mono" for="sI"></output></div>
+          <input type="range" id="sI" min="-20" max="20" step="0.5">
+        </div>
+        <div class="row2">
+          <button type="button" class="btn" id="flipW">Reverse current</button>
+          <button type="button" class="btn" id="delW">Remove wire</button>
+        </div>
+        <ul class="qlist" id="wList" aria-label="Wires: current, position and the force per meter on each"></ul>
+        <p class="hint">Positive current comes out of the page (<svg class="wi out" style="margin:0" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><circle class="f" cx="8" cy="8" r="1.9"/></svg>), negative goes into it (<svg class="wi in" style="margin:0" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><path d="M4.6 4.6 11.4 11.4 M11.4 4.6 4.6 11.4"/></svg>). Drag a wire to move it; double click it to reverse its current.</p>
+      </section>
+
+      <section data-scene="wires" id="secForce">
+        <h2>Force between currents</h2>
+        <dl class="readout" id="fRead"></dl>
+        <p class="hint">Each wire sits in the field of the others and feels F/L = I × B per meter of its length. Parallel currents attract and opposite currents repel, with equal and opposite forces (Newton's third law).</p>
+      </section>
+
+
+      <!-- loop and solenoid -->
+      <section data-scene="side" hidden>
+        <h2>Loop and solenoid</h2>
+        <div class="ctl">
+          <div class="slider-head"><label for="sN">Number of turns N</label><output id="oN" class="mono" for="sN"></output></div>
+          <input type="range" id="sN" min="1" max="80" step="1">
+        </div>
+        <div class="ctl" id="lCtl">
+          <div class="slider-head"><label for="sL">Length L</label><output id="oL" class="mono" for="sL"></output></div>
+          <input type="range" id="sL" min="1" max="40" step="0.5">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sR">Radius R</label><output id="oR" class="mono" for="sR"></output></div>
+          <input type="range" id="sR" min="0.5" max="8" step="0.1">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sIs">Current I</label><output id="oIs" class="mono" for="sIs"></output></div>
+          <input type="range" id="sIs" min="-20" max="20" step="0.5">
+        </div>
+        <dl class="readout" id="sRead"></dl>
+        <p class="hint" id="sideHint"></p>
+      </section>
+
+      <section>
+        <h2>Probe</h2>
+        <dl class="readout">
+          <div class="wide big"><dt id="pLab">|B| at the probe</dt><dd id="pB">—</dd></div>
+          <div><dt id="pL1">B<sub>x</sub></dt><dd id="pC1">—</dd></div>
+          <div><dt id="pL2">B<sub>y</sub></dt><dd id="pC2">—</dd></div>
+          <div class="wide"><dt>Probe position and direction of B</dt><dd id="pPos">—</dd></div>
+        </dl>
+      </section>
+
+      <section>
+        <h2>Display</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tLines" checked>Field lines</label>
+          <label><input type="checkbox" id="tShade" checked>|B| shading</label>
+          <label><input type="checkbox" id="tCompass" checked>Compasses</label>
+          <label><input type="checkbox" id="tProbe" checked>Probe</label>
+          <label data-scene="wires"><input type="checkbox" id="tForce" checked>Forces</label>
+        </div>
+        <div class="key" id="key"></div>
+        <p class="hint" id="lineHint"></p>
+      </section>
+
+      <section>
+        <h2>Right hand rule</h2>
+        <svg class="rhr" viewBox="0 0 270 118" role="img" aria-label="Right hand rule. A wire with current I pointing up is circled by B, which runs counterclockwise seen from above. In cross section, a current out of the page has B circling counterclockwise, a current into the page has B circling clockwise.">
+          <path class="ring" d="M26 62 A34 11 0 0 1 94 62"/>
+          <line class="wire" x1="60" y1="108" x2="60" y2="18"/>
+          <polygon class="itip" points="60,7 54.5,19 65.5,19"/>
+          <path class="ringbg" d="M94 62 A34 11 0 0 1 26 62"/>
+          <path class="ring" d="M94 62 A34 11 0 0 1 26 62"/>
+          <polygon class="tip" points="67,73 59,68.5 59,77.5"/>
+          <text class="b" x="69" y="20">I</text>
+          <text class="b" x="98" y="84">B</text>
+          <circle class="o" cx="165" cy="58" r="9"/><circle class="on" cx="165" cy="58" r="2.6"/>
+          <path class="ring" d="M187 58 A22 22 0 1 0 176 77.05"/>
+          <polygon class="tip" points="181.2,74.1 177.1,82.1 171.8,74.6"/>
+          <circle class="n" cx="235" cy="58" r="9"/><path class="onl" d="M229.5 52.5 240.5 63.5 M240.5 52.5 229.5 63.5"/>
+          <path class="ring" d="M213 58 A22 22 0 1 1 224 77.05"/>
+          <polygon class="tip" points="218.8,74.1 222.9,82.1 228.2,74.6"/>
+          <text x="165" y="108" text-anchor="middle">out of page</text>
+          <text x="235" y="108" text-anchor="middle">into page</text>
+        </svg>
+        <p class="hint">Point your right thumb along the current; your fingers curl the way B circles the wire. In the drawing: a current out of the page gives counterclockwise circles, into the page gives clockwise ones. For a loop, curl your fingers along the current and your thumb points along B through the middle.</p>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint" id="modelHint"></p>
+      </section>
+    </aside>
+  </main>
+  <p class="sr" aria-live="polite" id="live"></p>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  // SI throughout inside the physics; positions come in as cm.
+  const MU0 = 1.25663706212e-6;   // N/A² (CODATA 2018), 4π×10⁻⁷ to within 6 parts in 10¹⁰
+  const CM = 0.01;
+  const TWO_PI = 2 * Math.PI;
+
+  // ---------- long straight wires along z, seen in cross section (the xy plane) ----------
+  // wire {x, y} in cm, I in A, positive out of the page (+z). B = μ₀I/(2πr) φ̂ with φ̂ = ẑ × r̂: a positive current
+  // is circled counterclockwise. Superposition: the sum over wires. Returns [Bx, By] in T.
+  function wireB(W, x, y, skip) {
+    let bx = 0, by = 0;
+    for (const w of W) {
+      if (w === skip || !w.I) continue;
+      const dx = (x - w.x) * CM, dy = (y - w.y) * CM, r2 = dx * dx + dy * dy;
+      if (r2 === 0) continue;
+      const f = MU0 * w.I / (TWO_PI * r2);
+      bx -= f * dy; by += f * dx;
+    }
+    return [bx, by];
+  }
+  // ψ = Σ I ln r (r in cm). The vector potential is A_z = −(μ₀/2π) ψ + const and B = (∂A_z/∂y, −∂A_z/∂x),
+  // so B is tangent to the contours of ψ: they are the field lines, and equal steps in ψ space them as 1/|B|.
+  function wirePsi(W, x, y) {
+    let p = 0;
+    for (const w of W) { if (!w.I) continue; const dx = x - w.x, dy = y - w.y; p += 0.5 * w.I * Math.log(dx * dx + dy * dy + 1e-30); }
+    return p;
+  }
+  // force per meter on wire j from the fields of all the others: F/L = I_j ẑ × B (N/m)
+  function wireForce(W, j) { const w = W[j], b = wireB(W, w.x, w.y, w); return [-w.I * b[1], w.I * b[0]]; }
+  // F/L between two long parallel wires d cm apart (N/m); positive means they attract
+  const pairForce = (I1, I2, d) => MU0 * I1 * I2 / (TWO_PI * d * CM);
+
+  // ---------- adaptive Gauss–Kronrod (7, 15) quadrature ----------
+  const XGK = [0.991455371120812639, 0.949107912342758525, 0.864864423359769073, 0.741531185599394440,
+    0.586087235467691130, 0.405845151377397167, 0.207784955007898468, 0];
+  const WGK = [0.022935322010529225, 0.063092092629978553, 0.104790010322250184, 0.140653259715525919,
+    0.169004726639267903, 0.190350578064785410, 0.204432940075298892, 0.209482141084727828];
+  const WG = [0.129484966168869693, 0.279705391489276668, 0.381830050505118945, 0.417959183673469388];
+  function gkPanel(f, a, b) {
+    const c = 0.5 * (a + b), h = 0.5 * (b - a);
+    let K = 0, G = 0;
+    for (let j = 0; j < 7; j++) { const s = f(c - h * XGK[j]) + f(c + h * XGK[j]); K += WGK[j] * s; if (j & 1) G += WG[j >> 1] * s; }
+    const v = f(c); K += WGK[7] * v; G += WG[3] * v;
+    return { a, b, v: K * h, e: Math.abs(K - G) * h };
+  }
+  // ∫ f over [bps[0], bps[last]], first split at the breakpoints, then always bisecting the worst panel
+  function integrate(f, bps, absTol, maxPanels) {
+    const pan = [];
+    for (let k = 0; k + 1 < bps.length; k++) if (bps[k + 1] > bps[k]) pan.push(gkPanel(f, bps[k], bps[k + 1]));
+    let v = 0, e = 0;
+    const sum = () => { v = 0; e = 0; for (const p of pan) { v += p.v; e += p.e; } };
+    sum();
+    while (pan.length < maxPanels && e > absTol) {
+      let w = 0;
+      for (let k = 1; k < pan.length; k++) if (pan[k].e > pan[w].e) w = k;
+      const p = pan[w], mid = 0.5 * (p.a + p.b);
+      if (!(mid > p.a && mid < p.b)) break;
+      pan.splice(w, 1, gkPanel(f, p.a, mid), gkPanel(f, mid, p.b));
+      sum();
+    }
+    return { v, e, panels: pan.length };
+  }
+  function breaks(a, b, extra) {
+    const out = [a];
+    for (const x of extra.slice().sort((p, q) => p - q)) if (x > a + 1e-9 * (b - a) && x < b - 1e-9 * (b - a) && x > out[out.length - 1]) out.push(x);
+    out.push(b);
+    return out;
+  }
+
+  // ---------- Amperian loops: circle {kind: 'circle', x, y, r} or rectangle {kind: 'rect', x, y, w, h}, in cm ----------
+  // pieces traversed counterclockwise; at(t) gives the point and dl/dt (cm per unit t); near(x, y) the t closest to a point
+  function loopPieces(L) {
+    if (L.kind === 'circle') return [{ a: 0, b: TWO_PI,
+      at: (t) => [L.x + L.r * Math.cos(t), L.y + L.r * Math.sin(t), -L.r * Math.sin(t), L.r * Math.cos(t)],
+      near: (px, py) => { let t = Math.atan2(py - L.y, px - L.x); if (t < 0) t += TWO_PI; return t; } }];
+    const a = L.w / 2, b = L.h / 2, C = [[L.x - a, L.y - b], [L.x + a, L.y - b], [L.x + a, L.y + b], [L.x - a, L.y + b]];
+    return C.map((p, k) => {
+      const q = C[(k + 1) % 4], ex = q[0] - p[0], ey = q[1] - p[1], l2 = ex * ex + ey * ey;
+      return { a: 0, b: 1, at: (t) => [p[0] + ex * t, p[1] + ey * t, ex, ey], near: (px, py) => ((px - p[0]) * ex + (py - p[1]) * ey) / l2 };
+    });
+  }
+  // ∮ B·dl in T·m, computed numerically with adaptive quadrature (the loop never uses Ampère's law itself)
+  function circulation(W, L, ccw) {
+    let sumI = 0; for (const w of W) sumI += Math.abs(w.I);
+    if (sumI === 0) return { v: 0, e: 0, panels: 0 };
+    const tol = 1e-10 * MU0 * sumI;
+    let v = 0, e = 0, n = 0;
+    for (const P of loopPieces(L)) {
+      const f = (t) => { const p = P.at(t), b = wireB(W, p[0], p[1]); return (b[0] * p[2] + b[1] * p[3]) * CM; };
+      const r = integrate(f, breaks(P.a, P.b, W.map((w) => P.near(w.x, w.y))), tol / 4, 6000);
+      v += r.v; e += r.e; n += r.panels;
+    }
+    return { v: ccw ? v : -v, e, panels: n };
+  }
+  const insideLoop = (L, x, y) => (L.kind === 'circle' ? Math.hypot(x - L.x, y - L.y) < L.r : Math.abs(x - L.x) < L.w / 2 && Math.abs(y - L.y) < L.h / 2);
+  function loopDist(L, x, y) {
+    if (L.kind === 'circle') return Math.abs(Math.hypot(x - L.x, y - L.y) - L.r);
+    const dx = Math.abs(x - L.x) - L.w / 2, dy = Math.abs(y - L.y) - L.h / 2;
+    return dx > 0 || dy > 0 ? Math.hypot(Math.max(dx, 0), Math.max(dy, 0)) : Math.min(-dx, -dy);
+  }
+  // current through the loop with the right hand sign: out of the page counts positive for a counterclockwise loop
+  function enclosedI(W, L, ccw) { let s = 0; for (const w of W) if (insideLoop(L, w.x, w.y)) s += w.I; return ccw ? s : -s; }
+
+  // ---------- circular loops: exact 3D Biot–Savart field in closed form ----------
+  // complete elliptic integrals K(m) and E(m), parameter m = k², by the arithmetic geometric mean
+  function ellipKE(m) {
+    if (m > 1 - 1e-15) m = 1 - 1e-15;
+    let a = 1, b = Math.sqrt(1 - m), s = m / 2, p = 0.5;
+    for (let i = 0; i < 40; i++) {
+      const c = (a - b) / 2, an = (a + b) / 2;
+      b = Math.sqrt(a * b); a = an; p *= 2; s += p * c * c;
+      if (c < 1e-15 * a) break;
+    }
+    const K = Math.PI / (2 * a);
+    return [K, K * (1 - s)];
+  }
+  // A ring of radius a (m) carrying 1 A counterclockwise about +z, centered at the origin. At cylindrical (r, z) in m:
+  // [Bz, Br] in T, and the flux function ψ = r A_φ in T·m² (2πψ is the flux through the circle of radius r at height z).
+  // k² = 4ar/((a + r)² + z²); Bz = μ₀/(2π√((a+r)²+z²)) [K + (a² − r² − z²)/((a − r)² + z²) E],
+  // Br = μ₀ z/(2π r √((a+r)²+z²)) [−K + (a² + r² + z²)/((a − r)² + z²) E], ψ = μ₀ √((a+r)²+z²)/(4π) [(2 − k²)K − 2E].
+  function ringField(a, r, z) {
+    const d2 = (a + r) * (a + r) + z * z, q = (a - r) * (a - r) + z * z;
+    if (q === 0) return [NaN, NaN, NaN];
+    const m = 4 * a * r / d2, sq = Math.sqrt(d2);
+    if (m < 1e-7) {   // next to the axis: the leading terms in r
+      const s = a * a + z * z;
+      return [MU0 * a * a / (2 * Math.pow(s, 1.5)), 3 * MU0 * a * a * r * z / (4 * Math.pow(s, 2.5)), MU0 * a * a * r * r / (4 * Math.pow(s, 1.5))];
+    }
+    const [K, E] = ellipKE(m), c = MU0 / (TWO_PI * sq);
+    const g = m < 1e-3 ? Math.PI / 16 * m * m * (1 + 0.75 * m + 75 / 128 * m * m) : (2 - m) * K - 2 * E;   // series avoids cancellation
+    return [c * (K + (a * a - r * r - z * z) / q * E), c * z / r * (-K + (a * a + r * r + z * z) / q * E), MU0 * sq / (4 * Math.PI) * g];
+  }
+  // a solenoid {N, L, R, I} (cm, A): N coaxial rings of radius R evenly spread over the length L, centered at z = 0.
+  // Ring k sits at the middle of its share of the length, so the turn density is exactly n = N/L. One turn sits at z = 0.
+  function solTurns(sol) { const out = []; for (let k = 0; k < sol.N; k++) out.push(sol.N === 1 ? 0 : -sol.L / 2 + sol.L * (k + 0.5) / sol.N); return out; }
+  // field at (z, y) in cm in the plane through the axis (y signed): [Bz, By] in T and ψ in T·m²
+  function solField(sol, z, y, turns) {
+    turns = turns || solTurns(sol);
+    const a = sol.R * CM, r = Math.abs(y) * CM;
+    let bz = 0, br = 0, ps = 0;
+    for (const zk of turns) { const f = ringField(a, r, (z - zk) * CM); bz += f[0]; br += f[1]; ps += f[2]; }
+    return [bz * sol.I, (y < 0 ? -br : br) * sol.I, ps * sol.I];
+  }
+  // on the axis: one ring gives μ₀IR²/(2(R² + z²)^{3/2}); summed over the turns
+  function axisExact(sol, z, turns) {
+    turns = turns || solTurns(sol);
+    const a = sol.R * CM; let b = 0;
+    for (const zk of turns) { const d = (z - zk) * CM; b += a * a / (2 * Math.pow(a * a + d * d, 1.5)); }
+    return MU0 * sol.I * b;
+  }
+  const loopCenter = (R, I) => MU0 * I / (2 * R * CM);                 // μ₀I/(2R)
+  const turnsPerM = (sol) => sol.N / (sol.L * CM);
+  const idealSol = (sol) => MU0 * turnsPerM(sol) * sol.I;                // μ₀nI
+  // the winding as a continuous current sheet n I per meter from z₁ = −L/2 to z₂ = L/2, on the axis:
+  // B = μ₀nI (cos θ₁ − cos θ₂)/2, θ₁ and θ₂ the angles from the +z axis to the rims of the ends at z₂ and z₁
+  function sheetAxis(sol, z) {
+    const a = sol.R, d2 = sol.L / 2 - z, d1 = -sol.L / 2 - z;
+    return idealSol(sol) / 2 * (d2 / Math.hypot(d2, a) - d1 / Math.hypot(d1, a));
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.CF = { MU0, CM, wireB, wirePsi, wireForce, pairForce, integrate, breaks, loopPieces, circulation, insideLoop, loopDist, enclosedI,
+      ellipKE, ringField, solTurns, solField, axisExact, loopCenter, turnsPerM, idealSol, sheetAxis };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const snap = (v, st) => +(Math.round(v / st) * st).toFixed(4);
+
+  // ---------- state ----------
+  let nextId = 1;
+  const mkW = (x, y, I) => ({ id: nextId++, x, y, I });
+  const PRESETS = {
+    one: { scene: 'wires', wires: [[0, 0, 5]], amp: false, probe: [3, 0],
+      hint: 'One long straight wire with its current out of the page. The field lines are circles, counterclockwise by the right hand rule. B = μ₀I/(2πr) falls off as 1/r, so the circles spread apart farther out. Drag the probe to check.' },
+    par: { scene: 'wires', wires: [[-3, 0, 5], [3, 0, 5]], amp: false, probe: [0, 3],
+      hint: 'Parallel currents attract. Between the wires their fields point opposite ways and cancel at the midpoint. Far away the pair looks like one wire carrying the total current.' },
+    anti: { scene: 'wires', wires: [[-3, 0, 5], [3, 0, -5]], amp: false, probe: [0, 3],
+      hint: 'Opposite currents repel. Between the wires both fields point the same way and add. Far away they nearly cancel, so the lines close up around the pair.' },
+    amp: { scene: 'wires', wires: [[-2.5, 1, 5], [-0.5, -1.5, -2], [6, 1.5, 4]], amp: true, loop: { kind: 'circle', x: -1.5, y: 0, r: 4, w: 9, h: 7 }, probe: [4, -5],
+      hint: 'Around any closed loop, ∮B·dl = μ₀I<sub>enc</sub>. Two wires pass through this loop (5 A out, 2 A in). Drag the loop over the third wire: B along the loop changes, ∮B·dl changes only when a wire crosses the loop.' },
+    loop: { scene: 'side', sol: { N: 1, L: 12, R: 4, I: 5 }, sprobe: [0, 0],
+      hint: 'A circular loop seen edge on: at the top the current comes out of the page, at the bottom it goes in. Every field line threads the loop and closes around the outside. At the center B = μ₀I/(2R).' },
+    sol: { scene: 'side', sol: { N: 30, L: 24, R: 3, I: 5 }, sprobe: [0, 1.2],
+      hint: 'Many loops side by side. Inside a long solenoid the field is nearly uniform, close to μ₀nI with n = N/L, and outside it is weak. At each end it drops to about half. Shorten it to watch it turn into a loop.' }
+  };
+  const S = {
+    scene: 'wires', preset: 'par', wires: [], wsel: null, sel: null, amp: false,
+    loop: { kind: 'circle', x: -1.5, y: 0, r: 4, w: 9, h: 7 }, ccw: true,
+    probe: { x: 0, y: 3 }, sprobe: { z: 0, y: 1.2 },
+    sol: { N: 30, L: 24, R: 3, I: 5 }, fit: null,
+    show: { lines: true, shade: true, compass: true, probe: true, force: true }
+  };
+  const wById = (id) => S.wires.find((w) => w.id === id);
+  const wIndex = (w) => S.wires.indexOf(w) + 1;
+
+  // ---------- canvas, theme, view ----------
+  let T = null, dpr = 1, W = 0, H = 0, themeVer = 0;
+  const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  const layer = document.createElement('canvas'), lctx = layer.getContext('2d');
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.4 : 1);
+  // line and label scale: grows in projector mode, capped by the pane size so labels do not pile up
+  const kS = () => Math.min(projScale(), Math.max(1, Math.min(W, H) / 430));
+  const fsz = (base) => base * kS();
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), fout: g('--fout'), fin: g('--fin'), bline: g('--bline'), shade: g('--shade'), onw: g('--on-wire'),
+      ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace' };
+    themeVer++;
+  }
+  function rgbOf(c) {
+    const m = /^#([0-9a-f]{6})$/i.exec(c);
+    if (m) { const n = parseInt(m[1], 16); return [n >> 16, (n >> 8) & 255, n & 255]; }
+    const k = /(\d+)\D+(\d+)\D+(\d+)/.exec(c); return k ? [+k[1], +k[2], +k[3]] : [43, 96, 181];
+  }
+  const V = { s: 20, cx: 0, cy: 0, x0: -10, x1: 10, y0: -10, y1: 10, Hd: 0 };
+  const X = (x) => V.cx + x * V.s, Y = (y) => V.cy - y * V.s;
+  const wx = (px) => (px - V.cx) / V.s, wy = (py) => (V.cy - py) / V.s;
+  function fitSide() { S.fit = { N: S.sol.N, L: S.sol.L, R: S.sol.R }; setView(); }
+  function setView() {
+    if (S.scene === 'wires') {
+      const ex = W < 640 ? 7 : 14, ey = 9;
+      V.s = Math.max(4, Math.min(W / (2 * ex), H / (2 * ey)));
+      V.cx = W / 2; V.cy = H / 2; V.Hd = H;
+    } else {
+      const f = S.fit || S.sol;
+      V.Hd = Math.round(H * (W < 640 ? 0.6 : 0.64));
+      const nar = W < 640, ex = f.N > 1 ? Math.max(f.L / 2 + (nar ? 0.9 : 1.7) * f.R, (nar ? 2 : 2.6) * f.R) : (nar ? 2.2 : 2.7) * f.R, ey = 2.05 * f.R;
+      V.s = Math.max(2, Math.min(W / (2 * ex), V.Hd / (2 * ey)));
+      V.cx = W / 2; V.cy = V.Hd / 2;
+    }
+    V.x0 = wx(0); V.x1 = wx(W); V.y1 = wy(0); V.y0 = wy(V.Hd);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = pane.getBoundingClientRect();
+    W = r.width; H = r.height;
+    can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(H * dpr));
+    can.style.width = W + 'px'; can.style.height = H + 'px';
+    layer.width = can.width; layer.height = can.height;
+    setView(); keepInView();
+    layerKey = ''; needlesKey = ''; dirty = true;
+  }
+  function keepInView() {
+    if (S.scene !== 'wires' || !W) return;
+    const m = 0.4;
+    for (const w of S.wires) { w.x = clamp(w.x, V.x0 + m, V.x1 - m); w.y = clamp(w.y, V.y0 + m, V.y1 - m); }
+    S.probe.x = clamp(S.probe.x, V.x0 + m, V.x1 - m); S.probe.y = clamp(S.probe.y, V.y0 + m, V.y1 - m);
+  }
+
+  // ---------- contours by marching squares, chained into polylines ----------
+  // vals at nodes (i, j) → pixel (ox + i g, oy + j g). mask: per cell, 1 to skip. levels(lo, hi, emit) calls emit(index, value)
+  // for each contour value inside (lo, hi). Returns polylines as flat arrays [x0, y0, x1, y1, ...].
+  function contours(vals, cols, rows, g, ox, oy, mask, levels) {
+    const kA = [], kB = [], P = [];
+    const map = new Map();
+    const add = (ka, xa, ya, kb, xb, yb) => { const n = kA.length; kA.push(ka); kB.push(kb); P.push(xa, ya, xb, yb); for (const k of [ka, kb]) { const l = map.get(k); if (l) l.push(n); else map.set(k, [n]); } };
+    const cx = [0, 0, 0, 0], cy = [0, 0, 0, 0], ck = [0, 0, 0, 0];
+    for (let j = 0; j + 1 < rows; j++) {
+      for (let i = 0; i + 1 < cols; i++) {
+        if (mask[j * (cols - 1) + i]) continue;
+        const n0 = j * cols + i, va = vals[n0], vb = vals[n0 + 1], vc = vals[n0 + cols + 1], vd = vals[n0 + cols];
+        const lo = Math.min(va, vb, vc, vd), hi = Math.max(va, vb, vc, vd);
+        if (!(hi > lo)) continue;
+        const x0 = ox + i * g, y0 = oy + j * g;
+        levels(lo, hi, (li, L) => {
+          let c = 0;
+          const A = va > L, B = vb > L, C = vc > L, D = vd > L;
+          if (A !== B) { cx[c] = x0 + (L - va) / (vb - va) * g; cy[c] = y0; ck[c] = (n0 * 2) * 1024 + li; c++; }
+          if (B !== C) { cx[c] = x0 + g; cy[c] = y0 + (L - vb) / (vc - vb) * g; ck[c] = ((n0 + 1) * 2 + 1) * 1024 + li; c++; }
+          if (D !== C) { cx[c] = x0 + (L - vd) / (vc - vd) * g; cy[c] = y0 + g; ck[c] = ((n0 + cols) * 2) * 1024 + li; c++; }
+          if (A !== D) { cx[c] = x0; cy[c] = y0 + (L - va) / (vd - va) * g; ck[c] = (n0 * 2 + 1) * 1024 + li; c++; }
+          if (c === 2) add(ck[0], cx[0], cy[0], ck[1], cx[1], cy[1]);
+          else if (c === 4) {   // saddle: decide by the center value (order top, right, bottom, left)
+            const mid = (va + vb + vc + vd) / 4 > L;
+            if (mid === A) { add(ck[0], cx[0], cy[0], ck[1], cx[1], cy[1]); add(ck[2], cx[2], cy[2], ck[3], cx[3], cy[3]); }
+            else { add(ck[0], cx[0], cy[0], ck[3], cx[3], cy[3]); add(ck[1], cx[1], cy[1], ck[2], cx[2], cy[2]); }
+          }
+        });
+      }
+    }
+    const used = new Uint8Array(kA.length), lines = [], minLen = 3 * g;
+    const walk = (s, key, out) => {
+      for (;;) {
+        const l = map.get(key); let t = -1;
+        if (l) for (const q of l) if (!used[q]) { t = q; break; }
+        if (t < 0) return;
+        used[t] = 1;
+        if (kA[t] === key) { out.push(P[4 * t + 2], P[4 * t + 3]); key = kB[t]; } else { out.push(P[4 * t], P[4 * t + 1]); key = kA[t]; }
+      }
+    };
+    for (let s = 0; s < kA.length; s++) {
+      if (used[s]) continue;
+      used[s] = 1;
+      const fwd = [P[4 * s], P[4 * s + 1], P[4 * s + 2], P[4 * s + 3]], back = [];
+      walk(s, kB[s], fwd); walk(s, kA[s], back);
+      const pts = [];
+      for (let k = back.length - 2; k >= 0; k -= 2) pts.push(back[k], back[k + 1]);
+      for (const v of fwd) pts.push(v);
+      let len = 0; for (let k = 2; k < pts.length && len < minLen; k += 2) len += Math.hypot(pts[k] - pts[k - 2], pts[k + 1] - pts[k - 1]);
+      if (len >= minLen) lines.push(pts);   // drop slivers cut off between masked spots
+    }
+    return lines;
+  }
+  // arrowheads spaced along each line; dir(px, py) gives the field direction there in screen coordinates
+  function placeArrows(lines, spacing, minGap, dir) {
+    const out = [];
+    for (const p of lines) {
+      let len = 0; const cum = [0];
+      for (let k = 2; k < p.length; k += 2) { len += Math.hypot(p[k] - p[k - 2], p[k + 1] - p[k - 1]); cum.push(len); }
+      if (len < 46 * kS()) continue;
+      const n = Math.max(1, Math.round(len / spacing));
+      for (let q = 0; q < n; q++) {
+        const target = (q + 0.5) * len / n;
+        let k = 1; while (k < cum.length - 1 && cum[k] < target) k++;
+        const f = (target - cum[k - 1]) / Math.max(1e-9, cum[k] - cum[k - 1]);
+        const x = p[2 * k - 2] + f * (p[2 * k] - p[2 * k - 2]), y = p[2 * k - 1] + f * (p[2 * k + 1] - p[2 * k - 1]);
+        if (out.some((a) => Math.hypot(a[0] - x, a[1] - y) < minGap)) continue;
+        const d = dir(x, y); if (!d) continue;
+        out.push([x, y, d[0], d[1]]);
+      }
+    }
+    return out;
+  }
+
+  // ---------- the static layer: shading and field lines ----------
+  let layerKey = '', layerFine = true, lines = [], arrows = [], shadeInfo = null, axisArrows = [];
+  const rwire = () => 11 * Math.min(kS(), 1.3);
+  function turnR() {   // drawn radius of a turn in the side view: smaller when the turns crowd together
+    const sp = S.sol.N > 1 ? S.sol.L / S.sol.N * V.s : Infinity;
+    return Math.max(2.2, Math.min(rwire(), 0.46 * sp));
+  }
+  function layerSig() {
+    const base = `${S.scene}|${W}|${H}|${dpr}|${projScale()}|${themeVer}|${S.show.lines}|${S.show.shade}|${V.s.toFixed(4)}|${V.cx}|${V.cy}`;
+    if (S.scene === 'wires') return base + '|' + S.wires.map((w) => `${w.x},${w.y},${w.I}`).join(';');
+    return base + `|${S.sol.N},${S.sol.L},${S.sol.R},${S.sol.I}`;
+  }
+  function shadeColor(img, idx, B, lo, hi, rgb) {
+    const t = B > lo ? Math.min(1, Math.log(B / lo) / Math.log(hi / lo)) : 0;
+    img[idx] = rgb[0]; img[idx + 1] = rgb[1]; img[idx + 2] = rgb[2]; img[idx + 3] = Math.round(255 * 0.5 * t * t);
+  }
+  function buildLayer(fine) {
+    layerFine = fine;
+    const c = lctx;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.fillStyle = T.canvas; c.fillRect(0, 0, W, H);
+    lines = []; arrows = []; axisArrows = []; shadeInfo = null;
+    if (S.scene === 'wires') buildWires(c, fine); else buildSide(c, fine);
+  }
+  function drawGrid(c, h) {
+    const s = V.s;
+    if (s >= 9) {
+      c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath();
+      for (let x = Math.ceil(V.x0); x <= V.x1; x++) if (x % 5) { const px = Math.round(X(x)) + 0.5; c.moveTo(px, 0); c.lineTo(px, h); }
+      for (let y = Math.ceil(V.y0); y <= V.y1; y++) if (y % 5) { const py = Math.round(Y(y)) + 0.5; c.moveTo(0, py); c.lineTo(W, py); }
+      c.stroke();
+    }
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.beginPath();
+    for (let x = Math.ceil(V.x0 / 5) * 5; x <= V.x1; x += 5) { const px = Math.round(X(x)) + 0.5; c.moveTo(px, 0); c.lineTo(px, h); }
+    for (let y = Math.ceil(V.y0 / 5) * 5; y <= V.y1; y += 5) { const py = Math.round(Y(y)) + 0.5; c.moveTo(0, py); c.lineTo(W, py); }
+    c.stroke();
+  }
+  function strokeLines(c) {
+    c.strokeStyle = T.bline; c.lineWidth = 1.25 * kS(); c.lineJoin = 'round'; c.beginPath();
+    for (const p of lines) { c.moveTo(p[0], p[1]); for (let k = 2; k < p.length; k += 2) c.lineTo(p[k], p[k + 1]); }
+    c.stroke();
+    c.fillStyle = T.bline;
+    for (const a of arrows.concat(axisArrows)) chevron(c, a[0], a[1], a[2], a[3], 5.5 * kS());
+  }
+  function chevron(c, x, y, ux, uy, h) {
+    c.beginPath();
+    c.moveTo(x + ux * h, y + uy * h);
+    c.lineTo(x - ux * h * 0.6 - uy * h * 0.75, y - uy * h * 0.6 + ux * h * 0.75);
+    c.lineTo(x - ux * h * 0.25, y - uy * h * 0.25);
+    c.lineTo(x - ux * h * 0.6 + uy * h * 0.75, y - uy * h * 0.6 - ux * h * 0.75);
+    c.closePath(); c.fill();
+  }
+  function shadeImage(c, B, cols, rows, g, ox, oy, lo, hi, clipH) {
+    const off = document.createElement('canvas'); off.width = cols; off.height = rows;
+    const oc = off.getContext('2d'), im = oc.createImageData(cols, rows), rgb = rgbOf(T.shade);
+    for (let n = 0; n < cols * rows; n++) shadeColor(im.data, 4 * n, B[n], lo, hi, rgb);
+    oc.putImageData(im, 0, 0);
+    c.save(); c.beginPath(); c.rect(0, 0, W, clipH); c.clip();
+    c.imageSmoothingEnabled = true;
+    c.drawImage(off, ox - g / 2, oy - g / 2, cols * g, rows * g);
+    c.restore();
+    shadeInfo = { lo, hi };
+  }
+  function buildWires(c, fine) {
+    drawGrid(c, H);
+    const live = S.wires.filter((w) => w.I);
+    if (!live.length) return;
+    const g = fine ? 3 : 5, cols = Math.ceil(W / g) + 1, rows = Math.ceil(H / g) + 1;
+    const psi = new Float64Array(cols * rows), Bm = S.show.shade ? new Float32Array(cols * rows) : null;
+    const nw = live.length, wxs = live.map((w) => w.x), wys = live.map((w) => w.y), wis = live.map((w) => w.I), kB = MU0 / (TWO_PI * CM);
+    for (let j = 0; j < rows; j++) {
+      const y = wy(j * g);
+      for (let i = 0; i < cols; i++) {
+        const x = wx(i * g);
+        let p = 0, bx = 0, by = 0;
+        for (let q = 0; q < nw; q++) {
+          const dx = x - wxs[q], dy = y - wys[q], r2 = dx * dx + dy * dy + 1e-30, f = wis[q] / r2;
+          p += 0.5 * wis[q] * Math.log(r2); bx -= f * dy; by += f * dx;
+        }
+        const n = j * cols + i;
+        psi[n] = p; if (Bm) Bm[n] = kB * Math.hypot(bx, by);
+      }
+    }
+    const rw = rwire();
+    if (Bm) {
+      let Imax = 0; for (const w of live) Imax = Math.max(Imax, Math.abs(w.I));
+      const hi = MU0 * Imax / (TWO_PI * 2.2 * rw / V.s * CM);
+      shadeImage(c, Bm, cols, rows, g, 0, 0, hi / 400, hi, H);
+    }
+    if (!S.show.lines) return;
+    const mask = new Uint8Array((cols - 1) * (rows - 1)), rm = rw * 1.75;
+    for (const w of live) {
+      const px = X(w.x), py = Y(w.y);
+      for (let j = Math.max(0, Math.floor((py - rm) / g) - 1); j <= Math.min(rows - 2, Math.ceil((py + rm) / g)); j++)
+        for (let i = Math.max(0, Math.floor((px - rm) / g) - 1); i <= Math.min(cols - 2, Math.ceil((px + rm) / g)); i++)
+          if (Math.hypot((i + 0.5) * g - px, (j + 0.5) * g - py) < rm) mask[j * (cols - 1) + i] = 1;
+    }
+    let Imax = 0; for (const w of live) Imax = Math.max(Imax, Math.abs(w.I));
+    const step = 0.3 * Imax, off = 0.37 * step;
+    lines = contours(psi, cols, rows, g, 0, 0, mask, (lo, hi, emit) => {
+      for (let k = Math.ceil((lo - off) / step); k * step + off < hi; k++) emit(k + 512, k * step + off);
+    });
+    const ks = kS();
+    arrows = placeArrows(lines, 230 * ks, 26 * ks, (x, y) => { const b = wireB(live, wx(x), wy(y)), m = Math.hypot(b[0], b[1]); return m > 0 ? [b[0] / m, -b[1] / m] : null; });
+  }
+  // side view: ψ and |B| are symmetric about the axis (y → −y) and about the center plane (z → −z), so a quarter is computed
+  function buildSide(c, fine) {
+    const Hd = V.Hd, sol = S.sol, turns = solTurns(sol), tr = turnR();
+    drawGrid(c, Hd);
+    if (S.show.lines || S.show.shade) {
+      const g0 = fine ? 4 : 7, cost = Math.max(1, (W * Hd) / (g0 * g0) / 4 * sol.N);
+      const g = cost > 9e5 ? g0 * Math.sqrt(cost / 9e5) : g0, gw = g / V.s;
+      const i0 = Math.ceil(V.cx / g), j0 = Math.ceil(V.cy / g), ox = V.cx - i0 * g, oy = V.cy - j0 * g;
+      const cols = Math.ceil((W - ox) / g) + 1, rows = Math.ceil((Hd - oy) / g) + 1;
+      const mi = Math.max(i0, cols - 1 - i0), mj = Math.max(j0, rows - 1 - j0);
+      const qpsi = new Float64Array((mi + 1) * (mj + 1)), qB = new Float32Array((mi + 1) * (mj + 1));
+      for (let dj = 0; dj <= mj; dj++) for (let di = 0; di <= mi; di++) {
+        const f = solField(sol, di * gw, dj * gw, turns), n = dj * (mi + 1) + di;
+        qpsi[n] = f[2]; qB[n] = Math.hypot(f[0], f[1]);
+      }
+      const psi = new Float64Array(cols * rows), Bm = new Float32Array(cols * rows);
+      for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
+        const q = Math.abs(j - j0) * (mi + 1) + Math.abs(i - i0), n = j * cols + i;
+        psi[n] = qpsi[q]; Bm[n] = qB[q];
+        if (!isFinite(psi[n])) { psi[n] = 0; Bm[n] = 0; }
+      }
+      if (S.show.shade) {
+        const hi = 2.5 * Math.abs(axisExact(sol, 0, turns)) || 1e-12;
+        shadeImage(c, Bm, cols, rows, g, ox, oy, hi / 400, hi, Hd);
+      }
+      if (S.show.lines && sol.I) {
+        const mask = new Uint8Array((cols - 1) * (rows - 1)), rm = tr + 3.5 * kS();
+        for (const zk of turns) for (const yy of [sol.R, -sol.R]) {
+          const px = X(zk), py = Y(yy);
+          for (let j = Math.max(0, Math.floor((py - rm - oy) / g) - 1); j <= Math.min(rows - 2, Math.ceil((py + rm - oy) / g)); j++)
+            for (let i = Math.max(0, Math.floor((px - rm - ox) / g) - 1); i <= Math.min(cols - 2, Math.ceil((px + rm - ox) / g)); i++)
+              if (Math.hypot(ox + (i + 0.5) * g - px, oy + (j + 0.5) * g - py) < rm) mask[j * (cols - 1) + i] = 1;
+        }
+        // lines through points evenly spaced across the center plane, plus one close to the winding
+        const lv = [];
+        for (const f of [1 / 6, 2 / 6, 3 / 6, 4 / 6, 5 / 6, 0.93]) lv.push(solField(sol, 0, f * sol.R, turns)[2]);
+        lines = contours(psi, cols, rows, g, ox, oy, mask, (lo, hi, emit) => { for (let k = 0; k < lv.length; k++) if (lv[k] > lo && lv[k] < hi) emit(k, lv[k]); });
+        const ks = kS();
+        const dir = (x, y) => { const f = solField(sol, wx(x), wy(y), turns), m = Math.hypot(f[0], f[1]); return m > 0 ? [f[0] / m, -f[1] / m] : null; };
+        arrows = placeArrows(lines, 240 * ks, 24 * ks, dir);
+        // the axis is a field line too
+        const sg = Math.sign(sol.I), n = Math.max(2, Math.round(W / (230 * ks)));
+        for (let q = 0; q < n; q++) axisArrows.push([(q + 0.5) * W / n, V.cy, sg, 0]);
+      }
+    }
+    if (S.show.lines && sol.I) {
+      c.save(); c.beginPath(); c.rect(0, 0, W, Hd); c.clip();
+      strokeLines(c);
+      c.strokeStyle = T.bline; c.lineWidth = 1.25 * kS(); c.beginPath(); c.moveTo(0, V.cy); c.lineTo(W, V.cy); c.stroke();
+      c.restore();
+    }
+    drawPlot(c);
+  }
+  function ensureLayer() {
+    const busy = drag || performance.now() - lastInput < 260;
+    const key = layerSig();
+    if (key !== layerKey || (!layerFine && !busy)) {
+      buildLayer(!busy);
+      layerKey = key;
+      if (S.scene === 'wires' && S.show.lines) strokeLines(lctx);
+    }
+  }
+
+  // ---------- the axis plot (side view) ----------
+  let PG = null;
+  function plotGeom() {
+    const ks = kS(), top = V.Hd + 30 * ks, bot = H - 26 * ks;
+    if (bot - top < 40) return null;
+    const sol = S.sol, turns = solTurns(sol);
+    let lo = 0, hi = 0;
+    const xs = [], ys = [], ysh = [];
+    for (let px = 0; px <= W; px += 2) {
+      const z = wx(px), b = axisExact(sol, z, turns); xs.push(px); ys.push(b); lo = Math.min(lo, b); hi = Math.max(hi, b);
+      if (sol.N > 1) { const s = sheetAxis(sol, z); ysh.push(s); }
+    }
+    if (sol.N > 1) { const id = idealSol(sol); lo = Math.min(lo, id); hi = Math.max(hi, id); }
+    if (hi === lo) hi = lo + 1e-9;
+    const span = hi - lo; hi += span * 0.14; if (lo < 0) lo -= span * 0.14;
+    const unit = Math.max(Math.abs(hi), Math.abs(lo)) >= 1e-3 ? 1e3 : 1e6;
+    return { top, bot, lo, hi, xs, ys, ysh, unit, uname: unit === 1e3 ? 'mT' : 'µT', Yb: (b) => bot - (b - lo) / (hi - lo) * (bot - top) };
+  }
+  function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  function drawPlot(c) {
+    PG = plotGeom(); if (!PG) return;
+    const g = PG, ks = kS(), fs = fsz(11), sol = S.sol;
+    c.strokeStyle = T.line; c.lineWidth = 1; c.beginPath(); c.moveTo(0, V.Hd + 0.5); c.lineTo(W, V.Hd + 0.5); c.stroke();
+    // grid: y ticks
+    const st = niceStep((g.hi - g.lo) * g.unit / 4) / g.unit;
+    c.strokeStyle = T.grid; c.beginPath();
+    for (let b = Math.ceil(g.lo / st) * st; b <= g.hi; b += st) { const y = Math.round(g.Yb(b)) + 0.5; c.moveTo(0, y); c.lineTo(W, y); }
+    c.stroke();
+    // z ticks share the drawing's scale
+    const zst = niceStep(Math.max(1, 80 * ks / V.s));
+    c.strokeStyle = T.gridStrong; c.beginPath(); c.moveTo(0, Math.round(g.Yb(0)) + 0.5); c.lineTo(W, Math.round(g.Yb(0)) + 0.5); c.stroke();
+    c.fillStyle = T.muted; c.font = `${fs}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let z = Math.ceil(V.x0 / zst) * zst; z <= V.x1; z += zst) { const px = X(z); c.fillRect(Math.round(px), g.bot, 1, 4 * ks); if (px > 20 && px < W - 50) c.fillText(`${+z.toFixed(1)}`, px, g.bot + 5 * ks); }
+    c.textAlign = 'right'; c.fillText('z (cm)', W - 8, g.bot + 5 * ks);
+    // solenoid ends
+    if (sol.N > 1) {
+      c.strokeStyle = T.gridStrong; c.setLineDash([3, 4]); c.beginPath();
+      for (const z of [-sol.L / 2, sol.L / 2]) { const px = Math.round(X(z)) + 0.5; c.moveTo(px, g.top); c.lineTo(px, g.bot); }
+      c.stroke(); c.setLineDash([]);
+      // ideal μ₀nI and the current sheet
+      const id = idealSol(sol);
+      c.strokeStyle = T.muted; c.lineWidth = 1.5 * ks; c.setLineDash([6, 5]); c.beginPath(); c.moveTo(0, g.Yb(id)); c.lineTo(W, g.Yb(id)); c.stroke();
+    }
+    c.strokeStyle = T.accent; c.lineWidth = 2.6 * ks; c.lineJoin = 'round'; c.beginPath();
+    g.xs.forEach((px, k) => { const y = g.Yb(g.ys[k]); k ? c.lineTo(px, y) : c.moveTo(px, y); }); c.stroke();
+    if (sol.N > 1) {   // the current sheet, dashed on top so it shows where the two agree
+      c.strokeStyle = T.equi; c.lineWidth = 2 * ks; c.setLineDash([7, 6]); c.beginPath();
+      g.xs.forEach((px, k) => { const y = g.Yb(g.ysh[k]); k ? c.lineTo(px, y) : c.moveTo(px, y); }); c.stroke(); c.setLineDash([]);
+    }
+    if (sol.N === 1) {   // μ₀I/(2R) at the center
+      const b = loopCenter(sol.R, sol.I), y = g.Yb(b);
+      c.strokeStyle = T.muted; c.lineWidth = 1.5 * ks; c.setLineDash([6, 5]); c.beginPath(); c.moveTo(X(0) - 70 * ks, y); c.lineTo(X(0) + 70 * ks, y); c.stroke(); c.setLineDash([]);
+    }
+    // y tick labels on a halo
+    for (let b = Math.ceil(g.lo / st) * st; b <= g.hi - st * 0.3; b += st) {
+      if (Math.abs(b) < st * 1e-6 && g.lo >= 0) continue;
+      label(c, `${+(b * g.unit).toPrecision(3)}`, 6, g.Yb(b) + fs * 0.35, { size: fs, weight: 400, fam: T.mono, color: T.muted });
+    }
+    label(c, `B_z on the axis (${g.uname})`, 8, g.top - 9 * ks, { size: fsz(12), color: T.ink });
+    if (sol.N > 1) {
+      const id = idealSol(sol), y = g.Yb(id);
+      label(c, `μ₀nI = ${fmtB(id)}`, W - 8, y - 7 * ks, { size: fsz(11), align: 'right', fam: T.mono, color: T.muted, weight: 400 });
+    } else {
+      const b = loopCenter(sol.R, sol.I);
+      label(c, `μ₀I/(2R) = ${fmtB(b)}`, X(0) + 78 * ks, g.Yb(b) + fs * 1.5, { size: fsz(11), fam: T.mono, color: T.muted, weight: 400 });
+    }
+  }
+
+  // ---------- compass needles ----------
+  let needles = [], needlesKey = '';
+  function fieldAt(x, y) { return S.scene === 'wires' ? wireB(S.wires, x, y) : solField(S.sol, x, y).slice(0, 2); }
+  function setupNeedles() {
+    const key = `${S.scene}|${W}|${H}|${V.s.toFixed(4)}|${V.cx}|${V.cy}|${projScale()}`;
+    const ks = kS(), sp = 74 * ks, old = needlesKey === key ? null : needles;
+    if (needlesKey !== key) {
+      needles = [];
+      const h = S.scene === 'wires' ? H : V.Hd;
+      const nx = Math.max(2, Math.floor(W / sp)), ny = Math.max(2, Math.floor(h / sp));
+      const gx = W / nx, gy = h / ny;
+      for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) needles.push({ px: (i + 0.5) * gx, py: (j + 0.5) * gy, th: reduce ? 0 : Math.random() * TWO_PI, om: 0, tg: 0, hide: false });
+      needlesKey = key;
+    }
+    void old;
+    aimNeedles(true);
+  }
+  let aimKey = '';
+  function aimNeedles(force) {
+    const key = layerSig() + (S.scene === 'side' ? '' : '');
+    if (!force && key === aimKey) return;
+    aimKey = key;
+    const rw = rwire(), tr = turnR(), turns = S.scene === 'side' ? solTurns(S.sol) : null;
+    for (const n of needles) {
+      const x = wx(n.px), y = wy(n.py);
+      n.hide = false;
+      if (S.scene === 'wires') { for (const w of S.wires) if (Math.hypot(X(w.x) - n.px, Y(w.y) - n.py) < rw * 3) n.hide = true; }
+      else for (const zk of turns) if (Math.abs(X(zk) - n.px) < tr + 12 * kS() && Math.abs(Math.abs(n.py - V.cy) - S.sol.R * V.s) < tr + 12 * kS()) n.hide = true;
+      const b = S.scene === 'wires' ? wireB(S.wires, x, y) : solField(S.sol, x, y, turns);
+      const m = Math.hypot(b[0], b[1]);
+      n.on = m > 0 && isFinite(m);
+      if (n.on) n.tg = Math.atan2(-b[1], b[0]);
+      if (reduce && n.on) { n.th = n.tg; n.om = 0; }
+    }
+  }
+  let needlesMoving = true;
+  function stepNeedles(dt) {
+    if (reduce) { needlesMoving = false; return; }
+    let moving = false;
+    const sub = Math.max(1, Math.ceil(dt / 0.008)), h = dt / sub;
+    for (const n of needles) {
+      if (!n.on) continue;
+      for (let k = 0; k < sub; k++) {
+        const d = Math.atan2(Math.sin(n.th - n.tg), Math.cos(n.th - n.tg));
+        n.om += (-90 * Math.sin(d) - 7 * n.om) * h; n.th += n.om * h;
+      }
+      if (Math.abs(n.om) > 0.02 || Math.abs(Math.sin(n.th - n.tg)) > 0.002) moving = true;
+    }
+    needlesMoving = moving;
+  }
+  function drawNeedles(c) {
+    const ks = kS(), L = 10 * ks, w = 3.4 * ks;
+    for (const n of needles) {
+      if (n.hide || !n.on) continue;
+      const ux = Math.cos(n.th), uy = Math.sin(n.th);
+      c.fillStyle = T.canvas; c.globalAlpha = 0.7; c.beginPath(); c.arc(n.px, n.py, L + 2 * ks, 0, TWO_PI); c.fill(); c.globalAlpha = 1;
+      c.strokeStyle = T.line; c.lineWidth = 1; c.stroke();
+      c.fillStyle = T.pos; c.beginPath(); c.moveTo(n.px + ux * L, n.py + uy * L); c.lineTo(n.px - uy * w, n.py + ux * w); c.lineTo(n.px + uy * w, n.py - ux * w); c.closePath(); c.fill();
+      c.fillStyle = T.muted; c.beginPath(); c.moveTo(n.px - ux * L, n.py - uy * L); c.lineTo(n.px - uy * w, n.py + ux * w); c.lineTo(n.px + uy * w, n.py - ux * w); c.closePath(); c.fill();
+    }
+  }
+
+  // ---------- labels and grips ----------
+  function roundRect(c, x, y, w, h, r) {
+    c.beginPath(); c.moveTo(x + r, y); c.lineTo(x + w - r, y); c.quadraticCurveTo(x + w, y, x + w, y + r); c.lineTo(x + w, y + h - r);
+    c.quadraticCurveTo(x + w, y + h, x + w - r, y + h); c.lineTo(x + r, y + h); c.quadraticCurveTo(x, y + h, x, y + h - r); c.lineTo(x, y + r); c.quadraticCurveTo(x, y, x + r, y); c.closePath();
+  }
+  function richParts(str) {
+    const out = []; const re = /_\{([^}]*)\}|_(\w+)/g; let i = 0, m;
+    while ((m = re.exec(str))) { if (m.index > i) out.push([str.slice(i, m.index), false]); out.push([m[1] || m[2], true]); i = re.lastIndex; }
+    if (i < str.length) out.push([str.slice(i), false]);
+    return out;
+  }
+  function measureRich(c, str, size, weight, fam) { let w = 0; for (const [s, sub] of richParts(str)) { c.font = `${weight} ${sub ? size * 0.72 : size}px ${fam}`; w += c.measureText(s).width; } return w; }
+  function label(c, str, x, y, o) {
+    o = o || {};
+    const size = o.size || fsz(12), weight = o.weight || 600, fam = o.fam || T.ui, align = o.align || 'left';
+    const w = measureRich(c, str, size, weight, fam), pad = 3 * Math.min(projScale(), 1.3);
+    let x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    x0 = clamp(x0, pad + 2, W - w - pad - 2);
+    let yy = clamp(y, size * 0.8 + pad + 2, H - size * 0.35 - pad - 2);
+    if (o.avoid) {   // step up or down until the box clears the labels already placed
+      const hh = size * 1.18 + pad, box = (yc) => [x0 - pad, yc - size * 0.82 - pad * 0.5, w + 2 * pad, hh];
+      const hit = (b) => o.avoid.some((a) => b[0] < a[0] + a[2] && a[0] < b[0] + b[2] && b[1] < a[1] + a[3] && a[1] < b[1] + b[3]);
+      for (const k of [0, 1, -1, 2, -2, 3]) { const yc = clamp(yy + k * (hh + 1), size * 0.8 + pad + 2, H - size * 0.35 - pad - 2); if (!hit(box(yc))) { yy = yc; break; } }
+      o.avoid.push(box(yy));
+    }
+    c.fillStyle = T.canvas; c.globalAlpha = 0.88;
+    roundRect(c, x0 - pad, yy - size * 0.82 - pad * 0.5, w + 2 * pad, size * 1.18 + pad, 3); c.fill(); c.globalAlpha = 1;
+    c.fillStyle = o.color || T.ink; c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+    let xx = x0;
+    for (const [s, sub] of richParts(str)) { c.font = `${weight} ${sub ? size * 0.72 : size}px ${fam}`; c.fillText(s, xx, yy + (sub ? size * 0.25 : 0)); xx += c.measureText(s).width; }
+    return { x: x0, y: yy, w };
+  }
+  function arrow(c, x1, y1, x2, y2, col, lw, head) {
+    const L = Math.hypot(x2 - x1, y2 - y1); if (L < 1) return;
+    const ux = (x2 - x1) / L, uy = (y2 - y1) / L, hh = Math.min(head, L * 0.6);
+    c.strokeStyle = col; c.fillStyle = col; c.lineWidth = lw; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2 - ux * hh * 0.7, y2 - uy * hh * 0.7); c.stroke();
+    c.beginPath(); c.moveTo(x2, y2); c.lineTo(x2 - ux * hh - uy * hh * 0.45, y2 - uy * hh + ux * hh * 0.45); c.lineTo(x2 - ux * hh + uy * hh * 0.45, y2 - uy * hh - ux * hh * 0.45); c.closePath(); c.fill();
+    c.lineCap = 'butt';
+  }
+  function grip(c, x, y, hot, dir) {
+    const ps = Math.min(projScale(), 1.3), col = hot ? T.accent : T.muted;
+    c.fillStyle = T.canvas; c.strokeStyle = col; c.lineWidth = (hot ? 2 : 1.3) * ps;
+    if (dir === 'move') {
+      c.beginPath(); c.arc(x, y, 9 * ps, 0, TWO_PI); c.fill(); c.stroke();
+      c.fillStyle = col; const a = 3 * ps; c.beginPath();
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const tx = x + dx * 6.5 * ps, ty = y + dy * 6.5 * ps, bx = x + dx * 2.5 * ps, by = y + dy * 2.5 * ps;
+        c.moveTo(tx, ty); c.lineTo(bx - dy * a, by + dx * a); c.lineTo(bx + dy * a, by - dx * a); c.closePath();
+      }
+      c.fill(); return;
+    }
+    const vertical = dir === 'v', w = (vertical ? 13 : 20) * ps, h = (vertical ? 20 : 13) * ps;
+    roundRect(c, x - w / 2, y - h / 2, w, h, 4 * ps); c.fill(); c.stroke();
+    c.fillStyle = col; const a = 3.5 * ps; c.beginPath();
+    if (vertical) {
+      c.moveTo(x, y - 7 * ps); c.lineTo(x - a, y - 2.5 * ps); c.lineTo(x + a, y - 2.5 * ps); c.closePath();
+      c.moveTo(x, y + 7 * ps); c.lineTo(x - a, y + 2.5 * ps); c.lineTo(x + a, y + 2.5 * ps); c.closePath();
+    } else {
+      c.moveTo(x - 7 * ps, y); c.lineTo(x - 2.5 * ps, y - a); c.lineTo(x - 2.5 * ps, y + a); c.closePath();
+      c.moveTo(x + 7 * ps, y); c.lineTo(x + 2.5 * ps, y - a); c.lineTo(x + 2.5 * ps, y + a); c.closePath();
+    }
+    c.fill();
+  }
+  function gripAlong(c, x, y, ux, uy, hot) { c.save(); c.translate(x, y); c.rotate(Math.atan2(uy, ux)); grip(c, 0, 0, hot, 'h'); c.restore(); }
+  // a wire seen end on: a disk with a dot (out of the page) or a cross (into the page)
+  function wireGlyph(c, px, py, r, I, hot, sel) {
+    const col = I > 0 ? T.pos : I < 0 ? T.neg : T.muted;
+    if (hot || sel) { c.fillStyle = T.accent; c.globalAlpha = hot ? 0.3 : 0.18; c.beginPath(); c.arc(px, py, r + 6 * Math.min(kS(), 1.3), 0, TWO_PI); c.fill(); c.globalAlpha = 1; }
+    if (sel) { c.strokeStyle = T.accent; c.lineWidth = 2; c.beginPath(); c.arc(px, py, r + 4, 0, TWO_PI); c.stroke(); }
+    c.fillStyle = I ? col : T.canvas; c.strokeStyle = col; c.lineWidth = 1.6;
+    c.beginPath(); c.arc(px, py, r, 0, TWO_PI); c.fill(); if (!I) c.stroke();
+    if (r < 4.5) return;
+    if (I > 0) { c.fillStyle = T.onw; c.beginPath(); c.arc(px, py, Math.max(1.6, r * 0.27), 0, TWO_PI); c.fill(); }
+    else if (I < 0) { const q = r * 0.5; c.strokeStyle = T.onw; c.lineWidth = Math.max(1.4, r * 0.17); c.lineCap = 'round'; c.beginPath(); c.moveTo(px - q, py - q); c.lineTo(px + q, py + q); c.moveTo(px + q, py - q); c.lineTo(px - q, py + q); c.stroke(); c.lineCap = 'butt'; }
+  }
+
+  // ---------- number formats ----------
+  const prec = (v, sig) => (Math.abs(v) >= Math.pow(10, sig) ? v.toFixed(0) : v.toPrecision(sig));
+  function fmtB(b, sig = 3) {
+    if (!isFinite(b)) return '—';
+    const a = Math.abs(b);
+    if (a === 0) return '0 µT';
+    if (a >= 1e-3) return `${prec(b * 1e3, sig)} mT`;
+    if (a >= 1e-6) return `${prec(b * 1e6, sig)} µT`;
+    return `${prec(b * 1e9, sig)} nT`;
+  }
+  function fmtF(f, sig = 3) { const a = Math.abs(f); if (a === 0) return '0 N/m'; if (a >= 1e-3) return `${prec(f * 1e3, sig)} mN/m`; if (a >= 1e-6) return `${prec(f * 1e6, sig)} µN/m`; return `${prec(f * 1e9, sig)} nN/m`; }
+  const fmtI = (I) => `${I > 0 ? '+' : I < 0 ? '−' : ''}${Math.abs(I).toFixed(1)} A`;
+  const fmtCm = (v) => `${v.toFixed(1)} cm`;
+  const sgn = (v) => (v < 0 ? '−' : '');
+  const fmtC = (v) => `${sgn(v)}${Math.abs(v * 1e6).toFixed(6)} µT·m`;
+  const angDeg = (bx, by) => { let d = Math.atan2(by, bx) * 180 / Math.PI; if (d < 0) d += 360; return d; };
+
+  // ---------- Ampère computation (cached) ----------
+  let AMP = null, ampKey = '';
+  function ampere() {
+    const key = S.wires.map((w) => `${w.x},${w.y},${w.I}`).join(';') + JSON.stringify(S.loop) + S.ccw;
+    if (key === ampKey && AMP) return AMP;
+    ampKey = key;
+    let minD = Infinity; for (const w of S.wires) if (w.I) minD = Math.min(minD, loopDist(S.loop, w.x, w.y));
+    const on = minD < 0.02;
+    const t0 = performance.now();
+    const r = on ? null : circulation(S.wires, S.loop, S.ccw);
+    let sumI = 0; for (const w of S.wires) sumI += Math.abs(w.I);
+    AMP = { on, num: r, Ienc: enclosedI(S.wires, S.loop, S.ccw), sumI, ms: performance.now() - t0, inside: S.wires.filter((w) => insideLoop(S.loop, w.x, w.y)) };
+    return AMP;
+  }
+
+  // ---------- drawing ----------
+  let hoverId = null, drag = null;
+  const isHot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+  function drawAll() {
+    if (!T || !W || !H) return;
+    ensureLayer();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.drawImage(layer, 0, 0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (S.scene === 'wires') drawWiresScene(); else drawSideScene();
+  }
+  function drawLegend(c, x, y) {
+    if (!S.show.shade || !shadeInfo) return;
+    const ks = kS(), w = 110 * ks, h = 8 * ks, rgb = rgbOf(T.shade), fs = fsz(10.5);
+    const gr = c.createLinearGradient(x, 0, x + w, 0);
+    for (let k = 0; k <= 8; k++) { const t = k / 8; gr.addColorStop(t, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${0.5 * t * t})`); }
+    c.fillStyle = T.canvas; roundRect(c, x - 6, y - fs * 1.5 - 4, w + 12, h + fs * 2.9 + 6, 4); c.fill(); c.strokeStyle = T.line; c.lineWidth = 1; c.stroke();
+    c.fillStyle = gr; c.fillRect(x, y, w, h); c.strokeStyle = T.line; c.lineWidth = 1; c.strokeRect(x + 0.5, y + 0.5, w, h);
+    c.fillStyle = T.muted; c.font = `${fs}px ${T.mono}`; c.textBaseline = 'alphabetic';
+    c.textAlign = 'left'; c.fillText('|B|, log scale', x, y - 4);
+    c.fillText(fmtB(shadeInfo.lo, 2), x, y + h + fs + 2); c.textAlign = 'right'; c.fillText(fmtB(shadeInfo.hi, 2), x + w, y + h + fs + 2);
+  }
+  function drawLoop(c) {
+    const L = S.loop, ks = kS(), pts = [];
+    if (L.kind === 'circle') { const n = 240; for (let i = 0; i <= n; i++) { const t = TWO_PI * i / n; pts.push([L.x + L.r * Math.cos(t), L.y + L.r * Math.sin(t), -Math.sin(t), Math.cos(t)]); } }
+    else for (const P of loopPieces(L)) { const len = Math.hypot(...P.at(0).slice(2)), n = Math.max(4, Math.ceil(len / 0.15)); for (let i = 0; i <= n; i++) { const p = P.at(i / n); pts.push([p[0], p[1], p[2] / len, p[3] / len]); } }
+    const bt = pts.map((p) => { const b = wireB(S.wires, p[0], p[1]); return (b[0] * p[2] + b[1] * p[3]) * (S.ccw ? 1 : -1); });
+    let mx = 0; for (const v of bt) if (isFinite(v)) mx = Math.max(mx, Math.abs(v));
+    const hot = isHot('lm') || isHot('lr') || isHot('lw') || isHot('lh');
+    c.lineCap = 'round';
+    c.strokeStyle = T.ink; c.globalAlpha = hot ? 0.35 : 0.18; c.lineWidth = 7 * ks; c.beginPath();
+    pts.forEach((p, i) => (i ? c.lineTo(X(p[0]), Y(p[1])) : c.moveTo(X(p[0]), Y(p[1])))); c.stroke(); c.globalAlpha = 1;
+    c.lineWidth = 3.4 * ks;
+    for (let i = 1; i < pts.length; i++) {
+      const v = 0.5 * (bt[i] + bt[i - 1]); if (!isFinite(v)) continue;
+      c.strokeStyle = v >= 0 ? T.fout : T.fin; c.globalAlpha = mx > 0 ? 0.3 + 0.7 * Math.min(1, Math.sqrt(Math.abs(v) / mx)) : 0.4;
+      c.beginPath(); c.moveTo(X(pts[i - 1][0]), Y(pts[i - 1][1])); c.lineTo(X(pts[i][0]), Y(pts[i][1])); c.stroke();
+    }
+    c.globalAlpha = 1; c.lineCap = 'butt';
+    // direction of travel around the loop
+    let per = 0; for (let i = 1; i < pts.length; i++) per += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+    const nA = Math.max(3, Math.round(per * V.s / (120 * ks)));
+    let acc = 0, next = per / nA / 2;
+    c.fillStyle = T.ink;
+    for (let i = 1; i < pts.length && nA; i++) {
+      acc += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+      if (acc >= next) { const sg = S.ccw ? 1 : -1; chevron(c, X(pts[i][0]), Y(pts[i][1]), sg * pts[i][2], -sg * pts[i][3], 6.5 * ks); next += per / nA; }
+    }
+  }
+  function loopGrips() {
+    const L = S.loop, ks = Math.min(kS(), 1.3);
+    if (L.kind === 'circle') {
+      const a = -Math.PI / 4;
+      return { size: [X(L.x + L.r * Math.cos(a)), Y(L.y + L.r * Math.sin(a)), Math.cos(a), -Math.sin(a)], move: [X(L.x), Y(L.y - L.r) - 16 * ks] };
+    }
+    return { w: [X(L.x + L.w / 2), Y(L.y)], h: [X(L.x), Y(L.y + L.h / 2)], move: [X(L.x), Y(L.y - L.h / 2) - 16 * ks] };
+  }
+  function drawWiresScene() {
+    const c = ctx, ks = kS(), rw = rwire(), live = S.wires;
+    if (S.amp) drawLoop(c);
+    if (S.show.compass) drawNeedles(c);
+    // forces
+    const F = live.map((w, j) => wireForce(live, j));
+    let Fmax = 0; for (const f of F) Fmax = Math.max(Fmax, Math.hypot(f[0], f[1]));
+    const showF = S.show.force && live.length >= 2 && Fmax > 0;
+    if (showF && live.length === 2) {
+      const [a, b] = live;
+      c.strokeStyle = T.muted; c.lineWidth = 1; c.setLineDash([3, 4]); c.beginPath(); c.moveTo(X(a.x), Y(a.y)); c.lineTo(X(b.x), Y(b.y)); c.stroke(); c.setLineDash([]);
+    }
+    if (S.amp) {
+      const gp = loopGrips();
+      if (gp.size) gripAlong(c, gp.size[0], gp.size[1], gp.size[2], gp.size[3], isHot('lr'));
+      if (gp.w) grip(c, gp.w[0], gp.w[1], isHot('lw'), 'h');
+      if (gp.h) grip(c, gp.h[0], gp.h[1], isHot('lh'), 'v');
+      grip(c, gp.move[0], gp.move[1], isHot('lm'), 'move');
+    }
+    for (const w of live) wireGlyph(c, X(w.x), Y(w.y), rw, w.I, isHot('w' + w.id), S.sel && S.sel.kind === 'w' && S.sel.id === w.id);
+    const fLabels = [];
+    if (showF) {
+      live.forEach((w, j) => {
+        const f = F[j], m = Math.hypot(f[0], f[1]); if (m <= 0) return;
+        const len = 18 * ks + 52 * ks * m / Fmax, ux = f[0] / m, uy = -f[1] / m, px = X(w.x), py = Y(w.y);
+        arrow(c, px + ux * (rw + 3), py + uy * (rw + 3), px + ux * (rw + 3 + len), py + uy * (rw + 3 + len), T.equi, 3.2 * ks, 11 * ks);
+        let nx = -uy, ny = ux; if (ny < 0 || (Math.abs(ny) < 0.2 && nx < 0)) { nx = -nx; ny = -ny; }
+        const mid = rw + 3 + len / 2, off = 14 * ks;
+        fLabels.push([px + ux * mid + nx * off, py + uy * mid + ny * off + (ny > 0.5 ? 6 * ks : 0), nx, `${fmtF(m)}`]);
+      });
+    }
+    // probe
+    let pr = null;
+    if (S.show.probe) {
+      const p = S.probe, b = wireB(live, p.x, p.y), m = Math.hypot(b[0], b[1]), px = X(p.x), py = Y(p.y);
+      pr = { px, py, m };
+      if (m > 0) { const len = 46 * ks; arrow(c, px, py, px + b[0] / m * len, py - b[1] / m * len, T.accent, 2.6 * ks, 10 * ks); }
+      probeGlyph(c, px, py, isHot('probe'), S.sel && S.sel.kind === 'probe');
+    }
+    // labels last
+    const fs = fsz(11.5), avoid = live.map((w) => [X(w.x) - rw - 2, Y(w.y) - rw - 2, 2 * rw + 4, 2 * rw + 4]);
+    live.forEach((w) => label(c, `I_${wIndex(w)} = ${fmtI(w.I)}`, X(w.x), Y(w.y) - rw - 8 * ks, { size: fs, fam: T.mono, color: T.ink, align: 'center', avoid }));
+    for (const [x, y, nx, t] of fLabels) label(c, t, x, y, { size: fsz(11), fam: T.mono, color: T.equi, align: nx > 0.5 ? 'left' : nx < -0.5 ? 'right' : 'center', avoid });
+    if (showF && live.length === 2) {
+      const [a, b] = live, d = Math.hypot(a.x - b.x, a.y - b.y);
+      label(c, `d = ${fmtCm(d)}`, (X(a.x) + X(b.x)) / 2, (Y(a.y) + Y(b.y)) / 2 - 8 * ks, { size: fsz(11), fam: T.mono, color: T.muted, align: 'center', weight: 400, avoid });
+    }
+    if (pr) label(c, `B = ${fmtB(pr.m)}`, pr.px + 12 * ks, pr.py + 20 * ks, { size: fsz(11.5), fam: T.mono, color: T.accent, avoid });
+    if (S.amp) {
+      const A = ampere(), L = S.loop, ly = Y(L.y + (L.kind === 'circle' ? L.r : L.h / 2)) - 10 * ks;
+      const txt = A.on ? '∮B·dl undefined: a wire is on the loop' : `∮B·dl = ${fmtC(A.num.v).replace('µT·m', '')}µT·m = μ₀(${fmtI(A.Ienc)})`;
+      label(c, txt, X(L.x), ly, { size: fsz(12), align: 'center', color: A.on ? T.pos : T.ink, fam: T.mono, avoid });
+    }
+    drawLegend(c, 12, H - 30 * ks);
+    if (W >= 560) label(c, 'Long straight wires, seen end on · grid 1 cm', W - 10, H - 10, { size: fsz(11), weight: 400, color: T.muted, align: 'right' });
+  }
+  function probeGlyph(c, px, py, hot, sel) {
+    const ks = Math.min(kS(), 1.3), r = 7 * ks;
+    if (hot || sel) { c.fillStyle = T.accent; c.globalAlpha = hot ? 0.3 : 0.18; c.beginPath(); c.arc(px, py, r + 6 * ks, 0, TWO_PI); c.fill(); c.globalAlpha = 1; }
+    c.fillStyle = T.canvas; c.strokeStyle = T.accent; c.lineWidth = 2 * ks;
+    c.beginPath(); c.arc(px, py, r, 0, TWO_PI); c.fill(); c.stroke();
+    c.beginPath(); c.moveTo(px - r - 4 * ks, py); c.lineTo(px - r + 3 * ks, py); c.moveTo(px + r - 3 * ks, py); c.lineTo(px + r + 4 * ks, py);
+    c.moveTo(px, py - r - 4 * ks); c.lineTo(px, py - r + 3 * ks); c.moveTo(px, py + r - 3 * ks); c.lineTo(px, py + r + 4 * ks); c.stroke();
+  }
+  function sideGrips() {
+    const sol = S.sol, ks = Math.min(kS(), 1.3), tr = turnR();
+    const out = { R: [X(0), Y(sol.R) - tr - 15 * ks] };
+    if (sol.N > 1) out.L = [X(sol.L / 2) + tr + 15 * ks, Y(sol.R)];
+    return out;
+  }
+  function drawSideScene() {
+    const c = ctx, ks = kS(), sol = S.sol, turns = solTurns(sol), tr = turnR(), Hd = V.Hd;
+    c.save(); c.beginPath(); c.rect(0, 0, W, Hd); c.clip();
+    if (S.show.compass) drawNeedles(c);
+    // outline of the coil and its axis label
+    if (sol.N === 1) {   // the loop itself, seen nearly edge on
+      c.strokeStyle = T.muted; c.lineWidth = 1.2; c.setLineDash([4, 4]); c.beginPath(); c.ellipse(X(0), V.cy, 0.2 * sol.R * V.s, sol.R * V.s, 0, 0, TWO_PI); c.stroke(); c.setLineDash([]);
+    } else {
+      c.strokeStyle = T.muted; c.lineWidth = 1; c.setLineDash([4, 4]); c.beginPath();
+      for (const yy of [sol.R, -sol.R]) { c.moveTo(X(-sol.L / 2), Y(yy)); c.lineTo(X(sol.L / 2), Y(yy)); }
+      c.stroke(); c.setLineDash([]);
+    }
+    const hotR = isHot('sr'), hotL = isHot('sl');
+    for (const zk of turns) {
+      const endHot = hotL && Math.abs(zk - turns[turns.length - 1]) < 1e-9;
+      wireGlyph(c, X(zk), Y(sol.R), tr, sol.I, hotR || endHot, false);
+      wireGlyph(c, X(zk), Y(-sol.R), tr, -sol.I, hotR || endHot, false);
+    }
+    const gp = sideGrips();
+    grip(c, gp.R[0], gp.R[1], hotR, 'v');
+    if (gp.L) grip(c, gp.L[0], gp.L[1], hotL, 'h');
+    let pr = null;
+    if (S.show.probe) {
+      const p = S.sprobe, f = solField(sol, p.z, p.y, turns), m = Math.hypot(f[0], f[1]), px = X(p.z), py = Y(p.y);
+      pr = { px, py, m };
+      if (m > 0 && isFinite(m)) arrow(c, px, py, px + f[0] / m * 46 * ks, py - f[1] / m * 46 * ks, T.accent, 2.6 * ks, 10 * ks);
+      probeGlyph(c, px, py, isHot('probe'), S.sel && S.sel.kind === 'probe');
+    }
+    // labels
+    const fs = fsz(11.5);
+    if (sol.N === 1) {
+      label(c, `I = ${fmtI(sol.I).replace('+', '')}, R = ${fmtCm(sol.R)}`, X(0) + tr + 10 * ks, Y(sol.R) + fs * 0.35, { size: fs, fam: T.mono, color: T.ink });
+    } else {
+      label(c, `N = ${sol.N}, L = ${fmtCm(sol.L)}, R = ${fmtCm(sol.R)}, I = ${fmtI(sol.I).replace('+', '')}`, X(0), Y(-sol.R) + tr + 18 * ks, { size: fs, fam: T.mono, color: T.ink, align: 'center' });
+    }
+    if (pr && isFinite(pr.m)) label(c, `B = ${fmtB(pr.m)}`, pr.px + 12 * ks, pr.py + 20 * ks, { size: fsz(11.5), fam: T.mono, color: T.accent });
+    if (W >= 560) label(c, 'Plane through the axis · z to the right · grid 1 cm', W - 10, Hd - 10, { size: fsz(11), weight: 400, color: T.muted, align: 'right' });
+    drawLegend(c, 12, Hd - 30 * ks);
+    c.restore();
+    // probe position on the plot
+    if (PG && S.show.probe) {
+      const z = S.sprobe.z, b = axisExact(sol, z, turns), px = X(z), y = PG.Yb(b);
+      c.strokeStyle = T.accent; c.lineWidth = 1; c.setLineDash([3, 3]); c.beginPath(); c.moveTo(px, PG.top); c.lineTo(px, PG.bot); c.stroke(); c.setLineDash([]);
+      c.fillStyle = T.accent; c.beginPath(); c.arc(px, y, 4.5 * ks, 0, TWO_PI); c.fill();
+      label(c, `${fmtB(b)} at z = ${fmtCm(z)}`, px + 8 * ks, Math.max(PG.top + 14 * ks, y - 8 * ks), { size: fsz(11), fam: T.mono, color: T.accent, align: px > W * 0.7 ? 'right' : 'left' });
+    }
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const ws = S.wires;
+    // wire list
+    const ul = $('wList');
+    ul.innerHTML = ws.map((w, j) => {
+      const f = wireForce(ws, j), m = Math.hypot(f[0], f[1]);
+      const icon = w.I > 0 ? '<svg class="wi out" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><circle class="f" cx="8" cy="8" r="1.9"/></svg>'
+        : w.I < 0 ? '<svg class="wi in" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><path d="M4.6 4.6 11.4 11.4 M11.4 4.6 4.6 11.4"/></svg>'
+        : '<svg class="wi off" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/></svg>';
+      return `<li tabindex="0" data-id="${w.id}" aria-selected="${w.id === S.wsel}">${icon}<span>Wire ${j + 1}</span><span class="qv">${fmtI(w.I)}</span><span class="qs">(${w.x.toFixed(1)}, ${w.y.toFixed(1)}) cm${ws.length > 1 ? ` · F/L ${fmtF(m)}` : ''}</span></li>`;
+    }).join('');
+    const sw = wById(S.wsel);
+    $('iCtl').hidden = !sw; $('flipW').disabled = !sw; $('delW').disabled = !sw;
+    $('addOut').disabled = $('addIn').disabled = ws.length >= 6;
+    if (sw) { $('lI').textContent = `Current in wire ${wIndex(sw)}`; $('sI').value = sw.I; $('oI').textContent = `${fmtI(sw.I)} (${sw.I > 0 ? 'out' : sw.I < 0 ? 'in' : 'off'})`; }
+    // forces
+    let fh = '';
+    if (ws.length === 2) {
+      const [a, b] = ws, d = Math.hypot(a.x - b.x, a.y - b.y), f = pairForce(a.I, b.I, d);
+      fh = `<div><dt>Distance d</dt><dd>${fmtCm(d)}</dd></div><div><dt>I₁ I₂</dt><dd>${sgn(a.I * b.I)}${Math.abs(a.I * b.I).toFixed(2)} A²</dd></div>
+        <div class="wide big"><dt>F/L = μ₀I₁I₂/(2πd), on each wire</dt><dd>${f ? fmtF(Math.abs(f)) : '0 N/m'} <span class="ok">${f > 0 ? 'attract' : f < 0 ? 'repel' : 'no force'}</span></dd></div>`;
+    } else if (ws.length > 2) {
+      fh = ws.map((w, j) => { const f = wireForce(ws, j), m = Math.hypot(f[0], f[1]); return `<div><dt>Net on wire ${j + 1}</dt><dd>${fmtF(m)} <span class="ok">${m ? Math.round(angDeg(f[0], f[1])) + '°' : ''}</span></dd></div>`; }).join('');
+    } else fh = '<div class="wide"><dt>One wire</dt><dd class="note">Add a second wire to see a force.</dd></div>';
+    $('fRead').innerHTML = fh;
+    // Ampère
+    if (S.amp) {
+      const A = ampere(), L = S.loop;
+      $('aShape').textContent = L.kind === 'circle' ? `circle, radius ${fmtCm(L.r)}` : `rectangle ${L.w.toFixed(1)} × ${L.h.toFixed(1)} cm`;
+      $('aIenc').innerHTML = `${fmtI(A.Ienc)} <span class="ok">${A.inside.length ? 'wire ' + A.inside.map((w) => `${wIndex(w)} (${fmtI(S.ccw ? w.I : -w.I)})`).join(', ') : 'no wire inside'}</span>`;
+      $('aMu').textContent = fmtC(MU0 * A.Ienc);
+      $('onLoop').hidden = !A.on;
+      if (A.on) { $('aNum').textContent = 'undefined'; $('aDiff').textContent = '—'; }
+      else {
+        $('aNum').textContent = fmtC(A.num.v);
+        const rel = A.sumI ? Math.abs(A.num.v - MU0 * A.Ienc) / (MU0 * A.sumI) : 0;
+        $('aDiff').innerHTML = `${rel < 1e-15 ? '< 10⁻¹⁵' : rel.toExponential(1).replace('e-', ' × 10^-').replace(/\^-(\d+)/, (m, d) => '⁻' + d.split('').map((x) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[x]).join(''))} <span class="ok">${A.num.panels} quadrature panels</span>`;
+      }
+    }
+    // side view
+    const sol = S.sol, turns = solTurns(sol);
+    $('sN').value = sol.N; $('sL').value = sol.L; $('sR').value = sol.R; $('sIs').value = sol.I;
+    $('oN').textContent = sol.N === 1 ? '1 (one loop)' : `${sol.N}`;
+    $('oL').textContent = fmtCm(sol.L); $('oR').textContent = fmtCm(sol.R); $('oIs').textContent = fmtI(sol.I).replace('+', '');
+    $('lCtl').hidden = sol.N === 1;
+    const bc = axisExact(sol, 0, turns);
+    let sh = '';
+    if (sol.N === 1) {
+      sh = `<div class="wide big"><dt>B at the center, exact</dt><dd>${fmtB(bc, 4)}</dd></div>
+        <div class="wide"><dt>μ₀I/(2R)</dt><dd>${fmtB(loopCenter(sol.R, sol.I), 4)}</dd></div>
+        <div class="wide"><dt>On the axis at the probe's z: μ₀IR²/(2(R²+z²)<sup>3/2</sup>)</dt><dd>${fmtB(axisExact(sol, S.sprobe.z, turns), 4)} <span class="ok">z = ${fmtCm(S.sprobe.z)}</span></dd></div>`;
+      $('sideHint').textContent = 'With one turn the length L does not matter. Raise N to stack more turns along the length.';
+    } else {
+      const id = idealSol(sol), be = axisExact(sol, sol.L / 2, turns);
+      sh = `<div><dt>Turns per length n = N/L</dt><dd>${turnsPerM(sol).toFixed(0)} per m</dd></div><div><dt>L/R</dt><dd>${(sol.L / sol.R).toFixed(2)}</dd></div>
+        <div class="wide big"><dt>B at the center, exact sum over turns</dt><dd>${fmtB(bc, 4)}</dd></div>
+        <div class="wide big"><dt>Long solenoid μ₀nI</dt><dd>${fmtB(id, 4)} <span class="ok">exact/ideal ${(bc / id).toFixed(4)}</span></dd></div>
+        <div class="wide"><dt>Current sheet at the center, μ₀nI(cos θ₁ − cos θ₂)/2</dt><dd>${fmtB(sheetAxis(sol, 0), 4)}</dd></div>
+        <div class="wide"><dt>B at an end (z = L/2), exact</dt><dd>${fmtB(be, 4)} <span class="ok">${(be / bc).toFixed(3)} of the center</span></dd></div>`;
+      $('sideHint').textContent = 'θ₁ and θ₂ are the angles from the +z axis to the rims of the two ends, seen from the point on the axis. A long solenoid has θ₁ → 0 and θ₂ → 180°, giving μ₀nI.';
+    }
+    $('sRead').innerHTML = sh;
+    // probe
+    if (S.scene === 'wires') {
+      const p = S.probe, b = wireB(ws, p.x, p.y), m = Math.hypot(b[0], b[1]);
+      $('pLab').textContent = '|B| at the probe'; $('pL1').innerHTML = 'B<sub>x</sub>'; $('pL2').innerHTML = 'B<sub>y</sub>';
+      $('pB').textContent = fmtB(m); $('pC1').textContent = fmtB(b[0]); $('pC2').textContent = fmtB(b[1]);
+      $('pPos').textContent = `(${p.x.toFixed(1)}, ${p.y.toFixed(1)}) cm · ${m ? Math.round(angDeg(b[0], b[1])) + '° from +x' : 'no field'}`;
+    } else {
+      const p = S.sprobe, f = solField(sol, p.z, p.y, turns), m = Math.hypot(f[0], f[1]);
+      $('pLab').textContent = '|B| at the probe'; $('pL1').innerHTML = 'B<sub>z</sub> (along the axis)'; $('pL2').innerHTML = 'B<sub>ρ</sub> (away from the axis)';
+      $('pB').textContent = fmtB(m); $('pC1').textContent = fmtB(f[0]); $('pC2').textContent = fmtB(p.y < 0 ? -f[1] : f[1]);
+      $('pPos').textContent = `z = ${fmtCm(p.z)}, ρ = ${fmtCm(Math.abs(p.y))} · ${m && isFinite(m) ? Math.round(angDeg(f[0], f[1])) + '° from +z' : '—'}`;
+    }
+    headline();
+  }
+  function headline() {
+    const hl = $('headline');
+    if (S.scene === 'side') {
+      const sol = S.sol, bc = axisExact(sol, 0);
+      hl.innerHTML = sol.N === 1 ? `B<sub>center</sub> = ${fmtB(bc, 4)} <small>μ₀I/(2R) = ${fmtB(loopCenter(sol.R, sol.I), 4)}</small>`
+        : `B<sub>center</sub> = ${fmtB(bc, 4)} <small>μ₀nI = ${fmtB(idealSol(sol), 4)}</small>`;
+    } else if (S.amp) {
+      const A = ampere();
+      hl.innerHTML = A.on ? '∮B·dl undefined <small>a wire is on the loop</small>' : `∮B·dl = ${fmtC(A.num.v)} <small>μ₀I<sub>enc</sub> = ${fmtC(MU0 * A.Ienc)}</small>`;
+    } else if (S.wires.length === 2) {
+      const [a, b] = S.wires, f = pairForce(a.I, b.I, Math.hypot(a.x - b.x, a.y - b.y));
+      hl.innerHTML = `F/L = ${fmtF(Math.abs(f))} <small>${f > 0 ? 'attract' : f < 0 ? 'repel' : 'no force'}</small>`;
+    } else {
+      const p = S.probe, b = wireB(S.wires, p.x, p.y);
+      hl.innerHTML = `B = ${fmtB(Math.hypot(b[0], b[1]))} <small>at the probe</small>`;
+    }
+  }
+  const MODEL = {
+    wires: 'Model: infinitely long, thin, straight wires perpendicular to the page, in vacuum. Each gives B = μ₀I/(2πr) circling it; the field shown is the sum over the wires. The force on a wire is per meter of its length and comes only from the other wires. ∮B·dl is integrated numerically along the loop with adaptive Gauss–Kronrod quadrature to a tolerance of 10⁻¹⁰ of μ₀Σ|I|; it never uses Ampère\'s law. A real wire has a thickness: inside it B falls to zero at the center, which this thin wire model leaves out. Compass needles turn to line up with B; how they swing on the way is for show.',
+    side: 'Model: each turn is an exact circle of radius R carrying I, all coaxial and evenly spaced over the length L. A real winding is a helix, which also carries the current I once along the coil; that small part is left out. The field of each turn at every point comes from the full 3D Biot–Savart law in closed form, with the complete elliptic integrals K and E, and the turns are summed. The dashed gold curve treats the winding as a continuous current sheet with n = N/L turns per meter. The thickness of the wire is ignored. Compass needles turn to line up with B; how they swing on the way is for show.'
+  };
+  const LINEHINT = {
+    wires: 'In this cross section the field lines are contours of the vector potential A<sub>z</sub> at equal steps. That makes their spacing exact: lines crowd together in proportion to the field strength. They are not drawn inside a small circle around each wire, where they crowd without limit.',
+    side: 'In this plane through the axis the field lines are contours of the flux function ρA<sub>φ</sub>. They are drawn through points evenly spaced across the center plane, so here their spacing shows B only roughly. The axis itself is a field line. The top of each turn carries current out of the page and the bottom into it; looking along +z (to the right), the current goes counterclockwise.'
+  };
+  function syncScene() {
+    const side = S.scene === 'side';
+    $('stage').classList.toggle('side', side);
+    $('scWires').setAttribute('aria-pressed', String(!side)); $('scSide').setAttribute('aria-pressed', String(side));
+    $('ampBtn').hidden = side; $('ampBtn').setAttribute('aria-pressed', String(S.amp));
+    for (const el of document.querySelectorAll('[data-scene]')) el.hidden = el.dataset.scene !== S.scene || (el.hasAttribute('data-amp') && !S.amp);
+    $('shCircle').setAttribute('aria-pressed', String(S.loop.kind === 'circle')); $('shRect').setAttribute('aria-pressed', String(S.loop.kind === 'rect'));
+    $('dirCcw').setAttribute('aria-pressed', String(S.ccw)); $('dirCw').setAttribute('aria-pressed', String(!S.ccw));
+    for (const [id, k] of [['tLines', 'lines'], ['tShade', 'shade'], ['tCompass', 'compass'], ['tProbe', 'probe'], ['tForce', 'force']]) $(id).checked = S.show[k];
+    $('modelHint').textContent = MODEL[S.scene];
+    $('lineHint').innerHTML = LINEHINT[S.scene];
+    $('key').innerHTML = side
+      ? '<span><i class="swatch bl"></i>Field line</span><span><i class="swatch exact"></i>B<sub>z</sub> on the axis, exact</span><span><i class="swatch sheet"></i>Continuous current sheet</span><span><i class="swatch ideal"></i>μ₀nI, or μ₀I/(2R) for one loop</span><span><i class="swatch needle"></i>Compass, red end along B</span><span><i class="swatch grip"></i>Grip: drag to change R or L</span>'
+      : '<span><i class="swatch bl"></i>Field line</span><span><i class="swatch shade"></i>|B|, stronger is darker</span><span><i class="swatch needle"></i>Compass, red end along B</span><span><i class="swatch force"></i>Force on a wire, per meter</span>' + (S.amp ? '<span><i class="swatch out"></i><i class="swatch in"></i>Loop: B along or against its direction</span><span><i class="swatch grip"></i>Grip: drag to move or resize</span>' : '');
+  }
+
+  // ---------- changes ----------
+  let dirty = true, readDirty = true, lastInput = 0;
+  function changed() { dirty = true; readDirty = true; }
+  function markPreset(name) {
+    S.preset = name;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint').innerHTML = name && PRESETS[name] ? PRESETS[name].hint : 'Your own setup. Pick a preset to return to a known one.';
+  }
+  function custom() { if (S.preset) markPreset(null); }
+  function applyPreset(name) {
+    const p = PRESETS[name];
+    S.scene = p.scene;
+    if (p.wires) {
+      S.wires = p.wires.map(([x, y, I]) => mkW(x, y, I)); S.wsel = S.wires[0].id; S.sel = null;
+      S.amp = p.amp; if (p.loop) S.loop = { ...p.loop }; S.ccw = true;
+      S.probe = { x: p.probe[0], y: p.probe[1] };
+      S.show.force = !p.amp;
+    }
+    if (p.sol) { S.sol = { ...p.sol }; S.sprobe = { z: p.sprobe[0], y: p.sprobe[1] }; S.fit = null; S.sel = null; }
+    markPreset(name);
+    syncScene(); setView(); if (S.scene === 'side') fitSide(); keepInView();
+    needlesKey = ''; changed();
+    if (!reduce) for (const n of needles) n.th = Math.random() * TWO_PI;
+  }
+  function setScene(sc) {
+    if (S.scene === sc) return;
+    applyPreset(sc === 'side' ? (S.sol.N === 1 ? 'loop' : 'sol') : 'par');
+  }
+  function addWire(sign) {
+    if (S.wires.length >= 6) return;
+    // a free spot near the middle
+    let best = null;
+    for (let r = 0; r < 12 && !best; r += 1.5) for (let k = 0; k < 12; k++) {
+      const a = k * Math.PI / 6, x = snap(r * Math.cos(a), 0.5), y = snap(r * Math.sin(a), 0.5);
+      if (x < V.x0 + 1 || x > V.x1 - 1 || y < V.y0 + 1 || y > V.y1 - 1) continue;
+      if (S.wires.every((w) => Math.hypot(w.x - x, w.y - y) > 2.2) && Math.hypot(S.probe.x - x, S.probe.y - y) > 1.5) { best = [x, y]; break; }
+    }
+    best = best || [0, 0];
+    const w = mkW(best[0], best[1], 5 * sign); S.wires.push(w); S.wsel = w.id; S.sel = { kind: 'w', id: w.id };
+    custom(); changed(); say(`Added wire ${S.wires.length}, ${fmtI(w.I)}`);
+  }
+  function removeWire(id) {
+    const i = S.wires.findIndex((w) => w.id === id); if (i < 0) return;
+    S.wires.splice(i, 1);
+    S.wsel = S.wires.length ? S.wires[Math.min(i, S.wires.length - 1)].id : null;
+    if (S.sel && S.sel.kind === 'w') S.sel = S.wsel ? { kind: 'w', id: S.wsel } : null;
+    custom(); changed(); say(`Removed wire ${i + 1}`);
+  }
+  function setCurrent(w, I) { w.I = clamp(snap(I, 0.5), -20, 20); custom(); changed(); }
+  const say = (t) => { $('live').textContent = t; };
+
+  // ---------- controls ----------
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('scWires').addEventListener('click', () => setScene('wires'));
+  $('scSide').addEventListener('click', () => setScene('side'));
+  $('ampBtn').addEventListener('click', () => { S.amp = !S.amp; custom(); syncScene(); changed(); });
+  $('addOut').addEventListener('click', () => addWire(1));
+  $('addIn').addEventListener('click', () => addWire(-1));
+  $('delW').addEventListener('click', () => { if (S.wsel) removeWire(S.wsel); });
+  $('flipW').addEventListener('click', () => { const w = wById(S.wsel); if (w) setCurrent(w, -w.I); });
+  $('sI').addEventListener('input', (e) => { const w = wById(S.wsel); if (w) setCurrent(w, +e.target.value); });
+  $('wList').addEventListener('click', (e) => { const li = e.target.closest('li'); if (!li) return; S.wsel = +li.dataset.id; S.sel = { kind: 'w', id: S.wsel }; changed(); });
+  $('wList').addEventListener('keydown', (e) => {
+    const li = e.target.closest('li'); if (!li || (e.key !== 'Enter' && e.key !== ' ')) return;
+    S.wsel = +li.dataset.id; S.sel = { kind: 'w', id: S.wsel }; e.preventDefault(); changed();
+    readouts(); readDirty = false; const el = document.querySelector(`#wList li[data-id="${S.wsel}"]`); if (el) el.focus();
+  });
+  $('shCircle').addEventListener('click', () => { S.loop.kind = 'circle'; custom(); syncScene(); changed(); });
+  $('shRect').addEventListener('click', () => { S.loop.kind = 'rect'; custom(); syncScene(); changed(); });
+  $('dirCcw').addEventListener('click', () => { S.ccw = true; custom(); syncScene(); changed(); });
+  $('dirCw').addEventListener('click', () => { S.ccw = false; custom(); syncScene(); changed(); });
+  function sideOut() {   // refit if the coil no longer fits the drawing
+    const sol = S.sol, ex = (sol.N > 1 ? sol.L / 2 : 0) + sol.R * 1.15;
+    if (ex > Math.min(-V.x0, V.x1) * 0.98 || sol.R * 1.2 > Math.min(V.y1, -V.y0)) fitSide();
+  }
+  function sideInput(key, v) {
+    S.sol[key] = v; custom(); lastInput = performance.now();
+    S.sprobe.z = clamp(S.sprobe.z, V.x0, V.x1);
+    sideOut(); changed();
+  }
+  $('sN').addEventListener('input', (e) => sideInput('N', +e.target.value));
+  $('sL').addEventListener('input', (e) => sideInput('L', +e.target.value));
+  $('sR').addEventListener('input', (e) => sideInput('R', +e.target.value));
+  $('sIs').addEventListener('input', (e) => sideInput('I', +e.target.value));
+  for (const id of ['sN', 'sL', 'sR']) $(id).addEventListener('change', () => { fitSide(); lastInput = 0; changed(); });
+  $('sIs').addEventListener('change', () => { lastInput = 0; changed(); });
+  for (const [id, k] of [['tLines', 'lines'], ['tShade', 'shade'], ['tCompass', 'compass'], ['tProbe', 'probe'], ['tForce', 'force']])
+    $(id).addEventListener('change', (e) => { S.show[k] = e.target.checked; changed(); });
+
+  // ---------- dragging on the drawing ----------
+  // every draggable part, in pane pixels: d(x, y) is the distance from the pointer (negative inside a disk)
+  function handles() {
+    const out = [], ks = Math.min(kS(), 1.3);
+    if (S.scene === 'wires') {
+      const rw = rwire();
+      for (const w of S.wires) out.push({ id: 'w' + w.id, kind: 'w', ref: w, cursor: 'move', d: (x, y) => Math.hypot(x - X(w.x), y - Y(w.y)) - rw });
+      if (S.show.probe) out.push({ id: 'probe', kind: 'probe', cursor: 'move', d: (x, y) => Math.hypot(x - X(S.probe.x), y - Y(S.probe.y)) - 8 * ks });
+      if (S.amp) {
+        const L = S.loop, gp = loopGrips();
+        out.push({ id: 'lm', kind: 'lm', cursor: 'move', d: (x, y) => Math.hypot(x - gp.move[0], y - gp.move[1]) - 9 * ks });
+        if (L.kind === 'circle') out.push({ id: 'lr', kind: 'lr', cursor: 'nwse-resize', d: (x, y) => Math.min(Math.abs(Math.hypot(x - X(L.x), y - Y(L.y)) - L.r * V.s), Math.hypot(x - gp.size[0], y - gp.size[1]) - 9 * ks) });
+        else {
+          out.push({ id: 'lw', kind: 'lw', cursor: 'ew-resize', d: (x, y) => (Math.abs(y - Y(L.y)) <= L.h / 2 * V.s + 4 ? Math.abs(Math.abs(x - X(L.x)) - L.w / 2 * V.s) : Infinity) });
+          out.push({ id: 'lh', kind: 'lh', cursor: 'ns-resize', d: (x, y) => (Math.abs(x - X(L.x)) <= L.w / 2 * V.s + 4 ? Math.abs(Math.abs(y - Y(L.y)) - L.h / 2 * V.s) : Infinity) });
+        }
+      }
+    } else {
+      const sol = S.sol, gp = sideGrips(), tr = turnR(), x0 = X(-sol.L / 2) - tr, x1 = X(sol.L / 2) + tr, xs = sol.N > 1 ? [x0, x1] : [X(0) - tr, X(0) + tr];
+      if (S.show.probe) out.push({ id: 'probe', kind: 'sprobe', cursor: 'move', d: (x, y) => Math.hypot(x - X(S.sprobe.z), y - Y(S.sprobe.y)) - 8 * ks });
+      out.push({ id: 'sr', kind: 'sr', cursor: 'ns-resize', d: (x, y) => {
+        const row = x >= xs[0] && x <= xs[1] ? Math.min(Math.abs(y - Y(sol.R)), Math.abs(y - Y(-sol.R))) - tr * 0.6 : Infinity;
+        return Math.min(row, Math.hypot(x - gp.R[0], y - gp.R[1]) - 9 * ks);
+      } });
+      if (gp.L) out.push({ id: 'sl', kind: 'sl', cursor: 'ew-resize', d: (x, y) => Math.hypot(x - gp.L[0], y - gp.L[1]) - 9 * ks });
+    }
+    return out;
+  }
+  function hitAt(ev) {
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 6 * Math.min(projScale(), 1.3) * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of handles()) { const d = h.d(x, y); if (d < bd) { bd = d; best = h; } }
+    if (!best && S.scene === 'wires' && S.amp && insideLoop(S.loop, wx(x), wy(y))) best = { id: 'lm', kind: 'lm', cursor: 'move' };
+    if (!best && S.scene === 'side' && PG && y > V.Hd && S.show.probe) best = { id: 'plot', kind: 'plot', cursor: 'ew-resize' };
+    return best;
+  }
+  function inView(x, y, m) { return [clamp(x, V.x0 + m, V.x1 - m), clamp(y, V.y0 + m, V.y1 - m)]; }
+  let dq = null, dFrame = false;
+  function dragApply() {
+    dFrame = false;
+    if (!drag || !dq) return;
+    const [px, py] = dq; dq = null;
+    const x = wx(px), y = wy(py), o = drag.o, L = S.loop;
+    switch (drag.kind) {
+      case 'w': { const w = wById(drag.ref); if (!w) return; [w.x, w.y] = inView(snap(o[0] + x - drag.x0, 0.1), snap(o[1] + y - drag.y0, 0.1), 0.4); break; }
+      case 'probe': [S.probe.x, S.probe.y] = inView(snap(o[0] + x - drag.x0, 0.1), snap(o[1] + y - drag.y0, 0.1), 0.2); break;
+      case 'lm': [L.x, L.y] = inView(snap(o[0] + x - drag.x0, 0.1), snap(o[1] + y - drag.y0, 0.1), 0.5); break;
+      case 'lr': L.r = clamp(snap(Math.hypot(x - L.x, y - L.y) + o, 0.1), 0.5, 20); break;
+      case 'lw': L.w = clamp(snap(2 * Math.abs(x - L.x) + o, 0.1), 0.6, 40); break;
+      case 'lh': L.h = clamp(snap(2 * Math.abs(y - L.y) + o, 0.1), 0.6, 30); break;
+      case 'sprobe': { const [z, yy] = inView(snap(o[0] + x - drag.x0, 0.1), snap(o[1] + y - drag.y0, 0.1), 0.2); S.sprobe.z = z; S.sprobe.y = clamp(yy, wy(V.Hd) + 0.2, V.y1 - 0.2); break; }
+      case 'sr': S.sol.R = clamp(snap(Math.abs(y) + o, 0.1), 0.5, 8); lastInput = performance.now(); break;
+      case 'sl': S.sol.L = clamp(snap(2 * Math.abs(x) + o, 0.5), 1, 40); lastInput = performance.now(); break;
+      case 'plot': S.sprobe.z = clamp(snap(x, 0.1), V.x0 + 0.2, V.x1 - 0.2); S.sprobe.y = 0; break;
+    }
+    if (drag.kind !== 'probe' && drag.kind !== 'sprobe' && drag.kind !== 'plot') custom();
+    changed();
+  }
+  can.addEventListener('pointermove', (ev) => {
+    const r = can.getBoundingClientRect();
+    if (drag) { dq = [ev.clientX - r.left, ev.clientY - r.top]; if (!dFrame) { dFrame = true; requestAnimationFrame(dragApply); } return; }
+    const h = hitAt(ev), id = h ? h.id : null;
+    if (id !== hoverId) { hoverId = id; dirty = true; }
+    can.style.cursor = h ? h.cursor : 'default';
+  });
+  can.addEventListener('pointerdown', (ev) => {
+    can.focus({ preventScroll: true });
+    const h = hitAt(ev);
+    if (!h) { if (S.sel) { S.sel = null; dirty = true; } return; }
+    const r = can.getBoundingClientRect(), x = wx(ev.clientX - r.left), y = wy(ev.clientY - r.top), L = S.loop;
+    drag = { id: h.id, kind: h.kind, x0: x, y0: y };
+    switch (h.kind) {
+      case 'w': drag.ref = h.ref.id; drag.o = [h.ref.x, h.ref.y]; S.wsel = h.ref.id; S.sel = { kind: 'w', id: h.ref.id }; readDirty = true; break;
+      case 'probe': drag.o = [S.probe.x, S.probe.y]; S.sel = { kind: 'probe' }; break;
+      case 'sprobe': drag.o = [S.sprobe.z, S.sprobe.y]; S.sel = { kind: 'probe' }; break;
+      case 'lm': drag.o = [L.x, L.y]; S.sel = { kind: 'loop' }; break;
+      case 'lr': drag.o = L.r - Math.hypot(x - L.x, y - L.y); S.sel = { kind: 'loop' }; break;
+      case 'lw': drag.o = L.w - 2 * Math.abs(x - L.x); S.sel = { kind: 'loop' }; break;
+      case 'lh': drag.o = L.h - 2 * Math.abs(y - L.y); S.sel = { kind: 'loop' }; break;
+      case 'sr': drag.o = S.sol.R - Math.abs(y); break;
+      case 'sl': drag.o = S.sol.L - 2 * Math.abs(x); break;
+      case 'plot': dq = [ev.clientX - r.left, ev.clientY - r.top]; dragApply(); drag = { id: 'plot', kind: 'plot' }; break;
+    }
+    hoverId = h.id; dirty = true;
+    try { can.setPointerCapture(ev.pointerId); } catch (_) {}
+    can.style.cursor = h.cursor; ev.preventDefault();
+  });
+  const endDrag = () => {
+    if (!drag) return;
+    if (dq) dragApply();
+    const k = drag.kind; drag = null; hoverId = null;
+    if (k === 'sr' || k === 'sl') { lastInput = 0; fitSide(); }
+    changed();
+  };
+  can.addEventListener('pointerup', endDrag);
+  can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('pointerleave', () => { if (!drag && hoverId) { hoverId = null; dirty = true; } });
+  can.addEventListener('dblclick', (ev) => {
+    if (S.scene !== 'wires') return;
+    const h = hitAt(ev); if (h && h.kind === 'w') { const w = wById(h.ref.id); if (w) setCurrent(w, -w.I); }
+  });
+  // keys on the drawing
+  function selectables() {
+    const L = S.wires.map((w) => ({ kind: 'w', id: w.id }));
+    if (S.show.probe) L.push({ kind: 'probe' });
+    if (S.amp) L.push({ kind: 'loop' });
+    return L;
+  }
+  const selName = (s) => (s.kind === 'w' ? `wire ${wIndex(wById(s.id))}, ${fmtI(wById(s.id).I)}` : s.kind === 'probe' ? 'the probe' : 'the Amperian loop');
+  can.addEventListener('keydown', (e) => {
+    const k = e.key, st = e.shiftKey ? 1 : 0.1;
+    const dirs = { ArrowLeft: [-st, 0], ArrowRight: [st, 0], ArrowUp: [0, st], ArrowDown: [0, -st] };
+    if (S.scene === 'side') {
+      if (dirs[k]) { const [dx, dy] = dirs[k]; S.sprobe.z = clamp(snap(S.sprobe.z + dx, 0.1), V.x0 + 0.2, V.x1 - 0.2); S.sprobe.y = clamp(snap(S.sprobe.y + dy, 0.1), V.y0 + 0.2, V.y1 - 0.2); S.sel = { kind: 'probe' }; changed(); }
+      else if (k === '+' || k === '=' || k === '-' || k === '_') { S.sol.N = clamp(S.sol.N + (k === '+' || k === '=' ? 1 : -1) * (e.shiftKey ? 5 : 1), 1, 80); custom(); sideOut(); changed(); say(`${S.sol.N} turns`); }
+      else return;
+      e.preventDefault(); return;
+    }
+    if (k === 'n' || k === 'N') {
+      const L = selectables(); if (!L.length) return;
+      const i = S.sel ? L.findIndex((o) => o.kind === S.sel.kind && o.id === S.sel.id) : -1;
+      S.sel = L[(i + (e.shiftKey ? L.length - 1 : 1)) % L.length];
+      if (S.sel.kind === 'w') S.wsel = S.sel.id;
+      say(`Selected ${selName(S.sel)}`); changed(); e.preventDefault(); return;
+    }
+    if (k === 'a' || k === 'A') { S.amp = !S.amp; custom(); syncScene(); changed(); say(S.amp ? 'Amperian loop shown' : 'Amperian loop hidden'); e.preventDefault(); return; }
+    const sel = S.sel || (S.wsel ? { kind: 'w', id: S.wsel } : null);
+    if (!sel) return;
+    if (dirs[k]) {
+      const [dx, dy] = dirs[k];
+      if (sel.kind === 'w') { const w = wById(sel.id); if (w) { [w.x, w.y] = inView(snap(w.x + dx, 0.1), snap(w.y + dy, 0.1), 0.4); custom(); } }
+      else if (sel.kind === 'probe') [S.probe.x, S.probe.y] = inView(snap(S.probe.x + dx, 0.1), snap(S.probe.y + dy, 0.1), 0.2);
+      else { [S.loop.x, S.loop.y] = inView(snap(S.loop.x + dx, 0.1), snap(S.loop.y + dy, 0.1), 0.5); custom(); }
+      changed();
+    } else if (k === '+' || k === '=' || k === '-' || k === '_') {
+      const d = k === '+' || k === '=' ? 1 : -1;
+      if (sel.kind === 'w') { const w = wById(sel.id); if (w) { setCurrent(w, w.I + 0.5 * d); say(`Wire ${wIndex(w)}: ${fmtI(w.I)}`); } }
+      else if (sel.kind === 'loop') { const L = S.loop; if (L.kind === 'circle') L.r = clamp(snap(L.r + 0.2 * d, 0.1), 0.5, 20); else { L.w = clamp(snap(L.w + 0.4 * d, 0.1), 0.6, 40); L.h = clamp(snap(L.h + 0.3 * d, 0.1), 0.6, 30); } custom(); changed(); }
+      else return;
+    } else if ((k === 'r' || k === 'R') && sel.kind === 'w') { const w = wById(sel.id); if (w) { setCurrent(w, -w.I); say(`Wire ${wIndex(w)} reversed: ${fmtI(w.I)}`); } }
+    else if ((k === 'Delete' || k === 'Backspace') && sel.kind === 'w') removeWire(sel.id);
+    else return;
+    e.preventDefault();
+  });
+
+  // ---------- projector and theme ----------
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  const retheme = () => { tokens(); changed(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), frameMs = 0, lastRead = 0;
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (W && H) {
+      if (dirty) { setupNeedles(); }
+      const wasMoving = needlesMoving;
+      if (S.show.compass) stepNeedles(dt);
+      const coarse = !layerFine && !drag && now - lastInput >= 260;
+      if (dirty || (S.show.compass && (needlesMoving || wasMoving)) || coarse) { drawAll(); dirty = false; frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0); }
+      if (readDirty && now - lastRead > 60) { readouts(); readDirty = false; lastRead = now; }
+    }
+    requestAnimationFrame(loop);
+  }
+  window.__cf = {
+    get frameMs() { return frameMs; }, get S() { return S; }, get V() { return V; }, get lines() { return lines.length; }, get arrows() { return arrows.length; },
+    get amp() { return ampere(); }, get needlesMoving() { return needlesMoving; }, get layerFine() { return layerFine; },
+    handles: () => handles().map((h) => h.id), X, Y, applyPreset, time(n) { const t = performance.now(); for (let i = 0; i < n; i++) { layerKey = ''; drawAll(); } return (performance.now() - t) / n; }
+  };
+
+  tokens();
+  new ResizeObserver(() => resize()).observe(pane);
+  resize();
+  applyPreset('par');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { layerKey = ''; changed(); });
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
