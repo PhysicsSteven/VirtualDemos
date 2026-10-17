@@ -1,0 +1,1393 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>RC Circuits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the circuit drawing and the energy bars on the left, V_C, V_R, I and Q against time on the right; instrument rail on the right; stacks on narrow screens. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --capq: #7a45c0;
+  --resq: #1d8a5a;
+  --wire: #3b4655;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --capq: #b48cff; --resq: #4cc38a; --wire: #aab4c2;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --capq: #b48cff; --resq: #4cc38a; --wire: #aab4c2;
+  color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 600px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
+  display: grid; grid-template-columns: minmax(0, 47fr) minmax(0, 53fr); grid-template-rows: minmax(0, 54fr) minmax(0, 46fr); }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#pPane { grid-column: 2; grid-row: 1 / 3; border-left: 1px solid var(--line); }
+#ePane { grid-column: 1; grid-row: 2; border-top: 1px solid var(--line); }
+#cCan, #pCan { touch-action: none; outline: none; }
+#cCan:focus-visible, #pCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
+.stage-ctl > * { pointer-events: auto; }
+.stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
+.tclock { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; font-size: 0.86rem; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--canvas) 85%, transparent); padding: 2px 6px; border-radius: 6px; white-space: nowrap; line-height: 1.25; }
+.tclock small { font-size: 0.74rem; font-weight: 400; color: var(--muted); }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg.full { display: flex; }
+.seg.full button { flex: 1; padding: 4px 4px; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.ctl { display: flex; flex-direction: column; gap: 4px; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .wide { grid-column: 1 / -1; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.formula { margin: 0; font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
+.formula b { color: var(--ink); font-weight: 600; }
+.kirch { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.84rem; line-height: 1.6; overflow-wrap: anywhere; }
+.kirch .eq { font-size: 1rem; font-weight: 600; }
+.kirch .res { color: var(--muted); font-size: 0.78rem; }
+.c-cap { color: var(--capq); } .c-res { color: var(--resq); }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid var(--capq); }
+.swatch.dash { border-top-style: dashed; border-color: var(--ink); }
+.swatch.ghost { border-color: var(--muted); opacity: 0.6; }
+.swatch.mark { width: 0; height: 12px; border-top: 0; border-left: 1.5px dotted var(--muted); margin: 0 11px; }
+.swatch.dot { width: 8px; height: 8px; border: 0; border-radius: 50%; background: var(--equi); margin: 0 7px; }
+.swatch.dot.e { background: var(--neg); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 1060px) {
+  .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: 380px 600px 230px; min-height: 0; }
+  #pPane { grid-column: 1; grid-row: 2; border-left: 0; border-top: 1px solid var(--line); }
+  #ePane { grid-column: 1; grid-row: 3; }
+}
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { grid-template-rows: 330px 560px 230px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>RC Circuits</h1>
+      <p>A resistor limits how fast charge can reach a capacitor. Every change happens on the same clock, the time constant τ = RC, and always along an exponential.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units · τ = RC · I &gt; 0 charges the top plate</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="pane" id="cPane">
+        <canvas id="cCan" tabindex="0" aria-label="Circuit drawing: battery, switch, resistor and capacitor. Click the switch to flip it. Drag the battery up or down to change the EMF, the resistor up or down to change R, and the top capacitor plate to change C. Keys: S flips the switch, up and down arrows change the EMF, left and right arrows change R, page up and page down change C, space plays or pauses, R resets."></canvas>
+        <div class="stage-ctl">
+          <button type="button" class="btn" id="play">Pause</button>
+          <button type="button" class="btn" id="reset">Reset</button>
+          <button type="button" class="btn" id="flip">Flip switch</button>
+          <span class="tclock mono" id="tclock">t = 0<small id="rateTag">real time</small></span>
+        </div>
+      </div>
+      <div class="pane" id="ePane">
+        <canvas id="eCan" aria-label="Energy bars: work done by the battery, energy stored in the capacitor, and heat dissipated in the resistor since t = 0."></canvas>
+      </div>
+      <div class="pane" id="pPane">
+        <canvas id="pCan" tabindex="0" aria-label="Capacitor voltage, resistor voltage, current and charge against time. Solid lines are what happened, dashed lines the exact exponential from the last change. Drag the τ marker sideways to change R; left and right arrows do the same."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="charge" aria-pressed="true">Charging</button>
+          <button type="button" data-p="discharge" aria-pressed="false">Discharging</button>
+          <button type="button" data-p="flip" aria-pressed="false">Flip mid way</button>
+          <button type="button" data-p="compare" aria-pressed="false">Big τ vs small τ</button>
+          <button type="button" data-p="flash" aria-pressed="false">Camera flash</button>
+          <button type="button" data-p="energy" aria-pressed="false">Energy bookkeeping</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Switch</h2>
+        <div class="seg full" role="group" aria-label="Switch position" id="swSeg">
+          <button type="button" data-m="charge" aria-pressed="true">Charge</button>
+          <button type="button" data-m="discharge" aria-pressed="false">Discharge</button>
+        </div>
+        <label class="check"><input type="checkbox" id="flashChk">Separate discharge resistor R₂</label>
+        <p class="hint" id="swHint">Charge puts the battery in the loop. Discharge takes it out, so the capacitor drives current back through the resistor by itself.</p>
+      </section>
+
+      <section>
+        <h2>Circuit</h2>
+        <div class="ctl">
+          <div class="slider-head"><label for="sEps">Battery EMF ε</label><output id="oEps" class="mono" for="sEps"></output></div>
+          <input type="range" id="sEps" min="1" max="12" step="0.5">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sR1" id="lR1">Resistance R</label><output id="oR1" class="mono" for="sR1"></output></div>
+          <input type="range" id="sR1" min="0" max="36" step="1">
+        </div>
+        <div class="ctl" id="r2Ctl" hidden>
+          <div class="slider-head"><label for="sR2">Discharge resistor R₂</label><output id="oR2" class="mono" for="sR2"></output></div>
+          <input type="range" id="sR2" min="0" max="72" step="1">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sC">Capacitance C</label><output id="oC" class="mono" for="sC"></output></div>
+          <input type="range" id="sC" min="0" max="18" step="1">
+        </div>
+        <dl class="readout" id="tauBox"></dl>
+        <p class="hint">Resistors and capacitors come in standard values (E12 and E6 series), so the sliders step through those. You can also drag the battery, the resistor and the top plate on the drawing, or the τ marker on the plots.</p>
+      </section>
+
+      <section>
+        <h2>Time</h2>
+        <div class="ctl">
+          <div class="slider-head"><label for="sRate">Playback rate</label><output id="oRate" class="mono" for="sRate"></output></div>
+          <input type="range" id="sRate" min="0" max="21" step="1">
+        </div>
+        <label class="check"><input type="checkbox" id="autoRate" checked>Automatic: about 6 s of viewing per 5τ</label>
+        <div class="slider-head"><span style="font-size:0.88rem">Plot window</span></div>
+        <div class="row2">
+          <button type="button" class="btn" id="zRun">Whole run</button>
+          <button type="button" class="btn" id="zStage">Last change</button>
+        </div>
+        <div class="row2">
+          <button type="button" class="btn" id="keep">Keep trace</button>
+          <button type="button" class="btn" id="clearG">Clear traces</button>
+        </div>
+        <p class="hint">The plots and the clock show the circuit's own time. A τ of a millisecond is played in slow motion, a τ of several minutes is fast forwarded; the rate is always shown next to the clock.</p>
+      </section>
+
+      <section>
+        <h2>Kirchhoff loop rule</h2>
+        <p class="kirch" id="kEq"></p>
+        <p class="hint" id="kHint">Going around the loop, the battery raises the potential by ε, the resistor drops IR and the capacitor drops Q/C. The drops always add up to ε, at every instant.</p>
+      </section>
+
+      <section>
+        <h2>Measurements</h2>
+        <dl class="readout">
+          <div><dt>Time t</dt><dd id="mT">—</dd></div>
+          <div><dt>Since last change</dt><dd id="mS">—</dd></div>
+          <div><dt>V<sub>C</sub> = Q/C</dt><dd id="mVC" class="c-cap">—</dd></div>
+          <div><dt>V<sub>R</sub> = IR</dt><dd id="mVR" class="c-res">—</dd></div>
+          <div><dt>Current I</dt><dd id="mI">—</dd></div>
+          <div><dt>Charge Q</dt><dd id="mQ" class="c-cap">—</dd></div>
+          <div class="wide"><dt id="mFracLab">V<sub>C</sub> as a fraction of ε</dt><dd id="mFrac">—</dd></div>
+        </dl>
+        <p class="formula mono" id="mFormula"></p>
+      </section>
+
+      <section>
+        <h2>Energy</h2>
+        <dl class="readout">
+          <div><dt>Battery work W = ∫εI dt</dt><dd id="eW">—</dd></div>
+          <div><dt>Stored U = ½CV<sup>2</sup></dt><dd id="eU" class="c-cap">—</dd></div>
+          <div><dt>Heat in R, ∫I<sup>2</sup>R dt</dt><dd id="eH" class="c-res">—</dd></div>
+          <div><dt>Power in R now</dt><dd id="eP" class="c-res">—</dd></div>
+          <div class="wide"><dt id="eSplitLab">Split of the battery work</dt><dd id="eSplit">—</dd></div>
+          <div class="wide"><dt>Peak power, start of this stage, I₀<sup>2</sup>R</dt><dd id="ePk">—</dd></div>
+        </dl>
+        <p class="hint" id="eHint">Charging an empty capacitor, the battery moves charge Q = Cε through a potential difference ε, so it does work Cε<sup>2</sup>. The capacitor ends up with ½Cε<sup>2</sup>. The other half heats the resistor, whatever the value of R: a small R gives a large current for a short time, a large R a small current for a long time, and ∫I<sup>2</sup>R dt comes out the same.</p>
+      </section>
+
+      <section>
+        <h2>Display</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tElec">Electron flow</label>
+          <label><input type="checkbox" id="tField" checked>E field</label>
+          <label><input type="checkbox" id="tMarks" checked>τ marks</label>
+          <label><input type="checkbox" id="tPred" checked>Exact curve</label>
+        </div>
+        <div class="key">
+          <span><i class="swatch dot" id="dotSw"></i><span id="dotTxt">Positive charge carriers, conventional current</span></span>
+          <span><i class="swatch"></i>What happened so far</span>
+          <span><i class="swatch dash"></i>Exact exponential from the last change</span>
+          <span><i class="swatch ghost"></i><span id="ghostTxt">Kept trace</span></span>
+          <span><i class="swatch mark"></i>1τ to 5τ after the last change</span>
+        </div>
+        <p class="hint" id="modelHint">Model: ideal battery with no internal resistance, ideal wires and switch, no inductance, and a switch that flips instantly. Between changes the exact solution Q(t) = Q<sub>f</sub> + (Q₀ − Q<sub>f</sub>) e<sup>−(t−t₀)/τ</sup> is used, starting from the charge at the moment of the change, so there is no step size error. Dot speed is proportional to I, scaled so that ε/R of the resistor in the loop is one fixed speed. The plate symbols show Q in proportion to C × 12 V. The plate spacing is drawn on a log scale; for a parallel plate capacitor C ∝ 1/d.</p>
+      </section>
+    </aside>
+  </main>
+  <p class="sr" aria-live="polite" id="live"></p>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const E12 = [1, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2];
+  const E6 = [1, 1.5, 2.2, 3.3, 4.7, 6.8];
+  // standard values from 10^d0 up to 10^d1 inclusive
+  function series(mult, d0, d1, unit) {
+    const out = [];
+    for (let d = d0; d < d1; d++) for (const m of mult) out.push(+(m * Math.pow(10, d) * unit).toPrecision(3));
+    out.push(+(Math.pow(10, d1) * unit).toPrecision(3));
+    return out;
+  }
+  const R_VALUES = series(E12, 3, 6, 1);        // 1 kΩ to 1 MΩ
+  const R2_VALUES = series(E12, 0, 6, 1);       // 1 Ω to 1 MΩ
+  const C_VALUES = series(E6, 0, 3, 1e-6);      // 1 µF to 1000 µF
+  function nearestIdx(list, v) {
+    let b = 0, bd = Infinity;
+    for (let i = 0; i < list.length; i++) { const d = Math.abs(Math.log(v / list[i])); if (d < bd) { bd = d; b = i; } }
+    return b;
+  }
+  // The loop that the switch closes. Charge: battery, R1 and C. Discharge: C and R1 (or R2 when the circuit has a separate one).
+  function loopOf(p, mode) {
+    return mode === 'charge' ? { R: p.R1, eps: p.eps } : { R: p.flash ? p.R2 : p.R1, eps: 0 };
+  }
+  // One stretch of time with fixed circuit values: Q(t) = Qf + (Q0 − Qf) e^(−(t − t0)/τ), Qf = Cε, τ = RC
+  function makeSeg(t0, Q0, p, mode, kind) {
+    const l = loopOf(p, mode);
+    return { t0, Q0, C: p.C, R: l.R, eps: l.eps, epsB: p.eps, mode, kind, Qf: p.C * l.eps, tau: l.R * p.C };
+  }
+  function segState(g, t) {
+    const s = Math.max(0, t - g.t0), e = Math.exp(-s / g.tau), D = g.Q0 - g.Qf;
+    const Q = g.Qf + D * e, I = -D / g.tau * e;
+    return { Q, I, VC: Q / g.C, VR: I * g.R };
+  }
+  // Battery work W = ∫εI dt = ε(Q − Q0) and heat ∫I²R dt = (Q0 − Qf)²/(2C) (1 − e^(−2s/τ)), both exact
+  function segEnergy(g, t) {
+    const s = Math.max(0, t - g.t0), D = g.Q0 - g.Qf;
+    return { W: -g.eps * D * -Math.expm1(-s / g.tau), H: D * D / (2 * g.C) * -Math.expm1(-2 * s / g.tau) };
+  }
+  function makeRC(p, mode, Q0) {
+    return { segs: [makeSeg(0, Q0, p, mode, 'start')], acc: { W: 0, H: 0, M: 0 }, U0: Q0 * Q0 / (2 * p.C) };
+  }
+  const lastSeg = (sim) => sim.segs[sim.segs.length - 1];
+  // A change at time t (switch flip or new component value). The charge on the plates is continuous.
+  // Changing C at fixed Q changes Q²/2C; that energy is mechanical work on the plates, kept as M.
+  function rcEvent(sim, t, p, mode, kind) {
+    const g = lastSeg(sim);
+    if (t < g.t0) t = g.t0;
+    const st = segState(g, t), en = segEnergy(g, t), Q = st.Q;
+    if (t === g.t0 && sim.segs.length === 1) {       // nothing has happened yet: just redefine the start
+      sim.segs[0] = makeSeg(0, g.Q0, p, mode, 'start');
+      sim.U0 = g.Q0 * g.Q0 / (2 * p.C);
+      return sim.segs[0];
+    }
+    sim.acc.W += en.W; sim.acc.H += en.H;
+    if (p.C !== g.C) sim.acc.M += Q * Q / (2 * p.C) - Q * Q / (2 * g.C);
+    const ng = makeSeg(t, Q, p, mode, kind);
+    if (t === g.t0) { if (g.kind === 'switch') ng.kind = 'switch'; sim.segs[sim.segs.length - 1] = ng; }
+    else sim.segs.push(ng);
+    return ng;
+  }
+  function stateAt(sim, t) {
+    let k = sim.segs.length - 1;
+    while (k > 0 && sim.segs[k].t0 > t) k--;
+    return segState(sim.segs[k], t);
+  }
+  function totals(sim, t) {
+    const g = lastSeg(sim), en = segEnergy(g, t), st = segState(g, t);
+    const W = sim.acc.W + en.W, H = sim.acc.H + en.H, M = sim.acc.M, U = st.Q * st.Q / (2 * g.C);
+    return { W, H, M, U, U0: sim.U0, check: sim.U0 + W + M - U - H };
+  }
+  // Kirchhoff loop: ε − IR − Q/C (ε = 0 when the battery is out of the loop)
+  function loopResidual(sim, t) { const g = lastSeg(sim), st = segState(g, t); return g.eps - st.I * g.R - st.Q / g.C; }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.RC = { R_VALUES, R2_VALUES, C_VALUES, nearestIdx, loopOf, makeSeg, segState, segEnergy, makeRC, rcEvent, stateAt, totals, loopResidual, lastSeg };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const RATES = [];
+  for (let d = -4; d <= 2; d++) for (const m of [1, 2, 5]) RATES.push(+(m * Math.pow(10, d)).toPrecision(2));
+  RATES.push(1000);
+
+  // ---------- setups ----------
+  const PRESETS = {
+    charge: { eps: 12, R1: 10e3, C: 100e-6, mode: 'charge', full: false,
+      hint: 'The switch connects the battery. V_C climbs fast at first and then ever slower: at t = τ it has made 63% of the climb, after 5τ it is within 1% of ε. The current does the opposite, starting at ε/R and dying away. Click the switch at any time to discharge.' },
+    discharge: { eps: 9, R1: 47e3, C: 100e-6, mode: 'discharge', full: true,
+      hint: 'The capacitor starts full and drives current through R by itself. In every τ, V_C falls to 37% of what it was. The current is negative: it runs the opposite way to the charging current.' },
+    flip: { eps: 12, R1: 10e3, C: 100e-6, mode: 'charge', full: false, autoFlip: 1,
+      hint: 'The switch flips by itself at t = τ, when V_C has reached 63% of ε. The discharge is a new exponential that starts from that 63%, not from ε, with the same τ. The faint dashed line is where the charging would have gone.' },
+    compare: { eps: 12, R1: 10e3, C: 100e-6, mode: 'charge', full: false, ghostR: 33e3, winTau: 3.3,
+      hint: 'The gray trace was charged through R = 33 kΩ, so τ = 3.3 s. Yours has 10 kΩ and τ = 1.0 s. Both reach 63% of ε at their own τ and have the same shape, only stretched. Drag the τ marker on the plots to change R.' },
+    flash: { eps: 12, R1: 10e3, R2: 10, C: 1000e-6, mode: 'charge', full: false, flash: true,
+      hint: 'Charge slowly through R₁ (τ₁ = 10 s), then flip the switch to dump the charge through the small R₂, the flash tube (τ₂ = 10 ms). The same stored energy comes out a thousand times faster, so the peak power is a thousand times larger. A defibrillator works the same way.' },
+    energy: { eps: 6, R1: 1e3, C: 1000e-6, mode: 'charge', full: false,
+      hint: 'Watch the split of the battery work below the bars. Charging from empty, both shares head for exactly 50%. Change R and press Reset: it takes a different time, but the split is the same.' }
+  };
+
+  // ---------- state ----------
+  const S = { preset: 'charge', p: { eps: 12, R1: 10e3, R2: 10, C: 100e-6, flash: false }, mode: 'charge', full: false,
+    layers: { elec: false, field: true, marks: true, pred: true }, rateIdx: 9, autoRate: true };
+  let sim = null, t = 0, running = !reduce, pauseWhy = '', autoFlipAt = null;
+  const view = { tL: 0, L: 6, tLshow: 0 };
+  let ghosts = [];
+  let ranges = {};
+  let blade = 0;                 // 0: blade on the charge contact, 1: on the discharge contact (animated)
+  const phase = { com: 0, bat: 0, byp: 0 };
+  const cfg = () => PRESETS[S.preset];
+  const rate = () => RATES[S.rateIdx];
+  const tauCharge = () => S.p.R1 * S.p.C;
+  const tauDis = () => (S.p.flash ? S.p.R2 : S.p.R1) * S.p.C;
+
+  // ---------- formatting ----------
+  const PFX = [[1e6, 'M'], [1e3, 'k'], [1, ''], [1e-3, 'm'], [1e-6, 'µ'], [1e-9, 'n'], [1e-12, 'p'], [1e-15, 'f']];
+  function sigStr(x, sig) {
+    const a = Math.abs(x);
+    if (a === 0) return '0';
+    const d = Math.max(0, sig - 1 - Math.floor(Math.log10(a) + 1e-12));
+    return x.toFixed(d);
+  }
+  function fmtSI(v, unit, sig) {
+    sig = sig || 3;
+    if (!isFinite(v)) return '—';
+    const a = Math.abs(v);
+    if (a < 1e-18) return `0 ${unit}`;
+    const f = PFX.find(([m]) => a >= m * 0.9995) || PFX[PFX.length - 1];
+    return `${sigStr(v / f[0], sig).replace('-', '−')} ${f[1]}${unit}`;
+  }
+  function fmtTime(s, sig) {
+    if (Math.abs(s) >= 120) return `${sigStr(s / 60, sig || 3)} min`;
+    return fmtSI(s, 's', sig || 3);
+  }
+  const fmtR = (v) => fmtSI(v, 'Ω', 2);
+  const fmtC = (v) => `${sigStr(v * 1e6, 2)} µF`;      // capacitors are labeled in µF, also above 1000 µF
+  function fmtRate(r) {
+    if (Math.abs(r - 1) < 1e-9) return 'real time';
+    if (r < 1) return `slow motion ×${Math.round(1 / r).toLocaleString('en-US')}`;
+    return `fast forward ×${Math.round(r).toLocaleString('en-US')}`;
+  }
+  const pct = (v) => `${(v * 100).toFixed(1)}%`;
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  function fmtSci(v) {
+    if (v === 0) return '0';
+    const e = Math.floor(Math.log10(Math.abs(v))), m = v / Math.pow(10, e);
+    return `${m.toFixed(1).replace('-', '−')} × 10${String(e).split('').map((c) => SUP[c]).join('')}`;
+  }
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  function timeUnit(L) { return L < 0.5 ? [1e-3, 'ms'] : L <= 600 ? [1, 's'] : [60, 'min']; }
+  function scaleUnit(maxAbs, unit) {
+    const f = PFX.find(([m]) => maxAbs >= m * 0.9995) || PFX[PFX.length - 1];
+    return [f[0], f[1] + unit];
+  }
+
+  // ---------- simulation control ----------
+  function newRun() {
+    const Q0 = S.full ? S.p.C * S.p.eps : 0;
+    sim = makeRC(S.p, S.mode, Q0);
+    t = 0; pauseWhy = '';
+    autoFlipAt = cfg().autoFlip ? cfg().autoFlip * tauCharge() : null;
+    blade = S.mode === 'charge' ? 0 : 1;
+    fitView(cfg().winTau ? 6 * cfg().winTau : 0);
+    view.tL = 0; view.tLshow = 0;
+    if (S.autoRate) setRateIdx(autoRateIdx());
+    updateReadouts();
+  }
+  function fitView(Lforce) {
+    view.L = Lforce || 6 * tauCharge();
+    ranges = {};
+  }
+  function autoRateIdx() { return nearestIdx(RATES, 5 * lastSeg(sim).tau / 6); }
+  function setRateIdx(i) {
+    S.rateIdx = Math.max(0, Math.min(RATES.length - 1, i));
+    const el = $('sRate'); if (document.activeElement !== el) el.value = S.rateIdx;
+    $('oRate').textContent = fmtRate(rate());
+    $('rateTag').textContent = fmtRate(rate());
+  }
+  // make room on the plots for 5τ of what follows a change
+  function roomFor(tau) {
+    if (t + 5 * tau > view.tL + view.L * 1.0001) view.tL = Math.max(0, t - view.L / 6);
+  }
+  function change(kind) {
+    rcEvent(sim, t, S.p, S.mode, kind);
+    const g = lastSeg(sim);
+    // rescale the time window only when the charging τ no longer fits or would be a sliver
+    const tc = tauCharge();
+    if (!dragging() && (tc > view.L / 3 || tc < view.L / 60)) { fitView(); view.tL = Math.max(0, t - view.L / 6); view.tLshow = view.tL; }
+    if (S.autoRate) setRateIdx(autoRateIdx());
+    if (kind === 'switch') roomFor(g.tau);
+    staticText();
+    updateReadouts();
+  }
+  function setMode(m, fromUser) {
+    if (m === S.mode) return;
+    S.mode = m;
+    if (fromUser) autoFlipAt = null;
+    change('switch');
+    for (const b of document.querySelectorAll('#swSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === m));
+    if (reduce) blade = m === 'charge' ? 0 : 1;
+    $('live').textContent = m === 'charge' ? 'Switch to charge: the battery is in the loop.' : 'Switch to discharge: the capacitor drives current through the resistor.';
+    if (pauseWhy) { if (pauseWhy === 'window') view.tL = Math.max(0, t - view.L / 6); setRunning(true); }
+  }
+  const flip = () => setMode(S.mode === 'charge' ? 'discharge' : 'charge', true);
+
+  // advance the circuit's clock by dts; stops exactly at an automatic flip, the end of the plot window, or when settled
+  function advanceSim(dts) {
+    let t1 = t + dts;
+    if (autoFlipAt !== null && t < autoFlipAt && t1 >= autoFlipAt) {
+      t = autoFlipAt; autoFlipAt = null; setMode('discharge', false); return;
+    }
+    const tR = view.tL + view.L;
+    if (t < tR && t1 >= tR) { t = tR; pause('window'); return; }
+    const g = lastSeg(sim), ts = g.t0 + 8 * g.tau;
+    if (t < ts && t1 >= ts && ts < tR) { t = ts; pause('settled'); return; }
+    t = t1;
+  }
+  function pause(why) { setRunning(false); pauseWhy = why; updateReadouts(); }
+
+  // ---------- canvases ----------
+  let T = null, dpr = 1;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), capq: g('--capq'), resq: g('--resq'), wire: g('--wire'),
+      ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace' };
+  }
+  const cans = { c: $('cCan'), e: $('eCan'), p: $('pCan') };
+  const panes = { c: $('cPane'), e: $('ePane'), p: $('pPane') };
+  const ctxs = { c: cans.c.getContext('2d'), e: cans.e.getContext('2d'), p: cans.p.getContext('2d') };
+  const dims = { c: [0, 0], e: [0, 0], p: [0, 0] };
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const k of ['c', 'e', 'p']) {
+      const r = panes[k].getBoundingClientRect();
+      cans[k].width = Math.max(1, Math.round(r.width * dpr)); cans[k].height = Math.max(1, Math.round(r.height * dpr));
+      cans[k].style.width = r.width + 'px'; cans[k].style.height = r.height + 'px';
+      dims[k] = [r.width, r.height];
+    }
+    drawAll();
+  }
+  // text with one level of subscripts: "V_C" or "V_{R1}"
+  function richParts(str) {
+    const out = []; const re = /_\{([^}]*)\}|_(\S)/g; let i = 0, m;
+    while ((m = re.exec(str))) { if (m.index > i) out.push([str.slice(i, m.index), false]); out.push([m[1] || m[2], true]); i = re.lastIndex; }
+    if (i < str.length) out.push([str.slice(i), false]);
+    return out;
+  }
+  function richText(ctx, str, x, y, size, weight, align) {
+    const parts = richParts(str), fam = T.ui;
+    const f0 = `${weight || 400} ${size}px ${fam}`, f1 = `${weight || 400} ${size * 0.72}px ${fam}`;
+    let w = 0;
+    for (const [s, sub] of parts) { ctx.font = sub ? f1 : f0; w += ctx.measureText(s).width; }
+    let x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    const ta = ctx.textAlign; ctx.textAlign = 'left';
+    for (const [s, sub] of parts) { ctx.font = sub ? f1 : f0; ctx.fillText(s, x0, y + (sub ? size * 0.28 : 0)); x0 += ctx.measureText(s).width; }
+    ctx.textAlign = ta;
+    return w;
+  }
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+  }
+
+  // ---------- circuit drawing ----------
+  // Schematic in units: battery on the left, switch top left, resistor on top, capacitor on the right, return along the bottom.
+  const GEO = { xL: -1.25, xR: 10.35, yT: 0.3, yB: 5.75, A: [3, 1], B: [3, 2.1], P: [4.3, 1], capX: 9, capY: 3, plateHalf: 0.9 };
+  let cg = null, ctlH = 44;
+  function capGap(C) { return 0.7 + 0.8 * Math.log(C_VALUES[C_VALUES.length - 1] / C) / Math.log(1000); }
+  function circuitGeom() {
+    const [W, H] = dims.c;
+    const top = ctlH + 4, avail = H - top - 6;
+    const s = Math.max(10, Math.min((W - 16) / (GEO.xR - GEO.xL), avail / (GEO.yB - GEO.yT)));
+    const ox = (W - s * (GEO.xR - GEO.xL)) / 2 - GEO.xL * s;
+    const oy = top + (avail - s * (GEO.yB - GEO.yT)) / 2 - GEO.yT * s;
+    const fl = S.p.flash;
+    const gap = capGap(S.p.C);
+    return { s, X: (u) => ox + u * s, Y: (v) => oy + v * s, flash: fl,
+      batY: fl ? 2.15 : 3, r1: fl ? { c: [1, 3.95], vert: true } : { c: [6.6, 1], vert: false },
+      r2: fl ? { c: [3, 3.85], vert: true } : null,
+      plTop: GEO.capY - gap / 2, plBot: GEO.capY + gap / 2 };
+  }
+  function bladeEnd(b) {
+    const [px, py] = GEO.P, [ax, ay] = GEO.A, [bx, by] = GEO.B;
+    const a1 = Math.atan2(ay - py, ax - px), a2 = Math.atan2(by - py, bx - px);
+    const l1 = Math.hypot(ax - px, ay - py), l2 = Math.hypot(bx - px, by - py);
+    const a = a1 + (a2 - a1) * b, l = l1 + (l2 - l1) * b;
+    return [px + l * Math.cos(a), py + l * Math.sin(a)];
+  }
+  // branch paths in units, oriented so that positive I flows along them
+  function paths(g) {
+    const P = GEO.P;
+    return {
+      com: [[P, [9, 1], [9, g.plTop]], [[9, g.plBot], [9, 5], [3, 5]]],
+      bat: [[[3, 5], [1, 5], [1, 1], GEO.A].concat(S.mode === 'charge' ? [P] : [])],
+      byp: [[[3, 5], GEO.B].concat(S.mode === 'discharge' ? [P] : [])]
+    };
+  }
+  function drawDots(ctx, g, pl, ph, col) {
+    const sp = 0.34, r = Math.max(2, 0.055 * g.s) * Math.min(1.3, projScale());
+    ctx.fillStyle = col;
+    for (const line of pl) {
+      let acc = 0;
+      for (let i = 0; i + 1 < line.length; i++) {
+        const [x0, y0] = line[i], [x1, y1] = line[i + 1], L = Math.hypot(x1 - x0, y1 - y0);
+        if (L < 1e-9) continue;
+        let s0 = ((ph - acc) % sp + sp) % sp;
+        for (let s = s0; s < L; s += sp) {
+          const u = s / L;
+          ctx.beginPath(); ctx.arc(g.X(x0 + (x1 - x0) * u), g.Y(y0 + (y1 - y0) * u), r, 0, 2 * Math.PI); ctx.fill();
+        }
+        acc += L;
+      }
+    }
+  }
+  function drawResistor(ctx, g, r, hot, active) {
+    const [cx, cy] = r.c, half = 0.8, amp = 0.17, n = 6, ps = projScale();
+    const pt = (k, off) => r.vert ? [g.X(cx + off), g.Y(cy - half + 2 * half * k)] : [g.X(cx - half + 2 * half * k), g.Y(cy + off)];
+    // clear the wire under it
+    ctx.strokeStyle = T.canvas; ctx.lineWidth = 6 * ps;
+    ctx.beginPath(); ctx.moveTo(...pt(0, 0)); ctx.lineTo(...pt(1, 0)); ctx.stroke();
+    const zig = () => {
+      ctx.beginPath(); ctx.moveTo(...pt(0, 0)); ctx.lineTo(...pt(0.08, 0));
+      for (let i = 0; i < n; i++) ctx.lineTo(...pt(0.08 + 0.84 * (i + 0.5) / n, (i % 2 ? -amp : amp)));
+      ctx.lineTo(...pt(0.92, 0)); ctx.lineTo(...pt(1, 0));
+    };
+    if (hot) { zig(); ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.3; ctx.lineWidth = 9 * ps; ctx.lineJoin = 'round'; ctx.stroke(); ctx.globalAlpha = 1; }
+    zig(); ctx.strokeStyle = active ? T.resq : T.wire; ctx.lineWidth = 2.2 * ps; ctx.lineJoin = 'round'; ctx.stroke();
+  }
+  function grip(ctx, x, y, hot, vertical) {
+    const ps = projScale(), w = (vertical ? 13 : 20) * ps, h = (vertical ? 20 : 13) * ps;
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = hot ? T.accent : T.muted; ctx.lineWidth = (hot ? 2 : 1.2) * ps;
+    roundRect(ctx, x - w / 2, y - h / 2, w, h, 4 * ps); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = hot ? T.accent : T.muted;
+    const a = 3.5 * ps;
+    ctx.beginPath();
+    if (vertical) {
+      ctx.moveTo(x, y - 7 * ps); ctx.lineTo(x - a, y - 2.5 * ps); ctx.lineTo(x + a, y - 2.5 * ps); ctx.closePath();
+      ctx.moveTo(x, y + 7 * ps); ctx.lineTo(x - a, y + 2.5 * ps); ctx.lineTo(x + a, y + 2.5 * ps); ctx.closePath();
+    } else {
+      ctx.moveTo(x - 7 * ps, y); ctx.lineTo(x - 2.5 * ps, y - a); ctx.lineTo(x - 2.5 * ps, y + a); ctx.closePath();
+      ctx.moveTo(x + 7 * ps, y); ctx.lineTo(x + 2.5 * ps, y - a); ctx.lineTo(x + 2.5 * ps, y + a); ctx.closePath();
+    }
+    ctx.fill();
+  }
+  let cHandles = [], cHover = null, cDrag = null;
+  function drawCircuit() {
+    const [W, H] = dims.c; if (!W || !H || !sim) return;
+    const ctx = ctxs.c, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const g = circuitGeom(); cg = g;
+    const st = stateAt(sim, t), seg = lastSeg(sim);
+    const X = g.X, Y = g.Y, s = g.s;
+    const fs = Math.max(11, Math.min(14.5, s * 0.34)) * Math.min(ps, 1.22);   // the drawing is width limited, so projector text grows less here
+    const isHot = (id) => (cDrag && cDrag.id === id) || (!cDrag && cHover === id);
+    // wires
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    const wire = (pts, active) => {
+      ctx.strokeStyle = T.wire; ctx.globalAlpha = active ? 1 : 0.55; ctx.lineWidth = 2 * ps;
+      ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y)))); ctx.stroke(); ctx.globalAlpha = 1;
+    };
+    const chg = S.mode === 'charge';
+    wire([GEO.P, [9, 1], [9, g.plTop]], true);
+    wire([[9, g.plBot], [9, 5], [3, 5]], true);
+    wire([[3, 5], [1, 5], [1, 1], GEO.A], chg);
+    wire([[3, 5], GEO.B], !chg);
+    // junction
+    ctx.fillStyle = T.wire; ctx.beginPath(); ctx.arc(X(3), Y(5), 3.2 * ps, 0, 2 * Math.PI); ctx.fill();
+
+    // battery
+    {
+      const by = g.batY, cell = [[-0.36, 0.42], [-0.14, 0.22], [0.14, 0.42], [0.36, 0.22]];
+      ctx.strokeStyle = T.canvas; ctx.lineWidth = 6 * ps; ctx.beginPath(); ctx.moveTo(X(1), Y(by - 0.36)); ctx.lineTo(X(1), Y(by + 0.36)); ctx.stroke();
+      const hot = isHot('eps');
+      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.15; ctx.fillRect(X(0.5), Y(by - 0.52), 1 * s, 1.04 * s); ctx.globalAlpha = 1; }
+      for (const [dy, hw] of cell) {
+        ctx.strokeStyle = chg ? T.ink : T.wire; ctx.lineWidth = (hw > 0.3 ? 2 : 4.2) * ps; ctx.lineCap = 'butt';
+        ctx.beginPath(); ctx.moveTo(X(1 - hw), Y(by + dy)); ctx.lineTo(X(1 + hw), Y(by + dy)); ctx.stroke();
+      }
+      ctx.lineCap = 'round';
+      ctx.fillStyle = T.muted; ctx.font = `700 ${fs * 0.9}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('+', X(1.58), Y(by - 0.44)); ctx.fillText('−', X(1.58), Y(by + 0.44));
+      ctx.fillStyle = T.ink; ctx.textBaseline = 'alphabetic';
+      richText(ctx, 'ε', X(0.38), Y(by) - 2 * ps, fs * 1.1, 700, 'right');
+      ctx.fillStyle = T.muted; ctx.font = `${fs}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+      ctx.fillText(`${S.p.eps.toFixed(1)} V`, X(0.38), Y(by) + 2 * ps);
+      grip(ctx, X(1.95), Y(by), hot, true);
+      cHandles.push({ id: 'eps', box: [X(0.45), Y(by - 0.6), X(2.15) - X(0.45), 1.2 * s], cursor: 'ns-resize' });
+    }
+    // resistors
+    const activeR1 = chg || !g.flash, activeR2 = !chg;
+    drawResistor(ctx, g, g.r1, isHot('R1'), activeR1);
+    {
+      const [cx, cy] = g.r1.c, vrt = g.r1.vert;
+      const VR1 = activeR1 ? st.I * S.p.R1 : 0;
+      ctx.fillStyle = T.ink; ctx.textBaseline = 'alphabetic';
+      if (!vrt) {
+        richText(ctx, `R = ${fmtR(S.p.R1)}`, X(cx), Y(cy - 0.32), fs, 700, 'center');
+        ctx.fillStyle = T.resq; ctx.textBaseline = 'top';
+        const vw = richText(ctx, `V_R = ${fmtSI(Math.abs(VR1), 'V')}`, X(cx), Y(cy + 0.3), fs, 600, 'center');
+        const gx = Math.max(X(cx + 1.15), X(cx) + vw / 2 + 12 * ps), gy = Y(cy + 0.3) + fs * 0.55;
+        grip(ctx, gx, gy, isHot('R1'), true);
+        cHandles.push({ id: 'R1', box: [X(cx - 0.9), Y(cy - 0.45), gx + 8 * ps - X(cx - 0.9), gy + 12 * ps - Y(cy - 0.45)], cursor: 'ns-resize' });
+        // polarity marks: current enters the + end
+        if (Math.abs(VR1) > 1e-6 * S.p.eps) {
+          const plusLeft = st.I > 0;
+          ctx.fillStyle = T.muted; ctx.font = `700 ${fs * 0.85}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText(plusLeft ? '+' : '−', X(cx - 1.02), Y(cy - 0.2)); ctx.fillText(plusLeft ? '−' : '+', X(cx + 1.02), Y(cy - 0.2));
+        }
+      } else {
+        richText(ctx, 'R_1', X(cx - 0.32), Y(cy) - 5 * ps, fs, 700, 'right');
+        ctx.fillStyle = T.muted; ctx.font = `${fs}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+        ctx.fillText(fmtR(S.p.R1), X(cx - 0.32), Y(cy) + 3 * ps);
+        grip(ctx, X(cx + 0.55), Y(cy + 0.15), isHot('R1'), true);
+        cHandles.push({ id: 'R1', box: [X(cx - 0.3), Y(cy - 0.85), 1.05 * s, 1.7 * s], cursor: 'ns-resize' });
+      }
+    }
+    if (g.r2) {
+      drawResistor(ctx, g, g.r2, isHot('R2'), activeR2);
+      const [cx, cy] = g.r2.c;
+      ctx.fillStyle = T.ink; ctx.textBaseline = 'alphabetic';
+      richText(ctx, 'R_2 flash', X(cx + 0.36), Y(cy) - 5 * ps, fs, 700, 'left');
+      ctx.fillStyle = T.muted; ctx.font = `${fs}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      ctx.fillText(fmtR(S.p.R2), X(cx + 0.36), Y(cy) + 3 * ps);
+      grip(ctx, X(cx - 0.5), Y(cy + 0.15), isHot('R2'), true);
+      cHandles.push({ id: 'R2', box: [X(cx - 0.75), Y(cy - 0.85), 1.1 * s, 1.7 * s], cursor: 'ns-resize' });
+      // V_R of whichever resistor carries the current, on the top wire
+      ctx.fillStyle = T.resq; ctx.textBaseline = 'top';
+      richText(ctx, `${chg ? 'V_{R1}' : 'V_{R2}'} = ${fmtSI(Math.abs(st.I * seg.R), 'V')}`, X(6.6), Y(1.3), fs, 600, 'center');
+    }
+    // switch
+    {
+      const tgt = S.mode === 'charge' ? 0 : 1;
+      const hot = isHot('sw');
+      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.12; roundRect(ctx, X(2.6), Y(0.6), 2 * s, 1.85 * s, 6 * ps); ctx.fill(); ctx.globalAlpha = 1; }
+      const [ex, ey] = bladeEnd(blade);
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 2.6 * ps;
+      ctx.beginPath(); ctx.moveTo(X(GEO.P[0]), Y(GEO.P[1])); ctx.lineTo(X(ex), Y(ey)); ctx.stroke();
+      for (const [cx, cy, on] of [[...GEO.A, tgt === 0], [...GEO.B, tgt === 1]]) {
+        ctx.fillStyle = T.canvas; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.8 * ps;
+        ctx.beginPath(); ctx.arc(X(cx), Y(cy), 3.6 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      }
+      ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(GEO.P[0]), Y(GEO.P[1]), 3.6 * ps, 0, 2 * Math.PI); ctx.fill();
+      ctx.font = `${chg ? 700 : 400} ${fs * 0.92}px ${T.ui}`; ctx.fillStyle = chg ? T.ink : T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+      ctx.fillText('charge', X(GEO.A[0]), Y(GEO.A[1] - 0.3));
+      ctx.font = `${!chg ? 700 : 400} ${fs * 0.92}px ${T.ui}`; ctx.fillStyle = !chg ? T.ink : T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText('discharge', X(GEO.B[0] + 0.22), Y(GEO.B[1] + 0.32));
+      cHandles.push({ id: 'sw', box: [X(2.6), Y(0.6), 2 * s, 1.85 * s], cursor: 'pointer', click: true });
+    }
+    // capacitor
+    {
+      const cx = GEO.capX, hw = GEO.plateHalf, yt = Y(g.plTop), yb = Y(g.plBot), hot = isHot('C');
+      const Q = st.Q, frac = Q / (S.p.C * 12), n = Math.abs(frac) * 10;
+      // field between the plates
+      const gapPx = yb - yt;
+      if (S.layers.field && gapPx > 30 * ps && Math.abs(st.VC) > 0.02) {
+        const a = Math.min(1, Math.abs(st.VC) / 12) * 0.85 + 0.1, down = Q > 0;
+        ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.globalAlpha = a; ctx.lineWidth = 1.3 * ps;
+        const y0 = yt + 11 * ps, y1 = yb - 11 * ps;
+        for (const fx of [-0.55, 0, 0.55]) {
+          const px = X(cx + fx);
+          ctx.beginPath(); ctx.moveTo(px, y0); ctx.lineTo(px, y1); ctx.stroke();
+          const tip = down ? y1 : y0, d = down ? -1 : 1;
+          ctx.beginPath(); ctx.moveTo(px, tip); ctx.lineTo(px - 3.5 * ps, tip + d * 6 * ps); ctx.lineTo(px + 3.5 * ps, tip + d * 6 * ps); ctx.closePath(); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        ctx.font = `italic 700 ${fs * 0.85}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        ctx.fillText('E', X(cx + 0.66), (yt + yb) / 2);
+      }
+      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.14; ctx.fillRect(X(cx - hw - 0.12), yt - 0.25 * s, (2 * hw + 0.24) * s, 0.4 * s); ctx.globalAlpha = 1; }
+      ctx.strokeStyle = T.capq; ctx.lineWidth = 3.4 * ps; ctx.lineCap = 'butt';
+      ctx.beginPath(); ctx.moveTo(X(cx - hw), yt); ctx.lineTo(X(cx + hw), yt); ctx.moveTo(X(cx - hw), yb); ctx.lineTo(X(cx + hw), yb); ctx.stroke();
+      ctx.lineCap = 'round';
+      // charges: + on the top plate's inner face, − on the bottom plate's (swapped if Q < 0)
+      const full = Math.floor(n), part = n - full, slots = 10;
+      ctx.font = `700 ${Math.max(9, 0.3 * s) * Math.min(1.25, ps)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      for (let k = 0; k < Math.min(slots, Math.ceil(n)); k++) {
+        const order = [4, 5, 3, 6, 2, 7, 1, 8, 0, 9][k];
+        const px = X(cx - hw + (order + 0.5) * (2 * hw) / slots);
+        ctx.globalAlpha = k < full ? 1 : part;
+        ctx.fillStyle = Q > 0 ? T.pos : T.neg; ctx.fillText(Q > 0 ? '+' : '−', px, yt + 6.5 * ps);
+        ctx.fillStyle = Q > 0 ? T.neg : T.pos; ctx.fillText(Q > 0 ? '−' : '+', px, yb - 6.5 * ps);
+      }
+      ctx.globalAlpha = 1;
+      // labels
+      const lx = X(cx - hw - 0.2), ly = Y(GEO.capY) - fs * 0.35, lh = fs * 1.3;
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillStyle = T.ink; richText(ctx, `C = ${fmtC(S.p.C)}`, lx, ly, fs, 700, 'right');
+      ctx.fillStyle = T.capq; richText(ctx, `V_C = ${fmtSI(st.VC, 'V')}`, lx, ly + lh, fs, 600, 'right');
+      ctx.fillStyle = T.muted; richText(ctx, `Q = ${fmtSI(Q, 'C')}`, lx, ly + 2 * lh, fs, 400, 'right');
+      grip(ctx, X(cx + hw + 0.3), yt, hot, true);
+      cHandles.push({ id: 'C', box: [X(cx - hw - 0.1), yt - 0.3 * s, (2 * hw + 0.55) * s, 0.6 * s], cursor: 'ns-resize' });
+    }
+    // moving charge carriers
+    {
+      const pl = paths(g), col = S.layers.elec ? T.neg : T.equi, sgn = S.layers.elec ? -1 : 1;
+      drawDots(ctx, g, pl.com, sgn * phase.com, col);
+      drawDots(ctx, g, pl.bat, sgn * phase.bat, col);
+      drawDots(ctx, g, pl.byp, sgn * phase.byp, col);
+    }
+    // current arrow and value on the bottom wire (conventional current)
+    {
+      const I = st.I, y = Y(5), xm = X(6.2);
+      const tiny = Math.abs(I) < 1e-9 * S.p.eps / seg.R;
+      if (!tiny) {
+        const dir = I > 0 ? -1 : 1, L = 0.5 * s;   // positive I runs leftward along the bottom wire
+        ctx.strokeStyle = T.equi; ctx.fillStyle = T.equi; ctx.lineWidth = 2.4 * ps;
+        const x0 = xm - dir * L / 2, x1 = xm + dir * L / 2;
+        ctx.beginPath(); ctx.moveTo(x0, y - 9 * ps); ctx.lineTo(x1, y - 9 * ps); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x1 + dir * 4 * ps, y - 9 * ps); ctx.lineTo(x1 - dir * 4 * ps, y - 13.5 * ps); ctx.lineTo(x1 - dir * 4 * ps, y - 4.5 * ps); ctx.closePath(); ctx.fill();
+      }
+      ctx.fillStyle = T.ink; ctx.textBaseline = 'top';
+      richText(ctx, `I = ${fmtSI(Math.abs(I), 'A')}${tiny ? '' : I > 0 ? ', charging' : ', discharging'}`, xm, y + 7 * ps, fs, 600, 'center');
+    }
+  }
+
+  // ---------- plots ----------
+  const PANELS = [
+    { key: 'VC', title: 'V_C, capacitor voltage', unit: 'V', col: 'capq', fixed: true },
+    { key: 'VR', title: 'V_R = IR, resistor voltage', unit: 'V', col: 'resq', fixed: true },
+    { key: 'I', title: 'I, current', unit: 'A', col: 'equi' },
+    { key: 'Q', title: 'Q, charge on the top plate', unit: 'C', col: 'capq' }
+  ];
+  function val(key, st, g) { return key === 'VC' ? st.VC : key === 'VR' ? st.I * g.R : key === 'I' ? st.I : st.Q; }
+  const COL = { VC: 1, VR: 2, I: 3, Q: 4 };
+  const pt = (g, tt) => { const st = segState(g, tt); return [tt, st.VC, st.I * g.R, st.I, st.Q]; };
+  // A run's history as points [t, VC, VR, I, Q]: one per pixel column plus both sides of every change,
+  // so a stage much shorter than a pixel (a flash discharge) still shows its true peak.
+  function sampleRun(segs, ts, tEnd) {
+    const out = [], t0 = Math.max(ts[0], 0), t1 = Math.min(ts[ts.length - 1], tEnd);
+    if (!(t1 >= t0)) return out;
+    let k = 0; while (k + 1 < segs.length && segs[k + 1].t0 <= t0) k++;
+    let j = 0; while (j < ts.length && ts[j] <= t0) j++;
+    out.push(pt(segs[k], t0));
+    for (;;) {
+      const nb = k + 1 < segs.length ? segs[k + 1].t0 : Infinity;
+      while (j < ts.length && ts[j] < t1 && ts[j] < nb) { out.push(pt(segs[k], ts[j])); j++; }
+      if (nb <= t1) { out.push(pt(segs[k], nb)); k++; out.push(pt(segs[k], nb)); } else break;
+    }
+    if (t1 > out[out.length - 1][0]) out.push(pt(segs[k], t1));
+    return out;
+  }
+  function sampleSeg(g, ts, t0, t1) {
+    const out = [];
+    if (t1 < t0) return out;
+    out.push(pt(g, t0));
+    for (let j = 0; j < ts.length; j++) if (ts[j] > t0 && ts[j] < t1) out.push(pt(g, ts[j]));
+    out.push(pt(g, t1));
+    return out;
+  }
+  let pGeom = null, pHover = false, pDrag = null, tauHandle = null;
+  function plotGeom(W, H) {
+    const ps = projScale();
+    const L = (W < 460 ? 50 : 58) * ps, R = W - 14 * ps, top = 30 * ps, bot = H - 34 * ps;
+    const gap = 8 * ps, head = 17 * ps;
+    const ph = (bot - top - 3 * gap) / 4;
+    const boxes = PANELS.map((p, i) => { const y0 = top + i * (ph + gap); return { y0: y0 + head, y1: y0 + ph }; });
+    const tL = view.tLshow, Lw = view.L;
+    return { L, R, top, bot, boxes, W, H, X: (tt) => L + (tt - tL) / Lw * (R - L), invX: (px) => tL + (px - L) / (R - L) * Lw, tL, Lw };
+  }
+  function rangeFor(key, lo, hi) {
+    const r = ranges[key];
+    if (!r || lo < r[0] || hi > r[1] || (hi - lo) < 0.3 * (r[1] - r[0])) {
+      const span = Math.max(hi - lo, 1e-30), pad = 0.08 * span;
+      let a = lo < 0 ? lo - pad : 0, b = hi > 0 ? hi + pad : 0;
+      if (b - a <= 0) b = 1;
+      const st = nice((b - a) / 4);
+      a = Math.floor(a / st + 1e-9) * st; b = Math.ceil(b / st - 1e-9) * st;
+      ranges[key] = [a, b];
+    }
+    return ranges[key];
+  }
+  function drawPlots() {
+    const [W, H] = dims.p; if (!W || !H || !sim) return;
+    const ctx = ctxs.p, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const g = plotGeom(W, H); pGeom = g;
+    if (g.boxes[0].y1 - g.boxes[0].y0 < 20) return;
+    const n = Math.max(2, Math.floor(g.R - g.L));
+    const ts = new Float64Array(n + 1);
+    for (let j = 0; j <= n; j++) ts[j] = g.tL + g.Lw * j / n;
+    const seg = lastSeg(sim), tR = g.tL + g.Lw;
+    const past = sampleRun(sim.segs, ts, t);
+    const pred = sampleSeg(seg, ts, Math.max(seg.t0, g.tL), tR);
+    const prevSeg = seg.kind === 'switch' && sim.segs.length > 1 ? sim.segs[sim.segs.length - 2] : null;
+    const prev = prevSeg ? sampleSeg(prevSeg, ts, Math.max(seg.t0, g.tL), tR) : null;
+    const gh = ghosts.map((G) => sampleRun(G.segs, ts, G.tEnd));
+    const stNow = segState(seg, t);
+    const [tu, tuName] = timeUnit(g.Lw);
+    // time grid
+    const tst = nice(g.Lw / tu / (W < 460 ? 4 : 7)) * tu;
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    let lastPx = -1e9;
+    for (let kk = Math.ceil(g.tL / tst - 1e-9); kk * tst <= tR + tst * 1e-6; kk++) {
+      const v = kk * tst, px = Math.round(g.X(v)) + 0.5;
+      ctx.strokeStyle = T.grid; ctx.lineWidth = 1;
+      for (const b of g.boxes) { ctx.beginPath(); ctx.moveTo(px, b.y0); ctx.lineTo(px, b.y1); ctx.stroke(); }
+      const txt = +(v / tu).toPrecision(6) + '', tw = ctx.measureText(txt).width;
+      if (px - tw / 2 > lastPx + 6) { ctx.fillText(txt, Math.min(px, g.R - tw / 2), g.boxes[3].y1 + 4 * ps); lastPx = px + tw / 2; }
+    }
+    ctx.textAlign = 'right'; ctx.fillText(`t (${tuName})`, g.R, g.boxes[3].y1 + 18 * ps);
+    const marks = S.layers.marks;
+    PANELS.forEach((P, i) => {
+      const b = g.boxes[i], col = T[P.col];
+      // range from everything visible
+      let lo = 0, hi = 0;
+      const ci = COL[P.key];
+      const scan = (o) => { if (!o) return; for (const q of o) { if (q[ci] < lo) lo = q[ci]; if (q[ci] > hi) hi = q[ci]; } };
+      scan(past); if (S.layers.pred) scan(pred); gh.forEach(scan);
+      if (P.key === 'VC') hi = Math.max(hi, S.p.eps);
+      if (P.key === 'Q') hi = Math.max(hi, S.p.eps * S.p.C);
+      const [ya, yb] = rangeFor(P.key, lo, hi);
+      const Y = (v) => b.y1 - (v - ya) / (yb - ya) * (b.y1 - b.y0);
+      const [us, uName] = P.fixed ? [1, P.unit] : scaleUnit(Math.max(Math.abs(ya), Math.abs(yb)), P.unit);
+      // y grid
+      const yst = nice((yb - ya) / ((b.y1 - b.y0) < 90 * ps ? 2 : 4));
+      ctx.font = `${10 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      for (let kk = Math.ceil(ya / yst - 1e-9); kk * yst <= yb + yst * 1e-6; kk++) {
+        const v = kk * yst, py = Math.round(Y(v)) + 0.5;
+        ctx.strokeStyle = kk === 0 ? T.gridStrong : T.grid; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(g.L, py); ctx.lineTo(g.R, py); ctx.stroke();
+        ctx.fillStyle = T.muted; ctx.fillText(kk === 0 ? '0' : (+(v / us).toPrecision(4) + '').replace('-', '−'), g.L - 5 * ps, py);
+      }
+      // title
+      ctx.fillStyle = col; ctx.textBaseline = 'alphabetic';
+      const tw = richText(ctx, `${P.title} (${uName})`, g.L, b.y0 - 5 * ps, 11.5 * ps, 700, 'left');
+      // current value at right of the title
+      ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'right';
+      const nowTxt = fmtSI(val(P.key, stNow, seg), P.unit);
+      if (g.L + tw + ctx.measureText(nowTxt).width + 14 * ps < g.R) ctx.fillText(nowTxt, g.R, b.y0 - 5 * ps);
+      ctx.save(); ctx.beginPath(); ctx.rect(g.L, b.y0 - 1, g.R - g.L, b.y1 - b.y0 + 2); ctx.clip();
+      // ε reference in the V_C panel
+      if (P.key === 'VC') {
+        const py = Math.round(Y(S.p.eps)) + 0.5;
+        ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.45; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(g.L, py); ctx.lineTo(g.R, py); ctx.stroke(); ctx.globalAlpha = 1;
+        ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.font = `${10 * ps}px ${T.ui}`;
+        ctx.fillText('ε', g.L + 4 * ps, py - 1);
+      }
+      // whole τ after the last change
+      if (marks) {
+        ctx.strokeStyle = T.muted; ctx.lineWidth = 1.1; ctx.setLineDash([2, 3]); ctx.globalAlpha = 0.85;
+        for (let k = 2; k <= 5; k++) { const px = Math.round(g.X(seg.t0 + k * seg.tau)) + 0.5; if (px < g.L || px > g.R) continue; ctx.beginPath(); ctx.moveTo(px, b.y0); ctx.lineTo(px, b.y1); ctx.stroke(); }
+        ctx.setLineDash([]); ctx.globalAlpha = 1;
+        // 63% or 37% level of this stage
+        const s0 = segState(seg, seg.t0), s1 = segState(seg, seg.t0 + seg.tau);
+        const v0 = val(P.key, s0, seg), v1 = val(P.key, s1, seg);
+        if (Math.abs(v0 - val(P.key, segState(seg, seg.t0 + 50 * seg.tau), seg)) > 1e-9 * (yb - ya)) {
+          const py = Y(v1), x0 = Math.max(g.L, g.X(seg.t0));
+          ctx.strokeStyle = col; ctx.globalAlpha = 0.7; ctx.setLineDash([4, 4]); ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(x0, py); ctx.lineTo(g.R, py); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+          const px = g.X(seg.t0 + seg.tau);
+          if (px >= g.L && px <= g.R) { ctx.fillStyle = T.canvas; ctx.strokeStyle = col; ctx.lineWidth = 1.6 * ps; ctx.beginPath(); ctx.arc(px, py, 3.6 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); }
+          let lab;
+          if (P.key === 'VC' || P.key === 'Q') {
+            const vf = val(P.key, segState(seg, seg.t0 + 60 * seg.tau), seg);
+            lab = seg.mode === 'charge' && Math.abs(seg.Q0) < 1e-12 * Math.abs(seg.Qf) ? (P.key === 'VC' ? '63% of ε' : '63% of Cε')
+              : Math.abs(vf) < 1e-12 * Math.abs(v0) ? (P.key === 'VC' ? '37% of V₀' : '37% of Q₀') : '63% of the change';
+          } else lab = '37% of the start value';
+          ctx.font = `${10 * ps}px ${T.ui}`; ctx.fillStyle = col; ctx.textAlign = 'right';
+          const up = py - (b.y0) > 14 * ps;
+          ctx.textBaseline = up ? 'bottom' : 'top';
+          const lw = ctx.measureText(lab).width, ly = up ? py - 2 - 11 * ps : py + 2;
+          ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(g.R - 6 * ps - lw, ly, lw + 4 * ps, 11 * ps); ctx.globalAlpha = 1;
+          ctx.fillStyle = col; ctx.fillText(lab, g.R - 4 * ps, up ? py - 2 : py + 2);
+        }
+      }
+      // kept traces
+      ctx.lineWidth = 1.6 * ps; ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.6;
+      for (const o of gh) line(ctx, o, ci, g, Y);
+      ctx.globalAlpha = 1;
+      // a kept trace's own 1τ point, when it starts with a full stage
+      if (marks) for (const G of ghosts) {
+        const g0 = G.segs[0], tt = g0.t0 + g0.tau;
+        if ((G.segs.length > 1 && G.segs[1].t0 < tt) || tt > G.tEnd || tt < g.tL || tt > tR) continue;
+        const q = pt(g0, tt);
+        ctx.fillStyle = T.canvas; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.6 * ps;
+        ctx.beginPath(); ctx.arc(g.X(tt), Y(q[ci]), 3.4 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      }
+      // what the previous stage would have done
+      if (prev && S.layers.pred) { ctx.strokeStyle = col; ctx.globalAlpha = 0.35; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([3 * ps, 4 * ps]); line(ctx, prev, ci, g, Y); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+      // what happened
+      ctx.strokeStyle = col; ctx.lineWidth = 2.4 * ps; ctx.lineJoin = 'round';
+      line(ctx, past, ci, g, Y);
+      // exact curve from the last change, dashed with a halo
+      if (S.layers.pred) {
+        ctx.setLineDash([7 * ps, 5 * ps]);
+        ctx.strokeStyle = T.canvas; ctx.lineWidth = 3.4 * ps; ctx.globalAlpha = 0.7; line(ctx, pred, ci, g, Y); ctx.globalAlpha = 1;
+        ctx.strokeStyle = T.ink; ctx.lineWidth = 1.4 * ps; line(ctx, pred, ci, g, Y);
+        ctx.setLineDash([]);
+      }
+      // now
+      if (t >= g.tL && t <= tR) {
+        ctx.fillStyle = T.canvas; ctx.strokeStyle = col; ctx.lineWidth = 2 * ps;
+        ctx.beginPath(); ctx.arc(g.X(t), Y(val(P.key, stNow, seg)), 3.8 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      }
+      ctx.restore();
+      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(g.L + 0.5, b.y0 + 0.5, g.R - g.L, b.y1 - b.y0);
+    });
+    // τ labels across the top, and the draggable τ handle
+    tauHandle = null;
+    if (marks) {
+      ctx.font = `${10 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+      for (let k = 2; k <= 5; k++) { const px = g.X(seg.t0 + k * seg.tau); if (px < g.L + 10 || px > g.R - 8) continue; ctx.fillText(`${k}τ`, px, g.top - 8 * ps); }
+    }
+    const hx = g.X(seg.t0 + seg.tau);
+    if (hx >= g.L - 1 && hx <= g.R + 1) {
+      const hot = !!pDrag || pHover;
+      ctx.strokeStyle = T.accent; ctx.lineWidth = (hot ? 2.6 : 1.5) * ps; ctx.globalAlpha = hot ? 1 : 0.8;
+      for (const b of g.boxes) { ctx.beginPath(); ctx.moveTo(hx, b.y0); ctx.lineTo(hx, b.y1); ctx.stroke(); }
+      ctx.globalAlpha = 1;
+      const txt = 'τ = RC', bw = (ctx.font = `700 ${11 * ps}px ${T.ui}`, ctx.measureText(txt).width + 24 * ps), bh = 17 * ps;
+      const bx = Math.max(g.L + 1, Math.min(g.R - bw - 1, hx - bw / 2)), by = g.top - 22 * ps;
+      ctx.fillStyle = T.canvas; ctx.strokeStyle = T.accent; ctx.lineWidth = (hot ? 2 : 1.3) * ps;
+      roundRect(ctx, bx, by, bw, bh, 4 * ps); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, bx + 5 * ps, by + bh / 2 + 0.5);
+      ctx.fillStyle = T.accent;
+      const ax = bx + bw - 10 * ps, ay = by + bh / 2;
+      ctx.beginPath(); ctx.moveTo(ax - 4 * ps, ay); ctx.lineTo(ax - 1 * ps, ay - 3.5 * ps); ctx.lineTo(ax - 1 * ps, ay + 3.5 * ps); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(ax + 5 * ps, ay); ctx.lineTo(ax + 2 * ps, ay - 3.5 * ps); ctx.lineTo(ax + 2 * ps, ay + 3.5 * ps); ctx.closePath(); ctx.fill();
+      tauHandle = { x: hx, box: [bx, by, bw, bh] };
+    }
+  }
+  function line(ctx, pts, ci, g, Y) {
+    if (!pts || pts.length < 2) return;
+    ctx.beginPath();
+    for (let j = 0; j < pts.length; j++) { const q = pts[j], px = g.X(q[0]), py = Y(q[ci]); j ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+    ctx.stroke();
+  }
+
+  // ---------- energy bars ----------
+  let eMax = 0;
+  function drawEnergy() {
+    const [W, H] = dims.e; if (!W || !H || !sim) return;
+    const ctx = ctxs.e, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const E = totals(sim, t);
+    const rows = [
+      { lab: 'Battery work W', v: E.W, col: T.ink },
+      { lab: 'Stored in C, ½CV_C²', v: E.U, col: T.capq, mark: E.U0 > 0 ? E.U0 : null },
+      { lab: 'Heat in R, ∫I²R dt', v: E.H, col: T.resq }
+    ];
+    if (Math.abs(E.M) > 1e-9 * Math.max(E.W, E.U, E.H, E.U0, 1e-30)) rows.push({ lab: 'Work done changing C', v: E.M, col: T.muted });
+    const big = Math.max(...rows.map((r) => Math.abs(r.v)), E.U0, 1e-30);
+    if (big > eMax || big < eMax * 0.02) eMax = big;
+    const L = 16 * ps, R = W - 16 * ps;
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('Energy since t = 0', L, 20 * ps);
+    const rowH = Math.min(48 * ps, (H - 70 * ps) / rows.length), bh = Math.min(15 * ps, rowH * 0.34);
+    let y = 32 * ps;
+    for (const r of rows) {
+      ctx.fillStyle = T.muted; ctx.textBaseline = 'alphabetic';
+      richText(ctx, r.lab, L, y + rowH - bh - 6 * ps, 11.5 * ps, 400, 'left');
+      ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'right';
+      ctx.fillText(fmtSI(r.v, 'J'), R, y + rowH - bh - 6 * ps);
+      const by = y + rowH - bh - 2 * ps, wFull = R - L;
+      ctx.fillStyle = T.grid; ctx.fillRect(L, by, wFull, bh);
+      const w = Math.min(1, Math.abs(r.v) / eMax) * wFull;
+      ctx.fillStyle = r.col; ctx.globalAlpha = r.v < 0 ? 0.4 : 0.85; ctx.fillRect(L, by, w, bh); ctx.globalAlpha = 1;
+      if (r.mark) {
+        const mx = L + Math.min(1, r.mark / eMax) * wFull;
+        ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps; ctx.setLineDash([3, 2]);
+        ctx.beginPath(); ctx.moveTo(mx, by - 3 * ps); ctx.lineTo(mx, by + bh + 3 * ps); ctx.stroke(); ctx.setLineDash([]);
+      }
+      y += rowH;
+    }
+    // bookkeeping line
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    const lines = [];
+    if (E.U0 <= 1e-12 * Math.max(E.W, 1e-30) && E.W > 0) lines.push(`stored ${pct(E.U / E.W)} + heat ${pct(E.H / E.W)} of W`);
+    else if (E.U0 > 0) lines.push(`start U₀ = ${fmtSI(E.U0, 'J')} (dashed mark)`);
+    lines.push(`U₀ + W${rows.length > 3 ? ' + work on C' : ''} − U − heat = ${fmtSci(E.check)} J`);
+    let ly = Math.min(H - 8 * ps - 15 * ps * (lines.length - 1), y + 14 * ps);
+    for (const s of lines) { ctx.fillText(s, L, ly); ly += 15 * ps; }
+  }
+
+  function drawAll() {
+    if (!sim || !T) return;
+    { const c = $('cPane').querySelector('.stage-ctl'); ctlH = c.offsetTop + c.offsetHeight; }
+    cHandles = [];
+    drawCircuit(); drawPlots(); drawEnergy();
+  }
+
+  // ---------- readouts ----------
+  function staticText() {
+    const p = S.p, fl = p.flash;
+    $('lR1').textContent = fl ? 'Charging resistor R₁' : 'Resistance R';
+    $('r2Ctl').hidden = !fl;
+    $('oEps').textContent = `${p.eps.toFixed(1)} V`;
+    $('oR1').textContent = fmtR(p.R1);
+    $('oR2').textContent = fmtR(p.R2);
+    $('oC').textContent = fmtC(p.C);
+    const sync = (id, v) => { const el = $(id); if (document.activeElement !== el) el.value = v; };
+    sync('sEps', p.eps); sync('sR1', nearestIdx(R_VALUES, p.R1)); sync('sR2', nearestIdx(R2_VALUES, p.R2)); sync('sC', nearestIdx(C_VALUES, p.C));
+    $('flashChk').checked = fl;
+    let html = '';
+    if (fl) {
+      html = `<div><dt>τ₁ = R₁C, charging</dt><dd>${fmtTime(p.R1 * p.C)}</dd></div><div><dt>τ₂ = R₂C, discharging</dt><dd>${fmtTime(p.R2 * p.C)}</dd></div>`;
+    } else html = `<div class="wide"><dt>Time constant τ = RC</dt><dd>${fmtR(p.R1)} × ${fmtC(p.C)} = ${fmtTime(p.R1 * p.C)}</dd></div>`;
+    html += `<div><dt>Full charge Cε</dt><dd>${fmtSI(p.C * p.eps, 'C')}</dd></div><div><dt>Largest current ε/R</dt><dd>${fmtSI(p.eps / (fl ? Math.min(p.R1, p.R2) : p.R1), 'A')}</dd></div>`;
+    $('tauBox').innerHTML = html;
+    $('dotSw').classList.toggle('e', S.layers.elec);
+    $('dotTxt').textContent = S.layers.elec ? 'Electrons, moving opposite to I' : 'Positive charge carriers, conventional current';
+  }
+  function updateReadouts() {
+    if (!sim) return;
+    const seg = lastSeg(sim), st = segState(seg, t), E = totals(sim, t);
+    $('tclock').firstChild.nodeValue = `t = ${fmtTime(t, 4)}${pauseWhy === 'window' ? ' · plot full' : pauseWhy === 'settled' ? ' · settled' : ''}`;
+    $('mT').textContent = fmtTime(t, 4);
+    $('mS').textContent = `${((t - seg.t0) / seg.tau).toFixed(2)} τ`;
+    $('mVC').textContent = fmtSI(st.VC, 'V', 4);
+    $('mVR').textContent = fmtSI(st.I * seg.R, 'V', 4);
+    $('mI').textContent = fmtSI(st.I, 'A', 4);
+    $('mQ').textContent = fmtSI(st.Q, 'C', 4);
+    $('mFrac').innerHTML = `${(st.VC / S.p.eps * 100).toFixed(2)}% <span class="ok">1 − e<sup>−1</sup> = 63.21%, e<sup>−1</sup> = 36.79%</span>`;
+    $('mFormula').innerHTML = seg.mode === 'charge'
+      ? `V<sub>C</sub> = ε + (V₀ − ε) e<sup>−(t−t₀)/τ</sup>, I = (ε − V<sub>C</sub>)/R`
+      : `V<sub>C</sub> = V₀ e<sup>−(t−t₀)/τ</sup>, I = −V<sub>C</sub>/R`;
+    // Kirchhoff
+    const VR = st.I * seg.R, VC = st.Q / seg.C, res = seg.eps - VR - VC;
+    const Rn = seg.mode === 'charge' ? (S.p.flash ? 'R₁' : 'R') : (S.p.flash ? 'R₂' : 'R');
+    const f3 = (v) => v.toFixed(3).replace('-', '−');
+    const Iv = fmtSI(st.I, 'A', 4), Qv = fmtSI(st.Q, 'C', 4);
+    if (seg.mode === 'charge') {
+      $('kEq').innerHTML = `<span class="eq">ε − I${Rn} − Q/C = 0</span><br>${f3(seg.eps)} V − (${Iv})(${fmtR(seg.R)}) − (${Qv})/(${fmtC(seg.C)})<br>= ${f3(seg.eps)} V − <span class="c-res">${f3(VR)} V</span> − <span class="c-cap">${f3(VC)} V</span><br><span class="res">residual ${fmtSci(res)} V</span>`;
+    } else {
+      $('kEq').innerHTML = `<span class="eq">− I${Rn} − Q/C = 0</span><br>−(${Iv})(${fmtR(seg.R)}) − (${Qv})/(${fmtC(seg.C)})<br>= <span class="c-res">${f3(-VR)} V</span> − <span class="c-cap">${f3(VC)} V</span><br><span class="res">residual ${fmtSci(res)} V; the battery is out of the loop and I &lt; 0</span>`;
+    }
+    // energy
+    $('eW').textContent = fmtSI(E.W, 'J', 4);
+    $('eU').textContent = fmtSI(E.U, 'J', 4);
+    $('eH').textContent = fmtSI(E.H, 'J', 4);
+    $('eP').textContent = fmtSI(st.I * st.I * seg.R, 'W', 3);
+    const I0 = segState(seg, seg.t0).I;
+    $('ePk').textContent = `${fmtSI(I0 * I0 * seg.R, 'W', 3)} in ${Rn}`;
+    if (E.U0 <= 0 && E.W > 0 && Math.abs(E.M) < 1e-12 * E.W) {
+      $('eSplitLab').textContent = 'Split of the battery work, stored : heat';
+      $('eSplit').innerHTML = `${pct(E.U / E.W)} : ${pct(E.H / E.W)} <span class="ok">→ 50% : 50% when full</span>`;
+    } else if (E.U0 > 0) {
+      $('eSplitLab').textContent = 'Heat so far as a share of the starting energy U₀';
+      $('eSplit').innerHTML = `${pct(E.H / E.U0)}${E.W ? ' <span class="ok">plus battery work</span>' : ''}`;
+    } else { $('eSplitLab').textContent = 'Split of the battery work'; $('eSplit').textContent = '—'; }
+  }
+
+  // ---------- presets ----------
+  function applyPreset(name) {
+    S.preset = name;
+    const c = cfg();
+    S.p = { eps: c.eps, R1: c.R1, R2: c.R2 || 10, C: c.C, flash: !!c.flash };
+    S.mode = c.mode; S.full = c.full;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    for (const b of document.querySelectorAll('#swSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
+    $('presetHint').innerHTML = c.hint.replace(/V_C/g, 'V<sub>C</sub>');
+    ghosts = [];
+    if (c.ghostR) {
+      const p2 = { ...S.p, R1: c.ghostR }, gs = makeRC(p2, 'charge', 0);
+      ghosts.push({ segs: gs.segs, tEnd: Infinity, label: `τ = ${fmtTime(c.ghostR * c.C)}, R = ${fmtR(c.ghostR)}` });
+    }
+    newRun();
+    staticText();
+    ghostKey();
+    setRunning(!reduce || running);
+  }
+
+  // ---------- controls ----------
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#swSeg button')) b.addEventListener('click', () => setMode(b.dataset.m, true));
+  $('flip').addEventListener('click', flip);
+  function setParam(key, v) {
+    if (S.p[key] === v) return;
+    S.p[key] = v;
+    change('param');
+  }
+  $('sEps').addEventListener('input', (e) => setParam('eps', +e.target.value));
+  $('sR1').addEventListener('input', (e) => setParam('R1', R_VALUES[+e.target.value]));
+  $('sR2').addEventListener('input', (e) => setParam('R2', R2_VALUES[+e.target.value]));
+  $('sC').addEventListener('input', (e) => setParam('C', C_VALUES[+e.target.value]));
+  $('flashChk').addEventListener('change', (e) => { S.p.flash = e.target.checked; change('param'); });
+  $('sRate').addEventListener('input', (e) => { S.autoRate = false; $('autoRate').checked = false; setRateIdx(+e.target.value); });
+  $('autoRate').addEventListener('change', (e) => { S.autoRate = e.target.checked; if (S.autoRate) setRateIdx(autoRateIdx()); });
+  $('keep').addEventListener('click', () => {
+    if (t <= 0) return;
+    const seg = lastSeg(sim);
+    ghosts.push({ segs: sim.segs.map((g) => ({ ...g })), tEnd: t, label: `τ = ${fmtTime(seg.tau)}` });
+    if (ghosts.length > 3) ghosts.shift();
+    ghostKey();
+  });
+  $('clearG').addEventListener('click', () => { ghosts = []; ghostKey(); });
+  function ghostKey() { $('ghostTxt').textContent = ghosts.length ? 'Kept trace: ' + ghosts.map((G) => G.label).join('; ') : 'Kept trace'; }
+  // plot window: the whole run from t = 0, or zoomed onto the stage since the last change
+  $('zRun').addEventListener('click', () => { view.L = Math.max(6 * tauCharge(), t * 1.08); view.tL = 0; view.tLshow = 0; ranges = {}; if (pauseWhy === 'window') pauseWhy = ''; });
+  $('zStage').addEventListener('click', () => {
+    const g = lastSeg(sim); view.L = 7 * g.tau; view.tL = Math.max(0, g.t0 - g.tau);
+    if (t > view.tL + view.L) view.tL = t - view.L * 0.9;
+    view.tLshow = view.tL; ranges = {};
+  });
+  $('tElec').addEventListener('change', (e) => { S.layers.elec = e.target.checked; staticText(); });
+  $('tField').addEventListener('change', (e) => { S.layers.field = e.target.checked; });
+  $('tMarks').addEventListener('change', (e) => { S.layers.marks = e.target.checked; });
+  $('tPred').addEventListener('change', (e) => { S.layers.pred = e.target.checked; ranges = {}; });
+  const playBtn = $('play');
+  function setRunning(r) {
+    if (r && pauseWhy === 'window') view.tL = Math.max(0, t - view.L / 6);
+    if (r) pauseWhy = '';
+    running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now();
+  }
+  playBtn.addEventListener('click', () => setRunning(!running));
+  function doReset() { newRun(); staticText(); if (!running && !reduce) setRunning(true); }
+  $('reset').addEventListener('click', doReset);
+
+  // ---------- dragging on the circuit ----------
+  const dragging = () => !!(cDrag || pDrag);
+  function cHit(ev) {
+    const r = cans.c.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 4 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = Infinity;
+    for (const h of cHandles) {
+      const [bx, by, bw, bh] = h.box;
+      const dx = Math.max(bx - x, 0, x - bx - bw), dy = Math.max(by - y, 0, y - by - bh), d = Math.hypot(dx, dy);
+      if (d <= tol && d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  function stepParam(id, dir) {
+    if (id === 'eps') setParam('eps', Math.max(1, Math.min(12, S.p.eps + 0.5 * dir)));
+    else if (id === 'R1') setParam('R1', R_VALUES[Math.max(0, Math.min(R_VALUES.length - 1, nearestIdx(R_VALUES, S.p.R1) + dir))]);
+    else if (id === 'R2') setParam('R2', R2_VALUES[Math.max(0, Math.min(R2_VALUES.length - 1, nearestIdx(R2_VALUES, S.p.R2) + dir))]);
+    else if (id === 'C') setParam('C', C_VALUES[Math.max(0, Math.min(C_VALUES.length - 1, nearestIdx(C_VALUES, S.p.C) + dir))]);
+  }
+  let cQueued = null, cFrame = false;
+  function cDragTo(ev) {
+    const r = cans.c.getBoundingClientRect();
+    cQueued = ev.clientY - r.top;
+    if (cFrame) return; cFrame = true;
+    requestAnimationFrame(() => {
+      cFrame = false; if (!cDrag || cQueued === null || !cg) return;
+      const dyU = (cQueued - cDrag.y0) / cg.s;            // units moved, down is positive
+      const d = cDrag;
+      if (d.id === 'eps') setParam('eps', Math.max(1, Math.min(12, Math.round((d.v0 - dyU * 4) * 2) / 2)));
+      else if (d.id === 'R1') setParam('R1', R_VALUES[Math.max(0, Math.min(R_VALUES.length - 1, Math.round(d.v0 - dyU * 9)))]);
+      else if (d.id === 'R2') setParam('R2', R2_VALUES[Math.max(0, Math.min(R2_VALUES.length - 1, Math.round(d.v0 - dyU * 9)))]);
+      else if (d.id === 'C') setParam('C', C_VALUES[Math.max(0, Math.min(C_VALUES.length - 1, Math.round(d.v0 + dyU * 6)))]);   // up: plates apart, smaller C
+      cQueued = null;
+    });
+  }
+  cans.c.addEventListener('pointermove', (ev) => {
+    if (cDrag) { cDragTo(ev); return; }
+    const h = cHit(ev); cHover = h ? h.id : null; cans.c.style.cursor = h ? h.cursor : 'default';
+  });
+  cans.c.addEventListener('pointerdown', (ev) => {
+    const h = cHit(ev);
+    cans.c.focus({ preventScroll: true });
+    if (!h) return;
+    if (h.click) { flip(); ev.preventDefault(); return; }
+    const r = cans.c.getBoundingClientRect();
+    const v0 = h.id === 'eps' ? S.p.eps : h.id === 'R1' ? nearestIdx(R_VALUES, S.p.R1) : h.id === 'R2' ? nearestIdx(R2_VALUES, S.p.R2) : nearestIdx(C_VALUES, S.p.C);
+    cDrag = { id: h.id, y0: ev.clientY - r.top, v0 };
+    try { cans.c.setPointerCapture(ev.pointerId); } catch (_) {}
+    cans.c.style.cursor = h.cursor; ev.preventDefault();
+  });
+  const endCDrag = () => { if (!cDrag) return; cDrag = null; cHover = null; change('param'); };
+  cans.c.addEventListener('pointerup', endCDrag);
+  cans.c.addEventListener('pointercancel', endCDrag);
+  cans.c.addEventListener('pointerleave', () => { if (!cDrag) cHover = null; });
+  cans.c.addEventListener('keydown', (e) => {
+    const k = e.key;
+    if (k === 'ArrowUp' || k === 'ArrowDown') stepParam('eps', k === 'ArrowUp' ? 1 : -1);
+    else if (k === 'ArrowLeft' || k === 'ArrowRight') stepParam('R1', k === 'ArrowRight' ? 1 : -1);
+    else if (k === 'PageUp' || k === 'PageDown') stepParam('C', k === 'PageUp' ? 1 : -1);
+    else if (k === 's' || k === 'S' || k === 'Enter') flip();
+    else if (k === ' ') setRunning(!running);
+    else if (k === 'r' || k === 'R') doReset();
+    else return;
+    e.preventDefault();
+  });
+
+  // ---------- dragging the τ marker on the plots ----------
+  function pHit(ev) {
+    if (!tauHandle || !pGeom) return false;
+    const r = cans.p.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 7 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    const [bx, by, bw, bh] = tauHandle.box;
+    if (x >= bx - tol / 2 && x <= bx + bw + tol / 2 && y >= by - tol / 2 && y <= by + bh + tol / 2) return true;
+    return y >= pGeom.boxes[0].y0 && y <= pGeom.boxes[3].y1 && Math.abs(x - tauHandle.x) <= tol;
+  }
+  const activeRKey = () => (S.mode === 'discharge' && S.p.flash ? 'R2' : 'R1');
+  let pQueued = null, pFrame = false;
+  cans.p.addEventListener('pointermove', (ev) => {
+    if (pDrag) {
+      const r = cans.p.getBoundingClientRect(); pQueued = ev.clientX - r.left;
+      if (pFrame) return; pFrame = true;
+      requestAnimationFrame(() => {
+        pFrame = false; if (!pDrag || pQueued === null) return;
+        const seg = lastSeg(sim), tau = pGeom.invX(pQueued) - seg.t0, key = activeRKey(), list = key === 'R1' ? R_VALUES : R2_VALUES;
+        if (tau > 0) setParam(key, list[nearestIdx(list, tau / S.p.C)]);
+        else setParam(key, list[0]);
+        pQueued = null;
+      });
+      return;
+    }
+    pHover = pHit(ev); cans.p.style.cursor = pHover ? 'ew-resize' : 'default';
+  });
+  cans.p.addEventListener('pointerdown', (ev) => {
+    cans.p.focus({ preventScroll: true });
+    if (!pHit(ev)) return;
+    pDrag = true;
+    try { cans.p.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault();
+  });
+  const endPDrag = () => { if (!pDrag) return; pDrag = null; pHover = false; change('param'); };
+  cans.p.addEventListener('pointerup', endPDrag);
+  cans.p.addEventListener('pointercancel', endPDrag);
+  cans.p.addEventListener('pointerleave', () => { if (!pDrag) pHover = false; });
+  cans.p.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') stepParam(activeRKey(), e.key === 'ArrowRight' ? 1 : -1);
+    else if (e.key === ' ') setRunning(!running);
+    else if (e.key === 's' || e.key === 'S') flip();
+    else return;
+    e.preventDefault();
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    ranges = {};
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); drawAll(); }); } catch (_) {}
+  new MutationObserver(() => { tokens(); drawAll(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, frameMs = 0;
+  function loop(now) {
+    const dtr = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (running && dtr > 0) {
+      advanceSim(dtr * rate());
+      // carriers: speed proportional to I, ε/R of the resistor in the loop moves at 2.2 units per second
+      const seg = lastSeg(sim), I = segState(seg, t).I, Iref = S.p.eps / seg.R;
+      const v = 2.2 * I / Iref * dtr;
+      phase.com += v; if (S.mode === 'charge') phase.bat += v; else phase.byp += v;
+    }
+    // blade animation
+    const tgt = S.mode === 'charge' ? 0 : 1;
+    if (blade !== tgt) blade = reduce ? tgt : (Math.abs(tgt - blade) < 0.08 ? tgt : blade + Math.sign(tgt - blade) * Math.min(Math.abs(tgt - blade), dtr * 9));
+    // window slides smoothly to its target start
+    if (view.tLshow !== view.tL) {
+      const d = view.tL - view.tLshow;
+      view.tLshow = reduce || Math.abs(d) < view.L * 0.002 ? view.tL : view.tLshow + d * Math.min(1, dtr * 10);
+    }
+    drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastRead > 120) { updateReadouts(); lastRead = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__rc = {
+    get frameMs() { return frameMs; }, get sim() { return sim; }, get t() { return t; }, get view() { return view; }, get running() { return running; },
+    get S() { return S; }, get pauseWhy() { return pauseWhy; }, get rate() { return rate(); }, get handles() { return cHandles; }, get tauHandle() { return tauHandle; },
+    applyPreset, setRunning, flip, setMode, setParam,
+    go(dts) { advanceSim(dts); updateReadouts(); },
+    state() { const g = lastSeg(sim), st = segState(g, t); return { t, Q: st.Q, I: st.I, VC: st.VC, VR: st.I * g.R, tau: g.tau, mode: g.mode, res: loopResidual(sim, t), E: totals(sim, t) }; }
+  };
+
+  tokens();
+  const ro = new ResizeObserver(resize);
+  for (const k of ['c', 'e', 'p']) ro.observe(panes[k]);
+  applyPreset('charge');
+  setRunning(!reduce);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
