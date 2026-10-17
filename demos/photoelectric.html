@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Photoelectric Effect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: lab bench. Apparatus on top, two measurement charts below, instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --metal: #9aa6b4;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --metal: #6b7786; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --metal: #6b7786; --on-charge: #0d1218; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 520px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: minmax(0, 58fr) minmax(0, 42fr); }
+.pane { position: relative; min-height: 0; }
+.pane + .pane { border-top: 1px solid var(--line); }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#app { touch-action: none; outline: none; }
+.stage-ctl { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.spectrum { height: 8px; border-radius: 4px; margin-top: 4px; border: 1px solid var(--line);
+  background: linear-gradient(90deg, #6f42c1 0%, #6f42c1 40%, #7a00d6 40%, #3b2bff 47%, #00a2ff 55%, #00d17a 62%, #c8e000 68%, #ffb000 75%, #ff4a00 83%, #b00000 95%, #4a0000 100%); }
+.spectrum-scale { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input { accent-color: var(--accent); margin: 0; }
+
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 80vh; min-height: 560px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Photoelectric Effect</h1>
+      <p>Shine light on a metal and catch the electrons it knocks loose. Color decides their energy; brightness only decides how many.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">E = hf = hc/λ · hc = 1240 eV·nm · K<sub>max</sub> = hf − φ</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage">
+      <div class="pane" id="appPane">
+        <canvas id="app" tabindex="0" aria-label="Photoelectric apparatus: a lamp shines on the emitter plate and electrons travel to the collector plate."></canvas>
+        <div class="stage-ctl">
+          <button type="button" class="btn" id="play">Pause</button>
+          <button type="button" class="btn" id="reset">Reset</button>
+        </div>
+      </div>
+      <div class="pane" id="chartPane">
+        <canvas id="charts" aria-label="Charts: maximum kinetic energy against frequency, and current against collector voltage."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="blue" aria-pressed="true">Blue on sodium</button>
+          <button type="button" data-p="red" aria-pressed="false">Red light, no luck</button>
+          <button type="button" data-p="bright" aria-pressed="false">Brighter, not faster</button>
+          <button type="button" data-p="stop" aria-pressed="false">Stopping voltage</button>
+          <button type="button" data-p="zinc" aria-pressed="false">UV on zinc</button>
+          <button type="button" data-p="planck" aria-pressed="false">Measure h</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Light</h2>
+        <div>
+          <div class="slider-head"><label for="lam">Wavelength λ</label><output id="lamOut" class="mono" for="lam"></output></div>
+          <input type="range" id="lam" min="100" max="800" step="1" value="420">
+          <div class="spectrum" aria-hidden="true"></div>
+          <div class="spectrum-scale mono"><span>100 nm</span><span>UV | visible</span><span>800 nm</span></div>
+        </div>
+        <div>
+          <div class="slider-head"><label for="pow">Light power</label><output id="powOut" class="mono" for="pow"></output></div>
+          <input type="range" id="pow" min="0" max="100" step="1" value="40">
+        </div>
+      </section>
+
+      <section>
+        <h2>Metal</h2>
+        <div class="chips" id="metals"></div>
+      </section>
+
+      <section>
+        <h2>Circuit</h2>
+        <div>
+          <div class="slider-head"><label for="volt">Collector voltage V</label><output id="voltOut" class="mono" for="volt"></output></div>
+          <input type="range" id="volt" min="-6" max="4" step="0.01" value="0">
+        </div>
+        <p class="hint">Negative V pushes electrons back toward the metal. The voltage that just stops the fastest ones is the stopping voltage V₀, and eV₀ = K<sub>max</sub>.</p>
+      </section>
+
+      <section>
+        <h2>Measurements</h2>
+        <dl class="readout">
+          <div class="big"><dt>Photon energy hf</dt><dd id="rE">—</dd></div>
+          <div class="big"><dt>Current I</dt><dd id="rI">—</dd></div>
+          <div><dt>Frequency f</dt><dd id="rF">—</dd></div>
+          <div><dt>Work function φ</dt><dd id="rPhi">—</dd></div>
+          <div><dt>K<sub>max</sub> = hf − φ</dt><dd id="rK">—</dd></div>
+          <div><dt>Stopping voltage V₀</dt><dd id="rV0">—</dd></div>
+          <div><dt>Threshold λ₀</dt><dd id="rL0">—</dd></div>
+          <div><dt>Photons per second</dt><dd id="rN">—</dd></div>
+        </dl>
+      </section>
+
+      <section>
+        <h2>Measure Planck's constant</h2>
+        <div class="row2">
+          <button type="button" class="btn primary" id="record">Record V₀</button>
+          <button type="button" class="btn" id="clear">Clear points</button>
+        </div>
+        <dl class="readout">
+          <div><dt>h from slope</dt><dd id="rH">—</dd></div>
+          <div><dt>φ from intercept</dt><dd id="rPhiFit">—</dd></div>
+        </dl>
+        <p class="hint">Record V₀ at several wavelengths. The points fall on a straight line of K<sub>max</sub> against f: the slope is h, and the intercept is the work function. Accepted h = 6.626 × 10⁻³⁴ J·s. Each recording includes a small random reading error of about ±0.02 V, like a real voltmeter.</p>
+      </section>
+
+      <section>
+        <h2>Layers</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tPhotons" checked>Photons</label>
+          <label><input type="checkbox" id="tTheory" checked>Theory line</label>
+        </div>
+        <p class="hint">Model: each absorbed photon frees at most one electron, with a kinetic energy spread evenly between 0 and K<sub>max</sub>. One electron per thousand photons (quantum efficiency 0.1%). Electron speeds on screen are slowed enormously; the fastest real ones move at hundreds of km/s.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  const HC = 1239.84;            // eV nm
+  const H = 6.62607e-34, QE = 1.602177e-19, C = 2.99792458e8;
+  const EFF = 1e-3;              // electrons per photon
+  const METALS = [
+    ['Cs', 'Cesium', 2.14], ['K', 'Potassium', 2.30], ['Na', 'Sodium', 2.28],
+    ['Ca', 'Calcium', 2.87], ['Zn', 'Zinc', 4.33], ['Cu', 'Copper', 4.70], ['Pt', 'Platinum', 5.65]
+  ];
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  const S = { lam: 420, pow: 40, metal: 'Na', V: 0 };
+  let running = !reduce, points = [], photons = [], electrons = [], flash = 0;
+  const layers = { photons: true, theory: true };
+  let dirtyCharts = true;
+
+  const phi = () => METALS.find((m) => m[0] === S.metal)[2];
+  const Eph = () => HC / S.lam;
+  const Kmax = () => Math.max(0, Eph() - phi());
+  const freq = () => C / (S.lam * 1e-9);
+  const photonRate = () => (S.pow * 1e-6) / (Eph() * QE);      // per second
+  const Isat = () => EFF * QE * photonRate();                  // amperes
+  function current(V, K = Kmax(), Is = Isat()) {
+    if (K <= 0 || Is <= 0) return 0;
+    if (V >= 0) return Is;
+    return Is * Math.max(0, 1 - (-V) / K);
+  }
+
+  // ---------- theme ----------
+  let T = null;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
+          gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'),
+          metal: g('--metal'), field: g('--field'),
+          mono: getComputedStyle(document.body).getPropertyValue('--font-mono') || 'monospace' };
+    dirtyCharts = true;
+  }
+  function lamColor(l, a = 1) {
+    let r = 0, g = 0, b = 0;
+    if (l < 380) { r = 0.55; g = 0.25; b = 0.85; }
+    else if (l < 440) { r = -(l - 440) / 60; b = 1; }
+    else if (l < 490) { g = (l - 440) / 50; b = 1; }
+    else if (l < 510) { g = 1; b = -(l - 510) / 20; }
+    else if (l < 580) { r = (l - 510) / 70; g = 1; }
+    else if (l < 645) { r = 1; g = -(l - 645) / 65; }
+    else { r = 1; }
+    let f = 1;
+    if (l >= 380 && l < 420) f = 0.35 + 0.65 * (l - 380) / 40;
+    else if (l > 700) f = Math.max(0.25, 0.35 + 0.65 * (780 - l) / 80);
+    const c = (v) => Math.round(255 * Math.pow(Math.max(0, v * f), 0.8));
+    return `rgba(${c(r)},${c(g)},${c(b)},${a})`;
+  }
+  const bandName = (l) => l < 380 ? 'ultraviolet' : l < 450 ? 'violet' : l < 495 ? 'blue' : l < 570 ? 'green' : l < 590 ? 'yellow' : l < 620 ? 'orange' : l <= 750 ? 'red' : 'infrared';
+
+  // ---------- canvases ----------
+  const appC = $('app'), chC = $('charts');
+  const actx = appC.getContext('2d'), cctx = chC.getContext('2d');
+  let AW = 0, AH = 0, CW = 0, CH = 0, dpr = 1;
+  function size(cv, ctx, pane) {
+    const r = pane.getBoundingClientRect();
+    dpr = window.devicePixelRatio || 1;
+    cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
+    cv.style.width = r.width + 'px'; cv.style.height = r.height + 'px';
+    return [r.width, r.height];
+  }
+  function resize() {
+    [AW, AH] = size(appC, actx, $('appPane'));
+    [CW, CH] = size(chC, cctx, $('chartPane'));
+    dirtyCharts = true; drawApp(); drawCharts();
+  }
+
+  // apparatus geometry (CSS px)
+  function geo() {
+    const ps = projScale();
+    const narrow = AW < 520;
+    const top = ps > 1 ? 76 : 56, bottom = AH - (narrow ? 70 : 64);
+    const plateH = Math.max(60, bottom - top - 30);
+    const midY = top + (bottom - top) / 2;
+    const ex = narrow ? AW * 0.22 : AW * 0.3, cx = narrow ? AW * 0.86 : AW * 0.78;
+    const lamp = { x: narrow ? AW * 0.12 : AW * 0.12, y: top + 6 };
+    return { ps, top, bottom, plateH, midY, ex, cx, gap: cx - ex, lamp, y0: midY - plateH / 2, y1: midY + plateH / 2 };
+  }
+
+  // ---------- simulation ----------
+  let spawnAccP = 0, spawnAccE = 0;
+  function visRate() { return S.pow <= 0 ? 0 : 3 + 37 * S.pow / 100; }  // photons per second on screen
+  function step(dt) {
+    const G = geo(), K = Kmax();
+    // photons from lamp to emitter plate
+    spawnAccP += visRate() * dt;
+    while (spawnAccP >= 1) {
+      spawnAccP -= 1;
+      const ty = G.y0 + 8 + Math.random() * (G.plateH - 16);
+      photons.push({ t: 0, sx: G.lamp.x + 18, sy: G.lamp.y + 18, tx: G.ex - 4, ty, dur: 0.7 });
+    }
+    for (const p of photons) p.t += dt / p.dur;
+    const arrived = photons.filter((p) => p.t >= 1);
+    photons = photons.filter((p) => p.t < 1);
+    // each arriving photon: frees an electron if hf > φ (visual: every arriving photon above threshold makes one)
+    for (const p of arrived) {
+      if (K > 0) {
+        const k = Math.random() * K;
+        const vScale = G.gap / 1.3 / Math.sqrt(3);
+        electrons.push({ x: 0, y: p.ty, v: vScale * Math.sqrt(k), vy: (Math.random() - 0.5) * 10, k });
+      }
+    }
+    // electrons: uniform field across the gap, energy consistent with K and V
+    const kk = Math.pow(G.gap / 1.3, 2) / 3;            // v^2 per eV on screen
+    const a = kk * S.V / (2 * G.gap);                   // px/s^2
+    for (const e of electrons) {
+      e.v += a * dt; e.x += e.v * dt; e.y += e.vy * dt;
+      if (e.x >= G.gap) { e.done = 'hit'; flash = 1; }
+      else if (e.x <= 0 && e.v < 0) e.done = 'back';
+    }
+    electrons = electrons.filter((e) => !e.done);
+    if (electrons.length > 600) electrons.splice(0, electrons.length - 600);
+    flash = Math.max(0, flash - dt * 3);
+  }
+
+  // ---------- drawing: apparatus ----------
+  function drawApp() {
+    if (!AW || !AH) return;
+    const ctx = actx, G = geo(), ps = G.ps;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, AW, AH);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, AW, AH);
+
+    // vacuum tube outline
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1.5 * ps;
+    const tx0 = G.ex - 40, tx1 = G.cx + 34;
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(tx0, G.y0 - 18, tx1 - tx0, G.plateH + 36, 26) : ctx.rect(tx0, G.y0 - 18, tx1 - tx0, G.plateH + 36); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${11 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillText('vacuum', tx1 - 12, G.y0 - 12);
+
+    // field hint between plates
+    if (Math.abs(S.V) > 0.05) {
+      ctx.save(); ctx.globalAlpha = Math.min(0.5, 0.12 + Math.abs(S.V) / 12);
+      ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1 * ps;
+      const dir = S.V > 0 ? -1 : 1;   // E field points from high to low potential
+      for (let i = 0; i < 4; i++) {
+        const y = G.y0 + (i + 0.5) * G.plateH / 4;
+        const xa = G.ex + G.gap * 0.35, xb = G.ex + G.gap * 0.65;
+        ctx.beginPath(); ctx.moveTo(xa, y); ctx.lineTo(xb, y); ctx.stroke();
+        const xh = dir > 0 ? xb : xa;
+        ctx.beginPath(); ctx.moveTo(xh, y); ctx.lineTo(xh - dir * 6 * ps, y - 4 * ps); ctx.lineTo(xh - dir * 6 * ps, y + 4 * ps); ctx.closePath(); ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    // plates
+    ctx.fillStyle = T.metal;
+    ctx.fillRect(G.ex - 10, G.y0, 10, G.plateH);
+    ctx.fillRect(G.cx, G.y0, 8, G.plateH);
+    ctx.fillStyle = T.ink; ctx.font = `600 ${12 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(S.metal + ' emitter', G.ex - 5, G.y1 + 22);
+    ctx.fillText('collector', G.cx + 4, G.y1 + 22);
+
+    // circuit: wires down to ammeter and battery
+    const wy = AH - 18;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * ps;
+    ctx.beginPath();
+    ctx.moveTo(G.ex - 5, G.y1); ctx.lineTo(G.ex - 5, G.y1 + 18);
+    ctx.moveTo(G.ex - 5, G.y1 + 38); ctx.lineTo(G.ex - 5, wy); ctx.lineTo(G.cx + 4, wy); ctx.lineTo(G.cx + 4, G.y1 + 38);
+    ctx.moveTo(G.cx + 4, G.y1 + 18); ctx.lineTo(G.cx + 4, G.y1);
+    ctx.stroke();
+    const amX = G.ex + G.gap * 0.32, batX = G.ex + G.gap * 0.7;
+    // ammeter
+    ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.arc(amX, wy, 11 * ps, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = flash > 0.05 ? T.accent : T.muted; ctx.lineWidth = (1.5 + flash * 1.5) * ps; ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('A', amX, wy + 0.5);
+    ctx.textBaseline = 'bottom'; ctx.fillText(fmtI(current(S.V)), amX, wy - 13 * ps);
+    // battery
+    ctx.fillStyle = T.canvas; ctx.fillRect(batX - 10, wy - 12, 20, 24);
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps;
+    ctx.beginPath(); ctx.moveTo(batX - 4, wy - 11); ctx.lineTo(batX - 4, wy + 11); ctx.stroke();
+    ctx.lineWidth = 4 * ps; ctx.beginPath(); ctx.moveTo(batX + 4, wy - 6); ctx.lineTo(batX + 4, wy + 6); ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.textBaseline = 'bottom';
+    ctx.fillText((S.V >= 0 ? '+' : '−') + Math.abs(S.V).toFixed(2) + ' V', batX, wy - 13 * ps);
+
+    // lamp and beam
+    const L = G.lamp, col = S.pow > 0 ? lamColor(S.lam, 1) : T.muted;
+    if (S.pow > 0) {
+      const grd = ctx.createLinearGradient(L.x, L.y, G.ex, G.midY);
+      grd.addColorStop(0, lamColor(S.lam, 0.05 + 0.25 * S.pow / 100));
+      grd.addColorStop(1, lamColor(S.lam, 0.02 + 0.12 * S.pow / 100));
+      ctx.fillStyle = grd;
+      ctx.beginPath(); ctx.moveTo(L.x + 10, L.y + 10); ctx.lineTo(G.ex - 10, G.y0 + 4); ctx.lineTo(G.ex - 10, G.y1 - 4); ctx.lineTo(L.x + 4, L.y + 26); ctx.closePath(); ctx.fill();
+    }
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps;
+    ctx.beginPath(); ctx.arc(L.x, L.y + 14, 16, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(L.x, L.y + 14, 10, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(Math.round(S.lam) + ' nm', L.x - 16, L.y - 4);
+
+    // photons as small wave packets
+    if (layers.photons) {
+      for (const p of photons) {
+        const x = p.sx + (p.tx - p.sx) * p.t, y = p.sy + (p.ty - p.sy) * p.t;
+        const ang = Math.atan2(p.ty - p.sy, p.tx - p.sx);
+        ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
+        ctx.strokeStyle = lamColor(S.lam, 0.95); ctx.lineWidth = 1.8 * ps;
+        ctx.beginPath();
+        const wl = Math.max(3, Math.min(9, S.lam / 70));
+        for (let s = -14; s <= 0; s += 1) { const yy = Math.sin(s / wl * Math.PI * 2) * 3.2; s === -14 ? ctx.moveTo(s, yy) : ctx.lineTo(s, yy); }
+        ctx.stroke(); ctx.restore();
+      }
+    }
+    // electrons
+    ctx.fillStyle = T.neg;
+    for (const e of electrons) {
+      ctx.beginPath(); ctx.arc(G.ex + e.x, e.y, 3.2 * ps, 0, Math.PI * 2); ctx.fill();
+    }
+    // message when below threshold
+    if (Kmax() <= 0 && S.pow > 0) {
+      ctx.fillStyle = T.pos; ctx.font = `700 ${13 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('hf < φ : no electrons', G.ex + G.gap / 2, G.midY);
+    }
+  }
+
+  // ---------- drawing: charts ----------
+  function nice(raw) {
+    const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p;
+    return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p;
+  }
+  function frame(ctx, x, y, w, h, xr, yr, xl, yl, ps, xFmt, yFmt) {
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1;
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * ps}px ${T.mono}`;
+    const X = (v) => x + (v - xr[0]) / (xr[1] - xr[0]) * w, Y = (v) => y + h - (v - yr[0]) / (yr[1] - yr[0]) * h;
+    const xs = nice((xr[1] - xr[0]) / (w < 220 ? 3 : 5)), ys = nice((yr[1] - yr[0]) / 4);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = Math.ceil(xr[0] / xs) * xs; v <= xr[1] + 1e-9; v += xs) {
+      ctx.beginPath(); ctx.moveTo(Math.round(X(v)) + 0.5, y); ctx.lineTo(Math.round(X(v)) + 0.5, y + h); ctx.stroke();
+      ctx.fillText(xFmt(v), X(v), y + h + 4);
+    }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = Math.ceil(yr[0] / ys) * ys; v <= yr[1] + 1e-9; v += ys) {
+      ctx.beginPath(); ctx.moveTo(x, Math.round(Y(v)) + 0.5); ctx.lineTo(x + w, Math.round(Y(v)) + 0.5); ctx.stroke();
+      ctx.fillText(yFmt(v), x - 5, Y(v));
+    }
+    ctx.strokeStyle = T.gridStrong; ctx.strokeRect(x + 0.5, y + 0.5, w, h);
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(yl, x, y - 6);
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillText(xl, x + w, y + h + 18 * ps);
+    return { X, Y };
+  }
+
+  function drawCharts() {
+    if (!CW || !CH) return;
+    const ctx = cctx, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, CW, CH);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, CW, CH);
+    const stack = CW < 560;
+    const padL = 44 * ps, padR = 14, padT = 26 * ps, padB = 38 * ps;
+    let boxes;
+    if (stack) {
+      const h2 = CH / 2;
+      boxes = [[padL, padT, CW - padL - padR, h2 - padT - padB], [padL, h2 + padT, CW - padL - padR, h2 - padT - padB]];
+    } else {
+      const w2 = CW / 2;
+      boxes = [[padL, padT, w2 - padL - padR - 8, CH - padT - padB], [w2 + padL, padT, w2 - padL - padR, CH - padT - padB]];
+    }
+    const lw = 2 * ps;
+    // --- chart 1: Kmax vs f (Millikan plot) ---
+    {
+      const [x, y, w, h] = boxes[0];
+      if (w > 40 && h > 30) {
+        const fTop = Math.max(16, Math.ceil(freq() / 1e14 * 1.12 / 2) * 2);
+        const fx = [0, fTop], ky = [0, Math.max(3, Math.ceil(H * fTop * 1e14 / QE - phi()))];   // f in 10^14 Hz, K in eV
+        const { X, Y } = frame(ctx, x, y, w, h, fx, ky, 'f (10¹⁴ Hz)', 'K_max (eV) vs frequency', ps, (v) => String(+v.toFixed(1)), (v) => String(+v.toFixed(1)));
+        ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+        const f0 = phi() * QE / H / 1e14;   // threshold in 10^14 Hz
+        if (layers.theory) {
+          ctx.strokeStyle = T.muted; ctx.setLineDash([5, 4]); ctx.lineWidth = 1.4 * ps;
+          ctx.beginPath(); ctx.moveTo(X(f0), Y(0)); ctx.lineTo(X(fx[1]), Y((H * fx[1] * 1e14) / QE - phi())); ctx.stroke();
+          ctx.setLineDash([]);
+        }
+        // threshold marker
+        ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(X(f0), Y(0), 3.5 * ps, 0, Math.PI * 2); ctx.fill();
+        // fit line
+        const fit = fitLine();
+        if (fit) {
+          ctx.strokeStyle = T.equi; ctx.lineWidth = lw;
+          ctx.beginPath(); ctx.moveTo(X(fx[0]), Y(fit.b)); ctx.lineTo(X(fx[1]), Y(fit.b + fit.m * fx[1])); ctx.stroke();
+        }
+        // recorded points
+        for (const p of points) {
+          ctx.fillStyle = T.equi; ctx.beginPath(); ctx.arc(X(p.f), Y(p.k), 4.5 * ps, 0, Math.PI * 2); ctx.fill();
+          ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.2; ctx.stroke();
+        }
+        // current point
+        const fNow = freq() / 1e14;
+        if (fNow <= fx[1]) {
+          ctx.strokeStyle = T.accent; ctx.lineWidth = 1 * ps; ctx.setLineDash([3, 3]);
+          ctx.beginPath(); ctx.moveTo(X(fNow), y); ctx.lineTo(X(fNow), y + h); ctx.stroke(); ctx.setLineDash([]);
+          ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(X(fNow), Y(Kmax()), 5 * ps, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.restore();
+        ctx.fillStyle = T.pos; ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+        if (X(f0) < x + w - 60) ctx.fillText('f₀', X(f0) + 5, Y(0) - 3);
+      }
+    }
+    // --- chart 2: I vs V ---
+    {
+      const [x, y, w, h] = boxes[1];
+      if (w > 40 && h > 30) {
+        const Imax = Math.max(1e-9, EFF * QE * (100e-6) / (HC / 250 * QE));   // fixed scale: 100 µW at 250 nm
+        const vr = [-6, 4], ir = [0, Imax * 1e9 * 1.05];
+        const { X, Y } = frame(ctx, x, y, w, h, vr, ir, 'collector voltage V (volts)', 'Current I (nA) vs voltage', ps, (v) => String(+v.toFixed(1)), (v) => String(+v.toFixed(0)));
+        ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+        ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(0), y); ctx.lineTo(X(0), y + h); ctx.stroke();
+        ctx.strokeStyle = T.accent; ctx.lineWidth = lw;
+        ctx.beginPath();
+        for (let i = 0; i <= 300; i++) {
+          const V = vr[0] + (vr[1] - vr[0]) * i / 300;
+          const I = current(V) * 1e9;
+          i ? ctx.lineTo(X(V), Y(I)) : ctx.moveTo(X(V), Y(I));
+        }
+        ctx.stroke();
+        const K = Kmax();
+        if (K > 0 && -K >= vr[0]) {
+          ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(X(-K), Y(0), 4 * ps, 0, Math.PI * 2); ctx.fill();
+          ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+          ctx.fillText('−V₀', X(-K), Y(0) - 6);
+        }
+        ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(S.V), Y(current(S.V) * 1e9), 5 * ps, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
+      }
+    }
+    dirtyCharts = false;
+  }
+
+  // ---------- fitting ----------
+  function fitLine() {
+    if (points.length < 2) return null;
+    const n = points.length;
+    let sx = 0, sy = 0, sxx = 0, sxy = 0;
+    for (const p of points) { sx += p.f; sy += p.k; sxx += p.f * p.f; sxy += p.f * p.k; }
+    const den = n * sxx - sx * sx;
+    if (Math.abs(den) < 1e-9) return null;
+    const m = (n * sxy - sx * sy) / den, b = (sy - m * sx) / n;
+    return { m, b };   // K (eV) = m f(1e14 Hz) + b
+  }
+
+  // ---------- readouts ----------
+  function fmtI(A) {
+    const n = A * 1e9;
+    if (n === 0) return '0 nA';
+    return (n >= 100 ? n.toFixed(0) : n >= 10 ? n.toFixed(1) : n.toFixed(2)) + ' nA';
+  }
+  const sci = (v, d = 3) => { const e = Math.floor(Math.log10(Math.abs(v))); const m = v / Math.pow(10, e); return m.toFixed(d - 1) + ' × 10' + sup(e); };
+  const sup = (n) => String(n).split('').map((c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'['0123456789'.indexOf(c)] || (c === '-' ? '⁻' : c)).join('');
+  function updateReadouts() {
+    $('lamOut').textContent = Math.round(S.lam) + ' nm · ' + bandName(S.lam);
+    $('powOut').textContent = S.pow + ' µW';
+    $('voltOut').textContent = (S.V >= 0 ? '+' : '−') + Math.abs(S.V).toFixed(2) + ' V';
+    $('rE').textContent = Eph().toFixed(2) + ' eV';
+    $('rF').textContent = sci(freq()) + ' Hz';
+    $('rPhi').textContent = phi().toFixed(2) + ' eV';
+    $('rK').textContent = Kmax().toFixed(2) + ' eV';
+    $('rV0').textContent = Kmax() > 0 ? Kmax().toFixed(2) + ' V' : 'none';
+    $('rL0').textContent = Math.round(HC / phi()) + ' nm';
+    $('rN').textContent = S.pow > 0 ? sci(photonRate(), 2) : '0';
+    $('rI').textContent = fmtI(current(S.V));
+    const fit = fitLine();
+    if (fit) {
+      const h = fit.m * QE / 1e14;
+      $('rH').textContent = sci(h) + ' J·s';
+      $('rPhiFit').textContent = (-fit.b).toFixed(2) + ' eV';
+    } else { $('rH').textContent = points.length ? 'need 2 points' : '—'; $('rPhiFit').textContent = '—'; }
+  }
+
+  // ---------- controls ----------
+  const PRESETS = {
+    blue:   { lam: 420, pow: 40, metal: 'Na', V: 0, hint: 'Each blue photon carries 2.95 eV, more than sodium needs (2.28 eV), so every absorbed photon can free an electron. The extra 0.67 eV becomes kinetic energy.' },
+    red:    { lam: 680, pow: 100, metal: 'Na', V: 0, hint: 'Full power red light and not a single electron. Each 680 nm photon has only 1.82 eV, below sodium\'s work function. Turning up the brightness sends more weak photons, not stronger ones.' },
+    bright: { lam: 400, pow: 15, metal: 'Na', V: -0.5, hint: 'Drag the power slider up and down. The current changes, but the stopping voltage on the right chart stays fixed at the same −V₀. Brighter light means more electrons, not faster ones. Classical waves predicted the opposite.' },
+    stop:   { lam: 400, pow: 60, metal: 'Na', V: -0.78, hint: 'The collector is held at −0.78 V, just under the stopping voltage of 0.82 V. Only the very fastest electrons make it across; most turn around. Push V a bit lower and the current drops to zero.' },
+    zinc:   { lam: 220, pow: 50, metal: 'Zn', V: 0, hint: 'Zinc needs 4.33 eV, which only ultraviolet can deliver. This is why Hertz and Hallwachs saw the effect with UV sparks on zinc in the 1880s. Try sliding into visible light and watch it stop.' },
+    planck: { lam: 300, pow: 50, metal: 'Na', V: 0, auto: true, hint: 'Six stopping voltages were recorded between 250 and 500 nm. The gold fit line\'s slope gives Planck\'s constant, and its intercept gives the work function. Millikan did exactly this in 1916, expecting to disprove Einstein.' }
+  };
+  function syncInputs() {
+    $('lam').value = S.lam; $('pow').value = S.pow; $('volt').value = S.V;
+    for (const b of document.querySelectorAll('#metals button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.metal));
+  }
+  function setPreset(name) {
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    if (name) $('presetHint').textContent = PRESETS[name].hint;
+  }
+  function changed() { dirtyCharts = true; electrons = electrons.filter(() => true); updateReadouts(); if (!running) { drawApp(); } }
+  function record() {
+    const K = Kmax();
+    if (K <= 0) return;
+    const noise = (Math.random() + Math.random() + Math.random() - 1.5) * 0.025;
+    points.push({ f: freq() / 1e14, k: Math.max(0, K + noise) });
+    changed();
+  }
+  function applyPreset(name) {
+    const p = PRESETS[name];
+    Object.assign(S, { lam: p.lam, pow: p.pow, metal: p.metal, V: p.V });
+    electrons = []; photons = [];
+    if (p.auto) {
+      points = [];
+      for (const l of [250, 300, 350, 400, 450, 500]) { S.lam = l; record(); }
+      S.lam = p.lam;
+    }
+    syncInputs(); setPreset(name); changed();
+  }
+
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const mBox = $('metals');
+  for (const [sym, name, w] of METALS) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.dataset.m = sym; b.setAttribute('aria-pressed', 'false');
+    b.textContent = `${name} ${w.toFixed(2)} eV`;
+    b.addEventListener('click', () => { S.metal = sym; electrons = []; syncInputs(); setPreset(null); changed(); });
+    mBox.appendChild(b);
+  }
+  $('lam').addEventListener('input', (e) => { S.lam = +e.target.value; setPreset(null); changed(); });
+  $('pow').addEventListener('input', (e) => { S.pow = +e.target.value; changed(); });
+  $('volt').addEventListener('input', (e) => { S.V = +e.target.value; changed(); });
+  $('record').addEventListener('click', record);
+  $('clear').addEventListener('click', () => { points = []; changed(); });
+  $('tPhotons').addEventListener('change', (e) => { layers.photons = e.target.checked; drawApp(); });
+  $('tTheory').addEventListener('change', (e) => { layers.theory = e.target.checked; dirtyCharts = true; });
+  const playBtn = $('play');
+  function setRunning(r) { running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now(); }
+  playBtn.addEventListener('click', () => setRunning(!running));
+  $('reset').addEventListener('click', () => applyPreset('blue'));
+
+  appC.addEventListener('keydown', (e) => {
+    const big = e.shiftKey ? 10 : 1;
+    if (e.key === 'ArrowLeft') S.lam = Math.max(100, S.lam - big);
+    else if (e.key === 'ArrowRight') S.lam = Math.min(800, S.lam + big);
+    else if (e.key === 'ArrowUp') S.V = Math.min(4, +(S.V + 0.05 * big).toFixed(2));
+    else if (e.key === 'ArrowDown') S.V = Math.max(-6, +(S.V - 0.05 * big).toFixed(2));
+    else if (e.key === ' ') { setRunning(!running); }
+    else return;
+    e.preventDefault(); syncInputs(); setPreset(null); changed();
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+
+  // theme changes
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); drawApp(); }); } catch (_) {}
+  new MutationObserver(() => { tokens(); drawApp(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0;
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    if (running && dt > 0) { step(dt); }
+    drawApp();
+    if (dirtyCharts) drawCharts();
+    if (now - lastRead > 150) { $('rI').textContent = fmtI(current(S.V)); lastRead = now; }
+    requestAnimationFrame(loop);
+  }
+
+  tokens();
+  new ResizeObserver(resize).observe(document.querySelector('.stage'));
+  applyPreset('blue');
+  setRunning(running);
+  if (!running) { for (let i = 0; i < 90; i++) step(1 / 60); }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirtyCharts = true; });
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

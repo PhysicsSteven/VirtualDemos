@@ -7,6 +7,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | Demo | Subject | Topic |
 | --- | --- | --- |
 | [Blackbody Radiation](demos/blackbody.html) | Astronomy | Planck curves, Wien's law, Stefan-Boltzmann luminosity and the colors of stars |
+| [Photoelectric Effect](demos/photoelectric.html) | Modern physics | Photon energy, work function, stopping voltage, and measuring Planck's constant |
 | [Projectile Range](demos/projectile-drag.html) | Mechanics | Projectile motion with and without quadratic air drag |
 | [Gas in a Box](demos/ideal-gas.html) | Thermodynamics | Kinetic theory of a 2D gas: pressure, temperature, Maxwell-Boltzmann speeds, adiabatic compression |
 | [Coulomb Sandbox](demos/coulomb-sandbox.html) | Electricity and magnetism | Electric field and potential of point charges, as a 2D map and a 3D potential landscape |
