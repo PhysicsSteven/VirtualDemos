@@ -8,6 +8,8 @@ of the star's life:
     12M_pre_ms_to_core_collapse   12 and 15 Msun to iron core collapse
     20M_pre_ms_to_core_collapse   20 and 25 Msun to iron core collapse (its optional envelope
                                   removal stage is skipped, so the star keeps its hydrogen envelope)
+    wd_cool_0.6M                  a 0.6 Msun C/O white dwarf cooling until its core freezes
+                                  (Skye equation of state, phase separation on); --no-wd skips it
 
 The 3.7 Msun life already in the demo came from your own mkwd_3.7 run and is not redone here.
 
@@ -50,6 +52,12 @@ SUITES = {
     },
 }
 SUITES['20M_pre_ms_to_core_collapse'] = dict(SUITES['12M_pre_ms_to_core_collapse'])
+# a 0.6 Msun C/O white dwarf cooling until it freezes (Skye EOS, phase separation on); it already lists
+# every isotope (add_abundances), so its own column list is kept and the demo's columns are appended
+SUITES['wd_cool_0.6M'] = {'stages': ['wd_cool_0.6M'], 'models': ['final.mod'], 'mass_files': [],
+                          'isotopes': None, 'interval': 5}
+WD_EXTRA = ['mass', 'logR', 'logT', 'logRho', 'mixing_type', 'log_conv_vel', 'eps_nuc', 'gam', 'eos_phase',
+            'eps_phase_separation']
 
 GRID = {1: ('1M_pre_ms_to_wd', 1.0), 12: ('12M_pre_ms_to_core_collapse', 12),
         15: ('12M_pre_ms_to_core_collapse', 12), 20: ('20M_pre_ms_to_core_collapse', 20),
@@ -85,6 +93,7 @@ def valid_profile_columns(mesa_dir):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--masses', nargs='+', type=float, default=[1, 12, 15, 20, 25])
+    ap.add_argument('--no-wd', action='store_true', help='skip the cooling white dwarf run (wd_cool_0.6M)')
     ap.add_argument('--dest', default='~/runs')
     ap.add_argument('--dry-run', action='store_true')
     a = ap.parse_args()
@@ -98,7 +107,39 @@ def main():
         print('not in this MESA install\'s profile column list, left out: ' + ' '.join(dropped))
     dest = os.path.expanduser(a.dest)
     made = []
-    for M in a.masses:
+    for M in list(a.masses) + ([] if a.no_wd else ['wd']):
+        if M == 'wd':
+            suite, suite_mass, cfg = 'wd_cool_0.6M', 'wd', SUITES['wd_cool_0.6M']
+            src = os.path.join(mesa_dir, 'star', 'test_suite', suite)
+            dst = os.path.join(dest, 'slice_grid_wd_0.6M')
+            print('\ncooling white dwarf: %s -> %s' % (suite, dst))
+            if not os.path.isdir(src):
+                print('  no %s in this MESA install, skipped' % suite); continue
+            if os.path.exists(dst):
+                print('  %s already exists, skipped (remove it to start over)' % dst); continue
+            if not a.dry_run:
+                shutil.copytree(src, dst, symlinks=True,
+                                ignore=lambda d, names: [n for n in names if n.startswith('LOGS') or n in ('photos', 'png')])
+            work = src if a.dry_run else dst
+            f = os.path.join(work, 'inlist_wd_cool_0.6M')
+            new = set_namelist(open(f).read(), 'controls', {'log_directory': "'LOGS_wd_cool'", 'profile_interval': 5,
+                                                              'max_num_profile_models': MAX_PROFILES})
+            new = set_namelist(new, 'star_job', {'pgstar_flag': '.false.'})
+            print('  inlist_wd_cool_0.6M                 log_directory=LOGS_wd_cool, profile_interval=5')
+            pc = open(os.path.join(work, 'profile_columns.list')).read()
+            active = {l.split('!')[0].split()[0] for l in pc.splitlines() if l.split('!')[0].split()}
+            add = [c for c in WD_EXTRA if c in valid and c not in active]
+            print('  profile_columns.list: suite list kept, adding %s' % ' '.join(add))
+            if not a.dry_run:
+                open(f, 'w').write(new)
+                with open(os.path.join(dst, 'profile_columns.list'), 'a') as fh:
+                    fh.write('\n! added by make_mass_grid.py for the Star Slice demo\n' + ''.join('   %s\n' % c for c in add))
+                p = os.path.join(dst, 'rn_slice')
+                open(p, 'w').write('#!/usr/bin/env bash\nsource "${MESA_DIR}/star/test_suite/test_suite_helpers"\n'
+                                   'date\ndo_one inlist_wd_cool_0.6M_header final.mod\ndate\necho finished\n')
+                os.chmod(p, os.stat(p).st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+            made.append(('wd_0.6', dst, ['wd_cool']))
+            continue
         key = int(M) if M == int(M) else M
         if key not in GRID:
             print('no suite set up for %g Msun (choose from %s), skipped' % (M, ' '.join(map(str, GRID)))); continue
@@ -153,6 +194,9 @@ def main():
         print('  cd %s && ./mk && ./rn_slice > run.log 2>&1' % dst)
     print('\nWhen a run prints "finished" at the end of run.log, pack it for the demo:')
     for M, dst, stages in made:
+        if M == 'wd_0.6':
+            print('  python3 extract_profiles.py -o data/wd_cool_0.6M.json.gz --label "0.6 Msun white dwarf cooling" %s/LOGS_wd_cool' % dst)
+            continue
         print('  python3 extract_profiles.py -o data/life_%gM.json.gz --label "%g Msun" %s' %
               (M, M, ' '.join('%s/LOGS_%s' % (dst, s) for s in stages)))
     if a.dry_run:

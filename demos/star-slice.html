@@ -282,7 +282,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="chart"><canvas id="chComp" aria-label="Mass fractions against position"></canvas></div>
           <div class="chart"><canvas id="chTR" aria-label="Log temperature and log density against position"></canvas></div>
         </div>
-        <p class="hint" style="margin-top:8px">Gray bands are convective zones. The tinted range is what the slice view shows. Hover a chart to probe that zone.</p>
+        <p class="hint" style="margin-top:8px">Gray bands are convective zones. The tinted range is what the slice view shows. In a freezing white dwarf, hatching marks the solid core inside the freezing front. Hover a chart to probe that zone.</p>
       </section>
     </div>
 
@@ -1199,7 +1199,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         c.save(); c.beginPath(); arcAt(c, rf);
         c.shadowColor = T.accent; c.shadowBlur = 12 * p * dpr; c.strokeStyle = T.accent; c.lineWidth = 2.8 * p; c.stroke();
         c.shadowBlur = 0; c.strokeStyle = 'rgba(255,255,255,0.95)'; c.lineWidth = 1 * p; c.stroke(); c.restore();
-        labels.push({ r: rf, f: 0.3, text: 'Crystallization front', color: T.accent });
+        labels.push({ r: rf, f: 0.3, text: `Freezing front · ${Math.round(100 * mo.front.m / mo.M)}% of the mass solid`, color: T.accent });
       }
     }
     c.restore(); // end clip
@@ -1573,6 +1573,24 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return { X, Y, pl, pt, pw, ph, xr };
   }
   function shadeContext(c, mo, A, T) {
+    // solid (crystallized) core: hatched from the center to the freezing front, with the front marked
+    if (mo.front) {
+      const xa = A.X(S.xmode === 'm' ? A.xr[0] : xOf(mo, 0)), xb = A.X(xOf(mo, mo.front.i));
+      if (xb > xa + 0.5) {
+        c.save(); c.beginPath(); c.rect(xa, A.pt, xb - xa, A.ph); c.clip();
+        c.strokeStyle = T.accent; c.globalAlpha = 0.22; c.lineWidth = 1;
+        c.beginPath();
+        for (let x = xa - A.ph; x < xb; x += 7) { c.moveTo(x, A.pt + A.ph); c.lineTo(x + A.ph, A.pt); }
+        c.stroke(); c.restore();
+      }
+      c.save(); c.strokeStyle = T.accent; c.lineWidth = 1.6; c.beginPath(); c.moveTo(xb, A.pt); c.lineTo(xb, A.pt + A.ph); c.stroke();
+      c.fillStyle = T.accent; c.font = `600 ${10.5 * ps()}px ${uiFont()}`; c.textBaseline = 'top';
+      const room = A.pl + A.pw - xb, txt = room > 90 * ps() ? 'freezing front' : 'front';
+      const tw = c.measureText(txt).width, fs = 10.5 * ps(), tx = room > tw + 10 ? xb + 4 : xb - 4 - tw, ty = A.pt + A.ph * 0.5 - fs / 2;
+      c.fillStyle = T.canvas; c.globalAlpha = 0.88; c.fillRect(tx - 3, ty - 2, tw + 6, fs + 4); c.globalAlpha = 1;
+      c.fillStyle = T.accent; c.textAlign = 'left'; c.fillText(txt, tx, ty);
+      c.restore();
+    }
     // convective zones
     if (mo.mix) {
       c.fillStyle = T.muted; c.globalAlpha = 0.13;
@@ -1668,7 +1686,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const [c, w, h] = fitCanvas($('hr')), T = tokens(), p = ps();
     const pts = D.moments.map((mo) => (mo.L > 0 && mo.Teff > 0 ? [Math.log10(mo.Teff), Math.log10(mo.L)] : null));
     // the other embedded masses, faint behind this one; the axes then cover every track so switching keeps them
-    const ghosts = S.datasets.filter((d) => !d.local && d.D !== D && trackOf(d)).map((d) => ({ d, t: trackOf(d) }));
+    const ghosts = S.datasets.filter((d) => !d.local && d.D !== D && isNum(d.mass) && d.mass > 0 && trackOf(d)).map((d) => ({ d, t: trackOf(d) }));
     const good = pts.filter(Boolean).concat(...ghosts.map((g) => g.t.pts.filter(Boolean)));
     let x0 = Math.min(...good.map((q) => q[0])), x1 = Math.max(...good.map((q) => q[0]));
     let y0 = Math.min(...good.map((q) => q[1])), y1 = Math.max(...good.map((q) => q[1]));
@@ -2024,8 +2042,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (k >= 0) {
       inp.value = Math.round(massPos[k] * 1000);
       inp.setAttribute('aria-valuetext', `${+list[k].mass.toPrecision(3)} solar masses`);
-    } else inp.setAttribute('aria-valuetext', 'Your loaded file is shown. Move the slider to pick a mass.');
-    $('massOut').textContent = busy ? 'unpacking…' : k >= 0 ? fmtMass(list[k].mass) : S.D ? 'Your file' : '—';
+    }
+    const local = !!S.D && S.datasets.some((d) => d.local && d.D === S.D);
+    const other = local ? 'Your file' : 'Other run';
+    if (k < 0) inp.setAttribute('aria-valuetext', (local ? 'Your loaded file' : 'A run that is not on the slider') + ' is shown. Move the slider to pick a mass.');
+    $('massOut').textContent = busy ? 'unpacking…' : k >= 0 ? fmtMass(list[k].mass) : S.D ? other : '—';
     const hint = [k >= 0 && S.D ? massiveNote(S.D) : '', list.length < 2 ? 'More masses appear here as MESA runs are added' : ''].filter(Boolean).join('. ');
     $('massHint').textContent = hint ? hint + '.' : ''; $('massHint').hidden = !hint;
   }

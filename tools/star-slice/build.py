@@ -19,6 +19,12 @@ a = ap.parse_args()
 
 
 def initial_mass(d, label):
+    # a run that starts as a white dwarf (no hydrogen at the center) is not a life on the mass slider
+    h0 = d['moments'][0].get('h', {}).get('center_h1')
+    if h0 is None:
+        h0 = (d['moments'][0].get('c', {}).get('h1') or [None])[0]
+    if isinstance(h0, (int, float)) and h0 < 0.01:
+        return None
     m = d['moments'][0].get('h', {}).get('star_mass')
     if isinstance(m, (int, float)) and m > 0:
         return float(m)
