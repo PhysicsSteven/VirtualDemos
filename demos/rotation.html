@@ -1,0 +1,1805 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Rotation and Torque</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the scene fills the top of the stage, two small charts sit under it, the instrument rail is on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --teal: #1d8270;
+  --violet: #7a4cb0;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; --teal: #4fcfae; --violet: #b897f0; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; --teal: #4fcfae; --violet: #b897f0; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage {
+  position: relative; min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
+  display: grid; grid-template-rows: minmax(0, 1fr) 210px;
+}
+:root[data-projector="on"] .stage { grid-template-rows: minmax(0, 1fr) 260px; }
+.pane { position: relative; min-height: 0; min-width: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#view { touch-action: none; outline: none; }
+#view:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.charts { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border-top: 1px solid var(--line); min-height: 0; }
+.charts > .pane + .pane { border-left: 1px solid var(--line); }
+.charts.one { grid-template-columns: minmax(0, 1fr); }
+.charts.one #pB { display: none; }
+.stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
+.stage-ctl > * { pointer-events: auto; }
+.stage-ctl .btn { padding: 4px 10px; font-size: 0.86rem; }
+.tclock { margin-left: auto; font-size: 0.88rem; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--canvas) 85%, transparent); padding: 2px 6px; border-radius: 6px; white-space: nowrap; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn.primary:hover { opacity: 0.9; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg.full { display: flex; }
+.seg.full button { flex: 1; padding: 4px 4px; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dd.pos { color: var(--pos); }
+.readout dd.neg { color: var(--neg); }
+
+.tbl { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.8rem; }
+.tbl th { font-family: var(--font-ui); font-weight: 400; color: var(--muted); text-align: right; padding: 2px 4px; font-size: 0.76rem; }
+.tbl td { text-align: right; padding: 3px 4px; border-top: 1px solid var(--grid-strong); }
+.tbl th:first-child, .tbl td:first-child { text-align: left; font-family: var(--font-ui); }
+.tbl tr.sel td { font-weight: 700; }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
+
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.f { border-color: var(--pos); border-top-width: 3px; }
+.swatch.r { border-color: var(--neg); }
+.swatch.rp { border-color: var(--equi); border-top-style: dashed; }
+.swatch.la { border-color: var(--muted); border-top-style: dashed; }
+.swatch.tq { border-color: var(--accent); }
+kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--canvas); }
+
+@media (min-width: 821px) {
+  :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 340px; }
+}
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; grid-template-rows: auto auto; }
+  .pane.main { height: 56vh; min-height: 340px; }
+  .charts { grid-template-columns: minmax(0, 1fr); }
+  .charts > .pane { height: 190px; }
+  .charts > .pane + .pane { border-left: 0; border-top: 1px solid var(--line); }
+  :root[data-projector="on"] .stage { grid-template-rows: auto auto; }
+  :root[data-projector="on"] .charts > .pane { height: 240px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Rotation and Torque</h1>
+      <p>Push a door, race rolling objects down a ramp, spin a skater, balance a seesaw. Torque makes things turn, moment of inertia resists it, and angular momentum stays the same when nothing twists from outside.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units · g = 9.81 m/s² · counterclockwise positive</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="pane main" id="mainPane">
+        <canvas id="view" tabindex="0" role="application" aria-label="Scene view. Drag the round grips to change the setup. Keys are listed in the rail for each scene."></canvas>
+        <div class="stage-ctl" id="ctl">
+          <button type="button" class="btn primary" id="act">Push</button>
+          <button type="button" class="btn" id="reset">Reset</button>
+          <div class="seg" role="group" aria-label="Time scale" id="speedSeg">
+            <button type="button" data-ts="0.1" aria-pressed="false">0.1×</button>
+            <button type="button" data-ts="0.25" aria-pressed="false">¼×</button>
+            <button type="button" data-ts="1" aria-pressed="true">1×</button>
+          </div>
+          <span class="tclock mono" id="tclock">t = 0.00 s</span>
+        </div>
+      </div>
+      <div class="charts" id="charts">
+        <div class="pane" id="pA"><canvas id="cA" aria-label="Chart for the current scene"></canvas></div>
+        <div class="pane" id="pB"><canvas id="cB" aria-label="Second chart for the current scene"></canvas></div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Scene</h2>
+        <div class="seg full" role="group" aria-label="Scene" id="sceneSeg">
+          <button type="button" data-s="torque" aria-pressed="true">Torque</button>
+          <button type="button" data-s="roll" aria-pressed="false">Rolling</button>
+          <button type="button" data-s="spin" aria-pressed="false">Spin</button>
+          <button type="button" data-s="seesaw" aria-pressed="false">Seesaw</button>
+        </div>
+        <div class="chips" id="presets">
+          <button type="button" data-p="wrench" aria-pressed="false">Wrench</button>
+          <button type="button" data-p="hinge" aria-pressed="true">Door: push near the hinge</button>
+          <button type="button" data-p="race" aria-pressed="false">Rolling race</button>
+          <button type="button" data-p="mass" aria-pressed="false">Mass doesn't matter</button>
+          <button type="button" data-p="skater" aria-pressed="false">Skater</button>
+          <button type="button" data-p="seesaw" aria-pressed="false">Seesaw</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <!-- ===== torque ===== -->
+      <section data-scene="torque">
+        <h2>Force</h2>
+        <div class="inline"><span class="lab">Object</span>
+          <div class="seg" role="group" aria-label="Object" id="objSeg">
+            <button type="button" data-o="door" aria-pressed="true">Door</button>
+            <button type="button" data-o="wrench" aria-pressed="false">Wrench</button>
+          </div>
+        </div>
+        <div>
+          <div class="slider-head"><label for="tF">Force F</label><output id="tFOut" class="mono" for="tF"></output></div>
+          <input type="range" id="tF" min="0" max="50" step="0.5" value="20">
+        </div>
+        <div>
+          <div class="slider-head"><label for="tR">Push point r, from the pivot</label><output id="tROut" class="mono" for="tR"></output></div>
+          <input type="range" id="tR" min="0" max="0.9" step="0.01" value="0.15">
+        </div>
+        <div>
+          <div class="slider-head"><label for="tTh">Angle θ between r and F</label><output id="tThOut" class="mono" for="tTh"></output></div>
+          <input type="range" id="tTh" min="-180" max="180" step="1" value="90">
+        </div>
+        <div class="inline"><span class="lab">While it turns, F keeps</span>
+          <div class="seg" role="group" aria-label="Force direction during the swing" id="modeSeg">
+            <button type="button" data-m="follow" aria-pressed="true">its angle θ</button>
+            <button type="button" data-m="room" aria-pressed="false">its direction</button>
+          </div>
+        </div>
+        <p class="hint">Drag the push point along the door and drag the arrow tip to aim and size the force. Keys: <kbd>←</kbd> <kbd>→</kbd> move the push point, <kbd>↑</kbd> <kbd>↓</kbd> turn the force, <kbd>Enter</kbd> pushes.</p>
+      </section>
+      <section data-scene="torque">
+        <h2>Door</h2>
+        <div>
+          <div class="slider-head"><label for="tL">Length L</label><output id="tLOut" class="mono" for="tL"></output></div>
+          <input type="range" id="tL" min="0.2" max="1.5" step="0.01" value="0.9">
+        </div>
+        <div>
+          <div class="slider-head"><label for="tM">Mass m</label><output id="tMOut" class="mono" for="tM"></output></div>
+          <input type="range" id="tM" min="0.1" max="30" step="0.1" value="15">
+        </div>
+        <p class="hint" id="objHint">Modeled as a thin uniform rod turning about one end, I = mL²/3, with a frictionless hinge.</p>
+      </section>
+      <section data-scene="torque">
+        <h2>Torque and swing</h2>
+        <dl class="readout">
+          <div><dt>Lever arm r⊥ = r |sin θ|</dt><dd id="qRp">—</dd></div>
+          <div class="big"><dt>Torque τ = r⊥F</dt><dd id="qTau">—</dd></div>
+          <div><dt>Moment of inertia I</dt><dd id="qI">—</dd></div>
+          <div><dt>Angular accel. α = τ/I</dt><dd id="qAl">—</dd></div>
+          <div><dt>Angle φ</dt><dd id="qPhi">—</dd></div>
+          <div><dt>Angular velocity ω</dt><dd id="qW">—</dd></div>
+          <div><dt>Time to turn 90°</dt><dd id="qT90">—</dd></div>
+          <div><dt>ω on reaching 90°</dt><dd id="qW90">—</dd></div>
+        </dl>
+        <p class="hint" id="tqNote"></p>
+      </section>
+
+      <!-- ===== rolling ===== -->
+      <section data-scene="roll" hidden>
+        <h2>Ramp</h2>
+        <div>
+          <div class="slider-head"><label for="rB">Incline angle β</label><output id="rBOut" class="mono" for="rB"></output></div>
+          <input type="range" id="rB" min="2" max="40" step="0.5" value="10">
+        </div>
+        <div>
+          <div class="slider-head"><label for="rD">Ramp length D</label><output id="rDOut" class="mono" for="rD"></output></div>
+          <input type="range" id="rD" min="0.5" max="4" step="0.1" value="2">
+        </div>
+        <p class="hint">Drag the round grip at the top of the lowest board to tilt the ramp. Keys: <kbd>↑</kbd> <kbd>↓</kbd> tilt, <kbd>1</kbd>–<kbd>5</kbd> select a lane, <kbd>Enter</kbd> races.</p>
+      </section>
+      <section data-scene="roll" hidden>
+        <h2 id="selTitle">Selected lane</h2>
+        <div class="chips" id="shapeChips">
+          <button type="button" data-sh="block" aria-pressed="false">Block</button>
+          <button type="button" data-sh="sphere" aria-pressed="false">Solid sphere</button>
+          <button type="button" data-sh="disk" aria-pressed="false">Cylinder</button>
+          <button type="button" data-sh="hsphere" aria-pressed="false">Hollow sphere</button>
+          <button type="button" data-sh="hoop" aria-pressed="false">Hoop</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="rM">Mass m</label><output id="rMOut" class="mono" for="rM"></output></div>
+          <input type="range" id="rM" min="0.1" max="10" step="0.1" value="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="rR">Radius R</label><output id="rROut" class="mono" for="rR"></output></div>
+          <input type="range" id="rR" min="2" max="15" step="0.5" value="10">
+        </div>
+        <p class="hint">Click an object to select it. Change its mass and radius, even mid race: the motion does not change, only the energies in joules and the size.</p>
+        <dl class="readout">
+          <div><dt>I / mR²</dt><dd id="oK">—</dd></div>
+          <div class="big"><dt>a = g sin β / (1 + I/mR²)</dt><dd id="oA">—</dd></div>
+          <div><dt>Time to the bottom</dt><dd id="oT">—</dd></div>
+          <div><dt>Speed at the bottom</dt><dd id="oV">—</dd></div>
+          <div><dt>Spin at the bottom ω = v/R</dt><dd id="oW">—</dd></div>
+          <div><dt>Friction needed μ ≥</dt><dd id="oMu">—</dd></div>
+        </dl>
+      </section>
+      <section data-scene="roll" hidden>
+        <h2>Race results</h2>
+        <table class="tbl" id="raceTbl"></table>
+        <p class="hint">Every object that rolls without slipping loses the same potential energy mgh, but part of it goes into spinning. The larger I/mR², the bigger that share, and the slower it goes down. The frictionless block puts it all into sliding, so it wins.</p>
+        <p class="hint">Assumes enough static friction to roll without slipping, no rolling resistance and no air drag; static friction does no work on a rolling object. Objects are drawn larger than scale.</p>
+      </section>
+
+      <!-- ===== spin ===== -->
+      <section data-scene="spin" hidden>
+        <h2>Spinner</h2>
+        <div class="inline"><span class="lab">Look</span>
+          <div class="seg" role="group" aria-label="Look" id="lookSeg">
+            <button type="button" data-l="skater" aria-pressed="true">Skater</button>
+            <button type="button" data-l="platform" aria-pressed="false">Platform</button>
+          </div>
+        </div>
+        <div class="row2">
+          <button type="button" class="btn primary" id="pullIn">Pull in</button>
+          <button type="button" class="btn" id="pushOut">Push out</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="sR">Masses at radius r</label><output id="sROut" class="mono" for="sR"></output></div>
+          <input type="range" id="sR" min="0.2" max="0.9" step="0.01" value="0.8">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sF">Spin rate now</label><output id="sFOut" class="mono" for="sF"></output></div>
+          <input type="range" id="sF" min="0.05" max="6" step="0.05" value="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sM">Each mass m</label><output id="sMOut" class="mono" for="sM"></output></div>
+          <input type="range" id="sM" min="0.5" max="10" step="0.5" value="3">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sI0">Body or platform I₀</label><output id="sI0Out" class="mono" for="sI0"></output></div>
+          <input type="range" id="sI0" min="0.2" max="12" step="0.1" value="0.8">
+        </div>
+        <p class="hint">Drag a mass in or out. Keys: <kbd>↑</kbd> <kbd>↓</kbd> move the masses out and in, <kbd>Space</kbd> plays or pauses. Moving the masses only pulls along the radius, so there is no torque and L stays the same. The spin rate slider and the mass sliders reset the system, as if someone outside gave it a twist.</p>
+      </section>
+      <section data-scene="spin" hidden>
+        <h2>Angular momentum</h2>
+        <dl class="readout">
+          <div><dt>I = I₀ + 2mr²</dt><dd id="sIr">—</dd></div>
+          <div><dt>Spin ω</dt><dd id="sW">—</dd></div>
+          <div class="big wide"><dt>L = Iω</dt><dd id="sL">—</dd></div>
+          <div><dt>Rotational KE ½Iω²</dt><dd id="sKE">—</dd></div>
+          <div><dt>Work done pulling</dt><dd id="sWk">—</dd></div>
+          <div><dt>KE now / KE at start</dt><dd id="sKr">—</dd></div>
+          <div><dt>I at start / I now</dt><dd id="sIrat">—</dd></div>
+        </dl>
+        <p class="hint">With L fixed, KE = L²/2I, so the kinetic energy grows by the same factor that I shrinks. ω grows by that factor too, which is why the ω and KE lines on the chart lie on top of each other. The extra energy is the work done pulling the masses inward against their tendency to fly outward.</p>
+        <p class="hint" id="spinModel"></p>
+      </section>
+
+      <!-- ===== seesaw ===== -->
+      <section data-scene="seesaw" hidden>
+        <h2>Blocks on the beam</h2>
+        <div>
+          <div class="slider-head"><label for="eMA">Block A mass</label><output id="eMAOut" class="mono" for="eMA"></output></div>
+          <input type="range" id="eMA" min="0.5" max="10" step="0.5" value="4">
+        </div>
+        <div>
+          <div class="slider-head"><label for="eXA">Block A position x</label><output id="eXAOut" class="mono" for="eXA"></output></div>
+          <input type="range" id="eXA" min="-2" max="2" step="0.05" value="-1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="eMB">Block B mass</label><output id="eMBOut" class="mono" for="eMB"></output></div>
+          <input type="range" id="eMB" min="0.5" max="10" step="0.5" value="2">
+        </div>
+        <div>
+          <div class="slider-head"><label for="eXB">Block B position x</label><output id="eXBOut" class="mono" for="eXB"></output></div>
+          <input type="range" id="eXB" min="-2" max="2" step="0.05" value="1.5">
+        </div>
+        <div>
+          <div class="slider-head"><label for="eMC">Block C mass (0 removes it)</label><output id="eMCOut" class="mono" for="eMC"></output></div>
+          <input type="range" id="eMC" min="0" max="10" step="0.5" value="0">
+        </div>
+        <div>
+          <div class="slider-head"><label for="eXC">Block C position x</label><output id="eXCOut" class="mono" for="eXC"></output></div>
+          <input type="range" id="eXC" min="-2" max="2" step="0.05" value="0.5">
+        </div>
+        <button type="button" class="btn" id="balB">Move B to the balance point</button>
+        <p class="hint">Drag the blocks along the beam. Keys: <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> pick a block, <kbd>←</kbd> <kbd>→</kbd> move it, <kbd>Enter</kbd> releases or holds the beam.</p>
+      </section>
+      <section data-scene="seesaw" hidden>
+        <h2>Torques about the pivot</h2>
+        <dl class="readout">
+          <div><dt>τ from A = −m g x</dt><dd id="eTA">—</dd></div>
+          <div><dt>τ from B</dt><dd id="eTB">—</dd></div>
+          <div><dt>τ from C</dt><dd id="eTC">—</dd></div>
+          <div class="big"><dt>Net torque</dt><dd id="eNet">—</dd></div>
+          <div><dt>B balances at x =</dt><dd id="eBal">—</dd></div>
+          <div><dt>I about the pivot</dt><dd id="eI">—</dd></div>
+          <div><dt>Beam angle</dt><dd id="ePhi">—</dd></div>
+          <div><dt>Time to touch down</dt><dd id="eTl">—</dd></div>
+        </dl>
+        <p class="hint" id="seeState"></p>
+        <p class="hint">A block on the left (x &lt; 0) twists the beam counterclockwise, one on the right clockwise. Balanced means m₁x₁ + m₂x₂ + m₃x₃ = 0: a heavy block close in matches a light block far out. Uniform 4 m beam of 10 kg pivoted at its center, so its own weight has no torque. Blocks are treated as point masses fixed on the beam's center line.</p>
+      </section>
+
+      <section>
+        <h2>Key</h2>
+        <div class="key" id="keyBox"></div>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.81;
+  const DEG = Math.PI / 180;
+  // I = k m R² for each object, rolling without slipping (the block slides without friction)
+  const SHAPES = {
+    block:   { k: 0,     name: 'Sliding block', Iform: 'slides, no friction', rolls: false },
+    sphere:  { k: 2 / 5, name: 'Solid sphere',  Iform: '⅖mR²', rolls: true },
+    disk:    { k: 1 / 2, name: 'Cylinder',      Iform: '½mR²', rolls: true },
+    hsphere: { k: 2 / 3, name: 'Hollow sphere', Iform: '⅔mR²', rolls: true },
+    hoop:    { k: 1,     name: 'Hoop',          Iform: 'mR²',  rolls: true }
+  };
+  const rodI = (m, L) => m * L * L / 3;                       // thin rod about one end
+  const torqueOf = (r, F, th) => r * F * Math.sin(th);        // z component of r × F
+  const leverArm = (r, th) => r * Math.abs(Math.sin(th));
+  // door torque at door angle phi: F keeps its angle th to the door ('follow') or its direction in the room ('room')
+  const doorTorque = (p, phi) => p.r * p.F * Math.sin(p.mode === 'room' ? p.th - phi : p.th);
+
+  function herm(p0, m0, p1, m1, u, h) {
+    const u2 = u * u, u3 = u2 * u;
+    return (2 * u3 - 3 * u2 + 1) * p0 + (u3 - 2 * u2 + u) * h * m0 + (-2 * u3 + 3 * u2) * p1 + (u3 - u2) * h * m1;
+  }
+  // RK4 for x'' = acc(x) from rest at x = 0, until |x| reaches lim (crossing on the cubic Hermite interpolant) or tMax
+  function swingRK4(acc, lim, dt, tMax) {
+    let t = 0, x = 0, v = 0, n = 0;
+    const every = Math.max(1, Math.round(tMax / dt / 6000));
+    const pts = [[0, 0, 0]];
+    while (t < tMax - 1e-12) {
+      const k1x = v, k1v = acc(x);
+      const k2x = v + 0.5 * dt * k1v, k2v = acc(x + 0.5 * dt * k1x);
+      const k3x = v + 0.5 * dt * k2v, k3v = acc(x + 0.5 * dt * k2x);
+      const k4x = v + dt * k3v, k4v = acc(x + dt * k3x);
+      const nx = x + dt / 6 * (k1x + 2 * k2x + 2 * k3x + k4x);
+      const nv = v + dt / 6 * (k1v + 2 * k2v + 2 * k3v + k4v);
+      if (Math.abs(nx) >= lim) {
+        const tgt = Math.sign(nx) * lim, sg = Math.sign(nx);
+        let lo = 0, hi = 1;
+        for (let i = 0; i < 52; i++) { const mid = 0.5 * (lo + hi); if ((herm(x, v, nx, nv, mid, dt) - tgt) * sg < 0) lo = mid; else hi = mid; }
+        const u = 0.5 * (lo + hi);
+        // velocity from the derivative of the Hermite cubic
+        const u2 = u * u;
+        const vh = ((6 * u2 - 6 * u) * x + (3 * u2 - 4 * u + 1) * dt * v + (-6 * u2 + 6 * u) * nx + (3 * u2 - 2 * u) * dt * nv) / dt;
+        pts.push([t + u * dt, tgt, vh]);
+        return { pts, hit: true, tHit: t + u * dt, vHit: vh, tEnd: t + u * dt };
+      }
+      x = nx; v = nv; t += dt; n++;
+      if (n % every === 0) pts.push([t, x, v]);
+    }
+    if (pts[pts.length - 1][0] < t) pts.push([t, x, v]);
+    return { pts, hit: false, tHit: null, vHit: null, tEnd: t };
+  }
+  function sampleAt(pts, t) {
+    if (t <= pts[0][0]) return pts[0];
+    const last = pts[pts.length - 1];
+    if (t >= last[0]) return last;
+    let lo = 0, hi = pts.length - 1;
+    while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (pts[mid][0] <= t) lo = mid; else hi = mid; }
+    const a = pts[lo], b = pts[hi], h = b[0] - a[0], u = (t - a[0]) / h;
+    return [t, herm(a[1], a[2], b[1], b[2], u, h), a[2] + (b[2] - a[2]) * u];   // position on the Hermite cubic
+  }
+  // a swing of the door (or wrench) from rest at phi = 0 until it has turned 90°
+  function makeSwing(p, rk) {
+    const I = rodI(p.m, p.L), tau0 = doorTorque(p, 0), lim = Math.PI / 2;
+    const base = { p: Object.assign({}, p), I, tau0 };
+    if (Math.abs(tau0) < 1e-12) return Object.assign(base, { none: true, t90: null, w90: null, tEnd: 0, at: () => [0, 0] });
+    if (p.mode !== 'room' && !rk) {   // constant torque: exact
+      const a = tau0 / I, t90 = Math.sqrt(Math.PI / Math.abs(a));
+      return Object.assign(base, { alpha: a, t90, w90: a * t90, tEnd: t90,
+        at: (t) => { const tt = Math.min(Math.max(t, 0), t90); return [0.5 * a * tt * tt, a * tt]; } });
+    }
+    const tc = Math.sqrt(I / (p.r * p.F));
+    const R = swingRK4((phi) => doorTorque(p, phi) / I, lim, Math.min(tc / 600, 2e-3), 8);
+    return Object.assign(base, { t90: R.tHit, w90: R.vHit, tEnd: R.tEnd, pts: R.pts,
+      at: (t) => { const q = sampleAt(R.pts, t); return [q[1], q[2]]; } });
+  }
+
+  // rolling down an incline of angle beta (rad) and length D
+  const rollAcc = (k, beta) => G * Math.sin(beta) / (1 + k);
+  const rollTime = (k, beta, D) => Math.sqrt(2 * D / rollAcc(k, beta));
+  const muMin = (k, beta) => k * Math.tan(beta) / (1 + k);
+  function rollAt(o, beta, D, t) {
+    const sh = SHAPES[o.shape], k = sh.k, a = rollAcc(k, beta), T = Math.sqrt(2 * D / a);
+    const tt = Math.min(Math.max(t, 0), T);
+    const s = 0.5 * a * tt * tt, v = a * tt, w = sh.rolls ? v / o.R : 0;
+    const KEt = 0.5 * o.m * v * v, KEr = 0.5 * k * o.m * o.R * o.R * w * w;
+    return { k, a, T, s, v, w, KEt, KEr, drop: o.m * G * s * Math.sin(beta), done: t >= T };
+  }
+
+  // spinner: body I0 plus two point masses m at radius r on opposite sides
+  const spinI = (I0, m, r) => I0 + 2 * m * r * r;
+  const spinWork = (L, Ia, Ib) => L * L / 2 * (1 / Ib - 1 / Ia);   // work done moving the masses from I = Ia to I = Ib at fixed L
+  // smooth radial move from r1 to r2 in time Tm, starting and ending at rest: [r, dr/dt, d²r/dt²]
+  function pullProfile(r1, r2, Tm, t) {
+    if (t >= Tm) return [r2, 0, 0];
+    if (t <= 0) return [r1, 0, 0];
+    const u = Math.PI * t / Tm;
+    return [r1 + (r2 - r1) * (1 - Math.cos(u)) / 2, (r2 - r1) * Math.PI / (2 * Tm) * Math.sin(u), (r2 - r1) * Math.PI * Math.PI / (2 * Tm * Tm) * Math.cos(u)];
+  }
+
+  // seesaw: point masses at x (m) on a beam pivoted at its center; tilt phi counterclockwise
+  const seesawMoment = (ms) => ms.reduce((s, q) => s + q.m * q.x, 0);
+  const seesawTorque = (ms, phi) => -G * seesawMoment(ms) * Math.cos(phi);
+  const seesawI = (ms, Mb, Lb) => ms.reduce((s, q) => s + q.m * q.x * q.x, Mb * Lb * Lb / 12);
+  function balanceX(ms, j) {
+    let s = 0;
+    ms.forEach((q, i) => { if (i !== j) s += q.m * q.x; });
+    return ms[j].m > 0 ? -s / ms[j].m : NaN;
+  }
+  function seesawTip(ms, Mb, Lb, phiStop) {
+    const I = seesawI(ms, Mb, Lb);
+    if (Math.abs(seesawMoment(ms)) < 1e-9) return { none: true, I, tEnd: 0, tHit: null, at: () => [0, 0] };
+    const tc = Math.sqrt(I / (G * Math.abs(seesawMoment(ms))));
+    const R = swingRK4((phi) => seesawTorque(ms, phi) / I, phiStop, Math.min(tc / 600, 2e-3), 30);
+    return { I, tEnd: R.tEnd, tHit: R.tHit, vHit: R.vHit, pts: R.pts, at: (t) => { const q = sampleAt(R.pts, t); return [q[1], q[2]]; } };
+  }
+  // ==CORE END==
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  // ---------- formatting ----------
+  const minus = (s) => String(s).replace(/-/g, '−');
+  const fx = (v, dp) => minus((Math.abs(v) < 0.5 * Math.pow(10, -dp) ? 0 : v).toFixed(dp));
+  const fsg = (v, dp) => { const s = fx(v, dp); return (/^[0.]+$/.test(s) || s.startsWith('−')) ? s : '+' + s; };
+  const f3 = (v) => { const a = Math.abs(v); return fx(v, a >= 100 ? 0 : a >= 10 ? 1 : a >= 1 ? 2 : 3); };
+  const s3 = (v) => { const a = Math.abs(v); const s = fx(v, a >= 100 ? 0 : a >= 10 ? 1 : a >= 1 ? 2 : 3); return (/^[0.]+$/.test(s) || s.startsWith('−')) ? s : '+' + s; };
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  const fmtTick = (v, step) => { const dp = Math.max(0, Math.ceil(-Math.log10(step) - 1e-9)); return fx(v, dp); };
+
+  // ---------- state ----------
+  const S = { scene: 'torque', ts: 1, preset: { torque: 'hinge', roll: 'race', spin: 'skater', seesaw: 'seesaw' } };
+  const TQ = { obj: 'door', L: 0.9, m: 15, F: 20, r: 0.15, th: 90, mode: 'follow', sw: null, t: 0, run: false, ghost: null };
+  const RO = { beta: 10, D: 2, lanes: [], sel: 0, t: 0, run: false };
+  const SP = { look: 'skater', I0: 0.8, m: 3, r: 0.8, L: 0, phi: 0, t: 0, run: !reduce, pull: null, hist: [], ref: null, trail: [] };
+  const SE = { ms: [{ id: 'A', m: 4, x: -1 }, { id: 'B', m: 2, x: 1.5 }, { id: 'C', m: 0, x: 0.5 }], held: true, tip: null, t: 0, run: false, sel: 0, Mb: 10, Lb: 4, h: 0.5 };
+  const SE_STOP = Math.asin(SE.h / (SE.Lb / 2));
+
+  const lane = (shape, m, R) => ({ shape, m, R });
+  const PRESETS = {
+    wrench: { scene: 'torque', ts: 0.1, hint: 'Torque is r⊥F, the force times its lever arm. Tilt the arrow: only the part of F perpendicular to the handle turns the bolt, and a push along the handle does nothing.',
+      apply() { Object.assign(TQ, { obj: 'wrench', L: 0.3, m: 0.4, F: 40, r: 0.27, th: 90, mode: 'follow', sw: null, t: 0, run: false, ghost: null }); } },
+    hinge: { scene: 'torque', ts: 1, hint: 'The same 20 N push, close to the hinge. Press Push and compare the swing with the faded one, pushed at the handle: the torque is 5.7 times smaller, so it takes √5.7 ≈ 2.4 times as long to open.',
+      apply() {
+        Object.assign(TQ, { obj: 'door', L: 0.9, m: 15, F: 20, r: 0.85, th: 90, mode: 'follow', sw: null, t: 0, run: false });
+        TQ.ghost = makeSwing(tqParams());
+        TQ.r = 0.15;
+      } },
+    race: { scene: 'roll', ts: 1, hint: 'Same mass and radius for all. Press Race: the block slides in first, then the solid sphere, the cylinder, the hollow sphere and the hoop.',
+      apply() { RO.beta = 10; RO.D = 2; RO.lanes = [lane('block', 1, 0.1), lane('sphere', 1, 0.1), lane('disk', 1, 0.1), lane('hsphere', 1, 0.1), lane('hoop', 1, 0.1)]; RO.sel = 2; RO.t = 0; RO.run = false; } },
+    mass: { scene: 'roll', ts: 1, hint: 'A heavy, wide cylinder against a light, narrow one, and the same for two hoops. Shape decides the race, through I/mR², and mass and radius cancel out.',
+      apply() { RO.beta = 10; RO.D = 2; RO.lanes = [lane('disk', 8, 0.15), lane('disk', 0.5, 0.03), lane('hoop', 8, 0.15), lane('hoop', 0.5, 0.03)]; RO.sel = 0; RO.t = 0; RO.run = false; } },
+    skater: { scene: 'spin', ts: 0.25, hint: 'Arms out, spinning slowly. Press Pull in: I drops by about 4.5 times, so ω rises by the same factor while L stays fixed. Shown at ¼ speed.',
+      apply() { Object.assign(SP, { look: 'skater', I0: 0.8, m: 3, r: 0.8 }); setSpinRate(1); } },
+    seesaw: { scene: 'seesaw', ts: 1, hint: 'The supports hold the beam level. The net torque is not zero, so press Release and the left end goes down. Then find where B must sit to balance A.',
+      apply() { SE.ms[0].m = 4; SE.ms[0].x = -1; SE.ms[1].m = 2; SE.ms[1].x = 1.5; SE.ms[2].m = 0; SE.ms[2].x = 0.5; SE.sel = 1; holdSeesaw(); } }
+  };
+  const SCENE_HINT = {
+    torque: 'Push a door or a wrench. The torque about the pivot is τ = rF sin θ = r⊥F, and it sets the angular acceleration α = τ/I.',
+    roll: 'Objects roll down a ramp without slipping: a = g sin β / (1 + I/mR²).',
+    spin: 'No outside torque, so L = Iω stays the same while the masses move.',
+    seesaw: 'Each block adds a torque −m g x about the pivot. The beam stays level only when they cancel.'
+  };
+
+  // ---------- torque scene ----------
+  const tqParams = () => ({ L: TQ.L, m: TQ.m, F: TQ.F, r: TQ.r, th: TQ.th * DEG, mode: TQ.mode });
+  function clearSwing() {
+    if (TQ.sw && TQ.t > 0 && !TQ.sw.none) TQ.ghost = TQ.sw;
+    TQ.sw = null; TQ.t = 0; TQ.run = false;
+  }
+  const doorState = () => (TQ.sw ? TQ.sw.at(TQ.t) : [0, 0]);
+  function tqAct() {
+    if (TQ.run) { TQ.run = false; return; }
+    if (TQ.sw && TQ.t > 0 && TQ.t < TQ.sw.tEnd) { TQ.run = true; return; }
+    const p = tqParams();
+    const same = TQ.sw && JSON.stringify(TQ.sw.p) === JSON.stringify(p);
+    if (TQ.sw && !same && !TQ.sw.none && TQ.t > 0) TQ.ghost = TQ.sw;
+    TQ.sw = same ? TQ.sw : makeSwing(p);
+    TQ.t = 0;
+    if (TQ.sw.none) return;
+    if (reduce) TQ.t = TQ.sw.tEnd; else TQ.run = true;
+  }
+
+  // ---------- rolling scene ----------
+  function rollEnd() { return Math.max(...RO.lanes.map((o) => rollAt(o, RO.beta * DEG, RO.D, 0).T)); }
+  function roAct() {
+    const tEnd = rollEnd();
+    if (RO.run) { RO.run = false; return; }
+    if (RO.t > 0 && RO.t < tEnd) { RO.run = true; return; }
+    RO.t = 0;
+    if (reduce) RO.t = tEnd; else RO.run = true;
+  }
+
+  // ---------- spin scene ----------
+  const spinNowI = () => spinI(SP.I0, SP.m, SP.r);
+  const spinW = () => SP.L / spinNowI();
+  function setRef() { SP.ref = { r: SP.r, L: SP.L, I: spinNowI() }; SP.hist = []; SP.t = 0; SP.pull = null; SP.trail = []; recordSpin(); }
+  function setSpinRate(rev) { SP.L = spinNowI() * rev * 2 * Math.PI; setRef(); }
+  function setSpinR(r) { SP.r = r; SP.pull = null; recordSpin(); }      // L unchanged: ω follows
+  function startPull(to) {
+    if (Math.abs(to - SP.r) < 1e-9) return;
+    SP.pull = { r1: SP.r, r2: to, Tm: 0.8, t: 0 };
+    if (reduce) { SP.r = to; SP.pull = null; } else SP.run = true;
+  }
+  function advanceSpin(dt) {
+    const n = Math.max(1, Math.ceil(dt / 0.002)), h = dt / n;
+    for (let i = 0; i < n; i++) {
+      const w0 = spinW();
+      if (SP.pull) {
+        SP.pull.t += h;
+        SP.r = pullProfile(SP.pull.r1, SP.pull.r2, SP.pull.Tm, SP.pull.t)[0];
+        if (SP.pull.t >= SP.pull.Tm) { SP.r = SP.pull.r2; SP.pull = null; }
+      }
+      SP.phi += 0.5 * (w0 + spinW()) * h;
+      SP.t += h;
+    }
+    SP.phi %= 2 * Math.PI;
+    recordSpin();
+  }
+  function recordSpin() {
+    const I = spinNowI(), w = SP.L / I;
+    SP.hist.push([SP.t, I, w]);
+    while (SP.hist.length > 2 && SP.hist[0][0] < SP.t - 8) SP.hist.shift();
+    SP.trail.push([SP.phi, SP.r]);
+    if (SP.trail.length > 18) SP.trail.shift();
+  }
+
+  // ---------- seesaw scene ----------
+  function holdSeesaw() { SE.held = true; SE.tip = null; SE.t = 0; SE.run = false; }
+  const liveMasses = () => SE.ms.filter((q) => q.m > 0);
+  function seAct() {
+    if (!SE.held) { holdSeesaw(); return; }
+    SE.held = false;
+    SE.tip = seesawTip(liveMasses(), SE.Mb, SE.Lb, SE_STOP);
+    SE.t = 0;
+    if (SE.tip.none) return;
+    if (reduce) SE.t = SE.tip.tEnd; else SE.run = true;
+  }
+  const seesawPhi = () => (SE.tip && !SE.tip.none ? SE.tip.at(SE.t)[0] : 0);
+
+  // ---------- canvas ----------
+  const view = $('view'), cA = $('cA'), cB = $('cB'), stage = $('stage');
+  const ctxV = view.getContext('2d'), ctxA = cA.getContext('2d'), ctxB = cB.getContext('2d');
+  let dpr = 1;
+  const dims = { v: [0, 0], a: [0, 0], b: [0, 0] };
+  let T = null, ctlH = 44, dirty = true;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), grid: g('--grid'), gridStrong: g('--grid-strong'), canvas: g('--canvas'),
+      relief: g('--relief'), ink: g('--ink'), muted: g('--muted'), accent: g('--accent'), line: g('--line'), teal: g('--teal'), violet: g('--violet'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+  }
+  const shapeColor = (sh) => ({ block: T.violet, sphere: T.pos, disk: T.equi, hsphere: T.teal, hoop: T.neg })[sh];
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const [c, k] of [[view, 'v'], [cA, 'a'], [cB, 'b']]) {
+      const r = c.parentElement.getBoundingClientRect();
+      c.width = Math.max(1, Math.round(r.width * dpr)); c.height = Math.max(1, Math.round(r.height * dpr));
+      c.style.width = r.width + 'px'; c.style.height = r.height + 'px';
+      dims[k] = [r.width, r.height];
+    }
+    dirty = true;
+  }
+  function begin(ctx, k) {
+    const [W, H] = dims[k];
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    return [W, H];
+  }
+  function arrowHead(ctx, x, y, ang, size) {
+    ctx.beginPath();
+    ctx.moveTo(x + Math.cos(ang) * size, y + Math.sin(ang) * size);
+    ctx.lineTo(x + Math.cos(ang + 2.6) * size, y + Math.sin(ang + 2.6) * size);
+    ctx.lineTo(x + Math.cos(ang - 2.6) * size, y + Math.sin(ang - 2.6) * size);
+    ctx.closePath(); ctx.fill();
+  }
+  function arrow(ctx, x0, y0, x1, y1, color, lw, dash) {
+    const len = Math.hypot(x1 - x0, y1 - y0);
+    if (len < 3) return;
+    const ps = projScale(), ang = Math.atan2(y1 - y0, x1 - x0), head = Math.min(11 * ps, 4 * ps + lw * 2.4, len * 0.6);
+    ctx.save();
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+    if (dash) ctx.setLineDash(dash);
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - Math.cos(ang) * head * 0.7, y1 - Math.sin(ang) * head * 0.7); ctx.stroke();
+    ctx.setLineDash([]);
+    arrowHead(ctx, x1, y1, ang, head);
+    ctx.restore();
+  }
+  // arc with an arrow head at the end; screen angles, ccw = counterclockwise on screen
+  function arcArrow(ctx, cx, cy, rad, a0, a1, ccw, color, lw) {
+    const ps = projScale();
+    ctx.save(); ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+    const head = 5 * ps + lw * 1.6, back = head / rad * 0.8 * (ccw ? -1 : 1);
+    ctx.beginPath(); ctx.arc(cx, cy, rad, a0, a1 - back, ccw); ctx.stroke();
+    const ex = cx + rad * Math.cos(a1), ey = cy + rad * Math.sin(a1);
+    const tang = a1 + (ccw ? -Math.PI / 2 : Math.PI / 2);
+    arrowHead(ctx, ex, ey, tang, head);
+    ctx.restore();
+  }
+  function label(ctx, txt, x, y, color, align, base, size, weight) {
+    const ps = projScale();
+    ctx.save();
+    ctx.font = `${weight || 600} ${(size || 11.5) * ps}px ${T.mono}`;
+    ctx.textAlign = align || 'left'; ctx.textBaseline = base || 'middle';
+    const w = ctx.measureText(txt).width, h = (size || 11.5) * ps * 1.25;
+    let x0 = align === 'center' ? x - w / 2 : align === 'right' ? x - w : x;
+    const y0 = base === 'top' ? y : base === 'bottom' || base === 'alphabetic' ? y - h : y - h / 2;
+    ctx.globalAlpha = 0.85; ctx.fillStyle = T.canvas; ctx.fillRect(x0 - 3, y0, w + 6, h); ctx.globalAlpha = 1;
+    ctx.fillStyle = color; ctx.fillText(txt, x, y);
+    ctx.restore();
+    return w;
+  }
+  // label beside a point, pushed out along the unit screen direction (nx, ny) and aligned so the text grows away from it
+  function sideLabel(ctx, txt, x, y, nx, ny, off, color, size) {
+    const al = nx > 0.45 ? 'left' : nx < -0.45 ? 'right' : 'center';
+    const bl = al !== 'center' ? 'middle' : ny > 0 ? 'top' : 'bottom';
+    label(ctx, txt, x + nx * off, y + ny * off, color, al, bl, size);
+  }
+  // keep a label box inside [xMin, xMax]
+  const clampX = (ctx, txt, x, xMin, xMax) => { const w = ctx.measureText(txt).width; return Math.max(xMin, Math.min(xMax - w, x)); };
+
+  function chartFrame(ctx, W, H, xr, yr, title, xlab) {
+    const ps = projScale();
+    const box = { L: 46 * ps, R: W - 14 * ps, T: 30 * ps, B: H - 24 * ps };
+    const X = (x) => box.L + (x - xr[0]) / (xr[1] - xr[0]) * (box.R - box.L);
+    const Y = (y) => box.B - (y - yr[0]) / (yr[1] - yr[0]) * (box.B - box.T);
+    const xs = nice((xr[1] - xr[0]) / Math.max(2, (box.R - box.L) / (70 * ps)));
+    const ys = nice((yr[1] - yr[0]) / Math.max(2, (box.B - box.T) / (34 * ps)));
+    ctx.lineWidth = 1; ctx.strokeStyle = T.grid; ctx.beginPath();
+    for (let x = Math.ceil(xr[0] / xs) * xs; x <= xr[1] + 1e-9; x += xs) { const px = Math.round(X(x)) + 0.5; ctx.moveTo(px, box.T); ctx.lineTo(px, box.B); }
+    for (let y = Math.ceil(yr[0] / ys) * ys; y <= yr[1] + 1e-9; y += ys) { const py = Math.round(Y(y)) + 0.5; ctx.moveTo(box.L, py); ctx.lineTo(box.R, py); }
+    ctx.stroke();
+    ctx.strokeStyle = T.gridStrong; ctx.beginPath();
+    ctx.moveTo(box.L + 0.5, box.T); ctx.lineTo(box.L + 0.5, box.B); ctx.lineTo(box.R, box.B + 0.5);
+    if (yr[0] < 0 && yr[1] > 0) { const py = Math.round(Y(0)) + 0.5; ctx.moveTo(box.L, py); ctx.lineTo(box.R, py); }
+    ctx.stroke();
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let x = Math.ceil(xr[0] / xs) * xs; x <= xr[1] + 1e-9; x += xs) ctx.fillText(fmtTick(x, xs), X(x), box.B + 5 * ps);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let y = Math.ceil(yr[0] / ys) * ys; y <= yr[1] + 1e-9; y += ys) ctx.fillText(fmtTick(y, ys), box.L - 6 * ps, Y(y));
+    if (xlab) { ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(xlab, box.R, box.B - 3 * ps); }
+    ctx.font = `700 ${11.5 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(title, 12 * ps, 19 * ps);
+    return { X, Y, box };
+  }
+
+  // energy or torque bars: rows of {lab, v, col}; signed bars around a zero line when any v < 0
+  function bars(ctx, W, H, title, rows, unit, opts) {
+    const ps = projScale();
+    ctx.font = `700 ${11.5 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(title, 12 * ps, 19 * ps);
+    const L = 14 * ps, R = W - 14 * ps, top = 28 * ps, foot = (opts && opts.foot ? opts.foot.length * 15 * ps + 6 * ps : 4 * ps);
+    const rowH = Math.min(42 * ps, (H - top - foot) / rows.length), bh = Math.min(13 * ps, rowH * 0.36);
+    const signed = (opts && opts.signed) || rows.some((r) => r.v < -1e-12);
+    const big = Math.max(1e-30, opts && opts.max ? opts.max : Math.max(...rows.map((r) => Math.abs(r.v))));
+    const zero = signed ? (L + R) / 2 : L, half = signed ? (R - L) / 2 : R - L;
+    let y = top;
+    for (const r of rows) {
+      const ty = y + rowH - bh - 6 * ps;
+      ctx.font = `${11 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+      ctx.fillText(r.lab, L, ty);
+      ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.fillStyle = T.ink; ctx.textAlign = 'right';
+      ctx.fillText(r.txt || (s3(r.v) + ' ' + unit), R, ty);
+      const by = y + rowH - bh - 2 * ps;
+      ctx.fillStyle = T.grid; ctx.fillRect(L, by, R - L, bh);
+      const w = Math.min(1, Math.abs(r.v) / big) * half;
+      ctx.fillStyle = r.col; ctx.globalAlpha = 0.85;
+      ctx.fillRect(r.v >= 0 ? zero : zero - w, by, w, bh); ctx.globalAlpha = 1;
+      if (signed) { ctx.fillStyle = T.ink; ctx.fillRect(zero - 0.75, by - 3 * ps, 1.5, bh + 6 * ps); }
+      y += rowH;
+    }
+    if (opts && opts.foot) {
+      ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+      let ly = Math.min(H - 8 * ps - 15 * ps * (opts.foot.length - 1), y + 16 * ps);
+      for (const s of opts.foot) { ctx.fillText(s, L, ly); ly += 15 * ps; }
+    }
+  }
+
+  // ---------- drag handles ----------
+  let handlesNow = [], drag = null, hoverId = null;
+  function drawGrips(ctx) {
+    const ps = projScale();
+    for (const h of handlesNow) {
+      if (!h.pt || h.noGrip) continue;
+      const hot = (drag && drag.id === h.id) || (!drag && hoverId === h.id);
+      ctx.save();
+      if (hot) { ctx.globalAlpha = 0.25; ctx.fillStyle = h.col || T.accent; ctx.beginPath(); ctx.arc(h.pt[0], h.pt[1], 13 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1; }
+      ctx.fillStyle = T.canvas; ctx.strokeStyle = h.col || T.accent; ctx.lineWidth = (hot ? 2.6 : 1.8) * ps;
+      ctx.beginPath(); ctx.arc(h.pt[0], h.pt[1], (hot ? 6.5 : 5) * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      ctx.restore();
+    }
+  }
+  function handleAt(ev) {
+    const r = view.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 9 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of handlesNow) {
+      let d = Infinity;
+      if (h.pt) d = Math.hypot(x - h.pt[0], y - h.pt[1]) - (h.rad || 3);
+      if (h.prio) d -= h.prio;
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  // snap a value to a slider's min, max and step
+  function snap(id, v) {
+    const el = $(id), mn = +el.min, mx = +el.max, st = +el.step;
+    v = Math.round((v - mn) / st) * st + mn;
+    return +Math.min(mx, Math.max(mn, v)).toFixed(6);
+  }
+
+  // ---------- torque scene drawing ----------
+  let tqGeo = null;
+  function drawTorque() {
+    const ctx = ctxV, [W, H] = begin(ctxV, 'v'), ps = projScale();
+    const top = ctlH + 10 * ps, bot = H - 52 * ps;
+    const door = TQ.obj === 'door';
+    const hx = Math.round(W * (W < 520 ? 0.24 : 0.3)), hy = Math.round((top + bot) / 2);
+    const s = Math.max(10, Math.min((W - hx - 34 * ps) / TQ.L, ((bot - top) / 2 - 12 * ps) / TQ.L));
+    const fpx = 0.7 * Math.min(W - hx - 10 * ps, (bot - top) / 2) / 50;
+    const [phi] = doorState();
+    const P2S = (x, y) => [hx + x * s, hy - y * s];
+    tqGeo = { hx, hy, s, fpx, phi };
+    const cph = Math.cos(phi), sph = Math.sin(phi);
+
+    // the room: wall with a doorway, or a bolt in a plate
+    if (door) {
+      const wallT = 9 * ps;
+      ctx.save();
+      ctx.fillStyle = T.relief; ctx.strokeStyle = T.muted; ctx.lineWidth = 1;
+      const xEnd = hx + (TQ.L + 0.04) * s;
+      ctx.fillRect(0, hy - wallT / 2, hx - 8 * ps, wallT); ctx.strokeRect(-1, hy - wallT / 2 + 0.5, hx - 8 * ps + 1, wallT - 1);
+      if (xEnd < W) { ctx.fillRect(xEnd, hy - wallT / 2, W - xEnd, wallT); ctx.strokeRect(xEnd + 0.5, hy - wallT / 2 + 0.5, W - xEnd, wallT - 1); }
+      ctx.restore();
+      // swing range and stops
+      ctx.save(); ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.setLineDash([2 * ps, 4 * ps]);
+      ctx.beginPath(); ctx.arc(hx, hy, TQ.L * s, -Math.PI / 2, Math.PI / 2); ctx.stroke(); ctx.setLineDash([]);
+      ctx.globalAlpha = 0.9; ctx.lineWidth = 3 * ps; ctx.lineCap = 'round';
+      for (const sg of [-1, 1]) { const y = hy + sg * TQ.L * s * 0.8; ctx.beginPath(); ctx.moveTo(hx - 9 * ps, y); ctx.lineTo(hx - 4 * ps, y); ctx.stroke(); }
+      ctx.restore();
+      ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+      ctx.fillText('wall', 6 * ps, hy - 8 * ps);
+    } else {
+      ctx.save(); ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.setLineDash([2 * ps, 4 * ps]);
+      ctx.beginPath(); ctx.arc(hx, hy, TQ.L * s, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+    }
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillText('top view', W - 12 * ps, top + 4 * ps);
+    // reference line for φ = 0
+    ctx.save(); ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.setLineDash([4 * ps, 4 * ps]);
+    ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(hx + TQ.L * s, hy); ctx.stroke(); ctx.restore();
+
+    // the body, rotated by phi (counterclockwise is negative on screen)
+    ctx.save(); ctx.translate(hx, hy); ctx.rotate(-phi);
+    if (door) {
+      const th = Math.max(7 * ps, Math.min(15 * ps, 0.045 * s));
+      ctx.fillStyle = T.relief; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps;
+      ctx.beginPath(); ctx.rect(0, -th / 2, TQ.L * s, th); ctx.fill(); ctx.stroke();
+      // handle on both faces near the free end
+      const hxp = (TQ.L - 0.07) * s;
+      if (hxp > 10) {
+        ctx.strokeStyle = T.ink; ctx.lineWidth = 3 * ps; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(hxp, -th / 2); ctx.lineTo(hxp, -th / 2 - 5 * ps); ctx.lineTo(hxp - 12 * ps, -th / 2 - 5 * ps);
+        ctx.moveTo(hxp, th / 2); ctx.lineTo(hxp, th / 2 + 5 * ps); ctx.lineTo(hxp - 12 * ps, th / 2 + 5 * ps); ctx.stroke();
+      }
+    } else {
+      const hw = Math.max(9 * ps, Math.min(20 * ps, 0.035 * s)), ring = hw * 1.25;
+      ctx.fillStyle = T.relief; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps;
+      ctx.beginPath(); ctx.moveTo(ring * 0.8, -hw / 2); ctx.lineTo(TQ.L * s - hw / 2, -hw / 2);
+      ctx.arc(TQ.L * s - hw / 2, 0, hw / 2, -Math.PI / 2, Math.PI / 2); ctx.lineTo(ring * 0.8, hw / 2); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, ring, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      // hex bolt head
+      ctx.fillStyle = T.canvas; ctx.beginPath();
+      for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3; const px = Math.cos(a) * ring * 0.62, py = Math.sin(a) * ring * 0.62; i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+    }
+    ctx.restore();
+    // hinge pin
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(hx, hy, 4.5 * ps, 0, 2 * Math.PI); ctx.fill();
+
+    // force geometry
+    const fAng = TQ.mode === 'room' ? TQ.th * DEG : phi + TQ.th * DEG;   // world angle of F
+    const rel = fAng - phi;                                               // angle from r to F
+    const Pw = [TQ.r * cph, TQ.r * sph], [px, py] = P2S(Pw[0], Pw[1]);
+    const u = [Math.cos(fAng), Math.sin(fAng)];
+    const flen = TQ.F * fpx;
+    const tip = [px + u[0] * flen, py - u[1] * flen];
+    const tau = torqueOf(TQ.r, TQ.F, rel), rperp = leverArm(TQ.r, rel);
+    tqGeo.tip = tip; tqGeo.P = [px, py]; tqGeo.u = u;
+
+    // line of action and lever arm
+    if (TQ.F > 0) {
+      ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, bot + 8 * ps); ctx.clip();
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([6 * ps, 5 * ps]);
+      const Lb = Math.hypot(W, H);
+      ctx.beginPath(); ctx.moveTo(px - u[0] * Lb, py + u[1] * Lb); ctx.lineTo(px + u[0] * Lb, py - u[1] * Lb); ctx.stroke(); ctx.restore();
+      const d = Pw[0] * u[0] + Pw[1] * u[1];
+      const foot = [Pw[0] - u[0] * d, Pw[1] - u[1] * d], [fxp, fyp] = P2S(foot[0], foot[1]);
+      if (rperp * s > 3) {
+        ctx.save(); ctx.strokeStyle = T.equi; ctx.lineWidth = 2.4 * ps; ctx.setLineDash([5 * ps, 3 * ps]);
+        ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(fxp, fyp); ctx.stroke(); ctx.setLineDash([]);
+        // right angle mark at the foot
+        const a = [(hx - fxp), (hy - fyp)], al = Math.hypot(a[0], a[1]), q = 8 * ps;
+        const e1 = [a[0] / al * q, a[1] / al * q], sgn = d >= 0 ? 1 : -1, e2 = [u[0] * q * sgn, -u[1] * q * sgn];
+        ctx.lineWidth = 1.2 * ps; ctx.beginPath();
+        ctx.moveTo(fxp + e1[0], fyp + e1[1]); ctx.lineTo(fxp + e1[0] + e2[0], fyp + e1[1] + e2[1]); ctx.lineTo(fxp + e2[0], fyp + e2[1]); ctx.stroke();
+        ctx.restore();
+        const mx = (hx + fxp) / 2, my = (hy + fyp) / 2, nx = -(fyp - hy) / al, ny = (fxp - hx) / al;
+        const tdot = nx * (tip[0] - mx) + ny * (tip[1] - my);
+        const side = tdot > 0 ? -1 : 1;
+        if (Math.abs(Math.sin(rel)) < 0.985) sideLabel(ctx, 'r⊥ = ' + fx(rperp, 2) + ' m', mx, my, nx * side, ny * side, 10 * ps, T.equi);
+      }
+    }
+    // r along the body
+    if (TQ.r * s > 4) arrow(ctx, hx, hy, px, py, T.neg, 2.2 * ps);
+    // angle θ between r and F
+    if (TQ.F > 0 && TQ.r > 0) {
+      const a0 = -phi;
+      const dth = Math.atan2(Math.sin(rel), Math.cos(rel));
+      ctx.save(); ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * ps;
+      ctx.beginPath(); ctx.arc(px, py, 20 * ps, a0, a0 - dth, dth > 0); ctx.stroke(); ctx.restore();
+      const am = -(phi + dth / 2);
+      label(ctx, 'θ', px + Math.cos(am) * 31 * ps, py + Math.sin(am) * 31 * ps, T.ink, 'center', 'middle', 12);
+    }
+    // the force
+    if (TQ.F > 0) {
+      ctx.save(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 7 * ps; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(tip[0], tip[1]); ctx.stroke(); ctx.restore();
+      arrow(ctx, px, py, tip[0], tip[1], T.pos, 3.2 * ps);
+      ctx.font = `600 ${12 * ps}px ${T.mono}`;
+      const ftxt = 'F = ' + fx(TQ.F, 1) + ' N';
+      const lx = tip[0] + (u[0] >= 0 ? 10 : -10) * ps, al = u[0] >= 0 ? 'left' : 'right';
+      const ly = Math.max(top + 8 * ps, Math.min(bot, tip[1] + (u[1] > 0 ? -10 : 12) * ps));
+      ctx.textAlign = al;
+      const w = ctx.measureText(ftxt).width;
+      const lx2 = al === 'left' ? Math.min(lx, W - 6 - w) : Math.max(lx, 6 + w);
+      label(ctx, ftxt, lx2, ly, T.pos, al, 'middle', 12);
+    }
+    // r label
+    if (TQ.r > 0.001) {
+      const nrm = [-sph, -cph];   // screen normal to the body, on the counterclockwise side
+      const side = Math.sin(rel) >= 0 ? -1 : 1;  // the side away from the force
+      const txt = Math.abs(Math.sin(rel)) >= 0.985 && TQ.F > 0 ? 'r = r⊥ = ' + fx(TQ.r, 2) + ' m' : 'r = ' + fx(TQ.r, 2) + ' m';
+      // anchored just past the pivot, offset to the side away from F, text running out along the body
+      const lx = hx + cph * 12 * ps + nrm[0] * side * 15 * ps, ly = hy - sph * 12 * ps + nrm[1] * side * 15 * ps;
+      label(ctx, txt, lx, ly, T.neg, cph > 0.3 ? 'left' : cph < -0.3 ? 'right' : 'center', Math.abs(cph) > 0.3 ? 'middle' : (nrm[1] * side > 0 ? 'top' : 'bottom'), 11.5);
+    }
+    // torque arrow at the pivot
+    if (Math.abs(tau) > 1e-9) {
+      // curved arrow behind the pivot, away from the body
+      const ccw = tau > 0, back = -phi + Math.PI, span = 1.5;
+      arcArrow(ctx, hx, hy, 24 * ps, ccw ? back + span : back - span, ccw ? back - span : back + span, ccw, T.accent, 2.4 * ps);
+    }
+    {
+      const txt = 'τ = ' + s3(tau) + ' N·m' + (Math.abs(tau) < 1e-9 ? '' : tau > 0 ? ', ccw' : ', cw');
+      ctx.font = `600 ${12 * ps}px ${T.mono}`;
+      const w = ctx.measureText(txt).width;
+      label(ctx, txt, Math.max(8 + w, hx - 16 * ps), hy + 56 * ps, T.accent, 'right', 'middle', 12);
+    }
+
+    // equation lines at the bottom
+    const I = rodI(TQ.m, TQ.L);
+    ctx.save(); ctx.font = `${11.5 * ps}px ${T.mono}`; ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    const thd = Math.atan2(Math.sin(rel), Math.cos(rel)) / DEG;
+    const l1 = `τ = rF sin θ = ${fx(TQ.r, 2)} × ${fx(TQ.F, 1)} × sin ${fx(thd, 0)}° = ${s3(tau)} N·m`;
+    const l2 = `α = τ / I = ${s3(tau)} / ${f3(I)} = ${s3(tau / I)} rad/s²`;
+    const fitFont = (txt) => { let sz = 11.5 * ps; ctx.font = `${sz}px ${T.mono}`; while (ctx.measureText(txt).width > W - 24 && sz > 8) { sz -= 0.5; ctx.font = `${sz}px ${T.mono}`; } };
+    fitFont(l1); ctx.fillText(l1, 12, H - 30 * ps);
+    fitFont(l2); ctx.fillText(l2, 12, H - 12 * ps);
+    ctx.restore();
+
+    // handles
+    handlesNow = [
+      { id: 'app', pt: [px, py], col: T.neg, cursor: 'move', set: (x, y) => {
+        const wx = (x - hx) / s, wy = (hy - y) / s;
+        setTq('r', snap('tR', wx * cph + wy * sph));
+      } },
+      { id: 'tip', pt: tip, col: T.pos, cursor: 'crosshair', prio: 2, set: (x, y) => {
+        const [qx, qy] = tqGeo.P;
+        const dx = (x - qx), dy = (qy - y);
+        const len = Math.hypot(dx, dy);
+        const ang = Math.atan2(dy, dx) - (TQ.mode === 'room' ? 0 : phi);
+        let th = Math.atan2(Math.sin(ang), Math.cos(ang)) / DEG;
+        setTq('F', snap('tF', len / fpx), true); setTq('th', snap('tTh', th));
+      } }
+    ];
+    drawGrips(ctx);
+  }
+
+  function drawTorqueCharts() {
+    // left: torque against push point
+    {
+      const ctx = ctxA, [W, H] = begin(ctxA, 'a'), ps = projScale();
+      const ymax = Math.max(1, TQ.L * TQ.F) * 1.1;
+      const { X, Y } = chartFrame(ctx, W, H, [0, TQ.L], [-ymax, ymax], 'Torque τ (N·m) vs push point r', 'r (m)');
+      const sn = Math.sin(TQ.th * DEG);
+      ctx.save(); ctx.strokeStyle = T.accent; ctx.lineWidth = 2.2 * ps;
+      ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(TQ.L), Y(TQ.L * TQ.F * sn)); ctx.stroke();
+      ctx.setLineDash([4 * ps, 4 * ps]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps;
+      ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(TQ.L), Y(TQ.L * TQ.F)); ctx.stroke(); ctx.restore();
+      const tau = TQ.r * TQ.F * sn;
+      ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(X(TQ.r), Y(tau), 5 * ps, 0, 2 * Math.PI); ctx.fill();
+      ctx.font = `${10.5 * ps}px ${T.mono}`;
+      const lab = 'θ = 90°, the most for this F';
+      ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+      if (Math.abs(sn) < 0.98) ctx.fillText(lab, X(TQ.L) - 4 * ps, Y(TQ.L * TQ.F) - 4 * ps);
+    }
+    // right: angle against time for this push and the previous one
+    {
+      const ctx = ctxB, [W, H] = begin(ctxB, 'b'), ps = projScale();
+      const sws = [TQ.ghost, TQ.sw].filter((q) => q && !q.none);
+      let tMax = Math.max(0.5, ...sws.map((q) => q.tEnd));
+      tMax = nice(tMax / 4) * Math.ceil(tMax / nice(tMax / 4));
+      const { X, Y, box } = chartFrame(ctx, W, H, [0, tMax], [-90, 90], 'Angle φ (°) vs time', 't (s)');
+      const plot = (q, tLim, col, lw, dash) => {
+        ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = lw; if (dash) ctx.setLineDash(dash); ctx.beginPath();
+        const n = 160, tE = Math.min(tLim, q.tEnd);
+        for (let i = 0; i <= n; i++) { const t = tE * i / n, ph = q.at(t)[0] / DEG; i ? ctx.lineTo(X(t), Y(ph)) : ctx.moveTo(X(t), Y(ph)); }
+        ctx.stroke(); ctx.restore();
+        if (q.t90 && tLim >= q.t90) {
+          const yv = Y(Math.sign(q.w90) * 90);
+          ctx.fillStyle = col; ctx.beginPath(); ctx.arc(X(q.t90), yv, 3.5 * ps, 0, 2 * Math.PI); ctx.fill();
+          const txt = fx(q.t90, 2) + ' s';
+          ctx.font = `600 ${10.5 * ps}px ${T.mono}`;
+          const tx = clampX(ctx, txt, X(q.t90) + 6 * ps, box.L + 2, box.R);
+          label(ctx, txt, tx, yv + (q.w90 > 0 ? 9 : -9) * ps, col, 'left', 'middle', 10.5);
+        }
+      };
+      if (TQ.ghost && !TQ.ghost.none) {
+        plot(TQ.ghost, Infinity, T.muted, 1.8 * ps, [5 * ps, 4 * ps]);
+        const g = TQ.ghost.p;
+        const down = sws.some((q) => q.w90 < 0 || (q.at(q.tEnd)[0] < 0));
+        ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = down ? 'top' : 'bottom';
+        ctx.fillText('dashed: earlier push at r = ' + fx(g.r, 2) + ' m', box.R - 4 * ps, down ? box.T + 3 * ps : Y(0) - 5 * ps);
+      }
+      if (TQ.sw && !TQ.sw.none) plot(TQ.sw, TQ.t, T.accent, 2.4 * ps);
+      else if (!TQ.sw) {
+        ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+        ctx.fillText('press Push to swing', box.L + 6 * ps, Y(0) + 6 * ps);
+      }
+    }
+  }
+
+  // ---------- rolling scene drawing ----------
+  let roGeo = null;
+  function drawRoll() {
+    const ctx = ctxV, [W, H] = begin(ctxV, 'v'), ps = projScale();
+    const n = RO.lanes.length, b = RO.beta * DEG, cb = Math.cos(b), sb = Math.sin(b);
+    const rpx = (R) => (5 + 60 * R) * ps;
+    const rMax = Math.max(...RO.lanes.map((o) => rpx(o.R)));
+    const g = (2 * rMax + 8 * ps) / cb + 6 * ps;
+    const laneName = (o) => SHAPES[o.shape].name.replace('Sliding block', 'Block');
+    const laneSub = (o) => fx(o.m, 1) + ' kg, ' + fx(o.R * 100, 1) + ' cm';
+    ctx.font = `600 ${10.5 * ps}px ${T.mono}`;
+    let tw = Math.max(...RO.lanes.map((o) => ctx.measureText(laneSub(o)).width), ctx.measureText('0.00 s  #5').width);
+    ctx.font = `700 ${11 * ps}px ${T.ui}`;
+    tw = Math.max(tw, ...RO.lanes.map((o) => ctx.measureText(laneName(o)).width));
+    const lgap = rMax + 12 * ps;
+    const padL = 16 * ps, padR = tw + lgap + 10 * ps, padT = ctlH + 14 * ps, padB = 42 * ps;
+    const availW = W - padL - padR, availH = H - padT - padB - (n - 1) * g - 2 * rMax - 6 * ps;
+    const Dpx = Math.max(40, Math.min(availW / cb, availH / sb));
+    const fxp = W - padR;
+    const footY = (k) => H - padB - (n - 1 - k) * g;
+    const d = [cb, sb], nrm = [sb, -cb];
+    const bth = 4 * ps;
+    roGeo = { fxp, footY, Dpx, d, nrm, rpx, g };
+    // start and finish lines
+    const yTop = footY(0) - Dpx * sb - 2 * rMax - 6 * ps, yBot = footY(n - 1) + 6 * ps;
+    ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([5 * ps, 4 * ps]);
+    ctx.beginPath(); ctx.moveTo(fxp, yTop + Dpx * sb); ctx.lineTo(fxp, yBot); ctx.moveTo(fxp - Dpx * cb, yTop); ctx.lineTo(fxp - Dpx * cb, footY(n - 1) - Dpx * sb + 6 * ps); ctx.stroke(); ctx.restore();
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textBaseline = 'bottom';
+    ctx.textAlign = 'center'; ctx.fillText('finish', fxp, yTop + Dpx * sb - 3 * ps);
+    ctx.textAlign = 'left'; ctx.fillText('start', fxp - Dpx * cb + 4 * ps, yTop - 3 * ps);
+
+    // boards and objects
+    const results = RO.lanes.map((o) => rollAt(o, b, RO.D, RO.t));
+    const order = results.map((r, i) => [r.T, i]).sort((p, q) => p[0] - q[0]);
+    const place = []; order.forEach(([, i], j) => { place[i] = j + 1; });
+    handlesNow = [];
+    for (let k = 0; k < n; k++) {
+      const o = RO.lanes[k], st = results[k], col = shapeColor(o.shape), sel = k === RO.sel;
+      const fy = footY(k), tx = fxp - Dpx * cb, ty = fy - Dpx * sb;
+      ctx.save(); ctx.strokeStyle = sel ? T.ink : T.muted; ctx.lineWidth = (sel ? 4.5 : 3.5) * ps; ctx.lineCap = 'butt';
+      ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(fxp, fy); ctx.stroke(); ctx.restore();
+      // object
+      const along = st.s / RO.D * Dpx, r = rpx(o.R);
+      const bx = tx + d[0] * along, by = ty + d[1] * along;
+      const cx = bx + nrm[0] * (r + bth / 2), cy = by + nrm[1] * (r + bth / 2);
+      const rot = SHAPES[o.shape].rolls ? st.s / o.R : 0;
+      drawObject(ctx, o.shape, cx, cy, r, rot, b, col, sel);
+      handlesNow.push({ id: 'lane' + k, pt: [cx, cy], rad: r, noGrip: true, cursor: 'pointer', click: () => selectLane(k) });
+      // name and time at the right
+      ctx.save();
+      ctx.font = `${(sel ? 700 : 400)} ${11 * ps}px ${T.ui}`; ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+      const lx = fxp + lgap;
+      ctx.fillText(laneName(o), lx, fy - 3 * ps);
+      ctx.font = `600 ${10.5 * ps}px ${T.mono}`; ctx.fillStyle = st.done ? T.ink : T.muted;
+      const sub = st.done ? fx(st.T, 2) + ' s  #' + place[k] : laneSub(o);
+      ctx.fillText(sub, lx, fy + 11 * ps);
+      ctx.restore();
+    }
+    // incline angle at the lowest board, with its grip at the top end
+    const fyL = footY(n - 1), txL = fxp - Dpx * cb, tyL = fyL - Dpx * sb;
+    ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps; ctx.setLineDash([3 * ps, 3 * ps]);
+    ctx.beginPath(); ctx.moveTo(txL, fyL); ctx.lineTo(fxp, fyL); ctx.moveTo(txL, tyL); ctx.lineTo(txL, fyL); ctx.stroke(); ctx.setLineDash([]);
+    const ar = Math.min(60 * ps, Dpx * cb * 0.5);
+    ctx.beginPath(); ctx.arc(fxp, fyL, ar, Math.PI, Math.PI + b); ctx.stroke(); ctx.restore();
+    label(ctx, 'β = ' + fx(RO.beta, 1) + '°', fxp - ar - 6 * ps, fyL + 12 * ps, T.ink, 'right', 'middle');
+    label(ctx, 'D = ' + fx(RO.D, 1) + ' m, drop h = D sin β = ' + fx(RO.D * sb, 2) + ' m', txL, fyL + 28 * ps, T.muted, 'left', 'middle', 10.5);
+    handlesNow.push({ id: 'beta', pt: [txL, tyL], col: T.accent, cursor: 'ns-resize', prio: 4, set: (x, y) => {
+      const ang = Math.atan2(fyL - y, Math.max(1, fxp - x)) / DEG;
+      setRo('beta', snap('rB', ang));
+    } });
+    drawGrips(ctx);
+  }
+  function drawObject(ctx, shape, cx, cy, r, rot, b, col, sel) {
+    const ps = projScale();
+    ctx.save(); ctx.translate(cx, cy);
+    if (shape === 'block') {
+      ctx.rotate(b);
+      ctx.fillStyle = col; ctx.globalAlpha = 0.85; ctx.fillRect(-r, -r, 2 * r, 2 * r); ctx.globalAlpha = 1;
+      ctx.strokeStyle = sel ? T.ink : col; ctx.lineWidth = (sel ? 2 : 1.2) * ps; ctx.strokeRect(-r, -r, 2 * r, 2 * r);
+      ctx.restore(); return;
+    }
+    ctx.rotate(rot);
+    if (shape === 'sphere') {
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(0, 0, r, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.6 * ps; ctx.beginPath(); ctx.moveTo(-r * 0.85, 0); ctx.lineTo(r * 0.85, 0); ctx.stroke();
+    } else if (shape === 'disk') {
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(0, 0, r, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.4 * ps; ctx.beginPath(); ctx.arc(0, 0, r * 0.55, 0, 2 * Math.PI); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(r * 0.9, 0); ctx.stroke();
+    } else if (shape === 'hsphere') {
+      ctx.fillStyle = col; ctx.globalAlpha = 0.28; ctx.beginPath(); ctx.arc(0, 0, r, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = col; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.arc(0, 0, r - 1.5 * ps, 0, 2 * Math.PI); ctx.stroke();
+      ctx.lineWidth = 1.4 * ps; ctx.beginPath(); ctx.moveTo(-r + 3 * ps, 0); ctx.lineTo(r - 3 * ps, 0); ctx.stroke();
+    } else {
+      ctx.strokeStyle = col; ctx.lineWidth = 3.4 * ps; ctx.beginPath(); ctx.arc(0, 0, r - 1.7 * ps, 0, 2 * Math.PI); ctx.stroke();
+      ctx.lineWidth = 1 * ps; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(r - 3 * ps, 0); ctx.stroke();
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(r - 1.7 * ps, 0, 3 * ps, 0, 2 * Math.PI); ctx.fill();
+    }
+    if (sel) { ctx.strokeStyle = T.ink; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([3 * ps, 3 * ps]); ctx.beginPath(); ctx.arc(0, 0, r + 4 * ps, 0, 2 * Math.PI); ctx.stroke(); }
+    ctx.restore();
+  }
+  function drawRollCharts() {
+    const b = RO.beta * DEG;
+    {
+      const ctx = ctxA, [W, H] = begin(ctxA, 'a'), ps = projScale();
+      const tEnd = rollEnd();
+      const { X, Y } = chartFrame(ctx, W, H, [0, tEnd * 1.04], [0, RO.D], 'Distance down the ramp (m) vs time', 't (s)');
+      RO.lanes.forEach((o, k) => {
+        const st0 = rollAt(o, b, RO.D, 0), col = shapeColor(o.shape), sel = k === RO.sel;
+        const path = (t1) => { ctx.beginPath(); for (let i = 0; i <= 80; i++) { const t = t1 * i / 80, s = 0.5 * st0.a * t * t; i ? ctx.lineTo(X(t), Y(s)) : ctx.moveTo(X(t), Y(s)); } ctx.stroke(); };
+        ctx.save(); ctx.strokeStyle = col; ctx.globalAlpha = 0.28; ctx.lineWidth = 1.4 * ps; path(st0.T);
+        ctx.globalAlpha = 1; ctx.lineWidth = (sel ? 2.8 : 1.8) * ps; path(Math.min(RO.t, st0.T)); ctx.restore();
+        if (RO.t >= st0.T) { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(X(st0.T), Y(RO.D), 3.5 * ps, 0, 2 * Math.PI); ctx.fill(); }
+      });
+      if (RO.t > 0) { ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.4; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(RO.t) + 0.5, Y(0)); ctx.lineTo(X(RO.t) + 0.5, Y(RO.D)); ctx.stroke(); ctx.globalAlpha = 1; }
+    }
+    {
+      const ctx = ctxB, [W, H] = begin(ctxB, 'b');
+      const o = RO.lanes[RO.sel], st = rollAt(o, b, RO.D, RO.t), full = rollAt(o, b, RO.D, 1e9);
+      const tot = st.KEt + st.KEr;
+      const nm = SHAPES[o.shape].name;
+      bars(ctx, W, H, 'Energy: ' + nm + ', lane ' + (RO.sel + 1), [
+        { lab: 'Height lost, mgh', v: st.drop, col: T.equi },
+        { lab: 'Moving along, ½mv²', v: st.KEt, col: T.accent },
+        { lab: 'Spinning, ½Iω²', v: st.KEr, col: T.pos }
+      ], 'J', { max: full.drop, foot: [
+        tot > 0 ? `split ${fx(100 * st.KEt / tot, 0)}% moving, ${fx(100 * st.KEr / tot, 0)}% spinning` : `split ${fx(100 / (1 + st.k), 0)}% moving, ${fx(100 * st.k / (1 + st.k), 0)}% spinning`,
+        `½mv² + ½Iω² − mgh = ${(tot - st.drop).toExponential(1).replace('-', '−')} J`
+      ] });
+    }
+  }
+
+  // ---------- spin scene drawing ----------
+  function drawSpin() {
+    const ctx = ctxV, [W, H] = begin(ctxV, 'v'), ps = projScale();
+    const top = ctlH + 8 * ps;
+    const cx = W / 2, cy = (top + H - 10 * ps) / 2;
+    const s = (Math.min(W, H - top - 10 * ps) / 2 - 24 * ps) / (SP.look === 'skater' ? 0.92 : 1.0);
+    const phi = SP.phi, c = Math.cos(phi), sn = Math.sin(phi);
+    const W2S = (x, y) => [cx + x * s, cy - y * s];
+    const at = (r, ang) => W2S(r * Math.cos(ang), r * Math.sin(ang));
+    const skater = SP.look === 'skater';
+    // fixed reference and rotation sense
+    ctx.save(); ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.setLineDash([4 * ps, 4 * ps]);
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + 1.0 * s, cy); ctx.stroke(); ctx.restore();
+    const w = spinW();
+    if (Math.abs(w) > 1e-9) arcArrow(ctx, cx, cy, 1.0 * s + 12 * ps, -0.25, -1.45, true, T.accent, 2.2 * ps);
+    {
+      const txt = 'ω = ' + fx(w, 2) + ' rad/s';
+      ctx.font = `600 ${11.5 * ps}px ${T.mono}`;
+      const x0 = clampX(ctx, txt, cx + Math.cos(-0.9) * (s + 22 * ps), 6, W - 8);
+      label(ctx, txt, x0, Math.max(top + 14 * ps, cy + Math.sin(-0.9) * (s + 22 * ps)), T.accent, 'left', 'bottom', 11.5);
+    }
+    // trail of one mass
+    ctx.save();
+    SP.trail.forEach(([ph, r], i) => {
+      const [x, y] = at(r, ph);
+      ctx.globalAlpha = 0.08 + 0.5 * i / SP.trail.length; ctx.fillStyle = T.pos;
+      ctx.beginPath(); ctx.arc(x, y, 3.5 * ps, 0, 2 * Math.PI); ctx.fill();
+    });
+    ctx.restore();
+    const m1 = at(SP.r, phi), m2 = at(SP.r, phi + Math.PI);
+    if (!skater) {
+      ctx.save();
+      ctx.fillStyle = T.relief; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps; ctx.globalAlpha = 0.7;
+      ctx.beginPath(); ctx.arc(cx, cy, 1.0 * s, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1; ctx.stroke();
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 2 * ps;
+      for (let i = 0; i < 4; i++) { const a = phi + i * Math.PI / 2; const [x, y] = at(0.97, a); ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(x, y); ctx.stroke(); }
+      ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 5 * ps, 0, 2 * Math.PI); ctx.fill();
+      ctx.restore();
+      const side = (10 + 3 * Math.sqrt(SP.m)) * ps;
+      for (const [x, y] of [m1, m2]) {
+        ctx.save(); ctx.translate(x, y); ctx.rotate(-phi);
+        ctx.fillStyle = T.pos; ctx.fillRect(-side / 2, -side / 2, side, side);
+        ctx.strokeStyle = T.ink; ctx.lineWidth = 1 * ps; ctx.strokeRect(-side / 2, -side / 2, side, side);
+        ctx.restore();
+      }
+    } else {
+      // top view of a skater: shoulders, head, arms out to the hands (the masses)
+      const sh = 0.2;
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(-phi);
+      ctx.fillStyle = T.relief; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps;
+      ctx.beginPath(); ctx.ellipse(0, 0, 0.23 * s, 0.12 * s, 0, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      // arms
+      ctx.strokeStyle = T.ink; ctx.lineCap = 'round';
+      const aw = Math.max(5 * ps, 0.07 * s);
+      for (const sg of [-1, 1]) {
+        ctx.lineWidth = aw + 3 * ps; ctx.strokeStyle = T.ink;
+        ctx.beginPath(); ctx.moveTo(sg * sh * s * 0.9, 0); ctx.lineTo(sg * Math.max(SP.r, sh) * s, 0); ctx.stroke();
+        ctx.lineWidth = aw; ctx.strokeStyle = T.relief;
+        ctx.beginPath(); ctx.moveTo(sg * sh * s * 0.9, 0); ctx.lineTo(sg * Math.max(SP.r, sh) * s, 0); ctx.stroke();
+      }
+      // head, facing direction with a nose
+      ctx.fillStyle = T.relief; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps;
+      ctx.beginPath(); ctx.arc(0, 0, 0.1 * s, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = T.ink; ctx.beginPath(); ctx.moveTo(-0.03 * s, -0.095 * s); ctx.lineTo(0, -0.14 * s); ctx.lineTo(0.03 * s, -0.095 * s); ctx.closePath(); ctx.fill();
+      ctx.restore();
+      const rad = (6 + 1.6 * Math.sqrt(SP.m)) * ps;
+      for (const [x, y] of [m1, m2]) {
+        ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(x, y, rad, 0, 2 * Math.PI); ctx.fill();
+        ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5 * ps; ctx.stroke();
+      }
+    }
+    // the radius, drawn beside the arm on the far side of mass 1
+    {
+      const off = 0.13 + (skater ? 0.05 : 0), ox = -sn * off * s, oy = -c * off * s;
+      const [ax, ay] = [cx + ox, cy + oy], [bx, by] = [m1[0] + ox, m1[1] + oy];
+      if (SP.r * s > 30 * ps) {
+        ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps;
+        ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
+        for (const [qx, qy] of [[ax, ay], [bx, by]]) { ctx.beginPath(); ctx.moveTo(qx - ox * 0.25, qy - oy * 0.25); ctx.lineTo(qx + ox * 0.25, qy + oy * 0.25); ctx.stroke(); }
+        ctx.restore();
+        const ol = Math.hypot(ox, oy);
+        label(ctx, 'r', (ax + bx) / 2 + ox / ol * 9 * ps, (ay + by) / 2 + oy / ol * 9 * ps, T.ink, 'center', 'middle', 12);
+      }
+    }
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText('top view', 12 * ps, H - 28 * ps);
+    ctx.fillStyle = T.ink;
+    ctx.fillText('two masses of ' + fx(SP.m, 1) + ' kg at r = ' + fx(SP.r, 2) + ' m', 12 * ps, H - 10 * ps);
+    ctx.textAlign = 'right';
+    const ltxt = 'L = Iω = ' + f3(spinNowI()) + ' × ' + fx(w, 2) + ' = ' + f3(SP.L) + ' kg·m²/s';
+    ctx.fillText(ltxt, W - 12 * ps, W < 520 ? H - 28 * ps : H - 10 * ps);
+    // handles on both masses
+    const setR = (x, y) => { setSpin('r', snap('sR', Math.hypot(x - cx, y - cy) / s)); };
+    handlesNow = [
+      { id: 'm1', pt: m1, rad: 8 * ps, col: T.pos, cursor: 'move', set: setR },
+      { id: 'm2', pt: m2, rad: 8 * ps, col: T.pos, cursor: 'move', set: setR }
+    ];
+    drawGrips(ctx);
+  }
+  function drawSpinCharts() {
+    {
+      const ctx = ctxA, [W, H] = begin(ctxA, 'a'), ps = projScale();
+      const ref = SP.ref, h = SP.hist;
+      const w0 = ref.L / ref.I, KE0 = ref.L * w0 / 2;
+      const tNow = SP.t, t0 = Math.max(0, tNow - 8);
+      let ymax = 1.2;
+      for (const [, I, w] of h) ymax = Math.max(ymax, w / w0 * 1.1, ref.I / I * 1.1, I / ref.I * 1.1);
+      ymax = Math.ceil(ymax);
+      const { X, Y, box } = chartFrame(ctx, W, H, [t0, t0 + 8], [0, ymax], 'Compared with the start (ratio)', 't (s)');
+      const line = (fn, col, lw, dash) => {
+        ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = lw; if (dash) ctx.setLineDash(dash); ctx.beginPath();
+        h.forEach((q, i) => { const x = X(q[0]), y = Y(fn(q)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+        ctx.stroke(); ctx.restore();
+      };
+      if (h.length > 1) {
+        line((q) => q[1] / ref.I, T.equi, 2 * ps);
+        line((q) => q[2] / w0, T.accent, 2.2 * ps);
+        line((q) => (q[1] * q[2] * q[2] / 2) / KE0, T.pos, 1.6 * ps, [5 * ps, 3 * ps]);
+        line((q) => q[1] * q[2] / ref.L, T.ink, 2 * ps);
+      }
+      // legend
+      ctx.font = `600 ${10.5 * ps}px ${T.mono}`; ctx.textBaseline = 'top'; ctx.textAlign = 'right';
+      const items = [['L', T.ink], ['ω', T.accent], ['KE', T.pos], ['I', T.equi]];
+      let x = box.R - 4 * ps;
+      for (const [t, col] of items) { ctx.fillStyle = col; ctx.fillText(t, x, box.T + 3 * ps); x -= ctx.measureText(t).width + 12 * ps; }
+    }
+    {
+      const ctx = ctxB, [W, H] = begin(ctxB, 'b');
+      const ref = SP.ref, I = spinNowI();
+      const KE0 = ref.L * ref.L / (2 * ref.I), KE = SP.L * SP.L / (2 * I), Wk = spinWork(SP.L, ref.I, I);
+      bars(ctx, W, H, 'Rotational energy (J)', [
+        { lab: 'At the start, L²/2I₀', v: KE0, col: T.muted },
+        { lab: 'Work done moving the masses', v: Wk, col: T.equi },
+        { lab: 'Now, ½Iω²', v: KE, col: T.pos }
+      ], 'J', { foot: [`start + work − now = ${(KE0 + Wk - KE).toExponential(1).replace('-', '−')} J`] });
+    }
+  }
+
+  // ---------- seesaw drawing ----------
+  function drawSeesaw() {
+    const ctx = ctxV, [W, H] = begin(ctxV, 'v'), ps = projScale();
+    const top = ctlH + 8 * ps;
+    const half = SE.Lb / 2;
+    const s = Math.min((W - 40 * ps) / (SE.Lb + 0.3), (H - top - 70 * ps) / 1.7);
+    const gy = H - 44 * ps, cx = W / 2, py = gy - SE.h * s;
+    const phi = seesawPhi(), c = Math.cos(phi), sn = Math.sin(phi);
+    const B2S = (x, up) => [cx + x * c * s - up * sn * s, py - x * sn * s - up * c * s];
+    // ground and pivot
+    ctx.save(); ctx.globalAlpha = 0.55; ctx.fillStyle = T.relief; ctx.fillRect(0, gy, W, H - gy); ctx.restore();
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke();
+    ctx.fillStyle = T.relief; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps;
+    ctx.beginPath(); ctx.moveTo(cx, py); ctx.lineTo(cx - 0.32 * s, gy); ctx.lineTo(cx + 0.32 * s, gy); ctx.closePath(); ctx.fill(); ctx.stroke();
+    // supports while held
+    if (SE.held) {
+      ctx.save(); ctx.fillStyle = T.grid; ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps;
+      for (const sg of [-1, 1]) { const x = cx + sg * (half - 0.12) * s; ctx.fillRect(x - 5 * ps, py + 4 * ps, 10 * ps, gy - py - 4 * ps); ctx.strokeRect(x - 5 * ps, py + 4 * ps, 10 * ps, gy - py - 4 * ps); }
+      ctx.restore();
+    }
+    // beam with a ruler
+    const bt = 0.07;
+    const corners = [B2S(-half, -bt / 2), B2S(half, -bt / 2), B2S(half, bt / 2), B2S(-half, bt / 2)];
+    ctx.fillStyle = T.relief; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps;
+    ctx.beginPath(); corners.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.font = `${10 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1;
+    for (let x = -2; x <= 2.001; x += 0.5) {
+      const [ax, ay] = B2S(x, -bt / 2), [bx2, by2] = B2S(x, -bt / 2 - (Math.abs(x % 1) < 1e-9 ? 0.07 : 0.04));
+      ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx2, by2); ctx.stroke();
+      if (Math.abs(x % 1) < 1e-9) { const [lx, ly] = B2S(x, -bt / 2 - 0.09); ctx.fillText(fx(x, 0), lx, ly); }
+    }
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, py, 4 * ps, 0, 2 * Math.PI); ctx.fill();
+    // balance ghost for B
+    const ms = SE.ms, xb = balanceX(ms, 1);
+    if (SE.held && isFinite(xb) && Math.abs(xb) <= half + 1e-9 && Math.abs(xb - ms[1].x) > 0.005 && ms[1].m > 0) {
+      const sd = 0.16 + 0.07 * Math.sqrt(ms[1].m);
+      const pts = [B2S(xb - sd / 2, bt / 2), B2S(xb + sd / 2, bt / 2), B2S(xb + sd / 2, bt / 2 + sd), B2S(xb - sd / 2, bt / 2 + sd)];
+      ctx.save(); ctx.strokeStyle = T.neg; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([4 * ps, 3 * ps]);
+      ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.closePath(); ctx.stroke(); ctx.restore();
+      const [gx, gy2] = B2S(xb, bt / 2 + sd + 0.1);
+      if (W >= 560) {
+        ctx.font = `600 ${10 * ps}px ${T.mono}`;
+        const gw = ctx.measureText('B balances here').width;
+        label(ctx, 'B balances here', Math.max(gw / 2 + 6, Math.min(W - gw / 2 - 6, gx)), gy2, T.neg, 'center', 'middle', 10);
+      }
+    }
+    // blocks with weight arrows
+    handlesNow = [];
+    const cols = [T.pos, T.neg, T.equi];
+    ms.forEach((q, i) => {
+      if (q.m <= 0) return;
+      const sd = 0.16 + 0.07 * Math.sqrt(q.m);
+      const pts = [B2S(q.x - sd / 2, bt / 2), B2S(q.x + sd / 2, bt / 2), B2S(q.x + sd / 2, bt / 2 + sd), B2S(q.x - sd / 2, bt / 2 + sd)];
+      const sel = i === SE.sel;
+      ctx.fillStyle = cols[i]; ctx.globalAlpha = 0.85;
+      ctx.beginPath(); pts.forEach(([x, y], j) => (j ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = sel ? T.ink : cols[i]; ctx.lineWidth = (sel ? 2 : 1) * ps; ctx.stroke();
+      const [mx, my] = B2S(q.x, bt / 2 + sd / 2);
+      ctx.font = `700 ${11 * ps}px ${T.mono}`; ctx.fillStyle = T.canvas; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(q.id, mx, my);
+      const [tx, ty] = B2S(q.x, bt / 2 + sd + 0.06);
+      const tq = -G * q.m * q.x * c;
+      label(ctx, fx(q.m, 1) + ' kg', tx, ty - 6 * ps, cols[i], 'center', 'bottom', 10.5);
+      if (W >= 560) label(ctx, s3(tq) + ' N·m', tx, ty - 21 * ps, T.muted, 'center', 'bottom', 10);
+      // weight arrow from the block center straight down, length ∝ m
+      arrow(ctx, mx, my, mx, my + (14 + 5 * q.m) * ps, cols[i], 2 * ps);
+      handlesNow.push({ id: 'b' + i, pt: [mx, my], rad: sd * s / 2, col: cols[i], cursor: 'ew-resize', set: (x, y) => {
+        const dx = (x - cx) / s, dy = (py - y) / s;
+        SE.sel = i; setSee('x' + i, snap(['eXA', 'eXB', 'eXC'][i], dx * c + dy * sn));
+      }, down: () => { SE.sel = i; } });
+    });
+    // net torque arrow at the pivot
+    const net = seesawTorque(liveMasses(), phi);
+    if (Math.abs(net) > 1e-9) arcArrow(ctx, cx, py, 26 * ps, net > 0 ? -0.2 : -Math.PI + 0.2, net > 0 ? -Math.PI + 0.4 : -0.4, net > 0, T.accent, 2.2 * ps);
+    label(ctx, 'net τ = ' + s3(net) + ' N·m' + (Math.abs(net) < 1e-9 ? ', balanced' : net > 0 ? ', ccw' : ', cw'), cx, gy + 10 * ps, T.accent, 'center', 'top', 12);
+    if (!SE.held && SE.tip && !SE.tip.none && SE.t >= SE.tip.tEnd) label(ctx, 'touched down after ' + fx(SE.tip.tHit, 2) + ' s', cx, top + 14 * ps, T.ink, 'center', 'middle', 11.5);
+    drawGrips(ctx);
+  }
+  function drawSeesawCharts() {
+    const ctx = ctxA, [W, H] = begin(ctxA, 'a');
+    const phi = seesawPhi(), c = Math.cos(phi);
+    const cols = [T.pos, T.neg, T.equi];
+    const rows = SE.ms.map((q, i) => ({ lab: 'Block ' + q.id + (q.m > 0 ? ` (${fx(q.m, 1)} kg at x = ${fx(q.x, 2)} m)` : ' (not on the beam)'), v: -G * q.m * q.x * c, col: cols[i] }));
+    const net = rows.reduce((s, r) => s + r.v, 0);
+    rows.push({ lab: 'Net torque', v: net, col: T.ink });
+    const big = Math.max(1, ...rows.map((r) => Math.abs(r.v)));
+    bars(ctx, W, H, 'Torques about the pivot (N·m), ccw positive', rows, 'N·m', { max: big, signed: true });
+  }
+
+  // ---------- readouts ----------
+  function setText(id, t) { const e = $(id); if (e.textContent !== t) e.textContent = t; }
+  function updateReadouts() {
+    const sc = S.scene;
+    let t = 0;
+    if (sc === 'torque') {
+      const [phi, w] = doorState();
+      const rel = TQ.mode === 'room' ? TQ.th * DEG - phi : TQ.th * DEG;
+      const tau = torqueOf(TQ.r, TQ.F, rel), I = rodI(TQ.m, TQ.L);
+      setText('qRp', fx(leverArm(TQ.r, rel), 3) + ' m');
+      setText('qTau', s3(tau) + ' N·m'); $('qTau').className = tau > 1e-9 ? 'pos' : tau < -1e-9 ? 'neg' : '';
+      setText('qI', f3(I) + ' kg·m²');
+      setText('qAl', s3(tau / I) + ' rad/s²');
+      setText('qPhi', fsg(phi / DEG, 1) + '°');
+      setText('qW', s3(w) + ' rad/s');
+      const sw = TQ.sw || makeSwing(tqParams());
+      setText('qT90', sw.none ? 'never' : sw.t90 ? fx(sw.t90, 3) + ' s' : 'not in 8 s');
+      setText('qW90', sw.none || !sw.t90 ? '—' : s3(sw.w90) + ' rad/s');
+      setText('tqNote', sw.none ? 'No torque: the force points along r, straight through the pivot, so the lever arm is zero.'
+        : TQ.mode === 'room' ? 'The force keeps its direction in the room, so θ and the torque change as it turns (RK4 integration). α in the table is at the current angle.'
+        : 'The force keeps its angle to the ' + (TQ.obj === 'door' ? 'door' : 'wrench') + ', so the torque is constant: φ = ½αt² and the time to turn 90° is √(π/α).');
+      t = TQ.t;
+    } else if (sc === 'roll') {
+      const o = RO.lanes[RO.sel], b = RO.beta * DEG, st = rollAt(o, b, RO.D, 1e9);
+      setText('selTitle', 'Selected: lane ' + (RO.sel + 1));
+      setText('oK', SHAPES[o.shape].rolls ? fx(st.k, 3) + '  (I = ' + SHAPES[o.shape].Iform + ')' : '0  (slides)');
+      setText('oA', fx(st.a, 3) + ' m/s²');
+      setText('oT', fx(st.T, 3) + ' s');
+      setText('oV', fx(st.v, 3) + ' m/s');
+      setText('oW', SHAPES[o.shape].rolls ? fx(st.w, 1) + ' rad/s' : '0');
+      setText('oMu', SHAPES[o.shape].rolls ? fx(muMin(st.k, b), 3) : 'none, it slides');
+      for (const btn of document.querySelectorAll('#shapeChips button')) btn.setAttribute('aria-pressed', String(btn.dataset.sh === o.shape));
+      raceTable();
+      t = RO.t;
+    } else if (sc === 'spin') {
+      const I = spinNowI(), w = SP.L / I, ref = SP.ref;
+      setText('sIr', f3(I) + ' kg·m²');
+      setText('sW', fx(w, 2) + ' rad/s');
+      setText('sL', f3(SP.L) + ' kg·m²/s');
+      const KE = SP.L * w / 2, KE0 = ref.L * ref.L / (2 * ref.I);
+      setText('sKE', f3(KE) + ' J');
+      setText('sWk', s3(spinWork(SP.L, ref.I, I)) + ' J');
+      setText('sKr', fx(KE / KE0, 3));
+      setText('sIrat', fx(ref.I / I, 3));
+      setText('sFOut', fx(w / (2 * Math.PI), 2) + ' rev/s');
+      $('sF').value = w / (2 * Math.PI);
+      setText('spinModel', SP.look === 'skater'
+        ? 'Skater model: body I₀ = ' + fx(SP.I0, 1) + ' kg·m² (a rough value for a person spinning on the spot), each arm and hand lumped into one point mass at radius r. Ice friction neglected.'
+        : 'Platform model: I₀ for the disk itself, two point masses on frictionless rails. Bearing friction neglected.');
+      t = SP.t;
+    } else {
+      const ms = SE.ms, phi = seesawPhi(), c = Math.cos(phi);
+      ['eTA', 'eTB', 'eTC'].forEach((id, i) => setText(id, ms[i].m > 0 ? s3(-G * ms[i].m * ms[i].x * c) + ' N·m' : '—'));
+      const net = seesawTorque(liveMasses(), phi);
+      setText('eNet', s3(net) + ' N·m'); $('eNet').className = net > 1e-9 ? 'pos' : net < -1e-9 ? 'neg' : '';
+      const xb = balanceX(ms, 1);
+      setText('eBal', !isFinite(xb) ? '—' : Math.abs(xb) <= SE.Lb / 2 + 1e-9 ? fx(xb, 3) + ' m' : fx(xb, 2) + ' m, off the beam');
+      setText('eI', f3(seesawI(liveMasses(), SE.Mb, SE.Lb)) + ' kg·m²');
+      setText('ePhi', fsg(phi / DEG, 1) + '°');
+      const tip = SE.tip || seesawTip(liveMasses(), SE.Mb, SE.Lb, SE_STOP);
+      setText('eTl', tip.none ? 'stays level' : fx(tip.tHit, 2) + ' s');
+      setText('seeState', SE.held ? 'Supports in place: the beam is held level. Release to let the net torque act.'
+        : tip.none ? 'Released and balanced: no net torque, so the beam stays level.'
+        : SE.t >= tip.tEnd ? 'The ' + (net > 0 ? 'left' : 'right') + ' end has touched the ground.' : 'Tipping: α = τ/I, with τ shrinking as cos φ.');
+      t = SE.t;
+    }
+    setText('tclock', 't = ' + fx(t, 2) + ' s');
+    actLabel();
+  }
+  function raceTable() {
+    const b = RO.beta * DEG;
+    const res = RO.lanes.map((o, k) => ({ k, o, st: rollAt(o, b, RO.D, 1e9) }));
+    const same = (p, q) => Math.abs(p.st.T - q.st.T) < 1e-9 * q.st.T;
+    let html = '<tr><th>Lane</th><th>I/mR²</th><th>a (m/s²)</th><th>t (s)</th><th>#</th></tr>';
+    res.forEach((r) => {
+      const rank = 1 + res.filter((q) => q.st.T < r.st.T && !same(q, r)).length;
+      const tie = res.some((q) => q.k !== r.k && same(q, r));
+      html += `<tr class="${r.k === RO.sel ? 'sel' : ''}"><td><span class="dot" style="background:${shapeColor(r.o.shape)}"></span>${r.k + 1}. ${SHAPES[r.o.shape].name.replace('Sliding block', 'Block')}</td>` +
+        `<td>${fx(r.st.k, 3)}</td><td>${fx(r.st.a, 3)}</td><td>${fx(r.st.T, 3)}</td><td>${tie ? '=' : ''}${rank}</td></tr>`;
+    });
+    const tb = $('raceTbl');
+    if (tb.innerHTML !== html) tb.innerHTML = html;
+  }
+  function actLabel() {
+    let txt = 'Push';
+    if (S.scene === 'torque') txt = TQ.run ? 'Pause' : (TQ.sw && TQ.t > 0 && TQ.t < TQ.sw.tEnd) ? 'Resume' : 'Push';
+    else if (S.scene === 'roll') { const e = rollEnd(); txt = RO.run ? 'Pause' : RO.t > 0 && RO.t < e ? 'Resume' : RO.t >= e ? 'Race again' : 'Race'; }
+    else if (S.scene === 'spin') txt = SP.run ? 'Pause' : 'Play';
+    else txt = SE.held ? 'Release' : 'Hold level';
+    setText('act', txt);
+  }
+
+  // ---------- key ----------
+  const KEYS = {
+    torque: '<span><i class="swatch f"></i>Force F, tail at the push point</span><span><i class="swatch r"></i>r, from the pivot to the push point</span><span><i class="swatch la"></i>Line of action of F</span><span><i class="swatch rp"></i>Lever arm r⊥, perpendicular to the line of action</span><span><i class="swatch tq"></i>Torque, curved arrow at the pivot</span>',
+    roll: '<span><i class="dot" style="background:var(--violet)"></i>Block, slides with no friction</span><span><i class="dot" style="background:var(--pos)"></i>Solid sphere, I = ⅖mR²</span><span><i class="dot" style="background:var(--equi)"></i>Cylinder, I = ½mR²</span><span><i class="dot" style="background:var(--teal)"></i>Hollow sphere, I = ⅔mR²</span><span><i class="dot" style="background:var(--neg)"></i>Hoop, I = mR²</span>',
+    spin: '<span><i class="swatch" style="border-color:var(--ink)"></i>L, angular momentum</span><span><i class="swatch" style="border-color:var(--accent)"></i>ω, spin rate</span><span><i class="swatch" style="border-color:var(--equi)"></i>I, moment of inertia</span><span><i class="swatch" style="border-color:var(--pos);border-top-style:dashed"></i>Rotational kinetic energy</span>',
+    seesaw: '<span><i class="swatch" style="border-color:var(--pos)"></i>Block A, its weight and torque</span><span><i class="swatch" style="border-color:var(--neg)"></i>Block B, dashed outline where it balances</span><span><i class="swatch" style="border-color:var(--equi)"></i>Block C</span><span><i class="swatch tq"></i>Net torque about the pivot</span>'
+  };
+
+  // ---------- drawing ----------
+  function drawAll() {
+    if (!T) tokens();
+    { const c = $('ctl'); ctlH = c.offsetTop + c.offsetHeight; }
+    if (!dims.v[0] || !dims.v[1]) return;
+    const sc = S.scene;
+    if (sc === 'torque') { drawTorque(); drawTorqueCharts(); }
+    else if (sc === 'roll') { drawRoll(); drawRollCharts(); }
+    else if (sc === 'spin') { drawSpin(); drawSpinCharts(); }
+    else { drawSeesaw(); drawSeesawCharts(); }
+  }
+
+  // ---------- setters shared by sliders, drags and keys ----------
+  function custom() { S.preset[S.scene] = null; syncPresetChips(); }
+  function setTq(key, v, keepPreset) {
+    if (key === 'L') { TQ.L = v; if (TQ.r > v) TQ.r = v; $('tR').max = v; }
+    else TQ[key] = v;
+    clearSwing();
+    if (!keepPreset) custom();
+    syncSliders(); dirty = true;
+  }
+  function setRo(key, v) {
+    RO[key] = v;
+    if (key === 'beta' || key === 'D') { RO.t = 0; RO.run = false; }
+    custom(); syncSliders(); dirty = true;
+  }
+  function setSpin(key, v) {
+    if (key === 'r') setSpinR(v);
+    else if (key === 'f') setSpinRate(v);
+    else { const w = spinW(); SP[key] = v; setSpinRate(w / (2 * Math.PI)); }
+    custom(); syncSliders(); dirty = true;
+  }
+  function setSee(key, v) {
+    const i = +key[1];
+    if (key[0] === 'm') SE.ms[i].m = v; else SE.ms[i].x = v;
+    holdSeesaw(); custom(); syncSliders(); dirty = true;
+  }
+  function selectLane(k) {
+    if (k < 0 || k >= RO.lanes.length) return;
+    RO.sel = k; syncSliders(); dirty = true;
+  }
+
+  // ---------- sliders ----------
+  const SL = {
+    tF: [() => TQ.F, (v) => setTq('F', v), (v) => fx(v, 1) + ' N'],
+    tR: [() => TQ.r, (v) => setTq('r', v), (v) => fx(v, 2) + ' m'],
+    tTh: [() => TQ.th, (v) => setTq('th', v), (v) => fx(v, 0) + '°'],
+    tL: [() => TQ.L, (v) => setTq('L', v), (v) => fx(v, 2) + ' m'],
+    tM: [() => TQ.m, (v) => setTq('m', v), (v) => fx(v, 1) + ' kg'],
+    rB: [() => RO.beta, (v) => setRo('beta', v), (v) => fx(v, 1) + '°'],
+    rD: [() => RO.D, (v) => setRo('D', v), (v) => fx(v, 1) + ' m'],
+    rM: [() => RO.lanes[RO.sel].m, (v) => { RO.lanes[RO.sel].m = v; custom(); dirty = true; syncSliders(); }, (v) => fx(v, 1) + ' kg'],
+    rR: [() => RO.lanes[RO.sel].R * 100, (v) => { RO.lanes[RO.sel].R = v / 100; custom(); dirty = true; syncSliders(); }, (v) => fx(v, 1) + ' cm'],
+    sR: [() => SP.r, (v) => setSpin('r', v), (v) => fx(v, 2) + ' m'],
+    sF: [() => spinW() / (2 * Math.PI), (v) => setSpin('f', v), (v) => fx(v, 2) + ' rev/s'],
+    sM: [() => SP.m, (v) => setSpin('m', v), (v) => fx(v, 1) + ' kg'],
+    sI0: [() => SP.I0, (v) => setSpin('I0', v), (v) => fx(v, 1) + ' kg·m²'],
+    eMA: [() => SE.ms[0].m, (v) => setSee('m0', v), (v) => fx(v, 1) + ' kg'],
+    eXA: [() => SE.ms[0].x, (v) => { SE.sel = 0; setSee('x0', v); }, (v) => fx(v, 2) + ' m'],
+    eMB: [() => SE.ms[1].m, (v) => setSee('m1', v), (v) => fx(v, 1) + ' kg'],
+    eXB: [() => SE.ms[1].x, (v) => { SE.sel = 1; setSee('x1', v); }, (v) => fx(v, 2) + ' m'],
+    eMC: [() => SE.ms[2].m, (v) => setSee('m2', v), (v) => (v > 0 ? fx(v, 1) + ' kg' : 'off')],
+    eXC: [() => SE.ms[2].x, (v) => { SE.sel = 2; setSee('x2', v); }, (v) => fx(v, 2) + ' m']
+  };
+  function syncSliders() {
+    $('tR').max = TQ.L;
+    $('sI0').max = SP.look === 'skater' ? 3 : 12;
+    for (const id in SL) {
+      const el = $(id), v = SL[id][0]();
+      if (document.activeElement !== el || Math.abs(+el.value - v) > +el.step) el.value = v;
+      setText(id + 'Out', SL[id][2](v));
+    }
+    $('eXC').disabled = SE.ms[2].m <= 0;
+    setPressed('#objSeg', 'o', TQ.obj); setPressed('#modeSeg', 'm', TQ.mode); setPressed('#lookSeg', 'l', SP.look);
+    setText('objHint', TQ.obj === 'door'
+      ? 'Door modeled as a thin uniform rod turning about one end, I = mL²/3, with a frictionless hinge. It stops when it has swung 90°, against the door stop.'
+      : 'Wrench modeled as a thin uniform rod turning about the bolt, I = mL²/3. The bolt turns freely here; a real bolt adds friction. The run ends after a quarter turn.');
+  }
+  for (const id in SL) $(id).addEventListener('input', (e) => SL[id][1](+e.target.value));
+  function setPressed(sel, attr, val) {
+    for (const b of document.querySelectorAll(sel + ' button')) b.setAttribute('aria-pressed', String(b.dataset[attr] === String(val)));
+  }
+  function syncPresetChips() {
+    setPressed('#presets', 'p', S.preset[S.scene]);
+    const p = S.preset[S.scene];
+    setText('presetHint', p ? PRESETS[p].hint : SCENE_HINT[S.scene]);
+  }
+
+  // ---------- scene switching and presets ----------
+  function setScene(sc) {
+    S.scene = sc;
+    setPressed('#sceneSeg', 's', sc);
+    for (const el of document.querySelectorAll('[data-scene]')) el.hidden = el.dataset.scene !== sc;
+    $('charts').classList.toggle('one', sc === 'seesaw');
+    $('keyBox').innerHTML = KEYS[sc];
+    $('speedSeg').hidden = sc === 'seesaw';
+    syncPresetChips(); syncSliders();
+    hoverId = null; drag = null;
+    requestAnimationFrame(() => { resize(); dirty = true; });
+    dirty = true;
+  }
+  function setTs(ts) { S.ts = ts; setPressed('#speedSeg', 'ts', ts); }
+  function applyPreset(id) {
+    const p = PRESETS[id];
+    p.apply();
+    S.preset[p.scene] = id;
+    setTs(p.ts);
+    if (S.scene !== p.scene) setScene(p.scene); else { syncPresetChips(); syncSliders(); }
+    dirty = true;
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#sceneSeg button')) b.addEventListener('click', () => setScene(b.dataset.s));
+  for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => setTs(+b.dataset.ts));
+  for (const b of document.querySelectorAll('#objSeg button')) b.addEventListener('click', () => {
+    if (TQ.obj === b.dataset.o) return;
+    if (b.dataset.o === 'wrench') Object.assign(TQ, { obj: 'wrench', L: 0.3, m: 0.4, r: Math.min(TQ.r, 0.3) });
+    else Object.assign(TQ, { obj: 'door', L: 0.9, m: 15, r: Math.min(0.85, TQ.r * 3) });
+    TQ.ghost = null; clearSwing(); TQ.ghost = null; custom(); syncSliders(); dirty = true;
+  });
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { TQ.mode = b.dataset.m; clearSwing(); custom(); syncSliders(); dirty = true; });
+  for (const b of document.querySelectorAll('#lookSeg button')) b.addEventListener('click', () => {
+    const look = b.dataset.l;
+    if (look === SP.look) return;
+    if (look === 'platform') Object.assign(SP, { look, I0: 10, m: 5, r: 0.9 }); else Object.assign(SP, { look, I0: 0.8, m: 3, r: 0.8 });
+    setSpinRate(look === 'platform' ? 0.5 : 1); custom(); syncSliders(); dirty = true;
+  });
+  for (const b of document.querySelectorAll('#shapeChips button')) b.addEventListener('click', () => {
+    RO.lanes[RO.sel].shape = b.dataset.sh; RO.t = 0; RO.run = false; custom(); syncSliders(); dirty = true;
+  });
+  $('pullIn').addEventListener('click', () => { startPull(+$('sR').min); custom(); dirty = true; });
+  $('pushOut').addEventListener('click', () => { startPull(+$('sR').max); custom(); dirty = true; });
+  $('balB').addEventListener('click', () => {
+    const xb = balanceX(SE.ms, 1);
+    if (!isFinite(xb)) return;
+    SE.ms[1].x = Math.max(-2, Math.min(2, xb)); SE.sel = 1; holdSeesaw(); custom(); syncSliders(); dirty = true;
+  });
+
+  function act() {
+    if (S.scene === 'torque') tqAct();
+    else if (S.scene === 'roll') roAct();
+    else if (S.scene === 'spin') { SP.run = !SP.run; }
+    else seAct();
+    dirty = true;
+  }
+  function reset() {
+    if (S.scene === 'torque') { TQ.sw = null; TQ.t = 0; TQ.run = false; }
+    else if (S.scene === 'roll') { RO.t = 0; RO.run = false; }
+    else if (S.scene === 'spin') { SP.r = SP.ref.r; SP.L = SP.ref.L; SP.phi = 0; setRef(); }
+    else holdSeesaw();
+    syncSliders(); dirty = true;
+  }
+  $('act').addEventListener('click', act);
+  $('reset').addEventListener('click', reset);
+
+  // ---------- pointer ----------
+  let dragQueued = null, dragFrame = false;
+  function dragTo(ev) {
+    const r = view.getBoundingClientRect();
+    dragQueued = [ev.clientX - r.left, ev.clientY - r.top];
+    if (dragFrame) return;
+    dragFrame = true;
+    requestAnimationFrame(() => {
+      dragFrame = false;
+      if (!drag || !dragQueued) return;
+      const h = handlesNow.find((k) => k.id === drag.id);
+      if (h && h.set) h.set(dragQueued[0], dragQueued[1]);
+      dragQueued = null; drawAll();
+    });
+  }
+  view.addEventListener('pointermove', (ev) => {
+    if (drag) { dragTo(ev); return; }
+    const h = handleAt(ev), id = h ? h.id : null;
+    if (id !== hoverId) { hoverId = id; dirty = true; }
+    view.style.cursor = h ? h.cursor : 'default';
+  });
+  view.addEventListener('pointerdown', (ev) => {
+    view.focus({ preventScroll: true });
+    const h = handleAt(ev);
+    if (h) {
+      if (h.click) { h.click(); return; }
+      if (h.down) h.down();
+      drag = { id: h.id };
+      try { view.setPointerCapture(ev.pointerId); } catch (_) {}
+      view.style.cursor = h.cursor; ev.preventDefault(); dirty = true;
+      return;
+    }
+    if (S.scene === 'roll' && roGeo) {   // click near a board selects that lane
+      const r = view.getBoundingClientRect(), y = ev.clientY - r.top, x = ev.clientX - r.left;
+      const g = roGeo, n = RO.lanes.length;
+      let best = -1, bd = g.g * 0.6;
+      for (let k = 0; k < n; k++) {
+        const fy = g.footY(k), yl = fy - (g.fxp - x) * Math.tan(RO.beta * DEG);
+        const d = Math.abs(y - (yl - 10 * projScale()));
+        if (x <= g.fxp + 100 && d < bd) { bd = d; best = k; }
+      }
+      if (best >= 0) selectLane(best);
+    }
+  });
+  const endDrag = () => { if (!drag) return; drag = null; hoverId = null; dirty = true; };
+  view.addEventListener('pointerup', endDrag);
+  view.addEventListener('pointercancel', endDrag);
+  view.addEventListener('pointerleave', () => { if (!drag && hoverId) { hoverId = null; dirty = true; } });
+
+  // ---------- keys ----------
+  view.addEventListener('keydown', (e) => {
+    const big = e.shiftKey ? 5 : 1, sc = S.scene, k = e.key;
+    const nudge = (id, dir) => { const el = $(id); SL[id][1](snap(id, +el.value + dir * (+el.step) * big)); };
+    if (k === 'Enter') act();
+    else if (sc === 'torque') {
+      if (k === 'ArrowLeft') nudge('tR', -1); else if (k === 'ArrowRight') nudge('tR', 1);
+      else if (k === 'ArrowUp') nudge('tTh', 5); else if (k === 'ArrowDown') nudge('tTh', -5);
+      else if (k === ' ') act(); else return;
+    } else if (sc === 'roll') {
+      if (k === 'ArrowUp') nudge('rB', 1); else if (k === 'ArrowDown') nudge('rB', -1);
+      else if (/^[1-9]$/.test(k)) selectLane(+k - 1); else if (k === ' ') act(); else return;
+    } else if (sc === 'spin') {
+      if (k === 'ArrowUp') nudge('sR', 2); else if (k === 'ArrowDown') nudge('sR', -2);
+      else if (k === ' ') act(); else return;
+    } else {
+      const ids = ['eXA', 'eXB', 'eXC'];
+      if (/^[1-3]$/.test(k)) { SE.sel = +k - 1; dirty = true; }
+      else if (k === 'ArrowLeft') nudge(ids[SE.sel], -1); else if (k === 'ArrowRight') nudge(ids[SE.sel], 1);
+      else if (k === ' ') act(); else return;
+    }
+    e.preventDefault();
+  });
+
+  // ---------- theme and projector ----------
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); dirty = true; }); } catch (_) {}
+  new MutationObserver(() => { tokens(); dirty = true; }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, frameMs = 0;
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)) * S.ts; last = now;
+    let anim = false;
+    if (S.scene === 'torque' && TQ.run && TQ.sw) { TQ.t += dt; if (TQ.t >= TQ.sw.tEnd) { TQ.t = TQ.sw.tEnd; TQ.run = false; dirty = true; } anim = true; }
+    else if (S.scene === 'roll' && RO.run) { const e = rollEnd(); RO.t += dt; if (RO.t >= e) { RO.t = e; RO.run = false; dirty = true; } anim = true; }
+    else if (S.scene === 'spin' && SP.run) { advanceSpin(dt); anim = true; }
+    else if (S.scene === 'seesaw' && SE.run && SE.tip) { SE.t += dt / S.ts; if (SE.t >= SE.tip.tEnd) { SE.t = SE.tip.tEnd; SE.run = false; dirty = true; } anim = true; }
+    if (anim || dirty) {
+      const t0 = performance.now();
+      tokens(); drawAll();
+      frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+      const wasDirty = dirty;
+      dirty = false;
+      if (wasDirty || now - lastRead > 100 || !anim) { updateReadouts(); lastRead = now; }
+    }
+    requestAnimationFrame(loop);
+  }
+
+  window.__rot = {
+    core: { G, SHAPES, rodI, torqueOf, leverArm, doorTorque, swingRK4, makeSwing, rollAcc, rollTime, rollAt, muMin, spinI, spinWork, pullProfile, seesawTorque, seesawI, balanceX, seesawTip },
+    S, TQ, RO, SP, SE, applyPreset, setScene, act, reset, advanceSpin, get frameMs() { return frameMs; }, get handles() { return handlesNow; }
+  };
+
+  // ---------- boot ----------
+  tokens();
+  for (const id of ['race', 'skater', 'seesaw', 'hinge']) { const p = PRESETS[id]; p.apply(); S.preset[p.scene] = id; }
+  setTs(1);
+  setScene('torque');
+  new ResizeObserver(resize).observe(stage);
+  resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

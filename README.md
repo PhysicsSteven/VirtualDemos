@@ -24,6 +24,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Rutherford Scattering](demos/rutherford.html) | Modern physics | Alpha trajectories past a nucleus, counts against the Rutherford formula, closest approach, and the plum pudding model for contrast |
 | [Photoelectric Effect](demos/photoelectric.html) | Modern physics | Photon energy, work function, stopping voltage, and measuring Planck's constant |
 | [Projectile Range](demos/projectile-drag.html) | Mechanics | Projectile motion with and without quadratic air drag |
+| [Rotation and Torque](demos/rotation.html) | Mechanics | Torque and lever arms, a rolling race set by I/mR², angular momentum conservation, and seesaw balance |
 | [Gas in a Box](demos/ideal-gas.html) | Thermodynamics | Kinetic theory of a 2D gas: pressure, temperature, Maxwell-Boltzmann speeds, adiabatic compression |
 | [Coulomb Sandbox](demos/coulomb-sandbox.html) | Electricity and magnetism | Electric field and potential of point charges, as a 2D map and a 3D potential landscape |
 | [RC Circuits](demos/rc-circuits.html) | Electricity and magnetism | Charging and discharging a capacitor: exponentials, the time constant, Kirchhoff's loop rule and energy bookkeeping |
