@@ -64,7 +64,10 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 }
 .bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
-.bar p { margin: 2px 0 0; color: var(--muted); }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar > div:first-child { flex: 1 1 380px; min-width: 0; }
+@media (min-width: 821px) { .bar .bar-right { max-width: 56%; flex-wrap: nowrap; justify-content: flex-end; } .bar-right .units { text-align: right; } :root[data-projector="on"] .bar .bar-right { max-width: 44%; } }
+.units .nw { white-space: nowrap; }
 .bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .units { color: var(--muted); font-size: 0.8rem; }
 .proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
@@ -158,7 +161,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       <p>Place events in time and space, then change observers. Light stays at 45° for everyone; clocks, lengths and simultaneity do not.</p>
     </div>
     <div class="bar-right">
-      <div class="units mono">c = 1 · ct in years, x in light years · γ = 1/√(1 − β²) · t′ = γ(t − βx), x′ = γ(x − βt)</div>
+      <div class="units mono"><span class="nw">c = 1</span> · <span class="nw">ct in years, x in light years</span> · <span class="nw">γ = 1/√(1 − β²)</span> · <span class="nw">t′ = γ(t − βx), x′ = γ(x − βt)</span></div>
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
     </div>
   </header>
@@ -544,33 +547,49 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(o[0], o[1]); ctx.lineTo(c[0], c[1]); ctx.stroke();
       }
       if (isSel && S.sel.length && e.id === S.sel[S.sel.length - 1]) {
-        const d = 70 / V.s;
-        const p = scr(td + d, xd + 0.5 * d);
-        if (p[1] > topPad + 10) text('future', p[0], p[1], alpha(C.equi, 0.95), { align: 'center', size: 10 });
-        const q = scr(td - d, xd + 0.5 * d);
-        if (q[1] < H - 10) text('past', q[0], q[1], alpha(C.equi, 0.95), { align: 'center', size: 10 });
+        // keep "future" and "past" clear of the light line labels: slide them along the cone if needed
+        const boxes = lightLabelSpots().map((L) => L.box);
+        ctx.font = font(10);
+        const clear = (pt, str) => {
+          const hw = ctx.measureText(str).width / 2 + 3 * ps, hh = 8 * ps;
+          return !boxes.some((b) => pt[0] + hw > b[0] && pt[0] - hw < b[2] && pt[1] + hh > b[1] && pt[1] - hh < b[3]);
+        };
+        for (const [str, sg, ok] of [['future', 1, (pt) => pt[1] > topPad + 10], ['past', -1, (pt) => pt[1] < H - 10]]) {
+          for (const f of [1, 0.75, 1.3, 0.55, 1.6]) {
+            const d = 70 * f / V.s, pt = scr(td + sg * d, xd + 0.5 * d);
+            if (ok(pt) && clear(pt, str)) { text(str, pt[0], pt[1], alpha(C.equi, 0.95), { align: 'center', size: 10 }); break; }
+          }
+        }
       }
     }
   }
 
+  // where the two light line labels go, in screen pixels
+  function lightLabelSpots() {
+    const R = BIG(), out = [];
+    for (const sgn of [1, -1]) {
+      const a = scr(-R, -sgn * R), b = scr(R, sgn * R);
+      const seg = clipSeg(a, b, 8);
+      if (!seg) continue;
+      const p = seg[1];
+      const lab = sgn > 0 ? 'light, x = ct' : 'light, x = −ct';
+      ctx.font = font(10);
+      const w = ctx.measureText(lab).width;
+      const atTop = p[1] < topPad + 4;
+      const px = sgn > 0 ? Math.min(p[0] - 6, W - 8) : Math.max(p[0] + 6, 8);
+      const py = atTop ? p[1] + 10 * ps : p[1] + 12 * ps;
+      const x0 = sgn > 0 ? px - w : px;
+      out.push({ sgn, a, b, lab, px, py, align: sgn > 0 ? 'right' : 'left', box: [x0 - 3 * ps, py - 8 * ps, x0 + w + 3 * ps, py + 8 * ps] });
+    }
+    return out;
+  }
   function drawLightLines() {
     const R = BIG();
     for (const sgn of [1, -1]) {
       const a = scr(-R, -sgn * R), b = scr(R, sgn * R);
       line(a, b, alpha(C.equi, 0.9), 1.3 * ps, [6 * ps, 5 * ps]);
-      const seg = clipSeg(a, b, 8);
-      if (seg) {
-        const p = seg[1];
-        const lab = sgn > 0 ? 'light, x = ct' : 'light, x = −ct';
-        ctx.font = font(10);
-        const w = ctx.measureText(lab).width;
-        const atTop = p[1] < topPad + 4;
-        const px = sgn > 0 ? Math.min(p[0] - 6, W - 8) : Math.max(p[0] + 6, 8);
-        text(lab, sgn > 0 ? px : px, atTop ? p[1] + 10 * ps : p[1] + (sgn > 0 ? 12 : 12) * ps, C.equi,
-          { align: sgn > 0 ? 'right' : 'left', size: 10 });
-        void w;
-      }
     }
+    for (const L of lightLabelSpots()) text(L.lab, L.px, L.py, C.equi, { align: L.align, size: 10 });
   }
 
   // axes of a frame with rapidity eta, drawn in the display frame

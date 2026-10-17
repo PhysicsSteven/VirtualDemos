@@ -70,7 +70,10 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 }
 .bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
-.bar p { margin: 2px 0 0; color: var(--muted); max-width: 70ch; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar > div:first-child { flex: 1 1 380px; min-width: 0; }
+@media (min-width: 821px) { .bar .bar-right { max-width: 56%; flex-wrap: nowrap; justify-content: flex-end; } .bar-right .units { text-align: right; } :root[data-projector="on"] .bar .bar-right { max-width: 44%; } }
+.units .nw { white-space: nowrap; }
 .bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .units { color: var(--muted); font-size: 0.8rem; }
 .proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
@@ -104,7 +107,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 
 .ptable-wrap { overflow-x: auto; }
 .ptable { display: grid; grid-template-columns: repeat(18, minmax(30px, 1fr)); gap: 3px; min-width: 560px; }
-.pcell { position: relative; font: inherit; aspect-ratio: 1 / 1.05; border: 1px solid var(--line); border-radius: 5px; background: var(--canvas); color: var(--ink); padding: 2px 2px 4px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; }
+.pcell { position: relative; font: inherit; aspect-ratio: 1 / 0.86; border: 1px solid var(--line); border-radius: 5px; background: var(--canvas); color: var(--ink); padding: 2px 2px 4px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; }
 .pcell .s { font-family: var(--font-mono); font-weight: 600; font-size: 0.92rem; line-height: 1; }
 .pcell .n { font-size: 0.58rem; color: var(--muted); line-height: 1; margin-top: 2px; }
 .pcell::after { content: ""; position: absolute; left: 3px; right: 3px; bottom: 2px; height: 3px; border-radius: 2px; background: var(--cat); opacity: 0.85; }
@@ -125,8 +128,8 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 .legend i { width: 14px; height: 4px; border-radius: 2px; display: inline-block; }
 
 .bohr { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 14px; align-items: start; }
-.bohr canvas { display: block; width: 100%; height: 300px; cursor: pointer; touch-action: none; }
-:root[data-projector="on"] .bohr canvas { height: 360px; }
+.bohr canvas { display: block; width: 100%; height: 270px; cursor: pointer; touch-action: none; }
+:root[data-projector="on"] .bohr canvas { height: 330px; }
 
 .rail { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .rail .card { display: flex; flex-direction: column; gap: 10px; }
@@ -159,9 +162,11 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
 .result b.bad { color: var(--pos); }
 .src { font-size: 0.78rem; color: var(--muted); margin: 0; }
 .src a { color: inherit; }
+.src .mono { overflow-wrap: anywhere; }
 
 @media (max-width: 900px) {
   .bench { grid-template-columns: minmax(0, 1fr); }
+  .pcell { aspect-ratio: 1 / 1.05; }
   .bohr { grid-template-columns: minmax(0, 1fr); }
 }
 </style>
@@ -174,7 +179,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
       <p>Every element glows in its own set of colors. Click any element to see its spectral lines, measured by NIST.</p>
     </div>
     <div class="bar-right">
-      <div class="units mono">air wavelengths · 1 nm = 10 Å · E = hc/λ</div>
+      <div class="units mono"><span class="nw">air wavelengths</span> · <span class="nw">1 nm = 10 Å</span> · <span class="nw">E = hc/λ</span></div>
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
     </div>
   </header>
@@ -647,7 +652,18 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
       ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x, y2 - 7 * ps); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(x, y2); ctx.lineTo(x - 5 * ps, y2 - 9 * ps); ctx.lineTo(x + 5 * ps, y2 - 9 * ps); ctx.closePath(); ctx.fill();
       ctx.beginPath(); ctx.arc(x, y1, (sel ? 5 : 3.5) * ps, 0, Math.PI * 2); ctx.fill();
-      if (sel) { ctx.fillStyle = ink; ctx.textAlign = 'center'; ctx.font = `600 ${10.5 * ps}px ${mono()}`; ctx.fillText(L.air < 200 ? `${L.vac.toFixed(1)} nm` : `${L.air.toFixed(1)} nm`, x, Math.max(top, y1 - 12 * ps)); ctx.font = `${10.5 * ps}px ${mono()}`; }
+      if (sel) {
+        // label beside the arrow, halfway down, with a halo so the level lines do not run through it
+        const lab = L.air < 200 ? `${L.vac.toFixed(1)} nm` : `${L.air.toFixed(1)} nm`;
+        ctx.font = `600 ${10.5 * ps}px ${mono()}`;
+        const tw = ctx.measureText(lab).width, beside = tw + 16 * ps < dx;
+        const ly = beside ? (y1 + y2) / 2 : Math.max(top, y1 - 12 * ps);
+        const lx = !beside ? x - tw / 2 : x + 9 * ps + tw < right ? x + 9 * ps : x - 9 * ps - tw;
+        ctx.textAlign = 'left'; ctx.fillStyle = tok('--surface');
+        ctx.fillRect(lx - 3 * ps, ly - 7.5 * ps, tw + 6 * ps, 15 * ps);
+        ctx.fillStyle = ink; ctx.fillText(lab, lx, ly);
+        ctx.font = `${10.5 * ps}px ${mono()}`;
+      }
       bohrHits.push({ x, y1, y2, ni });
     });
   }

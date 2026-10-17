@@ -61,7 +61,10 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 }
 .bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
-.bar p { margin: 2px 0 0; color: var(--muted); }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar > div:first-child { flex: 1 1 380px; min-width: 0; }
+@media (min-width: 821px) { .bar .bar-right { max-width: 56%; flex-wrap: nowrap; justify-content: flex-end; } .bar-right .units { text-align: right; } :root[data-projector="on"] .bar .bar-right { max-width: 44%; } }
+.units .nw { white-space: nowrap; }
 .bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .units { color: var(--muted); font-size: 0.8rem; }
 .proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
@@ -115,7 +118,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   html, body { height: auto; }
   .app { height: auto; }
   .bench { grid-template-columns: minmax(0, 1fr); }
-  .stage { height: 80vh; min-height: 560px; }
+  .stage { height: 88vh; min-height: 700px; }
   .rail { overflow: visible; }
 }
 </style>
@@ -128,7 +131,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <p>Shine light on a metal and catch the electrons it knocks loose. Color decides their energy; brightness only decides how many.</p>
     </div>
     <div class="bar-right">
-      <div class="units mono">E = hf = hc/λ · hc = 1240 eV·nm · K<sub>max</sub> = hf − φ</div>
+      <div class="units mono"><span class="nw">E = hf = hc/λ</span> · <span class="nw">hc = 1240 eV·nm</span> · <span class="nw">K<sub>max</sub> = hf − φ</span></div>
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
     </div>
   </header>
@@ -266,6 +269,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
           gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'),
           metal: g('--metal'), field: g('--field'),
+          ui: getComputedStyle(document.body).getPropertyValue('--font-ui') || 'sans-serif',
           mono: getComputedStyle(document.body).getPropertyValue('--font-mono') || 'monospace' };
     dirtyCharts = true;
   }
@@ -307,11 +311,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function geo() {
     const ps = projScale();
     const narrow = AW < 520;
-    const top = ps > 1 ? 76 : 56, bottom = AH - (narrow ? 70 : 64);
+    const top = ps > 1 ? 76 : narrow ? 70 : 56, bottom = AH - (narrow ? 70 : 64);
     const plateH = Math.max(60, bottom - top - 30);
     const midY = top + (bottom - top) / 2;
-    const ex = narrow ? AW * 0.22 : AW * 0.3, cx = narrow ? AW * 0.86 : AW * 0.78;
-    const lamp = { x: narrow ? AW * 0.12 : AW * 0.12, y: top + 6 };
+    const ex = narrow ? AW * 0.27 : AW * 0.26, cx = narrow ? AW * 0.86 : Math.min(AW * 0.9, AW - 60);
+    const lamp = { x: narrow ? AW * 0.08 : AW * 0.09, y: top + 6 };
     return { ps, top, bottom, plateH, midY, ex, cx, gap: cx - ex, lamp, y0: midY - plateH / 2, y1: midY + plateH / 2 };
   }
 
@@ -422,8 +426,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.beginPath(); ctx.moveTo(L.x + 10, L.y + 10); ctx.lineTo(G.ex - 10, G.y0 + 4); ctx.lineTo(G.ex - 10, G.y1 - 4); ctx.lineTo(L.x + 4, L.y + 26); ctx.closePath(); ctx.fill();
     }
     ctx.fillStyle = T.canvas; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps;
-    ctx.beginPath(); ctx.arc(L.x, L.y + 14, 16, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(L.x, L.y + 14, 10, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(L.x, L.y + 14, 16 * Math.sqrt(ps), 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(L.x, L.y + 14, 10 * Math.sqrt(ps), 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
     ctx.fillText(Math.round(S.lam) + ' nm', L.x - 16, L.y - 4);
 
@@ -473,8 +477,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.fillText(yFmt(v), x - 5, Y(v));
     }
     ctx.strokeStyle = T.gridStrong; ctx.strokeRect(x + 0.5, y + 0.5, w, h);
-    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-    ctx.fillText(yl, x, y - 6);
+    ctx.fillStyle = T.ink; ctx.font = `700 ${12 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    // "K_max" is drawn as K with a subscript
+    const parts = yl.split('_max');
+    if (parts.length === 2) {
+      ctx.fillText(parts[0], x, y - 6);
+      let xx = x + ctx.measureText(parts[0]).width;
+      ctx.font = `700 ${8.5 * ps}px ${T.ui}`; ctx.fillText('max', xx, y - 3); xx += ctx.measureText('max').width;
+      ctx.font = `700 ${12 * ps}px ${T.ui}`; ctx.fillText(parts[1], xx, y - 6);
+    } else ctx.fillText(yl, x, y - 6);
     ctx.fillStyle = T.muted; ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
     ctx.fillText(xl, x + w, y + h + 18 * ps);
     return { X, Y };

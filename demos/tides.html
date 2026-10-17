@@ -65,9 +65,15 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 }
 .bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
-.bar p { margin: 2px 0 0; color: var(--muted); }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar > div:first-child { flex: 1 1 380px; min-width: 0; }
+@media (min-width: 821px) { .bar .bar-right { max-width: 56%; flex-wrap: nowrap; justify-content: flex-end; } .bar-right .units { text-align: right; } :root[data-projector="on"] .bar .bar-right { max-width: 44%; } }
+.units .nw { white-space: nowrap; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .units { color: var(--muted); font-size: 0.8rem; }
-.barside { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+sub { font-size: 0.72em; line-height: 0; }
 
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
 :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 360px; }
@@ -76,6 +82,8 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
   display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) minmax(200px, 0.5fr);
 }
 :root[data-projector="on"] .stage { min-height: 760px; }
+/* projector on a short screen: let the stage shrink so it stays above the fold */
+@media (min-width: 821px) { :root[data-projector="on"] .stage { min-height: 500px; } }
 .pane { position: relative; min-height: 0; min-width: 0; }
 .pane.plot { border-top: 1px solid var(--line); }
 .stage canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; }
@@ -162,9 +170,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       <h1>Tides</h1>
       <p>The Moon pulls the near side of Earth harder than the far side. That difference stretches the oceans into two bulges.</p>
     </div>
-    <div class="barside">
-      <div class="units mono">d☾ 384,400 km · R⊕ 6371 km · lunar day 24 h 50 min · month 29.53 d</div>
-      <button type="button" class="btn" id="proj" aria-pressed="false">Projector</button>
+    <div class="bar-right">
+      <div class="units mono"><span class="nw">d<sub>Moon</sub> 384,400 km</span> · <span class="nw">R<sub>E</sub> 6371 km</span> · <span class="nw">lunar day 24 h 50 min</span> · <span class="nw">month 29.53 d</span></div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
     </div>
   </header>
 
@@ -203,7 +211,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-a="tidal" aria-pressed="true">Tidal pull</button>
         </div>
         <div>
-          <div class="slider-head"><label for="dist">Moon's distance</label><output id="distOut" class="mono" for="dist">60.3 R⊕</output></div>
+          <div class="slider-head"><label for="dist">Moon's distance</label><output id="distOut" class="mono" for="dist">60.3 R<sub>E</sub></output></div>
           <input type="range" id="dist" min="40" max="120" step="0.1" value="60.3">
         </div>
         <button type="button" class="btn" id="realD">Real distance (384,400 km)</button>
@@ -239,28 +247,28 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       <section id="pullRead">
         <h2>Accelerations</h2>
         <dl class="readout">
-          <div class="wide"><dt>Pull at Earth's center, GM☾/d²</dt><dd id="rPull">—</dd></div>
-          <div class="wide"><dt>Tidal, along the Earth–Moon line, 2GM☾R⊕/d³</dt><dd id="rAx">—</dd></div>
+          <div class="wide"><dt>Pull at Earth's center, GM<sub>Moon</sub>/d²</dt><dd id="rPull">—</dd></div>
+          <div class="wide"><dt>Tidal, along the Earth–Moon line, 2GM<sub>Moon</sub>R<sub>E</sub>/d³</dt><dd id="rAx">—</dd></div>
           <div><dt>Exact, near side</dt><dd id="rNear">—</dd></div>
           <div><dt>Exact, far side</dt><dd id="rFar">—</dd></div>
-          <div class="wide"><dt>Tidal, across (sides), GM☾R⊕/d³, inward</dt><dd id="rPerp">—</dd></div>
+          <div class="wide"><dt>Tidal, across (sides), GM<sub>Moon</sub>R<sub>E</sub>/d³, inward</dt><dd id="rPerp">—</dd></div>
           <div><dt>Pull vs today</dt><dd id="rPullRel">—</dd></div>
           <div><dt>Tide vs today</dt><dd id="rTideRel">—</dd></div>
         </dl>
-        <p class="hint">Exact values come from GM☾/r² at each point. The near side gets a little more than 2GM☾R⊕/d³ and the far side a little less; the formula is the first term in R⊕/d. Fractions use g = 9.81 m/s².</p>
+        <p class="hint">Exact values come from GM<sub>Moon</sub>/r² at each point. The near side gets a little more than 2GM<sub>Moon</sub>R<sub>E</sub>/d³ and the far side a little less; the formula is the first term in R<sub>E</sub>/d. Fractions use g = 9.81 m/s².</p>
       </section>
 
       <section id="bulgeRead" hidden>
         <h2>Water levels</h2>
         <dl class="readout">
-          <div><dt>Moon's tide A☾</dt><dd id="rAm">—</dd></div>
-          <div><dt>Sun's tide A☉</dt><dd id="rAs">—</dd></div>
+          <div><dt>Moon's tide A<sub>Moon</sub></dt><dd id="rAm">—</dd></div>
+          <div><dt>Sun's tide A<sub>Sun</sub></dt><dd id="rAs">—</dd></div>
           <div class="big"><dt>City water level</dt><dd id="rLevel">—</dd></div>
           <div class="big"><dt>Range today</dt><dd id="rRange">—</dd></div>
           <div><dt>Next high tide</dt><dd id="rNext">—</dd></div>
           <div><dt>Lunar day</dt><dd id="rLday">24 h 50 min</dd></div>
         </dl>
-        <p class="formula">h = A (3cos²θ − 1)/2, A = (M/M⊕)(R⊕/d)³ R⊕</p>
+        <p class="formula">h = A (3cos²θ − 1)/2, A = (M/M<sub>E</sub>)(R<sub>E</sub>/d)³ R<sub>E</sub></p>
         <p class="hint">θ is the angle from the point under the Moon (or Sun). Highs of +A under the body and opposite it, lows of −A/2 at 90°. The daily range is 1.5 A for one body.</p>
         <p class="hint"><strong>Why 24 h 50 min?</strong> While Earth turns once, the Moon moves about 12° along its orbit in the same direction (360° in 29.53 days). Earth has to turn a little more to bring the city back under the Moon, about 50 minutes more. So each high tide comes about 25 minutes later than half a day after the one before.</p>
       </section>
@@ -458,9 +466,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function pullGeo() {
     const w = V.main.W, h = V.main.H;
     const top = 64 * PS, bot = h - 40 * PS, cy = (top + bot) / 2;
-    const Rp = clamp(Math.min((bot - top) * 0.34, w * 0.15), 22, 210);
+    const Rp = clamp(Math.min((bot - top) * 0.39, w * 0.16), 22, 230);
     const cx = 14 * PS + Rp * 2.15;
-    const mr = Math.max(9 * PS, Rp * 0.273);           // the Moon's radius is 0.273 R⊕: sizes to scale, distance not
+    const mr = Math.max(9 * PS, Rp * 0.273);           // the Moon's radius is 0.273 Earth radii: sizes to scale, distance not
     const x0 = cx + Rp * 2.35 + mr, x1 = Math.max(x0 + 30, w - mr - 18 * PS);
     const mx = x0 + (S.dR - DMIN) / (DMAX - DMIN) * (x1 - x0);
     return { w, h, cx, cy, Rp, mr, x0, x1, mx, kp: 0.30 * Rp / PULL_REF };
@@ -475,7 +483,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = PS; ctx.setLineDash([4 * PS, 5 * PS]); ctx.globalAlpha = 0.7;
     ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(mx, cy); ctx.stroke(); ctx.restore();
     ctx.fillStyle = T.muted; ctx.font = font(600, 11); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    clampText(ctx, 'd = ' + S.dR.toFixed(1) + ' R⊕', mx, cy + mr + 12 * PS, w, 4 * PS);
+    clampText(ctx, 'd = ' + S.dR.toFixed(1) + ' Earth radii', mx, cy + mr + 12 * PS, w, 4 * PS);
     ctx.font = font(400, 10.5);
     clampText(ctx, fmtKm(d / 1000) + ' km', mx, cy + mr + 27 * PS, w, 4 * PS);
 
@@ -700,7 +708,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     const step = (b.R - b.L) < 300 * PS ? 20 : 10;
     for (let d = DMIN; d <= DMAX; d += step) ctx.fillText(String(d), X(d), b.B + 5 * PS);
-    ctx.textAlign = 'right'; ctx.fillText("Moon's distance (R⊕)", b.R, b.B + 18 * PS);
+    ctx.textAlign = 'right'; ctx.fillText("Moon's distance (Earth radii)", b.R, b.B + 18 * PS);
     plotFrame(ctx, b);
     // today
     ctx.save(); ctx.strokeStyle = T.muted; ctx.setLineDash([2 * PS, 3 * PS]); ctx.lineWidth = PS;
@@ -727,15 +735,19 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     // legends at the left end of each curve
     ctx.font = font(700, 11, 'ui'); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     ctx.textBaseline = 'bottom';
-    ctx.fillStyle = T.pos; ctx.fillText('tidal pull ∝ 1/d³', X(50) + 6 * PS, Y((DR0 / 50) ** 3) - 6 * PS);
+    {
+      const lx = X(45) + 6 * PS, ly = Y((DR0 / 45) ** 3) - 4 * PS, tw = ctx.measureText('tidal pull ∝ 1/d³').width;
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(lx - 3 * PS, ly - 14 * PS, tw + 6 * PS, 15 * PS); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.pos; ctx.fillText('tidal pull ∝ 1/d³', lx, ly);
+    }
     ctx.textAlign = 'right'; ctx.textBaseline = 'top';
     ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
     ctx.fillStyle = T.field; clampText(ctx, 'pull ∝ 1/d²', X(88), Y((DR0 / 88) ** 2) - 6 * PS, w, b.L + 4 * PS);
     // title
     ctx.fillStyle = T.ink; ctx.font = font(700, 12.5, 'ui'); ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
     ctx.fillText('Compared with today: pull ×' + rp.toFixed(2) + ', tide ×' + rt.toFixed(2), 12 * PS, b.T - 10 * PS);
-    ctx.fillStyle = T.muted; ctx.font = font(400, 10.5, 'ui'); ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-    clampText(ctx, 'today', X(DR0), b.T - 1 * PS, w, 4 * PS);
+    ctx.fillStyle = T.muted; ctx.font = font(400, 10.5, 'ui'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('today', X(DR0) + 5 * PS, b.T + 4 * PS);
   }
 
   // bulge view: water level at the city over 50 hours, and the daily range over a month
@@ -886,7 +898,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function updatePanel() {
     const d = dM();
     if (document.activeElement !== distIn) distIn.value = S.dR.toFixed(1);
-    $('distOut').textContent = S.dR.toFixed(1) + ' R⊕';
+    $('distOut').innerHTML = S.dR.toFixed(1) + ' R<sub>E</sub>';
     const pull = G * M_MOON / (d * d);
     $('rPull').innerHTML = sci(pull) + ' m/s²<small>' + sci(pull / G0) + ' g</small>';
     const ax = tidalAxial(M_MOON, d);
@@ -918,8 +930,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const r1 = M_SUN / M_MOON, r2 = (d / D_SUN) ** 3;
     $('rPullRatio').textContent = sunMoonPull(d).toFixed(0) + '×';
     $('rTideRatio').textContent = sunMoonTide(d).toFixed(3) + '×';
-    $('ratioCalc').textContent = '(M☉/M☾)(d☾/d☉)³ = (' + sci(r1) + ')(' + sci(r2) + ') = ' + (r1 * r2).toFixed(3) +
-      (Math.abs(S.dR - DR0) > 0.05 ? ' at d☾ = ' + S.dR.toFixed(1) + ' R⊕' : '');
+    $('ratioCalc').innerHTML = '(M<sub>Sun</sub>/M<sub>Moon</sub>)(d<sub>Moon</sub>/d<sub>Sun</sub>)³ = (' + sci(r1) + ')(' + sci(r2) + ') = ' + (r1 * r2).toFixed(3) +
+      (Math.abs(S.dR - DR0) > 0.05 ? ' at d<sub>Moon</sub> = ' + S.dR.toFixed(1) + ' R<sub>E</sub>' : '');
   }
 
   // ---------- loop ----------
@@ -964,7 +976,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     $('keyPull').hidden = v !== 'pull';
     $('keyBulge').hidden = v !== 'bulge';
     $('keysHint').innerHTML = v === 'pull'
-      ? '<kbd>←</kbd> <kbd>→</kbd> change the Moon\'s distance by 1 R⊕, <kbd>Shift</kbd> for 0.1.'
+      ? '<kbd>←</kbd> <kbd>→</kbd> change the Moon\'s distance by 1 R<sub>E</sub>, <kbd>Shift</kbd> for 0.1.'
       : '<kbd>←</kbd> <kbd>→</kbd> move the Moon a day (<kbd>Shift</kbd> a tenth), <kbd>↑</kbd> <kbd>↓</kbd> change the time by 15 minutes. <kbd>Space</kbd> plays or pauses.';
     hoverM = hoverP = null;
     requestAnimationFrame(resize);
@@ -1101,7 +1113,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     bulges: 'The tidal pull piles the ocean into two bulges, one under the Moon and one on the far side. Earth turns under them; the bulges stay lined up with the Moon.',
     beach: 'Follow the city: two high tides and two low tides a day. The next day\'s high comes about 50 minutes later, because the Moon has moved on in its orbit.',
     spring: 'Watch a month go by. At new and full moon the Sun\'s and Moon\'s bulges line up: spring tides, the biggest range. At the quarters they are at right angles: neap tides.',
-    closer: 'At 40 R⊕, two thirds of today\'s distance, the pull is (60.3/40)² = 2.3 times today\'s but the tide is (60.3/40)³ = 3.4 times. Drag the Moon in and out and compare the two curves.',
+    closer: 'At 40 R<sub>E</sub>, two thirds of today\'s distance, the pull is (60.3/40)² = 2.3 times today\'s but the tide is (60.3/40)³ = 3.4 times. Drag the Moon in and out and compare the two curves.',
     sunmoon: 'At first quarter the two bulges are at right angles. The Sun\'s (gold) is 0.46 of the Moon\'s (red), even though the Sun pulls 179 times harder.'
   };
   const PRE = {
@@ -1123,7 +1135,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (p.tp !== undefined) S.tp = p.tp;
     if (p.speed) setSpeed(p.speed);
     if (p.play !== undefined) setPlaying(p.play && !reduce);
-    setPreset(name); $('presetHint').textContent = HINTS[name];
+    setPreset(name); $('presetHint').innerHTML = HINTS[name];
     requestDraw();
   }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));

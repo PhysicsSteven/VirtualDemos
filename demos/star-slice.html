@@ -79,8 +79,12 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
 .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar > div:first-child { flex: 1 1 380px; min-width: 0; }
+@media (min-width: 821px) { .bar .bar-right { max-width: 56%; flex-wrap: nowrap; justify-content: flex-end; } .bar-right .units { text-align: right; } :root[data-projector="on"] .bar .bar-right { max-width: 44%; } }
+.units .nw { white-space: nowrap; }
 .bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .units { color: var(--muted); font-size: 0.8rem; }
+.units sub { font-size: 0.72em; line-height: 0; }
 .proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
 .proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
 
@@ -213,7 +217,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <p>A real star cut in half. Composition, temperature, convection and burning at every radius, played back from MESA stellar evolution profiles.</p>
     </div>
     <div class="bar-right">
-      <div class="units mono">R☉ = 6.957×10⁵ km · R⊕ = R☉/109.2 · M☉ · L☉ · ε in erg g⁻¹ s⁻¹</div>
+      <div class="units mono"><span class="nw">R☉ = 6.957×10⁵ km</span> · <span class="nw">R<sub>E</sub> = R☉/109.2</span> · <span class="nw">M☉</span> · <span class="nw">L☉</span> · <span class="nw">ε in erg g⁻¹ s⁻¹</span></div>
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
     </div>
   </header>
@@ -461,7 +465,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function fmtKm(r) { const km = r * RSUN_KM; return (km < 1e5 ? grp(km) : sci(km, 3)) + ' km'; }
   function fmtRfull(r) {
     let s = fmtRsun(r) + ' · ' + fmtKm(r);
-    if (r < 0.5) s += ' · ' + sci(r / EARTH_RSUN, 3) + ' R⊕';
+    if (r < 0.5) s += ' · ' + sci(r / EARTH_RSUN, 3) + ' Earth radii';
     return s;
   }
   function niceStep(x) { const e = 10 ** Math.floor(Math.log10(x)), f = x / e; return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * e; }
@@ -1394,7 +1398,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.fillText(sci(len, 2) + ' R☉', right ? xb : xa, y0);
     c.fillStyle = T.muted;
     c.fillText('= ' + fmtKm(len), right ? xb : xa, yb + 5 * p);
-    c.fillText('= ' + sci(len / EARTH_RSUN, 2) + ' R⊕', right ? xb : xa, yb + 19 * p);
+    {   // "= N R_E", with the E drawn as a subscript
+      const t1 = '= ' + sci(len / EARTH_RSUN, 2) + ' R', f0 = c.font, w1 = c.measureText(t1).width;
+      const fs = f0.replace(/([\d.]+)px/, (m, v) => (v * 0.72).toFixed(1) + 'px');
+      c.font = fs; const w2 = c.measureText('E').width;
+      const xs = right ? xb - w1 - w2 : xa;
+      c.textAlign = 'left'; c.font = f0; c.fillText(t1, xs, yb + 19 * p);
+      c.font = fs; c.fillText('E', xs + w1, yb + 22 * p); c.font = f0;
+    }
     // Earth to scale, when it shows at a sensible size
     const ePx = M.px(EARTH_RSUN);
     if (ePx >= 2 && ePx <= 46 * p) {
