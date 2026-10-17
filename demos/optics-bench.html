@@ -147,7 +147,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   <main class="bench">
     <div class="stage" id="stage">
-      <canvas id="view" tabindex="0" role="application" aria-label="Optics bench. Drag sources and optical elements to move them; select one and use arrow keys to nudge it, brackets to rotate it, Delete to remove it."></canvas>
+      <canvas id="view" tabindex="0" role="application" aria-label="Optics bench. Drag sources and optical elements to move them. A selected item shows handles: drag F or C to change the focal length, the grips to resize it and the round knob to rotate it. Arrow keys nudge it, brackets rotate it, plus and minus resize it, Delete removes it."></canvas>
     </div>
 
     <aside class="rail">
@@ -181,7 +181,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="sel" id="selFields"></div>
           <div class="selfoot"><span id="selPos" class="mono"></span><button type="button" class="link" id="del">Remove</button></div>
         </div>
-        <p class="hint" id="selHint">Click anything on the bench to edit it. Arrow keys nudge it, [ and ] rotate it, Delete removes it.</p>
+        <p class="hint" id="selHint">Click anything on the bench to edit it. Drag its grips, dots and round knob to reshape and turn it.</p>
       </section>
 
       <section id="imgSec">
@@ -676,6 +676,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       arrowHead(a[0] + Math.cos(ang) * 6, a[1] + Math.sin(ang) * 6, ang, 8);
     }
     const fa = Math.abs(it.f);
+    if (it === sel) return;          // the selected lens shows draggable F and F′ instead
     tick([it.x + u[0] * fa, it.y + u[1] * fa], w, 'F', T);
     tick([it.x - u[0] * fa, it.y - u[1] * fa], w, 'F', T);
   }
@@ -701,7 +702,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.stroke();
     ctx.strokeStyle = T.ink; ctx.lineWidth = 3; ctx.lineCap = 'round';
     polyline(pts);
-    if (it.shape !== 'plane') {
+    if (it.shape !== 'plane' && it !== sel) {
       const R = signedR(it);
       tick([it.x + u[0] * R / 2, it.y + u[1] * R / 2], w, 'F', T);
       tick([it.x + u[0] * R, it.y + u[1] * R], w, 'C', T);
@@ -820,7 +821,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.textBaseline = up ? 'bottom' : 'top';
       ctx.fillText(im.real ? 'real image' : 'virtual image', x, y + (up ? -8 : 8));
     }
-    if (sel) drawSelection(sel, T);
+    if (sel) { drawSelection(sel, T); drawHandles(T); }
 
     // scale bar
     ctx.save();
@@ -877,7 +878,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const SPECS = {
     lens: [
       { chips: [['conv', 'Converging'], ['div', 'Diverging']], get: (it) => it.f > 0 ? 'conv' : 'div', set: (it, v) => { it.f = (v === 'conv' ? 1 : -1) * Math.abs(it.f); } },
-      { label: 'Focal length', min: 5, max: 30, step: 0.5, get: (it) => Math.abs(it.f), set: (it, v) => { it.f = Math.sign(it.f) * v; }, fmt: (it) => 'f = ' + fmtCm(it.f) },
+      { label: 'Focal length', hk: 'f', min: 5, max: 30, step: 0.5, get: (it) => Math.abs(it.f), set: (it, v) => { it.f = Math.sign(it.f) * v; }, fmt: (it) => 'f = ' + fmtCm(it.f) },
       { label: 'Aperture height', min: 2, max: 20, step: 0.5, key: 'ap', unit: ' cm' },
       { label: 'Rotate', min: -90, max: 90, step: 1, key: 'rot', unit: '°' }
     ],
@@ -978,7 +979,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     });
   }
   function updateSel() {
-    $('selEditor').hidden = !sel; $('selHint').hidden = !!sel;
+    $('selEditor').hidden = !sel;
+    const hint = selHintText(sel);
+    if ($('selHint').textContent !== hint) $('selHint').textContent = hint;
     if (sel !== editorFor) buildEditor();
     if (sel) {
       $('selName').textContent = itemName(sel);
@@ -994,12 +997,186 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
   }
 
+  // ---------- drag handles on the selected item ----------
+  // Dots: focal points F, F′ and center of curvature C. Grips: size (aperture, width, height, side, radius).
+  // Knob: rotation (or aim, for sources). Values snap to the matching slider's min, max and step.
+  const KNOB_GAP = 26;                          // px from the item's edge out to its rotation knob
+  let hoverId = null, pendingDrag = null;
+  const specOf = (kind, key) => SPECS[kind].find((sp) => sp.key === key || sp.hk === key);
+  function snap(sp, v) {
+    v = Math.round((v - sp.min) / sp.step) * sp.step + sp.min;
+    return +Math.max(sp.min, Math.min(sp.max, v)).toFixed(4);
+  }
+  function setKey(it, key, v) {
+    const sp = specOf(it.kind, key), nv = snap(sp, v);
+    if (sp.set) sp.set(it, nv); else it[key] = nv;
+  }
+  function wrapRot(it, r) {
+    const sp = specOf(it.kind, 'rot');
+    if (sp.max - sp.min >= 360) r = ((r + 180) % 360 + 360) % 360 - 180;
+    else if (it.kind === 'lens') r = ((r + 90) % 180 + 180) % 180 - 90;     // a thin lens turned by 180° is the same lens
+    return snap(sp, r);
+  }
+  function resizeCursor(d) {                    // d: world direction of the drag
+    let a = deg(Math.atan2(-d[1], d[0]));
+    a = ((a % 180) + 180) % 180;
+    return a < 22.5 || a >= 157.5 ? 'ew-resize' : a < 67.5 ? 'nwse-resize' : a < 112.5 ? 'ns-resize' : 'nesw-resize';
+  }
+  // f or R from a signed distance t along the axis; the sign flips only once the pointer is clearly past the item
+  const signedPick = (t, cur) => (Math.abs(t) < 0.3 ? Math.sign(cur) || 1 : Math.sign(t));
+  function handles() {
+    const it = sel;
+    if (!it) return [];
+    const out = [], c = [it.x, it.y], { u, w } = frameOf(it), g = KNOB_GAP / s, go = 9 / s;   // go: tip grips sit just past the tip
+    const rel = (p) => [p.x - c[0], p.y - c[1]];
+    const grip = (id, at, axis, set) => out.push({ id, type: 'grip', at, axis, cursor: resizeCursor(axis), set });
+    const dotH = (id, at, label, set) => out.push({ id, type: 'dot', at, axis: u, label, cursor: resizeCursor(u), set });
+    const knob = (center, off, dist, from) => {
+      if (drag && drag.hid === 'rot' && drag.koff != null) off = drag.koff;   // keep the knob on one side while turning
+      const a = rad(it.rot + off);
+      out.push({ id: 'rot', type: 'knob', off, at: [center[0] + Math.cos(a) * dist, center[1] + Math.sin(a) * dist], from, cursor: 'grab',
+        set: (p) => { it.rot = wrapRot(it, deg(Math.atan2(p.y - center[1], p.x - center[0])) - off); placeOnPivot(it); } });
+    };
+    if (it.kind === 'lens') {
+      // F′ sits at +f along u (where light going +u focuses), F at −f; a diverging lens has them swapped
+      dotH('F2', local(it, it.f, 0), 'F′', (p) => { const t = dot(rel(p), u); it.f = signedPick(t, it.f) * Math.abs(it.f); setKey(it, 'f', Math.abs(t)); });
+      dotH('F1', local(it, -it.f, 0), 'F', (p) => { const t = -dot(rel(p), u); it.f = signedPick(t, it.f) * Math.abs(it.f); setKey(it, 'f', Math.abs(t)); });
+      grip('ap', local(it, 0, it.ap / 2 + go), w, (p) => setKey(it, 'ap', 2 * (Math.abs(dot(rel(p), w)) - go)));
+      knob(c, -90, it.ap / 2 + g, local(it, 0, -it.ap / 2));
+    } else if (it.kind === 'mirror') {
+      const pts = outline(it), ends = [pts[0], pts[pts.length - 1]].sort((a, b) => dot([a[0] - c[0], a[1] - c[1]], w) - dot([b[0] - c[0], b[1] - c[1]], w));
+      if (it.shape !== 'plane') {
+        const Rs = signedR(it);
+        const setR = (k) => (p) => {
+          const t = dot(rel(p), u) * k, sg = signedPick(t, Rs);
+          if (sg !== Math.sign(Rs)) it.shape = sg > 0 ? 'concave' : 'convex';
+          setKey(it, 'R', Math.abs(t));
+        };
+        dotH('F', local(it, Rs / 2, 0), 'F', setR(2));
+        dotH('C', local(it, Rs, 0), 'C', setR(1));
+      }
+      // grip on the upper end, knob on the lower one (the knob stays on its side while it is being turned)
+      let up = w[1] >= 0 ? 1 : 0;
+      if (drag && drag.hid === 'rot' && drag.koff != null) up = drag.koff < 0 ? 1 : 0;
+      const sg = up ? go : -go, ge = [ends[up][0] + w[0] * sg, ends[up][1] + w[1] * sg];
+      grip('ap', ge, w, (p) => setKey(it, 'ap', 2 * (Math.abs(dot(rel(p), w)) - go)));
+      knob(c, up ? -90 : 90, it.ap / 2 + g, ends[1 - up]);
+    } else if (it.kind === 'block') {
+      grip('w', local(it, it.w / 2, 0), u, (p) => setKey(it, 'w', 2 * Math.abs(dot(rel(p), u))));
+      grip('h', local(it, 0, -it.h / 2), w, (p) => setKey(it, 'h', 2 * Math.abs(dot(rel(p), w))));
+      knob(c, 90, it.h / 2 + g, local(it, 0, it.h / 2));
+    } else if (it.kind === 'prism') {
+      const Hh = it.side * Math.sqrt(3) / 2, corner = local(it, it.side / 2, -Hh / 3);
+      grip('side', corner, norm([corner[0] - c[0], corner[1] - c[1]]), (p) => setKey(it, 'side', Math.sqrt(3) * Math.hypot(...rel(p))));
+      knob(c, 90, 2 * Hh / 3 + g, local(it, 0, 2 * Hh / 3));
+    } else if (it.kind === 'semi') {
+      grip('r', local(it, it.r, 0), u, (p) => setKey(it, 'r', Math.hypot(...rel(p))));
+      knob(c, 90, it.r + g, local(it, 0, it.r));
+    } else if (it.kind === 'object') {
+      const tip = [it.x, it.y + it.h];
+      grip('h', [tip[0], tip[1] + go], [0, 1], (p) => setKey(it, 'h', p.y - it.y - go));
+      knob(tip, 0, 44 / s, tip);
+    } else if (it.kind === 'beam') {
+      const half = Math.max(it.w / 2, 18 / s);   // keep the grips apart on a narrow beam so its middle can still be grabbed
+      grip('w2', local(it, 0, half), w, (p) => setKey(it, 'w', 2 * Math.abs(dot(rel(p), w))));
+      grip('w1', local(it, 0, -half), w, (p) => setKey(it, 'w', 2 * Math.abs(dot(rel(p), w))));
+      if (it.pivot) knob([it.pivot.x, it.pivot.y], 180, it.pivot.dist + g, c);
+      else knob(c, 180, g, c);
+    } else if (it.kind === 'point') {
+      knob(c, 0, 30 / s, c);
+    }
+    return out;
+  }
+  function handleAt(e) {
+    if (!sel) return null;
+    const r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    let best = null, bd = 10 * (e.pointerType === 'touch' ? 2 : 1);
+    for (const h of handles()) {
+      const [hx, hy] = toPx(h.at[0], h.at[1]), d = Math.hypot(x - hx, y - hy) - (h.type === 'knob' ? 2 : 0);
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  function applyPendingDrag() {          // runs inside the animation frame: at most one handle update per frame
+    if (!pendingDrag || !drag || !drag.hid) { pendingDrag = null; return; }
+    const h = handles().find((k) => k.id === drag.hid), before = itemName(drag.it);
+    if (h) { h.set(pendingDrag); setPreset(null); }
+    if (itemName(drag.it) !== before) editorFor = null;   // converging ⇄ diverging or concave ⇄ convex: refresh the chips
+    pendingDrag = null;
+  }
+  function labelText(text, x, y, T) {
+    ctx.lineWidth = 3.5; ctx.strokeStyle = T.canvas; ctx.lineJoin = 'round'; ctx.strokeText(text, x, y);
+    ctx.fillText(text, x, y);
+  }
+  function drawHandles(T) {
+    const hs = handles();
+    ctx.save(); ctx.lineCap = 'round';
+    for (const h of hs) {
+      const hot = drag ? drag.hid === h.id : hoverId === h.id;
+      const [x, y] = toPx(h.at[0], h.at[1]);
+      if (hot) {
+        ctx.fillStyle = T.accent; ctx.globalAlpha = 0.25;
+        ctx.beginPath(); ctx.arc(x, y, 13, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1;
+      }
+      if (h.type === 'knob') {
+        const [fx, fy] = toPx(h.from[0], h.from[1]);
+        ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.75; ctx.setLineDash([3, 3]);
+        ctx.beginPath(); ctx.moveTo(fx, fy); ctx.lineTo(x, y); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+        ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(x, y, hot ? 7.5 : 6.5, 0, 2 * Math.PI); ctx.fill();
+        // two small curved arrows around the knob say "turn me"
+        ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.4;
+        ctx.beginPath(); ctx.arc(x, y, 3.4, -0.4 * Math.PI, 0.35 * Math.PI); ctx.stroke();
+        ctx.beginPath(); ctx.arc(x, y, 3.4, 0.6 * Math.PI, 1.35 * Math.PI); ctx.stroke();
+      } else if (h.type === 'dot') {
+        ctx.fillStyle = T.canvas; ctx.strokeStyle = T.accent; ctx.lineWidth = hot ? 2.4 : 1.8;
+        ctx.beginPath(); ctx.arc(x, y, hot ? 6 : 4.5, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+        // label on the side of the axis that points down the screen
+        let ex = h.axis[1], ey = h.axis[0];                // screen perpendicular to the axis
+        if (ey < 0 || (Math.abs(ey) < 1e-6 && ex < 0)) { ex = -ex; ey = -ey; }
+        ctx.fillStyle = T.accent; ctx.font = '700 11px ' + monoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        labelText(h.label, x + ex * 15, y + ey * 15, T);
+      } else {
+        // a small pill lying along the edge, with three grip bars in the drag direction
+        const ax = h.axis[0], ay = -h.axis[1];
+        ctx.translate(x, y); ctx.rotate(Math.atan2(ax, -ay));      // local +x runs along the edge, +y along the drag axis
+        const L = hot ? 10 : 8.5, Wd = hot ? 5.5 : 4.5;
+        ctx.fillStyle = T.canvas; ctx.strokeStyle = T.accent; ctx.lineWidth = hot ? 2.2 : 1.7;
+        ctx.beginPath();
+        ctx.roundRect ? ctx.roundRect(-L, -Wd, 2 * L, 2 * Wd, Wd) : ctx.rect(-L, -Wd, 2 * L, 2 * Wd);
+        ctx.fill(); ctx.stroke();
+        ctx.lineWidth = 1.3; ctx.beginPath();
+        for (let k = -1; k <= 1; k++) { ctx.moveTo(k * 3.5, -Wd + 2); ctx.lineTo(k * 3.5, Wd - 2); }
+        ctx.stroke();
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+    }
+    ctx.restore();
+  }
+  const HINTS = {
+    lens: 'Drag F or F′ along the axis to change f. Pull one through the lens to switch between converging and diverging. The grip at the top sets the height.',
+    mirror: 'Drag F or C along the axis to change the curvature (f = R/2). Pull one through the mirror to switch concave and convex. The grip at the top sets the height.',
+    plane: 'The grip at the top sets the height.',
+    block: 'Drag the grips on the edges to change the width and height.',
+    prism: 'Drag the corner grip to change the side length.',
+    semi: 'Drag the grip on the flat face to change the radius.',
+    object: 'Drag the tip of the arrow to change its height. The knob aims the rays.',
+    beam: 'Drag either end of the beam to change its width.',
+    point: 'The knob aims the rays.'
+  };
+  function selHintText(it) {
+    if (!it) return 'Click anything on the bench to edit it. Drag its grips, dots and round knob to reshape and turn it.';
+    const first = HINTS[it.kind === 'mirror' && it.shape === 'plane' ? 'plane' : it.kind];
+    const turn = isSource(it) ? '' : ' Turn the round knob to rotate it.';
+    return first + turn + ' Arrow keys nudge it, [ and ] rotate it, + and − resize it, Delete removes it.';
+  }
+
   // ---------- scheduling ----------
   function schedule() {
     if (raf) return;
     raf = requestAnimationFrame(() => {
       raf = 0;
       if (!W || !H) return;
+      applyPendingDrag();
       draw(); updateReadouts(); updateSel();
     });
   }
@@ -1040,6 +1217,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   cv.addEventListener('pointerdown', (e) => {
     cv.focus({ preventScroll: true });
+    const h = handleAt(e);
+    if (h) {                               // handles on the selected item win over moving it
+      drag = { it: sel, hid: h.id, koff: h.off }; hoverId = h.id;
+      cv.style.cursor = h.cursor === 'grab' ? 'grabbing' : h.cursor;
+      cv.setPointerCapture(e.pointerId); e.preventDefault(); schedule();
+      return;
+    }
     const p = eventW(e), it = hit(p);
     if (it) {
       sel = it; drag = { it, dx: p.x - it.x, dy: p.y - it.y };
@@ -1050,18 +1234,28 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   });
   cv.addEventListener('pointermove', (e) => {
     const p = eventW(e);
-    if (drag) {
+    if (drag && drag.hid) {
+      pendingDrag = p; schedule();
+    } else if (drag) {
       drag.it.x = p.x - drag.dx; drag.it.y = p.y - drag.dy; drag.it.pivot = null; clampToView(drag.it);
       if (sel === drag.it && editorFor === sel && sel.kind === 'beam') editorFor = null;
       setPreset(null); schedule();
     } else if (e.pointerType === 'mouse') {
-      cv.style.cursor = hit(p) ? 'grab' : 'default';
+      const h = handleAt(e), id = h ? h.id : null;
+      if (id !== hoverId) { hoverId = id; schedule(); }
+      cv.style.cursor = h ? h.cursor : hit(p) ? 'grab' : 'default';
     }
   });
-  const endDrag = () => { drag = null; cv.style.cursor = 'default'; };
+  const endDrag = (e) => {
+    if (drag && drag.hid) { applyPendingDrag(); if (e.pointerType !== 'mouse') hoverId = null; schedule(); }
+    drag = null; cv.style.cursor = 'default';
+  };
   cv.addEventListener('pointerup', endDrag);
   cv.addEventListener('pointercancel', endDrag);
+  cv.addEventListener('pointerleave', () => { if (!drag && hoverId) { hoverId = null; schedule(); } });
 
+  // what + and − change: the focal length or main size of each kind
+  const SIZE_KEYS = { lens: ['f'], mirror: ['R'], block: ['w', 'h'], prism: ['side'], semi: ['r'], object: ['h'], beam: ['w'], point: ['spread'] };
   function removeSel() { items = items.filter((i) => i !== sel); sel = null; setPreset(null); schedule(); }
   cv.addEventListener('keydown', (e) => {
     if (!sel) return;
@@ -1079,6 +1273,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       let r = sel.rot + (e.key === ']' ? 1 : -1) * (e.shiftKey ? 1 : 5);
       if (lim === 180) { if (r > 180) r -= 360; if (r < -180) r += 360; } else r = Math.max(-lim, Math.min(lim, r));
       sel.rot = r; placeOnPivot(sel); setPreset(null);
+    } else if (['+', '=', '-', '_', '−'].includes(e.key)) {
+      const keys = SIZE_KEYS[sel.kind];
+      if (!keys || (sel.kind === 'mirror' && sel.shape === 'plane')) return;
+      const sgn = e.key === '+' || e.key === '=' ? 1 : -1;
+      for (const k of keys) { const sp = specOf(sel.kind, k); setKey(sel, k, getV(sp, sel) + sgn * sp.step); }
+      setPreset(null);
     } else return;
     e.preventDefault(); schedule();
   });
