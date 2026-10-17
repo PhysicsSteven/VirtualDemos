@@ -164,6 +164,13 @@ def main():
             print('  inlist_%-28s log_directory=LOGS_%s, profile_interval=%d' % (st, st, cfg['interval']))
             if not a.dry_run:
                 open(f, 'w').write(new)
+        if suite == '20M_pre_ms_to_core_collapse':
+            # the suite's carbon burning stage starts from its optional envelope removal stage, which is skipped
+            f = os.path.join(work, 'inlist_to_end_core_c_burn')
+            new = set_namelist(open(f).read(), 'star_job', {'load_model_filename': "'after_core_he_burn.mod'"})
+            print('  inlist_to_end_core_c_burn           load_model_filename=after_core_he_burn.mod (no envelope removal)')
+            if not a.dry_run:
+                open(f, 'w').write(new)
         if M != suite_mass:
             for fn in cfg['mass_files']:
                 f = os.path.join(work, fn)
