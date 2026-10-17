@@ -1,0 +1,1236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Rutherford Scattering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one canvas with the target seen side on (left) and a plot (right: deflection against b, or counts against angle); instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --alpha: #17855f;
+  --pud: #e7c9b8;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --alpha: #4fd1a0; --pud: #4a3530; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --alpha: #4fd1a0; --pud: #4a3530; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#can { touch-action: none; outline: none; }
+#can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .list dd { font-size: 0.88rem; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.flag { margin: 0; font-size: 0.88rem; font-weight: 700; border: 1px solid var(--pos); color: var(--pos); border-radius: 6px; padding: 7px 10px; }
+.flag span { display: block; font-weight: 400; color: var(--ink); margin-top: 2px; }
+.formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.alpha { border-color: var(--alpha); border-top-width: 3px; }
+.swatch.asym { border-color: var(--muted); border-top-style: dashed; }
+.swatch.curve { border-color: var(--equi); border-top-width: 3px; }
+.swatch.nuc { border-color: var(--muted); border-top-style: dashed; border-top-width: 2px; }
+.swatch.hist { height: 10px; border: 1px solid var(--accent); background: color-mix(in srgb, var(--accent) 22%, transparent); }
+.swatch.dot { width: 10px; height: 10px; border: 0; border-radius: 50%; margin: 0 6px; background: var(--pos); }
+
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 86vh; min-height: 640px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Rutherford Scattering</h1>
+      <p>Fire alpha particles at a gold foil. A few bounce straight back, which Thomson's plum pudding atom cannot do: the positive charge must sit in a tiny nucleus.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">lengths in fm = 10⁻¹⁵ m · K in MeV · e²/4πε₀ = 1.440 MeV·fm</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="What to fire">
+          <button type="button" id="mSingle" aria-pressed="true">One alpha</button>
+          <button type="button" id="mBeam" aria-pressed="false">Beam</button>
+        </div>
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="fire">Fire again</button>
+        <button type="button" class="btn" id="clear" hidden>Clear</button>
+        <span class="count mono" id="count" aria-live="off"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="Alpha particles approaching a target atom, seen side on, and a plot. In one alpha mode the plot shows the deflection angle against the impact parameter; in beam mode it shows counts against angle with the Rutherford prediction. Drag the handle on the incoming path to change the impact parameter b, or the beam edge to change the beam radius. Keys: up and down change b or the beam radius, space plays or pauses, B switches between one alpha and beam, P switches the atom model, F fires, C clears."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="one" aria-pressed="true">One alpha, gold</button>
+          <button type="button" data-p="gm" aria-pressed="false">Geiger–Marsden beam</button>
+          <button type="button" data-p="head" aria-pressed="false">Head on</button>
+          <button type="button" data-p="plum" aria-pressed="false">Plum pudding</button>
+          <button type="button" data-p="al" aria-pressed="false">Aluminum, high energy</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Atom model</h2>
+        <div class="seg" role="group" aria-label="Atom model">
+          <button type="button" id="aNuc" aria-pressed="true">Nuclear (Rutherford)</button>
+          <button type="button" id="aPlum" aria-pressed="false">Plum pudding</button>
+        </div>
+        <div class="chips" id="targets" role="group" aria-label="Target element">
+          <button type="button" data-t="au" aria-pressed="true">Gold</button>
+          <button type="button" data-t="ag" aria-pressed="false">Silver</button>
+          <button type="button" data-t="al" aria-pressed="false">Aluminum</button>
+          <button type="button" data-t="custom" aria-pressed="false">Custom Z</button>
+        </div>
+        <div id="zRow" hidden>
+          <div class="slider-head"><label for="zc">Atomic number Z</label><output id="zcOut" class="mono" for="zc"></output></div>
+          <input type="range" id="zc" min="1" max="100" step="1" value="29">
+        </div>
+        <dl class="readout">
+          <div><dt>Charge</dt><dd id="rZ">—</dd></div>
+          <div><dt>Mass number A</dt><dd id="rA">—</dd></div>
+          <div class="wide"><dt id="rRLab">Nuclear radius 1.2 fm · A^⅓</dt><dd id="rR">—</dd></div>
+        </dl>
+        <p class="hint" id="modelHint"></p>
+      </section>
+
+      <section>
+        <h2>Alpha particles</h2>
+        <div>
+          <div class="slider-head"><label for="ke">Kinetic energy K</label><output id="keOut" class="mono" for="ke"></output></div>
+          <input type="range" id="ke" min="1" max="10" step="0.01" value="7.69">
+        </div>
+        <dl class="readout">
+          <div class="wide"><dt>Speed v (nonrelativistic is fine: v/c ≤ 0.074)</dt><dd id="rV">—</dd></div>
+          <div class="wide big"><dt>Head on distance D = zZe²/4πε₀K</dt><dd id="rD">—</dd></div>
+        </dl>
+        <p class="hint">An alpha is a helium nucleus, z = 2, mc² = 3727.4 MeV. Geiger and Marsden's 1913 source was radon with its short lived decay products, giving alphas of 5.49, 6.00 and 7.69 MeV; the fastest, from ²¹⁴Po (radium C′), is the default here. Many textbooks quote 5.5 MeV.</p>
+      </section>
+
+      <section id="secSingle">
+        <h2>One alpha</h2>
+        <div>
+          <div class="slider-head"><label for="bb">Impact parameter b</label><output id="bOut" class="mono" for="bb"></output></div>
+          <input type="range" id="bb" min="0" max="1" step="0.001" value="0.3">
+        </div>
+        <dl class="readout">
+          <div class="wide big"><dt id="thLab">Deflection θ = 2 arctan(D/2b)</dt><dd id="rTh">—</dd></div>
+          <div class="wide"><dt id="rmLab">Closest approach r<sub>min</sub> = (D/2)(1 + √(1 + (2b/D)²))</dt><dd id="rRm">—</dd></div>
+          <div class="wide" id="recoilRow"><dt>Nucleus free to recoil (lab frame)</dt><dd id="rRec" class="list">—</dd></div>
+        </dl>
+        <p class="flag" id="touch" hidden></p>
+        <p class="hint" id="singleHint"></p>
+      </section>
+
+      <section id="secBeam" hidden>
+        <h2>Beam and detector</h2>
+        <div>
+          <div class="slider-head"><label for="rate">Rate</label><output id="rateOut" class="mono" for="rate"></output></div>
+          <input type="range" id="rate" min="0" max="10" step="1" value="7">
+        </div>
+        <div id="bmRow">
+          <div class="slider-head"><label for="bm">Beam radius b<sub>max</sub></label><output id="bmOut" class="mono" for="bm"></output></div>
+          <input type="range" id="bm" min="-0.301" max="1.477" step="0.001" value="0.756">
+        </div>
+        <div>
+          <div class="slider-head"><label for="ft">Foil thickness t</label><output id="ftOut" class="mono" for="ft"></output></div>
+          <input type="range" id="ft" min="-1" max="1" step="0.01" value="-0.3">
+        </div>
+        <dl class="readout" id="beamNuc">
+          <div><dt>Fired</dt><dd id="rN">0</dd></div>
+          <div><dt>Turned past 90°</dt><dd id="rB">0</dd></div>
+          <div class="wide"><dt>Expected past 90° for this beam, (b₉₀/b<sub>max</sub>)², b₉₀ = D/2</dt><dd id="rBexp">—</dd></div>
+          <div class="wide"><dt>Fit to Rutherford, χ² per bin</dt><dd id="rChi">—</dd></div>
+          <div class="wide"><dt>Past 90° in a real foil of thickness t, ntπb₉₀²</dt><dd id="rFoil">—</dd></div>
+        </dl>
+        <dl class="readout" id="beamPlum" hidden>
+          <div><dt>Fired</dt><dd id="pN">0</dd></div>
+          <div><dt>Turned past 90°</dt><dd id="pB">0</dd></div>
+          <div><dt>Atoms crossed</dt><dd id="pL">—</dd></div>
+          <div><dt>Largest kick per atom</dt><dd id="pK">—</dd></div>
+          <div class="wide"><dt>Spread after the foil, θ<sub>rms</sub></dt><dd id="pS">—</dd></div>
+          <div class="wide"><dt>Chance past 90°, Gaussian estimate e^(−θ²/θ²rms)</dt><dd id="pP">—</dd></div>
+          <div class="wide"><dt>Largest angle possible even if every kick lined up</dt><dd id="pMax">—</dd></div>
+        </dl>
+        <p class="hint" id="beamHint"></p>
+      </section>
+
+      <section id="secPlot" hidden>
+        <h2>Counts against angle</h2>
+        <div class="inline">
+          <span class="lab">Show</span>
+          <div class="seg" role="group" aria-label="Plot normalization">
+            <button type="button" id="nSr" aria-pressed="true">Per steradian</button>
+            <button type="button" id="nBin" aria-pressed="false">Per bin</button>
+          </div>
+        </div>
+        <div class="inline" id="rangeRow">
+          <span class="lab">Angles</span>
+          <div class="seg" role="group" aria-label="Angle range">
+            <button type="button" id="gFull" aria-pressed="true">0 to 180°</button>
+            <button type="button" id="gSmall" aria-pressed="false">Small</button>
+          </div>
+        </div>
+        <p class="formula" id="formula">dσ/dΩ = (D/4)² / sin⁴(θ/2)</p>
+        <div class="key" id="plotKey"></div>
+        <p class="hint" id="plotHint"></p>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint">Pure Coulomb repulsion, nonrelativistic. The trajectory is the exact hyperbola, and the alpha moves along it on the exact timing (Kepler's equation for a hyperbola). The nucleus is held fixed. The recoil readout shows the lab angle and closest approach when it is free to move: at the same b the angle changes by under 1% even for aluminum, and the closest approach grows by about 2% for gold and up to 15% for aluminum. The strong force is not simulated, only flagged.</p>
+        <p class="hint">Beam mode is a 3D beam: impact parameters are spread evenly over a disk, so their density grows as b, and each track is drawn in its own plane of scattering. The detector ring stands for Geiger and Marsden's zinc sulfide screen and microscope, which really sat centimeters away. Each alpha is scattered by one nucleus; the many distant, small deflections in a real foil are left out.</p>
+        <div class="key">
+          <span><i class="swatch alpha"></i>Alpha path</span>
+          <span><i class="swatch asym"></i>Asymptotes and closest approach</span>
+          <span><i class="swatch dot"></i>Nucleus (to scale, at least a few pixels)</span>
+        </div>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  // Units: lengths in fm, energies in MeV. In orbit code, speed in units of the initial speed v₀ and time in fm/v₀.
+  const KC = 1.439964;          // e²/4πε₀ in MeV·fm
+  const MA = 3727.379;          // alpha rest energy, MeV
+  const ZA = 2;                 // alpha charge number
+  const AMU = 931.494;          // MeV per atomic mass unit
+  const R0 = 1.2;               // fm, nuclear radius R = R0 A^(1/3)
+  const C_MS = 299792458;
+
+  const headOn = (Z, K) => ZA * Z * KC / K;                         // D, fm
+  const deflect = (b, D) => 2 * Math.atan2(D, 2 * Math.abs(b));     // θ, rad (π for b = 0)
+  function rMin(b, D) { const q = 2 * b / D; return D / 2 * (1 + Math.sqrt(1 + q * q)); }
+  const bOf = (th, D) => (th >= Math.PI ? 0 : D / (2 * Math.tan(th / 2)));
+  const speedC = (K) => Math.sqrt(2 * K / MA);
+  const nucR = (A) => R0 * Math.cbrt(A);
+  // b at which the closest approach equals Rt (alphas with smaller b reach Rt); 0 if none, Infinity if all
+  function bTouch(D, Rt) {
+    const q = 2 * Rt / D - 1;          // r_min ≥ D always, so no contact unless Rt > D
+    if (q <= 1) return 0;
+    return D / 2 * Math.sqrt(q * q - 1);
+  }
+  // Mass number for a custom Z from the valley of stability, Z = A / (1.98 + 0.0155 A^(2/3))
+  function massNumber(Z) { let A = 2 * Z; for (let i = 0; i < 40; i++) A = Z * (1.98 + 0.0155 * Math.pow(A, 2 / 3)); return Math.max(1, Math.round(A)); }
+  // Two body correction: the same b, but the relative motion has K_cm = K M/(M + m)
+  function recoil(b, Z, A, K) {
+    const M = A * AMU, Kcm = K * M / (M + MA), Dcm = headOn(Z, Kcm), thc = deflect(b, Dcm);
+    const th = Math.atan2(Math.sin(thc), Math.cos(thc) + MA / M);
+    return { Dcm, thc, th, rmin: rMin(b, Dcm) };
+  }
+
+  // Exact repulsive Coulomb orbit in the hyperbolic parameter w. The alpha comes in from x = −∞ along y = b
+  // (b signed), the nucleus at the origin. Branch away from the focus: r = a(e cosh w + 1), a = D/2, e = √(1 + (2b/D)²).
+  function orbit(b, D) {
+    const a = D / 2, e = Math.sqrt(1 + (2 * b / D) * (2 * b / D)), k = Math.sqrt(e * e - 1);
+    const al = Math.atan2(2 * Math.abs(b), D), ca = Math.cos(al), sa = Math.sin(al), sg = b < 0 ? -1 : 1;
+    return {
+      a, e, b, D, theta: deflect(b, D),
+      pos(w) { const X = -a * (e + Math.cosh(w)), Y = a * k * Math.sinh(w); return [X * ca + Y * sa, sg * (-X * sa + Y * ca)]; },
+      r(w) { return a * (e * Math.cosh(w) + 1); },
+      t(w) { return a * (e * Math.sinh(w) + w); },          // Kepler's equation for the repulsive hyperbola, in fm/v₀
+      wAt(r) { const c = (r / a - 1) / e; return c > 1 ? Math.acosh(c) : 0; },
+      wOfT(t) { // invert t(w) by Newton, monotonic
+        let w = Math.asinh(t / (a * e + 1e-300)); if (!isFinite(w)) w = 0;
+        for (let i = 0; i < 60; i++) { const f = a * (e * Math.sinh(w) + w) - t, df = a * (e * Math.cosh(w) + 1); const dw = f / df; w -= dw; if (Math.abs(dw) < 1e-13) break; }
+        return w;
+      }
+    };
+  }
+  // Independent check: integrate m d²r/dt² = zZe²/(4πε₀) r̂/r² with RK4 and a step proportional to r.
+  // In units v₀ = 1 the acceleration is (D/2) r̂/r².
+  function integrate(b, D, opt) {
+    const L = (opt && opt.L) || 1e5 * Math.max(D, Math.abs(b)), eps = (opt && opt.eps) || 2e-3;
+    let x = -L, y = b, vx = Math.sqrt(1 - D / Math.hypot(x, y)), vy = 0;   // energy matched to the asymptotic speed
+    const acc = (x, y) => { const r2 = x * x + y * y, r = Math.sqrt(r2), f = D / 2 / (r2 * r); return [f * x, f * y]; };
+    let rmin = Infinity, steps = 0, t = 0;
+    while (steps < 2e6) {
+      const r = Math.hypot(x, y); if (r < rmin) rmin = r;
+      if (steps > 10 && r > L && x * vx + y * vy > 0) break;
+      const h = eps * Math.max(r, 1e-9) / Math.max(1e-6, Math.hypot(vx, vy));
+      const k1 = acc(x, y), k1x = vx, k1y = vy;
+      const k2 = acc(x + h / 2 * k1x, y + h / 2 * k1y), k2x = vx + h / 2 * k1[0], k2y = vy + h / 2 * k1[1];
+      const k3 = acc(x + h / 2 * k2x, y + h / 2 * k2y), k3x = vx + h / 2 * k2[0], k3y = vy + h / 2 * k2[1];
+      const k4 = acc(x + h * k3x, y + h * k3y), k4x = vx + h * k3[0], k4y = vy + h * k3[1];
+      x += h / 6 * (k1x + 2 * k2x + 2 * k3x + k4x); y += h / 6 * (k1y + 2 * k2y + 2 * k3y + k4y);
+      vx += h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]); vy += h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
+      t += h; steps++;
+    }
+    return { theta: Math.atan2(vy, vx), rmin, steps, x, y, vx, vy, t };
+  }
+
+  // Plum pudding atom: uniform positive sphere of radius R; outside, the neutral atom exerts no force.
+  // Inside, the acceleration is (D/2) r/R³ (units v₀ = 1), so r(t) = r₀ cosh ωt + (v₀/ω) sinh ωt, ω² = D/(2R³).
+  function plumExact(b, D, R) {
+    const ab = Math.abs(b); if (ab >= R) return 0;
+    const w = Math.sqrt(D / (2 * R * R * R)), x0 = -Math.sqrt(R * R - ab * ab), y0 = ab;
+    const pos = (t) => { const c = Math.cosh(w * t), s = Math.sinh(w * t); return [x0 * c + s / w, y0 * c]; };
+    let lo = 1e-9 * R, hi = 2 * R + 1;
+    while (Math.hypot(...pos(hi)) < R) hi *= 2;
+    for (let i = 0; i < 200; i++) { const m = 0.5 * (lo + hi); if (Math.hypot(...pos(m)) < R) lo = m; else hi = m; }
+    const t = 0.5 * (lo + hi), c = Math.cosh(w * t), s = Math.sinh(w * t);
+    return Math.atan2(y0 * w * s, x0 * w * s + c);
+  }
+  // Small angle (impulse) form: θ = (D/R) s √(1 − s²), s = b/R; largest D/2R at s = 1/√2; mean square over the disk D²/6R²
+  const plumKick = (s, D, R) => (s >= 1 ? 0 : D / R * s * Math.sqrt(1 - s * s));
+
+  // A 3D beam spread evenly over a disk of radius bmax: b = bmax √u
+  const sampleB = (bmax, u) => bmax * Math.sqrt(u);
+  // Fraction of that beam deflected into [θ1, θ2] (exact): (b(θ1)² − b(θ2)²)/bmax²
+  function binFrac(th1, th2, D, bmax) {
+    const thMin = deflect(bmax, D), a = Math.max(th1, thMin);
+    if (a >= th2) return 0;
+    const b1 = bOf(a, D), b2 = bOf(th2, D);
+    return (b1 * b1 - b2 * b2) / (bmax * bmax);
+  }
+  // Rutherford cross section per solid angle, fm²/sr
+  const dsdo = (th, D) => { const s = Math.sin(th / 2); return (D / 4) * (D / 4) / (s * s * s * s); };
+  // One alpha through N plum pudding atoms: sum of N random 2D kicks, each from an even spread over the atom's disk.
+  function plumFoil(N, D, R, rnd) {
+    let tx = 0, ty = 0; const k = D / R;
+    for (let i = 0; i < N; i++) {
+      const s2 = rnd(), m = k * Math.sqrt(s2 * (1 - s2));
+      let ux, uy, q; do { ux = 2 * rnd() - 1; uy = 2 * rnd() - 1; q = ux * ux + uy * uy; } while (q > 1 || q < 1e-12);
+      const f = m / Math.sqrt(q); tx += f * ux; ty += f * uy;
+    }
+    return Math.hypot(tx, ty);
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.RS = { KC, MA, ZA, AMU, R0, headOn, deflect, rMin, bOf, speedC, nucR, bTouch, massNumber, recoil, orbit, integrate, plumExact, plumKick, sampleB, binFrac, dsdo, plumFoil };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  // number densities of the solids, atoms per m³
+  const TARGETS = {
+    au: { name: 'Gold', sym: 'Au', Z: 79, A: 197, n: 5.90e28 },
+    ag: { name: 'Silver', sym: 'Ag', Z: 47, A: 108, n: 5.86e28 },
+    al: { name: 'Aluminum', sym: 'Al', Z: 13, A: 27, n: 6.03e28 },
+    custom: { name: 'Custom', sym: '', Z: 29, A: 63, n: 6.0e28 }
+  };
+  const RATES = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000];
+  const PRESETS = {
+    one: { model: 'nuc', mode: 'single', target: 'au', K: 7.69, b: 25,
+      hint: 'A 7.69 MeV alpha passes a gold nucleus 25 fm off center and turns through 61°. Drag the handle on its incoming path: smaller b means a closer approach and a larger angle.' },
+    gm: { model: 'nuc', mode: 'beam', target: 'au', K: 7.69, bm: 0.756, rate: 7, ft: -0.3,
+      hint: 'Many alphas at random impact parameters. Most pass with a small deflection, a few come straight back. Counts per steradian follow 1/sin⁴(θ/2) over more than four decades, the law Geiger and Marsden confirmed in 1913.' },
+    head: { model: 'nuc', mode: 'single', target: 'au', K: 7.69, b: 0,
+      hint: 'b = 0: the alpha slows to a stop at D, where all its kinetic energy has become Coulomb energy, and comes straight back. For gold at 7.69 MeV, D = 29.6 fm, still about four times the radius of the nucleus.' },
+    plum: { model: 'plum', mode: 'beam', target: 'au', K: 7.69, rate: 7, ft: -0.3, range: 'small',
+      hint: 'Thomson’s atom: the positive charge fills the whole atom. Inside it the force grows only in proportion to r, so each atom turns an alpha by less than 0.01°. Even after about 1900 atoms the spread is a fraction of a degree, and nothing comes back.' },
+    al: { model: 'nuc', mode: 'single', target: 'al', K: 10, b: 1,
+      hint: 'Aluminum, Z = 13, at 10 MeV. The Coulomb repulsion is weak, so an alpha with a small impact parameter reaches the nucleus. There the strong force acts and pure Rutherford scattering fails, as was found for aluminum in the early 1920s. Try Beam to see which angles are affected.' }
+  };
+
+  // ---------- state ----------
+  const S = { preset: 'one', model: 'nuc', mode: 'single', target: 'au', Zc: 29, K: 7.69, b: 25, rate: 7, bm: 0.756, ft: -0.3, norm: 'sr', range: 'full', view: 75 };
+  let playing = !reduce;
+
+  const tgt = () => { const t = TARGETS[S.target]; if (S.target !== 'custom') return t; return { name: 'Custom', sym: '', Z: S.Zc, A: massNumber(S.Zc), n: 6.0e28 }; };
+  const Dnow = () => headOn(tgt().Z, S.K);
+  const Rnuc = () => nucR(tgt().A);
+  const Rcontact = () => nucR(tgt().A) + nucR(4);
+  const bmax = () => Dnow() * Math.pow(10, S.bm);
+  const foilT = () => Math.pow(10, S.ft) * 1e-6;                // m
+  const spacing = () => Math.cbrt(1 / tgt().n) * 1e15;        // fm between atoms
+  const atomR = () => spacing() / Math.sqrt(Math.PI);          // fm; πR² = spacing², so each layer of atoms covers the beam once
+  const nLayers = () => Math.max(1, Math.round(foilT() * 1e15 / spacing()));
+
+  // ---------- counting ----------
+  let fired = 0, past90 = 0, bins = null, binEdges = null;
+  function histSetup() {
+    if (S.model === 'plum' && S.range === 'small') {
+      const s = plumRms(), top = niceUp(3.4 * s * 180 / Math.PI) * Math.PI / 180, nb = 30;
+      binEdges = Array.from({ length: nb + 1 }, (_, i) => top * i / nb);
+    } else binEdges = Array.from({ length: 37 }, (_, i) => i * 5 * Math.PI / 180);
+    bins = new Float64Array(binEdges.length - 1);
+  }
+  const plumRms = () => Math.sqrt(nLayers()) * Dnow() / (atomR() * Math.sqrt(6));
+  let angles = new Float64Array(1 << 16), nAng = 0;    // keep recent angles so the plot range can change without clearing
+  function clearCounts() { fired = 0; past90 = 0; nAng = 0; histSetup(); flights = []; trailsClear(); }
+  function count(th) {
+    fired++; if (th > Math.PI / 2) past90++;
+    if (nAng < angles.length) angles[nAng++] = th;
+    const nb = bins.length, top = binEdges[nb];
+    if (th < top) { let i = Math.floor(th / top * nb); if (i >= nb) i = nb - 1; bins[i]++; }
+    else if (th === Math.PI && Math.abs(top - Math.PI) < 1e-9) bins[nb - 1]++;
+  }
+  function rebinAngles() { histSetup(); const nb = bins.length, top = binEdges[nb]; for (let i = 0; i < nAng; i++) { const th = angles[i]; if (th < top) bins[Math.min(nb - 1, Math.floor(th / top * nb))]++; else if (th >= top && Math.abs(top - Math.PI) < 1e-9) bins[nb - 1]++; } }
+
+  // ---------- flights (alphas in the drawing) ----------
+  let flights = [], single = null, carry = 0, budgetLeft = 0;
+  function newAlpha(b) {
+    if (S.model === 'nuc') {
+      const o = orbit(b, Dnow());
+      return { kind: 'nuc', b, o, theta: o.theta };
+    }
+    // plum: one atom drawn; the counted angle is for the whole foil (beam) or this atom (single)
+    const R = atomR(), th1 = plumExact(b, Dnow(), R);
+    return { kind: 'plum', b, theta: th1 };
+  }
+  function launch(a, animate) {
+    const g = sceneGeom(); if (!g) return;
+    const rFar = g.far / g.sc, rOut = (S.mode === 'beam' ? g.ring * 0.97 : g.far) / g.sc;
+    if (a.kind === 'nuc') {
+      const o = a.o; a.w0 = -o.wAt(rFar); a.w1 = o.wAt(rOut); a.t0 = o.t(a.w0); a.t1 = o.t(a.w1);
+      a.len = a.t1 - a.t0;                  // fm/v₀, so at v₀ it crosses the view in about len/(2 rFar)
+    } else { a.len = 2 * rFar; a.t0 = -rFar; a.t1 = rOut; }
+    a.dur = (S.mode === 'beam' ? 1.1 : 2.6) * (a.t1 - a.t0) / (2 * rFar) * (S.mode === 'beam' ? 1 : 1);
+    a.start = performance.now() / 1000; a.animate = animate;
+    return a;
+  }
+  function fireSingle() { single = launch(newAlpha(S.b), true); if (single) single.loop = true; }
+  function fireBeam(n) {
+    for (let i = 0; i < n; i++) beamOne(true);
+  }
+  function beamOne(animate) {
+    let b, th;
+    if (S.model === 'nuc') { b = sampleB(bmax(), Math.random()) * (Math.random() < 0.5 ? -1 : 1); }
+    else { b = sampleB(atomR(), Math.random()) * (Math.random() < 0.5 ? -1 : 1); }
+    const a = newAlpha(b);
+    if (S.model === 'plum') a.theta = plumFoil(nLayers(), Dnow(), atomR(), Math.random);
+    th = a.theta;
+    if (animate) { const f = launch(a, true); if (f) { f.start += Math.random() * 0.05; flights.push(f); } }
+    else { stampTrack(a); count(th); ringFlash(th, b); }
+  }
+  function stepBeam(dt) {
+    if (!playing || S.mode !== 'beam') return;
+    const r = RATES[S.rate];
+    carry += r * dt;
+    let k = Math.floor(carry); carry -= k;
+    const animShare = r <= 20 ? 1 : 20 / r;
+    const t0 = performance.now(), budget = 7;
+    for (; k > 0; k--) {
+      beamOne(Math.random() < animShare);
+      if (performance.now() - t0 > budget) { carry = Math.min(carry + k - 1, r * 0.25); throttled = true; break; }
+    }
+  }
+  let throttled = false;
+  function stepFlights(now) {
+    const keep = [];
+    for (const f of flights) {
+      if ((now - f.start) >= f.dur) { stampTrack(f); count(f.theta); ringFlash(f.theta, f.b); }
+      else keep.push(f);
+    }
+    flights = keep;
+  }
+
+  // ---------- theme, canvas, geometry ----------
+  let T = null, dpr = 1;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.4 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
+      gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), alpha: g('--alpha'), pud: g('--pud'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+  }
+  const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  const trails = document.createElement('canvas'), tctx = trails.getContext('2d');
+  let W = 0, Hh = 0, LY = null;
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = pane.getBoundingClientRect();
+    W = r.width; Hh = r.height;
+    can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(Hh * dpr));
+    can.style.width = W + 'px'; can.style.height = Hh + 'px';
+    trails.width = can.width; trails.height = can.height;
+    LY = layout(W, Hh);
+    if (single) fireSingle();
+    flights = [];
+    drawAll();
+  }
+  function layout(W, H) {
+    const ps = projScale();
+    if (W >= 640) { const sw = Math.round(W * 0.58); return { wide: true, scene: { x: 0, y: 0, w: sw, h: H }, plot: { x: sw, y: 0, w: W - sw, h: H } }; }
+    const sh = Math.round(H * 0.56);
+    return { wide: false, scene: { x: 0, y: 0, w: W, h: sh }, plot: { x: 0, y: sh, w: W, h: H - sh } };
+  }
+  // scene: nucleus position, px per fm, ring radius, far distance (fm → px)
+  function sceneGeom() {
+    if (!LY) return null;
+    const s = LY.scene, ps = projScale(), beam = S.mode === 'beam';
+    const cx = s.x + (beam ? s.w * 0.5 : s.w * 0.6), cy = s.y + s.h / 2 + (beam ? 4 * ps : 6 * ps);
+    const half = Math.min(s.h / 2 - 34 * ps, beam ? s.w / 2 - 40 * ps : s.h);
+    const sc = (beam ? half * 0.86 : (s.h / 2 - 34 * ps)) / S.view;
+    const ring = beam ? half : 0;
+    const far = Math.hypot(Math.max(cx - s.x, s.x + s.w - cx), s.h) + 20;
+    return { s, cx, cy, sc, ring, far, ps };
+  }
+  const plumUnits = () => S.model === 'plum';
+  function fitView() {
+    if (S.model === 'plum') S.view = atomR() * 1.35;
+    else if (S.mode === 'beam') S.view = bmax();
+    else S.view = niceUp(2.6 * Dnow());
+  }
+  function niceUp(v) { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; for (const s of [1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (m <= s + 1e-9) return s * p; return 10 * p; }
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  const bMaxSlider = () => S.view * 0.98;
+
+  // ---------- trails (beam tracks, fading) ----------
+  function trailsClear() { tctx.setTransform(1, 0, 0, 1, 0, 0); tctx.clearRect(0, 0, trails.width, trails.height); }
+  function trackPath(c, a, g, wEnd) {
+    c.beginPath();
+    if (a.kind === 'nuc') {
+      const o = a.o, w0 = a.w0, w1 = wEnd === undefined ? a.w1 : wEnd, n = 64;
+      // denser sampling near closest approach: uniform in w is already good for hyperbolas
+      for (let i = 0; i <= n; i++) {
+        const w = w0 + (w1 - w0) * i / n, p = o.pos(w), px = g.cx + p[0] * g.sc, py = g.cy - p[1] * g.sc;
+        i ? c.lineTo(px, py) : c.moveTo(px, py);
+      }
+    } else {
+      const R = atomR(), y = a.b, xin = -Math.sqrt(Math.max(0, R * R - y * y)), xout = -xin;
+      const x0 = g.s.x, xEnd = wEnd === undefined ? a.t1 : wEnd;
+      c.moveTo(x0, g.cy - y * g.sc);
+      if (xEnd * g.sc + g.cx <= g.cx + xout * g.sc || Math.abs(y) >= R) { c.lineTo(g.cx + xEnd * g.sc, g.cy - y * g.sc); }
+      else {
+        c.lineTo(g.cx + xout * g.sc, g.cy - y * g.sc);
+        const th = a.kind === 'plum' && S.mode === 'single' ? a.theta : 0, sg = y < 0 ? -1 : 1, L = (xEnd - xout);
+        c.lineTo(g.cx + (xout + L * Math.cos(th)) * g.sc, g.cy - (y + sg * L * Math.sin(th)) * g.sc);
+      }
+    }
+  }
+  function stampTrack(a) {
+    const g = sceneGeom(); if (!g) return;
+    if (a.w0 === undefined && a.kind === 'nuc') launch(a, false);
+    if (a.t1 === undefined) launch(a, false);
+    tctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    tctx.save(); tctx.beginPath(); tctx.rect(g.s.x, g.s.y, g.s.w, g.s.h); tctx.clip();
+    tctx.strokeStyle = T.alpha; tctx.globalAlpha = (RATES[S.rate] > 200 ? 0.12 : 0.22) * (S.model === 'plum' ? 0.5 : 1); tctx.lineWidth = 1 * projScale();
+    trackPath(tctx, a, g); tctx.stroke();
+    tctx.restore();
+  }
+  const flashes = [];
+  function ringFlash(th, b) { flashes.push({ th, sg: b < 0 ? -1 : 1, t: performance.now() / 1000 }); if (flashes.length > 120) flashes.shift(); }
+
+  // ---------- drawing ----------
+  function drawAll() {
+    if (!T || !LY) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    drawScene();
+    drawPlot();
+    // divider
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath();
+    if (LY.wide) { ctx.moveTo(LY.plot.x + 0.5, 0); ctx.lineTo(LY.plot.x + 0.5, Hh); } else { ctx.moveTo(0, LY.plot.y + 0.5); ctx.lineTo(W, LY.plot.y + 0.5); }
+    ctx.stroke();
+  }
+  function fmtLen(fm, d = 3) {
+    if (plumUnits() && fm >= 100) return `${trim((fm / 1000).toPrecision(d))} pm`;
+    if (fm === 0) return '0 fm';
+    return `${trim(fm.toPrecision(d))} fm`;
+  }
+  const trim = (s) => (s.includes('e') ? s : s.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, ''));
+  function fmtAng(th) {
+    const d = th * 180 / Math.PI;
+    if (d >= 1) return `${d.toFixed(d >= 100 ? 1 : 1)}°`;
+    if (d >= 0.01) return `${d.toFixed(3)}°`;
+    if (th === 0) return '0°';
+    return `${d.toPrecision(2)}° (${trim((th * 1e6).toPrecision(3))} µrad)`;
+  }
+  function label(c, txt, x, y, col, align = 'left', base = 'middle', bold = false) {
+    const ps = projScale();
+    c.font = `${bold ? '600 ' : ''}${11 * ps}px ${T.mono}`; c.textAlign = align; c.textBaseline = base;
+    const w = c.measureText(txt).width, h = 14 * ps;
+    let x0 = align === 'left' ? x : align === 'right' ? x - w : x - w / 2;
+    let y0 = base === 'middle' ? y - h / 2 : base === 'bottom' ? y - h : y;
+    c.fillStyle = T.canvas; c.globalAlpha = 0.85; c.fillRect(x0 - 3, y0, w + 6, h); c.globalAlpha = 1;
+    c.fillStyle = col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
+  }
+
+  function drawScene() {
+    const g = sceneGeom(), c = ctx, ps = g.ps, s = g.s, D = Dnow();
+    c.save(); c.beginPath(); c.rect(s.x, s.y, s.w, s.h); c.clip();
+    // beam axis
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.setLineDash([4, 5]);
+    c.beginPath(); c.moveTo(s.x, g.cy + 0.5); c.lineTo(s.x + s.w, g.cy + 0.5); c.stroke(); c.setLineDash([]);
+
+    if (S.mode === 'beam') drawBeamBand(g);
+    // target
+    if (S.model === 'plum') drawPudding(g); else drawNucleus(g, D);
+    if (S.mode === 'beam') {
+      drawRing(g);
+      c.drawImage(trails, 0, 0, trails.width, trails.height, 0, 0, W, Hh);
+      for (const f of flights) drawFlying(f, g, 0.9);
+    } else drawSingle(g, D);
+    drawScaleBar(g);
+    c.restore();
+  }
+  function drawScaleBar(g) {
+    const c = ctx, ps = g.ps, s = g.s;
+    const target = s.w * 0.22 / g.sc, L = nice(target), px = L * g.sc, x0 = s.x + 14 * ps, y0 = s.y + s.h - 16 * ps;
+    c.strokeStyle = T.ink; c.lineWidth = 1.5 * ps; c.beginPath();
+    c.moveTo(x0, y0 - 4 * ps); c.lineTo(x0, y0); c.lineTo(x0 + px, y0); c.lineTo(x0 + px, y0 - 4 * ps); c.stroke();
+    c.fillStyle = T.ink; c.font = `${11 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    c.fillText(fmtLen(L, 3), x0 + px + 6 * ps, y0 + 3 * ps);
+  }
+  function drawNucleus(g, D) {
+    const c = ctx, ps = g.ps, t = tgt();
+    const rc = Rcontact() * g.sc, rn = Math.max(3 * ps, Rnuc() * g.sc);
+    if (rc > 3) { c.fillStyle = T.pos; c.globalAlpha = 0.08; c.beginPath(); c.arc(g.cx, g.cy, rc, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 0.5; c.setLineDash([2, 3]); c.strokeStyle = T.pos; c.lineWidth = 1; c.stroke(); c.setLineDash([]); c.globalAlpha = 1; }
+    c.fillStyle = T.pos; c.beginPath(); c.arc(g.cx, g.cy, rn, 0, 2 * Math.PI); c.fill();
+    const txt = `${t.sym ? t.sym + ' nucleus, ' : ''}Z = ${t.Z}`;
+    const lx = g.cx + Math.max(rn, rc) + 6 * ps;
+    c.font = `${11 * ps}px ${T.mono}`;
+    if (lx + c.measureText(txt).width + 6 < g.s.x + g.s.w) label(c, txt, lx, g.cy + 13 * ps, T.pos, 'left', 'middle');
+    else label(c, txt, g.cx, g.cy + Math.max(rn, rc) + 14 * ps, T.pos, 'center', 'middle');
+  }
+  function drawPudding(g) {
+    const c = ctx, ps = g.ps, R = atomR() * g.sc, t = tgt();
+    c.fillStyle = T.pud; c.globalAlpha = 0.75; c.beginPath(); c.arc(g.cx, g.cy, R, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1;
+    c.strokeStyle = T.pos; c.lineWidth = 1.2 * ps; c.stroke();
+    // electrons ("plums") at fixed scattered spots
+    const n = Math.min(t.Z, 48); c.fillStyle = T.neg;
+    for (let i = 0; i < n; i++) {
+      const u = ((i * 0.6180339887) % 1), v = ((i * 0.7548776662 + 0.31) % 1);
+      const rr = Math.sqrt(u) * 0.9 * R, an = 2 * Math.PI * v;
+      c.beginPath(); c.arc(g.cx + rr * Math.cos(an), g.cy + rr * Math.sin(an), 1.8 * ps, 0, 2 * Math.PI); c.fill();
+    }
+    label(c, `${t.sym ? t.sym + ' atom' : 'Atom'}, +${t.Z}e spread through R = ${fmtLen(atomR())}`, g.cx, g.cy - R - 12 * ps, T.pos, 'center', 'middle');
+  }
+  function drawBeamBand(g) {
+    const c = ctx, ps = g.ps, s = g.s, bm = (S.model === 'plum' ? atomR() : bmax()) * g.sc;
+    c.fillStyle = T.alpha; c.globalAlpha = 0.07; c.fillRect(s.x, g.cy - bm, Math.max(0, g.cx - g.ring - s.x), 2 * bm); c.globalAlpha = 1;
+    // beam edge handle (nuclear model only)
+    if (S.model === 'nuc') {
+      const hot = (drag && drag.id === 'bm') || (!drag && hoverId === 'bm');
+      const hx = s.x + 26 * ps, y = g.cy - bm;
+      c.strokeStyle = T.accent; c.lineWidth = (hot ? 2.2 : 1.4) * ps; c.globalAlpha = 0.8;
+      c.beginPath(); c.moveTo(s.x, y); c.lineTo(hx + 40 * ps, y); c.stroke(); c.globalAlpha = 1;
+      c.fillStyle = T.canvas; c.beginPath(); c.arc(hx, y, (hot ? 6 : 4.5) * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+      label(c, `b_max = ${fmtLen(bmax())}`, hx + 10 * ps, y + (y - g.s.y > 40 * ps ? -11 : 11) * ps, T.accent, 'left', 'middle');
+    }
+  }
+  function drawRing(g) {
+    const c = ctx, ps = g.ps, R = g.ring, nb = 36, lw = 9 * ps;
+    // counts per bin of 5°, both halves (the beam is symmetric about its axis)
+    const cnt = new Float64Array(nb);
+    for (let i = 0; i < nAng; i++) cnt[Math.min(nb - 1, Math.floor(angles[i] / Math.PI * nb))]++;
+    let mx = 0; for (const v of cnt) mx = Math.max(mx, v);
+    for (let i = 0; i < nb; i++) {
+      const a0 = i * Math.PI / nb, a1 = (i + 1) * Math.PI / nb;
+      const f = mx > 0 && cnt[i] > 0 ? 0.18 + 0.82 * Math.log1p(cnt[i]) / Math.log1p(mx) : 0;
+      for (const sg of [1, -1]) {
+        c.beginPath(); c.arc(g.cx, g.cy, R, -sg * a0, -sg * a1, sg > 0); c.lineWidth = lw;
+        c.strokeStyle = T.gridStrong; c.globalAlpha = 1; c.stroke();
+        if (f > 0) { c.strokeStyle = T.accent; c.globalAlpha = f; c.stroke(); }
+      }
+    }
+    c.globalAlpha = 1;
+    // flashes
+    const now = performance.now() / 1000;
+    for (const fl of flashes) {
+      const age = now - fl.t; if (age > 0.6) continue;
+      const x = g.cx + R * Math.cos(fl.th), y = g.cy - fl.sg * R * Math.sin(fl.th);
+      c.fillStyle = T.alpha; c.globalAlpha = 1 - age / 0.6;
+      c.beginPath(); c.arc(x, y, (3 + 5 * age) * ps, 0, 2 * Math.PI); c.fill();
+    }
+    c.globalAlpha = 1;
+    c.fillStyle = T.muted; c.font = `${10.5 * ps}px ${T.mono}`; c.textBaseline = 'middle';
+    const lab = (a, t, al) => { c.textAlign = al; c.fillText(t, g.cx + (R + lw) * Math.cos(a), g.cy - (R + lw + 4 * ps) * Math.sin(a)); };
+    lab(0.02, '0°', 'left'); lab(Math.PI / 2, '90°', 'center'); lab(Math.PI - 0.02, '180°', 'right');
+    c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillText('detector ring, not to scale', g.s.x + 10 * ps, g.s.y + 10 * ps);
+  }
+  function drawFlying(f, g, alpha) {
+    const c = ctx, ps = g.ps, now = performance.now() / 1000;
+    let p = Math.max(0, Math.min(1, (now - f.start) / f.dur));
+    const tt = f.t0 + p * (f.t1 - f.t0);
+    let x, y;
+    c.save(); c.strokeStyle = T.alpha; c.lineWidth = 1.6 * ps; c.globalAlpha = alpha;
+    if (f.kind === 'nuc') {
+      const w = f.o.wOfT(tt); trackPath(c, f, g, w); c.stroke(); [x, y] = f.o.pos(w);
+    } else {
+      trackPath(c, f, g, tt); c.stroke();
+      const R = atomR(), xout = Math.sqrt(Math.max(0, R * R - f.b * f.b));
+      const th = S.mode === 'single' ? f.theta : 0, sg = f.b < 0 ? -1 : 1;
+      if (tt <= xout || Math.abs(f.b) >= R) { x = tt; y = f.b; } else { const L = tt - xout; x = xout + L * Math.cos(th); y = f.b + sg * L * Math.sin(th); }
+    }
+    c.globalAlpha = 1; c.fillStyle = T.alpha;
+    c.beginPath(); c.arc(g.cx + x * g.sc, g.cy - y * g.sc, 4 * ps, 0, 2 * Math.PI); c.fill();
+    c.restore();
+  }
+  function drawSingle(g, D) {
+    const c = ctx, ps = g.ps, s = g.s, b = S.b, a = single;
+    const by = g.cy - b * g.sc;
+    if (S.model === 'nuc') {
+      const th = deflect(b, D), rm = rMin(b, D);
+      // closest approach circle and D tick
+      c.strokeStyle = T.muted; c.lineWidth = 1 * ps; c.setLineDash([3, 4]);
+      c.beginPath(); c.arc(g.cx, g.cy, rm * g.sc, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]);
+      const rmA = b >= 0 ? Math.PI / 2 + th / 2 : -(Math.PI / 2 + th / 2);   // periapsis direction
+      const px = g.cx + rm * g.sc * Math.cos(rmA), py = g.cy - rm * g.sc * Math.sin(rmA);
+      // D tick on the axis (head on turning point)
+      const dx = g.cx - D * g.sc;
+      c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(dx, g.cy - 5 * ps); c.lineTo(dx, g.cy + 5 * ps); c.stroke();
+      label(c, 'D', dx, g.cy + 15 * ps, T.ink, 'center', 'middle', true);
+      // asymptotes
+      const P = [-b * Math.tan(th / 2), b];        // where they cross
+      const Pp = [g.cx + P[0] * g.sc, g.cy - P[1] * g.sc], sg = b < 0 ? -1 : 1;
+      c.strokeStyle = T.muted; c.lineWidth = 1 * ps; c.setLineDash([6, 5]);
+      c.beginPath(); c.moveTo(Pp[0], Pp[1]); c.lineTo(s.x + s.w, Pp[1]); c.stroke();
+      const L = g.far;
+      c.beginPath(); c.moveTo(Pp[0] - L * Math.cos(th) * 0.25, Pp[1] + sg * L * Math.sin(th) * 0.25); c.lineTo(Pp[0] + L * Math.cos(th), Pp[1] - sg * L * Math.sin(th)); c.stroke();
+      c.setLineDash([]);
+      // trajectory: the full hyperbola, plus the moving alpha
+      const o = orbit(b, D), w0 = -o.wAt(g.far / g.sc), w1 = o.wAt(g.far / g.sc);
+      c.strokeStyle = T.alpha; c.lineWidth = 2.2 * ps; c.beginPath();
+      for (let i = 0; i <= 200; i++) { const w = w0 + (w1 - w0) * i / 200, p = o.pos(w), x = g.cx + p[0] * g.sc, y = g.cy - p[1] * g.sc; i ? c.lineTo(x, y) : c.moveTo(x, y); }
+      c.globalAlpha = a ? 0.45 : 1; c.stroke(); c.globalAlpha = 1;
+      if (a) drawFlying(a, g, 1);
+      // r_min marker
+      c.fillStyle = T.ink; c.beginPath(); c.arc(px, py, 2.5 * ps, 0, 2 * Math.PI); c.fill();
+      c.strokeStyle = T.ink; c.lineWidth = 1 * ps; c.setLineDash([2, 3]); c.beginPath(); c.moveTo(g.cx, g.cy); c.lineTo(px, py); c.stroke(); c.setLineDash([]);
+      const lx = (g.cx + px) / 2, ly = (g.cy + py) / 2;
+      label(c, 'r_min', lx + 6 * ps * Math.cos(rmA + Math.PI / 2), ly - 8 * ps, T.ink, 'left', 'middle');
+      // angle arc at the crossing
+      const ar = 30 * ps;
+      c.strokeStyle = T.equi; c.lineWidth = 2 * ps; c.beginPath();
+      if (sg > 0) c.arc(Pp[0], Pp[1], ar, 0, -th, true); else c.arc(Pp[0], Pp[1], ar, 0, th, false);
+      c.stroke();
+      const mid = th / 2, tx = Pp[0] + (ar + 12 * ps) * Math.cos(mid), ty = Pp[1] - sg * (ar + 12 * ps) * Math.sin(mid);
+      label(c, `θ = ${(th * 180 / Math.PI).toFixed(1)}°`, tx, ty, T.equi, Math.cos(mid) < -0.2 ? 'right' : 'left', 'middle', true);
+    } else {
+      // plum pudding single alpha: straight to the eye
+      const o = { kind: 'plum', b, theta: plumExact(b, D, atomR()) };
+      launch(o, false);
+      c.strokeStyle = T.alpha; c.lineWidth = 2.2 * ps; c.globalAlpha = a ? 0.45 : 1; trackPath(c, o, g); c.stroke(); c.globalAlpha = 1;
+      if (a) drawFlying(a, g, 1);
+      label(c, `θ = ${fmtAng(o.theta)}: too small to see`, s.x + s.w - 10 * ps, g.cy - Math.abs(b) * g.sc * Math.sign(b || 1) - 14 * ps * Math.sign(b || 1), T.equi, 'right', 'middle', true);
+    }
+    // impact parameter: dimension line and draggable handle on the incoming path
+    const hx = s.x + 30 * ps, hot = (drag && drag.id === 'b') || (!drag && hoverId === 'b');
+    c.strokeStyle = T.accent; c.lineWidth = 1.2 * ps;
+    c.beginPath(); c.moveTo(hx, g.cy); c.lineTo(hx, by); c.stroke();
+    c.beginPath(); c.moveTo(hx - 4 * ps, g.cy); c.lineTo(hx + 4 * ps, g.cy); c.stroke();
+    c.fillStyle = T.canvas; c.lineWidth = (hot ? 2.4 : 1.6) * ps;
+    c.beginPath(); c.arc(hx, by, (hot ? 6.5 : 5) * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+    if (hot) { c.globalAlpha = 0.25; c.lineWidth = 8 * ps; c.beginPath(); c.moveTo(s.x, by); c.lineTo(hx + 50 * ps, by); c.stroke(); c.globalAlpha = 1; }
+    const lby = Math.abs(by - g.cy) > 24 * ps ? (by + g.cy) / 2 : (b >= 0 ? by - 14 * ps : by + 14 * ps);
+    label(c, `b = ${fmtLen(Math.abs(b))}`, hx + 10 * ps, lby, T.accent, 'left', 'middle', true);
+  }
+
+  // ---------- plot ----------
+  function drawPlot() {
+    const p = LY.plot, ps = projScale(), c = ctx;
+    const box = { L: p.x + 54 * ps, R: p.x + p.w - 14 * ps, T: p.y + 34 * ps, B: p.y + p.h - 38 * ps };
+    if (box.R - box.L < 60 || box.B - box.T < 60) return;
+    if (S.mode === 'single') plotSingle(box); else plotBeam(box);
+  }
+  function axesFrame(box) { const c = ctx; c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.strokeRect(box.L + 0.5, box.T + 0.5, box.R - box.L, box.B - box.T); }
+  function title(box, t) { const c = ctx, ps = projScale(); c.fillStyle = T.ink; c.font = `600 ${11.5 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(t, box.L - 46 * ps, box.T - 12 * ps); }
+  function plotSingle(box) {
+    const c = ctx, ps = projScale(), D = Dnow(), plum = S.model === 'plum';
+    const bMaxP = bMaxSlider(), X = (b) => box.L + b / bMaxP * (box.R - box.L);
+    let yTop, f, yUnit, ys;
+    if (!plum) { yTop = 180; f = (b) => deflect(b, D) * 180 / Math.PI; ys = 30; yUnit = '°'; }
+    else { const R = atomR(); f = (b) => plumExact(b, D, R) * 1e6; yTop = niceUp(D / (2 * R) * 1e6 * 1.15); ys = nice(yTop / 4); yUnit = ' µrad'; }
+    const Y = (v) => box.B - v / yTop * (box.B - box.T);
+    title(box, plum ? 'Deflection by one atom, θ (µrad)' : 'Deflection θ against impact parameter b');
+    // grid
+    c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted;
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let v = 0; v <= yTop + 1e-9; v += ys) { const y = Math.round(Y(v)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(box.L, y); c.lineTo(box.R, y); c.stroke(); c.fillText(trim(String(+v.toPrecision(6))) + (plum ? '' : '°'), box.L - 5, y); }
+    const xs = nice(bMaxP / 4); c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let v = 0; v <= bMaxP + 1e-9; v += xs) { const x = Math.round(X(v)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.fillText(plum ? trim((v / 1000).toPrecision(3)) : trim(v.toPrecision(4)), x, box.B + 5); }
+    c.textAlign = 'right'; c.fillText(plum ? 'b (pm)' : 'b (fm)', box.R, box.B + 20 * ps);
+    // contact region (alpha reaches the nucleus)
+    if (!plum) {
+      const bt = bTouch(recoil(0, tgt().Z, tgt().A, S.K).Dcm, Rcontact());
+      if (bt > 0) { const x1 = Math.min(box.R, X(Math.min(bt, bMaxP))); c.fillStyle = T.pos; c.globalAlpha = 0.1; c.fillRect(box.L, box.T, x1 - box.L, box.B - box.T); c.globalAlpha = 1;
+        c.fillStyle = T.pos; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText('reaches the nucleus', box.L + 4, box.T + 4); }
+      // b at 90°: b₉₀ = D/2
+      const x90 = X(D / 2);
+      if (x90 < box.R) { c.strokeStyle = T.muted; c.setLineDash([3, 4]); c.beginPath(); c.moveTo(x90, Y(90)); c.lineTo(x90, box.B); c.moveTo(box.L, Y(90)); c.lineTo(x90, Y(90)); c.stroke(); c.setLineDash([]);
+        c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText('b = D/2 gives 90°', x90 + 4, Y(90) - 2); }
+    }
+    // curve
+    c.save(); c.beginPath(); c.rect(box.L, box.T - 2, box.R - box.L, box.B - box.T + 4); c.clip();
+    c.strokeStyle = T.equi; c.lineWidth = 2 * ps; c.beginPath();
+    for (let i = 0; i <= 300; i++) { const b = bMaxP * i / 300, v = f(b), x = X(b), y = Y(v); i ? c.lineTo(x, y) : c.moveTo(x, y); }
+    c.stroke(); c.restore();
+    // current b
+    const b = Math.abs(S.b), v = f(b), x = X(b), y = Y(v);
+    c.fillStyle = T.accent; c.beginPath(); c.arc(x, y, 5 * ps, 0, 2 * Math.PI); c.fill();
+    const txt = plum ? `${trim(v.toPrecision(3))} µrad` : `${v.toFixed(1)}°`;
+    label(c, txt, x + (x > (box.L + box.R) / 2 ? -9 * ps : 9 * ps), Math.max(box.T + 10 * ps, y - 12 * ps), T.accent, x > (box.L + box.R) / 2 ? 'right' : 'left', 'middle', true);
+    axesFrame(box);
+  }
+  function supNum(n) { const m = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' }; return String(n).split('').map((ch) => m[ch] || ch).join(''); }
+  function plotBeam(box) {
+    const c = ctx, ps = projScale(), D = Dnow(), plum = S.model === 'plum', sr = S.norm === 'sr';
+    const nb = bins.length, top = binEdges[nb], bw = top / nb, N = Math.max(fired, 1);
+    const X = (th) => box.L + th / top * (box.R - box.L);
+    const dOm = (i) => 2 * Math.PI * (Math.cos(binEdges[i]) - Math.cos(binEdges[i + 1]));
+    const deg = top * 180 / Math.PI;
+    // model curves, as counts per sr or per bin for N alphas
+    const bm = bmax(), s2 = plumRms() ** 2, nt = tgt().n * foilT() * 1e-30;   // nt in fm⁻²
+    const toUnit = (perSr, th) => (sr ? perSr : perSr * 2 * Math.PI * Math.sin(th) * bw);
+    const ruthBeam = (th) => (th < deflect(bm, D) ? NaN : N * dsdo(th, D) / (Math.PI * bm * bm));
+    const ruthFoil = (th) => N * nt * dsdo(th, D);
+    const gauss = (th) => N * Math.exp(-th * th / s2) / (Math.PI * s2);
+    const main = plum ? gauss : ruthBeam;
+    // data
+    const vals = new Float64Array(nb), errs = new Float64Array(nb);
+    for (let i = 0; i < nb; i++) { const k = sr ? dOm(i) : 1; vals[i] = bins[i] / k; errs[i] = Math.sqrt(bins[i]) / k; }
+    // y range (log)
+    let hi = 0, lo = Infinity;
+    for (let i = 0; i < nb; i++) if (bins[i] > 0) { hi = Math.max(hi, vals[i] + errs[i]); lo = Math.min(lo, vals[i]); }
+    const thA = plum ? bw / 2 : Math.max(deflect(bm, D), bw / 2), thB = plum && S.range === 'small' ? top : Math.PI * 0.995;
+    const cA = toUnit(main(thA), thA), cB = plum ? (S.range === 'small' ? toUnit(main(thB), thB) : toUnit(ruthFoil(thB), thB)) : toUnit(main(thB), thB);
+    if (isFinite(cA)) hi = Math.max(hi, cA);
+    if (isFinite(cB) && cB > 0) lo = Math.min(lo, cB);
+    if (!(hi > 0)) hi = 1;
+    if (!(lo < Infinity) || lo <= 0) lo = hi / 1e4;
+    let eT = Math.ceil(Math.log10(hi * 1.3)), eB = Math.floor(Math.log10(lo / 1.5));
+    if (eT - eB < 2) eB = eT - 2;
+    if (eT - eB > 14) eB = eT - 14;
+    const Y = (v) => box.B - (Math.log10(v) - eB) / (eT - eB) * (box.B - box.T);
+    title(box, sr ? 'Counts per steradian against θ' : 'Counts per bin against θ');
+    // grid and labels
+    c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+    const stepE = eT - eB > 8 ? 2 : 1;
+    for (let e = eB; e <= eT; e++) {
+      const y = Math.round(Y(Math.pow(10, e))) + 0.5;
+      c.strokeStyle = T.grid; c.beginPath(); c.moveTo(box.L, y); c.lineTo(box.R, y); c.stroke();
+      if ((e - eB) % stepE === 0) c.fillText(e === 0 ? '1' : e === 1 ? '10' : `10${supNum(e)}`, box.L - 5, y);
+    }
+    const xstep = deg > 90 ? 30 : nice(deg / 5);
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let v = 0; v <= deg + 1e-9; v += xstep) { const x = Math.round(X(v * Math.PI / 180)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.fillText(trim(String(+v.toPrecision(4))) + '°', x, box.B + 5); }
+    c.textAlign = 'right'; c.fillText('θ', box.R, box.B + 20 * ps);
+    c.save(); c.beginPath(); c.rect(box.L, box.T, box.R - box.L, box.B - box.T); c.clip();
+    // contact shading
+    if (!plum) {
+      const bt = bTouch(recoil(0, tgt().Z, tgt().A, S.K).Dcm, Rcontact());
+      if (bt > 0) { const thT = bt === Infinity ? 0 : deflect(bt, D); const x0 = X(thT); c.fillStyle = T.pos; c.globalAlpha = 0.1; c.fillRect(x0, box.T, box.R - x0, box.B - box.T); c.globalAlpha = 1;
+        c.fillStyle = T.pos; c.textAlign = 'right'; c.textBaseline = 'top'; c.font = `${10.5 * ps}px ${T.mono}`; c.fillText('alpha reaches the nucleus:', box.R - 4, box.T + 4); c.fillText('real counts depart here', box.R - 4, box.T + 18 * ps); }
+    }
+    // bars
+    for (let i = 0; i < nb; i++) {
+      if (bins[i] <= 0) continue;
+      const x0 = X(binEdges[i]) + 0.5, x1 = X(binEdges[i + 1]) - 0.5, y = Y(vals[i]);
+      c.fillStyle = T.accent; c.globalAlpha = 0.22; c.fillRect(x0, y, x1 - x0, box.B - y); c.globalAlpha = 1;
+      c.strokeStyle = T.accent; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(x0, y); c.lineTo(x1, y); c.stroke();
+      // ±√N error bar
+      const xm = (x0 + x1) / 2, ya = Y(vals[i] + errs[i]), yb = vals[i] - errs[i] > 0 ? Y(vals[i] - errs[i]) : box.B;
+      c.lineWidth = 1 * ps; c.beginPath(); c.moveTo(xm, ya); c.lineTo(xm, yb); c.stroke();
+    }
+    // curves
+    const curve = (fn, col, dash, lw) => {
+      c.strokeStyle = col; c.lineWidth = lw * ps; c.setLineDash(dash); c.beginPath(); let on = false;
+      for (let k = 0; k <= 400; k++) {
+        const th = Math.max(1e-6, top * k / 400), v = toUnit(fn(th), th);
+        if (!(v > 0) || !isFinite(v)) { on = false; continue; }
+        const x = X(th), y = Math.max(box.T - 50, Math.min(box.B + 50, Y(v)));
+        on ? c.lineTo(x, y) : c.moveTo(x, y); on = true;
+      }
+      c.stroke(); c.setLineDash([]);
+    };
+    if (plum) {
+      if (S.range === 'full') curve(ruthFoil, T.muted, [5, 4], 1.4);
+      curve(gauss, T.equi, [], 2);
+    } else curve(ruthBeam, T.equi, [], 2);
+    c.restore();
+    if (fired === 0) { c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `${11 * ps}px ${T.ui}`; c.fillText('Press Play to fire alphas', (box.L + box.R) / 2, (box.T + box.B) / 2); }
+    axesFrame(box);
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const t = tgt(), D = Dnow(), plum = S.model === 'plum';
+    $('keOut').textContent = `${S.K.toFixed(2)} MeV`;
+    const v = speedC(S.K);
+    $('rV').textContent = `${v.toFixed(4)} c = ${(v * C_MS / 1e7).toFixed(2)} × 10⁷ m/s`;
+    $('rD').textContent = `${D.toPrecision(3)} fm`;
+    $('rZ').textContent = `+${t.Z}e`;
+    $('rA').textContent = String(t.A) + (S.target === 'custom' ? ' (est.)' : '');
+    $('zcOut').textContent = String(S.Zc);
+    if (plum) {
+      $('rRLab').textContent = 'Atom radius, πR² = (spacing)²';
+      $('rR').innerHTML = `${(atomR() / 1000).toFixed(1)} pm = ${(atomR() / 1e6).toFixed(3)} nm <span class="ok">10⁴ times a nucleus</span>`;
+    } else {
+      $('rRLab').textContent = 'Nuclear radius 1.2 fm · A^⅓; contact with the alpha';
+      $('rR').innerHTML = `${Rnuc().toFixed(2)} fm <span class="ok">contact at ${Rcontact().toFixed(2)} fm</span>`;
+    }
+    $('modelHint').textContent = plum
+      ? 'Thomson (1904): the positive charge +Ze is spread evenly through the whole atom, with the electrons embedded in it. Inside, the force on the alpha grows in proportion to r; outside, the neutral atom exerts none. The electrons are left out: each is 7300 times lighter than an alpha and can turn it by at most m_e/m_α = 0.008°.'
+      : 'Rutherford (1911): all the positive charge and nearly all the mass sit in a nucleus about 10⁻¹⁴ m across. The contact distance is the sum of the alpha and nuclear radii, both from 1.2 fm · A^⅓.';
+    // single
+    const b = Math.abs(S.b);
+    $('bOut').textContent = fmtLen(b);
+    if (!plum) {
+      const th = deflect(b, D), rm = rMin(b, D), rc = recoil(b, t.Z, t.A, S.K);
+      $('thLab').textContent = 'Deflection θ = 2 arctan(D/2b)';
+      $('rTh').textContent = `${(th * 180 / Math.PI).toFixed(2)}°`;
+      $('rmLab').innerHTML = 'Closest approach r<sub>min</sub> = (D/2)(1 + √(1 + (2b/D)²))';
+      $('rRm').innerHTML = `${rm.toPrecision(4)} fm <span class="ok">${(rm / Rnuc()).toFixed(1)} nuclear radii</span>`;
+      $('recoilRow').hidden = false;
+      $('rRec').innerHTML = `θ = ${(rc.th * 180 / Math.PI).toFixed(2)}°, r<sub>min</sub> = ${rc.rmin.toPrecision(4)} fm <span class="ok">(K in the center of mass frame ${(S.K * t.A * AMU / (t.A * AMU + MA)).toFixed(2)} MeV)</span>`;
+      const touch = rc.rmin < Rcontact();
+      $('touch').hidden = !touch || S.mode !== 'single';
+      if (touch) $('touch').innerHTML = `The alpha now touches the nucleus.<span>Closest approach ${rc.rmin.toFixed(2)} fm is inside the contact distance ${Rcontact().toFixed(2)} fm. The strong force acts here and pure Rutherford scattering fails; this demo keeps only the Coulomb force.</span>`;
+      $('singleHint').textContent = 'Head on (b = 0) the alpha stops at D and turns back. At b = D/2 it turns through exactly 90°. Raise K and D shrinks as 1/K, so the same b gives a smaller angle.';
+    } else {
+      const th = plumExact(b, D, atomR());
+      $('thLab').textContent = 'Deflection by this atom (exact motion inside the sphere)';
+      $('rTh').textContent = fmtAng(th);
+      $('rmLab').textContent = 'Largest possible for one atom, D/2R at b = R/√2';
+      $('rRm').textContent = fmtAng(D / (2 * atomR()));
+      $('recoilRow').hidden = true; $('touch').hidden = true;
+      $('singleHint').textContent = 'The alpha goes through the atom. Inside a uniform sphere of charge the field grows only as r and is weak everywhere, because the charge is spread over a region 10⁴ times wider than a nucleus.';
+    }
+    // beam settings
+    $('rateOut').textContent = `${RATES[S.rate]} per second`;
+    $('bmOut').innerHTML = `${fmtLen(bmax())} <span class="ok">θ ≥ ${(deflect(bmax(), D) * 180 / Math.PI).toFixed(1)}°</span>`;
+    const tUm = foilT() * 1e6;
+    $('ftOut').textContent = `${tUm < 1 ? (tUm * 1000).toFixed(0) + ' nm' : tUm.toFixed(2) + ' µm'}`;
+    $('bmRow').hidden = plum;
+    $('beamNuc').hidden = plum; $('beamPlum').hidden = !plum;
+    const pFoil = tgt().n * foilT() * Math.PI * (D / 2 * 1e-15) ** 2;
+    $('rFoil').innerHTML = `${(pFoil * 100).toPrecision(2)}% <span class="ok">1 in ${Math.round(1 / pFoil).toLocaleString('en-US')}</span>`;
+    $('rBexp').textContent = `${(100 * (D / 2 / bmax()) ** 2).toPrecision(3)}%`;
+    if (plum) {
+      const N = nLayers(), s = plumRms(), x = (Math.PI / 2) ** 2 / (s * s), lg = -x / Math.LN10;
+      $('pL').textContent = N.toLocaleString('en-US');
+      $('pK').textContent = fmtAng(D / (2 * atomR()));
+      $('pS').textContent = fmtAng(s);
+      $('pP').textContent = lg > -300 ? Math.pow(10, lg).toExponential(1) : `10${supNum(Math.round(lg)).replace('⁻', '⁻')}`;
+      $('pMax').textContent = fmtAng(Math.min(Math.PI, N * D / (2 * atomR())));
+      $('beamHint').textContent = 'Each alpha crosses the foil one atom at a time and gets a small random kick from every atom; this demo adds up all N kicks for every alpha. Random kicks partly cancel, so the spread grows only as √N and the angles pile up in a narrow Gaussian.';
+    } else {
+      $('beamHint').textContent = 'Geiger and Marsden (1909) found that about 1 alpha in 8000 was turned back by more than 90° from a thick platinum plate. That fraction depends on thickness: the line above is for a thin foil, where each alpha passes close to at most one nucleus.';
+    }
+    // plot section
+    $('rangeRow').hidden = !plum;
+    $('formula').textContent = plum ? 'dN/dΩ ≈ N e^(−θ²/θ²rms) / (π θ²rms)' : 'dσ/dΩ = (D/4)² / sin⁴(θ/2), N(θ)/ΔΩ = N_fired dσ/dΩ / πb²max';
+    $('plotKey').innerHTML = plum
+      ? '<span><i class="swatch hist"></i>Counts, with ±√N error bars</span><span><i class="swatch curve"></i>Plum pudding prediction (Gaussian)</span>' + (S.range === 'full' ? '<span><i class="swatch nuc"></i>Nuclear atom, same foil and alphas</span>' : '')
+      : '<span><i class="swatch hist"></i>Counts, with ±√N error bars</span><span><i class="swatch curve"></i>Rutherford prediction for this many alphas</span>';
+    $('plotHint').textContent = plum
+      ? (S.range === 'full' ? 'On the full range the plum pudding counts all sit in the first bin. The dashed line is what the same foil of nuclear atoms would give: about one alpha in tens of thousands past 90°.' : 'Small angles only. The bars follow the Gaussian of many small random kicks; its width grows as the square root of the foil thickness.')
+      : 'Per steradian divides each bin by its solid angle ΔΩ = 2π(cos θ₁ − cos θ₂), as a detector of fixed area would count. Per bin, the counts near 0° and 180° are smaller because those rings of directions are narrow.';
+  }
+  function countReadouts() {
+    const D = Dnow();
+    if (S.mode === 'single') { $('count').innerHTML = ''; return; }
+    const txt = fired.toLocaleString('en-US');
+    $('count').innerHTML = `${txt} <small>fired</small> · ${past90.toLocaleString('en-US')} <small>past 90°</small>`;
+    $('rN').textContent = txt; $('pN').textContent = txt;
+    const pb = fired ? `${past90.toLocaleString('en-US')} (${(100 * past90 / fired).toPrecision(2)}%)` : '0';
+    $('rB').textContent = pb; $('pB').textContent = pb;
+    if (S.model === 'nuc') {
+      let chi = 0, k = 0;
+      for (let i = 0; i < bins.length; i++) { const e = fired * binFrac(binEdges[i], binEdges[i + 1], D, bmax()); if (e >= 5) { chi += (bins[i] - e) ** 2 / e; k++; } }
+      $('rChi').innerHTML = k >= 3 ? `${(chi / k).toFixed(2)} <span class="ok">over ${k} bins; near 1 means agreement within counting noise</span>` : '<span class="ok">needs more counts</span>';
+    }
+  }
+
+  // ---------- controls ----------
+  function syncUI() {
+    $('ke').value = S.K;
+    $('mSingle').setAttribute('aria-pressed', String(S.mode === 'single')); $('mBeam').setAttribute('aria-pressed', String(S.mode === 'beam'));
+    $('aNuc').setAttribute('aria-pressed', String(S.model === 'nuc')); $('aPlum').setAttribute('aria-pressed', String(S.model === 'plum'));
+    for (const b of document.querySelectorAll('#targets button')) b.setAttribute('aria-pressed', String(b.dataset.t === S.target));
+    $('zRow').hidden = S.target !== 'custom'; $('zc').value = S.Zc;
+    $('secSingle').hidden = S.mode !== 'single'; $('secBeam').hidden = S.mode !== 'beam'; $('secPlot').hidden = S.mode !== 'beam';
+    $('clear').hidden = S.mode !== 'beam';
+    $('fire').textContent = S.mode === 'beam' ? 'Fire 100' : 'Fire again';
+    $('rate').value = S.rate; $('bm').value = S.bm; $('ft').value = S.ft;
+    $('nSr').setAttribute('aria-pressed', String(S.norm === 'sr')); $('nBin').setAttribute('aria-pressed', String(S.norm === 'bin'));
+    $('gFull').setAttribute('aria-pressed', String(S.range === 'full')); $('gSmall').setAttribute('aria-pressed', String(S.range === 'small'));
+    syncB();
+  }
+  function syncB() { const el = $('bb'), mx = bMaxSlider(); el.max = mx; el.step = mx / 1000; el.value = Math.min(mx, Math.abs(S.b)); }
+  function markPreset(name) {
+    S.preset = name;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint').textContent = name && PRESETS[name] ? PRESETS[name].hint : 'Your own setup. Pick a preset to return to a known one.';
+  }
+  function rebuild(opts = {}) {
+    if (opts.fit) fitView();
+    if (S.mode === 'single') { S.b = Math.sign(S.b || 1) * Math.min(Math.abs(S.b), bMaxSlider()); if (S.b === 0 && S.preset !== 'head') S.b = 0; }
+    clearCounts();
+    syncUI(); readouts();
+    single = null;
+    if (S.mode === 'single') fireSingle();
+    countReadouts(); drawAll();
+  }
+  function applyPreset(name) {
+    const p = PRESETS[name];
+    S.model = p.model; S.mode = p.mode; S.target = p.target; S.K = p.K;
+    if (p.b !== undefined) S.b = p.b;
+    if (p.bm !== undefined) S.bm = p.bm;
+    if (p.rate !== undefined) S.rate = p.rate;
+    if (p.ft !== undefined) S.ft = p.ft;
+    S.range = p.range || 'full';
+    markPreset(name);
+    rebuild({ fit: true });
+    if (name === 'one' || name === 'head' || name === 'al') { syncB(); }
+    if (!reduce) setPlaying(true);
+  }
+  function custom() { markPreset(null); }
+  // refit the view when D drifts far from the drawing scale
+  function maybeRefit() {
+    if (S.model === 'plum') { fitView(); return; }
+    if (S.mode === 'beam') { fitView(); return; }
+    const D = Dnow(); if (2.6 * D > S.view * 1.7 || 2.6 * D < S.view / 2.2) fitView();
+  }
+  $('ke').addEventListener('input', (e) => { S.K = +e.target.value; custom(); maybeRefit(); rebuild(); });
+  $('bb').addEventListener('input', (e) => { setB(Math.sign(S.b || 1) * +e.target.value); });
+  function setB(b) {
+    const mx = bMaxSlider(); b = Math.max(-mx, Math.min(mx, b));
+    if (Math.abs(b) < mx * 0.004) b = 0;
+    S.b = b; custom(); readouts(); syncB(); fireSingle();
+  }
+  $('rate').addEventListener('input', (e) => { S.rate = +e.target.value; carry = 0; readouts(); });
+  $('bm').addEventListener('input', (e) => { S.bm = +e.target.value; custom(); fitView(); rebuild(); });
+  $('ft').addEventListener('input', (e) => { S.ft = +e.target.value; custom(); rebuild(); });
+  $('zc').addEventListener('input', (e) => { S.Zc = +e.target.value; custom(); maybeRefit(); rebuild(); });
+  for (const b of document.querySelectorAll('#targets button')) b.addEventListener('click', () => { S.target = b.dataset.t; custom(); rebuild({ fit: true }); });
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  function setMode(m) { if (S.mode === m) return; S.mode = m; custom(); if (m === 'single' && S.model === 'nuc') S.b = Math.min(Math.abs(S.b) || Dnow(), niceUp(2.6 * Dnow())); rebuild({ fit: true }); if (m === 'single' && S.model === 'plum') { S.b = atomR() * 0.5; syncB(); readouts(); fireSingle(); } }
+  function setModel(m) { if (S.model === m) return; S.model = m; custom(); if (m === 'plum' && S.mode === 'beam') S.range = 'small'; if (m === 'nuc') S.range = 'full'; fitView(); S.b = m === 'plum' ? atomR() * 0.5 : Math.min(Dnow(), S.view); rebuild(); }
+  $('mSingle').addEventListener('click', () => setMode('single'));
+  $('mBeam').addEventListener('click', () => setMode('beam'));
+  $('aNuc').addEventListener('click', () => setModel('nuc'));
+  $('aPlum').addEventListener('click', () => setModel('plum'));
+  $('nSr').addEventListener('click', () => { S.norm = 'sr'; syncUI(); });
+  $('nBin').addEventListener('click', () => { S.norm = 'bin'; syncUI(); });
+  $('gFull').addEventListener('click', () => { S.range = 'full'; rebinAngles(); syncUI(); readouts(); });
+  $('gSmall').addEventListener('click', () => { S.range = 'small'; rebinAngles(); syncUI(); readouts(); });
+  const playBtn = $('play');
+  function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); if (on && single) single.start = performance.now() / 1000 - (single.pausedAt || 0); if (!on && single) single.pausedAt = performance.now() / 1000 - single.start; }
+  playBtn.addEventListener('click', () => setPlaying(!playing));
+  $('fire').addEventListener('click', () => { if (S.mode === 'beam') fireBeam(100); else { fireSingle(); if (!playing) setPlaying(true); } });
+  $('clear').addEventListener('click', () => { clearCounts(); countReadouts(); });
+
+  // ---------- dragging on the drawing ----------
+  let drag = null, hoverId = null;
+  function dragHandles() {
+    const g = sceneGeom(); if (!g) return [];
+    const ps = g.ps, out = [];
+    if (S.mode === 'single') out.push({ id: 'b', cursor: 'ns-resize', seg: [g.s.x, g.cy - S.b * g.sc, g.s.x + 70 * ps, g.cy - S.b * g.sc], set: (fm) => setB(fm) });
+    else if (S.model === 'nuc') { const y = g.cy - bmax() * g.sc; out.push({ id: 'bm', cursor: 'ns-resize', seg: [g.s.x, y, g.s.x + 70 * ps, y], set: (fm) => setBm(Math.abs(fm)) }); }
+    return out;
+  }
+  function setBm(fm) {
+    const D = Dnow(), el = $('bm'), v = Math.max(+el.min, Math.min(+el.max, Math.log10(Math.max(1e-9, fm) / D)));
+    S.bm = +v.toFixed(3); custom(); fitView(); rebuild();
+  }
+  function handleAt(ev) {
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 9 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of dragHandles()) {
+      const [x1, y1, x2] = h.seg;
+      if (x >= x1 - 4 && x <= x2 + 4) { const d = Math.abs(y - y1); if (d < bd) { bd = d; best = h; } }
+    }
+    return best;
+  }
+  let dragQ = null, dragFrame = false;
+  can.addEventListener('pointermove', (ev) => {
+    if (drag) {
+      const r = can.getBoundingClientRect(); dragQ = ev.clientY - r.top;
+      if (!dragFrame) { dragFrame = true; requestAnimationFrame(() => { dragFrame = false; if (!drag || dragQ === null) return; const g = sceneGeom(), h = dragHandles().find((k) => k.id === drag.id); if (h) h.set((g.cy - dragQ) / g.sc); dragQ = null; }); }
+      return;
+    }
+    const h = handleAt(ev); hoverId = h ? h.id : null; can.style.cursor = h ? h.cursor : 'default';
+  });
+  can.addEventListener('pointerdown', (ev) => {
+    const h = handleAt(ev); if (!h) return;
+    drag = { id: h.id }; hoverId = h.id;
+    try { can.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault();
+  });
+  const endDrag = () => { drag = null; };
+  can.addEventListener('pointerup', endDrag);
+  can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
+  can.addEventListener('keydown', (e) => {
+    const big = e.shiftKey ? 5 : 1;
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      const dir = e.key === 'ArrowUp' ? 1 : -1;
+      if (S.mode === 'single') setB(S.b + dir * big * bMaxSlider() / 100);
+      else if (S.model === 'nuc') { S.bm = Math.max(+$('bm').min, Math.min(+$('bm').max, S.bm + dir * big * 0.02)); custom(); fitView(); rebuild(); }
+    } else if (e.key === ' ') setPlaying(!playing);
+    else if (e.key === 'b' || e.key === 'B') setMode(S.mode === 'beam' ? 'single' : 'beam');
+    else if (e.key === 'p' || e.key === 'P') setModel(S.model === 'plum' ? 'nuc' : 'plum');
+    else if (e.key === 'f' || e.key === 'F') $('fire').click();
+    else if (e.key === 'c' || e.key === 'C') { clearCounts(); countReadouts(); }
+    else return;
+    e.preventDefault();
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(() => { resize(); });
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+
+  const retheme = () => { tokens(); trailsClear(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, frameMs = 0;
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now(), ts = now / 1000;
+    if (S.mode === 'beam') {
+      if (playing) {
+        // fade old tracks
+        tctx.setTransform(1, 0, 0, 1, 0, 0); tctx.globalCompositeOperation = 'destination-out'; tctx.globalAlpha = Math.min(1, 1.2 * dt); tctx.fillStyle = '#000'; tctx.fillRect(0, 0, trails.width, trails.height);
+        tctx.globalCompositeOperation = 'source-over'; tctx.globalAlpha = 1;
+        stepBeam(dt);
+        stepFlights(ts);
+      }
+    } else if (single && playing) {
+      if (ts - single.start > single.dur + 0.7) single.start = ts;
+    } else if (single && !playing) {
+      single.start = ts - (single.pausedAt || 0);
+    }
+    drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastRead > 150) { countReadouts(); lastRead = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__rs = { get frameMs() { return frameMs; }, get S() { return S; }, get fired() { return fired; }, get past90() { return past90; }, get bins() { return bins; }, get throttled() { return throttled; },
+    setRate(i) { S.rate = i; $('rate').value = i; readouts(); }, setPlaying, handles() { return dragHandles().map((h) => ({ id: h.id, seg: h.seg })); }, fireMany(n) { for (let i = 0; i < n; i++) { if (i < n - 300) { const b = sampleB(S.model === 'nuc' ? bmax() : atomR(), Math.random()); count(S.model === 'nuc' ? deflect(b, Dnow()) : plumFoil(nLayers(), Dnow(), atomR(), Math.random)); } else beamOne(false); } countReadouts(); } };
+
+  tokens();
+  const ro = new ResizeObserver(() => resize());
+  ro.observe(pane);
+  resize();
+  applyPreset('one');
+  setPlaying(!reduce);
+  if (reduce && single) single.pausedAt = single.dur * 0.62;   // a meaningful still picture: the alpha just past closest approach
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
