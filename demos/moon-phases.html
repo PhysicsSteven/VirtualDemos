@@ -1,0 +1,1082 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Moon Phases</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: lab bench. Three linked views fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --lit: #f1e8c8; --unlit: #4a5462; --earth-night: #18325e; --sky: #141c28; --on-sky: #dfe6ef;
+  --canvas-scale: 1;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+    --lit: #f2ead0; --unlit: #2a3441; --earth-night: #1a2c4c; --sky: #04070b; --on-sky: #dfe6ef;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  --lit: #f2ead0; --unlit: #2a3441; --earth-night: #1a2c4c; --sky: #04070b; --on-sky: #dfe6ef;
+}
+:root[data-projector="on"] { font-size: 125%; --canvas-scale: 1.5; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 18.75px; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); }
+.units { color: var(--muted); font-size: 0.8rem; }
+.barside { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+:root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 360px; }
+.stage {
+  position: relative; min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
+  display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+}
+.pane { position: relative; min-height: 0; min-width: 0; }
+.pane.main { grid-row: 1 / span 2; border-right: 1px solid var(--line); }
+.pane.clock { border-top: 1px solid var(--line); }
+.stage canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; }
+#main { cursor: grab; }
+#sky { cursor: grab; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+
+.seg { display: inline-flex; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg .seglabel { font-size: 0.8rem; color: var(--muted); padding: 0 6px 0 7px; font-weight: 700; }
+.seg button {
+  font: inherit; font-size: 0.86rem; font-weight: 700; color: var(--muted); background: none; border: 0;
+  border-radius: 6px; padding: 5px 9px; cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.hint strong { color: var(--ink); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.25rem; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .name dd { font-family: var(--font-ui); }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input { accent-color: var(--accent); margin: 0; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); }
+
+.flag { margin: 0; font-weight: 700; font-size: 0.9rem; border: 1px solid var(--line); border-radius: 6px; padding: 6px 9px; color: var(--muted); }
+.flag[data-k="solar"] { color: var(--equi); border-color: var(--equi); }
+.flag[data-k="lunar"] { color: var(--pos); border-color: var(--pos); }
+.flag[data-k="pen"] { color: var(--ink); border-color: var(--muted); }
+
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.sun { border-color: var(--equi); }
+.swatch.face { border-color: var(--accent); border-top-width: 3px; }
+.swatch.shadow { height: 8px; border: 0; border-radius: 2px; background: var(--muted); opacity: 0.35; }
+.swatch.nodes { border-color: var(--pos); border-top-style: dashed; }
+.swatch.star { border-color: var(--field); border-top-style: dotted; }
+kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--canvas); }
+
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench, :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto auto; }
+  .pane.main { grid-column: 1 / -1; grid-row: auto; height: 58vh; min-height: 360px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .pane.view, .pane.clock { height: 250px; }
+  :root[data-projector="on"] .pane.view, :root[data-projector="on"] .pane.clock { height: 320px; }
+  .pane.clock { border-top: 0; border-left: 1px solid var(--line); }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Moon Phases</h1>
+      <p>Sunlight always lights half the Moon. The phase is how much of that lit half faces Earth. Drag the Moon around its orbit.</p>
+    </div>
+    <div class="barside">
+      <div class="units mono">synodic month 29.53 d · sidereal 27.32 d · orbit tilt 5.1° · nodes 18.6 yr</div>
+      <button type="button" class="btn" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="pane main">
+        <canvas id="main" tabindex="0" role="application" aria-label="Top down view of the Sun's light, Earth and the Moon's orbit. Drag the Moon around its orbit. Arrow keys move the Moon one day; hold Shift for a tenth of a day. Space plays or pauses."></canvas>
+      </div>
+      <div class="pane view">
+        <canvas id="moonview" role="img" aria-label="The Moon as seen from Earth by a Northern Hemisphere observer facing south."></canvas>
+      </div>
+      <div class="pane clock">
+        <canvas id="sky" tabindex="0" role="application" aria-label="Sky clock: an observer on the rotating Earth. Drag the observer or the timeline to change the time of day. Arrow keys change the time by 15 minutes."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="new" aria-pressed="false">New moon</button>
+          <button type="button" data-p="first" aria-pressed="false">First quarter</button>
+          <button type="button" data-p="full" aria-pressed="false">Full moon</button>
+          <button type="button" data-p="wancres" aria-pressed="false">Waning crescent</button>
+          <button type="button" data-p="eclipse" aria-pressed="false">Eclipse season</button>
+          <button type="button" data-p="sid" aria-pressed="false">Sidereal vs synodic</button>
+        </div>
+        <p class="hint" id="presetHint">Pick a setup, or drag the Moon around its orbit and watch the view from Earth change.</p>
+      </section>
+
+      <section>
+        <h2>Time</h2>
+        <div class="row2">
+          <button type="button" class="btn" id="play">Pause</button>
+          <button type="button" class="btn" id="reset">Reset</button>
+        </div>
+        <div class="seg" role="group" aria-label="Animation speed" id="speed">
+          <span class="seglabel">days/s</span>
+          <button type="button" data-s="0.5" aria-pressed="false">0.5</button>
+          <button type="button" data-s="2" aria-pressed="true">2</button>
+          <button type="button" data-s="7" aria-pressed="false">7</button>
+          <button type="button" data-s="30" aria-pressed="false">30</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="day">Days since new moon</label><output id="dayOut" class="mono" for="day">3.0 d</output></div>
+          <input type="range" id="day" min="0" max="29.53" step="0.01" value="3">
+        </div>
+      </section>
+
+      <section>
+        <h2>The Moon now</h2>
+        <dl class="readout">
+          <div class="wide big name"><dt>Phase</dt><dd id="rPhase">—</dd></div>
+          <div class="big"><dt>Illuminated</dt><dd id="rFrac">—</dd></div>
+          <div class="big"><dt>Days since new</dt><dd id="rDay">—</dd></div>
+          <div><dt>Elongation E</dt><dd id="rElong">—</dd></div>
+          <div><dt>Moonrise ≈</dt><dd id="rRise">—</dd></div>
+          <div><dt>Highest ≈</dt><dd id="rTransit">—</dd></div>
+          <div><dt>Moonset ≈</dt><dd id="rSet">—</dd></div>
+        </dl>
+        <p class="hint">Lit fraction f = (1 − cos E)/2, where E is the Moon's angle from the Sun as seen from Earth.</p>
+        <p class="hint"><strong>Not Earth's shadow.</strong> A common idea is that phases come from Earth's shadow falling on the Moon. They do not. The Sun always lights half the Moon; we see different amounts of that lit half. Earth's shadow points away from the Sun and reaches the Moon only at full moon, during a lunar eclipse.</p>
+      </section>
+
+      <section>
+        <h2>Sky clock</h2>
+        <div>
+          <div class="slider-head"><label for="hour">Observer's local time</label><output id="hourOut" class="mono" for="hour">18:00</output></div>
+          <input type="range" id="hour" min="0" max="24" step="0.25" value="18">
+        </div>
+        <p class="hint">Rise and set times are approximate: an observer on the equator at an equinox, with the Moon on the celestial equator. Latitude and the Moon's tilted orbit shift real times by an hour or more, and the Moon rises about 50 minutes later each day.</p>
+      </section>
+
+      <section>
+        <h2>Eclipses</h2>
+        <button type="button" class="btn" id="ecl" aria-pressed="false">Show tilted orbit and nodes</button>
+        <div id="eclBox" hidden style="display:flex;flex-direction:column;gap:10px">
+          <div>
+            <div class="slider-head"><label for="node">Line of nodes from Sun line</label><output id="nodeOut" class="mono" for="node">0°</output></div>
+            <input type="range" id="node" min="-180" max="180" step="1" value="0">
+          </div>
+          <div class="row2">
+            <button type="button" class="btn" id="nextNew">Next new</button>
+            <button type="button" class="btn" id="nextFull">Next full</button>
+          </div>
+          <p class="flag" id="flag" data-k="none">No eclipse now</p>
+          <dl class="readout">
+            <div><dt>Sun to nearest node</dt><dd id="rNodeDist">—</dd></div>
+            <div><dt>Moon above ecliptic β</dt><dd id="rBeta">—</dd></div>
+            <div><dt>Next eclipse season</dt><dd id="rSeason">—</dd></div>
+            <div><dt>Elapsed</dt><dd id="rElapsed">—</dd></div>
+            <div class="wide"><dt>Node line drift against the stars</dt><dd id="rDrift">—</dd></div>
+          </dl>
+          <p class="hint">The Moon's orbit is tilted 5.1° to the ecliptic, so most new and full moons pass above or below the Sun line. An eclipse needs a new or full moon close to a node: the Sun within about 15 to 18° of a node for a solar eclipse, about 11° for an umbral lunar eclipse. The Sun passes a node every 173.3 days, giving two eclipse seasons a year. The nodes slide westward, once around in 18.6 years, so seasons come about 19 days earlier each year.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Layers</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tShadow" checked>Earth's shadow</label>
+          <label><input type="checkbox" id="tRing" checked>Phase ring</label>
+          <label><input type="checkbox" id="tArc" checked>Elongation</label>
+          <label><input type="checkbox" id="tSid">Sidereal vs synodic</label>
+        </div>
+      </section>
+
+      <section>
+        <h2>Key</h2>
+        <div class="key">
+          <span><i class="swatch sun"></i>Sunlight, from the right</span>
+          <span><i class="swatch face"></i>The half of the Moon that faces Earth</span>
+          <span><i class="swatch shadow"></i>Earth's shadow</span>
+          <span><i class="swatch nodes"></i>Line of nodes (eclipse view)</span>
+          <span><i class="swatch star"></i>Fixed star direction (sidereal)</span>
+        </div>
+        <p class="hint">Model: circular orbits at steady rates, so phases are evenly spaced (the real Moon runs up to about 14 hours early or late). Sizes and distances are not to scale; the real Moon is about 30 Earth diameters away. In the view from Earth the terminator is drawn upright; in the real sky it tilts as the Moon crosses the sky. In the Southern Hemisphere the picture flips left to right.</p>
+        <p class="hint"><kbd>←</kbd> <kbd>→</kbd> move the Moon a day, <kbd>Shift</kbd> for a tenth. <kbd>Space</kbd> plays or pauses.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ---------- constants (days, degrees) ----------
+  const P_SYN = 29.530589;          // synodic month
+  const P_SID = 27.321662;          // sidereal month
+  const YEAR = 365.256363;          // sidereal year
+  const P_NODE = 18.6129 * 365.25;  // regression of the nodes, days
+  const EC_YEAR = 1 / (1 / YEAR + 1 / P_NODE); // eclipse year, 346.62 d
+  const INC = 5.145;                // orbit tilt to the ecliptic
+  // angular sizes at the Moon's distance, seen from Earth's center (degrees)
+  const R_EARTH_DEG = 0.951;        // Earth's radius (lunar parallax)
+  const R_MOON_DEG = 0.259;
+  const UMBRA_DEG = 0.70, PENUMBRA_DEG = 1.27;
+  const SOLAR_LIMIT_BETA = R_EARTH_DEG + 0.267 + R_MOON_DEG;   // 1.48°
+  const UMBRAL_LIMIT_BETA = UMBRA_DEG + R_MOON_DEG;            // 0.96°
+  const PEN_LIMIT_BETA = PENUMBRA_DEG + R_MOON_DEG;            // 1.53°
+
+  const $ = (id) => document.getElementById(id);
+  const root = document.documentElement;
+  const rad = (d) => d * Math.PI / 180;
+  const mod = (a, n) => ((a % n) + n) % n;
+  const angDist = (a, b) => Math.abs(mod(a - b + 180, 360) - 180);
+  const minus = (s) => String(s).replace(/-/g, '−');
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const INIT = { T: 3, phiN0: 70, hour: 18, speed: 2 };
+  const S = { T: INIT.T, phiN0: INIT.phiN0, hour: INIT.hour, speed: INIT.speed, playing: !reduce,
+              eclipse: false, sidereal: false, shadow: true, ring: true, arc: true };
+
+  const E = () => mod(360 * S.T / P_SYN, 360);                       // elongation, east of Sun
+  const phiN = () => mod(S.phiN0 - 360 * S.T / EC_YEAR, 360);        // ascending node, from Sun line
+  const dayOf = () => mod(S.T, P_SYN);
+  const litFrac = (e) => (1 - Math.cos(rad(e))) / 2;
+  const beta = (e, pn) => INC * Math.sin(rad(e - pn));
+
+  function phaseName(e) {
+    const tol = 6;
+    if (angDist(e, 0) < tol) return 'New moon';
+    if (angDist(e, 90) < tol) return 'First quarter';
+    if (angDist(e, 180) < tol) return 'Full moon';
+    if (angDist(e, 270) < tol) return 'Third quarter';
+    if (e < 90) return 'Waxing crescent';
+    if (e < 180) return 'Waxing gibbous';
+    if (e < 270) return 'Waning gibbous';
+    return 'Waning crescent';
+  }
+  // equatorial observer, Moon on the celestial equator; hours of local solar time
+  const riseH = (e) => mod(6 + e / 15, 24);
+  const transitH = (e) => mod(12 + e / 15, 24);
+  const setH = (e) => mod(18 + e / 15, 24);
+  function fmtHM(h) {
+    let m = Math.round(mod(h, 24) * 60); if (m >= 1440) m -= 1440;
+    return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+  }
+  function fmtElong(e) {
+    const a = e <= 180 ? e : 360 - e;
+    if (a < 0.5) return '0°';
+    return a.toFixed(0) + '° ' + (e <= 180 ? 'east' : 'west');
+  }
+
+  function eclipseState() {
+    const e = E(), pn = phiN();
+    const nearNew = angDist(e, 0) < 12, nearFull = angDist(e, 180) < 12;
+    const bNew = beta(0, pn), bFull = beta(180, pn);
+    if (nearNew) {
+      if (Math.abs(bNew) < SOLAR_LIMIT_BETA) return { k: 'solar', text: 'Solar eclipse possible' };
+      return { k: 'none', text: 'New moon passes ' + (bNew > 0 ? 'north' : 'south') + ' of the Sun: no eclipse' };
+    }
+    if (nearFull) {
+      if (Math.abs(bFull) < UMBRAL_LIMIT_BETA) return { k: 'lunar', text: 'Lunar eclipse possible' };
+      if (Math.abs(bFull) < PEN_LIMIT_BETA) return { k: 'pen', text: 'Faint penumbral lunar eclipse possible' };
+      return { k: 'none', text: 'Full moon passes ' + (bFull > 0 ? 'north' : 'south') + ' of Earth\'s shadow: no eclipse' };
+    }
+    return { k: 'none', text: 'No eclipse: the Moon is not new or full' };
+  }
+  const nodeDist = () => { const a = mod(phiN(), 180); return Math.min(a, 180 - a); };
+  const daysToSeason = () => mod(phiN(), 180) / (360 / EC_YEAR);
+
+  // ---------- canvases ----------
+  const V = {
+    main: { el: $('main') }, moon: { el: $('moonview') }, sky: { el: $('sky') }
+  };
+  for (const k in V) V[k].ctx = V[k].el.getContext('2d');
+  let dpr = 1, T = null, PS = 1;
+
+  function tokens() {
+    const cs = getComputedStyle(root);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    return { pos: g('--pos'), neg: g('--neg'), field: g('--field'), equi: g('--equi'), grid: g('--grid'),
+             gridStrong: g('--grid-strong'), canvas: g('--canvas'), relief: g('--relief'), ink: g('--ink'),
+             muted: g('--muted'), accent: g('--accent'), line: g('--line'), onCharge: g('--on-charge'),
+             lit: g('--lit'), unlit: g('--unlit'), earthNight: g('--earth-night'), sky: g('--sky'), onSky: g('--on-sky'),
+             mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+  }
+  function pscale() {
+    const v = parseFloat(getComputedStyle(root).getPropertyValue('--canvas-scale'));
+    return v > 0 ? v : 1;
+  }
+  const font = (w, px, fam) => `${w} ${px * PS}px ${fam === 'ui' ? T.ui : T.mono}`;
+
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const k in V) {
+      const v = V[k], r = v.el.parentElement.getBoundingClientRect();
+      v.W = r.width; v.H = r.height;
+      v.el.width = Math.max(1, Math.round(v.W * dpr)); v.el.height = Math.max(1, Math.round(v.H * dpr));
+      v.el.style.width = v.W + 'px'; v.el.style.height = v.H + 'px';
+    }
+    requestDraw();
+  }
+
+  // ---------- drawing helpers ----------
+  function arrowHead(ctx, x, y, ang, size) {
+    ctx.beginPath();
+    ctx.moveTo(x + Math.cos(ang) * size, y + Math.sin(ang) * size);
+    ctx.lineTo(x + Math.cos(ang + 2.5) * size, y + Math.sin(ang + 2.5) * size);
+    ctx.lineTo(x + Math.cos(ang - 2.5) * size, y + Math.sin(ang - 2.5) * size);
+    ctx.closePath(); ctx.fill();
+  }
+  // a sphere lit from the right (+x): the view from above
+  function body(ctx, x, y, r, lit, dark, outline) {
+    ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fillStyle = dark; ctx.fill();
+    ctx.beginPath(); ctx.arc(x, y, r, -Math.PI / 2, Math.PI / 2); ctx.closePath(); ctx.fillStyle = lit; ctx.fill();
+    if (outline) { ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.strokeStyle = outline; ctx.lineWidth = PS; ctx.stroke(); }
+  }
+  // the Moon as seen from Earth, Northern Hemisphere: waxing lit on the right (west)
+  function phaseDisc(ctx, x, y, r, e, lit, dark, outline) {
+    ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fillStyle = dark; ctx.fill();
+    const c = Math.cos(rad(e)), sgn = mod(e, 360) <= 180 ? 1 : -1, N = 72;
+    if (litFrac(e) > 0.0005) {
+      ctx.beginPath();
+      for (let i = 0; i <= N; i++) {               // lit limb, top to bottom
+        const yy = -r + 2 * r * i / N, s = Math.sqrt(Math.max(0, r * r - yy * yy));
+        i ? ctx.lineTo(x + sgn * s, y + yy) : ctx.moveTo(x + sgn * s, y + yy);
+      }
+      for (let i = N; i >= 0; i--) {               // terminator, bottom to top
+        const yy = -r + 2 * r * i / N, s = Math.sqrt(Math.max(0, r * r - yy * yy));
+        ctx.lineTo(x + sgn * c * s, y + yy);
+      }
+      ctx.closePath(); ctx.fillStyle = lit; ctx.fill();
+    }
+    if (outline) { ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.strokeStyle = outline; ctx.lineWidth = PS; ctx.stroke(); }
+  }
+  function pill(ctx, x, y, text, fill, ink, align, stroke) {
+    ctx.font = font(700, 12.5, 'ui');
+    const tw = ctx.measureText(text).width + 16 * PS, th = 24 * PS;
+    const lx = align === 'right' ? x - tw : align === 'center' ? x - tw / 2 : x;
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(lx, y, tw, th, 6 * PS) : ctx.rect(lx, y, tw, th);
+    ctx.fillStyle = fill; ctx.fill();
+    if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 1.5 * PS; ctx.stroke(); }
+    ctx.fillStyle = ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(text, lx + 8 * PS, y + th / 2 + 0.5);
+  }
+  function clampText(ctx, text, x, y, w, pad) {
+    const tw = ctx.measureText(text).width;
+    const align = ctx.textAlign;
+    let x0 = align === 'right' ? x - tw : align === 'center' ? x - tw / 2 : x;
+    x0 = Math.max(pad, Math.min(w - pad - tw, x0));
+    ctx.save(); ctx.textAlign = 'left'; ctx.fillText(text, x0, y); ctx.restore();
+  }
+  function sunRays(ctx, xFrom, xTo, ys, label) {
+    ctx.save();
+    ctx.strokeStyle = T.equi; ctx.fillStyle = T.equi; ctx.lineWidth = 1.6 * PS; ctx.globalAlpha = 0.85;
+    for (const y of ys) {
+      ctx.beginPath(); ctx.moveTo(xFrom, y); ctx.lineTo(xTo + 6 * PS, y); ctx.stroke();
+      arrowHead(ctx, xTo, y, Math.PI, 6 * PS);
+    }
+    if (label) {
+      ctx.globalAlpha = 1; ctx.font = font(700, 11.5, 'ui'); ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+      ctx.fillText(label, xFrom, ys[0] - 5 * PS);
+    }
+    ctx.restore();
+  }
+
+  // ---------- main view: top down, plus side view in eclipse mode ----------
+  function mainGeo() {
+    const w = V.main.W, h = V.main.H;
+    const topH = S.eclipse ? h * 0.63 : h;
+    const R = Math.max(40, Math.min(w * 0.33, topH * 0.37 - 6 * PS));
+    const cx = Math.min(w * 0.46, w - R - 64 * PS), cy = topH * 0.53;
+    return { w, h, topH, R, cx, cy, rE: Math.max(10, R * 0.15), rM: Math.max(7 * PS, R * 0.07) };
+  }
+
+  function drawMain() {
+    const v = V.main, ctx = v.ctx;
+    const g = mainGeo(), { w, h, topH, R, cx, cy, rE, rM } = g;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, w, h);
+    const e = E(), er = rad(e), pn = phiN();
+    const mx = cx + R * Math.cos(er), my = cy - R * Math.sin(er);
+
+    ctx.save();
+    ctx.beginPath(); ctx.rect(0, 0, w, topH); ctx.clip();
+
+    // Earth's shadow, tapering umbra (shape only, not to scale)
+    if (S.shadow) {
+      const hw = (x) => rE * Math.max(0.25, 1 - 0.27 * (cx - x) / R);
+      ctx.beginPath(); ctx.moveTo(cx, cy - rE); ctx.lineTo(0, cy - hw(0)); ctx.lineTo(0, cy + hw(0)); ctx.lineTo(cx, cy + rE); ctx.closePath();
+      ctx.fillStyle = T.muted; ctx.globalAlpha = 0.16; ctx.fill(); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.muted; ctx.font = font(600, 11, 'ui'); ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+      ctx.fillText("Earth's shadow", 8 * PS, cy - hw(0) - 4 * PS);
+    }
+
+    // sunlight
+    const rayX0 = w - 8 * PS, rayX1 = Math.min(w - 40 * PS, cx + R + rM + 16 * PS);
+    const ys = [];
+    for (let k = -3; k <= 3; k++) { const y = cy + k * R * 0.36; if (y > 48 * PS && y < topH - 12 * PS) ys.push(y); }
+    sunRays(ctx, rayX0, rayX1, ys, 'Sunlight');
+
+    // orbit
+    ctx.lineWidth = 1.5 * PS; ctx.strokeStyle = T.muted;
+    if (S.eclipse) {
+      ctx.beginPath(); ctx.arc(cx, cy, R, -rad(pn), -rad(pn) - Math.PI, true); ctx.stroke();      // north of ecliptic
+      ctx.save(); ctx.setLineDash([5 * PS, 5 * PS]); ctx.globalAlpha = 0.8;
+      ctx.beginPath(); ctx.arc(cx, cy, R, -rad(pn), -rad(pn) - Math.PI, false); ctx.stroke(); ctx.restore();
+    } else {
+      ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.stroke(); ctx.globalAlpha = 1;
+    }
+
+    // phase ring: the Moon at eight positions, always lit from the Sun's side
+    if (S.ring) {
+      const names = ['New', 'Waxing crescent', 'First quarter', 'Waxing gibbous', 'Full', 'Waning gibbous', 'Third quarter', 'Waning crescent'];
+      ctx.font = font(400, 10.5, 'ui'); ctx.textBaseline = 'middle';
+      for (let k = 0; k < 8; k++) {
+        const a = rad(k * 45), x = cx + R * Math.cos(a), y = cy - R * Math.sin(a);
+        ctx.globalAlpha = 0.75; body(ctx, x, y, rM * 0.62, T.lit, T.unlit, T.muted); ctx.globalAlpha = 1;
+        const lr = R + rM + 12 * PS, lx = cx + lr * Math.cos(a), ly = cy - lr * Math.sin(a);
+        const c = Math.cos(a);
+        ctx.textAlign = Math.abs(c) < 0.2 ? 'center' : c > 0 ? 'left' : 'right';
+        ctx.fillStyle = T.muted;
+        if (k === 0 && !S.eclipse) continue;  // the Sunlight label sits there
+        clampText(ctx, names[k], lx, ly, w, 4 * PS);
+      }
+    }
+
+    // sidereal vs synodic
+    if (S.sidereal) {
+      const tn = dayOf(), star = -360 * tn / YEAR, sidPt = -360 * P_SID / YEAR;
+      ctx.save();
+      ctx.strokeStyle = T.field; ctx.lineWidth = 1.5 * PS; ctx.setLineDash([2 * PS, 4 * PS]);
+      const L = R + rM + 30 * PS;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + L * Math.cos(rad(star)), cy - L * Math.sin(rad(star))); ctx.stroke();
+      ctx.setLineDash([]);
+      // the extra angle beyond one orbit against the stars
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 5 * PS; ctx.globalAlpha = 0.85;
+      ctx.beginPath(); ctx.arc(cx, cy, R, -rad(sidPt), 0, true); ctx.stroke();
+      ctx.globalAlpha = 1;
+      const sx = cx + R * Math.cos(rad(sidPt)), sy = cy - R * Math.sin(rad(sidPt));
+      ctx.fillStyle = T.field; ctx.beginPath(); ctx.arc(sx, sy, 3.5 * PS, 0, 2 * Math.PI); ctx.fill();
+      ctx.font = font(600, 11, 'ui'); ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      clampText(ctx, 'Same stars: day 27.32', sx - rM - 10 * PS, sy, w, 4 * PS);
+      ctx.fillStyle = T.equi; ctx.textBaseline = 'bottom';
+      clampText(ctx, 'Same phase: day 29.53', cx + R + 8 * PS, cy - 8 * PS, w, 4 * PS);
+      const lx = cx + (L + 4 * PS) * Math.cos(rad(star)), ly = cy - (L + 4 * PS) * Math.sin(rad(star));
+      ctx.fillStyle = T.field; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      clampText(ctx, 'to a fixed star', lx, ly + 4 * PS, w, 4 * PS);
+      ctx.restore();
+    }
+
+    // elongation arc
+    if (S.arc) {
+      const rr = rE + 16 * PS, a = e <= 180 ? e : e - 360;
+      ctx.save(); ctx.strokeStyle = T.field; ctx.lineWidth = 1.3 * PS; ctx.globalAlpha = 0.8;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + rr + 18 * PS, cy); ctx.stroke();
+      if (Math.abs(a) > 0.5) {
+        ctx.beginPath(); ctx.arc(cx, cy, rr, 0, -rad(a), a > 0); ctx.stroke();
+        const mid = rad(a / 2), lr = rr + 13 * PS;
+        ctx.globalAlpha = 1; ctx.fillStyle = T.field; ctx.font = font(600, 11);
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('E ' + Math.abs(a).toFixed(0) + '°', cx + lr * Math.cos(mid) + 10 * PS * Math.cos(mid), cy - lr * Math.sin(mid) - 4 * PS * Math.sin(mid));
+      }
+      ctx.restore();
+    }
+
+    // line of nodes
+    if (S.eclipse) {
+      const a = rad(pn), L = R + 14 * PS;
+      ctx.save(); ctx.strokeStyle = T.pos; ctx.lineWidth = 1.6 * PS; ctx.setLineDash([7 * PS, 5 * PS]);
+      ctx.beginPath(); ctx.moveTo(cx - L * Math.cos(a), cy + L * Math.sin(a)); ctx.lineTo(cx + L * Math.cos(a), cy - L * Math.sin(a)); ctx.stroke();
+      ctx.restore();
+      for (const [ang, lab, filled] of [[pn, 'ascending node', true], [pn + 180, 'descending node', false]]) {
+        const x = cx + R * Math.cos(rad(ang)), y = cy - R * Math.sin(rad(ang)), d = 7 * PS;
+        ctx.beginPath(); ctx.moveTo(x, y - d); ctx.lineTo(x + d, y); ctx.lineTo(x, y + d); ctx.lineTo(x - d, y); ctx.closePath();
+        ctx.fillStyle = filled ? T.pos : T.canvas; ctx.fill(); ctx.strokeStyle = T.pos; ctx.lineWidth = 2 * PS; ctx.stroke();
+        const c = Math.cos(rad(ang)), lr = R - 16 * PS;
+        ctx.fillStyle = T.pos; ctx.font = font(600, 10.5, 'ui'); ctx.textBaseline = 'middle';
+        ctx.textAlign = Math.abs(c) < 0.2 ? 'center' : c > 0 ? 'right' : 'left';
+        clampText(ctx, lab, cx + lr * Math.cos(rad(ang)), cy - lr * Math.sin(rad(ang)) + 12 * PS * (Math.sin(rad(ang)) >= 0 ? 1 : -1), w, 4 * PS);
+      }
+    }
+
+    // Earth
+    body(ctx, cx, cy, rE, T.neg, T.earthNight, null);
+    ctx.fillStyle = T.muted; ctx.font = font(600, 11, 'ui'); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('Earth', cx, cy + rE + 4 * PS);
+
+    // sightline from Earth
+    ctx.save(); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.2 * PS; ctx.globalAlpha = 0.55; ctx.setLineDash([3 * PS, 4 * PS]);
+    ctx.beginPath(); ctx.moveTo(cx + rE * Math.cos(er), cy - rE * Math.sin(er)); ctx.lineTo(mx - rM * Math.cos(er), my + rM * Math.sin(er)); ctx.stroke();
+    ctx.restore();
+
+    // the Moon: sunlit half toward the Sun, Earth facing half marked
+    body(ctx, mx, my, rM, T.lit, T.unlit, T.muted);
+    const toE = Math.atan2(cy - my, cx - mx);
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 3 * PS; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.arc(mx, my, rM + 4 * PS, toE - Math.PI / 2, toE + Math.PI / 2); ctx.stroke();
+    ctx.lineCap = 'butt';
+    if (focusMain) {
+      ctx.save(); ctx.setLineDash([4 * PS, 3 * PS]); ctx.lineWidth = 1.5 * PS; ctx.strokeStyle = T.accent;
+      ctx.beginPath(); ctx.arc(mx, my, rM + 10 * PS, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+    }
+
+    // captions
+    ctx.fillStyle = T.ink; ctx.font = font(700, 15, 'ui'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Day ' + dayOf().toFixed(1) + ' of 29.53 · ' + phaseName(e), 12 * PS, 10 * PS);
+    ctx.fillStyle = T.muted; ctx.font = font(400, 11.5, 'ui');
+    ctx.fillText('Seen from above the North Pole, not to scale', 12 * PS, 30 * PS);
+
+    if (S.eclipse) {
+      const st = eclipseState();
+      const py = 50 * PS;
+      if (st.k === 'solar') pill(ctx, 12 * PS, py, st.text, T.equi, T.onCharge, 'left');
+      else if (st.k === 'lunar') pill(ctx, 12 * PS, py, st.text, T.pos, T.onCharge, 'left');
+      else if (st.k === 'pen') pill(ctx, 12 * PS, py, st.text, T.canvas, T.ink, 'left', T.muted);
+    }
+    if (S.sidereal) drawInset(ctx, g);
+    ctx.restore();
+
+    if (S.eclipse) drawSide(ctx, g, e, pn);
+  }
+
+  // heliocentric inset: Earth moves about 27° around the Sun during one month
+  function drawInset(ctx, g) {
+    const iw = 150 * PS, ih = 112 * PS, ix = 10 * PS, iy = g.topH - ih - 10 * PS;
+    ctx.save();
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(ix, iy, iw, ih, 8 * PS) : ctx.rect(ix, iy, iw, ih);
+    ctx.fillStyle = T.canvas; ctx.fill(); ctx.strokeStyle = T.line; ctx.lineWidth = PS; ctx.stroke();
+    ctx.clip();
+    const sx = ix + iw * 0.5, sy = iy + ih - 16 * PS, ro = ih * 0.52;
+    ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.6; ctx.lineWidth = PS;
+    ctx.beginPath(); ctx.arc(sx, sy, ro, 0, 2 * Math.PI); ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.equi; ctx.beginPath(); ctx.arc(sx, sy, 7 * PS, 0, 2 * Math.PI); ctx.fill();
+    const tn = dayOf(), th0 = 62, th = th0 + 360 * tn / YEAR, rm = 14 * PS;
+    const pos = (a) => [sx + ro * Math.cos(rad(a)), sy - ro * Math.sin(rad(a))];
+    const [x0, y0] = pos(th0), [x1, y1] = pos(th);
+    const dir0 = th0 + 180, dir1 = th + 180 + E();
+    // start, new moon: Moon toward the Sun
+    ctx.globalAlpha = 0.5;
+    ctx.strokeStyle = T.field; ctx.lineWidth = 1.2 * PS;
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 + rm * Math.cos(rad(dir0)), y0 - rm * Math.sin(rad(dir0))); ctx.stroke();
+    ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(x0, y0, 4 * PS, 0, 2 * Math.PI); ctx.fill();
+    ctx.globalAlpha = 1;
+    // now: dotted line parallel to the start direction (same star)
+    ctx.save(); ctx.setLineDash([2 * PS, 3 * PS]); ctx.strokeStyle = T.field;
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 + rm * 1.3 * Math.cos(rad(dir0)), y1 - rm * 1.3 * Math.sin(rad(dir0))); ctx.stroke(); ctx.restore();
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * PS;
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 + rm * Math.cos(rad(dir1)), y1 - rm * Math.sin(rad(dir1))); ctx.stroke();
+    ctx.fillStyle = T.lit; ctx.strokeStyle = T.muted; ctx.lineWidth = PS;
+    ctx.beginPath(); ctx.arc(x1 + rm * Math.cos(rad(dir1)), y1 - rm * Math.sin(rad(dir1)), 3 * PS, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(x1, y1, 4 * PS, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = T.ink; ctx.font = font(700, 10.5, 'ui'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Around the Sun', ix + 7 * PS, iy + 6 * PS);
+    ctx.fillStyle = T.muted; ctx.font = font(400, 10, 'ui');
+    ctx.fillText('Earth moved ' + (360 * tn / YEAR).toFixed(1) + '°', ix + 7 * PS, iy + 20 * PS);
+    ctx.restore();
+  }
+
+  // side view: horizontal not to scale, vertical in degrees of ecliptic latitude
+  function drawSide(ctx, g, e, pn) {
+    const { w, h, topH, R, cx } = g;
+    const sh = h - topH, yc = topH + sh * 0.56;
+    const ppd = Math.max(5, (sh * 0.5 - 18 * PS) / 6);
+    const Y = (b) => yc - b * ppd;
+    ctx.save();
+    ctx.beginPath(); ctx.rect(0, topH, w, sh); ctx.clip();
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, topH + 0.5); ctx.lineTo(w, topH + 0.5); ctx.stroke();
+
+    // degree ticks
+    ctx.font = font(400, 10); ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    for (const b of [-5, 5]) {
+      ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(0, Y(b)); ctx.lineTo(w, Y(b)); ctx.stroke();
+      ctx.fillText(minus((b > 0 ? '+' : '') + b + '°'), 6 * PS, Y(b) - 7 * PS);
+    }
+    // Earth's shadow and penumbra toward the full moon side
+    const xf = cx - R;
+    ctx.fillStyle = T.muted;
+    ctx.globalAlpha = 0.14;
+    ctx.beginPath(); ctx.moveTo(cx, Y(R_EARTH_DEG)); ctx.lineTo(xf - 30 * PS, Y(PENUMBRA_DEG + 0.04)); ctx.lineTo(xf - 30 * PS, Y(-PENUMBRA_DEG - 0.04)); ctx.lineTo(cx, Y(-R_EARTH_DEG)); ctx.closePath(); ctx.fill();
+    ctx.globalAlpha = 0.3;
+    ctx.beginPath(); ctx.moveTo(cx, Y(R_EARTH_DEG)); ctx.lineTo(xf - 30 * PS, Y(UMBRA_DEG - 0.01)); ctx.lineTo(xf - 30 * PS, Y(-UMBRA_DEG + 0.01)); ctx.lineTo(cx, Y(-R_EARTH_DEG)); ctx.closePath(); ctx.fill();
+    ctx.globalAlpha = 1;
+    // ecliptic
+    ctx.save(); ctx.strokeStyle = T.equi; ctx.lineWidth = 1.4 * PS; ctx.setLineDash([6 * PS, 4 * PS]);
+    ctx.beginPath(); ctx.moveTo(0, yc); ctx.lineTo(w, yc); ctx.stroke(); ctx.restore();
+    // solar eclipse zone at the new moon position
+    const xn = cx + R;
+    ctx.strokeStyle = T.equi; ctx.lineWidth = 2 * PS;
+    ctx.beginPath(); ctx.moveTo(xn + 9 * PS, Y(SOLAR_LIMIT_BETA)); ctx.lineTo(xn + 13 * PS, Y(SOLAR_LIMIT_BETA)); ctx.lineTo(xn + 13 * PS, Y(-SOLAR_LIMIT_BETA)); ctx.lineTo(xn + 9 * PS, Y(-SOLAR_LIMIT_BETA)); ctx.stroke();
+
+    // Moon's path: far half dashed
+    const pt = (a) => [cx + R * Math.cos(rad(a)), Y(beta(a, pn))];
+    ctx.lineWidth = 1.5 * PS; ctx.strokeStyle = T.muted;
+    for (const far of [true, false]) {
+      ctx.save(); if (far) { ctx.setLineDash([4 * PS, 4 * PS]); ctx.globalAlpha = 0.6; }
+      ctx.beginPath();
+      for (let k = 0; k <= 90; k++) {
+        const a = far ? k * 2 : 180 + k * 2, [x, y] = pt(a);
+        k ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      }
+      ctx.stroke(); ctx.restore();
+    }
+    // nodes on the ecliptic
+    for (const [ang, filled] of [[pn, true], [pn + 180, false]]) {
+      const x = cx + R * Math.cos(rad(ang)), d = 5.5 * PS;
+      ctx.beginPath(); ctx.moveTo(x, yc - d); ctx.lineTo(x + d, yc); ctx.lineTo(x, yc + d); ctx.lineTo(x - d, yc); ctx.closePath();
+      ctx.fillStyle = filled ? T.pos : T.canvas; ctx.fill(); ctx.strokeStyle = T.pos; ctx.lineWidth = 1.6 * PS; ctx.stroke();
+    }
+    // Earth
+    ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(cx, yc, R_EARTH_DEG * ppd, 0, 2 * Math.PI); ctx.fill();
+    // Moon
+    const [mx, my] = pt(e), mr = Math.max(4 * PS, R_MOON_DEG * ppd);
+    ctx.fillStyle = T.lit; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.3 * PS;
+    ctx.beginPath(); ctx.arc(mx, my, mr, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+
+    // labels
+    ctx.fillStyle = T.ink; ctx.font = font(700, 12, 'ui'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Side view, edge on to the ecliptic', 12 * PS, topH + 8 * PS);
+    ctx.fillStyle = T.muted; ctx.font = font(400, 10.5, 'ui');
+    ctx.fillText('Height: degrees above or below the ecliptic. Width not to scale.', 12 * PS, topH + 24 * PS);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillStyle = T.equi; ctx.font = font(600, 10.5, 'ui');
+    ctx.fillText('to Sun', w - 8 * PS, yc - 4 * PS);
+    ctx.textBaseline = 'top'; ctx.fillStyle = T.muted;
+    clampText(ctx, 'new moon', xn, Y(-SOLAR_LIMIT_BETA) + 4 * PS, w, 4 * PS);
+    ctx.textAlign = 'center';
+    clampText(ctx, 'full moon', xf, Y(-PENUMBRA_DEG) + 4 * PS, w, 4 * PS);
+    ctx.restore();
+  }
+
+  // ---------- view from Earth ----------
+  function drawMoonView() {
+    const v = V.moon, ctx = v.ctx, w = v.W, h = v.H, e = E();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.sky; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = T.onSky; ctx.font = font(700, 13, 'ui'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('View from Earth', 12 * PS, 10 * PS);
+    ctx.globalAlpha = 0.7; ctx.font = font(400, 11, 'ui');
+    ctx.fillText(w < 260 * PS ? 'N. Hemisphere, facing S' : 'Northern Hemisphere, facing south', 12 * PS, 28 * PS);
+    ctx.globalAlpha = 1;
+
+    const top = 48 * PS, bot = h - 46 * PS;
+    const r = Math.max(14, Math.min(w * 0.27, (bot - top) * 0.45)), x = w / 2, y = (top + bot) / 2;
+    phaseDisc(ctx, x, y, r, e, '#f2ead0', '#28313c', 'rgba(223,230,239,0.25)');
+
+    // which way is the Sun
+    const f = litFrac(e);
+    if (f > 0.002 && f < 0.998) {
+      const sgn = e <= 180 ? 1 : -1, x0 = x + sgn * (r + 10 * PS), x1 = x + sgn * Math.min(r + 34 * PS, w / 2 - 8 * PS);
+      ctx.strokeStyle = T.equi; ctx.fillStyle = T.equi; ctx.lineWidth = 1.6 * PS;
+      ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
+      arrowHead(ctx, x1, y, sgn > 0 ? 0 : Math.PI, 6 * PS);
+      ctx.font = font(600, 10.5, 'ui'); ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+      ctx.fillText('Sun', (x0 + x1) / 2, y - 5 * PS);
+    }
+    ctx.fillStyle = T.onSky; ctx.globalAlpha = 0.65; ctx.font = font(600, 10.5, 'ui'); ctx.textBaseline = 'bottom';
+    ctx.textAlign = 'left'; ctx.fillText('east', 10 * PS, bot + 2 * PS);
+    ctx.textAlign = 'right'; ctx.fillText('west', w - 10 * PS, bot + 2 * PS);
+    ctx.globalAlpha = 1;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.font = font(700, 13, 'ui');
+    ctx.fillText(phaseName(e) + ', ' + (100 * f).toFixed(0) + '% lit', w / 2, h - 12 * PS);
+  }
+
+  // ---------- sky clock ----------
+  function skyGeo() {
+    const v = V.sky, w = v.W, h = v.H;
+    const tlH = 52 * PS, top = 44 * PS, bot = h - tlH;
+    const re = Math.max(12, Math.min(w * 0.17, (bot - top) * 0.24));
+    return { w, h, cx: w * 0.47, cy: (top + bot) / 2, re, tl: { x0: 44 * PS, x1: w - 12 * PS, y: h - tlH + 8 * PS } };
+  }
+  function drawSky() {
+    const v = V.sky, ctx = v.ctx, g = skyGeo(), { w, h, cx, cy, re } = g, e = E();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = T.ink; ctx.font = font(700, 13, 'ui'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Sky clock', 12 * PS, 10 * PS);
+    ctx.textAlign = 'right'; ctx.font = font(600, 13);
+    ctx.fillText(fmtHM(S.hour), w - 12 * PS, 10 * PS);
+
+    // sunlight
+    const ys = [cy - re * 0.9, cy, cy + re * 0.9];
+    sunRays(ctx, w - 6 * PS, Math.min(w - 26 * PS, cx + re * 2.3), ys, null);
+
+    // Earth, then observer
+    body(ctx, cx, cy, re, T.neg, T.earthNight, null);
+    const a = (S.hour - 12) * 15, ar = rad(a);
+    const bx = cx + re * Math.cos(ar), by = cy - re * Math.sin(ar);
+    const sunAlt = 90 - angDist(a, 0), moonAlt = 90 - angDist(a, e);
+
+    // Moon direction from the observer (the Moon is far away, so this is parallel to Earth to Moon)
+    const L = re * 1.35, mxx = bx + L * Math.cos(rad(e)), myy = by - L * Math.sin(rad(e));
+    ctx.save();
+    ctx.strokeStyle = moonAlt > 0 ? T.accent : T.muted; ctx.lineWidth = 1.5 * PS;
+    if (moonAlt <= 0) { ctx.setLineDash([3 * PS, 4 * PS]); ctx.globalAlpha = 0.6; }
+    ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(mxx, myy); ctx.stroke(); ctx.restore();
+    ctx.globalAlpha = moonAlt > 0 ? 1 : 0.4;
+    body(ctx, mxx, myy, 6.5 * PS, T.lit, T.unlit, T.muted);
+    ctx.globalAlpha = 1;
+
+    ctx.save();
+    ctx.translate(bx, by); ctx.rotate(Math.PI / 2 - ar);
+    const u = PS;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.3 * u;
+    ctx.beginPath(); ctx.moveTo(-re * 0.95, 0); ctx.lineTo(re * 0.95, 0); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = font(600, 9.5, 'ui'); ctx.textBaseline = 'top'; ctx.textAlign = 'center';
+    ctx.fillText('E', -re * 0.95, 3 * u); ctx.fillText('W', re * 0.95, 3 * u);
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * u; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(-4 * u, 0); ctx.lineTo(0, -8 * u); ctx.lineTo(4 * u, 0);
+    ctx.moveTo(0, -8 * u); ctx.lineTo(0, -17 * u);
+    ctx.moveTo(-5 * u, -14 * u); ctx.lineTo(5 * u, -14 * u);
+    ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, -21 * u, 3.6 * u, 0, 2 * Math.PI); ctx.fillStyle = T.canvas; ctx.fill(); ctx.stroke();
+    if (focusSky) { ctx.setLineDash([3 * u, 3 * u]); ctx.lineWidth = 1.3 * u; ctx.strokeStyle = T.accent; ctx.beginPath(); ctx.arc(0, -11 * u, 17 * u, 0, 2 * Math.PI); ctx.stroke(); }
+    ctx.restore();
+
+    ctx.fillStyle = T.muted; ctx.font = font(400, 11, 'ui'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const mtxt = moonAlt > 0.5 ? 'Moon up, ' + moonAlt.toFixed(0) + '° high' : 'Moon below horizon';
+    ctx.fillText(mtxt, 12 * PS, 28 * PS);
+    ctx.fillText(sunAlt > 0.5 ? 'Day' : sunAlt > -0.5 ? (S.hour < 12 ? 'Sunrise' : 'Sunset') : 'Night', 12 * PS, 42 * PS);
+
+    // 24 hour timeline
+    const { x0, x1, y } = g.tl, X = (hh) => x0 + (x1 - x0) * hh / 24, rh = 9 * PS;
+    ctx.font = font(600, 10, 'ui'); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillStyle = T.muted;
+    ctx.fillText('Sun', x0 - 6 * PS, y + rh / 2); ctx.fillText('Moon', x0 - 6 * PS, y + rh * 1.5 + 3 * PS);
+    ctx.fillStyle = T.relief; ctx.fillRect(x0, y, x1 - x0, rh);
+    ctx.fillStyle = T.equi; ctx.fillRect(X(6), y, X(18) - X(6), rh);
+    const y2 = y + rh + 3 * PS;
+    ctx.fillStyle = T.relief; ctx.fillRect(x0, y2, x1 - x0, rh);
+    const r0 = riseH(e), r1 = r0 + 12;
+    ctx.fillStyle = T.accent;
+    for (const [s0, s1] of [[r0, Math.min(r1, 24)], [0, Math.max(0, r1 - 24)]]) if (s1 > s0) ctx.fillRect(X(s0), y2, X(s1) - X(s0), rh);
+    ctx.fillStyle = T.muted; ctx.font = font(400, 9.5); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (const hh of [0, 6, 12, 18, 24]) ctx.fillText(String(hh).padStart(2, '0'), X(hh), y2 + rh + 4 * PS);
+    const xc = X(S.hour);
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * PS;
+    ctx.beginPath(); ctx.moveTo(xc, y - 4 * PS); ctx.lineTo(xc, y2 + rh + 2 * PS); ctx.stroke();
+  }
+
+  // ---------- panel ----------
+  const R_ = { phase: $('rPhase'), frac: $('rFrac'), day: $('rDay'), elong: $('rElong'), rise: $('rRise'), transit: $('rTransit'), set: $('rSet'),
+               nodeDist: $('rNodeDist'), beta: $('rBeta'), season: $('rSeason'), elapsed: $('rElapsed'), drift: $('rDrift') };
+  const dayIn = $('day'), hourIn = $('hour'), nodeIn = $('node'), flag = $('flag');
+  function updatePanel() {
+    const e = E(), d = dayOf();
+    R_.phase.textContent = phaseName(e);
+    R_.frac.textContent = (100 * litFrac(e)).toFixed(1) + ' %';
+    R_.day.textContent = d.toFixed(2) + ' d';
+    R_.elong.textContent = fmtElong(e);
+    R_.rise.textContent = fmtHM(riseH(e));
+    R_.transit.textContent = fmtHM(transitH(e));
+    R_.set.textContent = fmtHM(setH(e));
+    if (document.activeElement !== dayIn) dayIn.value = d.toFixed(2);
+    $('dayOut').textContent = d.toFixed(1) + ' d';
+    if (document.activeElement !== hourIn) hourIn.value = S.hour;
+    $('hourOut').textContent = fmtHM(S.hour);
+    if (S.eclipse) {
+      const pn = phiN(), signed = pn > 180 ? pn - 360 : pn;
+      if (document.activeElement !== nodeIn) nodeIn.value = Math.round(signed);
+      $('nodeOut').textContent = minus(Math.round(signed) + '°');
+      R_.nodeDist.textContent = nodeDist().toFixed(1) + '°';
+      const b = beta(e, pn);
+      R_.beta.textContent = minus((b >= 0 ? '+' : '') + b.toFixed(2) + '°');
+      R_.season.textContent = nodeDist() < 17 ? 'now' : 'in ' + daysToSeason().toFixed(0) + ' d';
+      R_.elapsed.textContent = minus(S.T.toFixed(1) + ' d');
+      R_.drift.textContent = minus((-360 * S.T / P_NODE).toFixed(2) + '° (−19.3° per year)');
+      const st = eclipseState();
+      flag.textContent = st.text; flag.dataset.k = st.k;
+    }
+    const pb = $('play'); pb.textContent = S.playing ? 'Pause' : 'Play';
+  }
+
+  // ---------- loop ----------
+  let raf = 0, last = 0;
+  function frame(ts) {
+    raf = 0;
+    if (S.playing) {
+      const dt = last ? Math.min(0.1, (ts - last) / 1000) : 0;
+      last = ts; S.T += dt * S.speed;
+    } else last = 0;
+    T = tokens(); PS = pscale();
+    if (V.main.W && V.main.H) drawMain();
+    if (V.moon.W && V.moon.H) drawMoonView();
+    if (V.sky.W && V.sky.H) drawSky();
+    updatePanel();
+    if (S.playing) raf = requestAnimationFrame(frame);
+  }
+  function requestDraw() { if (!raf) raf = requestAnimationFrame(frame); }
+  function setPlaying(on) { S.playing = on; last = 0; requestDraw(); }
+
+  // ---------- interaction ----------
+  function setPreset(name) {
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+  }
+  function setE(target) {
+    const delta = mod(target - E() + 180, 360) - 180;
+    S.T += delta * P_SYN / 360;
+  }
+  function setNode(target) { S.phiN0 = target + 360 * S.T / EC_YEAR; }
+
+  let focusMain = false, focusSky = false, dragMain = null, dragSky = null;
+  const local = (el, ev) => { const r = el.getBoundingClientRect(); return { x: ev.clientX - r.left, y: ev.clientY - r.top }; };
+  function mainHit(p) {
+    const g = mainGeo();
+    if (p.y > g.topH) return null;
+    if (S.eclipse) {
+      for (const [ang, k] of [[phiN(), 0], [phiN() + 180, 180]]) {
+        const x = g.cx + g.R * Math.cos(rad(ang)), y = g.cy - g.R * Math.sin(rad(ang));
+        if (Math.hypot(p.x - x, p.y - y) < 13 * PS) return { type: 'node', off: k };
+      }
+    }
+    return { type: 'moon' };
+  }
+  const angleAt = (g, p) => mod(Math.atan2(g.cy - p.y, p.x - g.cx) * 180 / Math.PI, 360);
+  const mainEl = V.main.el;
+  mainEl.addEventListener('pointerdown', (ev) => {
+    mainEl.focus({ preventScroll: true });
+    const p = local(mainEl, ev), hit = mainHit(p);
+    if (!hit) return;
+    dragMain = hit; mainEl.setPointerCapture(ev.pointerId); mainEl.style.cursor = 'grabbing';
+    if (S.playing) setPlaying(false);
+    setPreset(null);
+    moveMain(p);
+  });
+  function moveMain(p) {
+    const g = mainGeo(), a = angleAt(g, p);
+    if (dragMain.type === 'node') setNode(a - dragMain.off); else setE(a);
+    requestDraw();
+  }
+  mainEl.addEventListener('pointermove', (ev) => {
+    const p = local(mainEl, ev);
+    if (dragMain) { moveMain(p); return; }
+    mainEl.style.cursor = mainHit(p) ? 'grab' : 'default';
+  });
+  const endMain = () => { dragMain = null; mainEl.style.cursor = 'grab'; };
+  mainEl.addEventListener('pointerup', endMain);
+  mainEl.addEventListener('pointercancel', endMain);
+  mainEl.addEventListener('focus', () => { focusMain = true; requestDraw(); });
+  mainEl.addEventListener('blur', () => { focusMain = false; requestDraw(); });
+  mainEl.addEventListener('keydown', (ev) => {
+    const step = ev.shiftKey ? 0.1 : 1;
+    if (ev.key === 'ArrowRight' || ev.key === 'ArrowUp') S.T += step;
+    else if (ev.key === 'ArrowLeft' || ev.key === 'ArrowDown') S.T -= step;
+    else if (ev.key === ' ') { ev.preventDefault(); setPlaying(!S.playing); return; }
+    else return;
+    ev.preventDefault(); if (S.playing) setPlaying(false); setPreset(null); requestDraw();
+  });
+
+  const skyEl = V.sky.el;
+  function moveSky(p) {
+    const g = skyGeo();
+    if (dragSky === 'tl') {
+      const hh = 24 * (p.x - g.tl.x0) / (g.tl.x1 - g.tl.x0);
+      S.hour = Math.round(Math.max(0, Math.min(24, hh)) * 4) / 4;
+    } else {
+      const a = Math.atan2(g.cy - p.y, p.x - g.cx) * 180 / Math.PI;
+      S.hour = Math.round(mod(12 + a / 15, 24) * 4) / 4;
+    }
+    requestDraw();
+  }
+  skyEl.addEventListener('pointerdown', (ev) => {
+    skyEl.focus({ preventScroll: true });
+    const p = local(skyEl, ev), g = skyGeo();
+    dragSky = p.y > g.tl.y - 14 * PS ? 'tl' : 'earth';
+    skyEl.setPointerCapture(ev.pointerId); skyEl.style.cursor = 'grabbing';
+    moveSky(p);
+  });
+  skyEl.addEventListener('pointermove', (ev) => { if (dragSky) moveSky(local(skyEl, ev)); });
+  const endSky = () => { dragSky = null; skyEl.style.cursor = 'grab'; };
+  skyEl.addEventListener('pointerup', endSky);
+  skyEl.addEventListener('pointercancel', endSky);
+  skyEl.addEventListener('focus', () => { focusSky = true; requestDraw(); });
+  skyEl.addEventListener('blur', () => { focusSky = false; requestDraw(); });
+  skyEl.addEventListener('keydown', (ev) => {
+    const step = ev.shiftKey ? 1 : 0.25;
+    if (ev.key === 'ArrowRight' || ev.key === 'ArrowUp') S.hour = mod(S.hour + step, 24);
+    else if (ev.key === 'ArrowLeft' || ev.key === 'ArrowDown') S.hour = mod(S.hour - step, 24);
+    else return;
+    ev.preventDefault(); requestDraw();
+  });
+
+  // ---------- controls ----------
+  $('play').addEventListener('click', () => setPlaying(!S.playing));
+  for (const b of document.querySelectorAll('#speed button')) {
+    b.addEventListener('click', () => {
+      S.speed = +b.dataset.s;
+      for (const o of document.querySelectorAll('#speed button')) o.setAttribute('aria-pressed', String(o === b));
+    });
+  }
+  function setSpeed(s) {
+    S.speed = s;
+    for (const o of document.querySelectorAll('#speed button')) o.setAttribute('aria-pressed', String(+o.dataset.s === s));
+  }
+  dayIn.addEventListener('input', () => {
+    S.T = Math.floor(S.T / P_SYN) * P_SYN + Math.min(P_SYN - 1e-6, +dayIn.value);
+    if (S.playing) setPlaying(false);
+    setPreset(null); requestDraw();
+  });
+  hourIn.addEventListener('input', () => { S.hour = +hourIn.value; requestDraw(); });
+  nodeIn.addEventListener('input', () => { setNode(+nodeIn.value); setPreset(null); requestDraw(); });
+
+  const eclBtn = $('ecl'), eclBox = $('eclBox');
+  function setEclipse(on) {
+    S.eclipse = on; eclBtn.setAttribute('aria-pressed', String(on));
+    eclBtn.textContent = on ? 'Hide tilted orbit and nodes' : 'Show tilted orbit and nodes';
+    eclBox.hidden = !on; requestDraw();
+  }
+  eclBtn.addEventListener('click', () => { setEclipse(!S.eclipse); setPreset(null); });
+  function stepTo(half) {
+    const n = S.T / P_SYN - half;
+    S.T = (Math.floor(n + 1e-6) + 1 + half) * P_SYN;
+    if (S.playing) setPlaying(false);
+    setPreset(null); requestDraw();
+  }
+  $('nextNew').addEventListener('click', () => stepTo(0));
+  $('nextFull').addEventListener('click', () => stepTo(0.5));
+
+  const layerIds = { tShadow: 'shadow', tRing: 'ring', tArc: 'arc', tSid: 'sidereal' };
+  for (const id in layerIds) $(id).addEventListener('change', (ev) => { S[layerIds[id]] = ev.target.checked; requestDraw(); });
+  function setLayer(id, on) { $(id).checked = on; S[layerIds[id]] = on; }
+
+  const HINTS = {
+    new: 'New moon: the lit half faces away from Earth. The Moon is up with the Sun all day and lost in its glare.',
+    first: 'First quarter: 90° east of the Sun. We see half of the lit half, so 50% lit, on the right. It rises near noon and is high in the south at sunset.',
+    full: 'Full moon: opposite the Sun, so the whole lit half faces us. It rises at sunset, is highest at midnight, and sets at sunrise. It usually passes just above or below Earth\'s shadow.',
+    wancres: 'Waning crescent: lit on the left (east), the side toward the Sun, which is still below the eastern horizon. It rises around 3 a.m. and is seen before dawn.',
+    eclipse: 'The line of nodes points almost at the Sun, so this new moon crosses the ecliptic: a solar eclipse is possible. Press Next full for a lunar eclipse, then keep stepping to watch the season end and the next one arrive about 173 days later.',
+    sid: 'After 27.32 days the Moon is back in front of the same stars, but Earth has moved about 27° around the Sun. The Moon needs about 2.2 more days (the gold arc) to line up with the Sun again: 29.53 days.'
+  };
+  const PRE = {
+    new:     { T: 0, hour: 12 },
+    first:   { T: P_SYN / 4, hour: 18 },
+    full:    { T: P_SYN / 2, hour: 0 },
+    wancres: { T: P_SYN * 315 / 360, hour: 5 },
+    eclipse: { T: 0, hour: 12, eclipse: true, phiN0: 8 },
+    sid:     { T: P_SID, hour: 18, sidereal: true }
+  };
+  function applyPreset(name) {
+    const p = PRE[name];
+    S.T = p.T; S.hour = p.hour;
+    if (p.phiN0 !== undefined) S.phiN0 = p.phiN0;
+    setEclipse(!!p.eclipse);
+    setLayer('tSid', !!p.sidereal);
+    if (S.playing) setPlaying(false);
+    setPreset(name); $('presetHint').textContent = HINTS[name];
+    requestDraw();
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+
+  $('reset').addEventListener('click', () => {
+    S.T = INIT.T; S.phiN0 = INIT.phiN0; S.hour = INIT.hour; setSpeed(INIT.speed);
+    setEclipse(false); setLayer('tShadow', true); setLayer('tRing', true); setLayer('tArc', true); setLayer('tSid', false);
+    setPreset(null); $('presetHint').textContent = 'Pick a setup, or drag the Moon around its orbit and watch the view from Earth change.';
+    setPlaying(!reduce);
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    if (on) root.setAttribute('data-projector', 'on'); else root.removeAttribute('data-projector');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('virtualdemos.projector', on ? 'on' : 'off'); } catch (_) {}
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('virtualdemos.projector') === 'on') setProjector(true); } catch (_) {}
+
+  // theme changes
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', requestDraw); } catch (_) {}
+  new MutationObserver(requestDraw).observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-projector', 'class', 'style'] });
+
+  // ---------- boot ----------
+  new ResizeObserver(resize).observe($('stage'));
+  resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(requestDraw);
+
+  // exposed for testing
+  window.__moon = { S, E, phiN, litFrac, beta, riseH, transitH, setH, eclipseState, applyPreset, P_SYN, P_SID, YEAR, EC_YEAR, P_NODE };
+})();
+</script>
+</body>
+</html>
