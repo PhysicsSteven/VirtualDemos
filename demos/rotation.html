@@ -145,10 +145,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.tq { border-color: var(--accent); }
 kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--canvas); }
 
+/* torque and spin scenes are about as tall as they are wide: on wide screens the charts move to a column at the right */
+@media (min-width: 1100px) {
+  :root .stage[data-layout="side"] { grid-template-rows: minmax(0, 1fr); grid-template-columns: minmax(0, 1fr) minmax(320px, 36%); }
+  :root .stage[data-layout="side"] .charts { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); border-top: 0; border-left: 1px solid var(--line); }
+  :root .stage[data-layout="side"] .charts > .pane + .pane { border-left: 0; border-top: 1px solid var(--line); }
+}
 @media (min-width: 821px) {
   :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 340px; }
 }
 @media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
   html, body { height: auto; }
   .app { height: auto; }
   .bench { grid-template-columns: minmax(0, 1fr); }
@@ -839,8 +847,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const ctx = ctxV, [W, H] = begin(ctxV, 'v'), ps = projScale();
     const top = ctlH + 10 * ps, bot = H - 52 * ps;
     const door = TQ.obj === 'door';
-    const hx = Math.round(W * (W < 520 ? 0.24 : 0.3)), hy = Math.round((top + bot) / 2);
-    const s = Math.max(10, Math.min((W - hx - 34 * ps) / TQ.L, ((bot - top) / 2 - 12 * ps) / TQ.L));
+    // fit the swing to the pane: the wrench turns all the way round, so it sits in the middle;
+    // the door swings to the right of its hinge, which leaves room on the left for the torque label
+    const sV = ((bot - top) / 2 - 12 * ps) / TQ.L;
+    const s = Math.max(10, door ? Math.min((W - 150 * ps - 34 * ps) / TQ.L, sV) : Math.min((W / 2 - 34 * ps) / TQ.L, sV));
+    const hx = Math.round(door ? Math.max(Math.min(150 * ps, W * 0.3), (W - TQ.L * s) / 2 - 20 * ps) : W / 2), hy = Math.round((top + bot) / 2);
     const fpx = 0.7 * Math.min(W - hx - 10 * ps, (bot - top) / 2) / 50;
     const [phi] = doorState();
     const P2S = (x, y) => [hx + x * s, hy - y * s];
@@ -1054,8 +1065,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         plot(TQ.ghost, Infinity, T.muted, 1.8 * ps, [5 * ps, 4 * ps]);
         const g = TQ.ghost.p;
         const down = sws.some((q) => q.w90 < 0 || (q.at(q.tEnd)[0] < 0));
-        ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = down ? 'top' : 'bottom';
-        ctx.fillText('dashed: earlier push at r = ' + fx(g.r, 2) + ' m', box.R - 4 * ps, down ? box.T + 3 * ps : Y(0) - 5 * ps);
+        ctx.font = `400 ${10.5 * ps}px ${T.mono}`;
+        let gtxt = 'dashed: earlier push at r = ' + fx(g.r, 2) + ' m';
+        if (ctx.measureText(gtxt).width > box.R - box.L - 12 * ps) gtxt = 'dashed: r = ' + fx(g.r, 2) + ' m';
+        label(ctx, gtxt, box.R - 4 * ps, down ? box.T + 3 * ps : Y(0) - 5 * ps, T.muted, 'right', down ? 'top' : 'bottom', 10.5, 400);
       }
       if (TQ.sw && !TQ.sw.none) plot(TQ.sw, TQ.t, T.accent, 2.4 * ps);
       else if (!TQ.sw) {
@@ -1202,7 +1215,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const ctx = ctxV, [W, H] = begin(ctxV, 'v'), ps = projScale();
     const top = ctlH + 8 * ps;
     const cx = W / 2, cy = (top + H - 10 * ps) / 2;
-    const s = (Math.min(W, H - top - 10 * ps) / 2 - 24 * ps) / (SP.look === 'skater' ? 0.92 : 1.0);
+    // the rotation arrow sits just outside radius 1, so keep that inside the pane
+    const s = Math.min((Math.min(W, H - top - 10 * ps) / 2 - 24 * ps) / (SP.look === 'skater' ? 0.92 : 1.0), W / 2 - 30 * ps);
     const phi = SP.phi, c = Math.cos(phi), sn = Math.sin(phi);
     const W2S = (x, y) => [cx + x * s, cy - y * s];
     const at = (r, ang) => W2S(r * Math.cos(ang), r * Math.sin(ang));
@@ -1619,6 +1633,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     setPressed('#sceneSeg', 's', sc);
     for (const el of document.querySelectorAll('[data-scene]')) el.hidden = el.dataset.scene !== sc;
     $('charts').classList.toggle('one', sc === 'seesaw');
+    $('stage').dataset.layout = sc === 'torque' || sc === 'spin' ? 'side' : 'below';
     $('keyBox').innerHTML = KEYS[sc];
     $('speedSeg').hidden = sc === 'seesaw';
     syncPresetChips(); syncSliders();
