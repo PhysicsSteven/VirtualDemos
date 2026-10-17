@@ -27,6 +27,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Coulomb Sandbox](demos/coulomb-sandbox.html) | Electricity and magnetism | Electric field and potential of point charges, as a 2D map and a 3D potential landscape |
 | [RC Circuits](demos/rc-circuits.html) | Electricity and magnetism | Charging and discharging a capacitor: exponentials, the time constant, Kirchhoff's loop rule and energy bookkeeping |
 | [Charges in Magnetic Fields](demos/magnetic-force.html) | Electricity and magnetism | Circular and helical motion, E × B drift, a velocity selector, a mass spectrometer and a cyclotron |
+| [Faraday's and Lenz's Laws](demos/faraday.html) | Electricity and magnetism | A magnet and coil with exact flux, EMF and current, Lenz's law, an AC generator and a sliding bar on rails |
 | [Optics Bench](demos/optics-bench.html) | Optics | Ray tracing through lenses, mirrors and glass, with image formation, total internal reflection and dispersion |
 
 ## Viewing
