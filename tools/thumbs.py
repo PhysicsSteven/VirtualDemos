@@ -1,0 +1,190 @@
+#!/usr/bin/env python3
+"""Render card thumbnails for index.html.
+
+Opens every demos/*.html in headless Chromium at 1440 x 900, lets it draw (and
+run for a moment if it animates), crops the demo's main stage, and saves
+thumbs/<name>-light.webp and thumbs/<name>-dark.webp at 640 x 400.
+
+Usage:
+    python3 tools/thumbs.py                     # every demo
+    python3 tools/thumbs.py rutherford tides    # only these
+    python3 tools/thumbs.py --three path/to/three.min.js   # serve three.js locally
+
+Needs: pip install playwright pillow, and a Chromium for Playwright.
+The --three option is for machines that cannot reach cdnjs; requests for
+three.min.js are answered from the local file instead.
+"""
+import argparse
+import io
+import sys
+from pathlib import Path
+
+from PIL import Image
+from playwright.sync_api import sync_playwright
+
+ROOT = Path(__file__).resolve().parent.parent
+DEMOS = ROOT / "demos"
+OUT = ROOT / "thumbs"
+
+W, H = 640, 400          # thumbnail size (16:10, matches the card in index.html)
+QUALITY = 80
+MAX_BYTES = 60_000       # lower the quality step by step until under this
+VIEW = {"width": 1440, "height": 900}
+
+# Per demo overrides. Keys:
+#   wait     ms to let the demo run after load (default 1500)
+#   crop     CSS selector of the element to crop (default: the .stage, else the largest canvas)
+#   click    list of CSS selectors to click in order before waiting
+#   anchor   "center" (default), "top" or "bottom": where to keep when trimming to 16:10
+#   js       script to evaluate after the clicks
+#   keep_controls  True to leave buttons inside the stage visible
+OVERRIDES = {
+    "spectra": {"crop": "main.bench > :first-child", "anchor": "top"},
+    "star-slice": {"wait": 2500},
+    "hydrogen-orbitals": {"wait": 2500},
+    "coulomb-sandbox": {"wait": 1500},
+    "double-slit": {"wait": 4000},
+    "radioactive-decay": {"wait": 3000},
+    "rutherford": {"click": ['[data-p="gm"]'], "wait": 6000},
+    "ideal-gas": {"wait": 2500},
+    "magnetic-force": {"wait": 5000},
+    "quantum-waves": {"click": ['[data-p="barrier"]'], "wait": 8000},
+}
+
+DEFAULT_CROP = """() => {
+  const vis = el => { const r = el.getBoundingClientRect(); return r.width > 50 && r.height > 50 ? r : null; };
+  const stages = [...document.querySelectorAll('.stage')].map(el => [el, vis(el)]).filter(x => x[1]);
+  let list = stages.length ? stages : [...document.querySelectorAll('canvas')].map(el => [el, vis(el)]).filter(x => x[1]);
+  list.sort((a, b) => b[1].width * b[1].height - a[1].width * a[1].height);
+  if (!list.length) return null;
+  const r = list[0][1];
+  // Leave out a row of buttons along the top of the stage.
+  const ctl = list[0][0].querySelector(':scope > .stage-ctl, :scope > .stage-top');
+  const top = ctl ? ctl.getBoundingClientRect().bottom : r.y;
+  return { x: r.x, y: top, width: r.width, height: r.bottom - top };
+}"""
+
+SELECTOR_CROP = """(sel) => {
+  const el = document.querySelector(sel);
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  return { x: r.x, y: r.y, width: r.width, height: r.height };
+}"""
+
+
+def fit_box(box, anchor):
+    """Trim the box to the thumbnail aspect ratio."""
+    x, y, w, h = box["x"], box["y"], box["width"], box["height"]
+    # stay inside the viewport
+    x0, y0 = max(x, 0), max(y, 0)
+    x1, y1 = min(x + w, VIEW["width"]), min(y + h, VIEW["height"])
+    x, y, w, h = x0, y0, x1 - x0, y1 - y0
+    target = W / H
+    if w / h > target:            # too wide: trim the sides
+        nw = h * target
+        x += (w - nw) / 2
+        w = nw
+    else:                         # too tall: trim top and bottom
+        nh = w / target
+        if anchor == "top":
+            pass
+        elif anchor == "bottom":
+            y += h - nh
+        else:
+            y += (h - nh) / 2
+        h = nh
+    return {"x": round(x), "y": round(y), "width": round(w), "height": round(h)}
+
+
+def save_webp(png_bytes, path):
+    img = Image.open(io.BytesIO(png_bytes)).convert("RGB").resize((W, H), Image.LANCZOS)
+    q = QUALITY
+    while True:
+        buf = io.BytesIO()
+        img.save(buf, "WEBP", quality=q, method=6)
+        if buf.tell() <= MAX_BYTES or q <= 40:
+            break
+        q -= 8
+    path.write_bytes(buf.getvalue())
+    return buf.tell(), q
+
+
+def render(browser, demo, scheme, three_js):
+    name = demo.stem
+    opt = OVERRIDES.get(name, {})
+    ctx = browser.new_context(viewport=VIEW, device_scale_factor=1, color_scheme=scheme,
+                              reduced_motion="no-preference")
+    # A stored theme or projector choice would override the scheme; start clean.
+    ctx.add_init_script("try { localStorage.clear(); } catch (e) {}")
+    page = ctx.new_page()
+    errors = []
+    page.on("pageerror", lambda e: errors.append(str(e)))
+    if three_js:
+        body = Path(three_js).read_bytes()
+        page.route("**/three.min.js", lambda route: route.fulfill(
+            status=200, body=body, content_type="application/javascript"))
+    page.goto(demo.as_uri(), wait_until="load", timeout=60_000)
+    page.evaluate("() => document.fonts ? document.fonts.ready.then(() => true) : true")
+    for sel in opt.get("click", []):
+        page.click(sel)
+    if opt.get("js"):
+        page.evaluate(opt["js"])
+    page.wait_for_timeout(opt.get("wait", 1500))
+    if not opt.get("keep_controls"):
+        # Buttons floating over the stage are noise in a small picture.
+        page.add_style_tag(content=".stage button, .stage select, .stage input, .stage .seg, .stage .chips"
+                                   " { visibility: hidden !important; }")
+        page.wait_for_timeout(100)
+    box = (page.evaluate(SELECTOR_CROP, opt["crop"]) if opt.get("crop")
+           else page.evaluate(DEFAULT_CROP))
+    if not box:
+        ctx.close()
+        raise RuntimeError("no stage or canvas found")
+    clip = fit_box(box, opt.get("anchor", "center"))
+    png = page.screenshot(clip=clip)
+    ctx.close()
+    return png, errors
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("names", nargs="*", help="demo names without .html (default: all)")
+    ap.add_argument("--three", help="local three.min.js to serve in place of the CDN copy")
+    args = ap.parse_args()
+
+    demos = sorted(DEMOS.glob("*.html"))
+    if args.names:
+        demos = [d for d in demos if d.stem in args.names]
+    OUT.mkdir(exist_ok=True)
+
+    flags = ["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader",
+             "--ignore-gpu-blocklist"]
+    total, failed = 0, []
+    with sync_playwright() as p:
+        browser = p.chromium.launch(args=flags)
+        for demo in demos:
+            text = demo.read_text(encoding="utf-8", errors="replace")
+            if "</html>" not in text[-2000:]:
+                print(f"skip {demo.name}: looks unfinished")
+                continue
+            for scheme in ("light", "dark"):
+                out = OUT / f"{demo.stem}-{scheme}.webp"
+                try:
+                    png, errors = render(browser, demo, scheme, args.three)
+                except Exception as e:  # keep going with the other demos
+                    print(f"FAIL {demo.stem} {scheme}: {e}")
+                    failed.append(demo.stem)
+                    continue
+                size, q = save_webp(png, out)
+                total += size
+                note = f"  page errors: {errors[0][:80]}" if errors else ""
+                print(f"{out.name:34s} {size/1000:5.1f} kB  q{q}{note}")
+        browser.close()
+    print(f"total {total/1000:.0f} kB")
+    if failed:
+        print("failed:", " ".join(sorted(set(failed))))
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

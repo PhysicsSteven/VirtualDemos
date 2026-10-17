@@ -2,257 +2,689 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Virtual Physics Demos</title>
+<meta name="description" content="Interactive demonstrations for introductory physics and astronomy. Each one runs in the browser with nothing to install.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 :root {
-  --bg: #e9edf2; --surface: #f8fafc; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
-  --pos: #c23f2c; --neg: #2b60b5; --accent: #2b60b5;
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #dde3ea;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --shadow: 0 1px 2px rgb(23 32 43 / 0.06), 0 8px 24px -12px rgb(23 32 43 / 0.25);
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --bg: #0d1218; --surface: #151c25; --ink: #e3e8ef; --muted: #96a2b2; --line: #283241;
-          --pos: #ff7660; --neg: #69a0ff; --accent: #69a0ff; color-scheme: dark; }
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18212c; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --accent: #69a0ff;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -12px rgb(0 0 0 / 0.7);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18212c; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --accent: #69a0ff;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -12px rgb(0 0 0 / 0.7);
+  color-scheme: dark;
 }
 *, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: 76px; }
 body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.5; }
-main { max-width: 860px; margin: 0 auto; padding: 48px max(16px, env(safe-area-inset-right, 0px)) 64px max(16px, env(safe-area-inset-left, 0px)); }
-h1 { margin: 0 0 6px; font-size: 2rem; letter-spacing: -0.01em; }
-.lede { margin: 0 0 32px; color: var(--muted); max-width: 60ch; }
-h2 { margin: 0 0 12px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
-.list { display: grid; gap: 10px; margin: 0 0 32px; padding: 0; list-style: none; }
-.demo { display: block; padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; color: inherit; text-decoration: none; }
-.demo:hover { border-color: var(--accent); }
-.demo:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.demo strong { display: block; font-size: 1.1rem; }
-.demo span { color: var(--muted); }
-.tags { margin-top: 6px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
-footer { color: var(--muted); font-size: 0.85rem; }
+[hidden] { display: none !important; }
+a { color: inherit; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Header: graph paper, like the demo canvases */
+.hero {
+  border-bottom: 1px solid var(--line);
+  background-color: var(--canvas);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+}
+.hero .wrap { position: relative; padding-top: 56px; padding-bottom: 44px; }
+.art { position: absolute; right: 16px; top: 50%; translate: 0 -50%; width: min(34%, 380px); height: auto; overflow: visible; }
+.art .orbit { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+.art .axis { stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 4 5; }
+.art .sweep { fill: color-mix(in srgb, var(--equi) 26%, transparent); stroke: var(--equi); stroke-width: 1.2; }
+.art .sun { fill: var(--equi); }
+.art .glow { fill: color-mix(in srgb, var(--equi) 22%, transparent); }
+.art .planet { fill: var(--neg); }
+.art .vel { stroke: var(--pos); stroke-width: 2.5; stroke-linecap: round; fill: none; }
+.art .head { fill: var(--pos); }
+.eyebrow { margin: 0 0 14px; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--muted); }
+.eyebrow b { color: var(--accent); font-weight: 600; }
+h1 { margin: 0; font-size: clamp(2.1rem, 5vw, 3.2rem); line-height: 1.08; letter-spacing: -0.02em; text-wrap: balance; }
+.lede { margin: 14px 0 0; max-width: 56ch; font-size: 1.15rem; color: var(--muted); text-wrap: pretty; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 22px 0 0; padding: 0; list-style: none; font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); }
+.facts li { display: flex; align-items: center; gap: 8px; }
+.facts li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dot, var(--accent)); }
+.facts li:nth-child(2) { --dot: var(--pos); }
+.facts li:nth-child(3) { --dot: var(--equi); }
+.facts strong { color: var(--ink); font-weight: 600; }
+
+/* Toolbar: filter and subject links, stays on screen while scrolling */
+.tools {
+  position: sticky; top: 0; z-index: 5;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.tools .wrap { display: flex; align-items: center; gap: 10px 18px; padding-top: 10px; padding-bottom: 10px; }
+.filter { position: relative; flex: 0 1 300px; min-width: 0; }
+.filter svg { position: absolute; left: 11px; top: 50%; translate: 0 -50%; width: 16px; height: 16px; color: var(--muted); pointer-events: none; }
+.filter input {
+  width: 100%; font: inherit; font-size: 0.95rem; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 34px 8px 34px;
+}
+.filter input::placeholder { color: var(--muted); }
+.filter input::-webkit-search-cancel-button { display: none; }
+.filter kbd {
+  position: absolute; right: 8px; top: 50%; translate: 0 -50%;
+  font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; line-height: 1.5; pointer-events: none;
+}
+.filter input:not(:placeholder-shown) + kbd { display: none; }
+.clear {
+  position: absolute; right: 5px; top: 50%; translate: 0 -50%;
+  font: inherit; font-size: 0.8rem; font-weight: 700; color: var(--muted);
+  background: none; border: 0; border-radius: 5px; padding: 3px 7px; cursor: pointer;
+}
+.clear:hover { color: var(--ink); }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; min-width: 0; flex: 1 1 auto; }
+.jump a {
+  display: inline-flex; align-items: baseline; gap: 6px; white-space: nowrap;
+  font-size: 0.88rem; font-weight: 700; text-decoration: none; color: var(--ink);
+  padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface);
+}
+.jump a:hover { border-color: var(--accent); color: var(--accent); }
+.n { font-family: var(--font-mono); font-size: 0.75em; font-weight: 400; color: var(--muted); font-variant-numeric: tabular-nums; }
+.status { margin: 20px 0 -12px; font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); }
+.status:empty { display: none; }
+
+/* Subjects and cards */
+main { padding-top: 12px; padding-bottom: 48px; }
+.subject { padding-top: 36px; }
+.subject h2 {
+  display: flex; align-items: baseline; gap: 10px; margin: 0 0 16px;
+  font-size: 1.35rem; letter-spacing: -0.01em;
+}
+.subject h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
+.subject h2 .n { font-size: 0.8rem; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 272px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.grid > li { display: flex; min-width: 0; }
+.card {
+  display: flex; flex-direction: column; width: 100%;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+  text-decoration: none; color: inherit;
+  transition: border-color 0.15s, box-shadow 0.2s, translate 0.2s;
+}
+.thumb { display: block; aspect-ratio: 16 / 10; background: var(--canvas); border-bottom: 1px solid var(--line); overflow: hidden; }
+.thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: scale 0.35s ease; }
+.body { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px 16px; flex: 1; }
+.card h3 { margin: 0; font-size: 1.12rem; line-height: 1.25; }
+.card p { margin: 0; color: var(--muted); font-size: 0.93rem; text-wrap: pretty; }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; margin: auto 0 0; padding: 8px 0 0; list-style: none; }
+.tags li {
+  font-family: var(--font-mono); font-size: 0.7rem; line-height: 1.4; color: var(--muted);
+  background: var(--canvas); border: 1px solid var(--line); border-radius: 5px; padding: 2px 6px;
+}
+.card:hover { border-color: var(--accent); box-shadow: var(--shadow); translate: 0 -2px; }
+.card:hover .thumb img { scale: 1.03; }
+.card:hover h3 { color: var(--accent); }
+.card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.filter input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.empty { margin: 48px 0 0; padding: 28px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 12px; }
+.empty button { font: inherit; font-weight: 700; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+
+footer { border-top: 1px solid var(--line); margin-top: 24px; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-top: 22px; padding-bottom: max(28px, env(safe-area-inset-bottom, 0px)); color: var(--muted); font-size: 0.9rem; }
+footer p { margin: 0; }
+footer a { color: var(--accent); text-underline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .thumb img { transition: none; }
+  .card:hover { translate: none; }
+  .card:hover .thumb img { scale: none; }
+}
+@media (max-width: 700px) {
+  html { scroll-padding-top: 116px; }
+  .hero .wrap { padding-top: 36px; padding-bottom: 30px; }
+  .art { display: none; }
+  .lede { font-size: 1.05rem; }
+  .tools .wrap { flex-wrap: wrap; }
+  .filter { flex: 1 1 100%; }
+  .filter kbd { display: none; }
+  .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+    .subject { padding-top: 28px; }
+}
 </style>
 </head>
 <body>
-<main>
-  <h1>Virtual Physics Demos</h1>
-  <p class="lede">Interactive demonstrations for introductory physics. Each one runs in the browser with nothing to install.</p>
+<header class="hero">
+  <div class="wrap">
+    <svg class="art" viewBox="40 20 400 260" aria-hidden="true">
+      <line class="axis" x1="50" y1="150" x2="430" y2="150"/>
+      <ellipse class="orbit" cx="220" cy="150" rx="150" ry="110"/>
+      <path class="sweep" d="M322.0 150 L145.0 245.3 L142.5 244.2 L140.0 243.0 L137.5 241.9 L135.0 240.7 L132.6 239.4 L130.3 238.1 L127.9 236.8 L125.6 235.5 L123.3 234.1 L121.1 232.7 L118.9 231.3 L116.7 229.8 L114.6 228.3 L112.6 226.8 L110.5 225.2 L108.5 223.6 Z"/>
+      <path class="sweep" d="M322.0 150 L342.3 86.3 L348.6 93.4 L354.2 100.8 L359.0 108.6 L362.9 116.6 L366.0 124.7 L368.2 133.1 L369.6 141.5 L370.0 150.0 L369.6 158.5 L368.2 166.9 L366.0 175.3 L362.9 183.4 L359.0 191.4 L354.2 199.2 L348.6 206.6 L342.3 213.7 Z"/>
+      <circle class="glow" cx="322.0" cy="150" r="17"/>
+      <circle class="sun" cx="322.0" cy="150" r="9"/>
+      <path class="vel" d="M145.0 245.3 L198.4 267.9"/>
+      <path class="head" d="M206.7 271.4 L196.1 273.4 L200.7 262.4 Z"/>
+      <circle class="planet" cx="145.0" cy="245.3" r="7"/>
+    </svg>
+    <p class="eyebrow"><b>Louisiana Tech University</b> · Physics</p>
+    <h1>Virtual Physics Demos</h1>
+    <p class="lede">Interactive demonstrations for introductory physics. Each one runs in the browser with nothing to install.</p>
+    <ul class="facts">
+      <li><span><strong>28</strong> demos</span></li>
+      <li><span><strong>6</strong> subjects</span></li>
+      <li><span>Phone, laptop or projector</span></li>
+    </ul>
+  </div>
+</header>
 
-  <h2>Astronomy</h2>
-  <ul class="list">
-    <li>
-      <a class="demo" href="demos/blackbody.html">
-        <strong>Blackbody Radiation</strong>
-        <span>Slide a temperature from a human body to a blue supergiant and watch the Planck curve, Wien's peak and the star's color change.</span>
-        <div class="tags">Planck curve · Wien's law · Stefan-Boltzmann · star colors</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/seasons.html">
-        <strong>Reasons for Seasons</strong>
-        <span>Earth's tilted axis, the Sun's path across your sky, day length and sunlight through the year, and why distance from the Sun is not the reason.</span>
-        <div class="tags">axial tilt · solar declination · day length · insolation</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/moon-phases.html">
-        <strong>Moon Phases</strong>
-        <span>Drag the Moon around Earth and see its phase from the ground, when it rises and sets, and why eclipses only happen in eclipse seasons.</span>
-        <div class="tags">lunar phases · synodic month · line of nodes · eclipses</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/kepler-orbits.html">
-        <strong>Kepler's Laws</strong>
-        <span>Launch a planet by dragging its velocity arrow. Watch ellipses form, equal areas sweep out in equal times, and the orbit land on P² = a³/M with the real planets.</span>
-        <div class="tags">ellipses · equal areas · P² = a³ · escape speed</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/hr-diagram.html">
-        <strong>Stellar Evolution</strong>
-        <span>Follow a star of any mass across the HR diagram from the main sequence to a cooling white dwarf or a supernova, and date a star cluster from its turnoff.</span>
-        <div class="tags">HR diagram · main sequence lifetime · white dwarf cooling · cluster turnoff</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/exoplanets.html">
-        <strong>Finding Exoplanets</strong>
-        <span>Watch a planet tug its star and cross its face, with the transit light curve and radial velocity curve drawing live. See why Earth twins are so hard to find.</span>
-        <div class="tags">transit method · radial velocity · Kepler's third law · planet density</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/distance-ladder.html">
-        <strong>Cosmic Distance Ladder</strong>
-        <span>Measure a parallax from two photos, time a Cepheid's light curve, find a supernova's peak, and fit Hubble's law to galaxy redshifts. Each rung calibrates the next.</span>
-        <div class="tags">parallax · Cepheid variables · Type Ia supernovae · Hubble constant</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/tides.html">
-        <strong>Tides</strong>
-        <span>See why the Moon raises two ocean bulges, not one: subtract the pull at Earth's center from the pull everywhere else. Watch a city's tides over a day and spring and neap tides over a month.</span>
-        <div class="tags">tidal force · 1/d³ · spring and neap tides · lunar day</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/star-slice.html">
-        <strong>Star Slice</strong>
-        <span>Cut a real MESA star model in half and zoom from the envelope to the core: composition, convection zones, burning shells, and a white dwarf crystallizing from the center out.</span>
-        <div class="tags">stellar interiors · convection · shell burning · MESA</div>
-      </a>
-    </li>
-  </ul>
+<nav class="tools" aria-label="Find a demo">
+  <div class="wrap">
+    <div class="filter" role="search">
+      <label class="sr" for="q">Filter demos</label>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input id="q" type="search" placeholder="Filter demos" autocomplete="off" spellcheck="false" aria-controls="demos">
+      <kbd aria-hidden="true">/</kbd>
+      <button class="clear" id="clear" type="button" hidden>Clear</button>
+    </div>
+    <ul class="jump" aria-label="Subjects">
+      <li><a href="#astronomy">Astronomy <span class="n">9</span></a></li>
+      <li><a href="#modern-physics">Modern physics <span class="n">8</span></a></li>
+      <li><a href="#mechanics">Mechanics <span class="n">5</span></a></li>
+      <li><a href="#thermodynamics">Thermodynamics <span class="n">1</span></a></li>
+      <li><a href="#electricity-and-magnetism">Electricity and magnetism <span class="n">4</span></a></li>
+      <li><a href="#optics">Optics <span class="n">1</span></a></li>
+    </ul>
+  </div>
+</nav>
 
-  <h2>Modern physics</h2>
-  <ul class="list">
-    <li>
-      <a class="demo" href="demos/photoelectric.html">
-        <strong>Photoelectric Effect</strong>
-        <span>Shine light on a metal, find the stopping voltage, and measure Planck's constant from the slope, the way Millikan did in 1916.</span>
-        <div class="tags">photons · work function · stopping voltage · Planck's constant</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/spectra.html">
-        <strong>Spectra Explorer</strong>
-        <span>Click any of 99 elements to see its emission or absorption lines, measured by NIST. Includes the Bohr model of hydrogen and a mystery spectrum game, including a star.</span>
-        <div class="tags">atomic spectra · Bohr model · Balmer series · stellar absorption lines</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/spacetime.html">
-        <strong>Spacetime Diagrams</strong>
-        <span>Place events on a Minkowski diagram and change observers. Light cones stay at 45° while simultaneity, clocks and lengths change, through the train, the rod and the twin paradox.</span>
-        <div class="tags">light cones · Lorentz transformation · relativity of simultaneity · twin paradox</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/quantum-waves.html">
-        <strong>Quantum Wave Packets</strong>
-        <span>Launch an electron at a barrier and watch part of it tunnel through, settle into energy eigenstates in a box or an oscillator, and collapse when you measure where it is.</span>
-        <div class="tags">Schrödinger equation · tunneling · energy eigenstates · uncertainty principle · measurement</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/hydrogen-orbitals.html">
-        <strong>Hydrogen Orbitals</strong>
-        <span>Every hydrogen state up to n = 6 as a 3D cloud sampled from |ψ|², a slice showing its nodes, and its radial probability against the Bohr orbit. Mix 1s and 2p and watch the charge slosh at the Lyman α frequency.</span>
-        <div class="tags">quantum numbers · orbitals · radial and angular nodes · superposition</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/double-slit.html">
-        <strong>Double Slit, One Particle at a Time</strong>
-        <span>Fire photons, electrons or buckyballs through two slits one at a time. Single dots pile up into fringes, and a which slit detector washes them out.</span>
-        <div class="tags">wave particle duality · de Broglie wavelength · interference · which path information</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/radioactive-decay.html">
-        <strong>Radioactive Decay</strong>
-        <span>A grid of nuclei that each decay at random, and a count that halves every half life anyway. Carbon 14 dating, iodine 131 and decay chains where a daughter builds up and dies away.</span>
-        <div class="tags">half life · exponential decay · decay chains · statistics of small samples</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/rutherford.html">
-        <strong>Rutherford Scattering</strong>
-        <span>Fire alpha particles at a gold nucleus one at a time or as a beam, count them by angle against 1/sin⁴(θ/2), and see why Thomson's plum pudding atom can never send one back.</span>
-        <div class="tags">nuclear atom · impact parameter · closest approach · cross section</div>
-      </a>
-    </li>
-  </ul>
+<main class="wrap" id="demos">
+  <p class="status" id="status" aria-live="polite"></p>
 
-  <h2>Mechanics</h2>
-  <ul class="list">
-    <li>
-      <a class="demo" href="demos/projectile-drag.html">
-        <strong>Projectile Range</strong>
-        <span>Launch a baseball, a ping pong ball or a cannonball with and without air resistance, and see why the best launch angle drops below 45°.</span>
-        <div class="tags">projectile motion · quadratic drag · terminal speed</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/springs.html">
-        <strong>Springs and Oscillations</strong>
-        <span>Pull a mass on a spring and let go: simple harmonic motion, a period that ignores the amplitude, three kinds of damping, a driven oscillator sweeping through resonance, and two coupled masses trading energy in beats.</span>
-        <div class="tags">simple harmonic motion · damping · resonance · normal modes</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/potential-curves.html">
-        <strong>Potential Energy Curves</strong>
-        <span>Read motion off a graph of U(x): drag the energy line and watch the particle speed up, slow down and turn around. Springs, roller coasters, a double well, a molecule, a pendulum, or a curve you draw yourself, with phase space.</span>
-        <div class="tags">energy conservation · turning points · stable and unstable equilibrium · phase space</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/rotation.html">
-        <strong>Rotation and Torque</strong>
-        <span>Push a door near the hinge and at the handle, race a hoop, disk and sphere down a ramp, spin a skater who pulls her arms in, and balance a seesaw.</span>
-        <div class="tags">torque · moment of inertia · rolling without slipping · angular momentum</div>
-      </a>
-    </li>
-  </ul>
+  <section class="subject" id="astronomy" aria-labelledby="astronomy-h">
+    <h2 id="astronomy-h">Astronomy <span class="n">9</span></h2>
+    <ul class="grid">
+      <li>
+        <a class="card" href="demos/blackbody.html">
+          <picture class="thumb">
+            <source srcset="thumbs/blackbody-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/blackbody-light.webp" alt="Screenshot of the Blackbody Radiation demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Blackbody Radiation</h3>
+            <p>Slide a temperature from a human body to a blue supergiant and watch the Planck curve, Wien's peak and the star's color change.</p>
+            <ul class="tags"><li>Planck curve</li><li>Wien's law</li><li>Stefan-Boltzmann</li><li>star colors</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/seasons.html">
+          <picture class="thumb">
+            <source srcset="thumbs/seasons-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/seasons-light.webp" alt="Screenshot of the Reasons for Seasons demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Reasons for Seasons</h3>
+            <p>Earth's tilted axis, the Sun's path across your sky, day length and sunlight through the year, and why distance from the Sun is not the reason.</p>
+            <ul class="tags"><li>axial tilt</li><li>solar declination</li><li>day length</li><li>insolation</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/moon-phases.html">
+          <picture class="thumb">
+            <source srcset="thumbs/moon-phases-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/moon-phases-light.webp" alt="Screenshot of the Moon Phases demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Moon Phases</h3>
+            <p>Drag the Moon around Earth and see its phase from the ground, when it rises and sets, and why eclipses only happen in eclipse seasons.</p>
+            <ul class="tags"><li>lunar phases</li><li>synodic month</li><li>line of nodes</li><li>eclipses</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/kepler-orbits.html">
+          <picture class="thumb">
+            <source srcset="thumbs/kepler-orbits-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/kepler-orbits-light.webp" alt="Screenshot of the Kepler's Laws demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Kepler's Laws</h3>
+            <p>Launch a planet by dragging its velocity arrow. Watch ellipses form, equal areas sweep out in equal times, and the orbit land on P² = a³/M with the real planets.</p>
+            <ul class="tags"><li>ellipses</li><li>equal areas</li><li>P² = a³</li><li>escape speed</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/hr-diagram.html">
+          <picture class="thumb">
+            <source srcset="thumbs/hr-diagram-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/hr-diagram-light.webp" alt="Screenshot of the Stellar Evolution demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Stellar Evolution</h3>
+            <p>Follow a star of any mass across the HR diagram from the main sequence to a cooling white dwarf or a supernova, and date a star cluster from its turnoff.</p>
+            <ul class="tags"><li>HR diagram</li><li>main sequence lifetime</li><li>white dwarf cooling</li><li>cluster turnoff</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/exoplanets.html">
+          <picture class="thumb">
+            <source srcset="thumbs/exoplanets-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/exoplanets-light.webp" alt="Screenshot of the Finding Exoplanets demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Finding Exoplanets</h3>
+            <p>Watch a planet tug its star and cross its face, with the transit light curve and radial velocity curve drawing live. See why Earth twins are so hard to find.</p>
+            <ul class="tags"><li>transit method</li><li>radial velocity</li><li>Kepler's third law</li><li>planet density</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/distance-ladder.html">
+          <picture class="thumb">
+            <source srcset="thumbs/distance-ladder-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/distance-ladder-light.webp" alt="Screenshot of the Cosmic Distance Ladder demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Cosmic Distance Ladder</h3>
+            <p>Measure a parallax from two photos, time a Cepheid's light curve, find a supernova's peak, and fit Hubble's law to galaxy redshifts. Each rung calibrates the next.</p>
+            <ul class="tags"><li>parallax</li><li>Cepheid variables</li><li>Type Ia supernovae</li><li>Hubble constant</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/tides.html">
+          <picture class="thumb">
+            <source srcset="thumbs/tides-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/tides-light.webp" alt="Screenshot of the Tides demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Tides</h3>
+            <p>See why the Moon raises two ocean bulges, not one: subtract the pull at Earth's center from the pull everywhere else. Watch a city's tides over a day and spring and neap tides over a month.</p>
+            <ul class="tags"><li>tidal force</li><li>1/d³</li><li>spring and neap tides</li><li>lunar day</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/star-slice.html">
+          <picture class="thumb">
+            <source srcset="thumbs/star-slice-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/star-slice-light.webp" alt="Screenshot of the Star Slice demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Star Slice</h3>
+            <p>Cut a real MESA star model in half and zoom from the envelope to the core: composition, convection zones, burning shells, and a white dwarf crystallizing from the center out.</p>
+            <ul class="tags"><li>stellar interiors</li><li>convection</li><li>shell burning</li><li>MESA</li></ul>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </section>
 
-  <h2>Thermodynamics</h2>
-  <ul class="list">
-    <li>
-      <a class="demo" href="demos/ideal-gas.html">
-        <strong>Gas in a Box</strong>
-        <span>Watch pressure and temperature emerge from molecules hitting the walls, speeds relax to Maxwell-Boltzmann, and a moving piston heat the gas.</span>
-        <div class="tags">kinetic theory · ideal gas law · adiabatic compression</div>
-      </a>
-    </li>
-  </ul>
+  <section class="subject" id="modern-physics" aria-labelledby="modern-physics-h">
+    <h2 id="modern-physics-h">Modern physics <span class="n">8</span></h2>
+    <ul class="grid">
+      <li>
+        <a class="card" href="demos/photoelectric.html">
+          <picture class="thumb">
+            <source srcset="thumbs/photoelectric-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/photoelectric-light.webp" alt="Screenshot of the Photoelectric Effect demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Photoelectric Effect</h3>
+            <p>Shine light on a metal, find the stopping voltage, and measure Planck's constant from the slope, the way Millikan did in 1916.</p>
+            <ul class="tags"><li>photons</li><li>work function</li><li>stopping voltage</li><li>Planck's constant</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/spectra.html">
+          <picture class="thumb">
+            <source srcset="thumbs/spectra-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/spectra-light.webp" alt="Screenshot of the Spectra Explorer demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Spectra Explorer</h3>
+            <p>Click any of 99 elements to see its emission or absorption lines, measured by NIST. Includes the Bohr model of hydrogen and a mystery spectrum game, including a star.</p>
+            <ul class="tags"><li>atomic spectra</li><li>Bohr model</li><li>Balmer series</li><li>stellar absorption lines</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/spacetime.html">
+          <picture class="thumb">
+            <source srcset="thumbs/spacetime-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/spacetime-light.webp" alt="Screenshot of the Spacetime Diagrams demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Spacetime Diagrams</h3>
+            <p>Place events on a Minkowski diagram and change observers. Light cones stay at 45° while simultaneity, clocks and lengths change, through the train, the rod and the twin paradox.</p>
+            <ul class="tags"><li>light cones</li><li>Lorentz transformation</li><li>relativity of simultaneity</li><li>twin paradox</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/quantum-waves.html">
+          <picture class="thumb">
+            <source srcset="thumbs/quantum-waves-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/quantum-waves-light.webp" alt="Screenshot of the Quantum Wave Packets demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Quantum Wave Packets</h3>
+            <p>Launch an electron at a barrier and watch part of it tunnel through, settle into energy eigenstates in a box or an oscillator, and collapse when you measure where it is.</p>
+            <ul class="tags"><li>Schrödinger equation</li><li>tunneling</li><li>energy eigenstates</li><li>uncertainty principle</li><li>measurement</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/hydrogen-orbitals.html">
+          <picture class="thumb">
+            <source srcset="thumbs/hydrogen-orbitals-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/hydrogen-orbitals-light.webp" alt="Screenshot of the Hydrogen Orbitals demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Hydrogen Orbitals</h3>
+            <p>Every hydrogen state up to n = 6 as a 3D cloud sampled from |ψ|², a slice showing its nodes, and its radial probability against the Bohr orbit. Mix 1s and 2p and watch the charge slosh at the Lyman α frequency.</p>
+            <ul class="tags"><li>quantum numbers</li><li>orbitals</li><li>radial and angular nodes</li><li>superposition</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/double-slit.html">
+          <picture class="thumb">
+            <source srcset="thumbs/double-slit-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/double-slit-light.webp" alt="Screenshot of the Double Slit, One Particle at a Time demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Double Slit, One Particle at a Time</h3>
+            <p>Fire photons, electrons or buckyballs through two slits one at a time. Single dots pile up into fringes, and a which slit detector washes them out.</p>
+            <ul class="tags"><li>wave particle duality</li><li>de Broglie wavelength</li><li>interference</li><li>which path information</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/radioactive-decay.html">
+          <picture class="thumb">
+            <source srcset="thumbs/radioactive-decay-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/radioactive-decay-light.webp" alt="Screenshot of the Radioactive Decay demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Radioactive Decay</h3>
+            <p>A grid of nuclei that each decay at random, and a count that halves every half life anyway. Carbon 14 dating, iodine 131 and decay chains where a daughter builds up and dies away.</p>
+            <ul class="tags"><li>half life</li><li>exponential decay</li><li>decay chains</li><li>statistics of small samples</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/rutherford.html">
+          <picture class="thumb">
+            <source srcset="thumbs/rutherford-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/rutherford-light.webp" alt="Screenshot of the Rutherford Scattering demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Rutherford Scattering</h3>
+            <p>Fire alpha particles at a gold nucleus one at a time or as a beam, count them by angle against 1/sin⁴(θ/2), and see why Thomson's plum pudding atom can never send one back.</p>
+            <ul class="tags"><li>nuclear atom</li><li>impact parameter</li><li>closest approach</li><li>cross section</li></ul>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </section>
 
-  <h2>Electricity and magnetism</h2>
-  <ul class="list">
-    <li>
-      <a class="demo" href="demos/coulomb-sandbox.html">
-        <strong>Coulomb Sandbox</strong>
-        <span>Drag point charges and watch the field lines, equipotentials and potential update live, as a 2D map or a rotatable 3D landscape.</span>
-        <div class="tags">electric field · potential · superposition</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/rc-circuits.html">
-        <strong>RC Circuits</strong>
-        <span>Flip a switch to charge or discharge a capacitor through a resistor and watch the voltages, current and charge follow exponentials with time constant RC. Half the battery's energy always ends up as heat.</span>
-        <div class="tags">time constant · Kirchhoff's loop rule · capacitor energy · exponential decay</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/magnetic-force.html">
-        <strong>Charges in Magnetic Fields</strong>
-        <span>Launch protons, electrons and alphas into a magnetic field and watch them circle at a period that doesn't depend on speed. Build a velocity selector, a mass spectrometer that separates neon isotopes, and a cyclotron.</span>
-        <div class="tags">magnetic force · cyclotron frequency · velocity selector · mass spectrometer</div>
-      </a>
-    </li>
-    <li>
-      <a class="demo" href="demos/faraday.html">
-        <strong>Faraday's and Lenz's Laws</strong>
-        <span>Push a magnet into a coil and watch the flux, EMF and current, with the coil pushing back. Move it fast or slow and the same total charge flows. Spin a generator coil and slide a bar along rails.</span>
-        <div class="tags">magnetic flux · induced EMF · Lenz's law · generators</div>
-      </a>
-    </li>
-  </ul>
+  <section class="subject" id="mechanics" aria-labelledby="mechanics-h">
+    <h2 id="mechanics-h">Mechanics <span class="n">5</span></h2>
+    <ul class="grid">
+      <li>
+        <a class="card" href="demos/projectile-drag.html">
+          <picture class="thumb">
+            <source srcset="thumbs/projectile-drag-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/projectile-drag-light.webp" alt="Screenshot of the Projectile Range demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Projectile Range</h3>
+            <p>Launch a baseball, a ping pong ball or a cannonball with and without air resistance, and see why the best launch angle drops below 45°.</p>
+            <ul class="tags"><li>projectile motion</li><li>quadratic drag</li><li>terminal speed</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/springs.html">
+          <picture class="thumb">
+            <source srcset="thumbs/springs-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/springs-light.webp" alt="Screenshot of the Springs and Oscillations demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Springs and Oscillations</h3>
+            <p>Pull a mass on a spring and let go: simple harmonic motion, a period that ignores the amplitude, three kinds of damping, a driven oscillator sweeping through resonance, and two coupled masses trading energy in beats.</p>
+            <ul class="tags"><li>simple harmonic motion</li><li>damping</li><li>resonance</li><li>normal modes</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/potential-curves.html">
+          <picture class="thumb">
+            <source srcset="thumbs/potential-curves-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/potential-curves-light.webp" alt="Screenshot of the Potential Energy Curves demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Potential Energy Curves</h3>
+            <p>Read motion off a graph of U(x): drag the energy line and watch the particle speed up, slow down and turn around. Springs, roller coasters, a double well, a molecule, a pendulum, or a curve you draw yourself, with phase space.</p>
+            <ul class="tags"><li>energy conservation</li><li>turning points</li><li>stable and unstable equilibrium</li><li>phase space</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/rotation.html">
+          <picture class="thumb">
+            <source srcset="thumbs/rotation-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/rotation-light.webp" alt="Screenshot of the Rotation and Torque demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Rotation and Torque</h3>
+            <p>Push a door near the hinge and at the handle, race a hoop, disk and sphere down a ramp, spin a skater who pulls her arms in, and balance a seesaw.</p>
+            <ul class="tags"><li>torque</li><li>moment of inertia</li><li>rolling without slipping</li><li>angular momentum</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/catenary.html">
+          <picture class="thumb">
+            <source srcset="thumbs/catenary-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/catenary-light.webp" alt="Screenshot of the Hanging Chains and Arches demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Hanging Chains and Arches</h3>
+            <p>Drag the ends of a hanging chain and compare its catenary with a parabola, follow the tension along it, then flip it into an arch that stands in pure compression, like the Gateway Arch.</p>
+            <ul class="tags"><li>catenary</li><li>tension</li><li>free body diagram</li><li>arches</li></ul>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </section>
 
-  <h2>Optics</h2>
-  <ul class="list">
-    <li>
-      <a class="demo" href="demos/optics-bench.html">
-        <strong>Optics Bench</strong>
-        <span>Drag lenses, mirrors, prisms and light sources. Rays bend and bounce live, and images form where they cross.</span>
-        <div class="tags">thin lens equation · mirrors · total internal reflection · dispersion</div>
-      </a>
-    </li>
-  </ul>
+  <section class="subject" id="thermodynamics" aria-labelledby="thermodynamics-h">
+    <h2 id="thermodynamics-h">Thermodynamics <span class="n">1</span></h2>
+    <ul class="grid">
+      <li>
+        <a class="card" href="demos/ideal-gas.html">
+          <picture class="thumb">
+            <source srcset="thumbs/ideal-gas-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/ideal-gas-light.webp" alt="Screenshot of the Gas in a Box demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Gas in a Box</h3>
+            <p>Watch pressure and temperature emerge from molecules hitting the walls, speeds relax to Maxwell-Boltzmann, and a moving piston heat the gas.</p>
+            <ul class="tags"><li>kinetic theory</li><li>ideal gas law</li><li>adiabatic compression</li></ul>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </section>
 
-  <footer>Steven Anderson · Louisiana Tech University</footer>
+  <section class="subject" id="electricity-and-magnetism" aria-labelledby="electricity-and-magnetism-h">
+    <h2 id="electricity-and-magnetism-h">Electricity and magnetism <span class="n">4</span></h2>
+    <ul class="grid">
+      <li>
+        <a class="card" href="demos/coulomb-sandbox.html">
+          <picture class="thumb">
+            <source srcset="thumbs/coulomb-sandbox-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/coulomb-sandbox-light.webp" alt="Screenshot of the Coulomb Sandbox demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Coulomb Sandbox</h3>
+            <p>Drag point charges and watch the field lines, equipotentials and potential update live, as a 2D map or a rotatable 3D landscape.</p>
+            <ul class="tags"><li>electric field</li><li>potential</li><li>superposition</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/rc-circuits.html">
+          <picture class="thumb">
+            <source srcset="thumbs/rc-circuits-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/rc-circuits-light.webp" alt="Screenshot of the RC Circuits demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>RC Circuits</h3>
+            <p>Flip a switch to charge or discharge a capacitor through a resistor and watch the voltages, current and charge follow exponentials with time constant RC. Half the battery's energy always ends up as heat.</p>
+            <ul class="tags"><li>time constant</li><li>Kirchhoff's loop rule</li><li>capacitor energy</li><li>exponential decay</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/magnetic-force.html">
+          <picture class="thumb">
+            <source srcset="thumbs/magnetic-force-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/magnetic-force-light.webp" alt="Screenshot of the Charges in Magnetic Fields demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Charges in Magnetic Fields</h3>
+            <p>Launch protons, electrons and alphas into a magnetic field and watch them circle at a period that doesn't depend on speed. Build a velocity selector, a mass spectrometer that separates neon isotopes, and a cyclotron.</p>
+            <ul class="tags"><li>magnetic force</li><li>cyclotron frequency</li><li>velocity selector</li><li>mass spectrometer</li></ul>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="demos/faraday.html">
+          <picture class="thumb">
+            <source srcset="thumbs/faraday-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/faraday-light.webp" alt="Screenshot of the Faraday's and Lenz's Laws demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Faraday's and Lenz's Laws</h3>
+            <p>Push a magnet into a coil and watch the flux, EMF and current, with the coil pushing back. Move it fast or slow and the same total charge flows. Spin a generator coil and slide a bar along rails.</p>
+            <ul class="tags"><li>magnetic flux</li><li>induced EMF</li><li>Lenz's law</li><li>generators</li></ul>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="subject" id="optics" aria-labelledby="optics-h">
+    <h2 id="optics-h">Optics <span class="n">1</span></h2>
+    <ul class="grid">
+      <li>
+        <a class="card" href="demos/optics-bench.html">
+          <picture class="thumb">
+            <source srcset="thumbs/optics-bench-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="thumbs/optics-bench-light.webp" alt="Screenshot of the Optics Bench demo" width="640" height="400" loading="lazy" decoding="async">
+          </picture>
+          <div class="body">
+            <h3>Optics Bench</h3>
+            <p>Drag lenses, mirrors, prisms and light sources. Rays bend and bounce live, and images form where they cross.</p>
+            <ul class="tags"><li>thin lens equation</li><li>mirrors</li><li>total internal reflection</li><li>dispersion</li></ul>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <p class="empty" id="empty" hidden>No demos match <strong id="emptyq"></strong>. <button type="button" id="reset">Show all demos</button></p>
 </main>
+
+<footer>
+  <div class="wrap">
+    <p>Steven Anderson · Louisiana Tech University</p>
+    <p><a href="https://github.com/PhysicsSteven/VirtualDemos">Source on GitHub</a></p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const q = document.getElementById('q');
+  const clear = document.getElementById('clear');
+  const status = document.getElementById('status');
+  const empty = document.getElementById('empty');
+  const emptyq = document.getElementById('emptyq');
+  const sections = [...document.querySelectorAll('.subject')];
+  const total = document.querySelectorAll('.card').length;
+  // Fold case and accents so "schrodinger" finds "Schrödinger".
+  const fold = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const items = [...document.querySelectorAll('.grid > li')].map(li => ({ li, text: fold(li.textContent.replace(/\s+/g, ' ')) }));
+
+  function apply() {
+    const words = fold(q.value.trim()).split(/\s+/).filter(Boolean);
+    let shown = 0;
+    for (const it of items) {
+      const ok = words.every(w => it.text.includes(w));
+      it.li.hidden = !ok;
+      if (ok) shown++;
+    }
+    for (const sec of sections) {
+      const n = sec.querySelectorAll('.grid > li:not([hidden])').length;
+      sec.hidden = n === 0;
+      sec.querySelector('h2 .n').textContent = n;
+      const link = document.querySelector('.jump a[href="#' + sec.id + '"]');
+      if (link) {
+        link.querySelector('.n').textContent = n;
+        link.parentElement.hidden = n === 0;
+      }
+    }
+    clear.hidden = !words.length;
+    empty.hidden = shown > 0;
+    emptyq.textContent = q.value.trim();
+    status.textContent = words.length && shown ? 'Showing ' + shown + ' of ' + total + ' demos' : '';
+  }
+
+  q.addEventListener('input', apply);
+  q.addEventListener('keydown', e => { if (e.key === 'Escape' && q.value) { q.value = ''; apply(); } });
+  const reset = () => { q.value = ''; apply(); q.focus(); };
+  clear.addEventListener('click', reset);
+  document.getElementById('reset').addEventListener('click', reset);
+  // Press / anywhere to jump to the filter box.
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey && document.activeElement !== q) {
+      e.preventDefault(); q.focus(); q.select();
+    }
+  });
+  apply();
+})();
+</script>
 </body>
 </html>

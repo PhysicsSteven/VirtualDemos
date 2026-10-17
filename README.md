@@ -24,6 +24,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Rutherford Scattering](demos/rutherford.html) | Modern physics | Alpha trajectories past a nucleus, counts against the Rutherford formula, closest approach, and the plum pudding model for contrast |
 | [Photoelectric Effect](demos/photoelectric.html) | Modern physics | Photon energy, work function, stopping voltage, and measuring Planck's constant |
 | [Projectile Range](demos/projectile-drag.html) | Mechanics | Projectile motion with and without quadratic air drag |
+| [Hanging Chains and Arches](demos/catenary.html) | Mechanics | The catenary under its own weight vs a parabola, tension and free body diagrams along the chain, and the inverted arch |
 | [Springs and Oscillations](demos/springs.html) | Mechanics | Simple harmonic motion, hanging springs, damping regimes, driven resonance and coupled normal modes and beats |
 | [Potential Energy Curves](demos/potential-curves.html) | Mechanics | Motion read from U(x): turning points, equilibria, small oscillation periods, phase space, and a curve you can draw |
 | [Rotation and Torque](demos/rotation.html) | Mechanics | Torque and lever arms, a rolling race set by I/mR², angular momentum conservation, and seesaw balance |
@@ -42,3 +43,7 @@ Open any file in `demos/` directly in a browser, or enable GitHub Pages (Setting
 
 1. Put the new demo in `demos/` as a single HTML file.
 2. Add a card for it in `index.html` and a row in the table above.
+
+## Maintenance
+
+The card thumbnails in `thumbs/` come from `tools/thumbs.py` (Python, Playwright and Pillow). Run `python3 tools/thumbs.py` after adding or changing a demo, or `python3 tools/thumbs.py name` for one demo; copy an existing card in `index.html` for the new one.
