@@ -18,6 +18,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Quantum Wave Packets](demos/quantum-waves.html) | Modern physics | The 1D time dependent Schrödinger equation for an electron: spreading, tunneling, bound states, superpositions, uncertainty and measurement |
 | [Hydrogen Orbitals](demos/hydrogen-orbitals.html) | Modern physics | Exact hydrogen wave functions: 3D probability clouds, slices with nodes, radial probability, real and complex orbitals, and a 1s + 2p superposition |
 | [Double Slit, One Particle at a Time](demos/double-slit.html) | Modern physics | Single detections building an interference pattern for photons, electrons and C₆₀, with a which slit detector |
+| [Radioactive Decay](demos/radioactive-decay.html) | Modern physics | Random decay of individual nuclei, half life, carbon 14 dating and two step decay chains against the Bateman equations |
 | [Photoelectric Effect](demos/photoelectric.html) | Modern physics | Photon energy, work function, stopping voltage, and measuring Planck's constant |
 | [Projectile Range](demos/projectile-drag.html) | Mechanics | Projectile motion with and without quadratic air drag |
 | [Gas in a Box](demos/ideal-gas.html) | Thermodynamics | Kinetic theory of a 2D gas: pressure, temperature, Maxwell-Boltzmann speeds, adiabatic compression |

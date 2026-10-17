@@ -1,0 +1,1318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Radioactive Decay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the grid of nuclei on the left, N(t) and the activity histogram stacked on the right; instrument rail on the right; stacks on narrow screens. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --sp1: #1f57b0;
+  --sp2: #e08414;
+  --sp3: #a3adba;
+  --sp3-line: #6f7a89;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --sp1: #5f9bff; --sp2: #f5b041; --sp3: #475262; --sp3-line: #8794a6;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --sp1: #5f9bff; --sp2: #f5b041; --sp3: #475262; --sp3-line: #8794a6;
+  color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
+  display: grid; grid-template-columns: minmax(0, 45fr) minmax(0, 55fr); grid-template-rows: minmax(0, 57fr) minmax(0, 43fr); }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#gPane { grid-row: 1 / 3; border-right: 1px solid var(--line); }
+#aPane { border-top: 1px solid var(--line); }
+#gCan { touch-action: none; outline: none; cursor: pointer; }
+#nCan { touch-action: none; outline: none; }
+#gCan:focus-visible, #nCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
+.stage-ctl > * { pointer-events: auto; }
+.stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
+.tclock { margin-left: auto; font-size: 0.86rem; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--canvas) 85%, transparent); padding: 2px 6px; border-radius: 6px; white-space: nowrap; }
+.plot-ctl { position: absolute; top: 8px; right: 10px; z-index: 3; }
+.plot-ctl .seg button { font-size: 0.78rem; padding: 3px 9px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg.full { display: flex; }
+.seg.full button { flex: 1; padding: 4px 4px; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.formula { margin: 0; font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
+.formula b { color: var(--ink); font-weight: 600; }
+
+.tbl { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.8rem; }
+.tbl th { font-family: var(--font-ui); font-weight: 400; color: var(--muted); text-align: right; padding: 2px 3px; font-size: 0.74rem; }
+.tbl td { text-align: right; padding: 3px 3px; border-top: 1px solid var(--grid-strong); white-space: nowrap; }
+.tbl th:first-child, .tbl td:first-child { text-align: left; font-family: var(--font-ui); }
+.tbl i { display: inline-block; width: 9px; height: 9px; margin-right: 5px; vertical-align: 0; }
+
+.task { display: flex; flex-direction: column; gap: 8px; }
+.task p { margin: 0; font-size: 0.9rem; }
+.task .entry { display: flex; gap: 6px; align-items: center; }
+.task input[type="number"] { font: inherit; font-family: var(--font-mono); font-size: 0.9rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; width: 0; flex: 1; min-width: 0; }
+.task .unit { font-size: 0.85rem; color: var(--muted); }
+.verdict { font-size: 0.85rem; }
+.verdict b { font-weight: 700; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid var(--ink); }
+.swatch.dash { border-top-style: dashed; }
+.swatch.band { height: 10px; border: 0; background: color-mix(in srgb, var(--sp1) 22%, transparent); }
+.swatch.bar { height: 10px; border: 1.5px solid var(--sp1); background: color-mix(in srgb, var(--sp1) 18%, transparent); }
+.swatch.ghost { border-color: var(--muted); opacity: 0.6; }
+.swatch.mark { width: 0; height: 12px; border-top: 0; border-left: 1.5px dotted var(--muted); margin: 0 11px; }
+.swatch.tri { width: 0; height: 0; border-top: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 9px solid var(--accent); margin: 0 5px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 1060px) {
+  .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 46fr) minmax(0, 30fr) minmax(0, 24fr); min-height: 820px; }
+  #gPane { grid-row: auto; border-right: 0; }
+  #nPane { border-top: 1px solid var(--line); }
+}
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; grid-template-rows: 440px 300px 240px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Radioactive Decay</h1>
+      <p>Each nucleus decays at random, with no memory of how long it has lived. Yet a large sample shrinks by half every half life, as predictably as a clock.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">t in steps, yr, d or h by setup · λ = ln 2 / T½</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="pane" id="gPane">
+        <canvas id="gCan" tabindex="0" aria-label="Grid of nuclei. Parent nuclei are filled squares, daughters are round, stable end products are small dots. Click a nucleus to follow it. Keys: arrows move the followed nucleus, space plays or pauses, S takes one step, R resets."></canvas>
+        <div class="stage-ctl">
+          <button type="button" class="btn" id="play">Pause</button>
+          <button type="button" class="btn" id="stepBtn">Step</button>
+          <button type="button" class="btn" id="reset">Reset</button>
+          <div class="seg" role="group" aria-label="Speed" id="speedSeg">
+            <button type="button" data-s="0.25" aria-pressed="false">¼×</button>
+            <button type="button" data-s="1" aria-pressed="true">1×</button>
+            <button type="button" data-s="4" aria-pressed="false">4×</button>
+            <button type="button" data-s="16" aria-pressed="false">16×</button>
+          </div>
+          <span class="tclock mono" id="tclock">t = 0</span>
+        </div>
+      </div>
+      <div class="pane" id="nPane">
+        <canvas id="nCan" tabindex="0" aria-label="Number of nuclei of each kind against time, with the expected curves dashed and a one sigma band. Drag a half life marker sideways to change that half life; left and right arrows nudge the parent half life, up and down the daughter's."></canvas>
+        <div class="plot-ctl">
+          <div class="seg" role="group" aria-label="Vertical scale" id="scaleSeg">
+            <button type="button" data-l="0" aria-pressed="true">Linear</button>
+            <button type="button" data-l="1" aria-pressed="false">Log</button>
+          </div>
+        </div>
+      </div>
+      <div class="pane" id="aPane">
+        <canvas id="aCan" aria-label="Activity: number of decays in each time bin as a histogram, with the expected number dashed."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="coin" aria-pressed="true">Coin flip nuclei</button>
+          <button type="button" data-p="c14" aria-pressed="false">Carbon 14 dating</button>
+          <button type="button" data-p="i131" aria-pressed="false">Iodine 131</button>
+          <button type="button" data-p="bi210" aria-pressed="false">Two step chain</button>
+          <button type="button" data-p="te132" aria-pressed="false">Short daughter, long parent</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Nuclei</h2>
+        <div class="seg full" role="group" aria-label="Number of nuclei" id="nSeg">
+          <button type="button" data-n="100" aria-pressed="false">100</button>
+          <button type="button" data-n="400" aria-pressed="true">400</button>
+          <button type="button" data-n="1600" aria-pressed="false">1,600</button>
+          <button type="button" data-n="10000" aria-pressed="false">10,000</button>
+        </div>
+        <p class="hint">Each run is a new random sample. The dashed curves are what you expect on average; the band shows the typical spread, ±1σ. Compare 100 nuclei with 10,000: the relative spread shrinks as 1/√N.</p>
+      </section>
+
+      <section>
+        <h2>Half life</h2>
+        <div id="hlSliders"></div>
+        <dl class="readout" id="hlTable"></dl>
+        <p class="formula mono" id="hlFormula"></p>
+        <p class="hint" id="hlNote"></p>
+      </section>
+
+      <section>
+        <h2>Measurements</h2>
+        <dl class="readout">
+          <div><dt>Elapsed time t</dt><dd id="rT">—</dd></div>
+          <div><dt id="rHLlab">Half lives elapsed</dt><dd id="rHL">—</dd></div>
+          <div><dt id="rFracLab">Remaining N/N₀</dt><dd id="rFrac">—</dd></div>
+          <div><dt>Expected e<sup>−λt</sup></dt><dd id="rExp">—</dd></div>
+          <div><dt>Off by</dt><dd id="rDev">—</dd></div>
+          <div><dt>Expected spread σ/N</dt><dd id="rRel">—</dd></div>
+        </dl>
+        <table class="tbl" id="spTable"></table>
+        <dl class="readout">
+          <div class="wide"><dt id="rSurvLab">Parents alive one half life ago that are still alive</dt><dd id="rSurv">—</dd></div>
+        </dl>
+        <p class="hint">σ = √(N₀f(1 − f)), where f is the expected fraction. For f small this is close to √N. The last line is the memoryless property at work: whatever their age, about half the survivors go in each half life.</p>
+      </section>
+
+      <section>
+        <h2>One nucleus</h2>
+        <div class="row2">
+          <button type="button" class="btn" id="followRand">Follow one</button>
+          <button type="button" class="btn" id="followClear">Clear ages</button>
+        </div>
+        <p class="formula" id="fStatus">Click any nucleus in the grid to follow it.</p>
+        <dl class="readout">
+          <div class="wide"><dt>Ages at decay of nuclei you followed</dt><dd id="fAges" class="mono" style="font-size:0.9rem;font-weight:400">none yet</dd></div>
+          <div><dt id="fMeanLab">Mean age at decay</dt><dd id="fMean">—</dd></div>
+          <div><dt>Expected mean life τ</dt><dd id="fTau">—</dd></div>
+        </dl>
+        <p class="hint">No one can say when a given nucleus will decay. A nucleus that has survived 3 half lives is no more likely to decay next than a fresh one: its chance of decaying within the next half life is still exactly 50%.</p>
+        <p class="sr" aria-live="polite" id="fLive"></p>
+      </section>
+
+      <section id="chainSec">
+        <h2>Parent and daughter</h2>
+        <dl class="readout">
+          <div><dt>Activity ratio A<sub>D</sub>/A<sub>P</sub> now</dt><dd id="cRatio">—</dd></div>
+          <div><dt>Expected now</dt><dd id="cRatioExp">—</dd></div>
+          <div><dt>Daughter peaks at</dt><dd id="cPeak">—</dd></div>
+          <div><dt>Long time ratio</dt><dd id="cLim">—</dd></div>
+        </dl>
+        <p class="formula mono" id="cFormula"></p>
+        <p class="hint" id="cNote"></p>
+      </section>
+
+      <section id="dateSec">
+        <h2>Carbon dating task</h2>
+        <div class="task">
+          <p id="dQ"></p>
+          <div class="entry">
+            <label class="sr" for="dIn">Your age estimate in years</label>
+            <input type="number" id="dIn" inputmode="decimal" min="0" step="10" placeholder="age">
+            <span class="unit">yr</span>
+            <button type="button" class="btn primary" id="dCheck">Check</button>
+          </div>
+          <p class="verdict" id="dOut" aria-live="polite"></p>
+          <button type="button" class="btn" id="dNew">New sample</button>
+        </div>
+        <p class="formula mono">t = (T½ / ln 2) · ln(N₀/N)</p>
+        <dl class="readout">
+          <div class="wide"><dt>Dating the grid from its count</dt><dd id="dGrid">—</dd></div>
+        </dl>
+        <p class="hint">N₀ is the carbon 14 a living sample has. The method assumes the atmospheric carbon 14 level was the same in the past; real dates are corrected with a calibration curve.</p>
+      </section>
+
+      <section>
+        <h2>Display</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tExp" checked>Expected</label>
+          <label><input type="checkbox" id="tBand" checked>±1σ band</label>
+          <label><input type="checkbox" id="tMarks" checked>Half lives</label>
+          <label><input type="checkbox" id="tGhost" checked>Earlier runs</label>
+        </div>
+        <div class="key">
+          <span><i class="swatch"></i>This sample</span>
+          <span><i class="swatch dash"></i>Expected, N₀e<sup>−λt</sup> or Bateman</span>
+          <span><i class="swatch band"></i>Expected ±1σ</span>
+          <span><i class="swatch ghost"></i>Earlier runs, same settings</span>
+          <span><i class="swatch bar"></i>Decays counted in each time bin</span>
+          <span><i class="swatch mark"></i>Whole half lives</span>
+          <span><i class="swatch tri"></i>Age at decay of a followed nucleus</span>
+        </div>
+        <p class="hint" id="modelHint">Model: each step of length Δt, every nucleus draws one random number and changes with the exact probability for that time, p = 1 − e<sup>−λΔt</sup>. For a chain the step uses the Bateman probabilities, so a parent can even pass through the daughter within one step. The sample therefore follows the expected curves at any step size.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  // phi(x) = (1 − e^(−x))/x, stable for all x including 0
+  function phi(x) { return Math.abs(x) < 1e-8 ? 1 - x / 2 : -Math.expm1(-x) / x; }
+  // Fractions in each species at time t for a chain lam[0] → lam[1] → stable (or lam[0] → stable),
+  // starting from one nucleus of species `from`. Bateman solution.
+  function fractions(lam, t, from) {
+    const n = lam.length, out = new Array(n + 1).fill(0);
+    from = from || 0;
+    if (from >= n) { out[n] = 1; return out; }
+    if (n === 1) { out[0] = Math.exp(-lam[0] * t); out[1] = -Math.expm1(-lam[0] * t); return out; }
+    const a = lam[0], b = lam[1];
+    if (from === 1) { out[1] = Math.exp(-b * t); out[2] = -Math.expm1(-b * t); return out; }
+    out[0] = Math.exp(-a * t);
+    // N_D/N₀ = a (e^(−at) − e^(−bt))/(b − a), written with the slower exponential factored out
+    out[1] = a * t * Math.exp(-Math.min(a, b) * t) * phi(Math.abs(b - a) * t);
+    out[2] = Math.max(0, 1 - out[0] - out[1]);
+    return out;
+  }
+  // Cumulative fraction of the original nuclei that have decayed out of species i by time t (start: pure species 0)
+  function cumDecays(lam, t, i) {
+    const f = fractions(lam, t, 0);
+    let s = 0; for (let j = i + 1; j < f.length; j++) s += f[j];
+    return s;
+  }
+  // Time of the daughter maximum, ln(λD/λP)/(λD − λP)
+  function peakTime(a, b) { return Math.abs(b - a) < 1e-12 * a ? 1 / a : Math.log(b / a) / (b - a); }
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function makeSim(N0, lam, dt, seed) {
+    const n = lam.length, rows = [];
+    for (let s = 0; s < n; s++) rows.push(fractions(lam, dt, s));
+    const counts = new Array(n + 1).fill(0); counts[0] = N0;
+    return { N0, lam: lam.slice(), dt, n, rows, counts, sp: new Uint8Array(N0), rng: mulberry32(seed >>> 0), step: 0 };
+  }
+  // One step: every unstable nucleus draws one uniform number and moves with the exact transition probabilities for Δt.
+  // Returns the decays out of each species; `changed` (optional Int32Array) receives the indices that changed.
+  function stepSim(s, changed) {
+    const n = s.n, sp = s.sp, rng = s.rng, r0 = s.rows[0];
+    const c00 = r0[0], c01 = n === 2 ? r0[0] + r0[1] : 2, c11 = n === 2 ? s.rows[1][1] : 0;
+    let d0 = 0, d1 = 0, m = 0;
+    for (let i = 0; i < sp.length; i++) {
+      const k = sp[i]; if (k === n) continue;
+      const u = rng();
+      if (k === 0) {
+        if (u < c00) continue;
+        if (u < c01) { sp[i] = 1; d0++; } else { sp[i] = n; d0++; if (n === 2) d1++; }
+      } else {
+        if (u < c11) continue;
+        sp[i] = 2; d1++;
+      }
+      if (changed) changed[m++] = i;
+    }
+    const c = s.counts;
+    c[0] -= d0;
+    if (n === 1) c[1] += d0; else { c[1] += d0 - d1; c[2] += d1; }
+    s.step++;
+    return { d0, d1, m };
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.RD = { phi, fractions, cumDecays, peakTime, mulberry32, makeSim, stepSim };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  // ---------- setups ----------
+  // Half lives: ENSDF/NNDC evaluated values (C 14: the conventional 5730 yr, see note).
+  const PRESETS = {
+    coin: { unit: 'step', species: [{ name: 'parent', T: 1, range: [0.5, 10] }, { name: 'daughter' }], winHL: 10, coin: true,
+      hint: 'Each step, every parent flips a fair coin and decays on heads, so p = 1/2 and T½ = 1 step. About half are left after one step, a quarter after two. Which ones go is pure chance.',
+      note: 'With T½ = 1 step the decay chance per step is exactly ½. Other half lives give p = 1 − 2^(−1/T½) per step.' },
+    c14: { unit: 'yr', species: [{ name: '¹⁴C', T: 5730, range: [500, 50000] }, { name: '¹⁴N' }], winHL: 8, dating: true,
+      hint: 'Living things take up carbon 14 from the air. After death it is not replaced, so the fraction left tells the age. Try the dating task below.',
+      note: '5730 yr is the textbook value (the Cambridge half life). The current evaluation is 5700 ± 30 yr; radiocarbon labs still quote ages with Libby’s 5568 yr by convention and then calibrate.' },
+    i131: { unit: 'd', species: [{ name: '¹³¹I', T: 8.0252, range: [0.5, 100] }, { name: '¹³¹Xe' }], winHL: 8,
+      hint: 'Iodine 131 treats thyroid disease and is a fallout product. After 10 half lives, about 80 days, the activity has dropped to 1/1024 of its start.',
+      note: '¹³¹I: 8.03 d, β⁻ decay to ¹³¹Xe. About 1% passes through the metastable ¹³¹ᵐXe (11.9 d) first; that detour is left out. In the body the iodine is also excreted, so the effective half life is shorter.' },
+    bi210: { unit: 'd', species: [{ name: '²¹⁰Bi', T: 5.012, range: [0.5, 200] }, { name: '²¹⁰Po', T: 138.376, range: [1, 1000] }, { name: '²⁰⁶Pb' }],
+      hint: 'A short lived parent feeds a long lived daughter. ²¹⁰Po builds up while ²¹⁰Bi decays, peaks at the moment their activities are equal, then dies away with its own half life. No equilibrium.',
+      note: '²¹⁰Bi: 5.01 d (β⁻); ²¹⁰Po: 138 d (α); ²⁰⁶Pb is stable. These are the last steps of the uranium 238 series. A tiny α branch of ²¹⁰Bi (0.00013%) is left out.' },
+    te132: { unit: 'h', species: [{ name: '¹³²Te', T: 76.896, range: [5, 1000] }, { name: '¹³²I', T: 2.295, range: [0.2, 100] }, { name: '¹³²Xe' }],
+      hint: 'A long lived parent feeds a short lived daughter. Within a few daughter half lives the daughter’s activity catches up and then tracks the parent’s. On the log scale the two activity lines run parallel.',
+      note: '¹³²Te: 3.20 d = 76.9 h; ¹³²I: 2.30 h; ¹³²Xe is stable. The same happens for ⁹⁰Sr (28.8 yr) and ⁹⁰Y (64.1 h), but there only 1 nucleus in 3,900 would be ⁹⁰Y at a time, too few to see among 10,000.' }
+  };
+  const UNIT_LONG = { step: 'steps', yr: 'yr', d: 'd', h: 'h' };
+
+  // ---------- state ----------
+  const S = { preset: 'coin', N0: 400, T: [1], custom: false, mult: 1, logY: false, layers: { exp: true, band: true, marks: true, ghost: true } };
+  let sim = null, lam = [Math.LN2], dt = 1, win = 10, winBase = 10, stepsPerSec = 1, acc = 0;
+  let H = [], D = [];             // H[i][k]: count of species i after step k; D[i][k]: decays out of species i during step k
+  let ghosts = [], ghostKey = '';
+  let running = !reduce, seed = 12345;
+  let changedBuf = new Int32Array(400), flashes = [];
+  let follow = -1, followLog = [], ages = [];
+  let dragHold = null;
+  const cfg = () => PRESETS[S.preset];
+  const nSp = () => lam.length;          // number of unstable species
+  const tNow = () => (sim ? sim.step * dt : 0);
+  const spName = (i) => (S.custom ? (i === 0 ? 'parent' : i === nSp() ? (nSp() === 2 ? 'stable' : 'daughter') : 'daughter') : cfg().species[i].name);
+
+  function nice125(v) { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p; }
+  function niceDown(v) { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; return (m >= 5 ? 5 : m >= 2 ? 2 : 1) * p; }
+  function naturalWindow() {
+    const c = cfg(), T = S.T;
+    if (c.coin) return Math.max(10, 10 * T[0]);
+    if (T.length === 1) return c.winHL * T[0];
+    return Math.max(2.5 * Math.max(T[0], T[1]), 6 * Math.min(T[0], T[1]));
+  }
+  function chooseStep(w) {
+    const c = cfg(), T = S.T;
+    if (c.coin) return 1;
+    let d = nice125(w / 400);
+    const tmin = Math.min(...T);
+    if (d > tmin / 4) d = niceDown(tmin / 4);
+    if (w / d > 4000) d = w / 4000;
+    return d;
+  }
+
+  // ---------- run control ----------
+  function configKey() { return `${S.preset}|${S.N0}|${S.T.join(',')}`; }
+  function newRun(keepGhost) {
+    // remember the finished sample as a ghost when nothing but the random draw changes
+    const key = configKey();
+    if (keepGhost && sim && key === ghostKey && sim.step > 2) {
+      ghosts.push({ dt, h: H[0].slice() });
+      if (ghosts.length > 3) ghosts.shift();
+    } else if (key !== ghostKey) ghosts = [];
+    ghostKey = key;
+    lam = S.T.map((T) => Math.LN2 / T);
+    if (!dragHold) { winBase = naturalWindow(); win = winBase; dt = chooseStep(win); }
+    stepsPerSec = cfg().coin ? win / 10 : (win / dt) / 30;
+    seed = (seed * 1103515245 + 12345 + Date.now()) >>> 0;
+    sim = makeSim(S.N0, lam, dt, seed);
+    if (changedBuf.length < S.N0) changedBuf = new Int32Array(S.N0);
+    H = []; D = [];
+    for (let i = 0; i <= nSp(); i++) { H.push([sim.counts[i]]); D.push([0]); }
+    flashes = []; acc = 0;
+    if (follow >= S.N0) follow = -1;
+    followLog = follow >= 0 ? [{ t: 0, sp: 0 }] : [];
+    lastAuto = '';
+    updateFollow();
+    updateReadouts(true);
+  }
+  let lastAuto = '';
+  function stepOnce(noFlash) {
+    const r = stepSim(sim, changedBuf), now = performance.now();
+    if (!noFlash) { flashes = []; for (let j = 0; j < r.m; j++) flashes.push({ i: changedBuf[j], t0: now }); }
+    if (flashes.length > 4000) flashes.splice(0, flashes.length - 4000);
+    for (let i = 0; i <= nSp(); i++) { H[i].push(sim.counts[i]); D[i].push(i === 0 ? r.d0 : i === 1 && nSp() === 2 ? r.d1 : 0); }
+    if (follow >= 0) {
+      const s = sim.sp[follow], last = followLog[followLog.length - 1];
+      if (last && s !== last.sp) {
+        const t = tNow();
+        followLog.push({ t, sp: s });
+        if (last.sp === 0) {
+          ages.push(t); if (ages.length > 40) ages.shift();
+          $('fLive').textContent = `The nucleus you followed decayed at age ${fmtT(t)}.`;
+        }
+      }
+    }
+    // extend the time axis when the run reaches the end, up to 16 times the starting window
+    const t = tNow();
+    if (t >= win - 1e-9 * win) {
+      if (win < 16 * winBase - 1e-9) win *= 2;
+      else { setRunning(false); lastAuto = 'end'; }
+    }
+    let alive = 0; for (let i = 0; i < nSp(); i++) alive += sim.counts[i];
+    if (alive === 0) { setRunning(false); lastAuto = 'done'; }
+  }
+  function advance(sec) {
+    acc += sec * stepsPerSec * S.mult;
+    let n = Math.floor(acc);
+    if (n <= 0) return;
+    acc -= n;
+    n = Math.min(n, 400);
+    for (let k = 0; k < n && running; k++) stepOnce(k < n - 1);
+  }
+
+  // ---------- theme and canvases ----------
+  let T = null, dpr = 1;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
+      gridStrong: g('--grid-strong'), accent: g('--accent'), equi: g('--equi'), ui: g('--font-ui') || 'sans-serif',
+      sp: [g('--sp1'), g('--sp2'), g('--sp3')], sp3line: g('--sp3-line'), mono: g('--font-mono') || 'monospace' };
+  }
+  // plot color of species i: parent blue, intermediate orange, stable end gray
+  const spColor = (i) => (i === nSp() ? T.sp3line : T.sp[i]);
+  const spFill = (i) => (i === nSp() ? T.sp[2] : T.sp[i]);
+
+  const cans = { g: $('gCan'), n: $('nCan'), a: $('aCan') };
+  const panes = { g: $('gPane'), n: $('nPane'), a: $('aPane') };
+  const ctxs = { g: cans.g.getContext('2d'), n: cans.n.getContext('2d'), a: cans.a.getContext('2d') };
+  const dims = { g: [0, 0], n: [0, 0], a: [0, 0] };
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const k of ['g', 'n', 'a']) {
+      const r = panes[k].getBoundingClientRect();
+      cans[k].width = Math.max(1, Math.round(r.width * dpr)); cans[k].height = Math.max(1, Math.round(r.height * dpr));
+      cans[k].style.width = r.width + 'px'; cans[k].style.height = r.height + 'px';
+      dims[k] = [r.width, r.height];
+    }
+    drawAll();
+  }
+
+  // ---------- formatting ----------
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  function fmtSci(v, sig) {
+    if (v === 0) return '0';
+    const e = Math.floor(Math.log10(Math.abs(v)));
+    if (e >= -2 && e < 4) return v.toPrecision(sig);
+    const m = v / Math.pow(10, e);
+    return `${m.toFixed(sig - 1)} × 10${String(e).split('').map((c) => SUP[c]).join('')}`;
+  }
+  const fmtInt = (n) => Math.round(n).toLocaleString('en-US');
+  function fmtNum(v) {
+    const a = Math.abs(v);
+    if (a >= 1000) return fmtInt(v);
+    if (a >= 100) return v.toFixed(0);
+    if (a >= 10) return v.toFixed(1);
+    if (a >= 1) return v.toFixed(2);
+    return v.toPrecision(3);
+  }
+  function fmtT(v) {
+    const u = cfg().unit;
+    if (u === 'step') { const r = Math.round(v); return Math.abs(v - r) < 1e-9 ? `${r} ${r === 1 ? 'step' : 'steps'}` : `${v.toFixed(2)} steps`; }
+    if (u === 'yr') return (v >= 100 ? fmtInt(Math.round(v / 10) * 10) : v.toFixed(1)) + ' yr';
+    return fmtNum(v) + ' ' + u;
+  }
+  function fmtHL(v) { if (cfg().coin) return `${+v.toFixed(1)} ${v === 1 ? 'step' : 'steps'}`; return (v >= 100 ? fmtInt(v) : v >= 10 ? v.toFixed(1) : v.toFixed(2)) + ' ' + (cfg().unit === 'step' ? (Math.abs(v - 1) < 1e-9 ? 'step' : 'steps') : cfg().unit); }
+  const pct = (v) => (v >= 0.1 ? (v * 100).toFixed(1) : v >= 0.001 ? (v * 100).toFixed(2) : (v * 100).toPrecision(2)) + '%';
+  function fmtTick(v, step) { if (step >= 1) return fmtInt(v); const d = Math.max(0, -Math.floor(Math.log10(step) + 1e-9)); return (Math.abs(v) < step / 1e6 ? 0 : v).toFixed(d); }
+
+  // ---------- grid of nuclei ----------
+  let ctlH = 44, gGeom = null;
+  function drawGrid() {
+    const [W, H0] = dims.g; if (!W || !H0 || !sim) return;
+    const ctx = ctxs.g, ps = projScale();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W * dpr, H0 * dpr);
+    // legend layout first: one line, or two when narrow
+    const legFont = 12 * ps;
+    ctx.font = `700 ${legFont * dpr}px ${T.ui}`;
+    const items = [];
+    for (let i = 0; i <= nSp(); i++) items.push({ i, txt: `${spName(i)} ${fmtInt(sim.counts[i])}` });
+    const itemW = items.map((it) => ctx.measureText(it.txt).width / dpr + 22 * ps);
+    const totalW = itemW.reduce((a, b) => a + b, 0) + 14 * ps * (items.length - 1);
+    const twoLines = totalW > W - 24;
+    const legH = (twoLines ? 2 : 1) * 20 * ps + 10 * ps;
+    const top = ctlH + 14 * ps, avail = H0 - top - legH - 10 * ps;
+    const n = Math.round(Math.sqrt(S.N0));
+    const side = Math.max(40, Math.min(W - 28, avail));
+    const cell = Math.max(1, Math.floor(side * dpr / n));
+    const gp = cell * n;
+    const blockTop = top + Math.max(0, (avail - gp / dpr) / 2);
+    const x0 = Math.round((W * dpr - gp) / 2), y0 = Math.round(blockTop * dpr);
+    const legTop = blockTop + gp / dpr + 8 * ps;
+    gGeom = { x0, y0, cell, n, gp };
+    // backing
+    ctx.fillStyle = T.grid; ctx.fillRect(x0 - 2, y0 - 2, gp + 4, gp + 4);
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(x0 - 2.5, y0 - 2.5, gp + 5, gp + 5);
+    const sp = sim.sp, ns = nSp();
+    const gap = cell >= 5 ? Math.max(1, Math.floor(cell * 0.12)) : 0;
+    const full = cell - 2 * gap;
+    // parent: filled square
+    ctx.fillStyle = T.sp[0]; ctx.beginPath();
+    for (let k = 0; k < S.N0; k++) if (sp[k] === 0) ctx.rect(x0 + (k % n) * cell + gap, y0 + Math.floor(k / n) * cell + gap, full, full);
+    ctx.fill();
+    // intermediate daughter: circle (large cells) or a smaller square
+    if (ns === 2) {
+      ctx.fillStyle = T.sp[1]; ctx.beginPath();
+      if (cell >= 7) {
+        const r = full / 2 * 0.98;
+        for (let k = 0; k < S.N0; k++) if (sp[k] === 1) {
+          const cx = x0 + (k % n) * cell + cell / 2, cy = y0 + Math.floor(k / n) * cell + cell / 2;
+          ctx.moveTo(cx + r, cy); ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+        }
+      } else {
+        const g2 = Math.max(gap, Math.round(cell * 0.15)), f2 = Math.max(1, cell - 2 * g2);
+        for (let k = 0; k < S.N0; k++) if (sp[k] === 1) ctx.rect(x0 + (k % n) * cell + g2, y0 + Math.floor(k / n) * cell + g2, f2, f2);
+      }
+      ctx.fill();
+    }
+    // stable end product: small dot
+    const ds = Math.max(1, Math.round(cell * 0.34)), off = Math.floor((cell - ds) / 2);
+    ctx.fillStyle = T.sp[2]; ctx.beginPath();
+    for (let k = 0; k < S.N0; k++) if (sp[k] === ns) ctx.rect(x0 + (k % n) * cell + off, y0 + Math.floor(k / n) * cell + off, ds, ds);
+    ctx.fill();
+    // flashes: a bright outline that fades (and grows unless reduced motion)
+    const now = performance.now(), dur = 520;
+    let keep = 0;
+    ctx.strokeStyle = T.ink;
+    for (let j = 0; j < flashes.length; j++) {
+      const f = flashes[j], a = 1 - (now - f.t0) / dur;
+      if (a <= 0) continue;
+      flashes[keep++] = f;
+      if (f.i >= S.N0) continue;
+      const grow = reduce ? 0 : (1 - a) * cell * 0.2;
+      const cx = x0 + (f.i % n) * cell + cell / 2, cy = y0 + Math.floor(f.i / n) * cell + cell / 2, h = cell / 2 - Math.max(0.5, cell * 0.04) + grow;
+      ctx.globalAlpha = 0.85 * a; ctx.lineWidth = Math.max(1, Math.round(cell * 0.1));
+      ctx.strokeRect(cx - h, cy - h, 2 * h, 2 * h);
+    }
+    flashes.length = keep; ctx.globalAlpha = 1;
+    // followed nucleus: accent ring and ticks on the grid edge
+    if (follow >= 0 && follow < S.N0) {
+      const c = follow % n, r = Math.floor(follow / n), lw = Math.max(2, 2 * dpr);
+      const fx = x0 + c * cell, fy = y0 + r * cell, pad = Math.max(2 * dpr, cell * 0.25);
+      ctx.strokeStyle = T.canvas; ctx.lineWidth = lw + 2 * dpr; ctx.strokeRect(fx - pad, fy - pad, cell + 2 * pad, cell + 2 * pad);
+      ctx.strokeStyle = T.accent; ctx.lineWidth = lw; ctx.strokeRect(fx - pad, fy - pad, cell + 2 * pad, cell + 2 * pad);
+      ctx.fillStyle = T.accent; const tk = 6 * dpr * ps;
+      ctx.beginPath();
+      ctx.moveTo(fx + cell / 2, y0 - 3); ctx.lineTo(fx + cell / 2 - tk / 2, y0 - 3 - tk); ctx.lineTo(fx + cell / 2 + tk / 2, y0 - 3 - tk); ctx.closePath();
+      ctx.moveTo(x0 - 3, fy + cell / 2); ctx.lineTo(x0 - 3 - tk, fy + cell / 2 - tk / 2); ctx.lineTo(x0 - 3 - tk, fy + cell / 2 + tk / 2); ctx.closePath();
+      ctx.fill();
+    }
+    // legend
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.font = `700 ${legFont}px ${T.ui}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+    const rows = twoLines ? [items.slice(0, Math.ceil(items.length / 2)), items.slice(Math.ceil(items.length / 2))] : [items];
+    const rowsW = rows.map((row) => row.reduce((a, it) => a + itemW[it.i], 0) + 14 * ps * (row.length - 1));
+    rows.forEach((row, ri) => {
+      let x = (W - rowsW[ri]) / 2;
+      const y = legTop + ri * 20 * ps + 10 * ps;
+      for (const it of row) {
+        drawSwatch(ctx, it.i, x + 7 * ps, y, 12 * ps);
+        ctx.fillStyle = T.ink; ctx.fillText(it.txt, x + 18 * ps, y + 0.5);
+        x += itemW[it.i] + 14 * ps;
+      }
+    });
+  }
+  function drawSwatch(ctx, i, cx, cy, s) {
+    ctx.fillStyle = spFill(i);
+    if (i === 0) ctx.fillRect(cx - s / 2, cy - s / 2, s, s);
+    else if (i < nSp()) { ctx.beginPath(); ctx.arc(cx, cy, s / 2, 0, 2 * Math.PI); ctx.fill(); }
+    else { const d = s * 0.42; ctx.fillRect(cx - d / 2, cy - d / 2, d, d); ctx.strokeStyle = T.sp3line; ctx.lineWidth = 1; ctx.strokeRect(cx - s / 2 + 0.5, cy - s / 2 + 0.5, s - 1, s - 1); }
+  }
+  function cellAt(ev) {
+    if (!gGeom) return -1;
+    const r = cans.g.getBoundingClientRect();
+    const x = (ev.clientX - r.left) * dpr - gGeom.x0, y = (ev.clientY - r.top) * dpr - gGeom.y0;
+    const pad = gGeom.cell;
+    if (x < -pad || y < -pad || x > gGeom.gp + pad || y > gGeom.gp + pad) return -1;
+    const c = Math.max(0, Math.min(gGeom.n - 1, Math.floor(x / gGeom.cell))), rr = Math.max(0, Math.min(gGeom.n - 1, Math.floor(y / gGeom.cell)));
+    return rr * gGeom.n + c;
+  }
+
+  // ---------- plots ----------
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  function plotGeom(W, H0, extraTop) {
+    const ps = projScale();
+    const L = (W < 520 ? 46 : 56) * ps, R = W - 16 * ps, top = (34 + (extraTop || 0)) * ps, bot = H0 - 34 * ps;
+    return { L, R, top, bot, W, H: H0, X: (t) => L + t / win * (R - L), invX: (px) => (px - L) / (R - L) * win };
+  }
+  function timeAxis(ctx, g, labels) {
+    const ps = projScale(), st = cfg().coin && win <= 20 ? 1 : nice(win / (g.W < 520 ? 4 : 7));
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1;
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    let lastPx = -1e9;
+    for (let v = 0; v <= win + 1e-9; v += st) {
+      const px = Math.round(g.X(v)) + 0.5;
+      ctx.beginPath(); ctx.moveTo(px, g.top); ctx.lineTo(px, g.bot); ctx.stroke();
+      const txt = fmtTick(v, st), tw = ctx.measureText(txt).width;
+      if (labels && px - tw / 2 > lastPx + 6) { ctx.fillText(txt, Math.min(px, g.R - tw / 2 + 4), g.bot + 4); lastPx = px + tw / 2; }
+    }
+    if (labels) { ctx.textAlign = 'right'; ctx.fillText(`t (${UNIT_LONG[cfg().unit]})`, g.R, g.bot + 17 * ps); }
+  }
+  function yMap(g, ymax, log) {
+    const ymin = 0.5;
+    if (log) { const a = Math.log10(ymin), b = Math.log10(ymax); return (v) => g.bot - (Math.log10(Math.max(v, ymin * 0.5)) - a) / (b - a) * (g.bot - g.top); }
+    return (v) => g.bot - v / ymax * (g.bot - g.top);
+  }
+  function yAxis(ctx, g, ymax, log, Y) {
+    const ps = projScale();
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.lineWidth = 1;
+    if (log) {
+      for (let e = 0; Math.pow(10, e) <= ymax * 1.0001; e++) {
+        for (const m of [1, 2, 5]) {
+          const v = m * Math.pow(10, e); if (v > ymax) break;
+          const py = Math.round(Y(v)) + 0.5;
+          ctx.strokeStyle = m === 1 ? T.gridStrong : T.grid; ctx.beginPath(); ctx.moveTo(g.L, py); ctx.lineTo(g.R, py); ctx.stroke();
+          if (m === 1 || (g.bot - g.top) / Math.log10(ymax / 0.5) > 70 * ps) { ctx.fillStyle = T.muted; ctx.fillText(fmtInt(v), g.L - 5, py); }
+        }
+      }
+    } else {
+      const st = nice(ymax / ((g.bot - g.top) < 160 ? 3 : 5));
+      for (let v = 0; v <= ymax + 1e-9; v += st) {
+        const py = Math.round(Y(v)) + 0.5;
+        ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(g.L, py); ctx.lineTo(g.R, py); ctx.stroke();
+        ctx.fillStyle = T.muted; ctx.fillText(fmtInt(v), g.L - 5, py);
+      }
+    }
+  }
+  // which species gets the whole half life marks: the parent if 1 to 16 fit, otherwise the daughter
+  function markSpecies() {
+    for (let i = 0; i < nSp(); i++) { const k = win / S.T[i]; if (k >= 1 && k <= 16) return i; }
+    return -1;
+  }
+
+  let nGeom = null, hoverH = null, drag = null, lastHandles = [];
+  function drawN() {
+    const [W, H0] = dims.n; if (!W || !H0 || !sim) return;
+    const ctx = ctxs.n, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H0);
+    const g = plotGeom(W, H0, 16); nGeom = g;
+    if (g.bot - g.top < 30) return;
+    const log = S.logY, N0 = S.N0;
+    const ymax = log ? N0 * 1.6 : N0 * 1.06;
+    const Y = yMap(g, ymax, log);
+    timeAxis(ctx, g, true);
+    yAxis(ctx, g, ymax, log, Y);
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('Number of nuclei N(t)', g.L, 20 * ps);
+    const ms = markSpecies();
+    ctx.save(); ctx.beginPath(); ctx.rect(g.L, g.top - 1, g.R - g.L, g.bot - g.top + 2); ctx.clip();
+    // whole half life marks
+    if (S.layers.marks && ms >= 0) {
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2; ctx.setLineDash([2, 3]); ctx.globalAlpha = 0.8;
+      for (let k = 1; k * S.T[ms] <= win + 1e-9; k++) { const px = Math.round(g.X(k * S.T[ms])) + 0.5; ctx.beginPath(); ctx.moveTo(px, g.top); ctx.lineTo(px, g.bot); ctx.stroke(); }
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+    }
+    // daughter peak
+    if (nSp() === 2) {
+      const tp = peakTime(lam[0], lam[1]);
+      if (tp < win) {
+        ctx.strokeStyle = T.sp[1]; ctx.lineWidth = 1.2; ctx.setLineDash([6, 4]); ctx.globalAlpha = 0.7;
+        const px = Math.round(g.X(tp)) + 0.5; ctx.beginPath(); ctx.moveTo(px, g.top); ctx.lineTo(px, g.bot); ctx.stroke();
+        ctx.setLineDash([]); ctx.globalAlpha = 1;
+      }
+    }
+    const ns = nSp(), nPts = 260;
+    // ±1σ bands around the expected counts
+    if (S.layers.band) {
+      for (let i = 0; i <= ns; i++) {
+        ctx.fillStyle = spColor(i); ctx.globalAlpha = i === ns ? 0.12 : 0.16; ctx.beginPath();
+        for (let j = 0; j <= nPts; j++) { const t = win * j / nPts, f = fractions(lam, t, 0)[i], m = N0 * f, s = Math.sqrt(N0 * f * (1 - f)); const px = g.X(t), py = Y(m + s); j ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+        for (let j = nPts; j >= 0; j--) { const t = win * j / nPts, f = fractions(lam, t, 0)[i], m = N0 * f, s = Math.sqrt(N0 * f * (1 - f)); ctx.lineTo(g.X(t), Y(Math.max(log ? 0.3 : 0, m - s))); }
+        ctx.closePath(); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+    // earlier runs (parent only)
+    if (S.layers.ghost) {
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.globalAlpha = 0.55;
+      for (const gh of ghosts) {
+        ctx.beginPath();
+        for (let k = 0; k < gh.h.length; k++) { const t = k * gh.dt; if (t > win) break; const px = g.X(t), py = Y(gh.h[k]); k ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+    // this sample
+    const steps = sim.step, dots = win / dt <= 40;
+    for (let i = ns; i >= 0; i--) {
+      ctx.strokeStyle = spColor(i); ctx.lineWidth = (i === 0 ? 2.4 : 2) * ps; ctx.lineJoin = 'round';
+      ctx.beginPath();
+      const stride = Math.max(1, Math.floor(steps / 1500));
+      for (let k = 0; k <= steps; k += stride) { const px = g.X(k * dt), py = Y(H[i][k]); k ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+      if (steps % stride) ctx.lineTo(g.X(steps * dt), Y(H[i][steps]));
+      ctx.stroke();
+      if (dots) {
+        ctx.fillStyle = spColor(i);
+        for (let k = 0; k <= steps; k++) { ctx.beginPath(); ctx.arc(g.X(k * dt), Y(H[i][k]), 2.8 * ps, 0, 2 * Math.PI); ctx.fill(); }
+      }
+    }
+    // expected curves, dashed, drawn over the sample with a thin halo so they stay visible
+    if (S.layers.exp) {
+      for (let i = 0; i <= ns; i++) {
+        const path = () => { ctx.beginPath(); for (let j = 0; j <= nPts; j++) { const t = win * j / nPts, px = g.X(t), py = Y(N0 * fractions(lam, t, 0)[i]); j ? ctx.lineTo(px, py) : ctx.moveTo(px, py); } };
+        ctx.setLineDash([7 * ps, 5 * ps]);
+        path(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 3.4 * ps; ctx.globalAlpha = 0.7; ctx.stroke(); ctx.globalAlpha = 1;
+        path(); ctx.strokeStyle = i === ns ? T.sp3line : T.ink; ctx.lineWidth = 1.5 * ps; ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+    // current point
+    for (let i = 0; i <= ns; i++) {
+      ctx.fillStyle = T.canvas; ctx.strokeStyle = spColor(i); ctx.lineWidth = 2 * ps;
+      ctx.beginPath(); ctx.arc(g.X(steps * dt), Y(H[i][steps]), 3.6 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    }
+    ctx.restore();
+    // labels for marks, peak and the log slope, kept from overlapping
+    ctx.font = `${10 * ps}px ${T.mono}`; ctx.textBaseline = 'top';
+    if (S.layers.marks && ms >= 0) {
+      ctx.fillStyle = T.muted; ctx.textAlign = 'center';
+      const count = Math.floor(win / S.T[ms] + 1e-9), pxPer = (g.R - g.L) * S.T[ms] / win;
+      const every = pxPer > 34 * ps ? 1 : pxPer > 17 * ps ? 2 : 5;
+      for (let k = 2; k <= count; k++) if (k % every === 0) {
+        const px = g.X(k * S.T[ms]); if (px > g.R - 12 * ps) continue;
+        ctx.fillText(`${k}T½`, px, g.top + 3 * ps);
+      }
+    }
+    // drag handles: one grip on the first half life of each unstable species, near the bottom of the plot
+    lastHandles = nHandles();
+    for (const h of lastHandles) {
+      const hot = (drag && drag.id === h.id) || (!drag && hoverH === h.id);
+      const px = h.x;
+      ctx.strokeStyle = spColor(h.id); ctx.lineWidth = (hot ? 3 : 1.6) * ps; ctx.globalAlpha = hot ? 1 : 0.85;
+      ctx.beginPath(); ctx.moveTo(px, g.top); ctx.lineTo(px, g.bot); ctx.stroke(); ctx.globalAlpha = 1;
+      const txt = ns === 2 ? `T½ ${spName(h.id)}` : 'T½';
+      ctx.font = `700 ${11 * ps}px ${T.ui}`;
+      const tw = ctx.measureText(txt).width + 22 * ps, ph = 17 * ps;
+      let bx = Math.max(g.L + 1, Math.min(g.R - tw - 1, px - tw / 2));
+      const other = lastHandles.find((o) => o.id === 0);
+      const by = g.bot - 24 * ps - (h.id === 1 && other && Math.abs(other.x - px) < tw + 6 ? 20 * ps : 0);
+      ctx.fillStyle = T.canvas; ctx.strokeStyle = spColor(h.id); ctx.lineWidth = (hot ? 2 : 1.3) * ps;
+      roundRect(ctx, bx, by - ph / 2, tw, ph, 4 * ps); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText(txt, bx + 5 * ps, by + 0.5);
+      // grip arrows
+      ctx.fillStyle = spColor(h.id);
+      const ax = bx + tw - 9 * ps;
+      ctx.beginPath(); ctx.moveTo(ax - 4 * ps, by); ctx.lineTo(ax - 1 * ps, by - 3.5 * ps); ctx.lineTo(ax - 1 * ps, by + 3.5 * ps); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(ax + 5 * ps, by); ctx.lineTo(ax + 2 * ps, by - 3.5 * ps); ctx.lineTo(ax + 2 * ps, by + 3.5 * ps); ctx.closePath(); ctx.fill();
+      h.box = [bx, by - ph / 2, tw, ph];
+    }
+    // followed nuclei: ages at decay as triangles on the time axis
+    ctx.fillStyle = T.accent;
+    for (let j = 0; j < ages.length; j++) {
+      const px = g.X(ages[j]); if (px > g.R + 1) continue;
+      ctx.globalAlpha = 0.35 + 0.65 * (j + 1) / ages.length;
+      ctx.beginPath(); ctx.moveTo(px, g.bot - 1); ctx.lineTo(px - 5 * ps, g.bot - 10 * ps); ctx.lineTo(px + 5 * ps, g.bot - 10 * ps); ctx.closePath(); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    // log scale note
+    if (log) {
+      ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+      let txt = `${spName(0)}: a straight line, ln N falls by λ = ${fmtSci(lam[0], 3)} per ${cfg().unit}`;
+      if (ctx.measureText(txt).width > g.R - g.L) txt = `ln N falls by λ = ${fmtSci(lam[0], 3)} per ${cfg().unit}`;
+      ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+      ctx.fillStyle = T.sp[0]; ctx.fillText(txt, g.L, 37 * ps);
+    }
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(g.L + 0.5, g.top + 0.5, g.R - g.L, g.bot - g.top);
+  }
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+  }
+  function nHandles() {
+    if (!nGeom) return [];
+    const out = [];
+    for (let i = 0; i < nSp(); i++) { const x = nGeom.X(S.T[i]); if (x >= nGeom.L - 1 && x <= nGeom.R + 1) out.push({ id: i, x }); }
+    return out;
+  }
+
+  // activity histogram: decays per bin from each unstable species, with the exact expected count per bin
+  function binSteps() { return cfg().coin ? 1 : Math.max(1, nice125(win / dt / (nSp() === 2 ? 80 : 40))); }
+  function drawA() {
+    const [W, H0] = dims.a; if (!W || !H0 || !sim) return;
+    const ctx = ctxs.a, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H0);
+    const g = plotGeom(W, H0, nSp() === 2 ? 14 : 0);
+    if (g.bot - g.top < 24) return;
+    const B = binSteps(), bw = B * dt, nb = Math.ceil(win / bw - 1e-9), ns = nSp(), N0 = S.N0, log = S.logY;
+    const steps = sim.step;
+    // observed bins
+    const obs = [];
+    let omax = 0;
+    for (let i = 0; i < ns; i++) {
+      const a = new Float64Array(nb);
+      for (let k = 1; k <= steps; k++) { const b = Math.floor((k - 1) / B); if (b < nb) a[b] += D[i][k]; }
+      for (let b = 0; b < nb; b++) omax = Math.max(omax, a[b]);
+      obs.push(a);
+    }
+    const mu = (i, tc) => N0 * (cumDecays(lam, tc + bw / 2, i) - cumDecays(lam, Math.max(0, tc - bw / 2), i));
+    let emax = 0;
+    for (let i = 0; i < ns; i++) for (let b = 0; b < nb; b++) { const m = mu(i, (b + 0.5) * bw), q = m / N0; emax = Math.max(emax, m + 2 * Math.sqrt(N0 * q * (1 - q))); }
+    const ymax = Math.max(4, emax, omax) * (log ? 1.6 : 1.1);
+    const Y = yMap(g, ymax, log);
+    timeAxis(ctx, g, true);
+    yAxis(ctx, g, ymax, log, Y);
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('Activity: decays per bin', g.L, 20 * ps);
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'right';
+    ctx.fillText(`bin = ${fmtT(bw)}`, g.R, 20 * ps);
+    ctx.save(); ctx.beginPath(); ctx.rect(g.L, g.top - 1, g.R - g.L, g.bot - g.top + 2); ctx.clip();
+    const curBin = Math.floor((steps - 1) / B), complete = steps % B === 0;
+    if (S.layers.band) {
+      for (let i = 0; i < ns; i++) {
+        ctx.fillStyle = spColor(i); ctx.globalAlpha = 0.13; ctx.beginPath();
+        const n = 200, t0 = bw / 2, t1 = Math.max(t0, win - bw / 2);
+        for (let j = 0; j <= n; j++) { const tc = t0 + (t1 - t0) * j / n, m = mu(i, tc), q = m / N0; const py = Y(m + Math.sqrt(N0 * q * (1 - q))); j ? ctx.lineTo(g.X(tc), py) : ctx.moveTo(g.X(tc), py); }
+        for (let j = n; j >= 0; j--) { const tc = t0 + (t1 - t0) * j / n, m = mu(i, tc), q = m / N0; ctx.lineTo(g.X(tc), Y(Math.max(log ? 0.3 : 0, m - Math.sqrt(N0 * q * (1 - q))))); }
+        ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+      }
+    }
+    for (let i = 0; i < ns; i++) {
+      const col = spColor(i);
+      for (let b = 0; b <= Math.min(curBin, nb - 1); b++) {
+        const v = obs[i][b]; if (v <= 0) continue;
+        let x0 = g.X(b * bw), x1 = g.X((b + 1) * bw);
+        if (ns === 2) { const xm = (x0 + x1) / 2; if (i === 0) x1 = xm; else x0 = xm; }
+        const py = Y(v), yb = g.bot;
+        const partial = b === curBin && !complete;
+        ctx.fillStyle = col; ctx.globalAlpha = partial ? 0.08 : 0.2; ctx.fillRect(x0, py, x1 - x0, yb - py);
+        ctx.globalAlpha = partial ? 0.45 : 1; ctx.strokeStyle = col; ctx.lineWidth = 1.4 * ps;
+        ctx.beginPath(); ctx.moveTo(x0 + 0.5, yb); ctx.lineTo(x0 + 0.5, py); ctx.lineTo(x1 - 0.5, py); ctx.lineTo(x1 - 0.5, yb); ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+    }
+    if (S.layers.exp) {
+      for (let i = 0; i < ns; i++) {
+        const n = 200, t0 = bw / 2, t1 = Math.max(t0, win - bw / 2);
+        const path = () => { ctx.beginPath(); for (let j = 0; j <= n; j++) { const tc = t0 + (t1 - t0) * j / n, py = Y(mu(i, tc)); j ? ctx.lineTo(g.X(tc), py) : ctx.moveTo(g.X(tc), py); } };
+        ctx.setLineDash([7 * ps, 5 * ps]);
+        path(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 3.4 * ps; ctx.globalAlpha = 0.7; ctx.stroke(); ctx.globalAlpha = 1;
+        path(); ctx.strokeStyle = ns === 2 ? spColor(i) : T.ink; ctx.lineWidth = 1.6 * ps; ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+    ctx.restore();
+    // which bars are which, for chains
+    if (ns === 2) {
+      ctx.font = `700 ${11 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      let x = g.L; const y = 36 * ps;
+      for (let i = 0; i < ns; i++) {
+        const txt = `${spName(i)} decays`;
+        ctx.fillStyle = spColor(i); ctx.globalAlpha = 0.3; ctx.fillRect(x, y - 5 * ps, 12 * ps, 10 * ps); ctx.globalAlpha = 1;
+        ctx.strokeStyle = spColor(i); ctx.lineWidth = 1.4 * ps; ctx.strokeRect(x + 0.5, y - 5 * ps + 0.5, 12 * ps - 1, 10 * ps - 1);
+        ctx.fillStyle = T.ink; ctx.fillText(txt, x + 17 * ps, y);
+        x += ctx.measureText(txt).width + 30 * ps;
+      }
+    }
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(g.L + 0.5, g.top + 0.5, g.R - g.L, g.bot - g.top);
+  }
+
+  function drawAll() {
+    if (!sim || !T) return;
+    { const c = $('gPane').querySelector('.stage-ctl'); ctlH = c.offsetTop + c.offsetHeight; }
+    drawGrid(); drawN(); drawA();
+  }
+
+  // ---------- readouts ----------
+  function updateReadouts(full) {
+    if (!sim) return;
+    const t = tNow(), N0 = S.N0, ns = nSp(), f = fractions(lam, t, 0);
+    $('tclock').textContent = 't = ' + fmtT(t);
+    $('rT').textContent = fmtT(t);
+    $('rHLlab').textContent = ns === 2 ? `Half lives of ${spName(0)}` : 'Half lives elapsed';
+    $('rHL').textContent = (t / S.T[0]).toFixed(t / S.T[0] >= 10 ? 1 : 2);
+    $('rFracLab').textContent = ns === 2 ? `Remaining ${spName(0)}, N/N₀` : 'Remaining N/N₀';
+    const fr = sim.counts[0] / N0;
+    $('rFrac').textContent = fr.toFixed(4);
+    $('rExp').textContent = f[0].toFixed(4);
+    const sig = Math.sqrt(N0 * f[0] * (1 - f[0]));
+    $('rDev').textContent = sig > 1e-9 ? `${(sim.counts[0] - N0 * f[0] >= 0 ? '+' : '−')}${Math.abs((sim.counts[0] - N0 * f[0]) / sig).toFixed(1)}σ` : '—';
+    $('rRel').textContent = f[0] * N0 >= 0.5 ? pct(sig / (N0 * f[0])) : '—';
+    // species table
+    let html = `<tr><th>Nuclide</th><th>N</th><th>expected ±σ</th><th>activity λN</th></tr>`;
+    for (let i = 0; i <= ns; i++) {
+      const m = N0 * f[i], s = Math.sqrt(N0 * f[i] * (1 - f[i]));
+      const act = i < ns ? `${fmtNum(lam[i] * sim.counts[i])}` : 'stable';
+      html += `<tr><td><i style="background:${spFill(i)};${i === ns ? `outline:1px solid ${T.sp3line};` : ''}border-radius:${i > 0 && i < ns ? '50%' : '1px'}"></i>${spName(i)}</td><td>${fmtInt(sim.counts[i])}</td><td>${fmtNum(m)} ± ${fmtNum(s)}</td><td>${act}</td></tr>`;
+    }
+    html += `<tr><td colspan="4" style="color:var(--muted);font-family:var(--font-ui);font-size:0.74rem;text-align:left">activity in decays per ${cfg().unit}</td></tr>`;
+    $('spTable').innerHTML = html;
+    // survivors of the last half life
+    const m = Math.round(S.T[0] / dt), k = sim.step;
+    if (m >= 1 && k >= m && H[0][k - m] > 0) {
+      const ratio = H[0][k] / H[0][k - m], expv = Math.exp(-lam[0] * m * dt);
+      $('rSurv').innerHTML = `${pct(ratio)} <span class="ok">of ${fmtInt(H[0][k - m])}; expected ${pct(expv)}</span>`;
+    } else $('rSurv').innerHTML = `— <span class="ok">after one half life</span>`;
+    $('rSurvLab').textContent = `${ns === 2 ? spName(0) + ' nuclei' : 'Parents'} alive one half life ago that are still alive`;
+    if (ns === 2) chainReadouts(t);
+    if (cfg().dating && !S.custom) datingReadout(t);
+    updateFollow();
+  }
+  function chainReadouts(t) {
+    const [a, b] = lam, f = fractions(lam, t, 0);
+    const AP = a * sim.counts[0], AD = b * sim.counts[1];
+    $('cRatio').textContent = AP > 0 ? (AD / AP).toFixed(3) : AD > 0 ? 'parent gone' : '—';
+    $('cRatioExp').textContent = f[0] > 1e-300 ? (b * f[1] / (a * f[0])).toFixed(3) : '—';
+    $('cPeak').textContent = fmtT(peakTime(a, b));
+    if (b > a) {
+      $('cLim').textContent = (b / (b - a)).toFixed(4);
+    } else $('cLim').textContent = 'grows';
+  }
+  function chainStatic() {
+    if (nSp() !== 2) return;
+    const [a, b] = lam, r = S.T[0] / S.T[1];
+    $('cFormula').innerHTML = `N<sub>D</sub>(t) = N₀ λ<sub>P</sub>/(λ<sub>D</sub> − λ<sub>P</sub>) · (e<sup>−λ<sub>P</sub>t</sup> − e<sup>−λ<sub>D</sub>t</sup>)`;
+    let note;
+    if (b > a * 100) note = `The daughter lives ${fmtNum(r)} times shorter than the parent: secular equilibrium. After a few daughter half lives the activities match to within ${pct(b / (b - a) - 1)}, and the daughter count settles at N<sub>D</sub>/N<sub>P</sub> = λ<sub>P</sub>/λ<sub>D</sub> ≈ ${fmtSci(a / b, 3)}.`;
+    else if (b > a) note = `The daughter lives ${fmtNum(r)} times shorter than the parent: transient equilibrium. The activity ratio settles at λ<sub>D</sub>/(λ<sub>D</sub> − λ<sub>P</sub>) = ${(b / (b - a)).toFixed(3)}, just above 1, and both then fall with the parent’s half life.`;
+    else note = `The daughter outlives the parent, so there is no equilibrium: once the parent is gone the daughter decays on its own half life. At the peak the two activities are equal.`;
+    $('cNote').innerHTML = note + ' The dashed orange line on the N(t) plot marks the daughter peak.';
+  }
+  function datingReadout(t) {
+    const N = sim.counts[0], N0 = S.N0, Th = S.T[0];
+    if (N <= 0) { $('dGrid').textContent = 'no carbon 14 left to count'; return; }
+    if (t <= 0) { $('dGrid').textContent = 'press Play, then date the grid'; return; }
+    const age = Th / Math.LN2 * Math.log(N0 / N);
+    const f = N / N0, sAge = Th / Math.LN2 * Math.sqrt((1 - f) / (N0 * f));
+    $('dGrid').innerHTML = `${fmtT(age)} ± ${fmtT(sAge)} <span class="ok">true age ${fmtT(t)}</span>`;
+  }
+  // dating task
+  let dTask = null;
+  function newTask() {
+    const Th = PRESETS.c14.species[0].T;
+    const age = Math.round((1500 + Math.random() * 26500) / 10) * 10;
+    const fr = Math.pow(2, -age / Th);
+    const shown = +fr.toPrecision(3);
+    dTask = { fr: shown, ans: Th / Math.LN2 * Math.log(1 / shown) };
+    $('dQ').innerHTML = `A piece of charcoal has <b>${(shown * 100).toPrecision(3)}%</b> of the carbon 14 a living sample has. How old is it?`;
+    $('dOut').textContent = ''; $('dIn').value = '';
+  }
+  function checkTask() {
+    const v = parseFloat($('dIn').value);
+    const Th = PRESETS.c14.species[0].T, a = dTask.ans;
+    const work = `t = (${fmtInt(Th)} yr / 0.693) · ln(1/${dTask.fr}) = ${fmtInt(Math.round(a / 10) * 10)} yr, about ${(a / Th).toFixed(2)} half lives.`;
+    if (!isFinite(v)) { $('dOut').innerHTML = `Enter an age in years. Hint: ${(dTask.fr * 100).toPrecision(3)}% is between ${pct(Math.pow(2, -Math.ceil(a / Th)))} and ${pct(Math.pow(2, -Math.floor(a / Th)))}, so between ${Math.floor(a / Th)} and ${Math.ceil(a / Th)} half lives.`; return; }
+    const err = Math.abs(v - a) / a;
+    const verdict = err <= 0.03 ? '<b>Spot on.</b>' : err <= 0.1 ? '<b>Close.</b>' : '<b>Not quite.</b>';
+    $('dOut').innerHTML = `${verdict} ${work}`;
+  }
+  $('dCheck').addEventListener('click', checkTask);
+  $('dIn').addEventListener('keydown', (e) => { if (e.key === 'Enter') checkTask(); });
+  $('dNew').addEventListener('click', newTask);
+
+  // ---------- follow one nucleus ----------
+  function updateFollow() {
+    const tau = S.T[0] / Math.LN2;
+    $('fTau').textContent = fmtT(tau);
+    if (ages.length) {
+      $('fAges').textContent = ages.slice(-8).map((a) => (a / S.T[0]).toFixed(2)).join(', ') + ' T½' + (ages.length > 8 ? ` (last 8 of ${ages.length})` : '');
+      const mean = ages.reduce((x, y) => x + y, 0) / ages.length;
+      $('fMean').textContent = fmtT(mean); $('fMeanLab').textContent = `Mean age at decay (${ages.length})`;
+    } else { $('fAges').textContent = 'none yet'; $('fMean').textContent = '—'; $('fMeanLab').textContent = 'Mean age at decay'; }
+    if (follow < 0 || !sim) { $('fStatus').textContent = 'Click any nucleus in the grid to follow it, or press Follow one.'; return; }
+    const n = Math.round(Math.sqrt(S.N0)), s = sim.sp[follow], t = tNow(), ns = nSp();
+    const where = `row ${Math.floor(follow / n) + 1}, column ${(follow % n) + 1}`;
+    let txt;
+    if (followLog[0] && followLog[0].late) {
+      txt = `The nucleus at ${where} had already decayed before you picked it; it is now ${spName(s)}. Pick a parent nucleus, or press Reset to watch this one from the start.`;
+    } else if (s === 0) {
+      txt = `Following the nucleus at ${where}: still ${spName(0)} at age ${fmtT(t)} (${(t / S.T[0]).toFixed(2)} T½). Its chance of decaying within the next half life is 50%, the same as when it was new.`;
+    } else {
+      const parts = [];
+      for (let j = 1; j < followLog.length; j++) parts.push(`became ${spName(followLog[j].sp)} at age ${fmtT(followLog[j].t)}`);
+      txt = `The nucleus at ${where} ${parts.join(', then ')}.`;
+      if (s < ns) txt += ` It is now ${spName(s)}; its own clock started when it formed.`;
+      else txt += ' Nothing could have told you when.';
+    }
+    $('fStatus').textContent = txt;
+  }
+  function setFollow(i) {
+    follow = i;
+    followLog = [];
+    if (i >= 0 && sim) followLog = [{ t: 0, sp: sim.sp[i], late: sim.sp[i] !== 0 }];
+    updateFollow(); drawAll();
+  }
+  $('followRand').addEventListener('click', () => {
+    const alive = []; for (let i = 0; i < S.N0; i++) if (sim.sp[i] === 0) alive.push(i);
+    if (!alive.length) { newRun(true); setFollow(Math.floor(Math.random() * S.N0)); return; }
+    setFollow(alive[Math.floor(Math.random() * alive.length)]);
+  });
+  $('followClear').addEventListener('click', () => { ages = []; updateFollow(); drawAll(); });
+
+  // ---------- half life controls ----------
+  const SL = 1000;
+  function sliderToT(i, v) { const [a, b] = cfg().species[i].range; return a * Math.pow(b / a, v / SL); }
+  function tToSlider(i, T) { const [a, b] = cfg().species[i].range; return Math.round(Math.log(T / a) / Math.log(b / a) * SL); }
+  function round3(v) { return +v.toPrecision(3); }
+  function buildSliders() {
+    const box = $('hlSliders'); box.innerHTML = '';
+    for (let i = 0; i < nSp(); i++) {
+      const d = document.createElement('div');
+      d.innerHTML = `<div class="slider-head"><label for="hl${i}">Half life of ${spName(i)}</label><output id="hl${i}Out" class="mono" for="hl${i}"></output></div>
+        <input type="range" id="hl${i}" min="0" max="${SL}" step="1">`;
+      box.appendChild(d);
+      const el = d.querySelector('input');
+      el.value = tToSlider(i, S.T[i]);
+      el.addEventListener('input', () => { let v = round3(sliderToT(i, +el.value)); if (cfg().coin) v = Math.max(0.5, Math.round(v * 2) / 2); setHalfLife(i, v); });
+    }
+  }
+  function syncSliders() {
+    for (let i = 0; i < nSp(); i++) {
+      const el = $(`hl${i}`); if (!el) continue;
+      if (document.activeElement !== el) el.value = tToSlider(i, S.T[i]);
+      $(`hl${i}Out`).textContent = fmtHL(S.T[i]);
+      el.previousElementSibling.querySelector('label').textContent = `Half life of ${spName(i)}`;
+    }
+  }
+  function setHalfLife(i, v) {
+    const [a, b] = cfg().species[i].range;
+    v = Math.max(a, Math.min(b, v));
+    if (v === S.T[i]) return;
+    S.T[i] = v;
+    S.custom = cfg().species.some((sp, j) => sp.T !== undefined && Math.abs(S.T[j] - sp.T) > 1e-9 * sp.T) && !cfg().coin;
+    newRun(false);
+    staticText();
+    syncSliders();
+  }
+  function staticText() {
+    const ns = nSp(), u = cfg().unit;
+    let html = '';
+    for (let i = 0; i < ns; i++) {
+      const p = -Math.expm1(-lam[i] * dt);
+      html += (ns === 2 ? `<div class="wide"><dt style="color:var(--ink);font-weight:700">${spName(i)}</dt></div>` : '') +
+        `<div><dt>λ = ln 2 / T½ (${u}⁻¹)</dt><dd>${fmtSci(lam[i], 3)}</dd></div>` +
+        `<div><dt>Mean life τ = 1/λ</dt><dd>${fmtT(1 / lam[i])}</dd></div>` +
+        `<div class="wide"><dt>Decay chance per step, p = 1 − e<sup>−λΔt</sup></dt><dd>${p.toFixed(p < 0.01 ? 5 : 4)} <span class="ok">with Δt = ${fmtT(dt)}</span></dd></div>`;
+    }
+    $('hlTable').innerHTML = html;
+    $('hlFormula').innerHTML = `T½ = ln 2 / λ = 0.693 τ<br>N(t) = N₀ e<sup>−λt</sup> = N₀ (½)<sup>t/T½</sup>`;
+    const c = cfg();
+    $('hlNote').textContent = (S.custom ? 'Half life changed from the real value, so the nuclides are now labeled parent and daughter. ' : '') + (c.note || '') + ' You can also drag the T½ marker on the N(t) plot.';
+    $('chainSec').hidden = ns !== 2;
+    $('dateSec').hidden = !(c.dating && !S.custom);
+    chainStatic();
+    syncSliders();
+  }
+
+  function applyPreset(name) {
+    S.preset = name;
+    const c = cfg();
+    S.T = c.species.filter((s) => s.T !== undefined).map((s) => s.T);
+    S.custom = false;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint').textContent = c.hint;
+    newRun(false);
+    buildSliders();
+    staticText();
+    if (c.dating && !dTask) newTask();
+  }
+
+  // ---------- controls ----------
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => { applyPreset(b.dataset.p); setRunning(!reduce || running); });
+  for (const b of document.querySelectorAll('#nSeg button')) b.addEventListener('click', () => {
+    S.N0 = +b.dataset.n; for (const o of document.querySelectorAll('#nSeg button')) o.setAttribute('aria-pressed', String(o === b));
+    newRun(false); staticText();
+  });
+  for (const b of document.querySelectorAll('#scaleSeg button')) b.addEventListener('click', () => {
+    S.logY = b.dataset.l === '1'; for (const o of document.querySelectorAll('#scaleSeg button')) o.setAttribute('aria-pressed', String(o === b));
+  });
+  for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => {
+    S.mult = +b.dataset.s; for (const o of document.querySelectorAll('#speedSeg button')) o.setAttribute('aria-pressed', String(o === b));
+  });
+  const playBtn = $('play');
+  function setRunning(r) {
+    if (r && sim) {
+      // restarting after the run ended starts a fresh sample
+      let alive = 0; for (let i = 0; i < nSp(); i++) alive += sim.counts[i];
+      if (alive === 0 || lastAuto === 'end') { newRun(true); }
+    }
+    running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now(); acc = 0;
+  }
+  playBtn.addEventListener('click', () => setRunning(!running));
+  $('stepBtn').addEventListener('click', () => { setRunning(false); doStep(); });
+  function doStep() {
+    let alive = 0; for (let i = 0; i < nSp(); i++) alive += sim.counts[i];
+    if (alive === 0 || lastAuto === 'end') { newRun(true); return; }
+    stepOnce(); updateReadouts();
+  }
+  $('reset').addEventListener('click', () => { newRun(true); });
+  $('tExp').addEventListener('change', (e) => { S.layers.exp = e.target.checked; });
+  $('tBand').addEventListener('change', (e) => { S.layers.band = e.target.checked; });
+  $('tMarks').addEventListener('change', (e) => { S.layers.marks = e.target.checked; });
+  $('tGhost').addEventListener('change', (e) => { S.layers.ghost = e.target.checked; });
+
+  // grid: click to follow; keys
+  cans.g.addEventListener('pointerdown', (ev) => { const i = cellAt(ev); if (i >= 0) { setFollow(i); cans.g.focus({ preventScroll: true }); } });
+  cans.g.addEventListener('keydown', (e) => {
+    const n = Math.round(Math.sqrt(S.N0));
+    const mv = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
+    if (mv) {
+      const big = e.shiftKey ? 5 : 1;
+      let i = follow >= 0 ? follow : Math.floor(n / 2) * n + Math.floor(n / 2);
+      let c = i % n, r = Math.floor(i / n);
+      if (follow >= 0) { c = Math.max(0, Math.min(n - 1, c + mv[0] * big)); r = Math.max(0, Math.min(n - 1, r + mv[1] * big)); }
+      setFollow(r * n + c);
+    } else if (e.key === ' ') setRunning(!running);
+    else if (e.key === 's' || e.key === 'S') { setRunning(false); doStep(); }
+    else if (e.key === 'r' || e.key === 'R') newRun(true);
+    else return;
+    e.preventDefault();
+  });
+
+  // N(t) plot: drag the T½ markers
+  function handleAt(ev) {
+    const r = cans.n.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    if (!nGeom || y < nGeom.top - 4 || y > nGeom.bot + 4) return null;
+    const tol = 7 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of lastHandles) {
+      let d = Math.abs(x - h.x);
+      if (h.box && x >= h.box[0] && x <= h.box[0] + h.box[2] && y >= h.box[1] - 3 && y <= h.box[1] + h.box[3] + 3) d = 0;
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  let dragFrame = false, dragX = 0;
+  cans.n.addEventListener('pointermove', (ev) => {
+    if (drag) {
+      const r = cans.n.getBoundingClientRect(); dragX = ev.clientX - r.left;
+      if (dragFrame) return; dragFrame = true;
+      requestAnimationFrame(() => {
+        dragFrame = false; if (!drag) return;
+        let v = round3(Math.max(1e-6, nGeom.invX(dragX)));
+        if (cfg().coin) v = Math.max(0.5, Math.round(v * 2) / 2);
+        setHalfLife(drag.id, v);
+      });
+      return;
+    }
+    const h = handleAt(ev); hoverH = h ? h.id : null; cans.n.style.cursor = h ? 'ew-resize' : 'default';
+  });
+  cans.n.addEventListener('pointerdown', (ev) => {
+    const h = handleAt(ev); if (!h) return;
+    drag = { id: h.id }; dragHold = { win };
+    try { cans.n.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault();
+  });
+  const endDrag = () => {
+    if (!drag) return;
+    drag = null; dragHold = null; hoverH = null;
+    newRun(false); staticText();
+  };
+  cans.n.addEventListener('pointerup', endDrag);
+  cans.n.addEventListener('pointercancel', endDrag);
+  cans.n.addEventListener('pointerleave', () => { if (!drag) hoverH = null; });
+  cans.n.addEventListener('keydown', (e) => {
+    const i = (e.key === 'ArrowUp' || e.key === 'ArrowDown') ? 1 : 0;
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key) || i >= nSp()) { if (e.key === ' ') { setRunning(!running); e.preventDefault(); } return; }
+    const up = e.key === 'ArrowRight' || e.key === 'ArrowUp';
+    const f = (e.shiftKey ? 1.25 : 1.05);
+    let v = cfg().coin ? S.T[i] + (up ? 0.5 : -0.5) : round3(S.T[i] * (up ? f : 1 / f));
+    setHalfLife(i, v);
+    e.preventDefault();
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); updateReadouts(true); drawAll(); }); } catch (_) {}
+  new MutationObserver(() => { tokens(); updateReadouts(true); drawAll(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, frameMs = 0;
+  function loop(now) {
+    const dtr = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (running && dtr > 0) advance(dtr);
+    drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastRead > 150) { updateReadouts(); lastRead = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__rd = { get frameMs() { return frameMs; }, get sim() { return sim; }, get t() { return tNow(); }, get win() { return win; }, get dt() { return dt; },
+    get H() { return H; }, get follow() { return follow; }, get ages() { return ages; }, stepOnce, setRunning, applyPreset, setFollow,
+    run(n) { for (let k = 0; k < n; k++) { if (lastAuto) break; stepOnce(k < n - 1); } updateReadouts(); } };
+
+  tokens();
+  const ro = new ResizeObserver(resize);
+  for (const k of ['g', 'n', 'a']) ro.observe(panes[k]);
+  applyPreset('coin');
+  setRunning(running);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
