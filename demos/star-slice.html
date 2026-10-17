@@ -32,11 +32,11 @@ img { max-width: 100%; }
   --equi: #a7740b;
   --accent: #2b60b5;
   --on-charge: #ffffff;
-  --el-h: #2f6fd6;
-  --el-he: #dc9d1c;
-  --el-c: #4a505c;
-  --el-o: #d2452f;
-  --el-ne: #8e4cc9;
+  --el-h: #2f5fd0;
+  --el-he: #e0a21b;
+  --el-c: #1595a8;
+  --el-o: #d6402b;
+  --el-ne: #9a4fd0;
   --liquid: #8fb6dc;
   --solid: #eef6ff;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
@@ -47,7 +47,7 @@ img { max-width: 100%; }
     --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
     --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218;
-    --el-h: #6ea2ff; --el-he: #f0bf4c; --el-c: #c3c9d3; --el-o: #ff7a63; --el-ne: #b98bf0;
+    --el-h: #6f9bff; --el-he: #f2c14e; --el-c: #3cc6d6; --el-o: #ff7a5e; --el-ne: #c08cf5;
     --liquid: #2c5580; --solid: #d6eaff; color-scheme: dark;
   }
 }
@@ -55,7 +55,7 @@ img { max-width: 100%; }
   --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
   --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218;
-  --el-h: #6ea2ff; --el-he: #f0bf4c; --el-c: #c3c9d3; --el-o: #ff7a63; --el-ne: #b98bf0;
+  --el-h: #6f9bff; --el-he: #f2c14e; --el-c: #3cc6d6; --el-o: #ff7a5e; --el-ne: #c08cf5;
   --liquid: #2c5580; --solid: #d6eaff; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -141,6 +141,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
 .key span { display: flex; align-items: center; gap: 8px; }
 .key canvas { flex: none; width: 30px; height: 14px; border: 1px solid var(--line); border-radius: 3px; }
+.key canvas.el { width: 34px; height: 18px; }
 .key i.sw { flex: none; width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--line); }
 .key .present { color: var(--ink); }
 .legend-bar { height: 10px; border-radius: 5px; border: 1px solid var(--line); }
@@ -203,7 +204,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     <div class="main">
       <div class="stagebar">
         <div class="seg" role="group" aria-label="Color by" id="modes">
-          <button type="button" data-m="comp" aria-pressed="true">Composition</button>
+          <button type="button" data-m="glow" aria-pressed="true">Glow</button>
+          <button type="button" data-m="comp" aria-pressed="false">Elements</button>
           <button type="button" data-m="temp" aria-pressed="false">Temperature</button>
           <button type="button" data-m="dens" aria-pressed="false">Density</button>
           <button type="button" data-m="burn" aria-pressed="false">Burning</button>
@@ -324,14 +326,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <h2>Key</h2>
         <div id="legend"></div>
         <div class="key" id="mixKey"></div>
-        <p class="hint">Convective cells are illustrative: their extent comes from MESA's mixing_type, and their relative speed from log_conv_vel (compressed so slow and fast regions both show). The loop pattern itself is drawn, not computed.</p>
+        <p class="hint">Convection is drawn as tracer streaks circling counter rotating roll cells. Their extent comes from MESA's mixing_type and their relative speed from log_conv_vel (compressed so slow and fast regions both show); the roll pattern itself is illustrative, not computed. Overshoot shows as fainter, slower streaks; semiconvection as drifting layers; thermohaline mixing as thin radial fingers.</p>
         <p class="hint" id="burnHint">Glow marks zones with ε<sub>nuc</sub> above 10 erg g⁻¹ s⁻¹ and above 10⁻⁴ of the moment's peak. Channel shares use MESA's pp, cno and tri_alpha columns; any remainder is other reactions.</p>
       </section>
 
       <section>
         <h2>Data notes</h2>
         <div class="datanote" id="notes"></div>
-        <p class="evidence">Line of evidence: every number on this page comes from the MESA profiles; the convective cell motion is illustrative.</p>
+        <p class="evidence">Line of evidence: every number and every layer color on this page comes from the MESA profiles; the convective motion, element textures, granulation, sparkle and glow pulse are illustrative.</p>
       </section>
     </aside>
   </main>
@@ -589,7 +591,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const argmax = (f) => { let b = -1, bv = -Infinity; ms.forEach((mo, i) => { const v = f(mo); if (v != null && isFinite(v) && v > bv) { bv = v; b = i; } }); return b; };
     const iR = argmax((mo) => mo.R);
     const rMin = Math.min(...ms.map((mo) => mo.R));
-    if (iR >= 0 && D.N > 1 && ms[iR].R > 1.3 * rMin) P.push({ label: 'Largest radius', idx: iR, mode: 'comp', log: false, zoom: 0,
+    if (iR >= 0 && D.N > 1 && ms[iR].R > 1.3 * rMin) P.push({ label: 'Largest radius', idx: iR, mode: 'glow', log: false, zoom: 0,
       hint: `Model ${ms[iR].model ?? iR + 1}: R = ${fmtRsun(ms[iR].R)} (${fmtKm(ms[iR].R)}). Nearly all of that volume holds a tiny fraction of the mass.` });
     if (D.has.mix) {
       const iE = argmax((mo) => (mo.env ? 1 - mo.env.mBase / mo.M : null));
@@ -642,7 +644,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- state ----------
   const S = {
-    datasets: [], D: null, idx: 0, mode: 'comp', log: false, hold: false, zoomDec: 0, viewAbs: 1,
+    datasets: [], D: null, idx: 0, mode: 'glow', log: false, hold: false, zoomDec: 0, viewAbs: 1,
     xmode: 'm', playing: false, speed: 1, acc: 0, lastT: 0,
     probe: null,            // { m (Msun), ang (0..1 along the half disk) }
     layers: { cells: true, tex: true, glow: true, lat: true, move: !reduced },
@@ -652,9 +654,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- canvas & geometry ----------
   const stage = $('stage'), cv = $('slice'), ctx = cv.getContext('2d');
-  const stat = document.createElement('canvas'), sctx = stat.getContext('2d');
-  const prev = document.createElement('canvas'), pctx = prev.getContext('2d');
-  let W = 0, H = 0, dpr = 1, G = null, cellBands = [], raf = 0, statDirty = true, chartsDirty = true;
+  const mk = () => { const c = document.createElement('canvas'); return [c, c.getContext('2d')]; };
+  const [stat, sctx] = mk(), [over, octx] = mk(), [glowC, gctx] = mk(), [prev, pctx] = mk();
+  let W = 0, H = 0, dpr = 1, G = null, raf = 0, statDirty = true, chartsDirty = true;
+  // per moment animated layers, rebuilt by drawStatic
+  let animBands = [], sparkles = [], rim = null, hasGlow = false, glowBox = null;
+  const GS = 0.5;   // the burning glow is blurred, so it lives on a half resolution canvas
 
   function geometry() {
     const p = ps(), up = W >= H * 1.1;
@@ -683,20 +688,67 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const halfDisk = (c, r) => { c.beginPath(); c.moveTo(G.cx, G.cy); c.arc(G.cx, G.cy, r, G.a0, G.a0 + Math.PI); c.closePath(); };
   const annulus = (c, r0, r1) => { c.beginPath(); c.arc(G.cx, G.cy, r1, G.a0, G.a0 + Math.PI); c.arc(G.cx, G.cy, Math.max(0, r0), G.a0 + Math.PI, G.a0, true); c.closePath(); };
   const polar = (r, f) => { const a = G.a0 + f * Math.PI; return [G.cx + r * Math.cos(a), G.cy + r * Math.sin(a)]; };
+  const arcAt = (c, r) => { const [x, y] = polar(r, 0); c.moveTo(x, y); c.arc(G.cx, G.cy, r, G.a0, G.a0 + Math.PI); };
 
   function resize() {
     const r = stage.getBoundingClientRect();
     W = r.width; H = r.height; dpr = window.devicePixelRatio || 1;
-    for (const c of [cv, stat, prev]) { c.width = Math.round(W * dpr); c.height = Math.round(H * dpr); }
+    for (const c of [cv, stat, over, prev]) { c.width = Math.round(W * dpr); c.height = Math.round(H * dpr); }
+    glowC.width = Math.max(1, Math.round(W * dpr * GS)); glowC.height = Math.max(1, Math.round(H * dpr * GS));
     cv.style.width = W + 'px'; cv.style.height = H + 'px';
     S.fade = null;
     markAll();
   }
 
+  // slice tokens: Glow mode draws on a dark sky inside the canvas, whatever the page theme
+  let tokC = null;
+  function sliceTokens() {
+    if (tokC && tokC.mode === S.mode) return tokC;
+    const T = tokens(); T.mode = S.mode;
+    if (S.mode === 'glow') Object.assign(T, { canvas: '#06080c', ink: '#e6ebf2', muted: '#8f9bab', grid: '#141a22', gridStrong: '#222c38', line: '#2a3442', accent: '#86b4ff' });
+    return (tokC = T);
+  }
+
+  // ---------- blackbody color (Glow mode) ----------
+  // Tanner Helland's fit to the Planck locus in sRGB, valid 1000 K to 40,000 K; clamped above, fading to black below 1000 K.
+  function bbRGB(T) {
+    const t = clamp(T, 1000, 40000) / 100; let r, g, b;
+    if (t <= 66) { r = 255; g = 99.4708025861 * Math.log(t) - 161.1195681661; b = t <= 19 ? 0 : 138.5177312231 * Math.log(t - 10) - 305.0447927307; }
+    else { r = 329.698727446 * Math.pow(t - 60, -0.1332047592); g = 288.1221695283 * Math.pow(t - 60, -0.0755148492); b = 255; }
+    const out = [clamp(r, 0, 255), clamp(g, 0, 255), clamp(b, 0, 255)];
+    if (T < 1000) { const f = clamp((T - 400) / 600, 0, 1); out[0] *= f; out[1] *= f * f; out[2] *= f * f; }
+    return out;
+  }
+  const GLOW_LO = 3.3, GLOW_HI = 7.8;
+  function glowRGB(lt) {
+    if (lt == null || !isFinite(lt)) return [22, 24, 30];
+    const c = bbRGB(10 ** lt);
+    const s = clamp((lt - GLOW_LO) / (GLOW_HI - GLOW_LO), 0, 1);
+    const b = 0.7 + 0.3 * Math.pow(s, 1.2);               // compressed log brightness
+    const w = clamp((lt - 7.0) / 1.1, 0, 1) * 0.6;        // the hottest layers overexpose toward white
+    // the fit is pale (white point normalized); a fixed saturation boost keeps dim layers ember colored, hue unchanged
+    const y = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2], k = c[0] >= c[2] ? 1.7 : 1.15;
+    return c.map((v) => clamp((y + (v - y) * k) * b, 0, 255) * (1 - w) + 255 * w);
+  }
+
+  // most abundant and second element of a zone
+  function domOf(mo, i) {
+    let k1 = -1, x1 = 0, k2 = -1, x2 = 0;
+    for (let k = 0; k < ELS.length; k++) {
+      const a = mo[ELS[k].key], x = a ? Math.max(0, a[i] || 0) : 0;
+      if (x > x1) { k2 = k1; x2 = x1; k1 = k; x1 = x; } else if (x > x2) { k2 = k; x2 = x; }
+    }
+    return [k1, x1, k2, x2];
+  }
+  // a tinted ink that reads on a zone color: a deep shade on light colors, a pale tint on dark ones
+  const inkFor = (col, a) => css(lum(col) > 0.5 ? mixc(col, [0, 0, 0], 0.62) : mixc(col, [255, 255, 255], 0.7), a);
+  const mixc = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+
   // zone color in the current mode
   function zoneColor(mo, i, T) {
     const D = S.D;
     switch (S.mode) {
+      case 'glow': return glowRGB(mo.logT ? mo.logT[i] : null);
       case 'temp': return mo.logT && D.rng.logT ? cmap(INF, (mo.logT[i] - D.rng.logT[0]) / (D.rng.logT[1] - D.rng.logT[0] || 1) * 0.92 + 0.06) : rgb(T.relief || T.grid);
       case 'dens': return mo.logRho && D.rng.logRho ? cmap(VIR, (mo.logRho[i] - D.rng.logRho[0]) / (D.rng.logRho[1] - D.rng.logRho[0] || 1)) : rgb(T.grid);
       case 'burn': {
@@ -706,64 +758,127 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       }
       case 'phase': {
         if (!mo.phase) return rgb(T.grid);
-        const a = rgb(T.liquid), b = rgb(T.solid), t = clamp(mo.phase[i] ?? 0, 0, 1);
-        return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+        return mixc(rgb(T.liquid), rgb(T.solid), clamp(mo.phase[i] ?? 0, 0, 1));
       }
       case 'gam': return mo.gam && D.rng.gam && mo.gam[i] > 0 ? cmap(VIR, (Math.log10(mo.gam[i]) - D.rng.gam[0]) / (D.rng.gam[1] - D.rng.gam[0] || 1)) : rgb(T.grid);
       default: {
-        let s = 0; const c = [0, 0, 0];
-        ELS.forEach((e, k) => { const a = mo[e.key]; const x = a ? Math.max(0, a[i] || 0) : 0; s += x; c[0] += x * T.el[k][0]; c[1] += x * T.el[k][1]; c[2] += x * T.el[k][2]; });
-        return s > 0 ? [c[0] / s, c[1] / s, c[2] / s] : rgb(T.grid);
+        const [k1, x1, k2, x2] = domOf(mo, i);
+        if (k1 < 0) return rgb(T.grid);
+        return k2 >= 0 ? mixc(T.el[k1], T.el[k2], 0.3 * x2 / (x1 + x2)) : T.el[k1].slice();
       }
     }
   }
 
-  // ---------- textures ----------
-  function texSemi(c, r0, r1, ink, p) {
-    c.strokeStyle = ink; c.lineWidth = 0.8 * p; c.beginPath();
-    for (let r = r0 + 2.5 * p; r < r1; r += 3.2 * p) { c.moveTo(G.cx + r * Math.cos(G.a0), G.cy + r * Math.sin(G.a0)); c.arc(G.cx, G.cy, r, G.a0, G.a0 + Math.PI); }
-    c.stroke();
+  // ---------- procedural textures (offscreen tiles, rebuilt on theme, projector or dpr change) ----------
+  function rngOf(seed) {
+    let a = seed >>> 0;
+    return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
   }
-  function texThermo(c, r0, r1, ink, p) {
-    c.strokeStyle = ink; c.lineWidth = 0.9 * p; c.beginPath();
-    const step = 7 * p;
-    for (let r = r0 + step / 2; r < r1; r += step) {
-      const na = Math.max(2, Math.floor(Math.PI * r / step));
-      for (let k = 0; k <= na; k++) {
-        const a = G.a0 + (k + ((Math.round(r / step)) % 2 ? 0.5 : 0)) * Math.PI / na;
-        const ca = Math.cos(a), sa = Math.sin(a), l = 2.2 * p;
-        c.moveTo(G.cx + (r - l) * ca, G.cy + (r - l) * sa); c.lineTo(G.cx + (r + l) * ca, G.cy + (r + l) * sa);
+  // a seamless tile of bw x bh base units drawn at sc css px per unit; draw() is repeated at the 8 neighbor offsets so marks wrap
+  function makeTile(bw, bh, sc, draw) {
+    const pw = Math.max(4, Math.round(bw * sc * dpr)), ph = Math.max(4, Math.round(bh * sc * dpr));
+    const t = document.createElement('canvas'); t.width = pw; t.height = ph;
+    const c = t.getContext('2d'), kx = pw / bw, ky = ph / bh;
+    for (const ox of [-bw, 0, bw]) for (const oy of [-bh, 0, bh]) { c.setTransform(kx, 0, 0, ky, ox * kx, oy * ky); draw(c); }
+    return t;
+  }
+  function patternOf(c, tile, dx = 0, dy = 0) {
+    const P = c.createPattern(tile, 'repeat');
+    try { P.setTransform(new DOMMatrix([1 / dpr, 0, 0, 1 / dpr, dx, dy])); } catch (_) {}
+    return P;
+  }
+  const HEX_S = 6, SQ3 = Math.sqrt(3);
+  function hexPath(c, cx, cy, s) { c.moveTo(cx + s, cy); for (let k = 1; k < 6; k++) c.lineTo(cx + s * Math.cos(k * Math.PI / 3), cy + s * Math.sin(k * Math.PI / 3)); c.closePath(); }
+  function hexCenters(cols, rows, s) { const out = []; for (let i = -1; i <= cols; i++) for (let j = -1; j <= rows; j++) out.push([1.5 * s * i, SQ3 * s * (j + (i & 1 ? 0.5 : 0))]); return out; }
+  // one drawer per element: H fine stipple, He soft swirls, C dots, O faceted hex cells, Ne tiny diamonds
+  const EL_TILE = [[48, 48], [48, 48], [36, 36], [36, 3 * SQ3 * HEX_S], [48, 48]];
+  function elDrawers() {
+    const R = rngOf(7);
+    const stip = Array.from({ length: 170 }, () => [R() * 48, R() * 48, 0.45 + R() * 0.5, R() < 0.3]);
+    const swirl = Array.from({ length: 8 }, () => [R() * 48, R() * 48, R() * 6.28, R() < 0.5 ? 1 : -1, 0.8 + 0.4 * R()]);
+    const dia = Array.from({ length: 20 }, () => [R() * 48, R() * 48, 1.3 + R() * 1.1, R() * 0.6]);
+    return [
+      (c, sh, li) => { for (const [x, y, r, l] of stip) { c.fillStyle = l ? li : sh; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); } },
+      (c, sh, li) => {
+        c.lineCap = 'round';
+        for (const [x, y, a0, d, k] of swirl) for (const [col, lw, off] of [[sh, 1.3, 0.45], [li, 0.65, -0.2]]) {
+          c.strokeStyle = col; c.lineWidth = lw; c.beginPath();
+          for (let q = 0; q <= 30; q++) { const th = (q / 30) * 2.4 * Math.PI, r = k * (0.6 + th * 0.48), X = x + off + r * Math.cos(a0 + d * th), Y = y + off + r * Math.sin(a0 + d * th); q ? c.lineTo(X, Y) : c.moveTo(X, Y); }
+          c.stroke();
+        }
+      },
+      (c, sh, li) => {
+        for (let j = 0; j < 4; j++) for (let i = 0; i < 4; i++) {
+          const x = 4.5 + i * 9 + (j & 1 ? 4.5 : 0), y = 4.5 + j * 9;
+          c.fillStyle = sh; c.beginPath(); c.arc(x + 0.6, y + 0.6, 2.1, 0, 7); c.fill();
+          c.fillStyle = li; c.beginPath(); c.arc(x - 0.3, y - 0.3, 1.3, 0, 7); c.fill();
+        }
+      },
+      (c, sh, li) => {
+        const cs = hexCenters(4, 3, HEX_S); c.lineJoin = 'round';
+        for (const [col, lw, off] of [[sh, 1.6, 0.45], [li, 0.7, -0.25]]) { c.strokeStyle = col; c.lineWidth = lw; c.beginPath(); for (const [x, y] of cs) hexPath(c, x + off, y + off, HEX_S * 0.84); c.stroke(); }
+      },
+      (c, sh, li) => {
+        for (const [x, y, s, rot] of dia) {
+          c.save(); c.translate(x, y); c.rotate(rot); c.beginPath(); c.moveTo(0, -s); c.lineTo(s * 0.68, 0); c.lineTo(0, s); c.lineTo(-s * 0.68, 0); c.closePath();
+          c.fillStyle = li; c.fill(); c.strokeStyle = sh; c.lineWidth = 0.8; c.stroke(); c.restore();
+        }
+      }
+    ];
+  }
+  function crystalDraw(c) {
+    const s = 11, cs = hexCenters(4, 2, s), L = -2.36;   // light from the upper left
+    for (const [x, y] of cs) {
+      // lit facets only, so the lattice reads as ice rather than as cubes
+      for (let k = 0; k < 6; k++) {
+        const a0 = (k * Math.PI) / 3, a1 = ((k + 1) * Math.PI) / 3, b = Math.cos((a0 + a1) / 2 - L);
+        if (b < 0.4) continue;
+        c.beginPath(); c.moveTo(x, y); c.lineTo(x + s * 0.92 * Math.cos(a0), y + s * 0.92 * Math.sin(a0)); c.lineTo(x + s * 0.92 * Math.cos(a1), y + s * 0.92 * Math.sin(a1)); c.closePath();
+        c.fillStyle = `rgba(255,255,255,${0.32 * (b - 0.4) / 0.6})`; c.fill();
       }
     }
-    c.stroke();
+    c.lineJoin = 'round';
+    c.strokeStyle = 'rgba(40,80,140,0.45)'; c.lineWidth = 1.1; c.beginPath(); for (const [x, y] of cs) hexPath(c, x + 0.45, y + 0.45, s * 0.94); c.stroke();
+    c.strokeStyle = 'rgba(255,255,255,0.85)'; c.lineWidth = 0.6; c.beginPath(); for (const [x, y] of cs) hexPath(c, x - 0.2, y - 0.2, s * 0.94); c.stroke();
   }
-  function texDots(c, r0, r1, ink, p) {
-    c.fillStyle = ink; const step = 6 * p;
-    for (let r = r0 + step / 2; r < r1; r += step) {
-      const na = Math.max(2, Math.floor(Math.PI * r / step));
-      for (let k = 0; k <= na; k++) { const [x, y] = polar(r, k / na); c.fillRect(x - 0.8 * p, y - 0.8 * p, 1.6 * p, 1.6 * p); }
-    }
-  }
-  function texLattice(c, rmax, ink, p) {
-    const d = 9 * p, h = d * 0.866;
-    c.strokeStyle = ink; c.lineWidth = 0.7 * p; c.fillStyle = ink;
-    const x0 = G.cx - rmax - d, x1 = G.cx + rmax + d, y0 = G.cy - rmax - d, y1 = G.cy + rmax + d;
-    c.beginPath();
-    let row = 0;
-    for (let y = y0; y <= y1; y += h, row++) {
-      const off = row % 2 ? d / 2 : 0;
-      for (let x = x0 + off; x <= x1; x += d) {
-        c.moveTo(x, y); c.lineTo(x + d, y);
-        c.moveTo(x, y); c.lineTo(x + d / 2, y + h);
-        c.moveTo(x, y); c.lineTo(x - d / 2, y + h);
+  // granulation: tileable Worley cells, bright granules with dark intergranular lanes
+  function granTile(p, seed) {
+    const n = Math.max(8, Math.round(56 * p * dpr)), t = document.createElement('canvas'); t.width = t.height = n;
+    const c = t.getContext('2d'), img = c.createImageData(n, n), d = img.data, R = rngOf(seed);
+    const pts = Array.from({ length: 30 }, () => [R() * n, R() * n, 0.6 + 0.4 * R()]), h = n / 2;
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      let f1 = 1e18, f2 = 1e18, b1 = 1;
+      for (const [px, py, br] of pts) {
+        let dx = Math.abs(x - px), dy = Math.abs(y - py); if (dx > h) dx = n - dx; if (dy > h) dy = n - dy;
+        const q = dx * dx + dy * dy; if (q < f1) { f2 = f1; f1 = q; b1 = br; } else if (q < f2) f2 = q;
       }
+      const lane = clamp((Math.sqrt(f2) - Math.sqrt(f1)) / (n * 0.05), 0, 1), o = (y * n + x) * 4;
+      if (lane < 0.35) { d[o] = d[o + 1] = d[o + 2] = 0; d[o + 3] = 255 * 0.3 * (1 - lane / 0.35); }
+      else { d[o] = 255; d[o + 1] = 246; d[o + 2] = 226; d[o + 3] = 255 * 0.55 * b1 * Math.min(1, (lane - 0.35) / 0.4) * clamp(1 - Math.sqrt(f1) / (n * 0.22), 0, 1); }
     }
-    c.stroke();
-    row = 0;
-    for (let y = y0; y <= y1; y += h, row++) {
-      const off = row % 2 ? d / 2 : 0;
-      for (let x = x0 + off; x <= x1; x += d) { c.beginPath(); c.arc(x, y, 1.5 * p, 0, 2 * Math.PI); c.fill(); }
-    }
+    c.putImageData(img, 0, 0); return t;
+  }
+  const TILE = {}; let tileKey = '';
+  function ensureTiles(T, p) {
+    const key = T.elHex.join() + '|' + p + '|' + dpr;
+    if (key === tileKey) return; tileKey = key;
+    const dr = elDrawers();
+    TILE.el = ELS.map((e, k) => {
+      const col = T.el[k], sh = css(mixc(col, [0, 0, 0], 0.5)), li = css(mixc(col, [255, 255, 255], 0.55));
+      return makeTile(EL_TILE[k][0], EL_TILE[k][1], p, (c) => dr[k](c, sh, li));
+    });
+    TILE.crystal = makeTile(66, 2 * SQ3 * 11, p, crystalDraw);
+    TILE.granA = granTile(p, 11); TILE.granB = granTile(p, 23);
+    TILE.pA = TILE.pB = null;
+  }
+  // quantized texture opacity from a mass fraction; small fractions still show faintly
+  const QMAX = 0.62;
+  const qa = (x) => (x > 0.008 ? Math.max(1, Math.round(Math.pow(Math.min(1, x), 0.65) * 32)) : 0);
+  // burning channel colors (glow, label)
+  function chanOf(s) {
+    if (/^H burning/.test(s.name)) return { glow: [255, 176, 60], label: '#e08a00' };
+    if (/^He burning/.test(s.name)) return { glow: [105, 196, 255], label: '#2b8fd8' };
+    return { glow: [255, 110, 210], label: '#c650b4' };
   }
 
   // ---------- static layer ----------
@@ -778,22 +893,61 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return [lx, ly, w, h];
   }
 
+  function drawElements(c, mo, rin, rout, Rp, T, p) {
+    const n = mo.n;
+    // each element's own texture, opacity from its own mass fraction
+    ELS.forEach((e, k) => {
+      const a = mo[e.key]; if (!a) return;
+      c.fillStyle = patternOf(c, TILE.el[k]);
+      let i = 0;
+      while (i < n) {
+        const q = qa(a[i]); if (!q || rin(i) >= Rp) { i++; continue; }
+        let j = i; while (j + 1 < n && qa(a[j + 1]) === q && rin(j + 1) < Rp) j++;
+        const r0 = rin(i), r1 = Math.min(rout(j), Rp);
+        if (r1 - r0 > 0.3) { c.globalAlpha = (q / 32) * QMAX; annulus(c, r0, r1); c.fill(); }
+        i = j + 1;
+      }
+    });
+    c.globalAlpha = 1;
+    // crisp onion layer interfaces where the most abundant element changes
+    c.beginPath();
+    let pd = domOf(mo, 0)[0];
+    for (let i = 1; i < n; i++) {
+      const d = domOf(mo, i)[0];
+      if (d !== pd) { const r = rin(i); if (r > 1.5 && r < Rp) arcAt(c, r); }
+      pd = d;
+    }
+    c.strokeStyle = 'rgba(0,0,0,0.35)'; c.lineWidth = 3 * p; c.stroke();
+    c.strokeStyle = css(rgb(T.canvas), 0.9); c.lineWidth = 1.3 * p; c.stroke();
+  }
+
   function drawStatic() {
-    const c = sctx, T = tokens(), p = ps(), mo = cur();
-    c.setTransform(dpr, 0, 0, dpr, 0, 0);
-    c.clearRect(0, 0, W, H);
+    const c = sctx, o = octx, g = gctx, T = sliceTokens(), p = ps(), mo = cur(), glow = S.mode === 'glow';
+    for (const k of [c, o]) { k.setTransform(dpr, 0, 0, dpr, 0, 0); k.clearRect(0, 0, W, H); }
+    g.setTransform(dpr * GS, 0, 0, dpr * GS, 0, 0); g.clearRect(0, 0, W, H);
     c.fillStyle = T.canvas; c.fillRect(0, 0, W, H);
-    cellBands = [];
+    animBands = []; sparkles = []; rim = null; hasGlow = false; glowBox = null;
     if (!mo) return;
     G = geometry();
+    ensureTiles(T, p);
     const M = mapper(mo), Rp = G.R, n = mo.n, D = S.D;
     const rin = (i) => (i ? M.px(mo.r[i - 1]) : 0), rout = (i) => M.px(mo.r[i]);
     const vis = (i) => rin(i) < Rp;
     const colors = new Array(n);
     for (let i = 0; i < n; i++) colors[i] = zoneColor(mo, i, T);
+    const rs = M.px(mo.r[n - 1]), surf = rs <= Rp + 0.5, rsC = Math.min(rs, Rp);
+    const R = rngOf(S.idx * 7919 + 13);
 
+    // Glow: a soft halo of the photosphere color just outside the surface
+    if (glow && surf) {
+      const sc = colors[n - 1], ro = rs + 28 * p;
+      c.save(); halfDisk(c, ro); c.clip();
+      const hg = c.createRadialGradient(G.cx, G.cy, rs * 0.98, G.cx, G.cy, ro);
+      hg.addColorStop(0, css(sc, 0.45)); hg.addColorStop(0.3, css(sc, 0.14)); hg.addColorStop(1, css(sc, 0));
+      c.fillStyle = hg; c.fillRect(0, 0, W, H); c.restore();
+    }
     // empty view frame (space beyond the star when the view is larger)
-    c.save(); halfDisk(c, Rp); c.fillStyle = T.grid; c.globalAlpha = 0.45; c.fill(); c.restore();
+    if (!glow) { c.save(); halfDisk(c, Rp); c.fillStyle = T.grid; c.globalAlpha = 0.45; c.fill(); c.restore(); }
 
     // zones, outermost first as nested half disks (no seams)
     for (let i = n - 1; i >= 0; i--) {
@@ -802,20 +956,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     c.save(); halfDisk(c, Rp); c.clip();
 
-    // static mixing textures
-    if (S.layers.tex && mo.mix) {
-      for (const ru of mo.runs) {
-        const t = texOf(ru.code); if (!t || t === 'conv' || t === 'faint' || t === 'psep') continue;
-        const r0 = rin(ru.i0), r1 = Math.min(rout(ru.i1), Rp);
-        if (r0 >= Rp || r1 - r0 < 2) continue;
-        const ink = contrastInk(colors[Math.floor((ru.i0 + ru.i1) / 2)], 0.42);
-        c.save(); annulus(c, r0, r1); c.clip();
-        if (t === 'semi') texSemi(c, r0, r1, ink, p); else if (t === 'thermo') texThermo(c, r0, r1, ink, p); else texDots(c, r0, r1, ink, p);
-        c.restore();
-      }
-    }
+    if (S.mode === 'comp') drawElements(c, mo, rin, rout, Rp, T, p);
 
-    // crystal layer
+    // crystal layer: faceted lattice, sparkle points for the animated layer
     if (mo.phase && S.layers.lat) {
       let i = 0;
       while (i < n) {
@@ -823,9 +966,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           let j = i; while (j + 1 < n && (mo.phase[j + 1] ?? 0) >= 0.5) j++;
           const r0 = rin(i), r1 = Math.min(rout(j), Rp);
           if (r1 - r0 > 1.5 && r0 < Rp) {
-            c.save(); annulus(c, r0, r1); c.clip();
-            texLattice(c, r1, contrastInk(colors[Math.floor((i + j) / 2)], 0.38), p);
-            c.restore();
+            c.save(); c.fillStyle = patternOf(c, TILE.crystal); c.globalAlpha = S.mode === 'phase' ? 0.7 : 0.45;
+            annulus(c, r0, r1); c.fill(); c.restore();
+            const cnt = clamp(Math.round(((r1 * r1 - r0 * r0) * Math.PI) / 2 / (2400 * p * p)), 5, 40);
+            for (let k = 0; k < cnt; k++) {
+              const rr = Math.sqrt(r0 * r0 + R() * (r1 * r1 - r0 * r0)), [x, y] = polar(rr, 0.03 + 0.94 * R());
+              sparkles.push({ x, y, w: 0.5 + R() * 1.1, ph: R() * 6.28, s: (3 + R() * 3.5) * p });
+            }
           }
           i = j + 1;
         } else i++;
@@ -835,7 +982,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // phase separation heating glow
     if (mo.psep && D.rng.psep && S.layers.lat) {
       const [lo, hi] = [D.rng.psep[1] - 4, D.rng.psep[1]];
-      c.save(); c.shadowColor = T.equi; c.shadowBlur = 14 * p;
+      c.save(); c.shadowColor = T.equi; c.shadowBlur = 14 * p * dpr;
       for (let i = 0; i < n; i++) {
         const v = mo.psep[i]; if (!(v > 0) || !vis(i)) continue;
         const a = clamp((Math.log10(v) - lo) / (hi - lo), 0, 1); if (a <= 0) continue;
@@ -846,88 +993,151 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       c.restore();
     }
 
-    // burning glow
-    if (S.layers.glow && mo.eps && D.rng.eps) {
-      const lo = Math.log10(mo.epsThr || 10), hi = D.rng.eps[1];
-      c.save(); c.shadowColor = '#ff8a00'; c.shadowBlur = 16 * p;
-      for (const s of mo.shells) {
-        for (let i = s.i0; i <= s.i1; i++) {
-          const e = mo.eps[i] || 0; if (e < (mo.epsThr || 10) || !vis(i)) continue;
-          const a = 0.3 + 0.6 * clamp((Math.log10(e) - lo) / Math.max(0.5, hi - lo), 0, 1);
-          const r0 = rin(i), r1 = Math.min(rout(i), Rp);
-          if (s.core && i === 0) { halfDisk(c, r1); c.fillStyle = `rgba(255,200,90,${a * 0.8})`; c.fill(); continue; }
-          c.strokeStyle = `rgba(255,205,95,${a})`; c.lineWidth = Math.max(2 * p, r1 - r0);
-          c.beginPath(); c.arc(G.cx, G.cy, (r0 + r1) / 2, G.a0, G.a0 + Math.PI); c.stroke();
-        }
+    // shading: a sliced sphere lit from the upper left; in Glow, limb darkening at the photosphere instead
+    if (!glow) {
+      c.save(); halfDisk(c, rsC); c.clip();
+      const lg = c.createLinearGradient(G.cx - rsC, G.cy - rsC, G.cx + rsC, G.cy + rsC);
+      lg.addColorStop(0, 'rgba(255,255,255,0.16)'); lg.addColorStop(0.5, 'rgba(255,255,255,0)'); lg.addColorStop(1, 'rgba(0,0,0,0.14)');
+      c.fillStyle = lg; c.fillRect(0, 0, W, H);
+      if (surf) {
+        const rg = c.createRadialGradient(G.cx, G.cy, rs * 0.78, G.cx, G.cy, rs);
+        rg.addColorStop(0, 'rgba(0,0,0,0)'); rg.addColorStop(1, 'rgba(0,0,0,0.2)');
+        c.fillStyle = rg; c.fillRect(0, 0, W, H);
       }
       c.restore();
-    }
-
-    // convective bands (drawn per frame), computed here
-    if (S.layers.cells && mo.mix) {
-      const cvr = D.rng.cv;
-      for (const ru of mo.runs) {
-        const t = texOf(ru.code); if (t !== 'conv' && t !== 'faint' && t !== 'psep') continue;
-        const R0 = rin(ru.i0), R1 = Math.min(rout(ru.i1), Rp);
-        if (R0 >= Rp || R1 - R0 < 1) continue;
-        const T0 = R1 - R0, rm = (R0 + R1) / 2;
-        const k = clamp(Math.ceil((4 * T0) / (Math.PI * rm + 1e-6)), 1, 5);
-        for (let b = 0; b < k; b++) {
-          const r0 = R0 + (T0 * b) / k, r1 = R0 + (T0 * (b + 1)) / k, rb = (r0 + r1) / 2, tb = r1 - r0;
-          // speed from conv_vel of zones inside this band
-          let sum = 0, cnt = 0;
-          for (let i = ru.i0; i <= ru.i1; i++) {
-            const zr0 = rin(i), zr1 = rout(i);
-            if (zr1 < r0 || zr0 > r1) continue;
-            const v = mo.cv ? mo.cv[i] : null; if (v != null && v > -50) { sum += v; cnt++; }
-          }
-          let f = 0.35, lv = null;
-          if (cnt && cvr) { lv = sum / cnt; const lo = Math.max(cvr[0], cvr[1] - 6); f = 0.12 + 0.88 * clamp((lv - lo) / Math.max(0.5, cvr[1] - lo), 0, 1); }
-          const ncell = clamp(Math.round((Math.PI * rb) / Math.max(tb * 1.15, 6 * p)), 1, 60);
-          const mid = colors[Math.floor((ru.i0 + ru.i1) / 2)];
-          cellBands.push({ t, r0, r1, rb, tb, n: ncell, f,
-            ink: t === 'psep' ? T.equi : contrastInk(mid, t === 'faint' ? 0.28 : 0.62) });
-        }
+    } else if (surf && rs > 4) {
+      // shape of the linear law I = 1 − u(1 − μ) with u = 0.6, over the outer 20% of the radius
+      c.save(); halfDisk(c, rs); c.clip();
+      const rg = c.createRadialGradient(G.cx, G.cy, rs * 0.8, G.cx, G.cy, rs);
+      for (let k = 0; k <= 6; k++) {
+        const x = 0.8 + 0.2 * (k / 6), d = 0.6 * (1 - Math.sqrt(Math.max(0, 1 - x * x))) - 0.24;
+        rg.addColorStop(k / 6, `rgba(0,0,0,${clamp((d / 0.36) * 0.62, 0, 0.62)})`);
       }
+      c.fillStyle = rg; c.fillRect(0, 0, W, H); c.restore();
     }
 
-    // crystallization front
+    // crystallization front: a crisp glowing line
     const labels = [];
     if (mo.front && S.layers.lat) {
       const rf = rout(mo.front.i);
       if (rf <= Rp + 0.5 && rf > 1) {
-        c.save(); c.strokeStyle = T.accent; c.lineWidth = 2.2 * p; c.setLineDash([7 * p, 4 * p]);
-        c.beginPath(); c.arc(G.cx, G.cy, rf, G.a0, G.a0 + Math.PI); c.stroke(); c.restore();
+        c.save(); c.beginPath(); arcAt(c, rf);
+        c.shadowColor = T.accent; c.shadowBlur = 12 * p * dpr; c.strokeStyle = T.accent; c.lineWidth = 2.8 * p; c.stroke();
+        c.shadowBlur = 0; c.strokeStyle = 'rgba(255,255,255,0.95)'; c.lineWidth = 1 * p; c.stroke(); c.restore();
         labels.push({ r: rf, f: 0.3, text: 'Crystallization front', color: T.accent });
       }
     }
     c.restore(); // end clip
 
     // star surface outline / view edge
-    const rs = M.px(mo.r[n - 1]);
     c.save(); c.lineWidth = 1.2 * p;
-    if (rs <= Rp + 0.5) { c.strokeStyle = T.ink; c.globalAlpha = 0.5; c.beginPath(); c.arc(G.cx, G.cy, rs, G.a0, G.a0 + Math.PI); c.stroke(); }
-    else { c.strokeStyle = T.muted; c.setLineDash([5 * p, 4 * p]); c.beginPath(); c.arc(G.cx, G.cy, Rp, G.a0, G.a0 + Math.PI); c.stroke(); }
+    if (surf) { if (!glow) { c.strokeStyle = T.ink; c.globalAlpha = 0.45; c.beginPath(); arcAt(c, rs); c.stroke(); } }
+    else { c.strokeStyle = T.muted; c.setLineDash([5 * p, 4 * p]); c.beginPath(); arcAt(c, Rp); c.stroke(); }
     c.restore();
 
-    // shell labels
+    // burning shells: pre blurred glow, composited additively with a pulse each frame
+    if (S.layers.glow && mo.eps && D.rng.eps && mo.shells.length) {
+      const lo = Math.log10(mo.epsThr || 10), hi = D.rng.eps[1];
+      g.save(); halfDisk(g, Rp); g.clip();
+      let gr = 0;
+      for (const s of mo.shells) {
+        const col = chanOf(s).glow;
+        for (let i = s.i0; i <= s.i1; i++) {
+          const e = mo.eps[i] || 0; if (e < (mo.epsThr || 10) || !vis(i)) continue;
+          const a = 0.25 + 0.75 * clamp((Math.log10(e) - lo) / Math.max(0.5, hi - lo), 0, 1);
+          const r0 = rin(i), r1 = Math.min(rout(i), Rp);
+          g.shadowColor = css(col, a); g.shadowBlur = 24 * p * dpr * GS; gr = Math.max(gr, r1);
+          if (s.core && i === 0) { halfDisk(g, Math.max(r1, 2 * p)); g.fillStyle = css(col, a * 0.55); g.fill(); hasGlow = true; continue; }
+          g.strokeStyle = css(col, a * 0.55); g.lineWidth = Math.max(2.2 * p, r1 - r0);
+          g.beginPath(); g.arc(G.cx, G.cy, (r0 + r1) / 2, G.a0, G.a0 + Math.PI); g.stroke(); hasGlow = true;
+        }
+      }
+      g.restore();
+      if (hasGlow) {   // composite only the part that glows
+        const e = Math.min(gr, Rp) + 40 * p, x0 = clamp(G.cx - e, 0, W), y0 = clamp(G.cy - e, 0, H), x1 = clamp(G.cx + e, 0, W), y1 = clamp(G.cy + e, 0, H);
+        glowBox = x1 - x0 > 1 && y1 - y0 > 1 ? [x0, y0, x1 - x0, y1 - y0] : null; hasGlow = !!glowBox;
+      }
+    }
+
+    // convection and mixing, for the animated layer
+    if (mo.mix) buildAnimBands(mo, rin, rout, Rp, colors, T, p, R);
+    if (surf && mo.env && S.layers.cells && rs > 20) { const th = clamp(rs * 0.05, 5 * p, 16 * p); rim = { r0: Math.max(0, rs - th), r1: rs }; }
+
+    // annotations go on their own layer so glow and particles stay underneath
     if (S.layers.glow) mo.shells.forEach((s, k) => {
       const r = (rin(s.pi) + rout(s.pi)) / 2;
       if (r > Rp || rout(s.i1) < 1.5) return;
-      labels.push({ r, f: 0.55 + 0.17 * k, text: s.name, color: '#e08a00' });
+      labels.push({ r, f: 0.55 + 0.17 * k, text: s.name, color: chanOf(s).label });
     });
     for (const L of labels) {
       const [x, y] = polar(L.r, L.f);
       const ang = G.a0 + L.f * Math.PI, d = 20 * p;
       const [lx, ly] = [x + Math.cos(ang) * d, y + Math.sin(ang) * d];
-      c.strokeStyle = L.color; c.lineWidth = 1.2 * p;
-      c.beginPath(); c.moveTo(x, y); c.lineTo(lx, ly); c.stroke();
-      c.fillStyle = L.color; c.beginPath(); c.arc(x, y, 2.5 * p, 0, 2 * Math.PI); c.fill();
-      labelBox(c, lx, ly, L.text, T, L.color, p, Math.cos(ang) < -0.2 ? 'right' : 'left');
+      o.strokeStyle = L.color; o.lineWidth = 1.2 * p;
+      o.beginPath(); o.moveTo(x, y); o.lineTo(lx, ly); o.stroke();
+      o.fillStyle = L.color; o.beginPath(); o.arc(x, y, 2.5 * p, 0, 2 * Math.PI); o.fill();
+      labelBox(o, lx, ly, L.text, T, L.color, p, Math.cos(ang) < -0.2 ? 'right' : 'left');
     }
+    drawAxis(o, mo, M, T, p);
+    drawScaleBar(o, mo, M, T, p);
+  }
 
-    drawAxis(c, mo, M, T, p);
-    drawScaleBar(c, mo, M, T, p);
+  function buildAnimBands(mo, rin, rout, Rp, colors, T, p, R) {
+    const D = S.D, cvr = D.rng.cv, specs = [];
+    for (const ru of mo.runs) {
+      const t = texOf(ru.code); if (!t) continue;
+      const isCell = t === 'conv' || t === 'faint' || t === 'psep';
+      if (isCell ? !S.layers.cells : !S.layers.tex) continue;
+      const R0 = rin(ru.i0), R1 = Math.min(rout(ru.i1), Rp);
+      if (R0 >= Rp || R1 - R0 < 1) continue;
+      const mid = colors[Math.floor((ru.i0 + ru.i1) / 2)];
+      if (!isCell) { specs.push({ t, r0: R0, r1: R1, ink: inkFor(mid, 0.4) }); continue; }
+      const T0 = R1 - R0, rm = (R0 + R1) / 2;
+      const k = clamp(Math.ceil((4 * T0) / (Math.PI * rm + 1e-6)), 1, 5);
+      for (let b = 0; b < k; b++) {
+        const r0 = R0 + (T0 * b) / k, r1 = R0 + (T0 * (b + 1)) / k, rb = (r0 + r1) / 2, tb = r1 - r0;
+        // speed from log_conv_vel of zones inside this band (compressed)
+        let sum = 0, cnt = 0;
+        for (let i = ru.i0; i <= ru.i1; i++) {
+          if (rout(i) < r0 || rin(i) > r1) continue;
+          const v = mo.cv ? mo.cv[i] : null; if (v != null && v > -50) { sum += v; cnt++; }
+        }
+        let f = 0.35;
+        if (cnt && cvr) { const lv = sum / cnt, lo = Math.max(cvr[0], cvr[1] - 6); f = 0.12 + 0.88 * clamp((lv - lo) / Math.max(0.5, cvr[1] - lo), 0, 1); }
+        specs.push({ t, r0, r1, rb, tb, f, n: clamp(Math.round((Math.PI * rb) / Math.max(tb * 1.1, 6 * p)), 1, 80),
+          ink: t === 'psep' ? T.equi : inkFor(mid, 1) });
+      }
+    }
+    let want = 0;
+    for (const b of specs) if (b.n) { b.want = (Math.PI * b.rb * b.tb) / (150 * p * p) * (b.t === 'faint' ? 0.45 : 1); want += b.want; }
+    const scale = want > 1100 ? 1100 / want : 1;
+    for (const b of specs) {
+      if (b.n) {
+        b.span = Math.PI / b.n; b.thin = b.tb < 6 * p;
+        b.ar = b.tb * 0.46; b.at = b.span * 0.46;
+        const v = 30 * p * b.f * (b.t === 'faint' ? 0.45 : 1);     // px per s
+        if (b.thin) { b.om = v / Math.max(b.rb, 1); b.trail = Math.max(b.om * 0.12, (2.5 * p) / Math.max(b.rb, 1)); }
+        else { b.om = Math.min(3, v / (0.5 * (b.ar + b.at * b.rb))); b.trail = clamp(b.om * 0.06, 0.04, 0.16); }
+        const cnt = Math.max(b.thin ? 6 : b.n * 3, Math.round(b.want * scale));
+        b.parts = new Float32Array(cnt * 4);
+        for (let q = 0; q < cnt; q++) {
+          const o = q * 4;
+          b.parts[o] = b.thin ? R() : Math.floor(R() * b.n);
+          b.parts[o + 1] = b.thin ? (R() - 0.5) * 0.7 : 0.16 + 0.8 * Math.sqrt(R());
+          b.parts[o + 2] = R() * 6.2832; b.parts[o + 3] = 0.85 + 0.3 * R();
+        }
+        b.pts = new Float32Array(cnt * 10);
+        b.alpha = b.t === 'faint' ? 0.4 : 0.85;
+      } else if (b.t === 'thermo' || b.t === 'dots') {
+        const step = (b.t === 'thermo' ? 6 : 6) * p, F = [];
+        for (let r = b.r0 + step / 2; r < b.r1 && F.length < 4500; r += step) {
+          const na = Math.max(2, Math.floor((Math.PI * r) / (step * (b.t === 'thermo' ? 0.9 : 1)))), row = Math.round(r / step);
+          for (let k = 0; k <= na; k++) F.push(G.a0 + ((k + (row % 2 ? 0.5 : 0)) * Math.PI) / na, r, R() * 6.28);
+        }
+        b.fing = new Float32Array(F);
+      }
+      animBands.push(b);
+    }
   }
 
   function drawAxis(c, mo, M, T, p) {
@@ -941,14 +1151,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (!S.log) {
       const step = niceStep(vr / 4);
       for (let v = 0; v <= vr * 1.0001; v += step) ticks.push([M.px(v), tickFmt(v, step)]);
-      ticks.unit = 'R☉';
     } else {
       const [a, b] = logRange(mo);
       const span = b - a, st = span > 6 ? 2 : 1;
       for (let e = Math.ceil(a); e <= b + 1e-9; e += st) ticks.push([M.px(10 ** e), e === 0 ? '1' : '10' + sup(e)]);
     }
     const dir = G.up ? [1, 0] : [0, 1];       // along the axis, away from the center, labeled half
-    ticks.forEach(([px, lab], k) => {
+    ticks.forEach(([px, lab]) => {
       const x = G.cx + dir[0] * px, y = G.cy + dir[1] * px;
       c.beginPath();
       if (G.up) { c.moveTo(x, y); c.lineTo(x, y + 5 * p); c.moveTo(G.cx - px, y); c.lineTo(G.cx - px, y + 5 * p); }
@@ -968,7 +1177,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const right = !G.up;
     c.save(); c.font = `600 ${11 * p}px ${monoFont()}`; c.textBaseline = 'top';
     if (S.log) {
-      c.font = `700 ${12 * p}px ${uiFont()}`; c.fillStyle = T.pos; c.textAlign = right ? 'right' : 'left';
+      c.font = `700 ${12 * p}px ${uiFont()}`; c.fillStyle = S.mode === 'glow' ? '#ff8f7a' : T.pos; c.textAlign = right ? 'right' : 'left';
       c.fillText('Log radius: not to scale', x0, y0);
       c.restore(); return;
     }
@@ -996,37 +1205,99 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- animated layer ----------
   let tAnim = 0;
-  function drawCells(c, t, T) {
-    if (!cellBands.length) return;
-    const p = ps();
-    c.save(); halfDisk(c, G.R); c.clip();
-    c.lineCap = 'round';
-    for (const b of cellBands) {
-      const span = Math.PI / b.n, speed = 34 * p * b.f;
-      c.strokeStyle = b.ink; c.lineWidth = (b.t === 'faint' ? 1.1 : 1.5) * p;
-      if (b.tb < 5 * p) {   // too thin for loops: a moving dashed line along the layer
-        c.setLineDash([5 * p, 6 * p]); c.lineDashOffset = -t * speed;
-        c.beginPath(); c.arc(G.cx, G.cy, b.rb, G.a0, G.a0 + Math.PI); c.stroke();
-        continue;
-      }
-      const ar = b.tb * 0.42, at = span * 0.42;
-      for (let j = 0; j < b.n; j++) {
-        const th = G.a0 + (j + 0.5) * span, dir = j % 2 ? 1 : -1;
-        for (const s of (b.tb > 22 * p ? [0.35, 0.68, 0.96] : [0.55, 0.95])) {
-          const len = Math.PI * (s * ar + s * at * b.rb);
-          const dash = Math.max(3 * p, Math.min(9 * p, len / 4));
-          c.setLineDash([dash, dash * 1.2]); c.lineDashOffset = dir * t * speed;
-          c.beginPath();
-          for (let q = 0; q <= 28; q++) {
-            const ph = (q / 28) * 2 * Math.PI, rr = b.rb + s * ar * Math.sin(ph), aa = th + s * at * Math.cos(ph);
-            const x = G.cx + rr * Math.cos(aa), y = G.cy + rr * Math.sin(aa);
-            q ? c.lineTo(x, y) : c.moveTo(x, y);
-          }
-          c.stroke();
+  function drawParts(c, b, t, p) {
+    const P = b.parts, cnt = P.length / 4, K = 4, X = b.pts, cx = G.cx, cy = G.cy, a0 = G.a0;
+    for (let q = 0; q < cnt; q++) {
+      const o = q * 4, w = P[o + 3], base = q * 10;
+      if (b.thin) {
+        const dir = q & 1 ? 1 : -1, rr = b.rb + P[o + 1] * b.tb, u0 = P[o] * Math.PI + dir * b.om * w * t;
+        for (let k = 0; k <= K; k++) {
+          let a = (u0 - dir * k * b.trail) % Math.PI; if (a < 0) a += Math.PI;
+          X[base + 2 * k] = cx + rr * Math.cos(a0 + a); X[base + 2 * k + 1] = cy + rr * Math.sin(a0 + a);
+        }
+      } else {
+        const j = P[o], dir = j % 2 ? 1 : -1, s = Math.min(1, P[o + 1] * (1 + 0.16 * Math.sin(0.6 * t + 5 * P[o + 2]))), th = a0 + (j + 0.5) * b.span, ph = P[o + 2] + dir * b.om * w * t;
+        for (let k = 0; k <= K; k++) {
+          const f = ph - dir * k * b.trail, rr = b.rb + s * b.ar * Math.sin(f), aa = th + s * b.at * Math.cos(f);
+          X[base + 2 * k] = cx + rr * Math.cos(aa); X[base + 2 * k + 1] = cy + rr * Math.sin(aa);
         }
       }
     }
-    c.restore();
+    c.lineWidth = (b.t === 'faint' ? 1.1 : 1.6) * p;
+    const jump = 30 * p;
+    for (let k = 0; k < K; k++) {
+      c.globalAlpha = b.alpha * (1 - k / K);
+      c.beginPath();
+      for (let q = 0; q < cnt; q++) {
+        const o = q * 10 + 2 * k, x0 = X[o], y0 = X[o + 1], x1 = X[o + 2], y1 = X[o + 3];
+        if (Math.abs(x1 - x0) + Math.abs(y1 - y0) > jump) continue;
+        c.moveTo(x0, y0); c.lineTo(x1, y1);
+      }
+      c.stroke();
+    }
+    c.globalAlpha = 1;
+  }
+  function drawAnim(c, t, T) {
+    const p = ps();
+    if (hasGlow) {
+      c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.globalCompositeOperation = 'screen';
+      c.globalAlpha = 0.62 + 0.22 * Math.sin(t * 2.2);
+      const [x, y, w, h] = glowBox, k = dpr * GS;
+      c.drawImage(glowC, x * k, y * k, w * k, h * k, x * dpr, y * dpr, w * dpr, h * dpr); c.restore();
+    }
+    if (rim) {
+      if (!TILE.pA) { TILE.pA = c.createPattern(TILE.granA, 'repeat'); TILE.pB = c.createPattern(TILE.granB, 'repeat'); }
+      const w = 0.5 + 0.5 * Math.sin(t * 0.35);
+      try {
+        TILE.pA.setTransform(new DOMMatrix([1 / dpr, 0, 0, 1 / dpr, t * 1.1 * p, t * 0.3 * p]));
+        TILE.pB.setTransform(new DOMMatrix([1 / dpr, 0, 0, 1 / dpr, -t * 0.8 * p, t * 0.6 * p]));
+      } catch (_) {}
+      c.save();
+      for (let k = 0; k < 3; k++) {
+        const r0 = rim.r0 + ((rim.r1 - rim.r0) * k) / 3;
+        c.globalAlpha = 0.2 * (1 - w); c.fillStyle = TILE.pA; annulus(c, r0, rim.r1); c.fill();
+        c.globalAlpha = 0.2 * w; c.fillStyle = TILE.pB; c.fill();
+      }
+      c.restore();
+    }
+    if (animBands.length) {
+      c.save(); halfDisk(c, G.R); c.clip(); c.lineCap = 'round';
+      for (const b of animBands) {
+        c.strokeStyle = b.ink; c.fillStyle = b.ink;
+        if (b.parts) { drawParts(c, b, t, p); continue; }
+        c.save(); annulus(c, b.r0, b.r1); c.clip();
+        if (b.t === 'semi') {     // layered stripes drifting slowly outward
+          const step = 3.6 * p, off = (((t * 1.3 * p) % step) + step) % step;
+          c.lineWidth = 0.9 * p; c.beginPath();
+          for (let r = b.r0 + off; r < b.r1; r += step) arcAt(c, r);
+          c.stroke();
+        } else if (b.t === 'thermo') {   // thin radial fingers, gently rising and sinking
+          const F = b.fing, l = 2.4 * p, A = 1.6 * p;
+          c.lineWidth = 0.9 * p; c.beginPath();
+          for (let q = 0; q < F.length; q += 3) {
+            const a = F[q], r = F[q + 1] + A * Math.sin(t * 0.9 + F[q + 2]), ca = Math.cos(a), sa = Math.sin(a);
+            c.moveTo(G.cx + (r - l) * ca, G.cy + (r - l) * sa); c.lineTo(G.cx + (r + l) * ca, G.cy + (r + l) * sa);
+          }
+          c.stroke();
+        } else {
+          const F = b.fing, d = 0.8 * p;
+          for (let q = 0; q < F.length; q += 3) { const x = G.cx + F[q + 1] * Math.cos(F[q]), y = G.cy + F[q + 1] * Math.sin(F[q]); c.fillRect(x - d, y - d, 2 * d, 2 * d); }
+        }
+        c.restore();
+      }
+      c.restore();
+    }
+    if (sparkles.length) {
+      c.save(); c.strokeStyle = '#ffffff'; c.fillStyle = '#ffffff'; c.lineCap = 'round';
+      c.shadowColor = T.accent; c.shadowBlur = 5 * p * dpr; c.lineWidth = 1.1 * p;
+      for (const s of sparkles) {
+        const I = Math.pow(Math.max(0, Math.sin(t * s.w + s.ph)), 10); if (I < 0.03) continue;
+        const L = s.s * (0.35 + 0.65 * I);
+        c.globalAlpha = I; c.beginPath(); c.moveTo(s.x - L, s.y); c.lineTo(s.x + L, s.y); c.moveTo(s.x, s.y - L); c.lineTo(s.x, s.y + L); c.stroke();
+        c.beginPath(); c.arc(s.x, s.y, 1.2 * p, 0, 7); c.fill();
+      }
+      c.restore();
+    }
   }
 
   function probeZone(mo) {
@@ -1047,9 +1318,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.restore();
   }
 
-  function needAnim() { return S.playing || S.fade || (S.layers.move && S.layers.cells && cellBands.length > 0); }
+  const animActive = () => animBands.length > 0 || !!rim || sparkles.length > 0 || hasGlow;
+  function needAnim() { return S.playing || S.fade || (S.layers.move && animActive()); }
   function schedule() { if (!raf) raf = requestAnimationFrame(frame); }
-  function markAll() { statDirty = true; chartsDirty = true; schedule(); }
+  function markAll() { statDirty = true; chartsDirty = true; tokC = null; schedule(); }
   function frame(now) {
     raf = 0;
     if (!W || !H || !S.D) return;
@@ -1060,17 +1332,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     if (statDirty) { drawStatic(); statDirty = false; }
     if (chartsDirty) { drawCharts(); drawHR(); updatePanel(); chartsDirty = false; }
-    const T = tokens();
+    const T = sliceTokens();
     if (S.layers.move) tAnim += dt;
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height);
     ctx.drawImage(stat, 0, 0);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    drawCells(ctx, tAnim, T);
+    drawAnim(ctx, tAnim, T);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.drawImage(over, 0, 0);
     if (S.fade) {
       const f = (now - S.fade) / 260;
       if (f >= 1) S.fade = null;
-      else { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1 - f; ctx.drawImage(prev, 0, 0); ctx.globalAlpha = 1; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+      else { ctx.globalAlpha = 1 - f; ctx.drawImage(prev, 0, 0); ctx.globalAlpha = 1; }
     }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     drawProbe(ctx, T);
     if (needAnim()) schedule(); else S.lastT = 0;
   }
@@ -1297,15 +1572,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const bar = (stops, lo, hi, unit) => `<div class="legend-bar" style="background:linear-gradient(90deg,${stops.join(',')})"></div><div class="legend-scale mono"><span>${lo}</span><span>${unit}</span><span>${hi}</span></div>`;
     let h = '';
     if (S.mode === 'comp') {
-      h = '<div class="key">' + ELS.map((e, k) => D.has.el[k] ? `<span class="present"><i class="sw" style="background:${T.elHex[k]}"></i>${e.label}</span>` : '').join('') +
-        '</div><p class="hint" style="margin-top:6px">Each layer blends these colors by mass fraction, normalized over the five shown.</p>';
+      h = '<div class="key">' + ELS.map((e, k) => D.has.el[k] ? `<span class="present"><canvas class="el" data-el="${k}" aria-hidden="true"></canvas>${e.label}</span>` : '').join('') +
+        '</div><p class="hint" style="margin-top:6px">Each zone takes the color of its most abundant element, lightly tinted by the second. Every element also has its own texture, laid over with opacity rising with its MESA mass fraction, so a mixed layer shows both patterns. Thin outlines mark where the most abundant element changes. The texture shapes are illustrative.</p>';
+    } else if (S.mode === 'glow') {
+      const st = []; for (let q = 0; q <= 20; q++) st.push(css(glowRGB(3 + (5 * q) / 20)) + ' ' + (q * 5) + '%');
+      h = `<div class="legend-bar" style="background:linear-gradient(90deg,${st.join(',')})"></div><div class="legend-scale mono"><span>10³ K</span><span>T, log scale</span><span>10⁸ K</span></div>` +
+        '<p class="hint" style="margin-top:6px">Color = blackbody color at the local temperature (logT from MESA); brightness compressed. The color stops changing above 40,000 K (blue white), and layers above about 10⁷ K are drawn overexposed toward white. Limb darkening at the surface is a linear law shape; the surface granulation shows only when MESA has a convective envelope reaching the surface, and its cells are illustrative.</p>';
     } else if (S.mode === 'temp' && D.rng.logT) h = bar(INFERNO.slice(1), sci(10 ** D.rng.logT[0], 2), sci(10 ** D.rng.logT[1], 2), 'T in K, log scale');
     else if (S.mode === 'dens' && D.rng.logRho) h = bar(VIRIDIS, sci(10 ** D.rng.logRho[0], 2), sci(10 ** D.rng.logRho[1], 2), 'ρ in g/cm³, log scale');
     else if (S.mode === 'burn' && D.rng.eps) h = bar(INFERNO, '≤ ' + sci(10 ** D.rng.eps[0], 1), sci(10 ** D.rng.eps[1], 2), 'ε_nuc, erg g⁻¹ s⁻¹, log');
     else if (S.mode === 'phase') h = bar([T.liquid, T.solid], '0 liquid', '1 solid', 'eos_phase');
     else if (S.mode === 'gam' && D.rng.gam) h = bar(VIRIDIS, sci(10 ** D.rng.gam[0], 2), sci(10 ** D.rng.gam[1], 2), `Γ (${mc.gamma || 'gam'}), log`);
-    if (S.mode !== 'comp') h += '<p class="hint" style="margin-top:6px">Color range is fixed over the whole run, so moments compare directly.</p>';
+    if (S.mode !== 'comp') h += '<p class="hint" style="margin-top:6px">' + (S.mode === 'glow' ? 'The temperature scale is absolute' : 'Color range is fixed over the whole run') + ', so moments compare directly.</p>';
     L.innerHTML = h;
+    for (const cvs of L.querySelectorAll('canvas.el')) elSwatch(cvs, +cvs.dataset.el, T);
     // mixing key
     const K = $('mixKey');
     if (!D.has.mix) { K.innerHTML = '<span>No mixing_type column in this file, so convection is not shown.</span>'; }
@@ -1325,10 +1605,25 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.relief || T.grid; c.fillRect(0, 0, w, h);
     c.strokeStyle = t === 'psep' ? T.equi : T.ink; c.fillStyle = T.ink; c.lineWidth = 1;
     c.globalAlpha = t === 'faint' ? 0.4 : 0.85;
-    if (t === 'conv' || t === 'faint' || t === 'psep') { c.setLineDash([3, 2]); c.beginPath(); c.ellipse(8, 7, 6, 4.5, 0, 0, 7); c.stroke(); c.beginPath(); c.ellipse(22, 7, 6, 4.5, 0, 0, 7); c.stroke(); }
+    if (t === 'conv' || t === 'faint' || t === 'psep') {
+      c.lineCap = 'round'; c.lineWidth = t === 'faint' ? 1 : 1.4; const a0 = c.globalAlpha;
+      for (const [x, d] of [[8, 1], [22, -1]]) for (const s0 of [0, 2.1, 4.2]) for (let k = 0; k < 3; k++) {
+        c.globalAlpha = a0 * (1 - k / 3); c.beginPath(); c.ellipse(x, 7, 5.5, 4.2, 0, s0 - d * k * 0.45, s0 - d * (k + 1) * 0.45, d > 0); c.stroke();
+      }
+      c.globalAlpha = a0;
+    }
     else if (t === 'semi') { c.beginPath(); for (let y = 2.5; y < h; y += 3) { c.moveTo(0, y); c.lineTo(w, y); } c.stroke(); }
     else if (t === 'thermo') { c.beginPath(); for (let x = 3; x < w; x += 5) for (let y = 3; y < h; y += 6) { c.moveTo(x, y - 2); c.lineTo(x, y + 2); } c.stroke(); }
     else { for (let x = 3; x < w; x += 5) for (let y = 3; y < h; y += 5) c.fillRect(x - 0.8, y - 0.8, 1.6, 1.6); }
+  }
+
+  function elSwatch(cvs, k, T) {
+    const w = 34, h = 18; cvs.width = w * dpr; cvs.height = h * dpr; const c = cvs.getContext('2d');
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); ensureTiles(T, ps());
+    c.fillStyle = css(T.el[k]); c.fillRect(0, 0, w, h);
+    const P = c.createPattern(TILE.el[k], 'repeat'), z = 0.6 / ps();   // smaller in the swatch so several marks show
+    try { P.setTransform(new DOMMatrix([z / dpr, 0, 0, z / dpr, 3, 2])); } catch (_) {}
+    c.fillStyle = P; c.fillRect(0, 0, w, h);
   }
 
   function buildNotes() {
@@ -1387,7 +1682,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   function setMode(m, quiet) {
     const btn = document.querySelector(`#modes button[data-m="${m}"]`);
-    if (!btn || btn.hidden) m = 'comp';
+    if (!btn || btn.hidden) m = document.querySelector('#modes button[data-m="glow"]').hidden ? 'comp' : 'glow';
     S.mode = m;
     for (const b of document.querySelectorAll('#modes button')) b.setAttribute('aria-pressed', String(b.dataset.m === m));
     buildKey();
@@ -1438,7 +1733,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     S.D = D; S.idx = 0; S.zoomDec = 0; S.hold = false; $('tHold').checked = false; S.viewAbs = D.moments[0].R; S.preset = -1;
     S.probe = null; S.fade = null;
     const showBtn = (m, on) => { document.querySelector(`#modes button[data-m="${m}"]`).hidden = !on; };
-    showBtn('temp', D.has.logT); showBtn('dens', D.has.logRho); showBtn('burn', D.has.eps); showBtn('phase', D.has.phase); showBtn('gam', D.has.gam);
+    showBtn('glow', D.has.logT); showBtn('temp', D.has.logT); showBtn('dens', D.has.logRho); showBtn('burn', D.has.eps); showBtn('phase', D.has.phase); showBtn('gam', D.has.gam);
     $('tLatWrap').hidden = !D.has.phase;
     $('tCells').parentElement.hidden = !D.has.mix; $('tTex').parentElement.hidden = !D.has.mix; $('tMove').parentElement.hidden = !D.has.mix;
     $('tGlow').parentElement.hidden = !D.has.eps;
