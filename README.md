@@ -33,6 +33,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [RC Circuits](demos/rc-circuits.html) | Electricity and magnetism | Charging and discharging a capacitor: exponentials, the time constant, Kirchhoff's loop rule and energy bookkeeping |
 | [Charges in Magnetic Fields](demos/magnetic-force.html) | Electricity and magnetism | Circular and helical motion, E × B drift, a velocity selector, a mass spectrometer and a cyclotron |
 | [Faraday's and Lenz's Laws](demos/faraday.html) | Electricity and magnetism | A magnet and coil with exact flux, EMF and current, Lenz's law, an AC generator and a sliding bar on rails |
+| [Gauss's Law](demos/gauss-law.html) | Electricity and magnetism | Flux through any closed surface from a numerical integral, and the sphere, line and plane derivations |
 | [Optics Bench](demos/optics-bench.html) | Optics | Ray tracing through lenses, mirrors and glass, with image formation, total internal reflection and dispersion |
 
 ## Viewing

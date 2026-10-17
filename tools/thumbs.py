@@ -49,6 +49,7 @@ OVERRIDES = {
     "ideal-gas": {"wait": 2500},
     "magnetic-force": {"wait": 5000},
     "quantum-waves": {"click": ['[data-p="barrier"]'], "wait": 3000},
+    "gauss-law": {"click": ['[data-p="outside"]'], "wait": 1500},
 }
 
 DEFAULT_CROP = """() => {

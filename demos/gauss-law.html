@@ -1,0 +1,1923 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Gauss's Law</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the z = 0 slice through a Gaussian surface and its charges (plus an E(r) plot in symmetry mode) on the left; instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --fout: #17855f;
+  --fin: #7a45c0;
+  --fline: #66727f;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --fout: #4fd1a0; --fin: #b48cff; --fline: #7d8a9a; --on-charge: #10161e; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --fout: #4fd1a0; --fin: #b48cff; --fline: #7d8a9a; --on-charge: #10161e; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 600px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px; border-bottom: 1px solid var(--line); }
+.headline { margin-left: auto; font-size: 0.95rem; font-weight: 600; white-space: nowrap; text-align: right; line-height: 1.3; }
+.headline small { display: block; font-weight: 400; color: var(--muted); font-size: 0.78rem; }
+.panes { min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr); }
+.stage.sym .panes { grid-template-columns: minmax(0, 56fr) minmax(0, 44fr); }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#pPane { border-left: 1px solid var(--line); }
+#dCan, #pCan { touch-action: none; outline: none; }
+#dCan:focus-visible, #pCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.toast { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 3; max-width: calc(100% - 28px); font-size: 0.86rem; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; color: var(--ink); pointer-events: none; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.btn .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
+.btn.pos .dot { background: var(--pos); } .btn.neg .dot { background: var(--neg); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.row3 .btn { padding: 5px 4px; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg.full { display: flex; }
+.seg.full button { flex: 1; padding: 4px 4px; }
+.seg.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.seg.grid2 button { padding: 4px 4px; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.ctl { display: flex; flex-direction: column; gap: 4px; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .big dd { font-size: 1.15rem; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.8rem; }
+.c-out { color: var(--fout); } .c-in { color: var(--fin); }
+.flag { margin: 0; font-size: 0.86rem; font-weight: 700; border: 1px solid var(--pos); color: var(--pos); border-radius: 6px; padding: 6px 10px; }
+.flag span { display: block; font-weight: 400; color: var(--ink); margin-top: 2px; }
+
+.qlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.qlist li { display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 2px 8px; font-size: 0.84rem; padding: 4px 6px; border-radius: 6px; border: 1px solid transparent; cursor: pointer; }
+.qlist li[aria-selected="true"] { border-color: var(--accent); }
+.qlist .qd { width: 9px; height: 9px; border-radius: 50%; align-self: center; }
+.qlist .qd.p { background: var(--pos); } .qlist .qd.n { background: var(--neg); }
+.qlist .qv { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 600; }
+.qlist .qf { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+.qlist .qs { grid-column: 2 / 4; color: var(--muted); font-size: 0.78rem; }
+
+.steps { margin: 0; padding-left: 1.3em; display: grid; gap: 9px; font-size: 0.86rem; }
+.steps li::marker { color: var(--muted); font-weight: 700; }
+.steps b { display: block; font-weight: 700; }
+.steps .eq { display: block; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.82rem; margin-top: 2px; overflow-wrap: anywhere; }
+.steps .res { font-weight: 600; font-size: 0.92rem; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 3px solid; }
+.swatch.out { border-color: var(--fout); } .swatch.in { border-color: var(--fin); }
+.swatch.fl { border-color: var(--fline); border-top-width: 1.5px; }
+.swatch.dot { width: 9px; height: 9px; border: 0; border-radius: 50%; margin: 0 6px; }
+.swatch.dot.out { background: var(--fout); } .swatch.dot.in { background: var(--fin); }
+.swatch.grip { width: 14px; height: 10px; border: 1.5px solid var(--muted); border-radius: 3px; margin: 0 4px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 1060px) {
+  .stage.sym .panes { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) 300px; }
+  #pPane { border-left: 0; border-top: 1px solid var(--line); }
+}
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; }
+  .panes { height: 74vh; min-height: 460px; }
+  .stage.sym .panes { height: auto; min-height: 0; grid-template-rows: 400px 300px; }
+  .rail { overflow: visible; }
+  .headline { margin-left: 0; text-align: left; white-space: normal; flex-basis: 100%; }
+}
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Gauss's Law</h1>
+      <p>The electric flux through any closed surface equals the charge inside divided by ε₀. Charges outside send field lines through the surface too, but every line that goes in comes back out.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">lengths in cm · q in nC · E in N/C · Φ in N·m²/C · ε₀ = 8.854×10⁻¹² C²/(N·m²)</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="Mode" id="modeSeg">
+          <button type="button" data-m="flux" aria-pressed="true">Any surface</button>
+          <button type="button" data-m="sym" aria-pressed="false">Symmetry</button>
+        </div>
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="drawBtn" aria-pressed="false" hidden>Draw a surface</button>
+        <span class="headline mono" id="headline"></span>
+      </div>
+      <div class="panes">
+        <div class="pane" id="dPane">
+          <canvas id="dCan" tabindex="0" aria-label="Slice through the Gaussian surface and the charges. Drag charges, drag inside the surface to move it, drag its edge or grips to resize it. Keys: N selects the next object, arrow keys move it, plus and minus change a charge or the size, Delete removes a charge, space plays or pauses."></canvas>
+          <p class="toast" id="toast" hidden></p>
+        </div>
+        <div class="pane" id="pPane" hidden>
+          <canvas id="pCan" tabindex="0" aria-label="Plot of the field E against distance with the Gaussian surface marked. Drag the marker or use the left and right arrow keys to move the Gaussian surface."></canvas>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="inside" aria-pressed="true">Charge inside</button>
+          <button type="button" data-p="outside" aria-pressed="false">Charge outside</button>
+          <button type="button" data-p="dipole" aria-pressed="false">Dipole inside</button>
+          <button type="button" data-p="ball" aria-pressed="false">Uniform sphere</button>
+          <button type="button" data-p="line" aria-pressed="false">Line of charge</button>
+          <button type="button" data-p="plane" aria-pressed="false">Plane of charge</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <!-- any surface mode -->
+      <section data-mode="flux">
+        <h2>Gaussian surface</h2>
+        <div class="seg grid2" role="group" aria-label="Surface shape" id="surfSeg">
+          <button type="button" data-s="sphere" aria-pressed="true">Sphere</button>
+          <button type="button" data-s="box" aria-pressed="false">Box</button>
+          <button type="button" data-s="cyl" aria-pressed="false">Cylinder</button>
+          <button type="button" data-s="free" aria-pressed="false">Freeform</button>
+        </div>
+        <div class="ctl" data-for-s="sphere">
+          <div class="slider-head"><label for="sR">Radius R</label><output id="oR" class="mono" for="sR"></output></div>
+          <input type="range" id="sR" min="1" max="12" step="0.1">
+        </div>
+        <div class="ctl" data-for-s="box cyl">
+          <div class="slider-head"><label for="sW" id="lW">Width</label><output id="oW" class="mono" for="sW"></output></div>
+          <input type="range" id="sW" min="2" max="28" step="0.1">
+        </div>
+        <div class="ctl" data-for-s="box cyl">
+          <div class="slider-head"><label for="sH" id="lH">Height</label><output id="oH" class="mono" for="sH"></output></div>
+          <input type="range" id="sH" min="2" max="18" step="0.1">
+        </div>
+        <div class="ctl" data-for-s="box free">
+          <div class="slider-head"><label for="sD">Depth along z</label><output id="oD" class="mono" for="sD"></output></div>
+          <input type="range" id="sD" min="1" max="24" step="0.5">
+        </div>
+        <div class="row2" data-for-s="free">
+          <button type="button" class="btn" id="drawBtn2">Draw new</button>
+          <button type="button" class="btn" id="blobBtn">Reset shape</button>
+        </div>
+        <p class="hint" id="surfHint"></p>
+      </section>
+
+      <section data-mode="flux">
+        <h2>Charges</h2>
+        <div class="row3">
+          <button type="button" class="btn pos" id="addPos"><span class="dot"></span>+1 nC</button>
+          <button type="button" class="btn neg" id="addNeg"><span class="dot"></span>−1 nC</button>
+          <button type="button" class="btn" id="delQ">Remove</button>
+        </div>
+        <div class="ctl" id="qCtl">
+          <div class="slider-head"><label for="sQ">Selected charge q</label><output id="oQ" class="mono" for="sQ"></output></div>
+          <input type="range" id="sQ" min="-5" max="5" step="0.5">
+        </div>
+        <ul class="qlist" id="qList" aria-label="Charges, whether each is inside, and the flux each one sends through the surface"></ul>
+        <p class="hint">Each charge's own flux comes from the same numerical surface integral. A charge inside gives q/ε₀ (1 nC gives 112.9 N·m²/C); a charge outside gives 0.</p>
+      </section>
+
+      <section data-mode="flux">
+        <h2>Gauss's law</h2>
+        <dl class="readout">
+          <div><dt>Enclosed charge Q<sub>enc</sub></dt><dd id="mQ">—</dd></div>
+          <div><dt>Q<sub>enc</sub>/ε₀</dt><dd id="mG">—</dd></div>
+          <div class="wide big"><dt id="mNlab">Numerical ∮E·dA over the 3D surface</dt><dd id="mN">—</dd></div>
+          <div><dt>Flux out</dt><dd id="mOut" class="c-out">—</dd></div>
+          <div><dt>Flux in</dt><dd id="mIn" class="c-in">—</dd></div>
+          <div class="wide"><dt>Field lines crossing the slice: out, in, net</dt><dd id="mL">—</dd></div>
+        </dl>
+        <p class="flag" id="onFlag" hidden>A charge sits on the surface.<span>E·dA is not integrable there, so the flux is not defined. Move the charge clearly inside or outside.</span></p>
+        <p class="hint" id="numHint"></p>
+      </section>
+
+      <section data-mode="flux">
+        <h2>Display</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tLines" checked>Field lines</label>
+          <label><input type="checkbox" id="tArrows" checked>E on surface</label>
+          <label><input type="checkbox" id="tCross" checked>Crossings</label>
+          <label><input type="checkbox" id="tGrid" checked>Grid</label>
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sDen">Field lines per nC</label><output id="oDen" class="mono" for="sDen"></output></div>
+          <input type="range" id="sDen" min="2" max="8" step="2">
+        </div>
+        <div class="key">
+          <span><i class="swatch out"></i>Surface where E points out, E·n &gt; 0</span>
+          <span><i class="swatch in"></i>Surface where E points in, E·n &lt; 0</span>
+          <span><i class="swatch fl"></i>Field line in the slice</span>
+          <span><i class="swatch dot out"></i><i class="swatch dot in" style="margin-left:-6px"></i>A line crossing out or in</span>
+          <span><i class="swatch grip"></i>Grip: drag to move or resize</span>
+        </div>
+        <p class="hint">Model: point charges in empty space, all in the plane z = 0, which is the slice you see. Their field lines in that plane stay in the plane, so the drawn lines are exact field lines. Lines are drawn in proportion to charge, but in a slice the spacing of lines does not show the field strength the way it does in 3D. The surface color fades where E·n is small. Arrows on the surface show the direction of E; their length grows with E and levels off for strong fields.</p>
+      </section>
+
+      <!-- symmetry mode -->
+      <section data-mode="sym" hidden>
+        <h2>Charge distribution</h2>
+        <div class="seg full" role="group" aria-label="Symmetry" id="symSeg">
+          <button type="button" data-k="sphere" aria-pressed="true">Sphere</button>
+          <button type="button" data-k="line" aria-pressed="false">Line</button>
+          <button type="button" data-k="plane" aria-pressed="false">Plane</button>
+        </div>
+        <div class="seg full" role="group" aria-label="Kind of sphere" id="sphSeg" data-for-k="sphere">
+          <button type="button" data-v="point" aria-pressed="false">Point</button>
+          <button type="button" data-v="ball" aria-pressed="true">Ball</button>
+          <button type="button" data-v="shell" aria-pressed="false">Conductor</button>
+        </div>
+        <div class="ctl" data-for-k="sphere">
+          <div class="slider-head"><label for="yQ">Total charge Q</label><output id="oyQ" class="mono" for="yQ"></output></div>
+          <input type="range" id="yQ" min="-10" max="10" step="0.5">
+        </div>
+        <div class="ctl" data-for-k="sphere" id="yRCtl">
+          <div class="slider-head"><label for="yR">Sphere radius R</label><output id="oyR" class="mono" for="yR"></output></div>
+          <input type="range" id="yR" min="1" max="8" step="0.1">
+        </div>
+        <div class="ctl" data-for-k="line">
+          <div class="slider-head"><label for="yL">Line charge density λ</label><output id="oyL" class="mono" for="yL"></output></div>
+          <input type="range" id="yL" min="-50" max="50" step="1">
+        </div>
+        <div class="ctl" data-for-k="plane">
+          <div class="slider-head"><label for="yS">Surface charge density σ</label><output id="oyS" class="mono" for="yS"></output></div>
+          <input type="range" id="yS" min="-100" max="100" step="1">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="yr" id="lyr">Gaussian radius r</label><output id="oyr" class="mono" for="yr"></output></div>
+          <input type="range" id="yr" min="0.2" max="14" step="0.1">
+        </div>
+        <div class="ctl" data-for-k="line plane">
+          <div class="slider-head"><label for="yLen" id="lyLen">Cylinder length L</label><output id="oyLen" class="mono" for="yLen"></output></div>
+          <input type="range" id="yLen" min="1" max="24" step="0.1">
+        </div>
+        <p class="hint" id="symHint"></p>
+      </section>
+
+      <section data-mode="sym" hidden>
+        <h2>Gauss's law, step by step</h2>
+        <ol class="steps" id="steps"></ol>
+      </section>
+
+      <section data-mode="sym" hidden>
+        <h2>Display</h2>
+        <div class="key">
+          <span><i class="swatch out"></i>Gaussian surface, flux out</span>
+          <span><i class="swatch in"></i>Gaussian surface, flux in</span>
+          <span><i class="swatch fl"></i>Field line</span>
+          <span><i class="swatch grip"></i>Grip: drag on the drawing or the plot</span>
+        </div>
+        <p class="hint" id="symModel">Model: ideal charge distributions. The line and the plane are infinitely long and wide; the drawing shows only a piece. Arrows on the Gaussian surface have a length proportional to E, capped close to a point or line charge. The ball is an insulator with its charge spread evenly through its volume; its field lines are drawn from the center for simplicity, although in the ball they begin all through the charged volume.</p>
+      </section>
+    </aside>
+  </main>
+  <p class="sr" aria-live="polite" id="live"></p>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  // SI constants (CODATA 2022)
+  const EPS0 = 8.8541878188e-12;            // F/m
+  const KC = 1 / (4 * Math.PI * EPS0);      // N·m²/C²
+  const NC = 1e-9, CM = 1e-2;
+
+  // ---------- adaptive Gauss–Kronrod (7, 15), vector valued, global error control ----------
+  const XGK = [0.991455371120812639, 0.949107912342758525, 0.864864423359769073, 0.741531185599394440,
+    0.586087235467691130, 0.405845151377397167, 0.207784955007898468, 0];
+  const WGK = [0.022935322010529225, 0.063092092629978553, 0.104790010322250184, 0.140653259715525919,
+    0.169004726639267903, 0.190350578064785410, 0.204432940075298892, 0.209482141084727828];
+  const WG = [0.129484966168869693, 0.279705391489276668, 0.381830050505118945, 0.417959183673469388];
+  const stats = { evals: 0 };
+  // one GK15 panel on [a, b] of f: x → array of m numbers. Error measure: largest |K − G| over the
+  // components, except that components 1 and 2 (the outward and inward parts, which have kinks) count 1/1000.
+  function gkPanel(f, a, b, m) {
+    const c = 0.5 * (a + b), h = 0.5 * (b - a);
+    const K = new Float64Array(m), G = new Float64Array(m);
+    for (let j = 0; j < 8; j++) {
+      const pts = j === 7 ? [c] : [c - h * XGK[j], c + h * XGK[j]];
+      for (const x of pts) {
+        const v = f(x);
+        for (let i = 0; i < m; i++) { K[i] += WGK[j] * v[i]; if (j & 1) G[i] += WG[j >> 1] * v[i]; }
+      }
+    }
+    let e = 0;
+    for (let i = 0; i < m; i++) { K[i] *= h; G[i] *= h; const d = Math.abs(K[i] - G[i]) * (i === 1 || i === 2 ? 1e-3 : 1); if (d > e) e = d; }
+    return { a, b, v: K, e };
+  }
+  // ∫ f over [bp0, bp_last], split first at the breakpoints, then always bisecting the worst panel
+  function integrate(f, bps, m, absTol, relTol, maxPanels) {
+    const pan = [];
+    for (let k = 0; k + 1 < bps.length; k++) if (bps[k + 1] > bps[k]) pan.push(gkPanel(f, bps[k], bps[k + 1], m));
+    const sum = () => { const v = new Float64Array(m); let e = 0; for (const p of pan) { for (let i = 0; i < m; i++) v[i] += p.v[i]; e += p.e; } return { v, e }; };
+    let s = sum();
+    while (pan.length < maxPanels && s.e > Math.max(absTol, relTol * Math.abs(s.v[0]))) {
+      let w = 0;
+      for (let k = 1; k < pan.length; k++) if (pan[k].e > pan[w].e) w = k;
+      const p = pan[w], mid = 0.5 * (p.a + p.b);
+      if (!(mid > p.a && mid < p.b)) break;
+      pan.splice(w, 1, gkPanel(f, p.a, mid, m), gkPanel(f, mid, p.b, m));
+      s = sum();
+    }
+    return s;
+  }
+  function breaks(a, b, extra) {
+    const out = [a];
+    for (const x of extra.slice().sort((p, q) => p - q)) if (x > a + 1e-12 * (b - a) && x < b - 1e-12 * (b - a) && x > out[out.length - 1]) out.push(x);
+    out.push(b);
+    return out;
+  }
+
+  // ---------- field of point charges (SI: positions in m, q in C), integrand of E·dA ----------
+  // the integrand vector is [E·n, max(E·n, 0), min(E·n, 0), then E·n of each charge alone], times the area element
+  function fluxIntegrand(Q, px, py, pz, nx, ny, nz, J, out) {
+    let tot = 0;
+    for (let i = 0; i < Q.length; i++) {
+      const c = Q[i], dx = px - c.x, dy = py - c.y, dz = pz - c.z;
+      const r2 = dx * dx + dy * dy + dz * dz, r = Math.sqrt(r2);
+      const en = KC * c.q * (dx * nx + dy * ny + dz * nz) / (r2 * r) * J;
+      out[3 + i] = en; tot += en;
+    }
+    out[0] = tot; out[1] = tot > 0 ? tot : 0; out[2] = tot < 0 ? tot : 0;
+    return out;
+  }
+  function tolFor(Q) { let s = 0; for (const c of Q) s += Math.abs(c.q); return Math.max(s, 1e-30) / EPS0; }
+  const MAXP = 300;
+
+  // flat parallelogram O + s·eu + t·ev (eu ⟂ ev unit vectors), s in [0, Lu], t in [0, Lv], outward normal n
+  function rectFlux(Q, O, eu, ev, Lu, Lv, n, tol) {
+    const m = 3 + Q.length, buf = new Float64Array(m);
+    const su = [], sv = [];
+    for (const c of Q) {
+      su.push((c.x - O[0]) * eu[0] + (c.y - O[1]) * eu[1] + (c.z - O[2]) * eu[2]);
+      sv.push((c.x - O[0]) * ev[0] + (c.y - O[1]) * ev[1] + (c.z - O[2]) * ev[2]);
+    }
+    const bu = breaks(0, Lu, su), bv = breaks(0, Lv, sv);
+    const inner = (s) => integrate((t) => {
+      stats.evals++;
+      return fluxIntegrand(Q, O[0] + s * eu[0] + t * ev[0], O[1] + s * eu[1] + t * ev[1], O[2] + s * eu[2] + t * ev[2], n[0], n[1], n[2], 1, buf);
+    }, bv, m, tol.abs / Math.max(Lu, 1e-9) * 0.2, tol.rel * 0.2, MAXP).v;
+    return integrate(inner, bu, m, tol.abs, tol.rel, MAXP);
+  }
+  // triangle A, B, C in the plane z = z0 with normal (0, 0, nz): x = A + s(B − A) + s t (C − B), area element s·|(B − A) × (C − B)|
+  function triFlux(Q, A, B, C, z0, nz, tol) {
+    const m = 3 + Q.length, buf = new Float64Array(m);
+    const ux = B[0] - A[0], uy = B[1] - A[1], vx = C[0] - B[0], vy = C[1] - B[1];
+    const J2 = Math.abs(ux * vy - uy * vx);
+    const inner = (s) => integrate((t) => {
+      stats.evals++;
+      return fluxIntegrand(Q, A[0] + s * ux + s * t * vx, A[1] + s * uy + s * t * vy, z0, 0, 0, nz, s * J2, buf);
+    }, [0, 1], m, tol.abs * 0.2, tol.rel * 0.2, MAXP).v;
+    return integrate(inner, [0, 1], m, tol.abs, tol.rel, MAXP);
+  }
+  function addInto(acc, r) { for (let i = 0; i < acc.v.length; i++) acc.v[i] += r.v[i]; acc.e += r.e; }
+  function result(Q, acc, t0) {
+    const per = [];
+    for (let i = 0; i < Q.length; i++) per.push(acc.v[3 + i]);
+    return { total: acc.v[0], out: acc.v[1], inw: acc.v[2], per, err: acc.e, evals: stats.evals - t0 };
+  }
+  function relTol(tol) { return { abs: 3e-9 * tolFor(tol), rel: 3e-10 }; }
+
+  // sphere of radius R centered at (cx, cy, 0): u = cos θ about the z axis, φ about z; dA = R² du dφ
+  function sphereFlux(Q, cx, cy, R) {
+    const t0 = stats.evals, m = 3 + Q.length, buf = new Float64Array(m), tol = relTol(Q);
+    const phis = [];
+    for (const c of Q) { let p = Math.atan2(c.y - cy, c.x - cx); if (p < 0) p += 2 * Math.PI; phis.push(p); }
+    const us = [0];
+    for (const c of Q) { const z = (c.z || 0) / R; if (Math.abs(z) < 1) us.push(z); }
+    const bphi = breaks(0, 2 * Math.PI, phis), bu = breaks(-1, 1, us);
+    const inner = (u) => {
+      const w = Math.sqrt(Math.max(0, 1 - u * u));
+      return integrate((p) => {
+        stats.evals++;
+        const nx = w * Math.cos(p), ny = w * Math.sin(p);
+        return fluxIntegrand(Q, cx + R * nx, cy + R * ny, R * u, nx, ny, u, R * R, buf);
+      }, bphi, m, tol.abs * 0.1, tol.rel * 0.1, MAXP).v;
+    };
+    const acc = integrate(inner, bu, m, tol.abs, tol.rel, MAXP);
+    return result(Q, acc, t0);
+  }
+  // rectangular box: center (cx, cy, 0), full sizes w, h in the plane and d along z
+  function boxFlux(Q, cx, cy, w, h, d) {
+    const t0 = stats.evals, a = w / 2, b = h / 2, z = d / 2, tol = relTol(Q);
+    const tf = { abs: tol.abs / 6, rel: tol.rel };
+    const X = [1, 0, 0], Yv = [0, 1, 0], Z = [0, 0, 1];
+    const acc = { v: new Float64Array(3 + Q.length), e: 0 };
+    addInto(acc, rectFlux(Q, [cx + a, cy - b, -z], Yv, Z, h, d, [1, 0, 0], tf));
+    addInto(acc, rectFlux(Q, [cx - a, cy - b, -z], Yv, Z, h, d, [-1, 0, 0], tf));
+    addInto(acc, rectFlux(Q, [cx - a, cy + b, -z], X, Z, w, d, [0, 1, 0], tf));
+    addInto(acc, rectFlux(Q, [cx - a, cy - b, -z], X, Z, w, d, [0, -1, 0], tf));
+    addInto(acc, rectFlux(Q, [cx - a, cy - b, z], X, Yv, w, h, [0, 0, 1], tf));
+    addInto(acc, rectFlux(Q, [cx - a, cy - b, -z], X, Yv, w, h, [0, 0, -1], tf));
+    return result(Q, acc, t0);
+  }
+  // cylinder with its axis along x through (cx, cy, 0): length w, radius h/2.
+  // curved side: (x, cy + ρ cos φ, ρ sin φ), dA = ρ dx dφ; end caps: disks in polar coordinates, dA = r dr dφ
+  function cylFlux(Q, cx, cy, w, h) {
+    const t0 = stats.evals, a = w / 2, rho = h / 2, tol = relTol(Q), m = 3 + Q.length, buf = new Float64Array(m);
+    const tf = { abs: tol.abs / 3, rel: tol.rel };
+    const acc = { v: new Float64Array(m), e: 0 };
+    const phis = [], xs = [];
+    for (const c of Q) { let p = Math.atan2(c.z || 0, c.y - cy); if (p < 0) p += 2 * Math.PI; phis.push(p); xs.push(c.x); }
+    const bphi = breaks(0, 2 * Math.PI, phis);
+    const side = (x) => integrate((p) => {
+      stats.evals++;
+      const ny = Math.cos(p), nz = Math.sin(p);
+      return fluxIntegrand(Q, x, cy + rho * ny, rho * nz, 0, ny, nz, rho, buf);
+    }, bphi, m, tf.abs / w * 0.2, tf.rel * 0.2, MAXP).v;
+    addInto(acc, integrate(side, breaks(cx - a, cx + a, xs), m, tf.abs, tf.rel, MAXP));
+    for (const sg of [1, -1]) {
+      const x0 = cx + sg * a, rs = [];
+      for (const c of Q) rs.push(Math.hypot(c.y - cy, c.z || 0));
+      const cap = (r) => integrate((p) => {
+        stats.evals++;
+        return fluxIntegrand(Q, x0, cy + r * Math.cos(p), r * Math.sin(p), sg, 0, 0, r, buf);
+      }, bphi, m, tf.abs / rho * 0.2, tf.rel * 0.2, MAXP).v;
+      addInto(acc, integrate(cap, breaks(0, rho, rs), m, tf.abs, tf.rel, MAXP));
+    }
+    return result(Q, acc, t0);
+  }
+  // prism: the simple polygon P (counterclockwise, in m) extruded from z = −d/2 to +d/2, with flat end caps
+  function prismFlux(Q, P, d, tris) {
+    const t0 = stats.evals, n = P.length, z = d / 2, tol = relTol(Q);
+    const tf = { abs: tol.abs / (n + 2 * tris.length), rel: tol.rel };
+    const acc = { v: new Float64Array(3 + Q.length), e: 0 };
+    for (let i = 0; i < n; i++) {
+      const A = P[i], B = P[(i + 1) % n], ex = B[0] - A[0], ey = B[1] - A[1], L = Math.hypot(ex, ey);
+      if (L < 1e-12) continue;
+      addInto(acc, rectFlux(Q, [A[0], A[1], -z], [ex / L, ey / L, 0], [0, 0, 1], L, d, [ey / L, -ex / L, 0], tf));
+    }
+    for (const [i, j, k] of tris) {
+      addInto(acc, triFlux(Q, P[i], P[j], P[k], z, 1, tf));
+      addInto(acc, triFlux(Q, P[i], P[j], P[k], -z, -1, tf));
+    }
+    return result(Q, acc, t0);
+  }
+
+  // ---------- polygons ----------
+  function signedArea(P) { let s = 0; for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length]; s += a[0] * b[1] - b[0] * a[1]; } return s / 2; }
+  function segX(a, b, c, d) {   // proper intersection of segments ab and cd
+    const o = (p, q, r) => (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0]);
+    const d1 = o(c, d, a), d2 = o(c, d, b), d3 = o(a, b, c), d4 = o(a, b, d);
+    return ((d1 > 0) !== (d2 > 0)) && ((d3 > 0) !== (d4 > 0)) && d1 !== 0 && d2 !== 0 && d3 !== 0 && d4 !== 0;
+  }
+  function isSimple(P) {
+    const n = P.length;
+    for (let i = 0; i < n; i++) {
+      const a = P[i], b = P[(i + 1) % n];
+      for (let j = i + 2; j < n; j++) {
+        if (i === 0 && j === n - 1) continue;
+        if (segX(a, b, P[j], P[(j + 1) % n])) return false;
+      }
+    }
+    return true;
+  }
+  // ear clipping for a simple counterclockwise polygon; returns index triples
+  function triangulate(P) {
+    const idx = P.map((_, i) => i), out = [];
+    const cross = (a, b, c) => (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]);
+    const inTri = (p, a, b, c) => cross(a, b, p) >= 0 && cross(b, c, p) >= 0 && cross(c, a, p) >= 0;
+    let guard = 0;
+    while (idx.length > 3 && guard++ < 100000) {
+      let cut = false;
+      for (let k = 0; k < idx.length; k++) {
+        const i0 = idx[(k + idx.length - 1) % idx.length], i1 = idx[k], i2 = idx[(k + 1) % idx.length];
+        const a = P[i0], b = P[i1], c = P[i2];
+        if (cross(a, b, c) <= 0) continue;
+        let ok = true;
+        for (const j of idx) { if (j === i0 || j === i1 || j === i2) continue; if (inTri(P[j], a, b, c)) { ok = false; break; } }
+        if (!ok) continue;
+        out.push([i0, i1, i2]); idx.splice(k, 1); cut = true; break;
+      }
+      if (!cut) { // degenerate leftovers (collinear runs): fan the rest
+        for (let k = 1; k + 1 < idx.length; k++) out.push([idx[0], idx[k], idx[k + 1]]);
+        return out;
+      }
+    }
+    if (idx.length === 3) out.push([idx[0], idx[1], idx[2]]);
+    return out;
+  }
+  function pointInPoly(P, x, y) {
+    let inside = false;
+    for (let i = 0, j = P.length - 1; i < P.length; j = i++) {
+      const a = P[i], b = P[j];
+      if ((a[1] > y) !== (b[1] > y) && x < a[0] + (y - a[1]) * (b[0] - a[0]) / (b[1] - a[1])) inside = !inside;
+    }
+    return inside;
+  }
+  // closed centripetal Catmull–Rom spline through the control points, n samples per span
+  function spline(C, n) {
+    const out = [], N = C.length;
+    for (let i = 0; i < N; i++) {
+      const p0 = C[(i - 1 + N) % N], p1 = C[i], p2 = C[(i + 1) % N], p3 = C[(i + 2) % N];
+      const tj = (a, b) => Math.pow(Math.hypot(b[0] - a[0], b[1] - a[1]), 0.5) || 1e-6;
+      const t0 = 0, t1 = t0 + tj(p0, p1), t2 = t1 + tj(p1, p2), t3 = t2 + tj(p2, p3);
+      for (let k = 0; k < n; k++) {
+        const t = t1 + (t2 - t1) * k / n;
+        const L = (pa, pb, ta, tb) => [(tb - t) / (tb - ta) * pa[0] + (t - ta) / (tb - ta) * pb[0], (tb - t) / (tb - ta) * pa[1] + (t - ta) / (tb - ta) * pb[1]];
+        const A1 = L(p0, p1, t0, t1), A2 = L(p1, p2, t1, t2), A3 = L(p2, p3, t2, t3);
+        const B1 = L(A1, A2, t0, t2), B2 = L(A2, A3, t1, t3);
+        out.push(L(B1, B2, t1, t2));
+      }
+    }
+    return out;
+  }
+
+  // ---------- symmetry cases (SI) ----------
+  // radial field E_r of a sphere of charge Q, radius R, at r: point charge, uniform ball, or conducting sphere
+  function enclosedSphere(kind, Q, R, r) {
+    if (kind === 'point') return Q;
+    if (kind === 'ball') return r >= R ? Q : Q * Math.pow(r / R, 3);
+    return r > R ? Q : 0;                         // conducting: all of Q sits on the outer surface
+  }
+  const Esphere = (kind, Q, R, r) => enclosedSphere(kind, Q, R, r) / (4 * Math.PI * EPS0 * r * r);
+  const Eline = (lam, r) => lam / (2 * Math.PI * EPS0 * r);
+  const Eplane = (sig) => sig / (2 * EPS0);
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.GL = { EPS0, KC, sphereFlux, boxFlux, cylFlux, prismFlux, triangulate, signedArea, isSimple, spline, pointInPoly, enclosedSphere, Esphere, Eline, Eplane, stats };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const KCM = KC * NC / (CM * CM);          // N/C per (nC/cm²)
+  const SPAN = 12;                          // spline samples between two control points
+  const E0 = KCM * 1 / 25;                  // reference field for colors and arrows: 1 nC at 5 cm, 3595 N/C
+
+  // ---------- formatting ----------
+  const PFX = [[1e9, 'G'], [1e6, 'M'], [1e3, 'k'], [1, ''], [1e-3, 'm'], [1e-6, 'µ'], [1e-9, 'n'], [1e-12, 'p']];
+  const minus = (s) => s.replace(/-/g, '−');
+  function sigStr(x, sig) {
+    const a = Math.abs(x);
+    if (a === 0) return '0';
+    const d = Math.max(0, sig - 1 - Math.floor(Math.log10(a) + 1e-12));
+    return x.toFixed(d);
+  }
+  function fmtSI(v, unit, sig) {
+    sig = sig || 3;
+    if (!isFinite(v)) return '—';
+    const a = Math.abs(v);
+    if (a < 1e-30) return `0 ${unit}`;
+    const f = PFX.find(([m]) => a >= m * 0.9995) || PFX[PFX.length - 1];
+    return `${minus(sigStr(v / f[0], sig))} ${f[1]}${unit}`;
+  }
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  function sci(v, d) {
+    if (v === 0) return '0';
+    const e = Math.floor(Math.log10(Math.abs(v)) + 1e-12), m = v / Math.pow(10, e);
+    if (e >= -2 && e <= 3) return minus(sigStr(v, (d || 3) + 1));
+    return `${minus(m.toFixed(d === undefined ? 2 : d))}×10${String(e).split('').map((c) => SUP[c]).join('')}`;
+  }
+  const fq = (q, dec) => `${q > 0 ? '+' : q < 0 ? '−' : ''}${Math.abs(q).toFixed(dec === undefined ? 1 : dec)} nC`;
+  const fcm = (v) => `${v.toFixed(1)} cm`;
+  const fflux = (v) => `${minus(sigStr(v, 4))} N·m²/C`;
+  function fluxOrZero(v, scale) {
+    if (Math.abs(v) < 1e-9 * scale) return `${v === 0 ? '0' : sci(v, 1)} N·m²/C <span class="ok">≈ 0</span>`;
+    return fflux(v);
+  }
+  const snap = (v, st) => Math.round(v / st) * st;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  // ---------- state ----------
+  const BLOB = [[7, 0], [4.5, 4.6], [-1, 5.6], [-6, 3.2], [-6.6, -2.4], [-2, -5.6], [3.6, -4.6]];
+  const F = {
+    surf: 'sphere', sph: { x: 0, y: 0, R: 6 }, rect: { x: 0, y: 0, w: 16, h: 10 }, free: BLOB.map((p) => p.slice()), depth: 12,
+    charges: [], sel: null, density: 6, layers: { lines: true, arrows: true, cross: true, grid: true }, ver: 0, qver: 0, motion: null
+  };
+  const Ysym = { kind: 'sphere', sk: 'ball', Q: 5, R: 5, r: 3, lam: 20, rl: 4, L: 12, sig: 40, h: 3, a: 4 };
+  let mode = 'flux', preset = 'inside', nextId = 1, running = !reduce, tMotion = 0;
+  const RANGES = { sphere: { r: [0.2, 14], L: null }, line: { r: [0.2, 12], L: [1, 24] }, plane: { r: [0.2, 10], L: [1, 8] } };
+
+  const PRESETS = {
+    inside: { mode: 'flux', hint: 'One charge inside a Gaussian sphere. The charge wanders: the field lines piercing the surface rearrange, but the flux stays q/ε₀, and the numerical surface integral agrees. Drag the charge, or drag the sphere around it.',
+      setup() { F.surf = 'sphere'; F.sph = { x: 0, y: 0, R: 6 }; F.charges = [mk(-1.5, 1, 2)]; F.motion = { type: 'lis', id: F.charges[0].id, ax: -1.5, ay: 1, A: 2.6, B: 2.4 }; } },
+    outside: { mode: 'flux', hint: 'The charge is outside. Field lines enter the sphere on one side (purple) and leave on the other (green), and the flux in and out cancel exactly: Φ = 0. Drag the charge inside and Φ jumps to q/ε₀.',
+      setup() { F.surf = 'sphere'; F.sph = { x: -4, y: 0, R: 5 }; F.charges = [mk(5.5, 0.5, 2)]; F.motion = { type: 'lis', id: F.charges[0].id, ax: 5.5, ay: 0.5, A: 1.1, B: 3.2 }; } },
+    dipole: { mode: 'flux', hint: 'Equal and opposite charges inside a box: Q_enc = 0, so the net flux is zero. The field on the surface is not zero; some flux leaves near the + charge and the same amount comes back in near the − charge.',
+      setup() { F.surf = 'box'; F.rect = { x: 0, y: 0, w: 16, h: 10 }; F.depth = 12; F.charges = [mk(-2.5, 0, 2), mk(2.5, 0, -2)]; F.motion = { type: 'rot', ids: [F.charges[0].id, F.charges[1].id], cx: 0, cy: 0, rad: 2.5, ang0: Math.PI }; } },
+    ball: { mode: 'sym', hint: 'A uniformly charged insulating ball. Inside, the Gaussian sphere encloses only the fraction (r/R)³ of the charge, so E grows in proportion to r. Outside, E = kQ/r², as if all the charge sat at the center.',
+      setup() { Object.assign(Ysym, { kind: 'sphere', sk: 'ball', Q: 5, R: 5, r: 3 }); } },
+    line: { mode: 'sym', hint: 'An infinite line of charge. All the flux leaves through the curved side of the cylinder; the field runs along the end caps. The length L cancels, so E = λ/(2πε₀r) falls off as 1/r.',
+      setup() { Object.assign(Ysym, { kind: 'line', lam: 20, rl: 4, L: 12 }); } },
+    plane: { mode: 'sym', hint: 'An infinite sheet of charge. Flux leaves through both caps of the pillbox and none through its side. The cap distance h cancels: E = σ/(2ε₀) is the same at every distance from the sheet.',
+      setup() { Object.assign(Ysym, { kind: 'plane', sig: 40, h: 3, a: 4 }); } }
+  };
+  function mk(x, y, q) { return { id: nextId++, x, y, q }; }
+  const qById = (id) => F.charges.find((c) => c.id === id);
+
+  // ---------- canvases ----------
+  let T = null, dpr = 1;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), fout: g('--fout'), fin: g('--fin'), fline: g('--fline'), onq: g('--on-charge'),
+      ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace' };
+  }
+  const cans = { d: $('dCan'), p: $('pCan') }, panes = { d: $('dPane'), p: $('pPane') };
+  const ctxs = { d: cans.d.getContext('2d'), p: cans.p.getContext('2d') };
+  const dims = { d: [0, 0], p: [0, 0] };
+  const view = { s: 20, cx: 0, cy: 0, x0: -10, x1: 10, y0: -10, y1: 10 };
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const k of ['d', 'p']) {
+      const r = panes[k].getBoundingClientRect();
+      cans[k].width = Math.max(1, Math.round(r.width * dpr)); cans[k].height = Math.max(1, Math.round(r.height * dpr));
+      cans[k].style.width = r.width + 'px'; cans[k].style.height = r.height + 'px';
+      dims[k] = [r.width, r.height];
+    }
+    setView();
+    linesKey = '';
+    drawAll();
+  }
+  // world (cm, y up) to pane pixels
+  function setView() {
+    const [W, H] = dims.d;
+    let ex = W < 640 ? 10.5 : 15.5, ey = 10.5;
+    if (mode === 'sym') { ex = Ysym.kind === 'sphere' ? 15.2 : Ysym.kind === 'line' ? 14 : 11.6; ey = Ysym.kind === 'sphere' ? 15.2 : Ysym.kind === 'line' ? 13 : 10.4; }
+    view.s = Math.max(6, Math.min(W / (2 * ex), H / (2 * ey)));
+    view.cx = W / 2; view.cy = H / 2;
+    view.x0 = -view.cx / view.s; view.x1 = (W - view.cx) / view.s; view.y0 = -(H - view.cy) / view.s; view.y1 = view.cy / view.s;
+  }
+  const X = (x) => view.cx + x * view.s, Yp = (y) => view.cy - y * view.s;
+  const wx = (px) => (px - view.cx) / view.s, wy = (py) => (view.cy - py) / view.s;
+  // label scale: grows in projector mode but is capped by the pane size so labels do not pile up
+  function fsz(base) { const [W, H] = dims.d; return base * Math.min(projScale(), Math.max(1, Math.min(W, H) / 430)); }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+  }
+  // text with one level of subscripts ("Q_enc", "E_{r}") on a halo box
+  function richParts(str) {
+    const out = []; const re = /_\{([^}]*)\}|_(\w+)/g; let i = 0, m;
+    while ((m = re.exec(str))) { if (m.index > i) out.push([str.slice(i, m.index), false]); out.push([m[1] || m[2], true]); i = re.lastIndex; }
+    if (i < str.length) out.push([str.slice(i), false]);
+    return out;
+  }
+  function measureRich(ctx, str, size, weight, fam) {
+    let w = 0;
+    for (const [s, sub] of richParts(str)) { ctx.font = `${weight} ${sub ? size * 0.72 : size}px ${fam}`; w += ctx.measureText(s).width; }
+    return w;
+  }
+  function label(ctx, str, x, y, o) {
+    o = o || {};
+    const size = o.size || fsz(12), weight = o.weight || 600, fam = o.fam || T.ui, align = o.align || 'left';
+    const w = measureRich(ctx, str, size, weight, fam), pad = 3 * Math.min(projScale(), 1.3);
+    let x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    const [W, H] = o.dims || dims.d;
+    x0 = clamp(x0, pad + 2, W - w - pad - 2);
+    const yy = clamp(y, size * 0.8 + pad + 2, H - size * 0.35 - pad - 2);
+    if (o.halo !== false) {
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.88;
+      roundRect(ctx, x0 - pad, yy - size * 0.82 - pad * 0.5, w + 2 * pad, size * 1.18 + pad, 3); ctx.fill(); ctx.globalAlpha = 1;
+    }
+    ctx.fillStyle = o.color || T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    let xx = x0;
+    for (const [s, sub] of richParts(str)) { ctx.font = `${weight} ${sub ? size * 0.72 : size}px ${fam}`; ctx.fillText(s, xx, yy + (sub ? size * 0.25 : 0)); xx += ctx.measureText(s).width; }
+    return { x: x0, y: yy, w };
+  }
+  function arrow(ctx, x1, y1, x2, y2, col, lw, head) {
+    const L = Math.hypot(x2 - x1, y2 - y1); if (L < 1) return;
+    const ux = (x2 - x1) / L, uy = (y2 - y1) / L, hh = Math.min(head, L * 0.6);
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = lw; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - ux * hh * 0.7, y2 - uy * hh * 0.7); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - ux * hh - uy * hh * 0.45, y2 - uy * hh + ux * hh * 0.45); ctx.lineTo(x2 - ux * hh + uy * hh * 0.45, y2 - uy * hh - ux * hh * 0.45); ctx.closePath(); ctx.fill();
+  }
+  // grips: always visible on draggable parts; dir 'h', 'v' or 'move'
+  function grip(ctx, x, y, hot, dir) {
+    const ps = Math.min(projScale(), 1.3), col = hot ? T.accent : T.muted;
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = col; ctx.lineWidth = (hot ? 2 : 1.3) * ps;
+    if (dir === 'move') {
+      ctx.beginPath(); ctx.arc(x, y, 9 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = col; const a = 3 * ps;
+      ctx.beginPath();
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const tx = x + dx * 6.5 * ps, ty = y + dy * 6.5 * ps, bx = x + dx * 2.5 * ps, by = y + dy * 2.5 * ps;
+        ctx.moveTo(tx, ty); ctx.lineTo(bx - dy * a, by + dx * a); ctx.lineTo(bx + dy * a, by - dx * a); ctx.closePath();
+      }
+      ctx.fill(); return;
+    }
+    const vertical = dir === 'v', w = (vertical ? 13 : 20) * ps, h = (vertical ? 20 : 13) * ps;
+    roundRect(ctx, x - w / 2, y - h / 2, w, h, 4 * ps); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = col; const a = 3.5 * ps;
+    ctx.beginPath();
+    if (vertical) {
+      ctx.moveTo(x, y - 7 * ps); ctx.lineTo(x - a, y - 2.5 * ps); ctx.lineTo(x + a, y - 2.5 * ps); ctx.closePath();
+      ctx.moveTo(x, y + 7 * ps); ctx.lineTo(x - a, y + 2.5 * ps); ctx.lineTo(x + a, y + 2.5 * ps); ctx.closePath();
+    } else {
+      ctx.moveTo(x - 7 * ps, y); ctx.lineTo(x - 2.5 * ps, y - a); ctx.lineTo(x - 2.5 * ps, y + a); ctx.closePath();
+      ctx.moveTo(x + 7 * ps, y); ctx.lineTo(x + 2.5 * ps, y - a); ctx.lineTo(x + 2.5 * ps, y + a); ctx.closePath();
+    }
+    ctx.fill();
+  }
+  // a grip turned to point along (ux, uy) in pixels
+  function gripAlong(ctx, x, y, ux, uy, hot) {
+    ctx.save(); ctx.translate(x, y); ctx.rotate(Math.atan2(uy, ux)); grip(ctx, 0, 0, hot, 'h'); ctx.restore();
+  }
+
+  // ---------- the Gaussian surface (slice) ----------
+  let shapeCache = null;
+  function shape() {
+    if (shapeCache && shapeCache.ver === F.ver && shapeCache.surf === F.surf) return shapeCache;
+    const sh = { ver: F.ver, surf: F.surf };
+    if (F.surf === 'sphere') {
+      const { x, y, R } = F.sph, n = 240;
+      sh.poly = []; for (let i = 0; i < n; i++) { const a = 2 * Math.PI * i / n; sh.poly.push([x + R * Math.cos(a), y + R * Math.sin(a)]); }
+      sh.inside = (px, py) => Math.hypot(px - x, py - y) < R;
+      sh.dist = (px, py) => Math.abs(Math.hypot(px - x, py - y) - R);
+      sh.center = [x, y];
+    } else if (F.surf === 'box' || F.surf === 'cyl') {
+      const { x, y, w, h } = F.rect, a = w / 2, b = h / 2;
+      const corners = [[x + a, y - b], [x + a, y + b], [x - a, y + b], [x - a, y - b]];
+      sh.poly = [];
+      for (let k = 0; k < 4; k++) {
+        const p = corners[k], q = corners[(k + 1) % 4], n = Math.max(2, Math.ceil(Math.hypot(q[0] - p[0], q[1] - p[1]) / 0.25));
+        for (let i = 0; i < n; i++) sh.poly.push([p[0] + (q[0] - p[0]) * i / n, p[1] + (q[1] - p[1]) * i / n]);
+      }
+      sh.inside = (px, py) => Math.abs(px - x) < a && Math.abs(py - y) < b;
+      sh.dist = (px, py) => { const dx = Math.abs(px - x) - a, dy = Math.abs(py - y) - b; return dx > 0 || dy > 0 ? Math.hypot(Math.max(dx, 0), Math.max(dy, 0)) : Math.min(-dx, -dy); };
+      sh.center = [x, y];
+    } else {
+      let P = spline(F.free, SPAN);
+      sh.rev = signedArea(P) < 0;
+      if (sh.rev) P = P.slice().reverse();
+      sh.poly = P;
+      let bx0 = Infinity, bx1 = -Infinity, by0 = Infinity, by1 = -Infinity;
+      for (const p of P) { bx0 = Math.min(bx0, p[0]); bx1 = Math.max(bx1, p[0]); by0 = Math.min(by0, p[1]); by1 = Math.max(by1, p[1]); }
+      sh.inside = (px, py) => px > bx0 && px < bx1 && py > by0 && py < by1 && pointInPoly(P, px, py);
+      sh.dist = (px, py) => {
+        let d = Infinity;
+        for (let i = 0; i < P.length; i++) {
+          const a = P[i], b = P[(i + 1) % P.length], ex = b[0] - a[0], ey = b[1] - a[1], L2 = ex * ex + ey * ey;
+          const t = L2 ? clamp(((px - a[0]) * ex + (py - a[1]) * ey) / L2, 0, 1) : 0;
+          d = Math.min(d, Math.hypot(px - a[0] - t * ex, py - a[1] - t * ey));
+        }
+        return d;
+      };
+      sh.tris = triangulate(P);
+      let cx = 0, cy = 0; for (const p of F.free) { cx += p[0]; cy += p[1]; }
+      sh.center = [cx / F.free.length, cy / F.free.length];
+    }
+    // outward normals and arc length along the slice
+    sh.n = sh.poly.length;
+    shapeCache = sh;
+    return sh;
+  }
+  function surfLabel() {
+    if (F.surf === 'sphere') return `Gaussian sphere, R = ${fcm(F.sph.R)}`;
+    if (F.surf === 'box') return `Box ${F.rect.w.toFixed(1)} × ${F.rect.h.toFixed(1)} × ${F.depth.toFixed(1)} cm`;
+    if (F.surf === 'cyl') return `Cylinder: length ${fcm(F.rect.w)}, diameter ${fcm(F.rect.h)}`;
+    return `Prism, depth ${fcm(F.depth)}`;
+  }
+  const SURF_HINT = {
+    sphere: 'A sphere centered in the slice. Drag inside it to move it, drag its edge or the grip to change R.',
+    box: 'A rectangular box: the rectangle you see, extended ± half the depth above and below the slice, closed by a top and a bottom face. Drag its edges to resize.',
+    cyl: 'A cylinder lying in the slice with its axis along x: the rectangle you see is its cross section. Drag its edges to change the length and the diameter.',
+    free: 'Any closed shape: the curve you see, extended ± half the depth above and below the slice, with flat top and bottom faces. Drag the control points, double click the curve to add one, select one and press Delete to remove it, or draw a new surface.'
+  };
+
+  // ---------- field lines in the slice (cm) ----------
+  function field2(x, y) {
+    let ex = 0, ey = 0;
+    for (const c of F.charges) {
+      if (!c.q) continue;
+      const dx = x - c.x, dy = y - c.y, r2 = dx * dx + dy * dy, r = Math.sqrt(r2);
+      ex += c.q * dx / (r2 * r); ey += c.q * dy / (r2 * r);
+    }
+    return [ex * KCM, ey * KCM];      // N/C
+  }
+  const rq = (c) => (8 + 2.4 * Math.sqrt(Math.abs(c.q))) * Math.min(projScale(), 1.3);
+  function trace(x, y, sgn, from) {
+    const pts = [[x, y]];
+    const h = 2.5 / view.s, m = 1.5;
+    for (let n = 0; n < 5000; n++) {
+      let [ex, ey] = field2(x, y); let mag = Math.hypot(ex, ey);
+      if (mag < 1e-9) break;
+      const mx = x + sgn * 0.5 * h * ex / mag, my = y + sgn * 0.5 * h * ey / mag;
+      [ex, ey] = field2(mx, my); mag = Math.hypot(ex, ey);
+      if (mag < 1e-9) break;
+      x += sgn * h * ex / mag; y += sgn * h * ey / mag;
+      pts.push([x, y]);
+      if (x < view.x0 - m || x > view.x1 + m || y < view.y0 - m || y > view.y1 + m) return { pts, end: null };
+      for (const c of F.charges) {
+        if (!c.q || c === from) continue;
+        if (Math.hypot(x - c.x, y - c.y) < rq(c) * 0.7 / view.s) { pts.push([c.x, c.y]); return { pts, end: c }; }
+      }
+    }
+    return { pts, end: null };
+  }
+  let lines = [], crossings = [], lineCount = { out: 0, inn: 0 }, linesKey = '';
+  function computeLines() {
+    const key = `${F.qver}|${F.ver}|${F.surf}|${F.density}|${view.s.toFixed(3)}|${dims.d[0]}|${dims.d[1]}|${projScale()}`;
+    if (key === linesKey) return;
+    linesKey = key;
+    lines = [];
+    const active = F.charges.filter((c) => c.q !== 0);
+    const nFor = (c) => Math.round(Math.abs(c.q) * F.density);
+    const arrivals = new Map();
+    for (const c of active) {
+      if (c.q <= 0) continue;
+      const n = nFor(c), r0 = rq(c) / view.s;
+      for (let k = 0; k < n; k++) {
+        const a = (k + 0.5) * 2 * Math.PI / n;
+        const res = trace(c.x + r0 * Math.cos(a), c.y + r0 * Math.sin(a), 1, c);
+        res.pts.unshift([c.x, c.y]);
+        lines.push(res.pts);
+        if (res.end && res.end.q < 0) {
+          const p = res.pts[res.pts.length - 2];
+          if (!arrivals.has(res.end)) arrivals.set(res.end, []);
+          arrivals.get(res.end).push(Math.atan2(p[1] - res.end.y, p[0] - res.end.x));
+        }
+      }
+    }
+    for (const c of active) {
+      if (c.q >= 0) continue;
+      const n = nFor(c), arr = arrivals.get(c) || [], rem = n - arr.length;
+      if (rem <= 0) continue;
+      const slots = [];
+      for (let k = 0; k < n; k++) {
+        const a = (k + 0.5) * 2 * Math.PI / n;
+        let d = Infinity;
+        for (const b of arr) { const t = Math.abs(a - b) % (2 * Math.PI); d = Math.min(d, Math.min(t, 2 * Math.PI - t)); }
+        slots.push([a, d]);
+      }
+      slots.sort((p, q) => q[1] - p[1]);
+      const r0 = rq(c) / view.s;
+      for (let k = 0; k < rem; k++) {
+        const a = slots[k][0];
+        const res = trace(c.x + r0 * Math.cos(a), c.y + r0 * Math.sin(a), -1, c);
+        res.pts.unshift([c.x, c.y]);
+        lines.push(res.pts.reverse());
+      }
+    }
+    // crossings of the slice curve: a line oriented along E going from inside to outside carries flux out
+    const sh = shape();
+    crossings = []; lineCount = { out: 0, inn: 0 };
+    for (const pts of lines) {
+      let prev = sh.inside(pts[0][0], pts[0][1]);
+      for (let i = 1; i < pts.length; i++) {
+        const cur = sh.inside(pts[i][0], pts[i][1]);
+        if (cur !== prev) {
+          const x = 0.5 * (pts[i - 1][0] + pts[i][0]), y = 0.5 * (pts[i - 1][1] + pts[i][1]);
+          crossings.push({ x, y, out: prev && !cur });
+          if (prev) lineCount.out++; else lineCount.inn++;
+          prev = cur;
+        }
+      }
+    }
+  }
+  function arrowIndex(pts) {
+    let total = 0;
+    for (let i = 1; i < pts.length; i++) total += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+    if (total < 30 / view.s) return -1;
+    const target = Math.min(total * 0.5, 110 / view.s);
+    let acc = 0;
+    for (let i = 1; i < pts.length; i++) { acc += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); if (acc >= target) return i; }
+    return -1;
+  }
+
+  // ---------- numerical flux through the 3D surface ----------
+  let num = null, numDirty = true, numLast = 0, numMs = 0, onSurface = false;
+  function markNum() { numDirty = true; }
+  function enclosed() {
+    const sh = shape();
+    let Q = 0, scale = 0; onSurface = false;
+    for (const c of F.charges) {
+      scale += Math.abs(c.q);
+      if (c.q && sh.dist(c.x, c.y) < 0.03) onSurface = true;
+      c.inside = sh.inside(c.x, c.y);
+      if (c.inside) Q += c.q;
+    }
+    return { Q, scale: scale * NC / EPS0 };
+  }
+  function computeNum() {
+    const t0 = performance.now(), sh = shape();
+    enclosed();
+    const Q = F.charges.map((c) => ({ x: c.x * CM, y: c.y * CM, z: 0, q: c.q * NC }));
+    if (onSurface || !F.charges.some((c) => c.q)) {
+      num = onSurface ? null : { total: 0, out: 0, inw: 0, per: F.charges.map(() => 0), evals: 0 };
+    } else if (F.surf === 'sphere') num = sphereFlux(Q, F.sph.x * CM, F.sph.y * CM, F.sph.R * CM);
+    else if (F.surf === 'box') num = boxFlux(Q, F.rect.x * CM, F.rect.y * CM, F.rect.w * CM, F.rect.h * CM, F.depth * CM);
+    else if (F.surf === 'cyl') num = cylFlux(Q, F.rect.x * CM, F.rect.y * CM, F.rect.w * CM, F.rect.h * CM);
+    else num = prismFlux(Q, sh.poly.map((p) => [p[0] * CM, p[1] * CM]), F.depth * CM, sh.tris);
+    if (num) num.ids = F.charges.map((c) => c.id);
+    numMs = performance.now() - t0; numLast = performance.now(); numDirty = false;
+    updateReadouts();
+  }
+
+  // ---------- drawing: any surface ----------
+  let hoverId = null, drag = null, stroke = null, drawing = false;
+  const hotId = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+  function drawGrid(ctx, W, H) {
+    const s = view.s;
+    if (s >= 9) {
+      ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath();
+      for (let x = Math.ceil(view.x0); x <= view.x1; x++) { if (x % 5) { const px = Math.round(X(x)) + 0.5; ctx.moveTo(px, 0); ctx.lineTo(px, H); } }
+      for (let y = Math.ceil(view.y0); y <= view.y1; y++) { if (y % 5) { const py = Math.round(Yp(y)) + 0.5; ctx.moveTo(0, py); ctx.lineTo(W, py); } }
+      ctx.stroke();
+    }
+    ctx.strokeStyle = T.gridStrong; ctx.beginPath();
+    for (let x = Math.ceil(view.x0 / 5) * 5; x <= view.x1; x += 5) { const px = Math.round(X(x)) + 0.5; ctx.moveTo(px, 0); ctx.lineTo(px, H); }
+    for (let y = Math.ceil(view.y0 / 5) * 5; y <= view.y1; y += 5) { const py = Math.round(Yp(y)) + 0.5; ctx.moveTo(0, py); ctx.lineTo(W, py); }
+    ctx.stroke();
+  }
+  function drawFlux() {
+    const [W, H] = dims.d; if (!W || !H) return;
+    const ctx = ctxs.d, ps = Math.min(projScale(), 1.3), s = view.s;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (F.layers.grid) drawGrid(ctx, W, H);
+    const sh = shape();
+    computeLines();
+    // inside tint
+    ctx.beginPath(); sh.poly.forEach((p, i) => (i ? ctx.lineTo(X(p[0]), Yp(p[1])) : ctx.moveTo(X(p[0]), Yp(p[1])))); ctx.closePath();
+    ctx.fillStyle = T.ink; ctx.globalAlpha = 0.035; ctx.fill(); ctx.globalAlpha = 1;
+    // field lines
+    if (F.layers.lines) {
+      ctx.strokeStyle = T.fline; ctx.lineWidth = 1.25 * ps; ctx.globalAlpha = 0.75; ctx.lineJoin = 'round';
+      for (const pts of lines) { ctx.beginPath(); pts.forEach((p, i) => (i ? ctx.lineTo(X(p[0]), Yp(p[1])) : ctx.moveTo(X(p[0]), Yp(p[1])))); ctx.stroke(); }
+      ctx.globalAlpha = 1; ctx.fillStyle = T.fline;
+      for (const pts of lines) {
+        const i = arrowIndex(pts); if (i < 1) continue;
+        const a = pts[i - 1], b = pts[i], x = X(b[0]), y = Yp(b[1]), ang = Math.atan2(-(b[1] - a[1]), b[0] - a[0]), hh = 6 * ps;
+        ctx.beginPath(); ctx.moveTo(x + hh * Math.cos(ang), y + hh * Math.sin(ang));
+        ctx.lineTo(x + hh * Math.cos(ang + 2.5), y + hh * Math.sin(ang + 2.5)); ctx.lineTo(x + hh * Math.cos(ang - 2.5), y + hh * Math.sin(ang - 2.5)); ctx.closePath(); ctx.fill();
+      }
+    }
+    // the surface, colored by the sign of E·n, faded where E·n is small
+    const P = sh.poly, n = P.length, en = new Float64Array(n);
+    for (let i = 0; i < n; i++) {
+      const a = P[i], b = P[(i + 1) % n], ex = b[0] - a[0], ey = b[1] - a[1], L = Math.hypot(ex, ey) || 1;
+      const [Ex, Ey] = field2(0.5 * (a[0] + b[0]), 0.5 * (a[1] + b[1]));
+      en[i] = (Ex * ey - Ey * ex) / L;
+    }
+    ctx.lineCap = 'butt'; ctx.lineJoin = 'round';
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * ps; ctx.globalAlpha = 0.5; ctx.setLineDash([4 * ps, 4 * ps]);
+    ctx.beginPath(); P.forEach((p, i) => (i ? ctx.lineTo(X(p[0]), Yp(p[1])) : ctx.moveTo(X(p[0]), Yp(p[1])))); ctx.closePath(); ctx.stroke();
+    ctx.setLineDash([]); ctx.globalAlpha = 1;
+    ctx.lineWidth = 4.2 * ps; ctx.lineCap = 'round';
+    for (let i = 0; i < n; i++) {
+      const a = P[i], b = P[(i + 1) % n], v = en[i];
+      if (!F.charges.length) break;
+      ctx.strokeStyle = v >= 0 ? T.fout : T.fin; ctx.globalAlpha = 0.18 + 0.82 * Math.tanh(Math.abs(v) / E0 * 1.5);
+      ctx.beginPath(); ctx.moveTo(X(a[0]), Yp(a[1])); ctx.lineTo(X(b[0]), Yp(b[1])); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    // line crossings
+    if (F.layers.lines && F.layers.cross) {
+      for (const c of crossings) {
+        ctx.fillStyle = c.out ? T.fout : T.fin; ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(X(c.x), Yp(c.y), 3.6 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      }
+    }
+    // E arrows piercing the surface, centered on it
+    if (F.layers.arrows && F.charges.some((c) => c.q)) {
+      let per = 0; const cum = [0];
+      for (let i = 0; i < n; i++) { const a = P[i], b = P[(i + 1) % n]; per += Math.hypot(b[0] - a[0], b[1] - a[1]); cum.push(per); }
+      const m = clamp(Math.round(per / 1.7), 12, 44), Lmax = Math.min(38, 1.7 * s) * ps;
+      let j = 0;
+      for (let k = 0; k < m; k++) {
+        const target = (k + 0.5) * per / m;
+        while (j < n - 1 && cum[j + 1] < target) j++;
+        const a = P[j], b = P[(j + 1) % n], f = (target - cum[j]) / ((cum[j + 1] - cum[j]) || 1);
+        const x = a[0] + (b[0] - a[0]) * f, y = a[1] + (b[1] - a[1]) * f;
+        const [Ex, Ey] = field2(x, y), E = Math.hypot(Ex, Ey); if (E < 1e-9) continue;
+        const L = Lmax * Math.tanh(E / E0), ux = Ex / E, uy = -Ey / E, px = X(x), py = Yp(y);
+        arrow(ctx, px - ux * L / 2, py - uy * L / 2, px + ux * L / 2, py + uy * L / 2, en[j] >= 0 ? T.fout : T.fin, 2 * ps, 7 * ps);
+      }
+    }
+    // charges
+    for (const c of F.charges) {
+      const x = X(c.x), y = Yp(c.y), r = rq(c), hot = hotId('q' + c.id), sel = F.sel && F.sel.kind === 'q' && F.sel.id === c.id;
+      if (hot || sel) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2.2 * ps; ctx.globalAlpha = hot ? 0.9 : 0.6; ctx.beginPath(); ctx.arc(x, y, r + 4 * ps, 0, 2 * Math.PI); ctx.stroke(); ctx.globalAlpha = 1; }
+      ctx.fillStyle = c.q > 0 ? T.pos : c.q < 0 ? T.neg : T.muted;
+      ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = T.onq; ctx.lineWidth = 2 * ps; const a = r * 0.45;
+      ctx.beginPath(); ctx.moveTo(x - a, y); ctx.lineTo(x + a, y); if (c.q > 0) { ctx.moveTo(x, y - a); ctx.lineTo(x, y + a); } ctx.stroke();
+    }
+    // grips
+    for (const h of fluxHandles()) {
+      if (h.draw) h.draw(ctx, hotId(h.id));
+    }
+    // stroke being drawn
+    if (stroke && stroke.length > 1) {
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 2.5 * ps; ctx.setLineDash([6, 4]);
+      ctx.beginPath(); stroke.forEach((p, i) => (i ? ctx.lineTo(X(p[0]), Yp(p[1])) : ctx.moveTo(X(p[0]), Yp(p[1])))); ctx.stroke(); ctx.setLineDash([]);
+    }
+    // labels last
+    const fs = fsz(12.5);
+    for (const c of F.charges) {
+      const r = rq(c);
+      label(ctx, `${fq(c.q, Math.abs(c.q) % 1 ? 1 : 0)}`, X(c.x) + r + 5 * ps, Yp(c.y) - r * 0.35, { size: fsz(11.5), fam: T.mono, color: T.ink });
+    }
+    let top = P[0]; for (const p of P) if (p[1] > top[1]) top = p;
+    const ly = Yp(top[1]) - 12 * ps;
+    label(ctx, surfLabel(), X(top[0]), ly < fs * 2.2 ? Yp(top[1]) + fs + 14 * ps : ly, { size: fs, align: 'center', color: T.ink });
+    ctx.fillStyle = T.muted; ctx.font = `${fsz(11)}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    label(ctx, 'Slice z = 0 through the 3D surface · grid 1 cm', 10, H - 10, { size: fsz(11), weight: 400, color: T.muted });
+    if (drawing) label(ctx, 'Draw a closed loop with the pointer', W / 2, 26 * ps, { size: fs, align: 'center', color: T.accent });
+  }
+
+  // draggable parts of the flux drawing, in pane pixels
+  function fluxHandles() {
+    const out = [], s = view.s, ps = Math.min(projScale(), 1.3);
+    if (drawing) return out;
+    for (const c of F.charges) {
+      out.push({ id: 'q' + c.id, kind: 'q', cursor: 'grab', d: (x, y) => Math.hypot(x - X(c.x), y - Yp(c.y)) - rq(c) - 3, ref: c });
+    }
+    const sh = shape();
+    const ptH = (id, kind, x, y, dir, cursor, extra) => out.push(Object.assign({ id, kind, cursor, d: (px, py) => Math.hypot(px - x, py - y) - 9 * ps,
+      draw: (ctx, hot) => grip(ctx, x, y, hot, dir) }, extra || {}));
+    if (F.surf === 'sphere') {
+      const { x, y, R } = F.sph, a = -0.7;
+      const gx = X(x + R * Math.cos(a)), gy = Yp(y + R * Math.sin(a));
+      out.push({ id: 'R', kind: 'R', cursor: 'nwse-resize', d: (px, py) => Math.abs(Math.hypot(px - X(x), py - Yp(y)) - R * s) + 1,
+        draw: (ctx, hot) => gripAlong(ctx, gx, gy, Math.cos(a), -Math.sin(a), hot) });
+      ptH('move', 'move', X(x), Yp(y), 'move', 'move');
+    } else if (F.surf === 'box' || F.surf === 'cyl') {
+      const { x, y, w, h } = F.rect, a = w / 2, b = h / 2;
+      const segD = (px, py, x1, y1, x2, y2) => { const ex = x2 - x1, ey = y2 - y1, t = clamp(((px - x1) * ex + (py - y1) * ey) / (ex * ex + ey * ey), 0, 1); return Math.hypot(px - x1 - t * ex, py - y1 - t * ey) + 1; };
+      out.push({ id: 'W', kind: 'W', cursor: 'ew-resize', d: (px, py) => Math.min(segD(px, py, X(x + a), Yp(y - b), X(x + a), Yp(y + b)), segD(px, py, X(x - a), Yp(y - b), X(x - a), Yp(y + b))),
+        draw: (ctx, hot) => grip(ctx, X(x + a), Yp(y), hot, 'h') });
+      out.push({ id: 'H', kind: 'H', cursor: 'ns-resize', d: (px, py) => Math.min(segD(px, py, X(x - a), Yp(y + b), X(x + a), Yp(y + b)), segD(px, py, X(x - a), Yp(y - b), X(x + a), Yp(y - b))),
+        draw: (ctx, hot) => grip(ctx, X(x), Yp(y + b), hot, 'v') });
+      ptH('move', 'move', X(x), Yp(y), 'move', 'move');
+    } else {
+      F.free.forEach((p, i) => {
+        const x = X(p[0]), y = Yp(p[1]);
+        out.push({ id: 'cp' + i, kind: 'cp', i, cursor: 'grab', d: (px, py) => Math.hypot(px - x, py - y) - 6 * ps,
+          draw: (ctx, hot) => {
+            const sel = F.sel && F.sel.kind === 'cp' && F.sel.i === i;
+            ctx.fillStyle = T.canvas; ctx.strokeStyle = hot || sel ? T.accent : T.muted; ctx.lineWidth = (hot || sel ? 2.4 : 1.6) * ps;
+            ctx.beginPath(); ctx.arc(x, y, (hot ? 6.5 : 5) * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+          } });
+      });
+      ptH('move', 'move', X(sh.center[0]), Yp(sh.center[1]), 'move', 'move');
+    }
+    // anywhere inside the surface also moves it (anything else under the pointer wins)
+    out.push({ id: 'movein', kind: 'move', cursor: 'move', d: (px, py) => (sh.inside(wx(px), wy(py)) ? 4 : Infinity) });
+    return out;
+  }
+
+  // ---------- drawing: symmetry ----------
+  function symE(r) {   // signed field component (N/C) at distance r (cm) for the current case
+    if (Ysym.kind === 'sphere') return Esphere(Ysym.sk, Ysym.Q * NC, Ysym.R * CM, r * CM);
+    if (Ysym.kind === 'line') return Eline(Ysym.lam * NC, r * CM);
+    return Eplane(Ysym.sig * NC) * Math.sign(r);
+  }
+  const symR = () => (Ysym.kind === 'sphere' ? Ysym.r : Ysym.kind === 'line' ? Ysym.rl : Ysym.h);
+  const symL = () => (Ysym.kind === 'line' ? Ysym.L : Ysym.a);
+  function plotRange() {
+    const k = Ysym.kind;
+    let top;
+    if (k === 'sphere') top = Ysym.sk === 'point' ? Math.abs(symE(2)) : KC * Math.abs(Ysym.Q) * NC / Math.pow(Ysym.R * CM, 2) * 1.25;
+    else if (k === 'line') top = Math.abs(Eline(Ysym.lam * NC, 1 * CM));
+    else top = Math.abs(Eplane(Ysym.sig * NC)) * 1.5;
+    if (!(top > 0)) top = 1;
+    const neg = (k === 'sphere' ? Ysym.Q : k === 'line' ? Ysym.lam : Ysym.sig) < 0;
+    if (k === 'plane') return { x0: -11, x1: 11, y0: -top, y1: top };
+    return { x0: 0, x1: k === 'sphere' ? 15 : 13, y0: neg ? -top : 0, y1: neg ? 0 : top };
+  }
+  let symHandles = [];
+  function drawSym() {
+    const [W, H] = dims.d; if (!W || !H) return;
+    const ctx = ctxs.d, ps = Math.min(projScale(), 1.3), s = view.s, k = Ysym.kind;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    drawGrid(ctx, W, H);
+    // arrow length is proportional to E: |E| = Eref gives 2.2 cm; capped close to a point or line charge
+    const Eref = Math.abs(k === 'sphere' ? (Ysym.sk === 'point' ? symE(3) : KC * Ysym.Q * NC / Math.pow(Ysym.R * CM, 2)) : k === 'line' ? symE(3) : symE(1)) || 1;
+    const Lmax = 2.2 * s;                           // arrow length for |E| = Eref
+    const r = symR(), E = symE(r), sgnQ = Math.sign(k === 'sphere' ? Ysym.Q : k === 'line' ? Ysym.lam : Ysym.sig) || 1;
+    const fcol = E >= 0 ? T.fout : T.fin, qcol = sgnQ > 0 ? T.pos : T.neg;
+    const alen = (e) => Math.min(Lmax * 1.6, Math.abs(e) / Eref * Lmax);
+    const fs = fsz(12.5);
+    symHandles = [];
+    const cx = X(0), cy = Yp(0);
+    const fieldLines = (fn) => { ctx.strokeStyle = T.fline; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); fn(); ctx.stroke(); ctx.globalAlpha = 1; };
+    if (k === 'sphere') {
+      const R = Ysym.R, sk = Ysym.sk;
+      // field lines: radial, starting where the field starts
+      const r0 = sk === 'shell' ? R : sk === 'ball' ? 0 : 0.5;
+      if (Ysym.Q) fieldLines(() => { for (let i = 0; i < 16; i++) { const a = (i + 0.5) * Math.PI / 8; ctx.moveTo(cx + r0 * s * Math.cos(a), cy - r0 * s * Math.sin(a)); ctx.lineTo(cx + 30 * s * Math.cos(a), cy - 30 * s * Math.sin(a)); } });
+      // the charge
+      if (sk === 'point') {
+        ctx.fillStyle = qcol; ctx.beginPath(); ctx.arc(cx, cy, 10 * ps, 0, 2 * Math.PI); ctx.fill();
+      } else if (sk === 'ball') {
+        ctx.fillStyle = qcol; ctx.globalAlpha = 0.14; ctx.beginPath(); ctx.arc(cx, cy, R * s, 0, 2 * Math.PI); ctx.fill();
+        ctx.globalAlpha = 0.22; ctx.beginPath(); ctx.arc(cx, cy, Math.min(r, R) * s, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1;
+        ctx.strokeStyle = qcol; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.arc(cx, cy, R * s, 0, 2 * Math.PI); ctx.stroke();
+        // + signs spread through the volume
+        ctx.strokeStyle = qcol; ctx.lineWidth = 1.3 * ps; ctx.beginPath();
+        const st = Math.max(1, R / 4);
+        for (let x = -R; x <= R; x += st) for (let y = -R; y <= R; y += st) {
+          if (x * x + y * y > (R - 0.4) * (R - 0.4)) continue;
+          const px = X(x + st / 2 * ((Math.round(y / st) & 1) ? 0.5 : 0)), py = Yp(y), a = 2.8 * ps;
+          ctx.moveTo(px - a, py); ctx.lineTo(px + a, py); if (sgnQ > 0) { ctx.moveTo(px, py - a); ctx.lineTo(px, py + a); }
+        }
+        ctx.stroke();
+      } else {
+        ctx.strokeStyle = qcol; ctx.lineWidth = 4 * ps; ctx.beginPath(); ctx.arc(cx, cy, R * s, 0, 2 * Math.PI); ctx.stroke();
+        ctx.fillStyle = T.ink; ctx.globalAlpha = 0.05; ctx.beginPath(); ctx.arc(cx, cy, R * s, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1;
+        ctx.strokeStyle = qcol; ctx.lineWidth = 1.4 * ps; ctx.beginPath();
+        for (let i = 0; i < 16; i++) { const a = i * Math.PI / 8, px = cx + (R * s + 9 * ps) * Math.cos(a), py = cy - (R * s + 9 * ps) * Math.sin(a), b = 3 * ps; ctx.moveTo(px - b, py); ctx.lineTo(px + b, py); if (sgnQ > 0) { ctx.moveTo(px, py - b); ctx.lineTo(px, py + b); } }
+        ctx.stroke();
+      }
+      // Gaussian sphere and E on it
+      ctx.strokeStyle = fcol; ctx.lineWidth = 3 * ps; ctx.setLineDash([9 * ps, 5 * ps]);
+      ctx.beginPath(); ctx.arc(cx, cy, r * s, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
+      const L = alen(E);
+      for (let i = 0; i < 12; i++) {
+        const a = (i + 0.25) * Math.PI / 6, ux = Math.cos(a), uy = -Math.sin(a), px = cx + r * s * ux, py = cy + r * s * uy, d = Math.sign(E);
+        if (L > 2) arrow(ctx, px, py, px + d * ux * L, py + d * uy * L, fcol, 2.2 * ps, 8 * ps);
+        else { ctx.fillStyle = fcol; ctx.beginPath(); ctx.arc(px, py, 2.5 * ps, 0, 2 * Math.PI); ctx.fill(); }
+      }
+      const ga = -0.6, gx = cx + r * s * Math.cos(ga), gy = cy - r * s * Math.sin(ga);
+      symHandles.push({ id: 'r', cursor: 'nwse-resize', d: (px, py) => Math.abs(Math.hypot(px - cx, py - cy) - r * s) + 1, set: (x, y) => setSym('r', Math.hypot(x, y)),
+        draw: (hot) => gripAlong(ctx, gx, gy, Math.cos(ga), -Math.sin(ga), hot) });
+      if (sk !== 'point') {
+        const gb = 2.45, bx = cx + R * s * Math.cos(gb), by = cy - R * s * Math.sin(gb);
+        symHandles.push({ id: 'R', cursor: 'nesw-resize', d: (px, py) => Math.abs(Math.hypot(px - cx, py - cy) - R * s) + 2, set: (x, y) => setSym('R', Math.hypot(x, y)),
+          draw: (hot) => gripAlong(ctx, bx, by, Math.cos(gb), -Math.sin(gb), hot) });
+      }
+      for (const h of symHandles) h.draw(hotId(h.id));
+      // labels
+      label(ctx, `Gaussian sphere r = ${fcm(r)}`, gx + 14 * ps, gy + fs + 10 * ps, { size: fs, color: T.ink });
+      if (sk !== 'point') { const gb = 2.45; label(ctx, `R = ${fcm(R)}`, cx + R * s * Math.cos(gb) - 14 * ps, cy - R * s * Math.sin(gb) - 12 * ps, { size: fs, align: 'right', color: qcol }); }
+      label(ctx, `Q_enc = ${fq(enclosedSphere(sk, Ysym.Q, R, r), 2)}`, cx, cy + Math.max(30 * ps, Math.min(r, R || r) * s * 0.5), { size: fs, align: 'center', color: T.ink });
+    } else if (k === 'line') {
+      const L = Ysym.L, rr = r, ell = 0.3;
+      // field lines perpendicular to the line
+      if (Ysym.lam) fieldLines(() => { for (let x = Math.ceil(view.x0 / 2) * 2 - 1; x <= view.x1; x += 2) { ctx.moveTo(X(x), 0); ctx.lineTo(X(x), H); } });
+      // the line of charge, the enclosed piece highlighted
+      ctx.strokeStyle = qcol; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(W, cy); ctx.stroke();
+      ctx.lineWidth = 7 * ps; ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.moveTo(X(-L / 2), cy); ctx.lineTo(X(L / 2), cy); ctx.stroke(); ctx.globalAlpha = 1;
+      // cylinder: side view with elliptical caps
+      const xl = X(-L / 2), xr = X(L / 2), yt = Yp(rr), yb = Yp(-rr), ew = ell * rr * s;
+      ctx.fillStyle = T.ink; ctx.globalAlpha = 0.04; ctx.fillRect(xl, yt, xr - xl, yb - yt); ctx.globalAlpha = 1;
+      ctx.strokeStyle = fcol; ctx.lineWidth = 3 * ps;
+      ctx.beginPath(); ctx.moveTo(xl, yt); ctx.lineTo(xr, yt); ctx.moveTo(xl, yb); ctx.lineTo(xr, yb); ctx.stroke();
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * ps; ctx.globalAlpha = 0.75;
+      ctx.beginPath(); ctx.ellipse(xr, cy, ew, rr * s, 0, 0, 2 * Math.PI); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(xl, cy, ew, rr * s, 0, Math.PI / 2, 3 * Math.PI / 2); ctx.stroke();
+      ctx.setLineDash([4 * ps, 4 * ps]); ctx.beginPath(); ctx.ellipse(xl, cy, ew, rr * s, 0, -Math.PI / 2, Math.PI / 2); ctx.stroke(); ctx.setLineDash([]);
+      ctx.globalAlpha = 1;
+      // E on the curved side (out of the side), and along the caps (no flux)
+      const Lp = alen(E), nA = clamp(Math.round(L / 2.4), 2, 8), d = Math.sign(E);
+      for (let i = 0; i < nA; i++) {
+        const x = X(-L / 2 + L * (i + 0.5) / nA);
+        arrow(ctx, x, yt, x, yt - d * Lp, fcol, 2.2 * ps, 8 * ps);
+        arrow(ctx, x, yb, x, yb + d * Lp, fcol, 2.2 * ps, 8 * ps);
+      }
+      const capA = Math.min(Lp, rr * s * 0.7);
+      if (capA > 4) for (const xc of [xl, xr]) {
+        arrow(ctx, xc, cy - rr * s * 0.25, xc, cy - rr * s * 0.25 - d * capA * 0.6, T.muted, 1.6 * ps, 6 * ps);
+        arrow(ctx, xc, cy + rr * s * 0.25, xc, cy + rr * s * 0.25 + d * capA * 0.6, T.muted, 1.6 * ps, 6 * ps);
+      }
+      symHandles.push({ id: 'r', cursor: 'ns-resize', d: (px, py) => (px >= xl - 6 && px <= xr + 6 ? Math.min(Math.abs(py - yt), Math.abs(py - yb)) + 1 : Infinity), set: (x, y) => setSym('r', Math.abs(y)),
+        draw: (hot) => grip(ctx, X(0), yt, hot, 'v') });
+      symHandles.push({ id: 'L', cursor: 'ew-resize', d: (px, py) => (Math.abs(py - cy) <= rr * s + 6 ? Math.min(Math.abs(px - xr), Math.abs(px - xl)) + 2 : Infinity), set: (x) => setSym('L', 2 * Math.abs(x)),
+        draw: (hot) => grip(ctx, xr + ew, cy - rr * s * 0.55, hot, 'h') });
+      for (const h of symHandles) h.draw(hotId(h.id));
+      label(ctx, `r = ${fcm(rr)}`, X(0) + 16 * ps, yt - 10 * ps, { size: fs, color: T.ink });
+      label(ctx, `L = ${fcm(L)}`, xr + ew + 16 * ps, cy - rr * s * 0.55 + fs * 0.35, { size: fs, color: T.ink });
+      label(ctx, `λ = ${minus(String(Ysym.lam))} nC/m`, 12, cy - 10 * ps, { size: fs, color: qcol });
+      label(ctx, `Q_enc = λL = ${fq(Ysym.lam * L / 100, 2)}`, X(0), cy + Math.max(rr * s * 0.5, fs) + fs * 0.4, { size: fs, align: 'center', color: T.ink });
+      label(ctx, 'caps: E runs along them, no flux', xl - 8 * ps, yb + fs + 12 * ps, { size: fsz(11), weight: 400, color: T.muted });
+    } else {
+      const h = r, a = Ysym.a, ell = 0.3;
+      if (Ysym.sig) fieldLines(() => { for (let y = Math.ceil(view.y0 / 1.6) * 1.6 + 0.8; y <= view.y1; y += 1.6) { ctx.moveTo(0, Yp(y)); ctx.lineTo(W, Yp(y)); } });
+      // the sheet, seen edge on
+      ctx.fillStyle = qcol; ctx.globalAlpha = 0.18; ctx.fillRect(cx - 4 * ps, 0, 8 * ps, H); ctx.globalAlpha = 1;
+      ctx.strokeStyle = qcol; ctx.lineWidth = 1.4 * ps; ctx.beginPath();
+      for (let y = Math.ceil(view.y0); y <= view.y1; y += 1) { const py = Yp(y), b = 3 * ps; ctx.moveTo(cx - b, py); ctx.lineTo(cx + b, py); if (sgnQ > 0) { ctx.moveTo(cx, py - b); ctx.lineTo(cx, py + b); } }
+      ctx.stroke();
+      const xl = X(-h), xr = X(h), yt = Yp(a), yb = Yp(-a), ew = ell * a * s;
+      // enclosed patch of the sheet
+      ctx.fillStyle = qcol; ctx.globalAlpha = 0.3; ctx.beginPath(); ctx.ellipse(cx, cy, ew, a * s, 0, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.ink; ctx.globalAlpha = 0.04; ctx.fillRect(xl, yt, xr - xl, yb - yt); ctx.globalAlpha = 1;
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * ps; ctx.globalAlpha = 0.75;
+      ctx.beginPath(); ctx.moveTo(xl, yt); ctx.lineTo(xr, yt); ctx.moveTo(xl, yb); ctx.lineTo(xr, yb); ctx.stroke(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = fcol; ctx.lineWidth = 3 * ps;
+      ctx.beginPath(); ctx.ellipse(xr, cy, ew, a * s, 0, 0, 2 * Math.PI); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(xl, cy, ew, a * s, 0, Math.PI / 2, 3 * Math.PI / 2); ctx.stroke();
+      ctx.setLineDash([4 * ps, 4 * ps]); ctx.beginPath(); ctx.ellipse(xl, cy, ew, a * s, 0, -Math.PI / 2, Math.PI / 2); ctx.stroke(); ctx.setLineDash([]);
+      const Lp = alen(E), d = sgnQ;
+      for (const f of [-0.55, 0, 0.55]) {
+        const py = cy + f * a * s;
+        arrow(ctx, xr + ew * Math.sqrt(1 - f * f) * 0, py, xr + d * Lp, py, fcol, 2.2 * ps, 8 * ps);
+        arrow(ctx, xl, py, xl - d * Lp, py, fcol, 2.2 * ps, 8 * ps);
+      }
+      symHandles.push({ id: 'r', cursor: 'ew-resize', d: (px, py) => (Math.abs(py - cy) <= a * s + 6 ? Math.min(Math.abs(px - xr), Math.abs(px - xl)) + 1 : Infinity), set: (x) => setSym('r', Math.abs(x)),
+        draw: (hot) => grip(ctx, xr, cy - a * s - 14 * ps, hot, 'h') });
+      symHandles.push({ id: 'L', cursor: 'ns-resize', d: (px, py) => (px >= xl - 6 && px <= xr + 6 ? Math.min(Math.abs(py - yt), Math.abs(py - yb)) + 2 : Infinity), set: (x, y) => setSym('L', Math.abs(y)),
+        draw: (hot) => grip(ctx, (cx + xr) / 2, yb, hot, 'v') });
+      for (const hd of symHandles) hd.draw(hotId(hd.id));
+      label(ctx, `h = ${fcm(h)}`, xr + 14 * ps, cy - a * s - 10 * ps, { size: fs, color: T.ink });
+      label(ctx, `cap radius a = ${fcm(a)}`, (cx + xr) / 2, yb + fs + 16 * ps, { size: fs, align: 'center', color: T.ink });
+      label(ctx, `σ = ${minus(String(Ysym.sig))} nC/m²`, cx + 10 * ps, 22 * ps, { size: fs, color: qcol });
+      label(ctx, 'side: E runs along it, no flux', (cx + xr) / 2, yb + 2 * fs + 24 * ps, { size: fsz(11), weight: 400, align: 'center', color: T.muted });
+    }
+    label(ctx, `E = ${fmtSI(Math.abs(E), 'N/C', 3)} ${E > 0 ? 'outward' : E < 0 ? 'inward' : ''} on the Gaussian surface`, 12, H - 12, { size: fsz(12), color: fcol });
+  }
+
+  // ---------- E against distance ----------
+  let pGeom = null, pHover = false, pDrag = false;
+  function drawPlot() {
+    const [W, H] = dims.p; if (!W || !H || mode !== 'sym') return;
+    const ctx = ctxs.p, ps = Math.min(projScale(), 1.3), k = Ysym.kind;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const pr = plotRange(), big = Math.max(Math.abs(pr.y0), Math.abs(pr.y1));
+    const [usc, un] = big >= 1e5 ? [1e3, 'kN/C'] : big >= 1e3 ? [1e3, 'kN/C'] : [1, 'N/C'];
+    const fsT = 10.5 * ps;
+    const L = 58 * ps, R = W - 18 * ps, top = 44 * ps, bot = H - 42 * ps;
+    if (bot - top < 40 || R - L < 60) return;
+    const Xp2 = (x) => L + (x - pr.x0) / (pr.x1 - pr.x0) * (R - L), Yv = (v) => bot - (v - pr.y0) / (pr.y1 - pr.y0) * (bot - top);
+    const invX = (px) => pr.x0 + (px - L) / (R - L) * (pr.x1 - pr.x0);
+    pGeom = { L, R, top, bot, invX, Xp2 };
+    // grid and ticks
+    ctx.font = `${fsT}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.lineWidth = 1;
+    const nice = (raw) => { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; };
+    const xs = nice((pr.x1 - pr.x0) / 6);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let x = Math.ceil(pr.x0 / xs) * xs; x <= pr.x1 + 1e-9; x += xs) {
+      const px = Math.round(Xp2(x)) + 0.5; ctx.strokeStyle = Math.abs(x) < 1e-9 ? T.gridStrong : T.grid;
+      ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bot); ctx.stroke(); ctx.fillText(minus(String(+x.toFixed(2))), px, bot + 5 * ps);
+    }
+    const ys = nice((pr.y1 - pr.y0) / usc / 5) * usc;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = Math.ceil(pr.y0 / ys) * ys; v <= pr.y1 + 1e-9 * ys; v += ys) {
+      const py = Math.round(Yv(v)) + 0.5; ctx.strokeStyle = Math.abs(v) < ys * 1e-6 ? T.gridStrong : T.grid;
+      ctx.beginPath(); ctx.moveTo(L, py); ctx.lineTo(R, py); ctx.stroke(); ctx.fillText(minus(String(+(v / usc).toPrecision(3))), L - 5 * ps, py);
+    }
+    ctx.strokeStyle = T.gridStrong; ctx.strokeRect(L + 0.5, top + 0.5, R - L, bot - top);
+    const yl = k === 'plane' ? `E_x (${un}) against x (cm), x measured from the sheet` : `E_r (${un}) against r (cm)`;
+    label(ctx, yl, L, top - 14 * ps, { size: 11.5 * ps, dims: dims.p, halo: false, color: T.ink });
+    ctx.fillStyle = T.muted; ctx.font = `${fsT}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillText(k === 'plane' ? 'x (cm)' : 'r (cm)', R, bot + 20 * ps);
+    // R marker for spheres
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
+    if (k === 'sphere' && Ysym.sk !== 'point') {
+      const px = Xp2(Ysym.R); ctx.strokeStyle = T.muted; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bot); ctx.stroke(); ctx.setLineDash([]);
+    }
+    // the curve
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2.2 * ps; ctx.lineJoin = 'round'; ctx.beginPath();
+    let first = true, prevV = null;
+    const N = Math.max(200, Math.round(R - L));
+    for (let i = 0; i <= N; i++) {
+      let x = pr.x0 + (pr.x1 - pr.x0) * i / N;
+      if (k !== 'plane' && x < 0.02) x = 0.02;
+      const v = k === 'plane' && Math.abs(x) < 1e-9 ? 0 : symE(x), py = clamp(Yv(v), top - 50, bot + 50);
+      // vertical jumps (conductor surface, sheet) drawn as vertical segments
+      if (first) { ctx.moveTo(Xp2(x), py); first = false; } else ctx.lineTo(Xp2(x), py);
+      prevV = v;
+    }
+    ctx.stroke();
+    // marker at the Gaussian surface
+    const r = symR(), E = symE(r), mx = Xp2(r), my = clamp(Yv(E), top, bot);
+    ctx.strokeStyle = T.accent; ctx.lineWidth = (pDrag || pHover ? 2.4 : 1.6) * ps; ctx.beginPath(); ctx.moveTo(mx, top); ctx.lineTo(mx, bot); ctx.stroke();
+    if (k === 'plane') { const gx = Xp2(-r); ctx.globalAlpha = 0.45; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(gx, top); ctx.lineTo(gx, bot); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+    ctx.fillStyle = E >= 0 ? T.fout : T.fin; ctx.beginPath(); ctx.arc(mx, my, 5 * ps, 0, 2 * Math.PI); ctx.fill();
+    ctx.restore();
+    grip(ctx, mx, bot, pDrag || pHover, 'h');
+    const txt = `${k === 'plane' ? 'h' : 'r'} = ${fcm(r)}, E = ${fmtSI(E, 'N/C', 3)}`;
+    const right = mx > (L + R) / 2;
+    label(ctx, txt, right ? mx - 10 * ps : mx + 10 * ps, Math.max(top + 18 * ps, Math.min(bot - 30 * ps, my - 10 * ps)), { size: 11.5 * ps, dims: dims.p, fam: T.mono, align: right ? 'right' : 'left', color: T.ink });
+    if (k === 'sphere' && Ysym.sk !== 'point') label(ctx, 'R', Xp2(Ysym.R) - 4 * ps, top + 14 * ps, { align: 'right', size: 11 * ps, dims: dims.p, color: T.muted });
+  }
+
+  function drawAll() {
+    if (!T) return;
+    if (mode === 'flux') drawFlux(); else { drawSym(); drawPlot(); }
+  }
+
+  // ---------- readouts ----------
+  let qListKey = '';
+  function updateReadouts() {
+    if (mode === 'flux') fluxReadouts(); else symReadouts();
+  }
+  function fluxReadouts() {
+    const enc = enclosed(), G = enc.Q * NC / EPS0, scale = Math.max(enc.scale, 1e-30);
+    const nIn = F.charges.filter((c) => c.inside).length;
+    $('mQ').innerHTML = `${fq(enc.Q)}<span class="ok"> ${nIn} of ${F.charges.length} inside</span>`;
+    $('mG').textContent = fflux(G);
+    $('onFlag').hidden = !onSurface;
+    const shapeName = { sphere: 'sphere', box: 'box', cyl: 'cylinder', free: 'prism' }[F.surf];
+    $('mNlab').textContent = `Numerical ∮E·dA over the 3D ${shapeName}`;
+    if (num && !onSurface) {
+      const diff = Math.abs(num.total - G);
+      $('mN').innerHTML = `${fluxOrZero(num.total, scale)}<span class="ok" style="display:block">${diff === 0 ? 'agrees with Q<sub>enc</sub>/ε₀ to every digit of double precision' : `differs from Q<sub>enc</sub>/ε₀ by ${sci(diff, 1)} N·m²/C${G ? `, a fraction ${sci(diff / Math.abs(G), 1)}` : ''}`}</span>`;
+      $('mOut').textContent = fflux(num.out);
+      $('mIn').textContent = fflux(num.inw);
+    } else { $('mN').textContent = '—'; $('mOut').textContent = '—'; $('mIn').textContent = '—'; }
+    const net = lineCount.out - lineCount.inn, expect = Math.round(enc.Q * F.density);
+    $('mL').innerHTML = `${lineCount.out} out, ${lineCount.inn} in, net ${minus(String(net))}<span class="ok" style="display:block">${F.density} per nC × Q<sub>enc</sub> = ${minus(String(expect))}${net === expect ? ', a match' : '. In a slice a negative charge can collect more lines than its share, so the count is only a picture of the flux'}</span>`;
+    $('numHint').innerHTML = num && !onSurface ? `The surface integral is evaluated with adaptive Gauss–Kronrod quadrature (${num.evals.toLocaleString('en-US')} field evaluations, ${numMs.toFixed(0)} ms) using the full 3D field of every charge, with no use of Gauss's law. ${F.surf === 'sphere' ? 'The sphere is covered in latitude and longitude, ' : F.surf === 'free' ? 'Each flat side panel and the triangulated top and bottom faces are integrated separately, ' : 'Each face is integrated separately, '}and it refines wherever E·n changes fast, near a charge close to the surface.` : '';
+    // headline
+    $('headline').innerHTML = `Q<sub>enc</sub> = ${fq(enc.Q)} · Φ<sub>E</sub> = ${onSurface ? 'undefined' : fflux(G)}<small>numerical ∮E·dA = ${num && !onSurface ? (Math.abs(num.total) < 1e-9 * scale ? '0.000 N·m²/C' : fflux(num.total)) : '—'}</small>`;
+    // charge list
+    const key = F.charges.map((c) => c.id).join(',');
+    const ul = $('qList');
+    if (key !== qListKey) {
+      qListKey = key;
+      ul.innerHTML = F.charges.map((c) => `<li data-id="${c.id}" tabindex="0" role="option"><i class="qd ${c.q >= 0 ? 'p' : 'n'}"></i><span class="qv"></span><span class="qf"></span><span class="qs"></span></li>`).join('');
+    }
+    for (const li of ul.children) {
+      const c = qById(+li.dataset.id); if (!c) continue;
+      li.setAttribute('aria-selected', String(!!(F.sel && F.sel.kind === 'q' && F.sel.id === c.id)));
+      li.querySelector('.qd').className = `qd ${c.q >= 0 ? 'p' : 'n'}`;
+      li.querySelector('.qv').textContent = fq(c.q);
+      const i = num && num.ids ? num.ids.indexOf(c.id) : -1;
+      const f = i >= 0 && !onSurface ? num.per[i] : null;
+      li.querySelector('.qf').innerHTML = f === null ? '—' : Math.abs(f) < 1e-9 * scale ? '0' : minus(sigStr(f, 4));
+      li.querySelector('.qs').textContent = `at (${minus(c.x.toFixed(1))}, ${minus(c.y.toFixed(1))}) cm, ${c.inside ? 'inside' : 'outside'}, q/ε₀ = ${minus(sigStr(c.q * NC / EPS0, 4))}`;
+    }
+    syncFluxRail();
+  }
+  function syncFluxRail() {
+    const sync = (id, v) => { const el = $(id); if (document.activeElement !== el) el.value = v; };
+    sync('sR', F.sph.R); $('oR').textContent = fcm(F.sph.R);
+    sync('sW', F.rect.w); $('oW').textContent = fcm(F.rect.w);
+    sync('sH', F.rect.h); $('oH').textContent = fcm(F.rect.h);
+    sync('sD', F.depth); $('oD').textContent = fcm(F.depth);
+    $('lW').textContent = F.surf === 'cyl' ? 'Length (along x)' : 'Width';
+    $('lH').textContent = F.surf === 'cyl' ? 'Diameter' : 'Height';
+    const c = F.sel && F.sel.kind === 'q' ? qById(F.sel.id) : null;
+    $('sQ').disabled = !c; $('delQ').disabled = !c && !(F.sel && F.sel.kind === 'cp' && F.free.length > 4);
+    if (c) { sync('sQ', c.q); $('oQ').textContent = fq(c.q); } else $('oQ').textContent = 'none selected';
+    $('addPos').disabled = $('addNeg').disabled = F.charges.length >= 8;
+  }
+  function stepsHTML(items) { return items.map(([b, t, eq]) => `<li><b>${b}</b>${t}${eq ? `<span class="eq">${eq}</span>` : ''}</li>`).join(''); }
+  function symReadouts() {
+    const k = Ysym.kind, r = symR(), rm = r * CM, E = symE(r);
+    const eDir = E > 0 ? 'pointing outward' : E < 0 ? 'pointing inward' : '';
+    const eDirPlane = E > 0 ? 'pointing away from the sheet on both sides' : E < 0 ? 'pointing toward the sheet on both sides' : '';
+    let items = [], Qenc, area;
+    if (k === 'sphere') {
+      const { sk, Q, R } = Ysym; Qenc = enclosedSphere(sk, Q, R, r); area = 4 * Math.PI * rm * rm;
+      const what = sk === 'point' ? 'a point charge' : sk === 'ball' ? 'the ball' : 'the conducting sphere';
+      items.push(['Use the symmetry', `Seen from its center, ${what} looks the same in every direction. So E points straight out or in, and has the same size everywhere on a sphere around the center. Choose that sphere, radius r = ${fcm(r)}, as the Gaussian surface.`]);
+      items.push(['Flux through it', 'E is perpendicular to the sphere and the same size everywhere on it, so the integral is E times the area.', `Φ = ∮E·dA = E·4πr² = E × 4π(${sigStr(rm, 3)} m)² = E × ${sci(area, 3)} m²`]);
+      let enc;
+      if (sk === 'point') enc = ['Charge inside', 'The point charge is inside any sphere around it.', `Q<sub>enc</sub> = Q = ${fq(Q, 1)}`];
+      else if (sk === 'ball') enc = r >= R ? ['Charge inside', 'The Gaussian sphere is outside the ball and holds all of its charge.', `Q<sub>enc</sub> = Q = ${fq(Q, 1)}`]
+        : ['Charge inside', 'The charge is spread evenly through the volume, so the Gaussian sphere holds the fraction (r/R)³ of it.', `Q<sub>enc</sub> = Q(r/R)³ = (${fq(Q, 1)})(${r.toFixed(1)}/${R.toFixed(1)})³ = ${fq(Qenc, 3)}`];
+      else enc = r > R ? ['Charge inside', 'The Gaussian sphere surrounds the conductor and holds all of its charge.', `Q<sub>enc</sub> = Q = ${fq(Q, 1)}`]
+        : ['Charge inside', 'In a conductor at rest E = 0 inside the metal, so all the charge sits on the outer surface. A Gaussian sphere inside holds none of it.', 'Q<sub>enc</sub> = 0'];
+      items.push(enc);
+      items.push(['Apply Gauss\'s law', 'Set the flux equal to Q<sub>enc</sub>/ε₀ and solve for E.', `E·4πr² = Q<sub>enc</sub>/ε₀  →  E = Q<sub>enc</sub>/(4πε₀r²)<br>= (${sci(Qenc * NC, 3)} C)/(4π · ${sci(EPS0, 4)} · (${sigStr(rm, 3)} m)²)`]);
+      let alt = '';
+      if (sk === 'ball' && r < R) alt = `Same as kQr/R³: inside, E grows in proportion to r.`;
+      else if (sk === 'shell' && r <= R) alt = 'Inside the conductor and its cavity the field is zero, whatever the charge on it.';
+      else alt = 'Same as kQ/r², the field of a point charge Q at the center.';
+      items.push(['Result', alt, `<span class="res">E = ${fmtSI(Math.abs(E), 'N/C', 4)}${eDir ? ', ' + eDir : ''}</span><br>Φ = Q<sub>enc</sub>/ε₀ = ${fflux(Qenc * NC / EPS0)}`]);
+    } else if (k === 'line') {
+      const { lam, L } = Ysym, Lm = L * CM; Qenc = lam * Lm; area = 2 * Math.PI * rm * Lm;
+      items.push(['Use the symmetry', `An infinite straight line looks the same from every point along it and from every direction around it. So E points straight away from (or toward) the line and depends only on the distance r. Choose a cylinder of radius r = ${fcm(r)} and length L = ${fcm(L)} around the line.`]);
+      items.push(['Flux through it', 'On the curved side E is perpendicular to the surface and the same size everywhere. On the two end caps E lies along the surface, so they carry no flux.', `Φ = E·2πrL + 0 = E × 2π(${sigStr(rm, 3)} m)(${sigStr(Lm, 3)} m) = E × ${sci(area, 3)} m²`]);
+      items.push(['Charge inside', 'The cylinder holds a length L of the line.', `Q<sub>enc</sub> = λL = (${minus(String(lam))} nC/m)(${sigStr(Lm, 3)} m) = ${fq(Qenc, 3)}`]);
+      items.push(['Apply Gauss\'s law', 'Set the flux equal to Q<sub>enc</sub>/ε₀. The length L appears on both sides and cancels.', `E·2πrL = λL/ε₀  →  E = λ/(2πε₀r)<br>= (${sci(lam * NC, 3)} C/m)/(2π · ${sci(EPS0, 4)} · ${sigStr(rm, 3)} m)`]);
+      items.push(['Result', 'E falls off as 1/r, more slowly than the 1/r² of a point charge.', `<span class="res">E = ${fmtSI(Math.abs(E), 'N/C', 4)}${eDir ? ', ' + eDir.replace('outward', 'away from the line').replace('inward', 'toward the line') : ''}</span><br>Φ = Q<sub>enc</sub>/ε₀ = ${fflux(Qenc * NC / EPS0)}`]);
+    } else {
+      const { sig, a } = Ysym, am = a * CM, A = Math.PI * am * am; Qenc = sig * A; area = 2 * A;
+      items.push(['Use the symmetry', `An infinite flat sheet looks the same from every point on it, and the same from both sides. So E is perpendicular to the sheet, the same size at equal distances on the two sides, and points away from it on both sides (toward it if σ < 0). Choose a pillbox: a cylinder through the sheet with caps of radius a = ${fcm(a)} at a distance h = ${fcm(r)} on each side.`]);
+      items.push(['Flux through it', 'On each cap E is perpendicular and the same size, flux EA each. Along the side E lies in the surface, no flux.', `Φ = 2EA = E × 2π(${sigStr(am, 3)} m)² = E × ${sci(area, 3)} m²`]);
+      items.push(['Charge inside', 'The pillbox holds a disk of the sheet with the area A of a cap.', `Q<sub>enc</sub> = σA = (${minus(String(sig))} nC/m²)(${sci(A, 3)} m²) = ${fq(Qenc, 3)}`]);
+      items.push(['Apply Gauss\'s law', 'Set the flux equal to Q<sub>enc</sub>/ε₀. The cap area cancels, and h never appears.', `2EA = σA/ε₀  →  E = σ/(2ε₀)<br>= (${sci(sig * NC, 3)} C/m²)/(2 · ${sci(EPS0, 4)})`]);
+      items.push(['Result', 'The field of an infinite sheet does not weaken with distance. Real sheets are finite, so this holds where you are close compared with the sheet\'s size.', `<span class="res">E = ${fmtSI(Math.abs(E), 'N/C', 4)}, ${eDirPlane}</span><br>Φ = Q<sub>enc</sub>/ε₀ = ${fflux(Qenc * NC / EPS0)}`]);
+    }
+    $('steps').innerHTML = stepsHTML(items);
+    $('headline').innerHTML = `Q<sub>enc</sub> = ${fq(Qenc, 3)} · Φ<sub>E</sub> = ${fflux(Qenc * NC / EPS0)}<small>E = ${fmtSI(E, 'N/C', 3)} at ${k === 'plane' ? 'h' : 'r'} = ${fcm(r)}</small>`;
+    syncSymRail();
+  }
+  function syncSymRail() {
+    const k = Ysym.kind, sync = (id, v) => { const el = $(id); if (document.activeElement !== el) el.value = v; };
+    for (const el of document.querySelectorAll('[data-for-k]')) el.hidden = !el.dataset.forK.split(' ').includes(k);
+    $('yRCtl').hidden = k !== 'sphere' || Ysym.sk === 'point';
+    for (const b of document.querySelectorAll('#symSeg button')) b.setAttribute('aria-pressed', String(b.dataset.k === k));
+    for (const b of document.querySelectorAll('#sphSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === Ysym.sk));
+    const rr = RANGES[k];
+    $('yr').min = rr.r[0]; $('yr').max = rr.r[1];
+    if (rr.L) { $('yLen').min = rr.L[0]; $('yLen').max = rr.L[1]; }
+    $('lyr').textContent = k === 'plane' ? 'Cap distance h' : 'Gaussian radius r';
+    $('lyLen').textContent = k === 'plane' ? 'Cap radius a' : 'Cylinder length L';
+    sync('yQ', Ysym.Q); $('oyQ').textContent = fq(Ysym.Q);
+    sync('yR', Ysym.R); $('oyR').textContent = fcm(Ysym.R);
+    sync('yL', Ysym.lam); $('oyL').textContent = `${minus(String(Ysym.lam))} nC/m`;
+    sync('yS', Ysym.sig); $('oyS').textContent = `${minus(String(Ysym.sig))} nC/m²`;
+    sync('yr', symR()); $('oyr').textContent = fcm(symR());
+    if (rr.L) { sync('yLen', symL()); $('oyLen').textContent = fcm(symL()); }
+    $('symHint').textContent = k === 'sphere' ? (Ysym.sk === 'shell' ? 'A charged conducting sphere: solid or hollow, the charge sits on its outer surface. E jumps from 0 to kQ/R² as the Gaussian sphere passes the surface.' : Ysym.sk === 'point' ? 'A point charge at the center. Every Gaussian sphere around it gets the same flux Q/ε₀; spread over 4πr², that gives Coulomb\'s law.' : 'Charge spread evenly through an insulating ball. Drag r on the drawing or on the plot.')
+      : k === 'line' ? 'Change L and watch E stay put: L cancels. Drag r on the drawing or on the plot.' : 'Drag the caps toward or away from the sheet: E does not change.';
+  }
+
+  // ---------- changes ----------
+  function surfChanged() { F.ver++; markNum(); updateReadouts(); }
+  function chargesChanged() { F.qver++; markNum(); updateReadouts(); }
+  const inView = (x, y, m) => [clamp(x, view.x0 + m, view.x1 - m), clamp(y, view.y0 + m, view.y1 - m)];
+  function setSym(key, v) {
+    const k = Ysym.kind, rr = RANGES[k];
+    if (key === 'r') { v = clamp(snap(v, 0.1), rr.r[0], rr.r[1]); if (k === 'sphere') Ysym.r = v; else if (k === 'line') Ysym.rl = v; else Ysym.h = v; }
+    else if (key === 'L') { v = clamp(snap(v, 0.1), rr.L[0], rr.L[1]); if (k === 'line') Ysym.L = v; else Ysym.a = v; }
+    else if (key === 'R') Ysym.R = clamp(snap(v, 0.1), 1, 8);
+    updateReadouts();
+  }
+  function toast(msg) {
+    const el = $('toast'); el.textContent = msg; el.hidden = false; $('live').textContent = msg;
+    clearTimeout(toast.t); toast.t = setTimeout(() => { el.hidden = true; }, 3200);
+  }
+  // move the freeform control points, but never into a curve that crosses itself
+  function tryFree(C) {
+    const P = spline(C, SPAN);
+    if (!isSimple(P)) return false;
+    if (Math.abs(signedArea(P)) < 2) return false;
+    F.free = C; surfChanged(); return true;
+  }
+
+  // ---------- presets and modes ----------
+  function setMode(m) {
+    mode = m;
+    $('stage').classList.toggle('sym', m === 'sym');
+    $('pPane').hidden = m !== 'sym';
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === m));
+    for (const el of document.querySelectorAll('.rail [data-mode]')) el.hidden = el.dataset.mode !== m;
+    if (m !== 'flux') setDrawing(false);
+    $('drawBtn').hidden = m !== 'flux' || F.surf !== 'free';
+    hoverId = null; drag = null;
+    requestAnimationFrame(resize);
+    setView(); updateReadouts();
+  }
+  function applyPreset(name) {
+    preset = name;
+    const p = PRESETS[name];
+    p.setup();
+    tMotion = 0;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint').innerHTML = p.hint.replace(/Q_enc/g, 'Q<sub>enc</sub>');
+    F.sel = p.mode === 'flux' && F.charges.length ? { kind: 'q', id: F.charges[0].id } : null;
+    if (p.mode === 'sym') symAnchor();
+    setSurf(F.surf, true);
+    F.ver++; F.qver++; markNum();
+    setMode(p.mode);
+    setRunning(!reduce);
+  }
+  function setSurf(sf, quiet) {
+    if (F.surf !== sf && !quiet) {
+      // keep the new surface where the old one was
+      const c = shape().center;
+      if (sf === 'sphere') { F.sph.x = c[0]; F.sph.y = c[1]; }
+      else if (sf === 'box' || sf === 'cyl') { F.rect.x = c[0]; F.rect.y = c[1]; }
+      else { const C = BLOB.map((p) => [p[0] + c[0], p[1] + c[1]]); F.free = C; }
+    }
+    F.surf = sf;
+    if (!(F.sel && F.sel.kind === 'q')) F.sel = null;
+    for (const b of document.querySelectorAll('#surfSeg button')) b.setAttribute('aria-pressed', String(b.dataset.s === sf));
+    for (const el of document.querySelectorAll('[data-for-s]')) el.hidden = !el.dataset.forS.split(' ').includes(sf);
+    $('surfHint').textContent = SURF_HINT[sf];
+    $('drawBtn').hidden = mode !== 'flux' || sf !== 'free';
+    if (sf !== 'free') setDrawing(false);
+    surfChanged();
+  }
+  function setDrawing(on) {
+    drawing = on; stroke = null;
+    $('drawBtn').setAttribute('aria-pressed', String(on));
+    $('drawBtn').textContent = on ? 'Cancel drawing' : 'Draw a surface';
+    $('drawBtn2').textContent = on ? 'Cancel' : 'Draw new';
+    cans.d.style.cursor = on ? 'crosshair' : 'default';
+  }
+  function finishStroke() {
+    const S = stroke; stroke = null;
+    if (!S || S.length < 8) { toast('Draw a bigger closed loop.'); return; }
+    let per = 0; const cum = [0];
+    const pts = S.concat([S[0]]);
+    for (let i = 1; i < pts.length; i++) { per += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); cum.push(per); }
+    if (per < 8) { toast('Draw a bigger closed loop.'); return; }
+    const n = clamp(Math.round(per / 4), 6, 14), C = [];
+    let j = 0;
+    for (let k = 0; k < n; k++) {
+      const t = k * per / n;
+      while (j < cum.length - 2 && cum[j + 1] < t) j++;
+      const f = (t - cum[j]) / ((cum[j + 1] - cum[j]) || 1);
+      C.push([snap(pts[j][0] + (pts[j + 1][0] - pts[j][0]) * f, 0.1), snap(pts[j][1] + (pts[j + 1][1] - pts[j][1]) * f, 0.1)]);
+    }
+    if (!tryFree(C)) { toast('That curve crosses itself. A Gaussian surface must be a simple closed surface; try again.'); return; }
+    setDrawing(false); F.sel = null;
+    toast('New surface. Drag its control points to reshape it.');
+  }
+
+  // ---------- motion ----------
+  const W_LIS = 0.42;
+  function anchorMotion() {
+    const m = F.motion; if (!m) return;
+    if (m.type === 'lis') { const c = qById(m.id); if (!c) { F.motion = null; return; } m.ax = c.x; m.ay = c.y; }
+    else { const a = qById(m.ids[0]), b = qById(m.ids[1]); if (!a || !b) { F.motion = null; return; }
+      m.cx = (a.x + b.x) / 2; m.cy = (a.y + b.y) / 2; m.rad = Math.hypot(a.x - b.x, a.y - b.y) / 2; m.ang0 = Math.atan2(a.y - m.cy, a.x - m.cx); }
+    tMotion = 0;
+  }
+  function symSweep() { const k = Ysym.kind; return k === 'sphere' ? [0.4, 13] : k === 'line' ? [0.6, 11] : [0.4, 9]; }
+  function symAnchor() {
+    const [a, b] = symSweep(), u = clamp((symR() - a) / (b - a), 0, 1);
+    tMotion = Math.acos(1 - 2 * u) / 0.45;
+  }
+  function stepMotion(dt) {
+    tMotion += dt;
+    if (mode === 'flux') {
+      const m = F.motion; if (!m) return;
+      if (m.type === 'lis') {
+        const c = qById(m.id); if (!c) return;
+        c.x = m.ax + m.A * Math.sin(W_LIS * tMotion); c.y = m.ay + m.B * Math.sin(1.37 * W_LIS * tMotion);
+      } else {
+        const a = qById(m.ids[0]), b = qById(m.ids[1]); if (!a || !b) return;
+        const ang = m.ang0 + 0.3 * tMotion;
+        a.x = m.cx + m.rad * Math.cos(ang); a.y = m.cy + m.rad * Math.sin(ang);
+        b.x = m.cx - m.rad * Math.cos(ang); b.y = m.cy - m.rad * Math.sin(ang);
+      }
+      F.qver++; markNum();
+    } else {
+      const [a, b] = symSweep(), v = a + (b - a) * (1 - Math.cos(0.45 * tMotion)) / 2;
+      const k = Ysym.kind; if (k === 'sphere') Ysym.r = v; else if (k === 'line') Ysym.rl = v; else Ysym.h = v;
+    }
+  }
+  const playBtn = $('play');
+  function setRunning(r) {
+    if (r && !running) { if (mode === 'flux') anchorMotion(); else symAnchor(); }
+    if (r && mode === 'flux' && !F.motion) {
+      const c = (F.sel && F.sel.kind === 'q' && qById(F.sel.id)) || F.charges[0];
+      if (c) { F.motion = { type: 'lis', id: c.id, A: 1.6, B: 1.6 }; anchorMotion(); } else r = false;
+    }
+    running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r);
+    if (!r) { if (mode === 'sym') { setSym('r', symR()); } else markNum(); }
+  }
+  playBtn.addEventListener('click', () => setRunning(!running));
+  const userPause = () => { if (running) setRunning(false); };
+
+  // ---------- rail controls ----------
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { if (b.dataset.m !== mode) { setMode(b.dataset.m); if (mode === 'sym') symAnchor(); else anchorMotion(); } });
+  for (const b of document.querySelectorAll('#surfSeg button')) b.addEventListener('click', () => setSurf(b.dataset.s));
+  $('sR').addEventListener('input', (e) => { F.sph.R = +e.target.value; surfChanged(); });
+  $('sW').addEventListener('input', (e) => { F.rect.w = +e.target.value; surfChanged(); });
+  $('sH').addEventListener('input', (e) => { F.rect.h = +e.target.value; surfChanged(); });
+  $('sD').addEventListener('input', (e) => { F.depth = +e.target.value; surfChanged(); });
+  for (const id of ['drawBtn', 'drawBtn2']) $(id).addEventListener('click', () => { userPause(); setDrawing(!drawing); if (drawing) cans.d.focus({ preventScroll: true }); });
+  $('blobBtn').addEventListener('click', () => { const c = shape().center; tryFree(BLOB.map((p) => [p[0] + c[0], p[1] + c[1]])); });
+  function addCharge(q) {
+    if (F.charges.length >= 8) return;
+    const sh = shape();
+    let best = null;
+    for (let k = 0; k < 60 && !best; k++) {
+      const a = k * 2.4, rr = 2 + k * 0.25, x = snap(sh.center[0] + rr * Math.cos(a), 0.1), y = snap(sh.center[1] + rr * Math.sin(a), 0.1);
+      if (x < view.x0 + 1 || x > view.x1 - 1 || y < view.y0 + 1 || y > view.y1 - 1) continue;
+      if (F.charges.every((c) => Math.hypot(c.x - x, c.y - y) > 2) && sh.dist(x, y) > 0.6) best = [x, y];
+    }
+    if (!best) best = [snap(view.x0 + 2, 0.1), snap(view.y1 - 2, 0.1)];
+    const c = mk(best[0], best[1], q); F.charges.push(c); F.sel = { kind: 'q', id: c.id };
+    chargesChanged();
+  }
+  function removeSel() {
+    if (!F.sel) return;
+    if (F.sel.kind === 'q') { F.charges = F.charges.filter((c) => c.id !== F.sel.id); F.sel = F.charges.length ? { kind: 'q', id: F.charges[F.charges.length - 1].id } : null; chargesChanged(); }
+    else if (F.sel.kind === 'cp' && F.free.length > 4) { const C = F.free.slice(); C.splice(F.sel.i, 1); if (tryFree(C)) F.sel = null; else toast('Removing that point would make the curve cross itself.'); }
+  }
+  $('addPos').addEventListener('click', () => addCharge(1));
+  $('addNeg').addEventListener('click', () => addCharge(-1));
+  $('delQ').addEventListener('click', removeSel);
+  $('sQ').addEventListener('input', (e) => { const c = F.sel && F.sel.kind === 'q' && qById(F.sel.id); if (c) { c.q = +e.target.value; chargesChanged(); } });
+  $('qList').addEventListener('click', (e) => { const li = e.target.closest('li'); if (li) { F.sel = { kind: 'q', id: +li.dataset.id }; updateReadouts(); } });
+  $('qList').addEventListener('keydown', (e) => { const li = e.target.closest('li'); if (li && (e.key === 'Enter' || e.key === ' ')) { F.sel = { kind: 'q', id: +li.dataset.id }; updateReadouts(); e.preventDefault(); } });
+  $('tLines').addEventListener('change', (e) => { F.layers.lines = e.target.checked; });
+  $('tArrows').addEventListener('change', (e) => { F.layers.arrows = e.target.checked; });
+  $('tCross').addEventListener('change', (e) => { F.layers.cross = e.target.checked; });
+  $('tGrid').addEventListener('change', (e) => { F.layers.grid = e.target.checked; });
+  $('sDen').addEventListener('input', (e) => { F.density = +e.target.value; $('oDen').textContent = F.density; linesKey = ''; computeLines(); updateReadouts(); });
+  for (const b of document.querySelectorAll('#symSeg button')) b.addEventListener('click', () => { Ysym.kind = b.dataset.k; setView(); symAnchor(); updateReadouts(); });
+  for (const b of document.querySelectorAll('#sphSeg button')) b.addEventListener('click', () => { Ysym.sk = b.dataset.v; updateReadouts(); });
+  $('yQ').addEventListener('input', (e) => { Ysym.Q = +e.target.value; updateReadouts(); });
+  $('yR').addEventListener('input', (e) => { Ysym.R = +e.target.value; updateReadouts(); });
+  $('yL').addEventListener('input', (e) => { Ysym.lam = +e.target.value; updateReadouts(); });
+  $('yS').addEventListener('input', (e) => { Ysym.sig = +e.target.value; updateReadouts(); });
+  $('yr').addEventListener('input', (e) => { userPause(); setSym('r', +e.target.value); });
+  $('yLen').addEventListener('input', (e) => { setSym('L', +e.target.value); });
+
+  // ---------- pointer on the drawing ----------
+  function hitAt(ev) {
+    const r = cans.d.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 6 * Math.min(projScale(), 1.3) * (ev.pointerType === 'touch' ? 2 : 1);
+    const list = mode === 'flux' ? fluxHandles() : symHandles;
+    let best = null, bd = tol;
+    for (const h of list) { const d = h.d(x, y); if (d < bd) { bd = d; best = h; } }
+    return best;
+  }
+  let dq = null, dFrame = false;
+  function dragApply() {
+    dFrame = false;
+    if (!drag || !dq) return;
+    const [x, y] = dq; dq = null;
+    if (mode === 'sym') { const h = symHandles.find((k) => k.id === drag.id); if (h) h.set(x, y); return; }
+    const dx = x - drag.x0, dy = y - drag.y0;
+    if (drag.kind === 'q') {
+      const c = qById(drag.ref); if (!c) return;
+      const [nx, ny] = inView(snap(drag.o[0] + dx, 0.1), snap(drag.o[1] + dy, 0.1), 0.3);
+      if (nx !== c.x || ny !== c.y) { c.x = nx; c.y = ny; chargesChanged(); }
+    } else if (drag.kind === 'move') {
+      const ddx = snap(dx, 0.1), ddy = snap(dy, 0.1);
+      if (F.surf === 'sphere') { const [nx, ny] = inView(drag.o[0] + ddx, drag.o[1] + ddy, 0.5); F.sph.x = +nx.toFixed(2); F.sph.y = +ny.toFixed(2); surfChanged(); }
+      else if (F.surf === 'box' || F.surf === 'cyl') { const [nx, ny] = inView(drag.o[0] + ddx, drag.o[1] + ddy, 0.5); F.rect.x = +nx.toFixed(2); F.rect.y = +ny.toFixed(2); surfChanged(); }
+      else {
+        const [cx, cy] = inView(drag.c0[0] + ddx, drag.c0[1] + ddy, 0.5), ox = cx - drag.c0[0], oy = cy - drag.c0[1];
+        F.free = drag.o.map((p) => [+(p[0] + ox).toFixed(2), +(p[1] + oy).toFixed(2)]); surfChanged();
+      }
+    } else if (drag.kind === 'R') {
+      F.sph.R = clamp(snap(Math.hypot(x - F.sph.x, y - F.sph.y), 0.1), 1, 12); surfChanged();
+    } else if (drag.kind === 'W') {
+      F.rect.w = clamp(snap(2 * Math.abs(x - F.rect.x), 0.1), 2, 28); surfChanged();
+    } else if (drag.kind === 'H') {
+      F.rect.h = clamp(snap(2 * Math.abs(y - F.rect.y), 0.1), 2, 18); surfChanged();
+    } else if (drag.kind === 'cp') {
+      const C = F.free.map((p) => p.slice()), [nx, ny] = inView(snap(x, 0.1), snap(y, 0.1), 0.2);
+      C[drag.i] = [nx, ny]; tryFree(C);
+    }
+  }
+  cans.d.addEventListener('pointermove', (ev) => {
+    const r = cans.d.getBoundingClientRect(), x = wx(ev.clientX - r.left), y = wy(ev.clientY - r.top);
+    if (stroke) { const l = stroke[stroke.length - 1]; if (Math.hypot(x - l[0], y - l[1]) > 0.25) stroke.push([x, y]); return; }
+    if (drag) { dq = [x, y]; if (!dFrame) { dFrame = true; requestAnimationFrame(dragApply); } return; }
+    if (drawing) return;
+    const h = hitAt(ev); hoverId = h ? h.id : null; cans.d.style.cursor = h ? h.cursor : 'default';
+  });
+  cans.d.addEventListener('pointerdown', (ev) => {
+    cans.d.focus({ preventScroll: true });
+    const r = cans.d.getBoundingClientRect(), x = wx(ev.clientX - r.left), y = wy(ev.clientY - r.top);
+    if (drawing && mode === 'flux') { stroke = [[x, y]]; try { cans.d.setPointerCapture(ev.pointerId); } catch (_) {} ev.preventDefault(); return; }
+    const h = hitAt(ev);
+    if (!h) { if (mode === 'flux' && F.sel) { F.sel = null; updateReadouts(); } return; }
+    userPause();
+    drag = { id: h.id, kind: h.kind, x0: x, y0: y };
+    if (mode === 'flux') {
+      if (h.kind === 'q') { drag.ref = h.ref.id; drag.o = [h.ref.x, h.ref.y]; F.sel = { kind: 'q', id: h.ref.id }; }
+      else if (h.kind === 'move') { F.sel = { kind: 'surf' }; if (F.surf === 'sphere') drag.o = [F.sph.x, F.sph.y]; else if (F.surf === 'free') { drag.o = F.free.map((p) => p.slice()); drag.c0 = shape().center.slice(); } else drag.o = [F.rect.x, F.rect.y]; }
+      else if (h.kind === 'cp') { drag.i = h.i; F.sel = { kind: 'cp', i: h.i }; }
+      else F.sel = { kind: 'surf' };
+      updateReadouts();
+    }
+    try { cans.d.setPointerCapture(ev.pointerId); } catch (_) {}
+    cans.d.style.cursor = h.cursor === 'grab' ? 'grabbing' : h.cursor; ev.preventDefault();
+  });
+  const endDrag = () => {
+    if (stroke) { finishStroke(); return; }
+    if (!drag) return;
+    if (dq) dragApply();
+    drag = null; hoverId = null; markNum();
+  };
+  cans.d.addEventListener('pointerup', endDrag);
+  cans.d.addEventListener('pointercancel', () => { stroke = null; drag = null; });
+  cans.d.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
+  cans.d.addEventListener('dblclick', (ev) => {
+    if (mode !== 'flux' || F.surf !== 'free' || drawing) return;
+    const r = cans.d.getBoundingClientRect(), x = wx(ev.clientX - r.left), y = wy(ev.clientY - r.top);
+    const sh = shape(); let bi = -1, bd = 10 / view.s;
+    sh.poly.forEach((p, i) => { const d = Math.hypot(p[0] - x, p[1] - y); if (d < bd) { bd = d; bi = i; } });
+    if (bi < 0 || F.free.length >= 24) return;
+    const oi = sh.rev ? sh.poly.length - 1 - bi : bi, span = Math.floor(oi / SPAN);
+    const C = F.free.map((p) => p.slice()); C.splice(span + 1, 0, [snap(x, 0.1), snap(y, 0.1)]);
+    if (tryFree(C)) F.sel = { kind: 'cp', i: span + 1 };
+  });
+  // keys on the drawing
+  function selectables() { return F.charges.map((c) => ({ kind: 'q', id: c.id })).concat([{ kind: 'surf' }]).concat(F.surf === 'free' ? F.free.map((_, i) => ({ kind: 'cp', i })) : []); }
+  cans.d.addEventListener('keydown', (e) => {
+    const k = e.key;
+    if (k === ' ') { setRunning(!running); e.preventDefault(); return; }
+    if (mode === 'sym') {
+      if (k === 'ArrowRight' || k === 'ArrowUp') { userPause(); setSym('r', symR() + (e.shiftKey ? 1 : 0.1)); }
+      else if (k === 'ArrowLeft' || k === 'ArrowDown') { userPause(); setSym('r', symR() - (e.shiftKey ? 1 : 0.1)); }
+      else if (k === '+' || k === '=') setSym(Ysym.kind === 'sphere' ? 'R' : 'L', (Ysym.kind === 'sphere' ? Ysym.R : symL()) + 0.5);
+      else if (k === '-' || k === '_') setSym(Ysym.kind === 'sphere' ? 'R' : 'L', (Ysym.kind === 'sphere' ? Ysym.R : symL()) - 0.5);
+      else return;
+      e.preventDefault(); return;
+    }
+    if (k === 'Escape' && drawing) { setDrawing(false); e.preventDefault(); return; }
+    if (k === 'n' || k === 'N') {
+      const L = selectables(), i = F.sel ? L.findIndex((o) => o.kind === F.sel.kind && o.id === F.sel.id && o.i === F.sel.i) : -1;
+      F.sel = L[(i + (e.shiftKey ? L.length - 1 : 1)) % L.length]; updateReadouts();
+      $('live').textContent = F.sel.kind === 'q' ? `Selected charge ${fq(qById(F.sel.id).q)}` : F.sel.kind === 'surf' ? 'Selected the surface' : `Selected control point ${F.sel.i + 1}`;
+      e.preventDefault(); return;
+    }
+    const st = e.shiftKey ? 1 : 0.1;
+    const dirs = { ArrowLeft: [-st, 0], ArrowRight: [st, 0], ArrowUp: [0, st], ArrowDown: [0, -st] };
+    const sel = F.sel || { kind: 'surf' };
+    if (dirs[k]) {
+      userPause();
+      const [dx, dy] = dirs[k];
+      if (sel.kind === 'q') { const c = qById(sel.id); if (c) { [c.x, c.y] = inView(+(c.x + dx).toFixed(2), +(c.y + dy).toFixed(2), 0.3); chargesChanged(); } }
+      else if (sel.kind === 'cp') { const C = F.free.map((p) => p.slice()); C[sel.i] = [+(C[sel.i][0] + dx).toFixed(2), +(C[sel.i][1] + dy).toFixed(2)]; tryFree(C); }
+      else if (F.surf === 'sphere') { [F.sph.x, F.sph.y] = inView(+(F.sph.x + dx).toFixed(2), +(F.sph.y + dy).toFixed(2), 0.5); surfChanged(); }
+      else if (F.surf === 'free') tryFree(F.free.map((p) => [+(p[0] + dx).toFixed(2), +(p[1] + dy).toFixed(2)]));
+      else { [F.rect.x, F.rect.y] = inView(+(F.rect.x + dx).toFixed(2), +(F.rect.y + dy).toFixed(2), 0.5); surfChanged(); }
+    } else if (k === '+' || k === '=' || k === '-' || k === '_') {
+      const d = k === '+' || k === '=' ? 1 : -1;
+      if (sel.kind === 'q') { const c = qById(sel.id); if (c) { c.q = clamp(c.q + 0.5 * d, -5, 5); chargesChanged(); } }
+      else if (F.surf === 'sphere') { F.sph.R = clamp(+(F.sph.R + 0.5 * d).toFixed(1), 1, 12); surfChanged(); }
+      else if (F.surf === 'free') { const c = shape().center, f = 1 + 0.05 * d; tryFree(F.free.map((p) => [+(c[0] + (p[0] - c[0]) * f).toFixed(2), +(c[1] + (p[1] - c[1]) * f).toFixed(2)])); }
+      else { F.rect.w = clamp(+(F.rect.w + d).toFixed(1), 2, 28); F.rect.h = clamp(+(F.rect.h + d * 0.6).toFixed(1), 2, 18); surfChanged(); }
+    } else if (k === 'Delete' || k === 'Backspace') removeSel();
+    else return;
+    e.preventDefault();
+  });
+
+  // ---------- pointer on the plot ----------
+  function pHit(ev) {
+    if (!pGeom) return false;
+    const r = cans.p.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 8 * Math.min(projScale(), 1.3) * (ev.pointerType === 'touch' ? 2 : 1);
+    const mx = pGeom.Xp2(symR());
+    return y >= pGeom.top - tol && y <= pGeom.bot + 14 && Math.abs(x - mx) <= tol;
+  }
+  let pq = null, pFrame = false;
+  cans.p.addEventListener('pointermove', (ev) => {
+    const r = cans.p.getBoundingClientRect();
+    if (pDrag) {
+      pq = ev.clientX - r.left;
+      if (!pFrame) { pFrame = true; requestAnimationFrame(() => { pFrame = false; if (pDrag && pq !== null) { setSym('r', Math.abs(pGeom.invX(pq))); pq = null; } }); }
+      return;
+    }
+    pHover = pHit(ev); cans.p.style.cursor = pHover ? 'ew-resize' : 'default';
+  });
+  cans.p.addEventListener('pointerdown', (ev) => {
+    cans.p.focus({ preventScroll: true });
+    if (!pHit(ev)) {
+      // a click elsewhere in the plot moves the Gaussian surface there
+      if (!pGeom) return;
+      const r = cans.p.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+      if (x < pGeom.L || x > pGeom.R || y < pGeom.top || y > pGeom.bot) return;
+      userPause(); setSym('r', Math.abs(pGeom.invX(x)));
+    } else userPause();
+    pDrag = true;
+    try { cans.p.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault();
+  });
+  const endP = () => { pDrag = false; };
+  cans.p.addEventListener('pointerup', endP);
+  cans.p.addEventListener('pointercancel', endP);
+  cans.p.addEventListener('pointerleave', () => { if (!pDrag) pHover = false; });
+  cans.p.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { userPause(); setSym('r', symR() + (e.shiftKey ? 1 : 0.1)); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { userPause(); setSym('r', symR() - (e.shiftKey ? 1 : 0.1)); }
+    else if (e.key === ' ') setRunning(!running);
+    else return;
+    e.preventDefault();
+  });
+
+  // ---------- projector and theme ----------
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    linesKey = '';
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); drawAll(); }); } catch (_) {}
+  new MutationObserver(() => { tokens(); drawAll(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, frameMs = 0;
+  function loop(now) {
+    const dt = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (running) stepMotion(dt);
+    if (mode === 'flux' && numDirty) {
+      // the surface integral runs every frame when it is cheap, otherwise a few times a second while things move
+      const busy = running || drag;
+      if (!busy || now - numLast > Math.max(0, numMs * 4 - 16)) computeNum();
+    }
+    drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastRead > 120) { if (mode === 'sym' || !numDirty) updateReadouts(); lastRead = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__gl = {
+    get frameMs() { return frameMs; }, get num() { return num; }, get F() { return F; }, get sym() { return Ysym; }, get mode() { return mode; }, get running() { return running; },
+    get lineCount() { return lineCount; }, get view() { return view; }, get numMs() { return numMs; },
+    handles: () => (mode === 'flux' ? fluxHandles() : symHandles).map((h) => h.id),
+    X, Y: Yp, applyPreset, setRunning, setSurf, computeNum, addCharge, symE, setSym, tryFree,
+    enclosed: () => enclosed()
+  };
+
+  tokens();
+  const ro = new ResizeObserver(resize);
+  ro.observe(panes.d); ro.observe(panes.p);
+  $('oDen').textContent = F.density; $('sDen').value = F.density;
+  applyPreset('inside');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { linesKey = ''; drawAll(); });
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
