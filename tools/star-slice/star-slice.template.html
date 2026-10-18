@@ -59,6 +59,7 @@ img { max-width: 100%; }
   --el-np: #9fb20e;
   --liquid: #8fb6dc;
   --solid: #eef6ff;
+  --space: #04060a;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -69,7 +70,7 @@ img { max-width: 100%; }
     --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218;
     --el-h: #6f9bff; --el-he: #f2c14e; --el-c: #3cc6d6; --el-o: #ff7a5e; --el-ne: #c08cf5;
     --el-mg: #62d688; --el-si: #a47a55; --el-sca: #ff8fb8; --el-fe: #d2d7dd; --el-np: #dff07a;
-    --liquid: #2c5580; --solid: #d6eaff; color-scheme: dark;
+    --liquid: #2c5580; --solid: #d6eaff; --space: #04060a; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
@@ -78,7 +79,7 @@ img { max-width: 100%; }
   --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218;
   --el-h: #6f9bff; --el-he: #f2c14e; --el-c: #3cc6d6; --el-o: #ff7a5e; --el-ne: #c08cf5;
   --el-mg: #62d688; --el-si: #a47a55; --el-sca: #ff8fb8; --el-fe: #d2d7dd; --el-np: #dff07a;
-  --liquid: #2c5580; --solid: #d6eaff; color-scheme: dark;
+  --liquid: #2c5580; --solid: #d6eaff; --space: #04060a; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -109,10 +110,16 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .card h2, .rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
 
 .stagebar { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; justify-content: space-between; }
-.stage { position: relative; height: clamp(380px, 62vh, 760px); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage { position: relative; height: clamp(380px, 62vh, 760px); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--space); }
 .stage canvas { position: absolute; inset: 0; display: block; }
 #slice { touch-action: none; cursor: crosshair; outline: none; }
 #slice:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+#gl { touch-action: none; cursor: grab; outline: none; }
+#gl.dragging { cursor: grabbing; }
+#gl:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+#ov3 { pointer-events: none; }
+.stagebar-l { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+#views button { padding: 5px 12px; }
 .hint3d {
   position: absolute; right: 10px; bottom: 10px; z-index: 2; max-width: calc(100% - 20px); box-sizing: border-box;
   font-size: 0.8rem; color: var(--muted); background: var(--surface); border: 1px solid var(--line);
@@ -221,6 +228,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .stage { height: 64vh; min-height: 340px; }
   .charts { grid-template-columns: minmax(0, 1fr); }
   .tl-grid .readout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #views button { min-height: 36px; }
 }
 </style>
 </head>
@@ -241,6 +249,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <main class="bench">
     <div class="main">
       <div class="stagebar">
+        <div class="stagebar-l">
+        <div class="seg" role="group" aria-label="View" id="views">
+          <button type="button" data-v="3d" aria-pressed="true">3D cutaway</button>
+          <button type="button" data-v="2d" aria-pressed="false">2D slice</button>
+        </div>
         <div class="seg" role="group" aria-label="Color by" id="modes">
           <button type="button" data-m="glow" aria-pressed="true">Glow</button>
           <button type="button" data-m="comp" aria-pressed="false">Elements</button>
@@ -250,14 +263,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-m="phase" aria-pressed="false" hidden>Phase</button>
           <button type="button" data-m="gam" aria-pressed="false" hidden>Gamma</button>
         </div>
+        </div>
         <label class="inline-toggle"><input type="checkbox" id="tLog">Log radius</label>
       </div>
       <div class="stage" id="stage">
         <canvas id="slice" tabindex="0" role="application" aria-label="Cross section of the star. Hover or tap a layer to read it. Scroll or pinch to zoom, double click to reset. Left and right arrow keys step through the moments, up and down zoom."></canvas>
+        <canvas id="ov3" aria-hidden="true" hidden></canvas>
+        <p class="hint3d" id="note3d" hidden></p>
         <div class="msg" id="msg">Unpacking the MESA profiles…</div>
       </div>
       <p class="viewline mono" id="viewline"></p>
-      <p class="hint" style="margin-top:-6px">Hover or tap a layer to probe it · Scroll or pinch to zoom · Double click to reset · Arrow keys step moments and zoom.</p>
+      <p class="hint" id="stageHint" style="margin-top:-6px">Hover or tap a layer to probe it · Scroll or pinch to zoom · Double click to reset · Arrow keys step moments and zoom.</p>
 
       <section class="card" aria-label="Timeline">
         <div class="tl-row">
@@ -336,6 +352,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="slider-head"><label for="zoom">Zoom</label><output id="zoomOut" class="mono" for="zoom">—</output></div>
           <input type="range" id="zoom" min="0" max="4.5" step="0.01" value="0">
         </div>
+        <div id="cutBox">
+          <div class="slider-head"><label for="cut">Cut angle</label><output id="cutOut" class="mono" for="cut">90°</output></div>
+          <input type="range" id="cut" min="60" max="180" step="5" value="90">
+        </div>
         <div class="toggles">
           <label><input type="checkbox" id="tHold">Hold scale</label>
           <label><input type="checkbox" id="tCells" checked>Convection</label>
@@ -344,7 +364,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <label id="tLatWrap" hidden><input type="checkbox" id="tLat" checked>Crystal layer</label>
           <label><input type="checkbox" id="tMove" checked>Moving cells</label>
         </div>
-        <p class="hint">Zoom sets the outer edge of the view; inside it radius is linear and to scale. Log radius stretches the inner layers so every layer shows at once; that view is not to scale. Hold scale keeps the same view size while you step through moments.</p>
+        <p class="hint" id="viewHint">Zoom sets the outer edge of the view; inside it radius is linear and to scale. Log radius stretches the inner layers so every layer shows at once; that view is not to scale. Hold scale keeps the same view size while you step through moments.</p>
       </section>
 
       <section>
@@ -372,18 +392,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div id="legend"></div>
         <div class="key" id="mixKey"></div>
         <p class="hint">Convection is drawn as tracer streaks circling counter rotating roll cells. Their extent comes from MESA's mixing_type and their relative speed from log_conv_vel (compressed so slow and fast regions both show); the roll pattern itself is illustrative, not computed. Overshoot shows as fainter, slower streaks; semiconvection as drifting layers; thermohaline mixing as thin radial fingers.</p>
+        <p class="hint" id="surfHint">In the 3D cutaway the outside is drawn from the model's T<sub>eff</sub>: its color is the blackbody color at T<sub>eff</sub> (Planck spectrum through the CIE 1931 color matching functions), with a fixed saturation boost that keeps the hue, and drawn a little dimmer below about 6000 K so cool stars read orange red and hot ones blue white. Its brightness falls toward the edge by the linear limb darkening law I(μ) = 1 − u(1 − μ) with u = 0.65 (0.55 in red and 0.8 in blue, so the edge is redder, as in real stars), where μ is the cosine of the angle between the line of sight and the surface normal. Granulation shows only when MESA has a convective envelope reaching the surface, and never on a white dwarf. The cells are illustrative and far larger than real ones: their size follows d/R = 0.012 x<sup>0.75</sup>, kept between 0.008 and 0.5 (small cells are also drawn with lower contrast), with x = (T<sub>eff</sub>/5772 K)(R/R<sub>sun</sub>)(M<sub>sun</sub>/M), which grows with the surface pressure scale height over the radius. In the cutaway the two upright cut faces show the true colors; the floor of the cut is drawn 12% darker so the cut reads in 3D. The halo around the star and the background sky are decorative.</p>
         <p class="hint" id="burnHint">Glow marks zones with ε<sub>nuc</sub> above 10 erg g⁻¹ s⁻¹ and above 10⁻⁴ of the moment's peak. Channel shares use MESA's pp, cno and tri_alpha columns; any remainder is other reactions.</p>
       </section>
 
       <section>
         <h2>Data notes</h2>
         <div class="datanote" id="notes"></div>
-        <p class="evidence">Line of evidence: every number and every layer color on this page comes from the MESA profiles; the convective motion, element textures, granulation, sparkle and glow pulse are illustrative.</p>
+        <p class="evidence">Line of evidence: every number and every layer color on this page comes from the MESA profiles; the convective motion, element textures, granulation, sparkle and glow pulse are illustrative, and so are the 3D halo and the background stars and Milky Way.</p>
       </section>
     </aside>
   </main>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (() => {
   'use strict';
@@ -833,13 +855,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // ---------- canvas & geometry ----------
   const stage = $('stage'), cv = $('slice'), ctx = cv.getContext('2d');
   const mk = () => { const c = document.createElement('canvas'); return [c, c.getContext('2d')]; };
-  const [stat, sctx] = mk(), [over, octx] = mk(), [glowC, gctx] = mk(), [prev, pctx] = mk();
+  let [stat, sctx] = mk(), [over, octx] = mk(), [glowC, gctx] = mk();
+  const [prev, pctx] = mk();
   let W = 0, H = 0, dpr = 1, G = null, raf = 0, statDirty = true, chartsDirty = true;
   // per moment animated layers, rebuilt by drawStatic
   let animBands = [], sparkles = [], rim = null, hasGlow = false, glowBox = null;
   const GS = 0.5;   // the burning glow is blurred, so it lives on a half resolution canvas
 
+  // texT: the 3D face texture being drawn (see withTex), or null for the 2D slice
+  let texT = null;
   function geometry() {
+    // a cut face texture: the half disk fills the canvas, flat side (the axis) along the bottom edge
+    if (texT) return { up: true, cx: W / 2, cy: H, R: W / 2, a0: Math.PI, mag: texT.mag };
     const p = ps(), up = W >= H * 1.1;
     if (up) {
       const mb = 40 * p, mt = 12;
@@ -850,17 +877,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const R = Math.max(40, Math.min(W - ml - mr - 4, H / 2 - 30 * p));
     return { up, cx: ml, cy: H / 2, R, a0: -Math.PI / 2 };
   }
-  function viewR(mo) { return S.hold ? S.viewAbs : mo.R * 10 ** -S.zoomDec; }
+  function viewR(mo) { return texT ? mo.r[mo.n - 1] : S.hold ? S.viewAbs : mo.R * 10 ** -S.zoomDec; }
   // a supergiant's iron core is about 10⁻⁶ of its radius, so massive runs may zoom further
   const zoomCap = (D) => (D && D.has.massive ? 7 : 4.5);
   function zoomMax(mo) { return clamp(Math.log10(mo.R / (5 * mo.r[0])), 1, zoomCap(S.D)); }
   function logRange(mo) {
     const Lout = Math.log10(viewR(mo));
-    const Lin = Math.log10(S.hold ? S.D.rInnerMin : mo.r[0]) - 0.25;
+    const Lin = Math.log10(S.hold && !texT ? S.D.rInnerMin : mo.r[0]) - 0.25;
     return [Math.min(Lin, Lout - 0.5), Lout];
   }
   function mapper(mo) {
-    const vr = viewR(mo), Rp = G.R;
+    // G.mag > 1: an inset texture of the face center, the same mapping magnified
+    const vr = viewR(mo), Rp = G.R * (G.mag || 1);
     if (!S.log) return { px: (r) => (r / vr) * Rp, inv: (p) => (p / Rp) * vr };
     const [a, b] = logRange(mo);
     return { px: (r) => (r <= 0 ? 0 : Math.max(0, ((Math.log10(r) - a) / (b - a)) * Rp)), inv: (p) => 10 ** (a + (p / Rp) * (b - a)) };
@@ -877,15 +905,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     glowC.width = Math.max(1, Math.round(W * dpr * GS)); glowC.height = Math.max(1, Math.round(H * dpr * GS));
     cv.style.width = W + 'px'; cv.style.height = H + 'px';
     S.fade = null;
+    G = geometry();
+    drawSky2D();
+    resize3D();
     markAll();
   }
 
-  // slice tokens: Glow mode draws on a dark sky inside the canvas, whatever the page theme
+  // slice tokens: the star is drawn in space, on a dark sky inside the stage, whatever the page theme
   let tokC = null;
   function sliceTokens() {
     if (tokC && tokC.mode === S.mode) return tokC;
     const T = tokens(); T.mode = S.mode;
-    if (S.mode === 'glow') Object.assign(T, { canvas: '#06080c', ink: '#e6ebf2', muted: '#8f9bab', grid: '#141a22', gridStrong: '#222c38', line: '#2a3442', accent: '#86b4ff' });
+    Object.assign(T, { canvas: '#06080c', ink: '#e6ebf2', muted: '#8f9bab', grid: '#141a22', gridStrong: '#222c38', line: '#2a3442', accent: '#86b4ff', pos: '#ff8f7a', neg: '#69a0ff' });
     return (tokC = T);
   }
 
@@ -1066,7 +1097,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     c.putImageData(img, 0, 0); return t;
   }
-  const TILE = {}; let tileKey = '';
+  let TILE = {}, tileKey = '';
   function ensureTiles(T, p) {
     const key = T.elHex.join() + '|' + p + '|' + dpr;
     if (key === tileKey) return; tileKey = key;
@@ -1139,11 +1170,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const c = sctx, o = octx, g = gctx, T = sliceTokens(), p = ps(), mo = cur(), glow = S.mode === 'glow';
     for (const k of [c, o]) { k.setTransform(dpr, 0, 0, dpr, 0, 0); k.clearRect(0, 0, W, H); }
     g.setTransform(dpr * GS, 0, 0, dpr * GS, 0, 0); g.clearRect(0, 0, W, H);
-    c.fillStyle = T.canvas; c.fillRect(0, 0, W, H);
+    if (!texT) { c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(sky, 0, 0); c.setTransform(dpr, 0, 0, dpr, 0, 0); }   // the sky, behind the slice
     animBands = []; sparkles = []; rim = null; hasGlow = false; glowBox = null;
     if (!mo) return;
     G = geometry();
     ensureTiles(T, p);
+    const flat = !texT;   // shading and limb darkening only on the flat 2D slice, not on the 3D cut faces
     const M = mapper(mo), Rp = G.R, n = mo.n, D = S.D;
     const rin = (i) => (i ? M.px(mo.r[i - 1]) : 0), rout = (i) => M.px(mo.r[i]);
     const vis = (i) => rin(i) < Rp;
@@ -1153,7 +1185,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const R = rngOf(S.idx * 7919 + 13);
 
     // Glow: a soft halo of the photosphere color just outside the surface
-    if (glow && surf) {
+    if (glow && surf && flat) {
       const sc = colors[n - 1], ro = rs + 28 * p;
       c.save(); halfDisk(c, ro); c.clip();
       const hg = c.createRadialGradient(G.cx, G.cy, rs * 0.98, G.cx, G.cy, ro);
@@ -1161,7 +1193,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       c.fillStyle = hg; c.fillRect(0, 0, W, H); c.restore();
     }
     // empty view frame (space beyond the star when the view is larger)
-    if (!glow) { c.save(); halfDisk(c, Rp); c.fillStyle = T.grid; c.globalAlpha = 0.45; c.fill(); c.restore(); }
+    if (!glow && flat) { c.save(); halfDisk(c, Rp); c.fillStyle = T.grid; c.globalAlpha = 0.45; c.fill(); c.restore(); }
 
     // zones, outermost first as nested half disks (no seams)
     for (let i = n - 1; i >= 0; i--) {
@@ -1208,7 +1240,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
 
     // shading: a sliced sphere lit from the upper left; in Glow, limb darkening at the photosphere instead
-    if (!glow) {
+    if (!flat) { /* cut faces stay unlit so the data colors are true */ }
+    else if (!glow) {
       c.save(); halfDisk(c, rsC); c.clip();
       const lg = c.createLinearGradient(G.cx - rsC, G.cy - rsC, G.cx + rsC, G.cy + rsC);
       lg.addColorStop(0, 'rgba(255,255,255,0.16)'); lg.addColorStop(0.5, 'rgba(255,255,255,0)'); lg.addColorStop(1, 'rgba(0,0,0,0.14)');
@@ -1245,7 +1278,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
     // star surface outline / view edge
     c.save(); c.lineWidth = 1.2 * p;
-    if (surf) { if (!glow) { c.strokeStyle = T.ink; c.globalAlpha = 0.45; c.beginPath(); arcAt(c, rs); c.stroke(); } }
+    if (!flat) { /* the 3D surface is the outline */ }
+    else if (surf) { if (!glow) { c.strokeStyle = T.ink; c.globalAlpha = 0.45; c.beginPath(); arcAt(c, rs); c.stroke(); } }
     else { c.strokeStyle = T.muted; c.setLineDash([5 * p, 4 * p]); c.beginPath(); arcAt(c, Rp); c.stroke(); }
     c.restore();
 
@@ -1309,6 +1343,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       o.fillStyle = L.color; o.beginPath(); o.arc(x, y, 2.5 * p, 0, 2 * Math.PI); o.fill();
       labelBox(o, lx, ly, L.text, T, L.color, p, Math.cos(ang) < -0.2 ? 'right' : 'left');
     }
+    if (texT) { texT.labels = labels.map((L) => ({ rf: L.r / (G.R * (G.mag || 1)), f: L.f, text: L.text, color: L.color })); return; }
     drawAxis(o, mo, M, T, p);
     drawScaleBar(o, mo, M, T, p);
   }
@@ -1557,9 +1592,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   const animActive = () => animBands.length > 0 || !!rim || sparkles.length > 0 || hasGlow;
-  function needAnim() { return S.playing || S.fade || (S.layers.move && animActive()); }
+  function needAnim() { return S.playing || S.fade || (S.layers.move && (animActive() || (!reduced && skyTw.length > 0))); }
   function schedule() { if (!raf) raf = requestAnimationFrame(frame); }
-  function markAll() { statDirty = true; chartsDirty = true; tokC = null; schedule(); }
+  function markAll() { statDirty = true; chartsDirty = true; tokC = null; TX.dirty = TXI.dirty = true; schedule(); }
   function frame(now) {
     raf = 0;
     if (!W || !H || !S.D) return;
@@ -1568,12 +1603,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       S.acc += dt * 2 * S.speed;
       if (S.acc >= 1) { S.acc = 0; if (S.idx >= S.D.N - 1) setPlaying(false); else setMoment(S.idx + 1, true); }
     }
+    if (view === '3d' && V3.ok) { frame3D(now, dt); return; }
     if (statDirty) { drawStatic(); statDirty = false; }
     if (chartsDirty) { drawCharts(); drawHR(); updatePanel(); chartsDirty = false; }
     const T = sliceTokens();
     if (S.layers.move) tAnim += dt;
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height);
     ctx.drawImage(stat, 0, 0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawTwinkle2D(ctx, tAnim); ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     drawAnim(ctx, tAnim, T);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -1587,6 +1624,785 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     drawProbe(ctx, T);
     if (needAnim()) schedule(); else S.lastT = 0;
   }
+
+  // ---------- blackbody color for the 3D surface and the background stars ----------
+  // the Planck spectrum through the CIE 1931 2° color matching functions (multi lobe Gaussian fit,
+  // Wyman, Sloan, Shirley 2013), as in the Blackbody Radiation demo; normalized to full brightness
+  const HCK = (6.62607015e-34 * 299792458) / 1.380649e-23;   // hc/k in m K
+  const lobe = (x, mu, s1, s2) => { const t = (x - mu) / (x < mu ? s1 : s2); return Math.exp(-0.5 * t * t); };
+  function cie(l) {
+    return [
+      1.056 * lobe(l, 599.8, 37.9, 31.0) + 0.362 * lobe(l, 442.0, 16.0, 26.7) - 0.065 * lobe(l, 501.1, 20.4, 26.2),
+      0.821 * lobe(l, 568.8, 46.9, 40.5) + 0.286 * lobe(l, 530.9, 16.3, 31.1),
+      1.217 * lobe(l, 437.0, 11.8, 36.0) + 0.681 * lobe(l, 459.0, 26.0, 13.8)
+    ];
+  }
+  const bbCache = new Map();
+  function bbColor(T) {
+    T = clamp(Math.round(T / 10) * 10, 1000, 200000);
+    if (bbCache.has(T)) return bbCache.get(T);
+    let X = 0, Y = 0, Z = 0;
+    for (let l = 360; l <= 830; l += 4) {
+      const w = Math.pow(500 / l, 5) / Math.expm1(HCK / (l * 1e-9 * T)), [x, y, z] = cie(l);
+      X += w * x; Y += w * y; Z += w * z;
+    }
+    let r = 3.2406 * X - 1.5372 * Y - 0.4986 * Z, g = -0.9689 * X + 1.8758 * Y + 0.0415 * Z, b = 0.0557 * X - 0.2040 * Y + 1.0570 * Z;
+    const mn = Math.min(r, g, b); if (mn < 0) { r -= mn; g -= mn; b -= mn; }
+    const mx = Math.max(r, g, b) || 1;
+    const out = [r, g, b].map((v) => { v /= mx; v = v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055; return clamp(v, 0, 1); });
+    bbCache.set(T, out);
+    return out;
+  }
+
+  // ---------- the sky behind the star (decorative) ----------
+  // one deterministic catalog for both views: field stars with a power law brightness distribution
+  // (N(>F) ∝ F^(−3/2), many faint and few bright), faint blackbody colors, and a Milky Way band of
+  // unresolved stars, glow and dust. In 3D it sits on a distant sphere; the 2D view shows it from the default 3D direction.
+  const WEDGE_C = 0, ORBIT0 = { az: -0.55, pol: 1.03 }, DIST = 6, FIT = 0.84, ZMAX = 40, TWINKLE = 0; // stars seen from space do not twinkle: twinkling is Earth's atmosphere
+  const SPACE_HEX = 0x04060a;
+  function camBasis(az, pol) {
+    const c = [Math.sin(pol) * Math.cos(az), Math.sin(pol) * Math.sin(az), Math.cos(pol)];
+    const f = [-c[0], -c[1], -c[2]];
+    let r = [f[1], -f[0], 0]; const rl = Math.hypot(r[0], r[1]) || 1; r = [r[0] / rl, r[1] / rl, 0];
+    const u = [r[1] * f[2] - r[2] * f[1], r[2] * f[0] - r[0] * f[2], r[0] * f[1] - r[1] * f[0]];
+    return { c, f, r, u };
+  }
+  const SKY = (() => {
+    const R = rngOf(20261018);
+    const gauss = () => Math.sqrt(-2 * Math.log(1 - R())) * Math.cos(2 * Math.PI * R());
+    const nrm = (v) => { const l = Math.hypot(v[0], v[1], v[2]) || 1; return [v[0] / l, v[1] / l, v[2] / l]; };
+    const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+    // the galactic plane is tilted to cross the default view behind the star, a little off center
+    const B = camBasis(ORBIT0.az, ORBIT0.pol);
+    const e1 = nrm([B.f[0] + 0.32 * B.r[0] + 0.1 * B.u[0], B.f[1] + 0.32 * B.r[1] + 0.1 * B.u[1], B.f[2] + 0.32 * B.r[2] + 0.1 * B.u[2]]);
+    const tilt = nrm([0.62 * B.r[0] + 0.78 * B.u[0], 0.62 * B.r[1] + 0.78 * B.u[1], 0.62 * B.r[2] + 0.78 * B.u[2]]);
+    const n = nrm(cross(e1, tilt)), e2 = nrm(cross(n, e1));
+    const gal = (l, b) => { const cb = Math.cos(b); return nrm([cb * (Math.cos(l) * e1[0] + Math.sin(l) * e2[0]) + Math.sin(b) * n[0], cb * (Math.cos(l) * e1[1] + Math.sin(l) * e2[1]) + Math.sin(b) * n[1], cb * (Math.cos(l) * e1[2] + Math.sin(l) * e2[2]) + Math.sin(b) * n[2]]); };
+    const bulge = (l) => { const d = Math.atan2(Math.sin(l - 0.35), Math.cos(l - 0.35)); return Math.exp(-(d * d) / 0.5); };
+    const pastel = (T, k) => bbColor(T).map((v) => v + (1 - v) * k);
+    const starT = () => { const u = R(); return u < 0.7 ? 4800 + R() * 2600 : u < 0.86 ? 3300 + R() * 1200 : 8500 + R() * 17000; };
+    const field = [];
+    for (let i = 0; i < 2300; i++) {
+      const z = 2 * R() - 1, ph = 2 * Math.PI * R(), s = Math.sqrt(1 - z * z);
+      const F = Math.min(400, Math.pow(1 - R(), -2 / 3));          // power law brightness, F ≥ 1
+      field.push({ d: [s * Math.cos(ph), s * Math.sin(ph), z], br: clamp(0.26 * Math.pow(F, 0.5), 0.2, 1), size: clamp(1.7 + 1.3 * Math.log10(F), 1.7, 5),
+        col: pastel(starT(), 0.5), tw: F > 6 ? 1 : 0, ph: R() * 6.283 });
+    }
+    const band = [];
+    for (let i = 0; i < 3600; i++) {
+      const l = R() < 0.35 ? 0.35 + gauss() * 0.7 : 2 * Math.PI * R(), b = gauss() * 0.075 * (1 + 1.6 * bulge(l));
+      band.push({ d: gal(l, b), br: 0.1 + 0.18 * R() * (0.6 + bulge(l)), size: 1.2 + 0.5 * R(), col: pastel(starT(), 0.4), tw: 0, ph: 0 });
+    }
+    // the unresolved Milky Way: a smooth band, brighter and wider toward a bulge, with clumps and a patchy dust lane
+    const mw = (l, b) => {
+      const bl = bulge(l), sig = 0.055 * (1 + 1.6 * bl);
+      if (Math.abs(b) > 6 * sig) return null;
+      let a = (0.3 + 0.7 * bl) * Math.exp(-(b * b) / (2 * sig * sig));
+      const nz = 0.5 * Math.sin(5 * l + 9 * b + 1.3) + 0.3 * Math.sin(11 * l - 17 * b + 0.4) + 0.2 * Math.sin(23 * l + 41 * b + 2.2) + 0.15 * Math.sin(37 * l - 63 * b + 4.1);
+      a *= 0.6 + 0.45 * nz;
+      const db = (b - 0.006) / (0.011 + 0.01 * bl), dl = Math.exp(-0.5 * db * db) * clamp(0.55 + 0.45 * Math.sin(3 * l + 1.3) + 0.25 * Math.sin(13 * l + 2), 0, 1);
+      a *= 1 - 0.8 * dl;
+      a = Math.max(0, a) * 0.22;
+      return [a, a * (0.93 - 0.05 * bl), a * (0.82 - 0.1 * bl)];
+    };
+    const mwDir = (d) => mw(Math.atan2(d[0] * e2[0] + d[1] * e2[1] + d[2] * e2[2], d[0] * e1[0] + d[1] * e1[1] + d[2] * e1[2]), Math.asin(clamp(d[0] * n[0] + d[1] * n[1] + d[2] * n[2], -1, 1)));
+    return { field, band, mw, mwDir, e1, e2, n };
+  })();
+  // 2D: the same sky seen from the default 3D view direction, drawn once per resize
+  const sky = document.createElement('canvas'), skyc = sky.getContext('2d');
+  let skyTw = [];
+  const hvFit = (w, h) => { const tb = 1 / Math.sqrt(DIST * DIST - 1), a = w / Math.max(1, h); return Math.atan(Math.max(tb / FIT, tb / (0.92 * a))); };
+  function drawSky2D() {
+    sky.width = Math.max(1, Math.round(W * dpr)); sky.height = Math.max(1, Math.round(H * dpr));
+    const c = skyc; c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.fillStyle = '#04060a'; c.fillRect(0, 0, W, H); skyTw = [];
+    if (!W || !H) return;
+    const B = camBasis(ORBIT0.az, ORBIT0.pol), k = (H / 2) / Math.tan(hvFit(W, H)), sc = H / 900;
+    const proj = (d) => {
+      const z = d[0] * B.f[0] + d[1] * B.f[1] + d[2] * B.f[2]; if (z <= 0.05) return null;
+      const x = W / 2 + ((d[0] * B.r[0] + d[1] * B.r[1] + d[2] * B.r[2]) / z) * k, y = H / 2 - ((d[0] * B.u[0] + d[1] * B.u[1] + d[2] * B.u[2]) / z) * k;
+      return x > -200 && x < W + 200 && y > -200 && y < H + 200 ? [x, y] : null;
+    };
+    const rgbs = (col, a) => `rgba(${Math.round(col[0] * 255)},${Math.round(col[1] * 255)},${Math.round(col[2] * 255)},${a})`;
+    {   // Milky Way glow, computed at a third of the resolution and smoothed up
+      const q = 3, w = Math.ceil(W / q), h = Math.ceil(H / q), lo = document.createElement('canvas'); lo.width = w; lo.height = h;
+      const lc = lo.getContext('2d'), img = lc.createImageData(w, h), D = img.data, t = Math.tan(hvFit(W, H));
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+        const sx = ((x + 0.5) * q - W / 2) / (H / 2) * t, sy = -((y + 0.5) * q - H / 2) / (H / 2) * t;
+        const d = [B.f[0] + sx * B.r[0] + sy * B.u[0], B.f[1] + sx * B.r[1] + sy * B.u[1], B.f[2] + sx * B.r[2] + sy * B.u[2]], dl = Math.hypot(d[0], d[1], d[2]);
+        const v = SKY.mwDir([d[0] / dl, d[1] / dl, d[2] / dl]), o = (y * w + x) * 4;
+        if (v) { D[o] = v[0] * 255; D[o + 1] = v[1] * 255; D[o + 2] = v[2] * 255; } D[o + 3] = 255;
+      }
+      lc.putImageData(img, 0, 0);
+      c.globalCompositeOperation = 'lighter'; c.imageSmoothingEnabled = true; c.drawImage(lo, 0, 0, w * q, h * q);
+    }
+    for (const s of SKY.band) { const q = proj(s.d); if (!q) continue; c.fillStyle = rgbs(s.col, s.br); c.fillRect(q[0] - 0.5, q[1] - 0.5, 1, 1); }
+    c.globalCompositeOperation = 'lighter';
+    for (const s of SKY.field) {
+      const q = proj(s.d); if (!q || q[0] < 0 || q[0] > W || q[1] < 0 || q[1] > H) continue;
+      const r = s.size * 0.5;
+      if (r > 1.1) {
+        const g = c.createRadialGradient(q[0], q[1], 0, q[0], q[1], r * 1.6);
+        g.addColorStop(0, rgbs(s.col, s.br)); g.addColorStop(0.45, rgbs(s.col, s.br * 0.45)); g.addColorStop(1, rgbs(s.col, 0));
+        c.fillStyle = g; c.fillRect(q[0] - r * 1.6, q[1] - r * 1.6, r * 3.2, r * 3.2);
+      } else { c.fillStyle = rgbs(s.col, s.br); c.beginPath(); c.arc(q[0], q[1], Math.max(0.55, r), 0, 7); c.fill(); }
+      if (s.tw) skyTw.push({ x: q[0], y: q[1], r: r * 1.3, col: s.col, br: s.br, ph: s.ph });
+    }
+    c.globalCompositeOperation = 'source-over';
+  }
+  function drawTwinkle2D(c, t) {
+    if (!S.layers.move || reduced || !skyTw.length || !G) return;
+    c.save(); c.globalCompositeOperation = 'lighter';
+    const rr = (G.R + 40 * ps()) ** 2;
+    for (const s of skyTw) {
+      // only stars in open sky: not on the half disk of the slice or its halo
+      const dx = s.x - G.cx, dy = s.y - G.cy, ang = Math.atan2(dy, dx) - G.a0, a = ((ang % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+      if (dx * dx + dy * dy < rr && a <= Math.PI + 0.2) continue;
+      const al = TWINKLE * s.br * (0.5 + 0.5 * Math.sin(t * (0.9 + s.ph * 0.15) + s.ph * 7));
+      if (al < 0.01) continue;
+      c.fillStyle = `rgba(${Math.round(s.col[0] * 255)},${Math.round(s.col[1] * 255)},${Math.round(s.col[2] * 255)},${al})`;
+      c.beginPath(); c.arc(s.x, s.y, s.r, 0, 7); c.fill();
+    }
+    c.restore();
+  }
+
+  // ---------- 3D face textures: the 2D slice renderer drawn into an offscreen half disk ----------
+  function mkTarget(mag) {
+    const [st, sc] = mk(), [ov, oc] = mk(), [gc, gx] = mk(), [cp, cx] = mk();
+    ov.width = ov.height = 1;
+    return { W: 0, H: 0, dpr: 1, G: null, stat: st, sctx: sc, over: ov, octx: oc, glowC: gc, gctx: gx, comp: cp, cctx: cx,
+      animBands: [], sparkles: [], rim: null, hasGlow: false, glowBox: null, TILE: {}, tileKey: '', labels: [], mag, dirty: true, pk: '', tex: null };
+  }
+  const TX = mkTarget(1), TXI = mkTarget(2);
+  // swap the slice renderer's canvases and per view state for a texture target's while fn runs
+  function withTex(t, fn) {
+    const sv = { W, H, dpr, G, stat, sctx, over, octx, glowC, gctx, animBands, sparkles, rim, hasGlow, glowBox, TILE, tileKey };
+    ({ W, H, dpr, G, stat, sctx, over, octx, glowC, gctx, animBands, sparkles, rim, hasGlow, glowBox, TILE, tileKey } = t);
+    texT = t;
+    try { return fn(); }
+    finally {
+      Object.assign(t, { W, H, dpr, G, stat, sctx, over, octx, glowC, gctx, animBands, sparkles, rim, hasGlow, glowBox, TILE, tileKey });
+      ({ W, H, dpr, G, stat, sctx, over, octx, glowC, gctx, animBands, sparkles, rim, hasGlow, glowBox, TILE, tileKey } = sv);
+      texT = null;
+    }
+  }
+  const texAnim = (t) => t.animBands.length > 0 || !!t.rim || t.sparkles.length > 0 || t.hasGlow;
+  function composeTex(t) {
+    const T = sliceTokens();
+    withTex(t, () => {
+      const c = t.cctx;
+      c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, t.comp.width, t.comp.height);
+      c.drawImage(stat, 0, 0);
+      c.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawAnim(c, tAnim, T);
+      drawProbe(c, T);
+    });
+    if (t.tex) t.tex.needsUpdate = true;
+  }
+
+  // ---------- 3D cutaway (three.js r128, Z up, hand written orbit controls) ----------
+  let view = '3d';
+  const V3 = { ok: false, failed: '' };
+  const orbit = { az: ORBIT0.az, pol: ORBIT0.pol, zoom: 1, user: false, t0: 0 };
+  const ov3 = $('ov3'), o3 = ov3.getContext('2d');
+  let glc = null, sph0 = 100, sphNow = 100, starScale = 1, holdRatio = 1, earthInfo = null;
+  S.cut = 90;
+
+  const SHELL_VS = `
+    varying vec3 vN; varying vec3 vW; varying vec3 vP;
+    void main() {
+      vP = position; vN = normalize(mat3(modelMatrix) * normal);
+      vec4 w = modelMatrix * vec4(position, 1.0); vW = w.xyz;
+      gl_Position = projectionMatrix * viewMatrix * w;
+    }`;
+  // linear limb darkening I(μ) = 1 − u(1 − μ); granulation as moving Worley cells (bright granules, dark lanes)
+  const SHELL_FS = `
+    uniform vec3 uCol; uniform vec3 uU; uniform float uGran; uniform float uCells; uniform float uTime; uniform float uBright; uniform float uK;
+    varying vec3 vN; varying vec3 vW; varying vec3 vP;
+    vec3 hash3(vec3 p) {
+      p = vec3(dot(p, vec3(127.1, 311.7, 74.7)), dot(p, vec3(269.5, 183.3, 246.1)), dot(p, vec3(113.5, 271.9, 124.6)));
+      return fract(sin(p) * 43758.5453123);
+    }
+    vec2 worley(vec3 x) {
+      vec3 i = floor(x), f = fract(x); float d1 = 8.0, d2 = 8.0;
+      for (int k = -1; k <= 1; k++) for (int j = -1; j <= 1; j++) for (int l = -1; l <= 1; l++) {
+        vec3 b = vec3(float(l), float(j), float(k)), h = hash3(i + b);
+        vec3 r = b + 0.5 + 0.38 * sin(uTime * 0.22 + 6.2831 * h) - f;
+        float d = dot(r, r);
+        if (d < d1) { d2 = d1; d1 = d; } else if (d < d2) { d2 = d; }
+      }
+      return vec2(sqrt(d1), sqrt(d2));
+    }
+    void main() {
+      vec3 V = normalize(cameraPosition - vW);
+      float mu = clamp(dot(normalize(vN), V), 0.0, 1.0);
+      vec3 I = 1.0 - uU * (1.0 - mu);
+      float g = 1.0;
+      if (uGran > 0.5) {
+        vec3 q = normalize(vP) * uCells;
+        q += 0.3 * sin(q.yzx * 1.7 + vec3(1.3, 2.1, 0.7));      // a gentle warp so the cells are not regular polygons
+        vec2 w = worley(q);
+        float lane = smoothstep(0.0, 0.4, w.y - w.x);
+        g = 1.0 + uK * ((0.9 + 0.14 * (1.0 - w.x * w.x)) * mix(0.72, 1.0, lane) - 1.0);
+      }
+      // exposure and a soft shoulder: the bright center saturates toward white, the darker limb keeps its color
+      vec3 lin = pow(uCol, vec3(2.2)) * I * g * uBright * 2.6;
+      vec3 v = 1.0 - exp(-lin);
+      gl_FragColor = vec4(pow(v, vec3(1.0 / 2.2)), 1.0);
+    }`;
+  const HALO_VS = `varying vec2 vXY; void main() { vXY = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
+  const HALO_FS = `
+    uniform vec3 uCol; uniform float uIn; uniform float uA; varying vec2 vXY;
+    void main() {
+      float r = length(vXY); if (r < uIn) discard;
+      float x = (r - uIn) / uIn;
+      float a = uA * (0.5 * exp(-x / 0.05) + 0.16 * exp(-x / 0.35));
+      gl_FragColor = vec4(uCol * a, 1.0);
+    }`;
+  const PTS_VS = `
+    attribute float aSize; attribute vec3 aCol; attribute float aTw; attribute float aPh;
+    uniform float uPR; uniform float uK; uniform float uTime; uniform float uTw;
+    varying vec3 vC;
+    void main() {
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      gl_PointSize = aSize * uPR * uK;
+      vC = aCol * (1.0 + uTw * aTw * sin(uTime * (0.9 + aPh * 0.15) + aPh * 7.0));
+    }`;
+  const PTS_FS = `
+    uniform float uDark; varying vec3 vC;
+    void main() {
+      float r = length(gl_PointCoord - 0.5) * 2.0; if (r > 1.0) discard;
+      float a = 1.0 - smoothstep(0.0, 1.0, r); a *= a;
+      if (uDark > 0.5) gl_FragColor = vec4(0.016, 0.024, 0.04, a * vC.r);
+      else gl_FragColor = vec4(vC * a, 1.0);
+    }`;
+
+  function skyPoints(list, opts) {
+    const n = list.length, P = new Float32Array(n * 3), Sz = new Float32Array(n), C = new Float32Array(n * 3), Tw = new Float32Array(n), Ph = new Float32Array(n);
+    list.forEach((s, i) => {
+      for (let k = 0; k < 3; k++) { P[3 * i + k] = s.d[k] * 400; C[3 * i + k] = opts.dark ? s.br : s.col[k] * s.br; }
+      Sz[i] = s.size; Tw[i] = s.tw; Ph[i] = s.ph;
+    });
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(P, 3)); g.setAttribute('aSize', new THREE.BufferAttribute(Sz, 1));
+    g.setAttribute('aCol', new THREE.BufferAttribute(C, 3)); g.setAttribute('aTw', new THREE.BufferAttribute(Tw, 1)); g.setAttribute('aPh', new THREE.BufferAttribute(Ph, 1));
+    const m = new THREE.ShaderMaterial({ vertexShader: PTS_VS, fragmentShader: PTS_FS, transparent: true, depthWrite: false,
+      blending: opts.dark ? THREE.NormalBlending : THREE.AdditiveBlending,
+      uniforms: { uPR: { value: 1 }, uK: { value: 1 }, uTime: { value: 0 }, uTw: { value: 0 }, uDark: { value: opts.dark ? 1 : 0 } } });
+    const pts = new THREE.Points(g, m); pts.renderOrder = opts.order; pts.frustumCulled = false; pts.userData.scaled = !!opts.scaled;
+    return pts;
+  }
+  // the Milky Way glow on a distant sphere whose poles are the galactic poles, so the band runs along its equator
+  function mwSphere() {
+    const tw = 2048, th = 1024, cvs = document.createElement('canvas'); cvs.width = tw; cvs.height = th;
+    const c = cvs.getContext('2d'), img = c.createImageData(tw, th), D = img.data;
+    for (let y = 0; y < th; y++) {
+      const b = Math.PI / 2 - (Math.PI * (y + 0.5)) / th;
+      if (Math.abs(b) > 0.7) { for (let x = 0; x < tw; x++) D[(y * tw + x) * 4 + 3] = 255; continue; }
+      for (let x = 0; x < tw; x++) {
+        const v = SKY.mw((2 * Math.PI * (x + 0.5)) / tw + Math.PI, b), o = (y * tw + x) * 4;
+        if (v) { D[o] = v[0] * 255; D[o + 1] = v[1] * 255; D[o + 2] = v[2] * 255; } D[o + 3] = 255;
+      }
+    }
+    c.putImageData(img, 0, 0);
+    const tex = new THREE.CanvasTexture(cvs); tex.minFilter = THREE.LinearFilter; tex.generateMipmaps = false;
+    const m = new THREE.Mesh(new THREE.SphereGeometry(600, 96, 48), new THREE.MeshBasicMaterial({ map: tex, side: THREE.BackSide, depthWrite: false }));
+    const v3 = (a) => new THREE.Vector3(a[0], a[1], a[2]);
+    m.matrixAutoUpdate = false; m.matrix.makeBasis(v3(SKY.e1), v3(SKY.n), v3(SKY.e2).negate()); m.renderOrder = -1;
+    return m;
+  }
+  // the photosphere: a full lower hemisphere, and an upper hemisphere with the wedge a0..a1 (the kept azimuths) — a classic octant style cutaway
+  function shellGeo(a0, a1) {
+    const NA = 120, NT = 36, P = [], N = [], I = [];
+    const grid = (b0, b1, t0, t1) => {
+      const base = P.length / 3;
+      for (let j = 0; j <= NT; j++) {
+        const th = t0 + ((t1 - t0) * j) / NT;
+        for (let i = 0; i <= NA; i++) {
+          const a = b0 + ((b1 - b0) * i) / NA, x = Math.sin(th) * Math.cos(a), y = Math.sin(th) * Math.sin(a), z = Math.cos(th);
+          P.push(x, y, z); N.push(x, y, z);
+        }
+      }
+      for (let j = 0; j < NT; j++) for (let i = 0; i < NA; i++) { const a = base + j * (NA + 1) + i, b = a + NA + 1; I.push(a, b, b + 1, a, b + 1, a + 1); }
+    };
+    grid(a0, a1, 0, Math.PI / 2);
+    grid(a0, a0 + 2 * Math.PI, Math.PI / 2, Math.PI);
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); g.setAttribute('normal', new THREE.Float32BufferAttribute(N, 3)); g.setIndex(I);
+    return g;
+  }
+  // a vertical cut face: the upper quarter disk through the axis at azimuth a. Texture u runs along the axis and v outward
+  // from it, the same linear map as the 2D half disk, so a triangle fan maps it exactly.
+  function faceGeo(a) {
+    const K = 96, P = [0, 0, 0], U = [0.5, 0], I = [], ca = Math.cos(a), sa = Math.sin(a);
+    for (let k = 0; k <= K; k++) {
+      const psi = (Math.PI / 2 * k) / K, s = Math.sin(psi), z = Math.cos(psi);
+      P.push(s * ca, s * sa, z); U.push(0.5 + z / 2, s);
+      if (k < K) I.push(0, k + 1, k + 2);
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(U, 2)); g.setIndex(I);
+    return g;
+  }
+  // the floor of the cut, in the equatorial plane from azimuth a0 to a1; radius maps exactly, the angle onto the quarter f = 0.5 to 1
+  function floorGeo(a0, a1) {
+    const K = 120, R0 = [0.04, 1], P = [], U = [], I = [];
+    // rings: small fan around the center, then a strip, so the angular map stays accurate
+    const NR = 24;
+    for (let j = 0; j <= NR; j++) {
+      const rf = j / NR;
+      for (let k = 0; k <= K; k++) {
+        const t = k / K, al = a0 + (a1 - a0) * t, ang = Math.PI + (0.5 + 0.5 * t) * Math.PI;
+        P.push(rf * Math.cos(al), rf * Math.sin(al), 0); U.push(0.5 + 0.5 * rf * Math.cos(ang), -rf * Math.sin(ang));
+      }
+    }
+    for (let j = 0; j < NR; j++) for (let k = 0; k < K; k++) { const a = j * (K + 1) + k, b = a + K + 1; I.push(a, b, b + 1, a, b + 1, a + 1); }
+    void R0;
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(U, 2)); g.setIndex(I);
+    return g;
+  }
+  function edgeGeo(aA, aB) {
+    const K = 64, P = [0, 0, 0, 0, 0, 1];
+    const seg = (f) => { for (let k = 0; k < K; k++) for (const q of [k, k + 1]) P.push(...f(q / K)); };
+    for (const a of [aA, aB]) {
+      seg((t) => { const psi = (Math.PI / 2) * t; return [Math.sin(psi) * Math.cos(a), Math.sin(psi) * Math.sin(a), Math.cos(psi)]; });
+      P.push(0, 0, 0, Math.cos(a), Math.sin(a), 0);
+    }
+    seg((t) => { const al = aB - 2 * Math.PI + (aA - aB + 2 * Math.PI) * t; return [Math.cos(al), Math.sin(al), 0]; });
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); return g;
+  }
+  function makeTex(t) {
+    const tex = new THREE.CanvasTexture(t.comp);
+    tex.minFilter = THREE.LinearMipmapLinearFilter; tex.magFilter = THREE.LinearFilter; tex.generateMipmaps = true;
+    tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
+    return tex;
+  }
+
+  function init3D() {
+    if (V3.ok) return true;
+    if (V3.failed) return false;
+    let renderer = null;
+    try {
+      if (!window.THREE) throw new Error('three.js could not be loaded');
+      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+      renderer.setClearColor(SPACE_HEX, 1);
+      const el = renderer.domElement;
+      el.id = 'gl'; el.tabIndex = 0; el.setAttribute('role', 'application'); el.hidden = true;
+      el.setAttribute('aria-label', 'The star in 3D with a wedge cut away. The cut faces show the chosen quantity. Drag to rotate, scroll or pinch to zoom, hover or tap a cut face to probe it, double click to reset. Arrow keys rotate, plus and minus zoom, Page Up and Page Down step through the moments.');
+      stage.insertBefore(el, ov3);
+      const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.05, 2000);
+      cam.up.set(0, 0, 1);
+      // sky first (far), then the star
+      const skyG = new THREE.Group(); scene.add(skyG);
+      const skyParts = [skyPoints(SKY.band, { order: 2 }), skyPoints(SKY.field, { order: 4 })];
+      for (const p of skyParts) skyG.add(p);
+      skyG.add(mwSphere());
+      const star = new THREE.Group(); scene.add(star);
+      const shellMat = new THREE.ShaderMaterial({ vertexShader: SHELL_VS, fragmentShader: SHELL_FS,
+        uniforms: { uCol: { value: new THREE.Vector3(1, 1, 1) }, uU: { value: new THREE.Vector3(0.55, 0.65, 0.8) }, uGran: { value: 0 }, uK: { value: 1 }, uCells: { value: 30 }, uTime: { value: 0 }, uBright: { value: 1 } } });
+      const shell = new THREE.Mesh(new THREE.BufferGeometry(), shellMat); star.add(shell);
+      TX.tex = makeTex(TX); TXI.tex = makeTex(TXI);
+      const faceMat = new THREE.MeshBasicMaterial({ map: TX.tex, side: THREE.DoubleSide });
+      const insetMat = new THREE.MeshBasicMaterial({ map: TXI.tex, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -4 });
+      // the floor of the cut is drawn 12% darker (hue unchanged) so the cut reads as 3D; the upright faces keep the true colors
+      const floorMat = faceMat.clone(), floorInset = insetMat.clone(); floorMat.color.setScalar(0.88); floorInset.color.setScalar(0.88);
+      V3.faceMats = [faceMat, floorMat]; V3.insetMats = [insetMat, floorInset];
+      const faces = [0, 1, 2].map((k) => { const m = new THREE.Mesh(new THREE.BufferGeometry(), k === 2 ? floorMat : faceMat); star.add(m); return m; });
+      const insets = [0, 1, 2].map((k) => { const m = new THREE.Mesh(new THREE.BufferGeometry(), k === 2 ? floorInset : insetMat); m.renderOrder = 1; m.visible = false; star.add(m); return m; });
+      const edges = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 }));
+      edges.scale.setScalar(1.002); star.add(edges);
+      const haloMat = new THREE.ShaderMaterial({ vertexShader: HALO_VS, fragmentShader: HALO_FS, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+        uniforms: { uCol: { value: new THREE.Vector3(1, 1, 1) }, uIn: { value: 1 }, uA: { value: 0.7 } } });
+      const halo = new THREE.Mesh(new THREE.PlaneGeometry(9, 9), haloMat); halo.renderOrder = 5; star.add(halo);
+      // Earth for size comparison, lit by the star
+      const light = new THREE.PointLight(0xffffff, 1.3, 0); scene.add(light);
+      scene.add(new THREE.AmbientLight(0x22324a, 0.6));
+      const earth = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 24), new THREE.MeshLambertMaterial({ color: 0x3f7fe0 }));
+      earth.visible = false; scene.add(earth);
+      Object.assign(V3, { ok: true, renderer, scene, cam, star, shell, shellMat, faces, insets, edges, halo, haloMat, skyParts, earth, light, ray: new THREE.Raycaster() });
+      buildCut();
+      bind3D(el);
+      glc = el;
+      el.addEventListener('webglcontextlost', (e) => { e.preventDefault(); fail3D('The 3D view stopped (the browser dropped its WebGL context), so the 2D slice is shown.'); });
+      resize3D();
+      return true;
+    } catch (err) {
+      try { if (renderer) renderer.dispose(); } catch (_) {}
+      V3.failed = String((err && err.message) || err);
+      return false;
+    }
+  }
+  function fail3D(msg) {
+    V3.ok = false; V3.failed = V3.failed || msg;
+    if (glc) glc.hidden = true;
+    const b = document.querySelector('#views button[data-v="3d"]'); if (b) b.disabled = true;
+    setView('2d');
+    const n = $('note3d'); n.textContent = msg; n.hidden = false;
+  }
+  function buildCut() {
+    const w = (S.cut * Math.PI) / 180, aA = WEDGE_C + w / 2, aB = WEDGE_C + 2 * Math.PI - w / 2;
+    const { shell, faces, insets, edges } = V3;
+    shell.geometry.dispose(); shell.geometry = shellGeo(aA, aB);
+    // the normal of each cut face points into the removed wedge, toward a viewer who can see it
+    const defs = [
+      { a: aA, n: [Math.sin(aA), -Math.cos(aA), 0], g: faceGeo(aA) },
+      { a: aB, n: [-Math.sin(aB), Math.cos(aB), 0], g: faceGeo(aB) },
+      { floor: true, a0: aB - 2 * Math.PI, a1: aA, n: [0, 0, 1], g: floorGeo(aB - 2 * Math.PI, aA) }
+    ];
+    defs.forEach((d, k) => {
+      faces[k].geometry.dispose(); faces[k].geometry = d.g; faces[k].userData = d;
+      insets[k].geometry = d.g; insets[k].userData = d;
+    });
+    edges.geometry.dispose(); edges.geometry = edgeGeo(aA, aB);
+  }
+  // camera fit: the sphere (radius 1 at scale 1) fills FIT of the shorter half side; an Earth shown beside it is fitted too
+  function fovFor(extraHalfW, zoom = orbit.zoom, extraHalfH = 0) {
+    const aspect = W / Math.max(1, H), tb = 1 / Math.sqrt(DIST * DIST - 1);
+    let t = Math.max(tb / FIT, tb / (0.92 * aspect));
+    if (extraHalfW > 0) t = Math.max(t, extraHalfW / DIST / (0.95 * aspect), extraHalfH / DIST / 0.9);
+    return 2 * Math.atan(t / zoom);
+  }
+  function resize3D() {
+    if (!V3.ok || !W || !H) return;
+    const small = W < 600, pr = Math.min(window.devicePixelRatio || 1, small ? 1.5 : 2);
+    V3.renderer.setPixelRatio(pr); V3.renderer.setSize(W, H, false);
+    glc.style.width = W + 'px'; glc.style.height = H + 'px';
+    ov3.width = Math.round(W * dpr); ov3.height = Math.round(H * dpr); ov3.style.width = W + 'px'; ov3.style.height = H + 'px';
+    V3.pr = pr;
+    // texture size: about 1.4 texture pixels per screen pixel of the face at the default view, a power of two
+    sph0 = Math.max(40, (Math.tan(Math.asin(1 / DIST)) / Math.tan(fovFor(0, 1) / 2)) * (H / 2));
+    const want = 2 * sph0 * pr * 1.4, cap = small ? 1024 : 2048;
+    let tw = 512; while (tw < want && tw < cap) tw *= 2;
+    for (const t of [TX, TXI]) {
+      t.W = 2 * sph0; t.H = sph0; t.dpr = tw / t.W;
+      for (const c of [t.stat, t.comp]) { c.width = tw; c.height = tw / 2; }
+      t.glowC.width = Math.max(1, Math.round(tw * GS)); t.glowC.height = Math.max(1, Math.round((tw / 2) * GS));
+      t.dirty = true;
+      if (t.tex) { t.tex.dispose(); }
+    }
+    if (TX.tex) {   // a resized canvas needs a new texture object
+      TX.tex = makeTex(TX); TXI.tex = makeTex(TXI);
+      for (const m of V3.faceMats) m.map = TX.tex;
+      for (const m of V3.insetMats) m.map = TXI.tex;
+    }
+  }
+
+  // surface look of the current moment, from the data: T_eff (color), R and M (granule size), convective envelope (granulation on or off)
+  let surfKey = '';
+  function updateSurface(mo) {
+    const key = S.D.label + '|' + S.idx;
+    if (key === surfKey) return; surfKey = key;
+    const T = mo.Teff || (mo.logT ? 10 ** mo.logT[mo.n - 1] : 5772);
+    // blackbody color with a fixed saturation boost (hue unchanged), since the pure Planck colors look pale on screen
+    const c0 = bbColor(T), y0 = 0.2126 * c0[0] + 0.7152 * c0[1] + 0.0722 * c0[2], ks = c0[0] >= c0[2] ? 1.6 : 1.2;
+    let col = c0.map((v) => Math.max(0, y0 + (v - y0) * ks)); const cm = Math.max(...col) || 1; col = col.map((v) => v / cm);
+    // tone: cool stars a little dimmer and deeper, hot stars full brightness (blue white)
+    const lt = Math.log10(T), bright = clamp(0.62 + 0.38 * (lt - 3.45) / (3.78 - 3.45), 0.62, 1);
+    V3.shellMat.uniforms.uCol.value.set(col[0], col[1], col[2]);
+    V3.shellMat.uniforms.uBright.value = bright;
+    const x = (T / 5772) * mo.R / Math.max(mo.M, 1e-3);
+    const gran = !!mo.env && mo.R > 0.05;
+    V3.shellMat.uniforms.uGran.value = gran ? 1 : 0;
+    // illustrative cell size d/R = 0.012 x^0.75 (0.008 to 0.5): a fine mottling on dwarfs, a few huge cells on giants;
+    // small cells are drawn with lower contrast, as they would blur at this scale
+    const cell = clamp(0.012 * Math.pow(x, 0.75), 0.008, 0.5);
+    V3.shellMat.uniforms.uCells.value = 1 / cell;
+    V3.shellMat.uniforms.uK.value = 0.3 + 0.7 * clamp((cell - 0.015) / 0.08, 0, 1);
+    V3.haloMat.uniforms.uCol.value.set(col[0], col[1], col[2]);
+    V3.light.color.setRGB(col[0], col[1], col[2]);
+    V3.surf = { T, gran, cell };
+  }
+
+  function placeCamera(now) {
+    const { cam } = V3;
+    if (!orbit.user && !reduced) {
+      if (!orbit.t0) orbit.t0 = now;
+      const t = (now - orbit.t0) / 1000;
+      orbit.az = ORBIT0.az + 0.16 * Math.sin((2 * Math.PI * t) / 40);   // a gentle sway that keeps the cut in view
+      orbit.pol = ORBIT0.pol + 0.06 * Math.sin((2 * Math.PI * t) / 57);
+    }
+    const B = camBasis(orbit.az, orbit.pol);
+    cam.position.set(B.c[0] * DIST, B.c[1] * DIST, B.c[2] * DIST);
+    cam.lookAt(0, 0, 0);
+    cam.aspect = W / Math.max(1, H);
+    const mo = cur();
+    // Earth to scale, in the plane of the star's center, to the right; it does not orbit with the view
+    let extra = 0;
+    const rE = mo ? (EARTH_RSUN / mo.R) * starScale : 0;
+    earthInfo = null;
+    if (mo && rE > 0) {
+      // just outside the limb, lower right: a gap of a tenth of the star's radius or 1.5 Earth radii, whichever is larger
+      const d = starScale + Math.max(0.1 * starScale, 1.5 * rE) + rE, ang = rE > 0.08 * starScale ? -0.12 : -0.5;
+      extra = d * Math.cos(ang) + rE * 1.1;
+      earthInfo = { rE, d, ang, eh: Math.max(starScale, -d * Math.sin(ang) + rE * 1.1) };
+    }
+    cam.fov = (fovFor(rE > 0.08 * starScale ? extra : 0, orbit.zoom, earthInfo ? earthInfo.eh : 0) * 180) / Math.PI;
+    cam.updateProjectionMatrix(); cam.updateMatrixWorld();
+    const tanH = Math.tan((cam.fov * Math.PI) / 360);
+    sphNow = (Math.tan(Math.asin(Math.min(0.999, starScale / DIST))) / tanH) * (H / 2);
+    const E = V3.earth;
+    if (earthInfo) {
+      const ePx = (earthInfo.rE / DIST / tanH) * (H / 2);
+      const ang = earthInfo.ang, r = earthInfo.d;
+      E.position.set((Math.cos(ang) * B.r[0] + Math.sin(ang) * B.u[0]) * r, (Math.cos(ang) * B.r[1] + Math.sin(ang) * B.u[1]) * r, (Math.cos(ang) * B.r[2] + Math.sin(ang) * B.u[2]) * r);
+      E.scale.setScalar(earthInfo.rE);
+      E.visible = ePx >= 1.2 && ePx <= 0.45 * H;
+      earthInfo.px = ePx;
+      if (!E.visible) earthInfo = null;
+    } else E.visible = false;
+    return B;
+  }
+
+  function frame3D(now, dt) {
+    const mo = cur(); if (!mo) return;
+    if (chartsDirty) { drawCharts(); drawHR(); updatePanel(); chartsDirty = false; }
+    if (S.layers.move) tAnim += dt;
+    updateSurface(mo);
+    // held scale: the true ratio, except that a star more than 3 times the held size is drawn at 3 (and the note says so)
+    holdRatio = S.hold ? mo.R / S.viewAbs : 1;
+    starScale = clamp(holdRatio, 1e-7, 3);
+    V3.star.scale.setScalar(starScale);
+    const B = placeCamera(now);
+    // face textures: the full face, and an inset of the center when the view is zoomed past what the full texture resolves
+    if (TX.dirty) { withTex(TX, drawStatic); TX.dirty = false; TX.pk = null; }
+    const pk = S.probe ? S.probe.m + ',' + S.probe.ang : '';
+    const moving = S.layers.move;
+    if (TX.pk !== pk || (moving && texAnim(TX))) { composeTex(TX); TX.pk = pk; }
+    const q = sphNow / sph0;
+    const zi = q >= 3 ? Math.min(64, 2 ** Math.floor(Math.log2(q / 2))) : 1;
+    if (zi !== TXI.mag) { TXI.mag = zi; TXI.dirty = true; }
+    for (const m of V3.insets) { m.visible = zi > 1; m.scale.setScalar(1 / zi); }
+    if (zi > 1) {
+      if (TXI.dirty) { withTex(TXI, drawStatic); TXI.dirty = false; TXI.pk = null; }
+      if (TXI.pk !== pk || (moving && texAnim(TXI))) { composeTex(TXI); TXI.pk = pk; }
+    }
+    // halo: outside the silhouette only, so it never tints the cut faces
+    V3.halo.quaternion.copy(V3.cam.quaternion);
+    const Dl = DIST / starScale;
+    V3.haloMat.uniforms.uIn.value = Dl / Math.sqrt(Dl * Dl - 1);
+    V3.shellMat.uniforms.uTime.value = moving ? tAnim : 0;
+    const tw = moving && !reduced ? TWINKLE : 0;
+    for (const p of V3.skyParts) {
+      const u = p.material.uniforms; u.uPR.value = V3.pr; u.uK.value = p.userData.scaled ? H / 900 : 1; u.uTime.value = tAnim; u.uTw.value = tw;
+    }
+    V3.renderer.render(V3.scene, V3.cam);
+    drawOverlay3D(mo, B);
+    const need = S.playing || (!orbit.user && !reduced) || (moving && (texAnim(TX) || tw > 0 || V3.surf.gran));
+    if (need) schedule(); else S.lastT = 0;
+  }
+
+  // a point on a cut face (k = 0 or 1) at fraction rf of the radius and angle fraction f of the half disk, in world space
+  function facePoint(k, rf, f) {
+    const d = V3.faces[k].userData;
+    if (d.floor) { const t = clamp((f - 0.5) / 0.5, 0.08, 0.92), al = d.a0 + (d.a1 - d.a0) * t; return new THREE.Vector3(rf * Math.cos(al) * starScale, rf * Math.sin(al) * starScale, 0); }
+    if (f < 0.5) f = 1 - f;   // the vertical faces are the upper quarters of the 2D half disk
+    const ang = Math.PI + f * Math.PI, s = -Math.sin(ang) * rf, z = Math.cos(ang) * rf;
+    return new THREE.Vector3(s * Math.cos(d.a) * starScale, s * Math.sin(d.a) * starScale, z * starScale);
+  }
+  const toScreen = (v) => { const p = v.clone().project(V3.cam); return p.z < 1 ? [(p.x + 1) / 2 * W, (1 - p.y) / 2 * H] : null; };
+  // a compact key for the cut faces, bottom left (the full key is in the rail)
+  function drawMiniKey(c, mo, T, p) {
+    const D = S.D, m = S.mode, cs = (rg) => (x) => sci(10 ** x, 1);
+    let title = '', stops = null, lo = '', hi = '', sw = null;
+    if (m === 'glow') { title = 'Glow: blackbody color at the local T'; stops = (t) => glowRGB(3 + 5 * t); lo = '10³ K'; hi = '10⁸ K'; }
+    else if (m === 'temp' && D.rng.logT) { title = 'Temperature T'; stops = (t) => cmap(INF, t * 0.92 + 0.06); lo = sci(10 ** D.rng.logT[0], 1) + ' K'; hi = sci(10 ** D.rng.logT[1], 1) + ' K'; }
+    else if (m === 'dens' && D.rng.logRho) { title = 'Density ρ'; stops = (t) => cmap(VIR, t); lo = sci(10 ** D.rng.logRho[0], 1); hi = sci(10 ** D.rng.logRho[1], 1) + ' g/cm³'; }
+    else if (m === 'burn' && D.rng.eps) { title = 'Burning ε_nuc'; stops = (t) => cmap(INF, t * 0.94 + 0.06); lo = '≤ ' + sci(10 ** D.rng.eps[0], 1); hi = sci(10 ** D.rng.eps[1], 1) + ' erg g⁻¹ s⁻¹'; }
+    else if (m === 'gam' && D.rng.gam) { title = 'Plasma coupling Γ'; stops = (t) => cmap(VIR, t); lo = sci(10 ** D.rng.gam[0], 1); hi = sci(10 ** D.rng.gam[1], 1); }
+    else if (m === 'phase') { title = 'Phase (eos_phase)'; stops = (t) => mixc(rgb(T.liquid), rgb(T.solid), t); lo = 'liquid'; hi = 'solid'; }
+    else if (m === 'comp') { title = 'Most abundant element'; sw = ELS.map((e, k) => [e, k]).filter(([e]) => mo[e.key] && mo[e.key].some((v) => v >= 0.05)); }
+    void cs;
+    if (!title) return;
+    const bw = Math.min(190 * p, W * 0.42), x0 = 10 * p, fs = 11 * p;
+    c.font = `600 ${fs}px ${uiFont()}`;
+    let w = Math.max(bw, c.measureText(title).width), rows = 0;
+    if (sw) { c.font = `${10.5 * p}px ${uiFont()}`; let lx = 0; rows = 1; for (const [e] of sw) { const ew = c.measureText(e.name).width + 20 * p; if (lx + ew > w) { rows++; lx = 0; } lx += ew; } }
+    const h = sw ? fs + 8 * p + rows * 15 * p : fs + 30 * p, y0 = H - h - 10 * p;
+    c.fillStyle = 'rgba(6,8,12,0.66)'; c.fillRect(x0 - 5 * p, y0 - 5 * p, w + 10 * p, h + 8 * p);
+    c.textAlign = 'left'; c.textBaseline = 'top'; c.font = `600 ${fs}px ${uiFont()}`; c.fillStyle = T.ink; c.fillText(title, x0, y0);
+    if (stops) {
+      const g = c.createLinearGradient(x0, 0, x0 + bw, 0);
+      for (let q = 0; q <= 16; q++) g.addColorStop(q / 16, css(stops(q / 16)));
+      c.fillStyle = g; c.fillRect(x0, y0 + fs + 5 * p, bw, 8 * p);
+      c.font = `${10 * p}px ${monoFont()}`; c.fillStyle = T.muted;
+      c.fillText(lo, x0, y0 + fs + 16 * p); c.textAlign = 'right'; c.fillText(hi, x0 + bw, y0 + fs + 16 * p);
+    } else {
+      c.font = `${10.5 * p}px ${uiFont()}`; let lx = 0, ly = y0 + fs + 6 * p;
+      for (const [e, k] of sw) {
+        const ew = c.measureText(e.name).width + 20 * p; if (lx + ew > w) { lx = 0; ly += 15 * p; }
+        c.fillStyle = css(T.el[k]); c.fillRect(x0 + lx, ly + 1 * p, 10 * p, 10 * p);
+        c.fillStyle = T.ink; c.fillText(e.name, x0 + lx + 14 * p, ly); lx += ew;
+      }
+    }
+  }
+  function drawOverlay3D(mo, B) {
+    const c = o3, T = sliceTokens(), p = ps();
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
+    // labels on the cut face that faces the camera most
+    const vis = V3.faces.map((f) => { const n = f.userData.n; return n[0] * B.c[0] + n[1] * B.c[1] + n[2] * B.c[2]; });
+    // the vertical face that faces the camera most, or the floor when the view is from high above
+    let k = vis[0] >= vis[1] ? 0 : 1;
+    if (vis[2] > 0.85 || vis[k] < 0.12) k = 2;
+    const ctr = toScreen(new THREE.Vector3(0, 0, 0));
+    const boxes = [];
+    if (vis[k] > 0.12 && ctr) {
+      c.font = `700 ${12 * p}px ${uiFont()}`;
+      for (const L of TX.labels) {
+        const q = toScreen(facePoint(k, Math.max(L.rf, 0.004), L.f)); if (!q || q[0] < 0 || q[0] > W || q[1] < 0 || q[1] > H) continue;
+        let dx = q[0] - ctr[0], dy = q[1] - ctr[1]; const dl = Math.hypot(dx, dy);
+        if (dl < 4) { dx = -B.r[0]; dy = 0; } else { dx /= dl; dy /= dl; }
+        const right = dx >= 0, w = c.measureText(L.text).width + 12 * p, h = 20 * p;
+        let lx = q[0] + dx * 22 * p, ly = q[1] + dy * 22 * p;
+        let bx = clamp(right ? lx : lx - w, 4, W - w - 4), by = clamp(ly - h / 2, 4, H - h - 4);
+        for (let t = 0; t < 8 && boxes.some((b) => bx < b[2] && bx + w > b[0] && by < b[3] && by + h > b[1]); t++) by = clamp(by + (t % 2 ? -1 : 1) * (t + 1) * (h + 4), 4, H - h - 4);
+        boxes.push([bx - 2, by - 2, bx + w + 2, by + h + 2]);
+        c.strokeStyle = L.color; c.lineWidth = 1.2 * p;
+        c.beginPath(); c.moveTo(q[0], q[1]); c.lineTo(right ? bx : bx + w, by + h / 2); c.stroke();
+        c.fillStyle = L.color; c.beginPath(); c.arc(q[0], q[1], 2.5 * p, 0, 2 * Math.PI); c.fill();
+        labelBox(c, bx, by + h / 2, L.text, T, L.color, p, 'left');
+      }
+    }
+    // scale note
+    c.textAlign = 'left'; c.textBaseline = 'top';
+    const lines = [[`R = ${sci(mo.R, 3)} R`, 'sun', ` = ${fmtKm(mo.R)}`, T.ink]];
+    lines.push([S.log ? 'Cut faces: log radius, not to scale' : 'Cut faces: linear radius, to scale', '', '', S.log ? T.pos : T.muted]);
+    if (S.hold) {
+      lines.push([`Scale held: the star is ${sci(holdRatio, 2)} times the held size` + (holdRatio > 3 ? ', drawn at 3 times (not to scale)' : ''), '', '', holdRatio > 3 ? T.pos : T.muted]);
+      if (sphNow < 2) lines.push(['The star is smaller than a pixel here: zoom in or turn off Hold scale', '', '', T.pos]);
+    }
+    if (orbit.zoom > 1.01) lines.push([`Zoom ${orbit.zoom >= 10 ? Math.round(orbit.zoom) : orbit.zoom.toFixed(1)}×`, '', '', T.muted]);
+    let y = 10 * p;
+    lines.forEach(([a, sub, b, col], i) => {
+      c.font = `${i ? 600 : 700} ${(i ? 11.5 : 13) * p}px ${i ? uiFont() : monoFont()}`;
+      const f0 = c.font, fs = f0.replace(/([\d.]+)px/, (m, v) => (v * 0.72).toFixed(1) + 'px');
+      const wa = c.measureText(a).width; c.font = fs; const ws = c.measureText(sub).width; c.font = f0; const wb = c.measureText(b).width;
+      const hgt = (i ? 11.5 : 13) * p;
+      c.fillStyle = 'rgba(6,8,12,0.62)'; c.fillRect(8 * p, y - 3 * p, wa + ws + wb + 10 * p, hgt + 6 * p);
+      c.fillStyle = col; c.fillText(a, 13 * p, y);
+      if (sub) { c.font = fs; c.fillText(sub, 13 * p + wa, y + hgt * 0.38); c.font = f0; }
+      if (b) c.fillText(b, 13 * p + wa + ws, y);
+      y += hgt + 9 * p;
+    });
+    drawMiniKey(c, mo, T, p);
+    // Earth label
+    if (earthInfo) {
+      const q = toScreen(V3.earth.position.clone());
+      if (q) {
+        // beside a small Earth, under a large one
+        const big = earthInfo.px > 24 * p, tx = big ? q[0] : q[0] + earthInfo.px + 7 * p, ty = big ? q[1] + earthInfo.px + 6 * p : q[1] - 8 * p;
+        c.textAlign = big ? 'center' : 'left'; c.textBaseline = 'top';
+        const x0 = clamp(tx, big ? 70 * p : 4, W - (big ? 70 * p : 140 * p)), y0 = Math.min(H - 30 * p, ty);
+        c.font = `600 ${11 * p}px ${monoFont()}`; c.fillStyle = T.ink; c.fillText('Earth, to scale', x0, y0);
+        c.font = `${10 * p}px ${monoFont()}`; c.fillStyle = T.muted; c.fillText('(size, not distance)', x0, y0 + 14 * p);
+      }
+    }
+  }
+
+  // probe: a ray from the pointer onto a cut face gives r on that face; the photosphere gives the outermost zone
+  function probe3(e) {
+    const mo = cur(); if (!mo || !V3.ok) return false;
+    const rect = glc.getBoundingClientRect();
+    const ndc = new THREE.Vector2(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
+    V3.ray.setFromCamera(ndc, V3.cam);
+    const hits = V3.ray.intersectObjects([...V3.faces, V3.shell], false);
+    if (!hits.length) return false;
+    const h = hits[0];
+    if (h.object === V3.shell) S.probe = { m: mo.mass[mo.n - 1], ang: S.probe ? S.probe.ang : 0.5 };
+    else {
+      const d = h.object.userData, P = h.point.clone().divideScalar(starScale);
+      let rf, f;
+      if (d.floor) { rf = Math.min(1, Math.hypot(P.x, P.y)); f = 0.75; }
+      else {
+        const s = P.x * Math.cos(d.a) + P.y * Math.sin(d.a), z = P.z; rf = Math.min(1, Math.hypot(s, z));
+        let ang = Math.atan2(-s, z); if (ang < 0) ang += 2 * Math.PI;
+        f = clamp((ang - Math.PI) / Math.PI, 0, 1);
+      }
+      // through the full face texture's own mapping (linear or log)
+      const r = withTex(TX, () => (G ? mapper(mo).inv(rf * G.R) : rf * mo.r[mo.n - 1]));
+      const i = lowerBound(mo.r, Math.min(r, mo.r[mo.n - 1]), mo.n);
+      S.probe = { m: mo.mass[i], ang: f };
+    }
+    chartsDirty = true; schedule();
+    return true;
+  }
+  function bind3D(el) {
+    const ptr = new Map(); let drag = null, pinch = null;
+    const stopAuto = () => { orbit.user = true; };
+    el.addEventListener('pointerdown', (e) => {
+      el.focus({ preventScroll: true }); stopAuto();
+      ptr.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      try { el.setPointerCapture(e.pointerId); } catch (_) {}
+      if (ptr.size === 2) { const q = [...ptr.values()]; pinch = { d: Math.hypot(q[0].x - q[1].x, q[0].y - q[1].y) }; drag = null; return; }
+      drag = { x: e.clientX, y: e.clientY, moved: 0 }; el.classList.add('dragging');
+    });
+    el.addEventListener('pointermove', (e) => {
+      if (ptr.has(e.pointerId)) ptr.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pinch && ptr.size === 2) {
+        const q = [...ptr.values()], d = Math.hypot(q[0].x - q[1].x, q[0].y - q[1].y);
+        if (d > 0 && pinch.d > 0) { orbit.zoom = clamp(orbit.zoom * (d / pinch.d), 1, ZMAX); pinch.d = d; chartsDirty = true; schedule(); }
+        return;
+      }
+      if (drag && ptr.has(e.pointerId)) {
+        const dx = e.clientX - drag.x, dy = e.clientY - drag.y, k = 0.0085 / Math.sqrt(orbit.zoom);
+        drag.moved += Math.abs(dx) + Math.abs(dy); drag.x = e.clientX; drag.y = e.clientY;
+        orbit.az -= dx * k; orbit.pol = clamp(orbit.pol - dy * k, 0.06, Math.PI - 0.06);
+        schedule(); return;
+      }
+      if (e.pointerType === 'mouse') probe3(e);
+    });
+    const end = (e) => {
+      if (drag && drag.moved < (e.pointerType === 'touch' ? 12 : 5) && e.type === 'pointerup') probe3(e);
+      ptr.delete(e.pointerId); if (ptr.size < 2) pinch = null;
+      if (!ptr.size) { drag = null; el.classList.remove('dragging'); }
+    };
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+    el.addEventListener('wheel', (e) => { e.preventDefault(); stopAuto(); orbit.zoom = clamp(orbit.zoom * Math.exp(-e.deltaY * 0.0016), 1, ZMAX); chartsDirty = true; schedule(); }, { passive: false });
+    el.addEventListener('dblclick', () => { reset3D(); });
+    el.addEventListener('keydown', (e) => {
+      if (!S.D) return;
+      const k = e.key;
+      if (k === 'ArrowLeft') orbit.az += 0.1;
+      else if (k === 'ArrowRight') orbit.az -= 0.1;
+      else if (k === 'ArrowUp') orbit.pol = clamp(orbit.pol - 0.08, 0.06, Math.PI - 0.06);
+      else if (k === 'ArrowDown') orbit.pol = clamp(orbit.pol + 0.08, 0.06, Math.PI - 0.06);
+      else if (k === '+' || k === '=') { orbit.zoom = clamp(orbit.zoom * 1.25, 1, ZMAX); chartsDirty = true; }
+      else if (k === '-' || k === '_') { orbit.zoom = clamp(orbit.zoom / 1.25, 1, ZMAX); chartsDirty = true; }
+      else if (k === 'PageDown' || k === ']') { setPlaying(false); setMoment(S.idx + 1); }
+      else if (k === 'PageUp' || k === '[') { setPlaying(false); setMoment(S.idx - 1); }
+      else if (k === 'Home') setMoment(0);
+      else if (k === 'End') setMoment(S.D.N - 1);
+      else if (k === ' ') setPlaying(!S.playing);
+      else if (k === 'Escape' || k === '0') reset3D();
+      else return;
+      stopAuto(); e.preventDefault(); schedule();
+    });
+  }
+  function reset3D() { orbit.az = ORBIT0.az; orbit.pol = ORBIT0.pol; orbit.zoom = 1; orbit.user = true; chartsDirty = true; schedule(); }
+
+  // ---------- view switching ----------
+  const HINT2D = 'Hover or tap a layer to probe it · Scroll or pinch to zoom · Double click to reset · Arrow keys step moments and zoom.';
+  const HINT3D = 'Drag to rotate · Scroll or pinch to zoom · Hover or tap a cut face to probe it · Double click to reset · Arrow keys rotate, Page Up and Page Down step moments.';
+  function setView(v) {
+    if (v === '3d' && !init3D()) {
+      v = '2d';
+      const b = document.querySelector('#views button[data-v="3d"]'); if (b) b.disabled = true;
+      const n = $('note3d'); n.textContent = 'The 3D view needs WebGL and three.js, which are not available here, so the 2D slice is shown.'; n.hidden = false;
+    }
+    view = v;
+    for (const b of document.querySelectorAll('#views button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    const is3 = v === '3d';
+    cv.hidden = is3; ov3.hidden = !is3; if (glc) glc.hidden = !is3;
+    $('cutBox').hidden = !is3;
+    $('stageHint').textContent = is3 ? HINT3D : HINT2D;
+    $('viewHint').textContent = is3
+      ? 'In 3D, zoom moves the camera in on the cut faces (the faces stay to scale with linear radius). Log radius stretches the inner layers on the cut faces only; the sphere keeps the star\'s true outline, so the faces are then not to scale. Hold scale keeps the sphere\'s size fixed while you step through moments. Cut angle sets the wedge that is removed.'
+      : 'Zoom sets the outer edge of the view; inside it radius is linear and to scale. Log radius stretches the inner layers so every layer shows at once; that view is not to scale. Hold scale keeps the same view size while you step through moments.';
+    S.fade = null; TX.dirty = TXI.dirty = true;
+    markAll();
+  }
+  for (const b of document.querySelectorAll('#views button')) b.addEventListener('click', () => { if (!b.disabled) setView(b.dataset.v); });
+  $('cut').addEventListener('input', (e) => { S.cut = +e.target.value; $('cutOut').textContent = S.cut + '°'; if (V3.ok) { buildCut(); schedule(); } });
 
   // ---------- charts ----------
   function fitCanvas(cvs) {
@@ -1807,13 +2623,26 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const e of ELS.slice(4)) if (mo[e.key] && mo[e.key][0] >= 0.01) cc.push([e.name, mo[e.key][0]]);
     $('oCenter').textContent = cc.length ? cc.map(([k, v]) => k + ' ' + sci(v, 3)).join(' · ') : '—';
     // features of this moment
-    const F = [], M = mapper(mo);
-    const small = (r) => M.px(r) < 2 ? ' (too small at this zoom: zoom in or use Log radius)' : '';
+    const F = [], is3 = view === '3d' && V3.ok;
+    // on screen size of radius r: the 2D slice, or the 3D cut face at its current size
+    const M = is3 ? null : mapper(mo);
+    const pxOf = (r) => (is3 ? (TX.G ? withTex(TX, () => mapper(mo).px(r)) / TX.G.R : r / mo.r[mo.n - 1]) * sphNow : M.px(r));
+    const small = (r) => pxOf(r) < 2 ? ' (too small at this zoom: zoom in or use Log radius)' : '';
     if (mo.env) F.push(`Convective envelope from m = ${sci(mo.env.mBase, 4)} M☉ (r = ${fmtRsun(mo.env.rBase)}) to the surface`);
     for (const z of mo.convZones) F.push(z.core
       ? `Convective core out to m = ${sci(z.mHi, 4)} M☉ (r = ${fmtRsun(z.rHi)})${small(z.rHi)}`
       : `Convective zone from m = ${sci(z.mLo, 4)} to ${sci(z.mHi, 4)} M☉${small(z.rHi)}`);
-    for (const s of mo.shells) F.push(`${s.name} at m = ${sci(mo.mass[s.pi], 4)} M☉, r = ${fmtRsun(mo.r[s.pi])}, peak ε_nuc ${sci(s.peak)} erg g⁻¹ s⁻¹${s.chanText ? ' (' + s.chanText + ')' : ''}${small(mo.r[s.pi])}`);
+    // burning region: the zones around the peak where ε_nuc stays at or above 10% of that region's peak
+    for (const s of mo.shells) {
+      const thr = 0.1 * s.peak; let lo = s.pi, hi = s.pi;
+      while (lo > 0 && (mo.eps[lo - 1] || 0) >= thr) lo--;
+      while (hi < mo.n - 1 && (mo.eps[hi + 1] || 0) >= thr) hi++;
+      const ext = lo === 0
+        ? `from the center out to m = ${sci(mo.mass[hi], 4)} M☉, r = ${fmtRsun(mo.r[hi])}`
+        : `from m = ${sci(mo.mass[lo - 1], 4)} to ${sci(mo.mass[hi], 4)} M☉, r = ${fmtRsun(mo.r[lo - 1])} to ${fmtRsun(mo.r[hi])}`;
+      const at = s.pi === 0 ? 'at the center' : `at m = ${sci(mo.mass[s.pi], 4)} M☉`;
+      F.push(`${s.name} ${ext} (where ε_nuc is at least 10% of its peak); peak ε_nuc ${sci(s.peak)} erg g⁻¹ s⁻¹ ${at}${s.chanText ? ' (' + s.chanText + ')' : ''}${small(mo.r[hi])}`);
+    }
     if (D.has.eps && !mo.shells.length) F.push(`No zone above the burning threshold; peak ε_nuc ${sci(mo.epsMax)} erg g⁻¹ s⁻¹`);
     if (mo.front) {
       let t = `Crystallization front (eos_phase ≥ 0.5 inside) at m = ${sci(mo.front.m, 4)} M☉ (${(mo.front.m / mo.M).toFixed(3)} M), r = ${fmtKm(mo.front.r)}`;
@@ -1842,11 +2671,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       (multiRun && D.moments.some((x, i) => i > 0 && x.age != null && D.moments[i - 1].age != null && x.age < D.moments[i - 1].age)
         ? ' This run was made in stages, and the age restarts where a stage resets it (for example at the zero age main sequence), so ages before that point are pre main sequence time.' : '');
     // zoom
-    const z = $('zoom'), zm = zoomMax(mo); z.max = zm.toFixed(2);
-    z.value = clamp(Math.log10(mo.R / viewR(mo)), 0, zm);
-    const vr = viewR(mo);
-    $('zoomOut').textContent = `edge ${fmtRsun(vr)} · ${sci(vr / mo.R, 2)} R`;
-    $('viewline').textContent = `View edge ${fmtRfull(vr)} · ` + (S.log ? 'log radius, not to scale' : 'linear radius, to scale') + (S.hold ? ' · scale held' : '');
+    const z = $('zoom');
+    if (is3) {
+      z.max = Math.log10(ZMAX).toFixed(2); z.value = Math.log10(orbit.zoom);
+      $('zoomOut').textContent = `3D camera ${orbit.zoom >= 10 ? Math.round(orbit.zoom) : orbit.zoom.toFixed(1)}×`;
+      $('viewline').textContent = `Star radius ${fmtRfull(mo.R)} · cut faces: ` + (S.log ? 'log radius, not to scale' : 'linear radius, to scale') + (S.hold ? ' · scale held' : '');
+    } else {
+      const zm = zoomMax(mo); z.max = zm.toFixed(2);
+      z.value = clamp(Math.log10(mo.R / viewR(mo)), 0, zm);
+      const vr = viewR(mo);
+      $('zoomOut').textContent = `edge ${fmtRsun(vr)} · ${sci(vr / mo.R, 2)} R`;
+      $('viewline').textContent = `View edge ${fmtRfull(vr)} · ` + (S.log ? 'log radius, not to scale' : 'linear radius, to scale') + (S.hold ? ' · scale held' : '');
+    }
     updateProbe();
     for (const [k, b] of document.querySelectorAll('#presets button').entries()) b.setAttribute('aria-pressed', String(k === S.preset));
   }
@@ -2021,7 +2857,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const D = S.D; i = clamp(i | 0, 0, D.N - 1);
     if (i === S.idx && !statDirty) return;
     const old = cur();
-    if (W && !reduced && old) {
+    if (W && !reduced && old && view === '2d') {
       pctx.setTransform(1, 0, 0, 1, 0, 0); pctx.clearRect(0, 0, prev.width, prev.height); pctx.drawImage(cv, 0, 0);
       S.fade = performance.now();
     }
@@ -2221,6 +3057,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('scrub').addEventListener('input', (e) => { setPlaying(false); setMoment(+e.target.value); });
   $('zoom').addEventListener('input', (e) => {
     const mo = cur(), v = +e.target.value;
+    if (view === '3d' && V3.ok) { orbit.zoom = clamp(10 ** v, 1, ZMAX); orbit.user = true; chartsDirty = true; schedule(); return; }
     if (S.hold) S.viewAbs = mo.R * 10 ** -v; else S.zoomDec = v;
     S.preset = -1; markAll();
   });
@@ -2319,6 +3156,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   renderDatasetChips(); renderMassSlider();
   new ResizeObserver(() => renderMassSlider()).observe($('massBox'));
   resize();
+  setView('3d');
   if (S.datasets.length) {
     // open on the run closest to the Sun's mass when there are several
     const list = embedded(), first = list.length ? list.reduce((a, b) => (Math.abs(Math.log10(b.mass)) < Math.abs(Math.log10(a.mass)) ? b : a)) : S.datasets[0];
