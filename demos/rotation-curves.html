@@ -469,7 +469,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const MW_B = { b: { on: true, M: 0.9e10, a: 0.6 }, d: { on: true, M: 4.0e10, R: 2.6 }, g: { on: true, M: 1.0e10, R: 7 } };
   const PRESETS = {
     sun: { sys: 'sun', rs: 1, tsp: 55,
-      hint: 'Nearly all the solar system\'s mass is in the Sun, so each planet\'s speed is √(GM/r) and falls as r^−1/2: Neptune moves at a sixth of Mercury\'s speed. Every planet gives the same M(<r) = v²r/G, one solar mass.' },
+      hint: 'Nearly all the solar system\'s mass is in the Sun, so each planet\'s speed is √(GM/r) and falls as r^−1/2: Neptune moves at about a ninth of Mercury\'s speed. Every planet gives the same M(<r) = v²r/G, one solar mass.' },
     vis: { sys: 'gal', view: 'face', P: { ...MW_B, h: { on: false, type: 'iso', rho: 0.25e9, r: 1.6 } }, rmax: 30, rs: 20, data: 'mw',
       hint: 'Stars and gas of a Milky Way like galaxy, nothing else. Their curve peaks near 5 kpc and then falls, heading for Kepler\'s r^−1/2. The measured speeds (circles) stay near 200 to 230 km/s out to 25 kpc.' },
     halo: { sys: 'gal', view: 'face', P: { ...MW_B, h: { on: true, type: 'iso', rho: 0.25e9, r: 1.6 } }, rmax: 30, rs: 20, data: 'mw',

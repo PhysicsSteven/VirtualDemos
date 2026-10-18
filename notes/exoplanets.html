@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finding Exoplanets: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Finding Exoplanets</h1><ul class="meta"><li><a href="../demos/exoplanets.html">Open the demo</a></li><li>Intro astronomy; majors astronomy (Kepler&#x27;s laws, momentum)</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A transit dims the star by the fraction of its disk the planet covers, about (R_p/R_s)². The depth gives the planet's radius once the star's radius is known.</li>
+<li>Star and planet both orbit their common center of mass. The star's line of sight speed swings with semi amplitude K ∝ M_p sin i / (M_s^⅔ P^⅓), so radial velocity gives M_p sin i, not M_p.</li>
+<li>A transit happens only if the orbit is nearly edge on; for a random orientation the chance is about R_s/a. A transiting planet has i near 90°, so the two methods together give the true mass, and with the radius, the density.</li>
+<li>Both methods favor big planets close to small stars. That is a selection effect, not a statement about which planets are common.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know Kepler's third law and the idea of a Doppler shift. Turn on <strong>Projector</strong> and point out the four panels: <strong>Top view, looking down on the orbit</strong>, <strong>What the telescope sees</strong>, the light curve and the star's radial velocity curve. <strong>Slow motion in transit</strong> stretches out the transit. Dragging the planet or either chart moves through time; on a focused canvas the up and down arrows change the inclination.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Hot Jupiter.</strong> Let one orbit play. Point to the two signals: a 1.15% dip (11,498 ppm) lasting 3.61 h every 4.19 d, and a star swinging at K = 55.2 m/s. The dip comes as the star's velocity crosses zero from away to toward us: the star is then behind the center of mass, moving across our line of sight. Switch the light curve to <strong>Zoom on transit</strong> to show the rounded bottom.</li>
+<li><strong>Not edge on.</strong> Ask Q1 first. Then press it: "no transit from here", but the velocity curve is still there with K = 47.8 m/s. From the <strong>Hot Jupiter</strong> preset, hold the down arrow (Shift for 1° steps) on the top view and watch <strong>Transits?</strong> change from yes to grazing to no near i = 84°.</li>
+<li><strong>Earth and Sun.</strong> 84 ppm for 13.1 h once a year, and K = 0.089 m/s. Raise <strong>Noise</strong> slowly; both signals vanish into the scatter long before the slider reaches the end. Read the <strong>Transit probability</strong>, 0.47%.</li>
+<li><strong>Jupiter and Sun.</strong> K = 12.5 m/s, but the period is 11.9 yr and the transit probability is 0.089%. Ask what kind of planets a survey lasting a few years will find first.</li>
+<li><strong>Eccentric planet.</strong> The velocity curve is lopsided: a short, sharp swing near periastron and a long, slow drift the rest of the orbit. Drag the planet around the top view to connect the shape to Kepler's second law.</li>
+<li><strong>TRAPPIST-1 like.</strong> An Earth sized planet blocks 0.5% of a star 12% the size of the Sun. Compare the depth and K with the <strong>Earth and Sun</strong> preset (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: the same hot Jupiter is tilted so that we view its orbit 30° from edge on (i = 60°). Will we still see a transit? Will the star still show a radial velocity signal, and if so, bigger, smaller or the same?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> A transit dims a star of radius 1.15 R_sun by 1.15%. How big is the planet, in Jupiter radii? (R_sun = 6.957 × 10⁵ km, R_J = 71,492 km.) Ignore limb darkening.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Jupiter makes the Sun move at K = 12.5 m/s. Use K ∝ M_p/√a (for one star and a circular orbit) to estimate K for Earth, which has 1/318 of Jupiter's mass and orbits at 1 AU instead of 5.2 AU. A good spectrograph reaches about 0.3 m/s. Can it detect Earth? Check with the <strong>Earth and Sun</strong> preset.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> The chance that a randomly oriented orbit transits is about R_s/a. If 1000 Sun like stars each had an Earth twin at 1 AU, about how many would show transits? How many would show transits if each had a hot Jupiter at 0.0527 AU around a star of radius 1.15 R_sun? (1 AU = 215 R_sun.)</p></div>
+
+<div class="q"><p><strong>Q5.</strong> The <strong>Hot Jupiter</strong> preset has a mass of 0.47 M_J and a density of 0.34 g/cm³. Why do you need both a transit and a radial velocity curve to find a density? What does a density this low tell you about what the planet is made of?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In the <strong>Eccentric planet</strong> preset the star's velocity changes slowly for most of the orbit and then swings sharply in a few days. Explain why, using Kepler's second law. Where in the orbit is the planet during the sharp swing? Check by dragging the planet in the top view.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> The <strong>TRAPPIST-1 like</strong> planet is a little smaller than Earth, yet its transit is about 60 times deeper than Earth's across the Sun and its K is about 13 times bigger. Explain both factors. Why are small, cool stars good places to look for Earth sized planets?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The star stays still and the planet goes around it."</strong> Both orbit their common center of mass. The star's orbit is tiny, but its speed is what radial velocity measures. The top view exaggerates the wobble by the factor shown in its corner.</li>
+<li><strong>"A planet with twice the radius makes a dip twice as deep."</strong> The depth goes as the area, (R_p/R_s)², so twice the radius gives four times the depth.</li>
+<li><strong>"No transit means no planet."</strong> Most planetary systems are not lined up for us. The <strong>Not edge on</strong> preset still has a full radial velocity signal.</li>
+<li><strong>"Radial velocity gives the planet's mass."</strong> It gives M_p sin i. Without a transit (or another way to find i), the true mass can be larger.</li>
+<li><strong>"Most planets are hot Jupiters, since those were found first."</strong> Their signals are the largest and repeat fastest; they orbit only about 1% of Sun like stars or fewer.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Two body Kepler orbit: P = 2π√(a³/G(M_s + M_p)), solved through Kepler's equation for eccentric orbits. Time is measured from conjunction, when the planet is nearest our line of sight.</li>
+<li>Radial velocity: v_r = K[cos(ν + ω) + e cos ω] with K = (2πG/P)^⅓ M_p sin i / [(M_s + M_p)^⅔ √(1 − e²)]. The angle ω is the star's argument of periastron, as catalogs quote it.</li>
+<li>Light curve: the fraction of a limb darkened stellar disk covered by the planet's disk, computed numerically. Limb darkening is quadratic with fixed Sun like coefficients (u₁ = 0.40, u₂ = 0.26), so the true dip is a little deeper than the (R_p/R_s)² readout and has a rounded bottom.</li>
+<li>The planet's own light is ignored, so there is no secondary eclipse. The duration readout uses the standard approximation for eccentric orbits. Transit probability is shown as R_s/a, the circular orbit value.</li>
+<li>Noise is white and Gaussian, up to 1000 ppm and 10 m/s. In the top view the star and planet are drawn larger than scale and the star's wobble is magnified.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: from P = 4.19 d and M_s = 1.11 M_sun, find a and the planet's speed, then use M_s v_s = M_p v_p to recover K = 55 m/s.</li>
+<li>History: 51 Pegasi b (1995), the first planet found around a Sun like star, was found by radial velocity.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

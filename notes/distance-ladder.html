@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cosmic Distance Ladder: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Cosmic Distance Ladder</h1><ul class="meta"><li><a href="../demos/distance-ladder.html">Open the demo</a></li><li>Intro astronomy; majors astronomy (magnitudes, distance modulus)</li><li>20 to 35 minutes (one rung alone takes 5 to 10)</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Parallax is the ladder's only direct distance: d (pc) = 1/p (arcsec), with a reach set by the instrument's position accuracy.</li>
+<li>A standard candle is an object whose luminosity we know. Comparing that with how bright it looks gives the distance through the inverse square law, written in magnitudes as m − M = 5 log₁₀(d / 10 pc).</li>
+<li>Cepheids are standard candles because their period tells their luminosity (the Leavitt law). Type Ia supernovae are about 400,000 times brighter still, so they reach hundreds of Mpc.</li>
+<li>Each rung is calibrated by the one below it, so an error in a low rung moves every distance above it, and with them H₀.</li>
+<li>Hubble's law v = H₀d turns a redshift into a distance; 1/H₀ is a time scale of about 14 Gyr.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know what an arcsecond is and the magnitude scale (5 magnitudes is a factor of 100 in flux, larger m is fainter). If the distance modulus is new, show that m − M = 5 log₁₀(d / 10 pc) is just F ∝ 1/d² in magnitudes. The strip at the top of the canvas shows each method's range; clicking a bar opens that rung. Each rung keeps its state when you switch away; <strong>Reset</strong> reloads its setup. Turn on <strong>Projector</strong>.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>1 Parallax.</strong> Play a year (or drag Earth) and drag the ruler ends onto the January and July images. For <strong>Proxima Centauri</strong> the shift is 1.536″, so p = 0.768″ and d = 1.30 pc. Ask Q1, then pick <strong>Any distance</strong>, set <strong>Distance d</strong> to 1 kpc and switch between <strong>Ground</strong>, <strong>Hipparcos</strong> and <strong>Gaia</strong>.</li>
+<li><strong>2 Cepheids.</strong> In the <strong>LMC</strong>, the preset markers sit on two peaks of a Cepheid with P = 11.40 d. Follow the readouts down: Leavitt law M_V = −4.19, mean m_V = 14.34, m − M = 18.53, d = 50.9 kpc. Have students pick other Cepheids, place the markers on two peaks themselves (or several cycles apart, with <strong>Cycles between the markers</strong>) and <strong>Record this Cepheid</strong>; the mean comes out near 50 kpc.</li>
+<li><strong>Inverse square law</strong> (in the Cepheid rail). Drag the screen out to 2.00 d: the same light covers four times the area, so the flux is ×0.250, 1.51 mag fainter.</li>
+<li><strong>3 Type Ia.</strong> Drag the line to the peak of <strong>SN B</strong>. With an assumed peak M = −19.3, m = 15.06 gives d = 74.5 Mpc. Point at "Brighter than a 30 day Cepheid by": 14.1 mag, about 430,000 times.</li>
+<li><strong>4 Hubble's law.</strong> The least squares fit gives H₀ = 69.9 ± 0.8 km/s/Mpc from 34 galaxies, and 1/H₀ = 14.0 Gyr. Click a galaxy to see its spectrum and drag the comb of rest wavelengths until the lines match. Then move <strong>Leavitt law zero point a</strong> (with <strong>Supernova calibration follows the Cepheids</strong> checked): every point slides together (Q6).</li>
+<li><strong>Whole ladder.</strong> End here: the ringed dots are the measurements just made. Ask what each overlap is used for.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: Hipparcos measured positions to about 1 mas (0.001″). Could it measure a useful parallax for a star 1 kpc away? What about Gaia, at about 0.02 mas for a bright star? Check with <strong>Any distance</strong> set to 1 kpc.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Your ruler shows Vega's January and July images 0.260″ apart. How far away is Vega, in parsecs and in light years? (1 pc = 3.26 ly.)</p></div>
+
+<div class="q"><p><strong>Q3.</strong> A Cepheid in the Large Magellanic Cloud has a period of 11.4 days and a mean apparent magnitude m_V = 14.34. Use the demo's Leavitt law, M_V = −2.43 (log₁₀P − 1) − 4.05, to find its absolute magnitude and then its distance.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Two Cepheids in M31 have periods of 8.4 d and 52 d. Which looks brighter, and by how many magnitudes? Check with <strong>Mean apparent m_V</strong> for C1 and C5, and explain why the difference is not exactly your prediction.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> <strong>SN B</strong> peaks at m = 15.06 and its host galaxy has redshift z = 0.0179. Assuming M = −19.3 at peak, find its distance and its recession speed (c = 2.998 × 10⁵ km/s). What value of H₀ does this one supernova give?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Suppose Cepheids are really 0.10 mag brighter than assumed (a = −4.15, not −4.05), and the supernova calibration, which comes from Cepheids, shifts by the same amount. By what factor does every distance on the Hubble diagram change, and what happens to H₀ = 69.9 km/s/Mpc? Check with <strong>Leavitt law zero point a</strong> in rung 4.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> The fit gives 1/H₀ = 14.0 Gyr. Why is this a natural estimate of the age of the universe, and why is it not exactly the age? Separately: why measure parallaxes of nearby Milky Way Cepheids so carefully when the goal is galaxies hundreds of Mpc away?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Parallax is the shift between two nights."</strong> The baseline is Earth's orbit: images six months apart shift by 2p.</li>
+<li><strong>"A star that looks brighter is closer."</strong> Only for the same kind of star. Apparent brightness depends on luminosity and distance; hence standard candles.</li>
+<li><strong>"Longer period Cepheids are farther away."</strong> They are more luminous; distance comes from comparing luminosity with apparent brightness.</li>
+<li><strong>"1/H₀ is the age of the universe."</strong> Only if the expansion rate had never changed. The standard model gives about 13.8 Gyr, close to 1/H₀ partly by coincidence.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Parallax: Earth on a circular 1 AU orbit, the star in the orbital plane with January and July at the extremes, so the shift is 2p and d = 1/p (a real star off the plane traces a small ellipse). Position uncertainties: 10 mas (Ground), 1 mas (Hipparcos), 0.02 mas (Gaia); σ_d/d = σ_p/p.</li>
+<li>Cepheids: simulated from M_V = −2.43 (log₁₀P − 1) + a, default a = −4.05 (Benedict et al. 2007, from Hubble Space Telescope parallaxes of Milky Way Cepheids), with a 0.1 mag spread for the instability strip width, noisy nightly photometry and a schematic light curve. Distance moduli: LMC 18.48, M31 24.40, M100 30.91. No dust extinction.</li>
+<li>Type Ia: peak M = −19.3 ± 0.12 mag, schematic light curve, no extinction, width, color or K corrections (fair at z &lt; 0.1).</li>
+<li>Hubble diagram: illustrative data simulated with H₀ = 70 km/s/Mpc, 250 km/s peculiar velocities and distance errors of 0.10 mag (Cepheids) and 0.15 mag (supernovae); least squares fit through the origin; v = cz (off by several percent at z = 0.1).</li>
+<li>Galaxy pictures are drawings, the spectrum is schematic, overview ranges are approximate, and other rungs (such as the red giant branch tip) are not shown.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Hubble tension (ladder about 73, microwave background 67.4 km/s/Mpc): using Q6, what zero point error would close it?</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>
