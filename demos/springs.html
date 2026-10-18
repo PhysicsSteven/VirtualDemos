@@ -545,7 +545,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return `fast forward ×${r}`;
   }
   function fmtE(v) { if (!isFinite(v)) return '—'; const a = Math.abs(v); return a >= 1 || a === 0 ? `${sig(v, 3)} J` : a >= 1e-3 ? `${sig(v * 1e3, 3)} mJ` : `${sig(v * 1e6, 3)} µJ`; }
-  const deg = (r) => `${(r * 180 / Math.PI).toFixed(1)}°`;
+  const deg = (r) => `${(r * 180 / Math.PI).toFixed(1).replace('-', '−')}°`;
   function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
 
   // ---------- running the oscillator ----------

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Springs and Oscillations: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Springs and Oscillations</h1><ul class="meta"><li><a href="../demos/springs.html">Open the demo</a></li><li>Intro mechanics (calculus based)</li><li>20 to 35 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A restoring force proportional to displacement, F = −kx, gives x = A cos(ω₀t + φ) with ω₀ = √(k/m). The period depends on m and k only, never on the amplitude.</li>
+<li>Hanging the spring shifts the equilibrium down by mg/k but leaves ω₀ unchanged. Gravity moves the center of the motion, not its period.</li>
+<li>A damping force −bv sorts the motion by ζ = b/(2√(km)): underdamped swings shrink inside e^(−bt/2m); critical damping (ζ = 1) returns fastest without overshoot; overdamping creeps back.</li>
+<li>A driven oscillator settles at the drive frequency. Its steady amplitude peaks near ω₀, and the height and sharpness of that peak are set by Q = √(km)/b. The phase lag goes from 0 through 90° at ω₀ to nearly 180°.</li>
+<li>Two coupled blocks have two normal modes. Any motion is a sum of them, and close mode frequencies make beats: energy moves from one block to the other and back.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know Newton's second law and the derivatives of sine and cosine. Drag a block to pull it from equilibrium and let go; moving the pointer as you let go gives it a starting speed (turn off <strong>Release with drag speed</strong> to always release from rest). <strong>Keep trace</strong> freezes the current x(t) as a gray curve for comparison. The <strong>Playback rate</strong> slider slows everything down for the room.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Simple harmonic motion.</strong> Ask Q1. Press <strong>Keep trace</strong>, then drag the block from 15 cm to 25 cm and let go. The new peaks are taller but line up in time; the measured period stays 0.9935 s. Point to the reference circle: x is the shadow of a point going around at ω₀.</li>
+<li><strong>Hanging spring.</strong> Ask the class to predict whether the period changes when the spring hangs. The block sits 24.5 cm lower, and the period readout and measured period are unchanged (Q2, Q3). Watch the three energy bars trade.</li>
+<li><strong>Three kinds of damping.</strong> The gray traces for ζ = 0.2, 1 and 2.5 start from the same 20 cm. Before playing, ask which returns to equilibrium first. Then measure the decay of the underdamped peaks (Q4).</li>
+<li><strong>Resonance.</strong> The block starts at rest; watch the transient beat with the drive and die away. Drag the ω marker on the resonance curve through ω₀ and watch the phase lag pass 90° (Q5). Press <strong>Sweep ω</strong> to trace the whole curve.</li>
+<li><strong>Damping on the resonance.</strong> Still driven, use the <strong>ζ = 0.2</strong> button or the damping slider and ask Q6 before the curve redraws.</li>
+<li><strong>Normal modes, then Beats.</strong> Show mode 1, press <strong>Mode 2</strong>, then switch to <strong>Beats</strong> with a weak coupling spring and watch block 2 take all the motion and give it back (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: you pull the block twice as far before releasing it. What happens to the period, the maximum speed and the maximum acceleration? Check with Keep trace and the readouts.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In Hanging spring, m = 0.50 kg and k = 20 N/m. Find the static stretch, the period, and the maximum speed and acceleration when the block is pulled 10 cm below its equilibrium and released. Use g = 9.81 m/s². Compare the period with a 1.0 kg block on a 40 N/m spring.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Explain why gravity does not change the period of a hanging spring. Write Newton's second law with x measured from the unstretched length, then change to y measured from the new equilibrium.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In Three kinds of damping (m = 1.00 kg, k = 40 N/m, ζ = 0.20), find b, the damped period, and the factor by which the amplitude shrinks in one damped period. By what factor does the energy shrink in that time? Check the peaks of x(t) against the envelope.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In Resonance (m = 1.00 kg, k = 40 N/m, b = 0.632 kg/s, F₀ = 0.50 N), find the steady amplitude at ω = 5.00 rad/s and at ω = ω₀. Show that at ω₀ the amplitude is Q times the static stretch F₀/k. What is the phase lag at ω₀, and what does it say about when the drive pushes?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Predict: if b is doubled, what happens to the steady amplitude at ω₀, and to the amplitude at ω = 5.00 rad/s, well off resonance? Explain why damping matters so much more at resonance than away from it.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In Beats, m = 0.50 kg, k = 20 N/m and k_c = 2.0 N/m. Find the two mode frequencies, the beat period, and the time after release at which block 1 is momentarily still and block 2 has all the motion. Check with the clock and the x₁, x₂ plots.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Pulling farther makes it take longer to come back."</strong> It has farther to go, but the larger force makes it go faster in proportion. For F = −kx the period is the same for every amplitude.</li>
+<li><strong>"Gravity changes the period of a hanging spring."</strong> Gravity only shifts the equilibrium. A pendulum's period depends on g; a mass on a spring does not.</li>
+<li><strong>"More damping always means it settles faster."</strong> Past critical damping it settles more slowly. ζ = 1 is fastest without overshooting.</li>
+<li><strong>"Resonance means the amplitude grows forever."</strong> Only with no damping. With damping the amplitude settles where the drive's work per cycle equals the energy lost to the oil, at a height set by Q.</li>
+<li><strong>"At resonance the block moves in step with the drive."</strong> At ω₀ the displacement lags the drive by 90°: the force is in step with the velocity, which is why the drive does the most work there.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>One block obeys m x″ + b x′ + k x = F₀ cos ωt. The demo uses the exact analytic solution in every regime (under, critically and overdamped), not a step by step integration. Changing a setting mid run starts a new solution from the current position and velocity.</li>
+<li>Steady state: A = (F₀/m)/√((ω₀² − ω²)² + (bω/m)²), tan δ = (bω/m)/(ω₀² − ω²), with the peak at ω_r = √(ω₀² − b²/(2m²)). The drive is a wall moving as X_w cos ωt, equivalent to a force F₀ = kX_w on the block. During a sweep, ω rises slowly; for small b the block needs a time of order 2m/b to catch up, so the swept dots fall a little below the steady curve near the peak.</li>
+<li>Two equal blocks between walls (k, k_c, k) move as normal coordinates q₁ = (x₁ + x₂)/2 at ω₁ = √(k/m) and q₂ = (x₁ − x₂)/2 at ω₂ = √((k + 2k_c)/m).</li>
+<li>Energy bars: hanging, ½k(x + mg/k)² plus −mgx for gravity; driven, ½mv² + ½kx², with the drive's work ∫Fv dt and the heat ∫bv² dt.</li>
+<li>Approximations: ideal massless springs that obey Hooke's law at any stretch (the drawing never shows a spring pressed solid), a frictionless track, damping exactly proportional to v, g = 9.80665 m/s².</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: show that for light damping the full width of the resonance peak at 1/√2 of its height is about b/m, so Q ≈ ω₀/(width). Measure the width on the resonance curve for ζ = 0.05.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

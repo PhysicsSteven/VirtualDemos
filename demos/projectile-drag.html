@@ -444,7 +444,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const fmtS = (t) => t.toFixed(t < 10 ? 2 : 1) + ' s';
   const fmtV = (v) => v.toFixed(1) + ' m/s';
   const fmtDeg = (d) => minus(d.toFixed(1)) + '°';
-  const fmtMass = (m) => m < 1 ? (m * 1000).toPrecision(3).replace(/\.?0+$/, '') + ' g' : m.toPrecision(3).replace(/\.?0+$/, '') + ' kg';
+  // trim zeros only after a decimal point, so 430 g stays 430 g
+  const trimZ = (s) => s.includes('.') ? s.replace(/\.?0+$/, '') : s;
+  const fmtMass = (m) => m < 1 ? trimZ((m * 1000).toPrecision(3)) + ' g' : trimZ(m.toPrecision(3)) + ' kg';
   function niceStep(raw) {
     const e = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / e;
     return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * e;

@@ -250,7 +250,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <input type="range" id="eS" min="0" max="1" step="0.001" value="0.5">
         </div>
         <div>
-          <div class="slider-head"><label for="xS" id="xLab">Starting point x₀</label><output id="xOut" class="mono" for="xS"></output></div>
+          <div class="slider-head"><label for="xS" id="xLab">Release point x</label><output id="xOut" class="mono" for="xS"></output></div>
           <input type="range" id="xS" min="0" max="1" step="0.001" value="0.5">
         </div>
         <div class="inline">
@@ -808,7 +808,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const decU = () => { const v = curView(), s = v.u1 - v.u0; return Math.max(0, 3 - Math.floor(Math.log10(s))); };
   const fU = (u) => { const d = decU(), z = Math.abs(u) < 0.5 * Math.pow(10, -d) ? 0 : u; return (z < 0 ? '−' : '') + Math.abs(z).toFixed(d) + ' ' + units().U; };
   function fX(x) {
-    if (cfg().angle) return `${(x * 180 / Math.PI).toFixed(1)}° (${x.toFixed(3)} rad)`;
+    if (cfg().angle) return `${(x * 180 / Math.PI).toFixed(1).replace('-', '−')}° (${x.toFixed(3).replace('-', '−')} rad)`;
     const v = curView(), d = Math.max(0, 3 - Math.floor(Math.log10(v.x1 - v.x0)));
     return (x < 0 ? '−' : '') + Math.abs(x).toFixed(d) + ' ' + units().x;
   }
@@ -1429,7 +1429,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (S.preset === 'pend') { lo = -Math.PI; hi = Math.PI; }
     const step = +(W / 600).toPrecision(1);
     xs.min = lo; xs.max = hi; xs.step = step; xs.value = S.x0;
-    $('xLab').textContent = `Starting point ${un.xs}₀`;
+    $('xLab').textContent = `Release point ${un.xs}`;
     $('xOut').textContent = fX(S.x0);
     for (const b of document.querySelectorAll('#dirSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.d === S.dir));
     for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));

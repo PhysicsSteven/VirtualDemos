@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Potential Energy Curves: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Potential Energy Curves</h1><ul class="meta"><li><a href="../demos/potential-curves.html">Open the demo</a></li><li>Intro mechanics (calculus based); upper level classical mechanics</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>For motion in one dimension with energy conserved, the graph of U(x) and one horizontal line at E tell the whole story: K = E − U is the gap between them, the particle stays where U ≤ E, and it turns around where U = E.</li>
+<li>The force is F = −dU/dx: it points downhill on the graph and is largest where the curve is steepest, not where the particle is fastest.</li>
+<li>Equilibria are where dU/dx = 0. A minimum is stable, a maximum unstable, a flat stretch neutral. Near a minimum every well looks like a spring with k = U″, so small oscillations have ω₀ = √(U″/m).</li>
+<li>Only a parabola gives a period independent of amplitude. A well that widens faster than a parabola (pendulum, Lennard Jones) has a period that grows with energy, and the period diverges as E approaches a hilltop.</li>
+<li>In phase space each energy is one curve, v = ±√(2(E − U)/m); bound motion is a closed loop, and the separatrix through a hilltop separates trapped orbits from those that cross.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know work, kinetic energy and conservation of mechanical energy; the upper level questions use Taylor series and the period integral T = 2∫dx/v. Drag the dashed energy line to change E and drag the particle to choose a start; round grips on the curve reshape it. Keep <strong>Particle on a line</strong>: it is the exact motion, while <strong>Ball on a track</strong> is only an illustration.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Spring.</strong> Point out the kinetic energy bar and the shaded forbidden regions. Raise E and ask Q1: the turning points move out, and the period curve stays flat at 0.9935 s.</li>
+<li><strong>Roller coaster.</strong> The car starts from rest at x = 8 m, 26 m up, with E = 127 kJ. Press <strong>Pause</strong> and ask where it will turn around and where it is fastest. It crosses the 25 m middle hill slowly and turns back on the last hill at x = 106 m. Show the neutral station between 22 and 32 m, then lower E below the middle hilltop (Q3).</li>
+<li><strong>Double well.</strong> Below the barrier the particle stays in the left well (Q4). Raise E toward the barrier top (1.00 J): the period shoots up. Turn on <strong>Phase space</strong> and find the gold separatrix.</li>
+<li><strong>Molecule (Lennard Jones).</strong> Argon atoms at E = −8.6 meV vibrate with period 1.425 ps, above the small oscillation value 1.26 ps. Drag E above 0: the molecule comes apart (Q5).</li>
+<li><strong>Pendulum.</strong> The start at 60° gives T/T₀ = 1.073. Raise E toward 2mgL = 19.6 J, then above it: the pendulum goes over the top (Q6).</li>
+<li><strong>Draw your own.</strong> Give the class Q7 and have them sketch a prediction before building it.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: on the Spring setup, if you raise E, what happens to the turning points, the speed at x = 0, and the period? Compare with the Pendulum at small and large swings, and explain the difference from the shapes of the two curves.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In the Spring setup, k = 20 N/m, m = 0.50 kg and E = 0.90 J. Find the turning points, the maximum speed, and the period. Check with the rail.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> At a turning point the particle is momentarily at rest. Is it in equilibrium there? Use the roller coaster: compare a car at rest at its turning point on the last hill with a car at rest on the flat station. What is the force on each, and what happens next?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> For the double well U = U₀[(x/a)² − 1]² with U₀ = 1.00 J, a = 0.80 m and m = 1.00 kg, find the equilibrium points and classify them. Expand U to second order about x = a to find the small oscillation period. Check with the equilibrium table.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> For the Lennard Jones potential U = 4ε[(σ/r)¹² − (σ/r)⁶], show that the minimum is at r₀ = 2^(1/6)σ with U(r₀) = −ε, and that U″(r₀) = 72ε/r₀². With ε = 10.4 meV, σ = 0.340 nm and the reduced mass μ = 19.97 u, find the small oscillation period. Why does the period rise above this value at higher (still negative) E?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> A pendulum has U = mgL(1 − cos θ). Explain from the shape of U why a 60° swing takes longer than a small one, and why the period grows without limit as E approaches 2mgL. What does the phase space picture look like for E just below, at, and just above 2mgL?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Describe a single well in which larger swings take less time than small ones. Then build it with Draw your own and check with the period curve.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The particle is fastest where the force on it is largest."</strong> Speed is set by the gap E − U; force by the slope. At the bottom of a well the particle is fastest and the force is zero. At a turning point it is at rest and the force is largest.</li>
+<li><strong>"At a turning point the particle is in equilibrium because it is at rest."</strong> Equilibrium needs dU/dx = 0. At a turning point on a slope the force is not zero, so the particle immediately moves back.</li>
+<li><strong>"The particle moves along the U(x) curve."</strong> The particle moves along the x axis. The curve is a graph of energy, not a track.</li>
+<li><strong>"All oscillations are simple harmonic."</strong> Only a parabolic well gives a period independent of amplitude. Small oscillations near any minimum are harmonic; large ones generally are not.</li>
+<li><strong>"A particle with E just above the barrier top crosses it quickly."</strong> It crawls over the top, because K is nearly zero there; near the barrier energy the period becomes very long.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>The particle obeys m x″ = −dU/dx, integrated with velocity Verlet; the rail shows the energy drift, which stays tiny. The orbit period T = 2∫dx/v is computed between the turning points (U = E), and the simulation also times each cycle. For a pendulum going over the top, the readout is the time per full turn.</li>
+<li>Equilibria are the zeros of dU/dx, classified by the sign of U″. The harmonic fit is the parabola with the same U″ at a minimum, and ω₀ = √(U″/m).</li>
+<li>Setups: roller coaster U = mgh(x) for a 500 kg car on a made up profile; double well for 1 kg; Lennard Jones with argon values as relative motion with μ = m_Ar/2; pendulum with a 1 kg bob on a light rigid rod, coordinate θ and inertia mL²; Draw your own is a natural cubic spline, straight beyond the end points.</li>
+<li>Approximations: no friction or drag; classical motion only (no tunneling; a real Ar₂ molecule is quantum, with a zero point energy and only a few vibrational levels). The coaster is a particle moving along x in U(x); a real car on that track has the same turning points but takes longer on steep parts.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: expand the pendulum period to T ≈ 2π√(L/g)(1 + θ₀²/16) and compare with T/T₀ = 1.073 at 60°.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

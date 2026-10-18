@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projectile Range: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Projectile Range</h1><ul class="meta"><li><a href="../demos/projectile-drag.html">Open the demo</a></li><li>Intro mechanics (calculus based)</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Without air the horizontal and vertical motions are independent: constant vₓ, constant downward acceleration g, a symmetric parabola, and from ground level the longest range at 45°.</li>
+<li>Air drag F = ½ρC_dAv² points against the velocity, so it slows both components and couples them. The path is no longer symmetric: it comes down steeper and shorter than it went up.</li>
+<li>The terminal speed v_t = √(2mg/ρC_dA) sets the scale. At launch the drag force is (v₀/v_t)² times the weight, so drag matters when v₀ is comparable to v_t or larger.</li>
+<li>Mass drops out only in vacuum. With drag, the deceleration is F/m, so a dense, heavy ball is barely affected while a light one of similar size is.</li>
+<li>The best launch angle falls below 45° when drag acts, and also when the launch point is above the ground, even with no air.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the constant acceleration equations and how to split a velocity into components. Each preset puts the ball's real mass, diameter and drag coefficient in the <strong>Ball</strong> sliders. Drag in the flight view or across the range chart to aim; arrow keys change the angle and <strong>Enter</strong> launches. The 0.25× button slows the flight for the room. Leave <strong>Vacuum path</strong> and <strong>Time dots</strong> on: the dashed vacuum parabola is the comparison every step uses.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Baseball, Air resistance Off.</strong> Ask for the range of a ball thrown at 40 m/s and 45° (Q2), then launch. The two paths coincide at 163 m. Point out the velocity vector at the top: horizontal, not zero.</li>
+<li><strong>Air resistance On.</strong> Ask Q1 first. Launch: the range drops to 94.7 m, the peak is lower and closer to the landing point, and the time dots bunch up on the steep way down. The rail shows v_t = 39.3 m/s, about the same as v₀.</li>
+<li><strong>Best angle.</strong> Drag across the range chart. The solid curve peaks at 40.9°, the dashed one at 45°. Ask why (Q3).</li>
+<li><strong>Ping pong ball and Cannonball.</strong> Same question for each: how big is drag here? Compare v₀/v_t (2.34 and 0.41) with how far the solid path falls short of the dashed one (Q4).</li>
+<li><strong>Shot put.</strong> Drag hardly matters (v₀/v_t = 0.09), yet the best angle is 42.4° in vacuum, because the ball leaves the hand 2 m up (Q5).</li>
+<li><strong>Denver</strong> (if time allows). Switch the air from <strong>Sea level</strong> to <strong>Denver</strong> with the baseball and predict the change before launching (Q6).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: a baseball (145 g, 7.4 cm) is hit at 40 m/s and 45°. With air resistance, will the range be a little shorter than in vacuum (say 10%) or a lot shorter? Will the highest point be halfway along the path, before halfway, or after?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> With air resistance off, find the range, the maximum height and the flight time for a ball launched from the ground at 40 m/s and 45°. Use g = 9.81 m/s². Check with the readouts.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> With drag on, the best angle for the baseball is about 41°, not 45°. Give a physical explanation of why drag favors a lower angle. Then use the range chart to check whether this holds for every preset launched from the ground.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Show that at the moment of launch the drag force divided by the weight is (v₀/v_t)². Find this ratio for the ping pong ball (v₀ = 20 m/s, v_t = 8.6 m/s) and for the cannonball (v₀ = 50 m/s, v_t = 122.7 m/s). Which one should be affected more by air, and does the demo agree?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> The shot put leaves the hand 2.0 m above the ground at 14 m/s. In vacuum, the best angle satisfies tan θ = v₀/√(v₀² + 2gh). Find it, and explain in words why launching from above the ground lowers the best angle even with no air at all.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Denver's air density is about 1.0 kg/m³ instead of 1.225 kg/m³ at sea level. By what factor does the baseball's terminal speed change? Predict whether the range at 45° goes up or down, then check with the Denver button.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> With drag, the baseball lands at 25.3 m/s even though it was launched at 40 m/s from the same height. In vacuum the two speeds are equal. Explain both facts with energy, and say where the missing kinetic energy went.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"At the top of its path the ball has zero velocity."</strong> Only the vertical component is zero. The velocity vector at the top is horizontal.</li>
+<li><strong>"45° always gives the longest range."</strong> Only from ground level in vacuum. Drag and a raised launch point both lower the best angle.</li>
+<li><strong>"Heavier objects fall faster."</strong> In vacuum every ball follows the same path for the same launch. With air, what matters is the drag deceleration F/m, which depends on size and mass together: the 5 kg cannonball is barely slowed, while the 2.7 g ping pong ball goes less than a quarter of its vacuum range.</li>
+<li><strong>"With air resistance the path is still a parabola, just smaller."</strong> The path is lopsided: the ball climbs at a shallower angle than it descends, and the peak lies past the middle of the range.</li>
+<li><strong>"Drag is a fixed force, like friction on a table."</strong> Drag grows as v², so it is largest at launch and weakest near the top of the path.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>The ball feels gravity and a drag force F = ½ρC_dAv² opposite its velocity, with A = πd²/4. The equation of motion is a = −g ŷ − k|v|v with k = ρC_dA/(2m), integrated with fourth order Runge–Kutta. The landing point is found on a cubic interpolation within the last step.</li>
+<li>The vacuum path is the exact parabola. The terminal speed is v_t = √(g/k) = √(2mg/ρC_dA).</li>
+<li>The range chart sweeps the launch angle in 1° steps and refines the best angle with a golden section search near the peak.</li>
+<li>Approximations: C_d is constant (no dependence on speed or Reynolds number), the ball does not spin (no Magnus lift), there is no wind, the ground is flat, and g and ρ do not change with height. The ball is drawn larger than scale.</li>
+<li><strong>Air resistance Off</strong> keeps the same air and only removes the drag force. <strong>Moon (no air)</strong> sets ρ = 0 but keeps g = 9.81 m/s², so it is a vacuum on Earth, not the lunar gravity.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: for small drag, show that the fractional loss of range is proportional to (v₀/v_t)², using a first order perturbation of the vacuum solution in k.</li>
+<li>Lab connection: launch a ping pong ball and a golf ball from the same launcher and compare ranges with the two curves on the range chart.</li>
+<li>Elite shot putters release at about 37° to 38°, lower than the 42° optimum here, because a person can push the shot faster when throwing at a lower angle; the launch speed is not independent of the angle.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>
