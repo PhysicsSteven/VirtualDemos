@@ -54,7 +54,7 @@ OVERRIDES = {
     "ideal-gas": {"wait": 2500},
     "magnetic-force": {"wait": 5000},
     "quantum-waves": {"click": ['[data-p="barrier"]'], "wait": 3000},
-    "circuit-builder": {"click": ['[data-p="compare"]'], "wait": 1500},
+    "circuit-builder": {"click": ['[data-v="bench"]', '[data-p="compare"]'], "wait": 1500},
     "gauss-law": {"click": ['[data-p="outside"]'], "wait": 1500},
     "black-holes": {"click": ['[data-p="ring"]'], "wait": 2500},
     "doppler": {"click": ['[data-p="jet"]'], "wait": 9000},
@@ -65,8 +65,8 @@ OVERRIDES = {
     "franck-hertz": {"click": ['[data-p="ne"]'], "wait": 9500},
     "projectile-drag": {"click": ['[data-p="heavy"]'], "wait": 6500},
     "diffraction-grating": {"click": ['[data-p="hydrogen"]'], "wait": 1500},
-    "capacitors": {"click": ['[data-p="energy"]'], "wait": 1500,
-                   "js": "['tPane', 'ePane', 'gPane'].forEach((id) => { document.getElementById(id).hidden = true; }); __cap.setRunning(false); __cap.setGeom({ A: 0.03 })"},
+    "capacitors": {"click": ['[data-p="energy"]'], "wait": 1500, "crop": "#dPane",
+                   "js": "__cap.setRunning(false); __cap.setGeom({ A: 0.0225 }); __cap.setClean(true)"},
 }
 
 DEFAULT_CROP = """() => {

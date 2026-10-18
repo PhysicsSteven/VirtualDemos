@@ -47,6 +47,8 @@ img { max-width: 100%; }
   --wire: #3b4655;
   --glow: #f0a800;
   --kir: #7a45c0;
+  --paper: #fbf8f0; --paper-rule: #ece5d4; --paper-dot: #cabfa6;
+  --bench: #d8c3a0; --bench-lo: #b99d74;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -55,6 +57,7 @@ img { max-width: 100%; }
     --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
     --line: #283241; --grid: #18202a; --grid-strong: #2a3646; --pos: #ff7660; --neg: #69a0ff;
     --equi: #e2b350; --accent: #69a0ff; --wire: #aab4c2; --glow: #ffd24d; --kir: #b48cff;
+    --paper: #0f1824; --paper-rule: #17243a; --paper-dot: #2b3c56; --bench: #3a2f24; --bench-lo: #261e16;
     color-scheme: dark;
   }
 }
@@ -62,6 +65,7 @@ img { max-width: 100%; }
   --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
   --line: #283241; --grid: #18202a; --grid-strong: #2a3646; --pos: #ff7660; --neg: #69a0ff;
   --equi: #e2b350; --accent: #69a0ff; --wire: #aab4c2; --glow: #ffd24d; --kir: #b48cff;
+  --paper: #0f1824; --paper-rule: #17243a; --paper-dot: #2b3c56; --bench: #3a2f24; --bench-lo: #261e16;
   color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -86,13 +90,14 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
 
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
-.stage { position: relative; min-height: 600px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage { position: relative; min-height: 600px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--paper); }
 .stage canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; }
 .stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
 .stage-ctl > * { pointer-events: auto; }
 .stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
 .stage-ctl .seg { flex-wrap: wrap; }
+.bar-right .views button { font-size: 0.82rem; padding: 3px 10px; }
 .stage-ctl .gap { flex: 1 1 0; pointer-events: none; }
 .warn { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); z-index: 3; width: max-content; max-width: calc(100% - 20px);
   font-size: 0.86rem; color: var(--ink); background: color-mix(in srgb, var(--pos) 12%, var(--canvas)); border: 1px solid var(--pos); border-radius: 8px; padding: 6px 12px; }
@@ -162,6 +167,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.dot { width: 8px; height: 8px; border: 0; border-radius: 50%; background: var(--equi); margin: 0 7px; }
 .swatch.dot.e { background: var(--neg); }
 .swatch.kir { border-top: 6px solid color-mix(in srgb, var(--kir) 40%, transparent); }
+.swatch.leads { height: 6px; border: 0; border-radius: 3px; background: linear-gradient(90deg, #b8372b 0 33%, #2b2f36 33% 66%, #2f68b8 66%); }
+.swatch.bands { height: 8px; border: 0; border-radius: 4px; background: linear-gradient(90deg, #dcc392 0 12%, #7b4a22 12% 24%, #151515 24% 36%, #cc2f28 36% 48%, #dcc392 48% 70%, #c9a227 70% 82%, #dcc392 82%); }
 .swatch.glow { width: 14px; height: 14px; border: 0; border-radius: 50%; margin: 0 4px; background: radial-gradient(circle, var(--glow), transparent 70%); }
 .vleg { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
 .vleg i { height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--neg), var(--muted), var(--pos)); }
@@ -190,6 +197,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
     <div class="bar-right">
       <div class="units mono">SI units · I is conventional current · ideal wires and meters</div>
+      <div class="seg views" role="group" aria-label="View" id="viewSeg">
+        <button type="button" data-v="schem" aria-pressed="true" title="Circuit symbols on paper (B switches view)">Schematic</button>
+        <button type="button" data-v="bench" aria-pressed="false" title="Real parts on a lab bench (B switches view)">Bench</button>
+      </div>
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
       <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/circuit-builder.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/circuit-builder.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h4v1h-4zM16 2h1v1h-1zM18 2h3v1h-3zM22 2h2v1h-2zM25 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM14 3h5v1h-5zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h6v1h-6zM21 4h3v1h-3zM25 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h4v1h-4zM16 5h1v1h-1zM18 5h2v1h-2zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM15 6h2v1h-2zM18 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM15 7h1v1h-1zM20 7h1v1h-1zM23 7h1v1h-1zM28 7h3v1h-3zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM13 9h1v1h-1zM16 9h1v1h-1zM18 9h1v1h-1zM21 9h3v1h-3zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM12 10h1v1h-1zM15 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h7v1h-7zM32 10h5v1h-5zM5 11h2v1h-2zM9 11h2v1h-2zM12 11h3v1h-3zM16 11h3v1h-3zM24 11h3v1h-3zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h5v1h-5zM8 12h5v1h-5zM19 12h2v1h-2zM22 12h2v1h-2zM26 12h1v1h-1zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h1v1h-1zM6 13h2v1h-2zM10 13h1v1h-1zM12 13h2v1h-2zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM25 13h2v1h-2zM29 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h1v1h-1zM6 14h4v1h-4zM12 14h1v1h-1zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h1v1h-1zM26 14h3v1h-3zM30 14h9v1h-9zM4 15h2v1h-2zM7 15h1v1h-1zM9 15h3v1h-3zM14 15h3v1h-3zM18 15h2v1h-2zM22 15h4v1h-4zM30 15h1v1h-1zM33 15h1v1h-1zM4 16h1v1h-1zM6 16h5v1h-5zM12 16h1v1h-1zM14 16h2v1h-2zM17 16h3v1h-3zM22 16h3v1h-3zM27 16h1v1h-1zM29 16h2v1h-2zM32 16h4v1h-4zM38 16h1v1h-1zM5 17h1v1h-1zM9 17h1v1h-1zM15 17h9v1h-9zM25 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h4v1h-4zM8 18h3v1h-3zM12 18h1v1h-1zM17 18h2v1h-2zM21 18h1v1h-1zM24 18h1v1h-1zM27 18h3v1h-3zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM7 19h1v1h-1zM10 19h1v1h-1zM12 19h1v1h-1zM17 19h1v1h-1zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM28 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM3 20h2v1h-2zM8 20h1v1h-1zM10 20h5v1h-5zM16 20h3v1h-3zM21 20h1v1h-1zM23 20h2v1h-2zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h1v1h-1zM6 21h1v1h-1zM9 21h1v1h-1zM12 21h1v1h-1zM17 21h1v1h-1zM20 21h5v1h-5zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM3 22h2v1h-2zM6 22h4v1h-4zM11 22h1v1h-1zM13 22h1v1h-1zM15 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h4v1h-4zM9 23h2v1h-2zM12 23h2v1h-2zM16 23h1v1h-1zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h2v1h-2zM5 24h4v1h-4zM10 24h1v1h-1zM12 24h1v1h-1zM15 24h1v1h-1zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h3v1h-3zM26 24h1v1h-1zM28 24h3v1h-3zM33 24h3v1h-3zM37 24h2v1h-2zM7 25h1v1h-1zM10 25h3v1h-3zM14 25h5v1h-5zM21 25h5v1h-5zM28 25h2v1h-2zM31 25h4v1h-4zM37 25h1v1h-1zM2 26h2v1h-2zM6 26h1v1h-1zM8 26h1v1h-1zM10 26h1v1h-1zM12 26h4v1h-4zM17 26h1v1h-1zM20 26h3v1h-3zM24 26h5v1h-5zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h3v1h-3zM7 27h1v1h-1zM9 27h3v1h-3zM14 27h5v1h-5zM23 27h1v1h-1zM25 27h1v1h-1zM30 27h2v1h-2zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h2v1h-2zM7 28h2v1h-2zM10 28h2v1h-2zM14 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM26 28h5v1h-5zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h1v1h-1zM7 29h1v1h-1zM11 29h5v1h-5zM18 29h1v1h-1zM23 29h1v1h-1zM31 29h4v1h-4zM37 29h1v1h-1zM2 30h1v1h-1zM5 30h4v1h-4zM12 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM26 30h13v1h-13zM10 31h2v1h-2zM14 31h1v1h-1zM17 31h6v1h-6zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h5v1h-5zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h3v1h-3zM26 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h4v1h-4zM15 33h6v1h-6zM23 33h1v1h-1zM25 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h3v1h-3zM14 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h10v1h-10zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM15 35h1v1h-1zM17 35h1v1h-1zM20 35h1v1h-1zM22 35h1v1h-1zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM14 36h2v1h-2zM17 36h2v1h-2zM20 36h2v1h-2zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM15 37h3v1h-3zM21 37h3v1h-3zM28 37h3v1h-3zM32 37h1v1h-1zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM16 38h2v1h-2zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h5v1h-5zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
     </div>
@@ -197,7 +208,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   <main class="bench">
     <div class="stage" id="stage">
-      <canvas id="can" tabindex="0" aria-label="Circuit board: a grid of connection dots with the circuit drawn on it. Keys: 1 to 8 pick a tool, arrows move the cursor or the selected part, Enter places a part from the marked dot to the cursor, Tab selects the next part, plus and minus change its value, R rotates, F flips, S or Enter flips a selected switch, Delete removes, Control Z undoes, P pauses the moving charges."></canvas>
+      <canvas id="can" tabindex="0" aria-label="Circuit board: a grid of connection dots with the circuit drawn on it. Keys: 1 to 8 pick a tool, arrows move the cursor or the selected part, Enter places a part from the marked dot to the cursor, Tab selects the next part, plus and minus change its value, R rotates, F flips, S or Enter flips a selected switch, Delete removes, Control Z undoes, P pauses the moving charges, B switches between the schematic and the bench view."></canvas>
       <div class="stage-ctl" id="ctl">
         <div class="seg tools" role="group" aria-label="Tool" id="tools">
           <button type="button" data-t="select" aria-pressed="true" title="Select and move (1)">Select</button>
@@ -284,7 +295,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" class="btn" id="toSelect">Select tool</button>
         </div>
         <p class="hint">Pick a tool above the drawing, then drag from one dot to another, or tap two dots. A part dragged over more than one step gets wires to fill the gap; a wire that turns a corner goes across first, then down. Batteries and meters have their + end where you start. With Select, drag a part or a dot to move it and click a switch to flip it.</p>
-        <p class="hint">Keys on the drawing: 1 to 8 pick a tool, arrows move the cursor (or the selected part), Enter marks the start dot and then places, Tab picks the next part, + and − change its value, R rotates, F flips, Delete removes, Ctrl+Z undoes.</p>
+        <p class="hint">Keys on the drawing: 1 to 8 pick a tool, arrows move the cursor (or the selected part), Enter marks the start dot and then places, Tab picks the next part, + and − change its value, R rotates, F flips, Delete removes, Ctrl+Z undoes, B switches view. Both views edit the same circuit in the same way.</p>
       </section>
 
       <section>
@@ -301,6 +312,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch glow"></i>Bulb glow ∝ power, full glow at 4 W</span>
           <span><i class="swatch kir"></i>Junction or loop in the Kirchhoff check</span>
           <span id="speedTxt"></span>
+          <span id="benchKey1" hidden><i class="swatch leads"></i>Bench leads: red joins a battery's + terminal, black its − terminal; each other color is one junction, all at one voltage</span>
+          <span id="benchKey2" hidden><i class="swatch bands"></i>Resistor bands: two digits, a multiplier, gold for 5%. A bulb filament runs from dull red to yellow white as its power rises</span>
         </div>
         <div class="vleg" id="vLeg" hidden><span id="vMin">0 V</span><i></i><span id="vMax"></span></div>
         <p class="hint">Model: ideal wires, switches and meters (an ammeter has zero resistance, a voltmeter draws no current). A battery is an ideal EMF ε with an optional internal resistance r in series. Bulbs are modeled as fixed resistors, so P = I<sup>2</sup>R; a real filament's resistance rises as it heats. Where wires alone form a loop, the current is shared as if every wire had the same tiny resistance. Node voltages are measured from the − terminal of the first battery in each separate circuit.</p>
@@ -883,7 +896,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function tokens() {
     const cs = getComputedStyle(document.documentElement);
     const g = (n) => cs.getPropertyValue(n).trim();
-    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+    T = { canvas: g('--paper'), paper: g('--paper'), paperRule: g('--paper-rule'), paperDot: g('--paper-dot'), bench: g('--bench'), benchLo: g('--bench-lo'), dark: isDark(), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
       pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), wire: g('--wire'), glow: g('--glow'), kir: g('--kir'),
       ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace' };
     T.rgb = { neg: hexRGB(T.neg), pos: hexRGB(T.pos), mid: hexRGB(T.muted), glow: hexRGB(T.glow), canvas: hexRGB(T.canvas) };
@@ -916,6 +929,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // half length of each symbol along its part, and how far it reaches sideways, in grid steps
   const HALF = { res: 0.3, bulb: 0.3, bat: 0.3, sw: 0.3, am: 0.3, vm: 0.3, wire: 0 };
   const SIDE = { res: 0.14, bulb: 0.25, bat: 0.3, sw: 0.27, am: 0.25, vm: 0.25, wire: 0.05 };
+  // the same in the bench view, where the parts are bodies rather than symbols; an upright meter is taller than it is wide
+  const SIDEB = { res: 0.11, bulb: 0.24, bat: 0.33, sw: 0.21, am: 0.31, vm: 0.31, wire: 0.05 };
+  // a bench part grows with the room it has between its two end dots
+  const benchZ = (ge) => (ge ? clamp((ge.L / 2 - 0.12) / 0.3, 1, 1.45) : 1);
+  function sideOf(e, ge) {
+    if (view !== 'bench') return SIDE[e.type];
+    const z = e.type === 'wire' ? 1 : benchZ(ge);
+    if ((e.type === 'am' || e.type === 'vm') && ge && Math.abs(ge.dir[0]) > 0.5) return 0.37 * z;
+    return SIDEB[e.type] * z;
+  }
   // geometry of every part in grid units; parts sharing both end dots are drawn as brackets beside each other
   function geoms() {
     const groups = new Map(), out = new Map();
@@ -965,7 +988,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   function underlay(ids, col, alpha, width) {
     ctx.strokeStyle = col; ctx.globalAlpha = alpha; ctx.lineWidth = width; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    for (const id of ids) { const ge = GE.get(id); if (!ge) continue; polyPx(ge.pts); ctx.stroke(); }
+    for (const id of ids) { const ge = GE.get(id); if (!ge) continue; polyPx(ge.bpts || ge.pts); ctx.stroke(); }
     ctx.globalAlpha = 1;
   }
   function triangle(x, y, dx, dy, size, col) {
@@ -1054,26 +1077,30 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function drawDots(e, ge, ps) {
     const r = sol && sol.res.get(e.id);
     if (!r || !isFinite(r.I) || !cleanI(r.I) || !conducts(e)) return;
-    const sp = 0.25, rad = Math.max(1.8, 0.045 * geo.s) * Math.min(1.3, ps), sgn = S.layers.elec ? -1 : 1, ph = sgn * (phase.get(e.id) || 0);
-    ctx.fillStyle = S.layers.elec ? T.neg : T.equi;
+    const bn = view === 'bench', sp = 0.25, rad = Math.max(bn ? 2.2 : 1.8, (bn ? 0.05 : 0.045) * geo.s) * Math.min(1.3, ps), sgn = S.layers.elec ? -1 : 1, ph = sgn * (phase.get(e.id) || 0);
+    const pts = ge.bpts || ge.pts;
+    ctx.beginPath();
     let acc = 0;
-    for (let i = 0; i + 1 < ge.pts.length; i++) {
-      const [x0, y0] = ge.pts[i], [x1, y1] = ge.pts[i + 1], L = Math.hypot(x1 - x0, y1 - y0);
+    for (let i = 0; i + 1 < pts.length; i++) {
+      const [x0, y0] = pts[i], [x1, y1] = pts[i + 1], L = Math.hypot(x1 - x0, y1 - y0);
       if (L < 1e-9) continue;
       const s0 = (((ph - acc) % sp) + sp) % sp;
       for (let t = s0; t < L; t += sp) {
-        const u = t / L;
-        ctx.beginPath(); ctx.arc(geo.X(x0 + (x1 - x0) * u), geo.Y(y0 + (y1 - y0) * u), rad, 0, 2 * Math.PI); ctx.fill();
+        const u = t / L, px = geo.X(x0 + (x1 - x0) * u), py = geo.Y(y0 + (y1 - y0) * u);
+        ctx.moveTo(px + rad, py); ctx.arc(px, py, rad, 0, 2 * Math.PI);
       }
       acc += L;
     }
+    ctx.fillStyle = S.layers.elec ? T.neg : T.equi; ctx.fill();
+    if (bn) { ctx.strokeStyle = T.dark ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.85)'; ctx.lineWidth = 1; ctx.stroke(); }
   }
-  function labelLines(e, r) {
+  function labelLines(e, r, ge) {
     const L = [], nm = e.name || '';
     const n = (t) => ({ t, f: 'name' }), v = (t) => ({ t, f: 'val' });
     if (isResEl(e)) L.push([n(nm), v(fmtR(e.R))]);
     else if (e.type === 'bat') { L.push([n(nm), v(fmtE(e.emf))]); if (hasRint(e)) L.push([v('r = ' + fmtR(e.r))]); }
     else if (e.type === 'sw') L.push([n(nm), v(e.closed ? 'closed' : 'open')]);
+    else if ((e.type === 'am' || e.type === 'vm') && view === 'bench' && lcdReadable(ge)) L.push([n(nm)]);
     else if (e.type === 'am') L.push([n(nm), { t: r && r.ok ? fmtSI(cleanI(r.I), 'A', 3) : '—', f: 'read' }]);
     else if (e.type === 'vm') L.push([n(nm), { t: r && isFinite(r.V) ? fmtSI(cleanV(r.V), 'V', 3) : '—', f: 'read' }]);
     const small = geo.s < 34;
@@ -1093,10 +1120,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const e of els) {
       if (e.type === 'wire') continue;
       const ge = GE.get(e.id), r = sol && sol.res.get(e.id);
-      const lines = labelLines(e, r);
+      const lines = labelLines(e, r, ge);
       const widths = lines.map((ln) => ln.reduce((w, sg, i) => { ctx.font = fonts[sg.f]; return w + ctx.measureText(sg.t).width + (i ? gap : 0); }, 0));
       const bw = Math.max(...widths) + 2 * pad, bh = lines.length * lh + 2 * pad;
-      const cx = geo.X(ge.c[0]), cy = geo.Y(ge.c[1]), [sx, sy] = ge.side, ext = SIDE[e.type] * s + 5 * ps;
+      const cx = geo.X(ge.c[0]), cy = geo.Y(ge.c[1]), [sx, sy] = ge.side, ext = sideOf(e, ge) * s + 5 * ps;
       let bx, by, align;
       const place = (sx, sy) => {
         if (Math.abs(sy) >= Math.abs(sx)) { bx = cx - bw / 2; by = sy < 0 ? cy - ext - bh : cy + ext; align = 'center'; }
@@ -1148,29 +1175,401 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
   }
 
+  // ---------- bench view: the same circuit, the same grid and the same hit targets, drawn with real parts on a wooden bench ----------
+  let view = 'schem';
+  try { if (localStorage.getItem('vd-cb-view') === 'bench') view = 'bench'; } catch (_) {}
+  function isDark() {
+    const th = document.documentElement.getAttribute('data-theme');
+    if (th === 'dark') return true; if (th === 'light') return false;
+    try { return matchMedia('(prefers-color-scheme: dark)').matches; } catch (_) { return false; }
+  }
+  // mix two colours, or shade one toward white (f > 0) or black (f < 0)
+  function mixC(a, b, f) { const A = hexRGB(a), B = hexRGB(b); return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * f)).join(',')})`; }
+  const shade = (c, f) => (f >= 0 ? mixC(c, '#ffffff', f) : mixC(c, '#000000', -f));
+  const BRASS = '#c9a23a', COPPER = '#b8692e', STEEL = '#8d96a3';
+  // light and shadow across a round object, laid over its paint, from one rim (x0, y0) to the other (x1, y1)
+  function roundShade(x0, y0, x1, y1) {
+    const gr = ctx.createLinearGradient(x0, y0, x1, y1);
+    gr.addColorStop(0, 'rgba(0,0,0,0.32)'); gr.addColorStop(0.2, 'rgba(255,255,255,0.08)'); gr.addColorStop(0.32, 'rgba(255,255,255,0.42)');
+    gr.addColorStop(0.48, 'rgba(255,255,255,0.04)'); gr.addColorStop(0.82, 'rgba(0,0,0,0.14)'); gr.addColorStop(1, 'rgba(0,0,0,0.38)');
+    return gr;
+  }
+  function shadowed(s, fn) { ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.36)'; ctx.shadowBlur = 0.12 * s; ctx.shadowOffsetY = 0.04 * s; fn(); ctx.restore(); }
+  // resistor colour code: two digits, a multiplier (gold ×0.1, silver ×0.01) and a gold 5% tolerance band
+  const BANDS = ['#151515', '#7b4a22', '#cc2f28', '#ee8a25', '#f1d43a', '#2f9b4a', '#2f62c9', '#7c40b8', '#8b8b8b', '#f3f3f3'];
+  function resBands(R) {
+    let e = Math.floor(Math.log10(R) + 1e-9) - 1, d = Math.round(R / Math.pow(10, e));
+    if (d >= 100) { d = Math.round(d / 10); e++; }
+    return [BANDS[Math.floor(d / 10)], BANDS[d % 10], e >= 0 ? BANDS[Math.min(e, 9)] : e === -1 ? '#c9a227' : '#b9bec6', '#c9a227'];
+  }
+  // filament colour against the fraction of full power: dark when cold, dull red, orange, then yellow white
+  const FIL = [[0, [74, 64, 56]], [0.02, [112, 40, 20]], [0.1, [190, 52, 24]], [0.3, [242, 112, 34]], [0.6, [255, 182, 78]], [1, [255, 243, 208]]];
+  function filRGB(g) {
+    for (let i = 1; i < FIL.length; i++) if (g <= FIL[i][0]) { const [g0, c0] = FIL[i - 1], [g1, c1] = FIL[i], u = (g - g0) / (g1 - g0); return c0.map((v, k) => v + (c1[k] - v) * u); }
+    return FIL[FIL.length - 1][1];
+  }
+  const bulbG = (e) => { const r = sol && sol.res.get(e.id), P = r && isFinite(r.P) ? r.P : 0; return clamp(P / P_FULL, 0, 1); };
+  // which source stands in for a battery: a tube of 1.5 V cells, a 9 V battery, or a bench supply for any other EMF
+  function batKind(e) {
+    const n = e.emf / 1.5;
+    if (e.emf > 0 && e.emf <= 6 && Math.abs(n - Math.round(n)) < 1e-9) return { kind: 'cells', n: Math.round(n) };
+    if (e.emf === 9) return { kind: 'pp3' };
+    return { kind: 'supply' };
+  }
+  const lcdReadable = (ge) => geo && 0.15 * geo.s * benchZ(ge) >= 12;
+
+  // the paper or the bench top, cached: it only changes with the pane size, the theme or the view
+  let backCache = null;
+  function backLayer(W, H) {
+    const s = geo.s, ps = projScale();
+    const key = [view, W, H, dpr, T.paper, T.paperRule, T.bench, s.toFixed(3), geo.ox.toFixed(2), geo.oy.toFixed(2), ps].join('|');
+    if (backCache && backCache.key === key) return backCache.c;
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(W * dpr)); c.height = Math.max(1, Math.round(H * dpr));
+    const x = c.getContext('2d'); x.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (view === 'bench') {
+      const gr = x.createLinearGradient(0, 0, W * 0.3, H); gr.addColorStop(0, shade(T.bench, 0.08)); gr.addColorStop(1, T.benchLo);
+      x.fillStyle = gr; x.fillRect(0, 0, W, H);
+      x.strokeStyle = T.benchLo; x.lineWidth = 1;
+      const n = Math.max(10, Math.round(H / 16));
+      for (let i = 0; i < n; i++) {
+        const yy = (i + 0.5) * H / n;
+        x.globalAlpha = (T.dark ? 0.5 : 0.36) * (0.6 + 0.4 * Math.sin(i * 2.3) ** 2);
+        x.beginPath();
+        for (let px = 0; px <= W + 8; px += 8) { const q = yy + 1.7 * Math.sin(px * 0.009 + i * 1.9) + 0.8 * Math.sin(px * 0.041 + i * 0.7); px ? x.lineTo(px, q) : x.moveTo(px, q); }
+        x.stroke();
+      }
+      x.globalAlpha = T.dark ? 0.7 : 0.45; x.strokeStyle = shade(T.benchLo, -0.35); x.lineWidth = 1.2;
+      const seams = [0.34, 0.69].map((f) => Math.round(H * f) + 0.5);
+      for (const y of seams) { x.beginPath(); x.moveTo(0, y); x.lineTo(W, y); x.stroke(); }
+      x.globalAlpha = T.dark ? 0.12 : 0.3; x.strokeStyle = '#ffffff';
+      for (const y of seams) { x.beginPath(); x.moveTo(0, y + 1); x.lineTo(W, y + 1); x.stroke(); }
+      // the board's drilled holes, one at every grid dot
+      const hr = Math.max(1.3, s * 0.028) * Math.min(ps, 1.3);
+      for (let i = 0; i < G.cols; i++) for (let j = 0; j < G.rows; j++) {
+        const px = geo.X(i), py = geo.Y(j);
+        x.globalAlpha = T.dark ? 0.2 : 0.4; x.fillStyle = '#ffffff'; x.beginPath(); x.arc(px, py + 0.8, hr, 0, 2 * Math.PI); x.fill();
+        x.globalAlpha = T.dark ? 0.8 : 0.55; x.fillStyle = '#1d140c'; x.beginPath(); x.arc(px, py, hr, 0, 2 * Math.PI); x.fill();
+      }
+      x.globalAlpha = 1;
+    } else {
+      // engineering paper: a faint rule through every grid dot
+      x.fillStyle = T.paper; x.fillRect(0, 0, W, H);
+      x.strokeStyle = T.paperRule; x.lineWidth = 1;
+      x.beginPath();
+      for (let i = Math.ceil(-geo.ox / s); geo.X(i) <= W; i++) { const px = Math.round(geo.X(i)) + 0.5; x.moveTo(px, 0); x.lineTo(px, H); }
+      for (let j = Math.ceil(-geo.oy / s); geo.Y(j) <= H; j++) { const py = Math.round(geo.Y(j)) + 0.5; x.moveTo(0, py); x.lineTo(W, py); }
+      x.stroke();
+      x.fillStyle = T.paperDot;
+      for (let i = 0; i < G.cols; i++) for (let j = 0; j < G.rows; j++) { x.beginPath(); x.arc(geo.X(i), geo.Y(j), Math.max(1.4, s * 0.022) * Math.min(ps, 1.3), 0, 2 * Math.PI); x.fill(); }
+    }
+    backCache = { key, c };
+    return c;
+  }
+
+  // lead colours: red from a battery's + terminal, black from its − terminal, and one more colour for each other junction
+  let netCol = new Map();
+  function leadPalette() {
+    return T.dark ? { red: '#c9473a', black: '#4a4f57', other: ['#3f7fd0', '#d8b23a', '#3f9c63', '#cfcac0', '#d47a32'] }
+      : { red: '#b8372b', black: '#2b2f36', other: ['#2f68b8', '#e0b52c', '#2e8653', '#f1eee6', '#d06d22'] };
+  }
+  function buildNetColors() {
+    const pal = leadPalette(), m = new Map();
+    for (const e of els) if (e.type === 'bat') {
+      const na = netOf.get(kp(e.a)), nb = netOf.get(kp(e.b));
+      if (!m.has(na)) m.set(na, pal.red);
+      if (!m.has(nb)) m.set(nb, pal.black);
+    }
+    let i = 0;
+    for (const e of els) for (const p of [e.a, e.b]) { const n = netOf.get(kp(p)); if (!m.has(n)) m.set(n, pal.other[i++ % pal.other.length]); }
+    netCol = m;
+  }
+  function benchLeadCol(p) {
+    if (S.layers.vcolor && sol) { const P = sol.parts[sol.ptPart.get(kp(p))]; if (P && P.hasSource) return vColor(ptVolt(p)); }
+    return netCol.get(netOf.get(kp(p))) || leadPalette().black;
+  }
+  // a wire lies with a little slack: a gentle bow to one side, sampled as a polyline in grid units
+  function slackPts(e, ge) {
+    if (ge.pts.length !== 2) return ge.pts;
+    const [a, b] = ge.pts, bow = Math.min(0.09, 0.04 * ge.L) * (e.id % 2 ? 1 : -1), n = [-ge.dir[1], ge.dir[0]];
+    const out = [];
+    for (let k = 0; k <= 10; k++) { const t = k / 10, w = 4 * t * (1 - t) * bow; out.push([a[0] + (b[0] - a[0]) * t + n[0] * w, a[1] + (b[1] - a[1]) * t + n[1] * w]); }
+    return out;
+  }
+  // a plastic insulated lead along a polyline in pixels: dark rim, coloured body, a soft highlight
+  function insulated(pts, col, w) {
+    if (pts.length < 2) return;
+    ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    const path = () => { ctx.beginPath(); pts.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); };
+    path(); ctx.strokeStyle = shade(col, -0.5); ctx.lineWidth = w + 1.4; ctx.stroke();
+    path(); ctx.strokeStyle = col; ctx.lineWidth = w; ctx.stroke();
+    ctx.translate(-w * 0.16, -w * 0.16); path(); ctx.strokeStyle = shade(col, 0.55); ctx.globalAlpha *= 0.6; ctx.lineWidth = Math.max(0.8, w * 0.28); ctx.stroke();
+    ctx.restore();
+  }
+  const toPx = (ptsU) => ptsU.map(([u, v]) => [geo.X(u), geo.Y(v)]);
+  const leadW = (s, ps) => clamp(0.055 * s, 2.2, 6.5) * Math.min(ps, 1.3);
+  function benchLeads(ps) {
+    const w = leadW(geo.s, ps);
+    for (const e of els) {
+      const ge = GE.get(e.id);
+      if (e.type === 'wire') { insulated(toPx(ge.bpts || ge.pts), benchLeadCol(e.a), w); continue; }
+      const [h1, h2] = halves(ge);
+      insulated(toPx(h1), benchLeadCol(e.a), w); insulated(toPx(h2), benchLeadCol(e.b), w);
+    }
+  }
+  // a brass binding post at every end, larger where three or more parts meet
+  function benchPosts(ps) {
+    const s = geo.s;
+    for (const [k, c] of endCount) {
+      const [u, v] = k.split(',').map(Number), x = geo.X(u), y = geo.Y(v), r = clamp(0.075 * s, 3, 9) * Math.min(ps, 1.3) * (c >= 3 ? 1.2 : 1);
+      if (S.layers.vcolor && sol) { const P = sol.parts[sol.ptPart.get(k)]; if (P && P.hasSource) { ctx.fillStyle = vColor(sol.ptV.get(k)); ctx.beginPath(); ctx.arc(x, y, r + 2.5 * ps, 0, 2 * Math.PI); ctx.fill(); } }
+      screw(x, y, r);
+    }
+  }
+  function screw(x, y, r) {
+    const gp = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, 0, x, y, r * 1.05); gp.addColorStop(0, shade(BRASS, 0.5)); gp.addColorStop(1, shade(BRASS, -0.4));
+    ctx.fillStyle = gp; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = 'rgba(40,25,0,0.55)'; ctx.lineWidth = 0.8; ctx.stroke();
+    if (r >= 3.5) { ctx.strokeStyle = 'rgba(60,40,0,0.6)'; ctx.lineWidth = Math.max(0.8, r * 0.22); ctx.beginPath(); ctx.moveTo(x - r * 0.55, y + r * 0.2); ctx.lineTo(x + r * 0.55, y - r * 0.2); ctx.stroke(); }
+  }
+  // a through hole resistor along x in the current frame, from xa to xb, its colour bands showing R (read from the xa end)
+  function axialRes(xa, xb, R, s) {
+    const mid = (xa + xb) / 2, bl = Math.min(0.5 * s, (xb - xa) * 0.8), bh = bl * 0.34, bx = mid - bl / 2;
+    ctx.lineCap = 'round'; ctx.strokeStyle = shade(STEEL, -0.2); ctx.lineWidth = Math.max(1.4, 0.04 * s);
+    ctx.beginPath(); ctx.moveTo(xa, 0); ctx.lineTo(xb, 0); ctx.stroke();
+    ctx.strokeStyle = '#e6eaef'; ctx.lineWidth = Math.max(0.6, 0.014 * s); ctx.beginPath(); ctx.moveTo(xa, -0.01 * s); ctx.lineTo(xb, -0.01 * s); ctx.stroke();
+    const body = () => {       // a dog bone body: rounded caps, a slight waist
+      const rr = bh / 2, w = bh * 0.38;
+      ctx.beginPath(); ctx.moveTo(bx + rr, -rr); ctx.lineTo(bx + bl * 0.24, -rr); ctx.quadraticCurveTo(bx + bl * 0.3, -w, bx + bl * 0.36, -w);
+      ctx.lineTo(bx + bl * 0.64, -w); ctx.quadraticCurveTo(bx + bl * 0.7, -w, bx + bl * 0.76, -rr); ctx.lineTo(bx + bl - rr, -rr);
+      ctx.arc(bx + bl - rr, 0, rr, -Math.PI / 2, Math.PI / 2); ctx.lineTo(bx + bl * 0.76, rr); ctx.quadraticCurveTo(bx + bl * 0.7, w, bx + bl * 0.64, w);
+      ctx.lineTo(bx + bl * 0.36, w); ctx.quadraticCurveTo(bx + bl * 0.3, w, bx + bl * 0.24, rr); ctx.lineTo(bx + rr, rr); ctx.arc(bx + rr, 0, rr, Math.PI / 2, 1.5 * Math.PI); ctx.closePath();
+    };
+    body(); ctx.fillStyle = T.dark ? '#c2aa76' : '#dcc392'; ctx.fill();
+    ctx.save(); body(); ctx.clip();
+    resBands(R).forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect(bx + bl * [0.15, 0.29, 0.43, 0.79][i], -bh, bl * 0.08, 2 * bh); });
+    ctx.fillStyle = roundShade(0, -bh / 2, 0, bh / 2); ctx.fillRect(bx, -bh, bl, 2 * bh);
+    ctx.restore();
+    body(); ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 0.8; ctx.stroke();
+  }
+  // a cylinder along x from x0 to x1 with diameter d: + nub at the x0 end, a copper cap band, printed nothing
+  function cell(x0, x1, d, s) {
+    const nub = Math.min(0.035 * s, (x1 - x0) * 0.12), b0 = x0 + nub;
+    ctx.fillStyle = '#b9c0c8'; ctx.fillRect(x0, -d * 0.18, nub + 1, d * 0.36);
+    ctx.save(); roundRect(b0, -d / 2, x1 - b0, d, d * 0.14); ctx.clip();
+    ctx.fillStyle = '#1c1d21'; ctx.fillRect(b0, -d / 2, x1 - b0, d);
+    ctx.fillStyle = COPPER; ctx.fillRect(b0, -d / 2, (x1 - b0) * 0.34, d);
+    ctx.fillStyle = '#c3c9d0'; ctx.fillRect(x1 - Math.max(1, 0.02 * s), -d / 2, Math.max(1, 0.02 * s), d);
+    ctx.fillStyle = roundShade(0, -d / 2, 0, d / 2); ctx.fillRect(b0, -d / 2, x1 - b0, d);
+    ctx.restore();
+  }
+  function upright(cx, cy, txt, size, col, weight) {
+    ctx.font = `${weight || 700} ${size}px ${T.mono}`; ctx.fillStyle = col; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, cx, cy);
+  }
+  function benchBat(e, ge, s, cx, cy, ps) {
+    const h = ge.h * s, rin = hasRint(e), k = batKind(e);
+    const xs0 = -h, xs1 = rin ? -h + 2 * h * 0.62 : h, ca = Math.cos(ge.ang), sa = Math.sin(ge.ang);
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(ge.ang);
+    if (rin) axialRes(xs1, h, e.r, s * 0.7);
+    if (k.kind === 'cells') {
+      const W = 0.24 * s, d = 0.17 * s, len = xs1 - xs0;
+      shadowed(s, () => { ctx.fillStyle = '#232528'; roundRect(xs0, -W / 2, len, W, 0.05 * s); ctx.fill(); });
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1; roundRect(xs0 + 0.5, -W / 2 + 0.5, len - 1, W - 1, 0.05 * s); ctx.stroke();
+      const pad = 0.035 * s, cl = (len - 2 * pad) / k.n;
+      for (let i = 0; i < k.n; i++) cell(xs0 + pad + i * cl, xs0 + pad + (i + 1) * cl - 0.006 * s, d, s);
+      ctx.fillStyle = '#b8372b'; ctx.fillRect(xs0, -W / 2, Math.max(1.5, 0.025 * s), W);
+    } else if (k.kind === 'pp3') {
+      const W = 0.3 * s, x0 = xs0 + 0.07 * s, x1 = xs1 - 0.02 * s;
+      // the clip: a red lead to the + end, a black lead back along the side to the − end
+      const lw = leadW(s, ps) * 0.8, sideY = W / 2 + 0.06 * s;
+      insulated([[xs0, 0], [x0 - 0.02 * s, -0.04 * s]], '#b8372b', lw);
+      insulated([[x0 - 0.02 * s, 0.05 * s], [x0 + 0.06 * s, sideY], [x1 - 0.1 * s, sideY], [xs1, 0]], T.dark ? '#4a4f57' : '#2b2f36', lw);
+      shadowed(s, () => { ctx.fillStyle = '#26324f'; roundRect(x0, -W / 2, x1 - x0, W, 0.035 * s); ctx.fill(); });
+      ctx.save(); roundRect(x0, -W / 2, x1 - x0, W, 0.035 * s); ctx.clip();
+      ctx.fillStyle = BRASS; ctx.fillRect(x0 + (x1 - x0) * 0.62, -W / 2, (x1 - x0) * 0.08, W);
+      ctx.fillStyle = roundShade(0, -W / 2, 0, W / 2); ctx.globalAlpha = 0.6; ctx.fillRect(x0, -W / 2, x1 - x0, W); ctx.globalAlpha = 1;
+      ctx.restore();
+      ctx.fillStyle = '#16181b'; roundRect(x0 - 0.06 * s, -0.11 * s, 0.08 * s, 0.22 * s, 0.02 * s); ctx.fill();
+    }
+    if (rin) {
+      ctx.setLineDash([3 * ps, 3 * ps]); ctx.strokeStyle = T.dark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.5)'; ctx.lineWidth = 1 * ps;
+      roundRect(-h - 0.04 * s, -0.31 * s, 2 * h + 0.08 * s, 0.62 * s, 5 * ps); ctx.stroke(); ctx.setLineDash([]);
+    }
+    ctx.restore();
+    const xm = (xs0 + xs1) / 2, mx = cx + ca * xm, my = cy + sa * xm;
+    if (k.kind === 'pp3' && 0.13 * s >= 7) upright(mx + ca * 0.06 * s, my + sa * 0.06 * s, '9V', 0.13 * s, '#f1eee6');
+    if (k.kind === 'supply') {
+      // a bench supply: grey case, red LED display of ε, + and − posts on the sides that face the leads
+      const horiz = Math.abs(ca) > 0.5, w = Math.min(0.66 * s, horiz ? xs1 - xs0 + 0.08 * s : 0.66 * s), hh = horiz ? 0.54 * s : Math.min(0.6 * s, xs1 - xs0 + 0.06 * s);
+      const x0 = mx - w / 2, y0 = my - hh / 2, base = T.dark ? '#3c424b' : '#d6dadf';
+      shadowed(s, () => {
+        const gc = ctx.createLinearGradient(0, y0, 0, y0 + hh); gc.addColorStop(0, shade(base, 0.22)); gc.addColorStop(0.55, base); gc.addColorStop(1, shade(base, -0.22));
+        ctx.fillStyle = gc; roundRect(x0, y0, w, hh, 0.07 * s); ctx.fill();
+      });
+      ctx.strokeStyle = 'rgba(0,0,0,0.4)'; ctx.lineWidth = 1; roundRect(x0 + 0.5, y0 + 0.5, w - 1, hh - 1, 0.07 * s); ctx.stroke();
+      const edge = (horiz ? w : hh) / 2 - 0.08 * s, pr = Math.max(2.5, 0.055 * s);
+      const dw = horiz ? w - 0.34 * s : w - 0.14 * s, dh = 0.2 * s;
+      ctx.fillStyle = '#190806'; roundRect(mx - dw / 2, my - dh / 2, dw, dh, 0.03 * s); ctx.fill();
+      const fsz = Math.min(0.15 * s, dw / 3.4);
+      if (fsz >= 6) {
+        const txt = e.emf < 100 ? e.emf.toFixed(1) : e.emf.toFixed(0);
+        ctx.save(); ctx.shadowColor = 'rgba(255,50,30,0.9)'; ctx.shadowBlur = 0.06 * s;
+        upright(mx, my + 0.5, txt, fsz, '#ff5b45'); ctx.restore();
+      }
+      for (const [sg, col] of [[-1, '#c0392b'], [1, '#26292e']]) {
+        const px = mx + sg * ca * edge, py = my + sg * sa * edge;
+        const gp = ctx.createRadialGradient(px - pr * 0.35, py - pr * 0.35, 0, px, py, pr * 1.05); gp.addColorStop(0, shade(col, 0.5)); gp.addColorStop(1, shade(col, -0.35));
+        ctx.fillStyle = gp; ctx.beginPath(); ctx.arc(px, py, pr, 0, 2 * Math.PI); ctx.fill();
+        ctx.fillStyle = '#d4d9e0'; ctx.beginPath(); ctx.arc(px, py, pr * 0.32, 0, 2 * Math.PI); ctx.fill();
+      }
+    }
+  }
+  function benchBulb(e, ge, s, cx, cy) {
+    const h = ge.h * s, g = bulbG(e);
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(ge.ang);
+    const mw = Math.min(2 * h + 0.04 * s, 0.62 * s), mh = 0.3 * s;
+    shadowed(s, () => { ctx.fillStyle = T.dark ? '#2a2c30' : '#3a3c41'; roundRect(-mw / 2, -mh / 2, mw, mh, 0.07 * s); ctx.fill(); });
+    ctx.fillStyle = shade(BRASS, -0.15);
+    for (const sx of [-1, 1]) ctx.fillRect(Math.min(sx * (mw / 2 - 0.07 * s), sx * 0.1 * s), -0.025 * s, Math.abs(mw / 2 - 0.17 * s), 0.05 * s);
+    for (const sx of [-1, 1]) screw(sx * (mw / 2 - 0.07 * s), 0, 0.045 * s);
+    ctx.restore();
+    // the bulb from above: screw base under the glass, the glass, the filament
+    const rg = 0.19 * s, fc = filRGB(g);
+    const gb = ctx.createRadialGradient(cx - rg * 0.2, cy - rg * 0.2, 0, cx, cy, rg * 0.7); gb.addColorStop(0, shade(BRASS, 0.4)); gb.addColorStop(1, shade(BRASS, -0.35));
+    ctx.fillStyle = gb; ctx.beginPath(); ctx.arc(cx, cy, rg * 0.68, 0, 2 * Math.PI); ctx.fill();
+    const gg = ctx.createRadialGradient(cx - rg * 0.35, cy - rg * 0.4, rg * 0.05, cx, cy, rg);
+    gg.addColorStop(0, 'rgba(255,255,255,0.8)'); gg.addColorStop(0.35, 'rgba(235,240,245,0.38)'); gg.addColorStop(1, 'rgba(185,195,205,0.5)');
+    ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(cx, cy, rg, 0, 2 * Math.PI); ctx.fill();
+    if (g > 0.002) { ctx.fillStyle = rgba(fc, 0.15 + 0.7 * g); ctx.fill(); }
+    ctx.strokeStyle = T.dark ? 'rgba(220,228,236,0.55)' : 'rgba(70,80,90,0.55)'; ctx.lineWidth = 1; ctx.stroke();
+    const fw = 0.085 * s, lw = Math.max(1, 0.022 * s);
+    ctx.strokeStyle = '#8d96a3'; ctx.lineWidth = Math.max(0.8, 0.012 * s); ctx.beginPath();
+    ctx.moveTo(cx - fw, cy + 0.11 * s); ctx.lineTo(cx - fw, cy); ctx.moveTo(cx + fw, cy + 0.11 * s); ctx.lineTo(cx + fw, cy); ctx.stroke();
+    ctx.save();
+    if (g > 0.02) { ctx.shadowColor = rgba(fc, 1); ctx.shadowBlur = (0.04 + 0.12 * g) * s; }
+    ctx.strokeStyle = rgba(fc, 1); ctx.lineWidth = lw; ctx.beginPath();
+    for (let k = 0; k <= 40; k++) { const t = k / 40, x = cx - fw + 2 * fw * t, y = cy - 0.005 * s + 0.028 * s * Math.sin(t * 2 * Math.PI * 5); k ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.stroke(); ctx.restore();
+    ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.beginPath(); ctx.ellipse(cx - rg * 0.42, cy - rg * 0.45, rg * 0.16, rg * 0.09, -0.7, 0, 2 * Math.PI); ctx.fill();
+  }
+  function benchSwitch(e, ge, s, cx, cy) {
+    const h = ge.h * s, hx = -0.15 * s, kx = 0.15 * s;
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(ge.ang);
+    const bw = Math.min(2 * h + 0.08 * s, 0.68 * s), bh = 0.36 * s, base = T.dark ? '#a29b8e' : '#efeadf';
+    shadowed(s, () => {
+      const gb = ctx.createLinearGradient(0, -bh / 2, 0, bh / 2); gb.addColorStop(0, shade(base, 0.25)); gb.addColorStop(1, shade(base, -0.12));
+      ctx.fillStyle = gb; roundRect(-bw / 2, -bh / 2, bw, bh, 0.07 * s); ctx.fill();
+    });
+    ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; roundRect(-bw / 2 + 0.5, -bh / 2 + 0.5, bw - 1, bh - 1, 0.07 * s); ctx.stroke();
+    const brass = (x, y, w, hh) => {
+      const gb = ctx.createLinearGradient(0, y - hh / 2, 0, y + hh / 2); gb.addColorStop(0, shade(BRASS, 0.45)); gb.addColorStop(0.5, BRASS); gb.addColorStop(1, shade(BRASS, -0.4));
+      ctx.fillStyle = gb; roundRect(x - w / 2, y - hh / 2, w, hh, Math.min(w, hh) * 0.2); ctx.fill();
+      ctx.strokeStyle = 'rgba(60,40,0,0.6)'; ctx.lineWidth = 0.8; ctx.stroke();
+    };
+    const tx = bw / 2 - 0.07 * s;
+    brass((-tx + hx) / 2, 0, tx - Math.abs(hx), 0.06 * s); brass((tx + kx) / 2, 0, tx - kx, 0.06 * s);
+    brass(kx, -0.045 * s, 0.1 * s, 0.035 * s); brass(kx, 0.045 * s, 0.1 * s, 0.035 * s);
+    brass(hx, 0, 0.1 * s, 0.12 * s);
+    for (const x of [-tx, tx]) screw(x, 0, 0.045 * s);
+    // the copper blade with its bakelite handle; open, it is swung away from the clip
+    const a = e.closed ? 0 : -0.55, L = kx - hx, dx = Math.cos(a), dy = Math.sin(a);
+    ctx.lineCap = 'butt';
+    ctx.strokeStyle = shade(COPPER, -0.45); ctx.lineWidth = 0.07 * s + 1.2; ctx.beginPath(); ctx.moveTo(hx, 0); ctx.lineTo(hx + dx * (L + 0.03 * s), dy * (L + 0.03 * s)); ctx.stroke();
+    ctx.strokeStyle = COPPER; ctx.lineWidth = 0.07 * s; ctx.stroke();
+    ctx.lineCap = 'round'; ctx.strokeStyle = '#121418'; ctx.lineWidth = 0.13 * s;
+    ctx.beginPath(); ctx.moveTo(hx + dx * (L + 0.07 * s), dy * (L + 0.07 * s)); ctx.lineTo(hx + dx * (L + 0.15 * s), dy * (L + 0.15 * s)); ctx.stroke();
+    ctx.fillStyle = shade(BRASS, -0.45); ctx.beginPath(); ctx.arc(hx, 0, 0.035 * s + 0.5, 0, 2 * Math.PI); ctx.fill();
+    ctx.restore();
+  }
+  // a small multimeter, upright, with its reading on the LCD; the red jack faces the + end
+  function benchMeter(e, ge, s, cx, cy) {
+    const r = sol && sol.res.get(e.id), horiz = Math.abs(ge.dir[0]) > 0.5, w = 0.6 * s, hB = 0.72 * s, x0 = cx - w / 2, y0 = cy - hB / 2;
+    const bump = T.dark ? '#b88f1f' : '#e3b326';
+    shadowed(s, () => { ctx.fillStyle = bump; roundRect(x0, y0, w, hB, 0.11 * s); ctx.fill(); });
+    ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1; roundRect(x0 + 0.5, y0 + 0.5, w - 1, hB - 1, 0.11 * s); ctx.stroke();
+    const ins = 0.045 * s;
+    ctx.fillStyle = '#2a2e35'; roundRect(x0 + ins, y0 + ins, w - 2 * ins, hB - 2 * ins, 0.07 * s); ctx.fill();
+    const lx = x0 + 0.09 * s, ly = y0 + 0.11 * s, lw = w - 0.18 * s, lh = 0.24 * s;
+    ctx.fillStyle = T.dark ? '#9aa889' : '#b9c6a4'; roundRect(lx, ly, lw, lh, 0.025 * s); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.5)'; ctx.lineWidth = 1; ctx.stroke();
+    if (0.15 * s >= 12) {
+      const val = e.type === 'am' ? (r && r.ok ? fmtSI(cleanI(r.I), 'A', 3) : '—') : (r && isFinite(r.V) ? fmtSI(cleanV(r.V), 'V', 3) : '—');
+      const sp = val.lastIndexOf(' '), num = sp > 0 ? val.slice(0, sp) : val, unit = sp > 0 ? val.slice(sp + 1) : '';
+      let f = 0.15 * s; ctx.font = `600 ${f}px ${T.mono}`;
+      const room = lw - 0.15 * s, nw = ctx.measureText(num).width;
+      if (nw > room) f *= room / nw;
+      ctx.font = `600 ${f}px ${T.mono}`; ctx.fillStyle = '#1b2116'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      ctx.fillText(num, lx + lw - 0.125 * s, ly + lh / 2 + 0.5);
+      ctx.font = `600 ${0.07 * s}px ${T.mono}`; ctx.textAlign = 'left';
+      ctx.fillText(unit, lx + lw - 0.115 * s, ly + lh / 2 + 0.035 * s);
+    }
+    const fm = 0.072 * s;
+    if (fm >= 5.5) upright(cx, y0 + 0.42 * s, e.type === 'am' ? 'DC A' : 'DC V', fm, '#d9dde3');
+    // the range dial, turned to A or V
+    const kx = cx, ky = y0 + 0.53 * s, kr = 0.07 * s, ka = e.type === 'am' ? -2.2 : -0.94;
+    ctx.fillStyle = '#121418'; ctx.beginPath(); ctx.arc(kx, ky, kr, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = '#d9dde3'; ctx.lineWidth = Math.max(1, 0.018 * s); ctx.beginPath(); ctx.moveTo(kx, ky); ctx.lineTo(kx + Math.cos(ka) * kr * 0.9, ky + Math.sin(ka) * kr * 0.9); ctx.stroke();
+    // jacks where the leads come in: red for +, black for COM
+    const edge = (horiz ? w : hB) / 2 - 0.07 * s, jr = Math.max(2, 0.045 * s);
+    for (const [sg, col] of [[-1, '#c0392b'], [1, '#111316']]) {
+      const px = cx + sg * ge.dir[0] * edge, py = cy + sg * ge.dir[1] * edge;
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(px, py, jr, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = '#050607'; ctx.beginPath(); ctx.arc(px, py, jr * 0.45, 0, 2 * Math.PI); ctx.fill();
+    }
+  }
+  function drawBenchPart(e, ge, ps) {
+    const s = geo.s * benchZ(ge), cx = geo.X(ge.c[0]), cy = geo.Y(ge.c[1]);
+    if (e.type === 'res') { ctx.save(); ctx.translate(cx, cy); ctx.rotate(ge.ang); axialRes(-ge.h * s, ge.h * s, e.R, s); ctx.restore(); }
+    else if (e.type === 'bulb') benchBulb(e, ge, s, cx, cy);
+    else if (e.type === 'bat') benchBat(e, ge, s, cx, cy, ps);
+    else if (e.type === 'sw') benchSwitch(e, ge, s, cx, cy);
+    else if (e.type === 'am' || e.type === 'vm') benchMeter(e, ge, s, cx, cy);
+  }
+  // the selected or hovered part's outline, since its body hides the highlight under the leads
+  function benchOutline(id, alpha, ps) {
+    const e = elById(id), ge = GE.get(id); if (!e || !ge || e.type === 'wire') return;
+    const z = benchZ(ge), s = geo.s * z, cx = geo.X(ge.c[0]), cy = geo.Y(ge.c[1]), m = 4 * ps;
+    ctx.save(); ctx.strokeStyle = T.accent; ctx.globalAlpha = alpha; ctx.lineWidth = 2 * ps;
+    if (e.type === 'am' || e.type === 'vm') roundRect(cx - 0.3 * s - m, cy - 0.36 * s - m, 0.6 * s + 2 * m, 0.72 * s + 2 * m, 0.11 * s + m);
+    else {
+      ctx.translate(cx, cy); ctx.rotate(ge.ang);
+      const a = Math.max(ge.h * s, 0.25 * s) + m, b = Math.max(sideOf(e, ge) * geo.s, 0.12 * s) + m;
+      roundRect(-a, -b, 2 * a, 2 * b, Math.min(b, 0.1 * s + m));
+    }
+    ctx.stroke(); ctx.restore();
+  }
+  function setView(v) {
+    view = v === 'bench' ? 'bench' : 'schem';
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === view));
+    $('benchKey1').hidden = $('benchKey2').hidden = view !== 'bench';
+    try { localStorage.setItem('vd-cb-view', view); } catch (_) {}
+    live(view === 'bench' ? 'Bench view: real parts on a lab bench.' : 'Schematic view: circuit symbols.');
+    draw();
+  }
+
   function draw() {
     const [W, H] = dims; if (!W || !H || !T) return;
     { const c = $('ctl'); ctlH = c.offsetTop + c.offsetHeight; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     geo = layout();
-    const g = geo, s = g.s, ps = projScale();
+    const g = geo, s = g.s, ps = projScale(), bn = view === 'bench';
     GE = geoms();
-    // breadboard dots
-    ctx.fillStyle = T.gridStrong;
-    for (let i = 0; i < G.cols; i++) for (let j = 0; j < G.rows; j++) { ctx.beginPath(); ctx.arc(g.X(i), g.Y(j), Math.max(1.4, s * 0.022) * Math.min(ps, 1.3), 0, 2 * Math.PI); ctx.fill(); }
+    if (bn) { for (const e of els) if (e.type === 'wire') { const ge = GE.get(e.id); ge.bpts = slackPts(e, ge); } buildNetColors(); }
+    // paper with its grid dots, or the bench top with a hole at every dot
+    ctx.drawImage(backLayer(W, H), 0, 0, W, H);
     if (!els.length) {
       ctx.fillStyle = T.muted; ctx.font = `${Math.max(12, s * 0.2)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText('Pick a tool above, then drag from one dot to another to place a part.', W / 2, g.Y(3.5));
     }
-    // bulb glow
+    // bulb glow; on the bench its colour follows the filament
     for (const e of els) {
       if (e.type !== 'bulb') continue;
-      const r = sol && sol.res.get(e.id), P = r && isFinite(r.P) ? r.P : 0, gl = clamp(P / P_FULL, 0, 1);
+      const gl = bulbG(e);
       if (gl < 0.002) continue;
-      const ge = GE.get(e.id), x = g.X(ge.c[0]), y = g.Y(ge.c[1]), R = s * (0.3 + 0.55 * gl);
+      const ge = GE.get(e.id), x = g.X(ge.c[0]), y = g.Y(ge.c[1]), R = s * (0.3 + 0.55 * gl), gc = bn ? filRGB(gl) : T.rgb.glow;
       const grd = ctx.createRadialGradient(x, y, 0, x, y, R);
-      grd.addColorStop(0, rgba(T.rgb.glow, 0.85 * gl)); grd.addColorStop(0.45, rgba(T.rgb.glow, 0.4 * gl)); grd.addColorStop(1, rgba(T.rgb.glow, 0));
+      grd.addColorStop(0, rgba(gc, 0.85 * gl)); grd.addColorStop(0.45, rgba(gc, 0.4 * gl)); grd.addColorStop(1, rgba(gc, 0));
       ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(x, y, R, 0, 2 * Math.PI); ctx.fill();
     }
     // highlights under the circuit
@@ -1193,7 +1592,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // leads and wires
     const lw = Math.max(1.4, Math.min(2.2, s * 0.03)) * ps;
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    for (const e of els) {
+    if (bn) benchLeads(ps);
+    else for (const e of els) {
       const ge = GE.get(e.id);
       if (e.type === 'wire') { ctx.strokeStyle = leadCol(e.a); ctx.lineWidth = lw; polyPx(ge.pts); ctx.stroke(); continue; }
       const [h1, h2] = halves(ge);
@@ -1203,9 +1603,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     // moving charges, then the symbols on top
     for (const e of els) drawDots(e, GE.get(e.id), ps);
-    for (const e of els) if (e.type !== 'wire') drawSymbol(e, GE.get(e.id), leadCol(e.a), leadCol(e.b), ps);
+    for (const e of els) if (e.type !== 'wire') { if (bn) drawBenchPart(e, GE.get(e.id), ps); else drawSymbol(e, GE.get(e.id), leadCol(e.a), leadCol(e.b), ps); }
+    if (bn) {
+      benchPosts(ps);
+      if (hovEl && !(sel && sel.kind === 'el' && sel.id === hovEl)) benchOutline(hovEl, 0.45, ps);
+      if (sel && sel.kind === 'el') benchOutline(sel.id, 0.95, ps);
+    }
     // connection dots: every end, larger where three or more meet
-    for (const [k, c] of endCount) {
+    if (!bn) for (const [k, c] of endCount) {
       const [u, v] = k.split(',').map(Number), V = sol ? sol.ptV.get(k) : NaN, P = sol && sol.parts[sol.ptPart.get(k)];
       ctx.fillStyle = S.layers.vcolor && P && P.hasSource ? vColor(V) : T.wire;
       ctx.beginPath(); ctx.arc(g.X(u), g.Y(v), (c >= 3 ? 3.8 : 2.6) * Math.min(ps, 1.3) * Math.min(1, s / 50 + 0.3), 0, 2 * Math.PI); ctx.fill();
@@ -1525,7 +1930,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const ge = GE.get(e.id); if (!ge) continue;
       let d = Infinity;
       for (let i = 0; i + 1 < ge.pts.length; i++) d = Math.min(d, distSeg(x, y, geo.X(ge.pts[i][0]), geo.Y(ge.pts[i][1]), geo.X(ge.pts[i + 1][0]), geo.Y(ge.pts[i + 1][1])));
-      if (e.type !== 'wire') d = Math.min(d, Math.hypot(x - geo.X(ge.c[0]), y - geo.Y(ge.c[1])) - SIDE[e.type] * geo.s);
+      if (e.type !== 'wire') d = Math.min(d, Math.hypot(x - geo.X(ge.c[0]), y - geo.Y(ge.c[1])) - sideOf(e, ge) * geo.s);
       if (e.type === 'wire') d += 2;                 // a part wins a tie with a wire
       if (d < bd) { bd = d; best = e; }
     }
@@ -1650,12 +2055,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else if (k === '+' || k === '=' || k === 'PageUp') stepValue(1);
     else if (k === '-' || k === '_' || k === '−' || k === 'PageDown') stepValue(-1);
     else if (k === 'p' || k === 'P') setRunning(!running);
+    else if (k === 'b' || k === 'B') setView(view === 'bench' ? 'schem' : 'bench');
     else return;
     ev.preventDefault();
   });
 
   // ---------- controls ----------
   for (const b of document.querySelectorAll('#tools button')) b.addEventListener('click', () => setTool(b.dataset.t));
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => setView(b.dataset.v));
   $('undo').addEventListener('click', undo);
   $('redo').addEventListener('click', redo);
   const playBtn = $('play');
@@ -1730,8 +2137,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   window.__cb = {
     get frameMs() { return frameMs; }, get els() { return els; }, get sol() { return sol; }, get sel() { return sel; }, get tool() { return tool; },
     get geo() { return geo; }, get GE() { return GE; }, get kLoop() { return kLoop; }, get kNet() { return kNet; }, get gripBox() { return gripBox; },
-    get undoDepth() { return undoStack.length; }, get running() { return running; },
-    applyPreset, setTool, placeParts, setSel, toggleSwitch, undo, redo, setRunning,
+    get undoDepth() { return undoStack.length; }, get running() { return running; }, get view() { return view; },
+    applyPreset, setView, setTool, placeParts, setSel, toggleSwitch, undo, redo, setRunning,
     px(u, v) { const r = can.getBoundingClientRect(); return [r.left + geo.X(u), r.top + geo.Y(v)]; },
     byName(n) { return els.find((e) => e.name === n); },
     kcl() { let m = 0; for (const [, v] of kclResiduals(els, sol)) if (isFinite(v)) m = Math.max(m, Math.abs(v)); return m; },
@@ -1742,7 +2149,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   new ResizeObserver(resize).observe(stage);
   applyPreset('series', true);
   setRunning(!reduce);
-  dotKey(); undoBtns();
+  dotKey(); undoBtns(); setView(view);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => draw());
   requestAnimationFrame(frame);
 })();
