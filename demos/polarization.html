@@ -1,0 +1,1207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+<title>Polarization</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the polarizer bench (elements and the field between them) over two plots, or the reflection view; instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --bo: #7a45c0;
+  --beam: #e0a92a;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --bo: #b48cff; --beam: #f0c050; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --bo: #b48cff; --beam: #f0c050; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#can { touch-action: none; outline: none; }
+#can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .list dd { font-size: 0.88rem; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.e { border-color: var(--pos); border-top-width: 3px; }
+.swatch.ratio { border-color: var(--equi); border-top-width: 3px; }
+.swatch.final { border-color: var(--accent); border-top-style: dashed; }
+.swatch.rs { border-color: var(--pos); border-top-width: 3px; }
+.swatch.rp { border-color: var(--neg); border-top-width: 3px; }
+.swatch.avg { border-color: var(--muted); border-top-style: dashed; }
+.swatch.disk { width: 14px; height: 14px; border: 1.5px solid var(--muted); border-radius: 50%; margin: 0 4px; }
+.swatch.disk.pol { background: color-mix(in srgb, var(--muted) 18%, transparent); }
+.swatch.disk.qwp { background: color-mix(in srgb, var(--equi) 26%, transparent); }
+.swatch.disk.hwp { background: color-mix(in srgb, var(--bo) 26%, transparent); }
+
+/* element rows */
+.els { display: flex; flex-direction: column; gap: 8px; }
+.el { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; background: var(--canvas); }
+.el[data-sel="true"] { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+.el-head { display: flex; align-items: center; gap: 6px; }
+.el-num { font-family: var(--font-mono); font-weight: 600; font-size: 0.85rem; min-width: 1.4em; cursor: pointer; background: none; border: 0; color: var(--ink); padding: 0; }
+.el-head .seg { flex: 1; min-width: 0; }
+.el-head .seg button { flex: 1; padding: 4px 6px; }
+.el-x { font: inherit; font-size: 1rem; line-height: 1; font-weight: 700; color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; cursor: pointer; }
+.el-x:hover { color: var(--pos); border-color: var(--pos); }
+
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj, .el-x { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 86vh; min-height: 660px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Polarization</h1>
+      <p>Send light through polarizers and wave plates and watch the electric field after each one. Malus's law, the three polarizer surprise, circular light from a quarter wave plate, and polarization by reflection at Brewster's angle.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">angles from the vertical, counterclockwise facing the beam · intensity as I/I₀</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View">
+          <button type="button" id="vBench" aria-pressed="true">Polarizer bench</button>
+          <button type="button" id="vRefl" aria-pressed="false">Reflection</button>
+        </div>
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="reset">Reset</button>
+        <span class="count mono" id="count" aria-live="polite"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="Polarizer bench: the light passes from left to right through up to four elements, each drawn as a disk seen facing the oncoming beam, with the polarization of the light drawn between them and its intensity as a bar. Below are a plot of transmission against the selected element's angle and a plot of transmission through N polarizers. Drag a disk to turn its axis, or drag along a plot. In the reflection view, drag the incoming ray to change the angle of incidence. Keys: left and right select an element, up and down turn it by 1 degree (5 with shift), A adds a polarizer, Delete removes the selected element, V switches view, space plays or pauses."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="malus" aria-pressed="true">Malus's law</button>
+          <button type="button" data-p="crossed" aria-pressed="false">Crossed polarizers</button>
+          <button type="button" data-p="three" aria-pressed="false">Three polarizer surprise</button>
+          <button type="button" data-p="qwp" aria-pressed="false">Quarter wave plate makes circular light</button>
+          <button type="button" data-p="hwp" aria-pressed="false">Half wave plate rotates polarization</button>
+          <button type="button" data-p="brewster" aria-pressed="false">Brewster's angle and glare</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <!-- bench view -->
+      <section class="vb">
+        <h2>Light in</h2>
+        <div class="seg" role="group" aria-label="Input light">
+          <button type="button" id="inU" aria-pressed="true">Unpolarized</button>
+          <button type="button" id="inL" aria-pressed="false">Linear</button>
+          <button type="button" id="inC" aria-pressed="false">Circular</button>
+        </div>
+        <div id="inAngRow" hidden>
+          <div class="slider-head"><label for="inAng">Polarization angle</label><output id="inAngOut" class="mono" for="inAng"></output></div>
+          <input type="range" id="inAng" min="-90" max="90" step="1" value="0">
+        </div>
+        <div class="inline" id="inHandRow" hidden>
+          <span class="lab">Handedness</span>
+          <div class="seg" role="group" aria-label="Handedness">
+            <button type="button" id="hR" aria-pressed="true">Right</button>
+            <button type="button" id="hL" aria-pressed="false">Left</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="vb">
+        <h2>Elements, in order along the beam</h2>
+        <div class="els" id="els"></div>
+        <button type="button" class="btn" id="addEl">Add an element</button>
+        <p class="hint">The angle is the transmission axis for a polarizer and the fast axis for a wave plate. Drag a disk on the drawing to turn it; click a disk or its number to plot it.</p>
+      </section>
+
+      <section class="vb">
+        <h2>Light out</h2>
+        <dl class="readout">
+          <div class="wide big"><dt>Intensity after the last element</dt><dd id="rOut">—</dd></div>
+          <div class="wide"><dt>Polarization</dt><dd id="rPol" class="list">—</dd></div>
+          <div class="wide"><dt>I/I₀ after each element</dt><dd id="rEach" class="list">—</dd></div>
+          <div class="wide"><dt>Stokes vector (S₀, S₁, S₂, S₃)/I₀</dt><dd id="rStokes" class="list">—</dd></div>
+        </dl>
+        <p class="formula" id="malusF"></p>
+        <div class="key">
+          <span><i class="swatch e"></i>Electric field and the path its tip traces</span>
+          <span><i class="swatch ratio"></i>Fraction this element passes, I/I<sub>in</sub></span>
+          <span><i class="swatch final"></i>Fraction that leaves the bench, I/I₀</span>
+        </div>
+      </section>
+
+      <section class="vb">
+        <h2>Many polarizers</h2>
+        <div>
+          <div class="slider-head"><label for="nn">Steps N</label><output id="nnOut" class="mono" for="nn"></output></div>
+          <input type="range" id="nn" min="1" max="30" step="1" value="6">
+        </div>
+        <dl class="readout">
+          <div class="wide big"><dt>Polarized light through N polarizers, each turned 90°/N more</dt><dd id="rN">—</dd></div>
+          <div class="wide"><dt>Unpolarized light, one more polarizer first</dt><dd id="rNu">—</dd></div>
+        </dl>
+        <p class="hint">Each step passes cos²(90°/N). The loss per step falls as 1/N², faster than the number of steps grows, so the total climbs toward 1: cos²ᴺ(π/2N) ≈ e^(−π²/4N), the dashed curve. N = 1 is crossed polarizers; N = 2 is the three polarizer surprise.</p>
+      </section>
+
+      <!-- reflection view -->
+      <section class="vr" hidden>
+        <h2>Interface</h2>
+        <div class="chips" id="media">
+          <button type="button" data-m="ag" aria-pressed="true">Air to glass</button>
+          <button type="button" data-m="aw" aria-pressed="false">Air to water</button>
+          <button type="button" data-m="ga" aria-pressed="false">Glass to air</button>
+          <button type="button" data-m="wa" aria-pressed="false">Water to air</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="n1">Index above, n₁</label><output id="n1Out" class="mono" for="n1"></output></div>
+          <input type="range" id="n1" min="1" max="2.4" step="0.01" value="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="n2">Index below, n₂</label><output id="n2Out" class="mono" for="n2"></output></div>
+          <input type="range" id="n2" min="1" max="2.4" step="0.01" value="1.5">
+        </div>
+        <div>
+          <div class="slider-head"><label for="thi">Angle of incidence θ<sub>i</sub></label><output id="thiOut" class="mono" for="thi"></output></div>
+          <input type="range" id="thi" min="0" max="89.5" step="0.1" value="56.3">
+        </div>
+        <div class="inline">
+          <span class="lab">Incoming light</span>
+          <div class="seg" role="group" aria-label="Incoming polarization">
+            <button type="button" id="rpU" aria-pressed="true">Unpolarized</button>
+            <button type="button" id="rpS" aria-pressed="false">s</button>
+            <button type="button" id="rpP" aria-pressed="false">p</button>
+          </div>
+        </div>
+        <label class="check"><input type="checkbox" id="glasses"> Polarized sunglasses on the reflected ray</label>
+      </section>
+
+      <section class="vr" hidden>
+        <h2>Fresnel equations</h2>
+        <dl class="readout">
+          <div><dt>Reflected, s: R<sub>s</sub></dt><dd id="rRs">—</dd></div>
+          <div><dt>Reflected, p: R<sub>p</sub></dt><dd id="rRp">—</dd></div>
+          <div><dt>Transmitted, s: T<sub>s</sub></dt><dd id="rTs">—</dd></div>
+          <div><dt>Transmitted, p: T<sub>p</sub></dt><dd id="rTp">—</dd></div>
+          <div><dt>Refraction angle θ<sub>t</sub></dt><dd id="rTht">—</dd></div>
+          <div><dt>Brewster angle θ<sub>B</sub></dt><dd id="rThB">—</dd></div>
+          <div class="wide"><dt>Critical angle θ<sub>c</sub> = arcsin(n₂/n₁)</dt><dd id="rThC">—</dd></div>
+          <div class="wide big"><dt>Glare: reflected fraction of the incoming light</dt><dd id="rGlare">—</dd></div>
+          <div class="wide"><dt>Reflected light that is s polarized</dt><dd id="rDop">—</dd></div>
+        </dl>
+        <p class="formula">r<sub>s</sub> = (n₁cos θ<sub>i</sub> − n₂cos θ<sub>t</sub>)/(n₁cos θ<sub>i</sub> + n₂cos θ<sub>t</sub>)<br>r<sub>p</sub> = (n₂cos θ<sub>i</sub> − n₁cos θ<sub>t</sub>)/(n₂cos θ<sub>i</sub> + n₁cos θ<sub>t</sub>)<br>R = |r|², T = 1 − R, tan θ<sub>B</sub> = n₂/n₁</p>
+        <div class="key">
+          <span><i class="swatch rs"></i>s: E out of the page (dots)</span>
+          <span><i class="swatch rp"></i>p: E in the plane of incidence (arrows)</span>
+          <span><i class="swatch avg"></i>Unpolarized, (R<sub>s</sub> + R<sub>p</sub>)/2</span>
+        </div>
+        <p class="hint" id="reflHint">Light reflected from a level surface such as water or a road has its s component horizontal, parallel to the surface. Polarized sunglasses have a vertical transmission axis, so they pass only the p part of the glare. At Brewster's angle the reflected and refracted rays are at 90° and R<sub>p</sub> = 0.</p>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint vb">Ideal elements: a polarizer passes the field component along its axis and absorbs the rest; wave plates are lossless and give exactly a quarter or half wave of delay to the slow axis. Polarized input is followed with Jones vectors, E<sub>out</sub> = J E<sub>in</sub>, with E = Re[E e<sup>i(kz − ωt)</sup>]. Unpolarized input is followed with Stokes vectors and Mueller matrices built from the same Jones matrices, M<sub>ij</sub> = ½ tr(σ<sub>i</sub> J σ<sub>j</sub> J†); at the first polarizer this is exactly the one half rule.</p>
+        <p class="hint vb">Everything is drawn as seen by an observer facing the oncoming beam. Right circular means the field turns clockwise in that view (the optics convention). The ellipse size shows the field amplitude, √(I/I₀). For unpolarized light the arrow wanders at random, much more slowly than real light, whose polarization changes in about a coherence time.</p>
+        <p class="hint vr" hidden>Fresnel equations for a flat, smooth interface between two transparent, nonmagnetic media (μ = μ₀). T includes the factor n₂cos θ<sub>t</sub>/n₁cos θ<sub>i</sub> for the change in beam width and speed, so R + T = 1 for each polarization. Indices are for visible light: water 1.33, crown glass 1.50. Beyond the critical angle the reflection is total. Marker sizes show field amplitudes.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const D2R = Math.PI / 180;
+  // Physical axes as seen facing the oncoming beam: x to the right, y up, z toward the viewer.
+  // Angles θ are from the vertical (y), counterclockwise in that view: unit vector u(θ) = (−sin θ, cos θ).
+  const axis = (deg) => [-Math.sin(deg * D2R), Math.cos(deg * D2R)];
+  // complex numbers as [re, im]
+  const cmul = (a, b) => [a[0] * b[0] - a[1] * b[1], a[0] * b[1] + a[1] * b[0]];
+  const cadd = (a, b) => [a[0] + b[0], a[1] + b[1]];
+  const conj = (a) => [a[0], -a[1]];
+  // 2x2 complex matrix [[m00, m01], [m10, m11]], each entry [re, im]
+  function jPolarizer(deg) { const [x, y] = axis(deg); return [[[x * x, 0], [x * y, 0]], [[x * y, 0], [y * y, 0]]]; }
+  // Retarder, fast axis along u(θ): J = u uᵀ + e^{iΓ} v vᵀ, v ⟂ u. The slow component gets the extra phase Γ (it lags).
+  function jRetarder(deg, G) {
+    const [x, y] = axis(deg), [vx, vy] = [y, -x], c = Math.cos(G), s = Math.sin(G);
+    return [[[x * x + c * vx * vx, s * vx * vx], [x * y + c * vx * vy, s * vx * vy]],
+            [[x * y + c * vx * vy, s * vx * vy], [y * y + c * vy * vy, s * vy * vy]]];
+  }
+  const RETARD = { qwp: Math.PI / 2, hwp: Math.PI };
+  const jOf = (el) => (el.type === 'pol' ? jPolarizer(el.ang) : jRetarder(el.ang, RETARD[el.type]));
+  const jApply = (M, E) => [cadd(cmul(M[0][0], E[0]), cmul(M[0][1], E[1])), cadd(cmul(M[1][0], E[0]), cmul(M[1][1], E[1]))];
+  function mMul2(A, B) { const r = [[0, 0], [0, 0]]; for (let i = 0; i < 2; i++) for (let j = 0; j < 2; j++) r[i][j] = cadd(cmul(A[i][0], B[0][j]), cmul(A[i][1], B[1][j])); return r; }
+  const dag = (A) => [[conj(A[0][0]), conj(A[1][0])], [conj(A[0][1]), conj(A[1][1])]];
+  // Stokes parameters with x horizontal: S₁ = I_x − I_y, S₂ = I(+45° from x) − I(−45° from x), S₃ = I_R − I_L
+  // (R: clockwise facing the beam). Coherency C = E E† = ½ Σ Sᵢ σᵢ with these σ:
+  const SIG = [[[[1, 0], [0, 0]], [[0, 0], [1, 0]]], [[[1, 0], [0, 0]], [[0, 0], [-1, 0]]],
+               [[[0, 0], [1, 0]], [[1, 0], [0, 0]]], [[[0, 0], [0, 1]], [[0, -1], [0, 0]]]];
+  const tr = (A) => cadd(A[0][0], A[1][1]);
+  function stokesOf(E) {
+    const a = E[0], b = E[1], ab = cmul(a, conj(b));          // C_xy = a b*
+    const ia = a[0] * a[0] + a[1] * a[1], ib = b[0] * b[0] + b[1] * b[1];
+    return [ia + ib, ia - ib, 2 * ab[0], 2 * ab[1]];
+  }
+  // Mueller matrix from a Jones matrix: M_ij = ½ tr(σᵢ J σⱼ J†)
+  function mueller(J) {
+    const Jd = dag(J), M = [];
+    for (let i = 0; i < 4; i++) { M.push([]); for (let j = 0; j < 4; j++) M[i].push(0.5 * tr(mMul2(mMul2(SIG[i], J), mMul2(SIG[j], Jd)))[0]); }
+    return M;
+  }
+  const mApply = (M, S) => M.map((r) => r[0] * S[0] + r[1] * S[1] + r[2] * S[2] + r[3] * S[3]);
+  const s2 = Math.SQRT1_2;
+  function inputJones(inp) {
+    if (inp.kind === 'lin') { const [x, y] = axis(inp.ang); return [[x, 0], [y, 0]]; }
+    if (inp.kind === 'circ') return inp.hand === 'R' ? [[s2, 0], [0, -s2]] : [[s2, 0], [0, s2]];
+    return null;
+  }
+  // Follow the light: Stokes (Mueller) always, Jones whenever the light is fully polarized.
+  function propagate(inp, els) {
+    const E0 = inputJones(inp), S0 = E0 ? stokesOf(E0) : [1, 0, 0, 0];
+    const out = [{ S: S0, E: E0 }];
+    let S = S0, E = E0;
+    for (const el of els) {
+      const J = jOf(el);
+      S = mApply(mueller(J), S);
+      if (E) E = jApply(J, E);
+      else if (el.type === 'pol') { const [x, y] = axis(el.ang), A = Math.sqrt(S[0]); E = [[A * x, 0], [A * y, 0]]; }
+      out.push({ S: S.slice(), E: E ? E.map((c) => c.slice()) : null });
+    }
+    return out;
+  }
+  const normAng = (d) => { let a = ((d + 90) % 180 + 180) % 180 - 90; if (a <= -90 + 1e-9) a += 180; return a; };   // (−90, 90]
+  // Describe a Stokes vector: degree of polarization, major axis angle (from the vertical), ellipticity
+  function describe(S) {
+    const I = S[0];
+    if (I < 1e-12) return { kind: 'dark', I };
+    const P = Math.hypot(S[1], S[2], S[3]), p = P / I;
+    if (p < 1e-9) return { kind: 'unpol', I, p: 0 };
+    const psiX = 0.5 * Math.atan2(S[2], S[1]) / D2R;        // from the x axis, counterclockwise
+    const ang = normAng(psiX - 90);                          // from the vertical
+    const chi = 0.5 * Math.asin(Math.max(-1, Math.min(1, S[3] / P)));
+    const q = Math.abs(S[3]) / P;
+    let kind = 'ellip';
+    if (q < 1e-9) kind = 'lin'; else if (q > 1 - 1e-9) kind = 'circ';
+    return { kind, I, p, ang, chi, hand: S[3] > 0 ? 'R' : 'L', ratio: Math.abs(Math.tan(chi)) };
+  }
+  // N polarizers after the first, each turned 90°/N more: cos^{2N}(π/2N)
+  const nChain = (N) => Math.pow(Math.cos(Math.PI / (2 * N)), 2 * N);
+  // Fresnel equations, lossless media; angles in radians
+  function fresnel(n1, n2, ti) {
+    const ci = Math.cos(ti), st = n1 / n2 * Math.sin(ti);
+    if (st >= 1) return { tir: true, tt: NaN, rs: NaN, rp: NaN, Rs: 1, Rp: 1, Ts: 0, Tp: 0 };
+    const tt = Math.asin(st), ct = Math.cos(tt);
+    const rs = (n1 * ci - n2 * ct) / (n1 * ci + n2 * ct), rp = (n2 * ci - n1 * ct) / (n2 * ci + n1 * ct);
+    const ts = 2 * n1 * ci / (n1 * ci + n2 * ct), tp = 2 * n1 * ci / (n2 * ci + n1 * ct);
+    const f = n2 * ct / (n1 * ci);
+    return { tir: false, tt, rs, rp, ts, tp, Rs: rs * rs, Rp: rp * rp, Ts: f * ts * ts, Tp: f * tp * tp };
+  }
+  const brewster = (n1, n2) => Math.atan(n2 / n1);
+  const critical = (n1, n2) => (n2 < n1 ? Math.asin(n2 / n1) : NaN);
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.POL = { axis, jPolarizer, jRetarder, jOf, jApply, stokesOf, mueller, mApply, propagate, describe, normAng, nChain, fresnel, brewster, critical, inputJones };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  const MEDIA = { ag: [1, 1.5], aw: [1, 1.33], ga: [1.5, 1], wa: [1.33, 1] };
+  const PRESETS = {
+    malus: { view: 'bench', input: { kind: 'unpol', ang: 0, hand: 'R' }, els: [['pol', 0], ['pol', 40]], sel: 1,
+      hint: 'Unpolarized light loses half at the first polarizer. The second passes cos²θ of what reaches it, θ being the angle between the two axes. Drag the second disk and the dot runs along cos²θ.' },
+    crossed: { view: 'bench', input: { kind: 'unpol', ang: 0, hand: 'R' }, els: [['pol', 0], ['pol', 90]], sel: 1,
+      hint: 'Axes at 90°: the light leaving the first polarizer has no component along the second, so nothing gets through.' },
+    three: { view: 'bench', input: { kind: 'unpol', ang: 0, hand: 'R' }, els: [['pol', 0], ['pol', 45], ['pol', 90]], sel: 1,
+      hint: 'A third polarizer at 45° between crossed ones lets 1/8 through: ½ · cos²45° · cos²45°. Remove the middle one and it goes dark again. The middle polarizer adds no light; it changes the polarization the last one sees.' },
+    qwp: { view: 'bench', input: { kind: 'lin', ang: 0, hand: 'R' }, els: [['qwp', 45], ['pol', 30]], sel: 1,
+      hint: 'Vertical light meets a quarter wave plate with its fast axis at 45°. Equal components along the fast and slow axes leave a quarter cycle apart: circular light. Turn the last polarizer: it passes half at every angle.' },
+    hwp: { view: 'bench', input: { kind: 'lin', ang: 0, hand: 'R' }, els: [['hwp', 20]], sel: 0,
+      hint: 'A half wave plate delays the slow component by half a cycle, which mirrors the polarization across the fast axis: α becomes 2θ − α. Fast axis at 20° turns vertical light to 40°. Turn the plate and the output turns twice as fast.' },
+    brewster: { view: 'refl', n1: 1, n2: 1.5, thi: 'B', rpol: 'unpol', glasses: true,
+      hint: 'At tan θ_B = n₂/n₁ the p component is not reflected at all, so the glare is pure s: polarized parallel to the surface. Polarized sunglasses pass only p and block it. Move the ray off θ_B and some glare comes back.' }
+  };
+
+  // ---------- state ----------
+  const S = { view: 'bench', preset: 'malus', input: { kind: 'unpol', ang: 0, hand: 'R' }, els: [], sel: 0, N: 6,
+    n1: 1, n2: 1.5, thi: 56.3, rpol: 'unpol', glasses: false };
+  let playing = !reduce, states = [], sweep = null;
+  const MAXEL = 4;
+
+  function recompute() {
+    states = propagate(S.input, S.els);
+    sweep = null;
+    if (S.sel >= 0 && S.sel < S.els.length) {
+      const k = S.sel, n = 241, xs = [], ratio = [], fin = [];
+      const els = S.els.map((e) => ({ type: e.type, ang: e.ang }));
+      for (let i = 0; i < n; i++) {
+        const a = -90 + 180 * i / (n - 1); els[k].ang = a;
+        const st = propagate(S.input, els), Ib = st[k].S[0], Ia = st[k + 1].S[0];
+        xs.push(a); ratio.push(Ib > 1e-12 ? Ia / Ib : NaN); fin.push(st[st.length - 1].S[0] / st[0].S[0]);
+      }
+      sweep = { k, xs, ratio, fin };
+    }
+  }
+
+  // ---------- theme, canvas ----------
+  let T = null, dpr = 1, W = 0, Hh = 0;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.4 : 1);
+  const pscale = () => Math.min(projScale(), Math.max(1, Math.min(W, Hh) / 290));
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
+      gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), bo: g('--bo'), beam: g('--beam'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+  }
+  const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = pane.getBoundingClientRect();
+    W = r.width; Hh = r.height;
+    can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(Hh * dpr));
+    can.style.width = W + 'px'; can.style.height = Hh + 'px';
+    drawAll();
+  }
+  const trim = (s) => (s.includes('e') ? s : s.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, ''));
+  const fmtI = (v) => (Math.abs(v) < 5e-7 ? '0' : v.toFixed(3));
+  const fmtDeg = (d, n = 1) => `${(Math.abs(d) < 0.05 ? 0 : d).toFixed(n)}°`;
+  function label(c, txt, x, y, col, align = 'left', base = 'middle', bold = false, size = 11) {
+    const ps = pscale();
+    c.font = `${bold ? '600 ' : ''}${size * ps}px ${T.mono}`; c.textAlign = align; c.textBaseline = base;
+    const w = c.measureText(txt).width, h = (size + 3) * ps;
+    const x0 = align === 'left' ? x : align === 'right' ? x - w : x - w / 2;
+    const y0 = base === 'middle' ? y - h / 2 : base === 'bottom' ? y - h : y;
+    c.fillStyle = T.canvas; c.globalAlpha = 0.85; c.fillRect(x0 - 3, y0, w + 6, h); c.globalAlpha = 1;
+    c.fillStyle = col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
+  }
+  function arrow(c, x0, y0, x1, y1, col, lw, head) {
+    const dx = x1 - x0, dy = y1 - y0, L = Math.hypot(dx, dy); if (L < 0.5) return;
+    const ux = dx / L, uy = dy / L, h = Math.min(head, L * 0.6);
+    c.strokeStyle = col; c.fillStyle = col; c.lineWidth = lw; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1 - ux * h * 0.6, y1 - uy * h * 0.6); c.stroke();
+    c.beginPath(); c.moveTo(x1, y1); c.lineTo(x1 - ux * h - uy * h * 0.45, y1 - uy * h + ux * h * 0.45); c.lineTo(x1 - ux * h + uy * h * 0.45, y1 - uy * h - ux * h * 0.45); c.closePath(); c.fill();
+    c.lineCap = 'butt';
+  }
+
+  // ---------- layout ----------
+  let LY = null;
+  function layout() {
+    const ps = pscale();
+    if (S.view === 'refl') {
+      if (W >= 640) { const sw = Math.round(W * 0.56); return { wide: true, scene: { x: 0, y: 0, w: sw, h: Hh }, plot: { x: sw, y: 0, w: W - sw, h: Hh } }; }
+      const sh = Math.round(Hh * 0.56); return { wide: false, scene: { x: 0, y: 0, w: W, h: sh }, plot: { x: 0, y: sh, w: W, h: Hh - sh } };
+    }
+    const wide = W >= 640;
+    const nEl = S.els.length, slots = [{ kind: 'state', i: 0 }];
+    for (let i = 0; i < nEl; i++) { slots.push({ kind: 'el', i }); slots.push({ kind: 'state', i: i + 1 }); }
+    const perRow = wide ? slots.length : 5;
+    // a wrapped row starts with an element: the state that ends one row is the light entering the next
+    const rows = [slots.slice(0, perRow)];
+    for (let i = perRow; i < slots.length; i += perRow - 1) rows.push(slots.slice(i, i + perRow - 1));
+    // the bench takes the top part; the two plots share the rest
+    const bh = Math.round(Hh * (wide ? 0.47 : (rows.length > 1 ? 0.56 : 0.42)));
+    const bench = { x: 0, y: 0, w: W, h: bh };
+    let malus, nplot;
+    if (wide) { const mw = Math.round(W * 0.58); malus = { x: 0, y: bh, w: mw, h: Hh - bh }; nplot = { x: mw, y: bh, w: W - mw, h: Hh - bh }; }
+    else { const mh = Math.round((Hh - bh) * 0.54); malus = { x: 0, y: bh, w: W, h: mh }; nplot = { x: 0, y: bh + mh, w: W, h: Hh - bh - mh }; }
+    // slot geometry
+    const top = 24 * ps, rowH = (bh - top - 4 * ps) / rows.length, wEl = 1.3, wSt = 1;
+    const weight = (r) => r.reduce((s, k) => s + (k.kind === 'el' ? wEl : wSt), 0);
+    const maxW = Math.max(...rows.map(weight)), pad = 16 * ps, unit = (W - 2 * pad - 30 * ps) / Math.max(maxW, 3.2);
+    const re = Math.max(14 * ps, Math.min(unit * wEl * 0.4, rowH * 0.3, 74 * ps));
+    const rs = Math.max(11 * ps, Math.min(unit * wSt * 0.36, rowH * 0.5 - 38 * ps, rowH * 0.24, 50 * ps));
+    const pos = [];
+    rows.forEach((r, ri) => {
+      const cy = top + ri * rowH + rowH * 0.43;
+      let x = pad + 30 * ps + (ri > 0 ? 0 : 0);
+      for (const k of r) { const w = (k.kind === 'el' ? wEl : wSt) * unit; pos.push({ ...k, x: x + w / 2, y: cy, w, row: ri }); x += w; }
+    });
+    return { wide, bench, malus, nplot, rows: rows.length, rowH, re, rs, pos, top };
+  }
+
+  // ---------- drawing ----------
+  function drawAll() {
+    if (!T || !W) return;
+    LY = layout();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    if (S.view === 'bench') { drawBench(); drawMalus(); drawN(); dividers([LY.malus, LY.nplot]); }
+    else { drawRefl(); drawReflPlot(); dividers([LY.plot]); }
+  }
+  function dividers(boxes) {
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath();
+    for (const b of boxes) {
+      if (b.y > 0) { ctx.moveTo(b.x, b.y + 0.5); ctx.lineTo(b.x + b.w, b.y + 0.5); }
+      if (b.x > 0) { ctx.moveTo(b.x + 0.5, b.y); ctx.lineTo(b.x + 0.5, b.y + b.h); }
+    }
+    ctx.stroke();
+  }
+  const tNow = () => performance.now() / 1000;
+  let phase = 0;          // ωt of the drawn field, advanced while playing
+  const OMEGA = 2 * Math.PI / 2.6;
+
+  function drawBench() {
+    const c = ctx, ps = pscale(), L = LY, b = L.bench;
+    c.save(); c.beginPath(); c.rect(b.x, b.y, b.w, b.h); c.clip();
+    c.fillStyle = T.muted; c.font = `${10.5 * ps}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'top';
+    const note = 'Light travels left to right. Disks and fields are drawn as seen facing the oncoming beam.';
+    c.fillText(c.measureText(note).width < W - 24 * ps ? note : 'Drawn as seen facing the oncoming beam.', 12 * ps, 7 * ps);
+    // the beam: a band through the slots, brightness from the intensity
+    const P = L.pos, I0 = states[0].S[0];
+    const segI = (k) => states[k].S[0] / I0;
+    const band = (x0, y0, x1, y1, I) => { c.strokeStyle = T.beam; c.globalAlpha = 0.12 + 0.55 * Math.sqrt(Math.max(0, I)); c.lineWidth = 8 * ps; c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke(); c.globalAlpha = 1; };
+    const first = P[0];
+    band(4 * ps, first.y, first.x, first.y, 1);
+    arrow(c, 6 * ps, first.y - 16 * ps, 24 * ps, first.y - 16 * ps, T.muted, 1.4 * ps, 7 * ps);
+    for (let i = 0; i + 1 < P.length; i++) {
+      const a = P[i], q = P[i + 1];
+      const Iseg = a.kind === 'state' ? segI(a.i) : segI(q.i);
+      if (a.row === q.row) band(a.x, a.y, q.x, q.y, Iseg);
+      else {   // wrap to the next row along the gap between rows
+        const yg = a.y + (L.rowH * 0.57) - 2 * ps, xr = W - 8 * ps, xl = 10 * ps;
+        c.save(); c.setLineDash([5 * ps, 4 * ps]);
+        c.strokeStyle = T.beam; c.globalAlpha = 0.2 + 0.5 * Math.sqrt(Iseg); c.lineWidth = 2.5 * ps;
+        c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(xr, a.y); c.lineTo(xr, yg); c.lineTo(xl, yg); c.lineTo(xl, q.y); c.lineTo(q.x, q.y); c.stroke();
+        c.restore(); c.globalAlpha = 1;
+        band(xl, q.y, q.x, q.y, Iseg);
+      }
+    }
+    const last = P[P.length - 1];
+    if (last.row === L.rows - 1) { const Il = segI(states.length - 1); band(last.x, last.y, W - 4 * ps, last.y, Il); }
+    // slots
+    for (const p of P) { if (p.kind === 'el') drawDisk(p); else drawStateSlot(p); }
+    c.restore();
+  }
+  function elColor(type) { return type === 'pol' ? T.muted : type === 'qwp' ? T.equi : T.bo; }
+  const ELNAME = { pol: 'Polarizer', qwp: 'λ/4 plate', hwp: 'λ/2 plate' }, SHORT = { pol: 'Pol', qwp: 'λ/4', hwp: 'λ/2' };
+  // the first variant that fits the width, else the last
+  function fitText(vars, w, size, bold) {
+    ctx.font = `${bold ? '600 ' : ''}${size * pscale()}px ${T.mono}`;
+    for (const v of vars) if (ctx.measureText(v).width + 6 <= w) return v;
+    return vars[vars.length - 1];
+  }
+  function drawDisk(p) {
+    const c = ctx, ps = pscale(), el = S.els[p.i], r = LY.re, x = p.x, y = p.y;
+    const sel = S.sel === p.i, hot = (drag && drag.id === 'e' + p.i) || (!drag && hoverId === 'e' + p.i);
+    const col = elColor(el.type), [ux, uy] = axis(el.ang), sx = ux, sy = -uy;    // screen direction of the axis
+    c.save();
+    c.fillStyle = col; c.globalAlpha = el.type === 'pol' ? 0.13 : 0.18; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1;
+    // polarizer: lines parallel to the transmission axis
+    c.save(); c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.clip();
+    if (el.type === 'pol') {
+      c.strokeStyle = T.muted; c.globalAlpha = 0.35; c.lineWidth = 1 * ps; c.beginPath();
+      const step = Math.max(4 * ps, r / 4.5);
+      for (let k = -Math.ceil(r / step); k <= Math.ceil(r / step); k++) { const ox = -sy * k * step, oy = sx * k * step; c.moveTo(x + ox - sx * r, y + oy - sy * r); c.lineTo(x + ox + sx * r, y + oy + sy * r); }
+      c.stroke(); c.globalAlpha = 1;
+    }
+    c.restore();
+    // vertical reference tick at the top
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(x, y - r - 4 * ps); c.lineTo(x, y - r + 3 * ps); c.stroke();
+    // rim
+    c.strokeStyle = sel ? T.accent : col; c.lineWidth = (sel ? 2.4 : 1.4) * ps * (hot ? 1.3 : 1);
+    c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.stroke();
+    if (hot) { c.strokeStyle = T.accent; c.globalAlpha = 0.25; c.lineWidth = 7 * ps; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.stroke(); c.globalAlpha = 1; }
+    // axis
+    const ax = el.type === 'pol' ? T.ink : col;
+    c.strokeStyle = ax; c.lineWidth = 2.2 * ps; c.beginPath(); c.moveTo(x - sx * r, y - sy * r); c.lineTo(x + sx * r, y + sy * r); c.stroke();
+    if (el.type !== 'pol') {
+      c.setLineDash([3 * ps, 3 * ps]); c.lineWidth = 1.3 * ps; c.beginPath(); c.moveTo(x + sy * r * 0.8, y - sx * r * 0.8); c.lineTo(x - sy * r * 0.8, y + sx * r * 0.8); c.stroke(); c.setLineDash([]);
+      if (r > 36 * ps) {
+        c.fillStyle = col; c.font = `600 ${10 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+        c.fillText('fast', x + sx * r * 0.55 - sy * 9 * ps, y + sy * r * 0.55 + sx * 9 * ps);
+        c.fillText('slow', x + sy * r * 0.55 + sx * 9 * ps, y - sx * r * 0.55 + sy * 9 * ps);
+      }
+    }
+    // grips at both ends of the axis
+    for (const g of [1, -1]) { c.fillStyle = T.canvas; c.strokeStyle = sel || hot ? T.accent : ax; c.lineWidth = (hot ? 2.2 : 1.6) * ps; c.beginPath(); c.arc(x + g * sx * r, y + g * sy * r, (hot ? 5.5 : 4.2) * ps, 0, 2 * Math.PI); c.fill(); c.stroke(); }
+    c.restore();
+    const sz = r < 30 * ps ? 9.5 : 11, room = p.w - 4 * ps;
+    label(c, fitText([`${p.i + 1} · ${ELNAME[el.type]}`, `${p.i + 1} ${SHORT[el.type]}`], room, sz, true), x, y - r - 13 * ps, sel ? T.accent : T.ink, 'center', 'middle', true, sz);
+    label(c, fitText([`${el.type === 'pol' ? 'axis' : 'fast'} ${fmtDeg(el.ang, 0)}`, fmtDeg(el.ang, 0)], room, sz), x, y + r + 13 * ps, sel ? T.accent : T.muted, 'center', 'middle', false, sz);
+  }
+  // random slowly wandering Jones vector for the unpolarized field (drawn only)
+  function randomJones(t, seed) {
+    const a = 0.75 + 0.25 * Math.sin(0.83 * t + seed), b = Math.sqrt(Math.max(0, 1.5 - a * a));
+    const p1 = 1.7 * Math.sin(0.61 * t + 2 * seed) + 0.9 * Math.sin(1.37 * t), p2 = 2.3 * Math.sin(0.47 * t + 1) + 1.1 * Math.sin(1.13 * t + seed);
+    return [[a * Math.cos(p1) * s2, a * Math.sin(p1) * s2], [b * Math.cos(p2) * s2, b * Math.sin(p2) * s2]];
+  }
+  function fieldAt(E, ph) { return [E[0][0] * Math.cos(ph) + E[0][1] * Math.sin(ph), E[1][0] * Math.cos(ph) + E[1][1] * Math.sin(ph)]; }   // Re[E e^{−iφ}]
+  function drawStateSlot(p) {
+    const c = ctx, ps = pscale(), r = LY.rs, x = p.x, y = p.y, st = states[p.i], I0 = states[0].S[0], d = describe(st.S);
+    const isIn = p.i === 0, hot = isIn && S.input.kind === 'lin' && ((drag && drag.id === 'in') || (!drag && hoverId === 'in'));
+    const selIn = isIn && S.sel === -1 && S.input.kind === 'lin';
+    c.save();
+    c.fillStyle = T.canvas; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.fill();
+    c.strokeStyle = selIn ? T.accent : T.gridStrong; c.lineWidth = (selIn ? 2 : 1) * ps; c.stroke();
+    if (hot) { c.strokeStyle = T.accent; c.globalAlpha = 0.25; c.lineWidth = 7 * ps; c.stroke(); c.globalAlpha = 1; }
+    c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(x - r, y); c.lineTo(x + r, y); c.moveTo(x, y - r); c.lineTo(x, y + r); c.stroke();
+    const sc = r * 0.86 / Math.sqrt(I0);
+    if (d.kind === 'dark') {
+      c.fillStyle = T.muted; c.font = `${10 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('dark', x, y);
+    } else if (!st.E) {
+      // unpolarized: a star of directions and a field that wanders at random
+      const A = Math.sqrt(st.S[0]) * sc;
+      c.strokeStyle = T.pos; c.globalAlpha = 0.28; c.lineWidth = 1.3 * ps; c.beginPath();
+      for (let k = 0; k < 6; k++) { const a = k * Math.PI / 6; c.moveTo(x - A * Math.cos(a), y - A * Math.sin(a)); c.lineTo(x + A * Math.cos(a), y + A * Math.sin(a)); }
+      c.stroke(); c.globalAlpha = 1;
+      // the same random field, carried through the wave plates met so far
+      let E = randomJones(phase / OMEGA * 0.9, 0.7);
+      for (let k = 0; k < p.i; k++) E = jApply(jOf(S.els[k]), E);
+      const f = fieldAt(E, phase);
+      arrow(c, x, y, x + f[0] * sc, y - f[1] * sc, T.pos, 2.4 * ps, 8 * ps);
+    } else {
+      const E = st.E;
+      c.strokeStyle = T.pos; c.globalAlpha = 0.55; c.lineWidth = 1.6 * ps; c.beginPath();
+      for (let k = 0; k <= 72; k++) { const f = fieldAt(E, k / 72 * 2 * Math.PI); const px = x + f[0] * sc, py = y - f[1] * sc; k ? c.lineTo(px, py) : c.moveTo(px, py); }
+      c.stroke(); c.globalAlpha = 1;
+      // sense of rotation, for elliptical and circular light
+      if (d.kind !== 'lin') {
+        const ph0 = phase + 0.9, f0 = fieldAt(E, ph0), f1 = fieldAt(E, ph0 + 0.18);
+        const ax = x + f0[0] * sc, ay = y - f0[1] * sc, bx = x + f1[0] * sc, by = y - f1[1] * sc;
+        c.globalAlpha = 0.8; arrow(c, ax, ay, bx + (bx - ax) * 0.3, by + (by - ay) * 0.3, T.pos, 1.4 * ps, 7 * ps); c.globalAlpha = 1;
+      }
+      const f = fieldAt(E, phase);
+      arrow(c, x, y, x + f[0] * sc, y - f[1] * sc, T.pos, 2.4 * ps, 8 * ps);
+    }
+    if (isIn && S.input.kind === 'lin') {   // grips: the input polarization can be dragged
+      const [ux, uy] = axis(S.input.ang);
+      for (const g of [1, -1]) { c.fillStyle = T.canvas; c.strokeStyle = T.accent; c.lineWidth = (hot ? 2.2 : 1.5) * ps; c.beginPath(); c.arc(x + g * ux * r, y - g * uy * r, (hot ? 5.5 : 4) * ps, 0, 2 * Math.PI); c.fill(); c.stroke(); }
+    }
+    c.restore();
+    // intensity: number, bar, and a short description
+    const I = st.S[0] / I0, bw = Math.min(p.w * 0.84, Math.max(2.4 * r, 56 * ps)), by0 = y + r + 17 * ps;
+    if (isIn) label(c, fitText(['Light in', 'In'], p.w - 4 * ps, 11, true), x, y - r - 13 * ps, T.ink, 'center', 'middle', true);
+    else label(c, fitText([`after ${p.i}`, `${p.i}`], p.w - 4 * ps, 11), x, y - r - 13 * ps, T.muted, 'center', 'middle');
+    c.font = `600 ${11 * ps}px ${T.mono}`; c.fillStyle = T.ink; c.textAlign = 'center'; c.textBaseline = 'bottom';
+    c.fillText(isIn ? 'I₀' : fmtI(I), x, by0 - 2 * ps);
+    c.fillStyle = T.grid; c.fillRect(x - bw / 2, by0, bw, 6 * ps);
+    c.fillStyle = T.beam; c.fillRect(x - bw / 2, by0, bw * Math.min(1, I), 6 * ps);
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.strokeRect(x - bw / 2 + 0.5, by0 + 0.5, bw - 1, 6 * ps - 1);
+    c.font = `${9.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textBaseline = 'top';
+    const txt = shortDesc(d), fit = c.measureText(txt).width < p.w * 0.98;
+    if (fit) c.fillText(txt, x, by0 + 9 * ps);
+    else c.fillText(shortDesc(d, true), x, by0 + 9 * ps);
+  }
+  function shortDesc(d, tiny) {
+    if (d.kind === 'dark') return tiny ? '' : 'no light';
+    if (d.kind === 'unpol') return tiny ? 'unpol.' : 'unpolarized';
+    if (d.kind === 'lin') return tiny ? fmtDeg(d.ang, 0) : `linear ${fmtDeg(d.ang, 0)}`;
+    if (d.kind === 'circ') return tiny ? `circ. ${d.hand}` : `circular ${d.hand === 'R' ? 'right' : 'left'}`;
+    return tiny ? `ellip. ${d.hand}` : `elliptical ${d.hand}`;
+  }
+  function longDesc(d) {
+    if (d.kind === 'dark') return 'no light';
+    if (d.kind === 'unpol') return 'unpolarized';
+    if (d.kind === 'lin') return `linear at ${fmtDeg(d.ang)}`;
+    if (d.kind === 'circ') return `circular, ${d.hand === 'R' ? 'right (clockwise facing the beam)' : 'left (counterclockwise facing the beam)'}`;
+    return `elliptical, ${d.hand === 'R' ? 'right' : 'left'} handed, major axis at ${fmtDeg(d.ang)}, axis ratio ${d.ratio.toFixed(3)}`;
+  }
+
+  // ---------- plots ----------
+  function plotBox(p, ps, extraB = 0) { return { L: p.x + 48 * ps, R: p.x + p.w - 16 * ps, T: p.y + 36 * ps, B: p.y + p.h - (30 + extraB) * ps }; }
+  function title(box, t, ps) { const c = ctx; c.fillStyle = T.ink; c.font = `600 ${11.5 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(t, box.L - 38 * ps, box.T - 12 * ps); }
+  function yGrid(box, ps, ticks, Y, fmt) {
+    const c = ctx; c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (const v of ticks) { const y = Math.round(Y(v)) + 0.5; c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(box.L, y); c.lineTo(box.R, y); c.stroke(); c.fillText(fmt(v), box.L - 5, y); }
+  }
+  function xGrid(box, ps, ticks, X, fmt) {
+    const c = ctx; c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'top';
+    for (const v of ticks) { const x = Math.round(X(v)) + 0.5; c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.fillText(fmt(v), x, box.B + 5); }
+  }
+  const frame = (box) => { ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(box.L + 0.5, box.T + 0.5, box.R - box.L, box.B - box.T); };
+  function malusBox() { const ps = pscale(); return plotBox(LY.malus, ps); }
+  function drawMalus() {
+    const c = ctx, ps = pscale(), box = malusBox();
+    if (box.R - box.L < 60 || box.B - box.T < 40) return;
+    const X = (a) => box.L + (a + 90) / 180 * (box.R - box.L), Y = (v) => box.B - v * (box.B - box.T);
+    if (!sweep) {
+      title(box, 'Transmission against an element\'s angle', ps);
+      frame(box); c.fillStyle = T.muted; c.font = `${11 * ps}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillText(S.els.length ? 'Click a disk to plot it' : 'Add an element to plot its transmission', (box.L + box.R) / 2, (box.T + box.B) / 2); return;
+    }
+    const k = sweep.k, el = S.els[k];
+    title(box, `${k + 1} · ${ELNAME[el.type]}: transmission against its angle`, ps);
+    yGrid(box, ps, box.B - box.T > 110 * ps ? [0, 0.25, 0.5, 0.75, 1] : [0, 0.5, 1], Y, (v) => trim(v.toFixed(2)));
+    xGrid(box, ps, box.R - box.L > 260 * ps ? [-90, -45, 0, 45, 90] : [-90, 0, 90], X, (v) => `${v}°`);
+    c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillText('angle', box.R, box.B + 18 * ps);
+    // the polarization arriving at this element, if linear
+    const din = describe(states[k].S);
+    if (el.type === 'pol' && din.kind === 'lin') {
+      const xa = X(din.ang); c.strokeStyle = T.muted; c.setLineDash([3, 4]); c.lineWidth = 1; c.beginPath(); c.moveTo(xa, box.T); c.lineTo(xa, box.B); c.stroke(); c.setLineDash([]);
+    }
+    c.save(); c.beginPath(); c.rect(box.L, box.T - 3, box.R - box.L, box.B - box.T + 6); c.clip();
+    const curve = (arr, col, dash, lw) => {
+      c.strokeStyle = col; c.lineWidth = lw * ps; c.setLineDash(dash); c.beginPath(); let on = false;
+      for (let i = 0; i < arr.length; i++) { const v = arr[i]; if (!isFinite(v)) { on = false; continue; } const px = X(sweep.xs[i]), py = Y(v); on ? c.lineTo(px, py) : c.moveTo(px, py); on = true; }
+      c.stroke(); c.setLineDash([]);
+    };
+    curve(sweep.ratio, T.equi, [], 2.2);
+    curve(sweep.fin, T.accent, [6 * ps, 4 * ps], 1.8);
+    c.restore();
+    if (el.type === 'pol' && din.kind === 'lin' && box.B - box.T > 230 * ps) {   // along the dashed line, rotated; skipped when the plot is short
+      // keep clear of the readout label beside the current angle's point
+      const rNow = sweep.ratio[sweep.xs.reduce((b, v, i) => Math.abs(v - el.ang) < Math.abs(sweep.xs[b] - el.ang) ? i : b, 0)];
+      c.save(); c.translate(X(din.ang) + (din.ang > 80 ? -11 : 11) * ps, Y(rNow > 0.35 && rNow < 0.7 ? 0.2 : 0.5)); c.rotate(-Math.PI / 2);
+      label(c, 'light arriving', 0, 0, T.muted, 'center', 'middle', false, 10); c.restore();
+    }
+    // current angle
+    const Ib = states[k].S[0], Ia = states[k + 1].S[0], I0 = states[0].S[0], fin = states[states.length - 1].S[0] / I0;
+    const x = X(el.ang), hot = (drag && drag.id === 'malus') || (!drag && hoverId === 'malus');
+    c.strokeStyle = T.accent; c.globalAlpha = hot ? 0.6 : 0.3; c.lineWidth = (hot ? 2 : 1) * ps; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.globalAlpha = 1;
+    // grip on the cursor line
+    c.lineWidth = 1.4 * ps; c.beginPath(); for (let j = -1; j <= 1; j++) { c.moveTo(x - 4 * ps, box.B - 12 * ps + j * 3.5 * ps); c.lineTo(x + 4 * ps, box.B - 12 * ps + j * 3.5 * ps); } c.stroke();
+    c.fillStyle = T.accent; c.beginPath(); c.arc(x, Y(fin), 4 * ps, 0, 2 * Math.PI); c.fill();
+    const right = x > (box.L + box.R) / 2, al = right ? 'right' : 'left', dx = right ? -9 * ps : 9 * ps;
+    const clampY = (v) => Math.min(box.B - 10 * ps, Math.max(box.T + 10 * ps, v));
+    let yf = clampY(Y(fin) - 12 * ps), yr = null;
+    if (Ib > 1e-12) {
+      const v = Ia / Ib; c.fillStyle = T.equi; c.beginPath(); c.arc(x, Y(v), 5.5 * ps, 0, 2 * Math.PI); c.fill();
+      yr = clampY(Y(v) - 12 * ps);
+      if (Math.abs(yf - yr) < 18 * ps) { yf = yr + 18 * ps; if (yf > box.B - 10 * ps) { yf = box.B - 10 * ps; yr = yf - 18 * ps; } }
+      label(c, `I/I_in = ${fmtI(v)}`, x + dx, yr, T.equi, al, 'middle', true);
+    }
+    label(c, `I/I₀ = ${fmtI(fin)}`, x + dx, yf, T.accent, al, 'middle', false);
+    frame(box);
+  }
+  function nBox() { const ps = pscale(); return plotBox(LY.nplot, ps); }
+  function drawN() {
+    const c = ctx, ps = pscale(), box = nBox();
+    if (box.R - box.L < 60 || box.B - box.T < 40) return;
+    const X = (n) => box.L + (n - 1) / 29 * (box.R - box.L), Y = (v) => box.B - v * (box.B - box.T);
+    title(box, 'Turning 90° in N polarizer steps', ps);
+    yGrid(box, ps, box.B - box.T > 110 * ps ? [0, 0.25, 0.5, 0.75, 1] : [0, 0.5, 1], Y, (v) => trim(v.toFixed(2)));
+    xGrid(box, ps, [1, 10, 20, 30], X, (v) => String(v));
+    c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'top'; c.font = `${10.5 * ps}px ${T.mono}`; c.fillText('N', box.R, box.B + 18 * ps);
+    // asymptotic form
+    c.save(); c.beginPath(); c.rect(box.L, box.T - 3, box.R - box.L, box.B - box.T + 6); c.clip();
+    c.strokeStyle = T.muted; c.setLineDash([5 * ps, 4 * ps]); c.lineWidth = 1.3 * ps; c.beginPath();
+    for (let i = 0; i <= 200; i++) { const n = 1 + 29 * i / 200, v = Math.exp(-Math.PI * Math.PI / (4 * n)), px = X(n), py = Y(v); i ? c.lineTo(px, py) : c.moveTo(px, py); }
+    c.stroke(); c.setLineDash([]); c.restore();
+    for (let n = 1; n <= 30; n++) { c.fillStyle = n === S.N ? T.accent : T.equi; c.globalAlpha = n === S.N ? 1 : 0.8; c.beginPath(); c.arc(X(n), Y(nChain(n)), (n === S.N ? 5.5 : 2.6) * ps, 0, 2 * Math.PI); c.fill(); }
+    c.globalAlpha = 1;
+    const hot = (drag && drag.id === 'nplot') || (!drag && hoverId === 'nplot'), xn = X(S.N);
+    c.strokeStyle = T.accent; c.globalAlpha = hot ? 0.6 : 0.3; c.lineWidth = (hot ? 2 : 1) * ps; c.beginPath(); c.moveTo(xn, box.T); c.lineTo(xn, box.B); c.stroke(); c.globalAlpha = 1;
+    c.lineWidth = 1.4 * ps; c.beginPath(); for (let j = -1; j <= 1; j++) { c.moveTo(xn - 4 * ps, box.B - 12 * ps + j * 3.5 * ps); c.lineTo(xn + 4 * ps, box.B - 12 * ps + j * 3.5 * ps); } c.stroke();
+    const v = nChain(S.N), right = xn > (box.L + box.R) * 0.55;
+    label(c, `N = ${S.N}: ${v.toFixed(3)}`, xn + (right ? -9 : 9) * ps, Math.min(box.B - 26 * ps, Y(v) + 16 * ps), T.accent, right ? 'right' : 'left', 'middle', true);
+    // a fan of the N + 1 axes, from 0° to 90°
+    const fr = Math.min(36 * ps, (box.B - box.T) * 0.32), fx = box.R - fr - 10 * ps, fy = box.B - 10 * ps;
+    if (box.R - box.L > 200 * ps) {
+      c.strokeStyle = T.muted; c.lineWidth = 1.2 * ps;
+      for (let i = 0; i <= S.N; i++) { const a = i / S.N * Math.PI / 2; c.globalAlpha = 0.35 + 0.65 * (i === 0 || i === S.N ? 1 : 0); c.beginPath(); c.moveTo(fx, fy); c.lineTo(fx + Math.sin(a) * fr, fy - Math.cos(a) * fr); c.stroke(); }
+      c.globalAlpha = 1;
+      c.fillStyle = T.muted; c.font = `${9.5 * ps}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillText(`${S.N + 1} axes`, fx - 6 * ps, fy);
+    }
+    frame(box);
+  }
+
+  // ---------- reflection view ----------
+  function reflGeom() {
+    const s = LY.scene, ps = pscale();
+    const cx = s.x + s.w / 2, cy = s.y + s.h * 0.5, Lr = Math.min(s.w * 0.44, s.h * 0.43);
+    return { s, cx, cy, Lr, ps };
+  }
+  function drawRefl() {
+    const c = ctx, g = reflGeom(), s = g.s, ps = g.ps, n1 = S.n1, n2 = S.n2, ti = S.thi * D2R, F = fresnel(n1, n2, ti);
+    c.save(); c.beginPath(); c.rect(s.x, s.y, s.w, s.h); c.clip();
+    // media
+    const tint = (n) => Math.min(0.32, (n - 1) * 0.28);
+    c.fillStyle = T.neg; c.globalAlpha = tint(n1); c.fillRect(s.x, s.y, s.w, g.cy - s.y);
+    c.globalAlpha = tint(n2); c.fillRect(s.x, g.cy, s.w, s.y + s.h - g.cy); c.globalAlpha = 1;
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1.5 * ps; c.beginPath(); c.moveTo(s.x, g.cy); c.lineTo(s.x + s.w, g.cy); c.stroke();
+    const mname = (n) => (Math.abs(n - 1) < 0.005 ? 'air' : Math.abs(n - 1.33) < 0.005 ? 'water' : Math.abs(n - 1.5) < 0.005 ? 'glass' : 'medium');
+    label(c, `n₁ = ${n1.toFixed(2)} (${mname(n1)})`, s.x + 12 * ps, s.y + 16 * ps, T.ink, 'left', 'middle');
+    label(c, `n₂ = ${n2.toFixed(2)} (${mname(n2)})`, s.x + 12 * ps, s.y + s.h - 16 * ps, T.ink, 'left', 'middle');
+    // normal
+    c.strokeStyle = T.muted; c.setLineDash([4 * ps, 4 * ps]); c.lineWidth = 1 * ps; c.beginPath(); c.moveTo(g.cx, g.cy - g.Lr * 1.05); c.lineTo(g.cx, g.cy + g.Lr * 1.05); c.stroke(); c.setLineDash([]);
+    // amplitudes of the incoming components
+    const Is = S.rpol === 'p' ? 0 : S.rpol === 's' ? 1 : 0.5, Ip = S.rpol === 's' ? 0 : S.rpol === 'p' ? 1 : 0.5;
+    const L = g.Lr, si = Math.sin(ti), ci = Math.cos(ti);
+    const A = [g.cx - L * si, g.cy - L * ci], Rr = [g.cx + L * si, g.cy - L * ci];
+    const ray = (x0, y0, x1, y1, I) => { c.strokeStyle = T.beam; c.globalAlpha = 0.18 + 0.75 * Math.sqrt(Math.min(1, I)); c.lineWidth = (2 + 5 * Math.sqrt(Math.min(1, I))) * ps; c.lineCap = 'round'; c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke(); c.lineCap = 'butt'; c.globalAlpha = 1; };
+    const lens = S.glasses ? 0.6 : 2;
+    ray(A[0], A[1], g.cx, g.cy, Is + Ip);
+    if (S.glasses) { const m = [g.cx + (Rr[0] - g.cx) * lens, g.cy + (Rr[1] - g.cy) * lens]; ray(g.cx, g.cy, m[0], m[1], Is * F.Rs + Ip * F.Rp); ray(m[0], m[1], Rr[0], Rr[1], Ip * F.Rp); }
+    else ray(g.cx, g.cy, Rr[0], Rr[1], Is * F.Rs + Ip * F.Rp);
+    let Tt = null;
+    if (!F.tir) { Tt = [g.cx + L * Math.sin(F.tt), g.cy + L * Math.cos(F.tt)]; ray(g.cx, g.cy, Tt[0], Tt[1], Is * F.Ts + Ip * F.Tp); }
+    arrow(c, A[0] + (g.cx - A[0]) * 0.35, A[1] + (g.cy - A[1]) * 0.35, A[0] + (g.cx - A[0]) * 0.5, A[1] + (g.cy - A[1]) * 0.5, T.ink, 1.5 * ps, 9 * ps);
+    arrow(c, g.cx + (Rr[0] - g.cx) * 0.42, g.cy + (Rr[1] - g.cy) * 0.42, g.cx + (Rr[0] - g.cx) * 0.52, g.cy + (Rr[1] - g.cy) * 0.52, T.ink, 1.5 * ps, 9 * ps);
+    if (Tt) arrow(c, g.cx + (Tt[0] - g.cx) * 0.42, g.cy + (Tt[1] - g.cy) * 0.42, g.cx + (Tt[0] - g.cx) * 0.52, g.cy + (Tt[1] - g.cy) * 0.52, T.ink, 1.5 * ps, 9 * ps);
+    // polarization markers: s as dots (E out of the page), p as arrows across the ray in the page
+    const m0 = 15 * ps;
+    const markers = (P0, P1, as, ap, fracs) => {
+      const dx = P1[0] - P0[0], dy = P1[1] - P0[1], Lm = Math.hypot(dx, dy), nx = -dy / Lm, ny = dx / Lm;
+      for (const f of fracs) {
+        const x = P0[0] + dx * f, y = P0[1] + dy * f, osc = Math.cos(phase - 6 * f);
+        if (ap > 0.02) { const h = m0 * ap * 1.41; c.strokeStyle = T.neg; c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(x - nx * h, y - ny * h); c.lineTo(x + nx * h, y + ny * h); c.stroke();
+          arrow(c, x, y, x + nx * h * osc, y + ny * h * osc, T.neg, 2 * ps, 6 * ps); }
+        if (as > 0.02) { const r = Math.max(2 * ps, 5 * ps * as * 1.41); c.strokeStyle = T.pos; c.lineWidth = 1.6 * ps; c.fillStyle = T.canvas; c.beginPath(); c.arc(x, y, r + 2.5 * ps, 0, 2 * Math.PI); c.fill(); c.stroke(); c.fillStyle = T.pos; c.beginPath(); c.arc(x, y, r * (0.55 + 0.45 * Math.abs(osc)), 0, 2 * Math.PI); c.fill(); }
+      }
+    };
+    markers(A, [g.cx, g.cy], Math.sqrt(Is), Math.sqrt(Ip), [0.2, 0.5]);
+    if (S.glasses) {
+      markers([g.cx, g.cy], Rr, Math.sqrt(Is * F.Rs), Math.sqrt(Ip * F.Rp), [0.4]);
+      markers([g.cx, g.cy], Rr, 0, Math.sqrt(Ip * F.Rp), [0.86]);
+      const m = [g.cx + (Rr[0] - g.cx) * lens, g.cy + (Rr[1] - g.cy) * lens], dx = Rr[0] - g.cx, dy = Rr[1] - g.cy, Lm = Math.hypot(dx, dy), nx = -dy / Lm, ny = dx / Lm, hl = 22 * ps;
+      c.strokeStyle = T.ink; c.lineWidth = 6 * ps; c.globalAlpha = 0.75; c.beginPath(); c.moveTo(m[0] - nx * hl, m[1] - ny * hl); c.lineTo(m[0] + nx * hl, m[1] + ny * hl); c.stroke(); c.globalAlpha = 1;
+      c.strokeStyle = T.canvas; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(m[0] - nx * hl * 0.8, m[1] - ny * hl * 0.8); c.lineTo(m[0] + nx * hl * 0.8, m[1] + ny * hl * 0.8); c.stroke();
+      const lt = 'sunglasses pass p only'; c.font = `${10 * ps}px ${T.mono}`;
+      const lw = c.measureText(lt).width, lx = Math.min(m[0] + 14 * ps, s.x + s.w - lw - 8 * ps);
+      label(c, lt, lx, m[1] + (m[1] - s.y > 40 * ps ? -26 : 26) * ps, T.ink, 'left', 'middle', false, 10);
+    } else markers([g.cx, g.cy], Rr, Math.sqrt(Is * F.Rs), Math.sqrt(Ip * F.Rp), [0.5, 0.8]);
+    if (Tt) markers([g.cx, g.cy], Tt, Math.sqrt(Is * F.Ts), Math.sqrt(Ip * F.Tp), [0.5, 0.8]);
+    // angle arcs
+    const arc = (a0, a1, r, col, txt, side) => {
+      c.strokeStyle = col; c.lineWidth = 1.6 * ps; c.beginPath(); c.arc(g.cx, g.cy, r, Math.min(a0, a1), Math.max(a0, a1)); c.stroke();
+      const am = (a0 + a1) / 2, lr = r + 10 * ps; label(c, txt, g.cx + lr * Math.cos(am), g.cy + lr * Math.sin(am), col, side, 'middle', true, 10.5);
+    };
+    const up = -Math.PI / 2, ar = Math.min(46 * ps, L * 0.3);
+    if (ti > 0.02) { arc(up - ti, up, ar, T.equi, `θi ${fmtDeg(S.thi)}`, 'right'); arc(up, up + ti, ar * 0.8, T.equi, 'θr', 'left'); }
+    if (Tt && F.tt > 0.02) arc(Math.PI / 2 - F.tt, Math.PI / 2, ar, T.equi, `θt ${fmtDeg(F.tt / D2R)}`, 'left');
+    // right angle between reflected and refracted rays at Brewster's angle
+    const thB = brewster(n1, n2) / D2R;
+    if (Tt && Math.abs(S.thi - thB) < 0.25) {
+      const q = 14 * ps, ur = [(Rr[0] - g.cx) / L, (Rr[1] - g.cy) / L], ut = [(Tt[0] - g.cx) / L, (Tt[1] - g.cy) / L];
+      c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(g.cx + ur[0] * q, g.cy + ur[1] * q); c.lineTo(g.cx + (ur[0] + ut[0]) * q, g.cy + (ur[1] + ut[1]) * q); c.lineTo(g.cx + ut[0] * q, g.cy + ut[1] * q); c.stroke();
+      label(c, 'Brewster: reflected light is pure s', s.x + s.w - 12 * ps, s.y + 16 * ps, T.equi, 'right', 'middle', true);
+    }
+    if (F.tir) label(c, 'total internal reflection', g.cx + 12 * ps, g.cy + 30 * ps, T.equi, 'left', 'middle', true);
+    // reflected fraction at the ray end
+    const Rtot = Is * F.Rs + Ip * F.Rp, Rseen = S.glasses ? Ip * F.Rp : Rtot;
+    label(c, `R = ${Rtot.toFixed(3)}${S.glasses ? `, through lens ${Rseen.toFixed(3)}` : ''}`, Math.min(Rr[0], s.x + s.w - 10 * ps), Math.max(s.y + 34 * ps, Rr[1] - 14 * ps), T.ink, Rr[0] > s.x + s.w * 0.7 ? 'right' : 'left', 'middle', false, 10.5);
+    if (Tt) label(c, `T = ${(Is * F.Ts + Ip * F.Tp).toFixed(3)}`, Tt[0] + 8 * ps, Math.min(s.y + s.h - 34 * ps, Tt[1]), T.ink, 'left', 'middle', false, 10.5);
+    // drag handle at the start of the incoming ray
+    const hot = (drag && drag.id === 'ray') || (!drag && hoverId === 'ray');
+    c.fillStyle = T.canvas; c.strokeStyle = T.accent; c.lineWidth = (hot ? 2.4 : 1.7) * ps; c.beginPath(); c.arc(A[0], A[1], (hot ? 7 : 5.5) * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+    if (hot) { c.globalAlpha = 0.25; c.lineWidth = 8 * ps; c.beginPath(); c.moveTo(A[0], A[1]); c.lineTo(g.cx, g.cy); c.stroke(); c.globalAlpha = 1; }
+    label(c, 'drag', A[0] + (A[0] < g.cx - 30 * ps ? 0 : -10 * ps), A[1] - 16 * ps, T.accent, 'center', 'middle', false, 10);
+    c.restore();
+  }
+  function reflBox() { const ps = pscale(); return plotBox(LY.plot, ps); }
+  function drawReflPlot() {
+    const c = ctx, ps = pscale(), box = reflBox(), n1 = S.n1, n2 = S.n2;
+    if (box.R - box.L < 60 || box.B - box.T < 40) return;
+    const X = (d) => box.L + d / 90 * (box.R - box.L), Y = (v) => box.B - v * (box.B - box.T);
+    title(box, 'Reflectance against angle of incidence', ps);
+    yGrid(box, ps, box.B - box.T > 130 * ps ? [0, 0.2, 0.4, 0.6, 0.8, 1] : [0, 0.5, 1], Y, (v) => trim(v.toFixed(1)));
+    xGrid(box, ps, box.R - box.L > 240 * ps ? [0, 15, 30, 45, 60, 75, 90] : [0, 30, 60, 90], X, (v) => `${v}°`);
+    c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'top'; c.font = `${10.5 * ps}px ${T.mono}`; c.fillText('θi', box.R, box.B + 18 * ps);
+    const thB = brewster(n1, n2) / D2R, thC = critical(n1, n2) / D2R;
+    c.save(); c.beginPath(); c.rect(box.L, box.T - 3, box.R - box.L, box.B - box.T + 6); c.clip();
+    const curve = (fn, col, dash, lw) => { c.strokeStyle = col; c.lineWidth = lw * ps; c.setLineDash(dash); c.beginPath(); for (let i = 0; i <= 900; i++) { const d = 90 * i / 900, F = fresnel(n1, n2, Math.min(d, 89.999) * D2R), v = fn(F), px = X(d), py = Y(v); i ? c.lineTo(px, py) : c.moveTo(px, py); } c.stroke(); c.setLineDash([]); };
+    curve((F) => (F.Rs + F.Rp) / 2, T.muted, [5 * ps, 4 * ps], 1.4);
+    curve((F) => F.Rs, T.pos, [], 2.2);
+    curve((F) => F.Rp, T.neg, [], 2.2);
+    c.restore();
+    // Brewster and critical angles
+    const vline = (d, col, txt, yv) => { const x = X(d); c.strokeStyle = col; c.setLineDash([3, 4]); c.lineWidth = 1.2; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.setLineDash([]); label(c, txt, x + (d > 75 ? -4 : 4) * ps, yv, col, d > 75 ? 'right' : 'left', 'middle', true, 10); };
+    vline(thB, T.equi, `θB = ${fmtDeg(thB)}`, box.T + 10 * ps);
+    if (isFinite(thC)) vline(thC, T.muted, `θc = ${fmtDeg(thC)}`, box.T + 28 * ps);
+    // current angle
+    const F = fresnel(n1, n2, S.thi * D2R), x = X(S.thi), hot = (drag && drag.id === 'rplot') || (!drag && hoverId === 'rplot');
+    c.strokeStyle = T.accent; c.globalAlpha = hot ? 0.6 : 0.3; c.lineWidth = (hot ? 2 : 1) * ps; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.globalAlpha = 1;
+    c.lineWidth = 1.4 * ps; c.beginPath(); for (let j = -1; j <= 1; j++) { c.moveTo(x - 4 * ps, box.B - 12 * ps + j * 3.5 * ps); c.lineTo(x + 4 * ps, box.B - 12 * ps + j * 3.5 * ps); } c.stroke();
+    for (const [v, col] of [[F.Rs, T.pos], [F.Rp, T.neg]]) { c.fillStyle = col; c.beginPath(); c.arc(x, Y(v), 5 * ps, 0, 2 * Math.PI); c.fill(); }
+    const right = x > (box.L + box.R) * 0.6, al = right ? 'right' : 'left', dx = right ? -9 * ps : 9 * ps;
+    let ys = Y(F.Rs) - 12 * ps, yp = Y(F.Rp) + 12 * ps; if (yp - ys < 18 * ps) { const m = (ys + yp) / 2; ys = m - 9 * ps; yp = m + 9 * ps; }
+    const lift = Math.max(0, box.T + 10 * ps - ys) - Math.max(0, yp - (box.B - 10 * ps)); ys += lift; yp += lift;
+    label(c, `Rs = ${F.Rs.toFixed(3)}`, x + dx, ys, T.pos, al, 'middle', true);
+    label(c, `Rp = ${F.Rp.toFixed(3)}`, x + dx, yp, T.neg, al, 'middle', true);
+    frame(box);
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const I0 = states[0].S[0], last = states[states.length - 1], d = describe(last.S);
+    $('rOut').innerHTML = `I/I₀ = ${fmtI(last.S[0] / I0)}` + (S.els.length ? '' : ' <span class="ok">no elements yet</span>');
+    $('rPol').textContent = longDesc(d);
+    $('rEach').textContent = S.els.length ? states.slice(1).map((s, i) => `${i + 1}: ${fmtI(s.S[0] / I0)}`).join(' · ') : '—';
+    $('rStokes').textContent = '(' + last.S.map((v) => { const x = v / I0; return (Math.abs(x) < 5e-7 ? 0 : x).toFixed(3); }).join(', ') + ')';
+    // formula for the selected element
+    let f = '';
+    if (S.sel >= 0 && S.sel < S.els.length) {
+      const k = S.sel, el = S.els[k], din = describe(states[k].S), Ib = states[k].S[0], Ia = states[k + 1].S[0];
+      if (el.type === 'pol') {
+        if (din.kind === 'lin') { const th = normAng(el.ang - din.ang); f = `Malus: I/I_in = cos²θ, θ = ${fmtDeg(th)} between the light and the axis → ${fmtI(Math.cos(th * D2R) ** 2)}`; }
+        else if (din.kind === 'unpol') f = 'Unpolarized light in: I/I_in = ½ at every angle';
+        else if (din.kind === 'circ') f = 'Circular light in: I/I_in = ½ at every angle';
+        else if (din.kind === 'dark') f = 'No light reaches this element';
+        else f = `Elliptical light in: I/I_in = ${fmtI(Ia / Ib)}, between ${fmtI(Math.sin(Math.atan(din.ratio)) ** 2)} and ${fmtI(Math.cos(Math.atan(din.ratio)) ** 2)} as the axis turns`;
+      } else if (el.type === 'hwp') {
+        f = din.kind === 'lin' ? `Half wave plate: α → 2θ − α = 2(${fmtDeg(el.ang, 0)}) − (${fmtDeg(din.ang, 0)}) = ${fmtDeg(normAng(2 * el.ang - din.ang))}` : 'Half wave plate: lossless, I/I_in = 1; it reverses the handedness of circular light';
+      } else {
+        f = din.kind === 'lin' ? `Quarter wave plate, ${fmtDeg(normAng(el.ang - din.ang))} between the light and the fast axis: ${Math.abs(Math.abs(normAng(el.ang - din.ang)) - 45) < 1e-6 ? 'equal parts, circular' : Math.abs(normAng(el.ang - din.ang)) < 1e-6 || Math.abs(Math.abs(normAng(el.ang - din.ang)) - 90) < 1e-6 ? 'along an axis, stays linear' : 'elliptical'}` : 'Quarter wave plate: lossless, I/I_in = 1';
+      }
+    }
+    $('malusF').textContent = f;
+    $('nnOut').textContent = String(S.N);
+    $('rN').innerHTML = `cos²ᴺ(${trim((90 / S.N).toFixed(2))}°) = ${nChain(S.N).toFixed(4)}`;
+    $('rNu').textContent = (nChain(S.N) / 2).toFixed(4);
+    $('inAngOut').textContent = fmtDeg(S.input.ang, 0);
+    $('count').innerHTML = S.view === 'bench' ? `${fmtI(last.S[0] / I0)} <small>of I₀ out</small>` : '';
+    // reflection
+    const F = fresnel(S.n1, S.n2, S.thi * D2R), thB = brewster(S.n1, S.n2) / D2R, thC = critical(S.n1, S.n2) / D2R;
+    $('n1Out').textContent = S.n1.toFixed(2); $('n2Out').textContent = S.n2.toFixed(2); $('thiOut').textContent = fmtDeg(S.thi);
+    $('rRs').textContent = F.Rs.toFixed(4); $('rRp').textContent = F.Rp.toFixed(4); $('rTs').textContent = F.Ts.toFixed(4); $('rTp').textContent = F.Tp.toFixed(4);
+    $('rTht').textContent = F.tir ? 'none' : fmtDeg(F.tt / D2R); $('rThB').textContent = fmtDeg(thB, 2);
+    $('rThC').textContent = isFinite(thC) ? fmtDeg(thC, 2) : 'none: n₂ > n₁';
+    const Is = S.rpol === 'p' ? 0 : S.rpol === 's' ? 1 : 0.5, Ip = 1 - Is, R = Is * F.Rs + Ip * F.Rp;
+    $('rGlare').innerHTML = `${R.toFixed(4)}` + (S.glasses ? ` <span class="ok">through the sunglasses ${(Ip * F.Rp).toFixed(4)}${R > 1e-9 ? `, ${(100 * (1 - Ip * F.Rp / R)).toFixed(0)}% blocked` : ''}</span>` : '');
+    $('rDop').textContent = R > 1e-12 ? `${(100 * Is * F.Rs / R).toFixed(1)}%` : '—';
+    if (S.view === 'refl') $('count').innerHTML = `R<sub>s</sub> ${F.Rs.toFixed(3)} <small>·</small> R<sub>p</sub> ${F.Rp.toFixed(3)}`;
+  }
+
+  // ---------- controls ----------
+  function buildEls() {
+    const box = $('els'); box.innerHTML = '';
+    S.els.forEach((el, i) => {
+      const d = document.createElement('div'); d.className = 'el'; d.dataset.i = i; d.dataset.sel = String(S.sel === i);
+      d.innerHTML = `<div class="el-head"><button type="button" class="el-num" aria-label="Plot element ${i + 1}">${i + 1}</button>
+        <div class="seg" role="group" aria-label="Element ${i + 1} type">
+          <button type="button" data-t="pol" aria-pressed="${el.type === 'pol'}">Polarizer</button><button type="button" data-t="qwp" aria-pressed="${el.type === 'qwp'}">λ/4</button><button type="button" data-t="hwp" aria-pressed="${el.type === 'hwp'}">λ/2</button>
+        </div><button type="button" class="el-x" aria-label="Remove element ${i + 1}">×</button></div>
+        <div class="slider-head"><label for="ea${i}">${el.type === 'pol' ? 'Transmission axis' : 'Fast axis'}</label><output class="mono" id="eo${i}" for="ea${i}">${fmtDeg(el.ang, 0)}</output></div>
+        <input type="range" id="ea${i}" min="-90" max="90" step="1" value="${el.ang}">`;
+      d.querySelector('.el-num').addEventListener('click', () => select(i));
+      for (const b of d.querySelectorAll('.seg button')) b.addEventListener('click', () => { S.els[i].type = b.dataset.t; S.sel = i; custom(); update(true); });
+      d.querySelector('.el-x').addEventListener('click', () => removeEl(i));
+      const r = d.querySelector('input'); r.addEventListener('input', () => { setAng(i, +r.value, true); });
+      r.addEventListener('focus', () => { if (S.sel !== i) select(i); });
+      box.appendChild(d);
+    });
+    $('addEl').disabled = S.els.length >= MAXEL;
+    $('addEl').textContent = S.els.length >= MAXEL ? 'Four elements at most' : 'Add an element';
+  }
+  function select(i) { S.sel = i; for (const d of document.querySelectorAll('.el')) d.dataset.sel = String(+d.dataset.i === i); recompute(); readouts(); drawAll(); }
+  function setAng(i, a, fromSlider) {
+    a = Math.max(-90, Math.min(90, Math.round(a)));
+    if (i === -1) { if (S.input.ang === a) return; S.input.ang = a; $('inAng').value = a; }
+    else { if (S.els[i].ang === a && !fromSlider) return; S.els[i].ang = a; const r = $('ea' + i); if (r && !fromSlider) r.value = a; const o = $('eo' + i); if (o) o.textContent = fmtDeg(a, 0); }
+    if (i >= 0 && S.sel !== i) { S.sel = i; for (const d of document.querySelectorAll('.el')) d.dataset.sel = String(+d.dataset.i === i); }
+    custom(); recompute(); readouts(); drawAll();
+  }
+  function removeEl(i) { S.els.splice(i, 1); if (S.sel >= S.els.length) S.sel = S.els.length - 1; custom(); update(true); }
+  function addEl() { if (S.els.length >= MAXEL) return; const prev = S.els.length ? S.els[S.els.length - 1].ang : 0; S.els.push({ type: 'pol', ang: normAng(prev + 45) === -90 ? 90 : Math.round(normAng(prev + 45)) }); S.sel = S.els.length - 1; custom(); update(true); }
+  function syncUI() {
+    $('vBench').setAttribute('aria-pressed', String(S.view === 'bench')); $('vRefl').setAttribute('aria-pressed', String(S.view === 'refl'));
+    for (const e of document.querySelectorAll('.vb')) e.hidden = S.view !== 'bench';
+    for (const e of document.querySelectorAll('.vr')) e.hidden = S.view !== 'refl';
+    $('inU').setAttribute('aria-pressed', String(S.input.kind === 'unpol')); $('inL').setAttribute('aria-pressed', String(S.input.kind === 'lin')); $('inC').setAttribute('aria-pressed', String(S.input.kind === 'circ'));
+    $('inAngRow').hidden = S.input.kind !== 'lin'; $('inHandRow').hidden = S.input.kind !== 'circ';
+    $('hR').setAttribute('aria-pressed', String(S.input.hand === 'R')); $('hL').setAttribute('aria-pressed', String(S.input.hand === 'L'));
+    $('inAng').value = S.input.ang;
+    $('n1').value = S.n1; $('n2').value = S.n2; $('thi').value = S.thi;
+    $('rpU').setAttribute('aria-pressed', String(S.rpol === 'unpol')); $('rpS').setAttribute('aria-pressed', String(S.rpol === 's')); $('rpP').setAttribute('aria-pressed', String(S.rpol === 'p'));
+    $('glasses').checked = S.glasses;
+    for (const b of document.querySelectorAll('#media button')) { const m = MEDIA[b.dataset.m]; b.setAttribute('aria-pressed', String(Math.abs(m[0] - S.n1) < 1e-9 && Math.abs(m[1] - S.n2) < 1e-9)); }
+    $('nn').value = S.N;
+  }
+  function update(rebuildEls) { if (rebuildEls) buildEls(); syncUI(); recompute(); readouts(); drawAll(); }
+  function markPreset(name) {
+    S.preset = name;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint').textContent = name && PRESETS[name] ? PRESETS[name].hint : 'Your own setup. Pick a preset to return to a known one.';
+  }
+  function custom() { if (S.preset) markPreset(null); }
+  function applyPreset(name) {
+    const p = PRESETS[name];
+    S.view = p.view;
+    if (p.view === 'bench') { S.input = { ...p.input }; S.els = p.els.map(([type, ang]) => ({ type, ang })); S.sel = p.sel; }
+    else { S.n1 = p.n1; S.n2 = p.n2; S.thi = p.thi === 'B' ? +(brewster(p.n1, p.n2) / D2R).toFixed(1) : p.thi; S.rpol = p.rpol; S.glasses = p.glasses; }
+    markPreset(name); update(true);
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('reset').addEventListener('click', () => applyPreset(S.preset || (S.view === 'refl' ? 'brewster' : 'malus')));
+  function setView(v) { if (S.view === v) return; S.view = v; update(false); }
+  $('vBench').addEventListener('click', () => setView('bench'));
+  $('vRefl').addEventListener('click', () => setView('refl'));
+  const setInput = (k) => { S.input.kind = k; if (k !== 'lin' && S.sel < 0) S.sel = S.els.length ? 0 : -1; custom(); update(false); };
+  $('inU').addEventListener('click', () => setInput('unpol'));
+  $('inL').addEventListener('click', () => setInput('lin'));
+  $('inC').addEventListener('click', () => setInput('circ'));
+  $('hR').addEventListener('click', () => { S.input.hand = 'R'; custom(); update(false); });
+  $('hL').addEventListener('click', () => { S.input.hand = 'L'; custom(); update(false); });
+  $('inAng').addEventListener('input', (e) => setAng(-1, +e.target.value, true));
+  $('addEl').addEventListener('click', addEl);
+  $('nn').addEventListener('input', (e) => { S.N = +e.target.value; readouts(); drawAll(); });
+  const setThi = (v) => { v = Math.max(0, Math.min(89.5, Math.round(v * 10) / 10)); if (v === S.thi) return; S.thi = v; $('thi').value = v; custom(); readouts(); drawAll(); };
+  $('thi').addEventListener('input', (e) => setThi(+e.target.value));
+  $('n1').addEventListener('input', (e) => { S.n1 = +e.target.value; custom(); syncUI(); readouts(); drawAll(); });
+  $('n2').addEventListener('input', (e) => { S.n2 = +e.target.value; custom(); syncUI(); readouts(); drawAll(); });
+  for (const b of document.querySelectorAll('#media button')) b.addEventListener('click', () => { [S.n1, S.n2] = MEDIA[b.dataset.m]; custom(); update(false); });
+  const setRpol = (v) => { S.rpol = v; custom(); update(false); };
+  $('rpU').addEventListener('click', () => setRpol('unpol'));
+  $('rpS').addEventListener('click', () => setRpol('s'));
+  $('rpP').addEventListener('click', () => setRpol('p'));
+  $('glasses').addEventListener('change', (e) => { S.glasses = e.target.checked; custom(); readouts(); drawAll(); });
+  const playBtn = $('play');
+  function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); }
+  playBtn.addEventListener('click', () => setPlaying(!playing));
+
+  // ---------- dragging on the drawing ----------
+  let drag = null, hoverId = null;
+  function dragHandles() {
+    if (!LY) return [];
+    const out = [];
+    if (S.view === 'bench') {
+      for (const p of LY.pos) {
+        if (p.kind === 'el') out.push({ id: 'e' + p.i, kind: 'disk', i: p.i, cx: p.x, cy: p.y, r: LY.re, cursor: 'grab' });
+        else if (p.i === 0 && S.input.kind === 'lin') out.push({ id: 'in', kind: 'disk', i: -1, cx: p.x, cy: p.y, r: LY.rs, cursor: 'grab' });
+      }
+      if (sweep) { const b = malusBox(); out.push({ id: 'malus', kind: 'plotx', box: b, cursor: 'ew-resize' }); }
+      const nb = nBox(); out.push({ id: 'nplot', kind: 'plotx', box: nb, cursor: 'ew-resize' });
+    } else {
+      const g = reflGeom(), ti = S.thi * D2R;
+      out.push({ id: 'ray', kind: 'ray', a: [g.cx - g.Lr * Math.sin(ti), g.cy - g.Lr * Math.cos(ti)], b: [g.cx, g.cy], g, cursor: 'grab' });
+      out.push({ id: 'rplot', kind: 'plotx', box: reflBox(), cursor: 'ew-resize' });
+    }
+    return out;
+  }
+  function ptr(ev) { const r = can.getBoundingClientRect(); return [ev.clientX - r.left, ev.clientY - r.top]; }
+  function handleAt(ev) {
+    const [x, y] = ptr(ev), tol = 9 * pscale() * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = Infinity;
+    for (const h of dragHandles()) {
+      let d = Infinity;
+      if (h.kind === 'disk') { const r = Math.hypot(x - h.cx, y - h.cy); if (r <= h.r + tol) d = Math.max(0, r - h.r) * 0.5; }
+      else if (h.kind === 'plotx') { const b = h.box; if (x >= b.L - 4 && x <= b.R + 4 && y >= b.T - 4 && y <= b.B + 4) d = tol * 0.9; }
+      else if (h.kind === 'ray') {
+        const [ax, ay] = h.a, [bx, by] = h.b, vx = bx - ax, vy = by - ay, t = Math.max(0, Math.min(1, ((x - ax) * vx + (y - ay) * vy) / (vx * vx + vy * vy)));
+        const dl = Math.hypot(x - ax - t * vx, y - ay - t * vy), dh = Math.hypot(x - ax, y - ay) - 4;
+        const dd = Math.min(dl, dh); if (dd <= tol && t < 0.92) d = dd;
+      }
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  // pointer angle around a disk center, in degrees from the vertical, counterclockwise facing the beam
+  const angAt = (h, x, y) => Math.atan2(-(x - h.cx), -(y - h.cy)) / D2R;
+  let dragQ = null, dragFrame = false;
+  function applyDrag() {
+    dragFrame = false;
+    if (!drag || !dragQ) return;
+    const [x, y] = dragQ; dragQ = null;
+    const h = dragHandles().find((k) => k.id === drag.id); if (!h) return;
+    if (h.kind === 'disk') setAng(h.i, normAng(angAt(h, x, y) - drag.off));
+    else if (h.kind === 'plotx') {
+      const b = h.box, f = Math.max(0, Math.min(1, (x - b.L) / (b.R - b.L)));
+      if (h.id === 'malus') setAng(S.sel, -90 + 180 * f);
+      else if (h.id === 'nplot') { const n = Math.round(1 + 29 * f); if (n !== S.N) { S.N = n; $('nn').value = n; readouts(); drawAll(); } }
+      else if (h.id === 'rplot') setThi(90 * f);
+    } else if (h.kind === 'ray') {
+      const g = h.g, dx = g.cx - x, dy = g.cy - y;
+      if (dy > -4) setThi(Math.atan2(Math.max(0, dx), Math.max(1e-6, dy)) / D2R);
+    }
+  }
+  can.addEventListener('pointermove', (ev) => {
+    if (drag) { dragQ = ptr(ev); if (!dragFrame) { dragFrame = true; requestAnimationFrame(applyDrag); } return; }
+    const h = handleAt(ev), id = h ? h.id : null;
+    if (id !== hoverId) { hoverId = id; if (!playing) drawAll(); }
+    can.style.cursor = h ? h.cursor : 'default';
+  });
+  can.addEventListener('pointerdown', (ev) => {
+    const h = handleAt(ev); if (!h) return;
+    const [x, y] = ptr(ev);
+    drag = { id: h.id, off: 0 }; hoverId = h.id;
+    if (h.kind === 'disk') {
+      const cur = h.i === -1 ? S.input.ang : S.els[h.i].ang;
+      drag.off = normAng(angAt(h, x, y) - cur);          // turn relative to where it was grabbed, no jump
+      if (h.i >= 0 && S.sel !== h.i) select(h.i);
+      can.style.cursor = 'grabbing';
+    } else { dragQ = [x, y]; applyDrag(); }
+    try { can.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault();
+    if (!playing) drawAll();
+  });
+  const endDrag = () => { if (drag) { drag = null; can.style.cursor = 'default'; if (!playing) drawAll(); } };
+  can.addEventListener('pointerup', endDrag);
+  can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('pointerleave', () => { if (!drag) { hoverId = null; if (!playing) drawAll(); } });
+  can.addEventListener('keydown', (e) => {
+    const big = e.shiftKey ? 5 : 1;
+    if (e.key === ' ') setPlaying(!playing);
+    else if (e.key === 'v' || e.key === 'V') setView(S.view === 'bench' ? 'refl' : 'bench');
+    else if (S.view === 'bench') {
+      const lo = S.input.kind === 'lin' ? -1 : 0;
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { if (!S.els.length && lo === 0) return; let i = S.sel + (e.key === 'ArrowRight' ? 1 : -1); i = Math.max(lo, Math.min(S.els.length - 1, i)); select(i); }
+      else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        const dir = e.key === 'ArrowUp' ? 1 : -1, i = S.sel;
+        if (i === -1 && S.input.kind === 'lin') setAng(-1, wrap90(S.input.ang + dir * big));
+        else if (i >= 0 && i < S.els.length) setAng(i, wrap90(S.els[i].ang + dir * big));
+        else return;
+      } else if (e.key === 'a' || e.key === 'A') addEl();
+      else if ((e.key === 'Delete' || e.key === 'Backspace') && S.sel >= 0 && S.sel < S.els.length) removeEl(S.sel);
+      else if (/^[1-4]$/.test(e.key) && +e.key <= S.els.length) select(+e.key - 1);
+      else return;
+    } else {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowRight') setThi(S.thi + 0.5 * big);
+      else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') setThi(S.thi - 0.5 * big);
+      else return;
+    }
+    e.preventDefault();
+  });
+  const wrap90 = (a) => (a > 90 ? a - 180 : a <= -90 ? a + 180 : a);
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(() => { resize(); });
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+
+  const retheme = () => { tokens(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), frameMs = 0;
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    if (playing) {
+      const t0 = performance.now();
+      phase = (phase + OMEGA * dt) % (2 * Math.PI * 1000);
+      drawAll();
+      frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    }
+    requestAnimationFrame(loop);
+  }
+  window.__pol = { get frameMs() { return frameMs; }, get S() { return S; }, get states() { return states; }, handles() { return dragHandles().map((h) => ({ ...h, g: undefined })); }, setPlaying, applyPreset };
+
+  tokens();
+  applyPreset('malus');
+  phase = reduce ? 0.6 : 0;
+  setPlaying(!reduce);
+  const ro = new ResizeObserver(() => resize());
+  ro.observe(pane);
+  resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

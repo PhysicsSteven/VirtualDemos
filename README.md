@@ -44,6 +44,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Electromagnetic Waves](demos/em-waves.html) | Electricity and magnetism | Plane waves in 3D, polarization, intensity and radiation pressure, the spectrum, and exact dipole antenna fields |
 | [Capacitors and Dielectrics](demos/capacitors.html) | Electricity and magnetism | Parallel plates connected or isolated, dielectric slabs and the force pulling them in, energy bookkeeping, and combinations |
 | [Optics Bench](demos/optics-bench.html) | Optics | Ray tracing through lenses, mirrors and glass, with image formation, total internal reflection and dispersion |
+| [Polarization](demos/polarization.html) | Optics | Polarizers and wave plates with Jones and Mueller calculus, Malus's law, many polarizer limit, Fresnel reflection and Brewster's angle |
 | [Standing Waves](demos/standing-waves.html) | Waves and sound | Superposition, string harmonics, driven resonance and plucking, open and closed air columns, beats |
 
 ## Viewing
