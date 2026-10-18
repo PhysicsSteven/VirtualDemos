@@ -63,7 +63,6 @@ OVERRIDES = {
     "fluids": {"crop": "#sPane", "anchor": "bottom", "wait": 2500},
     "franck-hertz": {"click": ['[data-p="ne"]'], "wait": 9500},
     "projectile-drag": {"click": ['[data-p="heavy"]'], "wait": 6500},
-    "coupled-oscillators": {"wait": 16000},
     "capacitors": {"click": ['[data-p="energy"]'], "wait": 1500,
                    "js": "['tPane', 'ePane', 'gPane'].forEach((id) => { document.getElementById(id).hidden = true; }); __cap.setRunning(false); __cap.setGeom({ A: 0.03 })"},
 }
