@@ -47,6 +47,9 @@ img { max-width: 100%; }
   --plate: #8b96a6;
   --diel: #12877a;
   --fline: #66727f;
+  --bench: #d8c3a0; --bench-lo: #b99d74; --alu: #c3cad3; --steel: #9aa5b3; --ptfe: #eeede8; --base-col: #3b414b;
+  --glass: #a9d8d6; --water: #4f9fe0; --paper: #efe7d2; --acrylic: #cfe6f0; --acrylic-base: rgba(205, 228, 240, 0.55);
+  --meter-case: #2a2e35; --meter-face: #f7f1e1; --meter-ink: #2b2620; --board: #f2f0e9; --board-ink: #8a8f96; --hole: #50565e;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -56,6 +59,9 @@ img { max-width: 100%; }
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
     --equi: #e2b350; --accent: #69a0ff; --capq: #b48cff; --resq: #4cc38a; --wire: #aab4c2;
     --plate: #6f7b8c; --diel: #46c7b4; --fline: #7d8a9a;
+    --bench: #3a2f24; --bench-lo: #261e16; --alu: #9aa3ae; --steel: #7d8794; --ptfe: #d8d6cf; --base-col: #1a1d22;
+    --glass: #7fc4c1; --water: #3f8fd8; --paper: #d9d0b8; --acrylic: #a9c8d6; --acrylic-base: rgba(170, 200, 215, 0.28);
+    --meter-case: #0b0d10; --meter-face: #e9e1cc; --meter-ink: #2b2620; --board: #26292f; --board-ink: #8a929c; --hole: #0b0d10;
     color-scheme: dark;
   }
 }
@@ -64,6 +70,9 @@ img { max-width: 100%; }
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
   --equi: #e2b350; --accent: #69a0ff; --capq: #b48cff; --resq: #4cc38a; --wire: #aab4c2;
   --plate: #6f7b8c; --diel: #46c7b4; --fline: #7d8a9a;
+  --bench: #3a2f24; --bench-lo: #261e16; --alu: #9aa3ae; --steel: #7d8794; --ptfe: #d8d6cf; --base-col: #1a1d22;
+  --glass: #7fc4c1; --water: #3f8fd8; --paper: #d9d0b8; --acrylic: #a9c8d6; --acrylic-base: rgba(170, 200, 215, 0.28);
+  --meter-case: #0b0d10; --meter-face: #e9e1cc; --meter-ink: #2b2620; --board: #26292f; --board-ink: #8a929c; --hole: #0b0d10;
   color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -175,7 +184,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 @media (max-width: 1060px) {
-  .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: 420px auto 230px 260px; min-height: 0; }
+  .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: 460px auto 230px 260px; min-height: 0; }
   #dPane { grid-row: 1; }
   #tPane { grid-column: 1; grid-row: 2; }
   #ePane { grid-column: 1; grid-row: 3; border-left: 0; }
@@ -200,8 +209,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   html, body { height: auto; }
   .app { height: auto; }
   .bench { grid-template-columns: minmax(0, 1fr); }
-  .stage { grid-template-rows: 320px auto 220px 250px; }
-  .stage.combo { grid-template-rows: 340px auto; }
+  .stage { grid-template-rows: 420px auto 220px 250px; }
+  .stage.combo { grid-template-rows: 400px auto; }
   .rail { overflow: visible; }
   .pane-seg button { min-height: 30px; }
 }
@@ -227,7 +236,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="pane" id="dPane">
-        <canvas id="dCan" tabindex="0" aria-label="Side view of a parallel plate capacitor with a battery and a switch. Drag the grip on the top plate to change the separation d, the grip on the right end of the top plate to change the plate area A, the dielectric slab sideways to slide it in or out, and the battery up or down to change its voltage. Click the switch to connect or disconnect the battery. Keys: up and down arrows change d, left and right arrows slide the slab, page up and page down change A, plus and minus change the battery voltage, M connects or disconnects, space plays or pauses, R resets."></canvas>
+        <canvas id="dCan" tabindex="0" aria-label="A demonstration parallel plate capacitor on a bench, seen in 3D: square aluminum plates on insulating posts, a scale for the separation d, a dielectric slab, a DC supply used as the battery, a knife switch and an electrometer reading V. Drag the grip on the top plate to change the separation d, the grip on the right end of the top plate to change the plate area A, the dielectric slab sideways to slide it in or out, and the supply up or down to change the battery voltage. Click the switch to connect or disconnect the battery. Drag empty space to turn the view. Keys: up and down arrows change d, left and right arrows slide the slab, page up and page down change A, plus and minus change the battery voltage, M connects or disconnects, square brackets turn the view, curly brackets tilt it, V resets the view, space plays or pauses, R resets."></canvas>
         <div class="stage-ctl">
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="reset">Reset</button>
@@ -374,7 +383,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span data-view="single"><i class="swatch fill"></i>Dielectric slab</span>
           <span data-view="single"><i class="swatch u"></i>Energy density, darker is larger</span>
         </div>
-        <p class="hint" data-view="single">Model: the readouts use the ideal parallel plate model with a uniform field and no fringing. The field lines come from a numerical solution of Laplace's equation for this cross section (plates infinitely deep, inside an insulating box at the edge of the drawing, so no field line leaves it), so they show the fringing at the edges honestly; lines start in proportion to the free charge and a share 1 − 1/κ of them ends on the bound charge where they enter the slab, so line density matches E in the uniform regions (near the slab's ends it is only approximate). The few lines that leave the outer faces fade out away from the plates. The wires and the battery are not part of that solution. All changes are slow (quasi static), the battery and wires are ideal, and the slab slides without friction.</p>
+        <p class="hint" data-view="single">Model: the readouts use the ideal parallel plate model with a uniform field and no fringing. The field lines, drawn in the front face of the plates, come from a numerical solution of Laplace's equation for this cross section (plates infinitely deep, inside an insulating box 5 cm beyond the plates, so no field line leaves it), so they show the fringing at the edges honestly; lines start in proportion to the free charge and a share 1 − 1/κ of them ends on the bound charge where they enter the slab, so line density matches E in the uniform regions (near the slab's ends it is only approximate). The few lines that leave the outer faces fade out away from the plates. The wires, the stand, the supply and the electrometer are not part of that solution; the electrometer is ideal and draws no charge, and the water tank's thin glass walls are ignored. All changes are slow (quasi static), the battery and wires are ideal, and the slab slides without friction.</p>
       </section>
     </aside>
   </main>
@@ -745,7 +754,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
       pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), capq: g('--capq'), resq: g('--resq'), wire: g('--wire'),
       plate: g('--plate'), diel: g('--diel'), fline: g('--fline'),
+      bench: g('--bench'), benchLo: g('--bench-lo'), alu: g('--alu'), steel: g('--steel'), ptfe: g('--ptfe'), baseCol: g('--base-col'),
+      glass: g('--glass'), water: g('--water'), paper: g('--paper'), acrylic: g('--acrylic'), acrylicBase: g('--acrylic-base'),
+      mCase: g('--meter-case'), mFace: g('--meter-face'), mInk: g('--meter-ink'), board: g('--board'), boardInk: g('--board-ink'), hole: g('--hole'),
       ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace' };
+    T.dark = (() => { const c = (T.canvas.match(/[0-9a-f]{2}/gi) || ['ff', 'ff', 'ff']).slice(0, 3).map((x) => parseInt(x, 16)); return c[0] + c[1] + c[2] < 384; })();
   }
   const cans = { d: $('dCan'), e: $('eCan'), g: $('gCan') };
   const panes = { d: $('dPane'), e: $('ePane'), g: $('gPane') };
@@ -839,21 +852,182 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.stroke();
   }
 
-  // ---------- single capacitor: layout ----------
+  // ---------- colors and small painting helpers for the apparatus ----------
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  function rgbOf(c) {
+    c = (c || '').trim();
+    if (c[0] === '#') { const h = c.length === 4 ? c.slice(1).split('').map((x) => x + x).join('') : c.slice(1, 7); return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)); }
+    const m = c.match(/[\d.]+/g); return m ? m.slice(0, 3).map(Number) : [128, 128, 128];
+  }
+  // amt in −1..1: toward black (negative) or white (positive)
+  function shade(c, amt) { const [r, g, b] = rgbOf(c), t = amt < 0 ? 0 : 255, p = Math.min(1, Math.abs(amt)); return `rgb(${Math.round(r + (t - r) * p)},${Math.round(g + (t - g) * p)},${Math.round(b + (t - b) * p)})`; }
+  function rgba(c, a) { const [r, g, b] = rgbOf(c); return `rgba(${r},${g},${b},${a})`; }
+  const poly = (ctx, pts) => { ctx.beginPath(); pts.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.closePath(); };
+
+  // the wooden bench top along the bottom of the drawing
+  function drawBench(ctx, W, y, H) {
+    const g = ctx.createLinearGradient(0, y, 0, H); g.addColorStop(0, shade(T.bench, 0.08)); g.addColorStop(1, T.benchLo);
+    ctx.fillStyle = g; ctx.fillRect(0, y, W, H - y);
+    ctx.save(); ctx.beginPath(); ctx.rect(0, y, W, H - y); ctx.clip();
+    ctx.strokeStyle = T.benchLo; ctx.lineWidth = 1; ctx.globalAlpha = T.dark ? 0.55 : 0.4;
+    for (let i = 0; i < 8; i++) {
+      const yy = y + (i + 0.6) * (H - y) / 8;
+      ctx.beginPath();
+      for (let x = 0; x <= W; x += 8) { const q = yy + 1.6 * Math.sin(x * 0.011 + i * 1.9) + 0.7 * Math.sin(x * 0.047 + i * 0.7); x ? ctx.lineTo(x, q) : ctx.moveTo(x, q); }
+      ctx.stroke();
+    }
+    ctx.restore();
+    ctx.fillStyle = shade(T.bench, T.dark ? 0.16 : 0.4); ctx.fillRect(0, y, W, 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.18)'; ctx.fillRect(0, y + 2, W, 1);
+  }
+  // a drop shadow under an instrument standing on the bench
+  function benchShadow(ctx, x, y, w) { const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 1); g.addColorStop(0, 'rgba(0,0,0,0.32)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.save(); ctx.translate(x + w / 2, y); ctx.scale(w * 0.62, 7); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 1, 0, 2 * Math.PI); ctx.fill(); ctx.restore(); }
+  // an instrument case with a slightly lighter face plate
+  function caseBox(ctx, b, q, title) {
+    benchShadow(ctx, b.x, b.y + b.h, b.w);
+    const g = ctx.createLinearGradient(0, b.y, 0, b.y + b.h); g.addColorStop(0, shade(T.mCase, 0.22)); g.addColorStop(0.5, T.mCase); g.addColorStop(1, shade(T.mCase, -0.35));
+    ctx.fillStyle = g; roundRect(ctx, b.x, b.y, b.w, b.h, 6 * q); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1; roundRect(ctx, b.x + 0.5, b.y + 0.5, b.w - 1, b.h - 1, 6 * q); ctx.stroke();
+    if (title) { ctx.fillStyle = 'rgba(225,230,236,0.82)'; ctx.font = `700 ${Math.max(8, 8.6 * q)}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(title, b.x + 8 * q, b.y + 6 * q); }
+  }
+  function bindingPost(ctx, x, y, r, col) {
+    const g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, 0, x, y, r * 1.05); g.addColorStop(0, shade(col, 0.45)); g.addColorStop(1, shade(col, -0.35));
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = '#c9ced6'; ctx.beginPath(); ctx.arc(x, y, r * 0.32, 0, 2 * Math.PI); ctx.fill();
+  }
+  const RED = '#c0392b', BLK = '#25282d';
+  // bench power supply used as the battery: LED display of V_b, a knob, output posts; returns the posts
+  function drawSupply(ctx, b, q, narrow, V, hot) {
+    caseBox(ctx, b, q, narrow ? 'DC SUPPLY' : 'DC SUPPLY (BATTERY)');
+    if (hot) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2.2 * q; roundRect(ctx, b.x - 2, b.y - 2, b.w + 4, b.h + 4, 7 * q); ctx.stroke(); }
+    const pad = 8 * q, lh = Math.max(18, Math.min(b.h * 0.36, 30 * q)), ly = b.y + 20 * q, postW = narrow ? 0 : 46 * q;
+    const kr = narrow ? 0 : Math.min((b.y + b.h - ly - lh) * 0.42, 13 * q), lw = b.w - 2 * pad - postW;
+    ctx.fillStyle = '#060708'; roundRect(ctx, b.x + pad - 2, ly - 2, lw + 4, lh + 4, 3 * q); ctx.fill();
+    ctx.fillStyle = '#1c0705'; roundRect(ctx, b.x + pad, ly, lw, lh, 2 * q); ctx.fill();
+    ctx.font = `700 ${Math.min(lh * 0.7, lw / 4.6)}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(255,74,46,0.12)'; ctx.fillText('888 V', b.x + pad + lw - 5 * q, ly + lh / 2 + 1);
+    ctx.save(); ctx.shadowColor = 'rgba(255,74,46,0.7)'; ctx.shadowBlur = 7 * q; ctx.fillStyle = '#ff4a2e';
+    ctx.fillText(`${String(V).padStart(3, ' ')} V`, b.x + pad + lw - 5 * q, ly + lh / 2 + 1); ctx.restore();
+    if (kr > 0) {
+      const kx = b.x + pad + kr + 4 * q, ky = (ly + lh + b.y + b.h) / 2 + 1 * q, ang = -Math.PI * 1.25 + 1.5 * Math.PI * (V - V_MIN) / (V_MAX - V_MIN);
+      const g = ctx.createRadialGradient(kx - kr * 0.3, ky - kr * 0.35, 0, kx, ky, kr); g.addColorStop(0, '#5b6168'); g.addColorStop(1, '#16181b');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(kx, ky, kr, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.16)'; ctx.lineWidth = 1;
+      for (let i = 0; i < 18; i++) { const a = i * Math.PI / 9; ctx.beginPath(); ctx.moveTo(kx + Math.cos(a) * kr * 0.8, ky + Math.sin(a) * kr * 0.8); ctx.lineTo(kx + Math.cos(a) * kr, ky + Math.sin(a) * kr); ctx.stroke(); }
+      ctx.strokeStyle = '#e8ecf0'; ctx.lineWidth = 2 * q; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(kx + Math.cos(ang) * kr * 0.2, ky + Math.sin(ang) * kr * 0.2); ctx.lineTo(kx + Math.cos(ang) * kr * 0.78, ky + Math.sin(ang) * kr * 0.78); ctx.stroke();
+      ctx.fillStyle = 'rgba(225,230,236,0.7)'; ctx.font = `${Math.max(7, 7.5 * q)}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('VOLTAGE', kx + kr + 6 * q, ky);
+    }
+    const py = narrow ? Math.min(b.y + b.h - 9 * q, ly + lh + 16 * q) : ly + lh / 2 - 2 * q, pr = 5.6 * q;
+    const minus = narrow ? [b.x + b.w - pad - 30 * q, py] : [b.x + b.w - pad - postW + 12 * q, py], plus = [minus[0] + 22 * q, py];
+    bindingPost(ctx, minus[0], minus[1], pr, BLK); bindingPost(ctx, plus[0], plus[1], pr, RED);
+    ctx.fillStyle = 'rgba(225,230,236,0.8)'; ctx.font = `700 ${Math.max(8, 9 * q)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText('−', minus[0], py - pr); ctx.fillText('+', plus[0], py - pr);
+    ctx.fillStyle = 'rgba(225,230,236,0.6)'; ctx.font = `${Math.max(7, 7.5 * q)}px ${T.mono}`; if (narrow) { ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText('OUTPUT', minus[0] - pr - 5 * q, py); } else { ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('OUTPUT', (minus[0] + plus[0]) / 2, py + pr + 3 * q); }
+    return { plus, minus };
+  }
+  // a knife switch on a slate base; returns its two terminals and its box
+  function drawKnife(ctx, b, q, closed, hot) {
+    const by = b.y + b.h - 30 * q, bh = 13 * q;
+    benchShadow(ctx, b.x, by + bh + 1, b.w);
+    const g = ctx.createLinearGradient(0, by, 0, by + bh); g.addColorStop(0, '#56635d'); g.addColorStop(1, '#2c3430');
+    ctx.fillStyle = g; roundRect(ctx, b.x, by, b.w, bh, 3 * q); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.fillRect(b.x + 3, by + 1, b.w - 6, 1.2);
+    const hx = b.x + 13 * q, jx = b.x + b.w - 13 * q, py = by - 2 * q, ph = 13 * q;
+    const brass = (x) => { const gg = ctx.createLinearGradient(x - 3 * q, 0, x + 3 * q, 0); gg.addColorStop(0, '#8a6a22'); gg.addColorStop(0.5, '#e8c46a'); gg.addColorStop(1, '#7a5a1a'); ctx.fillStyle = gg; ctx.fillRect(x - 3 * q, py - ph, 6 * q, ph); };
+    brass(hx); brass(jx);
+    // the blade, hinged at the left post
+    const len = jx - hx, ang = closed ? 0 : -0.95, ex = hx + len * Math.cos(ang), ey = py - ph * 0.55 + len * Math.sin(ang);
+    if (hot) { ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.3; ctx.lineWidth = 11 * q; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(hx, py - ph * 0.55); ctx.lineTo(ex, ey); ctx.stroke(); ctx.globalAlpha = 1; }
+    ctx.lineCap = 'round'; ctx.strokeStyle = '#7a3d14'; ctx.lineWidth = 4.6 * q; ctx.beginPath(); ctx.moveTo(hx, py - ph * 0.55); ctx.lineTo(ex, ey); ctx.stroke();
+    ctx.strokeStyle = '#e59a5c'; ctx.lineWidth = 1.6 * q; ctx.beginPath(); ctx.moveTo(hx, py - ph * 0.55 - 1); ctx.lineTo(ex, ey - 1); ctx.stroke();
+    // insulating handle at the free end
+    const hx2 = ex + 3 * q * Math.cos(ang), hy2 = ey + 3 * q * Math.sin(ang);
+    ctx.strokeStyle = '#141518'; ctx.lineWidth = 6 * q; ctx.beginPath(); ctx.moveTo(hx2, hy2); ctx.lineTo(hx2 + 9 * q * Math.sin(ang), hy2 - 9 * q * Math.cos(ang)); ctx.stroke();
+    ctx.fillStyle = '#c9ced6'; ctx.beginPath(); ctx.arc(hx, py - ph * 0.55, 1.8 * q, 0, 2 * Math.PI); ctx.fill();
+    ctx.lineCap = 'butt';
+    const tin = [b.x + 4 * q, by + bh / 2], tout = [b.x + b.w - 4 * q, by + bh / 2];
+    ctx.fillStyle = '#c9ced6'; for (const p of [tin, tout]) { ctx.beginPath(); ctx.arc(p[0], p[1], 2.6 * q, 0, 2 * Math.PI); ctx.fill(); }
+    return { tin, tout, box: [b.x - 4, Math.min(ey, py - ph) - 14 * q, b.w + 8, by + bh - Math.min(ey, py - ph) + 18 * q] };
+  }
+  // an electrometer: cream dial from 0 to the full scale, needle at V; returns its posts
+  function drawElectrometer(ctx, b, q, V, FS, postsRight) {
+    caseBox(ctx, b, q, '');
+    ctx.fillStyle = 'rgba(225,230,236,0.82)'; ctx.font = `700 ${Math.max(8, 8.6 * q)}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(b.w > 130 ? 'ELECTROMETER' : 'METER', b.x + b.w - 8 * q, b.y + 6 * q);
+    const fx = b.x + 7 * q, fy = b.y + 18 * q, fw = b.w - 14 * q, fh = b.h - 34 * q;
+    const gf = ctx.createLinearGradient(0, fy, 0, fy + fh); gf.addColorStop(0, T.mFace); gf.addColorStop(1, shade(T.mFace, -0.1));
+    ctx.fillStyle = gf; roundRect(ctx, fx, fy, fw, fh, 3 * q); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.5)'; ctx.lineWidth = 1; ctx.stroke();
+    const pcx = fx + fw / 2, pcy = fy + fh + fh * 0.18, pr = Math.min(fh * 0.98, fw * 0.62), a0 = -Math.PI / 2 - 0.62, a1 = -Math.PI / 2 + 0.62;
+    ctx.save(); roundRect(ctx, fx, fy, fw, fh, 3 * q); ctx.clip();
+    ctx.strokeStyle = T.mInk; ctx.fillStyle = T.mInk; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(pcx, pcy, pr * 0.86, a0, a1); ctx.stroke();
+    for (let k = 0; k <= 20; k++) {
+      const a = a0 + (a1 - a0) * k / 20, l = (k % 5 ? 3 : k % 10 ? 5 : 7) * q;
+      ctx.beginPath(); ctx.moveTo(pcx + Math.cos(a) * pr * 0.86, pcy + Math.sin(a) * pr * 0.86); ctx.lineTo(pcx + Math.cos(a) * (pr * 0.86 + l), pcy + Math.sin(a) * (pr * 0.86 + l)); ctx.stroke();
+    }
+    const fsU = FS >= 1000 ? [1000, 'kV'] : [1, 'V'];
+    ctx.font = `${Math.max(7, 8 * q)}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (const k of [0, 10, 20]) { const a = a0 + (a1 - a0) * k / 20, v = FS * k / 20 / fsU[0]; ctx.fillText(String(+v.toPrecision(3)), pcx + Math.cos(a) * pr * 0.68, pcy + Math.sin(a) * pr * 0.68 + 2); }
+    ctx.font = `600 ${Math.max(7.5, 8.5 * q)}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(fsU[1], fx + 4 * q, fy + 3 * q);
+    const na = a0 + (a1 - a0) * clamp(V / FS, -0.02, 1.04);
+    ctx.strokeStyle = 'rgba(0,0,0,0.2)'; ctx.lineWidth = 1.6 * q; ctx.beginPath(); ctx.moveTo(pcx + 2, pcy + 2); ctx.lineTo(pcx + 2 + Math.cos(na) * pr * 0.95, pcy + 2 + Math.sin(na) * pr * 0.95); ctx.stroke();
+    ctx.strokeStyle = '#c2362b'; ctx.lineWidth = 1.5 * q; ctx.beginPath(); ctx.moveTo(pcx, pcy); ctx.lineTo(pcx + Math.cos(na) * pr * 0.95, pcy + Math.sin(na) * pr * 0.95); ctx.stroke();
+    const gg = ctx.createLinearGradient(fx, fy, fx + fw * 0.6, fy + fh); gg.addColorStop(0, 'rgba(255,255,255,0)'); gg.addColorStop(0.35, 'rgba(255,255,255,0.3)'); gg.addColorStop(0.5, 'rgba(255,255,255,0)');
+    ctx.fillStyle = gg; ctx.fillRect(fx, fy, fw, fh);
+    ctx.restore();
+    const py = b.y + b.h - 9 * q, prr = 4.6 * q, minus = [postsRight ? b.x + b.w - 34 * q : b.x + 14 * q, b.y - 1], plus = [postsRight ? b.x + b.w - 14 * q : b.x + 34 * q, b.y - 1];
+    for (const [p, col] of [[minus, BLK], [plus, RED]]) { ctx.fillStyle = '#16181b'; ctx.fillRect(p[0] - 3 * q, p[1], 6 * q, 4 * q); bindingPost(ctx, p[0], p[1], prr, col); }
+    ctx.fillStyle = 'rgba(225,230,236,0.7)'; ctx.font = `${Math.max(7, 7.5 * q)}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(`RANGE ${FS >= 1000 ? FS / 1000 + ' kV' : FS + ' V'}`, b.x + b.w / 2, py);
+    return { plus, minus };
+  }
+  // a test lead: a sagging cable from a to b with a highlight
+  function lead(ctx, a, b, col, q, sag) {
+    const dx = b[0] - a[0], dy = a[1] - b[1];
+    if (sag === 'left') { const xl = Math.min(a[0], b[0]) - 34 * q; return leadPath(ctx, a, [xl, a[1] + 30 * q], [xl, b[1]], b, col, q); }
+    const up = sag === 'up', c1 = up ? [a[0] + dx * 0.05, a[1] - dy * 0.5] : [a[0] + dx * 0.15, a[1] + (sag || 26) * q], c2 = up ? [b[0] + (a[0] - b[0]) * 0.15, b[1] + dy * 0.4] : [b[0] - dx * 0.25 - 10 * q, b[1] + (sag || 26) * q * 0.9];
+    return leadPath(ctx, a, c1, c2, b, col, q);
+  }
+  function leadPath(ctx, a, c1, c2, b, col, q) {
+    if (col === BLK && T.dark) col = '#454b55';
+    const path = () => { ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.bezierCurveTo(c1[0], c1[1], c2[0], c2[1], b[0], b[1]); };
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    path(); ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 4.4 * q; ctx.stroke();
+    path(); ctx.strokeStyle = col; ctx.lineWidth = 3.2 * q; ctx.stroke();
+    ctx.save(); ctx.translate(-0.7 * q, -0.9 * q); path(); ctx.strokeStyle = 'rgba(255,255,255,0.32)'; ctx.lineWidth = 1 * q; ctx.stroke(); ctx.restore();
+    return (t) => { const u = 1 - t; return [u * u * u * a[0] + 3 * u * u * t * c1[0] + 3 * u * t * t * c2[0] + t * t * t * b[0], u * u * u * a[1] + 3 * u * u * t * c1[1] + 3 * u * t * t * c2[1] + t * t * t * b[1]]; };
+  }
+  function clip(ctx, p, q) { ctx.fillStyle = '#9aa3ad'; roundRect(ctx, p[0] - 4 * q, p[1] - 2.5 * q, 8 * q, 5 * q, 1.5 * q); ctx.fill(); ctx.fillStyle = '#5b6573'; ctx.fillRect(p[0] - 4 * q, p[1] - 0.5, 8 * q, 1); }
+
+  // ---------- single capacitor: the apparatus in an oblique 3D view ----------
+  // World coordinates in cm: X along the plates (the slab slides in from +X), Y up from the bottom plate's inner face, Z toward the viewer.
+  const VIEW0 = { yaw: 0.30, pit: 0.24 }, VIEW = { ...VIEW0 };
+  const PT = 0.3, POST = 1.6, BASE = 0.5, XC = 6;        // drawn plate thickness, insulating posts, base board; turning axis
+  const FM = 5, KV = 24, YTOPD = D_MAX + PT + FM;          // Laplace box: margin beyond the plates (cm), grid px per cm, its top
   let ctlH = 44, lay = null;
   function layoutSingle() {
-    const [W, H] = dims.d, ps = projScale();
-    const top = ctlH + 6, avail = Math.max(120, H - top - 8);
-    const bz = (W < 560 ? 84 : 128) * Math.min(ps, 1.2);       // battery zone on the left
-    const k = Math.max(4, Math.min((W - bz - 30) / (W < 560 ? 21 : 24), avail / 11));     // px per cm
-    const g = S.g, s = Math.sqrt(g.A) * 100, d = g.d * 100, t = g.t * 100;
-    const xL = bz + 14, xR = xL + s * k;
-    const yBot = top + avail * 0.5 + 1.1 * k;      // inner face of the bottom plate; the top plate moves
-    const yTop = yBot - d * k;
-    const pt = Math.max(5, Math.min(10, 0.32 * k)) * Math.min(ps, 1.2);       // drawn plate thickness
-    const depth = [0.20 * s * k, -0.11 * s * k];    // receding depth of the plates, a perspective hint
-    const xSlab = xR - g.f * s * k;                 // left (leading) end of the slab
-    return { W, H, top, k, s, d, t, xL, xR, yTop, yBot, pt, depth, xSlab, slabW: s * k, bz, ps };
+    const [W, H] = dims.d, ps = projScale(), q = Math.min(ps, 1.2);
+    const narrow = W < 560, top = ctlH + 6 + (narrow ? 58 * q : 0);       // on a phone the readout sits above the apparatus
+    // phone: the instruments stand in a row on the bench below the apparatus; wider: stacked on the bench to its left
+    let bandH, iq, LW = 0;
+    if (narrow) { const bandFull = 92 * q; bandH = Math.round(clamp(H * 0.25, 74, bandFull)); iq = q * bandH / bandFull; }
+    else { bandH = Math.round(46 * q); iq = Math.min(q, (H - top - 30) / 196); LW = 12 + 168 * iq + 10 + 66 * iq + 6; }
+    const yBench = H - bandH;
+    const availH = Math.max(80, yBench - top - 4), availW = W - LW - 16;
+    // fit the tallest part (the column with its knob, at the back) at the default tilt, so turning the view does not zoom
+    const c0 = Math.cos(VIEW0.pit), s0 = Math.sin(VIEW0.pit) * Math.cos(VIEW0.yaw);
+    const sc = Math.max(5, Math.min(availW / (narrow ? 23 : 27.5), availH / ((D_MAX + PT + 1.1 + PT + POST + BASE) * c0 + 11.8 * s0)));
+    const cY = Math.cos(VIEW.yaw), sY = Math.sin(VIEW.yaw), cP = Math.cos(VIEW.pit), sP = Math.sin(VIEW.pit);
+    const g = S.g, s = Math.sqrt(g.A) * 100, d = g.d * 100, t = g.t * 100, Yb = -PT - POST - BASE;
+    const cx = narrow ? W / 2 - 2.2 * sc * cY : LW + Math.max(0, (availW - 27.5 * sc) / 2) + 10.4 * sc;
+    const cy = yBench + 9 * q + (Yb * cP - 7 * cY * sP) * sc;
+    const P = (x, y, z) => { const xx = x - XC, x1 = xx * cY - z * sY, z1 = xx * sY + z * cY; return [cx + x1 * sc, cy - (y * cP - z1 * sP) * sc, y * sP + z1 * cP]; };
+    const vis = (n) => n[1] * sP + (n[0] * sY + n[2] * cY) * cP > 1e-6;
+    // the cross section the Laplace solution lives in, in grid px (KV per cm); the field lines are drawn in the front plane z = s/2
+    const F2 = { W: (20 + 2 * FM) * KV, H: (YTOPD + PT + FM) * KV, k: KV, xL: FM * KV, xR: (FM + s) * KV, yTop: (YTOPD - d) * KV, yBot: YTOPD * KV,
+      pt: PT * KV, t, d, s, xSlab: (FM + s - g.f * s) * KV, slabW: s * KV };
+    const V2S = (u, v) => P(u / KV - FM, YTOPD - v / KV, s / 2);
+    return { W, H, top, narrow, bandH, yBench, sc, q, iq, ps, s, d, t, Yb, P, vis, F2, V2S, cY, sY, cP, sP,
+      ex: [cY * sc, sY * sP * sc], ey: [0, -cP * sc], k: sc * Math.min(cY, cP), xSlab: s - g.f * s };
   }
 
   // ---------- numerical field (Laplace) for the drawing ----------
@@ -897,7 +1071,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const scale = 100 * (st.V / 2) * cf / S.eLine;
     lines = fieldLines(F, sites, scale, 6 * (F.nx + F.ny));
   }
-  // charge per symbol and field per line: 1, 2, 5 steps, changed only when the picture would crowd or thin out a lot
+  // charge per symbol and field per line: 1, 2, 5 steps, changed only when the picture would crowd or thin out a lot (L.k: screen px per cm)
   function fitScales(L, st, force) {
     const sp = 11 * Math.min(projScale(), 1.25);
     const sigMax = Math.max(S.g.f < 1 ? st.sigE : 0, S.g.f > 0 ? st.sigI : 0);
@@ -905,242 +1079,321 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (force || !S.qSym || S.qSym < needQ * 0.999 || S.qSym > 6 * needQ) S.qSym = ladderUp(needQ);
     const Emax = Math.max(S.g.f < 1 ? st.Ee : 0, S.g.f > 0 && st.gap > 1e-9 ? st.Ea : 0, S.g.f > 0 ? st.Ed : 0);
     const needE = Emax * (13 * Math.min(projScale(), 1.25)) / L.k;
-    if (force || !S.eLine || S.eLine < needE * 0.999 || S.eLine > 6 * needE) S.eLine = ladderUp(needE);
+    if (force || !S.eLine || S.eLine < needE * 0.999 || S.eLine > 3 * needE) S.eLine = ladderUp(needE);
+  }
+
+  // a lit box (x0..x1, y0..y1, z0..z1 in cm) in the given material; faces turned away from the viewer are skipped
+  const LDIR = (() => { const v = [-0.45, 0.8, 0.5], n = Math.hypot(...v); return v.map((x) => x / n); })();
+  const FACES = [[[0, 2, 6, 4], [-1, 0, 0]], [[1, 5, 7, 3], [1, 0, 0]], [[0, 4, 5, 1], [0, -1, 0]], [[2, 3, 7, 6], [0, 1, 0]], [[0, 1, 3, 2], [0, 0, -1]], [[4, 6, 7, 5], [0, 0, 1]]];
+  function box3(ctx, L, x0, x1, y0, y1, z0, z1, m) {
+    const V = (i) => L.P(i & 1 ? x1 : x0, i & 2 ? y1 : y0, i & 4 ? z1 : z0), out = {};
+    for (const [f, n] of FACES) {
+      if (!L.vis(n)) continue;
+      const lit = Math.max(0, n[0] * LDIR[0] + n[1] * LDIR[1] + n[2] * LDIR[2]), q = f.map(V);
+      out[n.join('')] = q;
+      poly(ctx, q);
+      const b = (m.base !== undefined ? m.base : -0.34) + (m.gain !== undefined ? m.gain : 0.6) * lit;
+      if (m.fill !== false) {
+        const gr = ctx.createLinearGradient(q[0][0], q[0][1], q[2][0], q[2][1]);
+        if (m.metal) { gr.addColorStop(0, shade(m.col, b + 0.1)); gr.addColorStop(0.45, shade(m.col, b + 0.22)); gr.addColorStop(0.55, shade(m.col, b - 0.02)); gr.addColorStop(1, shade(m.col, b - 0.1)); }
+        else { gr.addColorStop(0, shade(m.col, b + 0.06)); gr.addColorStop(1, shade(m.col, b - 0.06)); }
+        ctx.globalAlpha = m.alpha || 1; ctx.fillStyle = gr; ctx.fill(); ctx.globalAlpha = 1;
+      }
+      if (m.edge !== false) {
+        ctx.strokeStyle = m.edge || shade(m.col, -0.55); ctx.lineWidth = m.lw || 1; ctx.lineJoin = 'round';
+        if (m.dash) ctx.setLineDash(m.dash);
+        ctx.globalAlpha = m.edgeAlpha || 1; ctx.stroke(); ctx.globalAlpha = 1; ctx.setLineDash([]);
+      }
+    }
+    return out;
+  }
+  // a vertical cylinder at (x, z) from y0 to y1, radius r (cm)
+  function cyl3(ctx, L, x, z, y0, y1, r, col, gain) {
+    const a = L.P(x, y1, z), b = L.P(x, y0, z), rx = r * L.sc, ry = Math.max(0.5, r * L.sP * L.sc);
+    const g = ctx.createLinearGradient(a[0] - rx, 0, a[0] + rx, 0);
+    g.addColorStop(0, shade(col, -0.3)); g.addColorStop(0.35, shade(col, 0.25 * (gain || 1))); g.addColorStop(1, shade(col, -0.45));
+    ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(a[0] - rx, a[1]); ctx.lineTo(b[0] - rx, b[1]); ctx.ellipse(b[0], b[1], rx, ry, 0, Math.PI, 0, true); ctx.lineTo(a[0] + rx, a[1]); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = shade(col, 0.15); ctx.beginPath(); ctx.ellipse(a[0], a[1], rx, ry, 0, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = shade(col, -0.4); ctx.lineWidth = 0.8; ctx.stroke();
+  }
+  // a rod between two screen points with a highlight along it
+  function rod(ctx, p0, p1, w, base, hi, lo, alpha) {
+    ctx.save(); ctx.lineCap = 'round'; ctx.globalAlpha = alpha || 1;
+    ctx.strokeStyle = lo; ctx.lineWidth = w + 1.5; ctx.beginPath(); ctx.moveTo(p0[0], p0[1]); ctx.lineTo(p1[0], p1[1]); ctx.stroke();
+    ctx.strokeStyle = base; ctx.lineWidth = w; ctx.stroke();
+    ctx.strokeStyle = hi; ctx.globalAlpha *= 0.8; ctx.lineWidth = Math.max(0.8, w * 0.28); ctx.beginPath(); ctx.moveTo(p0[0], p0[1] - w * 0.2); ctx.lineTo(p1[0], p1[1] - w * 0.2); ctx.stroke();
+    ctx.restore();
+  }
+  // the dielectric as a material: how each one is painted
+  function slabLook() {
+    const id = S.mat;
+    if (id === 'pyrex') return { name: 'Pyrex glass', col: T.glass, alpha: 0.3, edge: shade(T.glass, -0.25), lw: 1.4, base: -0.1, gain: 0.35, glass: true };
+    if (id === 'water') return { name: 'Water in a thin glass tank', col: T.water, alpha: 0.42, edge: shade(T.water, -0.3), lw: 1.2, base: -0.12, gain: 0.3, tank: true };
+    if (id === 'paper') return { name: 'Paper stack', col: T.paper, alpha: 0.9, edge: shade(T.paper, -0.35), base: -0.2, gain: 0.35, sheets: true };
+    if (id === 'teflon') return { name: 'Teflon', col: T.ptfe, alpha: 0.86, edge: shade(T.ptfe, -0.3), base: -0.18, gain: 0.3 };
+    if (id === 'air') return { name: 'Air', col: T.fline, alpha: 0.05, edge: T.muted, dash: [4, 3], base: 0, gain: 0, edgeAlpha: 0.7 };
+    return { name: 'Dielectric', col: T.diel, alpha: 0.26, edge: T.diel, lw: 1.3, base: 0, gain: 0.3 };
+  }
+  // tick marks on the front face of the column: a millimetre scale with 0 at the bottom plate's inner face
+  function columnScale(ctx, L, xc, zc, fs) {
+    const xs = xc - 0.4, z = zc + 0.401;
+    ctx.strokeStyle = '#1b1d21'; ctx.lineWidth = 0.8; ctx.fillStyle = '#1b1d21';
+    for (let mm = 0; mm <= 45; mm++) {
+      const y = mm / 10, len = mm % 10 === 0 ? 0.42 : mm % 5 === 0 ? 0.3 : 0.18;
+      if (L.sc * 0.1 * L.cP < 2.2 && mm % 5) continue;
+      const a = L.P(xs, y, z), b = L.P(xs + len, y, z);
+      ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+    }
+    ctx.font = `600 ${fs}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let c = 0; c <= 4; c++) { const a = L.P(xs + 0.78, c, z); ctx.fillText(String(c), a[0], a[1]); }
   }
 
   // ---------- single capacitor: drawing ----------
-  let handles = [], hoverId = null, drag = null;
+  let handles = [], hoverId = null, drag = null, fsV = 200, cleanShot = false;
   function drawSingle() {
     const [W, H] = dims.d; if (!W || !H) return;
-    const ctx = ctxs.d, L = layoutSingle(), ps = L.ps, st = cur(), g = S.g;
+    const ctx = ctxs.d, L = layoutSingle(), ps = L.ps, q = L.q, st = cur(), g = S.g, P = L.P;
     lay = L;
     fitScales(L, st, false);
-    updateField(L, 30);
-    if (S.layers.lines) computeLines(L, st);
+    updateField(L.F2, 30);
+    if (S.layers.lines) computeLines(L.F2, st);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    const fs = Math.max(11, Math.min(13.5, L.k * 0.5)) * Math.min(ps, 1.22);
+    { const gg = ctx.createRadialGradient(W * 0.55, L.yBench * 0.55, Math.min(W, L.yBench) * 0.2, W * 0.55, L.yBench * 0.55, Math.max(W, L.yBench) * 0.85); gg.addColorStop(0, 'rgba(0,0,0,0)'); gg.addColorStop(1, T.dark ? 'rgba(0,0,0,0.28)' : 'rgba(30,50,80,0.06)'); ctx.fillStyle = gg; ctx.fillRect(0, 0, W, L.yBench); }
+    drawBench(ctx, W, L.yBench, H);
+    const fs = Math.max(11, Math.min(13.5, L.sc * 0.48)) * Math.min(ps, 1.22);
     const isHot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
-    const { xL, xR, yTop, yBot, pt, depth, xSlab, k } = L;
-    const xIn = Math.max(xL, xSlab);                    // where the inserted region starts on the plates
-    const slabTop = yBot - L.t * k;
+    const { s, d, t, Yb } = L, s2 = s / 2, xS = L.xSlab;
+    const slabTop = t;
     handles = [];
 
-    // back faces: the top faces of the plates and of the slab, receding to the upper right
-    const para = (x0, x1, y, col, alpha) => {
-      ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.lineTo(x1 + depth[0], y + depth[1]); ctx.lineTo(x0 + depth[0], y + depth[1]); ctx.closePath();
-      ctx.fillStyle = col; ctx.globalAlpha = alpha; ctx.fill(); ctx.globalAlpha = 1;
+    // the stand: a black base board, four Teflon posts, the bottom plate on them
+    box3(ctx, L, -3.2, s + 1, Yb, Yb + BASE, -s2 - 0.8, s2 + 0.8, { col: T.baseCol, base: -0.25, gain: 0.5 });
+    const posts = [[1, -s2 + 1], [s - 1, -s2 + 1], [1, s2 - 1], [s - 1, s2 - 1]].sort((a, b) => P(a[0], 0, a[1])[2] - P(b[0], 0, b[1])[2]);
+    for (const [x, z] of posts) cyl3(ctx, L, x, z, Yb + BASE, -PT, 0.45, T.ptfe, 0.6);
+    // the column with its scale, the carriage and the insulating arm holding the top plate; the micrometer knob on top
+    const XCOL = -2.2, ZCOL = -s2 + 1.2, ycTop = D_MAX + PT + 0.4;
+    const drawColumn = () => {
+      box3(ctx, L, XCOL - 0.4, XCOL + 0.4, Yb + BASE, ycTop, ZCOL - 0.4, ZCOL + 0.4, { col: T.steel, metal: true, base: -0.2 });
+      columnScale(ctx, L, XCOL, ZCOL, Math.max(8, 8.5 * Math.min(ps, 1.2)));
+      const hotD = isHot('d');
+      const cb = box3(ctx, L, XCOL + 0.4, XCOL + 1.2, d - 0.25, d + PT + 0.25, ZCOL - 0.55, ZCOL + 0.55, { col: '#2a2e35', base: -0.1, gain: 0.6, edge: hotD ? T.accent : undefined, lw: hotD ? 2 : 1 });
+      // index mark at the height of the top plate's inner face
+      const i0 = P(XCOL + 0.4, d, ZCOL + 0.42), i1 = P(XCOL - 0.25, d, ZCOL + 0.42);
+      ctx.strokeStyle = '#d0342c'; ctx.lineWidth = 1.6 * Math.min(ps, 1.3); ctx.beginPath(); ctx.moveTo(i0[0], i0[1]); ctx.lineTo(i1[0], i1[1]); ctx.stroke();
+      const a0 = P(XCOL + 1.2, d + PT / 2, ZCOL), a1 = P(0, d + PT / 2, ZCOL);
+      rod(ctx, a0, a1, Math.max(3, 0.32 * L.sc), T.acrylic, '#ffffff', shade(T.acrylic, -0.35), 0.9);
+      const kb = P(XCOL, ycTop, ZCOL); cyl3(ctx, L, XCOL, ZCOL, ycTop, ycTop + 0.7, 0.62, '#2b2f36', 1);
+      ctx.strokeStyle = 'rgba(255,255,255,0.22)'; ctx.lineWidth = 1;
+      for (let i = -4; i <= 4; i++) { const x = kb[0] + i * 0.62 * L.sc / 5; ctx.beginPath(); ctx.moveTo(x, kb[1] - 0.7 * L.cP * L.sc + 2); ctx.lineTo(x, kb[1] - 1); ctx.stroke(); }
+      const xs = [], ys = []; for (const f of Object.values(cb)) for (const p of f) { xs.push(p[0]); ys.push(p[1]); }
+      if (xs.length) handles.push({ id: 'd', cursor: 'ns-resize', quiet: true, box: [Math.min(...xs), Math.min(...ys), Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)] });
+      const kt = P(XCOL, ycTop + 0.7, ZCOL);
+      handles.push({ id: 'd', cursor: 'ns-resize', quiet: true, box: [kb[0] - 0.7 * L.sc, kt[1] - 0.62 * L.sP * L.sc - 2, 1.4 * L.sc, kb[1] - kt[1] + 1.24 * L.sP * L.sc + 4] });
     };
-    const sideFace = (x, y0, y1, col, alpha) => {
-      ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x + depth[0], y0 + depth[1]); ctx.lineTo(x + depth[0], y1 + depth[1]); ctx.lineTo(x, y1); ctx.closePath();
-      ctx.fillStyle = col; ctx.globalAlpha = alpha; ctx.fill(); ctx.globalAlpha = 1;
+    if (VIEW.yaw >= 0) drawColumn();
+    const alu = { col: T.alu, metal: true, base: -0.18, gain: 0.55 };
+    box3(ctx, L, 0, s, -PT, 0, -s2, s2, alu);
+    box3(ctx, L, -0.75, 0, -PT, 0, s2 - 1.3, s2 - 0.45, alu);           // solder tab for the lead
+    // the slab: the part between the plates first, the part sticking out after the top plate
+    const slabOn = g.kap > 1, look = slabOn ? slabLook() : null;
+    const slabPart = (x0, x1) => {
+      if (x1 - x0 < 1e-3) return;
+      const f = box3(ctx, L, x0, x1, 0, slabTop, -s2, s2, look);
+      const fr = f['001'];
+      if (fr && look.sheets) {       // the edges of the sheets of paper
+        ctx.strokeStyle = shade(T.paper, -0.3); ctx.lineWidth = 0.6; ctx.globalAlpha = 0.6;
+        const n = Math.max(2, Math.min(40, Math.round(t * L.sc * L.cP / 3)));
+        for (let i = 1; i < n; i++) { const yy = slabTop * i / n, a = P(x0, yy, s2), b = P(x1, yy, s2); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+        ctx.globalAlpha = 1;
+      }
+      if (fr && look.glass) {        // a glint on the polished front face
+        const gg = ctx.createLinearGradient(fr[0][0], fr[0][1], fr[2][0], fr[2][1]); gg.addColorStop(0.2, 'rgba(255,255,255,0)'); gg.addColorStop(0.3, 'rgba(255,255,255,0.35)'); gg.addColorStop(0.4, 'rgba(255,255,255,0)');
+        poly(ctx, fr); ctx.fillStyle = gg; ctx.fill();
+      }
+      if (look.tank) {               // thin glass walls: a pale rim on the visible top edges
+        const tf = f['010'];
+        if (tf) { poly(ctx, tf); ctx.strokeStyle = 'rgba(235,248,255,0.7)'; ctx.lineWidth = 1.4; ctx.stroke(); }
+      }
+      if (isHot('f') && fr) { poly(ctx, fr); ctx.fillStyle = T.accent; ctx.globalAlpha = 0.12; ctx.fill(); ctx.globalAlpha = 1; poly(ctx, fr); ctx.strokeStyle = T.accent; ctx.lineWidth = 2; ctx.stroke(); }
     };
-    para(xL, xR, yBot, T.plate, 0.28);
-    ctx.strokeStyle = T.plate; ctx.globalAlpha = 0.55; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(xL, yBot); ctx.lineTo(xL + depth[0], yBot + depth[1]); ctx.lineTo(xR + depth[0], yBot + depth[1]); ctx.lineTo(xR, yBot); ctx.stroke(); ctx.globalAlpha = 1;
-    // slab body (back and top faces)
-    const slabOn = g.kap > 1, slabVis = slabOn && xSlab < W;
-    let slabGrip = null;
-    if (slabVis) {
-      para(xSlab, xSlab + L.slabW, slabTop, T.diel, 0.13);
-      sideFace(xSlab, slabTop, yBot, T.diel, 0.1);
-    }
-    // energy density shading (ideal model), in the front plane
+    const inside = slabOn && g.f > 0 ? [xS, s] : null, out = slabOn ? [Math.max(s, xS), xS + s] : null;
+    if (inside) slabPart(inside[0], inside[1]);
+    if (out && VIEW.yaw < 0) slabPart(out[0], out[1]);
+    const tp = box3(ctx, L, 0, s, d, d + PT, -s2, s2, { ...alu, edge: isHot('d') ? T.accent : undefined, lw: isHot('d') ? 2.2 : 1 });
+    box3(ctx, L, -0.75, 0, d, d + PT, s2 - 1.3, s2 - 0.45, alu);
+    if (out && VIEW.yaw >= 0) slabPart(out[0], out[1]);
+    if (VIEW.yaw < 0) drawColumn();
+    if (isHot('A')) { const a = P(s, d - 0.05, s2), b = P(s, d + PT + 0.05, s2), c = P(s, -PT - 0.05, s2), e = P(s, 0.05, s2); ctx.strokeStyle = T.accent; ctx.lineWidth = 2.6 * ps; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.moveTo(c[0], c[1]); ctx.lineTo(e[0], e[1]); ctx.stroke(); }
+
+    // energy density (ideal model) in the front plane and on the right end of the gap
     if (S.layers.energy) {
       const uMax = Math.max(g.f < 1 ? st.uE : 0, g.f > 0 && st.gap > 1e-9 ? st.uA : 0, g.f > 0 ? st.uD : 0, 1e-300);
-      const shade = (x0, x1, y0, y1, u) => { if (x1 - x0 < 0.5 || y1 - y0 < 0.5) return; ctx.fillStyle = T.equi; ctx.globalAlpha = 0.08 + 0.42 * u / uMax; ctx.fillRect(x0, y0, x1 - x0, y1 - y0); ctx.globalAlpha = 1; };
-      shade(xL, xIn, yTop, yBot, st.uE);
-      if (g.f > 0) { shade(xIn, xR, yTop, slabTop, st.uA); shade(xIn, xR, slabTop, yBot, st.uD); }
+      const shadeQ = (pts, u) => { poly(ctx, pts); ctx.fillStyle = T.equi; ctx.globalAlpha = 0.12 + 0.5 * u / uMax; ctx.fill(); ctx.globalAlpha = 1; };
+      const front = (x0, x1, y0, y1, u) => { if (x1 - x0 < 1e-3 || y1 - y0 < 1e-3) return; shadeQ([P(x0, y0, s2), P(x1, y0, s2), P(x1, y1, s2), P(x0, y1, s2)], u); };
+      const xIn = Math.max(0, xS);
+      front(0, g.f > 0 ? xIn : s, 0, d, st.uE);
+      if (g.f > 0) { front(xIn, s, slabTop, d, st.uA); front(xIn, s, 0, slabTop, st.uD); }
+      if (L.vis([1, 0, 0])) {
+        const side = (y0, y1, u) => { if (y1 - y0 < 1e-3) return; shadeQ([P(s, y0, s2), P(s, y0, -s2), P(s, y1, -s2), P(s, y1, s2)], u); };
+        if (g.f > 0) { side(slabTop, d, st.uA); side(0, slabTop, st.uD); } else side(0, d, st.uE);
+      }
     }
-    // the top plate's top face
-    para(xL, xR, yTop - pt, T.plate, 0.32);
-    ctx.strokeStyle = T.plate; ctx.globalAlpha = 0.6; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(xL, yTop - pt); ctx.lineTo(xL + depth[0], yTop - pt + depth[1]); ctx.lineTo(xR + depth[0], yTop - pt + depth[1]); ctx.lineTo(xR, yTop - pt); ctx.stroke(); ctx.globalAlpha = 1;
-    sideFace(xR, yTop - pt, yTop, T.plate, 0.45);
-    sideFace(xR, yBot, yBot + pt, T.plate, 0.45);
 
-    // field lines
+    // field lines from the Laplace solution, drawn in the front plane of the plates
     if (S.layers.lines && field) {
-      const hp = field.hp;
-      ctx.strokeStyle = T.fline; ctx.lineWidth = 1.25 * Math.min(ps, 1.3); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-      // far from the plates the few outer lines fade out, so the drawing is not ruled by the box they live in
-      const bx0 = xL, bx1 = xR, by0 = yTop - pt, by1 = yBot + pt, D0 = Math.max(26, 0.8 * L.d * k);
+      const hp = field.hp, F2 = L.F2;
+      ctx.strokeStyle = T.fline; ctx.lineWidth = 1.5 * Math.min(ps, 1.3); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      const bx0 = F2.xL, bx1 = F2.xR, by0 = F2.yTop - F2.pt, by1 = F2.yBot + F2.pt, D0 = Math.max(0.6, 0.5 * d) * KV;
       const alphaAt = (x, y) => {
         const dx = Math.max(bx0 - x, 0, x - bx1), dy = Math.max(by0 - y, 0, y - by1), dist = Math.hypot(dx, dy);
         return dist <= D0 ? 1 : Math.max(0, Math.round(4 * (1 - (dist - D0) / D0)) / 4);
       };
+      const scr = [];
       for (const ln of lines) {
-        const p = ln.pts; if (p.length < 4) continue;
+        const p = ln.pts; if (p.length < 4) { scr.push(null); continue; }
+        const sp = new Array(p.length);
+        for (let i = 0; i < p.length; i += 2) { const v = L.V2S(p[i] * hp, p[i + 1] * hp); sp[i] = v[0]; sp[i + 1] = v[1]; }
+        scr.push(sp);
         let aCur = alphaAt(p[0] * hp, p[1] * hp);
-        ctx.globalAlpha = aCur; ctx.beginPath(); ctx.moveTo(p[0] * hp, p[1] * hp);
+        ctx.globalAlpha = aCur; ctx.beginPath(); ctx.moveTo(sp[0], sp[1]);
         for (let i = 2; i < p.length; i += 2) {
-          const x = p[i] * hp, y = p[i + 1] * hp, a = alphaAt(x, y);
-          ctx.lineTo(x, y);
-          if (a !== aCur) { if (aCur > 0) ctx.stroke(); aCur = a; ctx.globalAlpha = a; ctx.beginPath(); ctx.moveTo(x, y); }
+          const a = alphaAt(p[i] * hp, p[i + 1] * hp);
+          ctx.lineTo(sp[i], sp[i + 1]);
+          if (a !== aCur) { if (aCur > 0) ctx.stroke(); aCur = a; ctx.globalAlpha = a; ctx.beginPath(); ctx.moveTo(sp[i], sp[i + 1]); }
         }
         if (aCur > 0) ctx.stroke();
         ctx.globalAlpha = 1;
       }
-      // one arrowhead at the middle of each line long enough
       ctx.fillStyle = T.fline;
       const ah = 4.5 * Math.min(ps, 1.3);
-      for (const ln of lines) {
-        const p = ln.pts, n = p.length / 2; if (n < 6) continue;
-        let len = 0; for (let i = 1; i < n; i++) len += Math.hypot(p[2 * i] - p[2 * i - 2], p[2 * i + 1] - p[2 * i - 1]);
-        if (len * hp < 22) continue;
-        let acc = 0, half = len / 2;
+      lines.forEach((ln, li) => {
+        const p = ln.pts, sp = scr[li], n = p.length / 2; if (!sp || n < 6) return;
+        let len = 0; for (let i = 1; i < n; i++) len += Math.hypot(sp[2 * i] - sp[2 * i - 2], sp[2 * i + 1] - sp[2 * i - 1]);
+        if (len < 22) return;
+        let acc = 0; const half = len / 2;
         for (let i = 1; i < n; i++) {
-          const dl = Math.hypot(p[2 * i] - p[2 * i - 2], p[2 * i + 1] - p[2 * i - 1]);
+          const dl = Math.hypot(sp[2 * i] - sp[2 * i - 2], sp[2 * i + 1] - sp[2 * i - 1]);
           if (acc + dl >= half) {
-            const x = p[2 * i] * hp, y = p[2 * i + 1] * hp, a = Math.atan2(p[2 * i + 1] - p[2 * i - 1], p[2 * i] - p[2 * i - 2]);
-            if (alphaAt(x, y) < 1) break;
+            if (alphaAt(p[2 * i] * hp, p[2 * i + 1] * hp) < 1) break;
+            const x = sp[2 * i], y = sp[2 * i + 1], a = Math.atan2(sp[2 * i + 1] - sp[2 * i - 1], sp[2 * i] - sp[2 * i - 2]);
             ctx.beginPath(); ctx.moveTo(x + ah * Math.cos(a), y + ah * Math.sin(a));
             ctx.lineTo(x - ah * Math.cos(a - 0.5), y - ah * Math.sin(a - 0.5)); ctx.lineTo(x - ah * Math.cos(a + 0.5), y - ah * Math.sin(a + 0.5)); ctx.closePath(); ctx.fill();
             break;
           }
           acc += dl;
         }
-      }
+      });
     }
 
-    // slab front face, translucent so the lines show through
-    if (slabVis) {
-      const hot = isHot('f');
-      ctx.fillStyle = T.diel; ctx.globalAlpha = 0.16; ctx.fillRect(xSlab, slabTop, L.slabW, yBot - slabTop); ctx.globalAlpha = 1;
-      ctx.strokeStyle = T.diel; ctx.lineWidth = (hot ? 2.4 : 1.4) * Math.min(ps, 1.3);
-      ctx.strokeRect(xSlab, slabTop, L.slabW, yBot - slabTop);
-      ctx.beginPath(); ctx.moveTo(xSlab, slabTop); ctx.lineTo(xSlab + depth[0], slabTop + depth[1]); ctx.lineTo(xSlab + L.slabW + depth[0], slabTop + depth[1]); ctx.stroke();
-      ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.moveTo(xSlab + depth[0], slabTop + depth[1]); ctx.lineTo(xSlab + depth[0], yBot + depth[1]); ctx.stroke(); ctx.globalAlpha = 1;
-      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.1; ctx.fillRect(xSlab, slabTop, L.slabW, yBot - slabTop); ctx.globalAlpha = 1; }
-    }
-    // plate front faces
-    for (const [y0, y1] of [[yTop - pt, yTop], [yBot, yBot + pt]]) {
-      ctx.fillStyle = T.plate; ctx.fillRect(xL, y0, xR - xL, y1 - y0);
-      ctx.strokeStyle = T.wire; ctx.lineWidth = 1; ctx.strokeRect(xL + 0.5, y0 + 0.5, xR - xL - 1, y1 - y0 - 1);
-    }
-    if (isHot('d')) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2.4 * ps; ctx.strokeRect(xL - 1, yTop - pt - 1, xR - xL + 2, pt + 2); }
-    if (isHot('A')) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2.4 * ps; ctx.beginPath(); ctx.moveTo(xR, yTop - pt - 2); ctx.lineTo(xR, yTop + 1); ctx.moveTo(xR, yBot - 1); ctx.lineTo(xR, yBot + pt + 2); ctx.stroke(); }
-
-    // free charges on the inner faces, bound charges on the slab faces (ideal model: uniform in each region)
-    const w = Math.sqrt(g.A), r = Math.max(2.6, Math.min(4.6, pt * 0.45)) * Math.min(ps, 1.15);
-    const row = (x0, x1, y, n, sign, bound) => {
-      if (n <= 0 || x1 - x0 < 1) return;
-      const step = (x1 - x0) / n;
-      for (let i = 0; i < n; i++) chargeSym(ctx, x0 + step * (i + 0.5), y, r, sign, bound);
+    // free charges on the inner faces, bound charges on the slab faces (ideal model: uniform in each region).
+    // Rows along the front edges, and along the right end going back when that end faces the viewer.
+    const w = Math.sqrt(g.A), r = clamp(0.13 * L.sc, 2.4, 4.4) * Math.min(ps, 1.15);
+    const row = (x0, x1, y, z0, z1, n, sign, bound) => {
+      if (n <= 0) return;
+      for (let i = 0; i < n; i++) { const u = (i + 0.5) / n, p = P(x0 + (x1 - x0) * u, y, z0 + (z1 - z0) * u); chargeSym(ctx, p[0], p[1], r, sign, bound); }
     };
-    const nOf = (sig, x0, x1) => Math.round(sig * w * ((x1 - x0) / k / 100) / S.qSym);
+    const nOf = (sig, len) => Math.round(sig * w * (len / 100) / S.qSym);
+    const xIn = g.f > 0 ? Math.max(0, xS) : s, endSig = g.f > 0 ? st.sigI : st.sigE;
+    const sideOn = L.vis([1, 0, 0]) && L.sY * L.sc * s > 40;
+    const yTq = d + PT * 0.5, yBq = -PT * 0.5;
     if (S.layers.charges) {
-      const nE = nOf(st.sigE, xL, xIn), nI = g.f > 0 ? nOf(st.sigI, xIn, xR) : 0;
-      row(xL, xIn, yTop - pt / 2, nE, +1); row(xIn, xR, yTop - pt / 2, nI, +1);
-      row(xL, xIn, yBot + pt / 2, nE, -1); row(xIn, xR, yBot + pt / 2, nI, -1);
+      if (sideOn) { const nS = nOf(endSig, s); row(s, s, yTq, -s2, s2, nS, +1); row(s, s, yBq, -s2, s2, nS, -1); }
+      const nE = nOf(st.sigE, xIn), nI = g.f > 0 ? nOf(st.sigI, s - xIn) : 0;
+      row(0, xIn, yTq, s2, s2, nE, +1); row(xIn, s, yTq, s2, s2, nI, +1);
+      row(0, xIn, yBq, s2, s2, nE, -1); row(xIn, s, yBq, s2, s2, nI, -1);
     }
     if (S.layers.bound && g.f > 0 && g.kap > 1) {
-      const nB = nOf(st.sigB, xIn, xR), rb = r * 0.92, inset = rb + 2;
-      row(xIn, xR, slabTop + inset, nB, -1, true); row(xIn, xR, yBot - inset, nB, +1, true);
+      const nB = nOf(st.sigB, s - xIn), inset = (r + 2) / (L.cP * L.sc);
+      row(xIn, s, slabTop - inset, s2, s2, nB, -1, true); row(xIn, s, inset, s2, s2, nB, +1, true);
     }
 
-    // battery, wires and switch (the switch sits in the bottom wire)
-    const conn = S.mode === 'battery', ps2 = Math.min(ps, 1.2);
-    const bh = 16 * Math.min(ps, 1.25);
-    const xB = Math.max(L.bz * 0.5, 50 * ps2), yC = yBot - Math.max(bh + 14, 1.5 * k);
-    const yTw = yTop - pt / 2, yBw = yBot + pt / 2;
-    const xV = xL - 22 * ps2, yH = Math.min(yTw, yC - bh - 16);
-    const xSwA = xB + (xL - xB) * 0.3, xSwB = xSwA + 20 * Math.min(ps, 1.25);
-    ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * Math.min(ps, 1.3); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    ctx.beginPath(); ctx.moveTo(xB, yC - bh); ctx.lineTo(xB, yH); ctx.lineTo(xV, yH); ctx.lineTo(xV, yTw); ctx.lineTo(xL, yTw); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(xB, yC + bh); ctx.lineTo(xB, yBw); ctx.lineTo(xSwA, yBw); ctx.moveTo(xSwB, yBw); ctx.lineTo(xL, yBw); ctx.stroke();
+    // instruments on the bench: the supply (the battery), the knife switch, the electrometer; then the leads
+    const nar = L.narrow;
     {
-      const hot = isHot('sw'), ang = conn ? 0 : -0.6, y = yBw;
-      ctx.fillStyle = T.wire; ctx.beginPath(); ctx.arc(xSwA, y, 2.8 * Math.min(ps, 1.3), 0, 2 * Math.PI); ctx.arc(xSwB, y, 2.8 * Math.min(ps, 1.3), 0, 2 * Math.PI); ctx.fill();
-      const len = (xSwB - xSwA) * 1.05;
-      if (hot) { ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.3; ctx.lineWidth = 9 * ps; ctx.beginPath(); ctx.moveTo(xSwA, y); ctx.lineTo(xSwA + len * Math.cos(ang), y + len * Math.sin(ang)); ctx.stroke(); ctx.globalAlpha = 1; }
-      ctx.strokeStyle = hot ? T.accent : T.ink; ctx.lineWidth = 2.4 * Math.min(ps, 1.3);
-      ctx.beginPath(); ctx.moveTo(xSwA, y); ctx.lineTo(xSwA + len * Math.cos(ang), y + len * Math.sin(ang)); ctx.stroke();
-      ctx.fillStyle = T.muted; ctx.font = `${fs * 0.82}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-      ctx.fillText(conn ? 'switch closed' : 'switch open', (xSwA + xSwB) / 2, y + 7 * ps2);
-      handles.push({ id: 'sw', click: true, cursor: 'pointer', box: [xSwA - 6, y - 18 * ps2, xSwB - xSwA + 12, 28 * ps2] });
+    const conn = S.mode === 'battery', q = L.iq;
+    let bSup, bSw, bMet;
+    if (nar) {
+      const iy = L.yBench + 12 * q, ih = H - iy - 8;
+      bSup = { x: 6, y: iy, w: 112, h: ih }; bSw = { x: 124, y: iy, w: 50, h: ih }; bMet = { x: 180, y: iy, w: 112, h: ih };
+    } else {      // the electrometer on the bench, the supply on top of it, the knife switch beside them
+      const iw = 168 * q, ih = 86 * q;
+      bMet = { x: 12, y: H - 10 - ih, w: iw, h: ih }; bSup = { x: 12, y: bMet.y - 14 * q - ih, w: iw, h: ih };
+      bSw = { x: 12 + iw + 10, y: H - 10 - 64 * q, w: 66 * q, h: 64 * q };
     }
-    // battery cells
-    {
-      const hot = isHot('V');
-      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.14; ctx.fillRect(xB - 16 * ps2, yC - bh - 4, 32 * ps2, 2 * bh + 8); ctx.globalAlpha = 1; }
-      ctx.strokeStyle = T.canvas; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(xB, yC - bh + 3); ctx.lineTo(xB, yC + bh - 3); ctx.stroke();
-      for (const [dy, hw] of [[-0.75, 1], [-0.3, 0.5], [0.3, 1], [0.75, 0.5]]) {
-        ctx.strokeStyle = conn ? T.ink : T.wire; ctx.lineWidth = (hw > 0.7 ? 2 : 4) * Math.min(ps, 1.3); ctx.lineCap = 'butt';
-        ctx.beginPath(); ctx.moveTo(xB - hw * 12 * ps2, yC + dy * bh); ctx.lineTo(xB + hw * 12 * ps2, yC + dy * bh); ctx.stroke();
-      }
-      ctx.lineCap = 'round';
-      ctx.fillStyle = T.muted; ctx.font = `700 ${fs}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-      ctx.fillText('+', xB + 14 * ps2, yC - bh * 0.75); ctx.fillText('−', xB + 14 * ps2, yC + bh * 0.75);
-      ctx.fillStyle = T.ink; ctx.textAlign = 'right';
-      ctx.font = `600 ${fs * 0.92}px ${T.mono}`;
-      ctx.fillText(`${S.Vb} V`, xB - 15 * ps2, yC);
-      handles.push({ id: 'V', cursor: 'ns-resize', box: [xB - 16 * ps2, yC - bh - 6, 32 * ps2, 2 * bh + 12] });
-    }
-    // charge flowing in the wires (connected, while Q changes): conventional current toward the top plate while Q grows
+    const sup = drawSupply(ctx, bSup, q, nar, S.Vb, isHot('V'));
+    handles.push({ id: 'V', cursor: 'ns-resize', box: [bSup.x, bSup.y, bSup.w, bSup.h] });
+    const kn = drawKnife(ctx, bSw, q, conn, isHot('sw'));
+    handles.push({ id: 'sw', click: true, cursor: 'pointer', box: kn.box });
+    ctx.fillStyle = T.muted; ctx.font = `${fs * 0.8}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(conn ? 'switch closed' : 'switch open', bSw.x + bSw.w / 2, bSw.y + bSw.h - 14 * q);
+    const Vabs = Math.abs(st.V);
+    const ranges = [100, 200, 500, 1000, 2000, 5000];
+    if (Vabs > fsV * 1.0) fsV = ranges.find((x) => x >= Vabs) || 5000;
+    else { const lower = ranges[ranges.indexOf(fsV) - 1]; if (lower && Vabs < lower * 0.9) fsV = ranges.find((x) => x >= Vabs / 0.9) || 100; }
+    const met = drawElectrometer(ctx, bMet, q, st.V, fsV, !nar);
+    const tabT = P(-0.45, d + PT, s2 - 0.87), tabB = P(-0.45, 0, s2 - 0.87);
+    const sag = Math.max(14, (L.yBench - tabB[1]) * 0.2);
+    // the electrometer is clipped across the plates; the switch sits in the lead from the + terminal to the top plate
+    void sag;
+    lead(ctx, sup.plus, kn.tin, RED, q, 10);
+    lead(ctx, sup.minus, tabB, BLK, q, 'up');
+    lead(ctx, met.minus, tabB, BLK, q, 'up');
+    lead(ctx, met.plus, tabT, RED, q, 'up');
+    const wire = lead(ctx, kn.tout, tabT, RED, q, 'up');
+    clip(ctx, tabT, q); clip(ctx, tabB, q);
+    // charge flowing in the lead (connected, while Q changes): conventional current toward the top plate while Q grows
     if (conn && Math.abs(flowShow) > 0.02) {
       const dir = flowShow > 0 ? 1 : -1, a = Math.min(1, Math.abs(flowShow));
-      const x1 = yH < yTw - 1 ? xV : xL, xm = (xB + x1) / 2, al = Math.min(12 * ps2, (x1 - xB) / 3);
+      const p0 = wire(0.62 - 0.07 * dir), p1 = wire(0.62 + 0.07 * dir), nx = -(p1[1] - p0[1]), ny = p1[0] - p0[0], nn = Math.hypot(nx, ny) || 1, off = 9 * q * (nx > 0 ? -1 : 1);
       ctx.globalAlpha = 0.35 + 0.65 * a;
-      arrow(ctx, xm - dir * al, yH - 8 * ps2, xm + dir * al, yH - 8 * ps2, T.pos, 2 * Math.min(ps, 1.3), 7 * Math.min(ps, 1.3));
+      arrow(ctx, p0[0] + nx / nn * off, p0[1] + ny / nn * off, p1[0] + nx / nn * off, p1[1] + ny / nn * off, T.pos, 2.2 * Math.min(ps, 1.3), 7 * Math.min(ps, 1.3));
       ctx.globalAlpha = 1;
     }
-
-    // dimension labels
-    const lab = (lines, x, y, o) => haloLabel(ctx, lines, x, y, fs, { ps: Math.min(ps, 1.2), clamp: [2, L.top, W - 2, H - 2], ...o });
-    // d: on the left, between the plates' left ends and the wire
-    {
-      const xd = xL - 9 * Math.min(ps, 1.2);
-      ctx.strokeStyle = T.muted; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(xd, yTop + 2); ctx.lineTo(xd, yBot - 2); ctx.stroke();
-      if (yBot - yTop > 14) { arrow(ctx, xd, (yTop + yBot) / 2, xd, yTop + 1, T.muted, 1, 5); arrow(ctx, xd, (yTop + yBot) / 2, xd, yBot - 1, T.muted, 1, 5); }
     }
-    // s and A under the bottom plate
-    {
-      const ys = yBot + pt + 12 * Math.min(ps, 1.2);
+
+    // dimension under the bottom plate: s and A
+    if (!(nar && g.kap > 1) && !cleanShot) {
+      const ys = -PT - 0.75, a = P(0, ys, s2), b = P(s, ys, s2);
       ctx.strokeStyle = T.muted; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(xL, ys - 4); ctx.lineTo(xL, ys + 4); ctx.moveTo(xR, ys - 4); ctx.lineTo(xR, ys + 4); ctx.moveTo(xL, ys); ctx.lineTo(xR, ys); ctx.stroke();
-      ctx.fillStyle = T.muted; ctx.font = `${fs * 0.92}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-      const txt = `s = ${L.s.toFixed(1)} cm, A = ${(g.A * 1e4).toFixed(0)} cm²`;
-      ctx.fillStyle = T.canvas; const tw = ctx.measureText(txt).width;
-      ctx.globalAlpha = 0.85; ctx.fillRect((xL + xR) / 2 - tw / 2 - 3, ys + 3, tw + 6, fs * 1.2); ctx.globalAlpha = 1;
-      ctx.fillStyle = T.muted; ctx.fillText(txt, (xL + xR) / 2, ys + 4);
+      ctx.beginPath(); ctx.moveTo(a[0], a[1] - 4); ctx.lineTo(a[0], a[1] + 4); ctx.moveTo(b[0], b[1] - 4); ctx.lineTo(b[0], b[1] + 4); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+      haloLabel(ctx, [`s = ${s.toFixed(1)} cm, A = ${(g.A * 1e4).toFixed(0)} cm²`], a[0] + (b[0] - a[0]) * 0.5, a[1] + (b[1] - a[1]) * 0.5, fs * 0.86, { ps: Math.min(ps, 1.2), align: 'center', valign: 'middle', fam: T.mono, weight: 400, color: T.muted });
     }
 
     // grips: separation on the top plate, area at its right end, the slab on its visible part
-    const gd = [xL + (xR - xL) * 0.62, yTop - pt - 15 * Math.min(ps, 1.2)];
+    const lab = (lns, x, y, o) => haloLabel(ctx, lns, x, y, fs, { ps: Math.min(ps, 1.2), clamp: [2, L.top, W - 2, L.yBench - 2], ...o });
+    const gdP = P(0.62 * s, d + PT, s2 * 0.2), gd = [gdP[0], gdP[1] - 15 * Math.min(ps, 1.2)];
     handles.push({ id: 'd', cursor: 'ns-resize', box: grip(ctx, gd[0], gd[1], isHot('d'), true) });
-    handles.push({ id: 'd', cursor: 'ns-resize', box: [xL, yTop - pt - 3, xR - xL, pt + 5], quiet: true });
-    const gA = [xR + 14 * Math.min(ps, 1.2), yTop - pt / 2];
+    {
+      const xs = [], ys = []; for (const f of Object.values(tp)) for (const p of f) { xs.push(p[0]); ys.push(p[1]); }
+      handles.push({ id: 'd', cursor: 'ns-resize', quiet: true, box: [Math.min(...xs), Math.min(...ys) - 2, Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys) + 4] });
+    }
+    const gaP = P(s, d + PT / 2, s2), gA = [gaP[0] + 15 * Math.min(ps, 1.2), gaP[1]];
     handles.push({ id: 'A', cursor: 'ew-resize', box: grip(ctx, gA[0], gA[1], isHot('A'), false) });
-    if (slabVis) {
-      const ps2 = Math.min(ps, 1.2), vx0 = Math.max(xSlab, 0), vx1 = Math.min(xSlab + L.slabW, W), out0 = Math.max(xR, vx0);
-      // the grip on the part sticking out when there is room, else on the part between the plates
-      const gxx = vx1 - out0 >= 90 * ps2 ? out0 + Math.min(70 * ps2, (vx1 - out0) / 2) : (Math.max(xSlab, xL) + Math.min(xR, vx1)) / 2 - 10 * ps2;
-      const gy = (slabTop + yBot) / 2;
-      slabGrip = [gxx, gy];
-      handles.push({ id: 'f', cursor: 'ew-resize', box: grip(ctx, gxx, gy, isHot('f'), false) });
-      handles.push({ id: 'f', cursor: 'ew-resize', box: [xSlab, slabTop, L.slabW, yBot - slabTop], quiet: true });
+    let slabGrip = null;
+    if (slabOn) {
+      const outLen = xS + s - Math.max(s, xS), gx = outLen > 3.2 ? Math.max(s, xS) + Math.min(2.6, outLen / 2) : (Math.max(xS, 0) + s) / 2 - 0.3;
+      const gp = P(gx, slabTop / 2, s2);
+      slabGrip = gp;
+      if (gp[0] < W - 8) handles.push({ id: 'f', cursor: 'ew-resize', box: grip(ctx, gp[0], gp[1], isHot('f'), false) });
+      const c0 = P(xS, 0, s2), c1 = P(xS + s, slabTop, s2);
+      handles.push({ id: 'f', cursor: 'ew-resize', quiet: true, box: [Math.min(c0[0], c1[0]), Math.min(c0[1], c1[1]) - 2, Math.abs(c1[0] - c0[0]), Math.abs(c1[1] - c0[1]) + 4] });
     }
 
     // forces and labels, last, on halo boxes
-    {
-      lab([`d = ${L.d.toFixed(2)} cm`, `hand holds the plate: ${fmtSI(st.Fplate, 'N')}`], gd[0], gd[1] - 14 * Math.min(ps, 1.2), { valign: 'bottom', align: 'center' });
-    }
+    if (!cleanShot) lab([`d = ${d.toFixed(2)} cm`, `hand holds the plate: ${fmtSI(st.Fplate, 'N')}`], gd[0], gd[1] - 14 * Math.min(ps, 1.2), { valign: 'bottom', align: 'center' });
     if (slabOn) {
-      const lines2 = [`κ = ${fmtK(g.kap)}, x = ${(g.f * L.s).toFixed(1)} cm`];
-      if (g.f > 0 && st.gap > 1e-9) lines2.push(`t = ${L.t.toFixed(2)} cm, air gap ${(L.d - L.t).toFixed(2)} cm`);
-      const Fx = st.Fslab;
-      lines2.push(g.f >= 1 ? 'slab centered: no net pull' : g.kap > 1 ? `pulled in with F = ${fmtSI(Fx, 'N')}` : 'κ = 1: no force');
-      const ly = yBot + pt + 30 * Math.min(ps, 1.2);
-      lab(lines2, Math.min(W - 8, Math.max(xR + 20, (Math.max(xSlab, xR) + Math.min(W, xSlab + L.slabW)) / 2)), ly, { align: 'center' });
-      // the pull on the slab, toward the plates: an arrow just left of the slab grip
+      const lines2 = [`${look.name}, κ = ${fmtK(g.kap)}, x = ${(g.f * s).toFixed(1)} cm`];
+      if (g.f > 0 && st.gap > 1e-9) lines2.push(`t = ${t.toFixed(2)} cm, air gap ${(d - t).toFixed(2)} cm`);
+      lines2.push(g.f >= 1 ? 'slab centered: no net pull' : g.kap > 1 ? `pulled in with F = ${fmtSI(st.Fslab, 'N')}` : 'κ = 1: no force');
+      const an = P(s + 0.7, -PT - 0.3, s2);
+      if (!cleanShot) lab(lines2, an[0], an[1] + 4, { align: 'left' });
       if (g.f < 1 && g.kap > 1 && slabGrip) {
-        const [gx, gy] = slabGrip, x0 = gx - 15 * Math.min(ps, 1.2), x1 = x0 - 30 * Math.min(ps, 1.2);
-        if (x1 > xSlab + 3) arrow(ctx, x0, gy, x1, gy, T.accent, 2.4 * Math.min(ps, 1.3), 8 * Math.min(ps, 1.3));
+        const [gx, gy] = slabGrip, ux = L.ex[0] / Math.hypot(...L.ex), uy = L.ex[1] / Math.hypot(...L.ex), a0 = 15 * Math.min(ps, 1.2), a1 = 45 * Math.min(ps, 1.2);
+        const xEnd = P(xS, slabTop / 2, s2)[0];
+        if (gx - a1 * ux > xEnd + 3) arrow(ctx, gx - a0 * ux, gy - a0 * uy, gx - a1 * ux, gy - a1 * uy, T.accent, 2.4 * Math.min(ps, 1.3), 8 * Math.min(ps, 1.3));
       }
     }
-    // capacitance readout, top left of the drawing under the controls
     {
       const lines3 = [`C = κε_0A/d = ${fmtC(st.C)}`, `Q = ${fmtSI(st.Q, 'C')}   V = ${fmtSI(st.V, 'V')}`, `E = ${fmtE(st.Ee)}${g.f > 0 ? ' (empty part)' : ''}`];
       if (S.layers.energy) {
@@ -1149,108 +1402,148 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         if (g.f > 0) lines3.push(`  in slab     ${fmtSI(st.uD * st.vD, 'J', 4)}`);
         lines3.push(`  sum         ${fmtSI(st.Ufield, 'J', 4)}`, `CV²/2         ${fmtSI(st.U, 'J', 4)}`);
       }
-      lab(lines3, W - 10, L.top + 2, { align: 'right', fam: T.mono, weight: 600 });
+      if (cleanShot) { /* thumbnail: the apparatus only */ }
+      else if (nar) haloLabel(ctx, lines3, 8, ctlH + 4, fs * 0.92, { ps: Math.min(ps, 1.2), fam: T.mono, weight: 600 });
+      else {
+        const bx = lab(lines3, W - 10, L.top + 2, { align: 'right', fam: T.mono, weight: 600 });
+        ctx.fillStyle = T.muted; ctx.font = `${fs * 0.78}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.globalAlpha = 0.85;
+        ctx.fillText('Drag empty space to turn the view, double click to reset', W - 12, bx[1] + bx[3] + 6); ctx.globalAlpha = 1;
+      }
     }
   }
 
-  // ---------- combinations: layout and drawing ----------
+  // ---------- combinations: small parallel plate cells on a breadboard ----------
   function capGap(C) { return 0.22 + 0.5 * Math.log(CVALS[CVALS.length - 1] / C) / Math.log(1000); }
+  // positions in board units (hole pitch 0.25); a cell is 'v' (plates upright, charge flows left to right) or 'h' (plates flat, charge flows down)
   function comboGeom() {
-    const cb = S.cb, n = cb.top === 'mixed' ? 3 : cb.n, caps = [];
+    const cb = S.cb, n = cb.top === 'mixed' ? 3 : cb.n, caps = [], jumps = [];
     if (cb.top === 'series') {
-      const xs = n === 2 ? [3.6, 6.6] : [2.9, 5.3, 7.7];
-      xs.forEach((x, i) => caps.push({ i, x, y: 1, orient: 'v' }));
+      const a = n === 2 ? [1.75, 4.25, 6.75] : [1.25, 3.5, 5.75, 8.0];
+      for (let i = 0; i < n; i++) caps.push({ i, x: (a[i] + a[i + 1]) / 2, y: 1.75, orient: 'v', legs: [[a[i], 1.5], [a[i + 1], 2.0]] });
+      jumps.push({ a: [a[0], 0.5], b: [a[0], 1.25], col: RED }, { a: [a[n], 2.25], b: [a[n], 5.5], col: BLK });
     } else if (cb.top === 'parallel') {
-      const xs = n === 2 ? [5, 8.4] : [3.6, 6.1, 8.6];
-      xs.forEach((x, i) => caps.push({ i, x, y: 3, orient: 'h' }));
+      const xs = n === 2 ? [3.5, 6.25] : [2.5, 5.25, 8.0];
+      xs.forEach((x, i) => { caps.push({ i, x, y: 3, orient: 'h', legs: [[x, 2.25], [x, 3.75]] }); jumps.push({ a: [x, 0.5], b: [x, 1.25], col: RED }, { a: [x, 4.75], b: [x, 5.5], col: BLK }); });
     } else {
-      caps.push({ i: 0, x: 3.4, y: 1, orient: 'v' }, { i: 1, x: 6.1, y: 3, orient: 'h' }, { i: 2, x: 8.6, y: 3, orient: 'h' });
+      caps.push({ i: 0, x: 2.25, y: 1.75, orient: 'v', legs: [[1.25, 1.5], [3.25, 2.0]] }, { i: 1, x: 5.5, y: 3, orient: 'h', legs: [[5.5, 2.25], [5.5, 3.75]] }, { i: 2, x: 8.25, y: 3, orient: 'h', legs: [[8.25, 2.25], [8.25, 3.75]] });
+      jumps.push({ a: [1.25, 0.5], b: [1.25, 1.25], col: RED }, { a: [3.25, 1.25], b: [5.5, 1.25], col: '#d9a521' }, { a: [5.5, 1.5], b: [8.25, 1.5], col: '#d9a521' },
+        { a: [5.5, 4.75], b: [5.5, 5.5], col: BLK }, { a: [8.25, 4.75], b: [8.25, 5.5], col: BLK });
     }
-    return { n, caps };
+    return { n, caps, jumps };
   }
   let cbg = null;
   function drawCombo() {
     const [W, H] = dims.d; if (!W || !H) return;
-    const ctx = ctxs.d, ps = projScale();
+    const ctx = ctxs.d, ps = projScale(), q = Math.min(ps, 1.2);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    const top = ctlH + 8, avail = H - top - 8;
-    const xl = -1.0, xr = 10.6, yt = 0.2, yb = 5.8;
-    const s = Math.max(10, Math.min((W - 10) / (xr - xl), avail / (yb - yt)));
-    const ox = (W - s * (xr - xl)) / 2 - xl * s, oy = top + (avail - s * (yb - yt)) / 2 - yt * s;
+    const top = ctlH + 8, avail = H - top - 8, narrow = W < 560;
+    // supply on the left (2.6 units), then the board (10.6 × 6 units)
+    // wide: the supply to the left of the board; phone: the supply above it
+    const SUPW = narrow ? 0 : 2.7, BW = 10.6, BH = 6, supH = narrow ? 70 : 0;
+    const s = Math.max(10, Math.min((W - 16) / (SUPW + BW + (narrow ? 0 : 0.3)), (avail - supH) / (BH + 0.4)));
+    const ox = narrow ? (W - s * BW) / 2 : (W - s * (SUPW + 0.3 + BW)) / 2 + s * (SUPW + 0.3), oy = top + supH + (avail - supH - s * BH) / 2;
     const X = (u) => ox + u * s, Y = (v) => oy + v * s;
     const res = combo(S.cb.top, S.cb.n, S.cb.C, S.cb.V), G = comboGeom();
     cbg = { X, Y, s, G };
-    const fs = Math.max(11, Math.min(14, s * 0.24)) * Math.min(ps, 1.2);
+    const fs = Math.max(11, Math.min(14, s * 0.22)) * Math.min(ps, 1.2);
     const isHot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
     handles = [];
-    ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * Math.min(ps, 1.3); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    const wire = (pts) => { ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y)))); ctx.stroke(); };
-    const xEnd = G.caps.reduce((m, c) => Math.max(m, c.x), 0) + (S.cb.top === 'series' ? 1.3 : 0);
-    // battery on the left from y = 1 (top rail, + side) to y = 5
-    wire([[0.6, 2.55], [0.6, 1], [xEnd, 1]]);
-    wire([[0.6, 3.45], [0.6, 5], [xEnd, 5]]);
-    if (S.cb.top === 'series') wire([[xEnd, 1], [xEnd, 5]]);
-    for (const c of G.caps) if (c.orient === 'h') { wire([[c.x, 1], [c.x, 5]]); ctx.fillStyle = T.wire; for (const yy of [1, 5]) if (c.x < xEnd - 0.01) { ctx.beginPath(); ctx.arc(X(c.x), Y(yy), 3.2 * Math.min(ps, 1.3), 0, 2 * Math.PI); ctx.fill(); } }
-    // battery
+    // the board: rails along the top (+) and bottom (−), two blocks of five row strips, a channel down the middle
     {
-      const hot = isHot('cV');
-      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.14; ctx.fillRect(X(0.1), Y(2.4), s, 1.2 * s); ctx.globalAlpha = 1; }
-      ctx.strokeStyle = T.canvas; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(X(0.6), Y(2.6)); ctx.lineTo(X(0.6), Y(3.4)); ctx.stroke();
-      for (const [dy, hw] of [[-0.4, 0.4], [-0.16, 0.2], [0.16, 0.4], [0.4, 0.2]]) {
-        ctx.strokeStyle = T.ink; ctx.lineWidth = (hw > 0.3 ? 2 : 4) * Math.min(ps, 1.3); ctx.lineCap = 'butt';
-        ctx.beginPath(); ctx.moveTo(X(0.6 - hw), Y(3 + dy)); ctx.lineTo(X(0.6 + hw), Y(3 + dy)); ctx.stroke();
-      }
-      ctx.lineCap = 'round';
-      ctx.fillStyle = T.muted; ctx.font = `700 ${fs}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-      ctx.fillText('+', X(1.1), Y(2.55));
-      ctx.fillStyle = T.ink; ctx.font = `600 ${fs}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-      ctx.fillText(`${S.cb.V} V`, X(0.1), Y(3));
-      handles.push({ id: 'cV', cursor: 'ns-resize', box: [X(0.1), Y(2.4), s, 1.2 * s] });
+      ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.3)'; ctx.shadowBlur = 12 * q; ctx.shadowOffsetY = 4 * q;
+      ctx.fillStyle = T.board; roundRect(ctx, X(0), Y(0), BW * s, BH * s, 0.12 * s); ctx.fill(); ctx.restore();
+      const gb = ctx.createLinearGradient(0, Y(0), 0, Y(BH)); gb.addColorStop(0, 'rgba(255,255,255,0.08)'); gb.addColorStop(1, 'rgba(0,0,0,0.08)'); ctx.fillStyle = gb; roundRect(ctx, X(0), Y(0), BW * s, BH * s, 0.12 * s); ctx.fill();
+      ctx.fillStyle = shade(T.board, T.dark ? -0.35 : -0.08); ctx.fillRect(X(0.1), Y(2.82), (BW - 0.2) * s, 0.36 * s);
+      ctx.lineWidth = Math.max(1, 0.035 * s);
+      for (const [y, col] of [[0.22, '#d23b2f'], [0.78, '#d23b2f'], [5.22, '#2f6fd2'], [5.78, '#2f6fd2']]) { ctx.strokeStyle = col; ctx.globalAlpha = 0.8; ctx.beginPath(); ctx.moveTo(X(0.3), Y(y)); ctx.lineTo(X(BW - 0.3), Y(y)); ctx.stroke(); }
+      ctx.globalAlpha = 1;
+      ctx.font = `700 ${Math.max(9, 0.22 * s)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#d23b2f'; ctx.fillText('+', X(0.14), Y(0.5)); ctx.fillStyle = '#2f6fd2'; ctx.fillText('−', X(0.14), Y(5.5));
+      const hs = Math.max(2, 0.085 * s);
+      ctx.fillStyle = T.hole;
+      const rows = [0.5, 1.25, 1.5, 1.75, 2.0, 2.25, 3.75, 4.0, 4.25, 4.5, 4.75, 5.5];
+      for (const v of rows) for (let u = 0.5; u <= BW - 0.4; u += 0.25) { if ((v === 0.5 || v === 5.5) && Math.round(u / 0.25) % 6 === 5) continue; ctx.fillRect(X(u) - hs / 2, Y(v) - hs / 2, hs, hs); }
+      ctx.fillStyle = T.boardInk; ctx.font = `${Math.max(7, 0.14 * s)}px ${T.mono}`;
+      for (let c = 1; c <= 40; c += (c === 1 ? 4 : 5)) { const u = 0.5 + (c - 1) * 0.25; ctx.fillText(String(c), X(u), Y(1.03)); ctx.fillText(String(c), X(u), Y(4.98)); }
+      'abcde'.split('').forEach((ch, i) => ctx.fillText(ch, X(0.28), Y(2.25 - i * 0.25)));
+      'fghij'.split('').forEach((ch, i) => ctx.fillText(ch, X(0.28), Y(4.75 - i * 0.25)));
     }
+    // the supply, its leads to the rails
+    {
+      const hot = isHot('cV'), bw = narrow ? 130 : (SUPW - 0.15) * s, bh = narrow ? 62 : Math.min(2.3 * s, 150 * q), bx = narrow ? 8 : X(-SUPW - 0.3), by = narrow ? top : Y(3) - bh / 2;
+      const sup = drawSupply(ctx, { x: bx, y: by, w: bw, h: bh }, q, narrow || bw < 150, S.cb.V, hot);
+      handles.push({ id: 'cV', cursor: 'ns-resize', box: [bx, by, bw, bh] });
+      lead(ctx, sup.plus, [X(0.5), Y(0.5)], RED, q, -40 * q);
+      lead(ctx, sup.minus, [X(0.5), Y(5.5)], BLK, q, narrow ? 'left' : 30 * q);
+      for (const p of [[X(0.5), Y(0.5)], [X(0.5), Y(5.5)]]) { ctx.fillStyle = '#9aa3ad'; ctx.beginPath(); ctx.arc(p[0], p[1], 2.6 * q, 0, 2 * Math.PI); ctx.fill(); }
+    }
+    // jumper wires
+    const jumper = (a, b, col) => {
+      if (col === BLK && T.dark) col = '#5d6673';
+      const A = [X(a[0]), Y(a[1])], B = [X(b[0]), Y(b[1])], L2 = Math.hypot(B[0] - A[0], B[1] - A[1]), lift = Math.min(0.35 * s, L2 * 0.18);
+      const nx = (B[0] - A[0]) / (L2 || 1), ny = (B[1] - A[1]) / (L2 || 1), m = [(A[0] + B[0]) / 2 + ny * lift * 0.0 - (Math.abs(ny) > 0.5 ? lift : 0), (A[1] + B[1]) / 2 - (Math.abs(ny) > 0.5 ? 0 : lift)];
+      void nx;
+      const path = (dx, dy) => { ctx.beginPath(); ctx.moveTo(A[0] + dx, A[1] + dy); ctx.quadraticCurveTo(m[0] + dx, m[1] + dy, B[0] + dx, B[1] + dy); };
+      ctx.lineCap = 'round';
+      path(1.5 * q, 2.5 * q); ctx.strokeStyle = 'rgba(0,0,0,0.22)'; ctx.lineWidth = 0.075 * s + 1; ctx.stroke();
+      path(0, 0); ctx.strokeStyle = col; ctx.lineWidth = Math.max(2.5, 0.075 * s); ctx.stroke();
+      path(-0.6, -0.8); ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 1; ctx.stroke();
+      for (const p of [A, B]) { ctx.fillStyle = '#b8bec6'; ctx.beginPath(); ctx.arc(p[0], p[1], Math.max(1.8, 0.05 * s), 0, 2 * Math.PI); ctx.fill(); }
+    };
+    for (const j of G.jumps) jumper(j.a, j.b, j.col);
     // charge symbol scale for this circuit
     const qMax = Math.max(...res.caps.map((c) => c.Q));
     const needQ = qMax / 6;
     if (!S.qcSym || S.qcSym < needQ * 0.999 || S.qcSym > 6 * needQ) S.qcSym = ladderUp(needQ);
-    // capacitors
+    // the cells: two aluminum plates on a clear acrylic base, leads into the board
     for (const c of G.caps) {
       const r = res.caps[c.i], gap = capGap(r.C), half = 0.5, hot = isHot('c' + c.i);
-      const cx = X(c.x), cy = Y(c.y), gp = gap * s / 2, hl = half * s;
-      // clear the wire between the plates
-      ctx.strokeStyle = T.canvas; ctx.lineWidth = 6;
-      ctx.beginPath(); if (c.orient === 'v') { ctx.moveTo(cx - gp, cy); ctx.lineTo(cx + gp, cy); } else { ctx.moveTo(cx, cy - gp); ctx.lineTo(cx, cy + gp); } ctx.stroke();
-      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.12; if (c.orient === 'v') ctx.fillRect(cx - gp - 6, cy - hl - 4, 2 * gp + 12, 2 * hl + 8); else ctx.fillRect(cx - hl - 4, cy - gp - 6, 2 * hl + 8, 2 * gp + 12); ctx.globalAlpha = 1; }
-      ctx.strokeStyle = T.ink; ctx.lineWidth = 3.2 * Math.min(ps, 1.3); ctx.lineCap = 'butt';
-      ctx.beginPath();
-      if (c.orient === 'v') { ctx.moveTo(cx - gp, cy - hl); ctx.lineTo(cx - gp, cy + hl); ctx.moveTo(cx + gp, cy - hl); ctx.lineTo(cx + gp, cy + hl); }
-      else { ctx.moveTo(cx - hl, cy - gp); ctx.lineTo(cx + hl, cy - gp); ctx.moveTo(cx - hl, cy + gp); ctx.lineTo(cx + hl, cy + gp); }
-      ctx.stroke(); ctx.lineCap = 'round';
-      // charges: + on the side toward the battery's + terminal
+      const cx = X(c.x), cy = Y(c.y), gp = gap * s / 2, hl = half * s, th = Math.max(4, 0.09 * s), v = c.orient === 'v';
+      // leads from the plates to the holes
+      ctx.strokeStyle = '#a4abb4'; ctx.lineWidth = Math.max(1.4, 0.035 * s); ctx.lineCap = 'round';
+      c.legs.forEach(([lx, ly], k) => {
+        const px = v ? cx + (k ? 1 : -1) * (gp + th / 2) : cx, py = v ? cy : cy + (k ? 1 : -1) * (gp + th / 2);
+        ctx.beginPath(); ctx.moveTo(px, py); if (v) ctx.lineTo(X(lx), py); else ctx.lineTo(px, Y(ly)); ctx.lineTo(X(lx), Y(ly)); ctx.stroke();
+        ctx.fillStyle = '#c9ced6'; ctx.beginPath(); ctx.arc(X(lx), Y(ly), Math.max(1.6, 0.045 * s), 0, 2 * Math.PI); ctx.fill();
+      });
+      // acrylic base
+      const bx = v ? cx - gp - th - 0.08 * s : cx - hl - 0.08 * s, by = v ? cy - hl - 0.08 * s : cy - gp - th - 0.08 * s;
+      const bw = v ? 2 * (gp + th) + 0.16 * s : 2 * hl + 0.16 * s, bh = v ? 2 * hl + 0.16 * s : 2 * (gp + th) + 0.16 * s;
+      ctx.fillStyle = T.acrylicBase; roundRect(ctx, bx, by, bw, bh, 0.06 * s); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = 1; ctx.stroke();
+      if (hot) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2.2 * q; roundRect(ctx, bx - 3, by - 3, bw + 6, bh + 6, 0.08 * s); ctx.stroke(); }
+      // the two plates, seen from above as thick aluminum bars
+      const bar = (x, y, w2, h2) => {
+        ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.fillRect(x + 2 * q, y + 2.5 * q, w2, h2);
+        const gg = v ? ctx.createLinearGradient(x, 0, x + w2, 0) : ctx.createLinearGradient(0, y, 0, y + h2);
+        gg.addColorStop(0, shade(T.alu, 0.35)); gg.addColorStop(0.5, T.alu); gg.addColorStop(1, shade(T.alu, -0.35));
+        ctx.fillStyle = gg; ctx.fillRect(x, y, w2, h2); ctx.strokeStyle = shade(T.alu, -0.5); ctx.lineWidth = 0.8; ctx.strokeRect(x + 0.4, y + 0.4, w2 - 0.8, h2 - 0.8);
+      };
+      if (v) { bar(cx - gp - th, cy - hl, th, 2 * hl); bar(cx + gp, cy - hl, th, 2 * hl); }
+      else { bar(cx - hl, cy - gp - th, 2 * hl, th); bar(cx - hl, cy + gp, 2 * hl, th); }
+      // charges on the plates: + on the plate toward the supply's + terminal
       const nq = Math.min(14, Math.round(r.Q / S.qcSym)), rr = Math.max(2.5, Math.min(4.2, s * 0.06)) * Math.min(ps, 1.15);
       for (let k2 = 0; k2 < nq; k2++) {
         const u = -hl + 2 * hl * (k2 + 0.5) / nq;
-        if (c.orient === 'v') { chargeSym(ctx, cx - gp - rr - 2, cy + u, rr, +1); chargeSym(ctx, cx + gp + rr + 2, cy + u, rr, -1); }
-        else { chargeSym(ctx, cx + u, cy - gp - rr - 2, rr, +1); chargeSym(ctx, cx + u, cy + gp + rr + 2, rr, -1); }
+        if (v) { chargeSym(ctx, cx - gp - th - rr - 2, cy + u, rr, +1); chargeSym(ctx, cx + gp + th + rr + 2, cy + u, rr, -1); }
+        else { chargeSym(ctx, cx + u, cy - gp - th - rr - 2, rr, +1); chargeSym(ctx, cx + u, cy + gp + th + rr + 2, rr, -1); }
       }
       // grip on the second plate, along the plate normal
-      const gx = c.orient === 'v' ? cx + gp + 2 * rr + 12 * Math.min(ps, 1.2) : cx + hl + 14 * Math.min(ps, 1.2);
-      const gy = c.orient === 'v' ? cy + hl + 14 * Math.min(ps, 1.2) : cy + gp + 2 * rr + 10 * Math.min(ps, 1.2);
-      handles.push({ id: 'c' + c.i, cursor: c.orient === 'v' ? 'ew-resize' : 'ns-resize', axis: c.orient === 'v' ? 'x' : 'y', box: grip(ctx, gx, gy, hot, c.orient !== 'v') });
-      handles.push({ id: 'c' + c.i, cursor: c.orient === 'v' ? 'ew-resize' : 'ns-resize', axis: c.orient === 'v' ? 'x' : 'y', quiet: true,
-        box: c.orient === 'v' ? [cx - gp - 8, cy - hl - 4, 2 * gp + 16, 2 * hl + 8] : [cx - hl - 4, cy - gp - 8, 2 * hl + 8, 2 * gp + 16] });
-      // label
-      const lines = [`C_${c.i + 1} = ${fmtC(r.C)}`, `Q = ${fmtSI(r.Q, 'C')}`, `V = ${fmtSI(r.V, 'V')}`];
-      // series labels sit under their capacitors; when neighbors would overlap, every second one drops a row
+      const gx = v ? cx + gp + th + 2 * rr + 12 * Math.min(ps, 1.2) : cx + hl + 14 * Math.min(ps, 1.2);
+      const gy = v ? cy + hl + 14 * Math.min(ps, 1.2) : cy + gp + th + 2 * rr + 10 * Math.min(ps, 1.2);
+      handles.push({ id: 'c' + c.i, cursor: v ? 'ew-resize' : 'ns-resize', axis: v ? 'x' : 'y', box: grip(ctx, gx, gy, hot, !v) });
+      handles.push({ id: 'c' + c.i, cursor: v ? 'ew-resize' : 'ns-resize', axis: v ? 'x' : 'y', quiet: true, box: [bx - 6, by - 6, bw + 12, bh + 12] });
+      const lns = narrow ? [`C_${c.i + 1} ${fmtC(r.C)}`] : [`C_${c.i + 1} = ${fmtC(r.C)}`, `Q = ${fmtSI(r.Q, 'C')}`, `V = ${fmtSI(r.V, 'V')}`];
       let stagger = 0;
-      if (c.orient === 'v') {
+      if (v) {
         const others = G.caps.filter((o) => o.orient === 'v' && o !== c), sp = others.length ? Math.min(...others.map((o) => Math.abs(o.x - c.x))) * s : Infinity;
-        const lw = Math.max(...lines.map((t2) => richWidth(ctx, t2, fs * 0.95, 600, T.mono))) + 10;
-        if (lw > sp) stagger = (c.i % 2) * (3 * fs * 0.95 * 1.25 + 8);
+        const lw = Math.max(...lns.map((t2) => richWidth(ctx, t2, fs * 0.95, 600, T.mono))) + 10;
+        if (lw > sp) stagger = (c.i % 2) * (lns.length * fs * 0.95 * 1.25 + 8);
       }
-      const lx = c.orient === 'v' ? cx : cx + hl + 26 * Math.min(ps, 1.2), ly = c.orient === 'v' ? cy + hl + 28 * Math.min(ps, 1.2) + stagger : cy - 1.4 * fs * 1.25;
-      haloLabel(ctx, lines, lx, ly, fs * 0.95, { ps: Math.min(ps, 1.2), align: c.orient === 'v' ? 'center' : 'left', fam: T.mono, clamp: [2, top, W - 2, H - 2] });
+      const lx = v || narrow ? cx : cx + hl + 26 * Math.min(ps, 1.2), ly = v ? cy + hl + 28 * Math.min(ps, 1.2) + stagger : narrow ? cy - gp - th - 2 * rr - fs * 1.6 : cy - 1.4 * fs * 1.25;
+      haloLabel(ctx, lns, lx, ly, fs * 0.95, { ps: Math.min(ps, 1.2), align: v || narrow ? 'center' : 'left', fam: T.mono, clamp: [2, top, W - 2, H - 2] });
     }
-    // equivalent capacitance
     haloLabel(ctx, [`C_{eq} = ${fmtC(res.Ceq)}`, `Q from the battery = ${fmtSI(res.Q, 'C')}`], W - 10, top + 2, fs, { ps: Math.min(ps, 1.2), align: 'right', fam: T.mono });
   }
 
@@ -1560,10 +1853,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       dragFrame = false; if (!drag || !dragQ) return;
       const [x, y] = dragQ, d = drag, dx = x - d.x0, dy = y - d.y0;
       if (S.view === 'single') {
-        const k = d.k;
-        if (d.id === 'd') { setGeom({ d: Math.round((d.v0 - dy / k) / 0.05) * 0.05 / 100 }, true); S.graph = 'd'; graphSeg(); }
-        else if (d.id === 'A') { const s = d.v0 + dx / k; setGeom({ A: Math.round(Math.max(5, s) ** 2) * 1e-4 }, true); }
-        else if (d.id === 'f') { setGeom({ f: Math.round((d.v0 - dx / (d.k * d.s)) * 100) / 100 }, true); S.graph = 'x'; graphSeg(); }
+        // displacement along the dragged part's own axis on screen, in cm
+        const a = d.ax || [1, 0], along = (dx * a[0] + dy * a[1]) / (a[0] * a[0] + a[1] * a[1]);
+        if (d.id === 'view') { VIEW.yaw = clamp(d.v0[0] + dx * 0.006, -0.75, 0.75); VIEW.pit = clamp(d.v0[1] + dy * 0.004, 0.04, 0.75); }
+        else if (d.id === 'd') { setGeom({ d: Math.round((d.v0 + along) / 0.05) * 0.05 / 100 }, true); S.graph = 'd'; graphSeg(); }
+        else if (d.id === 'A') { const s = d.v0 + along; setGeom({ A: Math.round(Math.max(5, s) ** 2) * 1e-4 }, true); }
+        else if (d.id === 'f') { setGeom({ f: Math.round((d.v0 - along / d.s) * 100) / 100 }, true); S.graph = 'x'; graphSeg(); }
         else if (d.id === 'V') setVb(d.v0 - dy * 1.5);
       } else {
         if (d.id === 'cV') { S.cb.V = Math.max(V_MIN, Math.min(V_MAX, Math.round((d.v0 - dy * 1.5) / 10) * 10)); }
@@ -1579,12 +1874,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   cans.d.addEventListener('pointermove', (ev) => {
     if (drag) { dragTo(ev); return; }
-    const h = hitAt(ev); hoverId = h ? h.id : null; cans.d.style.cursor = h ? h.cursor : 'default';
+    const h = hitAt(ev); hoverId = h ? h.id : null; cans.d.style.cursor = h ? h.cursor : canTurn(ev) ? 'grab' : 'default';
   });
+  // empty space above the bench turns the view of the apparatus
+  function canTurn(ev) { if (S.view !== 'single' || !lay) return false; const r = cans.d.getBoundingClientRect(); return ev.clientY - r.top < lay.yBench && ev.clientY - r.top > lay.top; }
+  cans.d.addEventListener('dblclick', (ev) => { if (canTurn(ev) && !hitAt(ev)) { VIEW.yaw = VIEW0.yaw; VIEW.pit = VIEW0.pit; } });
   cans.d.addEventListener('pointerdown', (ev) => {
     const h = hitAt(ev);
     cans.d.focus({ preventScroll: true });
-    if (!h) return;
+    if (!h) {
+      if (canTurn(ev)) {
+        const r = cans.d.getBoundingClientRect();
+        drag = { id: 'view', x0: ev.clientX - r.left, y0: ev.clientY - r.top, v0: [VIEW.yaw, VIEW.pit] };
+        try { cans.d.setPointerCapture(ev.pointerId); } catch (_) {}
+        cans.d.style.cursor = 'grabbing';
+      }
+      return;
+    }
     if (h.click) { setMode(S.mode === 'battery' ? 'iso' : 'battery'); ev.preventDefault(); return; }
     const r = cans.d.getBoundingClientRect();
     let v0 = 0;
@@ -1592,7 +1898,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       v0 = h.id === 'd' ? S.g.d * 100 : h.id === 'A' ? Math.sqrt(S.g.A) * 100 : h.id === 'f' ? S.g.f : S.Vb;
       if (h.id !== 'V') stopSweep();
     } else v0 = h.id === 'cV' ? S.cb.V : nearestIdx(CVALS, S.cb.C[+h.id.slice(1)]);
-    drag = { id: h.id, axis: h.axis, x0: ev.clientX - r.left, y0: ev.clientY - r.top, v0, k: lay ? lay.k : 30, s: Math.sqrt(S.g.A) * 100 };
+    drag = { id: h.id, axis: h.axis, x0: ev.clientX - r.left, y0: ev.clientY - r.top, v0, s: Math.sqrt(S.g.A) * 100, ax: lay ? (h.id === 'd' ? lay.ey : lay.ex) : [30, 0] };
     try { cans.d.setPointerCapture(ev.pointerId); } catch (_) {}
     cans.d.style.cursor = h.cursor; ev.preventDefault();
   });
@@ -1611,6 +1917,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       else if (k === 'm' || k === 'M' || k === 'Enter') setMode(S.mode === 'battery' ? 'iso' : 'battery');
       else if (k === ' ') setRunning(!running);
       else if (k === 'r' || k === 'R') doReset();
+      else if (k === '[' || k === ']') VIEW.yaw = clamp(VIEW.yaw + (k === ']' ? 0.08 : -0.08), -0.75, 0.75);
+      else if (k === '{' || k === '}') VIEW.pit = clamp(VIEW.pit + (k === '}' ? 0.05 : -0.05), 0.04, 0.75);
+      else if (k === 'v' || k === 'V') { VIEW.yaw = VIEW0.yaw; VIEW.pit = VIEW0.pit; }
       else return;
     } else {
       if (k === '+' || k === '=' || k === '-' || k === '_') { S.cb.V = Math.max(V_MIN, Math.min(V_MAX, S.cb.V + (k === '+' || k === '=' ? 10 : -10))); }
@@ -1656,8 +1965,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   window.__cap = {
     get frameMs() { return frameMs; }, get S() { return S; }, get handles() { return handles; }, get running() { return running; },
-    get field() { return field && { nx: field.nx, ny: field.ny, it: field.it, resid: field.resid, hp: field.hp }; }, get lines() { return lines; }, get lay() { return lay; },
-    applyPreset, setRunning, setGeom, setMode, setVb, setMat, markStart, stepSweep,
+    get view() { return { ...VIEW }; },
+    get field() { return field && { nx: field.nx, ny: field.ny, it: field.it, resid: field.resid, hp: field.hp }; }, get lines() { return lines; }, get lay() { return lay; }, get cbg() { return cbg; },
+    setClean(v) { cleanShot = !!v; }, applyPreset, setRunning, setGeom, setMode, setVb, setMat, markStart, stepSweep,
     state() { const st = cur(); return { ...st, L: { ...S.L }, start: { ...S.start }, mode: S.mode, g: { ...S.g } }; },
     lineStats() { const c = {}; for (const l of lines) c[l.end] = (c[l.end] || 0) + 1; return { n: lines.length, ends: c }; }
   };
