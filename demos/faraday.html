@@ -24,6 +24,8 @@ img { max-width: 100%; }
 .vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
 .vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
 /* /vd-qr */
+input[type="number"], select { max-width:100%; width:100%; padding:.45rem; color:var(--ink); background:var(--canvas); border:1px solid var(--line); border-radius:5px; font:inherit; }
+#labRows td,#fluxRows td {padding:.3rem; font-variant-numeric:tabular-nums;}
 </style>
 <title>Faraday's and Lenz's Laws</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -250,6 +252,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <section>
         <h2>Measurements</h2>
         <dl class="readout" id="meas"></dl>
+        <p class="hint">Flux is evaluated at the displayed time. EMF, current and velocity are averages over the preceding 1 ms interval, not endpoint values.</p>
+        <label><input id="labBlind" type="checkbox" checked>Hide predicted amplitudes and integral checks</label>
+        <button class="btn" id="labStep">Step 1 ms</button>
+        <label for="labDuration">Advance by (s)</label><input id="labDuration" type="number" min="0.001" max="10" step="0.001" value="0.1">
+        <button class="btn" id="labAdvance">Advance and pause</button>
+        <button class="btn" id="labCapture">Capture measurement</button><button class="btn" id="labExport">Export notebook CSV</button><button class="btn" id="labTrace">Export current run CSV</button><button class="btn" id="labClear">Clear notebook</button>
+        <p id="labStatus" role="status" aria-live="polite"></p>
+        <div style="overflow:auto;max-height:220px"><table><caption>Measurement notebook</caption><thead><tr><th>Mode</th><th>t (s)</th><th>Φ (Wb)</th><th>EMF (V)</th><th>I (A)</th></tr></thead><tbody id="labRows"></tbody></table></div>
       </section>
 
       <section>
@@ -438,12 +448,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // The coil (N turns, total resistance R, inductance neglected) sees the flux per turn go from phi to phiNew in dt.
   // EMF = −N ΔΦ/Δt, I = EMF/R. Running sums since the start of a move: ∫EMF dt, Q = ∫I dt, heat ∫I²R dt.
   function circuitStep(c, phiNew, dt) {
+    if(!Number.isFinite(dt)||dt<=0||!Number.isFinite(phiNew)||!Number.isFinite(c.R)||c.R<=0)throw Error('Invalid circuit step');
     const emf = -c.N * (phiNew - c.phi) / dt, I = emf / c.R;
     c.phi = phiNew; c.emf = emf; c.I = I;
     c.intEmf += emf * dt; c.Q += I * dt; c.heat += I * I * c.R * dt;
     return c;
   }
-  function makeCircuit(N, R, phi) { return { N, R, phi, phi0: phi, emf: 0, I: 0, intEmf: 0, Q: 0, heat: 0 }; }
+  function makeCircuit(N, R, phi) { if(![N,R,phi].every(Number.isFinite)||N<=0||R<=0)throw Error('Invalid circuit parameters'); return { N, R, phi, phi0: phi, emf: 0, I: 0, intEmf: 0, Q: 0, heat: 0 }; }
   function startMove(c) { c.phi0 = c.phi; c.intEmf = 0; c.Q = 0; c.heat = 0; }
   // A magnet pushed at constant speed v from z0 to z1 (centre positions, coil at 0); returns the circuit and samples
   function runMove(p, z0, z1, v, dt) {
@@ -467,10 +478,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // ---------- rails: bar of length L at x from the resistor, B into the page along n̂ ----------
   const railsPhi = (B, L, x) => B * L * x;
   // coasting bar of mass m: m dv/dt = −B²L²v/R, so v = v0 e^(−t/τ), τ = mR/(B²L²)
-  function coast(p, v0, t) { const tau = p.m * p.R / (p.B * p.B * p.L * p.L), e = Math.exp(-t / tau); return { v: v0 * e, dx: v0 * tau * -Math.expm1(-t / tau), tau }; }
+  function coast(p, v0, t) {
+    if(![p.m,p.R,p.B,p.L,v0,t].every(Number.isFinite)||p.m<=0||p.R<=0||p.L<=0||t<0)throw Error('Invalid coasting parameters');
+    const rate=p.B*p.B*p.L*p.L/(p.m*p.R),tau=1/rate;
+    return {v:v0*Math.exp(-rate*t),dx:rate===0?v0*t:v0*-Math.expm1(-rate*t)/rate,tau};
+  }
   // ==CORE END==
 
-  if (typeof document === 'undefined') return;
+  if (typeof document === 'undefined') { globalThis.FD={MU0,MAG,ellipKE,ringFlux,ringField,cylFluxUnit,cylFieldUnit,coilFlux,dipoleFlux,magMoment,tiltFluxUnit,flipSeries,seriesEval,circuitStep,makeCircuit,runMove,magnetForce,genPhi,genEmf,railsPhi,coast};return; }
 
   const $ = (id) => document.getElementById(id);
   const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
@@ -574,6 +589,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     gth: 0, gtht: 0, gw: 0, motor: true, x: RAIL_X0, xt: RAIL_X0, rv: 0, ke: 0, ke0: 0, work: 0, eMax: 0, fv: 0 };
   let act = null, circ = null, tA = 0, running = !reduce, acc = 0;
   let hist = { t: [], phi: [], emf: [], I: [] };
+  let labTrace=[],labRun=0;const labRows=[];
   let ghosts = [];
   const view = { Tw: 2, wl: 0 };
   let ranges = {};
@@ -675,6 +691,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // a dragged part follows the pointer like a critically damped spring, so its speed changes smoothly
   function follow(pos, vel, target, dt) { const w = 1 / followTau(), acc = w * w * (target - pos) - 2 * w * vel; vel += acc * dt; return [pos + vel * dt, vel]; }
   function physStep(dt) {
+    const phiBefore=circ.phi;
     W.t += dt;
     const t = W.t;
     if (S.mode === 'magnet') {
@@ -721,6 +738,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       // your work = change of kinetic energy + heat (the magnetic force on the bar does work −I²R dt); none while coasting
       if (!coasting) W.work += W.ke - keOld + circ.I * circ.I * circ.R * dt;
     }
+    labTrace.push(labSample(dt,phiBefore));if(labTrace.length>60001)labTrace.shift();
     hist.t.push(t); hist.phi.push(circ.phi); hist.emf.push(circ.emf); hist.I.push(circ.I);
   }
   function trimHist() {
@@ -739,8 +757,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (!running) setRunning(true);
   }
   // a change of setting: no EMF from it, and a new move starts
-  function rebase() { circ.N = Nnow(); circ.R = Rnow(); circ.phi = fluxNow(); newMove(W.t); ranges = {}; }
-  function newMove(t0) { startMove(circ); tA = t0; W.Fmax = 1e-6; W.work = 0; W.ke0 = W.ke; }
+  function rebase() { circ.emf=circ.I=0; circ.N = Nnow(); circ.R = Rnow(); circ.phi = fluxNow(); newMove(W.t); ranges = {}; }
+  function newMove(t0) { startMove(circ); tA = t0; labRun++;labTrace=[labSample(0,circ.phi)]; W.Fmax = 1e-6; W.work = 0; W.ke0 = W.ke; }
   function freeWindow() {
     if (S.mode !== 'gen') { growWindow(W.t + 2); return; }
     const Tf = genWindow(); if (view.Tw < Tf) { view.Tw = Tf; view.wl = Math.max(0, W.t - 0.5 * Tf); }
@@ -797,6 +815,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     act = { kind: 'coast', x0: W.x, v0: S.rails.v, t0: W.t };
     beginMove(W.t, Math.min(5 * c.tau, (RAIL_END - W.x) / S.rails.v * 1.6 + 0.1));
     W.work += 0.5 * r.m * S.rails.v ** 2 - W.ke; W.ke = 0.5 * r.m * S.rails.v ** 2;     // the push
+    labTrace[0]=labSample(0,circ.phi);
   }
 
   // ---------- presets ----------
@@ -811,7 +830,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     act = null; ghosts = []; status('');
     W.t = 0; acc = 0; hist = { t: [], phi: [], emf: [], I: [] };
     W.z = W.zt = W.zMid = name === 'flip' ? -0.065 : -0.12; W.th = 0; W.vMag = 0; W.F = 0;
-    W.gth = W.gtht = 0; W.motor = true; W.fv = 0; W.x = W.xt = RAIL_X0; W.rv = 0;
+    W.ke=W.ke0=W.work=0;W.gMid=0;W.gth = W.gtht = 0; W.motor = true; W.fv = 0; W.x = W.xt = RAIL_X0; W.rv = 0;
     if (c.mode === 'gen') { GV.yaw = GV0.yaw; GV.pit = GV0.pit; }
     if (c.mode === 'magnet') { buildMagLines(); buildIndLines(); }
     circ = makeCircuit(Nnow(), Rnow(), fluxNow());
@@ -863,6 +882,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('signConv').innerHTML = T.sign; $('rhr').textContent = T.rhr; $('modelHint').innerHTML = T.model;
     $('meas').innerHTML = MEAS_ROWS[m].map(([id, l, c]) => `<div><dt>${l}</dt><dd id="${id}" class="${c || ''}">—</dd></div>`).join('');
     $('since').innerHTML = SINCE_ROWS[m].map(([id, l, c]) => `<div><dt>${l}</dt><dd id="${id}" class="${c || ''}">—</dd></div>`).join('');
+    for(const id of ['mPk','mRms','sDphi','sQf']){const el=$(id);if(el)el.parentElement.hidden=$('labBlind').checked;}
     $('sinceHint').innerHTML = m === 'rails'
       ? 'The circuit is one loop, so ∫EMF dt = −ΔΦ<sub>B</sub> and Q = −ΔΦ<sub>B</sub>/R exactly, however the bar moved.'
       : 'Summing EMF = −N dΦ<sub>B</sub>/dt over the move gives ∫EMF dt = −NΔΦ<sub>B</sub>, so the charge that flows is Q = −NΔΦ<sub>B</sub>/R whatever the speed.';
@@ -912,6 +932,36 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     rebase();
   }
+
+  function labSample(dt,phiBefore){
+    const m=S.mode,p=P();
+    const settings=m==='gen'?{N:p.N,R_ohm:Rnow(),B_T:p.B,A_m2:genA(),omega_rad_s:p.w}:m==='rails'?{...railP(),speed_m_s:p.v}:{...magP(),speed_m_s:p.v};
+    return {version:'faraday-2026-10-18.2',run:labRun,mode:m,t:W.t,dt,mid:dt?W.t-dt/2:W.t,N:circ.N,R:circ.R,phi:circ.phi,phiBefore,emf:dt?circ.emf:0,I:dt?circ.I:0,Q:circ.Q,heat:circ.heat,phi0:circ.phi0,start:tA,position:m==='magnet'?W.z:m==='rails'?W.x:null,theta:m==='gen'?W.gth:W.th,ke:m==='rails'?W.ke:null,settings:JSON.stringify(settings)};
+  }
+  function labDownload(data,name){
+    if(!data.length){$('labStatus').textContent='No samples yet. Advance or capture first.';return;}
+    const keys=['version','run','mode','t','dt','mid','N','R','phi','phiBefore','emf','I','Q','heat','phi0','start','position','theta','ke','settings'];
+    const quote=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+    const csv=['version,run,mode,t_s,interval_s,interval_midpoint_s,N,R_ohm,flux_Wb,previous_flux_Wb,interval_EMF_V,interval_I_A,charge_since_start_C,heat_since_start_J,initial_flux_Wb,move_start_s,position_m,angle_rad,kinetic_energy_J,settings_SI_json',...data.map(r=>keys.map(k=>quote(r[k])).join(','))].join('\n');
+    const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    $('labStatus').textContent=`Exported ${data.length} samples; interval quantities belong at the interval midpoint. Runs retain at most 60001 samples.`;
+  }
+  function labAdvance(seconds){
+    setRunning(false);const n=Math.round(seconds/DT);
+    for(let j=0;j<n;j++)advance(DT);
+    updateReadouts();drawAll();$('labStatus').textContent=`Advanced ${n} steps of 1 ms and paused.`;
+  }
+  $('labStep').addEventListener('click',()=>labAdvance(DT));
+  $('labAdvance').addEventListener('click',()=>{const el=$('labDuration');if(el.value!==''&&el.checkValidity())labAdvance(+el.value);else $('labStatus').textContent='Enter 0.001 to 10 seconds in 0.001 s increments.';});
+  $('labBlind').addEventListener('change',updateReadouts);
+  $('labCapture').addEventListener('click',()=>{
+    setRunning(false);const last=labTrace[labTrace.length-1];labRows.push(last?{...last}:labSample(0,circ.phi));
+    $('labRows').innerHTML=labRows.map(r=>`<tr><td>${r.mode}</td><td>${r.t.toFixed(3)}</td><td>${r.phi.toPrecision(6)}</td><td>${r.emf.toPrecision(6)}</td><td>${r.I.toPrecision(6)}</td></tr>`).join('');
+    $('labStatus').textContent=`Captured ${labRows.length} measurements.`;
+  });
+  $('labExport').addEventListener('click',()=>labDownload(labRows,'faraday-notebook.csv'));
+  $('labTrace').addEventListener('click',()=>{setRunning(false);labDownload(labTrace,'faraday-run.csv');});
+  $('labClear').addEventListener('click',()=>{labRows.length=0;$('labRows').textContent='';$('labStatus').textContent='Notebook cleared.';});
 
   // ---------- canvases ----------
   let T = null, dpr = 1;
@@ -1820,7 +1870,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const r = railP(), Fx = c.I * r.L * r.B;
       set('mX', `${(W.x * 100).toFixed(1)} cm`); set('mV', `${W.rv.toFixed(3).replace('-', '−')} m/s`);
       set('mF', fmtSI(Fx, 'N', 3)); set('mPF', fmtSI(-Fx * W.rv, 'W', 4)); set('mP', fmtSI(c.I * c.I * c.R, 'W', 4));
-      set('sKE', `${fmtSI(0.5 * r.m * W.rv * W.rv, 'J', 4)}${act && act.kind === 'coast' ? ` <span class="ok">of ${fmtSI(0.5 * r.m * act.v0 * act.v0, 'J', 3)} at the push</span>` : ''}`);
+      set('sKE', `${fmtSI(W.ke, 'J', 4)}${act && act.kind === 'coast' ? ` <span class="ok">of ${fmtSI(0.5 * r.m * act.v0 * act.v0, 'J', 3)} at the push</span>` : ''}`);
       if (Math.abs(c.emf) < 1e-9) lenz = 'The bar is not moving, so the flux is steady and no current flows.';
       else {
         const inc = -c.emf > 0;
@@ -1828,6 +1878,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       }
     }
     $('lenzNow').innerHTML = lenz;
+    for(const id of ['mPk','mRms','sDphi','sQf']){const el=$(id);if(el)el.parentElement.hidden=$('labBlind').checked;}
     // flip button availability
     const fb = $('acts').querySelector('[data-a="flip"]');
     if (fb) { const ok = flipClear(S.magnet.a / 100, -W.z) && !(act && act.kind === 'flip'); fb.disabled = !ok; fb.title = ok ? '' : 'Too close to the coil to turn'; }
