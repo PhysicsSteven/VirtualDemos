@@ -1,0 +1,22 @@
+name: Transient circuit physics tests
+on:
+  push:
+    paths:
+      - 'demos/transient-circuits.html'
+      - 'curriculum/validation/test_transient_circuits.cjs'
+      - '.github/workflows/transient-circuits.yml'
+  pull_request:
+    paths:
+      - 'demos/transient-circuits.html'
+      - 'curriculum/validation/test_transient_circuits.cjs'
+      - '.github/workflows/transient-circuits.yml'
+jobs:
+  physics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate analytic transient-circuit physics
+        run: node curriculum/validation/test_transient_circuits.cjs

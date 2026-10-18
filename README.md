@@ -6,7 +6,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 
 | Demo | Subject | Topic |
 | --- | --- | --- |
-| [Blackbody Radiation](demos/blackbody.html) | Astronomy | Planck curves, Wien's law, Stefan-Boltzmann luminosity and the colors of stars |
+| [Blackbody Radiation](demos/blackbody.html) | Thermodynamics | Planck spectrum, Wien displacement, Stefan–Boltzmann thermal emission, and applications to visible color |
 | [Reasons for Seasons](demos/seasons.html) | Astronomy | Axial tilt, Sun paths, day length and insolation through the year, and the distance misconception |
 | [Moon Phases](demos/moon-phases.html) | Astronomy | Phases from orbit geometry, Moon rise and set times, sidereal and synodic months, and eclipse seasons |
 | [Kepler's Laws](demos/kepler-orbits.html) | Astronomy | Orbits from a launch velocity, equal areas in equal times, and P² = a³/M against the solar system |

@@ -1,0 +1,67 @@
+# Experiment-first curriculum roadmap
+
+**Design decision:** Write rigorous experiments first. Add simulation controls and data features afterward to satisfy the experimental requirements. Avoid weakening the experimental questions to match the current UI.
+
+## Levels of completeness
+- **L0 Starter:** short concept, procedure and analytic reference (remaining starter guides).
+- **L1 Full experiment:** derivation, controlled procedure, data sheets, plots, uncertainty, questions, grading key and independent benchmark.
+- **L2 Instrumented:** simulation provides all required measurements, controlled data export, and hidden-theory mode.
+- **L3 Validated:** browser workflow and numerical tests pass; evidence and commit SHA recorded.
+
+## Completed L1 pilot experiments
+1. **RC Circuits:** measure C from charging time constants; independent exponential fit; discharge with alternate resistance; complete energy ledger. Features requested: CSV, time stepping, hideable theoretical answers.
+2. **Photoelectric Effect:** determine h and work function by linear regression; intensity controls; threshold study. Features requested: blinded stopping potential, virtual ammeter, CSV and seeded noise.
+3. **Gauss's Law:** test flux invariance across geometries; superposition; convergence as charges approach a surface. Features requested: quadrature tolerance controls, exact geometry, CSV and error plots.
+
+**Important:** L1 means the document is a substantive instructional design, not a verified UI workflow or a claim of executed physics tests.
+
+## Priority policy — Physics I and II first
+
+The college's current course offerings emphasize introductory physics rather than astronomy. Allocate development and review effort accordingly. Existing astronomy starter kits remain in place, but **do not prioritize expanding them** until the core laboratory curriculum is robust.
+
+**Tier 1 — Electricity and magnetism:** Transient RC/RL/LC/RLC circuits, Gauss's law, Faraday induction, capacitors and dielectrics, magnetic force, Coulomb fields, DC circuit building, AC impedance and resonance, electromagnetic waves.
+
+**Tier 2 — Mechanics and oscillations:** Projectile motion and drag, collisions, springs, rotational dynamics, potential energy curves, double pendulum and chaos, fluids.
+
+**Tier 3 — Waves, optics and thermal physics:** Standing waves, Doppler shift, polarization, diffraction, thin films, optics bench, ideal gas, heat engines, blackbody radiation as a thermal-physics experiment.
+
+**Tier 4 — Modern physics:** Photoelectric effect, Rutherford scattering, Compton scattering, radioactive decay, atomic spectra, hydrogen orbitals, quantum waves, nuclear binding energy, gamma spectroscopy, Franck–Hertz, lasers, spacetime.
+
+**Tier 5 — Astronomy and astrophysics (deferred):** HR diagrams, stellar structure, white-dwarf cooling, exoplanets, distance ladder, galactic rotation curves, black holes, seasons, moon phases, tidal astronomy and astronomy-specific orbital applications. Keplerian mechanics can still be developed under Tier 2 if taught in mechanics.
+
+## Next full experiments — recommended sequence
+1. **Transient circuits:** finish validation, energy partition, damping-peak capture and lab instrumentation.
+2. **Faraday induction:** infer magnetic flux rate from induced EMF; validate sign conventions.
+3. **Capacitors:** dielectric insertion, series/parallel networks and energy at fixed Q versus fixed V.
+4. **AC circuits:** measure resonance, phase angle, bandwidth and quality factor.
+5. **Projectile motion:** infer g, then estimate drag parameters using trajectory fits.
+6. **Collisions:** recover restitution and test momentum/energy budgets.
+7. **Springs:** infer k from T² versus m; compare damped and driven response.
+8. **Ideal gas:** test the two-dimensional equation of state and counting fluctuations.
+9. **Optics:** diffraction grating and polarization quantitative experiments.
+10. **Modern physics:** complete photoelectric and radioactive decay instrument-style experiments.
+
+Gauss's law and Photoelectric Effect already have full experiment drafts; validate and instrument them alongside this sequence.
+
+## Common feature contract for every L2 simulation
+- **Measurement notebook:** capture rows of current independent variables, observables, units, time, preset, simulation version and uncertainty model.
+- **Export:** CSV with header metadata, canonical SI units, raw (not just rounded display) values, and reproducible random seed where applicable.
+- **Lab mode:** hide theory overlays and fitted/known answers; reveal them only after students make a prediction and collect data.
+- **Reset and replay:** deterministic initial conditions and single-step/scrub where dynamics allow.
+- **Graphing:** axis labels and units, fit with residuals, uncertainty and downloadable image/data.
+- **Accessibility:** keyboard-only equivalent for pointer interactions, readable data table for canvas plots, reduced-motion option.
+- **Instructor controls:** locked presets, assignable parameter sets, versioned answer-key generation; never expose instructor solutions on the public student site by default.
+
+## Review gate
+Before promoting a lab to L2, verify that all measurement requests are feasible using real controls or explicitly log required features. Before promoting to L3, record analytic/numerical reference values, tolerance, actual output, regression evidence, and accessibility testing.
+
+## Collaboration
+Claude and ChatGPT can both implement features, but the author of a change should not be the only reviewer. Keep physics-code changes on separate commits from manual revisions.
+
+## Executed sprint update — 2026-10-18
+
+RLC, Faraday, capacitors and AC now have full quantitative laboratory/key revisions and executed numerical checks. RLC/Faraday have new measurement tools; do not promote them automatically to L3 because accessibility and independent review gates remain (pinned Chromium/Firefox CI now passes). Capacitors/AC use manual tables and still need L2 export/theory hiding. Gauss remains a design draft with known source issues reserved for Claude; its unapplied proposal is not a delivered feature. See [scope and evidence](validation/SPRINT_2026-10-18.md). Continue remaining E&M after resolving these specific gates.
+
+Second-pass update: RC, Faraday, capacitors, photoelectric and Gauss manuals now distinguish current-main controls from requested/branch-only instrumentation. Circuit-builder, Coulomb and diffraction-grating gained core regression coverage. This is validation breadth, not automatic L2/L3 promotion; [known failures and evidence](validation/SECOND_PASS_2026-10-18.md) remain explicit.
+
+Audit checkpoint: [teaching keys](validation/KEY_AUDIT.md) and [gamma published comparison](validation/GAMMA_PUBLISHED_COMPARISON.md) now have reproducible partial evidence. Gamma remains a starter and is not experimentally calibrated; remaining keys and measured distance validation are open.
