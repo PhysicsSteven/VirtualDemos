@@ -1,6 +1,6 @@
 # Physics validation protocol
 
-**Current status: starter templates only; no claim of 33 executed simulation tests.**
+**Current evidence:** [2026-10-18 E&M sprint](SPRINT_2026-10-18.md): 45 numerical test groups and ten local Chromium demo/viewport workflows passed; CI also passed Node 22 and 20 Chromium/Firefox demo/viewport workflows. Coverage and known failures are scoped in that record; this is not collection-wide validation.
 
 For each simulation:
 1. Record Git commit SHA and browser/runtime versions.

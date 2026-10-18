@@ -1,6 +1,6 @@
 # VirtualDemos laboratory curriculum — starter collection
 
-This directory contains **26 student laboratory starters and 26 instructor guides**. These are **draft teaching materials**, not validated measurements or approved grading keys. The main demonstration code is unchanged.
+This directory contains **27 student laboratory documents and 27 instructor guides**. These are **draft teaching materials**, not validated measurements or approved grading keys. The feature branch includes RLC and Faraday measurement improvements. See [executed validation and limitations](validation/SPRINT_2026-10-18.md); public demo links serve main until the owner merges the branch.
 
 ## Structure
 - [Student labs](labs/students/) — guided activities, measurement tables, graphs, uncertainty and conclusions

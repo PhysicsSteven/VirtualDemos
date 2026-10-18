@@ -23,11 +23,11 @@ Never call a demo release-ready merely because it renders, and never describe an
 8. **Release:** all blocking issues resolved, reproducible validation evidence documented, links checked and student/teacher materials synchronized.
 
 ## Current first-unit queue: Electricity and magnetism
-1. **Transient circuits** — implemented, analytic-core spot checks passed (10/10 independently executed); full Node suite, CI, oscilloscope interaction, export and browser tests still pending. Do not label software-validated.
-2. **Gauss's law** — full lab draft exists; numerical boundary and convergence checks, browser and key verification pending.
-3. **Faraday induction** — design and validate quantitative flux/EMF experiment and grading key.
-4. **Capacitors and dielectrics** — develop charge/voltage-controlled energy experiments.
-5. **AC circuits** — fit impedance, phase and resonance curves, compare with transient response.
+1. **Transient circuits** — full lab/tools, 18 numerical groups, Chromium desktop/phone and existing CI passed; accessibility and independent review remain.
+2. **Gauss's law** — 7 scoped groups and existing Chromium controls passed; known singular/boundary defects and quantitative tooling blocked on Claude coordination.
+3. **Faraday induction** — full lab/tools, 8 numerical groups and Chromium workflows passed; broader magnet domain/theory-overlay/accessibility review remains.
+4. **Capacitors and dielectrics** — full manual lab/key, 7 ideal-model groups and scoped Chromium controls passed; export/theory hiding pending.
+5. **AC circuits** — full manual lab/key, 5 groups and scoped Chromium controls passed; export/theory hiding and full timing workflow pending.
 6. **Remaining E&M demos** — inventory and apply the same gate.
 
 ## Work cadence
@@ -36,3 +36,7 @@ Finish one demo's physics, instrumentation, student lab, instructor key and auto
 ## Deferred work
 - Desktop installer/PWA: package the final web codebase after scope stabilizes; no duplicate simulation implementations.
 - TA crash test: end-of-project acceptance stage, not a development dependency.
+
+Executed evidence and exact scope: [2026-10-18 sprint](validation/SPRINT_2026-10-18.md). None has passed the complete release gate.
+
+The expanded Node/Chromium/Firefox [CI matrix](https://github.com/PhysicsSteven/VirtualDemos/actions/runs/39155943281) passed on the recorded source snapshot.

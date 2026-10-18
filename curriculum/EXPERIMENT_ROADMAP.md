@@ -57,3 +57,7 @@ Before promoting a lab to L2, verify that all measurement requests are feasible 
 
 ## Collaboration
 Claude and ChatGPT can both implement features, but the author of a change should not be the only reviewer. Keep physics-code changes on separate commits from manual revisions.
+
+## Executed sprint update — 2026-10-18
+
+RLC, Faraday, capacitors and AC now have full quantitative laboratory/key revisions and executed numerical checks. RLC/Faraday have new measurement tools; do not promote them automatically to L3 because accessibility and independent review gates remain (pinned Chromium/Firefox CI now passes). Capacitors/AC use manual tables and still need L2 export/theory hiding. Gauss remains a design draft with known source issues reserved for Claude; its unapplied proposal is not a delivered feature. See [scope and evidence](validation/SPRINT_2026-10-18.md). Continue remaining E&M after resolving these specific gates.

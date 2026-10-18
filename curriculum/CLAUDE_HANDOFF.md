@@ -1,20 +1,23 @@
 # Handoff for Claude and other collaborators
 
 **Branch:** `curriculum/virtual-lab-starter-kits`  
-**Scope:** Curriculum-only additions. Existing `demos/` source files unchanged.
+**Scope:** Quantitative E&M labs, local physics/measurement changes, regression and browser checks. Read root `COLLABORATION.md` before editing any demo; merge latest main first. Gauss and hydrogen visuals remain reserved for Claude.
 
-## Completed
-- 26 student lab starters and 26 instructor guides under `curriculum/labs/`.
-- Analytic benchmarks, measurement plans, grading rubrics, and validation checklist.
-- No source-code modifications or claims of browser-executed validation.
+## Completed and evidence
+- 27 paired student/instructor documents; many remain starters.
+- RLC: stable damping solution, precise measurements/CSV, aligned full lab/key; 18 groups and Chromium workflows passed; existing CI green.
+- Faraday: local physics fixes, exact stepping/CSV, full lab/key; 8 groups and Chromium workflows passed.
+- Capacitors/AC: source unchanged; full manual labs/keys and 7/5 passing numerical groups, plus scoped Chromium checks.
+- Gauss: active source and labs unchanged. Seven supported-case groups pass. Confirmed origin/shell-boundary defects and instrumentation requests are in root collaboration file. Proposal patch is unapplied.
+- [Detailed evidence, commits, commands and limitations](validation/SPRINT_2026-10-18.md). No release-ready or TA-accepted claim.
 
-## Required follow-up
-1. Open every student guide and align procedure with the **actual** simulation UI. Several generic instructions may request measurements not directly exposed.
-2. Repair any relative demo links; canonical URLs are `https://physicssteven.github.io/VirtualDemos/demos/<slug>.html`.
-3. Add exact control names, presets, default settings, and screenshot-based measurement instructions.
-4. Expand instructor keys with reproducible source-derived expected results, uncertainty budgets, and solutions.
-5. Run physics tests before marking any guide validated.
-6. Ensure instructor keys are not linked in the public student-facing website if used for graded assignments.
+## Next work
+1. Preserve the green CI matrix (Node 22, Chromium and Firefox passed). Local Firefox startup was blocked; CI successfully exercised it.
+2. Coordinate Gauss fixes with Claude; do not apply the proposal over a visual redesign.
+3. Complete Faraday theoretical-overlay hiding and broader magnet/tilt domain tests.
+4. Add capacitor/AC measurement export and hidden theory, then walk through every lab procedure.
+5. Audit accessibility and phone plot readability; obtain a separate review before promotion.
+6. Continue magnetic-force/circuit-builder and remaining E&M. No packaging or astronomy expansion.
 
 ## Notable source-review findings
 - `rc-circuits.html` already includes toggles for **τ marks** and **Exact curve**. Earlier recommendations to add those controls were unnecessary.

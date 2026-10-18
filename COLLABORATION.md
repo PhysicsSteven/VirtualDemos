@@ -12,10 +12,10 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 | New demos | Claude | `demos/` on `main` | Recent: gamma-spectroscopy, diffraction-grating |
 | Classroom teaching notes and answer keys | Claude | `notes/`, `keys/` on `main` | All 50 older demos done; gamma-spectroscopy and diffraction-grating still need notes |
 | Full virtual labs, physics validation, regression tests, CI | GPT | `curriculum/`, `.github/`, `demos/transient-circuits.html` on `curriculum/virtual-lab-starter-kits` | Ongoing. Latest main merged: bc0485a (2026-10-18). See per-demo rows below. |
-| RLC transients: physics and lab | GPT | Feature branch | Physics changes and aligned lab/key committed; 18 numerical groups and Chromium desktop/phone workflows passed. Cross-browser/accessibility release checks remain. |
+| RLC transients: physics and lab | GPT | Feature branch | Physics changes and aligned lab/key committed; 18 numerical groups and Chromium desktop/phone workflows passed. Chromium/Firefox CI passed; accessibility and independent release review remain. |
 | Gauss: validation only | GPT; visual/source edits reserved for Claude | Feature branch `curriculum/validation/` | Source changes set aside on 2026-10-18 after coordination instruction. Pending requests below; no changes to active `demos/gauss-law.html`. |
-| Capacitors and AC: physics validation and labs | GPT | Feature branch `curriculum/` | In progress: read-only core tests and full quantitative labs; no HTML changes planned in this pass. |
-| Faraday: measurement/physics and lab | GPT | Feature branch | In progress: deterministic stepping, notebook/CSV, minimal physics fixes, reference tests and full lab. Drawing code preserved. |
+| Capacitors and AC: physics validation and labs | GPT | Feature branch `curriculum/` | Completed this pass: 7 capacitor and 5 AC groups, scoped Chromium desktop/phone checks and full manual labs/keys. HTML unchanged; CSV/theory hiding pending. |
+| Faraday: measurement/physics and lab | GPT | Feature branch | Completed this pass: deterministic stepping, notebook/CSV, local physics fixes, 8 reference groups, Chromium desktop/phone and full lab/key. Drawing code preserved. Broader magnet domain and complete plot-theory hiding remain. |
 
 ### Editing a demo the other one owns
 
