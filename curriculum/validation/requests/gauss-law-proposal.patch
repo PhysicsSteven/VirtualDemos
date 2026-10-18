@@ -1,0 +1,287 @@
+diff --git a/curriculum/labs/instructors/gauss-law.md b/curriculum/labs/instructors/gauss-law.md
+index c81446e..5fcac9d 100644
+--- a/curriculum/labs/instructors/gauss-law.md
++++ b/curriculum/labs/instructors/gauss-law.md
+@@ -2,7 +2,7 @@
+ **Companion:** [Student laboratory](../students/gauss-law.md)
+ 
+ ## Reference physics
+-For a closed surface not passing through a point charge, Φ_E=Q_enclosed/ε₀, independent of geometry. ε₀=8.8541878128e−12 F/m. A charge of 1 nC gives Φ≈112.9409067 N m²/C. External point charges contribute zero net flux (although local E·n can be nonzero).
++For a closed surface not passing through a point charge, Φ_E=Q_enclosed/ε₀, independent of geometry. ε₀=8.8541878188e−12 F/m. A charge of 1 nC gives Φ≈112.9409067 N m²/C. External point charges contribute zero net flux (although local E·n can be nonzero).
+ 
+ | Enclosed Q (nC) | Expected flux (N m²/C) |
+ |---:|---:|
+@@ -26,12 +26,23 @@ Source `demos/gauss-law.html` around lines 1417–1435 computes and displays the
+ 5. Charge separation δ from boundary at 0.2, 0.1, 0.05, 0.02, 0.01 times characteristic surface dimension, from both sides; record evaluations, run time, signed error.
+ 6. Never evaluate exactly on a charge singularity; report as undefined or unsupported.
+ 
+-## Needed controls and data tools
+-**P1:** Record snapshot of geometry, charges, net/outward/inward flux, predicted flux, integration evaluation count and time. **P1:** CSV export with numerical tolerance metadata. **P1:** Manual control of quadrature tolerance or an independent high-precision reference mode. **P2:** Show signed local flux heatmap and a plot of numerical error against charge-to-boundary distance. **P2:** Allow entering exact charge coordinates for reproducibility.
++## Reproducible workflow and expected results
++Use the student guide's explicit sphere coordinates. All five interior samples have +112.94090666 N m²/C; all five exterior samples have zero net flux. The shortest distance is 0.012, 0.006, 0.003, 0.0012 or 0.0006 m, respectively. These exceed the UI exclusion distance 0.0003 m. A zero theoretical net flux must use |q|/ε₀ as the residual normalization.
+ 
+-## Questions and marking
+-A correct explanation of flux invariance must use Gauss's law and charge enclosure, not claim the local field is identical on every surface. A correct account of near-boundary numerical difficulty notes that E varies sharply across small surface patches and quadrature must resolve those peaks.
++For shape independence, set q=+1 nC at (0,0) cm and confirm enclosure after each shape change. The expected total is +112.94090666 N m²/C for each shape. CSV records actual geometry: freeform is the sampled polygon used by integration, not an ideal smooth curve. Enclosed +2 and −1 nC give +112.94090666; removing the negative charge gives +225.88181332; a dipole wholly inside gives zero net flux. Individual inward/outward contributions depend on geometry and are not fixed by Gauss's law.
+ 
+-**Rubric:** prelab 15; shape comparisons 25; superposition 15; near-boundary study 25; numerical analysis 20.
++Symmetry extension: Q=1 nC, ball radius 0.05 m gives E=1797.51036 N/C at r=0.025 m and E=898.75518 N/C at r=0.1 m. E=0 at the center of a uniform ball or inside a conducting shell. A shell's field on its ideal zero-thickness charged surface is undefined; the two one-sided limits differ. A line with λ=2 nC/m at r=0.04 m gives 898.75518 N/C. A sheet with σ=−3 nC/m² gives signed normal field −169.411360 N/C.
+ 
+-**Status:** analytic reference completed; convergence results pending actual execution.
++## Solutions and marking
++1. An exterior charge has zero enclosed charge; positive and negative signed surface contributions cancel, although the local field need not vanish.
++2. The ideal point source is singular at its position and the ordinary enclosure argument excludes a surface through it. The numerical exclusion zone is a separate limitation.
++3. Yes: an external charge gives a nonzero local field with zero net flux; an internal dipole is another example of cancellation.
++4. A narrow field peak develops near the surface. The true net flux is constant on either side and changes discontinuously on crossing; quadrature must resolve the peak.
++5. Net flux is a signed sum. Large positive/negative parts can cancel, making relative error normalized by the net result meaningless.
++
++Rubric: prelab 15 (derivation 10, units 5); shape comparisons 25 (geometry records 10, results 10, interpretation 5); superposition 15 (three predictions 9, explanation 6); boundary/convergence 25 (settings 5, tolerance comparison 10, exclusion/limits 10); graphs/analysis 20 (axes and normalization 10, uncertainty interpretation 10).
++
++## Executed validation
++`node curriculum/validation/test_gauss_law.cjs` executes 7 groups covering four surface geometries, superposition, external charges, independent midpoint-rule convergence, ten near-boundary cases at two tolerances, and symmetry limits. Fine sphere residuals in the prescribed boundary study were below 3×10⁻¹⁵ times q/ε₀ in this run. That observed residual is not a general guaranteed precision. See the sprint validation record for browser evidence and outstanding release checks.
++
++Implemented: exact charge-coordinate entry, tolerance selection, boundary-zone explanation, adaptive-limit reporting, notebook and SI CSV snapshots. Remaining: independent reviewer, broader freeform near-boundary convergence and accessibility review. Not yet a release candidate.
+diff --git a/curriculum/labs/students/gauss-law.md b/curriculum/labs/students/gauss-law.md
+index 99829fa..757a768 100644
+--- a/curriculum/labs/students/gauss-law.md
++++ b/curriculum/labs/students/gauss-law.md
+@@ -11,8 +11,15 @@ Distinguish net flux from outward and inward contributions; predict flux using Q
+ ## Prelab
+ Derive Φ_E=q/ε₀ for a point charge at the center of a sphere using Coulomb's law. Explain why the result also holds for an arbitrary closed surface not crossing the charge, and why a charge outside can contribute nonzero local flux while its **net** contribution is zero. Show the SI units of Φ_E.
+ 
++## Prerequisites
++Coulomb’s law, vector dot products, surface integrals, superposition and spreadsheet graphing.
++
+ ## Controls
+-Use the **Flux** mode, the charge list and surface shape controls (**sphere**, **box**, **cylinder**, **prism** where available). The demo displays numerical ∮E·dA, Q_enclosed/ε₀, outward/inward flux, field-evaluation count, and integration time. Record which surface and charge positions you actually use.
++Pause the simulation before measurements. Select **One charge inside** and use **Selected charge q** to set +1 nC. Select a charge in the list, then enter **Selected charge x (cm)** and **Selected charge y (cm)**. The exact coordinate fields are keyboard accessible. Shapes are **Sphere**, **Box**, **Cylinder** and **Freeform** (a closed extruded prism). Shape changes preserve a center derived from the previous shape; record exported geometry rather than assuming its center remains at the origin.
++
++Use **Capture flux** to freeze a measurement and **Export CSV** for unrounded SI values, geometry and charge JSON, minimum boundary distance, tolerance factor, evaluations, time, error estimate and convergence status. Keep **Hide predicted flux and residual** checked until you calculate predictions. **Quadrature tolerance** has Coarse, Standard and Fine settings. The line-density slider changes the drawing, not integration accuracy.
++
++The demo excludes nonzero charges within 0.03 cm of the surface, a numerical safety zone. Exactly on the surface the point-charge model has no ordinary closed-surface flux value. Do not label the entire excluded zone mathematically singular.
+ 
+ ## Part A — Shape independence (25 min)
+ 1. Place a single +1 nC charge clearly inside the closed surface. Choose a sphere with the charge well away from its boundary.
+@@ -37,8 +44,8 @@ Use the **Flux** mode, the charge list and surface shape controls (**sphere**, *
+ 
+ ## Part C — Boundary sensitivity (25 min)
+ 1. With one positive charge, move it toward the inside of the surface in at least five steps. Define δ as the shortest charge-to-surface separation if the geometry permits.
+-2. Record the numerical flux, evaluation count and time at each step. Keep the charge **strictly** off the surface.
+-3. Repeat from outside if possible. Identify whether computed flux changes smoothly or shows numerical difficulty near the crossing.
++2. For a fresh **One charge inside** preset (sphere centered at the origin, R=6 cm), set q=+1 nC and y=0. Use x=4.8, 5.4, 5.7, 5.88 and 5.94 cm. At each position capture at Coarse, Standard and Fine tolerance; predict flux independently. All these points are outside the exclusion zone.
++3. Repeat outside at x=7.2, 6.6, 6.3, 6.12 and 6.06 cm. Identify whether computed flux changes smoothly or shows numerical difficulty near the crossing.
+ 4. Explain the discontinuity in *enclosed charge* when the point charge crosses the surface, and distinguish it from quadrature error.
+ 
+ | Position / δ | Inside? | Predicted Φ | Numerical Φ | Difference | Evaluations | Integration time |
+@@ -52,6 +59,9 @@ Use the **Flux** mode, the charge list and surface shape controls (**sphere**, *
+ ## Data analysis
+ Calculate relative error |Φ_num−Φ_theory|/max(|Φ_theory|,Φ_scale), where Φ_scale is a clearly stated nonzero characteristic flux (e.g. |q|/ε₀). This avoids division by zero when Q_enclosed=0. Plot error and evaluation count against δ (log axes if appropriate). Compare shapes. Do not interpret an exact floating-point match as a rigorous bound on quadrature error.
+ 
++## Uncertainty and convergence
++Treat differences between tolerance levels as empirical convergence evidence, not a rigorous error bound. The displayed outer error estimate omits propagated inner quadrature error, and inward/outward contributions use a looser error weight than net flux. If panel criteria are not met, flag the row rather than silently accepting it. Geometry and charges are deterministic settings, so do not invent repeated-measurement noise. Record coordinate entry resolution and the boundary exclusion as experimental limitations.
++
+ ## Questions
+ 1. Why does an external charge give zero net flux through a closed surface?
+ 2. Why is a charge exactly on the surface excluded from the standard point-charge integral?
+diff --git a/demos/gauss-law.html b/demos/gauss-law.html
+index c1d6eb9..45d7dc1 100644
+--- a/demos/gauss-law.html
++++ b/demos/gauss-law.html
+@@ -21,6 +21,8 @@ img { max-width: 100%; }
+ .vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+ .vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+ /* /vd-qr */
++input[type="number"], select { max-width:100%; width:100%; padding:.45rem; color:var(--ink); background:var(--canvas); border:1px solid var(--line); border-radius:5px; font:inherit; }
++#labRows td,#fluxRows td {padding:.3rem; font-variant-numeric:tabular-nums;}
+ </style>
+ <title>Gauss's Law</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+@@ -288,7 +290,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+           <div class="slider-head"><label for="sQ">Selected charge q</label><output id="oQ" class="mono" for="sQ"></output></div>
+           <input type="range" id="sQ" min="-5" max="5" step="0.5">
+         </div>
+-        <ul class="qlist" id="qList" aria-label="Charges, whether each is inside, and the flux each one sends through the surface"></ul>
++        <label for="qX">Selected charge x (cm)</label><input id="qX" type="number" min="-20" max="20" step="0.01"><label for="qY">Selected charge y (cm)</label><input id="qY" type="number" min="-20" max="20" step="0.01"><ul class="qlist" id="qList" aria-label="Charges, whether each is inside, and the flux each one sends through the surface"></ul>
+         <p class="hint">Each charge's own flux comes from the same numerical surface integral. A charge inside gives q/ε₀ (1 nC gives 112.9 N·m²/C); a charge outside gives 0.</p>
+       </section>
+ 
+@@ -302,8 +304,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+           <div><dt>Flux in</dt><dd id="mIn" class="c-in">—</dd></div>
+           <div class="wide"><dt>Field lines crossing the slice: out, in, net</dt><dd id="mL">—</dd></div>
+         </dl>
+-        <p class="flag" id="onFlag" hidden>A charge sits on the surface.<span>E·dA is not integrable there, so the flux is not defined. Move the charge clearly inside or outside.</span></p>
++        <p class="flag" id="onFlag" hidden>A charge is within the 0.03 cm boundary exclusion zone.<span>The point-charge flux is undefined exactly on the surface; nearby configurations are intentionally excluded from this numerical demonstration. Move the charge at least 0.03 cm away.</span></p>
+         <p class="hint" id="numHint"></p>
++        <label for="quadTolerance">Quadrature tolerance</label><select id="quadTolerance"><option value="1000">Coarse (×1000)</option><option value="1" selected>Standard</option><option value="0.01">Fine (×0.01)</option></select>
++        <label><input id="labBlind" type="checkbox" checked>Hide predicted flux and residual</label>
++        <button class="btn" id="captureFlux">Capture flux</button><button class="btn" id="exportFlux">Export CSV</button><button class="btn" id="clearFlux">Clear notebook</button>
++        <p id="labStatus" role="status" aria-live="polite"></p>
++        <div style="overflow:auto;max-height:220px"><table><caption>Flux measurements (SI)</caption><thead><tr><th>Shape</th><th>Flux (N m²/C)</th><th>Evaluations</th><th>Converged?</th></tr></thead><tbody id="fluxRows"></tbody></table></div>
+       </section>
+ 
+       <section data-mode="flux">
+@@ -401,7 +408,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+   const WGK = [0.022935322010529225, 0.063092092629978553, 0.104790010322250184, 0.140653259715525919,
+     0.169004726639267903, 0.190350578064785410, 0.204432940075298892, 0.209482141084727828];
+   const WG = [0.129484966168869693, 0.279705391489276668, 0.381830050505118945, 0.417959183673469388];
+-  const stats = { evals: 0 };
++  const stats = { evals: 0, limits: 0 };
++  let toleranceFactor = 1;
++  function setQuadrature(factor) {
++    if (![0.01,1,1000].includes(factor)) throw Error('Unsupported quadrature factor');
++    toleranceFactor = factor;
++  }
+   // one GK15 panel on [a, b] of f: x → array of m numbers. Error measure: largest |K − G| over the
+   // components, except that components 1 and 2 (the outward and inward parts, which have kinks) count 1/1000.
+   function gkPanel(f, a, b, m) {
+@@ -432,6 +444,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+       pan.splice(w, 1, gkPanel(f, p.a, mid, m), gkPanel(f, mid, p.b, m));
+       s = sum();
+     }
++    if (s.e > Math.max(absTol, relTol * Math.abs(s.v[0]))) stats.limits++;
+     return s;
+   }
+   function breaks(a, b, extra) {
+@@ -487,13 +500,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+   function result(Q, acc, t0) {
+     const per = [];
+     for (let i = 0; i < Q.length; i++) per.push(acc.v[3 + i]);
+-    return { total: acc.v[0], out: acc.v[1], inw: acc.v[2], per, err: acc.e, evals: stats.evals - t0 };
++    return { total: acc.v[0], out: acc.v[1], inw: acc.v[2], per, err: acc.e, evals: stats.evals - t0.evals, converged: stats.limits === t0.limits, limitHits: stats.limits-t0.limits, toleranceFactor };
+   }
+-  function relTol(tol) { return { abs: 3e-9 * tolFor(tol), rel: 3e-10 }; }
++  function relTol(tol) { return { abs: toleranceFactor * 3e-9 * tolFor(tol), rel: toleranceFactor * 3e-10 }; }
+ 
+   // sphere of radius R centered at (cx, cy, 0): u = cos θ about the z axis, φ about z; dA = R² du dφ
+   function sphereFlux(Q, cx, cy, R) {
+-    const t0 = stats.evals, m = 3 + Q.length, buf = new Float64Array(m), tol = relTol(Q);
++    const t0 = {evals:stats.evals,limits:stats.limits}, m = 3 + Q.length, buf = new Float64Array(m), tol = relTol(Q);
+     const phis = [];
+     for (const c of Q) { let p = Math.atan2(c.y - cy, c.x - cx); if (p < 0) p += 2 * Math.PI; phis.push(p); }
+     const us = [0];
+@@ -512,7 +525,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+   }
+   // rectangular box: center (cx, cy, 0), full sizes w, h in the plane and d along z
+   function boxFlux(Q, cx, cy, w, h, d) {
+-    const t0 = stats.evals, a = w / 2, b = h / 2, z = d / 2, tol = relTol(Q);
++    const t0 = {evals:stats.evals,limits:stats.limits}, a = w / 2, b = h / 2, z = d / 2, tol = relTol(Q);
+     const tf = { abs: tol.abs / 6, rel: tol.rel };
+     const X = [1, 0, 0], Yv = [0, 1, 0], Z = [0, 0, 1];
+     const acc = { v: new Float64Array(3 + Q.length), e: 0 };
+@@ -527,7 +540,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+   // cylinder with its axis along x through (cx, cy, 0): length w, radius h/2.
+   // curved side: (x, cy + ρ cos φ, ρ sin φ), dA = ρ dx dφ; end caps: disks in polar coordinates, dA = r dr dφ
+   function cylFlux(Q, cx, cy, w, h) {
+-    const t0 = stats.evals, a = w / 2, rho = h / 2, tol = relTol(Q), m = 3 + Q.length, buf = new Float64Array(m);
++    const t0 = {evals:stats.evals,limits:stats.limits}, a = w / 2, rho = h / 2, tol = relTol(Q), m = 3 + Q.length, buf = new Float64Array(m);
+     const tf = { abs: tol.abs / 3, rel: tol.rel };
+     const acc = { v: new Float64Array(m), e: 0 };
+     const phis = [], xs = [];
+@@ -552,7 +565,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+   }
+   // prism: the simple polygon P (counterclockwise, in m) extruded from z = −d/2 to +d/2, with flat end caps
+   function prismFlux(Q, P, d, tris) {
+-    const t0 = stats.evals, n = P.length, z = d / 2, tol = relTol(Q);
++    const t0 = {evals:stats.evals,limits:stats.limits}, n = P.length, z = d / 2, tol = relTol(Q);
+     const tf = { abs: tol.abs / (n + 2 * tris.length), rel: tol.rel };
+     const acc = { v: new Float64Array(3 + Q.length), e: 0 };
+     for (let i = 0; i < n; i++) {
+@@ -641,15 +654,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+   function enclosedSphere(kind, Q, R, r) {
+     if (kind === 'point') return Q;
+     if (kind === 'ball') return r >= R ? Q : Q * Math.pow(r / R, 3);
+-    return r > R ? Q : 0;                         // conducting: all of Q sits on the outer surface
++    return r === R ? NaN : r > R ? Q : 0;                         // conducting: all of Q sits on the outer surface
+   }
+-  const Esphere = (kind, Q, R, r) => enclosedSphere(kind, Q, R, r) / (4 * Math.PI * EPS0 * r * r);
++  const Esphere = (kind, Q, R, r) => r===0 && kind!=='point' ? 0 : enclosedSphere(kind, Q, R, r) / (4 * Math.PI * EPS0 * r * r);
+   const Eline = (lam, r) => lam / (2 * Math.PI * EPS0 * r);
+   const Eplane = (sig) => sig / (2 * EPS0);
+   // ==CORE END==
+ 
+   if (typeof document === 'undefined') {
+-    globalThis.GL = { EPS0, KC, sphereFlux, boxFlux, cylFlux, prismFlux, triangulate, signedArea, isSimple, spline, pointInPoly, enclosedSphere, Esphere, Eline, Eplane, stats };
++    globalThis.GL = { EPS0, KC, sphereFlux, boxFlux, cylFlux, prismFlux, triangulate, signedArea, isSimple, spline, pointInPoly, enclosedSphere, Esphere, Eline, Eplane, stats, setQuadrature };
+     return;
+   }
+ 
+@@ -1012,7 +1025,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+     enclosed();
+     const Q = F.charges.map((c) => ({ x: c.x * CM, y: c.y * CM, z: 0, q: c.q * NC }));
+     if (onSurface || !F.charges.some((c) => c.q)) {
+-      num = onSurface ? null : { total: 0, out: 0, inw: 0, per: F.charges.map(() => 0), evals: 0 };
++      num = onSurface ? null : { total: 0, out: 0, inw: 0, per: F.charges.map(() => 0), evals: 0, err:0, converged:true, limitHits:0, toleranceFactor };
+     } else if (F.surf === 'sphere') num = sphereFlux(Q, F.sph.x * CM, F.sph.y * CM, F.sph.R * CM);
+     else if (F.surf === 'box') num = boxFlux(Q, F.rect.x * CM, F.rect.y * CM, F.rect.w * CM, F.rect.h * CM, F.depth * CM);
+     else if (F.surf === 'cyl') num = cylFlux(Q, F.rect.x * CM, F.rect.y * CM, F.rect.w * CM, F.rect.h * CM);
+@@ -1424,7 +1437,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+     $('mNlab').textContent = `Numerical ∮E·dA over the 3D ${shapeName}`;
+     if (num && !onSurface) {
+       const diff = Math.abs(num.total - G);
+-      $('mN').innerHTML = `${fluxOrZero(num.total, scale)}<span class="ok" style="display:block">${diff === 0 ? 'agrees with Q<sub>enc</sub>/ε₀ to every digit of double precision' : `differs from Q<sub>enc</sub>/ε₀ by ${sci(diff, 1)} N·m²/C${G ? `, a fraction ${sci(diff / Math.abs(G), 1)}` : ''}`}</span>`;
++      $('mN').innerHTML = `${fluxOrZero(num.total, scale)}<span class="ok" style="display:block">${diff === 0 ? 'zero floating-point residual; this is not an accuracy guarantee' : `differs from Q<sub>enc</sub>/ε₀ by ${sci(diff, 1)} N·m²/C${G ? `, a fraction ${sci(diff / Math.abs(G), 1)}` : ''}`}</span>`;
+       $('mOut').textContent = fflux(num.out);
+       $('mIn').textContent = fflux(num.inw);
+     } else { $('mN').textContent = '—'; $('mOut').textContent = '—'; $('mIn').textContent = '—'; }
+@@ -1433,6 +1446,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+     $('numHint').innerHTML = num && !onSurface ? `The surface integral is evaluated with adaptive Gauss–Kronrod quadrature (${num.evals.toLocaleString('en-US')} field evaluations, ${numMs.toFixed(0)} ms) using the full 3D field of every charge, with no use of Gauss's law. ${F.surf === 'sphere' ? 'The sphere is covered in latitude and longitude, ' : F.surf === 'free' ? 'Each flat side panel and the triangulated top and bottom faces are integrated separately, ' : 'Each face is integrated separately, '}and it refines wherever E·n changes fast, near a charge close to the surface.` : '';
+     // headline
+     $('headline').innerHTML = `Q<sub>enc</sub> = ${fq(enc.Q)} · Φ<sub>E</sub> = ${onSurface ? 'undefined' : fflux(G)}<small>numerical ∮E·dA = ${num && !onSurface ? (Math.abs(num.total) < 1e-9 * scale ? '0.000 N·m²/C' : fflux(num.total)) : '—'}</small>`;
++    if ($('labBlind').checked) {
++      $('mG').textContent='Hidden';
++      $('mN').textContent=num&&!onSurface?fflux(num.total):'—';
++      $('headline').textContent=num&&!onSurface?'Numerical flux: '+fflux(num.total):'Flux unavailable near boundary';
++    }
++    if(num&&!onSurface)$('numHint').textContent += ` Tolerance factor ${toleranceFactor}; ${num.converged?'all adaptive panel criteria met':'WARNING: adaptive panel limit reached; refine or move away from boundary'}. The reported outer error estimate is not a rigorous bound on nested quadrature; inward/outward parts use a 1000-times looser error weight. Compare tolerance levels.`;
+     // charge list
+     const key = F.charges.map((c) => c.id).join(',');
+     const ul = $('qList');
+@@ -1448,7 +1467,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+       const i = num && num.ids ? num.ids.indexOf(c.id) : -1;
+       const f = i >= 0 && !onSurface ? num.per[i] : null;
+       li.querySelector('.qf').innerHTML = f === null ? '—' : Math.abs(f) < 1e-9 * scale ? '0' : minus(sigStr(f, 4));
+-      li.querySelector('.qs').textContent = `at (${minus(c.x.toFixed(1))}, ${minus(c.y.toFixed(1))}) cm, ${c.inside ? 'inside' : 'outside'}, q/ε₀ = ${minus(sigStr(c.q * NC / EPS0, 4))}`;
++      li.querySelector('.qs').textContent = `at (${minus(c.x.toFixed(1))}, ${minus(c.y.toFixed(1))}) cm, ${c.inside ? 'inside' : 'outside'}, ${$('labBlind').checked?'prediction hidden':'q/ε₀ = '+minus(sigStr(c.q * NC / EPS0, 4))}`;
+     }
+     syncFluxRail();
+   }
+@@ -1461,6 +1480,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+     $('lW').textContent = F.surf === 'cyl' ? 'Length (along x)' : 'Width';
+     $('lH').textContent = F.surf === 'cyl' ? 'Diameter' : 'Height';
+     const c = F.sel && F.sel.kind === 'q' ? qById(F.sel.id) : null;
++    for(const id of ['qX','qY'])$(id).disabled=!c; if(c){sync('qX',c.x);sync('qY',c.y);}
+     $('sQ').disabled = !c; $('delQ').disabled = !c && !(F.sel && F.sel.kind === 'cp' && F.free.length > 4);
+     if (c) { sync('sQ', c.q); $('oQ').textContent = fq(c.q); } else $('oQ').textContent = 'none selected';
+     $('addPos').disabled = $('addNeg').disabled = F.charges.length >= 8;
+@@ -1717,6 +1737,31 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+   $('yr').addEventListener('input', (e) => { userPause(); setSym('r', +e.target.value); });
+   $('yLen').addEventListener('input', (e) => { setSym('L', +e.target.value); });
+ 
++  // Quantitative laboratory notebook; snapshots freeze geometry and raw SI readings.
++  const fluxRows=[];
++  for(const [id,key] of [['qX','x'],['qY','y']])$(id).addEventListener('change',()=>{
++    const el=$(id),c=F.sel&&F.sel.kind==='q'&&qById(F.sel.id);
++    if(c&&el.value!==''&&el.checkValidity()){userPause();c[key]=+el.value;chargesChanged();}else updateReadouts();
++  });
++  $('quadTolerance').addEventListener('change',()=>{userPause();setQuadrature(+$('quadTolerance').value);markNum();computeNum();});
++  $('labBlind').addEventListener('change',updateReadouts);
++  $('captureFlux').addEventListener('click',()=>{
++    userPause();computeNum();
++    if(!num||onSurface){$('labStatus').textContent='No capture: charge within boundary exclusion zone.';return;}
++    const sh=shape(),g=F.surf==='sphere'?{center_m:[F.sph.x*CM,F.sph.y*CM,0],radius_m:F.sph.R*CM}:F.surf==='free'?{vertices_m:sh.poly.map(p=>p.map(x=>x*CM)),depth_m:F.depth*CM}:{center_m:[F.rect.x*CM,F.rect.y*CM,0],width_m:F.rect.w*CM,height_m:F.rect.h*CM,depth_m:F.surf==='box'?F.depth*CM:null};
++    fluxRows.push({version:'gauss-2026-10-18.2',shape:F.surf,geometry:JSON.stringify(g),charges:JSON.stringify(F.charges.map(c=>({x_m:c.x*CM,y_m:c.y*CM,z_m:0,q_C:c.q*NC}))),distance_m:Math.min(...F.charges.filter(c=>c.q).map(c=>sh.dist(c.x,c.y)*CM)),flux:num.total,out:num.out,in:num.inw,evals:num.evals,ms:numMs,factor:toleranceFactor,outer_error:num.err,converged:num.converged});
++    $('fluxRows').innerHTML=fluxRows.map(r=>`<tr><td>${r.shape}</td><td>${r.flux.toPrecision(9)}</td><td>${r.evals}</td><td>${r.converged}</td></tr>`).join('');
++    $('labStatus').textContent=`Captured ${fluxRows.length} rows. Geometry and charges are included in CSV.`;
++  });
++  $('clearFlux').addEventListener('click',()=>{fluxRows.length=0;$('fluxRows').textContent='';$('labStatus').textContent='Notebook cleared.';});
++  $('exportFlux').addEventListener('click',()=>{
++    if(!fluxRows.length){$('labStatus').textContent='Capture a measurement first.';return;}
++    const keys=['version','shape','geometry','charges','distance_m','flux','out','in','evals','ms','factor','outer_error','converged'];
++    const quote=v=>'"'+String(v).replace(/"/g,'""')+'"';
++    const csv=['version,shape,geometry_SI_json,charges_SI_json,min_boundary_distance_m,flux_N_m2_C,outward_N_m2_C,inward_N_m2_C,field_evaluations,integration_ms,tolerance_factor,outer_error_estimate_N_m2_C,panel_criteria_met',...fluxRows.map(r=>keys.map(k=>quote(r[k])).join(','))].join('\n');
++    const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'})),a=document.createElement('a');a.href=url;a.download='gauss-flux.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
++  });
++
+   // ---------- pointer on the drawing ----------
+   function hitAt(ev) {
+     const r = cans.d.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;

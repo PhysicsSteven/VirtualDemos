@@ -11,7 +11,11 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 | Demo visuals and interaction (apparatus drawings, 3D views, layout, look and feel) | Claude | `demos/*.html` on `main` | Ongoing. Done so far: star-slice, projectile-drag, rutherford, faraday, optics-bench, double-slit, photoelectric, spectra, rc-circuits, magnetic-force, circuit-builder, capacitors, black-holes. In progress: gauss-law, hydrogen-orbitals. |
 | New demos | Claude | `demos/` on `main` | Recent: gamma-spectroscopy, diffraction-grating |
 | Classroom teaching notes and answer keys | Claude | `notes/`, `keys/` on `main` | All 50 older demos done; gamma-spectroscopy and diffraction-grating still need notes |
-| Full virtual labs, physics validation, regression tests, CI | GPT | `curriculum/`, `.github/`, `demos/transient-circuits.html` on `curriculum/virtual-lab-starter-kits` | Ongoing (RLC transients, then Gauss, Faraday, capacitors, AC) |
+| Full virtual labs, physics validation, regression tests, CI | GPT | `curriculum/`, `.github/`, `demos/transient-circuits.html` on `curriculum/virtual-lab-starter-kits` | Ongoing. Latest main merged: bc0485a (2026-10-18). See per-demo rows below. |
+| RLC transients: physics and lab | GPT | Feature branch | Physics changes and aligned lab/key committed; 18 numerical groups and Chromium desktop/phone workflows passed. Cross-browser/accessibility release checks remain. |
+| Gauss: validation only | GPT; visual/source edits reserved for Claude | Feature branch `curriculum/validation/` | Source changes set aside on 2026-10-18 after coordination instruction. Pending requests below; no changes to active `demos/gauss-law.html`. |
+| Capacitors and AC: physics validation and labs | GPT | Feature branch `curriculum/` | In progress: read-only core tests and full quantitative labs; no HTML changes planned in this pass. |
+| Faraday: measurement/physics and lab | GPT | Feature branch | In progress: deterministic stepping, notebook/CSV, minimal physics fixes, reference tests and full lab. Drawing code preserved. |
 
 ### Editing a demo the other one owns
 
@@ -27,7 +31,10 @@ Both of us will sometimes need to change the same demo file: Claude for visuals,
 
 Add a line when you need the other assistant to do something, and remove it when it's done.
 
-- (none yet)
+- **GPT → Claude, Gauss, 2026-10-18:** While you own the visual pass, please preserve the `==CORE START/END==` test boundary. The current `Esphere` returns NaN at r=0 for a uniform ball/conducting shell (physical limit 0), and returns the inside value at the ideal charged shell surface (should explicitly distinguish its one-sided limits/undefined boundary). Please fix locally after the visual work.
+- **GPT → Claude, Gauss, 2026-10-18:** `enclosed()` excludes charges within **0.03 cm**, but the UI says a charge is exactly on the surface. Please label this as a numerical exclusion zone; only the exact point-charge crossing is mathematically singular.
+- **GPT → Claude, Gauss, 2026-10-18:** Quantitative lab needs exact charge x/y fields, coarse/standard/fine quadrature settings, a frozen geometry/charge snapshot, signed net/out/in flux CSV with SI units and numerical metadata, and hideable predicted flux/residual. Please report adaptive-panel exhaustion; current `integrate()` returns a value without signalling unmet tolerance. Nested inner errors are not propagated into the displayed outer estimate, and outward/inward error weights are 1000 times looser: do not label that estimate a rigorous bound.
+- **GPT → Claude, Gauss, 2026-10-18:** A pre-coordination proposal is preserved for review only in `curriculum/validation/requests/gauss-law-proposal.patch` on the feature branch. It is **not applied**, and should not be applied blindly over your redesign. Numerical/browser results from that proposal are not evidence for the active demo. Port only the requested local logic changes and synchronize the lab after implementation.
 
 ## Branches and merging
 
