@@ -15,16 +15,33 @@
 
 **Important:** L1 means the document is a substantive instructional design, not a verified UI workflow or a claim of executed physics tests.
 
-## Next L1 experiments — ordered by instructional value
-4. **Blackbody Radiation:** estimate Wien constant and Stefan–Boltzmann exponent from independent sweeps; require peak detector, spectral integration, and fit export.
-5. **Kepler's Laws:** infer central mass from P²–a³; test areal velocity and numerical conservation; require state snapshots and orbital element export.
-6. **Projectile Range:** infer g from angle sweep, then quantify quadratic drag with parameter fitting; require shot comparison and trajectory CSV.
-7. **Radioactive Decay:** half-life estimation with counting uncertainty and many-run ensemble; require seeded trials, replicate export and histogram.
-8. **AC Circuits:** measure resonant frequency, bandwidth and Q; require frequency sweep, export and instrument mode.
-9. **Gamma Spectroscopy:** calibrate an MCA, identify unknown peaks and propagate Poisson uncertainty; require calibration save/load and CSV.
-10. **Heat Engine Cycles:** experimentally reconstruct work from PV loop and compare Carnot limit; require per-leg and full-cycle data export.
-11. **Exoplanets:** joint transit/RV fit to radius, mass and density; require observational noise and controlled fit pipeline.
-12. **Quantum Wave Packets:** tunneling and norm conservation with mesh convergence; require adjustable grid, absorber diagnostics and export.
+## Priority policy — Physics I and II first
+
+The college's current course offerings emphasize introductory physics rather than astronomy. Allocate development and review effort accordingly. Existing astronomy starter kits remain in place, but **do not prioritize expanding them** until the core laboratory curriculum is robust.
+
+**Tier 1 — Electricity and magnetism:** Transient RC/RL/LC/RLC circuits, Gauss's law, Faraday induction, capacitors and dielectrics, magnetic force, Coulomb fields, DC circuit building, AC impedance and resonance, electromagnetic waves.
+
+**Tier 2 — Mechanics and oscillations:** Projectile motion and drag, collisions, springs, rotational dynamics, potential energy curves, double pendulum and chaos, fluids.
+
+**Tier 3 — Waves, optics and thermal physics:** Standing waves, Doppler shift, polarization, diffraction, thin films, optics bench, ideal gas, heat engines, blackbody radiation as a thermal-physics experiment.
+
+**Tier 4 — Modern physics:** Photoelectric effect, Rutherford scattering, Compton scattering, radioactive decay, atomic spectra, hydrogen orbitals, quantum waves, nuclear binding energy, gamma spectroscopy, Franck–Hertz, lasers, spacetime.
+
+**Tier 5 — Astronomy and astrophysics (deferred):** HR diagrams, stellar structure, white-dwarf cooling, exoplanets, distance ladder, galactic rotation curves, black holes, seasons, moon phases, tidal astronomy and astronomy-specific orbital applications. Keplerian mechanics can still be developed under Tier 2 if taught in mechanics.
+
+## Next full experiments — recommended sequence
+1. **Transient circuits:** finish validation, energy partition, damping-peak capture and lab instrumentation.
+2. **Faraday induction:** infer magnetic flux rate from induced EMF; validate sign conventions.
+3. **Capacitors:** dielectric insertion, series/parallel networks and energy at fixed Q versus fixed V.
+4. **AC circuits:** measure resonance, phase angle, bandwidth and quality factor.
+5. **Projectile motion:** infer g, then estimate drag parameters using trajectory fits.
+6. **Collisions:** recover restitution and test momentum/energy budgets.
+7. **Springs:** infer k from T² versus m; compare damped and driven response.
+8. **Ideal gas:** test the two-dimensional equation of state and counting fluctuations.
+9. **Optics:** diffraction grating and polarization quantitative experiments.
+10. **Modern physics:** complete photoelectric and radioactive decay instrument-style experiments.
+
+Gauss's law and Photoelectric Effect already have full experiment drafts; validate and instrument them alongside this sequence.
 
 ## Common feature contract for every L2 simulation
 - **Measurement notebook:** capture rows of current independent variables, observables, units, time, preset, simulation version and uncertainty model.
