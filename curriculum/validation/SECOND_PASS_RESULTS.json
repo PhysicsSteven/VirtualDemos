@@ -1,0 +1,152 @@
+{
+  "date": "2026-10-18",
+  "runtime": "v24.19.0",
+  "source_hashes": {
+    "transient-circuits.html": "08a545f551f34b31efb449060770cbfaf2dd7d7c422a5ba3801f599d58e67cd6",
+    "gauss-law.html": "43ed1c2108065cb1ff8806ededd640fde957857dd804b6e3706104eb02a63560",
+    "coulomb-sandbox.html": "ae4dcd4d5c6540908e9cb1294f88e095ca6da47e29b50643b024a07f731e961f",
+    "ac-circuits.html": "0c8ff42d0aa86050bdd6217ad8f1aaf07be214d70f58892f8afba657c2976d29",
+    "rc-circuits.html": "14a6218f1fdaaa40790cf88bdad1d6922a2272661e929c663b4c748681910f5a",
+    "diffraction-grating.html": "00009e6e944b147728567ea45af4e3622ed692ae7b71e0020d3bd8653230aae0",
+    "capacitors.html": "a6986f32061260ad0d789b5690ed48a1156d8310f9e715c77c16f8abcbd0d134",
+    "faraday.html": "a1dec201e3cce6d153e73f18baef12ec203bb85f278ecf6d1c894ee2ba0044aa",
+    "circuit-builder.html": "4fede5ba3ccd5dfc1760da0165dd4f031ff0c086c2c06e03df2ac221c16148b9"
+  },
+  "runs": [
+    {
+      "source": "working tree",
+      "suite": "transient_circuits",
+      "exit_code": 0,
+      "stdout": "PASS LC quarter-cycle energy transfer\nPASS LC full cycle, no numerical damping\nPASS RLC R=0 matches LC\nPASS RLC underdamped energy\nPASS RLC critical damping\nPASS RLC overdamped energy\nPASS RC exponential discharge\nPASS RL exponential discharge\nPASS RL zero resistance constant current\nPASS RC zero resistance rejected\nPASS invalid parameters rejected\nCompleted 11 transient circuit tests.\nPASS independent ODE reference across damping transition and UI extremes\nPASS critical continuity from both sides without cancellation\nPASS independent integral of Joule power equals heat\nPASS differentiated charge, current and energy satisfy physical laws\nPASS all UI parameter corners remain finite, passive, and start correctly\nPASS zero excitation and invalid topology\nPASS CSV round trip preserves signed SI readings and initial conditions\nCompleted 18 transient circuit tests including independent numerical references.\n",
+      "stderr": ""
+    },
+    {
+      "source": "working tree",
+      "suite": "rc_circuits",
+      "exit_code": 0,
+      "stdout": "PASS charging and discharging against independent integrating-factor solution\nPASS independent midpoint power quadrature and complete charge energy split\nPASS switching preserves charge and selects separate discharge resistor\nPASS capacitance change preserves charge and records mechanical work\nPASS same-time successive events and historical states preserve ledger\nPASS UI range corners remain finite and passive\nCompleted 6 RC circuit groups.\n",
+      "stderr": ""
+    },
+    {
+      "source": "working tree",
+      "suite": "faraday",
+      "exit_code": 0,
+      "stdout": "PASS ring field agrees with independent on-axis Biot-Savart formula\nPASS ring mutual flux agrees with independent Neumann integral\nPASS finite magnet field and flux convergence\nPASS magnet reversal, linearity, Faraday integral and speed invariance\nPASS generator exact interval average, phase and step refinement\nPASS rails sign, electromagnetic drag and mechanical power\nPASS coasting energy converges and zero field remains ballistic\nPASS invalid time step and resistance rejected\nCompleted 8 Faraday test groups.\n",
+      "stderr": ""
+    },
+    {
+      "source": "working tree",
+      "suite": "capacitors",
+      "exit_code": 0,
+      "stdout": "PASS vacuum, full dielectric, partial area and air-gap series model\nPASS fixed voltage and fixed charge separation experiments\nPASS independently integrated field energy equals capacitor energy\nPASS force agrees with independent numerical energy derivative\nPASS independent plate-force work integral matches ledger at fixed V\nPASS reconnection heat and complete energy ledger\nPASS series parallel mixed networks conserve charge, voltage and energy\nCompleted 7 capacitor test groups. Qualitative fringe-field grid is not certified by these ideal-model checks.\n",
+      "stderr": ""
+    },
+    {
+      "source": "working tree",
+      "suite": "gauss_law",
+      "exit_code": 0,
+      "stdout": "PASS sphere centered, off-center, external and dipole flux\nPASS box centered, off-center, external and dipole flux\nPASS cylinder centered, off-center, external and dipole flux\nPASS prism centered, off-center, external and dipole flux\n  boundary -0.2 scaled error 1.2582557671407812e-16 evaluations 34530\n  boundary 0.2 scaled error 1.8873836507111718e-16 evaluations 58230\n  boundary -0.1 scaled error 2.5165115342815623e-16 evaluations 58110\n  boundary 0.1 scaled error 0 evaluations 110670\n  boundary -0.05 scaled error 5.033023068563125e-16 evaluations 84570\n  boundary 0.05 scaled error 5.976714893918711e-16 evaluations 154140\n  boundary -0.02 scaled error 1.6357324972830155e-15 evaluations 148830\n  boundary 0.02 scaled error 3.586028936351226e-15 evaluations 198030\n  boundary -0.01 scaled error 6.417104412417984e-15 evaluations 190770\n  boundary 0.01 scaled error 6.102540470632789e-15 evaluations 275760\nPASS near sphere boundary at current default tolerance\nPASS independent midpoint surface integration converges\nPASS symmetry fields at finite radius and point-charge singularity in SI\nCompleted 7 Gauss-law test groups. Origin and shell-boundary defects are tracked in COLLABORATION.md; tolerance controls pending Claude.\n",
+      "stderr": ""
+    },
+    {
+      "source": "working tree",
+      "suite": "circuit_builder",
+      "exit_code": 0,
+      "stdout": "PASS series and parallel currents, equivalent resistance and source power\nPASS unloaded divider and balanced bridge independently calculated\nPASS internal resistance terminal voltage and shorted load\nPASS KCL and independent signed terminal-power sums for all presets\nPASS open switch, ideal battery short and disconnected meters\nPASS UI resistor extremes agree with Ohm law including battery resistance\nCompleted 6 circuit-builder groups.\n",
+      "stderr": ""
+    },
+    {
+      "source": "working tree",
+      "suite": "coulomb_sandbox",
+      "exit_code": 0,
+      "stdout": "PASS SI units and inverse distance / inverse square for isolated charges\nPASS superposition and dipole cancellation\nPASS field equals independent numerical negative potential gradient away from cores\nPASS closed path work is zero outside softened charge cores\nPASS zero charges and distant dipole scaling\nCompleted 5 Coulomb groups outside softened cores.\n",
+      "stderr": ""
+    },
+    {
+      "source": "working tree",
+      "suite": "diffraction_grating",
+      "exit_code": 0,
+      "stdout": "PASS order geometry from phase difference at normal and oblique incidence\nPASS grating factor agrees with independent complex phasor sum\nPASS interference zeros and missing orders from finite slit width\nPASS wavelength and grating spacing recovery plus small-angle bias\nPASS grazing order exists but has no finite forward screen intersection\nCompleted 5 diffraction-grating groups. Spectral colour rendering is outside this physics suite.\n",
+      "stderr": ""
+    },
+    {
+      "source": "working tree",
+      "suite": "ac_circuits",
+      "exit_code": 0,
+      "stdout": "PASS phasor amplitude phase and cycle-averaged power from sampled waves\nPASS resonance and exact half-power bandwidth\nPASS driven transients agree with independent ODE integration\nPASS undamped exact resonance grows and remains finite in transient mode\nPASS UI component extremes remain finite in damped steady state\nCompleted 5 AC circuit test groups.\n",
+      "stderr": ""
+    },
+    {
+      "source": "origin/main",
+      "suite": "rc_circuits",
+      "exit_code": 0,
+      "stdout": "PASS charging and discharging against independent integrating-factor solution\nPASS independent midpoint power quadrature and complete charge energy split\nPASS switching preserves charge and selects separate discharge resistor\nPASS capacitance change preserves charge and records mechanical work\nPASS same-time successive events and historical states preserve ledger\nPASS UI range corners remain finite and passive\nCompleted 6 RC circuit groups.\n",
+      "stderr": "",
+      "source_sha": "bc0485a5fc20a130175dd370b45ff741d4f9acb2"
+    },
+    {
+      "source": "origin/main",
+      "suite": "faraday",
+      "exit_code": 1,
+      "stdout": "PASS ring field agrees with independent on-axis Biot-Savart formula\nPASS ring mutual flux agrees with independent Neumann integral\nPASS finite magnet field and flux convergence\nPASS magnet reversal, linearity, Faraday integral and speed invariance\nPASS generator exact interval average, phase and step refinement\nPASS rails sign, electromagnetic drag and mechanical power\nCompleted 6 Faraday test groups.\n",
+      "stderr": "FAIL coasting energy converges and zero field remains ballistic expected 6, got NaN\nFAIL invalid time step and resistance rejected Missing expected exception.",
+      "source_sha": "bc0485a5fc20a130175dd370b45ff741d4f9acb2"
+    },
+    {
+      "source": "origin/main",
+      "suite": "capacitors",
+      "exit_code": 0,
+      "stdout": "PASS vacuum, full dielectric, partial area and air-gap series model\nPASS fixed voltage and fixed charge separation experiments\nPASS independently integrated field energy equals capacitor energy\nPASS force agrees with independent numerical energy derivative\nPASS independent plate-force work integral matches ledger at fixed V\nPASS reconnection heat and complete energy ledger\nPASS series parallel mixed networks conserve charge, voltage and energy\nCompleted 7 capacitor test groups. Qualitative fringe-field grid is not certified by these ideal-model checks.\n",
+      "stderr": "",
+      "source_sha": "bc0485a5fc20a130175dd370b45ff741d4f9acb2"
+    },
+    {
+      "source": "origin/main",
+      "suite": "gauss_law",
+      "exit_code": 0,
+      "stdout": "PASS sphere centered, off-center, external and dipole flux\nPASS box centered, off-center, external and dipole flux\nPASS cylinder centered, off-center, external and dipole flux\nPASS prism centered, off-center, external and dipole flux\n  boundary -0.2 scaled error 1.2582557671407812e-16 evaluations 34530\n  boundary 0.2 scaled error 1.8873836507111718e-16 evaluations 58230\n  boundary -0.1 scaled error 2.5165115342815623e-16 evaluations 58110\n  boundary 0.1 scaled error 0 evaluations 110670\n  boundary -0.05 scaled error 5.033023068563125e-16 evaluations 84570\n  boundary 0.05 scaled error 5.976714893918711e-16 evaluations 154140\n  boundary -0.02 scaled error 1.6357324972830155e-15 evaluations 148830\n  boundary 0.02 scaled error 3.586028936351226e-15 evaluations 198030\n  boundary -0.01 scaled error 6.417104412417984e-15 evaluations 190770\n  boundary 0.01 scaled error 6.102540470632789e-15 evaluations 275760\nPASS near sphere boundary at current default tolerance\nPASS independent midpoint surface integration converges\nPASS symmetry fields at finite radius and point-charge singularity in SI\nCompleted 7 Gauss-law test groups. Origin and shell-boundary defects are tracked in COLLABORATION.md; tolerance controls pending Claude.\n",
+      "stderr": "",
+      "source_sha": "bc0485a5fc20a130175dd370b45ff741d4f9acb2"
+    },
+    {
+      "source": "origin/main",
+      "suite": "circuit_builder",
+      "exit_code": 0,
+      "stdout": "PASS series and parallel currents, equivalent resistance and source power\nPASS unloaded divider and balanced bridge independently calculated\nPASS internal resistance terminal voltage and shorted load\nPASS KCL and independent signed terminal-power sums for all presets\nPASS open switch, ideal battery short and disconnected meters\nPASS UI resistor extremes agree with Ohm law including battery resistance\nCompleted 6 circuit-builder groups.\n",
+      "stderr": "",
+      "source_sha": "bc0485a5fc20a130175dd370b45ff741d4f9acb2"
+    },
+    {
+      "source": "origin/main",
+      "suite": "coulomb_sandbox",
+      "exit_code": 0,
+      "stdout": "PASS SI units and inverse distance / inverse square for isolated charges\nPASS superposition and dipole cancellation\nPASS field equals independent numerical negative potential gradient away from cores\nPASS closed path work is zero outside softened charge cores\nPASS zero charges and distant dipole scaling\nCompleted 5 Coulomb groups outside softened cores.\n",
+      "stderr": "",
+      "source_sha": "bc0485a5fc20a130175dd370b45ff741d4f9acb2"
+    },
+    {
+      "source": "origin/main",
+      "suite": "diffraction_grating",
+      "exit_code": 0,
+      "stdout": "PASS order geometry from phase difference at normal and oblique incidence\nPASS grating factor agrees with independent complex phasor sum\nPASS interference zeros and missing orders from finite slit width\nPASS wavelength and grating spacing recovery plus small-angle bias\nPASS grazing order exists but has no finite forward screen intersection\nCompleted 5 diffraction-grating groups. Spectral colour rendering is outside this physics suite.\n",
+      "stderr": "",
+      "source_sha": "bc0485a5fc20a130175dd370b45ff741d4f9acb2"
+    },
+    {
+      "source": "working tree",
+      "suite": "coulomb_sandbox",
+      "flag": "--strict-core",
+      "exit_code": 1,
+      "stdout": "PASS SI units and inverse distance / inverse square for isolated charges\nPASS superposition and dipole cancellation\nPASS field equals independent numerical negative potential gradient away from cores\nPASS closed path work is zero outside softened charge cores\nPASS zero charges and distant dipole scaling\nCompleted 5 Coulomb groups outside softened cores.\nCore consistency probe (cm) { x: 0.05, field: 35950199.99999999, negativeGradient: -0 }\n",
+      "stderr": "node:internal/assert/utils:77\n    throw err;\n    ^\n\nAssertionError [ERR_ASSERTION]: expected 0, got 35950199.99999999"
+    },
+    {
+      "source": "working tree",
+      "suite": "gauss_law",
+      "flag": "--strict-origin",
+      "exit_code": 1,
+      "stdout": "PASS sphere centered, off-center, external and dipole flux\nPASS box centered, off-center, external and dipole flux\nPASS cylinder centered, off-center, external and dipole flux\nPASS prism centered, off-center, external and dipole flux\n  boundary -0.2 scaled error 1.2582557671407812e-16 evaluations 34530\n  boundary 0.2 scaled error 1.8873836507111718e-16 evaluations 58230\n  boundary -0.1 scaled error 2.5165115342815623e-16 evaluations 58110\n  boundary 0.1 scaled error 0 evaluations 110670\n  boundary -0.05 scaled error 5.033023068563125e-16 evaluations 84570\n  boundary 0.05 scaled error 5.976714893918711e-16 evaluations 154140\n  boundary -0.02 scaled error 1.6357324972830155e-15 evaluations 148830\n  boundary 0.02 scaled error 3.586028936351226e-15 evaluations 198030\n  boundary -0.01 scaled error 6.417104412417984e-15 evaluations 190770\n  boundary 0.01 scaled error 6.102540470632789e-15 evaluations 275760\nPASS near sphere boundary at current default tolerance\nPASS independent midpoint surface integration converges\nPASS symmetry fields at finite radius and point-charge singularity in SI\nCompleted 7 Gauss-law test groups. Origin and shell-boundary defects are tracked in COLLABORATION.md; tolerance controls pending Claude.\nUniform sphere origin probe NaN\n",
+      "stderr": "node:assert:152\n  throw new AssertionError(obj);\n  ^\n\nAssertionError [ERR_ASSERTION]: Regular uniform-sphere field must vanish at its origin\n\nNaN !== 0"
+    }
+  ]
+}

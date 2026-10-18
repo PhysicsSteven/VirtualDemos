@@ -25,3 +25,7 @@ For each simulation:
 - Blackbody: wavelength peak and integrated T^4 scaling.
 
 Do not mistake exact agreement between two derived readouts for independent validation.
+
+## Second pass: tasks 1, 3 and 5
+
+[Executed report](SECOND_PASS_2026-10-18.md) and [machine-readable numerical results](SECOND_PASS_RESULTS.json): 67 supported branch groups passed; seven requested suites give 42/44 groups on main (Faraday failures). Strict Gauss-origin and Coulomb-core probes intentionally fail and remain outside the supported-case green CI. See exact commands and scope before using any passing count as validation evidence.

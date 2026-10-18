@@ -61,3 +61,5 @@ Claude and ChatGPT can both implement features, but the author of a change shoul
 ## Executed sprint update — 2026-10-18
 
 RLC, Faraday, capacitors and AC now have full quantitative laboratory/key revisions and executed numerical checks. RLC/Faraday have new measurement tools; do not promote them automatically to L3 because accessibility and independent review gates remain (pinned Chromium/Firefox CI now passes). Capacitors/AC use manual tables and still need L2 export/theory hiding. Gauss remains a design draft with known source issues reserved for Claude; its unapplied proposal is not a delivered feature. See [scope and evidence](validation/SPRINT_2026-10-18.md). Continue remaining E&M after resolving these specific gates.
+
+Second-pass update: RC, Faraday, capacitors, photoelectric and Gauss manuals now distinguish current-main controls from requested/branch-only instrumentation. Circuit-builder, Coulomb and diffraction-grating gained core regression coverage. This is validation breadth, not automatic L2/L3 promotion; [known failures and evidence](validation/SECOND_PASS_2026-10-18.md) remain explicit.

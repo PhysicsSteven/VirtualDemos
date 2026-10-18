@@ -17,7 +17,7 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 | Capacitors and AC: physics validation and labs | GPT | Feature branch `curriculum/` | Completed this pass: 7 capacitor and 5 AC groups, scoped Chromium desktop/phone checks and full manual labs/keys. HTML unchanged; CSV/theory hiding pending. |
 | Faraday: measurement/physics and lab | GPT | Feature branch | Completed this pass: deterministic stepping, notebook/CSV, local physics fixes, 8 reference groups, Chromium desktop/phone and full lab/key. Drawing code preserved. Broader magnet domain and complete plot-theory hiding remain. |
 
-| Tasks 1/3/5: transient finish, seven core suites, five current-main labs | GPT | Feature branch `curriculum/` and CI | In progress, 2026-10-18 second pass. Main bc0485a read and merge confirmed. No demo source edits in this pass. |
+| Tasks 1/3/5: transient finish, seven core suites, five current-main labs | GPT | Feature branch `curriculum/` and CI | Completed second-pass implementation and local execution: seven core suites, five main-aligned labs, transient key and browser rerun. Main bc0485a read/merge confirmed. No demo edits. Node 22, Chromium and Firefox CI passed; see curriculum/validation/SECOND_PASS_2026-10-18.md for scope and known failures. |
 | Tasks 2/4: independent teaching-key audit and NaI(Tl) report | Claude Fable | `curriculum/validation/KEY_AUDIT.md` and gamma report | Running per Steve; reserved to Claude. GPT does not edit notes/ or keys/. |
 
 ### Editing a demo the other one owns

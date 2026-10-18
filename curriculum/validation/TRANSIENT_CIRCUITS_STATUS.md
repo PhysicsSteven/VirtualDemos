@@ -9,3 +9,7 @@ See [sprint evidence](SPRINT_2026-10-18.md) for exact commands, runtime, source 
 The expanded [CI matrix](https://github.com/PhysicsSteven/VirtualDemos/actions/runs/39155943281) also passed Node 22 plus Chromium and Firefox desktop/phone workflows.
 
 Remaining: mobile plot readability, comprehensive keyboard/screen-reader/contrast checks, and independent review. The student and instructor documents are aligned with precise resistance/time controls and CSV. **Implemented and tested in the stated scope; not release-ready or TA-accepted.**
+
+Second pass: the 18-group suite and Chromium desktop/phone workflows were rerun successfully, and the instructor key now includes every analytic damping branch plus critical-point numerical checks. See [second-pass evidence](SECOND_PASS_2026-10-18.md) for the new CI snapshot.
+
+Second-pass [CI run 39157675420](https://github.com/PhysicsSteven/VirtualDemos/actions/runs/39157675420) passed physics, Chromium and Firefox jobs on fe37258, including the transient browser suite.

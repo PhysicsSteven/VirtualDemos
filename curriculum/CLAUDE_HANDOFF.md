@@ -28,3 +28,7 @@
 
 ## Collaboration workflow
 Validate first, change code second, and independently retest after changes. Keep student labs, instructor keys, and validation evidence in separate commits when possible.
+
+## Second pass — tasks 1/3/5, 2026-10-18
+
+[Second-pass report](validation/SECOND_PASS_2026-10-18.md) supersedes the next-work list for the newly completed scope. Seven requested demo cores now have direct-source Node tests; 67 supported branch groups pass including transient/AC. Current-main baseline exposes two Faraday failures and strict probes expose Gauss origin and Coulomb near-core inconsistency. Five full labs are aligned with main bc0485a and checked in scoped Chromium workflows. No demos/, notes/ or keys/ files changed. Fable owns KEY_AUDIT and gamma comparison; do not duplicate or edit those outputs. Source requests remain in root collaboration file.
