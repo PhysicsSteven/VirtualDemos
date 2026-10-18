@@ -31,7 +31,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Compton Scattering](demos/compton.html) | Modern physics | Exact relativistic photon electron kinematics, the momentum triangle, Klein-Nishina angular distribution and the recoil electron spectrum with its edge |
 | [Lasers and Stimulated Emission](demos/lasers.html) | Modern physics | Einstein coefficients and Boltzmann populations, laser rate equations with threshold, gain clamping and relaxation oscillations, level schemes, He-Ne cavity modes |
 | [Franck–Hertz Experiment](demos/franck-hertz.html) | Modern physics | A Monte Carlo tetrode tube with mercury vapor or neon, the I(U) curve built by a sweep, peak marking with a linear fit, and NIST energy levels |
-| [Projectile Range](demos/projectile-drag.html) | Mechanics | Projectile motion with and without quadratic air drag |
+| [Projectile Range](demos/projectile-drag.html) | Mechanics | Projectile motion with and without quadratic air drag, up to eight stacked shots compared on shared graphs |
 | [Hanging Chains and Arches](demos/catenary.html) | Mechanics | The catenary under its own weight vs a parabola, tension and free body diagrams along the chain, and the inverted arch |
 | [Springs and Oscillations](demos/springs.html) | Mechanics | Simple harmonic motion, hanging springs, damping regimes, driven resonance and coupled normal modes and beats |
 | [Potential Energy Curves](demos/potential-curves.html) | Mechanics | Motion read from U(x): turning points, equilibria, small oscillation periods, phase space, and a curve you can draw |
