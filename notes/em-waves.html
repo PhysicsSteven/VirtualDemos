@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Electromagnetic Waves: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Electromagnetic Waves</h1><ul class="meta"><li><a href="../demos/em-waves.html">Open the demo</a></li><li>PHYS 202; intro astronomy</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>In a plane wave in vacuum, E and B are at right angles to each other and to the direction of travel, they peak together (in phase), and |B| = |E|/c with c = 1/√(μ₀ε₀).</li>
+<li>Every electromagnetic wave travels at c, so λf = c from radio to gamma rays; only the frequency (or wavelength) differs.</li>
+<li>The wave carries energy along S = E × B/μ₀, which never reverses. Its average is the intensity I = ½cε₀E₀², shared equally between the electric and magnetic fields, and it pushes with pressure I/c (absorbed) or 2I/c (reflected).</li>
+<li>Polarization describes how E moves at one place: along a line, round a circle or an ellipse, set by the two components and their phase difference. An ideal polarizer passes cos²θ of linear light and half of circular light.</li>
+<li>Waves are made by accelerating charges. An oscillating dipole radiates most at right angles to its axis (I ∝ sin²θ) and nothing along it.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the cross product right hand rule and v = λf. Drag the 3D view to turn it (<strong>Reset view</strong> restores it). B is drawn as cB to share the E scale; in tesla it is 3 × 10⁸ times smaller.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Plane wave.</strong> Ask Q1 first. Pause, and show E along x, B along y, S along z, with E and B peaking at the same places. Play again: S pulses but never points backward.</li>
+<li><strong>Drag the marker on the spectrum</strong> (or the <strong>Frequency f</strong> slider) from radio to gamma rays. The wavelength readout changes and λ × f stays c.</li>
+<li><strong>Sunlight at Earth.</strong> I = 1361 W/m² needs E₀ = 1.01 kV/m but only B₀ = 3.38 µT. Read the radiation pressure, 4.54 µPa absorbed (Q2).</li>
+<li><strong>Visible light.</strong> A 5 mW laser pointer in a 1 mm beam is about five times as intense as sunlight. Then <strong>Radio</strong>: 39.8 µW/m² at 10 km from a 50 kW station (Q3).</li>
+<li><strong>Circular polarization.</strong> At one place E keeps its length and turns. Check <strong>Polarizer in the end on view</strong> and turn the <strong>Transmission axis φ</strong>: the transmitted fraction stays at 0.500. Go back to <strong>Linear</strong> and turn it again (Q5).</li>
+<li><strong>Antenna.</strong> Loops of E pinch off near the dipole and move outward. Drag the <strong>Direction θ from the dipole axis</strong> slider: the intensity is sin²θ, zero along the axis, half at 45°.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: in a traveling plane wave, at a place and time where E is at its maximum, is B there at its maximum, zero, or somewhere in between? Many students expect a quarter cycle shift, as between the energies in a mass on a spring. Decide, then pause the demo to check.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Sunlight at Earth has an intensity of 1361 W/m². Find E₀, B₀ and the radiation pressure on a perfectly absorbing surface facing the Sun. What force does sunlight exert on a perfectly reflecting solar sail of area 100 m²? Use c = 3.00 × 10⁸ m/s and ε₀ = 8.85 × 10⁻¹² F/m.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The Radio setup is 10 km from a 50 kW transmitter that radiates evenly in all directions. Show that I = 39.8 µW/m² there and find E₀. What are I and E₀ at 20 km?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In a plane wave both E and B reverse direction every half period, yet the Poynting vector S = E × B/μ₀ always points along +z. Explain why. How often does |S| reach its peak?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Take the Plane wave setup (linear, E along x) and check Polarizer in the end on view. With the transmission axis at φ = 60°, what fraction of the intensity passes? At what φ does none pass? Now predict what happens for Circular polarization as you turn the polarizer, and check.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> A broadcast antenna is a vertical oscillating dipole. Why does an airplane directly above it receive almost nothing, while a car on the horizon at the same distance receives a strong signal? At what angle from the vertical is the intensity half the maximum? If the frequency is doubled with the same dipole amplitude, by what factor does the radiated power change?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"E and B are a quarter cycle out of step, like the energies in an oscillator."</strong> In a traveling plane wave in vacuum they are in phase. (Near an antenna, or in a standing wave, the phases differ.)</li>
+<li><strong>"Higher frequency light travels faster."</strong> All frequencies travel at c in vacuum; λ adjusts.</li>
+<li><strong>"The magnetic field is the weak part of the wave and carries little energy."</strong> B in tesla is small only because of the units. The energy density ½B²/μ₀ equals ½ε₀E² exactly.</li>
+<li><strong>"A polarizer at any angle blocks circular light partly, depending on the angle."</strong> For circular light it passes half at every angle.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>The plane wave is exact for vacuum: E_x = E₀ cos ψ cos(kz − ωt), E_y = E₀ sin ψ cos(kz − ωt + δ), and B = ẑ × E/c. The readouts use CODATA 2022 values of μ₀ and ε₀; c = 1/√(μ₀ε₀) comes out as 299 792 458 m/s.</li>
+<li>Intensity I = ½cε₀E₀² with E₀ = √(E₀x² + E₀y²), so it holds for every polarization. ⟨u⟩ = I/c; pressure I/c absorbed and 2I/c reflected, for a surface facing the wave.</li>
+<li>The drawing always shows 2.5 wavelengths, with one period slowed to 2.5 s. Band edges are conventional; visible colors are approximate.</li>
+<li>Handedness uses the optics convention: right circular turns clockwise as you face the oncoming wave (δ = −90°). Engineers (IEEE) use the opposite name.</li>
+<li>The presets are idealized: real sunlight is unpolarized and spread over many wavelengths (the demo uses one 500 nm wave with the same mean intensity), and real radio stations aim most power toward the horizon.</li>
+<li>Antenna: exact fields of an oscillating point dipole (much shorter than λ), near field terms included. Lines are electric field lines; shading shows B, which points into or out of the page, multiplied by r. Radiated power P = p₀²ω⁴/(12πε₀c³). A real half wave antenna has a slightly narrower pattern than sin²θ.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>History: in the 1860s Maxwell found that his equations predict waves traveling at 1/√(μ₀ε₀), close to the measured speed of light; Hertz produced and detected such waves with spark gap circuits in the late 1880s.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

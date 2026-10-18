@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Capacitors and Dielectrics: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Capacitors and Dielectrics</h1><ul class="meta"><li><a href="../demos/capacitors.html">Open the demo</a></li><li>PHYS 202</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Capacitance depends only on geometry and material: C = κε₀A/d for parallel plates. Q = CV says what happens when C changes, but not by itself which of Q or V stays fixed.</li>
+<li>Connected to a battery, V is fixed and Q follows C. Isolated, Q is fixed and V follows 1/C. The same move gives opposite energy changes in the two cases.</li>
+<li>The energy U = ½CV² = Q²/(2C) lives in the field, u = ½κε₀E², and every change is accounted for: W_hand + W_battery = ΔU + heat.</li>
+<li>A dielectric's bound surface charge cancels part of the field of the free charge, so the same V holds κ times the free charge. The fringe field pulls a dielectric into the gap.</li>
+<li>Capacitors in series share one charge and add their voltages; in parallel they share one voltage and add their charges.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know E = σ/ε₀ for a charged sheet, potential difference and work. Each setup starts a slow automatic sweep; press <strong>Pause</strong> to drag the plate grip or use the sliders yourself. <strong>Mark start</strong> zeroes the "Since the start" table and the energy bars (hand, battery, heat, ΔU): press it before each move you discuss.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Pull apart, connected.</strong> Pause, set d = 1.0 cm, press Mark start. Ask Q1, then drag to d = 2.0 cm: C, Q, E and U all halve (U from 63.8 to 31.9 nJ), and the battery takes in 63.8 nJ, twice the drop in U (Q3).</li>
+<li><strong>Pull apart, isolated.</strong> Same move from 1.0 to 2.0 cm: Q and E stay, V doubles to 200 V, U doubles to 128 nJ, and your hand supplied all of it (Q2).</li>
+<li><strong>Reconnect.</strong> Without resetting, click <strong>Connected</strong> (battery at 100 V). Charge rushes back into the battery and the heat bar appears (Q6).</li>
+<li><strong>Slide in a dielectric.</strong> Isolated plates and a Pyrex slab. As it goes in, C rises, V and U fall, and W_hand is negative: the slab is pulled in. Turn on <strong>Bound charges</strong> to see what cancels the field. Then switch to <strong>Connected</strong> and slide it again (Q4).</li>
+<li><strong>Energy in the field.</strong> Sum u × volume over the air gap and the paper: it equals ½CV². The energy density is higher in the air gap than in the paper.</li>
+<li><strong>Series and parallel.</strong> Switch between <strong>Series</strong>, <strong>Parallel</strong> and <strong>Mixed</strong>; the table shows Q, V and U on each capacitor (Q5).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: a parallel plate capacitor stays connected to a 100 V battery while you double the plate separation. For each of C, Q, V, E and U, does it double, halve, or stay the same? Then predict the same five for an isolated capacitor. Check with the first two setups.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Square plates with A = 144 cm² and d = 1.00 cm are charged to 100 V and disconnected. Find C, Q and U. The plates are then pulled to d = 2.00 cm. Find the new V and U, and the work your hand did. Show that this work equals the attractive force Q²/(2ε₀A) times the distance moved.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In Pull apart, connected, the plates attract, so your hand does positive work pulling them apart; yet the stored energy goes down. Where does the energy go? Show that the battery's work is W_battery = VΔQ = 2ΔU for this process.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Explain why a dielectric slab is pulled into a charged capacitor, using the bound charges and the fringe field at the edge of the plates. Is it still pulled in when the battery stays connected, even though U then increases as the slab goes in? Check both cases with Slide in a dielectric.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In Series and parallel, C₁ = 10 pF, C₂ = 22 pF and C₃ = 47 pF are connected in series to 100 V. Find C_eq, the charge on each, and the voltage across each. Which capacitor stores the most energy? Check with the table.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> After the isolated plates have been pulled to d = 2.00 cm in Q2 (now at 200 V), the 100 V battery is connected again. How much charge flows, and in which direction? How much energy becomes heat in the wires? Check the heat bar and the "Since the start" table.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Pulling the plates apart always increases the stored energy."</strong> Only when isolated. With the battery connected, U falls, because Q flows back into the battery.</li>
+<li><strong>"A dielectric stores more energy because the energy density inside it is larger."</strong> For the same free charge, D is the same and u = D²/(2κε₀) is smaller in the dielectric. C grows because the same V holds more free charge.</li>
+<li><strong>"In series the largest capacitor takes the largest voltage."</strong> The charge is the same on each, so V = Q/C is largest on the smallest capacitor.</li>
+<li><strong>"The battery gives the capacitor exactly the energy it stores."</strong> Charging from a battery, the battery does QV and the capacitor keeps ½QV; the other half becomes heat, whatever the resistance of the wires.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Readouts use the ideal parallel plate model, with a uniform field and no fringing: C = ε₀A/d, U = ½CV², E = V/d, σ = ε₀E, attraction ½V²|dC/dd| = Q²/(2ε₀A).</li>
+<li>A partly inserted slab makes two capacitors in parallel: C(x) = ε₀(s/d)(s − x) + ε₀(s/d_in)x with d_in = (d − t) + t/κ. The force pulling it in is ½V² dC/dx, the same expression whether the battery is connected or not.</li>
+<li>Field lines come from a numerical solution of Laplace's equation for the cross section (plates infinitely deep, inside an insulating box), so they show fringing honestly; a share 1 − 1/κ of them ends on the bound charge. The wires and battery are not part of that solution.</li>
+<li>All changes are slow (quasi static), the battery and wires are ideal, and the slab slides without friction. When a battery is connected at a different voltage, the charge flows at once and ½C(ΔV)² becomes heat.</li>
+<li>κ values are at 20 °C and low frequency; water's 80.1 is for pure water. Tap water conducts, and the charge would leak through it.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: show that the fraction of a battery's work lost as heat when charging a capacitor through a resistor R is ½, independent of R, by integrating I²R over the RC charging curve.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

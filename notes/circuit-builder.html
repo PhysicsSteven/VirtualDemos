@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DC Circuit Builder: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>DC Circuit Builder</h1><ul class="meta"><li><a href="../demos/circuit-builder.html">Open the demo</a></li><li>PHYS 202</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Current is not used up: along one path every part carries the same current, and at a junction the currents in equal the currents out (charge is conserved).</li>
+<li>Around any closed loop the voltage rises and drops add to zero, because the potential at a point has one value (energy is conserved).</li>
+<li>Series parts share the battery voltage; parallel parts each get the full voltage, and their currents add. A bulb's brightness follows its power, P = I²R = V²/R.</li>
+<li>A real battery is an EMF ε in series with an internal resistance r, so its terminal voltage ε − Ir falls as the current rises.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know V = IR and potential difference. Every preset is an ordinary circuit on the board: select any part to read its voltage, current and power, delete it, or add parts with the tools above the drawing. <strong>Node voltages</strong> and <strong>Voltage colors</strong> help with the divider and the bridge.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Series bulbs.</strong> Ask Q1 first. Both ammeters read 300 mA and both bulbs get 3 V. Turn on <strong>Electron flow</strong>: the dots reverse, no reading changes. Pick <strong>Loop rule</strong> under Kirchhoff check: +6 V, −3 V, −3 V, sum 0.</li>
+<li><strong>Parallel bulbs.</strong> Each bulb has 6 V and 600 mA; A1 reads 1.2 A. Switch to <strong>Junction rule</strong> and click a junction. Delete L2: L1 does not change and A1 halves.</li>
+<li><strong>Series vs parallel.</strong> Ask for a ranking of the four bulbs before you press it (Q2): 0.90 W each in series, 3.6 W each in parallel.</li>
+<li><strong>Voltage divider.</strong> V_out = 3.75 V. Change R1, then add a resistor across R2 to show a load pulling the output down (Q3).</li>
+<li><strong>Wheatstone bridge.</strong> G reads zero at R4 = 330 Ω. Move R4 a step and current appears in G; change the EMF and the balance stays (Q5).</li>
+<li><strong>Internal resistance.</strong> The voltmeter reads 8.18 V with R = 10 Ω. Lower R and the terminal voltage falls. Close S1: 9 A and 0 V.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: in Series bulbs the current leaves the + terminal and reaches L1 before L2. Is L1 brighter than L2? Does the first ammeter read more than the second? Explain before you look.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Predict: in Series vs parallel all four bulbs are 10 Ω and both batteries are 6 V. Rank the four bulbs by brightness. What happens to the other bulb in each circuit if one bulb burns out? Check by deleting one bulb in each.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In Voltage divider, ε = 12 V, R1 = 2.2 kΩ and R2 = 1.0 kΩ, so V_out = 3.75 V with nothing connected. A 1.0 kΩ load is connected across R2. Find the new V_out and the battery current. Check by adding a 1 kΩ resistor across R2.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> The battery in Internal resistance has ε = 9.0 V and r = 1.0 Ω. Find the terminal voltage and the power in the load for R = 10 Ω, 2.2 Ω and 1.0 Ω. Which load gets the most power, and what fraction of the power from the EMF is that? Check each case.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In Wheatstone bridge no current flows through G when R1/R3 = R2/R4. Explain why this does not depend on the battery EMF. If R4 is raised from 330 Ω to 390 Ω, which way does current flow through G: from the R1–R3 midpoint to the R2–R4 midpoint, or the reverse?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Start from Parallel bulbs and add a third 10 Ω bulb across the battery. Predict the new reading of A1, the equivalent resistance the battery sees, and the brightness of the first two bulbs. Then build it and check.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Current gets used up by the first bulb."</strong> The same current comes out of a bulb as goes in. What the bulb takes is energy, qΔV per charge.</li>
+<li><strong>"A battery supplies a fixed current."</strong> An ideal battery fixes the voltage; the current depends on what is connected.</li>
+<li><strong>"More bulbs means more resistance."</strong> Only in series. Each bulb added in parallel opens a new path and lowers the equivalent resistance.</li>
+<li><strong>"The voltage of a battery is always its EMF."</strong> The terminal voltage is ε − Ir; it equals ε only when no current flows.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>The circuit is solved at once by nodal analysis (Ohm's law plus the junction rule); the loop and junction rules and the power balance Σ εI = Σ I²R are shown as checks.</li>
+<li>Wires, switches and meters are ideal: an ammeter has zero resistance, a voltmeter draws no current. Where wires alone form a loop, the current is shared as if every wire had the same tiny resistance.</li>
+<li>A battery is an ideal EMF with an optional internal resistance r. The R_eq a battery "sees" is the rest of the circuit, other batteries replaced by their internal resistances; it leaves out the battery's own r.</li>
+<li>Bulbs are fixed 10 Ω resistors (glow ∝ power, full at 4 W). A real filament's resistance rises several times as it heats, so real brightness ratios differ from the demo's. Node voltages are measured from the − terminal of the first battery.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Lab connection: measure a real battery's terminal voltage against load current; the slope is −r and the intercept is ε. Then show by calculus that the load power peaks at R = r.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

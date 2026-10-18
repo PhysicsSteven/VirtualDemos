@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Magnetic Fields of Currents: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Magnetic Fields of Currents</h1><ul class="meta"><li><a href="../demos/currents-fields.html">Open the demo</a></li><li>PHYS 202</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A long straight current makes a magnetic field that circles it (right hand rule), with B = μ₀I/(2πr): twice as far, half the field.</li>
+<li>Fields of several currents add as vectors. Parallel currents attract and opposite currents repel, with F/L = μ₀I₁I₂/(2πd) on each wire, equal and opposite.</li>
+<li>Ampère's law: ∮B·dl around any closed loop equals μ₀ times the current through it. B on the loop depends on every current nearby; the integral depends only on the enclosed ones.</li>
+<li>A current loop has B = μ₀I/(2R) at its center. Many loops side by side make a solenoid with a nearly uniform field μ₀nI inside, weak outside, and about half that at the ends.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the force on a current, F = IL × B. The demo has two scenes: <strong>Straight wires</strong> (a cross section, currents into or out of the page) and <strong>Loop and solenoid</strong> (a plane through the axis). Line spacing is exact for straight wires but only rough in the loop scene, so read B from the probe there.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>One wire.</strong> Counterclockwise circles for current out of the page. Drag the probe from 3 cm (33.3 µT) to 6 cm: B halves. <strong>Reverse current</strong> turns the compasses round.</li>
+<li><strong>Two wires, parallel currents.</strong> Ask Q1 before you press it. The force arrows show attraction, 83.3 µN/m on each. Drag the probe to the midpoint, where B is zero.</li>
+<li><strong>Two wires, opposite currents.</strong> Now they repel, and the fields add between the wires. Select a wire and change its current with the slider: the two forces stay equal (Q3).</li>
+<li><strong>Ampère's law.</strong> The loop encloses 5 A out and 2 A in: ∮B·dl = μ₀(3 A) = 3.77 µT·m, computed by integrating B along the loop. Drag wire 3 around outside the loop: the colors along the loop change, the integral does not. Drag the loop over wire 3 and the integral jumps. Switch to <strong>Rectangle</strong> and <strong>Clockwise</strong>.</li>
+<li><strong>Current loop.</strong> B at the center is 78.5 µT. Drag the probe along the axis and compare with μ₀IR²/(2(R² + z²)^(3/2)).</li>
+<li><strong>Solenoid.</strong> N = 30 over 24 cm: 762 µT at the center against the ideal μ₀nI = 785 µT, and 0.511 of the center value at an end. Shorten L with the grip or slider until it turns back into a loop.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: two long parallel wires carry current in the same direction. Do they attract, repel, or feel no force? Use the field of one wire and F = IL × B on the other to decide.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Two long parallel wires are 6.0 cm apart and each carries 5.0 A in the same direction. Find the magnetic field that one wire makes at the other, and the force per meter on each. Check with Two wires, parallel currents.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In Two wires, parallel currents, wire 1 (at x = −3.0 cm) is left at 5.0 A and wire 2 (at x = +3.0 cm) is raised to 15 A. Where on the line between them is B zero? Which wire now feels the larger force per meter, and how large is it? Check with the probe and the force readouts.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In the Ampère's law setup, dragging wire 3 near the loop (but outside it) clearly changes B along the loop, yet ∮B·dl stays at μ₀(3 A). Explain how both can be true. Does wire 3 contribute nothing to B on the loop?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In the Ampère's law setup, what is ∮B·dl (a) as set, (b) with the loop direction set to Clockwise, (c) after the loop is moved or resized so that it also encloses wire 3 (+4.0 A)? Give numbers in µT·m.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> The Solenoid preset has N = 30 turns, L = 24 cm, R = 3.0 cm and I = 5.0 A. Find the ideal long solenoid field μ₀nI. The demo's exact value at the center is about 3% lower, and at an end it is about half. Explain both, and predict what happens to the 3% difference if L is doubled.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Magnetic field lines point from the wire outward, like electric field lines from a charge."</strong> Around a straight current they are closed circles; they have no start or end.</li>
+<li><strong>"Ampère's law says B on the loop comes only from the enclosed current."</strong> B everywhere comes from all the currents. Only the integral of B·dl around the closed loop is fixed by the enclosed current; outside currents add as much along the loop as they take away.</li>
+<li><strong>"The wire with the larger current feels the larger force."</strong> Each wire feels F/L = μ₀I₁I₂/(2πd): the forces are equal and opposite (Newton's third law).</li>
+<li><strong>"Like currents repel, as like charges do."</strong> For currents it is the other way round: parallel currents attract.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Straight wires: infinitely long, thin and straight, perpendicular to the page, in vacuum. Each gives B = μ₀I/(2πr), and the field shown is the vector sum. Field lines are contours of the vector potential A_z at equal steps, so their spacing is exact. A real wire has a thickness, and inside it B falls to zero at the center; the thin wire model leaves that out.</li>
+<li>The force on a wire is per meter of length and comes only from the other wires.</li>
+<li>∮B·dl is integrated numerically along the loop (adaptive Gauss–Kronrod quadrature, tolerance 10⁻¹⁰ of μ₀Σ|I|). It never uses Ampère's law, so the agreement with μ₀I_enc is a real check. Compass needles line up with B; their swing is for show.</li>
+<li>Loop and solenoid: each turn is an exact circle, coaxial and evenly spaced; its field comes from the full 3D Biot–Savart law in closed form (complete elliptic integrals). A real winding is a helix that also carries I once along the coil; that part is left out. The dashed gold curve on the axis plot is the continuous current sheet, B = μ₀nI(cos θ₁ − cos θ₂)/2.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>History: the force between two parallel currents was the basis of the SI ampere from 1948 until the 2019 redefinition, which fixed the elementary charge instead.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>
