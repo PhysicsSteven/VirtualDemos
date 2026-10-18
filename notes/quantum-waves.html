@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quantum Wave Packets: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Quantum Wave Packets</h1><ul class="meta"><li><a href="../demos/quantum-waves.html">Open the demo</a></li><li>Modern physics</li><li>20 to 35 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A localized electron is a wave packet, a superposition of wavelengths. It satisfies Δx·Δp ≥ ħ/2; a Gaussian packet starts at the minimum, and a free packet spreads because its momentum components travel at different speeds while Δp stays fixed.</li>
+<li>At a step or barrier the wave splits into reflected and transmitted parts. A quantum electron can reflect when E &gt; V₀ and can tunnel through when E &lt; V₀; tunneling falls off roughly as e^(−2κa).</li>
+<li>R and T are probabilities. Each detection finds the electron in one place; the pattern |ψ|² only shows up over many identically prepared electrons.</li>
+<li>Confinement gives discrete energies. An energy eigenstate is stationary (only its phase turns); a superposition of two levels sloshes with period h/ΔE.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the de Broglie relation p = h/λ, E = p²/2m for a free particle and the idea that |ψ|² is a probability density. Units are nm, eV and fs, with ħ²/2m = 0.0381 eV·nm² for the electron and h = 4.136 eV·fs. The top panel shows V(x), ⟨E⟩ and the levels; the lower panel shows |ψ|² colored by the phase of ψ. Use <strong>¼×</strong> speed and <strong>Pause</strong> at the key moments.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Free particle.</strong> Watch Δx grow while Δp stays at 196 eV/c; the uncertainty product starts at 0.506 ħ. The readouts describe only the part still in view, so pause before the packet reaches the right edge (after that, its leading part is being absorbed and Δp and ⟨p⟩ drift down).</li>
+<li><strong>Step.</strong> Ask Q1 first. E₀ = 0.6 eV over a 0.4 eV step: about 9% reflects. Then drag E₀ below 0.4 eV and relaunch: everything comes back, after a brief dip into the step.</li>
+<li><strong>Barrier.</strong> ⟨E⟩ = 0.30 eV, V₀ = 0.5 eV, a = 0.5 nm: once the packet splits, T ≈ 33%. Then set <strong>Barrier width a</strong> to 1.00 nm (Q3).</li>
+<li><strong>Infinite well.</strong> It starts in the superposition of n = 1 and n = 2, sloshing with the 3.67 fs beat. Click the <strong>n=2</strong> level chip to drop it, leaving n = 1 alone: |ψ|² freezes and only the color turns (Q5). Click <strong>n=2</strong> again to bring the sloshing back.</li>
+<li><strong>Measure x.</strong> In the well, press <strong>Pause</strong> and then <strong>Measure x</strong> twice; press <strong>Play</strong> and measure again. Press <strong>Reset</strong> to return to the prepared state, then <strong>Measure 200 copies</strong>, and let the histogram build up |ψ|² (Q7).</li>
+<li><strong>Oscillator</strong> and <strong>Double well</strong> (if time allows). The oscillator's levels are evenly spaced, and its coherent state swings without spreading. In the double well the electron tunnels from one well to the other and back every 290 fs.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: an electron with 0.6 eV of kinetic energy meets a step up of 0.4 eV. A classical particle would always continue, slower. Will the quantum electron always continue? What changes if its energy is below 0.4 eV?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> For a plane wave of energy E = 0.6 eV at a step of V₀ = 0.4 eV, the reflection probability is R = ((k₁ − k₂)/(k₁ + k₂))², with k ∝ √(E − V) on each side. Find R. In <strong>Step</strong> the packet's simulated R comes out a little larger. Why does a packet with the same mean energy reflect more than the plane wave does?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In <strong>Barrier</strong> (V₀ = 0.5 eV, a = 0.5 nm, E = 0.3 eV), find the decay constant κ = √(2m(V₀ − E))/ħ inside the barrier and κa. Predict: if the barrier width is doubled to 1.0 nm, will T be about half as large, or much smaller than that? Check with <strong>Plane wave T(E₀)</strong>.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> An electron is in an infinite well of width L = 1.00 nm. Find E₁ and E₂ from E_n = n²π²ħ²/(2mL²), and the period with which the superposition of n = 1 and n = 2 sloshes back and forth. Check with the table and the <strong>Beat period</strong> readout in <strong>Infinite well</strong>.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In an energy eigenstate, ψ keeps changing (the colors cycle), yet nothing you could measure about position changes. Explain why. Why does a superposition of two eigenstates move, and why does its period depend only on the difference of the two energies?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In <strong>Free particle</strong>, Δx grows steadily while Δp does not change. Explain the spreading using the momentum components of the packet. In <strong>Barrier</strong>, after the split, the readout shows Δx·Δp near 50 ħ. Does that violate the uncertainty principle? What does it tell you about the state?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Pause the motion, press <strong>Measure x</strong> on a state in the well, then press it again. Then try the same with the motion running. Compare the two results with each other, and with what <strong>Measure 200 copies</strong> shows. What does one measurement tell you about |ψ|², and what do 200 copies tell you?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Reflection only happens when E &lt; V₀."</strong> Waves reflect at any sudden change in potential; at a step, E &gt; V₀ still gives R &gt; 0.</li>
+<li><strong>"A tunneling electron loses energy inside the barrier."</strong> The transmitted packet has the same energy as the incident one; its wavelength on the far side is unchanged. Only the amplitude is reduced.</li>
+<li><strong>"T = 33% means a third of the electron gets through."</strong> Each electron is detected whole on one side; T is a probability.</li>
+<li><strong>"The packet spreads because Δp grows."</strong> Δp is constant for a free particle; the components with larger p simply outrun the slower ones.</li>
+<li><strong>"A stationary state is an electron at rest."</strong> It has a definite energy and an unchanging |ψ|²; its momentum is equally likely to be +p or −p.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>The time dependent Schrödinger equation for an electron in one dimension, solved with Crank–Nicolson steps on a uniform grid (25 pm spacing in the scattering setups).</li>
+<li>Scattering setups have absorbing layers just beyond the view; probability absorbed there is counted in R or T, so <strong>Total probability</strong> stays 1. All other readouts (⟨x⟩, Δx, ⟨p⟩, Δp, ⟨E⟩) use only the part still on the grid.</li>
+<li>The launched packet is ψ ∝ exp(−(x − x₀)²/4σ² + ik₀x), with Δx = σ and Δp = ħ/2σ at launch. <strong>Plane wave T(E₀)</strong> comes from transfer matrices (for the single barrier, T = [1 + V₀² sinh²(κa)/4E(V₀ − E)]⁻¹); <strong>T averaged over packet</strong> averages T(E) over the packet's spread of k.</li>
+<li>Wells have hard walls at the edges of the grid. Their levels come from diagonalizing the same finite difference Hamiltonian, which is why the infinite well and oscillator tables agree with n²π²ħ²/2mL² and (n + ½)ħω to three or four decimals rather than exactly.</li>
+<li><strong>Measure x</strong> draws one position from |ψ|² and replaces ψ with a narrow packet there, with zero mean momentum, to stand in for a detector of finite resolution. <strong>Measure 200 copies</strong> samples 200 positions without disturbing ψ.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: in <strong>Double barrier</strong>, one barrier alone transmits 23% at E₀ = 0.0774 eV, but the pair transmits 100% for a plane wave. Explain the resonance as a standing wave between the barriers, and explain why the packet's T (about 64%) is lower.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

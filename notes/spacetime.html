@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spacetime Diagrams: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Spacetime Diagrams</h1><ul class="meta"><li><a href="../demos/spacetime.html">Open the demo</a></li><li>Modern physics</li><li>20 to 35 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>An event is a point (ct, x). Light travels on 45° lines in every frame; the light cone of an event separates what it can influence (its future cone) from what it cannot.</li>
+<li>A moving frame S′ has tilted axes: the ct′ axis is its worldline, and the x′ axis, its line of simultaneity, tilts toward the light line by the same angle, tan θ = β. So events simultaneous in S are not simultaneous in S′.</li>
+<li>Time dilation and length contraction follow from the Lorentz transformation and are reciprocal: each frame finds the other's clocks slow and rods short, because the frames disagree about which events are simultaneous.</li>
+<li>The interval Δs² = (cΔt)² − Δx² is the same in every frame. Timelike pairs have an order all observers agree on; spacelike pairs do not, so no signal can connect them.</li>
+<li>In the twin paradox the traveler's worldline is bent; the elapsed proper time along it is shorter. The turnaround, not the motion, breaks the symmetry.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the postulates of special relativity and γ = 1/√(1 − β²); the Lorentz transformation is printed in the header. Units are years and light years, so c = 1 and light lines are at 45°. Each <strong>Scenarios</strong> button loads events and worldlines, with a hint. Click empty space to add an event, drag events to move them (they snap to quarter units), and toggle <strong>Both frames</strong> and <strong>Moving frame's view</strong> (or press M) to redraw the diagram in S′. The <strong>Speed β = v/c</strong> slider sets S′.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Light cone basics.</strong> O and A are selected: A is in O's future cone, timelike, proper time 3.71 yr. To compare B or C with O, click O and then the other event (the readouts always compare the last two events clicked). B is spacelike from O, C is on O's cone (lightlike), D is in O's past. Drag A across the cone and watch <strong>Separation</strong> change.</li>
+<li><strong>Relativity of simultaneity.</strong> Ask Q1 first. A and B are simultaneous on the platform (ct = 0). The red dashed lines of simultaneity through A and B are parallel to the x′ axis and do not coincide: on the train B happens first. Slide β to 0 and back.</li>
+<li><strong>Time dilation.</strong> At R the rocket clock reads 4 yr while the lab says ct = 5 yr. Then press <strong>Moving frame's view</strong>: now the home ticks are spread out. Ask Q3.</li>
+<li><strong>Length contraction.</strong> A rod 5 ly long in S′ spans 4 ly when both ends are marked at one S time (blue) and 5 ly when marked at one S′ time (red). Ask Q4.</li>
+<li><strong>Twin paradox.</strong> Home ages 10 yr, the traveler 6 yr at β = 0.8. The traveler's purple lines of simultaneity jump from home time 1.8 yr to 8.2 yr at the turnaround. Try β = 0.6 (Q5).</li>
+<li><strong>Causality.</strong> A and B are spacelike. Slide β slowly through 0.25 and watch the order flip in the verdict. Then click A and C: timelike, and no β changes their order (Q6).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: lightning strikes the front and back of a moving train at the same time according to an observer on the platform, standing midway between the strikes. A passenger sits at the middle of the train. Does the passenger find that the strikes were simultaneous? If not, which came first? The passenger knows the speed of light and corrects for the travel time.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In <strong>Relativity of simultaneity</strong>, the strikes are A = (ct, x) = (0, −4 ly) and B = (0, +4 ly), and the train moves at β = 0.5. Use the Lorentz transformation to find ct′ for each strike. How long before A does B happen on the train? Check with the <strong>In S′: (ct′, x′)</strong> readout.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In <strong>Time dilation</strong> (β = 0.6) the rocket's clock reads 8 years after 10 years of lab time. Explain how the rocket crew can, at the same time, correctly say that the home clock runs slow. How much does the home clock advance during the crew's first 8 years, according to the crew? Use <strong>Moving frame's view</strong> to check.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In <strong>Length contraction</strong> the rod is 5 ly long in S′ and spans 4 ly in S. Which is the rod's "real" length? Explain, using the two marked segments, why measuring a moving rod depends on simultaneity.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In <strong>Twin paradox</strong>, set β = 0.6 with a 10 year trip on the home clock. How much does the traveler age? Using the traveler's lines of simultaneity, find the home times just before and just after the turnaround. Check with the <strong>Traveling twin</strong> readout and the label on the diagram.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In <strong>Causality</strong>, find Δs² for A = (1, −2) and B = (2, 2), and for A and C = (5, −1). Explain why the order of A and B can be reversed by an observer moving faster than 0.25c, but the order of A and C cannot be reversed by anyone. What would go wrong if a signal could travel from A to B?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Use the demo to check: select one event, note the <strong>s² from origin</strong> readout, then sweep β from −0.95 to 0.95. What happens to the event's coordinates in S′, and to s²? On the diagram, along what curve does the event appear to move in <strong>Moving frame's view</strong>?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Time dilation means the moving clock really runs slow."</strong> Each frame finds the other's clock slow. Neither clock is faulty; they measure time along different worldlines, and comparing distant clocks needs a choice of simultaneity.</li>
+<li><strong>"The traveling twin is younger because acceleration slows clocks."</strong> Here the turnaround is instantaneous and adds nothing to the traveler's clock. The bent worldline simply has less proper time; at the turn the traveler changes frames, and the home time the traveler calls "now" jumps.</li>
+<li><strong>"Length contraction is an optical illusion caused by light travel time."</strong> Coordinates already correct for travel time; contraction comes from marking the two ends at events simultaneous in the observer's frame. Simultaneity itself depends on the frame.</li>
+<li><strong>"Every pair of events has a definite order."</strong> Only timelike and lightlike pairs do; spacelike pairs can be in either order.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Exact special relativity in one space dimension with c = 1: every coordinate comes from t′ = γ(t − βx), x′ = γ(x − βt). The S′ axes are drawn at tan θ = |β| from the S axes; <strong>Moving frame's view</strong> redraws everything with a boost by the rapidity tanh⁻¹β, so S′ axes become square and S axes tilt.</li>
+<li>For the last two events selected the rail gives Δs², the separation type and the proper time or proper distance. Clocks show proper time τ = ∫√(dt² − dx²), one tick per year on that clock.</li>
+<li>The faint hyperbolas are (ct)² − x² = ±1, ±4, ±9, …; a boost moves each event along its hyperbola, so the primed ticks look stretched.</li>
+<li>The twin turns around instantaneously at half the home time. Events snap to a grid of 0.25 in whichever frame the diagram is drawn.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: a muon (proper lifetime 2.2 µs) moves at β = 0.995. Draw its worldline and find how far it travels in the lab before decaying; then describe the trip in the muon's frame.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Photoelectric Effect: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Photoelectric Effect</h1><ul class="meta"><li><a href="../demos/photoelectric.html">Open the demo</a></li><li>Modern physics; intro astronomy; PHYS 202</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Light delivers its energy in photons of E = hf = hc/λ. One photon frees at most one electron, so color (frequency) sets the electron energy and brightness only sets how many electrons there are.</li>
+<li>Below the threshold frequency f₀ = φ/h no electrons come out, however bright the light and however long you wait.</li>
+<li>The fastest electrons have K_max = hf − φ, and the stopping voltage measures it directly: eV₀ = K_max.</li>
+<li>A graph of K_max against f is a straight line for every metal, with slope h. The intercept gives the work function, which depends on the metal.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know E = hf, c = fλ, the electron volt and that an electron crossing a potential difference V gains or loses energy eV. hc = 1240 eV·nm makes every photon energy a one line calculation. The demo starts in <strong>Blue on sodium</strong>; the hint under the setup buttons changes with each one.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Blue on sodium.</strong> Point out the readouts: each 420 nm photon carries 2.95 eV, sodium needs 2.28 eV, so K_max = 0.67 eV and the ammeter reads about 13.6 nA.</li>
+<li><strong>Red light, no luck.</strong> Ask Q1 before pressing it. Full power at 680 nm, and the tube shows "hf &lt; φ : no electrons". Slide the <strong>Light power</strong> up and down: nothing. Now slide <strong>Wavelength λ</strong> slowly toward blue and let the class call out when the current appears (544 nm, the <strong>Threshold λ₀</strong> readout).</li>
+<li><strong>Brighter, not faster.</strong> Drag <strong>Light power</strong>. The current tracks the power, but the −V₀ point on the current against voltage chart does not move. This is the observation the wave picture could not explain (Q3).</li>
+<li><strong>Stopping voltage.</strong> The collector sits at −0.78 V, just under V₀ = 0.82 V, and only a trickle gets across. Lower <strong>Collector voltage V</strong> past −0.82 V: the current is zero. Then bring V slowly back to 0 and watch the current rise along a straight line (Q6).</li>
+<li><strong>UV on zinc.</strong> Zinc needs 4.33 eV, so the threshold is 286 nm, in the ultraviolet. Slide into the visible and the current stops.</li>
+<li><strong>Measure h.</strong> Six recorded points fall on a line; read <strong>h from slope</strong> and <strong>φ from intercept</strong>. Then press <strong>Clear points</strong>, pick another metal, and have students record their own V₀ values with <strong>Record V₀</strong> (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: red light of 680 nm falls on sodium and no electrons come out. If you made the light ten times brighter, or left it on for an hour, would electrons start to come out? Explain what the wave picture of light would predict, and what the photon picture predicts.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Ultraviolet light of 300 nm falls on calcium (φ = 2.87 eV). Find the photon energy, the maximum kinetic energy of the electrons and the stopping voltage. What is the longest wavelength that can free electrons from calcium? Check with the demo.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In <strong>Brighter, not faster</strong>, tripling the light power triples the current but leaves the stopping voltage unchanged. Explain both facts photon by photon.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Predict, then check: on sodium with the light power fixed at 40 µW and V = 0, the wavelength is changed from 500 nm to 250 nm. Each photon now has twice the energy. Does the current go up, go down or stay the same, and by what factor?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In <strong>Blue on sodium</strong> the lamp delivers 40 µW of 420 nm light to the metal. How many photons arrive per second? If one photon in a thousand frees an electron that reaches the collector, what current flows? Compare with the <strong>Photons per second</strong> and <strong>Current I</strong> readouts.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In <strong>Stopping voltage</strong>, the current does not stay at full value until V reaches −V₀ and then drop to zero. It falls steadily as V goes from 0 to −0.82 V. What does that tell you about the kinetic energies of the electrons leaving the metal?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> After <strong>Measure h</strong>, clear the points, choose zinc and record V₀ at four wavelengths between 150 and 280 nm. Which of the two fit results changes from the sodium result and which stays the same? Explain why.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Brighter light knocks electrons out faster."</strong> Brightness is the number of photons per second. Each photon still carries hf, so K_max and V₀ do not change.</li>
+<li><strong>"Any light will free electrons if you wait long enough."</strong> An electron cannot save up energy from several photons. Below f₀ the current is zero at any power and for any time; above f₀ emission starts at once, even in dim light.</li>
+<li><strong>"Every electron comes out with K_max."</strong> K_max is the most any electron can have. Most lose some energy on the way out of the metal, which is why the current falls gradually toward V₀.</li>
+<li><strong>"Higher frequency light at the same power gives a bigger current."</strong> At fixed power, more energy per photon means fewer photons, so the current drops.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Photon energy E = hc/λ with hc = 1239.84 eV·nm; frequency f = c/λ. K_max = hf − φ and V₀ = K_max/e. The work functions are fixed textbook values (cesium 2.14 eV to platinum 5.65 eV); real values depend on the surface.</li>
+<li>Photon rate N = P/hf from the <strong>Light power</strong> P. The current with V ≥ 0 is the saturation current I = ηeN with quantum efficiency η = 0.001, and it is reached at once at V = 0. Real tubes rise gradually to saturation, and contact potentials between the two metals shift the measured V₀; the demo leaves both out.</li>
+<li>Electrons leave with kinetic energies spread evenly between 0 and K_max and all head straight across the gap. With V &lt; 0 the fraction that reaches the collector is 1 − e|V|/K_max, so the current falls linearly to zero at −V₀. Real curves have a rounded tail.</li>
+<li><strong>Record V₀</strong> adds a small random reading error (a few hundredths of a volt) before fitting a least squares line of K_max against f. The slope gives h, the intercept −φ.</li>
+<li>On screen every photon above threshold makes an electron, slowed enormously: at K_max = 0.67 eV a real electron moves at about 490 km/s.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>History: Einstein proposed light quanta to explain the effect in 1905. Millikan's careful measurements of V₀ against frequency, published in 1916, confirmed the straight line and gave a value of h.</li>
+<li>Lab connection: a real h/e apparatus uses mercury lamp lines and filters in place of the wavelength slider.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

@@ -349,7 +349,7 @@ select:disabled { opacity: 0.5; }
         <h2>About the model</h2>
         <p class="hint">Exact solutions of the Schrödinger equation for one electron and a point nucleus: ψ = R<sub>nl</sub>(r) Y<sub>lm</sub>(θ, φ), with R from associated Laguerre polynomials and Y from associated Legendre functions with the Condon–Shortley phase. Spin, fine structure and the Lamb shift are left out.</p>
         <p class="hint">Distances use the Bohr radius a₀ for an infinitely heavy nucleus. Energies use 13.598 eV, the measured value for hydrogen, which includes the small correction for the moving proton.</p>
-        <p class="hint">The Bohr model puts the electron on a circle of radius n²a₀. Here the electron has no orbit, only a probability cloud, and the energies still come out as −13.6 eV/n². Compare with the Bohr model in <a href="spectra.html">Atomic Spectra</a>.</p>
+        <p class="hint">The Bohr model puts the electron on a circle of radius n²a₀. Here the electron has no orbit, only a probability cloud, and the energies still come out as −13.6 eV/n². Compare with the Bohr model in <a href="spectra.html">Spectra Explorer</a>.</p>
       </section>
     </aside>
   </main>
@@ -709,9 +709,9 @@ select:disabled { opacity: 0.5; }
     if (S.l > 0) {
       if (S.real) {
         const cones = S.l - Math.abs(S.m), planes = Math.abs(S.m);
-        nh += `Angular nodes: ${cones ? cones + (cones === 1 ? (S.l - Math.abs(S.m) === 1 && planes === 0 ? ' plane (the xy plane)' : ' cone or plane through z') : ' cones or planes') : ''}${cones && planes ? ' and ' : ''}${planes ? planes + ' plane' + (planes > 1 ? 's' : '') + ' containing the z axis' : ''}.`;
+        nh += `Angular nodes: ${cones ? cones + (cones === 1 ? (S.l - Math.abs(S.m) === 1 ? ' plane (the xy plane)' : ' cone or plane through z') : ' cones or planes') : ''}${cones && planes ? ' and ' : ''}${planes ? planes + ' plane' + (planes > 1 ? 's' : '') + ' containing the z axis' : ''}.`;
       } else if (S.m !== 0) {
-        nh += `In a complex state ψ vanishes on ${S.l - Math.abs(S.m)} cone${S.l - Math.abs(S.m) === 1 ? '' : 's'} and along the z axis; the ${Math.abs(S.m)} nodal plane${Math.abs(S.m) > 1 ? 's' : ''} of the real orbitals become a phase that winds ${Math.abs(S.m)} time${Math.abs(S.m) > 1 ? 's' : ''} around z.`;
+        nh += `In a complex state ψ vanishes on ${S.l - Math.abs(S.m)} cone${S.l - Math.abs(S.m) === 1 ? '' : 's'} and along the z axis; the ${Math.abs(S.m)} nodal plane${Math.abs(S.m) > 1 ? 's' : ''} of the real orbitals ${Math.abs(S.m) > 1 ? 'become' : 'becomes'} a phase that winds ${Math.abs(S.m)} time${Math.abs(S.m) > 1 ? 's' : ''} around z.`;
       } else nh += `With m = 0 the complex state is real, the same as the real orbital.`;
     } else nh += 'An s state has no angular nodes.';
     $('nodeHint').textContent = nh.trim();
@@ -731,7 +731,7 @@ select:disabled { opacity: 0.5; }
       } else {
         $('rDip').textContent = '0';
         $('rRule').textContent = isFinite(T)
-          ? `No. ⟨r⟩ stays at the nucleus, so this pair does not radiate as a dipole. That needs Δl = ±1 (and Δm = 0 or ±1), the selection rule.`
+          ? `No. The center of the cloud stays at the nucleus, so this pair does not radiate as a dipole. That needs Δl = ±1 (and Δm = 0 or ±1), the selection rule.`
           : 'The two states have the same energy, so nothing moves: the cloud is stationary.';
       }
     } else {

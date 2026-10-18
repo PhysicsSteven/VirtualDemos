@@ -345,7 +345,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
   ];
   const BY = Object.fromEntries(EL.map((e) => [e[1], e]));
   const NOTES = {
-    H: 'Four visible lines, the Balmer series, all from electrons dropping to the n = 2 level. The red Hα line at 656.3 nm gives glowing hydrogen clouds in space their pink color.',
+    H: 'Four bright visible lines (and fainter ones crowding toward 365 nm), the Balmer series, all from electrons dropping to the n = 2 level. The red Hα line at 656.3 nm gives glowing hydrogen clouds in space their pink color.',
     He: 'Found in the Sun before it was found on Earth: in 1868 astronomers saw an unknown yellow line at 587.6 nm in the solar spectrum and named the element after the Greek word for Sun.',
     Li: 'The bright red line at 670.8 nm makes lithium compounds burn crimson in fireworks and flame tests.',
     Na: 'The famous yellow D lines at 589.0 and 589.6 nm. They give old sodium streetlights their color, and they show up as dark absorption lines in the Sun.',
@@ -629,20 +629,20 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
   function hLine(ni, nf) {
     const inv = RH * (1 / (nf * nf) - 1 / (ni * ni));
     const vac = 1e9 / inv;
-    return { vac, air: airFromVac(vac), eV: 13.6057 * (1 / (nf * nf) - 1 / (ni * ni)) };
+    return { vac, air: airFromVac(vac), eV: 13.5983 * (1 / (nf * nf) - 1 / (ni * ni)) };
   }
   const bohrHits = [];
   function drawBohr() {
     const cv = $('cBohr'), [ctx, W, H] = fit(cv), ps = projScale();
     ctx.clearRect(0, 0, W, H);
     const top = 40 * ps, bot = H - 16 * ps, left = 104 * ps, right = W - 10;
-    const Y = (E) => bot - (E + 13.6057) / 13.6057 * (bot - top);
+    const Y = (E) => bot - (E + 13.5983) / 13.5983 * (bot - top);
     ctx.font = `${10.5 * ps}px ${mono()}`; ctx.textBaseline = 'middle';
     const muted = tok('--muted'), ink = tok('--ink');
     ctx.fillStyle = muted; ctx.textAlign = 'left'; ctx.fillText('energy (eV)', 4, 10 * ps);
     // levels (linear energy scale: the upper levels really do crowd together near 0 eV)
     for (let n = 1; n <= 8; n++) {
-      const E = -13.6057 / (n * n), y = Math.round(Y(E)) + 0.5;
+      const E = -13.5983 / (n * n), y = Math.round(Y(E)) + 0.5;
       ctx.strokeStyle = n === S.series ? ink : muted; ctx.lineWidth = n === S.series ? 2 * ps : 1;
       ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(right, y); ctx.stroke();
       if (n <= 3) {
@@ -661,7 +661,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
     for (let ni = nf + 1; ni <= 8; ni++) his.push(ni);
     const span = right - left - 30, dx = span / (his.length + 1);
     his.forEach((ni, k) => {
-      const x = left + 20 + dx * (k + 1), y1 = Y(-13.6057 / (ni * ni)), y2 = Y(-13.6057 / (nf * nf));
+      const x = left + 20 + dx * (k + 1), y1 = Y(-13.5983 / (ni * ni)), y2 = Y(-13.5983 / (nf * nf));
       const L = hLine(ni, nf), c = lamRGB(L.air), sel = ni === S.ni;
       const col = (L.air < 380 || L.air > 750) ? (sel ? ink : muted) : rgba(c, 1);
       ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = (sel ? 3.4 : 2) * ps;

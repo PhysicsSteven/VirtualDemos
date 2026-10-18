@@ -617,7 +617,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const PRESETS = {
     free: { kind: 'scatter', view: [-20, 20], dx: 0.025,
       params: {}, packet: { x0: -13, sigma: 0.5, E0: 0.6, dir: 1 },
-      hint: 'A free packet spreads. Its momentum spread Δp never changes, but the faster parts run ahead (shorter wavelength, so the colors cycle faster at the front) and Δx keeps growing.' },
+      hint: 'A free packet spreads. Its momentum spread Δp stays the same (until the packet reaches the absorbing edge), but the faster parts run ahead (shorter wavelength, so the colors cycle faster at the front) and Δx keeps growing.' },
     step: { kind: 'scatter', view: [-25, 25], dx: 0.025,
       params: { h: 0.4 }, packet: { x0: -12, sigma: 2, E0: 0.6, dir: 1 },
       hint: 'Even with E above the step, part of the packet reflects, which a classical particle never does. Drop E₀ below the step and everything reflects after a brief dip into the step.' },
