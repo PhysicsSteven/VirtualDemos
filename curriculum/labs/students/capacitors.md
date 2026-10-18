@@ -1,7 +1,7 @@
 # Capacitors and Dielectrics: Charge, Energy and Work
 Student laboratory · 100 minutes · Physics II
 
-[Open simulation](https://physicssteven.github.io/VirtualDemos/demos/capacitors.html)
+[Open simulation](https://physicssteven.github.io/VirtualDemos/demos/capacitors.html). Controls checked against main bc0485a.
 
 ## Objectives and prerequisites
 Infer capacitance from geometry; distinguish fixed-charge and fixed-voltage processes; test a complete energy ledger; measure dielectric effects; compare series and parallel networks. Prerequisites: electric potential, parallel-plate fields, work, and basic graphing.

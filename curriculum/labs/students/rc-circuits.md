@@ -16,12 +16,14 @@ Starting with ε−IR−Q/C=0 and I=dQ/dt, derive the solution for charging an i
 ## Apparatus
 Use the **Charging**, **Discharging**, and **Energy bookkeeping** presets. The Circuit panel has **Battery EMF ε**, **Resistance R**, and **Capacitance C** controls. The Time panel has **Playback rate**, **Automatic**, **Whole run**, and **Last change**. The Display panel has **τ marks** and **Exact curve** toggles. Measurements display time, V_C, V_R, I and Q; Energy displays W, U, H and instantaneous power.
 
-## Part A — Determine an unknown capacitance (30 min)
+The current main version has no capture table, CSV or exact-time entry. Use **Play/Pause** and slow playback, recording actual circuit time and readouts in a spreadsheet. Turning off the two plot toggles does not hide all τ readouts or preset hints: make predictions first, and treat this as model-based parameter recovery rather than a blinded unknown-component experiment.
+
+## Part A — Determine capacitance (30 min)
 1. Select Charging. Set ε=10 V (or nearest available setting), C=100 µF and R=10 kΩ (or nearest supported E12 value). Record exact displayed values.
 2. **Turn off τ marks and Exact curve.** Use Reset before each run. Use Pause and playback controls to sample V_C at six or more times spanning approximately 0 to 4τ. If a precise sample time is inaccessible, record the nearest displayed time rather than inventing an exact one.
 3. Measure the elapsed time at which V_C reaches 0.6321ε, using interpolation between two neighboring samples if necessary.
 4. Compute y=ln(1−V_C/ε) for each non-saturated point. Fit y=a+bt, report slope b in s⁻¹, and infer τ=−1/b. Compare with the 63.2% method.
-5. Repeat with five resistor settings spanning approximately 5–25 kΩ, holding C fixed. Use the nearest supported resistor values; record those rather than forcing the nominal settings.
+5. Repeat with five resistor settings spanning 4.7–22 kΩ (4.7, 6.8, 10, 15 and 22 kΩ are available), holding C fixed. Use the nearest supported resistor values; record those rather than forcing the nominal settings.
 6. Plot τ against R in ohms and fit τ=mR+b. Infer C=m in farads; report intercept and residuals.
 7. Enable τ marks and Exact curve and compare your inferred values to the simulation prediction.
 
@@ -33,14 +35,16 @@ Use the **Charging**, **Discharging**, and **Energy bookkeeping** presets. The C
 | | | | | | |
 | | | | | | |
 
+For each run retain a raw table with columns: elapsed t (s), V_C (V), V_R (V), I (A), Q (C), and ln(1−V_C/ε). Include at least six rows before building the summary table. Avoid points so near saturation that readout rounding makes the logarithm undefined.
+
 ## Part B — Discharge and changing resistance (20 min)
-1. Fully charge the capacitor (wait at least 5τ), then switch to Discharge. Record initial Q, V_C, and I.
+1. Charge the capacitor for at least 5τ (this is about 99.3% charged, not exactly full), then switch to Discharge. Record initial Q, V_C, and I.
 2. Record V_C and I at 0, 0.5τ, τ, 2τ, 3τ and 5τ relative to the switch event. If the UI does not permit exact sampling, record actual times.
 3. Fit ln(V_C/V_C0) versus time. Compare discharge τ with charging τ.
 4. Enable **Separate discharge resistor R₂**, choose R₂ different from R, and repeat. Explain which properties change and which remain invariant.
 
 ## Part C — Energy conservation (20 min)
-1. Use Energy bookkeeping. Begin with an uncharged capacitor and record W, U and H at several times, including t≈5τ.
+1. Use **Energy bookkeeping** (ε=6 V, R=1 kΩ, C=1000 µF). Press Reset with the switch in Charge to begin with an uncharged capacitor and record W, U and H at several times, including t≈5τ.
 2. Calculate residual Δ=W−U−H for the initial charging run and express it relative to the final battery work.
 3. Repeat with a different R and identical ε,C. Compare final H and peak instantaneous power.
 4. Optional challenge: change capacitance while the capacitor is charged. Explain why the energy ledger must include mechanical work, not just W−U−H.
