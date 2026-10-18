@@ -46,6 +46,7 @@ OVERRIDES = {
     "double-slit": {"wait": 4000},
     "radioactive-decay": {"wait": 3000},
     "rutherford": {"click": ['[data-p="gm"]'], "wait": 6000},
+    "lasers": {"wait": 3500},
     "white-dwarf-cooling": {"click": ['[data-p="cryst"]'], "wait": 1500},
     "ideal-gas": {"wait": 2500},
     "magnetic-force": {"wait": 5000},
@@ -58,6 +59,7 @@ OVERRIDES = {
     "collisions": {"click": ['[data-p="glance"]'], "wait": 1300},
     "double-pendulum": {"click": ['[data-p="fly"]'], "wait": 9000},
     "fluids": {"crop": "#sPane", "anchor": "bottom", "wait": 2500},
+    "franck-hertz": {"click": ['[data-p="ne"]'], "wait": 9500},
     "capacitors": {"click": ['[data-p="energy"]'], "wait": 1500,
                    "js": "['tPane', 'ePane', 'gPane'].forEach((id) => { document.getElementById(id).hidden = true; }); __cap.setRunning(false); __cap.setGeom({ A: 0.03 })"},
 }

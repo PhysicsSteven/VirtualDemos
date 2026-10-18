@@ -1,0 +1,1590 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+<title>Lasers and Stimulated Emission</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one canvas with four views (the three processes, the laser cavity, energy levels, cavity modes). Instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --elec: #17855f;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --elec: #4fd1a0; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --elec: #4fd1a0; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.units .nw { white-space: nowrap; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#can { touch-action: none; outline: none; }
+#can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.scale { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
+
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 3px solid; }
+.swatch.las { border-color: var(--pos); }
+.swatch.inv { border-color: var(--equi); }
+.swatch.pmp { border-color: var(--accent); }
+.swatch.nr { border-color: var(--muted); border-top-style: dotted; }
+.swatch.ghost { border-color: var(--muted); border-top-style: dashed; border-top-width: 2px; }
+
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; }
+  .pane { height: 1080px; }
+  .pane[data-view="proc"] { height: 1120px; }
+  .pane[data-view="levels"] { height: 1260px; }
+  .pane[data-view="modes"] { height: 620px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Lasers and Stimulated Emission</h1>
+      <p>A photon can make an excited atom emit an exact copy of itself. Put enough excited atoms between two mirrors and the copies multiply into a laser beam, but only once the upper level holds more atoms than the lower one.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono"><span class="nw">E = hν</span> · <span class="nw">N₂/N₁ = e<sup>−hν/kT</sup></span> · <span class="nw">A₂₁/B₂₁ = 8πhν³/c³</span> · <span class="nw">N<sub>th</sub> = 1/(Kτ<sub>c</sub>)</span></div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="restart">Switch on again</button>
+        <div class="seg" role="group" aria-label="View">
+          <button type="button" id="vProc" aria-pressed="false">Processes</button>
+          <button type="button" id="vLaser" aria-pressed="true">Laser</button>
+          <button type="button" id="vLevels" aria-pressed="false">Energy levels</button>
+          <button type="button" id="vModes" aria-pressed="false">Modes</button>
+        </div>
+        <span class="count mono" id="count"></span>
+      </div>
+      <div class="pane" id="pane" data-view="laser">
+        <canvas id="can" tabindex="0" aria-label="Lasers and stimulated emission. Four views: the three radiative processes with thermal and pumped populations, a laser cavity with its rate equations, energy level diagrams of ruby, Nd:YAG and helium neon, and the longitudinal modes of a helium neon laser. Drag the grips on the drawing: the pump and the output mirror in the cavity, the operating point on the plots, the temperature and pump markers, the cavity mirror and the mode comb. Keys: left and right change the pump, temperature or mirror spacing; up and down change the mirror reflectivity, the two level pump or the gain; space plays or pauses; R switches the laser on again; 1 to 4 pick the view."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="proc" aria-pressed="false">Absorption vs stimulated emission</button>
+          <button type="button" data-p="noinv" aria-pressed="false">No laser without inversion</button>
+          <button type="button" data-p="thresh" aria-pressed="false">Threshold</button>
+          <button type="button" data-p="relax" aria-pressed="true">Turning on: relaxation oscillations</button>
+          <button type="button" data-p="three" aria-pressed="false">Three level vs four level</button>
+          <button type="button" data-p="modes" aria-pressed="false">Cavity modes of a He–Ne laser</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <!-- Processes view -->
+      <section data-for="proc">
+        <h2>Two level atom</h2>
+        <div class="chips" id="trans" role="group" aria-label="Transition">
+          <button type="button" data-t="hene" aria-pressed="true">He–Ne 632.8 nm</button>
+          <button type="button" data-t="nd" aria-pressed="false">Nd:YAG 1064 nm</button>
+          <button type="button" data-t="co2" aria-pressed="false">CO₂ 10.6 µm</button>
+          <button type="button" data-t="nh3" aria-pressed="false">Ammonia maser 23.87 GHz</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="temp">Temperature T</label><output id="tempOut" class="mono" for="temp"></output></div>
+          <input type="range" id="temp" min="1" max="5" step="0.001" value="2.4771">
+          <div class="scale"><span>10 K</span><span>1000 K</span><span>10⁵ K</span></div>
+        </div>
+        <dl class="readout">
+          <div><dt>Photon energy hν</dt><dd id="rHnu">—</dd></div>
+          <div><dt>hν/kT</dt><dd id="rX">—</dd></div>
+          <div class="wide big"><dt>Thermal N₂/N₁ = e<sup>−hν/kT</sup> = (stimulated rate)/(absorption rate)</dt><dd id="rRatio">—</dd></div>
+          <div class="wide"><dt>Stimulated over spontaneous in thermal light, 1/(e<sup>hν/kT</sup> − 1)</dt><dd id="rSS">—</dd></div>
+          <div class="wide"><dt>A₂₁/B₂₁ = 8πhν³/c³</dt><dd id="rAB">—</dd></div>
+        </dl>
+        <p class="formula">B₁₂ = B₂₁ (equal degeneracies)<br>absorption: B₁₂ρ(ν) N₁ · stimulated: B₂₁ρ(ν) N₂ · spontaneous: A₂₁ N₂</p>
+        <div>
+          <div class="slider-head"><label for="pw">Pump light, W/A₂₁</label><output id="pwOut" class="mono" for="pw"></output></div>
+          <input type="range" id="pw" min="-2" max="2" step="0.001" value="0">
+        </div>
+        <dl class="readout">
+          <div class="wide"><dt>Pumped two level atom, N₂/N₁ = W/(W + A₂₁)</dt><dd id="rPump">—</dd></div>
+        </dl>
+        <p class="hint">Pump light at the transition frequency drives absorption and stimulated emission at the same rate W per atom, so dN₂/dt = W(N₁ − N₂) − A₂₁N₂. However hard you pump, N₂ only approaches N₁: the medium becomes transparent, never amplifying. Lasers need a third or fourth level. Here kT ≪ hν is assumed for the pumped atom.</p>
+        <p class="hint" id="transHint"></p>
+      </section>
+
+      <!-- Laser view -->
+      <section data-for="laser">
+        <h2>Gain medium</h2>
+        <div class="chips" role="group" aria-label="Gain medium">
+          <button type="button" id="mNd" aria-pressed="true">Nd:YAG, four level</button>
+          <button type="button" id="mRuby" aria-pressed="false">Ruby, three level</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="wp">Pump rate W<sub>p</sub></label><output id="wpOut" class="mono" for="wp"></output></div>
+          <input type="range" id="wp" min="0" max="40" step="0.01" value="8">
+          <div class="scale"><span>off</span><span id="wpMax"></span></div>
+        </div>
+        <div>
+          <div class="slider-head"><label for="refl">Output mirror reflectivity R</label><output id="reflOut" class="mono" for="refl"></output></div>
+          <input type="range" id="refl" min="0.8" max="0.999" step="0.001" value="0.95">
+        </div>
+        <div>
+          <div class="slider-head"><span style="font-size:0.88rem">Time</span><output id="spOut" class="mono"></output></div>
+          <div class="seg" role="group" aria-label="Simulation speed" id="speeds">
+            <button type="button" data-s="1e-5" aria-pressed="false">10 µs/s</button>
+            <button type="button" data-s="1e-4" aria-pressed="true">100 µs/s</button>
+            <button type="button" data-s="1e-3" aria-pressed="false">1 ms/s</button>
+          </div>
+        </div>
+      </section>
+      <section data-for="laser">
+        <h2>Threshold and output</h2>
+        <dl class="readout">
+          <div><dt>Upper level lifetime τ</dt><dd id="rTau">—</dd></div>
+          <div><dt>Photon lifetime τ<sub>c</sub></dt><dd id="rTc">—</dd></div>
+          <div class="wide"><dt>Threshold inversion N<sub>th</sub> = 1/(Kτ<sub>c</sub>)</dt><dd id="rNth">—</dd></div>
+          <div class="wide"><dt>Threshold pump: W<sub>th</sub>, and absorbed power</dt><dd id="rWth">—</dd></div>
+          <div class="wide big"><dt>Output power now</dt><dd id="rPout">—</dd></div>
+          <div><dt>Inversion now, N/N<sub>th</sub></dt><dd id="rN">—</dd></div>
+          <div><dt>Photons in cavity q</dt><dd id="rQ">—</dd></div>
+          <div class="wide"><dt>Steady state output (prediction)</dt><dd id="rPss">—</dd></div>
+          <div class="wide"><dt>Relaxation oscillation, linearized: f<sub>R</sub>, damping time 2/γ</dt><dd id="rRel">—</dd></div>
+        </dl>
+      </section>
+      <section data-for="laser">
+        <h2>Rate equations</h2>
+        <p class="formula" id="rateEq"></p>
+        <p class="hint" id="rateHint"></p>
+        <div class="key">
+          <span><i class="swatch las"></i>Laser output, P<sub>out</sub> = hν q (−ln R)/t<sub>rt</sub></span>
+          <span><i class="swatch inv"></i>Inversion N in units of N<sub>th</sub></span>
+          <span><i class="swatch ghost"></i>The other medium, for comparison</span>
+        </div>
+      </section>
+
+      <!-- Levels view -->
+      <section data-for="levels">
+        <h2>Reading the diagrams</h2>
+        <div class="key">
+          <span><i class="swatch pmp"></i>Pumping</span>
+          <span><i class="swatch nr"></i>Fast decay, no light (or no laser light)</span>
+          <span><i class="swatch las"></i>Laser transition</span>
+        </div>
+        <p class="hint">Ruby (Cr³⁺ in Al₂O₃): pumped into the broad ⁴T₂ and ⁴T₁ bands by green and violet light, which relax in well under a microsecond to the ²E level. ²E lives about 3 ms and lases to the ground state ⁴A₂ on the R₁ line, 694.3 nm. The lower level is the ground state, so more than half of all Cr³⁺ ions must be excited.</p>
+        <p class="hint">Nd:YAG (Nd³⁺ in Y₃Al₅O₁₂): pumped at 808 nm into ⁴F₅/₂, which decays quickly to ⁴F₃/₂ (lifetime about 230 µs). Lasing at 1064 nm ends on ⁴I₁₁/₂, about 2100 cm⁻¹ (0.26 eV) above the ground state. At 300 K the Boltzmann factor leaves only <span id="ndLow">4 × 10⁻⁵</span> of the ions there, and it empties in nanoseconds, so any excited ion is already an inversion.</p>
+        <p class="hint">Helium neon: electrons in the discharge excite helium to its metastable 2¹S₀ level (20.62 eV). A collision hands the energy to neon 3s₂ (Paschen notation; 2p⁵5s, 20.66 eV), the 0.05 eV gap made up by the atoms' kinetic energy. 3s₂ lases at 632.8 nm to 2p₄ (2p⁵3p, 18.70 eV), which decays fast to the 1s levels (2p⁵3s); those empty mainly by collisions with the tube wall, which is why the tube is narrow. Other lines: 3.39 µm (3s₂ to 3p₄) and 1.15 µm (2s₂ to 2p₄, fed from helium 2³S₁ at 19.82 eV).</p>
+        <p class="hint">Wavelengths are the usual values in air. Level energies: NIST Atomic Spectra Database (He, Ne); W. Koechner, Solid State Laser Engineering (ruby, Nd:YAG). Energy axes are to scale except across the break in the helium neon diagram.</p>
+      </section>
+
+      <!-- Modes view -->
+      <section data-for="modes">
+        <h2>Cavity</h2>
+        <div>
+          <div class="slider-head"><label for="len">Mirror spacing L</label><output id="lenOut" class="mono" for="len"></output></div>
+          <input type="range" id="len" min="10" max="100" step="0.5" value="30">
+        </div>
+        <div>
+          <div class="slider-head"><label for="dl">Fine change of L</label><output id="dlOut" class="mono" for="dl"></output></div>
+          <input type="range" id="dl" min="0" max="316" step="1" value="0">
+          <div class="scale"><span>0</span><span>λ/2 moves every mode one spacing</span></div>
+        </div>
+        <div>
+          <div class="slider-head"><label for="gain">Peak gain over loss, g₀/g<sub>th</sub></label><output id="gainOut" class="mono" for="gain"></output></div>
+          <input type="range" id="gain" min="0.5" max="4" step="0.01" value="2">
+        </div>
+        <dl class="readout">
+          <div class="wide big"><dt>Mode spacing c/2L</dt><dd id="rFsr">—</dd></div>
+          <div><dt>Doppler width (FWHM)</dt><dd id="rDop">—</dd></div>
+          <div><dt>Modes lasing</dt><dd id="rNm">—</dd></div>
+          <div class="wide"><dt>Half wavelengths in the cavity, q = 2L/λ</dt><dd id="rQi">—</dd></div>
+          <div class="wide"><dt>Band above threshold</dt><dd id="rBand">—</dd></div>
+        </dl>
+        <p class="formula">ν<sub>q</sub> = q c/2L · Δν<sub>D</sub> = ν₀ √(8kT ln2/Mc²)</p>
+        <p class="hint">Neon at 400 K (M = 20.18 u), λ = 632.991 nm in vacuum. A mode lases where the gain exceeds the loss. Doppler broadening is inhomogeneous: each mode draws on its own group of atoms, so several modes lase at once. Mode heights are illustrative, proportional to how far the gain is above threshold; real modes compete and the bars ignore hole burning and the Lamb dip.</p>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint" id="modelHint"></p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  // SI units throughout. Exact SI constants (2019) and CODATA 2022.
+  const C0 = 299792458, HP = 6.62607015e-34, KB = 1.380649e-23, QE = 1.602176634e-19, AMU = 1.66053906892e-27;
+  const nuOf = (lam) => C0 / lam;
+  // ---- two level atom ----
+  const boltz = (nu, T) => Math.exp(-HP * nu / (KB * T));                 // N2/N1 in thermal equilibrium, g1 = g2
+  const AoverB = (nu) => 8 * Math.PI * HP * nu * nu * nu / (C0 * C0 * C0);  // J s m⁻³, B defined with ρ(ν) per unit frequency
+  const stimOverSpont = (nu, T) => 1 / Math.expm1(HP * nu / (KB * T));   // B ρ_Planck / A
+  const pumped2 = (wA) => wA / (1 + wA);                                  // N2/N1 = W/(W + A) for a pumped two level atom
+
+  // ---- laser cavity: one mode, uniform medium ----
+  // Rod of length l in a cavity of length L (refractive index taken as 1), mode radius w.
+  const CAV = { L: 0.10, l: 0.01, w: 0.5e-3, lossRT: 0.02, beta: 1e-9 };
+  // a = 0, g = 1: four level (lower laser level empty). a = 1, g = 2: three level (lower laser level = ground).
+  const MEDIA = {
+    nd: { key: 'nd', name: 'Nd:YAG', lam: 1064e-9, lamP: 808e-9, tau: 230e-6, sigma: 2.8e-23, dens: 1.38e26, a: 0, g: 1, Wmax: 40, Wstep: 0.01 },
+    ruby: { key: 'ruby', name: 'Ruby', lam: 694.3e-9, lamP: 550e-9, tau: 3e-3, sigma: 2.5e-24, dens: 1.58e25, a: 1, g: 2, Wmax: 2000, Wstep: 1 }
+  };
+  function laserParams(m, R) {
+    const A = Math.PI * CAV.w * CAV.w, V = A * CAV.l, Nt = m.dens * V;
+    const K = m.sigma * C0 / (A * CAV.L);          // stimulated rate per photon per unit inversion, s⁻¹
+    const trt = 2 * CAV.L / C0;                     // round trip time
+    const kOut = -Math.log(R) / trt, kInt = -Math.log(1 - CAV.lossRT) / trt, tc = 1 / (kOut + kInt);
+    const Nth = 1 / (K * tc);
+    const Wth = (Nth + m.a * Nt) / (m.tau * (Nt - Nth));
+    return { m, R, A, V, Nt, K, trt, kOut, kInt, tc, Nth, Wth, tau: m.tau, a: m.a, g: m.g, beta: CAV.beta,
+      Ep: HP * C0 / m.lamP, El: HP * C0 / m.lam };
+  }
+  const upper = (p, N) => (N + p.a * p.Nt) / (1 + p.a);     // upper laser level population N2
+  const ground = (p, N) => (p.Nt - N) / (1 + p.a);           // atoms in the pumped ground state
+  // dN/dt = W(Nt − N) − (N + a Nt)/τ − g K N q ;  dq/dt = K N q − q/τ_c + β N2/τ
+  function derivs(p, W, N, q) {
+    return [W * (p.Nt - N) - (N + p.a * p.Nt) / p.tau - p.g * p.K * N * q,
+      p.K * N * q - q / p.tc + p.beta * upper(p, N) / p.tau];
+  }
+  // steady state without the spontaneous seed (β = 0): the textbook result with a sharp threshold
+  function steadyIdeal(p, W) {
+    if (W <= p.Wth) return { N: p.Nt * (W * p.tau - p.a) / (W * p.tau + 1), q: 0 };
+    return { N: p.Nth, q: p.tc * (W * (p.Nt - p.Nth) - (p.Nth + p.a * p.Nt) / p.tau) / p.g };
+  }
+  // steady state with the seed: from dq/dt = 0, N(q) = (q/τ_c − β a Nt/((1+a)τ)) / (K q + β/((1+a)τ)); then dN/dt = 0 by bisection in log q
+  function steadySeed(p, W) {
+    const bb = p.beta / ((1 + p.a) * p.tau);
+    const Nq = (q) => (q / p.tc - bb * p.a * p.Nt) / (p.K * q + bb);
+    const f = (q) => { const N = Nq(q); return W * (p.Nt - N) - (N + p.a * p.Nt) / p.tau - p.g * p.K * N * q; };
+    let lo = -30, hi = 30;
+    if (f(Math.pow(10, lo)) <= 0) return { N: Nq(Math.pow(10, lo)), q: Math.pow(10, lo) };
+    for (let i = 0; i < 200; i++) { const mid = 0.5 * (lo + hi); if (f(Math.pow(10, mid)) > 0) lo = mid; else hi = mid; }
+    const q = Math.pow(10, 0.5 * (lo + hi));
+    return { N: Nq(q), q };
+  }
+  const pAbs = (p, W, N) => p.Ep * W * ground(p, N);          // absorbed pump power, W
+  const pOut = (p, q) => p.El * p.kOut * q;                   // power through the output mirror, W
+  // linearized relaxation oscillation about the ideal steady state above threshold
+  function relax(p, W) {
+    if (W <= p.Wth) return null;
+    const q0 = steadyIdeal(p, W).q;
+    const gamma = W + 1 / p.tau + p.g * p.K * q0;
+    const w0sq = p.g * p.K * q0 / p.tc, wd2 = w0sq - gamma * gamma / 4;
+    return { w0: Math.sqrt(w0sq), gamma, wd: wd2 > 0 ? Math.sqrt(wd2) : 0, f: wd2 > 0 ? Math.sqrt(wd2) / (2 * Math.PI) : 0, tdamp: 2 / gamma };
+  }
+  // one step of length h: exact exponential updates of N (q frozen) and of q (N frozen), Strang splitting
+  function stepN(p, W, s, h) {
+    const b = W + 1 / p.tau + p.g * p.K * s.q, Nss = p.Nt * (W - p.a / p.tau) / b;
+    s.N = Nss + (s.N - Nss) * Math.exp(-b * h);
+  }
+  function stepQ(p, s, h) {
+    const aq = p.K * s.N - 1 / p.tc, src = p.beta * upper(p, s.N) / p.tau, e = aq * h, em = Math.expm1(e);
+    s.q = s.q * (1 + em) + (Math.abs(e) < 1e-9 ? src * h * (1 + e / 2) : src * em / aq);
+    if (s.q < 0) s.q = 0;
+  }
+  function stepSize(p, W, s, hmax) {
+    const b = W + 1 / p.tau + p.g * p.K * s.q, aq = p.K * s.N - 1 / p.tc;
+    const wc = Math.sqrt(p.g * p.K * s.q * p.K * Math.max(Math.abs(s.N), p.Nth));
+    let h = Math.min(hmax, 0.04 / b);
+    if (aq > 0) h = Math.min(h, 0.03 / aq);
+    if (wc > 0) h = Math.min(h, 0.012 / wc);
+    // the growth rate of q, K N − 1/τ_c, may change by at most about 0.005/h within a step
+    const dN = Math.abs(W * (p.Nt - s.N) - (s.N + p.a * p.Nt) / p.tau - p.g * p.K * s.N * s.q);
+    if (dN > 0) h = Math.min(h, Math.sqrt(0.005 / (p.K * dN)));
+    return h;
+  }
+  function step(p, W, s, h) { stepN(p, W, s, h / 2); stepQ(p, s, h); stepN(p, W, s, h / 2); s.t += h; }
+  // advance by T seconds; onStep(s) after each step; returns the number of steps (stops early at maxSteps)
+  function advance(p, W, s, T, onStep, maxSteps = 1e9) {
+    const tEnd = s.t + T; let n = 0;
+    while (s.t < tEnd - 1e-15 && n < maxSteps) {
+      const h = Math.min(stepSize(p, W, s, p.tau / 50), tEnd - s.t);
+      step(p, W, s, h); n++;
+      if (onStep) onStep(s, h);
+    }
+    return n;
+  }
+  const offState = (p) => ({ N: -p.a * p.Nt, q: 0, t: 0 });   // pump off for a long time: all atoms in the ground state
+
+  // ---- longitudinal modes of a He–Ne laser ----
+  const HENE = { lamVac: 632.991e-9, M: 20.1797 * AMU, T: 400 };
+  const fsr = (L) => C0 / (2 * L);
+  const doppler = (nu0, T, M) => nu0 * Math.sqrt(8 * KB * T * Math.LN2 / (M * C0 * C0));
+  // gain relative to threshold at offset dnu from line centre, Gaussian (Doppler) profile
+  const gainRel = (ratio, dnu, fwhm) => ratio * Math.exp(-4 * Math.LN2 * dnu * dnu / (fwhm * fwhm));
+  // half width of the band where gain exceeds loss
+  const bandHalf = (ratio, fwhm) => ratio > 1 ? 0.5 * fwhm * Math.sqrt(Math.log(ratio) / Math.LN2) : 0;
+  // modes near the line: L in m, dL extra length in m; offsets ν_q − ν0 in Hz
+  function modeList(L, dL, nu0, span) {
+    const Lt = L + dL, q0 = Math.round(2 * L * nu0 / C0), out = [];
+    const sp = C0 / (2 * Lt), k0 = Math.round((nu0 - q0 * sp) / sp);
+    for (let k = k0 - Math.ceil(span / sp) - 1; k <= k0 + Math.ceil(span / sp) + 1; k++) {
+      const q = q0 + k, d = q * sp - nu0;
+      if (Math.abs(d) <= span) out.push({ q, d });
+    }
+    return out;
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.LZ = { C0, HP, KB, QE, AMU, nuOf, boltz, AoverB, stimOverSpont, pumped2, CAV, MEDIA, laserParams, upper, ground, derivs,
+      steadyIdeal, steadySeed, pAbs, pOut, relax, step, stepN, stepQ, stepSize, advance, offState, HENE, fsr, doppler, gainRel, bandHalf, modeList };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  const TRANS = {
+    hene: { nu: nuOf(632.8e-9), name: 'He–Ne, 632.8 nm', hint: 'The red helium neon line. At room temperature hν/kT is about 76, so thermally excited neon atoms in that level are rarer than 1 in 10³³.' },
+    nd: { nu: nuOf(1064e-9), name: 'Nd:YAG, 1064 nm', hint: 'The near infrared Nd:YAG line, 1.17 eV per photon.' },
+    co2: { nu: nuOf(10.6e-6), name: 'CO₂, 10.6 µm', hint: 'The carbon dioxide laser line in the far infrared, 0.117 eV per photon: at room temperature about 1% as many molecules sit in the upper level as in the lower.' },
+    nh3: { nu: 23.8701e9, name: 'NH₃, 23.87 GHz', hint: 'The ammonia inversion line used in the first maser (Gordon, Zeiger and Townes, 1954). hν/kT is only 0.004 at room temperature, so N₂/N₁ is close to 1 but still below it; the maser had to sort excited molecules out with an electric field.' }
+  };
+  const PRESETS = {
+    proc: { view: 'proc', trans: 'hene', T: 300, wA: 1,
+      hint: 'Left to right: an atom absorbs a photon; an excited atom emits on its own, in a random direction with a random phase; an incoming photon makes an excited atom emit a copy that travels with it in step. Absorption and stimulated emission have the same coefficient, B₁₂ = B₂₁, so which one wins depends only on N₁ and N₂.' },
+    noinv: { view: 'proc', trans: 'hene', T: 30000, wA: 20,
+      hint: 'Drag the temperature as high as you like: e<sup>−hν/kT</sup> creeps toward 1 but never passes it, so absorption always beats stimulated emission in thermal equilibrium. Pumping a two level atom with light does no better: N₂/N₁ = W/(W + A) stays below 1.' },
+    thresh: { view: 'laser', med: 'nd', r: 1.6, R: 0.95, speed: 1e-4, steady: true,
+      hint: 'Drag the operating point along the output curve, or the pump grip under the rod. Below threshold the output is only spontaneous emission, far too small to see; above it the output rises in a straight line while the inversion stays clamped at N<sub>th</sub>: gain equals loss.' },
+    relax: { view: 'laser', med: 'nd', r: 2, R: 0.95, speed: 1e-4, steady: false,
+      hint: 'The pump switches on at t = 0. The inversion climbs past threshold before the light has built up from spontaneous emission, so the photons overshoot, empty the inversion below threshold and die back: the spikes ring down to the steady output. Their spacing matches the linearized frequency f<sub>R</sub>.' },
+    three: { view: 'laser', med: 'ruby', r: 1.5, R: 0.95, speed: 1e-3, steady: false,
+      hint: 'Ruby lases down to its ground state, so it must first excite half of all its ions just to reach zero inversion: the threshold pump power is about 8 times that of Nd:YAG in the same cavity (dashed curves), whose lower level is empty from the start. Compare the energy level diagrams.' },
+    modes: { view: 'modes', L: 30, dL: 0, gain: 2,
+      hint: 'A 30 cm He–Ne cavity has modes every c/2L = 500 MHz; the Doppler broadened gain is about 1.5 GHz wide, so about three modes lase. Drag the comb (a change of L by a fraction of a wavelength, as when the tube warms up) and watch modes hop in and out.' }
+  };
+
+  // ---------- state ----------
+  const S = { view: 'laser', preset: 'relax', trans: 'hene', T: 300, wA: 1, med: 'nd', W: 8, R: 0.95, speed: 1e-4, ghost: false,
+    L: 0.30, dL: 0, gain: 2 };
+  let playing = !reduce;
+  let P = laserParams(MEDIA.nd, S.R);
+  let sim = offState(P);
+
+  // ---------- time trace of the simulation ----------
+  const NB = 500;
+  const TR = { t0: 0, Tw: 1e-3, qmax: new Float64Array(NB).fill(-1), qmin: new Float64Array(NB).fill(Infinity), N: new Float64Array(NB).fill(NaN), last: -1 };
+  function traceWindow() { return S.speed * 10; }
+  function clearTrace() { TR.t0 = 0; TR.Tw = traceWindow(); TR.qmax.fill(-1); TR.qmin.fill(Infinity); TR.N.fill(NaN); TR.last = -1; }
+  function record(s) {
+    let i = Math.floor((s.t - TR.t0) / TR.Tw * NB);
+    if (i >= NB) {   // scroll the window by half
+      const sh = NB / 2;
+      TR.qmax.copyWithin(0, sh); TR.qmin.copyWithin(0, sh); TR.N.copyWithin(0, sh);
+      TR.qmax.fill(-1, NB - sh); TR.qmin.fill(Infinity, NB - sh); TR.N.fill(NaN, NB - sh);
+      TR.t0 += TR.Tw / 2; TR.last -= sh;
+      i = Math.floor((s.t - TR.t0) / TR.Tw * NB);
+      if (i >= NB) { clearTrace(); TR.t0 = s.t; i = 0; }
+    }
+    if (i < 0) return;
+    if (s.q > TR.qmax[i]) TR.qmax[i] = s.q;
+    if (s.q < TR.qmin[i]) TR.qmin[i] = s.q;
+    TR.N[i] = s.N; TR.last = Math.max(TR.last, i);
+  }
+  function switchOn() {
+    sim = offState(P); clearTrace(); record(sim);
+    if (!playing) { advance(P, S.W, sim, TR.Tw * 0.999, record, 4e6); }
+  }
+  function setSteady() {
+    const st = steadySeed(P, S.W); sim = { N: st.N, q: st.q, t: 0 }; clearTrace(); record(sim);
+    if (!playing) advance(P, S.W, sim, TR.Tw * 0.5, record, 4e6);
+  }
+
+  // ---------- theme, canvas, layout ----------
+  let T = null, dpr = 1;
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
+      gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), elec: g('--elec'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+  }
+  const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  let W = 0, Hh = 0, LY = null, PS = 1, LBOX = null;
+  const projOn = () => document.documentElement.getAttribute('data-projector') === 'on';
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = pane.getBoundingClientRect();
+    W = r.width; Hh = r.height;
+    can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(Hh * dpr));
+    can.style.width = W + 'px'; can.style.height = Hh + 'px';
+    LY = layout(W, Hh);
+    drawAll();
+  }
+  const bx = (x, y, w, h) => ({ x, y, w, h });
+  function layout(W, H) {
+    let L, boxes;
+    if (S.view === 'proc') {
+      if (W >= 700) {
+        const th = Math.round(H * 0.5), pw = W / 3;
+        L = { kind: 'wide', a: bx(0, 0, pw, th), b: bx(pw, 0, pw, th), c: bx(2 * pw, 0, W - 2 * pw, th), th: bx(0, th, W / 2, H - th), pu: bx(W / 2, th, W / 2, H - th) };
+      } else {
+        const ph = Math.round(H * 0.17), r = H - 3 * ph;
+        L = { kind: 'narrow', a: bx(0, 0, W, ph), b: bx(0, ph, W, ph), c: bx(0, 2 * ph, W, ph), th: bx(0, 3 * ph, W, r / 2), pu: bx(0, 3 * ph + r / 2, W, r / 2) };
+      }
+      boxes = [L.a, L.b, L.c, L.th, L.pu];
+    } else if (S.view === 'laser') {
+      if (W >= 900) {
+        const lw = Math.round(W * 0.58), sh = Math.round(H * 0.5);
+        L = { kind: 'wide', scene: bx(0, 0, lw, sh), trace: bx(0, sh, lw, H - sh), out: bx(lw, 0, W - lw, Math.round(H / 2)), inv: bx(lw, Math.round(H / 2), W - lw, H - Math.round(H / 2)) };
+      } else if (W >= 560) {
+        const sh = Math.round(H * 0.38), tr = Math.round(H * 0.3);
+        L = { kind: 'mid', scene: bx(0, 0, W, sh), trace: bx(0, sh, W, tr), out: bx(0, sh + tr, W / 2, H - sh - tr), inv: bx(W / 2, sh + tr, W / 2, H - sh - tr) };
+      } else {
+        const sh = Math.round(H * 0.25), tr = Math.round(H * 0.25), r = H - sh - tr;
+        L = { kind: 'narrow', scene: bx(0, 0, W, sh), trace: bx(0, sh, W, tr), out: bx(0, sh + tr, W, r / 2), inv: bx(0, sh + tr + r / 2, W, r / 2) };
+      }
+      boxes = [L.scene, L.trace, L.out, L.inv];
+    } else if (S.view === 'levels') {
+      if (W >= 760) { const w3 = W / 3; L = { kind: 'wide', p: [bx(0, 0, w3, H), bx(w3, 0, w3, H), bx(2 * w3, 0, W - 2 * w3, H)] }; }
+      else { const h3 = H / 3; L = { kind: 'narrow', p: [bx(0, 0, W, h3), bx(0, h3, W, h3), bx(0, 2 * h3, W, H - 2 * h3)] }; }
+      boxes = L.p;
+    } else {
+      const ch = Math.max(130 * (projOn() ? 1.25 : 1), Math.round(H * 0.24));
+      L = { kind: 'modes', cav: bx(0, 0, W, ch), plot: bx(0, ch, W, H - ch) };
+      boxes = [L.cav, L.plot];
+    }
+    const small = Math.min(...boxes.map((b) => Math.min(b.w, b.h * 1.5)));
+    PS = projOn() ? Math.max(1, Math.min(1.4, small / 300)) : 1;
+    return L;
+  }
+
+  // ---------- formatting ----------
+  const SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  const supNum = (n) => String(n).split('').map((ch) => SUP[ch] || ch).join('');
+  const trim = (s) => (s.includes('e') ? s : s.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, ''));
+  function sci(v, d = 3) {
+    if (v === 0) return '0';
+    let e = Math.floor(Math.log10(Math.abs(v))), m = v / Math.pow(10, e);
+    if (Math.abs(+m.toFixed(d - 1)) >= 10) { m /= 10; e += 1; }
+    return `${m.toFixed(d - 1)} × 10${supNum(e)}`;
+  }
+  function num(v, d = 3) { const a = Math.abs(v); if (a !== 0 && (a < 1e-3 || a >= 1e5)) return sci(v, d); return trim(v.toPrecision(d)); }
+  function fmtPow(w, d = 3) {
+    const a = Math.abs(w);
+    if (a >= 1) return `${w.toPrecision(d)} W`;
+    if (a >= 1e-3) return `${(w * 1e3).toPrecision(d)} mW`;
+    if (a >= 1e-6) return `${(w * 1e6).toPrecision(d)} µW`;
+    if (a >= 1e-9) return `${(w * 1e9).toPrecision(d)} nW`;
+    if (a === 0) return '0 W';
+    return `${sci(w, d)} W`;
+  }
+  function fmtTime(t, d = 3) {
+    const a = Math.abs(t);
+    if (a >= 1) return `${t.toPrecision(d)} s`;
+    if (a >= 1e-3) return `${(t * 1e3).toPrecision(d)} ms`;
+    if (a >= 1e-6) return `${(t * 1e6).toPrecision(d)} µs`;
+    return `${(t * 1e9).toPrecision(d)} ns`;
+  }
+  function fmtFreq(f, d = 3) {
+    const a = Math.abs(f);
+    if (a >= 1e12) return `${(f / 1e12).toPrecision(d)} THz`;
+    if (a >= 1e9) return `${(f / 1e9).toPrecision(d)} GHz`;
+    if (a >= 1e6) return `${(f / 1e6).toPrecision(d)} MHz`;
+    if (a >= 1e3) return `${(f / 1e3).toPrecision(d)} kHz`;
+    return `${f.toPrecision(d)} Hz`;
+  }
+  function fmtEV(J) { const e = J / QE; return e >= 0.1 ? `${e.toPrecision(4)} eV` : e >= 1e-4 ? `${(e * 1e3).toPrecision(4)} meV` : `${(e * 1e6).toPrecision(4)} µeV`; }
+  function fmtTemp(t) { return t >= 1e4 ? `${sci(t, 3)} K` : `${t >= 100 ? Math.round(t) : t.toPrecision(3)} K`; }
+  function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+
+  // ---------- drawing helpers ----------
+  function label(c, txt, x, y, col, align = 'left', base = 'middle', bold = false, size = 11) {
+    const ps = PS;
+    c.font = `${bold ? '600 ' : ''}${size * ps}px ${T.mono}`; c.textAlign = align; c.textBaseline = base;
+    const w = c.measureText(txt).width, h = (size + 3) * ps;
+    let x0 = align === 'left' ? x : align === 'right' ? x - w : x - w / 2;
+    if (LBOX) { const sh = Math.max(LBOX.x + 4 - x0, Math.min(0, LBOX.x + LBOX.w - 4 - (x0 + w))); x0 += sh; x += sh; }
+    const y0 = base === 'middle' ? y - h / 2 : base === 'bottom' ? y - h : y;
+    c.fillStyle = T.canvas; c.globalAlpha = 0.86; c.fillRect(x0 - 3, y0, w + 6, h); c.globalAlpha = 1;
+    c.fillStyle = col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
+    return w;
+  }
+  function text(c, txt, x, y, col, align = 'left', base = 'middle', size = 10.5, font = 'ui', weight = '') {
+    c.font = `${weight ? weight + ' ' : ''}${size * PS}px ${font === 'ui' ? T.ui : T.mono}`; c.fillStyle = col; c.textAlign = align; c.textBaseline = base; c.fillText(txt, x, y);
+  }
+  function arrow(c, x1, y1, x2, y2, col, lw, head = 10) {
+    const ps = PS, L = Math.hypot(x2 - x1, y2 - y1); if (L < 0.5) return;
+    const ux = (x2 - x1) / L, uy = (y2 - y1) / L, hs = Math.min(head * ps, L * 0.5), hw = hs * 0.5;
+    c.strokeStyle = col; c.fillStyle = col; c.lineWidth = lw; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2 - ux * hs * 0.8, y2 - uy * hs * 0.8); c.stroke();
+    c.beginPath(); c.moveTo(x2, y2); c.lineTo(x2 - ux * hs - uy * hw, y2 - uy * hs + ux * hw); c.lineTo(x2 - ux * hs + uy * hw, y2 - uy * hs - ux * hw); c.closePath(); c.fill();
+    c.lineCap = 'butt';
+  }
+  // wavy arrow (a decay without laser light), phase animates
+  function wavy(c, x1, y1, x2, y2, col, lw, ph) {
+    const L = Math.hypot(x2 - x1, y2 - y1); if (L < 4) return;
+    const ux = (x2 - x1) / L, uy = (y2 - y1) / L, n = Math.max(12, Math.ceil(L / 2)), amp = 3.2 * PS, k = 2 * Math.PI / (9 * PS), hs = Math.min(8 * PS, L * 0.4);
+    c.strokeStyle = col; c.lineWidth = lw; c.beginPath();
+    for (let i = 0; i <= n; i++) { const s = (L - hs) * i / n, o = amp * Math.sin(k * s - ph); const x = x1 + ux * s - uy * o, y = y1 + uy * s + ux * o; i ? c.lineTo(x, y) : c.moveTo(x, y); }
+    c.stroke();
+    const hw = hs * 0.5; c.fillStyle = col; c.beginPath(); c.moveTo(x2, y2); c.lineTo(x2 - ux * hs - uy * hw, y2 - uy * hs + ux * hw); c.lineTo(x2 - ux * hs + uy * hw, y2 - uy * hs - ux * hw); c.closePath(); c.fill();
+  }
+  function title(c, box, txt, sub) {
+    const ps = PS;
+    c.font = `600 ${12 * ps}px ${T.ui}`; c.fillStyle = T.ink; c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillText(txt, box.x + 12 * ps, box.y + 10 * ps);
+    if (sub) { c.font = `${10.5 * ps}px ${T.ui}`; c.fillStyle = T.muted; c.fillText(sub, box.x + 12 * ps, box.y + 27 * ps); }
+  }
+  // a wave packet along a ray from (x0, y0) in direction (ux, uy); s measured along the ray; phase in radians
+  function packet(c, x0, y0, ux, uy, sCenter, lamPx, halfLen, amp, sMin, sMax, col, lw, phase = 0) {
+    const a = Math.max(sMin, sCenter - halfLen), b = Math.min(sMax, sCenter + halfLen);
+    if (b <= a) return;
+    const n = Math.max(24, Math.ceil((b - a) / 1.5));
+    c.strokeStyle = col; c.lineWidth = lw; c.beginPath();
+    for (let i = 0; i <= n; i++) {
+      const s = a + (b - a) * i / n, q = (s - sCenter) / halfLen, env = Math.cos(q * Math.PI / 2) ** 2;
+      const y = amp * env * Math.sin(2 * Math.PI * (s - sCenter) / lamPx + phase);
+      const px = x0 + ux * s - uy * y, py = y0 + uy * s + ux * y;
+      i ? c.lineTo(px, py) : c.moveTo(px, py);
+    }
+    c.stroke();
+  }
+  function grip(c, p, col, id) {
+    const hot = (drag && drag.id === id) || (!drag && hoverId === id), ps = PS;
+    if (hot) { c.fillStyle = col; c.globalAlpha = 0.22; c.beginPath(); c.arc(p[0], p[1], 13 * ps, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1; }
+    c.fillStyle = T.canvas; c.strokeStyle = col; c.lineWidth = (hot ? 2.6 : 1.8) * ps;
+    c.beginPath(); c.arc(p[0], p[1], (hot ? 7 : 5.5) * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+  }
+  function gripBars(c, x, y, col, id, horiz) {
+    const hot = (drag && drag.id === id) || (!drag && hoverId === id), ps = PS;
+    if (hot) { c.fillStyle = col; c.globalAlpha = 0.22; c.beginPath(); c.arc(x, y, 13 * ps, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1; }
+    c.strokeStyle = col; c.lineWidth = 1.4 * ps;
+    c.fillStyle = T.canvas; c.fillRect(x - 6 * ps, y - 7 * ps, 12 * ps, 14 * ps); c.strokeRect(x - 6 * ps, y - 7 * ps, 12 * ps, 14 * ps);
+    c.beginPath();
+    for (let k = -1; k <= 1; k++) { if (horiz) { c.moveTo(x - 3.5 * ps, y + k * 3 * ps); c.lineTo(x + 3.5 * ps, y + k * 3 * ps); } else { c.moveTo(x + k * 3 * ps, y - 4 * ps); c.lineTo(x + k * 3 * ps, y + 4 * ps); } }
+    c.stroke();
+  }
+  function plotBox(box, l = 56, r = 18, t = 48, b = 34) { const ps = PS; return { L: box.x + l * ps, R: box.x + box.w - r * ps, T: box.y + t * ps, B: box.y + box.h - b * ps }; }
+  function frame(p) { ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(Math.round(p.L) + 0.5, Math.round(p.T) + 0.5, Math.round(p.R - p.L), Math.round(p.B - p.T)); }
+  function xTicksLin(p, a, b, X, unitTxt, fmt = (v) => trim(v.toPrecision(6))) {
+    const c = ctx, ps = PS, step = niceStep((b - a) / Math.max(2, Math.floor((p.R - p.L) / (64 * ps))));
+    c.font = `${10 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let v = Math.ceil(a / step - 1e-9) * step; v <= b + 1e-9 * step; v += step) {
+      const x = Math.round(X(v)) + 0.5; c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(x, p.T); c.lineTo(x, p.B); c.stroke();
+      c.fillText(fmt(Math.abs(v) < step * 1e-6 ? 0 : v), x, p.B + 4 * ps);
+    }
+    c.textAlign = 'right'; c.fillText(unitTxt, p.R, p.B + 18 * ps);
+  }
+  function yTicksLin(p, a, b, Y, fmt = (v) => trim(v.toPrecision(6)), right = false, col) {
+    const c = ctx, ps = PS, step = niceStep((b - a) / Math.max(2, Math.floor((p.B - p.T) / (40 * ps))));
+    c.font = `${10 * ps}px ${T.mono}`; c.fillStyle = col || T.muted; c.textAlign = right ? 'left' : 'right'; c.textBaseline = 'middle';
+    for (let v = Math.ceil(a / step - 1e-9) * step; v <= b + 1e-9 * step; v += step) {
+      const y = Math.round(Y(v)) + 0.5;
+      if (!right) { c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(p.L, y); c.lineTo(p.R, y); c.stroke(); }
+      c.fillText(fmt(Math.abs(v) < step * 1e-6 ? 0 : v), right ? p.R + 4 * ps : p.L - 5 * ps, y);
+    }
+  }
+  function yLabel(p, txt, col, right = false) {
+    const c = ctx; c.save(); c.translate(right ? p.R + 40 * PS : p.L - 42 * PS, (p.T + p.B) / 2); c.rotate(right ? Math.PI / 2 : -Math.PI / 2);
+    c.font = `${10 * PS}px ${T.mono}`; c.fillStyle = col; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(txt, 0, 0); c.restore();
+  }
+  const clip = (b) => { ctx.save(); ctx.beginPath(); ctx.rect(b.x, b.y, b.w, b.h); ctx.clip(); };
+
+  let clock = 0;   // animation clock, s
+  function drawAll() {
+    if (!T || !LY) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    if (S.view === 'proc') drawProc();
+    else if (S.view === 'laser') drawLaser();
+    else if (S.view === 'levels') drawLevels();
+    else drawModes();
+  }
+  function divider(x1, y1, x2, y2) { ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(Math.round(x1) + 0.5, Math.round(y1) + 0.5); ctx.lineTo(Math.round(x2) + 0.5, Math.round(y2) + 0.5); ctx.stroke(); }
+  function boxDividers(list) { for (const b of list) { if (b.x > 0) divider(b.x, b.y, b.x, b.y + b.h); if (b.y > 0) divider(b.x, b.y, b.x + b.w, b.y); } }
+
+  // ---------- Processes view ----------
+  const CYC = 4.2, T_HIT = 1.7;
+  function rnd(seed) { let x = Math.sin(seed * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+  function drawProc() {
+    const L = LY;
+    procPanel(L.a, 'abs'); procPanel(L.b, 'spont'); procPanel(L.c, 'stim');
+    drawThermal(L.th); drawPumped(L.pu);
+    boxDividers([L.a, L.b, L.c, L.th, L.pu]);
+  }
+  function procPanel(b, kind) {
+    const c = ctx, ps = PS; clip(b);
+    const titles = { abs: ['Absorption', 'rate B₁₂ ρ(ν) N₁'], spont: ['Spontaneous emission', 'rate A₂₁ N₂'], stim: ['Stimulated emission', 'rate B₂₁ ρ(ν) N₂'] };
+    title(c, b, titles[kind][0], titles[kind][1]);
+    const cyc = Math.floor(clock / CYC), t = clock - cyc * CYC;
+    // level diagram on the left
+    const lx = b.x + 16 * ps, lw = Math.min(56 * ps, b.w * 0.18), top = b.y + 52 * ps, bot = b.y + b.h - 22 * ps;
+    const y2 = top + (bot - top) * 0.18, y1 = bot - (bot - top) * 0.12;
+    c.strokeStyle = T.ink; c.lineWidth = 2 * ps;
+    c.beginPath(); c.moveTo(lx, y2); c.lineTo(lx + lw, y2); c.moveTo(lx, y1); c.lineTo(lx + lw, y1); c.stroke();
+    text(c, 'E₂', lx + lw + 4 * ps, y2, T.muted, 'left', 'middle', 10.5, 'mono');
+    text(c, 'E₁', lx + lw + 4 * ps, y1, T.muted, 'left', 'middle', 10.5, 'mono');
+    // the atom and the photon path
+    const ax = b.x + lw + 30 * ps + (b.w - lw - 30 * ps) * 0.42, ay = (y1 + y2) / 2 + 4 * ps, ar = Math.min(16 * ps, (y1 - y2) * 0.22);
+    const lamPx = 13 * ps, half = Math.min(42 * ps, (b.w - lw) * 0.16), amp = 7 * ps;
+    const v = (ax - (lx + lw + 24 * ps) + half) / T_HIT;
+    const sIn = (t - T_HIT) * v, x0 = lx + lw + 22 * ps;
+    let excited, flash = Math.max(0, 1 - Math.abs(t - T_HIT) / 0.3);
+    const fade = t > CYC - 0.35 ? (CYC - t) / 0.35 : t < 0.2 ? t / 0.2 : 1;
+    c.globalAlpha = fade;
+    if (kind === 'abs') {
+      excited = t >= T_HIT;
+      packet(c, ax, ay, 1, 0, sIn, lamPx, half, amp, x0 - ax, -ar, T.pos, 2.2 * ps);
+    } else if (kind === 'stim') {
+      excited = t < T_HIT;
+      packet(c, ax, ay, 1, 0, sIn, lamPx, half, amp, x0 - ax, sIn < 0 ? -ar : 1e4, T.pos, 2.2 * ps);
+      if (t >= T_HIT) {
+        const dy = 15 * ps;
+        packet(c, ax, ay + dy, 1, 0, sIn, lamPx, half, amp, ar * 0.5, 1e4, T.pos, 2.2 * ps);
+        if (sIn > half * 0.4) {   // the two crests line up: same phase
+          const xc = ax + sIn + lamPx / 4;
+          c.strokeStyle = T.muted; c.lineWidth = 1; c.setLineDash([2, 3]); c.beginPath(); c.moveTo(xc, ay - amp - 4 * ps); c.lineTo(xc, ay + dy + amp + 4 * ps); c.stroke(); c.setLineDash([]);
+        }
+      }
+    } else {
+      const te = 0.7 + 1.6 * rnd(cyc + 0.3), ang = 2 * Math.PI * rnd(cyc + 7.7), ph = 2 * Math.PI * rnd(cyc + 3.1);
+      excited = t < te;
+      if (t >= te) { const s = (t - te) * v; packet(c, ax, ay, Math.cos(ang), Math.sin(ang), s, lamPx, half, amp, ar, 1e4, T.pos, 2.2 * ps, ph); }
+      flash = Math.max(0, 1 - Math.abs(t - te) / 0.3);
+    }
+    // atom
+    c.fillStyle = excited ? T.pos : T.muted; c.globalAlpha = fade * (excited ? 0.28 : 0.16);
+    c.beginPath(); c.arc(ax, ay, ar * (excited ? 1.15 : 1), 0, 2 * Math.PI); c.fill();
+    c.globalAlpha = fade; c.strokeStyle = excited ? T.pos : T.muted; c.lineWidth = 1.5 * ps; c.stroke();
+    c.fillStyle = T.ink; c.beginPath(); c.arc(ax, ay, 2.5 * ps, 0, 2 * Math.PI); c.fill();
+    if (flash > 0) { c.globalAlpha = 0.35 * flash * fade; c.fillStyle = T.equi; c.beginPath(); c.arc(ax, ay, ar * 1.8, 0, 2 * Math.PI); c.fill(); }
+    c.globalAlpha = fade;
+    // the electron on the level diagram
+    const ey = excited ? y2 : y1;
+    c.fillStyle = T.elec; c.beginPath(); c.arc(lx + lw / 2, ey - 5 * ps, 4.5 * ps, 0, 2 * Math.PI); c.fill();
+    if (flash > 0.05) { c.globalAlpha = fade * flash; if (kind === 'abs') arrow(c, lx + lw / 2, y1 - 10 * ps, lx + lw / 2, y2 + 4 * ps, T.pos, 1.6 * ps, 7); else arrow(c, lx + lw / 2, y2 + 2 * ps, lx + lw / 2, y1 - 10 * ps, T.pos, 1.6 * ps, 7); }
+    c.globalAlpha = 1;
+    // captions last
+    const cap = kind === 'abs' ? 'photon used up; atom excited' : kind === 'spont' ? 'random direction, random phase' : 'two photons: same direction, frequency, phase, polarization';
+    LBOX = b;
+    label(c, cap, b.x + b.w / 2, bot + 8 * ps, T.muted, 'center', 'middle', false, 10);
+    LBOX = null;
+    text(c, 'hν = E₂ − E₁', lx, (y2 + ay) / 2 - 4 * ps, T.pos, 'left', 'middle', 10, 'mono');
+    c.restore();
+  }
+  // thermal ratio against temperature, log log
+  let thGeom = null, puGeom = null;
+  function drawThermal(b) {
+    const c = ctx, ps = PS; clip(b);
+    const nu = TRANS[S.trans].nu;
+    title(c, b, 'Thermal equilibrium: N₂/N₁ = e^(−hν/kT)', `${TRANS[S.trans].name}; B₁₂ = B₂₁, so stimulated/absorption = N₂/N₁`);
+    const p = plotBox(b, 62, 20, 50, 34);
+    const lx0 = 1, lx1 = 5, ly0 = -40, ly1 = 2;
+    const X = (lt) => p.L + (lt - lx0) / (lx1 - lx0) * (p.R - p.L), Y = (ly) => p.B - (ly - ly0) / (ly1 - ly0) * (p.B - p.T);
+    thGeom = { p, X, lx0, lx1 };
+    c.font = `${10 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let e = lx0; e <= lx1; e++) { const x = Math.round(X(e)) + 0.5; c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(x, p.T); c.lineTo(x, p.B); c.stroke(); c.fillText(`10${supNum(e)}`, x, p.B + 4 * ps); }
+    c.textAlign = 'right'; c.fillText('T (K)', p.R, p.B + 18 * ps);
+    const stepY = (p.B - p.T) / 42 * 10 > 22 * ps ? 10 : 20;
+    c.textBaseline = 'middle';
+    for (let e = ly0; e <= 0; e += stepY) { const y = Math.round(Y(e)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(p.L, y); c.lineTo(p.R, y); c.stroke(); c.fillText(e === 0 ? '1' : `10${supNum(e)}`, p.L - 5 * ps, y); }
+    yLabel(p, 'N₂/N₁', T.muted);
+    c.save(); c.beginPath(); c.rect(p.L, p.T, p.R - p.L, p.B - p.T); c.clip();
+    // the line N2 = N1
+    const y1 = Y(0);
+    c.fillStyle = T.pos; c.globalAlpha = 0.07; c.fillRect(p.L, p.T, p.R - p.L, y1 - p.T); c.globalAlpha = 1;
+    c.strokeStyle = T.pos; c.lineWidth = 1.2 * ps; c.setLineDash([5, 4]); c.beginPath(); c.moveTo(p.L, y1); c.lineTo(p.R, y1); c.stroke(); c.setLineDash([]);
+    // curves for the other transitions, faint; the chosen one bold
+    for (const k of Object.keys(TRANS)) {
+      const nk = TRANS[k].nu, cur = k === S.trans;
+      c.beginPath(); let started = false;
+      for (let i = 0; i <= 300; i++) {
+        const lt = lx0 + (lx1 - lx0) * i / 300, ly = -HP * nk / (KB * Math.pow(10, lt)) / Math.LN10;
+        if (ly < ly0 - 2) { started = false; continue; }
+        const x = X(lt), y = Y(ly); if (!started) { c.moveTo(x, y); started = true; } else c.lineTo(x, y);
+      }
+      c.strokeStyle = cur ? T.equi : T.muted; c.globalAlpha = cur ? 1 : 0.35; c.lineWidth = (cur ? 2.4 : 1.2) * ps; c.stroke(); c.globalAlpha = 1;
+    }
+    c.restore();
+    // marker
+    const lt = Math.log10(S.T), ly = -HP * nu / (KB * S.T) / Math.LN10, xm = X(lt);
+    const hotM = (drag && drag.id === 'temp') || (!drag && hoverId === 'temp');
+    if (hotM) { c.strokeStyle = T.equi; c.globalAlpha = 0.3; c.lineWidth = 7 * ps; c.beginPath(); c.moveTo(xm, p.T); c.lineTo(xm, p.B); c.stroke(); c.globalAlpha = 1; }
+    c.strokeStyle = T.equi; c.lineWidth = 1.4 * ps; c.beginPath(); c.moveTo(xm, p.T); c.lineTo(xm, p.B); c.stroke();
+    if (ly >= ly0) { c.fillStyle = T.equi; c.beginPath(); c.arc(xm, Y(ly), 4.5 * ps, 0, 2 * Math.PI); c.fill(); }
+    gripBars(c, xm, p.B - 16 * ps, T.equi, 'temp', false);
+    frame(p);
+    LBOX = { x: p.L, w: p.R - p.L };
+    label(c, 'N₂ = N₁: never reached at any T', p.L + 6 * ps, y1 + 12 * ps, T.pos, 'left', 'middle', false, 10);
+    const r = boltz(nu, S.T), right = xm > (p.L + p.R) * 0.6;
+    const yl = ly >= ly0 ? Math.max(y1 + 30 * ps, Math.min(p.B - 34 * ps, Y(ly) - 16 * ps)) : p.B - 34 * ps;
+    label(c, `T = ${fmtTemp(S.T)}: N₂/N₁ = ${r < 1e-300 ? '< 10⁻³⁰⁰' : num(r, 3)}`, xm + (right ? -8 : 8) * ps, yl, T.equi, right ? 'right' : 'left', 'middle', true, 10.5);
+    LBOX = null;
+    c.restore();
+  }
+  function drawPumped(b) {
+    const c = ctx, ps = PS; clip(b);
+    title(c, b, 'Two level atom pumped with light: N₂/N₁ = W/(W + A₂₁)', 'pumping drives absorption and stimulated emission equally');
+    const p = plotBox(b, 52, 20, 50, 34);
+    const lx0 = -2, lx1 = 2, y0 = 0, y1 = 1.2;
+    const X = (l) => p.L + (l - lx0) / (lx1 - lx0) * (p.R - p.L), Y = (v) => p.B - (v - y0) / (y1 - y0) * (p.B - p.T);
+    puGeom = { p, X, lx0, lx1 };
+    c.font = `${10 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let e = lx0; e <= lx1; e++) { const x = Math.round(X(e)) + 0.5; c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(x, p.T); c.lineTo(x, p.B); c.stroke(); c.fillText(e === 0 ? '1' : `10${supNum(e)}`, x, p.B + 4 * ps); }
+    c.textAlign = 'right'; c.fillText('W/A₂₁', p.R, p.B + 18 * ps);
+    yTicksLin(p, 0, 1.2, Y, (v) => trim(v.toFixed(2)));
+    yLabel(p, 'N₂/N₁', T.muted);
+    const yl = Y(1);
+    c.save(); c.beginPath(); c.rect(p.L, p.T, p.R - p.L, p.B - p.T); c.clip();
+    c.fillStyle = T.pos; c.globalAlpha = 0.07; c.fillRect(p.L, p.T, p.R - p.L, yl - p.T); c.globalAlpha = 1;
+    c.strokeStyle = T.pos; c.lineWidth = 1.2 * ps; c.setLineDash([5, 4]); c.beginPath(); c.moveTo(p.L, yl); c.lineTo(p.R, yl); c.stroke(); c.setLineDash([]);
+    c.beginPath();
+    for (let i = 0; i <= 200; i++) { const l = lx0 + (lx1 - lx0) * i / 200, x = X(l), y = Y(pumped2(Math.pow(10, l))); i ? c.lineTo(x, y) : c.moveTo(x, y); }
+    c.strokeStyle = T.accent; c.lineWidth = 2.4 * ps; c.stroke();
+    c.restore();
+    const xm = X(Math.log10(S.wA)), ym = Y(pumped2(S.wA));
+    const hotM = (drag && drag.id === 'wA') || (!drag && hoverId === 'wA');
+    if (hotM) { c.strokeStyle = T.accent; c.globalAlpha = 0.3; c.lineWidth = 7 * ps; c.beginPath(); c.moveTo(xm, p.T); c.lineTo(xm, p.B); c.stroke(); c.globalAlpha = 1; }
+    c.strokeStyle = T.accent; c.lineWidth = 1.4 * ps; c.beginPath(); c.moveTo(xm, p.T); c.lineTo(xm, p.B); c.stroke();
+    c.fillStyle = T.accent; c.beginPath(); c.arc(xm, ym, 4.5 * ps, 0, 2 * Math.PI); c.fill();
+    gripBars(c, xm, p.B - 16 * ps, T.accent, 'wA', false);
+    frame(p);
+    LBOX = { x: p.L, w: p.R - p.L };
+    label(c, 'N₂ = N₁: transparent, no gain', p.L + 8 * ps, yl - 10 * ps, T.pos, 'left', 'middle', false, 10);
+    const right = xm > (p.L + p.R) * 0.6;
+    label(c, `N₂/N₁ = ${pumped2(S.wA).toFixed(3)}`, xm + (right ? -8 : 8) * ps, ym + 16 * ps, T.accent, right ? 'right' : 'left', 'middle', true, 10.5);
+    LBOX = null;
+    c.restore();
+  }
+
+  // ---------- Laser view ----------
+  // photon tokens bouncing in the cavity (drawing only)
+  let toks = [], leaving = [], sponts = [];
+  function cavGeom() {
+    const s = LY.scene, ps = PS;
+    const xL = s.x + Math.max(28 * ps, s.w * 0.07), xR = s.x + s.w * 0.74;
+    // stacked from the top: mirror label, mirrors around the rod, pump lamp, its label, the pump track
+    const top = s.y + 46 * ps, avail = s.y + s.h - 8 * ps - top;
+    const rodH = Math.max(22 * ps, Math.min(64 * ps, (avail - 84 * ps) / 1.45));
+    const mh = rodH * 1.9, spare = Math.max(0, avail - 84 * ps - 1.45 * rodH);
+    const cy = top + 16 * ps + spare * 0.35 + mh / 2;
+    const rx0 = xL + (xR - xL) * 0.2, rx1 = xR - (xR - xL) * 0.2;
+    const pumpY = cy + rodH / 2 + 12 * ps + spare * 0.15;
+    const trackY = pumpY + 36 * ps + spare * 0.15;
+    return { s, ps, xL, xR, cy, rodH, rx0, rx1, mh, pumpY, trackY };
+  }
+  function nTarget(q) {
+    if (!(q >= 1)) return 0;
+    const ref = 100 / (P.g * P.K * P.tau);
+    return Math.max(1, Math.min(60, Math.round(60 * Math.log10(1 + q) / Math.log10(1 + ref))));
+  }
+  function updateTokens(dt) {
+    if (S.view !== 'laser' || !LY || !LY.scene) return;
+    const g = cavGeom(), span = g.xR - g.xL, v = span / 0.55;
+    const target = nTarget(sim.q);
+    for (const k of toks) {
+      k.x += k.d * v * dt;
+      if (k.x <= g.xL + 3) { k.x = 2 * (g.xL + 3) - k.x; k.d = 1; }
+      if (k.x >= g.xR - 3) {
+        if (Math.random() > S.R || toks.length > target + 2) { k.gone = true; leaving.push({ x: g.xR, y: k.y }); }
+        else { k.x = 2 * (g.xR - 3) - k.x; k.d = -1; }
+      }
+    }
+    toks = toks.filter((k) => !k.gone);
+    while (toks.length < target) {   // a new photon: a copy beside one already there (stimulated), or spontaneous if none
+      const src = toks.length ? toks[Math.floor(Math.random() * toks.length)] : null;
+      const x = src ? Math.max(g.rx0, Math.min(g.rx1, src.x)) : g.rx0 + Math.random() * (g.rx1 - g.rx0);
+      toks.push({ x, y: (Math.random() - 0.5) * g.rodH * 0.7, d: src ? src.d : (Math.random() < 0.5 ? -1 : 1), born: clock });
+    }
+    while (toks.length > target + 6) toks.splice(Math.floor(Math.random() * toks.length), 1);
+    for (const k of leaving) k.x += v * dt;
+    leaving = leaving.filter((k) => k.x < g.s.x + g.s.w + 20);
+    // spontaneous emission flashes, rate rising with the upper level population
+    const u = Math.max(0, upper(P, sim.N)) / Math.max(1, upper(P, P.Nth));
+    if (Math.random() < Math.min(1, 7 * Math.min(1.5, u) * dt)) { const a = Math.random() * 2 * Math.PI; sponts.push({ x: g.rx0 + Math.random() * (g.rx1 - g.rx0), y: (Math.random() - 0.5) * g.rodH * 0.8, ux: Math.cos(a), uy: Math.sin(a), t0: clock }); }
+    sponts = sponts.filter((k) => clock - k.t0 < 0.6);
+  }
+  function drawLaser() {
+    const L = LY;
+    drawCavity(L.scene); drawTrace(L.trace); drawCurves(L.out, 'out'); drawCurves(L.inv, 'inv');
+    boxDividers([L.scene, L.trace, L.out, L.inv]);
+  }
+  function drawCavity(box) {
+    const c = ctx, g = cavGeom(), ps = g.ps; clip(box);
+    title(c, box, `${P.m.name} laser, ${P.m.key === 'nd' ? 'four level' : 'three level'}`, `cavity 10 cm, rod 1 cm; drawn photons follow log q`);
+    const { xL, xR, cy, rodH, rx0, rx1, mh } = g;
+    // beam axis
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.setLineDash([4, 5]); c.beginPath(); c.moveTo(xL, cy + 0.5); c.lineTo(box.x + box.w, cy + 0.5); c.stroke(); c.setLineDash([]);
+    // output beam
+    const po = pOut(P, sim.q), pref = Math.max(1e-3, pOut(P, steadyIdeal(P, MEDIA[S.med].Wmax).q));
+    const bA = po <= 1e-9 ? 0 : Math.min(1, 0.12 + 0.88 * Math.sqrt(po / pref));
+    if (bA > 0) { c.fillStyle = T.pos; c.globalAlpha = 0.55 * bA; c.fillRect(xR, cy - rodH * 0.22, box.x + box.w - xR, rodH * 0.44); c.globalAlpha = 1; }
+    // rod with glow from the upper level population
+    const u = Math.max(0, upper(P, sim.N)) / Math.max(1, upper(P, P.Nth));
+    c.fillStyle = T.equi; c.globalAlpha = 0.08 + 0.3 * Math.min(1.3, u) / 1.3; c.fillRect(rx0, cy - rodH / 2, rx1 - rx0, rodH); c.globalAlpha = 1;
+    c.strokeStyle = T.equi; c.lineWidth = 1.5 * ps; c.strokeRect(rx0, cy - rodH / 2, rx1 - rx0, rodH);
+    // pump
+    const wf = S.W / MEDIA[S.med].Wmax, pumpCol = S.med === 'nd' ? T.accent : T.elec;
+    const pyy = g.pumpY;
+    c.fillStyle = pumpCol; c.globalAlpha = 0.15 + 0.6 * wf; c.fillRect(rx0, pyy, rx1 - rx0, 8 * ps); c.globalAlpha = 1;
+    c.strokeStyle = pumpCol; c.lineWidth = 1.2 * ps; c.strokeRect(rx0, pyy, rx1 - rx0, 8 * ps);
+    if (wf > 0) { const n = 5; for (let i = 0; i < n; i++) { const x = rx0 + (rx1 - rx0) * (i + 0.5) / n; c.globalAlpha = 0.35 + 0.65 * wf; arrow(c, x, pyy - 2 * ps, x, cy + rodH / 2 + 2 * ps, pumpCol, 1.6 * ps, 7); } c.globalAlpha = 1; }
+    // pump track (drag)
+    const ty = g.trackY;
+    c.strokeStyle = T.gridStrong; c.lineWidth = 3 * ps; c.lineCap = 'round'; c.beginPath(); c.moveTo(rx0, ty); c.lineTo(rx1, ty); c.stroke();
+    c.strokeStyle = pumpCol; c.beginPath(); c.moveTo(rx0, ty); c.lineTo(rx0 + (rx1 - rx0) * wf, ty); c.stroke(); c.lineCap = 'butt';
+    const xth = rx0 + (rx1 - rx0) * Math.min(1, P.Wth / MEDIA[S.med].Wmax);
+    c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(xth, ty - 6 * ps); c.lineTo(xth, ty + 6 * ps); c.stroke();
+    gripBars(c, rx0 + (rx1 - rx0) * wf, ty, pumpCol, 'pump', false);
+    // mirrors
+    c.fillStyle = T.ink; c.fillRect(xL - 6 * ps, cy - mh / 2, 6 * ps, mh);
+    c.fillStyle = T.muted; c.globalAlpha = 0.5 + 0.5 * (S.R - 0.8) / 0.2; c.fillRect(xR, cy - mh / 2, 5 * ps, mh); c.globalAlpha = 1;
+    c.strokeStyle = T.ink; c.lineWidth = 1; c.strokeRect(xR + 0.5, cy - mh / 2, 5 * ps, mh);
+    // reflectivity track beside the output mirror (up = more reflective)
+    const rx = xR + 16 * ps, rt = cy - mh / 2, rb = cy + mh / 2, ry = rb - (S.R - 0.8) / 0.199 * (rb - rt);
+    c.strokeStyle = T.gridStrong; c.lineWidth = 3 * ps; c.lineCap = 'round'; c.beginPath(); c.moveTo(rx, rt); c.lineTo(rx, rb); c.stroke();
+    c.strokeStyle = T.ink; c.beginPath(); c.moveTo(rx, rb); c.lineTo(rx, ry); c.stroke(); c.lineCap = 'butt';
+    gripBars(c, rx, ry, T.ink, 'refl', true);
+    // photons
+    const lamPx = 7 * ps, half = 9 * ps;
+    for (const k of toks) packet(c, k.x, cy + k.y, k.d, 0, 0, lamPx, half, 3.2 * ps, -half, half, T.pos, 1.6 * ps);
+    for (const k of leaving) packet(c, k.x, cy + k.y * 0.4, 1, 0, 0, lamPx, half, 3.2 * ps, -half, half, T.pos, 1.6 * ps);
+    for (const k of sponts) { const s = (clock - k.t0) * 140 * ps; c.globalAlpha = 1 - (clock - k.t0) / 0.6; packet(c, k.x, cy + k.y, k.ux, k.uy, s, lamPx, half * 0.8, 2.6 * ps, 0, 1e4, T.equi, 1.3 * ps); c.globalAlpha = 1; }
+    // labels last
+    LBOX = box;
+    label(c, 'mirror, R = 1', xL - 6 * ps, cy - mh / 2 - 10 * ps, T.muted, 'left', 'middle', false, 10);
+    label(c, `output mirror R = ${S.R.toFixed(3)}`, xR + 26 * ps, rt - 2 * ps, T.ink, 'left', 'middle', true, 10);
+    label(c, `${P.m.name} ${P.m.key === 'nd' ? 'rod' : 'rod (Cr³⁺)'}`, (rx0 + rx1) / 2, cy - rodH / 2 - 10 * ps, T.equi, 'center', 'middle', true, 10);
+    label(c, `pump: ${P.m.key === 'nd' ? '808 nm diodes' : 'flash lamp, green and violet'}`, (rx0 + rx1) / 2, pyy + 19 * ps, pumpCol, 'center', 'middle', false, 10);
+    const lw = rx1 - rx0;
+    label(c, `W = ${(S.W / P.Wth).toFixed(2)} W_th`, rx1 + 12 * ps, ty, pumpCol, 'left', 'middle', true, 10);
+    if (lw > 120 * ps) label(c, 'threshold', xth, ty + 14 * ps, T.ink, 'center', 'middle', false, 9.5);
+    const lamTxt = P.m.key === 'nd' ? '1064 nm (infrared, drawn red)' : '694.3 nm';
+    label(c, `${fmtPow(po)} out`, box.x + box.w - 10 * ps, cy - rodH * 0.22 - 12 * ps, T.pos, 'right', 'middle', true, 11);
+    label(c, lamTxt, box.x + box.w - 10 * ps, cy + rodH * 0.22 + 12 * ps, T.pos, 'right', 'middle', false, 10);
+    LBOX = null;
+    c.restore();
+  }
+  let trGeom = null;
+  function drawTrace(box) {
+    const c = ctx, ps = PS; clip(box);
+    title(c, box, 'After switching on: output power and inversion against time', `t = ${fmtTime(Math.max(0, sim.t))} · window ${fmtTime(TR.Tw, 3)}`);
+    const p = plotBox(box, 60, 58, 48, 34);
+    const t0 = TR.t0, t1 = TR.t0 + TR.Tw;
+    // scales
+    let qm = 0, nmin = 0, nmax = 1.2;
+    for (let i = 0; i < NB; i++) { if (TR.qmax[i] > qm) qm = TR.qmax[i]; const n = TR.N[i] / P.Nth; if (n === n) { if (n < nmin) nmin = n; if (n > nmax) nmax = n; } }
+    const pm = Math.max(pOut(P, qm), pOut(P, steadyIdeal(P, S.W).q) * 1.2, 1e-3) * 1.08;
+    nmax *= 1.08; if (nmin < 0) nmin *= 1.05;
+    const fu = pm >= 1 ? [1, 'W'] : [1e3, 'mW'];
+    const tu = TR.Tw >= 2e-3 ? [1e3, 'ms'] : [1e6, 'µs'];
+    const X = (t) => p.L + (t - t0) / (t1 - t0) * (p.R - p.L), Yp = (w) => p.B - w / pm * (p.B - p.T), Yn = (n) => p.B - (n - nmin) / (nmax - nmin) * (p.B - p.T);
+    trGeom = { p };
+    xTicksLin(p, t0 * tu[0], t1 * tu[0], (v) => X(v / tu[0]), `t (${tu[1]})`);
+    yTicksLin(p, 0, pm * fu[0], (v) => Yp(v / fu[0]));
+    yTicksLin(p, nmin, nmax, Yn, (v) => trim(v.toPrecision(3)), true, T.equi);
+    yLabel(p, `P_out (${fu[1]})`, T.pos); yLabel(p, 'N/N_th', T.equi, true);
+    c.save(); c.beginPath(); c.rect(p.L, p.T, p.R - p.L, p.B - p.T); c.clip();
+    // N = N_th line
+    const yth = Yn(1); c.strokeStyle = T.equi; c.lineWidth = 1 * ps; c.setLineDash([5, 4]); c.beginPath(); c.moveTo(p.L, yth); c.lineTo(p.R, yth); c.stroke(); c.setLineDash([]);
+    const steadyP = pOut(P, steadyIdeal(P, S.W).q);
+    if (steadyP > 0) { const ys = Yp(steadyP); c.strokeStyle = T.pos; c.globalAlpha = 0.5; c.setLineDash([2, 4]); c.beginPath(); c.moveTo(p.L, ys); c.lineTo(p.R, ys); c.stroke(); c.setLineDash([]); c.globalAlpha = 1; }
+    // inversion
+    c.beginPath(); let st = false;
+    for (let i = 0; i <= TR.last && i < NB; i++) { const n = TR.N[i]; if (n !== n) { st = false; continue; } const x = X(t0 + (i + 0.5) / NB * TR.Tw), y = Yn(n / P.Nth); if (!st) { c.moveTo(x, y); st = true; } else c.lineTo(x, y); }
+    c.strokeStyle = T.equi; c.lineWidth = 1.8 * ps; c.stroke();
+    // output power: each time bin shows the range from its lowest to its highest value, so spikes shorter than a bin are not lost
+    const xi = (i) => X(t0 + (i + 0.5) / NB * TR.Tw);
+    for (const edge of ['qmax', 'qmin']) {
+      c.beginPath(); st = false;
+      for (let i = 0; i <= TR.last && i < NB; i++) { const q = TR[edge][i]; if (TR.qmax[i] < 0) { st = false; continue; } const y = Yp(pOut(P, q)); if (!st) { c.moveTo(xi(i), y); st = true; } else c.lineTo(xi(i), y); }
+      c.strokeStyle = T.pos; c.lineWidth = (edge === 'qmax' ? 2 : 1.2) * ps; c.stroke();
+    }
+    c.fillStyle = T.pos; c.globalAlpha = 0.25;
+    for (let i = 0; i <= TR.last && i < NB; i++) { if (TR.qmax[i] < 0) continue; const y1 = Yp(pOut(P, TR.qmax[i])), y2 = Yp(pOut(P, TR.qmin[i])); c.fillRect(xi(i) - (p.R - p.L) / NB / 2, y1, (p.R - p.L) / NB + 0.5, y2 - y1); }
+    c.globalAlpha = 1;
+    c.restore();
+    frame(p);
+    LBOX = { x: p.L, w: p.R - p.L };
+    label(c, 'N_th', p.R - 6 * ps, yth - 9 * ps, T.equi, 'right', 'middle', false, 10);
+    if (steadyP > 0 && Yp(steadyP) > p.T + 20 * ps) label(c, 'steady output', p.L + 6 * ps, Yp(steadyP) - 9 * ps, T.pos, 'left', 'middle', false, 10);
+    LBOX = null;
+    c.restore();
+  }
+  // steady state curves against absorbed pump power
+  let cvGeom = {};
+  function curveData(p, Wmax, n = 240) {
+    const pts = [];
+    for (let i = 0; i <= n; i++) {
+      // denser sampling near threshold
+      const W = Wmax * i / n, st = steadySeed(p, W);
+      pts.push({ W, x: pAbs(p, W, st.N), out: pOut(p, st.q), n: st.N / p.Nth });
+    }
+    const st = steadySeed(p, p.Wth); pts.push({ W: p.Wth, x: pAbs(p, p.Wth, st.N), out: pOut(p, st.q), n: st.N / p.Nth });
+    pts.sort((a, b) => a.W - b.W);
+    return pts;
+  }
+  let cache = { key: '', cur: null, other: null, op: null };
+  function curves() {
+    const key = `${S.med}|${S.R}|${S.ghost}`;
+    if (cache.key !== key) {
+      const cur = curveData(P, MEDIA[S.med].Wmax);
+      let other = null;
+      if (S.ghost) {
+        const om = MEDIA[S.med === 'nd' ? 'ruby' : 'nd'], op = laserParams(om, S.R), xmax = cur[cur.length - 1].x;
+        // the other medium over the same range of absorbed pump power
+        let lo = 0, hi = om.Wmax * 100;
+        for (let i = 0; i < 80; i++) { const mid = (lo + hi) / 2; if (pAbs(op, mid, steadySeed(op, mid).N) < xmax) lo = mid; else hi = mid; }
+        other = curveData(op, lo); other.p = op;
+      }
+      cache = { key, cur, other };
+    }
+    return cache;
+  }
+  function drawCurves(box, which) {
+    const c = ctx, ps = PS; clip(box);
+    const cd = curves(), cur = cd.cur, oth = cd.other;
+    const xmax = cur[cur.length - 1].x * 1.02;
+    const stNow = steadySeed(P, S.W), xNow = pAbs(P, S.W, stNow.N);
+    const thX = pAbs(P, P.Wth, P.Nth);
+    if (which === 'out') title(c, box, 'Output power against pump power', `steady state; threshold at ${fmtPow(thX)} absorbed`);
+    else title(c, box, 'Inversion against pump power', 'gain clamping: above threshold N stays at N_th');
+    const p = plotBox(box, 58, 18, 48, 34);
+    let ymin = 0, ymax;
+    const val = (pt) => which === 'out' ? pt.out : pt.n;
+    if (which === 'out') { ymax = 0; for (const pt of cur) ymax = Math.max(ymax, pt.out); if (oth) for (const pt of oth) ymax = Math.max(ymax, pt.out); ymax = Math.max(ymax, 1e-3) * 1.12; }
+    else { ymin = Math.min(0, ...cur.map((pt) => pt.n), ...(oth ? oth.map((pt) => pt.n) : [])); ymax = 1.35; if (ymin < 0) ymin *= 1.06; }
+    const X = (x) => p.L + x / xmax * (p.R - p.L), Y = (v) => p.B - (v - ymin) / (ymax - ymin) * (p.B - p.T);
+    cvGeom[which] = { p, X, xmax };
+    const xu = xmax >= 1 ? [1, 'W'] : [1e3, 'mW'];
+    xTicksLin(p, 0, xmax * xu[0], (v) => X(v / xu[0]), `absorbed pump power (${xu[1]})`);
+    if (which === 'out') { const yu = ymax >= 1 ? [1, 'W'] : [1e3, 'mW']; yTicksLin(p, 0, ymax * yu[0], (v) => Y(v / yu[0])); yLabel(p, `P_out (${yu[1]})`, T.pos); }
+    else { yTicksLin(p, ymin, ymax, Y, (v) => trim(v.toPrecision(3))); yLabel(p, 'N/N_th', T.equi); }
+    c.save(); c.beginPath(); c.rect(p.L, p.T, p.R - p.L, p.B - p.T); c.clip();
+    // threshold line
+    const xt = X(thX); c.strokeStyle = T.ink; c.globalAlpha = 0.5; c.lineWidth = 1 * ps; c.setLineDash([4, 4]); c.beginPath(); c.moveTo(xt, p.T); c.lineTo(xt, p.B); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+    if (which === 'inv') { const y1 = Y(1); c.strokeStyle = T.equi; c.globalAlpha = 0.6; c.setLineDash([5, 4]); c.beginPath(); c.moveTo(p.L, y1); c.lineTo(p.R, y1); c.stroke(); c.setLineDash([]); c.globalAlpha = 1; if (ymin < 0) { const y0 = Y(0); c.strokeStyle = T.gridStrong; c.beginPath(); c.moveTo(p.L, y0); c.lineTo(p.R, y0); c.stroke(); } }
+    const line = (pts, col, lw, dash) => { c.beginPath(); pts.forEach((pt, i) => { const x = X(pt.x), y = Y(val(pt)); i ? c.lineTo(x, y) : c.moveTo(x, y); }); c.strokeStyle = col; c.lineWidth = lw * ps; c.setLineDash(dash); c.stroke(); c.setLineDash([]); };
+    if (oth) line(oth, T.muted, 1.6, [6, 4]);
+    line(cur, which === 'out' ? T.pos : T.equi, 2.4, []);
+    // the simulated state now
+    const xs = pAbs(P, S.W, sim.N), ys = which === 'out' ? pOut(P, sim.q) : sim.N / P.Nth;
+    c.fillStyle = T.ink; c.globalAlpha = 0.7; c.beginPath(); c.arc(X(xs), Y(Math.max(ymin, Math.min(ymax, ys))), 3 * ps, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1;
+    c.restore();
+    // operating point (steady state), draggable
+    const yNow = which === 'out' ? pOut(P, stNow.q) : stNow.N / P.Nth;
+    const opt = [X(xNow), Y(yNow)];
+    c.strokeStyle = T.accent; c.globalAlpha = 0.45; c.lineWidth = 1 * ps; c.setLineDash([2, 3]); c.beginPath(); c.moveTo(opt[0], p.B); c.lineTo(opt[0], opt[1]); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+    grip(c, opt, T.accent, 'op-' + which);
+    frame(p);
+    LBOX = { x: p.L, w: p.R - p.L };
+    { // name the moving dot when it has left the steady curve (during the turn on spikes)
+      const nx = X(xs), ny = Y(Math.max(ymin, Math.min(ymax, ys)));
+      if (Math.hypot(nx - opt[0], ny - opt[1]) > 16 * ps) label(c, 'now', nx + 6 * ps, ny, T.muted, 'left', 'middle', false, 10);
+    }
+    label(c, 'threshold', xt + 5 * ps, which === 'out' ? p.T + 12 * ps : p.B - 12 * ps, T.ink, 'left', 'middle', false, 10);
+    if (oth) {
+      const o = oth[oth.length - 1], ox = X(o.x), oy = Y(Math.min(ymax * 0.97, Math.max(ymin, val(o))));
+      label(c, `${oth.p.m.name}`, ox - 6 * ps, oy + (which === 'out' ? 12 : -12) * ps, T.muted, 'right', 'middle', false, 10);
+    }
+    if (which === 'out') {
+      const right = opt[0] > (p.L + p.R) * 0.55;
+      label(c, `${fmtPow(yNow)} at ${fmtPow(xNow)}`, opt[0] + (right ? -12 : 12) * ps, opt[1] + (right ? 0 : -2) * ps - 12 * ps, T.accent, right ? 'right' : 'left', 'middle', true, 10.5);
+    } else {
+      label(c, 'N_th: gain = loss', p.L + 6 * ps, Y(1) - 10 * ps, T.equi, 'left', 'middle', false, 10);
+      if (ymin < -0.5) label(c, 'N < 0: absorbing', p.L + 6 * ps, Y(ymin * 0.5), T.muted, 'left', 'middle', false, 10);
+      label(c, `N = ${(yNow).toFixed(3)} N_th`, opt[0] + 12 * ps, opt[1] + 14 * ps, T.accent, 'left', 'middle', true, 10.5);
+    }
+    LBOX = null;
+    c.restore();
+  }
+
+  // ---------- Energy levels view ----------
+  function drawLevels() {
+    const L = LY;
+    levRuby(L.p[0]); levNd(L.p[1]); levHeNe(L.p[2]);
+    boxDividers(L.p);
+  }
+  function levAxis(b, e0, e1, top, bot) {
+    const Y = (e) => bot - (e - e0) / (e1 - e0) * (bot - top);
+    return Y;
+  }
+  function level(c, x0, x1, y, col, lw = 2) { c.strokeStyle = col; c.lineWidth = lw * PS; c.beginPath(); c.moveTo(x0, y); c.lineTo(x1, y); c.stroke(); }
+  function band(c, x0, x1, y0, y1, col) { c.fillStyle = col; c.globalAlpha = 0.16; c.fillRect(x0, y1, x1 - x0, y0 - y1); c.globalAlpha = 1; c.strokeStyle = col; c.lineWidth = 1 * PS; c.strokeRect(x0, y1, x1 - x0, y0 - y1); }
+  function eTicks(c, x, Y, e0, e1, step, top, bot) {
+    c.font = `${9.5 * PS}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.beginPath(); c.moveTo(x + 0.5, top); c.lineTo(x + 0.5, bot); c.stroke();
+    for (let e = Math.ceil(e0 / step) * step; e <= e1 + 1e-9; e += step) { const y = Y(e); c.beginPath(); c.moveTo(x - 3, y); c.lineTo(x + 3, y); c.stroke(); c.fillText(trim(e.toFixed(2)), x - 5 * PS, y); }
+  }
+  function levFrame(b, name, sub) {
+    const ps = PS; title(ctx, b, name, sub);
+    const top = b.y + 58 * ps, bot = b.y + b.h - 26 * ps;
+    return { top, bot, ax: b.x + 40 * ps };
+  }
+  function lasingArrow(c, x, y1, y2, txt, ps) {
+    const pulse = 0.65 + 0.35 * Math.sin(clock * 5);
+    c.globalAlpha = pulse; arrow(c, x, y1, x, y2, T.pos, 3.2 * ps, 11); c.globalAlpha = 1;
+  }
+  function marching(c, x1, y1, x2, y2, col, lw) {
+    c.setLineDash([6 * PS, 4 * PS]); c.lineDashOffset = -clock * 30 * PS; arrow(c, x1, y1, x2, y2, col, lw, 9); c.setLineDash([]); c.lineDashOffset = 0;
+  }
+  function levRuby(b) {
+    const c = ctx, ps = PS; clip(b);
+    const { top, bot, ax } = levFrame(b, 'Ruby: three level', 'Cr³⁺ ions in sapphire; energy in eV');
+    const Y = levAxis(b, 0, 3.4, top, bot);
+    eTicks(c, ax, Y, 0, 3.4, 0.5, top, bot);
+    const x0 = ax + 14 * ps, x1 = b.x + b.w - 16 * ps, w = x1 - x0;
+    band(c, x0, x1, Y(2.05), Y(2.45), T.accent); band(c, x0, x1, Y(2.85), Y(3.3), T.accent);
+    level(c, x0, x1, Y(1.786), T.ink); level(c, x0, x1, Y(0), T.ink);
+    const ph = clock * 6;
+    marching(c, x0 + w * 0.12, Y(0) - 2, x0 + w * 0.12, Y(2.25), T.elec, 2.4 * ps);
+    marching(c, x0 + w * 0.25, Y(0) - 2, x0 + w * 0.25, Y(3.05), T.accent, 2.4 * ps);
+    wavy(c, x0 + w * 0.36, Y(2.2), x0 + w * 0.46, Y(1.786) - 3, T.muted, 1.5 * ps, ph);
+    wavy(c, x0 + w * 0.34, Y(3.0), x0 + w * 0.54, Y(1.786) - 3, T.muted, 1.5 * ps, ph);
+    lasingArrow(c, x0 + w * 0.68, Y(1.786) + 2, Y(0) - 3, '', ps);
+    LBOX = b;
+    label(c, '⁴T₁ band', x1 - 4 * ps, Y(3.3) - 9 * ps, T.accent, 'right', 'middle', true, 10);
+    label(c, '⁴T₂ band', x1 - 4 * ps, Y(2.45) - 9 * ps, T.accent, 'right', 'middle', true, 10);
+    label(c, '²E, 1.79 eV, τ ≈ 3 ms', x1 - 4 * ps, Y(1.786) + 11 * ps, T.ink, 'right', 'middle', true, 10);
+    label(c, '⁴A₂ ground state = lower laser level', x1 - 4 * ps, Y(0) + 11 * ps, T.ink, 'right', 'middle', true, 10);
+    label(c, '≈ 550 nm', x0 + w * 0.12 + 4 * ps, Y(1.0), T.elec, 'left', 'middle', false, 9.5);
+    label(c, '≈ 400 nm', x0 + w * 0.25 + 4 * ps, Y(2.62), T.accent, 'left', 'middle', false, 9.5);
+    label(c, 'fast, no light', x0 + w * 0.5, Y(2.0) - 2 * ps, T.muted, 'left', 'middle', false, 9.5);
+    label(c, '694.3 nm laser', x0 + w * 0.68 + 7 * ps, Y(0.9), T.pos, 'left', 'middle', true, 10.5);
+    LBOX = null; c.restore();
+  }
+  function levNd(b) {
+    const c = ctx, ps = PS; clip(b);
+    const { top, bot, ax } = levFrame(b, 'Nd:YAG: four level', 'Nd³⁺ ions in YAG; energy in eV');
+    const Y = levAxis(b, 0, 1.7, top, bot);
+    eTicks(c, ax, Y, 0, 1.7, 0.25, top, bot);
+    const x0 = ax + 14 * ps, x1 = b.x + b.w - 16 * ps, w = x1 - x0;
+    const E = { f52: 1.534, f32: 1.427, i112: 0.262, i92: 0 };
+    level(c, x0, x1, Y(E.f52), T.accent, 2); level(c, x0, x1, Y(E.f32), T.ink); level(c, x0, x1, Y(E.i112), T.ink); level(c, x0, x1, Y(E.i92), T.ink);
+    const ph = clock * 6;
+    marching(c, x0 + w * 0.14, Y(0) - 2, x0 + w * 0.14, Y(E.f52) + 2, T.accent, 2.4 * ps);
+    wavy(c, x0 + w * 0.24, Y(E.f52) + 2, x0 + w * 0.42, Y(E.f32) - 2, T.muted, 1.5 * ps, ph);
+    lasingArrow(c, x0 + w * 0.52, Y(E.f32) + 2, Y(E.i112) - 3, '', ps);
+    wavy(c, x0 + w * 0.62, Y(E.i112) + 2, x0 + w * 0.78, Y(0) - 3, T.muted, 1.5 * ps, ph);
+    LBOX = b;
+    label(c, '⁴F₅/₂ (pump level)', x1 - 4 * ps, Y(E.f52) - 10 * ps, T.accent, 'right', 'middle', true, 10);
+    label(c, '⁴F₃/₂, τ ≈ 230 µs', x1 - 4 * ps, Y(E.f32) + 11 * ps, T.ink, 'right', 'middle', true, 10);
+    label(c, '⁴I₁₁/₂ lower laser level, empties in ns', x1 - 4 * ps, Y(E.i112) - 10 * ps, T.ink, 'right', 'middle', true, 10);
+    label(c, '⁴I₉/₂ ground state', x1 - 4 * ps, Y(0) + 11 * ps, T.ink, 'right', 'middle', true, 10);
+    label(c, '808 nm', x0 + w * 0.14 + 4 * ps, Y(0.7), T.accent, 'left', 'middle', false, 9.5);
+    label(c, '1064 nm laser', x0 + w * 0.52 + 7 * ps, Y(0.85), T.pos, 'left', 'middle', true, 10.5);
+    LBOX = null; c.restore();
+  }
+  function levHeNe(b) {
+    const c = ctx, ps = PS; clip(b);
+    const { top, bot, ax } = levFrame(b, 'Helium neon: energy transfer', 'energy in eV; axis broken below 16 eV');
+    // 16 to 21.2 eV on most of the axis, the ground states below a break
+    const gY = bot, brk = bot - 26 * ps;
+    const Y = (e) => e < 1 ? gY : levAxis(b, 16, 21.2, top, brk - 10 * ps)(e);
+    eTicks(c, ax, (e) => levAxis(b, 16, 21.2, top, brk - 10 * ps)(e), 16, 21, 1, top, brk - 10 * ps);
+    c.font = `${9.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText('0', ax - 5 * ps, gY);
+    c.strokeStyle = T.muted; c.lineWidth = 1.2 * ps;
+    for (const dy of [-3, 3]) { c.beginPath(); c.moveTo(ax - 5 * ps, brk + dy - 3 * ps); c.lineTo(ax + 5 * ps, brk + dy + 3 * ps); c.stroke(); }
+    const x0 = ax + 12 * ps, x1 = b.x + b.w - 12 * ps, w = x1 - x0;
+    const hx0 = x0, hx1 = x0 + w * 0.3, nx0 = x0 + w * 0.4, nx1 = x1;
+    text(c, 'He', (hx0 + hx1) / 2, top - 8 * ps, T.muted, 'center', 'middle', 11, 'ui', '700');
+    text(c, 'Ne', (nx0 + nx1) / 2, top - 8 * ps, T.muted, 'center', 'middle', 11, 'ui', '700');
+    // helium
+    level(c, hx0, hx1, Y(20.616), T.accent); level(c, hx0, hx1, Y(19.820), T.accent, 1.4); level(c, hx0, hx1, gY, T.ink);
+    // neon
+    const E = { s3: 20.663, p2: 18.704, s1a: 16.62, s1b: 16.85 };
+    level(c, nx0, nx1, Y(E.s3), T.ink); level(c, nx0, nx1, Y(E.p2), T.ink);
+    band(c, nx0, nx1, Y(E.s1a), Y(E.s1b), T.muted);
+    level(c, nx0, nx1, gY, T.ink);
+    const ph = clock * 6;
+    marching(c, hx0 + (hx1 - hx0) * 0.35, gY - 2, hx0 + (hx1 - hx0) * 0.35, Y(20.616) + 2, T.accent, 2.4 * ps);
+    // collision transfer
+    c.setLineDash([4 * ps, 3 * ps]); c.lineDashOffset = -clock * 20 * ps; arrow(c, hx1 + 2 * ps, Y(20.616), nx0 + w * 0.08, Y(E.s3) + 1, T.accent, 1.8 * ps, 8); c.setLineDash([]); c.lineDashOffset = 0;
+    const nw = nx1 - nx0;
+    lasingArrow(c, nx0 + nw * 0.2, Y(E.s3) + 2, Y(E.p2) - 3, '', ps);
+    wavy(c, nx0 + nw * 0.32, Y(E.p2) + 2, nx0 + nw * 0.42, Y(E.s1b) - 3, T.muted, 1.5 * ps, ph);
+    wavy(c, nx0 + nw * 0.55, Y(E.s1a) + 2, nx0 + nw * 0.6, gY - 3, T.muted, 1.5 * ps, ph);
+    LBOX = b;
+    label(c, '2¹S₀ 20.62', hx0, Y(20.616) - 10 * ps, T.accent, 'left', 'middle', true, 9.5);
+    label(c, '2³S₁ 19.82', hx0, Y(19.82) + 10 * ps, T.accent, 'left', 'middle', false, 9.5);
+    label(c, '1¹S₀', hx0, gY - 9 * ps, T.ink, 'left', 'middle', false, 9.5);
+    label(c, 'electron impact', hx0 + (hx1 - hx0) * 0.35 + 4 * ps, (Y(16.2) + gY) / 2 - 18 * ps, T.accent, 'left', 'middle', false, 9);
+    label(c, 'collision', (hx1 + nx0) / 2 + 4 * ps, Y(20.616) - 22 * ps, T.accent, 'center', 'middle', false, 9);
+    label(c, '3s₂ (5s) 20.66', nx1, Y(E.s3) - 10 * ps, T.ink, 'right', 'middle', true, 9.5);
+    label(c, '2p₄ (3p) 18.70', nx1, Y(E.p2) + 10 * ps, T.ink, 'right', 'middle', true, 9.5);
+    label(c, '1s (3s)', nx1, Y(E.s1b) - 10 * ps, T.muted, 'right', 'middle', true, 9.5);
+    label(c, '632.8 nm', nx0 + nw * 0.2 + 6 * ps, (Y(E.s3) + Y(E.p2)) / 2, T.pos, 'left', 'middle', true, 10.5);
+    label(c, 'fast', nx0 + nw * 0.42 + 4 * ps, (Y(E.p2) + Y(E.s1b)) / 2, T.muted, 'left', 'middle', false, 9);
+    label(c, 'wall collisions', nx0 + nw * 0.6 + 5 * ps, (Y(E.s1a) + gY) / 2 - 6 * ps, T.muted, 'left', 'middle', false, 9);
+    label(c, '2p⁶ ground', nx1, gY - 9 * ps, T.ink, 'right', 'middle', false, 9.5);
+    LBOX = null; c.restore();
+  }
+
+  // ---------- Modes view ----------
+  let mdGeom = null;
+  function modeData() {
+    const nu0 = C0 / HENE.lamVac, fw = doppler(nu0, HENE.T, HENE.M), span = 1.9 * fw;
+    return { nu0, fw, span, list: modeList(S.L, S.dL, nu0, span), sp: fsr(S.L + S.dL) };
+  }
+  function drawModes() {
+    const L = LY, c = ctx, ps = PS, md = modeData();
+    // the cavity strip
+    const b = L.cav; clip(b);
+    title(c, b, `He–Ne cavity, L = ${(S.L * 100).toFixed(1)} cm`, `standing waves need a whole number q of half wavelengths: here q ≈ ${Math.round(2 * S.L / HENE.lamVac).toLocaleString('en-US')}, drawn with a few`);
+    const xl = b.x + 30 * ps, xmaxR = b.x + b.w - 40 * ps, cy = b.y + b.h * 0.6;
+    const xr = xl + (xmaxR - xl) * S.L / 1.0, mh = Math.min(70 * ps, b.h * 0.5);
+    c.fillStyle = T.ink; c.fillRect(xl - 6 * ps, cy - mh / 2, 6 * ps, mh);
+    c.fillStyle = T.muted; c.fillRect(xr, cy - mh / 2, 5 * ps, mh);
+    // tube
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.strokeRect(xl + 10 * ps, cy - mh * 0.22, xr - xl - 20 * ps, mh * 0.44);
+    // a schematic standing wave with a few loops
+    const nloops = Math.max(4, Math.round((xr - xl) / (22 * ps)));
+    const amp = mh * 0.32, phase = Math.cos(clock * 6);
+    c.strokeStyle = T.pos; c.lineWidth = 1.8 * ps;
+    for (const sg of [1, -1]) { c.globalAlpha = sg > 0 ? 1 : 0.35; c.beginPath(); for (let i = 0; i <= 200; i++) { const x = xl + (xr - xl) * i / 200, y = cy - sg * phase * amp * Math.sin(Math.PI * nloops * i / 200); i ? c.lineTo(x, y) : c.moveTo(x, y); } c.stroke(); }
+    c.globalAlpha = 1;
+    grip(c, [xr + 2.5 * ps, cy + mh / 2 + 10 * ps], T.ink, 'len');
+    mdGeom = { cav: { xl, xmaxR, cy, mh } };
+    LBOX = b;
+    label(c, `L = ${(S.L * 100).toFixed(1)} cm`, (xl + xr) / 2, cy + mh / 2 + 10 * ps, T.ink, 'center', 'middle', true, 10.5);
+    LBOX = null;
+    c.restore();
+    // the gain curve and the comb
+    const pb = L.plot; clip(pb);
+    title(c, pb, 'Gain curve and cavity modes', `Doppler width ${fmtFreq(md.fw)} (FWHM); modes every c/2L = ${fmtFreq(md.sp, 4)}`);
+    const p = plotBox(pb, 56, 18, 52, 36);
+    const a = -md.span, bb = md.span, ymax = Math.max(1.3, S.gain * 1.18);
+    const X = (d) => p.L + (d - a) / (bb - a) * (p.R - p.L), Y = (g) => p.B - g / ymax * (p.B - p.T);
+    mdGeom.plot = { p, X, a, b: bb };
+    xTicksLin(p, a / 1e9, bb / 1e9, (v) => X(v * 1e9), 'ν − ν₀ (GHz)');
+    yTicksLin(p, 0, ymax, Y, (v) => trim(v.toPrecision(3)));
+    yLabel(p, 'gain / loss', T.muted);
+    c.save(); c.beginPath(); c.rect(p.L, p.T, p.R - p.L, p.B - p.T); c.clip();
+    // band above threshold
+    const hb = bandHalf(S.gain, md.fw);
+    if (hb > 0) { c.fillStyle = T.pos; c.globalAlpha = 0.07; c.fillRect(X(-hb), p.T, X(hb) - X(-hb), p.B - p.T); c.globalAlpha = 1; }
+    // threshold
+    const y1 = Y(1); c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps; c.setLineDash([5, 4]); c.beginPath(); c.moveTo(p.L, y1); c.lineTo(p.R, y1); c.stroke(); c.setLineDash([]);
+    // gain curve
+    c.beginPath(); for (let i = 0; i <= 300; i++) { const d = a + (bb - a) * i / 300, x = X(d), y = Y(gainRel(S.gain, d, md.fw)); i ? c.lineTo(x, y) : c.moveTo(x, y); }
+    c.strokeStyle = T.equi; c.lineWidth = 2.4 * ps; c.stroke();
+    c.lineTo(X(bb), p.B); c.lineTo(X(a), p.B); c.closePath(); c.fillStyle = T.equi; c.globalAlpha = 0.1; c.fill(); c.globalAlpha = 1;
+    // the comb
+    const hotC = (drag && drag.id === 'comb') || (!drag && hoverId === 'comb');
+    for (const m of md.list) {
+      const x = Math.round(X(m.d)) + 0.5, gr = gainRel(S.gain, m.d, md.fw), las = gr > 1;
+      c.strokeStyle = las ? T.pos : T.muted; c.globalAlpha = las ? 1 : (hotC ? 0.8 : 0.5); c.lineWidth = (las ? 1.6 : 1) * ps;
+      c.beginPath(); c.moveTo(x, p.B); c.lineTo(x, las ? Y(gr) : p.T + 14 * ps); c.stroke(); c.globalAlpha = 1;
+      if (las) { const hgt = (gr - 1) / Math.max(0.3, S.gain - 1) * (p.B - y1) * 0.85; c.fillStyle = T.pos; c.globalAlpha = 0.55; c.fillRect(x - 4 * ps, p.B - hgt, 8 * ps, hgt); c.globalAlpha = 1; }
+    }
+    c.restore();
+    // spacing arrow between the two modes nearest the centre
+    const sorted = md.list.slice().sort((u, v) => Math.abs(u.d) - Math.abs(v.d));
+    const m0 = sorted[0];
+    const yA = p.T + 22 * ps;
+    if (m0) {
+      const xa = X(m0.d), xb = X(m0.d + md.sp);
+      if (xb < p.R - 4) { arrow(c, (xa + xb) / 2, yA, xb - 1, yA, T.ink, 1.2 * ps, 7); arrow(c, (xa + xb) / 2, yA, xa + 1, yA, T.ink, 1.2 * ps, 7); }
+      gripBars(c, xa, p.B - 14 * ps, T.pos, 'comb', false);
+    }
+    // FWHM marker
+    const yh = Y(S.gain / 2);
+    c.strokeStyle = T.equi; c.lineWidth = 1 * ps; c.setLineDash([2, 3]); c.beginPath(); c.moveTo(X(-md.fw / 2), yh); c.lineTo(X(md.fw / 2), yh); c.stroke(); c.setLineDash([]);
+    // gain peak grip
+    grip(c, [X(0), Y(S.gain)], T.equi, 'gain');
+    frame(p);
+    LBOX = { x: p.L, w: p.R - p.L };
+    if (m0) label(c, `c/2L = ${fmtFreq(md.sp, 3)}`, (X(m0.d) + X(m0.d + md.sp)) / 2, yA - 11 * ps, T.ink, 'center', 'middle', true, 10);
+    label(c, `Δν_D = ${fmtFreq(md.fw, 3)}`, X(md.fw / 2) + 6 * ps, yh + (Math.abs(yh - y1) < 14 * ps ? 14 * ps : 0), T.equi, 'left', 'middle', false, 10);
+    label(c, 'loss (threshold)', p.R - 6 * ps, y1 - 10 * ps, T.ink, 'right', 'middle', false, 10);
+    const nl = md.list.filter((m) => gainRel(S.gain, m.d, md.fw) > 1).length;
+    label(c, `${nl} mode${nl === 1 ? '' : 's'} lasing`, p.L + 8 * ps, p.T + 12 * ps, T.pos, 'left', 'middle', true, 11);
+    LBOX = null;
+    c.restore();
+    boxDividers([L.cav, L.plot]);
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    // processes
+    const nu = TRANS[S.trans].nu, x = HP * nu / (KB * S.T), r = Math.exp(-x);
+    $('tempOut').textContent = fmtTemp(S.T);
+    $('rHnu').textContent = fmtEV(HP * nu);
+    $('rX').textContent = num(x, 4);
+    $('rRatio').textContent = r < 1e-300 ? '< 10⁻³⁰⁰' : num(r, 4);
+    const so = stimOverSpont(nu, S.T);
+    $('rSS').textContent = so < 1e-300 ? '< 10⁻³⁰⁰' : num(so, 4);
+    $('rAB').textContent = `${sci(AoverB(nu), 4)} J s m⁻³`;
+    $('pwOut').textContent = num(S.wA, 3);
+    $('rPump').textContent = pumped2(S.wA).toFixed(4);
+    $('transHint').innerHTML = TRANS[S.trans].hint;
+    for (const b of document.querySelectorAll('#trans button')) b.setAttribute('aria-pressed', String(b.dataset.t === S.trans));
+    // laser
+    const m = MEDIA[S.med], st = steadySeed(P, S.W), rel = relax(P, S.W);
+    $('wpOut').textContent = `${num(S.W, 3)} s⁻¹ · ${(S.W / P.Wth).toFixed(2)} × threshold`;
+    $('wpMax').textContent = `${m.Wmax} s⁻¹`;
+    $('reflOut').textContent = S.R.toFixed(3);
+    $('rTau').textContent = fmtTime(P.tau);
+    $('rTc').textContent = fmtTime(P.tc);
+    $('rNth').innerHTML = `${sci(P.Nth, 3)} <span class="ok">${(100 * P.Nth / P.Nt).toPrecision(2)}% of ${sci(P.Nt, 2)} ions</span>`;
+    $('rWth').innerHTML = `${num(P.Wth, 3)} s⁻¹ <span class="ok">${fmtPow(pAbs(P, P.Wth, P.Nth))} absorbed</span>`;
+    $('rPss').innerHTML = `${fmtPow(pOut(P, st.q))} <span class="ok">at ${fmtPow(pAbs(P, S.W, st.N))} absorbed, N = ${(st.N / P.Nth).toFixed(4)} N<sub>th</sub></span>`;
+    $('rRel').innerHTML = rel ? (rel.f > 0 ? `${fmtFreq(rel.f)} · ${fmtTime(rel.tdamp)} <span class="ok">period ${fmtTime(1 / rel.f)}</span>` : 'overdamped') : '— <span class="ok">below threshold</span>';
+    $('rateEq').innerHTML = S.med === 'nd'
+      ? 'dN/dt = W<sub>p</sub>(N<sub>t</sub> − N) − N/τ − K N q<br>dq/dt = K N q − q/τ<sub>c</sub> + β N/τ<br>N = N₂ (lower laser level empty)'
+      : 'dN/dt = W<sub>p</sub>(N<sub>t</sub> − N) − (N + N<sub>t</sub>)/τ − 2K N q<br>dq/dt = K N q − q/τ<sub>c</sub> + β N₂/τ<br>N = N₂ − N₁, N₂ = (N<sub>t</sub> + N)/2';
+    $('rateHint').innerHTML = `N is the inversion and q the number of photons in the cavity mode. K = σc/(AL) = ${sci(P.K, 3)} s⁻¹, from the cross section σ = ${sci(m.sigma * 1e4, 2)} cm², mode area A and cavity length L. τ<sub>c</sub> = t<sub>rt</sub>/(−ln R − ln 0.98), with t<sub>rt</sub> = 2L/c = ${fmtTime(P.trt)}. Above threshold, setting both derivatives to zero gives N = N<sub>th</sub> exactly and q growing in proportion to the pump. f<sub>R</sub> = √(ω₀² − γ²/4)/2π with ω₀² = ${S.med === 'nd' ? '' : '2'}K q₀/τ<sub>c</sub>, γ = W<sub>p</sub> + 1/τ + ${S.med === 'nd' ? '' : '2'}K q₀.`;
+    $('mNd').setAttribute('aria-pressed', String(S.med === 'nd')); $('mRuby').setAttribute('aria-pressed', String(S.med === 'ruby'));
+    for (const b of document.querySelectorAll('#speeds button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+    $('spOut').textContent = `${fmtTime(S.speed)} per second`;
+    liveReadouts();
+    // modes
+    const md = modeData();
+    $('lenOut').textContent = `${(S.L * 100).toFixed(1)} cm`;
+    $('dlOut').textContent = `${Math.round(S.dL * 1e9)} nm`;
+    $('gainOut').textContent = S.gain.toFixed(2);
+    $('rFsr').textContent = fmtFreq(md.sp, 4);
+    $('rDop').textContent = fmtFreq(md.fw, 3);
+    const nl = md.list.filter((mm) => gainRel(S.gain, mm.d, md.fw) > 1).length;
+    $('rNm').textContent = String(nl);
+    $('rQi').textContent = Math.round(2 * (S.L + S.dL) / HENE.lamVac).toLocaleString('en-US');
+    const hb = bandHalf(S.gain, md.fw);
+    $('rBand').innerHTML = hb > 0 ? `${fmtFreq(2 * hb, 3)} wide <span class="ok">${(2 * hb / md.sp).toFixed(2)} mode spacings</span>` : 'none: gain below loss';
+    // model text
+    const mh = {
+      proc: 'One transition between two levels with equal degeneracies, so B₁₂ = B₂₁. The thermal ratio is the Boltzmann factor; the rate ratio stimulated/spontaneous uses the Planck energy density at the same temperature. Animations are not to scale: wavelengths, speeds and timing are chosen to be seen.',
+      laser: 'Rate equations for one cavity mode and a uniform medium; no spatial hole burning, no thermal effects. Nd:YAG is an ideal four level laser and ruby an ideal three level laser: pump bands and the Nd lower level empty instantly. Rod 1 cm long, mode radius 0.5 mm, cavity 10 cm with refractive index 1, 2% internal loss per round trip, β = 10⁻⁹ of spontaneous emission into the mode. Doping (1.0 at.% Nd, 0.05 wt.% Cr₂O₃), cross sections and lifetimes as in Koechner. Real ruby lasers are flash pumped in pulses; running one continuously at these powers would overheat it.',
+      levels: 'Schematic diagrams with energies to scale on each axis. Many levels are omitted, and the levels shown are really manifolds of closely spaced sublevels.',
+      modes: 'Mode frequencies ν = qc/2L for a cavity of length L with refractive index 1; transverse modes ignored. The gain profile is a Gaussian with the Doppler width; its height relative to loss sets which modes can lase.'
+    };
+    $('modelHint').textContent = mh[S.view];
+    const lowB = Math.exp(-2111e2 * HP * C0 / (KB * 300));
+    $('ndLow').textContent = sci(lowB, 1);
+  }
+  function liveReadouts() {
+    $('rPout').textContent = fmtPow(pOut(P, sim.q));
+    $('rN').textContent = (sim.N / P.Nth).toFixed(3);
+    $('rQ').textContent = sim.q >= 1e5 ? sci(sim.q, 3) : sim.q >= 10 ? Math.round(sim.q).toString() : sim.q.toPrecision(2);
+  }
+  function countText() {
+    $('count').innerHTML = S.view === 'laser' ? `t = ${fmtTime(Math.max(0, sim.t))} <small>since switch on</small>` : '';
+  }
+
+  // ---------- controls ----------
+  const tempEl = $('temp'), pwEl = $('pw'), wpEl = $('wp'), reflEl = $('refl'), lenEl = $('len'), dlEl = $('dl'), gainEl = $('gain');
+  function syncUI() {
+    tempEl.value = Math.log10(S.T); pwEl.value = Math.log10(S.wA);
+    const m = MEDIA[S.med]; wpEl.max = m.Wmax; wpEl.step = m.Wstep; wpEl.value = S.W; reflEl.value = S.R;
+    lenEl.value = S.L * 100; dlEl.value = Math.round(S.dL * 1e9); gainEl.value = S.gain;
+    for (const [id, v] of [['vProc', 'proc'], ['vLaser', 'laser'], ['vLevels', 'levels'], ['vModes', 'modes']]) $(id).setAttribute('aria-pressed', String(S.view === v));
+    for (const sec of document.querySelectorAll('[data-for]')) sec.hidden = sec.dataset.for !== S.view;
+    $('restart').hidden = S.view !== 'laser';
+    pane.dataset.view = S.view;
+  }
+  function markPreset(name) {
+    S.preset = name;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint').innerHTML = name && PRESETS[name] ? PRESETS[name].hint : 'Your own setup. Pick a preset to return to a known one.';
+  }
+  function update() { readouts(); syncUI(); countText(); if (!playing) drawAll(); }
+  const snap = (v, el) => { const lo = +el.min, hi = +el.max, st = +el.step; v = Math.max(lo, Math.min(hi, v)); return Math.max(lo, Math.min(hi, Math.round((v - lo) / st) * st + lo)); };
+  function setTempLog(lv) { const v = snap(lv, tempEl); const t = Math.pow(10, v); if (t === S.T) return; S.T = t; markPreset(null); update(); }
+  function setWA(lv) { const v = snap(lv, pwEl); const w = Math.pow(10, v); if (w === S.wA) return; S.wA = w; markPreset(null); update(); }
+  function setW(w) { w = +snap(w, wpEl).toFixed(6); if (w === S.W) return; S.W = w; markPreset(null); update(); }
+  function setR(r) { r = +snap(r, reflEl).toFixed(6); if (r === S.R) return; S.R = r; P = laserParams(MEDIA[S.med], S.R); markPreset(null); update(); }
+  function setL(cm) { const v = snap(cm, lenEl); if (v / 100 === S.L) return; S.L = v / 100; markPreset(null); update(); }
+  function setDL(nm) { const v = snap(nm, dlEl); if (v * 1e-9 === S.dL) return; S.dL = v * 1e-9; markPreset(null); update(); }
+  function setGain(g) { const v = +snap(g, gainEl).toFixed(4); if (v === S.gain) return; S.gain = v; markPreset(null); update(); }
+  tempEl.addEventListener('input', () => setTempLog(+tempEl.value));
+  pwEl.addEventListener('input', () => setWA(+pwEl.value));
+  wpEl.addEventListener('input', () => setW(+wpEl.value));
+  reflEl.addEventListener('input', () => setR(+reflEl.value));
+  lenEl.addEventListener('input', () => setL(+lenEl.value));
+  dlEl.addEventListener('input', () => setDL(+dlEl.value));
+  gainEl.addEventListener('input', () => setGain(+gainEl.value));
+  for (const b of document.querySelectorAll('#trans button')) b.addEventListener('click', () => { S.trans = b.dataset.t; markPreset(null); update(); });
+  function setMedium(k, keepPreset) {
+    if (S.med === k && keepPreset) return;
+    S.med = k; P = laserParams(MEDIA[k], S.R);
+    S.W = Math.min(MEDIA[k].Wmax, +(2 * P.Wth).toPrecision(3));
+    if (!keepPreset) { markPreset(null); S.ghost = false; S.speed = k === 'nd' ? 1e-4 : 1e-3; }
+    clearTrace(); switchOn(); update();
+  }
+  $('mNd').addEventListener('click', () => setMedium('nd'));
+  $('mRuby').addEventListener('click', () => setMedium('ruby'));
+  for (const b of document.querySelectorAll('#speeds button')) b.addEventListener('click', () => { S.speed = +b.dataset.s; const t = sim.t; TR.Tw = traceWindow(); TR.qmax.fill(-1); TR.qmin.fill(Infinity); TR.N.fill(NaN); TR.last = -1; TR.t0 = Math.max(0, t - TR.Tw * 0.1); record(sim); update(); });
+  $('restart').addEventListener('click', () => { switchOn(); update(); });
+  function setView(v) { S.view = v; syncUI(); readouts(); countText(); resize(); }
+  $('vProc').addEventListener('click', () => setView('proc'));
+  $('vLaser').addEventListener('click', () => setView('laser'));
+  $('vLevels').addEventListener('click', () => setView('levels'));
+  $('vModes').addEventListener('click', () => setView('modes'));
+  function applyPreset(name) {
+    const p = PRESETS[name];
+    S.view = p.view;
+    if (p.view === 'proc') { S.trans = p.trans; S.T = p.T; S.wA = p.wA; }
+    if (p.view === 'laser') {
+      S.med = p.med; S.R = p.R; S.speed = p.speed; S.ghost = name === 'three';
+      P = laserParams(MEDIA[S.med], S.R); S.W = +(p.r * P.Wth).toPrecision(4);
+      clearTrace();
+      if (p.steady) setSteady(); else switchOn();
+      toks = []; leaving = [];
+    }
+    if (p.view === 'modes') { S.L = p.L / 100; S.dL = p.dL; S.gain = p.gain; }
+    markPreset(name);
+    syncUI(); readouts(); countText(); resize();
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const playBtn = $('play');
+  function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); }
+  playBtn.addEventListener('click', () => setPlaying(!playing));
+
+  // ---------- dragging on the drawing ----------
+  let drag = null, hoverId = null;
+  function wFromAbs(x) {   // pump rate giving a steady absorbed power x (monotonic)
+    let lo = 0, hi = MEDIA[S.med].Wmax;
+    for (let i = 0; i < 60; i++) { const mid = (lo + hi) / 2; if (pAbs(P, mid, steadySeed(P, mid).N) < x) lo = mid; else hi = mid; }
+    return (lo + hi) / 2;
+  }
+  function dragHandles() {
+    if (!LY) return [];
+    const out = [];
+    if (S.view === 'proc') {
+      if (thGeom) { const { p, X, lx0, lx1 } = thGeom, x = X(Math.log10(S.T)); out.push({ id: 'temp', cursor: 'ew-resize', seg: [x, p.T, x, p.B], set: (px) => setTempLog(lx0 + (px - p.L) / (p.R - p.L) * (lx1 - lx0)) }); }
+      if (puGeom) { const { p, X, lx0, lx1 } = puGeom, x = X(Math.log10(S.wA)); out.push({ id: 'wA', cursor: 'ew-resize', seg: [x, p.T, x, p.B], set: (px) => setWA(lx0 + (px - p.L) / (p.R - p.L) * (lx1 - lx0)) }); }
+    } else if (S.view === 'laser' && LY.scene) {
+      const g = cavGeom(), m = MEDIA[S.med];
+      out.push({ id: 'pump', cursor: 'ew-resize', pt: [g.rx0 + (g.rx1 - g.rx0) * S.W / m.Wmax, g.trackY], set: (x) => setW((x - g.rx0) / (g.rx1 - g.rx0) * m.Wmax) });
+      const rx = g.xR + 16 * g.ps, rt = g.cy - g.mh / 2, rb = g.cy + g.mh / 2;
+      out.push({ id: 'refl', cursor: 'ns-resize', pt: [rx, rb - (S.R - 0.8) / 0.199 * (rb - rt)], set: (x, y) => setR(0.8 + (rb - y) / (rb - rt) * 0.199) });
+      for (const w of ['out', 'inv']) {
+        const cg = cvGeom[w]; if (!cg) continue;
+        const st = steadySeed(P, S.W), xNow = pAbs(P, S.W, st.N);
+        const box = LY[w], p = cg.p, ymin = 0;
+        // the point position is recomputed from the drawing pass: use the vertical line through it as the target
+        out.push({ id: 'op-' + w, cursor: 'ew-resize', seg: [cg.X(xNow), p.T, cg.X(xNow), p.B], set: (px) => setW(wFromAbs(Math.max(0, (px - p.L) / (p.R - p.L) * cg.xmax))) });
+      }
+    } else if (S.view === 'modes' && mdGeom) {
+      const { xl, xmaxR, cy, mh } = mdGeom.cav, xr = xl + (xmaxR - xl) * S.L;
+      out.push({ id: 'len', cursor: 'ew-resize', pt: [xr + 2.5 * PS, cy + mh / 2 + 10 * PS], ray: null, set: (x) => setL((x - xl) / (xmaxR - xl) * 100) });
+      const md = modeData(), { p, X, a, b } = mdGeom.plot;
+      const m0 = md.list.slice().sort((u, v) => Math.abs(u.d) - Math.abs(v.d))[0];
+      if (m0) {
+        const x0 = X(m0.d);
+        out.push({ id: 'comb', cursor: 'ew-resize', seg: [x0, p.T, x0, p.B], grabD: m0.d, dL0: S.dL,
+          set: (px, py, h) => {
+            // moving the comb by Δν needs ΔL = −L Δν/ν (modulo λ/2)
+            const dnu = a + (px - p.L) / (p.R - p.L) * (b - a) - h.grabD, half = HENE.lamVac / 2;
+            let dl = h.dL0 - (S.L) * dnu / md.nu0;
+            dl = ((dl % half) + half) % half;
+            setDL(dl * 1e9);
+          } });
+      }
+      const ymax = Math.max(1.3, S.gain * 1.18);
+      out.push({ id: 'gain', cursor: 'ns-resize', pt: [X(0), p.B - S.gain / ymax * (p.B - p.T)], set: (x, y) => setGain((p.B - y) / (p.B - p.T) * ymax) });
+    }
+    return out;
+  }
+  function handleAt(ev) {
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 10 * PS * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of dragHandles()) {
+      let d = Infinity;
+      if (h.pt) d = Math.hypot(x - h.pt[0], y - h.pt[1]) - 3;
+      else if (h.seg) { const [x1, y1, , y2] = h.seg; if (y >= y1 - 4 && y <= y2 + 4) d = Math.abs(x - x1); }
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  let dragQ = null, dragFrame = false;
+  can.addEventListener('pointermove', (ev) => {
+    if (drag) {
+      const r = can.getBoundingClientRect(); dragQ = [ev.clientX - r.left, ev.clientY - r.top];
+      if (!dragFrame) { dragFrame = true; requestAnimationFrame(() => { dragFrame = false; if (!drag || !dragQ) return; drag.set(dragQ[0], dragQ[1], drag); dragQ = null; }); }
+      return;
+    }
+    const h = handleAt(ev), id = h ? h.id : null;
+    if (id !== hoverId) { hoverId = id; if (!playing) drawAll(); }
+    can.style.cursor = h ? h.cursor : 'default';
+  });
+  can.addEventListener('pointerdown', (ev) => {
+    const h = handleAt(ev); if (!h) return;
+    drag = h; hoverId = h.id; can.style.cursor = h.cursor === 'grab' ? 'grabbing' : h.cursor;
+    try { can.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault(); drawAll();
+  });
+  const endDrag = () => { if (!drag) return; drag = null; drawAll(); };
+  can.addEventListener('pointerup', endDrag);
+  can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('pointerleave', () => { if (!drag) { hoverId = null; drawAll(); } });
+  can.addEventListener('keydown', (e) => {
+    const k = e.key, sgn = (k === 'ArrowRight' || k === 'ArrowUp') ? 1 : -1, big = e.shiftKey ? 10 : 1;
+    if (k === 'ArrowLeft' || k === 'ArrowRight') {
+      if (S.view === 'proc') setTempLog(Math.log10(S.T) + sgn * big * 0.02);
+      else if (S.view === 'laser') setW(S.W + sgn * big * MEDIA[S.med].Wmax / 200);
+      else if (S.view === 'modes') setDL(Math.round(S.dL * 1e9) + sgn * big * 4);
+      else return;
+    } else if (k === 'ArrowUp' || k === 'ArrowDown') {
+      if (S.view === 'proc') setWA(Math.log10(S.wA) + sgn * big * 0.02);
+      else if (S.view === 'laser') setR(S.R + sgn * big * 0.001);
+      else if (S.view === 'modes') setGain(S.gain + sgn * big * 0.02);
+      else return;
+    } else if (k === ' ') setPlaying(!playing);
+    else if ((k === 'r' || k === 'R') && S.view === 'laser') { switchOn(); update(); }
+    else if (k >= '1' && k <= '4') setView(['proc', 'laser', 'levels', 'modes'][+k - 1]);
+    else return;
+    e.preventDefault();
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(() => { resize(); });
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+
+  const retheme = () => { tokens(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), frameMs = 0, lastRead = 0;
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (playing) {
+      clock += dt;
+      advance(P, S.W, sim, dt * S.speed, record, 40000);
+      updateTokens(dt);
+      drawAll();
+      if (now - lastRead > 150) { if (S.view === 'laser') liveReadouts(); countText(); lastRead = now; }
+    }
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    requestAnimationFrame(loop);
+  }
+  window.__lz = { get frameMs() { return frameMs; }, get S() { return S; }, get sim() { return sim; }, get P() { return P; }, setPlaying, applyPreset, setView,
+    handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt, seg: h.seg })); }, run(T) { advance(P, S.W, sim, T, record, 1e7); drawAll(); } };
+
+  tokens();
+  const ro = new ResizeObserver(() => resize());
+  ro.observe(pane);
+  setPlaying(!reduce);
+  applyPreset('relax');
+  if (reduce) { clock = 1.0; drawAll(); }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
