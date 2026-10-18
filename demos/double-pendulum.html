@@ -258,7 +258,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <section data-for="double">
         <h2>Small oscillations</h2>
         <div class="ctl">
-          <div class="slider-head"><label for="sAmp">Mode amplitude, upper rod</label><output id="oAmp" class="mono" for="sAmp"></output></div>
+          <div class="slider-head"><label for="sAmp">Mode amplitude, larger angle</label><output id="oAmp" class="mono" for="sAmp"></output></div>
           <input type="range" id="sAmp" min="1" max="60" step="1">
         </div>
         <div class="row3">
@@ -511,7 +511,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     mode1: { mode: 'double', m1: 1, m2: 1, L1: 1, L2: 1, amp: 6, start: 'm1', N: 1, view: 'config',
       hint: 'Both rods swing together at one frequency, the lower one √2 times as far: normal mode 1, ω₁² = (2 − √2)g/L for equal masses and lengths. The θ₂ against θ₁ plot is a straight line. Try 50 copies: at small angles they stay together.' },
     mode2: { mode: 'double', m1: 1, m2: 1, L1: 1, L2: 1, amp: 6, start: 'm2', N: 1, view: 'config',
-      hint: 'The rods swing opposite ways, the lower one √2 times as far: normal mode 2, ω₂² = (2 + √2)g/L, faster than mode 1. Raise the mode amplitude and press Mode 2 again: past about 30° the motion stops being a clean mode.' },
+      hint: 'The rods swing opposite ways, the lower one √2 times as far: normal mode 2, ω₂² = (2 + √2)g/L, faster than mode 1. Raise the mode amplitude and press Mode 2 again: by about 60° the motion is clearly no longer a clean mode.' },
     chaos: { mode: 'double', m1: 1, m2: 1, L1: 1, L2: 1, ic: [130, 130], N: 1, view: 'config',
       hint: 'Released from 130° and 130°, the lower bob flips over the top at irregular times and the trail never repeats. The equations are deterministic: there is no randomness anywhere, yet the motion cannot be predicted far ahead. The Lyapunov estimate in Copies and separation tells how fast errors grow.' },
     fly: { mode: 'double', m1: 1, m2: 1, L1: 1, L2: 1, ic: [130, 130], N: 100, logd: -6, view: 'sep',

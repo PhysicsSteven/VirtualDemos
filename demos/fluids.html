@@ -470,7 +470,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   };
   const PRESETS = {
     depth: { scene: 'press', liq: 'water', p: { D: 2, pd: 1.2, px: 0.62 }, gmode: 'abs',
-      hint: 'Every metre of water adds 9.8 kPa, about a tenth of an atmosphere, so 10.3 m of water doubles the pressure. Switch to mercury: the same depth gives 13.6 times as much.' },
+      hint: 'Every metre of water adds 9.8 kPa, about a tenth of an atmosphere, so 10.3 m of water doubles the pressure. Switch to Gauge, then to mercury: the same depth adds 13.6 times as much.' },
     float: { scene: 'buoy', liq: 'water', p: { rho: 500, L: 10, mat: 'wood', h0: 0.3, zeta: 0.12, scale: false, over: false, z0: 0.48, xb: 0 },
       hint: 'A floating block settles with a fraction ρ_obj/ρ_fluid of its height under the surface, here half. Try Steel or Ice, or slide the density through 1000 kg/m³: the block sinks once it is denser than the water.' },
     iceberg: { scene: 'buoy', liq: 'sea', p: { rho: 917, L: 20, mat: 'ice', h0: 0.26, zeta: 0.1, scale: false, over: false, z0: 0.43, xb: 0 },

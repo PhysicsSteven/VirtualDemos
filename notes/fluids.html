@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fluids: Pressure, Buoyancy and Flow: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Fluids: Pressure, Buoyancy and Flow</h1><ul class="meta"><li><a href="../demos/fluids.html">Open the demo</a></li><li>Intro mechanics (fluids)</li><li>20 to 35 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>In a liquid at rest the pressure depends only on depth, P = P₀ + ρgh. It pushes equally in every direction, whatever the shape of the container.</li>
+<li>The buoyant force is the extra push on the bottom of an object compared with the top: F_B = ρ_f V_sub g, the weight of the liquid displaced. A floater sinks until F_B equals its weight, so V_sub/V = ρ_obj/ρ_fluid; a sunk object weighs less by F_B.</li>
+<li>In steady flow the same volume passes every section, A₁v₁ = A₂v₂, so a narrow throat runs fast. Bernoulli, P + ½ρv² + ρgy = constant, then says the fast flow has the lower pressure.</li>
+<li>Water leaving a hole a depth h below the surface moves at v = √(2gh), as fast as if it had fallen freely from the surface (Torricelli).</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know pressure as force per area and the work–energy theorem. The <strong>Scene</strong> buttons pick <strong>Depth</strong>, <strong>Shapes</strong>, <strong>Barometer</strong>, <strong>Buoyancy</strong>, <strong>Venturi</strong> and <strong>Torricelli</strong>; each preset loads a scene, and the <strong>Liquid</strong> buttons switch the liquid. You can drag the probe, the block, the spring scale, the water surface, the pipe throat and the hole, or use the sliders. <strong>Show pressure as</strong> switches <strong>Absolute</strong> and <strong>Gauge</strong>. Turn on <strong>Projector</strong> for the room.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Pressure grows with depth.</strong> The probe at 1.20 m reads 113.09 kPa absolute, 1.116 atm. Drag it sideways: nothing changes. Switch to <strong>Gauge</strong> and to <strong>Mercury</strong>: the ρgh part is 13.6 times larger. Ask Q2.</li>
+<li><strong>Shapes</strong> (scene button). Ask Q1 before you say anything about the vessels. At a fill height of 0.32 m all four bases feel 3.14 kPa and 15.8 N, though the vessels hold from 1.00 L to 7.27 L.</li>
+<li><strong>Floating and sinking.</strong> The 10 cm pine cube settles half under; the level rises 3.33 mm. Try <strong>Steel</strong> or <strong>Ice</strong>, or slide <strong>Block density ρ_obj</strong> through 1000 kg/m³. Then switch the liquid to <strong>Oil</strong> and <strong>Mercury</strong> (Q3). Press <strong>Iceberg</strong> to see 89.5% of the ice under seawater.</li>
+<li><strong>Weighing in water (Archimedes).</strong> Drag the spring scale down to lower the aluminum cube into the full overflow can. The scale falls from 26.5 N to 16.7 N as 1000 cm³ of water, weighing 9.81 N, runs into the beaker (Q4). Ask Q5 while it is submerged.</li>
+<li><strong>Venturi tube.</strong> Halving the diameter makes the throat flow 4 times faster, 3.20 m/s, and the throat standpipe stands 48.9 cm lower than the inlet one (Q6). Drag the throat grip to widen it back.</li>
+<li><strong>Torricelli's tank.</strong> The hole 0.30 m below the surface sends water out at 2.43 m/s, landing 0.917 m from the wall. With <strong>Compare holes</strong> on, ask the class to predict which hole throws farthest, then drag the hole (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: four vessels with the same 8 cm base are filled with water to the same height. One is a straight tube, one flares out wide, one narrows toward the top, one slants. Which base feels the largest force from the water? Then open <strong>Shapes</strong> and check.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> A diver is 10.0 m below the surface of the sea (ρ = 1025 kg/m³). Find the absolute pressure on the diver, and how many atmospheres that is (P₀ = 101.3 kPa). Check with <strong>Seawater</strong>, the <strong>Liquid depth</strong> slider at 10 m and the probe at the bottom.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> A pine cube 10.0 cm on a side has density 500 kg/m³. How far below the surface is its bottom when it floats in water? In vegetable oil (920 kg/m³)? In mercury (13 595 kg/m³)? Check each with the <strong>Liquid</strong> buttons and the <strong>Fraction under now</strong> readout.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> An aluminum cube 10.0 cm on a side (2700 kg/m³) hangs from a spring scale. Find the scale reading in air and when the cube is fully under water, and the volume and weight of the water that spills into the beaker. Check with <strong>Weighing in water (Archimedes)</strong>.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Explain why: use the pressure on the top and bottom faces of the submerged cube to derive F_B = ρ_f V g. Then explain why the scale reading in Q4 stops changing once the cube is fully submerged, even as you lower it further. (Ignore the spill and the change of level.)</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In <strong>Venturi tube</strong>, water enters a 6.0 cm pipe at 0.80 m/s and passes through a 3.0 cm throat. Find the speed in the throat, the pressure difference P₁ − P₂, and the difference in height of the two standpipes.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In <strong>Torricelli's tank</strong> the water stands H = 1.00 m above the floor and the hole is h = 0.30 m below the surface. Find the exit speed and how far from the wall the jet lands. At what other hole depth would it land at the same spot? Explain why the hole halfway down throws farthest, and check with <strong>Compare holes</strong>.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The wide vessel holds more water, so it presses harder on its base."</strong> The pressure at the base depends only on depth, and every base has the same area, so the force is the same. In the flared vessel the slanted walls hold up the extra water; in the narrowing one the walls push down on it.</li>
+<li><strong>"Heavy things sink and light things float."</strong> Density decides it, not weight. A large steel ship floats because its hull displaces a lot of water; a small lead block sinks.</li>
+<li><strong>"The buoyant force grows the deeper an object goes."</strong> Both the top and bottom pressures grow with depth, and their difference stays ρ_f g times the height. For an incompressible liquid, F_B is the same at every depth once the object is fully under.</li>
+<li><strong>"Faster moving fluid pushes harder."</strong> In steady flow the faster fluid is at lower pressure. The pressure difference is what speeds it up as it enters the throat.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Hydrostatics: constant density (incompressible), g = 9.80665 m/s², standard air pressure P₀ = 101.325 kPa on the surface. The depth scale is to size; the tank width is schematic.</li>
+<li>Shapes: round open vessels with an 8 cm base (50.3 cm²); the narrowing one ends 2.4 cm across, the flared one 34 cm; every slice of the slanted tube is the same circle. Barometer: vacuum above the column, h = P/(ρg).</li>
+<li>Buoyancy: a cube in a tank of floor area 0.15 m², so the level rises by V_sub/A. Vertical motion only, with linear drag on the wet block (damping ratio ζ) and no added mass, so real blocks bob a little more slowly. The scale is read with the block hanging still.</li>
+<li>Venturi: ideal flow (incompressible, inviscid, steady), uniform speed across each section, horizontal pipe; each standpipe shows the gauge pressure at the axis. A real pipe also loses pressure to friction.</li>
+<li>Torricelli: a small hole with rounded edges in a wide tank kept full by a supply, so v = √(2gh) and the jet does not contract. The jet falls H − h, giving R = 2√(h(H − h)). Air drag is neglected.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>The <strong>Barometer</strong> scene: at 101.3 kPa a mercury column stands 760 mm and a water column over 10 m, which is why Torricelli used mercury.</li>
+<li>Homework: a floating block bobs with k = ρ_f g A_block (ignoring the level change). Show that a 10 cm pine cube in water bobs with a period of about 0.45 s, and compare with the demo.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

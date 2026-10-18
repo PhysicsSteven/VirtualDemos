@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pendulums and Chaos: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Pendulums and Chaos</h1><ul class="meta"><li><a href="../demos/double-pendulum.html">Open the demo</a></li><li>Intro mechanics (pendulum, simple harmonic motion); upper level classical mechanics (normal modes, chaos)</li><li>15 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>T = 2π√(L/g) is a small angle result. The exact period grows with amplitude, T = 4√(L/g) K(sin(θ₀/2)), and is infinite for a release at 180°.</li>
+<li>For small swings a double pendulum is linear, and every motion is a sum of two normal modes, each with one frequency and a fixed shape: the rods swing together (mode 1) or opposite (mode 2). For equal masses and lengths ω² = (g/L)(2 ∓ √2) and θ₂/θ₁ = ±√2.</li>
+<li>At large energy the same equations are chaotic: deterministic, yet two starts 10⁻⁶ rad apart separate exponentially, d ∝ e^(λt). Improving the starting accuracy a hundredfold buys only ln(100)/λ more seconds of prediction.</li>
+<li>A Poincaré section separates regular motion (closed curves, islands) from chaotic motion (a scattered sea) at one energy.</li>
+</ul>
+<h2>Before class</h2>
+<p>For an intro class, steps 1, 2, 4 and 5 are enough; the mode numbers and the Poincaré section suit an upper level class that has seen Lagrangians. The <strong>Pendulum</strong> switch picks <strong>Simple</strong> or <strong>Double</strong>. Drag a bob to set its angle and let go; with <strong>Release with drag speed</strong> on, a moving pointer gives it a starting speed, so hold still before releasing. The lower right plot switches between <strong>Angle path</strong>, <strong>Separation</strong> and <strong>Poincaré</strong>. Turn on <strong>Projector</strong> for the room.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Big swings take longer.</strong> Ask Q1 first. A 1.00 m pendulum from 150° falls behind the dashed small angle model every swing: T = 3.536 s against T₀ = 2.006 s, a ratio of 1.762. Drag the marker on the top plot toward 180°.</li>
+<li><strong>Normal mode 1.</strong> Both rods swing together at one frequency; the angle path is a straight line along a gold mode line. The rail shows ω₁ = 2.397 rad/s (period 2.622 s) and shape θ₂/θ₁ = 1.414. The <strong>Mode amplitude, larger angle</strong> slider (6°) sets the larger starting angle, here the lower rod's, so θ₁ starts at 4.2° and θ₂ at 6.0°.</li>
+<li><strong>Normal mode 2.</strong> The rods swing opposite ways, period 1.086 s. Ask Q3. Then raise <strong>Mode amplitude, larger angle</strong> to its 60° maximum and press <strong>Mode 2</strong>: the angle path spreads into a band around the gold line, because the large angle motion is no longer linear.</li>
+<li><strong>Double pendulum chaos.</strong> Both rods start at 130°, with E = 48.3 J against 58.8 J needed to stand both rods straight up. The lower bob flips over the top at irregular times. Point to the <strong>λ estimate</strong> in <strong>Copies and separation</strong>; after half a minute it settles near 1.5 s⁻¹.</li>
+<li><strong>Butterfly effect: 100 copies.</strong> Ask the class how long 100 pendulums started 10⁻⁶ rad apart will stay together. They move as one for several seconds, then fan out. On the log plot the separation rises along a straight line and levels off near d ≈ 1 to 5. Do Q5.</li>
+<li><strong>Poincaré section</strong> (upper level). At E = 15 J each dot marks the lower rod passing straight down moving right. Click inside the curve to start orbits, then raise <strong>Section energy E</strong>: the islands shrink (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: a pendulum released from 150° and one from 10°. Which has the longer period, or are they the same? Textbooks say the period does not depend on amplitude: when is that true?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> For L = 1.00 m and g = 9.81 m/s², find T₀. Use T ≈ T₀(1 + θ₀²/16), θ₀ in radians, to estimate T/T₀ at 30° and at 150°, and compare with the <strong>Ratio T/T₀</strong> readout (1.0174 and 1.7622). Where does this correction stop being useful?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> For equal masses and equal lengths L = 1.00 m, the normal mode frequencies are ω² = (g/L)(2 ∓ √2). Find both periods. Then explain why: why should the mode in which the rods swing opposite ways have the higher frequency?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Predict: in <strong>Normal mode 1</strong>, pause, drag the lower bob to hang straight down, hold still and let go, so only the upper rod starts displaced. Will the motion ever repeat exactly? What shape will the angle path fill? Explain using ω₂/ω₁, then check.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In <strong>Butterfly effect: 100 copies</strong> the first two copies start 10⁻⁶ rad apart, and the Lyapunov exponent is about λ = 1.5 s⁻¹. Estimate how long until their separation reaches about 1, so that the two are completely different. If you could measure the starting angle 100 times more precisely, how much longer could you predict the motion? Check with the <strong>Start difference δ, upper rod</strong> slider (it runs from 10⁻⁶ to 10⁻³ rad).</p></div>
+
+<div class="q"><p><strong>Q6.</strong> A student says the copies spread because of the computer's rounding errors, not physics. Use the demo to argue against this. (Look at <strong>Energy drift</strong>, and at 50 copies in <strong>Normal mode 1</strong>.)</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In a Poincaré section, what does a set of dots lying on a closed curve tell you about that orbit, and what does a scattered cloud of dots tell you? Predict what the section looks like at very low energy, where the small angle equations apply.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A pendulum's period never depends on its amplitude."</strong> That holds only for small swings. At 30° the period is 1.7% longer than 2π√(L/g); at 150° it is 76% longer.</li>
+<li><strong>"Chaos means random."</strong> The equations have no randomness: the same start always gives the same motion. Nearby starts separate exponentially, so any tiny uncertainty grows.</li>
+<li><strong>"Better measurements fix chaos."</strong> The error grows like e^(λt), so each factor of 10 in starting accuracy adds only ln(10)/λ, about 1.5 s here.</li>
+<li><strong>"A chaotic system is chaotic everywhere."</strong> At low energy the double pendulum is regular, and even at high energy the Poincaré section shows regular islands in the chaotic sea.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Point masses on rigid massless rods, frictionless pivots, no air drag, uniform g; angles from straight down. The exact nonlinear equations (from the Lagrangian) are integrated with an adaptive Dormand–Prince 5(4) method at a tolerance of 10⁻¹¹ per step; <strong>Energy drift</strong> shows how well energy stays fixed.</li>
+<li>Simple pendulum: θ″ = −(g/L) sin θ, exact period T = 4√(L/g) K(sin(θ₀/2)), with K from the arithmetic–geometric mean.</li>
+<li>Normal modes come from the linearized equations, det(K − ω²M) = 0, drawn as gold reference lines. The <strong>Mode amplitude, larger angle</strong> slider sets the larger starting angle, the lower rod's for equal masses and lengths.</li>
+<li>Separation: d² = Δθ₁² + Δθ₂² + (Δω₁² + Δω₂²)L₁/g; copy k starts with the upper rod turned k·δ more than copy 0. The λ estimate follows a nearby orbit pulled back to 10⁻⁸ every 0.1 s; it is a finite time estimate. The Poincaré section records θ₁ and ω₁ each time θ₂ crosses zero moving right.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Upper level homework: derive the Lagrangian, linearize it, and show that for equal masses and lengths ω² = (g/L)(2 ∓ √2) with θ₂/θ₁ = ±√2.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

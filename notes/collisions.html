@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Collisions and Momentum: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Collisions and Momentum</h1><ul class="meta"><li><a href="../demos/collisions.html">Open the demo</a></li><li>Intro mechanics (momentum, impulse, energy)</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>In every collision the bodies push on each other with equal and opposite forces for the same time, so the momentum one gains the other loses. Total momentum is conserved, elastic or not.</li>
+<li>Kinetic energy is kept only when e = 1. The loss is ½μ(1 − e²)v_rel², with μ = m₁m₂/(m₁ + m₂): only the energy of motion relative to the center of mass can be lost, and when the bodies stick (e = 0) all of it goes.</li>
+<li>In the center of mass frame the bodies arrive with equal and opposite momenta and leave with them reversed and scaled by e.</li>
+<li>Impulse J = ∫F dt = Δp. For the same change in momentum, a longer contact time means a smaller peak force.</li>
+<li>In two dimensions momentum is a vector and each component is conserved. For equal masses, an elastic collision with a target at rest sends the two off at 90° to each other.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know p = mv, kinetic energy and Newton's third law. The <strong>Scene</strong> buttons pick <strong>1D track</strong>, <strong>2D table</strong>, <strong>Explosion</strong>, <strong>Newton's cradle</strong> or <strong>Impulse</strong>; each preset loads one. Drag the round grip on a velocity arrow to set a velocity and the square grips to change a mass, the stored energy or a bumper's stiffness, or use the sliders. The bars show momentum and energy (outline before, filled after). <strong>0.25×</strong> and <strong>0.1×</strong> slow the playback.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Elastic, equal masses.</strong> Ask Q1 first. Cart 1 stops dead; cart 2 leaves at 1.00 m/s. Switch <strong>Frame</strong> to <strong>Center of mass</strong>: the carts come in at ±0.50 m/s and leave reversed.</li>
+<li><strong>Perfectly inelastic.</strong> The carts stick and move off at 0.50 m/s. Total momentum stays 1.00 kg·m/s, but K drops from 0.500 J to 0.250 J. Then do Q2 with the mass sliders.</li>
+<li><strong>Heavy hits light.</strong> Ask how fast the light cart leaves (Q3). The 4.0 kg cart slows only to 0.62 m/s; the 0.5 kg cart leaves at 1.42 m/s. Swap the masses and the light cart bounces back.</li>
+<li><strong>Explosion.</strong> From rest, the spring's 1.00 J pushes for 45.3 ms. The 2 kg piece leaves at −0.58 m/s and the 1 kg piece at 1.15 m/s: equal and opposite momenta, but K₁/K₂ = 0.5. Then <strong>Gun and bullet</strong> (Q4).</li>
+<li><strong>Glancing 2D collision: 90°.</strong> Puck 1 leaves at 0.50 m/s at −60°, puck 2 at 0.87 m/s at 30°. Change <strong>Impact parameter b</strong>: the angle stays 90° (Q5). Show the momentum triangle.</li>
+<li><strong>Impulse: soft vs stiff.</strong> Same carts, speeds and e. The areas under F(t) are equal (0.800 N·s), but the stiff bumper peaks at 26.2 N in 44.7 ms and the soft one at 4.54 N over 258 ms (Q6).</li>
+<li><strong>Newton's cradle</strong> (scene button). Pull back one ball, then two. The lower pane asks what would happen if n balls came out and shows that only n = k keeps the energy (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: a cart moving at 1 m/s hits an identical cart at rest, and the collision is perfectly elastic. What does each cart do afterward? Then predict what would change if the collision were perfectly inelastic. Check with the first two presets.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> A 1.0 kg cart at 1.0 m/s hits a 3.0 kg cart at rest and they stick. Find the final velocity and the fraction of the kinetic energy lost, then check with <strong>Perfectly inelastic</strong> and the mass sliders. What fraction is lost in general when a moving m₁ sticks to m₂ at rest?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In <strong>Heavy hits light</strong>, a 4.0 kg cart at 0.80 m/s hits a 0.50 kg cart at rest elastically. Find both velocities after the collision. What is the largest speed the light cart could ever get from a much heavier cart moving at v? Explain the answer in the center of mass frame.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A spring storing 1.00 J pushes apart a 2.0 kg piece and a 1.0 kg piece that start at rest. Find their velocities and kinetic energies. Why do they get equal momenta but not equal energies? Use <strong>Gun and bullet</strong> to explain why a rifle's recoil is survivable while the bullet is deadly.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Explain why: two equal mass pucks collide elastically, with one at rest. Using p₁ = p₁′ + p₂′ and energy conservation, show that the two pucks leave at right angles, whatever the impact parameter. Then set <strong>Coefficient of restitution e</strong> to 0.5 in <strong>Glancing 2D collision: 90°</strong>. Is the angle now more or less than 90°?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In <strong>Impulse: soft vs stiff</strong>, a 0.50 kg cart arrives at 1.0 m/s and rebounds with e = 0.60. Find the impulse from each bumper. Contact lasts 44.7 ms (stiff) and 258 ms (soft): find each average force. Use this to explain how an air bag protects a driver.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In <strong>Newton's cradle</strong>, one ball comes in at speed v. Why can't two balls go out at v/2 each? Check both momentum and kinetic energy. Use the chart in the lower pane, then test with <strong>Balls pulled back</strong> set to 2.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Momentum is conserved only in elastic collisions."</strong> Momentum is conserved in every collision, because the forces are internal and equal and opposite. It is kinetic energy that may or may not be conserved.</li>
+<li><strong>"In a crash the heavier object pushes harder."</strong> The forces on the two are equal in size at every instant (Newton's third law). The lighter object changes velocity more because the same impulse divided by a smaller mass is a bigger Δv.</li>
+<li><strong>"A soft bumper reduces the impulse."</strong> For the same speeds in and out, the impulse is the same, fixed by Δp. A soft bumper only spreads it over a longer time, which lowers the peak force.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>1D track: frictionless air track, rigid carts, instant collisions. Momentum is conserved and v₂′ − v₁′ = −e(v₂ − v₁), giving v₁′ = ((m₁ − e m₂)v₁ + (1 + e)m₂v₂)/(m₁ + m₂), and similarly for v₂′. Energy lost: ½μ(1 − e²)v_rel².</li>
+<li>2D table: smooth hard discs with no spin and no table edges. The impulse J = (1 + e)μ(v₁ − v₂)·n acts along the line of centers n at contact; the velocity components along the contact tangent do not change.</li>
+<li>Explosion: an ideal massless spring, compressed 5 cm and held by a thread, is released. Its force is internal, so momentum stays MV, and E = ½μv_rel². The pieces move in simple harmonic motion relative to each other for a quarter period.</li>
+<li>Newton's cradle: 0.25 kg balls on 30 cm strings, each a full pendulum; a collision is an instant elastic exchange of velocity between touching neighbors, one pair at a time. A real cradle slowly fades and mixes.</li>
+<li>Impulse: each bumper is a massless spring and damper in parallel, F = kx + cx′, with c = 2ζ√(km) and ζ set by e alone. It can push but not pull, so contact ends when F reaches zero. F(t) is the exact solution of m x″ + c x′ + k x = 0, so the peak force scales as √k and the contact time as 1/√k.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Lab: on an air track with photogates, measure e for magnetic and Velcro bumpers and compare ΔK with ½μ(1 − e²)v_rel².</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>
