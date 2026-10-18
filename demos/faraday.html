@@ -47,6 +47,10 @@ img { max-width: 100%; }
   --flux: #7a45c0;
   --emf: #1d8a5a;
   --wire: #3b4655;
+  --copper: #b8692e; --copper-hi: #f2b37a; --copper-lo: #6e3412;
+  --steel: #9aa5b3; --steel-hi: #eef2f6; --steel-lo: #5b6573;
+  --former: #d9c9a3; --bench: #d8c3a0; --bench-lo: #b99d74;
+  --meter-case: #2a2e35; --meter-face: #f7f1e1; --meter-ink: #2b2620;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -55,6 +59,8 @@ img { max-width: 100%; }
     --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
     --equi: #e2b350; --accent: #69a0ff; --flux: #b48cff; --emf: #4cc38a; --wire: #aab4c2;
+    --copper: #c4773a; --copper-hi: #f6c08c; --copper-lo: #5e2b0e; --steel: #7f8a99; --steel-hi: #dfe5ec; --steel-lo: #3f4753;
+    --former: #8c7b58; --bench: #3a2f24; --bench-lo: #261e16; --meter-case: #0b0d10; --meter-face: #e9e1cc; --meter-ink: #2b2620;
     color-scheme: dark;
   }
 }
@@ -62,6 +68,8 @@ img { max-width: 100%; }
   --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
   --equi: #e2b350; --accent: #69a0ff; --flux: #b48cff; --emf: #4cc38a; --wire: #aab4c2;
+    --copper: #c4773a; --copper-hi: #f6c08c; --copper-lo: #5e2b0e; --steel: #7f8a99; --steel-hi: #dfe5ec; --steel-lo: #3f4753;
+    --former: #8c7b58; --bench: #3a2f24; --bench-lo: #261e16; --meter-case: #0b0d10; --meter-face: #e9e1cc; --meter-ink: #2b2620;
   color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -474,7 +482,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const DPSI = 4.5e-5;                 // flux between neighbouring drawn field lines, Wb
   const ZLIM = 0.13;                   // how far the magnet centre can go from the coil, m
   const RAIL_END = 1.2, RAIL_X0 = 0.1;
-  const TWS = [0.5, 1, 2, 4, 8, 16];
+  const TWS = [0.5, 1, 2, 4, 8, 16, 32];          // plot time windows, s; the magnet and rails plots grow through these to keep the whole run in view
 
   // ---------- formatting ----------
   const PFX = [[1e6, 'M'], [1e3, 'k'], [1, ''], [1e-3, 'm'], [1e-6, 'µ'], [1e-9, 'n'], [1e-12, 'p']];
@@ -539,12 +547,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       motionHint: 'Drag the magnet along the axis, or use Push in, Pull out, Push through and Flip. Drag the top of the coil to change its radius and the resistor to change R.',
       sign: 'The coil normal n̂ points along +z, to the right. Φ<sub>B</sub> &gt; 0 when the field crosses the coil along n̂. A positive current circulates the right hand way around n̂: thumb along +z, fingers give the direction, which is counterclockwise seen from the right. A positive EMF drives a positive current. With these choices EMF = −N dΦ<sub>B</sub>/dt.',
       rhr: 'Right hand rule for the coil: curl your fingers along the current, and your thumb points along the coil\'s own field inside it, out of the face that acts as its north pole.',
-      model: 'Magnet: a cylinder 6 cm long and 2 cm across, uniformly magnetized along its axis (M = B<sub>r</sub>/μ₀), which is exactly a finite solenoid. Its field and the flux through the coil are computed from the exact field of current rings (complete elliptic integrals) integrated along the magnet; for the flip, the flux of the tilted magnet is ∫M·B<sub>coil</sub> dV/I by reciprocity. All N turns are taken to sit at one place (a short coil). The coil\'s self inductance is neglected, which is fine when L/R is much shorter than the move. The magnet moves as you or the buttons move it: the force from the induced current is shown but does not slow your drag. Field lines are drawn at equal steps of flux, ' + (DPSI * 1e6).toFixed(0) + ' µWb apart, so the number threading the coil follows Φ<sub>B</sub>.'
+      model: 'Magnet: a cylinder 6 cm long and 2 cm across, uniformly magnetized along its axis (M = B<sub>r</sub>/μ₀), which is exactly a finite solenoid. Its field and the flux through the coil are computed from the exact field of current rings (complete elliptic integrals) integrated along the magnet; for the flip, the flux of the tilted magnet is ∫M·B<sub>coil</sub> dV/I by reciprocity. All N turns are taken to sit at one place (a short coil). On the drawing the winding is spread over a short former, one drawn loop for every 40 turns (at least one). The coil\'s self inductance is neglected, which is fine when L/R is much shorter than the move. The magnet moves as you or the buttons move it: the force from the induced current is shown but does not slow your drag. Field lines are drawn at equal steps of flux, ' + (DPSI * 1e6).toFixed(0) + ' µWb apart, so the number threading the coil follows Φ<sub>B</sub>; count the darker lines in the plane of the page. The fainter lines are the same field in two other planes through the axis.'
     },
     gen: {
       setupH: 'Generator',
       setupHint: 'Changing a setting does not count as a change of flux: the readouts start a new move.',
-      motionHint: 'With the motor off, drag the crank knob on the top view (or use the left and right arrow keys) to turn the coil by hand.',
+      motionHint: 'With the motor off, drag the crank knob on the top view (or use the left and right arrow keys) to turn the coil by hand. Drag an empty part of the drawing, or hold Shift with the arrow keys, to turn the view; double click resets it.',
       sign: 'θ is the angle from the field B to the coil normal n̂. Φ<sub>B</sub> = BA cos θ per turn. A positive current circulates the right hand way around n̂, and EMF = −N dΦ<sub>B</sub>/dt = NBAω sin θ for steady turning.',
       rhr: 'The force on each side of the coil, IL×B, makes a torque N I A B sin θ that always opposes the turning: the crank has to work, and that work becomes the heat in R.',
       model: 'Uniform field between flat pole faces; square coil of N turns, area A, on a shaft with slip rings, so the output alternates. Self inductance of the coil is neglected. The motor keeps ω fixed whatever torque the current makes.'
@@ -643,14 +651,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   // the coil's own field (per ampere per turn), in the coil frame; only its shape is drawn
   const CG = { z0: -0.17, dz: 0.002, nz: 171, dr: 0.002, nr: 81, psi: null };
-  let indPath = null, indArrows = [];
+  let indPath = null, indLevels = [];
   function buildIndLines() {
     const a = S.magnet.a / 100, { nz, nr, z0, dz, dr } = CG, psi = new Float64Array(nz * nr);
     for (let i = 0; i < nz; i++) for (let j = 1; j < nr; j++) psi[i * nr + j] = ringFlux(j * dr, a, z0 + i * dz);
     CG.psi = psi;
-    const fr = [0.72, 0.88, 0.96];
+    const fr = [0.3, 0.5, 0.7];
+    indLevels = [0.3, 0.5].map((f) => ringFlux(f * a, a, 0));
     indPath = segPath(fr.map((f) => contour(CG, ringFlux(f * a, a, 0))));
-    indArrows = fr.map((f) => [0, f * a, 1, 0]);
   }
 
   // ---------- simulation ----------
@@ -716,22 +724,35 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     hist.t.push(t); hist.phi.push(circ.phi); hist.emf.push(circ.emf); hist.I.push(circ.I);
   }
   function trimHist() {
-    if (hist.t.length < 30000) return;
-    const cut = hist.t.findIndex((x) => x >= W.t - 18);
+    if (hist.t.length < 60000) return;
+    const cut = hist.t.findIndex((x) => x >= W.t - 34);
     for (const k of ['t', 'phi', 'emf', 'I']) hist[k] = hist[k].slice(Math.max(0, cut));
   }
   // a new move: the running sums restart and the plot window starts here
   function beginMove(t0, dur) {
     newMove(t0);
-    view.Tw = TWS.find((x) => x >= dur * 1.2 + 0.25) || 16;
-    view.wl = Math.max(0, t0 - 0.06 * view.Tw);
+    if (S.mode === 'gen') {
+      view.Tw = TWS.find((x) => x >= dur * 1.2 + 0.25) || 16;
+      view.wl = Math.max(0, t0 - 0.06 * view.Tw);
+    } else growWindow(t0 + dur * 1.2 + 0.25);
     ranges = {};
     if (!running) setRunning(true);
   }
   // a change of setting: no EMF from it, and a new move starts
   function rebase() { circ.N = Nnow(); circ.R = Rnow(); circ.phi = fluxNow(); newMove(W.t); ranges = {}; }
   function newMove(t0) { startMove(circ); tA = t0; W.Fmax = 1e-6; W.work = 0; W.ke0 = W.ke; }
-  function freeWindow() { const Tf = S.mode === 'gen' ? genWindow() : 4; if (view.Tw < Tf) { view.Tw = Tf; view.wl = Math.max(0, W.t - 0.5 * Tf); } }
+  function freeWindow() {
+    if (S.mode !== 'gen') { growWindow(W.t + 2); return; }
+    const Tf = genWindow(); if (view.Tw < Tf) { view.Tw = Tf; view.wl = Math.max(0, W.t - 0.5 * Tf); }
+  }
+  // The magnet and rails plots keep the start of the run pinned at the left edge, so a push and the pull that
+  // follows it can be compared: the window grows through TWS to reach tEnd, and slides only past the largest.
+  function growWindow(tEnd) {
+    if (tEnd <= view.wl + view.Tw) return;
+    const Tw = TWS.find((x) => x >= tEnd - view.wl);
+    if (Tw) view.Tw = Tw;
+    else { view.Tw = TWS[TWS.length - 1]; view.wl = tEnd - view.Tw; }
+  }
   function genWindow() { const per = 2 * Math.PI / Math.max(0.5, S.gen.w); return TWS.find((x) => x >= 2.6 * per) || 16; }
 
   // ---------- actions ----------
@@ -791,6 +812,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     W.t = 0; acc = 0; hist = { t: [], phi: [], emf: [], I: [] };
     W.z = W.zt = W.zMid = name === 'flip' ? -0.065 : -0.12; W.th = 0; W.vMag = 0; W.F = 0;
     W.gth = W.gtht = 0; W.motor = true; W.fv = 0; W.x = W.xt = RAIL_X0; W.rv = 0;
+    if (c.mode === 'gen') { GV.yaw = GV0.yaw; GV.pit = GV0.pit; }
     if (c.mode === 'magnet') { buildMagLines(); buildIndLines(); }
     circ = makeCircuit(Nnow(), Rnow(), fluxNow());
     tA = 0; view.Tw = 2; view.wl = 0; ranges = {};
@@ -848,7 +870,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('tLines').parentElement.hidden = m !== 'magnet'; $('tInd').parentElement.hidden = m !== 'magnet';
     $('sCan').setAttribute('aria-label', m === 'magnet'
       ? 'Bar magnet and coil with field lines, connected to a galvanometer and a resistor. Drag the magnet along the axis. Keys: left and right arrows move the magnet, F flips it, P pushes it in, O pulls it out, T pushes it through, up and down arrows change the coil radius, space plays or pauses, R resets.'
-      : m === 'gen' ? 'Coil turning between magnet poles, with a top view dial and a crank. Drag the crank knob to turn the coil by hand. Keys: M switches the motor, left and right arrows turn the crank, up and down arrows change ω, space plays or pauses, R resets.'
+      : m === 'gen' ? 'Coil turning between magnet poles, with a top view dial and a crank. Drag the crank knob to turn the coil by hand; drag empty space to turn the view. Keys: Shift with the arrow keys turns the view, M switches the motor, left and right arrows turn the crank, up and down arrows change ω, space plays or pauses, R resets.'
         : 'Conducting bar on rails in a field into the page, closed by a resistor. Drag the bar along the rails. Keys: left and right arrows move the bar, up and down arrows change the rail spacing, G pulls at v, L pushes and lets go, space plays or pauses, R resets.');
     renderActs();
   }
@@ -899,7 +921,26 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
       pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), flux: g('--flux'), emf: g('--emf'), wire: g('--wire'),
+      copper: g('--copper'), copperHi: g('--copper-hi'), copperLo: g('--copper-lo'), steel: g('--steel'), steelHi: g('--steel-hi'), steelLo: g('--steel-lo'),
+      former: g('--former'), bench: g('--bench'), benchLo: g('--bench-lo'), mCase: g('--meter-case'), mFace: g('--meter-face'), mInk: g('--meter-ink'),
+      dark: isDark(),
       ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace' };
+  }
+  function isDark() {
+    const th = document.documentElement.getAttribute('data-theme');
+    if (th === 'dark') return true; if (th === 'light') return false;
+    try { return matchMedia('(prefers-color-scheme: dark)').matches; } catch (_) { return false; }
+  }
+  // colour helpers for shading painted and metal parts: mix two #rrggbb colours, or shade one toward white (f > 0) or black (f < 0)
+  function rgbOf(c) { const h = (c || '#888').replace('#', ''); const n = parseInt(h.length === 3 ? h.split('').map((x) => x + x).join('') : h.slice(0, 6), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+  function mixC(a, b, t) { const A = rgbOf(a), B = rgbOf(b); return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',')})`; }
+  const shade = (c, f) => (f >= 0 ? mixC(c, '#ffffff', f) : mixC(c, '#000000', -f));
+  // a gradient across a cylinder seen side on, from (x0, y0) to (x1, y1): dark rim, a lit band near the upper edge, dark rim
+  function cylGrad(ctx, x0, y0, x1, y1, base, hi, lo) {
+    const g = ctx.createLinearGradient(x0, y0, x1, y1);
+    g.addColorStop(0, lo || shade(base, -0.45)); g.addColorStop(0.18, base); g.addColorStop(0.3, hi || shade(base, 0.45));
+    g.addColorStop(0.46, base); g.addColorStop(0.85, shade(base, -0.25)); g.addColorStop(1, lo || shade(base, -0.5));
+    return g;
   }
   const cans = { s: $('sCan'), p: $('pCan') }, panes = { s: $('sPane'), p: $('pPane') };
   const ctxs = { s: cans.s.getContext('2d'), p: cans.p.getContext('2d') };
@@ -986,60 +1027,204 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const Iscale = () => { const r = ranges.I; return r ? Math.max(Math.abs(r[0]), Math.abs(r[1])) : 1; };
   const curFrac = () => clamp(Math.abs(circ.I) / Math.max(1e-30, Iscale()), 0, 1);
 
-  // the bottom band: galvanometer and resistor, wired to two terminals of the coil
+  // ---------- materials: small helpers that make the apparatus look like real objects ----------
+  const OBL = 0.3;              // the oblique view: a circle of radius r about the axis is drawn as an ellipse 0.3 r wide and r tall
+  // an arrowhead with a thin halo, so it reads on copper, wood or field lines
+  function headHalo(ctx, x, y, ux, uy, h, col) {
+    ctx.save(); ctx.lineJoin = 'round';
+    ctx.beginPath(); ctx.moveTo(x + ux * h * 0.6, y + uy * h * 0.6);
+    ctx.lineTo(x - ux * h * 0.5 - uy * h * 0.5, y - uy * h * 0.5 + ux * h * 0.5); ctx.lineTo(x - ux * h * 0.5 + uy * h * 0.5, y - uy * h * 0.5 - ux * h * 0.5); ctx.closePath();
+    ctx.strokeStyle = T.canvas; ctx.lineWidth = Math.max(2, h * 0.3); ctx.stroke(); ctx.fillStyle = col; ctx.fill(); ctx.restore();
+  }
+  // light and shadow across a round object, laid over its paint: from (x0, y0) on one rim to (x1, y1) on the other
+  function roundShade(ctx, x0, y0, x1, y1) {
+    const g = ctx.createLinearGradient(x0, y0, x1, y1);
+    g.addColorStop(0, 'rgba(0,0,0,0.32)'); g.addColorStop(0.2, 'rgba(255,255,255,0.08)'); g.addColorStop(0.32, 'rgba(255,255,255,0.42)');
+    g.addColorStop(0.48, 'rgba(255,255,255,0.04)'); g.addColorStop(0.82, 'rgba(0,0,0,0.14)'); g.addColorStop(1, 'rgba(0,0,0,0.38)');
+    return g;
+  }
+  const leadCol = (red) => (red ? (T.dark ? '#d0493b' : '#b8372b') : (T.dark ? '#5d636d' : '#2f343b'));
+  // a plastic insulated lead along a polyline: dark rim, coloured body, a soft highlight
+  function insulated(ctx, pts, col, w) {
+    ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    const path = () => { ctx.beginPath(); pts.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); };
+    path(); ctx.strokeStyle = shade(col, -0.5); ctx.lineWidth = w + 1.4; ctx.stroke();
+    path(); ctx.strokeStyle = col; ctx.lineWidth = w; ctx.stroke();
+    ctx.translate(-w * 0.16, -w * 0.16); path(); ctx.strokeStyle = shade(col, 0.5); ctx.globalAlpha *= 0.6; ctx.lineWidth = Math.max(0.8, w * 0.28); ctx.stroke();
+    ctx.restore();
+  }
+  // resistor colour code: two digits, a multiplier (gold ×0.1, silver ×0.01) and a 5 % gold band
+  const BANDS = ['#151515', '#7b4a22', '#cc2f28', '#ee8a25', '#f1d43a', '#2f9b4a', '#2f62c9', '#7c40b8', '#8b8b8b', '#f3f3f3'];
+  function resBands(R) {
+    let e = Math.floor(Math.log10(R) + 1e-9) - 1, d = Math.round(R / Math.pow(10, e));
+    if (d >= 100) { d = Math.round(d / 10); e++; }
+    return [BANDS[Math.floor(d / 10)], BANDS[d % 10], e >= 0 ? BANDS[e] : e === -1 ? '#c9a227' : '#b9bec6', '#c9a227'];
+  }
+  // a through hole resistor between two points, its bands showing R
+  function drawResistor(ctx, x0, y0, x1, y1, R, hot, sc) {
+    const L = Math.hypot(x1 - x0, y1 - y0), bl = Math.min(56 * sc, L * 0.66), bh = 14 * sc, bx = (L - bl) / 2;
+    ctx.save(); ctx.translate(x0, y0); ctx.rotate(Math.atan2(y1 - y0, x1 - x0));
+    ctx.lineCap = 'round'; ctx.strokeStyle = T.steelLo; ctx.lineWidth = 2.6 * sc; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(L, 0); ctx.stroke();
+    ctx.strokeStyle = T.steelHi; ctx.lineWidth = 0.9 * sc; ctx.beginPath(); ctx.moveTo(0, -0.6 * sc); ctx.lineTo(L, -0.6 * sc); ctx.stroke();
+    if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.3; roundRect(ctx, bx - 6 * sc, -bh / 2 - 6 * sc, bl + 12 * sc, bh + 12 * sc, 9 * sc); ctx.fill(); ctx.globalAlpha = 1; }
+    const body = () => {       // a dog bone body: rounded caps, a slight waist
+      const r = bh / 2, w = bh * 0.38;
+      ctx.beginPath(); ctx.moveTo(bx + r, -r); ctx.lineTo(bx + bl * 0.24, -r); ctx.quadraticCurveTo(bx + bl * 0.3, -w, bx + bl * 0.36, -w);
+      ctx.lineTo(bx + bl * 0.64, -w); ctx.quadraticCurveTo(bx + bl * 0.7, -w, bx + bl * 0.76, -r); ctx.lineTo(bx + bl - r, -r);
+      ctx.arc(bx + bl - r, 0, r, -Math.PI / 2, Math.PI / 2); ctx.lineTo(bx + bl * 0.76, r); ctx.quadraticCurveTo(bx + bl * 0.7, w, bx + bl * 0.64, w);
+      ctx.lineTo(bx + bl * 0.36, w); ctx.quadraticCurveTo(bx + bl * 0.3, w, bx + bl * 0.24, r); ctx.lineTo(bx + r, r); ctx.arc(bx + r, 0, r, Math.PI / 2, 1.5 * Math.PI); ctx.closePath();
+    };
+    body(); ctx.fillStyle = T.dark ? '#b8a06c' : '#dcc392'; ctx.fill();
+    ctx.save(); body(); ctx.clip();
+    resBands(R).forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect(bx + bl * [0.17, 0.31, 0.45, 0.8][i], -bh, bl * 0.075, 2 * bh); });
+    ctx.fillStyle = roundShade(ctx, 0, -bh / 2, 0, bh / 2); ctx.fillRect(bx, -bh, bl, 2 * bh);
+    ctx.restore();
+    body(); ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 0.8; ctx.stroke();
+    ctx.restore();
+  }
+  // a round metal rod (shaft, crank arm, sliding bar) from p0 to p1
+  function rod(ctx, p0, p1, w, base, hi, lo) {
+    ctx.save(); ctx.lineCap = 'round';
+    ctx.strokeStyle = lo; ctx.lineWidth = w + 1.5; ctx.beginPath(); ctx.moveTo(p0[0], p0[1]); ctx.lineTo(p1[0], p1[1]); ctx.stroke();
+    ctx.strokeStyle = base; ctx.lineWidth = w; ctx.stroke();
+    const L = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]) || 1, nx = -(p1[1] - p0[1]) / L * w * 0.2, ny = (p1[0] - p0[0]) / L * w * 0.2, sg = nx < 0 || (nx === 0 && ny < 0) ? 1 : -1;
+    ctx.strokeStyle = hi; ctx.globalAlpha *= 0.8; ctx.lineWidth = Math.max(0.8, w * 0.28); ctx.beginPath(); ctx.moveTo(p0[0] + sg * nx, p0[1] + sg * ny); ctx.lineTo(p1[0] + sg * nx, p1[1] + sg * ny); ctx.stroke();
+    ctx.restore();
+  }
+  // a wooden bench top for the meter and the resistor
+  function drawBench(ctx, W0, y, H0) {
+    const g = ctx.createLinearGradient(0, y, 0, H0); g.addColorStop(0, shade(T.bench, 0.1)); g.addColorStop(1, T.benchLo);
+    ctx.fillStyle = g; ctx.fillRect(0, y, W0, H0 - y);
+    ctx.save(); ctx.beginPath(); ctx.rect(0, y, W0, H0 - y); ctx.clip();
+    ctx.strokeStyle = T.benchLo; ctx.lineWidth = 1; ctx.globalAlpha = T.dark ? 0.55 : 0.4;
+    const n = 9;
+    for (let i = 0; i < n; i++) {
+      const yy = y + (i + 0.6) * (H0 - y) / n;
+      ctx.beginPath();
+      for (let x = 0; x <= W0; x += 8) { const q = yy + 1.6 * Math.sin(x * 0.011 + i * 1.9) + 0.7 * Math.sin(x * 0.047 + i * 0.7); x ? ctx.lineTo(x, q) : ctx.moveTo(x, q); }
+      ctx.stroke();
+    }
+    ctx.restore();
+    ctx.fillStyle = shade(T.bench, T.dark ? 0.18 : 0.4); ctx.fillRect(0, y, W0, 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.18)'; ctx.fillRect(0, y + 2, W0, 1);
+  }
+  // a centre zero galvanometer: case, cream dial, needle, glass and two binding posts; returns the posts
+  function drawMeter(ctx, cx, top, mw, mh, sc, ps, FS, I) {
+    const x0 = cx - mw / 2;
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.35)'; ctx.shadowBlur = 9 * sc; ctx.shadowOffsetY = 3 * sc;
+    const gc = ctx.createLinearGradient(0, top, 0, top + mh); gc.addColorStop(0, shade(T.mCase, 0.28)); gc.addColorStop(0.45, T.mCase); gc.addColorStop(1, shade(T.mCase, -0.4));
+    ctx.fillStyle = gc; roundRect(ctx, x0, top, mw, mh, 8 * sc); ctx.fill(); ctx.restore();
+    ctx.strokeStyle = 'rgba(255,255,255,0.22)'; ctx.lineWidth = 1; roundRect(ctx, x0 + 0.5, top + 0.5, mw - 1, mh - 1, 8 * sc); ctx.stroke();
+    const fx = x0 + 6 * sc, fy = top + 5 * sc, fw = mw - 12 * sc, fh = mh - 23 * sc;
+    const gf = ctx.createLinearGradient(0, fy, 0, fy + fh); gf.addColorStop(0, T.mFace); gf.addColorStop(1, shade(T.mFace, -0.1));
+    ctx.fillStyle = gf; roundRect(ctx, fx, fy, fw, fh, 4 * sc); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.5)'; ctx.lineWidth = 1; ctx.stroke();
+    const pcx = cx, pcy = fy + fh - 5 * sc, pr = Math.min(fh - 13 * sc, fw * 0.42), A0 = -Math.PI / 2, span = 0.9;
+    ctx.strokeStyle = T.mInk; ctx.lineWidth = 1.1 * ps; ctx.beginPath(); ctx.arc(pcx, pcy, pr, A0 - span, A0 + span); ctx.stroke();
+    ctx.lineWidth = 1 * ps;
+    for (let k = -10; k <= 10; k++) {
+      const an = A0 + span * k / 10, l = (k % 5 ? 3.5 : 7) * sc;
+      ctx.beginPath(); ctx.moveTo(pcx + Math.cos(an) * pr, pcy + Math.sin(an) * pr); ctx.lineTo(pcx + Math.cos(an) * (pr - l), pcy + Math.sin(an) * (pr - l)); ctx.stroke();
+    }
+    const [us, un] = scaleUnit(FS, 'A');
+    ctx.fillStyle = T.mInk; ctx.font = `${9.5 * sc}px ${T.mono}`; ctx.textBaseline = 'middle';
+    ctx.textAlign = 'left'; ctx.fillText(`−${+(FS / us).toPrecision(3)}`, fx + 3 * sc, pcy - 1 * sc);
+    ctx.textAlign = 'right'; ctx.fillText(`+${+(FS / us).toPrecision(3)}`, fx + fw - 3 * sc, pcy - 1 * sc);
+    ctx.textAlign = 'center'; ctx.fillText('0', pcx, pcy - pr - 6 * sc);
+    ctx.font = `600 ${9.5 * sc}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(un, fx + fw - 4 * sc, fy + 3 * sc);
+    ctx.font = `700 ${9 * sc}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText('G', fx + 4 * sc, fy + 3 * sc);
+    // the needle, with its counterweight, swinging about the pivot
+    const na = A0 + span * clamp(I / FS, -1.08, 1.08), ux = Math.cos(na), uy = Math.sin(na);
+    ctx.save(); ctx.beginPath(); roundRect(ctx, fx, fy, fw, fh, 4 * sc); ctx.clip();
+    ctx.strokeStyle = 'rgba(0,0,0,0.18)'; ctx.lineWidth = 1.6 * ps; ctx.beginPath(); ctx.moveTo(pcx + 2 * sc, pcy + 2 * sc); ctx.lineTo(pcx + 2 * sc + ux * (pr - 3 * sc), pcy + 2 * sc + uy * (pr - 3 * sc)); ctx.stroke();
+    ctx.strokeStyle = T.mInk; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.moveTo(pcx - ux * 7 * sc, pcy - uy * 7 * sc); ctx.lineTo(pcx + ux * (pr - 2 * sc), pcy + uy * (pr - 2 * sc)); ctx.stroke();
+    ctx.strokeStyle = '#c23f2c'; ctx.lineWidth = 1.6 * ps; ctx.beginPath(); ctx.moveTo(pcx + ux * (pr * 0.62), pcy + uy * (pr * 0.62)); ctx.lineTo(pcx + ux * (pr - 2 * sc), pcy + uy * (pr - 2 * sc)); ctx.stroke();
+    // glass: a soft diagonal glare
+    const gg = ctx.createLinearGradient(fx, fy, fx + fw * 0.6, fy + fh); gg.addColorStop(0, 'rgba(255,255,255,0.0)'); gg.addColorStop(0.35, 'rgba(255,255,255,0.32)'); gg.addColorStop(0.5, 'rgba(255,255,255,0.0)');
+    ctx.fillStyle = gg; ctx.fillRect(fx, fy, fw, fh);
+    ctx.restore();
+    const gp = ctx.createRadialGradient(pcx - 1, pcy - 1, 0, pcx, pcy, 4.5 * sc); gp.addColorStop(0, '#9aa3ad'); gp.addColorStop(1, '#22262b');
+    ctx.fillStyle = gp; ctx.beginPath(); ctx.arc(pcx, pcy, 4 * sc, 0, 2 * Math.PI); ctx.fill();
+    // binding posts on the lower strip: black (−) on the left, red (+) on the right
+    const py = top + mh - 9 * sc, pl = [x0 + 15 * sc, py], prt = [x0 + mw - 15 * sc, py];
+    for (const [q, col] of [[pl, '#2a2a2a'], [prt, '#c0392b']]) {
+      const g = ctx.createRadialGradient(q[0] - 1.5 * sc, q[1] - 1.5 * sc, 0, q[0], q[1], 5.5 * sc); g.addColorStop(0, shade(col, 0.5)); g.addColorStop(1, shade(col, -0.3));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(q[0], q[1], 5.2 * sc, 0, 2 * Math.PI); ctx.fill();
+      ctx.fillStyle = '#c9ced6'; ctx.beginPath(); ctx.arc(q[0], q[1], 1.6 * sc, 0, 2 * Math.PI); ctx.fill();
+    }
+    ctx.fillStyle = 'rgba(255,255,255,0.75)'; ctx.font = `700 ${10 * sc}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('−', pl[0] + 13 * sc, py); ctx.fillText('+', prt[0] - 13 * sc, py);
+    return { neg: pl, plus: prt };
+  }
+
+  // the bottom band: a bench with the galvanometer and the resistor, wired to two terminals of the coil
   function drawBand(ctx, W0, H0, A, B, cx) {
     const [xA, yA] = A, [xB, yB] = B;
-    const ps = projScale(), sc = Math.min(ps, 1.25), bandTop = H0 - 112 * sc, yBus = bandTop + 50 * sc, yLow = H0 - 14 * sc;
-    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.9; ctx.fillRect(0, bandTop, W0, H0 - bandTop); ctx.globalAlpha = 1;
-    const xm = cx - 92 * sc, xL = Math.max(10 * sc, xm - 74 * sc), xR = Math.min(W0 - 10 * sc, cx + 170 * sc), xr0 = cx + 40 * sc, xr1 = Math.min(xR - 14 * sc, cx + 140 * sc);
-    ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * ps; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(xA, yA); ctx.lineTo(xA, yBus); ctx.lineTo(xL, yBus); ctx.lineTo(xL, yLow); ctx.lineTo(xR, yLow); ctx.lineTo(xR, yBus); ctx.lineTo(xr1, yBus);
-    ctx.moveTo(xr0, yBus); ctx.lineTo(xB, yBus); ctx.lineTo(xB, yB); ctx.stroke();
+    const ps = projScale(), sc = Math.min(ps, 1.25), bandTop = H0 - 112 * sc, yBus = bandTop + 52 * sc, yLow = H0 - 13 * sc;
+    drawBench(ctx, W0, bandTop, H0);
+    const xm = cx - 92 * sc, mw = 116 * sc, xL = Math.max(10 * sc, xm - mw / 2 - 16 * sc), xR = Math.min(W0 - 10 * sc, cx + 170 * sc), xr0 = cx + 40 * sc, xr1 = Math.min(xR - 14 * sc, cx + 140 * sc);
+    const FS = Iscale();
+    const posts = drawMeter(ctx, xm, bandTop + 4 * sc, mw, 78 * sc, sc, ps, FS, circ.I);
+    const lw = 3 * sc;
+    // red lead: coil terminal A to the + post; black leads: − post round the bench to the resistor, and the resistor back to terminal B
+    insulated(ctx, [[xA, yA], [xA, posts.plus[1]], [posts.plus[0], posts.plus[1]]], leadCol(true), lw);
+    insulated(ctx, [[posts.neg[0], posts.neg[1]], [xL, posts.neg[1]], [xL, yLow], [xR, yLow], [xR, yBus], [xr1, yBus]], leadCol(false), lw);
+    insulated(ctx, [[xr0, yBus], [xB, yBus], [xB, yB]], leadCol(false), lw);
+    for (const q of [posts.plus, posts.neg]) { ctx.fillStyle = '#c9ced6'; ctx.beginPath(); ctx.arc(q[0], q[1], 2.2 * sc, 0, 2 * Math.PI); ctx.fill(); }
     // resistor
     const hot = isHot('res');
-    ctx.strokeStyle = T.canvas; ctx.lineWidth = 6 * ps; ctx.beginPath(); ctx.moveTo(xr0, yBus); ctx.lineTo(xr1, yBus); ctx.stroke();
-    if (hot) { zigzag(ctx, xr0, yBus, xr1, yBus, 6, 6 * sc); ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.3; ctx.lineWidth = 9 * ps; ctx.stroke(); ctx.globalAlpha = 1; }
-    zigzag(ctx, xr0, yBus, xr1, yBus, 6, 6 * sc); ctx.strokeStyle = T.emf; ctx.lineWidth = 2.2 * ps; ctx.stroke();
+    drawResistor(ctx, xr0, yBus, xr1, yBus, Rnow(), hot, sc);
     const fs = 12 * sc;
-    ctx.fillStyle = T.ink; ctx.textBaseline = 'alphabetic';
-    richText(ctx, `R = ${fmtR(Rnow())}`, (xr0 + xr1) / 2, yBus - 12 * sc, fs, 700, 'center');
-    const gx = (xr0 + xr1) / 2, gy = yBus + 20 * sc;
+    label(ctx, `R = ${fmtR(Rnow())}`, (xr0 + xr1) / 2, yBus - 13 * sc, fs, 700, 'center', T.ink);
+    const gx = (xr0 + xr1) / 2, gy = yBus + 21 * sc;
     grip(ctx, gx, gy, hot, true);
     handles.push({ id: 'res', box: [xr0, yBus - 26 * sc, xr1 - xr0, 58 * sc], cursor: 'ns-resize' });
-    // galvanometer: centre zero, full scale = the current plot's range
-    const mw = 112 * sc, mh = 66 * sc, mx0 = xm - mw / 2, my0 = yBus - 46 * sc;
-    ctx.fillStyle = T.canvas; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps;
-    roundRect(ctx, mx0, my0, mw, mh, 7 * sc); ctx.fill(); ctx.stroke();
-    const pcx = xm, pcy = my0 + mh - 10 * sc, pr = 40 * sc, A0 = -Math.PI / 2, span = 0.9;
-    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.arc(pcx, pcy, pr, A0 - span, A0 + span); ctx.stroke();
-    for (let k = -4; k <= 4; k++) { const a = A0 + span * k / 4, l = k % 2 ? 4 : 8; ctx.beginPath(); ctx.moveTo(pcx + Math.cos(a) * pr, pcy + Math.sin(a) * pr); ctx.lineTo(pcx + Math.cos(a) * (pr - l * sc), pcy + Math.sin(a) * (pr - l * sc)); ctx.stroke(); }
-    const FS = Iscale(), [us, un] = scaleUnit(FS, 'A');
-    ctx.font = `${9.5 * sc}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.textAlign = 'left'; ctx.fillText(`−${+(FS / us).toPrecision(3)}`, mx0 + 5 * sc, pcy + 2 * sc);
-    ctx.textAlign = 'right'; ctx.fillText(`+${+(FS / us).toPrecision(3)}`, mx0 + mw - 5 * sc, pcy + 2 * sc);
-    ctx.textAlign = 'center'; ctx.fillText('0', pcx, pcy - pr - 7 * sc);
-    ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.font = `600 ${9.5 * sc}px ${T.mono}`; ctx.fillText(un, mx0 + mw - 5 * sc, my0 + 4 * sc);
-    const na = A0 + span * clamp(circ.I / FS, -1.08, 1.08);
-    ctx.strokeStyle = T.pos; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(pcx, pcy); ctx.lineTo(pcx + Math.cos(na) * (pr - 3 * sc), pcy + Math.sin(na) * (pr - 3 * sc)); ctx.stroke();
-    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(pcx, pcy, 3 * sc, 0, 2 * Math.PI); ctx.fill();
-    ctx.fillStyle = T.muted; ctx.font = `${10 * sc}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    ctx.fillText('galvanometer', mx0, my0 + mh + 3 * sc);
+    label(ctx, 'galvanometer', xm, bandTop + 83.5 * sc, 10 * sc, 400, 'center', T.muted, 'top');
     // current direction on the leads: positive I leaves terminal A
     if (S.layers.cur && Math.abs(circ.I) > 1e-6 * FS) {
-      const f = curFrac(), col = T.equi, sg = Math.sign(circ.I), hs = (5 + 5 * f) * sc;
-      ctx.globalAlpha = 0.35 + 0.65 * f;
-      headAt(ctx, xA - 7 * sc, (yA + yBus) / 2, 0, sg, hs, col);
-      headAt(ctx, xB + 7 * sc, (yB + yBus) / 2, 0, -sg, hs, col);
-      headAt(ctx, (xL + xR) / 2, yLow - 7 * sc, sg, 0, hs, col);
+      const f = curFrac(), col = T.equi, sg = Math.sign(circ.I), hs = (6 + 5 * f) * sc;
+      ctx.globalAlpha = 0.4 + 0.6 * f;
+      headHalo(ctx, xA - 9 * sc, (yA + posts.plus[1]) / 2, 0, sg, hs, col);
+      headHalo(ctx, xB + 9 * sc, (yB + yBus) / 2, 0, -sg, hs, col);
+      headHalo(ctx, (xL + xR) / 2, yLow - 9 * sc, sg, 0, hs, col);
       ctx.globalAlpha = 1;
     }
-    ctx.fillStyle = T.muted; ctx.font = `${10 * sc}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
-    ctx.fillText('I > 0 this way', xR - 4 * sc, yLow - 3 * sc);
-    headAt(ctx, xR - 4 * sc - ctx.measureText('I > 0 this way').width - 9 * sc, yLow - 8 * sc, 1, 0, 6 * sc, T.muted);
+    const kt = 'I > 0 this way';
+    ctx.font = `${10 * sc}px ${T.ui}`;
+    const kw = ctx.measureText(kt).width;
+    label(ctx, kt, xR - 6 * sc, yLow - 4 * sc, 10 * sc, 400, 'right', T.muted, 'bottom');
+    headHalo(ctx, xR - 6 * sc - kw - 10 * sc, yLow - 10 * sc, 1, 0, 6 * sc, T.muted);
     return bandTop;
   }
 
   // ---------- magnet and coil ----------
+  // the bar magnet: a painted cylinder seen from the front left, N half red and S half blue, letters painted on
+  function drawBarMagnet(ctx, xc, yc, th, hl, hb, hot, sc, ps) {
+    ctx.save(); ctx.translate(xc, yc); ctx.rotate(-th);
+    const c = Math.cos(th), vis = c >= 0 ? -1 : 1, cw = OBL * hb * Math.max(0.25, Math.abs(c));
+    if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.25; roundRect(ctx, -hl - cw - 5, -hb - 5, 2 * hl + 2 * cw + 10, 2 * hb + 10, 7); ctx.fill(); ctx.globalAlpha = 1; }
+    const half = (sg) => { ctx.beginPath(); ctx.moveTo(0, -hb); ctx.lineTo(sg * hl, -hb); ctx.ellipse(sg * hl, 0, cw, hb, 0, -Math.PI / 2, Math.PI / 2, sg < 0); ctx.lineTo(0, hb); ctx.closePath(); };
+    ctx.save(); ctx.shadowColor = T.dark ? 'rgba(0,0,0,0.6)' : 'rgba(20,30,50,0.3)'; ctx.shadowBlur = 10 * sc; ctx.shadowOffsetY = 5 * sc;
+    half(1); ctx.fillStyle = T.pos; ctx.fill(); half(-1); ctx.fillStyle = T.neg; ctx.fill(); ctx.restore();
+    // round shading over both halves
+    ctx.save(); ctx.beginPath(); ctx.moveTo(-hl, -hb); ctx.lineTo(hl, -hb); ctx.ellipse(hl, 0, cw, hb, 0, -Math.PI / 2, Math.PI / 2); ctx.lineTo(-hl, hb); ctx.ellipse(-hl, 0, cw, hb, 0, Math.PI / 2, 1.5 * Math.PI); ctx.closePath(); ctx.clip();
+    ctx.fillStyle = roundShade(ctx, 0, -hb, 0, hb); ctx.fillRect(-hl - cw - 2, -hb - 2, 2 * hl + 2 * cw + 4, 2 * hb + 4);
+    ctx.restore();
+    // the end face we can see, lit flat
+    const endCol = vis > 0 ? T.pos : T.neg;
+    ctx.beginPath(); ctx.ellipse(vis * hl, 0, cw, hb, 0, 0, 2 * Math.PI); ctx.fillStyle = shade(endCol, 0.18); ctx.fill();
+    ctx.strokeStyle = shade(endCol, -0.45); ctx.lineWidth = 1; ctx.stroke();
+    // a thin seam where the paint changes, and the outline
+    ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, -hb); ctx.lineTo(0, hb); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-hl, -hb); ctx.lineTo(hl, -hb); ctx.moveTo(-hl, hb); ctx.lineTo(hl, hb); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(-vis * hl, 0, cw, hb, 0, -Math.PI / 2, Math.PI / 2, vis > 0); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.95)'; ctx.font = `700 ${Math.min(hb * 1.2, 16 * sc)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('N', hl * 0.52, 0.5); ctx.fillText('S', -hl * 0.52, 0.5);
+    // grip ridges in the middle
+    ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.lineWidth = 1.3 * ps;
+    ctx.beginPath(); for (const dx of [-4, 0, 4]) { ctx.moveTo(dx * sc + 0.5, -hb * 0.5); ctx.lineTo(dx * sc + 0.5, hb * 0.5); } ctx.stroke();
+    ctx.restore();
+  }
   function drawMagnetScene(ctx, W0, H0) {
     const ps = projScale(), sc = Math.min(ps, 1.25), p = magP();
     const top = ctlH + 4, bandH = 112 * sc, fieldH = H0 - bandH - top;
@@ -1049,19 +1234,39 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     geo = { s, cx, y0, X, Y, invZ: (px) => (px - cx) / s, invR: (py) => (y0 - py) / s };
     const fs = 12.5 * sc;
     const a = p.a, cth = Math.cos(W.th), sth = Math.sin(W.th), zm = W.z;
+    // a soft vignette gives the space around the apparatus some depth
+    { const g = ctx.createRadialGradient(cx, y0, Math.min(W0, fieldH) * 0.25, cx, y0, Math.max(W0, fieldH) * 0.8); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, T.dark ? 'rgba(0,0,0,0.3)' : 'rgba(30,50,80,0.07)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W0, H0); }
     // axis
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.setLineDash([4, 5]);
     ctx.beginPath(); ctx.moveTo(6, y0); ctx.lineTo(W0 - 6, y0); ctx.stroke(); ctx.setLineDash([]);
     ctx.fillStyle = T.muted; ctx.font = `${10.5 * sc}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
     ctx.fillText('+z', W0 - 8, y0 - 3);
+    // coil geometry: one drawn loop for every 40 turns (at least one), spread over a short former
+    const ex = Math.max(6, OBL * a * s), ey = a * s;
+    const nD = clamp(Math.round(p.N / 40), 1, 25), wid = Math.min(nD * 4.4 * sc, 0.02 * s), pitch = wid / nD, ww = Math.max(1.2, Math.min(2.8 * sc, pitch * 0.8));
+    const dxk = (k) => -wid / 2 + pitch * (k + 0.5);
+    const fl = wid / 2 + 3.5 * sc, af = Math.max(RB + 0.0015, a - 0.0016), rc = a + 0.0035;
+    const arc = (dx, r, from, to) => { const er = OBL * r * s, fr = r * s; ctx.beginPath(); for (let i = 0; i <= 36; i++) { const ph = from + (to - from) * i / 36, px = X(0) + dx - er * Math.sin(ph), py = y0 - fr * Math.cos(ph); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); } };
+    const tube = () => { const er = OBL * af * s, fr = af * s; ctx.beginPath(); ctx.moveTo(X(0) - fl, y0 - fr); ctx.lineTo(X(0) + fl, y0 - fr); ctx.ellipse(X(0) + fl, y0, er, fr, 0, -Math.PI / 2, Math.PI / 2); ctx.lineTo(X(0) - fl, y0 + fr); ctx.ellipse(X(0) - fl, y0, er, fr, 0, Math.PI / 2, 1.5 * Math.PI); ctx.closePath(); };
     // field lines of the magnet, carried with it
     const toW = (zeta, rho) => [X(zm + zeta * cth - rho * sth), Y(zeta * sth + rho * cth)];
     ctx.save(); ctx.beginPath(); ctx.rect(0, top, W0, fieldH + 4); ctx.clip();
+    // the back of the former and the inside of the winding, seen through the turns
+    tube(); ctx.fillStyle = T.former; ctx.globalAlpha = 0.28; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = shade(T.copper, -0.35); ctx.lineWidth = ww;
+    for (let k = 0; k < nD; k++) { arc(dxk(k), a, Math.PI, 2 * Math.PI); ctx.stroke(); }
     if (S.layers.lines) {
+      // the field is the same in every plane through the axis: two more planes, faint, show the lines as a bundle around it
+      for (const phi of [Math.PI / 3, 2 * Math.PI / 3]) {
+        const sp = Math.sin(phi), cp = Math.cos(phi);
+        ctx.save(); ctx.transform(s * cth, -s * sth, -s * cp * sth - OBL * s * sp, -s * cp * cth, X(zm), y0);
+        ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.17; ctx.lineWidth = 1.1 * ps / (s * 0.7); ctx.stroke(magPath); ctx.restore();
+      }
       ctx.save(); ctx.translate(X(zm), y0); ctx.rotate(-W.th); ctx.scale(s, -s);
-      ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.15 * ps / s; ctx.lineCap = 'round';
-      ctx.stroke(magPath); ctx.restore();
-      ctx.globalAlpha = 0.75;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = T.canvas; ctx.globalAlpha = 0.75; ctx.lineWidth = 3.4 * ps / s; ctx.stroke(magPath);
+      ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.62; ctx.lineWidth = 1.2 * ps / s; ctx.stroke(magPath); ctx.restore();
+      ctx.globalAlpha = 0.8;
       for (const [zz, rr, dz, dr] of magArrows) for (const sgn of [1, -1]) {
         const [ax, ay] = toW(zz, sgn * rr);
         // direction (dz, dr) in the magnet frame; mirror flips dr; rotate; screen y is down
@@ -1074,67 +1279,75 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const f = curFrac(), Isg = Math.sign(circ.I);
     if (S.layers.ind && f > 0.02) {
       ctx.save(); ctx.translate(X(0), y0); ctx.scale(s, -s);
-      ctx.strokeStyle = T.equi; ctx.globalAlpha = 0.15 + 0.65 * f; ctx.lineWidth = 1.3 * ps / s; ctx.setLineDash([5 * sc / s, 4 * sc / s]);
-      ctx.stroke(indPath); ctx.restore(); ctx.globalAlpha = 0.15 + 0.65 * f;
-      for (const [, rr] of indArrows) for (const sgn of [1, -1]) headAt(ctx, X(0) + Isg * 10 * sc, Y(sgn * rr), Isg, 0, 7 * sc, T.equi);
-      ctx.globalAlpha = 1;
+      ctx.strokeStyle = T.equi; ctx.globalAlpha = 0.12 + 0.5 * f; ctx.lineWidth = 1.4 * ps / s; ctx.setLineDash([5 * sc / s, 4 * sc / s]);
+      ctx.stroke(indPath); ctx.restore();
     }
     ctx.restore();
-    // coil: N turns drawn as a short bundle of loops seen slightly from the front left
-    const ex = Math.max(6, 0.3 * a * s), ey = a * s, nL = 5, gap = 2.6 * sc;
-    const loop = (k, from, to) => { ctx.beginPath(); for (let i = 0; i <= 40; i++) { const ph = from + (to - from) * i / 40, px = X(0) + (k - (nL - 1) / 2) * gap - ex * Math.sin(ph), py = y0 - ey * Math.cos(ph); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); } ctx.stroke(); };
-    ctx.strokeStyle = T.wire; ctx.lineWidth = 1.8 * ps; ctx.globalAlpha = 0.5;
-    for (let k = 0; k < nL; k++) loop(k, Math.PI, 2 * Math.PI);       // back halves
-    ctx.globalAlpha = 1;
-    const loopArrow = (k, ph, size) => {
-      const px = X(0) + (k - (nL - 1) / 2) * gap - ex * Math.sin(ph), py = y0 - ey * Math.cos(ph);
-      const tx = -ex * Math.cos(ph), ty = ey * Math.sin(ph), tl = Math.hypot(tx, ty);
-      headAt(ctx, px, py, Isg * tx / tl, Isg * ty / tl, size, T.equi);
-    };
-    if (S.layers.cur && Math.abs(circ.I) > 1e-6 * Iscale()) { ctx.globalAlpha = 0.25 + 0.45 * f; loopArrow(nL - 1, 1.5 * Math.PI, (6 + 6 * f) * sc); ctx.globalAlpha = 1; }
     // magnet
     const hotM = isHot('magnet');
+    drawBarMagnet(ctx, X(zm), y0, W.th, LEN / 2 * s, RB * s, hotM, sc, ps);
     {
-      ctx.save(); ctx.translate(X(zm), y0); ctx.rotate(-W.th);
-      const hl = LEN / 2 * s, hb = RB * s;
-      if (hotM) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.25; roundRect(ctx, -hl - 5, -hb - 5, 2 * hl + 10, 2 * hb + 10, 6); ctx.fill(); ctx.globalAlpha = 1; }
-      ctx.fillStyle = T.neg; ctx.fillRect(-hl, -hb, hl, 2 * hb);
-      ctx.fillStyle = T.pos; ctx.fillRect(0, -hb, hl, 2 * hb);
-      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * ps; ctx.strokeRect(-hl, -hb, 2 * hl, 2 * hb);
-      ctx.fillStyle = '#fff'; ctx.font = `700 ${Math.min(hb * 1.25, 16 * sc)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText('N', hl * 0.55, 0.5); ctx.fillText('S', -hl * 0.55, 0.5);
-      // grip ridges in the middle
-      ctx.strokeStyle = 'rgba(255,255,255,0.85)'; ctx.lineWidth = 1.4 * ps;
-      ctx.beginPath(); for (const dx of [-4, 0, 4]) { ctx.moveTo(dx * sc, -hb * 0.55); ctx.lineTo(dx * sc, hb * 0.55); } ctx.stroke();
-      ctx.restore();
       const R0 = Math.hypot(LEN / 2, RB) * s, bb = act && act.kind === 'flip' ? R0 : null;
       handles.push({ id: 'magnet', box: bb ? [X(zm) - bb, y0 - bb, 2 * bb, 2 * bb] : [X(zm) - LEN / 2 * s, y0 - RB * s, LEN * s, 2 * RB * s], cursor: 'ew-resize' });
     }
-    // front halves of the coil
-    ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * ps;
-    for (let k = 0; k < nL; k++) loop(k, 0, Math.PI);
-    if (S.layers.cur && Math.abs(circ.I) > 1e-6 * Iscale()) { ctx.globalAlpha = 0.35 + 0.65 * f; loopArrow(0, 0.5 * Math.PI, (7 + 7 * f) * sc); loopArrow(0, 0.22 * Math.PI, (6 + 5 * f) * sc); loopArrow(0, 0.78 * Math.PI, (6 + 5 * f) * sc); ctx.globalAlpha = 1; }
+    // front of the coil: the former tube (clear plastic), enamelled copper turns, and the two cheeks
+    tube(); ctx.fillStyle = T.former; ctx.globalAlpha = 0.14; ctx.fill(); ctx.globalAlpha = 0.6; ctx.strokeStyle = shade(T.former, -0.35); ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = cylGrad(ctx, 0, y0 - ey, 0, y0 + ey, T.copper, T.copperHi, T.copperLo); ctx.lineWidth = ww;
+    for (let k = 0; k < nD; k++) { arc(dxk(k), a, 0, Math.PI); ctx.stroke(); }
+    ctx.save(); ctx.translate(-ww * 0.22, 0); ctx.strokeStyle = T.copperHi; ctx.globalAlpha = 0.5; ctx.lineWidth = Math.max(0.6, ww * 0.3);
+    for (let k = 0; k < nD; k++) { arc(dxk(k), a, 0.12 * Math.PI, 0.88 * Math.PI); ctx.stroke(); }
+    ctx.restore();
+    for (const sg of [-1, 1]) {
+      const er = OBL * rc * s, fr = rc * s, ei = OBL * af * s, fi = af * s, xc = X(0) + sg * fl;
+      ctx.beginPath(); ctx.ellipse(xc, y0, er, fr, 0, 0, 2 * Math.PI); ctx.ellipse(xc, y0, ei, fi, 0, 0, 2 * Math.PI, true);
+      ctx.fillStyle = T.former; ctx.globalAlpha = 0.42; ctx.fill('evenodd'); ctx.globalAlpha = 0.9; ctx.strokeStyle = shade(T.former, -0.4); ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1;
+    }
+    // the current in the turns: arrows on the front of the first, middle and last loops
+    const loopArrow = (dx, ph, size) => {
+      const px = X(0) + dx - ex * Math.sin(ph), py = y0 - ey * Math.cos(ph);
+      const tx = -ex * Math.cos(ph), ty = ey * Math.sin(ph), tl = Math.hypot(tx, ty);
+      headHalo(ctx, px, py, Isg * tx / tl, Isg * ty / tl, size, T.equi);
+    };
+    if (S.layers.cur && Math.abs(circ.I) > 1e-6 * Iscale()) {
+      ctx.globalAlpha = 0.4 + 0.6 * f;
+      for (const k of nD > 1 ? [0, nD - 1] : [0]) for (const ph of [0.27 * Math.PI, 0.73 * Math.PI]) loopArrow(dxk(k), ph, (7 + 5 * f) * sc);
+      ctx.globalAlpha = 1;
+    }
+    // the coil's own field: arrows on its lines just outside both faces, and its poles
+    if (S.layers.ind && f > 0.05) {
+      ctx.globalAlpha = 0.3 + 0.7 * f;
+      const zOut = (fl + OBL * rc * s + 10 * sc) / s;
+      let tag = null;
+      for (const lev of indLevels) for (const zs of [-zOut, zOut]) {
+        let rr = null;
+        for (let j = 1; j < CG.nr - 1; j++) { const r0 = j * CG.dr, va = gridVal(CG, zs, r0) - lev, vb = gridVal(CG, zs, r0 + CG.dr) - lev; if (va < 0 && vb >= 0) { rr = r0 + CG.dr * -va / (vb - va); break; } }
+        if (rr === null || rr * s > fieldH * 0.47) continue;
+        // on the lower half only, so they stay clear of the pole labels above the axis
+        const [dz, dr] = bDir(CG, zs, rr);
+        headHalo(ctx, X(zs), Y(-rr), Isg * dz, Isg * dr, 9 * sc, T.equi);
+        if (zs > 0 && (!tag || rr > tag[1])) tag = [zs, rr];
+      }
+      if (tag) label(ctx, 'B_{ind}', X(tag[0]) + 9 * sc, Y(-tag[1]) + 2 * sc, fs * 0.9, 700, 'left', T.equi, 'top');
+      ctx.font = `700 ${fs * 1.05}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const yl = Math.min(Y(a * 0.74), y0 - RB * geo.s - 12 * sc), pill = (x, txt, col) => { ctx.globalAlpha = 0.9; ctx.fillStyle = T.canvas; roundRect(ctx, x - 10 * sc, yl - 10 * sc, 20 * sc, 20 * sc, 5 * sc); ctx.fill(); ctx.globalAlpha = 0.3 + 0.7 * f; ctx.strokeStyle = T.equi; ctx.lineWidth = 1.4 * ps; ctx.stroke(); ctx.fillStyle = col; ctx.fillText(txt, x, yl + 0.5); };
+      pill(X(0) - fl - OBL * rc * s - 14 * sc, Isg > 0 ? 'S' : 'N', Isg > 0 ? T.neg : T.pos);
+      pill(X(0) + fl + OBL * rc * s + 14 * sc, Isg > 0 ? 'N' : 'S', Isg > 0 ? T.pos : T.neg);
+      ctx.globalAlpha = 1;
+    }
     // coil radius grip and labels
     const hotA = isHot('coilA');
     grip(ctx, X(0), Y(a) - 14 * sc, hotA, true);
     handles.push({ id: 'coilA', box: [X(0) - 14 * sc, Y(a) - 26 * sc, 28 * sc, 24 * sc], cursor: 'ns-resize' });
     label(ctx, `Coil: N = ${p.N} turns, a = ${(a * 100).toFixed(1)} cm`, 12 * sc, top + 16 * sc, fs * 0.92, 700, 'left', T.ink);
     // normal n̂ along +z
-    arrow(ctx, X(0) + 14 * sc, Y(a) - 6 * sc, X(0) + 40 * sc, Y(a) - 6 * sc, T.accent, 1.6 * ps, 7 * sc);
-    ctx.fillStyle = T.accent; ctx.font = `700 ${fs * 0.9}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('n̂', X(0) + 43 * sc, Y(a) - 6 * sc);
-    // induced polarity of the coil's faces
-    if (S.layers.ind && f > 0.05) {
-      ctx.globalAlpha = 0.3 + 0.7 * f; ctx.font = `700 ${fs * 1.05}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      const yl = Math.min(Y(a * 0.74), y0 - RB * geo.s - 12 * sc), pill = (x, txt, col) => { ctx.globalAlpha = 0.85; ctx.fillStyle = T.canvas; roundRect(ctx, x - 9 * sc, yl - 9 * sc, 18 * sc, 18 * sc, 5 * sc); ctx.fill(); ctx.globalAlpha = 0.3 + 0.7 * f; ctx.strokeStyle = T.equi; ctx.lineWidth = 1.2 * ps; ctx.stroke(); ctx.fillStyle = col; ctx.fillText(txt, x, yl + 0.5); };
-      pill(X(0) - ex - 2 * gap - 16 * sc, Isg > 0 ? 'S' : 'N', Isg > 0 ? T.neg : T.pos);
-      pill(X(0) + ex + 2 * gap + 16 * sc, Isg > 0 ? 'N' : 'S', Isg > 0 ? T.pos : T.neg);
-      ctx.globalAlpha = 1;
-    }
+    { const x1 = X(0) + fl + 4 * sc, yN = Y(rc) - 8 * sc; arrow(ctx, x1, yN, x1 + 26 * sc, yN, T.accent, 1.6 * ps, 7 * sc);
+      ctx.fillStyle = T.accent; ctx.font = `700 ${fs * 0.9}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('n̂', x1 + 29 * sc, yN); }
     // Φ label at the coil
     label(ctx, `Φ_B = ${fmtSI(circ.phi, 'Wb')} through each turn`, 12 * sc, top + 36 * sc, fs * 0.92, 700, 'left', T.flux);
     // force on the magnet and its speed
     if (S.layers.force) {
-      const yF = Math.min(y0 - RB * s - 26 * sc, Y(a) - 44 * sc), xc = X(zm);
+      const yF = Math.max(top + 62 * sc, Math.min(y0 - RB * s - 26 * sc, Y(rc) - 48 * sc)), xc = X(zm);   // kept below the two labels at the top
       if (act && act.kind === 'flip') {
         label(ctx, 'turning end over end', xc, y0 - Math.hypot(LEN / 2, RB) * s - 4 * sc, fs * 0.9, 400, 'center', T.muted, 'bottom');
       } else if (Math.abs(W.F) > 1e-4 * W.Fmax && Math.abs(W.F) > 1e-9) {
@@ -1143,89 +1356,120 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         label(ctx, `force on magnet ${fmtSI(Math.abs(W.F), 'N')}`, xc + d * L / 2, yF - 6 * sc, fs * 0.88, 700, 'center', T.pos, 'bottom');
       }
       if (Math.abs(W.vMag) > 1e-3) {
-        label(ctx, `v = ${Math.abs(W.vMag).toFixed(2)} m/s ${W.vMag > 0 ? '→' : '←'}`, xc, y0 + RB * s + 8 * sc, fs * 0.88, 600, 'center', T.ink, 'top');
+        label(ctx, `v = ${Math.abs(W.vMag).toFixed(2)} m/s ${W.vMag > 0 ? '→' : '←'}`, xc, y0 + RB * s + 9 * sc, fs * 0.88, 600, 'center', T.ink, 'top');
       }
     }
     // scale bar
     ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * ps; const sbx = 12 * sc, sby = H0 - bandH - 10 * sc;
     ctx.beginPath(); ctx.moveTo(sbx, sby); ctx.lineTo(sbx + 0.02 * s, sby); ctx.moveTo(sbx, sby - 4); ctx.lineTo(sbx, sby + 4); ctx.moveTo(sbx + 0.02 * s, sby - 4); ctx.lineTo(sbx + 0.02 * s, sby + 4); ctx.stroke();
     ctx.fillStyle = T.muted; ctx.font = `${10 * sc}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('2 cm', sbx + 0.01 * s, sby - 4);
-    drawBand(ctx, W0, H0, [X(0) - 2 * gap, Y(-a) + 1], [X(0) + 2 * gap, Y(-a) + 1], cx);
+    const xA = X(0) + Math.min(dxk(0), -4 * sc), xB = X(0) + Math.max(dxk(nD - 1), 4 * sc);
+    drawBand(ctx, W0, H0, [xA, Y(-a) + 1], [xB, Y(-a) + 1], cx);
   }
 
   // ---------- generator ----------
+  // the generator is drawn in 3D: drag an empty part of the drawing (or Shift and the arrow keys) to turn the view
+  const GV0 = { yaw: 0.42, pit: 0.33 }, GV = { ...GV0 };
   function drawGenScene(ctx, W0, H0) {
     const ps = projScale(), sc = Math.min(ps, 1.25), top = ctlH + 4, bandH = 112 * sc, fieldH = H0 - bandH - top;
     const side = Math.sqrt(genA()), th = W.gth;
-    const s = Math.min((W0 - 16) / 0.44, fieldH / 0.34), cx = W0 / 2;
     const dr = Math.max(40, Math.min(58 * sc, W0 * 0.13)), dcx = W0 - dr - 14 * sc, dcy = top + dr + 8 * sc;
-    // on narrow screens keep the poles clear of the top view dial and its labels
-    const cy = W0 < 600 ? Math.max(top + fieldH * 0.5, dcy + dr + 40 * sc + 0.13 * s) : top + fieldH * 0.5;
-    const yaw = 0.42, pit = 0.33, cY = Math.cos(yaw), sY = Math.sin(yaw), cP = Math.cos(pit), sP = Math.sin(pit);
+    // on narrow screens keep the poles clear of the top view dial and its labels, shrinking the drawing so it stays above the bench
+    const yDial = dcy + dr + 40 * sc, s = Math.min((W0 - 16) / 0.44, fieldH / 0.34, W0 < 600 ? (top + fieldH - yDial) / 0.31 : Infinity), cx = W0 / 2;
+    const cy = W0 < 600 ? Math.max(top + fieldH * 0.5, yDial + 0.13 * s) : top + fieldH * 0.5;
+    const yaw = GV.yaw, pit = GV.pit, cY = Math.cos(yaw), sY = Math.sin(yaw), cP = Math.cos(pit), sP = Math.sin(pit);
     const pr = (x, y, z) => { const x1 = x * cY - z * sY, z1 = x * sY + z * cY; return [cx + x1 * s, cy - (y * cP - z1 * sP) * s, y * sP + z1 * cP]; };
     const fs = 12.5 * sc;
+    { const g = ctx.createRadialGradient(cx, cy, Math.min(W0, fieldH) * 0.25, cx, cy, Math.max(W0, fieldH) * 0.8); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, T.dark ? 'rgba(0,0,0,0.3)' : 'rgba(30,50,80,0.07)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W0, H0); }
+    // painted blocks lit from the upper left front
+    const Ld = [-0.45, 0.75, 0.48], Ln = Math.hypot(...Ld);
     const box = (x0, x1, y0, y1, z0, z1, col, lab) => {
       const V = (i) => pr(i & 1 ? x1 : x0, i & 2 ? y1 : y0, i & 4 ? z1 : z0);
       const faces = [[[0, 2, 6, 4], [-1, 0, 0]], [[1, 5, 7, 3], [1, 0, 0]], [[0, 4, 5, 1], [0, -1, 0]], [[2, 3, 7, 6], [0, 1, 0]], [[0, 1, 3, 2], [0, 0, -1]], [[4, 6, 7, 5], [0, 0, 1]]];
       for (const [f, n] of faces) {
         const dep = n[1] * sP + (n[0] * sY + n[2] * cY) * cP; if (dep <= 0) continue;
-        ctx.beginPath(); f.forEach((i, k) => { const q = V(i); k ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); }); ctx.closePath();
-        ctx.fillStyle = col; ctx.globalAlpha = 0.55 + 0.4 * dep; ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = T.ink; ctx.lineWidth = 1 * ps; ctx.stroke();
+        const lit = Math.max(0, (n[0] * Ld[0] + n[1] * Ld[1] + n[2] * Ld[2]) / Ln);
+        const q = f.map(V);
+        ctx.beginPath(); q.forEach((p, k) => (k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.closePath();
+        const g = ctx.createLinearGradient(q[0][0], q[0][1], q[2][0], q[2][1]), b = -0.38 + 0.62 * lit;
+        g.addColorStop(0, shade(col, b + 0.07)); g.addColorStop(1, shade(col, b - 0.07));
+        ctx.fillStyle = g; ctx.fill(); ctx.strokeStyle = shade(col, -0.55); ctx.lineWidth = 1 * ps; ctx.lineJoin = 'round'; ctx.stroke();
       }
-      const c = pr((x0 + x1) / 2, y1, (z0 + z1) / 2);
-      ctx.fillStyle = '#fff'; ctx.font = `700 ${16 * sc}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(lab, c[0], c[1]);
+      if (lab) { const c = pr((x0 + x1) / 2, y1, (z0 + z1) / 2); ctx.fillStyle = 'rgba(255,255,255,0.95)'; ctx.font = `700 ${16 * sc}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(lab, c[0], c[1]); }
     };
-    const PX = 0.115, PW = 0.07, PH = 0.095, PZ = 0.08;
-    // far pole first (N on the left is farther in this view), then the field, the coil, and the near pole
-    box(-PX - PW, -PX, -PH, PH, -PZ, PZ, T.pos, 'N');
+    const PX = 0.115, PW = 0.07, PH = 0.095, PZ = 0.08, YT = 0.024;
+    // the magnet: two painted pole blocks joined low down by a steel yoke behind them; drawn far to near around the coil
+    const parts = [
+      { d: pr(-PX - PW / 2, 0, 0)[2], f: () => box(-PX - PW, -PX, -PH, PH, -PZ, PZ, T.pos, 'N') },
+      { d: pr(PX + PW / 2, 0, 0)[2], f: () => box(PX, PX + PW, -PH, PH, -PZ, PZ, T.neg, 'S') },
+      { d: pr(0, -0.07, -PZ - YT / 2)[2], f: () => box(-PX - PW, PX + PW, -PH, -0.04, -PZ - YT, -PZ, T.steel, '') }
+    ].sort((p, q) => p.d - q.d);
+    for (const q of parts) if (q.d < 0) q.f();
     ctx.strokeStyle = T.muted; ctx.lineWidth = 1.1 * ps; ctx.globalAlpha = 0.6;
     for (const yy of [-0.06, 0, 0.06]) for (const zz of [-0.05, 0.0, 0.05]) {
       const a0 = pr(-PX, yy, zz), a1 = pr(PX, yy, zz);
       ctx.beginPath(); ctx.moveTo(a0[0], a0[1]); ctx.lineTo(a1[0], a1[1]); ctx.stroke();
-      const m = pr(-0.075, yy, zz), m2 = pr(-0.065, yy, zz); headAt(ctx, m[0], m[1], (m2[0] - m[0]) / Math.hypot(m2[0] - m[0], m2[1] - m[1]), (m2[1] - m[1]) / Math.hypot(m2[0] - m[0], m2[1] - m[1]), 7 * sc, T.muted);
+      const m = pr(-0.075, yy, zz), m2 = pr(-0.065, yy, zz), ml = Math.hypot(m2[0] - m[0], m2[1] - m[1]);
+      if (ml > 0.5) headAt(ctx, m[0], m[1], (m2[0] - m[0]) / ml, (m2[1] - m[1]) / ml, 7 * sc, T.muted);
     }
     ctx.globalAlpha = 1;
     { const q = pr(-0.09, 0.085, -0.05); ctx.fillStyle = T.muted; ctx.font = `italic 700 ${fs}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('B', q[0], q[1]); }
-    // shaft, slip rings and brushes
+    // steel shaft, copper slip rings and carbon brushes
     const yTop = side / 2, yBot = -0.15;
     const sh0 = pr(0, yBot, 0), sh1 = pr(0, yTop + 0.035, 0);
-    ctx.strokeStyle = T.muted; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(sh0[0], sh0[1]); ctx.lineTo(sh1[0], sh1[1]); ctx.stroke();
+    rod(ctx, sh0, sh1, 4 * ps, T.steel, T.steelHi, T.steelLo);
     const ring = (yy, rr) => { ctx.beginPath(); for (let i = 0; i <= 36; i++) { const a = 2 * Math.PI * i / 36, q = pr(rr * Math.cos(a), yy, rr * Math.sin(a)); i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); } ctx.stroke(); };
-    ctx.strokeStyle = T.equi; ctx.lineWidth = 3 * ps; ring(-0.118, 0.014); ring(-0.14, 0.014);
+    for (const yy of [-0.118, -0.14]) {
+      ctx.strokeStyle = T.copperLo; ctx.lineWidth = 5 * ps; ring(yy, 0.014);
+      ctx.strokeStyle = T.copper; ctx.lineWidth = 3.4 * ps; ring(yy, 0.014);
+      ctx.strokeStyle = T.copperHi; ctx.globalAlpha = 0.7; ctx.lineWidth = 1 * ps; ring(yy + 0.0015, 0.014); ctx.globalAlpha = 1;
+    }
     const b1 = pr(0.014, -0.118, 0), b2 = pr(0.014, -0.14, 0);
-    ctx.fillStyle = T.ink; ctx.fillRect(b1[0], b1[1] - 3 * sc, 10 * sc, 6 * sc); ctx.fillRect(b2[0], b2[1] - 3 * sc, 10 * sc, 6 * sc);
-    // the coil
+    for (const b of [b1, b2]) {
+      const g = ctx.createLinearGradient(0, b[1] - 3.5 * sc, 0, b[1] + 3.5 * sc); g.addColorStop(0, '#5b5d62'); g.addColorStop(1, '#1e1f22');
+      ctx.fillStyle = g; ctx.fillRect(b[0], b[1] - 3.5 * sc, 11 * sc, 7 * sc);
+    }
+    // the coil: a square bundle of N enamelled copper turns
     const n = [Math.cos(th), 0, Math.sin(th)], e = [-Math.sin(th), 0, Math.cos(th)], h = side / 2;
     const corner = (se, sy) => [se * h * e[0], sy * h, se * h * e[2]];
     const C = [corner(-1, -1), corner(-1, 1), corner(1, 1), corner(1, -1)];     // positive circulation about n̂
     const Cp = C.map((q) => pr(...q));
     ctx.beginPath(); Cp.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.closePath();
+    const nv = n[1] * sP + (n[0] * sY + n[2] * cY) * cP;
     ctx.fillStyle = T.flux; ctx.globalAlpha = 0.1 + 0.16 * Math.abs(Math.cos(th)); ctx.fill(); ctx.globalAlpha = 1;
-    ctx.strokeStyle = T.wire; ctx.lineWidth = 3.2 * ps; ctx.lineJoin = 'round'; ctx.stroke();
-    ctx.strokeStyle = T.canvas; ctx.lineWidth = 0.8 * ps; ctx.stroke();
-    // leads from the coil down the shaft to the rings (drawn simply)
-    { const q0 = pr(0, -h, 0), q1 = pr(0, -0.118, 0); ctx.strokeStyle = T.wire; ctx.lineWidth = 1.4 * ps; ctx.beginPath(); ctx.moveTo(Cp[0][0], Cp[0][1]); ctx.lineTo(q0[0], q0[1]); ctx.lineTo(q1[0], q1[1]); ctx.moveTo(Cp[3][0], Cp[3][1]); ctx.lineTo(q0[0], q0[1]); ctx.stroke(); }
+    ctx.lineJoin = 'round';
+    for (const [w, col, a] of [[6.5, T.copperLo, 1], [4.6, T.copper, 1], [1.3, T.copperHi, 0.75]]) {
+      ctx.strokeStyle = col; ctx.globalAlpha = a; ctx.lineWidth = w * ps;
+      ctx.beginPath(); Cp.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1] - (w < 2 ? 1 : 0)) : ctx.moveTo(q[0], q[1] - (w < 2 ? 1 : 0)))); ctx.closePath(); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    // turns: a few faint lines along each side of the bundle, more when the face is seen square on
+    if (Math.abs(nv) > 0.15) { ctx.strokeStyle = T.copperLo; ctx.globalAlpha = 0.45; ctx.lineWidth = 0.8; ctx.beginPath(); Cp.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1] + 1.6 * ps) : ctx.moveTo(q[0], q[1] + 1.6 * ps))); ctx.closePath(); ctx.stroke(); ctx.globalAlpha = 1; }
+    // leads from the coil down the shaft to the rings
+    { const q0 = pr(0, -h, 0), q1 = pr(0, -0.118, 0); ctx.strokeStyle = T.copper; ctx.lineWidth = 1.6 * ps; ctx.beginPath(); ctx.moveTo(Cp[0][0], Cp[0][1]); ctx.lineTo(q0[0], q0[1]); ctx.lineTo(q1[0], q1[1]); ctx.moveTo(Cp[3][0], Cp[3][1]); ctx.lineTo(q0[0], q0[1]); ctx.stroke(); }
     // normal vector
     { const c0 = pr(0, 0, 0), c1 = pr(0.07 * n[0], 0, 0.07 * n[2]); arrow(ctx, c0[0], c0[1], c1[0], c1[1], T.accent, 2 * ps, 9 * sc); ctx.fillStyle = T.accent; ctx.font = `700 ${fs}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('n̂', c1[0] + 4, c1[1] - 2); }
     // current arrows along the edges
     const Isg = Math.sign(circ.I), f = curFrac();
     if (S.layers.cur && Math.abs(circ.I) > 1e-6 * Iscale()) {
-      ctx.globalAlpha = 0.35 + 0.65 * f;
+      ctx.globalAlpha = 0.4 + 0.6 * f;
       for (let i = 0; i < 4; i++) {
         const A = Cp[i], B = Cp[(i + 1) % 4], mx = (A[0] + B[0]) / 2, my = (A[1] + B[1]) / 2, L = Math.hypot(B[0] - A[0], B[1] - A[1]);
         if (L < 8) continue;
-        headAt(ctx, mx, my, Isg * (B[0] - A[0]) / L, Isg * (B[1] - A[1]) / L, (6 + 6 * f) * sc, T.equi);
+        headHalo(ctx, mx, my, Isg * (B[0] - A[0]) / L, Isg * (B[1] - A[1]) / L, (7 + 6 * f) * sc, T.equi);
       }
       ctx.globalAlpha = 1;
     }
-    box(PX, PX + PW, -PH, PH, -PZ, PZ, T.neg, 'S');
-    // crank on top of the shaft
+    for (const q of parts) if (q.d >= 0) q.f();
+    // crank on top of the shaft: a steel arm and a black knob
     { const c0 = pr(0, yTop + 0.035, 0), c1 = pr(0.03 * Math.cos(th + 1.2), yTop + 0.035, 0.03 * Math.sin(th + 1.2));
-      ctx.strokeStyle = T.ink; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(c0[0], c0[1]); ctx.lineTo(c1[0], c1[1]); ctx.stroke();
-      ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(c1[0], c1[1], 4 * sc, 0, 2 * Math.PI); ctx.fill(); }
+      rod(ctx, c0, c1, 3.2 * ps, T.steel, T.steelHi, T.steelLo);
+      const g = ctx.createRadialGradient(c1[0] - 1.5 * sc, c1[1] - 1.5 * sc, 0, c1[0], c1[1], 5 * sc); g.addColorStop(0, '#70737a'); g.addColorStop(1, '#16171a');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(c1[0], c1[1], 4.5 * sc, 0, 2 * Math.PI); ctx.fill(); }
     ctx.fillStyle = T.ink; ctx.textBaseline = 'alphabetic';
-    richText(ctx, `N = ${S.gen.N} turns, A = ${S.gen.A} cm²`, 12 * sc, top + 16 * sc, fs * 0.92, 700, 'left');
-    ctx.fillStyle = T.flux; richText(ctx, `Φ_B = BA cos θ = ${fmtSI(circ.phi, 'Wb')}`, 12 * sc, top + 34 * sc, fs * 0.92, 600, 'left');
+    label(ctx, `N = ${S.gen.N} turns, A = ${S.gen.A} cm²`, 12 * sc, top + 16 * sc, fs * 0.92, 700, 'left', T.ink);
+    label(ctx, `Φ_B = BA cos θ = ${fmtSI(circ.phi, 'Wb')}`, 12 * sc, top + 34 * sc, fs * 0.92, 600, 'left', T.flux);
+    if (W0 >= 380) label(ctx, 'drag the empty space to turn the view', 12 * sc, top + 50 * sc, fs * 0.8, 400, 'left', T.muted, 'top');
     // top view dial with the crank knob
     const hot = isHot('crank');
     ctx.fillStyle = T.canvas; ctx.strokeStyle = hot ? T.accent : T.line; ctx.lineWidth = (hot ? 2 : 1) * ps;
@@ -1234,7 +1478,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const yy of [-0.5, 0, 0.5]) { ctx.beginPath(); ctx.moveTo(dcx - dr * 0.85, dcy + yy * dr); ctx.lineTo(dcx + dr * 0.85, dcy + yy * dr); ctx.stroke(); headAt(ctx, dcx + dr * 0.7, dcy + yy * dr, 1, 0, 5 * sc, T.muted); }
     ctx.globalAlpha = 1;
     const cl = dr * 0.55;
-    ctx.strokeStyle = T.wire; ctx.lineWidth = 4 * ps; ctx.beginPath(); ctx.moveTo(dcx - cl * e[0], dcy - cl * e[2]); ctx.lineTo(dcx + cl * e[0], dcy + cl * e[2]); ctx.stroke();
+    ctx.strokeStyle = T.copper; ctx.lineWidth = 4 * ps; ctx.beginPath(); ctx.moveTo(dcx - cl * e[0], dcy - cl * e[2]); ctx.lineTo(dcx + cl * e[0], dcy + cl * e[2]); ctx.stroke();
     ctx.strokeStyle = T.accent; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.arc(dcx, dcy, dr * 0.32, 0, wrapPi(th) , wrapPi(th) < 0); ctx.stroke();
     const kx = dcx + dr * 0.78 * n[0], ky = dcy + dr * 0.78 * n[2];
     arrow(ctx, dcx, dcy, kx, ky, T.accent, 2 * ps, 8 * sc);
@@ -1246,7 +1490,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     handles.push({ id: 'crank', box: [dcx - dr, dcy - dr, 2 * dr, 2 * dr], cursor: 'grab', dial: [dcx, dcy] });
     // leads from the brushes: the lower ring to terminal A, the upper ring to terminal B
     const tA_ = [b2[0] + 22 * sc, b2[1]], tB_ = [b1[0] + 36 * sc, b1[1]];
-    ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(b2[0] + 10 * sc, b2[1]); ctx.lineTo(tA_[0], tA_[1]); ctx.moveTo(b1[0] + 10 * sc, b1[1]); ctx.lineTo(tB_[0], tB_[1]); ctx.stroke();
+    ctx.strokeStyle = T.copper; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(b2[0] + 10 * sc, b2[1]); ctx.lineTo(tA_[0], tA_[1]); ctx.moveTo(b1[0] + 10 * sc, b1[1]); ctx.lineTo(tB_[0], tB_[1]); ctx.stroke();
     drawBand(ctx, W0, H0, tA_, tB_, cx);
   }
 
@@ -1274,16 +1518,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       richText(ctx, `Φ_B = BLx = ${fmtSI(circ.phi, 'Wb')}`, X(xb / 2), Y(0) - 2, fs * 0.9, 700, 'center');
       ctx.fillStyle = T.accent; ctx.font = `${fs * 0.85}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText('⊗ n̂', X(xb / 2), Y(0) + fs * 1.1);
     }
-    // rails, bumper, resistor
-    ctx.strokeStyle = T.wire; ctx.lineWidth = 3 * ps; ctx.lineCap = 'butt';
-    for (const sg of [-1, 1]) { ctx.beginPath(); ctx.moveTo(X(0), Y(sg * L / 2)); ctx.lineTo(X(RAIL_END + 0.03), Y(sg * L / 2)); ctx.stroke(); }
-    ctx.fillStyle = T.muted; for (const sg of [-1, 1]) ctx.fillRect(X(RAIL_END + 0.03), Y(sg * L / 2) - 6 * sc, 6 * sc, 12 * sc);
+    // copper rails, rubber bumpers, and a real resistor closing the loop
+    for (const sg of [-1, 1]) {
+      const yy = Y(sg * L / 2), hh = 3.4 * ps;
+      ctx.fillStyle = cylGrad(ctx, 0, yy - hh, 0, yy + hh, T.copper, T.copperHi, T.copperLo); ctx.fillRect(X(0), yy - hh, X(RAIL_END + 0.03) - X(0), 2 * hh);
+      const g = ctx.createLinearGradient(0, yy - 6 * sc, 0, yy + 6 * sc); g.addColorStop(0, '#4a4c50'); g.addColorStop(1, '#141517');
+      ctx.fillStyle = g; roundRect(ctx, X(RAIL_END + 0.03), yy - 6 * sc, 7 * sc, 12 * sc, 2 * sc); ctx.fill();
+    }
     const hotR = isHot('res');
-    ctx.strokeStyle = T.canvas; ctx.lineWidth = 6 * ps; ctx.beginPath(); ctx.moveTo(X(0), Y(-L / 2)); ctx.lineTo(X(0), Y(L / 2)); ctx.stroke();
-    if (hotR) { zigzag(ctx, X(0), Y(-L / 2), X(0), Y(L / 2), 6, 6 * sc); ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.3; ctx.lineWidth = 9 * ps; ctx.stroke(); ctx.globalAlpha = 1; }
-    zigzag(ctx, X(0), Y(-L / 2), X(0), Y(L / 2), 6, 6 * sc); ctx.strokeStyle = T.emf; ctx.lineWidth = 2.2 * ps; ctx.lineCap = 'round'; ctx.stroke();
+    drawResistor(ctx, X(0), Y(-L / 2), X(0), Y(L / 2), r.R, hotR, sc);
     ctx.fillStyle = T.ink; ctx.textBaseline = 'middle';
-    richText(ctx, 'R', X(0) - 12 * sc, Y(0), fs, 700, 'right');
+    richText(ctx, 'R', X(0) - 14 * sc, Y(0), fs, 700, 'right');
     grip(ctx, X(0) - 10 * sc, Y(L / 2) + 20 * sc, hotR, true);
     label(ctx, `R = ${fmtR(r.R)}`, X(0) + 2 * sc, Y(L / 2) + 20 * sc, fs * 0.85, 600, 'left', T.emf, 'middle');
     handles.push({ id: 'res', box: [X(0) - 20 * sc, Y(-L / 2), 26 * sc, L * s + 32 * sc], cursor: 'ns-resize' });
@@ -1297,17 +1542,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const Isg = Math.sign(circ.I), f = curFrac();
     if (S.layers.cur && Math.abs(circ.I) > 1e-6 * Iscale() && xb > 0.06) {
       ctx.globalAlpha = 0.35 + 0.65 * f; const hs = (6 + 6 * f) * sc;
-      headAt(ctx, X(xb / 2), Y(-L / 2), Isg, 0, hs, T.equi);
-      headAt(ctx, X(xb / 2), Y(L / 2), -Isg, 0, hs, T.equi);
-      headAt(ctx, X(xb) + 9 * sc, Y(L * 0.25), 0, Isg, hs, T.equi);
-      headAt(ctx, X(0) + 11 * sc, Y(-L * 0.25), 0, -Isg, hs, T.equi);
+      headHalo(ctx, X(xb / 2), Y(-L / 2), Isg, 0, hs, T.equi);
+      headHalo(ctx, X(xb / 2), Y(L / 2), -Isg, 0, hs, T.equi);
+      headHalo(ctx, X(xb) + 10 * sc, Y(L * 0.25), 0, Isg, hs, T.equi);
+      headHalo(ctx, X(0) + 13 * sc, Y(-L * 0.3), 0, -Isg, hs, T.equi);
       ctx.globalAlpha = 1;
     }
     // bar
     const hotB = isHot('bar');
     if (hotB) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.25; ctx.fillRect(X(xb) - 8 * sc, Y(-L / 2) - 12 * sc, 16 * sc, L * s + 24 * sc); ctx.globalAlpha = 1; }
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 5 * ps; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(X(xb), Y(-L / 2) - 8 * sc); ctx.lineTo(X(xb), Y(L / 2) + 8 * sc); ctx.stroke();
+    rod(ctx, [X(xb), Y(-L / 2) - 8 * sc], [X(xb), Y(L / 2) + 8 * sc], 6 * ps, T.steel, T.steelHi, T.steelLo);
     grip(ctx, X(xb), Y(0), hotB, false);
     handles.push({ id: 'bar', box: [X(xb) - 12 * sc, Y(-L / 2) - 12 * sc, 24 * sc, L * s + 24 * sc], cursor: 'ew-resize' });
     // forces and speed
@@ -1644,23 +1888,31 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else if (d.id === 'crank') { const ang = Math.atan2(y - d.dial[1], x - d.dial[0]); W.gtht = W.gth + wrapPi(ang - W.gth); }
     else if (d.id === 'coilA') setParam('a', Math.abs(geo.invR(y + 14 * Math.min(projScale(), 1.25))) * 100);
     else if (d.id === 'res') setParam('Ri', d.v0 + Math.round(-(y - d.y0) / 10));
+    else if (d.id === 'view') { GV.yaw = wrapPi(d.yaw0 + (x - d.x0) * 0.008); GV.pit = clamp(d.pit0 + (y - d.y0) * 0.006, 0.06, 1.2); }
     else if (d.id === 'railL') setParam('L', Math.abs(geo.invY(y)) * 200);
   }
   let dragQueued = null, dragFrame = false;
+  let lastPt = [0, 0];
   cans.s.addEventListener('pointermove', (ev) => {
-    const r = cans.s.getBoundingClientRect();
+    const r = cans.s.getBoundingClientRect(); lastPt = [ev.clientX, ev.clientY];
     if (drag) {
       dragQueued = [ev.clientX - r.left, ev.clientY - r.top];
       if (dragFrame) return; dragFrame = true;
       requestAnimationFrame(() => { dragFrame = false; if (drag && dragQueued) applyDrag(drag, dragQueued[0], dragQueued[1]); dragQueued = null; });
       return;
     }
-    const h = hitAt(ev); hoverId = h ? h.id : null; cans.s.style.cursor = h ? h.cursor : 'default';
+    const h = hitAt(ev); hoverId = h ? h.id : null; cans.s.style.cursor = h ? h.cursor : S.mode === 'gen' ? 'grab' : 'default';
   });
   cans.s.addEventListener('pointerdown', (ev) => {
     cans.s.focus({ preventScroll: true });
-    const h = hitAt(ev); if (!h) return;
-    const r = cans.s.getBoundingClientRect();
+    const h = hitAt(ev), r = cans.s.getBoundingClientRect();
+    if (!h) {
+      // the generator is 3D: dragging empty space turns the view
+      if (S.mode !== 'gen') return;
+      drag = { id: 'view', x0: ev.clientX - r.left, y0: ev.clientY - r.top, yaw0: GV.yaw, pit0: GV.pit };
+      try { cans.s.setPointerCapture(ev.pointerId); } catch (_) {}
+      cans.s.style.cursor = 'grabbing'; ev.preventDefault(); return;
+    }
     drag = startDrag(h, ev.clientX - r.left, ev.clientY - r.top);
     if (!drag) return;
     try { cans.s.setPointerCapture(ev.pointerId); } catch (_) {}
@@ -1678,6 +1930,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   cans.s.addEventListener('keydown', (e) => {
     const k = e.key, m = S.mode;
+    if (m === 'gen' && e.shiftKey && k.startsWith('Arrow')) {
+      if (k === 'ArrowLeft' || k === 'ArrowRight') GV.yaw = wrapPi(GV.yaw + (k === 'ArrowRight' ? 0.1 : -0.1));
+      else GV.pit = clamp(GV.pit + (k === 'ArrowDown' ? 0.06 : -0.06), 0.06, 1.2);
+      e.preventDefault(); return;
+    }
     if (k === ' ') setRunning(!running);
     else if (k === 'r' || k === 'R') applyPreset(S.preset);
     else if (m === 'magnet' && (k === 'ArrowLeft' || k === 'ArrowRight')) nudge('magnet', k === 'ArrowRight' ? 1 : -1);
@@ -1696,6 +1953,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else return;
     e.preventDefault();
   });
+  cans.s.addEventListener('dblclick', () => { if (S.mode === 'gen' && !hitAt({ clientX: lastPt[0], clientY: lastPt[1], pointerType: 'mouse' })) { GV.yaw = GV0.yaw; GV.pit = GV0.pit; } });
   cans.p.addEventListener('keydown', (e) => { if (e.key === ' ') { setRunning(!running); e.preventDefault(); } });
 
   // projector mode
@@ -1721,7 +1979,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (n >= 400) acc = 0;
     // force on the magnet at the latest step (only needed for display)
     if (n > 0 && S.mode === 'magnet') { W.F = act && act.kind === 'flip' ? 0 : magnetForce(magP(), W.zMid, circ.I); W.Fmax = Math.max(W.Fmax, Math.abs(W.F)); }
-    if (W.t > view.wl + 0.96 * view.Tw) view.wl = W.t - 0.96 * view.Tw;
+    if (W.t > view.wl + 0.96 * view.Tw) {
+      if (S.mode === 'gen') view.wl = W.t - 0.96 * view.Tw;
+      else growWindow(view.wl + (W.t - view.wl) / 0.96);
+    }
     trimHist();
   }
   function loop(now) {
@@ -1735,7 +1996,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   window.__fd = {
     get frameMs() { return frameMs; }, get W() { return W; }, get S() { return S; }, get act() { return act; }, get circ() { return circ; },
-    get handles() { return handles; }, get running() { return running; }, get view() { return view; }, get ghosts() { return ghosts; }, get tA() { return tA; },
+    get handles() { return handles; }, get GV() { return GV; }, get running() { return running; }, get view() { return view; }, get ghosts() { return ghosts; }, get tA() { return tA; },
     applyPreset, setRunning, setParam, doAct, go(dts) { while (dts > 1e-12) { const d = Math.min(0.2, dts); advance(d); dts -= d; } updateReadouts(); }
   };
 
