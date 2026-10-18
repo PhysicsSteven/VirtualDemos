@@ -4,7 +4,7 @@
 **Scope:** Curriculum-only additions. Existing `demos/` source files unchanged.
 
 ## Completed
-- 33 student lab starters and 33 instructor guides under `curriculum/labs/`.
+- 26 student lab starters and 26 instructor guides under `curriculum/labs/`.
 - Analytic benchmarks, measurement plans, grading rubrics, and validation checklist.
 - No source-code modifications or claims of browser-executed validation.
 
