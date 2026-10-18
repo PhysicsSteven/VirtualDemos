@@ -40,6 +40,7 @@ VIEW = {"width": 1440, "height": 900}
 #   keep_controls  True to leave buttons inside the stage visible
 OVERRIDES = {
     "spectra": {"crop": "main.bench > :first-child", "anchor": "top"},
+    "photoelectric": {"anchor": "top"},
     "star-slice": {"wait": 9000,
                    "js": "setTimeout(() => { const m = document.getElementById('mass'); m.value = 1000; m.dispatchEvent(new Event('input', { bubbles: true })); "
                          "setTimeout(() => { const b = [...document.querySelectorAll('#presets button')].find((x) => x.textContent === 'Onion shells'); if (b) b.click(); }, 3500); }, 1500)"},

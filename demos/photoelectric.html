@@ -47,6 +47,22 @@ img { max-width: 100%; }
   --accent: #2b60b5;
   --metal: #9aa6b4;
   --on-charge: #ffffff;
+  --bench: #cdbb9c;
+  --bench-dk: #a99678;
+  --alu: #cfd6de;
+  --alu-dk: #8f99a5;
+  --case: #e4e8ed;
+  --case-dk: #c4cbd4;
+  --case-edge: #9aa4b0;
+  --lamp: #535c69;
+  --lamp-dk: #272c34;
+  --face: #f4f0e2;
+  --lcd: #b7c6ab;
+  --lcd-ink: #172015;
+  --coax: #26292e;
+  --paper: #f7faf5;
+  --paper-minor: #e5eee2;
+  --paper-major: #c6dac1;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -54,13 +70,15 @@ img { max-width: 100%; }
   :root:not([data-theme="light"]) {
     --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --metal: #6b7786; --on-charge: #0d1218; color-scheme: dark;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --metal: #6b7786; --on-charge: #0d1218;
+    --bench: #4a3f30; --bench-dk: #362d22; --alu: #a3adb9; --alu-dk: #6b7581; --case: #323a46; --case-dk: #222831; --case-edge: #4a5462; --lamp: #3d4550; --lamp-dk: #1b1f26; --face: #e6e1cf; --lcd: #8da084; --lcd-ink: #0f150e; --coax: #0c0e11; --paper: #0f1714; --paper-minor: #16211c; --paper-major: #233429; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --metal: #6b7786; --on-charge: #0d1218; color-scheme: dark;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --metal: #6b7786; --on-charge: #0d1218;
+    --bench: #4a3f30; --bench-dk: #362d22; --alu: #a3adb9; --alu-dk: #6b7581; --case: #323a46; --case-dk: #222831; --case-edge: #4a5462; --lamp: #3d4550; --lamp-dk: #1b1f26; --face: #e6e1cf; --lcd: #8da084; --lcd-ink: #0f150e; --coax: #0c0e11; --paper: #0f1714; --paper-minor: #16211c; --paper-major: #233429; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -117,6 +135,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .spectrum { height: 8px; border-radius: 4px; margin-top: 4px; border: 1px solid var(--line);
   background: linear-gradient(90deg, #6f42c1 0%, #6f42c1 40%, #7a00d6 40%, #3b2bff 47%, #00a2ff 55%, #00d17a 62%, #c8e000 68%, #ffb000 75%, #ff4a00 83%, #b00000 95%, #4a0000 100%); }
+.sublab { font-size: 0.82rem; color: var(--muted); margin-bottom: 6px; }
 .spectrum-scale { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
 
 .readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
@@ -130,6 +149,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .toggles input { accent-color: var(--accent); margin: 0; }
 
 @media (max-width: 820px) {
+  .chips button, .btn, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
   html, body { height: auto; }
   .app { height: auto; }
   .bench { grid-template-columns: minmax(0, 1fr); }
@@ -155,7 +176,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <main class="bench">
     <div class="stage">
       <div class="pane" id="appPane">
-        <canvas id="app" tabindex="0" aria-label="Photoelectric apparatus: a lamp shines on the emitter plate and electrons travel to the collector plate."></canvas>
+        <canvas id="app" tabindex="0" aria-label="Photoelectric apparatus on a lab bench: a lamp and monochromator shine light through the glass of an evacuated phototube onto its curved metal cathode (the emitter), and electrons travel to the central anode wire (the collector). A voltage supply with a reversing switch sets the collector voltage, and a picoammeter reads the current. Drag the knobs to change the wavelength, the light power and the voltage, and click the reversing switch to change the sign of V. Keys: left and right change the wavelength, up and down the voltage (shift for bigger steps), page up and page down the light power, R flips the reversing switch, space pauses."></canvas>
         <div class="stage-ctl">
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="reset">Reset</button>
@@ -187,6 +208,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <input type="range" id="lam" min="100" max="800" step="1" value="420">
           <div class="spectrum" aria-hidden="true"></div>
           <div class="spectrum-scale mono"><span>100 nm</span><span>UV | visible</span><span>800 nm</span></div>
+        </div>
+        <div>
+          <div class="sublab">Mercury lines, as in the h/e lab</div>
+          <div class="chips" id="hg"></div>
         </div>
         <div>
           <div class="slider-head"><label for="pow">Light power</label><output id="powOut" class="mono" for="pow"></output></div>
@@ -285,8 +310,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
           gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'),
           metal: g('--metal'), field: g('--field'),
+          bench: g('--bench'), benchDk: g('--bench-dk'), alu: g('--alu'), aluDk: g('--alu-dk'), case: g('--case'), caseDk: g('--case-dk'),
+          caseEdge: g('--case-edge'), lamp: g('--lamp'), lampDk: g('--lamp-dk'), face: g('--face'), lcd: g('--lcd'), lcdInk: g('--lcd-ink'), coax: g('--coax'),
+          paper: g('--paper'), paperMinor: g('--paper-minor'), paperMajor: g('--paper-major'),
           ui: getComputedStyle(document.body).getPropertyValue('--font-ui') || 'sans-serif',
           mono: getComputedStyle(document.body).getPropertyValue('--font-mono') || 'monospace' };
+    const hx = parseInt((T.canvas.match(/[0-9a-f]{6}/i) || ['ffffff'])[0], 16);
+    T.dark = ((hx >> 16) & 255) + ((hx >> 8) & 255) + (hx & 255) < 300;
     dirtyCharts = true;
   }
   function lamColor(l, a = 1) {
@@ -323,29 +353,71 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     dirtyCharts = true; drawApp(); drawCharts();
   }
 
-  // apparatus geometry (CSS px)
-  function geo() {
-    const ps = projScale();
-    const narrow = AW < 520;
-    const top = ps > 1 ? 76 : narrow ? 70 : 56, bottom = AH - (narrow ? 70 : 64);
-    const plateH = Math.max(60, bottom - top - 30);
-    const midY = top + (bottom - top) / 2;
-    const ex = narrow ? AW * 0.27 : AW * 0.26, cx = narrow ? AW * 0.86 : Math.min(AW * 0.9, AW - 60);
-    const lamp = { x: narrow ? AW * 0.08 : AW * 0.09, y: top + 6 };
-    return { ps, top, bottom, plateH, midY, ex, cx, gap: cx - ex, lamp, y0: midY - plateH / 2, y1: midY + plateH / 2 };
+  // ---------- apparatus layout (CSS px) ----------
+  // A lab bench: lamp and monochromator on an optical rail, the phototube on its socket, and the picoammeter
+  // stacked on the power supply. Phones put the instruments on the bench and the tube on a shelf above them.
+  const projOn = () => document.documentElement.getAttribute('data-projector') === 'on';
+  const labScale = () => projOn() ? Math.max(1.05, Math.min(1.3, Math.min(AW / 700, AH / 330))) : 1;
+  const TH = 1.2, KDEP = 0.3;          // cathode half angle (rad) and the oblique depth factor of the drawing
+  const HG = [365, 405, 436, 546, 577];
+  const COAT = { Cs: '#d3ad4e', K: '#b7bec7', Na: '#cdd2d6', Ca: '#c3c6bc', Zn: '#9daab6', Cu: '#c47b4b', Pt: '#d6d7d3' };
+  function lay() {
+    const ps = labScale(), narrow = AW < 640;
+    const benchY = AH - Math.round((narrow ? 14 : 20) * Math.min(1.2, ps));
+    let shelfY, tube, src, pico, sup;
+    if (narrow) {
+      const ih = Math.round(Math.max(118, Math.min(170, AH * 0.34)));
+      shelfY = benchY - ih - 16;
+      const iw = (AW - 24) / 2;
+      pico = { x: 8, y: benchY - ih, w: iw, h: ih };
+      sup = { x: 16 + iw, y: benchY - ih, w: iw, h: ih };
+      const th = shelfY - 12, tw = Math.min(th * 0.46, AW * 0.3);
+      tube = { cx: AW - tw / 2 - 18, top: 14, foot: shelfY, w: tw };
+      src = { x0: 8, x1: tube.cx - tw / 2 - 14, foot: shelfY };
+    } else {
+      shelfY = benchY;
+      const top = 16 * ps;
+      const iw = Math.round(Math.min(430 * Math.min(ps, 1.15), Math.max(250, AW * 0.33)));
+      const ih = (benchY - top - 10) / 2;
+      pico = { x: AW - iw - 14, y: top, w: iw, h: ih };
+      sup = { x: AW - iw - 14, y: top + ih + 10, w: iw, h: ih };
+      const th = benchY - top, tw = Math.min(th * 0.44, AW * 0.17);
+      const cx = Math.min(AW * 0.43, pico.x - tw / 2 - Math.max(40, AW * 0.06));
+      tube = { cx, top, foot: benchY, w: tw };
+      src = { x0: 14, x1: cx - tw / 2 - Math.max(28, AW * 0.05), foot: benchY };
+    }
+    // tube interior: glass from top to the base, cathode half cylinder around the anode wire
+    const tw = tube.w, baseH = Math.max(22, tw * 0.3);
+    tube.gBot = tube.foot - baseH - 6; tube.baseH = baseH;
+    tube.zTop = tube.top + tw * 0.62; tube.zBot = tube.gBot - tw * 0.42;
+    tube.R = tw * 0.4; tube.ax = tube.cx - tw * 0.1;
+    tube.beamY = (tube.zTop + tube.zBot) / 2;
+    // light source: lamp housing and monochromator on posts, beam leaves at the cathode's height
+    const sw = src.x1 - src.x0;
+    src.lw = sw * 0.36; src.mw = sw * 0.56;
+    src.lx = src.x0; src.mx = src.x1 - src.mw;
+    src.hb = Math.max(40, Math.min(sw * 0.62, 150 * ps, (src.foot - tube.beamY) * 1.3, (tube.beamY - 56 * ps) / 0.76));   // clear of Pause and Reset
+    src.mh = src.hb * 0.66;
+    src.beamY = tube.beamY;
+    src.sx = src.x1 + Math.min(20, sw * 0.08);   // end of the exit snout
+    return { ps, narrow, benchY, shelfY, tube, src, pico, sup };
   }
+  // a point on the cathode surface (theta across the half cylinder, zf from top to bottom) and on the anode
+  function cathPt(t, th, zf) { const z = t.zTop + zf * (t.zBot - t.zTop); return [t.ax + t.R * Math.cos(th), z - t.R * Math.sin(th) * KDEP]; }
+  function anodePt(t, zf) { return [t.ax, t.zTop + zf * (t.zBot - t.zTop)]; }
 
   // ---------- simulation ----------
-  let spawnAccP = 0, spawnAccE = 0;
+  // Positions along each electron's path are fractions of the cathode to anode gap; speeds are in gaps per second.
+  const VS = 1 / 1.3 / Math.sqrt(3), KK = 1 / (1.3 * 1.3 * 3);   // on screen speed per sqrt(eV), and v² per eV
+  let spawnAccP = 0, glints = [];
   function visRate() { return S.pow <= 0 ? 0 : 3 + 37 * S.pow / 100; }  // photons per second on screen
   function step(dt) {
-    const G = geo(), K = Kmax();
-    // photons from lamp to emitter plate
+    const K = Kmax();
+    // photons from the monochromator to the cathode
     spawnAccP += visRate() * dt;
     while (spawnAccP >= 1) {
       spawnAccP -= 1;
-      const ty = G.y0 + 8 + Math.random() * (G.plateH - 16);
-      photons.push({ t: 0, sx: G.lamp.x + 18, sy: G.lamp.y + 18, tx: G.ex - 4, ty, dur: 0.7 });
+      photons.push({ t: 0, u: Math.random() - 0.5, th: (Math.random() * 2 - 1) * TH * 0.9, zf: 0.05 + Math.random() * 0.9, dur: 0.7 });
     }
     for (const p of photons) p.t += dt / p.dur;
     const arrived = photons.filter((p) => p.t >= 1);
@@ -354,122 +426,398 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const p of arrived) {
       if (K > 0) {
         const k = Math.random() * K;
-        const vScale = G.gap / 1.3 / Math.sqrt(3);
-        electrons.push({ x: 0, y: p.ty, v: vScale * Math.sqrt(k), vy: (Math.random() - 0.5) * 10, k });
+        electrons.push({ s: 0, v: VS * Math.sqrt(k), th: p.th, zf: p.zf, k });
       }
     }
     // electrons: uniform field across the gap, energy consistent with K and V
-    const kk = Math.pow(G.gap / 1.3, 2) / 3;            // v^2 per eV on screen
-    const a = kk * S.V / (2 * G.gap);                   // px/s^2
+    const a = KK * S.V / 2;
     for (const e of electrons) {
-      e.v += a * dt; e.x += e.v * dt; e.y += e.vy * dt;
-      if (e.x >= G.gap) { e.done = 'hit'; flash = 1; }
-      else if (e.x <= 0 && e.v < 0) e.done = 'back';
+      e.v += a * dt; e.s += e.v * dt;
+      if (e.s >= 1) { e.done = 'hit'; flash = 1; if (glints.length < 40) glints.push({ zf: e.zf, a: 1 }); }
+      else if (e.s <= 0 && e.v < 0) e.done = 'back';
     }
     electrons = electrons.filter((e) => !e.done);
     if (electrons.length > 600) electrons.splice(0, electrons.length - 600);
     flash = Math.max(0, flash - dt * 3);
+    for (const g of glints) g.a -= dt * 4;
+    glints = glints.filter((g) => g.a > 0);
+  }
+
+  // ---------- drawing helpers ----------
+  function rr(c, x, y, w, h, r) { c.beginPath(); if (c.roundRect) c.roundRect(x, y, w, h, r); else c.rect(x, y, w, h); }
+  function label(c, txt, x, y, col, align = 'left', base = 'middle', bold = false, ps = 1, size = 11, bg = T.canvas) {
+    c.font = `${bold ? '600 ' : ''}${size * ps}px ${T.mono}`; c.textAlign = align; c.textBaseline = base;
+    const w = c.measureText(txt).width, h = (size + 4) * ps;
+    const x0 = align === 'left' ? x : align === 'right' ? x - w : x - w / 2;
+    const y0 = base === 'middle' ? y - h / 2 : base === 'bottom' ? y - h : y;
+    if (bg) { c.fillStyle = bg; c.globalAlpha = 0.86; rr(c, x0 - 4, y0, w + 8, h, 3); c.fill(); c.globalAlpha = 1; }
+    c.fillStyle = col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
+    return w;
+  }
+  function panel(c, b, title, ps) {
+    c.fillStyle = 'rgba(0,0,0,0.16)'; rr(c, b.x + 3, b.y + 4, b.w, b.h, 7); c.fill();
+    const g = c.createLinearGradient(0, b.y, 0, b.y + b.h); g.addColorStop(0, T.case); g.addColorStop(1, T.caseDk);
+    c.fillStyle = g; rr(c, b.x, b.y, b.w, b.h, 7); c.fill();
+    c.strokeStyle = T.caseEdge; c.lineWidth = 1; c.stroke();
+    c.strokeStyle = 'rgba(255,255,255,0.18)'; c.beginPath(); c.moveTo(b.x + 7, b.y + 1.5); c.lineTo(b.x + b.w - 7, b.y + 1.5); c.stroke();
+    c.fillStyle = T.aluDk; for (const [x, y] of [[b.x + 7, b.y + 7], [b.x + b.w - 7, b.y + 7], [b.x + 7, b.y + b.h - 7], [b.x + b.w - 7, b.y + b.h - 7]]) { c.beginPath(); c.arc(x, y, 1.8, 0, 7); c.fill(); }
+    c.fillStyle = T.muted; c.font = `700 ${Math.max(8, Math.min(10.5 * ps, b.w / 22))}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillText(title, b.x + 14, b.y + 9);
+  }
+  function knob(c, x, y, r, frac, hot, ps, lab) {
+    c.fillStyle = 'rgba(0,0,0,0.25)'; c.beginPath(); c.arc(x + 1.5, y + 2.5, r, 0, 7); c.fill();
+    const g = c.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r);
+    g.addColorStop(0, '#5b6574'); g.addColorStop(1, '#1d2229');
+    c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill();
+    // knurled rim
+    c.strokeStyle = 'rgba(255,255,255,0.12)'; c.lineWidth = 1;
+    for (let k = 0; k < 24; k++) { const a = k * Math.PI / 12; c.beginPath(); c.moveTo(x + Math.cos(a) * r * 0.82, y + Math.sin(a) * r * 0.82); c.lineTo(x + Math.cos(a) * r * 0.98, y + Math.sin(a) * r * 0.98); c.stroke(); }
+    const a = Math.PI * (0.75 + 1.5 * frac);
+    c.strokeStyle = '#f2f4f7'; c.lineWidth = 2 * ps; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(x + Math.cos(a) * r * 0.2, y + Math.sin(a) * r * 0.2); c.lineTo(x + Math.cos(a) * r * 0.78, y + Math.sin(a) * r * 0.78); c.stroke(); c.lineCap = 'butt';
+    // grip ring: always visible, brighter when hovered or dragged
+    if (hot) { c.fillStyle = T.accent; c.globalAlpha = 0.18; c.beginPath(); c.arc(x, y, r + 7 * ps, 0, 7); c.fill(); c.globalAlpha = 1; }
+    c.strokeStyle = T.accent; c.lineWidth = (hot ? 3 : 1.6) * ps; c.globalAlpha = hot ? 1 : 0.85;
+    c.beginPath(); c.arc(x, y, r + 3.5 * ps, Math.PI * 0.75, Math.PI * 2.25); c.stroke(); c.globalAlpha = 1;
+    if (lab) { c.fillStyle = T.ink; c.font = `600 ${Math.max(8, 9 * ps)}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(lab, x, y + r + 6 * ps); }
+  }
+  function post(c, x, y0, y1, ps) {
+    const w = Math.max(4, 6 * ps), g = c.createLinearGradient(x - w / 2, 0, x + w / 2, 0);
+    g.addColorStop(0, T.aluDk); g.addColorStop(0.45, T.alu); g.addColorStop(1, T.aluDk);
+    c.fillStyle = g; c.fillRect(x - w / 2, y0, w, y1 - y0);
+  }
+  function cable(c, pts, col, ps) {
+    c.lineCap = 'round';
+    for (const [w, s] of [[4.6, 'rgba(0,0,0,0.35)'], [3.2, col]]) {
+      c.strokeStyle = s; c.lineWidth = w * Math.min(ps, 1.2);
+      c.beginPath(); c.moveTo(pts[0], pts[1]); c.bezierCurveTo(pts[2], pts[3], pts[4], pts[5], pts[6], pts[7]); c.stroke();
+    }
+    c.lineCap = 'butt';
   }
 
   // ---------- drawing: apparatus ----------
+  let knobs = [], needle = 0, meterFS = 1, pol = 1, drag = null, hoverId = null;
+  const hot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
   function drawApp() {
-    if (!AW || !AH) return;
-    const ctx = actx, G = geo(), ps = G.ps;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, AW, AH);
-    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, AW, AH);
+    if (!AW || !AH || !T) return;
+    const c = actx, L = lay(), ps = L.ps, t = L.tube, s = L.src;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.fillStyle = T.canvas; c.fillRect(0, 0, AW, AH);
+    knobs = [];
+    // bench top (and the shelf above it on phones)
+    const benchTop = (y0, y1, x0, x1) => {
+      const g = c.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, T.bench); g.addColorStop(1, T.benchDk);
+      c.fillStyle = g; c.fillRect(x0, y0, x1 - x0, y1 - y0);
+      c.fillStyle = 'rgba(255,255,255,0.18)'; c.fillRect(x0, y0, x1 - x0, 1);
+    };
+    benchTop(L.benchY, AH, 0, AW);
+    if (L.narrow) { benchTop(L.shelfY, L.shelfY + 7, 0, AW); c.fillStyle = 'rgba(0,0,0,0.12)'; c.fillRect(0, L.shelfY + 7, AW, 4); }
 
-    // vacuum tube outline
-    ctx.strokeStyle = T.line; ctx.lineWidth = 1.5 * ps;
-    const tx0 = G.ex - 40, tx1 = G.cx + 34;
-    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(tx0, G.y0 - 18, tx1 - tx0, G.plateH + 36, 26) : ctx.rect(tx0, G.y0 - 18, tx1 - tx0, G.plateH + 36); ctx.stroke();
-    ctx.fillStyle = T.muted; ctx.font = `${11 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
-    ctx.fillText('vacuum', tx1 - 12, G.y0 - 12);
+    // cables first, so their ends tuck under the instruments
+    const pk = L.pico, sp = L.sup;
+    const capY = t.top - 7, inX = pk.x + pk.w - 26 * Math.min(ps, 1.15), inY = pk.y + pk.h - 20 * Math.min(ps, 1.15);
+    const posts = { a: [sp.x + sp.w - 46 * Math.min(ps, 1.15), sp.y + sp.h - 20 * Math.min(ps, 1.15)], k: [sp.x + sp.w - 22 * Math.min(ps, 1.15), sp.y + sp.h - 20 * Math.min(ps, 1.15)] };
+    if (L.narrow) {
+      cable(c, [t.cx, capY, t.cx + t.w * 0.7, capY - 6, AW - 4, L.shelfY - 20, inX, inY + 30], T.coax, ps);
+      cable(c, [t.cx + 6, t.foot - 4, t.cx + 30, t.foot + 30, posts.k[0] - 10, sp.y - 10, posts.k[0], posts.k[1]], '#1d1f23', ps);
+      cable(c, [pk.x + pk.w - 8, pk.y + pk.h - 12, pk.x + pk.w + 6, pk.y + pk.h + 6, posts.a[0] - 12, posts.a[1] + 14, posts.a[0], posts.a[1]], '#c2362b', ps);
+    } else {
+      cable(c, [t.cx, capY, t.cx + t.w * 0.5, capY - 26, pk.x - 30, inY + 40, inX, inY], T.coax, ps);
+      cable(c, [t.cx + t.w * 0.2, t.foot - t.baseH * 0.5, t.cx + t.w * 1.2, t.foot - 2, sp.x - 10, posts.k[1] + 30, posts.k[0], posts.k[1]], '#1d1f23', ps);
+      cable(c, [inX - 34 * Math.min(ps, 1.15), inY, inX - 50, inY + 60, posts.a[0] - 10, posts.a[1] - 40, posts.a[0], posts.a[1]], '#c2362b', ps);
+    }
 
-    // field hint between plates
-    if (Math.abs(S.V) > 0.05) {
-      ctx.save(); ctx.globalAlpha = Math.min(0.5, 0.12 + Math.abs(S.V) / 12);
-      ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1 * ps;
-      const dir = S.V > 0 ? -1 : 1;   // E field points from high to low potential
-      for (let i = 0; i < 4; i++) {
-        const y = G.y0 + (i + 0.5) * G.plateH / 4;
-        const xa = G.ex + G.gap * 0.35, xb = G.ex + G.gap * 0.65;
-        ctx.beginPath(); ctx.moveTo(xa, y); ctx.lineTo(xb, y); ctx.stroke();
-        const xh = dir > 0 ? xb : xa;
-        ctx.beginPath(); ctx.moveTo(xh, y); ctx.lineTo(xh - dir * 6 * ps, y - 4 * ps); ctx.lineTo(xh - dir * 6 * ps, y + 4 * ps); ctx.closePath(); ctx.fill();
+    drawSource(c, L, s, ps);
+    drawTube(c, L, t, s, ps);
+    drawPico(c, pk, ps, L.narrow);
+    drawSupply(c, sp, ps, L.narrow, posts);
+  }
+
+  function drawSource(c, L, s, ps) {
+    const by = s.beamY, on = S.pow > 0;
+    // optical rail on the bench, carriers and posts
+    const ry = s.foot - 7 * Math.min(ps, 1.2);
+    c.fillStyle = T.aluDk; c.fillRect(s.x0 - 4, ry, s.sx - s.x0 + 8, 7 * Math.min(ps, 1.2));
+    c.fillStyle = T.alu; c.fillRect(s.x0 - 4, ry, s.sx - s.x0 + 8, 2);
+    const ly0 = by - s.hb * 0.62, ly1 = ly0 + s.hb;
+    const my0 = by - s.mh / 2, my1 = by + s.mh / 2;
+    post(c, s.lx + s.lw / 2, ly1, ry, ps); post(c, s.mx + s.mw / 2, my1, ry, ps);
+    for (const x of [s.lx + s.lw / 2, s.mx + s.mw / 2]) { c.fillStyle = T.aluDk; rr(c, x - 12 * ps, ry - 6, 24 * ps, 7, 2); c.fill(); }
+    // power cord
+    c.strokeStyle = '#1d1f23'; c.lineWidth = 2.6; c.beginPath(); c.moveTo(s.lx + 6, ly1 - 10); c.bezierCurveTo(s.lx - 10, ly1 + 10, s.lx - 6, ry - 6, s.lx + 2, ry); c.stroke();
+    // lamp housing with cooling vents and chimney
+    const g = c.createLinearGradient(s.lx, 0, s.lx + s.lw, 0); g.addColorStop(0, T.lampDk); g.addColorStop(0.4, T.lamp); g.addColorStop(1, T.lampDk);
+    c.fillStyle = g; rr(c, s.lx + s.lw * 0.25, ly0 - s.hb * 0.12, s.lw * 0.5, s.hb * 0.14, 2); c.fill();
+    rr(c, s.lx, ly0, s.lw, s.hb, 5); c.fill(); c.strokeStyle = T.caseEdge; c.lineWidth = 1; c.stroke();
+    const glow = on ? 0.25 + 0.6 * S.pow / 100 : 0;
+    for (let i = 0; i < 4; i++) {
+      const vy = ly0 + s.hb * (0.1 + i * 0.075);
+      c.fillStyle = '#0d0f12'; rr(c, s.lx + s.lw * 0.18, vy, s.lw * 0.64, Math.max(2, s.hb * 0.035), 1.5); c.fill();
+      if (on) { c.fillStyle = `rgba(235, 240, 255, ${glow})`; rr(c, s.lx + s.lw * 0.2, vy + 0.5, s.lw * 0.6, Math.max(1, s.hb * 0.035 - 1.5), 1); c.fill(); }
+    }
+    // pilot lamp
+    c.fillStyle = on ? '#ffb02e' : '#4a3a1c'; c.beginPath(); c.arc(s.lx + s.lw * 0.22, ly1 - s.hb * 0.1, Math.max(2.5, 3.2 * ps), 0, 7); c.fill();
+    // coupling tube from lamp to monochromator
+    c.fillStyle = T.lampDk; c.fillRect(s.lx + s.lw - 1, by - s.mh * 0.12, s.mx - s.lx - s.lw + 2, s.mh * 0.24);
+    // monochromator body
+    const mg = c.createLinearGradient(0, my0, 0, my1); mg.addColorStop(0, T.case); mg.addColorStop(1, T.caseDk);
+    c.fillStyle = mg; rr(c, s.mx, my0, s.mw, s.mh, 5); c.fill(); c.strokeStyle = T.caseEdge; c.stroke();
+    // exit snout and filter holder
+    const sh = Math.max(10, s.mh * 0.26);
+    c.fillStyle = T.lampDk; c.fillRect(s.mx + s.mw - 1, by - sh / 2, s.sx - s.mx - s.mw + 1, sh);
+    const fx = s.mx + s.mw + (s.sx - s.mx - s.mw) * 0.45;
+    const hg = HG.includes(Math.round(S.lam)) && S.lam === Math.round(S.lam);
+    c.fillStyle = T.aluDk; c.fillRect(fx - 3, by - sh * 0.85, 6, sh * 1.7);
+    if (hg) { c.fillStyle = S.lam < 380 ? '#3a2b4d' : lamColor(S.lam, 0.85); c.fillRect(fx - 2, by - sh * 0.78, 4, sh * 1.56); }
+    // wavelength counter (white drum digits) and the wavelength knob
+    const cw = Math.min(s.mw * 0.62, 70 * ps), chh = Math.max(13, Math.min(s.mh * 0.24, 20 * ps));
+    const cx0 = s.mx + s.mw * 0.5 - cw / 2, cy0 = my0 + Math.max(6, s.mh * 0.1);
+    c.fillStyle = '#0e1013'; rr(c, cx0 - 2, cy0 - 2, cw + 4, chh + 4, 3); c.fill();
+    c.fillStyle = '#f4f1e8'; c.fillRect(cx0, cy0, cw, chh);
+    c.fillStyle = '#16181c'; c.font = `600 ${Math.min(chh * 0.78, cw / 4.6)}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillText(String(Math.round(S.lam)).padStart(3, '0') + ' nm', cx0 + cw / 2, cy0 + chh / 2 + 0.5);
+    c.strokeStyle = 'rgba(0,0,0,0.25)'; c.lineWidth = 1; c.beginPath(); c.moveTo(cx0, cy0 + chh / 2); c.lineTo(cx0 + cw, cy0 + chh / 2); c.globalAlpha = 0.4; c.stroke(); c.globalAlpha = 1;
+    const kr = Math.max(8, Math.min(s.mh * 0.2, s.mw * 0.16, 17 * ps));
+    const kx = s.mx + s.mw * 0.5, ky = Math.min(my1 - kr - 6, cy0 + chh + kr + 9 * ps);
+    knob(c, kx, ky, kr, (S.lam - 100) / 700, hot('lam'), ps, '');
+    knobs.push({ id: 'lam', x: kx, y: ky, r: kr, f: (S.lam - 100) / 700 });
+    // intensity knob on the lamp housing
+    const pr = Math.max(8, Math.min(s.lw * 0.24, s.hb * 0.11, 15 * ps)), px = s.lx + s.lw / 2, py = ly1 - pr - Math.max(10, s.hb * 0.16);
+    knob(c, px, py, pr, S.pow / 100, hot('pow'), ps, '');
+    knobs.push({ id: 'pow', x: px, y: py, r: pr, f: S.pow / 100 });
+
+    // beam from the exit slit to the cathode, colored by wavelength
+    const t = L.tube, uv = S.lam < 380, ir = S.lam > 750;
+    const [ex0, ey0] = cathPt(t, TH * 0.9, 0.04), [ex1, ey1] = cathPt(t, -TH * 0.9, 0.96);
+    const hitX = t.ax + t.R * 0.62;
+    if (on) {
+      const base = uv ? 'rgba(139, 92, 246, A)' : lamColor(S.lam, 1).replace(/,1\)$/, ',A)');
+      const a0 = (uv || ir ? 0.05 : 0.08) + (uv || ir ? 0.12 : 0.3) * S.pow / 100;
+      const grd = c.createLinearGradient(s.sx, 0, hitX, 0);
+      grd.addColorStop(0, base.replace('A', String(a0))); grd.addColorStop(1, base.replace('A', String(a0 * 0.55)));
+      c.fillStyle = grd;
+      c.beginPath(); c.moveTo(s.sx, by - sh * 0.4); c.lineTo(hitX, ey0 + 4); c.lineTo(hitX, ey1 - 4); c.lineTo(s.sx, by + sh * 0.4); c.closePath(); c.fill();
+      if (uv || ir) {
+        c.save(); c.setLineDash([4, 5]); c.strokeStyle = base.replace('A', '0.45'); c.lineWidth = 1;
+        c.beginPath(); c.moveTo(s.sx, by - sh * 0.4); c.lineTo(hitX, ey0 + 4); c.moveTo(s.sx, by + sh * 0.4); c.lineTo(hitX, ey1 - 4); c.stroke(); c.restore();
       }
-      ctx.restore();
     }
+    s.hitX = hitX; s.sh = sh; s.ly0 = ly0; s.my0 = my0; s.my1 = my1; s.ly1 = ly1; s.kx = kx; s.ky = ky; s.kr = kr; s.px = px; s.py = py; s.pr = pr; s.fx = fx; s.hg = hg;
+  }
 
-    // plates
-    ctx.fillStyle = T.metal;
-    ctx.fillRect(G.ex - 10, G.y0, 10, G.plateH);
-    ctx.fillRect(G.cx, G.y0, 8, G.plateH);
-    ctx.fillStyle = T.ink; ctx.font = `600 ${12 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    ctx.fillText(S.metal + ' emitter', G.ex - 5, G.y1 + 22);
-    ctx.fillText('collector', G.cx + 4, G.y1 + 22);
-
-    // circuit: wires down to ammeter and battery
-    const wy = AH - 18;
-    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * ps;
-    ctx.beginPath();
-    ctx.moveTo(G.ex - 5, G.y1); ctx.lineTo(G.ex - 5, G.y1 + 18);
-    ctx.moveTo(G.ex - 5, G.y1 + 38); ctx.lineTo(G.ex - 5, wy); ctx.lineTo(G.cx + 4, wy); ctx.lineTo(G.cx + 4, G.y1 + 38);
-    ctx.moveTo(G.cx + 4, G.y1 + 18); ctx.lineTo(G.cx + 4, G.y1);
-    ctx.stroke();
-    const amX = G.ex + G.gap * 0.32, batX = G.ex + G.gap * 0.7;
-    // ammeter
-    ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.arc(amX, wy, 11 * ps, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = flash > 0.05 ? T.accent : T.muted; ctx.lineWidth = (1.5 + flash * 1.5) * ps; ctx.stroke();
-    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('A', amX, wy + 0.5);
-    ctx.textBaseline = 'bottom'; ctx.fillText(fmtI(current(S.V)), amX, wy - 13 * ps);
-    // battery
-    ctx.fillStyle = T.canvas; ctx.fillRect(batX - 10, wy - 12, 20, 24);
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps;
-    ctx.beginPath(); ctx.moveTo(batX - 4, wy - 11); ctx.lineTo(batX - 4, wy + 11); ctx.stroke();
-    ctx.lineWidth = 4 * ps; ctx.beginPath(); ctx.moveTo(batX + 4, wy - 6); ctx.lineTo(batX + 4, wy + 6); ctx.stroke();
-    ctx.fillStyle = T.ink; ctx.textBaseline = 'bottom';
-    ctx.fillText((S.V >= 0 ? '+' : '−') + Math.abs(S.V).toFixed(2) + ' V', batX, wy - 13 * ps);
-
-    // lamp and beam
-    const L = G.lamp, col = S.pow > 0 ? lamColor(S.lam, 1) : T.muted;
+  function drawTube(c, L, t, s, ps) {
+    const tw = t.w, x0 = t.cx - tw / 2, x1 = t.cx + tw / 2, gTop = t.top, gBot = t.gBot, dark = T.dark;
+    // base and socket
+    const bg = c.createLinearGradient(x0, 0, x1, 0); bg.addColorStop(0, '#1c1d20'); bg.addColorStop(0.4, '#3d3f45'); bg.addColorStop(1, '#141518');
+    c.fillStyle = 'rgba(0,0,0,0.2)'; c.beginPath(); c.ellipse(t.cx + 4, t.foot - 1, tw * 0.62, 4, 0, 0, 7); c.fill();
+    c.fillStyle = T.aluDk; rr(c, t.cx - tw * 0.55, t.foot - 7, tw * 1.1, 7, 2); c.fill();
+    c.fillStyle = bg; rr(c, t.cx - tw * 0.4, gBot - 2, tw * 0.8, t.foot - 7 - gBot + 2, 3); c.fill();
+    c.fillStyle = 'rgba(255,255,255,0.08)'; c.fillRect(t.cx - tw * 0.4, gBot + (t.foot - gBot) * 0.35, tw * 0.8, 1.5);
+    // glass envelope: back fill
+    const env = () => { c.beginPath(); c.moveTo(x0 + 3, gBot); c.lineTo(x0, gTop + tw / 2); c.arc(t.cx, gTop + tw / 2, tw / 2, Math.PI, 0); c.lineTo(x1 - 3, gBot); c.quadraticCurveTo(t.cx, gBot + 8, x0 + 3, gBot); c.closePath(); };
+    env(); c.fillStyle = dark ? 'rgba(160, 195, 235, 0.06)' : 'rgba(190, 215, 240, 0.22)'; c.fill();
+    // stem press and support wires
+    c.fillStyle = dark ? 'rgba(170, 200, 230, 0.12)' : 'rgba(150, 180, 210, 0.28)';
+    c.beginPath(); c.moveTo(t.cx - tw * 0.18, gBot + 2); c.lineTo(t.cx - tw * 0.08, gBot - tw * 0.3); c.lineTo(t.cx + tw * 0.08, gBot - tw * 0.3); c.lineTo(t.cx + tw * 0.18, gBot + 2); c.closePath(); c.fill();
+    const [fbx, fby] = cathPt(t, -TH, 1), [bbx, bby] = cathPt(t, TH, 1);
+    c.strokeStyle = '#8b939d'; c.lineWidth = 1.2;
+    c.beginPath(); c.moveTo(t.cx + tw * 0.04, gBot - tw * 0.28); c.lineTo(fbx, fby); c.moveTo(t.cx + tw * 0.06, gBot - tw * 0.28); c.lineTo(bbx, bby); c.stroke();
+    // getter flash: a silvery patch inside the dome
+    const gg = c.createRadialGradient(t.cx + tw * 0.2, gTop + tw * 0.2, 1, t.cx + tw * 0.2, gTop + tw * 0.22, tw * 0.22);
+    gg.addColorStop(0, dark ? 'rgba(200,205,215,0.5)' : 'rgba(120,128,140,0.55)'); gg.addColorStop(1, 'rgba(120,128,140,0)');
+    c.save(); env(); c.clip(); c.fillStyle = gg; c.beginPath(); c.arc(t.cx + tw * 0.2, gTop + tw * 0.22, tw * 0.24, 0, 7); c.fill(); c.restore();
+    // cathode: a half cylinder coated with the metal, its hollow facing the light
+    const N = 28, top = [], bot = [];
+    for (let i = 0; i <= N; i++) { const th = -TH + 2 * TH * i / N; top.push(cathPt(t, th, -0.03)); bot.push(cathPt(t, th, 1.03)); }
+    const coat = COAT[S.metal] || '#c0c4c8';
+    const cg = c.createLinearGradient(t.ax + t.R * Math.cos(TH), 0, t.ax + t.R, 0);
+    cg.addColorStop(0, shade(coat, dark ? -0.45 : -0.3)); cg.addColorStop(0.7, coat); cg.addColorStop(1, shade(coat, dark ? -0.15 : 0.12));
+    const H2 = N / 2;
+    const outline = () => { c.beginPath(); for (let i = N; i >= H2; i--) i === N ? c.moveTo(top[i][0], top[i][1]) : c.lineTo(top[i][0], top[i][1]); for (let i = H2; i >= 0; i--) c.lineTo(bot[i][0], bot[i][1]); c.closePath(); };
+    c.fillStyle = cg; outline(); c.fill();
+    // the inner face just below the top rim is in shadow
+    const sg = c.createLinearGradient(0, top[0][1] - 4, 0, top[0][1] + t.R * 0.5);
+    sg.addColorStop(0, 'rgba(0,0,0,0.28)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+    c.save(); outline(); c.clip(); c.fillStyle = sg; c.fillRect(t.ax, top[N][1] - 2, t.R * 1.1, t.R * 0.9); c.restore();
+    c.strokeStyle = shade(coat, -0.45); c.lineWidth = 1.2;
+    c.beginPath(); top.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.stroke();
+    c.beginPath(); for (let i = H2; i >= 0; i--) i === H2 ? c.moveTo(bot[i][0], bot[i][1]) : c.lineTo(bot[i][0], bot[i][1]); c.stroke();
+    c.beginPath(); c.moveTo(top[0][0], top[0][1]); c.lineTo(bot[0][0], bot[0][1]); c.moveTo(top[N][0], top[N][1]); c.lineTo(bot[N][0], bot[N][1]); c.stroke();
+    // light falling on the coating
     if (S.pow > 0) {
-      const grd = ctx.createLinearGradient(L.x, L.y, G.ex, G.midY);
-      grd.addColorStop(0, lamColor(S.lam, 0.05 + 0.25 * S.pow / 100));
-      grd.addColorStop(1, lamColor(S.lam, 0.02 + 0.12 * S.pow / 100));
-      ctx.fillStyle = grd;
-      ctx.beginPath(); ctx.moveTo(L.x + 10, L.y + 10); ctx.lineTo(G.ex - 10, G.y0 + 4); ctx.lineTo(G.ex - 10, G.y1 - 4); ctx.lineTo(L.x + 4, L.y + 26); ctx.closePath(); ctx.fill();
+      const [mx, my] = cathPt(t, 0, 0.5), col = S.lam < 380 ? 'rgba(139,92,246,A)' : lamColor(S.lam, 1).replace(/,1\)$/, ',A)');
+      const rg = c.createRadialGradient(mx, my, 1, mx, my, (t.zBot - t.zTop) * 0.6);
+      const a = (S.lam < 380 || S.lam > 750 ? 0.12 : 0.4) * (0.3 + 0.7 * S.pow / 100);
+      rg.addColorStop(0, col.replace('A', String(a))); rg.addColorStop(1, col.replace('A', '0'));
+      c.save(); outline(); c.clip();
+      c.fillStyle = rg; c.fillRect(t.ax, t.zTop - t.R, t.R * 1.2, t.zBot - t.zTop + 2 * t.R); c.restore();
     }
-    ctx.fillStyle = T.canvas; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps;
-    ctx.beginPath(); ctx.arc(L.x, L.y + 14, 16 * Math.sqrt(ps), 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(L.x, L.y + 14, 10 * Math.sqrt(ps), 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-    ctx.fillText(Math.round(S.lam) + ' nm', L.x - 16, L.y - 4);
-
+    // field arrows between cathode and anode when V is not zero
+    if (Math.abs(S.V) > 0.05) {
+      c.save(); c.globalAlpha = Math.min(0.55, 0.15 + Math.abs(S.V) / 10); c.strokeStyle = T.muted; c.fillStyle = T.muted; c.lineWidth = 1 * ps;
+      const dir = S.V > 0 ? 1 : -1;   // E points from anode to cathode when V > 0 (outward), inward when V < 0
+      for (const zf of [0.2, 0.5, 0.8]) {
+        const [cx_, cy_] = cathPt(t, 0, zf), [axp, ayp] = anodePt(t, zf);
+        const xa = axp + (cx_ - axp) * 0.35, xb = axp + (cx_ - axp) * 0.65, y = (cy_ + ayp) / 2;
+        c.beginPath(); c.moveTo(xa, y); c.lineTo(xb, y); c.stroke();
+        const xh = dir > 0 ? xb : xa;
+        c.beginPath(); c.moveTo(xh, y); c.lineTo(xh - dir * 6 * ps, y - 3.5 * ps); c.lineTo(xh - dir * 6 * ps, y + 3.5 * ps); c.closePath(); c.fill();
+      }
+      c.restore();
+    }
     // photons as small wave packets
     if (layers.photons) {
+      const col = S.lam < 380 ? 'rgba(150, 105, 250, 0.9)' : lamColor(S.lam, 0.95);
+      c.strokeStyle = col; c.lineWidth = 1.8 * ps;
+      const wl = Math.max(3, Math.min(9, S.lam / 70));
       for (const p of photons) {
-        const x = p.sx + (p.tx - p.sx) * p.t, y = p.sy + (p.ty - p.sy) * p.t;
-        const ang = Math.atan2(p.ty - p.sy, p.tx - p.sx);
-        ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
-        ctx.strokeStyle = lamColor(S.lam, 0.95); ctx.lineWidth = 1.8 * ps;
-        ctx.beginPath();
-        const wl = Math.max(3, Math.min(9, S.lam / 70));
-        for (let s = -14; s <= 0; s += 1) { const yy = Math.sin(s / wl * Math.PI * 2) * 3.2; s === -14 ? ctx.moveTo(s, yy) : ctx.lineTo(s, yy); }
-        ctx.stroke(); ctx.restore();
+        const sx = s.sx, sy = s.beamY + p.u * s.sh * 0.7, [tx, ty] = cathPt(t, p.th, p.zf);
+        const x = sx + (tx - sx) * p.t, y = sy + (ty - sy) * p.t, ang = Math.atan2(ty - sy, tx - sx);
+        c.save(); c.translate(x, y); c.rotate(ang);
+        c.beginPath();
+        for (let q = -14; q <= 0; q += 1) { const yy = Math.sin(q / wl * Math.PI * 2) * 3.2; q === -14 ? c.moveTo(q, yy) : c.lineTo(q, yy); }
+        c.stroke(); c.restore();
       }
     }
-    // electrons
-    ctx.fillStyle = T.neg;
+    // photoelectrons, moving radially from the cathode to the anode wire
+    c.fillStyle = T.neg;
+    const er = 2.8 * ps;
     for (const e of electrons) {
-      ctx.beginPath(); ctx.arc(G.ex + e.x, e.y, 3.2 * ps, 0, Math.PI * 2); ctx.fill();
+      const [cx_, cy_] = cathPt(t, e.th, e.zf), [axp, ayp] = anodePt(t, e.zf), f = Math.max(0, Math.min(1, e.s));
+      c.beginPath(); c.arc(cx_ + (axp - cx_) * f, cy_ + (ayp - cy_) * f, er, 0, 7); c.fill();
     }
-    // message when below threshold
+    // anode wire, its lead to the top cap, and glints where electrons land
+    const ag = c.createLinearGradient(t.ax - 2, 0, t.ax + 2, 0); ag.addColorStop(0, '#6b7581'); ag.addColorStop(0.5, '#e3e7ec'); ag.addColorStop(1, '#6b7581');
+    c.strokeStyle = ag; c.lineWidth = Math.max(2, 2.4 * ps);
+    c.beginPath(); c.moveTo(t.ax, gBot - tw * 0.28); c.lineTo(t.ax, t.zTop - 4); c.quadraticCurveTo(t.ax, gTop + tw * 0.18, t.cx, gTop + 1); c.stroke();
+    for (const gl of glints) { const [gx, gy] = anodePt(t, gl.zf); c.fillStyle = `rgba(150, 200, 255, ${0.7 * gl.a})`; c.beginPath(); c.arc(gx, gy, 2 + 3 * (1 - gl.a), 0, 7); c.fill(); }
+    // top cap
+    const cg2 = c.createLinearGradient(t.cx - 7, 0, t.cx + 7, 0); cg2.addColorStop(0, T.aluDk); cg2.addColorStop(0.5, T.alu); cg2.addColorStop(1, T.aluDk);
+    c.fillStyle = cg2; rr(c, t.cx - 6 * Math.min(ps, 1.2), gTop - 8, 12 * Math.min(ps, 1.2), 10, 2); c.fill();
+    // glass outline and highlights
+    env(); c.strokeStyle = dark ? 'rgba(175, 205, 235, 0.5)' : 'rgba(95, 125, 160, 0.6)'; c.lineWidth = 1.5; c.stroke();
+    c.save(); env(); c.clip();
+    c.strokeStyle = dark ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.75)'; c.lineWidth = Math.max(3, tw * 0.05); c.lineCap = 'round';
+    c.beginPath(); c.moveTo(x0 + tw * 0.11, gTop + tw * 0.55); c.lineTo(x0 + tw * 0.11, gBot - tw * 0.2); c.stroke();
+    c.lineWidth = Math.max(1.5, tw * 0.02); c.beginPath(); c.arc(t.cx, gTop + tw / 2, tw * 0.4, Math.PI * 1.15, Math.PI * 1.4); c.stroke();
+    c.restore();
+    // labels, drawn last on halos
+    const lb = (txt, x, y, col, al = 'center', bold = false, sz = 10.5) => label(c, txt, x, y, col, al, 'middle', bold, ps, sz);
+    const nm = METALS.find((m) => m[0] === S.metal)[1];
+    {
+      const by_ = (gBot + t.foot - 7) / 2 + 2, bw = tw * 0.8 - 8;
+      c.font = `600 ${10 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#c9ced6';
+      const nmT = c.measureText('evacuated phototube').width <= bw ? 'evacuated phototube' : 'phototube';
+      c.font = `600 ${Math.min(10 * ps, bw / (nmT.length * 0.62))}px ${T.mono}`; c.fillText(nmT, t.cx, by_);
+    }
+    lb('anode (collector)', t.ax, gTop + tw * 0.34, T.ink, 'center', false, 9.5);
+    lb(`${L.narrow ? S.metal : nm} cathode (emitter)`, t.cx + tw * 0.02, t.zBot + t.R * KDEP + 14 * ps, T.ink, 'center', true, L.narrow ? 9.5 : 10.5);
+    if (S.pow > 0 && (S.lam < 380 || S.lam > 750)) lb(S.lam < 380 ? 'UV, invisible' : 'IR, invisible', (s.sx + s.hitX) / 2 - 6, s.beamY - s.sh - 10 * ps, S.lam < 380 ? '#8b5cf6' : T.muted, 'center', true);
+    if (s.hg) lb(`Hg ${Math.round(S.lam)} nm filter`, Math.min(s.fx, x0 - 50 * ps), s.my0 - 12 * ps, T.ink, 'center', false, 9.5);
+    lb(L.narrow ? 'lamp + mono' : 'lamp + monochromator', s.mx + s.mw / 2, s.my1 + 13 * ps, T.muted, 'center');
+    if (!L.narrow) { lb('λ', s.kx - s.kr - 10 * ps, s.ky, T.muted, 'right', true, 10); lb('power', s.px, s.py - s.pr - 12 * ps, T.muted, 'center', false, 9); }
     if (Kmax() <= 0 && S.pow > 0) {
-      ctx.fillStyle = T.pos; ctx.font = `700 ${13 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText('hf < φ : no electrons', G.ex + G.gap / 2, G.midY);
+      const mx = (t.ax + t.ax + t.R) / 2, my = t.beamY;
+      if (L.narrow || tw < 150) { lb('hf < φ', mx, my - 9 * ps, T.pos, 'center', true, 12); lb('no electrons', mx, my + 9 * ps, T.pos, 'center', true, 12); }
+      else lb('hf < φ : no electrons', mx, my, T.pos, 'center', true, 13);
     }
+  }
+
+  function meterRange(nA) { for (const fs of [1, 3, 10, 30, 100]) if (nA <= fs * 1.0001) return fs; return 100; }
+  function drawPico(c, b, ps, narrow) {
+    const q = Math.min(ps, 1.15);
+    panel(c, b, 'PICOAMMETER', q);
+    const I = current(S.V) * 1e9;
+    // analog meter: cream face, mirror band, needle
+    const side = !narrow && b.w > b.h * 1.5;
+    const lhN = Math.max(20, Math.min(30 * q, b.h * 0.2));
+    const mw = side ? b.w * 0.56 : b.w - 24, mh = side ? b.h - 40 * q : b.h - 26 * q - lhN - 18;
+    const mx = b.x + 12, my = b.y + 26 * q;
+    c.fillStyle = '#16181c'; rr(c, mx - 2, my - 2, mw + 4, mh + 4, 5); c.fill();
+    c.fillStyle = T.face; rr(c, mx, my, mw, mh, 4); c.fill();
+    const pvx = mx + mw / 2, pvy = my + mh * 0.96, rad = Math.min(mw * 0.48, mh * 0.82), a0 = -Math.PI * 0.78, a1 = -Math.PI * 0.22;
+    const fs = meterFS;
+    c.save(); rr(c, mx, my, mw, mh, 4); c.clip();
+    c.strokeStyle = 'rgba(140,150,160,0.55)'; c.lineWidth = Math.max(2, rad * 0.05); c.beginPath(); c.arc(pvx, pvy, rad * 0.8, a0, a1); c.stroke();
+    c.strokeStyle = '#1b1d21'; c.fillStyle = '#1b1d21'; c.lineWidth = 1;
+    const major = fs === 3 ? 0.5 : fs / 5, nMin = fs === 3 ? 5 : 4;
+    for (let v = 0; v <= fs + 1e-9; v += major / nMin) {
+      const a = a0 + (a1 - a0) * v / fs, isMaj = Math.abs(v / major - Math.round(v / major)) < 1e-6;
+      const r0 = rad * (isMaj ? 0.86 : 0.9);
+      c.lineWidth = isMaj ? 1.4 : 0.8;
+      c.beginPath(); c.moveTo(pvx + Math.cos(a) * r0, pvy + Math.sin(a) * r0); c.lineTo(pvx + Math.cos(a) * rad * 0.97, pvy + Math.sin(a) * rad * 0.97); c.stroke();
+      const showNum = isMaj && (fs !== 3 || Math.abs(v - Math.round(v)) < 1e-6) && (fs !== 30 || Math.round(v) % 10 === 0) && (fs !== 1 || Math.abs(v * 2 - Math.round(v * 2)) < 1e-6);
+      if (showNum && rad > 40) {
+        c.font = `${Math.max(7.5, rad * 0.11)}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+        c.fillText(String(+v.toFixed(1)), pvx + Math.cos(a) * rad * 0.72, pvy + Math.sin(a) * rad * 0.72 + 1);
+      }
+    }
+    c.font = `600 ${Math.max(8, rad * 0.12)}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('nA', pvx, pvy - rad * 0.42);
+    const na = a0 + (a1 - a0) * Math.max(-0.02, Math.min(1.03, needle));
+    c.strokeStyle = '#c2362b'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(pvx, pvy); c.lineTo(pvx + Math.cos(na) * rad * 0.98, pvy + Math.sin(na) * rad * 0.98); c.stroke();
+    c.fillStyle = '#1b1d21'; c.beginPath(); c.arc(pvx, pvy, Math.max(3, rad * 0.06), 0, 7); c.fill();
+    c.restore();
+    // LCD readout, range, input connector
+    const lx = side ? mx + mw + 14 : mx, lw = side ? b.x + b.w - lx - 14 : mw - 30 * q;
+    const lh = side ? Math.max(20, Math.min(34 * q, b.h * 0.26)) : lhN;
+    const ly = side ? my + 4 : my + mh + 8;
+    c.fillStyle = '#16181c'; rr(c, lx - 2, ly - 2, lw + 4, lh + 4, 4); c.fill();
+    c.fillStyle = T.lcd; rr(c, lx, ly, lw, lh, 3); c.fill();
+    c.fillStyle = T.lcdInk; c.font = `600 ${Math.min(lh * 0.62, lw / 6.2)}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'middle';
+    c.fillText(fmtI(current(S.V)), lx + lw - 8, ly + lh / 2 + 1);
+    c.fillStyle = T.muted; c.font = `600 ${Math.max(8, 9 * q)}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
+    if (side) { c.fillText(`RANGE ${fs} nA`, lx, ly + lh + 7 * q); c.fillText('AUTO', lx, ly + lh + 21 * q); }
+    else { c.fillStyle = '#5a5f66'; c.font = `600 ${Math.max(7.5, 8 * q)}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(`${fs} nA FS`, mx + 5, my + 4); }
+    // BNC input
+    const bx = b.x + b.w - (side ? 26 : 22) * q, by = side ? b.y + b.h - 20 * q : ly + lh / 2;
+    c.fillStyle = T.aluDk; c.beginPath(); c.arc(bx, by, 8 * q, 0, 7); c.fill(); c.fillStyle = T.alu; c.beginPath(); c.arc(bx, by, 5 * q, 0, 7); c.fill(); c.fillStyle = '#1b1d21'; c.beginPath(); c.arc(bx, by, 2 * q, 0, 7); c.fill();
+    if (b.w > 220) { c.fillStyle = T.muted; c.font = `${Math.max(7.5, 8.5 * q)}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText('INPUT', bx - 13 * q, by); }
+  }
+
+  function drawSupply(c, b, ps, narrow, posts) {
+    const q = Math.min(ps, 1.15);
+    panel(c, b, narrow ? 'SUPPLY' : 'VOLTAGE SUPPLY', q);
+    // LED display of V (collector relative to emitter)
+    const dw = narrow ? b.w - 24 : Math.min(b.w * 0.38, 180 * q), dh = Math.max(20, Math.min(34 * q, b.h * 0.24));
+    const dx = b.x + 12, dy = b.y + 28 * q;
+    c.fillStyle = '#0b0c0e'; rr(c, dx - 2, dy - 2, dw + 4, dh + 4, 4); c.fill();
+    c.fillStyle = '#1a0806'; rr(c, dx, dy, dw, dh, 3); c.fill();
+    c.fillStyle = '#ff4a2e'; c.font = `600 ${Math.min(dh * 0.66, dw / 5.6)}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'middle';
+    c.shadowColor = 'rgba(255, 74, 46, 0.6)'; c.shadowBlur = 6;
+    c.fillText((S.V >= 0 ? '+' : '−') + Math.abs(S.V).toFixed(2) + ' V', dx + dw - 8, dy + dh / 2 + 1);
+    c.shadowBlur = 0;
+    c.fillStyle = T.muted; c.font = `${Math.max(7.5, 8.5 * q)}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillText(narrow ? 'V anode' : 'V = anode − cathode', dx, dy + dh + 6 * q);
+    // voltage knob (sets the size of V) and the reversing switch (sets its sign)
+    const swR = b.x + b.w - 84 * q;
+    const nTop = dy + dh + 18 * q, nBot = b.y + b.h - 8;
+    const kr = narrow ? Math.max(10, Math.min(b.w * 0.13, (nBot - nTop) / 2 - 6 * q)) : Math.max(12, Math.min(b.h * 0.24, 26 * q, (swR - 14 * q - dx - dw) / 2 - 8 * q));
+    const kx = narrow ? b.x + b.w * 0.24 : (dx + dw + swR - 14 * q) / 2, ky = narrow ? (nTop + nBot) / 2 : dy + dh * 0.5 + kr * 0.5;
+    knob(c, kx, ky, kr, Math.abs(S.V) / 6, hot('volt'), q, narrow ? '' : 'VOLTAGE');
+    knobs.push({ id: 'volt', x: kx, y: ky, r: kr });
+    const swx = narrow ? b.x + b.w * 0.55 : swR, swy = ky, swh = Math.max(16, kr * 1.1);
+    c.fillStyle = '#16181c'; rr(c, swx - 7 * q, swy - swh / 2, 14 * q, swh, 4); c.fill();
+    const up = (S.V !== 0 ? S.V > 0 : pol > 0);
+    const hs = hot('rev');
+    c.strokeStyle = hs ? T.accent : '#c9ced5'; c.lineWidth = 4 * q; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(swx, swy); c.lineTo(swx, swy + (up ? -1 : 1) * swh * 0.95); c.stroke(); c.lineCap = 'butt';
+    c.fillStyle = hs ? T.accent : '#e3e7ec'; c.beginPath(); c.arc(swx, swy + (up ? -1 : 1) * swh * 0.95, 3.6 * q, 0, 7); c.fill();
+    c.strokeStyle = T.accent; c.lineWidth = (hs ? 2.4 : 1.2) * q; c.globalAlpha = hs ? 1 : 0.8; rr(c, swx - 12 * q, swy - swh * 1.25, 24 * q, swh * 2.5, 6); c.stroke(); c.globalAlpha = 1;
+    knobs.push({ id: 'rev', x: swx, y: swy, r: Math.max(14 * q, swh * 1.1), sw: true });
+    c.fillStyle = T.ink; c.font = `600 ${Math.max(7.5, 8.5 * q)}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'middle';
+    c.fillStyle = up ? T.ink : T.muted; c.fillText(narrow ? '+' : '+ accel', swx + 15 * q, swy - swh * 0.8);
+    c.fillStyle = up ? T.muted : T.ink; c.fillText(narrow ? '−' : '− retard', swx + 15 * q, swy + swh * 0.8);
+    if (!narrow && b.h > 120) { c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText('REVERSING', swx, swy + swh * 1.35); }
+    // output binding posts
+    for (const [k, col, txt] of [['a', '#c2362b', 'A'], ['k', '#202226', 'K']]) {
+      const [x, y] = posts[k];
+      c.fillStyle = col; c.beginPath(); c.arc(x, y, 7 * q, 0, 7); c.fill(); c.fillStyle = 'rgba(255,255,255,0.35)'; c.beginPath(); c.arc(x - 2 * q, y - 2 * q, 2.4 * q, 0, 7); c.fill();
+      c.fillStyle = T.muted; c.font = `600 ${Math.max(7.5, 8.5 * q)}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(txt, x, y - 9 * q);
+    }
+  }
+  function shade(hex, f) {
+    const n = parseInt(hex.slice(1), 16), ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    return 'rgb(' + ch.map((v) => Math.round(f < 0 ? v * (1 + f) : v + (255 - v) * f)).join(',') + ')';
   }
 
   // ---------- drawing: charts ----------
@@ -478,10 +826,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p;
   }
   function frame(ctx, x, y, w, h, xr, yr, xl, yl, ps, xFmt, yFmt) {
-    ctx.strokeStyle = T.grid; ctx.lineWidth = 1;
-    ctx.fillStyle = T.muted; ctx.font = `${10.5 * ps}px ${T.mono}`;
     const X = (v) => x + (v - xr[0]) / (xr[1] - xr[0]) * w, Y = (v) => y + h - (v - yr[0]) / (yr[1] - yr[0]) * h;
     const xs = nice((xr[1] - xr[0]) / (w < 220 ? 3 : 5)), ys = nice((yr[1] - yr[0]) / 4);
+    // graph paper: a tinted sheet with fine minor rules under the major grid
+    ctx.fillStyle = T.paper; ctx.fillRect(x, y, w, h);
+    const sub = (st) => { const m = st / Math.pow(10, Math.floor(Math.log10(st) + 1e-9)); return st / (Math.abs(m - 2) < 1e-6 ? 4 : 5); };
+    ctx.strokeStyle = T.paperMinor; ctx.lineWidth = 1;
+    ctx.beginPath();
+    const mx = sub(xs), my = sub(ys);
+    if ((mx / (xr[1] - xr[0])) * w > 4) for (let v = Math.ceil(xr[0] / mx) * mx; v <= xr[1] + 1e-9; v += mx) { const xx = Math.round(X(v)) + 0.5; ctx.moveTo(xx, y); ctx.lineTo(xx, y + h); }
+    if ((my / (yr[1] - yr[0])) * h > 4) for (let v = Math.ceil(yr[0] / my) * my; v <= yr[1] + 1e-9; v += my) { const yy = Math.round(Y(v)) + 0.5; ctx.moveTo(x, yy); ctx.lineTo(x + w, yy); }
+    ctx.stroke();
+    ctx.strokeStyle = T.paperMajor; ctx.lineWidth = 1;
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * ps}px ${T.mono}`;
     ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     for (let v = Math.ceil(xr[0] / xs) * xs; v <= xr[1] + 1e-9; v += xs) {
       ctx.beginPath(); ctx.moveTo(Math.round(X(v)) + 0.5, y); ctx.lineTo(Math.round(X(v)) + 0.5, y + h); ctx.stroke();
@@ -546,10 +903,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           ctx.strokeStyle = T.equi; ctx.lineWidth = lw;
           ctx.beginPath(); ctx.moveTo(X(fx[0]), Y(fit.b)); ctx.lineTo(X(fx[1]), Y(fit.b + fit.m * fx[1])); ctx.stroke();
         }
-        // recorded points
+        // recorded points: open markers with the ±0.02 V reading error as bars
         for (const p of points) {
-          ctx.fillStyle = T.equi; ctx.beginPath(); ctx.arc(X(p.f), Y(p.k), 4.5 * ps, 0, Math.PI * 2); ctx.fill();
-          ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.2; ctx.stroke();
+          const px = X(p.f), py = Y(p.k), eb = Math.abs(Y(p.k + 0.02) - py);
+          ctx.strokeStyle = T.equi; ctx.lineWidth = 1.4 * ps;
+          if (eb > 5 * ps) { ctx.beginPath(); ctx.moveTo(px, py - eb); ctx.lineTo(px, py + eb); ctx.moveTo(px - 3 * ps, py - eb); ctx.lineTo(px + 3 * ps, py - eb); ctx.moveTo(px - 3 * ps, py + eb); ctx.lineTo(px + 3 * ps, py + eb); ctx.stroke(); }
+          ctx.fillStyle = T.paper; ctx.beginPath(); ctx.arc(px, py, 4.2 * ps, 0, Math.PI * 2); ctx.fill();
+          ctx.lineWidth = 1.8 * ps; ctx.stroke();
         }
         // current point
         const fNow = freq() / 1e14;
@@ -560,7 +920,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         }
         ctx.restore();
         ctx.fillStyle = T.pos; ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-        if (X(f0) < x + w - 60) ctx.fillText('f₀', X(f0) + 5, Y(0) - 3);
+        if (X(f0) < x + w - 60) chartLabel(ctx, 'f₀', X(f0) + 6, Y(0) - 10 * ps, T.pos, ps);
+        if (points.length && w > 200) {
+          const lx = x + 10 * ps, ly = y + 12 * ps;
+          const lw = chartLabel(ctx, `○ recorded V₀ (${points.length})`, lx, ly, T.equi, ps);
+          if (fit) chartLabel(ctx, '— least squares fit', lx, ly + 16 * ps, T.equi, ps);
+          void lw;
+        }
       }
     }
     // --- chart 2: I vs V ---
@@ -580,17 +946,29 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           i ? ctx.lineTo(X(V), Y(I)) : ctx.moveTo(X(V), Y(I));
         }
         ctx.stroke();
+        // readings taken so far at this wavelength, power and metal, like points jotted in a lab notebook
+        ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.globalAlpha = 0.55;
+        for (const r of readings) { const rx = X(r.V), ry = Y(r.I); ctx.strokeRect(rx - 2 * ps, ry - 2 * ps, 4 * ps, 4 * ps); }
+        ctx.globalAlpha = 1;
         const K = Kmax();
         if (K > 0 && -K >= vr[0]) {
           ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(X(-K), Y(0), 4 * ps, 0, Math.PI * 2); ctx.fill();
-          ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-          ctx.fillText('−V₀', X(-K), Y(0) - 6);
+          ctx.restore(); ctx.save();
+          const tw_ = (ctx.font = `600 ${10 * ps}px ${T.mono}`, ctx.measureText('−V₀').width);
+          chartLabel(ctx, '−V₀', Math.max(x + 4, X(-K) - tw_ - 8 * ps), Y(0) - 12 * ps, T.pos, ps);
         }
         ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(S.V), Y(current(S.V) * 1e9), 5 * ps, 0, Math.PI * 2); ctx.fill();
         ctx.restore();
       }
     }
     dirtyCharts = false;
+  }
+
+  function chartLabel(ctx, txt, x, y, col, ps) {
+    ctx.font = `600 ${10 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    const w = ctx.measureText(txt).width, h = 14 * ps;
+    ctx.fillStyle = T.paper; ctx.globalAlpha = 0.9; ctx.fillRect(x - 4, y - h / 2, w + 8, h); ctx.globalAlpha = 1;
+    ctx.fillStyle = col; ctx.fillText(txt, x, y + 0.5); return w;
   }
 
   // ---------- fitting ----------
@@ -650,7 +1028,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
     if (name) $('presetHint').textContent = PRESETS[name].hint;
   }
-  function changed() { dirtyCharts = true; electrons = electrons.filter(() => true); updateReadouts(); if (!running) { drawApp(); } }
+  let readings = [], rKey = '';
+  function changed() {
+    if (S.V !== 0) pol = S.V > 0 ? 1 : -1;
+    const key = S.lam + '|' + S.pow + '|' + S.metal;
+    if (key !== rKey) { readings = []; rKey = key; }
+    const last = readings[readings.length - 1];
+    if (!last || last.V !== S.V) { readings.push({ V: S.V, I: current(S.V) * 1e9 }); if (readings.length > 400) readings.shift(); }
+    for (const b of document.querySelectorAll('#hg button')) b.setAttribute('aria-pressed', String(+b.dataset.l === S.lam));
+    dirtyCharts = true; updateReadouts(); if (!running) { drawApp(); }
+  }
   function record() {
     const K = Kmax();
     if (K <= 0) return;
@@ -679,6 +1066,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     b.addEventListener('click', () => { S.metal = sym; electrons = []; syncInputs(); setPreset(null); changed(); });
     mBox.appendChild(b);
   }
+  const hgBox = $('hg');
+  for (const l of HG) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.dataset.l = l; b.setAttribute('aria-pressed', 'false'); b.textContent = l + ' nm';
+    b.addEventListener('click', () => { S.lam = l; syncInputs(); setPreset(null); changed(); });
+    hgBox.appendChild(b);
+  }
   $('lam').addEventListener('input', (e) => { S.lam = +e.target.value; setPreset(null); changed(); });
   $('pow').addEventListener('input', (e) => { S.pow = +e.target.value; changed(); });
   $('volt').addEventListener('input', (e) => { S.V = +e.target.value; changed(); });
@@ -691,12 +1085,75 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   playBtn.addEventListener('click', () => setRunning(!running));
   $('reset').addEventListener('click', () => applyPreset('blue'));
 
+  // on canvas controls: the wavelength and intensity knobs, the voltage knob and the reversing switch
+  function setKnob(id, f) {
+    f = Math.max(0, Math.min(1, f));
+    if (id === 'lam') { const v = Math.round(100 + 700 * f); if (v === S.lam) return; S.lam = v; setPreset(null); }
+    else if (id === 'pow') { const v = Math.round(100 * f); if (v === S.pow) return; S.pow = v; }
+    else if (id === 'volt') { const v = Math.max(-6, Math.min(4, +(pol * Math.min(pol > 0 ? 4 : 6, 6 * f)).toFixed(2))); if (v === S.V) return; S.V = v; }
+    syncInputs(); changed();
+  }
+  const knobFrac = (id) => id === 'lam' ? (S.lam - 100) / 700 : id === 'pow' ? S.pow / 100 : Math.abs(S.V) / 6;
+  function flipPolarity() {
+    pol = -pol;
+    S.V = Math.max(-6, Math.min(4, +(-S.V).toFixed(2)));
+    if (S.V === 0) S.V = 0;
+    syncInputs(); setPreset(null); changed();
+  }
+  function handleAt(ev) {
+    const r = appC.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 6 * labScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const k of knobs) { const d = Math.hypot(x - k.x, y - k.y) - k.r; if (d < bd) { bd = d; best = k; } }
+    return best;
+  }
+  let dragQueued = null, dragFrame = false;
+  function dragTo(ev) {
+    const r = appC.getBoundingClientRect();
+    dragQueued = [ev.clientX - r.left, ev.clientY - r.top];
+    if (dragFrame) return;
+    dragFrame = true;
+    requestAnimationFrame(() => {
+      dragFrame = false;
+      if (!drag || !dragQueued) return;
+      const k = knobs.find((h) => h.id === drag.id); if (!k) return;
+      const a = Math.atan2(dragQueued[1] - k.y, dragQueued[0] - k.x);
+      let da = a - drag.a; while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI;
+      drag.a = a; drag.f = Math.max(0, Math.min(1, drag.f + da / (1.5 * Math.PI)));
+      setKnob(drag.id, drag.f);
+      dragQueued = null;
+    });
+  }
+  appC.addEventListener('pointermove', (ev) => {
+    if (drag) { dragTo(ev); return; }
+    const h = handleAt(ev);
+    hoverId = h ? h.id : null;
+    appC.style.cursor = h ? (h.sw ? 'pointer' : 'grab') : 'default';
+  });
+  appC.addEventListener('pointerdown', (ev) => {
+    const h = handleAt(ev);
+    if (!h) return;
+    ev.preventDefault();
+    if (h.sw) { flipPolarity(); return; }
+    const r = appC.getBoundingClientRect();
+    drag = { id: h.id, a: Math.atan2(ev.clientY - r.top - h.y, ev.clientX - r.left - h.x), f: knobFrac(h.id) };
+    try { appC.setPointerCapture(ev.pointerId); } catch (_) {}
+    appC.style.cursor = 'grabbing';
+  });
+  const endDrag = () => { if (!drag) return; drag = null; hoverId = null; appC.style.cursor = 'default'; };
+  appC.addEventListener('pointerup', endDrag);
+  appC.addEventListener('pointercancel', endDrag);
+  appC.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
+
   appC.addEventListener('keydown', (e) => {
     const big = e.shiftKey ? 10 : 1;
     if (e.key === 'ArrowLeft') S.lam = Math.max(100, S.lam - big);
     else if (e.key === 'ArrowRight') S.lam = Math.min(800, S.lam + big);
     else if (e.key === 'ArrowUp') S.V = Math.min(4, +(S.V + 0.05 * big).toFixed(2));
     else if (e.key === 'ArrowDown') S.V = Math.max(-6, +(S.V - 0.05 * big).toFixed(2));
+    else if (e.key === 'PageUp') S.pow = Math.min(100, S.pow + 5);
+    else if (e.key === 'PageDown') S.pow = Math.max(0, S.pow - 5);
+    else if (e.key === 'r' || e.key === 'R') { e.preventDefault(); flipPolarity(); return; }
     else if (e.key === ' ') { setRunning(!running); }
     else return;
     e.preventDefault(); syncInputs(); setPreset(null); changed();
@@ -718,10 +1175,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   new MutationObserver(() => { tokens(); drawApp(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
   // ---------- loop ----------
-  let last = performance.now(), lastRead = 0;
+  let last = performance.now(), lastRead = 0, lastNeedle = performance.now();
   function loop(now) {
     const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
     if (running && dt > 0) { step(dt); }
+    // the meter needle swings with a short damped response; the range switches up or down automatically
+    const nA = current(S.V) * 1e9, fs = meterRange(nA);
+    if (fs !== meterFS) { needle = needle * meterFS / fs; meterFS = fs; }
+    const tgt = nA / meterFS, rdt = Math.min(0.05, Math.max(0, (now - lastNeedle) / 1000)); lastNeedle = now;
+    needle = reduce ? tgt : needle + (tgt - needle) * Math.min(1, rdt * 9);
     drawApp();
     if (dirtyCharts) drawCharts();
     if (now - lastRead > 150) { $('rI').textContent = fmtI(current(S.V)); lastRead = now; }
