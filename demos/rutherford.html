@@ -46,6 +46,8 @@ img { max-width: 100%; }
   --accent: #2b60b5;
   --alpha: #17855f;
   --pud: #e7c9b8;
+  --chamber-in: #fdfeff; --chamber-out: #e1e6ed; --proton: #d0523c; --neutron: #a59c93;
+  --zns: #1d8a5b; --zns-band: #d3dcd7; --lead: #5b6169; --gold: #c99a24;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -53,13 +55,13 @@ img { max-width: 100%; }
   :root:not([data-theme="light"]) {
     --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --alpha: #4fd1a0; --pud: #4a3530; color-scheme: dark;
+    --equi: #e2b350; --accent: #69a0ff; --alpha: #4fd1a0; --pud: #4a3530; --chamber-in: #131b26; --chamber-out: #05080c; --proton: #f2735c; --neutron: #b5aca3; --zns: #66e8b0; --zns-band: #18241f; --lead: #4b515a; --gold: #e2b54c; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --alpha: #4fd1a0; --pud: #4a3530; color-scheme: dark;
+  --equi: #e2b350; --accent: #69a0ff; --alpha: #4fd1a0; --pud: #4a3530; --chamber-in: #131b26; --chamber-out: #05080c; --proton: #f2735c; --neutron: #b5aca3; --zns: #66e8b0; --zns-band: #18241f; --lead: #4b515a; --gold: #e2b54c; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -144,6 +146,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.nuc { border-color: var(--muted); border-top-style: dashed; border-top-width: 2px; }
 .swatch.hist { height: 10px; border: 1px solid var(--accent); background: color-mix(in srgb, var(--accent) 22%, transparent); }
 .swatch.dot { width: 10px; height: 10px; border: 0; border-radius: 50%; margin: 0 6px; background: var(--pos); }
+.swatch.pn { width: 22px; height: 10px; border: 0; background: radial-gradient(circle at 5px 5px, var(--proton) 4.5px, transparent 5px), radial-gradient(circle at 16px 5px, var(--neutron) 4.5px, transparent 5px); }
+.btn[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
 
 /* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
 @media (min-width: 821px) and (max-height: 820px) {
@@ -185,10 +189,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <button type="button" class="btn" id="play">Pause</button>
         <button type="button" class="btn" id="fire">Fire again</button>
         <button type="button" class="btn" id="clear" hidden>Clear</button>
+        <button type="button" class="btn" id="v3d" aria-pressed="false" title="Tilt the scene: the ring of impact parameter b and the cone of outgoing directions">3D view</button>
         <span class="count mono" id="count" aria-live="off"></span>
       </div>
       <div class="pane" id="pane">
-        <canvas id="can" tabindex="0" aria-label="Alpha particles approaching a target atom, seen side on, and a plot. In one alpha mode the plot shows the deflection angle against the impact parameter; in beam mode it shows counts against angle with the Rutherford prediction. Drag the handle on the incoming path to change the impact parameter b, or the beam edge to change the beam radius. Keys: up and down change b or the beam radius, space plays or pauses, B switches between one alpha and beam, P switches the atom model, F fires, C clears."></canvas>
+        <canvas id="can" tabindex="0" aria-label="Alpha particles approaching a target atom, seen side on, and a plot. In one alpha mode the plot shows the deflection angle against the impact parameter; in beam mode it shows counts against angle with the Rutherford prediction. Drag the handle on the incoming path to change the impact parameter b, or the beam edge to change the beam radius. Keys: up and down change b or the beam radius, space plays or pauses, B switches between one alpha and beam, P switches the atom model, F fires, C clears, V switches the 3D view, and left and right turn it."></canvas>
       </div>
     </div>
 
@@ -255,6 +260,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </dl>
         <p class="flag" id="touch" hidden></p>
         <p class="hint" id="singleHint"></p>
+        <p class="hint" id="v3Hint" hidden>3D view: every alpha with the same b, on a ring around the beam axis, turns by the same θ, so together they leave on a cone. Drag the drawing or use the left and right arrow keys to turn it.</p>
       </section>
 
       <section id="secBeam" hidden>
@@ -319,6 +325,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch alpha"></i>Alpha path</span>
           <span><i class="swatch asym"></i>Asymptotes and closest approach</span>
           <span><i class="swatch dot"></i>Nucleus (to scale, at least a few pixels)</span>
+          <span><i class="swatch pn"></i>Protons and neutrons, radius 0.85 fm, packed at random; their jostling is only for the eye</span>
         </div>
       </section>
     </aside>
@@ -565,8 +572,108 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
       gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), alpha: g('--alpha'), pud: g('--pud'),
+      chIn: g('--chamber-in'), chOut: g('--chamber-out'), proton: g('--proton'), neutron: g('--neutron'), zns: g('--zns'), znsBand: g('--zns-band'),
+      lead: g('--lead'), gold: g('--gold'),
       mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+    T.dark = lum(T.canvas) < 0.4;
+    sprites();
   }
+  // ---------- look: colors, sprites, nucleons, 3D projection ----------
+  function rgbOf(c) { const m = /^#([0-9a-f]{6})$/i.exec((c || '').trim()); if (!m) return [128, 128, 128]; const n = parseInt(m[1], 16); return [n >> 16, (n >> 8) & 255, n & 255]; }
+  const lum = (c) => { const [r, g, b] = rgbOf(c); return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255; };
+  function mix(a, b, t, al = 1) { const A = rgbOf(a), B = rgbOf(b); return `rgba(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',')},${al})`; }
+  function ballSprite(col, n = 96) {
+    const cv = document.createElement('canvas'); cv.width = cv.height = n; const c = cv.getContext('2d'), r = n / 2;
+    const gr = c.createRadialGradient(r * 0.68, r * 0.62, r * 0.05, r, r, r);
+    gr.addColorStop(0, mix(col, '#ffffff', 0.62)); gr.addColorStop(0.28, mix(col, '#ffffff', 0.12)); gr.addColorStop(0.72, col); gr.addColorStop(1, mix(col, '#000000', 0.55));
+    c.fillStyle = gr; c.beginPath(); c.arc(r, r, r - 0.5, 0, 2 * Math.PI); c.fill();
+    return cv;
+  }
+  function glowSprite(col, n = 64, core = null) {
+    const cv = document.createElement('canvas'); cv.width = cv.height = n; const c = cv.getContext('2d'), r = n / 2;
+    const gr = c.createRadialGradient(r, r, 0, r, r, r);
+    if (core) gr.addColorStop(0, core); gr.addColorStop(core ? 0.12 : 0, mix(col, col, 0, 0.9)); gr.addColorStop(0.35, mix(col, col, 0, 0.35)); gr.addColorStop(1, mix(col, col, 0, 0));
+    c.fillStyle = gr; c.fillRect(0, 0, n, n); return cv;
+  }
+  let SP = null, bgCv = null, grain = null;
+  function sprites() {
+    SP = { p: ballSprite(T.proton), n: ballSprite(T.neutron), nuc: ballSprite(T.pos), halo: glowSprite(T.alpha),
+      flash: glowSprite(T.zns, 64, T.dark ? '#f2fff8' : mix(T.zns, '#ffffff', 0.55)), src: glowSprite(T.dark ? '#ffcf70' : '#e08a1e', 32, '#fff6dc') };
+    if (!grain) {
+      grain = document.createElement('canvas'); grain.width = grain.height = 160; const g = grain.getContext('2d'), im = g.createImageData(160, 160), r = rng(7);
+      for (let i = 0; i < im.data.length; i += 4) { const v = r() * 255; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; }
+      g.putImageData(im, 0, 0);
+    }
+    bgCv = null;
+  }
+  // the scene's backdrop: a dim evacuated chamber, darker toward the walls, with a faint grain
+  function chamber() {
+    const s = LY.scene;
+    if (bgCv && bgCv.width === Math.round(s.w * dpr) && bgCv.height === Math.round(s.h * dpr) && bgCv.key === (T.dark ? 'd' : 'l') + projScale()) return bgCv;
+    bgCv = document.createElement('canvas'); bgCv.width = Math.max(1, Math.round(s.w * dpr)); bgCv.height = Math.max(1, Math.round(s.h * dpr)); bgCv.key = (T.dark ? 'd' : 'l') + projScale();
+    const c = bgCv.getContext('2d'); c.scale(dpr, dpr);
+    const gr = c.createRadialGradient(s.w * 0.55, s.h * 0.5, 0, s.w * 0.55, s.h * 0.5, Math.hypot(s.w, s.h) * 0.62);
+    gr.addColorStop(0, T.chIn); gr.addColorStop(0.55, mix(T.chIn, T.chOut, 0.35)); gr.addColorStop(1, T.chOut);
+    c.fillStyle = gr; c.fillRect(0, 0, s.w, s.h);
+    c.globalAlpha = T.dark ? 0.045 : 0.035; c.globalCompositeOperation = T.dark ? 'screen' : 'multiply';
+    c.fillStyle = c.createPattern(grain, 'repeat'); c.fillRect(0, 0, s.w, s.h);
+    return bgCv;
+  }
+  function rng(seed) { let x = (seed >>> 0) || 1; return () => { x ^= x << 13; x >>>= 0; x ^= x >>> 17; x ^= x << 5; x >>>= 0; return x / 4294967296; }; }
+  // Nucleons as hard spheres of radius 0.85 fm (the proton charge radius), centers kept inside R − 0.85 fm so the
+  // cluster fills the nuclear radius R = 1.2 A^(1/3) fm; a random close packing, relaxed so spheres barely touch.
+  const RN = 0.85, nucCache = new Map();
+  function nucleons(Z, A) {
+    const key = Z + '/' + A; if (nucCache.has(key)) return nucCache.get(key);
+    const r = rng(A * 7919 + Z * 104729 + 3), Rc = Math.max(0, nucR(A) - RN), P = [];
+    if (A === 4) { const d = 1.04; for (const v of [[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]]) P.push(v.map((q) => q * d / Math.sqrt(3))); }
+    else {
+      for (let i = 0; i < A; i++) { let x, y, z; do { x = 2 * r() - 1; y = 2 * r() - 1; z = 2 * r() - 1; } while (x * x + y * y + z * z > 1); P.push([x * Rc, y * Rc, z * Rc]); }
+      const dmin = 1.72;
+      for (let it = 0; it < 70 && A > 1; it++) {
+        for (let i = 0; i < A; i++) for (let j = i + 1; j < A; j++) {
+          const a = P[i], b = P[j], dx = b[0] - a[0], dy = b[1] - a[1], dz = b[2] - a[2], d2 = dx * dx + dy * dy + dz * dz;
+          if (d2 < dmin * dmin && d2 > 1e-12) { const d = Math.sqrt(d2), k = 0.5 * (dmin - d) / d; a[0] -= k * dx; a[1] -= k * dy; a[2] -= k * dz; b[0] += k * dx; b[1] += k * dy; b[2] += k * dz; }
+        }
+        for (const q of P) { const d = Math.hypot(q[0], q[1], q[2]); if (d > Rc) { const k = Rc / d; q[0] *= k; q[1] *= k; q[2] *= k; } }
+      }
+    }
+    const idx = P.map((_, i) => i); for (let i = idx.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [idx[i], idx[j]] = [idx[j], idx[i]]; }
+    const out = P.map((q, i) => ({ x: q[0], y: q[1], z: q[2], p: false, ph: [r() * 6.283, r() * 6.283, r() * 6.283], w: 1.7 + r() * 1.6 }));
+    for (let i = 0; i < Math.min(Z, A); i++) out[idx[i]].p = true;
+    nucCache.set(key, out); return out;
+  }
+  // 3×3 rotations; screen X = cx + x sc, Y = cy − y sc, depth z toward the viewer
+  const rotY = (a) => { const c = Math.cos(a), s = Math.sin(a); return [c, 0, s, 0, 1, 0, -s, 0, c]; };
+  const rotX = (a) => { const c = Math.cos(a), s = Math.sin(a); return [1, 0, 0, 0, c, -s, 0, s, c]; };
+  const mmul = (A, B) => { const o = new Array(9); for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) o[i * 3 + j] = A[i * 3] * B[j] + A[i * 3 + 1] * B[3 + j] + A[i * 3 + 2] * B[6 + j]; return o; };
+  const now_s = () => (reduce ? 0 : performance.now() / 1000);
+  // draw a cluster of nucleons centered at screen (X, Y) with px per fm k, rotated by M; returns false when too small to resolve
+  function drawCluster(c, list, X, Y, k, M, jig) {
+    const rpx = RN * k; if (rpx < 1.1) return false;
+    const t = now_s(), arr = [];
+    for (const n of list) {
+      let x = n.x, y = n.y, z = n.z;
+      if (jig && !reduce) { const a = 0.12; x += a * Math.sin(n.w * t + n.ph[0]); y += a * Math.sin(n.w * 1.13 * t + n.ph[1]); z += a * Math.sin(n.w * 0.91 * t + n.ph[2]); }
+      arr.push([M[0] * x + M[1] * y + M[2] * z, M[3] * x + M[4] * y + M[5] * z, M[6] * x + M[7] * y + M[8] * z, n.p]);
+    }
+    arr.sort((a, b) => a[2] - b[2]);
+    for (const q of arr) c.drawImage(q[3] ? SP.p : SP.n, X + q[0] * k - rpx, Y - q[1] * k - rpx, 2 * rpx, 2 * rpx);
+    return true;
+  }
+  const ALPHA4 = (() => { const l = nucleons(2, 4); l.forEach((n, i) => { n.p = i < 2; }); return l; })();
+  // the alpha: 2 protons and 2 neutrons, to scale (radius 1.2·4^(1/3) = 1.9 fm) but never under a few pixels
+  function drawAlpha(c, X, Y, sc, ps, M0) {
+    const Ra = nucR(4), k = Math.max(sc, 3.4 * ps / Ra), t = now_s(), R = Ra * k;
+    const hr = R * 1.5 + 7 * ps; c.globalAlpha = 0.6; c.drawImage(SP.halo, X - hr, Y - hr, 2 * hr, 2 * hr); c.globalAlpha = 1;
+    const M = mmul(M0 || rotY(0), mmul(rotY(1.1 * t + 0.4), rotX(0.7 * t + 0.9)));
+    if (!drawCluster(c, ALPHA4, X, Y, k, M, false)) c.drawImage(SP.halo, X - R * 1.4, Y - R * 1.4, R * 2.8, R * 2.8);
+  }
+  // the 3D view: v3.t eases from 0 (flat, side on) to 1 (tilted by the user's yaw and pitch)
+  const v3 = { on: false, t: 0, psi: -0.5, chi: 0.3 };
+  const v3Active = () => S.mode === 'single' && S.model === 'nuc';
+  function camM() { const u = v3Active() ? v3.t : 0, k = u * u * (3 - 2 * u); return { k, M: k ? mmul(rotX(k * v3.chi), rotY(k * v3.psi)) : [1, 0, 0, 0, 1, 0, 0, 0, 1] }; }
+  const P3 = (g, M, x, y, z) => [g.cx + (M[0] * x + M[1] * y + M[2] * z) * g.sc, g.cy - (M[3] * x + M[4] * y + M[5] * z) * g.sc, M[6] * x + M[7] * y + M[8] * z];
   const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
   const trails = document.createElement('canvas'), tctx = trails.getContext('2d');
   let W = 0, Hh = 0, LY = null;
@@ -611,13 +718,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- trails (beam tracks, fading) ----------
   function trailsClear() { tctx.setTransform(1, 0, 0, 1, 0, 0); tctx.clearRect(0, 0, trails.width, trails.height); }
-  function trackPath(c, a, g, wEnd) {
+  function trackPath(c, a, g, wEnd, M) {
     c.beginPath();
     if (a.kind === 'nuc') {
       const o = a.o, w0 = a.w0, w1 = wEnd === undefined ? a.w1 : wEnd, n = 64;
       // denser sampling near closest approach: uniform in w is already good for hyperbolas
       for (let i = 0; i <= n; i++) {
-        const w = w0 + (w1 - w0) * i / n, p = o.pos(w), px = g.cx + p[0] * g.sc, py = g.cy - p[1] * g.sc;
+        const w = w0 + (w1 - w0) * i / n, p = o.pos(w);
+        const [px, py] = M ? P3(g, M, p[0], p[1], 0) : [g.cx + p[0] * g.sc, g.cy - p[1] * g.sc];
         i ? c.lineTo(px, py) : c.moveTo(px, py);
       }
     } else {
@@ -643,13 +751,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     tctx.restore();
   }
   const flashes = [];
-  function ringFlash(th, b) { flashes.push({ th, sg: b < 0 ? -1 : 1, t: performance.now() / 1000 }); if (flashes.length > 120) flashes.shift(); }
+  function ringFlash(th, b) { flashes.push({ th, sg: b < 0 ? -1 : 1, t: performance.now() / 1000, r: Math.random() - 0.5 }); if (flashes.length > 120) flashes.shift(); }
 
   // ---------- drawing ----------
   function drawAll() {
     if (!T || !LY) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    ctx.drawImage(chamber(), LY.scene.x, LY.scene.y, LY.scene.w, LY.scene.h);
     drawScene();
     drawPlot();
     // divider
@@ -681,20 +790,33 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   function drawScene() {
-    const g = sceneGeom(), c = ctx, ps = g.ps, s = g.s, D = Dnow();
+    const g = sceneGeom(), c = ctx, ps = g.ps, s = g.s, D = Dnow(), cm = camM();
     c.save(); c.beginPath(); c.rect(s.x, s.y, s.w, s.h); c.clip();
     // beam axis
-    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.setLineDash([4, 5]);
-    c.beginPath(); c.moveTo(s.x, g.cy + 0.5); c.lineTo(s.x + s.w, g.cy + 0.5); c.stroke(); c.setLineDash([]);
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.setLineDash([4, 5]); c.beginPath();
+    if (cm.k) { const L = g.far / g.sc, a = P3(g, cm.M, -L, 0, 0), b = P3(g, cm.M, L, 0, 0); c.moveTo(a[0], a[1]); c.lineTo(b[0], b[1]); }
+    else { c.moveTo(s.x, g.cy + 0.5); c.lineTo(s.x + s.w, g.cy + 0.5); }
+    c.stroke(); c.setLineDash([]);
 
     if (S.mode === 'beam') drawBeamBand(g);
+    const cone = S.mode === 'single' && S.model === 'nuc' && cm.k > 0.01;
+    if (cone) drawCone(g, D, cm, false);
     // target
-    if (S.model === 'plum') drawPudding(g); else drawNucleus(g, D);
+    if (S.model === 'plum') drawPudding(g); else drawNucleus(g, D, cm);
     if (S.mode === 'beam') {
       drawRing(g);
       c.drawImage(trails, 0, 0, trails.width, trails.height, 0, 0, W, Hh);
       for (const f of flights) drawFlying(f, g, 0.9);
-    } else drawSingle(g, D);
+      drawApparatus(g);
+    } else {
+      if (cone) drawCone(g, D, cm, true);
+      drawSingle(g, D, cm);
+      if (S.model === 'nuc' && cm.k < 0.02) drawZoom(g);
+    }
+    if (S.model === 'plum') {
+      const t = tgt(), px = 2 * Rnuc() * g.sc;
+      label(c, `${t.sym ? t.name.toLowerCase() : 'this'} nucleus at this scale: ${px.toPrecision(2)} px across`, s.x + s.w - 10 * ps, s.y + s.h - 16 * ps, T.muted, 'right', 'middle');
+    }
     drawScaleBar(g);
     c.restore();
   }
@@ -706,33 +828,86 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.fillStyle = T.ink; c.font = `${11 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
     c.fillText(fmtLen(L, 3), x0 + px + 6 * ps, y0 + 3 * ps);
   }
-  function drawNucleus(g, D) {
+  // the nucleus as its Z protons and A − Z neutrons, k px per fm, slowly turning
+  function paintNucleus(c, X, Y, k, M0) {
+    const t = tgt(), R = Rnuc(), rpx = R * k;
+    const sh = c.createRadialGradient(X, Y, 0, X, Y, rpx * 1.04);
+    sh.addColorStop(0, mix(T.pos, '#000000', 0.42)); sh.addColorStop(0.8, mix(T.pos, '#000000', T.dark ? 0.5 : 0.35, 0.85)); sh.addColorStop(1, mix(T.pos, '#000000', 0.5, 0));
+    const M = mmul(M0 || [1, 0, 0, 0, 1, 0, 0, 0, 1], mmul(rotX(0.35), rotY(0.16 * now_s() + 0.5)));
+    const list = nucleons(t.Z, t.A);
+    if (RN * k >= 1.1) { c.fillStyle = sh; c.beginPath(); c.arc(X, Y, rpx * 1.04, 0, 2 * Math.PI); c.fill(); }
+    if (!drawCluster(c, list, X, Y, k, M, true)) c.drawImage(SP.nuc, X - rpx, Y - rpx, 2 * rpx, 2 * rpx);
+  }
+  function drawNucleus(g, D, cm) {
     const c = ctx, ps = g.ps, t = tgt();
     const rc = Rcontact() * g.sc, rn = Math.max(3 * ps, Rnuc() * g.sc);
     if (rc > 3) { c.fillStyle = T.pos; c.globalAlpha = 0.08; c.beginPath(); c.arc(g.cx, g.cy, rc, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 0.5; c.setLineDash([2, 3]); c.strokeStyle = T.pos; c.lineWidth = 1; c.stroke(); c.setLineDash([]); c.globalAlpha = 1; }
-    c.fillStyle = T.pos; c.beginPath(); c.arc(g.cx, g.cy, rn, 0, 2 * Math.PI); c.fill();
+    paintNucleus(c, g.cx, g.cy, rn / Rnuc(), cm && cm.k ? cm.M : null);
     const txt = `${t.sym ? t.sym + ' nucleus, ' : ''}Z = ${t.Z}`;
     const lx = g.cx + Math.max(rn, rc) + 6 * ps;
     c.font = `${11 * ps}px ${T.mono}`;
     if (lx + c.measureText(txt).width + 6 < g.s.x + g.s.w) label(c, txt, lx, g.cy + 13 * ps, T.pos, 'left', 'middle');
     else label(c, txt, g.cx, g.cy + Math.max(rn, rc) + 14 * ps, T.pos, 'center', 'middle');
   }
+  // inset: the nucleus and an alpha magnified together, the same zoom for both
+  function drawZoom(g) {
+    const c = ctx, ps = g.ps, s = g.s, t = tgt(), R = Rnuc();
+    const bh = Math.min(s.h * 0.3, s.w * 0.24, 170 * ps), bw = 1.3 * bh; if (bh < 80) return;
+    const kz = bh * 0.3 / R, zoom = kz / g.sc; if (zoom < 1.3) return;
+    const x0 = s.x + s.w - bw - 10 * ps, y0 = S.b < 0 ? s.y + 10 * ps : s.y + s.h - bh - 10 * ps;
+    c.save();
+    c.beginPath(); c.roundRect ? c.roundRect(x0, y0, bw, bh, 8 * ps) : c.rect(x0, y0, bw, bh);
+    c.fillStyle = T.canvas; c.globalAlpha = 0.92; c.fill(); c.globalAlpha = 1; c.strokeStyle = T.line; c.lineWidth = 1; c.stroke(); c.clip();
+    const nx = x0 + bw - 0.38 * bh, ny = y0 + 0.47 * bh, ax = x0 + 0.2 * bh, ra = nucR(4) * Math.max(kz, 3.4 * ps / nucR(4));
+    paintNucleus(c, nx, ny, kz, null);
+    drawAlpha(c, ax, ny, kz, ps, null);
+    const small = bh < 125 * ps, zs = zoom < 3 ? zoom.toFixed(1) : String(Math.round(zoom));
+    c.font = `${(small ? 9 : 10) * ps}px ${T.mono}`; c.textBaseline = 'middle';
+    c.fillStyle = T.muted; c.textAlign = 'left'; c.fillText(small ? `×${zs}` : `zoom ×${zs}`, x0 + 7 * ps, y0 + 11 * ps);
+    // counts of protons and neutrons, in their colors
+    const two = (a, b, x, y, al) => { const wa = c.measureText(a).width, wb = c.measureText(b).width, x1 = al === 'right' ? x - wa - wb : x - (wa + wb) / 2; c.textAlign = 'left'; c.fillStyle = mix(T.proton, T.ink, 0.25); c.fillText(a, x1, y); c.fillStyle = mix(T.neutron, T.ink, 0.45); c.fillText(b, x1 + wa, y); };
+    if (small) { c.textAlign = 'center'; c.fillStyle = T.muted; c.fillText('alpha', ax, ny + ra + 9 * ps); two(`${t.Z} p`, ` + ${t.A - t.Z} n`, x0 + bw - 7 * ps, y0 + 11 * ps, 'right'); }
+    else { c.textAlign = 'center'; c.fillStyle = T.muted; c.fillText('alpha', ax, ny - ra - 9 * ps); two('2 p', ' + 2 n', ax, ny + ra + 10 * ps, 'center'); two(`${t.Z} p`, ` + ${t.A - t.Z} n`, x0 + bw - 8 * ps, y0 + bh - 23 * ps, 'right'); }
+    // scale bar
+    const L = nice(bh * 0.3 / kz), px = L * kz, bx = x0 + 8 * ps, by = y0 + bh - 9 * ps;
+    c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(bx, by - 3 * ps); c.lineTo(bx, by); c.lineTo(bx + px, by); c.lineTo(bx + px, by - 3 * ps); c.stroke();
+    c.fillStyle = T.ink; c.textAlign = 'left'; c.fillText(`${trim(L.toPrecision(3))} fm`, bx + px + 5 * ps, by - 1 * ps);
+    c.restore();
+  }
+  // electrons of the Thomson atom: Z fixed spots inside the sphere (unit radius), drawn as dots
+  const elCache = new Map();
+  function electrons(Z) {
+    if (elCache.has(Z)) return elCache.get(Z);
+    const r = rng(Z * 131 + 17), out = [];
+    for (let i = 0; i < Z; i++) { let x, y, z; do { x = 2 * r() - 1; y = 2 * r() - 1; z = 2 * r() - 1; } while (x * x + y * y + z * z > 0.85); out.push({ x, y, z, ph: r() * 6.283, w: 0.8 + r() }); }
+    out.sort((a, b) => a.z - b.z); elCache.set(Z, out); return out;
+  }
   function drawPudding(g) {
-    const c = ctx, ps = g.ps, R = atomR() * g.sc, t = tgt();
-    c.fillStyle = T.pud; c.globalAlpha = 0.75; c.beginPath(); c.arc(g.cx, g.cy, R, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1;
-    c.strokeStyle = T.pos; c.lineWidth = 1.2 * ps; c.stroke();
-    // electrons ("plums") at fixed scattered spots
-    const n = Math.min(t.Z, 48); c.fillStyle = T.neg;
-    for (let i = 0; i < n; i++) {
-      const u = ((i * 0.6180339887) % 1), v = ((i * 0.7548776662 + 0.31) % 1);
-      const rr = Math.sqrt(u) * 0.9 * R, an = 2 * Math.PI * v;
-      c.beginPath(); c.arc(g.cx + rr * Math.cos(an), g.cy + rr * Math.sin(an), 1.8 * ps, 0, 2 * Math.PI); c.fill();
+    const c = ctx, ps = g.ps, R = atomR() * g.sc, t = tgt(), X = g.cx, Y = g.cy;
+    // a uniform ball of positive charge, seen through: densest along the center, where the path through it is longest (∝ √(R² − r²))
+    const gr = c.createRadialGradient(X, Y, 0, X, Y, R);
+    for (let i = 0; i <= 10; i++) { const r = i / 10; gr.addColorStop(r, mix(T.pud, T.pud, 0, 0.16 + 0.74 * Math.sqrt(Math.max(0, 1 - r * r)))); }
+    c.fillStyle = gr; c.beginPath(); c.arc(X, Y, R, 0, 2 * Math.PI); c.fill();
+    const hl = c.createRadialGradient(X - 0.35 * R, Y - 0.4 * R, 0, X - 0.35 * R, Y - 0.4 * R, 1.1 * R);
+    hl.addColorStop(0, `rgba(255,255,255,${T.dark ? 0.09 : 0.32})`); hl.addColorStop(1, 'rgba(255,255,255,0)');
+    c.fillStyle = hl; c.fill();
+    c.strokeStyle = T.pos; c.lineWidth = 1.2 * ps; c.globalAlpha = 0.6; c.stroke(); c.globalAlpha = 1;
+    // electrons ("plums") at fixed spots, nearer ones larger; a slight jiggle about their places
+    const tt = now_s();
+    for (const e of electrons(Math.min(t.Z, 100))) {
+      const j = 0.012, ex = X + (e.x + j * Math.sin(e.w * tt + e.ph)) * R, ey = Y - (e.y + j * Math.cos(1.3 * e.w * tt + e.ph)) * R, d = (e.z + 1) / 2;
+      const rr = (1.2 + 1.1 * d) * ps;
+      c.fillStyle = T.neg; c.globalAlpha = 0.16; c.beginPath(); c.arc(ex, ey, rr * 2.4, 0, 2 * Math.PI); c.fill();
+      c.globalAlpha = 0.55 + 0.45 * d; c.beginPath(); c.arc(ex, ey, rr, 0, 2 * Math.PI); c.fill();
     }
+    c.globalAlpha = 1;
     label(c, `${t.sym ? t.sym + ' atom' : 'Atom'}, +${t.Z}e spread through R = ${fmtLen(atomR())}`, g.cx, g.cy - R - 12 * ps, T.pos, 'center', 'middle');
   }
   function drawBeamBand(g) {
     const c = ctx, ps = g.ps, s = g.s, bm = (S.model === 'plum' ? atomR() : bmax()) * g.sc;
-    c.fillStyle = T.alpha; c.globalAlpha = 0.07; c.fillRect(s.x, g.cy - bm, Math.max(0, g.cx - g.ring - s.x), 2 * bm); c.globalAlpha = 1;
+    const x1 = Math.max(s.x, g.cx - g.ring), bg = c.createLinearGradient(s.x, 0, x1, 0);
+    bg.addColorStop(0, mix(T.alpha, T.alpha, 0, 0.12)); bg.addColorStop(1, mix(T.alpha, T.alpha, 0, 0.04));
+    c.fillStyle = bg; c.fillRect(s.x, g.cy - bm, Math.max(0, x1 - s.x), 2 * bm);
     // beam edge handle (nuclear model only)
     if (S.model === 'nuc') {
       const hot = (drag && drag.id === 'bm') || (!drag && hoverId === 'bm');
@@ -749,88 +924,197 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const cnt = new Float64Array(nb);
     for (let i = 0; i < nAng; i++) cnt[Math.min(nb - 1, Math.floor(angles[i] / Math.PI * nb))]++;
     let mx = 0; for (const v of cnt) mx = Math.max(mx, v);
+    // the zinc sulfide screen: a phosphor coated band, glowing where it has been struck
+    c.lineWidth = lw + 2 * ps; c.strokeStyle = mix(T.znsBand, T.dark ? '#000000' : '#5a6575', 0.3);
+    c.beginPath(); c.arc(g.cx, g.cy, R, 0, 2 * Math.PI); c.stroke();
+    c.lineWidth = lw; c.strokeStyle = T.znsBand; c.stroke();
     for (let i = 0; i < nb; i++) {
       const a0 = i * Math.PI / nb, a1 = (i + 1) * Math.PI / nb;
       const f = mx > 0 && cnt[i] > 0 ? 0.18 + 0.82 * Math.log1p(cnt[i]) / Math.log1p(mx) : 0;
+      if (f <= 0) continue;
       for (const sg of [1, -1]) {
         c.beginPath(); c.arc(g.cx, g.cy, R, -sg * a0, -sg * a1, sg > 0); c.lineWidth = lw;
-        c.strokeStyle = T.gridStrong; c.globalAlpha = 1; c.stroke();
-        if (f > 0) { c.strokeStyle = T.accent; c.globalAlpha = f; c.stroke(); }
+        c.strokeStyle = T.zns; c.globalAlpha = f * (T.dark ? 0.8 : 0.7); c.stroke();
       }
     }
     c.globalAlpha = 1;
-    // flashes
-    const now = performance.now() / 1000;
+    // a microscope looks at the screen (Geiger and Marsden counted the flashes by eye)
+    drawScope(c, g.cx, g.cy, R + lw / 2 + 2 * ps, -0.96, ps, 1);
+    // scintillations: a brief point of light where each alpha lands
+    const now = performance.now() / 1000, prev = c.globalCompositeOperation;
+    if (T.dark) c.globalCompositeOperation = 'lighter';
     for (const fl of flashes) {
       const age = now - fl.t; if (age > 0.6) continue;
-      const x = g.cx + R * Math.cos(fl.th), y = g.cy - fl.sg * R * Math.sin(fl.th);
-      c.fillStyle = T.alpha; c.globalAlpha = 1 - age / 0.6;
-      c.beginPath(); c.arc(x, y, (3 + 5 * age) * ps, 0, 2 * Math.PI); c.fill();
+      const rr = R + fl.r * lw * 0.7, x = g.cx + rr * Math.cos(fl.th), y = g.cy - fl.sg * rr * Math.sin(fl.th), sz = (9 + 7 * Math.exp(-age / 0.08)) * ps;
+      c.globalAlpha = Math.exp(-age / 0.16); c.drawImage(SP.flash, x - sz, y - sz, 2 * sz, 2 * sz);
     }
-    c.globalAlpha = 1;
+    c.globalCompositeOperation = prev; c.globalAlpha = 1;
     c.fillStyle = T.muted; c.font = `${10.5 * ps}px ${T.mono}`; c.textBaseline = 'middle';
     const lab = (a, t, al) => { c.textAlign = al; c.fillText(t, g.cx + (R + lw) * Math.cos(a), g.cy - (R + lw + 4 * ps) * Math.sin(a)); };
     lab(0.02, '0°', 'left'); lab(Math.PI / 2, '90°', 'center'); lab(Math.PI - 0.02, '180°', 'right');
     c.textAlign = 'left'; c.textBaseline = 'top';
-    c.fillText('detector ring, not to scale', g.s.x + 10 * ps, g.s.y + 10 * ps);
+    c.fillText('zinc sulfide screen, not to scale', g.s.x + 10 * ps, g.s.y + 10 * ps);
   }
-  function drawFlying(f, g, alpha) {
-    const c = ctx, ps = g.ps, now = performance.now() / 1000;
-    let p = Math.max(0, Math.min(1, (now - f.start) / f.dur));
-    const tt = f.t0 + p * (f.t1 - f.t0);
-    let x, y;
-    c.save(); c.strokeStyle = T.alpha; c.lineWidth = 1.6 * ps; c.globalAlpha = alpha;
-    if (f.kind === 'nuc') {
-      const w = f.o.wOfT(tt); trackPath(c, f, g, w); c.stroke(); [x, y] = f.o.pos(w);
-    } else {
-      trackPath(c, f, g, tt); c.stroke();
-      const R = atomR(), xout = Math.sqrt(Math.max(0, R * R - f.b * f.b));
-      const th = S.mode === 'single' ? f.theta : 0, sg = f.b < 0 ? -1 : 1;
-      if (tt <= xout || Math.abs(f.b) >= R) { x = tt; y = f.b; } else { const L = tt - xout; x = xout + L * Math.cos(th); y = f.b + sg * L * Math.sin(th); }
-    }
-    c.globalAlpha = 1; c.fillStyle = T.alpha;
-    c.beginPath(); c.arc(g.cx + x * g.sc, g.cy - y * g.sc, 4 * ps, 0, 2 * Math.PI); c.fill();
+  // a small microscope at angle a, its objective at radius r0 from (X, Y), pointing at the center
+  function drawScope(c, X, Y, r0, a, ps, z) {
+    ps *= z; const ca = Math.cos(a), sa = -Math.sin(a), L = 20 * ps, w = 4.5 * ps;
+    c.save(); c.translate(X + r0 * ca, Y + r0 * sa); c.rotate(Math.atan2(sa, ca));
+    c.fillStyle = T.lead; c.strokeStyle = mix(T.lead, '#000000', 0.35); c.lineWidth = 1;
+    c.fillRect(0, -w * 0.45, 4 * ps, w * 0.9);                       // objective
+    c.fillRect(4 * ps, -w / 2, L, w); c.strokeRect(4 * ps, -w / 2, L, w);   // tube
+    c.fillRect(4 * ps + L, -w * 0.65, 5 * ps, w * 1.3);               // eyepiece
     c.restore();
   }
-  function drawSingle(g, D) {
+  // inset in beam mode: a sketch of the real apparatus, source in a lead block, gold leaf, screen and microscope
+  function drawApparatus(g) {
+    const c = ctx, s = g.s;
+    for (const f of [1, 0.86, 0.74]) {
+      const u = g.ps * f, bw = 190 * u, bh = 108 * u, x0 = s.x + s.w - bw - 8 * g.ps, y0 = s.y + 8 * g.ps;
+      const qx = Math.max(x0, Math.min(g.cx, x0 + bw)), qy = Math.max(y0, Math.min(g.cy, y0 + bh));
+      if (bw > s.w * 0.42 || Math.hypot(qx - g.cx, qy - g.cy) < g.ring + 9 * g.ps) continue;
+      c.save();
+      c.beginPath(); c.roundRect ? c.roundRect(x0, y0, bw, bh, 7 * u) : c.rect(x0, y0, bw, bh);
+      c.fillStyle = T.canvas; c.globalAlpha = 0.9; c.fill(); c.globalAlpha = 1; c.strokeStyle = T.line; c.lineWidth = 1; c.stroke(); c.clip();
+      const P = (a, b) => [x0 + a * u, y0 + b * u], F = P(102, 60), rr = 28 * u;
+      c.font = `${9.5 * u}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'middle';
+      c.fillText('the apparatus, a sketch', x0 + 8 * u, y0 + 12 * u);
+      // lead block with a bore, the source glowing inside
+      const L0 = P(10, 48); c.fillStyle = T.lead; c.fillRect(L0[0], L0[1], 30 * u, 24 * u);
+      c.fillStyle = mix(T.lead, '#ffffff', 0.18); c.fillRect(L0[0], L0[1], 30 * u, 2.5 * u);
+      c.fillStyle = mix(T.lead, '#000000', 0.5); c.fillRect(L0[0] + 12 * u, F[1] - 1.2 * u, 18 * u, 2.4 * u);
+      const sz = 7 * u; c.drawImage(SP.src, L0[0] + 12 * u - sz, F[1] - sz, 2 * sz, 2 * sz);
+      // beam to the foil
+      c.strokeStyle = T.alpha; c.globalAlpha = 0.7; c.lineWidth = 1.4 * u; c.beginPath(); c.moveTo(L0[0] + 30 * u, F[1]); c.lineTo(F[0], F[1]); c.stroke(); c.globalAlpha = 1;
+      // screen: a ring around the foil with a gap for the incoming beam
+      c.lineWidth = 4 * u; c.strokeStyle = T.znsBand; c.beginPath(); c.arc(F[0], F[1], rr, -Math.PI + 0.3, Math.PI - 0.3); c.stroke();
+      c.lineWidth = 1; c.strokeStyle = mix(T.znsBand, T.dark ? '#000000' : '#5a6575', 0.35); c.stroke();
+      drawScope(c, F[0], F[1], rr + 3 * u, -0.8, u, 0.7);
+      // gold leaf: thin, slightly crumpled, with a warm metallic sheen
+      const lg = c.createLinearGradient(F[0] - 3 * u, 0, F[0] + 3 * u, 0);
+      lg.addColorStop(0, mix(T.gold, '#000000', 0.35)); lg.addColorStop(0.45, mix(T.gold, '#ffffff', 0.45)); lg.addColorStop(1, mix(T.gold, '#000000', 0.2));
+      c.fillStyle = lg; c.beginPath();
+      for (let i = 0; i <= 16; i++) { const v = -15 + 30 * i / 16; c.lineTo(F[0] - 1.6 * u + 1.1 * u * Math.sin(v * 0.55 + 1), F[1] + v * u); }
+      for (let i = 16; i >= 0; i--) { const v = -15 + 30 * i / 16; c.lineTo(F[0] + 1.6 * u + 1.1 * u * Math.sin(v * 0.55 + 1.6), F[1] + v * u); }
+      c.closePath(); c.fill();
+      // the same flashes as on the big screen
+      const now = performance.now() / 1000;
+      for (const fl of flashes) {
+        const age = now - fl.t; if (age > 0.6) continue;
+        const x = F[0] + rr * Math.cos(fl.th), y = F[1] - fl.sg * rr * Math.sin(fl.th), z = 6 * u;
+        c.globalAlpha = Math.exp(-age / 0.16); c.drawImage(SP.flash, x - z, y - z, 2 * z, 2 * z);
+      }
+      c.globalAlpha = 1; c.fillStyle = T.muted;
+      c.textAlign = 'center'; c.fillText('source', L0[0] + 15 * u, F[1] + 22 * u); c.fillText('gold leaf', F[0], F[1] + rr + 11 * u);
+      c.textAlign = 'left'; c.fillText('ZnS', F[0] + rr + 8 * u, F[1] - 6 * u); c.fillText('screen', F[0] + rr + 8 * u, F[1] + 6 * u);
+      c.restore();
+      return;
+    }
+  }
+  // position along a flight now: w (nuclear) or the path coordinate (plum)
+  function flightAt(f) { const p = Math.max(0, Math.min(1, (performance.now() / 1000 - f.start) / f.dur)); return f.t0 + p * (f.t1 - f.t0); }
+  function plumXY(f, tt) {
+    const R = atomR(), xout = Math.sqrt(Math.max(0, R * R - f.b * f.b)), th = S.mode === 'single' ? f.theta : 0, sg = f.b < 0 ? -1 : 1;
+    if (tt <= xout || Math.abs(f.b) >= R) return [tt, f.b];
+    const L = tt - xout; return [xout + L * Math.cos(th), f.b + sg * L * Math.sin(th)];
+  }
+  function drawFlying(f, g, alpha, M) {
+    const c = ctx, ps = g.ps, tt = flightAt(f), Q = (p) => (M ? P3(g, M, p[0], p[1], 0) : [g.cx + p[0] * g.sc, g.cy - p[1] * g.sc]);
+    let pos, at;
+    c.save(); c.strokeStyle = T.alpha; c.lineWidth = 1.6 * ps; c.globalAlpha = alpha;
+    if (f.kind === 'nuc') { const w = f.o.wOfT(tt); trackPath(c, f, g, w, M); c.stroke(); pos = f.o.pos(w); at = (u) => f.o.pos(f.o.wOfT(u)); }
+    else { trackPath(c, f, g, tt); c.stroke(); pos = plumXY(f, tt); at = (u) => plumXY(f, u); }
+    // a soft trail: the last stretch of the path, brighter and wider toward the alpha
+    const span = (f.t1 - f.t0) * (S.mode === 'beam' ? 0.05 : 0.07), n = 10;
+    c.lineCap = 'round'; let prev = Q(at(Math.max(f.t0, tt - span)));
+    for (let i = 1; i <= n; i++) {
+      const q = Q(at(Math.max(f.t0, tt - span * (1 - i / n))));
+      c.globalAlpha = alpha * 0.55 * i / n; c.lineWidth = (1.4 + 3.6 * i / n) * ps;
+      c.beginPath(); c.moveTo(prev[0], prev[1]); c.lineTo(q[0], q[1]); c.stroke(); prev = q;
+    }
+    c.restore();
+    const X = Q(pos);
+    drawAlpha(c, X[0], X[1], g.sc, ps, M);
+  }
+  // 3D view: the other alphas with the same b, on a ring around the beam axis, and the cone they leave on
+  const NPHI = 8;
+  function drawCone(g, D, cm, front) {
+    const c = ctx, ps = g.ps, b = Math.abs(S.b), M = cm.M, k = cm.k, f0 = S.b < 0 ? Math.PI : 0;
+    if (b < 1e-9) return;
+    const o = orbit(b, D), L = g.far / g.sc, w0 = -o.wAt(L), w1 = o.wAt(L), n = 90, pts = [];
+    for (let i = 0; i <= n; i++) pts.push(o.pos(w0 + (w1 - w0) * i / n));
+    const rot = (p, f) => [p[0], p[1] * Math.cos(f), p[1] * Math.sin(f)];
+    c.save(); c.strokeStyle = T.alpha; c.lineWidth = 1.2 * ps;
+    for (let j = 1; j < NPHI; j++) {
+      const f = f0 + 2 * Math.PI * j / NPHI; let prev = null; c.beginPath();
+      for (const p of pts) { const r3 = rot(p, f), q = P3(g, M, r3[0], r3[1], r3[2]); if (prev && (prev[2] + q[2] > 0) === front) { c.moveTo(prev[0], prev[1]); c.lineTo(q[0], q[1]); } prev = q; }
+      c.globalAlpha = 0.3 * k; c.stroke();
+    }
+    c.restore();
+    if (!front) return;
+    const ring = (x, r, col, dash, lw) => {
+      c.strokeStyle = col; c.lineWidth = lw * ps; c.setLineDash(dash); c.beginPath(); let low = null;
+      for (let i = 0; i <= 72; i++) { const f = 2 * Math.PI * i / 72, q = P3(g, M, x, r * Math.cos(f), r * Math.sin(f)); i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1]); if (!low || q[1] > low[1]) low = q; }
+      c.globalAlpha = k; c.stroke(); c.setLineDash([]); c.globalAlpha = 1; return low;
+    };
+    const xr = (g.s.x + 30 * ps - g.cx) / g.sc;
+    const lowIn = ring(xr, b, T.accent, [], 1.4);
+    const wE = o.wAt(Math.min(L * 0.8, S.view * 0.7)), pE = o.pos(wE);
+    const lowOut = Math.abs(pE[1]) * g.sc > 2 ? ring(pE[0], Math.abs(pE[1]), T.equi, [5, 4], 1.4) : null;
+    // the other alphas, moving in step with the highlighted one
+    if (single && single.kind === 'nuc') {
+      const w = o.wOfT(flightAt(single)), p = o.pos(w);
+      c.fillStyle = T.alpha;
+      for (let j = 1; j < NPHI; j++) { const r3 = rot(p, f0 + 2 * Math.PI * j / NPHI), q = P3(g, M, r3[0], r3[1], r3[2]); c.globalAlpha = k * (0.45 + 0.35 * (q[2] > 0)); c.beginPath(); c.arc(q[0], q[1], 2.4 * ps, 0, 2 * Math.PI); c.fill(); }
+      c.globalAlpha = 1;
+    }
+    if (k > 0.9) {
+      label(c, 'ring of radius b around the beam axis', lowIn[0], lowIn[1] + 14 * ps, T.accent, 'left', 'middle');
+      if (lowOut) label(c, `all leave on a cone, θ = ${(deflect(b, D) * 180 / Math.PI).toFixed(1)}°`, Math.min(lowOut[0], g.s.x + g.s.w - 10 * ps), Math.min(lowOut[1] + 14 * ps, g.s.y + g.s.h - 34 * g.ps), T.equi, lowOut[0] > g.s.x + g.s.w * 0.6 ? 'right' : 'center', 'middle');
+    }
+  }
+  function drawSingle(g, D, cm) {
     const c = ctx, ps = g.ps, s = g.s, b = S.b, a = single;
-    const by = g.cy - b * g.sc;
+    const M = cm.M, Q = (x, y) => P3(g, M, x, y, 0), xr = (s.x + 30 * ps - g.cx) / g.sc;
+    let base = [s.x + 30 * ps, g.cy], top = [s.x + 30 * ps, g.cy - b * g.sc];
     if (S.model === 'nuc') {
       const th = deflect(b, D), rm = rMin(b, D);
-      // closest approach circle and D tick
-      c.strokeStyle = T.muted; c.lineWidth = 1 * ps; c.setLineDash([3, 4]);
+      if (cm.k) { base = Q(xr, 0); top = Q(xr, b); }
+      const fade = 1 - 0.75 * cm.k;      // the construction lines step back in the 3D view
+      // closest approach (a sphere: its outline is this circle from any direction) and D tick
+      c.globalAlpha = fade; c.strokeStyle = T.muted; c.lineWidth = 1 * ps; c.setLineDash([3, 4]);
       c.beginPath(); c.arc(g.cx, g.cy, rm * g.sc, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]);
       const rmA = b >= 0 ? Math.PI / 2 + th / 2 : -(Math.PI / 2 + th / 2);   // periapsis direction
-      const px = g.cx + rm * g.sc * Math.cos(rmA), py = g.cy - rm * g.sc * Math.sin(rmA);
+      const [px, py] = Q(rm * Math.cos(rmA), rm * Math.sin(rmA));
       // D tick on the axis (head on turning point)
-      const dx = g.cx - D * g.sc;
-      c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(dx, g.cy - 5 * ps); c.lineTo(dx, g.cy + 5 * ps); c.stroke();
-      label(c, 'D', dx, g.cy + 15 * ps, T.ink, 'center', 'middle', true);
+      const [dx, dy] = Q(-D, 0);
+      c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(dx, dy - 5 * ps); c.lineTo(dx, dy + 5 * ps); c.stroke();
+      if (cm.k < 0.5) label(c, 'D', dx, dy + 15 * ps, T.ink, 'center', 'middle', true);
+      c.globalAlpha = fade;
       // asymptotes
       const P = [-b * Math.tan(th / 2), b];        // where they cross
-      const Pp = [g.cx + P[0] * g.sc, g.cy - P[1] * g.sc], sg = b < 0 ? -1 : 1;
+      const Pp = Q(P[0], P[1]), sg = b < 0 ? -1 : 1, Lw = g.far / g.sc;
       c.strokeStyle = T.muted; c.lineWidth = 1 * ps; c.setLineDash([6, 5]);
-      c.beginPath(); c.moveTo(Pp[0], Pp[1]); c.lineTo(s.x + s.w, Pp[1]); c.stroke();
-      const L = g.far;
-      c.beginPath(); c.moveTo(Pp[0] - L * Math.cos(th) * 0.25, Pp[1] + sg * L * Math.sin(th) * 0.25); c.lineTo(Pp[0] + L * Math.cos(th), Pp[1] - sg * L * Math.sin(th)); c.stroke();
-      c.setLineDash([]);
+      const seg = (p1, p2) => { const A = Q(p1[0], p1[1]), B = Q(p2[0], p2[1]); c.beginPath(); c.moveTo(A[0], A[1]); c.lineTo(B[0], B[1]); c.stroke(); };
+      seg(P, [(s.x + s.w - g.cx) / g.sc, P[1]]);
+      seg([P[0] - Lw * Math.cos(th) * 0.25, P[1] - sg * Lw * Math.sin(th) * 0.25], [P[0] + Lw * Math.cos(th), P[1] + sg * Lw * Math.sin(th)]);
+      c.setLineDash([]); c.globalAlpha = 1;
       // trajectory: the full hyperbola, plus the moving alpha
       const o = orbit(b, D), w0 = -o.wAt(g.far / g.sc), w1 = o.wAt(g.far / g.sc);
       c.strokeStyle = T.alpha; c.lineWidth = 2.2 * ps; c.beginPath();
-      for (let i = 0; i <= 200; i++) { const w = w0 + (w1 - w0) * i / 200, p = o.pos(w), x = g.cx + p[0] * g.sc, y = g.cy - p[1] * g.sc; i ? c.lineTo(x, y) : c.moveTo(x, y); }
+      for (let i = 0; i <= 200; i++) { const w = w0 + (w1 - w0) * i / 200, p = o.pos(w), [x, y] = Q(p[0], p[1]); i ? c.lineTo(x, y) : c.moveTo(x, y); }
       c.globalAlpha = a ? 0.45 : 1; c.stroke(); c.globalAlpha = 1;
-      if (a) drawFlying(a, g, 1);
+      if (a) drawFlying(a, g, 1, cm.k ? M : null);
       // r_min marker
-      c.fillStyle = T.ink; c.beginPath(); c.arc(px, py, 2.5 * ps, 0, 2 * Math.PI); c.fill();
-      c.strokeStyle = T.ink; c.lineWidth = 1 * ps; c.setLineDash([2, 3]); c.beginPath(); c.moveTo(g.cx, g.cy); c.lineTo(px, py); c.stroke(); c.setLineDash([]);
+      c.globalAlpha = fade; c.fillStyle = T.ink; c.beginPath(); c.arc(px, py, 2.5 * ps, 0, 2 * Math.PI); c.fill();
+      c.strokeStyle = T.ink; c.lineWidth = 1 * ps; c.setLineDash([2, 3]); c.beginPath(); c.moveTo(g.cx, g.cy); c.lineTo(px, py); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
       const lx = (g.cx + px) / 2, ly = (g.cy + py) / 2;
-      label(c, 'r_min', lx + 6 * ps * Math.cos(rmA + Math.PI / 2), ly - 8 * ps, T.ink, 'left', 'middle');
+      if (cm.k < 0.5) label(c, 'r_min', lx + 6 * ps * Math.cos(rmA + Math.PI / 2), ly - 8 * ps, T.ink, 'left', 'middle');
       // angle arc at the crossing
-      const ar = 30 * ps;
+      const ar = 30 * ps / g.sc;
       c.strokeStyle = T.equi; c.lineWidth = 2 * ps; c.beginPath();
-      if (sg > 0) c.arc(Pp[0], Pp[1], ar, 0, -th, true); else c.arc(Pp[0], Pp[1], ar, 0, th, false);
+      for (let i = 0; i <= 40; i++) { const u = th * i / 40, [x, y] = Q(P[0] + ar * Math.cos(u), P[1] + sg * ar * Math.sin(u)); i ? c.lineTo(x, y) : c.moveTo(x, y); }
       c.stroke();
-      const mid = th / 2, tx = Pp[0] + (ar + 12 * ps) * Math.cos(mid), ty = Pp[1] - sg * (ar + 12 * ps) * Math.sin(mid);
+      const mid = th / 2, [tx, ty] = Q(P[0] + (ar + 12 * ps / g.sc) * Math.cos(mid), P[1] + sg * (ar + 12 * ps / g.sc) * Math.sin(mid));
       label(c, `θ = ${(th * 180 / Math.PI).toFixed(1)}°`, tx, ty, T.equi, Math.cos(mid) < -0.2 ? 'right' : 'left', 'middle', true);
     } else {
       // plum pudding single alpha: straight to the eye
@@ -841,15 +1125,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       label(c, `θ = ${fmtAng(o.theta)}: too small to see`, s.x + s.w - 10 * ps, g.cy - Math.abs(b) * g.sc * Math.sign(b || 1) - 14 * ps * Math.sign(b || 1), T.equi, 'right', 'middle', true);
     }
     // impact parameter: dimension line and draggable handle on the incoming path
-    const hx = s.x + 30 * ps, hot = (drag && drag.id === 'b') || (!drag && hoverId === 'b');
+    const [hx, by] = top, hot = (drag && drag.id === 'b') || (!drag && hoverId === 'b');
     c.strokeStyle = T.accent; c.lineWidth = 1.2 * ps;
-    c.beginPath(); c.moveTo(hx, g.cy); c.lineTo(hx, by); c.stroke();
-    c.beginPath(); c.moveTo(hx - 4 * ps, g.cy); c.lineTo(hx + 4 * ps, g.cy); c.stroke();
+    c.beginPath(); c.moveTo(base[0], base[1]); c.lineTo(hx, by); c.stroke();
+    c.beginPath(); c.moveTo(base[0] - 4 * ps, base[1]); c.lineTo(base[0] + 4 * ps, base[1]); c.stroke();
     c.fillStyle = T.canvas; c.lineWidth = (hot ? 2.4 : 1.6) * ps;
     c.beginPath(); c.arc(hx, by, (hot ? 6.5 : 5) * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
-    if (hot) { c.globalAlpha = 0.25; c.lineWidth = 8 * ps; c.beginPath(); c.moveTo(s.x, by); c.lineTo(hx + 50 * ps, by); c.stroke(); c.globalAlpha = 1; }
-    const lby = Math.abs(by - g.cy) > 24 * ps ? (by + g.cy) / 2 : (b >= 0 ? by - 14 * ps : by + 14 * ps);
+    if (hot) {
+      const A = cm.k && S.model === 'nuc' ? Q((s.x - g.cx) / g.sc, b) : [s.x, by], B = cm.k && S.model === 'nuc' ? Q(xr + 50 * ps / g.sc, b) : [hx + 50 * ps, by];
+      c.globalAlpha = 0.25; c.lineWidth = 8 * ps; c.beginPath(); c.moveTo(A[0], A[1]); c.lineTo(B[0], B[1]); c.stroke(); c.globalAlpha = 1;
+    }
+    const lby = Math.abs(by - base[1]) > 24 * ps ? (by + base[1]) / 2 : (b >= 0 ? by - 14 * ps : by + 14 * ps);
     label(c, `b = ${fmtLen(Math.abs(b))}`, hx + 10 * ps, lby, T.accent, 'left', 'middle', true);
+    if (cm.k > 0.9) label(c, 'drag the drawing to turn it', s.x + 10 * ps, s.y + 14 * ps, T.muted, 'left', 'middle');
   }
 
   // ---------- plot ----------
@@ -1077,6 +1365,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('zRow').hidden = S.target !== 'custom'; $('zc').value = S.Zc;
     $('secSingle').hidden = S.mode !== 'single'; $('secBeam').hidden = S.mode !== 'beam'; $('secPlot').hidden = S.mode !== 'beam';
     $('clear').hidden = S.mode !== 'beam';
+    $('v3d').hidden = !v3Active(); $('v3Hint').hidden = !(v3.on && v3Active());
     $('fire').textContent = S.mode === 'beam' ? 'Fire 100' : 'Fire again';
     $('rate').value = S.rate; $('bm').value = S.bm; $('ft').value = S.ft;
     $('nSr').setAttribute('aria-pressed', String(S.norm === 'sr')); $('nBin').setAttribute('aria-pressed', String(S.norm === 'bin'));
@@ -1141,6 +1430,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('nBin').addEventListener('click', () => { S.norm = 'bin'; syncUI(); });
   $('gFull').addEventListener('click', () => { S.range = 'full'; rebinAngles(); syncUI(); readouts(); });
   $('gSmall').addEventListener('click', () => { S.range = 'small'; rebinAngles(); syncUI(); readouts(); });
+  function set3D(on) {
+    v3.on = on; $('v3d').setAttribute('aria-pressed', String(on)); $('v3Hint').hidden = !(on && v3Active());
+    if (reduce) v3.t = on ? 1 : 0;
+    drawAll();
+  }
+  $('v3d').addEventListener('click', () => set3D(!v3.on));
   const playBtn = $('play');
   function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); if (on && single) single.start = performance.now() / 1000 - (single.pausedAt || 0); if (!on && single) single.pausedAt = performance.now() / 1000 - single.start; }
   playBtn.addEventListener('click', () => setPlaying(!playing));
@@ -1152,7 +1447,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function dragHandles() {
     const g = sceneGeom(); if (!g) return [];
     const ps = g.ps, out = [];
-    if (S.mode === 'single') out.push({ id: 'b', cursor: 'ns-resize', seg: [g.s.x, g.cy - S.b * g.sc, g.s.x + 70 * ps, g.cy - S.b * g.sc], set: (fm) => setB(fm) });
+    const cm = camM();
+    if (S.mode === 'single' && cm.k) {
+      // 3D view: the grip sits where the highlighted alpha's ring point projects; b follows the pointer's height
+      const xr = (g.s.x + 30 * ps - g.cx) / g.sc, t = P3(g, cm.M, xr, S.b, 0), y0 = P3(g, cm.M, xr, 0, 0)[1], y1 = P3(g, cm.M, xr, 1, 0)[1];
+      out.push({ id: 'b', cursor: 'ns-resize', seg: [t[0] - 16 * ps, t[1], t[0] + 50 * ps], set: (fm) => setB(fm), fromY: (Y) => (Y - y0) / (y1 - y0) });
+    } else if (S.mode === 'single') out.push({ id: 'b', cursor: 'ns-resize', seg: [g.s.x, g.cy - S.b * g.sc, g.s.x + 70 * ps, g.cy - S.b * g.sc], set: (fm) => setB(fm) });
     else if (S.model === 'nuc') { const y = g.cy - bmax() * g.sc; out.push({ id: 'bm', cursor: 'ns-resize', seg: [g.s.x, y, g.s.x + 70 * ps, y], set: (fm) => setBm(Math.abs(fm)) }); }
     return out;
   }
@@ -1173,19 +1473,32 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   let dragQ = null, dragFrame = false;
   can.addEventListener('pointermove', (ev) => {
     if (drag) {
-      const r = can.getBoundingClientRect(); dragQ = ev.clientY - r.top;
-      if (!dragFrame) { dragFrame = true; requestAnimationFrame(() => { dragFrame = false; if (!drag || dragQ === null) return; const g = sceneGeom(), h = dragHandles().find((k) => k.id === drag.id); if (h) h.set((g.cy - dragQ) / g.sc); dragQ = null; }); }
+      const r = can.getBoundingClientRect(); dragQ = [ev.clientX - r.left, ev.clientY - r.top];
+      if (!dragFrame) { dragFrame = true; requestAnimationFrame(() => {
+        dragFrame = false; if (!drag || dragQ === null) return;
+        if (drag.id === 'orbit') { v3.psi = Math.max(-1.4, Math.min(1.4, drag.psi + (dragQ[0] - drag.x) * 0.008)); v3.chi = Math.max(-1.0, Math.min(1.0, drag.chi + (dragQ[1] - drag.y) * 0.008)); dragQ = null; drawAll(); return; }
+        const g = sceneGeom(), h = dragHandles().find((k) => k.id === drag.id); if (h) h.set(h.fromY ? h.fromY(dragQ[1]) : (g.cy - dragQ[1]) / g.sc); dragQ = null; }); }
       return;
     }
-    const h = handleAt(ev); hoverId = h ? h.id : null; can.style.cursor = h ? h.cursor : 'default';
+    const h = handleAt(ev); hoverId = h ? h.id : null; can.style.cursor = h ? h.cursor : (orbitable(ev) ? 'grab' : 'default');
   });
+  function orbitable(ev) {
+    if (!(v3.on && v3Active() && LY)) return false;
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, s = LY.scene;
+    return x >= s.x && x <= s.x + s.w && y >= s.y && y <= s.y + s.h;
+  }
   can.addEventListener('pointerdown', (ev) => {
-    const h = handleAt(ev); if (!h) return;
+    const h = handleAt(ev);
+    if (!h && orbitable(ev)) {
+      const r = can.getBoundingClientRect(); drag = { id: 'orbit', x: ev.clientX - r.left, y: ev.clientY - r.top, psi: v3.psi, chi: v3.chi };
+      can.style.cursor = 'grabbing'; try { can.setPointerCapture(ev.pointerId); } catch (_) {} ev.preventDefault(); return;
+    }
+    if (!h) return;
     drag = { id: h.id }; hoverId = h.id;
     try { can.setPointerCapture(ev.pointerId); } catch (_) {}
     ev.preventDefault();
   });
-  const endDrag = () => { drag = null; };
+  const endDrag = () => { if (drag && drag.id === 'orbit') can.style.cursor = 'grab'; drag = null; };
   can.addEventListener('pointerup', endDrag);
   can.addEventListener('pointercancel', endDrag);
   can.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
@@ -1195,7 +1508,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const dir = e.key === 'ArrowUp' ? 1 : -1;
       if (S.mode === 'single') setB(S.b + dir * big * bMaxSlider() / 100);
       else if (S.model === 'nuc') { S.bm = Math.max(+$('bm').min, Math.min(+$('bm').max, S.bm + dir * big * 0.02)); custom(); fitView(); rebuild(); }
-    } else if (e.key === ' ') setPlaying(!playing);
+    } else if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && v3.on && v3Active()) {
+      v3.psi = Math.max(-1.4, Math.min(1.4, v3.psi + (e.key === 'ArrowRight' ? 1 : -1) * big * 0.08)); drawAll();
+    } else if (e.key === 'v' || e.key === 'V') set3D(!v3.on);
+    else if (e.key === ' ') setPlaying(!playing);
     else if (e.key === 'b' || e.key === 'B') setMode(S.mode === 'beam' ? 'single' : 'beam');
     else if (e.key === 'p' || e.key === 'P') setModel(S.model === 'plum' ? 'nuc' : 'plum');
     else if (e.key === 'f' || e.key === 'F') $('fire').click();
@@ -1224,6 +1540,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function loop(now) {
     const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
     const t0 = performance.now(), ts = now / 1000;
+    const goal = v3.on && v3Active() ? 1 : 0;
+    if (v3.t !== goal) { const st = dt * 1.6; v3.t = reduce ? goal : Math.abs(goal - v3.t) <= st ? goal : v3.t + Math.sign(goal - v3.t) * st; }
     if (S.mode === 'beam') {
       if (playing) {
         // fade old tracks
