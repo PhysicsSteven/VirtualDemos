@@ -1,0 +1,1761 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Gamma Spectroscopy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one canvas with the bench (lead castle, source, detector, electronics) above the MCA screen; instrument rail on the right with a small analysis plot; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --gamma: #7a3ec2;
+  --lead: #646b75;
+  --lead-hi: #9198a2;
+  --lead-dk: #454b54;
+  --alu: #cfd6de;
+  --alu-dk: #8f99a5;
+  --pmt: #3b4351;
+  --bench: #cdbb9c;
+  --bench-dk: #a99678;
+  --nim: #d9dee5;
+  --scr: #0c1117;
+  --scr-ink: #d8e3ee;
+  --scr-muted: #8393a5;
+  --scr-grid: #1c2632;
+  --scr-data: #f2c53d;
+  --scr-roi: #ff5c6c;
+  --scr-cur: #5fd0ff;
+  --scr-cal: #6fe0a0;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --gamma: #b98cff; --lead: #575e68; --lead-hi: #7d848e; --lead-dk: #3a4048;
+    --alu: #a3adb9; --alu-dk: #6b7581; --pmt: #2a313c; --bench: #4a3f30; --bench-dk: #362d22; --nim: #2b333f;
+    --scr: #05080c; --scr-ink: #d8e3ee; --scr-muted: #8393a5; --scr-grid: #18212c; --scr-data: #f2c53d; --scr-roi: #ff5c6c; --scr-cur: #5fd0ff; --scr-cal: #6fe0a0; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --gamma: #b98cff; --lead: #575e68; --lead-hi: #7d848e; --lead-dk: #3a4048;
+  --alu: #a3adb9; --alu-dk: #6b7581; --pmt: #2a313c; --bench: #4a3f30; --bench-dk: #362d22; --nim: #2b333f;
+  --scr: #05080c; --scr-ink: #d8e3ee; --scr-muted: #8393a5; --scr-grid: #18212c; --scr-data: #f2c53d; --scr-roi: #ff5c6c; --scr-cur: #5fd0ff; --scr-cal: #6fe0a0; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-width: 0; min-height: 600px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.86rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.78rem; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#can { touch-action: none; outline: none; }
+#can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn.rec { background: var(--pos); color: #fff; border-color: var(--pos); }
+.btn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 9px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg button:disabled { opacity: 0.45; cursor: not-allowed; }
+.row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.row .lab { font-size: 0.88rem; min-width: 5.2em; }
+select, input[type="number"] { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+input[type="number"] { width: 7.5em; font-family: var(--font-mono); }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.98rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .list dd { font-size: 0.84rem; }
+.flag { margin: 0; font-size: 0.86rem; font-weight: 700; border: 1px solid var(--pos); color: var(--pos); border-radius: 6px; padding: 7px 10px; }
+.flag span { display: block; font-weight: 400; color: var(--ink); margin-top: 2px; }
+.tblwrap { max-height: 190px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; }
+.tbl { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.72rem; }
+.tbl th, .tbl td { padding: 3px 5px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--grid-strong); }
+.tbl th { position: sticky; top: 0; background: var(--surface); color: var(--muted); font-weight: 600; }
+.tbl td button { font: inherit; font-size: 0.72rem; color: var(--muted); background: none; border: 0; cursor: pointer; padding: 0 2px; }
+.ana { width: 100%; height: 210px; display: block; border: 1px solid var(--line); border-radius: 8px; background: var(--canvas); }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 10px; border-radius: 2px; }
+sub, sup { line-height: 0; }
+.lines { margin: 0; font-family: var(--font-mono); font-size: 0.74rem; color: var(--muted); line-height: 1.5; }
+
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+  :root[data-projector="on"] .stage-ctl { padding: 6px 8px; gap: 4px; }
+  :root[data-projector="on"] .count { display: none; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj, select { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: auto; min-height: 820px; }
+  .rail { overflow: visible; }
+  .count { white-space: normal; margin-left: 0; width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Gamma Spectroscopy</h1>
+      <p>A virtual NaI(Tl) scintillation spectrometer. Every pulse is simulated from physics: Monte Carlo photon transport in the crystal, detector resolution, the electronics and counting statistics. Acquire, mark peaks, calibrate, and measure.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">E in keV · d in cm · times in s · m<sub>e</sub>c² = 510.999 keV</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/gamma-spectroscopy.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/gamma-spectroscopy.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM13 2h2v1h-2zM17 2h3v1h-3zM23 2h3v1h-3zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h1v1h-1zM14 3h1v1h-1zM17 3h1v1h-1zM20 3h1v1h-1zM22 3h3v1h-3zM27 3h1v1h-1zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h5v1h-5zM23 4h1v1h-1zM25 4h1v1h-1zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM19 5h1v1h-1zM24 5h2v1h-2zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM15 6h3v1h-3zM19 6h1v1h-1zM21 6h3v1h-3zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h3v1h-3zM14 7h1v1h-1zM18 7h2v1h-2zM23 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM13 9h2v1h-2zM18 9h6v1h-6zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM13 10h1v1h-1zM17 10h2v1h-2zM24 10h7v1h-7zM32 10h5v1h-5zM3 11h1v1h-1zM6 11h2v1h-2zM11 11h1v1h-1zM14 11h1v1h-1zM16 11h2v1h-2zM20 11h1v1h-1zM22 11h1v1h-1zM24 11h2v1h-2zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM4 12h6v1h-6zM13 12h3v1h-3zM17 12h5v1h-5zM23 12h1v1h-1zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h1v1h-1zM6 13h2v1h-2zM9 13h4v1h-4zM17 13h1v1h-1zM20 13h4v1h-4zM25 13h2v1h-2zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h2v1h-2zM5 14h1v1h-1zM8 14h6v1h-6zM15 14h3v1h-3zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h3v1h-3zM30 14h9v1h-9zM3 15h1v1h-1zM7 15h1v1h-1zM10 15h2v1h-2zM13 15h1v1h-1zM15 15h1v1h-1zM18 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h2v1h-2zM5 16h1v1h-1zM8 16h1v1h-1zM12 16h2v1h-2zM15 16h4v1h-4zM20 16h1v1h-1zM22 16h2v1h-2zM28 16h8v1h-8zM38 16h1v1h-1zM4 17h3v1h-3zM9 17h1v1h-1zM12 17h7v1h-7zM21 17h5v1h-5zM28 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h3v1h-3zM6 18h1v1h-1zM8 18h1v1h-1zM11 18h1v1h-1zM14 18h1v1h-1zM16 18h2v1h-2zM20 18h2v1h-2zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h3v1h-3zM6 19h2v1h-2zM9 19h1v1h-1zM12 19h1v1h-1zM14 19h2v1h-2zM17 19h2v1h-2zM23 19h1v1h-1zM25 19h1v1h-1zM37 19h1v1h-1zM3 20h3v1h-3zM8 20h3v1h-3zM12 20h1v1h-1zM14 20h1v1h-1zM16 20h1v1h-1zM23 20h2v1h-2zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM5 21h1v1h-1zM10 21h2v1h-2zM13 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM22 21h5v1h-5zM28 21h2v1h-2zM32 21h1v1h-1zM38 21h1v1h-1zM3 22h3v1h-3zM7 22h7v1h-7zM15 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h5v1h-5zM11 23h1v1h-1zM16 23h1v1h-1zM18 23h2v1h-2zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM4 24h2v1h-2zM8 24h1v1h-1zM12 24h3v1h-3zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h2v1h-2zM29 24h2v1h-2zM32 24h4v1h-4zM37 24h2v1h-2zM3 25h1v1h-1zM5 25h2v1h-2zM11 25h1v1h-1zM16 25h8v1h-8zM25 25h1v1h-1zM28 25h2v1h-2zM31 25h4v1h-4zM37 25h1v1h-1zM3 26h1v1h-1zM6 26h9v1h-9zM17 26h2v1h-2zM21 26h1v1h-1zM24 26h2v1h-2zM27 26h2v1h-2zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h1v1h-1zM5 27h3v1h-3zM9 27h2v1h-2zM15 27h1v1h-1zM17 27h1v1h-1zM20 27h4v1h-4zM25 27h1v1h-1zM28 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM6 28h1v1h-1zM8 28h1v1h-1zM10 28h1v1h-1zM12 28h3v1h-3zM17 28h2v1h-2zM22 28h1v1h-1zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM5 29h1v1h-1zM9 29h2v1h-2zM12 29h1v1h-1zM14 29h2v1h-2zM17 29h1v1h-1zM22 29h2v1h-2zM25 29h1v1h-1zM29 29h6v1h-6zM2 30h1v1h-1zM4 30h1v1h-1zM7 30h3v1h-3zM11 30h7v1h-7zM19 30h1v1h-1zM21 30h1v1h-1zM25 30h4v1h-4zM30 30h7v1h-7zM10 31h2v1h-2zM14 31h2v1h-2zM17 31h2v1h-2zM20 31h3v1h-3zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h1v1h-1zM13 32h2v1h-2zM16 32h2v1h-2zM20 32h1v1h-1zM22 32h2v1h-2zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h2v1h-2zM15 33h4v1h-4zM23 33h1v1h-1zM25 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h1v1h-1zM20 34h2v1h-2zM24 34h11v1h-11zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM13 35h2v1h-2zM17 35h2v1h-2zM21 35h2v1h-2zM24 35h2v1h-2zM28 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h2v1h-2zM14 36h1v1h-1zM20 36h1v1h-1zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h2v1h-2zM16 37h1v1h-1zM18 37h1v1h-1zM22 37h2v1h-2zM25 37h2v1h-2zM28 37h4v1h-4zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM13 38h3v1h-3zM19 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <button type="button" class="btn rec" id="acq">Acquire</button>
+        <button type="button" class="btn" id="clr">Clear</button>
+        <div class="seg" role="group" aria-label="Vertical scale">
+          <button type="button" id="yLin" aria-pressed="false">Lin</button>
+          <button type="button" id="yLog" aria-pressed="true">Log</button>
+        </div>
+        <div class="seg" role="group" aria-label="Horizontal axis">
+          <button type="button" id="xCh" aria-pressed="true">Channel</button>
+          <button type="button" id="xKeV" aria-pressed="false" disabled>keV</button>
+        </div>
+        <button type="button" class="btn" id="markBtn" aria-pressed="false">Mark peak</button>
+        <div class="seg" role="group" aria-label="Zoom">
+          <button type="button" id="zOut" aria-label="Zoom out">−</button>
+          <button type="button" id="zFull">Full</button>
+          <button type="button" id="zIn" aria-label="Zoom in">+</button>
+        </div>
+        <span class="count mono" id="count" aria-live="off"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="The bench: a lead castle shown cut open with the source on a sliding holder, absorber sheets, the NaI(Tl) detector and photomultiplier, and the high voltage supply, amplifier and MCA. Below it the MCA screen shows counts against channel. Drag the source holder to change the distance, turn the HV and fine gain knobs, click the coarse gain switch. Drag across the spectrum to make a region of interest; drag its edges to adjust. In mark peak mode, click a peak. Keys: space starts or stops acquisition, left and right move the cursor (shift for 10 channels), the bracket keys move the source, page up and down change the high voltage, L switches lin and log, M marks the peak at the cursor, plus and minus zoom, Delete removes the selected region."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Experiments</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="cs" aria-pressed="true">Cs-137: photopeak, Compton edge, backscatter</button>
+          <button type="button" data-p="co" aria-pressed="false">Co-60: two lines and a sum peak</button>
+          <button type="button" data-p="na" aria-pressed="false">Na-22: annihilation radiation</button>
+          <button type="button" data-p="cal" aria-pressed="false">Calibrate the detector</button>
+          <button type="button" data-p="pb" aria-pressed="false">Lead attenuation</button>
+          <button type="button" data-p="unk" aria-pressed="false">Identify an unknown</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Source and geometry</h2>
+        <div class="row"><label class="lab" for="src">Source</label>
+          <select id="src">
+            <option value="cs137">Cs-137</option><option value="co60">Co-60</option><option value="na22">Na-22</option>
+            <option value="ba133">Ba-133</option><option value="mn54">Mn-54</option><option value="unk">Unknown</option><option value="none">None (background)</option>
+          </select>
+          <button type="button" class="btn" id="reveal" hidden>Reveal</button>
+        </div>
+        <div class="row"><span class="lab">Activity</span>
+          <div class="seg" role="group" aria-label="Source activity">
+            <button type="button" data-act="1" aria-pressed="true">1 µCi</button>
+            <button type="button" data-act="10" aria-pressed="false">10 µCi</button>
+            <button type="button" data-act="100" aria-pressed="false">100 µCi</button>
+          </div>
+        </div>
+        <div>
+          <div class="slider-head"><label for="dist">Source to detector face, d</label><output id="distOut" class="mono" for="dist"></output></div>
+          <input type="range" id="dist" min="1" max="30" step="0.5" value="5">
+        </div>
+        <div class="row"><span class="lab">Absorber</span>
+          <div class="seg" role="group" aria-label="Absorber material">
+            <button type="button" data-mat="none" aria-pressed="true">None</button>
+            <button type="button" data-mat="pb" aria-pressed="false">Lead</button>
+            <button type="button" data-mat="cu" aria-pressed="false">Copper</button>
+            <button type="button" data-mat="al" aria-pressed="false">Aluminum</button>
+          </div>
+        </div>
+        <div>
+          <div class="slider-head"><label for="thk">Absorber thickness</label><output id="thkOut" class="mono" for="thk"></output></div>
+          <input type="range" id="thk" min="0" max="50" step="0.5" value="0">
+        </div>
+        <div class="row"><span class="lab">Behind source</span>
+          <div class="seg" role="group" aria-label="Backing behind the source">
+            <button type="button" data-back="pb" aria-pressed="true">Lead brick</button>
+            <button type="button" data-back="fe" aria-pressed="false">Steel plate</button>
+            <button type="button" data-back="none" aria-pressed="false">Nothing</button>
+          </div>
+        </div>
+        <div class="row"><span class="lab">Crystal</span>
+          <div class="seg" role="group" aria-label="Crystal size">
+            <button type="button" data-size="s2" aria-pressed="true">2″ × 2″</button>
+            <button type="button" data-size="s3" aria-pressed="false">3″ × 3″</button>
+          </div>
+        </div>
+        <dl class="readout">
+          <div><dt>Solid angle Ω/4π</dt><dd id="rOmega">—</dd></div>
+          <div><dt>Decays per second</dt><dd id="rAct">—</dd></div>
+          <div><dt>Photons into the crystal</dt><dd id="rIn">—</dd></div>
+          <div><dt id="rTrLab">Absorber transmission</dt><dd id="rTr">—</dd></div>
+        </dl>
+        <p class="hint" id="srcHint"></p>
+      </section>
+
+      <section>
+        <h2>Electronics</h2>
+        <div>
+          <div class="slider-head"><label for="hv">PMT high voltage</label><output id="hvOut" class="mono" for="hv"></output></div>
+          <input type="range" id="hv" min="500" max="1200" step="5" value="900">
+        </div>
+        <div class="row"><span class="lab">Coarse gain</span>
+          <div class="seg" role="group" aria-label="Amplifier coarse gain" id="coarseSeg">
+            <button type="button" data-cg="5" aria-pressed="false">5</button>
+            <button type="button" data-cg="10" aria-pressed="false">10</button>
+            <button type="button" data-cg="20" aria-pressed="true">20</button>
+            <button type="button" data-cg="50" aria-pressed="false">50</button>
+            <button type="button" data-cg="100" aria-pressed="false">100</button>
+          </div>
+        </div>
+        <div>
+          <div class="slider-head"><label for="fine">Fine gain</label><output id="fineOut" class="mono" for="fine"></output></div>
+          <input type="range" id="fine" min="0.5" max="1.5" step="0.01" value="1">
+        </div>
+        <div class="row"><span class="lab">Channels</span>
+          <div class="seg" role="group" aria-label="MCA channels">
+            <button type="button" data-n="512" aria-pressed="false">512</button>
+            <button type="button" data-n="1024" aria-pressed="true">1024</button>
+            <button type="button" data-n="2048" aria-pressed="false">2048</button>
+          </div>
+        </div>
+        <div>
+          <div class="slider-head"><label for="lld">Lower level discriminator</label><output id="lldOut" class="mono" for="lld"></output></div>
+          <input type="range" id="lld" min="0" max="20" step="0.5" value="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="uld">Upper level discriminator</label><output id="uldOut" class="mono" for="uld"></output></div>
+          <input type="range" id="uld" min="40" max="100" step="1" value="100">
+        </div>
+        <div>
+          <div class="slider-head"><label for="res">Resolution, FWHM at 662 keV</label><output id="resOut" class="mono" for="res"></output></div>
+          <input type="range" id="res" min="5" max="10" step="0.1" value="7">
+        </div>
+        <div class="row"><label class="lab" for="ptime">Preset live</label>
+          <select id="ptime">
+            <option value="0">Off</option><option value="10">10 s</option><option value="30">30 s</option><option value="60">60 s</option>
+            <option value="120">120 s</option><option value="300">300 s</option><option value="600">600 s</option><option value="1800">1800 s</option>
+          </select>
+          <div class="seg" role="group" aria-label="Clock speed">
+            <button type="button" data-sp="1" aria-pressed="false">×1</button>
+            <button type="button" data-sp="10" aria-pressed="true">×10</button>
+            <button type="button" data-sp="100" aria-pressed="false">×100</button>
+          </div>
+        </div>
+        <dl class="readout">
+          <div><dt>PMT gain, relative to 900 V</dt><dd id="rGain">—</dd></div>
+          <div><dt>Pulse height for 662 keV</dt><dd id="rPulse">—</dd></div>
+          <div><dt>Input rate n (LLD to ULD)</dt><dd id="rRate">—</dd></div>
+          <div><dt>Dead time now</dt><dd id="rDead">—</dd></div>
+          <div><dt>Recorded rate m = counts / real time</dt><dd id="rM">—</dd></div>
+          <div><dt>Corrected n = m / (1 − mτ)</dt><dd id="rN">—</dd></div>
+        </dl>
+        <p class="hint">The clock speed makes the simulated clocks run faster than the wall clock; live and real times are the simulated ones. Pulses below the LLD (electronic noise, x-rays) are ignored and do not cost dead time.</p>
+      </section>
+
+      <section>
+        <h2>Region of interest</h2>
+        <p class="hint" id="roiHint">Drag across a peak on the spectrum to set a region of interest. The background under the peak is a straight line through the mean of the three channels at each end.</p>
+        <dl class="readout" id="roiRead">
+          <div><dt>Channels</dt><dd id="qCh">—</dd></div>
+          <div><dt>Gross counts</dt><dd id="qG">—</dd></div>
+          <div><dt>Background</dt><dd id="qB">—</dd></div>
+          <div><dt>Net counts</dt><dd id="qN">—</dd></div>
+          <div><dt>Centroid</dt><dd id="qC">—</dd></div>
+          <div><dt>FWHM</dt><dd id="qF">—</dd></div>
+          <div><dt>Net rate (per live s)</dt><dd id="qR">—</dd></div>
+          <div><dt>Energy, FWHM / E</dt><dd id="qE">—</dd></div>
+        </dl>
+        <div class="row">
+          <button type="button" class="btn" id="addRow">Add to table</button>
+          <button type="button" class="btn" id="roiCal">Use for calibration</button>
+          <button type="button" class="btn" id="roiDel">Delete ROI</button>
+        </div>
+        <div class="tblwrap"><table class="tbl" id="tbl"><thead><tr><th>#</th><th>source</th><th>d cm</th><th>absorber</th><th>live s</th><th>net</th><th>±</th><th>rate /s</th><th>±</th><th>centroid</th><th>±</th><th>FWHM ch</th><th>E keV</th><th>FWHM %</th><th></th></tr></thead><tbody></tbody></table></div>
+        <div class="row">
+          <button type="button" class="btn" id="csvSpec">Spectrum CSV</button>
+          <button type="button" class="btn" id="csvTbl">Table CSV</button>
+          <button type="button" class="btn" id="clrTbl">Clear table</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Energy calibration</h2>
+        <p class="hint" id="calHint">Press Mark peak and click a photopeak, or use a region of interest. Enter the energy of that line and add the point. Two points give a line E = a + b·ch; three or more allow a quadratic term.</p>
+        <dl class="readout"><div class="wide"><dt>Peak to calibrate</dt><dd id="cPeak">—</dd></div></dl>
+        <div class="row">
+          <label class="lab" for="cE">Energy (keV)</label>
+          <input type="number" id="cE" step="0.001" min="1" max="3000" list="cList">
+          <datalist id="cList"></datalist>
+          <button type="button" class="btn" id="cAdd" disabled>Add point</button>
+        </div>
+        <div class="row">
+          <div class="seg" role="group" aria-label="Calibration form">
+            <button type="button" id="cLin" aria-pressed="true">Linear</button>
+            <button type="button" id="cQuad" aria-pressed="false">Quadratic</button>
+          </div>
+          <button type="button" class="btn" id="cClr">Clear calibration</button>
+        </div>
+        <dl class="readout">
+          <div class="wide list"><dt>Points (channel → keV, residual)</dt><dd id="cPts">—</dd></div>
+          <div class="wide"><dt>Fit</dt><dd id="cFit">—</dd></div>
+        </dl>
+        <p class="flag" id="cStale" hidden>Gain changed<span>The calibration was made at a different HV, gain or channel count. Clear it and calibrate again.</span></p>
+      </section>
+
+      <section>
+        <h2>Analysis</h2>
+        <div class="seg" role="group" aria-label="Analysis plot">
+          <button type="button" data-an="cal" aria-pressed="true">Calibration</button>
+          <button type="button" data-an="att" aria-pressed="false">Attenuation</button>
+          <button type="button" data-an="inv" aria-pressed="false">Distance</button>
+          <button type="button" data-an="res" aria-pressed="false">Resolution</button>
+        </div>
+        <canvas class="ana" id="ana" role="img" aria-label="Analysis plot of the table rows or calibration points"></canvas>
+        <dl class="readout"><div class="wide"><dt id="aLab">Result</dt><dd id="aRes">—</dd></div></dl>
+        <p class="hint" id="aHint"></p>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint"><b>Simulated, not measured.</b> Nothing here is recorded data. Each spectrum is built from a Monte Carlo calculation of how photons deposit energy in the crystal, smeared by the detector resolution, mapped to channels by the electronics, and counted with Poisson statistics, so two acquisitions never look the same.</p>
+        <p class="hint" id="modelMC"></p>
+        <p class="hint">Lines and intensities per decay from NNDC NuDat 3 (ENSDF): ¹³⁷Cs, Browne and Tuli, Nucl. Data Sheets 108, 2173 (2007); ⁶⁰Co, Browne and Tuli, NDS 114, 1849 (2013); ²²Na, Basunia, NDS 127, 69 (2015); ¹³³Ba, Khazov, Rodionov and Kondev, NDS 112, 855 (2011); ⁵⁴Mn, Dong and Huo, NDS 121, 1 (2014); ⁴⁰K, Chen, NDS 140, 1 (2017). Lines weaker than 0.3% and x-rays below 15 keV are left out. Sources are point sources on the axis; decay since the reference date is ignored.</p>
+        <p class="hint">Attenuation: NIST XCOM (Berger, Hubbell, Seltzer et al., Standard Reference Database 8) for NaI, Pb, Cu and Al, interpolated log–log. In the crystal: photoelectric absorption, Compton scattering with the Klein–Nishina angular distribution (free electrons), and pair production with both 511 keV photons followed. Coherent scattering is left out in the crystal. Electrons deposit their energy where they are made (no escape, no bremsstrahlung). Densities: NaI 3.667, Pb 11.35, Cu 8.96, Al 2.699 g/cm³.</p>
+        <p class="hint">Iodine K x-rays: above the 33.17 keV K edge a photoabsorption leaves a K vacancy with probability 1 − 1/J = 0.834 (jump ratio J = 6.04) and gives a K x-ray with probability ω<sub>K</sub> = 0.893, which is then followed and can escape (the escape peak 28 to 33 keV below a low energy line). Lead: K edge 88.0 keV, J = 4.73, ω<sub>K</sub> = 0.978. X-ray energies, yields and jump ratios from Elam, Ravel and Sieber, Radiat. Phys. Chem. 63, 121 (2002).</p>
+        <p class="hint">Backscatter and lead x-rays: the holder carries a backing (a lead brick or a steel plate, XCOM data for Fe, 7.874 g/cm³) whose face is 5 cm behind the source, taken as a thick disk of radius 6 cm. Photons leaving the source backward that hit it are Compton scattered once (Klein–Nishina, free electrons) or, in lead, photoabsorbed in the K shell; the scattered photon or the K x-ray reaches the detector after attenuation of the incoming and outgoing photon in the backing (single scattering in a thick slab; multiple scattering is left out, so the backscatter is a lower estimate). Lead absorbers make K x-rays too (normal incidence, infinite sheet). Scattering in the castle walls, the table and the absorbers themselves is left out: absorbers follow the narrow beam law e<sup>−μx</sup>, with μ from XCOM including coherent scattering. Broad beam buildup is not modeled.</p>
+        <p class="hint">Coincidence summing: ⁶⁰Co (1173 and 1332 keV in cascade) and ²²Na (1274 keV with the two annihilation photons, back to back, from 89.96% of decays). Both photons of a decay are followed and their deposits added, directions uncorrelated. Summing in ¹³³Ba, chance pileup and x-ray summing are left out.</p>
+        <p class="hint">Resolution: Gaussian with FWHM/E = a/√E + 0.01, with a set by the FWHM at 662 keV (7.0% by default, typical of a 2″ × 2″ NaI(Tl)). The light output is taken as exactly proportional to energy (the small nonproportionality of NaI is left out). Entrance window: 0.5 mm aluminum (typical).</p>
+        <p class="hint">Electronics: PMT gain ∝ V<sup>7</sup> (typical of a 10 dynode tube); pulse height = 0.25 mV per keV × (V/900 V)<sup>7</sup> × coarse × fine; ADC full scale 10 V with a zero offset of 18 mV. Electronic noise: 3000 pulses per second with a half Gaussian height of 25 mV rms at gain 20. Dead time: nonparalyzable, τ = 8 µs per pulse between the discriminators (typical of an analog MCA); live time accumulates as dt/(1 + nτ). Counts in each channel are Poisson.</p>
+        <p class="hint">Room background inside the castle (assumed, typical): 3.0 counts per second above 20 keV for the 2″ × 2″ crystal, as a falling exponential continuum plus a flat part, with 0.3 photons per second of ⁴⁰K at 1460.8 keV and 0.05 per second of lead x-rays entering the face; scaled with crystal volume for 3″ × 3″.</p>
+        <p class="lines" id="lineList"></p>
+        <div class="key">
+          <span><i class="swatch" style="background: var(--scr-data)"></i>Counts per channel</span>
+          <span><i class="swatch" style="background: var(--scr-roi)"></i>Region of interest</span>
+          <span><i class="swatch" style="background: var(--scr-cal)"></i>Calibration peaks</span>
+          <span><i class="swatch" style="background: var(--gamma)"></i>Gamma rays reaching the crystal (drawn)</span>
+        </div>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  // Everything here is pure physics and numerics, shared by the page, its Web Worker and the node tests.
+  function GSCORE() {
+    const MEC2 = 510.99895;          // keV, CODATA 2018
+    const RE = 2.8179403262e-13;     // cm, classical electron radius (CODATA 2018)
+    const NAV = 6.02214076e23;       // 1/mol (exact)
+    const BW = 0.5, NB = 6400;       // deposit histograms: 0.5 keV bins up to 3200 keV
+    const RHO = { nai: 3.667, pb: 11.35, cu: 8.96, al: 2.699, fe: 7.874 };   // g/cm³
+    const parse = (s) => s.split('|').map((r) => r.split(',').map(Number));
+    // NIST XCOM, NaI: keV, incoherent, photoelectric, pair (nuclear + electron field), coherent; cm²/g
+    const XNAI = parse('8,0.05799,248.9,0,3.009|10,0.06731,137.5,0,2.437|11,0.07133,106.2,0,2.218|12.09,0.07533,82.04,0,2.013|13.3,0.07927,63.37,0,1.822|14.63,0.08311,48.94,0,1.643|15,0.0841,45.7,0,1.598|16.09,0.0868,37.67,0,1.477|17.69,0.09033,28.96,0,1.322|19.45,0.09369,22.26,0,1.176|20,0.09463,20.62,0,1.136|21.39,0.09688,17.07,0,1.04|23.53,0.09989,13.07,0,0.9136|25.87,0.1027,10.01,0,0.7989|28.45,0.1053,7.665,0,0.6963|30,0.1067,6.607,0,0.6443|31.29,0.1077,5.864,0,0.6056|33.17,0.109,4.972,0,0.5556|33.17,0.109,29.76,0,0.5556|34.41,0.1098,27.04,0,0.526|37.84,0.1117,21.09,0,0.4562|40,0.1127,18.24,0,0.4196|41.62,0.1133,16.43,0,0.3951|45.77,0.1147,12.76,0,0.3417|50,0.1157,10.06,0,0.2978|50.33,0.1157,9.883,0,0.2947|55.35,0.1165,7.627,0,0.2533|60,0.1169,6.111,0,0.2221|60.87,0.1169,5.872,0,0.2169|66.94,0.117,4.514,0,0.1851|73.62,0.1169,3.465,0,0.1575|80,0.1165,2.746,0,0.1365|80.96,0.1164,2.656,0,0.1337|89.03,0.1157,2.032,0,0.1133|97.92,0.1146,1.552,0,0.09592|100,0.1144,1.462,0,0.09243|107.7,0.1134,1.184,0,0.08112|118.4,0.1118,0.903,0,0.06855|130.2,0.1101,0.6882,0,0.05788|143.2,0.1081,0.5242,0,0.04881|150,0.1071,0.4592,0,0.04491|157.5,0.106,0.3994,0,0.04111|173.2,0.1037,0.3043,0,0.03458|190.5,0.1013,0.232,0,0.02904|200,0.1,0.2019,0,0.02654|209.5,0.09879,0.177,0,0.02435|230.4,0.09618,0.1353,0,0.0204|253.3,0.0935,0.1036,0,0.01706|278.6,0.09076,0.0795,0,0.01425|300,0.0886,0.06481,0,0.01238|306.4,0.08798,0.06117,0,0.01189|336.9,0.08518,0.04721,0,0.009913|370.6,0.08236,0.03657,0,0.008258|400,0.08009,0.02987,0,0.007126|407.5,0.07954,0.02844,0,0.006875|448.1,0.07673,0.02222,0,0.005718|492.8,0.07393,0.01746,0,0.004754|500,0.07351,0.01684,0,0.004622|542,0.07116,0.0138,0,0.00395|596,0.06841,0.01096,0,0.003281|600,0.06822,0.01079,0,0.003238|655.5,0.06568,0.008745,0,0.002723|720.8,0.063,0.007023,0,0.00226|792.7,0.06037,0.005697,0,0.001874|800,0.06012,0.005588,0,0.00184|871.8,0.0578,0.004675,0,0.001553|958.7,0.05526,0.003831,0,0.001287|1000,0.05413,0.003491,0,0.001184|1022,0.05355,0.003323,0,0.001134|1054,0.05273,0.003105,9.458e-7,0.001067|1160,0.05031,0.002573,4.877e-5,0.0008834|1250,0.04846,0.00224,0.0001634,0.0007607|1275,0.04797,0.00216,0.0002066,0.0007312|1402,0.04567,0.001813,0.0004873,0.0006052|1500,0.04407,0.001604,0.0007594,0.0005293|1542,0.04343,0.001526,0.0008886,0.0005009|1696,0.04125,0.001291,0.001408,0.0004145|1865,0.03914,0.001097,0.002042,0.000343|2000,0.03764,0.0009761,0.002575,0.0002985|2044,0.03717,0.0009415,0.002751,0.0002858|2051,0.0371,0.0009361,0.002779,0.0002838|2256,0.03513,0.0008023,0.003604,0.0002348|2481,0.03323,0.0006907,0.004509,0.0001942|2728,0.0314,0.000597,0.005485,0.0001606|3000,0.02963,0.0005178,0.006528,0.0001329');
+    // NIST XCOM, Pb: keV, photoelectric, total with coherent; cm²/g
+    const XPB = parse('8,222.6,228.7|10,125.6,130.6|12.09,76.66,80.87|13.04,63.1,67|13.04,158.2,162.1|14.63,115.8,119.3|15,108.2,111.6|15.2,104.5,107.8|15.2,145.2,148.5|15.53,138,141.2|15.86,131.2,134.4|15.86,151.7,154.8|17.69,114.8,117.6|20,83.97,86.37|21.39,70.31,72.53|25.87,42.62,44.37|30,28.86,30.32|31.29,25.78,27.16|37.84,15.49,16.57|40,13.35,14.36|45.77,9.267,10.11|50,7.292,8.042|55.35,5.524,6.178|60,4.432,5.02|66.94,3.282,3.791|80,2.012,2.419|80.96,1.947,2.348|88,1.547,1.91|88,7.321,7.684|97.92,5.534,5.854|100,5.237,5.549|118.4,3.369,3.626|143.2,2.05,2.259|150,1.815,2.015|173.2,1.24,1.414|200,0.8464,0.9986|209.5,0.7487,0.8949|253.3,0.4541,0.5793|300,0.293,0.4032|306.4,0.2775,0.3861|370.6,0.1714,0.2666|400,0.1417,0.2323|448.1,0.1073,0.1916|500,0.08257,0.1613|542,0.06833,0.1434|600,0.05406,0.1248|655.5,0.0443,0.1115|792.7,0.02927,0.08957|800,0.02871,0.0887|958.7,0.01971,0.07387|1000,0.0181,0.07102|1022,0.01732,0.06962|1160,0.0135,0.06235|1250,0.01168,0.05875|1402,0.009415,0.05432|1500,0.008321,0.05222|1696,0.006682,0.04909|2000,0.005034,0.04607|2044,0.004854,0.04577|2051,0.004826,0.04572|2481,0.003539,0.04361|3000,0.002631,0.04234');
+    // NIST XCOM, total with coherent; keV, cm²/g
+    const XCU = parse('8,52.55|8.979,38.29|8.979,278.3|10,216|12.09,132.9|14.63,79.33|15,74.05|17.69,47.27|20,33.8|21.39,28.07|25.87,16.54|30,10.91|31.29,9.693|37.84,5.679|40,4.862|45.77,3.337|50,2.613|55.35,1.979|60,1.593|66.94,1.194|80,0.763|80.96,0.7413|97.92,0.4797|100,0.4585|118.4,0.3274|143.2,0.2375|150,0.2217|173.2,0.1831|200,0.1559|209.5,0.1489|253.3,0.1264|300,0.1119|306.4,0.1104|370.6,0.09828|400,0.09413|448.1,0.08853|500,0.08363|542,0.08026|600,0.07625|655.5,0.07295|792.7,0.06636|800,0.06606|958.7,0.0603|1000,0.05901|1022,0.05834|1160,0.05466|1250,0.05261|1402,0.04966|1500,0.04803|1696,0.04528|2000,0.04205|2044,0.04166|2051,0.04159|2481,0.03851|3000,0.03599');
+    const XFE = parse('8,305.6|10,170.7|12.09,102.5|14.63,61.16|15,57.09|17.69,36.19|20,25.68|21.39,21.26|25.87,12.43|30,8.176|31.29,7.256|37.84,4.24|40,3.629|45.77,2.494|50,1.957|55.35,1.489|60,1.205|66.94,0.9116|80,0.5952|80.96,0.5793|97.92,0.3873|100,0.3717|118.4,0.2751|143.2,0.2083|150,0.1964|173.2,0.1671|200,0.146|209.5,0.1405|253.3,0.1221|300,0.1099|306.4,0.1085|370.6,0.09779|400,0.094|448.1,0.08879|500,0.08415|542,0.08092|600,0.07704|655.5,0.07381|792.7,0.06729|800,0.06699|958.7,0.06124|1000,0.05995|1022,0.05928|1160,0.05558|1250,0.0535|1402,0.05049|1500,0.04883|1696,0.04602|2000,0.04265|2044,0.04224|2051,0.04217|2481,0.03891|3000,0.03621');
+    const XAL = parse('8,50.32|10,26.21|12.09,14.99|14.63,8.566|15,7.955|17.69,4.91|20,3.442|21.39,2.839|25.87,1.671|30,1.128|31.29,1.013|37.84,0.6423|40,0.5684|45.77,0.4323|50,0.3681|55.35,0.3121|60,0.2778|66.94,0.242|80,0.2018|80.96,0.1997|97.92,0.1728|100,0.1704|118.4,0.1544|143.2,0.1407|150,0.1378|173.2,0.1297|200,0.1223|209.5,0.1201|253.3,0.1114|300,0.1042|306.4,0.1034|370.6,0.09573|400,0.09276|448.1,0.08847|500,0.08445|542,0.08157|600,0.07802|655.5,0.07499|792.7,0.0687|800,0.06841|958.7,0.06274|1000,0.06146|1022,0.0608|1160,0.05709|1250,0.05496|1402,0.05183|1500,0.05006|1696,0.047|2000,0.04324|2044,0.04277|2051,0.0427|2481,0.03885|3000,0.03541');
+
+    // Log–log interpolation in a table sorted by energy; a repeated energy is an absorption edge (row below, then row above).
+    function interp(rows, col, E) {
+      const n = rows.length;
+      if (E <= rows[0][0]) return rows[0][col];
+      if (E >= rows[n - 1][0]) return rows[n - 1][col];
+      let lo = 0, hi = n - 1;
+      while (hi - lo > 1) { const m = (lo + hi) >> 1; if (rows[m][0] <= E) lo = m; else hi = m; }
+      const x0 = rows[lo][0], x1 = rows[hi][0], y0 = rows[lo][col], y1 = rows[hi][col];
+      if (x1 <= x0) return y1;
+      if (y0 > 0 && y1 > 0) return Math.exp(Math.log(y0) + (Math.log(y1) - Math.log(y0)) * (Math.log(E) - Math.log(x0)) / (Math.log(x1) - Math.log(x0)));
+      return y0 + (y1 - y0) * (E - x0) / (x1 - x0);
+    }
+    const muMass = (mat, E) => mat === 'pb' ? interp(XPB, 2, E) : mat === 'cu' ? interp(XCU, 1, E) : mat === 'al' ? interp(XAL, 1, E) : mat === 'fe' ? interp(XFE, 1, E) : 0;
+    const muLin = (mat, E) => mat === 'none' ? 0 : muMass(mat, E) * RHO[mat];
+    const photoPb = (E) => interp(XPB, 1, E);
+
+    // Fine table of NaI linear coefficients (cm⁻¹) on a log energy grid for fast lookup during transport
+    const NT = 4000, LT0 = Math.log(5), LT1 = Math.log(3300), DLT = (LT1 - LT0) / (NT - 1);
+    const TI = new Float64Array(NT), TPH = new Float64Array(NT), TPA = new Float64Array(NT);
+    for (let i = 0; i < NT; i++) {
+      const E = Math.exp(LT0 + i * DLT);
+      TI[i] = RHO.nai * interp(XNAI, 1, E); TPH[i] = RHO.nai * interp(XNAI, 2, E); TPA[i] = RHO.nai * interp(XNAI, 3, E);
+    }
+    const XS = new Float64Array(3);
+    function xsAt(E) {
+      let f = (Math.log(E) - LT0) / DLT; if (f < 0) f = 0; if (f > NT - 1.0001) f = NT - 1.0001;
+      const i = f | 0, t = f - i;
+      XS[0] = TI[i] + (TI[i + 1] - TI[i]) * t; XS[1] = TPH[i] + (TPH[i + 1] - TPH[i]) * t; XS[2] = TPA[i] + (TPA[i + 1] - TPA[i]) * t;
+    }
+    // exact, edge-preserving value for readouts and tests
+    const muNaI = (E) => RHO.nai * (interp(XNAI, 1, E) + interp(XNAI, 2, E) + interp(XNAI, 3, E));
+
+    // Atomic data (Elam, Ravel & Sieber 2002, via xraydb)
+    const norm = (a) => { const s = a.reduce((t, x) => t + x[1], 0); return a.map(([e, w]) => [e, w / s]); };
+    const IK_EDGE = 33.169, IK_J = 6.039, IK_W = 0.893357, IK_P = (1 - 1 / IK_J) * IK_W;
+    const IKX = norm([[28.317, 0.287519], [28.612, 0.533828], [32.275, 0.143863], [33.046, 0.0325635]]);
+    const PB_EDGE = 88.005, PB_J = 4.731, PB_W = 0.977791;
+    const PBX = norm([[72.805, 0.289233], [74.970, 0.487769], [84.772, 0.168572], [87.243, 0.0497524]]);
+    const PBX_MEAN = PBX.reduce((s, [e, w]) => s + e * w, 0);
+    const NE = { pb: NAV * 82 / 207.2, fe: NAV * 26 / 55.845 };   // electrons per gram
+    const WIN_AL = 0.05;                        // cm, aluminum entrance window
+    const WALL = { w: 5, r: 6 };                // backing behind the source: face 5 cm behind it, radius 6 cm
+    const SIZES = { s2: { R: 2.54, H: 5.08, vol: 1, label: '2″ × 2″' }, s3: { R: 3.81, H: 7.62, vol: 3.375, label: '3″ × 3″' } };
+    const K40 = 1460.820;
+
+    // Sources: [energy keV, photons per decay] from NuDat 3 (ENSDF)
+    const SRC = {
+      cs137: { name: 'Cs-137', half: '30.08 y', lines: [[31.817, 0.0199], [32.194, 0.0364], [36.304, 0.00348], [36.378, 0.00672], [37.255, 0.00213], [661.657, 0.8510]] },
+      co60: { name: 'Co-60', half: '5.271 y', lines: [[1173.228, 0.9985], [1332.492, 0.999826]], sum: 'cascade' },
+      na22: { name: 'Na-22', half: '2.602 y', lines: [[511.0, 1.7991], [1274.537, 0.9994]], sum: 'beta+', fb: 1.7991 / 2 },
+      ba133: { name: 'Ba-133', half: '10.55 y', lines: [[30.625, 0.339], [30.973, 0.622], [34.92, 0.0588], [34.987, 0.114], [35.818, 0.0351], [53.1622, 0.0214], [79.6142, 0.0265], [80.9979, 0.329], [160.612, 0.00638], [223.2368, 0.00453], [276.3989, 0.0716], [302.8508, 0.1834], [356.0129, 0.6205], [383.8485, 0.0894]] },
+      mn54: { name: 'Mn-54', half: '312.2 d', lines: [[834.848, 0.99976]] },
+      none: { name: 'None', half: '', lines: [] }
+    };
+
+    function mulberry(seed) { let s = seed >>> 0; return () => { s += 0x6D2B79F5; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+
+    // Klein–Nishina sampling (Butcher & Messel, as in Geant4). Sets KN.eps = E'/E and KN.cos = cos θ.
+    const KN = { eps: 1, cos: 1 };
+    function sampleKN(k, rnd) {
+      const e0 = 1 / (1 + 2 * k), a1 = -Math.log(e0), a2 = 0.5 * (1 - e0 * e0);
+      for (;;) {
+        let eps;
+        if (rnd() * (a1 + a2) < a1) eps = Math.exp(-a1 * rnd()); else eps = Math.sqrt(e0 * e0 + (1 - e0 * e0) * rnd());
+        const t = (1 - eps) / (k * eps), s2 = t * (2 - t), g = 1 - eps * s2 / (1 + eps * eps);
+        if (rnd() < g) { KN.eps = eps; KN.cos = 1 - t; return; }
+      }
+    }
+    const dsKN = (E, cth) => { const eps = 1 / (1 + E / MEC2 * (1 - cth)); return 0.5 * RE * RE * eps * eps * (eps + 1 / eps - (1 - cth * cth)); };
+    const comptonEdge = (E) => 2 * E * E / (MEC2 + 2 * E);
+    const backscatterE = (E) => E / (1 + 2 * E / MEC2);
+
+    // distance to leave the cylinder 0 ≤ z ≤ H, x² + y² ≤ R²
+    function exitDist(x, y, z, u, v, w, R, H) {
+      let t = Infinity;
+      if (w > 1e-12) t = (H - z) / w; else if (w < -1e-12) t = -z / w;
+      const a = u * u + v * v;
+      if (a > 1e-14) { const b = x * u + y * v, c = x * x + y * y - R * R, D = b * b - a * c; const tc = (-b + Math.sqrt(D > 0 ? D : 0)) / a; if (tc < t) t = tc; }
+      return t > 0 ? t : 0;
+    }
+    function pickLine(tab, r) { let s = 0; for (let i = 0; i < tab.length; i++) { s += tab[i][1]; if (r < s) return tab[i][0]; } return tab[tab.length - 1][0]; }
+    const STK = new Float64Array(7 * 64);
+    // One photon history in the crystal; returns the energy deposited (keV).
+    function history(E0, x0, y0, z0, u0, v0, w0, R, H, rnd) {
+      let dep = 0, sp = 7;
+      STK[0] = x0; STK[1] = y0; STK[2] = z0; STK[3] = u0; STK[4] = v0; STK[5] = w0; STK[6] = E0;
+      while (sp > 0) {
+        sp -= 7;
+        let x = STK[sp], y = STK[sp + 1], z = STK[sp + 2], u = STK[sp + 3], v = STK[sp + 4], w = STK[sp + 5], E = STK[sp + 6];
+        for (;;) {
+          if (E < 1) { dep += E; break; }
+          xsAt(E);
+          const mi = XS[0], mp = XS[1], mpp = XS[2], mt = mi + mp + mpp;
+          const s = -Math.log(1 - rnd()) / mt, t = exitDist(x, y, z, u, v, w, R, H);
+          if (s >= t) break;
+          x += s * u; y += s * v; z += s * w;
+          const r = rnd() * mt;
+          if (r < mp) {                                   // photoelectric absorption
+            if (E > IK_EDGE && rnd() < IK_P && sp < STK.length - 7) {
+              const Ex = pickLine(IKX, rnd()); dep += E - Ex;
+              const cw = 2 * rnd() - 1, ph = 2 * Math.PI * rnd(), sw = Math.sqrt(1 - cw * cw);
+              STK[sp] = x; STK[sp + 1] = y; STK[sp + 2] = z; STK[sp + 3] = sw * Math.cos(ph); STK[sp + 4] = sw * Math.sin(ph); STK[sp + 5] = cw; STK[sp + 6] = Ex; sp += 7;
+            } else dep += E;
+            break;
+          } else if (r < mp + mi) {                       // Compton scattering
+            sampleKN(E / MEC2, rnd);
+            dep += E * (1 - KN.eps); E *= KN.eps;
+            const ct = KN.cos, st = Math.sqrt(Math.max(0, 1 - ct * ct)), ph = 2 * Math.PI * rnd(), cp = Math.cos(ph), sn = Math.sin(ph);
+            if (Math.abs(w) > 0.99999) { const sg = w > 0 ? 1 : -1; u = st * cp; v = st * sn; w = sg * ct; }
+            else { const dd = Math.sqrt(1 - w * w); const nu = u * ct + st * (u * w * cp - v * sn) / dd, nv = v * ct + st * (v * w * cp + u * sn) / dd, nw = w * ct - st * cp * dd; u = nu; v = nv; w = nw; }
+          } else {                                        // pair production: kinetic energy stays, two 511 keV photons
+            dep += E - 2 * MEC2;
+            const cw = 2 * rnd() - 1, ph = 2 * Math.PI * rnd(), sw = Math.sqrt(1 - cw * cw), a = sw * Math.cos(ph), b = sw * Math.sin(ph);
+            if (sp < STK.length - 14) {
+              STK[sp] = x; STK[sp + 1] = y; STK[sp + 2] = z; STK[sp + 3] = a; STK[sp + 4] = b; STK[sp + 5] = cw; STK[sp + 6] = MEC2; sp += 7;
+              STK[sp] = x; STK[sp + 1] = y; STK[sp + 2] = z; STK[sp + 3] = -a; STK[sp + 4] = -b; STK[sp + 5] = -cw; STK[sp + 6] = MEC2; sp += 7;
+            }
+            break;
+          }
+        }
+      }
+      return dep;
+    }
+    const omegaFrac = (d, R) => 0.5 * (1 - d / Math.sqrt(d * d + R * R));   // exact for a point on the axis
+    // Response to photons of energy E from a point on the axis at distance d (cm) from the face.
+    // hist[k]: probability per photon entering the face of depositing E in bin k; also interaction and full energy fractions.
+    function respLine(E, R, H, d, N, rnd) {
+      const hist = new Float32Array(NB); let inter = 0, peak = 0;
+      const c0 = d / Math.sqrt(d * d + R * R);
+      for (let n = 0; n < N; n++) {
+        const ct = c0 + (1 - c0) * rnd(), st = Math.sqrt(1 - ct * ct), ph = 2 * Math.PI * rnd(), cp = Math.cos(ph), sn = Math.sin(ph), r = d * st / ct;
+        const dep = history(E, r * cp, r * sn, 0, st * cp, st * sn, ct, R, H, rnd);
+        if (dep > 1e-9) { inter++; if (Math.abs(dep - E) < 1e-6) peak++; const k = Math.floor(dep / BW); if (k < NB) hist[k] += 1; }
+      }
+      for (let k = 0; k < NB; k++) hist[k] /= N;
+      return { hist, inter: inter / N, peak: peak / N, N };
+    }
+    // Backscatter and lead K x-rays from the backstop, per photon emitted by the source.
+    // Single Compton scattering in a thick lead slab: per sr, n_e dσ/dΩ / (μ_in + μ_out cos α_in / cos α_out).
+    function backstop(E, R, H, d, M, rnd, mat) {
+      mat = mat || 'pb';
+      const D = d + WALL.w, A = Math.PI * R * R, mu1 = muMass(mat, E), ne = NE[mat];
+      const tauK = mat === 'pb' && E > PB_EDGE ? photoPb(E) * (1 - 1 / PB_J) : 0, muX = muMass('pb', PBX_MEAN);
+      const bs = new Float32Array(NB); let Y = 0, Yx = 0;
+      for (let j = 0; j < M; j++) {
+        const ca = rnd(); if (ca < 1e-6) continue;
+        const sa = Math.sqrt(1 - ca * ca), ph = 2 * Math.PI * rnd(), rho = WALL.w * sa / ca;
+        if (rho > WALL.r) continue;                         // misses the backstop
+        const px = rho * Math.cos(ph), py = rho * Math.sin(ph);
+        const rr = R * Math.sqrt(rnd()), ps = 2 * Math.PI * rnd(), fx = rr * Math.cos(ps), fy = rr * Math.sin(ps);
+        let lx = fx - px, ly = fy - py, lz = D; const L = Math.sqrt(lx * lx + ly * ly + lz * lz); lx /= L; ly /= L; lz /= L;
+        const co = lz, omega = A * co / (L * L);
+        const cth = sa * Math.cos(ph) * lx + sa * Math.sin(ph) * ly - ca * lz;
+        const Ep = E / (1 + E / MEC2 * (1 - cth));
+        const f = ne * dsKN(E, cth) / (mu1 + muMass(mat, Ep) * ca / co);
+        const wt = 0.5 * f * omega;
+        Y += wt;
+        Yx += 0.5 * (tauK * PB_W / (4 * Math.PI)) / (mu1 + muX * ca / co) * omega;
+        const dep = history(Ep, fx, fy, 0, lx, ly, lz, R, H, rnd);
+        if (dep > 1e-9) { const k = Math.floor(dep / BW); if (k < NB) bs[k] += wt; }
+      }
+      for (let k = 0; k < NB; k++) bs[k] /= M;
+      return { bs, Y: Y / M, Yx: Yx / M };
+    }
+    // Job for the worker: a list of items {key, kind 'L' (line response) or 'B' (backstop), E, dist, N}
+    function computeJob(job) {
+      const rnd = mulberry(job.seed || 12345), out = [];
+      for (const it of job.items) {
+        if (it.kind === 'L') out.push(Object.assign({ key: it.key }, respLine(it.E, job.R, job.H, it.dist, it.N, rnd)));
+        else out.push(Object.assign({ key: it.key }, backstop(it.E, job.R, job.H, it.dist, it.N, rnd, it.mat)));
+      }
+      return out;
+    }
+    const FAR = 1e5;
+    const keyL = (sz, E, dist) => `L|${sz}|${dist}|${E}`;
+    const keyB = (sz, E, dist, mat) => `B|${sz}|${dist}|${E}|${mat}`;
+    // Which responses a configuration needs
+    function needed(cfg) {
+      const items = [], sz = cfg.size, d = cfg.d, src = SRC[cfg.src];
+      for (const [E, I] of src.lines) {
+        const big = I > 0.05, x = E < 40;
+        items.push({ key: keyL(sz, E, d), kind: 'L', E, dist: d, N: x ? 12000 : big ? 60000 : 20000 });
+        if (cfg.back !== 'none') items.push({ key: keyB(sz, E, d, cfg.back), kind: 'B', E, dist: d, N: x ? 2000 : big ? 24000 : 6000, mat: cfg.back });
+      }
+      for (const [E] of PBX) items.push({ key: keyL(sz, E, d + WALL.w), kind: 'L', E, dist: d + WALL.w, N: 8000 });
+      items.push({ key: keyL(sz, K40, FAR), kind: 'L', E: K40, dist: FAR, N: 60000 });
+      return items;
+    }
+    const window_ = (E) => Math.exp(-muLin('al', E) * WIN_AL);
+    const trans = (mat, tcm, E) => Math.exp(-muLin(mat, E) * tcm) * window_(E);
+    // Distribution of the sum of two independent deposits (histograms without the zero bin)
+    function conv(h1, h2) {
+      const out = new Float64Array(NB);
+      let n1 = NB - 1; while (n1 > 0 && h1[n1] === 0) n1--;
+      let n2 = NB - 1; while (n2 > 0 && h2[n2] === 0) n2--;
+      for (let i = 0; i <= n1; i++) {
+        const a = h1[i]; if (a === 0) continue;
+        const jm = Math.min(n2, NB - 2 - i);
+        for (let j = 0; j <= jm; j++) { const v = 0.5 * a * h2[j]; out[i + j] += v; out[i + j + 1] += v; }
+      }
+      return out;
+    }
+    const NOB = { bs: new Float32Array(NB), Y: 0, Yx: 0 };
+    const BG = { k40: 0.3, pbx: 0.05, c1: 0.0194, e1: 150, c2: 1.5e-4 };   // per s; continuum per keV per s
+    // Deposited energy spectrum, counts per second per 0.5 keV bin. get(key) returns a cached response or null.
+    // cfg: { src, size, d, A (Bq), mat, t (cm), bg }
+    function depositRates(cfg, get, convCache) {
+      const out = new Float64Array(NB), src = SRC[cfg.src], S = SIZES[cfg.size], R = S.R, d = cfg.d, A = cfg.A;
+      const g = omegaFrac(d, R);
+      const add = (h, s) => { if (!(s > 0)) return; for (let k = 0; k < NB; k++) out[k] += s * h[k]; };
+      // combined lead x-ray response (per x-ray entering)
+      const pbx = new Float64Array(NB);
+      for (const [E, w] of PBX) { const r = get(keyL(cfg.size, E, d + WALL.w)); if (!r) return null; for (let k = 0; k < NB; k++) pbx[k] += w * r.hist[k]; }
+      const tX = trans(cfg.mat, cfg.t, PBX_MEAN);
+      const parts = { direct: 0, bs: 0, pbx: 0 };
+      const pbAbs = (E) => {                         // lead x-rays made in a lead absorber, per emitted photon
+        if (cfg.mat !== 'pb' || !(cfg.t > 0) || E <= PB_EDGE) return 0;
+        const m1 = muLin('pb', E), m2 = muLin('pb', PBX_MEAN), tk = photoPb(E) * (1 - 1 / PB_J) * RHO.pb, t = cfg.t;
+        const f = Math.abs(m1 - m2) < 1e-9 ? t * Math.exp(-m1 * t) : (Math.exp(-m2 * t) - Math.exp(-m1 * t)) / (m1 - m2);
+        return 0.5 * PB_W * tk * g * f;
+      };
+      const resp = [];
+      for (const [E, I] of src.lines) {
+        const r = get(keyL(cfg.size, E, d)), b = cfg.back === 'none' ? NOB : get(keyB(cfg.size, E, d, cfg.back)); if (!r || !b) return null;
+        resp.push({ E, I, r, b });
+      }
+      if (src.sum && resp.length === 2) {
+        const [a, b] = resp, key = `${cfg.size}|${d}|${cfg.src}`;
+        let c = convCache && convCache.get(key);
+        if (!c) { c = conv(a.r.hist, b.r.hist); if (convCache) convCache.set(key, c); }
+        if (src.sum === 'cascade') {
+          const p = g * a.I * trans(cfg.mat, cfg.t, a.E), q = g * b.I * trans(cfg.mat, cfg.t, b.E);
+          add(a.r.hist, A * p * (1 - q)); add(b.r.hist, A * q * (1 - p)); add(c, A * p * q);
+          parts.direct = A * (p * a.r.inter + q * b.r.inter);
+        } else {                                   // beta+: two back to back 511 keV photons from fb of decays, 1274 keV from all
+          const fb = src.fb, p = 2 * g * trans(cfg.mat, cfg.t, a.E), q = g * b.I * trans(cfg.mat, cfg.t, b.E);
+          add(a.r.hist, A * fb * p * (1 - q)); add(b.r.hist, A * q * (fb * (1 - p) + (1 - fb))); add(c, A * fb * p * q);
+          parts.direct = A * (fb * p * a.r.inter + q * b.r.inter);
+        }
+      } else {
+        for (const x of resp) { const p = g * x.I * trans(cfg.mat, cfg.t, x.E); add(x.r.hist, A * p); parts.direct += A * p * x.r.inter; }
+      }
+      for (const x of resp) {
+        add(x.b.bs, A * x.I * trans(cfg.mat, cfg.t, backscatterE(x.E)));
+        const yx = x.I * (x.b.Yx * tX + pbAbs(x.E) * window_(PBX_MEAN));
+        add(pbx, A * yx);
+        parts.bs += A * x.I * x.b.Y; parts.pbx += A * yx;
+      }
+      if (cfg.bg) {
+        const v = S.vol, k = get(keyL(cfg.size, K40, FAR)); if (!k) return null;
+        add(k.hist, BG.k40 * v); add(pbx, BG.pbx * v);
+        for (let i = 0; i < NB; i++) { const E = (i + 0.5) * BW; if (E > 5) out[i] += v * BW * (BG.c1 * Math.exp(-E / BG.e1) + BG.c2); }
+      }
+      out.parts = parts; out.g = g;
+      return out;
+    }
+
+    // Electronics
+    const VPK = 2.5e-4, HV0 = 900, KPMT = 7, FS = 10, OFFV = 0.018, TAU = 8e-6, NOISE = { rate: 3000, sv: 0.025 };
+    const RES_B = 0.01;
+    function chanGain(e) { return e.N / FS * VPK * Math.pow(e.hv / HV0, KPMT) * e.coarse * e.fine; }   // channels per keV
+    function chanOffset(e) { return OFFV / FS * e.N; }
+    const fwhmFrac = (E, r662) => (r662 - RES_B) * Math.sqrt(661.657) / Math.sqrt(E) + RES_B;
+    function erf(x) { const s = x < 0 ? -1 : 1; x = Math.abs(x); const t = 1 / (1 + 0.3275911 * x); const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x); return s * y; }
+    const Phi = (z) => 0.5 * (1 + erf(z / Math.SQRT2));
+    // Expected counts per second in each channel. Channel j holds pulses with continuous channel coordinate in [j, j + 1).
+    function channelRates(dep, e) {
+      const N = e.N, out = new Float64Array(N), kg = chanGain(e), c0 = chanOffset(e);
+      for (let k = 0; k < NB; k++) {
+        const w = dep[k]; if (!(w > 0)) continue;
+        const E = (k + 0.5) * BW, c = kg * E + c0, s = Math.max(0.05, kg * E * fwhmFrac(E, e.res) / 2.35482);
+        let j0 = Math.floor(c - 5 * s), j1 = Math.floor(c + 5 * s);
+        if (j1 < 0 || j0 >= N) continue;
+        if (j0 < -1) j0 = -1; if (j1 > N) j1 = N;
+        let F = Phi((j0 + 1 - c) / s);
+        if (j0 >= 0) out[j0] += w * F;
+        for (let j = j0 + 1; j <= j1 && j < N; j++) { const Fn = Phi((j + 1 - c) / s); out[j] += w * (Fn - F); F = Fn; }
+      }
+      if (e.noise !== false) {
+        const sv = NOISE.sv * e.coarse * e.fine / 20 / FS * N;
+        for (let j = 0; j < N; j++) { const p = 2 * (Phi((j + 1) / sv) - Phi(j / sv)); if (p < 1e-12) break; out[j] += NOISE.rate * p; }
+      }
+      const lo = Math.round(e.lld / 100 * N), hi = Math.round(e.uld / 100 * N);
+      for (let j = 0; j < N; j++) if (j < lo || j >= hi) out[j] = 0;
+      return out;
+    }
+    function gauss(rnd) { let u = rnd(); if (u < 1e-300) u = 1e-300; return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rnd()); }
+    function poisson(lam, rnd) {
+      if (!(lam > 0)) return 0;
+      if (lam < 30) { const L = Math.exp(-lam); let k = 0, p = rnd(); while (p > L) { k++; p *= rnd(); } return k; }
+      const k = Math.round(lam + Math.sqrt(lam) * gauss(rnd)); return k > 0 ? k : 0;
+    }
+    // Advance an acquisition by dtReal seconds of real time. Nonparalyzable dead time: live = real / (1 + n τ).
+    function acquire(spec, rates, nIn, dtReal, rnd, maxLive) {
+      let dtLive = dtReal / (1 + nIn * TAU), done = false;
+      if (maxLive > 0 && spec.live + dtLive >= maxLive) { dtLive = Math.max(0, maxLive - spec.live); dtReal = dtLive * (1 + nIn * TAU); done = true; }
+      let tot = 0;
+      for (let j = 0; j < rates.length; j++) { const k = poisson(rates[j] * dtLive, rnd); spec.counts[j] += k; tot += k; }
+      spec.live += dtLive; spec.real += dtReal; spec.total += tot;
+      return done;
+    }
+
+    // ---------- analysis ----------
+    function solve(M, b) {          // Gauss elimination with partial pivoting, small systems
+      const n = b.length, A = M.map((r, i) => r.concat([b[i]]));
+      for (let i = 0; i < n; i++) {
+        let p = i; for (let r = i + 1; r < n; r++) if (Math.abs(A[r][i]) > Math.abs(A[p][i])) p = r;
+        [A[i], A[p]] = [A[p], A[i]]; if (Math.abs(A[i][i]) < 1e-300) return null;
+        for (let r = 0; r < n; r++) if (r !== i) { const f = A[r][i] / A[i][i]; for (let c = i; c <= n; c++) A[r][c] -= f * A[i][c]; }
+      }
+      return A.map((r, i) => r[n] / r[i]);
+    }
+    function inverse(M) { const n = M.length, out = []; for (let i = 0; i < n; i++) { const e = new Array(n).fill(0); e[i] = 1; const c = solve(M, e); if (!c) return null; out.push(c); } return out[0].map((_, i) => out.map((r) => r[i])); }
+    // Weighted polynomial fit y = Σ c_i x^i; sig are the y uncertainties (or null for unweighted with scatter errors)
+    function polyfit(xs, ys, sig, deg) {
+      const n = xs.length, m = deg + 1; if (n < m) return null;
+      const M = Array.from({ length: m }, () => new Array(m).fill(0)), b = new Array(m).fill(0);
+      for (let i = 0; i < n; i++) { const w = sig ? 1 / (sig[i] * sig[i]) : 1; for (let r = 0; r < m; r++) { b[r] += w * ys[i] * Math.pow(xs[i], r); for (let c = 0; c < m; c++) M[r][c] += w * Math.pow(xs[i], r + c); } }
+      const c = solve(M, b); if (!c) return null; const cov = inverse(M); if (!cov) return null;
+      let chi = 0; for (let i = 0; i < n; i++) { let f = 0; for (let r = 0; r < m; r++) f += c[r] * Math.pow(xs[i], r); const w = sig ? 1 / (sig[i] * sig[i]) : 1; chi += w * (ys[i] - f) * (ys[i] - f); }
+      const dof = n - m, s2 = sig ? 1 : (dof > 0 ? chi / dof : NaN);
+      return { c, err: c.map((_, i) => Math.sqrt(cov[i][i] * s2)), cov: cov.map((r) => r.map((v) => v * s2)), chi, dof };
+    }
+    const polyval = (c, x) => c.reduce((s, ci, i) => s + ci * Math.pow(x, i), 0);
+    // Gaussian fit of y = A exp(−(x − m)²/2s²) by Levenberg–Marquardt with weights w
+    function fitGauss(xs, ys, ws, p0) {
+      let p = p0.slice(), lam = 1e-3;
+      const chi2 = (q) => { let s = 0; for (let i = 0; i < xs.length; i++) { const z = (xs[i] - q[1]) / q[2], f = q[0] * Math.exp(-0.5 * z * z); s += ws[i] * (ys[i] - f) * (ys[i] - f); } return s; };
+      let chi = chi2(p), M = null;
+      for (let it = 0; it < 80; it++) {
+        M = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]; const g = [0, 0, 0];
+        for (let i = 0; i < xs.length; i++) {
+          const z = (xs[i] - p[1]) / p[2], e = Math.exp(-0.5 * z * z), f = p[0] * e, J = [e, f * z / p[2], f * z * z / p[2]], r = ys[i] - f;
+          for (let a = 0; a < 3; a++) { g[a] += ws[i] * J[a] * r; for (let b = 0; b < 3; b++) M[a][b] += ws[i] * J[a] * J[b]; }
+        }
+        let ok = false;
+        for (let tr = 0; tr < 12; tr++) {
+          const Ml = M.map((r, a) => r.map((v, b) => a === b ? v * (1 + lam) : v)), dp = solve(Ml, g);
+          if (!dp) break;
+          const q = [p[0] + dp[0], p[1] + dp[1], p[2] + dp[2]];
+          if (q[2] > 0 && q[0] > 0) { const c = chi2(q); if (c <= chi) { const conv = chi - c < 1e-7 * (chi + 1e-9); p = q; chi = c; lam = Math.max(1e-7, lam / 4); ok = true; if (conv) it = 999; break; } }
+          lam *= 6;
+        }
+        if (!ok) break;
+      }
+      const cov = M ? inverse(M) : null;
+      return { A: p[0], m: p[1], s: Math.abs(p[2]), cov, chi };
+    }
+    // Region of interest [a, b] (inclusive channels). Background: straight line through the mean of the three end channels on each side.
+    function roiStats(counts, a, b) {
+      if (b < a) [a, b] = [b, a];
+      const n = b - a + 1; if (n < 7) return null;
+      const m = 3; let SL = 0, SR = 0; for (let i = 0; i < m; i++) { SL += counts[a + i]; SR += counts[b - i]; }
+      const yL = SL / m, yR = SR / m, xL = a + (m - 1) / 2, xR = b - (m - 1) / 2;
+      const bl = (x) => yL + (yR - yL) * (x - xL) / (xR - xL);
+      let G = 0, B = 0; for (let j = a; j <= b; j++) { G += counts[j]; B += bl(j); }
+      const varB = (n / (2 * m)) * (n / (2 * m)) * (SL + SR), net = G - B, snet = Math.sqrt(G + varB);
+      // centroid and FWHM: Gaussian fit to the net counts, weights from Poisson variance of the gross counts
+      const xs = [], ys = [], ws = []; let s0 = 0, s1 = 0, s2 = 0, top = 0, xt = a;
+      for (let j = a; j <= b; j++) { const y = counts[j] - bl(j); xs.push(j); ys.push(y); ws.push(1 / Math.max(1, counts[j])); if (y > 0) { s0 += y; s1 += y * j; s2 += y * j * j; } if (y > top) { top = y; xt = j; } }
+      let cen = NaN, scen = NaN, fwhm = NaN, sfwhm = NaN, fit = null;
+      if (s0 > 0) {
+        const mu = s1 / s0, sg = Math.sqrt(Math.max(0.25, s2 / s0 - mu * mu));
+        fit = fitGauss(xs, ys, ws, [Math.max(top, 1), xt, Math.max(0.6, Math.min(sg, n / 3))]);
+        if (fit && fit.cov && fit.m > a && fit.m < b && fit.s < n) {
+          cen = fit.m; scen = Math.sqrt(Math.max(0, fit.cov[1][1])); fwhm = 2.35482 * fit.s; sfwhm = 2.35482 * Math.sqrt(Math.max(0, fit.cov[2][2]));
+        } else { cen = mu; scen = sg / Math.sqrt(s0); fwhm = 2.35482 * sg; sfwhm = fwhm / Math.sqrt(2 * s0); fit = null; }
+      }
+      return { a, b, n, G, B, net, snet, cen, scen, fwhm, sfwhm, bl: { xL, yL, xR, yR }, fit: !!fit };
+    }
+    // Find the peak nearest channel c: maximum of the 5 channel running mean within ±w, then a ROI of ±1.4 FWHM around it.
+    function findPeak(counts, c, w) {
+      const N = counts.length, sm = (j) => { let s = 0, k = 0; for (let i = j - 2; i <= j + 2; i++) if (i >= 0 && i < N) { s += counts[i]; k++; } return s / k; };
+      let best = -1, bv = -1;
+      for (let j = Math.max(3, Math.round(c - w)); j <= Math.min(N - 4, Math.round(c + w)); j++) { const v = sm(j); if (v > bv) { bv = v; best = j; } }
+      if (best < 0 || bv <= 0) return null;
+      // half width from the running mean
+      let l = best, r = best; while (l > 0 && sm(l) > bv / 2) l--; while (r < N - 1 && sm(r) > bv / 2) r++;
+      const hw = Math.max(4, Math.round((r - l) * 1.4));          // ±1.4 FWHM: the ends sit on the background
+      // stop early at a valley, so a neighbouring peak stays out of the region
+      const edge = (dir) => { let j = best, vmin = bv, jmin = best; for (let k = 1; k <= hw + 1; k++) { const i = best + dir * k; if (i < 0 || i >= N) break; const v = sm(i); if (v < vmin) { vmin = v; jmin = i; } else if (vmin < 0.6 * bv && v > vmin * 1.15 + 3) break; j = i; } return vmin < 0.6 * bv && Math.abs(jmin - best) < Math.abs(j - best) ? jmin : j; };
+      const a = Math.max(0, edge(-1)), b = Math.min(N - 1, edge(1));
+      return roiStats(counts, a, b);
+    }
+
+    return { MEC2, RE, NAV, BW, NB, RHO, XNAI, XPB, XCU, XAL, interp, muMass, muLin, muNaI, photoPb, IK_EDGE, IK_P, IKX, PB_EDGE, PB_W, PBX, PBX_MEAN, WALL, SIZES, K40, SRC, BG,
+      mulberry, sampleKN, KN, dsKN, comptonEdge, backscatterE, exitDist, history, omegaFrac, respLine, backstop, computeJob, needed, keyL, keyB, FAR, trans, window_, conv, depositRates,
+      VPK, HV0, KPMT, FS, OFFV, TAU, NOISE, RES_B, chanGain, chanOffset, fwhmFrac, erf, Phi, channelRates, gauss, poisson, acquire, solve, polyfit, polyval, fitGauss, roiStats, findPeak };
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') { globalThis.GSCORE = GSCORE; globalThis.GS = GSCORE(); return; }
+
+  const C = GSCORE();
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const rnd = Math.random;
+
+  // ---------- worker for the Monte Carlo responses ----------
+  let worker = null, busy = false, pendingJob = null, jobSeq = 0;
+  const cache = new Map(), convCache = new Map();
+  try {
+    const srcTxt = `const C = (${GSCORE.toString()})();\nonmessage = (e) => { const out = C.computeJob(e.data); postMessage({ id: e.data.id, out }, out.map((o) => (o.hist || o.bs).buffer)); };`;
+    worker = new Worker(URL.createObjectURL(new Blob([srcTxt], { type: 'text/javascript' })));
+    worker.onmessage = (e) => { busy = false; for (const o of e.data.out) cache.set(o.key, o); onResponses(); };
+    worker.onerror = () => { worker = null; busy = false; };
+  } catch (_) { worker = null; }
+  function runJob(job) {
+    busy = true;
+    if (worker) { worker.postMessage(job); return; }
+    // fallback without a worker: compute in slices so the page stays responsive
+    const items = job.items.slice();
+    const step = () => {
+      const t0 = performance.now();
+      while (items.length && performance.now() - t0 < 30) { const it = items.shift(); for (const o of C.computeJob({ R: job.R, H: job.H, seed: job.seed + items.length, items: [it] })) cache.set(o.key, o); }
+      if (items.length) setTimeout(step, 0); else { busy = false; onResponses(); }
+    };
+    setTimeout(step, 0);
+  }
+  function requestResponses() {
+    const cfg = depCfg(), items = C.needed(cfg).filter((it) => !cache.has(it.key));
+    if (!items.length) return true;
+    const sz = C.SIZES[cfg.size];
+    const job = { id: ++jobSeq, R: sz.R, H: sz.H, seed: (Math.random() * 4294967295) >>> 0, items };
+    if (busy) pendingJob = true; else runJob(job);
+    return false;
+  }
+  function onResponses() {
+    if (pendingJob) { pendingJob = null; if (!requestResponses()) return; }
+    depDirty = true;
+    if (cache.size > 900) { let n = 0; for (const k of cache.keys()) { if (n++ > 300) break; cache.delete(k); } }
+  }
+
+  // ---------- state ----------
+  const S = {
+    preset: 'cs', src: 'cs137', unk: 'cs137', revealed: false, act: 1, d: 5, mat: 'none', t: 0, size: 's2', back: 'pb',
+    hv: 900, coarse: 20, fine: 1, N: 1024, lld: 1, uld: 100, res: 0.07, ptime: 0, speed: 10,
+    log: true, keV: false, mark: false, bg: true, ana: 'cal'
+  };
+  const UCI = 3.7e4;               // Bq per µCi
+  const trueSrc = () => S.src === 'unk' ? S.unk : S.src;
+  const depCfg = () => ({ src: trueSrc(), size: S.size, d: S.d, A: S.act * UCI, mat: S.mat, t: S.t / 10, bg: S.bg, back: S.back });
+  const elec = () => ({ N: S.N, hv: S.hv, coarse: S.coarse, fine: S.fine, res: S.res, lld: S.lld, uld: S.uld });
+  const gainKey = () => `${S.hv}|${S.coarse}|${S.fine}|${S.N}`;
+  let spec = newSpec(), dep = null, rates = null, nIn = 0, depDirty = true, chanDirty = true, acquiring = false, ready = false;
+  function newSpec() { return { counts: new Float64Array(S.N), live: 0, real: 0, total: 0 }; }
+  let rois = [], roiSel = -1, cursor = 300, view = [0, 1024], cand = null, rows = [];
+  const cal = { pts: [], deg: 1, fit: null, key: null };
+
+  function recompute() {
+    if (depDirty) {
+      if (!requestResponses()) { ready = false; return; }
+      const d = C.depositRates(depCfg(), (k) => cache.get(k) || null, convCache);
+      if (!d) { ready = false; requestResponses(); return; }
+      dep = d; depDirty = false; chanDirty = true;
+    }
+    if (chanDirty && dep) {
+      rates = C.channelRates(dep, elec()); nIn = 0; for (const v of rates) nIn += v; chanDirty = false; ready = true;
+      geomReadouts(); elecReadouts();
+    }
+  }
+  const touchDep = () => { depDirty = true; ready = false; geomReadouts(); };
+  const touchChan = () => { chanDirty = true; elecReadouts(); calReadout(); };
+
+  // ---------- presets ----------
+  const PRESETS = {
+    cs: { src: 'cs137', back: 'fe', d: 5, coarse: 20, ptime: 0, speed: 10, ana: 'cal', lin: true,
+      hint: 'A 1 µCi ¹³⁷Cs source 5 cm from the crystal. The tall peak is the 661.7 keV photopeak, where the photon gave all its energy to the crystal. Below it the Compton continuum ends at the Compton edge, 2E²/(mₑc² + 2E) = 477.3 keV, where the counts fall most steeply. The bump near 190 keV is the backscatter peak: photons scattered back from the steel plate behind the source carry E/(1 + 2E/mₑc²) = 184.3 keV at exactly 180°, a little more at the smaller angles the plate also allows. Switch the backing to lead: lead absorbs most scattered photons on their way out, so the bump shrinks, and lead K x-rays appear near 75 keV. The barium K x-rays make the peak near 32 keV. Drag a region over each feature to measure it.' },
+    co: { src: 'co60', d: 1, coarse: 10, ptime: 0, speed: 10, ana: 'cal',
+      hint: '⁶⁰Co emits 1173.2 and 1332.5 keV photons in cascade, almost at the same instant. With the source 1 cm away both often reach the crystal and their energies add: the sum peak at 2505.7 keV. Move the source back and watch the sum peak fall faster than the photopeaks, because it needs two photons inside the solid angle.' },
+    na: { src: 'na22', d: 3, coarse: 10, ptime: 0, speed: 10, ana: 'cal',
+      hint: '²²Na decays by positron emission. The positron annihilates in the source capsule into two 511 keV photons going opposite ways, so only one can reach the crystal: a strong 511 keV peak beside the 1274.5 keV nuclear line. Their sum, 1785.5 keV, appears at short distance. Each line has its own Compton edge (340.7 and 1061.7 keV).' },
+    cal: { src: 'cs137', d: 5, coarse: 10, ptime: 120, speed: 100, mark: true, ana: 'cal',
+      hint: 'Acquire, then click the 661.7 keV peak in mark peak mode and add 661.657 keV. Switch the source to Co-60, clear and acquire, then mark 1173.228 and 1332.492 keV. Na-22 (511.0, 1274.537) and Ba-133 (81.0, 356.0) add more points. Keep the HV and gain fixed. Then turn on the keV axis and check the residuals.' },
+    pb: { src: 'cs137', d: 10, coarse: 20, ptime: 60, speed: 100, mat: 'pb', t: 0, roi: [661.657, 0.09], ana: 'att',
+      hint: 'Narrow beam attenuation of the 661.7 keV line in lead. The region of interest covers the photopeak. Acquire 60 s, Add to table, then add 2 mm of lead, Clear, acquire again, and repeat to 20 mm. The Attenuation plot fits ln(rate) against thickness; the slope is −μ. Compare with XCOM, μ = 1.25 cm⁻¹.' },
+    unk: { src: 'unk', d: 5, coarse: 10, ptime: 300, speed: 100, ana: 'cal', calibrate: true,
+      hint: 'A source with its label covered. The detector was calibrated with Cs-137 and Co-60 earlier (points in the calibration list), so the axis can show keV. Acquire, measure the energy of each photopeak, and compare with the line list in the Model section. Reveal the answer when you are done.' }
+  };
+  function applyPreset(name) {
+    const p = PRESETS[name];
+    S.preset = name; S.src = p.src; S.d = p.d; S.coarse = p.coarse; S.fine = 1; S.hv = 900; S.N = 1024; S.lld = 1; S.uld = 100; S.res = 0.07;
+    S.ptime = p.ptime; S.speed = p.speed; S.mat = p.mat || 'none'; S.t = p.t || 0; S.act = 1; S.size = 's2'; S.back = p.back || 'pb'; S.mark = !!p.mark; S.ana = p.ana; S.keV = false; S.log = !p.lin;
+    if (p.src === 'unk') { const ids = ['cs137', 'co60', 'na22', 'ba133', 'mn54']; S.unk = ids[Math.floor(Math.random() * ids.length)]; S.revealed = false; }
+    stop(); spec = newSpec(); rois = []; roiSel = -1; cand = null; view = [0, S.N];
+    cal.pts = []; cal.fit = null; cal.key = null; cal.deg = 1;
+    if (p.calibrate) {
+      // a calibration from an earlier session: centroids measured with Cs-137 and Co-60 (simulated, with their statistical scatter)
+      const e = elec(), kg = C.chanGain(e), c0 = C.chanOffset(e) - 0.5;
+      for (const E of [661.657, 1173.228, 1332.492]) { const s = 0.06; cal.pts.push({ ch: kg * E + c0 + s * C.gauss(rnd), sch: s, E }); }
+      cal.key = gainKey(); fitCal();
+    }
+    touchDep(); touchChan();
+    if (p.roi) {
+      const e = elec(), kg = C.chanGain(e), c0 = C.chanOffset(e) - 0.5, E = p.roi[0], w = p.roi[1] * E;
+      rois = [{ a: Math.round(kg * (E - w * 1.15) + c0), b: Math.round(kg * (E + w * 1.15) + c0) }]; roiSel = 0;
+    }
+    cursor = Math.round(C.chanGain(elec()) * 661.657);
+    markPresetButtons(); syncControls(); allReadouts();
+    if (reduce) { prefill(p.ptime || 120); } else start();
+  }
+  function markPresetButtons() {
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    $('presetHint').textContent = S.preset && PRESETS[S.preset] ? PRESETS[S.preset].hint : 'Your own setup. Pick an experiment above to return to a known one.';
+  }
+  function custom() { if (S.preset) { S.preset = null; markPresetButtons(); } }
+  // reduced motion: fill the spectrum at once instead of animating
+  function prefill(sec) {
+    const go = () => { recompute(); if (!ready) { setTimeout(go, 60); return; } C.acquire(spec, rates, nIn, sec * (1 + nIn * C.TAU), rnd, sec); allReadouts(); };
+    go();
+  }
+
+  // ---------- acquisition ----------
+  function start() { if (S.ptime > 0 && spec.live >= S.ptime - 1e-9) { spec = newSpec(); } acquiring = true; acqBtn(); }
+  function stop() { acquiring = false; acqBtn(); }
+  function acqBtn() { const b = $('acq'); b.textContent = acquiring ? 'Stop' : 'Acquire'; b.classList.toggle('rec', !acquiring); b.classList.toggle('primary', acquiring); }
+  function clearSpec() { spec = newSpec(); cand = null; allReadouts(); }
+
+  // ---------- calibration ----------
+  function fitCal() {
+    const pts = cal.pts, deg = pts.length >= 3 ? cal.deg : 1;
+    if (pts.length < 2) { cal.fit = null; return; }
+    // first pass for the slope, then weights σ_E = |dE/dch| σ_ch
+    let f = C.polyfit(pts.map((p) => p.ch), pts.map((p) => p.E), null, 1);
+    if (!f) { cal.fit = null; return; }
+    const slope = (x) => deg === 2 && cal.fit && cal.fit.c.length === 3 ? f.c[1] + 2 * (f.c[2] || 0) * x : f.c[1];
+    const sig = pts.map((p) => Math.max(1e-6, Math.abs(slope(p.ch)) * p.sch));
+    const fw = C.polyfit(pts.map((p) => p.ch), pts.map((p) => p.E), pts.length > deg + 1 ? null : sig, deg);
+    cal.fit = fw || f; cal.fit.deg = deg;
+  }
+  const calOK = () => !!cal.fit;
+  const calStale = () => calOK() && cal.key !== gainKey();
+  const chToE = (ch) => C.polyval(cal.fit.c, ch);
+  function eToCh(E) {
+    const c = cal.fit.c; if (c.length < 3 || Math.abs(c[2]) < 1e-14) return (E - c[0]) / c[1];
+    const a = c[2], b = c[1], cc = c[0] - E, D = b * b - 4 * a * cc; if (D < 0) return (E - c[0]) / c[1];
+    const r1 = (-b + Math.sqrt(D)) / (2 * a), r2 = (-b - Math.sqrt(D)) / (2 * a), g = (E - c[0]) / c[1];
+    return Math.abs(r1 - g) < Math.abs(r2 - g) ? r1 : r2;
+  }
+  function setCand(st, label) {
+    if (!st || !(st.cen === st.cen)) { cand = null; calReadout(); return; }
+    cand = { ch: st.cen, sch: st.scen, fwhm: st.fwhm, label };
+    // suggest the nearest known line when the source is known and the axis is calibrated
+    calReadout();
+  }
+  function addCalPoint() {
+    const E = parseFloat($('cE').value);
+    if (!cand || !(E > 0)) return;
+    if (cal.pts.length && cal.key !== gainKey()) { cal.pts = []; }
+    cal.pts.push({ ch: cand.ch, sch: Math.max(cand.sch || 0.05, 0.01), E }); cal.key = gainKey();
+    cal.pts.sort((a, b) => a.ch - b.ch); fitCal(); cand = null; $('cE').value = '';
+    calReadout(); roiReadout(); drawAna();
+  }
+
+  // ---------- table ----------
+  const matName = { none: 'none', pb: 'lead', cu: 'copper', al: 'aluminum' };
+  function addRow() {
+    const r = rois[roiSel]; if (!r) return;
+    const st = C.roiStats(spec.counts, r.a, r.b); if (!st || !(spec.live > 0)) return;
+    const E = calOK() && !calStale() ? chToE(st.cen) : NaN, fwE = calOK() && !calStale() ? Math.abs(chToE(st.cen + st.fwhm / 2) - chToE(st.cen - st.fwhm / 2)) : NaN;
+    rows.push({ n: rows.length + 1, src: S.src === 'unk' && !S.revealed ? 'unknown' : C.SRC[trueSrc()].name, srcId: trueSrc(), d: S.d, mat: S.mat, t: S.t, live: spec.live, real: spec.real, a: st.a, b: st.b, G: st.G, B: st.B,
+      net: st.net, snet: st.snet, rate: st.net / spec.live, srate: st.snet / spec.live, cen: st.cen, scen: st.scen, fwhm: st.fwhm, sfwhm: st.sfwhm, E, fwE });
+    tableReadout(); drawAna();
+  }
+  function tableReadout() {
+    const tb = $('tbl').querySelector('tbody'); tb.innerHTML = '';
+    for (const r of rows) {
+      const tr = document.createElement('tr');
+      const cells = [r.n, r.src, r.d.toFixed(1), r.mat === 'none' || r.t === 0 ? 'none' : `${matName[r.mat]} ${r.t.toFixed(1)} mm`, r.live.toFixed(1), r.net.toFixed(0), r.snet.toFixed(0), r.rate.toPrecision(4), r.srate.toPrecision(2),
+        r.cen.toFixed(2), r.scen.toFixed(2), r.fwhm.toFixed(1), r.E === r.E ? r.E.toFixed(1) : '—', r.E === r.E ? (100 * r.fwE / r.E).toFixed(2) : '—'];
+      for (const c of cells) { const td = document.createElement('td'); td.textContent = c; tr.appendChild(td); }
+      const td = document.createElement('td'), b = document.createElement('button'); b.type = 'button'; b.textContent = '×'; b.setAttribute('aria-label', `Remove row ${r.n}`);
+      b.addEventListener('click', () => { rows = rows.filter((x) => x !== r); rows.forEach((x, i) => { x.n = i + 1; }); tableReadout(); drawAna(); });
+      td.appendChild(b); tr.appendChild(td); tb.appendChild(tr);
+    }
+  }
+  function download(name, text) {
+    try {
+      const url = URL.createObjectURL(new Blob([text], { type: 'text/csv' })), a = document.createElement('a');
+      a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
+    } catch (_) {}
+  }
+  function specCSV() {
+    const cOK = calOK() && !calStale();
+    let s = `# Simulated NaI(Tl) spectrum (Gamma Spectroscopy virtual lab). Not measured data.\n# source,${S.src === 'unk' && !S.revealed ? 'unknown' : C.SRC[trueSrc()].name}\n# activity_uCi,${S.act}\n# distance_cm,${S.d}\n# absorber,${S.mat},${S.t} mm\n# crystal,${C.SIZES[S.size].label}\n# HV_V,${S.hv}\n# coarse_gain,${S.coarse}\n# fine_gain,${S.fine}\n# channels,${S.N}\n# live_time_s,${spec.live.toFixed(3)}\n# real_time_s,${spec.real.toFixed(3)}\n`;
+    if (cOK) s += `# calibration_keV,${cal.fit.c.map((v) => v.toPrecision(8)).join(',')}\n`;
+    s += cOK ? 'channel,counts,energy_keV\n' : 'channel,counts\n';
+    for (let j = 0; j < spec.counts.length; j++) s += cOK ? `${j},${spec.counts[j]},${chToE(j).toFixed(3)}\n` : `${j},${spec.counts[j]}\n`;
+    return s;
+  }
+  function tableCSV() {
+    let s = '# ROI table from the Gamma Spectroscopy virtual lab (simulated).\nrow,source,distance_cm,absorber,thickness_mm,live_s,real_s,roi_start,roi_end,gross,background,net,net_unc,rate_per_s,rate_unc,centroid_ch,centroid_unc,fwhm_ch,fwhm_unc,energy_keV,fwhm_keV\n';
+    for (const r of rows) s += [r.n, r.src, r.d, r.mat, r.t, r.live.toFixed(3), r.real.toFixed(3), r.a, r.b, r.G, r.B.toFixed(1), r.net.toFixed(1), r.snet.toFixed(1), r.rate.toPrecision(6), r.srate.toPrecision(3), r.cen.toFixed(3), r.scen.toFixed(3), r.fwhm.toFixed(3), r.sfwhm.toFixed(3), r.E === r.E ? r.E.toFixed(2) : '', r.fwE === r.fwE ? r.fwE.toFixed(2) : ''].join(',') + '\n';
+    return s;
+  }
+
+  // ---------- theme, canvas, layout ----------
+  let T = null, dpr = 1;
+  const projOn = () => document.documentElement.getAttribute('data-projector') === 'on';
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const n of ['canvas', 'surface', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'pos', 'neg', 'equi', 'accent', 'gamma', 'lead', 'lead-hi', 'lead-dk', 'alu', 'alu-dk', 'pmt', 'bench', 'bench-dk', 'nim', 'scr', 'scr-ink', 'scr-muted', 'scr-grid', 'scr-data', 'scr-roi', 'scr-cur', 'scr-cal']) T[n.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = g('--' + n);
+    T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'sans-serif';
+  }
+  const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  let W = 0, Hh = 0, LY = null;
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = pane.getBoundingClientRect(); W = r.width; Hh = r.height;
+    can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(Hh * dpr));
+    can.style.width = W + 'px'; can.style.height = Hh + 'px';
+    LY = layout(W, Hh); drawAll(); resizeAna();
+  }
+  function scaleFor(p) { if (!projOn()) return 1; return Math.max(1.05, Math.min(1.35, Math.min(p.w / 420, p.h / 210))); }
+  function layout(W, H) {
+    const P = (x, y, w, h) => { const o = { x, y, w, h }; o.ps = scaleFor(o); return o; };
+    const narrow = W < 600;
+    const bh = narrow ? Math.round(Math.min(330, Math.max(270, H * 0.38))) : Math.round(Math.max(180, Math.min(330, H * 0.37)));
+    return { narrow, bench: P(0, 0, W, bh), mca: P(0, bh, W, H - bh) };
+  }
+  function label(c, txt, x, y, col, align = 'left', base = 'middle', bold = false, ps = 1, bg = T.canvas, size = 11) {
+    c.font = `${bold ? '600 ' : ''}${size * ps}px ${T.mono}`; c.textAlign = align; c.textBaseline = base;
+    const w = c.measureText(txt).width, h = (size + 3) * ps;
+    const x0 = align === 'left' ? x : align === 'right' ? x - w : x - w / 2;
+    const y0 = base === 'middle' ? y - h / 2 : base === 'bottom' ? y - h : y;
+    if (bg) { c.fillStyle = bg; c.globalAlpha = 0.82; c.fillRect(x0 - 3, y0, w + 6, h); c.globalAlpha = 1; }
+    c.fillStyle = col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
+    return w;
+  }
+  function rr(c, x, y, w, h, r) { c.beginPath(); if (c.roundRect) c.roundRect(x, y, w, h, r); else c.rect(x, y, w, h); }
+
+  function drawAll() {
+    if (!T || !LY) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    drawBench(LY.bench);
+    drawMCA(LY.mca);
+  }
+
+  // ---------- the bench ----------
+  const NUC_COL = { cs137: '#d9a400', co60: '#2f7fd8', na22: '#c8402d', ba133: '#1d8a62', mn54: '#7a3ec2', unk: '#7c8796', none: '#7c8796' };
+  function benchGeom() {
+    const p = LY.bench, ps = p.ps, narrow = LY.narrow;
+    const top = p.y + 24 * ps;
+    let cast, el;
+    if (narrow) { const ch = Math.round((p.h - 24 * ps) * 0.6); cast = { x: p.x + 8, y: top, w: p.w - 16, h: ch }; el = { x: p.x + 8, y: top + ch + 4, w: p.w - 16, h: p.y + p.h - (top + ch + 4) - 6 }; }
+    else { const ew = Math.round(Math.min(300 * ps, Math.max(200, p.w * 0.27))); cast = { x: p.x + 10, y: top, w: p.w - ew - 28, h: p.h - (top - p.y) - 8 }; el = { x: cast.x + cast.w + 10, y: top + 4, w: ew, h: p.h - (top - p.y) - 14 }; }
+    const sz = C.SIZES[S.size], R = sz.R, H = sz.H;
+    const wallT = 4, half = 6.5;
+    const zL = -(30 + C.WALL.w + 5 + 2), zR = 5.08 * 1.5 + 0.6 + 13 + 4 + 2.5;
+    const spanZ = zR - zL + 2 * wallT + 3.2, spanY = 2 * half + 2 * wallT + 4.2 + 2.2;
+    const sc = Math.min(cast.w / spanZ, cast.h / spanY);
+    const ox = cast.x + (cast.w - spanZ * sc) / 2 + (wallT - zL) * sc - 1.6 * sc;
+    const cy = cast.y + (cast.h - spanY * sc) / 2 + (wallT + half + 2.2) * sc;
+    const X = (z) => ox + z * sc, Y = (y) => cy - y * sc;
+    return { p, ps, cast, el, sc, X, Y, R, H, wallT, half, zL, zR, cy };
+  }
+  function cylinder(c, x0, x1, yc, r, cols, capR) {
+    const g = c.createLinearGradient(0, yc - r, 0, yc + r);
+    g.addColorStop(0, cols[0]); g.addColorStop(0.35, cols[1]); g.addColorStop(0.62, cols[2]); g.addColorStop(1, cols[3]);
+    const e = Math.max(2, r * 0.28);
+    c.fillStyle = g; c.beginPath(); c.moveTo(x0, yc - r); c.lineTo(x1, yc - r); c.ellipse(x1, yc, e, r, 0, -Math.PI / 2, Math.PI / 2); c.lineTo(x0, yc + r); c.ellipse(x0, yc, e, r, 0, Math.PI / 2, -Math.PI / 2, true); c.closePath(); c.fill();
+    if (capR) { c.fillStyle = capR; c.beginPath(); c.ellipse(x0, yc, e, r, 0, 0, 2 * Math.PI); c.fill(); }
+  }
+  function bricks(c, x, y, w, h, bw, bh, face, cut) {
+    c.save(); c.beginPath(); c.rect(x, y, w, h); c.clip();
+    const g = c.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, T.leadHi); g.addColorStop(0.5, face); g.addColorStop(1, T.leadDk);
+    c.fillStyle = g; c.fillRect(x, y, w, h);
+    c.strokeStyle = T.leadDk; c.lineWidth = 1; c.globalAlpha = 0.7;
+    for (let r = 0, yy = y; yy < y + h; r++, yy += bh) {
+      c.beginPath(); c.moveTo(x, yy + 0.5); c.lineTo(x + w, yy + 0.5); c.stroke();
+      for (let xx = x + (r % 2 ? bw / 2 : 0); xx < x + w; xx += bw) { c.beginPath(); c.moveTo(xx + 0.5, yy); c.lineTo(xx + 0.5, yy + bh); c.stroke(); }
+    }
+    if (cut) { c.globalAlpha = 0.18; c.strokeStyle = T.ink; for (let k = -h; k < w; k += 6) { c.beginPath(); c.moveTo(x + k, y + h); c.lineTo(x + k + h, y); c.stroke(); } }
+    c.restore();
+  }
+  let gammas = [], flashes = [];
+  function drawBench(p) {
+    const c = ctx, G = benchGeom(), ps = G.ps, X = G.X, Y = G.Y, sc = G.sc;
+    c.save(); c.beginPath(); c.rect(p.x, p.y, p.w, p.h); c.clip();
+    c.fillStyle = T.ink; c.font = `600 ${11.5 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillText(LY.narrow ? 'Bench: lead castle, cut open' : 'Bench: lead castle cut open, source holder on a rail, NaI(Tl) detector', p.x + 12 * ps, p.y + 7 * ps);
+    // bench top
+    const yb = Y(-G.half - G.wallT);
+    const bg = c.createLinearGradient(0, yb, 0, p.y + p.h); bg.addColorStop(0, T.bench); bg.addColorStop(1, T.benchDk);
+    c.fillStyle = bg; c.fillRect(p.x, yb, p.w, p.y + p.h - yb);
+    // castle: back wall (inside, darker), floor and roof bricks cut open
+    const zl = G.zL - G.wallT, zr = G.zR + G.wallT;
+    const dz = 3.2 * sc, dyz = 2.2 * sc;          // oblique depth offset of the castle (drawn 3D box)
+    // top face of the roof and right face of the end wall
+    c.fillStyle = T.leadHi; c.beginPath(); c.moveTo(X(zl), Y(G.half + G.wallT)); c.lineTo(X(zl) + dz, Y(G.half + G.wallT) - dyz); c.lineTo(X(zr) + dz, Y(G.half + G.wallT) - dyz); c.lineTo(X(zr), Y(G.half + G.wallT)); c.closePath(); c.fill();
+    c.strokeStyle = T.leadDk; c.lineWidth = 1; c.globalAlpha = 0.6; for (let z = zl + 10; z < zr; z += 10) { c.beginPath(); c.moveTo(X(z), Y(G.half + G.wallT)); c.lineTo(X(z) + dz, Y(G.half + G.wallT) - dyz); c.stroke(); } c.globalAlpha = 1;
+    c.fillStyle = T.leadDk; c.beginPath(); c.moveTo(X(zr), Y(G.half + G.wallT)); c.lineTo(X(zr) + dz, Y(G.half + G.wallT) - dyz); c.lineTo(X(zr) + dz, Y(-G.half - G.wallT) - dyz); c.lineTo(X(zr), Y(-G.half - G.wallT)); c.closePath(); c.fill();
+    // shadow of the castle on the bench
+    c.fillStyle = 'rgba(0,0,0,0.18)'; c.fillRect(X(zl) + 4, Y(-G.half - G.wallT), (zr - zl) * sc + dz, 5 * ps);
+    const ig = c.createLinearGradient(0, Y(G.half), 0, Y(-G.half)); ig.addColorStop(0, '#2a2f36'); ig.addColorStop(1, T.leadDk);
+    c.fillStyle = ig; c.fillRect(X(G.zL), Y(G.half), (G.zR - G.zL) * sc, 2 * G.half * sc);
+    c.globalAlpha = 0.35; c.strokeStyle = T.lead; c.lineWidth = 1;
+    for (let yy = -G.half; yy < G.half; yy += 2.5) { c.beginPath(); c.moveTo(X(G.zL), Y(yy) + 0.5); c.lineTo(X(G.zR), Y(yy) + 0.5); c.stroke(); }
+    c.globalAlpha = 1;
+    const bwp = 10 * sc, bhp = 2.5 * sc;
+    bricks(c, X(zl), Y(G.half + G.wallT), (zr - zl) * sc, G.wallT * sc, bwp, bhp, T.lead, true);
+    bricks(c, X(zl), Y(-G.half), (zr - zl) * sc, G.wallT * sc, bwp, bhp, T.lead, true);
+    bricks(c, X(zl), Y(G.half), G.wallT * sc, 2 * G.half * sc, 2.5 * sc, bhp, T.lead, true);
+    bricks(c, X(G.zR), Y(G.half), G.wallT * sc, 2 * G.half * sc, 2.5 * sc, bhp, T.lead, true);
+    // rail on the floor
+    const zRail0 = G.zL + 0.5, zRail1 = -0.5;
+    c.fillStyle = T.aluDk; c.fillRect(X(zRail0), Y(-G.half + 0.8), (zRail1 - zRail0) * sc, 0.8 * sc);
+    c.fillStyle = T.alu; c.fillRect(X(zRail0), Y(-G.half + 1.0), (zRail1 - zRail0) * sc, 0.25 * sc);
+    // detector: can, crystal window, PMT, base, cable
+    const R = G.R, H = G.H, canR = R + 0.25, x0 = X(-0.15), x1 = X(H + 0.5), pmtR = Math.min(canR, R < 3 ? 2.75 : 4.0);
+    // V blocks
+    c.fillStyle = T.aluDk; for (const z of [H * 0.3, H + 6]) { c.beginPath(); c.moveTo(X(z - 1.4), Y(-G.half)); c.lineTo(X(z + 1.4), Y(-G.half)); c.lineTo(X(z + 0.9), Y(-canR * 0.85)); c.lineTo(X(z - 0.9), Y(-canR * 0.85)); c.closePath(); c.fill(); }
+    c.fillStyle = 'rgba(0,0,0,0.28)'; c.beginPath(); c.ellipse(X(H / 2 + 8), Y(-G.half) - 1.5, (H + 17) * sc / 2, 1.2 * sc, 0, 0, 2 * Math.PI); c.fill();
+    cylinder(c, X(H + 0.5), X(H + 0.5 + 13), G.cy, pmtR * sc, [T.pmt, '#6b7686', T.pmt, '#1b2028']);
+    cylinder(c, X(H + 13.5), X(H + 17.5), G.cy, pmtR * 0.82 * sc, ['#2a2f37', '#5a6372', '#2a2f37', '#15191e']);
+    cylinder(c, x0, x1, G.cy, canR * sc, [T.aluDk, T.alu, T.alu, T.aluDk], T.alu);
+    // cutaway of the can face shows the crystal
+    c.fillStyle = 'rgba(200, 225, 255, 0.55)'; c.fillRect(X(0), Y(R), H * sc, 2 * R * sc);
+    c.strokeStyle = T.aluDk; c.lineWidth = 1; c.strokeRect(X(0) + 0.5, Y(R) + 0.5, H * sc, 2 * R * sc);
+    // cable out through the right wall
+    c.strokeStyle = '#1f242b'; c.lineWidth = Math.max(2, 0.6 * sc); c.beginPath(); c.moveTo(X(H + 17.5), G.cy); c.lineTo(X(G.zR + G.wallT + 1), G.cy);
+    const el = G.el; if (LY.narrow) c.bezierCurveTo(X(G.zR + G.wallT + 3), G.cy, el.x + el.w * 0.9, el.y - 20, el.x + el.w * 0.9, el.y); else c.bezierCurveTo(X(G.zR + G.wallT + 4), G.cy, el.x - 10, el.y + el.h * 0.5, el.x, el.y + el.h * 0.55); c.stroke();
+    // flashes in the crystal
+    const now = performance.now() / 1000;
+    for (const f of flashes) { const a = now - f.t; if (a < 0 || a > 0.35) continue; c.fillStyle = '#9fd8ff'; c.globalAlpha = 0.9 * (1 - a / 0.35); c.beginPath(); c.arc(X(f.z), Y(f.y), (1.5 + 6 * a) * ps, 0, 2 * Math.PI); c.fill(); }
+    c.globalAlpha = 1;
+    // source carriage, backstop, absorber
+    const zs = -S.d, zb = zs - C.WALL.w;
+    const hot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+    // backstop brick on the carriage (5 cm thick drawn)
+    if (S.back === 'pb') { bricks(c, X(zb - 5), Y(6), 5 * sc, 12 * sc, 5 * sc, 3 * sc, T.lead, false); c.strokeStyle = T.leadDk; c.lineWidth = 1; c.strokeRect(X(zb - 5) + 0.5, Y(6) + 0.5, 5 * sc, 12 * sc); }
+    else if (S.back === 'fe') { const sg = c.createLinearGradient(X(zb - 1), 0, X(zb), 0); sg.addColorStop(0, '#7d8794'); sg.addColorStop(0.5, '#c3cad3'); sg.addColorStop(1, '#8a939f'); c.fillStyle = sg; c.fillRect(X(zb - 1), Y(6), 1 * sc, 12 * sc); c.strokeStyle = '#59616c'; c.lineWidth = 1; c.strokeRect(X(zb - 1) + 0.5, Y(6) + 0.5, 1 * sc, 12 * sc); }
+    // carriage plate on the rail
+    c.fillStyle = T.alu; rr(c, X(zb - 5.5), Y(-G.half + 1.8), (zs - zb + 7) * sc, 0.8 * sc, 2); c.fill();
+    c.fillStyle = T.aluDk; c.fillRect(X(zs - 0.2), Y(-1.4), 0.4 * sc, (-G.half + 1.8 + 1.4) * -sc);
+    // the source: a 1 inch plastic disk seen edge on, with its label color
+    const col = NUC_COL[S.src] || NUC_COL.unk;
+    c.fillStyle = col; rr(c, X(zs - 0.32), Y(1.27), 0.64 * sc, 2.54 * sc, 2); c.fill();
+    c.strokeStyle = T.ink; c.lineWidth = 1; c.stroke();
+    // absorber sheets in front of the source
+    if (S.mat !== 'none' && S.t > 0) {
+      const tc = S.t / 10, ac = S.mat === 'pb' ? T.lead : S.mat === 'cu' ? '#c27a45' : '#c7ccd2';
+      c.fillStyle = ac; c.fillRect(X(zs + 0.45), Y(5), Math.max(2, tc * sc), 10 * sc);
+      c.strokeStyle = T.ink; c.globalAlpha = 0.5; c.strokeRect(X(zs + 0.45) + 0.5, Y(5) + 0.5, Math.max(2, tc * sc), 10 * sc); c.globalAlpha = 1;
+    }
+    // solid angle: lines from the source to the edges of the face
+    c.strokeStyle = T.gamma; c.lineWidth = 1 * ps; c.setLineDash([4, 4]); c.globalAlpha = 0.6;
+    c.beginPath(); c.moveTo(X(zs), Y(0)); c.lineTo(X(0), Y(R)); c.moveTo(X(zs), Y(0)); c.lineTo(X(0), Y(-R)); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+    // gamma rays in flight
+    for (const g of gammas) { const a = (now - g.t) / g.dur; if (a < 0 || a > 1) continue; const z = zs + (g.z1 - zs) * a, y = g.y1 * a;
+      c.strokeStyle = T.gamma; c.lineWidth = 1.6 * ps; c.globalAlpha = 0.85; c.beginPath(); const z0 = Math.max(zs, z - 2.2), y0 = g.y1 * Math.max(0, (z0 - zs) / (g.z1 - zs)); c.moveTo(X(z0), Y(y0)); c.lineTo(X(z), Y(y)); c.stroke(); }
+    c.globalAlpha = 1;
+    // ruler on the bench: distance from the detector face
+    const yr = Y(-G.half - G.wallT) + 4 * ps, ryH = 12 * ps;
+    c.fillStyle = '#efe6c8'; c.fillRect(X(-31), yr, 31.6 * sc, ryH); c.strokeStyle = '#8a7a52'; c.lineWidth = 1; c.strokeRect(X(-31) + 0.5, yr + 0.5, 31.6 * sc, ryH);
+    c.strokeStyle = '#3d3522'; c.fillStyle = '#3d3522'; c.font = `${8.5 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'bottom';
+    for (let k = 0; k <= 30; k++) { const x = Math.round(X(-k)) + 0.5, L = k % 5 === 0 ? 0.55 : 0.3; c.beginPath(); c.moveTo(x, yr); c.lineTo(x, yr + ryH * L); c.stroke(); if (k % 5 === 0 && sc * 5 > 18 * ps) c.fillText(String(k), x, yr + ryH + 0.5); }
+    // carriage grip (draggable)
+    const hx = X(zs), hy = Y(-G.half + 1.8) + 0.4 * sc, hH = hot('src');
+    c.strokeStyle = T.accent; c.fillStyle = T.canvas; c.lineWidth = (hH ? 2.4 : 1.6) * ps;
+    if (hH) { c.globalAlpha = 0.25; c.fillStyle = T.accent; c.beginPath(); c.arc(hx, hy, 11 * ps, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1; c.fillStyle = T.canvas; }
+    rr(c, hx - 9 * ps, hy - 5 * ps, 18 * ps, 10 * ps, 3 * ps); c.fill(); c.stroke();
+    c.beginPath(); for (let k = -1; k <= 1; k++) { c.moveTo(hx + k * 3.5 * ps, hy - 2.5 * ps); c.lineTo(hx + k * 3.5 * ps, hy + 2.5 * ps); } c.stroke();
+    // labels, drawn last on halos
+    const lb = (t, x, y, colr, al = 'center', bold = false) => label(c, t, x, y, colr, al, 'middle', bold, ps * 0.92, T.canvas, 10.5);
+    lb(`d = ${S.d.toFixed(1)} cm`, (X(zs) + X(0)) / 2, Y(R) - 10 * ps, T.accent, 'center', true);
+    c.strokeStyle = T.accent; c.lineWidth = 1 * ps; c.beginPath(); c.moveTo(X(zs), Y(R) - 3 * ps); c.lineTo(X(0), Y(R) - 3 * ps); c.stroke();
+    if (sc > 5.5) {
+      lb(`NaI(Tl) ${C.SIZES[S.size].label}`, X(H / 2), Y(-canR) + 10 * ps, T.ink, 'center', true);
+      if (G.cast.w > 520 && sc > 7.5) lb('photomultiplier', X(H + 7), Y(pmtR) - 8 * ps, T.muted);
+      lb(S.src === 'unk' && !S.revealed ? 'source ?' : C.SRC[trueSrc()].name, X(zs), Y(1.27) - 9 * ps, T.ink, 'center', true);
+      if (G.cast.w > 520 && S.back !== 'none') lb(S.back === 'pb' ? 'lead brick' : 'steel plate', X(zb - (S.back === 'pb' ? 2.5 : 0.5)), Y(-6) + 9 * ps, T.muted);
+      if (S.mat !== 'none' && S.t > 0) lb(`${matName[S.mat]} ${S.t.toFixed(1)} mm`, X(zs + 0.6), Y(5) - 8 * ps, T.ink, 'left');
+    }
+    drawElectronics(G);
+    if (!ready && S.src !== 'none') lb('computing detector response…', X(-15), Y(0), T.muted);
+    c.restore();
+  }
+  function elecGeom(G) {
+    const e = G.el, ps = G.ps, mw = e.w / 3;
+    if (e.w / e.h > 2.4) {                       // a low strip (phones): knobs side by side
+      const r = Math.max(9, Math.min(mw * 0.15, e.h * 0.2));
+      return { e, mw, r, strip: true, hv: { x: e.x + mw * 0.5, y: e.y + e.h * 0.66 }, cg: { x: e.x + mw * 1.27, y: e.y + e.h * 0.55 }, fn: { x: e.x + mw * 1.73, y: e.y + e.h * 0.55 }, ps };
+    }
+    const r = Math.max(9, Math.min(mw * 0.24, e.h * 0.16));
+    return { e, mw, r, hv: { x: e.x + mw * 0.5, y: e.y + e.h * 0.62 }, cg: { x: e.x + mw * 1.5, y: e.y + e.h * 0.42 }, fn: { x: e.x + mw * 1.5, y: e.y + e.h * 0.77 }, ps };
+  }
+  function knob(c, x, y, r, frac, hotK, ps, lab) {
+    const g = c.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r);
+    g.addColorStop(0, '#5b6574'); g.addColorStop(1, '#1d2229');
+    c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.fill();
+    const a = Math.PI * (0.75 + 1.5 * frac);
+    c.strokeStyle = '#f2f4f7'; c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(x + Math.cos(a) * r * 0.25, y + Math.sin(a) * r * 0.25); c.lineTo(x + Math.cos(a) * r * 0.85, y + Math.sin(a) * r * 0.85); c.stroke();
+    // grip ring
+    c.strokeStyle = T.accent; c.lineWidth = (hotK ? 3 : 1.6) * ps; c.globalAlpha = hotK ? 1 : 0.85;
+    c.beginPath(); c.arc(x, y, r + 3 * ps, Math.PI * 0.75, Math.PI * 2.25); c.stroke(); c.globalAlpha = 1;
+    if (lab) { c.fillStyle = T.ink; c.font = `600 ${8.5 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(lab, x, y + r + 5 * ps); }
+  }
+  function drawElectronics(G) {
+    const c = ctx, E = elecGeom(G), e = E.e, ps = G.ps, mw = E.mw;
+    const hot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+    // NIM bin
+    c.fillStyle = T.leadDk; rr(c, e.x - 4, e.y - 4, e.w + 8, e.h + 8, 4); c.fill();
+    const fs = Math.max(7, Math.min(10 * ps, mw / 9));
+    for (let i = 0; i < 3; i++) {
+      const x = e.x + i * mw + 2, w = mw - 4;
+      const g = c.createLinearGradient(x, 0, x + w, 0); g.addColorStop(0, T.nim); g.addColorStop(0.5, T.surface); g.addColorStop(1, T.nim);
+      c.fillStyle = g; rr(c, x, e.y, w, e.h, 3); c.fill(); c.strokeStyle = T.line; c.lineWidth = 1; c.stroke();
+      c.fillStyle = T.muted; c.font = `600 ${fs}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
+      c.fillText(['HV SUPPLY', 'AMPLIFIER', 'MCA / ADC'][i], x + w / 2, e.y + 4);
+      // screws
+      c.fillStyle = T.aluDk; for (const yy of [e.y + e.h - 5]) { c.beginPath(); c.arc(x + 5, yy, 1.6, 0, 7); c.arc(x + w - 5, yy, 1.6, 0, 7); c.fill(); }
+    }
+    // HV display and knob
+    const dW = mw - 16, dH = Math.max(14, Math.min(22 * ps, e.h * 0.16)), dx = e.x + 8, dy = e.y + 6 + fs + 4;
+    c.fillStyle = '#1a0a08'; rr(c, dx, dy, dW, dH, 2); c.fill();
+    c.fillStyle = '#ff5a3c'; c.font = `600 ${Math.min(dH * 0.7, dW / 6)}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillText(`${String(S.hv).padStart(4, '0')} V`, dx + dW / 2, dy + dH / 2 + 1);
+    knob(c, E.hv.x, E.hv.y, E.r, (S.hv - 500) / 700, hot('hv'), ps, e.h > 110 ? 'HV' : '');
+    // amplifier: coarse switch and fine knob
+    const cgs = [5, 10, 20, 50, 100], ci = cgs.indexOf(S.coarse);
+    knob(c, E.cg.x, E.cg.y, E.r * 0.85, ci / 4, hot('cg'), ps, '');
+    c.fillStyle = T.ink; c.font = `600 ${fs}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+    if (E.strip) { c.fillText(`×${S.coarse}`, E.cg.x, E.cg.y + E.r * 0.85 + 9 * ps); c.fillText(S.fine.toFixed(2), E.fn.x, E.fn.y + E.r * 0.85 + 9 * ps); } else c.fillText(`×${S.coarse}`, E.cg.x + E.r * 0.85 + 4 * ps + c.measureText(`×${S.coarse}`).width / 2 > e.x + 2 * mw - 4 ? E.cg.x : E.cg.x + E.r * 0.85 + 4 * ps + c.measureText(`×${S.coarse}`).width / 2, E.cg.y - E.r - 6 * ps);
+    knob(c, E.fn.x, E.fn.y, E.r * 0.85, (S.fine - 0.5), hot('fn'), ps, '');
+    c.fillStyle = T.ink; if (!E.strip) c.fillText(`fine ${S.fine.toFixed(2)}`, E.fn.x, Math.min(e.y + e.h - 9, E.fn.y + E.r + 9 * ps));
+    // MCA: ACQ lamp, dead time meter, channels
+    const mx = e.x + 2 * mw + 8, mwid = mw - 16;
+    const lampOn = acquiring && ready;
+    c.fillStyle = lampOn ? '#3ddc6a' : '#1f3a26'; c.beginPath(); c.arc(mx + 6 * ps, e.y + fs + 16 * ps, 4.5 * ps, 0, 7); c.fill();
+    c.fillStyle = T.ink; c.font = `${fs}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText('ACQ', mx + 14 * ps, e.y + fs + 16 * ps);
+    const dt = deadNow();
+    const bh = Math.max(6, 8 * ps), by = Math.max(e.y + e.h * 0.5, e.y + fs + 16 * ps + 12 + bh + 6 * ps);
+    c.fillText('DEAD', mx, by - bh - 3 * ps);
+    c.fillStyle = '#1b1f26'; c.fillRect(mx, by, mwid, bh); c.fillStyle = dt > 0.3 ? '#ff5a3c' : '#3ddc6a'; c.fillRect(mx, by, mwid * Math.min(1, dt), bh);
+    c.fillStyle = T.ink; c.fillText(`${(100 * dt).toFixed(1)}%`, mx, by + bh + 8 * ps);
+    if (e.h > 100) c.fillText(`${S.N} ch`, mx, Math.min(e.y + e.h - 10, by + bh + 22 * ps));
+  }
+  const deadNow = () => ready ? nIn * C.TAU / (1 + nIn * C.TAU) : 0;
+
+  // ---------- the MCA screen ----------
+  function mcaGeom() {
+    const p = LY.mca, ps = p.ps;
+    const scr = { x: p.x + 8, y: p.y + 6, w: p.w - 16, h: p.h - 12 };
+    const head = 22 * ps, foot = 24 * ps;
+    const box = { L: scr.x + 52 * ps, R: scr.x + scr.w - 12 * ps, T: scr.y + head + 14 * ps, B: scr.y + scr.h - foot - 22 * ps };
+    const v0 = view[0], v1 = view[1];
+    const X = (ch) => box.L + (ch - v0) / (v1 - v0) * (box.R - box.L);
+    const invX = (x) => v0 + (x - box.L) / (box.R - box.L) * (v1 - v0);
+    return { p, ps, scr, box, X, invX, head, foot };
+  }
+  let yTop = 100;
+  function drawMCA(p) {
+    const c = ctx, M = mcaGeom(), ps = M.ps, box = M.box, X = M.X, scr = M.scr;
+    // monitor bezel and screen
+    c.fillStyle = T.pmt; rr(c, scr.x - 3, scr.y - 3, scr.w + 6, scr.h + 6, 8); c.fill();
+    c.fillStyle = T.scr; rr(c, scr.x, scr.y, scr.w, scr.h, 6); c.fill();
+    // title bar
+    c.fillStyle = '#18212c'; rr(c, scr.x, scr.y, scr.w, M.head, 6); c.fill(); c.fillRect(scr.x, scr.y + M.head - 6, scr.w, 6);
+    c.font = `600 ${10.5 * ps}px ${T.mono}`; c.textBaseline = 'middle'; c.textAlign = 'left'; c.fillStyle = T.scrInk;
+    const st = acquiring ? (ready ? '● ACQUIRING' : '◌ WAIT') : '■ STOPPED';
+    c.fillText(`MCA · ${S.N} ch`, scr.x + 10 * ps, scr.y + M.head / 2);
+    c.fillStyle = acquiring ? '#ff6a5a' : T.scrMuted; c.textAlign = 'center'; c.fillText(st, scr.x + scr.w * 0.42, scr.y + M.head / 2);
+    c.fillStyle = T.scrInk; c.textAlign = 'right';
+    const dtot = spec.real > 0 ? 1 - spec.live / spec.real : 0;
+    const tr = scr.w > 560 ? `Live ${spec.live.toFixed(1)} s   Real ${spec.real.toFixed(1)} s   Dead ${(100 * dtot).toFixed(1)}%` : `L ${spec.live.toFixed(0)} s  R ${spec.real.toFixed(0)} s  ${(100 * dtot).toFixed(1)}%`;
+    c.fillText(tr, scr.x + scr.w - 10 * ps, scr.y + M.head / 2);
+    const keVax = S.keV && calOK();
+    // y scale
+    const v0 = Math.max(0, Math.floor(view[0])), v1 = Math.min(S.N, Math.ceil(view[1]));
+    let mx = 0; for (let j = Math.max(v0, Math.round(S.lld / 100 * S.N) + 2); j < v1; j++) mx = Math.max(mx, spec.counts[j]);
+    const target = S.log ? Math.max(10, mx * 3) : Math.max(10, mx * 1.12);
+    yTop = target > yTop || target < yTop * 0.4 ? niceUp(target) : yTop;
+    const Y = S.log ? (v) => box.B - Math.log10(Math.max(0.5, v) / 0.5) / Math.log10(yTop / 0.5) * (box.B - box.T) : (v) => box.B - v / yTop * (box.B - box.T);
+    // grid and ticks
+    c.strokeStyle = T.scrGrid; c.lineWidth = 1; c.fillStyle = T.scrMuted; c.font = `${10 * ps}px ${T.mono}`;
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    if (S.log) { for (let e = 0; Math.pow(10, e) <= yTop; e++) { const v = Math.pow(10, e), y = Math.round(Y(v)) + 0.5; c.beginPath(); c.moveTo(box.L, y); c.lineTo(box.R, y); c.stroke(); c.fillText(e < 4 ? String(v) : `1e${e}`, box.L - 5, y); } }
+    else { const stp = nice(yTop / 4); for (let v = 0; v <= yTop + 1e-9; v += stp) { const y = Math.round(Y(v)) + 0.5; c.beginPath(); c.moveTo(box.L, y); c.lineTo(box.R, y); c.stroke(); c.fillText(fmtCount(v), box.L - 5, y); } }
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    if (keVax) {
+      const E0 = chToE(view[0]), E1 = chToE(view[1]), stp = nice((E1 - E0) / Math.max(3, Math.floor((box.R - box.L) / (70 * ps))));
+      for (let E = Math.ceil(Math.max(0, E0) / stp) * stp; E <= E1; E += stp) { const x = Math.round(X(eToCh(E) + 0.5)) + 0.5; if (x < box.L || x > box.R) continue; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.fillText(String(+E.toFixed(1)), x, box.B + 4); }
+      c.textAlign = 'right'; c.fillText('energy (keV)', box.R, box.B + 16 * ps);
+    } else {
+      const stp = nice((view[1] - view[0]) / Math.max(3, Math.floor((box.R - box.L) / (70 * ps))));
+      for (let ch = Math.ceil(view[0] / stp) * stp; ch <= view[1]; ch += stp) { const x = Math.round(X(ch)) + 0.5; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.fillText(String(ch), x, box.B + 4); }
+      c.textAlign = 'right'; c.fillText('channel', box.R, box.B + 16 * ps);
+    }
+    c.save(); c.translate(scr.x + 12 * ps, (box.T + box.B) / 2); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('counts per channel', 0, 0); c.restore();
+    // LLD / ULD markers
+    const lldC = Math.round(S.lld / 100 * S.N), uldC = Math.round(S.uld / 100 * S.N);
+    c.fillStyle = 'rgba(120, 140, 160, 0.13)';
+    if (lldC > view[0]) c.fillRect(box.L, box.T, Math.min(box.R, X(lldC)) - box.L, box.B - box.T);
+    if (uldC < view[1]) c.fillRect(X(uldC), box.T, box.R - X(uldC), box.B - box.T);
+    // spectrum: one bar per channel, or the maximum per pixel column when channels outnumber pixels
+    c.save(); c.beginPath(); c.rect(box.L, box.T - 1, box.R - box.L, box.B - box.T + 2); c.clip();
+    const inRoi = new Uint8Array(S.N); rois.forEach((r, i) => { for (let j = Math.max(0, r.a); j <= Math.min(S.N - 1, r.b); j++) inRoi[j] = i === roiSel ? 2 : 1; });
+    const pxPerCh = (box.R - box.L) / (view[1] - view[0]);
+    if (pxPerCh >= 1.5) {
+      for (let j = v0; j < v1; j++) {
+        const v = spec.counts[j]; if (v <= 0) continue;
+        const x = X(j), w = Math.max(1, pxPerCh - (pxPerCh > 4 ? 1 : 0)), y = Y(v);
+        c.fillStyle = inRoi[j] ? T.scrRoi : T.scrData; c.globalAlpha = inRoi[j] === 1 ? 0.7 : 1; c.fillRect(x, y, w, box.B - y);
+      }
+      c.globalAlpha = 1;
+    } else {
+      const cols = Math.ceil(box.R - box.L);
+      for (let px = 0; px < cols; px++) {
+        const a = Math.floor(M.invX(box.L + px)), b = Math.max(a + 1, Math.floor(M.invX(box.L + px + 1)));
+        let v = 0, roi = 0; for (let j = Math.max(0, a); j < Math.min(S.N, b); j++) { if (spec.counts[j] > v) v = spec.counts[j]; if (inRoi[j] > roi) roi = inRoi[j]; }
+        if (v <= 0) continue; const y = Y(v);
+        c.fillStyle = roi ? T.scrRoi : T.scrData; c.globalAlpha = roi === 1 ? 0.7 : 1; c.fillRect(box.L + px, y, 1, box.B - y);
+      }
+      c.globalAlpha = 1;
+    }
+    // ROI background lines and edge grips
+    rois.forEach((r, i) => {
+      const s = C.roiStats(spec.counts, r.a, r.b), sel = i === roiSel;
+      if (s && spec.total > 0) { c.strokeStyle = '#ffffff'; c.globalAlpha = 0.8; c.lineWidth = 1.2 * ps; c.setLineDash([4, 3]); c.beginPath(); c.moveTo(X(r.a + 0.5), Y(s.bl.yL + (s.bl.yR - s.bl.yL) * (r.a - s.bl.xL) / (s.bl.xR - s.bl.xL))); c.lineTo(X(r.b + 0.5), Y(s.bl.yL + (s.bl.yR - s.bl.yL) * (r.b - s.bl.xL) / (s.bl.xR - s.bl.xL))); c.stroke(); c.setLineDash([]); c.globalAlpha = 1; }
+      for (const [edge, ch] of [['a', r.a], ['b', r.b + 1]]) {
+        const x = X(ch), h = hoverId === `roi${i}${edge}` || (drag && drag.id === `roi${i}${edge}`);
+        c.strokeStyle = T.scrRoi; c.lineWidth = (h ? 2.6 : sel ? 1.6 : 1) * ps; c.globalAlpha = sel || h ? 1 : 0.6;
+        c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.globalAlpha = 1;
+        if (sel) { c.fillStyle = T.scrRoi; rr(c, x - 4 * ps, box.T + 6 * ps, 8 * ps, 16 * ps, 2 * ps); c.fill(); c.strokeStyle = T.scr; c.lineWidth = 1; c.beginPath(); c.moveTo(x - 1.5 * ps, box.T + 10 * ps); c.lineTo(x - 1.5 * ps, box.T + 18 * ps); c.moveTo(x + 1.5 * ps, box.T + 10 * ps); c.lineTo(x + 1.5 * ps, box.T + 18 * ps); c.stroke(); }
+      }
+    });
+    // ROI being dragged
+    if (drag && drag.id === 'new') { const a = Math.min(drag.a, drag.b), b = Math.max(drag.a, drag.b); c.fillStyle = T.scrRoi; c.globalAlpha = 0.18; c.fillRect(X(a), box.T, X(b + 1) - X(a), box.B - box.T); c.globalAlpha = 1; }
+    // calibration points
+    if (calOK() && !calStale()) for (const pt of cal.pts) { const x = X(pt.ch + 0.5); if (x < box.L || x > box.R) continue; c.fillStyle = T.scrCal; c.beginPath(); c.moveTo(x, box.T + 2); c.lineTo(x - 5 * ps, box.T - 6 * ps); c.lineTo(x + 5 * ps, box.T - 6 * ps); c.closePath(); c.fill(); }
+    if (cand) { const x = X(cand.ch + 0.5); c.strokeStyle = T.scrCal; c.lineWidth = 1.5 * ps; c.setLineDash([3, 3]); c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.setLineDash([]); }
+    // cursor
+    const cx = X(cursor + 0.5); c.strokeStyle = T.scrCur; c.lineWidth = 1 * ps; c.globalAlpha = 0.9; c.setLineDash([2, 3]); c.beginPath(); c.moveTo(cx, box.T); c.lineTo(cx, box.B); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+    c.restore();
+    c.strokeStyle = T.scrMuted; c.lineWidth = 1; c.strokeRect(box.L + 0.5, box.T + 0.5, box.R - box.L, box.B - box.T);
+    // labels on the screen
+    const sl = (t, x, y, col, al = 'left', bold = true) => label(c, t, x, y, col, al, 'middle', bold, ps, T.scr, 10.5);
+    if (calOK() && !calStale()) for (const pt of cal.pts) { const x = X(pt.ch + 0.5); if (x > box.L + 20 && x < box.R - 20) sl(`${pt.E.toFixed(1)}`, x, box.T - 13 * ps, T.scrCal, 'center', false); }
+    rois.forEach((r, i) => { if (i !== roiSel || spec.total === 0) return; const s = C.roiStats(spec.counts, r.a, r.b); if (!s) return; const xm = Math.max(box.L + 60 * ps, Math.min(box.R - 60 * ps, (X(r.a) + X(r.b + 1)) / 2)); sl(`net ${fmtCount(Math.max(0, s.net))} ± ${fmtCount(s.snet)}`, xm, box.T + 32 * ps, T.scrRoi, 'center'); });
+    if (spec.total === 0) sl(acquiring ? (ready ? 'acquiring…' : 'computing detector response…') : 'Press Acquire to start counting', (box.L + box.R) / 2, (box.T + box.B) / 2, T.scrMuted, 'center', false);
+    if (S.mark) sl('mark peak: click a photopeak', box.L + 8 * ps, box.T + 10 * ps, T.scrCal);
+    // footer: cursor readout and the simulated tag
+    const fy = scr.y + scr.h - M.foot / 2;
+    const cE = calOK() && !calStale() ? `  E ${chToE(cursor).toFixed(1)} keV` : '';
+    c.font = `600 ${10.5 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = T.scrCur;
+    c.fillText(`Cursor ch ${cursor}  counts ${fmtCount(spec.counts[cursor] || 0)}${cE}`, scr.x + 10 * ps, fy);
+    c.textAlign = 'right'; c.fillStyle = T.scrMuted; c.font = `${9.5 * ps}px ${T.mono}`;
+    if (scr.w > 420) c.fillText(scr.w > 700 ? 'SIMULATED · Monte Carlo response · Poisson counts' : 'SIMULATED', scr.x + scr.w - 10 * ps, fy);
+  }
+  function niceUp(v) { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; for (const s of [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (m <= s + 1e-9) return s * p; return 10 * p; }
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  const fmtCount = (v) => v >= 1e6 ? (v / 1e6).toFixed(2) + 'M' : v >= 1e4 ? (v / 1e3).toFixed(1) + 'k' : String(Math.round(v));
+
+  // ---------- analysis plot ----------
+  const ana = $('ana'), actx = ana.getContext('2d');
+  let AW = 0, AH = 0;
+  function resizeAna() {
+    const r = ana.getBoundingClientRect(); AW = r.width; AH = r.height; if (!AW) return;
+    ana.width = Math.round(AW * dpr); ana.height = Math.round(AH * dpr); drawAna();
+  }
+  function anaData() {
+    if (S.ana === 'cal') {
+      if (!calOK()) return { msg: 'Add two or more calibration points.', res: '—', hint: 'Each point is a peak centroid in channels with the energy you assigned. A good calibration has residuals within the centroid uncertainties.' };
+      const pts = cal.pts.map((p) => ({ x: p.ch, y: p.E - chToE(p.ch), s: Math.abs(chToE(p.ch + p.sch) - chToE(p.ch)) }));
+      const f = cal.fit, c0 = f.c[0], c1 = f.c[1];
+      const res = f.c.length === 3 ? `E = ${c0.toFixed(2)} + ${c1.toFixed(5)}·ch + ${f.c[2].toExponential(2)}·ch²` : `E = (${c0.toFixed(2)} ± ${f.err[0].toFixed(2)}) + (${c1.toFixed(5)} ± ${f.err[1].toFixed(5)})·ch keV`;
+      return { pts, xl: 'channel', yl: 'residual (keV)', zero: true, res, lab: 'Calibration fit', hint: 'Residuals: measured energy minus the fit, with the centroid uncertainty as error bars. A quadratic term should come out near zero, because this simulated detector is linear.' };
+    }
+    if (S.ana === 'att') {
+      const mat = S.mat !== 'none' ? S.mat : (rows.find((r) => r.mat !== 'none' && r.t > 0) || { mat: 'pb' }).mat;
+      const ref = rows.slice().reverse().find((r) => r.mat === mat && r.t > 0) || rows[rows.length - 1];
+      const sel = rows.filter((r) => r.net > 0 && (r.t === 0 || r.mat === mat) && ref && r.d === ref.d && r.srcId === ref.srcId);
+      const pts = sel.map((r) => ({ x: r.t / 10, y: Math.log(r.rate), s: r.srate / r.rate }));
+      const srcId = sel.length ? sel[0].srcId : trueSrc(), E = sel.length && sel[0].E === sel[0].E ? sel[0].E : (C.SRC[srcId].lines.slice().sort((a, b) => b[1] - a[1])[0] || [661.657])[0];
+      const muX = C.muLin(mat, E);
+      let fit = null; if (pts.length >= 2) fit = C.polyfit(pts.map((p) => p.x), pts.map((p) => p.y), pts.map((p) => p.s), 1);
+      const res = fit ? `μ = ${(-fit.c[1]).toFixed(3)} ± ${fit.err[1].toFixed(3)} cm⁻¹ · XCOM ${muX.toFixed(3)} cm⁻¹ at ${E.toFixed(1)} keV` : `XCOM narrow beam μ for ${matName[mat]} at ${E.toFixed(1)} keV: ${muX.toFixed(3)} cm⁻¹`;
+      return { pts, fit, xl: `${matName[mat]} thickness (cm)`, yl: 'ln(net rate / s⁻¹)', res, lab: 'Attenuation coefficient', hint: `Rows at the same distance and source with no absorber or with ${matName[mat]}; use the same ROI on the photopeak. Weighted fit of ln(rate) = ln(rate₀) − μx; the error bars are σ(net)/net. Keep the distance fixed.` };
+    }
+    if (S.ana === 'inv') {
+      const last = rows[rows.length - 1], sel = rows.filter((r) => r.net > 0 && (r.mat === 'none' || r.t === 0) && last && r.srcId === last.srcId);
+      const pts = sel.map((r) => ({ x: Math.log10(r.d), y: Math.log10(r.rate), s: r.srate / r.rate / Math.LN10 }));
+      let fit = null; if (pts.length >= 2) fit = C.polyfit(pts.map((p) => p.x), pts.map((p) => p.y), pts.map((p) => p.s), 1);
+      const res = fit ? `slope = ${fit.c[1].toFixed(3)} ± ${fit.err[1].toFixed(3)} (inverse square: −2)` : 'Add rows at several distances.';
+      return { pts, fit, xl: 'log₁₀ d (cm)', yl: 'log₁₀ net rate', res, lab: 'Power law fit', hint: 'Rows without absorber, same source as the last row. A point source and a point detector give a slope of −2. Close in, the detector face is not small compared with d, and photons interact some way inside the crystal, so the slope flattens.' };
+    }
+    const sel = rows.filter((r) => r.E === r.E && r.fwE > 0);
+    const pts = sel.map((r) => ({ x: Math.log10(r.E), y: Math.log10(100 * r.fwE / r.E), s: r.sfwhm / r.fwhm / Math.LN10 }));
+    let fit = null; if (pts.length >= 2) fit = C.polyfit(pts.map((p) => p.x), pts.map((p) => p.y), pts.map((p) => p.s), 1);
+    const res = fit ? `FWHM/E ∝ E^(${fit.c[1].toFixed(3)} ± ${fit.err[1].toFixed(3)}); at 662 keV ${Math.pow(10, fit.c[0] + fit.c[1] * Math.log10(661.657)).toFixed(2)}%` : 'Calibrate, then add rows for several photopeaks.';
+    return { pts, fit, xl: 'log₁₀ E (keV)', yl: 'log₁₀ FWHM/E (%)', res, lab: 'Resolution against energy', hint: 'Needs a calibration. Counting statistics of the photoelectrons alone give a slope of −1/2; the constant term in this model (1%) flattens it at high energy.' };
+  }
+  function drawAna() {
+    if (!AW || !T) return;
+    const c = actx, w = AW, h = AH; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, w, h);
+    const D = anaData();
+    $('aRes').textContent = D.res; $('aLab').textContent = D.lab || 'Result'; $('aHint').textContent = D.hint;
+    for (const b of document.querySelectorAll('[data-an]')) b.setAttribute('aria-pressed', String(b.dataset.an === S.ana));
+    if (D.msg || !D.pts || !D.pts.length) { c.fillStyle = T.muted; c.font = `12px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(D.msg || 'Add rows to the table.', w / 2, h / 2); return; }
+    const box = { L: 46, R: w - 10, T: 12, B: h - 32 };
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    for (const p of D.pts) { x0 = Math.min(x0, p.x); x1 = Math.max(x1, p.x); y0 = Math.min(y0, p.y - p.s); y1 = Math.max(y1, p.y + p.s); }
+    if (D.zero) { y0 = Math.min(y0, 0); y1 = Math.max(y1, 0); }
+    if (x1 - x0 < 1e-9) { x0 -= 1; x1 += 1; } const px = 0.08 * (x1 - x0); x0 -= px; x1 += px;
+    if (y1 - y0 < 1e-9) { y0 -= 1; y1 += 1; } const py = 0.12 * (y1 - y0); y0 -= py; y1 += py;
+    const X = (x) => box.L + (x - x0) / (x1 - x0) * (box.R - box.L), Y = (y) => box.B - (y - y0) / (y1 - y0) * (box.B - box.T);
+    c.strokeStyle = T.grid; c.lineWidth = 1; c.fillStyle = T.muted; c.font = `10px ${T.mono}`;
+    const sy = nice((y1 - y0) / 4), sx = nice((x1 - x0) / 4);
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let v = Math.ceil(y0 / sy) * sy; v <= y1; v += sy) { const y = Math.round(Y(v)) + 0.5; c.beginPath(); c.moveTo(box.L, y); c.lineTo(box.R, y); c.stroke(); c.fillText(String(+v.toPrecision(3)), box.L - 4, y); }
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let v = Math.ceil(x0 / sx) * sx; v <= x1; v += sx) { const x = Math.round(X(v)) + 0.5; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.fillText(String(+v.toPrecision(3)), x, box.B + 3); }
+    c.fillText(D.xl, (box.L + box.R) / 2, box.B + 16);
+    c.save(); c.translate(10, (box.T + box.B) / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(D.yl, 0, 0); c.restore();
+    if (D.zero) { c.strokeStyle = T.muted; c.setLineDash([4, 3]); c.beginPath(); c.moveTo(box.L, Y(0)); c.lineTo(box.R, Y(0)); c.stroke(); c.setLineDash([]); }
+    if (D.fit) { c.strokeStyle = T.pos; c.lineWidth = 1.6; c.beginPath(); c.moveTo(X(x0), Y(C.polyval(D.fit.c, x0))); c.lineTo(X(x1), Y(C.polyval(D.fit.c, x1))); c.stroke(); }
+    c.strokeStyle = T.ink; c.fillStyle = T.ink; c.lineWidth = 1.2;
+    for (const p of D.pts) { const x = X(p.x); c.beginPath(); c.moveTo(x, Y(p.y - p.s)); c.lineTo(x, Y(p.y + p.s)); c.stroke(); c.beginPath(); c.arc(x, Y(p.y), 3, 0, 2 * Math.PI); c.fill(); }
+  }
+
+  // ---------- readouts ----------
+  function geomReadouts() {
+    const sz = C.SIZES[S.size], g = C.omegaFrac(S.d, sz.R), src = C.SRC[trueSrc()];
+    $('distOut').textContent = `${S.d.toFixed(1)} cm`; $('thkOut').textContent = S.mat === 'none' ? '—' : `${S.t.toFixed(1)} mm = ${(S.t / 10 * C.RHO[S.mat]).toFixed(2)} g/cm²`;
+    $('rOmega').textContent = `${(100 * g).toFixed(3)}%`;
+    $('rAct').textContent = S.src === 'none' ? '0' : `${(S.act * UCI).toExponential(2)} Bq`;
+    let nin = 0; for (const [E, I] of src.lines) nin += S.act * UCI * I * g * C.trans(S.mat, S.t / 10, E) * (src.sum === 'beta+' && E === 511 ? 1 : 1);
+    $('rIn').textContent = `${nin.toFixed(0)} /s`;
+    const main = src.lines.slice().sort((a, b) => b[1] * (b[0] > 100 ? 1 : 0.01) - a[1] * (a[0] > 100 ? 1 : 0.01))[0];
+    if (main && S.mat !== 'none') { $('rTrLab').textContent = S.src === 'unk' && !S.revealed ? 'Transmission, strongest line' : `Transmission at ${main[0].toFixed(1)} keV`; $('rTr').textContent = (Math.exp(-C.muLin(S.mat, main[0]) * S.t / 10)).toFixed(4); }
+    else { $('rTrLab').textContent = 'Absorber transmission'; $('rTr').textContent = '1'; }
+    $('reveal').hidden = S.src !== 'unk';
+    $('reveal').textContent = S.revealed ? C.SRC[S.unk].name : 'Reveal';
+    $('srcHint').textContent = S.src === 'none' ? 'No source: only the room background inside the castle. Count long to see ⁴⁰K at 1460.8 keV.'
+      : `Point source on the axis${src.half ? `, half life ${S.src === 'unk' && !S.revealed ? 'unknown' : src.half}` : ''}. Ω/4π = ½(1 − d/√(d² + R²)) is exact for a point on the axis of a disk of radius R. The absorber sits on the holder just in front of the source.`;
+  }
+  function elecReadouts() {
+    const e = elec(), kg = C.chanGain(e);
+    $('hvOut').textContent = `${S.hv} V`; $('fineOut').textContent = S.fine.toFixed(2);
+    $('lldOut').textContent = `${S.lld.toFixed(1)}% = ch ${Math.round(S.lld / 100 * S.N)}`; $('uldOut').textContent = `${S.uld}% = ch ${Math.round(S.uld / 100 * S.N)}`;
+    $('resOut').textContent = `${(100 * S.res).toFixed(1)}%`;
+    $('rGain').textContent = `${Math.pow(S.hv / C.HV0, C.KPMT).toFixed(3)}×`;
+    const vp = 661.657 * C.VPK * Math.pow(S.hv / C.HV0, C.KPMT) * S.coarse * S.fine;
+    $('rPulse').textContent = vp > C.FS ? `${vp.toFixed(2)} V (over 10 V)` : `${vp.toFixed(2)} V`;
+    $('rRate').textContent = ready ? `${nIn.toFixed(0)} /s` : '—';
+    $('rDead').textContent = ready ? `${(100 * deadNow()).toFixed(2)}%` : '—';
+  }
+  function liveReadouts() {
+    const m = spec.real > 0 ? spec.total / spec.real : 0;
+    $('rM').textContent = spec.real > 0 ? `${m.toFixed(1)} /s` : '—';
+    $('rN').textContent = spec.real > 0 && m * C.TAU < 1 ? `${(m / (1 - m * C.TAU)).toFixed(1)} /s` : '—';
+    const dt = spec.real > 0 ? 1 - spec.live / spec.real : 0;
+    $('count').innerHTML = `Live ${spec.live.toFixed(1)} <small>s</small> · Real ${spec.real.toFixed(1)} <small>s</small> · Dead ${(100 * dt).toFixed(1)}<small>%</small> · ${fmtCount(spec.total)} <small>counts</small>`;
+    roiReadout();
+  }
+  function roiReadout() {
+    const r = rois[roiSel], ids = ['qCh', 'qG', 'qB', 'qN', 'qC', 'qF', 'qR', 'qE'];
+    $('addRow').disabled = !r; $('roiCal').disabled = !r; $('roiDel').disabled = !r;
+    if (!r) { for (const id of ids) $(id).textContent = '—'; return; }
+    const st = C.roiStats(spec.counts, r.a, r.b);
+    $('qCh').textContent = `${r.a} to ${r.b}`;
+    if (!st || spec.total === 0) { for (const id of ids.slice(1)) $(id).textContent = '—'; return; }
+    $('qG').textContent = st.G.toFixed(0); $('qB').textContent = st.B.toFixed(0);
+    $('qN').textContent = `${st.net.toFixed(0)} ± ${st.snet.toFixed(0)}`;
+    $('qC').textContent = st.cen === st.cen ? `${st.cen.toFixed(2)} ± ${st.scen.toFixed(2)}` : '—';
+    $('qF').textContent = st.fwhm === st.fwhm ? `${st.fwhm.toFixed(1)} ± ${st.sfwhm.toFixed(1)} ch` : '—';
+    $('qR').textContent = spec.live > 0 ? `${(st.net / spec.live).toPrecision(4)} ± ${(st.snet / spec.live).toPrecision(2)} /s` : '—';
+    if (calOK() && !calStale() && st.cen === st.cen) { const E = chToE(st.cen), fE = Math.abs(chToE(st.cen + st.fwhm / 2) - chToE(st.cen - st.fwhm / 2)); $('qE').textContent = `${E.toFixed(1)} keV, ${(100 * fE / E).toFixed(1)}%`; }
+    else $('qE').textContent = 'calibrate first';
+  }
+  function calReadout() {
+    $('cPeak').textContent = cand ? `channel ${cand.ch.toFixed(2)} ± ${Math.max(cand.sch, 0.01).toFixed(2)} (FWHM ${cand.fwhm.toFixed(1)} ch)` : '—';
+    $('cAdd').disabled = !cand;
+    const list = $('cList'); list.innerHTML = '';
+    if (S.src !== 'unk' && S.src !== 'none') for (const [E] of C.SRC[S.src].lines) if (E > 45) { const o = document.createElement('option'); o.value = String(E); list.appendChild(o); }
+    if (cal.pts.length) $('cPts').textContent = cal.pts.map((p) => `${p.ch.toFixed(2)} → ${p.E.toFixed(3)}${calOK() ? ` (${(p.E - chToE(p.ch)) >= 0 ? '+' : ''}${(p.E - chToE(p.ch)).toFixed(2)})` : ''}`).join(', ');
+    else $('cPts').textContent = '—';
+    if (calOK()) {
+      const f = cal.fit;
+      $('cFit').textContent = f.c.length === 3 ? `E = ${f.c[0].toFixed(2)} + ${f.c[1].toFixed(5)}·ch + ${f.c[2].toExponential(2)}·ch² keV` : `E = ${f.c[0].toFixed(2)} ± ${f.err[0].toFixed(2)} + (${f.c[1].toFixed(5)} ± ${f.err[1].toFixed(5)})·ch keV, ${(1 / f.c[1]).toFixed(4)} ch/keV`;
+    } else $('cFit').textContent = cal.pts.length === 1 ? 'one more point needed' : '—';
+    $('cStale').hidden = !calStale();
+    const ok = calOK() && !calStale();
+    $('xKeV').disabled = !ok; if (!ok && S.keV) S.keV = false;
+    $('xKeV').setAttribute('aria-pressed', String(S.keV)); $('xCh').setAttribute('aria-pressed', String(!S.keV));
+    $('cLin').setAttribute('aria-pressed', String(cal.deg === 1)); $('cQuad').setAttribute('aria-pressed', String(cal.deg === 2));
+  }
+  function lineList() {
+    const t = Object.entries(C.SRC).filter(([k]) => k !== 'none').map(([, s]) => `${s.name}: ${s.lines.filter(([E, I]) => E > 45 && I > 0.003).map(([E, I]) => `${E} (${(100 * I).toPrecision(3)}%)`).join(', ')}`);
+    $('lineList').textContent = 'Line energies in keV (photons per 100 decays). ' + t.join('. ') + `. ⁴⁰K: 1460.82 (10.66%). Annihilation: 511.0.`;
+    $('modelMC').textContent = 'Monte Carlo histories per line: 60 000 for gamma lines stronger than 5% per decay, 20 000 for weaker ones, 12 000 for x-rays, 8000 for each lead x-ray line, and 24 000 backscatter samples for the strong lines; recomputed in a background thread whenever the distance, source or crystal changes. Deposits are binned in 0.5 keV.';
+  }
+  function allReadouts() { geomReadouts(); elecReadouts(); liveReadouts(); calReadout(); tableReadout(); drawAna(); }
+  function syncControls() {
+    $('src').value = S.src; $('dist').value = S.d; $('thk').value = S.t; $('thk').disabled = S.mat === 'none';
+    $('hv').value = S.hv; $('fine').value = S.fine; $('lld').value = S.lld; $('uld').value = S.uld; $('res').value = (100 * S.res).toFixed(1); $('ptime').value = String(S.ptime);
+    const pr = (sel, attr, v) => { for (const b of document.querySelectorAll(sel)) b.setAttribute('aria-pressed', String(b.dataset[attr] === String(v))); };
+    pr('[data-act]', 'act', S.act); pr('[data-back]', 'back', S.back); pr('[data-mat]', 'mat', S.mat); pr('[data-size]', 'size', S.size); pr('[data-cg]', 'cg', S.coarse); pr('[data-n]', 'n', S.N); pr('[data-sp]', 'sp', S.speed);
+    $('yLin').setAttribute('aria-pressed', String(!S.log)); $('yLog').setAttribute('aria-pressed', String(S.log));
+    $('markBtn').setAttribute('aria-pressed', String(S.mark));
+  }
+
+  // ---------- controls ----------
+  $('acq').addEventListener('click', () => { acquiring ? stop() : start(); });
+  $('clr').addEventListener('click', clearSpec);
+  $('yLin').addEventListener('click', () => { S.log = false; syncControls(); });
+  $('yLog').addEventListener('click', () => { S.log = true; syncControls(); });
+  $('xCh').addEventListener('click', () => { S.keV = false; calReadout(); });
+  $('xKeV').addEventListener('click', () => { if (calOK() && !calStale()) S.keV = true; calReadout(); });
+  $('markBtn').addEventListener('click', () => { S.mark = !S.mark; syncControls(); });
+  function zoom(f, about) {
+    const span = view[1] - view[0], c = about === undefined ? cursor + 0.5 : about, ns = Math.max(32, Math.min(S.N, span * f));
+    let a = c - (c - view[0]) / span * ns; a = Math.max(0, Math.min(S.N - ns, a)); view = [a, a + ns];
+  }
+  $('zIn').addEventListener('click', () => zoom(0.5));
+  $('zOut').addEventListener('click', () => zoom(2));
+  $('zFull').addEventListener('click', () => { view = [0, S.N]; });
+  $('src').addEventListener('change', (e) => { custom(); S.src = e.target.value; if (S.src === 'unk') { const ids = ['cs137', 'co60', 'na22', 'ba133', 'mn54']; S.unk = ids[Math.floor(Math.random() * ids.length)]; S.revealed = false; } touchDep(); calReadout(); });
+  $('reveal').addEventListener('click', () => { S.revealed = true; geomReadouts(); });
+  for (const b of document.querySelectorAll('[data-act]')) b.addEventListener('click', () => { custom(); S.act = +b.dataset.act; syncControls(); touchDep(); });
+  for (const b of document.querySelectorAll('[data-mat]')) b.addEventListener('click', () => { custom(); S.mat = b.dataset.mat; if (S.mat === 'none') S.t = 0; syncControls(); touchDep(); });
+  for (const b of document.querySelectorAll('[data-back]')) b.addEventListener('click', () => { custom(); S.back = b.dataset.back; syncControls(); touchDep(); });
+  for (const b of document.querySelectorAll('[data-size]')) b.addEventListener('click', () => { custom(); S.size = b.dataset.size; syncControls(); touchDep(); });
+  for (const b of document.querySelectorAll('[data-cg]')) b.addEventListener('click', () => setCoarse(+b.dataset.cg));
+  for (const b of document.querySelectorAll('[data-n]')) b.addEventListener('click', () => { const n = +b.dataset.n; if (n === S.N) return; custom(); const f = n / S.N; S.N = n; spec = newSpec(); rois = rois.map((r) => ({ a: Math.round(r.a * f), b: Math.round(r.b * f) })); cursor = Math.round(cursor * f); view = [0, S.N]; syncControls(); touchChan(); });
+  for (const b of document.querySelectorAll('[data-sp]')) b.addEventListener('click', () => { S.speed = +b.dataset.sp; syncControls(); });
+  for (const b of document.querySelectorAll('[data-an]')) b.addEventListener('click', () => { S.ana = b.dataset.an; drawAna(); });
+  const clamp = (v, el) => { const mn = +el.min, mx = +el.max, st = +el.step; v = Math.round((v - mn) / st) * st + mn; return +Math.max(mn, Math.min(mx, v)).toFixed(4); };
+  function setDist(v) { v = clamp(v, $('dist')); if (v === S.d) return; custom(); S.d = v; $('dist').value = v; touchDep(); }
+  function setHV(v) { v = clamp(v, $('hv')); if (v === S.hv) return; custom(); S.hv = v; $('hv').value = v; touchChan(); }
+  function setFine(v) { v = clamp(v, $('fine')); if (v === S.fine) return; custom(); S.fine = v; $('fine').value = v; touchChan(); }
+  function setCoarse(v) { if (v === S.coarse) return; custom(); S.coarse = v; syncControls(); touchChan(); }
+  $('dist').addEventListener('input', (e) => setDist(+e.target.value));
+  $('thk').addEventListener('input', (e) => { custom(); S.t = +e.target.value; touchDep(); });
+  $('hv').addEventListener('input', (e) => setHV(+e.target.value));
+  $('fine').addEventListener('input', (e) => setFine(+e.target.value));
+  $('lld').addEventListener('input', (e) => { S.lld = +e.target.value; if (S.lld >= S.uld) S.lld = S.uld - 1; touchChan(); });
+  $('uld').addEventListener('input', (e) => { S.uld = +e.target.value; touchChan(); });
+  $('res').addEventListener('input', (e) => { custom(); S.res = +e.target.value / 100; touchChan(); });
+  $('ptime').addEventListener('change', (e) => { S.ptime = +e.target.value; });
+  $('addRow').addEventListener('click', addRow);
+  $('roiCal').addEventListener('click', () => { const r = rois[roiSel]; if (!r) return; setCand(C.roiStats(spec.counts, r.a, r.b), 'ROI'); });
+  $('roiDel').addEventListener('click', () => { if (roiSel >= 0) { rois.splice(roiSel, 1); roiSel = rois.length - 1; roiReadout(); } });
+  $('csvSpec').addEventListener('click', () => download(`gamma-spectrum-${C.SRC[trueSrc()].name}-${S.d}cm.csv`.replace(/ /g, ''), specCSV()));
+  $('csvTbl').addEventListener('click', () => download('gamma-roi-table.csv', tableCSV()));
+  $('clrTbl').addEventListener('click', () => { rows = []; tableReadout(); drawAna(); });
+  $('cAdd').addEventListener('click', addCalPoint);
+  $('cE').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addCalPoint(); } });
+  $('cLin').addEventListener('click', () => { cal.deg = 1; fitCal(); calReadout(); drawAna(); roiReadout(); });
+  $('cQuad').addEventListener('click', () => { cal.deg = 2; fitCal(); calReadout(); drawAna(); roiReadout(); });
+  $('cClr').addEventListener('click', () => { cal.pts = []; cal.fit = null; cal.key = null; cand = null; S.keV = false; calReadout(); drawAna(); roiReadout(); });
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+
+  // ---------- pointer interaction ----------
+  let drag = null, hoverId = null;
+  function dragHandles() {
+    if (!LY) return [];
+    const G = benchGeom(), E = elecGeom(G), M = mcaGeom(), out = [];
+    const sx = G.X(-S.d), sy = G.Y(-G.half + 1.8) + 0.4 * G.sc;
+    out.push({ id: 'src', cursor: 'ew-resize', hit: (x, y) => (Math.abs(y - G.cy) < 2 * G.sc + 4 || Math.abs(y - sy) < 9 * G.ps) ? Math.abs(x - sx) : Infinity,
+      set: (x) => setDist(-(x - G.X(0)) / G.sc) });
+    const kh = (k, r) => (x, y) => { const d = Math.hypot(x - k.x, y - k.y); return d <= r + 6 ? Math.max(0, d - r) : Infinity; };
+    out.push({ id: 'hv', cursor: 'ns-resize', hit: kh(E.hv, E.r), drag: 'y', set: (x, y, d0) => setHV(d0.v - (y - d0.y) * 2.5), val: () => S.hv });
+    out.push({ id: 'fn', cursor: 'ns-resize', hit: kh(E.fn, E.r * 0.85), drag: 'y', set: (x, y, d0) => setFine(d0.v - (y - d0.y) * 0.005), val: () => S.fine });
+    out.push({ id: 'cg', cursor: 'pointer', hit: kh(E.cg, E.r * 0.85), click: true });
+    rois.forEach((r, i) => {
+      for (const [edge, ch] of [['a', r.a], ['b', r.b + 1]]) {
+        const xe = M.X(ch);
+        out.push({ id: `roi${i}${edge}`, cursor: 'ew-resize', hit: (x, y) => (y >= M.box.T && y <= M.box.B) ? Math.abs(x - xe) : Infinity,
+          set: (x) => { const c = Math.max(0, Math.min(S.N - 1, Math.round(M.invX(x)))); const R = rois[i]; if (!R) return; if (edge === 'a') R.a = Math.min(c, R.b - 6); else R.b = Math.max(c - 1, R.a + 6); roiSel = i; } });
+      }
+    });
+    return out;
+  }
+  function handleAt(x, y, touch) {
+    const tol = 8 * (LY ? LY.bench.ps : 1) * (touch ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of dragHandles()) { const d = h.hit(x, y); if (d < bd) { bd = d; best = h; } }
+    return best;
+  }
+  const inPlot = (x, y) => { const b = mcaGeom().box; return x >= b.L && x <= b.R && y >= b.T - 4 && y <= b.B; };
+  const pos = (ev) => { const r = can.getBoundingClientRect(); return [ev.clientX - r.left, ev.clientY - r.top]; };
+  let dragQ = null, dragFrame = false;
+  can.addEventListener('pointermove', (ev) => {
+    const [x, y] = pos(ev);
+    if (drag) {
+      dragQ = [x, y];
+      if (!dragFrame) { dragFrame = true; requestAnimationFrame(() => { dragFrame = false; if (!drag || !dragQ) return; applyDrag(dragQ[0], dragQ[1]); dragQ = null; }); }
+      return;
+    }
+    const h = handleAt(x, y, ev.pointerType === 'touch'); hoverId = h ? h.id : null;
+    can.style.cursor = h ? h.cursor : inPlot(x, y) ? (S.mark ? 'crosshair' : 'text') : 'default';
+  });
+  function applyDrag(x, y) {
+    if (drag.id === 'new') { const M = mcaGeom(); drag.b = Math.max(0, Math.min(S.N - 1, Math.floor(M.invX(x)))); return; }
+    const h = dragHandles().find((k) => k.id === drag.id); if (h && h.set) { h.set(x, y, drag); if (drag.id.startsWith('roi')) roiReadout(); }
+  }
+  can.addEventListener('pointerdown', (ev) => {
+    const [x, y] = pos(ev); can.focus({ preventScroll: true });
+    const h = handleAt(x, y, ev.pointerType === 'touch');
+    if (h) {
+      if (h.click) { const cgs = [5, 10, 20, 50, 100], i = cgs.indexOf(S.coarse), E = elecGeom(benchGeom()); setCoarse(cgs[(i + (x < E.cg.x ? cgs.length - 1 : 1)) % cgs.length]); ev.preventDefault(); return; }
+      drag = { id: h.id, y, v: h.val ? h.val() : 0 }; hoverId = h.id; try { can.setPointerCapture(ev.pointerId); } catch (_) {} ev.preventDefault(); return;
+    }
+    if (inPlot(x, y)) {
+      const M = mcaGeom(), ch = Math.max(0, Math.min(S.N - 1, Math.floor(M.invX(x))));
+      cursor = ch;
+      if (S.mark) { markAt(ch); ev.preventDefault(); return; }
+      drag = { id: 'new', a: ch, b: ch }; try { can.setPointerCapture(ev.pointerId); } catch (_) {} ev.preventDefault();
+    }
+  });
+  function endDrag() {
+    if (drag && drag.id === 'new') {
+      const a = Math.min(drag.a, drag.b), b = Math.max(drag.a, drag.b);
+      if (b - a >= 6) { if (rois.length >= 8) rois.shift(); rois.push({ a, b }); roiSel = rois.length - 1; }
+      else { const i = rois.findIndex((r) => drag.a >= r.a && drag.a <= r.b); if (i >= 0) roiSel = i; }
+      roiReadout();
+    }
+    drag = null;
+  }
+  can.addEventListener('pointerup', endDrag);
+  can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
+  can.addEventListener('wheel', (ev) => { const [x, y] = pos(ev); if (!inPlot(x, y)) return; ev.preventDefault(); zoom(ev.deltaY < 0 ? 0.8 : 1.25, mcaGeom().invX(x)); }, { passive: false });
+  function markAt(ch) {
+    const w = Math.max(4, 0.04 * ch + 4), st = C.findPeak(spec.counts, ch, w);
+    if (st && st.net > 10) { setCand(st, 'peak'); cursor = Math.round(st.cen); $('cE').focus({ preventScroll: true }); }
+  }
+  can.addEventListener('keydown', (e) => {
+    const big = e.shiftKey ? 10 : 1;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { cursor = Math.max(0, Math.min(S.N - 1, cursor + (e.key === 'ArrowRight' ? big : -big))); if (cursor < view[0] || cursor >= view[1]) zoom(1); }
+    else if (e.key === ' ') { acquiring ? stop() : start(); }
+    else if (e.key === '[' || e.key === ']') setDist(S.d + (e.key === ']' ? 0.5 : -0.5));
+    else if (e.key === 'PageUp' || e.key === 'PageDown') setHV(S.hv + (e.key === 'PageUp' ? 5 : -5));
+    else if (e.key === 'l' || e.key === 'L') { S.log = !S.log; syncControls(); }
+    else if (e.key === 'm' || e.key === 'M') markAt(cursor);
+    else if (e.key === '+' || e.key === '=') zoom(0.5);
+    else if (e.key === '-' || e.key === '_') zoom(2);
+    else if (e.key === 'Delete' || e.key === 'Backspace') $('roiDel').click();
+    else return;
+    e.preventDefault(); liveReadouts();
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(() => { resize(); });
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  const retheme = () => { tokens(); drawAll(); drawAna(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, frameMs = 0, gCarry = 0;
+  function loop(now) {
+    const dt = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    recompute();
+    if (acquiring && ready) {
+      const done = C.acquire(spec, rates, nIn, dt * S.speed, rnd, S.ptime);
+      if (done) stop();
+      // drawn gamma rays: a small sample, more when the rate is higher
+      if (!reduce && S.src !== 'none' && dep) {
+        const G = benchGeom(), nrate = Math.min(14, 2 + 3 * Math.log10(1 + (dep.parts ? dep.parts.direct : 0)));
+        gCarry += dt * nrate;
+        while (gCarry >= 1 && gammas.length < 30) {
+          gCarry -= 1; const z1 = Math.random() * G.H * 0.8, y1 = (Math.random() * 2 - 1) * G.R * 0.95 * (S.d + z1) / S.d;
+          const yy = Math.max(-G.R, Math.min(G.R, y1 * 0.7)), ts = now / 1000, dur = 0.12 + 0.012 * S.d;
+          gammas.push({ t: ts, dur, z1, y1: yy }); flashes.push({ t: ts + dur, z: z1, y: yy });
+        }
+        if (gCarry > 2) gCarry = 2;
+        const ts = now / 1000; gammas = gammas.filter((g) => ts - g.t < g.dur); flashes = flashes.filter((f) => ts - f.t < 0.4);
+      }
+    }
+    drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastRead > 150) { liveReadouts(); elecReadouts(); lastRead = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__gs = { get frameMs() { return frameMs; }, get S() { return S; }, get spec() { return spec; }, get ready() { return ready; }, get rates() { return rates; }, get nIn() { return nIn; }, get rois() { return rois; }, get cal() { return cal; }, get rows() { return rows; },
+    get acquiring() { return acquiring; }, handles() { return dragHandles().map((h) => h.id); }, applyPreset, start, stop, markAt, addRow, setDist, setHV, C, geom: () => ({ bench: benchGeom(), mca: mcaGeom(), elec: elecGeom(benchGeom()) }) };
+
+  tokens(); lineList();
+  const ro = new ResizeObserver(() => resize());
+  ro.observe(pane); ro.observe(ana);
+  resize();
+  applyPreset('cs');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
