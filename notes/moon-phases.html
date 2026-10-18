@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moon Phases: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Moon Phases</h1><ul class="meta"><li><a href="../demos/moon-phases.html">Open the demo</a></li><li>Intro astronomy (non-majors and majors)</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>The Sun always lights half of the Moon. The phase is how much of that lit half faces Earth, which depends only on the Moon's angle from the Sun as seen from Earth, the elongation E: lit fraction f = (1 − cos E)/2.</li>
+<li>Phases are not caused by Earth's shadow. The shadow points away from the Sun and reaches the Moon only at some full moons, as a lunar eclipse.</li>
+<li>Phase and timing go together. Each 15° of elongation delays the Moon's rise by about an hour, so a first quarter moon rises near noon and a full moon rises at sunset.</li>
+<li>The cycle of phases (synodic month, 29.53 d) is longer than one trip around Earth against the stars (sidereal month, 27.32 d), because Earth moves along its orbit in the meantime.</li>
+<li>The Moon's orbit is tilted 5.1° to Earth's, so most new and full moons miss. Eclipses come in two seasons a year, when the line of nodes points near the Sun.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need only the idea that the Moon orbits Earth in about a month and the Sun lights things from one side. A lamp and a ball on a stick make a good warm up; the demo then shows the top down picture and the view from Earth side by side. The demo opens playing at 2 days per second; press <strong>Pause</strong> before you talk. Turn on <strong>Projector</strong> for a large room. Sunlight comes from the right in the top view, which is seen from above the North Pole.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Collect the shadow idea</strong> (Q1). Then press <strong>New moon</strong> and drag the Moon slowly around its orbit. Point at the bright side of the Moon (always toward the Sun) and at the marked half that faces Earth. Note where <strong>Earth's shadow</strong> points.</li>
+<li><strong>First quarter.</strong> The Moon is 90° east of the Sun and 50% lit, on the right side in the <strong>View from Earth</strong>. Use the <strong>Sky clock</strong> slider to show it rising near noon and standing highest at sunset.</li>
+<li><strong>Full moon.</strong> Opposite the Sun: it rises at sunset, is highest at midnight, and sets at sunrise. Ask why this is not an eclipse every month; leave the answer for step 5.</li>
+<li><strong>Waning crescent.</strong> 45° west of the Sun, 14.6% lit, on the left side. It rises around 03:00 and is seen before dawn (Q4).</li>
+<li><strong>Eclipse season.</strong> The tilted orbit and nodes appear. This new moon crosses the ecliptic: a solar eclipse is possible. Press <strong>Next full</strong>, then alternate <strong>Next new</strong> and <strong>Next full</strong> and read the flag each time (Q6).</li>
+<li><strong>Sidereal vs synodic.</strong> After 27.32 days the Moon faces the same stars again but is not yet new. The gold arc is the extra 2.2 days (Q5).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: a common idea is that phases happen because Earth's shadow covers part of the Moon. If that were true, in which direction from Earth would the Moon have to be to show a crescent? Where is the Moon really when we see a crescent? Check by dragging the Moon.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Use f = (1 − cos E)/2 to find the lit fraction at elongations of 45°, 90° and 135° east. How many days after new moon is each? Check with the <strong>Days since new moon</strong> slider.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In the demo's model a new moon rises at 06:00, and each degree of elongation delays moonrise by 4 minutes. When does a 3 day old moon rise? Show that the Moon rises about 50 minutes later each day.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A friend in Louisiana says she saw a thin crescent moon high in the south at midnight. Could she be right? Use the <strong>Sky clock</strong> with a crescent to decide, and explain the reason in one sentence.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> The Moon takes 27.32 days to go around Earth relative to the stars, and Earth takes 365.26 days to go around the Sun. Show that the time from one new moon to the next is 29.53 days.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In <strong>Eclipse season</strong>, press <strong>Next full</strong> and then alternate <strong>Next new</strong> and <strong>Next full</strong>. Which new and full moons can give an eclipse? How long until the next eclipse season starts? Why does the 5.1° tilt of the orbit make most new moons miss the Sun?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Earth's shadow causes the phases."</strong> The Sun lights half the Moon at all times; we see part of that half. Earth's shadow points away from the Sun and touches the Moon only at a full moon, during a lunar eclipse.</li>
+<li><strong>"The Moon is only out at night."</strong> The Moon is above the horizon about 12 hours each day, at a time set by its phase. A first quarter moon is easy to see in the afternoon.</li>
+<li><strong>"Half the Moon is always dark: the far side is the dark side."</strong> The far side is the side we never see, but it is lit as often as the near side. At new moon it is fully lit.</li>
+<li><strong>"The phase changes because the Moon is closer or farther."</strong> The phase depends only on the angle between the Sun and the Moon seen from Earth.</li>
+<li><strong>"There should be an eclipse every month."</strong> The tilted orbit means the Moon usually passes above or below the Sun or Earth's shadow.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Circular orbits at steady rates. The elongation grows by 360° per synodic month (29.530589 d), so phases are evenly spaced; the real Moon can run up to about 14 hours early or late.</li>
+<li><strong>Illuminated</strong> is f = (1 − cos E)/2. The phase name is "new", "first quarter", "full" or "third quarter" within 6° of those angles, and crescent or gibbous in between.</li>
+<li>Rise, transit and set times assume an observer on the equator at an equinox with the Moon on the celestial equator: rise = 06:00 + E/15° per hour, highest 6 hours later, set 12 hours later. Latitude and the tilted orbit shift real times by an hour or more.</li>
+<li>The <strong>View from Earth</strong> is for a Northern Hemisphere observer facing south, with the terminator drawn upright. In the Southern Hemisphere the picture flips left to right.</li>
+<li>Eclipse view: the orbit is tilted 5.145° and the line of nodes turns westward once in 18.6 years, which makes the eclipse year 346.6 days. The flag uses the Moon's height above the ecliptic β = 5.145° × sin(angle from the ascending node). A solar eclipse is possible when |β| &lt; 1.48° at new moon; an umbral lunar eclipse when |β| &lt; 0.96° at full moon, and a penumbral one when |β| &lt; 1.53°.</li>
+<li>Sizes and distances are not to scale; the real Moon is about 30 Earth diameters away.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: keep a moon log for two weeks. Record the time, the direction, and a sketch of the phase each night, and compare with the demo's rise and set times.</li>
+<li>Use the node line drift readout to show why eclipse seasons arrive about 19 days earlier each year.</li>
+<li>History: Aristarchus used the exact half lit moon, when the angle at the Moon between Earth and the Sun is 90°, to estimate how much farther the Sun is than the Moon. The demo puts the Sun infinitely far away, so its quarter moon is exactly 90° from the Sun. Ask students why the real angle is so hard to measure.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

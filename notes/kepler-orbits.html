@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kepler&#x27;s Laws: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Kepler&#x27;s Laws</h1><ul class="meta"><li><a href="../demos/kepler-orbits.html">Open the demo</a></li><li>Intro astronomy (non-majors and majors); intro mechanics (gravitation, angular momentum, energy)</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>First law: a bound planet moves on an ellipse with the star at one focus, not at the center. A circle is the special case e = 0.</li>
+<li>Second law: the line from the star to the planet sweeps equal areas in equal times. This is conservation of angular momentum, so the planet is fastest at perihelion: v_p/v_a = r_a/r_p = (1 + e)/(1 − e).</li>
+<li>Third law: P² = a³/M, with P in years, a in AU and M in solar masses. The period depends only on the semi major axis and the star's mass, not on the eccentricity or the planet's mass.</li>
+<li>The launch speed decides the shape. At the circular speed √(GM/r) the orbit is a circle; at the escape speed √2 times larger the energy is zero, and faster launches give hyperbolas.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know what an ellipse, its foci and its semi major axis are; a string and two pins on a board is a quick reminder. Majors and physics students should know Newton's law of gravity and the idea of angular momentum. The demo opens on <strong>Mercury</strong> and plays. Turn on <strong>Projector</strong> for a large room. The arrow tip snaps to the gold circular speed circle and the red escape speed circle; hold <strong>Shift</strong> to place it freely. Focus the view and press <strong>F</strong> to fit the orbit.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Circular orbit.</strong> The tip sits on the gold circle and the two foci merge at the star. Ask Q1, then focus the view and press the up arrow six times (+3.0 km/s) to launch at 1.1 times the circular speed. Students see the orbit grow outward from the launch point, which becomes perihelion.</li>
+<li><strong>Earth</strong>, then <strong>Mars</strong>, then <strong>Mercury.</strong> The empty focus moves away from the star as e grows: 0.017, 0.093, 0.206. With Mercury, watch the <strong>Sweep wedges</strong>: long and thin near aphelion, short and wide near perihelion, but the area readouts agree. Compare <strong>Perihelion speed</strong> and <strong>Aphelion speed</strong> (Q2).</li>
+<li><strong>Halley's comet.</strong> Launched at aphelion, 35 AU out, at 0.914 km/s. Play it: most of the 75 years are spent far out, and perihelion passes in a few months. Point at the dot on the <strong>third law chart</strong>: it falls on the same line as the planets.</li>
+<li><strong>Star mass.</strong> With <strong>Keep the orbit's shape when M changes</strong> on, raise the star mass to 2 M☉. The orbit stays the same; only the period changes (Q3). Return the slider to 1.00 M☉.</li>
+<li><strong>Escape.</strong> Launch at 1.2 times the escape speed: positive energy, a hyperbola, and a final speed v∞ (Q5).</li>
+<li><strong>Race two planets.</strong> Load <strong>Circular orbit</strong>, press <strong>Keep as second planet</strong>, then drag the arrow tip around the gold circle to point the launch in a new direction. Ask for a prediction, then play (Q6).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: a planet on a circular orbit at 1 AU gets a sudden push forward at one point, so it now moves at 1.1 times the circular speed. Does it move farther from the star or closer? Where on the new orbit is the point where it got the push? Will its period be longer or shorter than a year?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Mercury's distance from the Sun ranges from 0.3075 AU to 0.4667 AU. Use the second law, in the form r_p v_p = r_a v_a, to find the ratio of its perihelion and aphelion speeds. Check against the readouts.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Halley's comet has a semi major axis of 17.8 AU and e = 0.967. Find its period and its aphelion distance. If the same orbit went around a star of 2 M☉, what would the period be? Check both with the demo.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Explain why a planet must speed up as it falls toward perihelion and slow down as it climbs to aphelion. Give two explanations: one from the equal areas law, and one from energy.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> At 1 AU from the Sun the circular speed is 29.8 km/s. Find the escape speed there. In the <strong>Escape</strong> preset the planet is launched at 1.2 times the escape speed. Use energy conservation to find its speed far from the Sun, and compare with the <strong>Speed far away v∞</strong> readout.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Two planets start at the same point, 1 AU from the star, with the same speed, 29.8 km/s, but one moves sideways (a circle) and the other is aimed partly outward. Predict which one returns to the starting point first. Then race them with <strong>Keep as second planet</strong> and explain the result with the third law.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The Sun is at the center of the ellipse."</strong> It sits at one focus. The other focus is empty. For Earth they are so close together that the orbit looks like a circle centered on the Sun.</li>
+<li><strong>"Planets are closest to the Sun in summer."</strong> Earth's eccentricity is small, and perihelion comes in early January. Distance does not set the seasons.</li>
+<li><strong>"A heavier planet orbits more slowly."</strong> The planet's mass cancels out of the motion. Only the star's mass enters the third law.</li>
+<li><strong>"Planetary orbits are very elongated."</strong> Most planets have small e; drawings in textbooks often exaggerate them. Comets are the elongated ones.</li>
+<li><strong>"To escape you have to point straight away from the star."</strong> Escape depends on speed, not direction: any launch at or above √2 times the circular speed escapes, unless it hits the star.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Units: AU, years and solar masses, so GM = 4π² M AU³/yr². Speeds are shown in km/s, with 1 AU/yr = 4.74 km/s.</li>
+<li>The star is fixed and the planet's mass is neglected, so P² = a³/M holds exactly. Planets do not pull on each other, and the star does not move around the common center of mass.</li>
+<li>The motion is integrated with velocity Verlet, with a time step that shrinks near the star. The <strong>Energy drift</strong> readout shows how well the integrator keeps the energy constant. The predicted orbit path, a and e come from the launch position and velocity through the energy ε = v²/2 − GM/r and the angular momentum h = |r × v|.</li>
+<li>The wedge areas are summed from the integrated path, not taken from a formula, and compared with ½·h·Δt.</li>
+<li>A path that comes within 0.005 AU (about one solar radius) of the star counts as a hit.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: Newton's form of the third law, P² = 4π²a³/(G(M + m)), lets you weigh a star from a planet's orbit. Use it for an exoplanet with a = 0.05 AU and P = 4.2 days.</li>
+<li>History: Kepler found the first two laws from Tycho Brahe's observations of Mars and published them in 1609; the third law followed in 1619.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

@@ -447,7 +447,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   // ---------- state ----------
   const PRESETS = {
-    human:  { T: 310,   hint: 'Your skin at 310 K peaks near 9.3 μm, deep in the infrared. Thermal cameras see this glow; your eyes do not. Switch B to log to find the tiny visible tail.' },
+    human:  { T: 310,   hint: 'Your skin at 310 K peaks near 9.3 μm, deep in the infrared. Thermal cameras see this glow; your eyes do not. The visible share readout shows how little reaches the visible band: about 5 × 10⁻²¹ % of the power, far below even the log axis.' },
     bulb:   { T: 2800,  hint: 'A tungsten filament at 2800 K peaks near 1 μm, just past red. Only about 8% of its power lands in the visible band; the rest is heat.' },
     sun:    { T: 5772, R: 1, hint: 'The Sun at 5772 K peaks near 500 nm, right in the visible band, and about 44% of its power is visible light. Its color is close to white, not yellow.' },
     betel:  { T: 3600, R: 760, hint: 'Betelgeuse is a red supergiant: cooler than the Sun, so each square meter emits about 15% as much, but 760 times wider, so it outshines the Sun nearly 90,000 times.' },
@@ -455,7 +455,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     rigel:  { T: 12100, R: 78.9, hint: 'Rigel is a blue supergiant at 12,100 K. Most of its output is ultraviolet, and the visible part tilts toward blue.' },
     cmb:    { T: 2.725, hint: 'The cosmic microwave background is the most perfect blackbody known, at 2.725 K. Its peak sits near 1 mm, in microwaves. The slider stops at 300 K, so this preset is a special case.' }
   };
-  const S = { T: 5772, R: 1, xMode: 'lin', yMode: 'lin', rj: false, band: true, eye: false, lock: false };
+  const S = { T: 5772, R: 1, star: true, xMode: 'lin', yMode: 'lin', rj: false, band: true, eye: false, lock: false };
   let pins = [];
   let locked = null, frozen = null;
   let probe = null, drag = null, hoverPeak = false;
@@ -906,7 +906,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const F = SIG * Math.pow(S.T, 4);
     $('rF').textContent = sci(F, 3) + ' W/m²';
     const L = 4 * Math.PI * Math.pow(S.R * RSUN, 2) * F / LSUN;
-    $('rL').textContent = sci(L, 3) + ' L☉';
+    // luminosity only means something for a star of the chosen radius
+    $('rL').textContent = S.star ? sci(L, 3) + ' L☉' : '— (not a star; move R)';
     const vf = visibleFraction(S.T);
     $('rVis').textContent = vf > 0 ? (vf >= 1e-3 ? (vf * 100).toFixed(vf > 0.1 ? 1 : 2) + '%' : sci(vf * 100, 2) + '%') : '≈ 0';
     $('rB').textContent = sci(planck(wien(S.T), S.T) * 1e-9, 3);
@@ -954,6 +955,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function applyPreset(name) {
     const p = PRESETS[name];
     if (p.R) { S.R = p.R; $('rad').value = rToU(p.R); }
+    S.star = !!p.R;
     setT(p.T);
     setPressed('#presets', 'p', name);
     $('presetHint').textContent = p.hint;
@@ -964,7 +966,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     setPressed('#presets', 'p', null);
     $('presetHint').textContent = 'Slide T and watch the peak shift as 1/T while the height of the curve climbs much faster.';
   });
-  $('rad').addEventListener('input', (e) => { S.R = uToR(+e.target.value); schedule(); });
+  $('rad').addEventListener('input', (e) => { S.R = uToR(+e.target.value); S.star = true; schedule(); });
   for (const b of document.querySelectorAll('[data-x]')) b.addEventListener('click', () => { S.xMode = b.dataset.x; setPressed('.seg:nth-child(1)', 'x', S.xMode); schedule(); });
   for (const b of document.querySelectorAll('[data-y]')) b.addEventListener('click', () => { S.yMode = b.dataset.y; setPressed('.seg:nth-child(2)', 'y', S.yMode); schedule(); });
   $('tRJ').addEventListener('change', (e) => { S.rj = e.target.checked; schedule(); });

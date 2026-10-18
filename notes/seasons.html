@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reasons for Seasons: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Reasons for Seasons</h1><ul class="meta"><li><a href="../demos/seasons.html">Open the demo</a></li><li>Intro astronomy (non-majors and majors); intro physics (flux and angle of incidence)</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Seasons come from the 23.44° tilt of Earth's axis, which stays pointed the same way in space all year. The distance to the Sun changes by only ±1.7%, and Earth is closest in early January, during northern winter.</li>
+<li>The tilt changes two things together: the height of the noon Sun (a low Sun spreads the same beam over more ground) and the length of the day.</li>
+<li>The Sun's declination δ swings between +ε and −ε. The noon altitude is 90° − |φ − δ|, and day length follows from cos H₀ = −tan φ tan δ.</li>
+<li>Distance changes the sunlight in both hemispheres at once, by about ±3.3%. The tilt changes it in opposite directions in the two hemispheres, by about ±42% at 32.5° N.</li>
+<li>The tilt also sets where the tropics (±ε) and the polar circles (90° − ε) are.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know that Earth orbits the Sun in a year and spins in a day. Ask them, before the demo, to write one sentence on why it is warmer in summer; many will write "we are closer to the Sun". The demo opens on today's date at 32.5° N (Ruston, Louisiana) and plays; use <strong>Pause</strong> or a preset to stop it. Turn on <strong>Projector</strong> for a large room.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Collect the predictions</strong> (Q1). Then tick <strong>Show the distance effect</strong>. The chart switches to <strong>Insolation</strong> and the two bars compare the yearly swing from distance (±3.3%) with the swing from the tilt at the observer (±41.8%).</li>
+<li><strong>June solstice</strong>, then <strong>December solstice.</strong> Compare the readouts: noon Sun 80.9° and 34.1°, day length 14 h 08 m and 9 h 52 m, daily insolation 478 and 209 W/m². Point at the <strong>Earth to Sun</strong> readout: 1.0163 AU in June, 0.9837 AU in December. Show the Sun's path in the sky pane.</li>
+<li><strong>Equinox.</strong> The day and night line runs through both poles; every latitude has a 12 hour day. Drag up and down on the Earth closeup to move the observer: the noon altitude and the insolation change, but the day stays 12 hours long (Q4).</li>
+<li><strong>No tilt</strong>, then <strong>Play.</strong> The chart goes flat, apart from the small distance ripple. Ask what life on this Earth would be like.</li>
+<li><strong>Arctic summer.</strong> At 70° N the Sun never sets, and the daily insolation (493 W/m²) beats the equator at an equinox (Q5).</li>
+<li><strong>Uranus like tilt.</strong> Slide <strong>Axial tilt ε</strong> and watch the tropics and polar circles move until they overlap (Q6). Finish with <strong>Reset</strong>.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: Earth is closest to the Sun in early January. If the changing distance caused the seasons, what season would Australia have in January? What does it actually have, and what does that tell you?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Ruston is at 32.5° N. Find the noon Sun altitude at the June solstice, the December solstice and the equinoxes (ε = 23.44°). Check with the <strong>Noon Sun altitude</strong> readout.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Earth's distance from the Sun runs from 0.983 AU in January to 1.017 AU in July. By what percentage is the sunlight stronger at the closest point than at the farthest? Compare with the ratio of Ruston's daily insolation at the June and December solstices (478 and 209 W/m²).</p></div>
+
+<div class="q"><p><strong>Q4.</strong> At the equinox both Ruston and the equator have 12 hour days, yet Ruston's daily insolation is only 85% of the equator's. Explain why, using a flashlight beam on a tilted sheet of paper. Show that 85% is close to cos 32.5°.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> At the June solstice the daily insolation at 70° N is 493 W/m², more than at the equator on the same date. Use the demo to explain how, with a noon Sun only 43° high. Then explain why the Arctic is still much colder than the tropics in June.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Set the tilt to 98°, like Uranus. How far from the celestial equator can the Sun get now? Which latitudes have at least one day without sunset during the year? Check at Ruston with the <strong>Day length</strong> readout.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Summer is when Earth is closest to the Sun."</strong> Earth is closest around January 3, in northern winter. Distance would also give both hemispheres the same season at the same time.</li>
+<li><strong>"In summer the northern hemisphere is much closer to the Sun because it leans toward it."</strong> The lean changes the distance by a few thousand kilometers out of 150 million. What matters is the angle of the sunlight and the length of the day.</li>
+<li><strong>"The axis wobbles back and forth during the year."</strong> It points the same way in space all year, toward Polaris. The seasons change because Earth moves around the Sun.</li>
+<li><strong>"The hottest day is the longest day."</strong> The demo shows sunlight, not temperature. Oceans and land take weeks to warm, so the warmest weather comes in July and August.</li>
+<li><strong>"At the equator the Sun is straight overhead every noon."</strong> Only at the two equinoxes. In June the noon Sun there is 66.6° high, in the north.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Earth's orbit is an ellipse with e = 0.0167, solved from Kepler's equation, with perihelion fixed on January 3. The Sun's ecliptic longitude λ gives the declination, sin δ = sin ε sin λ.</li>
+<li>Noon altitude = 90° − |φ − δ|. Day length is 24 h × H₀/π with cos H₀ = −tan φ tan δ, using the center of the Sun and no refraction, so real days are a few minutes longer. Polar day and night appear when |tan φ tan δ| &gt; 1.</li>
+<li><strong>Daily mean insolation</strong> is the 24 hour average on a level surface at the top of the atmosphere: Q = (S₀/π)(1 AU/r)²(H₀ sin φ sin δ + cos φ cos δ sin H₀), with S₀ = 1361 W/m². <strong>vs equator at equinox</strong> divides by S₀/π = 433 W/m². The atmosphere, clouds, snow and ice, and the heat stored in oceans are not modeled.</li>
+<li>The distance bar shows the ±3.3% swing from 1/r². The tilt bar shows the swing at the observer's latitude computed at a constant 1 AU.</li>
+<li><strong>Stretch ellipse</strong> draws the orbit with e = 0.25 so its shape is visible; all timing and readouts still use e = 0.0167. Sun and Earth sizes are not to scale.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: find the latitude where the noon Sun is overhead on the June solstice, and the latitude where the Sun just stays up for 24 hours. Relate both to ε. Then repeat for Mars (tilt 25.2°).</li>
+<li>Lab connection: measure the length of a meter stick's noon shadow once a week through the semester and compare the Sun's altitude with the readout.</li>
+<li>Because the orbit is elliptical, northern summer (March equinox to September equinox) is several days longer than northern winter. Students can measure it with the date slider and connect it to Kepler's second law.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>
