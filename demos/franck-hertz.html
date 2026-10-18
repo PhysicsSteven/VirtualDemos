@@ -1,0 +1,1164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+<title>Franck–Hertz Experiment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one canvas with four panels: the tube, electron energy along the tube, the I(U) curve and the energy levels; instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --uv: #7a3ec2;
+  --glow: #e5681a;
+  --glass: #dfe7ef;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --uv: #b98cff; --glow: #ff9442; --glass: #1c2633; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --uv: #b98cff; --glow: #ff9442; --glass: #1c2633; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#can { touch-action: none; outline: none; }
+#can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .list dd { font-size: 0.86rem; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
+
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.data { border-color: var(--ink); border-top-width: 2px; }
+.swatch.ghost { border-color: var(--muted); border-top-style: dashed; }
+.swatch.thr { border-color: var(--equi); border-top-style: dashed; }
+.swatch.dot { width: 10px; height: 10px; border: 0; border-radius: 50%; margin: 0 6px; background: var(--neg); }
+.swatch.mark { width: 10px; height: 10px; border: 2px solid var(--pos); border-radius: 50%; margin: 0 6px; }
+.swatch.uv { height: 10px; border: 0; background: color-mix(in srgb, var(--uv) 55%, transparent); }
+.swatch.glow { height: 10px; border: 0; background: color-mix(in srgb, var(--glow) 70%, transparent); }
+sub, sup { line-height: 0; }
+
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: auto; min-height: 1080px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Franck–Hertz Experiment</h1>
+      <p>Electrons crossing mercury vapor can give an atom only one fixed amount of energy, 4.89 eV, so the collector current drops every 4.9 V. Sweep U, mark the peaks, measure the spacing.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">U in V · I in nA · energies in eV · λ = 1239.84 nm / E(eV)</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="Gas in the tube">
+          <button type="button" id="gHg" aria-pressed="true">Mercury</button>
+          <button type="button" id="gNe" aria-pressed="false">Neon</button>
+        </div>
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="again">New sweep</button>
+        <button type="button" class="btn" id="measure" aria-pressed="false">Mark peaks</button>
+        <span class="count mono" id="count" aria-live="off"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="The Franck–Hertz tube with electrons crossing the vapor, the electron energy along the tube, the collector current I against the accelerating voltage U, and the energy levels of the atom. Drag the U cursor on the current plot to set U, the retarding line in the energy panel to set U_r, and the oven thermometer to set the temperature. In mark peaks mode, click a maximum on the plot to mark it. Keys: left and right change U, up and down change the oven temperature, space plays or pauses, M toggles mark peaks, Enter marks the maximum nearest the cursor, Backspace removes the last mark, N starts a new sweep."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="hg" aria-pressed="true">Mercury tube at 180 °C</button>
+          <button type="button" data-p="measure" aria-pressed="false">Measure the peak spacing</button>
+          <button type="button" data-p="cold" aria-pressed="false">Too cold: few collisions</button>
+          <button type="button" data-p="hot" aria-pressed="false">Too hot: weak current</button>
+          <button type="button" data-p="ne" aria-pressed="false">Neon: glowing layers</button>
+          <button type="button" data-p="first" aria-pressed="false">Why the first peak is not at 4.9 V</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Tube</h2>
+        <div id="ovenRow">
+          <div class="slider-head"><label for="temp">Oven temperature</label><output id="tempOut" class="mono" for="temp"></output></div>
+          <input type="range" id="temp" min="100" max="210" step="1" value="180">
+        </div>
+        <dl class="readout">
+          <div><dt id="pLab">Vapor pressure</dt><dd id="rP">—</dd></div>
+          <div><dt>Atoms per m³, n = p/kT</dt><dd id="rN">—</dd></div>
+          <div><dt>Mean free path to an excitation, λ = 1/nσ</dt><dd id="rLam">—</dd></div>
+          <div><dt>Energy gained over λ at this U</dt><dd id="rOver">—</dd></div>
+          <div class="wide"><dt>Electrons not scattered out of the beam, e^(−nσ<sub>s</sub>L)</dt><dd id="rTr">—</dd></div>
+        </dl>
+        <p class="hint" id="tubeHint"></p>
+      </section>
+
+      <section>
+        <h2>Voltages</h2>
+        <div>
+          <div class="slider-head"><label for="uu">Accelerating voltage U (G2)</label><output id="uOut" class="mono" for="uu"></output></div>
+          <input type="range" id="uu" min="0" max="35" step="0.05" value="0">
+        </div>
+        <div>
+          <div class="slider-head"><label for="ur">Retarding voltage U<sub>r</sub></label><output id="urOut" class="mono" for="ur"></output></div>
+          <input type="range" id="ur" min="0" max="8" step="0.1" value="1.5">
+        </div>
+        <div>
+          <div class="slider-head"><label for="uc">Contact potential U<sub>c</sub></label><output id="ucOut" class="mono" for="uc"></output></div>
+          <input type="range" id="uc" min="0" max="4" step="0.1" value="2">
+        </div>
+        <div class="row">
+          <span class="hint">Sweep speed</span>
+          <div class="seg" role="group" aria-label="Sweep speed">
+            <button type="button" id="spSlow" aria-pressed="true">Lab</button>
+            <button type="button" id="spFast" aria-pressed="false">Fast</button>
+          </div>
+        </div>
+        <dl class="readout">
+          <div><dt>Collector current I</dt><dd id="rI">—</dd></div>
+          <div><dt>Reaching the collector</dt><dd id="rCol">—</dd></div>
+          <div><dt>Energy at G2 with no collisions, e(U − U<sub>c</sub>)</dt><dd id="rEmax">—</dd></div>
+          <div><dt>Excitations per electron</dt><dd id="rNx">—</dd></div>
+        </dl>
+        <p class="hint">The sweep records the current as U ramps up, like the slow ramp in the lab. Move U yourself and a point is recorded wherever you stop. Changing the oven, U<sub>r</sub> or U<sub>c</sub> starts a fresh curve; the last one stays as a dashed ghost.</p>
+      </section>
+
+      <section>
+        <h2>Measure</h2>
+        <div class="row">
+          <button type="button" class="btn" id="undo">Undo mark</button>
+          <button type="button" class="btn" id="clearMarks">Clear marks</button>
+        </div>
+        <label class="check"><input type="checkbox" id="snap" checked> Snap to the nearest maximum</label>
+        <label class="check"><input type="checkbox" id="guides"> Show lines at n · E<sub>exc</sub>/e</label>
+        <dl class="readout">
+          <div class="wide list"><dt>Peaks marked, U<sub>n</sub></dt><dd id="rMarks">—</dd></div>
+          <div class="wide list"><dt>Spacings U<sub>n</sub> − U<sub>n−1</sub></dt><dd id="rGaps">—</dd></div>
+          <div class="wide big"><dt>Fit U<sub>n</sub> = U<sub>0</sub> + n ΔE/e gives ΔE</dt><dd id="rFit">—</dd></div>
+          <div><dt>Intercept U<sub>0</sub></dt><dd id="rU0">—</dd></div>
+          <div><dt id="refLab">NIST 6³P₁ level</dt><dd id="rRef">—</dd></div>
+        </dl>
+        <p class="hint" id="measureHint"></p>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint">Energy is exact: an electron at distance x past the control grid G1 has its starting energy plus e(U − U<sub>c</sub>)x/L, minus every amount it has given to atoms. The path is drawn straight; the electron moves in a uniform field over the gap L (8 mm for the mercury tube, 5 mm for neon, typical values).</p>
+        <p class="hint" id="modelGas"></p>
+        <p class="hint">Once above threshold, an electron excites an atom after a random distance with mean λ = 1/nσ<sub>x</sub>. σ<sub>x</sub> is effective: elastic collisions make the real path zigzag, so an electron meets far more atoms per millimeter of progress than a straight path would. Elastic collisions are otherwise left out of the energy (each costs only 2m/M of E, 5 × 10⁻⁶ for mercury). They do two things kept here: the electrons reach G2 moving in random directions, so one with energy E gets past U<sub>r</sub> with chance 1 − eU<sub>r</sub>/E, and a fraction is scattered out of the beam, e^(−nσ<sub>s</sub>L), σ<sub>s</sub> = 5.3 × 10⁻²² m² (effective).</p>
+        <p class="hint">Electrons start with thermal energy from a 1100 K oxide cathode plus a 0.5 eV spread standing for potential differences across the cathode and grid meshes. The current entering the gap rises with U as u<sup>3/2</sup>/(1 + u<sup>3/2</sup>), u = (U − U<sub>c</sub>)/U<sub>s</sub>, U<sub>s</sub> = 8 V for mercury and 20 V for neon: space charge limits it at low U (Child's law), the control grid G1 at high U. It sets the rising baseline only, but it pulls each maximum slightly toward higher U. The nA scale resembles a typical tube; amplifier noise is 0.02 nA rms. Ionization is left out.</p>
+        <p class="hint" id="modelVapor">Vapor pressure of mercury from Huber, Laesecke and Friend, Ind. Eng. Chem. Res. 45, 7351 (2006), with the vapor in equilibrium with liquid mercury at the oven temperature. Energy levels from the NIST Handbook of Basic Atomic Spectroscopic Data (Sansonetti and Martin), as in the NIST Atomic Spectra Database.</p>
+        <div class="key">
+          <span><i class="swatch data"></i>Recorded current</span>
+          <span><i class="swatch ghost"></i>Previous curve (ghost)</span>
+          <span><i class="swatch dot"></i>Electrons</span>
+          <span><i class="swatch thr"></i>Excitation threshold</span>
+          <span><i class="swatch mark"></i>Marked peaks</span>
+          <span><i class="swatch uv"></i>Mercury 253.7 nm UV (invisible, drawn violet)</span>
+          <span><i class="swatch glow"></i>Neon red and orange glow</span>
+        </div>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  // Units: energies in eV, voltages in V, lengths in m, current in nA.
+  const KB = 1.380649e-23;            // J/K (exact, SI 2019)
+  const QE = 1.602176634e-19;         // C (exact)
+  const CM_PER_EV = 8065.543937;      // cm⁻¹ per eV (CODATA 2018)
+  const HC_EVNM = 1239.841984;        // hc in eV·nm
+  const T_CATH = 1100;                // K, oxide cathode
+  const KT_CATH = KB * T_CATH / QE;   // eV
+  const SIG_E = 0.5;                  // eV, Gaussian spread of the starting energy
+  const AMP_NOISE = 0.02;             // nA rms
+  const eVof = (cm) => cm / CM_PER_EV;
+
+  // Levels in cm⁻¹ (NIST Handbook of Basic Atomic Spectroscopic Data / ASD)
+  const HG = {
+    ground: 0,
+    levels: [
+      { name: '6s6p ³P₀', cm: 37645.080, note: 'metastable' },
+      { name: '6s6p ³P₁', cm: 39412.300, note: '' },
+      { name: '6s6p ³P₂', cm: 44042.977, note: 'metastable' },
+      { name: '6s6p ¹P₁', cm: 54068.781, note: '' }
+    ],
+    ion: 84184.1
+  };
+  const NE = {
+    s3: [134041.8400, 134459.2871, 134818.6405, 135888.7173],
+    p3: [148257.7898, 149657.0393, 149824.2215, 150121.5922, 150315.8612, 150772.1118, 150858.5079, 150917.4307, 151038.4524, 152970.7328],
+    ion: 173929.75
+  };
+
+  // Mercury vapor pressure, Pa (Huber, Laesecke & Friend 2006, Wagner type form, Tc = 1764 K, pc = 167 MPa)
+  function pHg(T) {
+    const Tc = 1764, Pc = 167e6, t = 1 - T / Tc;
+    const a = [-4.57618368, -1.40726277, 2.36263541, -31.0889985, 58.0183959, -27.6304546];
+    const p = [1, 1.89, 2, 8, 8.5, 9];
+    let s = 0; for (let i = 0; i < 6; i++) s += a[i] * Math.pow(t, p[i]);
+    return Pc * Math.exp(Tc / T * s);
+  }
+
+  // The two tubes. levels: energies an excitation can take (eV, ascending); the first is the threshold.
+  const GAS = {
+    hg: { id: 'hg', L: 8e-3, levels: [eVof(39412.300)], sigX: 1.7e-19, sigS: 5.3e-22, Isat: 12, Us: 8, Umax: 35, dU: 0.05, hw: 0.2, read: 0.1, Ur: 1.5, Uc: 2.0, rate: 2.5 },
+    ne: { id: 'ne', L: 5e-3, levels: NE.p3.map(eVof).sort((a, b) => a - b), sigX: 5.0e-20, sigS: 5.3e-22, Isat: 12, Us: 20, Umax: 80, dU: 0.1, hw: 0.5, read: 0.4, Ur: 5.0, Uc: 2.0, rate: 5, pFill: 1000, TFill: 293.15 }
+  };
+  function density(g, TC) {
+    if (g.id === 'hg') { const T = TC + 273.15; return pHg(T) / (KB * T); }
+    return g.pFill / (KB * g.TFill);
+  }
+  function tubeParams(g, TC) {
+    const n = density(g, TC);
+    return { n, p: g.id === 'hg' ? pHg(TC + 273.15) : g.pFill, lam: 1 / (n * g.sigX), trans: Math.exp(-n * g.sigS * g.L) };
+  }
+  function envelope(g, Ue) { if (Ue <= 0) return 0; const u = Math.pow(Ue / g.Us, 1.5); return u / (1 + u); }
+  function gauss(rnd) { let u = rnd(); if (u < 1e-300) u = 1e-300; return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rnd()); }
+  // Starting energy: Maxwellian flux from the cathode (sum of two exponentials, mean 2kT) plus a Gaussian spread
+  function startEnergy(rnd) { return -KT_CATH * Math.log((1 - rnd()) * (1 - rnd())) + SIG_E * gauss(rnd); }
+
+  // One electron across the gap. E(x) = E0 + F x − (sum of excitation energies so far), F = e(U − Uc)/L in eV per m.
+  // Below threshold nothing happens; once E ≥ threshold the distance to the next excitation is exponential with mean λ.
+  // An excitation takes one level the electron can reach, chosen at random, and removes exactly that energy.
+  function electron(g, tp, U, Ur, Uc, rnd, keep) {
+    const L = g.L, lv = g.levels, thr = lv[0], F = (U - Uc) / L;
+    const E0 = startEnergy(rnd);
+    let base = E0, nx = 0, lost = 0;
+    const exc = keep ? [] : null;
+    if (F > 0) {
+      for (;;) {
+        const xs = Math.max((thr - base) / F, 0); if (xs >= L) break;
+        const xe = xs - tp.lam * Math.log(1 - rnd()); if (xe >= L) break;
+        const Ex = base + F * xe;
+        let k = 0; while (k + 1 < lv.length && lv[k + 1] <= Ex) k++;
+        const dE = lv[Math.min(k, Math.floor(rnd() * (k + 1)))];
+        base -= dE; nx++; lost += dE;
+        if (exc) exc.push({ x: xe / L, E: Ex, dE });
+      }
+    }
+    const Er = base + F * L;                    // kinetic energy at G2
+    const mu2 = rnd();                          // cos²θ of a random direction, weighted by flux: uniform on [0, 1]
+    const Ea = Er > 0 ? Er * mu2 : 0;           // energy of the motion along the axis
+    const col = Ea > Ur && Er > 0;
+    return { E0, W: F * L, exc, Er, Ea, col, nx, lost };
+  }
+  // Collector current (nA) at U from N electrons; noise only from the finite sample unless amp is given.
+  function current(g, tp, U, Ur, Uc, N, rnd, amp) {
+    let c = 0, nx = 0;
+    for (let i = 0; i < N; i++) { const e = electron(g, tp, U, Ur, Uc, rnd, false); if (e.col) c++; nx += e.nx; }
+    const frac = c / N;
+    let I = g.Isat * envelope(g, U - Uc) * tp.trans * frac;
+    if (amp) I += amp * gauss(rnd);
+    return { I, frac, nx: nx / N };
+  }
+  // Least squares line y = a + b x. Standard errors from the scatter about the line, combined with a
+  // reading uncertainty sr of each point (added in quadrature to the residual variance).
+  function linfit(xs, ys, sr) {
+    const n = xs.length; if (n < 2) return null;
+    let mx = 0, my = 0; for (let i = 0; i < n; i++) { mx += xs[i]; my += ys[i]; } mx /= n; my /= n;
+    let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    const b = sxy / sxx, a = my - b * mx;
+    let rr = 0; for (let i = 0; i < n; i++) rr += (ys[i] - a - b * xs[i]) ** 2;
+    const r2 = n > 2 ? rr / (n - 2) : 0, s2 = r2 + (sr || 0) * (sr || 0);
+    if (n < 3 && !sr) return { a, b, sa: NaN, sb: NaN, n };
+    return { a, b, sa: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), sb: Math.sqrt(s2 / sxx), n };
+  }
+  // Smoothed value (5 point mean of the recorded points that exist)
+  function smoothAt(I, i, h) {
+    let s = 0, k = 0;
+    for (let j = i - h; j <= i + h; j++) if (j >= 0 && j < I.length && I[j] === I[j]) { s += I[j]; k++; }
+    return k ? s / k : NaN;
+  }
+  // Nearest maximum to U within ±win of the recorded curve (grid step dU); parabola through the smoothed top
+  function snapPeak(I, dU, U, win, hw) {
+    const h = Math.max(2, Math.round((hw || 0.2) / dU));
+    const i0 = Math.max(2, Math.round((U - win) / dU)), i1 = Math.min(I.length - 3, Math.round((U + win) / dU));
+    let best = -1, bv = -Infinity;
+    for (let i = i0; i <= i1; i++) { if (I[i] !== I[i]) continue; const v = smoothAt(I, i, h); if (v > bv) { bv = v; best = i; } }
+    if (best < 0) return null;
+    if (best === i0 || best === i1) return null;          // edge of the window: not a maximum
+    const y0 = smoothAt(I, best - h, h), y1 = bv, y2 = smoothAt(I, best + h, h), d = y0 - 2 * y1 + y2;
+    const off = d < 0 && isFinite(d) ? Math.max(-0.5, Math.min(0.5, 0.5 * (y0 - y2) / d)) : 0;
+    return (best + off * h) * dU;
+  }
+  // All maxima of a full curve: local maxima of the smoothed curve that dominate ±win
+  function findPeaks(I, dU, win, hw) {
+    const out = [], w = Math.round(win / dU), S = new Float64Array(I.length), h = Math.max(2, Math.round((hw || 0.2) / dU));
+    for (let i = 0; i < I.length; i++) S[i] = smoothAt(I, i, h);
+    for (let i = w; i < I.length - w; i++) {
+      let ok = S[i] > 0;
+      for (let k = i - w; k <= i + w && ok; k++) if (k !== i && S[k] > S[i]) ok = false;
+      if (ok) { const p = snapPeak(I, dU, i * dU, 0.5 * win, hw); if (p !== null) out.push(p); i += w; }
+    }
+    return out;
+  }
+  function mulberry(seed) { let s = seed >>> 0; return () => { s += 0x6D2B79F5; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  // A whole curve on the grid 0..Umax
+  function fullCurve(g, TC, Ur, Uc, N, rnd, amp) {
+    const tp = tubeParams(g, TC), n = Math.round(g.Umax / g.dU) + 1, I = new Float64Array(n);
+    for (let i = 0; i < n; i++) I[i] = current(g, tp, i * g.dU, Ur, Uc, N, rnd, amp).I;
+    return I;
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.FH = { KB, QE, CM_PER_EV, HC_EVNM, KT_CATH, SIG_E, HG, NE, eVof, pHg, GAS, density, tubeParams, envelope, startEnergy, electron, current, linfit, snapPeak, findPeaks, smoothAt, mulberry, fullCurve };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const rnd = Math.random;
+
+  const PRESETS = {
+    hg: { gas: 'hg', TC: 180, sweep: true,
+      hint: 'A mercury tube in its oven at 180 °C, swept from 0 to 35 V. The current climbs, then drops each time the electrons gain enough energy to excite mercury before they reach G2. In the energy panel every drop is one excitation of exactly 4.89 eV.' },
+    measure: { gas: 'hg', TC: 180, fill: true, measure: true,
+      hint: 'The whole curve is recorded. Click each maximum in order, starting with the first. A straight line through peak position against order gives the energy lost in one collision; mark at least three peaks for an uncertainty.' },
+    cold: { gas: 'hg', TC: 120, sweep: true, ghost: 180,
+      hint: 'At 120 °C the vapor is about 1 hPa, ten times thinner than at 180 °C. Past threshold an electron coasts farther before it hits an atom it can excite, so it arrives with extra energy: the dips fill in, the higher ones first. Dashed: the 180 °C curve. A real tube this cold can also ionize mercury and start a glow discharge, which this model leaves out.' },
+    hot: { gas: 'hg', TC: 210, sweep: true, ghost: 180,
+      hint: 'At 210 °C the vapor is about 30 hPa. Excitation happens almost right at threshold, so the dips are deep, but scattering removes most electrons from the beam: the current falls several times and the amplifier noise starts to show. Dashed: the 180 °C curve.' },
+    ne: { gas: 'ne', sweep: true,
+      hint: 'A neon tube at room temperature, swept to 80 V. Neon is excited mostly to the 2p⁵3p levels near 18.7 eV, which decay with red and orange light, so you can see where the collisions happen: a glowing layer appears at G2 near 21 V and moves toward the cathode, and a new layer joins about every 18.6 V.' },
+    first: { gas: 'hg', TC: 180, fill: true, guides: true,
+      hint: 'The first maximum is near 6 V, not at 4.89 V (dashed lines at n × 4.89 V). The electrons gain e(U − U_c), not eU: the contact potential between the oxide cathode and the grid metal shifts every peak by U_c. Their starting energy spread and the gradual cutoff at the collector add further shifts of the same size for every peak. A shift common to all peaks drops out of the differences, so measure the spacing.' }
+  };
+
+  // ---------- state ----------
+  const S = { preset: 'hg', gas: 'hg', TC: 180, U: 0, Ur: 1.5, Uc: 2.0, fast: false, measure: false, guides: false, snap: true, marks: [] };
+  let playing = !reduce, sweeping = false;
+  const G = () => GAS[S.gas];
+  let TP = tubeParams(G(), S.TC);
+  let data = null, ghost = null, yTop = 5, lastRec = null;
+
+  function nPts() { return Math.round(G().Umax / G().dU) + 1; }
+  function newData() { data = new Float64Array(nPts()).fill(NaN); }
+  function filledFrac() { if (!data) return 0; let k = 0; for (const v of data) if (v === v) k++; return k / data.length; }
+  function settingLabel() { return S.gas === 'hg' ? `${S.TC} °C, U_r ${S.Ur.toFixed(1)} V` : `U_r ${S.Ur.toFixed(1)} V, U_c ${S.Uc.toFixed(1)} V`; }
+  function recordAt(i) {
+    const g = G(), U = i * g.dU, r = current(g, TP, U, S.Ur, S.Uc, 2500, rnd, AMP_NOISE);
+    data[i] = r.I; lastRec = { U, I: r.I, frac: r.frac, nx: r.nx };
+  }
+  function estimateTop() {
+    const g = G(); let mx = 0;
+    for (let k = 0; k <= 80; k++) { const U = g.Umax * k / 80; mx = Math.max(mx, current(g, TP, U, S.Ur, S.Uc, 500, rnd, 0).I); }
+    if (ghost && ghost.gas === S.gas) for (const v of ghost.I) if (v === v) mx = Math.max(mx, v);
+    yTop = niceUp(Math.max(0.2, mx * 1.12));
+  }
+  function niceUp(v) { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; for (const s of [1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (m <= s + 1e-9) return s * p; return 10 * p; }
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  // parameters changed: keep the old curve as a ghost, start a fresh one
+  function paramsChanged() {
+    TP = tubeParams(G(), S.TC);
+    if (data && filledFrac() > 0.25) ghost = { I: data, gas: S.gas, label: lastLabel };
+    lastLabel = settingLabel();
+    newData(); S.marks = [];
+    if (sweeping) S.U = 0;
+    estimateTop(); resample(true); readouts(); marksReadout();
+  }
+  let lastLabel = '';
+
+  // ---------- electrons for the drawing ----------
+  let sample = null, sampleU = -1, hist = null, parts = [], flashes = [], spawnCarry = 0, colPulse = 0;
+  const GAP = 0.2;     // drawn G2 to collector gap, in units of L
+  function resample(force) {
+    if (!force && Math.abs(S.U - sampleU) < 0.005) return;
+    const g = G(), N = 1200, nb = 72, h = new Float64Array(nb), keep = [];
+    let col = 0, nx = 0;
+    for (let i = 0; i < N; i++) {
+      const e = electron(g, TP, S.U, S.Ur, S.Uc, rnd, true);
+      if (e.col) col++; nx += e.nx;
+      for (const x of e.exc) h[Math.min(nb - 1, Math.floor(x.x * nb))]++;
+      if (keep.length < 240) keep.push(e);
+    }
+    // light smoothing of the glow
+    const hs = new Float64Array(nb);
+    for (let i = 0; i < nb; i++) { let s = 0, w = 0; for (let k = -2; k <= 2; k++) { const j = i + k; if (j < 0 || j >= nb) continue; const ww = 3 - Math.abs(k); s += ww * h[j]; w += ww; } hs[i] = s / w / N; }
+    sample = { keep, frac: col / N, nx: nx / N, I: g.Isat * envelope(g, S.U - S.Uc) * TP.trans * col / N };
+    hist = hs; sampleU = S.U;
+  }
+  function spawn(dt) {
+    const g = G(); if (!sample || S.U - S.Uc <= 0) return;
+    spawnCarry += dt * 9;
+    while (spawnCarry >= 1 && parts.length < 46) {
+      spawnCarry -= 1;
+      const e = sample.keep[Math.floor(rnd() * sample.keep.length)];
+      const sT = e.col ? 1 + GAP : 1 + GAP * Math.max(0.05, Math.min(1, S.Ur > 0 ? e.Ea / S.Ur : 1));
+      parts.push({ e, s: 0, dir: 1, y: (rnd() * 2 - 1) * 0.62, k: 0, sT, thr: g.levels[0] });
+    }
+    if (spawnCarry > 1) spawnCarry = 1;
+  }
+  function keAt(p) {
+    const e = p.e;
+    if (p.s <= 1) { let E = e.E0 + e.W * p.s; for (let i = 0; i < p.k; i++) E -= e.exc[i].dE; return E; }
+    return e.Er - S.Ur * (p.s - 1) / GAP;
+  }
+  function stepParts(dt, now) {
+    const keep = [];
+    for (const p of parts) {
+      const ke = Math.max(0, keAt(p)), v = 0.16 * (0.35 + Math.sqrt(ke / p.thr));
+      p.s += p.dir * v * dt;
+      while (p.dir > 0 && p.k < p.e.exc.length && p.s >= p.e.exc[p.k].x) { const x = p.e.exc[p.k]; flashes.push({ s: x.x, y: p.y, t: now, dE: x.dE }); p.k++; }
+      if (p.dir > 0 && p.s >= p.sT) { if (p.e.col) { colPulse = now; continue; } p.dir = -1; p.s = p.sT; }
+      if (p.dir < 0 && p.s <= 1) continue;
+      keep.push(p);
+    }
+    parts = keep;
+    if (flashes.length > 160) flashes.splice(0, flashes.length - 160);
+  }
+
+  // ---------- theme, canvas, layout ----------
+  let T = null, dpr = 1;
+  const projOn = () => document.documentElement.getAttribute('data-projector') === 'on';
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
+      gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), uv: g('--uv'), glow: g('--glow'), glass: g('--glass'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+  }
+  const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  let W = 0, Hh = 0, LY = null;
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = pane.getBoundingClientRect();
+    W = r.width; Hh = r.height;
+    can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(Hh * dpr));
+    can.style.width = W + 'px'; can.style.height = Hh + 'px';
+    LY = layout(W, Hh);
+    drawAll();
+  }
+  function scaleFor(p) { if (!projOn()) return 1; return Math.max(1.1, Math.min(1.4, Math.min(p.w / 380, p.h / 220))); }
+  function layout(W, H) {
+    const P = (x, y, w, h) => { const o = { x, y, w, h }; o.ps = scaleFor(o); return o; };
+    if (W >= 760 && W / H > 1.9) {
+      const a = Math.round(W * 0.43), b = Math.round(W * 0.37), th = Math.round(H * 0.52);
+      return { cols: 3, tube: P(0, 0, a, th), en: P(0, th, a, H - th), plot: P(a, 0, b, H), lev: P(a + b, 0, W - a - b, H) };
+    }
+    if (W >= 760) {
+      const a = Math.round(W * 0.53), th = Math.round(H * 0.5), ph = Math.round(H * 0.6);
+      return { cols: 2, tube: P(0, 0, a, th), en: P(0, th, a, H - th), plot: P(a, 0, W - a, ph), lev: P(a, ph, W - a, H - ph) };
+    }
+    const f = [0.25, 0.22, 0.31], y1 = Math.round(H * f[0]), y2 = y1 + Math.round(H * f[1]), y3 = y2 + Math.round(H * f[2]);
+    return { cols: 1, tube: P(0, 0, W, y1), en: P(0, y1, W, y2 - y1), plot: P(0, y2, W, y3 - y2), lev: P(0, y3, W, H - y3) };
+  }
+  function label(c, txt, x, y, col, align = 'left', base = 'middle', bold = false, ps = 1) {
+    c.font = `${bold ? '600 ' : ''}${11 * ps}px ${T.mono}`; c.textAlign = align; c.textBaseline = base;
+    const w = c.measureText(txt).width, h = 14 * ps;
+    const x0 = align === 'left' ? x : align === 'right' ? x - w : x - w / 2;
+    const y0 = base === 'middle' ? y - h / 2 : base === 'bottom' ? y - h : y;
+    c.fillStyle = T.canvas; c.globalAlpha = 0.85; c.fillRect(x0 - 3, y0, w + 6, h); c.globalAlpha = 1;
+    c.fillStyle = col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
+    return w;
+  }
+  function title(c, p, txt) { const ps = p.ps; c.fillStyle = T.ink; c.font = `600 ${11.5 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(txt, p.x + 12 * ps, p.y + 10 * ps); }
+  const fmt = (v, d) => (Math.abs(v) < 0.5 * Math.pow(10, -d) ? (0).toFixed(d) : v.toFixed(d));
+
+  function drawAll() {
+    if (!T || !LY) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const now = performance.now() / 1000;
+    drawTube(LY.tube, now);
+    drawEnergy(LY.en);
+    drawPlot(LY.plot);
+    drawLevels(LY.lev, now);
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath();
+    for (const p of [LY.en, LY.plot, LY.lev]) {
+      if (p.x > 0) { ctx.moveTo(p.x + 0.5, p.y); ctx.lineTo(p.x + 0.5, p.y + p.h); }
+      if (p.y > 0) { ctx.moveTo(p.x, p.y + 0.5); ctx.lineTo(p.x + p.w, p.y + 0.5); }
+    }
+    ctx.stroke();
+  }
+
+  // ---------- tube ----------
+  function tubeGeom() {
+    const p = LY.tube, ps = p.ps, hg = S.gas === 'hg';
+    const x0 = p.x + 26 * ps, x1 = p.x + p.w - (hg ? 52 : 20) * ps;
+    const top = p.y + 42 * ps, bot = p.y + p.h - 40 * ps;
+    const cy = (top + bot) / 2, th = Math.max(12, Math.min((bot - top) / 2 - (hg ? 12 : 4) * ps, (x1 - x0) * 0.16));
+    const xi0 = x0 + th * 0.55, xi1 = x1 - th * 0.55, w = xi1 - xi0;
+    const xk = xi0 + 4 * ps, xg1 = xi0 + 0.07 * w, xg2 = xi0 + 0.8 * w, xa = xg2 + GAP * (xg2 - xg1);
+    const oven = { x: x0 - 10 * ps, y: cy - th - 10 * ps, w: x1 - x0 + 20 * ps, h: 2 * th + 20 * ps };
+    const thermo = { x: oven.x + oven.w + 18 * ps, y0: oven.y + oven.h - 8 * ps, y1: oven.y + 6 * ps };
+    return { p, ps, x0, x1, cy, th, xk, xg1, xg2, xa, oven, thermo, X: (s) => xg1 + s * (xg2 - xg1) };
+  }
+  const T_MIN = 100, T_MAX = 210;
+  function drawTube(p, now) {
+    const c = ctx, g = tubeGeom(), ps = g.ps, hg = S.gas === 'hg';
+    c.save(); c.beginPath(); c.rect(p.x, p.y, p.w, p.h); c.clip();
+    title(c, p, hg ? 'Tetrode tube with mercury vapor' : 'Tetrode tube with neon');
+    c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillText(hg ? 'violet: 253.7 nm UV, invisible to the eye' : 'orange: the glow seen through the glass', p.x + 12 * ps, p.y + 25 * ps);
+    // oven
+    if (hg) {
+      const o = g.oven, f = (S.TC - T_MIN) / (T_MAX - T_MIN);
+      c.fillStyle = T.pos; c.globalAlpha = 0.04 + 0.08 * f; c.fillRect(o.x, o.y, o.w, o.h); c.globalAlpha = 1;
+      c.strokeStyle = T.gridStrong; c.lineWidth = 1.2 * ps; c.setLineDash([5, 4]); c.strokeRect(o.x + 0.5, o.y + 0.5, o.w, o.h); c.setLineDash([]);
+      drawThermo(g);
+    }
+    // glass envelope
+    const r = g.th;
+    c.beginPath(); c.moveTo(g.x0 + r, g.cy - r); c.lineTo(g.x1 - r, g.cy - r); c.arc(g.x1 - r, g.cy, r, -Math.PI / 2, Math.PI / 2); c.lineTo(g.x0 + r, g.cy + r); c.arc(g.x0 + r, g.cy, r, Math.PI / 2, 3 * Math.PI / 2); c.closePath();
+    c.fillStyle = T.glass; c.globalAlpha = 0.7; c.fill(); c.globalAlpha = 1; c.strokeStyle = T.muted; c.lineWidth = 1.3 * ps; c.stroke();
+    // mercury droplet
+    if (hg) { c.fillStyle = T.muted; c.globalAlpha = 0.8; c.beginPath(); c.ellipse((g.xg1 + g.xg2) / 2, g.cy + r - 3 * ps, 9 * ps, 3 * ps, 0, Math.PI, 2 * Math.PI); c.fill(); c.globalAlpha = 1; }
+    // glow from excitations along the gap
+    if (hist && S.U - S.Uc > 0) {
+      const nb = hist.length, cur = G().Isat * envelope(G(), S.U - S.Uc) * TP.trans, bright = Math.min(1, 0.25 + cur / 5);
+      let mx = 0; for (const v of hist) mx = Math.max(mx, v);
+      if (mx > 0) {
+        const col = hg ? T.uv : T.glow, dx = (g.xg2 - g.xg1) / nb;
+        for (let i = 0; i < nb; i++) {
+          const a = hist[i] / mx; if (a < 0.02) continue;
+          const x = g.xg1 + i * dx, yh = r * 0.86;
+          const gr = c.createLinearGradient(0, g.cy - yh, 0, g.cy + yh);
+          gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(0.5, col); gr.addColorStop(1, 'rgba(0,0,0,0)');
+          c.fillStyle = gr; c.globalAlpha = (hg ? 0.42 : 0.85) * a * bright; c.fillRect(x, g.cy - yh, dx + 0.6, 2 * yh);
+        }
+        c.globalAlpha = 1;
+      }
+    }
+    // electrodes
+    c.strokeStyle = T.ink; c.lineWidth = 3 * ps; c.beginPath(); c.moveTo(g.xk, g.cy - r * 0.55); c.lineTo(g.xk, g.cy + r * 0.55); c.stroke();
+    c.strokeStyle = T.pos; c.lineWidth = 1.2 * ps; c.beginPath();
+    for (let k = 0; k <= 8; k++) { const y = g.cy - r * 0.45 + k * r * 0.9 / 8; const x = g.xk - (k % 2 ? 5 : 2) * ps; k ? c.lineTo(x, y) : c.moveTo(x, y); }
+    c.stroke();
+    const grid = (x) => { c.strokeStyle = T.ink; c.lineWidth = 1.3 * ps; c.setLineDash([2.5 * ps, 2.5 * ps]); c.beginPath(); c.moveTo(x, g.cy - r * 0.78); c.lineTo(x, g.cy + r * 0.78); c.stroke(); c.setLineDash([]); };
+    grid(g.xg1); grid(g.xg2);
+    c.strokeStyle = T.ink; c.lineWidth = 3.5 * ps; c.beginPath(); c.moveTo(g.xa, g.cy - r * 0.62); c.lineTo(g.xa, g.cy + r * 0.62); c.stroke();
+    if (now - colPulse < 0.12) { c.strokeStyle = T.neg; c.globalAlpha = 0.6; c.lineWidth = 7 * ps; c.beginPath(); c.moveTo(g.xa, g.cy - r * 0.62); c.lineTo(g.xa, g.cy + r * 0.62); c.stroke(); c.globalAlpha = 1; }
+    // flashes
+    for (const f of flashes) {
+      const age = now - f.t; if (age > 0.7 || age < 0) continue;
+      const x = g.X(f.s), y = g.cy + f.y * r * 0.8, k = 1 - age / 0.7;
+      c.fillStyle = hg ? T.uv : T.glow; c.globalAlpha = 0.7 * k;
+      c.beginPath(); c.arc(x, y, (2.5 + 9 * age) * ps, 0, 2 * Math.PI); c.fill();
+    }
+    c.globalAlpha = 1;
+    // electrons
+    c.fillStyle = T.neg;
+    for (const q of parts) { const x = q.s <= 1 ? g.X(q.s) : g.xg2 + (q.s - 1) / GAP * (g.xa - g.xg2); c.beginPath(); c.arc(x, g.cy + q.y * r * 0.8, 2.3 * ps, 0, 2 * Math.PI); c.fill(); }
+    // electrode names above, voltages below
+    c.font = `600 ${10.5 * ps}px ${T.mono}`; c.fillStyle = T.ink; c.textBaseline = 'bottom'; c.textAlign = 'center';
+    const yT = g.cy - r - 3 * ps;
+    if (g.xg1 - g.xk > 22 * ps) { c.fillText('K', g.xk, yT); c.fillText('G1', g.xg1, yT); } else { c.textAlign = 'right'; c.fillText('K G1', g.xg1 + 6 * ps, yT); c.textAlign = 'center'; }
+    c.fillText('G2', g.xg2, yT); c.fillText('A', g.xa, yT);
+    const yb = g.cy + r + (hg ? 18 : 10) * ps, ys = yb + 13 * ps;
+    c.strokeStyle = T.muted; c.lineWidth = 1 * ps;
+    c.beginPath(); c.moveTo(g.xg1, yb - 5 * ps); c.lineTo(g.xg1, yb); c.lineTo(g.xg2, yb); c.lineTo(g.xg2, yb - 5 * ps);
+    c.moveTo(g.xg2 + 2 * ps, yb); c.lineTo(g.xa, yb); c.lineTo(g.xa, yb - 5 * ps); c.stroke();
+    label(c, `U = ${S.U.toFixed(2)} V`, (g.xg1 + g.xg2) / 2, ys, T.accent, 'center', 'middle', true, ps);
+    const I = currentNow();
+    label(c, `I = ${I.toFixed(2)} nA`, p.x + p.w - 10 * ps, ys, T.ink, 'right', 'middle', true, ps);
+    if (S.U - S.Uc <= 0) label(c, 'U below U_c: no electron gets through', (g.xg1 + g.xg2) / 2, g.cy, T.muted, 'center', 'middle', false, ps);
+    c.restore();
+  }
+  function drawThermo(g) {
+    const c = ctx, ps = g.ps, t = g.thermo, f = (S.TC - T_MIN) / (T_MAX - T_MIN), y = t.y0 + (t.y1 - t.y0) * f;
+    const hot = (drag && drag.id === 'T') || (!drag && hoverId === 'T');
+    c.strokeStyle = T.muted; c.lineWidth = 1.2 * ps; c.fillStyle = T.canvas;
+    c.beginPath(); c.roundRect ? c.roundRect(t.x - 4 * ps, t.y1 - 4 * ps, 8 * ps, t.y0 - t.y1 + 8 * ps, 4 * ps) : c.rect(t.x - 4 * ps, t.y1 - 4 * ps, 8 * ps, t.y0 - t.y1 + 8 * ps); c.fill(); c.stroke();
+    c.fillStyle = T.pos; c.fillRect(t.x - 2 * ps, y, 4 * ps, t.y0 - y + 4 * ps);
+    c.beginPath(); c.arc(t.x, t.y0 + 7 * ps, 6 * ps, 0, 2 * Math.PI); c.fill();
+    // grip
+    c.strokeStyle = T.accent; c.fillStyle = T.canvas; c.lineWidth = (hot ? 2.4 : 1.6) * ps;
+    if (hot) { c.globalAlpha = 0.3; c.lineWidth = 7 * ps; c.beginPath(); c.moveTo(t.x - 10 * ps, y); c.lineTo(t.x + 10 * ps, y); c.stroke(); c.globalAlpha = 1; c.lineWidth = 2.4 * ps; }
+    c.beginPath(); c.arc(t.x, y, (hot ? 6 : 4.5) * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+    label(c, `${S.TC} °C`, t.x + 2 * ps, t.y1 - 14 * ps, T.pos, 'center', 'middle', true, ps);
+  }
+  function currentNow() {
+    const i = Math.round(S.U / G().dU);
+    if (data && data[i] === data[i]) return data[i];
+    return sample ? sample.I : 0;
+  }
+
+  // ---------- energy along the tube ----------
+  function enGeom() {
+    const p = LY.en, ps = p.ps, g = G();
+    const box = { L: p.x + 46 * ps, R: p.x + p.w - 16 * ps, T: p.y + 44 * ps, B: p.y + p.h - 30 * ps };
+    const top = S.gas === 'hg' ? 8 : 26;
+    const X = (s) => box.L + s / (1 + GAP) * (box.R - box.L), Y = (E) => box.B - E / top * (box.B - box.T);
+    return { p, ps, box, top, X, Y, thr: g.levels[0] };
+  }
+  function drawEnergy(p) {
+    const c = ctx, eg = enGeom(), ps = eg.ps, box = eg.box, X = eg.X, Y = eg.Y, hg = S.gas === 'hg';
+    if (box.R - box.L < 60 || box.B - box.T < 40) return;
+    title(c, p, 'Electron kinetic energy along the tube');
+    c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillText(hg ? 'each drop is one excitation: exactly 4.887 eV' : 'each drop is one excitation: 18.38 to 18.97 eV', p.x + 12 * ps, p.y + 25 * ps);
+    // grid
+    c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+    const step = hg ? 2 : 5;
+    for (let E = 0; E <= eg.top + 1e-9; E += step) { const y = Math.round(Y(E)) + 0.5; c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(box.L, y); c.lineTo(box.R, y); c.stroke(); c.fillText(String(E), box.L - 5, y); }
+    c.save(); c.translate(p.x + 12 * ps, (box.T + box.B) / 2); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('eV', 0, 0); c.restore();
+    // gap region
+    c.fillStyle = T.grid; c.fillRect(X(1), box.T, X(1 + GAP) - X(1), box.B - box.T);
+    c.textAlign = 'center'; c.textBaseline = 'top'; c.fillStyle = T.muted;
+    c.fillText('G1', X(0), box.B + 5); c.fillText('G2', X(1), box.B + 5); c.fillText('A', X(1 + GAP), box.B + 5);
+    c.fillText(`x, gap L = ${G().L * 1000} mm`, (X(0) + X(1)) / 2, box.B + 5);
+    c.save(); c.beginPath(); c.rect(box.L, box.T - 1, box.R - box.L, box.B - box.T + 2); c.clip();
+    // no collision line
+    const W0 = S.U - S.Uc;
+    if (W0 > 0) { c.strokeStyle = T.muted; c.lineWidth = 1.2 * ps; c.setLineDash([5, 4]); c.beginPath(); c.moveTo(X(0), Y(0)); c.lineTo(X(1), Y(W0)); c.stroke(); c.setLineDash([]); }
+    // threshold
+    c.strokeStyle = T.equi; c.lineWidth = 1.6 * ps; c.setLineDash([6, 4]); c.beginPath(); c.moveTo(X(0), Y(eg.thr)); c.lineTo(X(1), Y(eg.thr)); c.stroke(); c.setLineDash([]);
+    // sample paths
+    if (sample && W0 > 0) {
+      c.strokeStyle = T.neg; c.lineWidth = 1.1 * ps;
+      for (let k = 0; k < Math.min(7, sample.keep.length); k++) {
+        const e = sample.keep[k]; let E = e.E0, s = 0;
+        c.globalAlpha = k === 0 ? 0.75 : 0.22; c.lineWidth = (k === 0 ? 1.8 : 1.1) * ps;
+        c.beginPath(); c.moveTo(X(0), Y(E));
+        for (const x of e.exc) { E += e.W * (x.x - s); s = x.x; c.lineTo(X(s), Y(E)); E -= x.dE; c.lineTo(X(s), Y(E)); }
+        E += e.W * (1 - s); c.lineTo(X(1), Y(E));
+        if (e.col) c.lineTo(X(1 + GAP), Y(E - S.Ur));
+        else { const f = S.Ur > 0 ? Math.max(0, Math.min(1, e.Ea / S.Ur)) : 1; c.lineTo(X(1 + GAP * f), Y(E - S.Ur * f)); }
+        c.stroke();
+      }
+      c.globalAlpha = 1;
+    }
+    // moving electrons
+    c.fillStyle = T.neg;
+    for (const q of parts) { const E = keAt(q), x = q.s <= 1 ? X(q.s) : X(q.s); c.beginPath(); c.arc(x, Y(E), 2.6 * ps, 0, 2 * Math.PI); c.fill(); }
+    c.restore();
+    // retarding handle: the energy an electron must carry along the axis at G2
+    const hot = (drag && drag.id === 'Ur') || (!drag && hoverId === 'Ur'), yr = Y(S.Ur);
+    c.strokeStyle = T.accent; c.lineWidth = (hot ? 2.4 : 1.6) * ps;
+    if (hot) { c.globalAlpha = 0.3; c.lineWidth = 7 * ps; c.beginPath(); c.moveTo(X(1), yr); c.lineTo(X(1 + GAP), yr); c.stroke(); c.globalAlpha = 1; c.lineWidth = 2.4 * ps; }
+    c.beginPath(); c.moveTo(X(1), yr); c.lineTo(X(1 + GAP), yr); c.stroke();
+    const mx = (X(1) + X(1 + GAP)) / 2; c.lineWidth = 1.4 * ps; c.beginPath();
+    for (let k = -1; k <= 1; k++) { c.moveTo(mx + k * 3.5 * ps, yr - 4 * ps); c.lineTo(mx + k * 3.5 * ps, yr + 4 * ps); }
+    c.stroke();
+    // labels last
+    label(c, `eU_r = ${S.Ur.toFixed(1)} eV`, X(1) - 4 * ps, yr + (yr - box.T > 30 * ps ? -11 : 11) * ps, T.accent, 'right', 'middle', true, ps);
+    label(c, hg ? `threshold 4.887 eV` : `threshold 18.38 eV`, X(0) + 6 * ps, Y(eg.thr) - 10 * ps, T.equi, 'left', 'middle', true, ps);
+    if (W0 > 0) {
+      const sTop = Math.min(1, eg.top / W0), xt = X(sTop * 0.7), yt = Y(W0 * sTop * 0.7);
+      if (W0 > eg.thr * 1.15) label(c, 'no collisions', xt + 8 * ps, Math.max(box.T + 8 * ps, yt + 6 * ps), T.muted, 'left', 'middle', false, ps);
+    }
+  }
+
+  // ---------- current against U ----------
+  function plotGeom() {
+    const p = LY.plot, ps = p.ps, g = G();
+    const box = { L: p.x + 50 * ps, R: p.x + p.w - 16 * ps, T: p.y + 54 * ps, B: p.y + p.h - 38 * ps };
+    const X = (U) => box.L + U / g.Umax * (box.R - box.L), Y = (I) => box.B - I / yTop * (box.B - box.T);
+    const invX = (x) => (x - box.L) / (box.R - box.L) * g.Umax;
+    return { p, ps, box, X, Y, invX };
+  }
+  function trace(c, I, X, Y, dU) {
+    if (!I) return;
+    c.beginPath(); let on = false;
+    for (let i = 0; i < I.length; i++) { const v = I[i]; if (v !== v) { on = false; continue; } const x = X(i * dU), y = Y(v); on ? c.lineTo(x, y) : c.moveTo(x, y); on = true; }
+    c.stroke();
+  }
+  function drawPlot(p) {
+    const c = ctx, pg = plotGeom(), ps = pg.ps, box = pg.box, X = pg.X, Y = pg.Y, g = G();
+    if (box.R - box.L < 60 || box.B - box.T < 50) return;
+    title(c, p, 'Collector current I against U');
+    // grid
+    c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+    const ys = nice(yTop / 4);
+    for (let v = 0; v <= yTop + 1e-9; v += ys) { const y = Math.round(Y(v)) + 0.5; c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(box.L, y); c.lineTo(box.R, y); c.stroke(); c.fillText(String(+v.toPrecision(4)), box.L - 5, y); }
+    const xs = g.Umax > 40 ? 10 : 5; c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let v = 0; v <= g.Umax + 1e-9; v += xs) { const x = Math.round(X(v)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.fillText(String(v), x, box.B + 5); }
+    c.textAlign = 'right'; c.fillText('U (V)', box.R, box.B + 20 * ps);
+    c.save(); c.translate(p.x + 12 * ps, (box.T + box.B) / 2); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('I (nA)', 0, 0); c.restore();
+    c.save(); c.beginPath(); c.rect(box.L, box.T - 2, box.R - box.L, box.B - box.T + 4); c.clip();
+    // guide lines at n·E_exc
+    if (S.guides) {
+      const E = g.levels[0] < 10 ? g.levels[0] : 18.7;
+      c.strokeStyle = T.equi; c.lineWidth = 1.2 * ps; c.setLineDash([4, 4]); c.globalAlpha = 0.85;
+      for (let n = 1; n * E <= g.Umax; n++) { const x = X(n * E); c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); }
+      c.setLineDash([]); c.globalAlpha = 1;
+    }
+    // ghost
+    if (ghost && ghost.gas === S.gas) { c.strokeStyle = T.muted; c.lineWidth = 1.4 * ps; c.setLineDash([5, 4]); trace(c, ghost.I, X, Y, g.dU); c.setLineDash([]); }
+    // data
+    c.strokeStyle = T.ink; c.lineWidth = 1.8 * ps; c.lineJoin = 'round'; trace(c, data, X, Y, g.dU);
+    c.restore();
+    // cursor at U
+    const hot = (drag && drag.id === 'U') || (!drag && hoverId === 'U'), xu = X(S.U);
+    c.strokeStyle = T.accent; c.lineWidth = (hot ? 2.2 : 1.4) * ps; c.globalAlpha = hot ? 1 : 0.8;
+    c.beginPath(); c.moveTo(xu, box.T); c.lineTo(xu, box.B); c.stroke(); c.globalAlpha = 1;
+    if (hot) { c.globalAlpha = 0.25; c.lineWidth = 7 * ps; c.beginPath(); c.moveTo(xu, box.T); c.lineTo(xu, box.B); c.stroke(); c.globalAlpha = 1; }
+    c.fillStyle = T.accent; c.beginPath(); c.moveTo(xu - 6 * ps, box.T - 9 * ps); c.lineTo(xu + 6 * ps, box.T - 9 * ps); c.lineTo(xu, box.T); c.closePath(); c.fill();
+    c.strokeStyle = T.accent; c.lineWidth = 1.4 * ps; c.beginPath();
+    const my = (box.T + box.B) / 2;
+    for (let k = -1; k <= 1; k++) { c.moveTo(xu - 4 * ps, my + k * 3.5 * ps); c.lineTo(xu + 4 * ps, my + k * 3.5 * ps); }
+    c.stroke();
+    const In = currentNow();
+    if (In === In) { c.fillStyle = T.accent; c.beginPath(); c.arc(xu, Y(Math.min(yTop, Math.max(0, In))), 4 * ps, 0, 2 * Math.PI); c.fill(); }
+    // marks
+    const sorted = S.marks.slice().sort((a, b) => a - b);
+    sorted.forEach((U, i) => {
+      const k = Math.round(U / g.dU), v = data && data[k] === data[k] ? smoothAt(data, k, 2) : NaN, y = v === v ? Y(v) : box.T + 20 * ps;
+      c.strokeStyle = T.pos; c.lineWidth = 2 * ps; c.beginPath(); c.arc(X(U), y, 5.5 * ps, 0, 2 * Math.PI); c.stroke();
+      label(c, String(i + 1), X(U), y - 14 * ps, T.pos, 'center', 'middle', true, ps);
+    });
+    // labels
+    if (S.guides) { const E = g.levels[0] < 10 ? g.levels[0] : 18.7; label(c, S.gas === 'hg' ? 'n × 4.89 V' : 'n × 18.7 V', X(E) + 4 * ps, box.T + 10 * ps, T.equi, 'left', 'middle', true, ps); }
+    if (ghost && ghost.gas === S.gas && ghost.label) label(c, `dashed: ${ghost.label}`, box.R - 4 * ps, box.T + 10 * ps, T.muted, 'right', 'middle', false, ps);
+    label(c, `U = ${S.U.toFixed(2)} V`, Math.min(box.R - 50 * ps, Math.max(box.L + 50 * ps, xu)), box.T - 19 * ps, T.accent, 'center', 'middle', true, ps);
+    if (filledFrac() === 0) { c.fillStyle = T.muted; c.font = `${11.5 * ps}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(playing ? 'Sweeping U…' : 'Press Play to sweep U', (box.L + box.R) / 2, my - 20 * ps); }
+    if (S.measure) label(c, sorted.length ? 'click the next maximum' : 'click the first maximum', (box.L + box.R) / 2, box.B - 12 * ps, T.pos, 'center', 'middle', true, ps);
+    if (sorted.length >= 2) drawInset(c, pg, sorted);
+  }
+  function drawInset(c, pg, sorted) {
+    const ps = pg.ps, box = pg.box, w = Math.min(170 * ps, (box.R - box.L) * 0.4), h = Math.min(110 * ps, (box.B - box.T) * 0.42);
+    const x0 = box.L + 10 * ps, y0 = box.T + 26 * ps, n = sorted.length, f = linfit(sorted.map((_, i) => i + 1), sorted, 0);
+    c.fillStyle = T.canvas; c.globalAlpha = 0.92; c.fillRect(x0, y0, w, h); c.globalAlpha = 1;
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.strokeRect(x0 + 0.5, y0 + 0.5, w, h);
+    const iL = x0 + 30 * ps, iR = x0 + w - 8 * ps, iT = y0 + 26 * ps, iB = y0 + h - 16 * ps, Umx = niceUp(sorted[n - 1] * 1.05);
+    const IX = (k) => iL + (k - 0.5) / n * (iR - iL), IY = (U) => iB - U / Umx * (iB - iT);
+    c.font = `${9.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+    c.fillText(String(Umx), iL - 4, IY(Umx)); c.fillText('0', iL - 4, IY(0));
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (let k = 1; k <= n; k++) c.fillText(String(k), IX(k), iB + 2);
+    c.textAlign = 'left'; c.fillStyle = T.ink; c.fillText(`U_n against n`, x0 + 6 * ps, y0 + 4 * ps);
+    if (f) { c.strokeStyle = T.pos; c.lineWidth = 1.4 * ps; c.beginPath(); c.moveTo(IX(0.5), IY(f.a + 0.5 * f.b)); c.lineTo(IX(n + 0.5), IY(f.a + (n + 0.5) * f.b)); c.stroke(); }
+    c.fillStyle = T.pos; for (let k = 1; k <= n; k++) { c.beginPath(); c.arc(IX(k), IY(sorted[k - 1]), 3 * ps, 0, 2 * Math.PI); c.fill(); }
+  }
+
+  // ---------- energy levels ----------
+  function drawLevels(p, now) {
+    const c = ctx, ps = p.ps, hg = S.gas === 'hg';
+    title(c, p, hg ? 'Mercury energy levels (NIST)' : 'Neon energy levels (NIST)');
+    const box = { L: p.x + 18 * ps, R: p.x + p.w - 12 * ps, T: p.y + 50 * ps, B: p.y + p.h - 16 * ps };
+    if (box.B - box.T < 50 || box.R - box.L < 120) return;
+    const lo = hg ? 4.45 : 16.35, hi = hg ? 6.95 : 19.15;
+    const yG = box.B, yBreak = box.B - Math.max(16 * ps, (box.B - box.T) * 0.14), yLo = yBreak - 10 * ps;
+    const Y = (E) => yLo - (E - lo) / (hi - lo) * (yLo - box.T);
+    const wide = box.R - box.L, xa = box.L + wide * 0.1, lineL = box.L + wide * 0.05, lineR = box.L + wide * (p.w > 330 ? 0.5 : 0.46);
+    c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillText(hg ? `ionization at 10.44 eV, off scale` : `ionization at 21.56 eV, off scale`, p.x + 12 * ps, p.y + 25 * ps);
+    // axis break
+    c.strokeStyle = T.muted; c.lineWidth = 1 * ps; c.beginPath();
+    c.moveTo(lineL - 6 * ps, yBreak + 3 * ps); c.lineTo(lineL + 6 * ps, yBreak - 3 * ps); c.moveTo(lineL - 6 * ps, yBreak + 8 * ps); c.lineTo(lineL + 6 * ps, yBreak + 2 * ps); c.stroke();
+    // ground
+    c.strokeStyle = T.ink; c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(lineL, yG); c.lineTo(lineR, yG); c.stroke();
+    const lab = (txt, y, col, bold) => label(c, txt, lineR + 6 * ps, y, col, 'left', 'middle', bold, ps * 0.95);
+    const ex = sample && sample.nx > 0 && S.U > S.Uc;
+    const pulse = ex ? 0.5 + 0.5 * Math.sin(now * 6) : 0;
+    if (hg) {
+      const E = HG.levels.map((l) => eVof(l.cm));
+      HG.levels.forEach((l, i) => { c.strokeStyle = i === 1 ? T.ink : T.muted; c.lineWidth = (i === 1 ? 2.2 : 1.4) * ps; c.beginPath(); c.moveTo(lineL, Y(E[i])); c.lineTo(lineR, Y(E[i])); c.stroke(); });
+      // arrows
+      const ya = Y(E[1]);
+      arrow(c, xa, yG, xa, ya + 2 * ps, T.accent, 2 * ps * (1 + 0.4 * pulse), ps);
+      wavy(c, xa + wide * 0.24, ya, xa + wide * 0.24, yG - 2 * ps, T.uv, ps);
+      const midY = (ya + yG) / 2;
+      label(c, 'e⁻ impact', xa + 5 * ps, yG - 12 * ps, T.accent, 'left', 'middle', true, ps * 0.9);
+      label(c, '253.7 nm', xa + wide * 0.24 + 6 * ps, midY + 6 * ps, T.uv, 'left', 'middle', true, ps * 0.9);
+      // labels, spaced so they do not collide
+      const ys = spread(E.map(Y), 13 * ps * 0.95);
+      HG.levels.forEach((l, i) => lab(`${l.name.replace('6s6p ', '6')} ${E[i].toFixed(3)}${l.note ? ' (metastable)' : ''}`.replace(' (metastable)', p.w > 360 ? ' metastable' : ''), ys[i], i === 1 ? T.ink : T.muted, i === 1));
+      lab('6¹S₀ ground, 0', yG - 2 * ps, T.ink, false);
+    } else {
+      const s3 = NE.s3.map(eVof), p3 = NE.p3.map(eVof);
+      c.strokeStyle = T.muted; c.lineWidth = 1.2 * ps;
+      for (const E of s3) { c.beginPath(); c.moveTo(lineL, Y(E)); c.lineTo(lineR, Y(E)); c.stroke(); }
+      c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps;
+      for (const E of p3) { c.beginPath(); c.moveTo(lineL, Y(E)); c.lineTo(lineR, Y(E)); c.stroke(); }
+      const y3p = Y(18.7), y3s = Y(16.73);
+      arrow(c, xa, yG, xa, Y(p3[0]) + 2 * ps, T.accent, 2 * ps * (1 + 0.4 * pulse), ps);
+      wavy(c, xa + wide * 0.15, Y(p3[2]), xa + wide * 0.15, Y(s3[3]) - 2 * ps, T.glow, ps);
+      wavy(c, xa + wide * 0.3, Y(s3[3]), xa + wide * 0.3, yG - 2 * ps, T.uv, ps);
+      label(c, 'e⁻ impact', xa + 4 * ps, (yLo + yG) / 2 + 4 * ps, T.accent, 'left', 'middle', true, ps * 0.9);
+      label(c, '540–725 nm', xa + wide * 0.15 + 6 * ps, (y3p + y3s) / 2, T.glow, 'left', 'middle', true, ps * 0.9);
+      label(c, '74 nm', xa + wide * 0.3 + 6 * ps, (yLo + yG) / 2 - 12 * ps, T.uv, 'left', 'middle', true, ps * 0.9);
+      lab(`2p⁵3p, 10 levels`, Y(p3[9]) - 2 * ps, T.ink, true);
+      lab(`18.38 to 18.97`, Y(p3[0]) + 4 * ps, T.ink, false);
+      lab(`2p⁵3s, 16.62 to 16.85`, y3s, T.muted, false);
+      lab('2p⁶ ground, 0', yG - 2 * ps, T.ink, false);
+    }
+  }
+  function spread(ys, gap) {
+    const idx = ys.map((y, i) => i).sort((a, b) => ys[b] - ys[a]), out = ys.slice();
+    for (let k = 1; k < idx.length; k++) { const a = idx[k - 1], b = idx[k]; if (out[a] - out[b] < gap) out[b] = out[a] - gap; }
+    return out;
+  }
+  function arrow(c, x1, y1, x2, y2, col, lw, ps) {
+    c.strokeStyle = col; c.fillStyle = col; c.lineWidth = lw; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2 + 6 * ps); c.stroke();
+    c.beginPath(); c.moveTo(x2, y2); c.lineTo(x2 - 4.5 * ps, y2 + 9 * ps); c.lineTo(x2 + 4.5 * ps, y2 + 9 * ps); c.closePath(); c.fill();
+  }
+  function wavy(c, x1, y1, x2, y2, col, ps) {
+    c.strokeStyle = col; c.fillStyle = col; c.lineWidth = 1.6 * ps; c.beginPath();
+    const L = y2 - y1 - 8 * ps, n = Math.max(3, Math.round(Math.abs(L) / (7 * ps)));
+    for (let i = 0; i <= 60; i++) { const t = i / 60, y = y1 + t * L, x = x1 + 3.5 * ps * Math.sin(t * n * Math.PI); i ? c.lineTo(x, y) : c.moveTo(x, y); }
+    c.stroke();
+    c.beginPath(); c.moveTo(x2, y2); c.lineTo(x2 - 4.5 * ps, y2 - 9 * ps); c.lineTo(x2 + 4.5 * ps, y2 - 9 * ps); c.closePath(); c.fill();
+  }
+
+  // ---------- readouts ----------
+  function sci(v, d = 2) { const e = Math.floor(Math.log10(Math.abs(v))), m = v / Math.pow(10, e); return `${m.toFixed(d)} × 10${sup(e)}`; }
+  function sup(n) { const m = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' }; return String(n).split('').map((ch) => m[ch] || ch).join(''); }
+  function readouts() {
+    const g = G(), hg = S.gas === 'hg';
+    $('tempOut').textContent = `${S.TC} °C = ${(S.TC + 273.15).toFixed(0)} K`;
+    $('ovenRow').hidden = !hg;
+    $('pLab').textContent = hg ? 'Vapor pressure p (Huber et al.)' : 'Fill pressure p, at 20 °C';
+    $('rP').textContent = `${(TP.p / 100).toPrecision(3)} hPa`;
+    $('rN').textContent = sci(TP.n);
+    $('rLam').textContent = `${(TP.lam * 1e6).toPrecision(3)} µm`;
+    $('rOver').textContent = S.U > S.Uc ? `${((S.U - S.Uc) * TP.lam / g.L).toFixed(3)} eV` : '—';
+    $('rTr').textContent = `${(100 * TP.trans).toFixed(0)}%`;
+    $('tubeHint').textContent = hg
+      ? 'A drop of liquid mercury sits in the tube; the oven sets its vapor pressure. Hotter means denser vapor, a shorter mean free path and excitation closer to threshold, but more electrons scattered away.'
+      : 'Neon tubes are sealed at a fixed pressure and run at room temperature, so there is no oven. The light comes from the 2p⁵3p levels decaying to 2p⁵3s.';
+    $('uu').max = g.Umax; $('uu').step = g.dU; $('uu').value = S.U;
+    $('uOut').textContent = `${S.U.toFixed(2)} V`;
+    $('ur').value = S.Ur; $('urOut').textContent = `${S.Ur.toFixed(1)} V`;
+    $('uc').value = S.Uc; $('ucOut').textContent = `${S.Uc.toFixed(1)} V`;
+    $('temp').value = S.TC;
+    $('rEmax').textContent = `${Math.max(0, S.U - S.Uc).toFixed(2)} eV`;
+    $('refLab').textContent = hg ? 'NIST: 6³P₁ level' : 'NIST: 2p⁵3p levels';
+    $('rRef').textContent = hg ? `${g.levels[0].toFixed(3)} eV` : '18.38–18.97 eV';
+    $('modelGas').textContent = hg
+      ? 'Mercury: an excitation goes to 6s6p ³P₁ at 4.887 eV (39 412.300 cm⁻¹), which decays in 125 ns by emitting the 253.7 nm line (253.65 nm in air). The nearby ³P₀ (4.667 eV) and ³P₂ (5.461 eV) levels are left out.'
+      : 'Neon: an excitation goes to one of the ten 2p⁵3p levels (18.38 to 18.97 eV), chosen at random among those the electron can reach, and removes exactly that energy. These decay to 2p⁵3s with red, orange and yellow light. The 2p⁵3s levels (16.62 to 16.85 eV) are left out. The tube holds about 10 hPa of neon.';
+    for (const [id, on] of [['gHg', hg], ['gNe', !hg]]) $(id).setAttribute('aria-pressed', String(on));
+    $('measure').setAttribute('aria-pressed', String(S.measure));
+    $('guides').checked = S.guides; $('snap').checked = S.snap;
+    $('spSlow').setAttribute('aria-pressed', String(!S.fast)); $('spFast').setAttribute('aria-pressed', String(S.fast));
+    liveReadouts();
+  }
+  function liveReadouts() {
+    const g = G(), I = currentNow();
+    $('uOut').textContent = `${S.U.toFixed(2)} V`;
+    $('rI').textContent = `${I.toFixed(3)} nA`;
+    $('rCol').textContent = sample ? `${(100 * sample.frac * TP.trans).toFixed(0)}%` : '—';
+    $('rNx').textContent = sample ? sample.nx.toFixed(2) : '—';
+    $('rEmax').textContent = `${Math.max(0, S.U - S.Uc).toFixed(2)} eV`;
+    $('rOver').textContent = S.U > S.Uc ? `${((S.U - S.Uc) * TP.lam / g.L).toFixed(3)} eV` : '—';
+    $('count').innerHTML = `U ${S.U.toFixed(2)} <small>V</small> · I ${I.toFixed(2)} <small>nA</small>`;
+  }
+  function marksReadout() {
+    const m = S.marks.slice().sort((a, b) => a - b), hg = S.gas === 'hg';
+    $('rMarks').textContent = m.length ? m.map((u) => u.toFixed(2)).join(', ') + ' V' : '—';
+    $('rGaps').textContent = m.length > 1 ? m.slice(1).map((u, i) => (u - m[i]).toFixed(2)).join(', ') + ' V' : '—';
+    const f = m.length >= 2 ? linfit(m.map((_, i) => i + 1), m, G().read) : null;
+    if (!f) { $('rFit').textContent = '—'; $('rU0').textContent = '—'; }
+    else {
+      const d = hg ? 2 : 1;
+      $('rFit').innerHTML = `${f.b.toFixed(d + 1)} ± ${f.sb.toFixed(d + 1)} eV`;
+      $('rU0').textContent = `${f.a.toFixed(2)} ± ${f.sa.toFixed(2)} V`;
+    }
+    if (f && m.length >= 3) {
+      const ref = hg ? G().levels[0] : 18.7, z = Math.abs(f.b - ref) / f.sb;
+      $('measureHint').textContent = hg
+        ? `The fit is ${z < 1 ? 'within one uncertainty' : z < 2 ? 'within two uncertainties' : (z.toFixed(1) + ' uncertainties')} of the 4.887 eV level. The intercept U₀ is not 0: it holds the contact potential and the other fixed shifts. Two small effects bend the line: the rising current pulls each maximum a little to the right, most for the first, and the energy gained over one mean free path past threshold stretches the higher spacings.`
+        : `Neon's spacing reflects a mix of levels from 18.38 to 18.97 eV plus the energy gained past threshold before a collision, so it comes out near 18.6 V rather than one exact level energy.`;
+    } else $('measureHint').textContent = MEASURE_HINT;
+  }
+
+  const MEASURE_HINT = 'Press Mark peaks, then click each maximum in order, starting with the first. The uncertainty combines the scatter of the points about the line with a reading uncertainty of ±0.1 V per peak (±0.4 V for neon). Mark at least three peaks.';
+  // ---------- controls ----------
+  const playBtn = $('play');
+  function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); if (on && !sweeping && filledFrac() < 0.98 && S.U < G().Umax - 1e-9) sweeping = true; }
+  playBtn.addEventListener('click', () => setPlaying(!playing));
+  function newSweep() { if (data && filledFrac() > 0.25) ghost = { I: data, gas: S.gas, label: lastLabel }; newData(); S.marks = []; S.U = 0; sweeping = true; estimateTop(); resample(true); marksReadout(); readouts(); setPlaying(true); }
+  $('again').addEventListener('click', () => { custom(); newSweep(); });
+  function setMeasure(on) { S.measure = on; $('measure').setAttribute('aria-pressed', String(on)); can.style.cursor = on ? 'crosshair' : 'default'; }
+  $('measure').addEventListener('click', () => setMeasure(!S.measure));
+  $('undo').addEventListener('click', () => { if (lastMarks.length) { const u = lastMarks.pop(); const i = S.marks.indexOf(u); if (i >= 0) S.marks.splice(i, 1); } else S.marks.pop(); marksReadout(); });
+  $('clearMarks').addEventListener('click', () => { S.marks = []; lastMarks = []; marksReadout(); });
+  $('snap').addEventListener('change', (e) => { S.snap = e.target.checked; });
+  $('guides').addEventListener('change', (e) => { S.guides = e.target.checked; });
+  $('spSlow').addEventListener('click', () => { S.fast = false; readouts(); });
+  $('spFast').addEventListener('click', () => { S.fast = true; readouts(); });
+  function setGas(id) { if (S.gas === id) return; custom(); S.gas = id; const g = G(); S.Ur = g.Ur; S.Uc = g.Uc; ghost = null; data = null; parts = []; flashes = []; S.U = 0; paramsChanged(); readouts(); newSweep(); }
+  $('gHg').addEventListener('click', () => setGas('hg'));
+  $('gNe').addEventListener('click', () => setGas('ne'));
+  $('temp').addEventListener('input', (e) => setTemp(+e.target.value));
+  function setTemp(v) { v = Math.max(T_MIN, Math.min(T_MAX, Math.round(v))); if (v === S.TC) return; S.TC = v; custom(); paramsChanged(); }
+  $('ur').addEventListener('input', (e) => setUr(+e.target.value));
+  function setUr(v) { v = Math.max(0, Math.min(8, Math.round(v * 10) / 10)); if (v === S.Ur) return; S.Ur = v; custom(); paramsChanged(); }
+  $('uc').addEventListener('input', (e) => { S.Uc = +e.target.value; custom(); paramsChanged(); });
+  $('uu').addEventListener('input', (e) => setUManual(+e.target.value));
+  function setUManual(v) {
+    const g = G(); v = Math.max(0, Math.min(g.Umax, Math.round(v / g.dU) * g.dU));
+    sweeping = false; S.U = v; recordAt(Math.round(v / g.dU)); resample(true); liveReadouts(); $('uu').value = v;
+  }
+  function custom() { markPreset(null); }
+  function markPreset(name) {
+    S.preset = name;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint').textContent = name && PRESETS[name] ? PRESETS[name].hint : 'Your own setup. Pick a setup above to return to a known one.';
+  }
+  let lastMarks = [];
+  function applyPreset(name) {
+    const p = PRESETS[name], g = GAS[p.gas];
+    S.gas = p.gas; S.TC = p.TC || 180; S.Ur = g.Ur; S.Uc = g.Uc; S.guides = !!p.guides; S.marks = []; lastMarks = [];
+    parts = []; flashes = []; ghost = null; data = null;
+    markPreset(name);
+    TP = tubeParams(G(), S.TC);
+    if (p.ghost) {
+      const tp = tubeParams(g, p.ghost), I = new Float64Array(nPts());
+      for (let i = 0; i < I.length; i++) I[i] = current(g, tp, i * g.dU, S.Ur, S.Uc, 1500, rnd, AMP_NOISE).I;
+      ghost = { I, gas: S.gas, label: `${p.ghost} °C` };
+    }
+    lastLabel = settingLabel();
+    newData();
+    setMeasure(!!p.measure);
+    if (p.fill || reduce) {
+      for (let i = 0; i < data.length; i++) data[i] = current(g, TP, i * g.dU, S.Ur, S.Uc, 1500, rnd, AMP_NOISE).I;
+      S.U = p.fill ? (p.gas === 'hg' ? 6.1 : 20) : g.Umax * 0.46;
+      sweeping = false;
+    } else { S.U = 0; sweeping = true; }
+    estimateTop(); resample(true); readouts(); marksReadout();
+    if (!reduce) setPlaying(true); else setPlaying(false);
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+
+  // marking a peak
+  function markAt(U) {
+    const g = G(), win = S.gas === 'hg' ? 1.3 : 5;
+    let u = U;
+    if (S.snap) {
+      const s = snapPeak(data, g.dU, U, win, g.hw); if (s === null) return false;
+      let mx = 0; for (const v of data) if (v > mx) mx = v;
+      if (!(smoothAt(data, Math.round(s / g.dU), 2) > 0.06 * mx)) return false;   // noise near zero current is not a peak
+      u = s;
+    }
+    // clicking an existing mark removes it
+    for (let i = 0; i < S.marks.length; i++) if (Math.abs(S.marks[i] - u) < win * 0.5) { S.marks.splice(i, 1); marksReadout(); return true; }
+    S.marks.push(u); lastMarks.push(u); marksReadout(); return true;
+  }
+
+  // ---------- dragging on the drawing ----------
+  let drag = null, hoverId = null;
+  function dragHandles() {
+    if (!LY) return [];
+    const out = [], pg = plotGeom(), eg = enGeom();
+    out.push({ id: 'U', cursor: 'ew-resize', seg: [pg.X(S.U), pg.box.T - 10 * pg.ps, pg.X(S.U), pg.box.B], set: (x) => setUManual(pg.invX(x)) });
+    out.push({ id: 'Ur', cursor: 'ns-resize', seg: [eg.X(1), eg.Y(S.Ur), eg.X(1 + GAP), eg.Y(S.Ur)], set: (x, y) => setUr((eg.box.B - y) / (eg.box.B - eg.box.T) * eg.top) });
+    if (S.gas === 'hg') {
+      const tg = tubeGeom(), t = tg.thermo, y = t.y0 + (t.y1 - t.y0) * (S.TC - T_MIN) / (T_MAX - T_MIN);
+      out.push({ id: 'T', cursor: 'ns-resize', pt: [t.x, y], seg: [t.x, t.y1, t.x, t.y0], set: (x, yy) => setTemp(T_MIN + (yy - t.y0) / (t.y1 - t.y0) * (T_MAX - T_MIN)) });
+    }
+    return out;
+  }
+  function handleAt(x, y, touch) {
+    const tol = 8 * (LY ? LY.plot.ps : 1) * (touch ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of dragHandles()) {
+      let d = Infinity; const [x1, y1, x2, y2] = h.seg;
+      if (h.id === 'T') { if (y >= y1 - 8 && y <= y2 + 14) d = Math.abs(x - x1) - 2; }
+      else if (Math.abs(x2 - x1) < 1) { if (y >= Math.min(y1, y2) - 4 && y <= Math.max(y1, y2) + 4) d = Math.abs(x - x1); }
+      else if (x >= Math.min(x1, x2) - 4 && x <= Math.max(x1, x2) + 4) d = Math.abs(y - y1);
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  const inPlot = (x, y) => { const b = plotGeom().box; return x >= b.L && x <= b.R && y >= b.T && y <= b.B; };
+  let dragQ = null, dragFrame = false;
+  const pos = (ev) => { const r = can.getBoundingClientRect(); return [ev.clientX - r.left, ev.clientY - r.top]; };
+  can.addEventListener('pointermove', (ev) => {
+    const [x, y] = pos(ev);
+    if (drag) {
+      dragQ = [x, y];
+      if (!dragFrame) { dragFrame = true; requestAnimationFrame(() => { dragFrame = false; if (!drag || !dragQ) return; const h = dragHandles().find((k) => k.id === drag.id); if (h) h.set(dragQ[0], dragQ[1]); dragQ = null; }); }
+      return;
+    }
+    const h = handleAt(x, y, ev.pointerType === 'touch'); hoverId = h ? h.id : null;
+    can.style.cursor = h ? h.cursor : (S.measure && inPlot(x, y) ? 'crosshair' : (inPlot(x, y) ? 'pointer' : 'default'));
+  });
+  can.addEventListener('pointerdown', (ev) => {
+    const [x, y] = pos(ev);
+    const h = handleAt(x, y, ev.pointerType === 'touch');
+    if (h) { drag = { id: h.id }; hoverId = h.id; try { can.setPointerCapture(ev.pointerId); } catch (_) {} ev.preventDefault(); return; }
+    if (inPlot(x, y)) {
+      const pg = plotGeom();
+      if (S.measure) { markAt(pg.invX(x)); ev.preventDefault(); return; }
+      setUManual(pg.invX(x)); drag = { id: 'U' }; hoverId = 'U'; try { can.setPointerCapture(ev.pointerId); } catch (_) {} ev.preventDefault();
+    }
+  });
+  const endDrag = () => { drag = null; };
+  can.addEventListener('pointerup', endDrag);
+  can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
+  can.addEventListener('keydown', (e) => {
+    const g = G(), big = e.shiftKey ? 10 : 1;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') setUManual(S.U + (e.key === 'ArrowRight' ? 1 : -1) * big * g.dU * 2);
+    else if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && S.gas === 'hg') { setTemp(S.TC + (e.key === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 10 : 2)); readouts(); }
+    else if (e.key === ' ') setPlaying(!playing);
+    else if (e.key === 'm' || e.key === 'M') setMeasure(!S.measure);
+    else if (e.key === 'Enter') { const sn = S.snap; S.snap = true; markAt(S.U); S.snap = sn; }
+    else if (e.key === 'Backspace' || e.key === 'Delete') $('undo').click();
+    else if (e.key === 'n' || e.key === 'N') { custom(); newSweep(); }
+    else return;
+    e.preventDefault();
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(() => { resize(); });
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+
+  const retheme = () => { tokens(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, frameMs = 0;
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now(), ts = now / 1000;
+    if (playing) {
+      if (sweeping) {
+        const g = G(), U0 = S.U, U1 = Math.min(g.Umax, U0 + g.rate * (S.fast ? 4 : 1) * dt);
+        const i0 = Math.round(U0 / g.dU), i1 = Math.round(U1 / g.dU);
+        for (let i = (data[i0] === data[i0] ? i0 + 1 : i0); i <= i1; i++) recordAt(i);
+        S.U = U1; $('uu').value = U1;
+        if (U1 >= g.Umax - 1e-9) sweeping = false;
+      }
+      resample(false);
+      spawn(dt); stepParts(dt, ts);
+    }
+    drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastRead > 120) { liveReadouts(); lastRead = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__fh = { get frameMs() { return frameMs; }, get S() { return S; }, get data() { return data; }, get sweeping() { return sweeping; }, get playing() { return playing; }, get yTop() { return yTop; }, get TP() { return TP; },
+    handles() { return dragHandles().map((h) => ({ id: h.id, seg: h.seg })); }, applyPreset, markAt, setUManual, setPlaying };
+
+  tokens();
+  newData();
+  const ro = new ResizeObserver(() => resize());
+  ro.observe(pane);
+  resize();
+  applyPreset('hg');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
