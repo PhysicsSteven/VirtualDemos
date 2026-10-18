@@ -242,6 +242,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .charts { grid-template-columns: minmax(0, 1fr); }
   .tl-grid .readout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   #views button { min-height: 36px; }
+  .tl-row .inline-toggle { min-height: 36px; }
 }
 </style>
 </head>
@@ -301,6 +302,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
             <button type="button" data-s="2" aria-pressed="false">2×</button>
             <button type="button" data-s="4" aria-pressed="false">4×</button>
           </div>
+          <label class="inline-toggle" title="Draw display frames between saved models while playing; readouts always show the nearest saved model"><input type="checkbox" id="tSmooth" checked>Smooth playback</label>
         </div>
         <div class="tl-grid">
           <div>
@@ -929,9 +931,133 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     xmode: 'm', playing: false, speed: 1, acc: 0, lastT: 0,
     probe: null,            // { m (Msun), ang (0..1 along the half disk) }
     layers: { cells: true, tex: true, glow: true, lat: true, move: !reduced },
-    fade: null, preset: -1, size: 'fit'
+    fade: null, preset: -1, size: 'fit', smooth: true, blendMo: null
   };
   const cur = () => S.D && S.D.moments[S.idx];
+
+  // ---------- smooth playback: display frames between saved moments ----------
+  // Display only: the stored moments are never changed, and every readout, the hover card, the feature list and the HR
+  // marker show the nearest real saved model. Both moments are mapped onto a common enclosed mass coordinate s: when
+  // both have the same sequence of composition layers, s runs piecewise linearly in m between matching layer interfaces
+  // (so a burning shell that advances in mass moves smoothly instead of being smeared), otherwise s = m/M. The grid is the
+  // union of both moments' zone boundaries in s; quantities that span decades (ε and the channel rates, Γ, ε_phase sep)
+  // are blended in log space where both sides are positive (a linear fade where one is zero), the logarithmic columns (log T, log ρ, log r, log v_conv) linearly, mass fractions linearly
+  // and then renormalized. Mixing regions morph through a blend of signed distances to their edges, so convective zones
+  // slide instead of snapping.
+  // Jump rule: if anywhere on the grid |Δ log T| > 0.5, or the photosphere radius changes by more than a factor 3, or the
+  // total mass by more than 5%, the pair is a jump (the one step envelope removal, a flash onset ...). Then nothing
+  // in between is drawn: the view snaps to the next saved model (with the usual short crossfade in 2D).
+  const BL_LIN = ['logT', 'logRho', 'phase', 'eta', 'vel'];
+  const BL_LOG = ['eps', 'pp', 'cno', 'ta', 'bc', 'bo', 'gam', 'psep'];
+  const BL_X = ['h1', 'he4', 'c12', 'o16', 'ne20', 'ne22', 'mg24', 'si28', 's_ca', 'fe_grp', 'np'];
+  function pairOf(D, i) {
+    const cache = D.pairs || (D.pairs = new Map());
+    if (cache.has(i)) return cache.get(i);
+    const a = D.moments[i], b = D.moments[i + 1];
+    // landmarks: matching composition interfaces, in order
+    const La = a._layers || (a._layers = layersOf(a)), Lb = b._layers || (b._layers = layersOf(b));
+    const same = La.length > 1 && La.length === Lb.length && La.every((l, k) => l.k === Lb[k].k);
+    const edges = (mo, L) => [0, ...(same ? L.slice(1).map((l) => mo.mass[l.i0 - 1]) : []), Math.max(mo.M, mo.mass[mo.n - 1])];
+    const ea = edges(a, La), eb = edges(b, Lb);
+    const toS = (m, e) => { let j = 0; while (j < e.length - 2 && m > e[j + 1]) j++; return j + (m - e[j]) / ((e[j + 1] - e[j]) || 1); };
+    const qa = a.mass.map((m) => toS(m, ea)), qb = b.mass.map((m) => toS(m, eb));
+    const all = qa.concat(qb).sort((x, y) => x - y), q = [];
+    for (const v of all) if (!q.length || v - q[q.length - 1] > 1e-9) q.push(v);
+    const n = q.length;
+    // where q falls in each moment: lower zone, upper zone and weight between their boundary values; the zone holding q
+    const at = (qs) => {
+      const I0 = new Int32Array(n), I1 = new Int32Array(n), T = new Float32Array(n), Z = new Int32Array(n), m = qs.length;
+      for (let j = 0; j < n; j++) {
+        const k = Math.min(lowerBound(qs, q[j], m), m - 1);
+        Z[j] = k;
+        if (k === 0 || q[j] >= qs[k]) { I0[j] = I1[j] = k; T[j] = 0; }
+        else { I0[j] = k - 1; I1[j] = k; T[j] = (q[j] - qs[k - 1]) / ((qs[k] - qs[k - 1]) || 1); }
+      }
+      return { I0, I1, T, Z };
+    };
+    const fromS = (sv, e) => { const j = Math.min(Math.floor(sv), e.length - 2), t = sv - j; return e[j] + t * (e[j + 1] - e[j]); };
+    const P = { i, a, b, n, q, A: at(qa), B: at(qb), ma: q.map((sv) => fromS(sv, ea)), mb: q.map((sv) => fromS(sv, eb)) };
+    let jump = !(a.R > 0 && b.R > 0) || Math.max(a.R / b.R, b.R / a.R) > 3 || Math.abs(a.M - b.M) > 0.05 * Math.max(a.M, b.M);
+    if (!jump && a.logT && b.logT) {
+      for (let j = 0; j < n && !jump; j++) {
+        const ta = lerpAt(a.logT, P.A, j), tb = lerpAt(b.logT, P.B, j);
+        if (ta != null && tb != null && Math.abs(ta - tb) > 0.5) jump = true;
+      }
+    }
+    P.jump = jump;
+    if (cache.size > 40) cache.delete(cache.keys().next().value);   // keep the cache small; pairs are cheap to rebuild
+    cache.set(i, P);
+    return P;
+  }
+  function lerpAt(arr, X, j) {
+    const v0 = arr[X.I0[j]], v1 = arr[X.I1[j]];
+    if (v0 == null || v1 == null) return v0 ?? v1 ?? null;
+    return v0 + (v1 - v0) * X.T[j];
+  }
+  // signed distance (in grid points) to the edge of the region where codes == k: positive inside, negative outside
+  function edgeField(codes, n, k) {
+    const d = new Float32Array(n);
+    let last = -1e9;
+    for (let j = 0; j < n; j++) { if (j && (codes[j] === k) !== (codes[j - 1] === k)) last = j - 0.5; d[j] = j - last; }
+    last = 1e9;
+    for (let j = n - 1; j >= 0; j--) { if (j < n - 1 && (codes[j] === k) !== (codes[j + 1] === k)) last = j + 0.5; d[j] = Math.min(d[j], last - j); if (codes[j] !== k) d[j] = -d[j]; }
+    return d;
+  }
+  function blendMoment(D, P, f) {
+    const { a, b, n, A, B } = P, g = 1 - f;
+    const bm = { blend: { a: P.i, b: P.i + 1, f }, run: a.run, n };
+    const lin = (k) => { if (!a[k] || !b[k]) return null; const o = new Array(n); for (let j = 0; j < n; j++) { const x = lerpAt(a[k], A, j), y = lerpAt(b[k], B, j); o[j] = x == null || y == null ? (x ?? y) : g * x + f * y; } return o; };
+    const lg = (v) => Math.log10(Math.max(v || 0, 1e-30));
+    const logb = (k) => {
+      if (!a[k] || !b[k]) return null;
+      const o = new Array(n);
+      for (let j = 0; j < n; j++) {
+        const x = lerpAt(a[k], A, j), y = lerpAt(b[k], B, j);
+        // log blend where both are positive; where one side is zero (a thin burning or heating shell that moved), fade linearly
+        o[j] = x == null || y == null ? (x ?? y) : x > 0 && y > 0 ? 10 ** (g * lg(x) + f * lg(y)) : g * Math.max(0, x) + f * Math.max(0, y);
+      }
+      return o;
+    };
+    for (const k of BL_LIN) bm[k] = lin(k);
+    for (const k of BL_LOG) bm[k] = logb(k);
+    for (const k of BL_X) bm[k] = lin(k);
+    // mass fractions sum to 1 again after the blend
+    for (let j = 0; j < n; j++) { let s = 0; for (const k of BL_X) if (bm[k]) s += Math.max(0, bm[k][j] || 0); if (s > 0) for (const k of BL_X) if (bm[k]) bm[k][j] = Math.max(0, bm[k][j] || 0) / s; }
+    // convective velocity: log values, with −99 for none
+    if (a.cv && b.cv) { bm.cv = new Array(n); for (let j = 0; j < n; j++) { const x = lerpAt(a.cv, A, j), y = lerpAt(b.cv, B, j), okx = x != null && x > -50, oky = y != null && y > -50; bm.cv[j] = okx && oky ? g * x + f * y : okx ? x : oky ? y : -99; } } else bm.cv = null;
+    // mixing regions morph by blending signed distances to their edges
+    if (a.mix && b.mix) {
+      const ca = Array.from(A.Z, (z) => a.mix[z] ?? 0), cb = Array.from(B.Z, (z) => b.mix[z] ?? 0), ks = [...new Set(ca.concat(cb))];
+      const fields = ks.map((k) => { const da = edgeField(ca, n, k), db = edgeField(cb, n, k); return da.map((v, j) => g * v + f * db[j]); });
+      bm.mix = new Array(n);
+      for (let j = 0; j < n; j++) { let bk = 0, bv = -Infinity; ks.forEach((k, t) => { if (fields[t][j] > bv) { bv = fields[t][j]; bk = k; } }); bm.mix[j] = bk; }
+    } else bm.mix = null;
+    const M = g * a.M + f * b.M, lr = lin('logR');
+    bm.mass = P.ma.map((x, j) => g * x + f * P.mb[j]);
+    bm.logR = lr; bm.r = Float64Array.from(lr, (v) => 10 ** v);
+    bm.ne = bm.ne20 || bm.ne22 ? Array.from({ length: n }, (_, j) => (bm.ne20 ? bm.ne20[j] || 0 : 0) + (bm.ne22 ? bm.ne22[j] || 0 : 0)) : null;
+    const lgb = (x, y) => (x > 0 && y > 0 ? 10 ** (g * Math.log10(x) + f * Math.log10(y)) : x ?? y);
+    bm.R = lgb(a.R, b.R); bm.M = M; bm.L = lgb(a.L, b.L); bm.Teff = lgb(a.Teff, b.Teff);
+    bm.age = a.age != null && b.age != null ? g * a.age + f * b.age : a.age; bm.model = a.model;
+    bm.h = { ...a.h, star_mass: M, photosphere_r: bm.R, photosphere_L: bm.L, Teff: bm.Teff, star_age: bm.age };
+    bm.cH = bm.h1 ? bm.h1[0] : a.cH; bm.cHe = bm.he4 ? bm.he4[0] : a.cHe; bm.cC = bm.c12 ? bm.c12[0] : a.cC; bm.cO = bm.o16 ? bm.o16[0] : a.cO;
+    derive(D, bm);
+    return bm;
+  }
+  // the moment the stage draws: the blend during smooth playback, otherwise the saved moment
+  const disp = () => S.blendMo || cur();
+  const blendTag = (mo) => `Between saved models ${grp(S.D.moments[mo.blend.a].model ?? mo.blend.a + 1)} and ${grp(S.D.moments[mo.blend.b].model ?? mo.blend.b + 1)} (display blend)`;
+  function updateBlend() {
+    let bm = null;
+    if (S.playing && S.smooth && S.D && S.idx < S.D.N - 1 && S.acc > 0.008) {
+      const P = pairOf(S.D, S.idx);
+      if (!P.jump) {
+        const f = Math.round(S.acc * 64) / 64;
+        bm = S.blendMo && S.blendMo.blend.a === S.idx && S.blendMo.blend.f === f ? S.blendMo : blendMoment(S.D, P, f);
+      }
+    }
+    if (bm !== S.blendMo) { S.blendMo = bm; statDirty = true; TX.dirty = TXI.dirty = true; }
+  }
 
   // ---------- canvas & geometry ----------
   const stage = $('stage'), cv = $('slice'), ctx = cv.getContext('2d');
@@ -1252,7 +1378,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   function drawStatic() {
-    const c = sctx, o = octx, g = gctx, T = sliceTokens(), p = ps(), mo = cur(), glow = S.mode === 'glow';
+    const c = sctx, o = octx, g = gctx, T = sliceTokens(), p = ps(), mo = disp(), glow = S.mode === 'glow';
     for (const k of [c, o]) { k.setTransform(dpr, 0, 0, dpr, 0, 0); k.clearRect(0, 0, W, H); }
     g.setTransform(dpr * GS, 0, 0, dpr * GS, 0, 0); g.clearRect(0, 0, W, H);
     if (!texT) { c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(sky, 0, 0); c.setTransform(dpr, 0, 0, dpr, 0, 0); }   // the sky, behind the slice
@@ -1431,6 +1557,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (texT) { texT.labels = labels.map((L) => ({ rf: L.r / (G.R * (G.mag || 1)), f: L.f, text: L.text, color: L.color })); return; }
     drawAxis(o, mo, M, T, p);
     drawScaleBar(o, mo, M, T, p);
+    if (mo.blend) {
+      o.font = `600 ${11 * p}px ${uiFont()}`; o.textBaseline = 'top'; o.textAlign = 'right';
+      const t = blendTag(mo), tw = o.measureText(t).width, x = W - 10 * p, y = G.up ? 10 * p : H - 24 * p;
+      o.fillStyle = 'rgba(6,8,12,0.62)'; o.fillRect(x - tw - 6 * p, y - 3 * p, tw + 12 * p, 17 * p);
+      o.fillStyle = T.muted; o.fillText(t, x, y);
+    }
     if (D.collapse && S.idx === D.N - 1) {
       const t = 'Core collapse: the supernova that follows is not modeled';
       o.font = `700 ${12 * p}px ${uiFont()}`;
@@ -1669,7 +1801,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return lowerBound(mo.mass, m, mo.n);
   }
   function drawProbe(c, T) {
-    const mo = cur(); if (!mo || !S.probe) return;
+    const mo = disp(); if (!mo || !S.probe) return;
     const i = probeZone(mo), M = mapper(mo), p = ps();
     const r0 = i ? M.px(mo.r[i - 1]) : 0, r1 = M.px(mo.r[i]);
     if (r0 > G.R) return;
@@ -1693,6 +1825,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       S.acc += dt * 2 * S.speed;
       if (S.acc >= 1) { S.acc = 0; if (S.idx >= S.D.N - 1) setPlaying(false); else setMoment(S.idx + 1, true); }
     }
+    updateBlend();
     if (view === '3d' && V3.ok) { frame3D(now, dt); return; }
     if (statDirty) { drawStatic(); statDirty = false; }
     if (chartsDirty) { drawCharts(); drawHR(); updatePanel(); chartsDirty = false; }
@@ -2237,7 +2370,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // surface look of the current moment, from the data: T_eff (color), R and M (granule size), convective envelope (granulation on or off)
   let surfKey = '';
   function updateSurface(mo) {
-    const key = S.D.label + '|' + S.idx;
+    const key = S.D.label + '|' + S.idx + '|' + (mo.blend ? mo.blend.f : '');
     if (key === surfKey) return; surfKey = key;
     const T = mo.Teff || (mo.logT ? 10 ** mo.logT[mo.n - 1] : 5772);
     // blackbody color with a fixed saturation boost (hue unchanged), since the pure Planck colors look pale on screen
@@ -2272,7 +2405,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     cam.position.set(B.c[0] * DIST, B.c[1] * DIST, B.c[2] * DIST);
     cam.lookAt(0, 0, 0);
     cam.aspect = W / Math.max(1, H);
-    const mo = cur();
+    const mo = disp();
     // Earth to scale, in the plane of the star's center, to the right; it does not orbit with the view
     let extra = 0;
     const rE = mo ? (EARTH_RSUN / mo.R) * starScale : 0;
@@ -2301,7 +2434,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   function frame3D(now, dt) {
-    const mo = cur(); if (!mo) return;
+    const mo = disp(); if (!mo) return;
     if (chartsDirty) { drawCharts(); drawHR(); updatePanel(); chartsDirty = false; }
     if (S.layers.move) tAnim += dt;
     updateSurface(mo);
@@ -2485,6 +2618,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       : [`Lost gas shown: ${sci(gasNote.dm, 3)} M`, 'sun', ` (MESA mass loss) · outflow ${V_WIND} km/s assumed`, gasNote.ionized ? '#6fe0c8' : '#d9a074']);
     else if (S.size === 'true' && gasLost >= 1e-3) lines.push([`Mass lost so far: ${sci(gasLost, 3)} M`, 'sun', gasLostSetup > 0.5 * gasLost ? ` (${sci(gasLostSetup, 3)} of it removed in one step by the MESA run setup); its gas is out of view or has faded (assumed)` : ' (MESA); its gas is out of view or has faded (assumed)', T.muted]);
     if (S.D.collapse && S.idx === S.D.N - 1) lines.push(['Core collapse: the supernova that follows is not modeled', '', '', T.pos]);
+    if (mo.blend) lines.push([blendTag(mo), '', '', T.muted]);
     if (S.hold) {
       lines.push([`Scale held: the star is ${sci(holdRatio, 2)} times the held size` + (holdRatio > 3 ? ', drawn at 3 times (not to scale)' : ''), '', '', holdRatio > 3 ? T.pos : T.muted]);
       if (sphNow < 2) lines.push(['The star is smaller than a pixel here: zoom in or turn off Hold scale', '', '', T.pos]);
@@ -3119,7 +3253,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const D = S.D; i = clamp(i | 0, 0, D.N - 1);
     if (i === S.idx && !statDirty) return;
     const old = cur();
-    if (W && !reduced && old && view === '2d') {
+    const smoothStep = fromPlay && S.smooth && i === S.idx + 1 && !pairOf(D, S.idx).jump;
+    if (W && !reduced && old && view === '2d' && !smoothStep) {
       pctx.setTransform(1, 0, 0, 1, 0, 0); pctx.clearRect(0, 0, prev.width, prev.height); pctx.drawImage(cv, 0, 0);
       S.fade = performance.now();
     }
@@ -3317,6 +3452,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     S.xmode = b.dataset.x; for (const x of document.querySelectorAll('#xmodes button')) x.setAttribute('aria-pressed', String(x === b)); chartsDirty = true; schedule();
   });
   $('play').addEventListener('click', () => setPlaying(!S.playing));
+  $('tSmooth').addEventListener('change', (e) => { S.smooth = e.target.checked; S.blendMo = null; markAll(); });
   $('scrub').addEventListener('input', (e) => { setPlaying(false); setMoment(+e.target.value); });
   $('zoom').addEventListener('input', (e) => {
     const mo = cur(), v = +e.target.value;
