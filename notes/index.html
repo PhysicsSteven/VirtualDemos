@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><p class="kicker">Virtual Physics Demos</p><h1>Teaching notes</h1><p>One printable page per demo: what it shows, a way to run it in class, questions to ask, common misconceptions and the physics behind it. <a href="../index.html">Back to the demos</a>.</p></header><h2>Astronomy</h2><ul class="toc"><li class="missing">Blackbody Radiation (notes to come)</li><li class="missing">Reasons for Seasons (notes to come)</li><li class="missing">Moon Phases (notes to come)</li><li class="missing">Kepler&#x27;s Laws (notes to come)</li><li class="missing">Stellar Evolution (notes to come)</li><li class="missing">Finding Exoplanets (notes to come)</li><li class="missing">Cosmic Distance Ladder (notes to come)</li><li class="missing">Tides (notes to come)</li><li class="missing">Star Slice (notes to come)</li><li class="missing">Galaxy Rotation Curves (notes to come)</li><li class="missing">Black Holes and Lensing (notes to come)</li><li class="missing">Lagrange Points (notes to come)</li><li class="missing">White Dwarf Cooling (notes to come)</li></ul><h2>Modern physics</h2><ul class="toc"><li class="missing">Photoelectric Effect (notes to come)</li><li class="missing">Spectra Explorer (notes to come)</li><li class="missing">Spacetime Diagrams (notes to come)</li><li class="missing">Quantum Wave Packets (notes to come)</li><li class="missing">Hydrogen Orbitals (notes to come)</li><li class="missing">Double Slit, One Particle at a Time (notes to come)</li><li class="missing">Radioactive Decay (notes to come)</li><li><a href="rutherford.html">Rutherford Scattering</a></li><li class="missing">Nuclear Binding Energy (notes to come)</li><li class="missing">Compton Scattering (notes to come)</li><li class="missing">Lasers and Stimulated Emission (notes to come)</li><li class="missing">Franck–Hertz Experiment (notes to come)</li></ul><h2>Mechanics</h2><ul class="toc"><li class="missing">Projectile Range (notes to come)</li><li class="missing">Springs and Oscillations (notes to come)</li><li class="missing">Potential Energy Curves (notes to come)</li><li class="missing">Rotation and Torque (notes to come)</li><li class="missing">Hanging Chains and Arches (notes to come)</li><li class="missing">Collisions and Momentum (notes to come)</li><li class="missing">Pendulums and Chaos (notes to come)</li><li class="missing">Fluids: Pressure, Buoyancy and Flow (notes to come)</li></ul><h2>Thermodynamics</h2><ul class="toc"><li class="missing">Gas in a Box (notes to come)</li><li class="missing">Heat Engine Cycles (notes to come)</li></ul><h2>Electricity and magnetism</h2><ul class="toc"><li class="missing">Coulomb Sandbox (notes to come)</li><li class="missing">RC Circuits (notes to come)</li><li class="missing">Charges in Magnetic Fields (notes to come)</li><li class="missing">Faraday&#x27;s and Lenz&#x27;s Laws (notes to come)</li><li class="missing">Gauss&#x27;s Law (notes to come)</li><li class="missing">DC Circuit Builder (notes to come)</li><li class="missing">Magnetic Fields of Currents (notes to come)</li><li class="missing">AC Circuits and Resonance (notes to come)</li><li class="missing">Electromagnetic Waves (notes to come)</li><li class="missing">Capacitors and Dielectrics (notes to come)</li></ul><h2>Waves and sound</h2><ul class="toc"><li class="missing">Standing Waves (notes to come)</li><li class="missing">Doppler Effect and Shock Waves (notes to come)</li></ul><h2>Optics</h2><ul class="toc"><li class="missing">Optics Bench (notes to come)</li><li class="missing">Polarization (notes to come)</li><li class="missing">Thin Film Interference (notes to come)</li></ul>
+</main>
+</body>
+</html>

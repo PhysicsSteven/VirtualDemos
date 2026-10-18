@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rutherford Scattering: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Rutherford Scattering</h1><ul class="meta"><li><a href="../demos/rutherford.html">Open the demo</a></li><li>Modern physics; PHYS 202 (Coulomb force)</li><li>15 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A positive charge spread through the whole atom (Thomson's model) can only nudge an alpha particle; turning one straight back needs nearly all the charge in a tiny nucleus.</li>
+<li>The deflection of one alpha is set by its impact parameter b: smaller b, closer approach, larger angle, θ = 2 arctan(D/2b).</li>
+<li>The head on distance D = zZe²/(4πε₀K) is where all the kinetic energy has become Coulomb energy. It gives the scale of the whole problem and an upper bound on the size of the nucleus.</li>
+<li>Counts per solid angle fall as 1/sin⁴(θ/2), and the fraction turned past 90° tells you how small the target is.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know Coulomb's law and conservation of energy. Angular momentum helps for the closest approach readout but is not required. Open the demo once in projector mode so the preset buttons and the plot are large enough for the room.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Start with Plum pudding.</strong> Ask the prediction question (Q1) before you press anything. Fire a beam. The spread after the whole foil is a fraction of a degree, and the rail shows that nothing comes back. Point out the "largest kick per atom" readout: it is tiny because inside a uniform ball of charge the force grows only in proportion to r.</li>
+<li><strong>Switch to One alpha, gold.</strong> Drag the handle on the incoming path to change b. Let students call out what happens as b shrinks. Stop at about b = 25 fm, where the alpha turns through about 61°.</li>
+<li><strong>Head on.</strong> At b = 0 the alpha stops at D = 29.6 fm and comes straight back. Compare D with the nuclear radius in the rail (about 7 fm for gold): the alpha never touches the nucleus, so only the Coulomb force acts.</li>
+<li><strong>Geiger–Marsden beam.</strong> Let the counts build on the log plot. The points follow 1/sin⁴(θ/2) over four decades. Read off the fraction turned past 90° and compare with the expected value (b₉₀/b_max)².</li>
+<li><strong>Aluminum, high energy</strong> (if time allows). D is now about the same as the nuclear radius, so the alpha reaches the nucleus and the strong force acts. Pure Rutherford scattering fails at large angles; this is how the size of nuclei was first measured.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: in Thomson's plum pudding atom the positive charge fills the whole atom. If you fire alpha particles at a thin gold foil made of such atoms, will any come straight back? Why or why not?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> An alpha particle passes a gold nucleus with impact parameter b. If b is cut in half, does the deflection angle double, more than double, or less than double? Check with the demo at b = 50 fm and b = 25 fm.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> At the closest point of a head on collision the alpha is momentarily at rest. Use energy conservation to find the head on distance D for a 7.69 MeV alpha and a gold nucleus (Z = 79). Use e²/(4πε₀) = 1.440 MeV·fm.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Rutherford concluded that the gold nucleus is smaller than about 30 fm. What part of the experiment sets this bound, and why can it only be an upper bound?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Only alphas with b smaller than D/2 are turned past 90°. If the alpha energy is doubled, what happens to the fraction turned past 90°?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In the aluminum preset the measured counts at large angles fall below the Rutherford prediction. What is happening to those alphas, and what does it tell you about the aluminum nucleus?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The alpha hits the nucleus and bounces off."</strong> For gold at these energies it never touches it: it turns around at least 29.6 fm away, about four nuclear radii, pushed only by the Coulomb force.</li>
+<li><strong>"Most alphas bounce back."</strong> Almost all pass with a small deflection; only about one in tens of thousands is turned past 90° in a real foil. The surprise was that any came back at all.</li>
+<li><strong>"The plum pudding atom fails because it has the wrong total charge."</strong> The total charge is the same in both models. What differs is how concentrated it is, which sets how strong the force can get.</li>
+<li><strong>"The alpha follows a straight line and then turns sharply."</strong> The path is a smooth hyperbola, symmetric about the line through the point of closest approach.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Each alpha follows the exact Coulomb (hyperbolic) orbit, θ = 2 arctan(D/2b), with the closest approach r_min = (D/2)(1 + √(1 + (2b/D)²)). Nonrelativistic mechanics is fine: v/c is at most about 0.074.</li>
+<li>The beam fires alphas at random b with uniform density over the beam's cross section. Counts are binned per steradian and compared with the Rutherford cross section, dσ/dΩ = (D/4)² / sin⁴(θ/2).</li>
+<li>The plum pudding atom is a uniform sphere of positive charge with point electrons ignored; the alpha takes a small random kick from each atom it crosses, and the kicks add like a random walk.</li>
+<li>An option lets the nucleus recoil (lab frame); with it off, the nucleus is fixed.</li>
+<li>The aluminum preset marks where the strong force would act (the alpha reaching the nuclear radius 1.2 A^⅓ fm). The demo does not model nuclear forces; it shows where the Rutherford formula stops applying.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Ask students to estimate the fraction of alphas turned past 90° by a foil of thickness t from n t π b₉₀², then compare with the rail's readout.</li>
+<li>Historical note: Geiger and Marsden's 1909 result (a few alphas reflected from a metal foil) came two years before Rutherford's 1911 explanation; their 1913 paper tested the 1/sin⁴(θ/2) law in detail.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>
