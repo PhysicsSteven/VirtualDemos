@@ -91,8 +91,9 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .pane { position: relative; min-height: 0; }
 .pane canvas { position: absolute; inset: 0; display: block; }
 #pPane { border-left: 1px solid var(--line); }
-#dCan, #pCan { touch-action: none; outline: none; }
-#dCan:focus-visible, #pCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+#dCan, #pCan, #oCan { touch-action: none; outline: none; }
+#dCan:focus-visible, #pCan:focus-visible, #oCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+#gCan { pointer-events: none; }
 .toast { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 3; max-width: calc(100% - 28px); font-size: 0.86rem; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; color: var(--ink); pointer-events: none; }
 
 .rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
@@ -169,6 +170,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.dot { width: 9px; height: 9px; border: 0; border-radius: 50%; margin: 0 6px; }
 .swatch.dot.out { background: var(--fout); } .swatch.dot.in { background: var(--fin); }
 .swatch.grip { width: 14px; height: 10px; border: 1.5px solid var(--muted); border-radius: 3px; margin: 0 4px; }
+.swatch.patch { width: 16px; height: 11px; border: 0; margin: 0 3px; border-radius: 2px; background: linear-gradient(90deg, var(--fout) 0 48%, transparent 48% 52%, var(--fin) 52%); opacity: 0.75; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 @media (max-width: 1060px) {
@@ -216,6 +218,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-m="flux" aria-pressed="true">Any surface</button>
           <button type="button" data-m="sym" aria-pressed="false">Symmetry</button>
         </div>
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="3d" aria-pressed="false">3D</button>
+          <button type="button" data-v="slice" aria-pressed="true">Slice</button>
+        </div>
         <button type="button" class="btn" id="play">Pause</button>
         <button type="button" class="btn" id="drawBtn" aria-pressed="false" hidden>Draw a surface</button>
         <span class="headline mono" id="headline"></span>
@@ -223,6 +229,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <div class="panes">
         <div class="pane" id="dPane">
           <canvas id="dCan" tabindex="0" aria-label="Slice through the Gaussian surface and the charges. Drag charges, drag inside the surface to move it, drag its edge or grips to resize it. Keys: N selects the next object, arrow keys move it, plus and minus change a charge or the size, Delete removes a charge, space plays or pauses."></canvas>
+          <canvas id="gCan" hidden aria-hidden="true"></canvas>
+          <canvas id="oCan" tabindex="0" hidden aria-label="3D view of the Gaussian surface and the charges. Drag empty space to turn the view, use the wheel or pinch to zoom, double click to reset it. Drag a charge or a grip to move or resize. Keys: N selects the next object, arrow keys move it or change r, plus and minus change a charge or the size, Delete removes a charge, space plays or pauses, the bracket keys turn the view, Page Up and Page Down tilt it, 0 resets it."></canvas>
           <p class="toast" id="toast" hidden></p>
         </div>
         <div class="pane" id="pPane" hidden>
@@ -313,6 +321,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <label><input type="checkbox" id="tArrows" checked>E on surface</label>
           <label><input type="checkbox" id="tCross" checked>Crossings</label>
           <label><input type="checkbox" id="tGrid" checked>Grid</label>
+          <label><input type="checkbox" id="tPatch">Flux patches</label>
         </div>
         <div class="ctl">
           <div class="slider-head"><label for="sDen">Field lines per nC</label><output id="oDen" class="mono" for="sDen"></output></div>
@@ -324,7 +333,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch fl"></i>Field line in the slice</span>
           <span><i class="swatch dot out"></i><i class="swatch dot in" style="margin-left:-6px"></i>A line crossing out or in</span>
           <span><i class="swatch grip"></i>Grip: drag to move or resize</span>
+          <span><i class="swatch patch"></i>Flux patch (3D): an area element colored by its E·dA</span>
         </div>
+        <p class="hint">3D view: the whole closed surface, with its area elements drawn as tiles. Field lines leave each charge evenly in all directions, three times as many per nC as set above, so lines out minus lines in follows Q<sub>enc</sub>. Drag empty space to turn the view.</p>
         <p class="hint">Model: point charges in empty space, all in the plane z = 0, which is the slice you see. Their field lines in that plane stay in the plane, so the drawn lines are exact field lines. Lines are drawn in proportion to charge, but in a slice the spacing of lines does not show the field strength the way it does in 3D. The surface color fades where E·n is small. Arrows on the surface show the direction of E; their length grows with E and levels off for strong fields.</p>
       </section>
 
@@ -380,13 +391,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch in"></i>Gaussian surface, flux in</span>
           <span><i class="swatch fl"></i>Field line</span>
           <span><i class="swatch grip"></i>Grip: drag on the drawing or the plot</span>
+          <span><i class="swatch patch"></i>Flux patch (3D): an area element colored by its E·dA</span>
         </div>
+        <div class="toggles"><label><input type="checkbox" id="tPatchY">Flux patches</label></div>
+        <p class="hint">3D view: charge dots inside the Gaussian surface are bright, the rest faint. With flux patches on, the caps of the line's cylinder and the side of the pillbox stay gray: E runs along them, so E·dA = 0.</p>
         <p class="hint" id="symModel">Model: ideal charge distributions. The line and the plane are infinitely long and wide; the drawing shows only a piece. Arrows on the Gaussian surface have a length proportional to E, capped close to a point or line charge. The ball is an insulator with its charge spread evenly through its volume; its field lines are drawn from the center for simplicity, although in the ball they begin all through the charged volume.</p>
       </section>
     </aside>
   </main>
   <p class="sr" aria-live="polite" id="live"></p>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (() => {
   // ==CORE START==
@@ -697,7 +712,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const BLOB = [[7, 0], [4.5, 4.6], [-1, 5.6], [-6, 3.2], [-6.6, -2.4], [-2, -5.6], [3.6, -4.6]];
   const F = {
     surf: 'sphere', sph: { x: 0, y: 0, R: 6 }, rect: { x: 0, y: 0, w: 16, h: 10 }, free: BLOB.map((p) => p.slice()), depth: 12,
-    charges: [], sel: null, density: 6, layers: { lines: true, arrows: true, cross: true, grid: true }, ver: 0, qver: 0, motion: null
+    charges: [], sel: null, density: 6, layers: { lines: true, arrows: true, cross: true, grid: true, patch: false }, ver: 0, qver: 0, motion: null
   };
   const Ysym = { kind: 'sphere', sk: 'ball', Q: 5, R: 5, r: 3, lam: 20, rl: 4, L: 12, sig: 40, h: 3, a: 4 };
   let mode = 'flux', preset = 'inside', nextId = 1, running = !reduce, tMotion = 0;
@@ -721,7 +736,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const qById = (id) => F.charges.find((c) => c.id === id);
 
   // ---------- canvases ----------
-  let T = null, dpr = 1;
+  let T = null, dpr = 1, themeVer = 0;
   const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
   function tokens() {
     const cs = getComputedStyle(document.documentElement);
@@ -729,6 +744,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
       pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), fout: g('--fout'), fin: g('--fin'), fline: g('--fline'), onq: g('--on-charge'),
       ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace' };
+    themeVer++;
   }
   const cans = { d: $('dCan'), p: $('pCan') }, panes = { d: $('dPane'), p: $('pPane') };
   const ctxs = { d: cans.d.getContext('2d'), p: cans.p.getContext('2d') };
@@ -744,6 +760,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     setView();
     linesKey = '';
+    size3D();
     drawAll();
   }
   // world (cm, y up) to pane pixels
@@ -1107,8 +1124,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const c of F.charges) {
       const x = X(c.x), y = Yp(c.y), r = rq(c), hot = hotId('q' + c.id), sel = F.sel && F.sel.kind === 'q' && F.sel.id === c.id;
       if (hot || sel) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2.2 * ps; ctx.globalAlpha = hot ? 0.9 : 0.6; ctx.beginPath(); ctx.arc(x, y, r + 4 * ps, 0, 2 * Math.PI); ctx.stroke(); ctx.globalAlpha = 1; }
-      ctx.fillStyle = c.q > 0 ? T.pos : c.q < 0 ? T.neg : T.muted;
-      ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+      // a small glowing bead: soft halo, then a lit sphere
+      const qc = c.q > 0 ? T.pos : c.q < 0 ? T.neg : T.muted;
+      ctx.save(); ctx.shadowColor = qc; ctx.shadowBlur = (c.q ? 12 : 0) * ps; ctx.fillStyle = qc;
+      ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+      const gr = ctx.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.1, x, y, r);
+      gr.addColorStop(0, 'rgba(255,255,255,0.55)'); gr.addColorStop(0.55, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(0,0,0,0.18)');
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
       ctx.strokeStyle = T.onq; ctx.lineWidth = 2 * ps; const a = r * 0.45;
       ctx.beginPath(); ctx.moveTo(x - a, y); ctx.lineTo(x + a, y); if (c.q > 0) { ctx.moveTo(x, y - a); ctx.lineTo(x, y + a); } ctx.stroke();
     }
@@ -1406,6 +1428,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   function drawAll() {
     if (!T) return;
+    if (view3d && G3.ready) { draw3D(); if (mode === 'sym') drawPlot(); return; }
     if (mode === 'flux') drawFlux(); else { drawSym(); drawPlot(); }
   }
 
@@ -1677,7 +1700,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('sW').addEventListener('input', (e) => { F.rect.w = +e.target.value; surfChanged(); });
   $('sH').addEventListener('input', (e) => { F.rect.h = +e.target.value; surfChanged(); });
   $('sD').addEventListener('input', (e) => { F.depth = +e.target.value; surfChanged(); });
-  for (const id of ['drawBtn', 'drawBtn2']) $(id).addEventListener('click', () => { userPause(); setDrawing(!drawing); if (drawing) cans.d.focus({ preventScroll: true }); });
+  for (const id of ['drawBtn', 'drawBtn2']) $(id).addEventListener('click', () => { userPause(); if (view3d && !drawing) setView3d(false); setDrawing(!drawing); if (drawing) cans.d.focus({ preventScroll: true }); });
   $('blobBtn').addEventListener('click', () => { const c = shape().center; tryFree(BLOB.map((p) => [p[0] + c[0], p[1] + c[1]])); });
   function addCharge(q) {
     if (F.charges.length >= 8) return;
@@ -1707,6 +1730,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('tArrows').addEventListener('change', (e) => { F.layers.arrows = e.target.checked; });
   $('tCross').addEventListener('change', (e) => { F.layers.cross = e.target.checked; });
   $('tGrid').addEventListener('change', (e) => { F.layers.grid = e.target.checked; });
+  for (const id of ['tPatch', 'tPatchY']) $(id).addEventListener('change', (e) => { F.layers.patch = e.target.checked; $('tPatch').checked = $('tPatchY').checked = F.layers.patch; });
   $('sDen').addEventListener('input', (e) => { F.density = +e.target.value; $('oDen').textContent = F.density; linesKey = ''; computeLines(); updateReadouts(); });
   for (const b of document.querySelectorAll('#symSeg button')) b.addEventListener('click', () => { Ysym.kind = b.dataset.k; setView(); symAnchor(); updateReadouts(); });
   for (const b of document.querySelectorAll('#sphSeg button')) b.addEventListener('click', () => { Ysym.sk = b.dataset.v; updateReadouts(); });
@@ -1727,6 +1751,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return best;
   }
   let dq = null, dFrame = false;
+  // start dragging handle h, grabbed at world point (x, y) in the plane z = 0 (shared by the slice and the 3D view)
+  function startDrag(h, x, y) {
+    userPause();
+    drag = { id: h.id, kind: h.kind, x0: x, y0: y };
+    if (mode === 'flux') {
+      if (h.kind === 'q') { drag.ref = h.ref.id; drag.o = [h.ref.x, h.ref.y]; F.sel = { kind: 'q', id: h.ref.id }; }
+      else if (h.kind === 'move') { F.sel = { kind: 'surf' }; if (F.surf === 'sphere') drag.o = [F.sph.x, F.sph.y]; else if (F.surf === 'free') { drag.o = F.free.map((p) => p.slice()); drag.c0 = shape().center.slice(); } else drag.o = [F.rect.x, F.rect.y]; }
+      else if (h.kind === 'cp') { drag.i = h.i; F.sel = { kind: 'cp', i: h.i }; }
+      else F.sel = { kind: 'surf' };
+      updateReadouts();
+    }
+  }
   function dragApply() {
     dFrame = false;
     if (!drag || !dq) return;
@@ -1769,15 +1805,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (drawing && mode === 'flux') { stroke = [[x, y]]; try { cans.d.setPointerCapture(ev.pointerId); } catch (_) {} ev.preventDefault(); return; }
     const h = hitAt(ev);
     if (!h) { if (mode === 'flux' && F.sel) { F.sel = null; updateReadouts(); } return; }
-    userPause();
-    drag = { id: h.id, kind: h.kind, x0: x, y0: y };
-    if (mode === 'flux') {
-      if (h.kind === 'q') { drag.ref = h.ref.id; drag.o = [h.ref.x, h.ref.y]; F.sel = { kind: 'q', id: h.ref.id }; }
-      else if (h.kind === 'move') { F.sel = { kind: 'surf' }; if (F.surf === 'sphere') drag.o = [F.sph.x, F.sph.y]; else if (F.surf === 'free') { drag.o = F.free.map((p) => p.slice()); drag.c0 = shape().center.slice(); } else drag.o = [F.rect.x, F.rect.y]; }
-      else if (h.kind === 'cp') { drag.i = h.i; F.sel = { kind: 'cp', i: h.i }; }
-      else F.sel = { kind: 'surf' };
-      updateReadouts();
-    }
+    startDrag(h, x, y);
     try { cans.d.setPointerCapture(ev.pointerId); } catch (_) {}
     cans.d.style.cursor = h.cursor === 'grab' ? 'grabbing' : h.cursor; ev.preventDefault();
   });
@@ -1802,7 +1830,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   });
   // keys on the drawing
   function selectables() { return F.charges.map((c) => ({ kind: 'q', id: c.id })).concat([{ kind: 'surf' }]).concat(F.surf === 'free' ? F.free.map((_, i) => ({ kind: 'cp', i })) : []); }
-  cans.d.addEventListener('keydown', (e) => {
+  cans.d.addEventListener('keydown', keyDrawing);
+  function keyDrawing(e) {
     const k = e.key;
     if (k === ' ') { setRunning(!running); e.preventDefault(); return; }
     if (mode === 'sym') {
@@ -1840,7 +1869,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     } else if (k === 'Delete' || k === 'Backspace') removeSel();
     else return;
     e.preventDefault();
-  });
+  }
 
   // ---------- pointer on the plot ----------
   function pHit(ev) {
@@ -1885,6 +1914,836 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     e.preventDefault();
   });
 
+  // ---------- 3D view: three.js r128, Z up, hand written orbit ----------
+  // World units are cm, the same as the slice. In "Any surface" the slice is the plane z = 0; in "Symmetry" the line
+  // runs along x and the sheet is the plane x = 0, as in the drawing.
+  const gCan = $('gCan'), oCan = $('oCan'), octx = oCan.getContext('2d');
+  let view3d = false;
+  const G3 = { ready: false, failed: false, handles: [], lc: null };
+  const ORBIT0 = { th: -Math.PI / 2 - 0.6, ph: 1.1, zoom: 1 };
+  const orbit = Object.assign({}, ORBIT0);
+  const BOUNDZ = 11;
+  const hexRGB = (h) => { h = String(h || '#888888').replace('#', ''); if (h.length === 3) h = h.split('').map((c) => c + c).join(''); const v = parseInt(h, 16); return [(v >> 16 & 255) / 255, (v >> 8 & 255) / 255, (v & 255) / 255]; };
+  const rgba = (h, a) => { const c = hexRGB(h); return [c[0], c[1], c[2], a]; };
+  const mixC = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+  const isDark = () => { const c = hexRGB(T.canvas); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2] < 0.4; };
+  const norm3 = (a) => { const L = Math.hypot(a[0], a[1], a[2]) || 1; return [a[0] / L, a[1] / L, a[2] / L]; };
+  const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const lerp3 = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+  // n unit vectors spread evenly over all directions (Fibonacci sphere), turned by rot about z
+  function fib(n, rot) {
+    const out = [], ga = Math.PI * (3 - Math.sqrt(5));
+    for (let i = 0; i < n; i++) { const z = 1 - 2 * (i + 0.5) / n, w = Math.sqrt(1 - z * z), a = i * ga + rot; out.push([w * Math.cos(a), w * Math.sin(a), z]); }
+    return out;
+  }
+
+  // thick lines: each segment is a quad widened in screen space, so widths are in pixels and scale with projector mode
+  const FAT_VS = `uniform vec2 res; uniform float width; uniform float backFade;
+attribute vec3 pb; attribute float side; attribute vec4 col; attribute vec3 nrm;
+varying vec4 vCol;
+void main() {
+  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  vec4 a = projectionMatrix * mv;
+  vec4 b = projectionMatrix * modelViewMatrix * vec4(pb, 1.0);
+  vec2 d = b.xy / b.w * res - a.xy / a.w * res;
+  float L = length(d);
+  d = L > 1e-5 ? d / L : vec2(1.0, 0.0);
+  a.xy += vec2(-d.y, d.x) * side * width / res * a.w;
+  float f = 1.0;
+  if (dot(nrm, nrm) > 0.0) f = mix(backFade, 1.0, smoothstep(-0.12, 0.12, dot(normalize(normalMatrix * nrm), normalize(-mv.xyz))));
+  vCol = vec4(col.rgb, col.a * f);
+  gl_Position = a;
+}`;
+  const COL_FS = 'varying vec4 vCol; void main() { gl_FragColor = vCol; }';
+  const COL_VS = 'attribute vec4 col; varying vec4 vCol; void main() { vCol = col; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }';
+  // glassy shell: faint body, brighter toward the silhouette (Fresnel like), a small specular highlight
+  const GLASS_VS = 'varying vec3 vN; varying vec3 vV; void main() { vec4 mv = modelViewMatrix * vec4(position, 1.0); vN = normalMatrix * normal; vV = -mv.xyz; gl_Position = projectionMatrix * mv; }';
+  const GLASS_FS = `uniform vec3 tint; uniform vec3 rimCol; uniform float base; uniform float rim; uniform float spec;
+varying vec3 vN; varying vec3 vV;
+void main() {
+  vec3 n = normalize(vN), v = normalize(vV);
+  if (!gl_FrontFacing) n = -n;
+  float f = pow(1.0 - clamp(dot(n, v), 0.0, 1.0), 3.0);
+  vec3 h = normalize(normalize(vec3(-0.35, 0.6, 0.72)) + v);
+  float s = pow(max(dot(n, h), 0.0), 90.0) * spec;
+  gl_FragColor = vec4(mix(tint, rimCol, f) + s, clamp(base + rim * f + s * 0.8, 0.0, 1.0));
+}`;
+
+  function Fat() { this.P = []; this.Q = []; this.S = []; this.C = []; this.N = []; this.I = []; this.v = 0; }
+  Fat.prototype.seg = function (a, b, ca, cb, na, nb) {
+    const Z = [0, 0, 0]; na = na || Z; nb = nb || na; cb = cb || ca;
+    const put = (p, q, s, c, n) => { this.P.push(p[0], p[1], p[2]); this.Q.push(q[0], q[1], q[2]); this.S.push(s); this.C.push(c[0], c[1], c[2], c[3]); this.N.push(n[0], n[1], n[2]); };
+    put(a, b, 1, ca, na); put(a, b, -1, ca, na); put(b, a, -1, cb, nb); put(b, a, 1, cb, nb);
+    const v = this.v; this.I.push(v, v + 1, v + 2, v + 2, v + 1, v + 3); this.v += 4;
+  };
+  Fat.prototype.poly = function (pts, col, nrm, closed) {
+    const n = pts.length, cf = typeof col === 'function' ? col : () => col;
+    for (let i = 1; i < n + (closed ? 1 : 0); i++) { const a = i - 1, b = i % n; this.seg(pts[a], pts[b], cf(a), cf(b), nrm ? nrm[a] : null, nrm ? nrm[b] : null); }
+  };
+  Fat.prototype.mesh = function (mat, order) {
+    if (!this.v) return null;
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(this.P, 3));
+    g.setAttribute('pb', new THREE.Float32BufferAttribute(this.Q, 3));
+    g.setAttribute('side', new THREE.Float32BufferAttribute(this.S, 1));
+    g.setAttribute('col', new THREE.Float32BufferAttribute(this.C, 4));
+    g.setAttribute('nrm', new THREE.Float32BufferAttribute(this.N, 3));
+    g.setIndex(this.v > 65000 ? new THREE.Uint32BufferAttribute(this.I, 1) : new THREE.Uint16BufferAttribute(this.I, 1));
+    const m = new THREE.Mesh(g, mat); m.frustumCulled = false; m.renderOrder = order; return m;
+  };
+  const addTo = (g, ...objs) => { for (const o of objs) if (o) g.add(o); };
+  function clearGroup(g) {
+    for (const o of g.children.slice()) {
+      if (o.isInstancedMesh && o.dispose) o.dispose();
+      if (o.geometry && !o.userData.shared) o.geometry.dispose();
+    }
+    g.clear();
+  }
+  function glowTex() {
+    const c = document.createElement('canvas'); c.width = c.height = 64;
+    const x = c.getContext('2d'), gr = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.3, 'rgba(255,255,255,0.5)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+    x.fillStyle = gr; x.fillRect(0, 0, 64, 64);
+    return new THREE.CanvasTexture(c);
+  }
+
+  function init3D() {
+    if (G3.ready) return true;
+    if (G3.failed || !window.THREE) return false;
+    let renderer;
+    try { renderer = new THREE.WebGLRenderer({ canvas: gCan, antialias: true }); } catch (_) { G3.failed = true; return false; }
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(32, 1, 1, 800);
+    cam.up.set(0, 0, 1);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x5d6878, 0.85); hemi.position.set(0, 0, 1);
+    const sun = new THREE.DirectionalLight(0xffffff, 0.75); sun.position.set(-12, -16, 26);
+    scene.add(hemi, sun);
+    const fatMats = [];
+    const fat = (w, bf, dw) => { const m = new THREE.ShaderMaterial({ uniforms: { res: { value: new THREE.Vector2(1, 1) }, width: { value: w }, backFade: { value: bf } },
+      vertexShader: FAT_VS, fragmentShader: COL_FS, transparent: true, depthWrite: dw, side: THREE.DoubleSide }); m.userData.w = w; fatMats.push(m); return m; };
+    const glass = (side) => new THREE.ShaderMaterial({ uniforms: { tint: { value: new THREE.Color() }, rimCol: { value: new THREE.Color() }, base: { value: 0.05 }, rim: { value: 0.5 }, spec: { value: 0.5 } },
+      vertexShader: GLASS_VS, fragmentShader: GLASS_FS, transparent: true, depthWrite: false, side });
+    const std = (o) => new THREE.MeshStandardMaterial(o);
+    const map = glowTex();
+    const M = {
+      grid: fat(0.65, 0.28, false), sec: fat(1.25, 0.5, false), field: fat(0.95, 1, true), arrow: fat(1.35, 0.35, false), floor: fat(0.55, 1, false), floorS: fat(0.8, 1, false),
+      glassB: glass(THREE.BackSide), glassF: glass(THREE.FrontSide),
+      patch: new THREE.ShaderMaterial({ vertexShader: COL_VS, fragmentShader: COL_FS, transparent: true, depthWrite: false, side: THREE.DoubleSide }),
+      beadP: std({ roughness: 0.28, metalness: 0.1 }), beadN: std({ roughness: 0.28, metalness: 0.1 }), beadZ: std({ roughness: 0.5 }),
+      glowP: new THREE.SpriteMaterial({ map, transparent: true, depthWrite: false }), glowN: new THREE.SpriteMaterial({ map, transparent: true, depthWrite: false }),
+      inst: new THREE.MeshBasicMaterial({ color: 0xffffff }), instLit: std({ color: 0xffffff, roughness: 0.4 }),
+      metal: std({ metalness: 0.8, roughness: 0.32, transparent: true, opacity: 0.62, depthWrite: false }),
+      ball: std({ roughness: 0.55, transparent: true, opacity: 0.2, depthWrite: false }),
+      rod: std({ roughness: 0.35, metalness: 0.35 }),
+      sleeve: std({ roughness: 0.5, transparent: true, opacity: 0.28, depthWrite: false }),
+      sheet: std({ roughness: 0.6, transparent: true, opacity: 0.15, depthWrite: false, side: THREE.DoubleSide }),
+      disk: std({ roughness: 0.6, transparent: true, opacity: 0.38, depthWrite: false, side: THREE.DoubleSide })
+    };
+    const statG = new THREE.Group(), dynG = new THREE.Group(), symG = new THREE.Group();
+    scene.add(statG, dynG, symG);
+    Object.assign(G3, { ready: true, renderer, scene, cam, M, fatMats, statG, dynG, symG, themeV: -1, k1: '', k2: '', kS: '',
+      sphGeo: new THREE.SphereGeometry(1, 22, 16), coneGeo: new THREE.ConeGeometry(1, 1, 16),
+      ray: new THREE.Raycaster(), ndc: new THREE.Vector2(), pv: new THREE.Vector3(), dummy: new THREE.Object3D(), up: new THREE.Vector3(0, 1, 0), tv: new THREE.Vector3(), tc: new THREE.Color(),
+      planes: { z0: new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), y0: new THREE.Plane(new THREE.Vector3(0, 1, 0), 0) } });
+    size3D();
+    return true;
+  }
+  function size3D() {
+    const [W, H] = dims.d;
+    oCan.width = Math.max(1, Math.round(W * dpr)); oCan.height = Math.max(1, Math.round(H * dpr));
+    oCan.style.width = W + 'px'; oCan.style.height = H + 'px';
+    if (!G3.ready) return;
+    G3.renderer.setPixelRatio(dpr); G3.renderer.setSize(Math.max(1, W), Math.max(1, H), false);
+    gCan.style.width = W + 'px'; gCan.style.height = H + 'px';
+    G3.k1 = G3.k2 = G3.kS = '';
+  }
+  function recolor3D() {
+    G3.themeV = themeVer;
+    const M = G3.M, dark = isDark(), set = (m, hex) => m.color.set(hex);
+    G3.renderer.setClearColor(T.canvas);
+    const acc = hexRGB(T.accent), cv = hexRGB(T.canvas), ink = hexRGB(T.ink);
+    const tint = dark ? mixC(cv, acc, 0.35) : mixC(cv, acc, 0.22), rim = dark ? mixC(acc, [1, 1, 1], 0.25) : mixC(acc, ink, 0.25);
+    for (const [m, b, r] of [[M.glassB, dark ? 0.04 : 0.035, dark ? 0.22 : 0.18], [M.glassF, dark ? 0.07 : 0.06, dark ? 0.55 : 0.5]]) {
+      m.uniforms.tint.value.setRGB(tint[0], tint[1], tint[2]); m.uniforms.rimCol.value.setRGB(rim[0], rim[1], rim[2]);
+      m.uniforms.base.value = b; m.uniforms.rim.value = r; m.uniforms.spec.value = dark ? 0.55 : 0.35;
+    }
+    for (const [m, hex] of [[M.beadP, T.pos], [M.beadN, T.neg], [M.beadZ, T.muted]]) { set(m, hex); m.emissive.set(hex); m.emissiveIntensity = dark ? 0.45 : 0.18; }
+    set(M.glowP, T.pos); set(M.glowN, T.neg); M.glowP.opacity = M.glowN.opacity = dark ? 0.75 : 0.5;
+    set(M.metal, dark ? '#a4afbc' : '#9aa5b2'); M.metal.emissive.set(dark ? '#1a2029' : '#000000');
+  }
+  // a parametric patch f(s, t) over [s0, s1] × [t0, t1], inset a little so neighboring area elements read as tiles
+  function tile(f, s0, s1, t0, t1, m) {
+    const gs = (s1 - s0) * 0.05, gt = (t1 - t0) * 0.05; s0 += gs; s1 -= gs; t0 += gt; t1 -= gt;
+    const P = [], tr = [];
+    for (let i = 0; i <= m; i++) { P.push([]); for (let j = 0; j <= m; j++) P[i].push(f(s0 + (s1 - s0) * i / m, t0 + (t1 - t0) * j / m)); }
+    for (let i = 0; i < m; i++) for (let j = 0; j < m; j++) tr.push([P[i][j], P[i + 1][j], P[i + 1][j + 1]], [P[i][j], P[i + 1][j + 1], P[i][j + 1]]);
+    return tr;
+  }
+
+  // ---------- 3D surface models: area elements (cells), grid lines, the z = 0 section, sample points for E arrows ----------
+  // sphere: equal steps in u = cos θ about z give area elements of equal area R² Δu Δφ
+  function mSphere(cx, cy, R, nU, nP, nS) {
+    const f = (u, p) => { const w = Math.sqrt(Math.max(0, 1 - u * u)); return [cx + R * w * Math.cos(p), cy + R * w * Math.sin(p), R * u]; };
+    const nf = (u, p) => { const w = Math.sqrt(Math.max(0, 1 - u * u)); return [w * Math.cos(p), w * Math.sin(p), u]; };
+    const Md = { cells: [], grid: [], sec: [], sites: [] }, du = 2 / nU, dp = 2 * Math.PI / nP;
+    for (let i = 0; i < nU; i++) for (let j = 0; j < nP; j++) {
+      const u0 = -1 + i * du, p0 = j * dp, uc = u0 + du / 2, pc = p0 + dp / 2;
+      Md.cells.push({ c: f(uc, pc), n: nf(uc, pc), A: R * R * du * dp, part: 'side', tris: tile(f, u0, u0 + du, p0, p0 + dp, 3) });
+    }
+    for (let i = 1; i < nU; i++) { const u = -1 + i * du, pts = [], nr = []; for (let k = 0; k < 72; k++) { const p = 2 * Math.PI * k / 72; pts.push(f(u, p)); nr.push(nf(u, p)); } Md.grid.push({ pts, nrm: nr, closed: true }); }
+    for (let j = 0; j < nP; j++) { const p = j * dp, pts = [], nr = []; for (let k = 0; k <= 36; k++) { const u = Math.cos(Math.PI * k / 36); pts.push(f(u, p)); nr.push(nf(u, p)); } Md.grid.push({ pts, nrm: nr }); }
+    const sp = []; for (let k = 0; k < 120; k++) sp.push(f(0, 2 * Math.PI * k / 120)); Md.sec.push({ pts: sp, closed: true });
+    for (const u of fib(nS, 0.2)) Md.sites.push({ p: [cx + R * u[0], cy + R * u[1], R * u[2]], n: u, part: 'side' });
+    Md.geo = new THREE.SphereGeometry(R, 56, 36).rotateX(Math.PI / 2).translate(cx, cy, 0);
+    Md.inside = (x, y, z) => (x - cx) * (x - cx) + (y - cy) * (y - cy) + z * z < R * R;
+    Md.ext = [[cx, cy, R], [cx, cy, -R], [cx + R, cy, 0], [cx - R, cy, 0], [cx, cy + R, 0], [cx, cy - R, 0]];
+    return Md;
+  }
+  function mBox(cx, cy, w, h, D) {
+    const a = w / 2, b = h / 2, d = D / 2, X = [1, 0, 0], Y = [0, 1, 0], Z = [0, 0, 1];
+    const faces = [[[cx + a, cy - b, -d], Y, Z, h, D, [1, 0, 0]], [[cx - a, cy - b, -d], Y, Z, h, D, [-1, 0, 0]], [[cx - a, cy + b, -d], X, Z, w, D, [0, 1, 0]],
+      [[cx - a, cy - b, -d], X, Z, w, D, [0, -1, 0]], [[cx - a, cy - b, d], X, Y, w, h, [0, 0, 1]], [[cx - a, cy - b, -d], X, Y, w, h, [0, 0, -1]]];
+    const Md = { cells: [], grid: [], sec: [], sites: [] };
+    for (const [O, U, V, Lu, Lv, n] of faces) {
+      const f = (s, t) => [O[0] + s * U[0] + t * V[0], O[1] + s * U[1] + t * V[1], O[2] + s * U[2] + t * V[2]];
+      const nu = clamp(Math.round(Lu / 2), 2, 10), nv = clamp(Math.round(Lv / 2), 2, 10);
+      for (let i = 0; i < nu; i++) for (let j = 0; j < nv; j++) {
+        const s0 = Lu * i / nu, s1 = Lu * (i + 1) / nu, t0 = Lv * j / nv, t1 = Lv * (j + 1) / nv;
+        Md.cells.push({ c: f((s0 + s1) / 2, (t0 + t1) / 2), n, A: (s1 - s0) * (t1 - t0), part: 'side', tris: tile(f, s0, s1, t0, t1, 1) });
+      }
+      for (let i = 0; i <= nu; i++) Md.grid.push({ pts: [f(Lu * i / nu, 0), f(Lu * i / nu, Lv)], nrm: [n, n] });
+      for (let j = 0; j <= nv; j++) Md.grid.push({ pts: [f(0, Lv * j / nv), f(Lu, Lv * j / nv)], nrm: [n, n] });
+      const su = clamp(Math.round(Lu / 4), 1, 4), sv = clamp(Math.round(Lv / 4), 1, 4);
+      for (let i = 0; i < su; i++) for (let j = 0; j < sv; j++) Md.sites.push({ p: f(Lu * (i + 0.5) / su, Lv * (j + 0.5) / sv), n, part: 'side' });
+    }
+    Md.sec.push({ pts: [[cx + a, cy - b, 0], [cx + a, cy + b, 0], [cx - a, cy + b, 0], [cx - a, cy - b, 0]], closed: true });
+    Md.geo = new THREE.BoxGeometry(w, h, D).translate(cx, cy, 0);
+    Md.inside = (x, y, z) => Math.abs(x - cx) < a && Math.abs(y - cy) < b && Math.abs(z) < d;
+    Md.ext = []; for (const sx of [-1, 1]) for (const sy of [-1, 1]) for (const sz of [-1, 1]) Md.ext.push([cx + sx * a, cy + sy * b, sz * d]);
+    return Md;
+  }
+  // cylinder with its axis along x through (cx, cy, 0): length w, radius rho; end caps in equal area rings
+  function mCyl(cx, cy, w, rho, nX, nPh, nR, nPc) {
+    const a = w / 2, Md = { cells: [], grid: [], sec: [], sites: [] };
+    const fs = (x, p) => [x, cy + rho * Math.cos(p), rho * Math.sin(p)], ns = (x, p) => [0, Math.cos(p), Math.sin(p)];
+    const dx = w / nX, dp = 2 * Math.PI / nPh, dpc = 2 * Math.PI / nPc;
+    for (let i = 0; i < nX; i++) for (let j = 0; j < nPh; j++) {
+      const x0 = cx - a + i * dx, p0 = j * dp;
+      Md.cells.push({ c: fs(x0 + dx / 2, p0 + dp / 2), n: ns(0, p0 + dp / 2), A: dx * rho * dp, part: 'side', tris: tile(fs, x0, x0 + dx, p0, p0 + dp, 2) });
+    }
+    for (const sg of [1, -1]) {
+      const x0 = cx + sg * a, n = [sg, 0, 0], fc = (r, p) => [x0, cy + r * Math.cos(p), r * Math.sin(p)];
+      for (let i = 0; i < nR; i++) for (let j = 0; j < nPc; j++) {
+        const r0 = rho * Math.sqrt(i / nR), r1 = rho * Math.sqrt((i + 1) / nR), p0 = j * dpc;
+        Md.cells.push({ c: fc(Math.sqrt((r0 * r0 + r1 * r1) / 2), p0 + dpc / 2), n, A: Math.PI * rho * rho / (nR * nPc), part: 'cap', tris: tile(fc, r0, r1, p0, p0 + dpc, 2) });
+      }
+      for (let i = 1; i < nR; i++) { const r = rho * Math.sqrt(i / nR), pts = []; for (let k = 0; k < 48; k++) pts.push(fc(r, 2 * Math.PI * k / 48)); Md.grid.push({ pts, nrm: pts.map(() => n), closed: true }); }
+      for (let j = 0; j < nPc; j++) Md.grid.push({ pts: [fc(0, j * dpc), fc(rho, j * dpc)], nrm: [n, n] });
+      Md.sec.push({ pts: [[x0, cy + rho, 0], [x0, cy - rho, 0]] });
+      Md.sites.push({ p: [x0, cy, 0], n, part: 'cap' });
+      for (let j = 0; j < 6; j++) Md.sites.push({ p: fc(0.62 * rho, j * Math.PI / 3 + Math.PI / 6), n, part: 'cap' });
+    }
+    for (let i = 0; i <= nX; i++) { const x = cx - a + i * dx, pts = [], nr = []; for (let k = 0; k < 72; k++) { const p = 2 * Math.PI * k / 72; pts.push(fs(x, p)); nr.push(ns(x, p)); } Md.grid.push({ pts, nrm: nr, closed: true }); }
+    for (let j = 0; j < nPh; j++) { const p = j * dp; Md.grid.push({ pts: [fs(cx - a, p), fs(cx + a, p)], nrm: [ns(0, p), ns(0, p)] }); }
+    Md.sec.push({ pts: [fs(cx - a, 0), fs(cx + a, 0)] }, { pts: [fs(cx - a, Math.PI), fs(cx + a, Math.PI)] });
+    const nXs = clamp(Math.round(w / 3), 2, 6);
+    for (let i = 0; i < nXs; i++) for (let j = 0; j < 8; j++) { const p = 2 * Math.PI * (j + (i % 2) * 0.5) / 8; Md.sites.push({ p: fs(cx - a + w * (i + 0.5) / nXs, p), n: ns(0, p), part: 'side' }); }
+    Md.geo = new THREE.CylinderGeometry(rho, rho, w, 56, 1, false).rotateZ(-Math.PI / 2).translate(cx, cy, 0);
+    Md.inside = (x, y, z) => Math.abs(x - cx) < a && (y - cy) * (y - cy) + z * z < rho * rho;
+    Md.ext = []; for (const sx of [-1, 1]) { Md.ext.push([cx + sx * a, cy + rho, 0], [cx + sx * a, cy - rho, 0], [cx + sx * a, cy, rho], [cx + sx * a, cy, -rho]); }
+    return Md;
+  }
+  // clip the polygon P (any simple polygon) to the rectangle [x0, x1] × [y0, y1] (Sutherland–Hodgman)
+  function clipRect(P, x0, x1, y0, y1) {
+    const cut = (a, b, k, v) => { const t = (v - a[k]) / (b[k] - a[k]); return k === 0 ? [v, a[1] + t * (b[1] - a[1])] : [a[0] + t * (b[0] - a[0]), v]; };
+    let out = P;
+    for (const [k, v, keep] of [[0, x0, 1], [0, x1, -1], [1, y0, 1], [1, y1, -1]]) {
+      const inp = out; out = [];
+      for (let i = 0; i < inp.length; i++) {
+        const cur = inp[i], prev = inp[(i + inp.length - 1) % inp.length], ci = (cur[k] - v) * keep >= 0, pi = (prev[k] - v) * keep >= 0;
+        if (ci) { if (!pi) out.push(cut(prev, cur, k, v)); out.push(cur); } else if (pi) out.push(cut(prev, cur, k, v));
+      }
+      if (!out.length) break;
+    }
+    return out;
+  }
+  // where the line x = c (vertical) or y = c meets the polygon's edges, sorted
+  function scanPoly(P, vertical, c) {
+    const xs = [], n = P.length;
+    for (let i = 0; i < n; i++) {
+      const a = P[i], b = P[(i + 1) % n], A = vertical ? a[0] : a[1], B = vertical ? b[0] : b[1];
+      if ((A > c) !== (B > c)) { const t = (c - A) / (B - A); xs.push(vertical ? a[1] + t * (b[1] - a[1]) : a[0] + t * (b[0] - a[0])); }
+    }
+    return xs.sort((p, q) => p - q);
+  }
+  // prism: the counterclockwise polygon P extruded from z = −D/2 to +D/2
+  function mPrism(P, D, insideXY) {
+    const n = P.length, d = D / 2, nz = clamp(Math.round(D / 2), 2, 12), dz = D / nz, K = 3, ncol = Math.ceil(n / K);
+    const Md = { cells: [], grid: [], sec: [], sites: [] };
+    const nrmAt = (i) => { const a = P[(i - 1 + n) % n], b = P[(i + 1) % n], ex = b[0] - a[0], ey = b[1] - a[1], L = Math.hypot(ex, ey) || 1; return [ey / L, -ex / L, 0]; };
+    const sstep = Math.max(1, Math.round(ncol / 10));
+    for (let j = 0; j < ncol; j++) {
+      const pts = []; for (let i = j * K; i <= Math.min(j * K + K, n); i++) pts.push(P[i % n]);
+      let len = 0; for (let i = 1; i < pts.length; i++) len += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+      const A0 = pts[0], A1 = pts[pts.length - 1], ex = A1[0] - A0[0], ey = A1[1] - A0[1], L = Math.hypot(ex, ey) || 1, nn = [ey / L, -ex / L, 0];
+      const m = pts.length >> 1, mp = pts.length % 2 ? pts[m] : [(pts[m - 1][0] + pts[m][0]) / 2, (pts[m - 1][1] + pts[m][1]) / 2];
+      const sp = pts.map((p) => p.slice()), gg = 0.07;
+      if (sp.length > 1) { sp[0] = [A0[0] + (pts[1][0] - A0[0]) * gg * 2, A0[1] + (pts[1][1] - A0[1]) * gg * 2]; const q = pts[pts.length - 2]; sp[sp.length - 1] = [A1[0] + (q[0] - A1[0]) * gg * 2, A1[1] + (q[1] - A1[1]) * gg * 2]; }
+      for (let r = 0; r < nz; r++) {
+        const z0 = -d + r * dz + dz * 0.05, z1 = -d + (r + 1) * dz - dz * 0.05, tris = [];
+        for (let i = 1; i < sp.length; i++) { const a = sp[i - 1], b = sp[i]; tris.push([[a[0], a[1], z0], [b[0], b[1], z0], [b[0], b[1], z1]], [[a[0], a[1], z0], [b[0], b[1], z1], [a[0], a[1], z1]]); }
+        Md.cells.push({ c: [mp[0], mp[1], -d + (r + 0.5) * dz], n: nn, A: len * dz, part: 'side', tris });
+      }
+      const nA = nrmAt((j * K) % n);
+      Md.grid.push({ pts: [[A0[0], A0[1], -d], [A0[0], A0[1], d]], nrm: [nA, nA] });
+      if (j % sstep === 0) for (const zz of [-d / 2, d / 2]) Md.sites.push({ p: [mp[0], mp[1], zz], n: nn, part: 'side' });
+    }
+    const nr = P.map((_, i) => nrmAt(i));
+    for (let r = 0; r <= nz; r++) { const z = -d + r * dz; Md.grid.push({ pts: P.map((p) => [p[0], p[1], z]), nrm: nr, closed: true }); }
+    Md.sec.push({ pts: P.map((p) => [p[0], p[1], 0]), closed: true });
+    let bx0 = Infinity, bx1 = -Infinity, by0 = Infinity, by1 = -Infinity;
+    for (const p of P) { bx0 = Math.min(bx0, p[0]); bx1 = Math.max(bx1, p[0]); by0 = Math.min(by0, p[1]); by1 = Math.max(by1, p[1]); }
+    const cs = 1.25, gx0 = Math.floor(bx0 / cs) * cs, gy0 = Math.floor(by0 / cs) * cs;
+    for (let x = gx0; x < bx1; x += cs) for (let y = gy0; y < by1; y += cs) {
+      const q = clipRect(P, x, x + cs, y, y + cs); if (q.length < 3) continue;
+      const A2 = signedArea(q), A = Math.abs(A2); if (A < 0.03) continue;
+      let gx = 0, gy = 0; for (let i = 0; i < q.length; i++) { const a = q[i], b = q[(i + 1) % q.length], cr = a[0] * b[1] - b[0] * a[1]; gx += (a[0] + b[0]) * cr; gy += (a[1] + b[1]) * cr; }
+      gx /= 6 * A2; gy /= 6 * A2;
+      const sq = q.map((p) => [gx + (p[0] - gx) * 0.88, gy + (p[1] - gy) * 0.88]);
+      for (const sg of [1, -1]) {
+        const z = sg * d, tris = [];
+        for (let i = 1; i + 1 < sq.length; i++) tris.push([[sq[0][0], sq[0][1], z], [sq[i][0], sq[i][1], z], [sq[i + 1][0], sq[i + 1][1], z]]);
+        Md.cells.push({ c: [gx, gy, z], n: [0, 0, sg], A, part: 'cap', tris });
+      }
+    }
+    for (const sg of [1, -1]) {
+      const z = sg * d, n2 = [0, 0, sg];
+      for (let x = gx0 + cs; x < bx1; x += cs) { const ys = scanPoly(P, true, x); for (let i = 0; i + 1 < ys.length; i += 2) Md.grid.push({ pts: [[x, ys[i], z], [x, ys[i + 1], z]], nrm: [n2, n2] }); }
+      for (let y = gy0 + cs; y < by1; y += cs) { const xs = scanPoly(P, false, y); for (let i = 0; i + 1 < xs.length; i += 2) Md.grid.push({ pts: [[xs[i], y, z], [xs[i + 1], y, z]], nrm: [n2, n2] }); }
+      for (let x = gx0 + 1.5; x < bx1; x += 3) for (let y = gy0 + 1.5; y < by1; y += 3) if (insideXY(x, y)) Md.sites.push({ p: [x, y, z], n: n2, part: 'cap' });
+    }
+    const shp = new THREE.Shape(P.map((p) => new THREE.Vector2(p[0], p[1])));
+    Md.geo = new THREE.ExtrudeGeometry(shp, { depth: D, bevelEnabled: false, steps: 1, curveSegments: 1 }).translate(0, 0, -d);
+    Md.inside = (x, y, z) => Math.abs(z) < d && insideXY(x, y);
+    Md.ext = []; for (const z of [-d, d]) Md.ext.push([bx0, by0, z], [bx1, by0, z], [bx0, by1, z], [bx1, by1, z]);
+    return Md;
+  }
+  // glass shell, flux patches, area element grid and the z = 0 section of a model
+  function addSurface(g, Md) {
+    const M = G3.M, back = new THREE.Mesh(Md.geo, M.glassB), front = new THREE.Mesh(Md.geo, M.glassF);
+    back.renderOrder = 3; front.renderOrder = 6; front.userData.shared = true;
+    let nv = 0; for (const c of Md.cells) { c.v0 = nv; nv += c.tris.length * 3; }
+    const pos = new Float32Array(nv * 3); let o = 0;
+    for (const c of Md.cells) for (const t of c.tris) for (const p of t) { pos[o++] = p[0]; pos[o++] = p[1]; pos[o++] = p[2]; }
+    const pg = new THREE.BufferGeometry();
+    pg.setAttribute('position', new THREE.BufferAttribute(pos, 3)); pg.setAttribute('col', new THREE.BufferAttribute(new Float32Array(nv * 4), 4));
+    Md.patch = new THREE.Mesh(pg, M.patch); Md.patch.renderOrder = 4; Md.patch.frustumCulled = false;
+    const fb = new Fat(), gc = rgba(T.ink, isDark() ? 0.3 : 0.24);
+    for (const L of Md.grid) fb.poly(L.pts, gc, L.nrm, L.closed);
+    const sb = new Fat(), sc = rgba(T.ink, isDark() ? 0.7 : 0.62);
+    for (const L of Md.sec) sb.poly(L.pts, sc, null, L.closed);
+    addTo(g, back, Md.patch, fb.mesh(M.grid, 5), front, sb.mesh(M.sec, 7));
+  }
+  // patch color: gray for no flux, toward the outward or inward hue as |E·dA| grows (k in 0..1)
+  function patchRGBA(k, sgn) {
+    const c = mixC(hexRGB(T.muted), hexRGB(sgn >= 0 ? T.fout : T.fin), Math.min(1, k * 1.2));
+    return [c[0], c[1], c[2], 0.14 + 0.62 * k];
+  }
+  function paintPatches(Md, f) {
+    const attr = Md.patch.geometry.attributes.col, a = attr.array;
+    for (const c of Md.cells) { const v = f(c); for (let i = c.v0, e = c.v0 + c.tris.length * 3; i < e; i++) { a[4 * i] = v[0]; a[4 * i + 1] = v[1]; a[4 * i + 2] = v[2]; a[4 * i + 3] = v[3]; } }
+    attr.needsUpdate = true;
+  }
+  // arrow from a to b: thick shaft plus a cone head collected in heads
+  function arrow3(fb, heads, a, b, col, nrm, hl) {
+    const d = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], L = Math.hypot(d[0], d[1], d[2]); if (L < 1e-6) return;
+    const u = [d[0] / L, d[1] / L, d[2] / L], h = Math.min(hl, L * 0.5);
+    fb.seg(a, [b[0] - u[0] * h * 0.7, b[1] - u[1] * h * 0.7, b[2] - u[2] * h * 0.7], col, col, nrm, nrm);
+    heads.push({ p: b, d: u, hl: h, hr: h * 0.38, c: col });
+  }
+  function instCones(list, order) {
+    if (!list.length) return null;
+    const m = new THREE.InstancedMesh(G3.coneGeo, G3.M.inst, list.length), D = G3.dummy;
+    list.forEach((h, i) => {
+      G3.tv.set(h.d[0], h.d[1], h.d[2]);
+      D.position.set(h.p[0] - h.d[0] * h.hl / 2, h.p[1] - h.d[1] * h.hl / 2, h.p[2] - h.d[2] * h.hl / 2);
+      D.quaternion.setFromUnitVectors(G3.up, G3.tv); D.scale.set(h.hr, h.hl, h.hr); D.updateMatrix();
+      m.setMatrixAt(i, D.matrix); m.setColorAt(i, G3.tc.setRGB(h.c[0], h.c[1], h.c[2]));
+    });
+    m.userData.shared = true; m.renderOrder = order; m.frustumCulled = false; return m;
+  }
+  function instDots(list, mat, order) {
+    if (!list.length) return null;
+    const m = new THREE.InstancedMesh(G3.sphGeo, mat, list.length), D = G3.dummy;
+    D.quaternion.set(0, 0, 0, 1);
+    list.forEach((h, i) => { D.position.set(h.p[0], h.p[1], h.p[2]); D.scale.setScalar(h.r); D.updateMatrix(); m.setMatrixAt(i, D.matrix); m.setColorAt(i, G3.tc.setRGB(h.c[0], h.c[1], h.c[2])); });
+    m.userData.shared = true; m.renderOrder = order; m.frustumCulled = false; return m;
+  }
+  const bead3 = (g, x, y, z, q, r) => {
+    const M = G3.M, b = new THREE.Mesh(G3.sphGeo, q > 0 ? M.beadP : q < 0 ? M.beadN : M.beadZ);
+    b.userData.shared = true; b.scale.setScalar(r); b.position.set(x, y, z); g.add(b);
+    if (q) { const s = new THREE.Sprite(q > 0 ? M.glowP : M.glowN); s.userData.shared = true; s.scale.setScalar(r * 5.5); s.position.set(x, y, z); s.renderOrder = 2; g.add(s); }
+  };
+
+  // ---------- 3D: any surface ----------
+  function field3(x, y, z) {
+    let ex = 0, ey = 0, ez = 0;
+    for (const c of F.charges) {
+      if (!c.q) continue;
+      const dx = x - c.x, dy = y - c.y, r2 = Math.max(dx * dx + dy * dy + z * z, 1e-8), k = c.q / (r2 * Math.sqrt(r2));
+      ex += k * dx; ey += k * dy; ez += k * z;
+    }
+    return [ex * KCM, ey * KCM, ez * KCM];      // N/C
+  }
+  const beadR = (c) => (0.3 + 0.12 * Math.sqrt(Math.abs(c.q))) * Math.min(projScale(), 1.3);
+  const LINES3 = 3;                            // lines per nC in 3D, as a multiple of the slider value
+  function trace3(x, y, z, sgn, from, B) {
+    const pts = [[x, y, z]];
+    for (let n = 0; n < 3000; n++) {
+      let dmin = Infinity;
+      for (const c of F.charges) if (c.q) { const d = Math.hypot(x - c.x, y - c.y, z); if (d < dmin) dmin = d; }
+      const h = clamp(0.1 * dmin, 0.03, 0.3);
+      let [ex, ey, ez] = field3(x, y, z), m = Math.hypot(ex, ey, ez); if (m < 1e-9) break;
+      const mx = x + sgn * 0.5 * h * ex / m, my = y + sgn * 0.5 * h * ey / m, mz = z + sgn * 0.5 * h * ez / m;
+      [ex, ey, ez] = field3(mx, my, mz); m = Math.hypot(ex, ey, ez); if (m < 1e-9) break;
+      x += sgn * h * ex / m; y += sgn * h * ey / m; z += sgn * h * ez / m;
+      pts.push([x, y, z]);
+      if (x < B.x0 || x > B.x1 || y < B.y0 || y > B.y1 || Math.abs(z) > B.z) return { pts, end: null };
+      for (const c of F.charges) {
+        if (!c.q || c === from) continue;
+        if (Math.hypot(x - c.x, y - c.y, z) < beadR(c) * 0.8) { pts.push([c.x, c.y, 0]); return { pts, end: c }; }
+      }
+    }
+    return { pts, end: null };
+  }
+  // field lines in 3D: n ∝ |q| lines leave each positive charge evenly over all directions; a negative charge
+  // collects the lines that reach it and starts its own share, traced backward, where none arrive
+  function lines3() {
+    const act = F.charges.filter((c) => c.q), n3 = (c) => Math.round(Math.abs(c.q) * F.density * LINES3);
+    const B = { x0: view.x0 - 1, x1: view.x1 + 1, y0: view.y0 - 1, y1: view.y1 + 1, z: BOUNDZ };
+    const out = [], arrivals = new Map();
+    for (const c of act) {
+      if (c.q <= 0) continue;
+      const r0 = beadR(c);
+      for (const u of fib(n3(c), c.id * 0.9)) {
+        const res = trace3(c.x + r0 * u[0], c.y + r0 * u[1], r0 * u[2], 1, c, B);
+        res.pts.unshift([c.x, c.y, 0]); out.push(res.pts);
+        if (res.end && res.end.q < 0) {
+          const p = res.pts[res.pts.length - 2];
+          if (!arrivals.has(res.end)) arrivals.set(res.end, []);
+          arrivals.get(res.end).push(norm3([p[0] - res.end.x, p[1] - res.end.y, p[2]]));
+        }
+      }
+    }
+    for (const c of act) {
+      if (c.q >= 0) continue;
+      const n = n3(c), arr = arrivals.get(c) || [], rem = n - arr.length;
+      if (rem <= 0) continue;
+      const cand = fib(n, c.id * 0.9).map((u) => [u, arr.reduce((m, a) => Math.min(m, 1 - dot3(u, a)), Infinity)]);
+      cand.sort((p, q) => q[1] - p[1]);
+      const r0 = beadR(c);
+      for (let k = 0; k < rem; k++) {
+        const u = cand[k][0], res = trace3(c.x + r0 * u[0], c.y + r0 * u[1], r0 * u[2], -1, c, B);
+        res.pts.unshift([c.x, c.y, 0]); out.push(res.pts.reverse());
+      }
+    }
+    return out;
+  }
+  // where the lines pierce the closed surface; a line oriented along E going from inside to outside carries flux out
+  function pierce3(L3, inside) {
+    const marks = [], lc = { out: 0, inn: 0 };
+    for (const pts of L3) {
+      let prev = inside(pts[0][0], pts[0][1], pts[0][2]);
+      for (let i = 1; i < pts.length; i++) {
+        const cur = inside(pts[i][0], pts[i][1], pts[i][2]);
+        if (cur === prev) continue;
+        let a = 0, b = 1;
+        for (let k = 0; k < 16; k++) { const m = (a + b) / 2, p = lerp3(pts[i - 1], pts[i], m); if (inside(p[0], p[1], p[2]) === prev) a = m; else b = m; }
+        marks.push({ p: lerp3(pts[i - 1], pts[i], (a + b) / 2), out: prev && !cur });
+        if (prev) lc.out++; else lc.inn++;
+        prev = cur;
+      }
+    }
+    return { marks, lc };
+  }
+  function buildFlux3() {
+    const ps = Math.min(projScale(), 1.3);
+    const k1 = `${F.surf}|${F.ver}|${themeVer}|${ps}|${F.layers.grid}|${view.x0.toFixed(2)}|${view.y0.toFixed(2)}`;
+    if (G3.k1 !== k1) { G3.k1 = k1; G3.k2 = ''; buildStatic3(ps); }
+    const k2 = `${F.qver}|${F.ver}|${F.density}|${F.layers.lines}|${F.layers.arrows}|${F.layers.cross}|${F.layers.patch}|${themeVer}|${ps}`;
+    if (G3.k2 !== k2) { G3.k2 = k2; buildDynamic3(ps); }
+  }
+  function buildStatic3() {
+    const g = G3.statG; clearGroup(g);
+    const sh = shape();
+    let Md;
+    if (F.surf === 'sphere') Md = mSphere(F.sph.x, F.sph.y, F.sph.R, 12, 24, 50);
+    else if (F.surf === 'box') Md = mBox(F.rect.x, F.rect.y, F.rect.w, F.rect.h, F.depth);
+    else if (F.surf === 'cyl') Md = mCyl(F.rect.x, F.rect.y, F.rect.w, F.rect.h / 2, clamp(Math.round(F.rect.w / 2), 2, 12), 24, 4, 12);
+    else Md = mPrism(sh.poly, F.depth, sh.inside);
+    G3.S = Md;
+    addSurface(g, Md);
+    // the slice z = 0 as a faint lab floor: 1 cm grid, 5 cm lines stronger, and its frame
+    const fb = new Fat(), fs = new Fat(), x0 = view.x0, x1 = view.x1, y0 = view.y0, y1 = view.y1;
+    const c1 = rgba(T.gridStrong, isDark() ? 0.75 : 0.9), c5 = rgba(T.gridStrong, 1);
+    if (F.layers.grid) {
+      for (let x = Math.ceil(x0); x <= x1; x++) (x % 5 ? fb : fs).seg([x, y0, 0], [x, y1, 0], x % 5 ? c1 : c5);
+      for (let y = Math.ceil(y0); y <= y1; y++) (y % 5 ? fb : fs).seg([x0, y, 0], [x1, y, 0], y % 5 ? c1 : c5);
+    }
+    fs.poly([[x0, y0, 0], [x1, y0, 0], [x1, y1, 0], [x0, y1, 0]], rgba(T.muted, 0.6), null, true);
+    addTo(g, fb.mesh(G3.M.floor, 0), fs.mesh(G3.M.floorS, 0));
+  }
+  function buildDynamic3(ps) {
+    const g = G3.dynG, Md = G3.S, M = G3.M; clearGroup(g);
+    for (const c of F.charges) bead3(g, c.x, c.y, 0, c.q, beadR(c));
+    const live = F.charges.some((c) => c.q);
+    G3.lc = null;
+    if (F.layers.lines && live) {
+      const L3 = lines3(), fl = hexRGB(T.fline), fb = new Fat(), heads = [];
+      for (const pts of L3) {
+        fb.poly(pts, (i) => { const p = pts[i]; return [fl[0], fl[1], fl[2], 0.8 * clamp(1.4 - Math.hypot(p[0], p[1], p[2] * 1.2) / 16, 0.1, 1)]; });
+        // arrowhead about 3 cm along the line, or halfway for short lines
+        let tot = 0; for (let i = 1; i < pts.length; i++) tot += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1], pts[i][2] - pts[i - 1][2]);
+        const target = Math.min(tot * 0.5, 3.2); let acc = 0;
+        for (let i = 1; i < pts.length; i++) {
+          const seg = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1], pts[i][2] - pts[i - 1][2]); acc += seg;
+          if (acc >= target && tot > 1) { heads.push({ p: pts[i], d: norm3([pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1], pts[i][2] - pts[i - 1][2]]), hl: 0.42 * ps, hr: 0.15 * ps, c: fl }); break; }
+        }
+      }
+      const pr = pierce3(L3, Md.inside);
+      G3.lc = pr.lc;
+      addTo(g, fb.mesh(M.field, 1), instCones(heads, 1));
+      if (F.layers.cross) {
+        const co = hexRGB(T.fout), ci = hexRGB(T.fin);
+        addTo(g, instDots(pr.marks.map((m) => ({ p: m.p, r: 0.17 * ps, c: m.out ? co : ci })), M.inst, 7));
+      }
+    }
+    // E on the surface: arrows centered on the surface, length growing with E and leveling off, colored by the sign of E·n
+    if (F.layers.arrows && live) {
+      const fb = new Fat(), heads = [], co = rgba(T.fout, 1), ci = rgba(T.fin, 1);
+      for (const s of Md.sites) {
+        const E = field3(s.p[0], s.p[1], s.p[2]), m = Math.hypot(E[0], E[1], E[2]); if (m < 1e-9) continue;
+        const L = 1.9 * Math.tanh(m / E0), u = [E[0] / m, E[1] / m, E[2] / m];
+        if (L < 0.15) continue;
+        arrow3(fb, heads, lerp3(s.p, [s.p[0] + u[0], s.p[1] + u[1], s.p[2] + u[2]], -L / 2), lerp3(s.p, [s.p[0] + u[0], s.p[1] + u[1], s.p[2] + u[2]], L / 2), dot3(E, s.n) >= 0 ? co : ci, s.n, 0.5);
+      }
+      addTo(g, fb.mesh(M.arrow, 8), instCones(heads, 8));
+    }
+    // flux patches: each area element colored by its E·dA, against the flux each would carry if all of Σ|q|/ε₀ spread evenly
+    Md.patch.visible = F.layers.patch;
+    if (F.layers.patch) {
+      let s = 0; for (const c of F.charges) s += Math.abs(c.q);
+      const ref = Math.max(s * NC / EPS0 / Md.cells.length, 1e-30);
+      paintPatches(Md, (c) => { const E = field3(c.c[0], c.c[1], c.c[2]), dF = dot3(E, c.n) * c.A * CM * CM; return patchRGBA(Math.tanh(Math.abs(dF) / ref), dF); });
+    }
+  }
+
+  // ---------- 3D: symmetry ----------
+  function buildSym3() {
+    const ps = Math.min(projScale(), 1.3), k = Ysym.kind;
+    const key = `${JSON.stringify(Ysym)}|${themeVer}|${ps}|${F.layers.patch}`;
+    if (G3.kS === key) return;
+    G3.kS = key;
+    const g = G3.symG, M = G3.M; clearGroup(g);
+    const r = symR(), E = symE(r), qs = k === 'sphere' ? Ysym.Q : k === 'line' ? Ysym.lam : Ysym.sig, sgnQ = Math.sign(qs) || 1;
+    const fc = rgba(E >= 0 ? T.fout : T.fin, 1), qhex = sgnQ > 0 ? T.pos : T.neg, qc = hexRGB(qhex), qdim = mixC(qc, hexRGB(T.canvas), 0.55), mut = rgba(T.muted, 0.9);
+    const Eref = Math.abs(k === 'sphere' ? (Ysym.sk === 'point' ? symE(3) : KC * Ysym.Q * NC / Math.pow(Ysym.R * CM, 2)) : k === 'line' ? symE(3) : symE(1)) || 1;
+    const alen = (e) => Math.min(2.2 * 1.6, Math.abs(e) / Eref * 2.2), Lp = alen(E), d = Math.sign(E);
+    const flc = hexRGB(T.fline), fade = (p, s) => [flc[0], flc[1], flc[2], 0.75 * clamp(1.4 - Math.hypot(p[0], p[1], p[2]) / s, 0.1, 1)];
+    const fl = new Fat(), ar = new Fat(), heads = [], fheads = [], dots = [], marks = [], co = hexRGB(T.fout), ci = hexRGB(T.fin);
+    const flHead = (p, u) => fheads.push({ p, d: u, hl: 0.42 * ps, hr: 0.15 * ps, c: flc });
+    M.ball.color.set(qhex); M.rod.color.set(qhex); M.sleeve.color.set(qhex); M.sheet.color.set(qhex); M.disk.color.set(qhex);
+    let Md, cellK;
+    if (k === 'sphere') {
+      const { sk, Q, R } = Ysym, Qenc = enclosedSphere(sk, Q, R, r);
+      Md = mSphere(0, 0, r, 10, 20, 0);
+      if (sk === 'point') bead3(g, 0, 0, 0, Q, 0.5 * ps);
+      else if (sk === 'ball') {
+        const b = new THREE.Mesh(new THREE.SphereGeometry(R, 48, 32), M.ball); b.renderOrder = 2; g.add(b);
+        // charge spread evenly through the volume: dots inside the Gaussian sphere bright, the rest faint
+        // a low discrepancy (R3) sequence: radius³, cos θ and φ each uniform, so the dots fill the volume evenly
+        const N = 220, fr = (x) => x - Math.floor(x);
+        for (let i = 0; i < N; i++) {
+          const s = R * Math.cbrt(fr(0.5 + i * 0.8191725134)) * 0.97, z = 2 * fr(0.5 + i * 0.6710436067) - 1, w = Math.sqrt(1 - z * z), a = 2 * Math.PI * fr(0.5 + i * 0.5497004779);
+          dots.push({ p: [s * w * Math.cos(a), s * w * Math.sin(a), s * z], r: 0.11 * ps, c: s < r ? qc : qdim });
+        }
+      } else {
+        const b = new THREE.Mesh(new THREE.SphereGeometry(R, 56, 36), M.metal); b.renderOrder = 2; g.add(b);
+        for (const u of fib(130, 0.5)) dots.push({ p: [u[0] * R * 1.015, u[1] * R * 1.015, u[2] * R * 1.015], r: 0.1 * ps, c: qc });
+      }
+      const r0 = sk === 'shell' ? R : sk === 'ball' ? 0 : 0.5 * ps;
+      if (Q) for (const u of fib(30, 0.45)) {
+        const pts = []; for (let i = 0; i <= 24; i++) { const s = r0 + (24 - r0) * i / 24; pts.push([u[0] * s, u[1] * s, u[2] * s]); }
+        fl.poly(pts, (i) => fade(pts[i], 17));
+        flHead([u[0] * 15, u[1] * 15, u[2] * 15], [u[0] * sgnQ, u[1] * sgnQ, u[2] * sgnQ]);
+        if (r > r0 + 1e-9) marks.push({ p: [u[0] * r, u[1] * r, u[2] * r], r: 0.17 * ps, c: Qenc >= 0 ? co : ci });
+      }
+      for (const u of fib(42, 0.1)) {
+        const p = [u[0] * r, u[1] * r, u[2] * r];
+        if (Lp > 0.12) arrow3(ar, heads, p, [p[0] + d * u[0] * Lp, p[1] + d * u[1] * Lp, p[2] + d * u[2] * Lp], fc, u, 0.55);
+        else dots.push({ p, r: 0.09 * ps, c: fc });
+      }
+      cellK = () => [Q ? Math.tanh(1.4 * Math.abs(Qenc / Q)) : 0, Qenc];
+    } else if (k === 'line') {
+      const { lam, L } = Ysym, X = 22;
+      const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.15 * ps, 0.15 * ps, 2 * X, 20).rotateZ(-Math.PI / 2), M.rod); g.add(rod);
+      const sl = new THREE.Mesh(new THREE.CylinderGeometry(0.34 * ps, 0.34 * ps, L, 28, 1, false).rotateZ(-Math.PI / 2), M.sleeve); sl.renderOrder = 2; g.add(sl);
+      for (let x = -X + 0.35; x < X; x += 0.7) for (let j = 0; j < 3; j++) {
+        const a = j * 2.094 + x * 1.3; dots.push({ p: [x, 0.19 * ps * Math.cos(a), 0.19 * ps * Math.sin(a)], r: 0.075 * ps, c: Math.abs(x) < L / 2 ? qc : qdim });
+      }
+      Md = mCyl(0, 0, L, r, clamp(Math.round(L / 2), 2, 12), 24, 3, 12);
+      if (lam) for (let x = -18; x <= 18; x += 4) for (let j = 0; j < 6; j++) {
+        const p = j * Math.PI / 3 + (Math.round(x / 4) % 2 ? Math.PI / 6 : 0), u = [0, Math.cos(p), Math.sin(p)], pts = [];
+        for (let i = 0; i <= 12; i++) { const s = 0.2 + 13.8 * i / 12; pts.push([x, u[1] * s, u[2] * s]); }
+        fl.poly(pts, (i) => fade(pts[i], 18));
+        if (Math.abs(x) < L / 2 - 1e-9) marks.push({ p: [x, u[1] * r, u[2] * r], r: 0.17 * ps, c: lam >= 0 ? co : ci });
+        flHead([x, u[1] * 10, u[2] * 10], [0, u[1] * sgnQ, u[2] * sgnQ]);
+      }
+      const nA = clamp(Math.round(L / 2.4), 2, 8);
+      for (let i = 0; i < nA; i++) for (let j = 0; j < 8; j++) {
+        const x = -L / 2 + L * (i + 0.5) / nA, p = 2 * Math.PI * (j + (i % 2) * 0.5) / 8, u = [0, Math.cos(p), Math.sin(p)], a = [x, r * u[1], r * u[2]];
+        arrow3(ar, heads, a, [x, a[1] + d * u[1] * Lp, a[2] + d * u[2] * Lp], fc, u, 0.55);
+      }
+      // on the caps E lies along the surface: short gray arrows in the plane of each cap
+      const capA = Math.min(Lp, r * 0.7) * 0.6;
+      if (capA > 0.12) for (const sg of [1, -1]) for (let j = 0; j < 4; j++) {
+        const p = j * Math.PI / 2 + Math.PI / 4, u = [0, Math.cos(p), Math.sin(p)], a = [sg * L / 2, 0.3 * r * u[1], 0.3 * r * u[2]];
+        arrow3(ar, heads, a, [a[0], a[1] + d * u[1] * capA, a[2] + d * u[2] * capA], mut, [sg, 0, 0], 0.4);
+      }
+      cellK = (c) => (c.part === 'cap' ? [0, 1] : [lam ? Math.tanh(1.4) : 0, lam]);
+    } else {
+      const { sig, a } = Ysym, h = r, S = 26;
+      const sheet = new THREE.Mesh(new THREE.PlaneGeometry(S, S).rotateY(Math.PI / 2), M.sheet); sheet.renderOrder = 2; g.add(sheet);
+      const disk = new THREE.Mesh(new THREE.CircleGeometry(a, 64).rotateY(Math.PI / 2), M.disk); disk.renderOrder = 2; g.add(disk);
+      for (let y = -12.35; y < 12.4; y += 1.3) for (let z = -12.35; z < 12.4; z += 1.3) dots.push({ p: [0, y, z], r: 0.1 * ps, c: y * y + z * z < a * a ? qc : qdim });
+      Md = mCyl(0, 0, 2 * h, a, clamp(Math.round(2 * h / 1.5), 2, 10), 24, 3, 12);
+      if (sig) for (let y = -10.4; y <= 10.5; y += 2.6) for (let z = -10.4; z <= 10.5; z += 2.6) for (const sg of [1, -1]) {
+        const pts = []; for (let i = 0; i <= 10; i++) pts.push([sg * 16 * i / 10, y, z]);
+        fl.poly(pts, (i) => fade(pts[i], 19));
+        if (y * y + z * z < a * a) marks.push({ p: [sg * h, y, z], r: 0.17 * ps, c: sig >= 0 ? co : ci });
+        if ((Math.round(y / 2.6) + Math.round(z / 2.6)) % 2 === 0) flHead([sg * 12, y, z], [sg * sgnQ, 0, 0]);
+      }
+      const ring = [[0, 0]]; for (let j = 0; j < 6; j++) ring.push([0.6 * a * Math.cos(j * Math.PI / 3), 0.6 * a * Math.sin(j * Math.PI / 3)]);
+      for (const sg of [1, -1]) {
+        for (const [y, z] of ring) arrow3(ar, heads, [sg * h, y, z], [sg * h + sg * sgnQ * Lp, y, z], fc, [sg, 0, 0], 0.55);
+        const sideA = Math.min(Lp, h * 0.8) * 0.6;
+        if (sideA > 0.12) for (let j = 0; j < 6; j++) {
+          const p = j * Math.PI / 3 + Math.PI / 6, u = [0, Math.cos(p), Math.sin(p)], s0 = [sg * h * 0.5 - sg * sgnQ * sideA / 2, a * u[1], a * u[2]];
+          arrow3(ar, heads, s0, [s0[0] + sg * sgnQ * sideA, s0[1], s0[2]], mut, u, 0.4);
+        }
+      }
+      cellK = (c) => (c.part === 'side' ? [0, 1] : [sig ? Math.tanh(1.4) : 0, sig]);
+    }
+    addSurface(g, Md);
+    Md.patch.visible = F.layers.patch;
+    if (F.layers.patch) paintPatches(Md, (c) => { const [kk, s] = cellK(c); return patchRGBA(kk, s); });
+    addTo(g, fl.mesh(M.field, 1), instCones(fheads, 1), ar.mesh(M.arrow, 8), instCones(heads, 8), instDots(dots, M.instLit, 2), instDots(marks, M.inst, 7));
+    G3.symM = Md;
+  }
+
+  // ---------- 3D: camera, overlay labels and grips ----------
+  function P2(p) { const v = G3.pv.set(p[0], p[1], p[2]).project(G3.cam), [W, H] = dims.d; return [(v.x + 1) / 2 * W, (1 - v.y) / 2 * H]; }
+  function pxR(p, r) { const e = G3.cam.matrixWorld.elements, a = P2(p), b = P2([p[0] + e[0] * r, p[1] + e[1] * r, p[2] + e[2] * r]); return Math.hypot(b[0] - a[0], b[1] - a[1]); }
+  function draw3D() {
+    const [W, H] = dims.d; if (!W || !H) return;
+    if (G3.themeV !== themeVer) { recolor3D(); G3.k1 = G3.k2 = G3.kS = ''; }
+    const cam = G3.cam, ps = Math.min(projScale(), 1.3);
+    cam.aspect = W / H; cam.updateProjectionMatrix();
+    const fitR = mode === 'flux' ? (W < 640 ? 10.5 : 12.5) : (Ysym.kind === 'sphere' ? 11 : Ysym.kind === 'line' ? 12 : 12);
+    const tv = Math.tan(cam.fov * Math.PI / 360), dist = fitR / Math.min(tv, tv * cam.aspect) * orbit.zoom;
+    cam.position.set(dist * Math.sin(orbit.ph) * Math.cos(orbit.th), dist * Math.sin(orbit.ph) * Math.sin(orbit.th), dist * Math.cos(orbit.ph));
+    cam.lookAt(0, 0, 0); cam.updateMatrixWorld();
+    for (const m of G3.fatMats) { m.uniforms.res.value.set(W / 2, H / 2); m.uniforms.width.value = m.userData.w * ps; }
+    G3.statG.visible = G3.dynG.visible = mode === 'flux'; G3.symG.visible = mode === 'sym';
+    if (mode === 'flux') { computeLines(); buildFlux3(); } else buildSym3();
+    G3.renderer.render(G3.scene, cam);
+    overlay3D(W, H, ps);
+  }
+  function overlay3D(W, H, ps) {
+    const ctx = octx, hs = [], fs = fsz(12.5);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    const right = orbit.th + Math.PI / 2;           // azimuth of the screen's right side, seen from the camera
+    const ptH = (id, kind, p, dir, cursor, extra) => { const s = P2(p); hs.push(Object.assign({ id, kind, cursor, s, d: (x, y) => Math.hypot(x - s[0], y - s[1]) - 9 * ps, draw: (hot) => grip(ctx, s[0], s[1], hot, dir) }, extra || {})); return s; };
+    const alongH = (id, kind, p, c, cursor, extra) => { const s = P2(p), o = P2(c); hs.push(Object.assign({ id, kind, cursor, s, d: (x, y) => Math.hypot(x - s[0], y - s[1]) - 10 * ps, draw: (hot) => gripAlong(ctx, s[0], s[1], s[0] - o[0], s[1] - o[1], hot) }, extra || {})); return s; };
+    const labels = [];
+    if (mode === 'flux') {
+      for (const c of F.charges) {
+        const [x, y] = P2([c.x, c.y, 0]), r = pxR([c.x, c.y, 0], beadR(c)), hot = hotId('q' + c.id), sel = F.sel && F.sel.kind === 'q' && F.sel.id === c.id;
+        if (hot || sel) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2.2 * ps; ctx.globalAlpha = hot ? 0.9 : 0.6; ctx.beginPath(); ctx.arc(x, y, r + 4 * ps, 0, 2 * Math.PI); ctx.stroke(); ctx.globalAlpha = 1; }
+        if (c.q) { ctx.strokeStyle = T.onq; ctx.lineWidth = Math.max(1.4, r * 0.17); ctx.lineCap = 'round'; const a = r * 0.45; ctx.beginPath(); ctx.moveTo(x - a, y); ctx.lineTo(x + a, y); if (c.q > 0) { ctx.moveTo(x, y - a); ctx.lineTo(x, y + a); } ctx.stroke(); }
+        hs.push({ id: 'q' + c.id, kind: 'q', ref: c, cursor: 'grab', plane: 'z0', d: (px, py) => Math.hypot(px - x, py - y) - r - 3 });
+        labels.push([`${fq(c.q, Math.abs(c.q) % 1 ? 1 : 0)}`, x + r + 5 * ps, y - r * 0.35, { size: fsz(11.5), fam: T.mono, color: T.ink }]);
+      }
+      if (F.surf === 'sphere') {
+        const { x, y, R } = F.sph, a = right - 0.45;
+        alongH('R', 'R', [x + R * Math.cos(a), y + R * Math.sin(a), 0], [x, y, 0], 'ew-resize', { plane: 'z0' });
+        ptH('move', 'move', [x, y, 0], 'move', 'move', { plane: 'z0' });
+      } else if (F.surf === 'box' || F.surf === 'cyl') {
+        const { x, y, w, h } = F.rect, sx = Math.cos(right) >= 0 ? 1 : -1;
+        alongH('W', 'W', [x + sx * w / 2, y, 0], [x, y, 0], 'ew-resize', { plane: 'z0' });
+        if (F.surf === 'box') {
+          const sy = Math.sin(orbit.th) >= 0 ? 1 : -1;
+          alongH('H', 'H', [x, y + sy * h / 2, 0], [x, y, 0], 'ns-resize', { plane: 'z0' });
+          alongH('D', 'D', [x, y, F.depth / 2], [x, y, 0], 'ns-resize', { plane: 'vz', cx: x, cy: y });
+        } else alongH('H', 'Hz', [x, y, h / 2], [x, y, 0], 'ns-resize', { plane: 'vz', cx: x, cy: y });
+        ptH('move', 'move', [x, y, 0], 'move', 'move', { plane: 'z0' });
+      } else {
+        const sh = shape();
+        F.free.forEach((p, i) => {
+          const s = P2([p[0], p[1], 0]);
+          hs.push({ id: 'cp' + i, kind: 'cp', i, cursor: 'grab', plane: 'z0', d: (px, py) => Math.hypot(px - s[0], py - s[1]) - 6 * ps,
+            draw: (hot) => { const sel = F.sel && F.sel.kind === 'cp' && F.sel.i === i; ctx.fillStyle = T.canvas; ctx.strokeStyle = hot || sel ? T.accent : T.muted; ctx.lineWidth = (hot || sel ? 2.4 : 1.6) * ps; ctx.beginPath(); ctx.arc(s[0], s[1], (hot ? 6.5 : 5) * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); } });
+        });
+        alongH('D', 'D', [sh.center[0], sh.center[1], F.depth / 2], [sh.center[0], sh.center[1], 0], 'ns-resize', { plane: 'vz', cx: sh.center[0], cy: sh.center[1] });
+        ptH('move', 'move', [sh.center[0], sh.center[1], 0], 'move', 'move', { plane: 'z0' });
+      }
+      for (const h of hs) if (h.draw) h.draw(hotId(h.id));
+      // the surface's name above its highest point on the screen
+      let top = null; for (const p of G3.S.ext) { const s = P2(p); if (!top || s[1] < top[1]) top = s; }
+      const cc = P2(shape().center.concat([0]));
+      const ly = top[1] - 14 * ps;
+      labels.push([surfLabel(), cc[0], ly < fs * 2.2 ? top[1] + fs + 16 * ps : ly, { size: fs, align: 'center', color: T.ink }]);
+      const fc = P2([view.x1 - 0.4, view.y0 + 0.4, 0]);
+      labels.push(['Slice z = 0', fc[0], fc[1] - 6 * ps, { size: fsz(11), weight: 400, align: 'right', color: T.muted }]);
+      if (G3.lc && F.layers.lines) {
+        const enc = enclosed(), n3 = F.density * LINES3, net = G3.lc.out - G3.lc.inn;
+        labels.push([`Lines through the closed surface: ${G3.lc.out} out, ${G3.lc.inn} in, net ${minus(String(net))}`, 10, H - 12 - fsz(11) * 1.45, { size: fsz(11), weight: 600, color: T.ink }]);
+        labels.push([`${n3} lines per nC in 3D, so ${n3} × Q_enc = ${minus(String(Math.round(enc.Q * n3)))}`, 10, H - 10, { size: fsz(11), weight: 400, color: T.muted }]);
+      }
+    } else {
+      const k = Ysym.kind, r = symR(), E = symE(r), qcol = (k === 'sphere' ? Ysym.Q : k === 'line' ? Ysym.lam : Ysym.sig) < 0 ? T.neg : T.pos;
+      if (k === 'sphere') {
+        const R = Ysym.R, sk = Ysym.sk, a = right - 0.45, b = right + Math.PI + 0.45;
+        const gs = alongH('r', 'r', [r * Math.cos(a), r * Math.sin(a), 0], [0, 0, 0], 'ew-resize', { plane: 'z0', set: (p) => setSym('r', Math.hypot(p.x, p.y)) });
+        labels.push([`Gaussian sphere r = ${fcm(r)}`, gs[0] + 14 * ps, gs[1] + fs + 10 * ps, { size: fs, color: T.ink }]);
+        if (sk !== 'point') {
+          const bs = alongH('R', 'R', [R * Math.cos(b), R * Math.sin(b), 0], [0, 0, 0], 'ew-resize', { plane: 'z0', set: (p) => setSym('R', Math.hypot(p.x, p.y)) });
+          labels.push([`R = ${fcm(R)}`, bs[0] - 14 * ps, bs[1] - 12 * ps, { size: fs, align: 'right', color: qcol }]);
+        }
+        const qs = P2([0, 0, -Math.min(r, sk === 'point' ? r : R) * 0.5]);
+        labels.push([`Q_enc = ${fq(enclosedSphere(sk, Ysym.Q, R, r), 2)}`, qs[0], qs[1] + Math.max(fs, 24 * ps), { size: fs, align: 'center', color: T.ink }]);
+        if (sk === 'shell') { const ts = P2([0, 0, R]); labels.push(['Metal: E = 0 inside, charge on the surface', ts[0], ts[1] - 14 * ps, { size: fsz(11.5), align: 'center', color: T.ink }]); }
+      } else if (k === 'line') {
+        const L = Ysym.L;
+        const rs = alongH('r', 'r', [0, 0, r], [0, 0, 0], 'ns-resize', { plane: 'y0', set: (p) => setSym('r', Math.abs(p.z)) });
+        const Ls = alongH('L', 'L', [L / 2, 0, r * 0.55], [0, 0, r * 0.55], 'ew-resize', { plane: 'y0', set: (p) => setSym('L', 2 * Math.abs(p.x)) });
+        labels.push([`r = ${fcm(r)}`, rs[0] + 16 * ps, rs[1] - 10 * ps, { size: fs, color: T.ink }]);
+        labels.push([`L = ${fcm(L)}`, Ls[0] + 16 * ps, Ls[1] + fs * 0.35, { size: fs, color: T.ink }]);
+        const ls = P2([-15, 0, 0]); labels.push([`λ = ${minus(String(Ysym.lam))} nC/m`, ls[0], ls[1] - 12 * ps, { size: fs, align: 'center', color: qcol }]);
+        const qs = P2([0, 0, -r]); labels.push([`Q_enc = λL = ${fq(Ysym.lam * L / 100, 2)}`, qs[0], qs[1] + fs + 12 * ps, { size: fs, align: 'center', color: T.ink }]);
+        const cs = P2([-L / 2, 0, -r]); labels.push(['caps: E runs along them, no flux', cs[0], cs[1] + fs + 12 * ps, { size: fsz(11), weight: 400, align: 'right', color: T.muted }]);
+      } else {
+        const a = Ysym.a, h = r;
+        const hs2 = alongH('r', 'r', [h, 0, a], [0, 0, a], 'ew-resize', { plane: 'y0', set: (p) => setSym('r', Math.abs(p.x)) });
+        const as = alongH('L', 'L', [h / 2, 0, -a], [h / 2, 0, 0], 'ns-resize', { plane: 'y0', set: (p) => setSym('L', Math.abs(p.z)) });
+        labels.push([`h = ${fcm(h)}`, hs2[0] + 14 * ps, hs2[1] - 10 * ps, { size: fs, color: T.ink }]);
+        labels.push([`cap radius a = ${fcm(a)}`, as[0], as[1] + fs + 16 * ps, { size: fs, align: 'center', color: T.ink }]);
+        labels.push(['side: E runs along it, no flux', as[0], as[1] + 2 * fs + 24 * ps, { size: fsz(11), weight: 400, align: 'center', color: T.muted }]);
+        const ss = P2([0, 0, 11.5]); labels.push([`σ = ${minus(String(Ysym.sig))} nC/m²`, ss[0] + 10 * ps, ss[1], { size: fs, color: qcol }]);
+      }
+      for (const h of hs) h.draw(hotId(h.id));
+      labels.push([`E = ${fmtSI(Math.abs(E), 'N/C', 3)} ${E > 0 ? 'outward' : E < 0 ? 'inward' : ''} on the Gaussian surface`, 12, H - 12, { size: fsz(12), color: E >= 0 ? T.fout : T.fin }]);
+    }
+    if (F.layers.patch) labels.push(['Flux patches: each area element colored by its E·dA', 10, fsz(11) + 12, { size: fsz(11), weight: 400, color: T.muted }]);
+    labels.push([W < 520 ? 'Drag to turn' : 'Drag to turn · wheel to zoom · double click to reset', W - 10, fsz(11) + 12, { size: fsz(11), weight: 400, align: 'right', color: T.muted }]);
+    for (const [s, x, y, o] of labels) label(ctx, s, x, y, o);
+    G3.handles = hs;
+  }
+
+  // ---------- 3D: pointer and keys ----------
+  function ray3(ev) {
+    const r = oCan.getBoundingClientRect();
+    G3.ndc.set((ev.clientX - r.left) / r.width * 2 - 1, -(ev.clientY - r.top) / r.height * 2 + 1);
+    G3.ray.setFromCamera(G3.ndc, G3.cam); return G3.ray.ray;
+  }
+  function onPlane(ev, which) { const v = new THREE.Vector3(); return ray3(ev).intersectPlane(G3.planes[which], v) ? v : null; }
+  // height on the vertical line through (cx, cy) closest to the pointer's ray
+  function vertZ(ev, cx, cy) {
+    const R = ray3(ev), o = R.origin, d = R.direction, wx0 = o.x - cx, wy0 = o.y - cy, wz0 = o.z;
+    const a = d.x * d.x + d.y * d.y + d.z * d.z, b = d.z, den = a - b * b;
+    if (den < 1e-9) return null;
+    return (a * wz0 - b * (d.x * wx0 + d.y * wy0 + d.z * wz0)) / den;
+  }
+  function hit3(ev) {
+    const r = oCan.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 6 * Math.min(projScale(), 1.3) * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of G3.handles) { const d = h.d(x, y); if (d < bd) { bd = d; best = h; } }
+    return best;
+  }
+  let o3 = null, o3ev = null, o3Frame = false;
+  const ptr3 = new Map();
+  function apply3() {
+    o3Frame = false;
+    if (!o3 || o3.type !== 'h' || !o3ev) return;
+    const h = o3.h, ev = o3ev; o3ev = null;
+    if (mode === 'flux') {
+      if (h.plane === 'z0') { const p = onPlane(ev, 'z0'); if (p) { dq = [p.x, p.y]; dragApply(); } }
+      else {
+        const z = vertZ(ev, h.cx, h.cy); if (z === null) return;
+        if (h.kind === 'D') F.depth = clamp(snap(2 * Math.abs(z), 0.5), 1, 24); else F.rect.h = clamp(snap(2 * Math.abs(z), 0.1), 2, 18);
+        surfChanged();
+      }
+    } else { const p = onPlane(ev, h.plane); if (p) h.set(p); }
+  }
+  oCan.addEventListener('pointerdown', (ev) => {
+    if (!G3.ready) return;
+    oCan.focus({ preventScroll: true });
+    ptr3.set(ev.pointerId, [ev.clientX, ev.clientY]);
+    try { oCan.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault();
+    if (ptr3.size === 2) { const [a, b] = [...ptr3.values()]; drag = null; o3 = { type: 'pinch', d0: Math.hypot(a[0] - b[0], a[1] - b[1]), z0: orbit.zoom }; return; }
+    const h = hit3(ev);
+    if (h) {
+      if (mode === 'flux') {
+        const p = h.plane === 'z0' ? onPlane(ev, 'z0') : null;
+        startDrag(h, p ? p.x : 0, p ? p.y : 0);
+      } else { userPause(); drag = { id: h.id, kind: h.kind }; }
+      o3 = { type: 'h', h };
+      oCan.style.cursor = h.cursor === 'grab' ? 'grabbing' : h.cursor;
+    } else { o3 = { type: 'orbit', lx: ev.clientX, ly: ev.clientY, moved: 0 }; oCan.style.cursor = 'grabbing'; }
+  });
+  oCan.addEventListener('pointermove', (ev) => {
+    if (!G3.ready) return;
+    if (ptr3.has(ev.pointerId)) ptr3.set(ev.pointerId, [ev.clientX, ev.clientY]);
+    if (o3 && o3.type === 'pinch' && ptr3.size === 2) { const [a, b] = [...ptr3.values()]; orbit.zoom = clamp(o3.z0 * o3.d0 / Math.max(10, Math.hypot(a[0] - b[0], a[1] - b[1])), 0.55, 2.2); return; }
+    if (o3 && o3.type === 'h') { o3ev = ev; if (!o3Frame) { o3Frame = true; requestAnimationFrame(apply3); } return; }
+    if (o3 && o3.type === 'orbit') {
+      const dx = ev.clientX - o3.lx, dy = ev.clientY - o3.ly; o3.lx = ev.clientX; o3.ly = ev.clientY; o3.moved += Math.abs(dx) + Math.abs(dy);
+      orbit.th -= dx * 0.008; orbit.ph = clamp(orbit.ph - dy * 0.008, 0.12, 1.75); return;
+    }
+    const h = hit3(ev); hoverId = h ? h.id : null; oCan.style.cursor = h ? h.cursor : 'grab';
+  });
+  const end3 = (ev) => {
+    ptr3.delete(ev.pointerId);
+    if (o3 && o3.type === 'orbit' && o3.moved < 4 && mode === 'flux' && F.sel) { F.sel = null; updateReadouts(); }
+    if (o3 && o3.type === 'h') { if (o3ev) apply3(); drag = null; hoverId = null; markNum(); }
+    if (!ptr3.size || (o3 && o3.type === 'pinch')) o3 = null;
+    oCan.style.cursor = 'grab';
+  };
+  oCan.addEventListener('pointerup', end3);
+  oCan.addEventListener('pointercancel', end3);
+  oCan.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
+  oCan.addEventListener('wheel', (e) => { e.preventDefault(); orbit.zoom = clamp(orbit.zoom * Math.exp(e.deltaY * 0.0012), 0.55, 2.2); }, { passive: false });
+  oCan.addEventListener('dblclick', () => { Object.assign(orbit, ORBIT0); });
+  oCan.addEventListener('keydown', (e) => {
+    const k = e.key;
+    if (k === '[' || k === ']') { orbit.th += (k === ']' ? -1 : 1) * 0.12; e.preventDefault(); return; }
+    if (k === 'PageUp' || k === 'PageDown') { orbit.ph = clamp(orbit.ph + (k === 'PageDown' ? 0.1 : -0.1), 0.12, 1.75); e.preventDefault(); return; }
+    if (k === '0') { Object.assign(orbit, ORBIT0); e.preventDefault(); return; }
+    keyDrawing(e);
+  });
+  function setView3d(on) {
+    if (on && !init3D()) on = false;
+    view3d = on;
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String((b.dataset.v === '3d') === on));
+    cans.d.hidden = on; gCan.hidden = oCan.hidden = !on;
+    if (on && drawing) setDrawing(false);
+    hoverId = null; drag = null; o3 = null; ptr3.clear();
+    requestAnimationFrame(resize);
+  }
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => setView3d(b.dataset.v === '3d'));
+  if (!window.THREE) $('viewSeg').hidden = true;
+
   // ---------- projector and theme ----------
   const projBtn = $('proj');
   function setProjector(on) {
@@ -1920,7 +2779,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     get lineCount() { return lineCount; }, get view() { return view; }, get numMs() { return numMs; },
     handles: () => (mode === 'flux' ? fluxHandles() : symHandles).map((h) => h.id),
     X, Y: Yp, applyPreset, setRunning, setSurf, computeNum, addCharge, symE, setSym, tryFree,
-    enclosed: () => enclosed()
+    enclosed: () => enclosed(), setView3d, get view3d() { return view3d; }, orbit, get lc3() { return G3.lc; }, handles3: () => G3.handles.map((h) => ({ id: h.id, s: h.s }))
   };
 
   tokens();
@@ -1928,6 +2787,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   ro.observe(panes.d); ro.observe(panes.p);
   $('oDen').textContent = F.density; $('sDen').value = F.density;
   applyPreset('inside');
+  setView3d(true);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { linesKey = ''; drawAll(); });
   requestAnimationFrame(loop);
 })();

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gamma Spectroscopy: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Gamma Spectroscopy</h1><ul class="meta"><li><a href="../demos/gamma-spectroscopy.html">Open the demo</a></li><li>Modern physics lab (pre-lab for the NaI(Tl) spectrometer)</li><li>30 to 45 minutes as a pre-lab; 15 minutes for steps 1 to 3 in lecture</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>One gamma line does not give one peak. The photopeak (all the energy absorbed) sits above a Compton continuum ending at the Compton edge, 2E²/(mₑc² + 2E), and photons scattered back from behind the source make a backscatter peak near E/(1 + 2E/mₑc²): 477.3 and 184.3 keV for 661.7 keV.</li>
+<li>The spectrometer measures pulse height, not energy. The HV and amplifier gain set channels per keV; a fit E = a + b·ch through known lines turns channels into energy. Change the HV or gain and the calibration is gone.</li>
+<li>The resolution FWHM/E falls with energy, roughly as 1/√E, because the pulse height comes from a number of photoelectrons that grows in proportion to E.</li>
+<li>Count rates in a photopeak follow the solid angle (close to inverse square far from the crystal) and fall as e^(−μx) through an absorber, with μ ≈ 1.25 cm⁻¹ for 662 keV photons in lead.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the photoelectric effect, the Compton formula E′ = E/(1 + (E/mₑc²)(1 − cos θ)), exponential attenuation and √N counting errors. Use the <strong>×100</strong> clock speed and a <strong>Preset live</strong> time to keep runs short. Every spectrum is Monte Carlo with Poisson noise, so results vary by a few percent from run to run; students should record every run with <strong>Add to table</strong>, as in the real lab.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Cs-137: photopeak, Compton edge, backscatter.</strong> It starts acquiring at once: press <strong>Stop</strong>, ask Q1, then let it run. Drag a region of interest across the photopeak (centroid near channel 340) and put the cursor on the Compton edge and the backscatter bump. Switch <strong>Behind source</strong> to <strong>Lead brick</strong>: the bump shrinks and lead x-rays appear near 75 keV.</li>
+<li><strong>HV and gain setup.</strong> Drag the HV knob or the <strong>PMT high voltage</strong> slider and watch the spectrum slide; read <strong>Pulse height for 662 keV</strong>. Ask Q2, then press <strong>Co-60: two lines and a sum peak</strong> (coarse gain 10). After step 3, change sources with the <strong>Source</strong> menu, not the presets, so the HV, gain and calibration stay fixed.</li>
+<li><strong>Calibrate the detector.</strong> Follow the preset hint: <strong>Mark peak</strong> on 661.7 keV, add the energy, switch to Co-60, <strong>Clear</strong>, acquire and mark 1173.2 and 1332.5 keV. Check the residuals on the <strong>Calibration</strong> plot and turn on the <strong>keV</strong> axis. Q3.</li>
+<li><strong>Resolution against energy.</strong> Add photopeak rows for Cs-137, Co-60, Na-22, Mn-54 and Ba-133 (356 and 81 keV) and open the <strong>Resolution</strong> plot. Ask Q4 before showing the slope.</li>
+<li><strong>Inverse square.</strong> Cs-137, no absorber, one ROI on the photopeak. Acquire 60 s live at several distances (drag the source holder or the <strong>Source to detector face, d</strong> slider), <strong>Add to table</strong> each time, and open the <strong>Distance</strong> plot. Ask Q5 before the 20 cm run.</li>
+<li><strong>Lead attenuation.</strong> The preset sets d = 10 cm and the ROI. Acquire, <strong>Add to table</strong>, add 2 mm of lead, <strong>Clear</strong>, acquire again, up to 20 mm. The <strong>Attenuation</strong> plot gives μ. Q6.</li>
+<li><strong>Identify an unknown.</strong> The calibration is already loaded. Students measure each photopeak energy, compare with the Model section's line list and check a Compton edge before <strong>Reveal</strong>. Q7.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: ¹³⁷Cs gives off essentially one gamma ray, 661.7 keV (plus barium x-rays near 32 keV). Will the spectrum be a single narrow peak at 661.7 keV? Sketch it and say where counts below the peak come from.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> At 900 V and coarse gain 20 the rail shows a pulse height of 3.31 V for 662 keV. The ADC's full scale is 10 V over 1024 channels. (a) About which channel holds the 662 keV photopeak? (b) Is the ⁶⁰Co sum peak at 2505.7 keV on scale at this gain? (c) Keeping gain 20, what HV puts 2505.7 keV at full scale, given PMT gain ∝ V⁷? What does this say about HV stability?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> After setup you find the 661.657 keV centroid at channel 170.7 and the 1332.492 keV centroid at channel 342.5. (a) Find a and b in E = a + b·ch. (b) Predict the channel of the ⁵⁴Mn line at 834.848 keV and check it with the demo. (c) What would a one point calibration through the origin do to your energies?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> The FWHM at 662 keV is 7.0%. (a) If the resolution came only from the statistics of the photoelectrons, what FWHM/E would you expect at 1332.5 keV and at 81.0 keV? (b) Explain why counting statistics give FWHM/E ∝ 1/√E. (c) Is k in the <strong>Resolution</strong> fit FWHM/E ∝ Eᵏ exactly −1/2? Why not?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Predict: at d = 10 cm the photopeak net rate is about 125 per second. What will it be at 20 cm by the inverse square law? Measure it. Why is the drop smaller than a factor of 4?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> For 661.7 keV photons in lead, μ = 1.25 cm⁻¹ (NIST XCOM). (a) What thickness of lead halves the photopeak rate? (b) With 125 per second and no lead, what rate do you expect behind 20 mm? (c) Why use the net photopeak counts rather than all the counts in the spectrum?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> An unknown shows one clear photopeak, at 834 ± 1 keV, on a continuum that ends near 640 keV, with a small bump near 195 keV. Which source is it? Show that the 640 keV edge and the 195 keV bump belong to the same line.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Every peak is a gamma ray from the source."</strong> The Compton edge, backscatter peak, lead and iodine x-rays, escape peaks and sum peaks all come from the detector and its surroundings. Only photopeaks mark source lines.</li>
+<li><strong>"Turning up the HV gives more counts."</strong> It makes each pulse bigger, so the spectrum moves to higher channels. The photopeak area stays the same as long as the peak stays on scale.</li>
+<li><strong>"More channels means better resolution."</strong> The FWHM in keV is set by the crystal and PMT; 2048 channels only spread the same peak over more bins.</li>
+<li><strong>"Lead stops gamma rays."</strong> It attenuates them exponentially; 2 cm still passes about 8% at 662 keV.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Photons from a point source on the axis are followed through a cylindrical NaI crystal with NIST XCOM cross sections: photoelectric absorption (iodine K x-rays can escape), Klein–Nishina Compton scattering on free electrons, and pair production. Electrons deposit their energy where they are made; coherent scattering in the crystal is left out. Lines are from NuDat 3; source decay is ignored.</li>
+<li>Backscatter is single Compton scattering in a thick backing 5 cm behind the source (a lower estimate). Absorbers follow the narrow beam law e^(−μx); scattering in absorbers, walls and table, and buildup, are not modeled. Coincidence summing is included for ⁶⁰Co and ²²Na; chance pileup is not.</li>
+<li>Resolution: Gaussian, FWHM/E = a/√E + 0.01, a set by the 662 keV slider; light output exactly proportional to energy. Electronics: pulse height 0.25 mV per keV × (V/900 V)⁷ × coarse × fine into a 10 V ADC with an 18 mV zero offset; nonparalyzable dead time τ = 8 µs (see it with <strong>100 µCi</strong> at d = 1 cm). The room background is assumed.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

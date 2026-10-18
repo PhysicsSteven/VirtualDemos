@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diffraction Grating: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Diffraction Grating</h1><ul class="meta"><li><a href="../demos/diffraction-grating.html">Open the demo</a></li><li>PHYS 202 (optics lab); intro astronomy (spectra)</li><li>15 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Light from neighboring slits adds up in step only where the path difference is a whole number of wavelengths: d sin θ = mλ. The bright orders are sharp because hundreds of slits must all agree.</li>
+<li>The angle depends on λ/d. Longer wavelengths bend more, so a grating spreads white light into a spectrum in each order, red farthest out (the opposite order of colors from a prism).</li>
+<li>A finer grating (more lines per mm, smaller d) spreads the orders wider and allows fewer of them; an order exists only if mλ/d ≤ 1.</li>
+<li>Measuring the spot position y at distance L gives θ = arctan(y/L) and then λ = d sin θ/m. The shortcut λ ≈ dy/(mL) fails at the angles a real grating gives.</li>
+<li>A gas lamp's lines repeat in every order, which is how a spectrograph identifies elements in a lamp or a star.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know wave superposition and path difference (the double slit). 600 lines/mm means d = 1.667 µm. In <strong>Measure</strong> mode the <strong>Orders</strong> table is hidden so students can find the wavelength themselves. On the bench students can drag the grating to change L, turn its knob to rotate it, and drag the caliper jaws on the wall; the arrow keys move the selected jaw by 1 mm (A and B choose the jaw).</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Red laser through 600 lines/mm.</strong> Spots at m = 0, ±1 and ±2 on the wall; the <strong>Orders</strong> table gives 22.3° and 49.4°. Ask Q1, then press the <strong>1000</strong> grating button. Point out that y = L tan θ, so the second order at 49.4° lands far out (116.7 cm at L = 1 m).</li>
+<li><strong>Measure the wavelength.</strong> A laser of unknown color, L = 0.80 m. Students put jaw A on the m = 0 spot and jaw B on m = 1, press <strong>Use bench values</strong>, then <strong>Compute and check</strong>. The result shows the exact and small angle values side by side. Q2.</li>
+<li><strong>Green, red and blue together.</strong> One beam, three spots in each order, red farthest out; only blue reaches a third order. Ask Q3.</li>
+<li><strong>White light rainbows and overlapping orders.</strong> At 300 lines/mm each order is a spectrum with violet inside and the center stays white. The second and third orders overlap. Q4.</li>
+<li><strong>Hydrogen lamp spectrum.</strong> The four Balmer lines repeat in every order. Use the wavelength chips above the <strong>Orders</strong> table to read each line's position. For astronomy, this is the pattern a spectrograph records from a star or nebula. Try the <strong>Na</strong> lamp for Q6.</li>
+<li><strong>CD as a grating.</strong> The track pitch of a CD acts as a 625 lines/mm grating; press <strong>DVD</strong> to compare. Q7. If time allows, set <strong>Illuminated slits N</strong> to 5 and choose <strong>0 to 1st order</strong> on the plot: between orders there are N − 1 zeros and N − 2 small maxima, and the orders sharpen as N grows.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: the red He-Ne laser (632.8 nm) shines through 600 lines/mm and makes spots up to m = ±2. You swap in a 1000 lines/mm grating. Do the first order spots move in or out? How many orders will you see now?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In <strong>Measure</strong> with 600 lines/mm and L = 0.80 m, the caliper reads B − A = 26.9 cm from the m = 0 spot to m = 1. Find λ with the exact relations tan θ = y/L and d sin θ = mλ, and with the small angle form λ ≈ dy/(mL). Which laser is it, and how large is the small angle error? How could you halve the effect of a 1 mm error in placing the jaws?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> A prism bends blue light more than red, but a grating bends red more than blue. Explain why the grating does this, using the path difference between neighboring slits.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> White light (400 to 700 nm) falls on a 300 lines/mm grating. Show that the first order spectrum does not overlap the second, but the second overlaps the third. Which wavelength in the third order lands at the same angle as 700 nm in the second order? Check with the demo.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> The hydrogen lamp shines through 600 lines/mm with L = 0.60 m. Where on the wall (y) are the first order Hα (656.3 nm) and Hβ (486.1 nm) lines? Is there a third order for either line? Check with the <strong>Orders</strong> table.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> The sodium D lines are at 589.0 and 589.6 nm. A grating separates two lines when the resolving power mN is at least λ/Δλ. How many illuminated slits are needed in first order? On a 600 lines/mm grating the 1 mm beam lights 600 slits: will the lines separate in first order, in second order? Choose the <strong>Na</strong> lamp and its 589 nm chip, set <strong>Illuminated slits N</strong>, and check the note under the <strong>Orders</strong> table.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> A 650 nm laser reflected from a CD gives first order spots at 24.0° from the straight through beam. Find the track pitch d. A DVD has d = 0.74 µm. At what angle is its first order, and why does it have no second order?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"More lines per mm gives more orders."</strong> It gives fewer: d is smaller, so mλ/d reaches 1 at a smaller m. The orders that remain are spread wider.</li>
+<li><strong>"A grating sorts colors like a prism."</strong> A prism bends violet most, through dispersion in glass; a grating bends red most, through interference, d sin θ = mλ.</li>
+<li><strong>"λ = dy/(mL) is the grating formula."</strong> That is the small angle form of the double slit. For a grating, θ is often 15° to 50°: tan θ is 8% larger than sin θ at 22° and 56% larger at 50°. The demo marks the small angle result good only within 1%.</li>
+<li><strong>"More slits move the spots."</strong> The spot angles depend only on d and λ. More slits make each order narrower and brighter; they do not move it.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Spot positions are exact: sin θₘ = sin θᵢ + mλ/d and yₘ = L tan θₘ on a flat wall square to the beam. Turning the grating sets θᵢ; the simple formulas apply only with the turn at 0°.</li>
+<li>The plot is the far field pattern of N slits of width a: I ∝ [sin(Nφ)/sin φ]² × [sin β/β]², with φ = πd(sin θ − sin θᵢ)/λ and β = πa(sin θ − sin θᵢ)/λ, scaled so the central peak is 1. Whole numbers of d/a make orders missing.</li>
+<li>On the wall each order carries power in proportion to the slit envelope; obliquity factors are left out. Spot widths include the beam width and diffraction spread but have a minimum size in pixels, so spot brightness is not to scale. Fine structure such as the 0.6 nm sodium doublet is far too small to see on the wall (about 0.4 mm at L = 1 m); the resolving power is reported in the note under the <strong>Orders</strong> table.</li>
+<li>Lamp light passes a slit and a lens to make a parallel beam. A real lamp is too faint to project; in lab you look through the grating. Lines are NIST air wavelengths on a log brightness scale; white light is CIE D65 from 400 to 700 nm.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>In the lab, measure between the ±1 spots and halve, then repeat in second order. The <strong>d from λ</strong> button in <strong>Measure</strong> finds the spacing of an unlabeled grating from a known laser.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

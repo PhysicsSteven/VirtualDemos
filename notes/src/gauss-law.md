@@ -16,7 +16,7 @@ Students need the point charge field, flux as E·A, and line and surface charge 
 ## Running it in class
 
 1. **Charge inside.** A 2 nC charge wanders inside a sphere; Q_enc/ε₀ and the numerical ∮E·dA both stay 225.9 N·m²/C. Ask Q1, then change **Radius R** and try **Box** or **Freeform**.
-2. **Charge outside.** Lines enter and leave; flux out (+12.63) and in (−12.63) cancel. Drag the charge inside: Φ jumps to q/ε₀.
+2. **Charge outside.** Lines enter and leave; the flux out and the flux in (their sizes change as the charge wanders) always cancel. Drag the charge inside: Φ jumps to q/ε₀.
 3. **Dipole inside.** Q_enc = 0, Φ = 0, yet E is strong on parts of the box. Add a charge with **+1 nC** and predict the new flux.
 4. **Uniform sphere.** Follow **Gauss's law, step by step**; pause and drag r inside and outside the ball. Then try **Conductor**.
 5. **Line of charge** and **Plane of charge.** Change the cylinder length L or the cap distance h: E does not change.
