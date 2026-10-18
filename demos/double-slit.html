@@ -30,7 +30,7 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-/* Layout: one canvas with the apparatus seen from above, the detector screen seen face on, and a histogram of hits, all sharing the screen coordinate y; instrument rail on the right; stacks on phones. */
+/* Layout: one canvas with the apparatus (in perspective on a darkened bench, or seen from above), the detector screen seen face on, and a histogram of hits, all sharing the screen coordinate y; instrument rail on the right; stacks on phones. */
 :root {
   --bg: #e9edf2;
   --surface: #f8fafc;
@@ -47,6 +47,7 @@ img { max-width: 100%; }
   --wall: #4a5566;
   --scr: #0a0f15;
   --scr-edge: #2a3442;
+  --lab: #0d1218;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -54,13 +55,13 @@ img { max-width: 100%; }
   :root:not([data-theme="light"]) {
     --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --wall: #8693a5; --scr: #05080c; --scr-edge: #344052; color-scheme: dark;
+    --equi: #e2b350; --accent: #69a0ff; --wall: #8693a5; --scr: #05080c; --scr-edge: #344052; --lab: #080b10; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --wall: #8693a5; --scr: #05080c; --scr-edge: #344052; color-scheme: dark;
+  --equi: #e2b350; --accent: #69a0ff; --wall: #8693a5; --scr: #05080c; --scr-edge: #344052; --lab: #080b10; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -189,10 +190,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <button type="button" class="btn" id="fire1">Fire 1</button>
         <button type="button" class="btn" id="fire10">Fire 10</button>
         <button type="button" class="btn" id="clear">Clear</button>
+        <button type="button" class="btn" id="v3d" aria-pressed="true" title="Switch between the bench in perspective and the top view">3D view</button>
         <span class="count mono" id="count" aria-live="off">0 <small>detected</small></span>
       </div>
       <div class="pane" id="pane">
-        <canvas id="can" tabindex="0" aria-label="Double slit apparatus seen from above, the detector screen seen face on, and a histogram of where particles landed. Drag a slit up or down to change the separation d, drag its outer edge to change the width a, click a slit to close or open it. Keys: space streams or pauses, F fires one, C clears, 1 and 2 close or open a slit, W toggles the which slit detector, up and down change d, left and right change a, plus and minus zoom the screen."></canvas>
+        <canvas id="can" tabindex="0" aria-label="Double slit apparatus, in perspective on a darkened bench or seen from above, the detector screen seen face on, and a histogram of where particles landed. Drag a slit up or down to change the separation d, drag its outer edge to change the width a, click a slit to close or open it. In the 3D view, drag elsewhere on the bench to turn it. Keys: space streams or pauses, F fires one, C clears, 1 and 2 close or open a slit, W toggles the which slit detector, up and down change d, left and right change a, plus and minus zoom the screen, V switches between the 3D view and the top view, and the bracket keys turn the 3D view."></canvas>
       </div>
     </div>
 
@@ -315,6 +317,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch mark"></i>Predicted bright fringes</span>
           <span><i class="swatch dot s1"></i><i class="swatch dot s2" style="margin-left:-8px"></i>Recorded at slit 1 or slit 2</span>
         </div>
+        <p class="hint">3D view: the slits are long, so each one sends out a cylindrical wave and the fringes are lines across the screen. The slits keep their true ratio of width to spacing. Drag the empty bench, or press [ and ], to turn it; the 3D view button or V switches to the top view.</p>
         <p class="hint">Model: a monochromatic plane wave falls on two slits, and the screen pattern is the paraxial Fresnel calculation, which matches the formula above in the far field. Each hit is drawn at random from that pattern; its position along the slits is just spread out for display. Slits are drawn enlarged and L is not to scale. Hits count only if they land on the screen shown.</p>
       </section>
     </aside>
@@ -552,7 +555,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function commit(h, flash) {
     if (nHits >= CAP) { setStreaming(false); return; }
     hitY[nHits] = h.y; hitZ[nHits] = h.z; hitTag[nHits] = h.slit; nHits++;
-    stamp(h.y, h.z, h.slit);
+    stamp(h.y, h.z, h.slit, nHits - 1);
     if (histCounts) { const b = binOf(h.y); if (b >= 0) histCounts[b]++; }
     if (h.slit) slitFlash[h.slit - 1] = 1;
     if (flash) recent.push({ t: performance.now(), y: h.y, z: h.z, slit: h.slit });
@@ -616,21 +619,24 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     dotCan.width = gw; dotCan.height = gh; img = dotCtx.createImageData(gw, gh);
     bloomCan.width = Math.max(1, Math.round(gw / 4)); bloomCan.height = Math.max(1, Math.round(gh / 4));
     gmax = 0;
-    for (let i = 0; i < nHits; i++) stamp(hitY[i], hitZ[i], hitTag[i]);
+    for (let i = 0; i < nHits; i++) stamp(hitY[i], hitZ[i], hitTag[i], i);
     dotsDirty = true;
   }
-  const KW = [0.2, 0.6, 1, 0.6, 0.2];
-  function stamp(y, z, tag) {
+  // Each hit leaves one small grain, like a developed grain or a phosphor speck. Grains differ a little in
+  // brightness (fixed per hit, from its index), which is display only: where the hit lands is unchanged.
+  const KW = [0.12, 0.55, 1, 0.55, 0.12];
+  function grain(i) { let h = Math.imul(i ^ 0x9e3779b9, 0x85ebca6b); h ^= h >>> 13; h = Math.imul(h, 0xc2b2ae35); h ^= h >>> 16; return 0.7 + 0.6 * ((h >>> 0) / 4294967296); }
+  function stamp(y, z, tag, i) {
     if (!gw) return;
     const fx = (z + 1) / 2 * (gw - 1), fy = (1 - (y / S.Y + 1) / 2) * (gh - 1);
     const ix = Math.round(fx), iy = Math.round(fy);
     if (iy < 0 || iy >= gh) return;
-    const g = G[tag];
+    const g = G[tag], q = grain(i || 0);
     for (let dy = -2; dy <= 2; dy++) {
       const yy = iy + dy; if (yy < 0 || yy >= gh) continue;
       for (let dx = -2; dx <= 2; dx++) {
         const xx = ix + dx; if (xx < 0 || xx >= gw) continue;
-        g[yy * gw + xx] += KW[dy + 2] * KW[dx + 2];
+        g[yy * gw + xx] += q * KW[dy + 2] * KW[dx + 2];
       }
     }
     const c = iy * gw + ix;
@@ -644,7 +650,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   const S1 = [255, 118, 96], S2 = [105, 160, 255];
   function renderDots() {
-    if (!img || !dotsDirty) return;
+    if (!img) return;
+    if (matKey !== gw + 'x' + gh + S.kind) dotsDirty = true;
+    if (!dotsDirty) return;
     dotsDirty = false;
     const d = img.data, n0 = Math.max(0.45, 0.3 * gmax), c0 = baseRGB(), byS = show.color;
     const A = G[0], B = G[1], Cc = G[2], N = gw * gh;
@@ -664,6 +672,50 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     bloomCtx.clearRect(0, 0, bloomCan.width, bloomCan.height);
     bloomCtx.imageSmoothingEnabled = true;
     bloomCtx.drawImage(dotCan, 0, 0, bloomCan.width, bloomCan.height);
+    // the finished screen image: detector material, grains, and the faint glow around dense fringes
+    if (scrCan.width !== gw || scrCan.height !== gh) { scrCan.width = gw; scrCan.height = gh; }
+    scrCtx.globalCompositeOperation = 'source-over'; scrCtx.globalAlpha = 1;
+    scrCtx.drawImage(material(), 0, 0);
+    scrCtx.drawImage(dotCan, 0, 0);
+    scrCtx.imageSmoothingEnabled = true;
+    scrCtx.globalCompositeOperation = 'lighter'; scrCtx.globalAlpha = 0.6;
+    scrCtx.drawImage(bloomCan, 0, 0, gw, gh);
+    scrCtx.globalCompositeOperation = 'source-over'; scrCtx.globalAlpha = 1;
+  }
+  // Detector surface, drawn once per size and particle: a photon counting camera sensor (fine pixel grid),
+  // a phosphor screen for electrons, a dark detector plate for C60. Fixed noise and a slight vignette.
+  const scrCan = document.createElement('canvas'), scrCtx = scrCan.getContext('2d');
+  const matCan = document.createElement('canvas'), matCtx = matCan.getContext('2d');
+  let matKey = '';
+  function material() {
+    const key = gw + 'x' + gh + S.kind;
+    if (key === matKey) return matCan;
+    matKey = key; matCan.width = gw; matCan.height = gh;
+    const im = matCtx.createImageData(gw, gh), d = im.data;
+    const base = S.kind === 'photon' ? [11, 13, 19] : S.kind === 'electron' ? [8, 15, 12] : [13, 12, 11];
+    let seed = 12345;
+    const rnd = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
+    for (let j = 0, q = 0; j < gh; j++) {
+      const v = (j / (gh - 1)) * 2 - 1;
+      for (let i = 0; i < gw; i++, q += 4) {
+        const u = (i / (gw - 1)) * 2 - 1, vig = 1 - 0.28 * (u * u * 0.6 + v * v * 0.4);
+        let n = (rnd() - 0.5) * 7;
+        if (S.kind === 'photon' && (i % 3 === 0 || j % 3 === 0)) n -= 3;
+        d[q] = Math.max(0, base[0] * vig + n); d[q + 1] = Math.max(0, base[1] * vig + n); d[q + 2] = Math.max(0, base[2] * vig + n); d[q + 3] = 255;
+      }
+    }
+    matCtx.putImageData(im, 0, 0);
+    return matCan;
+  }
+  // a soft glow sprite per color, for the brief flash where a quantum has just arrived
+  const glowCache = new Map();
+  function glowSprite(c) {
+    const k = c.join(',');
+    if (glowCache.has(k)) return glowCache.get(k);
+    const cv = document.createElement('canvas'); cv.width = cv.height = 48;
+    const g = cv.getContext('2d'), gr = g.createRadialGradient(24, 24, 0, 24, 24, 24);
+    gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.12, rgb(c, 1)); gr.addColorStop(0.4, rgb(c, 0.32)); gr.addColorStop(1, rgb(c, 0));
+    g.fillStyle = gr; g.fillRect(0, 0, 48, 48); glowCache.set(k, cv); return cv;
   }
 
   // ---------- histogram ----------
@@ -694,7 +746,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
       gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'),
-      wall: g('--wall'), scr: g('--scr'), scrEdge: g('--scr-edge'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+      wall: g('--wall'), scr: g('--scr'), lab: g('--lab') || '#0d1218', scrEdge: g('--scr-edge'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
   }
   function lamRGB(l) {
     if (l < 380 || l > 750) return [196, 201, 209];
@@ -773,12 +825,389 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return ok.map((v) => (v.missing ? `(${sig(v.y / f)})` : sig(v.y / f))).join(', ') + ' ' + u;
   }
 
+  // ---------- 3D view: the bench in perspective, projected by hand ----------
+  // World units are schematic: x along the beam (slits at x = 0), y across the slits (up, as in the other panels),
+  // z along the slits. The slits keep their true ratio of a to d; L is not to scale.
+  let view3d = true, v3 = null;
+  const cam = { yaw: 0.95, pitch: 0.5, user: false };
+  const B3 = { xs: -2.05, xnd: -1.35, xl: 2.55, hp: 1.45, zp: 0.52, th: 0.07, zsl: 0.36, hs: 1.55, floor: -2.1 };
+  const LAB = { ink: '#e6ebf1', muted: '#a3afbe', halo: 'rgba(6,9,13,0.78)' };
+  const clampCam = () => { cam.yaw = Math.max(0.3, Math.min(1.25, cam.yaw)); cam.pitch = Math.max(0.06, Math.min(0.75, cam.pitch)); };
+  function labBox() {
+    const A = LY.app, ps = projScale();
+    if (LY.wide) return { x: A.x + 6, y: 6, w: A.w - 6 - 4 * ps, h: Hh - 12 };
+    return { x: 6, y: 6, w: W - 12, h: A.bot - 10 };
+  }
+  function v3Proj(box, zs) {
+    const ps = projScale(), cyw = Math.cos(cam.yaw), syw = Math.sin(cam.yaw), cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch), D = 17;
+    const raw = (x, y, z) => {
+      x -= 0.05;
+      const xc = x * cyw + z * syw, zc = -x * syw + z * cyw, yc = y * cp - zc * sp, zz = y * sp + zc * cp, k = D / (D - zz);
+      return [xc * k, yc * k, k, zz];
+    };
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    const add = (x, y, z) => { const r = raw(x, y, z); x0 = Math.min(x0, r[0]); x1 = Math.max(x1, r[0]); y0 = Math.min(y0, r[1]); y1 = Math.max(y1, r[1]); };
+    for (const a of [-1, 1]) for (const b of [-1, 1]) {
+      add(B3.xs - 1.2, 0.3 * a, 0.3 * b); add(0, B3.hp * a, B3.zp * b); add(B3.xl, (B3.hs + 0.1) * a, (zs + 0.1) * b);
+      add(B3.xl + (S.kind === 'photon' ? 0.6 : 0.14), (B3.hs + 0.1) * a, (zs + 0.1) * b);
+    }
+    for (const x of [B3.xs - 0.5, 0, B3.xl]) add(x, B3.floor, 0);
+    const mt = 30 * ps, mb = 30 * ps, mx = 8 * ps;
+    const s = Math.min((box.w - 2 * mx) / (x1 - x0), (box.h - mt - mb) / (y1 - y0));
+    const ox = box.x + box.w / 2 - s * (x0 + x1) / 2, oy = box.y + mt + (box.h - mt - mb) / 2 + s * (y0 + y1) / 2;
+    return (x, y, z) => { const r = raw(x, y, z); return [ox + s * r[0], oy - s * r[1], s * r[2], r[3]]; };
+  }
+  function pPoly(pts) { ctx.beginPath(); for (let i = 0; i < pts.length; i++) i ? ctx.lineTo(pts[i][0], pts[i][1]) : ctx.moveTo(pts[i][0], pts[i][1]); ctx.closePath(); }
+  function quad(P, a, b, c, d, fill, stroke, lw) { pPoly([P(...a), P(...b), P(...c), P(...d)]); if (fill) { ctx.fillStyle = fill; ctx.fill(); } if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw || 1; ctx.stroke(); } }
+  function hull(pts) {
+    const p = pts.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]), cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+    const lo = [], up = [];
+    for (const q of p) { while (lo.length >= 2 && cr(lo[lo.length - 2], lo[lo.length - 1], q) <= 0) lo.pop(); lo.push(q); }
+    for (let i = p.length - 1; i >= 0; i--) { const q = p[i]; while (up.length >= 2 && cr(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); }
+    return lo.slice(0, -1).concat(up.slice(0, -1));
+  }
+  const circX = (P, x, r, n = 28, yc = 0, zc = 0) => { const o = []; for (let i = 0; i < n; i++) { const f = 2 * Math.PI * i / n; o.push(P(x, yc + r * Math.sin(f), zc + r * Math.cos(f))); } return o; };
+  // a cylinder along the beam axis, shaded as turned metal; returns the near end cap (x0 faces the viewer)
+  function cylX(P, x0, x1, r, cols, cap, yc = 0, zc = 0) {
+    const a = circX(P, x0, r, 28, yc, zc), b = circX(P, x1, r, 28, yc, zc), p0 = P(x0, yc, zc), p1 = P(x1, yc, zc);
+    let nx = -(p1[1] - p0[1]), ny = p1[0] - p0[0]; const nl = Math.hypot(nx, ny) || 1; nx /= nl; ny /= nl;
+    if (ny > 0) { nx = -nx; ny = -ny; }
+    const R = r * Math.max(p0[2], p1[2]), mx = (p0[0] + p1[0]) / 2, my = (p0[1] + p1[1]) / 2;
+    const gr = ctx.createLinearGradient(mx + nx * R, my + ny * R, mx - nx * R, my - ny * R);
+    cols.forEach((c, i) => gr.addColorStop(i / (cols.length - 1), c));
+    pPoly(hull(a.concat(b))); ctx.fillStyle = gr; ctx.fill();
+    if (cap) { pPoly(a); ctx.fillStyle = cap; ctx.fill(); ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1; ctx.stroke(); }
+    return a;
+  }
+  // an optical post from an object down to the table (or the floor of the vacuum chamber)
+  function post3(P, x, yTop, z = 0) {
+    const base = []; for (let i = 0; i < 20; i++) { const f = 2 * Math.PI * i / 20; base.push(P(x + 0.17 * Math.cos(f), B3.floor, z + 0.17 * Math.sin(f))); }
+    pPoly(base); ctx.fillStyle = '#20262e'; ctx.fill();
+    const a = P(x, yTop, z), b = P(x, B3.floor, z), w = Math.max(2, 0.085 * a[2]);
+    const gr = ctx.createLinearGradient(a[0] - w / 2, 0, a[0] + w / 2, 0);
+    gr.addColorStop(0, '#3a414b'); gr.addColorStop(0.45, '#a9b2bd'); gr.addColorStop(1, '#3f4650');
+    ctx.strokeStyle = gr; ctx.lineWidth = w; ctx.lineCap = 'butt'; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+  }
+  // set the canvas transform so that (u, v) drawn on the canvas lands at o + u·U + v·V in the world (affine, for small patches)
+  function planeXf(P, o, U, V) {
+    const c = P(o[0], o[1], o[2]), u = P(o[0] + U[0], o[1] + U[1], o[2] + U[2]), v = P(o[0] + V[0], o[1] + V[1], o[2] + V[2]);
+    ctx.setTransform(dpr * (u[0] - c[0]), dpr * (u[1] - c[1]), dpr * (v[0] - c[0]), dpr * (v[1] - c[1]), dpr * c[0], dpr * c[1]);
+  }
+  function hLabel(txt, x, y, color, align = 'left', base = 'middle', size = 11, font) {
+    const ps = projScale(), b = v3 ? v3.box : null;
+    ctx.font = `${size * ps}px ${font || T.ui}`;
+    const w = ctx.measureText(txt).width, h = size * ps * 1.3;
+    let bx = align === 'center' ? x - w / 2 : align === 'right' ? x - w : x;
+    if (b) bx = Math.max(b.x + 5 * ps, Math.min(b.x + b.w - 5 * ps - w, bx));
+    const by = base === 'top' ? y : base === 'bottom' ? y - h : y - h / 2;
+    ctx.fillStyle = LAB.halo; roundRect(bx - 4 * ps, by - 1, w + 8 * ps, h + 2, 4 * ps); ctx.fill();
+    ctx.fillStyle = color; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, bx, by + h / 2 + 0.5);
+  }
+  function labRGB() { return S.kind === 'photon' ? lamRGB(S.src) : S.kind === 'electron' ? [120, 172, 255] : [255, 190, 112]; }
+
+  function drawTable3D(P) {
+    const x0 = -3.9, x1 = 3.3, z0 = -1.8, z1 = 1.8, y = B3.floor, t = 0.2;
+    const a = P(x0, y, z1), b = P(x1, y, z0), gr = ctx.createLinearGradient(a[0], a[1], b[0], b[1]);
+    gr.addColorStop(0, '#2b323b'); gr.addColorStop(1, '#171b21');
+    quad(P, [x0, y, z0], [x1, y, z0], [x1, y, z1], [x0, y, z1], gr);
+    quad(P, [x0, y, z1], [x1, y, z1], [x1, y - t, z1], [x0, y - t, z1], '#101318');
+    quad(P, [x0, y, z0], [x0, y, z1], [x0, y - t, z1], [x0, y - t, z0], '#0c0f13');
+    // tapped holes on a 25 mm style grid
+    ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.beginPath();
+    const fl = Math.max(0.25, Math.sin(cam.pitch + 0.12));
+    for (let x = x0 + 0.15; x < x1 - 0.05; x += 0.25) for (let z = z0 + 0.15; z < z1 - 0.05; z += 0.25) {
+      const p = P(x, y, z), r = Math.max(0.5, 0.026 * p[2]);
+      ctx.moveTo(p[0] + r, p[1]); ctx.ellipse(p[0], p[1], r, r * fl, 0, 0, 2 * Math.PI);
+    }
+    ctx.fill();
+  }
+  // a vacuum chamber around the beam line, for electrons and molecules; back half first, front rims last
+  function drawTube3D(P, front) {
+    const R = 2.1, xa = B3.xs - 1.45, xb = B3.xl + 0.6, rings = [xa, xa + 0.12, -0.75, -0.63, 1.05, 1.17, xb - 0.12, xb];
+    const ringPts = (x) => { const o = []; for (let i = 0; i <= 48; i++) { const f = 2 * Math.PI * i / 48; o.push(P(x, R * Math.sin(f), R * Math.cos(f))); } return o; };
+    const cz = (x) => P(x, 0, 0)[3];
+    if (!front) {
+      pPoly(hull(ringPts(xa).concat(ringPts(xb)))); ctx.fillStyle = 'rgba(150,170,195,0.045)'; ctx.fill();
+      ctx.strokeStyle = 'rgba(160,178,200,0.16)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+    ctx.strokeStyle = front ? 'rgba(175,190,210,0.22)' : 'rgba(150,165,185,0.1)'; ctx.lineWidth = front ? 1.4 : 1;
+    for (const x of rings) {
+      const pts = ringPts(x), c = cz(x); ctx.beginPath(); let on = false;
+      for (const p of pts) { const isF = p[3] > c; if (isF === front) { on ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); on = true; } else on = false; }
+      ctx.stroke();
+    }
+  }
+
+  function drawScreen3D(P, zs, ps) {
+    const x = B3.xl, hs = B3.hs, fr = 0.1, dep = S.kind === 'photon' ? 0.6 : 0.14;
+    const Y0 = -hs - fr, Y1 = hs + fr, Z0 = -zs - fr, Z1 = zs + fr;
+    post3(P, x + dep / 2, Y0);
+    quad(P, [x, Y1, Z0], [x + dep, Y1, Z0], [x + dep, Y1, Z1], [x, Y1, Z1], '#59626e');
+    quad(P, [x, Y1, Z1], [x + dep, Y1, Z1], [x + dep, Y0, Z1], [x, Y0, Z1], '#232930');
+    const a = P(x, Y1, Z0), b = P(x, Y0, Z1), gr = ctx.createLinearGradient(a[0], a[1], b[0], b[1]);
+    gr.addColorStop(0, '#5f6874'); gr.addColorStop(0.5, '#363d46'); gr.addColorStop(1, '#4b535e');
+    quad(P, [x, Y1, Z0], [x, Y1, Z1], [x, Y0, Z1], [x, Y0, Z0], gr);
+    // the detector surface with the grains, mapped onto the plane in small patches
+    renderDots();
+    if (gw > 1) {
+      const NC = 10, NR = 3, cw = gw / NC, ch = gh / NR;
+      ctx.imageSmoothingEnabled = true;
+      for (let j = 0; j < NR; j++) for (let i = 0; i < NC; i++) {
+        const z0 = -zs + 2 * zs * i / NC, z1 = -zs + 2 * zs * (i + 1) / NC, y0 = hs - 2 * hs * j / NR, y1 = hs - 2 * hs * (j + 1) / NR;
+        const p = P(x, y0, z0), q = P(x, y0, z1), r = P(x, y1, z0);
+        ctx.setTransform(dpr * (q[0] - p[0]) / cw, dpr * (q[1] - p[1]) / cw, dpr * (r[0] - p[0]) / ch, dpr * (r[1] - p[1]) / ch, dpr * p[0], dpr * p[1]);
+        ctx.drawImage(scrCan, i * cw, j * ch, cw, ch, 0, 0, cw + 0.7, ch + 0.7);
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    quad(P, [x, hs, -zs], [x, hs, zs], [x, -hs, zs], [x, -hs, -zs], null, 'rgba(255,255,255,0.1)', 1);
+    // flashes of fresh hits
+    const tn = performance.now();
+    ctx.globalCompositeOperation = 'lighter';
+    if (recent.length <= 120) for (const r of recent) {
+      const age = (tn - r.t) / 1000; if (age > 0.6) continue;
+      const p = P(x, r.y / S.Y * hs, r.z * zs), c = r.slit && show.color ? (r.slit === 1 ? S1 : S2) : baseRGB();
+      const e = Math.exp(-age / 0.13), rr = (2.5 + 8 * e) * ps;
+      ctx.globalAlpha = Math.min(1, 1.15 * e); ctx.drawImage(glowSprite(c), p[0] - rr, p[1] - rr, 2 * rr, 2 * rr);
+    }
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+  }
+
+  function drawPlate3D(P, slits, ps) {
+    const th = B3.th, hp = B3.hp, zp = B3.zp, zl = B3.zsl, xf = -th;
+    post3(P, -th / 2, -hp);
+    quad(P, [xf, hp, -zp], [0, hp, -zp], [0, hp, zp], [xf, hp, zp], '#8d96a2');
+    quad(P, [xf, hp, zp], [0, hp, zp], [0, -hp, zp], [xf, -hp, zp], '#2a3038');
+    // front face with the two slots cut through it
+    ctx.beginPath();
+    const rect = (y0, y1, z0, z1) => { const pts = [P(xf, y1, z0), P(xf, y1, z1), P(xf, y0, z1), P(xf, y0, z0)]; ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < 4; i++) ctx.lineTo(pts[i][0], pts[i][1]); ctx.closePath(); };
+    rect(-hp, hp, -zp, zp);
+    for (const sl of slits) rect(sl.lo, sl.hi, -zl, zl);
+    const a = P(xf, hp, -zp), b = P(xf, -hp, zp), gr = ctx.createLinearGradient(a[0], a[1], b[0], b[1]);
+    gr.addColorStop(0, '#6b7480'); gr.addColorStop(0.45, '#3e454e'); gr.addColorStop(0.7, '#4a515b'); gr.addColorStop(1, '#2f353d');
+    ctx.fillStyle = gr; ctx.fill('evenodd');
+    // fine machining marks on the face
+    ctx.save(); ctx.clip('evenodd');
+    ctx.strokeStyle = 'rgba(255,255,255,0.035)'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let y = -hp + 0.05; y < hp; y += 0.06) { const p = P(xf, y, -zp), q = P(xf, y, zp); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); }
+    ctx.stroke(); ctx.restore();
+    // the lower wall of each slot is seen through the opening
+    for (const sl of slits) quad(P, [xf, sl.lo, -zl], [0, sl.lo, -zl], [0, sl.lo, zl], [xf, sl.lo, zl], 'rgba(150,160,172,0.75)');
+  }
+
+  function drawApparatus3D(ps) {
+    const box = labBox(), f = FAM[S.kind], now = performance.now() / 1000;
+    // until the viewer turns the bench, pick the angle that fills the pane: steeper for a tall pane
+    if (!cam.user) { const asp = box.h / box.w; cam.yaw = asp > 1.25 ? 0.95 : asp > 0.85 ? 0.86 : 0.72; cam.pitch = asp > 1.25 ? 0.62 : asp > 0.85 ? 0.48 : 0.34; }
+    const zs = Math.max(0.45, Math.min(1.25, B3.hs * LY.scr.w / Math.max(1, LY.scr.h)));
+    v3 = { box, zs, P: null, bs: 1, slits: [] };
+    const P = v3Proj(box, zs);
+    const Rb = (f.d[1] + f.a[1]) * f.unit / 2 * 1.04, bs = 0.9 * B3.hp / Rb;
+    const slits = slitEdges(S.a, S.d).map(([lo, hi], i) => ({ i: i + 1, lo: lo * bs, hi: hi * bs, c: (lo + hi) / 2 * bs }));
+    Object.assign(v3, { P, bs, slits });
+    const th = B3.th, xf = -th, zl = B3.zsl, vac = S.kind !== 'photon', wc = labRGB(), photon = S.kind === 'photon';
+    const bw = Math.max(0.16, (S.d / 2 + S.a) * bs * 1.3);
+    ctx.save();
+    roundRect(box.x, box.y, box.w, box.h, 8 * ps); ctx.clip();
+    const bg = ctx.createLinearGradient(0, box.y, 0, box.y + box.h);
+    bg.addColorStop(0, '#141a22'); bg.addColorStop(1, T.lab);
+    ctx.fillStyle = bg; ctx.fillRect(box.x, box.y, box.w, box.h);
+    if (vac) drawTube3D(P, false); else drawTable3D(P);
+    // a measuring tape on the table from the slits to the screen: L, not to scale
+    {
+      const zt = 1.0, yt = B3.floor + 0.004, w2 = 0.05;
+      quad(P, [0, yt, zt - w2], [B3.xl, yt, zt - w2], [B3.xl, yt, zt + w2], [0, yt, zt + w2], 'rgba(214,178,58,0.8)');
+      ctx.strokeStyle = 'rgba(30,26,12,0.85)'; ctx.lineWidth = 1; ctx.beginPath();
+      for (let k = 0; k <= 40; k++) { const x = B3.xl * k / 40, p = P(x, yt, zt + w2), q = P(x, yt, zt + (k % 5 ? 0.02 : -0.02)); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); }
+      ctx.stroke();
+      const a = P(0, yt, zt + w2), b = P(B3.xl, yt, zt + w2);
+      v3.Lmid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+    }
+    drawScreen3D(P, zs, ps);
+    // after the slits: a faint fan of the diffracted wave toward the screen
+    ctx.globalCompositeOperation = 'lighter';
+    if (S.open[0] || S.open[1]) for (const sl of slits) {
+      if (!S.open[sl.i - 1]) continue;
+      const o = P(0, sl.c, 0), t1 = P(B3.xl, B3.hs * 0.8, 0), t2 = P(B3.xl, -B3.hs * 0.8, 0);
+      const gr = ctx.createLinearGradient(o[0], o[1], (t1[0] + t2[0]) / 2, (t1[1] + t2[1]) / 2);
+      gr.addColorStop(0, rgb(wc, photon ? 0.16 : 0.09)); gr.addColorStop(1, rgb(wc, 0.015));
+      ctx.fillStyle = gr; pPoly([o, t1, t2]); ctx.fill();
+    }
+    // wavefronts beyond the slits: cylindrical, because the slits are long
+    for (const fl of flights) {
+      const t = now - fl.t0; if (t < T1 || t >= T1 + T2) continue;
+      const u = (t - T1) / T2, R = u * B3.xl * 1.06;
+      for (const sn of fl.arcs) {
+        const sl = slits[sn - 1];
+        for (let k = 0; k < 2; k++) {
+          const r = R - k * 0.2; if (r <= 0.03) continue;
+          const runs = []; let run = [];
+          for (let i = 0; i <= 36; i++) {
+            const ph = -1.3 + 2.6 * i / 36, x = r * Math.cos(ph), y = sl.c + r * Math.sin(ph);
+            if (x > 0 && x < B3.xl && Math.abs(y) < B3.hs) run.push([x, y]); else if (run.length) { runs.push(run); run = []; }
+          }
+          if (run.length) runs.push(run);
+          const al = (k ? 0.5 : 1) * (1 - 0.6 * u);
+          for (const rn of runs) {
+            if (rn.length < 2) continue;
+            const pts = rn.map(([x, y]) => P(x, y, zl)).concat(rn.slice().reverse().map(([x, y]) => P(x, y, -zl)));
+            pPoly(pts); ctx.fillStyle = rgb(wc, 0.12 * al); ctx.fill();
+            ctx.strokeStyle = rgb(wc, 0.7 * al); ctx.lineWidth = 1.3 * ps; ctx.beginPath();
+            rn.forEach(([x, y], i) => { const p = P(x, y, zl); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }); ctx.stroke();
+          }
+        }
+      }
+    }
+    ctx.globalCompositeOperation = 'source-over';
+    drawPlate3D(P, slits, ps);
+    // slot glow when a which slit detector fires, hover highlight, closed shutters, grips
+    for (const sl of slits) {
+      const open = S.open[sl.i - 1], fl = slitFlash[sl.i - 1], hot = (drag && drag.id === 'd' + sl.i) || (!drag && hoverId === 'd' + sl.i);
+      const pts = [P(xf, sl.hi, -zl), P(xf, sl.hi, zl), P(xf, sl.lo, zl), P(xf, sl.lo, -zl)];
+      if (S.det && fl > 0.02 && open) { pPoly(pts); ctx.fillStyle = rgb(sl.i === 1 ? S1 : S2, 0.75 * fl); ctx.fill(); }
+      if (!open) {
+        const e = 0.05, sp = [P(xf - 0.012, sl.hi + e, -zl - e), P(xf - 0.012, sl.hi + e, zl + e), P(xf - 0.012, sl.lo - e, zl + e), P(xf - 0.012, sl.lo - e, -zl - e)];
+        pPoly(sp); ctx.fillStyle = '#23282f'; ctx.fill(); ctx.strokeStyle = '#ff7660'; ctx.lineWidth = 1.5 * ps; ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(sp[0][0], sp[0][1]); ctx.lineTo(sp[2][0], sp[2][1]); ctx.moveTo(sp[1][0], sp[1][1]); ctx.lineTo(sp[3][0], sp[3][1]); ctx.stroke();
+      }
+      if (hot) { pPoly(pts); ctx.strokeStyle = rgb(hexRGB('#69a0ff'), 0.95); ctx.lineWidth = 2.5 * ps; ctx.stroke(); }
+    }
+    for (const id of ['a1', 'a2']) {
+      const sl = slits[id === 'a1' ? 0 : 1], y = id === 'a1' ? sl.hi : sl.lo, sg = id === 'a1' ? 1 : -1;
+      const hot = (drag && drag.id === id) || (!drag && hoverId === id);
+      if (hot) { const p = P(xf, y, -zl), q = P(xf, y, zl); ctx.strokeStyle = 'rgba(105,160,255,0.55)'; ctx.lineWidth = 5 * ps; ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); ctx.stroke(); }
+      ctx.strokeStyle = hot ? '#69a0ff' : 'rgba(230,235,241,0.85)'; ctx.lineWidth = 1.3 * ps; ctx.beginPath();
+      for (const z of [-0.07, 0, 0.07]) { const p = P(xf, y, z); ctx.moveTo(p[0], p[1] - sg * 2 * ps); ctx.lineTo(p[0], p[1] - sg * 7 * ps); }
+      ctx.stroke();
+    }
+    // which slit detectors: a small probe at the end of each slot, with a lamp that flashes when it records the particle
+    if (S.det) for (const sl of slits) {
+      const zc = (sl.i === 1 ? 1 : -1) * (zl + 0.12), hb = 0.065, x0 = xf - 0.13, fl = slitFlash[sl.i - 1], col = sl.i === 1 ? S1 : S2;
+      const cb = P(x0 + 0.06, sl.c - hb, zc), cf = P(x0 - 0.25, B3.floor, zc + 0.15 * (sl.i === 1 ? 1 : -1));
+      ctx.strokeStyle = '#0b0d10'; ctx.lineWidth = Math.max(1.2, 0.025 * cb[2]); ctx.beginPath(); ctx.moveTo(cb[0], cb[1]); ctx.quadraticCurveTo(cb[0], cf[1], cf[0], cf[1]); ctx.stroke();
+      quad(P, [x0, sl.c + hb, zc - hb], [xf, sl.c + hb, zc - hb], [xf, sl.c + hb, zc + hb], [x0, sl.c + hb, zc + hb], '#76808c');
+      quad(P, [x0, sl.c + hb, zc + hb], [xf, sl.c + hb, zc + hb], [xf, sl.c - hb, zc + hb], [x0, sl.c - hb, zc + hb], '#1c2127');
+      quad(P, [x0, sl.c + hb, zc - hb], [x0, sl.c + hb, zc + hb], [x0, sl.c - hb, zc + hb], [x0, sl.c - hb, zc - hb], '#353c45', 'rgba(255,255,255,0.12)', 1);
+      const lp = P(x0 - 0.002, sl.c, zc), lr = Math.max(1.6 * ps, 0.028 * lp[2]);
+      if (fl > 0.02) { ctx.globalCompositeOperation = 'lighter'; const rr = lr * (2.5 + 4 * fl); ctx.globalAlpha = fl; ctx.drawImage(glowSprite(col), lp[0] - rr, lp[1] - rr, 2 * rr, 2 * rr); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; }
+      ctx.fillStyle = rgb(col, 0.4 + 0.6 * Math.min(1, fl * 1.5)); ctx.beginPath(); ctx.arc(lp[0], lp[1], lr, 0, 2 * Math.PI); ctx.fill();
+    }
+    // before the slits: the faint beam, its spot on the plate, and plane wavefronts in flight
+    const xsrc = B3.xs, beamSeg = (xa, xb, a1, a2) => {
+      const p = P(xa, 0, 0), q = P(xb, 0, 0), wpx = 2 * bw * (p[2] + q[2]) / 2;
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.strokeStyle = rgb(wc, a1); ctx.lineWidth = wpx; ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); ctx.stroke();
+      ctx.strokeStyle = rgb(wc, a2); ctx.lineWidth = 1.4 * ps; ctx.stroke();
+      ctx.globalCompositeOperation = 'source-over';
+    };
+    {
+      if (photon) beamSeg(B3.xnd + 0.02, xf, 0.05, 0.3); else beamSeg(xsrc, xf, 0.045, 0.2);
+      // the spot where the beam lights the plate
+      ctx.save(); planeXf(P, [xf - 0.003, 0, 0], [0, 0, bw], [0, bw, 0]);
+      const gr = ctx.createRadialGradient(0, 0, 0, 0, 0, 1.6);
+      gr.addColorStop(0, rgb(wc, photon ? 0.5 : 0.22)); gr.addColorStop(0.5, rgb(wc, photon ? 0.16 : 0.07)); gr.addColorStop(1, rgb(wc, 0));
+      ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(0, 0, 1.6, 0, 2 * Math.PI); ctx.fill();
+      ctx.restore();
+    }
+    for (const fl of flights) {
+      const t = now - fl.t0; if (t < 0 || t >= T1) continue;
+      const x = xsrc + (t / T1) * (xf - xsrc);
+      quad(P, [x, bw, -zl], [x, bw, zl], [x, -bw, zl], [x, -bw, -zl], rgb(wc, 0.13), rgb(wc, 0.75), 1.3 * ps);
+    }
+    // the source
+    if (photon) {
+      // neutral density filter that dims the laser to about one photon at a time in the apparatus
+      post3(P, B3.xnd, -0.26);
+      const nd = circX(P, B3.xnd, 0.26, 32);
+      pPoly(nd); ctx.fillStyle = 'rgba(38,42,50,0.82)'; ctx.fill(); ctx.strokeStyle = '#97a0ab'; ctx.lineWidth = 1.6 * ps; ctx.stroke();
+      ctx.save(); planeXf(P, [B3.xnd - 0.002, 0, 0], [0, 0, 0.26], [0, 0.26, 0]); ctx.fillStyle = 'rgba(255,255,255,0.07)'; ctx.beginPath(); ctx.ellipse(-0.25, -0.3, 0.35, 0.18, -0.6, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+      beamSeg(xsrc, B3.xnd, 0.14, 0.85);
+      post3(P, xsrc - 0.5, -0.2);
+      cylX(P, xsrc - 1.0, xsrc - 0.06, 0.2, ['#7d8692', '#3c434c', '#1d2126', '#121417'], '#1a1e23');
+      cylX(P, xsrc - 0.06, xsrc, 0.13, ['#c3cad3', '#7b8490', '#3d444d'], null);
+      // yellow laser warning label on the side of the head
+      quad(P, [xsrc - 0.62, 0.07, 0.2], [xsrc - 0.42, 0.07, 0.2], [xsrc - 0.42, -0.07, 0.2], [xsrc - 0.62, -0.07, 0.2], '#e3bd25');
+      const cp = P(xsrc - 1.0, 0, 0); ctx.fillStyle = '#0b0d10'; ctx.beginPath(); ctx.arc(cp[0], cp[1], 0.05 * cp[2], 0, 2 * Math.PI); ctx.fill();
+    } else if (S.kind === 'electron') {
+      post3(P, xsrc - 0.5, -0.28);
+      // cable to the high voltage supply
+      const hc = P(xsrc - 1.18, 0, 0), hf = P(xsrc - 1.7, B3.floor, 0.35);
+      ctx.strokeStyle = '#08090b'; ctx.lineWidth = Math.max(2, 0.06 * hc[2]); ctx.beginPath(); ctx.moveTo(hc[0], hc[1]); ctx.quadraticCurveTo(hf[0], hc[1], hf[0], hf[1]); ctx.stroke();
+      cylX(P, xsrc - 0.9, xsrc - 0.1, 0.24, ['#a7b0bb', '#e6eaef', '#7a838e', '#363c44'], '#8a939e');
+      cylX(P, xsrc - 0.1, xsrc, 0.31, ['#b9c1ca', '#e9edf1', '#6d7681', '#30363d'], null);
+      const cap = cylX(P, xsrc - 1.15, xsrc - 0.9, 0.15, ['#e4ddcf', '#f6f2ea', '#bdb5a5', '#6f695d'], '#d9d1c1');
+      // the hot filament, seen through the back of the gun
+      const fc = P(xsrc - 1.152, 0, 0), gr = ctx.createRadialGradient(fc[0], fc[1], 0, fc[0], fc[1], 0.13 * fc[2]);
+      gr.addColorStop(0, 'rgba(255,236,190,1)'); gr.addColorStop(0.3, 'rgba(255,160,70,0.85)'); gr.addColorStop(1, 'rgba(255,120,40,0)');
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(fc[0], fc[1], 0.13 * fc[2], 0, 2 * Math.PI); ctx.fill();
+      const h1 = P(xsrc - 1.153, -0.05, -0.035), h2 = P(xsrc - 1.153, 0.05, 0), h3 = P(xsrc - 1.153, -0.05, 0.035);
+      ctx.strokeStyle = '#fff3d6'; ctx.lineWidth = 1.3 * ps; ctx.beginPath(); ctx.moveTo(h1[0], h1[1]); ctx.lineTo(h2[0], h2[1]); ctx.lineTo(h3[0], h3[1]); ctx.stroke();
+      void cap;
+    } else {
+      post3(P, xsrc - 0.55, -0.27);
+      cylX(P, xsrc - 1.0, xsrc - 0.14, 0.27, ['#8a6a52', '#c79b74', '#6b4a35', '#2e1f16'], '#5b4130');
+      // heater windings glowing dull red (only the near half of each turn shows)
+      ctx.strokeStyle = 'rgba(255,112,52,0.85)'; ctx.lineWidth = 1.5 * ps;
+      for (let x = xsrc - 0.92; x < xsrc - 0.2; x += 0.09) {
+        const c = P(x, 0, 0)[3]; ctx.beginPath(); let on = false;
+        for (let i = 0; i <= 28; i++) { const f2 = 2 * Math.PI * i / 28, p = P(x, 0.275 * Math.sin(f2), 0.275 * Math.cos(f2)); if (p[3] >= c) { on ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); on = true; } else on = false; }
+        ctx.stroke();
+      }
+      cylX(P, xsrc - 0.14, xsrc, 0.08, ['#c3cad3', '#7b8490', '#3d444d'], null);
+    }
+    if (vac) drawTube3D(P, true);
+    // labels, each on a dark halo
+    const lp = P(xsrc - 0.5, -0.36, 0.3);
+    hLabel(f.gun, lp[0], lp[1] + 4 * ps, LAB.muted, 'center', 'top', 10.5);
+    if (photon) { const q = P(B3.xnd, 0.3, 0); hLabel('ND filter', q[0], q[1] - 4 * ps, LAB.muted, 'center', 'bottom', 10); }
+    const sq = P(B3.xl, B3.hs + 0.12, 0);
+    hLabel(S.kind === 'photon' ? 'Photon counting camera' : S.kind === 'electron' ? 'Phosphor screen' : 'Molecule detector', sq[0], sq[1] - 2 * ps, LAB.muted, 'center', 'bottom', 10.5);
+    const dTxt = `d = ${trim(sig(S.d / f.unit))} ${f.uname}`, aTxt = `a = ${trim(sig(S.a / f.unit))} ${f.uname}`;
+    const pq = P(xf, B3.hp + 0.1, -0.1);
+    hLabel(`${dTxt} · ${aTxt}`, pq[0], pq[1] - 2 * ps, LAB.ink, 'center', 'bottom', 10.5, T.mono);
+    for (const sl of slits) { const q = P(0, sl.c, B3.zp + 0.05); hLabel(String(sl.i), q[0] + 4 * ps, q[1], S.open[sl.i - 1] ? LAB.ink : LAB.muted, 'left', 'middle', 10.5, T.mono); }
+    if (S.det) { const q = P(xf - 0.2, slits[1].c - 0.12, -zl - 0.2); hLabel('which slit detectors', q[0], q[1] + 4 * ps, LAB.muted, 'center', 'top', 10); }
+    hLabel(`L = ${sig(S.L)} m, not to scale`, v3.Lmid[0], v3.Lmid[1] + 6 * ps, LAB.muted, 'center', 'top', 10.5, T.mono);
+    hLabel(LY.wide ? '3D view (slits enlarged)' : '3D view', box.x + 8 * ps, box.y + 8 * ps, LAB.muted, 'left', 'top', 11);
+    if (vac) hLabel('in vacuum', box.x + box.w - 8 * ps, box.y + 8 * ps, LAB.muted, 'right', 'top', 10);
+    if (!S.open[0] && !S.open[1]) { const q = P(xf, 0, 0); hLabel('Both slits closed', q[0], q[1] - 40 * ps, '#ff8a76', 'center', 'middle', 11.5); }
+    ctx.restore();
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; roundRect(box.x + 0.5, box.y + 0.5, box.w - 1, box.h - 1, 8 * ps); ctx.stroke();
+  }
+  // hit testing on the projected slots
+  function handleAt3D(x, y, touch) {
+    if (!v3 || !v3.P) return null;
+    const b = v3.box; if (x < b.x || x > b.x + b.w || y < b.y || y > b.y + b.h) return null;
+    const ps = projScale(), tol = 7 * ps * (touch ? 2 : 1), P = v3.P, xf = -B3.th, zl = B3.zsl;
+    const segD = (A, B) => { const dx = B[0] - A[0], dy = B[1] - A[1], L2 = dx * dx + dy * dy || 1, t = Math.max(0, Math.min(1, ((x - A[0]) * dx + (y - A[1]) * dy) / L2)); return Math.hypot(x - A[0] - t * dx, y - A[1] - t * dy); };
+    let best = null, bd = Infinity;
+    // the outer edges change a; they win when close, unless the pointer is inside a slot drawn too thin to hold both
+    const inside = (sl) => { const half = Math.abs(P(xf, sl.hi, 0)[1] - P(xf, sl.lo, 0)[1]) / 2; return half < 6 * ps && segD(P(xf, sl.c, -zl), P(xf, sl.c, zl)) < half; };
+    for (const [id, yy, sl] of [['a1', v3.slits[0].hi, v3.slits[0]], ['a2', v3.slits[1].lo, v3.slits[1]]]) {
+      if (inside(sl)) continue;
+      const dd = segD(P(xf, yy, -zl), P(xf, yy, zl)); if (dd < tol * 0.8 && dd < bd) { bd = dd; best = { id, cursor: 'ns-resize' }; }
+    }
+    if (best) return best;
+    for (const sl of v3.slits) {
+      const half = Math.abs(P(xf, sl.hi, 0)[1] - P(xf, sl.lo, 0)[1]) / 2;
+      const dd = Math.max(0, segD(P(xf, sl.c, -zl), P(xf, sl.c, zl)) - half);
+      if (dd < tol && dd < bd) { bd = dd; best = { id: 'd' + sl.i, cursor: 'ns-resize' }; }
+    }
+    return best || { id: 'rot', cursor: 'grab' };
+  }
+  // world y on the slit plate under a canvas y (the projection falls monotonically with y)
+  function plateY(py) {
+    const P = v3.P, xf = -B3.th; let lo = -4 * B3.hp, hi = 4 * B3.hp;
+    for (let k = 0; k < 44; k++) { const m = (lo + hi) / 2; if (P(xf, m, 0)[1] > py) lo = m; else hi = m; }
+    return (lo + hi) / 2;
+  }
+
   function drawAll() {
     if (!T || !LY || !pat) return;
     const ps = projScale();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
-    drawApparatus(ps);
+    if (view3d) drawApparatus3D(ps); else { v3 = null; drawApparatus(ps); }
     drawScreen(ps);
     drawHist(ps);
   }
@@ -802,8 +1231,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.fillRect(g.srcX + g.srcW, beamTop, g.xb - g.srcX - g.srcW, beamBot - beamTop);
     // source
     const sh = Math.min(46 * ps, A.half * 0.5), sy = g.cy - sh / 2;
-    ctx.fillStyle = T.surface; ctx.strokeStyle = T.wall; ctx.lineWidth = 1.5 * ps;
-    roundRect(g.srcX, sy, g.srcW, sh, 5 * ps); ctx.fill(); ctx.stroke();
+    drawSource2D(g, sy, sh, ps);
     ctx.fillStyle = waveColor(1); ctx.fillRect(g.srcX + g.srcW - 3 * ps, g.cy - 6 * ps, 3 * ps, 12 * ps);
     // wavefronts of particles in flight
     ctx.save();
@@ -843,7 +1271,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     // barrier with slits
     const bx = g.xb - g.thick / 2, btop = g.cy - g.half - 6 * ps, bbot = g.cy + g.half + 6 * ps;
-    ctx.fillStyle = T.wall;
+    { const gr = ctx.createLinearGradient(bx, 0, bx + g.thick, 0); gr.addColorStop(0, T.wall); gr.addColorStop(0.4, '#8f99a6'); gr.addColorStop(1, T.wall); ctx.fillStyle = gr; }
     const s1 = g.slits[0], s2 = g.slits[1];
     ctx.fillRect(bx, btop, g.thick, s1.top - btop);
     ctx.fillRect(bx, s1.bot, g.thick, s2.top - s1.bot);
@@ -864,14 +1292,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       label(String(sl.i), bx - 6 * ps, sl.c, open ? T.ink : T.muted, 'right', 'middle', 11, T.mono);
       // which slit detector and its flash
       if (S.det) {
+        // a small probe box behind each slit, with a lamp that flashes when it records the particle
         const dx = g.xb + g.thick / 2 + 9 * ps, fl = slitFlash[sl.i - 1];
-        const col = sl.i === 1 ? T.pos : T.neg;
+        const col = sl.i === 1 ? T.pos : T.neg, cr = sl.i === 1 ? S1 : S2;
         if (fl > 0.02) {
-          ctx.fillStyle = col; ctx.globalAlpha = 0.85 * fl;
-          ctx.beginPath(); ctx.arc(dx, sl.c, (5 + 6 * fl) * ps, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1;
+          const rr = (6 + 8 * fl) * ps; ctx.globalAlpha = fl; ctx.drawImage(glowSprite(cr), dx - rr, sl.c - rr, 2 * rr, 2 * rr); ctx.globalAlpha = 1;
         }
-        ctx.strokeStyle = col; ctx.lineWidth = 1.6 * ps; ctx.fillStyle = T.canvas;
-        ctx.beginPath(); ctx.arc(dx, sl.c, 4 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = '#2d333b'; ctx.strokeStyle = col; ctx.lineWidth = 1.4 * ps;
+        roundRect(dx - 5 * ps, sl.c - 5 * ps, 10 * ps, 10 * ps, 2 * ps); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = rgb(cr, 0.45 + 0.55 * Math.min(1, 1.5 * fl)); ctx.beginPath(); ctx.arc(dx, sl.c, 2.4 * ps, 0, 2 * Math.PI); ctx.fill();
       }
     }
     // grips on the outer edges (drag to change a)
@@ -938,6 +1367,32 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     label(lt, (g.xb + g.xs) / 2, ly, T.muted, 'center', 'middle', 10.5, T.mono);
     if (!S.open[0] && !S.open[1]) label('Both slits closed', g.xb + 14 * ps, g.cy - g.half + 4 * ps, T.pos, 'left', 'top', 11.5);
   }
+  // the source seen from above: a laser head with its dimming filter, an electron gun with a hot filament, or an oven
+  function drawSource2D(g, sy, sh, ps) {
+    const x = g.srcX, w = g.srcW, cy = g.cy, vg = (y0, y1, cols) => { const gr = ctx.createLinearGradient(0, y0, 0, y1); cols.forEach((c, i) => gr.addColorStop(i / (cols.length - 1), c)); return gr; };
+    if (S.kind === 'photon') {
+      const bh = Math.min(sh * 0.62, 24 * ps), bw = w * 0.8;
+      ctx.fillStyle = vg(cy - bh / 2, cy + bh / 2, ['#6c7480', '#2d333b', '#16191d']); roundRect(x, cy - bh / 2, bw, bh, 3 * ps); ctx.fill();
+      ctx.fillStyle = '#e3bd25'; ctx.fillRect(x + bw * 0.45, cy - bh / 2 + 2 * ps, bw * 0.18, bh * 0.3);
+      ctx.fillStyle = vg(cy - bh / 3, cy + bh / 3, ['#c3cad3', '#6d7681']); ctx.fillRect(x + bw, cy - bh * 0.3, w * 0.08, bh * 0.6);
+      ctx.fillStyle = 'rgba(52,56,64,0.85)'; ctx.fillRect(x + w - 6 * ps, sy, 2.5 * ps, sh);
+      ctx.strokeStyle = '#97a0ab'; ctx.lineWidth = 1; ctx.strokeRect(x + w - 6 * ps, sy, 2.5 * ps, sh);
+    } else if (S.kind === 'electron') {
+      const bh = Math.min(sh * 0.8, 34 * ps);
+      ctx.fillStyle = vg(cy - bh / 2, cy + bh / 2, ['#e6eaef', '#a7b0bb', '#5a636e']); roundRect(x + w * 0.16, cy - bh / 2, w * 0.84, bh, 4 * ps); ctx.fill();
+      ctx.fillStyle = vg(cy - bh / 3, cy + bh / 3, ['#f6f2ea', '#bdb5a5']); ctx.fillRect(x, cy - bh * 0.28, w * 0.16, bh * 0.56);
+      const gr = ctx.createRadialGradient(x + w * 0.2, cy, 0, x + w * 0.2, cy, 9 * ps);
+      gr.addColorStop(0, 'rgba(255,236,190,1)'); gr.addColorStop(0.35, 'rgba(255,150,60,0.8)'); gr.addColorStop(1, 'rgba(255,120,40,0)');
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(x + w * 0.2, cy, 9 * ps, 0, 2 * Math.PI); ctx.fill();
+    } else {
+      const bh = Math.min(sh * 0.85, 36 * ps);
+      ctx.fillStyle = vg(cy - bh / 2, cy + bh / 2, ['#c79b74', '#8a6a52', '#3e2a1e']); roundRect(x, cy - bh / 2, w * 0.86, bh, 4 * ps); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,112,52,0.85)'; ctx.lineWidth = 1.4 * ps; ctx.beginPath();
+      for (let k = 1; k < 8; k++) { const xx = x + w * 0.86 * k / 8; ctx.moveTo(xx, cy - bh / 2 + 1); ctx.lineTo(xx, cy + bh / 2 - 1); }
+      ctx.stroke();
+      ctx.fillStyle = '#9aa3ae'; ctx.fillRect(x + w * 0.86, cy - 3 * ps, w * 0.14, 6 * ps);
+    }
+  }
   function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
   function arrowV(x, y1, y2, ps) {
     const a = 4 * ps;
@@ -963,31 +1418,35 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   function drawScreen(ps) {
     const s = LY.scr;
-    // perspective cue from the edge on screen to the face on view
+    // perspective cue from the screen in the apparatus view to the face on view
     if (LY.wide) {
-      const g = appGeom();
+      let ta, tb;
+      if (view3d && v3) { ta = v3.P(B3.xl, B3.hs, v3.zs); tb = v3.P(B3.xl, -B3.hs, v3.zs); }
+      else { const g = appGeom(); ta = [g.xs + 3, s.y]; tb = [g.xs + 3, s.y + s.h]; }
+      ctx.save();
+      if (view3d && v3) { const bx = v3.box.x + v3.box.w; ctx.beginPath(); ctx.rect(bx, 0, s.x - bx, Hh); ctx.clip(); }
       ctx.strokeStyle = T.gridStrong; ctx.setLineDash([3, 4]); ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(g.xs + 3, s.y); ctx.lineTo(s.x, s.y); ctx.moveTo(g.xs + 3, s.y + s.h); ctx.lineTo(s.x, s.y + s.h); ctx.stroke(); ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(ta[0], ta[1]); ctx.lineTo(s.x, s.y); ctx.moveTo(tb[0], tb[1]); ctx.lineTo(s.x, s.y + s.h); ctx.stroke(); ctx.setLineDash([]);
+      ctx.restore();
     }
     label('Detector screen, face on', s.x, s.y - 8 * ps, T.muted, 'left', 'bottom', 11);
-    ctx.fillStyle = T.scr; roundRect(s.x, s.y, s.w, s.h, 4 * ps); ctx.fill();
     renderDots();
     ctx.save(); roundRect(s.x, s.y, s.w, s.h, 4 * ps); ctx.clip();
+    ctx.fillStyle = T.scr; ctx.fillRect(s.x, s.y, s.w, s.h);
     ctx.imageSmoothingEnabled = true;
-    ctx.drawImage(dotCan, s.x, s.y, s.w, s.h);
-    ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.6;
-    ctx.drawImage(bloomCan, s.x, s.y, s.w, s.h);
-    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
-    // fresh hits
+    if (gw > 1) ctx.drawImage(scrCan, s.x, s.y, s.w, s.h);
+    // fresh hits: a bright flash that fades within about half a second, leaving the grain behind
     const tn = performance.now(), keep = [];
+    ctx.globalCompositeOperation = 'lighter';
     for (const r of recent) {
-      const age = (tn - r.t) / 1000; if (age > 0.5) continue; keep.push(r);
+      const age = (tn - r.t) / 1000; if (age > 0.6) continue; keep.push(r);
       if (recent.length > 120) continue;
       const x = s.x + (r.z + 1) / 2 * s.w, y = yPx(r.y), c = r.slit && show.color ? (r.slit === 1 ? S1 : S2) : baseRGB();
-      ctx.strokeStyle = rgb(c, 1 - age / 0.5); ctx.lineWidth = 1.5 * ps;
-      ctx.beginPath(); ctx.arc(x, y, (2 + 10 * age) * ps, 0, 2 * Math.PI); ctx.stroke();
-      ctx.fillStyle = `rgba(255,255,255,${0.9 * (1 - age / 0.5)})`; ctx.beginPath(); ctx.arc(x, y, 1.6 * ps, 0, 2 * Math.PI); ctx.fill();
+      const e = Math.exp(-age / 0.13), rr = (3 + 9 * e) * ps;
+      ctx.globalAlpha = Math.min(1, 1.15 * e);
+      ctx.drawImage(glowSprite(c), x - rr, y - rr, 2 * rr, 2 * rr);
     }
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
     recent = keep;
     // predicted maxima marks on both edges
     if (show.marks) {
@@ -1009,7 +1468,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       }
     }
     ctx.restore();
-    ctx.strokeStyle = T.scrEdge; ctx.lineWidth = 1; roundRect(s.x + 0.5, s.y + 0.5, s.w - 1, s.h - 1, 4 * ps); ctx.stroke();
+    // a thin metal frame with four screws, so it reads as a mounted detector
+    ctx.strokeStyle = T.scrEdge; ctx.lineWidth = 2; roundRect(s.x + 1, s.y + 1, s.w - 2, s.h - 2, 4 * ps); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.07)'; ctx.lineWidth = 1; roundRect(s.x + 2.5, s.y + 2.5, s.w - 5, s.h - 5, 3 * ps); ctx.stroke();
+    for (const [sx, sy] of [[s.x + 6 * ps, s.y + 6 * ps], [s.x + s.w - 6 * ps, s.y + 6 * ps], [s.x + 6 * ps, s.y + s.h - 6 * ps], [s.x + s.w - 6 * ps, s.y + s.h - 6 * ps]]) {
+      ctx.fillStyle = '#5c6672'; ctx.beginPath(); ctx.arc(sx, sy, 2.2 * ps, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = '#1b2027'; ctx.lineWidth = 0.8 * ps; ctx.beginPath(); ctx.moveTo(sx - 1.4 * ps, sy); ctx.lineTo(sx + 1.4 * ps, sy); ctx.stroke();
+    }
     // y axis
     const tk = yTicks();
     ctx.strokeStyle = T.muted; ctx.lineWidth = 1;
@@ -1266,6 +1731,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function handleAt(ev) {
     if (!LY) return null;
     const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    if (view3d) return handleAt3D(x, y, ev.pointerType === 'touch');
     const g = appGeom(), ps = projScale(), tol = 7 * ps * (ev.pointerType === 'touch' ? 2 : 1);
     if (Math.abs(x - g.xb) > g.thick / 2 + tol + 8 * ps) return null;
     let best = null, bd = Infinity;
@@ -1281,13 +1747,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return best;
   }
   function applyDrag(py) {
-    const g = appGeom(), f = FAM[S.kind];
-    const off = (g.cy - py) / g.bs;   // meters from the center line
+    const g = appGeom();
+    const off = view3d && v3 ? plateY(py) / v3.bs : (g.cy - py) / g.bs;   // meters from the center line
     if (drag.id === 'd1' || drag.id === 'd2') setGeom('d', 2 * Math.abs(off));
     else setGeom('a', 2 * (Math.abs(off) - S.d / 2));
   }
   let dragQ = null, dragFrame = false;
   can.addEventListener('pointermove', (ev) => {
+    if (drag && drag.id === 'rot') {
+      const r = can.getBoundingClientRect(), px = ev.clientX - r.left, py = ev.clientY - r.top;
+      if (!drag.moved && Math.hypot(px - drag.x0, py - drag.y0) < 3) return;
+      drag.moved = true;
+      cam.yaw = drag.yaw0 - (px - drag.x0) * 0.005; cam.pitch = drag.pitch0 + (py - drag.y0) * 0.004; cam.user = true; clampCam();
+      return;
+    }
     if (drag) {
       const r = can.getBoundingClientRect(), py = ev.clientY - r.top;
       if (!drag.moved && Math.abs(py - drag.y0) < 3) return;
@@ -1303,13 +1776,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const h = handleAt(ev);
     if (!h) return;
     const r = can.getBoundingClientRect();
-    drag = { id: h.id, y0: ev.clientY - r.top, moved: false };
+    drag = { id: h.id, x0: ev.clientX - r.left, y0: ev.clientY - r.top, moved: false, yaw0: cam.yaw, pitch0: cam.pitch };
+    if (h.id === 'rot') can.style.cursor = 'grabbing';
     try { can.setPointerCapture(ev.pointerId); } catch (_) {}
     ev.preventDefault();
   });
   const endDrag = () => {
     if (!drag) return;
     if (!drag.moved && drag.id[0] === 'd') toggleSlit(+drag.id[1] - 1);
+    if (drag.id === 'rot') can.style.cursor = 'grab';
     drag = null; hoverId = null;
   };
   can.addEventListener('pointerup', endDrag);
@@ -1322,6 +1797,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else if (e.key === 'c' || e.key === 'C') { flights = []; clearHits(); }
     else if (e.key === '1' || e.key === '2') toggleSlit(+e.key - 1);
     else if (e.key === 'w' || e.key === 'W') setDet(!S.det);
+    else if (e.key === 'v' || e.key === 'V') setView(!view3d);
+    else if ((e.key === '[' || e.key === ']') && view3d) { cam.yaw += (e.key === ']' ? 1 : -1) * 0.08 * big; cam.user = true; clampCam(); }
     else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') setGeom('d', S.d + (e.key === 'ArrowUp' ? 1 : -1) * f.d[2] * f.unit * big);
     else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') setGeom('a', S.a + (e.key === 'ArrowRight' ? 1 : -1) * f.a[2] * f.unit * big);
     else if (e.key === '+' || e.key === '=') $('zIn').click();
@@ -1329,6 +1806,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else return;
     e.preventDefault();
   });
+
+  // 3D view or top view
+  function setView(on) { view3d = on; $('v3d').setAttribute('aria-pressed', String(on)); hoverId = null; can.style.cursor = 'default'; drawAll(); }
+  $('v3d').addEventListener('click', () => setView(!view3d));
 
   // projector mode
   const projBtn = $('proj');
@@ -1359,7 +1840,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     requestAnimationFrame(loop);
   }
   window.__ds = { get frameMs() { return frameMs; }, get n() { return nHits; }, get S() { return S; }, get pat() { return pat; }, get pred() { return pred; },
-    geom() { const g = appGeom(); return { xb: g.xb, slits: g.slits }; }, setRate(i) { S.rate = i; $('rate').value = i; physReadouts(); }, setStreaming, fire, commitMany(n) { for (let i = 0; i < n; i++) { const h = draw1(); if (h) commit(h, false); } } };
+    geom() { const g = appGeom(); return { xb: g.xb, slits: g.slits }; }, get view3d() { return view3d; }, setView, cam,
+    geom3() { if (!v3 || !v3.P) return null; const xf = -B3.th; return { slits: v3.slits.map((sl) => ({ c: v3.P(xf, sl.c, 0), hi: v3.P(xf, sl.hi, 0), lo: v3.P(xf, sl.lo, 0) })), box: v3.box }; }, setRate(i) { S.rate = i; $('rate').value = i; physReadouts(); }, setStreaming, fire, commitMany(n) { for (let i = 0; i < n; i++) { const h = draw1(); if (h) commit(h, false); } } };
 
   tokens();
   syncSliders();
