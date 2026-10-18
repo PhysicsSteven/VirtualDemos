@@ -1,0 +1,1624 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Diffraction Grating</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: lab bench. One canvas on the left (intensity plot, the wall face on, the bench from above), the rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --good: #2f8a46;
+  --lab-bg: #1c232c; --lab-bg2: #2a3440; --lab-table: #232a32; --lab-ink: #eef2f7; --lab-muted: #b4bfcc;
+  --lab-grid: rgba(255, 255, 255, 0.045); --lab-grid-strong: rgba(255, 255, 255, 0.1); --lab-halo: rgba(16, 21, 28, 0.82);
+  --lab-accent: #8fbaff; --lab-gold: #f2c25a; --lab-wall: #4a525c; --lab-wall2: #3a4149; --lab-scope: #0c1116;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark; --good: #5fcf7a;
+    --lab-bg: #07090d; --lab-bg2: #121821; --lab-table: #161b21; --lab-ink: #e3e8ef; --lab-muted: #a3afbf;
+    --lab-grid: rgba(255, 255, 255, 0.035); --lab-grid-strong: rgba(255, 255, 255, 0.075); --lab-halo: rgba(7, 10, 14, 0.82);
+    --lab-accent: #82b0ff; --lab-gold: #e8b84e; --lab-wall: #3c434b; --lab-wall2: #2d333a; --lab-scope: #080b0f;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark; --good: #5fcf7a;
+  --lab-bg: #07090d; --lab-bg2: #121821; --lab-table: #161b21; --lab-ink: #e3e8ef; --lab-muted: #a3afbf;
+  --lab-grid: rgba(255, 255, 255, 0.035); --lab-grid-strong: rgba(255, 255, 255, 0.075); --lab-halo: rgba(7, 10, 14, 0.82);
+  --lab-accent: #82b0ff; --lab-gold: #e8b84e; --lab-wall: #3c434b; --lab-wall2: #2d333a; --lab-scope: #080b0f;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--lab-bg); }
+.stage canvas { position: absolute; inset: 0; display: block; }
+#view { touch-action: none; cursor: default; outline: none; }
+#view:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.sub { margin: 0 0 -4px; font-size: 0.78rem; color: var(--muted); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.chips.small button { font-size: 0.82rem; padding: 4px 8px; }
+.chips .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: 0; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg button:disabled { opacity: 0.45; cursor: not-allowed; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .wide { grid-column: 1 / -1; }
+
+table.orders { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.84rem; }
+table.orders th { text-align: right; font-family: var(--font-ui); font-weight: 700; font-size: 0.74rem; color: var(--muted); padding: 2px 4px; border-bottom: 1px solid var(--line); }
+table.orders td { text-align: right; padding: 3px 4px; border-bottom: 1px solid var(--line); }
+table.orders th:first-child, table.orders td:first-child { text-align: left; }
+table.orders tr.no td { color: var(--muted); }
+table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-size: 0.8rem; }
+.note { margin: 0; font-size: 0.86rem; }
+.note b { font-family: var(--font-mono); font-weight: 600; }
+
+.fields { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.fields label { display: flex; flex-direction: column; gap: 3px; font-size: 0.8rem; color: var(--muted); min-width: 0; }
+.fields input { font: inherit; font-family: var(--font-mono); font-size: 0.92rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 6px; width: 100%; min-width: 0; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.result { margin: 0; display: grid; gap: 4px; font-size: 0.86rem; }
+.result div { display: flex; justify-content: space-between; gap: 8px; border-bottom: 1px dashed var(--line); padding-bottom: 3px; }
+.result span:last-child { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 600; text-align: right; }
+.result .good span:last-child { color: var(--good); }
+.result .bad span:last-child { color: var(--pos); }
+.result p { margin: 2px 0 0; color: var(--muted); }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input { accent-color: var(--accent); margin: 0; }
+
+@media (min-width: 821px) {
+  :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 340px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 80vh; min-height: 580px; }
+  .rail { overflow: visible; }
+}
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Diffraction Grating</h1>
+      <p>Shine a laser, a gas lamp or white light through a grating. Bright orders land on the wall where d sin θ = mλ: measure them to find the wavelength.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">λ in nm · d in µm · L in m · y in cm · θ from the straight through beam</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/diffraction-grating.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/diffraction-grating.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM17 2h1v1h-1zM19 2h3v1h-3zM25 2h1v1h-1zM27 2h1v1h-1zM29 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM13 3h2v1h-2zM16 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h2v1h-2zM15 4h2v1h-2zM19 4h8v1h-8zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM13 5h3v1h-3zM18 5h1v1h-1zM20 5h2v1h-2zM25 5h5v1h-5zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM16 6h1v1h-1zM18 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h3v1h-3zM17 7h1v1h-1zM20 7h3v1h-3zM27 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM16 9h2v1h-2zM19 9h5v1h-5zM25 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM12 10h3v1h-3zM16 10h2v1h-2zM20 10h6v1h-6zM31 10h5v1h-5zM38 10h1v1h-1zM3 11h5v1h-5zM10 11h2v1h-2zM14 11h1v1h-1zM18 11h1v1h-1zM21 11h3v1h-3zM25 11h1v1h-1zM27 11h4v1h-4zM34 11h4v1h-4zM2 12h4v1h-4zM8 12h4v1h-4zM13 12h1v1h-1zM15 12h1v1h-1zM18 12h1v1h-1zM23 12h4v1h-4zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM4 13h1v1h-1zM6 13h1v1h-1zM11 13h3v1h-3zM16 13h1v1h-1zM19 13h1v1h-1zM22 13h4v1h-4zM29 13h3v1h-3zM33 13h2v1h-2zM36 13h2v1h-2zM6 14h6v1h-6zM13 14h2v1h-2zM16 14h2v1h-2zM19 14h1v1h-1zM23 14h2v1h-2zM26 14h1v1h-1zM30 14h3v1h-3zM36 14h3v1h-3zM7 15h1v1h-1zM10 15h1v1h-1zM13 15h1v1h-1zM17 15h3v1h-3zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM3 16h2v1h-2zM6 16h6v1h-6zM14 16h2v1h-2zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h1v1h-1zM25 16h2v1h-2zM29 16h1v1h-1zM33 16h5v1h-5zM4 17h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM12 17h2v1h-2zM15 17h1v1h-1zM17 17h1v1h-1zM21 17h4v1h-4zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h2v1h-2zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h6v1h-6zM15 18h2v1h-2zM18 18h1v1h-1zM22 18h3v1h-3zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM7 19h1v1h-1zM10 19h1v1h-1zM12 19h1v1h-1zM15 19h2v1h-2zM20 19h1v1h-1zM25 19h1v1h-1zM27 19h4v1h-4zM33 19h3v1h-3zM37 19h1v1h-1zM3 20h1v1h-1zM5 20h2v1h-2zM8 20h1v1h-1zM15 20h3v1h-3zM19 20h2v1h-2zM22 20h2v1h-2zM25 20h1v1h-1zM28 20h9v1h-9zM3 21h5v1h-5zM9 21h1v1h-1zM11 21h1v1h-1zM14 21h1v1h-1zM16 21h4v1h-4zM22 21h2v1h-2zM28 21h1v1h-1zM30 21h2v1h-2zM36 21h2v1h-2zM6 22h1v1h-1zM8 22h4v1h-4zM13 22h3v1h-3zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM3 23h5v1h-5zM9 23h10v1h-10zM22 23h1v1h-1zM25 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM4 24h3v1h-3zM8 24h1v1h-1zM12 24h1v1h-1zM14 24h1v1h-1zM17 24h3v1h-3zM22 24h1v1h-1zM25 24h1v1h-1zM27 24h3v1h-3zM31 24h6v1h-6zM2 25h2v1h-2zM6 25h2v1h-2zM9 25h2v1h-2zM13 25h1v1h-1zM17 25h1v1h-1zM19 25h5v1h-5zM26 25h1v1h-1zM28 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM3 26h4v1h-4zM8 26h1v1h-1zM10 26h1v1h-1zM12 26h1v1h-1zM20 26h1v1h-1zM22 26h2v1h-2zM25 26h1v1h-1zM29 26h4v1h-4zM35 26h3v1h-3zM2 27h1v1h-1zM4 27h1v1h-1zM6 27h1v1h-1zM9 27h2v1h-2zM16 27h1v1h-1zM18 27h1v1h-1zM25 27h1v1h-1zM27 27h4v1h-4zM34 27h2v1h-2zM4 28h2v1h-2zM7 28h2v1h-2zM10 28h3v1h-3zM14 28h1v1h-1zM16 28h1v1h-1zM18 28h3v1h-3zM24 28h11v1h-11zM36 28h1v1h-1zM4 29h1v1h-1zM6 29h1v1h-1zM9 29h2v1h-2zM12 29h1v1h-1zM15 29h1v1h-1zM19 29h2v1h-2zM22 29h3v1h-3zM26 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM38 29h1v1h-1zM2 30h3v1h-3zM6 30h1v1h-1zM8 30h2v1h-2zM11 30h1v1h-1zM14 30h4v1h-4zM19 30h1v1h-1zM21 30h3v1h-3zM26 30h1v1h-1zM30 30h5v1h-5zM36 30h1v1h-1zM10 31h2v1h-2zM13 31h2v1h-2zM18 31h3v1h-3zM23 31h1v1h-1zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h2v1h-2zM15 32h4v1h-4zM20 32h1v1h-1zM22 32h1v1h-1zM25 32h1v1h-1zM27 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM12 33h4v1h-4zM17 33h1v1h-1zM23 33h2v1h-2zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h2v1h-2zM16 34h3v1h-3zM23 34h4v1h-4zM28 34h1v1h-1zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM15 35h1v1h-1zM20 35h1v1h-1zM23 35h1v1h-1zM25 35h1v1h-1zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h1v1h-1zM14 36h1v1h-1zM17 36h1v1h-1zM19 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h4v1h-4zM17 37h4v1h-4zM23 37h4v1h-4zM28 37h2v1h-2zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM13 38h1v1h-1zM15 38h2v1h-2zM19 38h1v1h-1zM22 38h5v1h-5zM29 38h1v1h-1zM33 38h1v1h-1zM36 38h3v1h-3z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="view" tabindex="0" role="application" aria-label="Diffraction grating lab. Top: intensity across the wall. Middle: the wall seen face on with a meter stick. Bottom: the bench from above with the laser, the grating and the wall. Drag the grating up or down to change the distance L, turn its round knob to rotate it, and drag the grip on its face to change the number of illuminated slits. Keys: up and down arrows change L, brackets rotate the grating, plus and minus change N. In measure mode, A and B pick a caliper jaw and left and right arrows move it."></canvas>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="red600" aria-pressed="true">Red laser through 600 lines/mm</button>
+          <button type="button" data-p="measure" aria-pressed="false">Measure the wavelength</button>
+          <button type="button" data-p="rgb" aria-pressed="false">Green, red and blue together</button>
+          <button type="button" data-p="white" aria-pressed="false">White light rainbows and overlapping orders</button>
+          <button type="button" data-p="hydrogen" aria-pressed="false">Hydrogen lamp spectrum</button>
+          <button type="button" data-p="cd" aria-pressed="false">CD as a grating</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Light source</h2>
+        <p class="sub">Lasers</p>
+        <div class="chips small" id="srcLaser"></div>
+        <p class="sub">Several colors</p>
+        <div class="chips small" id="srcMulti"></div>
+        <p class="sub">Gas discharge lamps</p>
+        <div class="chips small" id="srcLamp"></div>
+        <p class="hint" id="srcNote"></p>
+      </section>
+
+      <section>
+        <h2>Grating</h2>
+        <div class="chips small" id="grats">
+          <button type="button" data-g="100" aria-pressed="false">100</button>
+          <button type="button" data-g="300" aria-pressed="false">300</button>
+          <button type="button" data-g="600" aria-pressed="true">600</button>
+          <button type="button" data-g="1000" aria-pressed="false">1000</button>
+          <button type="button" data-g="cd" aria-pressed="false">CD</button>
+          <button type="button" data-g="dvd" aria-pressed="false">DVD</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="sLpm">Lines per mm</label><output id="oLpm" class="mono" for="sLpm"></output></div>
+          <input type="range" id="sLpm" min="50" max="1500" step="1" value="600">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sN">Illuminated slits N</label><output id="oN" class="mono" for="sN"></output></div>
+          <input type="range" id="sN" min="0.30103" max="3.47712" step="0.01" value="2.77815">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sDA">Slit spacing over slit width, d/a</label><output id="oDA" class="mono" for="sDA"></output></div>
+          <input type="range" id="sDA" min="1.1" max="6" step="0.1" value="3.5">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sRot">Grating turned by</label><output id="oRot" class="mono" for="sRot"></output></div>
+          <input type="range" id="sRot" min="-30" max="30" step="0.5" value="0">
+        </div>
+        <p class="hint">Whole numbers of d/a make orders go missing: the zero of one slit's pattern lands on a bright order. Turning the grating uses d(sin θ<sub>m</sub> − sin θ<sub>i</sub>) = mλ, angles from the grating's normal.</p>
+      </section>
+
+      <section>
+        <h2>Wall</h2>
+        <div>
+          <div class="slider-head"><label for="sL">Grating to wall L</label><output id="oL" class="mono" for="sL"></output></div>
+          <input type="range" id="sL" min="0.1" max="3" step="0.01" value="1">
+        </div>
+        <p class="hint">On the bench: drag the grating up or down to change L, turn its round knob to rotate it, and drag the grip on its face to light more or fewer slits. Keys on the bench: ↑ ↓ for L, [ ] to turn, + − for N.</p>
+      </section>
+
+      <section id="ordSec">
+        <h2>Orders</h2>
+        <div class="chips small" id="refChips" role="group" aria-label="Wavelength for the table"></div>
+        <table class="orders" id="ordTable" aria-live="polite"></table>
+        <p class="note" id="ordNote"></p>
+        <p class="hint" id="ordHidden" hidden>Hidden while you measure. Switch back to Explore to see the answers.</p>
+      </section>
+
+      <section>
+        <h2>Measure</h2>
+        <div class="inline">
+          <div class="seg" role="group" aria-label="Mode">
+            <button type="button" data-mode="explore" aria-pressed="true">Explore</button>
+            <button type="button" data-mode="measure" aria-pressed="false">Measure</button>
+          </div>
+        </div>
+        <div id="measBox" hidden>
+          <p class="hint" style="margin-bottom: 8px;">Drag the caliper jaws A and B on the wall onto two spots (m = 0 and m = 1). Then enter L, y and m, and compute.</p>
+          <dl class="readout" style="margin-bottom: 8px;">
+            <div><dt>Caliper B − A</dt><dd id="rCal">—</dd></div>
+            <div><dt>Grating</dt><dd id="rGr">—</dd></div>
+          </dl>
+          <div class="inline" style="margin-bottom: 8px;">
+            <span class="lab">Find</span>
+            <div class="seg" role="group" aria-label="Quantity to find">
+              <button type="button" data-find="lam" aria-pressed="true">λ from d</button>
+              <button type="button" data-find="d" aria-pressed="false">d from λ</button>
+            </div>
+          </div>
+          <div class="fields">
+            <label>L (m)<input id="inL" type="number" inputmode="decimal" step="0.01" min="0" placeholder="1.00"></label>
+            <label>y (cm)<input id="inY" type="number" inputmode="decimal" step="0.1" min="0" placeholder="41.0"></label>
+            <label>order m<input id="inM" type="number" inputmode="numeric" step="1" min="1" value="1"></label>
+          </div>
+          <div class="row2" style="margin-top: 8px;">
+            <button type="button" class="btn" id="fill">Use bench values</button>
+            <button type="button" class="btn primary" id="check">Compute and check</button>
+          </div>
+          <div class="result" id="result" aria-live="polite" style="margin-top: 10px;"></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Display</h2>
+        <div class="inline">
+          <span class="lab">Plot</span>
+          <div class="seg" role="group" aria-label="Plot range">
+            <button type="button" data-zoom="0" aria-pressed="true">Whole wall</button>
+            <button type="button" data-zoom="1" aria-pressed="false">0 to 1st order</button>
+          </div>
+        </div>
+        <div class="toggles">
+          <label><input type="checkbox" id="tEnv" checked>Single slit envelope</label>
+          <label><input type="checkbox" id="tAng" checked>Angles</label>
+          <label><input type="checkbox" id="tHaze" checked>Drifting haze</label>
+        </div>
+        <p class="hint">Zoom the plot with a few slits (try N = 5): between two bright orders there are N − 1 zeros and N − 2 small maxima. With hundreds of slits the orders become sharp spikes.</p>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint">Positions are exact: sin θ<sub>m</sub> = sin θ<sub>i</sub> + mλ/d and y<sub>m</sub> = L tan θ<sub>m</sub> on a flat wall square to the beam. The plot is the far field pattern of N slits of width a: I ∝ [sin(Nφ)/sin φ]² × [sin β/β]² with φ = πd(sin θ − sin θ<sub>i</sub>)/λ and β = πa(sin θ − sin θ<sub>i</sub>)/λ, scaled so the central peak is 1.</p>
+        <p class="hint">On the wall each order carries power in proportion to the slit envelope; obliquity factors are left out. A spot is as wide as the beam plus its diffraction spread, but never drawn smaller than a few pixels, so its brightness is not to scale. The laser, lamps and grating holder are not to scale; L, y and the angles are.</p>
+        <p class="hint">Lamp light passes a slit and a lens to make a parallel beam (a real lamp is too faint to project; in lab you look through the grating). Line data: NIST Handbook of Basic Atomic Spectroscopic Data (J. E. Sansonetti and W. C. Martin), strong neutral lines from 380 to 750 nm, air wavelengths; brightness on a log scale so weak lines stay visible. White light: the CIE D65 daylight spectrum (CIE 15:2004) from 400 to 700 nm. Colors from the CIE 1931 color matching functions (Wyman, Sloan and Shirley fit) in sRGB.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const PI = Math.PI;
+  // CIE 1931 2° color matching functions, multi lobe Gaussian fit (Wyman, Sloan, Shirley 2013)
+  const gl = (x, mu, s1, s2) => { const t = (x - mu) / (x < mu ? s1 : s2); return Math.exp(-0.5 * t * t); };
+  function cie(l) {
+    return [
+      1.056 * gl(l, 599.8, 37.9, 31.0) + 0.362 * gl(l, 442.0, 16.0, 26.7) - 0.065 * gl(l, 501.1, 20.4, 26.2),
+      0.821 * gl(l, 568.8, 46.9, 40.5) + 0.286 * gl(l, 530.9, 16.3, 31.1),
+      1.217 * gl(l, 437.0, 11.8, 36.0) + 0.681 * gl(l, 459.0, 26.0, 13.8)
+    ];
+  }
+  // XYZ to linear sRGB (D65)
+  function linRGB(l) {
+    const [X, Y, Z] = cie(l);
+    return [3.2404542 * X - 1.5371385 * Y - 0.4985314 * Z,
+      -0.9692660 * X + 1.8760108 * Y + 0.0415560 * Z,
+      0.0556434 * X - 0.2040259 * Y + 1.0572252 * Z];
+  }
+  // CIE standard illuminant D65, relative spectral power, 380 to 780 nm every 10 nm (CIE 15:2004): the white light source
+  const D65_10 = [49.9755, 54.6482, 82.7549, 91.486, 93.4318, 86.6823, 104.865, 117.008, 117.812, 114.861,
+    115.923, 108.811, 109.354, 107.802, 104.79, 107.689, 104.405, 104.046, 100, 96.3342,
+    95.788, 88.6856, 90.0062, 89.5991, 87.6987, 83.2886, 83.6992, 80.0268, 80.2146, 82.2778,
+    78.2842, 69.7213, 71.6091, 74.349, 61.604, 69.8856, 75.087, 63.5927, 46.4182, 66.8054, 63.3828];
+  function d65(l) {
+    const f = (l - 380) / 10, i = Math.max(0, Math.min(39, Math.floor(f))), u = f - i;
+    return (D65_10[i] * (1 - u) + D65_10[i + 1] * u) / 100;
+  }
+  const gam = (v) => (v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055);
+  // display color of one wavelength at full brightness: out of gamut parts clipped, brightest channel 1
+  function spectralRGB(l) {
+    const c = linRGB(l).map((v) => Math.max(0, v)), mx = Math.max(c[0], c[1], c[2]) || 1;
+    return c.map((v) => Math.round(255 * gam(v / mx)));
+  }
+
+  const dOf = (linesPerMm) => 1e-3 / linesPerMm;                  // slit spacing in m
+  // The grating's normal is turned by alpha from the beam, so the light arrives at θ_i = −alpha from the normal.
+  // Order m leaves at sin θ_m = sin θ_i + mλ/d (from the normal), which is ψ_m = θ_m + alpha from the straight through beam.
+  const sinThetaM = (m, lam, d, alpha) => -Math.sin(alpha) + m * lam / d;
+  function orderRange(lam, d, alpha) {
+    const si = -Math.sin(alpha);
+    return { lo: Math.ceil((-1 - si) * d / lam - 1e-9), hi: Math.floor((1 - si) * d / lam + 1e-9) };
+  }
+  function orderInfo(m, lam, d, alpha, L) {
+    const s = sinThetaM(m, lam, d, alpha);
+    if (Math.abs(s) > 1 + 1e-12) return { m, exists: false, s };
+    const th = Math.asin(Math.max(-1, Math.min(1, s))), psi = th + alpha;
+    const onScreen = Math.abs(psi) < PI / 2 - 1e-6 && Math.abs(th) < PI / 2 - 1e-6;
+    return { m, exists: true, s, th, psi, onScreen, y: onScreen ? L * Math.tan(psi) : (psi > 0 ? Infinity : -Infinity) };
+  }
+  // [sin Nφ / sin φ]²: N² at every principal maximum (φ = kπ), zero at φ = kπ/N in between
+  function gratingFactor(phi, N) {
+    const r = phi - Math.round(phi / PI) * PI;
+    if (Math.abs(r) < 1e-7) return N * N * (1 - (N * N - 1) * r * r / 3);
+    const q = Math.sin(N * r) / Math.sin(r);
+    return q * q;
+  }
+  function sinc2(x) { if (Math.abs(x) < 1e-8) return 1; const q = Math.sin(x) / x; return q * q; }
+  // far field intensity of N slits of width a and spacing d, relative to one slit's central peak (N² on the axis)
+  // sd = sin θ − sin θ_i
+  function intensity(sd, lam, d, a, N) { return gratingFactor(PI * d * sd / lam, N) * sinc2(PI * a * sd / lam); }
+  const envelope = (m, dOverA) => sinc2(PI * m / dOverA);        // slit envelope at order m (any incidence)
+  function isMissing(m, dOverA) { if (m === 0) return false; const r = m / dOverA; return Math.abs(r - Math.round(r)) < 1e-6; }
+  // small angle versus exact wavelength from a measured spot: tan θ = y/L, d sin θ = mλ
+  function lamFromSpot(y, L, m, d) { const th = Math.atan2(y, L); return { th, exact: d * Math.sin(th) / m, small: d * y / (m * L) }; }
+  function dFromSpot(y, L, m, lam) { const th = Math.atan2(y, L); return { th, exact: m * lam / Math.sin(th), small: m * lam * L / y }; }
+  // ==CORE END==
+
+  const $ = (id) => document.getElementById(id);
+  const DEG = PI / 180;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const minus = (str) => String(str).replace(/-/g, '−');
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  // ---------- light sources ----------
+  // NIST Handbook of Basic Atomic Spectroscopic Data (Sansonetti and Martin), strong lines, neutral atoms, air wavelengths,
+  // 380 to 750 nm: [nm, relative intensity]. Same data and source as the Atomic Spectra demo.
+  const LAMPS = {
+    H: [[383.538, 5], [388.905, 6], [397.007, 8], [410.174, 15], [434.046, 30], [486.128, 30], [486.129, 10], [486.136, 60], [656.271, 90], [656.272, 30], [656.285, 180]],
+    He: [[381.961, 10], [381.976, 1], [386.748, 3], [388.86, 60], [388.865, 200], [388.865, 300], [396.473, 20], [400.927, 1], [402.619, 50], [402.636, 5], [412.082, 12], [412.099, 2], [414.376, 3], [438.793, 10], [443.755, 3], [447.148, 200], [447.168, 25], [471.315, 30], [471.338, 4], [492.193, 20], [501.568, 100], [504.774, 10], [587.561, 500], [587.564, 250], [587.597, 120], [667.815, 200], [706.518, 100], [706.522, 60], [706.571, 20], [728.135, 50]],
+    Ne: [[453.775, 100], [470.439, 150], [470.886, 120], [471.006, 100], [471.206, 150], [471.534, 150], [475.273, 50], [478.893, 100], [479.022, 50], [482.734, 100], [488.492, 100], [500.516, 50], [503.775, 50], [514.494, 50], [533.078, 60], [534.109, 100], [534.328, 60], [540.056, 200], [556.277, 50], [565.666, 50], [571.922, 50], [574.83, 50], [576.442, 70], [580.445, 50], [582.016, 50], [585.249, 200], [587.283, 50], [588.19, 100], [590.246, 5], [590.643, 5], [594.483, 50], [596.547, 50], [597.463, 50], [597.553, 60], [598.791, 15], [603, 100], [607.434, 100], [609.616, 30], [612.845, 10], [614.306, 100], [616.359, 100], [618.215, 15], [621.728, 100], [626.649, 100], [630.479, 10], [632.816, 30], [633.443, 100], [638.299, 100], [640.225, 200], [650.653, 150], [653.288, 10], [659.895, 100], [665.209, 15], [667.828, 50], [671.704, 7], [692.947, 1000], [702.405, 300], [703.241, 800], [705.129, 20], [705.911, 100], [717.394, 800], [724.517, 800], [747.244, 30], [748.887, 300]],
+    Hg: [[404.656, 400], [433.922, 60], [434.749, 100], [435.833, 1000], [546.073, 500], [576.96, 50], [579.066, 60], [708.19, 25]],
+    Na: [[432.462, 1], [439.003, 1], [439.334, 1], [449.418, 1], [449.766, 1], [466.481, 2], [466.856, 2], [497.854, 2], [498.281, 5], [514.884, 1], [515.34, 1], [568.263, 4], [568.819, 1], [568.821, 7], [588.995, 1000], [589.592, 500], [615.423, 2], [616.075, 3]]
+  };
+  // log scale, steepened (as in the Atomic Spectra demo): a line at 1/10 of the strongest looks clearly fainter but stays visible
+  function lampWeight(I, Imax) { return Math.max(0.12, Math.pow(Math.log10(1 + I) / Math.log10(1 + Imax), 1.8)); }
+
+  const SOURCES = {
+    hene:   { group: 'laser', chip: 'He-Ne 632.8', name: 'He-Ne laser', lines: [[632.8, 1]], body: 'hene',
+              note: 'Helium neon gas laser, 632.8 nm: the classic red lab laser.' },
+    red:    { group: 'laser', chip: 'Red 650', name: 'Red diode laser', lines: [[650, 1]], body: 'pen',
+              note: 'Red laser pointer: typically 650 nm (diodes vary by several nm).' },
+    green:  { group: 'laser', chip: 'Green 532', name: 'Green laser', lines: [[532, 1]], body: 'pen',
+              note: 'Green laser pointer, 532 nm: an infrared 1064 nm laser with its frequency doubled.' },
+    blue:   { group: 'laser', chip: 'Blue 450', name: 'Blue diode laser', lines: [[450, 1]], body: 'pen',
+              note: 'Blue diode laser: typically 445 to 450 nm; 450 nm here.' },
+    violet: { group: 'laser', chip: 'Violet 405', name: 'Violet diode laser', lines: [[405, 1]], body: 'pen',
+              note: 'Violet diode laser: typically 405 nm, the Blu-ray wavelength.' },
+    rgb:    { group: 'multi', chip: 'RGB laser module', name: 'RGB laser module', lines: [[638, 1], [520, 1], [450, 1]], body: 'box',
+              note: 'RGB laser module: three diodes in one beam, typically 638, 520 and 450 nm.' },
+    argon:  { group: 'multi', chip: 'Argon ion laser', name: 'Argon ion laser', lines: [[514.5, 1], [488.0, 0.8]], body: 'hene',
+              note: 'Argon ion laser on all lines: its two strongest are 514.5 nm and 488.0 nm (typical relative power).' },
+    white:  { group: 'multi', chip: 'White light', name: 'White light', continuum: true, body: 'lamp',
+              note: 'White light from a slit and lens: a daylight spectrum (CIE D65) with every wavelength from 400 to 700 nm.' },
+    H:  { group: 'lamp', chip: 'H', name: 'Hydrogen lamp', lamp: 'H', body: 'lamp', note: 'Hydrogen: the visible Balmer lines, 656, 486, 434 and 410 nm.' },
+    He: { group: 'lamp', chip: 'He', name: 'Helium lamp', lamp: 'He', body: 'lamp', note: 'Helium: a strong yellow line at 587.6 nm, plus red, green, blue and violet lines.' },
+    Ne: { group: 'lamp', chip: 'Ne', name: 'Neon lamp', lamp: 'Ne', body: 'lamp', note: 'Neon: dozens of orange and red lines, which give the familiar neon sign glow.' },
+    Hg: { group: 'lamp', chip: 'Hg', name: 'Mercury lamp', lamp: 'Hg', body: 'lamp', note: 'Mercury: violet 404.7, blue 435.8, green 546.1 and the yellow pair near 577 and 579 nm.' },
+    Na: { group: 'lamp', chip: 'Na', name: 'Sodium lamp', lamp: 'Na', body: 'lamp', note: 'Sodium: the yellow D lines, 589.0 and 589.6 nm. Separating them needs a resolving power mN of about 1000.' }
+  };
+  const UNKNOWN_SET = [632.8, 650, 532, 450, 405];
+
+  // ---------- state ----------
+  const S = {
+    src: 'hene', unknown: false, unknownLam: 632.8, lpm: 600, grat: '600', dA: 3.5, N: 600, alpha: 0, L: 1.0,
+    frameL: 1.2, mode: 'explore', zoom: false, env: true, angles: true, haze: !reduce, refIdx: 0,
+    jawA: 0, jawB: 0.2, jaw: 'B', find: 'lam', preset: 'red600'
+  };
+  const PRESETS = {
+    red600:   { src: 'hene', lpm: 600, grat: '600', L: 1.0, frameL: 1.2, N: 600, dA: 3.5, alpha: 0, mode: 'explore', zoom: false,
+                hint: 'Two orders on each side. A third order would need sin θ = 3λ/d = 3 × 632.8 nm / 1.667 µm = 1.14, which is impossible, so it does not exist.' },
+    measure:  { src: 'unknown', lpm: 600, grat: '600', L: 0.8, frameL: 1.0, N: 600, dA: 3.5, alpha: 0, mode: 'measure', zoom: false,
+                hint: 'A laser of unknown color. Put caliper jaw A on the m = 0 spot and B on m = 1, read L from the meter stick, and compute λ. Compare the exact tan and sin result with the small angle one.' },
+    rgb:      { src: 'rgb', lpm: 600, grat: '600', L: 0.6, frameL: 0.75, N: 600, dA: 3.5, alpha: 0, mode: 'explore', zoom: false,
+                hint: 'One beam, three colors. Red bends the most and blue the least. Only blue reaches a third order: 3 × 450 nm / d = 0.81.' },
+    white:    { src: 'white', lpm: 300, grat: '300', L: 1.0, frameL: 1.2, N: 300, dA: 3.5, alpha: 0, mode: 'explore', zoom: false,
+                hint: 'Each order is a rainbow with violet nearest the center. Orders 2 and 3 overlap: 2 × 700 nm = 1400 nm is more than 3 × 400 nm = 1200 nm, so second order red lands beyond third order violet.' },
+    hydrogen: { src: 'H', lpm: 600, grat: '600', L: 0.6, frameL: 0.75, N: 600, dA: 3.5, alpha: 0, mode: 'explore', zoom: false,
+                hint: 'The Balmer lines of hydrogen: red 656 nm, cyan 486 nm, violet 434 and 410 nm, repeated in every order. This is how astronomers read the light of stars and nebulae.' },
+    cd:       { src: 'red', lpm: 625, grat: 'cd', L: 0.4, frameL: 0.5, N: 625, dA: 2.5, alpha: 0, mode: 'explore', zoom: false,
+                hint: 'A CD\'s track pitch is 1.6 µm, so it acts like 625 lines/mm: first order at 24.0° for 650 nm. A DVD (0.74 µm) sends it to 61.4°, with no second order. A whole disc does the same by reflection.' }
+  };
+  const GRATS = { 100: 100, 300: 300, 600: 600, 1000: 1000, cd: 625, dvd: 1000 / 0.74 };
+
+  // ---------- canvas ----------
+  const stage = $('stage'), cv = $('view'), ctx = cv.getContext('2d');
+  let W = 0, H = 0, dpr = 1, s = 200, cx = 0;
+  const G = {};                                  // layout
+  const projScale = () => {
+    if (document.documentElement.getAttribute('data-projector') !== 'on') return 1;
+    return clamp(Math.min(W / 640, H / 470), 1.05, 1.4);     // labels grow, but not past what the pane can hold
+  };
+  const monoFont = () => getComputedStyle(document.body).getPropertyValue('--font-mono') || 'monospace';
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    return { bg: g('--lab-bg'), bg2: g('--lab-bg2'), table: g('--lab-table'), ink: g('--lab-ink'), muted: g('--lab-muted'),
+             grid: g('--lab-grid'), gridStrong: g('--lab-grid-strong'), halo: g('--lab-halo'), accent: g('--lab-accent'),
+             gold: g('--lab-gold'), wall: g('--lab-wall'), wall2: g('--lab-wall2'), scope: g('--lab-scope') };
+  }
+  const rgbStr = (c, a) => `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${a == null ? 1 : a})`;
+  const rrect = (x, y, w, h, r) => { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h); };
+  function tag(text, x, y, color, T, o) {
+    o = o || {};
+    const ps = projScale(), fs = (o.size || 11) * ps;
+    ctx.save();
+    ctx.font = `${o.weight || 600} ${fs}px ` + monoFont(); ctx.textAlign = o.align || 'center'; ctx.textBaseline = 'middle';
+    const w = ctx.measureText(text).width, px = 4 * ps, py = 2.5 * ps;
+    const yc = o.base === 'top' ? y + fs / 2 : o.base === 'bottom' ? y - fs / 2 : y;
+    const x0 = ctx.textAlign === 'center' ? x - w / 2 : ctx.textAlign === 'right' ? x - w : x;
+    ctx.globalAlpha = o.alpha == null ? 1 : o.alpha;
+    ctx.fillStyle = T.halo; rrect(x0 - px, yc - fs / 2 - py, w + 2 * px, fs + 2 * py, 4 * ps); ctx.fill();
+    ctx.fillStyle = color; ctx.fillText(text, x, yc + 0.5);
+    ctx.restore();
+    return [x0 - px, yc - fs / 2 - py, w + 2 * px, fs + 2 * py];
+  }
+  // where a label of this size fits without covering an earlier one: try the spot, then step down
+  function freeSpot(text, x, y, o, placed) {
+    const ps = projScale(), fs = (o.size || 11) * ps;
+    ctx.save(); ctx.font = `${o.weight || 600} ${fs}px ` + monoFont(); const w = ctx.measureText(text).width + 8 * ps; ctx.restore();
+    const h = fs + 5 * ps, x0 = o.align === 'right' ? x - w : o.align === 'left' ? x : x - w / 2;
+    for (let k = 0; k < 8; k++) {
+      const step = Math.ceil(k / 2) * (k % 2 ? 1 : -1), yy = y + step * (h + 2 * ps), r = [x0, yy - h / 2, w, h];   // 0, +1, −1, +2, −2 …
+      if (!placed.some((q) => r[0] < q[0] + q[2] && q[0] < r[0] + r[2] && r[1] < q[1] + q[3] && q[1] < r[1] + r[3])) { placed.push(r); return yy; }
+    }
+    placed.push([x0, y - h / 2, w, h]); return y;
+  }
+  const fmtNm = (l) => (Math.abs(l - Math.round(l)) < 0.05 ? Math.round(l).toFixed(0) : l.toFixed(1)) + ' nm';
+  const fmtDeg = (r) => minus((r / DEG).toFixed(1)) + '°';
+  const fmtCm = (m) => minus((m * 100).toFixed(1)) + ' cm';
+  const SUB = '₀₁₂₃₄₅₆₇₈₉';
+  const sub = (n) => (n < 0 ? '₋' : '') + String(Math.abs(n)).split('').map((c) => SUB[+c]).join('');
+
+  // ---------- physics frame ----------
+  let PH = null, dirty = true;
+  function srcDef() { return S.src === 'unknown' ? { group: 'laser', name: 'Unknown laser', lines: [[S.unknownLam, 1]], body: 'pen' } : SOURCES[S.src]; }
+  const isSlit = () => !!(srcDef().continuum || srcDef().lamp);
+  function components() {
+    const sd = srcDef();
+    if (sd.continuum) { const out = []; for (let l = 400; l <= 700.001; l += 2) out.push({ lam: l, w: d65(l) }); return out; }
+    if (sd.lamp) {
+      const rows = LAMPS[sd.lamp], mx = Math.max(...rows.map((r) => r[1]));
+      return rows.map((r) => ({ lam: r[0], w: lampWeight(r[1], mx), I: r[1] }));
+    }
+    return sd.lines.map((r) => ({ lam: r[0], w: r[1] }));
+  }
+  // wavelengths offered for the orders table
+  function refList() {
+    const sd = srcDef();
+    if (sd.continuum) return [400, 550, 700];
+    if (sd.lamp) {
+      const rows = LAMPS[sd.lamp].slice().sort((a, b) => b[1] - a[1]), out = [];
+      for (const r of rows) { if (out.every((l) => Math.abs(l - r[0]) > 0.8)) out.push(r[0]); if (out.length >= 4) break; }
+      return out.sort((a, b) => b - a);
+    }
+    return sd.lines.map((r) => r[0]);
+  }
+  const refLam = () => { const l = refList(); return l[Math.min(S.refIdx, l.length - 1)]; };
+
+  function physics() {
+    const d = dOf(S.lpm), al = S.alpha * DEG, comps = components();
+    for (const c of comps) {
+      const lam = c.lam * 1e-9, r = orderRange(lam, d, al);
+      c.rgb = spectralRGB(c.lam); c.lin = linRGB(c.lam);
+      c.orders = [];
+      for (let m = r.lo; m <= r.hi; m++) {
+        const o = orderInfo(m, lam, d, al, S.L);
+        o.env = envelope(m, S.dA); o.missing = isMissing(m, S.dA);
+        c.orders.push(o);
+      }
+      c.range = r;
+    }
+    PH = { d, a: d / S.dA, al, comps, slit: isSlit(), wmax: Math.max(...comps.map((c) => c.w)) };
+    buildFace();
+    buildPlot();
+    buildBeams();
+    dirty = false;
+  }
+
+  // ---------- layout ----------
+  function layout() {
+    const ps = projScale();
+    const plotH = clamp(H * (ps > 1 ? 0.17 : 0.19), 74, 150 * ps), faceH = clamp(H * (ps > 1 ? 0.2 : 0.22), 92, 165 * ps);
+    G.plot = { y0: 8, y1: 8 + plotH };
+    G.face = { y0: G.plot.y1 + 6, y1: G.plot.y1 + 6 + faceH };
+    G.ruler = 20 * ps;                                         // meter stick strip at the bottom of the wall view
+    G.lit = { y0: G.face.y0 + 18 * ps, y1: G.face.y1 - G.ruler - 2 };   // where the light falls on the wall view
+    G.wallTop = G.face.y1 + 8;
+    G.yS = G.wallTop + 12 * ps;                                // the wall's surface, seen from above
+    G.laserPx = 72 * ps; G.gap = 20 * ps;
+    const avail = H - G.yS - G.laserPx - G.gap - 14 * ps;
+    S.frameL = Math.max(S.frameL, S.L);
+    s = Math.max(10, avail / S.frameL);
+    cx = W / 2;
+    G.yG = G.yS + S.L * s;
+  }
+  const X = (y) => cx + y * s;                                 // wall position (m) to canvas x
+  const Yw = (px) => (px - cx) / s;
+
+  // ---------- the light on the wall ----------
+  // Column by column, add up linear sRGB from every wavelength and order: either the exact far field pattern
+  // (when the bright fringes are wide enough to resolve), or each order as a Gaussian spot of the right power and width.
+  let faceCv = null, bloomCv = null, wallCv = null, colRGB = null, faceGain = 1;
+  const LUT = new Uint8ClampedArray(1025);
+  for (let i = 0; i <= 1024; i++) LUT[i] = Math.round(255 * gam(i / 1024));
+  function tone(r, g, b, out, o) {                              // compress brightness, keep the hue, a little white in the hottest cores
+    const mx = Math.max(r, g, b);
+    if (mx <= 1e-6) { out[o] = out[o + 1] = out[o + 2] = 0; return; }
+    const f = (1 - Math.exp(-mx)) / mx, wm = mx > 2.2 ? Math.min(0.35, 0.07 * (mx - 2.2)) : 0, k = 1 - Math.exp(-mx);
+    out[o] = LUT[Math.round(1024 * Math.min(1, r * f * (1 - wm) + wm * k))];
+    out[o + 1] = LUT[Math.round(1024 * Math.min(1, g * f * (1 - wm) + wm * k))];
+    out[o + 2] = LUT[Math.round(1024 * Math.min(1, b * f * (1 - wm) + wm * k))];
+  }
+  function spotMode() {
+    // exact pattern when the central fringe's half width (to its first zero) is at least 3 px
+    const lmin = Math.min(...PH.comps.map((c) => c.lam)) * 1e-9;
+    return S.L * lmin / (S.N * PH.d * Math.cos(PH.al)) * s >= 3 ? 'exact' : 'spots';
+  }
+  function sigmaY(o, lam) {                                     // spot width on the wall (m): beam footprint and diffraction spread
+    const { d } = PH, cth = Math.cos(o.th), cps = Math.cos(o.psi);
+    const foot = S.N * d * cth / cps / 4;                       // beam width N d, narrowed to N d cos θ on the way out, spread by 1/cos ψ on the wall
+    const diff = (1.23 / S.N) * (lam / (PI * d * cth)) * S.L / (cps * cps);
+    return Math.hypot(foot, diff);
+  }
+  function buildFace() {
+    const Wc = Math.max(1, Math.round(W)), Hr = Math.max(1, Math.round(G.lit.y1 - G.lit.y0)), ps = projScale();
+    colRGB = new Float32Array(Wc * 3);
+    const mode = spotMode(), { d, a, al } = PH, minSig = 3 * ps;
+    PH.mode = mode;
+    for (const c of PH.comps) {
+      const lam = c.lam * 1e-9, L = S.L, lin = c.lin;
+      if (mode === 'exact') {
+        const N = S.N;
+        for (let col = 0; col < Wc; col++) {
+          let acc = 0;
+          for (let k = 0; k < 3; k++) {
+            const y = Yw(col + (k + 0.5) / 3), psi = Math.atan2(y, L), th = psi - al;
+            if (Math.abs(th) >= PI / 2) continue;
+            const sd = Math.sin(th) + Math.sin(al), cp = Math.cos(psi);
+            const I = intensity(sd, lam, d, a, N) / (N * N);
+            const dphi = PI * d * Math.cos(th) / lam * cp * cp / L;     // dφ/dy
+            acc += (N / PI) * I * dphi;                                  // power per metre of wall; each order integrates to its envelope
+          }
+          const pw = acc / 3 / s * c.w;
+          colRGB[col * 3] += pw * lin[0]; colRGB[col * 3 + 1] += pw * lin[1]; colRGB[col * 3 + 2] += pw * lin[2];
+        }
+      } else {
+        for (const o of c.orders) {
+          if (!o.exists || !o.onScreen || o.env < 1e-9) continue;
+          const xc = X(o.y);
+          const sg = Math.max(minSig, sigmaY(o, lam) * s);
+          if (xc < -5 * sg || xc > Wc + 5 * sg) continue;
+          const c0 = Math.max(0, Math.floor(xc - 4 * sg)), c1 = Math.min(Wc - 1, Math.ceil(xc + 4 * sg));
+          let norm = 0;
+          for (let col = Math.floor(xc - 4 * sg); col <= Math.ceil(xc + 4 * sg); col++) norm += Math.exp(-0.5 * ((col + 0.5 - xc) / sg) ** 2);
+          const pw = o.env * c.w / (norm || 1);
+          for (let col = c0; col <= c1; col++) {
+            const g = pw * Math.exp(-0.5 * ((col + 0.5 - xc) / sg) ** 2);
+            colRGB[col * 3] += g * lin[0]; colRGB[col * 3 + 1] += g * lin[1]; colRGB[col * 3 + 2] += g * lin[2];
+          }
+        }
+      }
+    }
+    let mx = 0;
+    for (let i = 0; i < colRGB.length; i++) { if (colRGB[i] < 0) colRGB[i] = 0; mx = Math.max(mx, colRGB[i]); }
+    faceGain = mx > 0 ? (PH.slit ? 3.6 : 2.6) / mx : 0;
+    // vertical profile: a round spot for a laser, a tall slit image for lamps and white light
+    const V = new Float32Array(Hr), mid = (Hr - 1) / 2;
+    if (PH.slit) {
+      const half = Hr * 0.36;
+      for (let r = 0; r < Hr; r++) { const e = Math.abs(r - mid) - half; V[r] = e <= 0 ? 1 : Math.exp(-0.5 * (e / (2.2 * ps)) ** 2); }
+    } else {
+      const sv = Math.max(minSig, S.N * PH.d * Math.cos(PH.al) / 4 * s);
+      for (let r = 0; r < Hr; r++) V[r] = Math.exp(-0.5 * ((r - mid) / sv) ** 2);
+    }
+    if (!faceCv) { faceCv = document.createElement('canvas'); bloomCv = document.createElement('canvas'); wallCv = document.createElement('canvas'); }
+    faceCv.width = Wc; faceCv.height = Hr;
+    const fc = faceCv.getContext('2d'), img = fc.createImageData(Wc, Hr), D = img.data;
+    for (let r = 0; r < Hr; r++) {
+      const v = V[r] * faceGain;
+      if (v < 1e-4) { for (let col = 0; col < Wc; col++) D[(r * Wc + col) * 4 + 3] = 255; continue; }
+      for (let col = 0; col < Wc; col++) {
+        const o = (r * Wc + col) * 4;
+        tone(colRGB[col * 3] * v, colRGB[col * 3 + 1] * v, colRGB[col * 3 + 2] * v, D, o);
+        D[o + 3] = 255;
+      }
+    }
+    fc.putImageData(img, 0, 0);
+    bloomCv.width = Math.max(1, Math.ceil(Wc / 6)); bloomCv.height = Math.max(1, Math.ceil(Hr / 6));
+    const bc = bloomCv.getContext('2d'); bc.imageSmoothingEnabled = true; bc.imageSmoothingQuality = 'high';
+    bc.clearRect(0, 0, bloomCv.width, bloomCv.height); bc.drawImage(faceCv, 0, 0, bloomCv.width, bloomCv.height);
+    // the same light along the wall's edge in the top view
+    wallCv.width = Wc; wallCv.height = 1;
+    const wc = wallCv.getContext('2d'), wi = wc.createImageData(Wc, 1);
+    for (let col = 0; col < Wc; col++) { tone(colRGB[col * 3] * faceGain, colRGB[col * 3 + 1] * faceGain, colRGB[col * 3 + 2] * faceGain, wi.data, col * 4); wi.data[col * 4 + 3] = 255; }
+    wc.putImageData(wi, 0, 0);
+  }
+
+  // ---------- intensity plot ----------
+  let plotData = null;
+  function plotLams() {
+    const sd = srcDef();
+    return (sd.continuum || sd.lamp) ? [refLam()] : sd.lines.map((r) => r[0]);
+  }
+  function zoomRange() {                                         // wall range (m) from just before order 0 to just past order 1
+    const d = PH.d, lam = refLam() * 1e-9, o0 = orderInfo(0, lam, d, PH.al, S.L), o1 = orderInfo(1, lam, d, PH.al, S.L);
+    if (!o1.exists || !o1.onScreen) return null;
+    const span = o1.y - o0.y;
+    return [o0.y - 0.12 * span, o1.y + 0.12 * span];
+  }
+  function buildPlot() {
+    const Wc = Math.max(1, Math.round(W)), { d, a, al } = PH, N = S.N, L = S.L;
+    const zr = S.zoom ? zoomRange() : null;
+    const yOf = zr ? (px) => zr[0] + (zr[1] - zr[0]) * px / Wc : (px) => Yw(px);
+    const K = zr ? 10 : 6;
+    const sets = [];
+    for (const l of plotLams()) {
+      const lam = l * 1e-9, v = new Float32Array(Wc);
+      for (let col = 0; col < Wc; col++) {
+        let mx = 0;
+        for (let k = 0; k < K; k++) {
+          const y = yOf(col + (k + 0.5) / K), psi = Math.atan2(y, L), th = psi - al;
+          if (Math.abs(th) >= PI / 2) continue;
+          mx = Math.max(mx, intensity(Math.sin(th) + Math.sin(al), lam, d, a, N) / (N * N));
+        }
+        v[col] = mx;
+      }
+      // a principal maximum narrower than a pixel is still drawn at its full height
+      const r = orderRange(lam, d, al);
+      for (let m = r.lo; m <= r.hi; m++) {
+        const o = orderInfo(m, lam, d, al, L);
+        if (!o.onScreen) continue;
+        const px = zr ? (o.y - zr[0]) / (zr[1] - zr[0]) * Wc : X(o.y), col = Math.floor(px);
+        if (col >= 0 && col < Wc) v[col] = Math.max(v[col], envelope(m, S.dA));
+      }
+      sets.push({ lam: l, v, rgb: spectralRGB(l) });
+    }
+    const env = new Float32Array(Wc), lam = refLam() * 1e-9;
+    for (let col = 0; col < Wc; col++) {
+      const y = yOf(col + 0.5), psi = Math.atan2(y, L), th = psi - al;
+      env[col] = Math.abs(th) >= PI / 2 ? NaN : sinc2(PI * a * (Math.sin(th) + Math.sin(al)) / lam);
+    }
+    plotData = { sets, env, zr, Wc };
+  }
+
+  // ---------- beams seen from above ----------
+  let beams = [];
+  function beamEnd(o) {                                        // where order o meets the wall, kept within a few canvas widths
+    const x = X(o.y), y = G.yS;
+    const dx = x - cx, lim = 3 * W;
+    if (Math.abs(dx) <= lim) return [x, y];
+    const t = lim / Math.abs(dx);
+    return [cx + dx * t, G.yG + (y - G.yG) * t];
+  }
+  function buildBeams() {
+    beams = [];
+    const sd = srcDef(), ps = projScale(), y0 = G.yG + G.gap;
+    const comps = sd.continuum ? PH.comps.filter((c, i) => i % 5 === 0) : PH.comps;
+    const base = sd.continuum ? 0.16 : sd.lamp ? 0.5 : 0.62;
+    for (const c of comps) {
+      const wr = c.w / PH.wmax;
+      beams.push({ x0: cx, y0, x1: cx, y1: G.yG, rgb: c.rgb, a: base * wr * (sd.continuum ? 0.5 : 1), w: 1 });
+      for (const o of c.orders) {
+        if (!o.exists || !o.onScreen || o.env < 1e-4) continue;
+        const [x1, y1] = beamEnd(o);
+        beams.push({ x0: cx, y0: G.yG, x1, y1, rgb: c.rgb, a: base * wr * Math.sqrt(o.env) * (o.m === 0 ? 1 : 0.9), w: 1 });
+      }
+    }
+    // squared length and direction from the grating, for the haze
+    for (const b of beams) {
+      b.dx = b.x1 - b.x0; b.dy = b.y1 - b.y0; b.L2 = b.dx * b.dx + b.dy * b.dy || 1;
+      b.inc = b.y0 > G.yG; b.ang = Math.atan2(b.dy, b.dx);
+    }
+    beamsOut = beams.filter((b) => !b.inc).sort((p, q) => p.ang - q.ang);
+    beamsIn = beams.filter((b) => b.inc);
+    // the beam layer
+    if (!beamCv) beamCv = document.createElement('canvas');
+    const bw = Math.max(1, Math.round(W * dpr)), bh = Math.max(1, Math.round(H * dpr));
+    if (beamCv.width !== bw || beamCv.height !== bh) { beamCv.width = bw; beamCv.height = bh; }
+    const bx = beamCv.getContext('2d');
+    bx.setTransform(1, 0, 0, 1, 0, 0); bx.globalCompositeOperation = 'source-over'; bx.clearRect(0, 0, bw, bh);
+    bx.save(); bx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    bx.beginPath(); bx.rect(0, G.yS, W, H - G.yS); bx.clip();
+    bx.globalCompositeOperation = 'lighter'; bx.lineCap = 'round';
+    // the soft glow at a quarter of the pixels (it is blurry anyway), then the thin cores at full resolution
+    if (!glowCv) glowCv = document.createElement('canvas');
+    const gw = Math.max(1, Math.round(W / 2)), gh = Math.max(1, Math.round(H / 2));
+    if (glowCv.width !== gw || glowCv.height !== gh) { glowCv.width = gw; glowCv.height = gh; }
+    const gx = glowCv.getContext('2d');
+    gx.setTransform(1, 0, 0, 1, 0, 0); gx.globalCompositeOperation = 'source-over'; gx.clearRect(0, 0, gw, gh);
+    gx.setTransform(0.5, 0, 0, 0.5, 0, 0); gx.globalCompositeOperation = 'lighter'; gx.lineCap = 'round'; gx.lineWidth = 6 * ps;
+    for (const B of beams) {
+      if (B.a < 0.04) continue;
+      gx.strokeStyle = rgbStr(B.rgb, Math.min(1, B.a * 0.22));
+      gx.beginPath(); gx.moveTo(B.x0, B.y0); gx.lineTo(B.x1, B.y1); gx.stroke();
+    }
+    bx.imageSmoothingEnabled = true; bx.drawImage(glowCv, 0, 0, W, H);
+    bx.lineWidth = 1.2 * ps;
+    for (const B of beams) {
+      bx.strokeStyle = rgbStr(B.rgb, Math.min(1, B.a * 0.75));
+      bx.beginPath(); bx.moveTo(B.x0, B.y0); bx.lineTo(B.x1, B.y1); bx.stroke();
+    }
+    bx.restore();
+  }
+  let glowCv = null;
+  let beamCv = null, beamsOut = [], beamsIn = [];
+
+  // ---------- haze: specks drifting through the room light up where they cross a beam ----------
+  const specks = [];
+  function seedSpecks() {
+    specks.length = 0;
+    for (let i = 0; i < 170; i++) specks.push({ x: Math.random(), y: Math.random(), vx: (Math.random() - 0.5) * 0.012, vy: (Math.random() - 0.5) * 0.012, ph: Math.random() * 6.28 });
+  }
+  seedSpecks();
+  function drawHaze(dt) {
+    if (!beams.length) return;
+    const ps = projScale(), top = G.wallTop + 10 * ps, bot = Math.min(H, G.yG + G.gap + 4), hgt = bot - top;
+    if (hgt < 20) return;
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    const sg2 = 2 * (3.2 * ps) ** 2;
+    for (const p of specks) {
+      if (S.haze && !reduce) {
+        p.x += p.vx * dt; p.y += p.vy * dt; p.ph += dt * 0.7;
+        p.vx += (Math.random() - 0.5) * 0.004 * dt; p.vy += (Math.random() - 0.5) * 0.004 * dt;
+        p.vx = clamp(p.vx, -0.02, 0.02); p.vy = clamp(p.vy, -0.02, 0.02);
+        if (p.x < 0) p.x += 1; if (p.x > 1) p.x -= 1; if (p.y < 0) p.y += 1; if (p.y > 1) p.y -= 1;
+      }
+      const x = p.x * W, y = top + p.y * hgt;
+      let r = 0, g = 0, b = 0, list = beamsIn;
+      if (y < G.yG) {                                     // above the grating: only beams pointing near this speck
+        const rr = Math.hypot(x - cx, y - G.yG), a = Math.atan2(y - G.yG, x - cx), tol = 9 * ps / Math.max(rr, 1);
+        let lo = 0, hi = beamsOut.length;
+        while (lo < hi) { const m = (lo + hi) >> 1; if (beamsOut[m].ang < a - tol) lo = m + 1; else hi = m; }
+        list = [];
+        for (let i = lo; i < beamsOut.length && beamsOut[i].ang <= a + tol; i++) list.push(beamsOut[i]);
+      }
+      for (const B of list) {
+        const t = clamp(((x - B.x0) * B.dx + (y - B.y0) * B.dy) / B.L2, 0, 1);
+        const ex = B.x0 + t * B.dx - x, ey = B.y0 + t * B.dy - y, d2 = ex * ex + ey * ey;
+        if (d2 > 60 * ps * ps) continue;
+        const k = B.a * Math.exp(-d2 / sg2);
+        r += k * B.rgb[0]; g += k * B.rgb[1]; b += k * B.rgb[2];
+      }
+      const mx = Math.max(r, g, b);
+      if (mx < 6) continue;
+      const tw = 0.75 + 0.25 * Math.sin(p.ph * 3);
+      const f = Math.min(1, 255 / mx);
+      ctx.fillStyle = `rgba(${Math.round(r * f)}, ${Math.round(g * f)}, ${Math.round(b * f)}, ${Math.min(1, mx / 255 * 1.4) * tw})`;
+      ctx.beginPath(); ctx.arc(x, y, 1.3 * ps, 0, 2 * PI); ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  // ---------- drawing ----------
+  function draw(dt) {
+    if (!W || !H) return;
+    if (dirty) physics();
+    const T = tokens();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, T.bg2); g.addColorStop(1, T.bg);
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    drawPlot(T);
+    drawFace(T);
+    drawTop(T);
+    drawHaze(dt || 0);
+    drawHardware(T);
+    drawTopLabels(T);
+    drawHandles(T);
+  }
+
+  // ----- plot panel -----
+  function drawPlot(T) {
+    const ps = projScale(), y0 = G.plot.y0, y1 = G.plot.y1, x0 = 8, x1 = W - 8;
+    ctx.fillStyle = T.scope; rrect(x0, y0, x1 - x0, y1 - y0, 7); ctx.fill();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)'; ctx.lineWidth = 1; ctx.stroke();
+    const top = y0 + 20 * ps, bot = y1 - 6 * ps, hgt = bot - top;
+    if (hgt < 20 || !plotData) return;
+    ctx.save(); rrect(x0, y0, x1 - x0, y1 - y0, 7); ctx.clip();
+    // grid: 0, 0.5, 1
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath();
+    for (const f of [0, 0.5, 1]) { const y = Math.round(bot - f * hgt) + 0.5; ctx.moveTo(x0, y); ctx.lineTo(x1, y); }
+    ctx.stroke();
+    const { sets, env, zr, Wc } = plotData;
+    if (!zr) {                                           // the axis of the straight through beam
+      ctx.strokeStyle = T.grid; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(Math.round(cx) + 0.5, top); ctx.lineTo(Math.round(cx) + 0.5, bot); ctx.stroke(); ctx.setLineDash([]);
+    }
+    ctx.globalCompositeOperation = 'lighter';
+    for (const st of sets) {
+      ctx.beginPath(); ctx.moveTo(0, bot);
+      for (let c = 0; c < Wc; c++) ctx.lineTo(c + 0.5, bot - st.v[c] * hgt);
+      ctx.lineTo(Wc, bot); ctx.closePath();
+      ctx.fillStyle = rgbStr(st.rgb, 0.22); ctx.fill();
+      ctx.beginPath();
+      for (let c = 0; c < Wc; c++) { const y = bot - st.v[c] * hgt; c ? ctx.lineTo(c + 0.5, y) : ctx.moveTo(c + 0.5, y); }
+      ctx.strokeStyle = rgbStr(st.rgb, 0.95); ctx.lineWidth = 1.3 * ps; ctx.stroke();
+    }
+    ctx.globalCompositeOperation = 'source-over';
+    if (S.env) {
+      ctx.beginPath(); let pen = false;
+      for (let c = 0; c < Wc; c++) {
+        const v = env[c];
+        if (!isFinite(v)) { pen = false; continue; }
+        const y = bot - v * hgt; pen ? ctx.lineTo(c + 0.5, y) : ctx.moveTo(c + 0.5, y); pen = true;
+      }
+      ctx.strokeStyle = T.gold; ctx.globalAlpha = 0.85; ctx.lineWidth = 1.3 * ps; ctx.setLineDash([5 * ps, 4 * ps]); ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+    }
+    ctx.restore();
+    // labels
+    const lamTxt = S.unknown ? 'λ = ?' : (plotLams().length > 1 ? plotLams().map((l) => Math.round(l)).join(', ') + ' nm' : 'λ = ' + fmtNm(plotLams()[0]));
+    let title = `I / I₀ across the wall · far field · N = ${S.N} · ${lamTxt}`;
+    if (S.zoom) title = zr ? `I / I₀ zoomed: order 0 to order 1 · N = ${S.N} · ${S.N - 1} zeros between` : 'No first order to zoom on';
+    ctx.font = `600 ${10.5 * ps}px ` + monoFont(); ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+    ctx.fillStyle = T.muted;
+    let tt = title;
+    while (ctx.measureText(tt).width > x1 - x0 - 20 && tt.includes(' · ')) tt = tt.slice(0, tt.lastIndexOf(' · '));
+    ctx.fillText(tt, x0 + 8 * ps, y0 + 10 * ps);
+    ctx.textAlign = 'right'; ctx.fillStyle = T.muted; ctx.font = `${9.5 * ps}px ` + monoFont();
+    ctx.fillText('1', x1 - 5 * ps, top + 1); ctx.fillText('0.5', x1 - 5 * ps, bot - hgt / 2);
+    if (S.zoom && zr) {
+      // which part of the wall the zoom shows
+      const a = X(zr[0]), b = X(zr[1]), yb = G.face.y0 + 3;
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * ps; ctx.beginPath();
+      ctx.moveTo(a, yb + 6 * ps); ctx.lineTo(a, yb); ctx.lineTo(b, yb); ctx.lineTo(b, yb + 6 * ps); ctx.stroke();
+      if (S.N > Wc / 6) tag('lower N to see the zeros', (x0 + x1) / 2, top + hgt * 0.45, T.muted, T, { size: 10 });
+    }
+  }
+
+  // ----- the wall, face on -----
+  function niceStep(pxPerM, minPx) {
+    for (const st of [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2]) if (st * pxPerM >= minPx) return st;
+    return 5;
+  }
+  function drawFace(T) {
+    const ps = projScale(), y0 = G.face.y0, y1 = G.face.y1, x0 = 8, x1 = W - 8;
+    ctx.save(); rrect(x0, y0, x1 - x0, y1 - y0, 7); ctx.clip();
+    const g = ctx.createLinearGradient(0, y0, 0, y1);
+    g.addColorStop(0, T.wall); g.addColorStop(1, T.wall2);
+    ctx.fillStyle = g; ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+    // matte paint texture
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.025)';
+    for (let i = 0; i < 90; i++) { const xx = x0 + ((i * 97.13) % 1) * (x1 - x0), yy = y0 + ((i * 53.71) % 1) * (y1 - y0); ctx.fillRect(xx, yy, 2, 1); }
+    // the light
+    if (faceCv) {
+      const ly0 = G.lit.y0, lh = G.lit.y1 - G.lit.y0;
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.imageSmoothingEnabled = true;
+      ctx.globalAlpha = 0.95; ctx.drawImage(bloomCv, 0, ly0 - lh * 0.12, faceCv.width, lh * 1.24);
+      ctx.globalAlpha = 0.6; ctx.drawImage(bloomCv, -6 * ps, ly0 - lh * 0.3, faceCv.width + 12 * ps, lh * 1.6);
+      ctx.globalAlpha = 1; ctx.drawImage(faceCv, 0, ly0, faceCv.width, lh);
+      ctx.globalCompositeOperation = 'source-over';
+    }
+    // meter stick taped along the bottom
+    const ry0 = y1 - G.ruler, ry1 = y1 - 3 * ps;
+    const rg = ctx.createLinearGradient(0, ry0, 0, ry1);
+    rg.addColorStop(0, '#b99a58'); rg.addColorStop(1, '#8f7440');
+    ctx.fillStyle = rg; ctx.fillRect(x0, ry0, x1 - x0, ry1 - ry0);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.35)'; ctx.fillRect(x0, ry1, x1 - x0, 1.5);
+    const fine = s * 0.01 >= 4 ? 0.01 : s * 0.05 >= 4 ? 0.05 : 0.1;
+    const lab = niceStep(s, 44 * ps), left = Yw(x0), right = Yw(x1);
+    ctx.strokeStyle = '#2a2116'; ctx.lineWidth = Math.max(1, 0.9 * ps); ctx.beginPath();
+    for (let k = Math.ceil(left / fine); k * fine <= right; k++) {
+      const y = k * fine, px = Math.round(X(y)) + 0.5, big = Math.abs(y / lab - Math.round(y / lab)) < 1e-6, mid = Math.abs(y / (fine * 5) - Math.round(y / (fine * 5))) < 1e-6;
+      const len = big ? 0.55 : mid ? 0.38 : 0.22;
+      ctx.moveTo(px, ry0); ctx.lineTo(px, ry0 + (ry1 - ry0) * len);
+    }
+    ctx.stroke();
+    ctx.fillStyle = '#21190f'; ctx.font = `600 ${Math.min(9.5 * ps, (ry1 - ry0) * 0.5)}px ` + monoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    for (let k = Math.ceil(left / lab); k * lab <= right; k++) {
+      const y = k * lab, px = X(y);
+      if (px < x0 + 12 || px > x1 - 12) continue;
+      ctx.fillText(minus(Math.round(y * 100)), px, ry1 - 1);
+    }
+    ctx.restore();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)'; ctx.lineWidth = 1; rrect(x0, y0, x1 - x0, y1 - y0, 7); ctx.stroke();
+    tag('the wall, face on · meter stick in cm', x0 + 6 * ps, y0 + 9 * ps, T.muted, T, { size: 9.5, align: 'left' });
+    drawFaceLabels(T);
+    if (S.mode === 'measure') drawJaws(T);
+  }
+  function refOrders() {
+    const lam = refLam() * 1e-9, r = orderRange(lam, PH.d, PH.al), out = [];
+    for (let m = r.lo; m <= r.hi; m++) { const o = orderInfo(m, lam, PH.d, PH.al, S.L); o.env = envelope(m, S.dA); o.missing = isMissing(m, S.dA); out.push(o); }
+    return { lam, out, r };
+  }
+  function drawFaceLabels(T) {
+    const ps = projScale(), { out } = refOrders(), y = G.lit.y0 + 1 * ps, sd = srcDef();
+    // label the orders nearest the center first, then outward while there is room
+    const spaced = out.filter((o) => o.onScreen && X(o.y) > 20 && X(o.y) < W - 20).sort((p, q) => Math.abs(p.m) - Math.abs(q.m) || p.m - q.m);
+    const taken = [];
+    for (const o of spaced) {
+      const x = X(o.y), txt = o.missing ? `m=${minus(o.m)} missing` : `m=${minus(o.m)}`;
+      ctx.font = `600 ${9.5 * ps}px ` + monoFont();
+      const hw = ctx.measureText(txt).width / 2 + 7 * ps;
+      if (taken.some(([a, b]) => x + hw > a && x - hw < b)) continue;
+      taken.push([x - hw, x + hw]);
+      tag(txt, x, y, o.missing ? T.gold : T.ink, T, { size: 9.5, base: 'top', alpha: 0.9 });
+    }
+    // orders beyond the edges of the view
+    const offR = out.filter((o) => o.onScreen && X(o.y) >= W - 20), offL = out.filter((o) => o.onScreen && X(o.y) <= 20);
+    const ly = G.lit.y1 - 9 * projScale();
+    if (offR.length) tag(`m ≥ ${offR[0].m} off view →`, W - 12 * ps, ly, T.muted, T, { size: 9.5, align: 'right' });
+    if (offL.length) tag(`← m ≤ ${minus(offL[offL.length - 1].m)} off view`, 12 * ps, ly, T.muted, T, { size: 9.5, align: 'left' });
+    // white light: where orders 2 and 3 overlap
+    if (sd.continuum && S.mode !== 'measure') {
+      const d = PH.d, al = PH.al, a2 = orderInfo(2, 700e-9, d, al, S.L), b3 = orderInfo(3, 400e-9, d, al, S.L);
+      if (a2.exists && b3.exists && a2.onScreen && b3.onScreen && b3.y < a2.y) {
+        const xa = X(b3.y), xb = X(a2.y), yy = G.lit.y1 - 3 * ps;
+        if (xb > 20 && xa < W - 20) {
+          ctx.strokeStyle = T.gold; ctx.lineWidth = 1.5 * ps; ctx.beginPath();
+          ctx.moveTo(xa, yy - 5 * ps); ctx.lineTo(xa, yy); ctx.lineTo(xb, yy); ctx.lineTo(xb, yy - 5 * ps); ctx.stroke();
+          const tx = clamp((xa + xb) / 2, 70 * ps, W - 70 * ps);
+          tag('orders 2 and 3 overlap', tx, yy - 8 * ps, T.gold, T, { size: 9.5, base: 'bottom' });
+        }
+      }
+    }
+  }
+  function drawJaws(T) {
+    const ps = projScale(), y0 = G.lit.y0 + 16 * ps, y1 = G.face.y1 - G.ruler;
+    for (const id of ['A', 'B']) {
+      const y = id === 'A' ? S.jawA : S.jawB, x = X(y), hot = (drag && drag.id === 'jaw' + id) || hoverId === 'jaw' + id, act = S.jaw === id;
+      ctx.strokeStyle = T.accent; ctx.lineWidth = (hot ? 2 : 1.3) * ps; ctx.globalAlpha = act ? 1 : 0.75;
+      ctx.beginPath(); ctx.moveTo(Math.round(x) + 0.5, y0); ctx.lineTo(Math.round(x) + 0.5, y1); ctx.stroke();
+      ctx.globalAlpha = 1;
+      // grip: a cursor riding on the meter stick
+      const gy = y1 + G.ruler / 2 - 1.5 * ps;
+      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(x, gy, 13 * ps, 0, 2 * PI); ctx.fill(); ctx.globalAlpha = 1; }
+      ctx.fillStyle = T.halo; ctx.strokeStyle = T.accent; ctx.lineWidth = (hot || act ? 2 : 1.5) * ps;
+      rrect(x - 9 * ps, gy - 7 * ps, 18 * ps, 14 * ps, 4 * ps); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = T.accent; ctx.font = `700 ${10 * ps}px ` + monoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(id, x, gy + 0.5);
+    }
+    const mid = (X(S.jawA) + X(S.jawB)) / 2;
+    tag('B − A = ' + fmtCm(S.jawB - S.jawA), clamp(mid, 70 * ps, W - 70 * ps), G.lit.y1 - 10 * ps, T.accent, T, { size: 10.5 });
+  }
+
+  // ----- the bench from above -----
+  function drawTop(T) {
+    const ps = projScale(), top = G.wallTop;
+    // table
+    const tg = ctx.createLinearGradient(0, top, 0, H);
+    tg.addColorStop(0, T.table); tg.addColorStop(1, T.bg);
+    ctx.fillStyle = tg; ctx.fillRect(0, top, W, H - top);
+    // breadboard holes on a 2.5 cm (or 5 cm) pitch
+    const pitch = s * 0.025 >= 11 ? 0.025 : s * 0.05 >= 11 ? 0.05 : s * 0.1 >= 11 ? 0.1 : 0;
+    if (pitch) {
+      const r = Math.max(1.1, Math.min(2.4, 0.004 * s)) * 1;
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.38)'; ctx.beginPath();
+      for (let yy = G.yS + pitch * s / 2; yy < H; yy += pitch * s) for (let xx = cx % (pitch * s); xx < W; xx += pitch * s) { ctx.moveTo(xx + r, yy); ctx.arc(xx, yy, r, 0, 2 * PI); }
+      ctx.fill();
+    }
+    const v = ctx.createRadialGradient(W / 2, (top + H) / 2, Math.min(W, H) * 0.2, W / 2, (top + H) / 2, Math.hypot(W, H) * 0.6);
+    v.addColorStop(0, 'rgba(0, 0, 0, 0)'); v.addColorStop(1, 'rgba(0, 0, 0, 0.35)');
+    ctx.fillStyle = v; ctx.fillRect(0, top, W, H - top);
+    // the wall in section: hatched
+    ctx.fillStyle = T.wall2; ctx.fillRect(0, top, W, G.yS - top);
+    ctx.save(); ctx.beginPath(); ctx.rect(0, top, W, G.yS - top); ctx.clip();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.09)'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let xx = -20; xx < W + 20; xx += 8 * ps) { ctx.moveTo(xx, G.yS); ctx.lineTo(xx + (G.yS - top), top); }
+    ctx.stroke(); ctx.restore();
+    ctx.fillStyle = '#cfd5dc'; ctx.globalAlpha = 0.5; ctx.fillRect(0, G.yS - 1.5, W, 1.5); ctx.globalAlpha = 1;
+    // meter stick on the table, from the wall to past the grating
+    const msw = 13 * ps, msx = cx - 56 * ps - msw, msEnd = G.yG + 26 * ps;
+    const mg = ctx.createLinearGradient(msx, 0, msx + msw, 0);
+    mg.addColorStop(0, '#a88a4c'); mg.addColorStop(1, '#8a703c');
+    ctx.fillStyle = mg; ctx.fillRect(msx, G.yS, msw, msEnd - G.yS);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.35)'; ctx.fillRect(msx + msw, G.yS, 2, msEnd - G.yS);
+    const fine = s * 0.01 >= 4 ? 0.01 : s * 0.05 >= 4 ? 0.05 : 0.1, lab = niceStep(s, 30 * ps);
+    ctx.strokeStyle = '#2a2116'; ctx.lineWidth = Math.max(1, 0.8 * ps); ctx.beginPath();
+    for (let k = 1; G.yS + k * fine * s < msEnd; k++) {
+      const yy = Math.round(G.yS + k * fine * s) + 0.5, big = Math.abs(k * fine / lab - Math.round(k * fine / lab)) < 1e-6;
+      ctx.moveTo(msx + msw, yy); ctx.lineTo(msx + msw * (big ? 0.4 : 0.7), yy);
+    }
+    ctx.stroke();
+    ctx.save(); ctx.fillStyle = T.muted; ctx.font = `600 ${8.5 * ps}px ` + monoFont(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let k = 1; G.yS + k * lab * s < msEnd - 6; k++) {
+      const yy = G.yS + k * lab * s;
+      ctx.fillText(String(Math.round(k * lab * 100)), msx - 3 * ps, yy);
+    }
+    ctx.restore();
+    // the grating normal, when the grating is turned
+    if (S.alpha !== 0 && S.angles) {
+      const nx = Math.sin(PH.al), ny = -Math.cos(PH.al), Ln = Math.min(G.yG - G.yS, 140 * ps);
+      ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.7; ctx.lineWidth = ps; ctx.setLineDash([5 * ps, 4 * ps]);
+      ctx.beginPath(); ctx.moveTo(cx - nx * 30 * ps, G.yG - ny * 30 * ps); ctx.lineTo(cx + nx * Ln, G.yG + ny * Ln); ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+    }
+    // beams in the haze (drawn once per change into their own layer)
+    if (beamCv) {
+      ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      ctx.drawImage(beamCv, 0, 0, W, H);
+      ctx.restore();
+    }
+    // the light where it hits the wall
+    if (wallCv) {
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.imageSmoothingEnabled = true;
+      ctx.globalAlpha = 0.55; ctx.drawImage(wallCv, 0, G.yS - 7 * ps, W, 12 * ps);
+      ctx.globalAlpha = 1; ctx.drawImage(wallCv, 0, G.yS - 2.5 * ps, W, 4 * ps);
+      ctx.restore();
+    }
+  }
+
+  // ----- hardware: laser or lamp, grating in its slide holder -----
+  function lampGlow() {                                         // the lamp's own color: all its light mixed
+    let r = 0, g = 0, b = 0;
+    for (const c of PH.comps) { r += c.w * Math.max(0, c.lin[0]); g += c.w * Math.max(0, c.lin[1]); b += c.w * Math.max(0, c.lin[2]); }
+    const mx = Math.max(r, g, b) || 1;
+    return [r, g, b].map((v) => Math.round(255 * gam(v / mx)));
+  }
+  function drawHardware(T) {
+    const ps = projScale(), sd = srcDef(), y0 = G.yG + G.gap, yb = y0 + G.laserPx;   // source front face at y0
+    const body = sd.body;
+    const beamRGB = sd.continuum || sd.lamp ? lampGlow() : (PH.comps.length === 1 ? PH.comps[0].rgb : lampGlow());
+    // post holder and base
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.35)'; rrect(cx - 26 * ps + 4 * ps, y0 + 4 * ps, 52 * ps, G.laserPx, 6 * ps); ctx.fill();
+    if (body === 'hene') {
+      const w = 24 * ps, g = ctx.createLinearGradient(cx - w / 2, 0, cx + w / 2, 0);
+      g.addColorStop(0, '#5b636d'); g.addColorStop(0.35, '#e1e5ea'); g.addColorStop(0.6, '#9aa3ad'); g.addColorStop(1, '#3d434b');
+      ctx.fillStyle = g; rrect(cx - w / 2, y0 + 6 * ps, w, G.laserPx - 6 * ps, 5 * ps); ctx.fill();
+      ctx.fillStyle = '#1d2126'; rrect(cx - w * 0.36, y0, w * 0.72, 9 * ps, 2 * ps); ctx.fill();          // output aperture cap
+      ctx.fillStyle = '#e9c43a'; ctx.fillRect(cx - w / 2 + 3 * ps, y0 + G.laserPx * 0.45, w - 6 * ps, 11 * ps);  // warning label
+      ctx.fillStyle = '#111'; ctx.font = `700 ${7 * ps}px ` + monoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('LASER', cx, y0 + G.laserPx * 0.45 + 5.5 * ps);
+      ctx.fillStyle = '#2a2f36'; ctx.fillRect(cx - 4 * ps, yb - 3 * ps, 8 * ps, 6 * ps);                     // power cable
+    } else if (body === 'pen') {
+      const w = 15 * ps, len = G.laserPx * 0.62, g = ctx.createLinearGradient(cx - w / 2, 0, cx + w / 2, 0);
+      g.addColorStop(0, '#30353c'); g.addColorStop(0.4, '#8c949e'); g.addColorStop(1, '#22262b');
+      ctx.fillStyle = '#2b3036'; rrect(cx - 13 * ps, y0 + len * 0.35, 26 * ps, 12 * ps, 3 * ps); ctx.fill();   // clamp
+      ctx.fillStyle = g; rrect(cx - w / 2, y0 + 3 * ps, w, len, 4 * ps); ctx.fill();
+      ctx.fillStyle = '#15181c'; rrect(cx - w * 0.38, y0, w * 0.76, 6 * ps, 2 * ps); ctx.fill();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.25)'; ctx.fillRect(cx - w / 2 + 2 * ps, y0 + 8 * ps, 1.5 * ps, len - 12 * ps);
+    } else if (body === 'box') {
+      const w = 40 * ps, len = G.laserPx * 0.7;
+      const g = ctx.createLinearGradient(cx - w / 2, 0, cx + w / 2, 0);
+      g.addColorStop(0, '#262b31'); g.addColorStop(0.5, '#4a525c'); g.addColorStop(1, '#1e2227');
+      ctx.fillStyle = g; rrect(cx - w / 2, y0 + 2 * ps, w, len, 4 * ps); ctx.fill();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = '#111'; rrect(cx - 5 * ps, y0, 10 * ps, 5 * ps, 2 * ps); ctx.fill();
+      for (let k = 0; k < 3; k++) {                                   // fins
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'; ctx.fillRect(cx - w / 2 + 5 * ps, y0 + len * (0.45 + 0.13 * k), w - 10 * ps, 2 * ps);
+      }
+    } else {
+      // lamp housing with a slit, and a lens tube that makes the beam parallel
+      const w = 44 * ps, hh = G.laserPx * 0.55, tube = G.laserPx * 0.4, tw = 16 * ps;
+      ctx.fillStyle = '#2c3239'; rrect(cx - tw / 2, y0, tw, tube, 3 * ps); ctx.fill();
+      ctx.fillStyle = 'rgba(190, 225, 255, 0.5)'; ctx.fillRect(cx - tw / 2 + 2 * ps, y0 + 1, tw - 4 * ps, 2.5 * ps);   // lens
+      const hy = y0 + tube;
+      const g = ctx.createLinearGradient(cx - w / 2, 0, cx + w / 2, 0);
+      g.addColorStop(0, '#20252b'); g.addColorStop(0.5, '#414952'); g.addColorStop(1, '#1b1f24');
+      ctx.fillStyle = g; rrect(cx - w / 2, hy, w, hh, 5 * ps); ctx.fill();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      const gg = ctx.createRadialGradient(cx, hy + hh / 2, 0, cx, hy + hh / 2, w * 0.9);
+      gg.addColorStop(0, rgbStr(beamRGB, 0.5)); gg.addColorStop(1, rgbStr(beamRGB, 0));
+      ctx.fillStyle = gg; ctx.fillRect(cx - w, hy - w * 0.4, 2 * w, hh + w * 0.8);
+      ctx.restore();
+      ctx.fillStyle = rgbStr(beamRGB, 0.9); ctx.fillRect(cx - 1.2 * ps, y0 + tube - 2 * ps, 2.4 * ps, 3 * ps);  // the slit
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)'; ctx.lineWidth = 1.2 * ps; ctx.beginPath();
+      for (let k = 0; k < 3; k++) { const yy = hy + hh * (0.3 + 0.2 * k); ctx.moveTo(cx - w * 0.3, yy); ctx.lineTo(cx + w * 0.3, yy); }
+      ctx.stroke();
+    }
+    // emission glow at the source's output
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    const eg = ctx.createRadialGradient(cx, y0, 0, cx, y0, 10 * ps);
+    eg.addColorStop(0, rgbStr(beamRGB, 0.7)); eg.addColorStop(1, rgbStr(beamRGB, 0));
+    ctx.fillStyle = eg; ctx.fillRect(cx - 10 * ps, y0 - 10 * ps, 20 * ps, 20 * ps);
+    ctx.restore();
+    // source label, left of the source
+    const name = S.unknown ? 'laser, λ = ?' : sd.name;
+    tag(name, cx + 30 * ps, y0 + G.laserPx * 0.45, T.muted, T, { size: 10, align: 'left' });
+
+    // grating in a slide holder, turned by alpha about the post
+    const al = PH.al, tx = Math.cos(al), ty = Math.sin(al), half = gratHalf();
+    ctx.save(); ctx.translate(cx, G.yG); ctx.rotate(al);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)'; rrect(-half + 3 * ps, -3 * ps + 4 * ps, 2 * half, 8 * ps, 2 * ps); ctx.fill();
+    const fg = ctx.createLinearGradient(0, -4 * ps, 0, 4 * ps);
+    fg.addColorStop(0, '#b4ad9b'); fg.addColorStop(1, '#7d7768');
+    ctx.fillStyle = fg; rrect(-half, -4 * ps, 2 * half, 8 * ps, 2 * ps); ctx.fill();
+    // the grating film in the window, with a faint rainbow sheen
+    const film = half * 0.62, sh = ctx.createLinearGradient(-film, 0, film, 0);
+    ['#7b5cff', '#3f8cff', '#2cd0c9', '#57d66a', '#f2d03a', '#ff8a3a', '#ff4a6a'].forEach((c, i) => sh.addColorStop(i / 6, c));
+    ctx.globalAlpha = 0.5; ctx.fillStyle = sh; ctx.fillRect(-film, -2 * ps, 2 * film, 4 * ps); ctx.globalAlpha = 1;
+    ctx.fillStyle = 'rgba(20, 24, 28, 0.55)'; ctx.fillRect(-film, -0.6 * ps, 2 * film, 1.2 * ps);
+    // the illuminated patch: N slits (drawn wider than life, on a log scale)
+    const nl = nLen();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.fillStyle = rgbStr(beamRGB, 0.85); ctx.fillRect(-nl, -1.6 * ps, 2 * nl, 3.2 * ps);
+    const hg = ctx.createRadialGradient(0, 0, 0, 0, 0, Math.max(10 * ps, nl * 1.3));
+    hg.addColorStop(0, rgbStr(beamRGB, 0.45)); hg.addColorStop(1, rgbStr(beamRGB, 0));
+    ctx.fillStyle = hg; ctx.fillRect(-nl * 1.4 - 12 * ps, -14 * ps, 2 * nl * 1.4 + 24 * ps, 28 * ps);
+    ctx.restore();
+    void tx; void ty;
+  }
+  const gratHalf = () => 36 * projScale();
+  // drawn half length of the lit patch on the grating: log scale from N = 2 to 3000
+  const nLen = () => { const ps = projScale(), t = (Math.log10(S.N) - Math.log10(2)) / (Math.log10(3000) - Math.log10(2)); return (2 + 21 * t) * ps; };
+  const nFromLen = (len) => { const ps = projScale(), t = clamp((len / ps - 2) / 21, 0, 1); return Math.pow(10, Math.log10(2) + t * (Math.log10(3000) - Math.log10(2))); };
+
+  function drawTopLabels(T) {
+    const ps = projScale(), { out, lam } = refOrders(), measure = S.mode === 'measure';
+    // L along the meter stick
+    const msx = cx - 56 * ps - 13 * ps;
+    tag('L = ' + S.L.toFixed(2) + ' m', msx - 26 * ps, (G.yS + G.yG) / 2, T.ink, T, { size: 10.5, align: 'right' });
+    // carrier index mark: where the grating reads on the meter stick (cm from the wall)
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.moveTo(msx - 2 * ps, G.yG); ctx.lineTo(cx - gratHalf() + 2 * ps, G.yG); ctx.stroke();
+    // angle arcs for orders 1, 2, 3 of the reference wavelength
+    if (S.angles && !measure) {
+      const pos = out.filter((o) => o.m > 0 && o.onScreen && !o.missing).slice(0, 3), placed = [], labels = [];
+      let lastAng = 0, k = 0;
+      for (const o of pos) {
+        const ang = Math.atan2(G.yS - G.yG, X(o.y) - cx), axis = -PI / 2;
+        if (Math.abs(ang - lastAng) < 7 * DEG && k) continue;
+        const r = Math.min((G.yG - G.yS) * (0.42 + 0.2 * k), (90 + 60 * k) * ps);
+        if (r < 18 * ps) break;
+        ctx.strokeStyle = T.gold; ctx.lineWidth = 1.3 * ps; ctx.globalAlpha = 0.9;
+        ctx.beginPath(); ctx.arc(cx, G.yG, r, axis, ang, ang < axis); ctx.stroke(); ctx.globalAlpha = 1;
+        const lx = cx + Math.cos(ang) * r, ly = G.yG + Math.sin(ang) * r;
+        labels.push([`θ${sub(o.m)} = ${fmtDeg(o.psi)}`, Math.min(lx + 7 * ps, W - 96 * ps), ly]);
+        lastAng = ang; k++;
+      }
+      for (const [txt, lx, ly] of labels) tag(txt, lx, freeSpot(txt, lx, ly, { size: 10, align: 'left' }, placed), T.gold, T, { size: 10, align: 'left' });
+      if (S.alpha !== 0) {
+        const Ln = Math.min(G.yG - G.yS, 140 * ps), nx = Math.sin(PH.al), ny = -Math.cos(PH.al);
+        tag(`grating normal · θᵢ = ${minus(Math.abs(S.alpha).toFixed(1))}°`, cx + nx * Ln, G.yG + ny * Ln - 2 * ps, T.muted, T, { size: 9.5, base: 'bottom' });
+      }
+    }
+    // y1 on the wall
+    const o1 = out.find((o) => o.m === 1), o0 = out.find((o) => o.m === 0);
+    if (!measure && o1 && o1.onScreen && o0 && X(o1.y) < W - 10) {
+      const xa = X(o0.y), xb = X(o1.y), yy = G.yS + 9 * ps;
+      ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.8; ctx.lineWidth = ps; ctx.beginPath();
+      ctx.moveTo(xa, yy - 4 * ps); ctx.lineTo(xa, yy + 4 * ps); ctx.moveTo(xa, yy); ctx.lineTo(xb, yy); ctx.moveTo(xb, yy - 4 * ps); ctx.lineTo(xb, yy + 4 * ps); ctx.stroke();
+      ctx.globalAlpha = 1;
+      tag('y₁ = ' + fmtCm(o1.y - o0.y), clamp((xa + xb) / 2, 50 * ps, W - 50 * ps), yy + 4 * ps, T.ink, T, { size: 10, base: 'top' });
+    }
+    // orders that do not exist
+    const lamT = S.unknown ? 'this laser' : fmtNm(lam * 1e9);
+    const hi = out.length ? out[out.length - 1].m : 0, nxt = hi + 1, sN = sinThetaM(nxt, lam, PH.d, PH.al);
+    const msg = S.alpha === 0 ? `no m = ±${nxt} for ${lamT}: ${nxt}λ/d = ${(nxt * lam / PH.d).toFixed(2)} > 1`
+                              : `no m = ${nxt} for ${lamT}: sin θ would be ${sN.toFixed(2)}`;
+    if (!measure || !S.unknown) tag(msg, W - 10 * ps, H - 12 * ps, T.muted, T, { size: 9.5, align: 'right', base: 'bottom' });
+    if (PH.mode === 'exact') tag('few slits: each order spreads into a wide fringe', 10 * ps, H - 12 * ps, T.muted, T, { size: 9.5, align: 'left', base: 'bottom' });
+    // N on the grating
+    const al = PH.al, nl = nLen(), gx = cx + Math.cos(al) * (nl + 0), gy = G.yG + Math.sin(al) * nl;
+    void gx; void gy;
+    tag(`N = ${S.N} slits lit`, cx - 12 * ps, G.yG + 15 * ps, T.muted, T, { size: 9.5, align: 'right' });
+  }
+
+  // ---------- drag handles ----------
+  // Grating body: drag up or down to change L. Round knob: turn the grating. Grip on its face: illuminated slits N.
+  // Caliper jaws A and B on the wall (measure mode). Values snap to the matching slider's min, max and step.
+  let drag = null, hoverId = null, pendingDrag = null;
+  function sliderSnap(el, v) {
+    const mn = +el.min, mx = +el.max, st = +el.step;
+    v = Math.round((v - mn) / st) * st + mn;
+    return +clamp(v, mn, mx).toFixed(5);
+  }
+  function handles() {
+    const ps = projScale(), al = S.alpha * DEG, tx = Math.cos(al), ty = Math.sin(al), half = gratHalf(), out = [];
+    out.push({ id: 'L', type: 'body', at: [cx, G.yG], seg: [cx - tx * half, G.yG - ty * half, cx + tx * half, G.yG + ty * half], cursor: 'ns-resize',
+      set: (x, y) => setL(sliderSnap($('sL'), (y - G.yS) / s)) });
+    const kd = half + 20 * ps;
+    out.push({ id: 'rot', type: 'knob', at: [cx + tx * kd, G.yG + ty * kd], from: [cx + tx * half, G.yG + ty * half], cursor: 'grab',
+      set: (x, y) => {
+        let a = Math.atan2(y - G.yG, x - cx) / DEG;                // knob sits on the +t end of the holder
+        if (a > 90) a -= 180; if (a < -90) a += 180;
+        setAlpha(sliderSnap($('sRot'), a));
+      } });
+    const nl = nLen() + 5 * ps;
+    out.push({ id: 'N', type: 'grip', at: [cx - tx * nl, G.yG - ty * nl], axis: [tx, ty], cursor: Math.abs(S.alpha) < 22.5 ? 'ew-resize' : 'nwse-resize',
+      set: (x, y) => { const t = -((x - cx) * tx + (y - G.yG) * ty) - 5 * ps; setN(Math.round(nFromLen(Math.max(0, t)))); } });
+    if (S.mode === 'measure') {
+      for (const id of ['A', 'B']) {
+        const xx = X(id === 'A' ? S.jawA : S.jawB);
+        out.push({ id: 'jaw' + id, type: 'jaw', at: [xx, G.face.y1 - G.ruler / 2], vx: xx, cursor: 'ew-resize',
+          set: (x) => { setJaw(id, Math.round(Yw(x) * 1000) / 1000); } });
+      }
+    }
+    return out;
+  }
+  function handleAt(px, py, touch) {
+    const ps = projScale(), tol = 10 * ps * (touch ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of handles()) {
+      let d;
+      if (h.type === 'jaw') d = (py >= G.face.y0 && py <= G.face.y1) ? Math.abs(px - h.vx) : Infinity;
+      else if (h.type === 'body') {
+        const [x1, y1, x2, y2] = h.seg, ex = x2 - x1, ey = y2 - y1, t = clamp(((px - x1) * ex + (py - y1) * ey) / (ex * ex + ey * ey), 0, 1);
+        d = Math.hypot(px - x1 - t * ex, py - y1 - t * ey) + 3 * ps;      // the knob and the N grip win over the holder itself
+      } else d = Math.hypot(px - h.at[0], py - h.at[1]) - (h.type === 'knob' ? 2 * ps : 0);
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  function drawHandles(T) {
+    const ps = projScale();
+    ctx.save(); ctx.lineCap = 'round';
+    for (const h of handles()) {
+      const hot = drag ? drag.id === h.id : hoverId === h.id;
+      const [x, y] = h.at;
+      if (h.type === 'jaw') continue;                              // drawn with the wall
+      if (h.type === 'body') {
+        if (hot) {
+          const [x1, y1, x2, y2] = h.seg;
+          ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.35; ctx.lineWidth = 14 * ps; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.globalAlpha = 1;
+        }
+        // up and down chevrons say "slide me along the bench"
+        const al = S.alpha * DEG, ox = Math.cos(al) * (gratHalf() * 0.82), oy = Math.sin(al) * (gratHalf() * 0.82);
+        ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * ps; ctx.globalAlpha = hot ? 1 : 0.8;
+        for (const sg of [1]) {
+          const px = x + sg * ox, py = y + sg * oy;
+          ctx.beginPath(); ctx.moveTo(px - 4 * ps, py - 7 * ps); ctx.lineTo(px, py - 11 * ps); ctx.lineTo(px + 4 * ps, py - 7 * ps); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(px - 4 * ps, py + 7 * ps); ctx.lineTo(px, py + 11 * ps); ctx.lineTo(px + 4 * ps, py + 7 * ps); ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+      } else if (h.type === 'knob') {
+        if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(x, y, 13 * ps, 0, 2 * PI); ctx.fill(); ctx.globalAlpha = 1; }
+        ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * ps; ctx.globalAlpha = 0.75; ctx.setLineDash([3 * ps, 3 * ps]);
+        ctx.beginPath(); ctx.moveTo(h.from[0], h.from[1]); ctx.lineTo(x, y); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+        ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(x, y, (hot ? 7.5 : 6.5) * ps, 0, 2 * PI); ctx.fill();
+        ctx.strokeStyle = T.bg; ctx.lineWidth = 1.4 * ps;
+        ctx.beginPath(); ctx.arc(x, y, 3.4 * ps, -0.4 * PI, 0.35 * PI); ctx.stroke();
+        ctx.beginPath(); ctx.arc(x, y, 3.4 * ps, 0.6 * PI, 1.35 * PI); ctx.stroke();
+      } else {
+        if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(x, y, 13 * ps, 0, 2 * PI); ctx.fill(); ctx.globalAlpha = 1; }
+        ctx.save(); ctx.translate(x, y); ctx.rotate(Math.atan2(h.axis[1], h.axis[0]) + PI / 2);
+        const L = (hot ? 9 : 7.5) * ps, Wd = (hot ? 5.5 : 4.5) * ps;
+        ctx.fillStyle = T.halo; ctx.strokeStyle = T.accent; ctx.lineWidth = (hot ? 2.2 : 1.7) * ps;
+        rrect(-L, -Wd, 2 * L, 2 * Wd, Wd); ctx.fill(); ctx.stroke();
+        ctx.lineWidth = 1.3 * ps; ctx.beginPath();
+        for (let k = -1; k <= 1; k++) { ctx.moveTo(-Wd + 2 * ps, k * 3.2 * ps); ctx.lineTo(Wd - 2 * ps, k * 3.2 * ps); }
+        ctx.stroke(); ctx.restore();
+      }
+    }
+    ctx.restore();
+  }
+
+  // ---------- setters (keep sliders in sync) ----------
+  function changed(keepPreset) {
+    if (!keepPreset) setPresetBtn(null);
+    dirty = true; layout(); schedule(); updateRail();
+  }
+  function setL(v) { if (v === S.L) return; S.L = v; $('sL').value = v; changed(); }
+  function setAlpha(v) { if (v === S.alpha) return; S.alpha = v; $('sRot').value = v; changed(); }
+  function setN(v) { v = Math.round(clamp(v, 2, 3000)); if (v === S.N) return; S.N = v; $('sN').value = Math.log10(v); changed(); }
+  function setJaw(id, v) {
+    const lim = Yw(W - 10), lo = Yw(10);
+    v = clamp(v, lo, lim);
+    if (id === 'A') S.jawA = v; else S.jawB = v;
+    S.jaw = id; schedule(); updateMeasure();
+  }
+  function setLpm(v, grat) {
+    S.lpm = v; S.grat = grat || null;
+    for (const b of document.querySelectorAll('#grats button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.grat));
+    $('sLpm').value = Math.round(v);
+    changed();
+  }
+
+  // ---------- rail ----------
+  function buildSourceChips() {
+    const groups = { laser: $('srcLaser'), multi: $('srcMulti'), lamp: $('srcLamp') };
+    for (const [key, sd] of Object.entries(SOURCES)) {
+      const b = document.createElement('button'); b.type = 'button'; b.dataset.src = key;
+      const dot = document.createElement('span'); dot.className = 'dot';
+      if (sd.lines && sd.lines.length === 1) dot.style.background = rgbStr(spectralRGB(sd.lines[0][0]));
+      else if (sd.continuum) dot.style.background = 'linear-gradient(90deg, #7b5cff, #3f8cff, #2cd0c9, #57d66a, #f2d03a, #ff8a3a, #ff4a4a)';
+      else if (sd.lines) dot.style.background = `linear-gradient(90deg, ${sd.lines.map((r) => rgbStr(spectralRGB(r[0]))).join(', ')})`;
+      else dot.style.background = '#999';
+      b.append(dot, sd.chip);
+      b.addEventListener('click', () => { S.src = key; S.unknown = false; S.refIdx = sd.continuum ? 1 : 0; syncSourceChips(); changed(); });
+      groups[sd.group].appendChild(b);
+    }
+    // lamp dots: the lamp's mixed glow
+    for (const b of $('srcLamp').querySelectorAll('button')) {
+      const rows = LAMPS[b.dataset.src], mx = Math.max(...rows.map((r) => r[1]));
+      let r = 0, g = 0, bb = 0;
+      for (const [l, I] of rows) { const c = linRGB(l), w = lampWeight(I, mx); r += w * Math.max(0, c[0]); g += w * Math.max(0, c[1]); bb += w * Math.max(0, c[2]); }
+      const m = Math.max(r, g, bb) || 1;
+      b.querySelector('.dot').style.background = rgbStr([r, g, bb].map((v) => Math.round(255 * gam(v / m))));
+    }
+  }
+  function syncSourceChips() {
+    for (const b of document.querySelectorAll('[data-src]')) b.setAttribute('aria-pressed', String(!S.unknown && b.dataset.src === S.src));
+  }
+  function updateRail() {
+    const d = dOf(S.lpm), sd = srcDef();
+    const gname = S.grat === 'cd' ? ' (CD)' : S.grat === 'dvd' ? ' (DVD)' : '';
+    $('oLpm').textContent = (Math.abs(S.lpm - Math.round(S.lpm)) < 1e-6 ? S.lpm.toFixed(0) : S.lpm.toFixed(1)) + gname + ' · d = ' + (d * 1e6).toFixed(3) + ' µm';
+    $('oN').textContent = `N = ${S.N} · beam ${(S.N * d * Math.cos(S.alpha * DEG) * 1e3).toFixed(S.N * d < 1e-3 ? 3 : 2)} mm`;
+    $('oDA').textContent = `${S.dA.toFixed(1)} · a = ${(d / S.dA * 1e6).toFixed(3)} µm`;
+    $('oRot').textContent = minus(S.alpha.toFixed(1)) + '°';
+    $('oL').textContent = S.L.toFixed(2) + ' m';
+    $('srcNote').textContent = S.unknown ? 'Unknown laser: its wavelength is hidden. Measure it.' : sd.note;
+    // reference chips
+    const refs = refList(), box = $('refChips');
+    if (S.unknown) box.textContent = '';
+    else if (box.dataset.key !== S.src + refs.join()) {
+      box.textContent = ''; box.dataset.key = S.src + refs.join();
+      refs.forEach((l, i) => {
+        const b = document.createElement('button'); b.type = 'button';
+        const dot = document.createElement('span'); dot.className = 'dot'; dot.style.background = rgbStr(spectralRGB(l));
+        b.append(dot, fmtNm(l)); b.addEventListener('click', () => { S.refIdx = i; changed(true); });
+        box.appendChild(b);
+      });
+    }
+    box.hidden = S.unknown || refs.length < 2;
+    [...box.children].forEach((b, i) => b.setAttribute('aria-pressed', String(i === Math.min(S.refIdx, refs.length - 1))));
+    updateOrders();
+    updateMeasure();
+  }
+  function updateOrders() {
+    const hide = S.mode === 'measure';
+    $('ordTable').hidden = $('ordNote').hidden = hide; $('ordHidden').hidden = !hide;
+    if (hide) return;
+    const d = dOf(S.lpm), al = S.alpha * DEG, lamNm = refLam(), lam = lamNm * 1e-9, r = orderRange(lam, d, al), rows = [];
+    const sym = S.alpha === 0;
+    rows.push('<tr><th>m</th><th>θ</th><th>y</th><th>I / I₀</th></tr>');
+    for (let m = sym ? 0 : r.lo; m <= r.hi; m++) {
+      const o = orderInfo(m, lam, d, al, S.L), env = envelope(m, S.dA), miss = isMissing(m, S.dA);
+      const mm = sym && m ? '±' + m : minus(m);
+      if (!o.onScreen) { rows.push(`<tr class="no"><td>${mm}</td><td>${fmtDeg(o.psi)}</td><td colspan="2" class="why">misses the wall</td></tr>`); continue; }
+      rows.push(`<tr${miss ? ' class="no"' : ''}><td>${mm}</td><td>${fmtDeg(o.psi)}</td><td>${minus((o.y * 100).toFixed(1))}</td><td>${miss ? 'missing' : env.toFixed(2)}</td></tr>`);
+    }
+    const nx = r.hi + 1;
+    rows.push(`<tr class="no"><td>${sym ? '±' : ''}${nx}</td><td>—</td><td colspan="2" class="why">does not exist</td></tr>`);
+    $('ordTable').innerHTML = rows.join('');
+    const sN = sinThetaM(nx, lam, d, al);
+    let note = sym
+      ? `For ${fmtNm(lamNm)}: highest order <b>m = ${r.hi}</b>, since ${r.hi}λ/d = ${(r.hi * lam / d).toFixed(3)} but ${nx}λ/d = ${(nx * lam / d).toFixed(3)} &gt; 1.`
+      : `For ${fmtNm(lamNm)}: orders <b>${minus(r.lo)}</b> to <b>${r.hi}</b>. Order ${nx} would need sin θ = ${minus(sN.toFixed(3))}.`;
+    const missing = []; for (let m = 1; m <= Math.max(r.hi, -r.lo); m++) if (isMissing(m, S.dA)) missing.push(m);
+    if (missing.length) note += ` Missing: m = ${missing.join(', ')} (d/a = ${S.dA.toFixed(0)}).`;
+    note += ` Resolving power in order 1: R = mN = ${S.N}, so lines closer than λ/R = ${(lamNm / S.N).toFixed(S.N > 500 ? 2 : 1)} nm blur together.`;
+    if (!sym) note += ' θ is measured from the straight through beam; from the grating normal subtract the turn.';
+    $('ordNote').innerHTML = note;
+  }
+  function trueLams() { return PH ? PH.comps.map((c) => c.lam) : []; }
+  function updateMeasure() {
+    const on = S.mode === 'measure';
+    $('measBox').hidden = !on;
+    if (!on) return;
+    $('rCal').textContent = fmtCm(S.jawB - S.jawA);
+    $('rGr').textContent = (S.lpm % 1 ? S.lpm.toFixed(1) : S.lpm.toFixed(0)) + ' /mm';
+    const dBtn = document.querySelector('[data-find="d"]');
+    dBtn.disabled = S.unknown || !!srcDef().continuum;
+    if (dBtn.disabled && S.find === 'd') setFind('lam');
+  }
+  function setFind(f) {
+    S.find = f;
+    for (const b of document.querySelectorAll('[data-find]')) b.setAttribute('aria-pressed', String(b.dataset.find === f));
+    $('result').textContent = '';
+  }
+  function pct(v, t) { const e = (v - t) / t * 100; return (e >= 0 ? '+' : '−') + Math.abs(e).toFixed(Math.abs(e) < 10 ? 2 : 1) + '%'; }
+  function row(label, value, cls) { return `<div${cls ? ` class="${cls}"` : ''}><span>${label}</span><span>${value}</span></div>`; }
+  function check() {
+    const L = parseFloat($('inL').value), yc = parseFloat($('inY').value), m = parseInt($('inM').value, 10), box = $('result');
+    if (!(L > 0) || !(yc > 0) || !(m >= 1)) { box.innerHTML = '<p>Enter L in metres, y in centimetres (both positive) and a whole order number m ≥ 1.</p>'; return; }
+    const y = yc / 100, d = dOf(S.lpm), sd = srcDef();
+    let html = '';
+    if (S.find === 'lam') {
+      if (sd.continuum) { box.innerHTML = '<p>White light contains every wavelength, so there is no single answer. Pick a laser or a lamp line.</p>'; return; }
+      const r = lamFromSpot(y, L, m, d), ex = r.exact * 1e9, sm = r.small * 1e9;
+      const truth = trueLams().reduce((b, l) => (Math.abs(l - ex) < Math.abs(b - ex) ? l : b), trueLams()[0]);
+      const good = Math.abs(ex - truth) / truth < 0.01;
+      html += row('θ = arctan(y/L)', fmtDeg(r.th));
+      html += row('Exact: λ = d sin θ / m', fmtNm(ex) + ' (' + pct(ex, truth) + ')', good ? 'good' : 'bad');
+      html += row('Small angle: λ ≈ d y / (m L)', fmtNm(sm) + ' (' + pct(sm, truth) + ')', Math.abs(sm - truth) / truth < 0.01 ? 'good' : 'bad');
+      html += row(PH.comps.length > 1 ? 'Nearest true line' : 'True wavelength', fmtNm(truth));
+      const o = orderInfo(m, truth * 1e-9, d, S.alpha * DEG, S.L);
+      if (o.exists && o.onScreen) html += row(`True y${sub(m)} at L = ${S.L.toFixed(2)} m`, fmtCm(o.y));
+      if (S.unknown) {
+        const key = Object.keys(SOURCES).find((k) => SOURCES[k].lines && SOURCES[k].lines.length === 1 && SOURCES[k].lines[0][0] === truth);
+        S.unknown = false; if (key) S.src = key;
+        html += '<p>The laser is revealed: ' + (key ? SOURCES[key].note : fmtNm(truth)) + '</p>';
+      }
+    } else {
+      const lam = refLam() * 1e-9, r = dFromSpot(y, L, m, lam), ex = r.exact * 1e6, sm = r.small * 1e6, truth = d * 1e6;
+      html += row('θ = arctan(y/L)', fmtDeg(r.th));
+      html += row('Exact: d = mλ / sin θ', ex.toFixed(3) + ' µm (' + pct(ex, truth) + ')', Math.abs(ex - truth) / truth < 0.01 ? 'good' : 'bad');
+      html += row('Small angle: d ≈ mλL / y', sm.toFixed(3) + ' µm (' + pct(sm, truth) + ')', Math.abs(sm - truth) / truth < 0.01 ? 'good' : 'bad');
+      html += row('True d', truth.toFixed(3) + ' µm = ' + (1 / (truth * 1e-3)).toFixed(0) + ' lines/mm');
+      html += row('Using λ', fmtNm(refLam()));
+    }
+    if (S.alpha !== 0) html += '<p>The grating is turned, so tan θ = y/L and d sin θ = mλ no longer apply as written. Set the turn to 0° for this measurement.</p>';
+    else html += '<p>The small angle form uses sin θ ≈ tan θ ≈ y/L. It is only good to 1% below about 8°; at larger angles the exact form is needed.</p>';
+    box.innerHTML = html;
+    syncSourceChips(); dirty = true; schedule(); updateRail();
+  }
+
+  // ---------- presets ----------
+  function setPresetBtn(name) {
+    S.preset = name;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint').textContent = name ? PRESETS[name].hint : 'Your own setup. Pick a preset to start again.';
+  }
+  function setMode(mode) {
+    S.mode = mode;
+    for (const b of document.querySelectorAll('[data-mode]')) b.setAttribute('aria-pressed', String(b.dataset.mode === mode));
+    if (mode === 'explore' && S.unknown) { S.unknown = false; syncSourceChips(); dirty = true; }
+    schedule(); updateRail();
+  }
+  function setZoom(z) {
+    S.zoom = z;
+    for (const b of document.querySelectorAll('[data-zoom]')) b.setAttribute('aria-pressed', String((b.dataset.zoom === '1') === z));
+    dirty = true; schedule();
+  }
+  function applyPreset(name) {
+    const p = PRESETS[name];
+    if (p.src === 'unknown') {
+      let l; do { l = UNKNOWN_SET[Math.floor(Math.random() * UNKNOWN_SET.length)]; } while (UNKNOWN_SET.length > 1 && l === S.unknownLam && Math.random() < 0.8);
+      S.src = 'unknown'; S.unknown = true; S.unknownLam = l;
+    } else { S.src = p.src; S.unknown = false; }
+    S.refIdx = p.src === 'white' ? 1 : 0; S.lpm = p.lpm; S.grat = p.grat; S.L = p.L; S.frameL = p.frameL; S.N = p.N; S.dA = p.dA; S.alpha = p.alpha;
+    $('sL').value = S.L; $('sN').value = Math.log10(S.N); $('sDA').value = S.dA; $('sRot').value = S.alpha; $('sLpm').value = Math.round(S.lpm);
+    for (const b of document.querySelectorAll('#grats button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.grat));
+    syncSourceChips(); setZoom(p.zoom);
+    S.jawA = 0; S.jawB = 0.2; S.jaw = 'B';
+    $('inL').value = ''; $('inY').value = ''; $('inM').value = 1; $('result').textContent = ''; setFind('lam');
+    setMode(p.mode);
+    setPresetBtn(name);
+    dirty = true; layout(); schedule(); updateRail();
+  }
+
+  // ---------- events ----------
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#grats button')) b.addEventListener('click', () => setLpm(GRATS[b.dataset.g], b.dataset.g));
+  $('sLpm').addEventListener('input', (e) => { const v = +e.target.value; const g = Object.keys(GRATS).find((k) => Math.abs(GRATS[k] - v) < 1e-9 && k !== 'cd'); setLpm(v, g || (v === 625 ? 'cd' : null)); });
+  $('sN').addEventListener('input', (e) => { S.N = Math.round(Math.pow(10, +e.target.value)); changed(); });
+  $('sDA').addEventListener('input', (e) => { S.dA = +e.target.value; changed(); });
+  $('sRot').addEventListener('input', (e) => { S.alpha = +e.target.value; changed(); });
+  $('sL').addEventListener('input', (e) => { S.L = +e.target.value; changed(); });
+  for (const b of document.querySelectorAll('[data-mode]')) b.addEventListener('click', () => setMode(b.dataset.mode));
+  for (const b of document.querySelectorAll('[data-find]')) b.addEventListener('click', () => { if (!b.disabled) setFind(b.dataset.find); });
+  for (const b of document.querySelectorAll('[data-zoom]')) b.addEventListener('click', () => setZoom(b.dataset.zoom === '1'));
+  $('tEnv').addEventListener('change', (e) => { S.env = e.target.checked; schedule(); });
+  $('tAng').addEventListener('change', (e) => { S.angles = e.target.checked; schedule(); });
+  $('tHaze').addEventListener('change', (e) => { S.haze = e.target.checked; schedule(); });
+  $('fill').addEventListener('click', () => { $('inL').value = S.L.toFixed(2); $('inY').value = (Math.abs(S.jawB - S.jawA) * 100).toFixed(1); });
+  $('check').addEventListener('click', check);
+
+  function evXY(e) { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+  cv.addEventListener('pointerdown', (e) => {
+    cv.focus({ preventScroll: true });
+    const [x, y] = evXY(e);
+    let h = handleAt(x, y, e.pointerType === 'touch');
+    // in measure mode a press anywhere on the wall brings the nearer jaw there
+    if (!h && S.mode === 'measure' && y >= G.face.y0 && y <= G.face.y1) {
+      const id = Math.abs(x - X(S.jawA)) < Math.abs(x - X(S.jawB)) ? 'A' : 'B';
+      h = handles().find((k) => k.id === 'jaw' + id);
+    }
+    if (!h) return;
+    drag = { id: h.id }; hoverId = h.id; if (h.id.startsWith('jaw')) S.jaw = h.id.slice(3);
+    cv.style.cursor = h.cursor === 'grab' ? 'grabbing' : h.cursor;
+    cv.setPointerCapture(e.pointerId); e.preventDefault();
+    pendingDrag = [x, y]; schedule();
+  });
+  cv.addEventListener('pointermove', (e) => {
+    const [x, y] = evXY(e);
+    if (drag) { pendingDrag = [x, y]; schedule(); return; }
+    if (e.pointerType === 'mouse') {
+      const h = handleAt(x, y, false), id = h ? h.id : null;
+      if (id !== hoverId) { hoverId = id; schedule(); }
+      cv.style.cursor = h ? h.cursor : (S.mode === 'measure' && y >= G.face.y0 && y <= G.face.y1 ? 'crosshair' : 'default');
+    }
+  });
+  const endDrag = (e) => {
+    if (drag) { applyPendingDrag(); if (e.pointerType !== 'mouse') hoverId = null; }
+    drag = null; cv.style.cursor = 'default'; schedule();
+  };
+  cv.addEventListener('pointerup', endDrag);
+  cv.addEventListener('pointercancel', endDrag);
+  cv.addEventListener('pointerleave', () => { if (!drag && hoverId) { hoverId = null; schedule(); } });
+  function applyPendingDrag() {                                  // at most one handle update per animation frame
+    if (!pendingDrag || !drag) { pendingDrag = null; return; }
+    const h = handles().find((k) => k.id === drag.id);
+    if (h) h.set(pendingDrag[0], pendingDrag[1]);
+    pendingDrag = null;
+  }
+  cv.addEventListener('keydown', (e) => {
+    const k = e.key, big = e.shiftKey;
+    if (k === 'ArrowUp' || k === 'ArrowDown') setL(sliderSnap($('sL'), S.L + (k === 'ArrowUp' ? -1 : 1) * (big ? 0.1 : 0.01)));
+    else if (k === '[' || k === ']') setAlpha(sliderSnap($('sRot'), S.alpha + (k === ']' ? 1 : -1) * (big ? 5 : 0.5)));
+    else if (k === '+' || k === '=' || k === '-' || k === '_' || k === '−') setN(S.N * ((k === '+' || k === '=') ? (big ? 2 : 1.25) : (big ? 0.5 : 0.8)) + ((k === '+' || k === '=') ? 1 : 0));
+    else if (S.mode === 'measure' && (k === 'a' || k === 'A' || k === 'b' || k === 'B')) { S.jaw = k.toUpperCase(); schedule(); }
+    else if (S.mode === 'measure' && (k === 'ArrowLeft' || k === 'ArrowRight')) {
+      const cur = S.jaw === 'A' ? S.jawA : S.jawB;
+      setJaw(S.jaw, Math.round((cur + (k === 'ArrowRight' ? 1 : -1) * (big ? 0.01 : 0.001)) * 1000) / 1000);
+    } else return;
+    e.preventDefault();
+  });
+
+  // ---------- frame loop ----------
+  let raf = 0, last = 0;
+  function animating() { return S.haze && !reduce && !document.hidden; }
+  function schedule() { if (!raf) raf = requestAnimationFrame(frame); }
+  function frame(t) {
+    raf = 0;
+    const dt = last ? Math.min(0.1, (t - last) / 1000) : 0; last = t;
+    applyPendingDrag();
+    draw(dt);
+    if (animating()) schedule(); else last = 0;
+  }
+  window.__dg = { S, physics: () => PH, handles: () => handles(), scale: () => s, frameTime: (rebuild) => { const t0 = performance.now(); for (let i = 0; i < 20; i++) { if (rebuild) dirty = true; draw(0.016); } return (performance.now() - t0) / 20; } };
+
+  // ---------- sizing ----------
+  function resize() {
+    const r = stage.getBoundingClientRect();
+    W = r.width; H = r.height; dpr = window.devicePixelRatio || 1;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    layout(); dirty = true; schedule();
+  }
+
+  // theme changes
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', schedule); } catch (_) {}
+  new MutationObserver(schedule).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class', 'style'] });
+  document.addEventListener('visibilitychange', schedule);
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+
+  // ---------- boot ----------
+  if (reduce) { $('tHaze').checked = false; S.haze = false; }
+  buildSourceChips();
+  new ResizeObserver(resize).observe(stage);
+  resize();
+  applyPreset('red600');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; schedule(); });
+})();
+</script>
+</body>
+</html>
