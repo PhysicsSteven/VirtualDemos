@@ -1,0 +1,1775 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+<title>Fluids: Pressure, Buoyancy and Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the apparatus across the top of the stage, a graph for the current scene below it; instrument rail on the right; stacks on narrow screens. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --xcol: #7a45c0;
+  --vcol: #1d8a5a;
+  --acol: #c0601a;
+  --wire: #3b4655;
+  --block: #cdd6e1;
+  --liq-water: #3f8fd8;
+  --liq-sea: #23879a;
+  --liq-oil: #cf9a1e;
+  --liq-hg: #8e98a4;
+  --cork: #c9a77a;
+  --wood: #b07a43;
+  --ice: #bfe3f3;
+  --metal: #aab4bf;
+  --lead: #6f7782;
+  --liq-alpha: 0.30;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #aab4c2;
+    --block: #2c3a4c; --liq-water: #4a9ff0; --liq-sea: #3fb2c0; --liq-oil: #e8b94a; --liq-hg: #b8c0ca;
+    --cork: #a8865a; --wood: #9a6a3a; --ice: #8fc3da; --metal: #7f8a97; --lead: #59616c; --liq-alpha: 0.34;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #aab4c2;
+  --block: #2c3a4c; --liq-water: #4a9ff0; --liq-sea: #3fb2c0; --liq-oil: #e8b94a; --liq-hg: #b8c0ca;
+  --cork: #a8865a; --wood: #9a6a3a; --ice: #8fc3da; --metal: #7f8a97; --lead: #59616c; --liq-alpha: 0.34;
+  color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 640px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
+  display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 63fr) minmax(0, 37fr); }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#gPane { border-top: 1px solid var(--line); }
+.stage.cols { grid-template-columns: minmax(0, 56fr) minmax(0, 44fr); grid-template-rows: minmax(0, 1fr); }
+.stage.cols #gPane { border-top: 0; border-left: 1px solid var(--line); }
+#sCan { touch-action: none; outline: none; }
+#sCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
+.stage-ctl > * { pointer-events: auto; }
+.stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
+.tclock { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; font-size: 0.86rem; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--canvas) 85%, transparent); padding: 2px 6px; border-radius: 6px; white-space: nowrap; line-height: 1.25; }
+.tclock small { font-size: 0.74rem; font-weight: 400; color: var(--muted); }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg.full { display: flex; }
+.seg.full button { flex: 1; padding: 4px 4px; }
+.seg.wrap { flex-wrap: wrap; gap: 2px; }
+.seg.wrap button { flex: 1 1 30%; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; white-space: nowrap; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.ctl { display: flex; flex-direction: column; gap: 4px; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: 0.88rem; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .wide { grid-column: 1 / -1; }
+.formula { margin: 0; font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
+.c-w { color: var(--pos); } .c-b { color: var(--vcol); } .c-t { color: var(--xcol); } .c-d { color: var(--acol); } .c-p { color: var(--neg); }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid var(--pos); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; grid-template-rows: 400px 270px; }
+  .stage.cols { grid-template-columns: minmax(0, 1fr); grid-template-rows: 420px 440px; }
+  .stage.cols #gPane { border-left: 0; border-top: 1px solid var(--line); }
+  .rail { overflow: visible; }
+}
+@media (max-width: 640px) {
+  .stage { grid-template-rows: 360px 250px; }
+  .stage.cols { grid-template-rows: 400px 440px; }
+}
+
+/* projector on a short screen: let the stage shrink to fit under the header */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 440px !important; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Fluids: Pressure, Buoyancy and Flow</h1>
+      <p>A liquid at rest pushes harder the deeper you go, and that extra push on the bottom of a submerged object is the buoyant force. A moving liquid trades pressure for speed: where a pipe narrows the flow speeds up and the pressure drops.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units · P = P₀ + ρgh · F_B = ρ_f V_sub g · P + ½ρv² + ρgy = const</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="pane" id="sPane">
+        <canvas id="sCan" tabindex="0" role="application" aria-label="Fluid apparatus. Drag the probe, the block, the spring scale, the water surface, the pipe throat or the hole in the tank. Keys: arrows move or change the selected part, space plays or pauses, R starts again."></canvas>
+        <div class="stage-ctl" id="stageCtl">
+          <button type="button" class="btn" id="play">Pause</button>
+          <button type="button" class="btn" id="reset">Drop again</button>
+          <span class="tclock mono" id="tclock">t = 0<small id="rateTag">real time</small></span>
+        </div>
+      </div>
+      <div class="pane" id="gPane">
+        <canvas id="gCan" aria-label="Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, or jet range against hole depth."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Scene</h2>
+        <div class="seg full wrap" role="group" aria-label="Scene" id="sceneSeg">
+          <button type="button" data-s="press" aria-pressed="false">Depth</button>
+          <button type="button" data-s="pascal" aria-pressed="false">Shapes</button>
+          <button type="button" data-s="baro" aria-pressed="false">Barometer</button>
+          <button type="button" data-s="buoy" aria-pressed="true">Buoyancy</button>
+          <button type="button" data-s="venturi" aria-pressed="false">Venturi</button>
+          <button type="button" data-s="torr" aria-pressed="false">Torricelli</button>
+        </div>
+        <div class="chips" id="presets">
+          <button type="button" data-p="depth" aria-pressed="false">Pressure grows with depth</button>
+          <button type="button" data-p="float" aria-pressed="true">Floating and sinking</button>
+          <button type="button" data-p="iceberg" aria-pressed="false">Iceberg</button>
+          <button type="button" data-p="weigh" aria-pressed="false">Weighing in water (Archimedes)</button>
+          <button type="button" data-p="venturi" aria-pressed="false">Venturi tube</button>
+          <button type="button" data-p="torr" aria-pressed="false">Torricelli's tank</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section id="liqSec">
+        <h2>Liquid</h2>
+        <div class="seg full" role="group" aria-label="Liquid" id="liqSeg">
+          <button type="button" data-l="water" aria-pressed="true">Water</button>
+          <button type="button" data-l="oil" aria-pressed="false">Oil</button>
+          <button type="button" data-l="sea" aria-pressed="false">Seawater</button>
+          <button type="button" data-l="hg" aria-pressed="false">Mercury</button>
+        </div>
+        <p class="hint mono" id="liqNote"></p>
+      </section>
+
+      <section>
+        <h2 id="parTitle">Block</h2>
+        <div class="seg full wrap" role="group" aria-label="Instrument" id="baroSeg">
+          <button type="button" data-b="baro" aria-pressed="true">Barometer</button>
+          <button type="button" data-b="mano" aria-pressed="false">Manometer</button>
+        </div>
+        <div class="seg full wrap" role="group" aria-label="Block material" id="matSeg">
+          <button type="button" data-m="cork" aria-pressed="false">Cork</button>
+          <button type="button" data-m="wood" aria-pressed="true">Pine</button>
+          <button type="button" data-m="ice" aria-pressed="false">Ice</button>
+          <button type="button" data-m="al" aria-pressed="false">Aluminum</button>
+          <button type="button" data-m="steel" aria-pressed="false">Steel</button>
+          <button type="button" data-m="lead" aria-pressed="false">Lead</button>
+        </div>
+        <div id="sliders"></div>
+        <div class="toggles" id="buoyToggles">
+          <label><input type="checkbox" id="tScale">Spring scale</label>
+          <label><input type="checkbox" id="tOver">Overflow can</label>
+        </div>
+        <div class="inline" id="pModeWrap"><span>Show pressure as</span>
+          <div class="seg" role="group" aria-label="Pressure shown as" id="pModeSeg">
+            <button type="button" data-g="abs" aria-pressed="true">Absolute</button>
+            <button type="button" data-g="gauge" aria-pressed="false">Gauge</button>
+          </div>
+        </div>
+        <p class="hint" id="parHint"></p>
+      </section>
+
+      <section>
+        <h2>Results</h2>
+        <dl class="readout" id="readBox"></dl>
+        <p class="formula mono" id="formula"></p>
+      </section>
+
+      <section id="timeSec">
+        <h2>Time</h2>
+        <div class="seg full" role="group" aria-label="Playback rate" id="rateSeg">
+          <button type="button" data-r="0.1" aria-pressed="false">0.1×</button>
+          <button type="button" data-r="0.25" aria-pressed="false">0.25×</button>
+          <button type="button" data-r="0.5" aria-pressed="false">0.5×</button>
+          <button type="button" data-r="1" aria-pressed="true">1×</button>
+        </div>
+        <div class="toggles" id="layerToggles">
+          <label id="lForces"><input type="checkbox" id="tForces" checked>Force arrows</label>
+          <label id="lGhost"><input type="checkbox" id="tGhost" checked>Starting level</label>
+          <label id="lCmp"><input type="checkbox" id="tCmp" checked>Compare holes</label>
+        </div>
+      </section>
+
+      <section>
+        <h2>Key and model</h2>
+        <div class="key" id="keyBox"></div>
+        <p class="hint" id="modelHint"></p>
+      </section>
+    </aside>
+  </main>
+  <p class="sr" aria-live="polite" id="live"></p>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.80665;            // standard gravity, m/s²
+  const PATM = 101325;          // standard atmosphere, Pa
+  const PVAP = 2339;            // vapour pressure of water at 20 °C, Pa
+  const LIQ = {
+    water: { name: 'Water', rho: 1000, note: 'fresh water, 1000 kg/m³ (998 at 20 °C)' },
+    oil: { name: 'Oil', rho: 920, note: 'vegetable oil, 920 kg/m³' },
+    sea: { name: 'Seawater', rho: 1025, note: 'seawater, 1025 kg/m³' },
+    hg: { name: 'Mercury', rho: 13595.1, note: 'mercury at 0 °C, 13 595 kg/m³ (13.6 g/cm³)' }
+  };
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  // hydrostatics: pressure at depth d below a free surface at pressure P0
+  const hydro = (rho, d, P0) => (P0 === undefined ? PATM : P0) + rho * G * d;
+  // a column of liquid that balances a pressure difference ΔP: h = ΔP/(ρg)
+  const columnHeight = (dP, rho) => dP / (rho * G);
+
+  // Pascal's vessels: axisymmetric, the same base radius r0; radius r(z) changes linearly up to rt at the vessel top H.
+  // The slanted tube is a sheared cylinder: every horizontal slice is a circle of radius r0, so its volume is πr0²h (Cavalieri).
+  function vesselR(v, z) { return v.r0 + (v.rt - v.r0) * z / v.H; }
+  function vesselVolume(v, h) { const r1 = vesselR(v, h); return Math.PI * h / 3 * (v.r0 * v.r0 + v.r0 * r1 + r1 * r1); }
+
+  // Buoyancy in a tank of floor area A. Heights z are measured up from the tank floor; zb is the block's bottom.
+  // The block is a cube of edge L (cross section a = L²). With water volume Vw (level Vw/A without the block),
+  // the submerged height s and the surface hs satisfy hs = (Vw + a s)/A and s = clamp(hs − zb, 0, L), so
+  // s = clamp((Vw/A − zb)/(1 − a/A), 0, L). An overflow can holds the level at its spout: any extra spills out.
+  function submerged(p, zb, Vw) {
+    const a = p.L * p.L, A = p.A, h0 = Vw / A;
+    let s = clamp((h0 - zb) / (1 - a / A), 0, p.L), hs = h0 + a * s / A, spill = 0;
+    if (p.spout != null && hs > p.spout + 1e-12) {
+      s = clamp(p.spout - zb, 0, p.L); hs = p.spout;
+      spill = Math.max(0, Vw - (A * p.spout - a * s));
+    }
+    return { s, hs, spill };
+  }
+  // stiffness of the floating block (buoyant force per unit drop of the block, the surface rise included)
+  const kEff = (p) => p.rhoF * G * p.L * p.L / (1 - p.L * p.L / p.A);
+  const blockMass = (p) => p.rhoO * p.L * p.L * p.L;
+  // linear drag on the wet block, b = 2ζ√(k m), so ζ is the damping ratio of small bobs about the floating level;
+  // it fades in over the first 2 mm of immersion so the force has no jump at the surface. Added mass is left out.
+  const dragB = (p) => 2 * p.zeta * Math.sqrt(kEff(p) * blockMass(p));
+  function buoyForces(p, zb, v, Vw) {
+    const sb = submerged(p, zb, Vw), m = blockMass(p);
+    const W = m * G, FB = p.rhoF * G * p.L * p.L * sb.s, Fd = -dragB(p) * Math.min(1, sb.s / 0.002) * v;
+    return { s: sb.s, hs: sb.hs, W, FB, Fd, m };
+  }
+  // equilibrium of a freely floating block: s = (ρ_obj/ρ_fluid) L, the level rises by a s/A (capped by a spout)
+  function floatEq(p, Vw) {
+    const frac = p.rhoO / p.rhoF, a = p.L * p.L;
+    if (frac >= 1) return { floats: false, frac, s: p.L, zb: 0 };
+    const s = frac * p.L;
+    let hs = Vw / p.A + a * s / p.A;
+    if (p.spout != null) hs = Math.min(hs, p.spout);
+    const zb = hs - s;
+    return { floats: zb >= 0, frac, s, zb, hs };
+  }
+  // one RK4 step of m z″ = F_B(z) + F_drag − m g, with the tank floor as a perfectly inelastic stop
+  function bobStep(st, p, dt) {
+    const acc = (zb, v) => { const f = buoyForces(p, zb, v, st.Vw); return (f.FB + f.Fd - f.W) / f.m; };
+    const z = st.zb, v = st.v;
+    const k1z = v, k1v = acc(z, v);
+    const k2z = v + dt / 2 * k1v, k2v = acc(z + dt / 2 * k1z, v + dt / 2 * k1v);
+    const k3z = v + dt / 2 * k2v, k3v = acc(z + dt / 2 * k2z, v + dt / 2 * k2v);
+    const k4z = v + dt * k3v, k4v = acc(z + dt * k3z, v + dt * k3v);
+    let zn = z + dt / 6 * (k1z + 2 * k2z + 2 * k3z + k4z), vn = v + dt / 6 * (k1v + 2 * k2v + 2 * k3v + k4v);
+    if (zn <= 0) { zn = 0; if (vn < 0) vn = 0; }
+    const out = { zb: zn, v: vn, Vw: st.Vw, caught: st.caught || 0, t: (st.t || 0) + dt };
+    const sb = submerged(p, zn, out.Vw);
+    if (sb.spill > 0) { out.Vw -= sb.spill; out.caught += sb.spill; }
+    return out;
+  }
+  function bobRun(st, p, T, h) {
+    h = h || 5e-4;
+    let left = T;
+    while (left > 1e-12) { const d = Math.min(h, left); st = bobStep(st, p, d); left -= d; }
+    return st;
+  }
+  // a block hanging still from a string whose lowest reach for the block bottom is zTaut:
+  // the string can pull but not push, so a floater rides up to its floating level if that is higher
+  function hangState(p, zTaut, Vw) {
+    const eq = floatEq(p, Vw);
+    let zb = Math.max(zTaut, 0), slack = false;
+    if (eq.floats && eq.zb > zb) { zb = eq.zb; slack = true; }
+    const f = buoyForces(p, zb, 0, Vw);
+    const T = slack ? 0 : Math.max(0, f.W - f.FB);
+    const N = !slack && zb === 0 && zTaut < 0 ? Math.max(0, f.W - f.FB) : 0;
+    return { zb, T: N > 0 ? 0 : T, N, s: f.s, hs: f.hs, W: f.W, FB: f.FB, slack };
+  }
+
+  // Venturi: continuity A1 v1 = A2 v2 and Bernoulli along the axis, P1 + ½ρv1² = P2 + ½ρv2².
+  // An open standpipe shows the gauge pressure at the pipe axis as a column h = P_gauge/(ρg).
+  function venturi(p) {
+    const r = (p.D1 / p.D2) * (p.D1 / p.D2), v2 = p.v1 * r;
+    const P1 = p.rho * G * p.h1, P2 = P1 - 0.5 * p.rho * (v2 * v2 - p.v1 * p.v1);
+    return { v1: p.v1, v2, ratio: r, P1, P2, h2: P2 / (p.rho * G), dh: (v2 * v2 - p.v1 * p.v1) / (2 * G), Q: Math.PI * p.D1 * p.D1 / 4 * p.v1 };
+  }
+  // Torricelli: a small hole at depth h below the surface of a tank whose water stands H above the floor.
+  // v = √(2gh); the jet falls H − h in t = √(2(H − h)/g) and lands R = v t = 2√(h(H − h)) from the wall.
+  function torricelli(H, h) {
+    const v = Math.sqrt(2 * G * Math.max(0, h)), t = Math.sqrt(2 * Math.max(0, H - h) / G);
+    return { v, t, R: v * t };
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.FL = { G, PATM, LIQ, hydro, columnHeight, vesselR, vesselVolume, submerged, kEff, blockMass, dragB, buoyForces, floatEq, bobStep, bobRun, hangState, venturi, torricelli };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  // ---------- apparatus constants ----------
+  const TANK = { W: 0.5, D: 0.3, H: 0.5, spout: 0.42, top: 0.28 };   // buoyancy tank: inner width, depth front to back, wall height, spout height; room above
+  const STR = 0.05;                                                // string from the scale hook to the block, m
+  const BEAKER = { W: 0.2, D: 0.2, H: 0.26 };                      // catch beaker beside the overflow can
+  const VESS = [
+    { id: 'straight', name: 'Straight', r0: 0.04, rt: 0.04, H: 0.5, shear: 0 },
+    { id: 'flared', name: 'Flared', r0: 0.04, rt: 0.17, H: 0.5, shear: 0 },
+    { id: 'narrow', name: 'Narrowing', r0: 0.04, rt: 0.012, H: 0.5, shear: 0 },
+    { id: 'slant', name: 'Slanted', r0: 0.04, rt: 0.04, H: 0.5, shear: 0.62 }
+  ];
+  const PIPE = { L: 1.6, c0: 0.45, c1: 0.65, d0: 0.95, d1: 1.3, taps: [0.22, 0.8, 1.45] };  // Venturi: converging and diverging sections, standpipe positions
+  const TT = { W: 0.34 };                                          // Torricelli tank inner width
+  const MATS = { cork: ['Cork', 240], wood: ['Pine', 500], ice: ['Ice', 917], al: ['Aluminum', 2700], steel: ['Steel', 7850], lead: ['Lead', 11340] };
+
+  // ---------- sliders per scene: [key, label, min, max, step, unit, decimals] ----------
+  const SLD = {
+    press: [['D', 'Liquid depth', 0.5, 10, 0.1, 'm', 1], ['pd', 'Probe depth', 0, 10, 0.01, 'm', 2]],
+    pascal: [['hp', 'Fill height (all vessels)', 0.05, 0.48, 0.01, 'm', 2]],
+    baro: [['Pa', 'Air pressure P<sub>atm</sub>', 85, 106, 0.1, 'kPa', 1], ['Pg', 'Gas gauge pressure', -10, 20, 0.1, 'kPa', 1]],
+    buoy: [['rho', 'Block density ρ<sub>obj</sub>', 100, 12000, 10, 'kg/m³', 0], ['L', 'Block edge (a cube)', 4, 20, 1, 'cm', 0],
+      ['h0', 'Water depth without the block', 0.15, 0.45, 0.01, 'm', 2], ['zeta', 'Damping ratio ζ', 0.02, 1, 0.01, '', 2]],
+    venturi: [['D1', 'Pipe diameter D<sub>1</sub>', 3, 10, 0.1, 'cm', 1], ['D2', 'Throat diameter D<sub>2</sub>', 1, 10, 0.1, 'cm', 1],
+      ['v1', 'Inlet speed v<sub>1</sub>', 0.1, 2, 0.05, 'm/s', 2], ['h1', 'Inlet standpipe height h<sub>1</sub>', 0.2, 1.2, 0.01, 'm', 2]],
+    torr: [['H', 'Water height H', 0.2, 1.5, 0.01, 'm', 2], ['hh', 'Hole depth h', 0, 1.5, 0.01, 'm', 2]]
+  };
+  const DEF = {
+    press: { D: 2, pd: 1.2, px: 0.62 },
+    pascal: { hp: 0.32 },
+    baro: { Pa: 101.3, Pg: 6 },
+    buoy: { rho: 500, L: 10, h0: 0.3, zeta: 0.12, mat: 'wood', scale: false, over: false, xb: 0, z0: 0.48, zh: 0.6 },
+    venturi: { D1: 6, D2: 3, v1: 0.8, h1: 0.8 },
+    torr: { H: 1, hh: 0.3 }
+  };
+  const TITLES = { press: 'Tank and probe', pascal: 'Vessels', baro: 'Instrument', buoy: 'Block', venturi: 'Pipe', torr: 'Tank' };
+  const PAR_HINT = {
+    press: 'Drag the probe anywhere in the liquid, or drag the grip on the surface to change the depth. Moving the probe sideways changes nothing: only depth matters.',
+    pascal: 'Drag the grip on the dashed line to fill all four vessels to the same height. Each vessel has the same base, 8 cm across.',
+    baro: 'Drag the top of the liquid column (barometer) or the open arm’s level (manometer). The column height is the pressure difference divided by ρg.',
+    buoy: 'Drag the block anywhere and let go; drag the square grip on its corner to resize it. With the spring scale on, drag the scale up and down to lower the block into the liquid.',
+    venturi: 'Drag the grip on the throat wall to narrow or widen it, the grip on the inlet wall for D₁, the round grip on the arrow for the inlet speed, and the first standpipe’s level for the inlet pressure.',
+    torr: 'Drag the hole up and down the wall, and the grip on the surface to change the water height H.'
+  };
+  const MODEL = {
+    press: 'Model: a liquid at rest with constant density (incompressible), g = 9.80665 m/s², and standard air pressure P₀ = 101.325 kPa on the surface. The drawing’s width is schematic; the depth scale is to size.',
+    pascal: 'Model: liquid at rest, open to the air. Each vessel is round with a base 8 cm across (area 50.3 cm²); the narrowing vessel ends 2.4 cm across, the flared one 34 cm. Gauge pressures are shown.',
+    baro: 'Model: incompressible liquid, g = 9.80665 m/s². The space above a barometer column is taken as a vacuum (mercury vapour adds only 0.2 Pa; water vapour would add 2.3 kPa, which a real water barometer must allow for). The manometer arms have the same width.',
+    buoy: 'Model: a cube in a glass tank 50 cm wide and 30 cm from front to back (floor area 0.15 m²), so the level rises by V_sub/A. The liquid pushes up with ρ_f V_sub g. Motion is vertical only, with linear drag F = −b v on the wet block (b = 2ζ√(km), k = the buoyant force per metre of sinking, so ζ is the damping ratio of small bobs) and no added mass, so real blocks bob a little more slowly and real water drag grows faster than v. The floor stops the block dead. The spring scale is read with the block hanging still.',
+    venturi: 'Model: ideal flow, meaning incompressible, inviscid and steady, with the speed uniform across each section. The pipe is horizontal; each open standpipe shows the gauge pressure at the axis. Pipe widths are drawn larger than to scale. A real pipe loses some pressure to friction, so the outlet standpipe would stand a little lower.',
+    torr: 'Model: ideal flow from a small hole in a wide tank, so the surface hardly moves and v = √(2gh). A supply keeps the level steady. Air drag on the jet is neglected and the hole has rounded edges, so the jet does not contract.'
+  };
+  const PRESETS = {
+    depth: { scene: 'press', liq: 'water', p: { D: 2, pd: 1.2, px: 0.62 }, gmode: 'abs',
+      hint: 'Every metre of water adds 9.8 kPa, about a tenth of an atmosphere, so 10.3 m of water doubles the pressure. Switch to mercury: the same depth gives 13.6 times as much.' },
+    float: { scene: 'buoy', liq: 'water', p: { rho: 500, L: 10, mat: 'wood', h0: 0.3, zeta: 0.12, scale: false, over: false, z0: 0.48, xb: 0 },
+      hint: 'A floating block settles with a fraction ρ_obj/ρ_fluid of its height under the surface, here half. Try Steel or Ice, or slide the density through 1000 kg/m³: the block sinks once it is denser than the water.' },
+    iceberg: { scene: 'buoy', liq: 'sea', p: { rho: 917, L: 20, mat: 'ice', h0: 0.26, zeta: 0.1, scale: false, over: false, z0: 0.43, xb: 0 },
+      hint: 'Ice in seawater floats with 917/1025 = 89.5% of its volume under the surface: only about a tenth of an iceberg shows. The same holds for any shape, not only a cube.' },
+    weigh: { scene: 'buoy', liq: 'water', p: { rho: 2700, L: 10, mat: 'al', zeta: 0.12, scale: true, over: true, xb: 0 },
+      hint: 'Lower the aluminum block into the full overflow can. The scale reading drops by exactly the weight of the water that runs into the beaker: the buoyant force equals the weight of the liquid displaced.' },
+    venturi: { scene: 'venturi', liq: 'water', p: { D1: 6, D2: 3, v1: 0.8, h1: 0.8 }, gmode: 'gauge',
+      hint: 'Halving the diameter quarters the area, so the water moves 4 times faster in the throat, and the throat standpipe stands lower. Fast flow, low pressure: the pressure drop pays for the extra kinetic energy.' },
+    torr: { scene: 'torr', liq: 'water', p: { H: 1, hh: 0.3 },
+      hint: 'Water leaves the hole as fast as if it had fallen freely from the surface, v = √(2gh). The jet lands farthest when the hole is halfway down; holes a quarter of the way from the top and from the bottom land at the same spot.' }
+  };
+  const SCENE_PRESET = { press: 'depth', buoy: 'float', venturi: 'venturi', torr: 'torr' };
+
+  // ---------- state ----------
+  const S = { scene: 'buoy', preset: 'float', liq: 'water', gmode: 'abs', baro: 'baro', rate: 1, sel: 0,
+    P: JSON.parse(JSON.stringify(DEF)), layers: { forces: true, ghost: true, cmp: true } };
+  let running = !reduce, held = false, t = 0;
+  let bs = null;          // buoyancy state {zb, v, Vw, caught, t}
+  let trace = [];         // [t, s] while the block moves freely
+  let parts = [];         // Venturi flow particles
+  let drops = [];         // Torricelli jet droplets
+  let spillT = 0;         // time since the last spill, for drawing the overflow stream
+  const P = () => S.P[S.scene];
+  const rhoF = () => LIQ[S.liq].rho;
+
+  // ---------- formatting ----------
+  const MIN = (s) => s.replace(/-/g, '−');
+  function fx(v, d) { if (!isFinite(v)) return '—'; const r = +v.toFixed(d); return MIN((r === 0 ? 0 : r).toFixed(d)); }
+  function sig(v, n) {
+    if (!isFinite(v)) return '—';
+    if (Math.abs(v) < 1e-12) return '0';
+    const d = clamp(n - 1 - Math.floor(Math.log10(Math.abs(v)) + 1e-12), 0, 9);
+    return fx(v, d);
+  }
+  const kPa = (v, d) => `${fx(v / 1000, d === undefined ? 2 : d)} kPa`;
+  const fN = (v) => `${sig(v, 3)} N`;
+  const lenStr = (m) => (Math.abs(m) < 1 ? `${fx(m * 100, 1)} cm` : `${fx(m, 2)} m`);
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  const fmtRate = (r) => (r === 1 ? 'real time' : `slow motion ×${+(1 / r).toFixed(1)}`);
+
+  // ---------- buoyancy helpers ----------
+  function bp() {
+    const q = S.P.buoy;
+    return { L: q.L / 100, rhoO: q.rho, rhoF: rhoF(), A: TANK.W * TANK.D, zeta: q.zeta, spout: q.over ? TANK.spout : null };
+  }
+  const Vw0 = () => (S.P.buoy.over ? TANK.W * TANK.D * TANK.spout : TANK.W * TANK.D * S.P.buoy.h0);
+  const zTautOf = (q) => q.zh - STR - q.L / 100;
+  // the hook stays 1.5 cm above the highest the liquid can stand, so the scale itself never gets wet
+  const zhMin = (q) => Math.max(STR + q.L / 100, (q.over ? TANK.spout : q.h0 + Math.pow(q.L / 100, 3) / (TANK.W * TANK.D)) + 0.015);
+  const zhMax = () => TANK.H + 0.12;
+  function clampBlock(q) {
+    const L = q.L / 100;
+    q.xb = clamp(q.xb, -TANK.W / 2 + L / 2, TANK.W / 2 - L / 2);
+    q.z0 = clamp(q.z0, 0, TANK.H + TANK.top - L - 0.02);
+    q.zh = clamp(q.zh, zhMin(q), zhMax());
+  }
+  // start the block again: free blocks drop from their start height, a hanging block sits at the hook
+  function buoyReset(keepWater) {
+    const q = S.P.buoy, p = bp();
+    clampBlock(q);
+    if (!keepWater || !bs) bs = { zb: q.z0, v: 0, Vw: Vw0(), caught: 0, t: 0 };
+    if (q.scale) { q.xb = 0; const h = hangState(p, zTautOf(q), bs.Vw); bs.zb = h.zb; bs.v = 0; spill(p); }
+    else { bs.zb = q.z0; bs.v = 0; bs.t = 0; spill(p); }
+    trace = [[0, submerged(p, bs.zb, bs.Vw).s]];
+    t = 0;
+  }
+  function spill(p) {
+    const sb = submerged(p, bs.zb, bs.Vw);
+    if (sb.spill > 0) { bs.Vw -= sb.spill; bs.caught += sb.spill; spillT = 0; }
+  }
+  function settleBuoy() {      // reduced motion: show the block at rest
+    const p = bp(), q = S.P.buoy; if (q.scale) return;
+    const eq = floatEq(p, bs.Vw);
+    bs.zb = eq.floats ? eq.zb : 0; bs.v = 0; spill(p);
+  }
+
+  // ---------- Venturi helpers ----------
+  const smooth = (u) => { u = clamp(u, 0, 1); return u * u * (3 - 2 * u); };
+  function pipeD(x, q) {        // diameter along the pipe, m
+    const D1 = q.D1 / 100, D2 = q.D2 / 100;
+    if (x < PIPE.c0) return D1;
+    if (x < PIPE.c1) return D1 + (D2 - D1) * smooth((x - PIPE.c0) / (PIPE.c1 - PIPE.c0));
+    if (x < PIPE.d0) return D2;
+    if (x < PIPE.d1) return D2 + (D1 - D2) * smooth((x - PIPE.d0) / (PIPE.d1 - PIPE.d0));
+    return D1;
+  }
+  const vp = () => { const q = S.P.venturi; return { D1: q.D1 / 100, D2: q.D2 / 100, v1: q.v1, h1: q.h1, rho: rhoF() }; };
+  function seedParts() {
+    parts = []; const n = 260;
+    const q = S.P.venturi, Dm = Math.max(q.D1, q.D2) / 100;
+    while (parts.length < n) { const x = Math.random() * PIPE.L, D = pipeD(x, q); if (Math.random() < (D / Dm) * (D / Dm)) parts.push({ x, e: (Math.random() * 2 - 1) * 0.86 }); }
+    parts.sort((a, b) => a.x - b.x);
+  }
+  function advanceParts(dt) {
+    const q = S.P.venturi, D1 = q.D1 / 100;
+    for (const pt of parts) {
+      let left = dt;
+      while (left > 0) { const h = Math.min(left, 0.004); const D = pipeD(pt.x, q); pt.x += q.v1 * (D1 / D) * (D1 / D) * h; left -= h; }
+      if (pt.x > PIPE.L) { pt.x -= PIPE.L; pt.e = (Math.random() * 2 - 1) * 0.86; }
+    }
+  }
+
+  // ---------- Torricelli helpers ----------
+  let dropAcc = 0;
+  function advanceDrops(dt) {
+    const q = S.P.torr, tr = torricelli(q.H, q.hh), z0 = q.H - q.hh;
+    for (const d of drops) d.a += dt;
+    drops = drops.filter((d) => z0 - 0.5 * G * d.a * d.a > 0);
+    if (q.hh < 0.005) return;
+    dropAcc += dt;
+    const every = 0.012;
+    while (dropAcc > every) { dropAcc -= every; drops.push({ a: dropAcc }); }
+    void tr;
+  }
+
+  // ---------- canvases ----------
+  let T = null, dpr = 1;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
+  // label scale: projector size, capped by the pane so labels do not pile up on a small pane
+  const lsc = (W, H) => Math.min(projScale(), Math.max(projScale() > 1 ? 1.15 : 1, Math.min(W / 560, H / 300)));
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), xcol: g('--xcol'), vcol: g('--vcol'), acol: g('--acol'),
+      wire: g('--wire'), block: g('--block'), ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace',
+      liq: { water: g('--liq-water'), sea: g('--liq-sea'), oil: g('--liq-oil'), hg: g('--liq-hg') }, la: +g('--liq-alpha') || 0.3,
+      mat: { cork: g('--cork'), wood: g('--wood'), ice: g('--ice'), metal: g('--metal'), lead: g('--lead') } };
+  }
+  const cans = { s: $('sCan'), g: $('gCan') };
+  const panes = { s: $('sPane'), g: $('gPane') };
+  const ctxs = { s: cans.s.getContext('2d'), g: cans.g.getContext('2d') };
+  const dims = { s: [0, 0], g: [0, 0] };
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const k of ['s', 'g']) {
+      const r = panes[k].getBoundingClientRect();
+      cans[k].width = Math.max(1, Math.round(r.width * dpr)); cans[k].height = Math.max(1, Math.round(r.height * dpr));
+      cans[k].style.width = r.width + 'px'; cans[k].style.height = r.height + 'px';
+      dims[k] = [r.width, r.height];
+    }
+    drawAll();
+  }
+  // text with one level of subscripts: "P_0" or "F_{B}"
+  function richParts(str) {
+    const out = []; const re = /_\{([^}]*)\}|_(\S)/g; let i = 0, m;
+    while ((m = re.exec(str))) { if (m.index > i) out.push([str.slice(i, m.index), false]); out.push([m[1] || m[2], true]); i = re.lastIndex; }
+    if (i < str.length) out.push([str.slice(i), false]);
+    return out;
+  }
+  function richText(ctx, str, x, y, size, weight, align, fam) {
+    const parts2 = richParts(str); fam = fam || T.ui;
+    const f0 = `${weight || 400} ${size}px ${fam}`, f1 = `${weight || 400} ${size * 0.72}px ${fam}`;
+    let w = 0;
+    for (const [s, sub] of parts2) { ctx.font = sub ? f1 : f0; w += ctx.measureText(s).width; }
+    let x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    const ta = ctx.textAlign; ctx.textAlign = 'left';
+    for (const [s, sub] of parts2) { ctx.font = sub ? f1 : f0; ctx.fillText(s, x0, y + (sub ? size * 0.28 : 0)); x0 += ctx.measureText(s).width; }
+    ctx.textAlign = ta;
+    return w;
+  }
+  function richWidth(ctx, str, size, weight, fam) {
+    let w = 0;
+    for (const [s, sub] of richParts(str)) { ctx.font = `${weight || 400} ${sub ? size * 0.72 : size}px ${fam || T.ui}`; w += ctx.measureText(s).width; }
+    return w;
+  }
+  // a label on a halo box, drawn last where lines might cross it; y is the baseline
+  function labelBox(ctx, txt, x, y, align, col, size, weight, fam) {
+    const w = richWidth(ctx, txt, size, weight, fam), x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.86; ctx.fillRect(x0 - 3, y - size * 0.95, w + 6, size * 1.32); ctx.globalAlpha = 1;
+    ctx.fillStyle = col; ctx.textBaseline = 'alphabetic'; richText(ctx, txt, x0, y, size, weight, 'left', fam);
+    return w;
+  }
+  function roundRect(ctx, x, y, w, h, r) {
+    r = Math.max(0, Math.min(r, w / 2, h / 2));
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+  }
+  function arrow(ctx, x0, y0, x1, y1, col, lw, head) {
+    const L = Math.hypot(x1 - x0, y1 - y0); if (L < 2) return;
+    const ux = (x1 - x0) / L, uy = (y1 - y0) / L, hd = Math.min((head || 9) * projScale(), L * 0.6), hw = hd * 0.5;
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = lw; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - ux * hd * 0.8, y1 - uy * hd * 0.8); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - ux * hd - uy * hw, y1 - uy * hd + ux * hw); ctx.lineTo(x1 - ux * hd + uy * hw, y1 - uy * hd - ux * hw); ctx.closePath(); ctx.fill();
+  }
+  // grips: a round one for a point you drag anywhere, a square one with two arrows for a value dragged along one direction
+  function roundGrip(ctx, x, y, hot, col) {
+    const ps = projScale();
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = hot ? T.accent : (col || T.muted); ctx.lineWidth = (hot ? 2.4 : 1.6) * ps;
+    ctx.beginPath(); ctx.arc(x, y, (hot ? 7 : 5.5) * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+  }
+  function grip(ctx, x, y, hot, vertical) {
+    const ps = projScale(), w = (vertical ? 13 : 20) * ps, h = (vertical ? 20 : 13) * ps;
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = hot ? T.accent : T.muted; ctx.lineWidth = (hot ? 2 : 1.2) * ps;
+    roundRect(ctx, x - w / 2, y - h / 2, w, h, 4 * ps); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = hot ? T.accent : T.muted;
+    const a = 3.5 * ps;
+    ctx.beginPath();
+    if (vertical) {
+      ctx.moveTo(x, y - 7 * ps); ctx.lineTo(x - a, y - 2.5 * ps); ctx.lineTo(x + a, y - 2.5 * ps); ctx.closePath();
+      ctx.moveTo(x, y + 7 * ps); ctx.lineTo(x - a, y + 2.5 * ps); ctx.lineTo(x + a, y + 2.5 * ps); ctx.closePath();
+    } else {
+      ctx.moveTo(x - 7 * ps, y); ctx.lineTo(x - 2.5 * ps, y - a); ctx.lineTo(x - 2.5 * ps, y + a); ctx.closePath();
+      ctx.moveTo(x + 7 * ps, y); ctx.lineTo(x + 2.5 * ps, y - a); ctx.lineTo(x + 2.5 * ps, y + a); ctx.closePath();
+    }
+    ctx.fill();
+  }
+  function drawSpringV(ctx, x, y0, y1, amp, coils, col, lw) {     // a vertical coil spring from y0 down to y1
+    const len = y1 - y0; if (len < 2) return;
+    const lead = Math.min(4, len * 0.12), n = coils * 2;
+    ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x, y0 + lead);
+    for (let i = 1; i <= n; i++) ctx.lineTo(x + (i % 2 ? -amp : amp), y0 + lead + (len - 2 * lead) * (i - 0.5) / n);
+    ctx.lineTo(x, y1 - lead); ctx.lineTo(x, y1);
+    ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.lineJoin = 'round'; ctx.stroke();
+  }
+  const liqCol = () => T.liq[S.liq];
+  function fillLiquid(ctx, path, col) {
+    ctx.fillStyle = col || liqCol(); ctx.globalAlpha = T.la; path(); ctx.fill(); ctx.globalAlpha = 1;
+  }
+  function glassWalls(ctx, x0, yTop, x1, yBot, lw) {   // an open topped container
+    ctx.strokeStyle = T.wire; ctx.lineWidth = lw; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x0, yTop); ctx.lineTo(x0, yBot); ctx.lineTo(x1, yBot); ctx.lineTo(x1, yTop); ctx.stroke();
+  }
+  function surfaceLine(ctx, x0, x1, y, lw) {
+    ctx.strokeStyle = liqCol(); ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
+  }
+  function hatchFloor(ctx, x0, x1, y) {
+    const ps = projScale();
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * ps; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps; ctx.beginPath();
+    for (let x = x0 + 4 * ps; x < x1; x += 9 * ps) { ctx.moveTo(x, y); ctx.lineTo(x - 7 * ps, y + 7 * ps); }
+    ctx.stroke();
+  }
+  // a round dial gauge: 270° sweep from 0 to max
+  function dial(ctx, cx, cy, r, val, max, unit, ls, col) {
+    const ps = projScale(), a0 = Math.PI * 0.75, sweep = Math.PI * 1.5, ang = (v) => a0 + clamp(v / max, 0, 1.02) * sweep;
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * ps;
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    const st = nice(max / 5);
+    ctx.font = `${Math.max(8, r * 0.17)}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps;
+    for (let v = 0; v <= max + 1e-9; v += st / 2) {
+      const a = ang(v), major = Math.abs(v / st - Math.round(v / st)) < 1e-6, r1 = r * (major ? 0.8 : 0.86);
+      ctx.beginPath(); ctx.moveTo(cx + Math.cos(a) * r1, cy + Math.sin(a) * r1); ctx.lineTo(cx + Math.cos(a) * r * 0.93, cy + Math.sin(a) * r * 0.93); ctx.stroke();
+      if (major && r > 40) ctx.fillText(fx(v, st < 1 ? 1 : 0), cx + Math.cos(a) * r * 0.64, cy + Math.sin(a) * r * 0.64);
+    }
+    const a = ang(val);
+    ctx.strokeStyle = col || T.pos; ctx.lineWidth = 2.4 * ps; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(cx - Math.cos(a) * r * 0.12, cy - Math.sin(a) * r * 0.12); ctx.lineTo(cx + Math.cos(a) * r * 0.78, cy + Math.sin(a) * r * 0.78); ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 3.5 * ps, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = T.muted; ctx.font = `${Math.max(8, r * 0.16)}px ${T.mono}`; ctx.fillText(unit, cx, cy + r * 0.42);
+    void ls;
+  }
+
+  // ---------- drag handles ----------
+  // Every draggable part for the current scene, rebuilt each time the scene is drawn:
+  // {id, cursor, pt | box | seg, set(px, py)} or {param, grip:'h'|'v', dir} for a value that follows the drag distance.
+  let handles = [], hoverId = null, drag = null;
+  const isHot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+  const SLDEF = (key) => SLD[S.scene].find((d) => d[0] === key);
+  function sliderMax(key) {
+    const d = SLDEF(key); if (!d) return 0;
+    if (S.scene === 'press' && key === 'pd') return S.P.press.D;
+    if (S.scene === 'venturi' && key === 'D2') return S.P.venturi.D1;
+    if (S.scene === 'torr' && key === 'hh') return S.P.torr.H;
+    return d[3];
+  }
+  function snap(key, v) {
+    const d = SLDEF(key); if (!d) return v;
+    return +clamp(Math.round((v - d[2]) / d[4]) * d[4] + d[2], d[2], sliderMax(key)).toFixed(4);
+  }
+  // a change of parameter: keep dependent values in range, sync the rail
+  function setParam(key, v, opts) {
+    const p = P();
+    p[key] = snap(key, v);
+    if (S.scene === 'press') p.pd = Math.min(p.pd, p.D);
+    if (S.scene === 'venturi') p.D2 = Math.min(p.D2, p.D1);
+    if (S.scene === 'torr') p.hh = Math.min(p.hh, p.H);
+    if (S.scene === 'buoy') {
+      if (key === 'rho') { p.mat = Object.keys(MATS).find((k) => MATS[k][1] === p.rho) || null; syncMat(); }
+      clampBlock(p);
+      if (key === 'h0' || key === 'L' || key === 'rho') { if (key === 'h0') bs.Vw = Vw0(); buoyAfterChange(); }
+    }
+    if (!(opts && opts.quiet)) clearPreset();
+    if (!(opts && opts.nosync)) syncSliders();
+    updateReadouts();
+  }
+  // after a change to the block or the water: a hanging block re-hangs, a free one drops again from its start
+  function buoyAfterChange() {
+    const q = S.P.buoy;
+    if (q.scale) { buoyReset(true); }
+    else { buoyReset(true); if (reduce && !running) settleBuoy(); else setRunning(true); }
+  }
+  function clearPreset() {
+    if (!S.preset) return;
+    S.preset = null;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', 'false');
+  }
+
+  // ---------- scene: pressure and depth ----------
+  function depthScale(D) { for (const z of [0.6, 1, 1.5, 2, 3, 4, 6, 8, 10, 12]) if (z >= D * 1.08) return z; return 12; }
+  function drawPress(ctx, W, H) {
+    const ps = projScale(), ls = lsc(W, H), q = S.P.press, rho = rhoF();
+    const top = 34 * ls, bot = H - 26 * ls, rulerW = 46 * ls;
+    const dialR = clamp(Math.min(W * 0.14, (bot - top) * 0.32), 34, 120 * ps);
+    const x0 = 16 * ps + rulerW, x1 = W - dialR * 2 - 70 * ls;
+    const Zmax = depthScale(q.D), sy = (bot - top) / Zmax;
+    const ySurf = bot - q.D * sy, Y = (d) => ySurf + d * sy;
+    // tank and liquid
+    fillLiquid(ctx, () => { ctx.beginPath(); ctx.rect(x0, ySurf, x1 - x0, bot - ySurf); });
+    // depth shading: a faint gradient darker with depth
+    const gr = ctx.createLinearGradient(0, ySurf, 0, bot); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, liqCol());
+    ctx.fillStyle = gr; ctx.globalAlpha = 0.18; ctx.fillRect(x0, ySurf, x1 - x0, bot - ySurf); ctx.globalAlpha = 1;
+    surfaceLine(ctx, x0, x1, ySurf, 2 * ps);
+    glassWalls(ctx, x0, top - 6 * ls, x1, bot, 2.4 * ps);
+    // depth ruler, metres below the surface
+    ctx.font = `${10.5 * ls}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.strokeStyle = T.muted; ctx.lineWidth = 1;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    const st = nice(q.D / Math.max(2, Math.floor((bot - ySurf) / (34 * ls))));
+    ctx.beginPath(); ctx.moveTo(x0 - 8 * ls, ySurf); ctx.lineTo(x0 - 8 * ls, bot); ctx.stroke();
+    for (let d = 0; d <= q.D + 1e-9; d += st) {
+      const y = Y(d); ctx.beginPath(); ctx.moveTo(x0 - 13 * ls, y); ctx.lineTo(x0 - 8 * ls, y); ctx.stroke();
+      ctx.fillText(fx(d, st < 1 ? 1 : 0), x0 - 16 * ls, y);
+    }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('depth (m)', x0 - 4 * ls, ySurf - 6 * ls);
+    // equal depth line through the probe
+    const px = x0 + q.px * (x1 - x0), py = Y(q.pd);
+    ctx.setLineDash([5 * ps, 4 * ps]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps;
+    ctx.beginPath(); ctx.moveTo(x0, py); ctx.lineTo(x1, py); ctx.stroke(); ctx.setLineDash([]);
+    // tube from the probe to the dial
+    const dcx = W - dialR - 24 * ls, dcy = clamp(top + dialR + 26 * ls, top + dialR, bot - dialR - 20 * ls);
+    ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * ps; ctx.lineJoin = 'round';
+    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, top - 18 * ls); ctx.lineTo(dcx, top - 18 * ls); ctx.lineTo(dcx, dcy - dialR); ctx.stroke();
+    // pressure arrows on the probe from every side, equal length
+    const Pabs = hydro(rho, q.pd), Pshow = S.gmode === 'abs' ? Pabs : Pabs - PATM;
+    const Pbot = hydro(rho, q.D) - (S.gmode === 'abs' ? 0 : PATM);
+    const aL = (8 + 22 * clamp(Pshow / Math.max(1, Pbot), 0, 1)) * ps;
+    for (let k = 0; k < 8; k++) {
+      const a = k * Math.PI / 4, cx = Math.cos(a), cy = Math.sin(a), r0 = 9 * ps;
+      arrow(ctx, px + cx * (r0 + aL), py + cy * (r0 + aL), px + cx * (r0 + 1), py + cy * (r0 + 1), T.neg, 1.8 * ps, 6);
+    }
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = isHot('probe') ? T.accent : T.ink; ctx.lineWidth = (isHot('probe') ? 2.6 : 1.8) * ps;
+    ctx.beginPath(); ctx.arc(px, py, 7 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    handles.push({ id: 'probe', cursor: 'move', pt: [px, py], set: (x, y) => {
+      q.px = clamp((x - x0) / (x1 - x0), 0.04, 0.96); setParam('pd', clamp((y - ySurf) / sy, 0, q.D));
+    } });
+    // the surface grip sets the depth
+    const gx = x0 + 0.12 * (x1 - x0);
+    grip(ctx, gx, ySurf, isHot('surf'), true);
+    handles.push({ id: 'surf', cursor: 'ns-resize', pt: [gx, ySurf], set: (x, y) => setParam('D', (bot - y) / sy) });
+    // dial
+    const Pmax = nice(Math.max(Pbot, 1) * 1.05) * Math.ceil(Math.max(Pbot, 1) * 1.05 / nice(Math.max(Pbot, 1) * 1.05));
+    dial(ctx, dcx, dcy, dialR, Pshow / 1000, Pmax / 1000, 'kPa', ls, T.pos);
+    labelBox(ctx, S.gmode === 'abs' ? 'absolute pressure' : 'gauge pressure', dcx, dcy + dialR + 16 * ls, 'center', T.muted, 11 * ls);
+    labelBox(ctx, `${fx(Pshow / 1000, Pshow < 1e5 ? 2 : 1)} kPa`, dcx, dcy + dialR + 32 * ls, 'center', T.ink, 13 * ls, 700, T.mono);
+    // labels last
+    labelBox(ctx, `P_0 = ${fx(PATM / 1000, 3)} kPa (air)`, x0 + 6 * ls, ySurf - 8 * ls, 'left', T.muted, 11 * ls);
+    const lbl = `P = ${fx(Pshow / 1000, 2)} kPa at h = ${fx(q.pd, 2)} m`;
+    const right = px + 40 * ls + richWidth(ctx, lbl, 12 * ls, 700) < x1;
+    labelBox(ctx, lbl, right ? px + 34 * ps : px - 34 * ps, py - 12 * ls, right ? 'left' : 'right', T.ink, 12 * ls, 700);
+    labelBox(ctx, LIQ[S.liq].name.toLowerCase(), x1 - 6 * ls, bot - 8 * ls, 'right', T.muted, 11 * ls);
+  }
+
+  // ---------- scene: Pascal's vessels ----------
+  function pascalData() {
+    const h = S.P.pascal.hp, rho = rhoF(), A = Math.PI * 0.04 * 0.04, Pg = rho * G * h;
+    return VESS.map((v) => { const V = vesselVolume(v, h); return { v, V, Wl: rho * G * V, F: Pg * A }; });
+  }
+  function drawPascal(ctx, W, H) {
+    const ps = projScale(), ls = lsc(W, H), h = S.P.pascal.hp, rho = rhoF();
+    const ext = VESS.map((v) => [Math.min(-v.r0, -v.rt), Math.max(v.r0, v.rt) + v.shear * v.H]);
+    const gap = 0.12, totW = ext.reduce((s, e) => s + e[1] - e[0], 0) + gap * (VESS.length - 1);
+    const top = 30 * ls, bot = H - 60 * ls, sc = Math.min((W - 60 * ls) / totW, (bot - top) / 0.53);
+    let xc = (W - totW * sc) / 2;
+    const Y = (z) => bot - z * sc, data = pascalData();
+    const yh = Y(h);
+    const centers = [];
+    VESS.forEach((v, i) => {
+      const cx = xc - ext[i][0] * sc; centers.push(cx);
+      const xl = (z) => cx + (v.shear * z - vesselR(v, z)) * sc, xr = (z) => cx + (v.shear * z + vesselR(v, z)) * sc;
+      fillLiquid(ctx, () => { ctx.beginPath(); ctx.moveTo(xl(0), Y(0)); ctx.lineTo(xr(0), Y(0)); ctx.lineTo(xr(h), yh); ctx.lineTo(xl(h), yh); ctx.closePath(); });
+      surfaceLine(ctx, xl(h), xr(h), yh, 2 * ps);
+      ctx.strokeStyle = T.wire; ctx.lineWidth = 2.2 * ps; ctx.lineJoin = 'round';
+      ctx.beginPath(); ctx.moveTo(xl(v.H), Y(v.H)); ctx.lineTo(xl(0), Y(0)); ctx.lineTo(xr(0), Y(0)); ctx.lineTo(xr(v.H), Y(v.H)); ctx.stroke();
+      xc += (ext[i][1] - ext[i][0]) * sc + gap * sc;
+    });
+    // common base plate
+    ctx.fillStyle = T.block; ctx.strokeStyle = T.wire; ctx.lineWidth = 1.2 * ps;
+    ctx.fillRect(16 * ps, bot, W - 32 * ps, 6 * ps); ctx.strokeRect(16 * ps, bot, W - 32 * ps, 6 * ps);
+    // the fill height line and its grip
+    ctx.setLineDash([6 * ps, 5 * ps]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps;
+    ctx.beginPath(); ctx.moveTo(20 * ps, yh); ctx.lineTo(W - 20 * ps, yh); ctx.stroke(); ctx.setLineDash([]);
+    const gx = W - 30 * ls;
+    grip(ctx, gx, yh, isHot('fill'), true);
+    handles.push({ id: 'fill', cursor: 'ns-resize', pt: [gx, yh], set: (x, y) => setParam('hp', (bot - y) / sc) });
+    // height marker on the left
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * ps;
+    const hx = 26 * ls; ctx.beginPath(); ctx.moveTo(hx, yh); ctx.lineTo(hx, bot); ctx.stroke();
+    arrow(ctx, hx, (yh + bot) / 2, hx, yh, T.ink, 1.2 * ps, 6); arrow(ctx, hx, (yh + bot) / 2, hx, bot, T.ink, 1.2 * ps, 6);
+    // labels under each vessel
+    const Pg = rho * G * h;
+    data.forEach((d, i) => {
+      const cx = centers[i] + (d.v.shear ? 0 : 0);
+      labelBox(ctx, d.v.name, cx, bot + 22 * ls, 'center', T.ink, 12 * ls, 700);
+      labelBox(ctx, `P = ${fx(Pg / 1000, 2)} kPa`, cx, bot + 38 * ls, 'center', T.neg, 11 * ls, 400, T.mono);
+      labelBox(ctx, `W = ${sig(d.Wl, 3)} N`, cx, bot + 52 * ls, 'center', T.pos, 11 * ls, 400, T.mono);
+    });
+    labelBox(ctx, `h = ${fx(h * 100, 0)} cm`, hx + 6 * ls, (yh + bot) / 2 + 4 * ls, 'left', T.ink, 12 * ls, 700);
+  }
+
+  // ---------- scene: barometer and manometer ----------
+  function drawBaro(ctx, W, H) {
+    const ps = projScale(), ls = lsc(W, H), q = S.P.baro, rho = rhoF();
+    const top = 40 * ls, bot = H - 26 * ls;
+    const tubeW = clamp(W * 0.035, 16, 30) * ps;
+    if (S.baro === 'baro') {
+      const Pa = q.Pa * 1000, hcol = columnHeight(Pa, rho), Lt = columnHeight(106000, rho) * 1.12;
+      const dishH = 0.16 * (bot - top), sy = (bot - top - dishH * 0.5) / (Lt + 0.02 * Lt);
+      const cx = W * 0.42, ySurf = bot - dishH * 0.55, Y = (z) => ySurf - z * sy;
+      const dishW = Math.min(W * 0.36, 260 * ls);
+      // dish
+      fillLiquid(ctx, () => { ctx.beginPath(); ctx.rect(cx - dishW / 2, ySurf, dishW, bot - ySurf); });
+      surfaceLine(ctx, cx - dishW / 2, cx + dishW / 2, ySurf, 2 * ps);
+      glassWalls(ctx, cx - dishW / 2, bot - dishH, cx + dishW / 2, bot, 2.2 * ps);
+      // tube: open end under the surface, sealed top
+      const yBot = ySurf + dishH * 0.3, yTop = Y(Lt), xl = cx - tubeW / 2, xr = cx + tubeW / 2;
+      ctx.fillStyle = T.canvas; ctx.fillRect(xl, yTop, tubeW, ySurf - yTop);
+      fillLiquid(ctx, () => { ctx.beginPath(); ctx.rect(xl, Y(hcol), tubeW, yBot - Y(hcol)); });
+      surfaceLine(ctx, xl, xr, Y(hcol), 2 * ps);
+      ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * ps;
+      ctx.beginPath(); ctx.moveTo(xl, yBot); ctx.lineTo(xl, yTop + tubeW / 2); ctx.arc(cx, yTop + tubeW / 2, tubeW / 2, Math.PI, 0); ctx.lineTo(xr, yBot); ctx.stroke();
+      // air pressure arrows on the dish
+      for (let k = 0; k < 4; k++) {
+        const ax = cx - dishW / 2 + dishW * (k < 2 ? 0.1 + k * 0.17 : 0.73 + (k - 2) * 0.17);
+        arrow(ctx, ax, ySurf - 30 * ls, ax, ySurf - 3 * ls, T.neg, 2 * ps, 7);
+      }
+      // ruler
+      const rx = xr + 26 * ls, unitMM = hcol < 2;
+      ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1; ctx.font = `${10.5 * ls}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.beginPath(); ctx.moveTo(rx, ySurf); ctx.lineTo(rx, Y(Lt)); ctx.stroke();
+      const st = nice(Lt / Math.max(3, Math.floor((ySurf - Y(Lt)) / (34 * ls))));
+      for (let z = 0; z <= Lt + 1e-9; z += st) { ctx.beginPath(); ctx.moveTo(rx, Y(z)); ctx.lineTo(rx + 6 * ls, Y(z)); ctx.stroke(); ctx.fillText(unitMM ? fx(z * 1000, 0) : fx(z, st < 1 ? 1 : 0), rx + 9 * ls, Y(z)); }
+      ctx.textBaseline = 'bottom'; ctx.fillText(unitMM ? 'mm' : 'm', rx, Y(Lt) - 6 * ls);
+      // drag the column top
+      grip(ctx, cx, Y(hcol), isHot('col'), true);
+      handles.push({ id: 'col', cursor: 'ns-resize', pt: [cx, Y(hcol)], set: (x, y) => setParam('Pa', rho * G * (ySurf - y) / sy / 1000) });
+      // labels
+      const lx = xl - 14 * ls;
+      labelBox(ctx, 'vacuum, P ≈ 0', lx, (Y(Lt) + Y(hcol)) / 2 + 4 * ls, 'right', T.muted, 11.5 * ls);
+      labelBox(ctx, `h = ${unitMM ? fx(hcol * 1000, 1) + ' mm' : fx(hcol, 2) + ' m'}`, lx, Y(hcol) + 4 * ls, 'right', T.ink, 13 * ls, 700);
+      labelBox(ctx, `air pushes with P_{atm} = ${fx(q.Pa, 1)} kPa`, cx + dishW / 2 + 10 * ls, ySurf - 12 * ls, 'left', T.neg, 11.5 * ls);
+      labelBox(ctx, `ρgh = P_{atm}`, lx, Y(hcol) + 20 * ls, 'right', T.muted, 11 * ls);
+    } else {
+      const dP = q.Pg * 1000, dh = columnHeight(dP, rho), dhMax = columnHeight(20000, rho);
+      const armL = dhMax * 1.25, sy = (bot - top) / (armL * 1.05);
+      const cx = W * 0.5, sep = clamp(W * 0.12, 70, 160) * ls, xL = cx - sep / 2, xR = cx + sep / 2;
+      const yRest = bot - armL * 0.5 * sy, Y = (z) => yRest - z * sy, yU = bot - 4 * ls;
+      const zl = -dh / 2, zr = dh / 2;
+      // the U tube: liquid from each level down and across the bend
+      fillLiquid(ctx, () => {
+        ctx.beginPath(); ctx.moveTo(xL - tubeW / 2, Y(zl)); ctx.lineTo(xL - tubeW / 2, yU - tubeW); ctx.lineTo(xR + tubeW / 2, yU - tubeW);
+        ctx.lineTo(xR + tubeW / 2, Y(zr)); ctx.lineTo(xR - tubeW / 2, Y(zr)); ctx.lineTo(xR - tubeW / 2, yU - 2 * tubeW); ctx.lineTo(xL + tubeW / 2, yU - 2 * tubeW); ctx.lineTo(xL + tubeW / 2, Y(zl)); ctx.closePath();
+      });
+      surfaceLine(ctx, xL - tubeW / 2, xL + tubeW / 2, Y(zl), 2 * ps); surfaceLine(ctx, xR - tubeW / 2, xR + tubeW / 2, Y(zr), 2 * ps);
+      ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * ps; ctx.lineJoin = 'round';
+      const yTop = Y(armL * 0.5);
+      // gas bulb joined to the top of the left arm by a short tube
+      const br = clamp(Math.min(W * 0.06, (yRest - top) * 0.35), 26, 60 * ls), bx = xL - br - 44 * ls, by = Math.max(yTop, top + br + 4);
+      ctx.beginPath(); ctx.moveTo(xL - tubeW / 2, by + tubeW / 2); ctx.lineTo(xL - tubeW / 2, yU - tubeW); ctx.lineTo(xR + tubeW / 2, yU - tubeW); ctx.lineTo(xR + tubeW / 2, yTop); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(xL + tubeW / 2, by - tubeW / 2); ctx.lineTo(xL + tubeW / 2, yU - 2 * tubeW); ctx.lineTo(xR - tubeW / 2, yU - 2 * tubeW); ctx.lineTo(xR - tubeW / 2, yTop); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(xL + tubeW / 2, by - tubeW / 2); ctx.lineTo(bx + br * 0.9, by - tubeW / 2); ctx.moveTo(xL - tubeW / 2, by + tubeW / 2); ctx.lineTo(bx + br * 0.9, by + tubeW / 2); ctx.stroke();
+      ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.arc(bx, by, br, 0, 2 * Math.PI); ctx.fill();
+      ctx.globalAlpha = 0.15 + 0.3 * clamp((q.Pg + 10) / 30, 0, 1); ctx.fillStyle = T.equi; ctx.fill(); ctx.globalAlpha = 1; ctx.stroke();
+      // rest level and the difference
+      ctx.setLineDash([5 * ps, 4 * ps]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps;
+      ctx.beginPath(); ctx.moveTo(xL - 30 * ls, Y(0)); ctx.lineTo(xR + 30 * ls, Y(0)); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(xL, Y(zl)); ctx.lineTo(xR + 50 * ls, Y(zl)); ctx.stroke(); ctx.setLineDash([]);
+      const mx = xR + 44 * ls;
+      if (Math.abs(Y(zr) - Y(zl)) > 8) { arrow(ctx, mx, (Y(zl) + Y(zr)) / 2, mx, Y(zr), T.ink, 1.3 * ps, 6); arrow(ctx, mx, (Y(zl) + Y(zr)) / 2, mx, Y(zl), T.ink, 1.3 * ps, 6); }
+      grip(ctx, xR, Y(zr), isHot('arm'), true);
+      handles.push({ id: 'arm', cursor: 'ns-resize', pt: [xR, Y(zr)], set: (x, y) => setParam('Pg', rho * G * 2 * (yRest - y) / sy / 1000) });
+      const unitMM = dhMax < 0.5;
+      labelBox(ctx, `Δh = ${unitMM ? fx(dh * 1000, 1) + ' mm' : fx(dh * 100, 1) + ' cm'}`, mx + 8 * ls, (Y(zl) + Y(zr)) / 2 + 4 * ls, 'left', T.ink, 13 * ls, 700);
+      labelBox(ctx, 'gas', bx, by - 4 * ls, 'center', T.ink, 12 * ls, 700);
+      labelBox(ctx, `P = ${fx(PATM / 1000 + q.Pg, 1)} kPa`, bx, by + 13 * ls, 'center', T.ink, 11 * ls, 400, T.mono);
+      labelBox(ctx, 'open to the air', xR, yTop - 8 * ls, 'center', T.muted, 11 * ls);
+      labelBox(ctx, 'level with no pressure difference', xL - 34 * ls, Y(0) + 4 * ls, 'right', T.muted, 10.5 * ls);
+    }
+  }
+
+  // ---------- scene: buoyancy ----------
+  let bGeom = null;
+  function blockColor(rho) {
+    const m = S.P.buoy.mat;
+    if (m === 'cork') return T.mat.cork; if (m === 'wood') return T.mat.wood; if (m === 'ice') return T.mat.ice;
+    if (m === 'al' || m === 'steel') return T.mat.metal; if (m === 'lead') return T.mat.lead;
+    return rho < 350 ? T.mat.cork : rho < 880 ? T.mat.wood : rho < 2000 ? T.block : rho < 9000 ? T.mat.metal : T.mat.lead;
+  }
+  function buoyNow() {        // forces and levels for the current block state
+    const p = bp(), q = S.P.buoy;
+    const f = buoyForces(p, bs.zb, bs.v, bs.Vw);
+    let Tn = 0, N = 0;
+    if (q.scale) { const h = hangState(p, zTautOf(q), bs.Vw); Tn = h.T; N = h.N; }
+    else if (bs.zb <= 1e-9 && f.W > f.FB) N = f.W - f.FB;
+    return { p, q, ...f, T: Tn, N, eq: floatEq(p, bs.Vw), hs0: q.over ? TANK.spout : q.h0 };
+  }
+  function drawBuoy(ctx, W, H) {
+    const ps = projScale(), ls = lsc(W, H), b = buoyNow(), q = b.q, p = b.p, L = p.L;
+    const worldW = TANK.W + (q.over ? BEAKER.W + 0.3 : 0) + 0.16, worldH = TANK.H + TANK.top + 0.04;
+    const top = 50 * ls, bot = H - 14 * ls;
+    const sc = Math.min((W - 40 * ls) / worldW, (bot - top) / worldH);
+    const cxT = q.over ? W / 2 - (BEAKER.W + 0.3) * sc / 2 : W / 2;
+    const X = (x) => cxT + x * sc, Y = (z) => bot - z * sc;
+    bGeom = { X, Y, sc, cxT, bot };
+    const x0 = X(-TANK.W / 2), x1 = X(TANK.W / 2), yS = Y(b.hs);
+    // liquid with the block cut out of it
+    const bx0 = X(q.xb - L / 2), bx1 = X(q.xb + L / 2), by0 = Y(bs.zb + L), by1 = Y(bs.zb);
+    fillLiquid(ctx, () => { ctx.beginPath(); ctx.rect(x0, yS, x1 - x0, Y(0) - yS); });
+    surfaceLine(ctx, x0, x1, yS, 2 * ps);
+    // the starting level, before the block went in
+    if (S.layers.ghost && Math.abs(b.hs - b.hs0) * sc > 1.5) {
+      ctx.setLineDash([5 * ps, 4 * ps]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps;
+      ctx.beginPath(); ctx.moveTo(x0, Y(b.hs0)); ctx.lineTo(x1, Y(b.hs0)); ctx.stroke(); ctx.setLineDash([]);
+    }
+    glassWalls(ctx, x0, Y(TANK.H), x1, Y(0), 2.6 * ps);
+    hatchFloor(ctx, 14 * ps, W - 14 * ps, Y(0) + 1.3 * ps);
+    // overflow spout and the catch beaker on a scale
+    let beakerInfo = null;
+    if (q.over) {
+      const ys = Y(TANK.spout) - 4 * ps, sx1 = x1 + 0.1 * sc;
+      ctx.lineCap = 'butt';
+      ctx.strokeStyle = T.wire; ctx.lineWidth = 10 * ps; ctx.beginPath(); ctx.moveTo(x1 - 1, ys); ctx.lineTo(sx1, ys + 0.03 * sc); ctx.stroke();
+      ctx.strokeStyle = T.canvas; ctx.lineWidth = 6 * ps; ctx.beginPath(); ctx.moveTo(x1 - 2, ys); ctx.lineTo(sx1 + 1, ys + 0.03 * sc); ctx.stroke();
+      ctx.lineCap = 'round';
+      const bxl = x1 + 0.14 * sc, bxr = bxl + BEAKER.W * sc, bfloor = Y(0.06);
+      // kitchen scale
+      ctx.fillStyle = T.block; ctx.strokeStyle = T.wire; ctx.lineWidth = 1.4 * ps;
+      roundRect(ctx, bxl - 0.02 * sc, bfloor, BEAKER.W * sc + 0.04 * sc, Y(0) - bfloor, 4 * ps); ctx.fill(); ctx.stroke();
+      const Vc = bs.caught, hc = Vc / (BEAKER.W * BEAKER.D);
+      fillLiquid(ctx, () => { ctx.beginPath(); ctx.rect(bxl, bfloor - hc * sc, bxr - bxl, hc * sc); });
+      if (hc > 0) surfaceLine(ctx, bxl, bxr, bfloor - hc * sc, 2 * ps);
+      glassWalls(ctx, bxl, bfloor - BEAKER.H * sc, bxr, bfloor, 2.2 * ps);
+      if (spillT < 0.25) {                 // a stream while water is running over
+        ctx.strokeStyle = liqCol(); ctx.lineWidth = 3 * ps; ctx.globalAlpha = 0.8;
+        ctx.beginPath(); ctx.moveTo(sx1, ys + 0.03 * sc); ctx.quadraticCurveTo(sx1 + 0.03 * sc, ys + 0.05 * sc, sx1 + 0.04 * sc, bfloor - hc * sc); ctx.stroke(); ctx.globalAlpha = 1;
+      }
+      beakerInfo = { x: (bxl + bxr) / 2, y: (bfloor + Y(0)) / 2, top: bfloor - BEAKER.H * sc, Wc: rhoF() * G * Vc };
+    }
+    // the block
+    ctx.fillStyle = blockColor(q.rho); ctx.strokeStyle = isHot('block') ? T.accent : T.ink; ctx.lineWidth = (isHot('block') ? 2.4 : 1.5) * ps;
+    ctx.fillRect(bx0, by0, bx1 - bx0, by1 - by0); ctx.strokeRect(bx0, by0, bx1 - bx0, by1 - by0);
+    // tint the submerged part
+    if (b.s > 0) { ctx.fillStyle = liqCol(); ctx.globalAlpha = 0.22; ctx.fillRect(bx0, Y(bs.zb + b.s), bx1 - bx0, by1 - Y(bs.zb + b.s)); ctx.globalAlpha = 1; surfaceLine(ctx, bx0, bx1, yS, 1.2 * ps); }
+    if (!q.scale) handles.push({ id: 'block', cursor: 'grab', grabbing: 'grabbing', box: [bx0, by0, bx1 - bx0, by1 - by0], set: (x, y) => {
+      const w = bGeom; q.xb = (x - w.cxT) / w.sc; q.z0 = (w.bot - y) / w.sc - L / 2; clampBlock(q); bs.zb = q.z0; bs.v = 0; spill(p); trace = [[0, submerged(p, bs.zb, bs.Vw).s]];
+    } });
+    // size grip on the top right corner
+    handles.push({ id: 'size', cursor: 'ew-resize', pt: [bx1, by0], param: 'L', grip: 'h' });
+    grip(ctx, bx1, by0, isHot('size'), false);
+    // the spring scale
+    let scaleInfo = null;
+    if (q.scale) {
+      const yh = Y(q.zh), cw = 30 * ps, ch = clamp(0.15 * sc, 60 * ps, 100 * ps), cy1 = yh - 10 * ps, cy0 = cy1 - ch;
+      const cx = X(q.xb);
+      ctx.strokeStyle = T.wire; ctx.lineWidth = 1.4 * ps;
+      ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, cy0 - 8 * ps); ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy0 - 4 * ps, 4 * ps, 0, 2 * Math.PI); ctx.stroke();
+      ctx.fillStyle = T.canvas; ctx.strokeStyle = isHot('scale') ? T.accent : T.wire; ctx.lineWidth = (isHot('scale') ? 2.4 : 1.8) * ps;
+      roundRect(ctx, cx - cw / 2, cy0, cw, ch, 6 * ps); ctx.fill(); ctx.stroke();
+      // graduations 0 .. Tmax and the pointer
+      const Tmax = nice(b.W * 1.05) * Math.ceil(b.W * 1.05 / nice(b.W * 1.05)), g0 = cy0 + 12 * ps, g1 = cy1 - 12 * ps;
+      const st = nice(Tmax / 5);
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps; ctx.fillStyle = T.muted; ctx.font = `${8.5 * ls}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      for (let v = 0; v <= Tmax + 1e-9; v += st) { const yy = g0 + (g1 - g0) * v / Tmax; ctx.beginPath(); ctx.moveTo(cx + cw / 2 - 8 * ps, yy); ctx.lineTo(cx + cw / 2 - 2 * ps, yy); ctx.stroke(); }
+      const yp = g0 + (g1 - g0) * clamp(b.T / Tmax, 0, 1);
+      drawSpringV(ctx, cx - 3 * ps, g0 - 6 * ps, yp, 5 * ps, 6, T.wire, 1.3 * ps);
+      ctx.strokeStyle = T.xcol; ctx.lineWidth = 2.4 * ps; ctx.beginPath(); ctx.moveTo(cx - 10 * ps, yp); ctx.lineTo(cx + cw / 2 - 2 * ps, yp); ctx.stroke();
+      // hook and string
+      ctx.strokeStyle = T.wire; ctx.lineWidth = 1.6 * ps;
+      ctx.beginPath(); ctx.moveTo(cx, cy1); ctx.lineTo(cx, yh); ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, yh + 3 * ps, 3 * ps, -Math.PI / 2, Math.PI); ctx.stroke();
+      const slack = b.T === 0 && by0 < Y(zTautOf(q) + L) - 1;
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.moveTo(cx, yh + 6 * ps);
+      if (slack) ctx.quadraticCurveTo(cx + 14 * ps, (yh + by0) / 2, cx, by0); else ctx.lineTo(cx, by0);
+      ctx.stroke();
+      handles.push({ id: 'scale', cursor: 'ns-resize', box: [cx - cw / 2, cy0, cw, ch + 10 * ps], set: (x, y) => {
+        q.zh = clamp((bGeom.bot - (y + ch / 2 + 10 * ps)) / bGeom.sc, zhMin(q), zhMax()); clearPreset();
+        const h = hangState(p, zTautOf(q), bs.Vw); bs.zb = h.zb; bs.v = 0; spill(p);
+      } });
+      scaleInfo = { x: cx + cw / 2 + 8 * ls, y: (cy0 + cy1) / 2 };
+    }
+    // force arrows: weight at the center, buoyant force at the center of the submerged part
+    const cxB = (bx0 + bx1) / 2, Fmax = Math.max(b.W, b.FB, 1e-9), aMax = clamp(0.16 * sc, 40 * ps, 110 * ps), k = aMax / Fmax;
+    const labels = [];
+    if (S.layers.forces) {
+      const lw = 3 * ps, off = Math.min(12 * ps, (bx1 - bx0) * 0.25);
+      const yc = (by0 + by1) / 2;
+      arrow(ctx, cxB - off, yc, cxB - off, yc + b.W * k, T.pos, lw, 10);
+      labels.push([`W = ${fN(b.W)}`, cxB - off - 6 * ls, yc + b.W * k + 4 * ls, 'right', T.pos]);
+      if (b.FB > 1e-6) {
+        const yb = Y(bs.zb + b.s / 2);
+        arrow(ctx, cxB + off, yb, cxB + off, yb - b.FB * k, T.vcol, lw, 10);
+        labels.push([`F_B = ${fN(b.FB)}`, cxB + off + 6 * ls, yb - b.FB * k + 4 * ls, 'left', T.vcol]);
+      }
+      if (b.T > 1e-6) { const xt = Math.min(bx1 - 6 * ps, cxB + off * 2.2); arrow(ctx, xt, by0, xt, by0 - b.T * k, T.xcol, lw, 10); labels.push([`T = ${fN(b.T)}`, xt + 6 * ls, by0 - b.T * k * 0.4, 'left', T.xcol]); }
+      if (b.N > 1e-6) { arrow(ctx, cxB + off * 2.2, by1, cxB + off * 2.2, by1 - b.N * k, T.xcol, lw, 10); labels.push([`N = ${fN(b.N)}`, cxB + off * 2.2 + 6 * ls, by1 - b.N * k * 0.5, 'left', T.xcol]); }
+      if (Math.abs(b.Fd) > 0.02 * b.W) { const yd = yc; arrow(ctx, bx1 + 8 * ps, yd, bx1 + 8 * ps, yd - b.Fd * k, T.acol, 2 * ps, 8); }
+    }
+    // labels last
+    for (const [txt, x, y, al, col] of labels) labelBox(ctx, txt, x, y, al, col, 12 * ls, 700);
+    if (bx1 - bx0 > 64 * ls && !S.layers.forces) { ctx.fillStyle = T.ink; ctx.font = `600 ${10.5 * ls}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${fx(q.rho, 0)} kg/m³`, cxB, (by0 + by1) / 2); }
+    labelBox(ctx, `${LIQ[S.liq].name}, ${fx(rhoF(), 0)} kg/m³`, x0 + 6 * ls, Y(0) - 8 * ls, 'left', T.muted, 11 * ls);
+    if (S.layers.ghost && Math.abs(b.hs - b.hs0) * sc > 1.5) {
+      const dh = b.hs - b.hs0;
+      labelBox(ctx, `level ${dh >= 0 ? 'up' : 'down'} ${fx(Math.abs(dh) * 1000, 1)} mm = V_{sub}/A`, x0 + 6 * ls, Math.max(yS, Y(b.hs0)) + 16 * ls, 'left', T.muted, 11 * ls);
+    }
+    if (scaleInfo) { labelBox(ctx, `scale ${fN(b.T)}`, scaleInfo.x, scaleInfo.y, 'left', T.xcol, 12.5 * ls, 700, T.mono); }
+    if (beakerInfo) {
+      labelBox(ctx, 'displaced water', beakerInfo.x, beakerInfo.top - 22 * ls, 'center', T.muted, 11 * ls);
+      labelBox(ctx, `${fx(bs.caught * 1000, 2)} L, ${fN(beakerInfo.Wc)}`, beakerInfo.x, beakerInfo.top - 7 * ls, 'center', T.neg, 11.5 * ls, 700, T.mono);
+    }
+  }
+
+  // ---------- scene: Venturi tube ----------
+  function drawVenturi(ctx, W, H) {
+    const ps = projScale(), ls = lsc(W, H), q = S.P.venturi, r = venturi(vp());
+    const left = 22 * ls, right = W - 22 * ls, sx = (right - left) / PIPE.L, X = (x) => left + x * sx;
+    const Dmaxpx = clamp(H * 0.2, 40, 120 * ps), sD = Dmaxpx / 0.1;
+    const cy = H - 42 * ls - Dmaxpx / 2, top = 56 * ls;
+    const hMax = Math.max(1.25, q.h1 + 0.1), sy = (cy - Dmaxpx / 2 - top) / hMax;
+    const rpx = (x) => pipeD(x, q) / 2 * sD;
+    const sw = clamp(9 * ps, 8, 16);
+    // standpipes first, so the pipe wall draws over their feet
+    const hs = [q.h1, r.h2, q.h1];
+    PIPE.taps.forEach((xt, i) => {
+      const xx = X(xt), yb = cy - rpx(xt), ytop = cy - hMax * sy;
+      const hh = hs[i], yl = cy - Math.max(0, hh) * sy;
+      if (hh > 0) fillLiquid(ctx, () => { ctx.beginPath(); ctx.rect(xx - sw / 2, yl, sw, yb - yl + 1); });
+      if (hh > 0) surfaceLine(ctx, xx - sw / 2, xx + sw / 2, yl, 2 * ps);
+      ctx.strokeStyle = T.wire; ctx.lineWidth = 1.6 * ps;
+      ctx.beginPath(); ctx.moveTo(xx - sw / 2, ytop); ctx.lineTo(xx - sw / 2, yb); ctx.moveTo(xx + sw / 2, ytop); ctx.lineTo(xx + sw / 2, yb); ctx.stroke();
+    });
+    // the pipe: liquid, then walls
+    const path = (sgn) => { for (let x = 0; x <= PIPE.L + 1e-9; x += PIPE.L / 200) { const y = cy + sgn * rpx(x); x === 0 ? ctx.moveTo(X(x), y) : ctx.lineTo(X(x), y); } };
+    fillLiquid(ctx, () => { ctx.beginPath(); path(-1); for (let x = PIPE.L; x >= -1e-9; x -= PIPE.L / 200) ctx.lineTo(X(x), cy + rpx(x)); ctx.closePath(); });
+    ctx.strokeStyle = T.wire; ctx.lineWidth = 2.4 * ps; ctx.lineJoin = 'round';
+    ctx.beginPath(); path(-1); ctx.stroke(); ctx.beginPath(); path(1); ctx.stroke();
+    // reopen the standpipe feet through the top wall
+    PIPE.taps.forEach((xt) => { ctx.fillStyle = T.canvas; ctx.fillRect(X(xt) - sw / 2 + 1.2 * ps, cy - rpx(xt) - 2 * ps, sw - 2.4 * ps, 4 * ps);
+      ctx.fillStyle = liqCol(); ctx.globalAlpha = T.la; ctx.fillRect(X(xt) - sw / 2 + 1.2 * ps, cy - rpx(xt) - 2 * ps, sw - 2.4 * ps, 4 * ps); ctx.globalAlpha = 1; });
+    // flow particles
+    ctx.fillStyle = T.ink; ctx.globalAlpha = 0.75;
+    const pr = 1.7 * ps;
+    for (const pt of parts) { const y = cy + pt.e * rpx(pt.x); ctx.beginPath(); ctx.arc(X(pt.x), y, pr, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.globalAlpha = 1;
+    // inlet speed arrow with a round grip, scaled 60 px per m/s
+    const sv = 50 * ps, ay = cy, ax0 = X(0.04);
+    arrow(ctx, ax0, ay, ax0 + q.v1 * sv, ay, T.acol, 2.6 * ps, 9);
+    roundGrip(ctx, ax0 + q.v1 * sv, ay, isHot('v1'), T.acol);
+    handles.push({ id: 'v1', cursor: 'ew-resize', pt: [ax0 + q.v1 * sv, ay], set: (x) => setParam('v1', (x - ax0) / sv) });
+    // grips on the walls: inlet diameter and throat diameter
+    const xi = X(0.1), xth = X((PIPE.c1 + PIPE.d0) / 2);
+    grip(ctx, xi, cy + rpx(0.1), isHot('D1'), true);
+    handles.push({ id: 'D1', cursor: 'ns-resize', pt: [xi, cy + rpx(0.1)], set: (x, y) => setParam('D1', 2 * (y - cy) / sD * 100) });
+    grip(ctx, xth, cy + rpx(0.8), isHot('D2'), true);
+    handles.push({ id: 'D2', cursor: 'ns-resize', pt: [xth, cy + rpx(0.8)], set: (x, y) => setParam('D2', 2 * (y - cy) / sD * 100) });
+    // inlet standpipe level grip sets h1
+    const xt0 = X(PIPE.taps[0]), yl0 = cy - q.h1 * sy;
+    grip(ctx, xt0, yl0, isHot('h1'), true);
+    handles.push({ id: 'h1', cursor: 'ns-resize', pt: [xt0, yl0], set: (x, y) => setParam('h1', (cy - y) / sy) });
+    // the drop between inlet and throat
+    const xt1 = X(PIPE.taps[1]), yl1 = cy - Math.max(0, r.h2) * sy;
+    ctx.setLineDash([5 * ps, 4 * ps]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps;
+    ctx.beginPath(); ctx.moveTo(xt0 + sw, yl0); ctx.lineTo(X(PIPE.taps[2]) - sw, yl0); ctx.stroke(); ctx.setLineDash([]);
+    if (r.dh * sy > 14) { const mx = xt1 + sw + 12 * ls; arrow(ctx, mx, (yl0 + yl1) / 2, mx, yl0, T.ink, 1.2 * ps, 6); arrow(ctx, mx, (yl0 + yl1) / 2, mx, Math.min(yl1, cy - rpx(0.8)), T.ink, 1.2 * ps, 6); }
+    // labels last
+    const lab = (txt, x, y, al, col, fs, wt, fam) => labelBox(ctx, txt, x, y, al, col, fs * ls, wt, fam);
+    lab(`h_1 = ${fx(q.h1 * 100, 0)} cm`, xt0 + sw + 6 * ls, yl0 - 6 * ls, 'left', T.ink, 12, 700);
+    if (r.h2 > 0) lab(`h_2 = ${fx(r.h2 * 100, 0)} cm`, xt1 - sw - 6 * ls, yl1 - 6 * ls, 'right', T.ink, 12, 700);
+    else { lab('below atmospheric pressure:', xt1 - sw - 6 * ls, cy - hMax * sy + 16 * ls, 'right', T.pos, 12, 700); lab('air is sucked in', xt1 - sw - 6 * ls, cy - hMax * sy + 32 * ls, 'right', T.pos, 12, 700); }
+    const dhs = r.dh < 2 ? `${fx(r.dh * 100, 1)} cm` : `${fx(r.dh, 1)} m`;
+    if (r.dh * sy > 14) {
+      const long = `Δh = (v_2² − v_1²)/2g = ${dhs}`, fits = xt1 + sw + 24 * ls + richWidth(ctx, long, 11 * ls) < X(PIPE.taps[2]) - sw;
+      lab(fits ? long : `Δh = ${dhs}`, xt1 + sw + 18 * ls, (yl0 + yl1) / 2 + 4 * ls, 'left', T.muted, 11);
+    }
+    lab(`v_1 = ${fx(q.v1, 2)} m/s`, ax0, cy + rpx(0) + 16 * ls, 'left', T.acol, 12, 700);
+    lab(`v_2 = ${fx(r.v2, 2)} m/s`, X(0.8), cy + rpx(0.8) + 16 * ls, 'center', T.acol, 12, 700);
+    lab(`D_1 = ${fx(q.D1, 1)} cm`, xi + 12 * ls, cy + rpx(0.1) + 32 * ls, 'left', T.muted, 10.5, 400, T.mono);
+    lab(`D_2 = ${fx(q.D2, 1)} cm`, xth, cy + rpx(0.8) + 32 * ls, 'center', T.muted, 10.5, 400, T.mono);
+    lab('flow →', X(1.12), cy - rpx(1.12) - 8 * ls, 'center', T.muted, 11);
+    if (hydro(rhoF(), r.h2) < PVAP) lab('absolute pressure below the vapour pressure: the water would boil (cavitate)', W / 2, top - 8 * ls, 'center', T.pos, 11.5, 700);
+  }
+
+  // ---------- scene: Torricelli's tank ----------
+  function drawTorr(ctx, W, H) {
+    const ps = projScale(), ls = lsc(W, H), q = S.P.torr, tr = torricelli(q.H, q.hh);
+    const top = 60 * ls, bot = H - 40 * ls, lm = 100 * ls;
+    const worldW = TT.W + q.H * 1.12 + 0.05, worldH = q.H + 0.2;
+    const sc = Math.min((W - lm - 30 * ls) / worldW, (bot - top) / worldH);
+    const xw = lm + TT.W * sc + Math.max(0, (W - lm - 30 * ls - worldW * sc) / 2), X = (x) => xw + x * sc, Y = (z) => bot - z * sc;
+    const yS = Y(q.H), x0 = X(-TT.W);
+    hatchFloor(ctx, 12 * ps, W - 12 * ps, Y(0) + 1.3 * ps);
+    fillLiquid(ctx, () => { ctx.beginPath(); ctx.rect(x0, yS, X(0) - x0, Y(0) - yS); });
+    surfaceLine(ctx, x0, X(0), yS, 2 * ps);
+    // the supply that keeps the level steady
+    const fx0 = x0 + 0.08 * sc, fy = Y(q.H + 0.13);
+    ctx.strokeStyle = T.wire; ctx.lineWidth = 6 * ps; ctx.lineCap = 'butt';
+    ctx.beginPath(); ctx.moveTo(x0 - 18 * ls, fy); ctx.lineTo(fx0, fy); ctx.stroke();
+    ctx.strokeStyle = liqCol(); ctx.lineWidth = 3 * ps; ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.moveTo(fx0 - 2 * ps, fy + 3 * ps); ctx.lineTo(fx0 - 2 * ps, yS); ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.lineCap = 'round';
+    // tank walls with a hole
+    const zh = q.H - q.hh, yh = Y(zh), hr = 3.5 * ps;
+    ctx.strokeStyle = T.wire; ctx.lineWidth = 2.6 * ps; ctx.lineJoin = 'round';
+    const wallTop = Y(q.H + 0.08);
+    ctx.beginPath(); ctx.moveTo(x0, wallTop); ctx.lineTo(x0, Y(0)); ctx.lineTo(X(0), Y(0)); ctx.lineTo(X(0), yh + hr); ctx.moveTo(X(0), yh - hr); ctx.lineTo(X(0), wallTop); ctx.stroke();
+    // ghost jets for holes at H/4, H/2 and 3H/4
+    const jet = (h, col, lw, dash) => {
+      const z0 = q.H - h, tt = torricelli(q.H, h); if (h <= 0.002 || z0 <= 0) return tt;
+      ctx.setLineDash(dash || []); ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.beginPath();
+      const n = 60; for (let i = 0; i <= n; i++) { const a = tt.t * i / n, x = tt.v * a, z = z0 - 0.5 * G * a * a; i ? ctx.lineTo(X(x), Y(z)) : ctx.moveTo(X(x), Y(z)); }
+      ctx.stroke(); ctx.setLineDash([]);
+      return tt;
+    };
+    if (S.layers.cmp) {
+      for (const f of [0.25, 0.5, 0.75]) {
+        const tt = jet(q.H * f, T.muted, 1.2 * ps, [4 * ps, 4 * ps]);
+        const yy = Y(q.H * (1 - f));
+        ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps; ctx.beginPath(); ctx.arc(X(0), yy, 2.5 * ps, 0, 2 * Math.PI); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(X(tt.R), Y(0) - 5 * ps); ctx.lineTo(X(tt.R), Y(0) + 5 * ps); ctx.stroke();
+      }
+    }
+    // the jet: a thin stream and the droplets moving along it
+    if (q.hh > 0.002) {
+      jet(q.hh, liqCol(), 2.5 * ps);
+      ctx.fillStyle = liqCol();
+      for (const d of drops) { const x = tr.v * d.a, z = zh - 0.5 * G * d.a * d.a; if (z < 0) continue; ctx.beginPath(); ctx.arc(X(x), Y(z), 2.6 * ps, 0, 2 * Math.PI); ctx.fill(); }
+      // landing splash marker and the range bracket
+      const xl = X(tr.R);
+      ctx.strokeStyle = T.pos; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(xl, Y(0) - 7 * ps); ctx.lineTo(xl, Y(0) + 7 * ps); ctx.stroke();
+      if (tr.R * sc > 30) { const yy = Y(0) + 14 * ls; arrow(ctx, (X(0) + xl) / 2, yy, X(0) + 1, yy, T.pos, 1.2 * ps, 6); arrow(ctx, (X(0) + xl) / 2, yy, xl - 1, yy, T.pos, 1.2 * ps, 6); }
+      // efflux velocity arrow
+      arrow(ctx, X(0) + 4 * ps, yh, X(0) + 4 * ps + Math.min(tr.v * 14 * ps, 90 * ps), yh, T.acol, 2.4 * ps, 9);
+    }
+    // depth bracket h from the surface to the hole
+    const bx = x0 - 14 * ls;
+    if (q.hh * sc > 12) { arrow(ctx, bx, (yS + yh) / 2, bx, yS, T.ink, 1.2 * ps, 6); arrow(ctx, bx, (yS + yh) / 2, bx, yh, T.ink, 1.2 * ps, 6); }
+    ctx.setLineDash([4 * ps, 4 * ps]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps; ctx.beginPath(); ctx.moveTo(bx - 4 * ls, yh); ctx.lineTo(X(0), yh); ctx.stroke(); ctx.setLineDash([]);
+    // grips: the hole and the surface
+    grip(ctx, X(0), yh, isHot('hole'), true);
+    handles.push({ id: 'hole', cursor: 'ns-resize', pt: [X(0), yh], set: (x, y) => setParam('hh', q.H - (bot - y) / sc) });
+    const gx = x0 + TT.W * sc * 0.62;
+    grip(ctx, gx, yS, isHot('Hs'), true);
+    handles.push({ id: 'Hs', cursor: 'ns-resize', pt: [gx, yS], set: (x, y) => { const hold = q.H - q.hh; setParam('H', (bot - y) / sc); setParam('hh', Math.max(0, q.H - hold), { quiet: true }); } });
+    // labels last
+    labelBox(ctx, `h = ${fx(q.hh, 2)} m`, bx - 6 * ls, (yS + yh) / 2 + 4 * ls, 'right', T.ink, 12 * ls, 700);
+    if (q.hh > 0.002) {
+      labelBox(ctx, `v = √(2gh) = ${fx(tr.v, 2)} m/s`, X(0) + 10 * ps, yh - 10 * ls, 'left', T.acol, 12 * ls, 700);
+      labelBox(ctx, `R = ${fx(tr.R, 2)} m`, (X(0) + X(tr.R)) / 2, Y(0) + 32 * ls, 'center', T.pos, 12 * ls, 700);
+    }
+    labelBox(ctx, `H = ${fx(q.H, 2)} m`, x0 + 6 * ls, Y(0) - 8 * ls, 'left', T.muted, 11 * ls);
+    if (S.layers.cmp && W > 600) labelBox(ctx, 'dashed: holes at H/4, H/2 and 3H/4', W - 16 * ls, Y(0) - 10 * ls, 'right', T.muted, 11 * ls);
+  }
+
+  // ---------- graphs ----------
+  function axes(ctx, L, R, top, bot, xr, yr, xlab, ylab, ls, opts) {
+    opts = opts || {};
+    const fs = 10 * ls;
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.font = `${fs}px ${T.mono}`;
+    const X = (v) => L + (v - xr[0]) / (xr[1] - xr[0]) * (R - L);
+    const Y = opts.flipY ? (v) => top + (v - yr[0]) / (yr[1] - yr[0]) * (bot - top) : (v) => bot - (v - yr[0]) / (yr[1] - yr[0]) * (bot - top);
+    const xs = nice((xr[1] - xr[0]) / Math.max(2, Math.floor((R - L) / (70 * ls)))), ys = nice((yr[1] - yr[0]) / Math.max(2, Math.floor((bot - top) / (34 * ls))));
+    ctx.beginPath();
+    if (!opts.noX) for (let v = Math.ceil(xr[0] / xs - 1e-9) * xs; v <= xr[1] + 1e-9; v += xs) { ctx.moveTo(Math.round(X(v)) + 0.5, top); ctx.lineTo(Math.round(X(v)) + 0.5, bot); }
+    for (let v = Math.ceil(yr[0] / ys - 1e-9) * ys; v <= yr[1] + 1e-9; v += ys) { ctx.moveTo(L, Math.round(Y(v)) + 0.5); ctx.lineTo(R, Math.round(Y(v)) + 0.5); }
+    ctx.stroke();
+    const dec = (s) => (s < 0.01 ? 3 : s < 0.1 ? 2 : s < 1 ? 1 : 0);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    if (!opts.noX) for (let v = Math.ceil(xr[0] / xs - 1e-9) * xs; v <= xr[1] + 1e-9; v += xs) ctx.fillText(fx(v, dec(xs)), X(v), bot + 4 * ls);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = Math.ceil(yr[0] / ys - 1e-9) * ys; v <= yr[1] + 1e-9; v += ys) ctx.fillText(fx(v, dec(ys)), L - 4 * ls, Y(v));
+    ctx.strokeStyle = T.gridStrong; ctx.strokeRect(L + 0.5, top + 0.5, R - L, bot - top);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(xlab, R, bot + 16 * ls);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(ylab, L, top - 4 * ls);
+    return { X, Y };
+  }
+  // a graph title, wrapped to the pane; returns the y of its last line's bottom
+  function gTitle(ctx, txt, x, y, ls, maxW) {
+    ctx.fillStyle = T.ink; ctx.font = `700 ${11.5 * ls}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    maxW = maxW || (dims.g[0] - x - 12 * ls);
+    const words = txt.split(' '), lines = []; let cur = '';
+    for (const w of words) { const t2 = cur ? cur + ' ' + w : w; if (ctx.measureText(t2).width > maxW && cur) { lines.push(cur); cur = w; } else cur = t2; }
+    lines.push(cur);
+    lines.forEach((l, i) => ctx.fillText(l, x, y + i * 14 * ls));
+    return y + lines.length * 14 * ls;
+  }
+  function bars(ctx, L, R, top, bot, items, ls, unit, group) {     // items: [label, value, color]; group: bars per cluster
+    group = group || 1;
+    const vmax = Math.max(1e-9, ...items.map((it) => Math.abs(it[1]))), ymax = nice(vmax * 1.1) * Math.ceil(vmax * 1.1 / nice(vmax * 1.1));
+    const { Y } = axes(ctx, L, R, top, bot, [0, 1], [0, ymax], '', unit, ls, { noX: true });
+    const n = items.length, ng = n / group, gslot = (R - L) / ng, slot = gslot * 0.84 / group, bw = Math.min(slot * (group > 1 ? 0.8 : 0.5), 60 * ls);
+    items.forEach(([lab, v, col], i) => {
+      const gi = Math.floor(i / group), k = i % group, cx = L + gslot * gi + gslot * 0.08 + slot * (k + 0.5), y = Y(Math.max(0, v));
+      ctx.fillStyle = col; ctx.fillRect(cx - bw / 2, y, bw, bot - y);
+      ctx.fillStyle = T.ink; ctx.font = `${10 * ls}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+      ctx.fillText(sig(v, 3), cx, y - 3 * ls);
+      ctx.fillStyle = col; ctx.font = `700 ${10.5 * ls}px ${T.ui}`; ctx.textBaseline = 'top';
+      richText(ctx, lab, cx, bot + 5 * ls, 10.5 * ls, 700, 'center');
+    });
+  }
+  // the bottom pane would otherwise print x tick labels under a bar chart: clear them with a strip
+  function drawGraph() {
+    const [W, H] = dims.g; if (!W || !H) return;
+    const ctx = ctxs.g; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const ls = lsc(Math.max(W, 560), H * 1.6), ps = projScale();
+    const L = 58 * ls, R = W - 20 * ls, top = 40 * ls, bot = H - 36 * ls;
+    if (bot - top < 30) return;
+    const rho = rhoF();
+    if (S.scene === 'press') {
+      const q = S.P.press, abs = S.gmode === 'abs', off = abs ? PATM : 0;
+      const Pb = (hydro(rho, q.D) - PATM + off) / 1000;
+      const tb = gTitle(ctx, `${abs ? 'Absolute' : 'Gauge'} pressure against depth: a straight line with slope ρg = ${fx(rho * G / 1000, 2)} kPa per metre`, 12 * ls, 10 * ls, ls);
+      const xr = [abs ? 0 : 0, nice(Pb * 1.1) * Math.ceil(Pb * 1.1 / nice(Pb * 1.1))];
+      const { X, Y } = axes(ctx, L, R, Math.max(top + 6 * ls, tb + 26 * ls), bot, xr, [0, q.D], 'P (kPa)', 'depth (m), down', ls, { flipY: true });
+      // other liquids, faint
+      for (const k of Object.keys(LIQ)) {
+        if (k === S.liq) continue;
+        ctx.strokeStyle = T.liq[k]; ctx.globalAlpha = 0.45; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([4 * ps, 4 * ps]);
+        const dEnd = Math.min(q.D, (xr[1] * 1000 - off) / (LIQ[k].rho * G));
+        ctx.beginPath(); ctx.moveTo(X(off / 1000), Y(0)); ctx.lineTo(X((off + LIQ[k].rho * G * dEnd) / 1000), Y(dEnd)); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+      }
+      ctx.strokeStyle = liqCol(); ctx.lineWidth = 2.6 * ps;
+      ctx.beginPath(); ctx.moveTo(X(off / 1000), Y(0)); ctx.lineTo(X(Pb), Y(q.D)); ctx.stroke();
+      const Pp = (off + rho * G * q.pd) / 1000;
+      ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(X(Pp), Y(q.pd), 5 * ps, 0, 2 * Math.PI); ctx.fill();
+      labelBox(ctx, `${fx(Pp, 2)} kPa at ${fx(q.pd, 2)} m`, X(Pp) + 10 * ls, Y(q.pd) + 4 * ls, X(Pp) > (L + R) / 2 ? 'right' : 'left', T.pos, 11.5 * ls, 700);
+      if (abs) labelBox(ctx, 'P_0 at the surface', X(off / 1000) + 8 * ls, Y(0) + 14 * ls, 'left', T.muted, 10.5 * ls);
+      labelBox(ctx, 'dashed: the other liquids', R - 6 * ls, bot - 8 * ls, 'right', T.muted, 10.5 * ls);
+    } else if (S.scene === 'pascal') {
+      const d = pascalData();
+      const tb = gTitle(ctx, 'Weight of the liquid W (red) and force on the base F = PA (blue), in N: the forces on the bases are all equal', 12 * ls, 10 * ls, ls);
+      const items = [];
+      d.forEach((e) => { items.push([e.v.name, e.Wl, T.pos]); items.push(['F', e.F, T.neg]); });
+      bars(ctx, L, R, Math.max(top + 8 * ls, tb + 26 * ls), bot, items, ls, 'N', 2);
+    } else if (S.scene === 'baro') {
+      const dP = S.baro === 'baro' ? S.P.baro.Pa * 1000 : Math.abs(S.P.baro.Pg * 1000);
+      const tb = gTitle(ctx, `Height of a column that balances ${fx(dP / 1000, 1)} kPa, h = ΔP/(ρg), for each liquid (m)`, 12 * ls, 10 * ls, ls);
+      bars(ctx, L, R, Math.max(top + 8 * ls, tb + 26 * ls), bot, Object.keys(LIQ).map((k) => [LIQ[k].name, columnHeight(dP, LIQ[k].rho), T.liq[k]]), ls, 'm');
+    } else if (S.scene === 'buoy') {
+      drawBuoyGraph(ctx, W, H, ls, ps);
+    } else if (S.scene === 'venturi') {
+      const q = S.P.venturi, v = vp(), r = venturi(v);
+      const left = 22 * lsc(dims.s[0], dims.s[1]), right = W - 22 * lsc(dims.s[0], dims.s[1]);
+      const tb = gTitle(ctx, 'Along the pipe: gauge pressure P (blue) plus ½ρv² (orange) stays the same total (Bernoulli)', 12 * ls, 10 * ls, ls);
+      const tot = r.P1 + 0.5 * v.rho * v.v1 * v.v1;
+      const ymin = Math.min(0, r.P2) / 1000, ymax = tot / 1000 * 1.12;
+      const LL = Math.max(left, 52 * ls);
+      const { X, Y } = axes(ctx, LL, right, Math.max(top + 6 * ls, tb + 26 * ls), bot, [0, PIPE.L], [ymin, ymax], 'distance along the pipe (m)', 'kPa', ls);
+      const Px = (x) => { const D = pipeD(x, q), vv = q.v1 * (v.D1 / D) * (v.D1 / D); return [tot - 0.5 * v.rho * vv * vv, 0.5 * v.rho * vv * vv]; };
+      const N = 160;
+      ctx.fillStyle = T.neg; ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.moveTo(X(0), Y(0));
+      for (let i = 0; i <= N; i++) { const x = PIPE.L * i / N; ctx.lineTo(X(x), Y(Px(x)[0] / 1000)); }
+      ctx.lineTo(X(PIPE.L), Y(0)); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = T.acol; ctx.beginPath();
+      for (let i = 0; i <= N; i++) { const x = PIPE.L * i / N; i ? ctx.lineTo(X(x), Y(Px(x)[0] / 1000)) : ctx.moveTo(X(x), Y(Px(x)[0] / 1000)); }
+      ctx.lineTo(X(PIPE.L), Y(tot / 1000)); ctx.lineTo(X(0), Y(tot / 1000)); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = T.neg; ctx.lineWidth = 2 * ps; ctx.beginPath();
+      for (let i = 0; i <= N; i++) { const x = PIPE.L * i / N; i ? ctx.lineTo(X(x), Y(Px(x)[0] / 1000)) : ctx.moveTo(X(x), Y(Px(x)[0] / 1000)); }
+      ctx.stroke();
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * ps; ctx.setLineDash([6 * ps, 4 * ps]); ctx.beginPath(); ctx.moveTo(X(0), Y(tot / 1000)); ctx.lineTo(X(PIPE.L), Y(tot / 1000)); ctx.stroke(); ctx.setLineDash([]);
+      if (ymin < 0) { ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(PIPE.L), Y(0)); ctx.stroke(); }
+      const pv = (PVAP - PATM) / 1000;          // gauge pressure at which water at 20 °C boils
+      if (ymin < pv) {
+        ctx.strokeStyle = T.pos; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([3 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(X(0), Y(pv)); ctx.lineTo(X(PIPE.L), Y(pv)); ctx.stroke(); ctx.setLineDash([]);
+        labelBox(ctx, 'vapour pressure: below this line the water boils, so the ideal result fails', X(PIPE.L) - 6 * ls, Y(pv) + 14 * ls, 'right', T.pos, 10.5 * ls, 700);
+      }
+      labelBox(ctx, `P + ½ρv² = ${fx(tot / 1000, 2)} kPa`, X(0.03), Y(tot / 1000) - 5 * ls, 'left', T.ink, 11 * ls, 700);
+      labelBox(ctx, `P_2 = ${fx(r.P2 / 1000, 2)} kPa`, X(0.8), Y(r.P2 / 1000) + (r.P2 > tot * 0.3 ? 14 * ls : -6 * ls), 'center', T.neg, 11 * ls, 700);
+      labelBox(ctx, `P_1 = ${fx(r.P1 / 1000, 2)} kPa`, X(0.22), Y(r.P1 / 1000 * 0.5) + 4 * ls, 'center', T.neg, 11 * ls, 700);
+    } else if (S.scene === 'torr') {
+      const q = S.P.torr, tr = torricelli(q.H, q.hh);
+      const tb = gTitle(ctx, `Range against hole depth: R = 2√(h(H − h)), largest (R = H = ${fx(q.H, 2)} m) for a hole halfway down`, 12 * ls, 10 * ls, ls);
+      const { X, Y } = axes(ctx, L, R, Math.max(top + 6 * ls, tb + 26 * ls), bot, [0, q.H], [0, q.H * 1.12], 'hole depth h (m)', 'R (m)', ls);
+      ctx.strokeStyle = T.pos; ctx.lineWidth = 2.4 * ps; ctx.beginPath();
+      for (let i = 0; i <= 120; i++) { const h = q.H * i / 120, r = torricelli(q.H, h).R; i ? ctx.lineTo(X(h), Y(r)) : ctx.moveTo(X(h), Y(r)); }
+      ctx.stroke();
+      ctx.setLineDash([4 * ps, 4 * ps]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps; ctx.beginPath(); ctx.moveTo(X(q.H / 2), Y(0)); ctx.lineTo(X(q.H / 2), Y(q.H)); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(X(q.hh), Y(tr.R), 5 * ps, 0, 2 * Math.PI); ctx.fill();
+      labelBox(ctx, 'h = H/2', X(q.H / 2) + 5 * ls, Y(0) - 8 * ls, 'left', T.muted, 10.5 * ls);
+      labelBox(ctx, `R = ${fx(tr.R, 2)} m`, X(q.hh) + (q.hh > q.H * 0.7 ? -10 : 10) * ls, Y(tr.R) + 18 * ls, q.hh > q.H * 0.7 ? 'right' : 'left', T.pos, 11.5 * ls, 700);
+    }
+  }
+  function drawBuoyGraph(ctx, W, H, ls, ps) {
+    const b = buoyNow(), q = b.q, p = b.p;
+    // two plots: side by side on a wide pane, stacked on a tall one
+    const tall = H > W * 0.8, sx = tall ? 0 : Math.round(W * 0.42), sy = tall ? Math.round(H * 0.44) : 0;
+    const items = [['W', b.W, T.pos], ['F_B', b.FB, T.vcol]];
+    if (q.scale) items.push(['scale T', b.T, T.xcol]); else items.push(['floor N', b.N, T.xcol]);
+    items.push([q.over ? 'beaker water' : 'ρ_f V_{sub} g', q.over ? rhoF() * G * bs.caught : b.FB, T.neg]);
+    if (!tall && W <= 520) {      // too narrow for two: bars only
+      const tb = gTitle(ctx, 'Forces on the block (N)', 12 * ls, 10 * ls, ls);
+      bars(ctx, 50 * ls, W - 16 * ls, Math.max(48 * ls, tb + 26 * ls), H - 36 * ls, items, ls, 'N'); return;
+    }
+    const tb0 = gTitle(ctx, q.over ? 'Forces on the block, and the weight of the water caught (N)' : 'Forces on the block (N)', 12 * ls, 10 * ls, ls, (tall ? W : sx) - 24 * ls);
+    bars(ctx, 50 * ls, (tall ? W : sx) - 16 * ls, Math.max(48 * ls, tb0 + 26 * ls), (tall ? sy : H) - 36 * ls, items, ls, 'N');
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath();
+    if (tall) { ctx.moveTo(0, sy + 0.5); ctx.lineTo(W, sy + 0.5); } else { ctx.moveTo(sx + 0.5, 0); ctx.lineTo(sx + 0.5, H); }
+    ctx.stroke();
+    const L = sx + 56 * ls, R = W - 20 * ls, bot = H - 36 * ls, tx = sx + 12 * ls, ty = sy + 10 * ls;
+    let top = sy + 48 * ls;
+    if (q.scale) {
+      // scale reading against how deep the block bottom is below the surface
+      top = Math.max(top, gTitle(ctx, 'Scale reading against depth of the block bottom', tx, ty, ls) + 26 * ls);
+      const dMax = (p.L + STR) * 1.15, Tmax = nice(b.W * 1.1) * Math.ceil(b.W * 1.1 / nice(b.W * 1.1));
+      const { X, Y } = axes(ctx, L, R, top, bot, [0, dMax * 100], [0, Tmax], 'depth below the surface (cm)', 'T (N)', ls);
+      const a = p.L * p.L, Tof = (d) => Math.max(0, b.W - p.rhoF * G * a * Math.min(d, p.L));
+      ctx.strokeStyle = T.xcol; ctx.lineWidth = 2.4 * ps; ctx.beginPath();
+      for (let i = 0; i <= 120; i++) { const d = dMax * i / 120; i ? ctx.lineTo(X(d * 100), Y(Tof(d))) : ctx.moveTo(X(d * 100), Y(Tof(d))); }
+      ctx.stroke();
+      ctx.setLineDash([4 * ps, 4 * ps]); ctx.strokeStyle = T.pos; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.moveTo(X(0), Y(b.W)); ctx.lineTo(X(dMax * 100), Y(b.W)); ctx.stroke(); ctx.setLineDash([]);
+      const d = Math.max(0, b.hs - bs.zb);
+      ctx.fillStyle = T.xcol; ctx.beginPath(); ctx.arc(X(Math.min(d, dMax) * 100), Y(b.T), 5 * ps, 0, 2 * Math.PI); ctx.fill();
+      labelBox(ctx, 'weight in air', R - 6 * ls, Y(b.W) - 5 * ls, 'right', T.pos, 10.5 * ls);
+      labelBox(ctx, 'fully under', X(Math.min(p.L, dMax) * 100) + 5 * ls, Y(Tof(p.L)) - 8 * ls, 'left', T.muted, 10.5 * ls);
+    } else {
+      top = Math.max(top, gTitle(ctx, 'Submerged depth s of the block against time', tx, ty, ls) + 26 * ls);
+      const tEnd = Math.max(4, trace.length ? trace[trace.length - 1][0] : 0), t0 = Math.max(0, tEnd - 8);
+      const smax = p.L * 100 * 1.15;
+      const { X, Y } = axes(ctx, L, R, top, bot, [t0, Math.max(t0 + 4, tEnd)], [0, smax], 't (s)', 's (cm)', ls);
+      const eqS = b.eq.floats ? b.eq.s : p.L;
+      ctx.setLineDash([6 * ps, 4 * ps]); ctx.strokeStyle = T.equi; ctx.lineWidth = 1.6 * ps;
+      ctx.beginPath(); ctx.moveTo(L, Y(eqS * 100)); ctx.lineTo(R, Y(eqS * 100)); ctx.stroke(); ctx.setLineDash([]);
+      ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
+      ctx.strokeStyle = T.neg; ctx.lineWidth = 2.2 * ps; ctx.beginPath();
+      let first = true;
+      for (const [tt, s] of trace) { if (tt < t0) continue; first ? ctx.moveTo(X(tt), Y(s * 100)) : ctx.lineTo(X(tt), Y(s * 100)); first = false; }
+      ctx.stroke(); ctx.restore();
+      labelBox(ctx, b.eq.floats ? `floating: s = (ρ_{obj}/ρ_f) L = ${fx(eqS * 100, 2)} cm` : 'sinks: fully under, s = L', R - 6 * ls, Y(eqS * 100) - 6 * ls, 'right', T.equi, 11 * ls, 700);
+    }
+  }
+
+  function drawScene() {
+    const [W, H] = dims.s; if (!W || !H) return;
+    const ctx = ctxs.s; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    handles = [];
+    ctx.lineCap = 'round';
+    if (S.scene === 'press') drawPress(ctx, W, H);
+    else if (S.scene === 'pascal') drawPascal(ctx, W, H);
+    else if (S.scene === 'baro') drawBaro(ctx, W, H);
+    else if (S.scene === 'buoy') drawBuoy(ctx, W, H);
+    else if (S.scene === 'venturi') drawVenturi(ctx, W, H);
+    else drawTorr(ctx, W, H);
+  }
+  function drawAll() { if (!T || !bs) return; drawScene(); drawGraph(); clock(); }
+  function clock() {
+    const dyn = S.scene === 'buoy' && !S.P.buoy.scale;
+    $('tclock').firstChild.textContent = dyn ? `t = ${fx(t, 2)} s` : S.scene === 'venturi' ? 'steady flow' : S.scene === 'torr' ? 'steady jet' : '';
+    $('rateTag').textContent = fmtRate(S.rate);
+  }
+
+  // ---------- readouts ----------
+  function dl(rows) {
+    $('readBox').innerHTML = rows.map(([k, v, cls, wide]) => `<div${wide ? ' class="wide"' : ''}><dt>${k}</dt><dd${cls ? ` class="${cls}"` : ''}>${v}</dd></div>`).join('');
+  }
+  let lastRead = '';
+  function updateReadouts() {
+    const rho = rhoF();
+    let rows = [], f = '';
+    if (S.scene === 'press') {
+      const q = S.P.press, Pa = hydro(rho, q.pd);
+      rows = [['Depth h', `${fx(q.pd, 2)} m`], ['ρgh', kPa(rho * G * q.pd)], ['Absolute P', kPa(Pa), S.gmode === 'abs' ? 'c-w' : ''], ['Gauge P', kPa(Pa - PATM), S.gmode === 'gauge' ? 'c-w' : ''],
+        ['At the bottom', kPa(hydro(rho, q.D) - (S.gmode === 'abs' ? 0 : PATM)) + (S.gmode === 'abs' ? ' abs' : ' gauge')], ['In atmospheres', `${fx(Pa / PATM, 3)} atm`]];
+      f = `P = P₀ + ρgh = ${fx(PATM / 1000, 3)} + ${fx(rho, 0)}·${fx(G, 3)}·${fx(q.pd, 2)} Pa = ${kPa(Pa)}`;
+    } else if (S.scene === 'pascal') {
+      const d = pascalData(), h = S.P.pascal.hp, Pg = rho * G * h;
+      rows = [['Gauge P at each base', kPa(Pg), 'c-p'], ['Force on each base', fN(d[0].F), 'c-p'],
+        ...d.map((e) => [`Liquid in ${e.v.name.toLowerCase()}`, `${fx(e.V * 1000, 2)} L, ${fN(e.Wl)}`, 'c-w', true])];
+      f = `F = ρgh·A = ${fx(Pg, 0)} Pa × ${fx(Math.PI * 0.04 * 0.04 * 1e4, 1)} cm². The flared walls hold up the extra liquid; the narrowing walls push down on it.`;
+    } else if (S.scene === 'baro') {
+      const q = S.P.baro;
+      if (S.baro === 'baro') {
+        const h = columnHeight(q.Pa * 1000, rho);
+        rows = [['Air pressure', `${fx(q.Pa, 1)} kPa`], ['Column height', h < 2 ? `${fx(h * 1000, 1)} mm` : `${fx(h, 2)} m`, 'c-p'], ['In mmHg', `${fx(q.Pa * 1000 / 133.322387, 1)} mmHg`], ['In atmospheres', `${fx(q.Pa * 1000 / PATM, 4)} atm`]];
+        f = `h = P_atm/(ρg) = ${fx(q.Pa * 1000, 0)}/(${fx(rho, 0)}·${fx(G, 3)}) m`;
+      } else {
+        const dh = columnHeight(q.Pg * 1000, rho);
+        rows = [['Gas gauge pressure', `${fx(q.Pg, 1)} kPa`], ['Gas absolute pressure', `${fx(PATM / 1000 + q.Pg, 2)} kPa`], ['Level difference Δh', Math.abs(dh) < 0.5 ? `${fx(dh * 1000, 1)} mm` : `${fx(dh * 100, 1)} cm`, 'c-p'], ['Higher side', q.Pg > 0 ? 'open arm' : q.Pg < 0 ? 'gas arm' : 'level']];
+        f = 'P_gas − P_atm = ρgΔh, with Δh measured up the open arm';
+      }
+    } else if (S.scene === 'buoy') {
+      const b = buoyNow(), p = b.p, Vs = p.L * p.L * b.s;
+      const fr = b.s / p.L, fe = p.rhoO / p.rhoF;
+      rows = [['Weight W', fN(b.W), 'c-w'], ['Buoyant force F_B', fN(b.FB), 'c-b'],
+        b.q.scale ? ['Scale reading T', fN(b.T), 'c-t'] : ['Floor pushes N', fN(b.N), 'c-t'],
+        ['W − F_B', fN(b.W - b.FB)],
+        ['Fraction under now', `${fx(fr * 100, 1)}%`], ['ρ_obj/ρ_fluid', fe < 1 ? `${fx(fe * 100, 1)}% (floats)` : `${fx(fe, 2)} (sinks)`],
+        ['Submerged volume', `${fx(Vs * 1e6, 0)} cm³`], b.q.over ? ['Water in beaker', `${fx(bs.caught * 1e6, 0)} cm³, ${fN(rhoF() * G * bs.caught)}`, 'c-p'] : ['Level rise V_sub/A', `${fx(Vs / p.A * 1000, 2)} mm`]];
+      f = b.q.scale ? 'Scale reading T = W − F_B = W − ρ_f V_sub g; the beaker gains ρ_f V_sub g.' : 'Floating: ρ_f V_sub g = ρ_obj V g, so V_sub/V = ρ_obj/ρ_fluid.';
+    } else if (S.scene === 'venturi') {
+      const v = vp(), r = venturi(v), abs = S.gmode === 'abs', off = abs ? PATM : 0;
+      rows = [['v₁ (inlet)', `${fx(v.v1, 2)} m/s`, 'c-d'], ['v₂ (throat)', `${fx(r.v2, 2)} m/s`, 'c-d'], ['A₁/A₂', fx(r.ratio, 2)], ['Flow rate Q', `${fx(r.Q * 1000, 3)} L/s`],
+        [`P₁ (${abs ? 'abs' : 'gauge'})`, kPa(r.P1 + off), 'c-p'], [`P₂ (${abs ? 'abs' : 'gauge'})`, kPa(r.P2 + off), 'c-p'], ['P₁ − P₂', kPa(r.P1 - r.P2)], ['Δh', r.dh < 2 ? `${fx(r.dh * 100, 1)} cm` : `${fx(r.dh, 2)} m`]];
+      if (r.P2 + PATM < PVAP) rows.push(['Throat', 'the water would boil (cavitation): no real flow can follow these numbers', 'c-w', true]);
+      f = `A₁v₁ = A₂v₂; P₁ − P₂ = ½ρ(v₂² − v₁²) = ${kPa(r.P1 - r.P2)}`;
+    } else {
+      const q = S.P.torr, tr = torricelli(q.H, q.hh);
+      rows = [['Hole depth h', `${fx(q.hh, 2)} m`], ['Hole height H − h', `${fx(q.H - q.hh, 2)} m`], ['Exit speed v', `${fx(tr.v, 2)} m/s`, 'c-d'], ['Fall time', `${fx(tr.t, 3)} s`],
+        ['Range R', `${fx(tr.R, 3)} m`, 'c-w'], ['Largest range', `${fx(q.H, 2)} m at h = ${fx(q.H / 2, 2)} m`]];
+      f = 'v = √(2gh), t = √(2(H − h)/g), R = vt = 2√(h(H − h))';
+    }
+    const html = JSON.stringify(rows) + f;
+    if (html === lastRead) return;
+    lastRead = html;
+    dl(rows); $('formula').textContent = f;
+  }
+
+  // ---------- rail: sliders ----------
+  const slEls = {};
+  function buildSliders() {
+    const box = $('sliders'); box.innerHTML = '';
+    for (const [scene, defs] of Object.entries(SLD)) {
+      const grp = document.createElement('div'); grp.dataset.scene = scene; grp.style.display = 'flex'; grp.style.flexDirection = 'column'; grp.style.gap = '10px';
+      for (const d of defs) {
+        const id = `s_${scene}_${d[0]}`;
+        const w = document.createElement('div'); w.className = 'ctl';
+        w.innerHTML = `<div class="slider-head"><label for="${id}">${d[1]}</label><output id="${id}o" class="mono" for="${id}"></output></div><input type="range" id="${id}" min="${d[2]}" max="${d[3]}" step="${d[4]}">`;
+        grp.appendChild(w);
+        const inp = w.querySelector('input');
+        inp.addEventListener('input', () => { setParam(d[0], +inp.value, { nosync: true }); syncSliders(d[0]); drawAll(); });
+        slEls[`${scene}.${d[0]}`] = { inp, out: w.querySelector('output'), d, w };
+      }
+      box.appendChild(grp);
+    }
+  }
+  function syncSliders(skip) {
+    for (const grp of $('sliders').children) grp.hidden = grp.dataset.scene !== S.scene;
+    for (const d of SLD[S.scene]) {
+      const el = slEls[`${S.scene}.${d[0]}`], v = P()[d[0]];
+      el.inp.max = sliderMax(d[0]);
+      if (d[0] !== skip) el.inp.value = v;
+      el.out.textContent = `${fx(v, d[6])}${d[5] ? ' ' + d[5] : ''}`;
+    }
+    if (S.scene === 'baro') { slEls['baro.Pa'].w.hidden = S.baro !== 'baro'; slEls['baro.Pg'].w.hidden = S.baro !== 'mano'; }
+    if (S.scene === 'buoy') { slEls['buoy.h0'].w.hidden = S.P.buoy.over; slEls['buoy.zeta'].w.hidden = S.P.buoy.scale; }
+  }
+  function syncMat() { for (const b of document.querySelectorAll('#matSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.P.buoy.mat)); }
+
+  // ---------- scenes, presets, controls ----------
+  const KEYS = {
+    press: [['--neg', 'Pressure pushes equally from every side'], ['--pos', 'Probe reading']],
+    pascal: [['--pos', 'Weight of the liquid'], ['--neg', 'Pressure and force on the base']],
+    baro: [['--neg', 'Air pressure'], ['--muted', 'Rest level']],
+    buoy: [['--pos', 'Weight W = mg'], ['--vcol', 'Buoyant force F_B = ρ_f V_sub g'], ['--xcol', 'Scale tension T or floor force N'], ['--acol', 'Drag in the liquid']],
+    venturi: [['--acol', 'Speed'], ['--neg', 'Gauge pressure P'], ['--acol', '½ρv², the kinetic energy per volume']],
+    torr: [['--acol', 'Exit velocity'], ['--pos', 'Range on the floor'], ['--muted', 'Jets from other holes']]
+  };
+  function setScene(sc) {
+    S.scene = sc;
+    for (const b of document.querySelectorAll('#sceneSeg button')) b.setAttribute('aria-pressed', String(b.dataset.s === sc));
+    $('parTitle').textContent = TITLES[sc];
+    $('parHint').textContent = PAR_HINT[sc];
+    $('modelHint').textContent = MODEL[sc];
+    $('liqSec').hidden = sc === 'torr';
+    $('baroSeg').hidden = sc !== 'baro';
+    $('matSeg').hidden = sc !== 'buoy';
+    $('buoyToggles').hidden = sc !== 'buoy';
+    $('pModeWrap').hidden = !(sc === 'press' || sc === 'venturi');
+    const dyn = sc === 'buoy' || sc === 'venturi' || sc === 'torr';
+    $('stageCtl').hidden = !dyn;
+    $('stage').classList.toggle('cols', sc === 'buoy');
+    $('timeSec').hidden = !dyn;
+    $('reset').textContent = sc === 'buoy' ? 'Drop again' : 'Restart';
+    $('lForces').hidden = sc !== 'buoy'; $('lGhost').hidden = sc !== 'buoy'; $('lCmp').hidden = sc !== 'torr';
+    $('keyBox').innerHTML = KEYS[sc].map(([c, txt]) => `<span><i class="swatch" style="border-color: var(${c})${c === '--muted' ? '; border-top-style: dashed' : ''}"></i>${txt.replace(/_(\w+)/g, '<sub>$1</sub>')}</span>`).join('');
+    S.sel = 0;
+    if (sc === 'venturi' && !parts.length) seedParts();
+    syncLiq(); syncSliders(); syncMat(); updateReadouts();
+    $('tScale').checked = S.P.buoy.scale; $('tOver').checked = S.P.buoy.over;
+  }
+  function syncLiq() {
+    for (const b of document.querySelectorAll('#liqSeg button')) b.setAttribute('aria-pressed', String(b.dataset.l === S.liq));
+    $('liqNote').textContent = LIQ[S.liq].note;
+    for (const b of document.querySelectorAll('#pModeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.gmode));
+    for (const b of document.querySelectorAll('#baroSeg button')) b.setAttribute('aria-pressed', String(b.dataset.b === S.baro));
+  }
+  function setRate(r) {
+    S.rate = r;
+    for (const b of document.querySelectorAll('#rateSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.r === r));
+  }
+  function applyPreset(name) {
+    const c = PRESETS[name]; if (!c) return;
+    S.preset = name;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    S.P[c.scene] = { ...JSON.parse(JSON.stringify(DEF[c.scene])), ...JSON.parse(JSON.stringify(c.p)) };
+    S.liq = c.liq; if (c.gmode) S.gmode = c.gmode;
+    if (c.scene === 'buoy') {
+      const q = S.P.buoy;
+      if (q.scale) q.zh = TANK.spout + 0.06 + STR + q.L / 100;
+      setRate(1); bs = null; buoyReset(false);
+      if (reduce) settleBuoy();
+    }
+    if (c.scene === 'venturi') { seedParts(); setRate(0.25); }
+    if (c.scene === 'torr') { drops = []; setRate(1); }
+    setScene(c.scene);
+    $('presetHint').textContent = c.hint;
+    if (!reduce) setRunning(true);
+    drawAll();
+  }
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) applyPreset(b.dataset.p); });
+  const SCENE_HINT = {
+    pascal: 'Pascal’s paradox: the four vessels hold very different amounts of liquid, yet the pressure and the force on each base are the same. Pressure depends only on depth, not on the shape or the amount of liquid above.',
+    baro: 'Torricelli’s barometer: the air pushing on the dish holds up a column of liquid with a vacuum above it. For mercury the column is 760 mm at sea level; water would need a tube over 10 m tall. Switch to the manometer to measure a gas pressure.'
+  };
+  $('sceneSeg').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b || b.dataset.s === S.scene) return;
+    const sc = b.dataset.s;
+    if (SCENE_PRESET[sc] && !S.P[sc].__touched) { applyPreset(SCENE_PRESET[sc]); return; }
+    clearPreset(); setScene(sc);
+    if (sc === 'baro' && S.liq !== 'hg') { S.liq = 'hg'; syncLiq(); }
+    $('presetHint').textContent = SCENE_HINT[sc] || '';
+    if (sc === 'buoy') buoyReset(true);
+    updateReadouts(); drawAll();
+  });
+  $('liqSeg').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    S.liq = b.dataset.l; syncLiq(); clearPreset();
+    if (S.scene === 'buoy') buoyAfterChange();
+    updateReadouts(); drawAll();
+  });
+  $('pModeSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { S.gmode = b.dataset.g; syncLiq(); updateReadouts(); drawAll(); } });
+  $('baroSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { S.baro = b.dataset.b; syncLiq(); syncSliders(); updateReadouts(); drawAll(); } });
+  $('matSeg').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    const q = S.P.buoy; q.mat = b.dataset.m; q.rho = MATS[q.mat][1]; q.__touched = true; syncMat(); clearPreset();
+    buoyAfterChange(); syncSliders(); updateReadouts(); drawAll();
+  });
+  $('tScale').addEventListener('change', (e) => {
+    const q = S.P.buoy; q.scale = e.target.checked; q.__touched = true; clearPreset();
+    if (q.scale) { q.xb = 0; q.zh = (q.over ? TANK.spout : q.h0) + 0.06 + STR + q.L / 100; }
+    bs = null; buoyReset(false); if (!q.scale && reduce) settleBuoy(); else if (!q.scale) setRunning(true);
+    syncSliders(); updateReadouts(); drawAll();
+  });
+  $('tOver').addEventListener('change', (e) => {
+    const q = S.P.buoy; q.over = e.target.checked; q.__touched = true; clearPreset();
+    if (q.scale) q.zh = (q.over ? TANK.spout : q.h0) + 0.06 + STR + q.L / 100;
+    bs = null; buoyReset(false); if (!q.scale && reduce) settleBuoy(); else if (!q.scale) setRunning(true);
+    syncSliders(); updateReadouts(); drawAll();
+  });
+  $('rateSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { setRate(+b.dataset.r); clock(); } });
+  const lay = { tForces: 'forces', tGhost: 'ghost', tCmp: 'cmp' };
+  for (const [id, key] of Object.entries(lay)) $(id).addEventListener('change', (e) => { S.layers[key] = e.target.checked; drawAll(); });
+  const playBtn = $('play');
+  let last = performance.now();
+  function setRunning(r) { running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now(); }
+  playBtn.addEventListener('click', () => setRunning(!running));
+  function restart() {
+    if (S.scene === 'buoy') { const q = S.P.buoy; if (!q.scale) { bs = null; buoyReset(false); } }
+    if (S.scene === 'venturi') seedParts();
+    if (S.scene === 'torr') { drops = []; dropAcc = 0; }
+    setRunning(true); drawAll();
+  }
+  $('reset').addEventListener('click', restart);
+
+  // ---------- dragging on the scene ----------
+  function handleAt(ev) {
+    const r = cans.s.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 6 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = Infinity;
+    for (const h of handles) {
+      let d = Infinity;
+      if (h.pt) d = Math.hypot(x - h.pt[0], y - h.pt[1]) - 8 * projScale() - 1;      // grips win over the bodies under them
+      else if (h.box) { const [bx, by, bw, bh] = h.box; d = Math.hypot(Math.max(bx - x, 0, x - bx - bw), Math.max(by - y, 0, y - by - bh)); }
+      if (d < 0) d = -1 + d / 1e3;
+      if (d <= tol && d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  function centerOf(h) { return h.pt ? h.pt : [h.box[0] + h.box[2] / 2, h.box[1] + h.box[3] / 2]; }
+  let qd = null, qFrame = false;
+  function dragTo(ev) {
+    const r = cans.s.getBoundingClientRect();
+    qd = [ev.clientX - r.left, ev.clientY - r.top];
+    if (qFrame) return; qFrame = true;
+    requestAnimationFrame(() => {
+      qFrame = false; if (!drag || !qd) return;
+      const [x, y] = qd; qd = null;
+      if (drag.param) {          // square grips that follow the drag distance
+        const d = SLDEF(drag.param), dist = (x - drag.x0);
+        setParam(drag.param, drag.v0 + dist * (d[3] - d[2]) / (220 * projScale()));
+      } else {
+        const h = handles.find((k) => k.id === drag.id);
+        if (h && h.set) { h.set(x - drag.off[0], y - drag.off[1]); P().__touched = true; clearPreset(); }
+      }
+      syncSliders(); updateReadouts(); drawAll();
+    });
+  }
+  cans.s.addEventListener('pointermove', (ev) => {
+    if (drag) { dragTo(ev); return; }
+    const h = handleAt(ev); const id = h ? h.id : null;
+    if (id !== hoverId) { hoverId = id; drawAll(); }
+    cans.s.style.cursor = h ? h.cursor : 'default';
+  });
+  cans.s.addEventListener('pointerdown', (ev) => {
+    cans.s.focus({ preventScroll: true });
+    const h = handleAt(ev); if (!h) return;
+    const r = cans.s.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, c = centerOf(h);
+    drag = { id: h.id, off: [x - c[0], y - c[1]] };
+    if (h.param) { drag.param = h.param; drag.x0 = x; drag.v0 = P()[h.param]; }
+    if (h.id === 'block') { held = true; bs.v = 0; }
+    try { cans.s.setPointerCapture(ev.pointerId); } catch (_) {}
+    cans.s.style.cursor = h.grabbing || h.cursor; ev.preventDefault();
+    drawAll();
+  });
+  function endDrag() {
+    if (!drag) return;
+    const id = drag.id;
+    drag = null; hoverId = null;
+    if (held) {
+      held = false; const q = S.P.buoy; q.z0 = bs.zb; t = 0; bs.t = 0; bs.v = 0;
+      trace = [[0, submerged(bp(), bs.zb, bs.Vw).s]];
+      if (!reduce) setRunning(true);
+      $('live').textContent = 'Block released.';
+    } else if (id === 'size' && S.scene === 'buoy') buoyAfterChange();
+    syncSliders(); updateReadouts(); drawAll();
+  }
+  cans.s.addEventListener('pointerup', endDrag);
+  cans.s.addEventListener('pointercancel', endDrag);
+  cans.s.addEventListener('pointerleave', () => { if (!drag && hoverId) { hoverId = null; drawAll(); } });
+  cans.s.addEventListener('keydown', (e) => {
+    const k = e.key, sh = e.shiftKey ? 5 : 1, sc = S.scene, p = P();
+    const step = (key, dir, mul) => { const d = SLDEF(key); setParam(key, p[key] + dir * d[4] * sh * (mul || 1)); };
+    let dir = 0;
+    if (k === 'ArrowUp' || k === 'ArrowDown') {
+      dir = k === 'ArrowUp' ? 1 : -1;
+      if (sc === 'press') step('pd', -dir, 5);
+      else if (sc === 'pascal') step('hp', dir);
+      else if (sc === 'baro') step(S.baro === 'baro' ? 'Pa' : 'Pg', dir);
+      else if (sc === 'buoy') {
+        if (p.scale) { p.zh = clamp(+(p.zh + dir * 0.005 * sh).toFixed(4), zhMin(p), zhMax()); const h = hangState(bp(), zTautOf(p), bs.Vw); bs.zb = h.zb; spill(bp()); clearPreset(); }
+        else step('L', dir);
+      } else if (sc === 'venturi') step('v1', dir);
+      else step('hh', -dir);
+    } else if (k === 'ArrowLeft' || k === 'ArrowRight') {
+      dir = k === 'ArrowRight' ? 1 : -1;
+      if (sc === 'press') { p.px = clamp(p.px + dir * 0.03 * sh, 0.04, 0.96); clearPreset(); }
+      else if (sc === 'buoy') step('rho', dir, 5);
+      else if (sc === 'venturi') step('D2', dir);
+      else if (sc === 'torr') step('H', dir);
+      else if (sc === 'baro') step(S.baro === 'baro' ? 'Pa' : 'Pg', dir);
+      else step('hp', dir);
+    } else if (k === ' ') { setRunning(!running); }
+    else if (k === 'r' || k === 'R') { restart(); }
+    else return;
+    e.preventDefault(); syncSliders(); updateReadouts(); drawAll();
+  });
+
+  // ---------- projector and theme ----------
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); drawAll(); }); } catch (_) {}
+  new MutationObserver(() => { tokens(); drawAll(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  function advance(dts) {
+    if (!(dts > 0)) return;
+    spillT += dts;
+    if (S.scene === 'buoy' && !S.P.buoy.scale && !held) {
+      const before = bs.caught;
+      bs = bobRun(bs, bp(), dts, 5e-4);
+      if (bs.caught > before + 1e-12) spillT = 0;
+      t += dts;
+      const lastT = trace.length ? trace[trace.length - 1][0] : -1;
+      if (t - lastT > 0.01) { trace.push([t, submerged(bp(), bs.zb, bs.Vw).s]); if (trace.length > 2000) trace.splice(0, trace.length - 2000); }
+    } else if (S.scene === 'venturi') advanceParts(dts);
+    else if (S.scene === 'torr') advanceDrops(dts);
+  }
+  let frameMs = 0, lastR = 0;
+  function loop(now) {
+    const dtr = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    const dyn = S.scene === 'buoy' || S.scene === 'venturi' || S.scene === 'torr';
+    if (running && dtr > 0 && dyn) { advance(dtr * S.rate); drawAll(); }
+    else if (held) drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastR > 150) { updateReadouts(); lastR = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__fl = {
+    get frameMs() { return frameMs; }, get t() { return t; }, get S() { return S; }, get bs() { return bs; }, get handles() { return handles; },
+    get running() { return running; }, get trace() { return trace; },
+    applyPreset, setScene, setParam, setRunning, buoyNow, bp,
+    go(dts, step) { step = step || 0.01; for (let x = 0; x < dts - 1e-12; x += step) advance(Math.min(step, dts - x)); updateReadouts(); drawAll(); }
+  };
+
+  tokens();
+  buildSliders();
+  bs = { zb: DEF.buoy.z0, v: 0, Vw: Vw0(), caught: 0, t: 0 };
+  const ro = new ResizeObserver(resize);
+  for (const k of ['s', 'g']) ro.observe(panes[k]);
+  applyPreset('float');
+  setRunning(!reduce);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
