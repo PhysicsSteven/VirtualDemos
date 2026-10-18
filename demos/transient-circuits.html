@@ -24,7 +24,7 @@ function state(mode,R,L,C,V0,I0,t){
   if(mode==='RL'){const i=I0*Math.exp(-R*t/L);const E0=L*I0*I0/2;const U=L*i*i/2;return {q:0,i,U,H:Math.max(0,E0-U),E0,regime:R===0?'constant current':'RL decay'};}
   const q0=C*V0,E0=q0*q0/(2*C);
   let q,i,regime;
-  if(mode==='RC'){if(R===0){q=t===0?q0:0;i=0;regime='singular ideal RC (R=0)';}else{q=q0*Math.exp(-t/(R*C));i=-q/(R*C);regime='RC decay';}}
+  if(mode==='RC'){if(R===0)throw Error('Ideal RC with R=0 has impulsive current; select LC for undamped oscillations.');q=q0*Math.exp(-t/(R*C));i=-q/(R*C);regime='RC decay';}
   else{
     const r=mode==='LC'?0:R,alpha=r/(2*L),w0=1/Math.sqrt(L*C);
     if(alpha===0){q=q0*Math.cos(w0*t);i=-q0*w0*Math.sin(w0*t);regime='undamped';}
@@ -38,9 +38,9 @@ function state(mode,R,L,C,V0,I0,t){
 if(typeof module!=='undefined')module.exports={state};
 const $=id=>document.getElementById(id),fields=['R','L','C','V0','I0'],rows=[],ctx=$('plot').getContext('2d');
 let anim=0;
-function settings(){const mode=$('mode').value;const R=mode==='LC'?0:+$('R').value,L=+$('L').value/1000,C=+$('C').value/1e6,V0=+$('V0').value,I0=+$('I0').value;return {mode,R,L,C,V0,I0};}
+function settings(){const mode=$('mode').value;const R=mode==='LC'?0:mode==='RC'?Math.max(.1,+$('R').value):+$('R').value,L=+$('L').value/1000,C=+$('C').value/1e6,V0=+$('V0').value,I0=+$('I0').value;return {mode,R,L,C,V0,I0};}
 function horizon(s){if(s.mode==='RL')return s.R>0?Math.min(5*s.L/s.R,10):1;if(s.mode==='RC')return s.R>0?5*s.R*s.C:1;const w0=1/Math.sqrt(s.L*s.C),alpha=s.R/(2*s.L);return Math.min(10,Math.max(4*2*Math.PI/w0,alpha>0?4/alpha:0));}
-function draw(){const s=settings(),T=horizon(s),t=T*(+$('time').value/1000),z=state(s.mode,s.R,s.L,s.C,s.V0,s.I0,t);$('Rval').textContent=s.R.toFixed(1)+' Ω';$('Lval').textContent=(s.L*1000).toFixed(0)+' mH';$('Cval').textContent=(s.C*1e6).toFixed(0)+' µF';$('V0val').textContent=s.V0.toFixed(1)+' V';$('I0val').textContent=s.I0.toFixed(1)+' A';$('tval').textContent=(t*1000).toFixed(3)+' ms';$('R').disabled=s.mode==='LC';$('L').disabled=s.mode==='RC';$('C').disabled=s.mode==='RL';$('V0').disabled=s.mode==='RL';$('I0').disabled=s.mode!=='RL';
+function draw(){const s=settings(),T=horizon(s),t=T*(+$('time').value/1000),z=state(s.mode,s.R,s.L,s.C,s.V0,s.I0,t);$('Rval').textContent=s.R.toFixed(1)+' Ω';$('Lval').textContent=(s.L*1000).toFixed(0)+' mH';$('Cval').textContent=(s.C*1e6).toFixed(0)+' µF';$('V0val').textContent=s.V0.toFixed(1)+' V';$('I0val').textContent=s.I0.toFixed(1)+' A';$('tval').textContent=(t*1000).toFixed(3)+' ms';$('R').disabled=s.mode==='LC';$('R').min=s.mode==='RC'?'0.1':'0';$('L').disabled=s.mode==='RC';$('C').disabled=s.mode==='RL';$('V0').disabled=s.mode==='RL';$('I0').disabled=s.mode!=='RL';
 const fmt=(v,u)=>v.toFixed(5)+' '+u;const metric=[['Charge',fmt(z.q*1000,'mC')],['Current',fmt(z.i*1000,'mA')],['Stored energy',fmt(z.U*1000,'mJ')],['Dissipated heat',fmt(z.H*1000,'mJ')]];$('metrics').innerHTML=metric.map(([k,v])=>'<div class="metric"><span class="small">'+k+'</span><strong>'+v+'</strong></div>').join('');
 const w0=1/Math.sqrt(s.L*s.C),rc=2*Math.sqrt(s.L/s.C),alpha=s.R/(2*s.L);$('theory').textContent=$('blind').checked?'Theory hidden. Record and analyze measurements before revealing it.':('Regime: '+z.regime+' · ω₀ = '+w0.toFixed(4)+' rad/s · Rcrit = '+rc.toFixed(4)+' Ω · α = '+alpha.toFixed(4)+' s⁻¹ · total initial energy = '+(z.E0*1000).toFixed(5)+' mJ');
 const W=900,H=350,left=60,right=18,top=20,bottom=42,pw=W-left-right,ph=H-top-bottom;ctx.clearRect(0,0,W,H);ctx.fillStyle='#0d1725';ctx.fillRect(0,0,W,H);ctx.strokeStyle='#4d6077';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(left,top);ctx.lineTo(left,H-bottom);ctx.lineTo(W-right,H-bottom);ctx.stroke();ctx.font='14px system-ui';ctx.fillStyle='#d2dfed';ctx.fillText('Normalized response',left,15);ctx.fillText('Time (ms)',W/2,H-9);ctx.fillText('0',left-15,H-bottom+17);ctx.fillText((T*1000).toFixed(2),W-right-50,H-bottom+17);
