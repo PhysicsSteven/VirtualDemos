@@ -1,0 +1,1605 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Coupled Oscillators</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the chain (top left) above a strip chart of every mass against time; normal modes with their energies (top right) above a spectrum; instrument rail on the right; stacks on narrow screens. Hanging, the chain takes a tall column of its own. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --steel: #4c5664;
+  --steel-hi: #c9d1db;
+  --brass: #c7962c;
+  --brass-hi: #f6dd8f;
+  --brass-lo: #7d5a12;
+  --alu: #c3cbd5;
+  --alu-lo: #9aa5b2;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --steel: #8d98a8; --steel-hi: #e4e9f0; --brass: #b98a26; --brass-hi: #f1d27a; --brass-lo: #5e430c;
+    --alu: #3b4757; --alu-lo: #2a3441; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --steel: #8d98a8; --steel-hi: #e4e9f0; --brass: #b98a26; --brass-hi: #f1d27a; --brass-lo: #5e430c;
+  --alu: #3b4757; --alu-lo: #2a3441; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 600px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
+  display: grid; grid-template-columns: minmax(0, 58fr) minmax(0, 42fr); grid-template-rows: minmax(0, 52fr) minmax(0, 48fr); }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#sPane { grid-column: 1; grid-row: 1; }
+#tPane { grid-column: 1; grid-row: 2; border-top: 1px solid var(--line); }
+#mPane { grid-column: 2; grid-row: 1; border-left: 1px solid var(--line); }
+#fPane { grid-column: 2; grid-row: 2; border-left: 1px solid var(--line); border-top: 1px solid var(--line); }
+.stage[data-orient="v"] { grid-template-columns: minmax(0, 27fr) minmax(0, 38fr) minmax(0, 35fr); grid-template-rows: minmax(0, 52fr) minmax(0, 48fr); }
+.stage[data-orient="v"] #sPane { grid-column: 1; grid-row: 1 / 3; }
+.stage[data-orient="v"] #tPane { grid-column: 2; grid-row: 1 / 3; border-top: 0; border-left: 1px solid var(--line); }
+.stage[data-orient="v"] #mPane { grid-column: 3; grid-row: 1; }
+.stage[data-orient="v"] #fPane { grid-column: 3; grid-row: 2; }
+#sCan, #tCan, #mCan, #fCan { touch-action: none; outline: none; }
+#sCan:focus-visible, #mCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
+.stage-ctl > * { pointer-events: auto; }
+.stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
+.tclock { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; font-size: 0.86rem; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--canvas) 85%, transparent); padding: 2px 6px; border-radius: 6px; white-space: nowrap; line-height: 1.25; }
+.tclock small { font-size: 0.74rem; font-weight: 400; color: var(--muted); }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg.full { display: flex; }
+.seg.full button { flex: 1; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+.modechips button { min-width: 2.4em; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .small dd { font-size: 0.88rem; }
+.selname { font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.selname i { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+.flag { margin: 0; font-size: 0.88rem; font-weight: 700; border: 1px solid var(--pos); color: var(--pos); border-radius: 6px; padding: 7px 10px; }
+.flag span { display: block; font-weight: 400; color: var(--ink); margin-top: 2px; }
+.formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.eq { border-color: var(--muted); }
+.swatch.ghost { border-color: var(--muted); border-top-style: dashed; }
+.swatch.mode { border-color: var(--equi); border-top-style: dashed; }
+.swatch.graph { border-color: var(--accent); }
+
+@media (max-width: 1060px) {
+  .stage, .stage[data-orient="v"] { grid-template-columns: minmax(0, 1fr); grid-template-rows: 420px 330px 340px 260px; min-height: 0; }
+  .stage[data-orient="v"] { grid-template-rows: 560px 360px 340px 260px; }
+  #sPane, .stage[data-orient="v"] #sPane { grid-column: 1; grid-row: 1; }
+  #tPane, .stage[data-orient="v"] #tPane { grid-column: 1; grid-row: 2; border-left: 0; border-top: 1px solid var(--line); }
+  #mPane, .stage[data-orient="v"] #mPane { grid-column: 1; grid-row: 3; border-left: 0; border-top: 1px solid var(--line); }
+  #fPane, .stage[data-orient="v"] #fPane { grid-column: 1; grid-row: 4; border-left: 0; }
+}
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage, .stage[data-orient="v"] { grid-template-rows: 380px 320px 330px 250px; }
+  .stage[data-orient="v"] { grid-template-rows: 520px 340px 330px 250px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Coupled Oscillators</h1>
+      <p>Masses joined by springs. Any motion, however tangled, is a sum of normal modes: patterns in which every mass swings at one shared frequency.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units · ξ = displacement from equilibrium · g = 9.80665 m/s²</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/coupled-oscillators.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/coupled-oscillators.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM14 2h1v1h-1zM16 2h1v1h-1zM19 2h3v1h-3zM25 2h1v1h-1zM27 2h3v1h-3zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM13 3h2v1h-2zM16 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h2v1h-2zM15 4h2v1h-2zM18 4h9v1h-9zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM13 5h3v1h-3zM17 5h2v1h-2zM20 5h2v1h-2zM25 5h5v1h-5zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM16 6h1v1h-1zM18 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM15 7h1v1h-1zM17 7h1v1h-1zM20 7h5v1h-5zM27 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM17 9h1v1h-1zM19 9h5v1h-5zM25 9h1v1h-1zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM12 10h2v1h-2zM15 10h3v1h-3zM20 10h6v1h-6zM31 10h5v1h-5zM38 10h1v1h-1zM3 11h2v1h-2zM6 11h1v1h-1zM10 11h2v1h-2zM13 11h1v1h-1zM16 11h1v1h-1zM18 11h1v1h-1zM21 11h5v1h-5zM27 11h4v1h-4zM34 11h4v1h-4zM2 12h2v1h-2zM8 12h4v1h-4zM13 12h1v1h-1zM15 12h1v1h-1zM18 12h1v1h-1zM23 12h4v1h-4zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM5 13h2v1h-2zM9 13h5v1h-5zM16 13h1v1h-1zM19 13h1v1h-1zM22 13h4v1h-4zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM6 14h3v1h-3zM10 14h2v1h-2zM13 14h2v1h-2zM16 14h2v1h-2zM19 14h1v1h-1zM23 14h2v1h-2zM26 14h1v1h-1zM30 14h3v1h-3zM36 14h3v1h-3zM6 15h2v1h-2zM10 15h1v1h-1zM13 15h1v1h-1zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM3 16h2v1h-2zM6 16h1v1h-1zM8 16h3v1h-3zM12 16h1v1h-1zM14 16h1v1h-1zM16 16h2v1h-2zM20 16h1v1h-1zM22 16h1v1h-1zM24 16h6v1h-6zM31 16h1v1h-1zM33 16h5v1h-5zM4 17h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM11 17h3v1h-3zM17 17h1v1h-1zM21 17h4v1h-4zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM7 18h3v1h-3zM12 18h2v1h-2zM15 18h2v1h-2zM18 18h1v1h-1zM22 18h3v1h-3zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h2v1h-2zM7 19h1v1h-1zM9 19h2v1h-2zM13 19h3v1h-3zM20 19h1v1h-1zM24 19h2v1h-2zM27 19h1v1h-1zM29 19h2v1h-2zM33 19h3v1h-3zM37 19h1v1h-1zM3 20h1v1h-1zM5 20h2v1h-2zM8 20h1v1h-1zM14 20h4v1h-4zM19 20h2v1h-2zM22 20h2v1h-2zM25 20h1v1h-1zM28 20h9v1h-9zM3 21h1v1h-1zM5 21h3v1h-3zM9 21h3v1h-3zM16 21h4v1h-4zM22 21h2v1h-2zM25 21h2v1h-2zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM4 22h1v1h-1zM6 22h1v1h-1zM8 22h1v1h-1zM10 22h2v1h-2zM14 22h2v1h-2zM19 22h1v1h-1zM22 22h5v1h-5zM29 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM3 23h3v1h-3zM7 23h1v1h-1zM9 23h2v1h-2zM12 23h3v1h-3zM16 23h3v1h-3zM22 23h1v1h-1zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h3v1h-3zM8 24h1v1h-1zM11 24h2v1h-2zM14 24h6v1h-6zM22 24h1v1h-1zM24 24h2v1h-2zM27 24h1v1h-1zM29 24h1v1h-1zM32 24h5v1h-5zM2 25h1v1h-1zM9 25h2v1h-2zM12 25h2v1h-2zM16 25h2v1h-2zM19 25h5v1h-5zM26 25h1v1h-1zM28 25h3v1h-3zM32 25h3v1h-3zM36 25h1v1h-1zM38 25h1v1h-1zM4 26h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM11 26h2v1h-2zM14 26h2v1h-2zM20 26h1v1h-1zM22 26h2v1h-2zM25 26h2v1h-2zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM6 27h2v1h-2zM9 27h1v1h-1zM12 27h3v1h-3zM16 27h1v1h-1zM18 27h1v1h-1zM25 27h1v1h-1zM27 27h5v1h-5zM34 27h2v1h-2zM5 28h1v1h-1zM7 28h3v1h-3zM11 28h4v1h-4zM16 28h1v1h-1zM18 28h3v1h-3zM24 28h2v1h-2zM27 28h8v1h-8zM36 28h1v1h-1zM6 29h1v1h-1zM9 29h2v1h-2zM12 29h1v1h-1zM14 29h2v1h-2zM19 29h2v1h-2zM22 29h5v1h-5zM29 29h2v1h-2zM33 29h2v1h-2zM36 29h1v1h-1zM38 29h1v1h-1zM2 30h3v1h-3zM6 30h1v1h-1zM8 30h1v1h-1zM11 30h1v1h-1zM13 30h5v1h-5zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h1v1h-1zM10 31h2v1h-2zM13 31h3v1h-3zM18 31h3v1h-3zM23 31h1v1h-1zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM13 32h1v1h-1zM17 32h2v1h-2zM20 32h1v1h-1zM22 32h1v1h-1zM25 32h1v1h-1zM27 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM13 33h2v1h-2zM16 33h2v1h-2zM23 33h2v1h-2zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM13 34h3v1h-3zM17 34h2v1h-2zM23 34h4v1h-4zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h2v1h-2zM14 35h2v1h-2zM20 35h1v1h-1zM23 35h1v1h-1zM25 35h1v1h-1zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h2v1h-2zM17 36h1v1h-1zM19 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h2v1h-2zM15 37h1v1h-1zM17 37h4v1h-4zM23 37h3v1h-3zM28 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM15 38h2v1h-2zM19 38h1v1h-1zM22 38h5v1h-5zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage" data-orient="h">
+      <div class="pane" id="sPane">
+        <canvas id="sCan" tabindex="0" aria-label="The chain of masses and springs. Drag a mass to displace it and let go; moving the pointer as you let go gives it a starting velocity. Click a mass or a spring to select it, drag the small grip above a mass to change its mass, or the grip by a spring to change its spring constant. Keys: left and right arrows select the previous or next part, up and down arrows move the selected mass 0.5 cm and release the chain from rest, plus and minus change the selected mass or spring constant, 1 to 9 and 0 start a pure normal mode, space plays or pauses, R resets, G turns gravity on or off when hanging."></canvas>
+        <div class="stage-ctl">
+          <button type="button" class="btn" id="play">Pause</button>
+          <button type="button" class="btn" id="reset">Reset</button>
+          <button type="button" class="btn" id="rest">At rest</button>
+          <span class="tclock mono" id="tclock">t = 0<small id="rateTag">real time</small></span>
+        </div>
+      </div>
+      <div class="pane" id="tPane">
+        <canvas id="tCan" aria-label="Strip chart: the displacement of every mass from its equilibrium against time, one lane per mass, and the energy of the motion at the bottom."></canvas>
+      </div>
+      <div class="pane" id="mPane">
+        <canvas id="mCan" tabindex="0" aria-label="Normal modes: for each mode its shape, frequency and period, and the share of the energy it carries now. Click a mode, or press its number, to start the chain in that mode alone."></canvas>
+      </div>
+      <div class="pane" id="fPane">
+        <canvas id="fCan" aria-label="Spectrum of the selected mass's motion over the recorded time, with the normal mode frequencies marked."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="two" aria-pressed="false">Two masses: in phase and out of phase</button>
+          <button type="button" data-p="beats" aria-pressed="false">Beats</button>
+          <button type="button" data-p="three" aria-pressed="true">Three masses: three modes</button>
+          <button type="button" data-p="hang" aria-pressed="false">Hanging chain with gravity</button>
+          <button type="button" data-p="mismatch" aria-pressed="false">Heavy and light</button>
+          <button type="button" data-p="waves" aria-pressed="false">Many masses: waves on a chain</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Chain</h2>
+        <div>
+          <div class="slider-head"><label for="nn">Number of masses N</label><output id="nnOut" class="mono" for="nn"></output></div>
+          <input type="range" id="nn" min="1" max="10" step="1" value="3">
+        </div>
+        <div class="seg full" role="group" aria-label="Orientation">
+          <button type="button" id="oH" aria-pressed="true">Air track</button>
+          <button type="button" id="oV" aria-pressed="false">Hanging</button>
+        </div>
+        <div class="inline">
+          <span class="lab" id="endLab">Right end</span>
+          <div class="seg" role="group" aria-label="End of the chain">
+            <button type="button" id="eFix" aria-pressed="true">Wall</button>
+            <button type="button" id="eFree" aria-pressed="false">Free</button>
+          </div>
+        </div>
+        <label class="check" id="gravRow" hidden><input type="checkbox" id="grav" checked>Gravity on</label>
+        <dl class="readout" id="sagBox" hidden>
+          <div class="wide"><dt id="topLab">Top spring tension</dt><dd id="rTop">—</dd></div>
+          <div class="wide"><dt>Sag of the lowest mass, s<sub>N</sub></dt><dd id="rSag">—</dd></div>
+        </dl>
+        <p class="hint" id="chainHint"></p>
+      </section>
+
+      <section>
+        <h2>Selected part</h2>
+        <div class="selname" id="selName"><i id="selDot"></i><span id="selTxt">Mass 1</span></div>
+        <div id="mRow">
+          <div class="slider-head"><label for="mm">Mass m</label><output id="mmOut" class="mono" for="mm"></output></div>
+          <input type="range" id="mm" min="0.1" max="5" step="0.01" value="1">
+        </div>
+        <div id="kRow" hidden>
+          <div class="slider-head"><label for="kk">Spring constant k</label><output id="kkOut" class="mono" for="kk"></output></div>
+          <input type="range" id="kk" min="0.5" max="200" step="0.5" value="10">
+        </div>
+        <dl class="readout" id="selRead"></dl>
+        <div class="row2">
+          <button type="button" class="btn" id="eqM">All masses equal</button>
+          <button type="button" class="btn" id="eqK">All springs equal</button>
+        </div>
+        <p class="hint">Click a mass or a spring in the drawing to select it. The equal buttons copy the selected value, or mass 1 and spring 1, to every part.</p>
+      </section>
+
+      <section>
+        <h2>Normal modes</h2>
+        <p class="formula">M ξ̈ = −K ξ &nbsp;→&nbsp; K v = ω² M v</p>
+        <div class="chips modechips" id="modeChips" role="group" aria-label="Start in a pure normal mode"></div>
+        <div>
+          <div class="slider-head"><label for="amp">Largest displacement A</label><output id="ampOut" class="mono" for="amp"></output></div>
+          <input type="range" id="amp" min="0.5" max="8" step="0.1" value="4">
+        </div>
+        <dl class="readout" id="modeRead"></dl>
+        <p class="hint" id="modeHint"></p>
+      </section>
+
+      <section>
+        <h2>Air resistance</h2>
+        <div class="seg full" role="group" aria-label="Drag model">
+          <button type="button" id="dOff" aria-pressed="true">Off</button>
+          <button type="button" id="dLin" aria-pressed="false">Linear</button>
+          <button type="button" id="dQuad" aria-pressed="false">Quadratic</button>
+        </div>
+        <div id="bRow" hidden>
+          <div class="slider-head"><label for="bb">Drag coefficient b</label><output id="bbOut" class="mono" for="bb"></output></div>
+          <input type="range" id="bb" min="0.01" max="2" step="0.01" value="0.2">
+        </div>
+        <div id="cRow" hidden>
+          <div class="slider-head"><label for="cc">c = ½ρC<sub>d</sub>A</label><output id="ccOut" class="mono" for="cc"></output></div>
+          <input type="range" id="cc" min="0.1" max="20" step="0.1" value="4">
+        </div>
+        <p class="formula" id="dragFormula">no drag: energy is conserved</p>
+        <dl class="readout" id="dragRead" hidden></dl>
+        <p class="hint" id="dragHint"></p>
+      </section>
+
+      <section>
+        <h2>Energy</h2>
+        <dl class="readout">
+          <div><dt>Kinetic ½Σmv²</dt><dd id="eK">—</dd></div>
+          <div><dt id="eSLab">Springs ½Σk(Δx)²</dt><dd id="eS">—</dd></div>
+          <div id="eGRow" hidden><dt>Gravity −Σmgs</dt><dd id="eG">—</dd></div>
+          <div><dt>Total</dt><dd id="eT">—</dd></div>
+          <div class="wide"><dt>Motion about equilibrium, ½ξ̇ᵀMξ̇ + ½ξᵀKξ = Σ E<sub>n</sub></dt><dd id="eO">—</dd></div>
+          <div class="wide"><dt id="eDLab">Drift, |ΔE| / E</dt><dd id="eD">—</dd></div>
+        </dl>
+        <p class="hint" id="energyHint"></p>
+      </section>
+
+      <section>
+        <h2>Time and display</h2>
+        <div class="inline">
+          <span class="lab">Speed</span>
+          <div class="seg" role="group" aria-label="Playback speed" id="rateSeg">
+            <button type="button" data-r="0.25" aria-pressed="false">¼×</button>
+            <button type="button" data-r="0.5" aria-pressed="false">½×</button>
+            <button type="button" data-r="1" aria-pressed="true">1×</button>
+            <button type="button" data-r="2" aria-pressed="false">2×</button>
+          </div>
+        </div>
+        <div>
+          <div class="slider-head"><label for="span">Strip chart span</label><output id="spanOut" class="mono" for="span"></output></div>
+          <input type="range" id="span" min="2" max="60" step="1" value="15">
+        </div>
+        <div class="toggles">
+          <label><input type="checkbox" id="tGraph" checked>ξ graph</label>
+          <label><input type="checkbox" id="tEq" checked>Equilibrium ticks</label>
+        </div>
+        <div class="key">
+          <span><i class="swatch eq"></i>Equilibrium position of each mass</span>
+          <span id="ghostKey" hidden><i class="swatch ghost"></i>Where it would hang with g = 0</span>
+          <span><i class="swatch graph"></i>ξ graph: each mass's displacement drawn crosswise, enlarged</span>
+          <span><i class="swatch mode"></i>Mode frequencies on the spectrum</span>
+        </div>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint">Point masses on ideal massless linear springs (Hooke's law at every stretch), moving along one line. On the air track the masses glide without friction; their weight is carried by the air cushion and plays no part. Hanging, gravity is uniform. The springs are drawn relaxed 25 cm apart, center to center; block and coil sizes are drawing choices, and stiffer springs are drawn with thicker wire.</p>
+        <p class="hint">Without drag the motion is the exact sum of normal modes, evaluated at each instant, so energy stays fixed to rounding error. With drag the equations are integrated with fourth order Runge–Kutta at a step of at most 1/800 of the shortest mode period, and the energy readout checks that kinetic plus potential energy plus the work done against drag stays fixed. The modes are found by Cholesky reduction of M and Jacobi rotations.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  // SI units throughout. Masses i = 0..N−1. Spring j joins mass j−1 to mass j; spring 0 hangs from the left wall
+  // (or ceiling), spring N joins the last mass to the right wall (or floor) and is absent for a free end.
+  // ξ is each mass's displacement from its equilibrium position (along the chain, down positive when vertical).
+  const G0 = 9.80665;
+  const nSpr = (N, free) => (free ? N : N + 1);
+  // (K ξ)_i for the tridiagonal stiffness matrix, without building it
+  function kmul(ks, N, free, x, out) {
+    for (let i = 0; i < N; i++) {
+      const kl = ks[i], kr = (i < N - 1 || !free) ? ks[i + 1] : 0;
+      let f = (kl + kr) * x[i];
+      if (i > 0) f -= kl * x[i - 1];
+      if (i < N - 1) f -= kr * x[i + 1];
+      out[i] = f;
+    }
+    return out;
+  }
+  function stiffness(ks, N, free) {
+    const K = new Float64Array(N * N);
+    for (let i = 0; i < N; i++) {
+      const kr = (i < N - 1 || !free) ? ks[i + 1] : 0;
+      K[i * N + i] = ks[i] + kr;
+      if (i < N - 1) { K[i * N + i + 1] = -ks[i + 1]; K[(i + 1) * N + i] = -ks[i + 1]; }
+    }
+    return K;
+  }
+  // Cholesky factor of a symmetric positive definite matrix, A = L Lᵀ (row major, lower triangle)
+  function cholesky(A, N) {
+    const L = new Float64Array(N * N);
+    for (let i = 0; i < N; i++) for (let j = 0; j <= i; j++) {
+      let s = A[i * N + j];
+      for (let k = 0; k < j; k++) s -= L[i * N + k] * L[j * N + k];
+      if (i === j) { if (!(s > 0)) throw new Error('matrix not positive definite'); L[i * N + i] = Math.sqrt(s); }
+      else L[i * N + j] = s / L[j * N + j];
+    }
+    return L;
+  }
+  // Cyclic Jacobi eigenvalues of a symmetric matrix: returns eigenvalues d and eigenvectors as columns of V
+  function jacobi(A0, N) {
+    const A = Float64Array.from(A0), V = new Float64Array(N * N);
+    for (let i = 0; i < N; i++) V[i * N + i] = 1;
+    let norm = 0; for (let i = 0; i < N * N; i++) norm += A[i] * A[i];
+    norm = Math.sqrt(norm) || 1;
+    for (let sweep = 0; sweep < 100; sweep++) {
+      let off = 0;
+      for (let p = 0; p < N; p++) for (let q = p + 1; q < N; q++) off += A[p * N + q] * A[p * N + q];
+      if (Math.sqrt(off) < 1e-15 * norm) break;
+      for (let p = 0; p < N; p++) for (let q = p + 1; q < N; q++) {
+        const apq = A[p * N + q]; if (Math.abs(apq) < 1e-300) continue;
+        const th = (A[q * N + q] - A[p * N + p]) / (2 * apq);
+        const t = Math.sign(th || 1) / (Math.abs(th) + Math.sqrt(th * th + 1));
+        const c = 1 / Math.sqrt(t * t + 1), s = t * c;
+        for (let k = 0; k < N; k++) {           // A ← Jᵀ A J
+          const akp = A[k * N + p], akq = A[k * N + q];
+          A[k * N + p] = c * akp - s * akq; A[k * N + q] = s * akp + c * akq;
+        }
+        for (let k = 0; k < N; k++) {
+          const apk = A[p * N + k], aqk = A[q * N + k];
+          A[p * N + k] = c * apk - s * aqk; A[q * N + k] = s * apk + c * aqk;
+        }
+        for (let k = 0; k < N; k++) {
+          const vkp = V[k * N + p], vkq = V[k * N + q];
+          V[k * N + p] = c * vkp - s * vkq; V[k * N + q] = s * vkp + c * vkq;
+        }
+      }
+    }
+    const d = new Float64Array(N); for (let i = 0; i < N; i++) d[i] = A[i * N + i];
+    return { d, V };
+  }
+  // Normal modes of M ξ̈ = −K ξ: K v = ω² M v. With M = L Lᵀ, the symmetric matrix L⁻¹ K L⁻ᵀ has the same ω²,
+  // and v = L⁻ᵀ y. The vectors come out normalized so that vₘᵀ M vₙ = δₘₙ. Sorted by ω.
+  function normalModes(ms, ks, N, free) {
+    const K = stiffness(ks, N, free), Mm = new Float64Array(N * N);
+    for (let i = 0; i < N; i++) Mm[i * N + i] = ms[i];
+    const L = cholesky(Mm, N);
+    const fwd = (b) => { const x = new Float64Array(N); for (let i = 0; i < N; i++) { let s = b[i]; for (let k = 0; k < i; k++) s -= L[i * N + k] * x[k]; x[i] = s / L[i * N + i]; } return x; };
+    const bwd = (b) => { const x = new Float64Array(N); for (let i = N - 1; i >= 0; i--) { let s = b[i]; for (let k = i + 1; k < N; k++) s -= L[k * N + i] * x[k]; x[i] = s / L[i * N + i]; } return x; };
+    // B = L⁻¹ K, then C = L⁻¹ Bᵀ = L⁻¹ K L⁻ᵀ since K is symmetric
+    const B = new Float64Array(N * N);
+    for (let j = 0; j < N; j++) { const col = new Float64Array(N); for (let i = 0; i < N; i++) col[i] = K[i * N + j]; const x = fwd(col); for (let i = 0; i < N; i++) B[i * N + j] = x[i]; }
+    const C = new Float64Array(N * N);
+    for (let i = 0; i < N; i++) { const row = new Float64Array(N); for (let j = 0; j < N; j++) row[j] = B[i * N + j]; const x = fwd(row); for (let j = 0; j < N; j++) C[j * N + i] = x[j]; }
+    for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) { const a = 0.5 * (C[i * N + j] + C[j * N + i]); C[i * N + j] = a; C[j * N + i] = a; }
+    const { d, V } = jacobi(C, N);
+    const order = Array.from({ length: N }, (_, i) => i).sort((a, b) => d[a] - d[b]);
+    const w2 = [], w = [], vec = [];
+    for (const n of order) {
+      const y = new Float64Array(N); for (let i = 0; i < N; i++) y[i] = V[i * N + n];
+      const v = bwd(y);
+      let big = 0; for (let i = 0; i < N; i++) if (Math.abs(v[i]) > Math.abs(big) + 1e-12) big = v[i];
+      let first = 0; for (let i = 0; i < N; i++) if (Math.abs(v[i]) > 1e-6 * Math.abs(big)) { first = v[i]; break; }
+      if (first < 0) for (let i = 0; i < N; i++) v[i] = -v[i];
+      w2.push(Math.max(d[n], 0)); w.push(Math.sqrt(Math.max(d[n], 0))); vec.push(v);
+    }
+    return { N, w2, w, vec };
+  }
+  // Static deflection under gravity: K s = M g. For a free bottom end, spring j carries the weight of every
+  // mass below it, so it stretches by g Σ_{i≥j} mᵢ / kⱼ and the sags add down the chain.
+  function staticSag(ms, ks, N, free, g) {
+    const s = new Float64Array(N);
+    if (free) {
+      let below = 0; const st = new Float64Array(N);
+      for (let j = N - 1; j >= 0; j--) { below += ms[j]; st[j] = g * below / ks[j]; }
+      let acc = 0; for (let i = 0; i < N; i++) { acc += st[i]; s[i] = acc; }
+      return s;
+    }
+    // Thomas algorithm on the tridiagonal K
+    const a = new Float64Array(N), b = new Float64Array(N), c = new Float64Array(N), r = new Float64Array(N);
+    for (let i = 0; i < N; i++) { b[i] = ks[i] + ks[i + 1]; a[i] = i > 0 ? -ks[i] : 0; c[i] = i < N - 1 ? -ks[i + 1] : 0; r[i] = ms[i] * g; }
+    for (let i = 1; i < N; i++) { const f = a[i] / b[i - 1]; b[i] -= f * c[i - 1]; r[i] -= f * r[i - 1]; }
+    s[N - 1] = r[N - 1] / b[N - 1];
+    for (let i = N - 2; i >= 0; i--) s[i] = (r[i] - c[i] * s[i + 1]) / b[i];
+    return s;
+  }
+  // modal coordinates qₙ = vₙᵀ M ξ and their rates
+  function toModal(md, ms, u, v) {
+    const N = md.N, q = new Float64Array(N), qd = new Float64Array(N);
+    for (let n = 0; n < N; n++) { let a = 0, b = 0; const e = md.vec[n]; for (let i = 0; i < N; i++) { a += e[i] * ms[i] * u[i]; b += e[i] * ms[i] * v[i]; } q[n] = a; qd[n] = b; }
+    return { q, qd };
+  }
+  // exact undamped motion: qₙ(τ) = qₙ(0) cos ωₙτ + q̇ₙ(0)/ωₙ sin ωₙτ, ξ = Σ qₙ vₙ
+  function exactAt(md, q0, qd0, tau, u, v) {
+    const N = md.N; u.fill(0); v.fill(0);
+    for (let n = 0; n < N; n++) {
+      const w = md.w[n], c = Math.cos(w * tau), s = Math.sin(w * tau);
+      const q = q0[n] * c + (w > 0 ? qd0[n] / w * s : qd0[n] * tau), qd = -q0[n] * w * s + qd0[n] * c, e = md.vec[n];
+      for (let i = 0; i < N; i++) { u[i] += q * e[i]; v[i] += qd * e[i]; }
+    }
+  }
+  // drag force on one mass: linear −b v, or quadratic −c |v| v with c = ½ ρ C_d A
+  const dragF = (dr, v) => (dr.type === 'lin' ? -dr.b * v : dr.type === 'quad' ? -dr.c * Math.abs(v) * v : 0);
+  // one classical RK4 step of M ξ̈ = −K ξ + F_drag(ξ̇) (gravity cancels exactly against the equilibrium shift).
+  // st = { u, v, W } with W the work done against drag so far (energy dissipated).
+  function rk4(sys, st, h) {
+    const N = sys.N, ms = sys.ms, ks = sys.ks, fr = sys.free, dr = sys.drag;
+    const f = (u, v, du, dv) => {
+      kmul(ks, N, fr, u, dv); let P = 0;
+      for (let i = 0; i < N; i++) { const F = dragF(dr, v[i]); dv[i] = (-dv[i] + F) / ms[i]; du[i] = v[i]; P -= F * v[i]; }
+      return P;
+    };
+    const T = sys._tmp || (sys._tmp = Array.from({ length: 10 }, () => new Float64Array(N)));
+    const [k1u, k1v, k2u, k2v, k3u, k3v, k4u, k4v, uu, vv] = T;
+    const P1 = f(st.u, st.v, k1u, k1v);
+    for (let i = 0; i < N; i++) { uu[i] = st.u[i] + 0.5 * h * k1u[i]; vv[i] = st.v[i] + 0.5 * h * k1v[i]; }
+    const P2 = f(uu, vv, k2u, k2v);
+    for (let i = 0; i < N; i++) { uu[i] = st.u[i] + 0.5 * h * k2u[i]; vv[i] = st.v[i] + 0.5 * h * k2v[i]; }
+    const P3 = f(uu, vv, k3u, k3v);
+    for (let i = 0; i < N; i++) { uu[i] = st.u[i] + h * k3u[i]; vv[i] = st.v[i] + h * k3v[i]; }
+    const P4 = f(uu, vv, k4u, k4v);
+    for (let i = 0; i < N; i++) {
+      st.u[i] += h / 6 * (k1u[i] + 2 * k2u[i] + 2 * k3u[i] + k4u[i]);
+      st.v[i] += h / 6 * (k1v[i] + 2 * k2v[i] + 2 * k3v[i] + k4v[i]);
+    }
+    st.W += h / 6 * (P1 + 2 * P2 + 2 * P3 + P4);
+  }
+  // energy of the motion about equilibrium: ½ ξ̇ᵀ M ξ̇ + ½ ξᵀ K ξ
+  function oscEnergy(sys, u, v) {
+    const N = sys.N; let T = 0, U = 0;
+    for (let i = 0; i < N; i++) T += 0.5 * sys.ms[i] * v[i] * v[i];
+    for (let j = 0; j < nSpr(N, sys.free); j++) { const a = j > 0 ? u[j - 1] : 0, b = j < N ? u[j] : 0; U += 0.5 * sys.ks[j] * (b - a) * (b - a); }
+    return { T, U };
+  }
+  // full mechanical energy with gravity: springs measured from their relaxed lengths, gravity from the g = 0 positions
+  function fullEnergy(sys, s, g, u, v) {
+    const N = sys.N; let T = 0, Us = 0, Ug = 0;
+    for (let i = 0; i < N; i++) { T += 0.5 * sys.ms[i] * v[i] * v[i]; Ug -= sys.ms[i] * g * (s[i] + u[i]); }
+    for (let j = 0; j < nSpr(N, sys.free); j++) { const a = j > 0 ? s[j - 1] + u[j - 1] : 0, b = j < N ? s[j] + u[j] : 0; Us += 0.5 * sys.ks[j] * (b - a) * (b - a); }
+    return { T, Us, Ug };
+  }
+  // energy in each normal mode, ½ (q̇ₙ² + ωₙ² qₙ²); they add up to oscEnergy
+  function modeEnergies(md, ms, u, v) {
+    const { q, qd } = toModal(md, ms, u, v), E = new Float64Array(md.N);
+    for (let n = 0; n < md.N; n++) E[n] = 0.5 * (qd[n] * qd[n] + md.w2[n] * q[n] * q[n]);
+    return E;
+  }
+  // radix 2 FFT magnitude of a real series (length a power of 2) after a Hann window; returns |X_k| for k = 0..n/2
+  function spectrum(x) {
+    const n = x.length, re = new Float64Array(n), im = new Float64Array(n);
+    let mean = 0; for (let i = 0; i < n; i++) mean += x[i]; mean /= n;
+    let wsum = 0;
+    for (let i = 0; i < n; i++) { const w = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / n); re[i] = (x[i] - mean) * w; wsum += w; }
+    for (let i = 1, j = 0; i < n; i++) { let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit; if (i < j) { let t = re[i]; re[i] = re[j]; re[j] = t; t = im[i]; im[i] = im[j]; im[j] = t; } }
+    for (let len = 2; len <= n; len <<= 1) {
+      const ang = -2 * Math.PI / len, wr = Math.cos(ang), wi = Math.sin(ang);
+      for (let i = 0; i < n; i += len) {
+        let cr = 1, ci = 0;
+        for (let k = 0; k < len / 2; k++) {
+          const a = i + k, b = a + len / 2, tr = re[b] * cr - im[b] * ci, ti = re[b] * ci + im[b] * cr;
+          re[b] = re[a] - tr; im[b] = im[a] - ti; re[a] += tr; im[a] += ti;
+          const nr = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = nr;
+        }
+      }
+    }
+    const out = new Float64Array(n / 2 + 1);
+    for (let k = 0; k <= n / 2; k++) out[k] = 2 * Math.hypot(re[k], im[k]) / wsum;   // amplitude of a sinusoid at bin k
+    return out;
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.CO = { G0, nSpr, kmul, stiffness, cholesky, jacobi, normalModes, staticSag, toModal, exactAt, dragF, rk4, oscEnergy, fullEnergy, modeEnergies, spectrum };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const D0 = 0.25;                    // relaxed spacing, center to center, m
+  const NMAX = 10;
+  const SUB = '₀₁₂₃₄₅₆₇₈₉';
+  const sub = (n) => String(n).split('').map((c) => SUB[+c]).join('');
+  const MIN = (s) => s.replace(/^-/, '−').replace(/e([+-]?)(\d+)/, (m, sg, d) => '×10' + (sg === '-' ? '⁻' : '') + d.split('').map((c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+c]).join(''));
+  const fmt = (x, p) => MIN((+x).toFixed(p));
+  const sig = (x, n) => { if (!isFinite(x)) return '—'; if (x === 0) return '0'; const a = Math.abs(x); return MIN(a >= 1e5 || a < 1e-3 ? x.toExponential(n - 1) : x.toPrecision(n).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '')); };
+  const fmtJ = (E) => { const a = Math.abs(E); return a >= 1 ? fmt(E, 3) + ' J' : a >= 1e-3 || a === 0 ? fmt(E * 1e3, a >= 0.1 ? 1 : 2) + ' mJ' : sig(E * 1e6, 3) + ' µJ'; };
+  const fmtCm = (x, p) => fmt(x * 100, p === undefined ? 2 : p) + ' cm';
+
+  // ---------- presets ----------
+  const fill = (n, v) => Array.from({ length: n }, () => v);
+  const PRESETS = {
+    two: { N: 2, orient: 'h', free: false, ms: [1, 1], ks: [10, 10, 10], start: { mode: 0 }, span: 12,
+      hint: 'Both masses swing together in mode 1: the middle spring never stretches, so ω₁ = √(k/m). Press mode 2: they swing opposite, the middle spring works twice as hard, and ω₂ = √(3k/m). Drag one mass to mix the two.' },
+    beats: { N: 2, orient: 'h', free: false, ms: [1, 1], ks: [10, 0.5, 10], start: { u: [1, 0] }, span: 60,
+      hint: 'A weak middle spring. Mass 1 starts displaced; its swing slowly dies away as mass 2 picks it up, then the energy flows back. The two mode frequencies are close, and the energy sloshes once per beat period 2π/(ω₂ − ω₁).' },
+    three: { N: 3, orient: 'h', free: false, ms: [1, 1, 1], ks: [10, 10, 10, 10], start: { u: [1, 0, 0] }, span: 15,
+      hint: 'Mass 1 starts displaced, which mixes all three modes, ω² = (2 − √2, 2, 2 + √2) k/m. Each mode keeps its own energy. Start a pure mode to see its pattern: in mode 2 the middle mass stands still.' },
+    hang: { N: 3, orient: 'v', free: true, grav: true, ms: [0.5, 0.5, 0.5], ks: [40, 40, 40, 40], start: { u: [0, 0, 1] }, span: 12,
+      hint: 'Hanging from the ceiling, each spring carries the weight of everything below it, so the top spring stretches most. Turn gravity off and on: the equilibrium moves, but the motion about it, the frequencies and the traces do not change.' },
+    mismatch: { N: 6, orient: 'h', free: false, ms: [2, 0.25, 2, 0.25, 2, 0.25], ks: fill(7, 20), start: { u: [0, 1, 0, 0, 0, 0] }, span: 10,
+      hint: 'Heavy and light masses alternate. The modes split into a slow group, where neighbors move together and the heavy masses carry the motion, and a fast group, where neighbors move opposite and mostly the light masses move, with a gap between: the acoustic and optical branches of a crystal.' },
+    waves: { N: 10, orient: 'h', free: false, ms: fill(10, 0.5), ks: fill(11, 5), start: { pulse: true }, span: 20,
+      hint: 'A pulse launched at the left end runs down the chain at about a√(k/m) (a = spacing), reflects from the far wall with its displacement reversed, and comes back. The strip chart shows it as diagonal stripes. Short wavelengths travel more slowly, so the pulse slowly spreads.' }
+  };
+
+  // ---------- state ----------
+  const S = { preset: 'three', N: 3, orient: 'h', free: false, grav: true, ms: fill(NMAX, 1), ks: fill(NMAX + 1, 10),
+    drag: 'off', b: 0.2, c: 4, rate: 1, amp: 0.04, span: 15, sel: { t: 'm', i: 0 }, specMass: 0, graph: true, eqTicks: true };
+  let playing = !reduce;
+  let sys = null, md = null, sag = new Float64Array(NMAX);
+  const sim = { t: 0, u: new Float64Array(NMAX), v: new Float64Array(NMAX), W: 0, t0: 0, q: null, qd: null, exact: true, ref: null };
+  let held = null;           // a mass being dragged (the chain is frozen)
+  let flags = { bottom: false };
+  let modeE = new Float64Array(NMAX), startInfo = '';
+
+  // history ring: time, displacement of each mass, oscillation energy
+  const CAP = 65536;
+  const H = { t: new Float64Array(CAP), u: new Float32Array(CAP * NMAX), e: new Float64Array(CAP), n: 0, head: 0 };
+  let hs = 1 / 120, tNext = 0;
+  function histClear() { H.n = 0; H.head = 0; tNext = sim.t; specCache = null; }
+  function histPush() {
+    const k = H.head; H.t[k] = sim.t;
+    for (let i = 0; i < sys.N; i++) H.u[k * NMAX + i] = sim.u[i];
+    const e = oscEnergy(sys, sim.u, sim.v); H.e[k] = e.T + e.U;
+    H.head = (k + 1) % CAP; if (H.n < CAP) H.n++;
+  }
+  const hIdx = (j) => (H.head - H.n + j + CAP) % CAP;     // j = 0 oldest
+
+  function buildSys() {
+    const N = S.N;
+    sys = { N, ms: Float64Array.from(S.ms.slice(0, N)), ks: Float64Array.from(S.ks.slice(0, N + 1)), free: S.free,
+      drag: { type: S.drag, b: S.b, c: S.c } };
+    md = normalModes(sys.ms, sys.ks, N, S.free);
+    const g = S.orient === 'v' && S.grav ? G0 : 0;
+    sag = g ? staticSag(sys.ms, sys.ks, N, S.free, g) : new Float64Array(N);
+    const Tmin = 2 * Math.PI / md.w[N - 1];
+    hs = Math.min(1 / 120, Tmin / 24);
+  }
+  const gNow = () => (S.orient === 'v' && S.grav ? G0 : 0);
+  // start the solution again from the present state (after any change of parameters, or a release)
+  function rebase(newRef) {
+    sim.exact = S.drag === 'off';
+    const m = toModal(md, sys.ms, sim.u, sim.v); sim.q = m.q; sim.qd = m.qd; sim.t0 = sim.t;
+    if (newRef || !sim.ref) setRef();
+  }
+  function setRef() {
+    const F = fullEnergy(sys, sag, gNow(), sim.u, sim.v), O = oscEnergy(sys, sim.u, sim.v);
+    sim.ref = { E: F.T + F.Us + F.Ug + sim.W, Eosc: O.T + O.U, W: sim.W };
+  }
+  function stepTo(t) {
+    if (sim.exact) { exactAt(md, sim.q, sim.qd, t - sim.t0, sim.u, sim.v); sim.t = t; return; }
+    const hmax = 2 * Math.PI / md.w[sys.N - 1] / 800, dt = t - sim.t;
+    if (dt <= 0) return;
+    const n = Math.ceil(dt / hmax - 1e-9), h = dt / n, st = { u: sim.u, v: sim.v, W: sim.W };
+    for (let i = 0; i < n; i++) rk4(sys, st, h);
+    sim.W = st.W; sim.t = t;
+  }
+  function advance(dtSim) {
+    const tEnd = sim.t + dtSim;
+    let guard = 0;
+    while (tNext <= tEnd + 1e-12 && guard++ < 4000) { stepTo(tNext); histPush(); tNext += hs; }
+    if (guard >= 4000) tNext = sim.t + hs;
+  }
+
+  // ---------- applying parameters ----------
+  function paramsChanged(opt) {
+    // keep each mass's displacement from equilibrium and its velocity; the equilibrium itself may move
+    buildSys();
+    sim.t0 = sim.t;
+    rebase(true);
+    if (opt && opt.clear) histClear();
+    else { tNext = sim.t + hs; specCache = null; }
+    syncUI();
+  }
+  function setInitial(u, v) {
+    for (let i = 0; i < NMAX; i++) { sim.u[i] = u && i < u.length ? u[i] : 0; sim.v[i] = v && i < v.length ? v[i] : 0; }
+    sim.W = 0; rebase(true); histClear(); histPush(); tNext = sim.t + hs;
+  }
+  function startMode(n) {
+    if (n >= sys.N) return;
+    const e = md.vec[n]; let big = 0; for (let i = 0; i < sys.N; i++) big = Math.max(big, Math.abs(e[i]));
+    setInitial(Array.from(e, (x) => S.amp * x / big), null);
+    startInfo = `Started in mode ${n + 1} alone`;
+    syncUI(); setPlaying(true);
+  }
+  function applyStart(st) {
+    const N = S.N;
+    if (st.mode !== undefined) { startMode(st.mode); startInfo = `Started in mode ${st.mode + 1} alone`; return; }
+    if (st.pulse) {
+      // a smooth pulse moving right: ξᵢ = A e^(−((i − i₀)/w)²), ξ̇ᵢ = −√(k/m) ∂ξ/∂i, the long wavelength wave speed in masses per second
+      const i0 = 1.2, w = 1.1, rate = Math.sqrt(S.ks[0] / S.ms[0]), u = [], v = [];
+      for (let i = 0; i < N; i++) { const x = (i - i0) / w, e = S.amp * Math.exp(-x * x); u.push(e); v.push(rate * 2 * (i - i0) / (w * w) * e); }
+      setInitial(u, v); startInfo = 'A pulse launched toward the right'; return;
+    }
+    setInitial(st.u.map((x) => x * S.amp), null);
+    startInfo = 'Released from rest';
+  }
+
+  function applyPreset(key) {
+    const p = PRESETS[key]; S.preset = key;
+    S.N = p.N; S.orient = p.orient; S.free = p.free; S.grav = p.grav !== undefined ? p.grav : true;
+    for (let i = 0; i < NMAX; i++) S.ms[i] = p.ms[Math.min(i, p.ms.length - 1)];
+    for (let j = 0; j <= NMAX; j++) S.ks[j] = p.ks[Math.min(j, p.ks.length - 1)];
+    S.drag = 'off'; S.span = p.span; S.amp = 0.04; S.sel = { t: 'm', i: 0 }; S.specMass = 0;
+    sim.t = 0; sim.W = 0; sim.ref = null;
+    buildSys();
+    applyStart(p.start);
+    document.querySelectorAll('#presets button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.p === key)));
+    $('presetHint').textContent = p.hint;
+    setLayout();
+    syncUI();
+  }
+  const custom = () => { if (!S.preset) return; S.preset = null; document.querySelectorAll('#presets button').forEach((b) => b.setAttribute('aria-pressed', 'false')); };
+
+  // ---------- theme and canvases ----------
+  let T = null, dpr = 1, MC = [];
+  const MCOL_L = ['#2b6cb0', '#c05621', '#2f855a', '#7b45c0', '#c53030', '#2c7a7b', '#a26b05', '#b83280', '#4a5568', '#8b5a2b'];
+  const MCOL_D = ['#6aa8ff', '#ff9a52', '#4cc38a', '#b48cff', '#ff7660', '#4fd1c5', '#f0b93a', '#f687b3', '#cbd5e0', '#d6a26b'];
+  const projOn = () => document.documentElement.getAttribute('data-projector') === 'on';
+  // label scale: larger in projector mode, capped by the pane size so labels do not pile up in a small pane
+  const lsOf = (W, H) => (projOn() ? clamp(Math.min(W, H * 1.3) / 300, 1, 1.4) : 1);
+  function isDark() { return getComputedStyle(document.documentElement).colorScheme.includes('dark'); }
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), steel: g('--steel'), steelHi: g('--steel-hi'),
+      brass: g('--brass'), brassHi: g('--brass-hi'), brassLo: g('--brass-lo'), alu: g('--alu'), aluLo: g('--alu-lo'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif', dark: isDark() };
+    MC = T.dark ? MCOL_D : MCOL_L;
+  }
+  const cans = { s: $('sCan'), t: $('tCan'), m: $('mCan'), f: $('fCan') };
+  const panes = { s: $('sPane'), t: $('tPane'), m: $('mPane'), f: $('fPane') };
+  const ctxs = { s: cans.s.getContext('2d'), t: cans.t.getContext('2d'), m: cans.m.getContext('2d'), f: cans.f.getContext('2d') };
+  const dims = { s: [0, 0], t: [0, 0], m: [0, 0], f: [0, 0] };
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const key of ['s', 't', 'm', 'f']) {
+      const r = panes[key].getBoundingClientRect();
+      cans[key].width = Math.max(1, Math.round(r.width * dpr)); cans[key].height = Math.max(1, Math.round(r.height * dpr));
+      cans[key].style.width = r.width + 'px'; cans[key].style.height = r.height + 'px';
+      dims[key] = [r.width, r.height];
+    }
+    const ctl = document.querySelector('.stage-ctl'); ctlH = ctl.offsetTop + ctl.offsetHeight;
+    drawAll();
+  }
+  function halo(ctx, txt, x, y, color, align, base) {
+    ctx.textAlign = align || 'left'; ctx.textBaseline = base || 'alphabetic';
+    const w = ctx.measureText(txt).width, mm = /([\d.]+)px/.exec(ctx.font), fs = mm ? +mm[1] : 11;
+    const x0 = align === 'center' ? x - w / 2 : align === 'right' ? x - w : x;
+    const y0 = base === 'top' ? y : base === 'middle' ? y - fs / 2 : base === 'bottom' ? y - fs : y - fs * 0.8;
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.86; ctx.fillRect(x0 - 3, y0 - 2, w + 6, fs + 4); ctx.globalAlpha = 1;
+    ctx.fillStyle = color; ctx.fillText(txt, x, y);
+    return w;
+  }
+  function roundRect(ctx, x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+  }
+  function nice(x) { const p = Math.pow(10, Math.floor(Math.log10(x))), f = x / p; return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * p; }
+
+  // grip: a small box with two arrows along the drag direction
+  function grip(ctx, x, y, hot, vertical, ls) {
+    const w = (vertical ? 13 : 20) * ls, h = (vertical ? 20 : 13) * ls;
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = hot ? T.accent : T.muted; ctx.lineWidth = (hot ? 2 : 1.2) * ls;
+    roundRect(ctx, x - w / 2, y - h / 2, w, h, 4 * ls); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = hot ? T.accent : T.muted;
+    const a = 3.5 * ls;
+    ctx.beginPath();
+    if (vertical) {
+      ctx.moveTo(x, y - 7 * ls); ctx.lineTo(x - a, y - 2.5 * ls); ctx.lineTo(x + a, y - 2.5 * ls); ctx.closePath();
+      ctx.moveTo(x, y + 7 * ls); ctx.lineTo(x - a, y + 2.5 * ls); ctx.lineTo(x + a, y + 2.5 * ls); ctx.closePath();
+    } else {
+      ctx.moveTo(x - 7 * ls, y); ctx.lineTo(x - 2.5 * ls, y - a); ctx.lineTo(x - 2.5 * ls, y + a); ctx.closePath();
+      ctx.moveTo(x + 7 * ls, y); ctx.lineTo(x + 2.5 * ls, y - a); ctx.lineTo(x + 2.5 * ls, y + a); ctx.closePath();
+    }
+    ctx.fill();
+  }
+
+  // A helical coil spring from a to b (canvas px), seen slightly from above: nc turns of radius r, wire width lw.
+  // The pitch is the active length divided by the number of turns, so the coils spread and close up with the stretch;
+  // it is never drawn shorter than the solid length (coils touching). The back half of each turn is drawn first, darker.
+  const NC = 9;
+  function helix(ctx, ax, ay, bx, by, r, lw, hot, ls) {
+    const dx = bx - ax, dy = by - ay, len = Math.hypot(dx, dy); if (len < 1) return false;
+    const ux = dx / len, uy = dy / len, nx = -uy, ny = ux;
+    const lead = Math.min(7 * ls, len * 0.12), solid = NC * lw * 1.02;
+    let act = len - 2 * lead, bottomed = false;
+    if (act < solid) { act = solid; bottomed = true; }
+    const lead2 = (len - act) / 2;
+    const M = NC * 28, tilt = 0.42;
+    const P = [];
+    for (let k = 0; k <= M; k++) {
+      const s = k / M, ph = 2 * Math.PI * NC * s;
+      // the axial position runs from 0 to act; the end turns close down to the axis smoothly
+      const env = Math.min(1, s * NC * 1.5, (1 - s) * NC * 1.5);
+      const al = lead2 + act * s + tilt * r * Math.sin(ph) * env, pe = r * Math.cos(ph) * env;
+      P.push([ax + ux * al + nx * pe, ay + uy * al + ny * pe, Math.sin(ph)]);
+    }
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    if (hot) {
+      ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.22; ctx.lineWidth = 2 * r + 8 * ls;
+      ctx.beginPath(); ctx.moveTo(ax + ux * lead2, ay + uy * lead2); ctx.lineTo(bx - ux * lead2, by - uy * lead2); ctx.stroke(); ctx.globalAlpha = 1;
+    }
+    // straight end leads
+    ctx.strokeStyle = T.steel; ctx.lineWidth = lw;
+    ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(P[0][0], P[0][1]); ctx.moveTo(P[M][0], P[M][1]); ctx.lineTo(bx, by); ctx.stroke();
+    const runs = (front) => {
+      ctx.beginPath(); let on = false;
+      for (let k = 1; k <= M; k++) {
+        const f = (P[k][2] + P[k - 1][2]) / 2 >= 0;
+        if (f === front) { if (!on) { ctx.moveTo(P[k - 1][0], P[k - 1][1]); on = true; } ctx.lineTo(P[k][0], P[k][1]); }
+        else on = false;
+      }
+    };
+    // back half: darker and a little thinner
+    runs(false); ctx.strokeStyle = T.steel; ctx.globalAlpha = T.dark ? 0.6 : 0.7; ctx.lineWidth = lw * 0.85; ctx.stroke(); ctx.globalAlpha = 1;
+    // front half: a thin gap in the background color where it crosses the back wire, then steel with a highlight
+    runs(true); ctx.strokeStyle = T.canvas; ctx.lineWidth = lw + 2.2 * ls; ctx.stroke();
+    ctx.strokeStyle = T.steel; ctx.lineWidth = lw; ctx.stroke();
+    if (lw >= 1.6) {
+      ctx.save(); ctx.translate(-nx * lw * 0.22 - ux * lw * 0.1, -ny * lw * 0.22 - uy * lw * 0.1);
+      runs(true); ctx.strokeStyle = T.steelHi; ctx.globalAlpha = 0.75; ctx.lineWidth = Math.max(0.6, lw * 0.32); ctx.stroke(); ctx.restore(); ctx.globalAlpha = 1;
+    }
+    return bottomed;
+  }
+  // wire width grows as k^(1/4) (for a coil spring k ∝ d⁴, d the wire diameter)
+  const wireW = (k, ls) => clamp(1.7 * Math.pow(k / 10, 0.25), 0.9, 4.4) * ls;
+
+  // a brass glider block: front face with a vertical sheen, a top face for depth, an engraved number badge
+  function brassBox(ctx, cx, bottom, w, h, i, hot, ls) {
+    const x = cx - w / 2, y = bottom - h, dep = Math.min(9 * ls, h * 0.28), sk = dep * 0.55;
+    if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.22; roundRect(ctx, x - 6 * ls, y - dep - 6 * ls, w + sk + 12 * ls, h + dep + 12 * ls, 8 * ls); ctx.fill(); ctx.globalAlpha = 1; }
+    // top face
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + sk, y - dep); ctx.lineTo(x + w + sk, y - dep); ctx.lineTo(x + w, y); ctx.closePath();
+    const gt = ctx.createLinearGradient(x, y - dep, x + w, y); gt.addColorStop(0, T.brassHi); gt.addColorStop(1, T.brass);
+    ctx.fillStyle = gt; ctx.fill(); ctx.strokeStyle = T.brassLo; ctx.lineWidth = 1; ctx.stroke();
+    // right side face
+    ctx.beginPath(); ctx.moveTo(x + w, y); ctx.lineTo(x + w + sk, y - dep); ctx.lineTo(x + w + sk, bottom - dep); ctx.lineTo(x + w, bottom); ctx.closePath();
+    ctx.fillStyle = T.brassLo; ctx.fill(); ctx.stroke();
+    // front face
+    const gf = ctx.createLinearGradient(x, 0, x + w, 0);
+    gf.addColorStop(0, T.brassLo); gf.addColorStop(0.22, T.brass); gf.addColorStop(0.38, T.brassHi); gf.addColorStop(0.55, T.brass); gf.addColorStop(1, T.brassLo);
+    ctx.fillStyle = gf; ctx.fillRect(x, y, w, h); ctx.strokeStyle = T.brassLo; ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+    badge(ctx, cx, y + h / 2, i, Math.min(w, h), ls);
+  }
+  // a hanging brass cylinder (slotted weight style) with a hook on top and an eye below
+  function brassCyl(ctx, cx, top, w, h, i, hot, ls) {
+    const x = cx - w / 2, ry = Math.min(w * 0.16, 7 * ls);
+    if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.22; roundRect(ctx, x - 6 * ls, top - ry - 6 * ls, w + 12 * ls, h + 2 * ry + 12 * ls, 8 * ls); ctx.fill(); ctx.globalAlpha = 1; }
+    const gf = ctx.createLinearGradient(x, 0, x + w, 0);
+    gf.addColorStop(0, T.brassLo); gf.addColorStop(0.25, T.brass); gf.addColorStop(0.4, T.brassHi); gf.addColorStop(0.6, T.brass); gf.addColorStop(1, T.brassLo);
+    ctx.fillStyle = gf; ctx.strokeStyle = T.brassLo; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, top + h); ctx.ellipse(cx, top + h, w / 2, ry, 0, Math.PI, 0, true); ctx.lineTo(x + w, top); ctx.closePath(); ctx.fill(); ctx.stroke();
+    const gt = ctx.createLinearGradient(x, top - ry, x + w, top + ry); gt.addColorStop(0, T.brassHi); gt.addColorStop(1, T.brass);
+    ctx.fillStyle = gt; ctx.beginPath(); ctx.ellipse(cx, top, w / 2, ry, 0, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    badge(ctx, cx, top + h / 2 + ry * 0.3, i, Math.min(w, h), ls);
+  }
+  function badge(ctx, x, y, i, size, ls) {
+    const r = clamp(size * 0.24, 6 * ls, 10 * ls);
+    ctx.fillStyle = MC[i]; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = T.dark ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.7)'; ctx.lineWidth = 1.2; ctx.stroke();
+    ctx.fillStyle = '#fff'; ctx.font = `700 ${r * 1.15}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(String(i + 1), x, y + r * 0.06);
+  }
+
+  // ---------- the chain drawing ----------
+  let ctlH = 44, sg = null, sHandles = [], hoverId = null, drag = null;
+  const isHot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+  const selId = () => (S.sel.t === 'm' ? 'm' + S.sel.i : 'k' + S.sel.i);
+  // largest displacement over the strip chart window (for the ξ graph gain)
+  let recentMax = 0.02;
+  function drawScene() {
+    const [W, Hh] = dims.s; if (!W || !Hh || !sys) return;
+    const ctx = ctxs.s, ls = lsOf(W, Hh), N = sys.N;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    sHandles = []; flags.bottom = false;
+    if (S.orient === 'h') drawTrack(ctx, W, Hh, ls, N); else drawHanging(ctx, W, Hh, ls, N);
+  }
+  function chainState() { return { u: sim.u, s: sag }; }
+
+  function drawTrack(ctx, W, Hh, ls, N) {
+    const top = ctlH + 8 * ls, fs = 11 * ls;
+    const graphH = S.graph ? clamp((Hh - top) * 0.3, 60 * ls, 150 * ls) : 0;
+    const span = S.free ? (N + 0.75) * D0 : (N + 1) * D0;
+    const mx = 26 * ls;
+    const sc = (W - 2 * mx) / span;
+    const X = (x) => mx + x * sc;
+    const dpx = D0 * sc;
+    const yTrack = top + graphH + clamp((Hh - top - graphH) * 0.58, 70 * ls, Hh);
+    const base = clamp(dpx * 0.36, 16 * ls, 52 * ls);
+    const sizes = [];
+    for (let i = 0; i < N; i++) {
+      const c = Math.cbrt(sys.ms[i]);
+      const w = clamp(base * c, 14 * ls, dpx * 0.5), h = Math.max(clamp(base * 0.9 * c, 24 * ls, dpx * 0.55), 28 * ls);
+      sizes.push([w, h]);
+    }
+    const springY = yTrack - tdepOf(ls) * 0.5 - 2 * ls - Math.min(...sizes.map((s) => s[1])) / 2;
+    const pos = (i) => X((i + 1) * D0 + sim.u[i]);
+    const eqx = (i) => X((i + 1) * D0);
+    // track: aluminum beam with a top face, air holes, and end feet
+    sg = { orient: 'h', X, sc, yTrack, springY, top, graphH, dpx, ls };
+    const x0 = X(0) - 14 * ls, x1 = S.free ? X(span) + 6 * ls : X(span) + 14 * ls, th = 12 * ls, tdep = tdepOf(ls);
+    ctx.fillStyle = T.alu; ctx.beginPath(); ctx.moveTo(x0, yTrack); ctx.lineTo(x0 + tdep * 0.6, yTrack - tdep); ctx.lineTo(x1 + tdep * 0.6, yTrack - tdep); ctx.lineTo(x1, yTrack); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = T.aluLo; ctx.fillRect(x0, yTrack, x1 - x0, th);
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(x0 + 0.5, yTrack + 0.5, x1 - x0 - 1, th - 1);
+    ctx.fillStyle = T.dark ? 'rgba(0,0,0,0.45)' : 'rgba(40,50,60,0.35)';
+    for (let x = x0 + 8 * ls; x < x1 - 4 * ls; x += 11 * ls) { ctx.beginPath(); ctx.ellipse(x + tdep * 0.3, yTrack - tdep / 2, 1.3 * ls, 0.8 * ls, 0, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.fillStyle = T.steel;
+    for (const fx of [x0 + 10 * ls, x1 - 10 * ls]) { ctx.fillRect(fx - 7 * ls, yTrack + th, 14 * ls, 7 * ls); }
+    // walls: steel posts bolted to the track
+    const post = (x, side) => {
+      const pw = 9 * ls, ph = yTrack - springY + 26 * ls;
+      const g = ctx.createLinearGradient(x - pw / 2, 0, x + pw / 2, 0); g.addColorStop(0, T.steel); g.addColorStop(0.4, T.steelHi); g.addColorStop(1, T.steel);
+      ctx.fillStyle = g; ctx.fillRect(x - pw / 2, yTrack - tdep * 0.5 - ph, pw, ph);
+      ctx.strokeStyle = T.steel; ctx.lineWidth = 1; ctx.strokeRect(x - pw / 2 + 0.5, yTrack - tdep * 0.5 - ph + 0.5, pw - 1, ph - 1);
+      ctx.fillStyle = T.steel; ctx.fillRect(x - pw / 2 - (side < 0 ? 6 * ls : 0), yTrack - tdep * 0.5 - 5 * ls, pw + 6 * ls, 5 * ls);
+    };
+    post(X(0) - 4 * ls, -1);
+    if (!S.free) post(X((N + 1) * D0) + 4 * ls, 1);
+    // equilibrium ticks on the track's top face
+    if (S.eqTicks) {
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ls;
+      ctx.beginPath(); for (let i = 0; i < N; i++) { const x = eqx(i); ctx.moveTo(x, yTrack + 1); ctx.lineTo(x, yTrack + th - 1); } ctx.stroke();
+    }
+    // springs: wall or block face to block face, at a fixed height
+    const faceR = (i) => (i < 0 ? X(0) : pos(i) + sizes[i][0] / 2);
+    const faceL = (i) => (i >= N ? X((N + 1) * D0) : pos(i) - sizes[i][0] / 2);
+    const nS = nSpr(N, S.free), sel = selId();
+    const r = clamp(dpx * 0.075, 6 * ls, 14 * ls);
+    const showAll = dpx > 58 * ls;
+    for (let j = 0; j < nS; j++) {
+      const a = faceR(j - 1), b = faceL(j), id = 'k' + j;
+      const bot = helix(ctx, a, springY, b, springY, r, wireW(sys.ks[j], ls), isHot(id) || sel === id, ls);
+      if (bot) flags.bottom = true;
+      sHandles.push({ id, kind: 'spring', j, seg: [a, springY, b, springY], tol: r + 3 * ls, cursor: 'pointer' });
+      if (showAll || sel === id || isHot(id) || isHot('gk' + j)) {
+        const gx = (a + b) / 2, gy = springY - r - 14 * ls;
+        grip(ctx, gx, gy, isHot('gk' + j), true, ls);
+        sHandles.push({ id: 'gk' + j, kind: 'kgrip', j, pt: [gx, gy], cursor: 'ns-resize' });
+      }
+    }
+    // blocks
+    for (let i = 0; i < N; i++) {
+      const [w, h] = sizes[i], cx = pos(i), id = 'm' + i, hot = isHot(id) || sel === id;
+      // air cushion shadow
+      ctx.fillStyle = T.dark ? 'rgba(0,0,0,0.4)' : 'rgba(30,40,55,0.18)';
+      ctx.beginPath(); ctx.ellipse(cx + 2 * ls, yTrack - tdep * 0.5, w * 0.55, 2.2 * ls, 0, 0, 2 * Math.PI); ctx.fill();
+      brassBox(ctx, cx, yTrack - tdep * 0.5 - 2 * ls, w, h, i, hot, ls);
+      // eye bolts where the springs attach
+      ctx.fillStyle = T.steel;
+      for (const sx of [-1, 1]) if (sx < 0 || i < N - 1 || !S.free) { ctx.beginPath(); ctx.arc(cx + sx * w / 2, springY, 2.2 * ls, 0, 2 * Math.PI); ctx.fill(); }
+      sHandles.push({ id, kind: 'mass', i, box: [cx - w / 2, yTrack - h - 8 * ls, w + 6 * ls, h + 8 * ls], cursor: held ? 'grabbing' : 'grab' });
+      if (showAll || sel === id || isHot('gm' + i)) {
+        const gx = cx, gy = yTrack - tdep * 0.5 - h - 16 * ls - Math.min(9 * ls, h * 0.28);
+        grip(ctx, gx, gy, isHot('gm' + i), true, ls);
+        sHandles.push({ id: 'gm' + i, kind: 'mgrip', i, pt: [gx, gy], cursor: 'ns-resize' });
+      }
+    }
+    // labels under the track: mass values; spring constants above the grips
+    ctx.font = `${fs}px ${T.mono}`;
+    const labRoom = dpx > 62 * ls;
+    for (let i = 0; i < N; i++) if (labRoom || sel === 'm' + i) halo(ctx, `${fmt(sys.ms[i], 2)} kg`, pos(i), yTrack + th + 16 * ls, sel === 'm' + i ? T.accent : T.muted, 'center');
+    for (let j = 0; j < nS; j++) if (labRoom || sel === 'k' + j) {
+      const a = faceR(j - 1), b = faceL(j);
+      halo(ctx, `${sig(sys.ks[j], 3)} N/m`, (a + b) / 2, springY - r - 30 * ls, sel === 'k' + j ? T.accent : T.muted, 'center');
+    }
+    // ξ graph above: each mass's displacement drawn upward at its equilibrium position, enlarged
+    if (S.graph) drawGraphH(ctx, W, ls, N, eqx, top, graphH, fs);
+    if (flags.bottom) halo(ctx, 'A spring is squeezed to its solid length: the linear model no longer describes a real spring here.', mx, Hh - 10 * ls, T.pos, 'left');
+  }
+  const tdepOf = (ls) => 7 * ls;
+  function graphGain(room) { const m = Math.max(recentMax, 0.005); return room / m; }
+  function drawGraphH(ctx, W, ls, N, eqx, top, gh, fs) {
+    const y0 = top + gh / 2, G = graphGain(gh * 0.4), L = eqx(-1), R = S.free ? eqx(N - 1) : eqx(N);
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, y0); ctx.lineTo(R, y0); ctx.stroke();
+    ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(L, y0 - gh * 0.4); ctx.lineTo(R, y0 - gh * 0.4); ctx.moveTo(L, y0 + gh * 0.4); ctx.lineTo(R, y0 + gh * 0.4); ctx.stroke();
+    const pts = [[L, y0]];
+    for (let i = 0; i < N; i++) pts.push([eqx(i), y0 - sim.u[i] * G]);
+    if (!S.free) pts.push([R, y0]);
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * ls; ctx.lineJoin = 'round'; ctx.beginPath();
+    pts.forEach(([x, y], k) => (k ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.stroke();
+    for (let i = 0; i < N; i++) { ctx.strokeStyle = MC[i]; ctx.lineWidth = 1.2 * ls; ctx.beginPath(); ctx.moveTo(eqx(i), y0); ctx.lineTo(eqx(i), y0 - sim.u[i] * G); ctx.stroke();
+      ctx.fillStyle = MC[i]; ctx.beginPath(); ctx.arc(eqx(i), y0 - sim.u[i] * G, 3.4 * ls, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.font = `${fs}px ${T.ui}`;
+    const gtxt = W > 560 * ls ? `ξ graph: displacement to the right drawn upward, enlarged ${sig(G / sg.sc, 2)}×, top line +${fmtCm(gh * 0.4 / G, 1)}`
+      : `ξ graph, enlarged ${sig(G / sg.sc, 2)}×, top line +${fmtCm(gh * 0.4 / G, 1)}`;
+    halo(ctx, gtxt, L, top + 2 * ls, T.muted, 'left', 'top');
+  }
+
+  function drawHanging(ctx, W, Hh, ls, N) {
+    const top = ctlH + 30 * ls, fs = 11 * ls, g = gNow();
+    const Ybot = S.free ? (N + 0.7) * D0 + sag[N - 1] : (N + 1) * D0;
+    // keep the scale the same with gravity off, so turning it on shows the sag
+    const sagOn = S.grav ? staticSag(sys.ms, sys.ks, N, S.free, G0) : sag;
+    const YbotOn = S.free ? (N + 0.7) * D0 + sagOn[N - 1] : (N + 1) * D0;
+    const span = Math.max(Ybot, YbotOn);
+    const sc = (Hh - top - 24 * ls) / span;
+    const cx = S.graph ? clamp(W * 0.4, 70 * ls, W - 130 * ls) : W * 0.5;
+    const Y = (y) => top + y * sc;
+    sg = { orient: 'v', Y, sc, cx, top, ls };
+    const eqY = (i) => Y((i + 1) * D0 + sag[i]);
+    const pos = (i) => Y((i + 1) * D0 + sag[i] + sim.u[i]);
+    // spacing between neighbors at equilibrium, for sizing
+    let minGap = Infinity; for (let i = 0; i < N; i++) minGap = Math.min(minGap, eqY(i) - (i ? eqY(i - 1) : Y(0)));
+    if (!S.free) minGap = Math.min(minGap, Y((N + 1) * D0) - eqY(N - 1));
+    const base = clamp(Math.min(minGap * 0.42, W * 0.2), 18 * ls, 58 * ls);
+    const sizes = [];
+    for (let i = 0; i < N; i++) { const c = Math.cbrt(sys.ms[i]); sizes.push([clamp(base * 1.1 * c, 16 * ls, Math.min(W * 0.3, 70 * ls)), clamp(base * 0.8 * c, 14 * ls, Math.max(14 * ls, minGap * 0.5))]); }
+    // ceiling mount: a hatched beam with a bracket
+    const cw = Math.min(W * 0.7, 180 * ls), cy = Y(0);
+    ctx.fillStyle = T.alu; ctx.fillRect(cx - cw / 2, cy - 12 * ls, cw, 12 * ls);
+    ctx.strokeStyle = T.aluLo; ctx.lineWidth = 1; ctx.strokeRect(cx - cw / 2 + 0.5, cy - 12 * ls + 0.5, cw - 1, 12 * ls - 1);
+    ctx.strokeStyle = T.muted; ctx.beginPath();
+    for (let x = cx - cw / 2 + 4 * ls; x < cx + cw / 2; x += 8 * ls) { ctx.moveTo(x, cy - 12 * ls); ctx.lineTo(x + 7 * ls, cy - 20 * ls); }
+    ctx.stroke();
+    ctx.fillStyle = T.steel; ctx.fillRect(cx - 7 * ls, cy, 14 * ls, 4 * ls);
+    if (!S.free) {
+      const fy = Y((N + 1) * D0);
+      ctx.fillStyle = T.alu; ctx.fillRect(cx - cw / 2, fy, cw, 12 * ls);
+      ctx.strokeStyle = T.aluLo; ctx.strokeRect(cx - cw / 2 + 0.5, fy + 0.5, cw - 1, 12 * ls - 1);
+      ctx.strokeStyle = T.muted; ctx.beginPath();
+      for (let x = cx - cw / 2 + 4 * ls; x < cx + cw / 2; x += 8 * ls) { ctx.moveTo(x, fy + 12 * ls); ctx.lineTo(x - 7 * ls, fy + 20 * ls); }
+      ctx.stroke();
+    }
+    // equilibrium ticks to the left; with gravity on, dashed ticks where each mass would hang with g = 0
+    if (S.eqTicks) {
+      const tx = cx - Math.max(...sizes.map((s) => s[0])) / 2 - 16 * ls;
+      ctx.lineWidth = 1.4 * ls; ctx.strokeStyle = T.muted;
+      ctx.beginPath(); for (let i = 0; i < N; i++) { ctx.moveTo(tx - 8 * ls, eqY(i)); ctx.lineTo(tx + 4 * ls, eqY(i)); } ctx.stroke();
+      if (g) {
+        ctx.setLineDash([3 * ls, 3 * ls]); ctx.beginPath();
+        for (let i = 0; i < N; i++) { const y = Y((i + 1) * D0); ctx.moveTo(tx - 8 * ls, y); ctx.lineTo(tx + 4 * ls, y); }
+        ctx.stroke(); ctx.setLineDash([]);
+        // sag arrow for the lowest mass
+        const y0 = Y(N * D0), y1 = eqY(N - 1), ax = tx - 14 * ls;
+        if (y1 - y0 > 16 * ls) {
+          ctx.strokeStyle = T.equi; ctx.fillStyle = T.equi; ctx.lineWidth = 1.5 * ls;
+          ctx.beginPath(); ctx.moveTo(ax, y0); ctx.lineTo(ax, y1 - 6 * ls); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(ax, y1); ctx.lineTo(ax - 4 * ls, y1 - 7 * ls); ctx.lineTo(ax + 4 * ls, y1 - 7 * ls); ctx.closePath(); ctx.fill();
+          ctx.font = `${fs}px ${T.mono}`; ctx.save(); ctx.translate(ax - 6 * ls, (y0 + y1) / 2); ctx.rotate(-Math.PI / 2);
+          halo(ctx, `sag ${fmtCm(sag[N - 1], 1)}`, 0, 0, T.equi, 'center', 'bottom'); ctx.restore();
+        }
+      }
+    }
+    const sel = selId(), nS = nSpr(N, S.free), r = clamp(base * 0.22, 5 * ls, 10 * ls);
+    const topOf = (i) => (i < 0 ? Y(0) + 4 * ls : pos(i) + sizes[i][1] + Math.min(sizes[i][0] * 0.16, 7 * ls) + 3 * ls);
+    const botOf = (i) => (i >= N ? Y((N + 1) * D0) : pos(i) - 3 * ls);
+    // the weights hang by their tops: pos(i) is the top face of weight i (the equilibrium tick marks it)
+    const showAll = minGap > 40 * ls;
+    for (let j = 0; j < nS; j++) {
+      const a = topOf(j - 1), b = botOf(j), id = 'k' + j;
+      if (helix(ctx, cx, a, cx, b, r, wireW(sys.ks[j], ls), isHot(id) || sel === id, ls)) flags.bottom = true;
+      sHandles.push({ id, kind: 'spring', j, seg: [cx, a, cx, b], tol: r + 3 * ls, cursor: 'pointer' });
+      if (showAll || sel === id || isHot('gk' + j)) {
+        const gx = cx - r - 16 * ls, gy = (a + b) / 2;
+        grip(ctx, gx, gy, isHot('gk' + j), false, ls);
+        sHandles.push({ id: 'gk' + j, kind: 'kgrip', j, pt: [gx, gy], cursor: 'ew-resize' });
+        if (minGap > 70 * ls || sel === id) { ctx.font = `${fs}px ${T.mono}`; halo(ctx, `${sig(sys.ks[j], 3)} N/m`, gx - 14 * ls, gy, sel === id ? T.accent : T.muted, 'right', 'middle'); }
+      }
+    }
+    for (let i = 0; i < N; i++) {
+      const [w, h] = sizes[i], y = pos(i), id = 'm' + i;
+      // hook
+      ctx.strokeStyle = T.steel; ctx.lineWidth = 1.6 * ls; ctx.beginPath(); ctx.moveTo(cx, y); ctx.lineTo(cx, y + 4 * ls); ctx.stroke();
+      brassCyl(ctx, cx, y + 4 * ls, w, h - 4 * ls, i, isHot(id) || sel === id, ls);
+      sHandles.push({ id, kind: 'mass', i, box: [cx - w / 2 - 4 * ls, y - 4 * ls, w + 8 * ls, h + 12 * ls], cursor: held ? 'grabbing' : 'grab' });
+      if (showAll || sel === id || isHot('gm' + i)) {
+        const gx = cx + w / 2 + 16 * ls, gy = y + h / 2;
+        grip(ctx, gx, gy, isHot('gm' + i), false, ls);
+        sHandles.push({ id: 'gm' + i, kind: 'mgrip', i, pt: [gx, gy], cursor: 'ew-resize' });
+        if (!S.graph || W > 300 * ls) { ctx.font = `${fs}px ${T.mono}`; halo(ctx, `${fmt(sys.ms[i], 2)} kg`, gx + 14 * ls, gy, sel === id ? T.accent : T.muted, 'left', 'middle'); }
+      }
+    }
+    if (S.graph) {
+      const gx0 = clamp(cx + 120 * ls, cx + 70 * ls, W - 50 * ls), room = Math.min(44 * ls, W - gx0 - 8 * ls), G = graphGain(room);
+      if (room > 14 * ls) {
+        const Ytop = Y(0), Yend = S.free ? eqY(N - 1) : Y((N + 1) * D0);
+        ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(gx0, Ytop); ctx.lineTo(gx0, Yend); ctx.stroke();
+        const pts = [[gx0, Ytop]]; for (let i = 0; i < N; i++) pts.push([gx0 + sim.u[i] * G, eqY(i)]); if (!S.free) pts.push([gx0, Yend]);
+        ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * ls; ctx.beginPath(); pts.forEach(([x, y], k) => (k ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.stroke();
+        for (let i = 0; i < N; i++) { ctx.fillStyle = MC[i]; ctx.beginPath(); ctx.arc(gx0 + sim.u[i] * G, eqY(i), 3.4 * ls, 0, 2 * Math.PI); ctx.fill(); }
+        ctx.font = `${fs * 0.95}px ${T.ui}`;
+        halo(ctx, `ξ graph ×${sig(G / sc, 2)}`, gx0, Yend + 8 * ls, T.muted, 'center', 'top');
+        halo(ctx, 'down drawn right', gx0, Yend + 10 * ls + fs, T.muted, 'center', 'top');
+      }
+    }
+    ctx.font = `${fs}px ${T.ui}`;
+    if (flags.bottom) halo(ctx, 'A spring is at its solid length: beyond the linear model.', 8 * ls, Hh - 10 * ls, T.pos, 'left');
+    else if (S.orient === 'v') halo(ctx, g ? `g = ${G0} m/s²` : 'g = 0', 8 * ls, Hh - 10 * ls, T.muted, 'left');
+  }
+
+  // ---------- strip chart ----------
+  function drawStrip() {
+    const [W, Hh] = dims.t; if (!W || !Hh || !sys) return;
+    const ctx = ctxs.t, ls = lsOf(W, Hh), N = sys.N, fs = 10.5 * ls;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const Lm = 40 * ls, R = W - 12 * ls, top = 26 * ls, bot = Hh - 26 * ls;
+    const lanes = N + 1, gap = 4 * ls, laneH = (bot - top - gap * (lanes - 1)) / lanes;
+    const tR = Math.max(sim.t, S.span), tL = tR - S.span, X = (t) => Lm + (t - tL) / S.span * (R - Lm);
+    // y scale shared by all masses: the largest displacement in the window, rounded up
+    let m = 0, eMax = 0;
+    const j0 = firstIdx(tL);
+    for (let j = j0; j < H.n; j++) { const k = hIdx(j); for (let i = 0; i < N; i++) m = Math.max(m, Math.abs(H.u[k * NMAX + i])); eMax = Math.max(eMax, H.e[k]); }
+    recentMax = Math.max(m, 1e-4);
+    const ymax = niceUp(Math.max(m, 0.002));
+    ctx.font = `700 ${11.5 * ls}px ${T.ui}`; ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(W > 470 * ls ? 'Displacement ξ of each mass against time' : 'Displacement ξ against time', Lm, 17 * ls);
+    ctx.font = `${fs}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right';
+    ctx.fillText(`lanes ±${fmtCm(ymax, ymax < 0.01 ? 2 : 1)}`, R, 17 * ls);
+    // time grid
+    const tst = nice(S.span / (W < 460 ? 4 : 7));
+    let lastPx = -1e9;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let kk = Math.ceil(tL / tst - 1e-9); kk * tst <= tR + 1e-9; kk++) {
+      const px = Math.round(X(kk * tst)) + 0.5;
+      ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bot); ctx.stroke();
+      const txt = String(+(kk * tst).toPrecision(6)), tw = ctx.measureText(txt).width;
+      if (px - tw / 2 > lastPx + 6 && px + tw / 2 < R + 2) { ctx.fillStyle = T.muted; ctx.fillText(txt, px, bot + 5 * ls); lastPx = px + tw / 2; }
+    }
+    ctx.textAlign = 'right'; ctx.fillText('t (s)', R, bot + 5 * ls + fs + 1);
+    // decimate to about two samples per pixel column
+    const cnt = H.n - j0, stride = Math.max(1, Math.floor(cnt / ((R - Lm) * 2)));
+    for (let i = 0; i <= N; i++) {
+      const y0 = top + i * (laneH + gap), yc = y0 + laneH / 2, energyLane = i === N;
+      ctx.fillStyle = T.dark ? 'rgba(255,255,255,0.02)' : 'rgba(20,40,70,0.025)'; ctx.fillRect(Lm, y0, R - Lm, laneH);
+      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath();
+      const zy = energyLane ? y0 + laneH : yc; ctx.moveTo(Lm, Math.round(zy) + 0.5); ctx.lineTo(R, Math.round(zy) + 0.5); ctx.stroke();
+      const lab = energyLane ? 'E' : 'ξ' + sub(i + 1), col = energyLane ? T.ink : MC[i];
+      ctx.font = `700 ${Math.min(12 * ls, laneH * 0.8 + 4)}px ${T.ui}`; ctx.fillStyle = col; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      ctx.fillText(lab, Lm - 6 * ls, energyLane ? y0 + laneH / 2 : yc);
+      if (cnt < 2) continue;
+      const Yf = energyLane ? (e) => y0 + laneH - (eMax > 0 ? e / (eMax * 1.2) : 0) * laneH : (u) => yc - u / ymax * laneH / 2;
+      ctx.save(); ctx.beginPath(); ctx.rect(Lm, y0 - 1, R - Lm, laneH + 2); ctx.clip();
+      ctx.strokeStyle = col; ctx.lineWidth = (energyLane ? 1.6 : 1.5) * ls; ctx.lineJoin = 'round'; ctx.beginPath();
+      let first = true;
+      for (let j = j0; j < H.n; j += stride) {
+        const k = hIdx(j), x = X(H.t[k]), y = Yf(energyLane ? H.e[k] : H.u[k * NMAX + i]);
+        if (first) { ctx.moveTo(x, y); first = false; } else ctx.lineTo(x, y);
+      }
+      const kl = hIdx(H.n - 1); ctx.lineTo(X(H.t[kl]), Yf(energyLane ? H.e[kl] : H.u[kl * NMAX + i]));
+      ctx.stroke(); ctx.restore();
+      if (S.sel.t === 'm' && S.sel.i === i) { ctx.strokeStyle = T.accent; ctx.lineWidth = 1.2; ctx.strokeRect(Lm + 0.5, y0 + 0.5, R - Lm - 1, laneH - 1); }
+    }
+    // energy lane scale
+    if (laneH > 12 * ls) { ctx.font = `${fs * 0.95}px ${T.mono}`; halo(ctx, `0 to ${fmtJ(eMax * 1.2)}`, R - 3 * ls, top + N * (laneH + gap) + 2 * ls, T.muted, 'right', 'top'); }
+  }
+  function niceUp(x) { const p = Math.pow(10, Math.floor(Math.log10(x))); for (const f of [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (f * p >= x * 1.02) return f * p; return 10 * p; }
+  function firstIdx(tL) { let lo = 0, hi = H.n; while (lo < hi) { const mid = (lo + hi) >> 1; if (H.t[hIdx(mid)] < tL) lo = mid + 1; else hi = mid; } return Math.max(0, lo - 1); }
+
+  // ---------- normal modes pane ----------
+  let modeRows = [], modeHover = -1, modeFocus = 0;
+  function drawModes() {
+    const [W, Hh] = dims.m; if (!W || !Hh || !sys) return;
+    const ctx = ctxs.m, ls = lsOf(W, Hh), N = sys.N, fs = 10.5 * ls;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const L = 12 * ls, R = W - 12 * ls, top = 40 * ls, bot = Hh - 8 * ls;
+    ctx.font = `700 ${11.5 * ls}px ${T.ui}`; ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('Normal modes', L, 17 * ls);
+    ctx.font = `${fs}px ${T.ui}`; ctx.fillStyle = T.muted;
+    ctx.fillText(W > 420 * ls ? 'shape · frequency · share of the energy now (click to start one alone)' : 'shape · frequency · energy share', L, 32 * ls);
+    let Etot = 0; for (let n = 0; n < N; n++) Etot += modeE[n];
+    const rowH = Math.min(96 * ls, (bot - top) / N);
+    const compact = rowH < 34 * ls;
+    const shapeW = clamp(W * 0.3, 60 * ls, 170 * ls), barW = clamp(W * 0.24, 50 * ls, 150 * ls);
+    const txtX = L + 22 * ls + shapeW + 10 * ls, f1 = `600 ${Math.min(11 * ls, rowH * 0.36)}px ${T.mono}`;
+    ctx.font = f1; let tw = 0; for (let n = 0; n < N; n++) tw = Math.max(tw, ctx.measureText(`ω = ${sig(md.w[n], 4)} rad/s`).width);
+    const barX = Math.max(R - barW, txtX + tw + 12 * ls), barW2 = Math.max(R - barX, 0);
+    ctx.font = `${Math.min(10.5 * ls, rowH * 0.3)}px ${T.mono}`; let t2w = 0;
+    for (let n = 0; n < N; n++) { const f = md.w[n] / (2 * Math.PI); t2w = Math.max(t2w, ctx.measureText(`f = ${sig(f, 3)} Hz · T = ${sig(1 / f, 3)} s`).width); }
+    const showF = t2w < barX - txtX - 8 * ls;
+    modeRows = [];
+    for (let n = 0; n < N; n++) {
+      const y0 = top + n * rowH, yc = y0 + rowH / 2, hot = modeHover === n;
+      modeRows.push([y0, y0 + rowH]);
+      if (hot || (document.activeElement === cans.m && modeFocus === n)) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.1; ctx.fillRect(L - 6 * ls, y0 + 1, R - L + 12 * ls, rowH - 2); ctx.globalAlpha = 1; }
+      if (n > 0) { ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, Math.round(y0) + 0.5); ctx.lineTo(R, Math.round(y0) + 0.5); ctx.stroke(); }
+      ctx.font = `700 ${Math.min(13 * ls, rowH * 0.5)}px ${T.mono}`; ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText(String(n + 1), L, yc);
+      // mode shape: stems at each mass's place along the chain, joined through the fixed ends
+      const sx0 = L + 22 * ls, sx1 = sx0 + shapeW, e = md.vec[n];
+      let big = 0; for (let i = 0; i < N; i++) big = Math.max(big, Math.abs(e[i]));
+      const segs = S.free ? N + 0.5 : N + 1, Xs = (k) => sx0 + k / segs * (sx1 - sx0), amp = rowH * 0.36;
+      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sx0, yc); ctx.lineTo(sx1, yc); ctx.stroke();
+      ctx.fillStyle = T.muted; ctx.fillRect(sx0 - 2 * ls, yc - amp, 2 * ls, 2 * amp);
+      if (!S.free) ctx.fillRect(sx1, yc - amp, 2 * ls, 2 * amp);
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 1.6 * ls; ctx.beginPath(); ctx.moveTo(sx0, yc);
+      for (let i = 0; i < N; i++) ctx.lineTo(Xs(i + 1), yc - e[i] / big * amp);
+      if (!S.free) ctx.lineTo(sx1, yc);
+      ctx.stroke();
+      for (let i = 0; i < N; i++) {
+        const x = Xs(i + 1), y = yc - e[i] / big * amp;
+        ctx.strokeStyle = MC[i]; ctx.lineWidth = 1.3 * ls; ctx.beginPath(); ctx.moveTo(x, yc); ctx.lineTo(x, y); ctx.stroke();
+        ctx.fillStyle = MC[i]; ctx.beginPath(); ctx.arc(x, y, Math.min(3.2 * ls, rowH * 0.1 + 1), 0, 2 * Math.PI); ctx.fill();
+      }
+      // frequency text
+      const w = md.w[n], f = w / (2 * Math.PI), Tp = 1 / f;
+      ctx.textAlign = 'left'; ctx.fillStyle = T.ink;
+      const room = barX - txtX - 8 * ls;
+      ctx.font = f1;
+      const t1 = `ω = ${sig(w, 4)} rad/s`, t2 = `f = ${sig(f, 3)} Hz · T = ${sig(Tp, 3)} s`;
+      if (compact) { const t = ctx.measureText(`${t1} · T = ${sig(Tp, 3)} s`).width < room ? `${t1} · T = ${sig(Tp, 3)} s` : t1; ctx.fillText(t, txtX, yc); }
+      else { ctx.fillText(t1, txtX, yc - rowH * 0.17); ctx.font = `${Math.min(10.5 * ls, rowH * 0.3)}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.fillText(showF ? t2 : `T = ${sig(Tp, 3)} s`, txtX, yc + rowH * 0.2); }
+      // energy share bar
+      const frac = Etot > 0 ? modeE[n] / Etot : 0, bh = Math.min(12 * ls, rowH * 0.36);
+      if (barW2 < 24 * ls) continue;
+      ctx.fillStyle = T.grid; ctx.fillRect(barX, yc - bh / 2, barW2, bh);
+      ctx.fillStyle = T.equi; ctx.fillRect(barX, yc - bh / 2, barW2 * frac, bh);
+      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(barX + 0.5, yc - bh / 2 + 0.5, barW2 - 1, bh - 1);
+      ctx.font = `${Math.min(10 * ls, rowH * 0.3)}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+      if (!compact) {
+        const pc = `${(frac * 100).toFixed(frac > 0.995 || frac < 0.001 ? 0 : 1)}%`, full = `${pc} · ${fmtJ(modeE[n])}`;
+        ctx.fillText(ctx.measureText(full).width <= barW2 ? full : pc, R, yc - bh / 2 - 1);
+      }
+      else { ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillStyle = frac > 0.55 ? T.canvas : T.muted; ctx.fillText(`${Math.round(frac * 100)}%`, barX + 3 * ls, yc + 0.5); }
+    }
+  }
+
+  // ---------- spectrum pane ----------
+  let specCache = null, specAt = -1;
+  function computeSpectrum() {
+    const N = sys.N; if (H.n < 64) return null;
+    const i = Math.min(S.specMass, N - 1), fmax = md.w[N - 1] / (2 * Math.PI);
+    const tEnd = H.t[hIdx(H.n - 1)], tStart = H.t[hIdx(0)];
+    const n = 2048, dtMin = 1 / (2.6 * fmax), Dmax = n * dtMin;
+    const D = Math.min(tEnd - tStart, Dmax);
+    if (D < 4 / fmax) return null;
+    const dt = D / n, x = new Float64Array(n);
+    let j = firstIdx(tEnd - D);
+    for (let k = 0; k < n; k++) {
+      const t = tEnd - D + k * dt;
+      while (j < H.n - 2 && H.t[hIdx(j + 1)] < t) j++;
+      const a = hIdx(j), b = hIdx(Math.min(j + 1, H.n - 1)), ta = H.t[a], tb = H.t[b];
+      const f = tb > ta ? clamp((t - ta) / (tb - ta), 0, 1) : 0;
+      x[k] = H.u[a * NMAX + i] * (1 - f) + H.u[b * NMAX + i] * f;
+    }
+    return { amp: spectrum(x), df: 1 / (n * dt), D, mass: i, fNy: 1 / (2 * dt) };
+  }
+  function drawSpectrum() {
+    const [W, Hh] = dims.f; if (!W || !Hh || !sys) return;
+    const ctx = ctxs.f, ls = lsOf(W, Hh), N = sys.N, fs = 10.5 * ls;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const Lm = 54 * ls, R = W - 12 * ls, top = 42 * ls, bot = Hh - 32 * ls;
+    const i = Math.min(S.specMass, N - 1), sp = specCache;
+    ctx.font = `700 ${11.5 * ls}px ${T.ui}`; ctx.fillStyle = MC[i]; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(`Spectrum of ξ${sub(i + 1)}`, Lm, 17 * ls);
+    ctx.font = `${fs}px ${T.ui}`; ctx.fillStyle = T.muted;
+    if (sp) ctx.fillText(`last ${sig(sp.D, 3)} s, Hann window · resolution 1/T = ${sig(sp.df, 2)} Hz`, Lm, 32 * ls);
+    const fTop = md.w[N - 1] / (2 * Math.PI) * 1.18, X = (f) => Lm + f / fTop * (R - Lm);
+    if (bot - top < 30) return;
+    // f axis
+    const fst = nice(fTop / (W < 460 ? 4 : 6));
+    ctx.font = `${fs}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let k = 0; k * fst <= fTop; k++) {
+      const px = Math.round(X(k * fst)) + 0.5; ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bot); ctx.stroke();
+      ctx.fillStyle = T.muted; ctx.fillText(String(+(k * fst).toPrecision(4)), px, bot + 5 * ls);
+    }
+    ctx.textAlign = 'right'; ctx.fillText('f (Hz)', R, bot + 5 * ls + fs + 1);
+    ctx.strokeStyle = T.gridStrong; ctx.strokeRect(Lm + 0.5, top + 0.5, R - Lm - 1, bot - top - 1);
+    // mode frequencies
+    ctx.setLineDash([4 * ls, 3 * ls]); ctx.strokeStyle = T.equi; ctx.lineWidth = 1.2 * ls;
+    let lastX = -1e9;
+    for (let n = 0; n < N; n++) {
+      const x = X(md.w[n] / (2 * Math.PI)); ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bot); ctx.stroke();
+      if (x - lastX > 13 * ls) { ctx.setLineDash([]); ctx.font = `600 ${fs}px ${T.mono}`; halo(ctx, String(n + 1), x, top + 3 * ls, T.equi, 'center', 'top'); ctx.setLineDash([4 * ls, 3 * ls]); lastX = x; }
+    }
+    ctx.setLineDash([]);
+    if (!sp) {
+      ctx.font = `${12 * ls}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(R - Lm > 330 * ls ? 'Recording… the spectrum needs a few periods.' : 'Recording a few periods…', (Lm + R) / 2, (top + bot) / 2); return;
+    }
+    // log amplitude, four decades below the highest peak
+    let peak = 0; const kTop = Math.min(sp.amp.length - 1, Math.floor(fTop / sp.df));
+    for (let k = 1; k <= kTop; k++) peak = Math.max(peak, sp.amp[k]);
+    if (peak <= 0) return;
+    const hiL = Math.ceil(Math.log10(peak * 1.05) * 2) / 2, loL = hiL - 4;
+    const Y = (a) => bot - (Math.log10(Math.max(a, 1e-30)) - loL) / (hiL - loL) * (bot - top);
+    ctx.font = `${fs}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let d = Math.ceil(loL); d <= hiL; d++) {
+      const py = Math.round(Y(Math.pow(10, d))) + 0.5; ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(Lm, py); ctx.lineTo(R, py); ctx.stroke();
+      ctx.fillStyle = T.muted; ctx.fillText(d + 2 >= -2 ? String(+Math.pow(10, d + 2).toFixed(Math.max(0, -(d + 2)))) : '10' + MIN('e' + (d + 2)).slice(3), Lm - 5 * ls, py);
+    }
+    ctx.save(); ctx.translate(9 * ls, (top + bot) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('amplitude (cm)', 0, 0); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(Lm, top, R - Lm, bot - top); ctx.clip();
+    ctx.strokeStyle = MC[i]; ctx.lineWidth = 1.6 * ls; ctx.lineJoin = 'round'; ctx.beginPath();
+    for (let k = 1; k <= kTop + 1 && k < sp.amp.length; k++) { const x = X(k * sp.df), y = Y(sp.amp[k]); k > 1 ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.stroke();
+    ctx.globalAlpha = 0.12; ctx.lineTo(X((kTop + 1) * sp.df), bot); ctx.lineTo(X(sp.df), bot); ctx.closePath(); ctx.fillStyle = MC[i]; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+
+  function drawAll() { if (!T || !sys) return; drawScene(); drawStrip(); drawModes(); drawSpectrum(); }
+
+  // ---------- readouts ----------
+  const rateTxt = { 0.25: '¼ speed', 0.5: '½ speed', 1: 'real time', 2: '2× speed' };
+  function setLayout() {
+    $('stage').dataset.orient = S.orient;
+    requestAnimationFrame(resize);
+  }
+  function syncUI() {
+    const N = S.N;
+    $('nn').value = N; $('nnOut').textContent = String(N);
+    $('oH').setAttribute('aria-pressed', String(S.orient === 'h')); $('oV').setAttribute('aria-pressed', String(S.orient === 'v'));
+    $('eFix').setAttribute('aria-pressed', String(!S.free)); $('eFree').setAttribute('aria-pressed', String(S.free));
+    $('endLab').textContent = S.orient === 'v' ? 'Bottom end' : 'Right end';
+    $('eFix').textContent = S.orient === 'v' ? 'Floor' : 'Wall';
+    $('gravRow').hidden = S.orient !== 'v'; $('grav').checked = S.grav;
+    $('sagBox').hidden = !(S.orient === 'v' && S.grav);
+    $('ghostKey').hidden = !(S.orient === 'v' && S.grav);
+    $('chainHint').textContent = S.orient === 'h'
+      ? `${N} mass${N > 1 ? 'es' : ''} on a frictionless air track, ${nSpr(N, S.free)} spring${nSpr(N, S.free) > 1 ? 's' : ''}. Gravity points into the track, so the air cushion carries the weight and it plays no part in the motion.`
+      : S.grav ? 'Hanging from the ceiling. Gravity stretches each spring until it holds the weight below it; the masses then oscillate about these lower equilibrium positions.'
+        : 'Hanging, with gravity turned off: the springs hang relaxed. Turn gravity on to see the chain sag.';
+    if (S.orient === 'v' && S.grav) {
+      let below = 0; for (let i = 0; i < N; i++) below += sys.ms[i];
+      const s0 = sag[0];
+      $('topLab').textContent = S.free ? 'Top spring holds the whole chain, Σm·g' : 'Top spring tension k₁s₁';
+      $('rTop').textContent = `${sig(sys.ks[0] * s0, 4)} N, stretched ${fmtCm(s0, 1)}`;
+      $('rSag').textContent = fmtCm(sag[N - 1], 2);
+    }
+    // selection
+    if (S.sel.t === 'm' && S.sel.i >= N) S.sel.i = N - 1;
+    if (S.sel.t === 'k' && S.sel.i >= nSpr(N, S.free)) S.sel.i = nSpr(N, S.free) - 1;
+    const isM = S.sel.t === 'm', i = S.sel.i;
+    if (isM) S.specMass = i;
+    $('mRow').hidden = !isM; $('kRow').hidden = isM;
+    $('selDot').style.background = isM ? MC[i] || '' : 'var(--steel)';
+    const end = S.orient === 'v' ? (S.free ? '' : 'floor') : 'right wall', start = S.orient === 'v' ? 'ceiling' : 'left wall';
+    $('selTxt').textContent = isM ? `Mass ${i + 1}` : `Spring ${i + 1}, ${i === 0 ? start : 'mass ' + i} to ${i === N ? end : 'mass ' + (i + 1)}`;
+    if (isM) { $('mm').value = S.ms[i]; $('mmOut').textContent = `${fmt(S.ms[i], 2)} kg`; }
+    else { $('kk').value = S.ks[i]; $('kkOut').textContent = `${sig(S.ks[i], 3)} N/m`; }
+    $('amp').value = S.amp * 100; $('ampOut').textContent = `${fmt(S.amp * 100, 1)} cm`;
+    // mode chips
+    const mc = $('modeChips');
+    if (mc.children.length !== N) {
+      mc.innerHTML = '';
+      for (let n = 0; n < N; n++) { const b = document.createElement('button'); b.type = 'button'; b.textContent = String(n + 1); b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', `Start in mode ${n + 1} alone`); b.addEventListener('click', () => startMode(n)); mc.appendChild(b); }
+    }
+    const w = md.w;
+    const lines = [];
+    lines.push(`<div><dt>Slowest, ω${sub(1)}</dt><dd>${sig(w[0], 4)} rad/s</dd></div>`);
+    lines.push(`<div><dt>Fastest, ω${sub(N)}</dt><dd>${sig(w[N - 1], 4)} rad/s</dd></div>`);
+    let eqm = true, eqk = true; for (let k = 1; k < N; k++) if (sys.ms[k] !== sys.ms[0]) eqm = false; for (let k = 1; k < nSpr(N, S.free); k++) if (sys.ks[k] !== sys.ks[0]) eqk = false;
+    if (eqm && eqk && N > 1) {
+      lines.push(`<div class="wide small"><dt>Equal masses and springs: ${S.free ? 'ωₙ = 2√(k/m) sin((2n − 1)π / 2(2N + 1))' : 'ωₙ = 2√(k/m) sin(nπ / 2(N + 1))'}</dt><dd>${S.free ? 'free end' : 'both ends fixed'}, √(k/m) = ${sig(Math.sqrt(sys.ks[0] / sys.ms[0]), 4)} rad/s</dd></div>`);
+    }
+    if (N === 2) lines.push(`<div class="wide small"><dt>Beat period 2π/(ω₂ − ω₁)</dt><dd>${sig(2 * Math.PI / (w[1] - w[0]), 4)} s</dd></div>`);
+    $('modeRead').innerHTML = lines.join('');
+    $('modeHint').textContent = (S.orient === 'v' ? 'Gravity shifts the equilibrium but does not change the frequencies: g appears only in M g, never in K. ' : '')
+      + 'Each mode is a pattern vₙ in which every mass moves as qₙ(t)vₙ with qₙ = Aₙcos(ωₙt + φₙ). Any motion is a sum of modes, and without drag each mode keeps its own energy.';
+    // drag
+    $('dOff').setAttribute('aria-pressed', String(S.drag === 'off')); $('dLin').setAttribute('aria-pressed', String(S.drag === 'lin')); $('dQuad').setAttribute('aria-pressed', String(S.drag === 'quad'));
+    $('bRow').hidden = S.drag !== 'lin'; $('cRow').hidden = S.drag !== 'quad'; $('dragRead').hidden = S.drag === 'off';
+    $('bb').value = S.b; $('bbOut').textContent = `${fmt(S.b, 2)} kg/s`;
+    $('cc').value = S.c; $('ccOut').textContent = `${fmt(S.c, 1)} kg/m`;
+    if (S.drag === 'off') { $('dragFormula').textContent = 'no drag: energy is conserved'; $('dragHint').textContent = ''; }
+    else if (S.drag === 'lin') {
+      $('dragFormula').textContent = 'F = −b v on each mass';
+      const cs = eqm ? `With equal masses every mode decays at the same rate, amplitude ∝ e^(−bt/2m), b/2m = ${sig(S.b / (2 * sys.ms[0]), 3)} s⁻¹.` : 'With unequal masses the drag couples the modes slightly, so energy can pass between them.';
+      $('dragHint').textContent = `Linear drag, as from a viscous fluid or eddy current braking. ${cs}`;
+    } else {
+      $('dragFormula').innerHTML = 'F = −c |v| v on each mass, c = ½ρC<sub>d</sub>A';
+      const A = 2 * S.c / (1.204 * 1.05);
+      $('dragHint').innerHTML = `Quadratic drag, as from air at high Reynolds number. In air (ρ = 1.204 kg/m³) with C<sub>d</sub> = 1.05, a cube face on, this c needs a face of ${sig(A, 3)} m²: real air drag on these masses is far weaker, so it is exaggerated here. The swings shrink roughly in proportion to 1/t rather than exponentially, large swings first.`;
+    }
+    $('eGRow').hidden = !(S.orient === 'v' && S.grav);
+    $('eSLab').textContent = S.orient === 'v' && S.grav ? 'Springs ½Σk(stretch)²' : 'Springs ½Σk(Δξ)²';
+    $('eDLab').innerHTML = S.drag === 'off' ? 'Drift, |E − E₀| / E<sub>motion</sub>' : 'Accounting, |E + W<sub>drag</sub> − E₀| / E<sub>motion</sub>';
+    $('energyHint').textContent = S.orient === 'v' && S.grav
+      ? 'Springs plus gravity equals ½ξᵀKξ − ½sᵀKs, where s is the static sag: gravity only adds a constant to the energy of the motion about equilibrium.'
+      : S.drag === 'off' ? 'Each mode carries ½(q̇ₙ² + ωₙ²qₙ²) and these add up to the energy of the motion. Without drag each one stays fixed.' : 'Drag takes energy out; the work done against drag is tracked so the books still balance.';
+    document.querySelectorAll('#rateSeg button').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.r === S.rate)));
+    $('rateTag').textContent = rateTxt[S.rate];
+    $('span').value = S.span; $('spanOut').textContent = `${S.span} s`;
+    $('tGraph').checked = S.graph; $('tEq').checked = S.eqTicks;
+    liveReadouts();
+  }
+  function liveReadouts() {
+    if (!sys) return;
+    const N = sys.N, g = gNow();
+    const F = fullEnergy(sys, sag, g, sim.u, sim.v), O = oscEnergy(sys, sim.u, sim.v);
+    $('eK').textContent = fmtJ(F.T); $('eS').textContent = fmtJ(F.Us); $('eG').textContent = fmtJ(F.Ug);
+    $('eT').textContent = fmtJ(F.T + F.Us + F.Ug); $('eO').textContent = fmtJ(O.T + O.U);
+    const ref = sim.ref, Em = ref ? Math.max(ref.Eosc, 1e-30) : 1;
+    const err = ref ? Math.abs(F.T + F.Us + F.Ug + sim.W - ref.E) / Em : 0;
+    $('eD').textContent = ref && ref.Eosc > 0 ? sig(err, 2) : '—';
+    if (S.drag !== 'off') {
+      const now = O.T + O.U, frac = ref && ref.Eosc > 0 ? now / ref.Eosc : 0;
+      $('dragRead').innerHTML = `<div><dt>E now / E at start</dt><dd>${ref && ref.Eosc > 0 ? (frac * 100).toFixed(1) + '%' : '—'}</dd></div><div><dt>W<sub>drag</sub> so far</dt><dd>${fmtJ(sim.W - (ref ? ref.W : 0))}</dd></div>`;
+    }
+    // selected part
+    const isM = S.sel.t === 'm', i = S.sel.i;
+    if (isM && i < N) {
+      $('selRead').innerHTML = `<div><dt>ξ${sub(i + 1)}</dt><dd>${fmtCm(sim.u[i])}</dd></div><div><dt>v${sub(i + 1)}</dt><dd>${fmt(sim.v[i] * 100, 1)} cm/s</dd></div>`;
+    } else if (!isM) {
+      const a = i > 0 ? sag[i - 1] + sim.u[i - 1] : 0, b = i < N ? sag[i] + sim.u[i] : 0, st = b - a;
+      $('selRead').innerHTML = `<div><dt>Stretch</dt><dd>${fmtCm(st)}</dd></div><div><dt>Tension k·stretch</dt><dd>${sig(sys.ks[i] * st, 3)} N</dd></div>`;
+    }
+    $('tclock').firstChild.textContent = `t = ${sim.t.toFixed(sim.t < 100 ? 2 : 1)} s`;
+  }
+
+  // ---------- controls ----------
+  const projBtn = $('proj');
+  function setPlaying(on) { playing = on; $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('primary', !on); }
+  $('play').addEventListener('click', () => setPlaying(!playing));
+  $('reset').addEventListener('click', () => { if (S.preset) applyPreset(S.preset); else { sim.t = 0; setInitial(null, null); sim.u[0] = S.amp; rebase(true); histClear(); histPush(); syncUI(); } });
+  $('rest').addEventListener('click', () => { setInitial(null, null); startInfo = 'At rest'; syncUI(); });
+  document.querySelectorAll('#presets button').forEach((b) => b.addEventListener('click', () => { applyPreset(b.dataset.p); setPlaying(true); }));
+  $('nn').addEventListener('input', () => {
+    const N = +$('nn').value; if (N === S.N) return;
+    custom(); const old = S.N; S.N = N;
+    for (let i = old; i < N; i++) { S.ms[i] = S.ms[old - 1]; sim.u[i] = 0; sim.v[i] = 0; }
+    for (let j = old + 1; j <= N; j++) S.ks[j] = S.ks[old];
+    for (let i = N; i < NMAX; i++) { sim.u[i] = 0; sim.v[i] = 0; }
+    paramsChanged({ clear: true }); histPush();
+  });
+  const setOrient = (o) => { if (o === S.orient) return; custom(); S.orient = o; paramsChanged({ clear: false }); setLayout(); };
+  $('oH').addEventListener('click', () => setOrient('h')); $('oV').addEventListener('click', () => setOrient('v'));
+  const setFree = (f) => { if (f === S.free) return; custom(); S.free = f; paramsChanged({ clear: true }); histPush(); };
+  $('eFix').addEventListener('click', () => setFree(false)); $('eFree').addEventListener('click', () => setFree(true));
+  // gravity: the chain is re-hung, keeping each displacement from equilibrium, so the traces carry straight on
+  const setGrav = (on) => { S.grav = on; custom(); paramsChanged({ clear: false }); };
+  $('grav').addEventListener('change', () => setGrav($('grav').checked));
+  function setMass(i, v) {
+    v = clamp(Math.round(v / 0.01) * 0.01, 0.1, 5); v = +v.toFixed(2);
+    if (v === S.ms[i]) return; S.ms[i] = v; custom(); paramsChanged();
+  }
+  function setK(j, v) {
+    v = clamp(Math.round(v / 0.5) * 0.5, 0.5, 200); v = +v.toFixed(1);
+    if (v === S.ks[j]) return; S.ks[j] = v; custom(); paramsChanged();
+  }
+  $('mm').addEventListener('input', () => setMass(S.sel.i, +$('mm').value));
+  $('kk').addEventListener('input', () => setK(S.sel.i, +$('kk').value));
+  $('eqM').addEventListener('click', () => { const v = S.ms[S.sel.t === 'm' ? S.sel.i : 0]; for (let i = 0; i < NMAX; i++) S.ms[i] = v; custom(); paramsChanged(); });
+  $('eqK').addEventListener('click', () => { const v = S.ks[S.sel.t === 'k' ? S.sel.i : 0]; for (let j = 0; j <= NMAX; j++) S.ks[j] = v; custom(); paramsChanged(); });
+  $('amp').addEventListener('input', () => { S.amp = +$('amp').value / 100; $('ampOut').textContent = `${fmt(S.amp * 100, 1)} cm`; });
+  const setDrag = (d) => { if (d === S.drag) return; S.drag = d; custom(); paramsChanged(); };
+  $('dOff').addEventListener('click', () => setDrag('off')); $('dLin').addEventListener('click', () => setDrag('lin')); $('dQuad').addEventListener('click', () => setDrag('quad'));
+  $('bb').addEventListener('input', () => { S.b = +$('bb').value; custom(); paramsChanged(); });
+  $('cc').addEventListener('input', () => { S.c = +$('cc').value; custom(); paramsChanged(); });
+  document.querySelectorAll('#rateSeg button').forEach((b) => b.addEventListener('click', () => { S.rate = +b.dataset.r; syncUI(); }));
+  $('span').addEventListener('input', () => { S.span = +$('span').value; $('spanOut').textContent = `${S.span} s`; });
+  $('tGraph').addEventListener('change', () => { S.graph = $('tGraph').checked; });
+  $('tEq').addEventListener('change', () => { S.eqTicks = $('tEq').checked; });
+  function select(t, i) { S.sel = { t, i }; syncUI(); }
+
+  // ---------- dragging on the chain ----------
+  function handleAt(ev) {
+    const r = cans.s.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const touch = ev.pointerType === 'touch' ? 2 : 1, tol = 8 * (sg ? sg.ls : 1) * touch;
+    let best = null, bd = Infinity;
+    for (const h of sHandles) {
+      let d = Infinity;
+      if (h.pt) d = Math.hypot(x - h.pt[0], y - h.pt[1]) - 6 - tol;
+      else if (h.box) { const [bx, by, bw, bh] = h.box; const dx = Math.max(bx - x, 0, x - bx - bw), dy = Math.max(by - y, 0, y - by - bh); d = Math.hypot(dx, dy) - (touch > 1 ? 8 : 0) - 0.5; }
+      else if (h.seg) {
+        const [x1, y1, x2, y2] = h.seg, L2 = (x2 - x1) ** 2 + (y2 - y1) ** 2, t = L2 ? clamp(((x - x1) * (x2 - x1) + (y - y1) * (y2 - y1)) / L2, 0, 1) : 0;
+        d = Math.hypot(x - x1 - t * (x2 - x1), y - y1 - t * (y2 - y1)) - h.tol - (touch > 1 ? 6 : 0) + 1;   // springs lose ties to blocks and grips
+      }
+      if (d < 0 && d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  const along = (ev) => { const r = cans.s.getBoundingClientRect(); return sg.orient === 'h' ? ev.clientX - r.left : ev.clientY - r.top; };
+  const across = (ev) => { const r = cans.s.getBoundingClientRect(); return sg.orient === 'h' ? ev.clientY - r.top : ev.clientX - r.left; };
+  let queued = null, frameQueued = false;
+  function queue(fn) { queued = fn; if (frameQueued) return; frameQueued = true; requestAnimationFrame(() => { frameQueued = false; const f = queued; queued = null; if (f) f(); }); }
+  function freeze() { for (let i = 0; i < sys.N; i++) sim.v[i] = 0; }
+  cans.s.addEventListener('pointermove', (ev) => {
+    if (drag) {
+      if (drag.kind === 'mass') {
+        const p = along(ev); drag.trail.push([performance.now(), p]); if (drag.trail.length > 12) drag.trail.shift();
+        queue(() => {
+          if (!drag) return;
+          const lim = 0.4 * D0, i = drag.i;
+          sim.u[i] = clamp(drag.u0 + (p - drag.p0) / sg.sc, -lim, lim);
+          freeze(); rebase(false);
+        });
+      } else {
+        const d = sg.orient === 'h' ? drag.c0 - across(ev) : across(ev) - drag.c0, f = Math.exp(d / (70 * sg.ls));
+        queue(() => { if (!drag) return; if (drag.kind === 'mgrip') setMass(drag.i, drag.v0 * f); else setK(drag.j, drag.v0 * f); });
+      }
+      return;
+    }
+    const h = handleAt(ev);
+    hoverId = h ? h.id : null;
+    cans.s.style.cursor = h ? h.cursor : 'default';
+  });
+  cans.s.addEventListener('pointerdown', (ev) => {
+    const h = handleAt(ev); if (!h) return;
+    try { cans.s.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault();
+    if (h.kind === 'mass') {
+      select('m', h.i);
+      held = { i: h.i }; freeze(); rebase(false);
+      drag = { id: h.id, kind: 'mass', i: h.i, p0: along(ev), u0: sim.u[h.i], trail: [[performance.now(), along(ev)]] };
+      cans.s.style.cursor = 'grabbing';
+    } else if (h.kind === 'spring') { select('k', h.j); }
+    else if (h.kind === 'mgrip') { select('m', h.i); drag = { id: h.id, kind: 'mgrip', i: h.i, c0: across(ev), v0: S.ms[h.i] }; }
+    else if (h.kind === 'kgrip') { select('k', h.j); drag = { id: h.id, kind: 'kgrip', j: h.j, c0: across(ev), v0: S.ks[h.j] }; }
+  });
+  function endDrag(ev) {
+    if (!drag) return;
+    if (drag.kind === 'mass') {
+      if (queued) { const f = queued; queued = null; f(); }
+      // flick: the pointer speed over the last 80 ms, in m/s of simulated time
+      const tr = drag.trail, now = performance.now(); let v = 0;
+      const old = tr.find((p) => now - p[0] < 80);
+      if (old && tr.length > 1 && now - old[0] > 8) { const last = tr[tr.length - 1]; if (now - last[0] < 60) v = (last[1] - old[1]) / ((last[0] - old[0]) / 1000) / sg.sc * S.rate; }
+      freeze(); sim.v[drag.i] = clamp(v, -1.5, 1.5);
+      sim.W = 0; rebase(true); histClear(); histPush();
+      startInfo = v ? 'Released with a flick' : 'Released from rest';
+      held = null; if (!playing) setPlaying(true);
+      custom();
+    }
+    drag = null; hoverId = null; cans.s.style.cursor = 'default';
+    syncUI();
+  }
+  cans.s.addEventListener('pointerup', endDrag);
+  cans.s.addEventListener('pointercancel', endDrag);
+  cans.s.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
+
+  // keyboard on the chain
+  const parts = () => { const out = [], N = S.N, nS = nSpr(N, S.free); for (let j = 0; j < nS || j < N; j++) { if (j < nS) out.push(['k', j]); if (j < N) out.push(['m', j]); } return out; };
+  cans.s.addEventListener('keydown', (e) => {
+    const big = e.shiftKey ? 4 : 1;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      const P = parts(), k = P.findIndex((p) => p[0] === S.sel.t && p[1] === S.sel.i), n = clamp(k + (e.key === 'ArrowLeft' ? -1 : 1), 0, P.length - 1);
+      select(P[n][0], P[n][1]);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      if (S.sel.t !== 'm') return;
+      const i = S.sel.i, dir = (e.key === 'ArrowUp' ? 1 : -1) * (S.orient === 'v' ? -1 : 1);
+      freeze(); sim.u[i] = clamp(sim.u[i] + dir * 0.005 * big, -0.4 * D0, 0.4 * D0); sim.W = 0; rebase(true); histClear(); histPush(); custom(); syncUI();
+    } else if (e.key === '+' || e.key === '=' || e.key === '-' || e.key === '_' || e.key === 'PageUp' || e.key === 'PageDown') {
+      const up = e.key === '+' || e.key === '=' || e.key === 'PageUp', f = Math.pow(up ? 1.1 : 1 / 1.1, big);
+      if (S.sel.t === 'm') setMass(S.sel.i, S.ms[S.sel.i] * f); else setK(S.sel.i, S.ks[S.sel.i] * f);
+    } else if (/^[0-9]$/.test(e.key)) { startMode(e.key === '0' ? 9 : +e.key - 1); }
+    else if (e.key === ' ') setPlaying(!playing);
+    else if (e.key === 'r' || e.key === 'R') $('reset').click();
+    else if ((e.key === 'g' || e.key === 'G') && S.orient === 'v') setGrav(!S.grav);
+    else return;
+    e.preventDefault();
+  });
+  // modes pane: click a row or use the keys
+  const modeAt = (ev) => { const r = cans.m.getBoundingClientRect(), y = ev.clientY - r.top; return modeRows.findIndex(([a, b]) => y >= a && y < b); };
+  cans.m.addEventListener('pointermove', (ev) => { modeHover = modeAt(ev); cans.m.style.cursor = modeHover >= 0 ? 'pointer' : 'default'; });
+  cans.m.addEventListener('pointerleave', () => { modeHover = -1; });
+  cans.m.addEventListener('click', (ev) => { const n = modeAt(ev); if (n >= 0) { modeFocus = n; startMode(n); } });
+  cans.m.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') modeFocus = clamp(modeFocus + (e.key === 'ArrowUp' ? -1 : 1), 0, sys.N - 1);
+    else if (e.key === 'Enter') startMode(modeFocus);
+    else if (/^[0-9]$/.test(e.key)) startMode(e.key === '0' ? 9 : +e.key - 1);
+    else if (e.key === ' ') setPlaying(!playing);
+    else return;
+    e.preventDefault();
+  });
+
+  // projector mode
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(() => { resize(); });
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+
+  const retheme = () => { tokens(); syncUI(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, frameMs = 0;
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (playing && !held) advance(dt * S.rate);
+    modeE = modeEnergies(md, sys.ms, sim.u, sim.v);
+    if (now - specAt > 300) { specCache = computeSpectrum(); specAt = now; }
+    drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastRead > 120) { liveReadouts(); lastRead = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__co = { get frameMs() { return frameMs; }, get S() { return S; }, get sim() { return sim; }, get md() { return md; }, get sys() { return sys; }, get sag() { return sag; },
+    get flags() { return flags; }, setPlaying, applyPreset, startMode, handles() { return sHandles.map((h) => ({ id: h.id, kind: h.kind, pt: h.pt, box: h.box, seg: h.seg })); },
+    advance(t) { advance(t); drawAll(); liveReadouts(); }, get hist() { return H.n; } };
+
+  tokens();
+  const ro = new ResizeObserver(() => resize());
+  for (const k of ['s', 't', 'm', 'f']) ro.observe(panes[k]);
+  applyPreset('three');
+  resize();
+  setPlaying(!reduce);
+  if (reduce) { advance(1.3); }   // a meaningful still picture: the masses partway through a swing
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

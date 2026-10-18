@@ -39,6 +39,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Collisions and Momentum](demos/collisions.html) | Mechanics | 1D and 2D collisions with any restitution, center of mass frame, explosions, Newton's cradle and impulse with spring damper bumpers |
 | [Pendulums and Chaos](demos/double-pendulum.html) | Mechanics | Exact large amplitude period, double pendulum normal modes, sensitivity to initial conditions with a Lyapunov estimate, Poincaré sections |
 | [Fluids: Pressure, Buoyancy and Flow](demos/fluids.html) | Mechanics | Hydrostatic pressure, Pascal's paradox, barometers, buoyancy with a spring scale and overflow can, Venturi tubes and Torricelli's law |
+| [Coupled Oscillators](demos/coupled-oscillators.html) | Mechanics | N masses and springs with exact normal modes, gravity sag, linear or quadratic drag, mode energies, spectrum and strip charts |
 | [Gas in a Box](demos/ideal-gas.html) | Thermodynamics | Kinetic theory of a 2D gas: pressure, temperature, Maxwell-Boltzmann speeds, adiabatic compression |
 | [Heat Engine Cycles](demos/heat-engines.html) | Thermodynamics | Ideal gas cycles on PV and T-S diagrams with per leg Q, W and ΔU, efficiency against the Carnot limit, refrigerators and custom cycles |
 | [Coulomb Sandbox](demos/coulomb-sandbox.html) | Electricity and magnetism | Electric field and potential of point charges, as a 2D map and a 3D potential landscape |
