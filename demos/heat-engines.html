@@ -1,0 +1,1359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+<title>Heat Engine Cycles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one canvas. Left: the PV diagram with the cylinder under it, the piston lined up with the volume axis. Right: the T–S diagram and the energy flow. Instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --work: #17855f;
+  --steel: #8b96a5;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --work: #4fd1a0; --steel: #6b7686; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --work: #4fd1a0; --steel: #6b7686; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.86rem; font-weight: 600; min-width: 0; overflow-wrap: anywhere; text-align: right; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#can { touch-action: none; outline: none; }
+#can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg.full { display: flex; }
+.seg.full button { flex: 1 1 auto; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; white-space: nowrap; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+select { font: inherit; font-size: 0.82rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 2px 4px; max-width: 100%; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.flag { margin: 0; font-size: 0.88rem; font-weight: 700; border: 1px solid var(--pos); color: var(--pos); border-radius: 6px; padding: 7px 10px; }
+.formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
+
+/* energy bookkeeping, one block per leg */
+.legs { display: grid; gap: 2px; font-size: 0.82rem; }
+.lrow { display: grid; grid-template-columns: 40px repeat(3, minmax(0, 1fr)); gap: 4px; align-items: baseline; }
+.lrow span { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lrow span:first-child { text-align: left; }
+.lhead span { color: var(--muted); font-size: 0.76rem; font-family: var(--font-ui); }
+.leg { border-radius: 6px; padding: 4px 4px 3px; border: 1px solid transparent; }
+.leg.now { background: color-mix(in srgb, var(--accent) 9%, transparent); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+.lname { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px; }
+.lname b { font-family: var(--font-mono); font-size: 0.82rem; min-width: 34px; }
+.lname .word { color: var(--muted); font-size: 0.8rem; }
+.lname i { flex: none; width: 14px; height: 0; border-top: 3px solid var(--ink); }
+.leg.tot { border-top: 1px solid var(--line); border-radius: 0; padding-top: 6px; margin-top: 2px; }
+.leg.tot .lrow span { font-weight: 600; }
+.corners { display: grid; gap: 2px; font-size: 0.82rem; }
+.crow { display: grid; grid-template-columns: 24px repeat(3, minmax(0, 1fr)); gap: 4px; }
+.crow span { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.crow span:first-child { text-align: left; font-weight: 600; }
+.crow.head span { color: var(--muted); font-size: 0.76rem; font-family: var(--font-ui); font-weight: 400; }
+.btnrow { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 3px solid; }
+.swatch.hot { border-color: var(--pos); }
+.swatch.cold { border-color: var(--neg); }
+.swatch.adi { border-color: var(--ink); }
+.swatch.reg { border-color: var(--equi); }
+.swatch.area { height: 12px; border: 1px solid var(--work); background: color-mix(in srgb, var(--work) 22%, transparent); }
+.swatch.iso { border-top: 1px solid var(--muted); }
+.swatch.grip { width: 12px; height: 12px; border: 2px solid var(--accent); border-radius: 50%; margin: 0 5px; background: var(--canvas); }
+.legend-bar { height: 10px; border-radius: 5px; background: linear-gradient(90deg, var(--neg), var(--pos)); border: 1px solid var(--line); }
+.legend-scale { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--muted); margin-top: 3px; }
+.model p + p { margin-top: 2px; }
+
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+  :root[data-projector="on"] .stage-ctl { padding: 6px 10px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj, select { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 1000px; min-height: 0; }
+  .rail { overflow: visible; }
+  .count { margin-left: 0; text-align: left; flex-basis: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Heat Engine Cycles</h1>
+      <p>An ideal gas in a cylinder goes around a closed loop on the PV diagram. The area inside the loop is the net work per cycle, and no engine can beat the Carnot efficiency set by its hottest and coldest temperatures.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">P in kPa · V in L · T in K · R = 8.314 J/(mol·K)</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="next">Next leg</button>
+        <button type="button" class="btn" id="reset">Reset</button>
+        <div class="seg" role="group" aria-label="Animation speed" id="speedSeg">
+          <button type="button" data-s="0.5" aria-pressed="false">Slow</button>
+          <button type="button" data-s="1" aria-pressed="true">Normal</button>
+          <button type="button" data-s="2" aria-pressed="false">Fast</button>
+        </div>
+        <span class="count" id="count" aria-live="off"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="PV diagram of the cycle with the piston cylinder under it, the T–S diagram, and the energy flow per cycle. Drag a corner of the cycle, or the grip in the middle of a leg, to reshape it. Keys: 1 to 6 pick a corner, arrow keys move it, space plays or pauses, N goes to the next leg, R runs the cycle the other way."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="carnot" aria-pressed="true">Carnot cycle</button>
+          <button type="button" data-p="otto" aria-pressed="false">Otto cycle (gasoline engine)</button>
+          <button type="button" data-p="diesel" aria-pressed="false">Diesel cycle</button>
+          <button type="button" data-p="stirling" aria-pressed="false">Stirling engine</button>
+          <button type="button" data-p="fridge" aria-pressed="false">Run it backward: refrigerator</button>
+          <button type="button" data-p="own" aria-pressed="false">Build your own cycle</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Cycle</h2>
+        <div class="chips" id="cycles" role="group" aria-label="Cycle">
+          <button type="button" data-c="carnot" aria-pressed="true">Carnot</button>
+          <button type="button" data-c="otto" aria-pressed="false">Otto</button>
+          <button type="button" data-c="diesel" aria-pressed="false">Diesel</button>
+          <button type="button" data-c="stirling" aria-pressed="false">Stirling</button>
+          <button type="button" data-c="brayton" aria-pressed="false">Brayton</button>
+          <button type="button" data-c="rect" aria-pressed="false">Rectangle</button>
+          <button type="button" data-c="own" aria-pressed="false">Your own</button>
+        </div>
+        <div class="seg full" role="group" aria-label="Direction around the cycle" id="dirSeg">
+          <button type="button" data-d="1" aria-pressed="true">Engine</button>
+          <button type="button" data-d="-1" aria-pressed="false">Refrigerator</button>
+        </div>
+        <div id="params"></div>
+        <label class="check" id="regenRow" hidden><input type="checkbox" id="regen" checked>Ideal regenerator</label>
+        <p class="hint" id="cycleHint"></p>
+      </section>
+
+      <section>
+        <h2>Gas</h2>
+        <div class="seg full" role="group" aria-label="Kind of gas" id="gasSeg">
+          <button type="button" data-g="mono" aria-pressed="true">Monatomic, γ = 5/3</button>
+          <button type="button" data-g="di" aria-pressed="false">Diatomic, γ = 7/5</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="nIn">Amount of gas n</label><output id="nOut" class="mono" for="nIn">1.00 mol</output></div>
+          <input type="range" id="nIn" min="0.1" max="2" step="0.05" value="1">
+        </div>
+        <p class="hint">C<sub>v</sub> = 3/2 R for a monatomic gas like helium or argon, and 5/2 R for a diatomic gas like air near room temperature (the molecules rotate, but do not yet vibrate). C<sub>p</sub> = C<sub>v</sub> + R and γ = C<sub>p</sub>/C<sub>v</sub>. Changing n keeps the temperatures and pressures and scales the volumes, so every energy scales with n while η stays the same.</p>
+      </section>
+
+      <section>
+        <h2>Energy per leg</h2>
+        <div class="legs" id="legs"></div>
+        <p class="formula" id="check"></p>
+        <div class="btnrow">
+          <button type="button" class="btn" id="addC">Add a corner</button>
+          <button type="button" class="btn" id="delC">Remove corner</button>
+        </div>
+        <p class="flag" id="legFlag" hidden></p>
+        <p class="hint">Q &gt; 0 is heat into the gas. W &gt; 0 is work done by the gas on the piston (it expands). ΔU = n C<sub>v</sub> ΔT. The three columns are worked out separately: W from the area under the path, Q from the heat capacity for that process (C<sub>p</sub> at constant pressure, C<sub>v</sub> at constant volume, T ΔS on an isotherm, zero on an adiabat). The first law ΔU = Q − W then checks out on every row. Pick a process in any row to rebuild that leg; adding or removing a corner acts on the selected corner (1 to 6 on the keyboard, or click it).</p>
+      </section>
+
+      <section>
+        <h2 id="effTitle">Efficiency</h2>
+        <dl class="readout" id="effOut"></dl>
+        <p class="formula" id="formula"></p>
+        <p class="hint" id="effHint"></p>
+      </section>
+
+      <section>
+        <h2>Corners</h2>
+        <div class="corners" id="corners"></div>
+        <p class="hint" id="sCheck"></p>
+      </section>
+
+      <section>
+        <h2>Display</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tIso" checked>Isotherms</label>
+          <label><input type="checkbox" id="tAdi">Adiabats</label>
+          <label><input type="checkbox" id="tUnder" checked>Area under the leg</label>
+          <label><input type="checkbox" id="tMol" checked>Molecules</label>
+        </div>
+        <div class="key">
+          <span><i class="swatch hot"></i>Leg exchanges heat with the hot side</span>
+          <span><i class="swatch cold"></i>Leg exchanges heat with the cold side</span>
+          <span><i class="swatch adi"></i>Adiabatic leg, no heat</span>
+          <span><i class="swatch reg"></i>Heat stored and returned by the regenerator</span>
+          <span><i class="swatch area"></i>Enclosed area: net work per cycle</span>
+          <span><i class="swatch iso"></i>Isotherms (PV = nRT) and adiabats</span>
+          <span><i class="swatch grip"></i>Drag corners and leg grips</span>
+        </div>
+        <div>
+          <div class="legend-bar"></div>
+          <div class="legend-scale mono"><span id="lgLo">300 K</span><span>gas temperature</span><span id="lgHi">500 K</span></div>
+        </div>
+      </section>
+
+      <section class="model">
+        <h2>Model</h2>
+        <p class="hint"><b>Heat and work</b> are the two ways energy crosses into or out of the gas. Work is the gas pushing the piston: W = ∫P dV, the area under the path on the PV diagram, positive while the gas expands and negative while it is squeezed. Heat flows through the cylinder wall because of a temperature difference: Q = ∫T dS, the area under the path on the T–S diagram, positive while the gas's entropy goes up.</p>
+        <p class="hint"><b>Why the enclosed area is the net work.</b> Internal energy depends only on the state; for an ideal gas U = n C<sub>v</sub> T. Around a closed cycle the gas returns to its starting temperature, so ΔU = 0 and the net heat in equals the net work out. Along the top of the loop the gas pushes the piston out at high pressure; along the bottom the piston pushes it back in at lower pressure. Work out minus work in is the area between the two paths. Clockwise on the PV diagram the gas does net work (an engine); counterclockwise work must be put in (a refrigerator or heat pump).</p>
+        <p class="hint"><b>Why no engine beats Carnot.</b> Entropy also depends only on the state, so over one cycle the gas gives off exactly the entropy it takes in. Heat Q<sub>in</sub> brings in entropy of at least Q<sub>in</sub>/T<sub>max</sub>, since the gas is never hotter than T<sub>max</sub>. Giving that entropy off at temperatures no lower than T<sub>min</sub> takes heat Q<sub>out</sub> ≥ Q<sub>in</sub> T<sub>min</sub>/T<sub>max</sub>. So W = Q<sub>in</sub> − Q<sub>out</sub> ≤ Q<sub>in</sub>(1 − T<sub>min</sub>/T<sub>max</sub>). The Carnot cycle takes in all its heat at T<sub>max</sub> and gives it all off at T<sub>min</sub>, so it reaches the limit; any other path takes in some heat below T<sub>max</sub> or gives some off above T<sub>min</sub>. On the T–S diagram the Carnot cycle is the rectangle that fills the band between the two temperatures.</p>
+        <p class="hint"><b>Approximations.</b> Ideal gas with constant heat capacities. Every process is quasistatic, slow enough that the gas stays uniform and follows the drawn path. The Otto, Diesel and Brayton cycles are air standard models: the same gas goes around again, burning fuel is heat added and exhaust plus fresh intake is heat removed. Real air has γ falling toward about 1.3 at combustion temperatures, and real engines lose to friction and fast, irreversible steps, so real efficiencies are well below these. Where the temperature changes while heat flows (isobaric and isochoric legs), a reversible version would need a series of reservoirs matched to the gas; the drawing shows one hot side and one cold side. The Stirling regenerator is ideal: it gives back exactly the heat it stored.</p>
+        <p class="hint"><b>How the cycle stays closed.</b> Each process is a power law P V<sup>k</sup> = constant, with k = 0 (isobaric), 1 (isothermal), γ (adiabatic) or infinite (isochoric). Each corner is where two neighboring curves cross, so dragging a corner slides its two neighbors along their other curves. Entropy is S = n C<sub>v</sub> ln(T/300 K) + n R ln(V/V<sub>0</sub>), with V<sub>0</sub> the volume at 300 K and 100 kPa; only differences in S matter.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  // SI inside: P in Pa, V in m³, T in K, energies in J, entropy in J/K.
+  const R = 8.314462618;            // J/(mol K), exact in SI since 2019
+  const Pref = 1e5, Tref = 300;     // reference state for S and the anchor of the standard cycles
+  // Each process is a straight line in (x, y) = (ln V, ln P):  y + k x = c, with k = 0, 1, γ, or the vertical line x = c.
+  const kOf = (t, g) => (t === 'P' ? 0 : t === 'T' ? 1 : t === 'S' ? g : Infinity);
+  const offsetThrough = (t, g, x, y) => (t === 'V' ? x : y + kOf(t, g) * x);
+  function meet(a, b, g) {
+    if (a.t === b.t) return null;
+    if (a.t === 'V') { const x = a.c; return [x, b.c - kOf(b.t, g) * x]; }
+    if (b.t === 'V') { const x = b.c; return [x, a.c - kOf(a.t, g) * x]; }
+    const ka = kOf(a.t, g), kb = kOf(b.t, g), x = (a.c - b.c) / (ka - kb);
+    return [x, a.c - ka * x];
+  }
+  // corner k is where edge k−1 meets edge k; edge k runs from corner k to corner k+1
+  function corners(E, g) {
+    const N = E.length, out = [];
+    for (let k = 0; k < N; k++) {
+      const m = meet(E[(k - 1 + N) % N], E[k], g);
+      if (!m || !isFinite(m[0]) || !isFinite(m[1])) return null;
+      out.push({ x: m[0], y: m[1], V: Math.exp(m[0]), P: Math.exp(m[1]) });
+    }
+    return out;
+  }
+  const temp = (P, V, n) => P * V / (n * R);
+  function entropy(T, V, n, g) { const cv = R / (g - 1), V0 = n * R * Tref / Pref; return n * cv * Math.log(T / Tref) + n * R * Math.log(V / V0); }
+  // One leg from state A to state B along process t. W, Q and ΔU are each worked out on their own.
+  function legEnergy(t, A, B, n, g) {
+    const cv = R / (g - 1), cp = cv + R, T1 = temp(A.P, A.V, n), T2 = temp(B.P, B.V, n);
+    const dU = n * cv * (T2 - T1);
+    let W, Q, dS;
+    if (t === 'T') { const T = 0.5 * (T1 + T2); W = n * R * T * Math.log(B.V / A.V); dS = n * R * Math.log(B.V / A.V); Q = T * dS; }
+    else if (t === 'S') { W = (A.P * A.V - B.P * B.V) / (g - 1); Q = 0; dS = 0; }
+    else if (t === 'P') { W = A.P * (B.V - A.V); Q = n * cp * (T2 - T1); dS = n * cp * Math.log(T2 / T1); }
+    else { W = 0; Q = n * cv * (T2 - T1); dS = n * cv * Math.log(T2 / T1); }
+    return { T1, T2, dU, W, Q, dS };
+  }
+  // The whole cycle in the order it is run (dir = +1 forward through the corners, −1 backward).
+  function summary(E, vs, g, n, dir, regen) {
+    const N = E.length, legs = [];
+    for (let i = 0; i < N; i++) {
+      let k, ia, ib;
+      if (dir > 0) { k = i; ia = i; ib = (i + 1) % N; } else { k = N - 1 - i; ia = (N - i) % N; ib = N - 1 - i; }
+      const e = legEnergy(E[k].t, vs[ia], vs[ib], n, g);
+      legs.push(Object.assign({ i, k, t: E[k].t, ia, ib, a: vs[ia], b: vs[ib], regen: !!(regen && regen.has(k)) }, e));
+    }
+    let scale = 0; for (const L of legs) scale = Math.max(scale, Math.abs(L.Q), Math.abs(L.W));
+    const tiny = 1e-9 * Math.max(scale, 1e-30);
+    let Qin = 0, Qout = 0, Wnet = 0, Qnet = 0, dU = 0, dS = 0, mism = 0, Qreg = 0, Tmax = -Infinity, Tmin = Infinity, TinMax = -Infinity, TinMin = Infinity, ToutMin = Infinity, ToutMax = -Infinity;
+    for (const L of legs) {
+      Wnet += L.W; Qnet += L.Q; dU += L.dU; dS += L.dS;
+      mism = Math.max(mism, Math.abs(L.dU - (L.Q - L.W)));
+      Tmax = Math.max(Tmax, L.T1, L.T2); Tmin = Math.min(Tmin, L.T1, L.T2);
+      L.side = 0;
+      if (Math.abs(L.Q) <= tiny) continue;
+      if (L.regen) { if (L.Q > 0) Qreg += L.Q; continue; }
+      if (L.Q > 0) { Qin += L.Q; TinMax = Math.max(TinMax, L.T1, L.T2); TinMin = Math.min(TinMin, L.T1, L.T2); }
+      else { Qout -= L.Q; ToutMin = Math.min(ToutMin, L.T1, L.T2); ToutMax = Math.max(ToutMax, L.T1, L.T2); }
+    }
+    const engine = Wnet > 0;
+    // which side each leg trades heat with: an engine takes heat in from the hot side; a refrigerator takes it from the cold side
+    for (const L of legs) if (Math.abs(L.Q) > tiny && !L.regen) L.side = (L.Q > 0) === engine ? 1 : -1;
+    return { legs, Qin, Qout, Wnet, Qnet, dU, dS, mism, Qreg, Tmax, Tmin, TinMax, TinMin, ToutMin, ToutMax, engine, scale };
+  }
+  // Textbook efficiencies for the standard cycles
+  const eff = {
+    carnot: (Th, Tc) => 1 - Tc / Th,
+    otto: (r, g) => 1 - Math.pow(r, 1 - g),
+    diesel: (r, rc, g) => 1 - Math.pow(r, 1 - g) * (Math.pow(rc, g) - 1) / (g * (rc - 1)),
+    brayton: (rp, g) => 1 - Math.pow(rp, (1 - g) / g),
+    stirling: (Th, Tc, r, g, regen) => regen ? 1 - Tc / Th : (Th - Tc) * Math.log(r) / (Th * Math.log(r) + (Th - Tc) / (g - 1))
+  };
+  // Standard cycles as edge lists. State 1 of Otto, Diesel and Brayton is 300 K and 100 kPa.
+  function build(name, p, n, g) {
+    const nR = n * R, L = Math.log, P1 = Pref, V1 = nR * Tref / P1;
+    const E = (t, c) => ({ t, c }), thr = (t, V, P) => E(t, offsetThrough(t, g, L(V), L(P)));
+    switch (name) {
+      case 'carnot': { const Vc = nR * p.Tc / Pref, Vd = Vc / (p.ratio || 2);
+        return [E('T', L(nR * p.Th)), thr('S', Vc, Pref), E('T', L(nR * p.Tc)), thr('S', Vd, nR * p.Tc / Vd)]; }
+      case 'otto': { const V2 = V1 / p.r; return [thr('S', V1, P1), E('V', L(V2)), thr('S', V2, nR * p.T3 / V2), E('V', L(V1))]; }
+      case 'diesel': { const V2 = V1 / p.r, P2 = P1 * Math.pow(p.r, g), V3 = p.rc * V2;
+        return [thr('S', V1, P1), E('P', L(P2)), thr('S', V3, P2), E('V', L(V1))]; }
+      case 'stirling': { const Va = nR * p.Tc / Pref; return [E('T', L(nR * p.Tc)), E('V', L(Va / p.r)), E('T', L(nR * p.Th)), E('V', L(Va))]; }
+      case 'brayton': { const P2 = P1 * p.rp, V3 = nR * p.T3 / P2; return [thr('S', V1, P1), E('P', L(P2)), thr('S', V3, P2), E('P', L(P1))]; }
+      case 'rect': return [E('P', L(p.Ph)), E('V', L(n * p.Vb)), E('P', L(p.Pl)), E('V', L(n * p.Va))];
+      case 'own': return [E('P', L(3e5)), E('V', L(n * 0.02)), E('T', L(nR * 300))];
+    }
+    return null;
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.HE = { R, Pref, Tref, kOf, offsetThrough, meet, corners, temp, entropy, legEnergy, summary, eff, build };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const NAME = { T: 'Isothermal', S: 'Adiabatic', P: 'Isobaric', V: 'Isochoric' };
+  const GAM = { mono: 5 / 3, di: 7 / 5 };
+
+  const CYC = {
+    carnot: { label: 'Carnot', types: 'TSTS', def: { Th: 500, Tc: 300 },
+      notes: ['touching the hot reservoir', 'insulated', 'touching the cold reservoir', 'insulated'],
+      hint: 'Two isotherms joined by two adiabats. Drag the top leg to change T<sub>h</sub> and the bottom leg to change T<sub>c</sub>; dragging a corner slides its neighbors along their curves.' },
+    otto: { label: 'Otto', types: 'SVSV', def: { r: 8, T3: 1800 },
+      notes: ['compression stroke', 'combustion', 'power stroke', 'exhaust and intake'],
+      hint: '1→2 compression stroke, 2→3 the spark burns the fuel so fast that the volume barely changes, 3→4 power stroke, 4→1 exhaust and fresh intake, modeled as cooling at constant volume. Drag leg 2→3 sideways to change r.' },
+    diesel: { label: 'Diesel', types: 'SPSV', def: { r: 15, rc: 2 },
+      notes: ['compression stroke', 'fuel injected and burning', 'power stroke', 'exhaust and intake'],
+      hint: 'Fuel is sprayed in at the top of the stroke and burns as the piston starts back out, so the heat comes in at about constant pressure. Drag leg 2→3 up or down to change r, or the adiabat 3→4 to change the cutoff ratio r<sub>c</sub> = V₃/V₂.' },
+    stirling: { label: 'Stirling', types: 'TVTV', def: { Th: 600, Tc: 300, r: 3 },
+      notes: ['in the cold space', 'gas pushed through the regenerator', 'in the hot space', 'gas pushed back through the regenerator'],
+      hint: 'Two isotherms joined by two constant volume legs. The regenerator is a metal mesh the gas passes through: on 4→1 the hot gas warms the mesh, and on 2→3 the mesh hands the same heat back to the cold gas.' },
+    brayton: { label: 'Brayton', types: 'SPSP', def: { rp: 8, T3: 1300 },
+      notes: ['compressor', 'combustor', 'turbine', 'exhaust (heat given off)'],
+      hint: 'A gas turbine or jet engine: compressor, combustion at constant pressure, turbine, and the exhaust cooling at constant pressure. Drag leg 2→3 up or down to change the pressure ratio r<sub>p</sub>.' },
+    rect: { label: 'Rectangle', types: 'PVPV', def: { Ph: 2.5e5, Pl: 1e5, Va: 0.012, Vb: 0.03 },
+      notes: null,
+      hint: 'Two constant pressure legs and two constant volume legs. No work is done on the vertical legs, so W<sub>net</sub> = (P<sub>high</sub> − P<sub>low</sub>)(V<sub>max</sub> − V<sub>min</sub>), the area of the rectangle. Drag its sides or corners.' },
+    own: { label: 'Your own', types: null, def: {},
+      notes: null,
+      hint: 'Drag corners or leg grips, pick each leg’s process under Energy per leg, and add or remove corners. Neighboring legs need different processes, because each corner is where two different curves cross.' }
+  };
+
+  const PRESETS = {
+    carnot: { cycle: 'carnot', gas: 'mono', dir: 1, p: { Th: 500, Tc: 300 },
+      hint: 'Heat enters only at T<sub>h</sub> and leaves only at T<sub>c</sub>, so η equals the Carnot limit 1 − T<sub>c</sub>/T<sub>h</sub>. On the T–S diagram the cycle is a rectangle: the area under the top edge is Q<sub>in</sub>, under the bottom edge Q<sub>out</sub>.' },
+    otto: { cycle: 'otto', gas: 'di', dir: 1, p: { r: 8, T3: 1800 },
+      hint: 'The gasoline engine as an air standard cycle. Its efficiency η = 1 − r<sup>1−γ</sup> depends only on the compression ratio r. Raise r and watch η climb, though it stays well below the Carnot limit for its 300 K to 1800 K span.' },
+    diesel: { cycle: 'diesel', gas: 'di', dir: 1, p: { r: 15, rc: 2 },
+      hint: 'A Diesel squeezes the air so hard (r = 15 here) that the fuel ignites on its own, which is why Diesels beat gasoline engines. At the same r it is less efficient than an Otto: set r = 8 and compare.' },
+    stirling: { cycle: 'stirling', gas: 'mono', dir: 1, p: { Th: 600, Tc: 300, r: 3 }, regen: true,
+      hint: 'With an ideal regenerator, the heat given off on 4→1 is handed back on 2→3, so the only heat from outside arrives at T<sub>h</sub>: η equals the Carnot limit. Turn the regenerator off and that heat must come from the hot side too, and η drops.' },
+    fridge: { cycle: 'carnot', gas: 'mono', dir: -1, p: { Th: 320, Tc: 250 },
+      hint: 'The Carnot cycle run counterclockwise. Work goes in, heat is pulled from the cold side at T<sub>c</sub> and dumped on the hot side at T<sub>h</sub>. The coefficient of performance COP = Q<sub>c</sub>/W = T<sub>c</sub>/(T<sub>h</sub> − T<sub>c</sub>) can be much larger than 1.' },
+    own: { cycle: 'own', gas: 'mono', dir: 1, p: {},
+      hint: 'A start: expand at constant pressure, cool at constant volume, then squeeze back along an isotherm. Drag the corners, change any leg’s process, or add corners. The table shows the first law on every leg.' }
+  };
+
+  // ---------- state ----------
+  const S = { preset: 'carnot', cycle: 'carnot', g: GAM.mono, gas: 'mono', n: 1, dir: 1, regen: true, edges: [], signs: [], speed: 1,
+    iso: true, adi: false, under: true, mol: true };
+  let ax = { V: 0.03, P: 1e6 };
+  let vs = null, sum = null, phase = 0.0, playing = !reduce, selCorner = 0;
+  const LEG_DUR = 1.8;
+  const nR = () => S.n * R;
+  const gam = () => S.g;
+
+  // sliders for each standard cycle: get from the edges, set into the edges, and (edge) the leg whose grip drives it
+  const SL = {
+    carnot: [
+      { key: 'Th', label: 'Hot temperature T<sub>h</sub>', min: 300, max: 1200, step: 10, fmt: (v) => `${v.toFixed(0)} K`, edge: 0,
+        get: (E) => Math.exp(E[0].c) / nR(), set: (E, v) => { E[0].c = Math.log(nR() * v); }, from: (x, y) => Math.exp(x + y) / nR() },
+      { key: 'Tc', label: 'Cold temperature T<sub>c</sub>', min: 150, max: 600, step: 10, fmt: (v) => `${v.toFixed(0)} K`, edge: 2,
+        get: (E) => Math.exp(E[2].c) / nR(), set: (E, v) => { E[2].c = Math.log(nR() * v); }, from: (x, y) => Math.exp(x + y) / nR() }
+    ],
+    otto: [
+      { key: 'r', label: 'Compression ratio r = V₁/V₂', min: 2, max: 12, step: 0.1, fmt: (v) => v.toFixed(1), edge: 1,
+        get: (E) => Math.exp(E[3].c - E[1].c), set: (E, v) => { E[1].c = E[3].c - Math.log(v); }, from: (x, y, E) => Math.exp(E[3].c - x) }
+    ],
+    diesel: [
+      { key: 'r', label: 'Compression ratio r = V₁/V₂', min: 4, max: 22, step: 0.5, fmt: (v) => v.toFixed(1), edge: 1,
+        get: (E) => Math.exp(E[3].c - meet(E[0], E[1], gam())[0]),
+        set: (E, v) => { const rc = dieselRc(E), x2 = E[3].c - Math.log(v), y2 = E[0].c - gam() * x2; E[1].c = y2; E[2].c = y2 + gam() * (x2 + Math.log(rc)); },
+        from: (x, y, E) => Math.exp(E[3].c - (E[0].c - y) / gam()) },
+      { key: 'rc', label: 'Cutoff ratio r<sub>c</sub> = V₃/V₂', min: 1.1, max: 4, step: 0.05, fmt: (v) => v.toFixed(2), edge: 2,
+        get: (E) => dieselRc(E),
+        set: (E, v) => { const v1 = meet(E[0], E[1], gam()); E[2].c = v1[1] + gam() * (v1[0] + Math.log(v)); },
+        from: (x, y, E) => { const c = y + gam() * x, x3 = (c - E[1].c) / gam(), v1 = meet(E[0], E[1], gam()); return Math.exp(x3 - v1[0]); } }
+    ],
+    stirling: [
+      { key: 'Th', label: 'Hot temperature T<sub>h</sub>', min: 300, max: 1000, step: 10, fmt: (v) => `${v.toFixed(0)} K`, edge: 2,
+        get: (E) => Math.exp(E[2].c) / nR(), set: (E, v) => { E[2].c = Math.log(nR() * v); }, from: (x, y) => Math.exp(x + y) / nR() },
+      { key: 'Tc', label: 'Cold temperature T<sub>c</sub>', min: 150, max: 500, step: 10, fmt: (v) => `${v.toFixed(0)} K`, edge: 0,
+        get: (E) => Math.exp(E[0].c) / nR(), set: (E, v) => { E[0].c = Math.log(nR() * v); }, from: (x, y) => Math.exp(x + y) / nR() },
+      { key: 'r', label: 'Volume ratio r = V<sub>max</sub>/V<sub>min</sub>', min: 1.5, max: 6, step: 0.1, fmt: (v) => v.toFixed(1), edge: 1,
+        get: (E) => Math.exp(E[3].c - E[1].c), set: (E, v) => { E[1].c = E[3].c - Math.log(v); }, from: (x, y, E) => Math.exp(E[3].c - x) }
+    ],
+    brayton: [
+      { key: 'rp', label: 'Pressure ratio r<sub>p</sub> = P₂/P₁', min: 2, max: 20, step: 0.5, fmt: (v) => v.toFixed(1), edge: 1,
+        get: (E) => Math.exp(E[1].c - E[3].c), set: (E, v) => { E[1].c = E[3].c + Math.log(v); }, from: (x, y, E) => Math.exp(y - E[3].c) }
+    ],
+    rect: [], own: []
+  };
+  function dieselRc(E) { const g = gam(), v1 = meet(E[0], E[1], g), v2 = meet(E[1], E[2], g); return Math.exp(v2[0] - v1[0]); }
+  const defs = () => SL[S.cycle] || [];
+  const snap = (d, v) => { v = Math.max(d.min, Math.min(d.max, v)); v = d.min + Math.round((v - d.min) / d.step) * d.step; return +v.toFixed(6); };
+  const regenSet = () => (S.cycle === 'stirling' && S.regen ? new Set([1, 3]) : null);
+
+  // ---------- validity of a set of edges ----------
+  function segX(a, b, c, d) {   // proper crossing of segments ab and cd in the log plane
+    const o = (p, q, r) => (q.x - p.x) * (r.y - p.y) - (q.y - p.y) * (r.x - p.x);
+    const d1 = o(c, d, a), d2 = o(c, d, b), d3 = o(a, b, c), d4 = o(a, b, d);
+    return ((d1 > 0) !== (d2 > 0)) && ((d3 > 0) !== (d4 > 0)) && d1 !== 0 && d2 !== 0 && d3 !== 0 && d4 !== 0;
+  }
+  function signsOf(E, v) { const N = E.length; return E.map((e, k) => { const a = v[k], b = v[(k + 1) % N]; return Math.sign(e.t === 'V' ? b.y - a.y : b.x - a.x); }); }
+  function check(E, opt) {
+    const N = E.length, g = S.g;
+    for (let k = 0; k < N; k++) if (E[k].t === E[(k + 1) % N].t) return null;
+    const v = corners(E, g); if (!v) return null;
+    for (let k = 0; k < N; k++) {
+      const a = v[k], b = v[(k + 1) % N];
+      if (Math.hypot(b.x - a.x, b.y - a.y) < 0.04) return null;
+      if (opt.range) {
+        if (a.V < 0.004 * ax.V || a.V > 0.985 * ax.V || a.P < 0.004 * ax.P || a.P > 0.985 * ax.P) return null;
+      } else if (a.V < 1e-5 || a.V > 20 || a.P < 2e3 || a.P > 5e8) return null;
+    }
+    if (opt.signs) { const s = signsOf(E, v); for (let k = 0; k < N; k++) if (s[k] !== S.signs[k]) return null; }
+    for (let i = 0; i < N; i++) for (let j = i + 2; j < N; j++) {
+      if (i === 0 && j === N - 1) continue;
+      if (segX(v[i], v[(i + 1) % N], v[j], v[(j + 1) % N])) return null;
+    }
+    if (opt.params) for (const d of defs()) { const p = d.get(E); if (!(p >= d.min - 1e-6 && p <= d.max + 1e-6)) return null; }
+    return v;
+  }
+  const copyE = (E) => E.map((e) => ({ t: e.t, c: e.c }));
+  // take the new edges if they are valid, else go as far toward them as stays valid
+  function applyEdges(En, opt) {
+    if (check(En, opt)) { S.edges = En; recompute(); return true; }
+    const E0 = S.edges; if (E0.length !== En.length || !E0.every((e, k) => e.t === En[k].t)) return false;
+    let lo = 0, hi = 1;
+    const at = (t) => E0.map((e, k) => ({ t: e.t, c: e.c + (En[k].c - e.c) * t }));
+    for (let i = 0; i < 14; i++) { const m = 0.5 * (lo + hi); if (check(at(m), opt)) lo = m; else hi = m; }
+    if (lo <= 0) return false;
+    S.edges = at(lo); recompute(); return true;
+  }
+  const DRAG_OPT = { range: true, signs: true, params: true };
+  const LOOSE = { range: false, signs: false, params: false };
+
+  // ---------- recompute and axes ----------
+  function recompute() {
+    vs = corners(S.edges, S.g);
+    sum = summary(S.edges, vs, S.g, S.n, S.dir, regenSet());
+    tsCache = null;
+  }
+  function niceUp(v) { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; for (const s of [1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (m <= s + 1e-9) return s * p; return 10 * p; }
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  function fitAxes() {
+    let mv = 0, mp = 0; for (const v of vs) { mv = Math.max(mv, v.V); mp = Math.max(mp, v.P); }
+    ax = { V: niceUp(mv * 1.1), P: niceUp(mp * 1.1) };
+  }
+  function structural() {   // after a new shape: remember the leg directions, refit, rebuild the tables
+    recompute(); S.signs = signsOf(S.edges, vs); fitAxes();
+    selCorner = Math.min(selCorner, S.edges.length - 1);
+    phase = Math.min(phase, S.edges.length - 1e-6);
+    buildParams(); buildLegs(); refresh();
+  }
+
+  // ---------- formatting ----------
+  const minus = (s) => s.replace(/^-/, '−');
+  function sig(x, n = 3) {
+    if (!isFinite(x)) return '—';
+    if (Math.abs(x) < 1e-9) return '0';
+    const d = Math.max(0, Math.min(6, n - 1 - Math.floor(Math.log10(Math.abs(x)))));
+    return minus(x.toFixed(d));
+  }
+  const kJ = () => (sum && sum.scale >= 1000);
+  function fE(J, signed = true) {
+    const sc = kJ() ? 1000 : 1, tiny = 1e-7 * Math.max(1, sum ? sum.scale : 1);
+    if (Math.abs(J) < tiny) return '0';
+    const s = sig(J / sc, 3);
+    return signed && J > 0 ? '+' + s : s;
+  }
+  const eUnit = () => (kJ() ? 'kJ' : 'J');
+  const fP = (Pa) => (Pa >= 1e5 ? (Pa / 1e3).toFixed(0) : sig(Pa / 1e3, 3));
+  const fV = (m3) => sig(m3 * 1e3, 3);
+  const fT = (T) => `${T.toFixed(0)} K`;
+  const pct = (x) => `${(100 * x).toFixed(1)}%`;
+
+  // ---------- rail: sliders ----------
+  function buildParams() {
+    const box = $('params'); box.innerHTML = '';
+    for (const d of defs()) {
+      const wrap = document.createElement('div');
+      wrap.innerHTML = `<div class="slider-head"><label for="p_${d.key}">${d.label}</label><output id="o_${d.key}" class="mono" for="p_${d.key}"></output></div>
+        <input type="range" id="p_${d.key}" min="${d.min}" max="${d.max}" step="${d.step}">`;
+      box.appendChild(wrap);
+      const inp = wrap.querySelector('input');
+      inp.addEventListener('input', () => {
+        const E = copyE(S.edges); d.set(E, snap(d, +inp.value));
+        if (applyEdges(E, { range: false, signs: true, params: true })) { fitAxes(); }
+        refresh();
+      });
+    }
+    $('regenRow').hidden = S.cycle !== 'stirling';
+    $('cycleHint').innerHTML = CYC[S.cycle].hint;
+    syncSliders();
+  }
+  function syncSliders() {
+    for (const d of defs()) {
+      const v = d.get(S.edges), inp = $('p_' + d.key), out = $('o_' + d.key); if (!inp) continue;
+      inp.value = String(Math.max(d.min, Math.min(d.max, v)));
+      out.textContent = d.fmt(v);
+    }
+  }
+
+  // ---------- rail: energy per leg ----------
+  let legSig = '';
+  function buildLegs() {
+    const N = S.edges.length, box = $('legs');
+    legSig = S.edges.map((e) => e.t).join('') + S.dir + S.cycle + S.regen;
+    let h = `<div class="lrow lhead"><span id="eu">${eUnit()}</span><span>Q</span><span>W</span><span>ΔU</span></div>`;
+    for (const L of sum.legs) {
+      const prev = S.edges[(L.k - 1 + N) % N].t, next = S.edges[(L.k + 1) % N].t;
+      const opts = ['T', 'S', 'P', 'V'].map((t) => `<option value="${t}"${t === L.t ? ' selected' : ''}${t !== L.t && (t === prev || t === next) ? ' disabled' : ''}>${NAME[t]}</option>`).join('');
+      h += `<div class="leg" data-i="${L.i}"><div class="lname"><i></i><b>${L.ia + 1}→${L.ib + 1}</b><select data-k="${L.k}" aria-label="Process for leg ${L.ia + 1} to ${L.ib + 1}">${opts}</select><span class="word"></span></div>
+        <div class="lrow"><span></span><span class="q"></span><span class="w"></span><span class="u"></span></div></div>`;
+    }
+    h += `<div class="leg tot"><div class="lrow"><span>Cycle</span><span class="q"></span><span class="w"></span><span class="u"></span></div></div>`;
+    box.innerHTML = h;
+    box.querySelectorAll('select').forEach((s) => s.addEventListener('change', () => setLegType(+s.dataset.k, s.value, s)));
+    $('addC').disabled = N >= 6; $('delC').disabled = N <= 3;
+    $('delC').textContent = `Remove corner ${selCorner + 1}`;
+    lastNow = -1;
+  }
+  function legWord(L) {
+    const dV = L.b.V - L.a.V, dT = L.T2 - L.T1;
+    if (L.t === 'T') return `${dV > 0 ? 'expansion' : 'compression'} at ${fT(L.T1)}`;
+    if (L.t === 'S') return dV > 0 ? 'expansion' : 'compression';
+    if (L.t === 'P') return dV > 0 ? 'expansion, heating' : 'compression, cooling';
+    return dT > 0 ? 'heating' : 'cooling';
+  }
+  const legColor = (L) => (L.regen ? T.equi : L.side > 0 ? T.pos : L.side < 0 ? T.neg : T.ink);
+  function legNote(L) { const c = CYC[S.cycle]; if (!c.notes || S.dir < 0) return ''; if (S.cycle === 'stirling' && !S.regen && L.k % 2) return ''; return c.notes[L.k]; }
+  function updateLegs() {
+    const box = $('legs'); const rows = box.querySelectorAll('.leg[data-i]');
+    $('eu').textContent = eUnit();
+    sum.legs.forEach((L, i) => {
+      const r = rows[i]; if (!r) return;
+      r.querySelector('.q').textContent = fE(L.Q); r.querySelector('.w').textContent = fE(L.W); r.querySelector('.u').textContent = fE(L.dU);
+      r.querySelector('.word').textContent = legWord(L) + (L.regen ? ', regenerator' : '');
+      r.querySelector('i').style.borderTopColor = legColor(L);
+    });
+    const tot = box.querySelector('.tot');
+    tot.querySelector('.q').textContent = fE(sum.Qnet); tot.querySelector('.w').textContent = fE(sum.Wnet); tot.querySelector('.u').textContent = fE(sum.dU);
+    const m = sum.mism, rel = m / Math.max(sum.scale, 1e-30);
+    $('check').innerHTML = `First law ΔU = Q − W on every leg: largest mismatch ${m < 1e-9 ? 'below 10⁻⁹ J' : sig(m, 2) + ' J'} (${rel < 1e-12 ? 'rounding only' : sig(rel, 2) + ' of the largest term'}).<br>Around the cycle ΔU = 0, so W<sub>net</sub> = Q<sub>net</sub> = ${fE(sum.Wnet)} ${eUnit()}.`;
+  }
+  let lastNow = -1;
+  function markNow(i) {
+    if (i === lastNow) return; lastNow = i;
+    $('legs').querySelectorAll('.leg[data-i]').forEach((r) => r.classList.toggle('now', +r.dataset.i === i));
+  }
+
+  // ---------- rail: efficiency, corners ----------
+  function updateEff() {
+    const s = sum, g = S.g, out = $('effOut');
+    const Thot = s.Tmax, Tcold = s.Tmin;
+    let f = '', hint = '';
+    if (s.engine) {
+      $('effTitle').textContent = 'Efficiency';
+      const eta = s.Wnet / s.Qin, lim = 1 - Tcold / Thot;
+      out.innerHTML = `<div class="big"><dt>η = W<sub>net</sub>/Q<sub>in</sub></dt><dd>${pct(eta)}</dd></div>
+        <div class="big"><dt>Carnot limit 1 − T<sub>min</sub>/T<sub>max</sub></dt><dd>${pct(lim)}</dd></div>
+        <div><dt>Q<sub>in</sub> from the hot side</dt><dd>${fE(s.Qin, false)} ${eUnit()}</dd></div>
+        <div><dt>Q<sub>out</sub> to the cold side</dt><dd>${fE(s.Qout, false)} ${eUnit()}</dd></div>
+        <div><dt>W<sub>net</sub> = Q<sub>in</sub> − Q<sub>out</sub></dt><dd>${fE(s.Wnet, false)} ${eUnit()}</dd></div>
+        <div><dt>T<sub>min</sub> to T<sub>max</sub></dt><dd>${Tcold.toFixed(0)} to ${fT(Thot)}</dd></div>`;
+      const p = {}; for (const d of defs()) p[d.key] = d.get(S.edges);
+      const fr = (x) => (Math.abs(x - eta) < 5e-4 ? `, the same as W/Q<sub>in</sub>` : '');
+      const gs = S.gas === 'mono' ? '5/3' : '7/5';
+      if (S.cycle === 'carnot') { const e = eff.carnot(p.Th, p.Tc); f = `Carnot: η = 1 − T<sub>c</sub>/T<sub>h</sub> = 1 − ${p.Tc.toFixed(0)}/${p.Th.toFixed(0)} = ${pct(e)}${fr(e)}`; }
+      else if (S.cycle === 'otto') { const e = eff.otto(p.r, g); f = `Otto: η = 1 − r<sup>1−γ</sup> = 1 − ${p.r.toFixed(2)}<sup>1−${gs}</sup> = ${pct(e)}${fr(e)}`; }
+      else if (S.cycle === 'diesel') { const e = eff.diesel(p.r, p.rc, g); f = `Diesel: η = 1 − r<sup>1−γ</sup> (r<sub>c</sub><sup>γ</sup> − 1)/(γ(r<sub>c</sub> − 1)) with r = ${p.r.toFixed(2)}, r<sub>c</sub> = ${p.rc.toFixed(2)}: ${pct(e)}${fr(e)}. An Otto at the same r: ${pct(eff.otto(p.r, g))}.`; }
+      else if (S.cycle === 'brayton') { const e = eff.brayton(p.rp, g); f = `Brayton: η = 1 − r<sub>p</sub><sup>(1−γ)/γ</sup> = ${pct(e)}${fr(e)}`; }
+      else if (S.cycle === 'stirling') { const e = eff.stirling(p.Th, p.Tc, p.r, g, S.regen);
+        f = S.regen ? `Stirling with regenerator: η = 1 − T<sub>c</sub>/T<sub>h</sub> = ${pct(e)}${fr(e)}` : `Stirling, no regenerator: η = (T<sub>h</sub> − T<sub>c</sub>) ln r / (T<sub>h</sub> ln r + (T<sub>h</sub> − T<sub>c</sub>)/(γ − 1)) = ${pct(e)}${fr(e)}`; }
+      else if (S.cycle === 'rect') f = `Rectangle: W<sub>net</sub> = ΔP ΔV = ${fE((vs[0].P - vs[2].P) * (vs[1].V - vs[0].V), false)} ${eUnit()}`;
+      const atLimit = Math.abs(eta - lim) < 5e-4;
+      hint = atLimit
+        ? 'This cycle reaches the Carnot limit: every bit of heat comes in at the hottest temperature and leaves at the coldest one.'
+        : `η is the share of the heat taken in that comes out as work. The rest, Q<sub>out</sub>, has to be given off: it carries away the entropy the gas took in. This cycle takes in heat between ${s.TinMin.toFixed(0)} and ${fT(s.TinMax)} and gives it off between ${s.ToutMin.toFixed(0)} and ${fT(s.ToutMax)}, not all at the extremes, so it falls short of the Carnot limit.`;
+    } else {
+      $('effTitle').textContent = 'Coefficient of performance';
+      const Win = -s.Wnet, copR = s.Qin / Win, copH = s.Qout / Win;
+      const Tc = s.TinMax, Th = s.ToutMin;   // the cold side must be at least as warm as the gas while it gives heat, the hot side no warmer than the gas while it takes heat
+      const ok = Th > Tc + 1e-9;
+      out.innerHTML = `<div class="big"><dt>Refrigerator COP = Q<sub>c</sub>/W<sub>in</sub></dt><dd>${sig(copR, 3)}</dd></div>
+        <div class="big"><dt>Heat pump COP = Q<sub>h</sub>/W<sub>in</sub></dt><dd>${sig(copH, 3)}</dd></div>
+        <div><dt>Q<sub>c</sub> from the cold side</dt><dd>${fE(s.Qin, false)} ${eUnit()}</dd></div>
+        <div><dt>Q<sub>h</sub> to the hot side</dt><dd>${fE(s.Qout, false)} ${eUnit()}</dd></div>
+        <div><dt>W<sub>in</sub> = Q<sub>h</sub> − Q<sub>c</sub></dt><dd>${fE(Win, false)} ${eUnit()}</dd></div>
+        <div><dt>Carnot COP, T<sub>c</sub>/(T<sub>h</sub> − T<sub>c</sub>)</dt><dd>${ok ? sig(Tc / (Th - Tc), 3) : '—'}</dd></div>`;
+      f = ok ? `Best reservoirs this cycle could serve: T<sub>c</sub> = ${fT(Tc)} (the warmest the gas gets while taking in heat) and T<sub>h</sub> = ${fT(Th)} (the coolest it gets while giving heat off).` : '';
+      hint = ok
+        ? (Math.abs(copR - Tc / (Th - Tc)) < 5e-4 * copR ? 'Run backward, the Carnot cycle is the best possible refrigerator between its two temperatures. Note COP<sub>heat pump</sub> = COP<sub>refrigerator</sub> + 1, because Q<sub>h</sub> = Q<sub>c</sub> + W.' : 'COP<sub>heat pump</sub> = COP<sub>refrigerator</sub> + 1, because Q<sub>h</sub> = Q<sub>c</sub> + W. Only the reversed Carnot cycle reaches the Carnot COP.')
+        : `Run backward, this cycle takes in heat while the gas is as warm as ${fT(Tc)} and gives heat off while it is as cool as ${fT(Th)}. No pair of fixed reservoirs fits that, so it cannot work as a refrigerator between a cold space and a warmer room. A refrigerator must take its heat in where the gas is coldest, as the reversed Carnot cycle does.`;
+    }
+    $('formula').innerHTML = f; $('formula').hidden = !f;
+    $('effHint').innerHTML = hint;
+  }
+  function updateCorners() {
+    let h = `<div class="crow head"><span>#</span><span>P (kPa)</span><span>V (L)</span><span>T (K)</span></div>`;
+    vs.forEach((v, j) => { h += `<div class="crow"${j === selCorner ? ' style="color: var(--accent)"' : ''}><span>${j + 1}</span><span>${fP(v.P)}</span><span>${fV(v.V)}</span><span>${temp(v.P, v.V, S.n).toFixed(0)}</span></div>`; });
+    $('corners').innerHTML = h;
+    const Sv = vs.map((v) => entropy(temp(v.P, v.V, S.n), v.V, S.n, S.g));
+    const dS = Math.abs(sum.dS);
+    $('sCheck').innerHTML = `Entropy at the corners: ${Sv.map((x) => sig(x, 3)).join(', ')} J/K. Summing ΔS over the legs gives ${dS < 1e-12 ? 'zero to rounding' : sig(sum.dS, 2) + ' J/K'}: S is a state function, so it returns to its starting value.`;
+    $('lgLo').textContent = fT(sum.Tmin); $('lgHi').textContent = fT(sum.Tmax);
+  }
+  function refresh() {
+    const sg = S.edges.map((e) => e.t).join('') + S.dir + S.cycle + S.regen;
+    if (sg !== legSig) buildLegs();
+    updateLegs(); updateEff(); updateCorners(); syncSliders();
+    $('delC').textContent = `Remove corner ${selCorner + 1}`;
+    curLegCache = -1; dirty = true;
+  }
+  let dirty = true;
+
+  // ---------- changing the cycle ----------
+  function pressed(container, attr, val) { document.querySelectorAll(`#${container} button`).forEach((b) => b.setAttribute('aria-pressed', String(b.dataset[attr] === String(val)))); }
+  function setCycle(name, params) {
+    S.cycle = name;
+    const p = Object.assign({}, CYC[name].def, params || {});
+    S.edges = build(name, p, S.n, S.g);
+    pressed('cycles', 'c', name);
+    phase = 0; structural();
+  }
+  function applyPreset(key) {
+    const P = PRESETS[key]; S.preset = key;
+    S.gas = P.gas; S.g = GAM[P.gas]; S.dir = P.dir; S.regen = P.regen !== undefined ? P.regen : true; $('regen').checked = S.regen;
+    pressed('presets', 'p', key); pressed('gasSeg', 'g', P.gas); pressed('dirSeg', 'd', P.dir);
+    $('presetHint').innerHTML = P.hint;
+    setCycle(P.cycle, P.p);
+  }
+  function clearPreset() { S.preset = null; pressed('presets', 'p', '__'); $('presetHint').textContent = 'Your changes. Pick a setup to start over.'; }
+  function toOwn() { if (S.cycle !== 'own') { S.cycle = 'own'; pressed('cycles', 'c', 'own'); clearPreset(); } }
+  function flag(msg) { const f = $('legFlag'); f.textContent = msg; f.hidden = false; clearTimeout(flag.t); flag.t = setTimeout(() => { f.hidden = true; }, 5000); }
+  function setLegType(k, t, sel) {
+    const N = S.edges.length, E = S.edges, v = vs;
+    const a = v[k], b = v[(k + 1) % N], m = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+    for (const p of [a, b, m]) {
+      const E2 = copyE(E); E2[k] = { t, c: offsetThrough(t, S.g, p.x, p.y) };
+      if (check(E2, LOOSE)) { S.edges = E2; toOwn(); structural(); return; }
+    }
+    if (sel) sel.value = E[k].t;
+    flag('That process cannot close the cycle from here. Move a corner first, or change a neighboring leg.');
+  }
+  function addCorner() {
+    const N = S.edges.length; if (N >= 6) return;
+    const j = selCorner, E = S.edges, v = vs, pv = v[(j - 1 + N) % N], nx = v[(j + 1) % N], c = v[j];
+    const types = ['T', 'S', 'P', 'V'].filter((t) => t !== E[(j - 1 + N) % N].t && t !== E[j].t);
+    for (const f of [0.4, 0.55, 0.25, 0.7]) for (const from of [pv, nx]) for (const t of types) {
+      const p = { x: c.x + (from.x - c.x) * f, y: c.y + (from.y - c.y) * f };
+      const E2 = [...copyE(E.slice(0, j)), { t, c: offsetThrough(t, S.g, p.x, p.y) }, ...copyE(E.slice(j))];
+      if (check(E2, LOOSE)) { S.edges = E2; toOwn(); selCorner = j + 1; structural(); return; }
+    }
+    flag('No new corner fits here. Pick another corner first.');
+  }
+  function removeCorner() {
+    const N = S.edges.length; if (N <= 3) return;
+    const j = selCorner;
+    for (const m of [j, (j - 1 + N) % N]) {
+      const E2 = copyE(S.edges.filter((_, i) => i !== m));
+      if (check(E2, LOOSE)) { S.edges = E2; toOwn(); selCorner = Math.min(j, N - 2); structural(); return; }
+    }
+    flag('Removing that corner would leave two neighboring legs of the same process, or a tangled loop. Change a leg’s process first.');
+  }
+  function setGas(key) {
+    if (GAM[key] === S.g) return;
+    const old = copyE(S.edges), v0 = vs, gNew = GAM[key];
+    const params = {}; for (const d of defs()) params[d.key] = d.get(old);
+    S.gas = key; S.g = gNew; pressed('gasSeg', 'g', key);
+    // each adiabat is redrawn through its starting corner, then the cycle's own ratios are restored
+    let E = old.map((e, k) => (e.t === 'S' ? { t: 'S', c: offsetThrough('S', gNew, v0[k].x, v0[k].y) } : e));
+    for (const d of defs()) d.set(E, params[d.key]);
+    if (!check(E, LOOSE)) E = build(S.cycle, Object.assign({}, CYC[S.cycle].def, params), S.n, gNew) || E;
+    if (!check(E, LOOSE)) E = build(S.cycle === 'own' ? 'own' : S.cycle, CYC[S.cycle].def, S.n, gNew);
+    S.edges = E; clearPreset(); structural();
+  }
+  function setN(nNew) {
+    const f = nNew / S.n; if (Math.abs(f - 1) < 1e-12) return;
+    // the same temperatures and pressures with f times the gas: every volume scales by f
+    S.edges = S.edges.map((e) => ({ t: e.t, c: e.c + (e.t === 'V' ? 1 : kOf(e.t, S.g)) * Math.log(f) }));
+    S.n = nNew; $('nOut').textContent = `${nNew.toFixed(2)} mol`;
+    structural();
+  }
+  function setDir(d) { S.dir = d; pressed('dirSeg', 'd', d); clearPreset(); phase = 0; structural(); }
+
+  // ---------- canvas ----------
+  let T = null, dpr = 1, W = 0, Hh = 0, LY = null, PS = 1;
+  const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  const isProj = () => document.documentElement.getAttribute('data-projector') === 'on';
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), work: g('--work'), steel: g('--steel'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+  }
+  function rgb(hex) { const h = hex.replace('#', ''); const v = h.length === 3 ? h.split('').map((c) => parseInt(c + c, 16)) : [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)); return v; }
+  function mix(a, b, f) { const A = rgb(a), B = rgb(b); return `rgb(${A.map((x, i) => Math.round(x + (B[i] - x) * f)).join(',')})`; }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = pane.getBoundingClientRect(); W = r.width; Hh = r.height;
+    can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(Hh * dpr));
+    can.style.width = W + 'px'; can.style.height = Hh + 'px';
+    PS = isProj() ? Math.max(1.1, Math.min(1.4, W / 800, Hh / 520)) : 1;
+    LY = layout(W, Hh); drawAll();
+  }
+  function layout(W, H) {
+    const ps = PS, cylH = Math.round(104 * ps);
+    if (W >= 680) {
+      const lw = Math.round(W * 0.6), tsH = Math.round(H * 0.55);
+      return { wide: true, pv: { x: 0, y: 0, w: lw, h: H - cylH }, cyl: { x: 0, y: H - cylH, w: lw, h: cylH },
+        ts: { x: lw, y: 0, w: W - lw, h: tsH }, flow: { x: lw, y: tsH, w: W - lw, h: H - tsH } };
+    }
+    const pvH = Math.round(H * 0.42), tsH = Math.round(H * 0.25);
+    return { wide: false, pv: { x: 0, y: 0, w: W, h: pvH }, cyl: { x: 0, y: pvH, w: W, h: cylH },
+      ts: { x: 0, y: pvH + cylH, w: W, h: tsH }, flow: { x: 0, y: pvH + cylH + tsH, w: W, h: H - pvH - cylH - tsH } };
+  }
+  function label(txt, x, y, col, align = 'left', base = 'middle', o = {}) {
+    const c = ctx, ps = PS, size = (o.size || 11) * ps;
+    c.font = `${o.bold ? '600 ' : ''}${size}px ${T.mono}`; c.textAlign = align; c.textBaseline = base;
+    const w = c.measureText(txt).width, h = size * 1.3;
+    const x0 = align === 'left' ? x : align === 'right' ? x - w : x - w / 2;
+    const y0 = base === 'middle' ? y - h / 2 : base === 'bottom' ? y - h : y;
+    if (o.halo !== false) { c.fillStyle = T.canvas; c.globalAlpha = 0.86; c.fillRect(x0 - 3, y0, w + 6, h); c.globalAlpha = 1; }
+    c.fillStyle = col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
+    return w;
+  }
+  const clampN = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  // the current state along the cycle
+  function stateAt(ph) {
+    const N = sum.legs.length, i = Math.min(N - 1, Math.floor(ph)), s = ph - i, L = sum.legs[i];
+    const x = L.a.x + (L.b.x - L.a.x) * s, y = L.a.y + (L.b.y - L.a.y) * s, V = Math.exp(x), P = Math.exp(y);
+    return { i, s, L, V, P, T: temp(P, V, S.n) };
+  }
+  function legPts(L, m = 64, s1 = 1) {   // points along a leg, in order of travel, up to fraction s1
+    const out = [];
+    for (let j = 0; j <= m; j++) { const s = s1 * j / m, x = L.a.x + (L.b.x - L.a.x) * s, y = L.a.y + (L.b.y - L.a.y) * s, V = Math.exp(x), P = Math.exp(y); out.push({ V, P, T: temp(P, V, S.n) }); }
+    return out;
+  }
+  let G = null, legPx = [];   // PV geometry and each edge's pixel polyline (for dragging)
+
+  function drawAll() {
+    if (!T || !LY || !sum) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const st = stateAt(phase);
+    drawPV(LY.pv, st);
+    drawCyl(LY.cyl, st);
+    drawTS(LY.ts, st);
+    drawFlow(LY.flow);
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath();
+    if (LY.wide) { ctx.moveTo(LY.ts.x + 0.5, 0); ctx.lineTo(LY.ts.x + 0.5, Hh); ctx.moveTo(LY.ts.x, LY.flow.y + 0.5); ctx.lineTo(W, LY.flow.y + 0.5); }
+    else { ctx.moveTo(0, LY.ts.y + 0.5); ctx.lineTo(W, LY.ts.y + 0.5); ctx.moveTo(0, LY.flow.y + 0.5); ctx.lineTo(W, LY.flow.y + 0.5); }
+    ctx.stroke();
+    ctlText(st);
+  }
+  function chevron(pts, X, Y, col, ps) {
+    const n = pts.length, j = Math.floor(n / 2), a = pts[Math.max(0, j - 2)], b = pts[Math.min(n - 1, j + 2)];
+    const x1 = X(a), y1 = Y(a), x2 = X(b), y2 = Y(b), d = Math.hypot(x2 - x1, y2 - y1); if (d < 1e-6) return;
+    const ux = (x2 - x1) / d, uy = (y2 - y1) / d, cx = X(pts[j]), cy = Y(pts[j]), s = 7 * ps;
+    ctx.fillStyle = col; ctx.beginPath();
+    ctx.moveTo(cx + ux * s, cy + uy * s); ctx.lineTo(cx - ux * s * 0.6 - uy * s * 0.75, cy - uy * s * 0.6 + ux * s * 0.75); ctx.lineTo(cx - ux * s * 0.6 + uy * s * 0.75, cy - uy * s * 0.6 - ux * s * 0.75);
+    ctx.closePath(); ctx.fill();
+  }
+  function axesFrame(L, R, Tp, B, xt, yt) {
+    const c = ctx, ps = PS;
+    c.lineWidth = 1; c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted;
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    for (const t of xt) { const px = Math.round(t.p) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(px, Tp); c.lineTo(px, B); c.stroke(); c.fillText(t.s, px, B + 5 * ps); }
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (const t of yt) { const py = Math.round(t.p) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(L, py); c.lineTo(R, py); c.stroke(); c.fillText(t.s, L - 6 * ps, py); }
+    c.strokeStyle = T.gridStrong; c.strokeRect(L + 0.5, Tp + 0.5, R - L, B - Tp);
+  }
+  function ticks(max, lo, n, f, map) { const st = nice((max - lo) / n), out = []; for (let v = Math.ceil(lo / st - 1e-9) * st; v <= max + 1e-9 * st; v += st) out.push({ p: map(v), s: f(v, st) }); return out; }
+  const tickFmt = (v, st) => { const d = Math.max(0, -Math.floor(Math.log10(st) + 1e-9)); return minus(v.toFixed(d)); };
+
+  // ---------- PV diagram ----------
+  function drawPV(box, st) {
+    const c = ctx, ps = PS;
+    const L = box.x + 58 * ps, R = box.x + box.w - 16 * ps, Tp = box.y + 34 * ps, B = box.y + box.h - 30 * ps;
+    if (R - L < 60 || B - Tp < 60) return;
+    const X = (V) => L + V / ax.V * (R - L), Y = (P) => B - P / ax.P * (B - Tp);
+    G = { L, R, T: Tp, B, X, Y, iV: (px) => (px - L) / (R - L) * ax.V, iP: (py) => (B - py) / (B - Tp) * ax.P };
+    const xt = ticks(ax.V * 1e3, 0, W < 500 ? 4 : 6, tickFmt, (v) => X(v / 1e3)), yt = ticks(ax.P / 1e3, 0, B - Tp < 220 ? 4 : 6, tickFmt, (v) => Y(v * 1e3));
+    axesFrame(L, R, Tp, B, xt, yt);
+    c.save(); c.beginPath(); c.rect(L, Tp, R - L, B - Tp); c.clip();
+    // background isotherms and adiabats
+    const isoLabels = [];
+    if (S.iso) {
+      const Tc = ax.P * ax.V / nR(), stT = nice(Math.max(sum.Tmax, 1) / 3.2);
+      c.strokeStyle = T.muted; c.lineWidth = 0.8; c.globalAlpha = 0.35;
+      for (let Tk = stT; Tk < Math.min(Tc * 0.98, sum.Tmax * 2.4); Tk += stT) {
+        const k = nR() * Tk; c.beginPath(); let first = true;
+        for (let j = 0; j <= 80; j++) { const V = (k / ax.P) * Math.pow(ax.V / (k / ax.P), j / 80), P = k / V; const px = X(V), py = Y(P); first ? c.moveTo(px, py) : c.lineTo(px, py); first = false; }
+        c.stroke();
+        const Pr = k / ax.V; if (Y(Pr) > Tp + 10 * ps && Y(Pr) < B - 8 * ps) isoLabels.push([`${Tk.toFixed(0)} K`, R - 3 * ps, Y(Pr) - 7 * ps, 'right']);
+        else { const Vt = k / ax.P; if (X(Vt) < R - 40 * ps) isoLabels.push([`${Tk.toFixed(0)} K`, X(Vt) + 4 * ps, Tp + 8 * ps, 'left']); }
+      }
+      c.globalAlpha = 1;
+    }
+    if (S.adi) {
+      const g = S.g, cs = vs.map((v) => v.y + g * v.x), c0 = Math.min(...cs), c1 = Math.max(...cs), span = Math.max(0.6, c1 - c0);
+      c.strokeStyle = T.muted; c.lineWidth = 0.8; c.globalAlpha = 0.4; c.setLineDash([2, 4]);
+      for (let j = -3; j <= 9; j++) {
+        const cc = c0 - span * 0.5 + j * span / 4; c.beginPath(); let first = true;
+        for (let q = 0; q <= 80; q++) { const V = ax.V * Math.pow(10, -1.7 * (1 - q / 80)), P = Math.exp(cc - g * Math.log(V)); const px = X(V), py = Math.max(Y(P), Tp - 2000); first ? c.moveTo(px, py) : c.lineTo(px, py); first = false; }
+        c.stroke();
+      }
+      c.setLineDash([]); c.globalAlpha = 1;
+    }
+    // net work: the enclosed area
+    const all = sum.legs.map((Lg) => legPts(Lg));
+    c.beginPath(); all.forEach((pts, i) => pts.forEach((p, j) => (i === 0 && j === 0 ? c.moveTo(X(p.V), Y(p.P)) : c.lineTo(X(p.V), Y(p.P))))); c.closePath();
+    c.fillStyle = T.work; c.globalAlpha = 0.16; c.fill(); c.globalAlpha = 1;
+    // area under the current leg: its work
+    const cur = st.L, cpts = all[st.i];
+    if (S.under && cur.t !== 'V') {
+      c.beginPath(); cpts.forEach((p, j) => (j ? c.lineTo(X(p.V), Y(p.P)) : c.moveTo(X(p.V), Y(p.P)))); c.lineTo(X(cur.b.V), B); c.lineTo(X(cur.a.V), B); c.closePath();
+      c.save(); c.clip();
+      c.strokeStyle = cur.W > 0 ? T.work : T.muted; c.globalAlpha = 0.55; c.lineWidth = 1;
+      const step = 7 * ps; c.beginPath();
+      for (let x = L - (B - Tp); x < R; x += step) { c.moveTo(x, B); c.lineTo(x + (B - Tp), Tp); }
+      c.stroke(); c.restore(); c.globalAlpha = 1;
+    }
+    // the legs, colored by where their heat goes
+    legPx = [];
+    sum.legs.forEach((Lg, i) => {
+      const pts = all[i], col = legColor(Lg), now = i === st.i;
+      c.strokeStyle = col; c.lineWidth = (now ? 3.4 : 2.2) * ps; c.lineJoin = 'round';
+      c.beginPath(); pts.forEach((p, j) => (j ? c.lineTo(X(p.V), Y(p.P)) : c.moveTo(X(p.V), Y(p.P)))); c.stroke();
+      chevron(pts, (p) => X(p.V), (p) => Y(p.P), col, ps);
+      legPx[Lg.k] = pts.map((p) => [X(p.V), Y(p.P)]);
+    });
+    c.restore();
+    // drag grips
+    for (const h of dragHandles()) {
+      const hot = (drag && drag.id === h.id) || (!drag && hoverId === h.id);
+      c.strokeStyle = T.accent;
+      if (h.kind === 'leg') {
+        const [mx, my] = h.mid, [tx, ty] = h.tan;
+        if (hot) { c.globalAlpha = 0.3; c.lineWidth = 8 * ps; c.beginPath(); h.pts.forEach((p, j) => (j ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]))); c.stroke(); c.globalAlpha = 1; }
+        // a small grip across the leg: three short bars
+        c.lineWidth = 1.5 * ps; c.globalAlpha = hot ? 1 : 0.75; c.beginPath();
+        for (let k = -1; k <= 1; k++) { const ox = mx + tx * k * 3.6 * ps - tx * 9 * ps, oy = my + ty * k * 3.6 * ps - ty * 9 * ps; c.moveTo(ox - ty * 5 * ps, oy + tx * 5 * ps); c.lineTo(ox + ty * 5 * ps, oy - tx * 5 * ps); }
+        c.stroke(); c.globalAlpha = 1;
+      } else {
+        const sel = h.j === selCorner && document.activeElement === can;
+        c.fillStyle = T.canvas; c.lineWidth = (hot ? 2.4 : 1.7) * ps;
+        c.beginPath(); c.arc(h.pt[0], h.pt[1], (hot ? 6.5 : 5) * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+        if (sel) { c.lineWidth = 1.2 * ps; c.setLineDash([3, 3]); c.beginPath(); c.arc(h.pt[0], h.pt[1], 10 * ps, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]); }
+      }
+    }
+    // state point
+    const sx = X(st.V), sy = Y(st.P), fT0 = tempFrac(st.T);
+    c.fillStyle = mix(T.neg, T.pos, fT0); c.strokeStyle = T.ink; c.lineWidth = 1.5 * ps;
+    c.beginPath(); c.arc(sx, sy, 6.5 * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+    // labels, last
+    let lastY = -1e9, lastX = -1e9;
+    for (const l of isoLabels) {
+      if (l[3] === 'right') { if (Math.abs(l[2] - lastY) < 13 * ps) continue; lastY = l[2]; }
+      else { if (Math.abs(l[1] - lastX) < 44 * ps) continue; lastX = l[1]; }
+      label(l[0], l[1], l[2], T.muted, l[3], 'middle', { size: 9.5, halo: true });
+    }
+    let cx0 = 0, cy0 = 0; vs.forEach((v) => { cx0 += X(v.V); cy0 += Y(v.P); }); cx0 /= vs.length; cy0 /= vs.length;
+    cornerLabels(all.map((pts) => pts.map((p) => [X(p.V), Y(p.P)])), [L, R, Tp, B]);
+    // net work label in the loop: at the area centroid
+    let A = 0, gx = 0, gy = 0; const poly = [].concat(...all.map((p) => p.slice(0, -1)));
+    for (let j = 0; j < poly.length; j++) { const p = poly[j], q = poly[(j + 1) % poly.length], x1 = X(p.V), y1 = Y(p.P), x2 = X(q.V), y2 = Y(q.P), cr = x1 * y2 - x2 * y1; A += cr; gx += (x1 + x2) * cr; gy += (y1 + y2) * cr; }
+    if (Math.abs(A) > 1) { gx /= 3 * A; gy /= 3 * A; } else { gx = cx0; gy = cy0; }
+    const wTxt = sum.engine ? `W net = ${fE(sum.Wnet, false)} ${eUnit()}` : `W in = ${fE(-sum.Wnet, false)} ${eUnit()}`;
+    const lx = clampN(gx, L + 70 * ps, R - 70 * ps), ly = clampN(gy, Tp + 18 * ps, B - 30 * ps);
+    label(wTxt, lx, ly - 7 * ps, T.work, 'center', 'middle', { bold: true });
+    label(sum.engine ? 'clockwise: engine' : 'counterclockwise: refrigerator', lx, ly + 8 * ps, T.work, 'center', 'middle', { size: 10 });
+    if (S.under) {
+      const wl = cur.t === 'V' ? `W ${cur.ia + 1}→${cur.ib + 1} = 0: no volume change` : `W ${cur.ia + 1}→${cur.ib + 1} = area under the leg = ${fE(cur.W)} ${eUnit()}`;
+      const xm = cur.t === 'V' ? X(cur.a.V) : (X(cur.a.V) + X(cur.b.V)) / 2;
+      c.font = `${10.5 * ps}px ${T.mono}`; const tw = c.measureText(wl).width;
+      label(wl, clampN(xm, L + tw / 2 + 4, R - tw / 2 - 4), B - 10 * ps, cur.W > 0 ? T.work : T.muted, 'center', 'middle', { size: 10.5 });
+    }
+    // titles
+    label('Pressure P (kPa)', box.x + 10 * ps, box.y + 13 * ps, T.ink, 'left', 'middle', { bold: true, halo: false });
+    const stTxt = `P = ${fP(st.P)} kPa  V = ${fV(st.V)} L  T = ${fT(st.T)}`;
+    label(stTxt, R, box.y + 13 * ps, T.ink, 'right', 'middle', { halo: false, size: box.w > 520 * ps ? 11 : 10 });
+    label('V (L)', R, B + 22 * ps, T.muted, 'right', 'middle', { halo: false, size: 10.5 });
+  }
+  // corner numbers sit outside the loop, along the bisector of the two legs that meet there
+  function cornerLabels(px, bd) {
+    const ps = PS, N = sum.legs.length, near = {};
+    sum.legs.forEach((Lg, i) => {
+      const p = px[i], m = p.length - 1, q = Math.min(4, m);
+      (near[Lg.ia] = near[Lg.ia] || {}).v = p[0]; near[Lg.ia].b = p[q];
+      (near[Lg.ib] = near[Lg.ib] || {}).a = p[m - q];
+    });
+    for (let j = 0; j < N; j++) {
+      const o = near[j]; if (!o || !o.a || !o.b) continue;
+      const [vx, vy] = o.v, u = (pt) => { const dx = pt[0] - vx, dy = pt[1] - vy, d = Math.hypot(dx, dy) || 1; return [dx / d, dy / d]; };
+      const a = u(o.a), b = u(o.b); let ox = -(a[0] + b[0]), oy = -(a[1] + b[1]); let d = Math.hypot(ox, oy);
+      if (d < 0.25) { ox = -b[1]; oy = b[0]; d = 1; }
+      ox /= d; oy /= d;
+      label(String(j + 1), clampN(vx + ox * 14 * ps, bd[0] + 6 * ps, bd[1] - 6 * ps), clampN(vy + oy * 14 * ps, bd[2] + 7 * ps, bd[3] - 7 * ps), T.ink, 'center', 'middle', { bold: true, size: 12 });
+    }
+  }
+  function tempFrac(Tk) { const a = sum.Tmin, b = sum.Tmax; return b - a < 1e-6 ? 0.5 : clampN((Tk - a) / (b - a), 0, 1); }
+
+  // ---------- cylinder ----------
+  const MOL = Array.from({ length: 34 }, (_, i) => ({ u: ((i * 0.618034) % 1), v: ((i * 0.754878 + 0.27) % 1), a: i * 2.39996 }));
+  function drawCyl(box, st) {
+    if (!G) return;
+    const c = ctx, ps = PS, X = G.X, L = st.L;
+    const x0 = X(0), xE = X(ax.V), xp = X(st.V);
+    const yc0 = box.y + 20 * ps, sh = 17 * ps, yc1 = box.y + box.h - sh - 12 * ps, ys0 = yc1 + 6 * ps, ys1 = ys0 + sh, hc = yc1 - yc0;
+    if (hc < 16) return;
+    // gas
+    c.fillStyle = mix(T.neg, T.pos, tempFrac(st.T)); c.globalAlpha = 0.45; c.fillRect(x0, yc0, xp - x0, hc); c.globalAlpha = 1;
+    if (S.mol) {
+      c.fillStyle = T.ink; c.globalAlpha = 0.6;
+      const pad = 3 * ps;
+      for (const m of MOL) { const px = x0 + pad + m.u * (xp - x0 - 2 * pad), py = yc0 + pad + m.v * (hc - 2 * pad); c.beginPath(); c.arc(px, py, 1.6 * ps, 0, 2 * Math.PI); c.fill(); }
+      c.globalAlpha = 1;
+    }
+    // walls
+    c.strokeStyle = T.ink; c.lineWidth = 2 * ps;
+    c.beginPath(); c.moveTo(xE + 4 * ps, yc0); c.lineTo(x0 - 5 * ps, yc0); c.lineTo(x0 - 5 * ps, yc1); c.lineTo(xE + 4 * ps, yc1); c.stroke();
+    c.fillStyle = T.steel; c.fillRect(x0 - 9 * ps, yc0 - 1, 5 * ps, hc + 2);
+    // piston and rod
+    const pw = 8 * ps;
+    c.fillStyle = T.steel; c.fillRect(xp, yc0 + 1.5 * ps, pw, hc - 3 * ps);
+    c.strokeStyle = T.ink; c.lineWidth = 1 * ps; c.strokeRect(xp + 0.5, yc0 + 1.5 * ps, pw, hc - 3 * ps);
+    c.fillStyle = T.steel; c.fillRect(xp + pw, yc0 + hc / 2 - 2.5 * ps, Math.min(46 * ps, box.x + box.w - xp - pw), 5 * ps);
+    if (L.t === 'V') {   // piston held: two stops
+      c.fillStyle = T.ink;
+      for (const xs of [xp - 4 * ps, xp + pw]) { c.fillRect(xs, yc0 - 4 * ps, 4 * ps, 7 * ps); c.fillRect(xs, yc1 - 3 * ps, 4 * ps, 7 * ps); }
+    }
+    // what touches the bottom of the cylinder
+    const tiny = 1e-9 * sum.scale;
+    let col = T.muted, txt = '';
+    if (L.t === 'S') txt = 'insulated: no heat flows, Q = 0';
+    else if (L.regen) { col = T.equi; txt = L.Q > 0 ? 'regenerator hands its stored heat back' : 'regenerator soaks up heat'; }
+    else if (L.side > 0) { col = T.pos; txt = `hot side${L.t === 'T' ? ' at ' + fT(L.T1) : ''}: heat flows ${L.Q > 0 ? 'into' : 'out of'} the gas`; }
+    else if (L.side < 0) { col = T.neg; txt = `cold side${L.t === 'T' ? ' at ' + fT(L.T1) : ''}: heat flows ${L.Q > 0 ? 'into' : 'out of'} the gas`; }
+    c.save(); c.beginPath(); c.rect(x0 - 9 * ps, ys0, xE - x0 + 13 * ps, sh); c.clip();
+    if (L.t === 'S') {
+      c.fillStyle = T.grid; c.fillRect(x0 - 9 * ps, ys0, xE - x0 + 13 * ps, sh);
+      c.strokeStyle = T.muted; c.lineWidth = 1; c.globalAlpha = 0.6; c.beginPath();
+      for (let x = x0 - 20 * ps; x < xE + 20 * ps; x += 6 * ps) { c.moveTo(x, ys1); c.lineTo(x + sh, ys0); }
+      c.stroke(); c.globalAlpha = 1;
+    } else { c.fillStyle = col; c.globalAlpha = 0.22; c.fillRect(x0 - 9 * ps, ys0, xE - x0 + 13 * ps, sh); c.globalAlpha = 1; }
+    c.restore();
+    c.strokeStyle = L.t === 'S' ? T.muted : col; c.lineWidth = 1; c.strokeRect(x0 - 9 * ps + 0.5, ys0 + 0.5, xE - x0 + 13 * ps, sh);
+    // heat arrows through the bottom wall
+    if (L.t !== 'S' && Math.abs(L.Q) > tiny) {
+      const up = L.Q > 0, n = xp - x0 > 120 * ps ? 3 : xp - x0 > 50 * ps ? 2 : 1, t = performance.now() / 1000;
+      c.strokeStyle = col; c.fillStyle = col; c.lineWidth = 2.4 * ps;
+      for (let j = 0; j < n; j++) {
+        const ax0 = x0 + (xp - x0) * (j + 1) / (n + 1), ya = up ? ys0 : yc1 - 14 * ps, yb = up ? yc1 - 14 * ps : ys0 - 1;
+        c.setLineDash([5 * ps, 4 * ps]); c.lineDashOffset = (playing ? -t * 22 * ps : 0) * (1); c.beginPath(); c.moveTo(ax0, ya); c.lineTo(ax0, yb + (up ? 6 * ps : -6 * ps)); c.stroke(); c.setLineDash([]);
+        const dir = up ? -1 : 1; c.beginPath(); c.moveTo(ax0, yb); c.lineTo(ax0 - 5 * ps, yb - dir * 7 * ps); c.lineTo(ax0 + 5 * ps, yb - dir * 7 * ps); c.closePath(); c.fill();
+      }
+    }
+    if (txt) { c.font = `${10.5 * ps}px ${T.mono}`; const tw = c.measureText(txt).width, cx = clampN((x0 + xE) / 2, x0 + tw / 2 + 4, xE - tw / 2 - 4);
+      label(txt, cx, ys0 + sh / 2, L.t === 'S' ? T.muted : col, 'center', 'middle', { size: 10.5, halo: true }); }
+    // work: the piston moving
+    let wt = '';
+    if (L.t === 'V') wt = 'piston held still: W = 0';
+    else if (L.b.V > L.a.V) wt = 'gas pushes the piston out: W > 0  →';
+    else wt = '←  piston pushes the gas in: W < 0';
+    c.font = `${10.5 * ps}px ${T.mono}`; const tw = c.measureText(wt).width;
+    label(wt, clampN(xp + pw / 2, box.x + tw / 2 + 6, box.x + box.w - tw / 2 - 6), box.y + 9 * ps, L.t === 'V' ? T.muted : (L.W > 0 ? T.work : T.ink), 'center', 'middle', { size: 10.5, halo: false });
+  }
+
+  // ---------- T–S diagram ----------
+  let tsCache = null;
+  function drawTS(box, st) {
+    const c = ctx, ps = PS;
+    const L = box.x + 52 * ps, R = box.x + box.w - 14 * ps, Tp = box.y + 34 * ps, B = box.y + box.h - 30 * ps;
+    if (R - L < 60 || B - Tp < 40) return;
+    const n = S.n, g = S.g;
+    if (!tsCache) {
+      const legs = sum.legs.map((Lg) => legPts(Lg, 48).map((p) => ({ T: p.T, S: entropy(p.T, p.V, n, g) })));
+      let s0 = Infinity, s1 = -Infinity, tm = 0; for (const pts of legs) for (const p of pts) { s0 = Math.min(s0, p.S); s1 = Math.max(s1, p.S); tm = Math.max(tm, p.T); }
+      const span = Math.max(s1 - s0, 0.5 * n), mid = (s0 + s1) / 2, st2 = nice(span / 3);
+      const lo = Math.floor((mid - span * 0.68) / st2) * st2, hi = Math.ceil((mid + span * 0.68) / st2) * st2;
+      tsCache = { legs, lo, hi, tmax: niceUp(tm * 1.1) };
+    }
+    const tc = tsCache, X = (s) => L + (s - tc.lo) / (tc.hi - tc.lo) * (R - L), Y = (t) => B - t / tc.tmax * (B - Tp);
+    axesFrame(L, R, Tp, B, ticks(tc.hi, tc.lo, W < 500 ? 3 : 4, tickFmt, X), ticks(tc.tmax, 0, B - Tp < 160 ? 3 : 4, tickFmt, Y));
+    c.save(); c.beginPath(); c.rect(L, Tp, R - L, B - Tp); c.clip();
+    c.beginPath(); tc.legs.forEach((pts, i) => pts.forEach((p, j) => (i === 0 && j === 0 ? c.moveTo(X(p.S), Y(p.T)) : c.lineTo(X(p.S), Y(p.T))))); c.closePath();
+    c.fillStyle = T.work; c.globalAlpha = 0.16; c.fill(); c.globalAlpha = 1;
+    const cur = st.L, cp = tc.legs[st.i], ccol = legColor(cur);
+    if (S.under && cur.t !== 'S') {
+      c.beginPath(); cp.forEach((p, j) => (j ? c.lineTo(X(p.S), Y(p.T)) : c.moveTo(X(p.S), Y(p.T)))); c.lineTo(X(cp[cp.length - 1].S), B); c.lineTo(X(cp[0].S), B); c.closePath();
+      c.save(); c.clip(); c.strokeStyle = ccol; c.globalAlpha = 0.5; c.lineWidth = 1; c.beginPath();
+      for (let x = L - (B - Tp); x < R; x += 7 * ps) { c.moveTo(x, B); c.lineTo(x + (B - Tp), Tp); }
+      c.stroke(); c.restore(); c.globalAlpha = 1;
+    }
+    sum.legs.forEach((Lg, i) => {
+      const pts = tc.legs[i], col = legColor(Lg);
+      c.strokeStyle = col; c.lineWidth = (i === st.i ? 3.2 : 2.1) * ps; c.lineJoin = 'round';
+      c.beginPath(); pts.forEach((p, j) => (j ? c.lineTo(X(p.S), Y(p.T)) : c.moveTo(X(p.S), Y(p.T)))); c.stroke();
+      chevron(pts, (p) => X(p.S), (p) => Y(p.T), col, ps);
+    });
+    c.restore();
+    const sS = entropy(st.T, st.V, n, g), sx = X(sS), sy = Y(st.T);
+    c.fillStyle = mix(T.neg, T.pos, tempFrac(st.T)); c.strokeStyle = T.ink; c.lineWidth = 1.5 * ps; c.beginPath(); c.arc(sx, sy, 6 * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+    // labels
+    const cps = vs.map((v) => { const t = temp(v.P, v.V, n); return [X(entropy(t, v.V, n, g)), Y(t)]; });
+    let cx0 = 0, cy0 = 0; cps.forEach((p) => { cx0 += p[0]; cy0 += p[1]; }); cx0 /= cps.length; cy0 /= cps.length;
+    cornerLabels(tc.legs.map((pts) => pts.map((p) => [X(p.S), Y(p.T)])), [L, R, Tp, B]);
+    if (S.under) {
+      const ql = cur.t === 'S' ? `Q ${cur.ia + 1}→${cur.ib + 1} = 0: S does not change` : `Q ${cur.ia + 1}→${cur.ib + 1} = area under = ${fE(cur.Q)} ${eUnit()}`;
+      c.font = `${10.5 * ps}px ${T.mono}`; const tw = c.measureText(ql).width;
+      const xm = (X(cp[0].S) + X(cp[cp.length - 1].S)) / 2;
+      label(ql, clampN(xm, L + tw / 2 + 4, R - tw / 2 - 4), B - 10 * ps, cur.t === 'S' ? T.muted : ccol, 'center', 'middle', { size: 10.5 });
+    }
+    label(`Q net = W net = area`, clampN(cx0, L + 74 * ps, R - 74 * ps), cy0, T.work, 'center', 'middle', { bold: true, size: 10.5 });
+    label('Temperature T (K)', box.x + 10 * ps, box.y + 13 * ps, T.ink, 'left', 'middle', { bold: true, halo: false });
+    label('S (J/K)', R, B + 22 * ps, T.muted, 'right', 'middle', { halo: false, size: 10.5 });
+  }
+
+  // ---------- energy flow per cycle ----------
+  function drawFlow(box) {
+    const c = ctx, ps = PS, s = sum;
+    label('Energy per cycle', box.x + 10 * ps, box.y + 15 * ps, T.ink, 'left', 'middle', { bold: true, halo: false });
+    const top = box.y + 30 * ps, bot = box.y + box.h - 10 * ps; if (bot - top < 80) return;
+    const sw = Math.round(box.w * 0.6), sx0 = box.x + 10 * ps, bh = 18 * ps;
+    const engine = s.engine, big = engine ? s.Qin : s.Qout, small = engine ? s.Qout : s.Qin, w = Math.abs(s.Wnet);
+    const maxBand = Math.min(sw * 0.3, (bot - top) * 0.22, 64 * ps), k = big > 0 ? maxBand / big : 0;
+    const wq = big * k, wo = small * k, ww = w * k, x0 = sx0 + 22 * ps, yh = top + bh, yc = bot - bh, yj = yh + (yc - yh) * 0.42, r0 = 12 * ps;
+    // reservoirs
+    c.fillStyle = T.pos; c.globalAlpha = 0.18; c.fillRect(sx0, top, sw - 10 * ps, bh); c.globalAlpha = 1; c.strokeStyle = T.pos; c.lineWidth = 1; c.strokeRect(sx0 + 0.5, top + 0.5, sw - 10 * ps, bh);
+    c.fillStyle = T.neg; c.globalAlpha = 0.18; c.fillRect(sx0, yc, sw - 10 * ps, bh); c.globalAlpha = 1; c.strokeStyle = T.neg; c.strokeRect(sx0 + 0.5, yc + 0.5, sw - 10 * ps, bh);
+    label('hot side', sx0 + sw - 16 * ps, top + bh / 2, T.pos, 'right', 'middle', { halo: false, size: 10.5 });
+    label('cold side', sx0 + sw - 16 * ps, yc + bh / 2, T.neg, 'right', 'middle', { halo: false, size: 10.5 });
+    // bands
+    c.globalAlpha = 0.7;
+    c.fillStyle = T.pos; c.fillRect(x0, yh, wq, yj - yh);
+    c.fillStyle = T.neg; c.fillRect(x0, yj, wo, yc - yj);
+    c.fillStyle = T.work; c.beginPath();
+    const cxw = x0 + wq + r0, xend = sx0 + sw - 22 * ps;
+    c.moveTo(x0 + wo, yj); c.arc(cxw, yj, r0 + ww, Math.PI, Math.PI / 2, true); c.lineTo(xend, yj + r0 + ww); c.lineTo(xend, yj + r0); c.arc(cxw, yj, r0, Math.PI / 2, Math.PI, false); c.closePath(); c.fill();
+    c.globalAlpha = 1;
+    // the gas, where the bands meet
+    const gr = Math.max(14 * ps, wq / 2 + 6 * ps), sgn = engine ? 1 : -1;
+    // flow direction: a light chevron inside a wide band, a colored arrowhead beside a thin one
+    const mark = (x, y, dx, dy, bw, col) => {
+      const s2 = Math.max(4 * ps, Math.min(bw * 0.32, 12 * ps));
+      if (bw >= 11 * ps) { c.strokeStyle = T.canvas; c.lineWidth = 2 * ps; c.globalAlpha = 0.95; c.beginPath(); c.moveTo(x - dx * s2 * 0.5 - dy * s2, y - dy * s2 * 0.5 + dx * s2); c.lineTo(x + dx * s2 * 0.5, y + dy * s2 * 0.5); c.lineTo(x - dx * s2 * 0.5 + dy * s2, y - dy * s2 * 0.5 - dx * s2); c.stroke(); c.globalAlpha = 1; }
+      else { const ox = -dy * (bw / 2 + 7 * ps), oy = dx * (bw / 2 + 7 * ps), q = 5 * ps; c.fillStyle = col; c.beginPath(); c.moveTo(x + ox + dx * q, y + oy + dy * q); c.lineTo(x + ox - dx * q - dy * q * 0.8, y + oy - dy * q + dx * q * 0.8); c.lineTo(x + ox - dx * q + dy * q * 0.8, y + oy - dy * q - dx * q * 0.8); c.closePath(); c.fill(); }
+    };
+    if (wq > 0.5) mark(x0 + wq / 2, (yh + yj - gr) / 2, 0, sgn, wq, T.pos);
+    if (wo > 0.5) mark(x0 + wo / 2, (yj + gr + yc) / 2, 0, sgn, wo, T.neg);
+    if (ww > 0.5) mark((cxw + xend) / 2, yj + r0 + ww / 2, sgn, 0, ww, T.work);
+    c.fillStyle = T.surface; c.strokeStyle = T.ink; c.lineWidth = 1.5 * ps;
+    c.beginPath(); c.arc(x0 + wq / 2, yj, gr, 0, 2 * Math.PI); c.fill(); c.stroke();
+    label('gas', x0 + wq / 2, yj, T.ink, 'center', 'middle', { halo: false, size: 10 });
+    const u = eUnit();
+    label(`${engine ? 'Q in' : 'Q h'} = ${fE(big, false)} ${u}`, x0 + wq / 2 + Math.max(wq / 2, gr) + 8 * ps, (yh + yj - gr) / 2, T.pos, 'left', 'middle', { size: 10.5 });
+    label(`${engine ? 'Q out' : 'Q c'} = ${fE(small, false)} ${u}`, x0 + wo + 10 * ps, clampN(Math.max(yj + gr + 10 * ps, yj + r0 + ww + 14 * ps), yj, yc - 9 * ps), T.neg, 'left', 'middle', { size: 10.5 });
+    label(`${engine ? 'W out' : 'W in'} = ${fE(w, false)} ${u}`, xend, yj + r0 - 9 * ps, T.work, 'right', 'middle', { size: 10.5 });
+    if (s.Qreg > 0) label(`regenerator: ${fE(s.Qreg, false)} ${u} stored and returned`, sx0 + 2, yh + 10 * ps, T.equi, 'left', 'middle', { size: 9.5 });
+    // efficiency or COP
+    const rx = box.x + sw + 8 * ps, rw = box.x + box.w - rx - 12 * ps; if (rw < 70) return;
+    let y = top + 6 * ps;
+    if (engine) {
+      const eta = s.Wnet / s.Qin, lim = 1 - s.Tmin / s.Tmax;
+      label('efficiency η = W/Q in', rx, y, T.muted, 'left', 'middle', { halo: false, size: 10 }); y += 22 * ps;
+      label(pct(eta), rx, y, T.ink, 'left', 'middle', { halo: false, bold: true, size: 17 }); y += 24 * ps;
+      const bw = rw, bh2 = 12 * ps;
+      c.fillStyle = T.grid; c.fillRect(rx, y, bw, bh2); c.fillStyle = T.work; c.fillRect(rx, y, bw * clampN(eta, 0, 1), bh2);
+      c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.strokeRect(rx + 0.5, y + 0.5, bw, bh2);
+      const lx = rx + bw * clampN(lim, 0, 1); c.strokeStyle = T.ink; c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(lx, y - 4 * ps); c.lineTo(lx, y + bh2 + 4 * ps); c.stroke();
+      y += bh2 + 16 * ps;
+      label('Carnot limit', rx, y, T.muted, 'left', 'middle', { halo: false, size: 10 }); y += 16 * ps;
+      label(`1 − ${s.Tmin.toFixed(0)}/${s.Tmax.toFixed(0)} = ${pct(lim)}`, rx, y, T.ink, 'left', 'middle', { halo: false, size: 10.5 }); y += 22 * ps;
+      if (y < bot - 20 * ps) label(`${pct(eta / lim)} of the limit`, rx, y, T.muted, 'left', 'middle', { halo: false, size: 10 });
+    } else {
+      const Win = -s.Wnet;
+      label('refrigerator COP = Q c/W', rx, y, T.muted, 'left', 'middle', { halo: false, size: 10 }); y += 22 * ps;
+      label(sig(s.Qin / Win, 3), rx, y, T.ink, 'left', 'middle', { halo: false, bold: true, size: 17 }); y += 26 * ps;
+      label('heat pump COP = Q h/W', rx, y, T.muted, 'left', 'middle', { halo: false, size: 10 }); y += 20 * ps;
+      label(sig(s.Qout / Win, 3), rx, y, T.ink, 'left', 'middle', { halo: false, bold: true, size: 14 });
+    }
+  }
+
+  function ctlText(st) {
+    if (st.i === curLegCache) return; curLegCache = st.i;
+    const L = st.L, note = legNote(L);
+    $('count').innerHTML = `Leg ${L.ia + 1}→${L.ib + 1}: ${NAME[L.t].toLowerCase()} ${legWord(L)}${note ? ` <small>· ${note}</small>` : ''}`;
+    markNow(st.i);
+  }
+  let curLegCache = -1;
+
+  // ---------- dragging corners and legs on the PV diagram ----------
+  let drag = null, hoverId = null;
+  function dragHandles() {
+    if (!G || !vs) return [];
+    const out = [];
+    S.edges.forEach((e, k) => {
+      const pts = legPx[k]; if (!pts) return;
+      const j = Math.floor(pts.length / 2), a = pts[Math.max(0, j - 3)], b = pts[Math.min(pts.length - 1, j + 3)], d = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
+      let tx = (b[0] - a[0]) / d, ty = (b[1] - a[1]) / d;
+      out.push({ id: 'e' + k, kind: 'leg', k, pts, mid: [pts[j][0] + tx * 9 * PS, pts[j][1] + ty * 9 * PS], tan: [tx, ty], cursor: e.t === 'V' ? 'ew-resize' : e.t === 'P' ? 'ns-resize' : 'move' });
+    });
+    vs.forEach((v, j) => out.push({ id: 'c' + j, kind: 'corner', j, pt: [G.X(v.V), G.Y(v.P)], cursor: 'move' }));
+    return out;
+  }
+  function distSeg(px, py, a, b) { const dx = b[0] - a[0], dy = b[1] - a[1], l2 = dx * dx + dy * dy; let t = l2 ? ((px - a[0]) * dx + (py - a[1]) * dy) / l2 : 0; t = clampN(t, 0, 1); return Math.hypot(px - a[0] - t * dx, py - a[1] - t * dy); }
+  function handleAt(ev) {
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 8 * PS * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of dragHandles()) {
+      let d;
+      if (h.kind === 'corner') d = Math.hypot(x - h.pt[0], y - h.pt[1]) - 4;
+      else { d = Infinity; for (let i = 1; i < h.pts.length; i++) d = Math.min(d, distSeg(x, y, h.pts[i - 1], h.pts[i])); d = Math.min(d, Math.hypot(x - h.mid[0], y - h.mid[1]) - 2); }
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  function moveTo(id, px, py, opt) {
+    const V = Math.max(1e-7, G.iV(px)), P = Math.max(1, G.iP(py)), x = Math.log(V), y = Math.log(P), N = S.edges.length;
+    const E = copyE(S.edges);
+    if (id[0] === 'c') {
+      const j = +id.slice(1), a = (j - 1 + N) % N;
+      E[a].c = offsetThrough(E[a].t, S.g, x, y); E[j].c = offsetThrough(E[j].t, S.g, x, y);
+    } else {
+      const k = +id.slice(1), d = defs().find((q) => q.edge === k);
+      if (d) d.set(E, snap(d, d.from(x, y, S.edges)));
+      else E[k].c = offsetThrough(E[k].t, S.g, x, y);
+    }
+    if (applyEdges(E, opt || DRAG_OPT)) refresh();
+  }
+  let dragQ = null, dragFrame = false;
+  can.addEventListener('pointermove', (ev) => {
+    if (drag) {
+      const r = can.getBoundingClientRect(); dragQ = [ev.clientX - r.left - drag.dx, ev.clientY - r.top - drag.dy];
+      if (!dragFrame) { dragFrame = true; requestAnimationFrame(() => { dragFrame = false; if (drag && dragQ) { moveTo(drag.id, dragQ[0], dragQ[1]); dragQ = null; if (!playing) drawAll(); } }); }
+      return;
+    }
+    const h = handleAt(ev), id = h ? h.id : null;
+    if (id !== hoverId) { hoverId = id; if (!playing) drawAll(); }
+    can.style.cursor = h ? h.cursor : 'default';
+  });
+  can.addEventListener('pointerdown', (ev) => {
+    const h = handleAt(ev); if (!h) return;
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    // corners keep the grab offset so they do not jump; legs follow the pointer
+    drag = { id: h.id, dx: h.kind === 'corner' ? x - h.pt[0] : 0, dy: h.kind === 'corner' ? y - h.pt[1] : 0 };
+    if (h.kind === 'corner') { selCorner = h.j; refresh(); }
+    try { can.setPointerCapture(ev.pointerId); } catch (_) {}
+    can.style.cursor = h.cursor; ev.preventDefault(); can.focus({ preventScroll: true });
+  });
+  const endDrag = () => { if (!drag) return; drag = null; hoverId = null; fitAxes(); refresh(); drawAll(); };
+  can.addEventListener('pointerup', endDrag);
+  can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('pointerleave', () => { if (!drag) { hoverId = null; if (!playing) drawAll(); } });
+  can.addEventListener('focus', () => { if (!playing) drawAll(); });
+  can.addEventListener('blur', () => { if (!playing) drawAll(); });
+  can.addEventListener('keydown', (e) => {
+    const N = S.edges.length;
+    if (/^[1-6]$/.test(e.key) && +e.key <= N) { selCorner = +e.key - 1; refresh(); drawAll(); }
+    else if (e.key.startsWith('Arrow')) {
+      const v = vs[selCorner], f = e.shiftKey ? 5 : 1, dx = (G.R - G.L) * 0.01 * f, dy = (G.B - G.T) * 0.01 * f;
+      let px = G.X(v.V), py = G.Y(v.P);
+      if (e.key === 'ArrowLeft') px -= dx; else if (e.key === 'ArrowRight') px += dx; else if (e.key === 'ArrowUp') py -= dy; else py += dy;
+      moveTo('c' + selCorner, px, py); fitAxes(); refresh(); drawAll();
+    }
+    else if (e.key === ' ') setPlaying(!playing);
+    else if (e.key === 'n' || e.key === 'N') nextLeg();
+    else if (e.key === 'r' || e.key === 'R') setDir(-S.dir);
+    else return;
+    e.preventDefault();
+  });
+
+  // ---------- controls ----------
+  function setPlaying(p) { playing = p; $('play').textContent = p ? 'Pause' : 'Play'; $('play').classList.toggle('primary', !p); }
+  function nextLeg() { phase = (Math.floor(phase) + 1) % S.edges.length + (playing ? 0 : 0.5); curLegCache = -1; drawAll(); }
+  $('play').addEventListener('click', () => setPlaying(!playing));
+  $('next').addEventListener('click', nextLeg);
+  $('reset').addEventListener('click', () => { phase = playing ? 0 : 0.5; if (S.preset) applyPreset(S.preset); else setCycle(S.cycle); drawAll(); });
+  document.querySelectorAll('#speedSeg button').forEach((b) => b.addEventListener('click', () => { S.speed = +b.dataset.s; pressed('speedSeg', 's', b.dataset.s); }));
+  document.querySelectorAll('#presets button').forEach((b) => b.addEventListener('click', () => { applyPreset(b.dataset.p); drawAll(); }));
+  document.querySelectorAll('#cycles button').forEach((b) => b.addEventListener('click', () => { clearPreset(); setCycle(b.dataset.c); drawAll(); }));
+  document.querySelectorAll('#dirSeg button').forEach((b) => b.addEventListener('click', () => { setDir(+b.dataset.d); drawAll(); }));
+  document.querySelectorAll('#gasSeg button').forEach((b) => b.addEventListener('click', () => { setGas(b.dataset.g); drawAll(); }));
+  $('nIn').addEventListener('input', () => { setN(+$('nIn').value); drawAll(); });
+  $('regen').addEventListener('change', () => { S.regen = $('regen').checked; clearPreset(); recompute(); refresh(); drawAll(); });
+  $('addC').addEventListener('click', () => { addCorner(); drawAll(); });
+  $('delC').addEventListener('click', () => { removeCorner(); drawAll(); });
+  const tog = (id, key) => $(id).addEventListener('change', () => { S[key] = $(id).checked; drawAll(); });
+  tog('tIso', 'iso'); tog('tAdi', 'adi'); tog('tUnder', 'under'); tog('tMol', 'mol');
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(() => resize());
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  const retheme = () => { tokens(); drawAll(); dirty = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), frameMs = 0;
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (playing && sum) {
+      phase = (phase + dt * S.speed / LEG_DUR) % S.edges.length;
+      if (S.mol) {
+        const st = stateAt(phase), sp = Math.sqrt(st.T / 300), gasPx = G ? Math.max(20, G.X(st.V) - G.X(0)) : 200;
+        for (const m of MOL) {
+          m.a += (Math.random() - 0.5) * 0.6;
+          m.u += Math.cos(m.a) * sp * 70 * dt / gasPx; m.v += Math.sin(m.a) * sp * 70 * dt / 50;
+          if (m.u < 0) { m.u = -m.u; m.a = Math.PI - m.a; } if (m.u > 1) { m.u = 2 - m.u; m.a = Math.PI - m.a; }
+          if (m.v < 0) { m.v = -m.v; m.a = -m.a; } if (m.v > 1) { m.v = 2 - m.v; m.a = -m.a; }
+        }
+      }
+      drawAll();
+    } else if (dirty) drawAll();
+    dirty = false;
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    requestAnimationFrame(loop);
+  }
+  window.__he = { get frameMs() { return frameMs; }, get S() { return S; }, get sum() { return sum; }, get vs() { return vs; }, get ax() { return ax; },
+    setPhase(p) { phase = p; curLegCache = -1; drawAll(); }, setPlaying, applyPreset,
+    handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt || h.mid })); }, pv() { return G && { L: G.L, R: G.R, T: G.T, B: G.B }; } };
+
+  tokens();
+  applyPreset('carnot');
+  const ro = new ResizeObserver(() => resize());
+  ro.observe(pane);
+  resize();
+  setPlaying(!reduce);
+  if (reduce) phase = 0.5;
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
