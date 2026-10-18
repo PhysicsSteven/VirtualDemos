@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polarization: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Polarization</h1><ul class="meta"><li><a href="../demos/polarization.html">Open the demo</a></li><li>PHYS 202 (optics unit; EM waves)</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Light is a transverse wave; its polarization is the direction (and pattern in time) of its electric field. An ideal polarizer passes the field component along its axis, E cos θ, so the intensity is I cos²θ (Malus's law). Unpolarized light loses exactly half at the first polarizer, whatever its angle.</li>
+<li>A polarizer does not only remove light: it resets the polarization to its own axis. That is why a third polarizer between crossed ones lets light through, and many small steps pass nearly all of it.</li>
+<li>A wave plate absorbs nothing; it delays one field component relative to the other. A quarter wave plate at 45° to linear light makes circular light; a half wave plate mirrors the polarization across its fast axis.</li>
+<li>Reflection polarizes light. At Brewster's angle, tan θ_B = n₂/n₁, the p component is not reflected at all, so glare from a level surface is horizontally polarized, and polarized sunglasses (vertical axis) block it.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need light as a transverse electric field and components of a vector. Angles are measured from the vertical, counterclockwise as seen facing the oncoming beam; intensities are fractions of I₀. Click a disk to plot its transmission against its angle; drag it to turn it. <strong>Reflection</strong> switches to the Brewster view.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Malus's law.</strong> Ask Q1 first. The readouts give 0.500 after the first polarizer and 0.293 after the second, at 40°. Drag the second disk: the dot runs along cos²θ.</li>
+<li><strong>Crossed polarizers</strong>, then ask Q2 before pressing <strong>Three polarizer surprise</strong>. The middle polarizer at 45° brings the output from 0 to 0.125. Remove it with its ×: dark again. <strong>Add an element</strong> puts a new polarizer after the last one (at −45°): still dark. Order matters.</li>
+<li><strong>Many polarizers.</strong> Move <strong>Steps N</strong> from 1 up to 30. More polarizers, more light: 0.660 at N = 6 and 0.921 at N = 30 (Q3).</li>
+<li><strong>Quarter wave plate makes circular light.</strong> The field tip after the plate traces a circle. Drag the last polarizer around: 0.500 at every angle. Then turn the plate away from 45° and the circle flattens into an ellipse (Q4).</li>
+<li><strong>Half wave plate rotates polarization.</strong> Vertical light leaves at 40° with no loss. Turn the plate by 10° and the output turns by 20° (Q5).</li>
+<li><strong>Brewster's angle and glare.</strong> In air to glass at θ_B = 56.31°, R_p = 0 and the reflected light is 100% s; the sunglasses block all of it. Drag the incoming ray off θ_B and glare comes back through the lenses (Q6). Try <strong>Glass to air</strong> and compare θ_B with θ_c.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: unpolarized light of intensity I₀ passes through two ideal polarizers whose axes are 40° apart. What fraction of I₀ gets through? Does the answer change if both polarizers are turned together by 30°? Check with <strong>Malus's law</strong>.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Predict: two crossed polarizers pass no light. A third polarizer, at 45°, is slipped in between them. Does light now get through, and if so what fraction of I₀ for unpolarized light? What if the 45° polarizer is put after the other two instead?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Vertically polarized light passes through polarizers at 30°, 60° and 90° in turn (N = 3). What fraction gets out? With N polarizers each turned a further 90°/N, explain why the total transmission climbs toward 1 as N grows, even though each added polarizer can only remove light. Check your N = 3 value with <strong>Many polarizers</strong>.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In <strong>Quarter wave plate makes circular light</strong>, vertical light meets a quarter wave plate with its fast axis at 45°. Explain why the light leaving it is circular, and why it is elliptical if the fast axis is at 30° instead. Why does a polarizer after circular light pass exactly half at every angle?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> A half wave plate with its fast axis at 20° turns vertical light to 40°. Where should the fast axis be set to turn vertical light horizontal? If the plate is turned by 10°, by how much does the output turn? How much of the light is lost? Check with <strong>Half wave plate rotates polarization</strong>.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Sunlight reflects from a lake (n = 1.33). At what angle of incidence is the reflected light completely polarized, and in which direction is its field? Find the refraction angle there and show that the reflected and refracted rays are perpendicular. Using the Fresnel formula for r_s in the rail, find R_s, and the fraction of unpolarized light reflected. Check with <strong>Air to water</strong>.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A polarizer always cuts the intensity in half."</strong> Only for unpolarized or circular light. For linearly polarized light it passes cos²θ, anything from 0 to all of it.</li>
+<li><strong>"A polarizer is a filter: it can only take light away, so an extra one can never help."</strong> It does only take light away, but it also leaves the light polarized along its own axis. The next polarizer then sees a smaller angle.</li>
+<li><strong>"A wave plate is a weak polarizer."</strong> It is lossless: I/I_in = 1 always. It changes the polarization state, not the intensity.</li>
+<li><strong>"Circular light is just unpolarized light."</strong> A polarizer alone cannot tell them apart, but a quarter wave plate turns circular light into linear light and leaves unpolarized light unpolarized. The Stokes readout shows S₃ = ±1 for circular light and 0 for unpolarized.</li>
+<li><strong>"Reflected light is polarized."</strong> Only fully at Brewster's angle. At normal incidence it is not polarized at all, and at other angles only partly.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Ideal elements: polarizers pass the field component along the axis and absorb the rest; wave plates are lossless and delay the slow component by exactly a quarter or half cycle (real ones are exact at one wavelength only).</li>
+<li>Polarized light is followed with Jones vectors, E_out = J E_in. Unpolarized light is followed with Stokes vectors and Mueller matrices built from the same Jones matrices; at the first polarizer this reproduces the one half rule.</li>
+<li>Right circular means clockwise as seen facing the beam. Ellipse size shows the field amplitude, √(I/I₀). Unpolarized light is drawn as a field arrow wandering at random, far more slowly than in real light.</li>
+<li>Reflection view: Fresnel equations for a flat, smooth boundary between transparent, nonmagnetic media, with R + T = 1 for each polarization; unpolarized light averages s and p. Sunglasses are an ideal polarizer with a vertical axis on the reflected ray.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Lab: look at an LCD screen through a polarizer sheet and turn it; then look at glare from a floor near 55° from the normal.</li>
+<li>History: Malus found polarization by reflection in 1808, looking at sunlight reflected from windows through a calcite crystal.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

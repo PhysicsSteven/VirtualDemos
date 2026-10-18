@@ -538,7 +538,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   const PRESETS = {
     two: { view: 'rays', m: [1, 1.33, 1], t: 335, th: 30, lam: 550, pol: 'u', gain: 3, light: 'white',
-      hint: 'A soap film in air, 335 nm thick, light at 30°. The top reflection flips (air to water), the bottom one does not (water to air). The extra path is 1.5 λ at 550 nm, and with the half cycle flip ray 2 lags by exactly 2 cycles: the waves add. Drag the bottom surface and watch them slide in and out of step.' },
+      hint: 'A soap film in air, 335 nm thick, light at 30°. The top reflection flips (air to water), the bottom one does not (water to air). The extra path is 1.5 λ at 550 nm, and with the half cycle flip ray 2 is a whole number of cycles behind ray 1: the waves add. Drag the bottom surface and watch them slide in and out of step.' },
     soap: { view: 'soap', m: [1, 1.33, 1], th: 0, lam: 550, pol: 'u', gain: 3, light: 'white', ttop: 10, tbot: 1000, probe: 0.2, play: true,
       hint: 'A vertical soap film drains: thin at the top, thicker below. Each band is a thickness where some colors add and others cancel. The bands creep down and spread as the film thins, and the black film at the top grows. Where the film is thicker than about 1 µm, many orders overlap and the colors fade to pale pinks and greens.' },
     black: { view: 'rays', m: [1, 1.33, 1], t: 10, th: 0, lam: 550, pol: 'u', gain: 3, light: 'white',
@@ -548,7 +548,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ar: { view: 'rays', m: [1, 1.38, 1.52], t: 99.6, th: 0, lam: 550, pol: 'u', gain: 10, light: 'white',
       hint: 'A quarter wave of MgF₂ (99.6 nm) on glass. Both reflections flip, so only the path counts: half a wave at 550 nm, and they cancel. R drops from 4.3% (bare glass, dotted) to 1.3% in the green, and rises toward the ends of the spectrum, which is why coated lenses look faintly purple.' },
     oil: { view: 'rays', m: [1, 1.47, 1.33], t: 300, th: 0, lam: 550, pol: 'u', gain: 3, light: 'white',
-      hint: 'Oil (1.47) on water (1.33). The top reflection flips (air to oil) and the bottom one does not (oil to the lower index water), the same as a soap film. A 300 nm slick reflects strongly near 588 nm and 420 nm and comes out a magenta pink.' }
+      hint: 'Oil (1.47) on water (1.33). The top reflection flips (air to oil) and the bottom one does not (oil to the lower index water), the same as a soap film. A 300 nm slick reflects most strongly near 588 nm and least near 441 nm, so it looks yellowish. Drag the thickness and watch the color change.' }
   };
 
   // ---------- state ----------

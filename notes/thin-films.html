@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thin Film Interference: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Thin Film Interference</h1><ul class="meta"><li><a href="../demos/thin-films.html">Open the demo</a></li><li>PHYS 202 (optics unit)</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Light reflected from the top and bottom surfaces of a film interferes. Ray 2 travels an extra optical path 2n_f t cos θ_t, and each reflection from a higher index medium adds half a cycle.</li>
+<li>With one such flip (a soap film, oil on water) the film reflects strongly when 2n_f t cos θ_t = (m + ½)λ and weakly when it equals mλ. With two flips, or none, the conditions swap.</li>
+<li>A film much thinner than λ with one flip reflects almost nothing at any color: a soap film turns black just before it bursts.</li>
+<li>In white light each thickness reinforces some wavelengths and cancels others, so the film is colored. A quarter wave coating, t = λ/(4n_f), cancels the reflection at one wavelength, completely if n_f = √(n₁n₂). The energy is not destroyed: it is transmitted.</li>
+<li>In a wedge or under a lens the fringes are lines of equal thickness; each fringe means λ/(2n_f) more film.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know superposition and phase. The <strong>Rays</strong> view shows the two reflected rays and their waves at λ₀ (the film is drawn far thicker than scale); the plot below shows R across the visible spectrum. <strong>Soap film</strong>, <strong>Wedge</strong> and <strong>Newton's rings</strong> show the film in its computed colors; drag the probe to read the thickness. <strong>Display gain</strong> only brightens the colors on screen.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Two reflections.</strong> A soap film 335 nm thick, with light at 30°. The readouts give π at the top surface, none at the bottom, and an extra path of 1.501 λ₀. Ray 2 lags by 1.00 cycles: the waves add. Drag the bottom surface and watch the waves slide in and out of step (Q2).</li>
+<li><strong>Black film.</strong> Ask Q1 before pressing it. At 10 nm the path is only 0.048 λ₀, and the flip leaves the two reflections nearly opposite. R is 0.19%, and the spectrum is low at every color.</li>
+<li><strong>Soap bubble colors.</strong> The film drains, thin at the top. Point out the black top, then the bands. Switch <strong>Light</strong> to <strong>Only λ₀</strong>: the colors become simple bright and dark bands. Where the film is thicker than about 1 µm, many orders overlap and the colors fade to pastels.</li>
+<li><strong>Air wedge fringes.</strong> Two glass slides touch at the left; sodium light (589 nm). The contact edge is dark. With a 10 µm spacer the fringes are 1.473 mm apart, 34 over the slide (Q5). Then open <strong>Newton's rings</strong>: dark rings at 0.767, 1.085, 1.329 mm for R = 1.0 m (Q6).</li>
+<li><strong>Anti reflection coating.</strong> MgF₂, 99.6 nm, on glass. Both reflections flip, so only the path counts. R drops from 4.26% to 1.26% at 550 nm and rises toward both ends of the spectrum (Q3). Set n_f to 1.23 and press <strong>Set t to a quarter wave of λ₀</strong>: R at λ₀ falls to almost zero.</li>
+<li><strong>Oil on water.</strong> One flip, like the soap film. Read the <strong>Brightest</strong> and <strong>Darkest reflected wavelengths</strong>, then set n₂ to 1.52 (oil on glass) and compare (Q4).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: a soap film (n = 1.33) in air drains until it is far thinner than the wavelength of light. Does it reflect strongly, weakly, or not at all? Why? Check with <strong>Black film</strong>.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In <strong>Two reflections</strong> a soap film (n = 1.33) 335 nm thick in air is lit at 30°. Find the angle θ_t in the film, the extra path 2n_f t cos θ_t, and its value in wavelengths for λ₀ = 550 nm. Are the two reflections in step or opposite? Which visible wavelength is reflected most weakly? Check with the readouts.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> A lens maker coats glass (n = 1.52) with MgF₂ (n = 1.38) to reduce reflection at 550 nm at normal incidence. Find the thinnest coating that works, and R at 550 nm using the formula in the rail. Compare with bare glass. What coating index would cancel the reflection completely? Where does the light that is no longer reflected go?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> An oil film (n = 1.47) 300 nm thick floats on water (n = 1.33). Which visible wavelengths does it reflect most and least strongly at normal incidence? The same film is now spread on glass (n = 1.52). Explain why the answer changes, and find the new wavelengths. Check both with <strong>Oil on water</strong> and the n₂ slider.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Two glass slides 50 mm long touch at one end and are held apart by a 10 µm spacer at the other. In 589 nm light, how far apart are the dark fringes, and how many are there across the slides? Why is the line of contact dark? What happens to the fringe spacing if the gap is filled with water (n = 1.33)? Check with <strong>Air wedge fringes</strong> and the n_f slider.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Explain why Newton's rings get closer together farther from the center, while the fringes of an air wedge are evenly spaced. For a lens with R = 1.0 m on flat glass in 589 nm light, find the radii of the first three dark rings around the dark center.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The colors come from dispersion, like a prism."</strong> The demo uses the same index at every wavelength and the colors still appear. They come from the path difference, which is a different number of wavelengths for each color.</li>
+<li><strong>"Every reflection flips the wave."</strong> Only reflection from a medium of higher index does (at normal incidence). Whether one, two or no surfaces flip decides which thicknesses are bright.</li>
+<li><strong>"A film much thinner than λ has no effect."</strong> With one flip it cancels its own reflection and looks black. With two flips (a thin coating on glass) its reflections add, and the surface reflects like bare glass.</li>
+<li><strong>"An anti reflection coating absorbs the reflected light."</strong> Nothing is absorbed: R + T = 1. T rises from 95.7% to 98.7% at 550 nm.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>R is the exact single layer (Airy) result, r = (r₁₂ + r₂₃e^(2iβ))/(1 + r₁₂r₂₃e^(2iβ)) with β = 2πn_f t cos θ_t/λ, summing all reflections inside the film. r₁₂ and r₂₃ are Fresnel coefficients for s or p light; unpolarized light averages the two. <strong>First two only</strong> keeps r₁₂ + (1 − r₁₂²)r₂₃e^(2iβ), which is very close when each surface reflects only a few percent.</li>
+<li>The half cycle rule is exact at normal incidence; at other angles the demo uses the full coefficients (for p light they change sign at Brewster's angle).</li>
+<li>No dispersion and no absorption. Colors: the reflectance spectrum times the D65 illuminant, converted to sRGB with the CIE 1931 color matching functions.</li>
+<li>Soap film: t = t_top + (t_bottom − t_top)(y/h)^p, thinning when playing. Wedge: t = xh/L. Newton's rings: t = R − √(R² − r²) ≈ r²/2R.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Lab: make an air wedge from two microscope slides and a strip of paper or a hair, count the fringes in sodium or laser light, and find the spacer's thickness.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

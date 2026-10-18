@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Optics Bench: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Optics Bench</h1><ul class="meta"><li><a href="../demos/optics-bench.html">Open the demo</a></li><li>PHYS 202 (optics unit)</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>An image is where the rays from one object point cross, or where they appear to come from when traced back. Two of the three principal rays are enough to find it.</li>
+<li>The thin lens and mirror equation 1/d_o + 1/d_i = 1/f and m = −d_i/d_o, with signs: d_i &gt; 0 is a real image, m &lt; 0 is inverted, f &lt; 0 for a diverging lens.</li>
+<li>A converging lens or concave mirror gives a real, inverted image of an object beyond F and a virtual, upright, enlarged one inside F. A diverging lens always gives a virtual, upright, reduced image.</li>
+<li>Snell's law n₁ sin θ₁ = n₂ sin θ₂. Light inside glass cannot leave past the critical angle θ_c = arcsin(1/n); and because n depends on wavelength, a prism spreads white light.</li>
+<li>Two converging lenses a distance f₁ + f₂ apart take a parallel beam to a parallel beam, turned through a larger angle: a telescope with angular magnification f₁/f₂.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the law of reflection and Snell's law. The sign conventions are spelled out under the Image readouts; agree on them first. Click an element to select it: lenses show draggable F and F′ dots, mirrors F and C, and a round knob turns it. Image readouts need an <strong>Object arrow</strong> whose rays meet exactly one lens or mirror.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Converging lens.</strong> Ask Q1 first. The readouts give d_o = +30.0 cm, d_i = +15.0 cm, m = −0.50. Drag the object toward the lens: inside 2F the image is enlarged, at F it goes to infinity, inside F it becomes virtual.</li>
+<li><strong>Magnifier.</strong> The object is inside F (6 cm from an f = 12 cm lens). The rays leave diverging; the dashed lines trace them back to a virtual, upright image at d_i = −12.0 cm with m = +2.00 (Q2).</li>
+<li><strong>Diverging lens.</strong> d_i = −6.7 cm, m = +0.33. Drag the object anywhere in front of the lens: the image stays virtual, upright and reduced (Q3).</li>
+<li><strong>Concave mirror.</strong> Traced d_i = +19.7 cm, while the mirror equation gives +20.0 cm. Ask what causes the difference, then try the fix students suggest (Q4).</li>
+<li><strong>Telescope.</strong> A beam at 3° to the axis enters a 16 cm lens; the 5 cm lens sits 21 cm behind it. The beam leaves parallel, narrower, tilted the other way and steeper (Q5).</li>
+<li><strong>Prism</strong>, then <strong>Total internal reflection.</strong> A single white ray splits; violet bends most. Then select the beam and turn <strong>Angle (pivots on the glass)</strong>: the beam enters the semicircle along a radius and meets the flat face at the angle in <strong>Angle inside, at exit face</strong>. Step past 41.8° and the outgoing ray disappears (Q6).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: an object stands 30 cm in front of a converging lens with f = 10 cm. Where is the image, and is it upright or inverted, larger or smaller? Predict the same for the object at 15 cm and at 5 cm. Check by dragging the object in <strong>Converging lens</strong>.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In <strong>Magnifier</strong> the object is 6.0 cm from a lens with f = 12.0 cm. Find d_i and m from the lens equation. Where must the object be placed for m = +3? Check by moving it (arrow keys move a selected item by 0.5 cm).</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Explain, using the lens equation and the principal rays, why a diverging lens can never form a real image of a real object, and why its image is always smaller than the object.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In <strong>Concave mirror</strong> (R = 24 cm, object 3 cm tall at 30 cm) the traced image is at 19.7 cm, but 1/d_o + 1/d_i = 1/f gives 20.0 cm. Predict which change would bring the two into agreement: a smaller mirror aperture, a narrower fan of rays, or a shorter object. Try all three. What does the result tell you about when the mirror equation holds?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In <strong>Telescope</strong>, f₁ = 16 cm and f₂ = 5 cm. Explain why the lenses must be f₁ + f₂ apart for a parallel beam to leave parallel. The beam enters 6 cm wide at 3° to the axis. At what angle does it leave, and how wide is it?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> The semicircle in <strong>Total internal reflection</strong> has n = 1.50. Why does the beam enter the curved side without bending? Find the critical angle. At 30° inside the glass, at what angle does the beam leave the flat face? Predict what you see as the inside angle approaches θ_c, then check.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Covering half a lens cuts off half the image."</strong> Every part of the lens sends rays from every object point to the image. Shrink a lens's aperture: the image stays whole and only fewer rays form it.</li>
+<li><strong>"A real image is one you can see; a virtual image is an illusion."</strong> Both can be seen. A real image is where the light actually converges and can be caught on a screen; a virtual one is where the light only appears to come from.</li>
+<li><strong>"Total internal reflection happens when light goes into a denser medium."</strong> It happens only going from higher n to lower n, past θ_c.</li>
+<li><strong>"The magnifier's m = +2 is what the eye sees."</strong> The lens equation gives the lateral size of the virtual image. How much bigger it looks depends also on where the eye puts that image (angular magnification).</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Rays are traced in two dimensions. Lenses are ideal thin lenses (each ray's slope changes by −h/f at height h), so traced d_i always agrees with the lens equation.</li>
+<li>Mirrors are true spherical arcs with exact reflection, so the traced image can differ slightly from the paraxial mirror equation.</li>
+<li>Glass faces follow Snell's law; the faint reflection at each face has a fixed brightness (no Fresnel coefficients).</li>
+<li>n is quoted at 550 nm and follows a Cauchy form; n = 1.50 gives 1.529 at 400 nm and 1.487 at 700 nm, more dispersion than crown glass so the spectrum is easy to see. White light is seven wavelengths from 400 to 700 nm.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: in <strong>Prism</strong> the white ray enters at 48.6°, the angle of minimum deviation for n = 1.50 (the ray inside runs parallel to the base). Show that the deviation is 37.2° for green, and find it for violet (n = 1.529) and red (n = 1.487).</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>
