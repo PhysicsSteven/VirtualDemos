@@ -1,0 +1,1406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+<title>Thin Film Interference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the stage holds the main view (rays and waves, soap film, wedge or Newton's rings) above the reflectance spectrum; instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --film: #4f9fb8;
+  --med: #8796ab;
+  --frame: #4a5566;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --film: #4fa9c4; --med: #7d8ba0; --frame: #8693a5; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --film: #4fa9c4; --med: #7d8ba0; --frame: #8693a5; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1.7fr) minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.pane { position: relative; min-height: 0; }
+.pane + .pane { border-top: 1px solid var(--line); }
+.pane canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; }
+.pane canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .list dd { font-size: 0.88rem; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
+
+.swrow { display: flex; align-items: center; gap: 12px; }
+.bigsw { flex: none; width: 64px; height: 64px; border-radius: 8px; border: 1px solid var(--line); background: #000; }
+.swtxt { font-size: 0.85rem; color: var(--muted); }
+.swtxt b { color: var(--ink); font-family: var(--font-mono); font-weight: 600; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.exact { border-color: var(--ink); border-top-width: 3px; }
+.swatch.two { border-color: var(--accent); border-top-style: dashed; }
+.swatch.bare { border-color: var(--muted); border-top-style: dotted; border-top-width: 3px; }
+.swatch.r1 { border-color: var(--pos); border-top-width: 3px; }
+.swatch.r2 { border-color: var(--neg); border-top-width: 3px; }
+.swatch.lam { border-color: var(--equi); border-top-width: 3px; }
+
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 88vh; min-height: 640px; grid-template-rows: auto minmax(0, 1.45fr) minmax(0, 1fr); }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Thin Film Interference</h1>
+      <p>Light reflects from both surfaces of a thin film. The two reflections add or cancel depending on the extra path through the film and on which surfaces flip the wave, and white light comes back colored.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">extra path 2n<sub>f</sub>t cos θ<sub>t</sub> · π shift going to higher n · λ in nm</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="views">
+          <button type="button" data-v="rays" aria-pressed="true">Rays</button>
+          <button type="button" data-v="soap" aria-pressed="false">Soap film</button>
+          <button type="button" data-v="wedge" aria-pressed="false">Wedge</button>
+          <button type="button" data-v="newton" aria-pressed="false">Newton's rings</button>
+        </div>
+        <button type="button" class="btn" id="play">Pause</button>
+        <span class="count mono" id="tag" aria-live="off"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="Main view. Rays: a film between two media, the two reflected rays and their waves. Drag the bottom surface to change the thickness t and the start of the incoming ray to change the angle. Soap film, wedge and Newton's rings: the film in its computed colors; drag the probe line to read the thickness there. Keys: up and down change t, left and right change the angle, open and close bracket change the wavelength, space plays or pauses, 1 to 4 pick the view."></canvas>
+      </div>
+      <div class="pane" id="specPane">
+        <canvas id="sCan" tabindex="0" aria-label="Reflectance R against wavelength from 380 to 780 nm for the current film, with the first two reflections only and with no film for comparison. Drag the wavelength marker, or use the left and right arrow keys."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="two" aria-pressed="true">Two reflections</button>
+          <button type="button" data-p="soap" aria-pressed="false">Soap bubble colors</button>
+          <button type="button" data-p="black" aria-pressed="false">Black film</button>
+          <button type="button" data-p="wedge" aria-pressed="false">Air wedge fringes</button>
+          <button type="button" data-p="ar" aria-pressed="false">Anti reflection coating</button>
+          <button type="button" data-p="oil" aria-pressed="false">Oil on water</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Film and media</h2>
+        <div class="chips" id="media" role="group" aria-label="Media">
+          <button type="button" data-m="soap" aria-pressed="false">Soap film in air</button>
+          <button type="button" data-m="gap" aria-pressed="false">Air gap in glass</button>
+          <button type="button" data-m="mgf" aria-pressed="false">MgF₂ on glass</button>
+          <button type="button" data-m="oil" aria-pressed="false">Oil on water</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="n1">Above, n₁</label><output id="n1Out" class="mono" for="n1"></output></div>
+          <input type="range" id="n1" min="1" max="2" step="0.01" value="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="nf">Film, n<sub>f</sub></label><output id="nfOut" class="mono" for="nf"></output></div>
+          <input type="range" id="nf" min="1" max="2.5" step="0.01" value="1.33">
+        </div>
+        <div>
+          <div class="slider-head"><label for="n2">Below, n₂</label><output id="n2Out" class="mono" for="n2"></output></div>
+          <input type="range" id="n2" min="1" max="2.5" step="0.01" value="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="t">Film thickness t</label><output id="tOut" class="mono" for="t"></output></div>
+          <input type="range" id="t" min="0" max="3000" step="0.1" value="335">
+        </div>
+        <div>
+          <div class="slider-head"><label for="th">Angle of incidence θ₁</label><output id="thOut" class="mono" for="th"></output></div>
+          <input type="range" id="th" min="0" max="80" step="1" value="30">
+        </div>
+        <div class="inline">
+          <span class="lab">Polarization</span>
+          <div class="seg" role="group" aria-label="Polarization" id="pols">
+            <button type="button" data-q="u" aria-pressed="true">Unpolarized</button>
+            <button type="button" data-q="s" aria-pressed="false">s</button>
+            <button type="button" data-q="p" aria-pressed="false">p</button>
+          </div>
+        </div>
+        <p class="hint">θ₁ is measured in the top medium. s means the electric field is perpendicular to the plane of incidence, p means it lies in it; at normal incidence they are the same. The indices are taken as the same at every wavelength (no dispersion) and the film absorbs nothing.</p>
+      </section>
+
+      <section>
+        <h2>One wavelength, λ₀</h2>
+        <div>
+          <div class="slider-head"><label for="lam">Wavelength λ₀</label><output id="lamOut" class="mono" for="lam"></output></div>
+          <input type="range" id="lam" min="380" max="780" step="1" value="550">
+        </div>
+        <dl class="readout">
+          <div><dt>Shift at top surface</dt><dd id="rS1">—</dd></div>
+          <div><dt>Shift at bottom surface</dt><dd id="rS2">—</dd></div>
+          <div class="wide"><dt>Extra path 2n<sub>f</sub>t cos θ<sub>t</sub></dt><dd id="rPath">—</dd></div>
+          <div class="wide big"><dt>Ray 2 lags ray 1 by (path plus shifts)</dt><dd id="rLag">—</dd></div>
+          <div><dt>R, all reflections</dt><dd id="rR">—</dd></div>
+          <div><dt>R, first two only</dt><dd id="rR2">—</dd></div>
+          <div><dt>T, all reflections</dt><dd id="rT">—</dd></div>
+          <div><dt>R + T</dt><dd id="rRT">—</dd></div>
+          <div><dt>Angle in the film θ<sub>t</sub></dt><dd id="rTt">—</dd></div>
+          <div><dt>R with no film</dt><dd id="rR0">—</dd></div>
+          <div class="wide list"><dt>Brightest reflected wavelengths</dt><dd id="rMax">—</dd></div>
+          <div class="wide list"><dt>Darkest reflected wavelengths</dt><dd id="rMin">—</dd></div>
+        </dl>
+        <p class="hint" id="condHint"></p>
+      </section>
+
+      <section>
+        <h2>Reflected white light</h2>
+        <div class="swrow">
+          <div class="bigsw" id="bigsw" role="img" aria-label="Color of the reflected white light"></div>
+          <div class="swtxt">Luminous reflectance <b id="rY">—</b><br>Chromaticity <b id="rXY">—</b><br><span id="rGainTxt"></span></div>
+        </div>
+        <div class="inline">
+          <span class="lab">Display gain</span>
+          <div class="seg" role="group" aria-label="Display gain" id="gains">
+            <button type="button" data-g="1" aria-pressed="false">1×</button>
+            <button type="button" data-g="3" aria-pressed="true">3×</button>
+            <button type="button" data-g="10" aria-pressed="false">10×</button>
+          </div>
+        </div>
+        <p class="hint">Color model: the reflectance spectrum times CIE illuminant D65 (tabulated every 10 nm, interpolated linearly), integrated against the CIE 1931 2° color matching functions in the analytic fit of Wyman, Sloan and Shirley (2013), 380 to 780 nm, then converted to sRGB. A flat spectrum comes out exactly neutral. Gain 1× is true brightness against black, with a perfect mirror as white; a film reflects only a few percent, so 3× or 10× brightens it. Colors outside sRGB are desaturated and those too bright are scaled down.</p>
+      </section>
+
+      <section>
+        <h2>Anti reflection coating</h2>
+        <dl class="readout">
+          <div><dt>R with no film, normal incidence</dt><dd id="rBare">—</dd></div>
+          <div><dt>Ideal coating n<sub>f</sub> = √(n₁n₂)</dt><dd id="rIdeal">—</dd></div>
+          <div class="wide"><dt>Quarter wave thickness λ₀/(4n<sub>f</sub> cos θ<sub>t</sub>)</dt><dd id="rQW">—</dd></div>
+          <div class="wide"><dt>R at the quarter wave, ((n₁n₂ − n<sub>f</sub>²)/(n₁n₂ + n<sub>f</sub>²))²</dt><dd id="rQR">—</dd></div>
+        </dl>
+        <button type="button" class="btn" id="setQW">Set t to a quarter wave of λ₀</button>
+        <p class="hint">With n₁ &lt; n<sub>f</sub> &lt; n₂ both reflections flip, so the shifts cancel and only the path counts: a quarter wave film puts ray 2 half a cycle behind ray 1. If n<sub>f</sub>² = n₁n₂ the two reflections are equally strong and cancel completely at λ₀. MgF₂ (1.38) is used because it is durable, though √1.52 = 1.23 would be ideal on glass.</p>
+      </section>
+
+      <section id="patSec">
+        <h2>Pattern</h2>
+        <p class="hint" id="patNone">Pick Soap film, Wedge or Newton's rings above the drawing to see the film in its own colors. Each one uses the media and angle set above.</p>
+        <div class="inline" id="lightRow">
+          <span class="lab">Light</span>
+          <div class="seg" role="group" aria-label="Light" id="lights">
+            <button type="button" data-l="white" aria-pressed="true">White (D65)</button>
+            <button type="button" data-l="mono" aria-pressed="false">Only λ₀</button>
+          </div>
+        </div>
+        <div id="soapRows">
+          <div>
+            <div class="slider-head"><label for="ttop">Thickness at the top</label><output id="ttopOut" class="mono" for="ttop"></output></div>
+            <input type="range" id="ttop" min="0" max="200" step="1" value="10">
+          </div>
+          <div style="margin-top:10px">
+            <div class="slider-head"><label for="tbot">Thickness at the bottom</label><output id="tbotOut" class="mono" for="tbot"></output></div>
+            <input type="range" id="tbot" min="100" max="3000" step="10" value="1500">
+          </div>
+          <div class="inline" style="margin-top:10px">
+            <span class="lab">Profile</span>
+            <div class="seg" role="group" aria-label="Thickness profile" id="profs">
+              <button type="button" data-f="1" aria-pressed="true">Linear</button>
+              <button type="button" data-f="0.5" aria-pressed="false">√ depth</button>
+            </div>
+          </div>
+          <p class="hint" style="margin-top:10px">t = t<sub>top</sub> + (t<sub>bottom</sub> − t<sub>top</sub>)(y/h)<sup>p</sup>, with y the depth. Linear (p = 1) is a simple wedge with evenly spaced bands. √ depth (p = ½) is the shape of a film draining under gravity between rigid surfaces, which squeezes the first colors into a thin strip at the top. Play drains the film: the profile thins as 1/√time, sped up. The black film at the top is far thinner than λ, so the path adds almost nothing and the single π shift makes the two reflections cancel. Real black films are a stable layer a few nm to about 30 nm thick that grows down from the top.</p>
+        </div>
+        <div id="wedgeRows">
+          <div>
+            <div class="slider-head"><label for="hw">Spacer thickness h</label><output id="hwOut" class="mono" for="hw"></output></div>
+            <input type="range" id="hw" min="1" max="40" step="0.5" value="10">
+          </div>
+          <p class="hint" style="margin-top:10px">Two 50 mm glass slides touch at the left and are held apart by a spacer (a hair or a strip of foil) at the right. The gap grows linearly, t = x h/L, so the fringes are evenly spaced: one fringe for each λ/2 of extra gap (λ/2n<sub>f</sub> in general), Δx = λL/(2n<sub>f</sub>h). Drag the spacer in the side view.</p>
+        </div>
+        <div id="newtonRows">
+          <div>
+            <div class="slider-head"><label for="rl">Lens radius of curvature R</label><output id="rlOut" class="mono" for="rl"></output></div>
+            <input type="range" id="rl" min="0.5" max="5" step="0.1" value="1">
+          </div>
+          <p class="hint" style="margin-top:10px">A convex lens rests on a flat plate. The gap is t = R − √(R² − r²) ≈ r²/2R, so the rings crowd together outward. With an air gap the center is dark and dark rings sit at r = √(mλR/n<sub>f</sub>), m = 0, 1, 2, at normal incidence.</p>
+        </div>
+        <dl class="readout" id="patRead">
+          <div class="wide"><dt id="pLab1">—</dt><dd id="pVal1">—</dd></div>
+          <div class="wide"><dt id="pLab2">—</dt><dd id="pVal2">—</dd></div>
+        </dl>
+      </section>
+
+      <section>
+        <h2>Reflectance formula</h2>
+        <p class="formula">r = (r₁₂ + r₂₃e<sup>2iβ</sup>) / (1 + r₁₂r₂₃e<sup>2iβ</sup>)<br>β = 2π n<sub>f</sub> t cos θ<sub>t</sub> / λ, R = |r|²</p>
+        <p class="hint">This is the exact single layer (Airy) result: it sums every reflection inside the film, not just the first two. r₁₂ and r₂₃ are the Fresnel coefficients of the two surfaces for the chosen polarization (unpolarized light averages s and p). Keeping only the first two reflections gives r ≈ r₁₂ + (1 − r₁₂²)r₂₃e<sup>2iβ</sup>, which is very close when each surface reflects only a few percent.</p>
+      </section>
+
+      <section>
+        <h2>Display</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tTwo" checked>First two only</label>
+          <label><input type="checkbox" id="tBare" checked>No film</label>
+        </div>
+        <div class="key">
+          <span><i class="swatch exact"></i>R(λ), all reflections, filled in spectral color</span>
+          <span><i class="swatch two"></i>R(λ) from the first two reflections</span>
+          <span><i class="swatch bare"></i>R(λ) with no film (n₁ against n₂)</span>
+          <span><i class="swatch lam"></i>Wavelength λ₀ used in the wave picture</span>
+          <span><i class="swatch r1"></i><i class="swatch r2"></i>Ray 1 (top surface) and ray 2 (bottom surface)</span>
+        </div>
+        <p class="hint">In the ray drawing the film is drawn far thicker than scale (the drawn thickness grows as the cube root of t). Rays are at their true angles, except that below 20° they are drawn at 20° so they can be told apart. The dotted line from where ray 2 leaves the film to ray 1 is a line of equal phase: from there on both rays travel the same distance, so the extra path is n<sub>f</sub>(AB + BC) inside the film minus n₁ times the stretch of ray 1 before that line, which works out to 2n<sub>f</sub>t cos θ<sub>t</sub>. The phase shifts shown are those of s polarization (or p if chosen); beyond Brewster's angle the p reflection loses its π shift. The wave picture shows the first two reflections only. The reflected waves are drawn side by side for clarity; in reality they overlap.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const DEG = Math.PI / 180;
+
+  // CIE standard illuminant D65, relative spectral power, 380 to 780 nm every 10 nm (CIE 15:2004)
+  const D65_10 = [49.9755, 54.6482, 82.7549, 91.486, 93.4318, 86.6823, 104.865, 117.008, 117.812, 114.861,
+    115.923, 108.811, 109.354, 107.802, 104.79, 107.689, 104.405, 104.046, 100, 96.3342,
+    95.788, 88.6856, 90.0062, 89.5991, 87.6987, 83.2886, 83.6992, 80.0268, 80.2146, 82.2778,
+    78.2842, 69.7213, 71.6091, 74.349, 61.604, 69.8856, 75.087, 63.5927, 46.4182, 66.8054, 63.3828];
+  function d65(l) {
+    const f = (l - 380) / 10, i = Math.max(0, Math.min(39, Math.floor(f))), u = f - i;
+    return D65_10[i] * (1 - u) + D65_10[i + 1] * u;
+  }
+  // CIE 1931 2° color matching functions, multi lobe Gaussian fit (Wyman, Sloan, Shirley 2013)
+  const gl = (x, mu, s1, s2) => { const t = (x - mu) / (x < mu ? s1 : s2); return Math.exp(-0.5 * t * t); };
+  function cie(l) {
+    return [
+      1.056 * gl(l, 599.8, 37.9, 31.0) + 0.362 * gl(l, 442.0, 16.0, 26.7) - 0.065 * gl(l, 501.1, 20.4, 26.2),
+      0.821 * gl(l, 568.8, 46.9, 40.5) + 0.286 * gl(l, 530.9, 16.3, 31.1),
+      1.217 * gl(l, 437.0, 11.8, 36.0) + 0.681 * gl(l, 459.0, 26.0, 13.8)
+    ];
+  }
+  // Weights for ∫ R(λ) D65(λ) x̄ȳz̄(λ) dλ by the trapezoid rule, normalized so that R = 1 gives Y = 1.
+  function makeObserver(step) {
+    const n = Math.round(400 / step) + 1, lams = new Float64Array(n), wx = new Float64Array(n), wy = new Float64Array(n), wz = new Float64Array(n);
+    let N = 0;
+    for (let i = 0; i < n; i++) {
+      const l = 380 + i * step, c = cie(l), s = d65(l) * (i === 0 || i === n - 1 ? 0.5 : 1);
+      lams[i] = l; wx[i] = s * c[0]; wy[i] = s * c[1]; wz[i] = s * c[2]; N += wy[i];
+    }
+    let Xw = 0, Zw = 0;
+    for (let i = 0; i < n; i++) { wx[i] /= N; wy[i] /= N; wz[i] /= N; Xw += wx[i]; Zw += wz[i]; }
+    return { n, step, lams, wx, wy, wz, Xw, Zw };
+  }
+  function xyzOf(obs, R) {
+    let X = 0, Y = 0, Z = 0;
+    for (let i = 0; i < obs.n; i++) { X += R[i] * obs.wx[i]; Y += R[i] * obs.wy[i]; Z += R[i] * obs.wz[i]; }
+    return [X, Y, Z];
+  }
+  // XYZ (D65 white of this observer at Y = 1) to linear sRGB. The tiny difference between the white point
+  // computed from the fit and the sRGB D65 point (0.95047, 1, 1.08883) is removed by scaling X and Z.
+  function xyzToLin(obs, X, Y, Z) {
+    X *= 0.95047 / obs.Xw; Z *= 1.08883 / obs.Zw;
+    return [3.2404542 * X - 1.5371385 * Y - 0.4985314 * Z,
+      -0.9692660 * X + 1.8760108 * Y + 0.0415560 * Z,
+      0.0556434 * X - 0.2040259 * Y + 1.0572252 * Z];
+  }
+  const gam = (v) => (v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055);
+  // linear sRGB to 0..255: out of gamut colors are desaturated toward the gray of the same luminance,
+  // colors brighter than the display are scaled down (keeping their chromaticity)
+  function linToRGB(c, Y) {
+    let [r, g, b] = c;
+    const mn = Math.min(r, g, b);
+    if (Y <= 0) return [0, 0, 0];
+    if (mn < 0) { const k = Y / (Y - mn); r = Y + k * (r - Y); g = Y + k * (g - Y); b = Y + k * (b - Y); }
+    const mx = Math.max(r, g, b);
+    if (mx > 1) { r /= mx; g /= mx; b /= mx; }
+    return [r, g, b].map((v) => Math.round(255 * Math.min(1, Math.max(0, gam(v)))));
+  }
+  function xyzToRGB(obs, X, Y, Z, gain) { return linToRGB(xyzToLin(obs, X * gain, Y * gain, Z * gain), Y * gain); }
+  // a spectral color at full brightness, for strips and rays
+  function specRGB(l) {
+    const c = cie(l);
+    let r = 3.2404542 * c[0] - 1.5371385 * c[1] - 0.4985314 * c[2], g = -0.9692660 * c[0] + 1.8760108 * c[1] + 0.0415560 * c[2], b = 0.0556434 * c[0] - 0.2040259 * c[1] + 1.0572252 * c[2];
+    const mn = Math.min(r, g, b); if (mn < 0) { r -= mn; g -= mn; b -= mn; }
+    const mx = Math.max(r, g, b) || 1;
+    return [r / mx, g / mx, b / mx];
+  }
+
+  // ---------- complex helpers, [re, im] ----------
+  const cmul = (a, b) => [a[0] * b[0] - a[1] * b[1], a[0] * b[1] + a[1] * b[0]];
+  const cdiv = (a, b) => { const d = b[0] * b[0] + b[1] * b[1]; return [(a[0] * b[0] + a[1] * b[1]) / d, (a[1] * b[0] - a[0] * b[1]) / d]; };
+  const cadd = (a, b) => [a[0] + b[0], a[1] + b[1]];
+  const cabs2 = (a) => a[0] * a[0] + a[1] * a[1];
+  const cexpi = (z) => { const m = Math.exp(-z[1]); return [m * Math.cos(z[0]), m * Math.sin(z[0])]; };   // e^{iz}
+  // cos θ in a medium of index n for incidence n₁ sin θ₁ (Snell). Imaginary (Im > 0, a decaying wave) past the critical angle.
+  function cosIn(n1, s1, n) { const s = n1 * s1 / n, a = 1 - s * s; return a >= 0 ? [Math.sqrt(a), 0] : [0, Math.sqrt(-a)]; }
+  // Fresnel amplitude coefficients from medium i into j. s: r = (nᵢcᵢ − nⱼcⱼ)/(nᵢcᵢ + nⱼcⱼ), t = 2nᵢcᵢ/(nᵢcᵢ + nⱼcⱼ).
+  // p: r = (nᵢcⱼ − nⱼcᵢ)/(nᵢcⱼ + nⱼcᵢ), t = 2nᵢcᵢ/(nᵢcⱼ + nⱼcᵢ), sign chosen so r_p = r_s at normal incidence.
+  function iface(ni, ci, nj, cj, pol) {
+    if (pol === 's') {
+      const a = [ni * ci[0], ni * ci[1]], b = [nj * cj[0], nj * cj[1]], den = cadd(a, b);
+      return { r: cdiv([a[0] - b[0], a[1] - b[1]], den), t: cdiv([2 * a[0], 2 * a[1]], den) };
+    }
+    const a = [ni * cj[0], ni * cj[1]], b = [nj * ci[0], nj * ci[1]], den = cadd(a, b);
+    return { r: cdiv([a[0] - b[0], a[1] - b[1]], den), t: cdiv([2 * ni * ci[0], 2 * ni * ci[1]], den) };
+  }
+  // One film of index nf and thickness t (nm) between n1 (light comes from here) and n2, wavelength lam (nm), angle th (deg).
+  function film(n1, nf, n2, t, lam, th, pol) {
+    if (pol === 'u') {
+      const s = film(n1, nf, n2, t, lam, th, 's'), p = film(n1, nf, n2, t, lam, th, 'p');
+      return { R: 0.5 * (s.R + p.R), T: 0.5 * (s.T + p.T), R2: 0.5 * (s.R2 + p.R2), R0: 0.5 * (s.R0 + p.R0), Rinc: 0.5 * (s.Rinc + p.Rinc), s, p, cf: s.cf };
+    }
+    const s1 = Math.sin(th * DEG), c1 = cosIn(n1, s1, n1), cf = cosIn(n1, s1, nf), c2 = cosIn(n1, s1, n2);
+    const a = iface(n1, c1, nf, cf, pol), b = iface(nf, cf, n2, c2, pol), d = iface(n1, c1, n2, c2, pol);
+    const beta = [2 * Math.PI * nf * cf[0] * t / lam, 2 * Math.PI * nf * cf[1] * t / lam];
+    const E = cexpi([2 * beta[0], 2 * beta[1]]), Eh = cexpi(beta);
+    const rbE = cmul(b.r, E), den = cadd([1, 0], cmul(a.r, rbE));
+    const r = cdiv(cadd(a.r, rbE), den);
+    const tt = cdiv(cmul(cmul(a.t, b.t), Eh), den);
+    // the first two reflected waves: ρ₁ = r₁₂ from the top, ρ₂ = t₁₂t₂₁r₂₃e^{2iβ} = (1 − r₁₂²)r₂₃e^{2iβ} from the bottom
+    const one = [1 - (a.r[0] * a.r[0] - a.r[1] * a.r[1]), -2 * a.r[0] * a.r[1]];
+    const rho1 = a.r, rho2 = cmul(one, rbE);
+    const R12 = cabs2(a.r), R23 = cabs2(b.r);
+    // incoherent sum of all reflections (what a very thick film averages to)
+    const Rinc = R12 * R23 >= 1 - 1e-12 ? 1 : R12 + (1 - R12) * (1 - R12) * R23 / (1 - R12 * R23);
+    return { r, R: cabs2(r), T: (n2 * c2[0]) / (n1 * c1[0]) * cabs2(tt), rho1, rho2, R2: cabs2(cadd(rho1, rho2)), R0: cabs2(d.r), Rinc,
+      r12: a.r, r23: b.r, cf, tirTop: cf[1] > 0, tirBot: c2[1] > 0 };
+  }
+  // Precomputed Fresnel coefficients for fast R(λ, t) on a list of wavelengths (indices do not depend on λ, so only β does)
+  function prep(n1, nf, n2, th, pol, lams) {
+    const s1 = Math.sin(th * DEG), c1 = cosIn(n1, s1, n1), cf = cosIn(n1, s1, nf), c2 = cosIn(n1, s1, n2);
+    const pols = (pol === 'u' ? ['s', 'p'] : [pol]).map((q) => {
+      const a = iface(n1, c1, nf, cf, q).r, b = iface(nf, cf, n2, c2, q).r, ab = cmul(a, b);
+      return { ar: a[0], ai: a[1], br: b[0], bi: b[1], abr: ab[0], abi: ab[1] };
+    });
+    const n = lams.length, qre = new Float64Array(n), qim = new Float64Array(n);
+    for (let i = 0; i < n; i++) { qre[i] = 4 * Math.PI * nf * cf[0] / lams[i]; qim[i] = 4 * Math.PI * nf * cf[1] / lams[i]; }
+    return { pols, qre, qim, n, w: 1 / pols.length };
+  }
+  function Rfast(P, i, t) {
+    const m = Math.exp(-P.qim[i] * t), ph = P.qre[i] * t, Er = m * Math.cos(ph), Ei = m * Math.sin(ph);
+    let R = 0;
+    for (const c of P.pols) {
+      const nr = c.ar + c.br * Er - c.bi * Ei, ni = c.ai + c.br * Ei + c.bi * Er;
+      const dr = 1 + c.abr * Er - c.abi * Ei, di = c.abr * Ei + c.abi * Er;
+      R += (nr * nr + ni * ni) / (dr * dr + di * di);
+    }
+    return R * P.w;
+  }
+  // Quarter wave coating at normal incidence: R = ((n₁n₂ − n_f²)/(n₁n₂ + n_f²))²
+  const quarterR = (n1, nf, n2) => { const a = n1 * n2, b = nf * nf; return ((a - b) / (a + b)) ** 2; };
+  // Thickness profiles (nm). Soap: y from 0 (top) to 1 (bottom). Wedge: x and L in the same unit, h in nm. Lens: r and R in m, result in nm.
+  const soapT = (y, ttop, tbot, p = 1) => ttop + (tbot - ttop) * Math.pow(Math.max(0, Math.min(1, y)), p);
+  const soapY = (t, ttop, tbot, p = 1) => (tbot <= ttop ? 0 : Math.pow(Math.max(0, Math.min(1, (t - ttop) / (tbot - ttop))), 1 / p));
+  const wedgeT = (x, L, h) => x * h / L;
+  const lensT = (r, R) => (R - Math.sqrt(Math.max(0, R * R - r * r))) * 1e9;
+  const lensR = (tnm, R) => { const t = tnm * 1e-9; return Math.sqrt(Math.max(0, t * (2 * R - t))); };
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.TF = { DEG, D65_10, d65, cie, makeObserver, xyzOf, xyzToLin, linToRGB, xyzToRGB, specRGB, cosIn, iface, film, prep, Rfast, quarterR, soapT, soapY, wedgeT, lensT, lensR, cmul, cdiv, cabs2 };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const OBS1 = makeObserver(1), OBS2 = makeObserver(2);
+  const TMAX_DRAW = 2000;          // thickness that fills the drawn film band
+  const MIN_DRAW = 20;             // smaller angles of incidence are drawn at this angle (deg)
+  const WEDGE_L = 50;              // slide length, mm
+  const NEWTON_RMAX = 2;           // radius shown, mm
+  const LUT_DT = 2, LUT_TMAX = 12000;   // white light colors tabulated every 2 nm up to 12 µm
+
+  const MEDIA = { soap: [1, 1.33, 1], gap: [1.52, 1, 1.52], mgf: [1, 1.38, 1.52], oil: [1, 1.47, 1.33] };
+  const NAMES = [[1, 'air'], [1.33, 'water'], [1.38, 'MgF₂'], [1.47, 'oil'], [1.52, 'glass']];
+  const nName = (n) => { for (const [v, s] of NAMES) if (Math.abs(n - v) < 0.004) return s; return ''; };
+
+  const PRESETS = {
+    two: { view: 'rays', m: [1, 1.33, 1], t: 335, th: 30, lam: 550, pol: 'u', gain: 3, light: 'white',
+      hint: 'A soap film in air, 335 nm thick, light at 30°. The top reflection flips (air to water), the bottom one does not (water to air). The extra path is 1.5 λ at 550 nm, and with the half cycle flip ray 2 lags by exactly 2 cycles: the waves add. Drag the bottom surface and watch them slide in and out of step.' },
+    soap: { view: 'soap', m: [1, 1.33, 1], th: 0, lam: 550, pol: 'u', gain: 3, light: 'white', ttop: 10, tbot: 1000, probe: 0.2, play: true,
+      hint: 'A vertical soap film drains: thin at the top, thicker below. Each band is a thickness where some colors add and others cancel. The bands creep down and spread as the film thins, and the black film at the top grows. Where the film is thicker than about 1 µm, many orders overlap and the colors fade to pale pinks and greens.' },
+    black: { view: 'rays', m: [1, 1.33, 1], t: 10, th: 0, lam: 550, pol: 'u', gain: 3, light: 'white',
+      hint: 'A film 10 nm thick, far thinner than λ. The extra path is only 0.05 λ, so the half cycle flip at the top surface leaves the two reflections almost exactly opposite: they cancel at every color and the film looks black, just before a bubble bursts.' },
+    wedge: { view: 'wedge', m: [1.52, 1, 1.52], th: 0, lam: 589, pol: 'u', gain: 3, light: 'mono', hw: 10, probe: 6,
+      hint: 'An air wedge between glass slides in sodium yellow light (589 nm). The edge where the slides touch is dark: there the gap is zero and only the bottom reflection (air to glass) flips. Each next dark fringe is λ/2 = 295 nm more gap. Switch the light to white to see the colors, which fade after a few fringes.' },
+    ar: { view: 'rays', m: [1, 1.38, 1.52], t: 99.6, th: 0, lam: 550, pol: 'u', gain: 10, light: 'white',
+      hint: 'A quarter wave of MgF₂ (99.6 nm) on glass. Both reflections flip, so only the path counts: half a wave at 550 nm, and they cancel. R drops from 4.3% (bare glass, dotted) to 1.3% in the green, and rises toward the ends of the spectrum, which is why coated lenses look faintly purple.' },
+    oil: { view: 'rays', m: [1, 1.47, 1.33], t: 300, th: 0, lam: 550, pol: 'u', gain: 3, light: 'white',
+      hint: 'Oil (1.47) on water (1.33). The top reflection flips (air to oil) and the bottom one does not (oil to the lower index water), the same as a soap film. A 300 nm slick reflects strongly near 588 nm and 420 nm and comes out a magenta pink.' }
+  };
+
+  // ---------- state ----------
+  const S = { preset: 'two', view: 'rays', n1: 1, nf: 1.33, n2: 1, t: 335, th: 30, lam: 550, pol: 'u', gain: 3, light: 'white',
+    soap: { ttop: 10, tbot: 1000, y: 0.18, tb0: 1000, tau: 0, p: 1 }, wedge: { hw: 10, x: 6 }, newton: { R: 1, r: 1 },
+    two: true, bare: true };
+  let playing = !reduce, drainDone = false, wavePhase = 0;
+  let dirtyMain = true, dirtySpec = true, dirtyRead = true;
+  const touch = () => { dirtyMain = dirtySpec = dirtyRead = true; };
+
+  // ---------- spectra and colors ----------
+  let spec = null;   // { R, R2, R0, xyz, rgb }
+  function cfgKey() { return [S.n1, S.nf, S.n2, S.th, S.pol].join('|'); }
+  function computeSpec() {
+    const P = prep(S.n1, S.nf, S.n2, S.th, S.pol, OBS1.lams), n = OBS1.n;
+    const R = new Float64Array(n), R2 = new Float64Array(n), R0 = new Float64Array(n);
+    for (let i = 0; i < n; i++) R[i] = Rfast(P, i, S.t);
+    // two beam and no film curves from the full function, every 4 nm (they are smooth) and interpolated
+    for (let i = 0; i < n; i += 4) { const f = film(S.n1, S.nf, S.n2, S.t, OBS1.lams[i], S.th, S.pol); R2[i] = f.R2; R0[i] = f.R0; }
+    for (let i = 0; i < n; i++) if (i % 4) { const a = i - (i % 4), b = Math.min(n - 1, a + 4), u = (i - a) / (b - a || 1); R2[i] = R2[a] * (1 - u) + R2[b] * u; R0[i] = R0[a] * (1 - u) + R0[b] * u; }
+    const xyz = xyzOf(OBS1, R);
+    spec = { R, R2, R0, xyz, rgb: xyzToRGB(OBS1, ...xyz, S.gain) };
+  }
+  // white light color against thickness, for the pattern views
+  let lut = null, lutKey = '';
+  function ensureLUT() {
+    const key = cfgKey();
+    if (lut && lutKey === key) return;
+    const P = prep(S.n1, S.nf, S.n2, S.th, S.pol, OBS2.lams), m = Math.round(LUT_TMAX / LUT_DT) + 1;
+    const X = new Float32Array(m), Y = new Float32Array(m), Z = new Float32Array(m), Rt = new Float64Array(OBS2.n);
+    for (let k = 0; k < m; k++) {
+      const t = k * LUT_DT;
+      for (let i = 0; i < OBS2.n; i++) Rt[i] = Rfast(P, i, t);
+      const c = xyzOf(OBS2, Rt); X[k] = c[0]; Y[k] = c[1]; Z[k] = c[2];
+    }
+    // the average over many fringes: the incoherent sum of reflections, at every wavelength the same (no dispersion)
+    const f = film(S.n1, S.nf, S.n2, 0, 550, S.th, S.pol);
+    lut = { X, Y, Z, m, inc: [f.Rinc * OBS2.Xw, f.Rinc, f.Rinc * OBS2.Zw] };
+    lutKey = key;
+  }
+  // XYZ of reflected white light at thickness t. Between 10 and 12 µm the fringes are finer than any eye or
+  // spectral sampling can follow, so the color blends into the many fringe average.
+  function whiteXYZ(t) {
+    const f = Math.max(0, t) / LUT_DT, k = Math.min(lut.m - 2, Math.floor(f)), u = Math.min(1, f - k);
+    let X = lut.X[k] * (1 - u) + lut.X[k + 1] * u, Y = lut.Y[k] * (1 - u) + lut.Y[k + 1] * u, Z = lut.Z[k] * (1 - u) + lut.Z[k + 1] * u;
+    if (t > 10000) { const w = Math.min(1, (t - 10000) / 2000); X += w * (lut.inc[0] - X); Y += w * (lut.inc[1] - Y); Z += w * (lut.inc[2] - Z); }
+    return [X, Y, Z];
+  }
+  let monoP = null, monoKey = '', monoPeak = 1, monoLin = [1, 1, 1];
+  function ensureMono() {
+    const key = cfgKey() + '|' + S.lam;
+    if (monoP && monoKey === key) return;
+    monoP = prep(S.n1, S.nf, S.n2, S.th, S.pol, [S.lam]);
+    // brightest fringe over one period of β
+    const per = monoP.qre[0] > 0 ? 2 * Math.PI / monoP.qre[0] : 1;
+    monoPeak = 0; for (let k = 0; k < 256; k++) monoPeak = Math.max(monoPeak, Rfast(monoP, 0, per * k / 256));
+    monoPeak = Math.max(monoPeak, 1e-9);
+    monoLin = specRGB(S.lam);
+    monoKey = key;
+  }
+  // color of the film at thickness t in the current light, as [r, g, b] 0..255
+  function filmRGB(t) {
+    if (S.light === 'mono') {
+      const I = Math.min(1, Rfast(monoP, 0, t) / monoPeak);
+      return monoLin.map((v) => Math.round(255 * gam(v * I)));
+    }
+    const c = whiteXYZ(t); return xyzToRGB(OBS2, c[0], c[1], c[2], S.gain);
+  }
+  const rgbStr = (c, a = 1) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+  const specStr = (l, a = 1) => { const c = specRGB(l); return `rgba(${Math.round(255 * gam(c[0]))},${Math.round(255 * gam(c[1]))},${Math.round(255 * gam(c[2]))},${a})`; };
+
+  // ---------- probes: the thickness at the probe is the film thickness t ----------
+  function tAtProbe() {
+    if (S.view === 'soap') return soapT(S.soap.y, S.soap.ttop, S.soap.tbot, S.soap.p);
+    if (S.view === 'wedge') return wedgeT(S.wedge.x, WEDGE_L, S.wedge.hw * 1000);
+    if (S.view === 'newton') return lensT(S.newton.r * 1e-3, S.newton.R);
+    return S.t;
+  }
+  function probeToT(t) {   // move the probe to where the film has thickness t (clamped to what the view shows)
+    if (S.view === 'soap') S.soap.y = soapY(t, S.soap.ttop, S.soap.tbot, S.soap.p);
+    else if (S.view === 'wedge') S.wedge.x = Math.max(0, Math.min(WEDGE_L, t * WEDGE_L / (S.wedge.hw * 1000)));
+    else if (S.view === 'newton') S.newton.r = Math.min(NEWTON_RMAX, lensR(t, S.newton.R) * 1e3);
+  }
+  function syncT() { if (S.view !== 'rays') S.t = Math.round(tAtProbe() * 10) / 10; }
+
+  // ---------- theme and canvas ----------
+  let T = null;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.4 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
+      gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), film: g('--film'),
+      med: g('--med'), frame: g('--frame'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+  }
+  const can = $('can'), ctx = can.getContext('2d'), sCan = $('sCan'), sctx = sCan.getContext('2d');
+  const dims = { m: [0, 0], s: [0, 0] };
+  let dpr = 1;
+  function fit(c, pane, key) {
+    const r = pane.getBoundingClientRect();
+    dims[key] = [r.width, r.height];
+    c.width = Math.max(1, Math.round(r.width * dpr)); c.height = Math.max(1, Math.round(r.height * dpr));
+    c.style.width = r.width + 'px'; c.style.height = r.height + 'px';
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; fit(can, $('pane'), 'm'); fit(sCan, $('specPane'), 's'); newtonImg = null; touch(); }
+  // label scale: projector mode enlarges labels, capped by the pane size so they do not pile up
+  function labScale(W, H) { const ps = projScale(); return ps === 1 ? 1 : Math.min(ps, Math.max(1, Math.min(W / 520, H / 300))); }
+
+  // labels are queued and drawn last on a halo box
+  let labels = [];
+  function lab(txt, x, y, o = {}) { labels.push({ txt, x, y, ...o }); }
+  function flushLabels(c, ls) {
+    for (const L of labels) {
+      const size = (L.size || 11.5) * ls;
+      c.font = `${L.bold ? '700 ' : ''}${size}px ${L.font === 'ui' ? T.ui : T.mono}`;
+      c.textAlign = L.align || 'left'; c.textBaseline = 'middle';
+      const w = c.measureText(L.txt).width, x0 = L.align === 'right' ? L.x - w : L.align === 'center' ? L.x - w / 2 : L.x;
+      if (L.halo !== false) {
+        c.fillStyle = L.bg || T.canvas; c.globalAlpha = L.bgA || 0.86;
+        c.fillRect(x0 - 3, L.y - size * 0.62, w + 6, size * 1.24); c.globalAlpha = 1;
+      }
+      c.fillStyle = L.color || T.ink; c.fillText(L.txt, L.x, L.y);
+    }
+    labels = [];
+  }
+  function arrowHead(c, x, y, ang, s) {
+    c.beginPath(); c.moveTo(x, y); c.lineTo(x - s * Math.cos(ang - 0.42), y - s * Math.sin(ang - 0.42));
+    c.lineTo(x - s * Math.cos(ang + 0.42), y - s * Math.sin(ang + 0.42)); c.closePath(); c.fill();
+  }
+  function ray(c, a, b, color, w, alpha = 1, head = true, ls = 1) {
+    c.globalAlpha = alpha; c.strokeStyle = color; c.fillStyle = color; c.lineWidth = w;
+    c.beginPath(); c.moveTo(a[0], a[1]); c.lineTo(b[0], b[1]); c.stroke();
+    if (head) { const ang = Math.atan2(b[1] - a[1], b[0] - a[0]), mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2; arrowHead(c, mx + 5 * ls * Math.cos(ang), my + 5 * ls * Math.sin(ang), ang, 8 * ls); }
+    c.globalAlpha = 1;
+  }
+
+  // ---------- layout of the main pane ----------
+  function mainLayout() {
+    const [W, H] = dims.m, ls = labScale(W, H);
+    if (S.view === 'rays') {
+      if (W >= 640) { const w1 = Math.round(W * 0.58); return { W, H, ls, ray: { x: 0, y: 0, w: w1, h: H }, wave: { x: w1, y: 0, w: W - w1, h: H }, wide: true }; }
+      const h1 = Math.round(H * 0.6); return { W, H, ls, ray: { x: 0, y: 0, w: W, h: h1 }, wave: { x: 0, y: h1, w: W, h: H - h1 }, wide: false };
+    }
+    return { W, H, ls };
+  }
+
+  // ---------- rays view geometry (shared by drawing and dragging) ----------
+  function rayGeom() {
+    const Ly = mainLayout(), R = Ly.ray, ls = Ly.ls, pad = 16 * ls;
+    const thD = Math.max(S.th, MIN_DRAW) * DEG, sD = Math.sin(thD), cD = Math.cos(thD);
+    const sTf = S.n1 * sD / S.nf, tirTop = sTf >= 1, cTf = tirTop ? 0 : Math.sqrt(1 - sTf * sTf), tanTf = tirTop ? 0 : sTf / cTf;
+    const sT2 = S.n1 * sD / S.n2, tirBot = sT2 >= 1;
+    const top = R.y + 40 * ls, y1 = R.y + R.h * 0.46;
+    const hfMax = Math.max(8, Math.min(R.h * 0.32, tirTop ? R.h * 0.32 : 0.2 * R.w / Math.max(tanTf, 0.05)));
+    const hf = S.t <= 0 ? 0 : hfMax * Math.cbrt(Math.min(1, S.t / TMAX_DRAW));
+    const y2 = y1 + hf, dx = hf * tanTf;
+    // the point of incidence stays put, so dragging the angle pivots about it
+    const xA = R.x + R.w * 0.4;
+    const Lr = Math.max(30, Math.min((y1 - top) / cD, (xA - R.x - pad) / sD, (R.x + R.w - pad - xA - 2 * dx) / sD));
+    const A = [xA, y1], S0 = [xA - Lr * sD, y1 - Lr * cD], B = [xA + dx, y2], C = [xA + 2 * dx, y1];
+    const u = [sD, -cD];
+    const proj = (C[0] - xA) * u[0] + (C[1] - y1) * u[1], D = [xA + proj * u[0], y1 + proj * u[1]];
+    const L1 = Math.min(Math.max(Lr, proj + 26 * ls), (y1 - R.y - 14 * ls) / cD);   // ray 1 reaches past the equal phase line
+    const E1 = [xA + L1 * sD, y1 - L1 * cD], E2 = [C[0] + Lr * sD, y1 - Lr * cD];
+    return { R, ls, pad, thD, sD, cD, tirTop, tirBot, tanTf, sT2, y1, y2, hf, hfMax, dx, Lr, A, S0, B, C, D, E1, E2, gripX: R.x + R.w - pad - 46 * ls };
+  }
+
+  // ---------- drawing: rays view ----------
+  function drawRays() {
+    const c = ctx, g = rayGeom(), R = g.R, ls = g.ls, ps = projScale(), lw = Math.min(ps, 1.25);
+    const f = film(S.n1, S.nf, S.n2, S.t, S.lam, S.th, S.pol === 'p' ? 'p' : 's');
+    // media
+    const tint = (n) => Math.min(0.5, 0.05 + (n - 1) * 0.32);
+    c.save(); c.beginPath(); c.rect(R.x, R.y, R.w, R.h); c.clip();
+    c.fillStyle = T.med; c.globalAlpha = S.n1 > 1.001 ? tint(S.n1) : 0; c.fillRect(R.x, R.y, R.w, g.y1 - R.y);
+    c.globalAlpha = S.n2 > 1.001 ? tint(S.n2) : 0; c.fillRect(R.x, g.y2, R.w, R.y + R.h - g.y2);
+    c.fillStyle = T.film; c.globalAlpha = 0.16 + tint(S.nf) * 0.6; c.fillRect(R.x, g.y1, R.w, g.hf); c.globalAlpha = 1;
+    c.strokeStyle = T.frame; c.lineWidth = 1.4 * lw;
+    c.beginPath(); c.moveTo(R.x, g.y1 + 0.5); c.lineTo(R.x + R.w, g.y1 + 0.5); c.stroke();
+    c.beginPath(); c.moveTo(R.x, g.y2 + 0.5); c.lineTo(R.x + R.w, g.y2 + 0.5); c.stroke();
+    // normal at A
+    c.strokeStyle = T.muted; c.lineWidth = 1; c.setLineDash([4, 4]);
+    c.beginPath(); c.moveTo(g.A[0], g.y1 - 70 * ls); c.lineTo(g.A[0], Math.max(g.y2, g.y1 + 40 * ls)); c.stroke(); c.setLineDash([]);
+    // wavefront CD: equal phase line perpendicular to the reflected rays
+    if (!g.tirTop && g.hf > 2) {
+      c.strokeStyle = T.muted; c.lineWidth = 1.2 * lw; c.setLineDash([2, 3]);
+      c.beginPath(); c.moveTo(g.C[0], g.C[1]); c.lineTo(g.D[0], g.D[1]); c.stroke(); c.setLineDash([]);
+    }
+    const W1 = 2.6 * lw, inc = specStr(S.lam);
+    // incident ray (outlined so pale colors show on a light canvas)
+    c.globalAlpha = 0.55; c.strokeStyle = T.ink; c.lineWidth = W1 + 2; c.beginPath(); c.moveTo(...g.S0); c.lineTo(...g.A); c.stroke(); c.globalAlpha = 1;
+    ray(c, g.S0, g.A, inc, W1, 1, true, ls);
+    // ray 1
+    ray(c, g.A, g.E1, T.pos, W1, 1, true, ls);
+    if (!g.tirTop) {
+      const a2 = Math.min(1, 0.35 + 3 * Math.sqrt(cabs2(f.rho2)));
+      // inside the film: A → B → C, then ray 2
+      ray(c, g.A, g.B, T.neg, W1 * 0.85, 1, g.hf > 26 * ls, ls);
+      ray(c, g.B, g.C, T.neg, W1 * 0.85, 1, g.hf > 26 * ls, ls);
+      ray(c, g.C, g.E2, T.neg, W1, a2 < 1 ? Math.max(0.55, a2) : 1, true, ls);
+      // the third reflection and transmitted rays, faint
+      if (g.hf > 1) {
+        const B3 = [g.C[0] + g.dx, g.y2], C3 = [g.C[0] + 2 * g.dx, g.y1], E3 = [C3[0] + g.Lr * 0.55 * g.sD, g.y1 - g.Lr * 0.55 * g.cD];
+        c.setLineDash([5, 4]); ray(c, g.C, B3, T.muted, 1.2 * lw, 0.6, false); ray(c, B3, C3, T.muted, 1.2 * lw, 0.6, false); ray(c, C3, E3, T.muted, 1.2 * lw, 0.6, false); c.setLineDash([]);
+        lab('3, 4, … weaker', E3[0] + 4 * ls, E3[1] - 6 * ls, { color: T.muted, size: 10.5 });
+        if (!g.tirBot) {
+          const cT2 = Math.sqrt(1 - g.sT2 * g.sT2), len = (R.y + R.h - g.y2) / cT2 * 0.8;
+          ray(c, g.B, [g.B[0] + len * g.sT2, g.y2 + len * cT2], T.muted, 1.4 * lw, 0.55, true, ls);
+        }
+      }
+    }
+    // angle arcs
+    c.strokeStyle = T.ink; c.lineWidth = 1.2 * lw;
+    const ar = 34 * ls;
+    c.beginPath(); c.arc(g.A[0], g.A[1], ar, -Math.PI / 2 - g.thD, -Math.PI / 2); c.stroke();
+    lab(`θ₁ = ${S.th}°${S.th < MIN_DRAW ? ` (drawn at ${MIN_DRAW}°)` : ''}`, g.A[0] - ar * Math.sin(g.thD / 2) - 6 * ls, g.A[1] - ar * Math.cos(g.thD / 2) - 9 * ls, { align: 'right', size: 11 });
+    if (!g.tirTop && g.hf > 18 * ls) {
+      const tt = Math.atan(g.tanTf), ar2 = Math.min(g.hf * 0.7, 30 * ls);
+      c.beginPath(); c.arc(g.A[0], g.A[1], ar2, Math.PI / 2 - tt, Math.PI / 2); c.stroke();
+    }
+    // phase shift badges (s or p as chosen)
+    const short = R.w < 560;
+    const shiftTxt = (r) => { if (Math.abs(r[1]) < 1e-9) return Math.abs(r[0]) < 1e-9 ? 'no reflection' : r[0] < 0 ? (short ? 'π' : 'π shift') : (short ? 'none' : 'no shift'); return `shift ${Math.round(((Math.atan2(r[1], r[0]) / DEG) % 360 + 360) % 360)}°`; };
+    lab(`1: ${shiftTxt(f.r12)}`, g.A[0] - 12 * ls, g.y1 + 12 * ls, { align: 'right', color: T.pos, bold: true, size: 11.5 });
+    if (!g.tirTop) lab(`2: ${shiftTxt(f.r23)}`, g.B[0] - 12 * ls, g.y2 + 14 * ls, { align: 'right', color: T.neg, bold: true, size: 11.5 });
+    // ray end labels
+    lab('1', g.E1[0] - 10 * ls, g.E1[1] + 4 * ls, { color: T.pos, bold: true, size: 13, align: 'right' });
+    if (!g.tirTop) lab('2', g.E2[0] + 6 * ls, g.E2[1] + 4 * ls, { color: T.neg, bold: true, size: 13 });
+    // media labels
+    const nm = (n) => { const s = nName(n); return s && !short ? ` ${s}` : ''; };
+    lab(`n₁ = ${S.n1.toFixed(2)}${nm(S.n1)}`, R.x + g.pad, R.y + 16 * ls, { size: 11.5 });
+    lab(`n_f = ${S.nf.toFixed(2)}${nm(S.nf)}`, R.x + g.pad, g.hf > 18 * ls ? (g.y1 + g.y2) / 2 : g.y1 - 11 * ls, { size: 11.5, color: T.ink });
+    lab(`n₂ = ${S.n2.toFixed(2)}${nm(S.n2)}`, R.x + g.pad, R.y + R.h - 14 * ls, { size: 11.5 });
+    // thickness dimension and its grip on the bottom surface
+    const xd = R.x + R.w - g.pad - 6 * ls;
+    c.strokeStyle = T.ink; c.fillStyle = T.ink; c.lineWidth = 1.2 * lw;
+    if (g.hf > 10) { c.beginPath(); c.moveTo(xd, g.y1 + 1); c.lineTo(xd, g.y2 - 1); c.stroke(); arrowHead(c, xd, g.y1 + 1, -Math.PI / 2, 6 * ls); arrowHead(c, xd, g.y2 - 1, Math.PI / 2, 6 * ls); }
+    lab(`t = ${fmtT(S.t)}`, xd - 8 * ls, g.hf > 22 * ls ? (g.y1 + g.y2) / 2 : g.y2 + 13 * ls, { align: 'right', bold: true });
+    // extra path label, bottom right
+    const P = 2 * S.nf * S.t * (g.tirTop ? 0 : Math.sqrt(Math.max(0, 1 - (S.n1 * Math.sin(S.th * DEG) / S.nf) ** 2)));
+    if (g.tirTop) lab('Total internal reflection at the top surface: only an evanescent wave enters the film.', R.x + R.w - g.pad, R.y + R.h - 34 * ls, { align: 'right', size: 10.5, color: T.muted, font: 'ui' });
+    else {
+      lab(`extra path 2n_f t cos θ_t = ${P.toFixed(0)} nm = ${(P / S.lam).toFixed(2)} λ₀`, R.x + R.w - g.pad, R.y + R.h - 36 * ls, { align: 'right', size: 11 });
+      if (g.tirBot) lab('total internal reflection at the bottom surface', R.x + R.w - g.pad, R.y + R.h - 16 * ls, { align: 'right', size: 10.5, color: T.muted, font: 'ui' });
+    }
+    c.restore();
+    // drag grips: bottom surface (thickness) and the start of the incoming ray (angle)
+    const hotT = isHot('thick'), hotA = isHot('angle');
+    c.strokeStyle = T.accent;
+    if (hotT) { c.globalAlpha = 0.3; c.lineWidth = 7 * ps; c.beginPath(); c.moveTo(R.x, g.y2); c.lineTo(R.x + R.w, g.y2); c.stroke(); c.globalAlpha = 1; }
+    grip(c, g.gripX, g.y2, false, hotT, ps);
+    c.fillStyle = T.canvas; c.lineWidth = (hotA ? 2.4 : 1.8) * ps; c.strokeStyle = T.accent;
+    c.beginPath(); c.arc(g.S0[0], g.S0[1], (hotA ? 7 : 5.5) * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+    flushLabels(c, ls);
+    drawWaves(f);
+  }
+  function grip(c, x, y, vert, hot, ps) {
+    c.strokeStyle = T.accent; c.lineWidth = 1.5 * ps; c.globalAlpha = hot ? 1 : 0.8;
+    c.fillStyle = T.canvas; c.beginPath(); c.roundRect ? c.roundRect(x - 13 * ps, y - 6 * ps, 26 * ps, 12 * ps, 4 * ps) : c.rect(x - 13 * ps, y - 6 * ps, 26 * ps, 12 * ps); c.fill(); c.stroke();
+    c.beginPath();
+    for (let k = -1; k <= 1; k++) {
+      if (!vert) { c.moveTo(x + k * 4 * ps, y - 3 * ps); c.lineTo(x + k * 4 * ps, y + 3 * ps); }
+      else { c.moveTo(x - 3 * ps, y + k * 4 * ps); c.lineTo(x + 3 * ps, y + k * 4 * ps); }
+    }
+    c.stroke(); c.globalAlpha = 1;
+  }
+  function vgrip(c, x, y, hot, ps) {   // a grip on a vertical line, dragged sideways
+    c.strokeStyle = T.accent; c.lineWidth = 1.5 * ps; c.globalAlpha = hot ? 1 : 0.85; c.fillStyle = T.canvas;
+    c.beginPath(); c.roundRect ? c.roundRect(x - 6 * ps, y - 13 * ps, 12 * ps, 26 * ps, 4 * ps) : c.rect(x - 6 * ps, y - 13 * ps, 12 * ps, 26 * ps); c.fill(); c.stroke();
+    c.beginPath(); for (let k = -1; k <= 1; k++) { c.moveTo(x - 3 * ps, y + k * 4 * ps); c.lineTo(x + 3 * ps, y + k * 4 * ps); } c.stroke(); c.globalAlpha = 1;
+  }
+
+  // the two reflected waves at λ₀ and their sum
+  function drawWaves(f) {
+    const Ly = mainLayout(), Wv = Ly.wave, c = ctx, ls = Ly.ls, ps = projScale(), lw = Math.min(ps, 1.25);
+    c.save(); c.beginPath(); c.rect(Wv.x, Wv.y, Wv.w, Wv.h); c.clip();
+    c.strokeStyle = T.line; c.lineWidth = 1; c.beginPath();
+    if (Ly.wide) { c.moveTo(Wv.x + 0.5, Wv.y + 10); c.lineTo(Wv.x + 0.5, Wv.y + Wv.h - 10); } else { c.moveTo(Wv.x + 10, Wv.y + 0.5); c.lineTo(Wv.x + Wv.w - 10, Wv.y + 0.5); }
+    c.stroke();
+    const pad = 16 * ls, x0 = Wv.x + pad, x1 = Wv.x + Wv.w - pad;
+    const top = Wv.y + (Ly.wide ? 40 : 30) * ls, bot = Wv.y + Wv.h - 14 * ls;
+    lab(`Reflected waves at λ₀ = ${S.lam} nm${S.pol === 'p' ? ', p' : ', s polarization'}`, x0, Wv.y + (Ly.wide ? 18 : 14) * ls, { size: 11.5, bold: true, font: 'ui' });
+    const A1 = Math.sqrt(cabs2(f.rho1)), A2 = f.tirTop ? 0 : Math.sqrt(cabs2(f.rho2)), mx = Math.max(A1, A2);
+    const ph1 = Math.atan2(f.rho1[1], f.rho1[0]), ph2 = Math.atan2(f.rho2[1], f.rho2[0]);
+    const rowH = (bot - top) / 4, rows = [top + rowH * 0.5, top + rowH * 1.5, top + rowH * 3];
+    const unit = mx > 1e-9 ? rowH * 0.4 / mx : 0, nl = 2.5;
+    const cyc = (x) => (x - x0) / (x1 - x0) * nl;
+    const wave = (yc, A, ph, color, w) => {
+      c.strokeStyle = color; c.lineWidth = w; c.beginPath();
+      for (let x = x0; x <= x1 + 0.5; x += 1.5) { const y = yc - A * unit * Math.cos(2 * Math.PI * cyc(x) - wavePhase + ph); x === x0 ? c.moveTo(x, y) : c.lineTo(x, y); }
+      c.stroke();
+    };
+    for (const yc of rows) { c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(x0, yc); c.lineTo(x1, yc); c.stroke(); }
+    // dotted guides at the crests of wave 1, through rows 1 and 2
+    c.strokeStyle = T.muted; c.globalAlpha = 0.55; c.setLineDash([2, 3]); c.lineWidth = 1;
+    for (let k = -1; k <= nl + 1; k++) {
+      const cx = x0 + ((k + (wavePhase - ph1) / (2 * Math.PI)) % (nl + 2) + (nl + 2)) % (nl + 2) / nl * (x1 - x0);
+      if (cx < x0 || cx > x1) continue;
+      c.beginPath(); c.moveTo(cx, rows[0] - rowH * 0.45); c.lineTo(cx, rows[1] + rowH * 0.45); c.stroke();
+    }
+    c.setLineDash([]); c.globalAlpha = 1;
+    wave(rows[0], A1, ph1, T.pos, 2.2 * lw);
+    wave(rows[1], A2, ph2, T.neg, 2.2 * lw);
+    // two beam sum: amplitude and phase of ρ₁ + ρ₂
+    const sr = f.rho1[0] + (f.tirTop ? 0 : f.rho2[0]), si = f.rho1[1] + (f.tirTop ? 0 : f.rho2[1]);
+    wave(rows[2], Math.hypot(sr, si), Math.atan2(si, sr), T.ink, 2.6 * lw);
+    const lag = ((ph2 - ph1) / (2 * Math.PI) % 1 + 1) % 1, kind = condName(lag);
+    lab(`1: top surface, amplitude ${A1.toFixed(3)}`, x0, rows[0] - rowH * 0.5 + 2, { color: T.pos, size: 10.5 });
+    lab(f.tirTop ? '2: no ray (total internal reflection)' : `2: bottom surface, amplitude ${A2.toFixed(3)}`, x0, rows[1] - rowH * 0.5 + 2, { color: T.neg, size: 10.5 });
+    lab(`1 + 2: amplitude ${Math.hypot(sr, si).toFixed(3)}, ${kind}`, x0, rows[2] - rowH + 4, { color: T.ink, size: 10.5, bold: true });
+    if (mx <= 1e-9) lab('Equal indices: nothing reflects', (x0 + x1) / 2, rows[1], { align: 'center', color: T.muted, font: 'ui' });
+    c.restore();
+    flushLabels(c, ls);
+  }
+  function condName(lagFrac) {
+    const d = Math.min(lagFrac, 1 - lagFrac);   // 0 in step, 0.5 opposite
+    return d < 0.06 ? 'constructive' : d > 0.44 ? 'destructive' : d < 0.25 ? 'mostly constructive' : 'mostly destructive';
+  }
+
+  // ---------- drawing: soap film ----------
+  function soapGeom() {
+    const [W, H] = dims.m, ls = labScale(W, H), pad = 18 * ls;
+    const top = 40 * ls, bot = H - 30 * ls;
+    const fw = Math.round(Math.min(W * 0.42, 340, (bot - top) * 0.9)), plotW = Math.min(W * 0.36, 300);
+    const gap = 44 * ls, total = fw + gap + plotW, fx = Math.max(pad, (W - total) / 2);
+    return { W, H, ls, pad, top, bot, fx, fw, px: fx + fw + gap, pw: plotW, tmax: niceUp(Math.max(S.soap.tbot, 200) * 1.08) };
+  }
+  function drawSoap() {
+    const g = soapGeom(), c = ctx, ls = g.ls, ps = projScale(), lw = Math.min(ps, 1.25);
+    S.light === 'mono' ? ensureMono() : ensureLUT();
+    const h = g.bot - g.top, r = Math.min(26 * ls, g.fw * 0.12);
+    lab(`Vertical soap film in ${S.light === 'mono' ? `light of λ₀ = ${S.lam} nm` : `reflected white light, gain ${S.gain}×`}`, g.pad, 18 * ls, { size: 11.5, bold: true, font: 'ui' });
+    c.save(); c.beginPath(); c.roundRect ? c.roundRect(g.fx, g.top, g.fw, h, r) : c.rect(g.fx, g.top, g.fw, h); c.clip();
+    for (let y = 0; y < h; y++) {
+      const t = soapT((y + 0.5) / h, S.soap.ttop, S.soap.tbot, S.soap.p);
+      c.fillStyle = rgbStr(filmRGB(t)); c.fillRect(g.fx, g.top + y, g.fw, 1.5);
+    }
+    c.restore();
+    c.strokeStyle = T.frame; c.lineWidth = 4 * lw;
+    c.beginPath(); c.roundRect ? c.roundRect(g.fx, g.top, g.fw, h, r) : c.rect(g.fx, g.top, g.fw, h); c.stroke();
+    // black film tag
+    if (S.soap.ttop < 60 && S.light === 'white') {
+      c.fillStyle = 'rgba(0,0,0,0.6)'; c.font = `${10.5 * ls}px ${T.ui}`;
+      const txt = 'black film, t ≪ λ', tw = c.measureText(txt).width;
+      const band = h * Math.pow(Math.max(0, (40 - S.soap.ttop) / (S.soap.tbot - S.soap.ttop)), 1 / S.soap.p);
+      if (band >= 20 * ls) {
+        c.fillRect(g.fx + g.fw / 2 - tw / 2 - 5, g.top + 7 * ls, tw + 10, 17 * ls);
+        c.fillStyle = '#e3e8ef'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(txt, g.fx + g.fw / 2, g.top + 15.5 * ls);
+      } else lab(`${txt} at the top`, g.fx + g.fw / 2, g.top - 10 * ls, { align: 'center', size: 10.5, font: 'ui' });
+    }
+    // thickness profile plot
+    const X = (t) => g.px + t / g.tmax * g.pw;
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.strokeRect(g.px + 0.5, g.top + 0.5, g.pw, h);
+    const st = niceStep(g.tmax / 4);
+    c.fillStyle = T.muted; c.font = `${10 * ls}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let t = 0; t <= g.tmax + 1e-6; t += st) {
+      const x = Math.round(X(t)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, g.top + 1); c.lineTo(x, g.bot); c.stroke();
+      c.fillText(String(t), x, g.bot + 4 * ls);
+    }
+    lab('t (nm)', g.px + g.pw, g.bot + 22 * ls, { align: 'right', size: 10, color: T.muted, halo: false });
+    lab('thickness against depth', g.px, g.top - 10 * ls, { size: 10.5, color: T.muted, font: 'ui', halo: false });
+    c.strokeStyle = T.ink; c.lineWidth = 2 * lw; c.beginPath();
+    for (let y = 0; y <= h; y += 2) { const x = X(soapT(y / h, S.soap.ttop, S.soap.tbot, S.soap.p)); y ? c.lineTo(x, g.top + y) : c.moveTo(x, g.top + y); }
+    c.stroke();
+    // λ/4n_f marks: thicknesses where the first bright band sits, for orientation
+    // probe line across film and plot
+    const py = g.top + S.soap.y * h, hot = isHot('probe');
+    c.strokeStyle = T.accent; c.lineWidth = (hot ? 2.4 : 1.6) * lw; c.setLineDash([6, 4]);
+    c.beginPath(); c.moveTo(g.fx - 8 * ls, py); c.lineTo(g.px + g.pw, py); c.stroke(); c.setLineDash([]);
+    grip(c, g.fx + g.fw + g.pad * 0.0 + 22 * ls, py, true, hot, ps);
+    const pt = soapT(S.soap.y, S.soap.ttop, S.soap.tbot, S.soap.p);
+    lab(`t = ${fmtT(pt)}`, Math.min(X(pt) + 10 * ls, g.px + g.pw - 70 * ls), py - g.top < 40 * ls ? py + 14 * ls : py - 12 * ls, { bold: true, color: T.accent });
+    // profile handles
+    for (const [id, y, t] of [['ttop', 0, S.soap.ttop], ['tbot', h, S.soap.tbot]]) {
+      const hh = isHot(id);
+      c.fillStyle = T.canvas; c.strokeStyle = T.accent; c.lineWidth = (hh ? 2.4 : 1.8) * ps;
+      c.beginPath(); c.arc(X(t), g.top + y, (hh ? 7 : 5.5) * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+    }
+    lab(`top ${fmtT(S.soap.ttop)}`, X(S.soap.ttop) + 10 * ls, g.top + 12 * ls, { size: 10.5 });
+    lab(`bottom ${fmtT(S.soap.tbot)}`, Math.min(X(S.soap.tbot) - 10 * ls, g.px + g.pw - 4), g.bot - 16 * ls, { size: 10.5, align: 'right' });
+    if (drainDone) lab('Drained. Press New film to start again.', g.fx + g.fw / 2, g.bot - 16 * ls, { align: 'center', font: 'ui', size: 10.5 });
+    flushLabels(c, ls);
+  }
+
+  // ---------- drawing: wedge ----------
+  function wedgeGeom() {
+    const [W, H] = dims.m, ls = labScale(W, H), pad = 20 * ls;
+    const x0 = pad + 6 * ls, x1 = W - pad - 10 * ls, top = 40 * ls;
+    const imgH = Math.round((H - top) * 0.52), axisY = top + imgH + 6 * ls;
+    const sideTop = axisY + 50 * ls, sideBot = H - 16 * ls;
+    return { W, H, ls, pad, x0, x1, top, imgH, axisY, sideTop, sideBot, X: (mm) => x0 + mm / WEDGE_L * (x1 - x0) };
+  }
+  function drawWedge() {
+    const g = wedgeGeom(), c = ctx, ls = g.ls, ps = projScale(), lw = Math.min(ps, 1.25);
+    S.light === 'mono' ? ensureMono() : ensureLUT();
+    const hnm = S.wedge.hw * 1000;
+    lab(`Wedge seen from above, ${S.light === 'mono' ? `λ₀ = ${S.lam} nm` : `white light, gain ${S.gain}×`}`, g.pad, 18 * ls, { size: 11.5, bold: true, font: 'ui' });
+    const w = g.x1 - g.x0, sub = 4;
+    for (let i = 0; i < w; i++) {
+      let r = 0, gg = 0, b = 0;
+      for (let k = 0; k < sub; k++) { const mm = (i + (k + 0.5) / sub) / w * WEDGE_L, col = filmRGB(wedgeT(mm, WEDGE_L, hnm)); r += col[0]; gg += col[1]; b += col[2]; }
+      c.fillStyle = `rgb(${Math.round(r / sub)},${Math.round(gg / sub)},${Math.round(b / sub)})`; c.fillRect(g.x0 + i, g.top, 1.5, g.imgH);
+    }
+    c.strokeStyle = T.frame; c.lineWidth = 1.5; c.strokeRect(g.x0, g.top, w, g.imgH);
+    // mm axis
+    c.fillStyle = T.muted; c.font = `${10 * ls}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top'; c.strokeStyle = T.gridStrong;
+    const stp = w > 520 ? 5 : 10;
+    for (let mm = 0; mm <= WEDGE_L; mm += stp) { const x = Math.round(g.X(mm)) + 0.5; c.beginPath(); c.moveTo(x, g.axisY - 6 * ls); c.lineTo(x, g.axisY); c.stroke(); c.fillText(String(mm), x, g.axisY + 2); }
+    lab('x (mm) from the edge where the slides touch', g.x1, g.axisY + 22 * ls, { align: 'right', size: 10, color: T.muted, font: 'ui', halo: false });
+    // dark fringe ticks along the top in one wavelength: Δφ(t) = φ₀ + 4πn_f cos θ_t t/λ = π (mod 2π)
+    if (S.light === 'mono') {
+      const f0 = film(S.n1, S.nf, S.n2, 0, S.lam, S.th, S.pol === 'p' ? 'p' : 's');
+      if (!f0.tirTop) {
+        const phi0 = Math.atan2(f0.rho2[1], f0.rho2[0]) - Math.atan2(f0.rho1[1], f0.rho1[0]), k = 4 * Math.PI * S.nf * f0.cf[0] / S.lam;
+        c.strokeStyle = T.ink; c.lineWidth = 1.4;
+        lab('ticks: predicted dark fringes', g.x1, 18 * ls, { align: 'right', size: 10, color: T.muted, font: 'ui', halo: false });
+        for (let m = -1; m < 2000; m++) {
+          const t = ((2 * m + 1) * Math.PI - phi0) / k; if (t < 0) continue;
+          const mm = t / hnm * WEDGE_L; if (mm > WEDGE_L) break;
+          const x = g.X(mm); c.beginPath(); c.moveTo(x, g.top - 9 * ls); c.lineTo(x, g.top - 1); c.stroke();
+        }
+      }
+    }
+    // side view: bottom slide, top slide tilted (gap exaggerated), spacer at the right
+    const sh = g.sideBot - g.sideTop, slab = Math.max(6, sh * 0.16), baseY = g.sideBot - slab, gapMax = Math.min(sh * 0.46, sh - 2.3 * slab);
+    const gapPx = gapMax * Math.sqrt(S.wedge.hw / 40);
+    c.fillStyle = T.med; c.globalAlpha = 0.5; c.fillRect(g.x0, baseY, w, slab);
+    c.beginPath(); c.moveTo(g.x0, baseY); c.lineTo(g.x1, baseY - gapPx); c.lineTo(g.x1, baseY - gapPx - slab); c.lineTo(g.x0, baseY - slab); c.closePath(); c.fill(); c.globalAlpha = 1;
+    c.strokeStyle = T.frame; c.lineWidth = 1.2; c.strokeRect(g.x0, baseY, w, slab); c.stroke();
+    const hotS = isHot('spacer');
+    c.fillStyle = T.equi; c.fillRect(g.x1 - 10 * ls, baseY - gapPx, 10 * ls, gapPx);
+    grip(c, g.x1 - 5 * ls, baseY - gapPx - slab - 10 * ls, false, hotS, ps);
+    lab(`spacer h = ${S.wedge.hw.toFixed(1)} µm`, g.x1 - 24 * ls, baseY - gapPx - slab - 10 * ls, { align: 'right', size: 10.5 });
+    lab('side view, gap drawn hugely exaggerated', g.x0, g.sideTop + 2 * ls, { size: 10, color: T.muted, font: 'ui', halo: false });
+    // probe
+    const px = g.X(S.wedge.x), hot = isHot('probe');
+    c.strokeStyle = T.accent; c.lineWidth = (hot ? 2.4 : 1.6) * lw; c.setLineDash([6, 4]);
+    c.beginPath(); c.moveTo(px, g.top - 4); c.lineTo(px, baseY); c.stroke(); c.setLineDash([]);
+    vgrip(c, px, g.top + g.imgH + 0.5 * (g.axisY - g.top - g.imgH), hot, ps);
+    const pt = wedgeT(S.wedge.x, WEDGE_L, hnm);
+    lab(`x = ${S.wedge.x.toFixed(2)} mm, t = ${fmtT(pt)}`, px + (px > (g.x0 + g.x1) / 2 ? -10 : 10) * ls, g.sideTop + 24 * ls, { align: px > (g.x0 + g.x1) / 2 ? 'right' : 'left', bold: true, color: T.accent });
+    flushLabels(c, ls);
+  }
+
+  // ---------- drawing: Newton's rings ----------
+  let newtonImg = null, newtonKey = '';
+  function newtonGeom() {
+    const [W, H] = dims.m, ls = labScale(W, H), pad = 18 * ls, top = 38 * ls;
+    const wide = W > H * 1.25;
+    const size = Math.floor(wide ? Math.min(H - top - 26 * ls, W * 0.56) : Math.min(W - 2 * pad, (H - top) * 0.64));
+    const cx = wide ? pad + size / 2 + 10 : W / 2, cy = top + size / 2;
+    const side = wide ? { x: cx + size / 2 + 40 * ls, y: top + 20 * ls, w: W - (cx + size / 2 + 40 * ls) - pad, h: Math.min(size * 0.36, 150 * ls) }
+      : { x: pad, y: top + size + 26 * ls, w: W - 2 * pad, h: H - (top + size + 26 * ls) - 12 * ls };
+    return { W, H, ls, pad, top, size, cx, cy, rad: size / 2, side, wide };
+  }
+  function drawNewton() {
+    const g = newtonGeom(), c = ctx, ls = g.ls, ps = projScale(), lw = Math.min(ps, 1.25);
+    S.light === 'mono' ? ensureMono() : ensureLUT();
+    lab(`Newton's rings, ${S.light === 'mono' ? `λ₀ = ${S.lam} nm` : `white light, gain ${S.gain}×`}`, g.pad, 18 * ls, { size: 11.5, bold: true, font: 'ui' });
+    const key = [cfgKey(), S.light, S.lam, S.gain, S.newton.R, g.size, dpr].join('|');
+    if (!newtonImg || newtonKey !== key) {
+      const n = Math.max(2, Math.round(g.size * dpr)), oc = document.createElement('canvas'); oc.width = n; oc.height = n;
+      const ox = oc.getContext('2d'), im = ox.createImageData(n, n), d = im.data;
+      // radial table: 4 samples per device pixel, then averaged over each pixel's ring
+      const nr = Math.ceil(n / 2 * Math.SQRT2) + 2, sub = 4, tab = new Float32Array(nr * 3);
+      for (let i = 0; i < nr; i++) {
+        let r = 0, gg = 0, b = 0;
+        for (let k = 0; k < sub; k++) { const rp = (i + (k + 0.5) / sub) / (n / 2) * NEWTON_RMAX * 1e-3, col = filmRGB(lensT(rp, S.newton.R)); r += col[0]; gg += col[1]; b += col[2]; }
+        tab[3 * i] = r / sub; tab[3 * i + 1] = gg / sub; tab[3 * i + 2] = b / sub;
+      }
+      for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+        const rr = Math.hypot(x + 0.5 - n / 2, y + 0.5 - n / 2), i = Math.min(nr - 2, Math.floor(rr)), u = rr - i, q = 4 * (y * n + x);
+        d[q] = tab[3 * i] * (1 - u) + tab[3 * i + 3] * u; d[q + 1] = tab[3 * i + 1] * (1 - u) + tab[3 * i + 4] * u; d[q + 2] = tab[3 * i + 2] * (1 - u) + tab[3 * i + 5] * u;
+        d[q + 3] = rr <= n / 2 ? 255 : 0;
+      }
+      ox.putImageData(im, 0, 0); newtonImg = oc; newtonKey = key;
+    }
+    c.drawImage(newtonImg, g.cx - g.rad, g.cy - g.rad, g.size, g.size);
+    c.strokeStyle = T.frame; c.lineWidth = 2 * lw; c.beginPath(); c.arc(g.cx, g.cy, g.rad, 0, 2 * Math.PI); c.stroke();
+    lab(`${NEWTON_RMAX} mm`, g.cx + g.rad * 0.71 + 4, g.cy + g.rad * 0.71 + 8 * ls, { size: 10, color: T.muted });
+    // probe ring
+    const pr = S.newton.r / NEWTON_RMAX * g.rad, hot = isHot('probe');
+    c.strokeStyle = T.accent; c.lineWidth = (hot ? 2.4 : 1.6) * lw; c.setLineDash([6, 4]);
+    c.beginPath(); c.arc(g.cx, g.cy, Math.max(0.5, pr), 0, 2 * Math.PI); c.stroke(); c.setLineDash([]);
+    grip(c, g.cx + pr, g.cy, false, hot, ps);
+    const pt = lensT(S.newton.r * 1e-3, S.newton.R);
+    // side view: flat plate and lens touching at the center, gap exaggerated
+    const sd = g.side;
+    if (sd.w > 80 && sd.h > 50) {
+      const base = sd.y + sd.h * 0.62, scx = sd.x + sd.w / 2, half = sd.w / 2 - 4, sag = sd.h * 0.38;
+      c.fillStyle = T.med; c.globalAlpha = 0.5; c.fillRect(sd.x, base, sd.w, sd.h * 0.2);
+      c.beginPath(); c.moveTo(scx - half, base - sag);
+      for (let k = -40; k <= 40; k++) { const xx = k / 40; c.lineTo(scx + xx * half, base - sag * xx * xx); }
+      c.lineTo(scx + half, sd.y + 2); c.lineTo(scx - half, sd.y + 2); c.closePath(); c.fill(); c.globalAlpha = 1;
+      c.strokeStyle = T.frame; c.lineWidth = 1.2; c.strokeRect(sd.x, base, sd.w, sd.h * 0.2);
+      const ppx = scx + S.newton.r / NEWTON_RMAX * half;
+      c.strokeStyle = T.accent; c.setLineDash([4, 3]); c.beginPath(); c.moveTo(ppx, base - sag * (S.newton.r / NEWTON_RMAX) ** 2); c.lineTo(ppx, base); c.stroke(); c.setLineDash([]);
+      lab('side view, gap exaggerated', sd.x, sd.y - 6 * ls, { size: 10, color: T.muted, font: 'ui', halo: false });
+      lab(`R = ${S.newton.R.toFixed(1)} m`, scx, sd.y + sd.h * 0.25, { align: 'center', size: 10.5 });
+    }
+    const lx = g.wide ? sd.x : g.pad, ly = g.wide ? sd.y + sd.h + 28 * ls : g.cy - g.rad + 4;
+    lab(`r = ${S.newton.r.toFixed(2)} mm, t = ${fmtT(pt)}`, lx, ly, { bold: true, color: T.accent });
+    flushLabels(c, ls);
+  }
+
+  // ---------- spectrum pane ----------
+  function specGeom() {
+    const [W, H] = dims.s, ls = labScale(W, H);
+    const L = 52 * ls, R = W - 16 * ls, top = 30 * ls, bot = H - 40 * ls;
+    let ymax = 0.02; for (let i = 0; i < OBS1.n; i += 2) { ymax = Math.max(ymax, spec.R[i], S.two ? spec.R2[i] : 0, S.bare ? spec.R0[i] : 0); }
+    ymax = Math.min(1, niceUp(ymax * 1.12));
+    return { W, H, ls, L, R, top, bot, ymax, X: (l) => L + (l - 380) / 400 * (R - L), Y: (v) => bot - v / ymax * (bot - top) };
+  }
+  function drawSpec() {
+    const [W, H] = dims.s; if (!W || !H) return;
+    const c = sctx, g = specGeom(), ls = g.ls, ps = projScale(), lw = Math.min(ps, 1.25);
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, W, H);
+    if (g.bot - g.top < 20) return;
+    // grid
+    const st = niceStep(g.ymax / 4);
+    c.font = `${10 * ls}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let v = 0; v <= g.ymax + 1e-9; v += st) {
+      const y = Math.round(g.Y(v)) + 0.5; c.strokeStyle = v === 0 ? T.gridStrong : T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(g.L, y); c.lineTo(g.R, y); c.stroke();
+      c.fillText(`${+(v * 100).toFixed(st * 100 < 1 ? 1 : 0)}%`, g.L - 6, y);
+    }
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let l = 400; l <= 780; l += 50) { const x = Math.round(g.X(l)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, g.top); c.lineTo(x, g.bot); c.stroke(); c.fillText(String(l), x, g.bot + 12 * ls); }
+    // spectral strip under the axis
+    for (let l = 380; l < 780; l += 2) { c.fillStyle = specStr(l); c.fillRect(g.X(l), g.bot + 2, g.X(l + 2) - g.X(l) + 0.6, 7 * ls); }
+    // filled area under R(λ) in spectral color
+    const grad = c.createLinearGradient(g.X(380), 0, g.X(780), 0);
+    for (let l = 380; l <= 780; l += 10) grad.addColorStop((l - 380) / 400, specStr(l, 0.34));
+    c.fillStyle = grad; c.beginPath(); c.moveTo(g.X(380), g.bot);
+    for (let i = 0; i < OBS1.n; i++) c.lineTo(g.X(OBS1.lams[i]), g.Y(Math.min(spec.R[i], g.ymax * 1.02)));
+    c.lineTo(g.X(780), g.bot); c.closePath(); c.fill();
+    const curve = (arr, color, w, dash) => {
+      c.strokeStyle = color; c.lineWidth = w; c.setLineDash(dash || []); c.beginPath();
+      for (let i = 0; i < OBS1.n; i++) { const x = g.X(OBS1.lams[i]), y = g.Y(Math.min(arr[i], g.ymax * 1.02)); i ? c.lineTo(x, y) : c.moveTo(x, y); }
+      c.stroke(); c.setLineDash([]);
+    };
+    if (S.bare) curve(spec.R0, T.muted, 2 * lw, [2, 3]);
+    curve(spec.R, T.ink, 2.4 * lw);
+    if (S.two) curve(spec.R2, T.accent, 1.6 * lw, [6, 4]);
+    // λ₀ marker
+    const xl = g.X(S.lam), hot = isHot('lam');
+    c.strokeStyle = T.equi; c.lineWidth = (hot ? 3 : 2) * lw; c.beginPath(); c.moveTo(xl, g.top - 4); c.lineTo(xl, g.bot); c.stroke();
+    vgrip(c, xl, g.top + 8 * ps, hot, ps);
+    const Rl = film(S.n1, S.nf, S.n2, S.t, S.lam, S.th, S.pol).R;
+    c.fillStyle = T.equi; c.beginPath(); c.arc(xl, g.Y(Math.min(Rl, g.ymax)), 4 * ps, 0, 2 * Math.PI); c.fill();
+    lab(`λ₀ = ${S.lam} nm, R = ${pct(Rl)}`, xl + (xl > (g.L + g.R) / 2 ? -12 : 12) * ls, g.top + 8 * ls, { align: xl > (g.L + g.R) / 2 ? 'right' : 'left', color: T.ink, size: 10.5 });
+    lab(`Reflectance R(λ), t = ${fmtT(S.t)}, θ₁ = ${S.th}°${S.pol === 'u' ? '' : `, ${S.pol} polarized`}`, g.L, 13 * ls, { size: 11, bold: true, font: 'ui', halo: false });
+    lab('λ (nm)', g.R, g.bot + 30 * ls, { align: 'right', size: 10, color: T.muted, halo: false });
+    // swatch of the reflected white light
+    const sw = 22 * ls, sx = g.R - sw, sy = 4 * ls;
+    c.fillStyle = rgbStr(spec.rgb); c.fillRect(sx, sy, sw, sw - 4 * ls); c.strokeStyle = T.line; c.lineWidth = 1; c.strokeRect(sx + 0.5, sy + 0.5, sw, sw - 4 * ls);
+    if (g.W > 460) lab(`white light reflects as`, sx - 6 * ls, sy + (sw - 4 * ls) / 2, { align: 'right', size: 10, color: T.muted, font: 'ui', halo: false });
+    flushLabels(c, ls);
+  }
+
+  // ---------- main draw ----------
+  function drawMain() {
+    const [W, H] = dims.m; if (!W || !H) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (S.view === 'rays') drawRays(); else if (S.view === 'soap') drawSoap(); else if (S.view === 'wedge') drawWedge(); else drawNewton();
+  }
+
+  // ---------- readouts ----------
+  function fmtT(t) { if (t < 1000) return `${t < 100 ? (Math.round(t * 10) / 10).toFixed(1) : Math.round(t)} nm`; return `${(t / 1000).toFixed(t < 10000 ? 3 : 2)} µm`; }
+  const pct = (v) => (v < 0.001 ? `${(v * 100).toFixed(3)}%` : v < 0.1 ? `${(v * 100).toFixed(2)}%` : `${(v * 100).toFixed(1)}%`);
+  function niceUp(v) { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; for (const s of [1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (m <= s + 1e-9) return s * p; return 10 * p; }
+  function niceStep(v) { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p; }
+  function readouts() {
+    const q = S.pol === 'p' ? 'p' : 's', f = film(S.n1, S.nf, S.n2, S.t, S.lam, S.th, q), fu = film(S.n1, S.nf, S.n2, S.t, S.lam, S.th, S.pol);
+    const shift = (r) => { if (Math.abs(r[1]) > 1e-9) return `${Math.round(((Math.atan2(r[1], r[0]) / DEG) % 360 + 360) % 360)}°`; return Math.abs(r[0]) < 1e-12 ? 'no reflection' : r[0] < 0 ? 'π' : 'none'; };
+    $('rS1').textContent = shift(f.r12);
+    $('rS2').textContent = f.tirTop ? 'not reached' : shift(f.r23);
+    const cT = f.cf[0], P = 2 * S.nf * S.t * cT;
+    $('rPath').innerHTML = f.tirTop ? 'none <span class="ok">total internal reflection at the top</span>' : `${P.toFixed(1)} nm = ${(P / S.lam).toFixed(3)} λ₀`;
+    const ph1 = Math.atan2(f.rho1[1], f.rho1[0]), ph2 = Math.atan2(f.rho2[1], f.rho2[0]);
+    if (f.tirTop) $('rLag').textContent = '—';
+    else {
+      // lag in cycles: the path part plus the difference of the reflection phases, so it can exceed one cycle
+      const shiftCyc = (((ph2 - 2 * Math.PI * P / S.lam) - ph1) / (2 * Math.PI) % 1 + 1.5) % 1 - 0.5;
+      const lag = P / S.lam + shiftCyc, frac = ((lag % 1) + 1) % 1;
+      $('rLag').innerHTML = `${lag.toFixed(2)} cycles <span class="ok">${condName(frac)}</span>`;
+    }
+    $('rR').textContent = pct(fu.R); $('rR2').textContent = pct(fu.R2); $('rT').textContent = pct(fu.T);
+    $('rRT').textContent = (fu.R + fu.T).toFixed(6);
+    $('rTt').textContent = f.tirTop ? 'no real angle' : `${(Math.acos(Math.min(1, cT)) / DEG).toFixed(1)}°`;
+    $('rR0').textContent = pct(fu.R0);
+    // extremes in the visible: Δφ = φ₀ + 2πP/λ; brightest where Δφ = 2πm, darkest where Δφ = 2π(m + ½)
+    if (!f.tirTop && P > 0) {
+      const phi0 = ((ph2 - 2 * Math.PI * P / S.lam) - ph1);
+      const list = (off) => { const out = []; for (let m = -5; m < 60; m++) { const l = 2 * Math.PI * P / (2 * Math.PI * (m + off) - phi0); if (l >= 380 && l <= 780) out.push(Math.round(l)); } return out.sort((a, b) => b - a); };
+      const mxl = list(0), mnl = list(0.5);
+      $('rMax').textContent = mxl.length ? mxl.slice(0, 6).map((v) => v + ' nm').join(', ') : 'none in 380 to 780 nm';
+      $('rMin').textContent = mnl.length ? mnl.slice(0, 6).map((v) => v + ' nm').join(', ') : 'none in 380 to 780 nm';
+    } else { $('rMax').textContent = '—'; $('rMin').textContent = '—'; }
+    const s1 = f.r12[0] < 0 && Math.abs(f.r12[1]) < 1e-9, s2 = !f.tirTop && f.r23[0] < 0 && Math.abs(f.r23[1]) < 1e-9;
+    $('condHint').textContent = f.tirTop ? 'The light never enters the film, so there is no second ray.'
+      : s1 === s2 ? `${s1 ? 'Both reflections flip' : 'Neither reflection flips'}, so the flips cancel: bright when 2n_f t cos θ_t = mλ, dark when it is (m + ½)λ.`
+        : 'Only one reflection flips, which costs half a cycle: bright when 2n_f t cos θ_t = (m + ½)λ, dark when it is mλ. A film much thinner than λ is dark.';
+    // white light
+    const [X, Y, Z] = spec.xyz, sum = X + Y + Z;
+    $('bigsw').style.background = rgbStr(spec.rgb);
+    $('rY').textContent = pct(Y);
+    $('rXY').textContent = sum > 1e-9 ? `${(X / sum).toFixed(3)}, ${(Y / sum).toFixed(3)}` : '—';
+    $('rGainTxt').textContent = `shown at gain ${S.gain}×; white (D65) is 0.313, 0.329`;
+    // anti reflection
+    $('rBare').textContent = pct(((S.n1 - S.n2) / (S.n1 + S.n2)) ** 2);
+    $('rIdeal').textContent = Math.sqrt(S.n1 * S.n2).toFixed(3);
+    $('rQW').textContent = f.tirTop ? '—' : `${fmtT(S.lam / (4 * S.nf * cT))}`;
+    const qr = quarterR(S.n1, S.nf, S.n2), bare = ((S.n1 - S.n2) / (S.n1 + S.n2)) ** 2;
+    $('rQR').innerHTML = `${pct(qr)} <span class="ok">${qr < bare - 1e-9 ? 'less than with no film' : qr > bare + 1e-9 ? 'more than with no film' : 'same as no film'}</span>`;
+    // pattern readouts
+    if (S.view === 'wedge') {
+      const a = S.wedge.hw * 1e-6 / (WEDGE_L * 1e-3), dx = S.lam * 1e-9 / (2 * S.nf * cT * a);
+      $('pLab1').textContent = 'Wedge angle h/L'; $('pVal1').textContent = `${(a * 1e3).toFixed(3)} mrad = ${(a / DEG * 60).toFixed(2)}′`;
+      $('pLab2').innerHTML = 'Fringe spacing Δx = λ₀/(2n<sub>f</sub> cos θ<sub>t</sub> · h/L)'; $('pVal2').innerHTML = f.tirTop ? '—' : `${(dx * 1e3).toFixed(3)} mm <span class="ok">${(WEDGE_L / (dx * 1e3)).toFixed(1)} fringes over the slide</span>`;
+    } else if (S.view === 'newton') {
+      const ring = []; for (let m = 1; m <= 3; m++) ring.push((Math.sqrt(m * S.lam * 1e-9 * S.newton.R / (S.nf * cT)) * 1e3).toFixed(3));
+      $('pLab1').textContent = `Rings at r = √(mλ₀R/n_f cos θ_t), m = 1, 2, 3`; $('pVal1').textContent = `${ring.join(', ')} mm`;
+      $('pLab2').textContent = 'Gap at the probe'; $('pVal2').textContent = `${fmtT(S.t)} = ${(S.t / S.lam).toFixed(2)} λ₀`;
+    } else if (S.view === 'soap') {
+      $('pLab1').textContent = 'Thickness at the probe'; $('pVal1').textContent = `${fmtT(S.t)} = ${(S.t / S.lam).toFixed(2)} λ₀`;
+      $('pLab2').textContent = 'Depth of the probe, 0 at the top'; $('pVal2').textContent = `${(S.soap.y * 100).toFixed(0)}% of the height`;
+    }
+    $('tag').innerHTML = `t = ${fmtT(S.t)} <small>R(λ₀) ${pct(fu.R)}</small>`;
+  }
+
+  // ---------- controls ----------
+  function setOut() {
+    const nm = (n) => { const s = nName(n); return s ? `${n.toFixed(2)} ${s}` : n.toFixed(2); };
+    $('n1Out').textContent = nm(S.n1); $('nfOut').textContent = nm(S.nf); $('n2Out').textContent = nm(S.n2);
+    $('tOut').textContent = fmtT(S.t); $('thOut').textContent = `${S.th}°`; $('lamOut').textContent = `${S.lam} nm`;
+    $('ttopOut').textContent = fmtT(S.soap.ttop); $('tbotOut').textContent = fmtT(S.soap.tbot);
+    $('hwOut').textContent = `${S.wedge.hw.toFixed(1)} µm`; $('rlOut').textContent = `${S.newton.R.toFixed(1)} m`;
+  }
+  function syncSliders() {
+    $('n1').value = S.n1; $('nf').value = S.nf; $('n2').value = S.n2; $('t').value = Math.min(3000, S.t); $('th').value = S.th; $('lam').value = S.lam;
+    $('ttop').value = S.soap.ttop; $('tbot').value = S.soap.tbot; $('hw').value = S.wedge.hw; $('rl').value = S.newton.R;
+    $('tTwo').checked = S.two; $('tBare').checked = S.bare;
+    const pr = (sel, attr, v) => { for (const b of document.querySelectorAll(sel)) b.setAttribute('aria-pressed', String(b.dataset[attr] === String(v))); };
+    pr('#views button', 'v', S.view); pr('#profs button', 'f', S.soap.p); pr('#pols button', 'q', S.pol); pr('#gains button', 'g', S.gain); pr('#lights button', 'l', S.light);
+    for (const b of document.querySelectorAll('#media button')) { const m = MEDIA[b.dataset.m]; b.setAttribute('aria-pressed', String(Math.abs(m[0] - S.n1) < 1e-6 && Math.abs(m[1] - S.nf) < 1e-6 && Math.abs(m[2] - S.n2) < 1e-6)); }
+    const pv = S.view !== 'rays';
+    $('patNone').hidden = pv; $('lightRow').hidden = !pv; $('patRead').hidden = !pv;
+    $('soapRows').hidden = S.view !== 'soap'; $('wedgeRows').hidden = S.view !== 'wedge'; $('newtonRows').hidden = S.view !== 'newton';
+    setOut(); playBtn();
+  }
+  function changed() { syncT(); computeSpec(); syncSliders(); touch(); }
+  function custom() { markPreset(null); $('presetHint').textContent = 'Your own setup. Pick a preset to return to a known one.'; }
+  function markPreset(name) {
+    S.preset = name;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    if (name && PRESETS[name]) $('presetHint').textContent = PRESETS[name].hint;
+  }
+  function applyPreset(name) {
+    const p = PRESETS[name];
+    [S.n1, S.nf, S.n2] = p.m; S.th = p.th; S.lam = p.lam; S.pol = p.pol; S.gain = p.gain; S.light = p.light; S.view = p.view;
+    if (p.t !== undefined) S.t = p.t;
+    if (name === 'soap') { Object.assign(S.soap, { ttop: p.ttop, tbot: p.tbot, y: p.probe, tb0: p.tbot, tau: 0, p: 1 }); drainDone = false; if (!reduce) playing = true; }
+    if (name === 'wedge') { S.wedge.hw = p.hw; S.wedge.x = p.probe; }
+    if (p.view === 'rays' && !reduce) playing = true;
+    markPreset(name); changed();
+  }
+  const num = (id, fn) => $(id).addEventListener('input', (e) => { fn(+e.target.value); custom(); changed(); });
+  num('n1', (v) => { S.n1 = v; }); num('nf', (v) => { S.nf = v; }); num('n2', (v) => { S.n2 = v; });
+  num('t', (v) => { setT(v, false); });
+  num('th', (v) => { S.th = v; }); num('lam', (v) => { S.lam = v; });
+  num('ttop', (v) => { S.soap.ttop = Math.min(v, S.soap.tbot - 10); });
+  num('tbot', (v) => { S.soap.tbot = Math.max(v, S.soap.ttop + 10); S.soap.tb0 = S.soap.tbot; S.soap.tau = 0; drainDone = false; });
+  num('hw', (v) => { S.wedge.hw = v; }); num('rl', (v) => { S.newton.R = v; });
+  function setT(v) { v = Math.max(0, Math.round(v * 10) / 10); if (S.view === 'rays') S.t = Math.min(3000, v); else probeToT(v); }
+  const seg = (sel, attr, fn) => { for (const b of document.querySelectorAll(sel)) b.addEventListener('click', () => { fn(b.dataset[attr]); changed(); }); };
+  seg('#pols button', 'q', (v) => { S.pol = v; custom(); });
+  seg('#gains button', 'g', (v) => { S.gain = +v; });
+  seg('#profs button', 'f', (v) => { const t = S.t; S.soap.p = +v; if (S.view === 'soap') probeToT(t); });
+  seg('#lights button', 'l', (v) => { S.light = v; });
+  seg('#media button', 'm', (v) => { [S.n1, S.nf, S.n2] = MEDIA[v]; custom(); });
+  seg('#views button', 'v', (v) => setView(v));
+  const VIEW_MEDIA = { soap: 'soap', wedge: 'gap', newton: 'gap' };
+  function setView(v) {
+    if (v === S.view) return;
+    const t = S.t; S.view = v; drainDone = false;
+    const m = VIEW_MEDIA[v];
+    if (m && !MEDIA[m].every((n, i) => Math.abs(n - [S.n1, S.nf, S.n2][i]) < 1e-6)) {
+      [S.n1, S.nf, S.n2] = MEDIA[m]; S.th = 0;
+      markPreset(null);
+      $('presetHint').textContent = m === 'soap' ? 'Media set to a soap film in air (1.00 | 1.33 | 1.00), light at normal incidence. Change them in Film and media if you like.'
+        : `Media set to an air gap between glass (1.52 | 1.00 | 1.52), light at normal incidence: the classic ${v === 'wedge' ? 'air wedge' : "Newton's rings"}. Change them in Film and media if you like.`;
+    }
+    if (v !== 'rays') probeToT(t);
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('tTwo').addEventListener('change', (e) => { S.two = e.target.checked; dirtySpec = true; });
+  $('tBare').addEventListener('change', (e) => { S.bare = e.target.checked; dirtySpec = true; });
+  $('setQW').addEventListener('click', () => {
+    const f = film(S.n1, S.nf, S.n2, 0, S.lam, S.th, 's'); if (f.tirTop) return;
+    setT(S.lam / (4 * S.nf * f.cf[0])); custom(); changed();
+  });
+  function playBtn() {
+    const b = $('play');
+    if (S.view === 'soap' && drainDone) { b.textContent = 'New film'; b.classList.add('primary'); return; }
+    b.textContent = playing ? 'Pause' : 'Play'; b.classList.toggle('primary', !playing);
+    b.disabled = S.view === 'wedge' || S.view === 'newton';
+  }
+  function togglePlay() {
+    if (S.view === 'soap' && drainDone) { S.soap.tbot = 1000; S.soap.tb0 = 1000; S.soap.tau = 0; drainDone = false; playing = true; changed(); return; }
+    playing = !playing; playBtn();
+  }
+  $('play').addEventListener('click', togglePlay);
+
+  // ---------- dragging on the drawings ----------
+  let drag = null, hover = null;
+  const isHot = (id) => (drag && drag.id === id) || (!drag && hover === id);
+  function handles(which) {
+    const out = [];
+    if (which === 'm') {
+      if (S.view === 'rays') {
+        const g = rayGeom();
+        out.push({ id: 'angle', pt: g.S0, cursor: 'grab' });
+        out.push({ id: 'thick', hseg: [g.R.x, g.R.x + g.R.w, g.y2], cursor: 'ns-resize', grip: [g.gripX, g.y2] });
+      } else if (S.view === 'soap') {
+        const g = soapGeom(), h = g.bot - g.top, X = (t) => g.px + t / g.tmax * g.pw;
+        out.push({ id: 'ttop', pt: [X(S.soap.ttop), g.top], cursor: 'ew-resize' });
+        out.push({ id: 'tbot', pt: [X(S.soap.tbot), g.bot], cursor: 'ew-resize' });
+        out.push({ id: 'probe', hseg: [g.fx - 8, g.px + g.pw, g.top + S.soap.y * h], cursor: 'ns-resize', grip: [g.fx + g.fw + 22 * g.ls, g.top + S.soap.y * h] });
+      } else if (S.view === 'wedge') {
+        const g = wedgeGeom(), px = g.X(S.wedge.x);
+        const sh = g.sideBot - g.sideTop, slab = Math.max(6, sh * 0.16), baseY = g.sideBot - slab, gapMax = Math.min(sh * 0.46, sh - 2.3 * slab), gapPx = gapMax * Math.sqrt(S.wedge.hw / 40);
+        out.push({ id: 'spacer', pt: [g.x1 - 5 * g.ls, baseY - gapPx - slab - 10 * g.ls], r: 14, cursor: 'ns-resize', geo: { baseY, slab, gapMax } });
+        out.push({ id: 'probe', vseg: [px, g.top - 4, baseY], cursor: 'ew-resize' });
+      } else {
+        const g = newtonGeom(), pr = S.newton.r / NEWTON_RMAX * g.rad;
+        out.push({ id: 'probe', ring: [g.cx, g.cy, pr], cursor: 'ew-resize' });
+      }
+    } else {
+      const g = specGeom();
+      out.push({ id: 'lam', vseg: [g.X(S.lam), g.top - 6, g.bot], cursor: 'ew-resize' });
+    }
+    return out;
+  }
+  function handleAt(which, ev) {
+    const cv = which === 'm' ? can : sCan, r = cv.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 8 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of handles(which)) {
+      let d = Infinity;
+      if (h.pt) d = Math.hypot(x - h.pt[0], y - h.pt[1]) - (h.r || 5);
+      else if (h.hseg) { if (x >= h.hseg[0] - 4 && x <= h.hseg[1] + 4) d = Math.abs(y - h.hseg[2]); if (h.grip) d = Math.min(d, Math.hypot(x - h.grip[0], y - h.grip[1]) - 10); }
+      else if (h.vseg) { if (y >= h.vseg[1] - 4 && y <= h.vseg[2] + 4) d = Math.abs(x - h.vseg[0]); }
+      else if (h.ring) d = Math.abs(Math.hypot(x - h.ring[0], y - h.ring[1]) - h.ring[2]);
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  function applyDrag(which, x, y) {
+    const id = drag.id;
+    if (which === 's') { const g = specGeom(); S.lam = Math.max(380, Math.min(780, Math.round(380 + (x - g.L) / (g.R - g.L) * 400))); }
+    else if (S.view === 'rays') {
+      const g = rayGeom();
+      if (id === 'angle') { const a = Math.atan2(g.A[0] - x, g.A[1] - y) / DEG; S.th = Math.max(0, Math.min(80, Math.round(a))); }
+      else { const hf = Math.max(0, Math.min(g.hfMax, y - g.y1)); S.t = Math.round(TMAX_DRAW * (hf / g.hfMax) ** 3 * 10) / 10; }
+    } else if (S.view === 'soap') {
+      const g = soapGeom(), h = g.bot - g.top, tAt = (px) => (px - g.px) / g.pw * g.tmax;
+      if (id === 'probe') S.soap.y = Math.max(0, Math.min(1, (y - g.top) / h));
+      else if (id === 'ttop') S.soap.ttop = Math.max(0, Math.min(200, S.soap.tbot - 10, Math.round(tAt(x))));
+      else { S.soap.tbot = Math.max(100, S.soap.ttop + 10, Math.min(3000, Math.round(tAt(x) / 10) * 10)); S.soap.tb0 = S.soap.tbot; S.soap.tau = 0; drainDone = false; }
+    } else if (S.view === 'wedge') {
+      const g = wedgeGeom();
+      if (id === 'probe') S.wedge.x = Math.max(0, Math.min(WEDGE_L, Math.round((x - g.x0) / (g.x1 - g.x0) * WEDGE_L * 100) / 100));
+      else { const hh = drag.geo, gp = hh.baseY - hh.slab - 10 * g.ls - y; S.wedge.hw = Math.max(1, Math.min(40, Math.round(40 * Math.max(0, gp / hh.gapMax) ** 2 * 2) / 2)); }
+    } else {
+      const g = newtonGeom(); S.newton.r = Math.max(0, Math.min(NEWTON_RMAX, Math.round(Math.hypot(x - g.cx, y - g.cy) / g.rad * NEWTON_RMAX * 1000) / 1000));
+    }
+    if (id !== 'probe' && which !== 's') custom();
+    changed();
+  }
+  function wire(which, cv) {
+    let q = null, frame = false;
+    cv.addEventListener('pointermove', (ev) => {
+      const r = cv.getBoundingClientRect();
+      if (drag && drag.which === which) {
+        q = [ev.clientX - r.left, ev.clientY - r.top];
+        if (!frame) { frame = true; requestAnimationFrame(() => { frame = false; if (drag && q) applyDrag(which, q[0], q[1]); q = null; }); }
+        return;
+      }
+      const h = handleAt(which, ev), id = h ? h.id : null;
+      if (id !== hover) { hover = id; dirtyMain = dirtySpec = true; }
+      cv.style.cursor = h ? h.cursor : 'default';
+    });
+    cv.addEventListener('pointerdown', (ev) => {
+      const h = handleAt(which, ev); if (!h) return;
+      drag = { which, id: h.id, geo: h.geo };
+      if (h.id === 'angle') cv.style.cursor = 'grabbing';
+      try { cv.setPointerCapture(ev.pointerId); } catch (_) {}
+      ev.preventDefault(); cv.focus({ preventScroll: true });
+      const r = cv.getBoundingClientRect();
+      if (h.id === 'probe' || h.id === 'lam') applyDrag(which, ev.clientX - r.left, ev.clientY - r.top);
+    });
+    const end = () => { if (drag) { if (q) { applyDrag(which, q[0], q[1]); q = null; } drag = null; dirtyMain = dirtySpec = true; } };
+    cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+    cv.addEventListener('pointerleave', () => { if (!drag && hover) { hover = null; dirtyMain = dirtySpec = true; } });
+  }
+  wire('m', can); wire('s', sCan);
+  function keys(e) {
+    const big = e.shiftKey ? 10 : 1;
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { setT(S.t + (e.key === 'ArrowUp' ? 1 : -1) * big * (S.view === 'wedge' ? 10 : 1)); }
+    else if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && e.currentTarget === sCan) S.lam = Math.max(380, Math.min(780, S.lam + (e.key === 'ArrowRight' ? 1 : -1) * big));
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') S.th = Math.max(0, Math.min(80, S.th + (e.key === 'ArrowRight' ? 1 : -1) * big));
+    else if (e.key === '[' || e.key === ']') S.lam = Math.max(380, Math.min(780, S.lam + (e.key === ']' ? 1 : -1) * 5 * big));
+    else if (e.key === ' ') { togglePlay(); e.preventDefault(); return; }
+    else if (['1', '2', '3', '4'].includes(e.key)) setView(['rays', 'soap', 'wedge', 'newton'][+e.key - 1]);
+    else return;
+    e.preventDefault(); custom(); changed();
+  }
+  can.addEventListener('keydown', keys); sCan.addEventListener('keydown', keys);
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  const retheme = () => { tokens(); newtonImg = null; touch(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, frameMs = 0;
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (playing && S.view === 'rays') { wavePhase += 2 * Math.PI * 0.45 * dt; dirtyMain = true; }
+    if (playing && S.view === 'soap' && !drainDone && !(drag && drag.id === 'tbot')) {
+      // t_bottom = t₀/√(1 + τ/τ₀): the whole √(depth) profile thins as 1/√time
+      S.soap.tau += dt;
+      S.soap.tbot = Math.max(S.soap.ttop + 10, S.soap.tb0 / Math.sqrt(1 + S.soap.tau / 1.5));
+      if (S.soap.tbot <= 150) { S.soap.tbot = 150; drainDone = true; playing = false; }
+      syncT(); computeSpec(); dirtyMain = dirtySpec = true;
+      if (now - lastRead > 120 || drainDone) { $('tbot').value = S.soap.tbot; $('t').value = Math.min(3000, S.t); setOut(); playBtn(); dirtyRead = true; }
+    }
+    if (dirtyMain) { drawMain(); dirtyMain = false; }
+    if (dirtySpec) { drawSpec(); dirtySpec = false; }
+    if (dirtyRead && (now - lastRead > 120 || !playing)) { readouts(); dirtyRead = false; lastRead = now; }
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    requestAnimationFrame(loop);
+  }
+  window.__tf = { get S() { return S; }, get frameMs() { return frameMs; }, get spec() { return spec; }, handles, rayGeom, applyPreset, setView: (v) => { setView(v); changed(); },
+    canvasBox: (w) => { const r = (w === 's' ? sCan : can).getBoundingClientRect(); return [r.left, r.top]; } };
+
+  tokens();
+  applyPreset('two');
+  if (reduce) playing = false;
+  playBtn();
+  const ro = new ResizeObserver(resize);
+  ro.observe($('pane')); ro.observe($('specPane'));
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => touch());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

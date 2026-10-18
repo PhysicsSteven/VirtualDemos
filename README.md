@@ -45,6 +45,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Capacitors and Dielectrics](demos/capacitors.html) | Electricity and magnetism | Parallel plates connected or isolated, dielectric slabs and the force pulling them in, energy bookkeeping, and combinations |
 | [Optics Bench](demos/optics-bench.html) | Optics | Ray tracing through lenses, mirrors and glass, with image formation, total internal reflection and dispersion |
 | [Polarization](demos/polarization.html) | Optics | Polarizers and wave plates with Jones and Mueller calculus, Malus's law, many polarizer limit, Fresnel reflection and Brewster's angle |
+| [Thin Film Interference](demos/thin-films.html) | Optics | Exact single layer reflectance and its color under white light, soap films, air wedges, Newton's rings and quarter wave coatings |
 | [Standing Waves](demos/standing-waves.html) | Waves and sound | Superposition, string harmonics, driven resonance and plucking, open and closed air columns, beats |
 | [Doppler Effect and Shock Waves](demos/doppler.html) | Waves and sound | Moving sources and observers with the exact retarded time geometry, Mach cones and booms, relativistic Doppler and redshift |
 
