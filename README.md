@@ -33,6 +33,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Potential Energy Curves](demos/potential-curves.html) | Mechanics | Motion read from U(x): turning points, equilibria, small oscillation periods, phase space, and a curve you can draw |
 | [Rotation and Torque](demos/rotation.html) | Mechanics | Torque and lever arms, a rolling race set by I/mR², angular momentum conservation, and seesaw balance |
 | [Collisions and Momentum](demos/collisions.html) | Mechanics | 1D and 2D collisions with any restitution, center of mass frame, explosions, Newton's cradle and impulse with spring damper bumpers |
+| [Pendulums and Chaos](demos/double-pendulum.html) | Mechanics | Exact large amplitude period, double pendulum normal modes, sensitivity to initial conditions with a Lyapunov estimate, Poincaré sections |
 | [Gas in a Box](demos/ideal-gas.html) | Thermodynamics | Kinetic theory of a 2D gas: pressure, temperature, Maxwell-Boltzmann speeds, adiabatic compression |
 | [Coulomb Sandbox](demos/coulomb-sandbox.html) | Electricity and magnetism | Electric field and potential of point charges, as a 2D map and a 3D potential landscape |
 | [RC Circuits](demos/rc-circuits.html) | Electricity and magnetism | Charging and discharging a capacitor: exponentials, the time constant, Kirchhoff's loop rule and energy bookkeeping |

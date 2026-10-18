@@ -1,0 +1,1559 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+<title>Pendulums and Chaos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the pendulum drawing on the left; two plots stacked on the right (angles against time and a second plot that depends on the setup); instrument rail on the right; stacks on narrow screens. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --wire: #3b4655;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --wire: #aab4c2;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --wire: #aab4c2;
+  color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 640px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
+  display: grid; grid-template-columns: minmax(0, 55fr) minmax(0, 45fr); grid-template-rows: minmax(0, 44fr) minmax(0, 56fr); }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#pPane { grid-column: 1; grid-row: 1 / 3; }
+#aPane { grid-column: 2; grid-row: 1; border-left: 1px solid var(--line); }
+#bPane { grid-column: 2; grid-row: 2; border-left: 1px solid var(--line); border-top: 1px solid var(--line); }
+#pCan, #aCan, #bCan { touch-action: none; outline: none; }
+#pCan:focus-visible, #aCan:focus-visible, #bCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
+.stage-ctl > * { pointer-events: auto; }
+.stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
+.tclock { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; font-size: 0.86rem; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--canvas) 85%, transparent); padding: 2px 6px; border-radius: 6px; white-space: nowrap; line-height: 1.25; }
+.tclock small { font-size: 0.74rem; font-weight: 400; color: var(--muted); }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.row3 .btn { padding: 5px 4px; font-size: 0.84rem; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg.full { display: flex; }
+.seg.full button { flex: 1; padding: 4px 4px; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.ctl { display: flex; flex-direction: column; gap: 4px; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .wide { grid-column: 1 / -1; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.formula { margin: 0; font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
+.c-1 { color: var(--neg); } .c-2 { color: var(--pos); }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid var(--accent); }
+.swatch.s1 { border-color: var(--neg); } .swatch.s2 { border-color: var(--pos); }
+.swatch.dash { border-top-style: dashed; border-color: var(--muted); }
+.swatch.gold { border-top-style: dashed; border-color: var(--equi); }
+.swatch.rainbow { border-image: linear-gradient(90deg, hsl(250 75% 55%), hsl(160 70% 42%), hsl(45 85% 50%), hsl(0 75% 52%)) 1; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 1060px) {
+  .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: 440px 260px 340px; min-height: 0; }
+  #pPane { grid-row: 1; }
+  #aPane { grid-column: 1; grid-row: 2; border-left: 0; border-top: 1px solid var(--line); }
+  #bPane { grid-column: 1; grid-row: 3; border-left: 0; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { grid-template-rows: 380px 250px 330px; }
+  .rail { overflow: visible; }
+}
+
+/* projector on a short screen: let the stage shrink to fit under the header */
+@media (min-width: 1061px) and (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 440px !important; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Pendulums and Chaos</h1>
+      <p>A pendulum keeps time only for small swings: big swings take longer. Hang a second pendulum from the first and the motion can turn chaotic, so two starts that differ by a millionth of a radian soon do completely different things.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units · angles from straight down · g = 9.80665 m/s²</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="pane" id="pPane">
+        <canvas id="pCan" tabindex="0" aria-label="Pendulum drawing. Drag a bob to set its angle and let go; moving the pointer as you let go gives it a starting speed. Drag the grip in the middle of a rod to change its length. Keys: left and right arrows turn the upper rod by 1 degree and release from rest, shift with the arrows turns the lower rod, space plays or pauses, R resets."></canvas>
+        <div class="stage-ctl">
+          <button type="button" class="btn" id="play">Pause</button>
+          <button type="button" class="btn" id="reset">Reset</button>
+          <span class="tclock mono" id="tclock">t = 0<small id="rateTag">real time</small></span>
+        </div>
+      </div>
+      <div class="pane" id="aPane">
+        <canvas id="aCan" tabindex="0" aria-label="Top plot"></canvas>
+      </div>
+      <div class="pane" id="bPane">
+        <canvas id="bCan" tabindex="0" aria-label="Bottom plot"></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="big" aria-pressed="false">Big swings take longer</button>
+          <button type="button" data-p="mode1" aria-pressed="false">Normal mode 1</button>
+          <button type="button" data-p="mode2" aria-pressed="false">Normal mode 2</button>
+          <button type="button" data-p="chaos" aria-pressed="true">Double pendulum chaos</button>
+          <button type="button" data-p="fly" aria-pressed="false">Butterfly effect: 100 copies</button>
+          <button type="button" data-p="poinc" aria-pressed="false">Poincaré section</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Pendulum</h2>
+        <div class="seg full" role="group" aria-label="Pendulum" id="modeSeg">
+          <button type="button" data-m="simple" aria-pressed="false">Simple</button>
+          <button type="button" data-m="double" aria-pressed="true">Double</button>
+        </div>
+        <div class="ctl" data-for="double">
+          <div class="slider-head"><label for="sM1">Upper mass m<sub>1</sub></label><output id="oM1" class="mono" for="sM1"></output></div>
+          <input type="range" id="sM1" min="0.1" max="5" step="0.05">
+        </div>
+        <div class="ctl" data-for="double">
+          <div class="slider-head"><label for="sM2">Lower mass m<sub>2</sub></label><output id="oM2" class="mono" for="sM2"></output></div>
+          <input type="range" id="sM2" min="0.1" max="5" step="0.05">
+        </div>
+        <div class="ctl" data-for="double">
+          <div class="slider-head"><label for="sL1">Upper rod L<sub>1</sub></label><output id="oL1" class="mono" for="sL1"></output></div>
+          <input type="range" id="sL1" min="0.2" max="2" step="0.01">
+        </div>
+        <div class="ctl" data-for="double">
+          <div class="slider-head"><label for="sL2">Lower rod L<sub>2</sub></label><output id="oL2" class="mono" for="sL2"></output></div>
+          <input type="range" id="sL2" min="0.2" max="2" step="0.01">
+        </div>
+        <div class="ctl" data-for="simple">
+          <div class="slider-head"><label for="sL">Length L</label><output id="oL" class="mono" for="sL"></output></div>
+          <input type="range" id="sL" min="0.1" max="3" step="0.01">
+        </div>
+        <div class="ctl" data-for="simple">
+          <div class="slider-head"><label for="sA">Release angle θ<sub>0</sub></label><output id="oA" class="mono" for="sA"></output></div>
+          <input type="range" id="sA" min="1" max="179" step="1">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sG">Gravity g</label><output id="oG" class="mono" for="sG"></output></div>
+          <input type="range" id="sG" min="1" max="25" step="0.01">
+        </div>
+        <p class="hint" id="dragHint">Drag a bob to set an angle and let go. Drag the grip in the middle of a rod to change its length.</p>
+      </section>
+
+      <section data-for="double">
+        <h2>Small oscillations</h2>
+        <div class="ctl">
+          <div class="slider-head"><label for="sAmp">Mode amplitude, upper rod</label><output id="oAmp" class="mono" for="sAmp"></output></div>
+          <input type="range" id="sAmp" min="1" max="60" step="1">
+        </div>
+        <div class="row3">
+          <button type="button" class="btn" data-start="m1">Mode 1</button>
+          <button type="button" class="btn" data-start="m2">Mode 2</button>
+          <button type="button" class="btn" data-start="rest">From rest</button>
+        </div>
+        <dl class="readout" id="modeBox"></dl>
+        <p class="hint">For small angles the equations become linear, and every motion is a sum of two normal modes. In mode 1 the rods swing together; in mode 2 they swing opposite. For equal masses and lengths ω² = (g/L)(2 ∓ √2). From rest keeps the present angles and sets both speeds to zero.</p>
+      </section>
+
+      <section data-for="double">
+        <h2>Copies and separation</h2>
+        <div class="ctl">
+          <div class="slider-head"><label for="sN">Number of copies</label><output id="oN" class="mono" for="sN"></output></div>
+          <input type="range" id="sN" min="1" max="200" step="1">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sD">Start difference δ, upper rod</label><output id="oD" class="mono" for="sD"></output></div>
+          <input type="range" id="sD" min="-6" max="-3" step="0.25">
+        </div>
+        <dl class="readout" id="lyapBox"></dl>
+        <p class="hint">Copy k starts with the upper rod turned k·δ more than copy 0, everything else the same. The separation d is measured in phase space, d² = Δθ₁² + Δθ₂² + (Δω₁² + Δω₂²)L₁/g. The Lyapunov exponent λ is estimated from a nearby orbit that is pulled back to 10⁻⁸ every 0.1 s, averaging ln of the growth; it is a finite time estimate.</p>
+      </section>
+
+      <section data-for="double">
+        <h2>Lower right plot</h2>
+        <div class="seg full" role="group" aria-label="Lower right plot" id="plotSeg">
+          <button type="button" data-v="config" aria-pressed="true">Angle path</button>
+          <button type="button" data-v="sep" aria-pressed="false">Separation</button>
+          <button type="button" data-v="poinc" aria-pressed="false">Poincaré</button>
+        </div>
+        <div id="poincCtl" hidden>
+          <div class="ctl">
+            <div class="slider-head"><label for="sE">Section energy E</label><output id="oE" class="mono" for="sE"></output></div>
+            <input type="range" id="sE" min="0.5" max="60" step="0.1">
+          </div>
+          <div class="row2" style="margin-top:8px">
+            <button type="button" class="btn" id="clearPoinc">Clear section</button>
+            <button type="button" class="btn" id="morePoinc">More orbits</button>
+          </div>
+        </div>
+        <p class="hint" id="plotHint"></p>
+      </section>
+
+      <section>
+        <h2>Measurements</h2>
+        <dl class="readout" id="measBox"></dl>
+        <p class="formula mono" id="mFormula"></p>
+      </section>
+
+      <section>
+        <h2>Time and display</h2>
+        <div class="ctl">
+          <div class="slider-head"><label for="sRate">Playback rate</label><output id="oRate" class="mono" for="sRate"></output></div>
+          <input type="range" id="sRate" min="0" max="5" step="1">
+        </div>
+        <div class="toggles">
+          <label data-for="double"><input type="checkbox" id="tTrail" checked>Trail</label>
+          <label data-for="simple"><input type="checkbox" id="tGhost" checked>Small angle model</label>
+          <label><input type="checkbox" id="tArcs" checked>Angle arcs</label>
+          <label><input type="checkbox" id="tFling" checked>Release with drag speed</label>
+        </div>
+        <div class="key" id="keyBox"></div>
+        <p class="hint" id="modelHint">Model: point masses on rigid massless rods, frictionless pivots, no air drag, uniform g. The motion comes from the exact nonlinear equations of motion (from the Lagrangian), integrated with an adaptive Dormand–Prince 5(4) method at a tolerance of 10⁻¹¹ per step; the energy drift readout shows how well the integration keeps energy fixed. The small angle period 2π√(L/g) and the normal mode frequencies are the linearized limits, drawn as references.</p>
+      </section>
+    </aside>
+  </main>
+  <p class="sr" aria-live="polite" id="live"></p>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const G0 = 9.80665;
+  const TAU = 2 * Math.PI;
+  const wrapPi = (x) => x - TAU * Math.round(x / TAU);
+  // complete elliptic integral of the first kind K(k) = π / (2 AGM(1, √(1 − k²)))
+  function agm(a, b) {
+    for (let i = 0; i < 60 && Math.abs(a - b) > 1e-16 * a; i++) { const an = 0.5 * (a + b); b = Math.sqrt(a * b); a = an; }
+    return 0.5 * (a + b);
+  }
+  function ellipK(k) { k = Math.abs(k); if (k >= 1) return Infinity; return Math.PI / (2 * agm(1, Math.sqrt((1 - k) * (1 + k)))); }
+  // simple pendulum: θ'' = −(g/L) sin θ. With k² = E/(2mgL) = ω²/(4ω₀²) + sin²(θ/2):
+  // swinging (k < 1): T = 4K(k)/ω₀, k = sin(θ₀/2); going over the top (k > 1): one turn takes 2K(1/k)/(kω₀)
+  function simpleK2(L, g, th, om) { const w0sq = g / L, s = Math.sin(th / 2); return om * om / (4 * w0sq) + s * s; }
+  function periodExact(L, g, th0) { return 4 * Math.sqrt(L / g) * ellipK(Math.sin(Math.abs(th0) / 2)); }
+  function simplePeriod(L, g, th, om) {
+    const w0 = Math.sqrt(g / L), k2 = simpleK2(L, g, th, om);
+    if (k2 < 1) return { T: 4 * ellipK(Math.sqrt(k2)) / w0, rot: false, k: Math.sqrt(k2) };
+    if (k2 > 1) { const k = Math.sqrt(k2); return { T: 2 * ellipK(1 / k) / (k * w0), rot: true, k }; }
+    return { T: Infinity, rot: false, k: 1 };
+  }
+  const simpleDeriv = (p) => (y, out) => { out[0] = y[1]; out[1] = -(p.g / p.L) * Math.sin(y[0]); };
+  // double pendulum, point masses m₁, m₂ on massless rods L₁, L₂, angles θ₁, θ₂ from straight down, y = [θ₁, θ₂, ω₁, ω₂].
+  // Euler–Lagrange equations solved for the angular accelerations (denominator 2(m₁ + m₂ sin²Δ), Δ = θ₁ − θ₂).
+  const dpDeriv = (p) => (y, out) => {
+    const t1 = y[0], t2 = y[1], w1 = y[2], w2 = y[3], m1 = p.m1, m2 = p.m2, L1 = p.L1, L2 = p.L2, g = p.g, M = m1 + m2;
+    const d = t1 - t2, sd = Math.sin(d), cd = Math.cos(d), den = 2 * (m1 + m2 * sd * sd);
+    out[0] = w1; out[1] = w2;
+    out[2] = (-g * (2 * m1 + m2) * Math.sin(t1) - m2 * g * Math.sin(t1 - 2 * t2) - 2 * sd * m2 * (w2 * w2 * L2 + w1 * w1 * L1 * cd)) / (L1 * den);
+    out[3] = (2 * sd * (w1 * w1 * L1 * M + g * M * Math.cos(t1) + w2 * w2 * L2 * m2 * cd)) / (L2 * den);
+  };
+  // energy with the potential zero when both rods hang straight down (1 − cos θ = 2 sin²(θ/2) avoids cancellation)
+  function dpEnergy(p, y) {
+    const M = p.m1 + p.m2, s1 = Math.sin(y[0] / 2), s2 = Math.sin(y[1] / 2);
+    const K = 0.5 * M * p.L1 * p.L1 * y[2] * y[2] + 0.5 * p.m2 * p.L2 * p.L2 * y[3] * y[3] + p.m2 * p.L1 * p.L2 * y[2] * y[3] * Math.cos(y[0] - y[1]);
+    const U = 2 * M * p.g * p.L1 * s1 * s1 + 2 * p.m2 * p.g * p.L2 * s2 * s2;
+    return { K, U, E: K + U };
+  }
+  const dpVsec = (p, th1) => { const s = Math.sin(th1 / 2); return 2 * (p.m1 + p.m2) * p.g * p.L1 * s * s; };   // potential with θ₂ = 0
+  const dpTop = (p) => 2 * (p.m1 + p.m2) * p.g * p.L1 + 2 * p.m2 * p.g * p.L2;                            // both rods straight up
+  // linearized: mass matrix [[M L₁², m₂L₁L₂], [m₂L₁L₂, m₂L₂²]], stiffness diag(M g L₁, m₂ g L₂); det(K − ω²M) = 0
+  function normalModes(p) {
+    const M = p.m1 + p.m2, a = p.m1 * p.L1 * p.L2, b = M * p.g * (p.L1 + p.L2), c = M * p.g * p.g;
+    const disc = Math.sqrt(Math.max(0, b * b - 4 * a * c));
+    const wsqHi = (b + disc) / (2 * a), wsqLo = c / (a * wsqHi);      // product of roots is c/a, no cancellation
+    const ratio = (wsq) => M * (p.g - wsq * p.L1) / (wsq * p.m2 * p.L2);   // θ₂/θ₁ in the mode
+    return { w1: Math.sqrt(wsqLo), w2: Math.sqrt(wsqHi), r1: ratio(wsqLo), r2: ratio(wsqHi) };
+  }
+  // phase space distance between two double pendulum states, angle differences wrapped, ω scaled by √(L₁/g)
+  function phaseDist(p, a, b) {
+    const s = p.L1 / p.g, d1 = wrapPi(a[0] - b[0]), d2 = wrapPi(a[1] - b[1]), d3 = a[2] - b[2], d4 = a[3] - b[3];
+    return Math.sqrt(d1 * d1 + d2 * d2 + (d3 * d3 + d4 * d4) * s);
+  }
+  // a start on the Poincaré section: θ₂ = 0, ω₂ > 0, total energy E. Returns null if no such state exists.
+  function sectionStart(p, E, th1, om1) {
+    const M = p.m1 + p.m2, A = 0.5 * p.m2 * p.L2 * p.L2, B = p.m2 * p.L1 * p.L2 * om1 * Math.cos(th1);
+    const C = 0.5 * M * p.L1 * p.L1 * om1 * om1 + dpVsec(p, th1) - E, D = B * B - 4 * A * C;
+    if (D < 0) return null;
+    const w2 = (-B + Math.sqrt(D)) / (2 * A);
+    if (!(w2 > 0)) return null;
+    return [th1, 0, om1, w2];
+  }
+  // edge of the section: largest |ω₁| at which a state with θ₂ = 0 and energy E exists
+  function sectionEdge(p, E, th1) {
+    const M = p.m1 + p.m2, c = Math.cos(th1), r = 2 * (E - dpVsec(p, th1));
+    return r <= 0 ? NaN : Math.sqrt(r / (p.L1 * p.L1 * (M - p.m2 * c * c)));
+  }
+
+  // Dormand–Prince 5(4) with step size control (error per step below tol·(1 + |y|) in every component), FSAL.
+  const DPc = [0, 1 / 5, 3 / 10, 4 / 5, 8 / 9, 1, 1];
+  const DPa = [[], [1 / 5], [3 / 40, 9 / 40], [44 / 45, -56 / 15, 32 / 9], [19372 / 6561, -25360 / 2187, 64448 / 6561, -212 / 729],
+    [9017 / 3168, -355 / 33, 46732 / 5247, 49 / 176, -5103 / 18656], [35 / 384, 0, 500 / 1113, 125 / 192, -2187 / 6784, 11 / 84]];
+  const DPe = [71 / 57600, 0, -71 / 16695, 71 / 1920, -17253 / 339200, 22 / 525, -1 / 40];
+  function makeInteg(n, f, tol) {
+    const I = { n, f, tol, t: 0, h: 1e-3, y: new Float64Array(n), yn: new Float64Array(n), tmp: new Float64Array(n), steps: 0, rejects: 0, k: [] };
+    for (let i = 0; i < 7; i++) I.k.push(new Float64Array(n));
+    return I;
+  }
+  function integReset(I, t, y0) { I.t = t; for (let i = 0; i < I.n; i++) I.y[i] = y0[i]; I.f(I.y, I.k[0]); I.h = Math.max(I.h, 1e-5); I.steps = 0; I.rejects = 0; }
+  // advance to time T exactly; onStep(t0, y0, f0, t1, y1, f1) after each accepted step
+  function integTo(I, T, onStep) {
+    const n = I.n, k = I.k, y = I.y, yn = I.yn, tmp = I.tmp;
+    let guard = 0;
+    while (I.t < T && guard++ < 200000) {
+      let h = I.h, cut = false;
+      if (I.t + h >= T) { h = T - I.t; cut = true; }
+      for (;;) {
+        for (let s = 1; s < 7; s++) {
+          const a = DPa[s];
+          for (let i = 0; i < n; i++) { let acc = y[i]; for (let j = 0; j < s; j++) acc += h * a[j] * k[j][i]; tmp[i] = acc; }
+          if (s === 6) yn.set(tmp);
+          I.f(tmp, k[s]);
+        }
+        let err = 0;
+        for (let i = 0; i < n; i++) {
+          let e = 0; for (let j = 0; j < 7; j++) e += DPe[j] * k[j][i];
+          e = Math.abs(h * e) / (I.tol * (1 + Math.max(Math.abs(y[i]), Math.abs(yn[i]))));
+          if (e > err) err = e;
+        }
+        const fac = err === 0 ? 5 : Math.min(5, Math.max(0.2, 0.9 * Math.pow(err, -0.2)));
+        if (err <= 1) {
+          const t0 = I.t;
+          if (onStep) onStep(t0, y, k[0], cut ? T : t0 + h, yn, k[6], h);
+          I.t = cut ? T : t0 + h;
+          y.set(yn);
+          const kk = k[0]; k[0] = k[6]; k[6] = kk;
+          I.h = cut ? Math.max(I.h, h * fac) : h * fac;
+          I.steps++;
+          break;
+        }
+        I.rejects++; h *= fac; cut = false;
+      }
+    }
+  }
+  // cubic Hermite interpolation on one step, s in [0, 1]
+  function herm(y0, f0, y1, f1, h, s) {
+    const s2 = s * s, s3 = s2 * s;
+    return (2 * s3 - 3 * s2 + 1) * y0 + (s3 - 2 * s2 + s) * h * f0 + (-2 * s3 + 3 * s2) * y1 + (s3 - s2) * h * f1;
+  }
+  // where in a step component i passes through c (from below if dir > 0, from above if dir < 0); s in [0,1] or −1
+  function crossIn(y0, f0, y1, f1, h, i, c, dir) {
+    const a = y0[i] - c, b = y1[i] - c;
+    if (!(dir > 0 ? a < 0 && b >= 0 : a > 0 && b <= 0)) return -1;
+    let lo = 0, hi = 1;
+    for (let it = 0; it < 50; it++) {
+      const md = 0.5 * (lo + hi), v = herm(y0[i], f0[i], y1[i], f1[i], h, md) - c;
+      if ((dir > 0) === (v < 0)) lo = md; else hi = md;
+    }
+    return 0.5 * (lo + hi);
+  }
+  // crossings of angle component i through a multiple of 2π (i.e. the bob passing straight down), upward and downward
+  function angleCross(t0, y0, f0, y1, f1, h, i, cb) {
+    const c = TAU * Math.round(y0[i] / TAU);
+    let s = crossIn(y0, f0, y1, f1, h, i, c, 1);
+    if (s >= 0) cb(t0 + s * h, 1, s);
+    s = crossIn(y0, f0, y1, f1, h, i, c, -1);
+    if (s >= 0) cb(t0 + s * h, -1, s);
+  }
+  // largest Lyapunov exponent: a nearby orbit pulled back to distance d0 every tau, λ = Σ ln(d/d0) / t
+  function makeLyap(p, f, tol, y, d0) {
+    const sh = makeInteg(4, f, tol), z = Array.from(y), sc = Math.sqrt(p.g / p.L1);
+    const u = [0.5, 0.5, 0.5 * sc, 0.5 * sc];               // unit length in the phase space metric
+    integReset(sh, 0, z.map((v, i) => v + d0 * u[i]));
+    return { sh, d0, sum: 0, tsum: 0, logd: Math.log10(d0), lam: NaN };
+  }
+  function lyapRenorm(Ly, p, ref, t) {
+    const sh = Ly.sh, d = phaseDist(p, sh.y, ref);
+    if (!(d > 0) || !isFinite(d)) return;
+    Ly.sum += Math.log(d / Ly.d0); Ly.tsum = t; Ly.lam = Ly.sum / t; Ly.logd = Math.log10(Ly.d0) + Ly.sum / Math.LN10;
+    const r = Ly.d0 / d, y = new Float64Array(4);
+    for (let i = 0; i < 4; i++) { const di = i < 2 ? wrapPi(sh.y[i] - ref[i]) : sh.y[i] - ref[i]; y[i] = ref[i] + di * r; }
+    integReset(sh, t, y);
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.DP = { G0, wrapPi, agm, ellipK, simpleK2, periodExact, simplePeriod, simpleDeriv, dpDeriv, dpEnergy, dpVsec, dpTop, normalModes,
+      phaseDist, sectionStart, sectionEdge, makeInteg, integReset, integTo, herm, crossIn, angleCross, makeLyap, lyapRenorm };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const DEG = Math.PI / 180;
+  const TOL = 1e-11;
+  const CH = 1 / 120;                       // simulated time per recorded sample, s
+  const LYTAU = 12;                         // renormalize the nearby orbit every 12 samples = 0.1 s
+  const SPEEDS = [0.1, 0.25, 0.5, 1, 2, 4];
+  const SL = { m1: { el: 'sM1', min: 0.1, max: 5, step: 0.05 }, m2: { el: 'sM2', min: 0.1, max: 5, step: 0.05 },
+    L1: { el: 'sL1', min: 0.2, max: 2, step: 0.01 }, L2: { el: 'sL2', min: 0.2, max: 2, step: 0.01 },
+    L: { el: 'sL', min: 0.1, max: 3, step: 0.01 }, A: { el: 'sA', min: 1, max: 179, step: 1 } };
+  const snap = (key, v) => { const d = SL[key]; return +clamp(Math.round(v / d.step) * d.step, d.min, d.max).toFixed(4); };
+
+  // ---------- setups ----------
+  const PRESETS = {
+    big: { mode: 'simple', L: 1, A: 150, hint: 'Released from 150°, the pendulum lags further behind the dashed small angle model on every swing. Its period is T = 4√(L/g) K(sin(θ₀/2)), not 2π√(L/g); the top plot shows how T grows with the release angle and becomes infinite at 180°. Drag the bob or the marker on the curve.' },
+    mode1: { mode: 'double', m1: 1, m2: 1, L1: 1, L2: 1, amp: 6, start: 'm1', N: 1, view: 'config',
+      hint: 'Both rods swing together at one frequency, the lower one √2 times as far: normal mode 1, ω₁² = (2 − √2)g/L for equal masses and lengths. The θ₂ against θ₁ plot is a straight line. Try 50 copies: at small angles they stay together.' },
+    mode2: { mode: 'double', m1: 1, m2: 1, L1: 1, L2: 1, amp: 6, start: 'm2', N: 1, view: 'config',
+      hint: 'The rods swing opposite ways, the lower one √2 times as far: normal mode 2, ω₂² = (2 + √2)g/L, faster than mode 1. Raise the mode amplitude and press Mode 2 again: past about 30° the motion stops being a clean mode.' },
+    chaos: { mode: 'double', m1: 1, m2: 1, L1: 1, L2: 1, ic: [130, 130], N: 1, view: 'config',
+      hint: 'Released from 130° and 130°, the lower bob flips over the top at irregular times and the trail never repeats. The equations are deterministic: there is no randomness anywhere, yet the motion cannot be predicted far ahead. The Lyapunov estimate in Copies and separation tells how fast errors grow.' },
+    fly: { mode: 'double', m1: 1, m2: 1, L1: 1, L2: 1, ic: [130, 130], N: 100, logd: -6, view: 'sep',
+      hint: '100 copies start 10⁻⁶ rad apart, a difference far too small to see. For several seconds they move as one, then they fan out over the whole circle. The separation grows exponentially, a straight line on the log plot with slope λ, until it is as large as the pendulum itself.' },
+    poinc: { mode: 'double', m1: 1, m2: 1, L1: 1, L2: 1, N: 1, view: 'poinc', E: 15,
+      hint: 'Each dot is θ₁ and ω₁ at a moment when the lower rod passes straight down moving right, at one fixed energy. Regular orbits draw closed curves (islands); chaotic orbits scatter dots over a region (the chaotic sea). Click the section to start an orbit there; raise E and the islands shrink.' }
+  };
+
+  // ---------- state ----------
+  const S = { preset: 'chaos', mode: 'double', p: { m1: 1, m2: 1, L1: 1, L2: 1, g: G0 }, sp: { L: 1, g: G0 }, A: 150, amp: 6, N: 1, logd: -6,
+    view: 'config', Esec: 15, speedIdx: 3, layers: { trail: true, ghost: true, arcs: true, fling: true } };
+  let running = !reduce, R = null, Rs = null;
+  const pp = () => S.p;
+  const spp = () => ({ L: S.sp.L, g: S.p.g });
+
+  // ---------- runs ----------
+  function hueOf(k, N) { return 250 - 250 * k / Math.max(1, N - 1); }
+  function newDouble(y0) {
+    const p = { ...pp() }, f = dpDeriv(p), N = S.N, dlt = Math.pow(10, S.logd);
+    const copies = [];
+    for (let k = 0; k < N; k++) {
+      const I = makeInteg(4, f, TOL);
+      integReset(I, 0, [y0[0] + k * dlt, y0[1], y0[2], y0[3]]);
+      copies.push(I);
+    }
+    R = { p, f, t: 0, y0: Array.from(y0), copies, N, dlt, E0: dpEnergy(p, y0).E, ly: makeLyap(p, f, TOL, y0, 1e-8), n: 0,
+      hist: [], sep: [], trail: [], up: [], down: [], sec: [], lag: false };
+    R.hist.push([0, y0[0], y0[1]]);
+    if (N > 1) R.sep.push([0, sepNow()]);
+    if (S.view === 'poinc' && Math.abs(R.E0 - S.Esec) > 1e-9 * Math.max(1, S.Esec)) { S.Esec = R.E0; syncESlider(); resetPoinc(); }
+    updateReadouts();
+  }
+  function newSimple(y0) {
+    const p = spp(), I = makeInteg(2, simpleDeriv(p), TOL);
+    integReset(I, 0, y0);
+    const w0 = Math.sqrt(p.g / p.L);
+    Rs = { p, I, t: 0, y0: Array.from(y0), w0, E0: simpleE(p, y0), trace: [], up: [], down: [], lag: false };
+    updateReadouts();
+  }
+  function simpleE(p, y) { const s = Math.sin(y[0] / 2); return 0.5 * p.L * p.L * y[1] * y[1] + 2 * p.g * p.L * s * s; }   // per unit mass
+  function sepNow() {
+    if (R.N < 2) return NaN;
+    return phaseDist(R.p, R.copies[0].y, R.copies[1].y);
+  }
+  function sepMax() {
+    let m = 0; const a = R.copies[0].y;
+    for (let k = 1; k < R.N; k++) m = Math.max(m, phaseDist(R.p, a, R.copies[k].y));
+    return m;
+  }
+  function curState() {
+    if (S.mode === 'simple') return Array.from(Rs.I.y);
+    return Array.from(R.copies[0].y);
+  }
+  function restart() {
+    if (S.mode === 'simple') newSimple(Rs ? Rs.y0 : [S.A * DEG, 0]);
+    else newDouble(R ? R.y0 : [130 * DEG, 130 * DEG, 0, 0]);
+  }
+  // a parameter changed: carry on from the present state under the new settings, with a fresh clock and plots
+  function continueRun() {
+    if (S.mode === 'simple') { const y = Rs ? curState() : [S.A * DEG, 0]; newSimple(y); }
+    else { const y = R ? curState() : [0, 0, 0, 0]; y[0] = wrapPi(y[0]); y[1] = wrapPi(y[1]); newDouble(y); }
+  }
+
+  // step the simulation forward by dt of simulated time, in samples of CH; stop if the frame budget runs out
+  function advance(dt, budgetMs) {
+    const t0 = performance.now();
+    if (S.mode === 'simple') {
+      const r = Rs; let target = r.t + dt;
+      while (r.t + CH <= target + 1e-12) {
+        const T = (Math.round(r.t / CH) + 1) * CH;
+        integTo(r.I, T, (ta, ya, fa, tb, yb, fb, h) => angleCross(ta, ya, fa, yb, fb, h, 0, (tc, dir) => (dir > 0 ? r.up : r.down).push(tc)));
+        r.t = T;
+        r.trace.push([r.I.y[0], r.I.y[1]]);
+        if (r.trace.length > 2400) r.trace.splice(0, 600);
+        if (budgetMs && performance.now() - t0 > budgetMs) { r.lag = true; break; }
+      }
+      trimList(r.up); trimList(r.down);
+      return;
+    }
+    const r = R, target = r.t + dt;
+    while (r.t + CH <= target + 1e-12) {
+      const T = (Math.round(r.t / CH) + 1) * CH;
+      integTo(r.copies[0], T, onMainStep);
+      for (let k = 1; k < r.N; k++) integTo(r.copies[k], T, null);
+      integTo(r.ly.sh, T, null);
+      r.t = T; r.n++;
+      if (r.n % LYTAU === 0) lyapRenorm(r.ly, r.p, r.copies[0].y, T);
+      const y = r.copies[0].y;
+      r.hist.push([T, y[0], y[1]]);
+      if (r.hist.length > 3600) r.hist.splice(0, 600);
+      r.trail.push([T, r.p.L1 * Math.sin(y[0]) + r.p.L2 * Math.sin(y[1]), r.p.L1 * Math.cos(y[0]) + r.p.L2 * Math.cos(y[1])]);
+      if (r.trail.length > 1200) r.trail.splice(0, 200);
+      if (r.N > 1 && r.n % 2 === 0) { r.sep.push([T, sepNow(), r.N > 2 ? sepMax() : NaN]); if (r.sep.length > 9000) thinSep(); }
+      if (budgetMs && performance.now() - t0 > budgetMs) { r.lag = true; break; }
+    }
+    trimList(r.up); trimList(r.down);
+  }
+  function thinSep() { R.sep = R.sep.filter((_, i) => i % 2 === 0); }
+  function trimList(a) { if (a.length > 40) a.splice(0, a.length - 40); }
+  function onMainStep(ta, ya, fa, tb, yb, fb, h) {
+    angleCross(ta, ya, fa, yb, fb, h, 0, (tc, dir) => (dir > 0 ? R.up : R.down).push(tc));
+    // Poincaré section: θ₂ through 0 (mod 2π) going up
+    const c = TAU * Math.round(ya[1] / TAU), s = crossIn(ya, fa, yb, fb, h, 1, c, 1);
+    if (s >= 0) {
+      const th1 = wrapPi(herm(ya[0], fa[0], yb[0], fb[0], h, s)), om1 = herm(ya[2], fa[2], yb[2], fb[2], h, s);
+      R.sec.push(th1, om1);
+      if (R.sec.length > 6000) R.sec.splice(0, 1000);
+    }
+  }
+  // period from the last few crossings in one direction, if they agree to 1 %
+  function measuredPeriod(r) {
+    const best = [r.up, r.down].map((a) => {
+      if (a.length < 3) return null;
+      const iv = []; for (let i = Math.max(1, a.length - 5); i < a.length; i++) iv.push(a[i] - a[i - 1]);
+      const mean = iv.reduce((x, y) => x + y, 0) / iv.length, spread = Math.max(...iv) - Math.min(...iv);
+      return { T: mean, ok: spread <= 0.01 * mean, n: iv.length };
+    }).filter(Boolean);
+    if (!best.length) return null;
+    return best.sort((a, b) => b.n - a.n)[0];
+  }
+
+  // ---------- Poincaré section, background orbits at the section energy ----------
+  let PC = null;
+  function resetPoinc(extra) {
+    const p = { ...pp() }, f = dpDeriv(p), E = S.Esec, orbits = PC && extra ? PC.orbits : [];
+    const thmax = E >= 2 * (p.m1 + p.m2) * p.g * p.L1 ? Math.PI : 2 * Math.asin(Math.sqrt(E / (2 * (p.m1 + p.m2) * p.g * p.L1)));
+    const seeds = [];
+    const base = extra ? orbits.length : 0;
+    const nth = 7, fr = extra ? [-0.75, -0.25, 0.25, 0.75] : [-0.5, 0, 0.5];
+    for (let i = 0; i < nth; i++) {
+      const th = (extra ? (i + 0.5) / nth * 2 - 1 : (i + 1) / (nth + 1) * 2 - 1) * thmax * 0.98;
+      const e = sectionEdge(p, E, th);
+      if (!isFinite(e)) continue;
+      for (const q of fr) { const y = sectionStart(p, E, th, q * e); if (y) seeds.push(y); }
+    }
+    let hi = base;
+    for (const y of seeds) {
+      const I = makeInteg(4, f, 1e-10); integReset(I, 0, y);
+      orbits.push({ I, pts: [], hue: (hi++ * 137.508) % 360 });
+    }
+    PC = { p, f, E, thmax, orbits, rr: 0 };
+  }
+  function poincWork(budgetMs) {
+    if (!PC || S.view !== 'poinc' || S.mode !== 'double') return;
+    const t0 = performance.now(), n = PC.orbits.length;
+    let idle = 0;
+    while (performance.now() - t0 < budgetMs && idle < n) {
+      const o = PC.orbits[PC.rr % n]; PC.rr++;
+      if (o.pts.length >= 800 || o.I.t > 2000) { idle++; continue; }
+      idle = 0;
+      integTo(o.I, o.I.t + 1, (ta, ya, fa, tb, yb, fb, h) => {
+        const c = TAU * Math.round(ya[1] / TAU), s = crossIn(ya, fa, yb, fb, h, 1, c, 1);
+        if (s >= 0) o.pts.push(wrapPi(herm(ya[0], fa[0], yb[0], fb[0], h, s)), herm(ya[2], fa[2], yb[2], fb[2], h, s));
+      });
+    }
+  }
+
+  // ---------- formatting ----------
+  const MIN = (s) => s.replace(/-/g, '−');
+  function sig(v, n) {
+    if (!isFinite(v)) return '—';
+    if (v === 0) return '0';
+    const d = clamp(n - 1 - Math.floor(Math.log10(Math.abs(v)) + 1e-12), 0, 9);
+    return MIN(v.toFixed(d));
+  }
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  const sup = (e) => String(e).split('').map((c) => SUP[c]).join('');
+  function fmtSci(v, d) {
+    if (!isFinite(v)) return '—';
+    if (v === 0) return '0';
+    const e = Math.floor(Math.log10(Math.abs(v))), m = v / Math.pow(10, e);
+    if (e >= -2 && e <= 2) return sig(v, (d || 1) + 1);
+    return `${MIN(m.toFixed(d === undefined ? 1 : d))} × 10${sup(e)}`;
+  }
+  const pow10 = (e) => (Number.isInteger(e) ? `10${sup(e)}` : `${(Math.pow(10, e)).toPrecision(2).replace(/e(-?\d+)/, (_, x) => ` × 10${sup(+x)}`)}`);
+  function fmtRate(r) { if (r === 1) return 'real time'; if (r < 1) return `slow motion ×${+(1 / r).toFixed(1)}`; return `fast forward ×${r}`; }
+  const deg = (r, d) => `${MIN((r / DEG).toFixed(d === undefined ? 1 : d))}°`;
+  const fJ = (v) => `${sig(v, 4)} J`;
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  function fmtTick(v, step) { const d = Math.max(0, -Math.floor(Math.log10(step) + 1e-9)); return MIN((Math.abs(v) < step / 1e6 ? 0 : v).toFixed(d)); }
+
+  // ---------- theme and canvases ----------
+  let T = null, dpr = 1;
+  const projOn = () => document.documentElement.getAttribute('data-projector') === 'on';
+  // label scale: larger in projector mode, capped by the pane size so labels do not pile up in a small pane
+  const lsOf = (W, H) => (projOn() ? clamp(Math.min(W, H * 1.3) / 300, 1, 1.45) : 1);
+  function isDark() { return getComputedStyle(document.documentElement).colorScheme.includes('dark'); }
+  let HUE = [];
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), wire: g('--wire'), surface: g('--surface'), mono: g('--font-mono') || 'monospace' };
+    const dark = isDark();
+    HUE = []; for (let h = 0; h <= 360; h++) HUE.push(`hsl(${h} ${dark ? 75 : 72}% ${dark ? 62 : 46}%)`);
+  }
+  const hue = (h) => HUE[((Math.round(h) % 360) + 360) % 360];
+  const cans = { p: $('pCan'), a: $('aCan'), b: $('bCan') };
+  const panes = { p: $('pPane'), a: $('aPane'), b: $('bPane') };
+  const ctxs = { p: cans.p.getContext('2d'), a: cans.a.getContext('2d'), b: cans.b.getContext('2d') };
+  const dims = { p: [0, 0], a: [0, 0], b: [0, 0] };
+  // both plots share one label scale so their titles and ticks match
+  const plotLs = () => Math.min(lsOf(dims.a[0], dims.a[1]), lsOf(dims.b[0], dims.b[1]));
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const key of ['p', 'a', 'b']) {
+      const r = panes[key].getBoundingClientRect();
+      cans[key].width = Math.max(1, Math.round(r.width * dpr)); cans[key].height = Math.max(1, Math.round(r.height * dpr));
+      cans[key].style.width = r.width + 'px'; cans[key].style.height = r.height + 'px';
+      dims[key] = [r.width, r.height];
+    }
+    drawAll();
+  }
+  function halo(ctx, txt, x, y, color, align, base, ls) {
+    ctx.textAlign = align || 'left'; ctx.textBaseline = base || 'alphabetic';
+    const w = ctx.measureText(txt).width, mm = /([\d.]+)px/.exec(ctx.font), fs = mm ? +mm[1] : 11;
+    let x0 = align === 'center' ? x - w / 2 : align === 'right' ? x - w : x;
+    let y0 = base === 'top' ? y : base === 'middle' ? y - fs / 2 : base === 'bottom' ? y - fs : y - fs * 0.8;
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.86; ctx.fillRect(x0 - 3, y0 - 2, w + 6, fs + 4); ctx.globalAlpha = 1;
+    ctx.fillStyle = color; ctx.fillText(txt, x, y);
+  }
+
+  // ---------- pendulum geometry ----------
+  let holdReach = null, drag = null, hoverId = null;
+  function pGeom() {
+    const [W, H] = dims.p, ls = lsOf(W, H);
+    const top = 50 * ls, cx = W / 2, rad = Math.max(40, Math.min(W / 2 - 18, (H - top - 16) / 2));
+    const reach = holdReach || (S.mode === 'simple' ? S.sp.L : S.p.L1 + S.p.L2);
+    return { W, H, ls, cx, cy: top + (H - top) / 2, sc: rad / reach, rad, reach };
+  }
+  const bobR = (m, ls, sc, L) => Math.min((6 + 6 * Math.cbrt(m)) * Math.min(ls, 1.25), 0.22 * sc * L);
+  function bobs(g, y) {
+    const p = S.mode === 'simple' ? { L1: S.sp.L, L2: 0 } : S.p;
+    const x1 = g.cx + g.sc * p.L1 * Math.sin(y[0]), y1 = g.cy + g.sc * p.L1 * Math.cos(y[0]);
+    if (S.mode === 'simple') return { x1, y1 };
+    return { x1, y1, x2: x1 + g.sc * p.L2 * Math.sin(y[1]), y2: y1 + g.sc * p.L2 * Math.cos(y[1]) };
+  }
+  function shownState() {
+    if (drag && drag.y) return drag.y;
+    return curState();
+  }
+  function dragHandles() {
+    const g = pGeom(), y = shownState(), b = bobs(g, y), out = [];
+    if (S.mode === 'simple') {
+      out.push({ id: 'b1', pt: [b.x1, b.y1], r: bobR(1, g.ls, g.sc, S.sp.L), cursor: 'grab' });
+      out.push({ id: 'L', grip: [(g.cx + b.x1) / 2, (g.cy + b.y1) / 2], dir: y[0], cursor: 'move' });
+    } else {
+      out.push({ id: 'b2', pt: [b.x2, b.y2], r: bobR(S.p.m2, g.ls, g.sc, S.p.L2), cursor: 'grab' });
+      out.push({ id: 'b1', pt: [b.x1, b.y1], r: bobR(S.p.m1, g.ls, g.sc, S.p.L1), cursor: 'grab' });
+      out.push({ id: 'L1', grip: [(g.cx + b.x1) / 2, (g.cy + b.y1) / 2], dir: y[0], cursor: 'move' });
+      out.push({ id: 'L2', grip: [(b.x1 + b.x2) / 2, (b.y1 + b.y2) / 2], dir: y[1], cursor: 'move' });
+    }
+    return out;
+  }
+
+  // ---------- drawing: pendulum ----------
+  function drawPend() {
+    const [W, H] = dims.p; if (!W || !H) return;
+    const ctx = ctxs.p, g = pGeom(), ls = g.ls;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const y = shownState(), simple = S.mode === 'simple';
+    // reach circle and vertical through the pivot
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.setLineDash([4, 5]);
+    ctx.beginPath(); ctx.arc(g.cx, g.cy, g.sc * g.reach, 0, TAU); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = T.gridStrong; ctx.setLineDash([3, 4]);
+    ctx.beginPath(); ctx.moveTo(g.cx, g.cy); ctx.lineTo(g.cx, g.cy + g.sc * g.reach + 6); ctx.stroke(); ctx.setLineDash([]);
+    // scale bar
+    const bar = nice(g.reach / 3), bx = 14 * ls, by = H - 16 * ls;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * ls;
+    ctx.beginPath(); ctx.moveTo(bx, by - 4); ctx.lineTo(bx, by); ctx.lineTo(bx + bar * g.sc, by); ctx.lineTo(bx + bar * g.sc, by - 4); ctx.stroke();
+    ctx.font = `${10.5 * ls}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(`${sig(bar, 2)} m`, bx + 4, by - 5);
+    const lw = 2.4 * Math.min(ls, 1.3);
+    if (simple) drawSimple(ctx, g, y, lw);
+    else drawDouble(ctx, g, y, lw);
+    // pivot
+    ctx.fillStyle = T.wire; ctx.fillRect(g.cx - 14 * ls, g.cy - 4 * ls, 28 * ls, 3 * ls);
+    ctx.beginPath(); ctx.arc(g.cx, g.cy, 3.2 * ls, 0, TAU); ctx.fill();
+    // grips last
+    for (const h of dragHandles()) {
+      const hot = (drag && drag.id === h.id) || (!drag && hoverId === h.id);
+      if (h.pt) {
+        ctx.strokeStyle = T.accent; ctx.lineWidth = (hot ? 2.4 : 1.4) * ls; ctx.globalAlpha = hot ? 1 : 0.0;
+        if (hot) { ctx.beginPath(); ctx.arc(h.pt[0], h.pt[1], h.r + 4 * ls, 0, TAU); ctx.stroke(); }
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.arc(h.pt[0], h.pt[1], Math.max(2, Math.min(3.2 * ls, h.r * 0.35)), 0, TAU); ctx.fill();
+      } else if (h.grip) {
+        const [mx, my] = h.grip, c = Math.cos(h.dir), s = Math.sin(h.dir);
+        if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(mx, my, 10 * ls, 0, TAU); ctx.fill(); ctx.globalAlpha = 1; }
+        ctx.strokeStyle = hot ? T.accent : T.muted; ctx.lineWidth = 1.5 * ls; ctx.beginPath();
+        for (let k = -1; k <= 1; k++) {
+          const ox = s * k * 3.5 * ls, oy = c * k * 3.5 * ls;          // along the rod
+          ctx.moveTo(mx + ox - c * 5 * ls, my + oy + s * 5 * ls); ctx.lineTo(mx + ox + c * 5 * ls, my + oy - s * 5 * ls);
+        }
+        ctx.stroke();
+      }
+    }
+    if (drag && drag.id && drag.id[0] === 'L') {
+      const key = simple ? 'L' : drag.id, v = simple ? S.sp.L : S.p[drag.id];
+      ctx.font = `600 ${11 * ls}px ${T.mono}`;
+      halo(ctx, `${key === 'L' ? 'L' : key === 'L1' ? 'L₁' : 'L₂'} = ${v.toFixed(2)} m`, g.cx, H - 16 * ls, T.accent, 'center', 'bottom', ls);
+    }
+  }
+  function arcLabel(ctx, cx, cy, r, a, txt, col, ls) {
+    // arc from straight down (angle 0) to a, centered on (cx, cy)
+    if (Math.abs(a) < 0.5 * DEG) return;
+    const a0 = Math.PI / 2, a1 = Math.PI / 2 - a;
+    ctx.strokeStyle = col; ctx.lineWidth = 1.3 * ls; ctx.beginPath(); ctx.arc(cx, cy, r, Math.min(a0, a1), Math.max(a0, a1)); ctx.stroke();
+    // label just beside the vertical, on the side away from the rod
+    ctx.font = `600 ${11 * ls}px ${T.mono}`;
+    const sd = a > 0 ? -1 : 1;
+    halo(ctx, txt, cx + sd * 5 * ls, cy + r + 2 * ls, col, sd < 0 ? 'right' : 'left', 'top', ls);
+  }
+  function drawSimple(ctx, g, y, lw) {
+    const ls = g.ls, L = S.sp.L, r = Rs, b = bobs(g, y), rb = bobR(1, ls, g.sc, L);
+    // small angle model: θ = θ(0) cos ω₀t + ω(0)/ω₀ sin ω₀t, from the same start
+    if (S.layers.ghost && r && !drag) {
+      const th = r.y0[0] * Math.cos(r.w0 * r.t) + r.y0[1] / r.w0 * Math.sin(r.w0 * r.t);
+      const gx = g.cx + g.sc * L * Math.sin(th), gy = g.cy + g.sc * L * Math.cos(th);
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ls; ctx.setLineDash([5 * ls, 4 * ls]);
+      ctx.beginPath(); ctx.moveTo(g.cx, g.cy); ctx.lineTo(gx, gy); ctx.stroke(); ctx.setLineDash([]);
+      ctx.beginPath(); ctx.arc(gx, gy, rb, 0, TAU); ctx.stroke();
+      if (Math.abs(r.y0[1]) < 1e-12 && Math.abs(r.y0[0]) < Math.PI) {
+        ctx.font = `${10.5 * ls}px ${T.mono}`;
+        const tw = ctx.measureText('small angle model').width;
+        const lx = clamp(gx - tw / 2, 6, g.W - tw - 6);
+        halo(ctx, 'small angle model', lx, gy + rb + 6 * ls > g.H - 30 * ls ? gy - rb - 20 * ls : gy + rb + 6 * ls, T.muted, 'left', 'top', ls);
+      }
+    }
+    // release angle marks on both sides
+    if (r && !drag) {
+      const pk = simplePeriod(L, S.p.g, r.y0[0], r.y0[1]);
+      if (!pk.rot && pk.k < 1) {
+        const a0 = 2 * Math.asin(pk.k);
+        ctx.strokeStyle = T.equi; ctx.lineWidth = 1.2 * ls; ctx.setLineDash([2, 4]);
+        ctx.beginPath(); ctx.arc(g.cx, g.cy, g.sc * L, Math.PI / 2 - a0, Math.PI / 2 + a0); ctx.stroke(); ctx.setLineDash([]);
+      }
+    }
+    if (S.layers.arcs) arcLabel(ctx, g.cx, g.cy, Math.min(48 * ls, 0.35 * g.sc * L), wrapPi(y[0]), `θ = ${deg(wrapPi(y[0]), 0)}`, T.neg, ls);
+    ctx.strokeStyle = T.wire; ctx.lineWidth = lw;
+    ctx.beginPath(); ctx.moveTo(g.cx, g.cy); ctx.lineTo(b.x1, b.y1); ctx.stroke();
+    ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(b.x1, b.y1, rb, 0, TAU); ctx.fill();
+  }
+  function drawDouble(ctx, g, y, lw) {
+    const ls = g.ls, r = R, p = S.p;
+    // trail of the lower bob (copy 0), fading with age
+    if (S.layers.trail && r && !drag && r.trail.length > 1) {
+      const tr = r.trail, tNow = r.t, span = 5;
+      ctx.lineWidth = 1.6 * Math.min(ls, 1.3); ctx.strokeStyle = T.pos; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      // ten age bands, each one path, older bands fainter
+      const nb = 10;
+      let i0 = 1;
+      while (i0 < tr.length && tNow - tr[i0][0] > span) i0++;
+      for (let band = 0; band < nb; band++) {
+        const ta = tNow - span + band * span / nb, tb = ta + span / nb;
+        ctx.globalAlpha = 0.7 * (band + 1) / nb;
+        ctx.beginPath(); let started = false;
+        for (let i = i0; i < tr.length; i++) {
+          if (tr[i][0] < ta) continue;
+          if (tr[i - 1][0] > tb) break;
+          if (!started) { ctx.moveTo(g.cx + g.sc * tr[i - 1][1], g.cy + g.sc * tr[i - 1][2]); started = true; }
+          ctx.lineTo(g.cx + g.sc * tr[i][1], g.cy + g.sc * tr[i][2]);
+        }
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1; ctx.lineCap = 'butt'; ctx.lineJoin = 'miter';
+    }
+    // copies, color coded by how far their start differs from copy 0
+    if (r && r.N > 1 && !drag) {
+      const rr = Math.max(2, 3 * Math.min(ls, 1.3)), alpha = r.N > 30 ? 0.5 : 0.75;
+      for (let k = r.N - 1; k >= 1; k--) {
+        const b = bobs(g, r.copies[k].y), col = hue(hueOf(k, r.N));
+        ctx.strokeStyle = col; ctx.globalAlpha = alpha * 0.6; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(g.cx, g.cy); ctx.lineTo(b.x1, b.y1); ctx.lineTo(b.x2, b.y2); ctx.stroke();
+        ctx.globalAlpha = alpha + 0.2; ctx.fillStyle = col;
+        ctx.beginPath(); ctx.arc(b.x2, b.y2, rr, 0, TAU); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+    const b = bobs(g, y);
+    if (S.layers.arcs && (!r || r.N <= 1 || drag)) {
+      const rA = Math.min(46 * ls, 0.3 * g.sc * p.L1), rB = Math.min(40 * ls, 0.3 * g.sc * p.L2);
+      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.setLineDash([3, 4]);
+      ctx.beginPath(); ctx.moveTo(b.x1, b.y1); ctx.lineTo(b.x1, b.y1 + rB + 10 * ls); ctx.stroke(); ctx.setLineDash([]);
+      arcLabel(ctx, g.cx, g.cy, rA, wrapPi(y[0]), 'θ₁', T.neg, ls);
+      arcLabel(ctx, b.x1, b.y1, rB, wrapPi(y[1]), 'θ₂', T.pos, ls);
+    }
+    ctx.strokeStyle = T.wire; ctx.lineWidth = lw;
+    ctx.beginPath(); ctx.moveTo(g.cx, g.cy); ctx.lineTo(b.x1, b.y1); ctx.lineTo(b.x2, b.y2); ctx.stroke();
+    ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(b.x1, b.y1, bobR(p.m1, ls, g.sc, p.L1), 0, TAU); ctx.fill();
+    ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(b.x2, b.y2, bobR(p.m2, ls, g.sc, p.L2), 0, TAU); ctx.fill();
+    if (drag && drag.y && (drag.id === 'b1' || drag.id === 'b2')) {
+      ctx.font = `600 ${11 * ls}px ${T.mono}`;
+      halo(ctx, `θ₁ = ${deg(drag.y[0], 0)}   θ₂ = ${deg(drag.y[1], 0)}`, g.cx, g.H - 16 * ls, T.accent, 'center', 'bottom', ls);
+    }
+  }
+
+  // ---------- plot helpers ----------
+  function box(W, H, ls, opt) {
+    opt = opt || {};
+    return { L: (opt.L || 50) * ls, R: W - (opt.R || 16) * ls, T: (opt.T || 34) * ls, B: H - (opt.B || 30) * ls };
+  }
+  function axes(ctx, b, xr, yr, ls, o) {
+    o = o || {};
+    const X = (v) => b.L + (v - xr[0]) / (xr[1] - xr[0]) * (b.R - b.L), Y = (v) => b.B - (v - yr[0]) / (yr[1] - yr[0]) * (b.B - b.T);
+    ctx.font = `${10.5 * ls}px ${T.mono}`; ctx.lineWidth = 1;
+    const xs = o.xstep || nice((xr[1] - xr[0]) / Math.max(2, Math.floor((b.R - b.L) / (70 * ls))));
+    const ys = o.ystep || nice((yr[1] - yr[0]) / Math.max(2, Math.floor((b.B - b.T) / (34 * ls))));
+    ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = Math.ceil(xr[0] / xs - 1e-9) * xs; v <= xr[1] + 1e-9 * xs; v += xs) {
+      const px = Math.round(X(v)) + 0.5;
+      ctx.strokeStyle = Math.abs(v) < xs * 1e-6 && o.zeroX ? T.gridStrong : T.grid; ctx.beginPath(); ctx.moveTo(px, b.T); ctx.lineTo(px, b.B); ctx.stroke();
+      ctx.fillText(o.xfmt ? o.xfmt(v, xs) : fmtTick(v, xs), px, b.B + 4);
+    }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = Math.ceil(yr[0] / ys - 1e-9) * ys; v <= yr[1] + 1e-9 * ys; v += ys) {
+      const py = Math.round(Y(v)) + 0.5;
+      ctx.strokeStyle = Math.abs(v) < ys * 1e-6 && o.zeroY ? T.gridStrong : T.grid; ctx.beginPath(); ctx.moveTo(b.L, py); ctx.lineTo(b.R, py); ctx.stroke();
+      ctx.fillStyle = T.muted; ctx.fillText(o.yfmt ? o.yfmt(v, ys) : fmtTick(v, ys), b.L - 5, py);
+    }
+    if (o.xlab) { ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillStyle = T.muted; ctx.fillText(o.xlab, b.R, b.B + 16 * ls); }
+    if (o.title) { ctx.font = `600 ${11.5 * ls}px ${T.mono}`; ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(o.title, b.L, b.T - 8 * ls); }
+    return { X, Y };
+  }
+  const frameBox = (ctx, b) => { ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(b.L + 0.5, b.T + 0.5, b.R - b.L, b.B - b.T); };
+  const clipBox = (ctx, b) => { ctx.save(); ctx.beginPath(); ctx.rect(b.L, b.T, b.R - b.L, b.B - b.T); ctx.clip(); };
+  function legend(ctx, b, items, ls, left) {
+    ctx.font = `${10.5 * ls}px ${T.mono}`;
+    const wid = (it) => ctx.measureText(it[0]).width + 24 * ls, gap = 10 * ls, avail = b.R - b.L - 12 * ls;
+    // pack items into rows that fit the plot width
+    const rows = [[]]; let used = 0;
+    for (const it of items) {
+      const w = wid(it);
+      if (rows[rows.length - 1].length && used + gap + w > avail) { rows.push([]); used = 0; }
+      used += (rows[rows.length - 1].length ? gap : 0) + w; rows[rows.length - 1].push(it);
+    }
+    rows.forEach((row, ri) => {
+      const tot = row.reduce((a, it, k) => a + wid(it) + (k ? gap : 0), 0), yy = b.T + 6 * ls + ri * 16 * ls;
+      let x = left ? b.L + 6 * ls : b.R - 6 * ls - tot;
+      for (const [txt, col, dash] of row) {
+        const w = ctx.measureText(txt).width;
+        ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.86; ctx.fillRect(x - 2, yy - 2, w + 28 * ls, 15 * ls); ctx.globalAlpha = 1;
+        ctx.strokeStyle = col; ctx.lineWidth = 2 * ls; ctx.setLineDash(dash ? [4 * ls, 3 * ls] : []);
+        ctx.beginPath(); ctx.moveTo(x + 2 * ls, yy + 6 * ls); ctx.lineTo(x + 18 * ls, yy + 6 * ls); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(txt, x + 24 * ls, yy);
+        x += w + 24 * ls + gap;
+      }
+    });
+    return rows.length;
+  }
+  const degFmt = (v, st) => `${fmtTick(v, st)}°`;
+
+  // ---------- top pane ----------
+  let aGeom = null;
+  function drawTop() {
+    const [W, H] = dims.a; if (!W || !H) return;
+    const ctx = ctxs.a, ls = plotLs();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (S.mode === 'simple') return drawPeriodCurve(ctx, W, H, ls);
+    const r = R; if (!r) return;
+    const b = box(W, H, ls, { L: 50, B: 32 }), span = 20;
+    const t1 = Math.max(span, r.t), t0 = t1 - span;
+    let A = 0;
+    for (const h of r.hist) if (h[0] >= t0) A = Math.max(A, Math.abs(wrapPi(h[1])), Math.abs(wrapPi(h[2])));
+    const ymax = Math.min(180, Math.max(10, nice(A / DEG * 1.15) * Math.ceil(A / DEG * 1.15 / nice(A / DEG * 1.15))));
+    const yr = A / DEG > 120 ? [-180, 180] : [-ymax, ymax];
+    const m = axes(ctx, b, [t0, t1], yr, ls, { title: 'Angles against time', xlab: 't (s)', yfmt: degFmt, zeroY: true, ystep: yr[1] === 180 ? 90 : undefined });
+    clipBox(ctx, b);
+    for (const [i, col] of [[1, T.neg], [2, T.pos]]) {
+      ctx.strokeStyle = col; ctx.lineWidth = 1.8 * Math.min(ls, 1.3); ctx.beginPath();
+      let prev = null;
+      for (const h of r.hist) {
+        if (h[0] < t0 - 0.1) continue;
+        const v = wrapPi(h[i]) / DEG, px = m.X(h[0]), py = m.Y(v);
+        if (prev === null || Math.abs(v - prev) > 180) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        prev = v;
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
+    frameBox(ctx, b);
+    legend(ctx, b, [['θ₁', T.neg], ['θ₂', T.pos]], ls);
+  }
+  // T/T₀ against release angle, with the measured point
+  function drawPeriodCurve(ctx, W, H, ls) {
+    const b = box(W, H, ls, { L: 44, B: 32 }), yr = [0.9, 4];
+    const m = axes(ctx, b, [0, 180], yr, ls, { title: 'Period ÷ small angle period', xlab: 'release angle θ₀', xstep: 30, ystep: 0.5, xfmt: degFmt });
+    aGeom = { b, m };
+    clipBox(ctx, b);
+    ctx.lineWidth = 1.6 * Math.min(ls, 1.3);
+    ctx.strokeStyle = T.muted; ctx.setLineDash([5 * ls, 4 * ls]); ctx.beginPath(); ctx.moveTo(b.L, m.Y(1)); ctx.lineTo(b.R, m.Y(1)); ctx.stroke();
+    ctx.strokeStyle = T.equi; ctx.beginPath();
+    for (let a = 0; a <= 180; a += 1) { const t = a * DEG, v = 1 + t * t / 16 + 11 * t ** 4 / 3072; a === 0 ? ctx.moveTo(m.X(a), m.Y(v)) : ctx.lineTo(m.X(a), m.Y(v)); }
+    ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 2.2 * Math.min(ls, 1.3); ctx.beginPath();
+    for (let a = 0; a <= 179.9; a += 0.25) { const v = 2 * ellipK(Math.sin(a * DEG / 2)) / Math.PI; a === 0 ? ctx.moveTo(m.X(a), m.Y(v)) : ctx.lineTo(m.X(a), m.Y(v)); }
+    ctx.stroke();
+    // present amplitude
+    const r = Rs;
+    if (r) {
+      const y = drag && drag.y ? drag.y : r.y0, pk = simplePeriod(S.sp.L, S.p.g, y[0], y[1]);
+      if (!pk.rot && pk.k < 1) {
+        const a = 2 * Math.asin(pk.k) / DEG, v = 2 * ellipK(pk.k) / Math.PI, hot = hoverA || (drag && drag.id === 'amp');
+        ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+        ctx.beginPath(); ctx.moveTo(m.X(a), b.B); ctx.lineTo(m.X(a), m.Y(Math.min(v, yr[1]))); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+        const mp = measuredPeriod(r);
+        if (mp && mp.ok && !drag) {
+          ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(m.X(a), m.Y(mp.T * r.w0 / TAU), 3 * ls, 0, TAU); ctx.fill();
+        }
+        ctx.fillStyle = T.canvas; ctx.strokeStyle = T.accent; ctx.lineWidth = (hot ? 2.6 : 1.8) * ls;
+        ctx.beginPath(); ctx.arc(m.X(a), m.Y(Math.min(v, yr[1])), (hot ? 7 : 5.5) * ls, 0, TAU); ctx.fill(); ctx.stroke();
+        ctx.restore();
+        ctx.font = `600 ${11 * ls}px ${T.mono}`;
+        const lx = m.X(a) + (a < 120 ? 10 : -10) * ls, ly = m.Y(Math.min(v, yr[1] - 0.3)) - 10 * ls;
+        halo(ctx, `θ₀ = ${a.toFixed(0)}°: T/T₀ = ${v.toFixed(3)}`, lx, ly, T.accent, a < 120 ? 'left' : 'right', 'bottom', ls);
+      } else {
+        ctx.restore();
+        ctx.font = `${11 * ls}px ${T.mono}`;
+        halo(ctx, 'going over the top: no release angle', b.L + 8 * ls, b.T + 42 * ls, T.muted, 'left', 'top', ls);
+      }
+    } else ctx.restore();
+    frameBox(ctx, b);
+    legend(ctx, b, [['exact', T.accent], ['1 + θ₀²/16 + …', T.equi, true], ['small angle', T.muted, true]], ls, true);
+  }
+
+  // ---------- bottom pane ----------
+  let bGeom = null;
+  function drawBottom() {
+    const [W, H] = dims.b; if (!W || !H) return;
+    const ctx = ctxs.b, ls = plotLs();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    bGeom = null;
+    if (S.mode === 'simple') return drawPhase(ctx, W, H, ls);
+    if (S.view === 'sep') return drawSep(ctx, W, H, ls);
+    if (S.view === 'poinc') return drawPoinc(ctx, W, H, ls);
+    return drawConfig(ctx, W, H, ls);
+  }
+  function drawPhase(ctx, W, H, ls) {
+    const L = S.sp.L, g = S.p.g, w0 = Math.sqrt(g / L), b = box(W, H, ls, { L: 50, B: 32 });
+    const yr = [-3, 3];
+    const m = axes(ctx, b, [-180, 180], yr, ls, { title: 'Phase portrait: ω/ω₀ against θ', xlab: 'θ', xstep: 90, ystep: 1, xfmt: degFmt, zeroX: true, zeroY: true });
+    bGeom = { b, m, w0 };
+    clipBox(ctx, b);
+    // level curves of energy: (ω/ω₀)² = 4(k² − sin²(θ/2))
+    const curve = (k2, sgn) => {
+      ctx.beginPath(); let on = false;
+      for (let a = -180; a <= 180; a += 0.5) {
+        const s = Math.sin(a * DEG / 2), q = 4 * (k2 - s * s);
+        if (q < 0) { on = false; continue; }
+        const px = m.X(a), py = m.Y(sgn * Math.sqrt(q));
+        on ? ctx.lineTo(px, py) : ctx.moveTo(px, py); on = true;
+      }
+      ctx.stroke();
+    };
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1;
+    for (const k2 of [0.04, 0.16, 0.36, 0.64, 1.44, 2.25]) { curve(k2, 1); curve(k2, -1); }
+    ctx.strokeStyle = T.equi; ctx.lineWidth = 1.8 * Math.min(ls, 1.3); curve(1, 1); curve(1, -1);
+    const r = Rs;
+    if (r && !drag) {
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * Math.min(ls, 1.3); ctx.beginPath();
+      let prev = null;
+      const tr = r.trace;
+      for (const q of tr) {
+        const a = wrapPi(q[0]) / DEG, px = m.X(a), py = m.Y(q[1] / w0);
+        if (prev === null || Math.abs(a - prev) > 180) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        prev = a;
+      }
+      ctx.stroke();
+    }
+    ctx.font = `${10.5 * ls}px ${T.mono}`;
+    halo(ctx, 'separatrix', m.X(135), m.Y(2 * Math.cos(67.5 * DEG)) - 5 * ls, T.equi, 'center', 'bottom', ls);
+    const y = drag && drag.y ? drag.y : r ? Array.from(r.I.y) : null;
+    if (y) { ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(m.X(wrapPi(y[0]) / DEG), m.Y(y[1] / w0), 4.5 * ls, 0, TAU); ctx.fill(); }
+    ctx.restore();
+    frameBox(ctx, b);
+    ctx.font = `${10 * ls}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('click to start from that point', b.L, b.B + 16 * ls);
+  }
+  function drawConfig(ctx, W, H, ls) {
+    const r = R; if (!r) return;
+    const b = box(W, H, ls, { L: 50, B: 32 });
+    // square plot area
+    const side = Math.min(b.R - b.L, b.B - b.T), cxm = (b.L + b.R) / 2;
+    b.L = cxm - side / 2; b.R = cxm + side / 2; b.B = b.T + side;
+    const t0 = r.t - 20;
+    let A = 0;
+    for (const h of r.hist) if (h[0] >= t0) A = Math.max(A, Math.abs(wrapPi(h[1])), Math.abs(wrapPi(h[2])));
+    for (let k = 1; k < r.N; k++) A = Math.max(A, Math.abs(wrapPi(r.copies[k].y[0])), Math.abs(wrapPi(r.copies[k].y[1])));
+    const Ad = A / DEG, st = nice(Ad * 1.2 / 2), ym = Ad > 110 ? 180 : Math.max(5, Math.ceil(Ad * 1.15 / st) * st);
+    const m = axes(ctx, b, [-ym, ym], [-ym, ym], ls, { title: 'Angle path: θ₂ against θ₁', xlab: 'θ₁', xfmt: degFmt, yfmt: degFmt, zeroX: true, zeroY: true,
+      xstep: ym === 180 ? 90 : undefined, ystep: ym === 180 ? 90 : undefined });
+    clipBox(ctx, b);
+    // normal mode directions θ₂ = r θ₁
+    const nm = normalModes(r.p);
+    ctx.lineWidth = 1; ctx.setLineDash([4 * ls, 4 * ls]);
+    for (const q of [nm.r1, nm.r2]) {
+      ctx.strokeStyle = T.equi; ctx.globalAlpha = 0.7;
+      const x = Math.abs(q) > 1 ? ym / Math.abs(q) : ym;
+      ctx.beginPath(); ctx.moveTo(m.X(-x), m.Y(-x * q)); ctx.lineTo(m.X(x), m.Y(x * q)); ctx.stroke();
+    }
+    ctx.setLineDash([]); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 1.6 * Math.min(ls, 1.3);
+    let prev = null; ctx.beginPath();
+    for (const h of r.hist) {
+      if (h[0] < t0) continue;
+      const a = wrapPi(h[1]) / DEG, c = wrapPi(h[2]) / DEG;
+      if (prev === null || Math.abs(a - prev[0]) > 180 || Math.abs(c - prev[1]) > 180) ctx.moveTo(m.X(a), m.Y(c)); else ctx.lineTo(m.X(a), m.Y(c));
+      prev = [a, c];
+    }
+    ctx.stroke();
+    for (let k = r.N - 1; k >= 1; k--) {
+      const y = r.copies[k].y; ctx.fillStyle = hue(hueOf(k, r.N));
+      ctx.beginPath(); ctx.arc(m.X(wrapPi(y[0]) / DEG), m.Y(wrapPi(y[1]) / DEG), 2.4 * ls, 0, TAU); ctx.fill();
+    }
+    const y = r.copies[0].y;
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(m.X(wrapPi(y[0]) / DEG), m.Y(wrapPi(y[1]) / DEG), 4 * ls, 0, TAU); ctx.fill();
+    ctx.restore();
+    frameBox(ctx, b);
+    ctx.font = `${10.5 * ls}px ${T.mono}`;
+    if (Math.abs(nm.r1) * 20 < ym * 3) halo(ctx, 'mode 1', m.X(Math.min(ym * 0.55, ym / Math.abs(nm.r1) * 0.85)), m.Y(Math.min(ym * 0.55, ym / Math.abs(nm.r1) * 0.85) * nm.r1) + 6 * ls, T.equi, 'left', 'top', ls);
+    const x2 = Math.min(ym * 0.55, ym / Math.abs(nm.r2) * 0.85);
+    halo(ctx, 'mode 2', m.X(-x2) + 6 * ls, m.Y(-x2 * nm.r2), T.equi, 'left', 'middle', ls);
+  }
+  function drawSep(ctx, W, H, ls) {
+    const r = R; if (!r) return;
+    const b = box(W, H, ls, { L: 50, B: 32 }), t1 = Math.max(10, nice(Math.max(r.t, 1) / 4) * Math.ceil(r.t / nice(Math.max(r.t, 1) / 4) + 1e-9));
+    const yr = [-10, 1];
+    const m = axes(ctx, b, [0, t1], yr, ls, { title: 'Separation d from copy 0 (log scale)', xlab: 't (s)', ystep: 2, yfmt: (v) => `10${sup(v)}` });
+    clipBox(ctx, b);
+    // nearby orbit, renormalized: its accumulated growth (slope λ/ln 10)
+    const ly = r.ly;
+    if (r.lyHist && r.lyHist.length > 1) {
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * Math.min(ls, 1.3); ctx.setLineDash([5 * ls, 4 * ls]); ctx.beginPath();
+      r.lyHist.forEach((q, i) => (i ? ctx.lineTo(m.X(q[0]), m.Y(q[1])) : ctx.moveTo(m.X(q[0]), m.Y(q[1]))));
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    if (r.N > 1) {
+      for (const [j, col, w] of [[2, T.equi, 1.3], [1, T.accent, 2]]) {
+        if (j === 2 && r.N < 3) continue;
+        ctx.strokeStyle = col; ctx.lineWidth = w * Math.min(ls, 1.3); ctx.beginPath(); let on = false;
+        for (const q of r.sep) { const v = q[j]; if (!(v > 0)) { on = false; continue; } const px = m.X(q[0]), py = m.Y(Math.log10(v)); on ? ctx.lineTo(px, py) : ctx.moveTo(px, py); on = true; }
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+    frameBox(ctx, b);
+    const items = [];
+    if (r.N > 1) items.push(['copy 1', T.accent]);
+    if (r.N > 2) items.push(['farthest copy', T.equi]);
+    items.push(['nearby orbit, renormalized', T.muted, true]);
+    const nRows = legend(ctx, b, items, ls);
+    if (r.N < 2) {
+      ctx.font = `${11 * ls}px ${T.mono}`;
+      halo(ctx, 'Add copies to watch two starts separate.', b.L + 8 * ls, b.B - 10 * ls, T.muted, 'left', 'bottom', ls);
+    }
+    if (isFinite(ly.lam)) {
+      ctx.font = `600 ${11 * ls}px ${T.mono}`;
+      halo(ctx, `λ ≈ ${sig(ly.lam, 2)} s⁻¹ (estimate)`, b.R - 8 * ls, b.B - 8 * ls, T.ink, 'right', 'bottom', ls);
+    }
+  }
+  function drawPoinc(ctx, W, H, ls) {
+    if (!PC) return;
+    const p = PC.p, E = PC.E, b = box(W, H, ls, { L: 54, B: 32 });
+    let emax = 0;
+    for (let a = -PC.thmax; a <= PC.thmax; a += PC.thmax / 100) { const e = sectionEdge(p, E, a); if (isFinite(e)) emax = Math.max(emax, e); }
+    const xr = [-Math.min(180, PC.thmax / DEG * 1.08), Math.min(180, PC.thmax / DEG * 1.08)], yr = [-emax * 1.1, emax * 1.1];
+    const m = axes(ctx, b, xr, yr, ls, { title: `Poincaré section at E = ${sig(E, 3)} J`, xlab: 'θ₁ when θ₂ = 0, ω₂ > 0', xfmt: degFmt, zeroX: true, zeroY: true,
+      xstep: xr[1] > 120 ? 90 : undefined });
+    bGeom = { b, m };
+    clipBox(ctx, b);
+    // edge of the energetically allowed region
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.4; for (const sg of [1, -1]) {
+      ctx.beginPath(); let on = false;
+      for (let i = 0; i <= 400; i++) { const a = xr[0] + (xr[1] - xr[0]) * i / 400, e = sectionEdge(p, E, a * DEG); if (!isFinite(e)) { on = false; continue; } const px = m.X(a), py = m.Y(sg * e); on ? ctx.lineTo(px, py) : ctx.moveTo(px, py); on = true; }
+      ctx.stroke();
+    }
+    const sz = Math.max(1.4, 1.6 * Math.min(ls, 1.3));
+    for (const o of PC.orbits) {
+      ctx.fillStyle = hue(o.hue); ctx.globalAlpha = 0.8;
+      const q = o.pts;
+      for (let i = 0; i < q.length; i += 2) ctx.fillRect(m.X(q[i] / DEG) - sz / 2, m.Y(q[i + 1]) - sz / 2, sz, sz);
+    }
+    ctx.globalAlpha = 1;
+    if (R && Math.abs(R.E0 - E) <= 1e-6 * Math.max(1, E)) {
+      ctx.fillStyle = T.ink; const q = R.sec, s2 = sz * 1.9;
+      for (let i = 0; i < q.length; i += 2) ctx.fillRect(m.X(q[i] / DEG) - s2 / 2, m.Y(q[i + 1]) - s2 / 2, s2, s2);
+    }
+    ctx.restore();
+    frameBox(ctx, b);
+    ctx.save(); ctx.translate(14 * ls, (b.T + b.B) / 2); ctx.rotate(-Math.PI / 2);
+    ctx.font = `${10.5 * ls}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('ω₁ (rad/s)', 0, 0); ctx.restore();
+    ctx.font = `${10.5 * ls}px ${T.mono}`;
+    legend(ctx, b, [['the pendulum shown', T.ink], ['other orbits', T.muted]], ls);
+  }
+  function drawAll() { if (!T) return; drawPend(); drawTop(); drawBottom(); }
+
+  // ---------- readouts ----------
+  function row(dt, dd, wide, cls) { return `<div${wide ? ' class="wide"' : ''}><dt>${dt}</dt><dd${cls ? ` class="${cls}"` : ''}>${dd}</dd></div>`; }
+  function updateReadouts() {
+    const simple = S.mode === 'simple';
+    for (const el of document.querySelectorAll('[data-for]')) el.hidden = el.getAttribute('data-for') !== S.mode;
+    $('poincCtl').hidden = S.view !== 'poinc';
+    if (simple) {
+      const r = Rs; if (!r) return;
+      const p = r.p, y = Array.from(r.I.y), pk = simplePeriod(p.L, p.g, r.y0[0], r.y0[1]), T0 = TAU / r.w0, mp = measuredPeriod(r);
+      const drift = Math.abs(simpleE(p, y) - r.E0) / Math.max(r.E0, 1e-300);
+      const amp = pk.rot ? 'over the top' : deg(2 * Math.asin(Math.min(1, pk.k)), 1);
+      $('measBox').innerHTML = row('Amplitude θ₀', amp) + row('Angle θ', deg(wrapPi(y[0]))) +
+        row(pk.rot ? 'Time per turn, exact' : 'Period T, exact', `${sig(pk.T, 5)} s`) + row('Small angle T₀', `${sig(T0, 5)} s`) +
+        row('Ratio T/T₀', sig(pk.T / T0, 5)) + row('Measured', mp && mp.ok ? `${sig(mp.T, 5)} s` : '—') +
+        row('Energy drift', r.E0 > 0 ? `${fmtSci(drift)} <span class="ok">of E</span>` : '—', true);
+      $('mFormula').textContent = pk.rot ? 'Over the top: one turn takes 2K(1/k)/(kω₀), k² = E/(2mgL)' : 'T = 4√(L/g) K(sin(θ₀/2)), K from the arithmetic–geometric mean: K(k) = π / (2 AGM(1, √(1 − k²)))';
+      $('keyBox').innerHTML = '<span><i class="swatch"></i>Exact period, phase path</span><span><i class="swatch gold"></i>Series 1 + θ₀²/16 + 11θ₀⁴/3072; separatrix</span><span><i class="swatch dash"></i>Small angle model, T₀ = 2π√(L/g)</span>';
+      $('plotHint').textContent = '';
+      return;
+    }
+    const r = R; if (!r) return;
+    const p = r.p, y = r.copies[0].y, en = dpEnergy(p, y), drift = Math.abs(en.E - r.E0) / Math.max(r.E0, 1e-300), nm = normalModes(p), mp = measuredPeriod(r);
+    $('modeBox').innerHTML = row('Mode 1, ω₁', `${sig(nm.w1, 4)} rad/s`) + row('Mode 2, ω₂', `${sig(nm.w2, 4)} rad/s`) +
+      row('Period 2π/ω₁', `${sig(TAU / nm.w1, 4)} s`) + row('Period 2π/ω₂', `${sig(TAU / nm.w2, 4)} s`) +
+      row('Shape θ₂/θ₁', sig(nm.r1, 4)) + row('Shape θ₂/θ₁', sig(nm.r2, 4));
+    const ly = r.ly;
+    let lam = '—';
+    if (isFinite(ly.lam)) lam = `${sig(ly.lam, 2)} s⁻¹`;
+    $('lyapBox').innerHTML = row('λ estimate', lam) + row('after', `${sig(ly.tsum, 3)} s`) +
+      row('e-folding time 1/λ', isFinite(ly.lam) && ly.lam > 0.02 ? `${sig(1 / ly.lam, 2)} s` : '—') +
+      row('d, copy 1', r.N > 1 ? fmtSci(sepNow(), 1) : '—');
+    $('measBox').innerHTML = row('θ₁', deg(wrapPi(y[0])), false, 'c-1') + row('θ₂', deg(wrapPi(y[1])), false, 'c-2') +
+      row('ω₁', `${sig(y[2], 3)} rad/s`) + row('ω₂', `${sig(y[3], 3)} rad/s`) +
+      row('Energy E', fJ(r.E0)) + row('Energy drift', r.E0 > 0 ? `${fmtSci(drift)} <span class="ok">of E</span>` : '—') +
+      row('Measured θ₁ period', mp ? (mp.ok ? `${sig(mp.T, 4)} s` : 'not periodic') : '—', true);
+    $('mFormula').textContent = `E = ½(m₁+m₂)L₁²ω₁² + ½m₂L₂²ω₂² + m₂L₁L₂ω₁ω₂cos(θ₁−θ₂) + (m₁+m₂)gL₁(1−cos θ₁) + m₂gL₂(1−cos θ₂); top of the circle ${fJ(dpTop(p))}`;
+    const keys = ['<span><i class="swatch s1"></i>θ₁, upper rod</span>', '<span><i class="swatch s2"></i>θ₂, lower rod; trail of the lower bob</span>'];
+    if (r.N > 1) keys.push('<span><i class="swatch rainbow"></i>Copies, violet (copy 1) to red (last)</span>');
+    if (S.view === 'config') keys.push('<span><i class="swatch gold"></i>Normal mode directions θ₂ = (shape) θ₁</span>');
+    $('keyBox').innerHTML = keys.join('');
+    $('plotHint').textContent = S.view === 'config' ? 'The path in the (θ₁, θ₂) plane over the last 20 s. A normal mode runs along a gold line; a sum of two modes fills a parallelogram; chaos fills the plane.'
+      : S.view === 'sep' ? 'A straight rise on this log plot is exponential growth, d ∝ e^(λt). It stops near d ≈ 1 to 5, when the copies are as far apart as the pendulum allows. For a regular start the separation grows only slowly.'
+      : 'Only orbits with the section energy appear. The background orbits are computed while you watch; the larger dark dots are the pendulum shown. Click inside the curve to start the pendulum there.';
+  }
+  function updateClock() {
+    const r = S.mode === 'simple' ? Rs : R; if (!r) return;
+    $('tclock').firstChild.textContent = `t = ${r.t.toFixed(1)} s`;
+    $('rateTag').textContent = r.lag ? 'slowed to keep up' : fmtRate(SPEEDS[S.speedIdx]);
+  }
+
+  // ---------- controls ----------
+  function syncSliders() {
+    const set = (id, v) => { $(id).value = v; };
+    set('sM1', S.p.m1); set('sM2', S.p.m2); set('sL1', S.p.L1); set('sL2', S.p.L2); set('sL', S.sp.L); set('sA', S.A); set('sG', S.p.g);
+    set('sAmp', S.amp); set('sN', S.N); set('sD', S.logd); set('sRate', S.speedIdx);
+    $('oM1').textContent = `${S.p.m1.toFixed(2)} kg`; $('oM2').textContent = `${S.p.m2.toFixed(2)} kg`;
+    $('oL1').textContent = `${S.p.L1.toFixed(2)} m`; $('oL2').textContent = `${S.p.L2.toFixed(2)} m`; $('oL').textContent = `${S.sp.L.toFixed(2)} m`;
+    $('oA').textContent = `${S.A}°`; $('oG').textContent = `${S.p.g.toFixed(Math.abs(S.p.g - G0) < 1e-9 ? 5 : 2)} m/s²`;
+    $('oAmp').textContent = `${S.amp}°`; $('oN').textContent = String(S.N); $('oD').textContent = `${pow10(S.logd)} rad`;
+    $('oRate').textContent = fmtRate(SPEEDS[S.speedIdx]);
+    for (const b of $('modeSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
+    for (const b of $('plotSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    $('tTrail').checked = S.layers.trail; $('tGhost').checked = S.layers.ghost; $('tArcs').checked = S.layers.arcs; $('tFling').checked = S.layers.fling;
+    syncESlider();
+    $('aCan').setAttribute('aria-label', S.mode === 'simple' ? 'Period divided by the small angle period against release angle. Drag the marker, or use the left and right arrows, to change the release angle.' : 'θ₁ and θ₂ against time over the last 20 seconds.');
+    $('bCan').setAttribute('aria-label', S.mode === 'simple' ? 'Phase portrait, angular velocity against angle, with the separatrix. Click to start the pendulum from that point.'
+      : S.view === 'poinc' ? 'Poincaré section, ω₁ against θ₁ each time the lower rod passes straight down moving right. Click to start an orbit there.' : S.view === 'sep' ? 'Separation between copies against time, log scale.' : 'θ₂ against θ₁ over the last 20 seconds.');
+  }
+  function syncESlider() {
+    const top = dpTop(S.p), el = $('sE');
+    el.max = String(Math.floor(top * 10) / 10); el.min = '0.5';
+    el.value = S.Esec; $('oE').textContent = `${sig(S.Esec, 3)} J`;
+  }
+  function setPresetPressed(k) { for (const b of $('presets').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; setPresetPressed(k);
+    $('presetHint').textContent = c.hint;
+    S.mode = c.mode;
+    if (c.mode === 'simple') {
+      S.sp.L = c.L; S.A = c.A; S.p.g = G0;
+      syncSliders(); newSimple([S.A * DEG, 0]);
+    } else {
+      Object.assign(S.p, { m1: c.m1, m2: c.m2, L1: c.L1, L2: c.L2, g: G0 });
+      S.N = c.N; if (c.logd !== undefined) S.logd = c.logd; if (c.amp) S.amp = c.amp;
+      S.view = c.view;
+      if (c.E) S.Esec = c.E;
+      syncSliders();
+      if (c.view === 'poinc') {
+        resetPoinc();
+        const e = sectionEdge(S.p, S.Esec, 0.5);
+        newDouble(sectionStart(S.p, S.Esec, 0.5, 0.3 * e));
+      } else if (c.start) startMode(c.start);
+      else newDouble([c.ic[0] * DEG, c.ic[1] * DEG, 0, 0]);
+    }
+    updateReadouts(); setRunning(running);
+  }
+  function startMode(which) {
+    const nm = normalModes(S.p), a = S.amp * DEG;
+    if (which === 'rest') { const y = curState(); newDouble([wrapPi(y[0]), wrapPi(y[1]), 0, 0]); return; }
+    const rr = which === 'm1' ? nm.r1 : nm.r2;
+    // keep both angles inside the slider amplitude: scale so the larger one equals it
+    const s = Math.abs(rr) > 1 ? a / Math.abs(rr) : a;
+    newDouble([s, s * rr, 0, 0]);
+  }
+  function clearPreset() { S.preset = null; setPresetPressed(null); }
+  function setRunning(on) {
+    running = on;
+    $('play').textContent = on ? 'Pause' : 'Play';
+    $('play').classList.toggle('primary', !on);
+  }
+  $('play').addEventListener('click', () => setRunning(!running));
+  $('reset').addEventListener('click', () => { restart(); });
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) applyPreset(b.dataset.p); });
+  $('modeSeg').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b || b.dataset.m === S.mode) return;
+    S.mode = b.dataset.m; clearPreset();
+    if (S.mode === 'simple') { if (!Rs) newSimple([S.A * DEG, 0]); else newSimple(Rs.y0); }
+    else { if (!R) newDouble([130 * DEG, 130 * DEG, 0, 0]); else newDouble(R.y0); if (S.view === 'poinc') resetPoinc(); }
+    syncSliders(); updateReadouts(); requestAnimationFrame(resize);
+  });
+  $('plotSeg').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    S.view = b.dataset.v;
+    if (S.view === 'poinc') { S.Esec = R.E0; resetPoinc(); }
+    syncSliders(); updateReadouts();
+  });
+  function bindSlider(id, fn) { $(id).addEventListener('input', (e) => { fn(+e.target.value); syncSliders(); updateReadouts(); }); }
+  for (const k of ['m1', 'm2', 'L1', 'L2']) bindSlider(SL[k].el, (v) => { S.p[k] = v; clearPreset(); continueRun(); if (S.view === 'poinc') { S.Esec = R.E0; resetPoinc(); } });
+  bindSlider('sL', (v) => { S.sp.L = v; clearPreset(); continueRun(); });
+  bindSlider('sA', (v) => { S.A = v; clearPreset(); newSimple([v * DEG, 0]); });
+  bindSlider('sG', (v) => { S.p.g = v; clearPreset(); continueRun(); if (S.mode === 'double' && S.view === 'poinc') { S.Esec = R.E0; resetPoinc(); } });
+  bindSlider('sAmp', (v) => { S.amp = v; });
+  bindSlider('sN', (v) => { S.N = v; clearPreset(); newDouble(R.y0); });
+  bindSlider('sD', (v) => { S.logd = v; clearPreset(); newDouble(R.y0); });
+  bindSlider('sRate', (v) => { S.speedIdx = v; });
+  bindSlider('sE', (v) => {
+    S.Esec = v; clearPreset(); resetPoinc();
+    const e = sectionEdge(S.p, v, 0.5), y = isFinite(e) ? sectionStart(S.p, v, 0.5, 0.3 * e) : sectionStart(S.p, v, 0, 0);
+    if (y) newDouble(y);
+  });
+  $('clearPoinc').addEventListener('click', () => { if (PC) { for (const o of PC.orbits) o.pts = []; PC.orbits = []; } if (R) R.sec = []; });
+  $('morePoinc').addEventListener('click', () => resetPoinc(true));
+  for (const b of document.querySelectorAll('[data-start]')) b.addEventListener('click', () => { clearPreset(); startMode(b.dataset.start); });
+  $('tTrail').addEventListener('change', (e) => { S.layers.trail = e.target.checked; });
+  $('tGhost').addEventListener('change', (e) => { S.layers.ghost = e.target.checked; });
+  $('tArcs').addEventListener('change', (e) => { S.layers.arcs = e.target.checked; });
+  $('tFling').addEventListener('change', (e) => { S.layers.fling = e.target.checked; });
+
+  // ---------- dragging on the pendulum ----------
+  function handleAt(ev) {
+    const r = cans.p.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 8 * lsOf(...dims.p) * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = Infinity;
+    for (const h of dragHandles()) {
+      let d;
+      if (h.pt) d = Math.hypot(x - h.pt[0], y - h.pt[1]) - h.r;
+      else d = Math.hypot(x - h.grip[0], y - h.grip[1]) - 6;
+      if (d < tol && d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  let pQueued = null, pFrame = false;
+  function pDragTo(ev) {
+    const r = cans.p.getBoundingClientRect();
+    pQueued = [ev.clientX - r.left, ev.clientY - r.top, performance.now()];
+    if (pFrame) return;
+    pFrame = true;
+    requestAnimationFrame(() => {
+      pFrame = false;
+      if (!drag || !pQueued) return;
+      const [x, y, tm] = pQueued; pQueued = null;
+      const g = pGeom(), st = drag.y, b = bobs(g, st);
+      if (drag.id === 'b1') {
+        let a = Math.atan2(x - g.cx, y - g.cy);
+        if (S.mode === 'simple') { a = snap('A', Math.abs(a) / DEG) * DEG * Math.sign(a || 1); S.A = Math.round(Math.abs(a) / DEG); }
+        st[0] = a;
+        drag.samples.push([tm, a]);
+      } else if (drag.id === 'b2') {
+        const a = Math.atan2(x - b.x1, y - b.y1); st[1] = a; drag.samples.push([tm, a]);
+      } else {
+        // rod length: the grip follows the pointer's projection on the rod
+        const piv = drag.id === 'L2' ? [b.x1, b.y1] : [g.cx, g.cy], ang = drag.id === 'L2' ? st[1] : st[0];
+        const proj = (x - piv[0]) * Math.sin(ang) + (y - piv[1]) * Math.cos(ang);
+        const key = S.mode === 'simple' ? 'L' : drag.id, v = snap(key, 2 * proj / g.sc);
+        if (S.mode === 'simple') S.sp.L = v; else S.p[key] = v;
+        syncSliders();
+      }
+      if (drag.samples.length > 8) drag.samples.shift();
+      updateReadouts(); drawAll();
+    });
+  }
+  function flickSpeed(samples) {
+    if (!S.layers.fling || samples.length < 2) return 0;
+    const now = performance.now(), last = samples[samples.length - 1];
+    if (now - last[0] > 90) return 0;
+    let first = null; for (const s of samples) if (last[0] - s[0] <= 80) { first = s; break; }
+    if (!first || last[0] - first[0] < 8) return 0;
+    return clamp(wrapPi(last[1] - first[1]) / ((last[0] - first[0]) / 1000), -15, 15);
+  }
+  cans.p.addEventListener('pointermove', (ev) => {
+    if (drag) { pDragTo(ev); return; }
+    const h = handleAt(ev); hoverId = h ? h.id : null;
+    cans.p.style.cursor = h ? h.cursor : 'default';
+  });
+  cans.p.addEventListener('pointerdown', (ev) => {
+    const h = handleAt(ev); if (!h) return;
+    const st = curState().slice(0, S.mode === 'simple' ? 2 : 4);
+    st[0] = wrapPi(st[0]); if (st.length > 2) st[1] = wrapPi(st[1]);
+    drag = { id: h.id, y: st, samples: [] };
+    if (h.grip) holdReach = pGeom().reach;
+    try { cans.p.setPointerCapture(ev.pointerId); } catch (_) {}
+    cans.p.style.cursor = h.grip ? 'move' : 'grabbing'; ev.preventDefault();
+    clearPreset();
+  });
+  function endPDrag() {
+    if (!drag) return;
+    const d = drag; drag = null; holdReach = null; hoverId = null;
+    const y = d.y.slice();
+    if (d.id === 'b1' || d.id === 'b2') {
+      const w = flickSpeed(d.samples);
+      if (S.mode === 'simple') { y[1] = w; newSimple(y); }
+      else { y[2] = d.id === 'b1' ? w : 0; y[3] = d.id === 'b2' ? w : 0; newDouble(y); }
+    } else {
+      if (S.mode === 'simple') newSimple(y); else newDouble(y);
+      if (S.mode === 'double' && S.view === 'poinc') resetPoinc();
+    }
+    syncSliders(); updateReadouts();
+  }
+  cans.p.addEventListener('pointerup', endPDrag);
+  cans.p.addEventListener('pointercancel', endPDrag);
+  cans.p.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
+  cans.p.addEventListener('keydown', (e) => {
+    const step = (e.key === 'ArrowLeft' ? -1 : 1) * DEG;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      clearPreset();
+      if (S.mode === 'simple') { const a = clamp(Math.round(wrapPi(Rs.I.y[0]) / DEG + step / DEG), -179, 179); S.A = Math.abs(a); newSimple([a * DEG, 0]); }
+      else { const y = curState(), i = e.shiftKey ? 1 : 0; y[0] = wrapPi(y[0]); y[1] = wrapPi(y[1]); y[i] = wrapPi(y[i] + step); y[2] = 0; y[3] = 0; newDouble(y); }
+      syncSliders();
+    } else if (e.key === ' ') setRunning(!running);
+    else if (e.key === 'r' || e.key === 'R') restart();
+    else return;
+    e.preventDefault();
+  });
+
+  // top pane (simple): the marker on the period curve sets the release angle
+  let hoverA = false;
+  function nearMarker(ev) {
+    if (S.mode !== 'simple' || !aGeom || !Rs) return false;
+    const r = cans.a.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, pk = simplePeriod(S.sp.L, S.p.g, Rs.y0[0], Rs.y0[1]);
+    if (pk.rot) return false;
+    const a = 2 * Math.asin(pk.k) / DEG, v = Math.min(2 * ellipK(pk.k) / Math.PI, 4);
+    const tol = 9 * lsOf(...dims.a) * (ev.pointerType === 'touch' ? 2 : 1);
+    return Math.hypot(x - aGeom.m.X(a), y - aGeom.m.Y(v)) < tol || (Math.abs(x - aGeom.m.X(a)) < tol && y > aGeom.b.T && y < aGeom.b.B);
+  }
+  let aQueued = null, aFrame = false;
+  function setAmpFromX(px) {
+    const b = aGeom.b, a = clamp(Math.round((px - b.L) / (b.R - b.L) * 180), 1, 179);
+    if (a === S.A && Rs && Math.abs(Rs.y0[1]) < 1e-12 && Math.abs(Math.abs(Rs.y0[0]) - a * DEG) < 1e-12) return;
+    S.A = a; clearPreset(); newSimple([a * DEG, 0]); syncSliders();
+  }
+  cans.a.addEventListener('pointermove', (ev) => {
+    if (drag && drag.id === 'amp') {
+      const r = cans.a.getBoundingClientRect(); aQueued = ev.clientX - r.left;
+      if (!aFrame) { aFrame = true; requestAnimationFrame(() => { aFrame = false; if (aQueued !== null && drag) setAmpFromX(aQueued); aQueued = null; }); }
+      return;
+    }
+    hoverA = nearMarker(ev); cans.a.style.cursor = hoverA ? 'ew-resize' : 'default';
+  });
+  cans.a.addEventListener('pointerdown', (ev) => {
+    if (!nearMarker(ev)) return;
+    drag = { id: 'amp' }; try { cans.a.setPointerCapture(ev.pointerId); } catch (_) {} ev.preventDefault();
+  });
+  const endA = () => { if (drag && drag.id === 'amp') drag = null; };
+  cans.a.addEventListener('pointerup', endA); cans.a.addEventListener('pointercancel', endA);
+  cans.a.addEventListener('pointerleave', () => { hoverA = false; });
+  cans.a.addEventListener('keydown', (e) => {
+    if (S.mode !== 'simple' || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return;
+    S.A = clamp(S.A + (e.key === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 10 : 1), 1, 179); clearPreset(); newSimple([S.A * DEG, 0]); syncSliders(); e.preventDefault();
+  });
+
+  // bottom pane: click the phase portrait (simple) or the Poincaré section (double) to start there
+  cans.b.addEventListener('pointermove', (ev) => {
+    const ok = bGeom && (S.mode === 'simple' || S.view === 'poinc');
+    if (!ok) { cans.b.style.cursor = 'default'; return; }
+    const r = cans.b.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, b = bGeom.b;
+    cans.b.style.cursor = x > b.L && x < b.R && y > b.T && y < b.B ? 'crosshair' : 'default';
+  });
+  cans.b.addEventListener('pointerdown', (ev) => {
+    if (!bGeom) return;
+    const r = cans.b.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, b = bGeom.b;
+    if (x < b.L || x > b.R || y < b.T || y > b.B) return;
+    const inv = (px, lo, hi, a0, a1) => a0 + (px - lo) / (hi - lo) * (a1 - a0);
+    const m = bGeom.m;
+    // invert the axes mapping numerically from two points
+    const xv = (px) => { const x0 = m.X(0), x1 = m.X(1); return (px - x0) / (x1 - x0); };
+    const yv = (py) => { const y0 = m.Y(0), y1 = m.Y(1); return (py - y0) / (y1 - y0); };
+    void inv;
+    clearPreset();
+    if (S.mode === 'simple') {
+      const th = clamp(xv(x), -179.9, 179.9) * DEG, om = yv(y) * bGeom.w0;
+      S.A = clamp(Math.round(Math.abs(th) / DEG), 1, 179);
+      newSimple([th, om]); syncSliders();
+    } else if (S.view === 'poinc') {
+      const st = sectionStart(S.p, S.Esec, xv(x) * DEG, yv(y));
+      if (st) newDouble(st);
+      else { $('live').textContent = 'No orbit with this energy passes through that point.'; }
+    }
+    ev.preventDefault();
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); drawAll(); }); } catch (_) {}
+  new MutationObserver(() => { tokens(); drawAll(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, frameMs = 0;
+  function loop(now) {
+    const dtr = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    const r = S.mode === 'simple' ? Rs : R;
+    if (running && !drag && dtr > 0 && r) {
+      r.lag = false;
+      advance(SPEEDS[S.speedIdx] * dtr, 20);
+      if (S.mode === 'double') {
+        if (!R.lyHist) R.lyHist = [];
+        const lh = R.lyHist;
+        if (R.ly.tsum > 0 && (!lh.length || lh[lh.length - 1][0] < R.ly.tsum)) { lh.push([R.ly.tsum, R.ly.logd]); if (lh.length > 6000) R.lyHist = lh.filter((_, i) => i % 2 === 0); }
+      }
+    }
+    poincWork(Math.max(1, 8 - (performance.now() - t0)));
+    drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastRead > 150) { updateReadouts(); updateClock(); lastRead = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__dp = { get frameMs() { return frameMs; }, get R() { return R; }, get Rs() { return Rs; }, get PC() { return PC; }, S, advance, setRunning, applyPreset,
+    energyDrift() { if (S.mode === 'simple') return Math.abs(simpleE(Rs.p, Rs.I.y) - Rs.E0) / Rs.E0; return Math.abs(dpEnergy(R.p, R.copies[0].y).E - R.E0) / R.E0; } };
+
+  tokens();
+  syncSliders();
+  const ro = new ResizeObserver(resize);
+  for (const k of ['p', 'a', 'b']) ro.observe(panes[k]);
+  applyPreset('chaos');
+  setRunning(running);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

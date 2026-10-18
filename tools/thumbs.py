@@ -56,6 +56,7 @@ OVERRIDES = {
     "doppler": {"click": ['[data-p="jet"]'], "wait": 9000},
     "polarization": {"click": ['[data-p="three"]'], "wait": 1500},
     "collisions": {"click": ['[data-p="glance"]'], "wait": 1300},
+    "double-pendulum": {"click": ['[data-p="fly"]'], "wait": 9000},
     "capacitors": {"click": ['[data-p="energy"]'], "wait": 1500,
                    "js": "['tPane', 'ePane', 'gPane'].forEach((id) => { document.getElementById(id).hidden = true; }); __cap.setRunning(false); __cap.setGeom({ A: 0.03 })"},
 }
