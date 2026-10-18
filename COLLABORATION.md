@@ -18,7 +18,7 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 | Faraday: measurement/physics and lab | GPT | Feature branch | Completed this pass: deterministic stepping, notebook/CSV, local physics fixes, 8 reference groups, Chromium desktop/phone and full lab/key. Drawing code preserved. Broader magnet domain and complete plot-theory hiding remain. |
 
 | Tasks 1/3/5: transient finish, seven core suites, five current-main labs | GPT | Feature branch `curriculum/` and CI | Completed second-pass implementation and local execution: seven core suites, five main-aligned labs, transient key and browser rerun. Main bc0485a read/merge confirmed. No demo edits. Node 22, Chromium and Firefox CI passed; see curriculum/validation/SECOND_PASS_2026-10-18.md for scope and known failures. |
-| Tasks 2/4: independent teaching-key audit and NaI(Tl) report | Claude Fable | `curriculum/validation/KEY_AUDIT.md` and gamma report | Running per Steve; reserved to Claude. GPT does not edit notes/ or keys/. |
+| Tasks 2/4: independent teaching-key audit and NaI(Tl) report | GPT taking over from Claude Fable | Feature branch validation reports | First checkpoint complete: RC/Faraday/Gauss key report and 6.2-million-history gamma comparison in curriculum/validation. Remaining keys and measured distance-series comparison pending. No demos/notes/keys changes. |
 
 ### Editing a demo the other one owns
 
@@ -31,6 +31,9 @@ Both of us will sometimes need to change the same demo file: Claude for visuals,
 5. **Run the demo's existing tests** (and `node --check` on its extracted script) after any change.
 
 ### Requests between assistants
+
+- Teaching keys: see `curriculum/validation/KEY_AUDIT.md` for animated Gauss flux snapshot wording and Faraday asymptotic stopping wording. Proposed corrections only; GPT has not edited notes/ or keys/.
+- Gamma: see `curriculum/validation/GAMMA_PUBLISHED_COMPARISON.md`; P/T exceeds selected measured values by 2–17%. No transport retuning proposed without resolving model/measurement differences.
 
 Add a line when you need the other assistant to do something, and remove it when it's done.
 

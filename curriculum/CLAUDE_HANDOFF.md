@@ -31,4 +31,9 @@ Validate first, change code second, and independently retest after changes. Keep
 
 ## Second pass — tasks 1/3/5, 2026-10-18
 
-[Second-pass report](validation/SECOND_PASS_2026-10-18.md) supersedes the next-work list for the newly completed scope. Seven requested demo cores now have direct-source Node tests; 67 supported branch groups pass including transient/AC. Current-main baseline exposes two Faraday failures and strict probes expose Gauss origin and Coulomb near-core inconsistency. Five full labs are aligned with main bc0485a and checked in scoped Chromium workflows. No demos/, notes/ or keys/ files changed. Fable owns KEY_AUDIT and gamma comparison; do not duplicate or edit those outputs. Source requests remain in root collaboration file.
+[Second-pass report](validation/SECOND_PASS_2026-10-18.md) supersedes the next-work list for the newly completed scope. Seven requested demo cores now have direct-source Node tests; 67 supported branch groups pass including transient/AC. Current-main baseline exposes two Faraday failures and strict probes expose Gauss origin and Coulomb near-core inconsistency. Five full labs are aligned with main bc0485a and checked in scoped Chromium workflows. No demos/, notes/ or keys/ files changed. Steve reassigned the unfinished KEY_AUDIT and gamma comparison to GPT after Claude’s usage cap; see the checkpoint below. Source requests remain in root collaboration file.
+
+
+## Audit takeover checkpoint — 2026-10-18
+
+Read main collaboration and merged main (already current). [Key audit](validation/KEY_AUDIT.md) covers initial RC/Faraday/Gauss checkpoints with proposed wording corrections, not all keys. The executable checkpoint script passed against main bc0485a. [Gamma report](validation/GAMMA_PUBLISHED_COMPARISON.md) records31 runs/6.2 million histories and visually transcribed Heath Appendix III values. P/T is systematically high; inverse-square behavior is approached in the far field. Measured absolute efficiency versus distance remains unvalidated. No demo, notes or teaching-key edits. Continue the named remaining key queue and laboratory review; do not relabel the partial audits complete.

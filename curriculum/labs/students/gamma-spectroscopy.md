@@ -35,3 +35,7 @@ E=a·channel+b
 **Caution:** Distinguish photopeaks from Compton edges and background; report counting uncertainty.
 
 **Submit:** Data table, graph, calculations, units and a short conclusion.
+
+## Detector-model limitation
+
+The simulated detector is not calibrated to a particular commercial NaI(Tl) assembly. Published peak-to-total ratios differ from its transport results; do not use this starter to infer a real source activity from absolute efficiency. A close source does not obey a simple inverse-square count law because crystal size and interaction depth matter. See the [executed benchmark and limitations](../../validation/GAMMA_PUBLISHED_COMPARISON.md). This remains a starter, not a complete validated laboratory.
