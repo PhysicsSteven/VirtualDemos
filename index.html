@@ -76,6 +76,7 @@ h1 { margin: 0; font-size: clamp(2.1rem, 5vw, 3.2rem); line-height: 1.08; letter
 .facts li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dot, var(--accent)); }
 .facts li:nth-child(2) { --dot: var(--pos); }
 .facts li:nth-child(3) { --dot: var(--equi); }
+.facts a { color: var(--accent); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .facts strong { color: var(--ink); font-weight: 600; }
 
 /* Toolbar: filter and subject links, stays on screen while scrolling */
@@ -198,6 +199,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
       <li><span><strong>50</strong> demos</span></li>
       <li><span><strong>7</strong> subjects</span></li>
       <li><span>Phone, laptop or projector</span></li>
+      <li><a href="notes/index.html"><span>Teaching notes</span></a></li>
     </ul>
   </div>
 </header>

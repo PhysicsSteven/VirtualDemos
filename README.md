@@ -66,6 +66,10 @@ Open any file in `demos/` directly in a browser, or enable GitHub Pages (Setting
 1. Put the new demo in `demos/` as a single HTML file.
 2. Add a card for it in `index.html` and a row in the table above.
 
+## Teaching notes
+
+Each demo has a printable notes page in `notes/` (learning goals, a way to run it in class, questions, common misconceptions, the physics behind it), listed at `notes/index.html`. The pages are built from `notes/src/<demo>.md` by `python3 tools/notes.py`. Answer keys to the questions are kept outside this public repo; `tools/notes.py --keys <folder>` builds them there.
+
 ## Maintenance
 
 The card thumbnails in `thumbs/` come from `tools/thumbs.py` (Python, Playwright and Pillow). Run `python3 tools/thumbs.py` after adding or changing a demo, or `python3 tools/thumbs.py name` for one demo; copy an existing card in `index.html` for the new one.
