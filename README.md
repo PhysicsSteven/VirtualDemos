@@ -69,3 +69,5 @@ Open any file in `demos/` directly in a browser, or enable GitHub Pages (Setting
 ## Maintenance
 
 The card thumbnails in `thumbs/` come from `tools/thumbs.py` (Python, Playwright and Pillow). Run `python3 tools/thumbs.py` after adding or changing a demo, or `python3 tools/thumbs.py name` for one demo; copy an existing card in `index.html` for the new one.
+
+In projector mode each demo shows a small QR code next to the Projector button; clicking it shows a large copy for students to scan. The codes come from `tools/qr.py` (needs `pip install qrcode`): run it after adding a demo, then `python3 tools/star-slice/build.py`. A code only appears when the page is opened at the address it points to, so a copy opened from disk or uploaded elsewhere shows none. If the site moves, rerun with `python3 tools/qr.py --base <new address of the demos folder>`.
