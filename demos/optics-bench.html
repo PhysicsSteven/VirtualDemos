@@ -51,6 +51,10 @@ img { max-width: 100%; }
   --pr-green: #2f8a46;
   --glass: rgba(43, 96, 181, 0.10);
   --glass-edge: #7d9cc9;
+  --lab-bg: #1c232c; --lab-bg2: #2a3440; --lab-table: #232a32; --lab-ink: #eef2f7; --lab-muted: #b4bfcc;
+  --lab-grid: rgba(255, 255, 255, 0.045); --lab-grid-strong: rgba(255, 255, 255, 0.1); --lab-halo: rgba(16, 21, 28, 0.82);
+  --lab-ray: #ffcf70; --lab-virt: #d9cfb4; --lab-pos: #ff8a73; --lab-p1: #ff8a73; --lab-p2: #6fdc8c; --lab-p3: #82b2ff; --lab-accent: #8fbaff;
+  --rail-hi: #c3c9d0; --rail-lo: #8b939d; --rail-ink: #12161b;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -60,6 +64,10 @@ img { max-width: 100%; }
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
     --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
     --ray: #e2b350; --pr-green: #5fcf7a; --glass: rgba(105, 160, 255, 0.13); --glass-edge: #5576a6;
+    --lab-bg: #07090d; --lab-bg2: #121821; --lab-table: #161b21; --lab-ink: #e3e8ef; --lab-muted: #a3afbf;
+    --lab-grid: rgba(255, 255, 255, 0.035); --lab-grid-strong: rgba(255, 255, 255, 0.075); --lab-halo: rgba(7, 10, 14, 0.82);
+    --lab-ray: #ffc85e; --lab-virt: #cfc4a6; --lab-pos: #ff7a62; --lab-p1: #ff7a62; --lab-p2: #5fd27e; --lab-p3: #75a8ff; --lab-accent: #82b0ff;
+    --rail-hi: #a7aeb7; --rail-lo: #6c747e; --rail-ink: #0d1014;
   }
 }
 :root[data-theme="dark"] {
@@ -67,6 +75,10 @@ img { max-width: 100%; }
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
   --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
   --ray: #e2b350; --pr-green: #5fcf7a; --glass: rgba(105, 160, 255, 0.13); --glass-edge: #5576a6;
+  --lab-bg: #07090d; --lab-bg2: #121821; --lab-table: #161b21; --lab-ink: #e3e8ef; --lab-muted: #a3afbf;
+  --lab-grid: rgba(255, 255, 255, 0.035); --lab-grid-strong: rgba(255, 255, 255, 0.075); --lab-halo: rgba(7, 10, 14, 0.82);
+  --lab-ray: #ffc85e; --lab-virt: #cfc4a6; --lab-pos: #ff7a62; --lab-p1: #ff7a62; --lab-p2: #5fd27e; --lab-p3: #75a8ff; --lab-accent: #82b0ff;
+  --rail-hi: #a7aeb7; --rail-lo: #6c747e; --rail-ink: #0d1014;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -90,7 +102,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
 
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
-.stage { position: relative; min-height: 380px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage { position: relative; min-height: 380px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--lab-bg); }
 .stage canvas { position: absolute; inset: 0; display: block; }
 #view { touch-action: none; cursor: default; outline: none; }
 #view:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
@@ -114,6 +126,8 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 .btn .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ray); }
 .btn .dot.glass { border-radius: 2px; background: var(--glass); border: 1px solid var(--glass-edge); }
 .btn .dot.optic { border-radius: 1px; width: 3px; height: 12px; background: var(--ink); }
+.btn .dot.card { border-radius: 1px; width: 5px; height: 12px; background: var(--muted); }
+.row2 .wide { grid-column: 1 / -1; }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .sel { display: flex; flex-direction: column; gap: 10px; }
@@ -138,14 +152,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
 .key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
 .key span { display: flex; align-items: center; gap: 8px; }
-.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
-.swatch.ray { border-color: var(--ray); }
-.swatch.faint { border-color: var(--ray); opacity: 0.35; }
-.swatch.ext { border-top-style: dashed; border-color: var(--ray); }
-.swatch.p1 { border-color: var(--pos); }
-.swatch.p2 { border-color: var(--pr-green); }
-.swatch.p3 { border-color: var(--neg); }
-.spectrum { flex: none; width: 22px; height: 8px; border-radius: 2px; background: linear-gradient(90deg, #7b3fe4, #2f6bff, #13b5c7, #36b24a, #f0b400, #f06a1f, #d42232); }
+/* key swatches sit on a chip of the lab background, so they match the bench colors */
+.swatch { flex: none; position: relative; width: 28px; height: 12px; border-radius: 3px; background: var(--lab-bg); --c: var(--lab-ray); }
+.swatch::after { content: ""; position: absolute; left: 4px; right: 4px; top: 5px; border-top: 2px solid var(--c); }
+.swatch.ray::after { box-shadow: 0 0 5px 1px var(--c); }
+.swatch.faint::after { opacity: 0.4; }
+.swatch.ext { --c: var(--lab-virt); }
+.swatch.ext::after { border-top-style: dashed; }
+.swatch.p1 { --c: var(--lab-p1); }
+.swatch.p2 { --c: var(--lab-p2); }
+.swatch.p3 { --c: var(--lab-p3); }
+.spectrum { flex: none; width: 28px; height: 12px; border-radius: 3px; background: var(--lab-bg); position: relative; }
+.spectrum::after { content: ""; position: absolute; left: 4px; right: 4px; top: 3px; bottom: 3px; border-radius: 2px; background: linear-gradient(90deg, #9b6bff, #4f86ff, #22c8dc, #4bd463, #ffd23a, #ff8a3a, #ff4a4a); }
 
 @media (min-width: 821px) {
   :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 340px; }
@@ -203,6 +221,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" class="btn" data-add="object"><span class="dot"></span>Object arrow</button>
           <button type="button" class="btn" data-add="beam"><span class="dot"></span>Parallel beam</button>
           <button type="button" class="btn" data-add="point"><span class="dot"></span>Point source</button>
+          <button type="button" class="btn wide" data-add="screen"><span class="dot card"></span>Screen</button>
         </div>
         <div class="sel" id="selEditor" hidden>
           <div class="selhead"><span>Selected</span><output id="selName" class="mono"></output></div>
@@ -259,7 +278,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch p3"></i>Principal ray: through the focal point F</span>
           <span><i class="spectrum"></i>White light, split from 400 to 700 nm</span>
         </div>
-        <p class="hint">Lenses follow the ideal thin lens rule. Mirrors use the exact spherical surface, so rays far from the axis, or from an object point off the axis, focus slightly differently from the mirror equation. Dispersion is a few times stronger than in ordinary crown glass so the spectrum is easy to see.</p>
+        <p class="hint">Lenses follow the ideal thin lens rule. Mirrors use the exact spherical surface, so rays far from the axis, or from an object point off the axis, focus slightly differently from the mirror equation. Dispersion is a few times stronger than in ordinary crown glass so the spectrum is easy to see. The screen picture is built from rays traced in the plane of the drawing, turned about the lens axis for the rest of the object.</p>
       </section>
     </aside>
   </main>
@@ -286,16 +305,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     semi:   () => ({ n: 1.5, r: 6, rot: 90 }),
     object: () => ({ h: 3, rays: 9, spread: 12, white: false }),
     beam:   () => ({ w: 4, rays: 7, white: false }),
-    point:  () => ({ rays: 24, spread: 360, white: false })
+    point:  () => ({ rays: 24, spread: 360, white: false }),
+    screen: () => ({ h: 10 })
   };
   const NAMES = { lens: 'Lens', mirror: 'Mirror', block: 'Glass block', prism: 'Prism', semi: 'Semicircle',
-                  object: 'Object arrow', beam: 'Parallel beam', point: 'Point source' };
+                  object: 'Object arrow', beam: 'Parallel beam', point: 'Point source', screen: 'Screen' };
   const mk = (kind, x, y, props) => Object.assign({ id: nextId++, kind, x, y, rot: 0 }, DEFAULTS[kind](), props || {});
   const isSource = (it) => it.kind === 'object' || it.kind === 'beam' || it.kind === 'point';
   const isGlass = (it) => it.kind === 'block' || it.kind === 'prism' || it.kind === 'semi';
 
   const PRESETS = {
-    converging: () => [mk('object', -22, 0, { h: 3, rays: 9, spread: 11, rot: -5.5 }), mk('lens', 8, 0, { f: 10, ap: 12 })],
+    converging: () => [mk('object', -22, 0, { h: 3, rays: 9, spread: 11, rot: -5.5 }), mk('lens', 8, 0, { f: 10, ap: 12 }), mk('screen', 23, 0, { h: 10 })],
     magnifier:  () => [mk('object', -2, 0, { h: 2, rays: 9, spread: 40, rot: -10 }), mk('lens', 4, 0, { f: 12, ap: 12 })],
     diverging:  () => [mk('object', -18, 0, { h: 4, rays: 9, spread: 15, rot: -10 }), mk('lens', 2, 0, { f: -10, ap: 12 })],
     concave:    () => [mk('object', -16, 0, { h: 3, rays: 9, spread: 7.5, rot: -5.6 }), mk('mirror', 14, 0, { R: 24, ap: 8 })],
@@ -330,9 +350,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function tokens() {
     const cs = getComputedStyle(document.documentElement);
     const g = (n) => cs.getPropertyValue(n).trim();
-    return { canvas: g('--canvas'), grid: g('--grid'), gridStrong: g('--grid-strong'), ink: g('--ink'), muted: g('--muted'),
-             accent: g('--accent'), line: g('--line'), pos: g('--pos'), neg: g('--neg'), green: g('--pr-green'),
-             ray: g('--ray'), glass: g('--glass'), glassEdge: g('--glass-edge') };
+    // the bench is a darkened lab in both themes; its colors come from the --lab-* tokens
+    return { bg: g('--lab-bg'), bg2: g('--lab-bg2'), canvas: g('--lab-bg'), grid: g('--lab-grid'), gridStrong: g('--lab-grid-strong'),
+             ink: g('--lab-ink'), muted: g('--lab-muted'), accent: g('--lab-accent'), pos: g('--lab-pos'),
+             p1: g('--lab-p1'), p2: g('--lab-p2'), p3: g('--lab-p3'), ray: g('--lab-ray'), virt: g('--lab-virt'), halo: g('--lab-halo'),
+             table: g('--lab-table'), railHi: g('--rail-hi'), railLo: g('--rail-lo'), railInk: g('--rail-ink') };
   }
   const toPx = (x, y) => [cx + x * s, cy - y * s];
   const toW = (px, py) => ({ x: (px - cx) / s, y: (cy - py) / s });
@@ -375,6 +397,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         const a = v[i], b = v[(i + 1) % v.length];
         out.push({ type: 'seg', a, b, nOut: norm([b[1] - a[1], -(b[0] - a[0])]), el: it, role: 'face' });
       }
+    } else if (it.kind === 'screen') {
+      out.push({ type: 'seg', a: [it.x, it.y - it.h / 2], b: [it.x, it.y + it.h / 2], el: it, role: 'screen' });
     } else if (it.kind === 'semi') {
       out.push({ type: 'seg', a: local(it, -it.r, 0), b: local(it, it.r, 0), nOut: [-w[0], -w[1]], el: it, role: 'face' });
       out.push({ type: 'arc', c: [it.x, it.y], r: it.r, a0: Math.atan2(w[1], w[0]), half: Math.PI / 2, el: it, role: 'face' });
@@ -443,6 +467,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           if (!best) break;
           r.bounces++;
         }
+        if (best.role === 'screen') { end = 'screen'; r.scr = best.el; break; }     // the screen stops the light
         p = q;
         if (best.role === 'lens') {
           d = lensBend(best.el, q, d); r.hits.push(best.el);
@@ -480,7 +505,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           }
         }
       }
-      paths.push({ pts: r.pts, lam: r.lam, white: r.white, faint: r.faint, hits: r.hits, end, last: { p, d }, src: r.src, tag: r.tag });
+      paths.push({ pts: r.pts, lam: r.lam, white: r.white, faint: r.faint, hits: r.hits, end, last: { p, d }, src: r.src, tag: r.tag, scr: r.scr || null });
     }
     return paths;
   }
@@ -621,7 +646,53 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     schedule();
   }
 
-  // ---------- drawing ----------
+  // ---------- drawing: the lab ----------
+  // The optics live in the plane of the drawing (z = 0). Bench hardware (rail, carriers, light box, screen card)
+  // has depth and is drawn with a slight perspective, as if the eye were F3 cm in front of that plane at axis height.
+  const F3 = 60;
+  const LAB_SPECTRUM = ['#9b6bff', '#4f86ff', '#22c8dc', '#4bd463', '#ffd23a', '#ff8a3a', '#ff4a4a'];
+  const GLASS = (a) => `rgba(160, 210, 255, ${a})`;
+  const SCENES = { prism: 'table', tir: 'table' };     // ray table (seen from above) for these, optical bench for the rest
+  let scene = 'bench', railY = -8;
+  const rrect = (x, y, w, h, r) => (ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h));
+  function hexA(hex, a) {
+    let h = (hex || '#000').trim().replace('#', '');
+    if (h.length === 3) h = h.split('').map((c) => c + c).join('');
+    const n = parseInt(h, 16) || 0;
+    return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
+  }
+  function P3(x, y, z) {
+    const [bx, by] = toPx(x, y), k = F3 / (F3 + z), vx = W / 2, vy = cy;
+    return [vx + (bx - vx) * k, vy + (by - vy) * k];
+  }
+  function quad(a, b, c, d) { ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.lineTo(c[0], c[1]); ctx.lineTo(d[0], d[1]); ctx.closePath(); }
+  function pathW(pts, close) {
+    ctx.beginPath();
+    pts.forEach((p, i) => { const [x, y] = toPx(p[0], p[1]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+    if (close) ctx.closePath();
+  }
+  // a label on a dark halo box, so rays and grid lines never run through the text
+  function tag(text, x, y, color, T, o) {
+    o = o || {};
+    const ps = projScale(), fs = (o.size || 11) * ps;
+    ctx.save();
+    ctx.font = `${o.weight || 600} ${fs}px ` + monoFont(); ctx.textAlign = o.align || 'center'; ctx.textBaseline = 'middle';
+    const w = ctx.measureText(text).width, px = 4 * ps, py = 2.5 * ps;
+    const yc = o.base === 'top' ? y + fs / 2 : o.base === 'bottom' ? y - fs / 2 : y;
+    const x0 = ctx.textAlign === 'center' ? x - w / 2 : ctx.textAlign === 'right' ? x - w : x;
+    ctx.globalAlpha = o.alpha == null ? 1 : o.alpha;
+    ctx.fillStyle = T.halo; ctx.beginPath(); rrect(x0 - px, yc - fs / 2 - py, w + 2 * px, fs + 2 * py, 4 * ps); ctx.fill();
+    ctx.fillStyle = color; ctx.fillText(text, x, yc + 0.5);
+    ctx.restore();
+  }
+  function setScene(name) {
+    scene = SCENES[name] || 'bench';
+    let lo = 0;
+    for (const it of items) { const m = mountOf(it); lo = Math.min(lo, m ? m[1] : it.y); }
+    railY = Math.min(-7, lo - 1.8);
+  }
+
+  // ---------- backdrop ----------
   function drawGrid(T) {
     const b = bounds();
     ctx.lineWidth = 1;
@@ -639,6 +710,263 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.stroke();
     }
   }
+  function drawBackdrop(T) {
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, T.bg2); g.addColorStop(1, T.bg);
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    if (scene === 'table') {
+      // optical breadboard: tapped holes on a 2.5 cm pitch
+      const b = bounds(), step = s * 2.5 < 22 ? 5 : 2.5, r = Math.max(1.3, 0.16 * s);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.42)'; ctx.beginPath();
+      for (let x = Math.ceil(b.x0 / step) * step; x <= b.x1; x += step) {
+        for (let y = Math.ceil(b.y0 / step) * step; y <= b.y1; y += step) {
+          const [px, py] = toPx(x + step / 2, y + step / 2); ctx.moveTo(px + r, py); ctx.arc(px, py, r, 0, 2 * Math.PI);
+        }
+      }
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.07)'; ctx.lineWidth = 1; ctx.beginPath();
+      for (let x = Math.ceil(b.x0 / step) * step; x <= b.x1; x += step) {
+        for (let y = Math.ceil(b.y0 / step) * step; y <= b.y1; y += step) {
+          const [px, py] = toPx(x + step / 2, y + step / 2); ctx.moveTo(px + r * 0.7, py + r * 0.7); ctx.arc(px, py, r, 0.25 * Math.PI, 0.9 * Math.PI);
+        }
+      }
+      ctx.stroke();
+    }
+    const v = ctx.createRadialGradient(W / 2, H * 0.45, Math.min(W, H) * 0.25, W / 2, H * 0.45, Math.hypot(W, H) * 0.62);
+    v.addColorStop(0, 'rgba(0, 0, 0, 0)'); v.addColorStop(1, 'rgba(0, 0, 0, 0.38)');
+    ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
+  }
+  function drawSpill(T) {                     // the sources light up the room a little
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    for (const it of items) {
+      if (!isSource(it)) continue;
+      const c = it.kind === 'object' ? [it.x, it.y + it.h / 2] : it.kind === 'beam' ? local(it, -0.2, 0) : [it.x, it.y];
+      const [x, y] = toPx(c[0], c[1]), R = Math.max(60, 8 * s);
+      const g = ctx.createRadialGradient(x, y, 0, x, y, R);
+      g.addColorStop(0, hexA(it.white ? '#ffffff' : T.ray, 0.09)); g.addColorStop(1, hexA(T.ray, 0));
+      ctx.fillStyle = g; ctx.fillRect(x - R, y - R, 2 * R, 2 * R);
+    }
+    ctx.restore();
+  }
+
+  // ---------- bench hardware: rail, carriers, posts ----------
+  function railGeom() {
+    const ps = projScale(), hF = Math.max(20 * ps, Math.min(36 * ps, 1.5 * s));
+    const yTop = Math.min(Math.max(cy - railY * s, cy + 0.55 * (H - cy)), H - hF - 16 * ps);
+    return { y: (cy - yTop) / s, h: hF / s, hF, D: 1.8, hc: Math.max(1, 10 * ps / s), top: yTop };
+  }
+  function drawRail(R, T) {
+    const ps = projScale(), b = bounds(), D = R.D;
+    const yBack = P3(0, R.y, D)[1], yFront = P3(0, R.y, -D)[1], yBot = P3(0, R.y - R.h, -D)[1];
+    // the table under the rail
+    const tg = ctx.createLinearGradient(0, yBot - 8 * ps, 0, H);
+    tg.addColorStop(0, T.table); tg.addColorStop(1, T.bg);
+    ctx.fillStyle = tg; ctx.fillRect(0, yBot - 4 * ps, W, H - yBot + 4 * ps);
+    const sh = ctx.createLinearGradient(0, yBot, 0, yBot + 14 * ps);
+    sh.addColorStop(0, 'rgba(0, 0, 0, 0.55)'); sh.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = sh; ctx.fillRect(0, yBot, W, 14 * ps);
+    // top face, with the slot the carriers ride in
+    const top = ctx.createLinearGradient(0, yBack, 0, yFront);
+    top.addColorStop(0, T.railLo); top.addColorStop(1, T.railHi);
+    ctx.fillStyle = top; ctx.fillRect(0, yBack, W, yFront - yBack);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.35)'; ctx.fillRect(0, P3(0, R.y, 0.35)[1], W, Math.max(1, P3(0, R.y, -0.35)[1] - P3(0, R.y, 0.35)[1]));
+    // front face: brushed aluminium with a ruler
+    const fr = ctx.createLinearGradient(0, yFront, 0, yBot);
+    fr.addColorStop(0, T.railHi); fr.addColorStop(0.55, T.railLo); fr.addColorStop(1, T.railHi);
+    ctx.fillStyle = fr; ctx.fillRect(0, yFront, W, yBot - yFront);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.35)'; ctx.fillRect(0, yFront, W, 1);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.45)'; ctx.fillRect(0, yBot - 1, W, 1);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let k = 1; k < 7; k++) { const y = Math.round(yFront + (yBot - yFront) * (k / 7 + 0.03 * Math.sin(k * 7.3))) + 0.5; ctx.moveTo(0, y); ctx.lineTo(W, y); }
+    ctx.stroke();
+    const hF = yBot - yFront, every = s * 5 >= 34 * ps ? 5 : 10, fine = s >= 4;
+    ctx.strokeStyle = T.railInk; ctx.lineWidth = Math.max(1, 0.9 * ps); ctx.beginPath();
+    for (let x = Math.ceil(b.x0 - 2); x <= b.x1 + 2; x++) {
+      const big = x % 10 === 0, mid = x % 5 === 0;
+      if (!fine && !mid) continue;
+      const px = Math.round(P3(x, R.y, -D)[0]) + 0.5, L = big ? 0.42 : mid ? 0.3 : 0.17;
+      ctx.moveTo(px, yFront + 1); ctx.lineTo(px, yFront + 1 + hF * L);
+    }
+    ctx.stroke();
+    ctx.fillStyle = T.railInk; ctx.font = `600 ${Math.min(10 * ps, hF * 0.4)}px ` + monoFont();
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    for (let x = Math.ceil(b.x0 / every) * every; x <= b.x1; x += every) {
+      ctx.fillText(minus(String(x)), P3(x, R.y, -D)[0], yBot - 2 * ps);
+    }
+  }
+  // where an item's post meets it: [x, y] in world cm, or null if it has no post
+  function mountOf(it) {
+    if (it.kind === 'object') return [it.x - 1.35, it.y - 0.9];
+    if (it.kind === 'point') return [it.x, it.y - 0.9];
+    if (it.kind === 'beam') { const hp = housingPts(it); return [(hp[0][0] + hp[2][0]) / 2, Math.min(...hp.map((p) => p[1]))]; }
+    if (it.kind === 'screen') return [it.x, it.y - it.h / 2];
+    if (it.kind === 'lens') { const a = local(it, 0, -it.ap / 2 - 0.45), b = local(it, 0, it.ap / 2 + 0.45); return a[1] < b[1] ? a : b; }
+    if (isGlass(it)) return [it.x, Math.min(...outline(it).map((p) => p[1]))];
+    const pts = outline(it); let lo = pts[0];
+    for (const p of pts) if (p[1] < lo[1]) lo = p;
+    return lo;
+  }
+  function drawMount(it, R, T) {
+    const m = mountOf(it), ps = projScale();
+    if (!m || m[1] <= R.y + R.hc + 0.2) return;
+    const x = m[0], [px, pt] = toPx(x, m[1]), pb = toPx(x, R.y + R.hc * 0.6)[1], pw = Math.max(5 * ps, Math.min(0.42 * s, 10 * ps));
+    // steel post
+    const g = ctx.createLinearGradient(px - pw / 2, 0, px + pw / 2, 0);
+    g.addColorStop(0, '#4a5058'); g.addColorStop(0.35, '#d5dae0'); g.addColorStop(0.6, '#8b939c'); g.addColorStop(1, '#30353b');
+    ctx.fillStyle = g; ctx.fillRect(px - pw / 2, pt, pw, pb - pt);
+    // collar where the post enters its holder
+    const cg = ctx.createLinearGradient(px - pw, 0, px + pw, 0);
+    cg.addColorStop(0, '#202429'); cg.addColorStop(0.4, '#5a616a'); cg.addColorStop(1, '#181b1f');
+    ctx.fillStyle = cg; ctx.fillRect(px - pw * 0.95, pb - Math.max(6 * ps, 0.5 * s), pw * 1.9, Math.max(6 * ps, 0.5 * s));
+    // glass sits on a small round table
+    if (isGlass(it)) {
+      const pts = outline(it), xs = pts.map((p) => p[0]), x0 = Math.min(...xs) - 0.3, x1 = Math.max(...xs) + 0.3, y = m[1];
+      quad(P3(x0, y, -1.5), P3(x1, y, -1.5), P3(x1, y, 1.5), P3(x0, y, 1.5));
+      ctx.fillStyle = '#3a4048'; ctx.fill();
+      const a = P3(x0, y, -1.5), b = P3(x1, y - 0.35, -1.5);
+      ctx.fillStyle = '#23272d'; ctx.fillRect(a[0], a[1], b[0] - a[0], Math.max(2, b[1] - a[1]));
+    }
+    // carrier on the rail, with an index mark that reads the ruler
+    const wc = Math.max(1.2, 9 * ps / s), y0 = R.y, y1 = R.y + R.hc, D = R.D + 0.25;
+    quad(P3(x - wc, y1, -D), P3(x + wc, y1, -D), P3(x + wc, y1, D * 0.85), P3(x - wc, y1, D * 0.85));
+    ctx.fillStyle = '#3d434c'; ctx.fill();
+    const side = toPx(x, 0)[0] < W / 2 ? x + wc : x - wc;
+    quad(P3(side, y0, -D), P3(side, y1, -D), P3(side, y1, D * 0.85), P3(side, y0, D * 0.85));
+    ctx.fillStyle = '#16191d'; ctx.fill();
+    const a = P3(x - wc, y1, -D), b = P3(x + wc, y0, -D);
+    const fg = ctx.createLinearGradient(0, a[1], 0, b[1]);
+    fg.addColorStop(0, '#30363e'); fg.addColorStop(1, '#14171b');
+    ctx.fillStyle = fg; ctx.fillRect(a[0], a[1], b[0] - a[0], b[1] - a[1]);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.18)'; ctx.fillRect(a[0], a[1], b[0] - a[0], 1);
+    const kx = a[0] + (b[0] - a[0]) * 0.78, ky = (a[1] + b[1]) / 2, kr = Math.min((b[1] - a[1]) * 0.32, 4.5 * ps);
+    ctx.fillStyle = '#5b636d'; ctx.beginPath(); ctx.arc(kx, ky, kr, 0, 2 * Math.PI); ctx.fill();
+    const ix = P3(x, y0, -D)[0];
+    ctx.fillStyle = '#f2f4f7'; ctx.beginPath();
+    ctx.moveTo(ix, b[1] + 3 * ps); ctx.lineTo(ix - 3 * ps, b[1] - 1); ctx.lineTo(ix + 3 * ps, b[1] - 1); ctx.closePath(); ctx.fill();
+  }
+
+  // ---------- glass, lenses, mirrors ----------
+  function glassBody(pts, T, hl) {
+    const ps = projScale(), px = pts.map((p) => toPx(p[0], p[1]));
+    if (scene === 'table') {                // a soft shadow on the table
+      ctx.save(); ctx.translate(3 * ps, 5 * ps); pathW(pts, true); ctx.fillStyle = 'rgba(0, 0, 0, 0.32)'; ctx.fill(); ctx.restore();
+    }
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (const [x, y] of px) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+    pathW(pts, true);
+    const g = ctx.createLinearGradient(x0, y0, x1, y1);
+    g.addColorStop(0, GLASS(0.24)); g.addColorStop(0.5, GLASS(0.09)); g.addColorStop(1, GLASS(0.2));
+    ctx.fillStyle = g; ctx.fill();
+    ctx.save(); ctx.clip();                 // seen through its thickness, glass edges look green
+    ctx.strokeStyle = 'rgba(120, 225, 195, 0.2)'; ctx.lineWidth = 7 * ps; ctx.stroke();
+    ctx.restore();
+    ctx.strokeStyle = 'rgba(205, 232, 255, 0.62)'; ctx.lineWidth = 1.2 * ps; ctx.lineJoin = 'round'; ctx.stroke();
+    if (hl && hl.length > 1) {
+      ctx.save(); ctx.strokeStyle = 'rgba(255, 255, 255, 0.36)'; ctx.lineWidth = 1.5 * ps; ctx.lineCap = 'round';
+      pathW(hl, false); ctx.stroke(); ctx.restore();
+    }
+  }
+  const lerpP = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+  function drawGlass(it, T) {
+    const pts = outline(it), ps = projScale();
+    const cen = pts.reduce((a, p) => [a[0] + p[0] / pts.length, a[1] + p[1] / pts.length], [0, 0]);
+    const inset = (p, k) => lerpP(cen, p, k);
+    let hl;
+    if (it.kind === 'semi') hl = pts.slice(6, 20).map((p) => inset(p, 0.88));
+    else hl = [inset(lerpP(pts[pts.length - 1], pts[0], 0.2), 0.86), inset(lerpP(pts[pts.length - 1], pts[0], 0.55), 0.86)];
+    glassBody(pts, T, hl);
+    if (it.kind !== 'semi') {               // faint ghosts of the faces, reflected inside the glass
+      pathW(pts.map((p) => inset(p, 0.8)), true);
+      ctx.strokeStyle = 'rgba(205, 232, 255, 0.08)'; ctx.lineWidth = ps; ctx.stroke();
+    }
+    const lp = it.kind === 'semi' ? local(it, 0, it.r * 0.45) : [it.x, it.y];
+    const [lx, ly] = toPx(lp[0], lp[1]);
+    if (s * (it.kind === 'semi' ? it.r : 3) > 30 * ps) tag('n = ' + it.n.toFixed(2), lx, ly, T.muted, T);
+  }
+  function lensShape(it) {
+    // half thickness: thick middle for converging, thick edges for diverging
+    const bulge = Math.min(it.ap * 0.12, 1.2), half = it.ap / 2, n = 24;
+    const thick = (t) => it.f > 0 ? 0.12 + bulge * (1 - (t / half) ** 2) : 0.18 + bulge * (t / half) ** 2;
+    const front = [], back = [];
+    for (let i = 0; i <= n; i++) { const t = -half + it.ap * i / n; front.push(local(it, thick(t), t)); back.push(local(it, -thick(t), t)); }
+    return { pts: front.concat(back.slice().reverse()), thick, half, n };
+  }
+  function drawLensBody(it, T) {
+    const L = lensShape(it), hl = [];
+    for (let i = 0; i <= 8; i++) { const t = L.half * (0.2 + 0.5 * i / 8); hl.push(local(it, -L.thick(t) * 0.55, t)); }
+    glassBody(L.pts, T, hl);
+  }
+  function tick(p, dirW, label, T) {
+    const [x, y] = toPx(p[0], p[1]);
+    const ps = projScale(), ox = dirW[0] * 6 * ps, oy = -dirW[1] * 6 * ps;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * ps;
+    ctx.beginPath(); ctx.moveTo(x - ox, y - oy); ctx.lineTo(x + ox, y + oy); ctx.stroke();
+    tag(label, x + ox * 1.6 + 2 * ps, y + Math.abs(oy) + 4 * ps, T.muted, T, { size: 10, base: 'top' });
+  }
+  function drawLens(it, T) {
+    const { u, w } = frameOf(it), L = lensShape(it), ps = projScale();
+    // holder clamps at the rim
+    for (const sg of [-1, 1]) {
+      const tE = L.thick(L.half) + 0.25, a = sg * (L.half + 0.02), b = sg * (L.half + 0.45);
+      const q = [local(it, -tE, a), local(it, tE, a), local(it, tE, b), local(it, -tE, b)];
+      pathW(q, true); ctx.fillStyle = '#23282e'; ctx.fill();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+    // thin lens mark: arrows out for converging, in for diverging
+    const a = toPx(...local(it, 0, -it.ap / 2)), b = toPx(...local(it, 0, it.ap / 2));
+    const ah = 7 * ps, ai = 6 * ps;
+    ctx.save(); ctx.globalAlpha = 0.6;
+    ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.lineWidth = 1.4 * ps; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+    const ang = Math.atan2(b[1] - a[1], b[0] - a[0]);
+    if (it.f > 0) { arrowHead(b[0], b[1], ang, ah); arrowHead(a[0], a[1], ang + Math.PI, ah); }
+    else {
+      arrowHead(b[0] - Math.cos(ang) * ai, b[1] - Math.sin(ang) * ai, ang + Math.PI, ah);
+      arrowHead(a[0] + Math.cos(ang) * ai, a[1] + Math.sin(ang) * ai, ang, ah);
+    }
+    ctx.restore();
+    const fa = Math.abs(it.f);
+    if (it === sel) return;          // the selected lens shows draggable F and F′ instead
+    tick([it.x + u[0] * fa, it.y + u[1] * fa], w, 'F', T);
+    tick([it.x - u[0] * fa, it.y - u[1] * fa], w, 'F', T);
+  }
+  function drawMirror(it, T) {
+    const { u, w } = frameOf(it), ps = projScale();
+    let pts = outline(it);
+    if (pts.length === 2) { const [p, q] = pts; pts = []; for (let k = 0; k <= 12; k++) pts.push(lerpP(p, q, k / 12)); }
+    const pr = primsOf(it, false)[0], th = Math.max(0.45, 5 * ps / s);
+    const back = (q) => {
+      if (it.shape === 'plane') return [-u[0], -u[1]];
+      const N = [(q[0] - pr.c[0]) / pr.r, (q[1] - pr.c[1]) / pr.r];
+      return it.shape === 'concave' ? N : [-N[0], -N[1]];
+    };
+    const behind = pts.map((q) => { const b = back(q); return [q[0] + b[0] * th, q[1] + b[1] * th]; });
+    // painted backing behind the silver
+    pathW(pts.concat(behind.slice().reverse()), true);
+    ctx.fillStyle = '#2b3037'; ctx.fill();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.save(); pathW(pts.concat(behind.slice().reverse()), true); ctx.clip();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)'; ctx.beginPath();
+    for (let i = 0; i < pts.length; i++) {
+      const q = pts[i], b = back(q), [x0, y0] = toPx(q[0], q[1]);
+      const [x1, y1] = toPx(q[0] + (b[0] - w[0] * 0.7) * th * 1.4, q[1] + (b[1] - w[1] * 0.7) * th * 1.4);
+      ctx.moveTo(x0, y0); ctx.lineTo(x1, y1);
+    }
+    ctx.stroke(); ctx.restore();
+    // the silvered surface
+    const e0 = toPx(...pts[0]), e1 = toPx(...pts[pts.length - 1]);
+    const g = ctx.createLinearGradient(e0[0], e0[1], e1[0], e1[1]);
+    g.addColorStop(0, '#9aa4b0'); g.addColorStop(0.3, '#f4f7fa'); g.addColorStop(0.55, '#b9c2cc'); g.addColorStop(1, '#e6ebf0');
+    ctx.save(); ctx.strokeStyle = g; ctx.lineWidth = 3.2 * ps; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    polyline(pts); ctx.restore();
+    if (it.shape !== 'plane' && it !== sel) {
+      const R = signedR(it);
+      tick([it.x + u[0] * R / 2, it.y + u[1] * R / 2], w, 'F', T);
+      tick([it.x + u[0] * R, it.y + u[1] * R], w, 'C', T);
+    }
+  }
+
+  // ---------- sources ----------
   function arrowHead(x, y, ang, size) {
     ctx.beginPath();
     ctx.moveTo(x + Math.cos(ang) * size, y + Math.sin(ang) * size);
@@ -661,91 +989,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (it.kind === 'semi') { const w = frameOf(it).w; return arcPts([it.x, it.y], it.r, Math.atan2(w[1], w[0]), Math.PI / 2, 48); }
     if (it.kind === 'mirror' && it.shape !== 'plane') { const pr = primsOf(it, false)[0]; return arcPts(pr.c, pr.r, pr.a0, pr.half, 40); }
     if (it.kind === 'lens' || it.kind === 'mirror') return [local(it, 0, -it.ap / 2), local(it, 0, it.ap / 2)];
+    if (it.kind === 'screen') return [[it.x, it.y - it.h / 2], [it.x, it.y + it.h / 2]];
     if (it.kind === 'object') return [[it.x, it.y], [it.x, it.y + it.h]];
     if (it.kind === 'beam') return [local(it, 0, -Math.max(it.w, 0.6) / 2), local(it, 0, Math.max(it.w, 0.6) / 2)];
     return [[it.x - 0.3, it.y - 0.3], [it.x + 0.3, it.y + 0.3]];
-  }
-
-  function drawGlass(it, T) {
-    const pts = outline(it);
-    ctx.beginPath();
-    pts.forEach((p, i) => { const [x, y] = toPx(p[0], p[1]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
-    ctx.closePath();
-    ctx.fillStyle = T.glass; ctx.fill();
-    const ps = projScale();
-    ctx.strokeStyle = T.glassEdge; ctx.lineWidth = 1.5 * ps; ctx.stroke();
-    ctx.fillStyle = T.muted; ctx.font = `600 ${11 * ps}px ` + monoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    const lp = it.kind === 'semi' ? local(it, 0, it.r * 0.45) : [it.x, it.y];
-    const [lx, ly] = toPx(lp[0], lp[1]);
-    if (s * (it.kind === 'semi' ? it.r : 3) > 30 * ps) ctx.fillText('n = ' + it.n.toFixed(2), lx, ly);
-  }
-  function tick(p, dirW, label, T) {
-    const [x, y] = toPx(p[0], p[1]);
-    const ps = projScale(), ox = dirW[0] * 6 * ps, oy = -dirW[1] * 6 * ps;
-    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * ps;
-    ctx.beginPath(); ctx.moveTo(x - ox, y - oy); ctx.lineTo(x + ox, y + oy); ctx.stroke();
-    ctx.fillStyle = T.muted; ctx.font = `600 ${10 * ps}px ` + monoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    ctx.fillText(label, x + ox * 1.6 + 2 * ps, y + Math.abs(oy) + 3 * ps);
-  }
-  function drawLens(it, T) {
-    const { u, w } = frameOf(it);
-    const a = toPx(...local(it, 0, -it.ap / 2)), b = toPx(...local(it, 0, it.ap / 2));
-    // faint lens body
-    // half thickness: thick middle for converging, thick edges for diverging
-    const bulge = Math.min(it.ap * 0.12, 1.2), half = it.ap / 2, n = 24;
-    const thick = (t) => it.f > 0 ? 0.12 + bulge * (1 - (t / half) ** 2) : 0.18 + bulge * (t / half) ** 2;
-    ctx.beginPath();
-    for (let i = 0; i <= n; i++) {
-      const t = -half + it.ap * i / n, [px, py] = toPx(...local(it, thick(t), t));
-      i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
-    }
-    for (let i = n; i >= 0; i--) {
-      const t = -half + it.ap * i / n, [px, py] = toPx(...local(it, -thick(t), t));
-      ctx.lineTo(px, py);
-    }
-    ctx.closePath(); ctx.fillStyle = T.glass; ctx.fill();
-    // double arrow line
-    const ps = projScale(), ah = 8 * ps, ai = 6 * ps;
-    ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.lineWidth = 2.5 * ps; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
-    const ang = Math.atan2(b[1] - a[1], b[0] - a[0]);
-    if (it.f > 0) { arrowHead(b[0], b[1], ang, ah); arrowHead(a[0], a[1], ang + Math.PI, ah); }
-    else {
-      arrowHead(b[0] - Math.cos(ang) * ai, b[1] - Math.sin(ang) * ai, ang + Math.PI, ah);
-      arrowHead(a[0] + Math.cos(ang) * ai, a[1] + Math.sin(ang) * ai, ang, ah);
-    }
-    const fa = Math.abs(it.f);
-    if (it === sel) return;          // the selected lens shows draggable F and F′ instead
-    tick([it.x + u[0] * fa, it.y + u[1] * fa], w, 'F', T);
-    tick([it.x - u[0] * fa, it.y - u[1] * fa], w, 'F', T);
-  }
-  function drawMirror(it, T) {
-    const pts = outline(it), { u, w } = frameOf(it), ps = projScale();
-    // hatching on the back side
-    ctx.strokeStyle = T.muted; ctx.lineWidth = ps;
-    ctx.beginPath();
-    const step = Math.max(1, Math.round(pts.length / 12));
-    if (pts.length > 2) for (let i = 0; i < pts.length; i += step) {
-      const p = pts[i];
-      const [x, y] = toPx(p[0], p[1]);
-      const bx = -u[0] * 0.5 - w[0] * 0.35, by = -u[1] * 0.5 - w[1] * 0.35;
-      ctx.moveTo(x, y); ctx.lineTo(x + bx * Math.min(s, 22), y - by * Math.min(s, 22));
-    }
-    if (pts.length === 2) {
-      for (let k = 0; k <= 10; k++) {
-        const p = local(it, 0, -it.ap / 2 + it.ap * k / 10), [x, y] = toPx(p[0], p[1]);
-        const bx = -u[0] * 0.5 - w[0] * 0.35, by = -u[1] * 0.5 - w[1] * 0.35;
-        ctx.moveTo(x, y); ctx.lineTo(x + bx * Math.min(s, 22), y - by * Math.min(s, 22));
-      }
-    }
-    ctx.stroke();
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 3 * ps; ctx.lineCap = 'round';
-    polyline(pts);
-    if (it.shape !== 'plane' && it !== sel) {
-      const R = signedR(it);
-      tick([it.x + u[0] * R / 2, it.y + u[1] * R / 2], w, 'F', T);
-      tick([it.x + u[0] * R, it.y + u[1] * R], w, 'C', T);
-    }
   }
   function drawObjectArrow(base, tip, color, dashed, alpha) {
     const [bx, by] = toPx(base[0], base[1]), [tx, ty] = toPx(tip[0], tip[1]);
@@ -760,53 +1007,288 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.beginPath(); ctx.arc(bx, by, 3 * ps, 0, 2 * Math.PI); ctx.fill();
     ctx.restore();
   }
+  function drawLightBox(it, T) {              // lamp housing behind the lit arrow (bench only)
+    const x0 = it.x - 2.6, x1 = it.x - 0.15, y0 = it.y - 0.9, y1 = it.y + it.h + 0.9, D = 1.6;
+    quad(P3(x0, y1, -D), P3(x1, y1, -D), P3(x1, y1, D), P3(x0, y1, D));
+    ctx.fillStyle = '#3a414a'; ctx.fill();
+    const seeRight = toPx(x1, 0)[0] < W / 2, xs = seeRight ? x1 : x0;
+    quad(P3(xs, y0, -D), P3(xs, y1, -D), P3(xs, y1, D), P3(xs, y0, D));
+    if (seeRight) {                           // the diffuser window that lights the arrow
+      const a = P3(xs, y0, -D), b = P3(xs, y0, D), g = ctx.createLinearGradient(a[0], 0, b[0], 0);
+      g.addColorStop(0, hexA(it.white ? '#ffffff' : T.ray, 0.55)); g.addColorStop(1, hexA(it.white ? '#ffffff' : T.ray, 0.25));
+      ctx.fillStyle = '#20252b'; ctx.fill(); ctx.fillStyle = g; ctx.fill();
+    } else { ctx.fillStyle = '#1b1f24'; ctx.fill(); }
+    const a = P3(x0, y1, -D), b = P3(x1, y0, -D);
+    const g = ctx.createLinearGradient(0, a[1], 0, b[1]);
+    g.addColorStop(0, '#363d46'); g.addColorStop(1, '#191d22');
+    ctx.fillStyle = g; ctx.fillRect(a[0], a[1], b[0] - a[0], b[1] - a[1]);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'; ctx.fillRect(a[0], a[1], b[0] - a[0], 1);
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.55)'; ctx.lineWidth = Math.max(1, 1.5 * projScale()); ctx.beginPath();
+    for (let k = 0; k < 4; k++) {
+      const y = a[1] + (b[1] - a[1]) * (0.2 + 0.12 * k);
+      if (y > b[1] - 3) break;
+      ctx.moveTo(a[0] + (b[0] - a[0]) * 0.22, y); ctx.lineTo(a[0] + (b[0] - a[0]) * 0.78, y);
+    }
+    ctx.stroke();
+  }
+  function housingPts(it) {
+    const hw = Math.max(it.w / 2 + 0.45, 0.8);
+    return [local(it, -3.4, -hw), local(it, -0.1, -hw), local(it, -0.1, hw), local(it, -3.4, hw)];
+  }
+  function drawHousing(it, T) {               // lamp with a slit (bench) or ray box (table)
+    const hp = housingPts(it), ps = projScale(), hw = Math.max(it.w / 2 + 0.45, 0.8);
+    if (scene === 'table') { ctx.save(); ctx.translate(3 * ps, 5 * ps); pathW(hp, true); ctx.fillStyle = 'rgba(0, 0, 0, 0.35)'; ctx.fill(); ctx.restore(); }
+    const a = toPx(...local(it, -1.7, -hw)), b = toPx(...local(it, -1.7, hw));
+    const g = ctx.createLinearGradient(a[0], a[1], b[0], b[1]);
+    g.addColorStop(0, '#191d22'); g.addColorStop(0.55, '#3c434c'); g.addColorStop(1, '#4f5761');
+    pathW(hp, true); ctx.fillStyle = g; ctx.fill();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)'; ctx.lineWidth = Math.max(1, 1.3 * ps); ctx.beginPath();
+    for (let k = 0; k < 4; k++) {
+      const x = -3.0 + 0.45 * k, p = toPx(...local(it, x, -hw * 0.7)), q = toPx(...local(it, x, hw * 0.7));
+      ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]);
+    }
+    ctx.stroke();
+    const half = Math.max(it.w, 0.3) / 2 + 0.12, c = it.white ? '#ffffff' : T.ray;
+    const p = toPx(...local(it, -0.1, -half)), q = toPx(...local(it, -0.1, half));
+    ctx.save(); ctx.lineCap = 'round'; ctx.globalCompositeOperation = 'lighter';
+    ctx.strokeStyle = hexA(c, 0.3); ctx.lineWidth = 7 * ps; ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); ctx.stroke();
+    ctx.strokeStyle = hexA(c, 0.95); ctx.lineWidth = 2.2 * ps; ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); ctx.stroke();
+    ctx.restore();
+  }
+  function glowDot(x, y, r, c, a) {
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0, hexA(c, a)); g.addColorStop(0.35, hexA(c, a * 0.35)); g.addColorStop(1, hexA(c, 0));
+    ctx.fillStyle = g; ctx.fillRect(x - r, y - r, 2 * r, 2 * r);
+  }
   function drawSource(it, T) {
-    if (it.kind === 'object') { drawObjectArrow([it.x, it.y], [it.x, it.y + it.h], T.pos, false, 1); return; }
-    const [px, py] = toPx(it.x, it.y), ps = projScale();
-    if (it.kind === 'point') {
-      ctx.beginPath(); ctx.arc(px, py, 6.5 * ps, 0, 2 * Math.PI);
-      ctx.fillStyle = it.white ? T.canvas : T.ray; ctx.fill(); ctx.lineWidth = 2 * ps; ctx.strokeStyle = T.ink; ctx.stroke();
+    const ps = projScale(), c = it.white ? '#ffffff' : T.ray;
+    if (it.kind === 'object') {
+      const base = [it.x, it.y], tip = [it.x, it.y + it.h];
+      if (scene === 'bench') drawLightBox(it, T);
+      const [bx, by] = toPx(...base), [tx, ty] = toPx(...tip);
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
+      for (const [wd, a] of [[16, 0.07], [8, 0.16]]) {
+        ctx.strokeStyle = hexA(c, a); ctx.lineWidth = wd * ps; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(tx, ty); ctx.stroke();
+      }
+      glowDot(tx, ty, 14 * ps, c, 0.5);
+      ctx.restore();
+      drawObjectArrow(base, tip, it.white ? '#ffffff' : '#fff1cf', false, 1);
       return;
     }
-    const pts = outline(it), a = toPx(...pts[0]), b = toPx(...pts[1]);
-    const { u } = frameOf(it);
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 5 * ps; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
-    ctx.lineWidth = 2 * ps;
-    const bx = (a[0] + b[0]) / 2 - u[0] * 12 * ps, by = (a[1] + b[1]) / 2 + u[1] * 12 * ps;
-    ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo((a[0] + b[0]) / 2, (a[1] + b[1]) / 2); ctx.stroke();
+    if (it.kind === 'point') {
+      const [px, py] = toPx(it.x, it.y);
+      ctx.fillStyle = '#2a2f36'; ctx.fillRect(px - 4 * ps, py + 3 * ps, 8 * ps, 5 * ps);
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; glowDot(px, py, 22 * ps, c, 0.55); ctx.restore();
+      ctx.beginPath(); ctx.arc(px, py, 5.5 * ps, 0, 2 * Math.PI);
+      ctx.fillStyle = it.white ? '#ffffff' : '#fff1cf'; ctx.fill();
+      ctx.lineWidth = 1.2 * ps; ctx.strokeStyle = hexA(c, 0.9); ctx.stroke();
+      return;
+    }
+    drawHousing(it, T);
   }
-  function drawSelection(it, T) {
-    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
-    for (const p of outline(it)) { const [x, y] = toPx(p[0], p[1]); x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
-    const ps = projScale(), pad = 9 * ps;
-    ctx.save(); ctx.setLineDash([4 * ps, 3 * ps]); ctx.lineWidth = 2 * ps; ctx.strokeStyle = T.accent;
-    ctx.beginPath();
-    const rx = x0 - pad, ry = y0 - pad, rw = x1 - x0 + 2 * pad, rh = y1 - y0 + 2 * pad;
-    ctx.roundRect ? ctx.roundRect(rx, ry, rw, rh, 6 * ps) : ctx.rect(rx, ry, rw, rh);
-    ctx.stroke(); ctx.restore();
+
+  // ---------- the screen ----------
+  const screens = () => items.filter((i) => i.kind === 'screen');
+  const cardHalfW = (sc) => Math.min(0.42 * sc.h, 4.5);       // the card's half width, across the drawing plane
+  // What lands on each screen, as disks in the card's own coordinates: y (cm, height) and z (cm, across).
+  // Object arrows: every point of the arrow sends a bundle of rays through the optics; where the bundle lands
+  // sets the center and the width of that point's blurred patch. Rays are traced in the drawing plane and the
+  // result is turned about the lens axis for points off that plane (exact for a lens or mirror centred on the axis).
+  function screenLight(fr) {
+    const out = new Map();
+    for (const sc of screens()) out.set(sc, []);
+    if (!out.size) return out;
+    for (const obj of items.filter((i) => i.kind === 'object')) objectOnScreens(obj, fr, out);
+    const groups = new Map();
+    for (const p of fr.paths) {
+      if (p.faint || p.end !== 'screen' || !p.scr || p.src.kind === 'object') continue;
+      const key = p.src.id + '|' + (p.lam || '') + '|' + p.scr.id;
+      if (!groups.has(key)) groups.set(key, { sc: p.scr, src: p.src, lam: p.lam, white: p.white, ys: [] });
+      groups.get(key).ys.push(p.pts[p.pts.length - 1][1]);
+    }
+    for (const g of groups.values()) {
+      const lo = Math.min(...g.ys), hi = Math.max(...g.ys), n = g.src.kind === 'beam' ? g.src.rays : g.src.rays;
+      out.get(g.sc).push({ y: (lo + hi) / 2, z: 0, r: (hi - lo) / 2, w: 0.5 * g.ys.length / Math.max(1, n), flat: true,
+                           col: g.lam ? LAB_SPECTRUM[LAMBDAS.indexOf(g.lam)] : g.white ? '#ffffff' : null });
+    }
+    return out;
   }
-  function rayColor(p, T) { return p.lam ? SPECTRUM[LAMBDAS.indexOf(p.lam)] : p.white ? T.ink : T.ray; }
+  function objectOnScreens(obj, fr, out) {
+    const im = fr.image, E = im && im.E && im.obj === obj ? im.E : null;
+    const ya = E ? E.y : obj.y, N = 31, J = 16;
+    const h = obj.h, hd = Math.min(0.32 * h, 1.2);
+    const segs = [[[0, 0], [h, 0]], [[h, 0], [h - hd, 0.62 * hd]], [[h, 0], [h - hd, -0.62 * hd]]];
+    const samples = [];
+    for (const [a, b] of segs) {
+      const L = Math.hypot(b[0] - a[0], b[1] - a[1]), n = Math.max(4, Math.round(L / h * 48)), list = [];
+      for (let k = 0; k < n; k++) {
+        const t = (k + 0.5) / n, y = obj.y + a[0] + (b[0] - a[0]) * t, z = a[1] + (b[1] - a[1]) * t;
+        list.push({ dy: y - ya, z, w: L / n });
+      }
+      samples.push(list);
+    }
+    let rhoMax = 1e-6;
+    for (const list of samples) for (const q of list) rhoMax = Math.max(rhoMax, Math.hypot(q.dy, q.z));
+    const ends = E ? outline(E) : null;
+    const table = [];
+    for (let j = 0; j <= J; j++) {
+      const P = [obj.x, ya + rhoMax * j / J];
+      let angs;
+      if (ends) {
+        const e0 = ends[0], e1 = ends[ends.length - 1];
+        const a1 = Math.atan2(e0[1] - P[1], e0[0] - P[0]);
+        let da = Math.atan2(e1[1] - P[1], e1[0] - P[0]) - a1;
+        da = Math.atan2(Math.sin(da), Math.cos(da));
+        angs = []; for (let k = 0; k < N; k++) angs.push(a1 + da * (k + 0.5) / N);
+      } else angs = fanAngles(N, obj.rot, obj.spread).map(rad);
+      const starts = angs.map((a) => ({ p: P, d: [Math.cos(a), Math.sin(a)], lam: null, white: false, central: false, src: obj, tag: 'scr' }));
+      const per = new Map();
+      for (const p of traceAll(starts, fr.prims, { faint: false })) {
+        if (p.end !== 'screen' || !p.scr) continue;
+        if (!per.has(p.scr)) per.set(p.scr, []);
+        per.get(p.scr).push(p.pts[p.pts.length - 1][1]);
+      }
+      table.push(per);
+    }
+    for (const sc of out.keys()) {
+      const row = table.map((per) => {
+        const ys = per.get(sc);
+        if (!ys || !ys.length) return null;
+        const lo = Math.min(...ys), hi = Math.max(...ys), mean = ys.reduce((a, v) => a + v, 0) / ys.length;
+        return { c: mean - ya, b: (hi - lo) / 2, f: ys.length / N };
+      });
+      if (!row.some(Boolean)) continue;
+      const col = obj.white ? '#ffffff' : null;
+      for (const list of samples) {
+        const disks = [];
+        for (const q of list) {
+          const rho = Math.hypot(q.dy, q.z), t = rho / rhoMax * J, j0 = Math.min(J - 1, Math.floor(t)), fr0 = t - j0;
+          const A = row[j0], B = row[j0 + 1];
+          if (!A && !B) continue;
+          const a = A || B, b = B || A, f = (A ? A.f : 0) * (1 - fr0) + (B ? B.f : 0) * fr0;
+          const c = a.c + (b.c - a.c) * fr0, r = a.b + (b.b - a.b) * fr0, phi = Math.atan2(q.z, q.dy);
+          if (f <= 0) continue;
+          disks.push({ y: ya + c * Math.cos(phi), z: c * Math.sin(phi), r, w: q.w * f, col });
+        }
+        // a wide blur needs fewer, heavier disks (keeps faint light above the 8 bit floor)
+        for (let i = 0; i < disks.length;) {
+          const d = disks[i], nx = disks[Math.min(i + 1, disks.length - 1)];
+          const sp = Math.max(1e-4, Math.hypot(nx.y - d.y, nx.z - d.z));
+          const k = Math.max(1, Math.min(disks.length - i, Math.floor(d.r / (2 * sp))));
+          let y = 0, z = 0, r = 0, w = 0;
+          for (let m = i; m < i + k; m++) { y += disks[m].y / k; z += disks[m].z / k; r += disks[m].r / k; w += disks[m].w; }
+          out.get(sc).push({ y, z, r, w, col });
+          i += k;
+        }
+      }
+    }
+  }
+  // paint the light on a card: (y, z) card coordinates already mapped by the current transform; r0 = sharpest patch (cm)
+  function paintCard(disks, r0, T) {
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    for (const d of disks) {
+      const r = Math.max(d.r, r0);
+      const a = d.flat ? Math.min(0.85, d.w / Math.max(1, d.r / 0.3)) : Math.min(1, 0.24 * d.w / (Math.PI * r * r));
+      if (a < 0.004) continue;
+      ctx.globalAlpha = a; ctx.fillStyle = d.col || T.ray;
+      ctx.beginPath(); ctx.arc(d.z, d.y, r, 0, 2 * Math.PI); ctx.fill();
+    }
+    ctx.restore();
+  }
+  function cardGrid(sc, zc) {
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.07)'; ctx.lineWidth = 0.03; ctx.beginPath();
+    for (let y = Math.ceil(sc.y - sc.h / 2); y <= sc.y + sc.h / 2; y++) { ctx.moveTo(-zc, y); ctx.lineTo(zc, y); }
+    for (let z = Math.ceil(-zc); z <= zc; z++) { ctx.moveTo(z, sc.y - sc.h / 2); ctx.lineTo(z, sc.y + sc.h / 2); }
+    ctx.stroke();
+  }
+  function drawScreen(sc, disks, T) {
+    const ps = projScale(), h2 = sc.h / 2, zc = cardHalfW(sc);
+    if (scene !== 'bench') {                  // seen from above: the card edge on, in a holder
+      const a = toPx(sc.x - 0.12, sc.y + h2), b = toPx(sc.x + 0.12, sc.y - h2), wd = Math.max(4 * ps, b[0] - a[0]);
+      ctx.fillStyle = '#c9ced5'; ctx.fillRect((a[0] + b[0] - wd) / 2, a[1], wd, b[1] - a[1]);
+      for (const y of [sc.y + h2, sc.y - h2]) {
+        const p = toPx(sc.x, y); ctx.fillStyle = '#23282e'; ctx.fillRect(p[0] - 6 * ps, p[1] - 3 * ps, 12 * ps, 6 * ps);
+      }
+      return;
+    }
+    const c = [P3(sc.x, sc.y - h2, -zc), P3(sc.x, sc.y + h2, -zc), P3(sc.x, sc.y + h2, zc), P3(sc.x, sc.y - h2, zc)];
+    // card frame, then the matte white face (dim: the room is dark)
+    quad(...c); ctx.lineWidth = 3 * ps; ctx.strokeStyle = '#1d2126'; ctx.lineJoin = 'round'; ctx.stroke();
+    const g = ctx.createLinearGradient(c[0][0], 0, c[3][0], 0);
+    g.addColorStop(0, '#5a616a'); g.addColorStop(1, '#474d55');
+    ctx.fillStyle = g; ctx.fill();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)'; ctx.lineWidth = 1; ctx.stroke();
+    // the light on the face, in the card's own coordinates (linearised perspective about the card centre)
+    const O = P3(sc.x, sc.y, 0), Ey = P3(sc.x, sc.y + 1, 0), Ez = P3(sc.x, sc.y, 1);
+    const ey = [Ey[0] - O[0], Ey[1] - O[1]], ez = [Ez[0] - O[0], Ez[1] - O[1]];
+    ctx.save(); quad(...c); ctx.clip();
+    ctx.transform(ez[0], ez[1], ey[0], ey[1], O[0] - ey[0] * sc.y, O[1] - ey[1] * sc.y);
+    paintCard(disks, 1.1 * ps / Math.hypot(ey[0], ey[1]), T);
+    ctx.restore();
+  }
+  function drawScreenInset(sc, disks, T, R) {
+    const ps = projScale(), zc = cardHalfW(sc);
+    const cardH = Math.max(70, Math.min(H * 0.27, 160 * ps)), k = cardH / sc.h, cardW = 2 * zc * k;
+    const pad = 9 * ps, head = 17 * ps, bw = Math.max(cardW + 2 * pad, 96 * ps), bh = head + cardH + 1.5 * pad;
+    let bx = W - bw - 10 * ps;
+    const by = 10 * ps;
+    // keep clear of the screen itself: slide left of the card if the corner would cover it
+    const corners = scene === 'bench' ? [P3(sc.x, sc.y + sc.h / 2, -zc), P3(sc.x, sc.y + sc.h / 2, zc), P3(sc.x, sc.y - sc.h / 2, -zc)] : [toPx(sc.x, sc.y + sc.h / 2)];
+    const cTop = Math.min(...corners.map((c) => c[1])), cL = Math.min(...corners.map((c) => c[0])) - 10 * ps, cR = Math.max(...corners.map((c) => c[0])) + 10 * ps;
+    if (cTop < by + bh + 8 * ps && cR > bx && cL < bx + bw) bx = Math.max(10 * ps, cL - bw - 4 * ps);
+    ctx.save();
+    ctx.fillStyle = T.halo; ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)'; ctx.lineWidth = 1;
+    ctx.beginPath(); rrect(bx, by, bw, bh, 8 * ps); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `600 ${10 * ps}px ` + monoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('on the screen', bx + bw / 2, by + pad * 0.6 + head / 2);
+    const ccx = bx + bw / 2, ccy = by + head + pad * 0.5 + cardH / 2;
+    ctx.beginPath(); ctx.rect(ccx - cardW / 2, ccy - cardH / 2, cardW, cardH);
+    ctx.fillStyle = '#4e545c'; ctx.fill(); ctx.clip();
+    ctx.transform(k, 0, 0, -k, ccx, ccy + k * sc.y);
+    cardGrid(sc, zc);
+    paintCard(disks, 1.1 * ps / k, T);
+    ctx.restore();
+  }
+
+  // ---------- rays ----------
+  function whiten(hex, k) {          // mix a color toward white: the hot core of a beam
+    let h = hex.trim().replace('#', '');
+    if (h.length === 3) h = h.split('').map((c) => c + c).join('');
+    const n = parseInt(h, 16) || 0, m = (v) => Math.round(v + (255 - v) * k);
+    return `rgb(${m((n >> 16) & 255)}, ${m((n >> 8) & 255)}, ${m(n & 255)})`;
+  }
+  function rayColor(p, T) { return p.lam ? LAB_SPECTRUM[LAMBDAS.indexOf(p.lam)] : p.white ? '#f4f7ff' : T.ray; }
   function drawPaths(paths, T) {
     const ps = projScale();
-    ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.globalCompositeOperation = 'lighter';
     for (const p of paths) {
-      if (!p.faint) continue;
-      ctx.strokeStyle = rayColor(p, T); ctx.globalAlpha = 0.28; ctx.lineWidth = ps;
-      polyline(p.pts);
+      if (!p.faint || p.pts.length < 2) continue;
+      ctx.strokeStyle = rayColor(p, T);
+      ctx.globalAlpha = 0.05; ctx.lineWidth = 5 * ps; polyline(p.pts);
+      ctx.globalAlpha = 0.2; ctx.lineWidth = ps; polyline(p.pts);
     }
-    for (const p of paths) {
-      if (p.faint || p.pts.length < 2) continue;
-      const c = rayColor(p, T);
-      ctx.strokeStyle = c; ctx.fillStyle = c; ctx.globalAlpha = p.white ? 0.8 : 0.9; ctx.lineWidth = (p.lam ? 1.3 : 1.4) * ps;
-      polyline(p.pts);
-      if (p.tag === 'fan' && !p.lam) {
-        const [x1, y1] = toPx(...p.pts[0]), [x2, y2] = toPx(...p.pts[1]);
-        const L = Math.hypot(x2 - x1, y2 - y1);
-        if (L > 60) {
-          const t = Math.min(0.5, 70 / L), ang = Math.atan2(y2 - y1, x2 - x1);
-          arrowHead(x1 + (x2 - x1) * t, y1 + (y2 - y1) * t, ang, 5 * ps);
-        }
+    const main = paths.filter((p) => !p.faint && p.pts.length >= 2);
+    // soft glow, then the bright core: where many rays overlap, the light adds up
+    for (const [a, wd, k] of [[0.05, 13, 0], [0.11, 5.5, 0], [0.22, 2.4, 0.1], [0.8, 1, 0.5]]) {
+      ctx.globalAlpha = a; ctx.lineWidth = wd * ps;
+      for (const p of main) { ctx.strokeStyle = k ? whiten(rayColor(p, T), k) : rayColor(p, T); polyline(p.pts); }
+    }
+    ctx.globalAlpha = 1;
+    for (const p of main) {
+      if (p.end !== 'screen') continue;
+      const [x, y] = toPx(...p.pts[p.pts.length - 1]);
+      glowDot(x, y, 9 * ps, rayColor(p, T), 0.35);
+    }
+    ctx.globalCompositeOperation = 'source-over';
+    for (const p of main) {
+      if (p.tag !== 'fan' || p.lam) continue;
+      const [x1, y1] = toPx(...p.pts[0]), [x2, y2] = toPx(...p.pts[1]);
+      const L = Math.hypot(x2 - x1, y2 - y1);
+      if (L > 60) {
+        const t = Math.min(0.5, 70 / L), ang = Math.atan2(y2 - y1, x2 - x1);
+        ctx.fillStyle = rayColor(p, T); ctx.globalAlpha = 0.95;
+        arrowHead(x1 + (x2 - x1) * t, y1 + (y2 - y1) * t, ang, 5 * ps);
       }
     }
     ctx.restore();
@@ -823,57 +1305,83 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     ctx.stroke(); ctx.restore();
   }
+  function drawSelection(it, T) {
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (const p of outline(it)) { const [x, y] = toPx(p[0], p[1]); x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+    const ps = projScale(), pad = 9 * ps;
+    ctx.save(); ctx.setLineDash([4 * ps, 3 * ps]); ctx.lineWidth = 2 * ps; ctx.strokeStyle = T.accent;
+    ctx.beginPath();
+    const rx = x0 - pad, ry = y0 - pad, rw = x1 - x0 + 2 * pad, rh = y1 - y0 + 2 * pad;
+    rrect(rx, ry, rw, rh, 6 * ps);
+    ctx.stroke(); ctx.restore();
+  }
 
   function draw() {
     const T = tokens(), ps = projScale();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    drawBackdrop(T);
     if (layers.grid) drawGrid(T);
+    drawSpill(T);
     // optical axis
-    ctx.save(); ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.7; ctx.lineWidth = ps; ctx.setLineDash([10 * ps, 6 * ps]);
+    ctx.save(); ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.55; ctx.lineWidth = ps; ctx.setLineDash([10 * ps, 6 * ps]);
     ctx.beginPath(); ctx.moveTo(0, Math.round(cy) + 0.5); ctx.lineTo(W, Math.round(cy) + 0.5); ctx.stroke(); ctx.restore();
 
     const fr = frameData = solve();
+    const R = scene === 'bench' ? railGeom() : null;
+    if (R) {
+      drawRail(R, T);
+      const order = items.slice().sort((a, b) => Math.abs(toPx(b.x, 0)[0] - W / 2) - Math.abs(toPx(a.x, 0)[0] - W / 2));
+      for (const it of order) drawMount(it, R, T);
+    }
     for (const it of items) if (isGlass(it)) drawGlass(it, T);
+    for (const it of items) if (it.kind === 'lens') drawLensBody(it, T);
+    ctx.save();
+    if (R) { ctx.beginPath(); ctx.rect(0, 0, W, R.top); ctx.clip(); }    // light stops at the bench
     drawPaths(fr.paths, T);
+    ctx.restore();
+    const light = screenLight(fr);
+    for (const sc of screens()) drawScreen(sc, light.get(sc), T);
 
+    for (const it of items) if (isSource(it)) drawSource(it, T);     // construction lines go over the hardware
     const im = fr.image;
     const showImg = layers.image && im.E && !im.inf;
-    if (showImg && !im.real) {
-      drawExtensions(im.lines, im.imgTip, T.ray, 0.6, 1.1);
-    }
+    if (showImg && !im.real) drawExtensions(im.lines, im.imgTip, T.virt, 0.8, 1.1);
     // principal rays
-    const PC = [T.pos, T.green, T.neg];
+    const PC = [T.p1, T.p2, T.p3];
+    ctx.save();
+    if (R) { ctx.beginPath(); ctx.rect(0, 0, W, R.top); ctx.clip(); }
     for (const p of fr.principal) {
       const i = +p.tag.slice(2);
-      ctx.save(); ctx.strokeStyle = PC[i]; ctx.lineWidth = 2 * ps; ctx.globalAlpha = 0.95; ctx.lineJoin = 'round';
-      polyline(p.pts); ctx.restore();
+      ctx.save(); ctx.lineJoin = 'round';
+      ctx.strokeStyle = T.halo; ctx.lineWidth = 4.5 * ps; ctx.globalAlpha = 0.5; polyline(p.pts);
+      ctx.strokeStyle = PC[i]; ctx.lineWidth = 2 * ps; ctx.globalAlpha = 0.95; polyline(p.pts);
+      ctx.restore();
       if (im.E && !im.inf && !im.real && p.hits.length && p.end !== 'absorbed') drawExtensions([p.last], im.imgTip, PC[i], 0.9, 1.6);
     }
+    ctx.restore();
     for (const it of items) {
       if (it.kind === 'lens') drawLens(it, T);
       else if (it.kind === 'mirror') drawMirror(it, T);
     }
-    for (const it of items) if (isSource(it)) drawSource(it, T);
     if (showImg) {
-      drawObjectArrow(im.imgBase, im.imgTip, T.pos, !im.real, 0.7);
+      drawObjectArrow(im.imgBase, im.imgTip, T.pos, !im.real, 0.75);
       const [x, y] = toPx(im.imgTip[0], im.imgTip[1]), up = im.imgTip[1] >= im.imgBase[1];
-      ctx.fillStyle = T.muted; ctx.font = `600 ${11 * ps}px ` + monoFont(); ctx.textAlign = 'center';
-      ctx.textBaseline = up ? 'bottom' : 'top';
-      const lab = im.real ? 'real image' : 'virtual image', hw = ctx.measureText(lab).width / 2 + 4;
-      ctx.fillText(lab, Math.max(hw, Math.min(W - hw, x)), y + (up ? -8 : 8) * ps);   // keep the label on the canvas
+      const lab = im.real ? 'real image' : 'virtual image';
+      ctx.font = `600 ${11 * ps}px ` + monoFont();
+      const hw = ctx.measureText(lab).width / 2 + 8 * ps;
+      tag(lab, Math.max(hw, Math.min(W - hw, x)), y + (up ? -10 : 10) * ps, T.muted, T, { base: up ? 'bottom' : 'top' });   // keep the label on the canvas
     }
+    for (const sc of screens()) drawScreenInset(sc, light.get(sc), T, R);
     if (sel) { drawSelection(sel, T); drawHandles(T); }
 
-    // scale bar
+    // scale bar (top left on the bench, where the ruler fills the bottom)
     ctx.save();
-    const x0 = 14, y0 = H - 16 * ps, len = 5 * s;
-    ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1.5 * ps;
+    const len = 5 * s, x0 = 14 * ps, y0 = R ? 30 * ps : H - 16 * ps;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * ps;
     ctx.beginPath(); ctx.moveTo(x0, y0 - 4 * ps); ctx.lineTo(x0, y0); ctx.lineTo(x0 + len, y0); ctx.lineTo(x0 + len, y0 - 4 * ps); ctx.stroke();
-    ctx.font = `600 ${11 * ps}px ` + monoFont();
-    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('5 cm', x0 + len / 2, y0 - 3 * ps);
     ctx.restore();
+    tag('5 cm', x0 + len / 2, y0 - 5 * ps, T.muted, T, { base: 'bottom' });
   }
 
   // ---------- readouts ----------
@@ -960,6 +1468,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       { label: 'Ray count', min: 1, max: 21, step: 1, key: 'rays', digits: 0 },
       { label: 'Angle', altLabel: 'Angle (pivots on the glass)', min: -180, max: 180, step: 0.5, key: 'rot', unit: '°' },
       { toggle: 'White light', key: 'white' }
+    ],
+    screen: [
+      { label: 'Height', min: 4, max: 20, step: 0.5, key: 'h', unit: ' cm' }
     ],
     point: [
       { label: 'Ray count', min: 4, max: 72, step: 1, key: 'rays', digits: 0 },
@@ -1127,6 +1638,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       else knob(c, 180, g, c);
     } else if (it.kind === 'point') {
       knob(c, 0, 30 * ps / s, c);
+    } else if (it.kind === 'screen') {
+      grip('h', [it.x, it.y + it.h / 2 + go], [0, 1], (p) => setKey(it, 'h', 2 * (Math.abs(p.y - it.y) - go)));
     }
     return out;
   }
@@ -1205,11 +1718,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     semi: 'Drag the grip on the flat face to change the radius.',
     object: 'Drag the tip of the arrow to change its height. The knob aims the rays.',
     beam: 'Drag either end of the beam to change its width.',
-    point: 'The knob aims the rays.'
+    point: 'The knob aims the rays.',
+    screen: 'Slide it along the bench: the image is sharp only where the rays from each point of the object meet. The grip at the top sets the height.'
   };
   function selHintText(it) {
     if (!it) return 'Click anything on the bench to edit it. Drag its grips, dots and round knob to reshape and turn it.';
     const first = HINTS[it.kind === 'mirror' && it.shape === 'plane' ? 'plane' : it.kind];
+    if (it.kind === 'screen') return first + ' Arrow keys nudge it, + and − resize it, Delete removes it.';
     const turn = isSource(it) ? '' : ' Turn the round knob to rotate it.';
     return first + turn + ' Arrow keys nudge it, [ and ] rotate it, + and − resize it, Delete removes it.';
   }
@@ -1241,6 +1756,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function hitItem(it, p) {
     const tol = 11 * projScale() / s, pts = outline(it);
     if (it.kind === 'point') return Math.hypot(p[0] - it.x, p[1] - it.y) <= tol;
+    if (it.kind === 'screen') return Math.abs(p[0] - it.x) <= Math.max(tol, 0.5) && Math.abs(p[1] - it.y) <= it.h / 2 + tol;
     if (isGlass(it)) {
       if (inPoly(p, pts)) return true;
     }
@@ -1299,7 +1815,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   cv.addEventListener('pointerleave', () => { if (!drag && hoverId) { hoverId = null; schedule(); } });
 
   // what + and − change: the focal length or main size of each kind
-  const SIZE_KEYS = { lens: ['f'], mirror: ['R'], block: ['w', 'h'], prism: ['side'], semi: ['r'], object: ['h'], beam: ['w'], point: ['spread'] };
+  const SIZE_KEYS = { lens: ['f'], mirror: ['R'], block: ['w', 'h'], prism: ['side'], semi: ['r'], object: ['h'], beam: ['w'], point: ['spread'], screen: ['h'] };
   function removeSel() { items = items.filter((i) => i !== sel); sel = null; setPreset(null); schedule(); }
   cv.addEventListener('keydown', (e) => {
     if (!sel) return;
@@ -1313,6 +1829,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     } else if (e.key === 'Escape') {
       sel = null;
     } else if (e.key === '[' || e.key === ']') {
+      if (sel.kind === 'screen') return;           // the screen stays square to the bench
       const lim = sel.kind === 'lens' ? 90 : sel.kind === 'object' ? 60 : 180;
       let r = sel.rot + (e.key === ']' ? 1 : -1) * (e.shiftKey ? 1 : 5);
       if (lim === 180) { if (r > 180) r -= 360; if (r < -180) r += 360; } else r = Math.max(-lim, Math.min(lim, r));
@@ -1337,14 +1854,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const d = items.length ? Math.min(...items.map((c) => Math.hypot(c.x - x, c.y - y))) : 99;
       if (d > bestD) { bestD = d; best = { x, y }; }
     }
-    const it = mk(kind, Math.round(best.x), Math.round(best.y));
+    const it = mk(kind, Math.round(best.x), kind === 'screen' ? 0 : Math.round(best.y));
     items.push(it); sel = it; setPreset(null); schedule();
   }
   for (const b of document.querySelectorAll('#adders button')) b.addEventListener('click', () => addItem(b.dataset.add));
   $('del').addEventListener('click', removeSel);
 
   for (const b of document.querySelectorAll('#presets button')) {
-    b.addEventListener('click', () => { items = PRESETS[b.dataset.p](); sel = null; setPreset(b.dataset.p); frame = FRAMES[b.dataset.p] || frame; resize(); });
+    b.addEventListener('click', () => { items = PRESETS[b.dataset.p](); sel = null; setPreset(b.dataset.p); setScene(b.dataset.p); frame = FRAMES[b.dataset.p] || frame; resize(); });
   }
   const bindToggle = (id, key) => $(id).addEventListener('change', (e) => { layers[key] = e.target.checked; schedule(); });
   bindToggle('tPrincipal', 'principal'); bindToggle('tImage', 'image'); bindToggle('tFaint', 'faint'); bindToggle('tGrid', 'grid');
@@ -1366,6 +1883,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- boot ----------
   items = PRESETS.converging();
+  setScene('converging');
   new ResizeObserver(resize).observe(stage);
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
