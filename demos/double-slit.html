@@ -487,7 +487,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   const PRESETS = {
     laser: { kind: 'photon', src: 650, a: 0.05e-3, d: 0.25e-3, L: 1, open: [true, true], det: false, eta: 1, rate: 7,
-      hint: 'A very faint red laser, one photon at a time, as in G. I. Taylor’s 1909 experiment. Fringes 2.6 mm apart, nine bright ones inside the central envelope, which ends 13 mm from the center.' },
+      hint: 'A very faint red laser, one photon at a time. G. I. Taylor did this in 1909 with the fringes around a needle’s shadow. Fringes 2.6 mm apart, nine bright ones inside the central envelope, which ends 13 mm from the center.' },
     electron: { kind: 'electron', src: Math.log10(50000), a: 0.2e-6, d: 1e-6, L: 0.35, open: [true, true], det: false, eta: 1, rate: 5,
       hint: '50 kV electrons, λ = 5.36 pm, slits 0.2 µm wide and 1 µm apart. The fringes are under 2 µm apart, so Jönsson magnified them with electron lenses; this screen shows them before magnification. Watch the first few dozen hits: no pattern yet.' },
     c60: { kind: 'c60', src: 220, a: 50e-9, d: 100e-9, L: 1.25, open: [true, true], det: false, eta: 1, rate: 6,

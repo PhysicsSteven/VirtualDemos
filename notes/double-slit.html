@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Double Slit, One Particle at a Time: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Double Slit, One Particle at a Time</h1><ul class="meta"><li><a href="../demos/double-slit.html">Open the demo</a></li><li>Modern physics; also optics (interference and diffraction)</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Each photon, electron or molecule is detected at one point, like a particle. The interference pattern appears only in the pile of many detections, and it appears even when the particles go through one at a time.</li>
+<li>The pattern is the one a wave of wavelength λ = h/p would make: bright fringes at d sin θ = mλ, spaced Δy ≈ λL/d, inside a single slit envelope whose first zero is at sin θ = λ/a.</li>
+<li>Amplitudes from the two slits add, not probabilities. Opening a second slit can lower the count at a point.</li>
+<li>Any record of which slit each particle went through removes the interference, even if the detector does nothing else to the particle. A detector that fires for a fraction η leaves fringes of contrast 1 − η.</li>
+<li>The same formula works for light, electrons and C₆₀ molecules of 720 u. Only λ, set by the momentum, changes.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know two slit interference for light (d sin θ = mλ, spacing λL/d) and λ = h/p; single slit diffraction helps for the envelope. The demo opens in <strong>Electrons (Jönsson 1961 style)</strong>, streaming; press <strong>Pause</strong> and <strong>Clear</strong> before class so the first hits happen in front of the students.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Electrons (Jönsson 1961 style).</strong> Ask Q1 first. Press <strong>Fire 1</strong> a few times: each electron makes one dot, and nothing about where one lands tells you where the next will. Then stream, raise <strong>Stream rate</strong>, and watch the histogram fill. After a few dozen hits the screen looks random; after a few thousand it matches the <strong>Predicted curve</strong>.</li>
+<li><strong>One slit.</strong> Slit 2 is closed. The fringes are gone and the single slit pattern remains. Point to a position that was dark with both slits open: it now gets hits (Q3). Click slit 2 on the drawing to open it again.</li>
+<li><strong>Which slit detector on.</strong> Every electron is now recorded at slit 1 or slit 2, and the hits are colored by slit. The fringes vanish. Lower <strong>Detector efficiency η</strong> to 50% and let the screen fill again (Q4).</li>
+<li><strong>Light, red laser.</strong> The same experiment with single photons, as in G. I. Taylor's faint light experiment. Read the <strong>Predicted pattern</strong> readouts: fringes 2.6 mm apart and nine bright fringes inside the central envelope (Q6).</li>
+<li><strong>Buckyballs (Arndt 1999 style, grating).</strong> A molecule of 60 carbon atoms at 220 m/s has λ = 2.5 pm. With d = 2a the second order falls on an envelope zero and is missing (Q5).</li>
+<li><strong>Change the momentum.</strong> Back with electrons, lower <strong>Accelerating voltage</strong> from 50 kV to 12.5 kV and predict the new fringe spacing before reading it (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: electrons are fired at the two slits so slowly that only one is in the apparatus at a time. What will the screen look like after 10 electrons? After 10,000? Can an electron that goes through alone interfere with anything?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In the electron preset the electrons are accelerated through 50 kV, the slits are 1.0 µm apart (center to center) and the screen is 0.35 m away. Find the de Broglie wavelength, first ignoring relativity (λ = h/√(2meV)), and then with the relativistic momentum p = √(2meV(1 + eV/2mc²)). Find the fringe spacing. Check both with the readouts.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In <strong>One slit</strong>, some points that were dark with both slits open now receive electrons. Explain how opening a second path for the electrons can reduce the number arriving at a point. Near the center of the screen, how does the count per second with both slits open compare with the count with one slit open?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> With the which slit detector on at η = 100%, the fringes disappear. What is the pattern now, in terms of the one slit patterns? With η = 50%, what fringe contrast (I_max − I_min)/(I_max + I_min) do you expect near the center, and what ratio I_max/I_min? Check by letting a few thousand hits build up.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> C₆₀ has a mass of 720 u. Find its de Broglie wavelength at 220 m/s and compare it with the size of the molecule, about 1 nm. In the buckyball preset the slits are 50 nm wide and 100 nm apart. Which bright fringes are missing, and why?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In <strong>Light, red laser</strong>, λ = 650 nm, a = 0.05 mm, d = 0.25 mm and L = 1.0 m. Find the fringe spacing and the distance from the center to the first zero of the envelope. How many bright fringes lie inside the central envelope, and why is the fifth order missing?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Predict, then check: if the accelerating voltage is cut from 50 kV to 12.5 kV, by what factor should the fringe spacing change? The demo's readout does not give exactly the simple answer. Why not?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Each electron splits in two and half goes through each slit."</strong> Every electron is detected whole, at one point. What goes through both slits is the probability amplitude, which decides where electrons are likely to land.</li>
+<li><strong>"The pattern comes from electrons interfering with each other."</strong> It builds up just the same with one electron at a time. Each interferes only with itself.</li>
+<li><strong>"The detector destroys the fringes by knocking the electron."</strong> In the demo the detector does nothing but record which slit; that record alone removes the interference.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Photons have p = h/λ. Electrons use the relativistic momentum p = √(2m eV(1 + eV/2mc²)); at 50 kV the nonrelativistic formula gives a λ about 2.4% too long. C₆₀ uses λ = h/mv with m = 720 u, and every molecule has the same speed (the real beam had a wide spread that blurred the side peaks).</li>
+<li>The screen pattern is the paraxial Fresnel calculation for a monochromatic plane wave on two slits. In the far field it matches I(θ) = I₀ cos²(πd sin θ/λ) [sin β/β]², β = πa sin θ/λ. The <strong>Far field check</strong> (d + a)²/λL tells how close the setup is to that limit; the electron preset is near it (about 0.8), so the screen pattern departs a little from the formulas.</li>
+<li>Each hit is drawn at random from the computed pattern; positions along the slit length are spread out only for display.</li>
+<li>The which slit detector is idealized: with probability η it records the slit and does nothing else, giving η(I₁ + I₂) + (1 − η)I₁₂.</li>
+<li>The buckyball preset uses two slits at the 100 nm period of the real grating; many slits would only sharpen the same peaks. Slits are drawn enlarged and L is not to scale.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>History: Claus Jönsson made electron double slit patterns in 1961, and Arndt, Zeilinger and colleagues reported C₆₀ interference in 1999. G. I. Taylor (1909) recorded fringes in light so faint that far less than one photon was in the apparatus at a time.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

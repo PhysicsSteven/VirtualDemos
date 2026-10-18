@@ -522,7 +522,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         const t = tNow();
         followLog.push({ t, sp: s });
         if (last.sp === 0) {
-          ages.push(t); if (ages.length > 40) ages.shift();
+          // it decayed somewhere inside the last step: count the middle of that step, not its end
+          ages.push(Math.max(0, t - dt / 2)); if (ages.length > 40) ages.shift();
           $('fLive').textContent = `The nucleus you followed decayed at age ${fmtT(t)}.`;
         }
       }

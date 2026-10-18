@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lasers and Stimulated Emission: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Lasers and Stimulated Emission</h1><ul class="meta"><li><a href="../demos/lasers.html">Open the demo</a></li><li>Modern physics</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Light interacts with a two level atom in three ways: absorption, spontaneous emission (random direction and phase) and stimulated emission, which makes a copy of the incoming photon. Absorption and stimulated emission have the same coefficient, B₁₂ = B₂₁, so which wins depends only on whether N₁ or N₂ is larger.</li>
+<li>In thermal equilibrium N₂/N₁ = e^(−hν/kT) &lt; 1 at every temperature, and pumping a two level atom can only bring N₂ up to N₁. Gain needs a population inversion, which needs a third or fourth level.</li>
+<li>A laser starts when the gain from the inversion balances the cavity losses. Above that threshold the inversion stays clamped at N_th and the extra pump power comes out as laser light, in a straight line against pump power.</li>
+<li>A four level laser (Nd:YAG) has an empty lower level; a three level laser (ruby) must first excite half its ions, so its threshold is far higher.</li>
+<li>The cavity allows only frequencies ν_q = qc/2L. The modes that fall inside the Doppler broadened gain curve, above threshold, are the ones that lase.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know E = hν, the Boltzmann factor and energy levels. There are four views, <strong>Processes</strong>, <strong>Laser</strong>, <strong>Energy levels</strong> and <strong>Modes</strong>; each preset opens the one it needs. The <strong>Laser</strong> view shows the cavity, a time trace, and output and inversion against pump power; the pump grip and the output mirror can be dragged. <strong>Switch on again</strong> restarts the laser with the pump just switched on.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Absorption vs stimulated emission.</strong> Walk through the three panels: absorption, spontaneous emission in a random direction, and stimulated emission of a copy travelling with the incoming photon. Ask Q1 here.</li>
+<li><strong>No laser without inversion.</strong> Drag the <strong>Temperature T</strong> up to 10⁵ K and watch <strong>Thermal N₂/N₁</strong> approach 1 but never pass it. Then drag <strong>Pump light, W/A₂₁</strong>: the pumped two level atom also stays below 1 (Q2, Q3).</li>
+<li><strong>Threshold.</strong> In the <strong>Laser</strong> view, drag the operating point along the output curve. Below threshold the output is only spontaneous emission, far too small to see; above it the output rises in a straight line while <strong>Inversion now, N/N_th</strong> stays at 1 (Q4).</li>
+<li><strong>Turning on: relaxation oscillations.</strong> The pump switches on at t = 0. Ask the class why nothing happens for the first 170 µs (Q5). Then the light overshoots in a train of spikes that ring down to the steady output. Press <strong>Switch on again</strong> to repeat.</li>
+<li><strong>Three level vs four level.</strong> Ruby in the same cavity, with Nd:YAG dashed. Compare the threshold readouts, then open <strong>Energy levels</strong> to see why (Q6).</li>
+<li><strong>Cavity modes of a He–Ne laser.</strong> A 30 cm cavity has modes every 500 MHz inside a gain curve about 1.5 GHz wide. Drag the comb (<strong>Fine change of L</strong>) and watch modes hop in and out; then shorten <strong>Mirror spacing L</strong> (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: a beam of light at the transition frequency passes through a gas of two level atoms, half of them in the upper level and half in the lower. Does the beam get brighter, dimmer, or stay the same? What if 60% are in the upper level?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> The He–Ne laser line is at 632.8 nm. Find the photon energy in eV and the ratio N₂/N₁ for neon atoms in thermal equilibrium at 300 K. At what temperature would N₂/N₁ = ½? Compare with the CO₂ line at 10.6 µm at 300 K. Check your values in <strong>Processes</strong>.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> A two level atom is pumped with light at its own transition frequency. Explain why N₂ can approach N₁ but never exceed it, however strong the pump. What would the medium do to a weak probe beam when N₂ ≈ N₁?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In <strong>Threshold</strong>, the Nd:YAG laser starts at about 1.07 W of absorbed pump power and gives 0.58 W of output at 2.14 W absorbed. Find the slope efficiency, ΔP_out/ΔP_abs. Explain why it is less than 1, using the pump and laser wavelengths (808 and 1064 nm) and the two cavity losses: the output mirror (R = 0.95) and 2% internal loss per round trip. Why does the inversion stop growing above threshold?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In <strong>Turning on: relaxation oscillations</strong>, the pump is switched on at twice threshold and the first spike appears about 170 µs later. The upper level lifetime is 230 µs. Without lasing, the inversion would rise as N(t) ≈ N_∞(1 − e^(−t/τ)) toward N_∞ ≈ 2N_th. Estimate when it crosses threshold. Why does the light then overshoot instead of rising smoothly to its steady value?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In <strong>Three level vs four level</strong>, the threshold inversion for ruby is about 9% of all Cr³⁺ ions. What fraction of the ions must be in the upper level at threshold? Why does Nd:YAG need almost none of its ions excited, and why does that make its threshold pump power several times lower?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> For the He–Ne cavity, find the mode spacing c/2L for L = 30 cm. With a gain curve 1.51 GHz wide (above threshold over its full width at half maximum), how many modes lase? How short must the cavity be for only one mode to fit? Check by changing <strong>Mirror spacing L</strong> and dragging <strong>Fine change of L</strong>.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Stimulated emission is a rare, special process."</strong> It has the same coefficient as absorption; it is hidden only because the lower level is so much more populated.</li>
+<li><strong>"The laser photons come from the pump light."</strong> The pump only fills the upper level. The laser photons are made by stimulated emission on another transition, at a longer wavelength.</li>
+<li><strong>"More pump power means more inversion."</strong> Above threshold the inversion is clamped at N_th, and the extra power goes into the beam.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li><strong>Processes:</strong> one transition with equal degeneracies (B₁₂ = B₂₁); the thermal ratio is the Boltzmann factor, and stimulated over spontaneous, 1/(e^(hν/kT) − 1), uses the Planck energy density. The pumped atom obeys dN₂/dt = W(N₁ − N₂) − A₂₁N₂ with kT ≪ hν. Animations are not to scale.</li>
+<li><strong>Laser:</strong> rate equations for the inversion N and the photon number q in one cavity mode of a uniform medium (no hole burning, no thermal effects); τ_c = t_rt/(−ln R − ln 0.98), N_th = 1/(Kτ_c), K = σc/(AL). Ideal four level Nd:YAG and three level ruby: pump bands and the Nd lower level empty instantly. 1 cm rod, 0.5 mm mode radius, 10 cm cavity, β = 10⁻⁹ of spontaneous emission into the mode. Real ruby lasers are flash pumped in pulses.</li>
+<li>The <strong>Relaxation oscillation</strong> readout is the linearized result about the steady state. The first large spikes in the trace are spaced more widely than its period (about 17 µs against 9.2 µs at twice threshold) and approach it only as they die down.</li>
+<li><strong>Modes:</strong> ν_q = qc/2L; the gain is a Gaussian of the Doppler width for neon at 400 K. Mode heights are illustrative; mode competition, hole burning and the Lamb dip are left out.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>History: Einstein introduced stimulated emission in 1916–1917; the ammonia maser ran in 1954 and Maiman's ruby laser, the first laser, in 1960.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

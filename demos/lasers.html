@@ -475,7 +475,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     thresh: { view: 'laser', med: 'nd', r: 1.6, R: 0.95, speed: 1e-4, steady: true,
       hint: 'Drag the operating point along the output curve, or the pump grip under the rod. Below threshold the output is only spontaneous emission, far too small to see; above it the output rises in a straight line while the inversion stays clamped at N<sub>th</sub>: gain equals loss.' },
     relax: { view: 'laser', med: 'nd', r: 2, R: 0.95, speed: 1e-4, steady: false,
-      hint: 'The pump switches on at t = 0. The inversion climbs past threshold before the light has built up from spontaneous emission, so the photons overshoot, empty the inversion below threshold and die back: the spikes ring down to the steady output. Their spacing matches the linearized frequency f<sub>R</sub>.' },
+      hint: 'The pump switches on at t = 0. The inversion climbs past threshold before the light has built up from spontaneous emission, so the photons overshoot, empty the inversion below threshold and die back: the spikes ring down to the steady output. The first spikes come farther apart; as they die down their spacing settles toward the linearized period 1/f<sub>R</sub>.' },
     three: { view: 'laser', med: 'ruby', r: 1.5, R: 0.95, speed: 1e-3, steady: false,
       hint: 'Ruby lases down to its ground state, so it must first excite half of all its ions just to reach zero inversion: the threshold pump power is about 8 times that of Nd:YAG in the same cavity (dashed curves), whose lower level is empty from the start. Compare the energy level diagrams.' },
     modes: { view: 'modes', L: 30, dL: 0, gain: 2,

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nuclear Binding Energy: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Nuclear Binding Energy</h1><ul class="meta"><li><a href="../demos/binding-energy.html">Open the demo</a></li><li>Modern physics; intro astronomy (stellar fusion)</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>The binding energy B is the energy needed to pull a nucleus apart into free protons and neutrons. It shows up as missing mass: B = [Z m(¹H) + N m_n − m(atom)]c², computed here from measured masses.</li>
+<li>B/A rises steeply through the light nuclei, peaks at about 8.8 MeV near iron and nickel, and falls slowly to 7.6 MeV for uranium. Any reaction that moves nucleons toward the peak releases energy: fusion from the left, fission from the right.</li>
+<li>The energy released, Q, equals the binding energy gained (when the number of protons and neutrons is unchanged). A change of about 1 MeV per nucleon is a million times the energy per atom of chemistry.</li>
+<li>The liquid drop model explains the shape: every nucleon binds to its neighbors (volume), minus losses for nucleons at the surface, for proton repulsion, and for an excess of neutrons over protons.</li>
+<li>Nuclei with 2, 8, 20, 28, 50, 82 or 126 protons or neutrons are bound more tightly than the smooth model predicts: closed shells.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know E = mc², 1 u = 931.494 MeV/c², and Z, N and A. The demo uses mass excesses Δ = (M − A u)c², so B = ZΔ(¹H) + NΔ(n) − Δ(A, Z). Views: <strong>Curve</strong>, <strong>Liquid drop</strong>, <strong>Shell effects</strong> and <strong>Chart</strong>. Click a dot to select a nuclide; the <strong>Mass number A</strong> slider picks the most tightly bound nuclide of that A.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>The curve of binding energy.</strong> Ask Q1 first. Each dot is a measured nuclide, blue if stable or found in nature. Click ⁴He, ¹²C and ¹⁶O: they sit above their neighbors. Point out the peak at ⁶²Ni (8.795 MeV) and the slow fall to uranium.</li>
+<li><strong>Fusion: D + T.</strong> The reaction arrow runs from two loosely bound nuclei up to ⁴He. Read <strong>Q from the masses</strong> (17.589 MeV) and <strong>Energy per kg of fuel</strong> (Q2, Q3).</li>
+<li><strong>Fission of uranium 235.</strong> The arrow runs from uranium up to the fragments. Q is 173 MeV at once, about ten times the D + T value per reaction, but less per kilogram (Q4).</li>
+<li><strong>The liquid drop model.</strong> Start with only <strong>Volume</strong> checked, then add <strong>Surface</strong>, <strong>Coulomb</strong>, <strong>Asymmetry</strong> and <strong>Pairing</strong> one at a time, and watch the model curve take the shape of the data. Ask the prediction in Q5 before removing the Coulomb term. <strong>Fit to AME2020</strong> shows how good five numbers can be.</li>
+<li><strong>Why iron is the end of the line.</strong> Near the peak, compare <strong>B/A measured</strong> and <strong>Mass per nucleon M/A</strong> for ⁶²Ni, ⁵⁸Fe and ⁵⁶Fe: the order is not the same (Q6).</li>
+<li><strong>Magic numbers.</strong> Measured B minus the fitted drop, against N, then <strong>Against Z</strong>. The spikes sit at the magic numbers; ²⁰⁸Pb is doubly magic (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: B/A for ²H is 1.1 MeV, for ⁴He 7.1 MeV, for ⁵⁶Fe 8.8 MeV and for ²³⁵U 7.6 MeV. Which of these releases energy: fusing two light nuclei, splitting a uranium nucleus, fusing two iron nuclei, splitting an iron nucleus? Explain using the shape of the curve.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> The mass excesses are Δ(¹H) = 7.289 MeV, Δ(n) = 8.071 MeV and Δ(⁴He) = 2.425 MeV. Find the binding energy of ⁴He and its B/A. What fraction of the mass of two hydrogen atoms and two neutrons disappears when they form one ⁴He atom? Check with the demo.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> For D + T → ⁴He + n, the mass excesses are Δ(²H) = 13.136 MeV and Δ(³H) = 14.950 MeV (with the values in Q2). Find Q. The deuterium and tritium are nearly at rest; how is Q shared between the neutron and the alpha particle, and why?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Uranium sits at 7.59 MeV per nucleon, and the fragments ¹⁴¹Ba and ⁹²Kr at about 8.33 and 8.51 MeV. Estimate the energy released in ²³⁵U + n → ¹⁴¹Ba + ⁹²Kr + 3n from these numbers. Why does fission release about ten times more energy per reaction than D + T, but D + T about five times more per kilogram of fuel?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Predict, then check in <strong>Liquid drop</strong>: if protons did not repel each other (turn off the <strong>Coulomb</strong> term), what would the model curve of B/A do at large A? What does your answer say about why heavy nuclei can fission at all?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> ⁶²Ni has the highest binding energy per nucleon, yet ⁵⁶Fe has the lowest mass per nucleon of any nucleus. Explain how both can be true. Use the <strong>Mass per nucleon M/A</strong> readout for both.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In <strong>Magic numbers</strong>, ²⁰⁸Pb (Z = 82, N = 126) is bound about 10 MeV more tightly than the fitted liquid drop. What does it mean for a nucleus to have a closed shell, and what is the chemical analogy? Find one more nuclide on the plot with an unusually large positive value and check whether its Z or N is magic.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Binding energy is energy stored in the nucleus that comes out in reactions."</strong> It is energy the nucleus does not have: the energy you must supply to take it apart. A more tightly bound nucleus has less mass, and the difference is what is released.</li>
+<li><strong>"Iron releases the most energy."</strong> Iron is the end point: nothing is gained by fusing or splitting nuclei near the peak.</li>
+<li><strong>"Fission releases energy because uranium is unstable."</strong> It releases energy because the fragments are bound about 0.7 MeV per nucleon more tightly.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Masses: AME2020 ground state mass excesses (2550 nuclides with measured masses; values estimated from systematics are left out). B = ZΔ(¹H) + NΔ(n) − Δ(A, Z). Atomic masses count the electrons with the protons, so the electrons' own binding (at most 0.8 MeV for uranium, 0.04%) is left in B.</li>
+<li>Q = Σ Δ(before) − Σ Δ(after) for nuclei at rest in their ground states. For D + T, fission and triple alpha, Q equals the binding energy gained. For the pp chain, two protons become neutrons, so Q is less than the binding of ⁴He by 2(m_n − m_H)c² = 1.565 MeV.</li>
+<li>Fission uses one fragment pair; real fission gives a spread of pairs, and later beta decays bring the total to about 200 MeV.</li>
+<li>Liquid drop: B = a_V A − a_S A^(2/3) − a_C Z(Z−1)/A^(1/3) − a_A(N−Z)²/A ± a_P/A^(1/2), with the textbook values a_V = 15.75, a_S = 17.8, a_C = 0.711, a_A = 23.7, a_P = 11.18 MeV, or a least squares fit to every measured nucleus with A ≥ 16. The model curve follows its own valley of stability Z(A) and leaves out pairing; it is poor for light nuclei (dashed below A = 16).</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: from the masses, Q for 4 ¹H → ⁴He is 26.73 MeV but the binding energy of ⁴He is 28.30 MeV. Explain the difference, then estimate how many kilograms of hydrogen the Sun turns into helium each second from its luminosity, 3.8 × 10²⁶ W.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

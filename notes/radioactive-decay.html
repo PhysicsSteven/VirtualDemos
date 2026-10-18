@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radioactive Decay: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Radioactive Decay</h1><ul class="meta"><li><a href="../demos/radioactive-decay.html">Open the demo</a></li><li>Modern physics; PHYS 202 (exponential decay, as in RC circuits)</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Each nucleus has the same fixed chance per unit time of decaying, λ, whatever its age. Which nucleus goes next is pure chance.</li>
+<li>A large sample therefore follows N(t) = N₀e^(−λt) = N₀(½)^(t/T½), with T½ = ln 2/λ = 0.693τ and the activity A = λN falling the same way.</li>
+<li>The spread about the expected count is about √N (σ = √(N₀f(1 − f))), so the relative scatter falls as 1/√N: a large sample is as predictable as a clock.</li>
+<li>The age of a sample follows from the fraction left: t = (T½/ln 2) ln(N₀/N). This is the basis of carbon 14 dating.</li>
+<li>In a chain the daughter grows while the parent feeds it. It peaks when the two activities are equal, and if it is the shorter lived of the two its activity settles to track the parent's.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know exponentials and logarithms; the RC discharge in PHYS 202 is the same mathematics. Parents are filled squares, daughters circles, stable end products small dots. The N(t) plot has <strong>Linear</strong> and <strong>Log</strong> scales. Each run is a new random sample; <strong>Earlier runs</strong> keeps up to three as ghosts.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Coin flip nuclei.</strong> 400 parents, each flipping a fair coin every step. Ask Q1 before pressing <strong>Step</strong>. Step three times and compare <strong>Remaining N/N₀</strong> with <strong>Expected e^(−λt)</strong> and the <strong>Off by</strong> readout in units of σ.</li>
+<li><strong>Nuclei: 100, then 10,000.</strong> Press <strong>Reset</strong> a few times at each size and compare the ghosts with the ±1σ band (Q5). The relative spread shrinks as 1/√N.</li>
+<li><strong>Follow a nucleus.</strong> Click one in the grid, or press <strong>Follow one</strong>, and run. Nobody can say when it will go. Read <strong>Parents alive one half life ago that are still alive</strong>: about half, whatever their age (Q2).</li>
+<li><strong>Carbon 14 dating.</strong> Switch the N(t) plot to <strong>Log</strong>: a straight line. Do the <strong>Carbon dating task</strong> together, then press <strong>New sample</strong> and let students work one alone (Q3).</li>
+<li><strong>Iodine 131.</strong> The activity histogram falls with the same 8 day half life as N. After 10 half lives, about 80 days, 1/1024 of the activity is left (Q4).</li>
+<li><strong>Two step chain.</strong> Bismuth 210 (5.0 d) feeds polonium 210 (138 d). Ask when the polonium will peak before running (Q6).</li>
+<li><strong>Short daughter, long parent.</strong> Tellurium 132 (76.9 h) feeds iodine 132 (2.3 h). On the log scale the two lines become parallel; read the activity ratio (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: 400 coin flip nuclei each decay with probability ½ per step. How many do you expect to be left after one step, and after three? Will exactly that many be left? How large a difference from the expected count would surprise you?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> A nucleus with a half life of 5730 years has already survived 3 half lives. What is the chance it decays within the next 5730 years? Use the <strong>Parents alive one half life ago that are still alive</strong> readout to check your answer late in a run, when the survivors are old.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> A piece of charcoal has 18.0% of the carbon 14 of a living sample. Using T½ = 5730 yr, how old is it? About how many half lives is that? The method assumes something about the atmosphere in the past; what?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Iodine 131 has a half life of 8.03 days. What fraction of a dose is left after 30 days? What is its mean life τ? Why is the activity in a patient's thyroid in practice lower than this calculation says?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> With 100 nuclei and with 10,000 nuclei, what relative spread σ/N do you expect in the number of parents left after one half life? Check with the <strong>Expected spread σ/N</strong> readout and with several runs. Why can a physicist predict the activity of a gram of radium very precisely but not the decay time of one nucleus?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In <strong>Two step chain</strong>, ²¹⁰Bi (T½ = 5.01 d) decays to ²¹⁰Po (T½ = 138 d). Explain why the number of polonium nuclei rises, peaks and then falls. Show that at the peak the two activities are equal. Then check: when does the demo say the peak occurs?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In <strong>Short daughter, long parent</strong>, ¹³²Te (76.9 h) feeds ¹³²I (2.30 h). After a day or so the iodine activity settles at about 1.03 times the tellurium activity. Explain why it tracks the parent, and find the ratio of the numbers of nuclei N_I/N_Te in that state.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"After two half lives everything is gone."</strong> Half of what is left goes in each half life: a quarter remains after two, an eighth after three.</li>
+<li><strong>"An old nucleus is due to decay."</strong> Nuclei do not age. A survivor of many half lives has exactly the same chance of decaying in the next half life, 50%, as a fresh one.</li>
+<li><strong>"The half life means each nucleus lives T½."</strong> Individual lifetimes are spread from almost zero to many half lives; the mean life is τ = T½/ln 2 = 1.44 T½, longer than the half life.</li>
+<li><strong>"Radioactive decay is perfectly regular."</strong> Only on average. For small samples the count wanders by about √N about the curve.</li>
+<li><strong>"A daughter can never have more activity than its parent."</strong> In transient equilibrium the daughter's activity is slightly greater, by λ_D/(λ_D − λ_P); with a long lived daughter, its activity exceeds the parent's after the peak.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Each step of length Δt, every nucleus draws one random number and changes with the exact probability for that time, p = 1 − e^(−λΔt). For the coin preset Δt = T½ = 1 step, so p = ½; other half lives give p = 1 − 2^(−1/T½).</li>
+<li>For a chain the step uses the Bateman probabilities, so a parent can pass through the daughter within one step. N_D(t) = N₀ λ_P/(λ_D − λ_P)(e^(−λ_P t) − e^(−λ_D t)); the daughter peaks at t = ln(λ_D/λ_P)/(λ_D − λ_P).</li>
+<li>The ±1σ band is σ = √(N₀f(1 − f)) with f the expected fraction (a binomial spread).</li>
+<li>Half lives are evaluated values: ¹⁴C uses the conventional 5730 yr (the current evaluation is 5700 ± 30 yr, and radiocarbon labs quote ages with Libby's 5568 yr and then calibrate). The ¹³¹ᵐXe branch of ¹³¹I and a tiny α branch of ²¹⁰Bi are left out. The dating method assumes a constant atmospheric ¹⁴C level; real dates use a calibration curve.</li>
+<li>A followed nucleus's age is taken at the middle of the step in which it decays. In the real nuclide presets the steps are short and the <strong>Mean age at decay</strong> tends to τ. In <strong>Coin flip nuclei</strong> decays can only happen once per whole step, so the mean tends to 1.5 steps rather than τ = 1.44 steps: a discrete process is not quite exponential decay.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: the activity of a sample falls from 800 to 50 counts per minute in 12 hours. Find the half life and predict the count rate after 18 hours.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

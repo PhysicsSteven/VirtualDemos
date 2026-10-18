@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Franck–Hertz Experiment: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Franck–Hertz Experiment</h1><ul class="meta"><li><a href="../demos/franck-hertz.html">Open the demo</a></li><li>Modern physics; Modern Physics Lab (pre-lab and analysis)</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>An electron can give a mercury atom only one fixed amount of energy, 4.89 eV (the 6³P₁ level), or nothing. Below that energy the collisions are elastic and the electron keeps almost all its energy.</li>
+<li>The current falls each time the electrons reach 4.89 eV just before G2: they lose it and can no longer climb the small retarding voltage U_r to the collector. Every 4.9 V more leaves room for one more excitation, so the maxima are evenly spaced.</li>
+<li>The spacing measures the excitation energy; the positions do not, because the contact potential and the electrons' starting energies shift every peak by the same amount.</li>
+<li>The excited atom emits one photon of hc/4.89 eV = 253.7 nm: the energy lost in collisions is the energy seen in the spectrum.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the electron volt and the idea of discrete energy levels. The panels show the tube (cathode K, grids G1 and G2, collector A), the electron energy across the gap G1 to G2, the current against U, and the mercury levels. The controls match the lab apparatus: <strong>Oven temperature</strong>, the ramp of <strong>Accelerating voltage U (G2)</strong>, <strong>Retarding voltage U_r</strong> and a nanoamp current amplifier. As a pre-lab it shows what the oscilloscope or data logger trace means.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Mercury tube at 180 °C.</strong> Ask Q1 before the sweep starts. In the energy panel each electron climbs a straight line and drops by exactly 4.887 eV wherever it excites an atom.</li>
+<li><strong>Stop in a dip.</strong> Drag the U cursor on the current plot to about 8 V: <strong>Excitations per electron</strong> is close to 1 and the current is near its minimum. At 10.7 V the electrons regain enough energy after one excitation, and the current is back at a maximum (Q3).</li>
+<li><strong>Measure the peak spacing.</strong> <strong>Mark peaks</strong> is on. Click each maximum in order; with all six, the fit gives about 4.84 to 4.86 ± 0.03 eV. Compare with <strong>NIST: 6³P₁ level</strong> (Q2).</li>
+<li><strong>Why the first peak is not at 4.9 V.</strong> The dashed lines at n × 4.89 V miss every peak by about the same amount. Drag <strong>Contact potential U_c</strong> to 0 and back: the curve slides, the spacing does not (Q4).</li>
+<li><strong>Too cold: few collisions</strong>, then <strong>Too hot: weak current.</strong> Compare each with the dashed 180 °C ghost and read the mean free path and the fraction not scattered out of the beam (Q5, Q6).</li>
+<li><strong>Retarding voltage.</strong> Ask the prediction in Q3, then set U_r to 0 at 180 °C and press <strong>New sweep</strong>. The maxima vanish.</li>
+<li><strong>Neon: glowing layers</strong> (if time allows). The 18.7 eV excitations are followed by visible red and orange light, so the collision zones show up as glowing layers (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: U is raised slowly from 0 to 35 V. Sketch the collector current you expect if mercury atoms could absorb any amount of energy from an electron, and then the current you expect if they can absorb only 4.89 eV at a time.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> At 180 °C the maxima lie at 6.04, 10.75, 15.60, 20.47, 25.35 and 30.26 V. Find the five spacings and the average spacing. What energy does one excitation take, and what wavelength should the excited atoms emit? Compare with the 253.7 nm mercury line.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Predict, then check: what happens to the maxima if the retarding voltage U_r is set to 0? Use your answer to explain why the current is smallest just after each maximum.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> The first maximum is at about 6.0 V, not 4.89 V. Give the main reason all the peaks are shifted, and explain why the spacing is not. Then set U_c to 0 and to 4 V, sweep each time, and record where the first maximum falls.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> At 180 °C the vapor pressure is 11.7 hPa. Find n = p/kT and the mean free path to an excitation, λ = 1/nσ, with the demo's σ = 1.7 × 10⁻¹⁹ m². With U = 20 V and U_c = 2 V across the 8 mm gap, how much energy does an electron gain over one mean free path? Repeat for 120 °C (p = 1.01 hPa) and explain why the dips fill in when the tube is too cold.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> At 210 °C the dips are as deep as at 180 °C, yet the whole curve is about three times weaker. Where are the missing electrons? Support your answer with the <strong>Electrons not scattered out of the beam</strong> readout at the three temperatures.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In neon the electrons excite levels near 18.7 eV, which then emit red and orange light. At U = 80 V, how many glowing layers do you expect between G1 and G2, and roughly where? Why does a mercury tube show no such glow?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The current drops because the atoms absorb the electrons."</strong> The electrons keep going; having lost 4.89 eV they cannot cross the retarding field to the collector.</li>
+<li><strong>"The first peak should be at 4.9 V."</strong> The electrons gain e(U − U_c) and start with energy of their own, so every peak is shifted. Only the spacing carries the atomic energy.</li>
+<li><strong>"Hotter is always better."</strong> Denser vapor gives sharper dips but scatters more electrons out of the beam, so the current sinks into the noise.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Electrons start with thermal energy (1100 K cathode) plus a 0.5 eV spread, and gain e(U − U_c)x/L over L = 8 mm (5 mm for neon). Above 4.887 eV an electron excites an atom after a random distance with mean λ = 1/nσ_x and loses exactly that energy; σ_x is effective, since elastic collisions make the real path zigzag. The ³P₀ and ³P₂ levels and ionization are left out.</li>
+<li>Elastic collisions are left out of the energy but kept in two ways: electrons reach G2 in random directions, so one with energy E passes U_r with chance 1 − eU_r/E, and a fraction e^(−nσ_sL) is scattered out of the beam.</li>
+<li>n = p/kT from the measured vapor pressure of mercury at the oven temperature. Neon is a sealed 10 hPa fill, excited to its 2p⁵3p levels (18.38 to 18.97 eV).</li>
+<li>The current entering the gap rises with U (space charge, then the control grid). This rising baseline pulls each maximum slightly to higher U, most for the first, so a fit through all six peaks comes out a little below 4.887 eV. Amplifier noise is 0.02 nA; the fit uses a reading uncertainty of ±0.1 V per peak.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Lab connection: the same analysis applies to the real trace. Let the oven settle, choose U_r and the temperature for clear maxima without a discharge (a tube too cold for its voltage can strike a glow discharge; turn U down at once), locate the maxima or the often sharper minima, and fit U_n against n. Report ΔE with its uncertainty, the intercept and λ = hc/ΔE, and compare a fit with and without the first peak.</li>
+<li>History: Franck and Hertz published in 1914 and shared the 1925 Nobel Prize. They first read 4.9 V as the ionization energy of mercury; it was soon understood as the first excitation energy, direct evidence for Bohr's discrete levels.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>
