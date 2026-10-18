@@ -1298,10 +1298,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (on) document.documentElement.setAttribute('data-projector', 'on');
     else document.documentElement.removeAttribute('data-projector');
     projBtn.setAttribute('aria-pressed', String(on));
-    try { localStorage.setItem('virtualdemos.projector', on ? 'on' : 'off'); } catch (_) {}
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
   }
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
-  try { if (localStorage.getItem('virtualdemos.projector') === 'on') setProjector(true); } catch (_) {}
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
 
   // theme changes
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', schedule); } catch (_) {}

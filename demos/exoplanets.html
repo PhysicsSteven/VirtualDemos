@@ -1041,10 +1041,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function setProjector(on) {
     if (on) root.setAttribute('data-projector', 'on'); else root.removeAttribute('data-projector');
     $('proj').setAttribute('aria-pressed', String(on));
-    try { localStorage.setItem('virtualdemos.projector', on ? 'on' : 'off'); } catch (_) {}
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
   }
   $('proj').addEventListener('click', () => setProjector(root.getAttribute('data-projector') !== 'on'));
-  try { if (localStorage.getItem('virtualdemos.projector') === 'on') setProjector(true); } catch (_) {}
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
 
   // theme changes
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', schedule); } catch (_) {}
