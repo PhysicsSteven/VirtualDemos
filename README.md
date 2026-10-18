@@ -28,6 +28,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Rutherford Scattering](demos/rutherford.html) | Modern physics | Alpha trajectories past a nucleus, counts against the Rutherford formula, closest approach, and the plum pudding model for contrast |
 | [Photoelectric Effect](demos/photoelectric.html) | Modern physics | Photon energy, work function, stopping voltage, and measuring Planck's constant |
 | [Nuclear Binding Energy](demos/binding-energy.html) | Modern physics | Binding energy per nucleon from AME2020 masses, the semi-empirical mass formula, fusion and fission Q values, shell effects, chart of nuclides |
+| [Compton Scattering](demos/compton.html) | Modern physics | Exact relativistic photon electron kinematics, the momentum triangle, Klein-Nishina angular distribution and the recoil electron spectrum with its edge |
 | [Projectile Range](demos/projectile-drag.html) | Mechanics | Projectile motion with and without quadratic air drag |
 | [Hanging Chains and Arches](demos/catenary.html) | Mechanics | The catenary under its own weight vs a parabola, tension and free body diagrams along the chain, and the inverted arch |
 | [Springs and Oscillations](demos/springs.html) | Mechanics | Simple harmonic motion, hanging springs, damping regimes, driven resonance and coupled normal modes and beats |
