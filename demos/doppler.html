@@ -1,0 +1,1217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+<title>Doppler Effect and Shock Waves</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one canvas with the wavefront view on top and a strip below (what the observer hears, or for light the f′/f plot and the spectrum); instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --wave: #3f5b78;
+  --obs: #17855f;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --wave: #9fb7d2; --obs: #4fd1a0; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --wave: #9fb7d2; --obs: #4fd1a0; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#can { touch-action: none; outline: none; }
+#can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .list dd { font-size: 0.88rem; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
+
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.wave { border-color: var(--wave); }
+.swatch.cone { border-color: var(--pos); border-top-width: 3px; }
+.swatch.ret { border-color: var(--muted); border-top-style: dashed; }
+.swatch.track { border-color: var(--accent); border-top-width: 3px; }
+.swatch.rev { border-color: var(--equi); border-top-style: dashed; border-top-width: 3px; }
+.swatch.rel { border-color: var(--neg); border-top-width: 3px; }
+.swatch.relr { border-color: var(--pos); border-top-width: 3px; }
+.swatch.cls { border-color: var(--muted); border-top-style: dashed; border-top-width: 2px; }
+.swatch.tr { border-color: var(--equi); border-top-width: 3px; }
+.swatch.dot { width: 10px; height: 10px; border: 0; border-radius: 50%; margin: 0 6px; background: var(--pos); }
+.swatch.odot { width: 10px; height: 10px; border: 0; border-radius: 2px; margin: 0 6px; background: var(--obs); }
+
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 86vh; min-height: 640px; }
+  .rail { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Doppler Effect and Shock Waves</h1>
+      <p>A moving source crowds its wavefronts ahead and stretches them behind, so the observer hears a different pitch. Faster than sound, the fronts pile into a Mach cone. For light, relativity adds time dilation.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">sound: m, s, Hz, v = 343 m/s · light: light seconds, c = 299 792 km/s</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="Kind of wave">
+          <button type="button" id="mSound" aria-pressed="true">Sound</button>
+          <button type="button" id="mLight" aria-pressed="false">Light</button>
+        </div>
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="restart">Restart</button>
+        <button type="button" class="btn" id="audio" aria-pressed="false">Sound off</button>
+        <span class="count mono" id="count" aria-live="off"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="Wavefronts spreading from a moving source, with an observer. Below, the frequency the observer receives over time; for light, a plot of received over emitted frequency against speed, and the spectrum. Drag the source or the observer to move them, and drag the round grip at the tip of an arrow to set that velocity. Keys: arrows move the selected object, N selects the other object, plus and minus change its speed, brackets turn its direction, space plays or pauses, R restarts, L switches between sound and light."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="ambulance" aria-pressed="true">Ambulance passing</button>
+          <button type="button" data-p="observer" aria-pressed="false">Source at rest, observer moving</button>
+          <button type="button" data-p="mach1" aria-pressed="false">Mach 1: the sound barrier</button>
+          <button type="button" data-p="jet" aria-pressed="false">Supersonic jet: Mach cone</button>
+          <button type="button" data-p="redshift" aria-pressed="false">Redshift and blueshift</button>
+          <button type="button" data-p="transverse" aria-pressed="false">Transverse Doppler</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Source</h2>
+        <div>
+          <div class="slider-head"><label for="spd" id="spdLab">Mach number v<sub>s</sub>/v</label><output id="spdOut" class="mono" for="spd"></output></div>
+          <input type="range" id="spd" min="0" max="2.5" step="0.001" value="0.087">
+        </div>
+        <div>
+          <div class="slider-head"><label for="dir">Direction</label><output id="dirOut" class="mono" for="dir"></output></div>
+          <input type="range" id="dir" min="0" max="359" step="1" value="0">
+        </div>
+        <div id="fRow">
+          <div class="slider-head"><label for="frq">Emitted frequency f</label><output id="frqOut" class="mono" for="frq"></output></div>
+          <input type="range" id="frq" min="100" max="1500" step="10" value="700">
+        </div>
+        <div id="lamRow" hidden>
+          <div class="slider-head"><label for="lam">Emitted wavelength λ</label><output id="lamOut" class="mono" for="lam"></output></div>
+          <input type="range" id="lam" min="350" max="800" step="0.1" value="656.3">
+          <div class="chips" id="lines" role="group" aria-label="Spectral lines" style="margin-top:8px">
+            <button type="button" data-l="656.3" aria-pressed="true">H-alpha 656.3</button>
+            <button type="button" data-l="486.1" aria-pressed="false">H-beta 486.1</button>
+            <button type="button" data-l="589.0" aria-pressed="false">Na 589.0</button>
+          </div>
+        </div>
+        <p class="hint" id="srcHint">Drag the source to move it, and the grip at the tip of its arrow to set its velocity. The arrow shows how far it moves in the time printed on the drawing.</p>
+      </section>
+
+      <section id="obsSec">
+        <h2>Observer</h2>
+        <div>
+          <div class="slider-head"><label for="ospd">Speed v<sub>o</sub>/v</label><output id="ospdOut" class="mono" for="ospd"></output></div>
+          <input type="range" id="ospd" min="0" max="0.9" step="0.001" value="0">
+        </div>
+        <div>
+          <div class="slider-head"><label for="odir">Direction</label><output id="odirOut" class="mono" for="odir"></output></div>
+          <input type="range" id="odir" min="0" max="359" step="1" value="0">
+        </div>
+        <p class="hint">The air is at rest. Only for sound does it matter which one moves: the medium picks out a frame.</p>
+      </section>
+
+      <section id="recSound">
+        <h2>What the observer hears</h2>
+        <dl class="readout">
+          <div class="wide big"><dt>Received frequency f′</dt><dd id="rF">—</dd></div>
+          <div><dt>f′/f</dt><dd id="rRatio">—</dd></div>
+          <div><dt>Angle θ at emission</dt><dd id="rTh">—</dd></div>
+          <div class="wide"><dt>This sound left the source</dt><dd id="rAgo" class="list">—</dd></div>
+          <div class="wide" id="coneRow"><dt>Mach cone half angle, sin θ<sub>c</sub> = v/v<sub>s</sub></dt><dd id="rCone">—</dd></div>
+        </dl>
+        <p class="formula" id="rForm"></p>
+        <p class="hint">f′ = f (v − v<sub>o</sub>·n̂)/(v − v<sub>s</sub>·n̂), where n̂ points from where the source was when it emitted this sound to where the observer is now. For an observer at rest this is f′ = f/(1 − (v<sub>s</sub>/v) cos θ). The dashed line on the drawing is that path.</p>
+      </section>
+
+      <section id="recLight" hidden>
+        <h2>What the observer sees</h2>
+        <dl class="readout">
+          <div class="big"><dt>Received λ′</dt><dd id="lLam">—</dd></div>
+          <div class="big"><dt>z = λ′/λ − 1</dt><dd id="lZ">—</dd></div>
+          <div><dt>f′/f, relativistic</dt><dd id="lRel">—</dd></div>
+          <div><dt>Classical 1/(1 − β cos θ)</dt><dd id="lCls">—</dd></div>
+          <div><dt>Angle θ at emission</dt><dd id="lTh">—</dd></div>
+          <div><dt>γ = 1/√(1 − β²)</dt><dd id="lGam">—</dd></div>
+          <div class="wide"><dt>Radial velocity v<sub>r</sub> = −v·n̂ (+ means receding)</dt><dd id="lVr">—</dd></div>
+          <div class="wide"><dt>If this were a galaxy: d ≈ cz/H<sub>0</sub>, H<sub>0</sub> = 70 km/s/Mpc</dt><dd id="lHub" class="list">—</dd></div>
+        </dl>
+        <p class="formula" id="lForm"></p>
+        <p class="hint">f′ = f/(γ(1 − β cos θ)), θ measured in the observer's frame between the velocity and the line to the observer. Head on this is √((1 + β)/(1 − β)); across the line of sight (θ = 90°) it is 1/γ, a redshift from time dilation alone. For small speeds z ≈ v<sub>r</sub>/c: a star receding at 30 km/s shifts H-alpha by only 0.066 nm.</p>
+        <p class="hint">Hubble's law v = H<sub>0</sub>d, with v = cz, holds only for z ≪ 1 (roughly z below 0.1). Larger galaxy redshifts come from the expansion of space and need a cosmological model, not this formula.</p>
+      </section>
+
+      <section>
+        <h2>Time</h2>
+        <div>
+          <div class="slider-head"><label for="tsp">Playback speed</label><output id="tspOut" class="mono" for="tsp"></output></div>
+          <input type="range" id="tsp" min="0" max="7" step="1" value="5">
+        </div>
+        <p class="hint" id="ringHint"></p>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint" id="modelSound">Point source in still, uniform air (v = 343 m/s at 20 °C). Each drawn circle is one crest, centered where the source was when it emitted it. The received frequency comes from that geometry: the program finds the emission time whose crest is reaching the observer now. Loudness falls off as 1/r in the audio but is not drawn. A real aircraft is not a point: its nose and tail shocks give two booms close together.</p>
+        <p class="hint" id="modelLight" hidden>Special relativity, in the observer's frame. Light needs no medium and travels at c in every frame. The source's clock runs slow by γ, so it emits crests γ times less often than it would at rest; the rest is the same crowding as for sound. Colors are approximate screen colors; outside 380 to 750 nm the light is drawn gray.</p>
+        <div class="key" id="keySound">
+          <span><i class="swatch dot"></i>Source</span>
+          <span><i class="swatch odot"></i>Observer</span>
+          <span><i class="swatch wave"></i>Crests (wavefronts)</span>
+          <span><i class="swatch ret"></i>Path of the sound reaching the observer now</span>
+          <span><i class="swatch cone"></i>Mach cone (shock)</span>
+          <span><i class="swatch track"></i>Received f′ over time</span>
+          <span><i class="swatch rev"></i>Second sound inside the cone, heard backward</span>
+        </div>
+        <div class="key" id="keyLight" hidden>
+          <span><i class="swatch rel"></i>Relativistic, approaching head on</span>
+          <span><i class="swatch relr"></i>Relativistic, receding head on</span>
+          <span><i class="swatch cls"></i>Classical moving source, 1/(1 ∓ β)</span>
+          <span><i class="swatch tr"></i>Transverse, 1/γ</span>
+        </div>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const V_AIR = 343;              // m/s, sound in dry air at 20 °C
+  const C_KMS = 299792.458;       // km/s
+  const H0 = 70;                  // km/s per Mpc, a round value
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1];
+  // Classical Doppler factor f′/f in a still medium with wave speed v.
+  // n: unit vector from the source at emission toward the observer at reception; vs, vo: velocities.
+  const soundFactor = (v, n, vs, vo) => (v - dot(n, vo)) / (v - dot(n, vs));
+  const gammaOf = (b) => 1 / Math.sqrt(1 - b * b);
+  // Relativistic Doppler factor f′/f, θ between the source velocity and n in the observer's frame
+  const lightFactor = (beta, cosTh) => Math.sqrt(1 - beta * beta) / (1 - beta * cosTh);
+  const lineOfSight = (beta) => Math.sqrt((1 + beta) / (1 - beta));   // approaching for β > 0
+  const coneHalfAngle = (M) => (M >= 1 ? Math.asin(1 / M) : NaN);
+  // Source history as breakpoints {t, x, y, vx, vy}: from t until the next breakpoint (the last one: until now)
+  // the source moves in a straight line with velocity (vx, vy).
+  function srcAt(H, t) {
+    let lo = 0, hi = H.length - 1;
+    if (t <= H[0].t) { const p = H[0]; return [p.x + p.vx * (t - p.t), p.y + p.vy * (t - p.t), p.vx, p.vy]; }
+    while (lo < hi) { const m = (lo + hi + 1) >> 1; if (H[m].t <= t) lo = m; else hi = m - 1; }
+    const p = H[lo]; return [p.x + p.vx * (t - p.t), p.y + p.vy * (t - p.t), p.vx, p.vy];
+  }
+  // Every emission time t_e ≤ t whose wavefront reaches the point (ox, oy) at time t:
+  // v (t − t_e) = |r_o − r_s(t_e)|. On each straight piece this is a quadratic in t_e, solved exactly.
+  function retarded(H, ox, oy, t, v) {
+    const out = [];
+    for (let i = H.length - 1; i >= 0; i--) {
+      const p = H[i], tr = i + 1 < H.length ? Math.min(t, H[i + 1].t) : t;   // end of this piece
+      const span = i === 0 ? Infinity : tr - p.t;
+      if (span < 0) continue;
+      // measured back from the end of the piece: r_s = P − V w, t_e = tr − w, w ≥ 0 (no large numbers cancel)
+      const Px = p.x + p.vx * (tr - p.t), Py = p.y + p.vy * (tr - p.t);
+      const Dx = ox - Px, Dy = oy - Py, Tp = t - tr, V2 = p.vx * p.vx + p.vy * p.vy;
+      // v²(Tp + w)² = |D + V w|²
+      const A = v * v - V2, B = 2 * (v * v * Tp - (Dx * p.vx + Dy * p.vy)), C = v * v * Tp * Tp - (Dx * Dx + Dy * Dy);
+      const ws = [];
+      if (Math.abs(A) < 1e-12 * v * v) { if (B !== 0) ws.push(-C / B); }
+      else {
+        const disc = B * B - 4 * A * C;
+        if (disc >= 0) { const q = -0.5 * (B + (B >= 0 ? 1 : -1) * Math.sqrt(disc)); if (q !== 0) { ws.push(q / A); const w2 = C / q; if (Math.abs(w2 - q / A) > 1e-12 * (1 + Math.abs(w2))) ws.push(w2); } else ws.push(0); }
+      }
+      for (const w of ws) {
+        // a breakpoint belongs to the later piece; the newest piece includes w = 0 (emitted just now)
+        if (!(w >= 0 && (w > 0 || i === H.length - 1 || tr === t) && w <= span)) continue;
+        if (Tp + w < 0) continue;
+        const x = Px - p.vx * w, y = Py - p.vy * w;
+        out.push({ te: tr - w, x, y, vx: p.vx, vy: p.vy, R: Math.hypot(ox - x, oy - y) });
+      }
+    }
+    out.sort((a, b) => b.te - a.te);
+    return out;
+  }
+  // Received frequency ratio for each arriving wave. light: v = c and the observer is at rest.
+  function received(H, ox, oy, t, v, vo, light) {
+    return retarded(H, ox, oy, t, v).map((r) => {
+      const n = r.R > 0 ? [(ox - r.x) / r.R, (oy - r.y) / r.R] : [1, 0];
+      const vs = [r.vx, r.vy], sp = Math.hypot(r.vx, r.vy);
+      const cosTh = sp > 0 ? dot(n, vs) / sp : 1;
+      const k = light ? lightFactor(sp / v, cosTh) : soundFactor(v, n, vs, vo);
+      return Object.assign(r, { n, cosTh, k });
+    });
+  }
+  // Approximate screen color of a wavelength in nm (after Bruton); null outside 380 to 750 nm.
+  function waveRGB(nm) {
+    let r = 0, g = 0, b = 0;
+    if (nm < 380 || nm > 750) return null;
+    if (nm < 440) { r = (440 - nm) / 60; b = 1; }
+    else if (nm < 490) { g = (nm - 440) / 50; b = 1; }
+    else if (nm < 510) { g = 1; b = (510 - nm) / 20; }
+    else if (nm < 580) { r = (nm - 510) / 70; g = 1; }
+    else if (nm < 645) { r = 1; g = (645 - nm) / 65; }
+    else r = 1;
+    const f = nm < 420 ? 0.3 + 0.7 * (nm - 380) / 40 : nm > 700 ? 0.3 + 0.7 * (750 - nm) / 50 : 1;
+    return [r, g, b].map((c) => Math.round(255 * Math.pow(c * f, 0.8)));
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.DOP = { V_AIR, C_KMS, H0, soundFactor, gammaOf, lightFactor, lineOfSight, coneHalfAngle, srcAt, retarded, received, waveRGB };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const RAD = Math.PI / 180;
+  const TIMES = [1 / 32, 1 / 16, 1 / 8, 1 / 4, 1 / 2, 1, 2, 4];
+  const TLAB = ['1/32', '1/16', '1/8', '1/4', '1/2', '1', '2', '4'];
+  const RINGS_PER_VIEW = 16;
+  const PRESETS = {
+    ambulance: { mode: 'sound', view: [320, 150], src: [-160, 30], dir: 0, M: 30 / V_AIR, obs: [0, -30], Mo: 0, odir: 0, f: 700, time: 5,
+      hint: 'An ambulance at 30 m/s (108 km/h) passes the observer. Crests bunch up ahead of it and spread out behind. The pitch falls from about f/(1 − M) to f/(1 + M), most steeply at closest approach. Turn on Sound to hear it.' },
+    observer: { mode: 'sound', view: [320, 150], src: [0, 35], dir: 0, M: 0, obs: [-160, -30], Mo: 0.25, odir: 0, f: 700, time: 4,
+      hint: 'The source is at rest, so its crests are evenly spaced circles. The observer, at 86 m/s, meets crests more often while approaching and less often while leaving: f′ = f (1 ± v_o/v). At the same speed a moving source gives a different shift.' },
+    mach1: { mode: 'sound', view: [300, 160], src: [-150, 0], dir: 0, M: 1, obs: [90, -45], Mo: 0, odir: 0, f: 300, time: 2,
+      hint: 'At Mach 1 the source keeps pace with its own sound. Every crest it sends forward stays on one front, so they pile up into a wall: the sound barrier. The observer ahead hears nothing until the wall arrives.' },
+    jet: { mode: 'sound', view: [500, 260], src: [-200, 70], dir: 0, M: 2, obs: [-90, -70], Mo: 0, odir: 0, f: 300, time: 1,
+      hint: 'At Mach 2 the source outruns its sound. The crests touch two lines, the Mach cone, with half angle arcsin(v/v_s) = 30°. Nothing is heard until the cone sweeps over the observer: the sonic boom. After it two sounds arrive at once, one of them backward.' },
+    redshift: { mode: 'light', view: [6, 3], src: [-3, 0.35], dir: 0, M: 0.2, obs: [0, -0.6], Mo: 0, odir: 0, lam: 550, time: 6,
+      hint: 'A source of 550 nm light at 0.2 c. Ahead the light arrives bluer, behind it arrives redder; each crest is colored by the wavelength it carries in that direction. The source dot shows the color the observer sees now.' },
+    transverse: { mode: 'light', view: [6, 3], src: [-3, 0.6], dir: 0, M: 0.6, obs: [0, -0.6], Mo: 0, odir: 0, lam: 500, time: 5,
+      hint: 'At 0.6 c, γ = 1.25. Light that left the source while it moved straight across the line of sight (θ = 90°) arrives with f′ = f/γ: λ goes from 500 to 625 nm from time dilation alone. Classical physics predicts no shift there.' }
+  };
+
+  // ---------- state ----------
+  const S = { preset: 'ambulance', mode: 'sound', view: [320, 150], M: 0.0875, dir: 0, Mo: 0, odir: 0, f: 700, lam: 656.3, time: 5,
+    t: 0, tau: 0, ox: 0, oy: -30, sel: 'src', start: [-160, 30] };
+  let H = [], rings = [], track = [], booms = [], roots = [], lastCount = -1, skipBoom = 0, seedT = 0, flash = null;
+  let playing = !reduce;
+  const light = () => S.mode === 'light';
+  const vW = () => (light() ? 1 : V_AIR);                 // wave speed in the drawing units per second
+  const unit = () => (light() ? 'ls' : 'm');
+  const srcVel = () => { const s = S.M * vW(); return [s * Math.cos(S.dir * RAD), s * Math.sin(S.dir * RAD)]; };
+  const obsVel = () => { if (light()) return [0, 0]; const s = S.Mo * vW(); return [s * Math.cos(S.odir * RAD), s * Math.sin(S.odir * RAD)]; };
+  const srcPos = () => { const p = H[H.length - 1]; return [p.x + p.vx * (S.t - p.t), p.y + p.vy * (S.t - p.t)]; };
+  const clockRate = (sp) => (light() ? Math.sqrt(Math.max(0, 1 - sp * sp)) : 1);   // source proper time per unit observer time
+  // ring interval in the source's own time: a whole number of periods for sound
+  function nCrests() { return Math.max(1, Math.round(S.f * S.view[0] / RINGS_PER_VIEW / V_AIR)); }
+  function dTau() { return light() ? S.view[0] / RINGS_PER_VIEW : nCrests() / S.f; }
+
+  // ---------- theme, canvas, geometry ----------
+  let T = null, dpr = 1, darkTheme = false;
+  const projOn = () => document.documentElement.getAttribute('data-projector') === 'on';
+  let PS = 1;
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
+      gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), wave: g('--wave'), obs: g('--obs'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+    const m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i.exec(T.canvas);
+    darkTheme = m ? (parseInt(m[1], 16) + parseInt(m[2], 16) + parseInt(m[3], 16)) / 3 < 128 : false;
+    colorCache.clear();
+  }
+  const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  let W = 0, Hh = 0, LY = null, G = null;
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = pane.getBoundingClientRect();
+    W = r.width; Hh = r.height;
+    can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(Hh * dpr));
+    can.style.width = W + 'px'; can.style.height = Hh + 'px';
+    PS = projOn() ? Math.max(1, Math.min(1.4, Math.min(W, Hh * 1.7) / 700)) : 1;
+    LY = layout(W, Hh); G = geom();
+    clampObjects();
+    drawAll();
+  }
+  function layout(W, H) {
+    const mh = Math.round(H * (W >= 640 ? 0.68 : 0.6));
+    return { wide: W >= 640, main: { x: 0, y: 0, w: W, h: mh }, strip: { x: 0, y: mh, w: W, h: H - mh } };
+  }
+  // world (m or ls, y up, view centered on 0) to pixels
+  function geom() {
+    if (!LY) return null;
+    const m = LY.main, pad = 16 * PS;
+    const sc = Math.max(1e-6, Math.min((m.w - 2 * pad) / S.view[0], (m.h - 2 * pad) / S.view[1]));
+    const cx = m.x + m.w / 2, cy = m.y + m.h / 2;
+    const vis = { x0: -m.w / 2 / sc, x1: m.w / 2 / sc, y0: -m.h / 2 / sc, y1: m.h / 2 / sc };
+    const diag = Math.hypot(vis.x1 - vis.x0, vis.y1 - vis.y0);
+    const margin = 0.12 * (vis.x1 - vis.x0) + 24 / sc;
+    return { m, sc, cx, cy, vis, diag, margin };
+  }
+  const X = (x) => G.cx + x * G.sc, Y = (y) => G.cy - y * G.sc;
+  const wx = (px) => (px - G.cx) / G.sc, wy = (py) => (G.cy - py) / G.sc;
+
+  // ---------- history and wavefronts ----------
+  function ringAge() {
+    const base = (G.diag + 2 * G.margin) / vW(), V = S.M * vW(), v = vW();
+    if (V > v * 1.0005) return Math.min(6 * base, Math.max(base, 1.05 * (G.diag + G.margin) / Math.sqrt(V * V - v * v)));
+    if (V >= v * 0.9995) return 6 * base;
+    return base;
+  }
+  // as if the source had always moved along its present line at its present velocity
+  function reseed(pos, keepRings) {
+    const vs = srcVel();
+    H = [{ t: S.t, x: pos[0], y: pos[1], vx: vs[0], vy: vs[1] }];     // the first piece extends back forever
+    if (!keepRings) rings = [];
+    const rate = clockRate(S.M), dt = dTau(), age = ringAge();
+    for (let k = Math.floor(S.tau / dt); ; k--) {
+      const te = S.t - (S.tau - k * dt) / rate;
+      if (S.t - te > age || rings.length > 1500) break;
+      rings.push({ te, x: pos[0] - vs[0] * (S.t - te), y: pos[1] - vs[1] * (S.t - te), vx: vs[0], vy: vs[1] });
+    }
+    rings.sort((a, b) => a.te - b.te);
+    seedT = S.t - age; skipBoom = 2;
+  }
+  function farCorner(x, y) { const v = G.vis; return Math.hypot(Math.max(x - v.x0, v.x1 - x), Math.max(y - v.y0, v.y1 - y)); }
+  function nearDist(x, y) { const v = G.vis; const dx = Math.max(v.x0 - x, 0, x - v.x1), dy = Math.max(v.y0 - y, 0, y - v.y1); return Math.hypot(dx, dy); }
+
+  function step(dtReal) {
+    const dt = dtReal * TIMES[S.time];
+    if (dt <= 0) return;
+    const vs = srcVel(), last = H[H.length - 1];
+    if (last.vx !== vs[0] || last.vy !== vs[1]) { const p = srcPos(); H.push({ t: S.t, x: p[0], y: p[1], vx: vs[0], vy: vs[1] }); if (H.length > 4000) H.splice(1, 1); }
+    // crests emitted during this step, at whole steps of the source's own clock
+    const rate = clockRate(S.M), dt0 = dTau(), tau1 = S.tau + rate * dt;
+    for (let k = Math.floor(S.tau / dt0) + 1; k * dt0 <= tau1; k++) {
+      const te = S.t + (k * dt0 - S.tau) / rate, p = srcAt(H, te);
+      rings.push({ te, x: p[0], y: p[1], vx: p[2], vy: p[3] });
+    }
+    S.tau = tau1; S.t += dt;
+    if (rings.length > 1500) rings.splice(0, rings.length - 1500);
+    // observer
+    const vo = obsVel(); S.ox += vo[0] * dt; S.oy += vo[1] * dt;
+    wrapObserver();
+    // source leaves the view: it comes back in on the far side, as a fresh pass
+    const p = srcPos(), e = G.margin, v = G.vis;
+    if (p[0] < v.x0 - e || p[0] > v.x1 + e || p[1] < v.y0 - e || p[1] > v.y1 + e) {
+      const np = reentry(p, vs); reseed(np, true); track.push({ t: S.t, gap: true });
+    }
+    // drop crests that now enclose the whole view
+    const vv = vW();
+    rings = rings.filter((r) => vv * (S.t - r.te) <= farCorner(r.x, r.y));
+  }
+  function reentry(p, vel) {
+    const sp = Math.hypot(vel[0], vel[1]), v = G.vis, e = G.margin * 0.98;
+    if (sp === 0) return [Math.max(v.x0, Math.min(v.x1, p[0])), Math.max(v.y0, Math.min(v.y1, p[1]))];
+    const u = [vel[0] / sp, vel[1] / sp];
+    // walk back along −u to the far side of the extended box (slab method)
+    let tmax = Infinity, tmin = -Infinity;
+    const lo = [v.x0 - e, v.y0 - e], hi = [v.x1 + e, v.y1 + e];
+    for (let i = 0; i < 2; i++) {
+      const d = -u[i];
+      if (Math.abs(d) < 1e-12) { if (p[i] < lo[i] || p[i] > hi[i]) return S.start.slice(); continue; }
+      let a = (lo[i] - p[i]) / d, b = (hi[i] - p[i]) / d; if (a > b) [a, b] = [b, a];
+      tmin = Math.max(tmin, a); tmax = Math.min(tmax, b);
+    }
+    if (!(tmax > tmin) || tmax <= 0) return S.start.slice();
+    return [p[0] - u[0] * tmax * 0.999, p[1] - u[1] * tmax * 0.999];
+  }
+  function wrapObserver() {
+    const v = G.vis, e = 6 / G.sc, w = v.x1 - v.x0 + 2 * e, h = v.y1 - v.y0 + 2 * e;
+    if (S.ox > v.x1 + e) S.ox -= w; else if (S.ox < v.x0 - e) S.ox += w;
+    if (S.oy > v.y1 + e) S.oy -= h; else if (S.oy < v.y0 - e) S.oy += h;
+  }
+  function clampObjects() {
+    if (!G || !H.length) return;
+    const v = G.vis, e = 12 / G.sc;
+    S.ox = Math.max(v.x0 + e, Math.min(v.x1 - e, S.ox)); S.oy = Math.max(v.y0 + e, Math.min(v.y1 - e, S.oy));
+  }
+
+  // ---------- what arrives at the observer ----------
+  function listen() {
+    roots = received(H, S.ox, S.oy, S.t, vW(), obsVel(), light());
+    roots = roots.filter((r) => isFinite(r.k));
+    const n = roots.length;
+    if (!light() && skipBoom <= 0 && lastCount === 0 && n >= 2 && S.M > 1) {
+      booms.push(S.t); flash = { t: performance.now() / 1000, x: S.ox, y: S.oy }; audioBoom();
+    }
+    if (skipBoom > 0) skipBoom--;
+    lastCount = n;
+  }
+  function recordTrack() {
+    if (light()) return;
+    track.push({ t: S.t, f: roots.map((r) => S.f * r.k) });
+    const win = stripWindow();
+    while (track.length && track[0].t < S.t - win * 1.05) track.shift();
+    while (booms.length && booms[0] < S.t - win * 1.05) booms.shift();
+  }
+  const stripWindow = () => 12 * TIMES[S.time];
+
+  // ---------- drawing helpers ----------
+  const colorCache = new Map();
+  function lamColor(nm) {
+    const key = Math.round(nm * 0.5);
+    if (colorCache.has(key)) return colorCache.get(key);
+    const c = waveRGB(key * 2);
+    let s;
+    if (!c) s = T.muted;
+    else { const k = darkTheme ? 1 : 0.8; s = `rgb(${Math.round(c[0] * k)},${Math.round(c[1] * k)},${Math.round(c[2] * k)})`; }
+    colorCache.set(key, s); return s;
+  }
+  function label(c, txt, x, y, col, align = 'left', base = 'middle', bold = false, size = 11) {
+    c.font = `${bold ? '600 ' : ''}${size * PS}px ${T.mono}`; c.textAlign = align; c.textBaseline = base;
+    const w = c.measureText(txt).width, h = (size + 3) * PS;
+    const x0 = align === 'left' ? x : align === 'right' ? x - w : x - w / 2;
+    const y0 = base === 'middle' ? y - h / 2 : base === 'bottom' ? y - h : y;
+    c.fillStyle = T.canvas; c.globalAlpha = 0.86; c.fillRect(x0 - 3, y0, w + 6, h); c.globalAlpha = 1;
+    c.fillStyle = col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
+    return { x0: x0 - 3, y0, w: w + 6, h };
+  }
+  function arrow(c, x0, y0, x1, y1, col, w) {
+    const L = Math.hypot(x1 - x0, y1 - y0); if (L < 2) return;
+    const ux = (x1 - x0) / L, uy = (y1 - y0) / L, hl = Math.min(10 * PS, L * 0.6);
+    c.strokeStyle = col; c.fillStyle = col; c.lineWidth = w;
+    c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1 - ux * hl * 0.8, y1 - uy * hl * 0.8); c.stroke();
+    c.beginPath(); c.moveTo(x1, y1); c.lineTo(x1 - ux * hl - uy * hl * 0.45, y1 - uy * hl + ux * hl * 0.45); c.lineTo(x1 - ux * hl + uy * hl * 0.45, y1 - uy * hl - ux * hl * 0.45); c.closePath(); c.fill();
+  }
+  const trim = (s) => (s.includes('e') ? s : s.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, ''));
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p; }
+  const fmtHz = (f) => `${Math.abs(f) < 100 ? Math.abs(f).toFixed(1) : Math.round(Math.abs(f)).toLocaleString('en-US')} Hz`;
+  const fmtLen = (x) => (light() ? `${trim(x.toPrecision(3))} ls` : `${x < 10 ? x.toFixed(1) : Math.round(x)} m`);
+  const fmtT = (t) => (t < 1 ? `${Math.round(t * 1000)} ms` : `${t.toFixed(2)} s`);
+  // the arrow shows the displacement in arrowT seconds: a round time that makes the faster arrow 40 to 120 px long
+  let arrowT = 1, arrowFrozen = false;
+  function updateArrowT() {
+    if (arrowFrozen) return;
+    const sp = Math.max(S.M, light() ? 0 : S.Mo) * vW() || 0.3 * vW(), target = 90 * PS / (G.sc * sp);
+    const steps = [];
+    for (let e = -4; e <= 3; e++) for (const m of [1, 2, 5]) steps.push(m * Math.pow(10, e));
+    let best = steps[0]; for (const s of steps) if (s <= target * 1.35) best = s;
+    arrowT = best;
+  }
+  const tipOf = (px, py, vel, dirDeg) => {
+    const L = Math.hypot(vel[0], vel[1]) * arrowT * G.sc, ang = Math.atan2(vel[1], vel[0]);
+    const dir = L > 0 ? ang : dirDeg * RAD, l = Math.max(L, 16 * PS);
+    return [px + l * Math.cos(dir), py - l * Math.sin(dir), L];
+  };
+
+  // ---------- main view ----------
+  function drawAll() {
+    if (!T || !LY || !G || !H.length) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    drawMain();
+    if (light()) drawLightStrip(); else drawSoundStrip();
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, LY.strip.y + 0.5); ctx.lineTo(W, LY.strip.y + 0.5); ctx.stroke();
+  }
+  function drawMain() {
+    const c = ctx, m = LY.main, ps = PS, v = vW();
+    c.save(); c.beginPath(); c.rect(m.x, m.y, m.w, m.h); c.clip();
+    // faint grid at the scale bar spacing
+    const gs = nice((G.vis.x1 - G.vis.x0) / 8);
+    c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath();
+    for (let x = Math.ceil(G.vis.x0 / gs) * gs; x <= G.vis.x1; x += gs) { const px = Math.round(X(x)) + 0.5; c.moveTo(px, m.y); c.lineTo(px, m.y + m.h); }
+    for (let y = Math.ceil(G.vis.y0 / gs) * gs; y <= G.vis.y1; y += gs) { const py = Math.round(Y(y)) + 0.5; c.moveTo(m.x, py); c.lineTo(m.x + m.w, py); }
+    c.stroke();
+    drawRings(c, v);
+    const sp = srcPos(), spx = X(sp[0]), spy = Y(sp[1]);
+    // Mach cone, or the wall at Mach 1
+    if (!light() && S.M >= 0.9995) drawCone(c, sp);
+    // where the sound or light reaching the observer now was emitted
+    const opx = X(S.ox), opy = Y(S.oy);
+    roots.slice(0, 2).forEach((r, i) => {
+      const gx = X(r.x), gy = Y(r.y);
+      c.strokeStyle = T.muted; c.lineWidth = 1.3 * ps; c.setLineDash([5 * ps, 5 * ps]);
+      c.beginPath(); c.moveTo(gx, gy); c.lineTo(opx, opy); c.stroke(); c.setLineDash([]);
+      c.fillStyle = T.canvas; c.strokeStyle = T.muted; c.lineWidth = 1.5 * ps;
+      c.beginPath(); c.arc(gx, gy, 6 * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+      // angle θ between the velocity and the line to the observer
+      const sp2 = Math.hypot(r.vx, r.vy);
+      if (sp2 > 0 && i === 0) {
+        const a0 = -Math.atan2(r.vy, r.vx), a1 = -Math.atan2(r.n[1], r.n[0]), ar = 22 * ps;
+        let d = a1 - a0; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI;
+        c.strokeStyle = T.equi; c.lineWidth = 1.5 * ps;
+        c.beginPath(); c.moveTo(gx, gy); c.lineTo(gx + (ar + 10 * ps) * Math.cos(a0), gy + (ar + 10 * ps) * Math.sin(a0)); c.stroke();
+        c.beginPath(); c.arc(gx, gy, ar, a0, a0 + d, d < 0); c.stroke();
+        const mid = a0 + d / 2;
+        r.thLabel = [gx + (ar + 14 * ps) * Math.cos(mid), gy + (ar + 14 * ps) * Math.sin(mid), Math.cos(mid)];
+      }
+    });
+    // velocity arrows and bodies, with their grips
+    const hs = dragHandles(), hot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+    const vs = srcVel(), vo = obsVel();
+    const st = tipOf(spx, spy, vs, S.dir);
+    if (st[2] > 2) arrow(c, spx, spy, st[0], st[1], T.pos, 2.4 * ps);
+    else { c.strokeStyle = T.pos; c.lineWidth = 1.2 * ps; c.setLineDash([3 * ps, 3 * ps]); c.beginPath(); c.moveTo(spx, spy); c.lineTo(st[0], st[1]); c.stroke(); c.setLineDash([]); }
+    if (!light()) {
+      const ot = tipOf(opx, opy, vo, S.odir);
+      if (ot[2] > 2) arrow(c, opx, opy, ot[0], ot[1], T.obs, 2.4 * ps);
+      else { c.strokeStyle = T.obs; c.lineWidth = 1.2 * ps; c.setLineDash([3 * ps, 3 * ps]); c.beginPath(); c.moveTo(opx, opy); c.lineTo(ot[0], ot[1]); c.stroke(); c.setLineDash([]); }
+    }
+    // source body: for light, colored as the observer sees it now
+    let fill = T.pos;
+    if (light()) fill = roots.length ? lamColor(S.lam / roots[0].k) : T.muted;
+    if (hot('src')) { c.fillStyle = T.accent; c.globalAlpha = 0.22; c.beginPath(); c.arc(spx, spy, 17 * ps, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1; }
+    if (light()) { c.fillStyle = fill; c.globalAlpha = 0.25; c.beginPath(); c.arc(spx, spy, 16 * ps, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1; }
+    c.fillStyle = fill; c.strokeStyle = T.ink; c.lineWidth = 1.6 * ps;
+    c.beginPath(); c.arc(spx, spy, 9 * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+    // observer body: a rounded square
+    if (hot('obs')) { c.fillStyle = T.accent; c.globalAlpha = 0.22; c.beginPath(); c.arc(opx, opy, 17 * ps, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1; }
+    c.fillStyle = T.obs; c.strokeStyle = T.ink; c.lineWidth = 1.6 * ps;
+    const os = 8 * ps; c.beginPath(); if (c.roundRect) c.roundRect(opx - os, opy - os, 2 * os, 2 * os, 3 * ps); else c.rect(opx - os, opy - os, 2 * os, 2 * os); c.fill(); c.stroke();
+    // grips: a small ring in each body, a round grip at each arrow tip
+    for (const h of hs) {
+      const on = hot(h.id);
+      c.strokeStyle = h.id.startsWith('obs') ? T.obs : T.pos;
+      if (h.kind === 'tip') {
+        c.fillStyle = T.canvas; c.lineWidth = (on ? 2.4 : 1.6) * ps;
+        c.beginPath(); c.arc(h.pt[0], h.pt[1], (on ? 6.5 : 5) * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
+      } else {
+        c.strokeStyle = T.canvas; c.lineWidth = 1.3 * ps; c.globalAlpha = 0.9;
+        c.beginPath(); c.arc(h.pt[0], h.pt[1], 3.2 * ps, 0, 2 * Math.PI); c.stroke(); c.globalAlpha = 1;
+      }
+      if (S.sel === h.id && document.activeElement === can) { c.strokeStyle = T.accent; c.lineWidth = 1.5 * ps; c.setLineDash([3 * ps, 3 * ps]); c.beginPath(); c.arc(h.pt[0], h.pt[1], 14 * ps, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]); }
+    }
+    // boom flash
+    if (flash) {
+      const age = performance.now() / 1000 - flash.t;
+      if (age > 1.2) flash = null;
+      else { const fx = X(flash.x), fy = Y(flash.y); c.strokeStyle = T.pos; c.lineWidth = 3 * ps; c.globalAlpha = 1 - age / 1.2; c.beginPath(); c.arc(fx, fy, (14 + 60 * age) * ps, 0, 2 * Math.PI); c.stroke(); c.globalAlpha = 1; }
+    }
+    // labels last, on halos
+    const above = spy - 16 * ps > m.y + 20 * ps;
+    label(c, light() ? 'source' : `source · ${Math.round(S.M * vW())} m/s`, spx, above ? spy - 16 * ps : spy + 20 * ps, T.pos, 'center', 'middle', true);
+    let olab;
+    if (!roots.length) olab = light() ? 'no light yet' : (S.M > 1 ? 'silent: outside the cone' : 'silent: no sound yet');
+    else if (light()) olab = `sees ${(S.lam / roots[0].k).toFixed(1)} nm`;
+    else if (roots.length === 1) olab = `hears ${fmtHz(S.f * roots[0].k)}`;
+    else olab = `hears ${fmtHz(S.f * roots[0].k)} and ${fmtHz(S.f * roots[1].k)}${roots[1].k < 0 || roots[0].k < 0 ? ' (one backward)' : ''}`;
+    const ob = opy + 22 * ps < m.y + m.h - 30 * ps;
+    let ox = opx; c.font = `600 ${11 * ps}px ${T.mono}`; const ow = c.measureText(olab).width / 2 + 6;
+    ox = Math.max(m.x + ow, Math.min(m.x + m.w - ow, ox));
+    label(c, olab, ox, ob ? opy + 22 * ps : opy - 22 * ps, T.obs, 'center', 'middle', true);
+    if (roots[0] && roots[0].thLabel) {
+      const [tx, ty, cs] = roots[0].thLabel, th = Math.acos(Math.max(-1, Math.min(1, roots[0].cosTh))) / RAD;
+      label(c, `θ = ${th.toFixed(0)}°`, tx, ty, T.equi, cs < -0.2 ? 'right' : cs > 0.2 ? 'left' : 'center', 'middle', true);
+    }
+    if (flash) label(c, 'boom', X(flash.x) + 16 * ps, Y(flash.y) - 18 * ps, T.pos, 'left', 'middle', true, 13);
+    // scale bar and drawing notes
+    const sb = nice((G.vis.x1 - G.vis.x0) / 6), sbx = m.x + 14 * ps, sby = m.y + m.h - 14 * ps;
+    c.strokeStyle = T.ink; c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(sbx, sby); c.lineTo(sbx + sb * G.sc, sby); c.moveTo(sbx, sby - 4 * ps); c.lineTo(sbx, sby + 4 * ps); c.moveTo(sbx + sb * G.sc, sby - 4 * ps); c.lineTo(sbx + sb * G.sc, sby + 4 * ps); c.stroke();
+    label(c, `${trim(String(sb))} ${unit()}`, sbx + sb * G.sc + 8 * ps, sby, T.ink, 'left', 'middle', false);
+    const note = `arrows: motion in ${trim(String(+arrowT.toPrecision(3)))} s`;
+    label(c, note, m.x + m.w - 12 * ps, sby, T.muted, 'right', 'middle', false, 10.5);
+    c.restore();
+  }
+  function drawRings(c, v) {
+    const ps = PS, now = S.t;
+    if (!light()) {
+      // older crests fainter
+      const groups = [new Path2D(), new Path2D(), new Path2D(), new Path2D()], amax = ringAge();
+      for (const r of rings) {
+        const rad = v * (now - r.te); if (rad <= 0) continue;
+        const nd = nearDist(r.x, r.y); if (nd > rad) continue;
+        const gi = Math.min(3, Math.floor(4 * (now - r.te) / Math.max(1e-9, Math.min(amax, (G.diag + G.margin) / v))));
+        const px = X(r.x), py = Y(r.y);
+        groups[gi].moveTo(px + rad * G.sc, py); groups[gi].arc(px, py, rad * G.sc, 0, 2 * Math.PI);
+      }
+      c.strokeStyle = T.wave; c.lineWidth = 1.4 * ps;
+      [0.9, 0.62, 0.42, 0.26].forEach((a, i) => { c.globalAlpha = a; c.stroke(groups[i]); });
+      c.globalAlpha = 1;
+      return;
+    }
+    // light: each crest colored by the wavelength it carries in each direction, λ(φ) = λ γ (1 − β cos φ)
+    const paths = new Map(), segs = 48;
+    for (const r of rings) {
+      const rad = v * (now - r.te); if (rad <= 0) continue;
+      if (nearDist(r.x, r.y) > rad) continue;
+      const sp = Math.hypot(r.vx, r.vy), g = 1 / Math.sqrt(1 - sp * sp), ang = Math.atan2(r.vy, r.vx), px = X(r.x), py = Y(r.y), R = rad * G.sc;
+      for (let i = 0; i < segs; i++) {
+        const a0 = 2 * Math.PI * i / segs, a1 = 2 * Math.PI * (i + 1) / segs, am = (a0 + a1) / 2;
+        const lam = S.lam * g * (1 - sp * Math.cos(am - ang)), col = lamColor(lam);
+        let p = paths.get(col); if (!p) { p = new Path2D(); paths.set(col, p); }
+        p.moveTo(px + R * Math.cos(a0), py - R * Math.sin(a0)); p.arc(px, py, R, -a0, -a1, true);
+      }
+    }
+    c.lineWidth = 2 * ps; c.globalAlpha = darkTheme ? 0.85 : 0.95;
+    for (const [col, p] of paths) { c.strokeStyle = col; c.stroke(p); }
+    c.globalAlpha = 1;
+  }
+  function drawCone(c, sp) {
+    const ps = PS, v = vW(), V = S.M * v, vel = srcVel(), u = [vel[0] / V, vel[1] / V];
+    // the straight run since the last velocity change, limited by the crests drawn
+    const run = Math.max(0, S.t - Math.max(H.length > 1 ? H[H.length - 1].t : -Infinity, seedT, rings.length ? rings[0].te : S.t));
+    const sx = X(sp[0]), sy = Y(sp[1]);
+    if (S.M <= 1.0005) {
+      // Mach 1: the crests share one front through the source, square to the motion
+      const L = 0.35 * Math.min(G.m.w, G.m.h);
+      c.strokeStyle = T.pos; c.lineWidth = 3 * ps;
+      c.beginPath(); c.moveTo(sx - u[1] * L, sy - u[0] * L); c.lineTo(sx + u[1] * L, sy + u[0] * L); c.stroke();
+      label(c, 'crests pile up: Mach 1', sx + u[1] * L * 0.6 + 10 * ps, sy + u[0] * L * 0.6, T.pos, 'left', 'middle', true);
+      return;
+    }
+    const a = Math.asin(1 / S.M), L = run * Math.sqrt(V * V - v * v);   // distance from the source to the tangent point
+    const back = Math.atan2(-u[1], -u[0]);
+    const ends = [back + a, back - a].map((ang) => [sp[0] + L * Math.cos(ang), sp[1] + L * Math.sin(ang)]);
+    c.fillStyle = T.pos; c.globalAlpha = 0.07;
+    c.beginPath(); c.moveTo(sx, sy); c.lineTo(X(ends[0][0]), Y(ends[0][1])); c.lineTo(X(ends[1][0]), Y(ends[1][1])); c.closePath(); c.fill(); c.globalAlpha = 1;
+    c.strokeStyle = T.pos; c.lineWidth = 3 * ps; c.beginPath();
+    for (const e of ends) { c.moveTo(sx, sy); c.lineTo(X(e[0]), Y(e[1])); }
+    c.stroke();
+    // half angle arc on the upper line
+    const ar = 46 * ps, a0 = -back, c0 = -(back + a);
+    c.strokeStyle = T.equi; c.lineWidth = 1.5 * ps; c.setLineDash([4 * ps, 4 * ps]);
+    c.beginPath(); c.moveTo(sx, sy); c.lineTo(sx + (ar + 20 * ps) * Math.cos(a0), sy + (ar + 20 * ps) * Math.sin(a0)); c.stroke(); c.setLineDash([]);
+    c.beginPath(); c.arc(sx, sy, ar, a0, c0, true); c.stroke();
+    const mid = (a0 + c0) / 2;
+    label(c, `θc = ${(a / RAD).toFixed(1)}°`, sx + (ar + 10 * ps) * Math.cos(mid), sy + (ar + 10 * ps) * Math.sin(mid), T.equi, Math.cos(mid) < 0 ? 'right' : 'left', 'middle', true);
+  }
+
+  // ---------- strip: what the observer hears ----------
+  function drawSoundStrip() {
+    const p = LY.strip, c = ctx, ps = PS;
+    const box = { L: p.x + 60 * ps, R: p.x + p.w - 16 * ps, T: p.y + 30 * ps, B: p.y + p.h - 30 * ps };
+    if (box.R - box.L < 60 || box.B - box.T < 30) return;
+    const win = stripWindow(), t1 = S.t, t0 = t1 - win;
+    const M = S.M, Mo = S.Mo;
+    // subsonic: frame the range from head on receding to head on approaching; supersonic: from 0 to 4f
+    let ymin = 0, ymax = S.f * 4;
+    if (M < 0.97) {
+      const hi = S.f * (1 + Mo) / (1 - M), lo = S.f * (1 - Mo) / (1 + M), pad = Math.max(0.25 * (hi - lo), 0.08 * S.f);
+      ymin = Math.max(0, lo - pad); ymax = hi + pad;
+    }
+    const ys = nice((ymax - ymin) / 4); ymin = Math.floor(ymin / ys + 1e-9) * ys; ymax = Math.ceil(ymax / ys - 1e-9) * ys;
+    const Xt = (t) => box.L + (t - t0) / win * (box.R - box.L), Yf = (f) => box.B - (f - ymin) / (ymax - ymin) * (box.B - box.T);
+    c.fillStyle = T.ink; c.font = `600 ${11.5 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    c.fillText('What the observer hears: received frequency f′ against time', box.L - 52 * ps, box.T - 9 * ps);
+    c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let f = ymin; f <= ymax + 1e-9; f += ys) { const y = Math.round(Yf(f)) + 0.5; c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(box.L, y); c.lineTo(box.R, y); c.stroke(); c.fillText(trim(String(+f.toPrecision(6))), box.L - 5, y); }
+    const ts = nice(win / 6), dec = Math.max(0, -Math.floor(Math.log10(ts) + 1e-9)); c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let j = Math.ceil(t0 / ts); j * ts <= t1 + 1e-9; j++) { const t = j * ts, x = Math.round(Xt(t)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); if (x > box.L + 20 * ps && x < box.R - 40 * ps) c.fillText((Math.abs(t) < ts / 2 ? 0 : t).toFixed(dec), x, box.B + 4); }
+    c.textAlign = 'right'; c.fillText('t (s)', box.R, box.B + 4);
+    c.save(); c.translate(p.x + 12 * ps, (box.T + box.B) / 2); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Hz', 0, 0); c.restore();
+    c.save(); c.beginPath(); c.rect(box.L, box.T - 2, box.R - box.L, box.B - box.T + 4); c.clip();
+    // emitted frequency and the head on limits
+    const refs = [[S.f, `f = ${fmtHz(S.f)}`]];
+    if (Mo === 0 && M > 0.004 && M < 0.97) { refs.push([S.f / (1 - M), 'f/(1 − M) head on, approaching'], [S.f / (1 + M), 'f/(1 + M) head on, receding']); }
+    if (M === 0 && Mo > 0.004) { refs.push([S.f * (1 + Mo), 'f(1 + v_o/v) approaching'], [S.f * (1 - Mo), 'f(1 − v_o/v) receding']); }
+    c.setLineDash([4 * ps, 4 * ps]); c.lineWidth = 1.2 * ps; c.strokeStyle = T.muted;
+    c.beginPath(); for (const [f] of refs) { const y = Yf(f); c.moveTo(box.L, y); c.lineTo(box.R, y); } c.stroke(); c.setLineDash([]);
+    // booms
+    for (const tb of booms) { const x = Xt(tb); c.strokeStyle = T.pos; c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); }
+    // the track; a second sound inside the Mach cone runs backward (f′ < 0) and is drawn at |f′|, dashed
+    for (let b = 0; b < 2; b++) {
+      c.lineWidth = 2.4 * ps;
+      let prev = null;
+      const paths = [new Path2D(), new Path2D()];
+      for (const s of track) {
+        if (s.gap) { prev = null; continue; }
+        if (s.t < t0) { prev = null; continue; }
+        const f = s.f[b];
+        if (f === undefined || s.f.length - 1 < b) { prev = null; continue; }
+        const kind = f < 0 ? 1 : 0, x = Xt(s.t), y = Yf(Math.max(ymin - 0.05 * (ymax - ymin), Math.min(Math.abs(f), ymax + 0.05 * (ymax - ymin))));
+        if (prev && prev.kind === kind && prev.n === s.f.length) paths[kind].lineTo(x, y); else paths[kind].moveTo(x, y);
+        prev = { kind, n: s.f.length };
+      }
+      c.strokeStyle = T.accent; c.stroke(paths[0]);
+      c.strokeStyle = T.equi; c.setLineDash([6 * ps, 4 * ps]); c.stroke(paths[1]); c.setLineDash([]);
+    }
+    c.restore();
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.strokeRect(box.L + 0.5, box.T + 0.5, box.R - box.L, box.B - box.T);
+    // reference labels, kept apart
+    const used = [];
+    for (const [f, txt] of refs) {
+      let y = Yf(f) - 8 * ps; if (y < box.T + 6 * ps) y = Yf(f) + 8 * ps;
+      if (used.some((u) => Math.abs(u - y) < 14 * ps)) continue;
+      used.push(y); label(c, txt, box.L + 6 * ps, y, T.muted, 'left', 'middle', false, 10);
+    }
+    for (const tb of booms) { const x = Xt(tb); if (x > box.L + 10 && x < box.R - 40 * ps) label(c, 'boom', x + 4 * ps, box.T + 10 * ps, T.pos, 'left', 'middle', true, 10.5); }
+    // the latest values at the right edge
+    const lastS = track.length ? track[track.length - 1] : null;
+    if (lastS && !lastS.gap) lastS.f.forEach((f, i) => { const y = Yf(Math.max(ymin, Math.min(Math.abs(f), ymax))); c.fillStyle = f < 0 ? T.equi : T.accent; c.beginPath(); c.arc(Xt(lastS.t), y, 4 * ps, 0, 2 * Math.PI); c.fill(); });
+  }
+
+  // ---------- strip for light: f′/f against β, and the spectrum ----------
+  function drawLightStrip() {
+    const p = LY.strip, c = ctx, ps = PS;
+    let pb, sb;
+    if (LY.wide) { const w1 = Math.round(p.w * 0.56); pb = { x: p.x, y: p.y, w: w1, h: p.h }; sb = { x: p.x + w1, y: p.y, w: p.w - w1, h: p.h }; }
+    else { const h1 = Math.round(p.h * 0.62); pb = { x: p.x, y: p.y, w: p.w, h: h1 }; sb = { x: p.x, y: p.y + h1, w: p.w, h: p.h - h1 }; }
+    drawBetaPlot(pb); drawSpectrum(sb);
+    c.strokeStyle = T.line; c.lineWidth = 1; c.beginPath();
+    if (LY.wide) { c.moveTo(sb.x + 0.5, sb.y); c.lineTo(sb.x + 0.5, sb.y + sb.h); } else { c.moveTo(sb.x, sb.y + 0.5); c.lineTo(sb.x + sb.w, sb.y + 0.5); }
+    c.stroke();
+  }
+  function drawBetaPlot(p) {
+    const c = ctx, ps = PS;
+    const box = { L: p.x + 50 * ps, R: p.x + p.w - 14 * ps, T: p.y + 30 * ps, B: p.y + p.h - 30 * ps };
+    if (box.R - box.L < 60 || box.B - box.T < 30) return;
+    const lo = Math.log10(0.1), hi = Math.log10(10);
+    const Xb = (b) => box.L + b * (box.R - box.L), Yk = (k) => box.B - (Math.log10(k) - lo) / (hi - lo) * (box.B - box.T);
+    c.fillStyle = T.ink; c.font = `600 ${11.5 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    c.fillText('f′/f against speed β = v/c', box.L - 42 * ps, box.T - 9 * ps);
+    c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+    const ticks = box.B - box.T > 90 * ps ? [0.1, 0.2, 0.5, 1, 2, 5, 10] : [0.1, 1, 10];
+    for (const k of ticks) { const y = Math.round(Yk(k)) + 0.5; c.strokeStyle = k === 1 ? T.gridStrong : T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(box.L, y); c.lineTo(box.R, y); c.stroke(); c.fillText(String(k), box.L - 5, y); }
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let b = 0; b <= 1.0001; b += 0.2) { const x = Math.round(Xb(b)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.fillText(b.toFixed(1), x, box.B + 4); }
+    c.save(); c.beginPath(); c.rect(box.L, box.T, box.R - box.L, box.B - box.T); c.clip();
+    const curve = (fn, col, dash, w) => {
+      c.strokeStyle = col; c.lineWidth = w * ps; c.setLineDash(dash ? [5 * ps, 4 * ps] : []); c.beginPath();
+      for (let i = 0; i <= 200; i++) { const b = 0.995 * i / 200, k = fn(b), y = Yk(Math.max(0.05, Math.min(20, k))); i ? c.lineTo(Xb(b), y) : c.moveTo(Xb(b), y); }
+      c.stroke(); c.setLineDash([]);
+    };
+    curve((b) => 1 / (1 - b), T.neg, true, 1.6); curve((b) => 1 / (1 + b), T.pos, true, 1.6);
+    curve((b) => lineOfSight(b), T.neg, false, 2.4); curve((b) => 1 / lineOfSight(b), T.pos, false, 2.4);
+    curve((b) => 1 / gammaOf(b), T.equi, false, 2.4);
+    // the present direction
+    const r = roots[0];
+    if (r) { c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps; c.setLineDash([2 * ps, 3 * ps]); curve((b) => lightFactor(b, r.cosTh), T.muted, true, 1.2); }
+    c.restore();
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.strokeRect(box.L + 0.5, box.T + 0.5, box.R - box.L, box.B - box.T);
+    // curve labels near the right end
+    const bl = 0.86;
+    const labs = [[lineOfSight(bl), 'approaching', T.neg], [1 / lineOfSight(bl), 'receding', T.pos], [1 / gammaOf(bl), '1/γ', T.equi]];
+    for (const [k, t, col] of labs) label(c, t, Xb(bl), Yk(k) + (t === '1/γ' ? -10 * ps : 0), col, 'right', 'middle', false, 10);
+    if (r) {
+      const sp = Math.hypot(r.vx, r.vy), k = r.k, x = Xb(sp), y = Yk(Math.max(0.1, Math.min(10, k)));
+      c.fillStyle = T.ink; c.beginPath(); c.arc(x, y, 5 * ps, 0, 2 * Math.PI); c.fill();
+      label(c, `now ${k.toFixed(3)}`, x + (sp > 0.6 ? -9 * ps : 9 * ps), y - 12 * ps, T.ink, sp > 0.6 ? 'right' : 'left', 'middle', true, 10.5);
+    }
+  }
+  function drawSpectrum(p) {
+    const c = ctx, ps = PS, L = p.x + 18 * ps, R = p.x + p.w - 18 * ps;
+    if (R - L < 80 || p.h < 50) return;
+    const n0 = 300, n1 = 1000, Xn = (nm) => L + (Math.max(n0, Math.min(n1, nm)) - n0) / (n1 - n0) * (R - L);
+    const r = roots[0], lam2 = r ? S.lam / r.k : NaN;
+    c.fillStyle = T.ink; c.font = `600 ${11.5 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    const ty = p.y + 30 * ps - 9 * ps;
+    c.fillText('Spectrum, wavelength in nm', L, ty);
+    const avail = p.h - 30 * ps - 24 * ps, bh = Math.max(14 * ps, Math.min(34 * ps, avail * 0.4));
+    const by = p.y + 30 * ps + Math.max(14 * ps, (avail - bh) / 2 - 4 * ps);
+    for (let x = L; x < R; x += 1) {
+      const nm = n0 + (x - L) / (R - L) * (n1 - n0), col = waveRGB(nm);
+      c.fillStyle = col ? `rgb(${col[0]},${col[1]},${col[2]})` : T.grid; c.fillRect(x, by, 1.5, bh);
+    }
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.strokeRect(L + 0.5, by + 0.5, R - L, bh);
+    c.font = `${10 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillText('UV', (L + Xn(380)) / 2, by + bh / 2); c.fillText('infrared', (Xn(750) + R) / 2, by + bh / 2);
+    c.textBaseline = 'top';
+    for (let nm = 300; nm <= 1000; nm += 100) { const x = Xn(nm); c.fillRect(x, by + bh, 1, 4 * ps); if (R - L > 260 * ps || nm % 200 === 0) c.fillText(String(nm), x, by + bh + 5 * ps); }
+    // emitted (thin) and received (thick) lines
+    const ex = Xn(S.lam);
+    c.strokeStyle = T.ink; c.lineWidth = 1.5 * ps; c.setLineDash([3 * ps, 2 * ps]); c.beginPath(); c.moveTo(ex, by - 6 * ps); c.lineTo(ex, by + bh + 2 * ps); c.stroke(); c.setLineDash([]);
+    if (r) {
+      const rx = Xn(lam2);
+      c.strokeStyle = T.ink; c.lineWidth = 3.5 * ps; c.beginPath(); c.moveTo(rx, by - 6 * ps); c.lineTo(rx, by + bh + 2 * ps); c.stroke();
+      c.strokeStyle = T.canvas; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(rx, by); c.lineTo(rx, by + bh); c.stroke();
+      const z = lam2 / S.lam - 1;
+      const txt = `received ${lam2 < n0 || lam2 > n1 ? (lam2 < n0 ? '< ' : '> ') : ''}${lam2.toFixed(1)} nm · z = ${z >= 0 ? '+' : '−'}${Math.abs(z).toFixed(4)}`;
+      const left = rx > (L + R) / 2;
+      label(c, txt, Math.max(L, Math.min(R, rx + (left ? -4 : 4) * ps)), by - 12 * ps, T.ink, left ? 'right' : 'left', 'middle', true, 10.5);
+    }
+    label(c, `emitted ${S.lam.toFixed(1)}`, Math.max(L + 40 * ps, Math.min(R - 40 * ps, ex)), by + bh + 22 * ps, T.muted, 'center', 'middle', false, 10);
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const lightM = light();
+    $('count').innerHTML = `t = ${S.t.toFixed(S.t < 10 ? 2 : 1)} s <small>· time ×${TLAB[S.time]}</small>`;
+    if (!lightM) {
+      if (!roots.length) {
+        $('rF').textContent = S.M > 1 ? 'silence: outside the cone' : 'no sound has arrived yet';
+        ['rRatio', 'rTh', 'rAgo'].forEach((id) => { $(id).textContent = '—'; }); $('rForm').textContent = '';
+      } else {
+        const r = roots[0];
+        $('rF').innerHTML = roots.length === 1 ? fmtHz(S.f * r.k)
+          : roots.map((q) => `${fmtHz(S.f * q.k)}${q.k < 0 ? ' <span class="ok">backward</span>' : ''}`).join(' and ');
+        $('rRatio').textContent = roots.map((q) => q.k.toFixed(3)).join(', ');
+        $('rTh').textContent = Math.hypot(r.vx, r.vy) > 0 ? `${(Math.acos(Math.max(-1, Math.min(1, r.cosTh))) / RAD).toFixed(1)}°` : 'source at rest';
+        $('rAgo').textContent = roots.map((q) => `${fmtT(S.t - q.te)} ago, ${fmtLen(q.R)} away`).join('; ');
+        const vo = obsVel(), vsn = r.vx * r.n[0] + r.vy * r.n[1], von = vo[0] * r.n[0] + vo[1] * r.n[1];
+        $('rForm').textContent = `f′ = ${Math.round(S.f)} × (343 − ${von.toFixed(1)})/(343 − ${vsn.toFixed(1)}) = ${fmtHz(S.f * r.k)}${r.k < 0 ? ' (negative: heard backward)' : ''}`;
+      }
+      $('coneRow').hidden = S.M < 0.9995;
+      $('rCone').textContent = S.M > 1.0005 ? `${(coneHalfAngle(S.M) / RAD).toFixed(1)}°` : 'Mach 1: 90°, a flat wall';
+    } else {
+      const g = gammaOf(S.M);
+      $('lGam').textContent = g.toFixed(4);
+      if (!roots.length) { ['lLam', 'lZ', 'lRel', 'lCls', 'lTh', 'lVr', 'lHub'].forEach((id) => { $(id).textContent = '—'; }); $('lForm').textContent = ''; return; }
+      const r = roots[0], sp = Math.hypot(r.vx, r.vy), lam2 = S.lam / r.k, z = lam2 / S.lam - 1;
+      $('lLam').textContent = `${lam2.toFixed(1)} nm`;
+      $('lZ').textContent = `${z >= 0 ? '+' : '−'}${Math.abs(z).toFixed(4)}`;
+      $('lRel').textContent = r.k.toFixed(4);
+      $('lCls').textContent = (1 / (1 - sp * r.cosTh)).toFixed(4);
+      const th = Math.acos(Math.max(-1, Math.min(1, r.cosTh))) / RAD;
+      $('lTh').innerHTML = sp > 0 ? `${th.toFixed(1)}°${Math.abs(th - 90) < 2 ? ' <span class="ok">transverse: f′/f ≈ 1/γ</span>' : ''}` : 'at rest';
+      const vr = -sp * r.cosTh * C_KMS;
+      $('lVr').textContent = `${vr >= 0 ? '+' : '−'}${Math.abs(vr).toLocaleString('en-US', { maximumFractionDigits: 0 })} km/s`;
+      if (z <= 0) $('lHub').innerHTML = '<span class="ok">blueshifted: approaching, so no Hubble distance</span>';
+      else { const d = C_KMS * z / H0; $('lHub').innerHTML = z <= 0.1 ? `${d.toLocaleString('en-US', { maximumFractionDigits: 0 })} Mpc` : `<span class="ok">z = ${z.toFixed(2)} is too large for d ≈ cz/H₀ (it would give ${d.toLocaleString('en-US', { maximumFractionDigits: 0 })} Mpc)</span>`; }
+      $('lForm').textContent = `f′/f = 1/(${g.toFixed(4)} × (1 − ${sp.toFixed(3)} × ${r.cosTh.toFixed(3)})) = ${r.k.toFixed(4)}`;
+    }
+  }
+  function sliderOuts() {
+    if (light()) $('spdOut').textContent = `${S.M.toFixed(3)} c · ${Math.round(S.M * C_KMS).toLocaleString('en-US')} km/s`;
+    else $('spdOut').textContent = `${S.M.toFixed(3)} · ${Math.round(S.M * V_AIR)} m/s`;
+    $('dirOut').textContent = `${S.dir}°`;
+    $('ospdOut').textContent = `${S.Mo.toFixed(3)} · ${Math.round(S.Mo * V_AIR)} m/s`;
+    $('odirOut').textContent = `${S.odir}°`;
+    $('frqOut').textContent = `${S.f} Hz`;
+    const c = waveRGB(S.lam);
+    $('lamOut').innerHTML = `${S.lam.toFixed(1)} nm ${c ? `<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:rgb(${c.join(',')});vertical-align:-1px"></span>` : ''}`;
+    $('tspOut').textContent = `×${TLAB[S.time]}${S.time < 5 ? ' (slow motion)' : ''}`;
+    for (const b of document.querySelectorAll('#lines button')) b.setAttribute('aria-pressed', String(Math.abs(+b.dataset.l - S.lam) < 0.05));
+    if (light()) $('ringHint').textContent = `Each ring is one crest, drawn every ${trim(dTau().toPrecision(3))} s of the source's own clock; real crests of visible light are only about 500 nm apart. A light second is 299 792 km.`;
+    else { const n = nCrests(), sfx = n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['th', 'st', 'nd', 'rd'][n % 10] || 'th'; $('ringHint').textContent = `${n === 1 ? 'Every' : `Every ${n}${sfx}`} crest is drawn (one ring every ${fmtT(dTau())} of the source's clock); all of them would be only ${(V_AIR / S.f).toFixed(2)} m apart. The audio always plays the real pitch f′; slow motion only slows the drawing.`; }
+  }
+
+  // ---------- controls ----------
+  function syncUI() {
+    const L = light();
+    $('mSound').setAttribute('aria-pressed', String(!L)); $('mLight').setAttribute('aria-pressed', String(L));
+    const sp = $('spd');
+    sp.max = L ? 0.99 : 2.5; sp.step = 0.001; sp.value = S.M;
+    $('spdLab').innerHTML = L ? 'β = v/c' : 'Mach number v<sub>s</sub>/v';
+    $('dir').value = S.dir; $('ospd').value = S.Mo; $('odir').value = S.odir; $('frq').value = S.f; $('lam').value = S.lam; $('tsp').value = S.time;
+    $('fRow').hidden = L; $('lamRow').hidden = !L; $('obsSec').hidden = L;
+    $('recSound').hidden = L; $('recLight').hidden = !L;
+    $('modelSound').hidden = L; $('modelLight').hidden = !L; $('keySound').hidden = L; $('keyLight').hidden = !L;
+    $('audio').hidden = L;
+    sliderOuts();
+  }
+  function markPreset(name) {
+    S.preset = name;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint').textContent = name && PRESETS[name] ? PRESETS[name].hint : 'Your own setup. Pick a preset to return to a known one.';
+  }
+  function applyPreset(name) {
+    const p = PRESETS[name];
+    const modeChange = S.mode !== p.mode;
+    S.mode = p.mode; S.view = p.view.slice(); S.M = p.M; S.dir = p.dir; S.Mo = p.Mo; S.odir = p.odir; S.time = p.time;
+    if (p.f) S.f = p.f; if (p.lam) S.lam = p.lam;
+    S.start = p.src.slice(); S.ox = p.obs[0]; S.oy = p.obs[1];
+    if (modeChange && light()) audioSet(false);
+    markPreset(name); restart();
+    if (!reduce) setPlaying(true);
+  }
+  function restart() {
+    S.t = 0; S.tau = 0; track = []; booms = []; flash = null; lastCount = -1;
+    G = geom(); updateArrowT();
+    if (S.preset && PRESETS[S.preset]) { const p = PRESETS[S.preset]; S.ox = p.obs[0]; S.oy = p.obs[1]; }
+    reseed(S.start.slice(), false);
+    syncUI(); listen(); readouts(); drawAll();
+  }
+  function custom() { markPreset(null); }
+  function setSpeed(M) {
+    const mx = light() ? 0.99 : 2.5;
+    S.M = Math.max(0, Math.min(mx, Math.round(M * 1000) / 1000)); $('spd').value = S.M; custom(); updateArrowT(); sliderOuts();
+  }
+  function setDir(d) { S.dir = ((Math.round(d) % 360) + 360) % 360; $('dir').value = S.dir; custom(); sliderOuts(); }
+  function setOSpeed(M) { S.Mo = Math.max(0, Math.min(0.9, Math.round(M * 1000) / 1000)); $('ospd').value = S.Mo; custom(); updateArrowT(); sliderOuts(); }
+  function setODir(d) { S.odir = ((Math.round(d) % 360) + 360) % 360; $('odir').value = S.odir; custom(); sliderOuts(); }
+  $('spd').addEventListener('input', (e) => { setSpeed(+e.target.value); if (!playing) { drawAll(); } });
+  $('dir').addEventListener('input', (e) => { setDir(+e.target.value); drawAll(); });
+  $('ospd').addEventListener('input', (e) => { setOSpeed(+e.target.value); drawAll(); });
+  $('odir').addEventListener('input', (e) => { setODir(+e.target.value); drawAll(); });
+  // changing f only relabels the crests; the drawing keeps one ring per about 1/16 of the view
+  $('frq').addEventListener('input', (e) => { S.f = +e.target.value; custom(); S.tau = 0; reseed(srcPos(), false); sliderOuts(); listen(); readouts(); drawAll(); });
+  $('lam').addEventListener('input', (e) => { S.lam = +e.target.value; custom(); sliderOuts(); readouts(); drawAll(); });
+  for (const b of document.querySelectorAll('#lines button')) b.addEventListener('click', () => { S.lam = +b.dataset.l; $('lam').value = S.lam; custom(); sliderOuts(); readouts(); drawAll(); });
+  $('tsp').addEventListener('input', (e) => { S.time = +e.target.value; sliderOuts(); readouts(); });
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  function setMode(m) { if (S.mode === m) return; applyPreset(m === 'light' ? 'redshift' : 'ambulance'); }
+  $('mSound').addEventListener('click', () => setMode('sound'));
+  $('mLight').addEventListener('click', () => setMode('light'));
+  const playBtn = $('play');
+  function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); if (!on) audioQuiet(); }
+  playBtn.addEventListener('click', () => setPlaying(!playing));
+  $('restart').addEventListener('click', () => { restart(); if (!reduce && !playing) setPlaying(true); });
+
+  // ---------- audio (off by default) ----------
+  let AC = null, master = null, voices = [], audioOn = false;
+  function audioSet(on) {
+    audioOn = on;
+    const b = $('audio'); b.setAttribute('aria-pressed', String(on)); b.textContent = on ? 'Sound on' : 'Sound off';
+    if (on) {
+      try {
+        if (!AC) {
+          AC = new (window.AudioContext || window.webkitAudioContext)();
+          master = AC.createGain(); master.gain.value = 0;
+          const lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2500;
+          master.connect(lp); lp.connect(AC.destination);
+          for (let i = 0; i < 2; i++) { const o = AC.createOscillator(), g = AC.createGain(); o.type = 'triangle'; o.frequency.value = 440; g.gain.value = 0; o.connect(g); g.connect(master); o.start(); voices.push({ o, g }); }
+        }
+        AC.resume();
+        master.gain.setTargetAtTime(0.07, AC.currentTime, 0.05);
+      } catch (_) { audioOn = false; b.setAttribute('aria-pressed', 'false'); b.textContent = 'Sound off'; }
+    } else if (AC) { master.gain.setTargetAtTime(0, AC.currentTime, 0.03); setTimeout(() => { if (!audioOn && AC) AC.suspend(); }, 200); }
+  }
+  function audioQuiet() { if (AC) voices.forEach((v) => v.g.gain.setTargetAtTime(0, AC.currentTime, 0.03)); }
+  function audioUpdate() {
+    if (!audioOn || !AC || light()) return;
+    const now = AC.currentTime, r0 = (G.vis.x1 - G.vis.x0) / 6;
+    voices.forEach((v, i) => {
+      const r = roots[i];
+      if (!r || !playing) { v.g.gain.setTargetAtTime(0, now, 0.03); return; }
+      const f = Math.max(30, Math.min(5000, Math.abs(S.f * r.k)));
+      v.o.frequency.setTargetAtTime(f, now, 0.012);
+      v.g.gain.setTargetAtTime(Math.max(0.12, Math.min(1, r0 / Math.max(1e-6, r.R))) * (i ? 0.7 : 1), now, 0.04);
+    });
+  }
+  function audioBoom() {
+    if (!audioOn || !AC) return;
+    try {
+      const n = Math.floor(AC.sampleRate * 0.5), buf = AC.createBuffer(1, n, AC.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (AC.sampleRate * 0.08));
+      const src = AC.createBufferSource(), lp = AC.createBiquadFilter(), g = AC.createGain();
+      lp.type = 'lowpass'; lp.frequency.value = 180; g.gain.value = 2.5;
+      src.buffer = buf; src.connect(lp); lp.connect(g); g.connect(master); src.start();
+    } catch (_) {}
+  }
+  $('audio').addEventListener('click', () => audioSet(!audioOn));
+  document.addEventListener('visibilitychange', () => { if (document.hidden && audioOn) audioSet(false); });
+  window.addEventListener('pagehide', () => { if (audioOn) audioSet(false); });
+
+  // ---------- dragging on the drawing ----------
+  let drag = null, hoverId = null;
+  function dragHandles() {
+    if (!G || !H.length) return [];
+    const sp = srcPos(), spx = X(sp[0]), spy = Y(sp[1]), opx = X(S.ox), opy = Y(S.oy), out = [];
+    const st = tipOf(spx, spy, srcVel(), S.dir);
+    out.push({ id: 'srcV', kind: 'tip', pt: [st[0], st[1]], base: [spx, spy], cursor: 'crosshair' });
+    if (!light()) { const ot = tipOf(opx, opy, obsVel(), S.odir); out.push({ id: 'obsV', kind: 'tip', pt: [ot[0], ot[1]], base: [opx, opy], cursor: 'crosshair' }); }
+    out.push({ id: 'src', kind: 'body', pt: [spx, spy], cursor: 'move' });
+    out.push({ id: 'obs', kind: 'body', pt: [opx, opy], cursor: 'move' });
+    return out;
+  }
+  function handleAt(ev) {
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    if (y > LY.main.y + LY.main.h) return null;
+    const tol = 10 * PS * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = Infinity;
+    for (const h of dragHandles()) {
+      const d = Math.hypot(x - h.pt[0], y - h.pt[1]) - (h.kind === 'tip' ? 6 * PS : 9 * PS) + (h.kind === 'tip' ? -1 : 0);
+      if (d < tol && d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  function moveSource(x, y) {
+    const v = G.vis, e = 8 / G.sc;
+    const p = [Math.max(v.x0 + e, Math.min(v.x1 - e, x)), Math.max(v.y0 + e, Math.min(v.y1 - e, y))];
+    reseed(p, false); track.push({ t: S.t, gap: true }); custom();
+  }
+  function moveObserver(x, y) { const v = G.vis, e = 8 / G.sc; S.ox = Math.max(v.x0 + e, Math.min(v.x1 - e, x)); S.oy = Math.max(v.y0 + e, Math.min(v.y1 - e, y)); skipBoom = 2; track.push({ t: S.t, gap: true }); custom(); }
+  function setFromTip(id, px, py) {
+    const h = dragHandles().find((k) => k.id === id); if (!h) return;
+    const dx = px - h.base[0], dy = h.base[1] - py, L = Math.hypot(dx, dy);
+    const speed = L < 8 * PS ? 0 : L / (arrowT * G.sc) / vW();
+    const ang = Math.atan2(dy, dx) / RAD;
+    if (id === 'srcV') { setSpeed(speed); if (L >= 8 * PS) setDir(ang); }
+    else { setOSpeed(speed); if (L >= 8 * PS) setODir(ang); }
+  }
+  let dragQ = null, dragFrame = false;
+  can.addEventListener('pointermove', (ev) => {
+    if (drag) {
+      const r = can.getBoundingClientRect(); dragQ = [ev.clientX - r.left, ev.clientY - r.top];
+      if (!dragFrame) {
+        dragFrame = true;
+        requestAnimationFrame(() => {
+          dragFrame = false; if (!drag || !dragQ) return;
+          const [px, py] = dragQ; dragQ = null;
+          if (drag.id === 'src') moveSource(wx(px - drag.off[0]), wy(py - drag.off[1]));
+          else if (drag.id === 'obs') moveObserver(wx(px - drag.off[0]), wy(py - drag.off[1]));
+          else setFromTip(drag.id, px, py);
+          listen(); readouts(); if (!playing) drawAll();
+        });
+      }
+      return;
+    }
+    const h = handleAt(ev); hoverId = h ? h.id : null; can.style.cursor = h ? h.cursor : 'default';
+    if (!playing) drawAll();
+  });
+  can.addEventListener('pointerdown', (ev) => {
+    const h = handleAt(ev); if (!h) return;
+    const r = can.getBoundingClientRect();
+    drag = { id: h.id, off: h.kind === 'body' ? [ev.clientX - r.left - h.pt[0], ev.clientY - r.top - h.pt[1]] : [0, 0] }; hoverId = h.id;
+    S.sel = h.id.startsWith('obs') ? 'obs' : 'src';
+    if (h.kind === 'tip') arrowFrozen = true;
+    try { can.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault();
+  });
+  const endDrag = () => { if (!drag) return; drag = null; arrowFrozen = false; updateArrowT(); if (!playing) drawAll(); };
+  can.addEventListener('pointerup', endDrag);
+  can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('pointerleave', () => { if (!drag) { hoverId = null; if (!playing) drawAll(); } });
+  can.addEventListener('focus', () => { if (!playing) drawAll(); });
+  can.addEventListener('blur', () => { if (!playing) drawAll(); });
+  can.addEventListener('keydown', (e) => {
+    const big = e.shiftKey ? 5 : 1, stepL = (G.vis.x1 - G.vis.x0) / 100 * big;
+    const k = e.key, isObs = S.sel === 'obs' && !light();
+    if (k.startsWith('Arrow')) {
+      const dx = k === 'ArrowRight' ? stepL : k === 'ArrowLeft' ? -stepL : 0, dy = k === 'ArrowUp' ? stepL : k === 'ArrowDown' ? -stepL : 0;
+      if (isObs) moveObserver(S.ox + dx, S.oy + dy); else { const p = srcPos(); moveSource(p[0] + dx, p[1] + dy); }
+    } else if (k === 'n' || k === 'N') { S.sel = isObs || light() ? 'src' : 'obs'; }
+    else if (k === '+' || k === '=') { if (isObs) setOSpeed(S.Mo + 0.01 * big); else setSpeed(S.M + (light() ? 0.01 : 0.05) * big); }
+    else if (k === '-' || k === '_') { if (isObs) setOSpeed(S.Mo - 0.01 * big); else setSpeed(S.M - (light() ? 0.01 : 0.05) * big); }
+    else if (k === '[' || k === ']') { const d = (k === ']' ? -5 : 5) * big; if (isObs) setODir(S.odir + d); else setDir(S.dir + d); }
+    else if (k === ' ') setPlaying(!playing);
+    else if (k === 'r' || k === 'R') restart();
+    else if (k === 'l' || k === 'L') setMode(light() ? 'sound' : 'light');
+    else return;
+    e.preventDefault(); listen(); readouts(); drawAll();
+  });
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(() => { resize(); updateArrowT(); drawAll(); });
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+
+  const retheme = () => { tokens(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastRead = 0, frameMs = 0;
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (playing) { step(dt); listen(); recordTrack(); audioUpdate(); }
+    drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastRead > 120) { readouts(); lastRead = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__dop = { get frameMs() { return frameMs; }, get S() { return S; }, get roots() { return roots; }, get rings() { return rings.length; }, get booms() { return booms.slice(); },
+    get track() { return track; }, applyPreset, setPlaying, restart, handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt })); },
+    run(sec, dt = 1 / 60) { for (let i = 0; i < sec / dt; i++) { step(dt); listen(); recordTrack(); } readouts(); drawAll(); } };
+
+  tokens();
+  const ro = new ResizeObserver(() => { resize(); });
+  ro.observe(pane);
+  resize();
+  applyPreset('ambulance');
+  setPlaying(!reduce);
+  if (reduce) { window.__dop.run(6.5); }   // a meaningful still picture: the source just past the observer, the pitch falling
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
