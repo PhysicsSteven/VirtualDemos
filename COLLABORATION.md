@@ -8,8 +8,10 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 
 | Area | Owner | Where | Status |
 |---|---|---|---|
-| Demo visuals and interaction (apparatus drawings, 3D views, layout, look and feel) | Claude | `demos/*.html` on `main` | Ongoing. Done so far: star-slice, projectile-drag, rutherford, faraday, optics-bench, double-slit, photoelectric, spectra, rc-circuits, magnetic-force, circuit-builder, capacitors, black-holes, gauss-law. In progress: hydrogen-orbitals, coulomb-sandbox, currents-fields, ac-circuits. |
-| New demos | Claude | `demos/` on `main` | Recent: gamma-spectroscopy, diffraction-grating |
+| Demo visuals and interaction (apparatus drawings, 3D views, layout, look and feel) | Claude | `demos/*.html` on `main` | **Paused by Steve (2026-10-18).** Done: star-slice, projectile-drag, rutherford, faraday, optics-bench, double-slit, photoelectric, spectra, rc-circuits, magnetic-force, circuit-builder, capacitors, black-holes, gauss-law. Unfinished passes for hydrogen-orbitals, coulomb-sandbox, currents-fields, ac-circuits are parked on `wip/visual-passes`; those four demos are free to edit on `main`. |
+| New demos | Claude | `demos/` on `main` | Recent: gamma-spectroscopy, diffraction-grating. **In progress: `demos/spin-resonance.html`** (ESR/PSR lab modeled on the Teltron TEL.2560 setup). |
+
+**Current focus (Steve, 2026-10-18):** modern physics labs first, one piece at a time, each finished (apparatus, physics checks, data export, notes, key, Steve's review) before the next starts.
 | Classroom teaching notes and answer keys | Claude | `notes/`, `keys/` on `main` | All 52 demos have notes |
 | Full virtual labs, physics validation, regression tests, CI | GPT | `curriculum/`, `.github/`, `demos/transient-circuits.html` on `curriculum/virtual-lab-starter-kits` | Ongoing. Latest main merged: bc0485a (2026-10-18). See per-demo rows below. |
 | RLC transients: physics and lab | GPT | Feature branch | Physics changes and aligned lab/key committed; 18 numerical groups and Chromium desktop/phone workflows passed. Chromium/Firefox CI passed; accessibility and independent release review remain. |
