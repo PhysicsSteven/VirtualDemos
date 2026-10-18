@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Charges in Magnetic Fields: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Charges in Magnetic Fields</h1><ul class="meta"><li><a href="../demos/magnetic-force.html">Open the demo</a></li><li>PHYS 202</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>F = qv × B is always perpendicular to v: it turns a charge but never changes its speed, so it does no work.</li>
+<li>In uniform B a charge moving across the field circles with r = mv/|q|B and period T = 2πm/|q|B, which does not depend on speed. The sign of q sets the sense of rotation.</li>
+<li>In crossed E and B the forces balance only for v = E/B (velocity selector); with B alone, ions of equal charge and energy separate by mass.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need the cross product, F = qv × B and centripetal acceleration. ⊗ is B into the page. Drag the arrow tip to set the launch velocity.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Circular motion.</strong> Ask Q1 first. A proton at 1.0×10⁵ m/s in 0.10 T: r = 1.04 cm, T = 656 ns. Drag the arrow tip: the circle grows, T stays 656 ns.</li>
+<li><strong>Electron vs proton.</strong> Same kinetic energy, 100 eV, in 1 mT: they circle in opposite senses, and the electron's circle is 43 times smaller (Q3).</li>
+<li><strong>E × B drift.</strong> A proton from rest traces a cycloid, drifting at E/B = 1.0×10⁵ m/s. An <strong>Electron</strong> arches the other way but drifts the same way.</li>
+<li><strong>Velocity selector.</strong> 400 V across plates 2 cm apart with 0.10 T: only protons near E/B = 2.0×10⁵ m/s get through. Press <strong>Fire 20</strong>; slow ones curve down, fast ones up.</li>
+<li><strong>Mass spectrometer.</strong> Neon ions through 1000 V in 0.20 T land 20.36 cm (²⁰Ne⁺) and 21.35 cm (²²Ne⁺) from the slit. <strong>Equal numbers</strong> shows the rare ²¹Ne⁺.</li>
+<li><strong>Cyclotron.</strong> A proton gains 100 keV per gap crossing at a fixed f_c = 15.25 MHz. Move <strong>f / f_c</strong> off 1 to show it falling out of step.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: a proton moves at right angles to a uniform magnetic field. Does its speed change? If its speed doubles, what happens to its radius and its period?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> A proton (m = 1.673×10⁻²⁷ kg) moves at 1.0×10⁵ m/s at right angles to a 0.10 T field. Calculate the radius of its circle and its period. Check with <strong>Circular motion</strong>.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In <strong>Electron vs proton</strong> both have 100 eV of kinetic energy in 1.0 mT pointing into the page. Which way does each circle, as seen on the page? Find the ratios of their radii and of their periods (m_p/m_e = 1836).</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In <strong>Velocity selector</strong> (400 V across plates 2.0 cm apart, B = 0.10 T), what speed goes straight through? Would an electron at that speed? A doubly charged ion? Check with <strong>Particle</strong>.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In <strong>Mass spectrometer</strong>, singly charged neon ions start from rest, are accelerated through 1000 V and enter 0.20 T. Taking masses of 20 u and 22 u (1 u = 1.661×10⁻²⁷ kg), find where each lands (2r from the slit) and the separation.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In <strong>Cyclotron</strong> (B = 1.0 T, dee radius 0.30 m), find the gap voltage frequency and the largest proton energy in MeV. Why does one frequency work for every orbit, and why does it fail at high energy?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The magnetic force speeds the particle up."</strong> F ⊥ v, so it does no work; only E changes the speed.</li>
+<li><strong>"The magnetic force points along B."</strong> It is perpendicular to both v and B.</li>
+<li><strong>"A faster particle takes longer to go around its bigger circle."</strong> Circumference and speed grow together; T is the same.</li>
+<li><strong>"Positive and negative charges drift opposite ways in crossed fields."</strong> The drift E × B/B² contains no q.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Exact nonrelativistic motion in uniform fields (circle in pure B, cycloid or trochoid with E), so |v| in pure B stays fixed to rounding error. Speeds stop at 10⁷ m/s (v/c = 0.033). Field edges are sharp (no fringe fields), and the particle does not radiate.</li>
+<li>Spectrometer ions start at rest; ion mass = atomic mass − one electron. The cyclotron gap voltage is a square wave; the rail shows v/c and γ at K_max.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

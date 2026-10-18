@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gauss&#x27;s Law: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Gauss&#x27;s Law</h1><ul class="meta"><li><a href="../demos/gauss-law.html">Open the demo</a></li><li>PHYS 202</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>The net flux through any closed surface is Q_enc/ε₀, whatever its shape and size and wherever the charges sit inside.</li>
+<li>Charges outside change the field on the surface but add zero net flux; zero net flux does not mean zero field.</li>
+<li>Gauss's law always holds, but gives E directly only when symmetry makes E constant and perpendicular on the surface: E ∝ 1/r² outside a sphere, E ∝ r inside a uniform ball, E ∝ 1/r for a line, E constant for a plane.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need the point charge field, flux as E·A, and line and surface charge densities. <strong>Any surface</strong> integrates the flux numerically without using Gauss's law; <strong>Symmetry</strong> walks through the derivation step by step. <strong>Pause</strong> stops the motion so you can drag things.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Charge inside.</strong> A 2 nC charge wanders inside a sphere; Q_enc/ε₀ and the numerical ∮E·dA both stay 225.9 N·m²/C. Ask Q1, then change <strong>Radius R</strong> and try <strong>Box</strong> or <strong>Freeform</strong>.</li>
+<li><strong>Charge outside.</strong> Lines enter and leave; flux out (+12.63) and in (−12.63) cancel. Drag the charge inside: Φ jumps to q/ε₀.</li>
+<li><strong>Dipole inside.</strong> Q_enc = 0, Φ = 0, yet E is strong on parts of the box. Add a charge with <strong>+1 nC</strong> and predict the new flux.</li>
+<li><strong>Uniform sphere.</strong> Follow <strong>Gauss's law, step by step</strong>; pause and drag r inside and outside the ball. Then try <strong>Conductor</strong>.</li>
+<li><strong>Line of charge</strong> and <strong>Plane of charge.</strong> Change the cylinder length L or the cap distance h: E does not change.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: in <strong>Charge inside</strong>, if the sphere's radius is doubled, does the flux double, quadruple, fall to a quarter, or stay the same? Explain from how E and the area change, then check.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In <strong>Charge outside</strong> the field on the sphere is not zero, yet the net flux is. Explain. Does zero net flux mean zero field everywhere on the surface? Use <strong>Dipole inside</strong> in your answer.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> A closed surface surrounds +2.0 nC. What is the flux? Then −1.0 nC is added inside and +3.0 nC outside. What is the new flux? Set it up in <strong>Any surface</strong> to check.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In <strong>Uniform sphere</strong>, Q = 5.0 nC is spread evenly through a ball of radius 5.0 cm. Find E at r = 3.0 cm, at the surface, and at r = 10 cm. Where is E largest? Check with the step panel.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> For a line with λ = 20 nC/m, find E at r = 4.0 cm. Why does the cylinder's length not matter? For a real wire 1 m long, where would this result stop being accurate?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Switch the sphere to <strong>Conductor</strong>. Why is E zero inside, and why does E jump at the surface instead of rising smoothly as for the ball?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Gauss's law only works for symmetric surfaces."</strong> It holds for every closed surface (try <strong>Freeform</strong>); symmetry is needed only to solve for E.</li>
+<li><strong>"Zero flux means zero field on the surface."</strong> In <strong>Dipole inside</strong> inward and outward flux cancel where E is strong.</li>
+<li><strong>"Charges outside do not affect the field on the surface."</strong> They do; they only add zero net flux.</li>
+<li><strong>"A bigger surface catches more flux."</strong> E falls as 1/r² while the area grows as r².</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li><strong>Any surface</strong>: point charges in the plane z = 0 (the slice you see), with 3D Gaussian surfaces (sphere, cylinder, or box or freeform prism extended ± half the depth). ∮E·dA is computed by adaptive quadrature from the full 3D field. In a slice, line spacing does not show field strength, and line counts are only a picture of the flux.</li>
+<li><strong>Symmetry</strong>: ideal distributions; the line and plane are infinite, the ball is a uniformly charged insulator, the conductor's charge sits on its surface. 1 nC enclosed gives 112.9 N·m²/C.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

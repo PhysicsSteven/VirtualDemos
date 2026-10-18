@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RC Circuits: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>RC Circuits</h1><ul class="meta"><li><a href="../demos/rc-circuits.html">Open the demo</a></li><li>PHYS 202</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>After any change the charge relaxes exponentially to its new final value with time constant τ = RC: 63% of the way at t = τ, within 1% after 5τ.</li>
+<li>The loop rule holds at every instant, ε = IR + Q/C, so I = (ε − V_C)/R: the current, and so the charging, slows as V_C approaches ε.</li>
+<li>V_C cannot jump; I can. Charging from empty, the battery does work Cε²: half is stored, half heats R, whatever R is.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need Q = CV, Ohm's law, the loop rule and U = ½CV². With <strong>Automatic</strong> playback 5τ takes about 6 s on screen, whatever τ is. <strong>Pause</strong> freezes the readouts.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Charging.</strong> Ask Q1 before pressing it, since it starts at once (12 V, 10 kΩ, 100 µF, τ = 1.00 s). Pause near t = 1 s and read "V_C as a fraction of ε" (about 63%). In the <strong>Kirchhoff loop rule</strong> panel the two drops always add to ε.</li>
+<li><strong>Discharging.</strong> The full capacitor (9 V) drives current through 47 kΩ by itself (τ = 4.70 s). I is negative; each τ, V_C falls to 37%.</li>
+<li><strong>Flip mid way.</strong> The switch flips by itself at t = τ. Ask what V_C and I do at the flip: V_C carries on from 63% of ε, the current jumps from positive to negative, and τ is unchanged.</li>
+<li><strong>Big τ vs small τ.</strong> The gray trace has 33 kΩ (τ = 3.3 s): same shape, stretched. Drag the τ marker to change R.</li>
+<li><strong>Energy bookkeeping</strong>, then <strong>Camera flash.</strong> The split of the battery work heads for 50% : 50%, for any <strong>Resistance R</strong> (change it, press <strong>Reset</strong>). In <strong>Camera flash</strong>, charge, then press <strong>Flip switch</strong> and compare the peak powers (Q6).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: an empty capacitor is connected through a resistor to a 12 V battery. At the instant the switch closes, what are V_C, V_R and I? What are they a long time later?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In <strong>Charging</strong> (ε = 12 V, R = 10 kΩ, C = 100 µF), find τ, the initial current, V_C at t = 2.0 s, and when V_C reaches 6.0 V. Pause the demo to check.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The battery stays at 12 V the whole time, yet the capacitor charges more and more slowly. Use the loop rule to explain why. Why does V_C never quite reach ε?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In <strong>Flip mid way</strong> the switch moves to Discharge at t = τ = 1.00 s. Find V_C just after the flip, the current just before and just after, and how long V_C then takes to halve.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In <strong>Energy bookkeeping</strong> (ε = 6.0 V, C = 1000 µF, R = 1.0 kΩ), find the battery work for a full charge, the energy stored and the heat. What changes, and what does not, with R = 10 kΩ?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In <strong>Camera flash</strong> (ε = 12 V, C = 1000 µF, R₁ = 10 kΩ, R₂ = 10 Ω), find the energy stored when full, the peak power in R₁ as charging starts and in R₂ as the discharge starts, and the fraction of the energy released 10 ms after the flip.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"After one time constant the capacitor is half charged."</strong> It is 63% charged; half takes τ ln 2 = 0.69τ.</li>
+<li><strong>"A bigger resistor wastes more energy while charging."</strong> The heat is ½Cε² for any R: a small R gives a large current briefly, a large R a small current for a long time.</li>
+<li><strong>"When the switch flips, the capacitor voltage jumps."</strong> V_C = Q/C, and Q cannot change instantly through a finite current. The current is what jumps.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Exact solution between changes, Q(t) = Q_f + (Q₀ − Q_f) e^(−(t−t₀)/τ), with Q_f = Cε charging and 0 discharging, restarted from the charge at each change: no step size error. Energies are exact too.</li>
+<li>Ideal battery (no internal resistance), wires and switch; no inductance; instant switching. R runs from 1 kΩ to 1 MΩ, C from 1 µF to 1000 µF.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

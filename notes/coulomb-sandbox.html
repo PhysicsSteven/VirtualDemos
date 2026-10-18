@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coulomb Sandbox: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Coulomb Sandbox</h1><ul class="meta"><li><a href="../demos/coulomb-sandbox.html">Open the demo</a></li><li>PHYS 202</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>E is the vector sum of the kq/r² fields; V is the plain number sum of the kq/r. Vectors can cancel where numbers do not, and the other way round.</li>
+<li>E = 0 and V = 0 are different conditions: on the dipole's midline V = 0 where E is strong; at the like pair's midpoint E = 0 where V is large.</li>
+<li>Field lines start on + and end on − charges or at infinity, in number proportional to charge. They cross equipotentials at right angles, pointing downhill in V; where equipotentials crowd, |E| ≈ ΔV/Δs is large.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need Coulomb's law, vector components and potential. Grid squares are 1 cm and charges are in nC (1 nC gives 899 V at 1 cm). Every Setups button puts the probe at (0, 2.5) cm, so its readouts are ready before anyone hovers.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Dipole.</strong> Ask Q1 first, then show the probe: V = 0 V, |E| = 18.1 kV/m, 0° from +x. Hover along the dashed V = 0 line: V stays zero while |E| changes.</li>
+<li><strong>Like pair.</strong> Ask for a prediction of E halfway between the charges, then hover there: |E| drops to zero while V is about 1.20 kV.</li>
+<li><strong>3D landscape</strong>, then <strong>Spin</strong>. Positive charges are hills, negative ones wells; equipotentials are contour lines and field lines run straight downhill. The like pair's midpoint is a saddle (Q5).</li>
+<li><strong>+3 and −1.</strong> In <strong>2D map</strong>, count lines: 18 leave the +3, only 6 end on the −1, and 12 go off screen. The dashed V = 0 line is now a closed loop around the −1. Hunt for the point where E = 0 (Q4).</li>
+<li><strong>Equipotential spacing ΔV.</strong> On <strong>Dipole</strong>, compare the packing of equipotentials near the charges and the midpoint (Q6). Build your own with <strong>Add +1 nC</strong> and <strong>Add −1 nC</strong>.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: in <strong>Dipole</strong> (+2 nC and −2 nC, 6 cm apart), consider the point 2.5 cm above the midpoint. Is V there positive, negative or zero? Is E zero? If not, which way does it point?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> With the dipole's charges at (−3, 0) cm and (3, 0) cm, calculate the magnitude and direction of E at (0, 2.5) cm. Check against the probe.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> At the midpoint of <strong>Like pair</strong> E is zero but V is not; at the midpoint of <strong>Dipole</strong> V is zero but E is not. Explain both. Then calculate V at the like pair's midpoint (+2 nC each, 6 cm apart).</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In <strong>+3 and −1</strong> (+3 nC at x = −2.5 cm, −1 nC at x = +2.5 cm) there is one point on the x axis where E = 0. Explain why it cannot lie between the charges or left of the +3, then find it. Check with the probe.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In the 3D view a positive test charge behaves like a marble on the surface. Put one at rest exactly at the midpoint of <strong>Like pair</strong>. Is it in equilibrium? Is that equilibrium stable for a nudge along the line joining the charges? For a nudge at right angles to it?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> On <strong>Dipole</strong> with ΔV = 250 V, the equipotentials near the midpoint are about 0.6 cm apart along the x axis. Estimate |E| there and compare with the probe.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Where V = 0, E must be zero too."</strong> E is the slope of V, not its value; along the dipole's midline V = 0 and E is strong.</li>
+<li><strong>"A charge released from rest moves along its field line."</strong> On a curved line, inertia carries it off the line.</li>
+<li><strong>"Line spacing in this picture shows how fast E falls off."</strong> In a flat slice of 3D point charges lines spread as 1/r while E falls as 1/r². Use the probe.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Up to 8 point charges (−5 to +5 nC) in one plane, with the full 3D Coulomb field: V = Σ kqᵢ/rᵢ, E = Σ kqᵢ r̂ᵢ/rᵢ², k = 8.99×10⁹ N·m²/C².</li>
+<li>Field lines follow E, in number proportional to |q|. In 3D the height is V, compressed near each charge: read it for shape, not scale.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>
