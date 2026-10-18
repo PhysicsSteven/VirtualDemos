@@ -1,6 +1,6 @@
 # VirtualDemos laboratory curriculum — starter collection
 
-This directory contains **33 student laboratory starters and 33 instructor guides**. These are **draft teaching materials**, not validated measurements or approved grading keys. The main demonstration code is unchanged.
+This directory contains **26 student laboratory starters and 26 instructor guides**. These are **draft teaching materials**, not validated measurements or approved grading keys. The main demonstration code is unchanged.
 
 ## Structure
 - [Student labs](labs/students/) — guided activities, measurement tables, graphs, uncertainty and conclusions
