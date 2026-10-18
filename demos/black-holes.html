@@ -551,7 +551,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const M = () => Math.pow(10, S.logM);
   const PRESETS = {
     ring: { view: 'lens', logM: 12, logDL: 6, logDS: Math.log10(2e6), shape: 'gal', rho: 0.35, bx: 0, by: 0, play: false,
-      hint: 'A background galaxy sits exactly behind a massive galaxy, here treated as a point mass of 10¹² M_sun halfway to a source 2 Gpc away. Light passes on every side and arrives as an Einstein ring about 2″ across. Drag the true position off center and the ring breaks into two arcs.' },
+      hint: 'A background galaxy sits exactly behind a massive galaxy, here treated as a point mass of 10¹² M_sun halfway to a source 2 Gpc away. Light passes on every side and arrives as an Einstein ring of radius θ_E ≈ 2″, about 4″ across. Drag the true position off center and the ring breaks into two arcs.' },
     two: { view: 'lens', logM: 12, logDL: 6, logDS: Math.log10(2e6), shape: 'gal', rho: 0.32, bx: 0.55, by: 0.3, play: false,
       hint: 'Off center the source makes two images on opposite sides of the lens: a bright one outside the Einstein ring and a fainter, mirror flipped one inside it. Both are stretched along the ring. Drag an image marker and the source follows.' },
     micro: { view: 'lens', logM: Math.log10(0.5), logDL: Math.log10(4), logDS: Math.log10(8), shape: 'disk', rho: 0.08, bx: -2, by: 0.3, play: true,
@@ -559,7 +559,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     stellar: { view: 'near', logM: 1, logR: Math.log10(30), play: true,
       hint: 'A 10 M_sun black hole has r_s = 29.5 km. At 30 r_s, still almost 900 km out, the difference in gravity between your head and feet is about 800 g: you are torn apart long before the horizon. Drag the observer to watch clocks slow and light redden.' },
     sgr: { view: 'near', logM: Math.log10(4.3e6), logR: Math.log10(1.2), obj: 'sgr', play: true,
-      hint: 'The Milky Way’s central black hole, 4.3 million M_sun (GRAVITY and EHT, approximate). Its horizon is 0.085 AU across in radius, and the tidal stretch there is about a thousandth of a meter per second squared: you would cross it without feeling anything, but the outside world would never see you arrive.' },
+      hint: 'The Milky Way’s central black hole, 4.3 million M_sun (GRAVITY and EHT, approximate). Its horizon radius is 0.085 AU, and the tidal stretch there is about a thousandth of a meter per second squared: you would cross it without feeling anything, but the outside world would never see you arrive.' },
     m87: { view: 'ray', logM: Math.log10(6.5e9), logRo: Math.log10(15), gx: 0.03, gy: 0.012, gsz: 4, obj: 'm87', play: false,
       hint: 'M87*, 6.5 billion M_sun (EHT 2019). In units of r_s every Schwarzschild black hole looks the same, so this is the view from 15 r_s of any of them. From Earth the shadow of M87* spans about 40 µas, close to the 42 µas ring the Event Horizon Telescope imaged.' }
   };
@@ -1515,7 +1515,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       lastRead = now;
       if (S.view === 'lens') { $('sxOut').textContent = S.bx.toFixed(3); const u = Math.hypot(S.bx, S.by), [tp, tm] = images(u);
         $('rU').innerHTML = `${u.toFixed(3)} θ<sub>E</sub>`; $('rT1').innerHTML = `${tp.toFixed(3)} θ<sub>E</sub>`; $('rT2').innerHTML = `${tm.toFixed(3)} θ<sub>E</sub>`;
-        $('rM1').textContent = mu(tp).toFixed(3); $('rM2').textContent = mu(tm).toFixed(3); $('rA').textContent = Apoint(u).toFixed(3); lensReadoutsA(); }
+        $('rM1').textContent = u > 1e-6 ? mu(tp).toFixed(3) : '∞'; $('rM2').textContent = u > 1e-6 ? mu(tm).toFixed(3) : '−∞'; $('rA').textContent = u > 1e-6 ? Apoint(u).toFixed(3) : '∞ (ring)'; lensReadoutsA(); }
       if (S.view === 'ray') $('rGal').textContent = fmtDeg(Math.hypot(S.gx, S.gy));
       countLine();
     }

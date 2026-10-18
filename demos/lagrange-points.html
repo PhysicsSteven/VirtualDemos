@@ -554,7 +554,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         return out;
       } },
     tadpole: { sys: 'sj', view: 'whole', speed: 6, follow: true,
-      hint: 'A particle starts at rest 35° behind L4. It librates around L4 between about 40° and 95° from Jupiter, never reaching it, once every 150 years or so, while its own zero velocity curve encloses the forbidden island it circles. Earth has Trojans like this too: 2010 TK7 and 2020 XL5 librate about Sun–Earth L4.',
+      hint: 'A particle starts at rest 95° from Jupiter, 35° beyond L4. It librates around L4 between about 40° and 95° from Jupiter, never reaching it, once every 150 years or so, while its own zero velocity curve encloses the forbidden island it circles. Earth has Trojans like this too: 2010 TK7 and 2020 XL5 librate about Sun–Earth L4.',
       make(mu) { const th = 95 * deg; return [{ s: [Math.cos(th) - mu, Math.sin(th), 0, 0], col: 0 }]; } },
     horseshoe: { sys: 'sj', view: 'whole', speed: 6, follow: true,
       hint: 'Start on a circular orbit 1% outside Jupiter’s, opposite it. The particle drifts slowly backward, is turned around before it reaches Jupiter, drifts the other way past L3, and turns again: a horseshoe enclosing L3, L4 and L5. Saturn’s moons Janus and Epimetheus swap orbits like this every four years.',

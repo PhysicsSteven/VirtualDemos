@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Star Slice: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Star Slice</h1><ul class="meta"><li><a href="../demos/star-slice.html">Open the demo</a></li><li>Intro astronomy; upper level astrophysics (stellar structure and evolution)</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A star burns only where it is hot enough: in the core, and later in thin shells around a core of ash. Most of the star is never burned.</li>
+<li>When a core runs out of fuel it contracts and heats, the next fuel ignites in a shell around it, and the envelope swells: a giant has a tiny dense core inside an enormous, thin envelope.</li>
+<li>Heavier stars burn faster and go further. A 1 M☉ star stops with a carbon/oxygen core that becomes a white dwarf; stars of 12 M☉ and up build an onion of shells, each the ash of the stage before, ending in an iron core that collapses.</li>
+<li>Each new fuel needs a higher temperature because heavier nuclei repel more strongly (Coulomb barrier ∝ Z₁Z₂). Fusion stops paying at iron, where the binding energy per nucleon peaks.</li>
+<li>A cooling white dwarf freezes from the center out, because the ions' coupling Γ ∝ Z²n^(1/3)/T is largest where the density is largest.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know that pressure holds a star up against gravity, and the basics of fusion. The demo plays back saved moments of MESA stellar evolution models. <strong>Star mass</strong> picks a run (1, 3.7, 12, 15, 20 and 25 M☉); <strong>0.6 Msun white dwarf cooling</strong> is a separate run. <strong>Moments to look at</strong> are found in each run's data. Color the slice by <strong>Glow</strong>, <strong>Elements</strong>, <strong>Temperature</strong>, <strong>Density</strong>, <strong>Burning</strong>, <strong>Gamma</strong> (and <strong>Phase</strong> for the white dwarf). <strong>Log radius</strong> shows every layer but is not to scale. Hover or tap a layer to read it in <strong>Probe</strong>. Turn on <strong>Projector</strong> for the room.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>1 M☉, from the start.</strong> The first moment is a large, cool protostar that is nearly all convective (<strong>Deepest convective envelope</strong> jumps here). Press <strong>Play</strong> and watch it shrink onto the main sequence, then switch to <strong>Burning</strong>: hydrogen burns only at the very center.</li>
+<li><strong>Largest radius</strong> (1 M☉). Ask Q1 first. The star is now 194 R☉, but the feature list puts the hydrogen burning shell at 0.027 R☉. Turn on <strong>Log radius</strong> to see the helium core, and switch the profiles to <strong>vs log r</strong>.</li>
+<li><strong>Strongest burning</strong> (1 M☉). The stage label reads <strong>Helium flash</strong>: helium ignites in a shell off center, not at the center. Look at the temperature profile and ask Q6.</li>
+<li><strong>Hot white dwarf</strong> (1 M☉). The envelope is gone: a carbon/oxygen core about five Earth radii in radius, still shrinking, with no burning.</li>
+<li><strong>12 M☉: Onion shells, then Core collapse.</strong> Read the layers from the center out (<strong>Log radius</strong> is on), then ask Q3. <strong>Core collapse</strong>, the last saved moment, shows an iron group core of about 1.5 M☉ and 1,500 km radius, already falling inward.</li>
+<li><strong>0.6 Msun white dwarf cooling: Crystallization starts, then Front halfway.</strong> Use <strong>Phase</strong>, then <strong>Gamma</strong>. The solid first appears at the center; at <strong>Front halfway</strong> half the mass is solid while the front is at about half the radius (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: at <strong>Largest radius</strong> the 1 M☉ star has swollen to 194 R☉. What fraction of its radius do you think holds more than half of its mass? Check with <strong>Log radius</strong>, the feature list and the profiles.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> The Sun's mean density is 1.41 g/cm³. Find the mean density of a giant of 0.78 M☉ and 194 R☉, and of a white dwarf of 0.61 M☉ and 0.0123 R☉. By what factor do they differ? (Mean density scales as M/R³.)</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In <strong>Onion shells</strong> the layers run, from the center out, roughly silicon (and heavier), oxygen, neon, carbon, helium, hydrogen. Explain why each heavier fuel burns closer to the center, and why the sequence ends with an iron core rather than going on to heavier elements.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A rough rule for the main sequence life is t ≈ 10 Gyr (M/M☉)^(−2.5) (t ∝ M/L, L ∝ M^3.5). Estimate t for 3.7, 12 and 25 M☉, and compare with each run's age when the stage label first reads <strong>Hydrogen shell burning</strong>. Where does the rule work, and why might it fail for the heaviest stars?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Step through the 1 M☉ run from <strong>Core hydrogen burning</strong> to <strong>Largest radius</strong>, watching the center mass fractions, <strong>Burning</strong> and the radius. Where does hydrogen burn before and after the center runs out? What happens to the radius and luminosity while the core is contracting?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> At <strong>Strongest burning</strong> in the 1 M☉ run, helium ignites in a shell at about 0.16 M☉, not at the center. Use the temperature profile to explain why it lights there. Why is the ignition so violent (the peak ε_nuc is enormous) in a core supported by degenerate electrons?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In the white dwarf run, use <strong>Phase</strong> and <strong>Gamma</strong> to say where the solid first appears and why there. At <strong>Front halfway</strong> half the mass is solid, but the front is only about halfway out in radius. Why does the inner half of the radius hold half of the mass, when a uniform ball would hold only one eighth there?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The whole star burns, like a fire."</strong> Burning happens only where the temperature is high enough: in the core or in thin shells. In <strong>Burning</strong> mode most of the star never glows.</li>
+<li><strong>"A red giant is a bigger, heavier star."</strong> It has the same mass or less; its core has shrunk while its envelope swelled.</li>
+<li><strong>"Every star makes elements up to iron."</strong> The 1 M☉ and 3.7 M☉ runs stop with carbon and oxygen; only the massive runs build the full onion.</li>
+<li><strong>"A white dwarf freezes from the outside in, like a pond."</strong> It freezes from the dense center outward.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Every number and layer color comes from saved MESA profiles (composition, temperature, density, mixing, burning), with about 100 to 200 real zones per moment and no interpolation. <strong>Data notes</strong> list each run's source and columns.</li>
+<li>Stage labels are inferred from the data, and say so. The 12 to 25 M☉ runs are MESA test suite models (about solar metallicity, no mass loss) that stop as the iron core collapses.</li>
+<li><strong>Glow</strong> uses the blackbody color of the local temperature. The burning glow marks zones above 10 erg g⁻¹ s⁻¹ (and 10⁻⁴ of the peak); a 1 M☉ main sequence core barely exceeds that, so it shows as a tiny spot.</li>
+<li>Illustrative only: the convective roll pattern (its extent and relative speed come from MESA), textures, granulation, sparkle and glow pulse.</li>
+<li>In the white dwarf run, <strong>Phase</strong> marks zones MESA's equation of state calls solid (eos_phase ≥ 0.5) and <strong>Gamma</strong> shows the plasma coupling Γ.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>ε_nuc of 10 erg g⁻¹ s⁻¹ is 1 mW per kg, less than a resting human body makes per kilogram. Ask how the Sun can still be so luminous.</li>
+<li>Compare with <strong>White Dwarf Cooling</strong>, a textbook model of the same freezing.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

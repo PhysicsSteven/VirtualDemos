@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lagrange Points: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Lagrange Points</h1><ul class="meta"><li><a href="../demos/lagrange-points.html">Open the demo</a></li><li>Intro astronomy; intro mechanics (rotating frames); upper level mechanics</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>In the frame that turns with two orbiting bodies, gravity from both and the centrifugal effect balance at five points. L1, L2 and L3 lie on the line through the bodies; L4 and L5 make equilateral triangles with them for any mass ratio.</li>
+<li>A Lagrange point is not where gravity vanishes: seen from the stars, an object there orbits with the smaller body's period.</li>
+<li>L1, L2 and L3 are saddles: offsets grow exponentially, so spacecraft there need regular corrections. L4 and L5 sit on hilltops of the effective potential, yet are stable for μ below Routh's 0.0385: the Coriolis effect turns a drift into a loop.</li>
+<li>In the rotating frame the Jacobi constant C = 2Ω − v² is conserved. Where 2Ω &lt; C a particle would need negative v², so the zero velocity curve fences off regions it can never reach.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know Newton's gravity, circular orbits and Kepler's third law, and have met the centrifugal and Coriolis effects. Lengths are in a (the separation), times in P (the period). The stage shows effective potential contours, the five points (stable green, unstable red), the gold zero velocity curve and the shaded forbidden region. Click empty space to drop a particle at rest, or drag to throw it. Switch <strong>Rotating</strong> and <strong>Inertial</strong>, pick a system under <strong>The two masses</strong> or set <strong>Mass ratio μ</strong>. Turn on <strong>Projector</strong> for the room.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Jupiter's Trojans.</strong> This is the opening setup: pause, ask Q1, then press <strong>Reset</strong> and play. A swarm of 140 test asteroids starts at rest near L4 and L5. None falls off; each swings around its point in a tadpole, about 150 years per swing.</li>
+<li><strong>Tadpole orbit.</strong> One particle starts at rest at 95° from Jupiter. It librates between about 40° and 95°, and its own zero velocity curve (C = 3.00051, just above 3) encloses a small forbidden island around L4 that the path circles.</li>
+<li><strong>Horseshoe orbit.</strong> A particle on a circular orbit 1% outside Jupiter's drifts backward, turns around before reaching Jupiter, and drifts the other way past L3. Ask Q6.</li>
+<li><strong>Sun–Earth: JWST at L2.</strong> Two planar orbits around L1 and L2, each about 0.004 AU across, last two or three loops and then leave. Read the e-folding times in the rail (23 d at L1, 23.4 d at L2) and ask Q4.</li>
+<li><strong>Earth–Moon.</strong> C is between C(L2) and C(L1): the particle wanders between Earth and the Moon through L1 but cannot get out past L2. Drag the gold curve (or <strong>Jacobi constant C</strong>) and read <strong>Where a particle with this C can go</strong> (Q5).</li>
+<li><strong>Unstable L1.</strong> μ = 0.1. Particles 10⁻⁵ a either side of L1 leave, one toward each mass; with μ above 0.0385 the one near L4 spirals away too. Ask Q3.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: on the contour map, L4 and L5 sit on top of hills of the effective potential, not in valleys. If you place an asteroid at rest a little way from L4, will it roll off the hill and leave? Then run <strong>Jupiter's Trojans</strong>.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> For a small second mass, L1 and L2 lie about a(μ/3)^(1/3) from it (Hill's estimate). For the Sun and the Earth–Moon pair, μ = 3.04 × 10⁻⁶ and a = 1.496 × 10⁸ km. How far are L1 and L2 from Earth, and how does that compare with the Moon's distance, 384,400 km? Check with the rail.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> L4 and L5 are stable only if μ &lt; 0.0385. Which have stable L4 and L5: Sun–Jupiter (μ = 9.5 × 10⁻⁴), Earth–Moon (μ = 0.0122), Pluto–Charon (Charon is 0.122 times Pluto's mass)? Set each μ, read the rail, and drop a particle near L4 to check.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> JWST orbits Sun–Earth L2, where the rail says offsets grow by a factor e every 23.4 days. If an error leaves it 1 km off its planned path, how long until the error is 1000 km if nothing is done? What does that say about how often it must correct its orbit?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Explain why a particle with Jacobi constant C larger than C(L1) can never cross from near Earth to near the Moon, though nothing physical blocks the way. Then use the <strong>Earth–Moon</strong> preset: lower C past C(L2) and throw a particle with that C. What new path opens?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In <strong>Horseshoe orbit</strong> the particle starts on a circular orbit of radius 1.01 a. Use Kepler's third law to explain why it drifts backward and estimate how many degrees it falls behind per Jupiter orbit. Why does it turn around before it reaches Jupiter?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A Lagrange point is where the two gravities cancel."</strong> The forces balance only in the rotating frame, with the centrifugal effect included. In the inertial frame the net gravity is exactly the centripetal force for a circular orbit with the second body's period.</li>
+<li><strong>"Stable points must be at the bottom of a valley."</strong> L4 and L5 are maxima of the effective potential, stable (for μ &lt; 0.0385) only because the Coriolis effect bends a sliding particle into a loop.</li>
+<li><strong>"Trojans and spacecraft sit at the points."</strong> Trojans librate in tadpoles around L4 and L5; spacecraft orbit L1 or L2 and correct every few weeks.</li>
+<li><strong>"The zero velocity curve is a path the particle follows."</strong> It is the edge of the region the particle may visit.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>The circular restricted three body problem: two masses on circular orbits, a massless test particle in their plane. Units a = 1, G(m₁ + m₂) = 1, so n = 1 and P = 2π.</li>
+<li>Ω = ½(x² + y²) + ½μ(1 − μ) + (1 − μ)/r₁ + μ/r₂. Exact rotating frame equations, ẍ − 2ẏ = ∂Ω/∂x, ÿ + 2ẋ = ∂Ω/∂y (Coriolis included). C = 2Ω − v² is conserved; C(L1) &gt; C(L2) &gt; C(L3) &gt; C(L4) = C(L5) = 3.</li>
+<li>L1, L2, L3 are roots of fifth degree equations (Newton's method). Stability, growth times and libration periods come from the linearized motion; Routh's criterion is μ &lt; (1 − √(23/27))/2 = 0.03852.</li>
+<li>Orbits use an adaptive Dormand–Prince 5(4) integrator; <strong>Drift since launch</strong> checks it. The Sun–Earth m₂ is the Earth–Moon barycenter.</li>
+<li>Left out: other planets, the Sun's pull on the Moon, eccentric orbits, radiation pressure and motion out of the plane. Real L1 and L2 spacecraft fly three dimensional halo orbits; the planar Lyapunov orbits here are their flat relatives. Real Trojans have tilted, eccentric orbits.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: show that at L4 (equal distances a from both masses) the net pull points at the center of mass with exactly the strength for a circle at Jupiter's period. Or derive Hill's estimate a(μ/3)^(1/3).</li>
+<li>Real examples: SOHO at Sun–Earth L1; JWST and Gaia at L2; Earth Trojans 2010 TK7 and 2020 XL5; Janus and Epimetheus, which swap orbits about every four years.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

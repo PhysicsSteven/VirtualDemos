@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Black Holes and Lensing: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Black Holes and Lensing</h1><ul class="meta"><li><a href="../demos/black-holes.html">Open the demo</a></li><li>Intro astronomy; modern physics or upper level astrophysics (general relativity)</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Mass bends light. A point mass lens turns one source into two images on opposite sides of the lens, one outside the Einstein radius θ_E and one, mirror flipped, inside it; exact alignment gives a ring. θ_E² = 2r_s(D_S − D_L)/(D_L D_S) sets the angular scale.</li>
+<li>Lensing keeps surface brightness, so a magnified image is a bigger patch of the same brightness: more light. A star passing in front of another, with images a milliarcsecond apart, shows up as a brightening over weeks.</li>
+<li>The Schwarzschild radius r_s = 2GM/c² grows in proportion to M. Near it, a static observer's clock runs slow by √(1 − r_s/r) and light climbing out is redshifted by the same factor.</li>
+<li>Tides at the horizon, 2GML/r_s³, fall as 1/M²: a stellar black hole tears you apart far outside the horizon; a supermassive one lets you cross unharmed.</li>
+<li>The dark shadow is larger than the horizon: rays with impact parameter below b_c = (√27/2) r_s ≈ 2.6 r_s are captured, and rays just above it circle the photon sphere at 1.5 r_s.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know Newton's gravity, angles in arcseconds, and that general relativity predicts light bending and gravitational time dilation. Three views: <strong>Lensing</strong> (a source seen through a point mass lens, with a light curve; drag the source, its edge, an image or the time marker), <strong>Ray traced</strong> (the exact view from an observer hovering near a Schwarzschild black hole) and <strong>Near the hole</strong> (drag the observer to read clock rate, redshift and tides). Turn on <strong>Projector</strong> for the room.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Einstein ring.</strong> A galaxy exactly behind a 10¹² M☉ point mass halfway to it (2 Gpc away) appears as a ring. θ_E = 2.02″, so the ring is about 4″ across (<strong>Image separation</strong> reads 4.04″). Drag the true position off center and the ring breaks into two arcs.</li>
+<li><strong>Two images.</strong> One bright image outside the ring, one fainter inside on the opposite side; μ₋ is negative because that image is mirror flipped. The total A = |μ₊| + |μ₋| is 1.82 for a point source.</li>
+<li><strong>Microlensing event.</strong> Ask Q4 first. A 0.5 M☉ star at 4 kpc drifts in front of one at 8 kpc. θ_E is only 0.713 mas, so a telescope sees one point that brightens and fades; t_E is 24.7 days.</li>
+<li><strong>Close to a stellar black hole.</strong> Ask Q1 first. <strong>Near the hole</strong>: 10 M☉, r_s = 29.5 km, observer at 30 r_s (886 km). The clock runs at 0.983 and green light arrives at 509 nm, but the tidal stretch is 778 g: torn apart.</li>
+<li><strong>Sagittarius A*.</strong> 4.3 million M☉, observer at 1.2 r_s. The clock runs at 0.408 and green light arrives at 1225 nm, yet the stretch at the horizon is only about 10⁻⁴ g. The predicted shadow from Earth, 53.3 µas, matches the EHT ring.</li>
+<li><strong>M87*.</strong> <strong>Ray traced</strong> from 15 r_s: the shadow's edge is 9.63° from its center, thin copies of the sky pile up there, and a source straight behind would make a ring of radius 23.7°. Hover to trace a ray. From Earth the shadow would be 39.7 µas, close to the EHT's 42 µas ring.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: you fall feet first into a 10 M☉ black hole, and separately into Sagittarius A<em> (4.3 × 10⁶ M☉). Near which horizon is the stretch between your head and feet larger? Then compare </em><em>Same person at the horizon</em>* in both presets.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Find r_s = 2GM/c² for 10 M☉ and for 4.3 × 10⁶ M☉ (GM☉ = 1.327 × 10²⁰ m³/s², c = 3.00 × 10⁸ m/s). Then find the stretch on a 2 m person at each horizon, ΔA = 2GML/r_s³, in m/s² and in g.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> For the microlensing preset, M = 0.5 M☉, D_L = 4 kpc and D_S = 8 kpc (1 pc = 3.086 × 10¹⁶ m). Find θ_E from θ_E² = 2r_s(D_S − D_L)/(D_L D_S), in milliarcseconds. Then find R_E = θ_E D_L and the time to cross it at 200 km/s.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Predict, then calculate: in the microlensing preset the source passes the lens at closest offset u₀ = 0.3 θ_E. A point source is magnified by A(u) = (u² + 2)/(u√(u² + 4)). What is the peak magnification? How much brighter is that in magnitudes? Pause at closest approach and compare with the rail.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> A lens makes no light and keeps surface brightness. How can the two images add up to more light than the unlensed source? Check in <strong>Two images</strong> that the brighter image is also the bigger one.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In <strong>Sagittarius A*</strong> the observer hovers at r = 1.2 r_s. Find the clock rate √(1 − r_s/r), how long one hour of this clock lasts far away, and where 500 nm light sent outward arrives. Check with the rail.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Light with impact parameter less than b_c = (√27/2) r_s falls in, so a distant observer sees a shadow of angular diameter 2b_c/D. Find it for M87* (6.5 × 10⁹ M☉ at 16.8 Mpc) in µas and compare with the EHT's 42 µas ring. Why is 2b_c about 2.6 times the horizon's diameter 2r_s?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A black hole sucks in everything around it."</strong> Far from the hole its gravity is just GM/r², like any body of that mass; even at 30 r_s clocks run within 2% of normal.</li>
+<li><strong>"Everyone who falls in is torn apart at the horizon."</strong> The tidal stretch at the horizon falls as 1/M². For 10 M☉ it is 2 × 10⁷ g; for Sagittarius A* about 10⁻⁴ g.</li>
+<li><strong>"The black disk in the EHT image is the event horizon."</strong> The shadow is set by the photon orbit: its radius is about 2.6 r_s for a distant observer, far larger than the horizon.</li>
+<li><strong>"Time stops at the horizon."</strong> The rail's clock rate is for an observer hovering with a rocket. A falling observer's own clock ticks normally; the outside world just never sees them arrive.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li><strong>Lensing:</strong> thin lens, point mass, small angles: β = θ − θ_E²/θ (impact parameter ≫ r_s), images θ± = (u ± √(u² + 4))/2, μ = 1/(1 − 1/θ⁴), in units of θ_E. Each pixel is traced back to the source plane. Distances are ordinary distances, not the angular diameter distances cosmology needs; real galaxy lenses are not point masses. The microlensing source star is drawn far too big so its images show.</li>
+<li><strong>Ray traced:</strong> exact Schwarzschild light paths, d²u/dφ² = −u + (3/2) r_s u² (u = 1/r), for a hovering observer and an infinitely distant sky. Left out: the observer's blueshift of incoming light, spin, and the glowing gas the EHT images show.</li>
+<li><strong>Near the hole:</strong> nonrotating. Clock rate and redshift for static observers are exact; 2GML/r³ is exact for a body falling radially with L ≪ r. The 100 g line is a rough guide; the drawing's radial scale is compressed.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: show that the tidal stretch at the horizon is ΔA = c⁶L/(4G²M²), and find the mass above which a 2 m person feels less than 1 g there.</li>
+<li>History: starlight bending by the Sun was measured at the 1919 eclipse; the EHT imaged M87<em> (2019) and Sagittarius A</em> (2022).</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

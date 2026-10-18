@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>White Dwarf Cooling: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>White Dwarf Cooling</h1><ul class="meta"><li><a href="../demos/white-dwarf-cooling.html">Open the demo</a></li><li>Intro astronomy; upper level astrophysics (stellar remnants, plasma physics)</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A white dwarf has no fuel. It shines by leaking heat stored in its ions; the degenerate electrons store almost none.</li>
+<li>The thin envelope is the insulation and sets L ∝ M T_c^3.5. With U = (3/2)NkT_c this gives Mestel's law, t ≈ (2/5)U/L and L ∝ t^(−7/5): fast fading while hot, ever slower later.</li>
+<li>The ions freeze where the coupling Γ = (Ze)²/(4πε₀ a kT) passes about 175. Γ grows as ρ^(1/3)/T, so freezing starts at the dense center, and heavier (denser) white dwarfs freeze first, while still bright.</li>
+<li>Freezing releases latent heat (0.77 kT per ion), so crystallization slows the fading.</li>
+<li>This page is a textbook model. Its envelope makes a 0.6 M☉ white dwarf start to crystallize later and fainter (T_eff about 3900 K) than detailed models (about 6000 K), so read its trends, not its exact numbers.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need L = 4πR²σT_eff⁴ and (3/2)kT per particle. Three panels: luminosity (or <strong>Core T</strong>) against cooling age, a slice through the star with its Γ profile, and a schematic Gaia HR diagram. Drag the age line, the dot on the HR diagram, or the handle on the star's surface (mass); the <strong>Mass M</strong> and <strong>Cooling age t</strong> sliders do the same. Checkboxes under <strong>Crystallization</strong> turn freezing and latent heat on and off; <strong>Liquid ions</strong> switches between <strong>Ideal gas</strong> and <strong>Coulomb liquid</strong>. Turn on <strong>Projector</strong> for the room.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Hot young white dwarf.</strong> A 0.6 M☉ carbon/oxygen dwarf 20,000 years old: about 3 L☉, T_eff ≈ 67,500 K. Let it play and watch the dot slide down its HR track. Ask the class where its light comes from.</li>
+<li><strong>Mestel cooling law.</strong> Ideal gas ions, no freezing. At 100 Myr the curve has joined the dashed L ∝ t^(−7/5) line (slope −1.38). Work Q2 with the rail's numbers, then switch to <strong>Coulomb liquid</strong>: the curve moves right, because the liquid stores more heat per ion.</li>
+<li><strong>Crystallization begins.</strong> A 0.8 M☉ dwarf at 6.31 Gyr: 24% of its mass is solid, but the front is only at 0.34 R. The Γ panel shows Γ = 214 at the center. Point at the dotted curve (no latent heat) and the <strong>Delay from latent heat</strong> readout (+712 Myr); ask Q5.</li>
+<li><strong>Heavier dwarfs crystallize first.</strong> Ask Q1 before you press it. The 1.0 M☉ onset is at 1.28 Gyr and M_G ≈ 13.0, where Gaia found the Q branch pile up. Drag the mass handle and watch <strong>Crystallization begins</strong> and <strong>Center freezes at</strong> move (Q4).</li>
+<li><strong>Helium vs carbon/oxygen.</strong> 3.4 times as many ions in the same mass: brighter at the same age, and Γ stays far below 175 (Q6).</li>
+<li><strong>Cosmic clock.</strong> A simulated disk 9 Gyr old. Drag the gold line and the faint end of the counts (<strong>Faintest 1%</strong>) moves with it. Finish with Q7: this 0.6 M☉ dwarf starts freezing at T_eff 3,887 K (<strong>Crystallization begins</strong>), where detailed models give about 6000 K.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: two carbon/oxygen white dwarfs form at the same time, one of 0.6 M☉ and one of 1.0 M☉. Which starts to crystallize first, and is it brighter or fainter than the other at that moment? Then check with <strong>Heavier dwarfs crystallize first</strong>.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In the <strong>Mestel cooling law</strong> preset at a cooling age of 100 Myr, the rail shows 5.2 × 10⁵⁵ ions, a core temperature T_c = 1.68 × 10⁷ K and L = 6.0 × 10⁻³ L☉ (L☉ = 3.83 × 10²⁶ W). Find the stored heat U = (3/2)NkT_c and Mestel's age t = (2/5)U/L, and compare with the age. (k = 1.381 × 10⁻²³ J/K, 1 yr = 3.156 × 10⁷ s.)</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In Mestel's model L ∝ T_c^3.5 and U ∝ T_c. Show that late in life L ∝ t^(−7/5). If a white dwarf takes 1 Gyr to fade to some luminosity, how old is it when ten times fainter? Check the slope readout.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Γ ∝ ρ^(1/3)/T, and freezing starts when the center reaches Γ = 175. The rail gives central densities of 3.2 × 10⁶ g/cm³ for 0.6 M☉ and 2.8 × 10⁷ g/cm³ for 1.0 M☉. By what factor is the 1.0 M☉ dwarf's freezing temperature higher? Check with <strong>Center freezes at</strong> for both masses.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Latent heat makes the white dwarf take longer to fade, yet at any given core temperature it is exactly as bright as without latent heat. Explain both facts.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> A 0.6 M☉ helium white dwarf fades more slowly than a carbon/oxygen one of the same mass and radius, and never crystallizes. Explain both, using the number of ions and Γ ∝ Z²/a.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> With the 0.6 M☉ carbon/oxygen dwarf selected, the rail says crystallization begins at L = 3.3 × 10⁻⁵ L☉, and the radius is 8,841 km. Use L = 4πR²σT_eff⁴ to find T_eff at onset (σ = 5.67 × 10⁻⁸ W m⁻² K⁻⁴). Detailed models give about 6000 K. Which way does this page's envelope err, and why does that make the onset later and fainter?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A white dwarf is still burning something."</strong> There is no fusion; it shines only because its ions are hot.</li>
+<li><strong>"It cools at a steady rate."</strong> The hotter it is, the faster it loses heat (L ∝ T_c^3.5), so most of its life is spent faint.</li>
+<li><strong>"The electrons hold the heat, since they hold the star up."</strong> Degenerate electrons can hardly absorb heat; the ions store it.</li>
+<li><strong>"It freezes from the surface in, like a pond."</strong> The core is at one temperature, so Γ is largest where the density is: the center.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li><strong>Structure:</strong> a zero temperature Chandrasekhar white dwarf (μ_e = 2), held fixed as it cools. C/O is 50:50 by mass (mean A = 13.7).</li>
+<li><strong>Envelope:</strong> the textbook Kramers opacity relation L ∝ M T_c^3.5 (Shapiro and Teukolsky) with X = 0, Y = 0.9, Z = 0.1. Real envelopes are hydrogen or helium and brighter at a given T_c. This largest simplification puts the 0.6 M☉ onset of crystallization at T_eff ≈ 3900 K instead of about 6000 K, and makes every age here only indicative.</li>
+<li><strong>Cooling:</strong> isothermal core, dU/dt = −L from T_c = 10⁸ K down. Neutrino cooling (dominant above about 25,000 K) is left out.</li>
+<li><strong>Heat and freezing:</strong> ions only: ideal gas (3/2 k per ion) or a Coulomb liquid fit; solid 3k per ion; Debye cooling marked but not modeled. One melting value Γ_m = 175 (one component plasma), applied to C/O with ⟨Z^(5/3)⟩; latent heat 0.77 kT per ion. Carbon/oxygen phase separation and ²²Ne settling, which release extra energy, are left out.</li>
+<li><strong>HR diagram:</strong> schematic blackbody colors; the population dots are simulated, not Gaia data.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Compare with <strong>Star Slice</strong>, which plays back a detailed model of a 0.6 M☉ white dwarf as it freezes: what does it include that this page leaves out?</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

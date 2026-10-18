@@ -809,7 +809,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         const rEnv = env ? (env.i0 ? mo.r[env.i0 - 1] : 0) : 0;
         const desc = Ls.map((L) => `${ELS[L.k].name} to ${sci(mo.mass[L.i1], 3)}`).join(', ');
         P.push({ label: 'Onion shells', idx: best, mode: 'comp', log: true, zoom: rEnv > 0 ? clamp(Math.log10(mo.R / (3 * rEnv)), 0, zoomCap(D)) : 0,
-          hint: `Model ${mo.model ?? best + 1}: ${bc} layers, each named by its most abundant element, from the center out (outer edge in M☉): ${desc}. Each layer is the ash of the burning stage before it. Log radius is on, so this view is not to scale.` });
+          hint: `Model ${mo.model ?? best + 1}: ${Ls.length} layers, each named by its most abundant element, from the center out (outer edge in M☉): ${desc}. Each layer is the ash of the burning stage before it. Log radius is on, so this view is not to scale.` });
       }
     }
     if (D.collapse) {
