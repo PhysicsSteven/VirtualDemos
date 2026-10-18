@@ -30,6 +30,8 @@ Usage:
                                               # ../keys/answers/<demo>.md (written there, never here)
     python3 tools/notes.py --check            # list demos without notes, and question/answer mismatches
 
+notes/index.html lists only notes whose source is committed; build again after committing new ones.
+
 Needs: pip install markdown
 """
 import argparse
@@ -231,12 +233,23 @@ def sections_from_index():
     return out
 
 
+def committed_sources():
+    """Notes sources that git already tracks, so drafts in progress stay off the index."""
+    import subprocess
+    try:
+        out = subprocess.run(["git", "ls-files", "notes/src"], cwd=ROOT, capture_output=True, text=True, check=True).stdout
+        return {Path(f).stem for f in out.split()}
+    except (OSError, subprocess.CalledProcessError):
+        return {p.stem for p in SRC.glob("*.md")}
+
+
 def build_index():
     rows = []
+    done = committed_sources()
     for subj, items in sections_from_index():
         lis = []
         for n, title in items:
-            if (SRC / f"{n}.md").exists():
+            if n in done:
                 lis.append(f'<li><a href="{n}.html">{html.escape(title)}</a></li>')
             else:
                 lis.append(f'<li class="missing">{html.escape(title)} (notes to come)</li>')
