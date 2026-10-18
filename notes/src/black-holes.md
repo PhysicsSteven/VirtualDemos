@@ -50,7 +50,7 @@ Students should know Newton's gravity, angles in arcseconds, and that general re
 ## Physics behind the demo
 
 - **Lensing:** thin lens, point mass, small angles: β = θ − θ_E²/θ (impact parameter ≫ r_s), images θ± = (u ± √(u² + 4))/2, μ = 1/(1 − 1/θ⁴), in units of θ_E. Each pixel is traced back to the source plane. Distances are ordinary distances, not the angular diameter distances cosmology needs; real galaxy lenses are not point masses. The microlensing source star is drawn far too big so its images show.
-- **Ray traced:** exact Schwarzschild light paths, d²u/dφ² = −u + (3/2) r_s u² (u = 1/r), for a hovering observer and an infinitely distant sky. Left out: the observer's blueshift of incoming light, spin, and the glowing gas the EHT images show.
+- **Ray traced:** exact Schwarzschild light paths, d²u/dφ² = −u + (3/2) r_s u² (u = 1/r), for a hovering observer and an infinitely distant sky. Left out: the observer's blueshift of incoming light, spin, and the glowing gas the EHT images show, unless the **Thin accretion disk (illustrative)** box is ticked: then a thin disk from 3 to 9 r_s is drawn along the exact light paths with exact Doppler and gravitational shifts for circular orbits, but an illustrative temperature profile.
 - **Near the hole:** nonrotating. Clock rate and redshift for static observers are exact; 2GML/r³ is exact for a body falling radially with L ≪ r. The 100 g line is a rough guide; the drawing's radial scale is compressed.
 
 ## Going further

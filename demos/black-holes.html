@@ -293,6 +293,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <input type="range" id="gsz" min="1" max="30" step="0.5" value="4">
         </div>
         <label class="check"><input type="checkbox" id="rayStars" checked>Stars and Milky Way band</label>
+        <label class="check"><input type="checkbox" id="rayDisk">Thin accretion disk (illustrative)</label>
         <dl class="readout">
           <div class="wide big"><dt>Shadow radius seen by this observer</dt><dd id="rSh">—</dd></div>
           <div class="wide"><dt>Far away estimate, b<sub>c</sub>/r<sub>o</sub> with b<sub>c</sub> = (√27/2) r<sub>s</sub> = 2.598 r<sub>s</sub></dt><dd id="rShFar">—</dd></div>
@@ -526,11 +527,73 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     switch (f) { case 0: d = [1, -v, -u]; break; case 1: d = [-1, -v, u]; break; case 2: d = [u, 1, v]; break; case 3: d = [u, -1, -v]; break; case 4: d = [u, -v, 1]; break; default: d = [-u, -v, -1]; }
     const n = Math.hypot(d[0], d[1], d[2]); return [d[0] / n, d[1] / n, d[2] / n];
   }
+  // ---- blackbody tint: the Planck spectrum through the CIE 1931 color matching functions (Wyman, Sloan and Shirley 2013 fit), to sRGB, brightest channel 1 ----
+  function bbRGB(Tk) {
+    const gs = (x, m, s1, s2) => { const t = (x - m) / (x < m ? s1 : s2); return Math.exp(-0.5 * t * t); };
+    let X = 0, Y = 0, Z = 0;
+    for (let l = 380; l <= 780; l += 5) {
+      const B = Math.pow(l / 500, -5) / Math.expm1(1.4387769e7 / (l * Tk));     // hc/k = 1.4388e7 nm K
+      X += B * (1.056 * gs(l, 599.8, 37.9, 31.0) + 0.362 * gs(l, 442.0, 16.0, 26.7) - 0.065 * gs(l, 501.1, 20.4, 26.2));
+      Y += B * (0.821 * gs(l, 568.8, 46.9, 40.5) + 0.286 * gs(l, 530.9, 16.3, 31.1));
+      Z += B * (1.217 * gs(l, 437.0, 11.8, 36.0) + 0.681 * gs(l, 459.0, 26.0, 13.8));
+    }
+    let r = 3.2406 * X - 1.5372 * Y - 0.4986 * Z, g = -0.9689 * X + 1.8758 * Y + 0.0415 * Z, b = 0.0557 * X - 0.2040 * Y + 1.0570 * Z;
+    const lo = Math.min(r, g, b); if (lo < 0) { r -= lo; g -= lo; b -= lo; }            // outside the sRGB gamut: desaturate
+    const hi = Math.max(r, g, b), enc = (v) => { v /= hi; return v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055; };
+    return [enc(r), enc(g), enc(b)];
+  }
+  const BB_T0 = 1000, BB_T1 = 40000, BB_N = 96, BB_TAB = [];
+  for (let i = 0; i < BB_N; i++) BB_TAB.push(bbRGB(BB_T0 * Math.pow(BB_T1 / BB_T0, i / (BB_N - 1))));
+  function bbCol(Tk) {          // table lookup, log spaced in T
+    let x = Math.log(Math.max(BB_T0, Math.min(BB_T1, Tk)) / BB_T0) / Math.log(BB_T1 / BB_T0) * (BB_N - 1);
+    const i = Math.min(BB_N - 2, Math.floor(x)), t = x - i, a = BB_TAB[i], b = BB_TAB[i + 1];
+    return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+  }
+  // ---- optional thin disk (illustrative): u = 1/r along each traced ray, sampled every DPHI in φ, for α on both sides of the shadow edge ----
+  const DPHI = 0.02;
+  function tracePath(ro, alpha) {
+    const sa = Math.max(1e-12, Math.sin(alpha)), f = Math.sqrt(Math.max(0, 1 - 1 / ro));
+    let u = 1 / ro, w = Math.cos(alpha) * f / (ro * sa), phi = 0;
+    const us = [u], h = DPHI / 2;
+    for (let k = 0; k < 60000; k++) {
+      const [un, wn] = rk4(u, w, h);
+      if (un <= 0 || un >= 1 || phi > 60) break;
+      u = un; w = wn; phi += h; if (k & 1) us.push(u);
+    }
+    return Float32Array.from(us);
+  }
+  function buildPaths(ro, N = 320) {
+    const ac = critAlpha(ro), s0 = Math.log(1e-7), sE = Math.log(Math.max(1e-6, Math.PI - ac)), sC = Math.log(Math.max(1e-6, ac));
+    const rows = (sg, s1) => Array.from({ length: N }, (_, i) => tracePath(ro, Math.max(1e-7, Math.min(Math.PI, ac + sg * Math.exp(s0 + (s1 - s0) * i / (N - 1))))));
+    return { ro, ac, s0, sE, sC, N, esc: rows(1, sE), cap: rows(-1, sC) };
+  }
+  // u at sweep angle φ along the ray that leaves the observer at α; NaN once the ray has escaped or crossed the horizon
+  function pathU(P, a, phi) {
+    const esc = a > P.ac, s1 = esc ? P.sE : P.sC, R = esc ? P.esc : P.cap;
+    let x = (Math.log(Math.max(1e-30, Math.abs(a - P.ac))) - P.s0) / (s1 - P.s0) * (P.N - 1);
+    if (x < 0) x = 0; if (x > P.N - 1.000001) x = P.N - 1.000001;
+    const i = Math.floor(x), t = x - i, q = phi / DPHI, j = Math.floor(q), fq = q - j, A = R[i], B = R[i + 1];
+    if (j + 1 >= A.length || j + 1 >= B.length) return NaN;
+    return (1 - t) * (A[j] + (A[j + 1] - A[j]) * fq) + t * (B[j] + (B[j + 1] - B[j]) * fq);
+  }
+  // first crossing of the disk plane (normal n) between rin and rout for the pixel at α in screen direction (ex, ey); returns [r, φ] or null
+  function diskHit(P, a, ex, ey, n, rin, rout) {
+    let phi = Math.atan2(-n[2], n[0] * ex + n[1] * ey); if (phi <= 0) phi += Math.PI;
+    for (let k = 0; k < 4; k++, phi += Math.PI) {
+      const u = pathU(P, a, phi); if (!(u > 0)) return null;
+      const r = 1 / u; if (r >= rin && r <= rout) return [r, phi];
+    }
+    return null;
+  }
+  // frequency ratio g = ν_seen/ν_emitted for gas on a circular Kepler orbit at r (r_s = 1, so GM = 1/2), photon impact parameter b;
+  // l = (ẑ × ê)·n for the pixel; a far away observer's view (the static observer's own uniform blueshift is left out, as for the sky)
+  function diskG(r, b, l) { const Om = Math.sqrt(0.5 / (r * r * r)), lam = -b * l; return Math.sqrt(1 - 1.5 / r) / (1 - Om * lam); }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
     globalThis.BH = { GM_SUN, C, PC, AU, DAY, YEAR, G0, BC, rsOf, clockRate, onePlusZ, tidal, hoverAcc, thetaE, shadowDiam, images, mu, Apoint, Adisk, Asource,
-      makeTex, sampleTex, lensMap, addSource, texFlux, rk4, traceRay, critAlpha, buildTable, lookPhi, ringAlpha, dirToFace, faceToDir };
+      makeTex, sampleTex, lensMap, addSource, texFlux, rk4, traceRay, critAlpha, buildTable, lookPhi, ringAlpha, dirToFace, faceToDir,
+      bbRGB, bbCol, tracePath, buildPaths, pathU, diskHit, diskG, DPHI };
     return;
   }
 
@@ -545,7 +608,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // ---------- state ----------
   const S = { view: 'lens', preset: 'micro', logM: Math.log10(0.5), logDL: Math.log10(4), logDS: Math.log10(8),
     shape: 'disk', rho: 0.08, bx: -2, by: 0.3, stars: true,
-    logRo: Math.log10(15), gx: 0.03, gy: 0.012, gsz: 4, rayStars: true,
+    logRo: Math.log10(15), gx: 0.03, gy: 0.012, gsz: 4, rayStars: true, disk: false,
     logR: Math.log10(30), obj: null };
   let playing = !reduce;
   const M = () => Math.pow(10, S.logM);
@@ -681,7 +744,6 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   // ---------- procedural textures ----------
   function rng(seed) { let a = seed >>> 0; return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
-  const STAR_COLS = [[155, 176, 255], [202, 216, 255], [248, 247, 255], [255, 244, 234], [255, 222, 180], [255, 196, 140]];
   function splat(d, w, wrap, x, y, sig, amp, col, sx, sy, rot) {
     // elliptical Gaussian; sx, sy stretch factors, rot rotation (rad)
     const ex = sx || 1, ey = sy || 1, cr = Math.cos(rot || 0), sr = Math.sin(rot || 0), R = Math.ceil(3 * sig * Math.max(ex, ey));
@@ -693,10 +755,30 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       const o = (Y * w + X) * 3; d[o] += g * col[0] / 255; d[o + 1] += g * col[1] / 255; d[o + 2] += g * col[2] / 255;
     }
   }
-  // the movable source galaxy, covering x, y ∈ [−1, 1]: bulge, exponential disk and two logarithmic spiral arms, tilted 44°
+  // star colors: blackbody tints for a field mix weighted toward cool stars (illustrative); brightness: N(>F) ∝ F^−3/2, as for stars spread evenly in space
+  function starT(R) { const q = R(); return q < 0.38 ? 3100 + 900 * R() : q < 0.66 ? 4000 + 1300 * R() : q < 0.82 ? 5300 + 700 * R() : q < 0.92 ? 6000 + 1500 * R() : q < 0.98 ? 7500 + 2500 * R() : 10000 + 18000 * R(); }
+  const starF = (R, fmin, fmax) => Math.min(fmax, fmin * Math.pow(1 - R(), -2 / 3));
+  function star(d, w, wrap, x, y, F, T, st) {
+    const c = bbCol(T), col = [255 * c[0], 255 * c[1], 255 * c[2]], s = st || 1;
+    splat(d, w, wrap, x, y, 0.72 * s, F, col);
+    if (F > 400) splat(d, w, wrap, x, y, 2.6 * s, F * 0.012, col);       // faint glow around the brightest stars
+  }
+  // 3D value noise and fractal sum, for nebulosity and dust (deterministic)
+  function hash3(i, j, k) { let h = Math.imul(i, 374761393) ^ Math.imul(j, 668265263) ^ Math.imul(k, 2147483647); h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; }
+  function vnoise(x, y, z) {
+    const i = Math.floor(x), j = Math.floor(y), k = Math.floor(z), fx = x - i, fy = y - j, fz = z - k;
+    const sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy), sz = fz * fz * (3 - 2 * fz);
+    const L = (a, b, t) => a + (b - a) * t;
+    return L(L(L(hash3(i, j, k), hash3(i + 1, j, k), sx), L(hash3(i, j + 1, k), hash3(i + 1, j + 1, k), sx), sy),
+      L(L(hash3(i, j, k + 1), hash3(i + 1, j, k + 1), sx), L(hash3(i, j + 1, k + 1), hash3(i + 1, j + 1, k + 1), sx), sy), sz);
+  }
+  function fbm(x, y, z, oct) { let s = 0, a = 0.5, f = 1; for (let o = 0; o < oct; o++) { s += a * vnoise(x * f + 17 * o, y * f, z * f); a *= 0.5; f *= 2.03; } return s; }
+  // the movable source galaxy, covering x, y ∈ [−1, 1]: an old yellow bulge, an exponential disk with two blue logarithmic spiral arms,
+  // dust lanes on their inner edges and pink star forming knots, tilted 44° (an illustrative picture, not a model of a real galaxy)
   function galaxyTexture(N) {
     const d = new Float32Array(N * N * 3), pa = 0.5, ci = 0.72, R = rng(7);
-    const knots = []; for (let k = 0; k < 70; k++) { const r = 0.12 + 0.7 * R(), arm = R() < 0.5 ? 0 : Math.PI; knots.push([r, arm + Math.log(r) / 0.32 + (R() - 0.5) * 0.5, 0.4 + 0.6 * R()]); }
+    const cB = bbCol(4300), cD = bbCol(6200), cA = bbCol(11000), cK = [1, 0.5, 0.68];
+    const knots = []; for (let k = 0; k < 90; k++) { const r = 0.12 + 0.7 * R(), arm = R() < 0.5 ? 0 : Math.PI; knots.push([r, arm + Math.log(r) / 0.32 + (R() - 0.5) * 0.45, 0.4 + 0.6 * R(), R() < 0.45]); }
     for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
       const x = (i + 0.5) / N * 2 - 1, y = 1 - (j + 0.5) / N * 2;
       const xr = x * Math.cos(pa) + y * Math.sin(pa), yr = (-x * Math.sin(pa) + y * Math.cos(pa)) / ci;
@@ -704,51 +786,73 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       const taper = pr < 0.8 ? 1 : 0.5 + 0.5 * Math.cos(Math.PI * (pr - 0.8) / 0.2);
       const th = Math.atan2(yr, xr);
       const ph = 2 * (th - Math.log(r + 1e-4) / 0.32), arm = Math.pow(0.5 + 0.5 * Math.cos(ph), 3);
-      const disk = Math.exp(-r / 0.24) * taper, bulge = Math.exp(-(r * r) / 0.006);
-      let kn = 0; for (const [kr, ka, kw] of knots) { const kx = kr * Math.cos(ka) - xr, ky = kr * Math.sin(ka) - yr, q = kx * kx + ky * ky; if (q < 0.004) kn += kw * Math.exp(-q / 0.0006); }
-      const a = 2.1 * (disk * (0.25 + 0.95 * arm) + 1.2 * kn * disk), o = (j * N + i) * 3;
-      d[o] = 235 * (0.95 * bulge + 0.75 * a); d[o + 1] = 235 * (0.82 * bulge + 0.82 * a); d[o + 2] = 235 * (0.55 * bulge + 1.0 * a);
+      const lane = Math.pow(0.5 + 0.5 * Math.cos(ph + 0.75), 10) * Math.min(1, r / 0.1);
+      const tex = 0.75 + 0.5 * fbm(xr * 9, yr * 9, 3.1, 3);
+      const disk = Math.exp(-r / 0.24) * taper, bulge = Math.exp(-(r * r) / 0.006) + 0.25 * Math.exp(-r / 0.05);
+      let kn = 0, kp = 0; for (const [kr, ka, kw, pink] of knots) { const kx = kr * Math.cos(ka) - xr, ky = kr * Math.sin(ka) - yr, q = kx * kx + ky * ky; if (q < 0.004) { const v = kw * Math.exp(-q / 0.0005); if (pink) kp += v; else kn += v; } }
+      const dust = 1 - 0.62 * lane * Math.min(1, disk * 6), aB = 2.1 * disk * 0.25 * tex, aA = 2.1 * disk * 0.95 * arm * tex, aK = 2.1 * 1.3 * disk * kn, aP = 2.1 * 1.3 * disk * kp, o = (j * N + i) * 3;
+      for (let c = 0; c < 3; c++) d[o + c] = 235 * dust * (0.95 * bulge * cB[c] + aB * cD[c] + aA * cA[c] + aK * cA[c] + aP * cK[c]);
     }
     return makeTex(N, d, 0);
   }
-  // background tile for the lens view, periodic with period P θ_E: a few hundred stars and faint distant galaxies
+  // background tile for the lens view, periodic with period P θ_E: stars and faint distant galaxies, all at the source distance (illustrative)
   const TILE = 1024, TILE_P = 8;
   function tileTexture() {
     const d = new Float32Array(TILE * TILE * 3), R = rng(42);
-    for (let k = 0; k < 70; k++) {
-      const x = R() * TILE, y = R() * TILE, sz = 1.6 + 3.5 * R(), e = 1.3 + 1.8 * R(), rot = R() * Math.PI, amp = 40 + 70 * R();
-      splat(d, TILE, true, x, y, sz, amp, R() < 0.6 ? [255, 214, 170] : [190, 205, 255], e, 1, rot);
+    for (let k = 0; k < 110; k++) {         // faint distant galaxies: about half small red ellipticals, half blue disks seen at random tilts
+      const x = R() * TILE, y = R() * TILE, sz = 1.1 + 2.2 * Math.pow(R(), 2.5) * 2, rot = R() * Math.PI, amp = 22 + 60 * R();
+      if (R() < 0.5) { const c = bbCol(3900 + 600 * R()); splat(d, TILE, true, x, y, sz, amp, [255 * c[0], 255 * c[1], 255 * c[2]], 1 + 0.6 * R(), 1, rot); }
+      else { const c = bbCol(7000 + 5000 * R()), e = 1.5 + 2.2 * R(); splat(d, TILE, true, x, y, sz * 1.2, amp * 0.8, [255 * c[0], 255 * c[1], 255 * c[2]], e, 1, rot); splat(d, TILE, true, x, y, sz * 0.4, amp * 0.9, [255, 226, 190]); }
     }
-    for (let k = 0; k < 420; k++) {
-      const x = R() * TILE, y = R() * TILE, b = Math.pow(R(), 3), amp = 60 + 900 * b;
-      splat(d, TILE, true, x, y, 0.75 + 0.6 * b, amp, STAR_COLS[Math.floor(R() * STAR_COLS.length)]);
-    }
+    for (let k = 0; k < 1800; k++) star(d, TILE, true, R() * TILE, R() * TILE, starF(R, 80, 6000), starT(R));
     for (let i = 0; i < d.length; i++) if (d[i] > 255) d[i] = 255;
     return makeTex(TILE, d, 1);
   }
-  // celestial sphere for the ray traced view: cube map of stars and a Milky Way band
+  // celestial sphere for the ray traced view: cube map of stars and a Milky Way band with a bulge and dust lanes (illustrative)
   const CUBE = 512;
+  let CUBE_MEAN = [0, 0, 0];
   function cubeTextures() {
-    const faces = [], R = rng(99), pole = [0.42, 0.78, 0.46], pn = Math.hypot(...pole);
+    const faces = [], R = rng(99), pole = [0.42, 0.78, 0.46], pn = Math.hypot(...pole), P = pole.map((v) => v / pn);
+    // longitude zero (the bulge) along a direction perpendicular to the pole
+    let L0 = [1 - P[0] * P[0], -P[0] * P[1], -P[0] * P[2]]; const nl = Math.hypot(...L0); L0 = L0.map((v) => v / nl);
+    const L1 = [P[1] * L0[2] - P[2] * L0[1], P[2] * L0[0] - P[0] * L0[2], P[0] * L0[1] - P[1] * L0[0]];
+    const cWarm = bbCol(4600), cCool = bbCol(6800);
     for (let f = 0; f < 6; f++) {
       const d = new Float32Array(CUBE * CUBE * 3);
       for (let j = 0; j < CUBE; j++) for (let i = 0; i < CUBE; i++) {
         const [x, y, z] = faceToDir(f, (i + 0.5) / CUBE * 2 - 1, (j + 0.5) / CUBE * 2 - 1);
-        const b = (x * pole[0] + y * pole[1] + z * pole[2]) / pn;
-        const mott = 0.55 + 0.25 * Math.sin(9 * x + 4 * y) * Math.sin(7 * z - 3 * x) + 0.2 * Math.sin(23 * y + 17 * z) * Math.sin(19 * x);
-        const g = Math.exp(-b * b / 0.018) * Math.max(0, mott) * 30, o = (j * CUBE + i) * 3;
-        d[o] = g * 1.0; d[o + 1] = g * 0.93; d[o + 2] = g * 0.82;
+        const b = x * P[0] + y * P[1] + z * P[2]; if (Math.abs(b) > 0.42) continue;
+        const cl = x * L0[0] + y * L0[1] + z * L0[2], sl = x * L1[0] + y * L1[1] + z * L1[2], bul = Math.exp(-((1 - cl) * (1 - cl)) / 0.18);
+        const width = 0.012 + 0.02 * bul, band = Math.exp(-b * b / width) + 0.6 * bul * Math.exp(-(b * b + 0.3 * sl * sl) / 0.03);
+        const neb = fbm(x * 5, y * 5, z * 5, 4), dustN = fbm(x * 11 + 3, y * 11, z * 11, 3);
+        const lane = Math.exp(-((b - 0.012) * (b - 0.012)) / 0.0016) * Math.max(0, dustN * 1.6 - 0.45);
+        const g = band * Math.max(0, 0.35 + 1.2 * (neb - 0.35)) * Math.max(0.08, 1 - 1.1 * lane) * 34, o = (j * CUBE + i) * 3, wc = Math.min(1, 0.4 + bul);
+        for (let c = 0; c < 3; c++) d[o + c] = g * (wc * cWarm[c] + (1 - wc) * cCool[c]);
       }
       faces.push(d);
     }
     const o3 = [0, 0, 0];
-    for (let k = 0; k < 4000; k++) {
-      const z = 2 * R() - 1, a = 2 * Math.PI * R(), s = Math.sqrt(1 - z * z), x = s * Math.cos(a), y = s * Math.sin(a);
+    for (let k = 0; k < 14000; k++) {
+      let x, y, z;
+      if (k % 5 < 2) {      // two in five stars crowd toward the band
+        const a = 2 * Math.PI * R(), bb = Math.max(-0.99, Math.min(0.99, (R() + R() + R() - 1.5) * 0.12)), c = Math.sqrt(1 - bb * bb);
+        x = bb * P[0] + c * (Math.cos(a) * L0[0] + Math.sin(a) * L1[0]); y = bb * P[1] + c * (Math.cos(a) * L0[1] + Math.sin(a) * L1[1]); z = bb * P[2] + c * (Math.cos(a) * L0[2] + Math.sin(a) * L1[2]);
+      } else { z = 2 * R() - 1; const a = 2 * Math.PI * R(), s = Math.sqrt(1 - z * z); x = s * Math.cos(a); y = s * Math.sin(a); }
       dirToFace(x, y, z, o3);
-      const u = o3[1], v = o3[2], st = 1 + u * u + v * v, b = Math.pow(R(), 3.2);
-      splat(faces[o3[0]], CUBE, false, (u + 1) / 2 * CUBE, (v + 1) / 2 * CUBE, (0.7 + 0.5 * b) * st, 70 + 900 * b, STAR_COLS[Math.floor(R() * STAR_COLS.length)]);
+      const u = o3[1], v = o3[2], st = 1 + u * u + v * v;
+      star(faces[o3[0]], CUBE, false, (u + 1) / 2 * CUBE, (v + 1) / 2 * CUBE, starF(R, 40, 5000), starT(R), st);
     }
-    return faces.map((d) => { for (let i = 0; i < d.length; i++) if (d[i] > 255) d[i] = 255; return makeTex(CUBE, d, 2); });
+    const mean = [0, 0, 0]; let wsum = 0;
+    const out = faces.map((d) => {
+      for (let j = 0; j < CUBE; j++) for (let i = 0; i < CUBE; i++) {
+        const u = (i + 0.5) / CUBE * 2 - 1, v = (j + 0.5) / CUBE * 2 - 1, w = Math.pow(1 + u * u + v * v, -1.5), o = (j * CUBE + i) * 3;   // solid angle weight
+        for (let c = 0; c < 3; c++) { if (d[o + c] > 255) d[o + c] = 255; mean[c] += w * d[o + c]; }
+        wsum += w;
+      }
+      return makeTex(CUBE, d, 2);
+    });
+    CUBE_MEAN = mean.map((v) => v / wsum);
+    return out;
   }
   let GAL = null, GAL_F = 0, GAL_COARSE = null, TILE_T = null, CUBE_T = null;
   function galaxy() {
@@ -772,8 +876,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // ---------- lens view: image, curves ----------
   const VIEW_HALF = 2.6;
   let lensImg = null, dirty = true, measured = [], measA = NaN, curve = null, curveKey = '';
+  // fewer traced pixels on small screens, so phones stay quick
+  const pixBudget = () => (W < 700 ? 1.7e5 : 4.5e5);
   function lensGeom() {
-    const m = LY.main, q0 = Math.min(dpr, 1.5), q = Math.min(q0, Math.sqrt(4.5e5 / (m.w * m.h)));
+    const m = LY.main, q0 = Math.min(dpr, 1.5), q = Math.min(q0, Math.sqrt(pixBudget() / (m.w * m.h)));
     const bw = Math.max(2, Math.round(m.w * q)), bh = Math.max(2, Math.round(m.h * q));
     const h = 2 * VIEW_HALF / Math.min(bw, bh);
     return { bw, bh, h, q: bw / m.w, cx: bw / 2, cy: bh / 2, pxPerTE: Math.min(m.w, m.h) / (2 * VIEW_HALF) };
@@ -824,39 +930,89 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     rayImg = null;
   }
   function rayGeom() {
-    const m = LY.main, q0 = Math.min(dpr, 1.5), q = Math.min(q0, Math.sqrt(4.5e5 / (m.w * m.h)));
+    const m = LY.main, q0 = Math.min(dpr, 1.5), q = Math.min(q0, Math.sqrt(pixBudget() / (m.w * m.h)));
     const bw = Math.max(2, Math.round(m.w * q)), bh = Math.max(2, Math.round(m.h * q)), fov = rayFov();
     return { bw, bh, q: bw / m.w, k: fov / (Math.min(bw, bh) / 2), kc: fov / (Math.min(m.w, m.h) / 2), fov };
   }
+  // the optional thin disk (illustrative): from the ISCO, 3 r_s, out to DISK_OUT; its normal is tilted DISK_INC from the line of sight
+  const DISK_IN = 3, DISK_OUT = 9, DISK_INC = 80 * Math.PI / 180, DISK_ROLL = -9 * Math.PI / 180;
+  const DISK_N = [-Math.sin(DISK_ROLL) * Math.sin(DISK_INC), Math.cos(DISK_ROLL) * Math.sin(DISK_INC), Math.cos(DISK_INC)];
+  let paths = null;
   function ensureRayImg() {
     ensureTable();
-    if (rayImg && rayImg.stars === S.rayStars) return;
+    if (rayImg && rayImg.stars === S.rayStars && rayImg.disk === S.disk) return;
     const g = rayGeom(), n = g.bw * g.bh, nx = new Float32Array(n), ny = new Float32Array(n), nz = new Float32Array(n), fp = new Float32Array(n), flag = new Uint8Array(n);
     const base = new Uint8ClampedArray(n * 4), out = [0, 0, 0], o3 = [0, 0, 0], ph = [0, 0], sk = T.skyRGB, texel = (Math.PI / 2) / CUBE;
     if (S.rayStars && !CUBE_T) CUBE_T = cubeTextures();
+    if (S.disk && (!paths || paths.ro !== ro())) paths = buildPaths(ro());
+    const nL = Math.log2(CUBE), dk = [], dr = [], dphi = [], dg = [], dex = [], dey = [];
     const hole = /^#?([0-9a-f]{6})$/i.exec(T.hole), hc = hole ? [0, 2, 4].map((k) => parseInt(hole[1].slice(k, k + 2), 16)) : [0, 0, 0];
+    const bOf = (a) => ro() * Math.sin(a) / Math.sqrt(1 - 1 / ro());
     for (let j = 0; j < g.bh; j++) for (let i = 0; i < g.bw; i++) {
       const p = j * g.bw + i, dx = i + 0.5 - g.bw / 2, dy = g.bh / 2 - j - 0.5, rp = Math.hypot(dx, dy), a = rp * g.k;
+      const cx = rp > 0 ? dx / rp : 1, cy = rp > 0 ? dy / rp : 0;
       let r = sk[0], gg = sk[1], b = sk[2];
-      if (a > Math.PI) { flag[p] = 2; r = sk[0] * 0.5; gg = sk[1] * 0.5; b = sk[2] * 0.5; }
+      if (S.disk && a <= Math.PI) {
+        const hit = diskHit(paths, a, cx, cy, DISK_N, DISK_IN, DISK_OUT);
+        if (hit) { flag[p] = 3; dk.push(p); dr.push(hit[0]); dphi.push(hit[1]); dex.push(cx); dey.push(cy); dg.push(diskG(hit[0], bOf(a), -cy * DISK_N[0] + cx * DISK_N[1])); }
+      }
+      if (flag[p] === 3) { /* drawn by composeRay */ }
+      else if (a > Math.PI) { flag[p] = 2; r = sk[0] * 0.5; gg = sk[1] * 0.5; b = sk[2] * 0.5; }
       else if (a <= table.ac) { flag[p] = 1; r = hc[0]; gg = hc[1]; b = hc[2]; }
       else {
         lookPhi(table, a, ph);
-        const P = ph[0], cx = rp > 0 ? dx / rp : 1, cy = rp > 0 ? dy / rp : 0, s = Math.sin(P);
+        const P = ph[0], s = Math.sin(P);
         // sky direction: cos φ ẑ + sin φ ê, observer on +z looking toward −z, ê the pixel's direction across the sky
         nx[p] = s * cx; ny[p] = s * cy; nz[p] = Math.cos(P);
         fp[p] = g.k * Math.max(Math.abs(ph[1]), Math.abs(s) / Math.max(a, 1e-6), 1e-3);
         if (S.rayStars) {
           dirToFace(nx[p], ny[p], nz[p], o3);
-          sampleTex(CUBE_T[o3[0]], (o3[1] + 1) / 2 * CUBE, (o3[2] + 1) / 2 * CUBE, Math.log2(fp[p] / texel), out);
+          const lod = Math.log2(fp[p] / texel);
+          sampleTex(CUBE_T[o3[0]], (o3[1] + 1) / 2 * CUBE, (o3[2] + 1) / 2 * CUBE, lod, out);
+          // a pixel this close to the shadow edge holds squeezed copies of the whole sky: it shows the whole sky's mean brightness
+          if (lod > nL - 3) { const w = Math.min(1, (lod - nL + 3) / 2); for (let c = 0; c < 3; c++) out[c] += w * (CUBE_MEAN[c] - out[c]); }
           r += out[0]; gg += out[1]; b += out[2];
         }
       }
       base[4 * p] = r; base[4 * p + 1] = gg; base[4 * p + 2] = b; base[4 * p + 3] = 255;
     }
     const off = document.createElement('canvas'); off.width = g.bw; off.height = g.bh;
-    rayImg = { g, nx, ny, nz, fp, flag, base, off, octx: off.getContext('2d'), id: new ImageData(g.bw, g.bh), stars: S.rayStars };
+    rayImg = { g, nx, ny, nz, fp, flag, base, off, octx: off.getContext('2d'), id: new ImageData(g.bw, g.bh), stars: S.rayStars, disk: S.disk,
+      dk: Int32Array.from(dk), dr: Float32Array.from(dr), dphi: Float32Array.from(dphi), dg: Float32Array.from(dg), dex: Float32Array.from(dex), dey: Float32Array.from(dey) };
     dirty = true;
+  }
+  // disk color: emitted temperature T ∝ r^−3/4 (1 − √(3 r_s/r))^1/4 (thin disk, zero torque at the ISCO), seen at gT with intensity × g⁴;
+  // the hottest ring is set to 4500 K for looks; the streaks orbit at the Kepler rate Ω = √(GM/r³), slowed down for viewing
+  const DISK_TPK = 4500, DISK_K = 1.6;
+  let diskTime = 0;
+  function diskTemp(r) { return Math.pow(r, -0.75) * Math.pow(Math.max(0, 1 - Math.sqrt(3 / r)), 0.25); }
+  const DISK_TMAX = diskTemp(49 / 12);
+  // per disk pixel, once per image: azimuth on the disk, ln r, Kepler rate, color and g⁴ weighted intensity
+  function diskPrep(R) {
+    const nn = DISK_N, dn = nn[0], m = R.dk.length;
+    let e1 = [1 - dn * nn[0], -dn * nn[1], -dn * nn[2]]; const l1 = Math.hypot(...e1); e1 = e1.map((v) => v / l1);   // in the disk plane
+    const e2 = [nn[1] * e1[2] - nn[2] * e1[1], nn[2] * e1[0] - nn[0] * e1[2], nn[0] * e1[1] - nn[1] * e1[0]];
+    const az = new Float32Array(m), lr = new Float32Array(m), om = new Float32Array(m), I = new Float32Array(m), col = new Float32Array(3 * m), fe = new Float32Array(m);
+    for (let q = 0; q < m; q++) {
+      const r = R.dr[q], g = R.dg[q], cp = Math.cos(R.dphi[q]), sp = Math.sin(R.dphi[q]);
+      const px = sp * R.dex[q], py = sp * R.dey[q], pz = cp;                       // direction of the hit point from the hole
+      az[q] = Math.atan2(px * e2[0] + py * e2[1] + pz * e2[2], px * e1[0] + py * e1[1] + pz * e1[2]);
+      lr[q] = Math.log(r); om[q] = Math.sqrt(0.5 / (r * r * r));
+      const t = diskTemp(r) / DISK_TMAX, c = bbCol(DISK_TPK * t * g);
+      I[q] = DISK_K * Math.pow(t * g, 4); col[3 * q] = c[0]; col[3 * q + 1] = c[1]; col[3 * q + 2] = c[2];
+      fe[q] = Math.max(0, Math.min(1, (r - DISK_IN) / 0.25, (DISK_OUT - r) / 1.5));
+    }
+    R.dp = { az, lr, om, I, col, fe };
+  }
+  function paintDisk(R, buf) {
+    if (!R.dp) diskPrep(R);
+    const { az, lr, om, I, col, fe } = R.dp, tt = diskTime;
+    for (let q = 0; q < az.length; q++) {
+      const a = az[q] - om[q] * tt, l = lr[q];
+      const streak = 1 + 0.22 * Math.sin(3 * a + 9 * l + 1.3) + 0.16 * Math.sin(7 * a - 14 * l + 0.4) + 0.12 * Math.sin(13 * a + 23 * l + 2.1) + 0.1 * Math.sin(40 * l);
+      const L = 255 * (1 - Math.exp(-I[q] * streak)), f = fe[q], j = 4 * R.dk[q], k = 3 * q;
+      buf[j] = buf[j] * (1 - f) + L * col[k] * f; buf[j + 1] = buf[j + 1] * (1 - f) + L * col[k + 1] * f; buf[j + 2] = buf[j + 2] * (1 - f) + L * col[k + 2] * f;
+    }
   }
   function galDir() {
     const psi = Math.hypot(S.gx, S.gy), chi = Math.atan2(S.gy, S.gx), s = Math.sin(psi);
@@ -869,6 +1025,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function composeRay() {
     const R = rayImg, buf = R.id.data, n = R.g.bw * R.g.bh, G = galaxy(), out = [0, 0, 0];
     buf.set(R.base);
+    if (R.disk) paintDisk(R, buf);
     const { gv, e1, e2 } = galDir(), tr = Math.tan(S.gsz * Math.PI / 180), cmax = Math.cos(Math.atan(tr * 1.42)), s = G.w0 / 2;
     for (let p = 0; p < n; p++) {
       if (R.flag[p]) continue;
@@ -913,6 +1070,35 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (hot) { c.globalAlpha = 0.3; c.lineWidth = 7 * ps; c.beginPath(); c.arc(x, y, 11 * ps, 0, 2 * Math.PI); c.stroke(); c.globalAlpha = 1; }
   }
   const isHot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+  // light of the lens itself, drawn on top for looks (not lensed; the lens stays a point mass): a soft elliptical galaxy for galaxy masses,
+  // a star's glow for stellar masses, nothing in between
+  function lensLight(c, lx, ly, k, ps) {
+    const Mv = M();
+    if (Mv >= 1e10) {
+      const col = bbCol(4400).map((v) => Math.round(255 * v)), rgba = (a) => `rgba(${col[0]},${col[1]},${col[2]},${a})`;
+      c.save(); c.globalCompositeOperation = 'lighter'; c.translate(lx, ly); c.rotate(-0.42); c.scale(1, 0.7);
+      // a de Vaucouleurs like profile from three soft layers: bright core, body, faint halo
+      for (const [rad, a] of [[1.5 * k, 0.16], [0.6 * k, 0.24], [0.16 * k, 0.5], [0.045 * k, 0.6]]) {
+        const gr = c.createRadialGradient(0, 0, 0, 0, 0, rad);
+        gr.addColorStop(0, rgba(a)); gr.addColorStop(0.35, rgba(a * 0.45)); gr.addColorStop(0.7, rgba(a * 0.12)); gr.addColorStop(1, rgba(0));
+        c.fillStyle = gr; c.beginPath(); c.arc(0, 0, rad, 0, 2 * Math.PI); c.fill();
+      }
+      c.restore();
+      return 'lens galaxy';
+    }
+    if (Mv <= 100) {
+      const Ts = Math.min(30000, Math.max(3000, 5772 * Math.pow(Mv, 0.55))), col = bbCol(Ts).map((v) => Math.round(255 * v)), rgba = (a) => `rgba(${col[0]},${col[1]},${col[2]},${a})`;
+      c.save(); c.globalCompositeOperation = 'lighter';
+      const R0 = 26 * ps, gr = c.createRadialGradient(lx, ly, 0, lx, ly, R0);
+      gr.addColorStop(0, rgba(1)); gr.addColorStop(0.1, rgba(0.75)); gr.addColorStop(0.3, rgba(0.18)); gr.addColorStop(0.6, rgba(0.05)); gr.addColorStop(1, rgba(0));
+      c.fillStyle = gr; c.beginPath(); c.arc(lx, ly, R0, 0, 2 * Math.PI); c.fill();
+      c.strokeStyle = rgba(0.22); c.lineWidth = 1 * ps; c.beginPath();       // faint telescope diffraction spikes
+      for (const [dx, dy] of [[1, 0], [0, 1]]) { c.moveTo(lx - dx * 36 * ps, ly - dy * 36 * ps); c.lineTo(lx + dx * 36 * ps, ly + dy * 36 * ps); }
+      c.stroke(); c.restore();
+      return 'lens star';
+    }
+    return '';
+  }
   // screen position of a lens plane angle (θ_E units)
   function lensXY(tx, ty) { const m = LY.main, g = lensGeom(); return [m.x + m.w / 2 + tx * g.pxPerTE, m.y + m.h / 2 - ty * g.pxPerTE]; }
   function drawLens() {
@@ -921,6 +1107,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     c.save(); c.beginPath(); c.rect(m.x, m.y, m.w, m.h); c.clip();
     c.imageSmoothingEnabled = true; c.drawImage(lensImg.off, m.x, m.y, m.w, m.h);
     const [lx, ly] = lensXY(0, 0);
+    const lensKind = lensLight(c, lx, ly, k, ps);
     // Einstein ring (critical curve)
     c.strokeStyle = T.skyAccent; c.lineWidth = 1.2 * ps; c.setLineDash([5, 5]); c.globalAlpha = 0.75;
     c.beginPath(); c.arc(lx, ly, k, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
@@ -978,6 +1165,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     c.strokeStyle = T.skyInk; c.lineWidth = 1.5 * ps; c.beginPath(); c.moveTo(bx0, by0 - 4 * ps); c.lineTo(bx0, by0); c.lineTo(bx0 + k, by0); c.lineTo(bx0 + k, by0 - 4 * ps); c.stroke();
     label(c, `θ_{E} = ${fmtAngle(te)}`, bx0 + k + 8 * ps, by0 - 2 * ps, T.skyInk, sk);
     label(c, 'thin lens, point mass', m.x + m.w - 10 * ps, m.y + 14 * ps, T.skyMuted, { ...sk, align: 'right' });
+    label(c, lensKind ? `sky and ${lensKind} glow: illustrative` : 'sky: illustrative', m.x + m.w - 10 * ps, m.y + 31 * ps, T.skyMuted, { ...sk, align: 'right', size: 10 });
     c.restore();
   }
   function plotBox(r, ps, top) { return { L: r.x + 50 * ps, R: r.x + r.w - 14 * ps, T: r.y + (top || 30) * ps, B: r.y + r.h - 34 * ps }; }
@@ -1083,6 +1271,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     label(c, 'true direction', gx, gy - gr - 11 * ps > m.y + 26 * ps ? gy - gr - 11 * ps : gy + gr + 13 * ps, T.skyInk, { ...sk, align: 'center' });
     label(c, `exact Schwarzschild, static observer at ${trim(ro().toPrecision(3))} r_{s}`, m.x + 10 * ps, m.y + 14 * ps, T.skyMuted, sk);
     label(c, `fisheye: distance from center ∝ angle; field ±${fmtDeg(g.fov)}`, m.x + 10 * ps, m.y + m.h - 14 * ps, T.skyMuted, sk);
+    label(c, S.disk ? 'stars, galaxy and disk: illustrative; their positions exact' : 'stars and galaxy: illustrative; their positions exact', m.x + 10 * ps, m.y + 31 * ps, T.skyMuted, { ...sk, size: 10 });
     c.restore();
   }
   // light paths in the plane of a ray, seen from above; the observer is on the right
@@ -1148,28 +1337,76 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (nm > 780) return null;
     return `rgb(${Math.round(255 * r * f)},${Math.round(255 * g * f)},${Math.round(255 * b * f)})`;
   }
+  // a pocket watch: brushed metal case and crown, cream face, one sweeping hand; ring colored to tell the two clocks apart
   function drawClock(c, x, y, R, ang, col, ps) {
-    c.fillStyle = T.canvas; c.strokeStyle = col; c.lineWidth = 1.5 * ps; c.beginPath(); c.arc(x, y, R, 0, 2 * Math.PI); c.fill(); c.stroke();
-    for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6; c.beginPath(); c.moveTo(x + R * 0.78 * Math.cos(a), y + R * 0.78 * Math.sin(a)); c.lineTo(x + R * 0.92 * Math.cos(a), y + R * 0.92 * Math.sin(a)); c.lineWidth = 1 * ps; c.stroke(); }
-    c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(x, y); c.lineTo(x + R * 0.8 * Math.sin(ang), y - R * 0.8 * Math.cos(ang)); c.stroke();
+    c.save();
+    c.fillStyle = '#a3acb7'; c.fillRect(x - 2.4 * ps, y - R - 6 * ps, 4.8 * ps, 5 * ps);
+    c.strokeStyle = '#a3acb7'; c.lineWidth = 1.5 * ps; c.beginPath(); c.arc(x, y - R - 8.5 * ps, 3 * ps, 0, 2 * Math.PI); c.stroke();
+    c.strokeStyle = col; c.lineWidth = 2 * ps; c.beginPath(); c.arc(x, y, R + 4.2 * ps, 0, 2 * Math.PI); c.stroke();
+    const cg = c.createLinearGradient(x - R, y - R, x + R, y + R); cg.addColorStop(0, '#eef1f5'); cg.addColorStop(0.5, '#8e98a4'); cg.addColorStop(1, '#d9dee5');
+    c.fillStyle = cg; c.beginPath(); c.arc(x, y, R + 2.6 * ps, 0, 2 * Math.PI); c.fill();
+    const fg = c.createRadialGradient(x - R * 0.35, y - R * 0.35, R * 0.1, x, y, R); fg.addColorStop(0, '#fffdf6'); fg.addColorStop(1, '#e2dccd');
+    c.fillStyle = fg; c.beginPath(); c.arc(x, y, R, 0, 2 * Math.PI); c.fill();
+    c.strokeStyle = '#2a3038'; c.lineCap = 'round';
+    for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6, q = i % 3 === 0 ? 0.7 : 0.8; c.lineWidth = (i % 3 === 0 ? 1.6 : 1) * ps; c.beginPath(); c.moveTo(x + R * q * Math.cos(a), y + R * q * Math.sin(a)); c.lineTo(x + R * 0.9 * Math.cos(a), y + R * 0.9 * Math.sin(a)); c.stroke(); }
+    c.strokeStyle = '#1b2029'; c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(x - R * 0.18 * Math.sin(ang), y + R * 0.18 * Math.cos(ang)); c.lineTo(x + R * 0.8 * Math.sin(ang), y - R * 0.8 * Math.cos(ang)); c.stroke();
+    c.fillStyle = '#c23f2c'; c.beginPath(); c.arc(x, y, 1.8 * ps, 0, 2 * Math.PI); c.fill();
+    c.restore();
+  }
+  // an astronaut falling feet first: lying along the radial axis with the feet toward the hole (−x); s is pixels per unit
+  function drawAstronaut(c, x, y, s) {
+    const suit = '#eef1f5', shade = '#b5bfcb', line = '#4d5662';
+    c.save(); c.translate(x, y); c.lineJoin = 'round'; c.lineCap = 'round';
+    const limb = (x1, y1, x2, y2, w) => { c.strokeStyle = line; c.lineWidth = w + 1.6; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); c.strokeStyle = suit; c.lineWidth = w; c.stroke(); };
+    const rr = (x0, y0, w, h, rad, fill) => { c.beginPath(); c.moveTo(x0 + rad, y0); c.arcTo(x0 + w, y0, x0 + w, y0 + h, rad); c.arcTo(x0 + w, y0 + h, x0, y0 + h, rad); c.arcTo(x0, y0 + h, x0, y0, rad); c.arcTo(x0, y0, x0 + w, y0, rad); c.closePath(); c.fillStyle = fill; c.fill(); c.strokeStyle = line; c.lineWidth = 0.8; c.stroke(); };
+    rr(-3.5 * s, -6 * s, 8 * s, 2.8 * s, 0.9 * s, shade);                       // life support pack
+    limb(-3 * s, -1.3 * s, -10.5 * s, -1.9 * s, 2.9 * s); limb(-3 * s, 1.3 * s, -10.5 * s, 2 * s, 2.9 * s);
+    c.fillStyle = '#5a6472'; for (const yy of [-1.9, 2]) { c.beginPath(); c.ellipse(-11.6 * s, yy * s, 1.6 * s, 1.7 * s, 0, 0, 2 * Math.PI); c.fill(); }
+    rr(-4.2 * s, -3.6 * s, 10 * s, 7.2 * s, 2 * s, suit);                       // torso
+    c.fillStyle = '#c23f2c'; c.fillRect(-0.5 * s, -1.4 * s, 2.4 * s, 1.1 * s);      // chest patch
+    c.fillStyle = '#2b60b5'; c.fillRect(-0.5 * s, 0.2 * s, 2.4 * s, 1.1 * s);
+    limb(4 * s, 2.6 * s, -1.5 * s, 4.6 * s, 2.3 * s);                           // arm along the side
+    c.fillStyle = shade; c.beginPath(); c.arc(-2 * s, 4.7 * s, 1.3 * s, 0, 2 * Math.PI); c.fill();
+    c.fillStyle = suit; c.strokeStyle = line; c.lineWidth = 0.8; c.beginPath(); c.arc(8.6 * s, 0, 4.2 * s, 0, 2 * Math.PI); c.fill(); c.stroke();   // helmet
+    const vg = c.createLinearGradient(8 * s, -3 * s, 11 * s, 3 * s); vg.addColorStop(0, '#f4d27a'); vg.addColorStop(0.55, '#9a6a1c'); vg.addColorStop(1, '#3d2a0c');
+    c.fillStyle = vg; c.beginPath(); c.ellipse(9.8 * s, 0.2 * s, 2.5 * s, 3 * s, 0, 0, 2 * Math.PI); c.fill();
+    c.fillStyle = 'rgba(255,255,255,0.75)'; c.beginPath(); c.ellipse(9.2 * s, -1.3 * s, 0.6 * s, 1 * s, -0.5, 0, 2 * Math.PI); c.fill();
+    c.restore();
+  }
+  // starry background of the near view (for looks): distant stars bent by a point lens at the hole, as a far away observer would see them
+  let nearSky = null;
+  function ensureNearSky(g) {
+    const m = g.m, key = `${m.w}|${m.h}|${g.cx}|${g.cy}|${g.Rh}|${T.sky}|${dpr}`;
+    if (nearSky && nearSky.key === key) return nearSky;
+    if (!TILE_T) TILE_T = tileTexture();
+    const q = Math.min(1, dpr, Math.sqrt(2.2e5 / (m.w * m.h))), bw = Math.max(2, Math.round(m.w * q)), bh = Math.max(2, Math.round(m.h * q));
+    const tE = 1.5 * g.Rh * q, map = lensMap(bw, bh, (g.cx - m.x) * q, (g.cy - m.y) * q, 1 / tE);
+    const s = tE * TILE / (Math.max(bw, bh) * 0.65), out = [0, 0, 0], sk = T.skyRGB, id = new ImageData(bw, bh), d = id.data;
+    for (let i = 0; i < map.n; i++) {
+      let r = sk[0], gg = sk[1], b = sk[2];
+      if (map.bx[i] < 1e8) { sampleTex(TILE_T, map.bx[i] * s + 311, -map.by[i] * s + 517, Math.log2(map.fp[i] * s), out); r += 1.4 * out[0]; gg += 1.4 * out[1]; b += 1.4 * out[2]; }
+      d[4 * i] = r; d[4 * i + 1] = gg; d[4 * i + 2] = b; d[4 * i + 3] = 255;
+    }
+    const off = document.createElement('canvas'); off.width = bw; off.height = bh; off.getContext('2d').putImageData(id, 0, 0);
+    nearSky = { key, off };
+    return nearSky;
   }
   function drawNear() {
-    const c = ctx, g = nearGeom(), m = g.m, ps = g.ps, r = nearR(), Mv = M(), rs = rsOf(Mv);
+    const c = ctx, g = nearGeom(), m = g.m, ps = g.ps, r = nearR(), Mv = M(), rs = rsOf(Mv), sk = { bg: T.sky, ps };
     c.save(); c.beginPath(); c.rect(m.x, m.y, m.w, m.h); c.clip();
+    c.imageSmoothingEnabled = true; c.drawImage(ensureNearSky(g).off, m.x, m.y, m.w, m.h);
     // lethal region (stretch above 100 g)
     const rk = Math.cbrt(2 * GM_SUN * Mv * L_PERSON / LETHAL) / rs;
-    if (rk > 1) { c.fillStyle = T.pos; c.globalAlpha = 0.05; c.beginPath(); c.arc(g.cx, g.cy, g.X(Math.min(rk, 2000)) - g.cx, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1; }
+    if (rk > 1) { c.fillStyle = T.skyPos; c.globalAlpha = 0.08; c.beginPath(); c.arc(g.cx, g.cy, g.X(Math.min(rk, 2000)) - g.cx, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1; }
     // circles: ISCO, photon sphere
     const circ = (rr, col, dash, lw) => { c.strokeStyle = col; c.lineWidth = lw * ps; c.setLineDash(dash); c.beginPath(); c.arc(g.cx, g.cy, g.X(rr) - g.cx, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]); };
-    circ(3, T.muted, [2, 4], 1.2); circ(1.5, T.equi, [5, 4], 1.6);
-    if (rk > 1 && rk < 1000) circ(rk, T.pos, [6, 4], 1.4);
-    c.fillStyle = T.hole; c.beginPath(); c.arc(g.cx, g.cy, g.Rh, 0, 2 * Math.PI); c.fill(); c.strokeStyle = T.muted; c.lineWidth = 1; c.stroke();
+    circ(3, T.skyMuted, [2, 4], 1.2); circ(1.5, T.skyGold, [5, 4], 1.6);
+    if (rk > 1 && rk < 1000) circ(rk, T.skyPos, [6, 4], 1.4);
+    c.fillStyle = T.hole; c.beginPath(); c.arc(g.cx, g.cy, g.Rh, 0, 2 * Math.PI); c.fill(); c.strokeStyle = T.skyMuted; c.globalAlpha = 0.6; c.lineWidth = 1; c.stroke(); c.globalAlpha = 1;
     // radial axis, log scale
-    c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(g.cx + g.Rh, g.cy); c.lineTo(g.xr, g.cy); c.stroke();
-    font(c, 10.5 * ps); c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'top';
+    c.strokeStyle = T.skyInk; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(g.cx + g.Rh, g.cy); c.lineTo(g.xr, g.cy); c.stroke();
     const ticks = [1, 1.5, 2, 3, 5, 10, 20, 50, 100, 200, 500, 1000], major = new Set([1, 1.5, 3, 10, 100, 1000]);
-    for (const t of ticks) { const x = g.X(t); c.strokeStyle = T.ink; c.lineWidth = 1; c.beginPath(); c.moveTo(x, g.cy - (major.has(t) ? 5 : 3) * ps); c.lineTo(x, g.cy + (major.has(t) ? 5 : 3) * ps); c.stroke(); if (major.has(t) || g.K > 50 * ps) c.fillText(String(t), x, g.cy + 8 * ps); }
-    c.textAlign = 'right'; text(c, 'r/r_{s}, compressed scale', g.xr, g.cy + 24 * ps);
+    for (const t of ticks) { const x = g.X(t); c.strokeStyle = T.skyInk; c.lineWidth = 1; c.beginPath(); c.moveTo(x, g.cy - (major.has(t) ? 5 : 3) * ps); c.lineTo(x, g.cy + (major.has(t) ? 5 : 3) * ps); c.stroke(); }
     // outgoing light from the observer
     const x0 = g.X(r), wy = g.cy - 22 * ps, amp = 5 * ps, base = 11 * ps, z0 = clockRate(r);
     let ph = 0;
@@ -1178,33 +1415,37 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       const rr = g.R(x), ratio = clockRate(rr) / z0, lam = 500 * ratio, col = waveColor(lam);
       const y1 = wy + amp * Math.sin(ph - wavePhase); ph += 2 * Math.PI * 2 / (base * ratio);
       const y2 = wy + amp * Math.sin(ph - wavePhase);
-      c.strokeStyle = col || T.muted; c.globalAlpha = col ? 1 : 0.6; c.beginPath(); c.moveTo(x, y1); c.lineTo(x + 2, y2); c.stroke();
+      c.strokeStyle = col || T.skyMuted; c.globalAlpha = col ? 1 : 0.6; c.beginPath(); c.moveTo(x, y1); c.lineTo(x + 2, y2); c.stroke();
     }
     c.globalAlpha = 1;
     // clocks
-    const CR = 15 * ps;
-    drawClock(c, x0, g.cy - 62 * ps, CR, clockNear * 2 * Math.PI, T.accent, ps);
-    drawClock(c, g.xr + 4 * ps, g.cy - 62 * ps, CR, clockFar * 2 * Math.PI, T.ink, ps);
-    // tidal arrows below the axis
-    const dA = tidal(Mv, r * rs, L_PERSON), lg = Math.log10(dA / G0), len = Math.max(3, Math.min(34, 10 + 3 * lg)) * ps, ay = g.cy + 50 * ps;
-    c.strokeStyle = dA > LETHAL ? T.pos : T.accent; c.lineWidth = 2 * ps;
-    for (const s of [-1, 1]) { const xa = x0 + s * len; c.beginPath(); c.moveTo(x0 + s * 3 * ps, ay); c.lineTo(xa, ay); c.moveTo(xa, ay); c.lineTo(xa - s * 5 * ps, ay - 4 * ps); c.moveTo(xa, ay); c.lineTo(xa - s * 5 * ps, ay + 4 * ps); c.stroke(); }
-    c.fillStyle = dA > LETHAL ? T.pos : T.accent; c.beginPath(); c.arc(x0, ay, 2.5 * ps, 0, 2 * Math.PI); c.fill();
+    const CR = 15 * ps, cyc = g.cy - 64 * ps;
+    drawClock(c, x0, cyc, CR, clockNear * 2 * Math.PI, T.skyAccent, ps);
+    drawClock(c, g.xr - 2 * ps, cyc, CR, clockFar * 2 * Math.PI, T.skyInk, ps);
+    // the falling person and the tidal stretch, below the axis
+    const dA = tidal(Mv, r * rs, L_PERSON), lg = Math.log10(dA / G0), len = Math.max(3, Math.min(34, 10 + 3 * lg)) * ps, ay = g.cy + 52 * ps, as = 1.7 * ps, half = 13.5 * as;
+    const tc = dA > LETHAL ? T.skyPos : T.skyAccent;
+    drawAstronaut(c, x0, ay, as);
+    c.strokeStyle = tc; c.lineWidth = 2 * ps;
+    for (const s of [-1, 1]) { const xs = x0 + s * (half + 2 * ps), xa = xs + s * len; c.beginPath(); c.moveTo(xs, ay); c.lineTo(xa, ay); c.moveTo(xa, ay); c.lineTo(xa - s * 5 * ps, ay - 4 * ps); c.moveTo(xa, ay); c.lineTo(xa - s * 5 * ps, ay + 4 * ps); c.stroke(); }
     // observer handle
-    grip(c, x0, g.cy, isHot('obs'), T.accent, ps);
+    grip(c, x0, g.cy, isHot('obs'), T.skyAccent, ps, T.sky);
     // labels last
-    const lab = (rr, s, col, ang) => { const R = g.X(rr) - g.cx; label(c, s, g.cx + R * Math.cos(ang) + 5 * ps, g.cy - R * Math.sin(ang) + 6 * ps, col, { ps, align: 'left' }); };
-    lab(1.5, 'photon sphere 1.5 r_{s}', T.equi, -Math.PI * 0.4);
-    lab(3, 'ISCO 3 r_{s}', T.muted, -Math.PI * 0.4);
+    for (const t of ticks) if (major.has(t) || g.K > 50 * ps) label(c, String(t), g.X(t), g.cy + 14 * ps, T.skyMuted, { ...sk, align: 'center', size: 10.5, alpha: 0.6 });
+    label(c, 'r/r_{s}, compressed scale', g.xr, g.cy + 31 * ps, T.skyMuted, { ...sk, align: 'right' });
+    const lab = (rr, s, col, ang) => { const R = g.X(rr) - g.cx; label(c, s, g.cx + R * Math.cos(ang) + 5 * ps, g.cy - R * Math.sin(ang) + 6 * ps, col, { ...sk, align: 'left' }); };
+    lab(1.5, 'photon sphere 1.5 r_{s}', T.skyGold, -Math.PI * 0.62);
+    lab(3, 'ISCO 3 r_{s}', T.skyMuted, -Math.PI * 0.62);
     font(c, 10.5 * ps); c.fillStyle = T.skyInk; c.textAlign = 'center'; c.textBaseline = 'middle'; text(c, 'horizon', g.cx, g.cy - 9 * ps);
-    if (rk > 1 && rk < 1000) lab(rk, `stretch over 100 g inside ${trim(rk.toPrecision(3))} r_{s}`, T.pos, -Math.PI * 0.3);
-    label(c, `your clock ×${z0.toFixed(3)}`, x0, g.cy - 62 * ps - CR - (x0 > g.xr - 150 * ps ? 28 : 11) * ps, T.accent, { ps, align: x0 > g.xr - 110 * ps ? 'right' : 'center', bold: true });
-    label(c, 'far away', g.xr + 4 * ps, g.cy - 62 * ps - CR - 11 * ps, T.ink, { ps, align: 'right' });
+    if (rk > 1 && rk < 1000) lab(rk, `stretch over 100 g inside ${trim(rk.toPrecision(3))} r_{s}`, T.skyPos, -Math.PI * 0.3);
+    label(c, `your clock ×${z0.toFixed(3)}`, x0, cyc - CR - (x0 > g.xr - 150 * ps ? 30 : 15) * ps, T.skyAccent, { ...sk, align: x0 > g.xr - 110 * ps ? 'right' : 'center', bold: true });
+    label(c, 'far away', g.xr + 4 * ps, cyc - CR - 15 * ps, T.skyInk, { ...sk, align: 'right' });
     const lamFar = 500 / z0;
-    label(c, `arrives at ${lamFar < 1e4 ? Math.round(lamFar) + ' nm' : sci(lamFar / 1000) + ' µm'}`, g.xr + 4 * ps, wy - 13 * ps, T.muted, { ps, align: 'right' });
-    label(c, `ΔA = ${sci(dA / G0)} g`, x0, ay + 16 * ps, dA > LETHAL ? T.pos : T.accent, { ps, align: x0 > g.xr - 70 * ps ? 'right' : 'center', bold: true });
-    label(c, `${fmtMass(Mv)}: r_{s} = ${fmtLen(rs)}`, m.x + 10 * ps, m.y + 14 * ps, T.muted, { ps });
-    label(c, 'radial scale compressed; nothing drawn inside the horizon', m.x + 10 * ps, m.y + 32 * ps, T.muted, { ps, size: 10 });
+    label(c, `arrives at ${lamFar < 1e4 ? Math.round(lamFar) + ' nm' : sci(lamFar / 1000) + ' µm'}`, g.xr + 4 * ps, wy - 13 * ps, T.skyMuted, { ...sk, align: 'right' });
+    label(c, `ΔA = ${sci(dA / G0)} g`, x0, ay + 22 * ps, tc, { ...sk, align: x0 > g.xr - 70 * ps ? 'right' : 'center', bold: true });
+    label(c, `${fmtMass(Mv)}: r_{s} = ${fmtLen(rs)}`, m.x + 10 * ps, m.y + 14 * ps, T.skyInk, sk);
+    label(c, 'radial scale compressed; nothing drawn inside the horizon', m.x + 10 * ps, m.y + 32 * ps, T.skyMuted, { ...sk, size: 10 });
+    label(c, 'background stars: illustrative', m.x + 10 * ps, m.y + 48 * ps, T.skyMuted, { ...sk, size: 10 });
     c.restore();
   }
   function drawNearPlots() {
@@ -1328,9 +1569,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     else el.innerHTML = `clock ×${clockRate(nearR()).toFixed(3)} <small>1 + z = ${sci(onePlusZ(nearR()), 3)}</small>`;
   }
   const MODEL = {
-    lens: 'Thin lens, point mass, small angles: the lens equation β = θ − θ_E²/θ is exact for a point mass far from the light path (impact parameter ≫ r_s). A galaxy is not a point mass, so real galaxy lenses differ in detail. Distances are ordinary distances; at cosmological distances use angular diameter distances. The background stars and galaxies are placed at the source distance. Pixels are traced back exactly; the picture shows only what lies inside the view.',
-    ray: 'Exact light paths of a Schwarzschild (not rotating) black hole for an observer hovering at r_o, looking at the hole. Sky directions are exact; the sky is infinitely far away. Not included: the observer’s gravitational blueshift of the incoming light (a factor 1/√(1 − r_s/r_o) in frequency), any accretion disk, and spin. The EHT images show glowing gas around the shadow, which this view leaves out.',
-    near: 'Schwarzschild black hole, not rotating. Clock rates and redshift are for static observers, exact. The tidal stretch 2GML/r³ is exact for a body falling along a radius, as long as it is small compared with r. The 100 g line is a rough guide, not a medical limit. The diagram’s radial scale is compressed, x ∝ ln(1 + 2(r − r_s)/r_s): nearly even close to the hole, logarithmic far out.'
+    lens: 'Thin lens, point mass, small angles: the lens equation β = θ − θ_E²/θ is exact for a point mass far from the light path (impact parameter ≫ r_s). A galaxy is not a point mass, so real galaxy lenses differ in detail. Distances are ordinary distances; at cosmological distances use angular diameter distances. The background stars and galaxies are placed at the source distance. Pixels are traced back exactly; the picture shows only what lies inside the view. The source galaxy, the background stars (blackbody colors, brightnesses spread as N(>F) ∝ F<sup>−3/2</sup>) and the faint galaxies are illustrative pictures, and every one of them is lensed by the same exact point mass mapping. The soft glow of the lens galaxy (or lens star) is drawn on top for looks: it is not lensed and does not change the point mass physics.',
+    ray: 'Exact light paths of a Schwarzschild (not rotating) black hole for an observer hovering at r_o, looking at the hole. Sky directions are exact; the sky is infinitely far away. Not included: the observer’s gravitational blueshift of the incoming light (a factor 1/√(1 − r_s/r_o) in frequency) and spin. The EHT images show glowing gas around the shadow, which this view leaves out unless you turn on the illustrative disk. The stars, the Milky Way band and the galaxy are illustrative pictures; where each appears is exact. Next to the shadow edge each pixel holds squeezed copies of the whole sky, so it shows the sky’s mean brightness: a thin faint ring.',
+    disk: 'Disk: thin, opaque and illustrative, from the ISCO (3 r_s) out to 9 r_s, tilted 80° from face on. Where it appears is exact, including its far side bent up over the shadow and the thin rings just outside the shadow edge, made of light that circled the hole before reaching you. Its colors and brightness are for looks: an emitted temperature ∝ r<sup>−3/4</sup>(1 − √(3r_s/r))<sup>1/4</sup>, hottest ring set to 4500 K, shifted by the exact Doppler and gravitational factor g for gas on circular Kepler orbits (brightness × g⁴), as seen from far away. That is why the side coming toward you is brighter and bluer. The streaks orbit at the Kepler rate, slowed down for viewing.',
+    near: 'Schwarzschild black hole, not rotating. Clock rates and redshift are for static observers, exact. The tidal stretch 2GML/r³ is exact for a body falling along a radius, as long as it is small compared with r. The 100 g line is a rough guide, not a medical limit. The diagram’s radial scale is compressed, x ∝ ln(1 + 2(r − r_s)/r_s): nearly even close to the hole, logarithmic far out. The starry background is for looks: it shows distant stars bent around the hole the way a far away observer would see them, not to the diagram’s scale.'
   };
   const KEYS = {
     lens: '<span><i class="swatch ring"></i>Einstein ring θ = θ<sub>E</sub>, the critical curve</span><span><i class="swatch dash"></i>True position of the source and its track</span><span><i class="swatch gold"></i>This source, exact light curve</span><span><i class="swatch dash"></i>Point source through the center</span><span><i class="swatch dot"></i>Measured from the picture</span>',
@@ -1344,8 +1586,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     for (const b of document.querySelectorAll('[data-v]')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
     $('secLens').hidden = S.view !== 'lens'; $('secSrc').hidden = S.view !== 'lens'; $('secRay').hidden = S.view !== 'ray'; $('secNear').hidden = S.view !== 'near';
     $('logM').value = S.logM; $('logDL').value = S.logDL; $('logDS').value = S.logDS; $('rho').value = S.rho; $('sx').value = S.bx; $('sy').value = S.by;
-    $('stars').checked = S.stars; $('logRo').value = S.logRo; $('gsz').value = S.gsz; $('rayStars').checked = S.rayStars; $('logR').value = S.logR;
-    $('modelHint').innerHTML = htmlSub(MODEL[S.view]); $('key').innerHTML = KEYS[S.view];
+    $('stars').checked = S.stars; $('logRo').value = S.logRo; $('gsz').value = S.gsz; $('rayStars').checked = S.rayStars; $('rayDisk').checked = S.disk; $('logR').value = S.logR;
+    $('modelHint').innerHTML = htmlSub(MODEL[S.view] + (S.view === 'ray' && S.disk ? ' ' + MODEL.disk : '')); $('key').innerHTML = KEYS[S.view];
   }
   function markPreset(name) {
     S.preset = name;
@@ -1383,6 +1625,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   $('logRo').addEventListener('input', (e) => { S.logRo = +e.target.value; custom(); dirty = true; readouts(); });
   $('gsz').addEventListener('input', (e) => setGsz(+e.target.value));
   $('rayStars').addEventListener('change', (e) => { S.rayStars = e.target.checked; dirty = true; });
+  $('rayDisk').addEventListener('change', (e) => { S.disk = e.target.checked; dirty = true; syncUI(); });
   $('logR').addEventListener('input', (e) => { S.logR = +e.target.value; custom(); readouts(); });
   const playBtn = $('play');
   function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); }
@@ -1502,6 +1745,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         S.bx = +x.toFixed(4); $('sx').value = S.bx; dirty = true;
       } else if (S.view === 'ray' && table) {
         const lim = rayFov() * 0.85; let x = S.gx + lim * dt / 7; if (x > lim) x = -lim; S.gx = x; dirty = true;
+        if (S.disk) diskTime += dt * 8;
       }
     }
     if (S.view === 'near' && playing) { const rate = clockRate(nearR()); clockFar += dt * 0.25; clockNear += dt * 0.25 * rate; wavePhase += dt * 6; }
