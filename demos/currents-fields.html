@@ -46,6 +46,10 @@ img { max-width: 100%; }
   --bline: #4c5866;
   --shade: #2b60b5;
   --on-wire: #ffffff;
+  --copper: #b8692e; --copper-hi: #f2b37a; --copper-lo: #6e3412;
+  --card: #f7f2e6; --card-edge: #cbbfa6; --filing: #2c3036;
+  --wood: #b98a5a; --wood-lo: #7a5333; --steel: #8a95a3; --steel-hi: #e6ebf0; --steel-lo: #4a5260;
+  --former: #d8c49c; --brass: #b08a34; --panel: #2a2f36; --panel-hi: #49515c; --led: #ff4230; --bench: #edf0f4;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -53,13 +57,13 @@ img { max-width: 100%; }
   :root:not([data-theme="light"]) {
     --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --fout: #4fd1a0; --fin: #b48cff; --bline: #9aa7b8; --shade: #69a0ff; --on-wire: #10161e; color-scheme: dark;
+    --equi: #e2b350; --accent: #69a0ff; --fout: #4fd1a0; --fin: #b48cff; --bline: #9aa7b8; --shade: #69a0ff; --on-wire: #10161e; --copper: #c4773a; --copper-hi: #f6c08c; --copper-lo: #5e2b0e; --card: #2c2a26; --card-edge: #4d473b; --filing: #c9ccd2; --wood: #7f5c3b; --wood-lo: #4a321d; --steel: #7f8a99; --steel-hi: #dfe5ec; --steel-lo: #3f4753; --former: #6e5f45; --brass: #c9a24a; --panel: #1b1f25; --panel-hi: #3d444f; --led: #ff5240; --bench: #0c1117; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --fout: #4fd1a0; --fin: #b48cff; --bline: #9aa7b8; --shade: #69a0ff; --on-wire: #10161e; color-scheme: dark;
+  --equi: #e2b350; --accent: #69a0ff; --fout: #4fd1a0; --fin: #b48cff; --bline: #9aa7b8; --shade: #69a0ff; --on-wire: #10161e; --copper: #c4773a; --copper-hi: #f6c08c; --copper-lo: #5e2b0e; --card: #2c2a26; --card-edge: #4d473b; --filing: #c9ccd2; --wood: #7f5c3b; --wood-lo: #4a321d; --steel: #7f8a99; --steel-hi: #dfe5ec; --steel-lo: #3f4753; --former: #6e5f45; --brass: #c9a24a; --panel: #1b1f25; --panel-hi: #3d444f; --led: #ff5240; --bench: #0c1117; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -160,6 +164,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.sheet { border-color: var(--equi); border-top-style: dashed; }
 .swatch.ideal { border-color: var(--muted); border-top-style: dashed; border-top-width: 2px; }
 .swatch.needle { height: 6px; border: 0; background: linear-gradient(90deg, var(--muted) 50%, var(--pos) 50%); clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%); }
+.swatch.coil { height: 7px; border: 0; border-radius: 3px; background: linear-gradient(180deg, var(--copper-hi), var(--copper) 45%, var(--copper-lo)); }
+.swatch.fil { height: 10px; border: 0; background: repeating-linear-gradient(60deg, transparent 0 3px, var(--filing) 3px 4px); opacity: 0.8; }
+.swatch.dots { height: 8px; border: 0; background: radial-gradient(circle, var(--pos) 0 2.5px, transparent 3px) 0 0 / 8px 8px repeat-x; }
 .swatch.grip { width: 14px; height: 10px; border: 1.5px solid var(--muted); border-radius: 3px; margin: 0 4px; }
 .swatch.shade { height: 10px; border: 0; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--shade) 55%, transparent)); border-radius: 2px; }
 .rhr { display: block; width: 100%; max-width: 280px; height: auto; color: var(--ink); }
@@ -215,11 +222,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" id="scWires" aria-pressed="true">Straight wires</button>
           <button type="button" id="scSide" aria-pressed="false">Loop and solenoid</button>
         </div>
+        <div class="seg" role="group" aria-label="Drawing">
+          <button type="button" id="v2d" aria-pressed="true">Flat</button>
+          <button type="button" id="v3d" aria-pressed="false">3D apparatus</button>
+        </div>
         <button type="button" class="btn" id="ampBtn" aria-pressed="false">Amperian loop</button>
         <span class="headline mono" id="headline"></span>
       </div>
       <div class="pane" id="pane">
-        <canvas id="can" tabindex="0" aria-label="Magnetic field drawing. Straight wires view: wires cross the page, drag a wire, the probe or the Amperian loop. Keys: N selects the next object, arrow keys move it, plus and minus change the selected wire's current, R reverses it, Delete removes it, A shows or hides the Amperian loop. Loop and solenoid view: drag the grips to change the radius and length, drag the probe or click the plot below to place it on the axis; arrow keys move the probe, plus and minus change the number of turns."></canvas>
+        <canvas id="can" tabindex="0" aria-label="Magnetic field drawing. Straight wires view: wires cross the page, drag a wire, the probe or the Amperian loop. Keys: N selects the next object, arrow keys move it, plus and minus change the selected wire's current, R reverses it, Delete removes it, A shows or hides the Amperian loop. Loop and solenoid view: drag the grips to change the radius and length, drag the probe or click the plot below to place it on the axis; arrow keys move the probe, plus and minus change the number of turns. In the 3D apparatus view, drag empty space or use the arrow keys to turn the view; wires, the probe and the Amperian loop can still be dragged on the card."></canvas>
       </div>
     </div>
 
@@ -323,10 +334,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <label><input type="checkbox" id="tShade" checked>|B| shading</label>
           <label><input type="checkbox" id="tCompass" checked>Compasses</label>
           <label><input type="checkbox" id="tProbe" checked>Probe</label>
+          <label><input type="checkbox" id="tFil" checked>Iron filings</label>
           <label data-scene="wires"><input type="checkbox" id="tForce" checked>Forces</label>
         </div>
         <div class="key" id="key"></div>
         <p class="hint" id="lineHint"></p>
+        <p class="hint" id="v3Hint" hidden></p>
       </section>
 
       <section>
@@ -555,8 +568,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     scene: 'wires', preset: 'par', wires: [], wsel: null, sel: null, amp: false,
     loop: { kind: 'circle', x: -1.5, y: 0, r: 4, w: 9, h: 7 }, ccw: true,
     probe: { x: 0, y: 3 }, sprobe: { z: 0, y: 1.2 },
-    sol: { N: 30, L: 24, R: 3, I: 5 }, fit: null,
-    show: { lines: true, shade: true, compass: true, probe: true, force: true }
+    sol: { N: 30, L: 24, R: 3, I: 5 }, fit: null, view3d: false,
+    show: { lines: true, shade: true, compass: true, probe: true, force: true, filings: true }
   };
   const wById = (id) => S.wires.find((w) => w.id === id);
   const wIndex = (w) => S.wires.indexOf(w) + 1;
@@ -573,7 +586,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
       pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), fout: g('--fout'), fin: g('--fin'), bline: g('--bline'), shade: g('--shade'), onw: g('--on-wire'),
+      copper: g('--copper'), copperHi: g('--copper-hi'), copperLo: g('--copper-lo'), card: g('--card'), cardEdge: g('--card-edge'), filing: g('--filing'),
+      wood: g('--wood'), woodLo: g('--wood-lo'), steel: g('--steel'), steelHi: g('--steel-hi'), steelLo: g('--steel-lo'), former: g('--former'), brass: g('--brass'),
+      panel: g('--panel'), panelHi: g('--panel-hi'), led: g('--led'), bench: g('--bench'),
       ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace' };
+    T.dark = rgbOf(T.canvas).reduce((a, b) => a + b, 0) < 300;
     themeVer++;
   }
   function rgbOf(c) {
@@ -692,14 +709,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   // ---------- the static layer: shading and field lines ----------
-  let layerKey = '', layerFine = true, lines = [], arrows = [], shadeInfo = null, axisArrows = [];
+  let layerKey = '', layerFine = true, lines = [], arrows = [], shadeInfo = null, axisArrows = [], shadeSrc = null, sideGrid = null;
   const rwire = () => 11 * Math.min(kS(), 1.3);
   function turnR() {   // drawn radius of a turn in the side view: smaller when the turns crowd together
     const sp = S.sol.N > 1 ? S.sol.L / S.sol.N * V.s : Infinity;
     return Math.max(2.2, Math.min(rwire(), 0.46 * sp));
   }
   function layerSig() {
-    const base = `${S.scene}|${W}|${H}|${dpr}|${projScale()}|${themeVer}|${S.show.lines}|${S.show.shade}|${V.s.toFixed(4)}|${V.cx}|${V.cy}`;
+    const base = `${S.scene}|${W}|${H}|${dpr}|${projScale()}|${themeVer}|${S.show.lines}|${S.show.shade}|${S.show.filings}|${V.s.toFixed(4)}|${V.cx}|${V.cy}`;
     if (S.scene === 'wires') return base + '|' + S.wires.map((w) => `${w.x},${w.y},${w.I}`).join(';');
     return base + `|${S.sol.N},${S.sol.L},${S.sol.R},${S.sol.I}`;
   }
@@ -712,7 +729,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const c = lctx;
     c.setTransform(dpr, 0, 0, dpr, 0, 0);
     c.fillStyle = T.canvas; c.fillRect(0, 0, W, H);
-    lines = []; arrows = []; axisArrows = []; shadeInfo = null;
+    lines = []; arrows = []; axisArrows = []; shadeInfo = null; shadeSrc = null; sideGrid = null;
     if (S.scene === 'wires') buildWires(c, fine); else buildSide(c, fine);
   }
   function drawGrid(c, h) {
@@ -753,6 +770,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.drawImage(off, ox - g / 2, oy - g / 2, cols * g, rows * g);
     c.restore();
     shadeInfo = { lo, hi };
+    shadeSrc = { off, x: ox - g / 2, y: oy - g / 2, w: cols * g, h: rows * g };
   }
   function buildWires(c, fine) {
     drawGrid(c, H);
@@ -780,6 +798,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const hi = MU0 * Imax / (TWO_PI * 2.2 * rw / V.s * CM);
       shadeImage(c, Bm, cols, rows, g, 0, 0, hi / 400, hi, H);
     }
+    if (S.show.filings) drawFilings(c, H, FLAT_FIL, fine);
     if (!S.show.lines) return;
     const mask = new Uint8Array((cols - 1) * (rows - 1)), rm = rw * 1.75;
     for (const w of live) {
@@ -800,17 +819,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function buildSide(c, fine) {
     const Hd = V.Hd, sol = S.sol, turns = solTurns(sol), tr = turnR();
     drawGrid(c, Hd);
-    if (S.show.lines || S.show.shade) {
+    if (S.show.lines || S.show.shade || S.show.filings) {
       const g0 = fine ? 4 : 7, cost = Math.max(1, (W * Hd) / (g0 * g0) / 4 * sol.N);
       const g = cost > 9e5 ? g0 * Math.sqrt(cost / 9e5) : g0, gw = g / V.s;
       const i0 = Math.ceil(V.cx / g), j0 = Math.ceil(V.cy / g), ox = V.cx - i0 * g, oy = V.cy - j0 * g;
       const cols = Math.ceil((W - ox) / g) + 1, rows = Math.ceil((Hd - oy) / g) + 1;
       const mi = Math.max(i0, cols - 1 - i0), mj = Math.max(j0, rows - 1 - j0);
       const qpsi = new Float64Array((mi + 1) * (mj + 1)), qB = new Float32Array((mi + 1) * (mj + 1));
+      const qBz = new Float64Array((mi + 1) * (mj + 1)), qBr = new Float64Array((mi + 1) * (mj + 1));
       for (let dj = 0; dj <= mj; dj++) for (let di = 0; di <= mi; di++) {
         const f = solField(sol, di * gw, dj * gw, turns), n = dj * (mi + 1) + di;
-        qpsi[n] = f[2]; qB[n] = Math.hypot(f[0], f[1]);
+        qpsi[n] = f[2]; qB[n] = Math.hypot(f[0], f[1]); qBz[n] = f[0]; qBr[n] = f[1];
       }
+      sideGrid = { bz: qBz, br: qBr, mi, mj, gw };
       const psi = new Float64Array(cols * rows), Bm = new Float32Array(cols * rows);
       for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
         const q = Math.abs(j - j0) * (mi + 1) + Math.abs(i - i0), n = j * cols + i;
@@ -821,6 +842,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         const hi = 2.5 * Math.abs(axisExact(sol, 0, turns)) || 1e-12;
         shadeImage(c, Bm, cols, rows, g, ox, oy, hi / 400, hi, Hd);
       }
+      if (S.show.filings) drawFilings(c, Hd, FLAT_FIL, fine);
       if (S.show.lines && sol.I) {
         const mask = new Uint8Array((cols - 1) * (rows - 1)), rm = tr + 3.5 * kS();
         for (const zk of turns) for (const yy of [sol.R, -sol.R]) {
@@ -938,7 +960,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const h = S.scene === 'wires' ? H : V.Hd;
       const nx = Math.max(2, Math.floor(W / sp)), ny = Math.max(2, Math.floor(h / sp));
       const gx = W / nx, gy = h / ny;
-      for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) needles.push({ px: (i + 0.5) * gx, py: (j + 0.5) * gy, th: reduce ? 0 : Math.random() * TWO_PI, om: 0, tg: 0, hide: false });
+      for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) needles.push({ i, j, px: (i + 0.5) * gx, py: (j + 0.5) * gy, th: reduce ? 0 : Math.random() * TWO_PI, om: 0, tg: 0, hide: false });
       needlesKey = key;
     }
     void old;
@@ -977,15 +999,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     needlesMoving = moving;
   }
-  function drawNeedles(c) {
-    const ks = kS(), L = 10 * ks, w = 3.4 * ks;
+  function drawNeedles(c, grow) {   // grow: on the 3D card, every other compass, drawn larger
+    const ks = kS() * (grow || 1), L = 10 * ks, w = 3.4 * ks;
     for (const n of needles) {
-      if (n.hide || !n.on) continue;
+      if (n.hide || !n.on || (grow && (n.i % 2 || n.j % 2))) continue;
       const ux = Math.cos(n.th), uy = Math.sin(n.th);
-      c.fillStyle = T.canvas; c.globalAlpha = 0.7; c.beginPath(); c.arc(n.px, n.py, L + 2 * ks, 0, TWO_PI); c.fill(); c.globalAlpha = 1;
-      c.strokeStyle = T.line; c.lineWidth = 1; c.stroke();
+      c.fillStyle = T.canvas; c.globalAlpha = 0.78; c.beginPath(); c.arc(n.px, n.py, L + 2 * ks, 0, TWO_PI); c.fill(); c.globalAlpha = 1;
+      c.strokeStyle = T.brass; c.lineWidth = 1.5 * Math.min(ks, 1.3); c.stroke();
       c.fillStyle = T.pos; c.beginPath(); c.moveTo(n.px + ux * L, n.py + uy * L); c.lineTo(n.px - uy * w, n.py + ux * w); c.lineTo(n.px + uy * w, n.py - ux * w); c.closePath(); c.fill();
       c.fillStyle = T.muted; c.beginPath(); c.moveTo(n.px - ux * L, n.py - uy * L); c.lineTo(n.px - uy * w, n.py + ux * w); c.lineTo(n.px + uy * w, n.py - ux * w); c.closePath(); c.fill();
+      c.fillStyle = T.brass; c.beginPath(); c.arc(n.px, n.py, 1.3 * Math.min(ks, 1.3), 0, TWO_PI); c.fill();
     }
   }
 
@@ -1059,8 +1082,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const col = I > 0 ? T.pos : I < 0 ? T.neg : T.muted;
     if (hot || sel) { c.fillStyle = T.accent; c.globalAlpha = hot ? 0.3 : 0.18; c.beginPath(); c.arc(px, py, r + 6 * Math.min(kS(), 1.3), 0, TWO_PI); c.fill(); c.globalAlpha = 1; }
     if (sel) { c.strokeStyle = T.accent; c.lineWidth = 2; c.beginPath(); c.arc(px, py, r + 4, 0, TWO_PI); c.stroke(); }
+    if (r >= 4.5) {   // bare copper around the colored core
+      const gr = c.createRadialGradient(px - r * 0.35, py - r * 0.4, r * 0.2, px, py, r + 2.4);
+      gr.addColorStop(0, T.copperHi); gr.addColorStop(0.55, T.copper); gr.addColorStop(1, T.copperLo);
+      c.fillStyle = gr; c.beginPath(); c.arc(px, py, r + 2.2, 0, TWO_PI); c.fill();
+    }
     c.fillStyle = I ? col : T.canvas; c.strokeStyle = col; c.lineWidth = 1.6;
-    c.beginPath(); c.arc(px, py, r, 0, TWO_PI); c.fill(); if (!I) c.stroke();
+    c.beginPath(); c.arc(px, py, r * (r >= 4.5 ? 0.86 : 1), 0, TWO_PI); c.fill(); if (!I) c.stroke();
     if (r < 4.5) return;
     if (I > 0) { c.fillStyle = T.onw; c.beginPath(); c.arc(px, py, Math.max(1.6, r * 0.27), 0, TWO_PI); c.fill(); }
     else if (I < 0) { const q = r * 0.5; c.strokeStyle = T.onw; c.lineWidth = Math.max(1.4, r * 0.17); c.lineCap = 'round'; c.beginPath(); c.moveTo(px - q, py - q); c.lineTo(px + q, py + q); c.moveTo(px + q, py - q); c.lineTo(px - q, py + q); c.stroke(); c.lineCap = 'butt'; }
@@ -1107,7 +1135,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.drawImage(layer, 0, 0);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    if (S.scene === 'wires') drawWiresScene(); else drawSideScene();
+    if (S.view3d) { draw3D(); if (S.scene === 'side') plotProbe(ctx); }
+    else if (S.scene === 'wires') drawWiresScene(); else drawSideScene();
   }
   function drawLegend(c, x, y) {
     if (!S.show.shade || !shadeInfo) return;
@@ -1120,8 +1149,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.textAlign = 'left'; c.fillText('|B|, log scale', x, y - 4);
     c.fillText(fmtB(shadeInfo.lo, 2), x, y + h + fs + 2); c.textAlign = 'right'; c.fillText(fmtB(shadeInfo.hi, 2), x + w, y + h + fs + 2);
   }
-  function drawLoop(c) {
-    const L = S.loop, ks = kS(), pts = [];
+  function drawLoop(c, dashed) {
+    const L = S.loop, ks = kS() * (dashed ? cardGrow : 1), pts = [];
     if (L.kind === 'circle') { const n = 240; for (let i = 0; i <= n; i++) { const t = TWO_PI * i / n; pts.push([L.x + L.r * Math.cos(t), L.y + L.r * Math.sin(t), -Math.sin(t), Math.cos(t)]); } }
     else for (const P of loopPieces(L)) { const len = Math.hypot(...P.at(0).slice(2)), n = Math.max(4, Math.ceil(len / 0.15)); for (let i = 0; i <= n; i++) { const p = P.at(i / n); pts.push([p[0], p[1], p[2] / len, p[3] / len]); } }
     const bt = pts.map((p) => { const b = wireB(S.wires, p[0], p[1]); return (b[0] * p[2] + b[1] * p[3]) * (S.ccw ? 1 : -1); });
@@ -1131,11 +1160,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.strokeStyle = T.ink; c.globalAlpha = hot ? 0.35 : 0.18; c.lineWidth = 7 * ks; c.beginPath();
     pts.forEach((p, i) => (i ? c.lineTo(X(p[0]), Y(p[1])) : c.moveTo(X(p[0]), Y(p[1])))); c.stroke(); c.globalAlpha = 1;
     c.lineWidth = 3.4 * ks;
+    if (dashed) { c.setLineDash([9 * ks, 6 * ks]); c.lineCap = 'butt'; }
+    let run = 0;
     for (let i = 1; i < pts.length; i++) {
-      const v = 0.5 * (bt[i] + bt[i - 1]); if (!isFinite(v)) continue;
+      const sl = Math.hypot(X(pts[i][0]) - X(pts[i - 1][0]), Y(pts[i][1]) - Y(pts[i - 1][1]));
+      const v = 0.5 * (bt[i] + bt[i - 1]); if (!isFinite(v)) { run += sl; continue; }
       c.strokeStyle = v >= 0 ? T.fout : T.fin; c.globalAlpha = mx > 0 ? 0.3 + 0.7 * Math.min(1, Math.sqrt(Math.abs(v) / mx)) : 0.4;
+      if (dashed) c.lineDashOffset = run;
       c.beginPath(); c.moveTo(X(pts[i - 1][0]), Y(pts[i - 1][1])); c.lineTo(X(pts[i][0]), Y(pts[i][1])); c.stroke();
+      run += sl;
     }
+    c.setLineDash([]); c.lineDashOffset = 0;
     c.globalAlpha = 1; c.lineCap = 'butt';
     // direction of travel around the loop
     let per = 0; for (let i = 1; i < pts.length; i++) per += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
@@ -1237,6 +1272,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       for (const yy of [sol.R, -sol.R]) { c.moveTo(X(-sol.L / 2), Y(yy)); c.lineTo(X(sol.L / 2), Y(yy)); }
       c.stroke(); c.setLineDash([]);
     }
+    if (sol.N > 1) {   // the former the wire is wound on, just inside the turns
+      const wall = Math.max(2, 0.12 * V.s), xa = X(-sol.L / 2) - tr - 0.25 * V.s, xb = X(sol.L / 2) + tr + 0.25 * V.s;
+      c.fillStyle = T.former; c.globalAlpha = T.dark ? 0.8 : 0.9;
+      for (const sg of [1, -1]) { const ye = V.cy - sg * (sol.R * V.s - tr - 1); c.fillRect(xa, sg > 0 ? ye : ye - wall, xb - xa, wall); }
+      c.globalAlpha = 1;
+    }
     const hotR = isHot('sr'), hotL = isHot('sl');
     for (const zk of turns) {
       const endHot = hotL && Math.abs(zk - turns[turns.length - 1]) < 1e-9;
@@ -1264,13 +1305,410 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (W >= 560) label(c, 'Plane through the axis · z to the right · grid 1 cm', W - 10, Hd - 10, { size: fsz(11), weight: 400, color: T.muted, align: 'right' });
     drawLegend(c, 12, Hd - 30 * ks);
     c.restore();
-    // probe position on the plot
+    plotProbe(c);
+  }
+  function plotProbe(c) {   // probe position on the axis plot
+    const sol = S.sol, turns = solTurns(sol), ks = kS();
     if (PG && S.show.probe) {
       const z = S.sprobe.z, b = axisExact(sol, z, turns), px = X(z), y = PG.Yb(b);
       c.strokeStyle = T.accent; c.lineWidth = 1; c.setLineDash([3, 3]); c.beginPath(); c.moveTo(px, PG.top); c.lineTo(px, PG.bot); c.stroke(); c.setLineDash([]);
       c.fillStyle = T.accent; c.beginPath(); c.arc(px, y, 4.5 * ks, 0, TWO_PI); c.fill();
       label(c, `${fmtB(b)} at z = ${fmtCm(z)}`, px + 8 * ks, Math.max(PG.top + 14 * ks, y - 8 * ks), { size: fsz(11), fam: T.mono, color: T.accent, align: px > W * 0.7 ? 'right' : 'left' });
     }
+  }
+
+  // ---------- iron filings ----------
+  // Short strokes on a jittered grid (the same seed every time, so they do not flicker). Each lies along B at its spot:
+  // exact for straight wires, and for the coil interpolated between the exact values on the side view's grid
+  // (4 px apart). Where B is weak a real filing is barely turned, so its angle gets a random spread that shrinks as
+  // B²/(B² + B_ref²) grows; this is drawing style only and is stated on the page.
+  const FLAT_FIL = 0.34;
+  function sideFieldGrid(x, y) {
+    const G = sideGrid; if (!G) return null;
+    const u = Math.abs(x) / G.gw, v = Math.abs(y) / G.gw, i = Math.floor(u), j = Math.floor(v);
+    if (i >= G.mi || j >= G.mj) return null;
+    const fu = u - i, fv = v - j, N1 = G.mi + 1, n = j * N1 + i;
+    const bi = (A) => (A[n] * (1 - fu) + A[n + 1] * fu) * (1 - fv) + (A[n + N1] * (1 - fu) + A[n + N1 + 1] * fu) * fv;
+    const bz = bi(G.bz), br = bi(G.br);
+    return isFinite(bz) && isFinite(br) ? [bz, (x < 0 ? -1 : 1) * (y < 0 ? -1 : 1) * br] : null;   // B_ρ is odd in z
+  }
+  function drawFilings(c, h, alpha, fine, grow) {
+    const ks = Math.min(kS(), 1.25) * (grow || 1), sp = (fine ? 6.6 : 9.5) * ks;
+    let bref = 0;
+    if (S.scene === 'wires') { let Im = 0; for (const w of S.wires) Im = Math.max(Im, Math.abs(w.I)); bref = MU0 * Im / (TWO_PI * 0.07); }
+    else bref = 0.1 * Math.abs(axisExact(S.sol, 0));
+    if (!(bref > 0)) return;
+    let seed = 20240917;
+    const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    const nx = Math.ceil(W / sp), ny = Math.ceil(h / sp), rw = rwire() * 1.5, tr = turnR() + 2;
+    const turns = S.scene === 'side' ? solTurns(S.sol) : null, yR = S.scene === 'side' ? S.sol.R * V.s : 0;
+    const bins = [new Path2D(), new Path2D(), new Path2D(), new Path2D()], b2 = bref * bref;
+    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+      const px = (i + rnd()) * sp, py = (j + rnd()) * sp, r1 = rnd(), r2 = rnd();
+      if (py > h) continue;
+      let skip = false;
+      if (turns) { if (Math.abs(Math.abs(py - V.cy) - yR) < tr) for (const zk of turns) if (Math.abs(X(zk) - px) < tr) { skip = true; break; } }
+      else for (const w of S.wires) if (Math.hypot(X(w.x) - px, Y(w.y) - py) < rw) { skip = true; break; }
+      if (skip) continue;
+      const b = turns ? sideFieldGrid(wx(px), wy(py)) : wireB(S.wires, wx(px), wy(py));
+      if (!b) continue;
+      const m2 = b[0] * b[0] + b[1] * b[1]; if (!(m2 > 0)) continue;
+      const o = m2 / (m2 + b2), th = Math.atan2(-b[1], b[0]) + (r1 - 0.5) * Math.PI * (1 - o);
+      const L = (1.9 + 2.3 * o) * ks * (0.7 + 0.6 * r2), cx = Math.cos(th) * L, cy = Math.sin(th) * L, P2 = bins[Math.min(3, Math.floor(o * 4))];
+      P2.moveTo(px - cx, py - cy); P2.lineTo(px + cx, py + cy);
+    }
+    c.save(); c.beginPath(); c.rect(0, 0, W, h); c.clip();
+    c.strokeStyle = T.filing; c.lineCap = 'round'; c.lineWidth = 1.05 * ks;
+    bins.forEach((P2, k) => { c.globalAlpha = alpha * (0.3 + 0.22 * k); c.stroke(P2); });
+    c.restore();
+  }
+
+  // ---------- 3D apparatus view ----------
+  // Orthographic projection. World axes: x and y lie in the card, which is the flat view's plane (for straight wires the
+  // cross section; for the coil the plane through its axis, x along the axis); z is up, which in the flat view is out of
+  // the page. The view turns about z and tilts from 7° to 83° above the card. Nothing here changes the physics: the card
+  // carries the flat view's field lines and filings, and the probe, wires and loop keep their card coordinates.
+  const V3 = { az: -0.52, el: 0.64 };
+  const HT = 10, HB = 5, BASE_M = 1.6;   // straight wires: held 10 cm above the card; base 5 cm below; base margin
+  let t3 = 0;                              // clock for the moving current dots, s
+  const region3 = () => ({ w: W, h: S.scene === 'wires' ? H : V.Hd });
+  const card3 = () => (S.scene === 'wires' ? { x0: V.x0, x1: V.x1, y0: V.y0, y1: V.y1 } : { x0: V.x0, x1: V.x1, y0: wy(V.Hd), y1: V.y1 });
+  const baseTop3 = () => (S.scene === 'wires' ? -HB : -1.45 * S.sol.R - 0.6);
+  function proj3() {
+    const r = region3(), C = card3(), ks = kS();
+    const ca = Math.cos(V3.az), sa = Math.sin(V3.az), ce = Math.cos(V3.el), se = Math.sin(V3.el);
+    const cx = (C.x0 + C.x1) / 2, cy = (C.y0 + C.y1) / 2;
+    // frame the apparatus (base to top) as seen from this direction
+    const hx = (C.x1 - C.x0) / 2 + BASE_M, hy = (C.y1 - C.y0) / 2 + BASE_M;
+    const z0 = baseTop3() - 1.2, z1 = S.scene === 'wires' ? HT + 0.5 : 1.15 * S.sol.R;
+    let u0 = Infinity, u1 = -Infinity, v0 = Infinity, v1 = -Infinity;
+    for (const dx of [-hx, hx]) for (const dy of [-hy, hy]) for (const z of [z0, z1]) {
+      const u = dx * ca - dy * sa, v = (dx * sa + dy * ca) * se + z * ce;
+      u0 = Math.min(u0, u); u1 = Math.max(u1, u); v0 = Math.min(v0, v); v1 = Math.max(v1, v);
+    }
+    const padX = 10 * ks, padT = (W < 640 ? 34 : 42) * ks, padB = 8 * ks;
+    const sc = Math.max(1, Math.min((r.w - 2 * padX) / (u1 - u0), (r.h - padT - padB) / (v1 - v0)));
+    const ox = r.w / 2 - (u0 + u1) / 2 * sc, oy = padT + (r.h - padT - padB) / 2 + (v0 + v1) / 2 * sc;
+    const P = (x, y, z) => { const dx = x - cx, dy = y - cy, xr = dx * ca - dy * sa, yr = dx * sa + dy * ca; return [ox + xr * sc, oy - (yr * se + z * ce) * sc, -yr * ce + z * se]; };
+    const inv = (px, py) => { const xr = (px - ox) / sc, yr = (oy - py) / sc / se; return [cx + xr * ca + yr * sa, cy - xr * sa + yr * ca]; };
+    return { P, inv, sc, ca, sa, ce, se, C, toV: [-sa * ce, -ca * ce, se] };
+  }
+  // the affine map from flat view pixels to the screen, for the card (z = 0) or the vertical plane through the coil axis
+  function planeM(pj, vertical) {
+    const f = vertical ? (px, py) => pj.P(wx(px), 0, wy(py)) : (px, py) => pj.P(wx(px), wy(py), 0);
+    const o = f(0, 0), a = f(1, 0), b = f(0, 1);
+    return [a[0] - o[0], a[1] - o[1], b[0] - o[0], b[1] - o[1], o[0], o[1]];
+  }
+  const withM = (c, m, fn) => { c.save(); c.setTransform(dpr * m[0], dpr * m[1], dpr * m[2], dpr * m[3], dpr * (m[4]), dpr * (m[5])); fn(); c.restore(); };
+  function mixc(a, b, t) { const p = rgbOf(a), q = rgbOf(b); return `rgb(${Math.round(p[0] + (q[0] - p[0]) * t)},${Math.round(p[1] + (q[1] - p[1]) * t)},${Math.round(p[2] + (q[2] - p[2]) * t)})`; }
+  function poly(c, pts, close) { c.beginPath(); pts.forEach((q, i) => (i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1]))); if (close) c.closePath(); }
+  // a round rod (wire or post): dark edge, body, and a highlight on the lit side
+  function rod(c, path, wpx, cols, hx, hy, alpha) {
+    c.save(); c.globalAlpha = alpha == null ? 1 : alpha; c.lineCap = 'round'; c.lineJoin = 'round';
+    c.strokeStyle = cols[0]; c.lineWidth = wpx; c.stroke(path);
+    c.strokeStyle = cols[1]; c.lineWidth = wpx * 0.68; c.stroke(path);
+    c.translate(hx * wpx, hy * wpx); c.globalAlpha *= 0.8; c.strokeStyle = cols[2]; c.lineWidth = Math.max(0.6, wpx * 0.2); c.stroke(path);
+    c.restore();
+  }
+  const copperCols = () => [T.copperLo, T.copper, T.copperHi], steelCols = () => [T.steelLo, T.steel, T.steelHi];
+  // the visible faces of a box (the top always shows: the view is from above)
+  function box3(c, pj, x0, x1, y0, y1, z0, z1, col) {
+    const P = pj.P, v = pj.toV, F = [];
+    if (v[0] < 0) F.push([[x0, y0], [x0, y1], -0.3]); else F.push([[x1, y0], [x1, y1], -0.3]);
+    if (v[1] < 0) F.push([[x0, y0], [x1, y0], -0.18]); else F.push([[x0, y1], [x1, y1], -0.18]);
+    for (const [a, b, f] of F) { poly(c, [P(a[0], a[1], z0), P(b[0], b[1], z0), P(b[0], b[1], z1), P(a[0], a[1], z1)], true); c.fillStyle = mixc(col, '#000000', -f); c.fill(); }
+    poly(c, [P(x0, y0, z1), P(x1, y0, z1), P(x1, y1, z1), P(x0, y1, z1)], true); c.fillStyle = col; c.fill();
+  }
+  function woodBase(c, pj, x0, x1, y0, y1, zt) {
+    box3(c, pj, x0, x1, y0, y1, zt - 1.2, zt, T.wood);
+    const P = pj.P;
+    c.save(); poly(c, [P(x0, y0, zt), P(x1, y0, zt), P(x1, y1, zt), P(x0, y1, zt)], true); c.clip();
+    c.strokeStyle = T.woodLo; c.lineWidth = 1; c.globalAlpha = 0.28;
+    let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    for (let k = 0; k < 16; k++) {
+      const y = y0 + (k + rnd()) * (y1 - y0) / 16, a = 0.15 + 0.25 * rnd(), ph = 6 * rnd(), pts = [];
+      for (let q = 0; q <= 30; q++) { const x = x0 + (x1 - x0) * q / 30; pts.push(P(x, y + a * Math.sin(x * 0.35 + ph), zt)); }
+      poly(c, pts); c.stroke();
+    }
+    c.restore();
+  }
+  function bindingPost(c, pj, x, y, z, col) {
+    const P = pj.P, s = pj.sc, a = P(x, y, z), b = P(x, y, z + 0.9), r = Math.max(2.5, 0.32 * s);
+    c.fillStyle = mixc(col, '#000000', 0.35); c.fillRect(b[0] - r, b[1], 2 * r, a[1] - b[1]);
+    c.beginPath(); c.ellipse(b[0], b[1], r, r * pj.se, 0, 0, TWO_PI); c.fillStyle = col; c.fill();
+    c.beginPath(); c.ellipse(b[0], b[1], r * 0.35, r * 0.35 * pj.se, 0, 0, TWO_PI); c.fillStyle = T.brass; c.fill();
+    return [b[0], b[1]];
+  }
+  // a bench power supply with an LED ammeter for each current; returns its two binding posts on screen
+  function supplyPanel(c, x, yb, rows) {
+    const k = Math.min(kS(), 1.3) * (W < 640 ? 0.85 : 1), rh = 17 * k, w = 124 * k, h = 26 * k + rows.length * rh + 30 * k, y = yb - h;
+    c.save();
+    const g = c.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, T.panelHi); g.addColorStop(0.1, T.panel); g.addColorStop(1, T.panel);
+    roundRect(c, x, y, w, h, 6 * k); c.fillStyle = g; c.fill(); c.strokeStyle = T.panelHi; c.lineWidth = 1; c.stroke();
+    c.fillStyle = '#c3cad3'; c.font = `700 ${8.5 * k}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+    c.fillText('DC POWER SUPPLY', x + 8 * k, y + 13 * k);
+    const dx = x + 7 * k, dy = y + 19 * k, dw = w - 14 * k, dh = rows.length * rh + 6 * k;
+    roundRect(c, dx, dy, dw, dh, 3 * k); c.fillStyle = '#07090b'; c.fill();
+    rows.forEach(([name, I], i) => {
+      const ty = dy + 4 * k + (i + 0.78) * rh;
+      c.textAlign = 'left'; c.font = `600 ${8.5 * k}px ${T.mono}`; c.fillStyle = '#8a95a3'; c.fillText(name, dx + 5 * k, ty);
+      c.textAlign = 'right'; c.font = `600 ${14 * k}px ${T.mono}`; c.fillStyle = T.led;
+      c.globalAlpha = 0.12; c.fillText('88.8', dx + dw - 16 * k, ty); c.globalAlpha = 1;
+      c.shadowColor = T.led; c.shadowBlur = 6 * k; c.fillText(`${I < 0 ? '−' : ''}${Math.abs(I).toFixed(1)}`, dx + dw - 16 * k, ty); c.shadowBlur = 0;
+      c.font = `600 ${9 * k}px ${T.mono}`; c.fillText('A', dx + dw - 5 * k, ty);
+    });
+    // a knob and the output terminals
+    const ky = y + h - 13 * k;
+    c.beginPath(); c.arc(x + 20 * k, ky, 7.5 * k, 0, TWO_PI); c.fillStyle = '#5b636e'; c.fill(); c.strokeStyle = '#8a95a3'; c.stroke();
+    c.strokeStyle = '#e6ebf0'; c.lineWidth = 1.6 * k; c.beginPath(); c.moveTo(x + 20 * k, ky); c.lineTo(x + 20 * k + 5 * k * Math.cos(-2.2 + Math.min(1, Math.abs(rows[0] ? rows[0][1] : 0) / 20) * 4.4), ky + 5 * k * Math.sin(-2.2 + Math.min(1, Math.abs(rows[0] ? rows[0][1] : 0) / 20) * 4.4)); c.stroke();
+    const posts = [[x + w - 36 * k, ky, '#d23a2c'], [x + w - 16 * k, ky, '#2a2d32']];
+    for (const [px, py, col] of posts) { c.beginPath(); c.arc(px, py, 6 * k, 0, TWO_PI); c.fillStyle = col; c.fill(); c.strokeStyle = '#8a95a3'; c.lineWidth = 1; c.stroke(); c.beginPath(); c.arc(px, py, 2 * k, 0, TWO_PI); c.fillStyle = '#c9a24a'; c.fill(); }
+    c.fillStyle = '#c3cad3'; c.font = `700 ${8 * k}px ${T.ui}`; c.textAlign = 'center'; c.fillText('+', posts[0][0], ky - 9 * k); c.fillText('−', posts[1][0], ky - 9 * k);
+    c.restore();
+    return { posts: posts.map((p) => [p[0], p[1]]), top: y, right: x + w };
+  }
+  function cable(c, a, b, col) {
+    const k = Math.min(kS(), 1.3), sag = Math.max(4, Math.min(26 * k + 0.08 * Math.abs(b[0] - a[0]), (region3().h - 6 - Math.max(a[1], b[1])) * 1.3));
+    c.save(); c.lineCap = 'round';
+    c.beginPath(); c.moveTo(a[0], a[1]); c.bezierCurveTo(a[0], a[1] + sag, b[0], b[1] + sag, b[0], b[1]);
+    c.strokeStyle = T.dark ? 'rgba(220,226,234,0.35)' : 'rgba(0,0,0,0.25)'; c.lineWidth = 4.4 * k; c.stroke();
+    c.strokeStyle = col; c.lineWidth = 3 * k; c.stroke();
+    c.restore();
+  }
+  // the card: a thin sheet carrying the filings and the field lines, drawn from a texture in flat view pixels
+  const cardTex = document.createElement('canvas'), cctx = cardTex.getContext('2d');
+  let cardKey = '';
+  let cardGrow = 1;
+  function ensureCard(pj) {
+    cardGrow = clamp(Math.round(V.s / pj.sc * 0.8 * 5) / 5, 1, 2.4);   // the card is drawn smaller than the flat view: coarser filings
+    const key = `${layerKey}|${layerFine}|${cardGrow}`;
+    if (key === cardKey) return;
+    cardKey = key;
+    const h = region3().h;
+    cardTex.width = Math.max(1, Math.round(W * dpr)); cardTex.height = Math.max(1, Math.round(h * dpr));
+    const c = cctx; c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.fillStyle = T.card; c.fillRect(0, 0, W, h);
+    if (S.show.shade && shadeSrc) { c.save(); c.globalAlpha = 0.6; c.imageSmoothingEnabled = true; c.drawImage(shadeSrc.off, shadeSrc.x, shadeSrc.y, shadeSrc.w, shadeSrc.h); c.restore(); }
+    if (S.show.filings) drawFilings(c, h, 0.62, layerFine, cardGrow);
+    if (S.show.lines) {
+      const ks = kS() * cardGrow;
+      c.save(); c.strokeStyle = T.bline; c.fillStyle = T.bline; c.lineWidth = 1.3 * ks; c.lineJoin = 'round'; c.beginPath();
+      for (const p of lines) { c.moveTo(p[0], p[1]); for (let k = 2; k < p.length; k += 2) c.lineTo(p[k], p[k + 1]); }
+      if (S.scene === 'side' && S.sol.I) { c.moveTo(0, V.cy); c.lineTo(W, V.cy); }
+      c.stroke();
+      for (const a of arrows.concat(axisArrows)) chevron(c, a[0], a[1], a[2], a[3], 5.5 * ks);
+      c.restore();
+    }
+  }
+  function drawCard(c, pj) {
+    const P = pj.P, C = pj.C, h = region3().h;
+    const q = [P(C.x0, C.y0, 0), P(C.x1, C.y0, 0), P(C.x1, C.y1, 0), P(C.x0, C.y1, 0)];
+    c.save(); c.translate(0, 0.16 * pj.sc * pj.ce); poly(c, q, true); c.fillStyle = T.cardEdge; c.fill(); c.restore();   // its thickness
+    withM(c, planeM(pj, false), () => { c.beginPath(); c.rect(0, 0, W, h); c.clip(); c.drawImage(cardTex, 0, 0, W, h); });
+    poly(c, q, true); c.strokeStyle = T.cardEdge; c.lineWidth = 1; c.stroke();
+  }
+  // polylines in flat pixels mapped onto a plane; keep(px, py) can cut them
+  function planeLines(c, pj, list, map, keep) {
+    c.beginPath();
+    for (const p of list) {
+      let on = false;
+      for (let k = 0; k < p.length; k += 2) {
+        if (keep && !keep(p[k], p[k + 1])) { on = false; continue; }
+        const q = map(p[k], p[k + 1]);
+        if (on) c.lineTo(q[0], q[1]); else { c.moveTo(q[0], q[1]); on = true; }
+      }
+    }
+  }
+  function probe3(c, pj, x, y, b, labels) {
+    const P = pj.P, p = P(x, y, 0), m = Math.hypot(b[0], b[1]), ks = kS();
+    if (m > 0 && isFinite(m)) {
+      const e = 0.5 / Math.max(pj.sc, 1), q = P(x + b[0] / m * e, y + b[1] / m * e, 0), dx = q[0] - p[0], dy = q[1] - p[1], L = Math.hypot(dx, dy) || 1;
+      arrow(c, p[0], p[1], p[0] + dx / L * 46 * ks * Math.max(0.35, pj.se), p[1] + dy / L * 46 * ks * Math.max(0.35, pj.se), T.accent, 2.6 * ks, 10 * ks);
+    }
+    probeGlyph(c, p[0], p[1], isHot('probe'), S.sel && S.sel.kind === 'probe');
+    if (isFinite(m)) labels.push(() => label(c, `B = ${fmtB(m)}`, p[0] + 12 * ks, p[1] + 20 * ks, { size: fsz(11.5), fam: T.mono, color: T.accent }));
+  }
+  function view3Text(c, extra) {
+    const ks = kS(), deg = Math.round(V3.el * 180 / Math.PI);
+    label(c, `Looking ${deg}° down onto the card · drag to turn the view`, 10, 16 * ks, { size: fsz(11), weight: 400, color: T.muted });
+    if (extra && W >= 520) label(c, extra, 10, 34 * ks, { size: fsz(11), weight: 400, color: T.muted });
+  }
+  const dotR = (pj) => Math.max(2, Math.min(5 * kS(), 0.17 * pj.sc));
+  function dot(c, x, y, r, I) { c.beginPath(); c.arc(x, y, r, 0, TWO_PI); c.fillStyle = I > 0 ? T.pos : T.neg; c.fill(); c.strokeStyle = T.dark ? '#10161e' : '#ffffff'; c.lineWidth = 1; c.stroke(); }
+
+  function drawWires3D(c, pj) {
+    const P = pj.P, C = pj.C, sc = pj.sc, ks = kS(), live = S.wires, labels = [];
+    const bx0 = C.x0 - BASE_M, bx1 = C.x1 + BASE_M, by0 = C.y0 - BASE_M, by1 = C.y1 + BASE_M, zb = -HB;
+    // forces, and the bowing that shows them (exaggerated)
+    const F = live.map((w, j) => wireForce(live, j));
+    let Fmax = 0; for (const f of F) Fmax = Math.max(Fmax, Math.hypot(f[0], f[1]));
+    const showF = S.show.force && live.length >= 2 && Fmax > 0;
+    const bow = live.map((w, j) => { const m = Math.hypot(F[j][0], F[j][1]); if (!showF || !m) return [0, 0]; const b = 1.5 * Math.min(1, Math.sqrt(m / 4e-4)); return [F[j][0] / m * b, F[j][1] / m * b]; });
+    const wpx = Math.max(3, Math.min(14 * ks, 0.44 * sc)), ppx = Math.max(2.5, Math.min(10 * ks, 0.3 * sc));
+    const wireAt = (j, z) => { const w = live[j], s = z > 0 ? Math.sin(Math.PI * z / HT) : 0; return [w.x + bow[j][0] * s, w.y + bow[j][1] * s]; };
+    const posts = [[C.x0 + 0.6, C.y0 + 0.6], [C.x1 - 0.6, C.y0 + 0.6], [C.x1 - 0.6, C.y1 - 0.6], [C.x0 + 0.6, C.y1 - 0.6]];
+    // the base, the supply and its cables
+    woodBase(c, pj, bx0, bx1, by0, by1, zb);
+    const tp = [bindingPost(c, pj, bx0 + 0.8, C.y0 + 1.2, zb, '#d23a2c'), bindingPost(c, pj, bx0 + 0.8, C.y0 + 3.0, zb, '#2a2d32')];
+    const sp = supplyPanel(c, 10, region3().h - 10, live.map((w, j) => [`I${j + 1}`, w.I]));
+    cable(c, sp.posts[0], tp[0], '#c8372d'); cable(c, sp.posts[1], tp[1], T.dark ? '#5a616b' : '#2a2d32');
+    // below the card: the card hides most of this
+    const rodPath = (pts) => { const p = new Path2D(); pts.forEach((q, i) => (i ? p.lineTo(q[0], q[1]) : p.moveTo(q[0], q[1]))); return p; };
+    for (const [x, y] of posts) rod(c, rodPath([P(x, y, zb), P(x, y, 0)]), ppx, steelCols(), -0.18, 0);
+    live.forEach((w) => rod(c, rodPath([P(w.x, w.y, zb), P(w.x, w.y, 0)]), wpx, copperCols(), -0.18, 0));
+    drawCard(c, pj);
+    // on the card: the Amperian loop, compasses, the holes the wires pass through, the probe
+    withM(c, planeM(pj, false), () => { if (S.amp) drawLoop(c, true); if (S.show.compass) drawNeedles(c, cardGrow * 0.9); });
+    for (const w of live) {
+      const hole = []; for (let k = 0; k < 20; k++) { const t = TWO_PI * k / 20; hole.push(P(w.x + 0.42 * Math.cos(t), w.y + 0.42 * Math.sin(t), 0)); }
+      poly(c, hole, true); c.fillStyle = T.filing; c.globalAlpha = 0.35; c.fill(); c.globalAlpha = 1;
+    }
+    if (S.show.probe) probe3(c, pj, S.probe.x, S.probe.y, wireB(live, S.probe.x, S.probe.y), labels);
+    // above the card: posts and wires from back to front, each wire with its current dots
+    const items = posts.map(([x, y]) => ({ d: P(x, y, 0)[2], f: () => rod(c, rodPath([P(x, y, 0), P(x, y, HT)]), ppx, steelCols(), -0.18, 0) }));
+    live.forEach((w, j) => items.push({ d: P(w.x, w.y, 0)[2], f: () => {
+      const pts = []; for (let k = 0; k <= 24; k++) { const z = HT * k / 24, q = wireAt(j, z); pts.push(P(q[0], q[1], z)); }
+      const hot = isHot('w' + w.id) || (S.sel && S.sel.kind === 'w' && S.sel.id === w.id);
+      if (hot) { c.save(); c.strokeStyle = T.accent; c.globalAlpha = 0.3; c.lineWidth = wpx + 8; c.lineCap = 'round'; poly(c, pts); c.stroke(); c.restore(); }
+      rod(c, rodPath(pts), wpx, copperCols(), -0.18, 0);
+      if (!w.I) return;
+      // conventional current: dots moving along the wire (up for current out of the page), speed for show
+      const gap = 2.2, v = Math.sign(w.I) * Math.min(5, 1.2 + 0.25 * Math.abs(w.I)), off = ((t3 * v) % gap + gap) % gap, r = dotR(pj);
+      for (let z = off; z < HT; z += gap) { const q = wireAt(j, z); const s = P(q[0], q[1], z); dot(c, s[0], s[1], r, w.I); }
+      const za = HT * 0.8, qa = wireAt(j, za), a = P(qa[0], qa[1], za), u = Math.sign(w.I);
+      c.fillStyle = w.I > 0 ? T.pos : T.neg; chevron(c, a[0], a[1], 0, -u, 7 * ks);
+    } }));
+    items.sort((a, b) => a.d - b.d).forEach((it) => it.f());
+    // the field just under the top plate: the same exact lines (the field of long straight wires is the same at every height)
+    if (S.show.lines && lines.length) {
+      const keep = lines.filter((p) => {
+        const n = p.length; if (Math.hypot(p[0] - p[n - 2], p[1] - p[n - 1]) > 4) return false;
+        let far = 0; for (let k = 0; k < n; k += 2) { let dmin = Infinity; for (const w of live) dmin = Math.min(dmin, Math.hypot(wx(p[k]) - w.x, wy(p[k + 1]) - w.y)); far = Math.max(far, dmin); }
+        return far < 4.5;
+      });
+      c.save(); c.strokeStyle = T.bline; c.globalAlpha = 0.6; c.lineWidth = 1.2 * ks; c.lineJoin = 'round';
+      planeLines(c, pj, keep, (px, py) => P(wx(px), wy(py), HT)); c.stroke();
+      c.fillStyle = T.bline;
+      for (const p of keep) for (const fr of [0.2, 0.7]) {
+        const k = 2 * Math.floor(fr * (p.length / 2 - 1)), x = wx(p[k]), y = wy(p[k + 1]), b = wireB(live, x, y), m = Math.hypot(b[0], b[1]); if (!m) continue;
+        const a = P(x, y, HT), q = P(x + b[0] / m * 0.3, y + b[1] / m * 0.3, HT), L = Math.hypot(q[0] - a[0], q[1] - a[1]) || 1;
+        chevron(c, a[0], a[1], (q[0] - a[0]) / L, (q[1] - a[1]) / L, 5.5 * ks);
+      }
+      c.restore();
+    }
+    // the clear top plate, with a brass clamp holding each wire
+    const tq = [P(C.x0, C.y0, HT), P(C.x1, C.y0, HT), P(C.x1, C.y1, HT), P(C.x0, C.y1, HT)];
+    poly(c, tq, true); c.fillStyle = T.steelHi; c.globalAlpha = T.dark ? 0.05 : 0.18; c.fill(); c.globalAlpha = 0.55; c.strokeStyle = T.steelLo; c.lineWidth = 1.2; c.stroke(); c.globalAlpha = 1;
+    for (const w of live) { const s = 0.45; poly(c, [P(w.x - s, w.y - s, HT), P(w.x + s, w.y - s, HT), P(w.x + s, w.y + s, HT), P(w.x - s, w.y + s, HT)], true); c.fillStyle = T.brass; c.fill(); c.strokeStyle = mixc(T.brass, '#000000', 0.4); c.lineWidth = 1; c.stroke(); }
+    // force arrows at the middle of each bowed wire
+    if (showF) live.forEach((w, j) => {
+      const f = F[j], m = Math.hypot(f[0], f[1]); if (!m) return;
+      const q = wireAt(j, HT / 2), a = P(q[0], q[1], HT / 2), b = P(q[0] + f[0] / m, q[1] + f[1] / m, HT / 2), L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
+      const ux = (b[0] - a[0]) / L, uy = (b[1] - a[1]) / L, len = (18 + 46 * m / Fmax) * ks, g0 = wpx / 2 + 3;
+      arrow(c, a[0] + ux * g0, a[1] + uy * g0, a[0] + ux * (g0 + len), a[1] + uy * (g0 + len), T.equi, 3.2 * ks, 11 * ks);
+      labels.push(() => label(c, fmtF(m), a[0] + ux * (g0 + len + 6 * ks), a[1] + uy * (g0 + len) + 14 * ks, { size: fsz(11), fam: T.mono, color: T.equi, align: ux > 0.3 ? 'left' : ux < -0.3 ? 'right' : 'center' }));
+    });
+    // labels last
+    const avoid = [];
+    live.forEach((w, j) => { const t = P(w.x, w.y, HT); label(c, `I_${j + 1} = ${fmtI(w.I)}`, t[0], t[1] - 12 * ks, { size: fsz(11.5), fam: T.mono, color: T.ink, align: 'center', avoid }); });
+    labels.forEach((f) => f());
+    if (S.amp) {
+      const A = ampere(), L = S.loop, t = P(L.x, L.y + (L.kind === 'circle' ? L.r : L.h / 2), 0);
+      label(c, A.on ? '∮B·dl undefined: a wire is on the loop' : `∮B·dl = ${fmtC(A.num.v).replace('µT·m', '')}µT·m = μ₀(${fmtI(A.Ienc)})`, t[0], t[1] - 10 * ks, { size: fsz(12), align: 'center', color: A.on ? T.pos : T.ink, fam: T.mono, avoid });
+    }
+    view3Text(c, showF ? 'Wire bowing exaggerated to show the force; a real bend is far too small to see' : '');
+  }
+
+  function drawCoil3D(c, pj) {
+    const P = pj.P, C = pj.C, sc = pj.sc, ks = kS(), sol = S.sol, R = sol.R, turns = solTurns(sol), labels = [];
+    const bx0 = C.x0 - BASE_M, bx1 = C.x1 + BASE_M, by0 = C.y0 - BASE_M, by1 = C.y1 + BASE_M, zb = baseTop3();
+    const pitch = sol.N > 1 ? sol.L / sol.N : Infinity;
+    const wpx = Math.max(1.6, Math.min(sol.N > 1 ? 0.8 * pitch * sc : 0.36 * sc, 0.36 * sc, 12 * ks)), ppx = Math.max(2.5, Math.min(10 * ks, 0.3 * sc));
+    woodBase(c, pj, bx0, bx1, by0, by1, zb);
+    const xe = sol.N > 1 ? [turns[0], turns[turns.length - 1]] : [-0.6, 0.6];
+    const tp = [bindingPost(c, pj, xe[0] - 0.6, by0 + 0.8, zb, '#d23a2c'), bindingPost(c, pj, xe[1] + 0.6, by0 + 0.8, zb, '#2a2d32')];
+    const sp = supplyPanel(c, 10, region3().h - 10, [['I', sol.I]]);
+    cable(c, sp.posts[0], tp[0], '#c8372d'); cable(c, sp.posts[1], tp[1], T.dark ? '#5a616b' : '#2a2d32');
+    const posts = [[C.x0 + 0.6, C.y0 + 0.6], [C.x1 - 0.6, C.y0 + 0.6], [C.x1 - 0.6, C.y1 - 0.6], [C.x0 + 0.6, C.y1 - 0.6]];
+    const rodPath = (pts) => { const p = new Path2D(); pts.forEach((q, i) => (i ? p.lineTo(q[0], q[1]) : p.moveTo(q[0], q[1]))); return p; };
+    for (const [x, y] of posts) rod(c, rodPath([P(x, y, zb), P(x, y, 0)]), ppx, steelCols(), -0.18, 0);
+    // turns: enamelled copper rings. Lower halves first (under the card), then the card, then the upper halves split
+    // into the part behind the vertical plane through the axis and the part in front of it
+    const ringPath = (f0, f1, n) => { const p = new Path2D(); for (const zk of turns) for (let k = 0; k <= n; k++) { const f = f0 + (f1 - f0) * k / n, q = P(zk, R * Math.cos(f), R * Math.sin(f)); k ? p.lineTo(q[0], q[1]) : p.moveTo(q[0], q[1]); } return p; };
+    const enamel = () => [T.copperLo, mixc(T.copper, T.copperLo, 0.15), T.copperHi];
+    rod(c, ringPath(Math.PI, TWO_PI, 16), wpx, enamel(), 0, -0.2);
+    drawCard(c, pj);
+    withM(c, planeM(pj, false), () => { if (S.show.compass) drawNeedles(c, cardGrow * 0.9); });
+    if (S.show.probe) { const f = solField(sol, S.sprobe.z, S.sprobe.y, turns); probe3(c, pj, S.sprobe.z, S.sprobe.y, [f[0], f[1]], labels); }
+    // leads from the end turns along the card to the base
+    for (let e = 0; e < 2; e++) {
+      const x = xe[e], pts = [P(x, -R, 0.05), P(x, C.y0 + 0.2, 0.05), P(x, C.y0 + 0.2, -0.1)], tpx = P(e ? xe[1] + 0.6 : xe[0] - 0.6, by0 + 0.8, zb + 0.9);
+      pts.push([tpx[0], tpx[1]]);
+      rod(c, rodPath(pts), Math.max(1.6, wpx * 0.8), enamel(), -0.15, -0.1);
+    }
+    const front = (Y) => Y * pj.ca < 0;   // in front of the vertical plane y = 0
+    const backF = pj.ca > 0 ? [0, Math.PI / 2] : [Math.PI / 2, Math.PI], frontF = pj.ca > 0 ? [Math.PI / 2, Math.PI] : [0, Math.PI / 2];
+    const ringDots = (wantFront) => {
+      if (!sol.I) return;
+      const nd = 4, w = Math.sign(sol.I) * Math.min(2.4, 0.5 + 0.1 * Math.abs(sol.I)), r = dotR(pj) * (sol.N > 1 ? Math.min(1, wpx / (2 * dotR(pj)) + 0.3) : 1);
+      turns.forEach((zk, i) => { for (let k = 0; k < nd; k++) {
+        const f = ((t3 * w + TWO_PI * k / nd + i * 0.7) % TWO_PI + TWO_PI) % TWO_PI, Y = R * Math.cos(f), Z = R * Math.sin(f);
+        if (Z < 0.05 || front(Y) !== wantFront) continue;
+        const q = P(zk, Y, Z); dot(c, q[0], q[1], r, sol.I);
+      } });
+    };
+    rod(c, ringPath(backF[0], backF[1], 12), wpx, enamel(), 0, -0.2);
+    ringDots(false);
+    // the clear former the coil is wound on
+    if (sol.N > 1) {
+      const Rf = R * 0.93, xa = -sol.L / 2 - 0.5, xb = sol.L / 2 + 0.5, p = new Path2D();
+      for (let k = 0; k < 24; k++) { const f0 = Math.PI * k / 24, f1 = Math.PI * (k + 1) / 24, a = [P(xa, Rf * Math.cos(f0), Rf * Math.sin(f0)), P(xb, Rf * Math.cos(f0), Rf * Math.sin(f0)), P(xb, Rf * Math.cos(f1), Rf * Math.sin(f1)), P(xa, Rf * Math.cos(f1), Rf * Math.sin(f1))]; p.moveTo(a[0][0], a[0][1]); for (const q of a.slice(1)) p.lineTo(q[0], q[1]); p.closePath(); }
+      c.save(); c.fillStyle = T.former; c.globalAlpha = T.dark ? 0.16 : 0.22; c.fill(p, 'nonzero'); c.globalAlpha = 0.8; c.strokeStyle = mixc(T.former, '#000000', 0.25); c.lineWidth = 1.2;
+      for (const x of [xa, xb]) { const e = []; for (let k = 0; k <= 24; k++) { const f = Math.PI * k / 24; e.push(P(x, Rf * Math.cos(f), Rf * Math.sin(f))); } poly(c, e); c.stroke(); }
+      c.restore();
+    }
+    // field lines in the vertical plane through the axis (above the card); the same lines lie in every such plane
+    if (S.show.lines && lines.length && sol.I) {
+      c.save(); c.strokeStyle = T.bline; c.globalAlpha = 0.7; c.lineWidth = 1.2 * ks; c.lineJoin = 'round';
+      planeLines(c, pj, lines, (px, py) => P(wx(px), 0, wy(py)), (px, py) => py <= V.cy + 0.5); c.stroke();
+      c.fillStyle = T.bline;
+      for (const a of arrows) {
+        if (a[1] > V.cy - 2) continue;
+        const p0 = P(wx(a[0]), 0, wy(a[1])), p1 = P(wx(a[0]) + a[2] * 0.3, 0, wy(a[1]) - a[3] * 0.3), L = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]) || 1;
+        chevron(c, p0[0], p0[1], (p1[0] - p0[0]) / L, (p1[1] - p0[1]) / L, 5.5 * ks);
+      }
+      c.restore();
+    }
+    // the front half of the middle turns is cut away to show the inside; the end turns stay whole
+    const nEnd = sol.N > 6 ? Math.max(2, Math.round(0.12 * sol.N)) : sol.N, keepT = turns.filter((zk, i) => i < nEnd || i >= sol.N - nEnd);
+    const all = turns.slice(); turns.length = 0; keepT.forEach((z) => turns.push(z));
+    rod(c, ringPath(frontF[0], frontF[1], 12), wpx, enamel(), 0, -0.2);
+    ringDots(true);
+    turns.length = 0; all.forEach((z) => turns.push(z));
+    if (keepT.length < turns.length) {   // the cut edges
+      const cut = new Path2D(); for (const zk of turns.slice(nEnd, sol.N - nEnd)) { const f = frontF[0] === 0 ? 0.02 : Math.PI - 0.02, g = Math.PI / 2, a = P(zk, R * Math.cos(f), R * Math.sin(f)), b = P(zk, R * Math.cos(g), R * Math.sin(g)); cut.moveTo(a[0], a[1]); cut.lineTo(a[0], a[1] + 0.01); cut.moveTo(b[0], b[1]); cut.lineTo(b[0], b[1] + 0.01); }
+      c.save(); c.strokeStyle = T.copperHi; c.lineCap = 'round'; c.lineWidth = wpx * 0.8; c.globalAlpha = 0.8; c.stroke(cut); c.restore();
+    }
+    // direction of the current at the top of the first, middle and last turn
+    if (sol.I) for (const zk of new Set([turns[0], turns[turns.length >> 1], turns[turns.length - 1]])) {
+      const a = P(zk, 0, R + 0.02), b = P(zk, -Math.sign(sol.I) * 0.3, R + 0.02), L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
+      c.fillStyle = T.ink; chevron(c, a[0], a[1] - wpx * 0.9, (b[0] - a[0]) / L, (b[1] - a[1]) / L, 6.5 * ks);
+    }
+    // labels
+    const ltxt = sol.N === 1 ? `I = ${fmtI(sol.I).replace('+', '')}, R = ${fmtCm(R)}` : `N = ${sol.N}, L = ${fmtCm(sol.L)}, R = ${fmtCm(R)}, I = ${fmtI(sol.I).replace('+', '')}`;
+    if (W >= 640) label(c, ltxt, W - 10, 16 * ks, { size: fsz(11.5), fam: T.mono, color: T.ink, align: 'right' });
+    else label(c, ltxt, 10, 34 * ks, { size: fsz(10.5), fam: T.mono, color: T.ink });
+    labels.forEach((f) => f());
+    view3Text(c, sol.N > 6 ? 'Enamelled copper on a clear former, through a card cut along the axis · front of the middle turns cut away' : sol.N > 1 ? 'Enamelled copper on a clear former, wound through a card cut along the axis' : 'One copper turn passing through a card cut along its axis');
+  }
+  function draw3D() {
+    const c = ctx, r = region3(), pj = proj3();
+    ensureCard(pj);
+    c.save(); c.beginPath(); c.rect(0, 0, r.w, r.h); c.clip();
+    const g = c.createLinearGradient(0, 0, 0, r.h); g.addColorStop(0, T.canvas); g.addColorStop(1, T.bench);
+    c.fillStyle = g; c.fillRect(0, 0, r.w, r.h);
+    if (S.scene === 'wires') drawWires3D(c, pj); else drawCoil3D(c, pj);
+    c.restore();
   }
 
   // ---------- readouts ----------
@@ -1375,6 +1813,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     wires: 'In this cross section the field lines are contours of the vector potential A<sub>z</sub> at equal steps. That makes their spacing exact: lines crowd together in proportion to the field strength. They are not drawn inside a small circle around each wire, where they crowd without limit.',
     side: 'In this plane through the axis the field lines are contours of the flux function ρA<sub>φ</sub>. They are drawn through points evenly spaced across the center plane, so here their spacing shows B only roughly. The axis itself is a field line. The top of each turn carries current out of the page and the bottom into it; looking along +z (to the right), the current goes counterclockwise.'
   };
+  const V3HINT = {
+    wires: '3D apparatus: the long straight wires stand on a base, pass through a card and are held under a clear top plate. The iron filings on the card each lie along the exact B at their spot; where B is weak they are drawn less ordered, as real filings are. The card carries the same field lines as the flat view, and they are drawn again just under the top plate: the field of a long straight wire is the same at every height. Moving dots show the conventional current (up is out of the page in the flat view); their speed is for show. With Forces on, the wires are drawn bowed toward or away from each other; the bend is exaggerated, since a real one is far too small to see.',
+    side: '3D apparatus: enamelled copper turns on a clear former, wound through a card cut along the axis. The iron filings on the card lie along B, interpolated between exact values 4 px apart; where B is weak they are drawn less ordered, as real filings are. The field lines are the flat view\'s; the field is the same in every plane through the axis, so they are drawn again in the vertical one. Moving dots show the conventional current; their speed is for show.'
+  };
   function syncScene() {
     const side = S.scene === 'side';
     $('stage').classList.toggle('side', side);
@@ -1383,12 +1825,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const el of document.querySelectorAll('[data-scene]')) el.hidden = el.dataset.scene !== S.scene || (el.hasAttribute('data-amp') && !S.amp);
     $('shCircle').setAttribute('aria-pressed', String(S.loop.kind === 'circle')); $('shRect').setAttribute('aria-pressed', String(S.loop.kind === 'rect'));
     $('dirCcw').setAttribute('aria-pressed', String(S.ccw)); $('dirCw').setAttribute('aria-pressed', String(!S.ccw));
-    for (const [id, k] of [['tLines', 'lines'], ['tShade', 'shade'], ['tCompass', 'compass'], ['tProbe', 'probe'], ['tForce', 'force']]) $(id).checked = S.show[k];
+    for (const [id, k] of [['tLines', 'lines'], ['tShade', 'shade'], ['tCompass', 'compass'], ['tProbe', 'probe'], ['tForce', 'force'], ['tFil', 'filings']]) $(id).checked = S.show[k];
+    $('v2d').setAttribute('aria-pressed', String(!S.view3d)); $('v3d').setAttribute('aria-pressed', String(S.view3d));
+    $('v3Hint').hidden = !S.view3d; $('v3Hint').innerHTML = V3HINT[S.scene];
     $('modelHint').textContent = MODEL[S.scene];
     $('lineHint').innerHTML = LINEHINT[S.scene];
     $('key').innerHTML = side
       ? '<span><i class="swatch bl"></i>Field line</span><span><i class="swatch exact"></i>B<sub>z</sub> on the axis, exact</span><span><i class="swatch sheet"></i>Continuous current sheet</span><span><i class="swatch ideal"></i>μ₀nI, or μ₀I/(2R) for one loop</span><span><i class="swatch needle"></i>Compass, red end along B</span><span><i class="swatch grip"></i>Grip: drag to change R or L</span>'
       : '<span><i class="swatch bl"></i>Field line</span><span><i class="swatch shade"></i>|B|, stronger is darker</span><span><i class="swatch needle"></i>Compass, red end along B</span><span><i class="swatch force"></i>Force on a wire, per meter</span>' + (S.amp ? '<span><i class="swatch out"></i><i class="swatch in"></i>Loop: B along or against its direction</span><span><i class="swatch grip"></i>Grip: drag to move or resize</span>' : '');
+    $('key').innerHTML += '<span><i class="swatch fil"></i>Iron filings, along B</span>' + (S.view3d ? '<span><i class="swatch coil"></i>Copper wire' + (side ? ', enamelled' : '') + '</span><span><i class="swatch dots"></i>Moving dots: conventional current</span>' : '');
   }
 
   // ---------- changes ----------
@@ -1447,6 +1892,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('scWires').addEventListener('click', () => setScene('wires'));
   $('scSide').addEventListener('click', () => setScene('side'));
   $('ampBtn').addEventListener('click', () => { S.amp = !S.amp; custom(); syncScene(); changed(); });
+  const setView3d = (on) => { S.view3d = on; S.sel = null; hoverId = null; can.style.cursor = 'default'; syncScene(); changed(); };
+  $('v2d').addEventListener('click', () => setView3d(false));
+  $('v3d').addEventListener('click', () => setView3d(true));
   $('addOut').addEventListener('click', () => addWire(1));
   $('addIn').addEventListener('click', () => addWire(-1));
   $('delW').addEventListener('click', () => { if (S.wsel) removeWire(S.wsel); });
@@ -1477,13 +1925,21 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('sIs').addEventListener('input', (e) => sideInput('I', +e.target.value));
   for (const id of ['sN', 'sL', 'sR']) $(id).addEventListener('change', () => { fitSide(); lastInput = 0; changed(); });
   $('sIs').addEventListener('change', () => { lastInput = 0; changed(); });
-  for (const [id, k] of [['tLines', 'lines'], ['tShade', 'shade'], ['tCompass', 'compass'], ['tProbe', 'probe'], ['tForce', 'force']])
+  for (const [id, k] of [['tLines', 'lines'], ['tShade', 'shade'], ['tCompass', 'compass'], ['tProbe', 'probe'], ['tForce', 'force'], ['tFil', 'filings']])
     $(id).addEventListener('change', (e) => { S.show[k] = e.target.checked; changed(); });
 
   // ---------- dragging on the drawing ----------
   // every draggable part, in pane pixels: d(x, y) is the distance from the pointer (negative inside a disk)
   function handles() {
     const out = [], ks = Math.min(kS(), 1.3);
+    if (S.view3d) {
+      const pj = proj3(), P = pj.P, wr = Math.max(8 * ks, 0.3 * pj.sc);
+      if (S.scene === 'wires') {
+        for (const w of S.wires) { const q = P(w.x, w.y, 0); out.push({ id: 'w' + w.id, kind: 'w', ref: w, cursor: 'move', d: (x, y) => Math.hypot(x - q[0], y - q[1]) - wr }); }
+        if (S.show.probe) { const q = P(S.probe.x, S.probe.y, 0); out.push({ id: 'probe', kind: 'probe', cursor: 'move', d: (x, y) => Math.hypot(x - q[0], y - q[1]) - 8 * ks }); }
+      } else if (S.show.probe) { const q = P(S.sprobe.z, S.sprobe.y, 0); out.push({ id: 'probe', kind: 'sprobe', cursor: 'move', d: (x, y) => Math.hypot(x - q[0], y - q[1]) - 8 * ks }); }
+      return out;
+    }
     if (S.scene === 'wires') {
       const rw = rwire();
       for (const w of S.wires) out.push({ id: 'w' + w.id, kind: 'w', ref: w, cursor: 'move', d: (x, y) => Math.hypot(x - X(w.x), y - Y(w.y)) - rw });
@@ -1513,18 +1969,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const tol = 6 * Math.min(projScale(), 1.3) * (ev.pointerType === 'touch' ? 2 : 1);
     let best = null, bd = tol;
     for (const h of handles()) { const d = h.d(x, y); if (d < bd) { bd = d; best = h; } }
-    if (!best && S.scene === 'wires' && S.amp && insideLoop(S.loop, wx(x), wy(y))) best = { id: 'lm', kind: 'lm', cursor: 'move' };
+    const wq = toW(x, y);
+    if (!best && S.scene === 'wires' && S.amp && insideLoop(S.loop, wq[0], wq[1])) best = { id: 'lm', kind: 'lm', cursor: 'move' };
     if (!best && S.scene === 'side' && PG && y > V.Hd && S.show.probe) best = { id: 'plot', kind: 'plot', cursor: 'ew-resize' };
+    if (!best && S.view3d && y <= region3().h) best = { id: 'orbit', kind: 'orbit', cursor: 'grab' };
     return best;
   }
+  // pane pixels to card coordinates (cm): the flat view's scale, or the card plane in the 3D view
+  const toW = (px, py) => (S.view3d ? proj3().inv(px, py) : [wx(px), wy(py)]);
   function inView(x, y, m) { return [clamp(x, V.x0 + m, V.x1 - m), clamp(y, V.y0 + m, V.y1 - m)]; }
   let dq = null, dFrame = false;
   function dragApply() {
     dFrame = false;
     if (!drag || !dq) return;
     const [px, py] = dq; dq = null;
-    const x = wx(px), y = wy(py), o = drag.o, L = S.loop;
+    const [x, y] = drag.kind === 'plot' ? [wx(px), wy(py)] : toW(px, py), o = drag.o, L = S.loop;
     switch (drag.kind) {
+      case 'orbit': V3.az = drag.az + (px - drag.px) * 0.008; V3.el = clamp(drag.el + (py - drag.py) * 0.006, 0.12, 1.45); dirty = true; return;
       case 'w': { const w = wById(drag.ref); if (!w) return; [w.x, w.y] = inView(snap(o[0] + x - drag.x0, 0.1), snap(o[1] + y - drag.y0, 0.1), 0.4); break; }
       case 'probe': [S.probe.x, S.probe.y] = inView(snap(o[0] + x - drag.x0, 0.1), snap(o[1] + y - drag.y0, 0.1), 0.2); break;
       case 'lm': [L.x, L.y] = inView(snap(o[0] + x - drag.x0, 0.1), snap(o[1] + y - drag.y0, 0.1), 0.5); break;
@@ -1542,7 +2003,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   can.addEventListener('pointermove', (ev) => {
     const r = can.getBoundingClientRect();
     if (drag) { dq = [ev.clientX - r.left, ev.clientY - r.top]; if (!dFrame) { dFrame = true; requestAnimationFrame(dragApply); } return; }
-    const h = hitAt(ev), id = h ? h.id : null;
+    const h = hitAt(ev), id = h && h.kind !== 'orbit' ? h.id : null;
     if (id !== hoverId) { hoverId = id; dirty = true; }
     can.style.cursor = h ? h.cursor : 'default';
   });
@@ -1550,9 +2011,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     can.focus({ preventScroll: true });
     const h = hitAt(ev);
     if (!h) { if (S.sel) { S.sel = null; dirty = true; } return; }
-    const r = can.getBoundingClientRect(), x = wx(ev.clientX - r.left), y = wy(ev.clientY - r.top), L = S.loop;
+    const r = can.getBoundingClientRect(), [x, y] = toW(ev.clientX - r.left, ev.clientY - r.top), L = S.loop;
     drag = { id: h.id, kind: h.kind, x0: x, y0: y };
     switch (h.kind) {
+      case 'orbit': Object.assign(drag, { px: ev.clientX - r.left, py: ev.clientY - r.top, az: V3.az, el: V3.el }); can.style.cursor = 'grabbing'; break;
       case 'w': drag.ref = h.ref.id; drag.o = [h.ref.x, h.ref.y]; S.wsel = h.ref.id; S.sel = { kind: 'w', id: h.ref.id }; readDirty = true; break;
       case 'probe': drag.o = [S.probe.x, S.probe.y]; S.sel = { kind: 'probe' }; break;
       case 'sprobe': drag.o = [S.sprobe.z, S.sprobe.y]; S.sel = { kind: 'probe' }; break;
@@ -1564,14 +2026,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       case 'sl': drag.o = S.sol.L - 2 * Math.abs(x); break;
       case 'plot': dq = [ev.clientX - r.left, ev.clientY - r.top]; dragApply(); drag = { id: 'plot', kind: 'plot' }; break;
     }
-    hoverId = h.id; dirty = true;
+    hoverId = h.id === 'orbit' ? null : h.id; dirty = true;
     try { can.setPointerCapture(ev.pointerId); } catch (_) {}
-    can.style.cursor = h.cursor; ev.preventDefault();
+    can.style.cursor = h.kind === 'orbit' ? 'grabbing' : h.cursor; ev.preventDefault();
   });
   const endDrag = () => {
     if (!drag) return;
     if (dq) dragApply();
     const k = drag.kind; drag = null; hoverId = null;
+    if (k === 'orbit') { can.style.cursor = 'grab'; dirty = true; return; }
     if (k === 'sr' || k === 'sl') { lastInput = 0; fitSide(); }
     changed();
   };
@@ -1593,6 +2056,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   can.addEventListener('keydown', (e) => {
     const k = e.key, st = e.shiftKey ? 1 : 0.1;
     const dirs = { ArrowLeft: [-st, 0], ArrowRight: [st, 0], ArrowUp: [0, st], ArrowDown: [0, -st] };
+    if (S.view3d && dirs[k]) {
+      if (k === 'ArrowLeft' || k === 'ArrowRight') V3.az += (k === 'ArrowRight' ? -1 : 1) * (e.shiftKey ? 0.3 : 0.1);
+      else V3.el = clamp(V3.el + (k === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 0.18 : 0.06), 0.12, 1.45);
+      say(`View turned: looking ${Math.round(V3.el * 180 / Math.PI)} degrees down onto the card`); dirty = true; e.preventDefault(); return;
+    }
     if (S.scene === 'side') {
       if (dirs[k]) { const [dx, dy] = dirs[k]; S.sprobe.z = clamp(snap(S.sprobe.z + dx, 0.1), V.x0 + 0.2, V.x1 - 0.2); S.sprobe.y = clamp(snap(S.sprobe.y + dy, 0.1), V.y0 + 0.2, V.y1 - 0.2); S.sel = { kind: 'probe' }; changed(); }
       else if (k === '+' || k === '=' || k === '-' || k === '_') { S.sol.N = clamp(S.sol.N + (k === '+' || k === '=' ? 1 : -1) * (e.shiftKey ? 5 : 1), 1, 80); custom(); sideOut(); changed(); say(`${S.sol.N} turns`); }
@@ -1646,6 +2114,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
     const t0 = performance.now();
     if (W && H) {
+      if (S.view3d && !reduce) { t3 += dt; dirty = true; }
       if (dirty) { setupNeedles(); }
       const wasMoving = needlesMoving;
       if (S.show.compass) stepNeedles(dt);
@@ -1658,7 +2127,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   window.__cf = {
     get frameMs() { return frameMs; }, get S() { return S; }, get V() { return V; }, get lines() { return lines.length; }, get arrows() { return arrows.length; },
     get amp() { return ampere(); }, get needlesMoving() { return needlesMoving; }, get layerFine() { return layerFine; },
-    handles: () => handles().map((h) => h.id), X, Y, applyPreset, time(n) { const t = performance.now(); for (let i = 0; i < n; i++) { layerKey = ''; drawAll(); } return (performance.now() - t) / n; }
+    handles: () => handles().map((h) => h.id), X, Y, applyPreset, V3, proj3: () => proj3(), setView3d: (on) => setView3d(on), time(n) { const t = performance.now(); for (let i = 0; i < n; i++) { layerKey = ''; drawAll(); } return (performance.now() - t) / n; }
   };
 
   tokens();

@@ -48,6 +48,9 @@ img { max-width: 100%; }
   --resq: #1d8a5a;
   --indq: #c0462b;
   --wire: #3b4655;
+  --bench: #d8c3a0; --bench-lo: #b99d74;
+  --scope-case: #d3d7dc; --scope-case-lo: #a9afb7; --scope-ink: #2a3038; --scope-screen: #07100c;
+  --paper: #fbf8ee; --paper-ink: #2f7a66;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -56,6 +59,8 @@ img { max-width: 100%; }
     --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
     --equi: #e2b350; --accent: #69a0ff; --capq: #b48cff; --resq: #4cc38a; --indq: #ff8a63; --wire: #aab4c2;
+  --bench: #3a2f24; --bench-lo: #261e16; --scope-case: #262b32; --scope-case-lo: #15181c; --scope-ink: #b9c2cd; --scope-screen: #050b08;
+  --paper: #151b19; --paper-ink: #63b39b;
     color-scheme: dark;
   }
 }
@@ -63,6 +68,8 @@ img { max-width: 100%; }
   --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
   --equi: #e2b350; --accent: #69a0ff; --capq: #b48cff; --resq: #4cc38a; --indq: #ff8a63; --wire: #aab4c2;
+  --bench: #3a2f24; --bench-lo: #261e16; --scope-case: #262b32; --scope-case-lo: #15181c; --scope-ink: #b9c2cd; --scope-screen: #050b08;
+  --paper: #151b19; --paper-ink: #63b39b;
   color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -93,8 +100,9 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .pane canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; }
 .pane canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 #wPane { grid-column: 1 / 3; grid-row: 1; }
-#cPane { grid-column: 1; grid-row: 2; border-top: 1px solid var(--line); }
-#rPane { grid-column: 2; grid-row: 2; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+#cPane { grid-column: 1; grid-row: 2; border-top: 1px solid var(--bench-lo); }
+#rPane { grid-column: 2; grid-row: 2; border-top: 1px solid var(--bench-lo); border-left: 1px solid var(--bench-lo); }
+.pane { background: var(--bench); }
 .stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
 .stage-ctl > * { pointer-events: auto; }
 .stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
@@ -158,6 +166,7 @@ input[type="range"]:disabled { opacity: 0.4; }
 .swatch.cur { border-top-width: 4px; border-color: var(--equi); }
 .swatch.ghost { border-color: var(--muted); opacity: 0.6; }
 .swatch.band { height: 10px; border: 0; background: var(--accent); opacity: 0.18; }
+.swatch.ring { width: 9px; height: 9px; border: 1.5px solid var(--ink); border-radius: 50%; margin: 0 6.5px; }
 .swatch.dot { width: 8px; height: 8px; border: 0; border-radius: 50%; background: var(--equi); margin: 0 7px; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
@@ -176,7 +185,7 @@ input[type="range"]:disabled { opacity: 0.4; }
   html, body { height: auto; }
   .app { height: auto; }
   .bench { grid-template-columns: minmax(0, 1fr); }
-  .stage { grid-template-rows: 500px 520px 320px; }
+  .stage { grid-template-rows: 560px 520px 340px; }
   .rail { overflow: visible; }
 }
 </style>
@@ -198,7 +207,7 @@ input[type="range"]:disabled { opacity: 0.4; }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="pane" id="wPane">
-        <canvas id="wCan" tabindex="0" aria-label="Voltages and current against time, with the rotating phasor diagram on the right. The vertical projection of each phasor is the value plotted at the present moment. Drag the phasor diagram around to scrub through the cycle; left and right arrows do the same, space plays or pauses."></canvas>
+        <canvas id="wCan" tabindex="0" aria-label="Oscilloscope: the source voltage and v_R, v_L, v_C on channels 1 to 4 and the current from a clamp probe, against time, with the rotating phasor diagram on a card beside it. The vertical projection of each phasor is the value on the screen at the present moment. Drag the phasor diagram around to scrub through the cycle; left and right arrows do the same, space plays or pauses, X switches the scope between time and XY."></canvas>
         <div class="stage-ctl">
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="restart">Switch on again</button>
@@ -206,10 +215,10 @@ input[type="range"]:disabled { opacity: 0.4; }
         </div>
       </div>
       <div class="pane" id="cPane">
-        <canvas id="cCan" tabindex="0" aria-label="Circuit drawing: AC source, resistor, inductor and capacitor in series, and the impedance triangle. Drag the grips to change the source amplitude, R, L and C. Keys: left and right arrows pick a part, up and down arrows change its value, 1, 2 and 3 switch R, L and C in or out."></canvas>
+        <canvas id="cCan" tabindex="0" aria-label="The bench: a function generator driving a resistor, an inductor and a capacitor in series with clip leads, scope probes on each part, and the impedance triangle on a card. Drag the grips to change the source amplitude, R, L and C. Keys: left and right arrows pick a part, up and down arrows change its value, 1, 2 and 3 switch R, L and C in or out."></canvas>
       </div>
       <div class="pane" id="rPane">
-        <canvas id="rCan" tabindex="0" aria-label="Resonance curve: rms current or impedance against frequency on a log scale. Drag the frequency marker sideways to change f. Keys: left and right arrows step the frequency, Home goes to the resonant frequency, S starts or stops a sweep."></canvas>
+        <canvas id="rCan" tabindex="0" aria-label="Resonance curve on semilog graph paper: rms current or impedance against frequency on a log scale. Drag the frequency marker sideways to change f. Keys: left and right arrows step the frequency, Home goes to the resonant frequency, S starts or stops a sweep."></canvas>
       </div>
     </div>
 
@@ -328,6 +337,12 @@ input[type="range"]:disabled { opacity: 0.4; }
           <label><input type="checkbox" data-c="vC" checked>v<sub>C</sub></label>
           <label><input type="checkbox" id="tSum" checked>Phasor sum</label>
         </div>
+        <div class="slider-head"><span style="font-size:0.88rem">Oscilloscope</span></div>
+        <div class="seg full" role="group" aria-label="Oscilloscope display" id="scopeSeg">
+          <button type="button" data-s="yt" aria-pressed="true">Against time</button>
+          <button type="button" data-s="xy" aria-pressed="false">XY: i against v</button>
+        </div>
+        <p class="hint" id="xyHint" hidden>XY plots the current against the source voltage over one cycle, a Lissajous figure. In step it is a straight line; a quarter cycle apart, an upright ellipse. Where it crosses v = 0, i = ±I₀ sin φ.</p>
         <div class="slider-head"><span style="font-size:0.88rem">Resonance plot</span></div>
         <div class="seg full" role="group" aria-label="Resonance plot quantity" id="ySeg">
           <button type="button" data-y="I" aria-pressed="true">Current I<sub>rms</sub></button>
@@ -338,9 +353,11 @@ input[type="range"]:disabled { opacity: 0.4; }
           <span><i class="swatch cur"></i>Current i (right hand scale)</span>
           <span><i class="swatch dash"></i>Steady state current, after switch on</span>
           <span><i class="swatch band"></i>Bandwidth, between the half power points</span>
+          <span><i class="swatch ring"></i>Sweep readings, one per step of the last sweep</span>
           <span><i class="swatch dot"></i>Positive charge carriers, speed ∝ i</span>
         </div>
         <p class="hint">Model: ideal parts (no coil resistance, no capacitor leakage, no wire inductance), an ideal source with no internal resistance, and lumped elements. Steady state uses the exact phasor solution and applies at once when you change a value. Switch on solves L di/dt + Ri + q/C = V₀ sin ωt exactly from i = 0 and q = 0. With an ideal capacitor alone the current jumps at t = 0. Dot speed is proportional to i, scaled to the current axis.</p>
+        <p class="hint">The bench: the resistor's color bands encode R, and the printed values on the parts follow the sliders. The coil's turn count and the capacitor's plate gap only grow or shrink with L and C (the gap on a log scale). The probes are drawn at the parts they measure; a real setup would need differential probes for v<sub>R</sub> and v<sub>L</sub>. The scope's four voltage channels share one V/div, and the current comes from a clamp current probe. The Δt cursors run from a peak of the source voltage to the matching peak of the current.</p>
       </section>
     </aside>
   </main>
@@ -492,9 +509,11 @@ input[type="range"]:disabled { opacity: 0.4; }
 
   // ---------- state ----------
   const S = { preset: 'below', p: { V0: 10, f: 1000, R: 22, L: 10e-3, C: 1e-6, on: { R: true, L: true, C: true } },
-    mode: 'steady', view: 3, show: { v: true, i: true, vR: true, vL: true, vC: true }, sum: true, yMode: 'I' };
+    mode: 'steady', view: 3, show: { v: true, i: true, vR: true, vL: true, vC: true }, sum: true, yMode: 'I', scope: 'yt' };
   let c = null, tr = null, trW = 0, t = 0, running = !reduce, sweeping = false, ghost = null;
   let axes = { V: 1, I: 1 };
+  let sweepPts = [], sweepK = -1;          // frequencies read during the last sweep
+  const divUp = (x) => 4 * niceUp(x / 4);  // a scope range of four divisions, each a 1-1.2-1.5-2-2.5-3-4-5-6-8 step
   const phase = { dots: 0 };
   const cfg = () => PRESETS[S.preset];
 
@@ -565,16 +584,16 @@ input[type="range"]:disabled { opacity: 0.4; }
   function fitAxes() {
     let vmax = c.unbounded ? c.V0 : Math.max(c.V0, c.VR0, c.VL0, c.VC0), imax = isFinite(c.I0) ? c.I0 : 0;
     if (S.mode === 'trans' && tr) {
-      const n = 3000;
+      const n = 3000, span = 10 * scopeDiv();
       for (let k = 0; k <= n; k++) {
-        const o = tr.at(trW * k / n);
+        const o = tr.at(span * k / n);
         vmax = Math.max(vmax, Math.abs(o.v), Math.abs(o.vR), Math.abs(o.vL), Math.abs(o.vC));
         imax = Math.max(imax, Math.abs(o.i));
       }
     }
     if (!isFinite(vmax)) vmax = c.V0;
-    axes.V = niceUp(vmax * 1.06);
-    axes.I = niceUp(Math.max(imax * 1.06, (isFinite(c.I0) ? c.I0 : imax) * 1.5));
+    axes.V = divUp(vmax * 1.06);
+    axes.I = divUp(Math.max(imax * 1.06, (isFinite(c.I0) ? c.I0 : imax) * 1.5));
   }
   function stateNow() { return S.mode === 'trans' && tr ? tr.at(t) : steady(c, t); }
   function setMode(m, forced) {
@@ -593,16 +612,24 @@ input[type="range"]:disabled { opacity: 0.4; }
   }
 
   // ---------- canvases ----------
-  let T = null, dpr = 1;
+  let T = null, dpr = 1, benchCache = {};
   const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
   // label scale, capped by the pane size so a small pane in projector mode is not swamped
   const paneScale = (W, H) => Math.min(projScale(), Math.max(1, Math.min(W, H) / 290));
+  function isDark() {
+    const th = document.documentElement.getAttribute('data-theme');
+    if (th === 'dark') return true; if (th === 'light') return false;
+    try { return matchMedia('(prefers-color-scheme: dark)').matches; } catch (_) { return false; }
+  }
   function tokens() {
     const cs = getComputedStyle(document.documentElement);
     const g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
       pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), capq: g('--capq'), resq: g('--resq'), indq: g('--indq'), wire: g('--wire'),
+      bench: g('--bench'), benchLo: g('--bench-lo'), scase: g('--scope-case'), scaseLo: g('--scope-case-lo'), sink: g('--scope-ink'), screen: g('--scope-screen'),
+      paper: g('--paper'), paperInk: g('--paper-ink'), dark: isDark(),
       ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace' };
+    benchCache = {};
   }
   const cans = { w: $('wCan'), c: $('cCan'), r: $('rCan') };
   const panes = { w: $('wPane'), c: $('cPane'), r: $('rPane') };
@@ -639,17 +666,31 @@ input[type="range"]:disabled { opacity: 0.4; }
     return w;
   }
   // a label on a halo box; (x, y) is the box's anchor point, ax/ay in 0..1 pick which point of the box sits there
-  function haloLabel(ctx, str, x, y, size, weight, col, ax, ay, bounds) {
+  function haloLabel(ctx, str, x, y, size, weight, col, ax, ay, bounds, bg) {
     const w = richWidth(ctx, str, size, weight), pad = 3, h = size * 1.25;
     let bx = x - ax * (w + 2 * pad), by = y - ay * (h + 2 * pad);
     if (bounds) { bx = Math.max(bounds[0], Math.min(bounds[2] - w - 2 * pad, bx)); by = Math.max(bounds[1], Math.min(bounds[3] - h - 2 * pad, by)); }
-    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.88; roundRect(ctx, bx, by, w + 2 * pad, h + 2 * pad, 3); ctx.fill(); ctx.globalAlpha = 1;
+    const ga = ctx.globalAlpha;
+    ctx.fillStyle = bg || T.canvas; ctx.globalAlpha = ga * 0.88; roundRect(ctx, bx, by, w + 2 * pad, h + 2 * pad, 3); ctx.fill(); ctx.globalAlpha = ga;
     ctx.fillStyle = col; ctx.textBaseline = 'middle';
     richText(ctx, str, bx + pad, by + pad + h / 2 + 0.5, size, weight, 'left');
     ctx.textBaseline = 'alphabetic';
     return [bx, by, w + 2 * pad, h + 2 * pad];
   }
+  // a label on a halo box by text alignment and baseline, for the bench drawing
+  function label(ctx, str, x, y, size, weight, align, col, base) {
+    base = base || 'alphabetic';
+    const w = richWidth(ctx, str, size, weight);
+    const x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    const yt = base === 'top' ? y : base === 'middle' ? y - size * 0.64 : y - size * 0.96;
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.86; roundRect(ctx, x0 - 3, yt - 1, w + 6, size * 1.34, 4); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = col; ctx.textBaseline = base;
+    const r = richText(ctx, str, x, y, size, weight, align);
+    ctx.textBaseline = 'alphabetic';
+    return r;
+  }
   function roundRect(ctx, x, y, w, h, r) {
+    r = Math.max(0, Math.min(r, w / 2, h / 2));
     ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + h - r);
     ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
   }
@@ -662,38 +703,144 @@ input[type="range"]:disabled { opacity: 0.4; }
     ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - ux * hl - uy * hw, y1 - uy * hl + ux * hw); ctx.lineTo(x1 - ux * hl + uy * hw, y1 - uy * hl - ux * hw); ctx.closePath(); ctx.fill();
   }
 
-  // ---------- time plot and phasors ----------
+  // ---------- bench hardware: colours and helpers ----------
+  function rgbOf(c) { const h = (c || '#888').replace('#', ''); const n = parseInt(h.length === 3 ? h.split('').map((x) => x + x).join('') : h.slice(0, 6), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+  function mixC(a, b, f) { const A = rgbOf(a), B = rgbOf(b); return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * f)).join(',')})`; }
+  const shade = (c, f) => (f >= 0 ? mixC(c, '#ffffff', f) : mixC(c, '#000000', -f));
+  // light and shadow across a round object, laid over its paint, from one rim (x0, y0) to the other (x1, y1)
+  function roundShade(ctx, x0, y0, x1, y1) {
+    const gr = ctx.createLinearGradient(x0, y0, x1, y1);
+    gr.addColorStop(0, 'rgba(0,0,0,0.32)'); gr.addColorStop(0.2, 'rgba(255,255,255,0.08)'); gr.addColorStop(0.32, 'rgba(255,255,255,0.42)');
+    gr.addColorStop(0.48, 'rgba(255,255,255,0.04)'); gr.addColorStop(0.82, 'rgba(0,0,0,0.14)'); gr.addColorStop(1, 'rgba(0,0,0,0.38)');
+    return gr;
+  }
+  // a polyline with its corners rounded off, as a lead lies on the bench
+  function leadPath(ctx, pts, rr) {
+    ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+    for (let i = 1; i < pts.length - 1; i++) {
+      const a = pts[i - 1], b = pts[i], d = pts[i + 1];
+      const r = Math.min(rr, Math.hypot(b[0] - a[0], b[1] - a[1]) / 2, Math.hypot(d[0] - b[0], d[1] - b[1]) / 2);
+      ctx.arcTo(b[0], b[1], d[0], d[1], Math.max(0, r));
+    }
+    ctx.lineTo(pts[pts.length - 1][0], pts[pts.length - 1][1]);
+  }
+  // a plastic insulated lead: dark rim, coloured body, a soft highlight
+  function insulated(ctx, pts, col, w, rr) {
+    ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    const path = () => leadPath(ctx, pts, rr || 0);
+    path(); ctx.strokeStyle = shade(col, -0.5); ctx.lineWidth = w + 1.4; ctx.stroke();
+    path(); ctx.strokeStyle = col; ctx.lineWidth = w; ctx.stroke();
+    ctx.translate(-w * 0.16, -w * 0.16); path(); ctx.strokeStyle = shade(col, 0.55); ctx.globalAlpha *= 0.6; ctx.lineWidth = Math.max(0.8, w * 0.28); ctx.stroke();
+    ctx.restore();
+  }
+  const leadCols = () => ({ red: T.dark ? '#c9473a' : '#b8372b', black: T.dark ? '#555b64' : '#2f343b', white: T.dark ? '#c3c8cf' : '#f3f1ec' });
+  const COPPER = '#b8692e', STEEL = '#8d96a3';
+  // resistor colour code: two digits, a multiplier (gold ×0.1) and a gold 5% tolerance band
+  const BANDS = ['#151515', '#7b4a22', '#cc2f28', '#ee8a25', '#f1d43a', '#2f9b4a', '#2f62c9', '#7c40b8', '#8b8b8b', '#f3f3f3'];
+  function resBands(R) {
+    let e = Math.floor(Math.log10(R) + 1e-9) - 1, d = Math.round(R / Math.pow(10, e));
+    if (d >= 100) { d = Math.round(d / 10); e++; }
+    return [BANDS[Math.floor(d / 10)], BANDS[d % 10], e >= 0 ? BANDS[e] : e === -1 ? '#c9a227' : '#b9bec6', '#c9a227'];
+  }
+  // the wooden bench top for one pane, cached: it only changes with the pane size or the theme
+  function benchLayer(key, W, H) {
+    const id = `${W}x${H}x${dpr}x${T.bench}`;
+    if (benchCache[key] && benchCache[key].id === id) return benchCache[key].c;
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(W * dpr)); c.height = Math.max(1, Math.round(H * dpr));
+    const x = c.getContext('2d'); x.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const gr = x.createLinearGradient(0, 0, W * 0.3, H); gr.addColorStop(0, shade(T.bench, 0.08)); gr.addColorStop(1, T.benchLo);
+    x.fillStyle = gr; x.fillRect(0, 0, W, H);
+    x.strokeStyle = T.benchLo; x.lineWidth = 1;
+    const n = Math.max(10, Math.round(H / 16)), seed = key.charCodeAt(0);
+    for (let i = 0; i < n; i++) {
+      const yy = (i + 0.5) * H / n;
+      x.globalAlpha = (T.dark ? 0.5 : 0.36) * (0.6 + 0.4 * Math.sin(i * 2.3 + seed) ** 2);
+      x.beginPath();
+      for (let px = 0; px <= W + 8; px += 8) { const q = yy + 1.7 * Math.sin(px * 0.009 + i * 1.9 + seed) + 0.8 * Math.sin(px * 0.041 + i * 0.7); px ? x.lineTo(px, q) : x.moveTo(px, q); }
+      x.stroke();
+    }
+    x.globalAlpha = T.dark ? 0.7 : 0.45; x.strokeStyle = shade(T.benchLo, -0.35); x.lineWidth = 1.2;
+    for (const f of [0.34, 0.69]) { x.beginPath(); x.moveTo(0, Math.round(H * f) + 0.5); x.lineTo(W, Math.round(H * f) + 0.5); x.stroke(); }
+    x.globalAlpha = T.dark ? 0.12 : 0.3; x.strokeStyle = '#ffffff';
+    for (const f of [0.34, 0.69]) { x.beginPath(); x.moveTo(0, Math.round(H * f) + 1.5); x.lineTo(W, Math.round(H * f) + 1.5); x.stroke(); }
+    x.globalAlpha = 1;
+    benchCache[key] = { id, c };
+    return c;
+  }
+  function shadowed(ctx, s, draw) {
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.38)'; ctx.shadowBlur = 0.16 * s; ctx.shadowOffsetY = 0.05 * s; draw(); ctx.restore();
+  }
+  // a sheet or card of graph paper: fine lines every step, every fifth one stronger
+  function paperCard(ctx, x, y, w, h, step, ps) {
+    shadowed(ctx, 34, () => { ctx.fillStyle = T.paper; roundRect(ctx, x, y, w, h, 4); ctx.fill(); });
+    ctx.save(); roundRect(ctx, x, y, w, h, 4); ctx.clip();
+    ctx.strokeStyle = T.paperInk; ctx.lineWidth = 1;
+    for (const major of [false, true]) {
+      ctx.globalAlpha = major ? (T.dark ? 0.26 : 0.3) : (T.dark ? 0.12 : 0.13); ctx.beginPath();
+      for (let k = 0, px = x + step; px < x + w; px += step, k++) if (((k + 1) % 5 === 0) === major) { ctx.moveTo(Math.round(px) + 0.5, y); ctx.lineTo(Math.round(px) + 0.5, y + h); }
+      for (let k = 0, py = y + step; py < y + h; py += step, k++) if (((k + 1) % 5 === 0) === major) { ctx.moveTo(x, Math.round(py) + 0.5); ctx.lineTo(x + w, Math.round(py) + 0.5); }
+      ctx.stroke();
+    }
+    ctx.restore();
+    ctx.strokeStyle = 'rgba(0,0,0,0.22)'; ctx.lineWidth = 1; roundRect(ctx, x + 0.5, y + 0.5, w - 1, h - 1, 4); ctx.stroke();
+  }
+  // a channel tag: a coloured box with the channel name
+  function badge(ctx, txt, x, ym, col, fsz, ink) {
+    ctx.font = `700 ${fsz}px ${T.mono}`;
+    const w = ctx.measureText(txt).width + fsz * 0.7, h = fsz * 1.32;
+    ctx.fillStyle = col; roundRect(ctx, x, ym - h / 2, w, h, fsz * 0.25); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 0.8; ctx.stroke();
+    ctx.fillStyle = ink || '#0b0f0d'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, x + fsz * 0.35, ym + 0.5);
+    return w;
+  }
+  function fmtDiv(v, unit) {
+    const f = PFX.find(([m]) => Math.abs(v) >= m * 0.9995) || PFX[PFX.length - 1];
+    return `${+(v / f[0]).toPrecision(3)} ${f[1]}${unit}`;
+  }
+
+  // ---------- oscilloscope and phasors ----------
+  // The scope shows the four voltages on channels 1 to 4 and the current from a clamp probe; all four voltage channels share one V/div.
+  const SCR = { ink: '#e4eee8', dim: '#93a39b', grid: 'rgba(150,200,175,0.22)', strong: 'rgba(170,215,190,0.5)', cursor: '#7cb4ff' };
   const CURVES = [
-    { k: 'v', lab: 'v', col: 'ink', w: 2.4 },
-    { k: 'vR', lab: 'v_R', col: 'resq', w: 2, part: 'R' },
-    { k: 'vL', lab: 'v_L', col: 'indq', w: 2, part: 'L' },
-    { k: 'vC', lab: 'v_C', col: 'capq', w: 2, part: 'C' },
-    { k: 'i', lab: 'i', col: 'equi', w: 3, cur: true }
+    { k: 'v', lab: 'v', name: 'v source', col: 'ink', tr: '#e9eef2', ch: '1', w: 2.1 },
+    { k: 'vR', lab: 'v_R', name: 'v_R', col: 'resq', tr: '#52d494', ch: '2', w: 1.9, part: 'R' },
+    { k: 'vL', lab: 'v_L', name: 'v_L', col: 'indq', tr: '#ff8a63', ch: '3', w: 1.9, part: 'L' },
+    { k: 'vC', lab: 'v_C', name: 'v_C', col: 'capq', tr: '#c7a0ff', ch: '4', w: 1.9, part: 'C' },
+    { k: 'i', lab: 'i', name: 'i current', col: 'equi', tr: '#f3c34f', ch: 'I', w: 2.6, cur: true }
   ];
   const curveOn = (C) => S.show[C.k] && (!C.part || S.p.on[C.part]);
   let wGeom = null, wHover = false, wDrag = null;
+  // the scope (case, bezel, an 8 × 10 division screen) and, beside it or under it on a phone, the phasor card
   function waveGeom(W, H) {
-    const ps = paneScale(W, H), ctlH = ctlBottom();
+    const ps = paneScale(W, H), ctl = ctlBottom(), pad = 7;
     const stacked = W < 600;
     if (!stacked) {
-      const top = ctlH + 26 * ps, bot = H - 30 * ps, padP = 40 * ps;
-      let hb = (bot - top) / 2;
-      hb = Math.max(30, Math.min(hb, (W * 0.42 - 2 * padP) / 2));
-      const cy = (top + bot) / 2, cx = W - padP - hb;
-      const L = 50 * ps, R = cx - hb - padP - 34 * ps;
-      return { ps, stacked, L, R, cy, hb, cx, top, bot, pr: hb, W, H, legendY: ctlH + 8 * ps };
+      const top0 = ctl + 30 * ps, bot0 = H - 50 * ps, side = 50 * ps;
+      const fixed = 2 * pad + 56 * ps + 56 * ps + 12 + 2 * side;
+      const dy = Math.max(6, Math.min((bot0 - top0) / 8, (W - fixed) / 17));
+      const hb = 4 * dy, cy = (top0 + bot0) / 2;
+      const card = { x1: W - pad, y0: Math.max(ctl + 2, cy - hb - 26 * ps), y1: Math.min(H - pad, cy + hb + 26 * ps) };
+      card.x0 = card.x1 - 2 * hb - 2 * side;
+      const kase = { x0: pad, y0: pad, x1: card.x0 - 12, y1: H - pad };
+      return { ps, stacked, kase, card, L: kase.x0 + 56 * ps, R: kase.x1 - 56 * ps, cy, hb, top: cy - hb, bot: cy + hb, cx: (card.x0 + card.x1) / 2, pcy: cy, pr: hb, W, H };
     }
-    // phone: plot on top, phasors underneath
-    const top = ctlH + 26 * ps, plotH = Math.max(80, (H - top) * 0.42);
-    const hb = (plotH - 30 * ps) / 2, cy = top + hb;
-    const pTop = top + plotH + 6 * ps, pr = Math.max(30, Math.min((H - pTop - 10 * ps) / 2 - 22 * ps, W / 2 - 46 * ps));
-    return { ps, stacked, L: 46 * ps, R: W - 46 * ps, cy, hb, cx: W / 2, pcy: pTop + 22 * ps + pr, top, bot: cy + hb, pr, W, H, legendY: ctlH + 8 * ps };
+    const top = ctl + 30 * ps, L = pad + 50 * ps, R = W - pad - 52 * ps;
+    const hb = Math.max(36, Math.min((R - L) * 0.4, (H - top) * 0.46 / 2));
+    const cy = top + hb, bot = cy + hb;
+    const kase = { x0: pad, y0: pad, x1: W - pad, y1: bot + 44 * ps };
+    const card = { x0: pad, x1: W - pad, y0: kase.y1 + 8, y1: H - pad };
+    const pr = Math.max(30, Math.min((card.y1 - card.y0) / 2 - 24 * ps, W / 2 - 54 * ps));
+    return { ps, stacked, kase, card, L, R, cy, hb, top: cy - hb, bot, cx: W / 2, pcy: (card.y0 + card.y1) / 2, pr, W, H };
   }
   let ctlH = 44;
   function ctlBottom() { return ctlH; }
+  // time per division: the steady state screen shows at least two cycles, a switch on run its whole window
+  function scopeDiv() { return niceUp((S.mode === 'trans' ? trW : 2 * c.T) / 10); }
   function timeWindow() {
-    if (S.mode === 'trans') { const W = trW; return t <= W ? [0, W] : [t - W, t]; }
-    return [t - 2 * c.T, t];
+    const W = 10 * scopeDiv();
+    if (S.mode === 'trans') return t <= W ? [0, W] : [t - W, t];
+    return [t - W, t];
   }
   function phasorList() {
     // angles: source at ωt, current at ωt − φ; v_L leads i by 90°, v_C lags i by 90°
@@ -705,115 +852,248 @@ input[type="range"]:disabled { opacity: 0.4; }
     out.push({ k: 'i', lab: 'I', col: T.equi, amp: c.I0, ang: ti, scale: 'I', w: 4 });
     return out;
   }
+  function drawScopeCase(ctx, g) {
+    const ps = g.ps, k = g.kase, w = k.x1 - k.x0, h = k.y1 - k.y0;
+    shadowed(ctx, 40, () => {
+      const gc = ctx.createLinearGradient(0, k.y0, 0, k.y1); gc.addColorStop(0, shade(T.scase, 0.12)); gc.addColorStop(1, T.scaseLo);
+      ctx.fillStyle = gc; roundRect(ctx, k.x0, k.y0, w, h, 10); ctx.fill();
+    });
+    ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1; roundRect(ctx, k.x0 + 0.5, k.y0 + 0.5, w - 1, h - 1, 10); ctx.stroke();
+    ctx.strokeStyle = T.dark ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.65)'; ctx.beginPath(); ctx.moveTo(k.x0 + 10, k.y0 + 1.5); ctx.lineTo(k.x1 - 10, k.y0 + 1.5); ctx.stroke();
+    const sx = g.L - 7 * ps, sy = g.top - 7 * ps, sw = g.R - g.L + 14 * ps, sh = g.bot - g.top + 14 * ps;
+    ctx.fillStyle = shade(T.scaseLo, -0.45); roundRect(ctx, sx - 3 * ps, sy - 3 * ps, sw + 6 * ps, sh + 6 * ps, 8 * ps); ctx.fill();
+    ctx.strokeStyle = T.dark ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.6)'; roundRect(ctx, sx - 3.5 * ps, sy - 3.5 * ps, sw + 7 * ps, sh + 7 * ps, 8.5 * ps); ctx.stroke();
+    ctx.fillStyle = T.screen; roundRect(ctx, sx, sy, sw, sh, 5 * ps); ctx.fill();
+    return [sx, sy, sw, sh];
+  }
   function drawWave() {
     const [W, H] = dims.w; if (!W || !H || !c) return;
     const ctx = ctxs.w, g = waveGeom(W, H), ps = g.ps; wGeom = g;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    const [tL, tR] = timeWindow();
+    ctx.drawImage(benchLayer('w', W, H), 0, 0, W, H);
+    const [sx, sy, sw, sh] = drawScopeCase(ctx, g);
+    const xy = S.scope === 'xy', trans = S.mode === 'trans';
+    const [tL, tR] = timeWindow(), tdiv = (tR - tL) / 10;
     const X = (tt) => g.L + (tt - tL) / (tR - tL) * (g.R - g.L);
     const Yv = (v) => g.cy - v / axes.V * g.hb, Yi = (i) => g.cy - i / axes.I * g.hb;
-    const y0 = g.cy - g.hb, y1 = g.cy + g.hb;
-    // time grid
-    const span = tR - tL, [tu, tuName] = span < 2e-3 ? [1e-6, 'µs'] : span < 2 ? [1e-3, 'ms'] : [1, 's'];
-    const tst = nice(span / tu / ((g.R - g.L) < 360 ? 3 : 6)) * tu;
-    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    let lastPx = -1e9;
-    for (let kk = Math.ceil(tL / tst - 1e-9); kk * tst <= tR + tst * 1e-6; kk++) {
-      const v = kk * tst, px = Math.round(X(v)) + 0.5;
-      ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, y0); ctx.lineTo(px, y1); ctx.stroke();
-      const txt = +(v / tu).toPrecision(6) + '', tw = ctx.measureText(txt).width;
-      if (px - tw / 2 > lastPx + 6 && px + tw / 2 < g.R + 4) { ctx.fillText(txt, px, y1 + 4 * ps); lastPx = px + tw / 2; }
-    }
-    ctx.textAlign = 'right'; ctx.fillText(`t (${tuName})`, g.R, y1 + 17 * ps);
-    if (S.mode === 'trans') { ctx.textAlign = 'left'; ctx.fillText('switched on at t = 0', g.L, y1 + 17 * ps); }
-    // y grid: voltage on the left, current on the right
-    const [vs, vName] = scaleUnit(axes.V, 'V'), [is, iName] = scaleUnit(axes.I, 'A');
-    ctx.font = `${10 * ps}px ${T.mono}`; ctx.textBaseline = 'middle';
-    for (const fr of [-1, -0.5, 0, 0.5, 1]) {
-      const py = Math.round(g.cy - fr * g.hb) + 0.5;
-      ctx.strokeStyle = fr === 0 ? T.gridStrong : T.grid; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(g.L, py); ctx.lineTo(g.R, py); ctx.stroke();
-      ctx.fillStyle = T.muted; ctx.textAlign = 'right';
-      ctx.fillText(fr === 0 ? '0' : (+(fr * axes.V / vs).toPrecision(3) + '').replace('-', '−'), g.L - 5 * ps, py);
-      if (S.show.i) { ctx.fillStyle = T.equi; ctx.textAlign = 'left'; ctx.fillText(fr === 0 ? '0' : (+(fr * axes.I / is).toPrecision(3) + '').replace('-', '−'), g.R + 5 * ps, py); }
-    }
-    ctx.font = `600 ${10 * ps}px ${T.mono}`; ctx.textBaseline = 'alphabetic';
-    ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.fillText(vName, g.L - 5 * ps, y0 - 6 * ps);
-    if (S.show.i) { ctx.fillStyle = T.equi; ctx.textAlign = 'left'; ctx.fillText(iName, g.R + 5 * ps, y0 - 6 * ps); }
-    // legend
+    const y0 = g.top, y1 = g.bot, dx = (g.R - g.L) / 10, dy = g.hb / 4, xc = g.L + 5 * dx;
+    const Xv = (v) => xc + v / axes.V * 4 * dx;          // XY mode: CH1 on the horizontal, same V/div
+    const iInk = T.dark ? '#f3c34f' : '#7d5605';
+    // graticule: 10 × 8 divisions, dotted, centre lines solid with five minor ticks to a division
+    ctx.lineWidth = 1; ctx.strokeStyle = SCR.grid; ctx.setLineDash([1, 3]); ctx.beginPath();
+    for (let k = 1; k < 10; k++) { if (k === 5) continue; const px = Math.round(g.L + k * dx) + 0.5; ctx.moveTo(px, y0); ctx.lineTo(px, y1); }
+    for (let k = 1; k < 8; k++) { if (k === 4) continue; const py = Math.round(y0 + k * dy) + 0.5; ctx.moveTo(g.L, py); ctx.lineTo(g.R, py); }
+    ctx.stroke(); ctx.setLineDash([]);
     {
-      let lx = g.L; const ly = g.legendY + 10 * ps;
+      const pxc = Math.round(xc) + 0.5, pyc = Math.round(g.cy) + 0.5, tq = 2.5 * ps;
+      ctx.strokeStyle = SCR.strong; ctx.beginPath();
+      ctx.moveTo(g.L, pyc); ctx.lineTo(g.R, pyc); ctx.moveTo(pxc, y0); ctx.lineTo(pxc, y1);
+      for (let k = 1; k < 50; k++) { const px = Math.round(g.L + k * dx / 5) + 0.5; ctx.moveTo(px, pyc - tq); ctx.lineTo(px, pyc + tq); }
+      for (let k = 1; k < 40; k++) { const py = Math.round(y0 + k * dy / 5) + 0.5; ctx.moveTo(pxc - tq, py); ctx.lineTo(pxc + tq, py); }
+      ctx.stroke();
+      ctx.strokeStyle = SCR.grid; ctx.strokeRect(g.L + 0.5, y0 + 0.5, g.R - g.L - 1, y1 - y0 - 1);
+    }
+    // scale values on the bezel: volts on the left, the current on the right (in XY, the current on the left)
+    const [vs, vName] = scaleUnit(axes.V, 'V'), [is, iName] = scaleUnit(axes.I, 'A');
+    const fmtAx = (v, sc) => (Math.abs(v) < 1e-9 * sc ? '0' : (+(v / sc).toPrecision(3) + '').replace('-', '−'));
+    ctx.font = `${10 * ps}px ${T.mono}`; ctx.textBaseline = 'middle';
+    for (const k of [4, 2, 0, -2, -4]) {
+      const py = g.cy - k * dy, u = k === 4;
+      if (!xy) {
+        ctx.fillStyle = T.sink; ctx.textAlign = 'right'; ctx.fillText(fmtAx(k / 4 * axes.V, vs) + (u ? ` ${vName}` : ''), g.L - 12 * ps, py);
+        if (S.show.i) { ctx.fillStyle = iInk; ctx.textAlign = 'left'; ctx.fillText(fmtAx(k / 4 * axes.I, is) + (u ? ` ${iName}` : ''), g.R + 12 * ps, py); }
+      } else { ctx.fillStyle = iInk; ctx.textAlign = 'right'; ctx.fillText(fmtAx(k / 4 * axes.I, is) + (u ? ` ${iName}` : ''), g.L - 12 * ps, py); }
+    }
+    // channel legend above the screen
+    {
+      const fsz = 11 * ps, bf = 9 * ps, ly = y0 - 17 * ps;
+      const items = xy ? [[CURVES[0], 'X: v source'], [CURVES[4], 'Y: i current']] : CURVES.filter(curveOn).map((C) => [C, C.name]);
+      ctx.font = `700 ${bf}px ${T.mono}`;
+      const wOf = (short) => items.reduce((a, [C, nm]) => a + ctx.measureText(C.ch).width + bf * 0.7 + 4 * ps + richWidth(ctx, short ? C.lab : nm, fsz, 700) + 12 * ps, 0);
+      const room = (g.stacked ? g.kase.x1 - 8 : g.R + 7 * ps) - (g.L - 7 * ps);
+      const short = !xy && wOf(false) > room;
+      let lx = g.L - 7 * ps;
+      for (const [C, nm] of items) {
+        lx += badge(ctx, C.ch, lx, ly, C.tr, bf) + 4 * ps;
+        ctx.fillStyle = T.sink; ctx.textBaseline = 'middle';
+        lx += richText(ctx, short ? C.lab : nm, lx, ly + 0.5, fsz, 700, 'left') + 12 * ps;
+      }
+      if (trans && !xy && S.show.i) {
+        ctx.font = `${fsz}px ${T.ui}`;
+        const tw = ctx.measureText('steady state i').width;
+        if (lx + 18 * ps + tw < (g.stacked ? g.kase.x1 - 8 : g.R + 40 * ps)) {
+          ctx.strokeStyle = iInk; ctx.lineWidth = 1.6 * ps; ctx.setLineDash([4 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 14 * ps, ly); ctx.stroke(); ctx.setLineDash([]);
+          ctx.fillStyle = T.sink; ctx.textAlign = 'left'; ctx.fillText('steady state i', lx + 18 * ps, ly + 0.5);
+        }
+      }
+      ctx.textBaseline = 'alphabetic';
+    }
+    // traces, with a soft phosphor glow
+    const n = Math.max(2, Math.floor(g.R - g.L)), tEnd = Math.min(t, tR);
+    const single = ['R', 'L', 'C'].filter((k) => S.p.on[k]).length === 1;   // then the one part's voltage is the source voltage
+    const now = stateNow(), xn = X(Math.min(t, tR));
+    const glow = (p, col, lw, dash) => {
+      ctx.strokeStyle = col;
+      if (!dash) { ctx.globalAlpha = 0.17; ctx.lineWidth = lw * 3.2; ctx.stroke(p); }
+      ctx.globalAlpha = 1; ctx.lineWidth = lw; ctx.setLineDash(dash || []); ctx.stroke(p); ctx.setLineDash([]);
+    };
+    let cursor = null, xyNow = null;
+    const dots = [];
+    ctx.save(); ctx.beginPath(); ctx.rect(g.L, y0, g.R - g.L, y1 - y0); ctx.clip();
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    if (!xy) {
+      const samp = [];
+      for (let j = 0; j <= n; j++) { const tt = tL + (tEnd - tL) * j / n; samp.push(trans ? tr.at(tt) : steady(c, tt)); }
+      if (trans && S.show.i && isFinite(c.I0)) {
+        const p = new Path2D();
+        for (let j = 0; j <= n; j++) { const tt = tL + (tR - tL) * j / n, py = Yi(steady(c, tt).i); j ? p.lineTo(X(tt), py) : p.moveTo(X(tt), py); }
+        ctx.lineCap = 'butt'; glow(p, CURVES[4].tr, 1.4 * ps, [5 * ps, 4 * ps]); ctx.lineCap = 'round';
+      }
+      for (const C of CURVES) {
+        if (!curveOn(C) || (single && C.k === 'v')) continue;
+        const Y = C.cur ? Yi : Yv, p = new Path2D();
+        for (let j = 0; j <= n; j++) { const tt = tL + (tEnd - tL) * j / n, py = Y(samp[j][C.k]); j ? p.lineTo(X(tt), py) : p.moveTo(X(tt), py); }
+        glow(p, C.tr, C.w * ps);
+      }
+      if (single && S.show.v) {
+        const p = new Path2D();
+        for (let j = 0; j <= n; j++) { const tt = tL + (tEnd - tL) * j / n, py = Yv(samp[j].v); j ? p.lineTo(X(tt), py) : p.moveTo(X(tt), py); }
+        ctx.lineCap = 'butt'; glow(p, CURVES[0].tr, 1.8 * ps, [7 * ps, 6 * ps]); ctx.lineCap = 'round';
+      }
+      // Δt cursors: from a peak of the source voltage to the matching peak of the current
+      if (!trans && !c.unbounded && S.show.v && S.show.i && Math.abs(c.phi) > 0.02) {
+        const d = c.phi / c.w;
+        let kk = Math.floor((c.w * tR - Math.PI / 2) / (2 * Math.PI)) + 1;
+        for (let m = 0; m < 6 && !cursor; m++, kk--) {
+          const tv = (Math.PI / 2 + 2 * Math.PI * kk) / c.w, ti = tv + d;
+          if (Math.max(tv, ti) <= tR && Math.min(tv, ti) >= tL + 0.03 * (tR - tL)) cursor = { xv: X(tv), xi: X(ti), dt: Math.abs(d) };
+        }
+        if (cursor) {
+          ctx.strokeStyle = SCR.cursor; ctx.lineWidth = 1.3 * ps; ctx.globalAlpha = 0.9; ctx.setLineDash([5 * ps, 3 * ps]);
+          ctx.beginPath(); for (const x of [cursor.xv, cursor.xi]) { ctx.moveTo(Math.round(x) + 0.5, y0); ctx.lineTo(Math.round(x) + 0.5, y1); } ctx.stroke();
+          ctx.setLineDash([]); ctx.globalAlpha = 1;
+          const ya = y0 + 24 * ps, a = cursor.xv, b = cursor.xi;
+          if (Math.abs(b - a) > 14 * ps) { arrow(ctx, (a + b) / 2, ya, a, ya, SCR.cursor, 1.4 * ps, 7 * ps); arrow(ctx, (a + b) / 2, ya, b, ya, SCR.cursor, 1.4 * ps, 7 * ps); }
+          cursor.ya = ya;
+        }
+      }
+      // the present moment, at the right hand edge once the screen is full
+      ctx.strokeStyle = SCR.dim; ctx.globalAlpha = 0.6; ctx.lineWidth = 1; ctx.setLineDash([2, 3]);
+      ctx.beginPath(); ctx.moveTo(xn, y0); ctx.lineTo(xn, y1); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
       for (const C of CURVES) {
         if (!curveOn(C)) continue;
-        ctx.strokeStyle = T[C.col]; ctx.lineWidth = C.w * ps * 0.9; ctx.beginPath(); ctx.moveTo(lx, ly - 4 * ps); ctx.lineTo(lx + 14 * ps, ly - 4 * ps); ctx.stroke();
-        ctx.fillStyle = T[C.col];
-        const lab = C.k === 'v' ? 'v source' : C.k === 'i' ? 'i current' : C.lab;
-        lx += 18 * ps + richText(ctx, lab, lx + 18 * ps, ly, 11.5 * ps, 700, 'left') + 12 * ps;
+        const py = (C.cur ? Yi : Yv)(now[C.k]);
+        if (py >= y0 - 2 && py <= y1 + 2) dots.push([xn, py, C.tr]);
       }
-      if (S.mode === 'trans' && S.show.i) {
-        ctx.strokeStyle = T.equi; ctx.lineWidth = 1.5 * ps; ctx.setLineDash([4 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(lx, ly - 4 * ps); ctx.lineTo(lx + 14 * ps, ly - 4 * ps); ctx.stroke(); ctx.setLineDash([]);
-        ctx.fillStyle = T.muted; ctx.font = `${11 * ps}px ${T.ui}`; ctx.textAlign = 'left';
-        if (lx + 18 * ps + ctx.measureText('steady state i').width < (g.stacked ? W : g.R)) ctx.fillText('steady state i', lx + 18 * ps, ly);
-      }
-    }
-    // curves
-    const n = Math.max(2, Math.floor(g.R - g.L)), tEnd = Math.min(t, tR);
-    const samp = [];
-    for (let j = 0; j <= n; j++) { const tt = tL + (tEnd - tL) * j / n; samp.push(S.mode === 'trans' ? tr.at(tt) : steady(c, tt)); }
-    ctx.save(); ctx.beginPath(); ctx.rect(g.L, y0 - 2, g.R - g.L, y1 - y0 + 4); ctx.clip();
-    if (S.mode === 'trans' && S.show.i && isFinite(c.I0)) {
-      ctx.strokeStyle = T.equi; ctx.lineWidth = 1.5 * ps; ctx.setLineDash([5 * ps, 4 * ps]); ctx.globalAlpha = 0.85; ctx.beginPath();
-      for (let j = 0; j <= n; j++) { const tt = tL + (tR - tL) * j / n, py = Yi(steady(c, tt).i); j ? ctx.lineTo(X(tt), py) : ctx.moveTo(X(tt), py); }
-      ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
-    }
-    ctx.lineJoin = 'round';
-    const single = ['R', 'L', 'C'].filter((k) => S.p.on[k]).length === 1;   // then the one part's voltage is the source voltage
-    for (const C of CURVES) {
-      if (!curveOn(C) || (single && C.k === 'v')) continue;
-      const Y = C.cur ? Yi : Yv;
-      ctx.strokeStyle = T[C.col]; ctx.lineWidth = C.w * ps; ctx.beginPath();
-      for (let j = 0; j <= n; j++) { const tt = tL + (tEnd - tL) * j / n, py = Y(samp[j][C.k]); j ? ctx.lineTo(X(tt), py) : ctx.moveTo(X(tt), py); }
-      ctx.stroke();
-    }
-    if (single && S.show.v) {
-      ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.setLineDash([7 * ps, 6 * ps]); ctx.beginPath();
-      for (let j = 0; j <= n; j++) { const tt = tL + (tEnd - tL) * j / n, py = Yv(samp[j].v); j ? ctx.lineTo(X(tt), py) : ctx.moveTo(X(tt), py); }
-      ctx.stroke(); ctx.setLineDash([]);
+    } else {
+      // XY: the current against the source voltage, one cycle (or the switch on run so far)
+      const p = new Path2D(); let first = true;
+      const add = (o) => { const px = Xv(o.v), py = Yi(o.i); if (first) { p.moveTo(px, py); first = false; } else p.lineTo(px, py); };
+      if (trans) for (let j = 0; j <= n; j++) add(tr.at(tL + (tEnd - tL) * j / n));
+      else for (let j = 0; j <= 360; j++) add(steady(c, t - c.T + c.T * j / 360));
+      glow(p, CURVES[4].tr, 2.2 * ps);
+      xyNow = [Xv(now.v), Yi(now.i)];
+      if (xyNow[0] >= g.L - 2 && xyNow[0] <= g.R + 2 && xyNow[1] >= y0 - 2 && xyNow[1] <= y1 + 2) dots.push([xyNow[0], xyNow[1], CURVES[4].tr]);
     }
     ctx.restore();
-    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(g.L + 0.5, y0 + 0.5, g.R - g.L, y1 - y0);
-    // now: dots at the present values
-    const now = stateNow(), xn = X(Math.min(t, tR));
-    ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.setLineDash([2, 3]);
-    ctx.beginPath(); ctx.moveTo(xn, y0); ctx.lineTo(xn, y1); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
-    const nowPts = {};
-    for (const C of CURVES) {
-      if (!curveOn(C)) continue;
-      const py = (C.cur ? Yi : Yv)(now[C.k]);
-      nowPts[C.k] = py;
-      if (py < y0 - 2 || py > y1 + 2) continue;
-      ctx.fillStyle = T.canvas; ctx.strokeStyle = T[C.col]; ctx.lineWidth = 2 * ps;
-      ctx.beginPath(); ctx.arc(xn, py, 3.6 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    for (const [x, y, col] of dots) { ctx.fillStyle = T.screen; ctx.strokeStyle = col; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.arc(x, y, 3.6 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); }
+    if (cursor) {
+      const lab = `Δt = ${fmtTime(cursor.dt)}, i ${c.phi > 0 ? 'lags' : 'leads'}`;
+      haloLabel(ctx, lab, (cursor.xv + cursor.xi) / 2, cursor.ya - 4 * ps, 10.5 * ps, 700, SCR.cursor, 0.5, 1, [g.L + 2, y0 + 2, g.R - 2, y1 - 2], T.screen);
     }
-    drawPhasors(ctx, g, xn, nowPts, Yv, Yi);
+    // glass: a faint reflection across the top of the screen
+    {
+      const gg = ctx.createLinearGradient(sx, sy, sx + sw * 0.5, sy + sh * 0.6); gg.addColorStop(0, 'rgba(255,255,255,0.07)'); gg.addColorStop(0.5, 'rgba(255,255,255,0)');
+      ctx.fillStyle = gg; roundRect(ctx, sx, sy, sw, sh, 5 * ps); ctx.fill();
+    }
+    // division values under the screen, then the status line: V/div, A/div, time/div
+    {
+      const yl = y1 + 10 * ps, fsz = 10 * ps;
+      ctx.font = `${fsz}px ${T.mono}`; ctx.textBaseline = 'top'; ctx.textAlign = 'center'; ctx.fillStyle = T.sink;
+      let title = '';
+      if (!xy) {
+        const span = tR - tL, [tu, tuName] = span < 2e-3 ? [1e-6, 'µs'] : span < 2 ? [1e-3, 'ms'] : [1, 's'];
+        const rel = !(trans && tL === 0);
+        const step = (g.R - g.L) < 420 ? 2 : 1;
+        for (let k = 0; k <= 10; k += step) {
+          const v = rel ? (k - 10) * tdiv : k * tdiv, txt = (Math.abs(v) < 1e-9 * tdiv ? '0' : +(v / tu).toPrecision(4) + '').replace('-', '−');
+          const tw = ctx.measureText(txt).width, px = Math.min(g.L + k * dx, g.R + 7 * ps - tw / 2);
+          ctx.fillText(txt, Math.max(g.L - 7 * ps + tw / 2, px), yl);
+        }
+        title = rel ? `t (${tuName}), 0 = now` : `t since switch on (${tuName})`;
+      } else {
+        for (const k of [-4, -2, 0, 2, 4]) ctx.fillText(fmtAx(k / 4 * axes.V, vs) + (k === 4 ? ` ${vName}` : ''), xc + k * dx, yl);
+        title = 'v source (X)';
+      }
+      const y = y1 + 27 * ps, bf = 9 * ps;
+      ctx.textBaseline = 'middle'; ctx.textAlign = 'right'; ctx.font = `${fsz}px ${T.mono}`;
+      const titleW = ctx.measureText(title).width, xEnd = g.stacked ? g.kase.x1 - 10 : g.R + 7 * ps;
+      ctx.fillText(title, xEnd, y + 0.5);
+      const items = [];
+      if (!xy) {
+        const vch = CURVES.filter((C) => !C.cur && curveOn(C));
+        if (vch.length) items.push([vch.map((C) => [C.ch, C.tr]), `${fmtDiv(axes.V / 4, 'V')}/div`]);
+        if (S.show.i) items.push([[['I', CURVES[4].tr]], `${fmtDiv(axes.I / 4, 'A')}/div`]);
+        items.push([[['H', T.sink, T.scase]], `${fmtDiv(tdiv, 's')}/div`]);
+      } else {
+        items.push([[['X', CURVES[0].tr]], `${fmtDiv(axes.V / 4, 'V')}/div`]);
+        items.push([[['Y', CURVES[4].tr]], `${fmtDiv(axes.I / 4, 'A')}/div`]);
+      }
+      let x = g.L - 7 * ps;
+      const xMax = xEnd - titleW - 10 * ps;
+      for (const [tags, txt] of items) {
+        ctx.font = `700 ${bf}px ${T.mono}`;
+        let w = tags.reduce((a, q) => a + ctx.measureText(q[0]).width + bf * 0.7 + 2 * ps, 0);
+        ctx.font = `${fsz}px ${T.mono}`; w += 3 * ps + ctx.measureText(txt).width;
+        if (x + w > xMax) break;
+        for (const q of tags) x += badge(ctx, q[0], x, y, q[1], bf, q[2]) + 2 * ps;
+        ctx.fillStyle = T.sink; ctx.font = `${fsz}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, x + 3 * ps, y + 0.5);
+        x += 3 * ps + ctx.measureText(txt).width + 12 * ps;
+      }
+      ctx.textBaseline = 'alphabetic';
+    }
+    // run and mode lamps, top right of the case
+    if (!g.stacked) {
+      const fsz = 9.5 * ps;
+      let x = g.kase.x1 - 10;
+      for (const [txt, col] of [[running ? 'RUN' : 'STOP', running ? '#2f9b57' : '#c0392b'], [xy ? 'XY' : trans ? 'SINGLE' : 'ROLL', T.dark ? '#4b5563' : '#6b7280']]) {
+        ctx.font = `700 ${fsz}px ${T.mono}`;
+        const w = ctx.measureText(txt).width + 10 * ps;
+        x -= w;
+        if (x < g.kase.x0 + 260 * ps) break;
+        ctx.fillStyle = col; roundRect(ctx, x, 12, w, fsz + 5 * ps, 3 * ps); ctx.fill();
+        ctx.fillStyle = '#ffffff'; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(txt, x + 5 * ps, 12 + 2.5 * ps);
+        x -= 6 * ps;
+      }
+      ctx.textBaseline = 'alphabetic';
+    }
+    drawPhasors(ctx, g, xn, xy);
   }
-  function drawPhasors(ctx, g, xn, nowPts, Yv, Yi) {
-    const ps = g.ps, cx = g.cx, cy = g.stacked ? g.pcy : g.cy, r = g.pr;
-    const kV = r / axes.V, kI = r / axes.I;          // pixels per volt and per ampere, the same as the time plot
+  function drawPhasors(ctx, g, xn, xy) {
+    const ps = g.ps, cx = g.cx, cy = g.pcy, r = g.pr, cd = g.card;
+    const kV = r / axes.V, kI = r / axes.I;          // pixels per volt and per ampere, the same as the scope
     const trans = S.mode === 'trans', hot = !!wDrag || wHover;
     const list = phasorList();
-    // axes and the source amplitude circle (the path of the V₀ tip)
+    // the card
+    shadowed(ctx, 34, () => { ctx.fillStyle = T.canvas; roundRect(ctx, cd.x0, cd.y0, cd.x1 - cd.x0, cd.y1 - cd.y0, 8); ctx.fill(); });
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; roundRect(ctx, cd.x0 + 0.5, cd.y0 + 0.5, cd.x1 - cd.x0 - 1, cd.y1 - cd.y0 - 1, 8); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `700 ${9.5 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const title = 'PHASORS';
+    ctx.fillText(title, cd.x0 + 9, cd.y0 + 8);
+    const titleBox = [cd.x0 + 5, cd.y0 + 4, ctx.measureText(title).width + 8, 9.5 * ps * 1.3 + 6];
+    ctx.textBaseline = 'alphabetic';
+    // axes, a half scale ring, and the source amplitude circle (the path of the V₀ tip)
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(cx - r - 8 * ps, cy); ctx.lineTo(cx + r + 8 * ps, cy); ctx.moveTo(cx, cy - r - 8 * ps); ctx.lineTo(cx, cy + r + 8 * ps); ctx.stroke();
+    ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.moveTo(cx + r / 2, cy); ctx.arc(cx, cy, r / 2, 0, 2 * Math.PI); ctx.stroke();
     ctx.strokeStyle = hot ? T.accent : T.muted; ctx.globalAlpha = hot ? 0.8 : 0.45; ctx.lineWidth = (hot ? 1.6 : 1) * ps; ctx.setLineDash([3, 4]);
     ctx.beginPath(); ctx.arc(cx, cy, c.V0 * kV, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
     if (c.unbounded) {
       haloLabel(ctx, 'no steady state phasors: Z = 0', cx, cy + r * 0.5, 11 * ps, 600, T.muted, 0.5, 0.5);
     }
     const alpha = trans ? 0.45 : 1;
-    // projections: dashed lines from each tip across to the present point of its curve
-    if (!c.unbounded) for (const P of list) {
+    // projections: dashed lines from each tip across to the present point of its trace
+    if (!c.unbounded && !xy) for (const P of list) {
       const C = CURVES.find((q) => q.k === P.k); if (!curveOn(C)) continue;
       const k = P.scale === 'V' ? kV : kI, tx = cx + P.amp * k * Math.cos(P.ang), ty = cy - P.amp * k * Math.sin(P.ang);
       ctx.strokeStyle = P.col; ctx.globalAlpha = 0.55 * alpha; ctx.lineWidth = 1.1 * ps; ctx.setLineDash([3 * ps, 3 * ps]);
@@ -823,6 +1103,19 @@ input[type="range"]:disabled { opacity: 0.4; }
       if (g.stacked) { ctx.fillStyle = P.col; ctx.beginPath(); ctx.arc(cx, ty, 2.6 * ps, 0, 2 * Math.PI); ctx.fill(); }
     }
     if (c.unbounded) return;
+    // trails: where each tip has just been; the phasors turn counterclockwise at ω
+    for (const P of list) {
+      const C = CURVES.find((q) => q.k === P.k); if (!curveOn(C)) continue;
+      const L = P.amp * (P.scale === 'V' ? kV : kI);
+      if (!(L > 6)) continue;
+      const steps = 14, span = Math.min(1.1, 60 * ps / L);
+      ctx.strokeStyle = P.col; ctx.lineWidth = Math.max(1.5, P.w * ps * 0.75); ctx.lineCap = 'round';
+      for (let j = 0; j < steps; j++) {
+        const a0 = P.ang - span * (1 - j / steps), a1 = P.ang - span * (1 - (j + 1) / steps) - 0.002;
+        ctx.globalAlpha = alpha * 0.5 * Math.pow((j + 1) / steps, 1.6);
+        ctx.beginPath(); ctx.arc(cx, cy, L, -a0, -a1, true); ctx.stroke();
+      }
+    }
     ctx.globalAlpha = alpha;
     // phasor sum: V_R and V_L − V_C add as vectors to V₀
     const th = c.w * t, ti = th - c.phi;
@@ -856,6 +1149,7 @@ input[type="range"]:disabled { opacity: 0.4; }
       const am = -(th + ti) / 2;
       ctx.fillStyle = T.accent; ctx.font = `italic 700 ${11.5 * ps}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText('φ', cx + (rr + 9 * ps) * Math.cos(am), cy + (rr + 9 * ps) * Math.sin(am));
+      ctx.textBaseline = 'alphabetic';
     }
     // grip on the V₀ tip: the diagram turns when dragged
     {
@@ -865,8 +1159,8 @@ input[type="range"]:disabled { opacity: 0.4; }
     }
     ctx.globalAlpha = 1;
     // labels last, on halos, pushed outward from each tip (the current label sideways, since I lies along V_R)
-    const fs = 12 * ps, bounds = [cx - r - 40 * ps, (g.stacked ? cy - r - 24 * ps : ctlBottom() + 22 * ps), cx + r + 40 * ps, g.stacked ? g.H - 2 : g.H - 4];
-    const placed = [];
+    const fs = 12 * ps, bounds = [cd.x0 + 4, cd.y0 + 4, cd.x1 - 4, cd.y1 - 4];
+    const placed = [titleBox];
     const overlaps = (b) => placed.some((q) => b[0] < q[0] + q[2] && b[0] + b[2] > q[0] && b[1] < q[1] + q[3] && b[1] + b[3] > q[1]);
     for (const { P, tx, ty, L } of tips.reverse()) {
       const lab = P.lab, w = richWidth(ctx, lab, fs, 700) + 6, h = fs * 1.25 + 6;
@@ -896,48 +1190,53 @@ input[type="range"]:disabled { opacity: 0.4; }
     if (trans) haloLabel(ctx, 'steady state phasors', cx, cy + r + 4 * ps, 10.5 * ps, 400, T.muted, 0.5, 0, bounds);
   }
 
-  // ---------- circuit drawing ----------
-  // units: loop from x = 0 (source) to x = 10 (capacitor), y = 0 (top wire) to y = 6 (bottom wire)
-  const SRC = { x: 0, y: 3, r: 0.75 }, RPOS = { x: 3, y: 0 }, LPOS = { x: 6.7, y: 0 }, CPOS = { x: 10, y: 3 };
+  // ---------- the bench: function generator, parts, clip leads and probes ----------
+  // units: the generator's leads come up at x = 1.3; top wire y = 0 (resistor, then inductor), capacitor at x = 10, bottom wire y = 6
+  const GX = 1.3, RPOS = { x: 3, y: 0 }, LPOS = { x: 6.7, y: 0 }, CPOS = { x: 10, y: 3 };
+  const GEN = { x0: -2.45, x1: 0.75, y0: 1.6, y1: 4.5, bnc: [0.22, 3.72] };
   function capGap() { return 0.38 + 0.6 * Math.log(C_VALUES[C_VALUES.length - 1] / S.p.C) / Math.log(1000); }
   let cg = null, cHandles = [], cHover = null, cDrag = null, cSel = null;
   function circuitGeom() {
     const [W, H] = dims.c;
-    const box = { x0: -1.8, x1: 11.6, y0: -1.55, y1: 7.0 };
-    const lw = box.x1 - box.x0, lh = box.y1 - box.y0, triW = 6.4, triH = 6.2;
-    // the impedance triangle goes beside the loop or under it, whichever lets the drawing be larger
+    const box = { x0: -2.95, x1: 11.5, y0: -1.55, y1: 7.0 };
+    const lw = box.x1 - box.x0, lh = box.y1 - box.y0, triW = 5.6, triH = 5.6;
+    // the impedance triangle card goes beside the loop or under it, whichever lets the drawing be larger
     const sSide = Math.min((W - 12) / (lw + triW), (H - 12) / lh), sBelow = Math.min((W - 12) / lw, (H - 12) / (lh + triH));
     const side = sSide >= sBelow;
     const tw = side ? lw + triW : lw, th = side ? lh : lh + triH;
     const s = Math.max(8, side ? sSide : sBelow);
     const ox = (W - s * tw) / 2 - box.x0 * s, oy = (H - s * th) / 2 - box.y0 * s;
     const X = (u) => ox + u * s, Y = (v) => oy + v * s;
-    const tri = side ? { x: X(box.x1 + 0.3), y: Y(box.y0 + 0.4), w: (triW - 0.5) * s, h: (lh - 0.8) * s }
-      : { x: X(box.x0 + 0.6), y: Y(box.y1 + 0.1), w: (lw - 1.2) * s, h: (triH - 0.3) * s };
+    const tri = side ? { x: X(box.x1 + 0.2), y: Y(box.y0 + 0.3), w: (triW - 0.3) * s, h: (lh - 0.6) * s }
+      : { x: X(box.x0 + 0.4), y: Y(box.y1 + 0.1), w: (lw - 0.8) * s, h: (triH - 0.3) * s };
     const gap = capGap();
-    return { s, X, Y, tri, plTop: CPOS.y - gap / 2, plBot: CPOS.y + gap / 2, W, H };
+    const g = { s, X, Y, tri, plTop: CPOS.y - gap / 2, plBot: CPOS.y + gap / 2, W, H };
+    g.can = { hw: 0.62, top: g.plTop - 0.75, bot: g.plBot + 0.36 };
+    return g;
   }
-  function drawResistor(ctx, g, cx, cy, col, lw, hot, ps) {
-    const half = 0.85, amp = 0.2, n = 6, X = g.X, Y = g.Y;
-    ctx.strokeStyle = T.canvas; ctx.lineWidth = 6 * ps; ctx.beginPath(); ctx.moveTo(X(cx - half), Y(cy)); ctx.lineTo(X(cx + half), Y(cy)); ctx.stroke();
-    const zig = () => {
-      ctx.beginPath(); ctx.moveTo(X(cx - half), Y(cy)); ctx.lineTo(X(cx - half * 0.84), Y(cy));
-      for (let i = 0; i < n; i++) ctx.lineTo(X(cx - half * 0.84 + 1.68 * half * (i + 0.5) / n), Y(cy + (i % 2 ? -amp : amp)));
-      ctx.lineTo(X(cx + half * 0.84), Y(cy)); ctx.lineTo(X(cx + half), Y(cy));
-    };
-    if (hot) { zig(); ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.3; ctx.lineWidth = 9 * ps; ctx.lineJoin = 'round'; ctx.stroke(); ctx.globalAlpha = 1; }
-    zig(); ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.lineJoin = 'round'; ctx.stroke();
+  function loopPath(g) {
+    const cn = g.can, by = GEN.bnc[1], top = [[GX, by - 0.25], [GX, 0], [10, 0]];
+    if (S.p.on.C) return [top.concat([[10, cn.top - 0.2]]), [[10, cn.bot + 0.2], [10, 6], [GX, 6], [GX, by + 0.25]]];
+    return [top.concat([[10, 6], [GX, 6], [GX, by + 0.25]])];
   }
-  function drawCoil(ctx, g, cx, cy, col, lw, hot, ps) {
-    const half = 0.95, n = 4, X = g.X, Y = g.Y, rr = 1.9 * half / (2 * n);
-    ctx.strokeStyle = T.canvas; ctx.lineWidth = 6 * ps; ctx.beginPath(); ctx.moveTo(X(cx - half), Y(cy)); ctx.lineTo(X(cx + half), Y(cy)); ctx.stroke();
-    const coil = () => {
-      ctx.beginPath(); ctx.moveTo(X(cx - half), Y(cy));
-      for (let k = 0; k < n; k++) { const x0 = cx - half + 0.05 + (2 * k + 1) * rr; ctx.arc(X(x0), Y(cy), rr * g.s, Math.PI, 0, false); }
-      ctx.lineTo(X(cx + half), Y(cy));
-    };
-    if (hot) { coil(); ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.3; ctx.lineWidth = 9 * ps; ctx.stroke(); ctx.globalAlpha = 1; }
-    coil(); ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.stroke();
+  function drawDots(ctx, g, pl, ph, col, ps) {
+    const sp = 0.4, r = Math.max(2, 0.06 * g.s) * Math.min(1.3, ps);
+    ctx.beginPath();
+    let acc = 0;
+    for (const line of pl) {
+      for (let i = 0; i + 1 < line.length; i++) {
+        const [x0, y0] = line[i], [x1, y1] = line[i + 1], L = Math.hypot(x1 - x0, y1 - y0);
+        if (L < 1e-9) continue;
+        const s0 = ((ph - acc) % sp + sp) % sp;
+        for (let s = s0; s < L; s += sp) {
+          const u = s / L, px = g.X(x0 + (x1 - x0) * u), py = g.Y(y0 + (y1 - y0) * u);
+          ctx.moveTo(px + r, py); ctx.arc(px, py, r, 0, 2 * Math.PI);
+        }
+        acc += L;
+      }
+    }
+    ctx.fillStyle = col; ctx.fill();
+    ctx.strokeStyle = T.dark ? 'rgba(0,0,0,0.55)' : 'rgba(255,255,255,0.9)'; ctx.lineWidth = 1; ctx.stroke();
   }
   function grip(ctx, x, y, hot, ps) {
     const w = 13 * ps, h = 20 * ps;
@@ -950,153 +1249,346 @@ input[type="range"]:disabled { opacity: 0.4; }
     ctx.moveTo(x, y + 7 * ps); ctx.lineTo(x - a, y + 2.5 * ps); ctx.lineTo(x + a, y + 2.5 * ps); ctx.closePath();
     ctx.fill();
   }
-  function loopPath(g) {
-    const pts = [[SRC.x, SRC.y - SRC.r], [0, 0], [10, 0]];
-    const out = [];
-    if (S.p.on.C) { out.push(pts.concat([[10, g.plTop]])); out.push([[10, g.plBot], [10, 6], [0, 6], [SRC.x, SRC.y + SRC.r]]); }
-    else out.push(pts.concat([[10, 6], [0, 6], [SRC.x, SRC.y + SRC.r]]));
-    return out;
+  // a through hole resistor along the top wire, its colour bands showing R
+  function drawResistor(ctx, g, cx, cy, R, hot) {
+    const s = g.s, half = 0.85, L = 2 * half * s, bl = 1.12 * s, bh = 0.3 * s, bx = (L - bl) / 2;
+    ctx.save(); ctx.translate(g.X(cx - half), g.Y(cy));
+    ctx.lineCap = 'round'; ctx.strokeStyle = shade(STEEL, -0.2); ctx.lineWidth = Math.max(1.6, 0.055 * s); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(L, 0); ctx.stroke();
+    ctx.strokeStyle = '#e6eaef'; ctx.lineWidth = Math.max(0.7, 0.018 * s); ctx.beginPath(); ctx.moveTo(0, -0.012 * s); ctx.lineTo(L, -0.012 * s); ctx.stroke();
+    const ga = ctx.globalAlpha;
+    if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = ga * 0.3; roundRect(ctx, bx - 0.12 * s, -bh / 2 - 0.12 * s, bl + 0.24 * s, bh + 0.24 * s, 0.18 * s); ctx.fill(); ctx.globalAlpha = ga; }
+    const body = () => {       // a dog bone body: rounded caps, a slight waist
+      const rr = bh / 2, w = bh * 0.38;
+      ctx.beginPath(); ctx.moveTo(bx + rr, -rr); ctx.lineTo(bx + bl * 0.24, -rr); ctx.quadraticCurveTo(bx + bl * 0.3, -w, bx + bl * 0.36, -w);
+      ctx.lineTo(bx + bl * 0.64, -w); ctx.quadraticCurveTo(bx + bl * 0.7, -w, bx + bl * 0.76, -rr); ctx.lineTo(bx + bl - rr, -rr);
+      ctx.arc(bx + bl - rr, 0, rr, -Math.PI / 2, Math.PI / 2); ctx.lineTo(bx + bl * 0.76, rr); ctx.quadraticCurveTo(bx + bl * 0.7, w, bx + bl * 0.64, w);
+      ctx.lineTo(bx + bl * 0.36, w); ctx.quadraticCurveTo(bx + bl * 0.3, w, bx + bl * 0.24, rr); ctx.lineTo(bx + rr, rr); ctx.arc(bx + rr, 0, rr, Math.PI / 2, 1.5 * Math.PI); ctx.closePath();
+    };
+    shadowed(ctx, s * 0.6, () => { body(); ctx.fillStyle = T.dark ? '#c2aa76' : '#dcc392'; ctx.fill(); });
+    ctx.save(); body(); ctx.clip();
+    resBands(R).forEach((col, i) => { ctx.fillStyle = col; ctx.fillRect(bx + bl * [0.15, 0.29, 0.43, 0.79][i], -bh, bl * 0.08, 2 * bh); });
+    ctx.fillStyle = roundShade(ctx, 0, -bh / 2, 0, bh / 2); ctx.fillRect(bx, -bh, bl, 2 * bh);
+    ctx.restore();
+    body(); ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 0.8; ctx.stroke();
+    ctx.restore();
   }
-  function drawDots(ctx, g, pl, ph, col, ps) {
-    const sp = 0.4, r = Math.max(2, 0.06 * g.s) * Math.min(1.3, ps);
-    ctx.fillStyle = col;
-    let acc = 0;
-    for (const line of pl) {
-      for (let i = 0; i + 1 < line.length; i++) {
-        const [x0, y0] = line[i], [x1, y1] = line[i + 1], L = Math.hypot(x1 - x0, y1 - y0);
-        if (L < 1e-9) continue;
-        const s0 = ((ph - acc) % sp + sp) % sp;
-        for (let s = s0; s < L; s += sp) {
-          const u = s / L;
-          ctx.beginPath(); ctx.arc(g.X(x0 + (x1 - x0) * u), g.Y(y0 + (y1 - y0) * u), r, 0, 2 * Math.PI); ctx.fill();
-        }
-        acc += L;
+  // an inductor: enamelled copper wire wound on a ferrite rod, its value printed on a band; more turns for larger L (illustrative)
+  function drawInductor(ctx, g, cx, cy, Lh, hot, ps) {
+    const { X, Y, s } = g, half = 0.95, y = Y(cy);
+    ctx.lineCap = 'round'; ctx.strokeStyle = shade(STEEL, -0.2); ctx.lineWidth = Math.max(1.6, 0.055 * s);
+    ctx.beginPath(); ctx.moveTo(X(cx - half), y); ctx.lineTo(X(cx + half), y); ctx.stroke();
+    const rx0 = X(cx - 0.8), rx1 = X(cx + 0.8), rh = 0.34 * s, wh = 0.52 * s;
+    const ga = ctx.globalAlpha;
+    if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = ga * 0.3; roundRect(ctx, rx0 - 0.1 * s, y - wh / 2 - 0.1 * s, rx1 - rx0 + 0.2 * s, wh + 0.2 * s, 0.16 * s); ctx.fill(); ctx.globalAlpha = ga; }
+    shadowed(ctx, s * 0.6, () => { ctx.fillStyle = '#2c2e33'; roundRect(ctx, rx0, y - rh / 2, rx1 - rx0, rh, rh * 0.3); ctx.fill(); });
+    ctx.fillStyle = roundShade(ctx, 0, y - rh / 2, 0, y + rh / 2); roundRect(ctx, rx0, y - rh / 2, rx1 - rx0, rh, rh * 0.3); ctx.fill();
+    // printed band in the middle
+    const txt = fmtL(Lh).replace(' ', ''), pf = Math.min(0.25 * s, 13) * Math.min(1.2, ps);
+    ctx.font = `700 ${pf}px ${T.mono}`;
+    const showTxt = pf >= 6.5, bandW = showTxt ? ctx.measureText(txt).width + 0.14 * s : 0, xm = X(cx);
+    const pos = Math.log(Lh / L_VALUES[0]) / Math.log(L_VALUES[L_VALUES.length - 1] / L_VALUES[0]);
+    const nT = 6 + 2 * Math.round(4 * pos);
+    const regions = showTxt ? [[X(cx - 0.68), xm - bandW / 2 - 0.03 * s], [xm + bandW / 2 + 0.03 * s, X(cx + 0.68)]] : [[X(cx - 0.68), X(cx + 0.68)]];
+    for (const [a, b] of regions) {
+      const m = showTxt ? nT / 2 : nT, pitch = (b - a) / m, tw = Math.max(1.2, pitch * 0.62);
+      for (let k = 0; k < m; k++) {
+        const x0 = a + (k + 0.2) * pitch, x1 = x0 + pitch * 0.45;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = shade(COPPER, -0.5); ctx.lineWidth = tw + 1; ctx.beginPath(); ctx.moveTo(x0, y - wh / 2); ctx.lineTo(x1, y + wh / 2); ctx.stroke();
+        ctx.strokeStyle = COPPER; ctx.lineWidth = tw; ctx.stroke();
+        ctx.strokeStyle = shade(COPPER, 0.55); ctx.lineWidth = Math.max(0.6, tw * 0.3); ctx.beginPath(); ctx.moveTo(x0 - tw * 0.15, y - wh / 2 + tw * 0.4); ctx.lineTo(x0 + (x1 - x0) * 0.35 - tw * 0.15, y - wh * 0.15); ctx.stroke();
       }
     }
+    if (showTxt) {
+      ctx.fillStyle = '#efe9d8'; roundRect(ctx, xm - bandW / 2, y - wh / 2 - 0.02 * s, bandW, wh + 0.04 * s, 0.05 * s); ctx.fill();
+      ctx.fillStyle = roundShade(ctx, 0, y - wh / 2, 0, y + wh / 2); ctx.globalAlpha = ga * 0.6; ctx.fill(); ctx.globalAlpha = ga;
+      ctx.fillStyle = '#26221a'; ctx.font = `700 ${pf}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, xm, y + 0.5);
+      ctx.textBaseline = 'alphabetic';
+    }
+  }
+  // a film capacitor: epoxy box with the value printed on it, a window cut to show the plates and their charge
+  function drawFilmCap(ctx, g, st, hot, dxu, ps, live) {
+    const { X, Y, s } = g, cn = g.can, cx = CPOS.x + dxu;
+    const x0 = X(cx - cn.hw), x1 = X(cx + cn.hw), y0 = Y(cn.top), y1 = Y(cn.bot), rr = 0.12 * s;
+    ctx.strokeStyle = shade(STEEL, -0.15); ctx.lineWidth = Math.max(1.6, 0.055 * s); ctx.lineCap = 'butt';
+    ctx.beginPath(); ctx.moveTo(X(cx), y0 - 0.28 * s); ctx.lineTo(X(cx), y0 + 2); ctx.moveTo(X(cx), y1 - 2); ctx.lineTo(X(cx), y1 + 0.28 * s); ctx.stroke();
+    const body = T.dark ? '#4c4192' : '#46398a';
+    shadowed(ctx, s, () => { ctx.fillStyle = body; roundRect(ctx, x0, y0, x1 - x0, y1 - y0, rr); ctx.fill(); });
+    ctx.save(); roundRect(ctx, x0, y0, x1 - x0, y1 - y0, rr); ctx.clip();
+    ctx.globalAlpha *= 0.55; ctx.fillStyle = roundShade(ctx, x0, 0, x1, 0); ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+    ctx.restore();
+    ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 1; roundRect(ctx, x0 + 0.5, y0 + 0.5, x1 - x0 - 1, y1 - y0 - 1, rr); ctx.stroke();
+    const pf = Math.min(0.23 * s, (x1 - x0) / 4.4) * Math.min(1.2, ps);
+    if (pf >= 6) {
+      ctx.fillStyle = 'rgba(255,255,255,0.9)'; ctx.font = `700 ${pf}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(`${sigStr(S.p.C * 1e6, 2)}µF`, X(cx), Y(cn.top + 0.24));
+      ctx.textBaseline = 'alphabetic';
+    }
+    // the window: two plates, the tabs to the leads, and the charge on each plate
+    const wx0 = X(cx - cn.hw + 0.12), wx1 = X(cx + cn.hw - 0.12), wy0 = Y(g.plTop - 0.3), wy1 = Y(g.plBot + 0.26);
+    ctx.save();
+    roundRect(ctx, wx0, wy0, wx1 - wx0, wy1 - wy0, 0.06 * s); ctx.fillStyle = '#14171c'; ctx.fill();
+    ctx.strokeStyle = shade(body, 0.45); ctx.lineWidth = 1.2; ctx.stroke(); ctx.clip();
+    const yt = Y(g.plTop), yb = Y(g.plBot), px0 = wx0 + 0.07 * s, px1 = wx1 - 0.07 * s, pmx = (px0 + px1) / 2;
+    ctx.strokeStyle = '#8d96a3'; ctx.lineWidth = Math.max(1.2, 0.04 * s);
+    ctx.beginPath(); ctx.moveTo(pmx, wy0); ctx.lineTo(pmx, yt); ctx.moveTo(pmx, yb); ctx.lineTo(pmx, wy1); ctx.stroke();
+    if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.45; ctx.fillRect(px0 - 0.05 * s, yt - 0.12 * s, px1 - px0 + 0.1 * s, 0.2 * s); ctx.globalAlpha = 1; }
+    const pt = Math.max(2.5, 0.07 * s);
+    for (const yy of [yt, yb]) {
+      const gp = ctx.createLinearGradient(0, yy - pt / 2, 0, yy + pt / 2); gp.addColorStop(0, '#f1f4f7'); gp.addColorStop(1, '#7d8794');
+      ctx.fillStyle = gp; ctx.fillRect(px0, yy - pt / 2, px1 - px0, pt);
+    }
+    if (live) {
+      // plate charges in proportion to q, scaled to the largest charge this circuit reaches
+      const qmax = Math.max(1e-30, axes.V * S.p.C), nq = Math.min(8, Math.abs(st.q) / qmax * 8), full = Math.floor(nq), part = nq - full;
+      const slots = 8, slotW = (px1 - px0) / slots, hs = Math.max(1.6, Math.min(slotW * 0.34, 0.075 * s * Math.min(1.25, ps)));
+      ctx.lineWidth = Math.max(1.2, hs * 0.42); ctx.lineCap = 'butt';
+      const glyph = (x, y, plus, col) => { ctx.strokeStyle = col; ctx.beginPath(); ctx.moveTo(x - hs, y); ctx.lineTo(x + hs, y); if (plus) { ctx.moveTo(x, y - hs); ctx.lineTo(x, y + hs); } ctx.stroke(); };
+      for (let k = 0; k < Math.min(slots, Math.ceil(nq)); k++) {
+        const ord = [3, 4, 2, 5, 1, 6, 0, 7][k], px = px0 + (ord + 0.5) * slotW;
+        ctx.globalAlpha = k < full ? 1 : part;
+        glyph(px, yt - pt / 2 - hs - 2, st.q > 0, st.q > 0 ? '#ff7660' : '#69a0ff');
+        glyph(px, yb + pt / 2 + hs + 2, st.q < 0, st.q > 0 ? '#69a0ff' : '#ff7660');
+      }
+      ctx.globalAlpha = 1; ctx.lineCap = 'round';
+    }
+    ctx.restore();
+  }
+  // the function generator: frequency display, a lit sine key, amplitude knob turned to V₀, BNC output
+  function drawGenerator(ctx, g, hot, ps) {
+    const { X, Y, s } = g, x0 = X(GEN.x0), y0 = Y(GEN.y0), w = (GEN.x1 - GEN.x0) * s, h = (GEN.y1 - GEN.y0) * s, rr = 0.14 * s;
+    const base = T.dark ? '#3c424b' : '#d6dadf';
+    shadowed(ctx, s, () => {
+      const gc = ctx.createLinearGradient(0, y0, 0, y0 + h); gc.addColorStop(0, shade(base, 0.22)); gc.addColorStop(0.55, base); gc.addColorStop(1, shade(base, -0.22));
+      ctx.fillStyle = gc; roundRect(ctx, x0, y0, w, h, rr); ctx.fill();
+    });
+    ctx.strokeStyle = hot ? T.accent : 'rgba(0,0,0,0.4)'; ctx.lineWidth = hot ? 2.2 * ps : 1; roundRect(ctx, x0 + 0.5, y0 + 0.5, w - 1, h - 1, rr); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0 + rr, y0 + 1.5); ctx.lineTo(x0 + w - rr, y0 + 1.5); ctx.stroke();
+    // display: the frequency to four figures
+    const dx = X(GEN.x0 + 0.18), dy = Y(GEN.y0 + 0.2), dw = (GEN.x1 - GEN.x0 - 0.36) * s, dh = 0.9 * s;
+    ctx.fillStyle = '#04120d'; roundRect(ctx, dx, dy, dw, dh, 0.06 * s); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.65)'; ctx.lineWidth = 1; ctx.stroke();
+    const f = S.p.f, pf = f >= 1e3 ? [1e3, 'kHz'] : [1, 'Hz'];
+    const digits = (f / pf[0]).toPrecision(4), ghostD = digits.replace(/\d/g, '8');
+    const fsz = Math.min(0.5 * s, dh * 0.6), usz = fsz * 0.5;
+    ctx.font = `700 ${usz}px ${T.mono}`; const uw = ctx.measureText(pf[1]).width;
+    const tx = dx + dw - uw - 0.2 * s, ty = dy + dh * 0.56;
+    ctx.font = `700 ${fsz}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(95,242,194,0.09)'; ctx.fillText(ghostD, tx, ty);
+    ctx.save(); ctx.shadowColor = 'rgba(80,240,190,0.8)'; ctx.shadowBlur = 0.1 * s; ctx.fillStyle = '#5ff2c2'; ctx.fillText(digits, tx, ty); ctx.restore();
+    ctx.font = `700 ${usz}px ${T.mono}`; ctx.textAlign = 'left'; ctx.fillStyle = '#5ff2c2'; ctx.fillText(pf[1], tx + 0.08 * s, ty + fsz * 0.12);
+    const small = 0.17 * s * Math.min(1.2, ps);
+    if (small >= 6) { ctx.font = `700 ${small}px ${T.mono}`; ctx.fillStyle = 'rgba(95,242,194,0.55)'; ctx.textBaseline = 'top'; ctx.fillText('FREQ', dx + 0.1 * s, dy + 0.07 * s); }
+    // the sine key, lit
+    const ky = Y(3.72), kx = X(-1.85), kw = 0.6 * s, kh = 0.44 * s;
+    ctx.fillStyle = T.dark ? '#5a616b' : '#eef0f3'; roundRect(ctx, kx - kw / 2, ky - kh / 2, kw, kh, 0.06 * s); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.strokeStyle = T.dark ? '#e6e9ee' : '#22262c'; ctx.lineWidth = Math.max(1.1, 0.04 * s); ctx.beginPath();
+    for (let k = 0; k <= 24; k++) { const u = k / 24, px = kx - kw * 0.32 + kw * 0.64 * u, py = ky - kh * 0.24 * Math.sin(2 * Math.PI * u); k ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+    ctx.stroke();
+    ctx.save(); ctx.shadowColor = 'rgba(60,230,120,0.9)'; ctx.shadowBlur = 0.12 * s; ctx.fillStyle = '#4fe88a';
+    ctx.beginPath(); ctx.arc(kx + kw / 2 + 0.12 * s, ky - kh / 2 + 0.02 * s, Math.max(1.6, 0.055 * s), 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+    // amplitude knob with a scale, turned to V₀ (1 V to 12 V over 270°)
+    const knx = X(-0.82), kny = ky, kr = 0.3 * s, ink = T.dark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.55)';
+    ctx.strokeStyle = ink; ctx.lineWidth = 1;
+    for (let k = 0; k <= 11; k++) {
+      const a = Math.PI * (0.75 + 1.5 * k / 11), l0 = kr * 1.14, l1 = kr * (k % 11 ? 1.26 : 1.36);
+      ctx.beginPath(); ctx.moveTo(knx + Math.cos(a) * l0, kny + Math.sin(a) * l0); ctx.lineTo(knx + Math.cos(a) * l1, kny + Math.sin(a) * l1); ctx.stroke();
+    }
+    shadowed(ctx, s * 0.6, () => {
+      const gk = ctx.createRadialGradient(knx - kr * 0.3, kny - kr * 0.35, 0, knx, kny, kr); gk.addColorStop(0, '#5a6069'); gk.addColorStop(1, '#14171b');
+      ctx.fillStyle = gk; ctx.beginPath(); ctx.arc(knx, kny, kr, 0, 2 * Math.PI); ctx.fill();
+    });
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(knx, kny, kr * 0.72, 0, 2 * Math.PI); ctx.stroke();
+    const ka = Math.PI * (0.75 + 1.5 * (S.p.V0 - 1) / 11);
+    ctx.strokeStyle = '#f2f2f2'; ctx.lineWidth = Math.max(1.4, 0.045 * s); ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(knx + Math.cos(ka) * kr * 0.25, kny + Math.sin(ka) * kr * 0.25); ctx.lineTo(knx + Math.cos(ka) * kr * 0.88, kny + Math.sin(ka) * kr * 0.88); ctx.stroke();
+    // BNC output: nickel shell, bayonet studs, insulator and centre pin, with the cable's plug on it
+    const bx = X(GEN.bnc[0]), byy = Y(GEN.bnc[1]), br = 0.2 * s;
+    const gb = ctx.createRadialGradient(bx - br * 0.4, byy - br * 0.4, 0, bx, byy, br * 1.1); gb.addColorStop(0, '#f4f6f8'); gb.addColorStop(1, '#7c858f');
+    ctx.fillStyle = gb; ctx.beginPath(); ctx.arc(bx, byy, br, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = '#9aa3ad'; for (const sg of [-1, 1]) { ctx.beginPath(); ctx.arc(bx, byy + sg * br * 1.02, br * 0.2, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.fillStyle = '#e9e2cf'; ctx.beginPath(); ctx.arc(bx, byy, br * 0.55, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = '#c9a23a'; ctx.beginPath(); ctx.arc(bx, byy, br * 0.18, 0, 2 * Math.PI); ctx.fill();
+    // printed panel labels, when they are large enough to read
+    if (small >= 6) {
+      ctx.font = `700 ${small}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillStyle = T.dark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.62)';
+      const ly = Y(4.18);
+      ctx.fillText('SINE', kx, ly); ctx.fillText('AMPLITUDE', knx, ly); ctx.fillText('OUTPUT', bx, ly);
+    }
+    ctx.textBaseline = 'alphabetic';
+  }
+  // a scope probe hooked onto a lead: tip, body with a channel ring, and its cable running off toward the scope
+  function drawProbe(ctx, g, at, dir, col, tag, ps) {
+    const { X, Y, s } = g, px = X(at[0]), py = Y(at[1]), L = Math.hypot(dir[0], dir[1]), ux = dir[0] / L, uy = dir[1] / L;
+    const P = (d) => [px + ux * d * s, py + uy * d * s];
+    const [ax, ay] = P(0.12), [bx, by] = P(0.62), [ex, ey] = P(1.15);
+    const gc = ctx.createLinearGradient(bx, by, ex, ey); gc.addColorStop(0, '#3a3f46'); gc.addColorStop(1, 'rgba(58,63,70,0)');
+    ctx.strokeStyle = gc; ctx.lineCap = 'round'; ctx.lineWidth = Math.max(2, 0.08 * s); ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(ex, ey); ctx.stroke();
+    ctx.strokeStyle = '#c9ced6'; ctx.lineWidth = Math.max(1.2, 0.035 * s); ctx.beginPath(); ctx.arc(px, py, 0.075 * s, 0, 2 * Math.PI); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px + ux * 0.075 * s, py + uy * 0.075 * s); ctx.lineTo(ax, ay); ctx.stroke();
+    ctx.save(); ctx.translate(ax, ay); ctx.rotate(Math.atan2(uy, ux));
+    const len = 0.5 * s, bh = 0.17 * s;
+    shadowed(ctx, s * 0.5, () => { ctx.fillStyle = '#2d3137'; roundRect(ctx, 0, -bh / 2, len, bh, bh * 0.45); ctx.fill(); });
+    ctx.fillStyle = 'rgba(255,255,255,0.16)'; ctx.fillRect(bh * 0.4, -bh * 0.32, len - bh * 0.8, bh * 0.16);
+    ctx.fillStyle = col; ctx.fillRect(len * 0.62, -bh / 2, len * 0.12, bh);
+    ctx.restore();
+    // the channel tag beside the body
+    const bf = 8.5 * Math.min(ps, 1.3), mx = (ax + bx) / 2 + uy * 0.26 * s, my = (ay + by) / 2 - ux * 0.26 * s;
+    ctx.font = `700 ${bf}px ${T.mono}`;
+    const tw = ctx.measureText(tag).width + bf * 0.7;
+    badge(ctx, tag, mx - tw / 2, my, col, bf);
+  }
+  // the clamp current probe around the return lead
+  function drawClamp(ctx, g, at, ps) {
+    const { X, Y, s } = g, x = X(at[0]), y = Y(at[1]), w = 0.5 * s, h = 0.42 * s;
+    const gc = ctx.createLinearGradient(x, y - h, x - 0.3 * s, y - 1.3 * s); gc.addColorStop(0, '#3a3f46'); gc.addColorStop(1, 'rgba(58,63,70,0)');
+    ctx.strokeStyle = gc; ctx.lineWidth = Math.max(2.2, 0.09 * s); ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x, y - h * 0.5); ctx.lineTo(x - 0.3 * s, y - 1.3 * s); ctx.stroke();
+    shadowed(ctx, s * 0.6, () => { ctx.fillStyle = '#26292e'; roundRect(ctx, x - w / 2, y - h / 2, w, h, 0.1 * s); ctx.fill(); });
+    ctx.strokeStyle = '#6d7480'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(x, y, 0.11 * s, 0, 2 * Math.PI); ctx.stroke();
+    ctx.fillStyle = '#f3c34f'; ctx.fillRect(x - w / 2 + 0.05 * s, y - h / 2 + 0.05 * s, 0.08 * s, h - 0.1 * s);
+    const bf = 8.5 * Math.min(ps, 1.3);
+    badge(ctx, 'I', x + w / 2 + 3, y - h / 2 - bf * 0.4, '#f3c34f', bf);
   }
   function drawCircuit() {
     const [W, H] = dims.c; if (!W || !H || !c) return;
     const ctx = ctxs.c, ps = paneScale(W, H);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    ctx.drawImage(benchLayer('c', W, H), 0, 0, W, H);
     const g = circuitGeom(); cg = g;
-    const X = g.X, Y = g.Y, s = g.s;
+    const X = g.X, Y = g.Y, s = g.s, cn = g.can;
     const fs = Math.max(10.5, Math.min(14.5, s * 0.4)) * Math.min(ps, 1.22);
     const st = stateNow(), on = S.p.on;
     const isHot = (id) => (cDrag && cDrag.id === id) || (!cDrag && (cHover === id || cSel === id));
     cHandles = [];
-    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    // wires
-    ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * ps;
-    ctx.beginPath(); ctx.moveTo(X(0), Y(SRC.y - SRC.r)); ctx.lineTo(X(0), Y(0)); ctx.lineTo(X(10), Y(0));
-    if (on.C) { ctx.lineTo(X(10), Y(g.plTop)); ctx.moveTo(X(10), Y(g.plBot)); }
-    ctx.lineTo(X(10), Y(6)); ctx.lineTo(X(0), Y(6)); ctx.lineTo(X(0), Y(SRC.y + SRC.r)); ctx.stroke();
-    const sgn = (v, ref) => (Math.abs(v) < 1e-6 * ref ? 0 : v > 0 ? 1 : -1);
-    const polar = (xa, ya, xb, yb, sg, col) => {   // + at a and − at b when sg > 0
-      if (!sg) return;
-      ctx.fillStyle = col; ctx.font = `700 ${fs * 0.95}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(sg > 0 ? '+' : '−', xa, ya); ctx.fillText(sg > 0 ? '−' : '+', xb, yb);
+    const labels = [], grips = [];
+    const LC = leadCols(), lw = Math.max(2.6, 0.085 * s) * Math.min(ps, 1.3), rr = 0.3 * s;
+    const lead = (pts, col) => insulated(ctx, pts.map((q) => [X(q[0]), Y(q[1])]), col, lw, rr);
+    const clip = (x, y, vert) => {       // the small crocodile clip at the end of a lead
+      const cw = 0.26 * s, ch = 0.15 * s;
+      ctx.save(); ctx.translate(X(x), Y(y)); if (vert) ctx.rotate(Math.PI / 2);
+      const gcl = ctx.createLinearGradient(0, -ch / 2, 0, ch / 2); gcl.addColorStop(0, '#e9edf1'); gcl.addColorStop(1, '#808994');
+      ctx.fillStyle = gcl; roundRect(ctx, -cw / 2, -ch / 2, cw, ch, ch * 0.3); ctx.fill();
+      ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 0.8; ctx.stroke();
+      ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.beginPath(); for (let k = -1; k <= 1; k++) { ctx.moveTo(k * cw * 0.22, -ch / 2); ctx.lineTo(k * cw * 0.22, ch / 2); } ctx.stroke();
+      ctx.restore();
     };
-    // source
+    drawTriangle(ctx, g, fs, ps);
+    // the generator, then the coax from its output to a breakout with the red and black clip leads
+    drawGenerator(ctx, g, isHot('V0'), ps);
+    const by = GEN.bnc[1];
+    insulated(ctx, [[X(GEN.bnc[0]), Y(by)], [X(GX - 0.1), Y(by)]], '#1d2025', lw * 1.7, 0);
+    // parts first, so the clip leads lie over their wire ends
+    const rOn = on.R, lOn = on.L, cOn = on.C;
+    ctx.save(); if (!rOn) { ctx.globalAlpha = 0.4; } drawResistor(ctx, g, RPOS.x, rOn ? 0 : -0.55, S.p.R, rOn && isHot('R')); ctx.restore();
+    ctx.save(); if (!lOn) { ctx.globalAlpha = 0.4; } drawInductor(ctx, g, LPOS.x, lOn ? 0 : -0.62, S.p.L, lOn && isHot('L'), ps); ctx.restore();
+    ctx.save(); if (!cOn) { ctx.globalAlpha = 0.4; } drawFilmCap(ctx, g, st, cOn && isHot('C'), cOn ? 0 : 0.9, ps, cOn); ctx.restore();
+    lead([[GX, by - 0.2], [GX, 0], [2.3, 0]], LC.red);
+    lead([[3.7, 0], [5.9, 0]], LC.white);
+    lead([[7.5, 0], [10, 0], [10, cn.top - 0.14]], LC.white);
+    lead([[10, cn.bot + 0.14], [10, 6], [GX, 6], [GX, by + 0.2]], LC.black);
+    if (!rOn) lead([[2.3, 0], [3.7, 0]], LC.white);
+    if (!lOn) lead([[5.9, 0], [7.5, 0]], LC.white);
+    if (!cOn) lead([[10, cn.top - 0.14], [10, cn.bot + 0.14]], LC.white);
+    // the breakout boot where the coax splits
+    { const bw = 0.34 * s, bh = 0.62 * s; shadowed(ctx, s * 0.6, () => { ctx.fillStyle = '#1d2025'; roundRect(ctx, X(GX) - bw / 2, Y(by) - bh / 2, bw, bh, bw * 0.3); ctx.fill(); });
+      ctx.fillStyle = 'rgba(255,255,255,0.12)'; ctx.fillRect(X(GX) - bw * 0.3, Y(by) - bh * 0.38, bw * 0.14, bh * 0.76); }
+    for (const [x, y, v] of [[2.3, 0], [3.7, 0], [5.9, 0], [7.5, 0], [10, cn.top - 0.14, true], [10, cn.bot + 0.14, true]]) clip(x, y, v);
+    // moving charge carriers
+    drawDots(ctx, g, loopPath(g), phase.dots, T.equi, ps);
+    // probes: channel 1 on the source lead, 2, 3, 4 at the parts they measure, the clamp on the return lead
+    drawProbe(ctx, g, [GX, 1.15], [0.8, 0.6], CURVES[0].tr, '1', ps);
+    if (rOn) drawProbe(ctx, g, [4.45, 0], [0.35, 1], CURVES[1].tr, '2', ps);
+    if (lOn) drawProbe(ctx, g, [8.55, 0], [-0.1, 1], CURVES[2].tr, '3', ps);
+    if (cOn) drawProbe(ctx, g, [10, 4.85], [-1, 0.45], CURVES[3].tr, '4', ps);
+    drawClamp(ctx, g, [3.1, 6], ps);
+    // polarity marks: outlined, not boxed, so they read as marks on the bench rather than buttons
+    const sgn = (v, ref) => (Math.abs(v) < 1e-6 * ref ? 0 : v > 0 ? 1 : -1);
+    const polar = (xa, ya, xb, yb, sg) => {   // + at a and − at b when sg > 0
+      if (!sg) return;
+      labels.push(() => {
+        ctx.font = `700 ${fs * 1.02}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+        for (const [x, y, ch] of [[xa, ya, sg > 0 ? '+' : '−'], [xb, yb, sg > 0 ? '−' : '+']]) {
+          ctx.strokeStyle = T.canvas; ctx.lineWidth = 3.5 * ps; ctx.strokeText(ch, x, y);
+          ctx.fillStyle = T.ink; ctx.fillText(ch, x, y);
+        }
+        ctx.textBaseline = 'alphabetic';
+      });
+    };
+    polar(X(1.0), Y(3.2), X(1.0), Y(4.3), sgn(st.v, c.V0));
+    // generator labels
     {
-      const hot = isHot('V0'), x = X(SRC.x), y = Y(SRC.y), r = SRC.r * s;
-      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.14; ctx.beginPath(); ctx.arc(x, y, r + 6 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1; }
-      ctx.fillStyle = T.canvas; ctx.strokeStyle = T.ink; ctx.lineWidth = 2.2 * ps; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
-      ctx.beginPath();
-      for (let k = 0; k <= 40; k++) { const u = k / 40, px = x - r * 0.6 + 1.2 * r * u, py = y - r * 0.32 * Math.sin(2 * Math.PI * u); k ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
-      ctx.lineWidth = 1.8 * ps; ctx.stroke();
-      polar(x + r + fs * 0.55, y - r * 0.75, x + r + fs * 0.55, y + r * 0.75, sgn(st.v, c.V0), T.muted);
-      ctx.fillStyle = T.ink; ctx.textBaseline = 'alphabetic';
-      const lx = X(1.3), ly = Y(SRC.y) - fs * 0.2;
-      richText(ctx, `V₀ = ${S.p.V0.toFixed(1)} V`, lx, ly, fs, 700, 'left');
-      ctx.fillStyle = T.muted; richText(ctx, `f = ${fmtF(S.p.f)}`, lx, ly + fs * 1.3, fs, 400, 'left');
-      richText(ctx, `V_{rms} = ${fmtSI(c.Vrms, 'V')}`, lx, ly + fs * 2.6, fs, 400, 'left');
-      const gx = X(SRC.x - SRC.r) - 12 * ps;
-      grip(ctx, gx, y, hot, ps);
-      cHandles.push({ id: 'V0', box: [gx - 10 * ps, y - r, X(SRC.x + SRC.r) - gx + 10 * ps, 2 * r], cursor: 'ns-resize' });
+      const hot = isHot('V0'), lx = X(GX + 0.42), ly = Y(2.55);
+      labels.push(() => {
+        label(ctx, `V₀ = ${S.p.V0.toFixed(1)} V`, lx, ly, fs, 700, 'left', T.ink);
+        label(ctx, `f = ${fmtF(S.p.f)}`, lx, ly + fs * 1.36, fs, 400, 'left', T.muted);
+        label(ctx, `V_{rms} = ${fmtSI(c.Vrms, 'V')}`, lx, ly + fs * 2.72, fs, 400, 'left', T.muted);
+        label(ctx, 'function generator', X(GEN.x0), Y(GEN.y0) - 5 * ps, fs * 0.85, 400, 'left', T.muted);
+      });
+      const gx = X(GEN.x0) - 12 * ps, gy = Y(3.0);
+      grips.push([gx, gy, hot]);
+      cHandles.push({ id: 'V0', box: [gx - 10 * ps, Y(GEN.y0), X(GEN.x1) - gx + 10 * ps, (GEN.y1 - GEN.y0) * s], cursor: 'ns-resize' });
     }
-    // resistor and inductor on the top wire
+    // resistor and inductor labels on the top wire
     const topPart = (id, pos, name, val, vr, col, rms, sg) => {
-      const hot = isHot(id), cx = pos.x, x = X(cx), y = Y(pos.y);
-      if (on[id]) {
-        if (id === 'R') drawResistor(ctx, g, cx, pos.y, col, 2.4 * ps, hot, ps); else drawCoil(ctx, g, cx, pos.y, col, 2.4 * ps, hot, ps);
-        polar(X(cx - 1.05), Y(0.42), X(cx + 1.05), Y(0.42), sg, T.muted);
-      } else {
-        ctx.globalAlpha = 0.3; ctx.setLineDash([3, 3]);
-        if (id === 'R') drawResistor(ctx, g, cx, pos.y - 0.45, T.muted, 1.2 * ps, false, ps); else drawCoil(ctx, g, cx, pos.y - 0.45, T.muted, 1.2 * ps, false, ps);
-        ctx.setLineDash([]); ctx.globalAlpha = 1;
-        ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(X(cx - 1), y); ctx.lineTo(X(cx + 1), y); ctx.stroke();
-      }
-      ctx.textBaseline = 'alphabetic';
-      ctx.fillStyle = on[id] ? T.ink : T.muted;
+      const hot = isHot(id), cx = pos.x, x = X(cx);
+      if (on[id]) polar(X(cx - 1.05), Y(0.42), X(cx + 1.05), Y(0.42), sg);
       const t1 = on[id] ? `${name} = ${val}` : `${name} out`;
-      const w1 = richText(ctx, t1, x, Y(-0.95), fs, 700, 'center');
-      let w2 = 0;
-      if (on[id]) { ctx.fillStyle = col; w2 = richText(ctx, `${vr} = ${fmtSI(rms, 'V')}`, x, Y(-0.95) + fs * 1.25, fs * 0.92, 600, 'center'); }
-      const half = Math.max(w1, w2) / 2, side = id === 'R' ? -1 : 1, gx = x + side * (half + 13 * ps), gy = Y(-0.95) + fs * 0.1;
+      const w1 = richWidth(ctx, t1, fs, 700);
+      const t2 = `${vr} = ${fmtSI(rms, 'V')}`, w2 = on[id] ? richWidth(ctx, t2, fs * 0.92, 600) : 0;
+      const ly = Y(-0.95) - (on[id] ? 0 : 0.35 * s);
+      labels.push(() => {
+        label(ctx, t1, x, ly, fs, 700, 'center', on[id] ? T.ink : T.muted);
+        if (on[id]) label(ctx, t2, x, ly + fs * 1.3, fs * 0.92, 600, 'center', col);
+      });
+      const half = Math.max(w1, w2) / 2, side = id === 'R' ? -1 : 1, gx = x + side * (half + 13 * ps), gy = ly + fs * 0.1;
       if (on[id]) {
-        grip(ctx, gx, gy, hot, ps);
+        grips.push([gx, gy, hot]);
         const x0 = Math.min(gx - 8 * ps, X(cx - 1)), x1 = Math.max(gx + 8 * ps, X(cx + 1));
-        cHandles.push({ id, box: [x0, Y(-0.95) - fs, x1 - x0, Y(0.45) - Y(-0.95) + fs], cursor: 'ns-resize' });
+        cHandles.push({ id, box: [x0, ly - fs, x1 - x0, Y(0.45) - ly + fs], cursor: 'ns-resize' });
       }
     };
     topPart('R', RPOS, 'R', fmtR(S.p.R), 'V_{R,rms}', T.resq, c.VR0 / Math.SQRT2, sgn(st.vR, c.V0));
     topPart('L', LPOS, 'L', fmtL(S.p.L), 'V_{L,rms}', T.indq, c.VL0 / Math.SQRT2, sgn(st.vL, c.V0));
-    // capacitor on the right side
+    // capacitor labels
     {
-      const hot = isHot('C'), cx = CPOS.x, hw = 0.8, yt = Y(g.plTop), yb = Y(g.plBot);
+      const hot = isHot('C'), cx = CPOS.x, yt = Y(g.plTop);
+      const lx = X(cx - cn.hw - 0.3), ly = Y(CPOS.y) - fs * 0.85;
+      const t1 = on.C ? `C = ${fmtC(S.p.C)}` : 'C out', w1 = richWidth(ctx, t1, fs, 700);
+      labels.push(() => {
+        label(ctx, t1, lx, ly, fs, 700, 'right', on.C ? T.ink : T.muted);
+        if (on.C) label(ctx, `V_{C,rms} = ${fmtSI(c.VC0 / Math.SQRT2, 'V')}`, lx, ly + fs * 1.36, fs * 0.92, 600, 'right', T.capq);
+      });
       if (on.C) {
-        if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.14; ctx.fillRect(X(cx - hw - 0.12), yt - 0.25 * s, (2 * hw + 0.24) * s, 0.4 * s); ctx.globalAlpha = 1; }
-        ctx.strokeStyle = T.capq; ctx.lineWidth = 3.4 * ps; ctx.lineCap = 'butt';
-        ctx.beginPath(); ctx.moveTo(X(cx - hw), yt); ctx.lineTo(X(cx + hw), yt); ctx.moveTo(X(cx - hw), yb); ctx.lineTo(X(cx + hw), yb); ctx.stroke();
-        ctx.lineCap = 'round';
-        // plate charges in proportion to q, scaled to the largest charge this circuit reaches
-        const qmax = Math.max(1e-30, axes.V * S.p.C), n = Math.min(8, Math.abs(st.q) / qmax * 8), full = Math.floor(n), part = n - full;
-        ctx.font = `700 ${Math.max(9, 0.3 * s) * Math.min(1.25, ps)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        for (let k = 0; k < Math.min(8, Math.ceil(n)); k++) {
-          const px = X(cx + (k % 2 ? 1 : -1) * (0.22 + 0.17 * Math.floor(k / 2)));
-          ctx.globalAlpha = k < full ? 1 : part;
-          ctx.fillStyle = st.q > 0 ? T.pos : T.neg; ctx.fillText(st.q > 0 ? '+' : '−', px, yt - 7 * ps);
-          ctx.fillStyle = st.q > 0 ? T.neg : T.pos; ctx.fillText(st.q > 0 ? '−' : '+', px, yb + 7 * ps);
-        }
-        ctx.globalAlpha = 1;
-      } else {
-        ctx.globalAlpha = 0.3; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([3, 3]);
-        ctx.beginPath(); ctx.moveTo(X(cx + 0.45 - hw), yt); ctx.lineTo(X(cx + 0.45 + hw), yt); ctx.moveTo(X(cx + 0.45 - hw), yb); ctx.lineTo(X(cx + 0.45 + hw), yb); ctx.stroke();
-        ctx.setLineDash([]); ctx.globalAlpha = 1;
-      }
-      const lx = X(cx - hw - 0.25), ly = Y(CPOS.y) - fs * 0.85;
-      ctx.textBaseline = 'alphabetic';
-      ctx.fillStyle = on.C ? T.ink : T.muted; const w1 = richText(ctx, on.C ? `C = ${fmtC(S.p.C)}` : 'C out', lx, ly, fs, 700, 'right');
-      if (on.C) { ctx.fillStyle = T.capq; richText(ctx, `V_{C,rms} = ${fmtSI(c.VC0 / Math.SQRT2, 'V')}`, lx, ly + fs * 1.3, fs * 0.92, 600, 'right'); }
-      if (on.C) {
-        const gx = X(cx + hw) + 14 * ps;
-        grip(ctx, gx, yt, hot, ps);
+        const gx = X(cx + cn.hw) + 14 * ps;
+        grips.push([gx, yt, hot]);
         cHandles.push({ id: 'C', box: [lx - w1, yt - 0.45 * s, gx + 8 * ps - (lx - w1), 0.9 * s], cursor: 'ns-resize' });
       }
     }
-    // carriers
-    drawDots(ctx, g, loopPath(g), phase.dots, T.equi, ps);
     // current arrow on the bottom wire: positive i runs clockwise, so leftward here
     {
-      const I = st.i, y = Y(6), xm = X(5);
+      const I = st.i, y = Y(6), xm = X(5.6);
       const tiny = !isFinite(I) || Math.abs(I) < 1e-4 * axes.I;
       if (!tiny) {
-        const dir = I > 0 ? -1 : 1, L = 0.6 * s;
-        ctx.strokeStyle = T.equi; ctx.fillStyle = T.equi; ctx.lineWidth = 2.4 * ps;
+        const dir = I > 0 ? -1 : 1, L = 0.6 * s, ya = y - 0.32 * s;
         const x0 = xm - dir * L / 2, x1 = xm + dir * L / 2;
-        ctx.beginPath(); ctx.moveTo(x0, y - 10 * ps); ctx.lineTo(x1, y - 10 * ps); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(x1 + dir * 4 * ps, y - 10 * ps); ctx.lineTo(x1 - dir * 4 * ps, y - 14.5 * ps); ctx.lineTo(x1 - dir * 4 * ps, y - 5.5 * ps); ctx.closePath(); ctx.fill();
+        const shape = () => { ctx.beginPath(); ctx.moveTo(x0, ya); ctx.lineTo(x1, ya); ctx.moveTo(x1 + dir * 4 * ps, ya); ctx.lineTo(x1 - dir * 4 * ps, ya - 4.5 * ps); ctx.lineTo(x1 - dir * 4 * ps, ya + 4.5 * ps); ctx.closePath(); };
+        ctx.lineJoin = 'round';
+        shape(); ctx.strokeStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.lineWidth = 6 * ps; ctx.stroke(); ctx.globalAlpha = 1;
+        shape(); ctx.strokeStyle = T.equi; ctx.fillStyle = T.equi; ctx.lineWidth = 2.4 * ps; ctx.stroke(); ctx.fill();
       }
-      ctx.fillStyle = T.ink; ctx.textBaseline = 'top';
-      richText(ctx, `i = ${fmtSI(Math.abs(I), 'A')}   I_{rms} = ${fmtSI(c.Irms, 'A')}`, xm, y + 8 * ps, fs * 0.95, 600, 'center', T.ui);
-      ctx.textBaseline = 'alphabetic';
+      labels.push(() => label(ctx, `i = ${fmtSI(Math.abs(I), 'A')}   I_{rms} = ${fmtSI(c.Irms, 'A')}`, X(5.2), y + 0.24 * s, fs * 0.95, 600, 'center', T.ink, 'top'));
     }
-    drawTriangle(ctx, g, fs, ps);
+    for (const f of labels) f();
+    for (const q of grips) grip(ctx, q[0], q[1], q[2], ps);
   }
-  // impedance triangle: legs R and X_L − X_C at right angles, hypotenuse Z; the values are listed beside or under it
+  // impedance triangle on a graph paper card: legs R and X_L − X_C at right angles, hypotenuse Z; the values are listed beside or under it
   function drawTriangle(ctx, g, fs, ps) {
-    const b = g.tri, R = c.R, Xr = c.X, Z = c.Z, f2 = fs * 0.9, lh = f2 * 1.35;
+    const b0 = g.tri;
+    paperCard(ctx, b0.x, b0.y, b0.w, b0.h, Math.max(8, g.s * 0.36), ps);
+    const b = { x: b0.x + 10, y: b0.y + 9, w: b0.w - 20, h: b0.h - 18 };
+    const R = c.R, Xr = c.X, Z = c.Z, f2 = fs * 0.9, lh = f2 * 1.35;
     ctx.fillStyle = T.muted; ctx.font = `700 ${fs * 0.8}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('IMPEDANCE TRIANGLE', b.x, b.y);
     const titleH = fs * 1.5;
@@ -1145,11 +1637,11 @@ input[type="range"]:disabled { opacity: 0.4; }
     }
   }
 
-  // ---------- resonance curve ----------
+  // ---------- resonance curve, on a sheet of semilog graph paper ----------
   let rGeom = null, rHover = false, rDrag = false, fHandle = null;
   function resGeom(W, H) {
     const ps = paneScale(W, H);
-    const L = 56 * ps, R = W - 16 * ps, top = 54 * ps, bot = H - 34 * ps;
+    const L = 58 * ps, R = W - 20 * ps, top = 56 * ps, bot = H - 36 * ps;
     const X = (f) => L + Math.log10(f / F_MIN) / F_DEC * (R - L);
     const invF = (px) => F_MIN * Math.pow(10, (px - L) / (R - L) * F_DEC);
     return { ps, L, R, top, bot, X, invF, W, H };
@@ -1158,44 +1650,46 @@ input[type="range"]:disabled { opacity: 0.4; }
     const [W, H] = dims.r; if (!W || !H || !c) return;
     const ctx = ctxs.r, g = resGeom(W, H), ps = g.ps; rGeom = g;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    ctx.drawImage(benchLayer('r', W, H), 0, 0, W, H);
+    const pm = 7;
+    shadowed(ctx, 30, () => { ctx.fillStyle = T.paper; roundRect(ctx, pm, pm, W - 2 * pm, H - 2 * pm, 3); ctx.fill(); });
     if (g.bot - g.top < 30) return;
     const p = S.p, zmode = S.yMode === 'Z';
     // y mapping
-    let Y, ytick = [];
+    let Y, ytick = [], minor = [];
     const Rref = p.on.R ? p.R : 10, Imax = 1.12 * c.Vrms / Rref;
     if (!zmode) {
       const st = nice(Imax / 4), [us, un] = scaleUnit(Imax, 'A');
       Y = (v) => g.bot - v / Imax * (g.bot - g.top);
       for (let v = 0; v <= Imax + 1e-12; v += st) ytick.push([v, v === 0 ? '0' : +(v / us).toPrecision(3) + '']);
+      for (let v = st / 5; v <= Imax + 1e-12; v += st / 5) minor.push(v);
       ytick.unit = un;
     } else {
       const lo = 0, hi = 6;
       Y = (z) => g.bot - (Math.log10(Math.max(z, 1e-3)) - lo) / (hi - lo) * (g.bot - g.top);
       for (let e = lo; e <= hi; e++) ytick.push([Math.pow(10, e), ['1', '10', '100', '1k', '10k', '100k', '1M'][e]]);
+      for (let e = lo; e < hi; e++) for (let m = 2; m < 10; m++) minor.push(m * Math.pow(10, e));
       ytick.unit = 'Ω';
     }
-    // grid
-    ctx.font = `${10 * ps}px ${T.mono}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'right';
-    for (const [v, lab] of ytick) {
-      const py = Math.round(Y(v)) + 0.5;
-      ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(g.L, py); ctx.lineTo(g.R, py); ctx.stroke();
-      ctx.fillStyle = T.muted; ctx.fillText(lab, g.L - 5 * ps, py);
-    }
+    // the paper's printed grid: decade lines strong, the rest fine
+    ctx.strokeStyle = T.paperInk; ctx.lineWidth = 1;
+    ctx.globalAlpha = T.dark ? 0.13 : 0.15; ctx.beginPath();
+    for (const v of minor) { const py = Math.round(Y(v)) + 0.5; ctx.moveTo(g.L, py); ctx.lineTo(g.R, py); }
+    for (let e = 1; e <= 5; e++) for (let m = 2; m < 10; m++) { const f = m * Math.pow(10, e); if (f >= 1e5) break; const px = Math.round(g.X(f)) + 0.5; ctx.moveTo(px, g.top); ctx.lineTo(px, g.bot); }
+    ctx.stroke();
+    ctx.globalAlpha = T.dark ? 0.32 : 0.4; ctx.beginPath();
+    for (const [v] of ytick) { const py = Math.round(Y(v)) + 0.5; ctx.moveTo(g.L, py); ctx.lineTo(g.R, py); }
+    for (let e = 1; e <= 5; e++) { const px = Math.round(g.X(Math.pow(10, e))) + 0.5; ctx.moveTo(px, g.top); ctx.lineTo(px, g.bot); }
+    ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.font = `${10 * ps}px ${T.mono}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'right'; ctx.fillStyle = T.muted;
+    for (const [v, lab] of ytick) ctx.fillText(lab, g.L - 5 * ps, Math.round(Y(v)) + 0.5);
     ctx.textBaseline = 'top'; ctx.textAlign = 'center';
     const flab = ['10', '100', '1k', '10k', '100k'];
-    for (let e = 1; e <= 5; e++) {
-      for (let m = 1; m < 10; m++) {
-        const f = m * Math.pow(10, e); if (f > 1e5) break;
-        const px = Math.round(g.X(f)) + 0.5;
-        ctx.strokeStyle = m === 1 ? T.gridStrong : T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, g.top); ctx.lineTo(px, g.bot); ctx.stroke();
-      }
-      ctx.fillStyle = T.muted; ctx.fillText(flab[e - 1], g.X(Math.pow(10, e)), g.bot + 4 * ps);
-    }
+    for (let e = 1; e <= 5; e++) ctx.fillText(flab[e - 1], g.X(Math.pow(10, e)), g.bot + 4 * ps);
     ctx.textAlign = 'right'; ctx.fillText('f (Hz)', g.R, g.bot + 17 * ps);
     // title
     ctx.fillStyle = T.ink; ctx.textBaseline = 'alphabetic';
-    richText(ctx, zmode ? `Z, X_L, X_C and R against f (${ytick.unit}, log)` : `I_{rms} against f (${ytick.unit})`, g.L, 18 * ps, 12 * ps, 700, 'left');
+    richText(ctx, zmode ? `Z, X_L, X_C and R against f (${ytick.unit}, log)` : `I_{rms} against f (${ytick.unit})`, g.L, 22 * ps, 12 * ps, 700, 'left');
     ctx.save(); ctx.beginPath(); ctx.rect(g.L, g.top - 1, g.R - g.L, g.bot - g.top + 2); ctx.clip();
     const n = Math.max(2, Math.floor(g.R - g.L));
     const curve = (fn, col, lw, dash, alpha) => {
@@ -1236,6 +1730,15 @@ input[type="range"]:disabled { opacity: 0.4; }
       if (p.on.C) annot.push({ lab: 'X_C = 1/ωC', x: g.X(fl), y: Y(1 / (2 * Math.PI * fl * p.C)), ax: -0.05, ay: 0, col: T.capq });
       if (p.on.R) annot.push({ lab: 'R', x: g.R - 4 * ps, y: Y(p.R) - 2 * ps, ax: 1, ay: 1, col: T.resq });
     }
+    // sweep readings: one point for each step of the last sweep, from the same exact formula
+    if (sweepPts.length) {
+      ctx.strokeStyle = T.ink; ctx.fillStyle = T.paper; ctx.lineWidth = 1.4 * ps;
+      for (const f of sweepPts) {
+        const v = zmode ? Zof(p, f) : Ifn(p)(f), py = Y(v), px = g.X(f);
+        if (!isFinite(py) || py < g.top - 4 || py > g.bot + 4) continue;
+        ctx.beginPath(); ctx.arc(px, py, 2.8 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      }
+    }
     // f₀ line
     if (c.f0 !== null && c.f0 >= F_MIN && c.f0 <= F_MIN * 1e4) {
       const px = g.X(c.f0);
@@ -1248,13 +1751,13 @@ input[type="range"]:disabled { opacity: 0.4; }
     ctx.strokeStyle = T.accent; ctx.lineWidth = (hot ? 2.6 : 1.6) * ps; ctx.globalAlpha = hot ? 1 : 0.85;
     ctx.beginPath(); ctx.moveTo(fx, g.top); ctx.lineTo(fx, g.bot); ctx.stroke(); ctx.globalAlpha = 1;
     const yv = zmode ? Y(c.Z) : Y(isFinite(c.Irms) ? c.Irms : 1e9);
-    if (yv >= g.top && yv <= g.bot) { ctx.fillStyle = T.canvas; ctx.strokeStyle = zmode ? T.ink : T.equi; ctx.lineWidth = 2.2 * ps; ctx.beginPath(); ctx.arc(fx, yv, 4.5 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); }
+    if (yv >= g.top && yv <= g.bot) { ctx.fillStyle = T.paper; ctx.strokeStyle = zmode ? T.ink : T.equi; ctx.lineWidth = 2.2 * ps; ctx.beginPath(); ctx.arc(fx, yv, 4.5 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); }
     // annotations last, on halos
     const bounds = [g.L + 2, g.top + 2, g.R - 2, g.bot - 2];
-    for (const a of annot) haloLabel(ctx, a.lab, a.x, a.y, 10.5 * ps, 600, a.col, a.ax, a.ay, bounds);
-    if (!zmode && !p.on.R) haloLabel(ctx, 'R out: scale set as for R = 10 Ω', g.L + 4 * ps, g.top + 4 * ps, 10.5 * ps, 400, T.muted, 0, 0, bounds);
+    for (const a of annot) haloLabel(ctx, a.lab, a.x, a.y, 10.5 * ps, 600, a.col, a.ax, a.ay, bounds, T.paper);
+    if (!zmode && !p.on.R) haloLabel(ctx, 'R out: scale set as for R = 10 Ω', g.L + 4 * ps, g.top + 4 * ps, 10.5 * ps, 400, T.muted, 0, 0, bounds, T.paper);
     ctx.restore();
-    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(g.L + 0.5, g.top + 0.5, g.R - g.L, g.bot - g.top);
+    ctx.strokeStyle = T.paperInk; ctx.globalAlpha = 0.55; ctx.lineWidth = 1; ctx.strokeRect(g.L + 0.5, g.top + 0.5, g.R - g.L, g.bot - g.top); ctx.globalAlpha = 1;
     // draggable frequency handle above the plot
     {
       const txt = `f = ${fmtF(p.f)}`;
@@ -1269,6 +1772,7 @@ input[type="range"]:disabled { opacity: 0.4; }
       ctx.beginPath(); ctx.moveTo(ax - 4 * ps, ay); ctx.lineTo(ax - 1 * ps, ay - 3.5 * ps); ctx.lineTo(ax - 1 * ps, ay + 3.5 * ps); ctx.closePath(); ctx.fill();
       ctx.beginPath(); ctx.moveTo(ax + 5 * ps, ay); ctx.lineTo(ax + 2 * ps, ay - 3.5 * ps); ctx.lineTo(ax + 2 * ps, ay + 3.5 * ps); ctx.closePath(); ctx.fill();
       ctx.beginPath(); ctx.moveTo(fx, by + bh); ctx.lineTo(fx, g.top); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.4 * ps; ctx.stroke();
+      ctx.textBaseline = 'alphabetic';
       fHandle = { x: fx, box: [bx, by, bw, bh] };
     }
   }
@@ -1365,7 +1869,7 @@ input[type="range"]:disabled { opacity: 0.4; }
   function applyPreset(name) {
     S.preset = name;
     const k = cfg();
-    stopSweep();
+    stopSweep(); sweepPts = [];
     S.p = { V0: k.V0, R: k.R, L: k.L, C: k.C, on: { ...k.on }, f: 1000 };
     S.p.f = k.f === 'f0' ? 1 / (2 * Math.PI * Math.sqrt(k.L * k.C)) : k.f;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
@@ -1381,7 +1885,7 @@ input[type="range"]:disabled { opacity: 0.4; }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   function setParam(key, v) {
     if (S.p[key] === v) return;
-    S.p[key] = v;
+    S.p[key] = v; sweepPts = [];
     recompute(false);
   }
   function setF(f, snap) {
@@ -1400,7 +1904,7 @@ input[type="range"]:disabled { opacity: 0.4; }
   function togglePart(k) {
     const on = { ...S.p.on, [k]: !S.p.on[k] };
     if (!on.R && !on.L && !on.C) { $('live').textContent = 'At least one part must stay in the circuit.'; return; }
-    S.p.on = on; ghost = null;
+    S.p.on = on; ghost = null; sweepPts = [];
     if (S.mode === 'trans' && !$('notice').hidden) $('notice').hidden = true;
     recompute(false);
     $('live').textContent = `${k} ${on[k] ? 'in' : 'out'}`;
@@ -1417,7 +1921,7 @@ input[type="range"]:disabled { opacity: 0.4; }
   function stopSweep() { if (!sweeping) return; sweeping = false; $('sweep').textContent = 'Sweep'; $('sweep').classList.remove('primary'); }
   function startSweep() {
     if (S.mode === 'trans') setMode('steady');
-    sweeping = true; sweepLog = 1; $('sweep').textContent = 'Stop sweep'; $('sweep').classList.add('primary');
+    sweeping = true; sweepLog = 1; sweepPts = []; sweepK = -1; $('sweep').textContent = 'Stop sweep'; $('sweep').classList.add('primary');
     setF(F_MIN, false);
     if (!running) setRunning(true);
   }
@@ -1438,6 +1942,12 @@ input[type="range"]:disabled { opacity: 0.4; }
   for (const b of document.querySelectorAll('#ySeg button')) b.addEventListener('click', () => setYMode(b.dataset.y));
   for (const el of document.querySelectorAll('#curveToggles input[data-c]')) el.addEventListener('change', () => { S.show[el.dataset.c] = el.checked; });
   $('tSum').addEventListener('change', (e) => { S.sum = e.target.checked; });
+  function setScope(m) {
+    S.scope = m;
+    for (const q of document.querySelectorAll('#scopeSeg button')) q.setAttribute('aria-pressed', String(q.dataset.s === m));
+    $('xyHint').hidden = m !== 'xy';
+  }
+  for (const b of document.querySelectorAll('#scopeSeg button')) b.addEventListener('click', () => setScope(b.dataset.s));
   const playBtn = $('play');
   function setRunning(r) {
     running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now();
@@ -1487,6 +1997,7 @@ input[type="range"]:disabled { opacity: 0.4; }
   cans.w.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { setRunning(false); t += (e.key === 'ArrowRight' ? 1 : -1) * c.T / 72; if (S.mode === 'trans') t = Math.max(0, t); updateClock(); }
     else if (e.key === ' ') setRunning(!running);
+    else if (e.key === 'x' || e.key === 'X') { setScope(S.scope === 'xy' ? 'yt' : 'xy'); $('live').textContent = S.scope === 'xy' ? 'Scope in XY mode' : 'Scope against time'; }
     else return;
     e.preventDefault();
   });
@@ -1631,6 +2142,8 @@ input[type="range"]:disabled { opacity: 0.4; }
         sweepLog += dtr * F_DEC / 12;
         if (sweepLog >= 1 + F_DEC) { sweepLog = 1 + F_DEC; setF(F_MIN * 1e4, false); stopSweep(); }
         else setF(Math.pow(10, sweepLog), false);
+        const kq = Math.floor(Math.min(sweepLog, 1 + F_DEC) * 20 + 1e-9);
+        if (kq !== sweepK) { sweepK = kq; sweepPts.push(Math.pow(10, kq / 20)); }
       }
       t += dtr * rate();
       const i = stateNow().i;
@@ -1639,7 +2152,7 @@ input[type="range"]:disabled { opacity: 0.4; }
       if (S.mode === 'trans' && t > trW * 4 && !reduce) {
         // keep the axes honest once the window has slid well past the start
         const o = Math.max(c.V0, c.VR0, c.VL0, c.VC0);
-        if (isFinite(o) && axes.V > 1.6 * niceUp(o * 1.06) && tr.kind !== 'resonant' && tr.kind !== 'undamped' && tr.kind !== 'L') fitAxesSteady();
+        if (isFinite(o) && axes.V > 1.6 * divUp(o * 1.06) && tr.kind !== 'resonant' && tr.kind !== 'undamped' && tr.kind !== 'L') fitAxesSteady();
       }
     }
     drawAll();
@@ -1650,14 +2163,14 @@ input[type="range"]:disabled { opacity: 0.4; }
   // undamped drive at f₀: the envelope grows as V₀t/(2L) in i and V₀ω₀t/2 in v_L and v_C; the axes step up with it
   function growAxes() {
     const tt = Math.max(t, 2 * c.T), w0 = tr.w0;
-    axes.V = niceUp(1.06 * Math.max(c.V0, c.V0 * (w0 * tt / 2 + 0.5)));
-    axes.I = niceUp(1.5 * c.V0 * (tt / (2 * S.p.L) + 1 / (2 * S.p.L * w0)));
+    axes.V = divUp(1.06 * Math.max(c.V0, c.V0 * (w0 * tt / 2 + 0.5)));
+    axes.I = divUp(1.5 * c.V0 * (tt / (2 * S.p.L) + 1 / (2 * S.p.L * w0)));
   }
   function fitAxesSteady() { const m = S.mode; S.mode = 'steady'; fitAxes(); S.mode = m; }
   window.__ac = {
     get frameMs() { return frameMs; }, get c() { return c; }, get t() { return t; }, set t(v) { t = v; }, get S() { return S; }, get running() { return running; },
     get axes() { return axes; }, get handles() { return cHandles; }, get fHandle() { return fHandle; }, get wGeom() { return wGeom; }, get trW() { return trW; }, get sweeping() { return sweeping; },
-    applyPreset, setRunning, setF, setMode, togglePart, setParam, stateNow, rate
+    applyPreset, setRunning, setF, setMode, togglePart, setParam, stateNow, rate, setScope, get sweepPts() { return sweepPts; }
   };
 
   tokens();

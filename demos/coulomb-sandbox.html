@@ -47,6 +47,7 @@ img { max-width: 100%; }
   --equi: #a7740b;
   --accent: #2b60b5;
   --on-charge: #ffffff;
+  --seed: #5e4a22;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -54,13 +55,13 @@ img { max-width: 100%; }
   :root:not([data-theme="light"]) {
     --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; --seed: #d9c590; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; --seed: #d9c590; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -86,6 +87,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
 .stage { position: relative; min-height: 380px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage canvas { position: absolute; inset: 0; display: block; }
+.stage.v3d { background: radial-gradient(130% 95% at 50% 28%, var(--canvas) 40%, var(--relief)); }
 #over { touch-action: none; cursor: crosshair; outline: none; }
 #gl { touch-action: none; cursor: grab; outline: none; }
 #over:focus-visible, #gl:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
@@ -158,6 +160,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.equi { border-color: var(--equi); }
 .swatch.zero { border-top-style: dashed; border-color: var(--muted); }
 .swatch.line { border-color: var(--field); }
+.swatch.seed { border-top: 0; height: 8px; background: repeating-linear-gradient(90deg, var(--seed) 0 5px, transparent 5px 8px); -webkit-mask: linear-gradient(transparent 2px, #000 2px 5px, transparent 5px); mask: linear-gradient(transparent 2px, #000 2px 5px, transparent 5px); }
+.swatch.dots { border-top: 0; height: 6px; background: radial-gradient(circle, var(--accent) 2px, transparent 2.5px) 0 0 / 7px 6px repeat-x; }
 
 @media (min-width: 821px) {
   :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 340px; }
@@ -168,6 +172,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .bench { grid-template-columns: minmax(0, 1fr); }
   .stage { height: 64vh; min-height: 340px; }
   .rail { overflow: visible; }
+  .seg button, .spin, .chips button, .btn, .proj { min-height: 36px; }
+  input[type="range"] { height: 28px; }
+  .toggles label { min-height: 30px; }
 }
 </style>
 </head>
@@ -195,6 +202,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-v="3d" aria-pressed="false">3D landscape</button>
         </div>
         <button type="button" class="spin" id="spin" aria-pressed="false" hidden>Spin</button>
+        <button type="button" class="spin" id="marble" aria-pressed="false" hidden title="Release a positive test charge from rest on the landscape">Marble</button>
       </div>
       <div class="qtag mono" id="qTag" hidden></div>
       <div class="hint3d" id="hint3d" hidden></div>
@@ -244,6 +252,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <label><input type="checkbox" id="tEqui" checked>Equipotentials</label>
           <label><input type="checkbox" id="tLines" checked>Field lines</label>
           <label><input type="checkbox" id="tGrid" checked>1 cm grid</label>
+          <label><input type="checkbox" id="tSeed">Grass seeds</label>
         </div>
         <div>
           <div class="slider-head"><label for="dV">Equipotential spacing ΔV</label><output id="dVOut" class="mono" for="dV">250 V</output></div>
@@ -269,8 +278,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch line"></i>Field lines, + to −</span>
           <span><i class="swatch equi"></i>Equipotentials, every ΔV</span>
           <span><i class="swatch zero"></i>The V = 0 equipotential</span>
+          <span><i class="swatch seed"></i>Grass seeds, each lying along E</span>
+          <span><i class="swatch dots"></i>Marble (3D), one dot per equal time step</span>
         </div>
         <p class="hint">In 3D, height is the potential: hills at positive charges, wells at negative ones. Heights are compressed near each charge, where V grows without bound.</p>
+        <p class="hint">The marble is a positive test charge released from rest. It moves under the force qE in the plane, with no friction; its charge to mass ratio only sets how fast the replay runs. The dashed curve is the field line through its starting point.</p>
       </section>
     </aside>
   </main>
@@ -292,7 +304,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   let charges = [], sel = null, drag = null, nextId = 1;
   let qDrag = null, hoverKnob = false, tagUntil = 0, tagTimer = 0;   // dragging a charge's value
   let probe = { x: 0, y: 2.5 };
-  const layers = { shade: true, equi: true, lines: true, grid: true };
+  const layers = { shade: true, equi: true, lines: true, grid: true, seed: false };
   let dV = 250, density = 6, reliefMult = 1;
   let view = '2d';
   let baseDirty = true, overDirty = true, raf = 0;
@@ -315,7 +327,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const g = (n) => cs.getPropertyValue(n).trim();
     return { pos: g('--pos'), neg: g('--neg'), field: g('--field'), equi: g('--equi'), grid: g('--grid'),
              gridStrong: g('--grid-strong'), canvas: g('--canvas'), relief: g('--relief'), ink: g('--ink'),
-             muted: g('--muted'), accent: g('--accent'), line: g('--line'), onCharge: g('--on-charge') };
+             muted: g('--muted'), accent: g('--accent'), line: g('--line'), onCharge: g('--on-charge'), seed: g('--seed'),
+             get dark() { const c = rgb(this.canvas); return c[0] * 0.3 + c[1] * 0.59 + c[2] * 0.11 < 128; } };
   }
   function rgb(hex) {
     hex = hex.replace('#', '');
@@ -323,6 +336,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const n = parseInt(hex, 16);
     return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
   }
+  // amt in −1..1: mix toward black (negative) or white (positive)
+  const shade = (hex, amt) => { const t = amt < 0 ? 0 : 255, p = Math.min(1, Math.abs(amt)); return `rgb(${rgb(hex).map((v) => Math.round(v + (t - v) * p)).join(',')})`; };
+  const rgba = (hex, a) => `rgba(${rgb(hex).join(',')},${a})`;
   const toPx = (x, y) => [cx + x * s, cy - y * s];
   const toW = (px, py) => ({ x: (px - cx) / s, y: (cy - py) / s });
   const radius = (c) => 11 + 4 * Math.sqrt(Math.abs(c.q));
@@ -452,20 +468,24 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return lines;
   }
 
-  // index along a polyline where an arrow should sit
-  function arrowIndex(pts, lenFn) {
-    let total = 0;
-    for (let i = 1; i < pts.length; i++) total += lenFn(pts[i - 1], pts[i]);
-    if (total < 30 / s) return -1;
-    const target = Math.min(total * 0.5, 110 / s);
-    let acc = 0;
-    for (let i = 1; i < pts.length; i++) {
-      acc += lenFn(pts[i - 1], pts[i]);
-      if (acc >= target) return i;
-    }
-    return -1;
-  }
   const len2 = (a, b) => Math.hypot(b[0] - a[0], b[1] - a[1]);
+  // indices along a field line (world cm) for small arrowheads: about every 150 px on screen, clear of both ends
+  function arrowSpots(pts) {
+    const ps = projScale(), first = 62 * ps, every = 150 * ps, gap = 30 * ps;
+    let total = 0;
+    for (let i = 1; i < pts.length; i++) total += len2(pts[i - 1], pts[i]) * s;
+    if (total < 30) return [];
+    const want = [];
+    for (let d = first; d <= total - gap; d += every) want.push(d);
+    if (!want.length) want.push(total / 2);
+    const out = [];
+    let acc = 0, k = 0;
+    for (let i = 1; i < pts.length && k < want.length; i++) {
+      acc += len2(pts[i - 1], pts[i]) * s;
+      if (acc >= want[k]) { out.push(i); k++; }
+    }
+    return out;
+  }
 
   // ---------- sizing ----------
   function resize() {
@@ -511,21 +531,79 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.closePath(); ctx.fill();
   }
 
+  // a charged metal bead seen from above: soft glow, contact shadow, shaded body, highlight
+  function drawBead(ctx, px, py, r, col, T, ps) {
+    const glow = ctx.createRadialGradient(px, py, r * 0.9, px, py, r * 2.3);
+    glow.addColorStop(0, rgba(col, T.dark ? 0.42 : 0.24)); glow.addColorStop(1, rgba(col, 0));
+    ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(px, py, r * 2.3, 0, 2 * Math.PI); ctx.fill();
+    ctx.beginPath(); ctx.arc(px, py, r + 2 * ps, 0, 2 * Math.PI); ctx.fillStyle = rgba(T.canvas, 0.7); ctx.fill();
+    const sx = px + r * 0.2, sy = py + r * 0.28;
+    const sh = ctx.createRadialGradient(sx, sy, r * 0.55, sx, sy, r * 1.3);
+    sh.addColorStop(0, `rgba(0,0,0,${T.dark ? 0.5 : 0.3})`); sh.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = sh; ctx.beginPath(); ctx.arc(sx, sy, r * 1.3, 0, 2 * Math.PI); ctx.fill();
+    const body = ctx.createRadialGradient(px - r * 0.36, py - r * 0.42, r * 0.04, px, py, r);
+    body.addColorStop(0, shade(col, 0.5)); body.addColorStop(0.3, shade(col, 0.1));
+    body.addColorStop(0.8, shade(col, -0.12)); body.addColorStop(1, shade(col, -0.45));
+    ctx.fillStyle = body; ctx.beginPath(); ctx.arc(px, py, r, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.28)'; ctx.lineWidth = Math.max(1, r * 0.08);
+    ctx.beginPath(); ctx.arc(px, py, r * 0.86, 0.15 * Math.PI, 0.6 * Math.PI); ctx.stroke();
+    ctx.save(); ctx.translate(px - r * 0.5, py - r * 0.52); ctx.rotate(-0.75);
+    const hl = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 0.26);
+    hl.addColorStop(0, 'rgba(255,255,255,0.85)'); hl.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.scale(1, 0.55); ctx.fillStyle = hl; ctx.beginPath(); ctx.arc(0, 0, r * 0.26, 0, 2 * Math.PI); ctx.fill();
+    ctx.restore();
+  }
+
   function drawCharges(ctx, T) {
     const ps = projScale(), cs = chargeScale();
     for (const c of charges) {
       const [px, py] = toPx(c.x, c.y), r = drawRadius(c);
-      ctx.beginPath(); ctx.arc(px, py, r + 2.5 * ps, 0, 2 * Math.PI); ctx.fillStyle = T.canvas; ctx.fill();
-      ctx.beginPath(); ctx.arc(px, py, r, 0, 2 * Math.PI);
-      ctx.fillStyle = c.q > 0 ? T.pos : c.q < 0 ? T.neg : T.muted; ctx.fill();
-      ctx.fillStyle = T.onCharge; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.font = `600 ${(radius(c) > 17 ? 13 : 12) * cs}px ${monoFont()}`;
+      drawBead(ctx, px, py, r, c.q > 0 ? T.pos : c.q < 0 ? T.neg : T.muted, T, ps);
+      ctx.save();
+      ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.shadowColor = 'rgba(0,0,0,0.6)'; ctx.shadowBlur = 2.5 * ps; ctx.shadowOffsetY = 0.5 * ps;
+      ctx.font = `700 ${(radius(c) > 17 ? 13 : 12) * cs}px ${monoFont()}`;
       ctx.fillText(fmtQ(c.q), px, py + 0.5);
+      ctx.restore();
       if (c === sel) {
         ctx.save(); ctx.setLineDash([4 * ps, 3 * ps]); ctx.lineWidth = 2 * ps; ctx.strokeStyle = T.accent;
         ctx.beginPath(); ctx.arc(px, py, r + 6 * ps, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
       }
     }
+  }
+
+  // grass seeds in oil: short dashes scattered at fixed random spots, each turned along E there
+  function drawSeeds(ctx, T) {
+    const ps = projScale(), n = Math.min(26000, Math.round(W * H / (46 * ps)));
+    let a = 20231 >>> 0;
+    const rnd = () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    const live = charges.filter((c) => c.q), path = new Path2D();
+    for (let k = 0; k < n; k++) {
+      const px = rnd() * W, py = rnd() * H, L = (2.6 + 2.2 * rnd()) * ps;
+      const w = toW(px, py);
+      let near = false;
+      for (const c of live) if (Math.hypot(w.x - c.x, w.y - c.y) * s < drawRadius(c) + 3 * ps) { near = true; break; }
+      if (near) continue;
+      const [ex, ey] = field(w.x, w.y), m = Math.hypot(ex, ey);
+      if (!m) continue;
+      const ux = ex / m * L, uy = -ey / m * L;
+      path.moveTo(px - ux, py - uy); path.lineTo(px + ux, py + uy);
+    }
+    ctx.save(); ctx.strokeStyle = T.seed; ctx.lineCap = 'round'; ctx.lineWidth = 1.6 * ps; ctx.globalAlpha = T.dark ? 0.75 : 0.7;
+    ctx.stroke(path); ctx.restore();
+  }
+
+  // a label on a halo box so lines underneath never run through the text
+  function haloText(ctx, T, text, x, y, size, align) {
+    ctx.save();
+    ctx.font = `600 ${size}px ${monoFont()}`;
+    const ps = projScale(), w = ctx.measureText(text).width + 8 * ps, h = size + 6 * ps;
+    const bx = align === 'center' ? x - w / 2 : x, by = y - h;
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.88;
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx, by, w, h, 3 * ps) : ctx.rect(bx, by, w, h); ctx.fill();
+    ctx.globalAlpha = 1; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(text, bx + w / 2, by + h / 2 + 0.5);
+    ctx.restore();
   }
 
   function drawBase() {
@@ -552,31 +630,35 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(off, -g / 2, -g / 2, nx * g, ny * g);
     }
+    if (layers.seed && charges.some((c) => c.q)) drawSeeds(ctx, T);
     if (layers.equi) {
       const main = new Path2D(), zero = new Path2D();
       for (const [ai, aj, bi, bj, k] of contourSegments(V, nx, ny)) {
         const p = k === 0 ? zero : main;
         p.moveTo(ai * g, aj * g); p.lineTo(bi * g, bj * g);
       }
-      ctx.save(); ctx.lineCap = 'round';
-      ctx.strokeStyle = T.equi; ctx.lineWidth = 1.2 * ps; ctx.globalAlpha = 0.9; ctx.stroke(main);
+      ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 4.5 * ps; ctx.globalAlpha = T.dark ? 0.16 : 0.13; ctx.stroke(main);
+      ctx.lineWidth = 1.25 * ps; ctx.globalAlpha = 0.95; ctx.stroke(main);
       ctx.globalAlpha = 1; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * ps; ctx.setLineDash([6 * ps, 5 * ps]); ctx.stroke(zero);
       ctx.restore();
     }
     if (layers.lines) {
-      ctx.save();
-      ctx.strokeStyle = T.field; ctx.fillStyle = T.field; ctx.lineWidth = 1.3 * ps; ctx.globalAlpha = 0.82; ctx.lineJoin = 'round';
+      const path = new Path2D(), heads = [];
       for (const pts of computeLines()) {
         if (pts.length < 2) continue;
-        ctx.beginPath();
-        pts.forEach((p, i) => { const [x, y] = toPx(p[0], p[1]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
-        ctx.stroke();
-        const ai = arrowIndex(pts, len2);
-        if (ai > 0) {
+        pts.forEach((p, i) => { const [x, y] = toPx(p[0], p[1]); i ? path.lineTo(x, y) : path.moveTo(x, y); });
+        for (const ai of arrowSpots(pts)) {
           const [x1, y1] = toPx(...pts[ai - 1]), [x2, y2] = toPx(...pts[ai]);
-          arrowHead(ctx, x2, y2, Math.atan2(y2 - y1, x2 - x1), 6 * ps);
+          heads.push([x2, y2, Math.atan2(y2 - y1, x2 - x1)]);
         }
       }
+      ctx.save();
+      ctx.strokeStyle = T.field; ctx.fillStyle = T.field; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      ctx.lineWidth = 5 * ps; ctx.globalAlpha = T.dark ? 0.13 : 0.07; ctx.stroke(path);     // soft glow
+      ctx.lineWidth = 1.35 * ps; ctx.globalAlpha = 0.88; ctx.stroke(path);                  // crisp line
+      ctx.globalAlpha = 0.95;
+      for (const [x, y, ang] of heads) arrowHead(ctx, x, y, ang, 5.5 * ps);
       ctx.restore();
     }
     drawCharges(ctx, T);
@@ -585,9 +667,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const x0 = 14, y0 = H - 16 * ps, len = 5 * s;
     ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1.5 * ps;
     ctx.beginPath(); ctx.moveTo(x0, y0 - 4 * ps); ctx.lineTo(x0, y0); ctx.lineTo(x0 + len, y0); ctx.lineTo(x0 + len, y0 - 4 * ps); ctx.stroke();
-    ctx.font = `600 ${11 * ps}px ` + monoFont();
-    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('5 cm', x0 + len / 2, y0 - 3 * ps);
     ctx.restore();
+    haloText(ctx, T, '5 cm', x0 + len / 2, y0 - 3 * ps, 11 * ps, 'center');
   }
 
   // ---------- 2D overlay ----------
@@ -649,9 +730,33 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return Math.hypot(e.clientX - r.left - k.x, e.clientY - r.top - k.y) <= tol;
   }
 
+  // a voltmeter probe: steel needle, black collar, red handle, a bit of lead; it leans away from the readout label
+  function drawPen(ctx, px, py, ps, T) {
+    ps *= 1.15;
+    const ux = px < 80 * ps ? 0.5 : -0.5, uy = py < 80 * ps ? 0.866 : -0.866;
+    const P = (d, n) => [px + ux * d - uy * n, py + uy * d + ux * n];
+    const quad = (d0, d1, w0, w1) => { const a = P(d0, -w0), b = P(d1, -w1), c = P(d1, w1), e = P(d0, w0);
+      ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.lineTo(c[0], c[1]); ctx.lineTo(e[0], e[1]); ctx.closePath(); };
+    const across = (d, w, c0, c1, c2) => { const a = P(d, -w), b = P(d, w), g = ctx.createLinearGradient(a[0], a[1], b[0], b[1]);
+      g.addColorStop(0, c0); g.addColorStop(0.35, c1); g.addColorStop(1, c2); return g; };
+    ctx.save();
+    ctx.translate(3 * ps, 4 * ps); ctx.fillStyle = 'rgba(0,0,0,0.16)'; quad(2 * ps, 48 * ps, 1.5 * ps, 4 * ps); ctx.fill();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const end = P(48 * ps, 0), c1 = P(70 * ps, 6 * ps * ux * uy), c2 = P(92 * ps, 0);
+    ctx.strokeStyle = T.dark ? '#6b7480' : '#2b2e33'; ctx.lineWidth = 2.4 * ps; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(end[0], end[1]); ctx.quadraticCurveTo(c1[0], c1[1], c2[0], c2[1]); ctx.stroke();
+    ctx.fillStyle = across(6 * ps, 1.2 * ps, '#f4f6f8', '#c9ced5', '#6f7680'); quad(0, 12 * ps, 0.2 * ps, 1.2 * ps); ctx.fill();
+    ctx.fillStyle = across(13 * ps, 3 * ps, '#5c6067', '#3a3e44', '#15171a'); quad(12 * ps, 16 * ps, 2 * ps, 3 * ps); ctx.fill();
+    ctx.fillStyle = across(30 * ps, 3.8 * ps, '#f0806f', '#c63b2b', '#7a1f15'); quad(16 * ps, 48 * ps, 3.5 * ps, 3.8 * ps); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1 * ps;
+    for (const d of [21, 24, 27]) { const a = P(d * ps, -3.6 * ps), b = P(d * ps, 3.6 * ps); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+    ctx.restore();
+  }
+
   function drawProbe(ctx, T) {
     const [px, py] = toPx(probe.x, probe.y);
     const [ex, ey] = field(probe.x, probe.y), m = Math.hypot(ex, ey), ps = projScale();
+    drawPen(ctx, px, py, ps, T);
     if (m > 0) {
       const len = Math.min(72, 18 + 11 * Math.log10(1 + m / 500)) * ps;
       const ang = Math.atan2(-ey, ex);
@@ -662,8 +767,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(tx, ty); ctx.stroke();
       ctx.fillStyle = T.accent; arrowHead(ctx, tx, ty, ang, 8 * ps);
     }
-    ctx.beginPath(); ctx.arc(px, py, 5 * ps, 0, 2 * Math.PI);
-    ctx.fillStyle = T.canvas; ctx.fill(); ctx.lineWidth = 2 * ps; ctx.strokeStyle = T.ink; ctx.stroke();
+    ctx.beginPath(); ctx.arc(px, py, 3.5 * ps, 0, 2 * Math.PI);
+    ctx.fillStyle = T.canvas; ctx.fill(); ctx.lineWidth = 1.8 * ps; ctx.strokeStyle = T.ink; ctx.stroke();
 
     const label = 'V = ' + fmtV(potential(probe.x, probe.y));
     ctx.font = `600 ${12 * ps}px ` + monoFont();
@@ -682,47 +787,121 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const orbit = { theta: -Math.PI / 2 - 0.35, phi: 0.95, zoom: 1, spin: false };
   const VC = 2500;                         // volts where height starts to compress
   const height = (v) => 4 * reliefMult * Math.tanh(v / VC);
+  const reduceMotion = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  // a soft studio around the scene (bright above, darker below, two window lights), only for reflections on the metal parts
+  function makeEnv(renderer) {
+    const es = new THREE.Scene(), geo = new THREE.SphereGeometry(50, 48, 24), col = [], p = geo.attributes.position;
+    for (let i = 0; i < p.count; i++) {
+      const z = p.getZ(i) / 50, t = z > 0 ? 0.6 + 0.4 * Math.pow(z, 0.7) : 0.6 + 0.48 * z;
+      col.push(t * 0.97, t * 0.985, t);
+    }
+    geo.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+    es.add(new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide })));
+    for (const [x, y, z, r] of [[-22, -26, 34, 10], [30, 12, 28, 6]]) {
+      const m = new THREE.Mesh(new THREE.SphereGeometry(r, 16, 12), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+      m.position.set(x, y, z); es.add(m);
+    }
+    const pm = new THREE.PMREMGenerator(renderer), tex = pm.fromScene(es, 0.02).texture;
+    pm.dispose();
+    return tex;
+  }
+
+  // the landscape paints its own equipotential lines, contour bands and 1 cm grid, crisp at any zoom
+  function surfaceMaterial() {
+    const U = G.U = {
+      uDV: { value: 250 }, uVmax: { value: 4000 }, uEq: { value: 1 }, uGrid: { value: 1 }, uLineW: { value: 1.5 },
+      uDash: { value: 10 }, uEqC: { value: new THREE.Color() }, uZeroC: { value: new THREE.Color() }, uGridC: { value: new THREE.Color() },
+      uBand: { value: 0.06 }, uGlow: { value: 0.3 }
+    };
+    const mat = new THREE.MeshStandardMaterial({ vertexColors: true, side: THREE.DoubleSide, roughness: 0.82, metalness: 0 });
+    mat.extensions = { derivatives: true };
+    mat.onBeforeCompile = (sh) => {
+      Object.assign(sh.uniforms, U);
+      sh.vertexShader = 'attribute float pot;\nvarying float vPot;\nvarying vec2 vXY;\n' +
+        sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n  vPot = pot; vXY = position.xy;');
+      sh.fragmentShader = 'uniform float uDV, uVmax, uEq, uGrid, uLineW, uDash, uBand, uGlow;\nuniform vec3 uEqC, uZeroC, uGridC;\nvarying float vPot;\nvarying vec2 vXY;\n' +
+        sh.fragmentShader.replace('#include <color_fragment>', `#include <color_fragment>
+  if (uGrid > 0.5) {
+    vec2 gw = max(fwidth(vXY), vec2(1e-4));
+    vec2 gd = abs(fract(vXY + 0.5) - 0.5) / gw;
+    diffuseColor.rgb = mix(diffuseColor.rgb, uGridC, (1.0 - clamp(min(gd.x, gd.y), 0.0, 1.0)) * 0.3);
+  }
+  if (uEq > 0.5) {
+    float u = vPot / uDV, fw = max(fwidth(u), 1e-4);
+    float sharp = 1.0 - smoothstep(0.25, 0.6, fw);           // fade where levels crowd closer than a few pixels
+    float inside = step(abs(vPot), uVmax + 0.5 * uDV);
+    diffuseColor.rgb *= 1.0 - uBand * mod(floor(u), 2.0) * sharp;
+    float d = abs(fract(u + 0.5) - 0.5) / fw;
+    float a = (1.0 - clamp(d - 0.5 * uLineW + 0.5, 0.0, 1.0)) * sharp * inside;
+    float zero = 1.0 - step(0.5, abs(u));
+    a *= mix(1.0, step(0.45, fract((gl_FragCoord.x + gl_FragCoord.y) / uDash)), zero);   // the V = 0 line is dashed
+    vec3 lc = mix(uEqC, uZeroC, zero);
+    diffuseColor.rgb = mix(diffuseColor.rgb, lc, a);
+    totalEmissiveRadiance += lc * a * uGlow;
+  }`);
+    };
+    return mat;
+  }
 
   function init3D() {
     if (G.ready) return true;
     if (!window.THREE) return false;
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setClearColor(0x000000, 0);
     const el = renderer.domElement;
     el.id = 'gl'; el.tabIndex = 0; el.hidden = true;
     el.setAttribute('role', 'application');
-    el.setAttribute('aria-label', 'Potential landscape in 3D. Drag to orbit, scroll to zoom, drag a sphere to move its charge.');
+    el.setAttribute('aria-label', 'Potential landscape in 3D. Drag to orbit, scroll to zoom, drag a sphere to move its charge. With Marble on, click the landscape to release a test charge; M releases it at the probe.');
     stage.insertBefore(el, stage.querySelector('.viewbar'));
 
     const scene = new THREE.Scene();
     const cam = new THREE.PerspectiveCamera(38, 1, 0.1, 1000);
     cam.up.set(0, 0, 1);
-    const hemi = new THREE.HemisphereLight(0xffffff, 0x7a8696, 0.8); hemi.position.set(0, 0, 1); scene.add(hemi);
-    const sun = new THREE.DirectionalLight(0xffffff, 0.65); sun.position.set(-8, -10, 16); scene.add(sun);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x6f7a8a, 0.72); hemi.position.set(0, 0, 1); scene.add(hemi);
+    const sun = new THREE.DirectionalLight(0xffffff, 0.7); sun.position.set(-8, -10, 16); scene.add(sun);
+    const fill = new THREE.DirectionalLight(0xdfe8ff, 0.18); fill.position.set(10, 8, 6); scene.add(fill);
+    const env = makeEnv(renderer);
 
-    const surf = new THREE.Mesh(new THREE.BufferGeometry(),
-      new THREE.MeshStandardMaterial({ vertexColors: true, side: THREE.DoubleSide, roughness: 0.92, metalness: 0 }));
+    const surf = new THREE.Mesh(new THREE.BufferGeometry(), surfaceMaterial());
     scene.add(surf);
+    const skirt = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9, metalness: 0, side: THREE.DoubleSide }));
+    scene.add(skirt);
     const mkLines = (opts) => { const l = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial(opts)); scene.add(l); return l; };
+    const metal = (color, rough) => new THREE.MeshStandardMaterial({ color, metalness: 0.9, roughness: rough, envMap: env, envMapIntensity: 1 });
+    const bead = () => new THREE.MeshStandardMaterial({ roughness: 0.24, metalness: 0.55, envMap: env, envMapIntensity: 1.1 });
+
+    // the voltmeter probe, tip at its group's origin, standing up from the surface
+    const pen = new THREE.Group(), red = new THREE.MeshStandardMaterial({ color: 0xc63b2b, roughness: 0.42, envMap: env, envMapIntensity: 0.6 });
+    const part = (geo, mat, z) => { const m = new THREE.Mesh(geo, mat); m.rotation.x = Math.PI / 2; m.position.z = z; pen.add(m); return m; };
+    part(new THREE.ConeGeometry(0.045, 0.2, 14), metal(0xd6dbe1, 0.25), 0.1).rotation.x = -Math.PI / 2;
+    part(new THREE.CylinderGeometry(0.018, 0.018, 0.46, 10), metal(0xd6dbe1, 0.25), 0.43);
+    part(new THREE.CylinderGeometry(0.062, 0.05, 0.1, 18), new THREE.MeshStandardMaterial({ color: 0x2a2d33, roughness: 0.5 }), 0.71);
+    part(new THREE.CylinderGeometry(0.078, 0.07, 1.0, 20), red, 1.26);
+    const cap = new THREE.Mesh(new THREE.SphereGeometry(0.078, 16, 10), red); cap.position.z = 1.76; pen.add(cap);
+    pen.rotation.y = 0.32; pen.rotation.order = 'ZYX';
+
+    // the marble, its strobe dots, and the field line through its starting point
+    const dotTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 32; const x = c.getContext('2d');
+      x.fillStyle = '#fff'; x.beginPath(); x.arc(16, 16, 14, 0, 2 * Math.PI); x.fill(); return new THREE.CanvasTexture(c); })();
+    const marble = new THREE.Mesh(new THREE.SphereGeometry(1, 28, 18), metal(0xe9edf2, 0.12));
+    const dots = new THREE.Points(new THREE.BufferGeometry(), new THREE.PointsMaterial({ map: dotTex, alphaTest: 0.5, sizeAttenuation: false, size: 5 }));
+    const fline = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineDashedMaterial({ dashSize: 0.22, gapSize: 0.16, transparent: true, opacity: 0.9 }));
 
     Object.assign(G, {
-      ready: true, renderer, el, scene, cam, surf,
-      gridL: mkLines({ transparent: true, opacity: 0.35 }),
-      equiL: mkLines({}),
-      zeroL: mkLines({ transparent: true, opacity: 0.9 }),
-      fieldL: mkLines({ transparent: true, opacity: 0.85 }),
-      frame: mkLines({}),
-      stem: mkLines({}),
-      cones: new THREE.Group(), coneGeo: new THREE.ConeGeometry(0.11, 0.34, 12), coneMat: new THREE.MeshBasicMaterial(),
-      spheres: new THREE.Group(), sphGeo: new THREE.SphereGeometry(1, 28, 18),
-      posMat: new THREE.MeshStandardMaterial({ roughness: 0.35 }),
-      negMat: new THREE.MeshStandardMaterial({ roughness: 0.35 }),
-      zeroMat: new THREE.MeshStandardMaterial({ roughness: 0.35 }),
+      ready: true, renderer, el, scene, cam, surf, skirt, env, pen, marble, dots, fline, hemi, sun,
+      fieldT: new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial()),
+      fieldGlow: new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.14, depthWrite: false })),
+      stem: mkLines({}), rods: mkLines({}),
+      cones: new THREE.Group(), coneGeo: new THREE.ConeGeometry(0.1, 0.3, 14), coneMat: new THREE.MeshBasicMaterial(),
+      spheres: new THREE.Group(), signs: new THREE.Group(), sphGeo: new THREE.SphereGeometry(1, 32, 20),
+      posMat: bead(), negMat: bead(), zeroMat: bead(),
       ring: new THREE.Mesh(new THREE.TorusGeometry(1, 0.045, 8, 56), new THREE.MeshBasicMaterial()),
-      probeDot: new THREE.Mesh(new THREE.SphereGeometry(0.13, 16, 12), new THREE.MeshBasicMaterial()),
+      tipDot: new THREE.Mesh(new THREE.SphereGeometry(0.06, 14, 10), new THREE.MeshBasicMaterial()),
       knob: new THREE.Mesh(new THREE.SphereGeometry(0.15, 18, 12), new THREE.MeshBasicMaterial()),
       knobStem: mkLines({})
     });
-    scene.add(G.cones, G.spheres, G.ring, G.probeDot, G.knob);
+    scene.add(G.fieldGlow, G.fieldT, G.cones, G.spheres, G.signs, G.ring, G.pen, G.tipDot, G.knob, marble, dots, fline);
     renderer.setPixelRatio(dpr); renderer.setSize(W, H);
     cam.aspect = W / H; cam.updateProjectionMatrix();
     bind3D(el);
@@ -740,6 +919,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(nx * ny * 3), 3));
     geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(nx * ny * 3), 3));
+    geo.setAttribute('pot', new THREE.BufferAttribute(new Float32Array(nx * ny), 1));
     const idx = new (nx * ny < 65536 ? Uint16Array : Uint32Array)((nx - 1) * (ny - 1) * 6);
     let o = 0;
     for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) {
@@ -750,87 +930,153 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     G.surf.geometry.dispose(); G.surf.geometry = geo; G.nx = nx; G.ny = ny;
   }
 
+  // round tubes along polylines ([[x, y, z], ...]), with frames carried along each line so they never twist
+  function tubeGeometry(lines, r, sides) {
+    const pos = [], nrm = [], idx = [];
+    const t = new THREE.Vector3(), n1 = new THREE.Vector3(), n2 = new THREE.Vector3(), tmp = new THREE.Vector3();
+    for (const L of lines) {
+      if (L.length < 2) continue;
+      const base = pos.length / 3;
+      for (let i = 0; i < L.length; i++) {
+        const a = L[Math.max(0, i - 1)], b = L[Math.min(L.length - 1, i + 1)];
+        t.set(b[0] - a[0], b[1] - a[1], b[2] - a[2]).normalize();
+        if (i === 0) { n1.set(-t.y, t.x, 0); if (n1.lengthSq() < 1e-6) n1.set(1, 0, 0); }
+        n1.addScaledVector(t, -n1.dot(t)).normalize();
+        n2.crossVectors(t, n1);
+        for (let k = 0; k < sides; k++) {
+          const ang = 2 * Math.PI * k / sides, c = Math.cos(ang), s_ = Math.sin(ang);
+          tmp.copy(n1).multiplyScalar(c).addScaledVector(n2, s_);
+          pos.push(L[i][0] + r * tmp.x, L[i][1] + r * tmp.y, L[i][2] + r * tmp.z); nrm.push(tmp.x, tmp.y, tmp.z);
+        }
+        if (i) for (let k = 0; k < sides; k++) {
+          const k2 = (k + 1) % sides, p0 = base + (i - 1) * sides;
+          idx.push(p0 + k, p0 + sides + k, p0 + k2, p0 + k2, p0 + sides + k, p0 + sides + k2);
+        }
+      }
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('normal', new THREE.Float32BufferAttribute(nrm, 3));
+    g.setIndex(idx);
+    return g;
+  }
+
+  // labels painted on the beads, cached per text
+  const labelMats = new Map();
+  function labelMat(text) {
+    if (labelMats.has(text)) return labelMats.get(text);
+    const c = document.createElement('canvas'); c.width = c.height = 128;
+    const x = c.getContext('2d');
+    x.font = `700 ${text.length > 2 ? 44 : 56}px ${monoFont()}`; x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.lineJoin = 'round'; x.lineWidth = 9; x.strokeStyle = 'rgba(0,0,0,0.55)'; x.strokeText(text, 64, 67);
+    x.fillStyle = '#ffffff'; x.fillText(text, 64, 67);
+    const m = new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false });
+    labelMats.set(text, m);
+    return m;
+  }
+
   function build3D() {
-    const T = tokens(), b = bounds();
+    const T = tokens(), b = bounds(), ps = projScale();
     const w = b.x1 - b.x0, h = b.y1 - b.y0;
     const nx = 161, ny = Math.max(40, Math.round(160 * h / w) + 1);
     if (nx !== G.nx || ny !== G.ny) setSurfaceSize(nx, ny);
     const dx = w / (nx - 1), dy = h / (ny - 1);
     const gx = (i) => b.x0 + i * dx, gy = (j) => b.y1 - j * dy;
 
-    const pos = G.surf.geometry.attributes.position.array, col = G.surf.geometry.attributes.color.array;
+    const at = G.surf.geometry.attributes, pos = at.position.array, col = at.color.array, pot = at.pot.array;
     const R = rgb(T.relief).map((v) => v / 255), P = rgb(T.pos).map((v) => v / 255), N = rgb(T.neg).map((v) => v / 255);
-    const V = new Float32Array(nx * ny);
+    let zMin = 0;
     for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
-      const k = j * nx + i, x = gx(i), y = gy(j), v = potential(x, y);
-      V[k] = v;
-      pos[k * 3] = x; pos[k * 3 + 1] = y; pos[k * 3 + 2] = height(v);
+      const k = j * nx + i, x = gx(i), y = gy(j), v = potential(x, y), z = height(v);
+      pot[k] = v; zMin = Math.min(zMin, z);
+      pos[k * 3] = x; pos[k * 3 + 1] = y; pos[k * 3 + 2] = z;
       const t = Math.tanh(v / 1600), a = layers.shade ? Math.abs(t) * 0.9 : 0, C = t > 0 ? P : N;
       col[k * 3] = R[0] + (C[0] - R[0]) * a; col[k * 3 + 1] = R[1] + (C[1] - R[1]) * a; col[k * 3 + 2] = R[2] + (C[2] - R[2]) * a;
     }
-    G.surf.geometry.attributes.position.needsUpdate = true;
-    G.surf.geometry.attributes.color.needsUpdate = true;
+    at.position.needsUpdate = at.color.needsUpdate = at.pot.needsUpdate = true;
     G.surf.geometry.computeVertexNormals();
     G.surf.geometry.computeBoundingSphere();
 
-    // 1 cm grid draped on the surface
-    const grid = [];
-    if (layers.grid) {
-      const zAt = (x, y) => height(potential(x, y)) + 0.012;
-      for (let x = Math.ceil(b.x0); x <= b.x1; x++) {
-        let py = b.y0, pz = zAt(x, py);
-        for (let j = 1; j <= 120; j++) { const y = b.y0 + h * j / 120, z = zAt(x, y); grid.push(x, py, pz, x, y, z); py = y; pz = z; }
+    // the landscape is a block, like a relief model: side walls down to a flat base
+    const zb = Math.min(-0.7, zMin - 0.35), sk = [], skn = [], skc = [];
+    const shade01 = (hex, amt) => rgb(hex).map((v) => (v + ((amt < 0 ? 0 : 255) - v) * Math.abs(amt)) / 255);
+    const cTop = shade01(T.relief, T.dark ? 0.02 : -0.1), cBot = shade01(T.relief, T.dark ? -0.55 : -0.38);
+    const edge = (i0, j0, di, dj, n, ox, oy) => {
+      for (let m = 0; m < n - 1; m++) {
+        const k0 = (j0 + dj * m) * nx + i0 + di * m, k1 = (j0 + dj * (m + 1)) * nx + i0 + di * (m + 1);
+        const A = [pos[k0 * 3], pos[k0 * 3 + 1], pos[k0 * 3 + 2]], B = [pos[k1 * 3], pos[k1 * 3 + 1], pos[k1 * 3 + 2]];
+        sk.push(A[0], A[1], A[2], A[0], A[1], zb, B[0], B[1], B[2], B[0], B[1], B[2], A[0], A[1], zb, B[0], B[1], zb);
+        for (let q = 0; q < 6; q++) { skn.push(ox, oy, 0); skc.push(...([0, 2, 3].includes(q) ? cTop : cBot)); }
       }
-      for (let y = Math.ceil(b.y0); y <= b.y1; y++) {
-        let px = b.x0, pz = zAt(px, y);
-        for (let i = 1; i <= 200; i++) { const x = b.x0 + w * i / 200, z = zAt(x, y); grid.push(px, y, pz, x, y, z); px = x; pz = z; }
-      }
-    }
-    setLineGeo(G.gridL, grid);
+    };
+    edge(0, 0, 1, 0, nx, 0, 1); edge(0, ny - 1, 1, 0, nx, 0, -1); edge(0, 0, 0, 1, ny, -1, 0); edge(nx - 1, 0, 0, 1, ny, 1, 0);
+    G.skirt.geometry.dispose();
+    G.skirt.geometry = new THREE.BufferGeometry();
+    G.skirt.geometry.setAttribute('position', new THREE.Float32BufferAttribute(sk, 3));
+    G.skirt.geometry.setAttribute('normal', new THREE.Float32BufferAttribute(skn, 3));
+    G.skirt.geometry.setAttribute('color', new THREE.Float32BufferAttribute(skc, 3));
+    G.zBase = zb;
 
-    // equipotentials sit at their own height: horizontal slices of the landscape
-    const eq = [], zr = [];
-    if (layers.equi) {
-      for (const [ai, aj, bi, bj, k] of contourSegments(V, nx, ny)) {
-        const z = height(k * dV) + 0.02, arr = k === 0 ? zr : eq;
-        arr.push(gx(ai), gy(aj), z, gx(bi), gy(bj), z);
-      }
+    // equipotentials, bands and grid are drawn by the surface shader
+    const U = G.U;
+    if (U) {
+      U.uDV.value = dV; U.uVmax.value = Math.min(60, Math.floor(4000 / dV)) * dV;
+      U.uEq.value = layers.equi ? 1 : 0; U.uGrid.value = layers.grid ? 1 : 0;
+      U.uLineW.value = 1.35 * ps * dpr; U.uDash.value = 12 * ps * dpr; U.uBand.value = T.dark ? 0.1 : 0.06; U.uGlow.value = T.dark ? 0.3 : 0.1;
+      U.uEqC.value.set(T.equi); U.uZeroC.value.set(T.muted); U.uGridC.value.set(T.muted);
     }
-    setLineGeo(G.equiL, eq); setLineGeo(G.zeroL, zr);
 
-    // field lines draped on the surface: paths of steepest descent
-    const fl = [];
+    // field lines draped on the surface (paths of steepest descent), as thin tubes with a faint glow
+    const inB = (p) => p[0] >= b.x0 && p[0] <= b.x1 && p[1] >= b.y0 && p[1] <= b.y1;
+    const tubes = [];
     G.cones.clear();
     if (layers.lines) {
+      const lift = 0.05 * ps, coneS = ps;
       for (const pts of computeLines()) {
-        const p3 = pts.map((p) => [p[0], p[1], height(potential(p[0], p[1])) + 0.035]);
-        for (let i = 1; i < p3.length; i++) fl.push(...p3[i - 1], ...p3[i]);
-        const ai = arrowIndex(pts, len2);
-        if (ai > 0) {
+        const p3 = pts.map((p) => [p[0], p[1], height(potential(p[0], p[1])) + lift]);
+        let run = [];
+        for (let i = 0; i < p3.length; i++) {
+          if (!inB(pts[i])) { if (run.length > 1) tubes.push(run); run = []; continue; }
+          const last = run[run.length - 1];
+          if (!last || i === p3.length - 1 || Math.hypot(p3[i][0] - last[0], p3[i][1] - last[1], p3[i][2] - last[2]) > 0.09) run.push(p3[i]);
+        }
+        if (run.length > 1) tubes.push(run);
+        for (const ai of arrowSpots(pts)) {
+          if (!inB(pts[ai])) continue;
           const a = p3[ai - 1], c = p3[ai];
           const d = new THREE.Vector3(c[0] - a[0], c[1] - a[1], c[2] - a[2]).normalize();
           const cone = new THREE.Mesh(G.coneGeo, G.coneMat);
-          cone.position.set(c[0], c[1], c[2]); cone.scale.setScalar(projScale());
+          cone.position.set(c[0], c[1], c[2]); cone.scale.setScalar(coneS);
           cone.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d);
           G.cones.add(cone);
         }
       }
     }
-    setLineGeo(G.fieldL, fl);
+    G.fieldT.geometry.dispose(); G.fieldT.geometry = tubeGeometry(tubes, 0.017 * ps, 6);
+    G.fieldGlow.geometry.dispose(); G.fieldGlow.geometry = tubeGeometry(tubes, 0.05 * ps, 6);
 
-    // V = 0 reference frame around the region
-    setLineGeo(G.frame, [b.x0, b.y0, 0, b.x1, b.y0, 0, b.x1, b.y0, 0, b.x1, b.y1, 0,
-                         b.x1, b.y1, 0, b.x0, b.y1, 0, b.x0, b.y1, 0, b.x0, b.y0, 0]);
-
-    // charges as spheres on the peaks and in the wells
-    G.spheres.clear();
+    // charges as metal beads on the peaks and in the wells, each with its value painted on
+    G.spheres.clear(); G.signs.clear();
+    const rods = [];
     for (const c of charges) {
       const m = new THREE.Mesh(G.sphGeo, c.q > 0 ? G.posMat : c.q < 0 ? G.negMat : G.zeroMat);
       const rr = (0.2 + 0.08 * Math.sqrt(Math.abs(c.q))) * chargeScale();
       m.scale.setScalar(rr);
-      m.position.set(c.x, c.y, Math.sign(c.q) * 4 * reliefMult);
+      // a positive bead balances on its peak; a negative one sits up in its funnel, where the camera can see it,
+      // on a thin rod down to the bottom of the well (the charge itself)
+      let zc = Math.sign(c.q) * 4 * reliefMult;
+      if (c.q < 0) {
+        let v = 0;
+        for (let k = 0; k < 4; k++) v += potential(c.x + 3.4 * rr * Math.cos(k * Math.PI / 2), c.y + 3.4 * rr * Math.sin(k * Math.PI / 2)) / 4;
+        zc = height(v);
+        rods.push(c.x, c.y, zc - rr, c.x, c.y, -4 * reliefMult);
+      }
+      m.position.set(c.x, c.y, zc);
       m.userData.c = c;
       G.spheres.add(m);
+      const sp = new THREE.Sprite(labelMat(fmtQ(c.q)));
+      sp.userData.m = m; sp.scale.setScalar(rr * 1.75); sp.renderOrder = 2;
+      G.signs.add(sp);
       if (c === sel) {
         G.ring.position.copy(m.position); G.ring.scale.setScalar(rr * 1.7);
         // value knob on a short vertical stalk above the sphere
@@ -840,21 +1086,27 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       }
     }
     G.ring.visible = G.knob.visible = G.knobStem.visible = !!sel;
+    setLineGeo(G.rods, rods);
+
+    // a new field means the marble's run no longer applies
+    if (marbleRun.state !== 'none' && marbleRun.sig !== chargeSig()) clearMarble();
+    updateMarble3D();
 
     // colors from the theme
-    G.renderer.setClearColor(T.canvas);
-    G.gridL.material.color.set(T.muted);
-    G.equiL.material.color.set(T.equi);
-    G.zeroL.material.color.set(T.muted);
-    G.fieldL.material.color.set(T.field);
+        G.fieldT.material.color.set(T.field); G.fieldGlow.material.color.set(T.field);
+    G.fieldGlow.material.opacity = T.dark ? 0.15 : 0.07;
+    G.hemi.intensity = T.dark ? 0.8 : 0.5; G.sun.intensity = T.dark ? 0.62 : 0.62;
     G.coneMat.color.set(T.field);
-    G.frame.material.color.set(T.gridStrong);
     G.posMat.color.set(T.pos); G.negMat.color.set(T.neg); G.zeroMat.color.set(T.muted);
+    for (const [mat, c] of [[G.posMat, T.pos], [G.negMat, T.neg], [G.zeroMat, T.muted]]) mat.emissive.set(c).multiplyScalar(T.dark ? 0.28 : 0.12);
     G.ring.material.color.set(T.accent);
-    G.probeDot.material.color.set(T.accent);
+    G.tipDot.material.color.set(T.accent);
     G.stem.material.color.set(T.accent);
+    G.rods.material.color.set(T.muted);
     G.knob.material.color.set(T.accent);
     G.knobStem.material.color.set(T.accent);
+    G.dots.material.color.set(T.accent);
+    G.fline.material.color.set(T.muted);
   }
   function knobScreen() {
     if (!G.ready || !sel || !G.knob.visible) return null;
@@ -865,11 +1117,84 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   function updateProbe3D() {
     const live = probe && charges.some((c) => c.q);
-    G.probeDot.visible = !!live;
+    G.pen.visible = G.tipDot.visible = !!live;
     if (!live) { setLineGeo(G.stem, []); return; }
     const z = height(potential(probe.x, probe.y));
-    G.probeDot.position.set(probe.x, probe.y, z + 0.06);
+    G.pen.position.set(probe.x, probe.y, z);
+    G.tipDot.position.set(probe.x, probe.y, z + 0.02);
     setLineGeo(G.stem, [probe.x, probe.y, 0, probe.x, probe.y, z]);
+  }
+
+  // ---------- the marble: a positive test charge released from rest ----------
+  // It moves in the plane of the charges under F = qE (no friction), integrated with velocity Verlet and
+  // a step that shrinks near charges. Released from rest in a static field, its path does not depend on q/m;
+  // MARBLE_K = q/m only sets how fast the replay runs.
+  const MARBLE_K = 1.2e-4;                 // cm/s² per V/m
+  const DOT_DT = 0.1;                      // replay seconds between strobe dots
+  const T_MAX = 60;
+  const marbleRun = { on: false, state: 'none', x: 0, y: 0, vx: 0, vy: 0, t: 0, nextDot: 0, dots: [], fline: [], sig: '', x0: 0, y0: 0 };
+  let marbleLast = 0;
+  const chargeSig = () => charges.map((c) => `${c.x},${c.y},${c.q}`).join(';');
+  function clearMarble() { Object.assign(marbleRun, { state: 'none', dots: [], fline: [] }); }
+  function dropMarble(x, y) {
+    x = Math.round(x * 10) / 10; y = Math.round(y * 10) / 10;
+    const fwd = trace(x, y, 1, null), back = trace(x, y, -1, null);
+    Object.assign(marbleRun, { state: 'run', x, y, x0: x, y0: y, vx: 0, vy: 0, t: 0, nextDot: 0, dots: [], sig: chargeSig(),
+      fline: back.pts.reverse().concat(fwd.pts.slice(1)) });
+    marbleLast = 0;
+    if (reduceMotion) advanceMarble(T_MAX, 200000);      // no animation: show the whole run at once
+    if (G.ready) updateMarble3D();
+    updateHint3d(); schedule();
+  }
+  function advanceMarble(T, maxSteps) {
+    const M = marbleRun, b = bounds();
+    let t = 0, n = 0;
+    while (t < T && M.state === 'run' && n++ < maxSteps) {
+      let rmin = Infinity;
+      for (const c of charges) if (c.q) rmin = Math.min(rmin, Math.hypot(M.x - c.x, M.y - c.y));
+      let [ax, ay] = field(M.x, M.y); ax *= MARBLE_K; ay *= MARBLE_K;
+      const v = Math.hypot(M.vx, M.vy), a = Math.hypot(ax, ay);
+      const hStep = Math.min(T - t, 1 / 240, 0.01 * rmin / (v + Math.sqrt(a * rmin) + 1e-12));
+      M.x += M.vx * hStep + 0.5 * ax * hStep * hStep; M.y += M.vy * hStep + 0.5 * ay * hStep * hStep;
+      let [bx, by] = field(M.x, M.y); bx *= MARBLE_K; by *= MARBLE_K;
+      M.vx += 0.5 * (ax + bx) * hStep; M.vy += 0.5 * (ay + by) * hStep;
+      t += hStep; M.t += hStep;
+      while (M.t >= M.nextDot && M.dots.length < 900) { M.dots.push([M.x, M.y]); M.nextDot += DOT_DT; }
+      for (const c of charges) if (c.q && Math.hypot(M.x - c.x, M.y - c.y) < (radius(c) * 0.6) / s) M.state = 'stop';
+      if (M.x < b.x0 || M.x > b.x1 || M.y < b.y0 || M.y > b.y1) M.state = 'out';
+      if (M.t >= T_MAX) M.state = 'stop';
+    }
+  }
+  function updateMarble3D() {
+    if (!G.ready) return;
+    const M = marbleRun, ps = projScale(), b = bounds(), show = M.state !== 'none';
+    const rm = 0.17 * ps;
+    G.marble.visible = show && M.state !== 'out';
+    if (G.marble.visible) { G.marble.scale.setScalar(rm); G.marble.position.set(M.x, M.y, height(potential(M.x, M.y)) + rm); }
+    const d = [];
+    if (show) for (const [x, y] of M.dots) d.push(x, y, height(potential(x, y)) + 0.05 * ps);
+    setLineGeo(G.dots, d);
+    G.dots.material.size = 5 * ps * dpr;
+    G.dots.visible = d.length > 0;
+    // the field line through the starting point: only the part inside the region around the start
+    const f = [];
+    if (show && M.fline.length) {
+      const inB = (p) => p[0] >= b.x0 && p[0] <= b.x1 && p[1] >= b.y0 && p[1] <= b.y1;
+      let i0 = 0, best = Infinity;
+      M.fline.forEach((p, i) => { const q = Math.hypot(p[0] - M.x0, p[1] - M.y0); if (q < best) { best = q; i0 = i; } });
+      let lo = i0, hi = i0;
+      while (lo > 0 && inB(M.fline[lo - 1])) lo--;
+      while (hi < M.fline.length - 1 && inB(M.fline[hi + 1])) hi++;
+      let last = null;
+      for (let i = lo; i <= hi; i++) {
+        const p = M.fline[i], z = height(potential(p[0], p[1])) + 0.04 * ps;
+        if (last && i < hi && Math.hypot(p[0] - last[0], p[1] - last[1]) < 0.06) continue;
+        f.push(p[0], p[1], z); last = p;
+      }
+    }
+    setLineGeo(G.fline, f);
+    G.fline.computeLineDistances();
+    G.fline.visible = f.length > 3;
   }
 
   function render3D() {
@@ -878,14 +1203,21 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const tanHalf = Math.tan((G.cam.fov * Math.PI / 180) / 2);
     const fit = Math.max((w / 2) / (tanHalf * G.cam.aspect), (h / 2) / tanHalf) * 1.08;
     const r = fit * orbit.zoom;
-    const tx = (b.x0 + b.x1) / 2, ty = (b.y0 + b.y1) / 2;
+    const tx = (b.x0 + b.x1) / 2, ty = (b.y0 + b.y1) / 2, tz = (G.zBase || 0) * 0.22;
     G.cam.position.set(
       tx + r * Math.sin(orbit.phi) * Math.cos(orbit.theta),
       ty + r * Math.sin(orbit.phi) * Math.sin(orbit.theta),
-      r * Math.cos(orbit.phi));
-    G.cam.lookAt(tx, ty, 0);
+      tz + r * Math.cos(orbit.phi));
+    G.cam.lookAt(tx, ty, tz);
     G.knob.scale.setScalar((qDrag || hoverKnob ? 1.45 : 1) * projScale());
-    G.probeDot.scale.setScalar(projScale());
+    G.pen.scale.setScalar(projScale()); G.tipDot.scale.setScalar(projScale());
+    // keep each painted label on the side of its bead that faces the camera
+    const v = new THREE.Vector3();
+    for (const sp of G.signs.children) {
+      const m = sp.userData.m;
+      v.copy(G.cam.position).sub(m.position).normalize();
+      sp.position.copy(m.position).addScaledVector(v, m.scale.x * 1.02);
+    }
     G.renderer.render(G.scene, G.cam);
   }
 
@@ -965,6 +1297,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       }
     });
     const end = (e) => {
+      if (mode && mode.type === 'orbit' && mode.moved < 5 && marbleRun.on) {
+        setRay(e); const p = hitSurface(); if (p) dropMarble(p.x, p.y);
+      }
       if (mode && mode.type === 'orbit' && mode.moved < 5 && e.pointerType !== 'mouse') {
         setRay(e); const p = hitSurface(); if (p) { probe = { x: p.x, y: p.y }; markOver(); }
       }
@@ -1075,9 +1410,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         if (baseDirty) { build3D(); baseDirty = false; }
         if (overDirty) { updateProbe3D(); overDirty = false; }
         if (orbit.spin) orbit.theta += 0.004;
+        if (marbleRun.state === 'run') {
+          const now = performance.now(), dt = marbleLast ? Math.min(0.05, (now - marbleLast) / 1000) : 0;
+          marbleLast = now;
+          advanceMarble(dt, 6000); updateMarble3D();
+          if (marbleRun.state !== 'run') updateHint3d();
+        }
         render3D();
-        if (orbit.spin) schedule();
+        if (orbit.spin || marbleRun.state === 'run') schedule();
       } else {
+        marbleLast = 0;
         if (baseDirty) { drawBase(); baseDirty = false; }
         if (overDirty) { drawOver(); overDirty = false; }
       }
@@ -1162,6 +1504,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }, { passive: false });
 
   function onKey(e) {
+    if (view === '3d' && (e.key === 'm' || e.key === 'M') && probe && charges.some((c) => c.q)) {
+      setMarbleMode(true); dropMarble(probe.x, probe.y); e.preventDefault(); return;
+    }
     if (!sel) return;
     const step = e.shiftKey ? 0.1 : 0.5;
     const moves = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, step], ArrowDown: [0, -step] };
@@ -1205,13 +1550,28 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     });
   }
   const bindToggle = (id, key) => $(id).addEventListener('change', (e) => { layers[key] = e.target.checked; markBase(); });
-  bindToggle('tShade', 'shade'); bindToggle('tEqui', 'equi'); bindToggle('tLines', 'lines'); bindToggle('tGrid', 'grid');
+  bindToggle('tShade', 'shade'); bindToggle('tEqui', 'equi'); bindToggle('tLines', 'lines'); bindToggle('tGrid', 'grid'); bindToggle('tSeed', 'seed');
   $('dV').addEventListener('input', (e) => { dV = +e.target.value; $('dVOut').textContent = dV + ' V'; markBase(); });
   $('dens').addEventListener('input', (e) => { density = +e.target.value; $('densOut').textContent = density; markBase(); });
   $('relief').addEventListener('input', (e) => { reliefMult = +e.target.value; $('reliefOut').textContent = reliefMult.toFixed(1) + '×'; markBase(); });
 
   // ---------- view switching ----------
-  const viewBtns = document.querySelectorAll('.seg button'), spinBtn = $('spin'), hint3d = $('hint3d');
+  const viewBtns = document.querySelectorAll('.seg button'), spinBtn = $('spin'), hint3d = $('hint3d'), marbleBtn = $('marble');
+  const HINT_3D = 'Drag to orbit · Scroll or pinch to zoom · Drag a sphere to move it · Drag its knob up or down to change its charge · Double-click to reset';
+  function updateHint3d() {
+    if (view !== '3d') return;
+    const M = marbleRun, f = (v) => minus(v.toFixed(1));
+    let t = HINT_3D;
+    if (M.on && M.state === 'none') t = 'Marble: click or tap the landscape to release a positive test charge from rest there (M releases it at the probe)';
+    else if (M.on) t = `Marble released at (${f(M.x0)}, ${f(M.y0)}) cm · ` + (M.state === 'run' ? 'moving' : M.state === 'out' ? 'left the region' : 'stopped') + ' · click to release again';
+    if (hint3d.textContent !== t) hint3d.textContent = t;
+  }
+  function setMarbleMode(on) {
+    marbleRun.on = on; marbleBtn.setAttribute('aria-pressed', String(on));
+    if (!on) { clearMarble(); if (G.ready) updateMarble3D(); }
+    updateHint3d(); schedule();
+  }
+  marbleBtn.addEventListener('click', () => setMarbleMode(!marbleRun.on));
   function setView(v) {
     if (v === '3d' && !init3D()) {
       hint3d.textContent = 'The 3D view could not load its graphics library. Check your connection and reload the page.';
@@ -1221,8 +1581,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const is3 = v === '3d';
     base.hidden = over.hidden = is3;
     if (G.ready) G.el.hidden = !is3;
-    spinBtn.hidden = hint3d.hidden = !is3;
-    if (is3) hint3d.textContent = 'Drag to orbit · Scroll or pinch to zoom · Drag a sphere to move it · Drag its knob up or down to change its charge · Double-click to reset';
+    spinBtn.hidden = hint3d.hidden = marbleBtn.hidden = !is3;
+    stage.classList.toggle('v3d', is3);
+    updateHint3d();
     hoverKnob = false; qDrag = null;
     for (const b of viewBtns) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     if (!is3) { orbit.spin = false; spinBtn.setAttribute('aria-pressed', 'false'); }
@@ -1247,6 +1608,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+
+  // hook for automated checks (energy conservation of the marble, readouts)
+  window.__coulomb = { potential, field, marble: marbleRun, dropMarble, advanceMarble, MARBLE_K, G };
 
   // ---------- boot ----------
   charges = PRESETS.dipole();
