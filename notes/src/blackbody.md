@@ -13,7 +13,7 @@ time: 15 to 25 minutes
 
 ## Before class
 
-Students need the idea of a spectrum and the order of the visible colors; wavelength in nm and μm helps. For majors, Stefan-Boltzmann and Wien can be introduced here. Turn on **Projector** so the readouts are legible. Both sliders are logarithmic. Note that **Human body**, **Light bulb** and **Cosmic background** do not set a radius, so the **Luminosity** readout keeps the previous R and should be ignored for them.
+Students need the idea of a spectrum and the order of the visible colors; wavelength in nm and μm helps. For majors, Stefan-Boltzmann and Wien can be introduced here. Turn on **Projector** so the readouts are legible. Both sliders are logarithmic. **Human body**, **Light bulb** and **Cosmic background** are not stars, so the **Luminosity** readout shows a dash until you move R.
 
 ## Running it in class
 
