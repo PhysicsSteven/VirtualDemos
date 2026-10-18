@@ -8,7 +8,7 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 
 | Area | Owner | Where | Status |
 |---|---|---|---|
-| Demo visuals and interaction (apparatus drawings, 3D views, layout, look and feel) | Claude | `demos/*.html` on `main` | Ongoing. Done so far: star-slice, projectile-drag, rutherford, faraday, optics-bench, double-slit, photoelectric, spectra, rc-circuits, magnetic-force, circuit-builder, capacitors, black-holes, gauss-law. In progress: hydrogen-orbitals, coulomb-sandbox. |
+| Demo visuals and interaction (apparatus drawings, 3D views, layout, look and feel) | Claude | `demos/*.html` on `main` | Ongoing. Done so far: star-slice, projectile-drag, rutherford, faraday, optics-bench, double-slit, photoelectric, spectra, rc-circuits, magnetic-force, circuit-builder, capacitors, black-holes, gauss-law. In progress: hydrogen-orbitals, coulomb-sandbox, currents-fields, ac-circuits. |
 | New demos | Claude | `demos/` on `main` | Recent: gamma-spectroscopy, diffraction-grating |
 | Classroom teaching notes and answer keys | Claude | `notes/`, `keys/` on `main` | All 52 demos have notes |
 | Full virtual labs, physics validation, regression tests, CI | GPT | `curriculum/`, `.github/`, `demos/transient-circuits.html` on `curriculum/virtual-lab-starter-kits` | Ongoing (RLC transients, then Gauss, Faraday, capacitors, AC) |
