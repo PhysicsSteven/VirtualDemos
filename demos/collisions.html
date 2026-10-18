@@ -1,0 +1,1801 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+<title>Collisions and Momentum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the scene across the top of the stage, before and after bars bottom left, a graph bottom right (x against t, the momentum diagram, F against t or the cradle outcomes); instrument rail on the right; stacks on narrow screens. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --xcol: #7a45c0;
+  --vcol: #1d8a5a;
+  --acol: #c0601a;
+  --wire: #3b4655;
+  --block: #cdd6e1;
+  --table: #eef2f6;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #aab4c2;
+    --block: #2c3a4c; --table: #141b24;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #aab4c2;
+  --block: #2c3a4c; --table: #141b24;
+  color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 640px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
+  display: grid; grid-template-columns: minmax(0, 42fr) minmax(0, 58fr); grid-template-rows: minmax(0, 50fr) minmax(0, 50fr); }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#cPane { grid-column: 1 / 3; grid-row: 1; }
+#ePane { grid-column: 1; grid-row: 2; border-top: 1px solid var(--line); }
+#pPane { grid-column: 2; grid-row: 2; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+#cCan { touch-action: none; outline: none; }
+#cCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
+.stage-ctl > * { pointer-events: auto; }
+.stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
+.tclock { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; font-size: 0.86rem; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--canvas) 85%, transparent); padding: 2px 6px; border-radius: 6px; white-space: nowrap; line-height: 1.25; }
+.tclock small { font-size: 0.74rem; font-weight: 400; color: var(--muted); }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg.full { display: flex; }
+.seg.full button { flex: 1; padding: 4px 4px; }
+.seg.wrap { flex-wrap: wrap; gap: 2px; }
+.seg.wrap button { flex: 1 1 30%; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; white-space: nowrap; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.ctl { display: flex; flex-direction: column; gap: 4px; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: 0.88rem; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .wide { grid-column: 1 / -1; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.formula { margin: 0; font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
+.c-1 { color: var(--pos); } .c-2 { color: var(--neg); } .c-t { color: var(--equi); } .c-s { color: var(--xcol); } .c-f { color: var(--vcol); }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid var(--pos); }
+.swatch.b2 { border-color: var(--neg); }
+.swatch.cm { border-top-style: dashed; border-color: var(--equi); }
+.box { flex: none; width: 12px; height: 12px; border: 1.5px solid var(--muted); border-radius: 2px; }
+.box.fill { background: var(--muted); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; grid-template-rows: 340px 290px; }
+  .rail { overflow: visible; }
+}
+@media (max-width: 640px) {
+  .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: 310px 250px 290px; }
+  #cPane { grid-column: 1; }
+  #ePane { grid-column: 1; grid-row: 2; }
+  #pPane { grid-column: 1; grid-row: 3; border-left: 0; }
+}
+
+/* projector on a short screen: let the stage shrink to fit under the header */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 440px !important; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Collisions and Momentum</h1>
+      <p>When two objects push on each other, the forces are equal and opposite for the same time, so the momentum one gains the other loses. Total momentum is the same before and after every collision; kinetic energy is kept only when the bounce is perfectly elastic.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units · p = mv · e = −(v₂′ − v₁′)/(v₂ − v₁)</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="pane" id="cPane">
+        <canvas id="cCan" tabindex="0" role="application" aria-label="Collision scene. Drag the round grips on the velocity arrows to set velocities, drag a cart or puck to move its start, and drag the small square grips to change masses, the stored energy or a bumper's stiffness. Keys: 1 and 2 pick a body, left and right arrows change its velocity, up and down arrows change e, space plays or pauses, R replays."></canvas>
+        <div class="stage-ctl">
+          <button type="button" class="btn" id="play">Pause</button>
+          <button type="button" class="btn" id="reset">Replay</button>
+          <span class="tclock mono" id="tclock">t = 0<small id="rateTag">real time</small></span>
+        </div>
+      </div>
+      <div class="pane" id="ePane">
+        <canvas id="eCan" aria-label="Momentum and kinetic energy of each body before and after the collision, as bars."></canvas>
+      </div>
+      <div class="pane" id="pPane">
+        <canvas id="pCan" aria-label="Graph for the current scene: position against time, the momentum diagram, force against time, or the possible Newton's cradle outcomes."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Scene</h2>
+        <div class="seg full wrap" role="group" aria-label="Scene" id="modeSeg">
+          <button type="button" data-m="track" aria-pressed="true">1D track</button>
+          <button type="button" data-m="table" aria-pressed="false">2D table</button>
+          <button type="button" data-m="explode" aria-pressed="false">Explosion</button>
+          <button type="button" data-m="cradle" aria-pressed="false">Newton's cradle</button>
+          <button type="button" data-m="impulse" aria-pressed="false">Impulse</button>
+        </div>
+        <div class="chips" id="presets">
+          <button type="button" data-p="elastic" aria-pressed="true">Elastic, equal masses</button>
+          <button type="button" data-p="inelastic" aria-pressed="false">Perfectly inelastic</button>
+          <button type="button" data-p="heavy" aria-pressed="false">Heavy hits light</button>
+          <button type="button" data-p="explode" aria-pressed="false">Explosion</button>
+          <button type="button" data-p="glance" aria-pressed="false">Glancing 2D collision: 90°</button>
+          <button type="button" data-p="impulse" aria-pressed="false">Impulse: soft vs stiff</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2 id="parTitle">Carts</h2>
+        <div id="sliders"></div>
+        <div class="inline" id="frameWrap"><span>Frame</span>
+          <div class="seg" role="group" aria-label="Reference frame" id="frameSeg">
+            <button type="button" data-f="lab" aria-pressed="true">Lab</button>
+            <button type="button" data-f="cm" aria-pressed="false">Center of mass</button>
+          </div>
+        </div>
+        <div class="row2" id="explodeBtns" hidden>
+          <button type="button" class="btn" id="gunBtn">Gun and bullet</button>
+          <button type="button" class="btn" id="eqBtn">Equal halves</button>
+        </div>
+        <p class="hint" id="parHint"></p>
+      </section>
+
+      <section>
+        <h2>Results</h2>
+        <dl class="readout" id="readBox"></dl>
+        <p class="formula mono" id="formula"></p>
+      </section>
+
+      <section>
+        <h2>Time</h2>
+        <div class="seg full" role="group" aria-label="Playback rate" id="rateSeg">
+          <button type="button" data-r="0.1" aria-pressed="false">0.1×</button>
+          <button type="button" data-r="0.25" aria-pressed="false">0.25×</button>
+          <button type="button" data-r="0.5" aria-pressed="false">0.5×</button>
+          <button type="button" data-r="1" aria-pressed="true">1×</button>
+        </div>
+        <div class="toggles">
+          <label><input type="checkbox" id="tArrows" checked>Velocity arrows</label>
+          <label><input type="checkbox" id="tCM" checked>Center of mass</label>
+          <label><input type="checkbox" id="tGhost" checked>Start positions</label>
+          <label><input type="checkbox" id="tLoop" checked>Replay at the end</label>
+        </div>
+      </section>
+
+      <section>
+        <h2>Key and model</h2>
+        <div class="key" id="keyBox">
+          <span><i class="swatch"></i>Body 1</span>
+          <span><i class="swatch b2"></i>Body 2</span>
+          <span><i class="swatch cm"></i>Center of mass, or the total</span>
+          <span><i class="box"></i>Bar outline: before &nbsp; <i class="box fill"></i>Filled: after</span>
+        </div>
+        <p class="hint" id="modelHint"></p>
+      </section>
+    </aside>
+  </main>
+  <p class="sr" aria-live="polite" id="live"></p>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.80665;
+  // One dimensional collision with coefficient of restitution e: momentum conserved and v₂′ − v₁′ = −e (v₂ − v₁).
+  function collide1D(m1, m2, v1, v2, e) {
+    const M = m1 + m2;
+    return [((m1 - e * m2) * v1 + (1 + e) * m2 * v2) / M, ((m2 - e * m1) * v2 + (1 + e) * m1 * v1) / M];
+  }
+  // kinetic energy lost: ½ μ (1 − e²) v_rel², μ = m₁m₂/(m₁ + m₂)
+  const keLoss = (m1, m2, v1, v2, e) => 0.5 * (m1 * m2 / (m1 + m2)) * (1 - e * e) * (v1 - v2) * (v1 - v2);
+  // a body moving in straight lines between instant collisions: segments {t0, x: [x, y], v: [vx, vy]}
+  function linBody(m, size, segs) {
+    const seg = (t) => { let s = segs[0]; for (const g of segs) if (g.t0 <= t) s = g; return s; };
+    return { m, size, segs,
+      pos(t) { const s = seg(t), d = t - s.t0; return [s.x[0] + s.v[0] * d, s.x[1] + s.v[1] * d]; },
+      vel(t) { return seg(t).v.slice(); } };
+  }
+  // two carts on a track, centers x₁ < x₂, lengths L₁ and L₂; they touch when x₂ − x₁ = (L₁ + L₂)/2
+  function trackRun(p) {
+    const gap = p.x2 - p.x1 - (p.L1 + p.L2) / 2, closing = p.v1 - p.v2;
+    const tc = closing > 0 ? Math.max(0, gap) / closing : Infinity;
+    const b1 = [{ t0: 0, x: [p.x1, 0], v: [p.v1, 0] }], b2 = [{ t0: 0, x: [p.x2, 0], v: [p.v2, 0] }];
+    let u1 = p.v1, u2 = p.v2;
+    if (isFinite(tc)) {
+      [u1, u2] = collide1D(p.m1, p.m2, p.v1, p.v2, p.e);
+      b1.push({ t0: tc, x: [p.x1 + p.v1 * tc, 0], v: [u1, 0] });
+      b2.push({ t0: tc, x: [p.x2 + p.v2 * tc, 0], v: [u2, 0] });
+    }
+    return { tc, before: [[p.v1, 0], [p.v2, 0]], after: [[u1, 0], [u2, 0]], bodies: [linBody(p.m1, p.L1, b1), linBody(p.m2, p.L2, b2)] };
+  }
+  // Smooth discs: first contact when |r₂ − r₁| = R₁ + R₂; the impulse acts along the line of centers n with
+  // J = (1 + e) μ (v₁ − v₂)·n, and the tangential velocities are unchanged.
+  function collide2D(p) {
+    const D = p.R1 + p.R2, dr = [p.r2[0] - p.r1[0], p.r2[1] - p.r1[1]], dv = [p.v2[0] - p.v1[0], p.v2[1] - p.v1[1]];
+    const a = dv[0] * dv[0] + dv[1] * dv[1], bq = dr[0] * dv[0] + dr[1] * dv[1], c = dr[0] * dr[0] + dr[1] * dr[1] - D * D;
+    const sp = Math.sqrt(a), bImp = sp > 0 ? Math.abs(dr[0] * dv[1] - dr[1] * dv[0]) / sp : Math.hypot(dr[0], dr[1]);
+    const res = { tc: Infinity, n: null, bImp, u1: p.v1.slice(), u2: p.v2.slice(), J: 0 };
+    if (!(a > 0) || bq >= 0) return res;
+    const disc = bq * bq - a * c;
+    if (disc < 0) return res;
+    const tc = Math.max(0, (-bq - Math.sqrt(disc)) / a);
+    const n = [(dr[0] + dv[0] * tc) / D, (dr[1] + dv[1] * tc) / D];
+    const vn = (p.v1[0] - p.v2[0]) * n[0] + (p.v1[1] - p.v2[1]) * n[1];
+    if (vn <= 0) return res;
+    const J = (1 + p.e) * (p.m1 * p.m2 / (p.m1 + p.m2)) * vn;
+    res.tc = tc; res.n = n; res.J = J;
+    res.u1 = [p.v1[0] - J / p.m1 * n[0], p.v1[1] - J / p.m1 * n[1]];
+    res.u2 = [p.v2[0] + J / p.m2 * n[0], p.v2[1] + J / p.m2 * n[1]];
+    return res;
+  }
+  function tableRun(p) {
+    const c = collide2D(p), tc = c.tc;
+    const b1 = [{ t0: 0, x: p.r1.slice(), v: p.v1.slice() }], b2 = [{ t0: 0, x: p.r2.slice(), v: p.v2.slice() }];
+    if (isFinite(tc)) {
+      b1.push({ t0: tc, x: [p.r1[0] + p.v1[0] * tc, p.r1[1] + p.v1[1] * tc], v: c.u1 });
+      b2.push({ t0: tc, x: [p.r2[0] + p.v2[0] * tc, p.r2[1] + p.v2[1] * tc], v: c.u2 });
+    }
+    return { tc, n: c.n, bImp: c.bImp, before: [p.v1.slice(), p.v2.slice()], after: [c.u1, c.u2], bodies: [linBody(p.m1, p.R1, b1), linBody(p.m2, p.R2, b2)] };
+  }
+  // Explosion: a spring released with energy E pushes the pieces apart; momentum stays M V and the energy
+  // of relative motion becomes E = ½ μ v_rel², so v₁ = V − (m₂/M) v_rel and v₂ = V + (m₁/M) v_rel.
+  function explode(m1, m2, E, V) {
+    const M = m1 + m2, vr = Math.sqrt(2 * E * M / (m1 * m2));
+    return [V - m2 / M * vr, V + m1 / M * vr];
+  }
+  // The spring itself: compressed by c from natural length Ls, released at ts; relative separation
+  // s = Ls − c cos ω(t − ts), ω = √(k/μ), k = 2E/c², until it reaches Ls a quarter period later.
+  function explodeRun(p) {
+    const M = p.m1 + p.m2, mu = p.m1 * p.m2 / M, c = p.comp, Ls = p.Ls, k = p.E > 0 ? 2 * p.E / (c * c) : 0, w = Math.sqrt(k / mu);
+    const [u1, u2] = explode(p.m1, p.m2, p.E, p.V), vr = u2 - u1, tq = k > 0 ? Math.PI / (2 * w) : Infinity;
+    const D0 = (p.L1 + p.L2) / 2;
+    const gapAt = (t) => {        // spring length (face to face gap) and its rate
+      if (t <= p.ts || k === 0) return [Ls - c, 0];
+      const s = t - p.ts;
+      if (s < tq) return [Ls - c * Math.cos(w * s), c * w * Math.sin(w * s)];
+      return [Ls + vr * (s - tq), vr];
+    };
+    const xc = (t) => p.x0 + p.V * t;
+    const mk = (i) => ({ m: i ? p.m2 : p.m1, size: i ? p.L2 : p.L1,
+      pos(t) { const D = D0 + gapAt(t)[0]; return [xc(t) + (i ? p.m1 / M : -p.m2 / M) * D, 0]; },
+      vel(t) { const r = gapAt(t)[1]; return [p.V + (i ? p.m1 / M : -p.m2 / M) * r, 0]; } });
+    return { tc: p.ts, tq, k, gapAt, before: [[p.V, 0], [p.V, 0]], after: [[u1, 0], [u2, 0]], bodies: [mk(0), mk(1)] };
+  }
+  // Bumper: a spring k in parallel with a damper c (Kelvin–Voigt) on a cart of mass m arriving at v₀.
+  // Compression x obeys m x″ + c x′ + k x = 0 from x = 0, x′ = v₀; the bumper can push but not pull,
+  // so contact ends when F = kx + cx′ falls to zero. Underdamped, with β = ζω₀ and ω_d = ω₀√(1 − ζ²),
+  // F ∝ e^(−βt)[(ω₀² − 2β²)/ω_d sin ω_d t + 2β cos ω_d t] first vanishes at ω_d t = π − atan2(2β ω_d, ω₀² − 2β²).
+  function eOfZeta(z) {
+    if (z <= 0) return 1;
+    const wd = Math.sqrt(1 - z * z), psi = Math.atan2(2 * z * wd, 1 - 2 * z * z), ts = (Math.PI - psi) / wd;
+    return Math.exp(-z * ts) * (Math.cos(wd * ts) - z / wd * Math.sin(wd * ts)) * -1;
+  }
+  function zetaForE(e) {                 // e falls steadily from 1 at ζ = 0 to e^(−2) at ζ = 1
+    if (e >= 1) return 0;
+    let lo = 0, hi = 0.999999;
+    for (let i = 0; i < 80; i++) { const md = (lo + hi) / 2; if (eOfZeta(md) > e) lo = md; else hi = md; }
+    return (lo + hi) / 2;
+  }
+  function bumper(m, k, e, v0) {
+    const z = zetaForE(e), w0 = Math.sqrt(k / m), be = z * w0, wd = w0 * Math.sqrt(1 - z * z), c = 2 * m * be;
+    const ts = (Math.PI - Math.atan2(2 * be * wd, w0 * w0 - 2 * be * be)) / wd;
+    const x = (t) => v0 / wd * Math.exp(-be * t) * Math.sin(wd * t);
+    const xd = (t) => v0 * Math.exp(-be * t) * (Math.cos(wd * t) - be / wd * Math.sin(wd * t));
+    const F = (t) => (t < 0 || t > ts ? 0 : Math.max(0, k * x(t) + c * xd(t)));
+    const vout = xd(ts);
+    // peak force: dense scan, then golden section on the best bracket
+    let bi = 0, bf = -1; const N = 400;
+    for (let i = 0; i <= N; i++) { const f = F(ts * i / N); if (f > bf) { bf = f; bi = i; } }
+    let a = ts * Math.max(0, bi - 1) / N, b = ts * Math.min(N, bi + 1) / N;
+    const gr = (Math.sqrt(5) - 1) / 2;
+    for (let i = 0; i < 60; i++) { const c1 = b - gr * (b - a), c2 = a + gr * (b - a); if (F(c1) > F(c2)) b = c2; else a = c1; }
+    const tp = (a + b) / 2, Fpk = Math.max(bf, F(tp));
+    return { m, k, c, z, w0, wd, be, ts, x, xd, F, vout, eCheck: -vout / v0, J: m * (v0 - vout), Fpk, tp: F(tp) >= bf ? tp : ts * bi / N, xs: x(ts) };
+  }
+  // ∫F dt by 8 point Gauss–Legendre on n pieces
+  const GL8 = [[-0.9602898564975363, 0.1012285362903763], [-0.7966664774136267, 0.2223810344533745], [-0.5255324099163290, 0.3137066458778873], [-0.1834346424956498, 0.3626837833783620],
+    [0.1834346424956498, 0.3626837833783620], [0.5255324099163290, 0.3137066458778873], [0.7966664774136267, 0.2223810344533745], [0.9602898564975363, 0.1012285362903763]];
+  function integrate(f, a, b, n) {
+    n = n || 64; let s = 0; const h = (b - a) / n;
+    for (let i = 0; i < n; i++) { const c = a + (i + 0.5) * h; for (const [xi, wi] of GL8) s += wi * h / 2 * f(c + xi * h / 2); }
+    return s;
+  }
+  // Newton's cradle: N equal balls of radius R on strings of length L, pivots 2R apart, so neighbours just touch at rest.
+  // Each ball is a full pendulum (RK4); a collision is an instant elastic exchange of velocities between two touching
+  // neighbours, which for equal masses is exact when the line of centers is horizontal (it is, at the bottom).
+  function cradleInit(N, k, th0) {
+    const th = new Array(N).fill(0), om = new Array(N).fill(0);
+    for (let i = 0; i < k; i++) th[i] = -th0;
+    return { th, om, t: 0, hits: 0 };
+  }
+  function cradleGap(st, i, L, R) {
+    const dx = 2 * R + L * (Math.sin(st.th[i + 1]) - Math.sin(st.th[i])), dy = L * (Math.cos(st.th[i]) - Math.cos(st.th[i + 1]));
+    return Math.hypot(dx, dy) - 2 * R;
+  }
+  function rk4Pend(th, om, h, L) {
+    const f = (a) => -G / L * Math.sin(a);
+    const k1t = om, k1o = f(th), k2t = om + h / 2 * k1o, k2o = f(th + h / 2 * k1t);
+    const k3t = om + h / 2 * k2o, k3o = f(th + h / 2 * k2t), k4t = om + h * k3o, k4o = f(th + h * k3t);
+    return [th + h / 6 * (k1t + 2 * k2t + 2 * k3t + k4t), om + h / 6 * (k1o + 2 * k2o + 2 * k3o + k4o)];
+  }
+  function cradleAdvance(st, h, L, R) {
+    const N = st.th.length, out = { th: st.th.slice(), om: st.om.slice(), t: st.t + h, hits: st.hits };
+    for (let i = 0; i < N; i++) [out.th[i], out.om[i]] = rk4Pend(st.th[i], st.om[i], h, L);
+    return out;
+  }
+  // exchange velocities across every touching, approaching pair until none is left
+  function cradleResolve(st, L, R) {
+    const N = st.th.length; let n = 0, changed = true;
+    while (changed && n < 200) {
+      changed = false;
+      for (let i = 0; i < N - 1; i++) {
+        if (cradleGap(st, i, L, R) <= 1e-9 && st.om[i] * Math.cos(st.th[i]) > st.om[i + 1] * Math.cos(st.th[i + 1]) + 1e-12) {
+          const a = st.om[i]; st.om[i] = st.om[i + 1]; st.om[i + 1] = a; changed = true; n++;
+        }
+      }
+    }
+    if (n) st.hits++;
+    return n;
+  }
+  function cradleStep(st, dt, L, R, hmax) {
+    hmax = hmax || 5e-4;
+    let left = dt, guard = 0;
+    while (left > 1e-15 && guard++ < 10000) {
+      const h = Math.min(hmax, left);
+      let nx = cradleAdvance(st, h, L, R);
+      let hit = false;
+      for (let i = 0; i < st.th.length - 1; i++) if (cradleGap(nx, i, L, R) < -1e-10) { hit = true; break; }
+      if (!hit) { st = nx; left -= h; continue; }
+      // bisect for the first moment any pair touches
+      let lo = 0, hi = h;
+      for (let j = 0; j < 50; j++) {
+        const md = (lo + hi) / 2, s = cradleAdvance(st, md, L, R);
+        let over = false; for (let i = 0; i < st.th.length - 1; i++) if (cradleGap(s, i, L, R) < -1e-10) { over = true; break; }
+        if (over) hi = md; else lo = md;
+      }
+      nx = cradleAdvance(st, lo, L, R);
+      const n = cradleResolve(nx, L, R);
+      st = nx; left -= lo;
+      if (!n) { st = cradleAdvance(st, Math.min(h, left), L, R); left -= Math.min(h, left); }   // never stall
+    }
+    return st;
+  }
+  function cradleEnergy(st, m, L) {
+    let E = 0; for (let i = 0; i < st.th.length; i++) E += 0.5 * m * L * L * st.om[i] * st.om[i] + m * G * L * (1 - Math.cos(st.th[i]));
+    return E;
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.COL = { G, collide1D, keLoss, trackRun, collide2D, tableRun, explode, explodeRun, eOfZeta, zetaForE, bumper, integrate, cradleInit, cradleStep, cradleResolve, cradleGap, cradleEnergy };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const hyp = (v) => Math.hypot(v[0], v[1]);
+
+  // ---------- geometry constants ----------
+  const XR = 1.1;                                  // the track view runs from −1.1 m to 1.1 m
+  const cartLen = (m) => 0.14 + 0.05 * Math.cbrt(m);
+  const puckR = (m) => 0.04 + 0.02 * Math.cbrt(m);
+  const TBL = { x: 1.0, y: 0.55 };                 // air table half widths, m
+  const EXP = { comp: 0.05, Ls: 0.1, ts: 0.6 };    // explosion spring: compression, natural length, release time
+  const CR = { L: 0.3, R: 0.025, m: 0.25 };        // cradle: string length, ball radius, ball mass
+  const BUMP = { L0: 0.12, d: 0.05 };              // bumper natural length, starting gap to the plate
+
+  // ---------- sliders per scene ----------
+  const LOGK = { kS: [300, 5000], kF: [10, 300] };
+  const kOfPos = (key, p) => { const [a, b] = LOGK[key]; return +(a * Math.pow(b / a, p / 100)).toPrecision(2); };
+  const posOfK = (key, k) => { const [a, b] = LOGK[key]; return clamp(Math.round(100 * Math.log(k / a) / Math.log(b / a)), 0, 100); };
+  const SLD = {
+    track: [['m1', 'Mass m<sub>1</sub>', 0.2, 5, 0.1, 'kg', 1], ['m2', 'Mass m<sub>2</sub>', 0.2, 5, 0.1, 'kg', 1],
+      ['v1', 'Velocity v<sub>1</sub>', -2, 2, 0.05, 'm/s', 2], ['v2', 'Velocity v<sub>2</sub>', -2, 2, 0.05, 'm/s', 2], ['e', 'Coefficient of restitution e', 0, 1, 0.01, '', 2]],
+    table: [['m1', 'Mass m<sub>1</sub>', 0.2, 5, 0.1, 'kg', 1], ['m2', 'Mass m<sub>2</sub>', 0.2, 5, 0.1, 'kg', 1],
+      ['u1', 'Speed of puck 1', 0.2, 2, 0.05, 'm/s', 2], ['b', 'Impact parameter b', 0, 20, 0.5, 'cm', 1], ['e', 'Coefficient of restitution e', 0, 1, 0.01, '', 2]],
+    explode: [['m1', 'Mass m<sub>1</sub>', 0.2, 5, 0.1, 'kg', 1], ['m2', 'Mass m<sub>2</sub>', 0.2, 5, 0.1, 'kg', 1],
+      ['E', 'Stored spring energy E', 0, 4, 0.05, 'J', 2], ['V', 'Starting velocity V', -1, 1, 0.05, 'm/s', 2]],
+    cradle: [['N', 'Number of balls', 2, 7, 1, '', 0], ['k', 'Balls pulled back', 1, 6, 1, '', 0], ['th', 'Pull angle', 5, 40, 1, '°', 0]],
+    impulse: [['m', 'Cart mass m', 0.1, 2, 0.05, 'kg', 2], ['v0', 'Speed v<sub>0</sub>', 0.2, 2, 0.05, 'm/s', 2], ['e', 'Coefficient of restitution e', 0.2, 1, 0.01, '', 2],
+      ['kS', 'Stiff bumper k', 0, 100, 1, 'N/m', 'logk'], ['kF', 'Soft bumper k', 0, 100, 1, 'N/m', 'logk']]
+  };
+  const DEF = {
+    track: { m1: 1, m2: 1, v1: 1, v2: 0, x1: -0.6, x2: 0.1, e: 1 },
+    table: { m1: 1, m2: 1, e: 1, r1: [-0.7, 0], v1: [1, 0], r2: [0, 0.05], v2: [0, 0] },
+    explode: { m1: 2, m2: 1, E: 1, V: 0, x0: 0 },
+    cradle: { N: 5, k: 1, th: 20 },
+    impulse: { m: 0.5, v0: 1, e: 0.6, kS: 2000, kF: 60 }
+  };
+  const TITLES = { track: 'Carts', table: 'Pucks', explode: 'Pieces and spring', cradle: 'Cradle', impulse: 'Cart and bumpers' };
+  const PAR_HINT = {
+    track: 'Drag a cart to move its start, drag the round grip on its velocity arrow to set v, and drag the square grip on top to change its mass.',
+    table: 'Drag a puck to move its start; moving puck 2 up or down sets the impact parameter b. Drag the round grips to set the velocities.',
+    explode: 'Drag the pair to move it, the round grip to set the starting velocity V, the square grip on the spring to store more or less energy, and the grips on top to change the masses.',
+    cradle: 'Drag any ball but the last one to the left: it and every ball to its left are pulled back together, to the angle you drag to.',
+    impulse: 'Drag the round grip to set the speed, the square grips on the springs to change each bumper’s stiffness, and the grip on a cart to change the mass.'
+  };
+  const MODEL = {
+    track: 'Model: a frictionless air track, carts treated as rigid bodies that collide in an instant. The coefficient of restitution e fixes how fast they separate: v₂′ − v₁′ = −e(v₂ − v₁). Carts that leave the track ends simply slide out of view.',
+    table: 'Model: smooth hard discs on a frictionless air table. The contact impulse is along the line of centers at the moment of contact, so the velocity components along the contact tangent do not change; e acts on the components along the line of centers. No spin, no table edges.',
+    explode: 'Model: an ideal massless spring, compressed by 5 cm and held by a thread, pushes the carts apart when the thread is cut. Its force is internal, so the total momentum never changes; the spring’s energy E becomes kinetic energy. The push is computed exactly (the pieces move in simple harmonic motion relative to each other until the spring reaches its natural length).',
+    cradle: 'Model: identical steel balls (0.25 kg, 2.5 cm radius) on 30 cm strings, just touching at rest. Each ball swings as a full pendulum, g = 9.80665 m/s². A collision is an instant, perfectly elastic exchange of velocity between two touching neighbours, taken one pair at a time. Real balls are slightly squashy and lose a little energy, so a real cradle slowly fades and mixes.',
+    impulse: 'Model: each bumper is a massless spring in parallel with a damper (force kx + cx′). The damping c is chosen so the cart rebounds with the e you set; the bumper can push but not pull, so contact ends when its force reaches zero. F(t) is the exact solution of m x″ + c x′ + k x = 0. The drawing never shows a spring pressed solid, and the model has no such limit.'
+  };
+
+  // ---------- setups ----------
+  const PRESETS = {
+    elastic: { mode: 'track', p: { m1: 1, m2: 1, v1: 1, v2: 0, x1: -0.6, x2: 0.1, e: 1 }, rate: 1,
+      hint: 'Equal masses, elastic: cart 1 stops dead and cart 2 leaves with its velocity. The momentum and energy bars are the same before and after. Switch to the center of mass frame: the carts arrive with equal and opposite momenta and leave with them reversed.' },
+    inelastic: { mode: 'track', p: { m1: 1, m2: 1, v1: 1, v2: 0, x1: -0.6, x2: 0.1, e: 0 }, rate: 1,
+      hint: 'With e = 0 the carts stick and move off together at the center of mass velocity. Total momentum is unchanged, but half the kinetic energy is gone: ΔK = ½μv_rel², all of the energy of motion relative to the center of mass.' },
+    heavy: { mode: 'track', p: { m1: 4, m2: 0.5, v1: 0.8, v2: 0, x1: -0.6, x2: 0.05, e: 1 }, rate: 1,
+      hint: 'A heavy cart hits a light one at rest. The heavy cart barely slows; the light one leaves at nearly twice the incoming speed, v₂′ = 2m₁v₁/(m₁ + m₂). Swap the masses and the light cart bounces back instead.' },
+    explode: { mode: 'explode', p: { m1: 2, m2: 1, E: 1, V: 0, x0: 0 }, rate: 0.5,
+      hint: 'The spring pushes both pieces with the same force for the same time, so they get equal and opposite momenta: m₁v₁ = −m₂v₂. The lighter piece moves faster and carries more of the energy, K₁/K₂ = m₂/m₁. Press Gun and bullet for the extreme case.' },
+    glance: { mode: 'table', p: { m1: 1, m2: 1, e: 1, r1: [-0.7, 0], v1: [1, 0], r2: [0, 0.06], v2: [0, 0] }, rate: 1,
+      hint: 'Equal masses, elastic, target at rest: the pucks always leave at 90° to each other, whatever the impact parameter. In the momentum diagram p₁′ + p₂′ = p₁, and with equal masses energy conservation says p₁′² + p₂′² = p₁², so the triangle has a right angle.' },
+    impulse: { mode: 'impulse', p: { m: 0.5, v0: 1, e: 0.6, kS: 2000, kF: 60 }, rate: 0.25,
+      hint: 'Both carts arrive at the same speed and leave with the same e, so both get the same change of momentum, and the areas under F(t) are equal. The soft bumper spreads that impulse over a longer time with a much smaller peak force: the egg drop and air bag idea.' }
+  };
+  const MODE_RATE = { track: 1, table: 1, explode: 0.5, cradle: 1, impulse: 0.25 };
+
+  // ---------- state ----------
+  const S = { mode: 'track', preset: 'elastic', frame: 'lab', rate: 1, sel: 0,
+    P: JSON.parse(JSON.stringify(DEF)), layers: { arrows: true, cm: true, ghost: true, loop: true } };
+  let run = null, t = 0, running = !reduce, hold = 0, Trun = 3, held = false, cr = null, crE0 = 0, crLog = null;
+  let bumps = null, frozen = null;
+  const P = () => S.P[S.mode];
+
+  // ---------- formatting ----------
+  const MIN = (s) => s.replace(/-/g, '−');
+  function fx(v, d) { if (!isFinite(v)) return '—'; const r = +v.toFixed(d); return MIN((r === 0 ? 0 : r).toFixed(d)); }
+  function sig(v, n) {
+    if (!isFinite(v)) return '—';
+    if (Math.abs(v) < 1e-12) return '0';
+    const d = clamp(n - 1 - Math.floor(Math.log10(Math.abs(v)) + 1e-12), 0, 9);
+    return fx(v, d);
+  }
+  const fp = (v) => `${fx(v, 2)} kg·m/s`, fK = (v) => `${fx(v, 3)} J`, fv = (v) => `${fx(v, 2)} m/s`;
+  const deg = (r) => `${(r * 180 / Math.PI).toFixed(1)}°`;
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  const fmtRate = (r) => (r === 1 ? 'real time' : `slow motion ×${+(1 / r).toFixed(1)}`);
+
+  // ---------- building a run ----------
+  function buildRun() {
+    const p = P();
+    t = 0; hold = 0; frozen = null;
+    if (S.mode === 'track') {
+      run = trackRun({ ...p, L1: cartLen(p.m1), L2: cartLen(p.m2) });
+      Trun = isFinite(run.tc) ? clamp(run.tc + Math.max(1.4, 1.2 * run.tc), 1.6, 9) : 3;
+    } else if (S.mode === 'table') {
+      run = tableRun({ ...p, R1: puckR(p.m1), R2: puckR(p.m2) });
+      Trun = isFinite(run.tc) ? clamp(run.tc + Math.max(1.2, 1.1 * run.tc), 1.6, 9) : 3;
+    } else if (S.mode === 'explode') {
+      run = explodeRun({ ...p, L1: cartLen(p.m1), L2: cartLen(p.m2), comp: EXP.comp, Ls: EXP.Ls, ts: EXP.ts });
+      Trun = EXP.ts + 1.8;
+    } else if (S.mode === 'cradle') {
+      p.k = clamp(p.k, 1, p.N - 1);
+      cr = cradleInit(p.N, p.k, p.th * Math.PI / 180); crE0 = cradleEnergy(cr, CR.m, CR.L); crLog = null;
+      run = { tc: Infinity, bodies: [] }; Trun = Infinity;
+    } else {
+      bumps = [bumper(p.m, p.kS, p.e, p.v0), bumper(p.m, p.kF, p.e, p.v0)];
+      const tcon = BUMP.d / p.v0;
+      run = { tc: tcon, bodies: [] };
+      Trun = tcon + bumps[1].ts + Math.max(0.25, 0.12 / p.v0);
+      L0imp = Math.max(BUMP.L0, 1.25 * Math.max(...bumps.map((b) => b.x(Math.atan2(b.wd, b.be) / b.wd))));
+    }
+  }
+  const M = () => run.bodies.reduce((s, b) => s + b.m, 0);
+  function cmAt(tt) {
+    let x = 0, y = 0, m = 0;
+    for (const b of run.bodies) { const r = b.pos(tt); x += b.m * r[0]; y += b.m * r[1]; m += b.m; }
+    return [x / m, y / m];
+  }
+  function vcm() {
+    let x = 0, y = 0, m = 0;
+    run.before.forEach((v, i) => { const mm = run.bodies[i].m; x += mm * v[0]; y += mm * v[1]; m += mm; });
+    return [x / m, y / m];
+  }
+  // offset of the drawing frame: the lab, or the center of mass (frozen while a drag is under way)
+  function frameOff(tt) {
+    if (S.frame !== 'cm' || !run.bodies.length) return { x: [0, 0], v: [0, 0] };
+    if (frozen) return { x: [frozen.x[0] + frozen.v[0] * tt, frozen.x[1] + frozen.v[1] * tt], v: frozen.v.slice() };
+    const V = vcm(), X0 = cmAt(0);
+    return { x: [X0[0] + V[0] * tt, X0[1] + V[1] * tt], v: V };
+  }
+  // momentum and kinetic energy of each body, before and after, in the current frame
+  function pk(which) {
+    const vs = which === 'before' ? run.before : run.after, V = frameOff(0).v;
+    return vs.map((v, i) => {
+      const m = run.bodies[i].m, u = [v[0] - V[0], v[1] - V[1]];
+      return { p: [m * u[0], m * u[1]], K: 0.5 * m * (u[0] * u[0] + u[1] * u[1]), v: u };
+    });
+  }
+
+  // ---------- canvases ----------
+  let T = null, dpr = 1;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
+  // label scale: projector size, capped by the pane so labels do not pile up on a small pane
+  const lsc = (W, H) => Math.min(projScale(), Math.max(projScale() > 1 ? 1.15 : 1, Math.min(W / 560, H / 300)));
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), xcol: g('--xcol'), vcol: g('--vcol'), acol: g('--acol'),
+      wire: g('--wire'), block: g('--block'), table: g('--table'), ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace' };
+    T.body = [T.pos, T.neg];
+  }
+  const cans = { c: $('cCan'), e: $('eCan'), p: $('pCan') };
+  const panes = { c: $('cPane'), e: $('ePane'), p: $('pPane') };
+  const ctxs = { c: cans.c.getContext('2d'), e: cans.e.getContext('2d'), p: cans.p.getContext('2d') };
+  const dims = { c: [0, 0], e: [0, 0], p: [0, 0] };
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const k of ['c', 'e', 'p']) {
+      const r = panes[k].getBoundingClientRect();
+      cans[k].width = Math.max(1, Math.round(r.width * dpr)); cans[k].height = Math.max(1, Math.round(r.height * dpr));
+      cans[k].style.width = r.width + 'px'; cans[k].style.height = r.height + 'px';
+      dims[k] = [r.width, r.height];
+    }
+    drawAll();
+  }
+  // text with one level of subscripts: "p_1" or "k_{soft}"
+  function richParts(str) {
+    const out = []; const re = /_\{([^}]*)\}|_(\S)/g; let i = 0, m;
+    while ((m = re.exec(str))) { if (m.index > i) out.push([str.slice(i, m.index), false]); out.push([m[1] || m[2], true]); i = re.lastIndex; }
+    if (i < str.length) out.push([str.slice(i), false]);
+    return out;
+  }
+  function richText(ctx, str, x, y, size, weight, align, fam) {
+    const parts = richParts(str); fam = fam || T.ui;
+    const f0 = `${weight || 400} ${size}px ${fam}`, f1 = `${weight || 400} ${size * 0.72}px ${fam}`;
+    let w = 0;
+    for (const [s, sub] of parts) { ctx.font = sub ? f1 : f0; w += ctx.measureText(s).width; }
+    let x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    const ta = ctx.textAlign; ctx.textAlign = 'left';
+    for (const [s, sub] of parts) { ctx.font = sub ? f1 : f0; ctx.fillText(s, x0, y + (sub ? size * 0.28 : 0)); x0 += ctx.measureText(s).width; }
+    ctx.textAlign = ta;
+    return w;
+  }
+  function richWidth(ctx, str, size, weight, fam) {
+    let w = 0;
+    for (const [s, sub] of richParts(str)) { ctx.font = `${weight || 400} ${sub ? size * 0.72 : size}px ${fam || T.ui}`; w += ctx.measureText(s).width; }
+    return w;
+  }
+  // a label on a halo box, drawn last where lines might cross it; y is the baseline
+  function labelBox(ctx, txt, x, y, align, col, size, weight) {
+    const w = richWidth(ctx, txt, size, weight), x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.86; ctx.fillRect(x0 - 3, y - size * 0.95, w + 6, size * 1.32); ctx.globalAlpha = 1;
+    ctx.fillStyle = col; ctx.textBaseline = 'alphabetic'; richText(ctx, txt, x0, y, size, weight, 'left');
+    return w;
+  }
+  function roundRect(ctx, x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+  }
+  function arrow(ctx, x0, y0, x1, y1, col, lw, head) {
+    const L = Math.hypot(x1 - x0, y1 - y0); if (L < 2) return;
+    const ux = (x1 - x0) / L, uy = (y1 - y0) / L, hd = Math.min((head || 9) * projScale(), L * 0.6), hw = hd * 0.5;
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = lw; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - ux * hd * 0.8, y1 - uy * hd * 0.8); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - ux * hd - uy * hw, y1 - uy * hd + ux * hw); ctx.lineTo(x1 - ux * hd + uy * hw, y1 - uy * hd - ux * hw); ctx.closePath(); ctx.fill();
+  }
+  // grips: a round one for a point you drag anywhere (arrow tips), a square one with two arrows for a value dragged along one direction
+  function roundGrip(ctx, x, y, hot, col) {
+    const ps = projScale();
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = hot ? T.accent : (col || T.muted); ctx.lineWidth = (hot ? 2.4 : 1.6) * ps;
+    ctx.beginPath(); ctx.arc(x, y, (hot ? 7 : 5.5) * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+  }
+  function grip(ctx, x, y, hot, vertical) {
+    const ps = projScale(), w = (vertical ? 13 : 20) * ps, h = (vertical ? 20 : 13) * ps;
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = hot ? T.accent : T.muted; ctx.lineWidth = (hot ? 2 : 1.2) * ps;
+    roundRect(ctx, x - w / 2, y - h / 2, w, h, 4 * ps); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = hot ? T.accent : T.muted;
+    const a = 3.5 * ps;
+    ctx.beginPath();
+    if (vertical) {
+      ctx.moveTo(x, y - 7 * ps); ctx.lineTo(x - a, y - 2.5 * ps); ctx.lineTo(x + a, y - 2.5 * ps); ctx.closePath();
+      ctx.moveTo(x, y + 7 * ps); ctx.lineTo(x - a, y + 2.5 * ps); ctx.lineTo(x + a, y + 2.5 * ps); ctx.closePath();
+    } else {
+      ctx.moveTo(x - 7 * ps, y); ctx.lineTo(x - 2.5 * ps, y - a); ctx.lineTo(x - 2.5 * ps, y + a); ctx.closePath();
+      ctx.moveTo(x + 7 * ps, y); ctx.lineTo(x + 2.5 * ps, y - a); ctx.lineTo(x + 2.5 * ps, y + a); ctx.closePath();
+    }
+    ctx.fill();
+  }
+  // a coil spring from (ax, y) to (bx, y)
+  function drawSpring(ctx, ax, bx, y, amp, coils, col, lw, hot) {
+    const len = bx - ax; if (Math.abs(len) < 1) return;
+    const ps = projScale(), lead = Math.min(6 * ps, Math.abs(len) * 0.15) * Math.sign(len), n = coils * 2;
+    const path = () => {
+      ctx.beginPath(); ctx.moveTo(ax, y); ctx.lineTo(ax + lead, y);
+      for (let i = 1; i <= n; i++) ctx.lineTo(ax + lead + (len - 2 * lead) * (i - 0.5) / n, y + (i % 2 ? -amp : amp));
+      ctx.lineTo(bx - lead, y); ctx.lineTo(bx, y);
+    };
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    if (hot) { path(); ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.3; ctx.lineWidth = lw + 7 * ps; ctx.stroke(); ctx.globalAlpha = 1; }
+    path(); ctx.strokeStyle = col || T.wire; ctx.lineWidth = lw; ctx.stroke();
+  }
+  function wallV(ctx, x, y0, y1, side) {          // a hatched wall, hatching on the far side
+    const ps = projScale(), d = side * 10 * ps;
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x, y1); ctx.stroke();
+    ctx.lineWidth = 1 * ps; ctx.strokeStyle = T.muted; ctx.beginPath();
+    for (let y = y0 + 4 * ps; y < y1; y += 8 * ps) { ctx.moveTo(x, y); ctx.lineTo(x + d, y - 7 * ps); }
+    ctx.stroke();
+  }
+
+  // ---------- drag handles ----------
+  // Every draggable part for the current scene, rebuilt each time the scene is drawn: {id, cursor, box | pt, set(px, py)}.
+  let handles = [], hoverId = null, drag = null;
+  const isHot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+  const SLDEF = (key) => SLD[S.mode].find((d) => d[0] === key);
+  function snap(key, v) {
+    const d = SLDEF(key); if (!d) return v;
+    if (d[6] === 'logk') { const [a, b] = LOGK[key]; return +clamp(v, a, b).toPrecision(2); }
+    return +clamp(Math.round((v - d[2]) / d[4]) * d[4] + d[2], d[2], d[3]).toFixed(4);
+  }
+  // b of the table setup: puck 2's signed offset from the line of puck 1's relative motion
+  function tableB(p) {
+    const u = [p.v1[0] - p.v2[0], p.v1[1] - p.v2[1]], sp = hyp(u) || 1, dr = [p.r2[0] - p.r1[0], p.r2[1] - p.r1[1]];
+    return (u[0] * dr[1] - u[1] * dr[0]) / sp;
+  }
+  function setTableB(p, bm) {        // move puck 2 across the line of relative motion so its offset is bm
+    const u = [p.v1[0] - p.v2[0], p.v1[1] - p.v2[1]], sp = hyp(u) || 1, nrm = [-u[1] / sp, u[0] / sp], d = bm - tableB(p);
+    p.r2 = [p.r2[0] + nrm[0] * d, p.r2[1] + nrm[1] * d];
+    tableKeep(p, 2);
+  }
+  // keep pucks on the table and apart at the start
+  function tableKeep(p, which) {
+    const R1 = puckR(p.m1), R2 = puckR(p.m2);
+    p.r1 = [clamp(p.r1[0], -TBL.x + R1, TBL.x - R1), clamp(p.r1[1], -TBL.y + R1, TBL.y - R1)];
+    p.r2 = [clamp(p.r2[0], -TBL.x + R2, TBL.x - R2), clamp(p.r2[1], -TBL.y + R2, TBL.y - R2)];
+    const mm = (v) => Math.round(v * 1000) / 1000;
+    p.r1 = p.r1.map(mm); p.r2 = p.r2.map(mm);
+    const dx = p.r2[0] - p.r1[0], dy = p.r2[1] - p.r1[1], d = Math.hypot(dx, dy), D = (R1 + R2) * 1.02;
+    if (d < D) {
+      const ux = d > 0 ? dx / d : 1, uy = d > 0 ? dy / d : 0;
+      if (which === 2) p.r2 = [p.r1[0] + ux * D, p.r1[1] + uy * D]; else p.r1 = [p.r2[0] - ux * D, p.r2[1] - uy * D];
+    }
+  }
+  function trackKeep(p, which) {
+    const g = (cartLen(p.m1) + cartLen(p.m2)) / 2, lim = XR - 0.1;
+    p.x1 = clamp(p.x1, -lim, lim - g); p.x2 = clamp(p.x2, -lim + g, lim);
+    if (p.x2 - p.x1 < g) { if (which === 1) p.x1 = p.x2 - g; else p.x2 = p.x1 + g; }
+    p.x1 = +p.x1.toFixed(3); p.x2 = +p.x2.toFixed(3);
+  }
+  // a change of parameter: rebuild, sync, and start over from t = 0
+  function setParam(key, v, opts) {
+    const p = P();
+    if (S.mode === 'table' && key === 'u1') {
+      const s = snap('u1', v), cur = hyp(p.v1) || 1; p.v1 = [p.v1[0] / cur * s, p.v1[1] / cur * s];
+    } else if (S.mode === 'table' && key === 'b') {
+      const s = snap('b', Math.abs(v)) / 100, sg = tableB(p) < 0 ? -1 : 1; setTableB(p, sg * s);
+    } else if (S.mode === 'cradle' && key === 'N') {
+      p.N = snap('N', v); p.k = clamp(p.k, 1, p.N - 1);
+    } else if (S.mode === 'cradle' && key === 'k') {
+      p.k = clamp(snap('k', v), 1, p.N - 1);
+    } else {
+      p[key] = snap(key, v);
+      if (S.mode === 'track' && (key === 'm1' || key === 'm2')) trackKeep(p, 2);
+      if (S.mode === 'table' && (key === 'm1' || key === 'm2')) tableKeep(p, 2);
+    }
+    if (!(opts && opts.quiet)) { clearPreset(); p.__touched = true; }
+    buildRun();
+    if (!(opts && opts.nosync)) syncSliders();
+    updateReadouts();
+  }
+  function clearPreset() {
+    if (!S.preset) return;
+    S.preset = null;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', 'false');
+  }
+
+  // ---------- the track scene (1D carts and the explosion) ----------
+  let sg = null, ctlH = 44;
+  function trackGeom(W, H) {
+    const ps = projScale(), pad = 12 * ps, s = (W - 2 * pad) / (2 * XR);
+    const yT = H - 62 * ps;
+    return { ps, s, X: (x) => W / 2 + x * s, invX: (px) => (px - W / 2) / s, yT, sv: clamp(0.2 * s, 40, 130 * ps) };
+  }
+  const cartH = (m, ps, s) => clamp(s * (0.055 + 0.025 * Math.cbrt(m)), 20 * ps, 80 * ps);
+  function drawCart(ctx, g, xw, m, L, col, label, opts) {
+    const ps = g.ps, w = L * g.s, h = cartH(m, ps, g.s), x0 = g.X(xw) - w / 2, y0 = g.yT - 3 * ps - h;
+    if (opts.ghost) {
+      ctx.setLineDash([5 * ps, 4 * ps]); ctx.strokeStyle = opts.hot ? T.accent : col; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.3 * ps;
+      roundRect(ctx, x0, y0, w, h, 5 * ps); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    } else {
+      if (opts.hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.2; roundRect(ctx, x0 - 5 * ps, y0 - 5 * ps, w + 10 * ps, h + 10 * ps, 8 * ps); ctx.fill(); ctx.globalAlpha = 1; }
+      ctx.fillStyle = T.block; roundRect(ctx, x0, y0, w, h, 5 * ps); ctx.fill();
+      ctx.fillStyle = col; ctx.globalAlpha = 0.85; roundRect(ctx, x0, y0, w, Math.max(5 * ps, h * 0.22), 5 * ps); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = col; ctx.lineWidth = (opts.hot ? 2.4 : 1.6) * ps; roundRect(ctx, x0, y0, w, h, 5 * ps); ctx.stroke();
+      const fs = Math.min(11.5 * ps, h * 0.36);
+      ctx.fillStyle = T.ink; ctx.font = `600 ${fs}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      if (ctx.measureText(label).width > w - 6 * ps && opts.short) { label = opts.short; ctx.font = `700 ${Math.min(12 * ps, h * 0.5)}px ${T.mono}`; }
+      ctx.fillText(label, g.X(xw), y0 + h * 0.6);
+    }
+    return { x0, y0, w, h };
+  }
+  function trackBase(ctx, W, H, g, off) {
+    const ps = g.ps, fs = 10 * ps;
+    // air track beam with its holes; the ruler moves with the track in the center of mass frame
+    ctx.fillStyle = T.block; ctx.fillRect(4, g.yT, W - 8, 9 * ps);
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.strokeRect(4.5, g.yT + 0.5, W - 9, 9 * ps);
+    ctx.fillStyle = T.muted; ctx.globalAlpha = 0.5;
+    const hs = 0.05, k0 = Math.ceil((-XR - 0.2 + off) / hs), k1 = Math.floor((XR + 0.2 + off) / hs);
+    for (let k = k0; k <= k1; k++) { const px = g.X(k * hs - off); if (px > 8 && px < W - 8) { ctx.beginPath(); ctx.arc(px, g.yT + 4.5 * ps, 1.2 * ps, 0, 7); ctx.fill(); } }
+    ctx.globalAlpha = 1;
+    const ry = g.yT + 9 * ps + 3 * ps;
+    ctx.strokeStyle = T.gridStrong; ctx.fillStyle = T.muted; ctx.font = `${fs}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const step = 0.1, j0 = Math.ceil((-XR + off) / step - 1e-9), j1 = Math.floor((XR + off) / step + 1e-9);
+    ctx.beginPath();
+    for (let j = j0; j <= j1; j++) { const px = g.X(j * step - off), big = j % 5 === 0; ctx.moveTo(px, ry); ctx.lineTo(px, ry + (big ? 6 : 3) * ps); }
+    ctx.stroke();
+    ctx.font = `${fs}px ${T.mono}`; const axw = ctx.measureText(S.frame === 'cm' ? 'x, lab (m)' : 'x (m)').width;
+    for (let j = j0; j <= j1; j++) if (j % 5 === 0) { const px = g.X(j * step - off); if (px > 16 * ps && px < W - 20 * ps - axw) ctx.fillText(j === 0 ? '0' : MIN(`${(j * step).toFixed(1)}`), px, ry + 7 * ps); }
+    ctx.textAlign = 'right'; ctx.fillText(S.frame === 'cm' ? 'x, lab (m)' : 'x (m)', W - 8 * ps, ry + 7 * ps);
+  }
+  function velArrow(ctx, g, xc, y, v, col, label, ghost) {
+    const ps = g.ps, x1 = g.X(xc) + v * g.sv;
+    ctx.globalAlpha = ghost ? 0.5 : 1;
+    if (Math.abs(v * g.sv) >= 3) arrow(ctx, g.X(xc), y, x1, y, col, 2.4 * ps);
+    else { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(g.X(xc), y, 2.5 * ps, 0, 7); ctx.fill(); }
+    ctx.globalAlpha = 1;
+    return { x1, y, label };
+  }
+  function drawTrackScene(ctx, W, H) {
+    const g = trackGeom(W, H), ps = g.ps, ls = lsc(W, H), fs = 11.5 * ls, p = P();
+    const off = frameOff(t), off0 = frameOff(0), atStart = t === 0 || held;
+    sg = g;
+    trackBase(ctx, W, H, g, off.x[0]);
+    const labels = [];
+    const nb = run.bodies.length, names = ['1', '2'];
+    const ex = S.mode === 'explode';
+    // start ghosts
+    if (S.layers.ghost && !atStart) {
+      run.bodies.forEach((b, i) => {
+        const x0 = b.pos(0)[0] - off0.x[0];
+        drawCart(ctx, g, x0, b.m, b.size, T.body[i], '', { ghost: true, hot: isHot('c' + i) || isHot('pair') });
+      });
+    }
+    // explosion: spring between the pieces, and the thread before it is cut
+    let boxes = [];
+    run.bodies.forEach((b, i) => {
+      const x = b.pos(t)[0] - off.x[0];
+      boxes.push(drawCart(ctx, g, x, b.m, b.size, T.body[i], `${ex ? '' : 'm' + (i ? '₂' : '₁') + ' '}${sig(b.m, 2)} kg`, { hot: atStart && (isHot('c' + i) || isHot('pair')), short: String(i + 1) }));
+    });
+    if (ex) {
+      const gap = run.gapAt(t)[0], xr = boxes[0].x0 + boxes[0].w, len = Math.min(gap, EXP.Ls) * g.s, yS = g.yT - 3 * ps - Math.min(boxes[0].h, boxes[1].h) * 0.45;
+      drawSpring(ctx, xr, xr + len, yS, 5 * ps, 7, T.wire, 1.6 * ps, isHot('E'));
+      if (t < EXP.ts || held) {
+        ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([2 * ps, 2 * ps]);
+        const yt = Math.min(boxes[0].y0, boxes[1].y0) + 6 * ps;
+        ctx.beginPath(); ctx.moveTo(boxes[0].x0 + boxes[0].w * 0.7, yt); ctx.lineTo(boxes[1].x0 + boxes[1].w * 0.3, yt); ctx.stroke(); ctx.setLineDash([]);
+        if (W > 420) labels.push(['thread', (xr + boxes[1].x0) / 2, yt - 5 * ps, 'center', T.muted]);
+      }
+    }
+    // center of mass marker under the beam
+    if (S.layers.cm) {
+      const xc = cmAt(t)[0] - off.x[0], px = g.X(xc), y = g.yT + 33 * ps;
+      ctx.fillStyle = T.equi; ctx.beginPath(); ctx.moveTo(px, y); ctx.lineTo(px - 6 * ps, y + 11 * ps); ctx.lineTo(px + 6 * ps, y + 11 * ps); ctx.closePath(); ctx.fill();
+      const Vc = vcm()[0] - off.v[0];
+      if (Math.abs(Vc) * g.sv * 0.6 > 6) arrow(ctx, px + Math.sign(Vc) * 9 * ps, y + 7 * ps, px + Math.sign(Vc) * 9 * ps + Vc * g.sv * 0.6, y + 7 * ps, T.equi, 1.8 * ps, 7);
+      labels.push(['CM', px + (Vc < 0 ? 9 : -9) * ps, y + 11 * ps, Vc < 0 ? 'left' : 'right', T.equi]);
+    }
+    // velocity arrows of the moving carts
+    if (S.layers.arrows && !atStart) {
+      const pre = ex && t < EXP.ts;
+      run.bodies.forEach((b, i) => {
+        if (pre && i === 1) return;     // one arrow for the pair before the thread is cut
+        const v = b.vel(t)[0] - off.v[0], y = (pre ? Math.min(boxes[0].y0, boxes[1].y0) : boxes[i].y0) - 14 * ps;
+        const xc = pre ? cmAt(t)[0] - off.x[0] : b.pos(t)[0] - off.x[0], col = pre ? T.equi : T.body[i];
+        const lab = pre ? `V = ${fv(v)}` : `v_${names[i]} = ${fv(v)}`;
+        const a = velArrow(ctx, g, xc, y, v, col, lab);
+        labels.push([lab, (g.X(xc) + a.x1) / 2, y - 7 * ps, 'center', col]);
+      });
+    }
+    // start handles: carts, velocity tips, mass grips (always on the start state)
+    handles = [];
+    const st = run.bodies.map((b, i) => ({ x: b.pos(0)[0] - off0.x[0], b, i }));
+    if (!ex) {
+      st.forEach(({ x, b, i }) => {
+        const w = b.size * g.s, h = cartH(b.m, ps, g.s), x0 = g.X(x) - w / 2, y0 = g.yT - 3 * ps - h;
+        handles.push({ id: 'c' + i, cursor: 'grab', grabbing: 'grabbing', box: [x0, y0, w, h], body: true,
+          set: (px) => { const q = P(); q[i ? 'x2' : 'x1'] = g.invX(px) + off0.x[0]; trackKeep(q, i + 1); } });
+        const vy = y0 - 14 * ps, v0 = (i ? p.v2 : p.v1) - off0.v[0];
+        if (S.layers.arrows) {
+          const tipx = g.X(x) + v0 * g.sv;
+          if (atStart) { const a = velArrow(ctx, g, x, vy, v0, T.body[i], ''); labels.push([`v_${names[i]} = ${fv(v0)}`, (g.X(x) + a.x1) / 2, vy - 9 * ps, 'center', T.body[i]]); }
+          else if (S.layers.ghost) velArrow(ctx, g, x, vy, v0, T.body[i], '', true);
+          if (atStart || S.layers.ghost) handles.push({ id: 'v' + i, cursor: 'ew-resize', pt: [tipx, vy], tip: [tipx, vy],
+            set: (px) => { setParam(i ? 'v2' : 'v1', (px - g.X(x)) / g.sv + off0.v[0], { quiet: false, nosync: true }); } });
+        }
+        if (atStart || (S.layers.ghost && W > 560)) handles.push({ id: 'm' + i, cursor: 'ns-resize', pt: [x0 + w - 8 * ps, y0 - 0 * ps], grip: 'v', param: i ? 'm2' : 'm1', dirY: -1 });
+      });
+    } else {
+      const xc = cmAt(0)[0] - off0.x[0], b0 = st[0], b1 = st[1];
+      const w0 = b0.b.size * g.s, w1 = b1.b.size * g.s, h0 = cartH(b0.b.m, ps, g.s), h1 = cartH(b1.b.m, ps, g.s);
+      const xa = g.X(b0.x) - w0 / 2, xb = g.X(b1.x) + w1 / 2, ytop = g.yT - 3 * ps - Math.max(h0, h1);
+      handles.push({ id: 'pair', cursor: 'grab', grabbing: 'grabbing', box: [xa, ytop, xb - xa, g.yT - ytop], body: true,
+        set: (px) => { const q = P(); q.x0 = +clamp(g.invX(px) + off0.x[0], -0.7, 0.7).toFixed(3); } });
+      if (S.layers.arrows) {
+        const vy = Math.min(boxes[0].y0, boxes[1].y0, ytop) - 14 * ps, V0 = p.V - off0.v[0], tipx = g.X(xc) + V0 * g.sv;
+        if (atStart) { const a = velArrow(ctx, g, xc, vy, V0, T.equi, ''); labels.push([`V = ${fv(V0)}`, (g.X(xc) + a.x1) / 2, vy - 9 * ps, 'center', T.equi]); }
+        else if (S.layers.ghost) { velArrow(ctx, g, xc, vy, V0, T.equi, '', true); }
+        if (atStart || S.layers.ghost) handles.push({ id: 'V', cursor: 'ew-resize', pt: [tipx, vy], tip: [tipx, vy], set: (px) => setParam('V', (px - g.X(xc)) / g.sv + off0.v[0], { nosync: true }) });
+      }
+      if (atStart || (S.layers.ghost && W > 560)) {
+        handles.push({ id: 'm0', cursor: 'ns-resize', pt: [xa + 10 * ps, g.yT - 3 * ps - h0], grip: 'v', param: 'm1', dirY: -1 });
+        handles.push({ id: 'm1', cursor: 'ns-resize', pt: [xb - 10 * ps, g.yT - 3 * ps - h1], grip: 'v', param: 'm2', dirY: -1 });
+        const xr = xa + w0, yS = g.yT - 3 * ps - Math.min(h0, h1) * 0.45;
+        handles.push({ id: 'E', cursor: 'ew-resize', pt: [xr + (EXP.Ls - EXP.comp) * g.s / 2, yS + 14 * ps], grip: 'h', param: 'E', dirX: 1 });
+      }
+    }
+    // the moment of contact
+    if (!ex && isFinite(run.tc) && Math.abs(t - run.tc) < 0.12 && t > 0) {
+      const a = 1 - Math.abs(t - run.tc) / 0.12, xs = (run.bodies[0].pos(run.tc)[0] + run.bodies[0].size / 2) - off.x[0];
+      const px = g.X(xs), cy = g.yT - 3 * ps - Math.min(boxes[0].h, boxes[1].h) / 2;
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 2 * ps; ctx.globalAlpha = a;
+      ctx.beginPath(); for (let k = 0; k < 8; k++) { const an = k * Math.PI / 4; ctx.moveTo(px + Math.cos(an) * 6 * ps, cy + Math.sin(an) * 6 * ps); ctx.lineTo(px + Math.cos(an) * 16 * ps, cy + Math.sin(an) * 16 * ps); } ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+    drawGrips(ctx);
+    for (const [txt, x, y, al, col] of labels) labelBox(ctx, txt, clamp(x, 40 * ls, W - 40 * ls), y, al, col, fs, 600);
+    // the bookkeeping, written out: momentum and kinetic energy before and after
+    {
+      const B = pk('before'), A = pk('after'), done = held || t >= run.tc + (run.tq && isFinite(run.tq) ? run.tq : 0) || !isFinite(run.tc);
+      const ef = clamp(12.5 * ls * Math.min(1, W / 700), 10, 18), y1 = ctlH + 18 * ls, dy = ef * 1.6;
+      const pS = (q) => fx(q, 2), tp = (X) => X[0].p[0] + X[1].p[0], tk = (X) => X[0].K + X[1].K;
+      const rows = [[`before:  p_1 + p_2 = ${pS(B[0].p[0])} + ${pS(B[1].p[0])} = ${pS(tp(B))} kg·m/s    K = ${fx(tk(B), 3)} J`, 1],
+        [`after:   p_1′ + p_2′ = ${pS(A[0].p[0])} + ${pS(A[1].p[0])} = ${pS(tp(A))} kg·m/s    K = ${fx(tk(A), 3)} J`, done ? 1 : 0.35]];
+      if (W < 640) { rows[0][0] = rows[0][0].replace('before:  ', 'before: ').replace(/ {4}K = .*/, ''); rows[1][0] = rows[1][0].replace('after:   ', 'after: ').replace(/ {4}K = .*/, ''); }
+      const cutoff = boxes.length ? Math.min(...boxes.map((b) => b.y0)) - 40 * ps : H;
+      const yb = Math.max(y1, (y1 + cutoff) / 2 - dy);
+      if (y1 + dy < cutoff) rows.forEach(([txt, a], k) => { ctx.globalAlpha = a; ctx.fillStyle = k ? T.ink : T.muted; ctx.textBaseline = 'alphabetic'; richText(ctx, txt, W / 2, yb + ef + k * dy, ef, 600, 'center', T.mono); ctx.globalAlpha = 1; });
+    }
+    if (!ex && !isFinite(run.tc)) labelBox(ctx, 'No collision: cart 1 never catches cart 2', W / 2, ctlH + 30 * ps, 'center', T.muted, fs, 400);
+    if (ex && t >= EXP.ts && t < EXP.ts + 0.5 && !held) labelBox(ctx, 'thread cut', W / 2, ctlH + 30 * ps, 'center', T.muted, fs, 400);
+  }
+  function drawGrips(ctx) {
+    for (const h of handles) {
+      if (h.grip === 'v' || h.grip === 'h') grip(ctx, h.pt[0], h.pt[1], isHot(h.id), h.grip === 'v');
+      else if (h.pt) roundGrip(ctx, h.pt[0], h.pt[1], isHot(h.id), h.col);
+    }
+  }
+
+  // ---------- the air table ----------
+  function tableGeom(W, H) {
+    const ps = projScale(), pad = 12 * ps, top = ctlH + 4;
+    const s = Math.min((W - 2 * pad) / (2 * TBL.x), (H - top - pad) / (2 * TBL.y));
+    const cx = W / 2, cy = top + (H - top - pad) / 2 + pad / 2;
+    return { ps, s, X: (x) => cx + x * s, Y: (y) => cy - y * s, invX: (px) => (px - cx) / s, invY: (py) => (cy - py) / s, sv: clamp(0.18 * s, 40, 120 * ps) };
+  }
+  function drawTableScene(ctx, W, H) {
+    const g = tableGeom(W, H), ps = g.ps, ls = lsc(W, H), fs = 11.5 * ls, p = P();
+    const off = frameOff(t), off0 = frameOff(0), atStart = t === 0 || held;
+    sg = g;
+    const X = (r, o) => g.X(r[0] - o.x[0]), Y = (r, o) => g.Y(r[1] - o.x[1]);
+    // table
+    ctx.fillStyle = T.table; roundRect(ctx, g.X(-TBL.x), g.Y(TBL.y), 2 * TBL.x * g.s, 2 * TBL.y * g.s, 10 * ps); ctx.fill();
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5 * ps; ctx.stroke();
+    ctx.save(); roundRect(ctx, g.X(-TBL.x), g.Y(TBL.y), 2 * TBL.x * g.s, 2 * TBL.y * g.s, 10 * ps); ctx.clip();
+    ctx.fillStyle = T.gridStrong;
+    const hs = 0.1, ox = ((off.x[0] % hs) + hs) % hs, oy = ((off.x[1] % hs) + hs) % hs;
+    for (let x = -TBL.x - hs; x <= TBL.x + hs; x += hs) for (let y = -TBL.y - hs; y <= TBL.y + hs; y += hs) { ctx.beginPath(); ctx.arc(g.X(x - ox), g.Y(y - oy), 1.1 * ps, 0, 7); ctx.fill(); }
+    // paths over the whole run
+    const labels = [];
+    run.bodies.forEach((b, i) => {
+      ctx.strokeStyle = T.body[i]; ctx.lineWidth = 1.4 * ps; ctx.globalAlpha = 0.45; ctx.setLineDash([6 * ps, 5 * ps]);
+      ctx.beginPath();
+      const n = 120;
+      for (let k = 0; k <= n; k++) { const tt = Trun * k / n, r = b.pos(tt), o = frameOff(tt); k ? ctx.lineTo(X(r, o), Y(r, o)) : ctx.moveTo(X(r, o), Y(r, o)); }
+      ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    });
+    // contact: ghost discs and the line of centers
+    if (isFinite(run.tc)) {
+      const oc = frameOff(run.tc), r1 = run.bodies[0].pos(run.tc), r2 = run.bodies[1].pos(run.tc);
+      const shown = t >= run.tc - 1e-9 || atStart;
+      ctx.globalAlpha = shown ? 0.7 : 0.3;
+      run.bodies.forEach((b, i) => {
+        const r = i ? r2 : r1;
+        ctx.strokeStyle = T.body[i]; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([3 * ps, 3 * ps]);
+        ctx.beginPath(); ctx.arc(X(r, oc), Y(r, oc), b.size * g.s, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+      });
+      const n = run.n, ext = 0.22;
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 1.4 * ps;
+      ctx.beginPath(); ctx.moveTo(X([r1[0] - n[0] * ext, r1[1] - n[1] * ext], oc), Y([r1[0] - n[0] * ext, r1[1] - n[1] * ext], oc));
+      ctx.lineTo(X([r2[0] + n[0] * ext, r2[1] + n[1] * ext], oc), Y([r2[0] + n[0] * ext, r2[1] + n[1] * ext], oc)); ctx.stroke();
+      ctx.globalAlpha = 1;
+      if (shown && W > 360) {
+        const e2 = [r2[0] + n[0] * ext, r2[1] + n[1] * ext];
+        labels.push(['line of centers', X(e2, oc) + 4 * ps, Y(e2, oc) + (n[1] > 0 ? -4 : 14) * ps, 'left', T.equi]);
+      }
+    }
+    // impact parameter, for a target at rest in the lab
+    if (S.frame === 'lab' && hyp(p.v2) < 1e-9 && hyp(p.v1) > 0) {
+      const u = [p.v1[0] / hyp(p.v1), p.v1[1] / hyp(p.v1)], dr = [p.r2[0] - p.r1[0], p.r2[1] - p.r1[1]], along = dr[0] * u[0] + dr[1] * u[1];
+      const foot = [p.r1[0] + u[0] * along, p.r1[1] + u[1] * along], o0 = { x: [0, 0] };
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps; ctx.setLineDash([2 * ps, 3 * ps]);
+      ctx.beginPath(); ctx.moveTo(X(p.r1, o0), Y(p.r1, o0)); ctx.lineTo(X([foot[0] + u[0] * 0.25, foot[1] + u[1] * 0.25], o0), Y([foot[0] + u[0] * 0.25, foot[1] + u[1] * 0.25], o0)); ctx.stroke(); ctx.setLineDash([]);
+      const bb = Math.hypot(p.r2[0] - foot[0], p.r2[1] - foot[1]);
+      if (bb * g.s > 3) {
+        const xa = X(foot, o0) + u[0] * 0, ya = Y(foot, o0), xb = X(p.r2, o0), yb = Y(p.r2, o0);
+        ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.moveTo(xa, ya); ctx.lineTo(xb, yb); ctx.stroke();
+        for (const [qx, qy] of [[xa, ya], [xb, yb]]) { ctx.beginPath(); ctx.moveTo(qx - 4 * ps, qy); ctx.lineTo(qx + 4 * ps, qy); ctx.stroke(); }
+        labels.push([`b = ${fx(bb * 100, 1)} cm`, Math.min(xa, xb) - 8 * ps, Math.min(ya, yb) - 6 * ps, 'right', T.ink]);
+      }
+    }
+    // start ghosts
+    if (S.layers.ghost && !atStart) run.bodies.forEach((b, i) => {
+      const r = b.pos(0); ctx.strokeStyle = T.body[i]; ctx.globalAlpha = 0.5; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([5 * ps, 4 * ps]);
+      ctx.beginPath(); ctx.arc(X(r, off0), Y(r, off0), b.size * g.s, 0, 7); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    });
+    // center of mass and its path
+    if (S.layers.cm) {
+      const c = cmAt(t), px = X(c, off), py = Y(c, off);
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([2 * ps, 4 * ps]);
+      const c0 = cmAt(0), c1 = cmAt(Trun); ctx.beginPath(); ctx.moveTo(X(c0, frameOff(0)), Y(c0, frameOff(0))); ctx.lineTo(X(c1, frameOff(Trun)), Y(c1, frameOff(Trun))); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = T.equi; ctx.beginPath(); ctx.moveTo(px, py - 6 * ps); ctx.lineTo(px + 6 * ps, py); ctx.lineTo(px, py + 6 * ps); ctx.lineTo(px - 6 * ps, py); ctx.closePath(); ctx.fill();
+      labels.push(['CM', px + 8 * ps, py + 14 * ps, 'left', T.equi]);
+    }
+    // pucks
+    run.bodies.forEach((b, i) => {
+      const r = b.pos(t), px = X(r, off), py = Y(r, off), R = b.size * g.s, hot = isHot('c' + i) && atStart;
+      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.2; ctx.beginPath(); ctx.arc(px, py, R + 6 * ps, 0, 7); ctx.fill(); ctx.globalAlpha = 1; }
+      ctx.fillStyle = T.block; ctx.beginPath(); ctx.arc(px, py, R, 0, 7); ctx.fill();
+      ctx.fillStyle = T.body[i]; ctx.globalAlpha = 0.3; ctx.beginPath(); ctx.arc(px, py, R * 0.62, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = T.body[i]; ctx.lineWidth = (hot ? 2.6 : 1.8) * ps; ctx.beginPath(); ctx.arc(px, py, R, 0, 7); ctx.stroke();
+      ctx.fillStyle = T.ink; ctx.font = `700 ${Math.min(12 * ps, R * 0.8)}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(i + 1), px, py);
+    });
+    ctx.restore();
+    // velocity arrows and handles
+    handles = [];
+    run.bodies.forEach((b, i) => {
+      const r = b.pos(t), v = b.vel(t), u = [v[0] - off.v[0], v[1] - off.v[1]], px = X(r, off), py = Y(r, off), R = b.size * g.s;
+      if (S.layers.arrows && hyp(u) * g.sv > R + 2) {
+        const ux = u[0] / hyp(u), uy = u[1] / hyp(u);
+        arrow(ctx, px + ux * R, py - uy * R, px + u[0] * g.sv, py - u[1] * g.sv, T.body[i], 2.4 * ps);
+      }
+      if (S.layers.arrows && !atStart && hyp(u) > 1e-6) labels.push([`${hyp(u) ? fv(hyp(u)) : ''}`, px + u[0] * g.sv + 6 * ps, py - u[1] * g.sv - 6 * ps, 'left', T.body[i]]);
+      // start handles
+      const r0 = b.pos(0), q0x = X(r0, off0), q0y = Y(r0, off0);
+      handles.push({ id: 'c' + i, cursor: 'grab', grabbing: 'grabbing', circle: [q0x, q0y, R], body: true,
+        set: (mx, my) => { const q = P(); q[i ? 'r2' : 'r1'] = [g.invX(mx) + off0.x[0], g.invY(my) + off0.x[1]]; tableKeep(q, i + 1); } });
+      if (S.layers.arrows && (atStart || S.layers.ghost)) {
+        const v0 = (i ? p.v2 : p.v1), w0 = [v0[0] - off0.v[0], v0[1] - off0.v[1]], tip = [q0x + w0[0] * g.sv, q0y - w0[1] * g.sv];
+        const L = Math.hypot(tip[0] - q0x, tip[1] - q0y);
+        let pt = tip;
+        if (L < R + 10 * ps) { const ux = L > 1e-6 ? (tip[0] - q0x) / L : 1, uy = L > 1e-6 ? (tip[1] - q0y) / L : 0; pt = [q0x + ux * (R + 12 * ps), q0y + uy * (R + 12 * ps)]; }
+        if (!atStart && S.layers.ghost && L > R + 2) { ctx.globalAlpha = 0.45; arrow(ctx, q0x + (tip[0] - q0x) / L * R, q0y + (tip[1] - q0y) / L * R, tip[0], tip[1], T.body[i], 1.8 * ps); ctx.globalAlpha = 1; }
+        handles.push({ id: 'v' + i, cursor: 'move', pt, tip, col: T.body[i],
+          set: (mx, my) => {
+            const q = P(), lim = 2;
+            let vx = (mx - q0x) / g.sv + off0.v[0], vy = -(my - q0y) / g.sv + off0.v[1];
+            const sp = Math.hypot(vx, vy); if (sp > lim) { vx *= lim / sp; vy *= lim / sp; }
+            vx = Math.round(vx * 20) / 20; vy = Math.round(vy * 20) / 20;
+            if (i === 0 && Math.hypot(vx, vy) < 0.05) vx = 0.05;
+            q[i ? 'v2' : 'v1'] = [vx, vy];
+          } });
+        if (atStart && S.layers.arrows) labels.push([`v_${i + 1} = ${fv(hyp(w0))}`, tip[0] + 8 * ps, tip[1] - 8 * ps, 'left', T.body[i]]);
+      }
+    });
+    drawGrips(ctx);
+    for (const [txt, x, y, al, col] of labels) labelBox(ctx, txt, clamp(x, 6, W - 60 * ls), clamp(y, ctlH + 14 * ls, H - 4), al, col, fs, 600);
+    if (!isFinite(run.tc)) labelBox(ctx, 'Miss: b is larger than R₁ + R₂', W / 2, H - 14 * ps, 'center', T.muted, fs, 400);
+  }
+
+  // ---------- Newton's cradle ----------
+  function cradleGeom(W, H) {
+    const ps = projScale(), top = ctlH + 10 * ps, p = P(), N = p.N;
+    const needW = N * 2 * CR.R + 2 * CR.L * Math.sin(45 * Math.PI / 180) + 0.08, needH = CR.L + CR.R + 0.07;
+    const s = Math.min((W - 24 * ps) / needW, (H - top - 16 * ps) / needH);
+    const yP = top + 0.03 * s + (H - top - 16 * ps - needH * s) / 2, cx = W / 2;
+    const px = (i) => cx + (i - (N - 1) / 2) * 2 * CR.R * s;
+    return { ps, s, yP, px, ball: (i, th) => [px(i) + CR.L * Math.sin(th) * s, yP + CR.L * Math.cos(th) * s] };
+  }
+  function drawCradleScene(ctx, W, H) {
+    const g = cradleGeom(W, H), ps = g.ps, ls = lsc(W, H), fs = 11.5 * ls, p = P(), N = p.N;
+    sg = g;
+    // frame bar
+    const x0 = g.px(0) - CR.L * 0.75 * g.s, x1 = g.px(N - 1) + CR.L * 0.75 * g.s;
+    ctx.fillStyle = T.block; roundRect(ctx, x0, g.yP - 7 * ps, x1 - x0, 7 * ps, 3 * ps); ctx.fill(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.stroke();
+    // rest positions, faint
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.setLineDash([3, 4]);
+    for (let i = 0; i < N; i++) { const b = g.ball(i, 0); ctx.beginPath(); ctx.arc(b[0], b[1], CR.R * g.s, 0, 7); ctx.stroke(); }
+    ctx.setLineDash([]);
+    handles = [];
+    const vmax = Math.sqrt(2 * G * CR.L * (1 - Math.cos(p.th * Math.PI / 180))) || 1;
+    for (let i = 0; i < N; i++) {
+      const th = cr.th[i], b = g.ball(i, th), R = CR.R * g.s, moving = Math.abs(cr.om[i]) * CR.L > 0.02 * vmax;
+      ctx.strokeStyle = T.wire; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.moveTo(g.px(i), g.yP); ctx.lineTo(b[0], b[1]); ctx.stroke();
+      const hot = isHot('b' + i);
+      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.22; ctx.beginPath(); ctx.arc(b[0], b[1], R + 6 * ps, 0, 7); ctx.fill(); ctx.globalAlpha = 1; }
+      const grd = ctx.createRadialGradient(b[0] - R * 0.35, b[1] - R * 0.35, R * 0.1, b[0], b[1], R);
+      grd.addColorStop(0, T.canvas); grd.addColorStop(1, T.block);
+      ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(b[0], b[1], R, 0, 7); ctx.fill();
+      ctx.strokeStyle = moving ? T.accent : T.muted; ctx.lineWidth = (moving || hot ? 2.2 : 1.3) * ps; ctx.stroke();
+      if (i < N - 1) handles.push({ id: 'b' + i, cursor: 'grab', grabbing: 'grabbing', circle: [b[0], b[1], R], body: true,
+        set: (mx, my) => {
+          const q = P(), ang = Math.atan2(g.px(i) - mx, my - g.yP) * 180 / Math.PI;
+          q.k = i + 1; q.th = clamp(Math.round(ang), 5, 40);
+        } });
+    }
+    // velocity arrows on the moving balls
+    if (S.layers.arrows) for (let i = 0; i < N; i++) {
+      const v = cr.om[i] * CR.L * Math.cos(cr.th[i]), b = g.ball(i, cr.th[i]);
+      if (Math.abs(v) > 0.05 * vmax) arrow(ctx, b[0], b[1] + CR.R * g.s + 10 * ps, b[0] + v / vmax * 40 * ps, b[1] + CR.R * g.s + 10 * ps, T.accent, 2 * ps, 7);
+    }
+    if (held) {
+      const b = g.ball(p.k - 1, cr.th[p.k - 1]);
+      labelBox(ctx, `${p.k} ball${p.k > 1 ? 's' : ''} at ${p.th}°`, b[0] - CR.R * g.s - 6 * ps, b[1] - CR.R * g.s - 6 * ps, 'right', T.ink, fs, 600);
+    }
+  }
+
+  // ---------- impulse: two bumpers ----------
+  function laneState(bp, tt) {   // cart front position (m, wall at 0) and velocity; bumper plate position
+    const p = P(), tc = BUMP.d / p.v0, L0 = laneL0();
+    if (tt <= tc) return { xf: -L0 - BUMP.d + p.v0 * tt, v: p.v0, plate: -L0, F: 0, phase: 0 };
+    const s = tt - tc;
+    if (s <= bp.ts) return { xf: -L0 + bp.x(s), v: bp.xd(s), plate: -L0 + bp.x(s), F: bp.F(s), phase: 1 };
+    const rel = bp.c > 0 ? bp.xs * Math.exp(-bp.k / bp.c * (s - bp.ts)) : 0;
+    return { xf: -L0 + bp.xs + bp.vout * (s - bp.ts), v: bp.vout, plate: -L0 + rel, F: 0, phase: 2 };
+  }
+  let L0imp = BUMP.L0;
+  const laneL0 = () => L0imp;
+  const LCOL = () => [T.xcol, T.vcol];
+  function drawImpulseScene(ctx, W, H) {
+    const ps = projScale(), ls = lsc(W, H), fs = 11.5 * ls, p = P(), top = ctlH + 6 * ps, L0 = laneL0();
+    const cl = cartLen(p.m), xmin = -L0 - BUMP.d - cl - 0.25, pad = 14 * ps;
+    const s = Math.min((W - 2 * pad - 20 * ps) / (-xmin + 0.02), 900 * ps);
+    const xw = W - pad - 10 * ps, X = (x) => xw + x * s;
+    const laneH = (H - top) / 2;
+    handles = [];
+    const labels = [];
+    const names = ['Stiff bumper', 'Soft bumper'], keys = ['kS', 'kF'];
+    sg = { s, X, invX: (px) => (px - xw) / s, sv: clamp(0.18 * s, 40, 120 * ps) };
+    bumps.forEach((bp, j) => {
+      const y0 = top + j * laneH, yT = y0 + laneH - 18 * ps, col = LCOL()[j], st = laneState(bp, t);
+      // track and wall
+      ctx.fillStyle = T.block; ctx.fillRect(4, yT, W - 8, 7 * ps); ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.strokeRect(4.5, yT + 0.5, W - 9, 7 * ps);
+      const h = cartH(p.m, ps, s), wallTop = yT - Math.max(h + 10 * ps, 42 * ps);
+      wallV(ctx, X(0), wallTop, yT, 1);
+      // spring and plate
+      const ySp = yT - 3 * ps - h * 0.5, plateX = X(st.plate);
+      drawSpring(ctx, plateX, X(0), ySp, 6 * ps, 8, T.wire, (1 + 0.45 * Math.log10(p[keys[j]])) * ps, isHot('k' + j));
+      ctx.fillStyle = T.ink; ctx.fillRect(plateX - 3 * ps, ySp - h * 0.42, 3 * ps, h * 0.84);
+      // cart
+      const cx = X(st.xf) - cl * s / 2, cw = cl * s;
+      const hot = isHot('m' + j);
+      ctx.fillStyle = T.block; roundRect(ctx, cx - cw / 2, yT - 3 * ps - h, cw, h, 5 * ps); ctx.fill();
+      ctx.fillStyle = col; ctx.globalAlpha = 0.85; roundRect(ctx, cx - cw / 2, yT - 3 * ps - h, cw, Math.max(5 * ps, h * 0.22), 5 * ps); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = col; ctx.lineWidth = (hot ? 2.4 : 1.6) * ps; roundRect(ctx, cx - cw / 2, yT - 3 * ps - h, cw, h, 5 * ps); ctx.stroke();
+      ctx.fillStyle = T.ink; ctx.font = `600 ${Math.min(11 * ps, h * 0.36)}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(`${sig(p.m, 2)} kg`, cx, yT - 3 * ps - h * 0.4);
+      // force on the cart during contact
+      if (st.F > 0) {
+        const Fm = Math.max(bumps[0].Fpk, bumps[1].Fpk), len = 18 * ps + 70 * ps * st.F / Fm;
+        arrow(ctx, cx - cw / 2, ySp, cx - cw / 2 - len, ySp, T.acol, 2.6 * ps);
+        labels.push([`F = ${sig(st.F, 3)} N`, cx - cw / 2 - len - 6 * ps, ySp - 8 * ps, 'right', T.acol]);
+      }
+      // velocity arrow
+      if (S.layers.arrows) {
+        const vy = yT - 3 * ps - h - 13 * ps;
+        arrow(ctx, cx, vy, cx + st.v * sg.sv, vy, col, 2.2 * ps);
+        labels.push([`v = ${fv(st.v)}`, cx + st.v * sg.sv / 2, vy - 7 * ps, 'center', col]);
+        if (j === 0) {
+          const s0 = laneState(bp, 0), c0 = X(s0.xf) - cl * s / 2, tip = c0 + p.v0 * sg.sv;
+          if (t > 0 && S.layers.ghost) { ctx.globalAlpha = 0.45; arrow(ctx, c0, vy, tip, vy, col, 1.6 * ps); ctx.globalAlpha = 1; }
+          if (t === 0 || held || S.layers.ghost) handles.push({ id: 'v0', cursor: 'ew-resize', pt: [tip, vy], tip: [tip, vy], col, set: (mx) => setParam('v0', (mx - c0) / sg.sv, { nosync: true }) });
+        }
+      }
+      labels.push([`${names[j]}, k = ${sig(p[keys[j]], 2)} N/m`, 12 * ps, y0 + 16 * ls, 'left', col]);
+      handles.push({ id: 'k' + j, cursor: 'ns-resize', pt: [(plateX + X(0)) / 2, ySp - 16 * ps], grip: 'v', param: keys[j], dirY: -1, logk: true });
+      handles.push({ id: 'm' + j, cursor: 'ns-resize', pt: [cx + cw / 2 - 9 * ps, yT - 3 * ps - h], grip: 'v', param: 'm', dirY: -1 });
+    });
+    drawGrips(ctx);
+    for (const [txt, x, y, al, col] of labels) labelBox(ctx, txt, x, y, al, col, fs, 600);
+  }
+
+  // ---------- bars ----------
+  // groups: [{title, items: [{lab, b, a, col}], note}]; b is "before" (outline), a is "after" (filled). Single bars when b is undefined.
+  function drawBars(ctx, W, H, groups, opts) {
+    const ps = projScale(), ls = lsc(W, H), fs = 11 * ls, top = 30 * ls, bot = H - 26 * ls - (groups.some((g) => g.note) ? 16 * ls : 0);
+    const gw = (W - 16) / groups.length;
+    let titleEnd = 0;
+    ctx.font = `600 ${fs}px ${T.ui}`;
+    groups.forEach((grp, gi) => {
+      const x0 = 8 + gi * gw + 8 * ls, x1 = 8 + (gi + 1) * gw - 8 * ls;
+      ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      richText(ctx, grp.title, x0, 10 * ls, fs * 0.95, 700, 'left');
+      let mx = 0, neg = false;
+      for (const it of grp.items) for (const v of [it.b, it.a]) if (v !== undefined && isFinite(v)) { mx = Math.max(mx, Math.abs(v)); if (v < -1e-9) neg = true; }
+      mx = grp.scale || (mx > 0 ? mx * 1.12 : 1);
+      if (grp.sym) neg = true;
+      const yz = neg ? (top + bot) / 2 + 6 * ls : bot, span = neg ? (bot - top) / 2 - 6 * ls : bot - top - 14 * ls;
+      const Y = (v) => yz - v / mx * span;
+      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, yz + 0.5); ctx.lineTo(x1, yz + 0.5); ctx.stroke();
+      const n = grp.items.length, slot = (x1 - x0) / n;
+      grp.items.forEach((it, k) => {
+        const cx = x0 + slot * (k + 0.5), pair = it.b !== undefined, bw = Math.min(pair ? slot * 0.3 : slot * 0.5, 30 * ls);
+        const draw = (v, x, filled, alpha) => {
+          if (!isFinite(v)) return;
+          const y = Y(v), h = yz - y;
+          ctx.globalAlpha = alpha;
+          if (filled) { ctx.fillStyle = it.col; ctx.fillRect(x, Math.min(y, yz), bw, Math.abs(h)); }
+          else { ctx.fillStyle = it.col; ctx.globalAlpha = alpha * 0.16; ctx.fillRect(x, Math.min(y, yz), bw, Math.abs(h)); ctx.globalAlpha = alpha; ctx.strokeStyle = it.col; ctx.lineWidth = 1.6 * ps; ctx.strokeRect(x + 0.8 * ps, Math.min(y, yz) + 0.8 * ps, bw - 1.6 * ps, Math.max(0, Math.abs(h) - 1.6 * ps)); }
+          ctx.globalAlpha = 1;
+        };
+        if (pair) { draw(it.b, cx - bw - 2 * ls, false, 1); draw(it.a, cx + 2 * ls, true, opts && opts.pending ? 0.28 : 1); }
+        else draw(it.a, cx - bw / 2, true, 1);
+        ctx.fillStyle = it.col; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        richText(ctx, it.lab, cx, bot + 6 * ls + (neg ? 0 : 0), fs, 700, 'center');
+        if (it.val) {
+          const v = pair ? it.a : it.a, y = Y(v);
+          const ty = v >= 0 ? Math.max(top + fs, y - 4 * ls) : Math.min(bot - 2, y + fs + 4 * ls);
+          ctx.textBaseline = 'alphabetic'; ctx.fillStyle = T.ink; ctx.font = `${fs * 0.92}px ${T.mono}`; ctx.textAlign = 'center';
+          ctx.fillText(it.val, cx, ty);
+        }
+      });
+      if (grp.note) { ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; richText(ctx, grp.note, x0, H - 8 * ls, fs * 0.92, 400, 'left'); }
+      if (gi === groups.length - 1) titleEnd = x0 + richWidth(ctx, grp.title, fs * 0.95, 700);
+    });
+    // legend, top right, when there is room
+    if (opts && opts.legend) {
+      const f2 = fs * 0.9; ctx.font = `${f2}px ${T.ui}`;
+      const wb = ctx.measureText('before').width, wa = ctx.measureText('after').width, bx = 10 * ls, tot = bx + 4 * ls + wb + 12 * ls + bx + 4 * ls + wa;
+      let x = W - 10 * ls - tot; const y = 10 * ls;
+      if (x > titleEnd + 14 * ls) {
+        ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ps; ctx.strokeRect(x + 0.5, y + 1, bx, bx);
+        ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('before', x + bx + 4 * ls, y);
+        x += bx + 4 * ls + wb + 12 * ls; ctx.fillRect(x, y + 1, bx, bx); ctx.fillText('after', x + bx + 4 * ls, y);
+      }
+    }
+  }
+  function drawE() {
+    const [W, H] = dims.e; if (!W || !H) return;
+    const ctx = ctxs.e, ls = lsc(W, H);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const C = [T.pos, T.neg, T.equi];
+    if (S.mode === 'track' || S.mode === 'explode' || S.mode === 'table') {
+      const B = pk('before'), A = pk('after'), pending = !held && t < run.tc + (run.tq && isFinite(run.tq) ? run.tq : 0);
+      const tot = (arr, f) => arr.reduce((s, q) => s + f(q), 0);
+      const grpP = (ax, title) => ({ title, items: [
+        { lab: 'p_1', b: B[0].p[ax], a: A[0].p[ax], col: C[0] }, { lab: 'p_2', b: B[1].p[ax], a: A[1].p[ax], col: C[1] },
+        { lab: 'total', b: tot(B, (q) => q.p[ax]), a: tot(A, (q) => q.p[ax]), col: C[2], val: fx(tot(A, (q) => q.p[ax]), 2) }] });
+      const dK = tot(A, (q) => q.K) - tot(B, (q) => q.K);
+      const gK = { title: 'Kinetic energy K (J)', items: [
+        { lab: 'K_1', b: B[0].K, a: A[0].K, col: C[0] }, { lab: 'K_2', b: B[1].K, a: A[1].K, col: C[1] },
+        { lab: 'total', b: tot(B, (q) => q.K), a: tot(A, (q) => q.K), col: C[2], val: fx(tot(A, (q) => q.K), 3) }],
+        note: Math.abs(dK) < 5e-7 ? 'ΔK = 0' : `ΔK = ${dK > 0 ? '+' : ''}${fx(dK, 3)} J${S.mode === 'explode' ? ' (spring energy)' : ''}` };
+      const groups = S.mode === 'table' ? [grpP(0, 'p_x (kg·m/s)'), grpP(1, 'p_y (kg·m/s)'), gK] : [grpP(0, 'Momentum p (kg·m/s)'), gK];
+      drawBars(ctx, W, H, groups, { pending: isFinite(run.tc) && pending, legend: true });
+    } else if (S.mode === 'impulse') {
+      const p = P(), [a, b] = bumps, Jm = p.m * p.v0 * (1 + p.e);
+      const Ja = integrate(a.F, 0, a.ts), Jb = integrate(b.F, 0, b.ts);
+      drawBars(ctx, W, H, [
+        { title: 'Impulse (N·s)', items: [{ lab: 'mΔv', a: Jm, col: T.muted, val: fx(Jm, 2) }, { lab: 'stiff', a: Ja, col: T.xcol, val: fx(Ja, 2) }, { lab: 'soft', a: Jb, col: T.vcol, val: fx(Jb, 2) }] },
+        { title: 'Peak force (N)', items: [{ lab: 'stiff', a: a.Fpk, col: T.xcol, val: sig(a.Fpk, 3) }, { lab: 'soft', a: b.Fpk, col: T.vcol, val: sig(b.Fpk, 3) }] },
+        { title: 'Contact time (ms)', items: [{ lab: 'stiff', a: a.ts * 1000, col: T.xcol, val: sig(a.ts * 1000, 3) }, { lab: 'soft', a: b.ts * 1000, col: T.vcol, val: sig(b.ts * 1000, 3) }] }
+      ]);
+    } else {
+      // cradle: horizontal velocity of each ball, now
+      const p = P(), vmax = Math.sqrt(2 * G * CR.L * (1 - Math.cos(p.th * Math.PI / 180)));
+      const items = cr.th.map((th, i) => ({ lab: String(i + 1), a: cr.om[i] * CR.L * Math.cos(th), col: T.accent }));
+      drawBars(ctx, W, H, [{ title: 'Velocity of each ball now (m/s)', items, scale: vmax * 1.1 || 1, sym: true, note: `Total momentum now: ${fx(items.reduce((s, q) => s + CR.m * q.a, 0), 3)} kg·m/s` }]);
+      void ls;
+    }
+  }
+
+  // ---------- graphs ----------
+  function axes(ctx, L, R, top, bot, xr, yr, xlab, ylab, ls, opts) {
+    const fs = 10 * ls;
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.font = `${fs}px ${T.mono}`;
+    const X = (v) => L + (v - xr[0]) / (xr[1] - xr[0]) * (R - L), Y = (v) => bot - (v - yr[0]) / (yr[1] - yr[0]) * (bot - top);
+    const xs = nice((xr[1] - xr[0]) / Math.max(3, Math.floor((R - L) / (70 * ls)))), ys = nice((yr[1] - yr[0]) / Math.max(2, Math.floor((bot - top) / (40 * ls))));
+    ctx.beginPath();
+    for (let v = Math.ceil(xr[0] / xs) * xs; v <= xr[1] + 1e-9; v += xs) { ctx.moveTo(X(v) + 0.5, top); ctx.lineTo(X(v) + 0.5, bot); }
+    for (let v = Math.ceil(yr[0] / ys) * ys; v <= yr[1] + 1e-9; v += ys) { ctx.moveTo(L, Y(v) + 0.5); ctx.lineTo(R, Y(v) + 0.5); }
+    ctx.stroke();
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const xd = xs < 1 ? (xs < 0.1 ? 2 : 1) : 0, yd = ys < 1 ? (ys < 0.1 ? 2 : 1) : 0;
+    for (let v = Math.ceil(xr[0] / xs) * xs; v <= xr[1] + 1e-9; v += xs) ctx.fillText(fx(v * (opts && opts.xmul || 1), opts && opts.xd !== undefined ? opts.xd : xd), X(v), bot + 4 * ls);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = Math.ceil(yr[0] / ys) * ys; v <= yr[1] + 1e-9; v += ys) ctx.fillText(fx(v, yd), L - 4 * ls, Y(v));
+    ctx.strokeStyle = T.gridStrong; ctx.strokeRect(L + 0.5, top + 0.5, R - L, bot - top);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(xlab, R, bot + 16 * ls);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(ylab, L, top - 4 * ls);
+    return { X, Y };
+  }
+  function drawXT(ctx, W, H) {
+    const ls = lsc(W, H), ps = projScale(), L = 44 * ls, R = W - 12 * ls, top = 40 * ls, bot = H - 34 * ls;
+    if (R - L < 40 || bot - top < 30) return;
+    ctx.fillStyle = T.ink; ctx.font = `700 ${11 * ls}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(S.frame === 'cm' ? 'Position against time, center of mass frame' : 'Position against time', 10 * ls, 9 * ls);
+    const { X, Y } = axes(ctx, L, R, top, bot, [0, Trun], [-XR, XR], 't (s)', S.frame === 'cm' ? 'x − x_cm (m)' : 'x (m)', ls);
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
+    const n = Math.max(60, Math.round((R - L) / 2));
+    const line = (f, col, lw, dash, alpha, t1) => {
+      ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.setLineDash(dash || []); ctx.globalAlpha = alpha; ctx.beginPath();
+      for (let k = 0; k <= n; k++) { const tt = Math.min(t1, Trun * k / n); const y = f(tt); k ? ctx.lineTo(X(tt), Y(y)) : ctx.moveTo(X(tt), Y(y)); if (tt >= t1) break; }
+      ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    };
+    if (isFinite(run.tc) && run.tc <= Trun) {
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(X(run.tc), top); ctx.lineTo(X(run.tc), bot); ctx.stroke(); ctx.setLineDash([]);
+    }
+    run.bodies.forEach((b, i) => {
+      const f = (tt) => b.pos(tt)[0] - frameOff(tt).x[0];
+      line(f, T.body[i], 1.4 * ps, null, 0.3, Trun);
+      line(f, T.body[i], 2.4 * ps, null, 1, t);
+    });
+    if (S.layers.cm) line((tt) => cmAt(tt)[0] - frameOff(tt).x[0], T.equi, 1.8 * ps, [6 * ps, 4 * ps], 1, Trun);
+    ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.45; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.moveTo(X(t), top); ctx.lineTo(X(t), bot); ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.restore();
+    if (isFinite(run.tc) && run.tc <= Trun) labelBox(ctx, S.mode === 'explode' ? 'thread cut' : 'collision', X(run.tc) + 4 * ls, top + 14 * ls, 'left', T.muted, 10.5 * ls, 400);
+    // line labels at the right end
+    const lab = [];
+    run.bodies.forEach((b, i) => lab.push([`cart ${i + 1}`, Y(clamp(b.pos(Trun)[0] - frameOff(Trun).x[0], -XR, XR)), T.body[i]]));
+    if (S.layers.cm) lab.push(['CM', Y(clamp(cmAt(Trun)[0] - frameOff(Trun).x[0], -XR, XR)), T.equi]);
+    lab.sort((a, b) => a[1] - b[1]);
+    for (let k = 1; k < lab.length; k++) if (lab[k][1] - lab[k - 1][1] < 13 * ls) lab[k][1] = lab[k - 1][1] + 13 * ls;
+    for (const [txt, y, col] of lab) labelBox(ctx, txt, R - 4 * ls, clamp(y + 4 * ls, top + 12 * ls, bot - 3), 'right', col, 10.5 * ls, 700);
+  }
+  // momentum diagram: p₁ + p₂ tip to tail before (outline) and after (solid), both ending at the same total P
+  function drawMomentum(ctx, W, H) {
+    const ls = lsc(W, H), ps = projScale(), fs = 11 * ls;
+    ctx.fillStyle = T.ink; ctx.font = `700 ${fs}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(S.frame === 'cm' ? 'Momentum vectors, center of mass frame' : 'Momentum vectors, tip to tail', 10 * ls, 9 * ls);
+    const B = pk('before'), A = pk('after'), Pt = [B[0].p[0] + B[1].p[0], B[0].p[1] + B[1].p[1]];
+    const pts = [[0, 0], B[0].p, Pt, A[0].p];
+    const p = P(), thales = S.frame === 'lab' && Math.abs(p.m1 - p.m2) < 1e-9 && p.e === 1 && hyp(p.v2) < 1e-9 && isFinite(run.tc);
+    if (thales) { const c = [Pt[0] / 2, Pt[1] / 2], r = hyp(Pt) / 2; pts.push([c[0] - r, c[1] - r], [c[0] + r, c[1] + r]); }
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    for (const q of pts) { x0 = Math.min(x0, q[0]); x1 = Math.max(x1, q[0]); y0 = Math.min(y0, q[1]); y1 = Math.max(y1, q[1]); }
+    const span = Math.max(x1 - x0, y1 - y0, 1e-6), padF = 0.12 * span;
+    x0 -= padF; x1 += padF; y0 -= padF; y1 += padF;
+    const top = 34 * ls, bot = H - 30 * ls, L = 14 * ls, R = W - 14 * ls;
+    const s = Math.min((R - L) / (x1 - x0), (bot - top) / (y1 - y0));
+    const cx = (L + R) / 2 - (x0 + x1) / 2 * s, cy = (top + bot) / 2 + (y0 + y1) / 2 * s;
+    const X = (v) => cx + v[0] * s, Y = (v) => cy - v[1] * s;
+    if (thales) {
+      const c = [Pt[0] / 2, Pt[1] / 2]; ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.2; ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.arc(X(c), Y(c), hyp(Pt) / 2 * s, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+    }
+    const O = [0, 0], pend = t < run.tc && t > 0 && !held;
+    const vec = (a, b, col, lw, dash, alpha) => {
+      ctx.globalAlpha = alpha; ctx.setLineDash(dash || []);
+      arrow(ctx, X(a), Y(a), X(b), Y(b), col, lw, 10); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    };
+    const labels = [];
+    const mid = (a, b, off) => { const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, dx = b[0] - a[0], dy = b[1] - a[1], d = Math.hypot(dx, dy) || 1; return [X([mx, my]) - dy / d * off, Y([mx, my]) - dx / d * off]; };
+    // before: outline style (dashed), after: solid
+    vec(O, B[0].p, T.pos, 1.8 * ps, [5 * ps, 4 * ps], 0.8);
+    vec(B[0].p, [B[0].p[0] + B[1].p[0], B[0].p[1] + B[1].p[1]], T.neg, 1.8 * ps, [5 * ps, 4 * ps], 0.8);
+    if (hyp(Pt) * s > 4) vec(O, Pt, T.equi, 2.6 * ps, null, 1);
+    const aA = pend ? 0.25 : 1;
+    vec(O, A[0].p, T.pos, 2.6 * ps, null, aA);
+    vec(A[0].p, [A[0].p[0] + A[1].p[0], A[0].p[1] + A[1].p[1]], T.neg, 2.6 * ps, null, aA);
+    if (hyp(B[0].p) * s > 14) { const m = mid(O, B[0].p, -12 * ls); labels.push(['p_1', m[0], m[1] + 4, 'center', T.pos]); }
+    if (hyp(B[1].p) * s > 14) { const m = mid(B[0].p, Pt, -12 * ls); labels.push(['p_2', m[0], m[1] + 4, 'center', T.neg]); }
+    if (!pend || true) {
+      if (hyp(A[0].p) * s > 14) { const m = mid(O, A[0].p, 13 * ls); labels.push(['p_1′', m[0], m[1] + 4, 'center', T.pos]); }
+      if (hyp(A[1].p) * s > 14) { const m = mid(A[0].p, Pt, 13 * ls); labels.push(['p_2′', m[0], m[1] + 4, 'center', T.neg]); }
+    }
+    // angle between outgoing momenta at their junction
+    if (isFinite(run.tc) && hyp(A[0].p) * s > 10 && hyp(A[1].p) * s > 10) {
+      const a1 = A[0].p, a2 = A[1].p, cos = (a1[0] * a2[0] + a1[1] * a2[1]) / (hyp(a1) * hyp(a2)), ang = Math.acos(clamp(cos, -1, 1));
+      const J = A[0].p, r = 14 * ls;
+      const angA = Math.atan2(-(0 - J[1]), 0 - J[0]), angB = Math.atan2(-(Pt[1] - J[1]), Pt[0] - J[0]);
+      // the interior angle at the junction is π − (angle between p₁′ and p₂′)
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * ps; ctx.globalAlpha = aA;
+      if (Math.abs(ang - Math.PI / 2) < 0.002) {
+        const u1 = [Math.cos(angA), Math.sin(angA)], u2 = [Math.cos(angB), Math.sin(angB)], q = 10 * ls;
+        ctx.beginPath(); ctx.moveTo(X(J) + u1[0] * q, Y(J) + u1[1] * q); ctx.lineTo(X(J) + (u1[0] + u2[0]) * q, Y(J) + (u1[1] + u2[1]) * q); ctx.lineTo(X(J) + u2[0] * q, Y(J) + u2[1] * q); ctx.stroke();
+      } else {
+        let d = angB - angA; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI;
+        ctx.beginPath(); ctx.arc(X(J), Y(J), r, angA, angA + d, d < 0); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      labels.push([`angle between p_1′ and p_2′: ${deg(ang)}`, 10 * ls, H - 10 * ls, 'left', T.ink]);
+    }
+    if (hyp(Pt) * s > 20) { const m = mid(O, Pt, 0); labels.push([S.frame === 'cm' ? '' : 'P', m[0] + 8 * ls, m[1] - 6 * ls, 'left', T.equi]); }
+    if (S.frame === 'cm') labels.push(['total P = 0 in this frame', W - 10 * ls, H - 10 * ls, 'right', T.equi]);
+    for (const [txt, x, y, al, col] of labels) if (txt) labelBox(ctx, txt, x, y, al, col, fs, 700);
+  }
+  function drawForce(ctx, W, H) {
+    const ls = lsc(W, H), ps = projScale(), L = 44 * ls, R = W - 12 * ls, top = 40 * ls, bot = H - 34 * ls, p = P();
+    if (R - L < 40 || bot - top < 30) return;
+    ctx.fillStyle = T.ink; ctx.font = `700 ${11 * ls}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Force on the cart during contact; the area is the impulse', 10 * ls, 9 * ls);
+    const tmax = Math.max(bumps[0].ts, bumps[1].ts) * 1.08, Fm = Math.max(bumps[0].Fpk, bumps[1].Fpk) * 1.12;
+    const { X, Y } = axes(ctx, L, R, top, bot, [0, tmax], [0, Fm], 't after contact (ms)', 'F (N)', ls, { xmul: 1000, xd: 0 });
+    const tc = BUMP.d / p.v0, now = t - tc;
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
+    bumps.forEach((bp, j) => {
+      const col = LCOL()[j], n = 300;
+      const path = (t1) => { ctx.beginPath(); ctx.moveTo(X(0), Y(0)); for (let k = 0; k <= n; k++) { const tt = Math.min(t1, bp.ts * k / n); ctx.lineTo(X(tt), Y(bp.F(tt))); if (tt >= t1) break; } };
+      path(bp.ts); ctx.lineTo(X(bp.ts), Y(0)); ctx.closePath(); ctx.fillStyle = col; ctx.globalAlpha = 0.1; ctx.fill(); ctx.globalAlpha = 1;
+      if (now > 0) { path(Math.min(now, bp.ts)); ctx.lineTo(X(Math.min(now, bp.ts)), Y(0)); ctx.closePath(); ctx.fillStyle = col; ctx.globalAlpha = 0.28; ctx.fill(); ctx.globalAlpha = 1; }
+      path(bp.ts); ctx.strokeStyle = col; ctx.lineWidth = 2.2 * ps; ctx.stroke();
+    });
+    if (now > 0 && now < tmax) { ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.moveTo(X(now), top); ctx.lineTo(X(now), bot); ctx.stroke(); }
+    ctx.restore();
+    const J = p.m * p.v0 * (1 + p.e);
+    bumps.forEach((bp, j) => {
+      const col = LCOL()[j], x = X(bp.tp), y = Y(bp.Fpk);
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, 3.5 * ps, 0, 7); ctx.fill();
+      labelBox(ctx, `${j ? 'soft' : 'stiff'}: peak ${sig(bp.Fpk, 3)} N`, x + 8 * ls, y + (j ? -6 : 12) * ls, 'left', col, 10.5 * ls, 700);
+    });
+    labelBox(ctx, `each area = ${fx(J, 3)} N·s = m(1 + e)v_0`, R - 6 * ls, top + 16 * ls, 'right', T.ink, 10.5 * ls, 600);
+  }
+  // Newton's cradle: if n balls came out, momentum fixes their speed at kv/n; only n = k keeps the energy
+  function drawCradleOutcomes(ctx, W, H) {
+    const ls = lsc(W, H), ps = projScale(), p = P(), N = p.N, k = p.k, fs = 10.5 * ls;
+    ctx.fillStyle = T.ink; ctx.font = `700 ${11 * ls}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(`${k} ball${k > 1 ? 's' : ''} in at speed v. What if n balls came out?`, 10 * ls, 9 * ls);
+    ctx.font = `${fs}px ${T.ui}`; ctx.fillStyle = T.muted;
+    ctx.fillText('Momentum fixes their speed at kv/n. Kinetic energy out ÷ in = k/n.', 10 * ls, 25 * ls);
+    const L = 44 * ls, R = W - 12 * ls, top = 52 * ls, bot = H - 40 * ls;
+    if (bot - top < 30) return;
+    const ymax = Math.max(1.2, k * 1.1);
+    const Y = (v) => bot - v / ymax * (bot - top);
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, bot + 0.5); ctx.lineTo(R, bot + 0.5); ctx.stroke();
+    ctx.strokeStyle = T.ink; ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.moveTo(L, Y(1)); ctx.lineTo(R, Y(1)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * ls}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillText('1', L - 4 * ls, Y(1)); ctx.fillText('0', L - 4 * ls, bot);
+    const slot = (R - L) / N;
+    for (let n = 1; n <= N; n++) {
+      const r = k / n, cx = L + slot * (n - 0.5), bw = Math.min(slot * 0.55, 38 * ls), ok = n === k;
+      ctx.fillStyle = ok ? T.vcol : T.pos; ctx.globalAlpha = ok ? 0.95 : 0.5;
+      ctx.fillRect(cx - bw / 2, Y(Math.min(r, ymax)), bw, bot - Y(Math.min(r, ymax))); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.ink; ctx.font = `${fs}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+      ctx.fillText(`×${r.toFixed(2)}`, cx, Y(Math.min(r, ymax)) - 3 * ls);
+      ctx.textBaseline = 'top'; ctx.font = `${ok ? 700 : 400} ${fs}px ${T.ui}`; ctx.fillStyle = ok ? T.vcol : T.muted;
+      ctx.fillText(`n = ${n}`, cx, bot + 5 * ls);
+      if (slot > 52 * ls) { ctx.font = `${fs * 0.9}px ${T.mono}`; ctx.fillText(`${sig(k / n, 2)}v`, cx, bot + 18 * ls); }
+    }
+    labelBox(ctx, 'energy in', R - 4 * ls, Y(1) - 4 * ls, 'right', T.ink, fs, 600);
+    void ps;
+  }
+  function drawP() {
+    const [W, H] = dims.p; if (!W || !H) return;
+    const ctx = ctxs.p;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (S.mode === 'track' || S.mode === 'explode') drawXT(ctx, W, H);
+    else if (S.mode === 'table') drawMomentum(ctx, W, H);
+    else if (S.mode === 'impulse') drawForce(ctx, W, H);
+    else drawCradleOutcomes(ctx, W, H);
+  }
+  function drawScene() {
+    const [W, H] = dims.c; if (!W || !H || !run) return;
+    const ctx = ctxs.c;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    ctlH = (document.querySelector('.stage-ctl').getBoundingClientRect().height || 30) + 10;
+    if (S.mode === 'track' || S.mode === 'explode') drawTrackScene(ctx, W, H);
+    else if (S.mode === 'table') drawTableScene(ctx, W, H);
+    else if (S.mode === 'cradle') drawCradleScene(ctx, W, H);
+    else drawImpulseScene(ctx, W, H);
+  }
+  function drawAll() { if (!T || !run) return; drawScene(); drawE(); drawP(); clock(); }
+  function clock() {
+    $('tclock').firstChild.textContent = S.mode === 'impulse' && t > BUMP.d / P().v0 ? `t = ${fx((t - BUMP.d / P().v0) * 1000, 0)} ms after contact` : `t = ${fx(t, 2)} s`;
+    $('rateTag').textContent = fmtRate(S.rate);
+  }
+
+  // ---------- readouts ----------
+  function dl(rows) {
+    return rows.map(([k, v, cls]) => `<div${cls && cls.includes('wide') ? ' class="wide"' : ''}><dt>${k}</dt><dd class="${cls || ''}">${v}</dd></div>`).join('');
+  }
+  let lastRead = '';
+  function updateReadouts() {
+    const p = P(); let rows = [], f = '';
+    if (S.mode === 'track') {
+      const [u1, u2] = [run.after[0][0], run.after[1][0]], V = vcm()[0], hit = isFinite(run.tc);
+      const B = pk('before'), A = pk('after'), PB = B[0].p[0] + B[1].p[0], PA = A[0].p[0] + A[1].p[0], KB = B[0].K + B[1].K, KA = A[0].K + A[1].K;
+      const off = S.frame === 'cm' ? V : 0;
+      rows = [[`v<sub>1</sub>′${S.frame === 'cm' ? ' (CM)' : ''}`, fv(u1 - off), 'c-1'], [`v<sub>2</sub>′${S.frame === 'cm' ? ' (CM)' : ''}`, fv(u2 - off), 'c-2'],
+        ['Total p before', fp(PB)], ['Total p after', fp(PA)], ['K before', fK(KB)], ['K after', fK(KA)],
+        ['Center of mass velocity', fv(V), 'c-t'], ['Collides at', hit ? `t = ${fx(run.tc, 2)} s` : 'never']];
+      const mu = p.m1 * p.m2 / (p.m1 + p.m2), loss = hit ? keLoss(p.m1, p.m2, p.v1, p.v2, p.e) : 0;
+      rows.push(['Kinetic energy lost', `${fK(KB - KA)} <span class="ok">½μ(1 − e²)v<sub>rel</sub>² = ${fx(loss, 3)} J</span>`, 'wide']);
+      f = S.frame === 'cm' ? `CM frame: u₁ = ${fx(p.v1 - V, 3)} → u₁′ = ${fx(u1 - V, 3)} = −e u₁; u₂ = ${fx(p.v2 - V, 3)} → u₂′ = ${fx(u2 - V, 3)} m/s. μ = ${fx(mu, 3)} kg.`
+        : `v₁′ = ((m₁ − e m₂)v₁ + (1 + e)m₂v₂)/(m₁ + m₂), v₂′ = ((m₂ − e m₁)v₂ + (1 + e)m₁v₁)/(m₁ + m₂). μ = m₁m₂/(m₁ + m₂) = ${fx(mu, 3)} kg.`;
+    } else if (S.mode === 'table') {
+      const A = run.after, B = run.before, hit = isFinite(run.tc);
+      const a1 = A[0], a2 = A[1], ang1 = Math.atan2(a1[1], a1[0]), ang2 = Math.atan2(a2[1], a2[0]);
+      const between = hyp(a1) > 1e-9 && hyp(a2) > 1e-9 ? Math.acos(clamp((a1[0] * a2[0] + a1[1] * a2[1]) / (hyp(a1) * hyp(a2)), -1, 1)) : NaN;
+      const KB = 0.5 * p.m1 * (B[0][0] ** 2 + B[0][1] ** 2) + 0.5 * p.m2 * (B[1][0] ** 2 + B[1][1] ** 2), KA = 0.5 * p.m1 * (a1[0] ** 2 + a1[1] ** 2) + 0.5 * p.m2 * (a2[0] ** 2 + a2[1] ** 2);
+      const D = puckR(p.m1) + puckR(p.m2);
+      rows = [['v<sub>1</sub>′', `${fv(hyp(a1))} at ${hyp(a1) > 1e-9 ? deg(ang1) : '—'}`, 'c-1'], ['v<sub>2</sub>′', `${fv(hyp(a2))} at ${hyp(a2) > 1e-9 ? deg(ang2) : '—'}`, 'c-2'],
+        ['Angle between outgoing paths', hit && isFinite(between) ? deg(between) : '—'], ['b ÷ (R<sub>1</sub> + R<sub>2</sub>)', `${fx(run.bImp / D, 3)}${hit ? '' : ' (miss)'}`],
+        ['Total p before', `(${fx(p.m1 * B[0][0] + p.m2 * B[1][0], 3)}, ${fx(p.m1 * B[0][1] + p.m2 * B[1][1], 3)})`], ['Total p after', `(${fx(p.m1 * a1[0] + p.m2 * a2[0], 3)}, ${fx(p.m1 * a1[1] + p.m2 * a2[1], 3)})`],
+        ['K before', fK(KB)], ['K after', fK(KA)]];
+      f = hit ? `n = (${fx(run.n[0], 3)}, ${fx(run.n[1], 3)}) along the line of centers; impulse J = (1 + e)μ(v₁ − v₂)·n = ${fx(collide2D({ ...p, R1: puckR(p.m1), R2: puckR(p.m2) }).J, 3)} N·s. Momentum in kg·m/s.` : 'The pucks miss: no impulse, nothing changes.';
+    } else if (S.mode === 'explode') {
+      const u1 = run.after[0][0], u2 = run.after[1][0];
+      const K1 = 0.5 * p.m1 * u1 * u1, K2 = 0.5 * p.m2 * u2 * u2, Mt = p.m1 + p.m2;
+      rows = [['v<sub>1</sub>', fv(u1), 'c-1'], ['v<sub>2</sub>', fv(u2), 'c-2'], ['Total p before', fp(Mt * p.V)], ['Total p after', fp(p.m1 * u1 + p.m2 * u2)],
+        ['K before', fK(0.5 * Mt * p.V * p.V)], ['K after', fK(K1 + K2)],
+        ['K<sub>1</sub> ÷ K<sub>2</sub>', p.V === 0 && K2 > 0 ? `${fx(K1 / K2, 3)} = m<sub>2</sub>/m<sub>1</sub>` : (K2 > 0 ? fx(K1 / K2, 3) : '—')], ['Push lasts', isFinite(run.tq) ? `${fx(run.tq * 1000, 1)} ms` : '—']];
+      const mg = 4, mb = 0.008, vb = 360, vg = -mb * vb / mg, Eg = 0.5 * mg * vg * vg, Eb = 0.5 * mb * vb * vb;
+      rows.push(['Gun and bullet', `<span class="ok">A 4 kg rifle firing an 8 g bullet at 360 m/s recoils at ${fx(-vg, 2)} m/s. The bullet carries ${fx(100 * Eb / (Eb + Eg), 1)}% of the ${sig(Eb + Eg, 3)} J.</span>`, 'wide']);
+      f = `v₁ = V − (m₂/M)v_rel, v₂ = V + (m₁/M)v_rel, with E = ½μv_rel², v_rel = ${fx(u2 - u1, 3)} m/s.`;
+    } else if (S.mode === 'cradle') {
+      const v = Math.sqrt(2 * G * CR.L * (1 - Math.cos(p.th * Math.PI / 180))), E = cradleEnergy(cr, CR.m, CR.L);
+      rows = [['Speed at the bottom v', fv(v)], ['Balls pulled back', String(p.k)],
+        ['Last collision', crLog ? `${crLog.inN} in → ${crLog.outN} out` : '—'], ['Speed out', crLog ? fv(crLog.vout) : '—'],
+        ['Momentum in', fp(p.k * CR.m * v)], ['Energy now', `${fK(E)}`], ['Energy drift', `${sig(crE0 > 0 ? (E - crE0) / crE0 * 100 : 0, 2)}%`, '']];
+      f = `With n balls out at kv/n: p = k m v always, K = (k/n)·½ k m v². Both hold only for n = k.`;
+    } else {
+      const [a, b] = bumps;
+      rows = [['Damping ratio ζ', fx(a.z, 4)], ['Rebound e from the model', `${fx(a.eCheck, 4)}`],
+        ['Stiff: c', `${sig(a.c, 3)} kg/s`, 'c-s'], ['Soft: c', `${sig(b.c, 3)} kg/s`, 'c-f'],
+        ['Stiff: peak F', `${sig(a.Fpk, 3)} N`, 'c-s'], ['Soft: peak F', `${sig(b.Fpk, 3)} N`, 'c-f'],
+        ['Stiff: contact', `${sig(a.ts * 1000, 3)} ms`, 'c-s'], ['Soft: contact', `${sig(b.ts * 1000, 3)} ms`, 'c-f'],
+        ['Impulse, both', `${fx(a.J, 3)} N·s`], ['m(1 + e)v<sub>0</sub>', `${fx(p.m * p.v0 * (1 + p.e), 3)} N·s`]];
+      f = `c = 2ζ√(km) with ζ set by e alone; peak force scales as √k, contact time as 1/√k, the area stays m(1 + e)v₀.`;
+    }
+    const html = dl(rows);
+    if (html !== lastRead) { $('readBox').innerHTML = html; lastRead = html; }
+    if ($('formula').textContent !== f) $('formula').textContent = f;
+  }
+
+  // ---------- rail: sliders ----------
+  const slEls = {};
+  function buildSliders() {
+    const box = $('sliders'); box.innerHTML = '';
+    for (const [mode, defs] of Object.entries(SLD)) {
+      const grp = document.createElement('div'); grp.dataset.mode = mode; grp.style.display = 'flex'; grp.style.flexDirection = 'column'; grp.style.gap = '10px';
+      for (const d of defs) {
+        const id = `s_${mode}_${d[0]}`;
+        const w = document.createElement('div'); w.className = 'ctl';
+        w.innerHTML = `<div class="slider-head"><label for="${id}">${d[1]}</label><output id="${id}o" class="mono" for="${id}"></output></div><input type="range" id="${id}" min="${d[2]}" max="${d[3]}" step="${d[4]}">`;
+        grp.appendChild(w);
+        const inp = w.querySelector('input');
+        inp.addEventListener('input', () => {
+          const v = +inp.value;
+          setParam(d[0], d[6] === 'logk' ? kOfPos(d[0], v) : v, { nosync: true });
+          syncSliders(d[0]);
+          restart();
+        });
+        slEls[`${mode}.${d[0]}`] = { inp, out: w.querySelector('output'), d };
+      }
+      box.appendChild(grp);
+    }
+  }
+  function valOf(key) {
+    const p = P();
+    if (S.mode === 'table' && key === 'u1') return hyp(p.v1);
+    if (S.mode === 'table' && key === 'b') return Math.abs(tableB(p)) * 100;
+    return p[key];
+  }
+  function syncSliders(skip) {
+    for (const grp of $('sliders').children) grp.hidden = grp.dataset.mode !== S.mode;
+    for (const d of SLD[S.mode]) {
+      const el = slEls[`${S.mode}.${d[0]}`], v = valOf(d[0]);
+      if (S.mode === 'cradle' && d[0] === 'k') el.inp.max = P().N - 1;
+      if (d[0] !== skip) el.inp.value = d[6] === 'logk' ? posOfK(d[0], v) : v;
+      const unit = d[5];
+      el.out.textContent = d[6] === 'logk' ? `${sig(v, 2)} ${unit}` : `${d[6] === 0 ? String(Math.round(v)) : fx(v, d[6])}${unit === '°' ? '°' : unit ? ' ' + unit : ''}`;
+    }
+  }
+
+  // ---------- scenes, presets, controls ----------
+  function setMode(m, keepRate) {
+    S.mode = m;
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === m));
+    $('parTitle').textContent = TITLES[m];
+    $('parHint').textContent = PAR_HINT[m];
+    $('modelHint').textContent = MODEL[m];
+    $('frameWrap').hidden = !(m === 'track' || m === 'table');
+    if (!(m === 'track' || m === 'table')) setFrame('lab', true);
+    $('explodeBtns').hidden = m !== 'explode';
+    $('tCM').closest('label').hidden = m === 'cradle' || m === 'impulse';
+    $('tGhost').closest('label').hidden = m === 'cradle';
+    $('tLoop').closest('label').hidden = m === 'cradle';
+    const kb = $('keyBox').children;
+    const keys = m === 'impulse' ? ['Stiff bumper', 'Soft bumper', 'Force on the cart', ''] : m === 'cradle' ? ['Moving ball', '', '', ''] : ['Body 1', 'Body 2', 'Center of mass, or the total', 'x'];
+    kb[0].lastChild.textContent = keys[0]; kb[1].lastChild.textContent = keys[1]; kb[2].lastChild.textContent = keys[2];
+    kb[0].firstChild.style.borderColor = m === 'impulse' ? 'var(--xcol)' : m === 'cradle' ? 'var(--accent)' : '';
+    kb[1].firstChild.style.borderColor = m === 'impulse' ? 'var(--vcol)' : '';
+    kb[2].firstChild.style.borderColor = m === 'impulse' ? 'var(--acol)' : '';
+    kb[2].firstChild.style.borderTopStyle = m === 'impulse' ? 'solid' : '';
+    kb[1].hidden = m === 'cradle'; kb[2].hidden = m === 'cradle'; kb[3].hidden = m === 'cradle' || m === 'impulse';
+    if (!keepRate) setRate(MODE_RATE[m]);
+    S.sel = 0;
+    buildRun(); syncSliders(); updateReadouts();
+  }
+  function setFrame(f, quiet) {
+    S.frame = f;
+    for (const b of document.querySelectorAll('#frameSeg button')) b.setAttribute('aria-pressed', String(b.dataset.f === f));
+    if (!quiet && run) { updateReadouts(); drawAll(); }
+  }
+  function setRate(r) {
+    S.rate = r;
+    for (const b of document.querySelectorAll('#rateSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.r === r));
+  }
+  function applyPreset(name) {
+    const c = PRESETS[name]; if (!c) return;
+    S.preset = name;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    S.P[c.mode] = { ...JSON.parse(JSON.stringify(DEF[c.mode])), ...JSON.parse(JSON.stringify(c.p)) };
+    setFrame('lab', true);
+    setMode(c.mode, true);
+    setRate(c.rate);
+    $('presetHint').textContent = c.hint;
+    restart();
+  }
+  function restart() { t = 0; hold = 0; if (S.mode === 'cradle') buildRun(); if (!held && !reduce) setRunning(true); drawAll(); }
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) applyPreset(b.dataset.p); });
+  $('modeSeg').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b || b.dataset.m === S.mode) return;
+    const pr = Object.keys(PRESETS).find((k) => PRESETS[k].mode === b.dataset.m);
+    if (pr && !S.P[b.dataset.m].__touched) applyPreset(pr);
+    else { clearPreset(); setMode(b.dataset.m); $('presetHint').textContent = b.dataset.m === 'cradle' ? 'Pull back one ball and let go: one ball comes out the far side. Pull two: two come out. The chart on the right shows why no other number can, with both momentum and energy conserved.' : ''; restart(); }
+  });
+  $('frameSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setFrame(b.dataset.f); });
+  $('rateSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { setRate(+b.dataset.r); clock(); } });
+  const lay = { tArrows: 'arrows', tCM: 'cm', tGhost: 'ghost', tLoop: 'loop' };
+  for (const [id, key] of Object.entries(lay)) $(id).addEventListener('change', (e) => { S.layers[key] = e.target.checked; drawAll(); });
+  $('gunBtn').addEventListener('click', () => { const q = S.P.explode; q.m1 = 5; q.m2 = 0.2; q.E = 2; q.V = 0; clearPreset(); buildRun(); syncSliders(); updateReadouts(); restart();
+    $('presetHint').textContent = 'A heavy gun and a light bullet: equal and opposite momenta, but the bullet is 25 times faster and takes 25/26 of the energy. A real rifle is 500 times heavier than its bullet.'; });
+  $('eqBtn').addEventListener('click', () => { const q = S.P.explode; q.m1 = 1; q.m2 = 1; clearPreset(); buildRun(); syncSliders(); updateReadouts(); restart(); });
+  const playBtn = $('play');
+  let last = performance.now();
+  function setRunning(r) { running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now(); }
+  playBtn.addEventListener('click', () => setRunning(!running));
+  $('reset').addEventListener('click', () => { restart(); setRunning(true); });
+
+  // ---------- dragging on the scene ----------
+  function handleAt(ev) {
+    const r = cans.c.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 6 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = Infinity;
+    for (const h of handles) {
+      let d = Infinity;
+      if (h.pt) d = Math.hypot(x - h.pt[0], y - h.pt[1]) - 7 * projScale() - 1;      // grips win over the bodies under them
+      else if (h.box) { const [bx, by, bw, bh] = h.box; d = Math.hypot(Math.max(bx - x, 0, x - bx - bw), Math.max(by - y, 0, y - by - bh)); }
+      else if (h.circle) d = Math.max(0, Math.hypot(x - h.circle[0], y - h.circle[1]) - h.circle[2]);
+      if (d < 0) d = -1 + d / 1e3;
+      if (d <= tol && d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  function centerOf(h) { return h.pt ? (h.tip || h.pt) : h.box ? [h.box[0] + h.box[2] / 2, h.box[1] + h.box[3] / 2] : [h.circle[0], h.circle[1]]; }
+  let qd = null, qFrame = false;
+  function dragTo(ev) {
+    const r = cans.c.getBoundingClientRect();
+    qd = [ev.clientX - r.left, ev.clientY - r.top];
+    if (qFrame) return; qFrame = true;
+    requestAnimationFrame(() => {
+      qFrame = false; if (!drag || !qd) return;
+      const [x, y] = qd; qd = null;
+      if (drag.param) {         // square grips: the value follows the drag distance
+        const d = SLDEF(drag.param), dist = drag.axis === 'y' ? (y - drag.y0) * drag.dir : (x - drag.x0) * drag.dir;
+        if (d[6] === 'logk') { const pos = clamp(drag.v0 + dist * 100 / (220 * projScale()), 0, 100); setParam(drag.param, kOfPos(drag.param, pos)); }
+        else setParam(drag.param, drag.v0 + dist * (d[3] - d[2]) / (220 * projScale()));
+      } else {
+        const h = handles.find((k) => k.id === drag.id);
+        if (h && h.set) { h.set(x - drag.off[0], y - drag.off[1]); S.P[S.mode].__touched = true; clearPreset(); buildRun(); if (S.mode === 'cradle') pullCradle(); }
+      }
+      syncSliders(); updateReadouts(); drawAll();
+    });
+  }
+  function pullCradle() {     // while dragging, the pulled balls sit at the drag angle
+    const p = P(); cr = cradleInit(p.N, p.k, p.th * Math.PI / 180); crE0 = cradleEnergy(cr, CR.m, CR.L); crLog = null;
+  }
+  cans.c.addEventListener('pointermove', (ev) => {
+    if (drag) { dragTo(ev); return; }
+    const h = handleAt(ev); const id = h ? h.id : null;
+    if (id !== hoverId) { hoverId = id; if (!running) drawAll(); }
+    cans.c.style.cursor = h ? h.cursor : 'default';
+  });
+  cans.c.addEventListener('pointerdown', (ev) => {
+    cans.c.focus({ preventScroll: true });
+    const h = handleAt(ev); if (!h) return;
+    if (S.frame === 'cm') frozen = { x: cmAt(0), v: vcm() };
+    held = true; t = 0; hold = 0;
+    if (S.mode === 'cradle') pullCradle();
+    const r = cans.c.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, c = centerOf(h);
+    drag = { id: h.id, off: S.mode === 'cradle' ? [0, 0] : [x - c[0], y - c[1]] };
+    if (h.param) {
+      const d = SLDEF(h.param);
+      drag.param = h.param; drag.axis = h.grip === 'v' ? 'y' : 'x'; drag.dir = h.grip === 'v' ? (h.dirY || -1) : (h.dirX || 1); drag.x0 = x; drag.y0 = y;
+      drag.v0 = d[6] === 'logk' ? posOfK(h.param, P()[h.param]) : P()[h.param];
+    }
+    if (S.mode === 'track' || S.mode === 'table') S.sel = +h.id.slice(-1) || 0;
+    try { cans.c.setPointerCapture(ev.pointerId); } catch (_) {}
+    cans.c.style.cursor = h.grabbing || h.cursor; ev.preventDefault();
+    drawAll();
+  });
+  function endDrag() {
+    if (!drag) return;
+    drag = null; held = false; hoverId = null;
+    const fr = frozen; frozen = null; void fr;
+    buildRun(); syncSliders(); updateReadouts();
+    if (!reduce) setRunning(true);
+    $('live').textContent = 'Setup changed; running from the start.';
+  }
+  cans.c.addEventListener('pointerup', endDrag);
+  cans.c.addEventListener('pointercancel', endDrag);
+  cans.c.addEventListener('pointerleave', () => { if (!drag) { hoverId = null; } });
+  cans.c.addEventListener('keydown', (e) => {
+    const k = e.key, p = P(), sh = e.shiftKey ? 5 : 1;
+    const step = (key, dir) => { const d = SLDEF(key); setParam(key, d[6] === 'logk' ? kOfPos(key, posOfK(key, p[key]) + dir * 5) : valOf(key) + dir * d[4] * sh); restart(); };
+    if (k === '1' || k === '2') { S.sel = +k - 1; $('live').textContent = `Body ${k} selected.`; }
+    else if (k === 'ArrowLeft' || k === 'ArrowRight') {
+      const dir = k === 'ArrowRight' ? 1 : -1;
+      if (S.mode === 'track') step(S.sel ? 'v2' : 'v1', dir);
+      else if (S.mode === 'table') { if (S.sel) { p.v2 = [clamp(+(p.v2[0] + 0.05 * dir * sh).toFixed(2), -2, 2), p.v2[1]]; setParam('e', p.e); restart(); } else step('u1', dir); }
+      else if (S.mode === 'explode') step('V', dir);
+      else if (S.mode === 'cradle') step('k', dir);
+      else step('v0', dir);
+    } else if (k === 'ArrowUp' || k === 'ArrowDown') {
+      const dir = k === 'ArrowUp' ? 1 : -1;
+      if (S.mode === 'cradle') step('th', dir); else if (S.mode === 'explode') step('E', dir); else if (S.mode === 'table' && e.shiftKey) step('b', dir); else step('e', dir);
+    } else if (k === ' ') setRunning(!running);
+    else if (k === 'r' || k === 'R') { restart(); setRunning(true); }
+    else return;
+    e.preventDefault();
+  });
+
+  // ---------- projector and theme ----------
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); drawAll(); }); } catch (_) {}
+  new MutationObserver(() => { tokens(); drawAll(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  function advance(dts) {
+    if (!(dts > 0)) return;
+    if (S.mode === 'cradle') {
+      const before = cr.hits, om0 = cr.om.slice();
+      cr = cradleStep(cr, dts, CR.L, CR.R);
+      t = cr.t;
+      if (cr.hits !== before) {
+        const thr = 1e-3;
+        const inN = om0.filter((w) => Math.abs(w) > thr).length, outs = cr.om.filter((w) => Math.abs(w) > thr);
+        crLog = { inN, outN: outs.length, vout: outs.length ? Math.max(...outs.map(Math.abs)) * CR.L : 0 };
+      }
+      return;
+    }
+    if (t < Trun) { t = Math.min(Trun, t + dts); return; }
+    if (!S.layers.loop) { setRunning(false); return; }
+    hold += dts / S.rate;
+    if (hold > 1.2) { t = 0; hold = 0; }
+  }
+  let frameMs = 0, lastR = 0;
+  function loop(now) {
+    const dtr = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (running && !held && dtr > 0) advance(dtr * S.rate);
+    drawAll();
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastR > 150) { updateReadouts(); lastR = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__col = {
+    get frameMs() { return frameMs; }, get t() { return t; }, get S() { return S; }, get run() { return run; }, get handles() { return handles; },
+    get bumps() { return bumps; }, get cr() { return cr; }, get crLog() { return crLog; }, get Trun() { return Trun; }, get running() { return running; },
+    applyPreset, setMode, setParam, setFrame, setRunning, pk,
+    go(dts, step) { step = step || 0.01; for (let x = 0; x < dts - 1e-12; x += step) advance(Math.min(step, dts - x)); updateReadouts(); drawAll(); },
+    seek(tt) { t = tt; drawAll(); }
+  };
+
+  tokens();
+  buildSliders();
+  const ro = new ResizeObserver(resize);
+  for (const k of ['c', 'e', 'p']) ro.observe(panes[k]);
+  applyPreset('elastic');
+  setRunning(!reduce);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
