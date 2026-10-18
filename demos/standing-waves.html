@@ -30,7 +30,7 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-/* Layout: one canvas that shows one of four views (two traveling waves, a string, an air column, beats); instrument rail on the right; stacks on phones. */
+/* Layout: one canvas that shows one of five views (two traveling waves, a string, an air column, beats, acoustic levitation); instrument rail on the right; stacks on phones. */
 :root {
   --bg: #e9edf2;
   --surface: #f8fafc;
@@ -149,6 +149,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.env { border-color: var(--muted); border-top-style: dashed; }
 .swatch.gold { border-color: var(--equi); border-top-width: 3px; }
 .swatch.acc { border-color: var(--accent); border-top-width: 3px; }
+.swatch.dot { width: 12px; height: 12px; border: 2px solid var(--equi); border-radius: 50%; background: var(--canvas); margin: 0 5px; }
+.hint.warn { color: var(--pos); font-weight: 700; }
 .swatch.comp { height: 10px; border: 0; background: linear-gradient(90deg, color-mix(in srgb, var(--pos) 45%, transparent), color-mix(in srgb, var(--neg) 45%, transparent)); }
 
 /* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
@@ -173,7 +175,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <header class="bar">
     <div>
       <h1>Standing Waves</h1>
-      <p>Two waves moving in opposite directions add up to a standing wave. Find the harmonics of a guitar string and an air column, drive a string into resonance, pluck it, and hear two close tones beat.</p>
+      <p>Two waves moving in opposite directions add up to a standing wave. Find the harmonics of a guitar string and an air column, drive a string into resonance, pluck it, hear beats, and float beads on ultrasound.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">x in m · f in Hz · v = fλ · string v = √(T/μ)</div>
@@ -190,6 +192,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-v="string" aria-pressed="false">String</button>
           <button type="button" data-v="pipe" aria-pressed="false">Air column</button>
           <button type="button" data-v="beats" aria-pressed="false">Beats</button>
+          <button type="button" data-v="lev" aria-pressed="false">Levitation</button>
         </div>
         <button type="button" class="btn" id="play">Pause</button>
         <button type="button" class="btn" id="reset">Reset</button>
@@ -201,7 +204,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <span class="count mono" id="clock">t = 0.00 s</span>
       </div>
       <div class="pane" id="pane">
-        <canvas id="can" tabindex="0" aria-label="Wave drawing. Space plays or pauses. Two waves view: up and down arrows change A₁, left and right change A₂. String and air column views: digits 1 to 8 pick a harmonic and left and right arrows step through them; with a pluck the arrows move the pluck point and height, with the driver they change the drive frequency. Beats view: left and right change f₂ − f₁, up and down change A₂. Drag the grips to change amplitudes, lengths and frequencies."></canvas>
+        <canvas id="can" tabindex="0" aria-label="Wave drawing. Space plays or pauses. Two waves view: up and down arrows change A₁, left and right change A₂. String and air column views: digits 1 to 8 pick a harmonic and left and right arrows step through them; with a pluck the arrows move the pluck point and height, with the driver they change the drive frequency. Beats view: left and right change f₂ − f₁, up and down change A₂. Levitation view: up and down change the drive amplitude, left and right move the reflector, Enter drops a bead, Delete clears them. Drag the grips to change amplitudes, lengths and frequencies."></canvas>
       </div>
     </div>
 
@@ -361,6 +364,60 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <p class="hint">y = A₁ cos(2πf₁t) + A₂ cos(2πf₂t). The loudness envelope is √(A₁² + A₂² + 2A₁A₂ cos 2π(f₂ − f₁)t), which repeats every 1/|f₁ − f₂|. The top two strips zoom in on the moment at the playhead.</p>
       </section>
 
+      <!-- acoustic levitation -->
+      <section id="secLev" hidden>
+        <h2>Acoustic levitation</h2>
+        <div>
+          <div class="slider-head"><label for="lP">Drive amplitude p₀</label><output id="lPOut" class="mono" for="lP"></output></div>
+          <input type="range" id="lP" min="0" max="6000" step="10" value="2000">
+        </div>
+        <div>
+          <div class="slider-head"><label for="lH">Reflector distance H</label><output id="lHOut" class="mono" for="lH"></output></div>
+          <input type="range" id="lH" min="3" max="40" step="0.001" value="17.16">
+        </div>
+        <div class="chips">
+          <button type="button" class="btn" id="lTune">Tune H to resonance</button>
+          <button type="button" class="btn" id="lDrop">Drop a bead</button>
+          <button type="button" class="btn" id="lClear">Clear beads</button>
+        </div>
+        <h3>Bead</h3>
+        <div class="chips" id="lMat" role="group" aria-label="Bead material">
+          <button type="button" data-m="eps" aria-pressed="true">Foam polystyrene, 30 kg/m³</button>
+          <button type="button" data-m="water" aria-pressed="false">Water droplet, 998 kg/m³</button>
+          <button type="button" data-m="ps" aria-pressed="false">Solid polystyrene, 1050 kg/m³</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="lA">Bead radius a</label><output id="lAOut" class="mono" for="lA"></output></div>
+          <input type="range" id="lA" min="0.1" max="2.5" step="0.01" value="0.75">
+        </div>
+        <div>
+          <div class="slider-head"><label for="lF">Drive frequency f</label><output id="lFOut" class="mono" for="lF"></output></div>
+          <input type="range" id="lF" min="20" max="60" step="0.1" value="40">
+        </div>
+        <div>
+          <div class="slider-head"><label for="lT">Air temperature</label><output id="lTOut" class="mono" for="lT"></output></div>
+          <input type="range" id="lT" min="-10" max="40" step="0.5" value="20">
+        </div>
+        <dl class="readout">
+          <div><dt>Wavelength λ = c/f</dt><dd id="rlLam">—</dd></div>
+          <div><dt>Node spacing λ/2</dt><dd id="rlNode">—</dd></div>
+          <div class="wide"><dt>Resonance H = n λ/2</dt><dd id="rlRes">—</dd></div>
+          <div class="big"><dt>F_max / W</dt><dd id="rlRatio">—</dd></div>
+          <div class="big"><dt>Needs p₀ above</dt><dd id="rlPmin">—</dd></div>
+          <div><dt>Trap below its node by</dt><dd id="rlOff">—</dd></div>
+          <div><dt>Trap stiffness K</dt><dd id="rlK">—</dd></div>
+          <div><dt>Bobbing frequency</dt><dd id="rlFz">—</dd></div>
+          <div><dt>Contrast Φ = f₁/3 + f₂/2</dt><dd id="rlPhi">—</dd></div>
+          <div><dt>Size ka = 2πa/λ</dt><dd id="rlKa">—</dd></div>
+          <div><dt>Beads held / fallen</dt><dd id="rlCount">—</dd></div>
+        </dl>
+        <p class="hint warn" id="lWarn" hidden></p>
+        <p class="hint">Click or tap in the gap to drop a bead; drag before letting go to place it. Drag the reflector (it snaps to resonance) and the pressure grip at the bottom of the amplitude plot.</p>
+        <h3>Why the pressure nodes, if pressure pushes?</h3>
+        <p class="hint">The pressure swings up and down 40 000 times a second, so its push averages to zero. What is left is a small steady force that grows as the wave amplitude squared. A bead much stiffer than air is pushed away from where the pressure swings most, the pressure antinodes. A bead much denser than air is drawn to where the air rushes back and forth fastest, since fast flow lowers the mean pressure around it (a Bernoulli effect). In a standing wave the air moves fastest at the pressure nodes, so both effects push the bead there. Gravity then pulls it a little below the node, until the restoring force balances its weight.</p>
+        <p class="hint" id="lTheory"></p>
+      </section>
+
       <section>
         <h2>Sound</h2>
         <div class="inline">
@@ -511,12 +568,55 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return Math.sqrt((A1 + A2) * (A1 + A2) * s * s + (A1 - A2) * (A1 - A2) * c * c);
   }
   const beatEnvelope = (t, A1, A2, f1, f2) => Math.sqrt(Math.max(0, A1 * A1 + A2 * A2 + 2 * A1 * A2 * Math.cos(TAU * (f2 - f1) * t)));
+
+  // ---------- acoustic levitation ----------
+  // Plane standing wave above a rigid reflector at z = 0: p = p₀ cos(kz) cos(ωt). The linearized Euler equation
+  // ρ₀ ∂v/∂t = −∂p/∂z gives v = (p₀/ρ₀c) sin(kz) sin(ωt), zero at the reflector.
+  const G_N = 9.80665, P_ATM = 101325, M_AIR = 0.0289647, R_GAS = 8.314462618;
+  const airDensity = (Tc) => P_ATM * M_AIR / (R_GAS * (Tc + 273.15));                 // ideal gas, dry air at 1 atm
+  const airViscosity = (Tc) => { const Tk = Tc + 273.15; return 1.716e-5 * Math.pow(Tk / 273.15, 1.5) * (273.15 + 110.4) / (Tk + 110.4); };   // Sutherland
+  // f₁ = 1 − κ_p/κ₀ = 1 − ρ₀c²/K_p (K_p = ρ_p c_p² for a fluid), f₂ = 2(ρ_p − ρ₀)/(2ρ_p + ρ₀), Φ = f₁/3 + f₂/2
+  function gorkovCoeffs(rho0, c0, rhop, Kp) { const f1 = 1 - rho0 * c0 * c0 / Kp, f2 = 2 * (rhop - rho0) / (2 * rhop + rho0); return { f1, f2, Phi: f1 / 3 + f2 / 2 }; }
+  // time averages ⟨p²⟩ and ⟨v²⟩ in the standing wave
+  const levP2 = (z, p0, k) => 0.5 * p0 * p0 * Math.cos(k * z) ** 2;
+  const levV2 = (z, p0, k, rho0, c0) => 0.5 * (p0 / (rho0 * c0)) ** 2 * Math.sin(k * z) ** 2;
+  // Gor'kov potential of a small sphere (a ≪ λ): U = 2πa³ [ f₁⟨p²⟩/(3ρ₀c²) − f₂ ρ₀⟨v²⟩/2 ]
+  const gorkovU = (a, p2, v2, rho0, c0, f1, f2) => 2 * PI * a ** 3 * (f1 * p2 / (3 * rho0 * c0 * c0) - f2 * rho0 * v2 / 2);
+  const levU = (z, a, p0, k, rho0, c0, f1, f2) => gorkovU(a, levP2(z, p0, k), levV2(z, p0, k, rho0, c0), rho0, c0, f1, f2);
+  // F = −dU/dz = F_max sin(2kz), F_max = 4πΦ k a³ E₀ with E₀ = p₀²/(4ρ₀c²)
+  const levFmax = (a, p0, k, rho0, c0, Phi) => 4 * PI * Phi * k * a ** 3 * p0 * p0 / (4 * rho0 * c0 * c0);
+  const levForce = (z, a, p0, k, rho0, c0, Phi) => levFmax(a, p0, k, rho0, c0, Phi) * Math.sin(2 * k * z);
+  // weight less buoyancy
+  const beadWeight = (a, rhop, rho0) => (rhop - rho0) * 4 / 3 * PI * a ** 3 * G_N;
+  // nodes at kz = π/2 + mπ; with weight W the trap sits below each node by asin(W/F_max)/2k ≈ W/K₀, K₀ = 2k F_max
+  const levNodes = (k, Hgap) => { const out = []; for (let m = 0; (m + 0.5) * PI / k < Hgap; m++) out.push((m + 0.5) * PI / k); return out; };
+  const trapOffset = (W, Fmax, k) => (Fmax > W ? Math.asin(W / Fmax) / (2 * k) : NaN);
+  const trapStiffness = (W, Fmax, k) => (Fmax > W ? 2 * k * Math.sqrt(Fmax * Fmax - W * W) : 0);
+  // F_max/W = 3Φ k p₀² / (4ρ₀c²(ρ_p − ρ₀)g), so the threshold p₀ does not depend on a
+  const levPmin = (rho0, c0, rhop, Phi, k) => Math.sqrt(4 * rho0 * c0 * c0 * (rhop - rho0) * G_N / (3 * Phi * k));
+  // cavity response: |p| relative to resonance for a small loss δ per pass, 1 at H = nλ/2
+  const cavityGain = (kH, delta) => Math.sinh(delta) / Math.sqrt(Math.sin(kH) ** 2 + Math.sinh(delta) ** 2);
+  // drag of air on a sphere, Schiller–Naumann: C_D = (24/Re)(1 + 0.15 Re^0.687), Stokes 6πμau when Re → 0
+  function beadDrag(u, a, rho0, mu) {
+    const s = Math.abs(u); if (s === 0) return 0;
+    const Re = 2 * a * rho0 * s / mu;
+    return -Math.sign(u) * 6 * PI * mu * a * s * (1 + 0.15 * Math.pow(Re, 0.687));
+  }
+  // one step of (m + ½ρ₀V) dv/dt = F_max sin 2kz − W + drag, semi implicit Euler; reflector at z = 0, transducer face at z = H
+  function stepBead(b, dt, P) {
+    const F = P.Fmax * Math.sin(2 * P.k * b.z) - P.W + beadDrag(b.v, P.a, P.rho0, P.mu);
+    b.v += dt * F / P.m; b.z += dt * b.v;
+    if (b.z < P.a) { b.z = P.a; if (b.v < 0) b.v = 0; }
+    if (b.z > P.gap - P.a) { b.z = P.gap - P.a; if (b.v > 0) b.v = 0; }
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
     globalThis.SWV = { PI, TAU, WAVE_V, DRIVE_F0, DRIVE_XD, DRIVE_M, PLUCK_N, waveSpeed, stringFreq, soundSpeed, pipeLeff, pipeFreq,
       sineSeries, cosineSeries, pluckCoeffs, triangle, modalEnergy, fieldEnergy, makeDriven, steadyG, setOmega, drivenQ, retarget,
-      restDriven, stepDriven, steadyAmp, resonanceCurve, waveSum, waveEnvelope, beatEnvelope };
+      restDriven, stepDriven, steadyAmp, resonanceCurve, waveSum, waveEnvelope, beatEnvelope,
+      G_N, airDensity, airViscosity, gorkovCoeffs, levP2, levV2, gorkovU, levU, levFmax, levForce, beadWeight, levNodes, trapOffset,
+      trapStiffness, levPmin, cavityGain, beadDrag, stepBead };
     return;
   }
 
@@ -531,7 +631,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     w: { A1: 1, A2: 1, f1: 1, f2: 1, env: true, marks: true },
     s: { L: 0.648, T: 70, mu: 6.14, mode: 'harm', n: 1, d: 0.5, h: 6, f: 60, Q: 30 },
     p: { kind: 'oc', n: 1, L: 0.6, D: 15, Tc: 20, endc: false },
-    b: { f1: 440, df: 3, a2: 1 }
+    b: { f1: 440, df: 3, a2: 1 },
+    l: { p0: 2000, gap: 17.16, mat: 'eps', a: 0.75, f: 40, Tc: 20 }
   };
   let running = !reduce, t = 0, frameMs = 0;
   let pluckB = null, pluckDrag = false, D = null, curve = null, curveMax = 1, holdSpan = null;
@@ -556,7 +657,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     waves: 'Ideal waves on a long string with no loss, both moving at v = 2 m/s. Amplitudes in cm, drawn larger than true scale.',
     string: 'Ideal flexible string: small amplitude, fixed ends, no stiffness. Harmonic and pluck motion have no damping, so the energy stays constant; the pluck is a sum of 200 modes. The driven string is a point force at x = L/20 with the same damping rate γ = ω₁/Q for every mode, solved exactly with 40 modes, transients included. Up and down displacement is exaggerated.',
     pipe: 'Plane sound waves in a narrow pipe with ideal ends. The end correction 0.6 r per open unflanged end (Levine and Schwinger) makes the pipe sound a little longer than it is. Air parcel displacement and the pipe width are exaggerated.',
-    beats: 'Two pure tones added; nothing else. The close up strips show about five cycles; the long strip is too dense to resolve single cycles, so it shows the band the signal fills.'
+    beats: 'Two pure tones added; nothing else. The close up strips show about five cycles; the long strip is too dense to resolve single cycles, so it shows the band the signal fills.',
+    lev: 'Ideal plane standing wave between the transducer face and a rigid flat reflector: no absorption, no spreading of the beam, and the transducer\'s own near field left out. The slider p₀ is the amplitude at resonance, H = nλ/2; off resonance it drops as sinh δ / √(sin² kH + sinh² δ), the response of a cavity with a loss δ = 0.1 per pass, a value chosen for illustration. Gor\'kov\'s potential holds for a sphere much smaller than λ in an inviscid fluid. Beads move only up and down the axis (a real trap also holds them sideways, more weakly) and pass through each other: forces between beads, acoustic streaming and heating are left out. Motion: (m + ½ρ₀V) dv/dt = F − (ρ_p − ρ₀)Vg + drag, with the Schiller and Naumann drag law, which becomes Stokes drag 6πμav at low speed. Air is an ideal gas at 1 atm with Sutherland\'s viscosity. The foam\'s bulk modulus, about 3 MPa, is a rough figure, giving f₁ ≈ 0.95. Beads and gap are to scale; the sound cycle is drawn at 0.5 Hz, really 40 kHz, and the bead motion is shown 20× slower.'
   };
 
   // ---------- derived quantities ----------
@@ -569,10 +671,56 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const pF = (n) => pipeFreq(S.p.kind, n, pV(), pLe());
   const pipeNs = () => (S.p.kind === 'oo' ? [1, 2, 3, 4, 5, 6, 7, 8] : [1, 3, 5, 7, 9, 11, 13, 15]);
 
+  // levitation: bead materials (K is the bulk modulus; for a solid K = ρ(c_L² − 4c_T²/3))
+  const LEV_MAT = {
+    eps: { rho: 30, K: 3e6, name: 'foam polystyrene' },
+    water: { rho: 998, K: 2.19e9, name: 'water' },
+    ps: { rho: 1050, K: 4.04e9, name: 'solid polystyrene' }
+  };
+  const LEV_DELTA = 0.1, LEV_SLOW = 20, LEV_MAXB = 30, LEV_PAX = 6300;
+  function lev() {
+    const l = S.l, c0 = soundSpeed(l.Tc), rho0 = airDensity(l.Tc), mu = airViscosity(l.Tc), f = l.f * 1e3, k = TAU * f / c0, lam = c0 / f;
+    const gap = l.gap * 1e-3, a = l.a * 1e-3, M = LEV_MAT[l.mat], co = gorkovCoeffs(rho0, c0, M.rho, M.K);
+    const g = cavityGain(k * gap, LEV_DELTA), pe = l.p0 * g, V = 4 / 3 * PI * a ** 3;
+    const Fmax = levFmax(a, pe, k, rho0, c0, co.Phi), W = beadWeight(a, M.rho, rho0), m = (M.rho + rho0 / 2) * V;
+    const off = trapOffset(W, Fmax, k), nodes = levNodes(k, gap);
+    const traps = Fmax > W ? nodes.map((zn) => zn - off).filter((zt) => zt >= a && zt <= gap - a) : [];
+    return { c0, rho0, mu, f, k, lam, gap, a, M, f1: co.f1, f2: co.f2, Phi: co.Phi, g, pe, V, Fmax, W, m, off, nodes, traps,
+      K: trapStiffness(W, Fmax, k), pmin: levPmin(rho0, c0, M.rho, co.Phi, k) };
+  }
+  let beads = [], holdPot = null, seed = 12345;
+  const rnd = () => { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; };
+  function dropBead(z, x) {
+    const L = lev();
+    beads.push({ z: Math.max(L.a, Math.min(L.gap - L.a, z)), v: 0, x, held: false });
+    if (beads.length > LEV_MAXB) beads.shift();
+  }
+  function dropRandom() { const L = lev(); dropBead(L.gap * (0.2 + 0.7 * rnd()), 0.2 + 0.6 * rnd()); }
+  function defaultBeads() { beads = []; seed = 12345; for (let i = 0; i < 7; i++) dropRandom(); }
+  function clampBeads() { const L = lev(); for (const b of beads) b.z = Math.max(L.a, Math.min(L.gap - L.a, b.z)); }
+  function stepBeads(dts) {
+    if (!beads.length || dts <= 0) return;
+    const L = lev(), P = { k: L.k, Fmax: L.Fmax, W: L.W, m: L.m, a: L.a, rho0: L.rho0, mu: L.mu, gap: L.gap };
+    const w = Math.sqrt(2 * L.k * Math.max(L.Fmax, L.W) / L.m), gam = 6 * PI * L.mu * L.a / L.m;
+    const hmax = Math.min(1e-4, 0.05 / w, 0.3 / gam);
+    const nst = Math.min(4000, Math.ceil(dts / hmax)), h = dts / nst;
+    for (const b of beads) if (!b.held) for (let i = 0; i < nst; i++) stepBead(b, h, P);
+  }
+  function beadStatus(L) {
+    let held = 0, fell = 0;
+    for (const b of beads) {
+      if (b.held) continue;
+      if (L.traps.some((zt) => Math.abs(b.z - zt) < L.lam / 8) && Math.abs(b.v) < 0.05) held++;
+      else if (b.z <= L.a + 1e-7 && Math.abs(b.v) < 1e-6) fell++;
+    }
+    return { held, fell };
+  }
+
   // slow motion: the fundamental is shown at about 0.6 Hz on screen at 1×; a driven string at about 1.8 Hz, so its build up is quick enough to watch
   function slowFactor() {
     if (S.view === 'string') return S.s.mode === 'drive' ? 1.8 / Math.max(1, S.s.f) : 0.6 / sF(1);
     if (S.view === 'pipe') return 0.6 / pF(1);
+    if (S.view === 'lev') return 1 / LEV_SLOW;
     return 1;
   }
 
@@ -668,6 +816,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   function drawGrips() {
     for (const h of handles) {
+      if (h.noGrip) continue;
       const hot = (drag && drag.id === h.id) || (!drag && hoverId === h.id);
       const col = h.color || T.accent;
       ctx.strokeStyle = col;
@@ -1190,6 +1339,167 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   const fmtT = (s) => (s >= 1 ? s.toFixed(2) + ' s' : (s * 1e3).toFixed(0) + ' ms');
 
+  // ---------- view: acoustic levitation ----------
+  // a curve x = fn(py) drawn down the page
+  function plotV(y0, y1, fn, color, lw, dash, step) {
+    ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.setLineDash(dash || []); ctx.lineJoin = 'round';
+    ctx.beginPath(); const st = step || 1.5;
+    for (let py = y0; py <= y1 + 0.01; py += st) { const yy = Math.min(py, y1), px = fn(yy); py === y0 ? ctx.moveTo(px, yy) : ctx.lineTo(px, yy); }
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+  function energyUnit(v) { return v >= 1e-6 ? [1e6, 'µJ'] : v >= 1e-9 ? [1e9, 'nJ'] : v >= 1e-12 ? [1e12, 'pJ'] : [1e15, 'fJ']; }
+  function drawLev() {
+    const L = lev(), l = S.l, k = L.k;
+    const top = 12 * ls, x0 = 12 * ls, xR = W - 14 * ls;
+    const yT = top + 50 * ls, Y0 = H - 42 * ls;
+    const avail = xR - x0, appW = Math.max(88 * ls, avail * 0.27);
+    const tickW = 38 * ls, colGap = 16 * ls;
+    const aL = x0 + appW + tickW, rest = xR - aL - colGap;
+    const aR = aL + rest * 0.44, uL = aR + colGap, uR = xR;
+    const span = holdSpan || L.gap, sc = (Y0 - yT) / span;
+    const Y = (z) => yT + (L.gap - z) * sc, invZ = (py) => L.gap - (py - yT) / sc;
+    const yR = Y(0), cx = x0 + appW / 2, faceW = appW * 0.74, bx0 = cx - faceW / 2, bx1 = cx + faceW / 2;
+    const ph = TAU * 0.5 * t * LEV_SLOW, cph = Math.cos(ph), sph = Math.sin(ph);
+    // gap and pressure shading: compression warm, rarefaction cool
+    ctx.fillStyle = T.tube; ctx.fillRect(bx0, yT, faceW, yR - yT);
+    for (let py = Math.floor(yT); py < yR; py += 3) {
+      const pv = L.g * Math.cos(k * invZ(py + 1.5)) * cph, y0 = Math.max(yT, py);
+      ctx.fillStyle = pv > 0 ? T.pos : T.neg; ctx.globalAlpha = 0.42 * Math.abs(pv);
+      ctx.fillRect(bx0, y0, faceW, Math.min(py + 3, yR) - y0);
+    }
+    ctx.globalAlpha = 1;
+    // pressure nodes: dashed lines across all three panels
+    for (const zn of L.nodes) { ctx.globalAlpha = 0.55; hline(bx0, uR, Math.round(Y(zn)) + 0.5, T.muted, [3 * ls, 4 * ls], 1); ctx.globalAlpha = 1; }
+    // traps: just below each node
+    for (const zt of L.traps) {
+      const py = Y(zt); ctx.fillStyle = T.equi;
+      ctx.beginPath(); ctx.moveTo(bx1 + 2 * ls, py); ctx.lineTo(bx1 + 9 * ls, py - 4.5 * ls); ctx.lineTo(bx1 + 9 * ls, py + 4.5 * ls); ctx.closePath(); ctx.fill();
+    }
+    // beads, to scale
+    const br = Math.max(2.5, L.a * sc);
+    const fill = l.mat === 'eps' ? '#f6f5f0' : l.mat === 'water' ? T.neg : T.equi;
+    ctx.save(); ctx.beginPath(); ctx.rect(bx0, yT, faceW, yR - yT); ctx.clip();
+    for (const b of beads) {
+      const px = bx0 + b.x * faceW, py = Y(b.z);
+      ctx.fillStyle = fill; ctx.globalAlpha = l.mat === 'water' ? 0.8 : 1;
+      ctx.beginPath(); ctx.arc(px, py, br, 0, TAU); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = b.held ? T.accent : T.tubeEdge; ctx.lineWidth = (b.held ? 2 : 1.2) * ls; ctx.stroke();
+    }
+    ctx.restore();
+    // transducer: a stepped horn ending in the flat face at z = H
+    ctx.fillStyle = T.tubeEdge;
+    const bodyW = faceW * 0.46, yb0 = top + 18 * ls, yb1 = yT - 22 * ls;
+    ctx.fillRect(cx - bodyW / 2, yb0, bodyW, Math.max(4, yb1 - yb0));
+    ctx.beginPath(); ctx.moveTo(cx - bodyW / 2, yb1); ctx.lineTo(cx + bodyW / 2, yb1); ctx.lineTo(bx1, yT - 7 * ls); ctx.lineTo(bx0, yT - 7 * ls); ctx.closePath(); ctx.fill();
+    ctx.fillRect(bx0, yT - 7 * ls, faceW, 7 * ls);
+    // reflector
+    const rw = appW * 0.92;
+    ctx.fillRect(cx - rw / 2, yR, rw, 11 * ls);
+    // panels: amplitudes, then potentials
+    frame(aL, yT, aR, yR); frame(uL, yT, uR, yR);
+    // z ticks between the levitator and the amplitude panel
+    {
+      const gmm = L.gap * 1e3, st = nice(gmm / Math.max(3, Math.min(8, (yR - yT) / (42 * ls))));
+      ctx.fillStyle = T.muted; ctx.font = font(10); ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      for (let v = 0; v <= gmm + 1e-9; v += st) ctx.fillText(fmtTick(v, st), aL - 5 * ls, Y(v * 1e-3));
+      ctx.save(); ctx.translate(aL - tickW + 3 * ls, (yT + yR) / 2); ctx.rotate(-PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('z (mm)', 0, 0); ctx.restore();
+    }
+    // amplitude panel: p and v share one scale, v in units of p/ρ₀c
+    const am = (aL + aR) / 2, ah = (aR - aL) / 2, XP = (pa) => am + pa / LEV_PAX * ah;
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(Math.round(am) + 0.5, yT); ctx.lineTo(Math.round(am) + 0.5, yR); ctx.stroke();
+    ctx.save(); ctx.beginPath(); ctx.rect(aL, yT, aR - aL, yR - yT); ctx.clip();
+    const pz = (py) => L.pe * Math.cos(k * invZ(py)), vz = (py) => L.pe * Math.sin(k * invZ(py));
+    ctx.globalAlpha = 0.6;
+    plotV(yT, yR, (py) => XP(Math.abs(vz(py))), T.equi, 1.2 * ls, [5 * ls, 4 * ls], 2); plotV(yT, yR, (py) => XP(-Math.abs(vz(py))), T.equi, 1.2 * ls, [5 * ls, 4 * ls], 2);
+    plotV(yT, yR, (py) => XP(Math.abs(pz(py))), T.pos, 1.2 * ls, [5 * ls, 4 * ls], 2); plotV(yT, yR, (py) => XP(-Math.abs(pz(py))), T.pos, 1.2 * ls, [5 * ls, 4 * ls], 2);
+    ctx.globalAlpha = 1;
+    plotV(yT, yR, (py) => XP(vz(py) * sph), T.equi, 2.4 * ls);
+    plotV(yT, yR, (py) => XP(pz(py) * cph), T.pos, 2.6 * ls);
+    ctx.restore();
+    // pressure nodes N and antinodes A
+    const marks = L.nodes.map((z) => ['N', z]);
+    for (let m = 0; m * PI / k <= L.gap + 1e-12; m++) marks.push(['A', m * PI / k]);
+    if (PI / (2 * k) * sc > 13 * ls) for (const [kind, z] of marks) {
+      const py = Math.max(yT + 7 * ls, Math.min(yR - 7 * ls, Y(z)));
+      if (kind === 'N') { ctx.strokeStyle = T.pos; ctx.fillStyle = T.canvas; ctx.lineWidth = 1.6 * ls; ctx.beginPath(); ctx.arc(am, Y(z), 3.8 * ls, 0, TAU); ctx.fill(); ctx.stroke(); }
+      tag(kind, aL + 3 * ls, py, kind === 'N' ? T.pos : T.muted, 'left', 'middle', kind === 'N', 10);
+    }
+    xTicks(aL, aR, -LEV_PAX / 1e3, LEV_PAX / 1e3, yR, 'p (kPa)', 4);
+    {   // velocity ticks along the top
+      const vax = LEV_PAX / (L.rho0 * L.c0), st = nice(vax / 2);
+      ctx.font = font(10); const uw = ctx.measureText('v (m/s)').width;
+      ctx.fillStyle = T.equi; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+      for (let v = -Math.floor(vax / st) * st; v <= vax + 1e-9; v += st) { const px = am + v / vax * ah; if (px < aR - uw - 10 * ls) ctx.fillText(fmtTick(v, st), px, yT - 3 * ls); }
+      ctx.textAlign = 'right'; ctx.fillText('v (m/s)', aR, yT - 3 * ls);
+    }
+    // potential panel
+    const NZ = 180, zs = [], ua = [], ug = [], ut = [];
+    for (let i = 0; i <= NZ; i++) { const z = L.gap * i / NZ; zs.push(z); ua.push(levU(z, L.a, L.pe, k, L.rho0, L.c0, L.f1, L.f2)); ug.push(L.W * z); ut.push(ua[i] + ug[i]); }
+    let mn = Math.min(0, ...ua, ...ut), mx = Math.max(...ua, ...ug, ...ut);
+    if (holdPot) [mn, mx] = holdPot; else { const pad = 0.08 * (mx - mn || 1e-12); mn -= pad; mx += pad; }
+    if (drag && (drag.id === 'lRefl' || drag.id === 'lP') && !holdPot) holdPot = [mn, mx];
+    const [sf, unit] = energyUnit(Math.max(Math.abs(mn), Math.abs(mx)));
+    const UX = (u) => uL + (u - mn) / (mx - mn) * (uR - uL);
+    vGrid(uL, uR, mn * sf, mx * sf, yT, yR);
+    frame(uL, yT, uR, yR);
+    if (mn < 0 && mx > 0) { ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(Math.round(UX(0)) + 0.5, yT); ctx.lineTo(Math.round(UX(0)) + 0.5, yR); ctx.stroke(); }
+    ctx.save(); ctx.beginPath(); ctx.rect(uL, yT, uR - uL, yR - yT); ctx.clip();
+    const curveZ = (arr, color, lw, dash) => {
+      ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.setLineDash(dash || []); ctx.lineJoin = 'round'; ctx.beginPath();
+      arr.forEach((u, i) => { const px = UX(u), py = Y(zs[i]); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); });
+      ctx.stroke(); ctx.setLineDash([]);
+    };
+    curveZ(ug, T.muted, 1.4 * ls, [5 * ls, 4 * ls]);
+    curveZ(ua, T.accent, 2 * ls);
+    curveZ(ut, T.ink, 3 * ls);
+    for (const zt of L.traps) {
+      const u = levU(zt, L.a, L.pe, k, L.rho0, L.c0, L.f1, L.f2) + L.W * zt;
+      ctx.fillStyle = T.canvas; ctx.strokeStyle = T.equi; ctx.lineWidth = 2.2 * ls;
+      ctx.beginPath(); ctx.arc(UX(u), Y(zt), 4.5 * ls, 0, TAU); ctx.fill(); ctx.stroke();
+    }
+    ctx.restore();
+    xTicks(uL, uR, mn * sf, mx * sf, yR, `U (${unit})`);
+    // labels last
+    const ratio = L.W > 0 ? L.Fmax / L.W : Infinity;
+    const rtxt = ratio >= 1 ? pick([`F_max/W = ${fmtRatio(ratio)}: traps hold`, `F_max/W = ${fmtRatio(ratio)}`, fmtRatio(ratio)], uR - uL - 12 * ls, 10.5, true)
+      : pick([`F_max/W = ${fmtRatio(ratio)}: no trap, beads fall`, `F_max/W = ${fmtRatio(ratio)}: no trap`, `${fmtRatio(ratio)}: falls`], uR - uL - 12 * ls, 10.5, true);
+    tag(rtxt, uL + 6 * ls, yT + 6 * ls, ratio >= 1 ? T.ink : T.pos, 'left', 'top', true, 10.5);
+    {
+      const lab = [[pick(['Gor\'kov U', 'U'], (uR - uL) / 2, 10, false), T.accent], [pick(['gravity W z', 'W z'], (uR - uL) / 2, 10, false), T.muted], [pick(['total', 'sum'], (uR - uL) / 2, 10, false), T.ink]];
+      let yy = yR - 5 * ls;
+      for (let i = lab.length - 1; i >= 0; i--) { tag(lab[i][0], uR - 5 * ls, yy, lab[i][1], 'right', 'bottom', i === 2, 10); yy -= 15 * ls; }
+    }
+    tag(pick(['Potential energy along z', 'Potential energy', 'Energy'], uR - uL), uL, yT - 18 * ls, T.ink, 'left', 'bottom', true, 11.5);
+    tag(pick(['Pressure p and air velocity v', 'p and v'], aR - aL + tickW - 6 * ls), aL - tickW + 6 * ls, yT - 18 * ls, T.ink, 'left', 'bottom', true, 11.5);
+    tag(pick([`Transducer, ${l.f.toFixed(1)} kHz`, `${l.f.toFixed(1)} kHz`, `${l.f.toFixed(0)} kHz`], appW), cx, top + 15 * ls, T.ink, 'center', 'bottom', true, 11.5);
+    // resonance condition under the reflector
+    const q = L.gap / (L.lam / 2), onRes = L.g > 0.98;
+    tag(onRes ? pick([`H = ${q.toFixed(2)} × λ/2: resonance`, `${q.toFixed(2)} λ/2, resonance`, `${q.toFixed(2)} λ/2`], appW + tickW - 8 * ls, 10.5, true)
+      : pick([`H = ${q.toFixed(2)} × λ/2: |p| at ${(100 * L.g).toFixed(0)} %`, `${q.toFixed(2)} λ/2, ${(100 * L.g).toFixed(0)} %`], appW + tickW - 8 * ls, 10.5, true),
+      x0, yR + 14 * ls, onRes ? T.equi : T.pos, 'left', 'top', true, 10.5);
+    if (L.a > L.lam / 10) tag(pick(['a > λ/10: theory only rough', 'a > λ/10'], faceW + 10 * ls, 10, true), cx, yT + 5 * ls, T.pos, 'center', 'top', true, 10);
+    else if (!beads.length) tag(pick(['click to drop a bead', 'tap to drop'], faceW + 10 * ls, 10, false), cx, (yT + yR) / 2, T.muted, 'center', 'middle', false, 10);
+    // handles: reflector distance, drive amplitude (on the pressure envelope at the reflector), and the gap for dropping beads
+    handles.push({ id: 'lRefl', cursor: 'ns-resize', color: T.tubeEdge, seg: [cx - rw / 2, yR + 5 * ls, cx + rw / 2, yR + 5 * ls], grip: [cx + rw / 2 - 12 * ls, yR + 5 * ls],
+      start: (mx, my) => { holdSpan = span; drag.dy = my - yR; drag.sc0 = sc; },
+      set: (mx, my) => {
+        // pointer mapped with the scale at grab time; past the bottom the drawing zooms out so the reflector stays on the stage
+        const s0 = (drag && drag.sc0) || sc;
+        let Hn = (my - (drag ? drag.dy || 0 : 0) - yT) / s0;
+        holdSpan = Math.max(span, Hn);
+        const half = L.lam / 2, n = Math.round(Hn / half);
+        if (n >= 1 && Math.abs(Hn - n * half) * sc < 7 * ls) Hn = n * half;
+        setSlider('lH', Hn * 1e3);
+      } });
+    const gx = Math.max(aL + 10 * ls, Math.min(aR - 8 * ls, XP(L.pe)));
+    handles.push({ id: 'lP', cursor: 'ew-resize', color: T.pos, seg: [gx, yR - 34 * ls, gx, yR], grip: [gx, yR - 13 * ls],
+      set: (mx) => { const pa = Math.abs(mx - am) / ah * LEV_PAX; setSlider('lP', L.g > 1e-3 ? pa / L.g : 0); } });
+    handles.push({ id: 'lDropB', cursor: 'crosshair', noGrip: true, region: [bx0, yT, bx1, yR],
+      start: (mx, my) => { dropBead(invZ(my), Math.max(0.03, Math.min(0.97, (mx - bx0) / faceW))); const b = beads[beads.length - 1]; b.held = true; drag.bead = b; },
+      set: (mx, my) => { const b = drag && drag.bead; if (!b) return; b.z = Math.max(L.a, Math.min(L.gap - L.a, invZ(my))); b.x = Math.max(0.03, Math.min(0.97, (mx - bx0) / faceW)); b.v = 0; } });
+  }
+  const fmtRatio = (r) => (!isFinite(r) ? '∞' : r >= 100 ? r.toFixed(0) : r >= 10 ? r.toFixed(1) : r.toFixed(2));
+
   // ---------- draw ----------
   function drawAll() {
     if (!W || !H || !T) return;
@@ -1202,7 +1512,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (S.view === 'waves') drawWaves();
     else if (S.view === 'string') drawString();
     else if (S.view === 'pipe') drawPipe();
-    else drawBeats();
+    else if (S.view === 'beats') drawBeats();
+    else drawLev();
     if (drag && !handles.find((h) => h.id === drag.id) && keep) drag.h = keep;
     drawGrips();
   }
@@ -1225,7 +1536,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     aT: [() => S.p.Tc, (v) => { S.p.Tc = v; }, (v) => v.toFixed(1) + ' °C'],
     bF1: [() => S.b.f1, (v) => { S.b.f1 = v; }, (v) => v.toFixed(0) + ' Hz'],
     bDf: [() => S.b.df, (v) => { S.b.df = v; }, (v) => (v > 0 ? '+' : '') + v.toFixed(1) + ' Hz'],
-    bA2: [() => S.b.a2, (v) => { S.b.a2 = v; }, (v) => v.toFixed(2)]
+    bA2: [() => S.b.a2, (v) => { S.b.a2 = v; }, (v) => v.toFixed(2)],
+    lP: [() => S.l.p0, (v) => { S.l.p0 = v; }, (v) => v.toFixed(0) + ' Pa'],
+    // beads keep their place relative to the transducer when the reflector moves
+    lH: [() => S.l.gap, (v) => { const d = (v - S.l.gap) * 1e-3; S.l.gap = v; for (const b of beads) b.z += d; clampBeads(); }, (v) => v.toFixed(2) + ' mm'],
+    lA: [() => S.l.a, (v) => { S.l.a = v; clampBeads(); }, (v) => v.toFixed(2) + ' mm'],
+    lF: [() => S.l.f, (v) => { S.l.f = v; }, (v) => v.toFixed(1) + ' kHz'],
+    lT: [() => S.l.Tc, (v) => { S.l.Tc = v; }, (v) => v.toFixed(1) + ' °C']
   };
   function outs() { for (const id in SL) $(id + 'Out').textContent = SL[id][2](SL[id][0]()); }
   function setSlider(id, v) {
@@ -1251,11 +1568,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function setView(v) {
     S.view = v;
     for (const b of $('viewSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
-    $('secWaves').hidden = v !== 'waves'; $('secString').hidden = v !== 'string'; $('secPipe').hidden = v !== 'pipe'; $('secBeats').hidden = v !== 'beats';
+    $('secWaves').hidden = v !== 'waves'; $('secString').hidden = v !== 'string'; $('secPipe').hidden = v !== 'pipe'; $('secBeats').hidden = v !== 'beats'; $('secLev').hidden = v !== 'lev';
     $('modelHint').textContent = MODEL[v];
     buildKey(); updateReadouts(); soundRebuild();
     t = 0; holdSpan = null;
     if (v === 'string' && S.s.mode === 'drive') restDriven(D);
+    if (v === 'lev' && !beads.length) defaultBeads();
     drawAll();
   }
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; setView(b.dataset.v); markPreset(null); });
@@ -1297,6 +1615,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('aEnd').addEventListener('change', () => { S.p.endc = $('aEnd').checked; updateReadouts(); buildTables(); soundUpdate(); if (!running) drawAll(); });
   $('wEnv').addEventListener('change', () => { S.w.env = $('wEnv').checked; if (!running) drawAll(); });
   $('wMarks').addEventListener('change', () => { S.w.marks = $('wMarks').checked; if (!running) drawAll(); });
+  function setMat(m) {
+    S.l.mat = m;
+    for (const b of $('lMat').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.m === m));
+    for (const b of beads) b.v = 0;
+    updateReadouts(); if (!running) drawAll();
+  }
+  $('lMat').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setMat(b.dataset.m); });
+  function tuneLev() { const L = lev(), half = L.lam / 2; setSlider('lH', Math.max(1, Math.round(L.gap / half)) * half * 1e3); }
+  $('lTune').addEventListener('click', tuneLev);
+  $('lDrop').addEventListener('click', () => { dropRandom(); updateReadouts(); if (!running) drawAll(); });
+  $('lClear').addEventListener('click', () => { beads = []; updateReadouts(); if (!running) drawAll(); });
 
   function buildTables() {
     const s = S.s, rows = ['<tr><th>n</th><th>fₙ (Hz)</th><th>λₙ = 2L/n (m)</th></tr>'];
@@ -1344,8 +1673,32 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('rbFm').textContent = ((b.f1 + f2) / 2).toFixed(2) + ' Hz';
     $('rbFb').textContent = Math.abs(b.df).toFixed(1) + ' Hz';
     $('rbTb').textContent = Math.abs(b.df) > 0 ? fmtT(1 / Math.abs(b.df)) : '∞';
+    levReadouts();
     soundHintText();
   }
+
+  function fmtLen(m) { const a = Math.abs(m); return a >= 1e-3 ? (m * 1e3).toFixed(2) + ' mm' : a >= 1e-6 ? (m * 1e6).toFixed(a >= 1e-5 ? 0 : 1) + ' µm' : (m * 1e9).toFixed(0) + ' nm'; }
+  function levReadouts() {
+    const L = lev(), ratio = L.W > 0 ? L.Fmax / L.W : Infinity, q = L.gap / (L.lam / 2), n = Math.max(1, Math.round(q));
+    $('rlLam').textContent = (L.lam * 1e3).toFixed(2) + ' mm';
+    $('rlNode').textContent = (L.lam * 500).toFixed(2) + ' mm';
+    $('rlRes').textContent = L.g > 0.98 ? `${q.toFixed(3)} × λ/2, on resonance (n = ${n})` : `${q.toFixed(3)} × λ/2: |p| = ${(100 * L.g).toFixed(0)} % of p₀`;
+    $('rlRatio').textContent = fmtRatio(ratio);
+    $('rlPmin').textContent = (L.pmin / L.g).toFixed(0) + ' Pa';
+    const trap = L.Fmax > L.W;
+    $('rlOff').textContent = trap ? fmtLen(L.off) : 'no trap';
+    $('rlK').textContent = trap ? (L.K >= 0.1 ? L.K.toFixed(2) + ' N/m' : (L.K * 1e3).toFixed(2) + ' mN/m') : '—';
+    $('rlFz').textContent = trap ? (Math.sqrt(L.K / L.m) / TAU).toFixed(0) + ' Hz' : '—';
+    $('rlPhi').textContent = `${L.Phi.toFixed(3)} (f₁ ${L.f1.toFixed(3)}, f₂ ${L.f2.toFixed(3)})`;
+    $('rlKa').textContent = `${(L.k * L.a).toFixed(2)}, a = λ/${(L.lam / L.a).toFixed(1)}`;
+    levCount();
+    const warn = [];
+    if (L.a > L.lam / 10) warn.push(`a > λ/10 (ka = ${(L.k * L.a).toFixed(2)} > 0.63): the bead is not small next to the wavelength, so Gor'kov's formula is only a rough guide here. It assumes a ≪ λ; this page warns above a = λ/10.`);
+    if (!trap) warn.push(L.p0 === 0 ? 'The transducer is off, so every bead falls.' : `F_max < W: the acoustic force cannot hold the bead's weight anywhere, so it falls to the reflector. Raise p₀ above ${(L.pmin / L.g).toFixed(0)} Pa${L.g < 0.98 ? ' or tune H to resonance' : ''}.`);
+    $('lWarn').hidden = !warn.length; $('lWarn').textContent = warn.join(' ');
+    $('lTheory').textContent = `Gor'kov: U = 2πa³[f₁⟨p²⟩/(3ρ₀c²) − f₂ρ₀⟨v²⟩/2]. Here ⟨p²⟩ = ½p₀²cos²kz and ⟨v²⟩ = ½(p₀/ρ₀c)²sin²kz, so F = −dU/dz = F_max sin 2kz with F_max = 4πΦ k a³ p₀²/(4ρ₀c²). The weight less buoyancy is W = (ρ_p − ρ₀)(4/3)πa³g, so a³ cancels: F_max/W = 3Φ k p₀²/[4ρ₀c²(ρ_p − ρ₀)g], the same for every small bead. The trap sits asin(W/F_max)/2k ≈ W/K₀ below its node, K₀ = 2k F_max. Air now: c = ${L.c0.toFixed(1)} m/s, ρ₀ = ${L.rho0.toFixed(3)} kg/m³.`;
+  }
+  function levCount() { const L = lev(), c = beadStatus(L); $('rlCount').textContent = `${c.held} / ${c.fell} of ${beads.length}`; }
 
   function buildKey() {
     const k = $('key'), v = S.view, rows = [];
@@ -1355,7 +1708,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (S.s.mode === 'drive') rows.push(['acc', 'Resonance curve'], ['gold', 'Harmonics fₙ = n v/2L'], ['pos', 'Drive frequency and the driver']);
       else rows.push(['gold', 'Nodes'], ['acc', 'Mode amplitudes']);
     } else if (v === 'pipe') rows.push(['comp', 'Pressure: compression red, rarefaction blue'], ['gold', 'Air displacement'], ['pos', 'Pressure change'], ['env', 'Envelope']);
-    else rows.push(['pos', 'Tone 1'], ['neg', 'Tone 2'], ['ink', 'Their sum'], ['acc', 'Envelope and beat period'], ['pos', 'Playhead (shown in the close up)']);
+    else if (v === 'beats') rows.push(['pos', 'Tone 1'], ['neg', 'Tone 2'], ['ink', 'Their sum'], ['acc', 'Envelope and beat period'], ['pos', 'Playhead (shown in the close up)']);
+    else rows.push(['comp', 'Pressure: compression red, rarefaction blue'], ['pos', 'Pressure p and its amplitude'], ['gold', 'Air velocity v and its amplitude'],
+      ['acc', 'Gor\'kov potential U'], ['env', 'Gravity W z (weight less buoyancy)'], ['ink', 'Total U + W z'], ['dot', 'Trap, the minimum of the total'], ['env', 'Pressure nodes']);
     k.innerHTML = rows.map(([c, t]) => `<span><i class="swatch ${c}"></i>${t}</span>`).join('');
   }
 
@@ -1364,7 +1719,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     waves: 'Two waves of the same frequency moving in opposite directions make a standing wave. Change one amplitude or one frequency and see what survives.',
     string: 'A string fixed at both ends vibrates only at fₙ = n v/2L. A guitar\'s low E string sounds E2 at 82.4 Hz; its high E string, about 0.4 g/m at a similar tension, sounds E4 at 329.6 Hz.',
     pipe: 'Open ends are pressure nodes and closed ends are displacement nodes. A flute is close to a pipe open at both ends; a clarinet is close to one closed at one end.',
-    beats: 'Two tones a few hertz apart swell and fade in loudness at the difference frequency.'
+    beats: 'Two tones a few hertz apart swell and fade in loudness at the difference frequency.',
+    lev: 'A 40 kHz transducer and a reflector hold a standing sound wave. Small beads float just below its pressure nodes, half a wavelength apart, and fall if the sound is too weak. Why the nodes? See the end of the Acoustic levitation panel.'
   };
   function markPreset(id) { presetId = id; for (const b of $('presets').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.p === id)); $('presetHint').textContent = id ? PRESETS[id].hint : VIEW_HINT[S.view]; }
   function applyPreset(id) {
@@ -1384,7 +1740,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // play, reset, speed
   function setRunning(on) { running = on; $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('primary', !on); }
   $('play').addEventListener('click', () => setRunning(!running));
-  function doReset() { t = 0; if (S.view === 'string' && S.s.mode === 'drive' && D) { D.phi = 0; restDriven(D); } drawAll(); }
+  function doReset() { t = 0; if (S.view === 'string' && S.s.mode === 'drive' && D) { D.phi = 0; restDriven(D); } if (S.view === 'lev') { defaultBeads(); updateReadouts(); } drawAll(); }
   $('reset').addEventListener('click', doReset);
   $('speedSeg').addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
@@ -1426,6 +1782,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (id === 'string') endPluck();
     if (id === 'pipeEnd' || id === 'bridge') holdSpan = null;
     if (id === 'beat') beatHold = null;
+    if (id === 'lRefl') holdSpan = null;
+    if (id === 'lRefl' || id === 'lP') holdPot = null;
+    if (id === 'lDropB') { for (const b of beads) b.held = false; updateReadouts(); }
     drawAll();
   };
   can.addEventListener('pointerup', endDrag);
@@ -1447,6 +1806,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else if (v === 'pipe' && /^[1-8]$/.test(e.key)) setPipeN(pipeNs()[+e.key - 1]);
     else if (v === 'beats' && lr) nudge('bDf', lr * big);
     else if (v === 'beats' && up) nudge('bA2', up * big);
+    else if (v === 'lev' && up) nudge('lP', up * big * 10);
+    else if (v === 'lev' && lr) nudge('lH', lr * big * 10);
+    else if (v === 'lev' && e.key === 'Enter') { dropRandom(); updateReadouts(); if (!running) drawAll(); }
+    else if (v === 'lev' && (e.key === 'Delete' || e.key === 'Backspace')) { beads = []; updateReadouts(); if (!running) drawAll(); }
     else return;
     e.preventDefault();
   });
@@ -1455,7 +1818,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const snd = { ac: null, master: null, voices: [], on: false, sig: '' };
   function voicesWanted() {
     const v = S.view;
-    if (v === 'waves') return [];
+    if (v === 'waves' || v === 'lev') return [];
     if (v === 'beats') return [{ f: S.b.f1, a: 0.5 }, { f: S.b.f1 + S.b.df, a: 0.5 * S.b.a2 }];
     if (v === 'pipe') return [{ f: pF(S.p.n), a: 0.8 }];
     const s = S.s;
@@ -1507,7 +1870,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   function soundHintText() {
     const v = S.view; let txt;
-    if (v === 'waves') txt = 'Nothing to hear in this view: 1 Hz is far below hearing, which runs from about 20 Hz to 20 kHz.';
+    if (v === 'lev') txt = 'Nothing to hear: 40 kHz is ultrasound, far above the 20 kHz top of human hearing, which is one reason levitators run there.';
+    else if (v === 'waves') txt = 'Nothing to hear in this view: 1 Hz is far below hearing, which runs from about 20 Hz to 20 kHz.';
     else if (v === 'beats') txt = 'Plays both tones, the second at the relative amplitude A₂/A₁. Listen for the loudness to swell and fade.';
     else if (v === 'pipe') txt = `Plays a pure tone at f${sub(S.p.n)} = ${pF(S.p.n).toFixed(1)} Hz.`;
     else if (S.s.mode === 'harm') txt = `Plays a pure tone at f${sub(S.s.n)} = ${sF(S.s.n).toFixed(1)} Hz.`;
@@ -1538,7 +1902,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   let last = performance.now(), lastRead = 0, lastSnd = 0;
   function clockText() {
     const el = $('clock');
-    if (S.view === 'string' || S.view === 'pipe') {
+    if (S.view === 'lev') el.innerHTML = `t = ${(t * 1e3).toFixed(0)} ms <small>shown ${LEV_SLOW}× slower</small>`;
+    else if (S.view === 'string' || S.view === 'pipe') {
       const sf = 1 / slowFactor();
       el.innerHTML = `t = ${(t * 1e3).toFixed(1)} ms <small>shown ${sf.toFixed(0)}× slower</small>`;
     } else el.innerHTML = `t = ${t.toFixed(2)} s${S.view === 'beats' ? ' <small>real time at 1×</small>' : ''}`;
@@ -1550,17 +1915,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const dts = dtr * S.speed * slowFactor();
       t += dts;
       if (S.view === 'string' && S.s.mode === 'drive' && D) stepDriven(D, dts);
+      if (S.view === 'lev') stepBeads(dts);
     }
     drawAll();
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
-    if (now - lastRead > 120) { clockText(); lastRead = now; }
+    if (now - lastRead > 120) { clockText(); if (S.view === 'lev') levCount(); lastRead = now; }
     if (S.view === 'string' && S.s.mode === 'drive' && snd.on && now - lastSnd > 150) { soundUpdate(); lastSnd = now; }
     requestAnimationFrame(loop);
   }
   window.__sw = { get frameMs() { return frameMs; }, get t() { return t; }, get S() { return S; }, get D() { return D; }, get handles() { return handles; },
-    setRunning, applyPreset, setView, get curveMax() { return curveMax; } };
+    setRunning, applyPreset, setView, get curveMax() { return curveMax; }, get beads() { return beads; }, lev, stepBeads, setMat, tuneLev };
 
   tokens();
+  { const L = lev(); S.l.gap = +(4 * L.lam / 2 * 1e3).toFixed(3); }
   rebuildPluck();
   rebuildDriven(false);
   buildHarmChips();
