@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gas in a Box: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Gas in a Box</h1><ul class="meta"><li><a href="../demos/ideal-gas.html">Open the demo</a></li><li>Intro physics (kinetic theory, thermodynamics)</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Temperature measures the average kinetic energy of the molecules (in this 2D gas ⟨KE⟩ = kT), not the speed of any one of them. Collisions spread any starting speeds into the Maxwell–Boltzmann distribution.</li>
+<li>Pressure is momentum delivered to the walls per unit time. Hotter molecules hit both harder and more often, so P ∝ T: the ideal gas law P = NkT/A.</li>
+<li>Work is energy moved by a moving wall: a molecule bouncing off an advancing piston comes back faster. A slow squeeze with no heat flow raises T (T × A stays constant in 2D); a wall pulled away faster than the molecules can follow takes almost no energy out.</li>
+<li>Heat is energy carried by molecular collisions from a hotter region to a colder one, with no wall moving.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know KE = ½mv², that momentum reverses in an elastic bounce, and the ideal gas law. The gas is argon in two dimensions, in a box 30 nm high whose right wall is a piston, so area plays the part of volume and pressure is force per length (N/m). One second on screen is 80 ps at <strong>Fixed rate</strong>. Drag the right wall or use the arrow keys on the box; click a molecule to follow it. <strong>P measured</strong> averages over about a second, so let it settle before reading it.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Relax to equilibrium.</strong> Every molecule starts at 353 m/s: one spike in the histogram. Ask Q1, then play. Within seconds the bars settle onto the Maxwell–Boltzmann curve, while <strong>Temperature T</strong> stays at 300 K.</li>
+<li><strong>Pressure from bounces.</strong> Compare <strong>P measured</strong> with <strong>P ideal, NkT/A</strong> (414 µN/m). Drag <strong>Temperature</strong> to 600 K: every speed is rescaled and P doubles (Q2, Q3).</li>
+<li><strong>Hot vs cold.</strong> Fast molecules (700 K) on the left, slow ones (100 K) on the right. No wall moves, so what crosses is heat. The box settles at 400 K (Q6).</li>
+<li><strong>Compress.</strong> Ask Q4 first. Set <strong>Piston top speed</strong> to 50 m/s and drag <strong>Box width</strong> from 50 to 25 nm: T climbs to a bit over 600 K. Back out slowly, T returns near 300 K.</li>
+<li><strong>Free expansion.</strong> Squeeze again, set <strong>Piston top speed</strong> to 1000 m/s and pull the wall straight out to 50 nm. T barely drops (Q5).</li>
+<li><strong>Dilute gas</strong> and <strong>Near absolute zero</strong> (if time allows). With 25 molecules the spike relaxes slowly and P is noisy. At 0.01 K the molecules average about 2 m/s but keep the same distribution shape.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: in <strong>Relax to equilibrium</strong> all 150 molecules start with the same speed in random directions, and every collision is perfectly elastic. After many collisions, will they still all have the same speed? Will the temperature reading change?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> The box holds N = 150 argon atoms (m = 6.63 × 10⁻²⁶ kg) at T = 300 K in an area of 50 nm × 30 nm. In two dimensions ⟨½mv²⟩ = kT. Find the rms speed and the ideal pressure P = NkT/A in N/m, and compare with the <strong>rms speed</strong> and <strong>P ideal, NkT/A</strong> readouts.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> If the temperature is doubled at fixed N and area, by what factor does the momentum delivered per bounce change? The number of bounces per second? Use these to explain why P ∝ T.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Predict, then check with <strong>Compress</strong>: the area is halved slowly, from 1500 nm² to 750 nm², with no heat exchanged. For this 2D gas U = NkT, and on each small step ΔU = −P ΔA. Show that T × A stays constant, and predict the final temperature and rms speed. Where does the energy come from, molecule by molecule?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Pulled out from 25 nm to 50 nm at <strong>Piston top speed</strong> 1000 m/s, the gas barely cools, though its area doubles. Pulled out slowly, its temperature halves. Explain the difference in terms of the work the gas does.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In <strong>Hot vs cold</strong>, 100 molecules at 700 K start on one side and 100 at 100 K on the other. What final temperature do you expect, and why? Is the energy that moves heat or work? Why does it never move back to recreate a hot side and a cold side?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> <strong>P / P ideal</strong> reads a few percent above 1. Set <strong>Molecules N</strong> to 400 and <strong>Piston top speed</strong> to 25 m/s, then slowly squeeze the box to 15 nm: the ratio climbs to about 1.5. What feature of these molecules makes P exceed NkT/A, and why does crowding make it worse?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"All molecules at one temperature move at the same speed."</strong> The speeds spread over a wide distribution; T sets only the average kinetic energy.</li>
+<li><strong>"Pressure comes from molecules pushing on each other."</strong> Wall pressure is the momentum the molecules carry into the wall. Collisions between molecules share energy around; they do not create the pressure.</li>
+<li><strong>"Compressing a gas heats it by friction."</strong> Nothing rubs. Each molecule that bounces off the advancing piston comes back faster: that is the work done on the gas.</li>
+<li><strong>"Every expansion cools a gas."</strong> Only if the gas does work; in a free expansion it does almost none.</li>
+<li><strong>"Near absolute zero the molecules are nearly still."</strong> Classically they slow as √T but keep a full Maxwell–Boltzmann spread at any T above zero. Real argon would have liquefied long before (near 87 K at 1 atm), and quantum effects matter near 0 K.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Hard disks 0.5 nm across with the mass of argon. Collisions are elastic: equal masses swap their velocity components along the line of centers. Walls reflect elastically; the piston reflects each molecule relative to its own motion, v′ = 2u − v.</li>
+<li>T comes from ⟨½mv²⟩ = kT (two degrees of freedom), so v_rms = √(2kT/m), and the 2D Maxwell–Boltzmann curve is f(v) = (mv/kT) e^(−mv²/2kT).</li>
+<li><strong>P measured</strong> is momentum delivered to the walls per unit length per unit time, smoothed over about a second; it lags while the wall moves.</li>
+<li>Finite disk size makes P run above NkT/A, by about 1 + N(πd²/2)/A (4% in the starting box), and makes a slow squeeze heat slightly more than T × A = constant predicts.</li>
+<li>A slow squeeze with no heat flow: U = NkT and dU = −P dA give T × A = constant (γ = 2 in 2D; in 3D it would be T V^(2/3) = constant).</li>
+<li>The <strong>Temperature</strong> slider rescales every speed at once (0.01 to 1000 K). There are no attractive forces, so the gas never condenses, and the physics is classical at every temperature.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: derive P = NkT/A from one molecule bouncing between two walls; in 3D, ⟨v_x²⟩ = ⟨v²⟩/3 instead of ⟨v²⟩/2.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

@@ -460,7 +460,7 @@ select { font: inherit; font-size: 0.82rem; color: var(--ink); background: var(-
     otto: { cycle: 'otto', gas: 'di', dir: 1, p: { r: 8, T3: 1800 },
       hint: 'The gasoline engine as an air standard cycle. Its efficiency η = 1 − r<sup>1−γ</sup> depends only on the compression ratio r. Raise r and watch η climb, though it stays well below the Carnot limit for its 300 K to 1800 K span.' },
     diesel: { cycle: 'diesel', gas: 'di', dir: 1, p: { r: 15, rc: 2 },
-      hint: 'A Diesel squeezes the air so hard (r = 15 here) that the fuel ignites on its own, which is why Diesels beat gasoline engines. At the same r it is less efficient than an Otto: set r = 8 and compare.' },
+      hint: 'A Diesel squeezes the air so hard (r = 15 here) that the fuel ignites on its own. Self ignition lets a Diesel run at a much higher compression ratio, and that is why Diesels beat gasoline engines. At the same r it is less efficient than an Otto: set r = 8 and compare.' },
     stirling: { cycle: 'stirling', gas: 'mono', dir: 1, p: { Th: 600, Tc: 300, r: 3 }, regen: true,
       hint: 'With an ideal regenerator, the heat given off on 4→1 is handed back on 2→3, so the only heat from outside arrives at T<sub>h</sub>: η equals the Carnot limit. Turn the regenerator off and that heat must come from the hot side too, and η drops.' },
     fridge: { cycle: 'carnot', gas: 'mono', dir: -1, p: { Th: 320, Tc: 250 },

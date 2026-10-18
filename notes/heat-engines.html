@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heat Engine Cycles: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Heat Engine Cycles</h1><ul class="meta"><li><a href="../demos/heat-engines.html">Open the demo</a></li><li>Intro physics (thermodynamics)</li><li>20 to 35 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Heat and work are the two ways energy enters or leaves the gas. Work W = ∫P dV is the area under the path on the PV diagram; heat Q crosses the cylinder wall because of a temperature difference. ΔU = Q − W on every leg.</li>
+<li>Around a closed cycle ΔU = 0, so net work equals net heat. The net work is the enclosed area: work out along the high pressure path minus work in along the low pressure path.</li>
+<li>An engine must give off some heat. The gas has to dump the entropy it took in, which costs the least heat at the coldest temperature, so η = W/Q_in can never exceed 1 − T_min/T_max.</li>
+<li>Real cycles fall short because they take in heat below T_max or give it off above T_min. A refrigerator is an engine run backward; its COP can be well above 1.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the ideal gas law, U = n C_v T and the first law. Entropy can be introduced here as heat divided by the temperature at which it flows (Q/T on an isotherm). The drawing shows the PV diagram with the piston under it, the T–S diagram and <strong>Energy per cycle</strong>; the rail table <strong>Energy per leg</strong> lists Q, W and ΔU for each leg. Use <strong>Slow</strong> and <strong>Next leg</strong> to stop on each leg. Drag a corner, or the grip in the middle of a leg, to reshape the cycle.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Carnot cycle.</strong> One mole of monatomic gas between 500 K and 300 K. Pause on leg 1→2 and ask Q1. The table: Q = W = +2.88 kJ, ΔU = 0. On the adiabat 2→3: W = +2.49 kJ, Q = 0, and the gas cools. The cycle row: W_net = Q_net = 1.15 kJ, η = 40.0%, equal to the Carnot limit.</li>
+<li><strong>Why the loop area.</strong> With <strong>Area under the leg</strong> on, step around: the area under 1→2→3 is work out, under 3→4→1 work in, and the loop is what is left (Q3). Ask Q4 before touching the <strong>Hot temperature T_h</strong> and <strong>Cold temperature T_c</strong> sliders, then check.</li>
+<li><strong>Rectangle</strong> (under Cycle, with <strong>Monatomic, γ = 5/3</strong>). W_net = ΔP ΔV = 2.70 kJ, yet η = 19.4% against a Carnot limit of 84.0% (Q2).</li>
+<li><strong>Otto cycle (gasoline engine).</strong> Compression ratio 8, diatomic air, peak 1800 K: η = 56.5% against 83.3%. On the T–S diagram, heat comes in while the gas warms from 689 K to 1800 K, not at 1800 K (Q5).</li>
+<li><strong>Diesel cycle</strong> and <strong>Stirling engine.</strong> The Diesel at r = 15 reaches 60.4%; at r = 8 it falls below an Otto with the same r. In the Stirling, uncheck <strong>Ideal regenerator</strong>: η falls from 50.0% to 29.7% (Q6).</li>
+<li><strong>Run it backward: refrigerator.</strong> The Carnot cycle counterclockwise between 320 K and 250 K: work goes in, COP = 3.57 (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: on leg 1→2 of the Carnot cycle the gas expands at a constant 500 K while touching the hot reservoir. Does its internal energy change? Where does the energy for its work on the piston come from? On leg 2→3 it expands with no heat at all. Where does that work come from?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In <strong>Rectangle</strong> with a monatomic gas, the cycle runs at 250 kPa from 12.0 L to 30.0 L, drops to 100 kPa at 30.0 L, returns at 100 kPa to 12.0 L, and rises back to 250 kPa. Find W_net. For a monatomic ideal gas Q = (5/2)P ΔV at constant pressure and Q = (3/2)V ΔP at constant volume. Find Q on each leg, Q_in and η, and check with <strong>Energy per leg</strong>.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Explain why the area enclosed by the loop is the net work per cycle, not the area under the top leg alone. What does a counterclockwise cycle mean?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> The Carnot engine runs between 500 K and 300 K. Which raises its efficiency more: raising T_h by 100 K or lowering T_c by 100 K? Predict, then check with the sliders.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> The Otto preset reaches η = 56.5%, while a Carnot engine between its extreme temperatures, 300 K and 1800 K, would reach 83.3%. Use the T–S diagram to explain the shortfall. Then explain why no engine of any design working between 300 K and 1800 K can beat 83.3%.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In the <strong>Stirling engine</strong>, turning off the regenerator does not change the work per cycle, yet η drops from 50.0% to 29.7%. Explain both facts. Where does the regenerator's heat go when it is off?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In <strong>Run it backward: refrigerator</strong>, heat is taken from the cold side at 250 K and given to the room at 320 K. Find the Carnot COP, Q_c/W. For each joule of work, how much heat leaves the cold side and how much reaches the room? Does a COP above 1 violate energy conservation? What happens to the COP as the room gets hotter?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A gas contains heat."</strong> A gas has internal energy. Heat, like work, is energy in transit; the same change of state can be reached with different amounts of each.</li>
+<li><strong>"Isothermal means no heat flows."</strong> The opposite: at constant T, ΔU = 0 for an ideal gas, so Q = W. It is the adiabatic leg that has Q = 0, and there T changes.</li>
+<li><strong>"Without friction an engine could reach 100%."</strong> Every cycle here is frictionless; the limit comes from entropy.</li>
+<li><strong>"A bigger loop is a better engine."</strong> A bigger loop does more work per cycle; efficiency depends on where the heat is exchanged. The <strong>Rectangle</strong> has a large area and a low η.</li>
+<li><strong>"A COP above 1 means free energy."</strong> A refrigerator moves heat; Q_h = Q_c + W always.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>n moles of ideal gas with constant heat capacities: C_v = 3/2 R (monatomic, γ = 5/3) or 5/2 R (diatomic, γ = 7/5), C_p = C_v + R. Every process is quasistatic.</li>
+<li>Each leg is P V^k = constant with k = 0 (isobaric), 1 (isothermal), γ (adiabatic) or ∞ (isochoric). W comes from the area under the path; Q separately from n C_p ΔT, n C_v ΔT, T ΔS on an isotherm, or 0 on an adiabat; ΔU = n C_v ΔT. The table confirms ΔU = Q − W on every row and that ΔU and ΔS sum to zero around the cycle.</li>
+<li>S = n C_v ln(T/300 K) + n R ln(V/V₀); the area under a leg on the T–S diagram is its heat.</li>
+<li>η = W_net/Q_in, with Q_in the sum of the positive Q's (regenerator legs excluded), compared with 1 − T_min/T_max for the cycle's own extremes. The rail also shows the textbook formulas (Otto 1 − r^(1−γ), Diesel, Brayton, Stirling).</li>
+<li>Otto, Diesel and Brayton are air standard models: combustion is heat added, exhaust plus intake is heat removed. Real air has γ falling toward about 1.3 at combustion temperatures, and friction and fast, irreversible steps keep real engines well below these values.</li>
+<li>One hot and one cold side are drawn; where T changes while heat flows, a reversible version would need a series of reservoirs. The regenerator is ideal.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: show that for the Carnot cycle Q_out/Q_in = T_c/T_h, using T V^(γ−1) = constant on the adiabats to prove that the two isotherms have the same volume ratio.</li>
+<li>Try <strong>Brayton</strong> with diatomic gas: η depends only on the pressure ratio, 44.8% at r_p = 8. Carnot found the limit in 1824, before the first law.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

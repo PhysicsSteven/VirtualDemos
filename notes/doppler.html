@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Doppler Effect and Shock Waves: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Doppler Effect and Shock Waves</h1><ul class="meta"><li><a href="../demos/doppler.html">Open the demo</a></li><li>Intro physics (waves and sound); intro astronomy (redshift)</li><li>15 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A moving source crowds its wavefronts ahead and spreads them behind. The received frequency depends on the velocity component along the line of sight, not on the distance: f′ = f/(1 − (v_s/v) cos θ) for an observer at rest.</li>
+<li>For sound the medium picks out a frame, so a moving source and a moving observer at the same speed give different shifts. For light only the relative motion matters.</li>
+<li>At Mach 1 the source keeps up with its own sound and the crests pile into a wall. Faster than sound they form a Mach cone, sin θ_c = v/v_s, and the boom is the cone sweeping past, all through the supersonic flight.</li>
+<li>Light from a receding source is redshifted, z = λ′/λ − 1 ≈ v_r/c at low speed. Relativity adds time dilation: a source moving across the line of sight is redshifted by f′ = f/γ.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know v = fλ and what a wavefront is. Each ring is one crest, centered where the source was when it emitted it; the dashed line is the path of the sound reaching the observer now, and the plot below tracks f′ over time. Drag the source or the observer, and the grip at the tip of an arrow to set a velocity. <strong>Sound off</strong> toggles audio, which always plays the true pitch, even in slow motion. Switch between <strong>Sound</strong> and <strong>Light</strong> at the top.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Ambulance passing.</strong> A 700 Hz siren at 30 m/s passes an observer 60 m from its path. Ask Q1, then turn the audio on and play. <strong>Received frequency f′</strong> starts near 760 Hz, falls slowly at first and fastest at closest approach, and settles near 647 Hz.</li>
+<li><strong>Source at rest, observer moving.</strong> Evenly spaced circles; the observer, at 86 m/s, meets crests more often going in and less often coming out. Ask Q3, then give the motion to the source instead and compare.</li>
+<li><strong>Mach 1: the sound barrier.</strong> The forward crests never get ahead of the source. The observer ahead reads "no sound has arrived yet" until the wall arrives (Q5).</li>
+<li><strong>Supersonic jet: Mach cone.</strong> At Mach 2 the crests touch two lines at 30° to the path. Outside the cone, silence; once it passes, two sounds arrive at once, one heard backward (Q4).</li>
+<li><strong>Redshift and blueshift.</strong> <strong>Light</strong> mode, a 550 nm source at 0.2 c: blue ahead, red behind. Pick <strong>H-alpha 656.3</strong> and read <strong>z = λ′/λ − 1</strong> and the Hubble line (Q6).</li>
+<li><strong>Transverse Doppler.</strong> At 0.6 c, γ = 1.25. Pause when <strong>Angle θ at emission</strong> reads 90°: λ′ = 625 nm, where the classical formula predicts no shift (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: an ambulance siren approaches at constant speed, passes you and drives away. Sketch the pitch you hear against time. Does it rise as the ambulance gets closer, stay constant, or something else? When does it change fastest?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> A 700 Hz siren moves at 30 m/s; sound travels at 343 m/s. Find the frequency heard by an observer at rest directly ahead and directly behind. Then find what a listener moving at 30 m/s hears from a siren at rest, approaching and receding. Compare the two pairs.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Explain why, for sound, it matters whether the source or the observer moves, at the same relative speed. Check with <strong>Source at rest, observer moving</strong>: note f′ early on. Then set the observer's <strong>Speed v_o/v</strong> to 0, give the source <strong>Mach number v_s/v</strong> 0.25 with <strong>Direction</strong> 180° (toward the observer), press <strong>Restart</strong> and compare. Why does this difference disappear for light?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A jet flies level at Mach 2 at an altitude of 10.0 km; take the speed of sound as 343 m/s everywhere. What is the cone's half angle? How far past you is the jet, and how long after it was overhead, when you hear the boom?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> At exactly Mach 1, f′ = f/(1 − v_s/v) is infinite straight ahead. What is physically happening, and why does the observer ahead hear nothing at all until the wall arrives? Use the drawing in <strong>Mach 1: the sound barrier</strong>.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> A galaxy's H-alpha line (656.3 nm at rest) is observed at 662.9 nm. Find z, the recession speed and, with H₀ = 70 km/s/Mpc, the distance. Why does the demo refuse a Hubble distance at z = 0.2? A star receding at 30 km/s shifts the same line by how much?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In <strong>Transverse Doppler</strong> the source moves at 0.6 c and emits 500 nm light. What wavelength arrives from where the source was moving straight across the line of sight (θ = 90°)? What does classical physics predict there? What arrives from a source coming straight at the observer, and going straight away?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The pitch rises as the source gets closer."</strong> Head on, the pitch is constant and high; the loudness is what grows. The pitch drops as the source passes, fastest at closest approach.</li>
+<li><strong>"The shift depends on the distance."</strong> Only the velocity along the line of sight matters; distance sets the delay and loudness.</li>
+<li><strong>"The boom happens once, when the plane breaks the sound barrier."</strong> The cone travels with the plane for the whole supersonic flight; everyone along the track hears it pass.</li>
+<li><strong>"A redshifted star looks red."</strong> The spectrum shifts by a tiny fraction (30 km/s moves H-alpha 0.066 nm); astronomers measure line positions.</li>
+<li><strong>"Galaxy redshifts are ordinary Doppler shifts."</strong> Only nearby: at large z the redshift comes from the expansion of space.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Sound: a point source in still air at v = 343 m/s. The program solves exactly for each emission time whose crest is arriving now, v(t − t_e) = |r_o − r_s(t_e)|, and applies f′ = f (v − v_o·n̂)/(v − v_s·n̂), with n̂ from the emission point to the observer.</li>
+<li>Faster than sound, two emission times reach each point inside the cone (the earlier one heard backward, with negative f′) and none reach points outside. sin θ_c = v/v_s.</li>
+<li>Light: special relativity in the observer's frame, f′ = f/(γ(1 − β cos θ)). Head on this is √((1 + β)/(1 − β)); at θ = 90° it is 1/γ. The Observer controls are hidden in light mode: the observer is at rest. Colors are approximate; outside 380 to 750 nm light is drawn gray.</li>
+<li>The Hubble line uses d = cz/H₀ (H₀ = 70 km/s/Mpc), only for 0 &lt; z ≤ 0.1. Only some crests are drawn; real 700 Hz crests are 0.49 m apart. Loudness falls as 1/r in the audio only. A real aircraft gives two booms (nose and tail shocks).</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Radial velocity planet searches detect stellar shifts of about 1 m/s, a few parts in 10⁹. Doppler proposed the effect in 1842; Buys Ballot tested it in 1845 with musicians on a moving train.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

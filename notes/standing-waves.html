@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Standing Waves: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Standing Waves</h1><ul class="meta"><li><a href="../demos/standing-waves.html">Open the demo</a></li><li>Intro physics (waves and sound)</li><li>20 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Two equal waves traveling in opposite directions add to a standing wave, with fixed nodes half a wavelength apart. With unequal amplitudes part of the wave travels and the minima no longer reach zero.</li>
+<li>Boundaries select the frequencies: a string fixed at both ends holds n half wavelengths, fₙ = n v/2L with v = √(T/μ); a pipe closed at one end holds an odd number of quarter wavelengths, fₙ = n v/4L, n odd.</li>
+<li>Driving at a natural frequency gives resonance, taller and narrower for higher Q. Where a string is plucked decides which harmonics it contains. Two tones a few hertz apart beat at the difference frequency.</li>
+<li>A standing sound wave can hold small beads in air: the time averaged acoustic force drives them to the pressure nodes, where the air moves fastest, and they sit just below those nodes.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know v = fλ and superposition. Five views are chosen at the top: <strong>Two waves</strong>, <strong>String</strong>, <strong>Air column</strong>, <strong>Beats</strong> and <strong>Levitation</strong>. The six setups load the first four; <strong>Levitation</strong> has no setup, so select its view directly. <strong>Sound on</strong> plays the string, pipe and beat tones (bring speakers); the 40 kHz levitator is silent.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Two waves make a standing wave.</strong> Two 1 Hz waves at 2 m/s, λ = 2.00 m. Ask Q1 first. <strong>Node spacing</strong> reads 1.00 m and the nodes stay put. Drag A₂ down: the <strong>Standing wave ratio</strong> drops from ∞.</li>
+<li><strong>Harmonics of a string.</strong> A guitar's low E string, f₁ = 82.4 Hz, shown at n = 3. Click <strong>n=1</strong> to <strong>n=8</strong> with sound on; drag the bridge to shorten the string, as a fret does (Q2).</li>
+<li><strong>Find the resonances.</strong> Driven at 60 Hz the string barely moves. Drag the red marker across the curve: peaks at 82.4, 164.8, 247.2 Hz. Raise <strong>Quality factor Q of mode 1</strong> from 30 to 300 (Q4).</li>
+<li><strong>Pluck at the middle.</strong> The table marks the even harmonics "(missing)". Drag <strong>Pluck point d</strong> toward the bridge and listen: the tone brightens (Q3).</li>
+<li><strong>Closed pipe: odd harmonics only.</strong> A 0.600 m pipe closed at one end, end correction on: 141.9 Hz, near a clarinet's lowest note. Switch to <strong>Both ends open</strong> and compare the tables (Q5).</li>
+<li><strong>Beats.</strong> 440 and 443 Hz with sound on: the loudness swells and fades 3 times a second. Drag <strong>Difference f₂ − f₁</strong> toward zero and the beats slow and stop.</li>
+<li><strong>Levitation</strong> view. A 40 kHz transducer 17.16 mm above a reflector, four half wavelengths. Ask Q6 first. Foam beads sit just below the four pressure nodes. Choose <strong>Water droplet</strong> and lower <strong>Drive amplitude p₀</strong> below <strong>Needs p₀ above</strong>: they fall. Restore 2000 Pa, <strong>Drop a bead</strong>, then raise <strong>Air temperature</strong> to 40 °C and press <strong>Tune H to resonance</strong> (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: two waves of equal amplitude and frequency travel in opposite directions along a string. Will any points stay still? If so, how far apart are they, in wavelengths? Check in <strong>Two waves make a standing wave</strong>, where v = 2 m/s and f = 1 Hz.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> A guitar's low E string is 0.648 m long, with linear density 6.14 g/m and tension 70.0 N. Find the wave speed, the fundamental and the third harmonic. What tension tunes it to F2 (87.3 Hz) at the same length? Where must a finger press to sound 164.8 Hz? Check with <strong>Harmonics of a string</strong>.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In <strong>Pluck at the middle</strong> every even harmonic is missing. Explain why, using where the even harmonics have their nodes. Which harmonics go missing for a pluck at d = L/4? Check by setting <strong>Pluck point d</strong> to 0.25 L.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In <strong>Find the resonances</strong> the string hardly moves at 60 Hz but swings strongly at 82.4 Hz, though the driving force is the same. Explain why. When Q goes from 30 to 300, what happens to the height and width of the peaks, and to the time the string needs to build up? Check with the curve and the readouts.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> A pipe 0.600 m long is closed at one end. With v = 343.2 m/s (air at 20 °C), find its lowest three frequencies, ignoring the end correction, and the lowest frequency of the same pipe open at both ends. Compare with the <strong>Air column</strong> table, end correction off. Why does the closed pipe have only odd harmonics?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Predict: in <strong>Levitation</strong> a small foam bead floats in the standing sound wave. Will it sit at a pressure antinode, where the pressure swings most, or at a pressure node, where it does not change? Explain, and say why the bead sits slightly below that point.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> The levitator runs at 40.0 kHz in air at 20 °C (c = 343.2 m/s) with H = 17.16 mm. Find the wavelength, the spacing of the traps and how many fit in the gap. A foam bead (30 kg/m³) needs p₀ above 304 Pa, a water droplet (998 kg/m³) 1742 Pa: explain the difference. Then predict what happens to trapped droplets if the air warms to 40 °C at the same H, and check.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Nothing travels, so a standing wave has no energy."</strong> It holds energy that sloshes between kinetic (near the antinodes) and elastic (near the nodes) within each loop; none crosses a node.</li>
+<li><strong>"Beats are a third tone."</strong> The pitch heard is (f₁ + f₂)/2; only the loudness varies at |f₁ − f₂|.</li>
+<li><strong>"The bead floats where the pressure is highest."</strong> That push averages out over each cycle; the steady force is a second order effect pointing toward the pressure nodes.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li><strong>Two waves:</strong> y = A₁ sin(k₁x − ω₁t) + A₂ sin(k₂x + ω₂t) at 2 m/s: a standing part 2 min(A) plus a traveling part |A₁ − A₂|. Nodes are v/(f₁ + f₂) apart.</li>
+<li><strong>String:</strong> ideal flexible string, small amplitude, fixed ends. The pluck is 200 undamped modes, bₙ = 2hL² sin(nπd/L)/(n²π² d(L − d)). The driven string has a point force at L/20 and damping rate γ = ω₁/Q for every mode, solved exactly, transients included.</li>
+<li><strong>Air column:</strong> plane waves, ideal ends, v = 331.3 √(1 + T/273.15) m/s, optional end correction 0.6 r per open end. <strong>Beats:</strong> two pure tones added.</li>
+<li><strong>Levitation:</strong> an ideal plane standing wave p = p₀ cos kz cos ωt above a rigid reflector, no absorption or beam spreading. Gor'kov's potential for a sphere much smaller than λ, U = 2πa³[f₁⟨p²⟩/(3ρ₀c²) − f₂ρ₀⟨v²⟩/2], gives F = F_max sin 2kz with F_max = πΦka³p₀²/(ρ₀c²) and Φ = f₁/3 + f₂/2. Force and weight both scale as a³, so F_max/W does not depend on bead size. The demo warns above a = λ/10. Off resonance the amplitude falls as for a cavity with an illustrative loss. Beads move only along the axis, with buoyancy, added mass and drag, and do not interact. The foam's bulk modulus (about 3 MPa) is a rough figure.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: a guitar string beats 3 times a second against a 110.0 Hz tuning fork, and the beats slow when the string is tightened slightly. What was its frequency?</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>
