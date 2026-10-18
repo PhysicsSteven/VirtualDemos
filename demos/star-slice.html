@@ -118,6 +118,19 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 #gl.dragging { cursor: grabbing; }
 #gl:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 #ov3 { pointer-events: none; }
+/* the label that names the part of the star under the pointer */
+.hoverbox {
+  position: absolute; left: 0; top: 0; z-index: 4; pointer-events: none; display: grid; gap: 1px;
+  max-width: min(300px, calc(100% - 16px)); padding: 6px 10px 7px; border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 94%, transparent); border: 1px solid var(--line);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35); color: var(--ink); font-size: 0.84rem; line-height: 1.3; will-change: transform;
+}
+.hoverbox b { font-size: 0.92rem; }
+.hoverbox span { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.82rem; }
+.hoverbox small { color: var(--muted); font-family: var(--font-mono); font-size: 0.74rem; }
+.hoverbox sub { font-size: 0.72em; line-height: 0; }
+.sizebox { display: grid; gap: 6px; justify-items: start; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .stagebar-l { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
 #views button { padding: 5px 12px; }
 .hint3d {
@@ -270,10 +283,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <canvas id="slice" tabindex="0" role="application" aria-label="Cross section of the star. Hover or tap a layer to read it. Scroll or pinch to zoom, double click to reset. Left and right arrow keys step through the moments, up and down zoom."></canvas>
         <canvas id="ov3" aria-hidden="true" hidden></canvas>
         <p class="hint3d" id="note3d" hidden></p>
+        <div class="hoverbox" id="hoverBox" aria-hidden="true" hidden><b id="hbName"></b><span id="hbVal"></span><small id="hbPos"></small></div>
+        <p class="sr-only" id="hoverLive" aria-live="polite"></p>
         <div class="msg" id="msg">Unpacking the MESA profiles…</div>
       </div>
       <p class="viewline mono" id="viewline"></p>
-      <p class="hint" id="stageHint" style="margin-top:-6px">Hover or tap a layer to probe it · Scroll or pinch to zoom · Double click to reset · Arrow keys step moments and zoom.</p>
+      <p class="hint" id="stageHint" style="margin-top:-6px">Hover or tap any layer to name it and probe it · Scroll or pinch to zoom · Double click to reset · Arrow keys step moments and zoom.</p>
 
       <section class="card" aria-label="Timeline">
         <div class="tl-row">
@@ -356,6 +371,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="slider-head"><label for="cut">Cut angle</label><output id="cutOut" class="mono" for="cut">90°</output></div>
           <input type="range" id="cut" min="60" max="180" step="5" value="90">
         </div>
+        <div id="sizeBox" class="sizebox">
+          <div class="slider-head"><span>Size</span></div>
+          <div class="seg small" role="group" aria-label="Size of the star in the view" id="sizes">
+            <button type="button" data-s="fit" aria-pressed="true">Fit to view</button>
+            <button type="button" data-s="true" aria-pressed="false">True size</button>
+          </div>
+          <button type="button" class="btn" id="toGas" hidden>Zoom out to the lost gas</button>
+        </div>
         <div class="toggles">
           <label><input type="checkbox" id="tHold">Hold scale</label>
           <label><input type="checkbox" id="tCells" checked>Convection</label>
@@ -393,6 +416,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div class="key" id="mixKey"></div>
         <p class="hint">Convection is drawn as tracer streaks circling counter rotating roll cells. Their extent comes from MESA's mixing_type and their relative speed from log_conv_vel (compressed so slow and fast regions both show); the roll pattern itself is illustrative, not computed. Overshoot shows as fainter, slower streaks; semiconvection as drifting layers; thermohaline mixing as thin radial fingers.</p>
         <p class="hint" id="surfHint">In the 3D cutaway the outside is drawn from the model's T<sub>eff</sub>: its color is the blackbody color at T<sub>eff</sub> (Planck spectrum through the CIE 1931 color matching functions), with a fixed saturation boost that keeps the hue, and drawn a little dimmer below about 6000 K so cool stars read orange red and hot ones blue white. Its brightness falls toward the edge by the linear limb darkening law I(μ) = 1 − u(1 − μ) with u = 0.65 (0.55 in red and 0.8 in blue, so the edge is redder, as in real stars), where μ is the cosine of the angle between the line of sight and the surface normal. Granulation shows only when MESA has a convective envelope reaching the surface, and never on a white dwarf. The cells are illustrative and far larger than real ones: their size follows d/R = 0.012 x<sup>0.75</sup>, kept between 0.008 and 0.5 (small cells are also drawn with lower contrast), with x = (T<sub>eff</sub>/5772 K)(R/R<sub>sun</sub>)(M<sub>sun</sub>/M), which grows with the surface pressure scale height over the radius. In the cutaway the two upright cut faces show the true colors; the floor of the cut is drawn 12% darker so the cut reads in 3D. The halo around the star and the background sky are decorative.</p>
+        <p class="hint" id="gasHint">True size (3D): the view radius follows the star's radius with smooth easing in log scale, so the swelling to a giant and the shrinking to a white dwarf play out on screen; zoom out past the star with the wheel, a pinch or the Zoom slider. The faint rings are the orbits of Mercury, Venus, Earth and Mars at true scale (1 AU = 215.03 R<sub>sun</sub>). Lost gas: the mass of each shell is the drop in the model's total mass between saved moments (MESA star_mass), so a run without mass loss shows none. The shells' shape (a uniform spherical outflow), their speed (an assumed 15 km/s, typical of winds from giants), their brightness, their color (teal once the star is hotter than about 25,000 K and can ionize the gas, dull orange before) and their fading beyond about 2 pc are illustrative.</p>
         <p class="hint" id="burnHint">Glow marks zones with ε<sub>nuc</sub> above 10 erg g⁻¹ s⁻¹ and above 10⁻⁴ of the moment's peak. Channel shares use MESA's pp, cno and tri_alpha columns; any remainder is other reactions.</p>
       </section>
 
@@ -711,6 +735,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           if (e > pk) { pk = e; pi = i; }
         }
         s.peak = pk; s.pi = pi; s.core = s.i0 === 0;
+        // the burning region proper: zones around the peak where ε_nuc stays at or above 10% of this region's peak
+        { const thr = 0.1 * pk; let lo = pi, hi = pi;
+          while (lo > 0 && (mo.eps[lo - 1] || 0) >= thr) lo--;
+          while (hi < n - 1 && (mo.eps[hi + 1] || 0) >= thr) hi++;
+          s.lo = lo; s.hi = hi; }
         s.fH = tot > 0 ? H / tot : 0; s.fHe = tot > 0 ? He / tot : 0; s.fC = tot > 0 ? Cb / tot : 0; s.fO = tot > 0 ? Ob / tot : 0;
         const where = s.core ? 'core' : 'shell';
         // the largest channel names the shell (ties go to the lighter fuel)
@@ -722,6 +751,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         s.chanText = chanText(D, s.fH, s.fHe, s.fC, s.fO);
       }
     }
+    mo.burn = burnRegionsOf(D, mo);
     mo.fe = ironOf(mo);
     // crystallization
     mo.solidAny = false; mo.front = null;
@@ -731,6 +761,57 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (last >= 0) mo.front = { i: last, m: mo.mass[last], r: mo.r[last], gam: mo.gam ? mo.gam[last] : null };
     }
     mo.stage = stageOf(mo, D);
+  }
+  // Burning regions, decided per reaction family (H: pp + CNO, He: triple alpha, C: c12_c12 + c12_o16, O: o16_o16,
+  // other: the rest of eps_nuc). A zone belongs to a family's burning region when that family's rate there is at least
+  // 10% of the family's own peak in this moment, at least BURN_FLOOR, and the largest of the families in that zone
+  // (so side reactions, such as alpha captures beside helium burning, do not make regions of their own). Deciding per family keeps a hydrogen shell
+  // named during the helium flash, whose peak is a million times larger. The floor, 1 erg g⁻¹ s⁻¹ (about half the Sun's
+  // average L/M = 1.9 erg g⁻¹ s⁻¹), drops families that only trickle; it is low because the Sun's core makes about 15.
+  const BURN_FLOOR = 1;
+  const FUEL_MIN = 0.01;   // a burning family needs its fuel (h1, he4, c12, o16) at 1% by mass or more in that zone
+  const FAM_NAME = { H: 'Hydrogen', He: 'Helium', C: 'Carbon', O: 'Oxygen' };
+  const FAM_RXN = { H: 'pp + CNO', He: 'triple alpha', C: 'carbon burning', O: 'oxygen burning', other: 'other reactions', all: 'eps_nuc' };
+  function famRates(D, mo) {
+    const n = mo.n, v = (a, i) => (a ? Math.max(0, a[i] || 0) : 0), F = {};
+    if (!mo.eps) return F;
+    if (!D.has.chan) { F.all = Float64Array.from({ length: n }, (_, i) => v(mo.eps, i)); return F; }
+    // Inside an iron core (iron group at least half the mass) matter is in nuclear statistical equilibrium: none of the
+    // named families applies there, whatever MESA's channels report (photodisintegration even leaves a few % of ⁴He).
+    const nse = (i) => !!mo.fe_grp && (mo.fe_grp[i] || 0) >= 0.5;
+    const fuel = (x, i) => !nse(i) && (!x || (x[i] || 0) >= FUEL_MIN);
+    F.H = Float64Array.from({ length: n }, (_, i) => (fuel(mo.h1, i) ? v(mo.pp, i) + v(mo.cno, i) : 0));
+    // A family only counts where its fuel is actually present (at least FUEL_MIN by mass). In nuclear statistical
+    // equilibrium MESA's triple alpha and carbon channels can be large inside an iron core, which is neither helium nor
+    // carbon burning; those rates then fall into "other".
+    F.He = Float64Array.from({ length: n }, (_, i) => (fuel(mo.he4, i) ? v(mo.ta, i) : 0));
+    if (D.has.cburn) F.C = Float64Array.from({ length: n }, (_, i) => (fuel(mo.c12, i) ? v(mo.bc, i) : 0));
+    if (D.has.oburn) F.O = Float64Array.from({ length: n }, (_, i) => (fuel(mo.o16, i) ? v(mo.bo, i) : 0));
+    F.other = Float64Array.from({ length: n }, (_, i) => Math.max(0, v(mo.eps, i) - F.H[i] - F.He[i] - (F.C ? F.C[i] : 0) - (F.O ? F.O[i] : 0)));
+    return F;
+  }
+  function burnRegionsOf(D, mo) {
+    const F = famRates(D, mo), out = [], fams = Object.keys(F);
+    const top = (i) => { let b = 0; for (const f of fams) if (F[f][i] > b) b = F[f][i]; return b; };
+    for (const fam of fams) {
+      const a = F[fam]; let pk = 0;
+      for (let i = 0; i < mo.n; i++) if (a[i] > pk) pk = a[i];
+      const thr = Math.max(0.1 * pk, BURN_FLOOR);
+      if (pk < thr) continue;
+      const ok = (i) => a[i] >= thr && a[i] >= top(i);
+      for (let i = 0; i < mo.n; i++) {
+        if (!ok(i)) continue;
+        let j = i, pi = i; while (j + 1 < mo.n && ok(j + 1)) { j++; if (a[j] > a[pi]) pi = j; }
+        const where = i === 0 ? 'core' : 'shell';
+        let name;
+        if (FAM_NAME[fam]) name = `${FAM_NAME[fam]} burning ${where}`;
+        else if (fam === 'all') name = `Burning ${where}`;
+        else { const k = domOf(mo, pi)[0], w = k >= 0 ? ELS[k].key : ''; name = `${w === 'fe_grp' ? 'Iron' : k >= 0 ? capW(EL_WORD[w]) : 'Mixed'} ${where}, burning (other reactions)`; }
+        out.push({ fam, lo: i, hi: j, pi, peak: a[pi], name, rate: a });
+        i = j;
+      }
+    }
+    return out;
   }
   // channel shares as text; the C and O parts and the remainder appear only when the file has burn_c / burn_o
   function chanText(D, fH, fHe, fC, fO) {
@@ -848,7 +929,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     xmode: 'm', playing: false, speed: 1, acc: 0, lastT: 0,
     probe: null,            // { m (Msun), ang (0..1 along the half disk) }
     layers: { cells: true, tex: true, glow: true, lat: true, move: !reduced },
-    fade: null, preset: -1
+    fade: null, preset: -1, size: 'fit'
   };
   const cur = () => S.D && S.D.moments[S.idx];
 
@@ -889,9 +970,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function mapper(mo) {
     // G.mag > 1: an inset texture of the face center, the same mapping magnified
     const vr = viewR(mo), Rp = G.R * (G.mag || 1);
-    if (!S.log) return { px: (r) => (r / vr) * Rp, inv: (p) => (p / Rp) * vr };
+    // w: 0 linear radius, 1 log radius; in between (3D cut faces while zooming in) a blend of the two, still monotonic
+    const w = texT ? logBlend() : S.log ? 1 : 0;
+    if (w <= 0) return { px: (r) => (r / vr) * Rp, inv: (p) => (p / Rp) * vr };
     const [a, b] = logRange(mo);
-    return { px: (r) => (r <= 0 ? 0 : Math.max(0, ((Math.log10(r) - a) / (b - a)) * Rp)), inv: (p) => 10 ** (a + (p / Rp) * (b - a)) };
+    if (w >= 1) return { px: (r) => (r <= 0 ? 0 : Math.max(0, ((Math.log10(r) - a) / (b - a)) * Rp)), inv: (p) => 10 ** (a + (p / Rp) * (b - a)) };
+    const f = (r) => (1 - w) * (r / vr) + w * (r <= 0 ? 0 : Math.max(0, (Math.log10(r) - a) / (b - a)));
+    return { px: (r) => f(r) * Rp, inv: (p) => { const t = p / Rp; let lo = 0, hi = vr; for (let k = 0; k < 60; k++) { const m = (lo + hi) / 2; if (f(m) < t) lo = m; else hi = m; } return (lo + hi) / 2; } };
   }
   const halfDisk = (c, r) => { c.beginPath(); c.moveTo(G.cx, G.cy); c.arc(G.cx, G.cy, r, G.a0, G.a0 + Math.PI); c.closePath(); };
   const annulus = (c, r0, r1) => { c.beginPath(); c.arc(G.cx, G.cy, r1, G.a0, G.a0 + Math.PI); c.arc(G.cx, G.cy, Math.max(0, r0), G.a0 + Math.PI, G.a0, true); c.closePath(); };
@@ -1346,6 +1431,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (texT) { texT.labels = labels.map((L) => ({ rf: L.r / (G.R * (G.mag || 1)), f: L.f, text: L.text, color: L.color })); return; }
     drawAxis(o, mo, M, T, p);
     drawScaleBar(o, mo, M, T, p);
+    if (D.collapse && S.idx === D.N - 1) {
+      const t = 'Core collapse: the supernova that follows is not modeled';
+      o.font = `700 ${12 * p}px ${uiFont()}`;
+      labelBox(o, W / 2 - (o.measureText(t).width + 12 * p) / 2, 20 * p, t, T, T.pos, p);
+    }
   }
 
   function buildAnimBands(mo, rin, rout, Rp, colors, T, p, R) {
@@ -1817,7 +1907,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }`;
   // linear limb darkening I(μ) = 1 − u(1 − μ); granulation as moving Worley cells (bright granules, dark lanes)
   const SHELL_FS = `
-    uniform vec3 uCol; uniform vec3 uU; uniform float uGran; uniform float uCells; uniform float uTime; uniform float uBright; uniform float uK;
+    uniform vec3 uCol; uniform vec3 uU; uniform float uGran; uniform float uCells; uniform float uTime; uniform float uBright; uniform float uK; uniform vec3 uInner;
     varying vec3 vN; varying vec3 vW; varying vec3 vP;
     vec3 hash3(vec3 p) {
       p = vec3(dot(p, vec3(127.1, 311.7, 74.7)), dot(p, vec3(269.5, 183.3, 246.1)), dot(p, vec3(113.5, 271.9, 124.6)));
@@ -1834,6 +1924,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       return vec2(sqrt(d1), sqrt(d2));
     }
     void main() {
+      if (!gl_FrontFacing) { gl_FragColor = vec4(uInner, 1.0); return; }   // inside of the shell, should any of it show
       vec3 V = normalize(cameraPosition - vW);
       float mu = clamp(dot(normalize(vN), V), 0.0, 1.0);
       vec3 I = 1.0 - uU * (1.0 - mu);
@@ -1854,11 +1945,49 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const HALO_FS = `
     uniform vec3 uCol; uniform float uIn; uniform float uA; varying vec2 vXY;
     void main() {
-      float r = length(vXY); if (r < uIn) discard;
-      float x = (r - uIn) / uIn;
+      // drawn on a plane behind the star: the star hides the inner part, and gaps in the cut show soft glow, not black
+      float r = length(vXY), x = max(r - uIn, 0.0) / uIn;
       float a = uA * (0.5 * exp(-x / 0.05) + 0.16 * exp(-x / 0.35));
+      if (r < uIn) a = uA * 0.42 * (0.5 + 0.5 * r / uIn);
       gl_FragColor = vec4(uCol * a, 1.0);
     }`;
+  // lost gas: a uniform spherical shell (radii uRi..uRo, view units) seen from distance uD; the fragment gets the exact
+  // projected column through the shell, so a thin shell is brightest at its rim, as real nebulae are
+  const GAS_VS = `varying vec2 vXY; void main() { vXY = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
+  const GAS_FS = `
+    uniform vec3 uCol; uniform float uRi; uniform float uRo; uniform float uDM; uniform float uFade; uniform float uD; uniform float uS; uniform float uAmp; varying vec2 vXY;
+    void main() {
+      float rho = length(vXY) * uS, b = rho * uD / sqrt(uD * uD + rho * rho);
+      if (b >= uRo) discard;
+      float col = 2.0 * sqrt(uRo * uRo - b * b) - (b < uRi ? 2.0 * sqrt(uRi * uRi - b * b) : 0.0);
+      // shape from the column relative to its peak (at the inner radius), brightness from the shell's mean column (uAmp)
+      float a = uAmp * col / (2.0 * sqrt(uRo * uRo - uRi * uRi)) * uFade;
+      gl_FragColor = vec4(uCol * a, 1.0);
+    }`;
+  const V_WIND = 15;                                      // km/s: ASSUMED outflow speed of the lost gas (typical of winds from giants)
+  const RSUN_PER_YR = (V_WIND * 3.15576e7) / RSUN_KM;     // about 680 R_sun per year
+  const AU_RSUN = 215.03, PC_RSUN = 3.0857e13 / RSUN_KM;
+  const PLANETS = [['Mercury', 0.387], ['Venus', 0.723], ['Earth', 1.0], ['Mars', 1.524]];
+  // mass lost between saved moments, from MESA star_mass; only where the ages count up (staged runs can reset the clock)
+  function gasOf(D) {
+    if (D.gas) return D.gas;
+    const g = [], ms = D.moments;
+    for (let i = Math.max(1, D.ageMonoFrom + 1); i < D.N; i++) {
+      const a = ms[i - 1], b = ms[i], dm = a.M - b.M;
+      if (dm > 1e-5 && a.age != null && b.age != null) g.push({ i, dm, a0: a.age, a1: b.age, R0: a.R, inst: a.age === b.age });
+    }
+    return (D.gas = g);
+  }
+  // 3D zoom blends the cut faces from linear radius (camera zoom 2.5× and below) to log radius (25× and above)
+  function logBlend() {
+    if (S.log) return 1;
+    if (view !== '3d' || !V3.ok) return 0;
+    const t = clamp(Math.log10(Math.max(1, orbit.zoom) / 2.5), 0, 1);
+    const w = t * t * (3 - 2 * t);
+    return w < 0.01 ? 0 : w;
+  }
+  const zMin = () => (S.size === 'true' && !S.hold && view === '3d' ? 1e-10 : 1);
+  let trueV = null, viewV = 1, easing = false, gasNote = null, gasLost = 0, gasLostSetup = 0, gasTarget = 0, ringInfo = [];
   const PTS_VS = `
     attribute float aSize; attribute vec3 aCol; attribute float aTw; attribute float aPh;
     uniform float uPR; uniform float uK; uniform float uTime; uniform float uTw;
@@ -2000,7 +2129,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       skyG.add(mwSphere());
       const star = new THREE.Group(); scene.add(star);
       const shellMat = new THREE.ShaderMaterial({ vertexShader: SHELL_VS, fragmentShader: SHELL_FS,
-        uniforms: { uCol: { value: new THREE.Vector3(1, 1, 1) }, uU: { value: new THREE.Vector3(0.55, 0.65, 0.8) }, uGran: { value: 0 }, uK: { value: 1 }, uCells: { value: 30 }, uTime: { value: 0 }, uBright: { value: 1 } } });
+        side: THREE.DoubleSide,
+        uniforms: { uCol: { value: new THREE.Vector3(1, 1, 1) }, uU: { value: new THREE.Vector3(0.55, 0.65, 0.8) }, uGran: { value: 0 }, uK: { value: 1 }, uCells: { value: 30 }, uTime: { value: 0 }, uBright: { value: 1 }, uInner: { value: new THREE.Vector3(0.1, 0.1, 0.1) } } });
       const shell = new THREE.Mesh(new THREE.BufferGeometry(), shellMat); star.add(shell);
       TX.tex = makeTex(TX); TXI.tex = makeTex(TXI);
       const faceMat = new THREE.MeshBasicMaterial({ map: TX.tex, side: THREE.DoubleSide });
@@ -2020,6 +2150,22 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       scene.add(new THREE.AmbientLight(0x22324a, 0.6));
       const earth = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 24), new THREE.MeshLambertMaterial({ color: 0x3f7fe0 }));
       earth.visible = false; scene.add(earth);
+      // planet orbits at true scale (radii in R_sun; the group is scaled to view units each frame)
+      const rings = new THREE.Group(); scene.add(rings);
+      for (const [nm, a] of PLANETS) {
+        const P = []; for (let k = 0; k < 256; k++) { const t = (2 * Math.PI * k) / 256; P.push(Math.cos(t) * a * AU_RSUN, Math.sin(t) * a * AU_RSUN, 0); }
+        const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3));
+        const l = new THREE.LineLoop(g, new THREE.LineBasicMaterial({ color: 0xa9bcd6, transparent: true, opacity: 0.45 }));
+        l.userData = { nm, a }; rings.add(l);
+      }
+      // lost gas shells: camera facing planes through the center, one per mass drop in view
+      const gasGeo = new THREE.PlaneGeometry(2, 2), gas = [];
+      for (let k = 0; k < 96; k++) {
+        const m = new THREE.Mesh(gasGeo, new THREE.ShaderMaterial({ vertexShader: GAS_VS, fragmentShader: GAS_FS, transparent: true, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending,
+          uniforms: { uCol: { value: new THREE.Vector3(1, 1, 1) }, uRi: { value: 0 }, uRo: { value: 1 }, uDM: { value: 0 }, uFade: { value: 1 }, uD: { value: DIST }, uS: { value: 1 }, uAmp: { value: 0 } } }));
+        m.renderOrder = 6; m.visible = false; m.frustumCulled = false; scene.add(m); gas.push(m);
+      }
+      V3.rings = rings; V3.gas = gas;
       Object.assign(V3, { ok: true, renderer, scene, cam, star, shell, shellMat, faces, insets, edges, halo, haloMat, skyParts, earth, light, ray: new THREE.Raycaster() });
       buildCut();
       bind3D(el);
@@ -2057,7 +2203,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     edges.geometry.dispose(); edges.geometry = edgeGeo(aA, aB);
   }
   // camera fit: the sphere (radius 1 at scale 1) fills FIT of the shorter half side; an Earth shown beside it is fitted too
-  function fovFor(extraHalfW, zoom = orbit.zoom, extraHalfH = 0) {
+  function fovFor(extraHalfW, zoom = Math.max(1, orbit.zoom), extraHalfH = 0) {
     const aspect = W / Math.max(1, H), tb = 1 / Math.sqrt(DIST * DIST - 1);
     let t = Math.max(tb / FIT, tb / (0.92 * aspect));
     if (extraHalfW > 0) t = Math.max(t, extraHalfW / DIST / (0.95 * aspect), extraHalfH / DIST / 0.9);
@@ -2137,7 +2283,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       extra = d * Math.cos(ang) + rE * 1.1;
       earthInfo = { rE, d, ang, eh: Math.max(starScale, -d * Math.sin(ang) + rE * 1.1) };
     }
-    cam.fov = (fovFor(rE > 0.08 * starScale ? extra : 0, orbit.zoom, earthInfo ? earthInfo.eh : 0) * 180) / Math.PI;
+    cam.fov = (fovFor(rE > 0.08 * starScale ? extra : 0, Math.max(1, orbit.zoom), earthInfo ? earthInfo.eh : 0) * 180) / Math.PI;
     cam.updateProjectionMatrix(); cam.updateMatrixWorld();
     const tanH = Math.tan((cam.fov * Math.PI) / 360);
     sphNow = (Math.tan(Math.asin(Math.min(0.999, starScale / DIST))) / tanH) * (H / 2);
@@ -2159,11 +2305,30 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (chartsDirty) { drawCharts(); drawHR(); updatePanel(); chartsDirty = false; }
     if (S.layers.move) tAnim += dt;
     updateSurface(mo);
+    // view radius V in R_sun: fit (V = R), held scale, or true size, eased in log toward R times the zoom out factor
     // held scale: the true ratio, except that a star more than 3 times the held size is drawn at 3 (and the note says so)
     holdRatio = S.hold ? mo.R / S.viewAbs : 1;
-    starScale = clamp(holdRatio, 1e-7, 3);
+    easing = false;
+    let Vv;
+    if (S.hold) Vv = S.viewAbs;
+    else if (S.size === 'true') {
+      // a zoom out past the star is anchored to the star's radius when it began, so the view stays put while moments change
+      if (orbit.zoom < 1) { if (orbit.outR == null) orbit.outR = mo.R; } else orbit.outR = null;
+      const lt = Math.log10((orbit.zoom < 1 ? orbit.outR : mo.R) / Math.min(1, orbit.zoom));
+      if (!trueV || reduced || trueV.D !== S.D) trueV = { lv: lt, D: S.D };
+      // log easing: about 1.4 s for the steps of evolution, quicker for big jumps (a zoom out to the gas)
+      else { const d = Math.abs(lt - trueV.lv); trueV.lv += (lt - trueV.lv) * (1 - Math.exp(-dt / (1.4 / (1 + d / 1.5)))); }
+      easing = Math.abs(lt - trueV.lv) > 0.002;
+      Vv = Math.max(10 ** trueV.lv, mo.R / 2.6);
+    } else Vv = mo.R;
+    starScale = clamp(mo.R / Vv, 1e-12, 3);
+    viewV = mo.R / starScale;
     V3.star.scale.setScalar(starScale);
+    V3.star.visible = starScale > 2e-5;
     const B = placeCamera(now);
+    updateRings(B); updateGas(mo, B);
+    { const oc = zoneColor(mo, mo.n - 1, sliceTokens()); V3.shellMat.uniforms.uInner.value.set(oc[0] / 255 * 0.45, oc[1] / 255 * 0.45, oc[2] / 255 * 0.45); }
+    { const lw = logBlend(); if (Math.abs(lw - (TX.lw ?? -1)) > 0.004) { TX.lw = lw; TX.dirty = TXI.dirty = true; chartsDirty = true; } }
     // face textures: the full face, and an inset of the center when the view is zoomed past what the full texture resolves
     if (TX.dirty) { withTex(TX, drawStatic); TX.dirty = false; TX.pk = null; }
     const pk = S.probe ? S.probe.m + ',' + S.probe.ang : '';
@@ -2177,8 +2342,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (TXI.dirty) { withTex(TXI, drawStatic); TXI.dirty = false; TXI.pk = null; }
       if (TXI.pk !== pk || (moving && texAnim(TXI))) { composeTex(TXI); TXI.pk = pk; }
     }
-    // halo: outside the silhouette only, so it never tints the cut faces
+    // halo: on a plane behind the star (local units), scaled to keep its apparent size, so it never tints the cut faces
     V3.halo.quaternion.copy(V3.cam.quaternion);
+    V3.halo.position.set(-B.c[0] * 2.5, -B.c[1] * 2.5, -B.c[2] * 2.5);
+    V3.halo.scale.setScalar((DIST + 2.5 * starScale) / DIST);
     const Dl = DIST / starScale;
     V3.haloMat.uniforms.uIn.value = Dl / Math.sqrt(Dl * Dl - 1);
     V3.shellMat.uniforms.uTime.value = moving ? tAnim : 0;
@@ -2188,10 +2355,49 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     V3.renderer.render(V3.scene, V3.cam);
     drawOverlay3D(mo, B);
-    const need = S.playing || (!orbit.user && !reduced) || (moving && (texAnim(TX) || tw > 0 || V3.surf.gran));
+    const need = S.playing || easing || (!orbit.user && !reduced) || (moving && (texAnim(TX) || tw > 0 || V3.surf.gran));
     if (need) schedule(); else S.lastT = 0;
   }
 
+  function updateRings(B) {
+    V3.rings.scale.setScalar(1 / viewV);
+    ringInfo = [];
+    const d = Math.hypot(B.r[0], B.r[1]) || 1, dx = B.r[0] / d, dy = B.r[1] / d;
+    for (const l of V3.rings.children) {
+      const rv = (l.userData.a * AU_RSUN) / viewV;
+      // only when the ring is a sensible size in the view; a ring inside the star is hidden and listed in the note instead
+      const show = rv > 0.12 && rv < 4.5;
+      l.visible = show && rv > starScale * 1.001;
+      if (show) ringInfo.push({ nm: l.userData.nm, a: l.userData.a, inside: rv <= starScale * 1.001, at: new THREE.Vector3(dx * rv, dy * rv, 0) });
+    }
+  }
+  function updateGas(mo, B) {
+    const t = mo.age, list = S.D && mo.age != null && S.idx >= S.D.ageMonoFrom ? gasOf(S.D) : [];
+    const ionized = (mo.Teff || 0) > 25000, col = ionized ? [0.42, 0.95, 0.85] : [0.85, 0.62, 0.45];
+    let k = 0, shown = 0, instShown = 0, best = null;
+    for (const g of list) {
+      if (g.i > S.idx) break;
+      const rin = g.R0 + RSUN_PER_YR * (t - g.a1), rout = Math.max(g.R0 + RSUN_PER_YR * (t - g.a0), rin * 1.03);
+      const fade = 1 / (1 + (rout / (2 * PC_RSUN)) ** 4);   // assumed: nebulae thin into the interstellar gas beyond about 2 pc
+      if (fade > 0.05 && (!best || g.dm * fade > best.w)) best = { w: g.dm * fade, rout };
+      const ri = rin / viewV, ro = rout / viewV;
+      if (ro < 0.01 || ro > 5.6 || fade < 0.02 || k >= V3.gas.length) continue;
+      const m = V3.gas[k++], u = m.material.uniforms;
+      u.uRi.value = ri; u.uRo.value = ro; u.uDM.value = g.dm; u.uFade.value = fade;
+      { const cm = 2 * Math.sqrt(ro * ro - ri * ri), sig = (g.dm * cm) / (4.18879 * (ro ** 3 - ri ** 3)); u.uAmp.value = 0.6 * (1 - Math.exp(-12 * sig)); } u.uCol.value.set(col[0], col[1], col[2]);
+      const sc = ((ro * DIST) / Math.sqrt(DIST * DIST - ro * ro)) * 1.02; m.scale.setScalar(sc); u.uS.value = sc;
+      m.quaternion.copy(V3.cam.quaternion); m.visible = true;
+      shown += g.dm; if (g.inst) instShown += g.dm;
+    }
+    for (; k < V3.gas.length; k++) V3.gas[k].visible = false;
+    let lost = 0, lostInst = 0; for (const g of list) { if (g.i > S.idx) break; lost += g.dm; if (g.inst) lostInst += g.dm; }
+    gasNote = shown > 0 ? { dm: shown, ionized, setup: instShown > 0.5 * shown } : null;
+    gasLost = lost; gasLostSetup = lostInst;
+    // the button frames the most massive gas that has not faded, when it is outside the view
+    gasTarget = best && S.size === 'true' && best.rout / viewV > 1.5 ? best.rout : 0;
+    const btn = $('toGas'), hide = !gasTarget;
+    if (btn.hidden !== hide) btn.hidden = hide;
+  }
   // a point on a cut face (k = 0 or 1) at fraction rf of the radius and angle fraction f of the half disk, in world space
   function facePoint(k, rf, f) {
     const d = V3.faces[k].userData;
@@ -2246,7 +2452,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (vis[2] > 0.85 || vis[k] < 0.12) k = 2;
     const ctr = toScreen(new THREE.Vector3(0, 0, 0));
     const boxes = [];
-    if (vis[k] > 0.12 && ctr) {
+    if (vis[k] > 0.12 && ctr && sphNow > 30) {
       c.font = `700 ${12 * p}px ${uiFont()}`;
       for (const L of TX.labels) {
         const q = toScreen(facePoint(k, Math.max(L.rf, 0.004), L.f)); if (!q || q[0] < 0 || q[0] > W || q[1] < 0 || q[1] > H) continue;
@@ -2266,7 +2472,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // scale note
     c.textAlign = 'left'; c.textBaseline = 'top';
     const lines = [[`R = ${sci(mo.R, 3)} R`, 'sun', ` = ${fmtKm(mo.R)}`, T.ink]];
-    lines.push([S.log ? 'Cut faces: log radius, not to scale' : 'Cut faces: linear radius, to scale', '', '', S.log ? T.pos : T.muted]);
+    const lw = logBlend();
+    lines.push([lw >= 1 ? 'Cut faces: log radius, not to scale' : lw > 0 ? `Cut faces: radius blending to log (${Math.round(lw * 100)}%), not to scale` : 'Cut faces: linear radius, to scale', '', '', lw > 0 ? T.pos : T.muted]);
+    if (S.size === 'true' && !S.hold) {
+      const V = viewV, u = V >= 0.5 * PC_RSUN ? [sci(V / PC_RSUN, 2) + ' pc', ''] : V >= 0.2 * AU_RSUN ? [sci(V / AU_RSUN, 2) + ' AU', ''] : [sci(V, 2) + ' R', 'sun'];
+      lines.push(['True size: view radius ' + u[0], u[1], '', T.ink]);
+    }
+    { const inside = ringInfo.filter((r) => r.inside).map((r) => r.nm);
+      if (inside.length) lines.push([`Orbit${inside.length > 1 ? 's' : ''} of ${inside.join(', ')} inside the star`, '', '', '#e2b350']); }
+    if (gasNote) lines.push(gasNote.setup
+      ? [`Gas shown: ${sci(gasNote.dm, 3)} M`, 'sun', ` envelope removed in one step by the MESA run setup (standing in for the slow giant wind) · outflow ${V_WIND} km/s assumed`, '#d9a074']
+      : [`Lost gas shown: ${sci(gasNote.dm, 3)} M`, 'sun', ` (MESA mass loss) · outflow ${V_WIND} km/s assumed`, gasNote.ionized ? '#6fe0c8' : '#d9a074']);
+    else if (S.size === 'true' && gasLost >= 1e-3) lines.push([`Mass lost so far: ${sci(gasLost, 3)} M`, 'sun', gasLostSetup > 0.5 * gasLost ? ` (${sci(gasLostSetup, 3)} of it removed in one step by the MESA run setup); its gas is out of view or has faded (assumed)` : ' (MESA); its gas is out of view or has faded (assumed)', T.muted]);
+    if (S.D.collapse && S.idx === S.D.N - 1) lines.push(['Core collapse: the supernova that follows is not modeled', '', '', T.pos]);
     if (S.hold) {
       lines.push([`Scale held: the star is ${sci(holdRatio, 2)} times the held size` + (holdRatio > 3 ? ', drawn at 3 times (not to scale)' : ''), '', '', holdRatio > 3 ? T.pos : T.muted]);
       if (sphNow < 2) lines.push(['The star is smaller than a pixel here: zoom in or turn off Hold scale', '', '', T.pos]);
@@ -2284,6 +2502,30 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (b) c.fillText(b, 13 * p + wa + ws, y);
       y += hgt + 9 * p;
     });
+    // a star smaller than a pixel is marked so it does not get lost; then orbit labels that do not overlap it or each other
+    const taken = [];
+    const free = (b) => !taken.some((q) => b[0] < q[2] && b[2] > q[0] && b[1] < q[3] && b[3] > q[1]);
+    c.font = `600 ${10.5 * p}px ${uiFont()}`; c.textAlign = 'left'; c.textBaseline = 'middle';
+    if (sphNow < 1.5) {
+      const q = toScreen(new THREE.Vector3(0, 0, 0));
+      if (q) {
+        const sc = V3.shellMat.uniforms.uCol.value, t = 'star (smaller than a pixel here)', tw = c.measureText(t).width;
+        c.fillStyle = `rgb(${Math.round(sc.x * 255)},${Math.round(sc.y * 255)},${Math.round(sc.z * 255)})`;
+        c.beginPath(); c.arc(q[0], q[1], 2.2 * p, 0, 7); c.fill();
+        c.fillStyle = 'rgba(6,8,12,0.6)'; c.fillRect(q[0] + 5 * p, q[1] - 8 * p, tw + 8 * p, 16 * p);
+        c.fillStyle = T.ink; c.fillText(t, q[0] + 9 * p, q[1]);
+        taken.push([q[0] - 4, q[1] - 9 * p, q[0] + tw + 14 * p, q[1] + 9 * p]);
+      }
+    }
+    for (const r of ringInfo.slice().reverse()) {   // outer orbits first: they have the most room
+      if (r.inside) continue;
+      const q = toScreen(r.at); if (!q || q[0] < 0 || q[0] > W - 20 || q[1] < 0 || q[1] > H) continue;
+      const t = `${r.nm}'s orbit`, tw = c.measureText(t).width, box = [q[0] + 4 * p, q[1] - 8 * p, q[0] + tw + 12 * p, q[1] + 8 * p];
+      if (!free(box)) continue;
+      taken.push(box);
+      c.fillStyle = 'rgba(6,8,12,0.6)'; c.fillRect(box[0], box[1], box[2] - box[0], box[3] - box[1]);
+      c.fillStyle = '#c3d2e6'; c.fillText(t, q[0] + 8 * p, q[1]);
+    }
     drawMiniKey(c, mo, T, p);
     // Earth label
     if (earthInfo) {
@@ -2308,7 +2550,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const hits = V3.ray.intersectObjects([...V3.faces, V3.shell], false);
     if (!hits.length) return false;
     const h = hits[0];
-    if (h.object === V3.shell) S.probe = { m: mo.mass[mo.n - 1], ang: S.probe ? S.probe.ang : 0.5 };
+    let what = 'face';
+    if (h.object === V3.shell) { S.probe = { m: mo.mass[mo.n - 1], ang: S.probe ? S.probe.ang : 0.5 }; what = 'surf'; }
     else {
       const d = h.object.userData, P = h.point.clone().divideScalar(starScale);
       let rf, f;
@@ -2324,7 +2567,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       S.probe = { m: mo.mass[i], ang: f };
     }
     chartsDirty = true; schedule();
-    return true;
+    return what;
   }
   function bind3D(el) {
     const ptr = new Map(); let drag = null, pinch = null;
@@ -2340,24 +2583,29 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (ptr.has(e.pointerId)) ptr.set(e.pointerId, { x: e.clientX, y: e.clientY });
       if (pinch && ptr.size === 2) {
         const q = [...ptr.values()], d = Math.hypot(q[0].x - q[1].x, q[0].y - q[1].y);
-        if (d > 0 && pinch.d > 0) { orbit.zoom = clamp(orbit.zoom * (d / pinch.d), 1, ZMAX); pinch.d = d; chartsDirty = true; schedule(); }
+        if (d > 0 && pinch.d > 0) { orbit.zoom = clamp(orbit.zoom * (d / pinch.d), zMin(), ZMAX); pinch.d = d; chartsDirty = true; schedule(); }
         return;
       }
       if (drag && ptr.has(e.pointerId)) {
         const dx = e.clientX - drag.x, dy = e.clientY - drag.y, k = 0.0085 / Math.sqrt(orbit.zoom);
         drag.moved += Math.abs(dx) + Math.abs(dy); drag.x = e.clientX; drag.y = e.clientY;
         orbit.az -= dx * k; orbit.pol = clamp(orbit.pol - dy * k, 0.06, Math.PI - 0.06);
+        if (drag.moved > 4) hoverHide();   // no label while rotating
         schedule(); return;
       }
-      if (e.pointerType === 'mouse') probe3(e);
+      if (e.pointerType === 'mouse') { const w = probe3(e); if (w) hoverShow(e.clientX, e.clientY, w === 'surf', false); else hoverHide(); }
     });
+    el.addEventListener('pointerleave', () => { if (!hov.touch) hoverHide(); });
     const end = (e) => {
-      if (drag && drag.moved < (e.pointerType === 'touch' ? 12 : 5) && e.type === 'pointerup') probe3(e);
+      if (drag && drag.moved < (e.pointerType === 'touch' ? 12 : 5) && e.type === 'pointerup') {
+        const w = probe3(e);
+        if (w) hoverShow(e.clientX, e.clientY, w === 'surf', e.pointerType !== 'mouse'); else hoverHide();
+      }
       ptr.delete(e.pointerId); if (ptr.size < 2) pinch = null;
       if (!ptr.size) { drag = null; el.classList.remove('dragging'); }
     };
     el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
-    el.addEventListener('wheel', (e) => { e.preventDefault(); stopAuto(); orbit.zoom = clamp(orbit.zoom * Math.exp(-e.deltaY * 0.0016), 1, ZMAX); chartsDirty = true; schedule(); }, { passive: false });
+    el.addEventListener('wheel', (e) => { e.preventDefault(); stopAuto(); orbit.zoom = clamp(orbit.zoom * Math.exp(-e.deltaY * 0.0016), zMin(), ZMAX); chartsDirty = true; schedule(); }, { passive: false });
     el.addEventListener('dblclick', () => { reset3D(); });
     el.addEventListener('keydown', (e) => {
       if (!S.D) return;
@@ -2366,8 +2614,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       else if (k === 'ArrowRight') orbit.az -= 0.1;
       else if (k === 'ArrowUp') orbit.pol = clamp(orbit.pol - 0.08, 0.06, Math.PI - 0.06);
       else if (k === 'ArrowDown') orbit.pol = clamp(orbit.pol + 0.08, 0.06, Math.PI - 0.06);
-      else if (k === '+' || k === '=') { orbit.zoom = clamp(orbit.zoom * 1.25, 1, ZMAX); chartsDirty = true; }
-      else if (k === '-' || k === '_') { orbit.zoom = clamp(orbit.zoom / 1.25, 1, ZMAX); chartsDirty = true; }
+      else if (k === '+' || k === '=') { orbit.zoom = clamp(orbit.zoom * 1.25, zMin(), ZMAX); chartsDirty = true; }
+      else if (k === '-' || k === '_') { orbit.zoom = clamp(orbit.zoom / 1.25, zMin(), ZMAX); chartsDirty = true; }
       else if (k === 'PageDown' || k === ']') { setPlaying(false); setMoment(S.idx + 1); }
       else if (k === 'PageUp' || k === '[') { setPlaying(false); setMoment(S.idx - 1); }
       else if (k === 'Home') setMoment(0);
@@ -2376,13 +2624,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       else if (k === 'Escape' || k === '0') reset3D();
       else return;
       stopAuto(); e.preventDefault(); schedule();
+      if (S.probe && k !== ' ') hoverAtProbe();
     });
   }
   function reset3D() { orbit.az = ORBIT0.az; orbit.pol = ORBIT0.pol; orbit.zoom = 1; orbit.user = true; chartsDirty = true; schedule(); }
 
   // ---------- view switching ----------
-  const HINT2D = 'Hover or tap a layer to probe it · Scroll or pinch to zoom · Double click to reset · Arrow keys step moments and zoom.';
-  const HINT3D = 'Drag to rotate · Scroll or pinch to zoom · Hover or tap a cut face to probe it · Double click to reset · Arrow keys rotate, Page Up and Page Down step moments.';
+  const HINT2D = 'Hover or tap any layer to name it and probe it · Scroll or pinch to zoom · Double click to reset · Arrow keys step moments and zoom.';
+  const HINT3D = 'Drag to rotate · Scroll or pinch to zoom · Hover or tap any part of the star to name it and probe it · Double click to reset · Arrow keys rotate, Page Up and Page Down step moments.';
   function setView(v) {
     if (v === '3d' && !init3D()) {
       v = '2d';
@@ -2393,15 +2642,26 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const b of document.querySelectorAll('#views button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     const is3 = v === '3d';
     cv.hidden = is3; ov3.hidden = !is3; if (glc) glc.hidden = !is3;
-    $('cutBox').hidden = !is3;
+    $('cutBox').hidden = !is3; $('sizeBox').hidden = !is3;
     $('stageHint').textContent = is3 ? HINT3D : HINT2D;
     $('viewHint').textContent = is3
       ? 'In 3D, zoom moves the camera in on the cut faces (the faces stay to scale with linear radius). Log radius stretches the inner layers on the cut faces only; the sphere keeps the star\'s true outline, so the faces are then not to scale. Hold scale keeps the sphere\'s size fixed while you step through moments. Cut angle sets the wedge that is removed.'
       : 'Zoom sets the outer edge of the view; inside it radius is linear and to scale. Log radius stretches the inner layers so every layer shows at once; that view is not to scale. Hold scale keeps the same view size while you step through moments.';
     S.fade = null; TX.dirty = TXI.dirty = true;
+    if (typeof hoverHide === 'function') try { hoverHide(); } catch (_) {}
     markAll();
   }
   for (const b of document.querySelectorAll('#views button')) b.addEventListener('click', () => { if (!b.disabled) setView(b.dataset.v); });
+  for (const b of document.querySelectorAll('#sizes button')) b.addEventListener('click', () => {
+    S.size = b.dataset.s;
+    for (const x of document.querySelectorAll('#sizes button')) x.setAttribute('aria-pressed', String(x === b));
+    if (S.size === 'fit') orbit.zoom = Math.max(1, orbit.zoom);
+    trueV = null; chartsDirty = true; schedule();
+  });
+  $('toGas').addEventListener('click', () => {
+    const mo = cur(); if (!mo || !gasTarget) return;
+    orbit.outR = mo.R; orbit.zoom = clamp(mo.R / (1.3 * gasTarget), zMin(), ZMAX); orbit.user = true; chartsDirty = true; schedule();
+  });
   $('cut').addEventListener('input', (e) => { S.cut = +e.target.value; $('cutOut').textContent = S.cut + '°'; if (V3.ok) { buildCut(); schedule(); } });
 
   // ---------- charts ----------
@@ -2632,18 +2892,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const z of mo.convZones) F.push(z.core
       ? `Convective core out to m = ${sci(z.mHi, 4)} M☉ (r = ${fmtRsun(z.rHi)})${small(z.rHi)}`
       : `Convective zone from m = ${sci(z.mLo, 4)} to ${sci(z.mHi, 4)} M☉${small(z.rHi)}`);
-    // burning region: the zones around the peak where ε_nuc stays at or above 10% of that region's peak
-    for (const s of mo.shells) {
-      const thr = 0.1 * s.peak; let lo = s.pi, hi = s.pi;
-      while (lo > 0 && (mo.eps[lo - 1] || 0) >= thr) lo--;
-      while (hi < mo.n - 1 && (mo.eps[hi + 1] || 0) >= thr) hi++;
+    // burning regions, per reaction family (see burnRegionsOf)
+    const BR = (mo.burn || []).slice().sort((a, b) => a.lo - b.lo);
+    for (const b of BR) {
+      const lo = b.lo, hi = b.hi;
       const ext = lo === 0
         ? `from the center out to m = ${sci(mo.mass[hi], 4)} M☉, r = ${fmtRsun(mo.r[hi])}`
         : `from m = ${sci(mo.mass[lo - 1], 4)} to ${sci(mo.mass[hi], 4)} M☉, r = ${fmtRsun(mo.r[lo - 1])} to ${fmtRsun(mo.r[hi])}`;
-      const at = s.pi === 0 ? 'at the center' : `at m = ${sci(mo.mass[s.pi], 4)} M☉`;
-      F.push(`${s.name} ${ext} (where ε_nuc is at least 10% of its peak); peak ε_nuc ${sci(s.peak)} erg g⁻¹ s⁻¹ ${at}${s.chanText ? ' (' + s.chanText + ')' : ''}${small(mo.r[hi])}`);
+      const at = b.pi === 0 ? 'at the center' : `at m = ${sci(mo.mass[b.pi], 4)} M☉`;
+      F.push(`${b.name} ${ext}; peak ${FAM_RXN[b.fam]} rate ${sci(b.peak)} erg g⁻¹ s⁻¹ ${at}${small(mo.r[hi])}`);
     }
-    if (D.has.eps && !mo.shells.length) F.push(`No zone above the burning threshold; peak ε_nuc ${sci(mo.epsMax)} erg g⁻¹ s⁻¹`);
+    if (BR.length) F.push(`Burning regions are found per reaction family (pp + CNO, triple alpha, carbon, oxygen, other): a zone counts when that family's rate is at least 10% of the family's own peak at this moment, at least ${BURN_FLOOR} erg g⁻¹ s⁻¹, the largest of the families there, and its fuel (¹H, ⁴He, ¹²C, ¹⁶O) is at least 1% by mass; inside an iron core (nuclear statistical equilibrium) all burning counts as other reactions.`);
+    if (D.has.eps && !BR.length) F.push(`No burning region (no reaction family reaches ${BURN_FLOOR} erg g⁻¹ s⁻¹); peak ε_nuc ${sci(mo.epsMax)} erg g⁻¹ s⁻¹`);
     if (mo.front) {
       let t = `Crystallization front (eos_phase ≥ 0.5 inside) at m = ${sci(mo.front.m, 4)} M☉ (${(mo.front.m / mo.M).toFixed(3)} M), r = ${fmtKm(mo.front.r)}`;
       if (mo.front.gam != null) t += `, Γ = ${sci(mo.front.gam, 3)} in the outermost solid zone`;
@@ -2673,17 +2933,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // zoom
     const z = $('zoom');
     if (is3) {
-      z.max = Math.log10(ZMAX).toFixed(2); z.value = Math.log10(orbit.zoom);
-      $('zoomOut').textContent = `3D camera ${orbit.zoom >= 10 ? Math.round(orbit.zoom) : orbit.zoom.toFixed(1)}×`;
-      $('viewline').textContent = `Star radius ${fmtRfull(mo.R)} · cut faces: ` + (S.log ? 'log radius, not to scale' : 'linear radius, to scale') + (S.hold ? ' · scale held' : '');
+      z.min = Math.log10(zMin()).toFixed(2); z.max = Math.log10(ZMAX).toFixed(2); z.value = Math.log10(orbit.zoom);
+      $('zoomOut').textContent = orbit.zoom < 1 ? `3D view out ${sci(1 / orbit.zoom, 2)}×` : `3D camera ${orbit.zoom >= 10 ? Math.round(orbit.zoom) : orbit.zoom.toFixed(1)}×`;
+      const lw = logBlend();
+      $('viewline').textContent = `Star radius ${fmtRfull(mo.R)} · cut faces: ` + (lw >= 1 ? 'log radius, not to scale' : lw > 0 ? `radius blending to log (${Math.round(lw * 100)}%), not to scale` : 'linear radius, to scale') + (S.hold ? ' · scale held' : S.size === 'true' ? ' · true size' : '');
     } else {
-      const zm = zoomMax(mo); z.max = zm.toFixed(2);
+      const zm = zoomMax(mo); z.min = '0'; z.max = zm.toFixed(2);
       z.value = clamp(Math.log10(mo.R / viewR(mo)), 0, zm);
       const vr = viewR(mo);
       $('zoomOut').textContent = `edge ${fmtRsun(vr)} · ${sci(vr / mo.R, 2)} R`;
       $('viewline').textContent = `View edge ${fmtRfull(vr)} · ` + (S.log ? 'log radius, not to scale' : 'linear radius, to scale') + (S.hold ? ' · scale held' : '');
     }
     updateProbe();
+    if (hov.on) hoverApply();
     for (const [k, b] of document.querySelectorAll('#presets button').entries()) b.setAttribute('aria-pressed', String(k === S.preset));
   }
   function updateProbe() {
@@ -3016,6 +3278,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     S.D = D; S.idx = start != null ? clamp(start, 0, D.N - 1) : 0;
     S.zoomDec = 0; S.hold = false; $('tHold').checked = false; S.viewAbs = D.moments[S.idx].R; S.preset = -1;
     S.probe = null; S.fade = null;
+    if (typeof orbit !== 'undefined' && orbit.zoom < 1) { orbit.zoom = 1; orbit.outR = null; }   // a zoom out past the star belongs to the old run
     const showBtn = (m, on) => { document.querySelector(`#modes button[data-m="${m}"]`).hidden = !on; };
     showBtn('glow', D.has.logT); showBtn('temp', D.has.logT); showBtn('dens', D.has.logRho); showBtn('burn', D.has.eps); showBtn('phase', D.has.phase); showBtn('gam', D.has.gam);
     $('tLatWrap').hidden = !D.has.phase;
@@ -3057,7 +3320,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('scrub').addEventListener('input', (e) => { setPlaying(false); setMoment(+e.target.value); });
   $('zoom').addEventListener('input', (e) => {
     const mo = cur(), v = +e.target.value;
-    if (view === '3d' && V3.ok) { orbit.zoom = clamp(10 ** v, 1, ZMAX); orbit.user = true; chartsDirty = true; schedule(); return; }
+    if (view === '3d' && V3.ok) { orbit.zoom = clamp(10 ** v, zMin(), ZMAX); orbit.user = true; chartsDirty = true; schedule(); return; }
     if (S.hold) S.viewAbs = mo.R * 10 ** -v; else S.zoomDec = v;
     S.preset = -1; markAll();
   });
@@ -3071,25 +3334,169 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   bindLayer('tCells', 'cells'); bindLayer('tTex', 'tex'); bindLayer('tGlow', 'glow'); bindLayer('tLat', 'lat'); bindLayer('tMove', 'move');
   $('tMove').checked = S.layers.move;
 
+  // ---------- hover label: names the part of the star under the pointer, from the zone data there ----------
+  const EL_WORD = { h1: 'hydrogen', he4: 'helium', c12: 'carbon', o16: 'oxygen', ne: 'neon', mg24: 'magnesium', si28: 'silicon',
+    s_ca: 'sulfur to calcium', fe_grp: 'iron group', np: 'free neutron and proton' };
+  const MIX_WORD = { 1: 'convective', 2: 'overshoot mixing', 3: 'semiconvective', 4: 'thermohaline mixing', 5: 'rotational mixing',
+    6: 'Rayleigh–Taylor mixing', 9: 'convective', 10: 'phase separation mixing' };
+  const capW = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+  // the zone's material in words; C and O (or O and Ne) together, each at least 20%, are named as a pair, as textbooks do
+  function compWord(mo, i) {
+    const x = (k) => (mo[k] ? Math.max(0, mo[k][i] || 0) : 0);
+    if (x('c12') >= 0.2 && x('o16') >= 0.2) return 'carbon–oxygen';
+    if (x('o16') >= 0.2 && x('ne') >= 0.2) return 'oxygen–neon';
+    const k = domOf(mo, i)[0];
+    return k >= 0 ? EL_WORD[ELS[k].key] : 'mixed';
+  }
+  function regionName(mo, i) {
+    const code = mo.mix ? (mo.mix[i] ?? 0) : 0, conv = code === 1 || code === 9;
+    const tag = (nm) => { const w = MIX_WORD[code]; return w && !/onvective/.test(nm) ? nm + ' · ' + w : nm; };
+    // nuclear burning: inside a burning region as the feature list defines it (ε_nuc at least 10% of the region's peak)
+    const word = compWord(mo, i), wd = mo.R < 0.05;
+    // burning regions per reaction family (see burnRegionsOf); where two overlap, the one with the larger rate here
+    let br = null;
+    for (const b of mo.burn || []) if (i >= b.lo && i <= b.hi && (!br || b.rate[i] > br.rate[i])) br = b;
+    if (br) return tag(br.name);
+    // white dwarf phase (MESA eos_phase)
+    if (mo.phase) {
+      if ((mo.phase[i] ?? 0) >= 0.5) return 'Solid (crystallized) core';
+      if (mo.front && i > mo.front.i && /carbon|oxygen|neon/.test(word)) return tag('Liquid layer above the freezing front');
+    }
+    // composition layers (runs of the same most abundant element), core and envelope by position
+    const L = mo._layers || (mo._layers = layersOf(mo));
+    const lay = L.find((l) => i >= l.i0 && i <= l.i1);
+    const atCenter = lay ? lay.i0 === 0 : i === 0, atSurf = lay ? lay.i1 >= mo.n - 3 : i >= mo.n - 3;
+    if (atCenter && !atSurf) {
+      if (word === 'iron group') return tag('Iron core');
+      if (wd) return tag(mo.phase ? `Liquid ${word} core` : `${capW(word)} core`);
+      // inert only where nothing burns (ε_nuc below 10 erg g⁻¹ s⁻¹); weaker burning outside a burning region shows in the value line
+      return tag(((mo.eps ? mo.eps[i] || 0 : 0) < BURN_FLOOR ? 'Inert ' + word : capW(word)) + ' core');
+    }
+    if (mo.env && i >= mo.env.i0) {
+      if (mo.env.i0 === 0) return 'Fully convective interior';
+      return word === 'hydrogen' || word === 'helium' ? 'Convective envelope' : `Convective ${word} envelope`;
+    }
+    if (conv && mo.runs.some((ru) => ru.i0 === 0 && ru.code === 1 && i <= ru.i1)) return 'Convective core';
+    if (wd) return tag(capW(word) + (atSurf ? ' envelope' : ' layer'));
+    if (word === 'hydrogen') return conv ? 'Convective zone' : tag(atSurf && !mo.env ? 'Radiative envelope' : 'Radiative zone');
+    return tag(capW(word) + ' layer');
+  }
+  const pctOf = (x) => (x >= 0.995 ? '100%' : x >= 0.1 ? Math.round(x * 100) + '%' : x >= 0.01 ? (x * 100).toFixed(1) + '%' : sci(x * 100, 2) + '%');
+  function reactionAt(mo, i) {
+    const e = mo.eps ? mo.eps[i] || 0 : 0; if (!(e > 0)) return '';
+    const f = (a) => (a ? Math.max(0, a[i] || 0) : 0);
+    const ch = [['H burning (pp + CNO)', f(mo.pp) + f(mo.cno)], ['He burning (triple alpha)', f(mo.ta)], ['C burning', f(mo.bc)], ['O burning', f(mo.bo)]].sort((a, b) => b[1] - a[1])[0];
+    if (!S.D.has.chan) return '';
+    return ch[1] >= 0.5 * e ? ch[0] : 'other reactions';
+  }
+  function valueLine(mo, i, surf) {
+    const lt = mo.logT ? mo.logT[i] : null, T = lt != null ? 10 ** lt : null;
+    switch (S.mode) {
+      case 'glow': case 'temp':
+        if (surf && mo.Teff) return `T<sub>eff</sub> = ${grp(mo.Teff)} K`;
+        return T != null ? `T = ${sci(T, 2)} K` : 'T not in this file';
+      case 'comp': {
+        const xs = ELS.map((e) => [e.name, mo[e.key] ? Math.max(0, mo[e.key][i] || 0) : 0]).sort((a, b) => b[1] - a[1]).slice(0, 2).filter((x) => x[1] > 0);
+        return xs.map(([nm, x]) => `${nm} ${pctOf(x)}`).join(' · ') || '—';
+      }
+      case 'dens': {
+        if (!mo.logRho || mo.logRho[i] == null) return '—';
+        const rho = 10 ** mo.logRho[i];
+        const like = rho >= 0.7 && rho <= 1.4 ? ' · about water' : rho >= 6.5 && rho <= 9 ? ' · about iron' : rho >= 11 && rho <= 13 ? ' · about lead' : '';
+        return `ρ = ${sci(rho, 2)} g/cm³${like}`;
+      }
+      case 'burn': {
+        const e = mo.eps ? mo.eps[i] || 0 : 0, r = reactionAt(mo, i);
+        return `ε<sub>nuc</sub> = ${sci(e, 2)} erg g⁻¹ s⁻¹` + (e < BURN_FLOOR ? ' · not burning' : r ? ' · ' + r : '');
+      }
+      case 'phase': {
+        const ph = mo.phase ? mo.phase[i] ?? 0 : 0, g = mo.gam ? mo.gam[i] : null;
+        return `${ph >= 0.5 ? 'solid' : 'liquid'} (eos_phase ${sci(ph, 2)})` + (g != null ? ` · Γ = ${sci(g, 3)}` : '');
+      }
+      case 'gam': return mo.gam && mo.gam[i] != null ? `Γ = ${sci(mo.gam[i], 3)}` : '—';
+    }
+    return '';
+  }
+  const hb = $('hoverBox'), hov = { on: false, x: 0, y: 0, touch: false, surf: false, atProbe: false, raf: 0, tm: 0, live: '', liveT: 0, liveTm: 0 };
+  function hoverShow(clientX, clientY, surf, touch) {
+    const r = stage.getBoundingClientRect();
+    hov.x = clientX - r.left; hov.y = clientY - r.top; hov.surf = surf; hov.touch = touch; hov.atProbe = false; hov.on = true;
+    clearTimeout(hov.tm);
+    if (touch) hov.tm = setTimeout(hoverHide, 5000);   // a tap keeps the label for a few seconds, or until the next tap
+    if (!hov.raf) hov.raf = requestAnimationFrame(hoverApply);
+  }
+  function hoverHide() { hov.on = false; hb.hidden = true; clearTimeout(hov.tm); }
+  // after a key press: the label goes to the probe point (the probe keeps its enclosed mass from moment to moment)
+  function hoverAtProbe() {
+    if (!S.probe) return;
+    hov.on = true; hov.atProbe = true; hov.touch = false; hov.surf = false;
+    clearTimeout(hov.tm); hov.tm = setTimeout(hoverHide, 5000);
+    if (!hov.raf) hov.raf = requestAnimationFrame(hoverApply);
+  }
+  function probeScreen() {
+    const mo = cur(), i = probeZone(mo); if (!mo || i < 0) return null;
+    const rm = ((i ? mo.r[i - 1] : 0) + mo.r[i]) / 2;
+    if (view === '3d' && V3.ok) {
+      if (!TX.G) return null;
+      const rf = withTex(TX, () => mapper(mo).px(rm) / G.R);
+      const cp = V3.cam.position.clone().normalize();
+      const vis = V3.faces.map((f) => { const n = f.userData.n; return n[0] * cp.x + n[1] * cp.y + n[2] * cp.z; });
+      let k = vis[0] >= vis[1] ? 0 : 1; if (vis[2] > 0.85 || vis[k] < 0.12) k = 2;
+      return toScreen(facePoint(k, Math.min(1, rf), S.probe.ang));
+    }
+    if (!G) return null;
+    const M = mapper(mo), r0 = i ? M.px(mo.r[i - 1]) : 0, r1 = M.px(mo.r[i]);
+    if (r0 > G.R) return null;
+    return polar(Math.min((r0 + r1) / 2, G.R), S.probe.ang);
+  }
+  function hoverApply() {
+    hov.raf = 0;
+    if (!hov.on || !S.D) { hb.hidden = true; return; }
+    const mo = cur(), i = probeZone(mo);
+    if (i < 0) { hb.hidden = true; return; }
+    if (hov.atProbe) { const q = probeScreen(); if (!q) { hb.hidden = true; return; } hov.x = q[0]; hov.y = q[1]; }
+    const surf = hov.surf && i === mo.n - 1;
+    const name = surf ? 'Photosphere (surface)' : regionName(mo, i), val = valueLine(mo, i, surf);
+    const r = surf ? mo.R : mo.r[i];
+    const pos = `r = ${sci(r, 2)} R<sub>sun</sub> · m = ${sci(mo.mass[i], 3)} M<sub>sun</sub>`;
+    $('hbName').textContent = name; $('hbVal').innerHTML = val; $('hbPos').innerHTML = pos;
+    hb.hidden = false;
+    const w = hb.offsetWidth, h = hb.offsetHeight, sw = stage.clientWidth, sh = stage.clientHeight, g = 16 * ps();
+    let x, y;
+    if (hov.touch) { x = hov.x - w / 2; y = hov.y - h - 40; if (y < 6) y = hov.y + 40; }   // above the finger
+    else { x = hov.x + g; y = hov.y + g; if (x + w > sw - 6) x = hov.x - g - w; if (y + h > sh - 6) y = hov.y - g - h; }
+    x = clamp(x, 6, Math.max(6, sw - w - 6)); y = clamp(y, 6, Math.max(6, sh - h - 6));
+    hb.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
+    // screen readers: the same text, at most every 1.5 s
+    const text = `${name}. ${val.replace(/<[^>]+>/g, '')}. ${pos.replace(/<[^>]+>/g, '')}`;
+    if (text !== hov.live) {
+      hov.live = text; clearTimeout(hov.liveTm);
+      const wait = Math.max(0, hov.liveT + 1500 - performance.now());
+      hov.liveTm = setTimeout(() => { $('hoverLive').textContent = hov.live; hov.liveT = performance.now(); }, wait);
+    }
+  }
+
   // slice pointer interaction
   const pointers = new Map(); let pinch = null;
   function probeAt(e) {
-    const mo = cur(); if (!mo || !G) return;
+    const mo = cur(); if (!mo || !G) return false;
     const rect = cv.getBoundingClientRect(), x = e.clientX - rect.left - G.cx, y = e.clientY - rect.top - G.cy;
-    const rho = Math.hypot(x, y); if (rho > G.R) return;
+    const rho = Math.hypot(x, y); if (rho > G.R) return false;
     let a = Math.atan2(y, x) - G.a0; while (a < 0) a += 2 * Math.PI; while (a > 2 * Math.PI) a -= 2 * Math.PI;
-    if (a > Math.PI) return;
+    if (a > Math.PI) return false;
     const r = mapper(mo).inv(rho);
-    if (r > mo.r[mo.n - 1]) return;
+    if (r > mo.r[mo.n - 1]) return false;
     const i = lowerBound(mo.r, r, mo.n);
     S.probe = { m: mo.mass[i], ang: a / Math.PI };
     chartsDirty = true; schedule();
+    return true;
   }
+  const hover2D = (e) => { if (probeAt(e)) hoverShow(e.clientX, e.clientY, false, e.pointerType !== 'mouse'); else if (e.pointerType === 'mouse' || !pointers.size) hoverHide(); };
   cv.addEventListener('pointerdown', (e) => {
     cv.focus({ preventScroll: true });
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY }); cv.setPointerCapture(e.pointerId);
-    if (pointers.size === 2) { const q = [...pointers.values()]; pinch = { d: Math.hypot(q[0].x - q[1].x, q[0].y - q[1].y) }; return; }
-    probeAt(e);
+    if (pointers.size === 2) { const q = [...pointers.values()]; pinch = { d: Math.hypot(q[0].x - q[1].x, q[0].y - q[1].y) }; hoverHide(); return; }
+    hover2D(e);
   });
   cv.addEventListener('pointermove', (e) => {
     if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -3098,8 +3505,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (d > 0 && pinch.d > 0) { zoomBy(Math.log10(d / pinch.d) * 1.5); pinch.d = d; }
       return;
     }
-    if (e.pointerType === 'mouse' || pointers.has(e.pointerId)) probeAt(e);
+    if (e.pointerType === 'mouse' || pointers.has(e.pointerId)) hover2D(e);
   });
+  cv.addEventListener('pointerleave', () => { if (!hov.touch) hoverHide(); });
   const endP = (e) => { pointers.delete(e.pointerId); if (pointers.size < 2) pinch = null; };
   cv.addEventListener('pointerup', endP); cv.addEventListener('pointercancel', endP);
   cv.addEventListener('wheel', (e) => { e.preventDefault(); zoomBy(-e.deltaY * 0.0022); }, { passive: false });
@@ -3116,6 +3524,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else if (k === ' ') setPlaying(!S.playing);
     else return;
     e.preventDefault();
+    if (S.probe && k !== ' ') hoverAtProbe();
   });
   // chart hover probes a zone
   for (const [id, key] of [['chComp', 'comp'], ['chTR', 'tr']]) {
