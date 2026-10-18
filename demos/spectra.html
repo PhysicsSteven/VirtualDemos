@@ -47,6 +47,12 @@ img { max-width: 100%; }
   --good: #2f7d4a;
   --scope: #05070b;
   --scope-ink: #c9d2de;
+  --rig-bg: #1c232d;
+  --rig-bg2: #10151c;
+  --rig-bench: #22272e;
+  --rig-bench-hi: #3a414a;
+  --rig-ink: #d3dbe5;
+  --rig-halo: rgba(12, 16, 22, 0.82);
   --cat-alkali: #d0573f;
   --cat-alkaline: #d98a2b;
   --cat-transition: #5f7fa8;
@@ -64,13 +70,15 @@ img { max-width: 100%; }
   :root:not([data-theme="light"]) {
     --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --good: #5fc27f; --scope: #020305; --scope-ink: #aab5c3; color-scheme: dark;
+    --equi: #e2b350; --accent: #69a0ff; --good: #5fc27f; --scope: #020305; --scope-ink: #aab5c3;
+    --rig-bg: #0c1016; --rig-bg2: #06080c; --rig-bench: #15191e; --rig-bench-hi: #262c34; --rig-ink: #b9c3cf; --rig-halo: rgba(6, 8, 12, 0.85); color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --good: #5fc27f; --scope: #020305; --scope-ink: #aab5c3; color-scheme: dark;
+  --equi: #e2b350; --accent: #69a0ff; --good: #5fc27f; --scope: #020305; --scope-ink: #aab5c3;
+    --rig-bg: #0c1016; --rig-bg2: #06080c; --rig-bench: #15191e; --rig-bench-hi: #262c34; --rig-ink: #b9c3cf; --rig-halo: rgba(6, 8, 12, 0.85); color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -99,7 +107,20 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; min-width: 0; }
 .card h2, .rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
 
-.spec-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
+.spec { container: spec / inline-size; }
+.spec-top { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "rig"; gap: 10px 16px; margin-bottom: 10px; }
+.spec-head { grid-area: head; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; min-width: 0; }
+.rig { grid-area: rig; min-width: 0; }
+.rig canvas { display: block; width: 100%; height: 200px; border-radius: 8px; background: var(--rig-bg2); }
+.rig-cap { margin: 0; color: var(--muted); font-size: 0.82rem; display: none; }
+@container spec (min-width: 700px) {
+  .spec-top { grid-template-columns: minmax(0, 1fr) 19rem; grid-template-areas: "rig head"; }
+  .spec-head { flex-direction: column; align-items: flex-start; justify-content: flex-start; }
+  .spec-head .controls { flex-direction: column; align-items: flex-start; }
+  .rig canvas { height: 230px; }
+  .rig-cap { display: block; }
+}
+:root[data-projector="on"] .rig canvas { height: 240px; }
 .elname { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
 .elname .sym { font-family: var(--font-mono); font-weight: 600; font-size: 1.6rem; }
 .elname .nm { font-size: 1.15rem; font-weight: 700; }
@@ -115,8 +136,8 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 .strip + .strip { margin-top: 8px; }
 .strip-label { display: flex; justify-content: space-between; gap: 8px; font-size: 0.82rem; color: var(--muted); margin-bottom: 3px; }
 .strip-label b { color: var(--ink); font-family: var(--font-mono); }
-.strip canvas { display: block; width: 100%; height: 96px; border-radius: 6px; background: var(--scope); cursor: crosshair; touch-action: none; }
-:root[data-projector="on"] .strip canvas { height: 120px; }
+.strip canvas { display: block; width: 100%; height: 108px; border-radius: 6px; background: var(--scope); cursor: crosshair; touch-action: none; }
+:root[data-projector="on"] .strip canvas { height: 132px; }
 .axis { display: block; width: 100%; height: 26px; }
 .tip { position: absolute; z-index: 3; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; font-size: 0.8rem; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
 
@@ -179,6 +200,9 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
 .src a { color: inherit; }
 .src .mono { overflow-wrap: anywhere; }
 
+@media (max-width: 600px) {
+  .seg button, .chips button, .btn, .proj { min-height: 36px; }
+}
 @media (max-width: 900px) {
   .bench { grid-template-columns: minmax(0, 1fr); }
   .pcell { aspect-ratio: 1 / 1.05; }
@@ -202,7 +226,9 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
 
   <main class="bench">
     <div class="main">
-      <section class="card" aria-labelledby="specTitle">
+      <section class="card spec" aria-labelledby="specTitle">
+        <div class="spec-top">
+        <div class="rig"><canvas id="cRig" role="img" aria-label="Spectrum tube on a high voltage supply, viewed through a hand spectroscope"></canvas></div>
         <div class="spec-head">
           <div class="elname" id="specTitle"><span class="sym" id="tSym">H</span><span class="nm" id="tName">Hydrogen</span><span class="z mono" id="tZ">Z = 1</span></div>
           <div class="controls">
@@ -220,6 +246,8 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
               <button type="button" data-i="2" aria-pressed="false">Ionized</button>
             </div>
           </div>
+          <p class="rig-cap" id="rigCap"></p>
+        </div>
         </div>
         <div class="strip" id="stripA">
           <div class="strip-label"><span id="labA"></span><span id="countA" class="mono"></span></div>
@@ -232,6 +260,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
           <div class="tip" id="tipB" hidden></div>
         </div>
         <canvas class="axis" id="axis" aria-hidden="true"></canvas>
+        <p class="hint" id="absNote" hidden>Absorption draws a dark line at every listed line. A real cool gas absorbs mostly from its lowest, populated levels and shows fewer lines, so read this as where lines can appear, not a calculation of which ones do.</p>
       </section>
 
       <section class="card" id="bohrCard" aria-labelledby="bohrTitle">
@@ -294,7 +323,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
 
       <section class="card" id="factsCard">
         <h2>About this spectrum</h2>
-        <div class="glow"><i id="glowSw"></i><span class="hint" id="glowTxt">Approximate color of the glowing gas</span></div>
+        <div class="glow"><i id="glowSw"></i><span class="hint" id="glowTxt">Color of the glowing gas, computed from its lines</span></div>
         <dl class="readout">
           <div><dt>Lines shown</dt><dd id="fCount">—</dd></div>
           <div><dt>Strongest visible</dt><dd id="fStrong">—</dd></div>
@@ -315,6 +344,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
         <h2>Data</h2>
         <p class="src">Line data: NIST Handbook of Basic Atomic Spectroscopic Data (J. E. Sansonetti and W. C. Martin), strong lines tables, air wavelengths from 300 to 1000 nm, for the 99 elements from hydrogen to einsteinium. Public domain. <span class="mono">physics.nist.gov/PhysRefData/Handbook</span></p>
         <p class="src">"I" marks lines from neutral atoms, "II" from atoms that have lost one electron. Line widths and colors on screen are drawn, not measured.</p>
+        <p class="src">The tube and swatch colors are computed: each line from 360 to 830 nm, weighted by its NIST intensity, is summed with the CIE 1931 color matching functions (fit of Wyman, Sloan and Shirley 2013) and shown at full brightness in sRGB. Under All the tube uses the neutral atom lines, which dominate a low current discharge. NIST intensities are rough and depend on the light source, so the color is an estimate. Metals are really studied in flames, arcs or hollow cathode lamps; the tube stands in for any such source.</p>
       </section>
     </aside>
   </main>
@@ -432,6 +462,45 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
   }
   function linesOfSet(syms, opts) { return [].concat(...syms.map((s) => linesOf(s, opts))).sort((x, y) => x.nm - y.nm); }
 
+  // ---------- perceived color of a glowing gas (CIE 1931) ----------
+  // CIE 1931 2° color matching functions, multi lobe Gaussian fit (Wyman, Sloan, Shirley 2013), as in blackbody.html and thin-films.html
+  const gl = (x, mu, s1, s2) => { const t = (x - mu) / (x < mu ? s1 : s2); return Math.exp(-0.5 * t * t); };
+  function cie(l) {
+    return [
+      1.056 * gl(l, 599.8, 37.9, 31.0) + 0.362 * gl(l, 442.0, 16.0, 26.7) - 0.065 * gl(l, 501.1, 20.4, 26.2),
+      0.821 * gl(l, 568.8, 46.9, 40.5) + 0.286 * gl(l, 530.9, 16.3, 31.1),
+      1.217 * gl(l, 437.0, 11.8, 36.0) + 0.681 * gl(l, 459.0, 26.0, 13.8)
+    ];
+  }
+  const gam = (v) => (v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055);
+  // XYZ to sRGB (D65) at full brightness: out of gamut colors are desaturated toward the gray of the same
+  // luminance (a line spectrum is often more saturated than a screen can show), then scaled so the largest channel is 1
+  function xyzToRGB(X, Y, Z) {
+    if (!(Y > 0)) return null;
+    let r = 3.2404542 * X - 1.5371385 * Y - 0.4985314 * Z, g = -0.9692660 * X + 1.8760108 * Y + 0.0415560 * Z, b = 0.0556434 * X - 0.2040259 * Y + 1.0572252 * Z;
+    const mn = Math.min(r, g, b);
+    if (mn < 0) { const k = Y / (Y - mn); r = Y + k * (r - Y); g = Y + k * (g - Y); b = Y + k * (b - Y); }
+    const mx = Math.max(r, g, b);
+    return [r, g, b].map((v) => Math.round(255 * Math.min(1, Math.max(0, gam(v / mx)))));
+  }
+  // XYZ of one element's light: each line from 360 to 830 nm weighted by its NIST relative intensity (taken as
+  // proportional to power), normalized to Y = 1. Under All, only the neutral atom lines, which dominate a low current
+  // discharge tube; elements with no neutral lines there fall back to all of them.
+  function gasXYZ(sym) {
+    let ls = linesOf(sym, { range: [360, 830], ion: S.ion });
+    if (S.ion === 'all' && ls.some((L) => L.ion === 1)) ls = ls.filter((L) => L.ion === 1);
+    const flat = !maxInt[sym];
+    let X = 0, Y = 0, Z = 0;
+    for (const L of ls) { const w = flat ? 1 : L.inten, c = cie(L.nm); X += w * c[0]; Y += w * c[1]; Z += w * c[2]; }
+    return Y > 0 ? [X / Y, 1, Z / Y] : null;
+  }
+  // a mixture: each element counted equally, since NIST intensities of different elements are not on one scale
+  function gasColor(syms) {
+    let X = 0, Y = 0, Z = 0;
+    for (const sym of syms) { const c = gasXYZ(sym); if (c) { X += c[0]; Y += c[1]; Z += c[2]; } }
+    return xyzToRGB(X, Y, Z);
+  }
+
   // ---------- canvases ----------
   let dpr = window.devicePixelRatio || 1;
   const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.5 : 1);
@@ -446,45 +515,89 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
   const tok = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   const mono = () => getComputedStyle(document.body).getPropertyValue('--font-mono') || 'monospace';
 
+  // Fraunhofer's letters for the darkest solar lines, placed on the listed lines of the element that makes each one
+  const FRAUN = [['K', 'Ca', 393.3, 393.4], ['H', 'Ca', 396.8, 396.9], ['h', 'H', 410.1, 410.2], ['G', 'Fe', 430.7, 430.8], ['F', 'H', 486.1, 486.2],
+    ['b', 'Mg', 516.7, 518.4], ['E', 'Fe', 526.9, 527.0], ['D', 'Na', 588.9, 589.6], ['C', 'H', 656.2, 656.3]];
+  function haloText(ctx, txt, x, y, align, fill, halo, pad) {
+    const tw = ctx.measureText(txt).width, fs = parseFloat(ctx.font.match(/([\d.]+)px/)[1]);
+    const x0 = align === 'left' ? x : align === 'right' ? x - tw : x - tw / 2;
+    ctx.fillStyle = halo; ctx.fillRect(x0 - pad, y - fs / 2 - pad * 0.6, tw + 2 * pad, fs + pad * 1.2);
+    ctx.fillStyle = fill; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, x0, y + 0.5);
+    return [x0 - pad, x0 + tw + pad];
+  }
   function drawStrip(cv, lines, opts = {}) {
     const [ctx, W, H] = fit(cv);
     const [l0, l1] = range();
     const X = (nm) => (nm - l0) / (l1 - l0) * W;
-    const ps = projScale(), absorb = opts.display === 'absorption';
+    const ps = projScale(), absorb = opts.display === 'absorption', lps = Math.min(ps, 1.35);
+    const sh = Math.round(15 * lps), Hs = H - sh;   // the spectroscope's own faint scale sits in a band under the spectrum
     ctx.clearRect(0, 0, W, H);
     if (absorb) {
       for (let x = 0; x < W; x++) {
         const nm = l0 + (x + 0.5) / W * (l1 - l0);
         const c = lamRGB(nm), a = visible(nm) ? 1 : 0.45;
-        ctx.fillStyle = rgba(c, a); ctx.fillRect(x, 0, 1.2, H);
+        ctx.fillStyle = rgba(c, a); ctx.fillRect(x, 0, 1.2, Hs);
       }
     } else {
-      ctx.fillStyle = tok('--scope'); ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = tok('--scope'); ctx.fillRect(0, 0, W, Hs);
+      // a little light scattered inside the instrument tints the dark field
+      if (opts.wash) { ctx.fillStyle = rgba(opts.wash, 0.045); ctx.fillRect(0, 0, W, Hs); }
     }
-    // shade invisible bands
     if (l0 < 380 || l1 > 750) {
       ctx.fillStyle = absorb ? 'rgba(0,0,0,0.18)' : 'rgba(255,255,255,0.03)';
-      if (l0 < 380) ctx.fillRect(0, 0, X(380), H);
-      if (l1 > 750) ctx.fillRect(X(750), 0, W - X(750), H);
-      ctx.fillStyle = absorb ? 'rgba(0,0,0,0.55)' : 'rgba(255,255,255,0.35)';
-      ctx.font = `600 ${10 * ps}px ${mono()}`; ctx.textBaseline = 'top';
-      if (l0 < 380) { ctx.textAlign = 'left'; ctx.fillText('ULTRAVIOLET', 6, 5); }
-      if (l1 > 750) { ctx.textAlign = 'right'; ctx.fillText('INFRARED', W - 6, 5); }
+      if (l0 < 380) ctx.fillRect(0, 0, X(380), Hs);
+      if (l1 > 750) ctx.fillRect(X(750), 0, W - X(750), Hs);
     }
+    // line width and brightness both follow the relative intensity: a strong line floods the slit image and looks wider
     const lw = Math.max(1.5, (S.view === 'visible' ? 2.2 : 1.6) * ps);
     if (absorb) {
       for (const L of lines) {
+        const w = lw * (0.55 + 0.8 * L.b);
         ctx.fillStyle = `rgba(0,0,0,${0.3 + 0.65 * L.b})`;
-        ctx.fillRect(X(L.nm) - lw / 2, 0, lw, H);
+        ctx.fillRect(X(L.nm) - w / 2, 0, w, Hs);
       }
     } else {
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
       for (const L of lines) {
-        const c = lamRGB(L.nm), x = X(L.nm), a = visible(L.nm) ? L.b : L.b * 0.6;
-        ctx.fillStyle = rgba(c, a * 0.22); ctx.fillRect(x - lw * 2.2, 0, lw * 4.4, H);
-        ctx.fillStyle = rgba(c, Math.min(1, a * 1.05)); ctx.fillRect(x - lw / 2, 0, lw, H);
+        const c = lamRGB(L.nm), x = X(L.nm), a = visible(L.nm) ? L.b : L.b * 0.6, w = lw * (0.45 + 0.85 * L.b);
+        ctx.fillStyle = rgba(c, a * a * 0.22); ctx.fillRect(x - w * 2.6, 0, w * 5.2, Hs);
+        ctx.fillStyle = rgba(c, Math.min(1, a * 1.05)); ctx.fillRect(x - w / 2, 0, w, Hs);
+        if (L.b > 0.7 && visible(L.nm)) { ctx.fillStyle = `rgba(255,255,255,${(L.b - 0.7) * 0.9})`; ctx.fillRect(x - w * 0.18, 0, w * 0.36, Hs); }
       }
       ctx.restore();
+    }
+    // the slit image fades at its top and bottom ends
+    const vg = ctx.createLinearGradient(0, 0, 0, Hs);
+    vg.addColorStop(0, 'rgba(0,0,0,0.42)'); vg.addColorStop(0.16, 'rgba(0,0,0,0)'); vg.addColorStop(0.86, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,0.42)');
+    ctx.fillStyle = vg; ctx.fillRect(0, 0, W, Hs);
+    // scale band: faint ticks every 10 nm and numbers every 100 nm, like the scale window of a hand spectroscope
+    ctx.fillStyle = '#05070a'; ctx.fillRect(0, Hs, W, sh);
+    ctx.fillStyle = 'rgba(255,255,255,0.07)'; ctx.fillRect(0, Hs, W, 1);
+    ctx.font = `${Math.round(sh * 0.6)}px ${mono()}`; ctx.textBaseline = 'bottom'; ctx.textAlign = 'center';
+    for (let v = Math.ceil(l0 / 10) * 10; v <= l1; v += 10) {
+      const x = Math.round(X(v)) + 0.5, maj = v % 50 === 0;
+      ctx.fillStyle = `rgba(205,215,228,${maj ? 0.36 : 0.2})`;
+      ctx.fillRect(x - 0.5, Hs + 1, 1, maj ? sh * 0.3 : sh * 0.17);
+      if (v % 100 === 0 && x > 12 && x < W - 12) { ctx.fillStyle = 'rgba(205,215,228,0.45)'; ctx.fillText(String(v), x, H - 1); }
+    }
+    const lf = `600 ${10 * lps}px ${mono()}`;
+    ctx.font = lf;
+    if (l0 < 380) haloText(ctx, 'ULTRAVIOLET', 7, 7 * lps + 4, 'left', absorb ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.5)', 'rgba(5,7,11,0.72)', 3);
+    if (l1 > 750) haloText(ctx, 'INFRARED', W - 7, 7 * lps + 4, 'right', absorb ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.5)', 'rgba(5,7,11,0.72)', 3);
+    // Fraunhofer's letters over absorption lines
+    if (absorb && opts.fraun) {
+      ctx.font = `700 ${10.5 * lps}px ${mono()}`;
+      const rows = [[], []], bh = 14 * lps;
+      for (const [lt, sym, a, b] of FRAUN) {
+        const ms = lines.filter((L) => L.sym === sym && L.nm >= a - 0.05 && L.nm <= b + 0.05);
+        if (!ms.length) continue;
+        const x = X(ms.reduce((t, L) => t + L.nm, 0) / ms.length), tw = ctx.measureText(lt).width + 8;
+        let row = rows[0].some(([p, q]) => x - tw / 2 < q + 2 && x + tw / 2 > p - 2) ? 1 : 0;
+        if (x < 0 || x > W) continue;
+        rows[row].push([x - tw / 2, x + tw / 2]);
+        const y = 4 * lps + bh / 2 + row * (bh + 2);
+        haloText(ctx, lt, x, y, 'center', '#f3f6fa', 'rgba(5,7,11,0.78)', 4);
+      }
     }
     // marked line
     const mk = opts.mark;
@@ -492,11 +605,11 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
       const x = X(mk);
       ctx.fillStyle = tok('--equi');
       ctx.beginPath(); ctx.moveTo(x - 6 * ps, 0); ctx.lineTo(x + 6 * ps, 0); ctx.lineTo(x, 8 * ps); ctx.closePath(); ctx.fill();
-      ctx.beginPath(); ctx.moveTo(x - 6 * ps, H); ctx.lineTo(x + 6 * ps, H); ctx.lineTo(x, H - 8 * ps); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(x - 6 * ps, Hs); ctx.lineTo(x + 6 * ps, Hs); ctx.lineTo(x, Hs - 8 * ps); ctx.closePath(); ctx.fill();
     }
     if (opts.empty) {
-      ctx.fillStyle = tok('--scope-ink'); ctx.font = `${12 * ps}px ${mono()}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(opts.empty, W / 2, H / 2);
+      ctx.font = `${12 * lps}px ${mono()}`;
+      haloText(ctx, opts.empty, W / 2, Hs / 2, 'center', tok('--scope-ink'), 'rgba(5,7,11,0.85)', 6);
     }
   }
   function drawAxis() {
@@ -609,7 +722,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
     const name = (s) => BY[s][2];
     const r = $('result');
     if (reveal) {
-      r.innerHTML = `The answer: <b class="good">${S.mystery.map(name).join(', ')}</b>.` + (S.kind === 'star' ? ' A real stellar spectrum has thousands more lines, mostly from iron, but these five make the strongest features in sunlight.' : '');
+      r.innerHTML = `The answer: <b class="good">${S.mystery.map(name).join(', ')}</b>.` + (S.kind === 'star' ? ' A real stellar spectrum has thousands more lines, mostly from iron, but these five make the strongest features in sunlight. The letters on the strip are the names Fraunhofer gave the darkest solar lines.' : '');
     } else if (!wrong.length && !missed.length) {
       r.innerHTML = `<b class="good">All ${right.length} found.</b> Every line in the mystery spectrum is accounted for.`;
     } else {
@@ -708,18 +821,11 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
   }
 
   // ---------- facts ----------
-  function glowColor(lines) {
-    let r = 0, g = 0, b = 0;
-    for (const L of lines) { if (!visible(L.nm)) continue; const c = lamRGB(L.nm), w = L.b * L.b; r += c[0] * w; g += c[1] * w; b += c[2] * w; }
-    const m = Math.max(r, g, b);
-    if (!m) return null;
-    return [Math.round(255 * r / m), Math.round(255 * g / m), Math.round(255 * b / m)];
-  }
   function updateFacts(sym, lines) {
     const all = linesOf(sym, { range: [380, 750], ion: S.ion });
-    const gc = glowColor(all);
+    const gc = gasColor([sym]);
     $('glowSw').style.background = gc ? `rgb(${gc.join(',')})` : 'transparent';
-    $('glowTxt').textContent = gc ? 'Approximate color of the glowing gas (a rough blend of its visible lines)' : 'No visible lines to blend';
+    $('glowTxt').textContent = gc ? 'Color of the glowing gas, computed from its lines with the CIE 1931 eye response' : 'No visible lines to give a color';
     $('fCount').textContent = String(lines.length);
     const vis = all.slice().sort((x, y) => y.b - x.b || x.nm - y.nm)[0];
     $('fStrong').textContent = vis ? `${vis.nm.toFixed(1)} nm ${ionName(vis.ion)}` : 'none';
@@ -738,6 +844,301 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
       tb.appendChild(tr);
     }
   }
+
+  // ---------- the apparatus: light source, sample and hand spectroscope ----------
+  // Drawn in design units (220 tall, bench top at 200, optical axis at 84), scaled to the canvas. A static picture is
+  // cached; when motion is allowed, a faint flicker of the discharge glow is added on top at about 20 frames per second.
+  const reduceMotion = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const rigCv = $('cRig'), rigBase = document.createElement('canvas');
+  const DH = 220, BENCH = 200, CY = 84;
+  let rig = { emit: [] };
+  const mixc = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+  const WHITE = [255, 255, 255], LAMP = [255, 226, 190];
+  function rrect(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+  function grad(c, x0, y0, x1, y1, stops) { const g = c.createLinearGradient(x0, y0, x1, y1); stops.forEach((st, i) => g.addColorStop(i / (stops.length - 1), st)); return g; }
+  function radial(c, x, y, r, col, a) { const g = c.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, rgba(col, a)); g.addColorStop(1, rgba(col, 0)); c.fillStyle = g; c.fillRect(x - r, y - r, 2 * r, 2 * r); }
+  const METAL_V = ['#d0d6dd', '#959da6', '#5f666e'];
+
+  // spectrum tube geometry (design units): caps, bulbs holding the electrodes, tapers, and the narrow capillary between
+  const TUBE = { y0: 26, y1: 140, cap: 5, bulb: 18, bulbR: 7, taper: 6, capR: 2.1 };
+  function tubeY() { const t = TUBE, yA = t.y0 + t.cap, yB = yA + t.bulb, yC = yB + t.taper, yF = t.y1 - t.cap, yE = yF - t.bulb, yD = yE - t.taper; return { yA, yB, yC, yD, yE, yF }; }
+  // soft elliptical glow around the capillary
+  function tubeHalo(c, cx, cy, ry, col, k) {
+    c.save(); c.translate(cx, cy); c.scale(1, ry / 22);
+    const g = c.createRadialGradient(0, 0, 0, 0, 0, 22);
+    g.addColorStop(0, rgba(col, 0.46 * k)); g.addColorStop(0.25, rgba(col, 0.26 * k)); g.addColorStop(0.6, rgba(col, 0.08 * k)); g.addColorStop(1, rgba(col, 0));
+    c.fillStyle = g; c.fillRect(-22, -22, 44, 44); c.restore();
+  }
+  function drawTube(c, cx, col) {
+    const t = TUBE, { yA, yB, yC, yD, yE, yF } = tubeY();
+    const bulb = (y) => rrect(c, cx - t.bulbR, y, 2 * t.bulbR, t.bulb, 6);
+    const taper = (ya, yb, wide) => { c.beginPath(); c.moveTo(cx - (wide === ya ? t.bulbR - 1 : t.capR), ya); c.lineTo(cx + (wide === ya ? t.bulbR - 1 : t.capR), ya); c.lineTo(cx + (wide === ya ? t.capR : t.bulbR - 1), yb); c.lineTo(cx - (wide === ya ? t.capR : t.bulbR - 1), yb); c.closePath(); };
+    if (col) {
+      // halo around the capillary, where the current density and the glow are highest
+      tubeHalo(c, cx, (yB + yE) / 2, (yE - yB) / 2 + 6, col, 1);
+    }
+    // glass and the diffuse glow in the bulbs
+    c.fillStyle = col ? rgba(col, 0.3) : 'rgba(205,220,235,0.07)';
+    bulb(yA); c.fill(); bulb(yE); c.fill();
+    c.fillStyle = col ? rgba(col, 0.5) : 'rgba(205,220,235,0.07)';
+    taper(yB, yC, yB); c.fill(); taper(yD, yE, yE); c.fill();
+    // electrodes: a wire and a small metal cylinder in each bulb
+    c.strokeStyle = '#9aa1a9'; c.lineWidth = 0.7;
+    c.beginPath(); c.moveTo(cx, yA); c.lineTo(cx, yA + 6); c.moveTo(cx, yF); c.lineTo(cx, yF - 6); c.stroke();
+    c.fillStyle = grad(c, cx - 2.4, 0, cx + 2.4, 0, ['#5d636b', '#aab1b9', '#5d636b']);
+    c.fillRect(cx - 2.4, yA + 6, 4.8, 8); c.fillRect(cx - 2.4, yF - 14, 4.8, 8);
+    if (col) {
+      c.save(); c.globalCompositeOperation = 'lighter';
+      radial(c, cx, yA + 11, 11, mixc(col, WHITE, 0.25), 0.5); radial(c, cx, yF - 11, 11, mixc(col, WHITE, 0.25), 0.5);
+      c.restore();
+      // the capillary itself: bright, its core close to white where the eye saturates
+      c.fillStyle = rgba(mixc(col, WHITE, 0.3), 1); c.fillRect(cx - t.capR, yC - 0.5, 2 * t.capR, yD - yC + 1);
+      c.fillStyle = rgba(mixc(col, WHITE, 0.72), 1); c.fillRect(cx - 0.7, yC, 1.4, yD - yC);
+    } else {
+      c.fillStyle = 'rgba(205,220,235,0.1)'; c.fillRect(cx - t.capR, yC, 2 * t.capR, yD - yC);
+    }
+    // glass outline and highlights
+    c.strokeStyle = 'rgba(220,234,248,0.5)'; c.lineWidth = 0.8;
+    bulb(yA); c.stroke(); bulb(yE); c.stroke(); taper(yB, yC, yB); c.stroke(); taper(yD, yE, yE); c.stroke();
+    if (!col) c.strokeRect(cx - t.capR, yC, 2 * t.capR, yD - yC);
+    c.strokeStyle = 'rgba(255,255,255,0.32)'; c.lineWidth = 1;
+    c.beginPath(); c.moveTo(cx - t.bulbR + 2.2, yA + 4); c.lineTo(cx - t.bulbR + 2.2, yB - 4); c.moveTo(cx - t.bulbR + 2.2, yE + 4); c.lineTo(cx - t.bulbR + 2.2, yF - 4); c.stroke();
+    // metal end caps
+    c.fillStyle = grad(c, cx - 5, 0, cx + 5, 0, ['#6a7179', '#d4dae0', '#7b828a']);
+    c.fillRect(cx - 5, t.y0, 10, t.cap); c.fillRect(cx - 5, yF, 10, t.cap);
+  }
+  // high voltage supply with the tube clamped between a top arm and a socket on the case
+  function drawSupply(c, x, it) {
+    const cx = x + 60;
+    // HV lead to the top contact
+    c.lineCap = 'round';
+    c.strokeStyle = '#7d211c'; c.lineWidth = 3.2; c.beginPath(); c.moveTo(x + 104, 151); c.bezierCurveTo(x + 120, 116, x + 114, 52, x + 93, 21); c.stroke();
+    c.strokeStyle = 'rgba(255,150,130,0.35)'; c.lineWidth = 0.9; c.beginPath(); c.moveTo(x + 103.2, 150); c.bezierCurveTo(x + 119, 116, x + 113, 52, x + 92.4, 21.6); c.stroke();
+    c.lineCap = 'butt';
+    // insulating post and top arm
+    c.fillStyle = grad(c, x + 82, 0, x + 94, 0, ['#121417', '#3b4047', '#1a1d21']); c.fillRect(x + 82, 18, 12, 134);
+    c.fillStyle = grad(c, 0, 13, 0, 26, METAL_V); rrect(c, x + 44, 13, 54, 13, 2.5); c.fill();
+    // socket on the case
+    c.fillStyle = grad(c, 0, 137, 0, 151, ['#30353c', '#16191d']); rrect(c, cx - 11, 137, 22, 14, 2); c.fill();
+    drawTube(c, cx, it.col);
+    // case
+    c.fillStyle = grad(c, 0, 150, 0, BENCH, ['#4b535d', '#2b3036']); rrect(c, x, 150, 120, BENCH - 150, 3); c.fill();
+    c.fillStyle = 'rgba(255,255,255,0.14)'; c.fillRect(x + 2, 150.5, 116, 1.2);
+    c.fillStyle = '#1f2328'; rrect(c, x + 6, 156, 108, 39, 2); c.fill();
+    // label tag with the gas, a high voltage stripe and the rating
+    c.fillStyle = '#e6dec6'; rrect(c, x + 12, 160, 36, 15, 1.5); c.fill();
+    c.fillStyle = '#23211d'; c.font = `700 10px ${mono()}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(it.tag, x + 30, 168);
+    c.save(); rrect(c, x + 12, 180, 36, 9, 1); c.clip(); c.fillStyle = '#e5c22c'; c.fillRect(x + 12, 180, 36, 9); c.fillStyle = '#18181a';
+    for (let k = -10; k < 44; k += 6) { c.beginPath(); c.moveTo(x + 12 + k, 189); c.lineTo(x + 15 + k, 189); c.lineTo(x + 24 + k, 180); c.lineTo(x + 21 + k, 180); c.closePath(); c.fill(); }
+    c.restore();
+    c.fillStyle = '#b4bcc6'; c.font = `600 7.5px ${mono()}`; c.textAlign = 'left'; c.fillText('5000 V', x + 54, 185);
+    // toggle switch (on) and pilot lamp
+    c.fillStyle = '#8d959e'; c.beginPath(); c.arc(x + 84, 167, 4, 0, 2 * Math.PI); c.fill();
+    c.strokeStyle = '#dfe4ea'; c.lineWidth = 2; c.lineCap = 'round'; c.beginPath(); c.moveTo(x + 84, 167); c.lineTo(x + 87, 160); c.stroke(); c.lineCap = 'butt';
+    radial(c, x + 102, 167, 10, [255, 80, 50], 0.5);
+    c.fillStyle = '#ff5b3d'; c.beginPath(); c.arc(x + 102, 167, 3.6, 0, 2 * Math.PI); c.fill();
+    c.fillStyle = 'rgba(255,230,220,0.85)'; c.beginPath(); c.arc(x + 101, 166, 1.2, 0, 2 * Math.PI); c.fill();
+    // contact spring under the top arm
+    c.strokeStyle = '#c3c9cf'; c.lineWidth = 0.8; c.beginPath();
+    for (let k = 0; k < 4; k++) { c.moveTo(cx - 4, 26 + k * 0.1); c.lineTo(cx + 4, 26 + k * 0.1 - 0.01); }
+    c.stroke();
+  }
+  // white light: a clear bulb with a glowing tungsten coil, on a stand
+  function drawLamp(c, x) {
+    const bx = x + 30, by = CY - 2;
+    c.fillStyle = 'rgba(0,0,0,0.35)'; c.beginPath(); c.ellipse(bx, BENCH - 1, 22, 3.5, 0, 0, 2 * Math.PI); c.fill();
+    c.fillStyle = grad(c, bx - 2.5, 0, bx + 2.5, 0, ['#5f666e', '#c6ccd3', '#5f666e']); c.fillRect(bx - 2.5, CY + 26, 5, BENCH - CY - 27);
+    c.fillStyle = grad(c, 0, BENCH - 7, 0, BENCH, ['#4b535d', '#22262b']); rrect(c, bx - 20, BENCH - 7, 40, 7, 2); c.fill();
+    c.fillStyle = grad(c, bx - 8, 0, bx + 8, 0, ['#7a5f2c', '#e2c47c', '#8a6c33']); c.fillRect(bx - 8, CY + 12, 16, 15);
+    c.strokeStyle = 'rgba(60,40,10,0.6)'; c.lineWidth = 0.8; c.beginPath(); for (let k = 0; k < 4; k++) { c.moveTo(bx - 8, CY + 14.5 + k * 3.4); c.lineTo(bx + 8, CY + 13 + k * 3.4); } c.stroke();
+    c.save(); c.globalCompositeOperation = 'lighter'; radial(c, bx, by, 48, LAMP, 0.55); c.restore();
+    c.fillStyle = 'rgba(255,240,220,0.16)'; c.beginPath(); c.arc(bx, by, 16, 0, 2 * Math.PI); c.fill();
+    c.beginPath(); c.moveTo(bx - 7, by + 14); c.lineTo(bx - 6.5, CY + 12); c.lineTo(bx + 6.5, CY + 12); c.lineTo(bx + 7, by + 14); c.closePath(); c.fill();
+    c.strokeStyle = 'rgba(255,244,228,0.55)'; c.lineWidth = 0.8; c.beginPath(); c.arc(bx, by, 16, 0, 2 * Math.PI); c.stroke();
+    c.strokeStyle = '#c9ccd0'; c.lineWidth = 0.6; c.beginPath(); c.moveTo(bx - 3, CY + 12); c.lineTo(bx - 7, by); c.moveTo(bx + 3, CY + 12); c.lineTo(bx + 7, by); c.stroke();
+    c.strokeStyle = '#fff7ea'; c.lineWidth = 1.6; c.beginPath();
+    for (let k = 0; k <= 8; k++) { const xx = bx - 7 + k * 1.75, yy = by + (k % 2 ? -2.2 : 2.2); k ? c.lineTo(xx, yy) : c.moveTo(xx, yy); }
+    c.stroke();
+  }
+  // absorption cell of cool gas, with a heater winding (metal vapors need heating to have any atoms in the gas)
+  function drawCell(c, x, cy, r, it) {
+    const L = 104;
+    c.fillStyle = 'rgba(205,220,235,0.09)'; rrect(c, x, cy - r, L, 2 * r, 3); c.fill();
+    if (it.col) { c.fillStyle = rgba(it.col, 0.08); rrect(c, x, cy - r, L, 2 * r, 3); c.fill(); }
+    c.strokeStyle = 'rgba(196,122,70,0.75)'; c.lineWidth = 0.9; c.beginPath();
+    for (let k = 10; k < L - 6; k += 7) { c.moveTo(x + k, cy + r); c.lineTo(x + k + 4, cy - r); }
+    c.stroke();
+    c.strokeStyle = 'rgba(220,234,248,0.6)'; c.lineWidth = 0.9; rrect(c, x, cy - r, L, 2 * r, 3); c.stroke();
+    c.fillStyle = 'rgba(225,238,250,0.28)';
+    for (const ex of [x, x + L]) { c.beginPath(); c.ellipse(ex, cy, 2.4, r, 0, 0, 2 * Math.PI); c.fill(); }
+    c.strokeStyle = 'rgba(255,255,255,0.3)'; c.lineWidth = 1; c.beginPath(); c.moveTo(x + 5, cy - r + 2.2); c.lineTo(x + L - 5, cy - r + 2.2); c.stroke();
+    c.fillStyle = '#e6dec6'; rrect(c, x + L / 2 - 15, cy - 6.5, 30, 13, 1.5); c.fill();
+    c.fillStyle = '#23211d'; c.font = `700 9.5px ${mono()}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(it.tag, x + L / 2, cy + 0.5);
+  }
+  function drawCellStand(c, x, yTop) {
+    for (const px of [x + 18, x + 86]) {
+      c.fillStyle = grad(c, px - 2, 0, px + 2, 0, ['#5f666e', '#c6ccd3', '#5f666e']); c.fillRect(px - 2, yTop, 4, BENCH - yTop - 6);
+      c.fillStyle = grad(c, 0, BENCH - 6, 0, BENCH, ['#4b535d', '#22262b']); rrect(c, px - 9, BENCH - 6, 18, 6, 2); c.fill();
+    }
+  }
+  // hand diffraction grating spectroscope: slit at the front, grating near the eyepiece, a small scale window on top
+  function drawScope(c, sx, L, mounted) {
+    const r = 10.5;
+    if (mounted) {
+      const xr = sx + L * 0.55;
+      c.fillStyle = 'rgba(0,0,0,0.35)'; c.beginPath(); c.ellipse(xr, BENCH - 1, 20, 3.2, 0, 0, 2 * Math.PI); c.fill();
+      c.fillStyle = grad(c, xr - 2.5, 0, xr + 2.5, 0, ['#5f666e', '#c6ccd3', '#5f666e']); c.fillRect(xr - 2.5, CY + r, 5, BENCH - CY - r - 6);
+      c.fillStyle = grad(c, 0, BENCH - 6, 0, BENCH, ['#4b535d', '#22262b']); rrect(c, xr - 16, BENCH - 6, 32, 6, 2); c.fill();
+    }
+    c.fillStyle = grad(c, 0, CY - r, 0, CY + r, ['#555d66', '#2b3036', '#15181c']); rrect(c, sx, CY - r, L, 2 * r, 2); c.fill();
+    c.fillStyle = 'rgba(255,255,255,0.13)'; c.fillRect(sx + 2, CY - r + 2.5, L - 4, 1.2);
+    if (mounted) { const xr = sx + L * 0.55; c.fillStyle = grad(c, 0, CY - r - 1.5, 0, CY + r + 1.5, METAL_V); c.fillRect(xr - 5, CY - r - 1.5, 10, 2 * r + 3); }
+    c.fillStyle = grad(c, 0, CY - r - 1.5, 0, CY + r + 1.5, METAL_V); rrect(c, sx - 5, CY - r - 1.5, 6.5, 2 * r + 3, 1.5); c.fill();
+    c.fillStyle = '#030405'; c.fillRect(sx - 5.6, CY - 5, 1.3, 10);
+    c.fillStyle = 'rgba(228,234,242,0.82)'; rrect(c, sx + 14, CY - r - 0.8, 22, 3.6, 1); c.fill();
+    c.fillStyle = grad(c, 0, CY - r - 1.5, 0, CY + r + 1.5, METAL_V); rrect(c, sx + L - 46, CY - r - 1.5, 15, 2 * r + 3, 2); c.fill();
+    c.fillStyle = grad(c, 0, CY - r - 3, 0, CY + r + 3, ['#2a2d31', '#0d0e10', '#060607']); rrect(c, sx + L, CY - r - 3, 14, 2 * r + 6, 5); c.fill();
+  }
+
+  function rigScene() {
+    const mode = S.mode;
+    if (mode === 'mystery' && S.kind === 'star') return { kind: 'star', items: [] };
+    const kind = S.display === 'absorption' ? 'abs' : 'emit';
+    if (mode === 'mystery') return { kind, items: [{ tag: '?', col: gasColor(S.mystery) }], mystery: true };
+    const items = [{ tag: S.a, col: gasColor([S.a]) }];
+    if (mode === 'compare') items.unshift({ tag: S.b, col: gasColor([S.b]), second: true });
+    return { kind, items, compare: mode === 'compare' };
+  }
+  const RIG_CAP = {
+    emit: 'A spectrum tube glowing on a 5000 V supply, viewed through a hand spectroscope. The strip below is the view in the eyepiece. The tube color is computed from its lines.',
+    emit2: 'Two tubes; a comparison prism at the slit shows one spectrum above the other, as in the two strips below. Tube colors are computed from their lines.',
+    abs: 'White light from a lamp passes through a cell of cool gas into the spectroscope. The strip below is the view in the eyepiece.',
+    abs2: 'One lamp shines through two cells of cool gas; a comparison prism at the slit shows one spectrum above the other.',
+    star: 'Starlight gathered by a telescope and spread out by the spectroscope. The strip below is the view in the eyepiece.'
+  };
+
+  function paintRig(c, W, H) {
+    const sc = rigScene(), ps = projScale(), lps = Math.min(ps, 1.25);
+    const two = sc.items.length > 1, star = sc.kind === 'star';
+    const srcW = star ? 206 : sc.kind === 'abs' ? 200 : two ? 254 : 120, gap = star ? 0 : 30, tail = 50;
+    const need = 14 + srcW + gap + 150 + 14 + tail;
+    const s = Math.min(H / DH, W / need, 1.35);
+    const Ls = Math.max(150, Math.min(300, W / s - 14 - srcW - gap - 14 - tail - 10));
+    const gw = srcW + gap + Ls + 14 + tail;
+    const ox = Math.max(8, (W - gw * s) / 2), oy = H - DH * s;
+    const labels = [];
+    const lab = (x, y, t, al) => labels.push({ x: ox + x * s, y: oy + y * s, t, al: al || 'center' });
+    // room, or the night sky for a star
+    c.fillStyle = grad(c, 0, 0, 0, H, star ? ['#04060c', '#0a1222'] : [tok('--rig-bg'), tok('--rig-bg2')]); c.fillRect(0, 0, W, H);
+    if (star) {
+      let q = 7;
+      const rnd = () => { q = (q * 16807) % 2147483647; return q / 2147483647; };
+      for (let k = 0; k < 90; k++) { c.fillStyle = `rgba(220,230,255,${0.15 + 0.5 * rnd() * rnd()})`; c.fillRect(rnd() * W, rnd() * H, 1.2, 1.2); }
+    }
+    c.save(); c.translate(ox, oy); c.scale(s, s);
+    const sx = srcW + gap, emit = [];
+    // light spilling onto the wall and the bench, under everything else
+    if (sc.kind === 'emit') {
+      sc.items.forEach((it, k) => {
+        if (!it.col) return;
+        const cx = (two ? k * 134 : 0) + 60, { yB, yE } = tubeY();
+        radial(c, cx, (yB + yE) / 2, 130, it.col, 0.16);
+        emit.push({ cx, y0: yB, y1: yE, col: it.col, ph: k * 1.7 });
+      });
+    } else if (sc.kind === 'abs') {
+      radial(c, 30, CY, 120, LAMP, 0.12);
+    }
+    if (!star) {
+      c.restore();
+      const yb = oy + BENCH * s;
+      c.fillStyle = tok('--rig-bench-hi'); c.fillRect(0, yb, W, Math.max(2, 5 * s));
+      c.fillStyle = grad(c, 0, yb + 5 * s, 0, H, [tok('--rig-bench'), tok('--rig-bg2')]); c.fillRect(0, yb + 5 * s, W, H - yb);
+      c.save(); c.translate(ox, oy); c.scale(s, s);
+      for (const e of emit) { c.fillStyle = rgba(e.col, 0.22); c.beginPath(); c.ellipse(e.cx, BENCH + 1.5, 46, 3.5, 0, 0, 2 * Math.PI); c.fill(); }
+    }
+    // light paths into the slit
+    const toSlit = (x0, ya, yb, col, a) => {
+      c.fillStyle = rgba(col, a); c.beginPath(); c.moveTo(x0, ya); c.lineTo(sx - 5, CY - 3); c.lineTo(sx - 5, CY + 3); c.lineTo(x0, yb); c.closePath(); c.fill();
+    };
+    if (sc.kind === 'emit') {
+      sc.items.forEach((it, k) => { if (it.col) { const { yC, yD } = tubeY(); toSlit((two ? k * 134 : 0) + 63, yC, yD, it.col, 0.07); } });
+      sc.items.forEach((it, k) => drawSupply(c, two ? k * 134 : 0, it));
+      if (two) { lab(60, 7, 'bottom strip'); lab(194, 7, 'top strip'); } else lab(60, 7, sc.mystery ? 'unknown gas' : 'spectrum tube');
+      lab(two ? 127 : 60, 211, two ? 'high voltage supplies' : 'high voltage supply');
+    } else if (sc.kind === 'abs') {
+      const xc = 82, r = two ? 11 : 14, cys = two ? [CY + 15, CY - 15] : [CY];
+      c.fillStyle = rgba(LAMP, 0.09); c.beginPath(); c.moveTo(30, CY - 6); c.lineTo(xc, CY - (two ? 26 : 13)); c.lineTo(xc + 104, CY - (two ? 26 : 13)); c.lineTo(sx - 5, CY - 3); c.lineTo(sx - 5, CY + 3); c.lineTo(xc + 104, CY + (two ? 26 : 13)); c.lineTo(xc, CY + (two ? 26 : 13)); c.lineTo(30, CY + 6); c.closePath(); c.fill();
+      drawCellStand(c, xc, cys[0] + r);
+      drawLamp(c, 0);
+      sc.items.forEach((it, k) => drawCell(c, xc, cys[k], r, it));
+      lab(30, 211, 'white light lamp');
+      lab(xc + 52, CY - (two ? 26 + 13 : 14 + 13), two ? 'cells of cool gas' : sc.mystery ? 'unknown cool gas' : 'cell of cool gas');
+    } else {
+      const g = c.createRadialGradient(46, CY, 0, 46, CY, 54);
+      g.addColorStop(0, '#fff9ee'); g.addColorStop(0.65, '#ffe6b8'); g.addColorStop(0.92, '#f6b56a'); g.addColorStop(1, '#e8964a');
+      radial(c, 46, CY, 120, [255, 214, 160], 0.22);
+      c.fillStyle = g; c.beginPath(); c.arc(46, CY, 54, 0, 2 * Math.PI); c.fill();
+      c.fillStyle = 'rgba(255,236,210,0.07)'; c.beginPath(); c.moveTo(70, CY - 40); c.lineTo(122, CY - 16); c.lineTo(122, CY + 16); c.lineTo(70, CY + 40); c.closePath(); c.fill();
+      // telescope on a pier, the spectroscope at its focus
+      c.strokeStyle = '#3a4048'; c.lineWidth = 3; c.beginPath(); c.moveTo(165, CY + 14); c.lineTo(165, 186); c.moveTo(165, 186); c.lineTo(145, 214); c.moveTo(165, 186); c.lineTo(185, 214); c.stroke();
+      c.fillStyle = grad(c, 0, CY - 15, 0, CY + 15, ['#e5e9ee', '#a9b0b9', '#6f7781']); rrect(c, 124, CY - 15, sx - 124, 30, 3); c.fill();
+      c.fillStyle = grad(c, 0, CY - 17, 0, CY + 17, ['#3a4048', '#1d2126', '#0d0f12']); rrect(c, 120, CY - 17, 22, 34, 3); c.fill();
+      lab(46, CY + 70, 'star'); lab(165, CY - 28, 'telescope');
+    }
+    drawScope(c, sx, Ls, !star);
+    lab(sx - 2, CY - 23, two ? 'slit, comparison prism' : 'slit', two ? 'left' : 'center');
+    if (Ls > 170 || !two) lab(sx + Ls - 38, CY - 23, 'grating');
+    lab(sx + Ls * 0.28, CY + 24, 'hand spectroscope');
+    lab(sx + Ls + 7, CY + 42, 'eyepiece: view below');
+    c.restore();
+    // labels last, on halo boxes, pushed down when they would overlap
+    c.font = `600 ${10.5 * lps}px ${mono()}`;
+    const placed = [], bh = 15 * lps;
+    for (const L of labels) {
+      const tw = c.measureText(L.t).width + 10;
+      let x0 = L.al === 'left' ? L.x - 5 : L.x - tw / 2;
+      x0 = Math.max(3, Math.min(W - 3 - tw, x0));
+      let y = Math.max(bh / 2 + 2, Math.min(H - bh / 2 - 1, L.y));
+      for (let k = 0; k < 4 && placed.some((p) => x0 < p[1] && x0 + tw > p[0] && Math.abs(y - p[2]) < bh); k++) y += bh + 1;
+      placed.push([x0, x0 + tw, y]);
+      haloText(c, L.t, x0 + 5, y, 'left', tok('--rig-ink'), tok('--rig-halo'), 5);
+    }
+    rig = { emit: emit.map((e) => ({ x: ox + e.cx * s, y0: oy + e.y0 * s, y1: oy + e.y1 * s, s, col: e.col, ph: e.ph })) };
+    $('rigCap').textContent = RIG_CAP[sc.kind + (two ? '2' : '')] || '';
+    const what = star ? 'Starlight through a telescope and a hand spectroscope' : sc.kind === 'abs' ? 'A lamp shining through a cell of cool gas into a hand spectroscope' : 'A glowing spectrum tube on a high voltage supply, viewed through a hand spectroscope';
+    rigCv.setAttribute('aria-label', what);
+  }
+  function drawRig() {
+    const [, W, H] = fit(rigCv);
+    if (rigBase.width !== rigCv.width || rigBase.height !== rigCv.height) { rigBase.width = rigCv.width; rigBase.height = rigCv.height; }
+    const b = rigBase.getContext('2d'); b.setTransform(dpr, 0, 0, dpr, 0, 0);
+    paintRig(b, W, H);
+    rigFrame(performance.now(), true);
+    startRig();
+  }
+  // a gentle irregular flicker, a few percent, of the discharge glow
+  const flick = (t) => 0.5 + 0.25 * Math.sin(2 * Math.PI * 5.3 * t) + 0.15 * Math.sin(2 * Math.PI * 11.7 * t + 1.3) + 0.1 * Math.sin(2 * Math.PI * 2.1 * t + 0.4);
+  function rigFrame(now, still) {
+    const c = rigCv.getContext('2d');
+    c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, rigCv.width, rigCv.height); c.drawImage(rigBase, 0, 0);
+    if (still || reduceMotion) return;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.globalCompositeOperation = 'lighter';
+    for (const e of rig.emit) {
+      const f = flick(now / 1000 + e.ph);
+      c.save(); c.translate(e.x, 0); c.scale(e.s, 1); tubeHalo(c, 0, (e.y0 + e.y1) / 2, (e.y1 - e.y0) / 2 + 6 * e.s, e.col, 0.3 * f); c.restore();
+    }
+    c.globalCompositeOperation = 'source-over';
+  }
+  let rigRaf = 0, rigLast = 0, rigSeen = true;
+  function rigTick(now) {
+    rigRaf = 0;
+    if (reduceMotion || !rigSeen || document.hidden || !rig.emit.length) return;
+    if (now - rigLast > 48) { rigLast = now; rigFrame(now); }
+    rigRaf = requestAnimationFrame(rigTick);
+  }
+  function startRig() { if (!rigRaf && !reduceMotion) rigRaf = requestAnimationFrame(rigTick); }
+  try { new IntersectionObserver((es) => { rigSeen = es[0].isIntersecting; startRig(); }).observe(rigCv); } catch (_) {}
+  document.addEventListener('visibilitychange', startRig);
 
   // ---------- render ----------
   const MODE_HINTS = {
@@ -799,23 +1200,25 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
       $('labB').innerHTML = S.guesses.size ? `<b>${[...S.guesses].join(' + ')}</b> your guess` : 'Your guess: click elements in the table';
       $('countA').textContent = `${shownA.length} lines`;
       $('countB').textContent = S.guesses.size ? `${shownB.length} lines` : '';
-      drawStrip($('cA'), shownA, { display: disp });
-      drawStrip($('cB'), shownB, { display: disp, empty: S.guesses.size ? null : 'no elements guessed yet' });
+      drawStrip($('cA'), shownA, { display: disp, fraun: S.revealed, wash: gasColor(S.mystery) });
+      drawStrip($('cB'), shownB, { display: disp, fraun: S.revealed, wash: gasColor([...S.guesses]), empty: S.guesses.size ? null : 'no elements guessed yet' });
     } else {
       shownA = linesOf(S.a);
       $('labA').innerHTML = `<b>${S.a}</b> ${BY[S.a][2]}`;
       $('countA').textContent = `${shownA.length} lines`;
-      drawStrip($('cA'), shownA, { display: disp, mark: S.mark, empty: shownA.length ? null : 'no lines listed in this range' });
+      drawStrip($('cA'), shownA, { display: disp, mark: S.mark, fraun: true, wash: gasColor([S.a]), empty: shownA.length ? null : 'no lines listed in this range' });
       if (mode === 'compare') {
         shownB = linesOf(S.b);
         $('labB').innerHTML = `<b>${S.b}</b> ${BY[S.b][2]}`;
         $('countB').textContent = `${shownB.length} lines`;
-        drawStrip($('cB'), shownB, { display: disp, empty: shownB.length ? null : 'no lines listed in this range' });
+        drawStrip($('cB'), shownB, { display: disp, fraun: true, wash: gasColor([S.b]), empty: shownB.length ? null : 'no lines listed in this range' });
       }
       updateFacts(S.a, shownA);
       updateList(S.a, shownA);
     }
+    $('absNote').hidden = disp !== 'absorption';
     drawAxis();
+    drawRig();
     if (!$('bohrCard').hidden) drawBohr();
   }
 

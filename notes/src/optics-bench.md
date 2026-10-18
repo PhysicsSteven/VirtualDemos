@@ -49,6 +49,7 @@ Students should know the law of reflection and Snell's law. The sign conventions
 
 - Rays are traced in two dimensions. Lenses are ideal thin lenses (each ray's slope changes by −h/f at height h), so traced d_i always agrees with the lens equation.
 - Mirrors are true spherical arcs with exact reflection, so the traced image can differ slightly from the paraxial mirror equation.
+- The **Screen** element (added in the **Converging lens** preset at the image) shows the picture the traced rays form on it: sharp at the image distance and a blurred patch elsewhere, a direct way to find a real image as in the lab.
 - Glass faces follow Snell's law; the faint reflection at each face has a fixed brightness (no Fresnel coefficients).
 - n is quoted at 550 nm and follows a Cauchy form; n = 1.50 gives 1.529 at 400 nm and 1.487 at 700 nm, more dispersion than crown glass so the spectrum is easy to see. White light is seven wavelengths from 400 to 700 nm.
 

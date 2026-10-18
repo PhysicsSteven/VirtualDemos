@@ -50,7 +50,7 @@ Students should know E = hf = hc/λ and the visible range, roughly 380 to 750 nm
 - **Absorption** draws a continuous spectrum with a dark line at every listed line of the element. A real cool gas absorbs mainly from levels that are actually populated, usually the ground state and levels just above it, so a real absorption spectrum has fewer lines than the emission spectrum. Treat the absorption view as a picture of where lines can be, not a calculation of which ones appear.
 - **Lines shown** counts every NIST entry: for hydrogen, Hα and Hβ are each listed as several closely spaced components, so the count is 11 although the strip shows seven distinct Balmer positions between 380 and 750 nm.
 - The hydrogen panel computes 1/λ = R_H(1/n_f² − 1/n_i²) with R_H = 1.09678 × 10⁷ m⁻¹, then converts to air wavelengths with a standard formula for the refractive index of air. Its energy levels use 13.598 eV, the value for hydrogen's own reduced mass, matching the wavelengths. Spin and fine structure are ignored there.
-- The glow swatch is a rough blend of the visible lines, not a colorimetric calculation. **Mystery**: a gas mixture is two or three elements drawn at random from 23 common ones; **A star** is always H, Na, Mg, Ca and Fe in absorption.
+- The tube and swatch color is computed from the listed lines (neutral atom lines under All) weighted by their NIST intensities with the CIE 1931 color matching functions; it is only as good as those rough relative intensities (potassium, for example, comes out greenish rather than the lilac of a flame). **Mystery**: a gas mixture is two or three elements drawn at random from 23 common ones; **A star** is always H, Na, Mg, Ca and Fe in absorption.
 
 ## Going further
 
