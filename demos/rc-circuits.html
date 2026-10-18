@@ -47,6 +47,8 @@ img { max-width: 100%; }
   --capq: #7a45c0;
   --resq: #1d8a5a;
   --wire: #3b4655;
+  --bench: #d8c3a0; --bench-lo: #b99d74;
+  --scope-case: #d3d7dc; --scope-case-lo: #a9afb7; --scope-ink: #2a3038; --scope-screen: #07100c;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -55,6 +57,7 @@ img { max-width: 100%; }
     --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
     --equi: #e2b350; --accent: #69a0ff; --capq: #b48cff; --resq: #4cc38a; --wire: #aab4c2;
+    --bench: #3a2f24; --bench-lo: #261e16; --scope-case: #262b32; --scope-case-lo: #15181c; --scope-ink: #b9c2cd; --scope-screen: #050b08;
     color-scheme: dark;
   }
 }
@@ -62,6 +65,7 @@ img { max-width: 100%; }
   --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
   --equi: #e2b350; --accent: #69a0ff; --capq: #b48cff; --resq: #4cc38a; --wire: #aab4c2;
+  --bench: #3a2f24; --bench-lo: #261e16; --scope-case: #262b32; --scope-case-lo: #15181c; --scope-ink: #b9c2cd; --scope-screen: #050b08;
   color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -90,7 +94,8 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
   display: grid; grid-template-columns: minmax(0, 55fr) minmax(0, 45fr); grid-template-rows: minmax(0, 58fr) minmax(0, 42fr); }
 .pane { position: relative; min-height: 0; }
 .pane canvas { position: absolute; inset: 0; display: block; }
-#pPane { grid-column: 2; grid-row: 1 / 3; border-left: 1px solid var(--line); }
+#pPane { grid-column: 2; grid-row: 1 / 3; border-left: 1px solid var(--line); background: var(--scope-case); }
+#cPane { background: var(--bench); }
 #ePane { grid-column: 1; grid-row: 2; border-top: 1px solid var(--line); }
 #cCan, #pCan { touch-action: none; outline: none; }
 #cCan:focus-visible, #pCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
@@ -189,7 +194,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="pane" id="cPane">
-        <canvas id="cCan" tabindex="0" aria-label="Circuit drawing: battery, switch, resistor and capacitor. Click the switch to flip it. Drag the battery up or down to change the EMF, the resistor up or down to change R, and the top capacitor plate to change C. Keys: S flips the switch, up and down arrows change the EMF, left and right arrows change R, page up and page down change C, space plays or pauses, R resets."></canvas>
+        <canvas id="cCan" tabindex="0" aria-label="Circuit on a bench: a DC power supply as the battery, a knife switch, a color coded resistor and an electrolytic capacitor with a window showing its plates. Click the switch to flip it. Drag the power supply up or down to change the EMF, the resistor up or down to change R, and the top capacitor plate to change C. Keys: S flips the switch, up and down arrows change the EMF, left and right arrows change R, page up and page down change C, space plays or pauses, R resets."></canvas>
         <div class="stage-ctl">
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="reset">Reset</button>
@@ -201,7 +206,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <canvas id="eCan" aria-label="Energy bars: work done by the battery, energy stored in the capacitor, and heat dissipated in the resistor since t = 0."></canvas>
       </div>
       <div class="pane" id="pPane">
-        <canvas id="pCan" tabindex="0" aria-label="Capacitor voltage, resistor voltage, current and charge against time. Solid lines are what happened, dashed lines the exact exponential from the last change. Drag the τ marker sideways to change R; left and right arrows do the same."></canvas>
+        <canvas id="pCan" tabindex="0" aria-label="Oscilloscope: capacitor voltage on channel 1, resistor voltage on channel 2, and the current and charge as math channels, against time. Solid lines are what happened, dashed lines the exact exponential from the last change. Drag the τ marker sideways to change R; left and right arrows do the same."></canvas>
       </div>
     </div>
 
@@ -248,7 +253,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <input type="range" id="sC" min="0" max="18" step="1">
         </div>
         <dl class="readout" id="tauBox"></dl>
-        <p class="hint">Resistors and capacitors come in standard values (E12 and E6 series), so the sliders step through those. You can also drag the battery, the resistor and the top plate on the drawing, or the τ marker on the plots.</p>
+        <p class="hint">Resistors and capacitors come in standard values (E12 and E6 series), so the sliders step through those. You can also drag the power supply, the resistor and the top plate on the drawing, or the τ marker on the plots.</p>
       </section>
 
       <section>
@@ -318,7 +323,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch ghost"></i><span id="ghostTxt">Kept trace</span></span>
           <span><i class="swatch mark"></i>1τ to 5τ after the last change</span>
         </div>
-        <p class="hint" id="modelHint">Model: ideal battery with no internal resistance, ideal wires and switch, no inductance, and a switch that flips instantly. Between changes the exact solution Q(t) = Q<sub>f</sub> + (Q₀ − Q<sub>f</sub>) e<sup>−(t−t₀)/τ</sup> is used, starting from the charge at the moment of the change, so there is no step size error. Dot speed is proportional to I, scaled so that ε/R of the resistor in the loop is one fixed speed. The plate symbols show Q in proportion to C × 12 V. The plate spacing is drawn on a log scale; for a parallel plate capacitor C ∝ 1/d.</p>
+        <p class="hint" id="modelHint">Model: the bench supply is an ideal battery with no internal resistance, ideal wires and switch, no inductance, and a switch that flips instantly. Between changes the exact solution Q(t) = Q<sub>f</sub> + (Q₀ − Q<sub>f</sub>) e<sup>−(t−t₀)/τ</sup> is used, starting from the charge at the moment of the change, so there is no step size error. Dot speed is proportional to I, scaled so that ε/R of the resistor in the loop is one fixed speed. The window in the capacitor shows its two plates (a real electrolytic capacitor rolls them up). The plate symbols show Q in proportion to C × 12 V. The plate spacing is drawn on a log scale; for a parallel plate capacitor C ∝ 1/d. The resistor's color bands encode R. The oscilloscope probes V<sub>C</sub> (channel 1) and V<sub>R</sub> (channel 2); I = V<sub>R</sub>/R and Q = CV<sub>C</sub> are its math channels M1 and M2.</p>
       </section>
     </aside>
   </main>
@@ -476,6 +481,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return `${m.toFixed(1).replace('-', '−')} × 10${String(e).split('').map((c) => SUP[c]).join('')}`;
   }
   function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  // fine 1-1.2-1.5-2-2.5-3-4-5-6-8 steps for the oscilloscope's time base and channel scales
+  const FINE = [1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 8];
+  function fineUp(x) {
+    if (!(x > 0)) return 1;
+    const p = Math.pow(10, Math.floor(Math.log10(x))), m = x / p;
+    for (const f of FINE) if (f >= m * (1 - 1e-9)) return f * p;
+    return 10 * p;
+  }
   function timeUnit(L) { return L < 0.5 ? [1e-3, 'ms'] : L <= 600 ? [1, 's'] : [60, 'min']; }
   function scaleUnit(maxAbs, unit) {
     const f = PFX.find(([m]) => maxAbs >= m * 0.9995) || PFX[PFX.length - 1];
@@ -494,8 +507,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (S.autoRate) setRateIdx(autoRateIdx());
     updateReadouts();
   }
+  // the plot window is ten scope divisions, each a fine step; the window starts on a division
+  const snapL = (L) => 10 * fineUp(L / 10);
+  const floorDiv = (x) => { const d = view.L / 10; return Math.max(0, Math.floor(x / d + 1e-9) * d); };
+  const ceilDiv = (x) => { const d = view.L / 10; return Math.max(0, Math.ceil(x / d - 1e-9) * d); };
   function fitView(Lforce) {
-    view.L = Lforce || 6 * tauCharge();
+    view.L = snapL(Lforce || 6 * tauCharge());
     ranges = {};
   }
   function autoRateIdx() { return nearestIdx(RATES, 5 * lastSeg(sim).tau / 6); }
@@ -507,14 +524,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   // make room on the plots for 5τ of what follows a change
   function roomFor(tau) {
-    if (t + 5 * tau > view.tL + view.L * 1.0001) view.tL = Math.max(0, t - view.L / 6);
+    if (t + 5 * tau > view.tL + view.L * 1.0001) view.tL = ceilDiv(t - view.L / 6);
   }
   function change(kind) {
     rcEvent(sim, t, S.p, S.mode, kind);
     const g = lastSeg(sim);
     // rescale the time window only when the charging τ no longer fits or would be a sliver
     const tc = tauCharge();
-    if (!dragging() && (tc > view.L / 3 || tc < view.L / 60)) { fitView(); view.tL = Math.max(0, t - view.L / 6); view.tLshow = view.tL; }
+    if (!dragging() && (tc > view.L / 3 || tc < view.L / 60)) { fitView(); view.tL = ceilDiv(t - view.L / 6); view.tLshow = view.tL; }
     if (S.autoRate) setRateIdx(autoRateIdx());
     if (kind === 'switch') roomFor(g.tau);
     staticText();
@@ -528,7 +545,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const b of document.querySelectorAll('#swSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === m));
     if (reduce) blade = m === 'charge' ? 0 : 1;
     $('live').textContent = m === 'charge' ? 'Switch to charge: the battery is in the loop.' : 'Switch to discharge: the capacitor drives current through the resistor.';
-    if (pauseWhy) { if (pauseWhy === 'window') view.tL = Math.max(0, t - view.L / 6); setRunning(true); }
+    if (pauseWhy) { if (pauseWhy === 'window') view.tL = ceilDiv(t - view.L / 6); setRunning(true); }
   }
   const flip = () => setMode(S.mode === 'charge' ? 'discharge' : 'charge', true);
 
@@ -554,6 +571,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
       pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), capq: g('--capq'), resq: g('--resq'), wire: g('--wire'),
+      bench: g('--bench'), benchLo: g('--bench-lo'), scase: g('--scope-case'), scaseLo: g('--scope-case-lo'), sink: g('--scope-ink'), screen: g('--scope-screen'), dark: isDark(),
       ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace' };
   }
   const cans = { c: $('cCan'), e: $('eCan'), p: $('pCan') };
@@ -593,9 +611,87 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
   }
 
+  // ---------- bench hardware: colours and helpers ----------
+  function isDark() {
+    const th = document.documentElement.getAttribute('data-theme');
+    if (th === 'dark') return true; if (th === 'light') return false;
+    try { return matchMedia('(prefers-color-scheme: dark)').matches; } catch (_) { return false; }
+  }
+  // mix two #rrggbb colours, or shade one toward white (f > 0) or black (f < 0)
+  function rgbOf(c) { const h = (c || '#888').replace('#', ''); const n = parseInt(h.length === 3 ? h.split('').map((x) => x + x).join('') : h.slice(0, 6), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+  function mixC(a, b, f) { const A = rgbOf(a), B = rgbOf(b); return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * f)).join(',')})`; }
+  const shade = (c, f) => (f >= 0 ? mixC(c, '#ffffff', f) : mixC(c, '#000000', -f));
+  // light and shadow across a round object, laid over its paint, from one rim (x0, y0) to the other (x1, y1)
+  function roundShade(ctx, x0, y0, x1, y1) {
+    const gr = ctx.createLinearGradient(x0, y0, x1, y1);
+    gr.addColorStop(0, 'rgba(0,0,0,0.32)'); gr.addColorStop(0.2, 'rgba(255,255,255,0.08)'); gr.addColorStop(0.32, 'rgba(255,255,255,0.42)');
+    gr.addColorStop(0.48, 'rgba(255,255,255,0.04)'); gr.addColorStop(0.82, 'rgba(0,0,0,0.14)'); gr.addColorStop(1, 'rgba(0,0,0,0.38)');
+    return gr;
+  }
+  // a plastic insulated lead along a polyline in pixels: dark rim, coloured body, a soft highlight
+  function insulated(ctx, pts, col, w) {
+    ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    const path = () => { ctx.beginPath(); pts.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); };
+    path(); ctx.strokeStyle = shade(col, -0.5); ctx.lineWidth = w + 1.4; ctx.stroke();
+    path(); ctx.strokeStyle = col; ctx.lineWidth = w; ctx.stroke();
+    ctx.translate(-w * 0.16, -w * 0.16); path(); ctx.strokeStyle = shade(col, 0.55); ctx.globalAlpha *= 0.6; ctx.lineWidth = Math.max(0.8, w * 0.28); ctx.stroke();
+    ctx.restore();
+  }
+  const leadCols = () => ({ red: T.dark ? '#c9473a' : '#b8372b', black: T.dark ? '#555b64' : '#2f343b', white: T.dark ? '#c3c8cf' : '#f3f1ec' });
+  const BRASS = '#c9a23a', COPPER = '#b8692e', STEEL = '#8d96a3';
+  // resistor colour code: two digits, a multiplier (gold ×0.1) and a gold 5% tolerance band
+  const BANDS = ['#151515', '#7b4a22', '#cc2f28', '#ee8a25', '#f1d43a', '#2f9b4a', '#2f62c9', '#7c40b8', '#8b8b8b', '#f3f3f3'];
+  function resBands(R) {
+    let e = Math.floor(Math.log10(R) + 1e-9) - 1, d = Math.round(R / Math.pow(10, e));
+    if (d >= 100) { d = Math.round(d / 10); e++; }
+    return [BANDS[Math.floor(d / 10)], BANDS[d % 10], e >= 0 ? BANDS[e] : e === -1 ? '#c9a227' : '#b9bec6', '#c9a227'];
+  }
+  // a label on a halo box, so it reads over wood, leads and parts
+  function label(ctx, str, x, y, size, weight, align, col, base) {
+    base = base || 'alphabetic';
+    let w = 0;
+    for (const [s, sub] of richParts(str)) { ctx.font = `${weight} ${sub ? size * 0.72 : size}px ${T.ui}`; w += ctx.measureText(s).width; }
+    const x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    const yt = base === 'top' ? y : base === 'middle' ? y - size * 0.64 : y - size * 0.96;
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.86; roundRect(ctx, x0 - 3, yt - 1, w + 6, size * 1.34, 4); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = col; ctx.textBaseline = base;
+    return richText(ctx, str, x, y, size, weight, align);
+  }
+  // the wooden bench top, cached: it only changes with the pane size or the theme
+  let benchCache = null;
+  function benchLayer(W, H) {
+    const key = `${W}x${H}x${dpr}x${T.bench}`;
+    if (benchCache && benchCache.key === key) return benchCache.c;
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(W * dpr)); c.height = Math.max(1, Math.round(H * dpr));
+    const x = c.getContext('2d'); x.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const gr = x.createLinearGradient(0, 0, W * 0.3, H); gr.addColorStop(0, shade(T.bench, 0.08)); gr.addColorStop(1, T.benchLo);
+    x.fillStyle = gr; x.fillRect(0, 0, W, H);
+    x.strokeStyle = T.benchLo; x.lineWidth = 1;
+    const n = Math.max(10, Math.round(H / 16));
+    for (let i = 0; i < n; i++) {
+      const yy = (i + 0.5) * H / n;
+      x.globalAlpha = (T.dark ? 0.5 : 0.36) * (0.6 + 0.4 * Math.sin(i * 2.3) ** 2);
+      x.beginPath();
+      for (let px = 0; px <= W + 8; px += 8) { const q = yy + 1.7 * Math.sin(px * 0.009 + i * 1.9) + 0.8 * Math.sin(px * 0.041 + i * 0.7); px ? x.lineTo(px, q) : x.moveTo(px, q); }
+      x.stroke();
+    }
+    // plank seams
+    x.globalAlpha = T.dark ? 0.7 : 0.45; x.strokeStyle = shade(T.benchLo, -0.35); x.lineWidth = 1.2;
+    for (const f of [0.34, 0.69]) { x.beginPath(); x.moveTo(0, Math.round(H * f) + 0.5); x.lineTo(W, Math.round(H * f) + 0.5); x.stroke(); }
+    x.globalAlpha = T.dark ? 0.12 : 0.3; x.strokeStyle = '#ffffff';
+    for (const f of [0.34, 0.69]) { x.beginPath(); x.moveTo(0, Math.round(H * f) + 1.5); x.lineTo(W, Math.round(H * f) + 1.5); x.stroke(); }
+    x.globalAlpha = 1;
+    benchCache = { key, c };
+    return c;
+  }
+  function shadowed(ctx, s, draw) {
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.38)'; ctx.shadowBlur = 0.16 * s; ctx.shadowOffsetY = 0.05 * s; draw(); ctx.restore();
+  }
+
   // ---------- circuit drawing ----------
-  // Schematic in units: battery on the left, switch top left, resistor on top, capacitor on the right, return along the bottom.
-  const GEO = { xL: -1.25, xR: 10.35, yT: 0.3, yB: 5.75, A: [3, 1], B: [3, 2.1], P: [4.3, 1], capX: 9, capY: 3, plateHalf: 0.9 };
+  // Layout in units: power supply on the left, knife switch top left, resistor on top, capacitor on the right, return along the bottom.
+  const GEO = { xL: -1.35, xR: 10.6, yT: 0.3, yB: 5.75, A: [3, 1], B: [3, 2.1], P: [4.3, 1], capX: 9, capY: 3, plateHalf: 0.9 };
   let cg = null, ctlH = 44;
   function capGap(C) { return 0.7 + 0.8 * Math.log(C_VALUES[C_VALUES.length - 1] / C) / Math.log(1000); }
   function circuitGeom() {
@@ -606,10 +702,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const oy = top + (avail - s * (GEO.yB - GEO.yT)) / 2 - GEO.yT * s;
     const fl = S.p.flash;
     const gap = capGap(S.p.C);
-    return { s, X: (u) => ox + u * s, Y: (v) => oy + v * s, flash: fl,
+    const g = { s, X: (u) => ox + u * s, Y: (v) => oy + v * s, flash: fl,
       batY: fl ? 2.15 : 3, r1: fl ? { c: [1, 3.95], vert: true } : { c: [6.6, 1], vert: false },
       r2: fl ? { c: [3, 3.85], vert: true } : null,
       plTop: GEO.capY - gap / 2, plBot: GEO.capY + gap / 2 };
+    // the supply's binding posts, and the electrolytic can (it grows gently with C; the window shows its plates)
+    g.plus = [0.42, g.batY + 0.12]; g.neg = [0.42, g.batY + 0.62];
+    const f = Math.log(S.p.C / C_VALUES[0]) / Math.log(C_VALUES[C_VALUES.length - 1] / C_VALUES[0]), hw = 0.92 + 0.24 * f;
+    g.can = { hw, top: g.plTop - 0.62, bot: g.plBot + 0.4, wx0: GEO.capX - hw + 0.13, wx1: GEO.capX + hw - 0.45, wy0: g.plTop - 0.3, wy1: g.plBot + 0.3 };
+    return g;
   }
   function bladeEnd(b) {
     const [px, py] = GEO.P, [ax, ay] = GEO.A, [bx, by] = GEO.B;
@@ -618,45 +719,61 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const a = a1 + (a2 - a1) * b, l = l1 + (l2 - l1) * b;
     return [px + l * Math.cos(a), py + l * Math.sin(a)];
   }
-  // branch paths in units, oriented so that positive I flows along them
+  // branch paths in units, oriented so that positive I flows along them; a third entry of 1 marks a stretch hidden inside the supply
   function paths(g) {
-    const P = GEO.P;
+    const P = GEO.P, pl = g.plus, ng = g.neg;
     return {
-      com: [[P, [9, 1], [9, g.plTop]], [[9, g.plBot], [9, 5], [3, 5]]],
-      bat: [[[3, 5], [1, 5], [1, 1], GEO.A].concat(S.mode === 'charge' ? [P] : [])],
+      com: [[P, [9, 1], [9, g.can.top]], [[9, g.can.bot], [9, 5], [3, 5]]],
+      bat: [[[3, 5], [1, 5], [1, ng[1]], ng, [pl[0], pl[1], 1], [1, pl[1]], [1, 1], GEO.A].concat(S.mode === 'charge' ? [P] : [])],
       byp: [[[3, 5], GEO.B].concat(S.mode === 'discharge' ? [P] : [])]
     };
   }
   function drawDots(ctx, g, pl, ph, col) {
-    const sp = 0.34, r = Math.max(2, 0.055 * g.s) * Math.min(1.3, projScale());
-    ctx.fillStyle = col;
+    const sp = 0.34, r = Math.max(2.2, 0.06 * g.s) * Math.min(1.3, projScale());
+    ctx.beginPath();
     for (const line of pl) {
       let acc = 0;
       for (let i = 0; i + 1 < line.length; i++) {
         const [x0, y0] = line[i], [x1, y1] = line[i + 1], L = Math.hypot(x1 - x0, y1 - y0);
         if (L < 1e-9) continue;
-        let s0 = ((ph - acc) % sp + sp) % sp;
-        for (let s = s0; s < L; s += sp) {
-          const u = s / L;
-          ctx.beginPath(); ctx.arc(g.X(x0 + (x1 - x0) * u), g.Y(y0 + (y1 - y0) * u), r, 0, 2 * Math.PI); ctx.fill();
+        if (!line[i + 1][2]) {
+          const s0 = ((ph - acc) % sp + sp) % sp;
+          for (let s = s0; s < L; s += sp) {
+            const u = s / L, px = g.X(x0 + (x1 - x0) * u), py = g.Y(y0 + (y1 - y0) * u);
+            ctx.moveTo(px + r, py); ctx.arc(px, py, r, 0, 2 * Math.PI);
+          }
         }
         acc += L;
       }
     }
+    ctx.fillStyle = col; ctx.fill();
+    ctx.strokeStyle = T.dark ? 'rgba(0,0,0,0.55)' : 'rgba(255,255,255,0.9)'; ctx.lineWidth = 1; ctx.stroke();
   }
-  function drawResistor(ctx, g, r, hot, active) {
-    const [cx, cy] = r.c, half = 0.8, amp = 0.17, n = 6, ps = projScale();
-    const pt = (k, off) => r.vert ? [g.X(cx + off), g.Y(cy - half + 2 * half * k)] : [g.X(cx - half + 2 * half * k), g.Y(cy + off)];
-    // clear the wire under it
-    ctx.strokeStyle = T.canvas; ctx.lineWidth = 6 * ps;
-    ctx.beginPath(); ctx.moveTo(...pt(0, 0)); ctx.lineTo(...pt(1, 0)); ctx.stroke();
-    const zig = () => {
-      ctx.beginPath(); ctx.moveTo(...pt(0, 0)); ctx.lineTo(...pt(0.08, 0));
-      for (let i = 0; i < n; i++) ctx.lineTo(...pt(0.08 + 0.84 * (i + 0.5) / n, (i % 2 ? -amp : amp)));
-      ctx.lineTo(...pt(0.92, 0)); ctx.lineTo(...pt(1, 0));
+  // a through hole resistor along the wire, its colour bands showing R
+  function drawResistor(ctx, g, r, R, hot, active) {
+    const [cx, cy] = r.c, half = 0.8, s = g.s;
+    const p0 = r.vert ? [g.X(cx), g.Y(cy - half)] : [g.X(cx - half), g.Y(cy)];
+    const L = 2 * half * s, bl = 1.12 * s, bh = 0.3 * s, bx = (L - bl) / 2;
+    ctx.save(); ctx.translate(p0[0], p0[1]); if (r.vert) ctx.rotate(Math.PI / 2);
+    ctx.globalAlpha = active ? 1 : 0.62;
+    ctx.lineCap = 'round'; ctx.strokeStyle = shade(STEEL, -0.2); ctx.lineWidth = Math.max(1.6, 0.055 * s); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(L, 0); ctx.stroke();
+    ctx.strokeStyle = '#e6eaef'; ctx.lineWidth = Math.max(0.7, 0.018 * s); ctx.beginPath(); ctx.moveTo(0, -0.012 * s); ctx.lineTo(L, -0.012 * s); ctx.stroke();
+    if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.3; roundRect(ctx, bx - 0.12 * s, -bh / 2 - 0.12 * s, bl + 0.24 * s, bh + 0.24 * s, 0.18 * s); ctx.fill(); ctx.globalAlpha = active ? 1 : 0.62; }
+    const body = () => {       // a dog bone body: rounded caps, a slight waist
+      const rr = bh / 2, w = bh * 0.38;
+      ctx.beginPath(); ctx.moveTo(bx + rr, -rr); ctx.lineTo(bx + bl * 0.24, -rr); ctx.quadraticCurveTo(bx + bl * 0.3, -w, bx + bl * 0.36, -w);
+      ctx.lineTo(bx + bl * 0.64, -w); ctx.quadraticCurveTo(bx + bl * 0.7, -w, bx + bl * 0.76, -rr); ctx.lineTo(bx + bl - rr, -rr);
+      ctx.arc(bx + bl - rr, 0, rr, -Math.PI / 2, Math.PI / 2); ctx.lineTo(bx + bl * 0.76, rr); ctx.quadraticCurveTo(bx + bl * 0.7, w, bx + bl * 0.64, w);
+      ctx.lineTo(bx + bl * 0.36, w); ctx.quadraticCurveTo(bx + bl * 0.3, w, bx + bl * 0.24, rr); ctx.lineTo(bx + rr, rr); ctx.arc(bx + rr, 0, rr, Math.PI / 2, 1.5 * Math.PI); ctx.closePath();
     };
-    if (hot) { zig(); ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.3; ctx.lineWidth = 9 * ps; ctx.lineJoin = 'round'; ctx.stroke(); ctx.globalAlpha = 1; }
-    zig(); ctx.strokeStyle = active ? T.resq : T.wire; ctx.lineWidth = 2.2 * ps; ctx.lineJoin = 'round'; ctx.stroke();
+    body(); ctx.fillStyle = T.dark ? '#c2aa76' : '#dcc392'; ctx.fill();
+    ctx.save(); body(); ctx.clip();
+    // bands read from the end nearer the first band: on the drawing, left to right, or top to bottom
+    resBands(R).forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect(bx + bl * [0.15, 0.29, 0.43, 0.79][i], -bh, bl * 0.08, 2 * bh); });
+    ctx.fillStyle = roundShade(ctx, 0, r.vert ? bh / 2 : -bh / 2, 0, r.vert ? -bh / 2 : bh / 2); ctx.fillRect(bx, -bh, bl, 2 * bh);
+    ctx.restore();
+    body(); ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 0.8; ctx.stroke();
+    ctx.restore();
   }
   function grip(ctx, x, y, hot, vertical) {
     const ps = projScale(), w = (vertical ? 13 : 20) * ps, h = (vertical ? 20 : 13) * ps;
@@ -674,155 +791,291 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     ctx.fill();
   }
+  // a binding post seen from above: coloured cap, metal stud
+  function post(ctx, x, y, r, col) {
+    const gp = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, 0, x, y, r * 1.05); gp.addColorStop(0, shade(col, 0.5)); gp.addColorStop(1, shade(col, -0.35));
+    ctx.fillStyle = gp; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = '#d4d9e0'; ctx.beginPath(); ctx.arc(x, y, r * 0.32, 0, 2 * Math.PI); ctx.fill();
+  }
+  // the bench supply that plays the ideal battery: LED display of ε, a knob that turns with it, + and − posts
+  function drawSupply(ctx, g, hot) {
+    const { X, Y, s } = g, by = g.batY;
+    const x0 = X(-1.25), y0 = Y(by - 0.95), w = 2 * s, h = 1.9 * s, rr = 0.12 * s;
+    const base = T.dark ? '#3c424b' : '#d6dadf';
+    shadowed(ctx, s, () => {
+      const gc = ctx.createLinearGradient(0, y0, 0, y0 + h); gc.addColorStop(0, shade(base, 0.22)); gc.addColorStop(0.55, base); gc.addColorStop(1, shade(base, -0.22));
+      ctx.fillStyle = gc; roundRect(ctx, x0, y0, w, h, rr); ctx.fill();
+    });
+    ctx.strokeStyle = hot ? T.accent : 'rgba(0,0,0,0.4)'; ctx.lineWidth = hot ? 2.2 * projScale() : 1; roundRect(ctx, x0 + 0.5, y0 + 0.5, w - 1, h - 1, rr); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0 + rr, y0 + 1.5); ctx.lineTo(x0 + w - rr, y0 + 1.5); ctx.stroke();
+    // LED display
+    const dx = X(-1.1), dy = Y(by - 0.8), dw = 1.62 * s, dh = 0.56 * s;
+    ctx.fillStyle = '#190806'; roundRect(ctx, dx, dy, dw, dh, 0.05 * s); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.65)'; ctx.lineWidth = 1; ctx.stroke();
+    const fsz = 0.38 * s, txt = S.p.eps.toFixed(1).padStart(4, ' '), tx = dx + dw - 0.34 * s, ty = dy + dh / 2 + 0.5;
+    ctx.font = `700 ${fsz}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(255,70,50,0.10)'; ctx.fillText('88.8', tx, ty);
+    ctx.save(); ctx.shadowColor = 'rgba(255,50,30,0.9)'; ctx.shadowBlur = 0.12 * s; ctx.fillStyle = '#ff5b45'; ctx.fillText(txt, tx, ty); ctx.restore();
+    ctx.font = `700 ${fsz * 0.58}px ${T.mono}`; ctx.textAlign = 'left'; ctx.fillStyle = '#ff5b45'; ctx.fillText('V', tx + 0.07 * s, ty + fsz * 0.1);
+    // knob with a scale, turned to ε (1 V to 12 V over 270°)
+    const kx = X(-0.68), ky = Y(by + 0.42), kr = 0.26 * s, ink = T.dark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.55)';
+    ctx.strokeStyle = ink; ctx.lineWidth = 1;
+    for (let k = 0; k <= 11; k++) {
+      const a = Math.PI * (0.75 + 1.5 * k / 11), l0 = kr * 1.14, l1 = kr * (k % 11 ? 1.26 : 1.36);
+      ctx.beginPath(); ctx.moveTo(kx + Math.cos(a) * l0, ky + Math.sin(a) * l0); ctx.lineTo(kx + Math.cos(a) * l1, ky + Math.sin(a) * l1); ctx.stroke();
+    }
+    shadowed(ctx, s * 0.6, () => {
+      const gk = ctx.createRadialGradient(kx - kr * 0.3, ky - kr * 0.35, 0, kx, ky, kr); gk.addColorStop(0, '#5a6069'); gk.addColorStop(1, '#14171b');
+      ctx.fillStyle = gk; ctx.beginPath(); ctx.arc(kx, ky, kr, 0, 2 * Math.PI); ctx.fill();
+    });
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(kx, ky, kr * 0.72, 0, 2 * Math.PI); ctx.stroke();
+    const ka = Math.PI * (0.75 + 1.5 * (S.p.eps - 1) / 11);
+    ctx.strokeStyle = '#f2f2f2'; ctx.lineWidth = Math.max(1.4, 0.045 * s); ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(kx + Math.cos(ka) * kr * 0.25, ky + Math.sin(ka) * kr * 0.25); ctx.lineTo(kx + Math.cos(ka) * kr * 0.88, ky + Math.sin(ka) * kr * 0.88); ctx.stroke();
+    // posts and their printed signs
+    const pr = 0.13 * s;
+    post(ctx, X(g.plus[0]), Y(g.plus[1]), pr, '#c0392b');
+    post(ctx, X(g.neg[0]), Y(g.neg[1]), pr, '#26292e');
+    ctx.fillStyle = T.dark ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.7)'; ctx.font = `700 ${Math.max(9, 0.22 * s)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('+', X(g.plus[0] - 0.26), Y(g.plus[1])); ctx.fillText('−', X(g.neg[0] - 0.26), Y(g.neg[1]));
+  }
+  // knife switch, part 1: the porcelain base under the leads
+  function drawSwitchBase(ctx, g) {
+    const { X, Y, s } = g, x0 = X(2.6), y0 = Y(0.6), w = 2.1 * s, h = 1.85 * s;
+    const base = T.dark ? '#a29b8e' : '#efeadf';
+    shadowed(ctx, s, () => {
+      const gb = ctx.createLinearGradient(0, y0, 0, y0 + h); gb.addColorStop(0, shade(base, 0.25)); gb.addColorStop(1, shade(base, -0.12));
+      ctx.fillStyle = gb; roundRect(ctx, x0, y0, w, h, 0.16 * s); ctx.fill();
+    });
+    ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; roundRect(ctx, x0 + 0.5, y0 + 0.5, w - 1, h - 1, 0.16 * s); ctx.stroke();
+    for (const [u, v] of [[2.76, 0.76], [4.54, 0.76], [2.76, 2.29], [4.54, 2.29]]) {
+      ctx.fillStyle = '#9aa3ad'; ctx.beginPath(); ctx.arc(X(u), Y(v), 0.055 * s, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = 'rgba(0,0,0,0.5)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(u) - 0.04 * s, Y(v)); ctx.lineTo(X(u) + 0.04 * s, Y(v)); ctx.stroke();
+    }
+  }
+  // knife switch, part 2: brass clips and hinge, the copper blade and its handle
+  function drawSwitchTop(ctx, g, hot) {
+    const { X, Y, s } = g, ps = projScale(), P = GEO.P;
+    const brass = (x, y, w, h, ang) => {
+      ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
+      const gb = ctx.createLinearGradient(0, -h / 2, 0, h / 2); gb.addColorStop(0, shade(BRASS, 0.45)); gb.addColorStop(0.5, BRASS); gb.addColorStop(1, shade(BRASS, -0.4));
+      ctx.fillStyle = gb; roundRect(ctx, -w / 2, -h / 2, w, h, Math.min(w, h) * 0.2); ctx.fill();
+      ctx.strokeStyle = 'rgba(60,40,0,0.6)'; ctx.lineWidth = 0.8; ctx.stroke(); ctx.restore();
+    };
+    for (const C of [GEO.A, GEO.B]) {
+      const ang = Math.atan2(C[1] - P[1], C[0] - P[0]), cx = X(C[0]), cy = Y(C[1]);
+      brass(cx, cy, 0.34 * s, 0.34 * s, ang);
+      for (const sg of [-1, 1]) brass(cx - sg * Math.sin(ang) * 0.1 * s, cy + sg * Math.cos(ang) * 0.1 * s, 0.3 * s, 0.07 * s, ang);
+    }
+    brass(X(P[0]), Y(P[1]), 0.36 * s, 0.36 * s, 0);
+    // blade, with a bakelite handle beyond the free end
+    const [ex, ey] = bladeEnd(blade), ux = ex - P[0], uy = ey - P[1], ul = Math.hypot(ux, uy), dx = ux / ul, dy = uy / ul;
+    if (hot) { ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.35; ctx.lineWidth = 0.3 * s; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(X(P[0]), Y(P[1])); ctx.lineTo(X(ex + dx * 0.45), Y(ey + dy * 0.45)); ctx.stroke(); ctx.globalAlpha = 1; }
+    ctx.lineCap = 'butt';
+    ctx.strokeStyle = shade(COPPER, -0.45); ctx.lineWidth = 0.12 * s + 1.2; ctx.beginPath(); ctx.moveTo(X(P[0]), Y(P[1])); ctx.lineTo(X(ex + dx * 0.12), Y(ey + dy * 0.12)); ctx.stroke();
+    ctx.strokeStyle = COPPER; ctx.lineWidth = 0.12 * s; ctx.stroke();
+    ctx.strokeStyle = shade(COPPER, 0.5); ctx.lineWidth = Math.max(0.8, 0.03 * s); ctx.beginPath(); ctx.moveTo(X(P[0]) - dy * 0.025 * s, Y(P[1]) + dx * 0.025 * s - 0.02 * s); ctx.lineTo(X(ex + dx * 0.12) - dy * 0.025 * s, Y(ey + dy * 0.12) + dx * 0.025 * s - 0.02 * s); ctx.stroke();
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#121418'; ctx.lineWidth = 0.22 * s; ctx.beginPath(); ctx.moveTo(X(ex + dx * 0.16), Y(ey + dy * 0.16)); ctx.lineTo(X(ex + dx * 0.4), Y(ey + dy * 0.4)); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.28)'; ctx.lineWidth = 0.05 * s; ctx.beginPath(); ctx.moveTo(X(ex + dx * 0.18), Y(ey + dy * 0.18) - 0.04 * s); ctx.lineTo(X(ex + dx * 0.38), Y(ey + dy * 0.38) - 0.04 * s); ctx.stroke();
+    // hinge pin
+    ctx.fillStyle = shade(BRASS, -0.45); ctx.beginPath(); ctx.arc(X(P[0]), Y(P[1]), 0.07 * s + 0.5 * ps, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = shade(BRASS, 0.5); ctx.beginPath(); ctx.arc(X(P[0]) - 0.02 * s, Y(P[1]) - 0.02 * s, 0.03 * s, 0, 2 * Math.PI); ctx.fill();
+  }
+  // an axial electrolytic capacitor: sleeve with a − stripe, printed value and rating, a window cut to show the plates
+  function drawCapacitor(ctx, g, st, hot) {
+    const { X, Y, s } = g, ps = projScale(), cn = g.can, cx = GEO.capX;
+    const x0 = X(cx - cn.hw), x1 = X(cx + cn.hw), y0 = Y(cn.top), y1 = Y(cn.bot), rr = 0.2 * s;
+    // tinned leads out of both ends
+    ctx.strokeStyle = shade(STEEL, -0.15); ctx.lineWidth = Math.max(1.6, 0.06 * s); ctx.lineCap = 'butt';
+    ctx.beginPath(); ctx.moveTo(X(cx), y0 - 0.2 * s); ctx.lineTo(X(cx), y0 + 2); ctx.moveTo(X(cx), y1 - 2); ctx.lineTo(X(cx), y1 + 0.2 * s); ctx.stroke();
+    const sleeve = T.dark ? '#4d3784' : '#47307c';
+    shadowed(ctx, s, () => { ctx.fillStyle = sleeve; roundRect(ctx, x0, y0, x1 - x0, y1 - y0, rr); ctx.fill(); });
+    ctx.save(); roundRect(ctx, x0, y0, x1 - x0, y1 - y0, rr); ctx.clip();
+    // aluminium ends and the groove at the + end
+    ctx.fillStyle = '#b9c0c8'; ctx.fillRect(x0, y0, x1 - x0, 0.07 * s); ctx.fillRect(x0, y1 - 0.06 * s, x1 - x0, 0.06 * s);
+    ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.fillRect(x0, y0 + 0.13 * s, x1 - x0, 0.035 * s);
+    // − stripe with its printed marks, pointing to the bottom lead
+    const sx0 = X(cx + cn.hw - 0.38), sx1 = X(cx + cn.hw - 0.12);
+    ctx.fillStyle = '#d7d1e6'; ctx.fillRect(sx0, y0 + 0.07 * s, sx1 - sx0, y1 - y0 - 0.13 * s);
+    ctx.fillStyle = sleeve; ctx.font = `700 ${Math.max(8, 0.24 * s)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (let v = cn.top + 0.42; v < cn.bot - 0.2; v += 0.36) ctx.fillText('−', (sx0 + sx1) / 2, Y(v));
+    ctx.fillStyle = roundShade(ctx, x0, 0, x1, 0); ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+    ctx.restore();
+    ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 1; roundRect(ctx, x0 + 0.5, y0 + 0.5, x1 - x0 - 1, y1 - y0 - 1, rr); ctx.stroke();
+    // printed value and voltage rating, above the window
+    const wx0 = X(cn.wx0), wx1 = X(cn.wx1), wy0 = Y(cn.wy0), wy1 = Y(cn.wy1), pf = Math.min(0.2 * s, (wx1 - wx0) / 6.4);
+    if (pf >= 6.5) {
+      const rating = S.p.C <= 10e-6 ? 50 : S.p.C <= 100e-6 ? 25 : 16;
+      ctx.fillStyle = 'rgba(255,255,255,0.88)'; ctx.font = `700 ${pf}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(`${sigStr(S.p.C * 1e6, 2)}µF ${rating}V`, (wx0 + wx1) / 2, (Y(cn.top + 0.17) + wy0) / 2);
+    }
+    // the window: a cut through the sleeve showing the two plates, their charge and the field between them
+    ctx.save();
+    roundRect(ctx, wx0, wy0, wx1 - wx0, wy1 - wy0, 0.08 * s); ctx.fillStyle = '#14171c'; ctx.fill();
+    ctx.strokeStyle = shade(sleeve, 0.45); ctx.lineWidth = 1.2; ctx.stroke(); ctx.clip();
+    const gi = ctx.createLinearGradient(0, wy0, 0, wy1); gi.addColorStop(0, 'rgba(0,0,0,0.45)'); gi.addColorStop(0.25, 'rgba(0,0,0,0)'); gi.addColorStop(1, 'rgba(255,255,255,0.05)');
+    ctx.fillStyle = gi; ctx.fillRect(wx0, wy0, wx1 - wx0, wy1 - wy0);
+    const yt = Y(g.plTop), yb = Y(g.plBot), px0 = X(cn.wx0 + 0.1), px1 = X(cn.wx1 - 0.1), pmx = (px0 + px1) / 2, phw = (px1 - px0) / 2;
+    const Q = st.Q, frac = Q / (S.p.C * 12), n = Math.abs(frac) * 10;
+    // tabs from the plates to the leads
+    ctx.strokeStyle = '#8d96a3'; ctx.lineWidth = Math.max(1.2, 0.04 * s);
+    ctx.beginPath(); ctx.moveTo(pmx, wy0); ctx.lineTo(pmx, yt); ctx.moveTo(pmx, yb); ctx.lineTo(pmx, wy1); ctx.stroke();
+    const gapPx = yb - yt;
+    if (S.layers.field && gapPx > 30 * ps && Math.abs(st.VC) > 0.02) {
+      const a = Math.min(1, Math.abs(st.VC) / 12) * 0.85 + 0.1, down = Q > 0;
+      ctx.strokeStyle = '#b4bfcd'; ctx.fillStyle = '#b4bfcd'; ctx.globalAlpha = a; ctx.lineWidth = 1.3 * ps;
+      const ya = yt + 11 * ps, yz = yb - 11 * ps;
+      for (const fx of [-0.62, 0, 0.62]) {
+        const px = pmx + fx * phw;
+        ctx.beginPath(); ctx.moveTo(px, ya); ctx.lineTo(px, yz); ctx.stroke();
+        const tip = down ? yz : ya, d = down ? -1 : 1;
+        ctx.beginPath(); ctx.moveTo(px, tip); ctx.lineTo(px - 3.5 * ps, tip + d * 6 * ps); ctx.lineTo(px + 3.5 * ps, tip + d * 6 * ps); ctx.closePath(); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      ctx.font = `italic 700 ${Math.max(10, 0.24 * s) * Math.min(1.2, ps)}px ${T.ui}`; ctx.fillStyle = '#c9d2de'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('E', pmx + 0.31 * phw, (yt + yb) / 2);
+    }
+    if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.4; ctx.fillRect(px0 - 0.06 * s, yt - 0.14 * s, px1 - px0 + 0.12 * s, 0.24 * s); ctx.globalAlpha = 1; }
+    const pt = Math.max(2.5, 0.07 * s);
+    for (const y of [yt, yb]) {
+      const gp = ctx.createLinearGradient(0, y - pt / 2, 0, y + pt / 2); gp.addColorStop(0, '#f1f4f7'); gp.addColorStop(1, '#7d8794');
+      ctx.fillStyle = gp; ctx.fillRect(px0, y - pt / 2, px1 - px0, pt);
+    }
+    // charges: + on the top plate's inner face, − on the bottom plate's (swapped if Q < 0)
+    const full = Math.floor(n), part = n - full, slots = 10, slotW = (px1 - px0) / slots;
+    const hs = Math.max(1.8, Math.min(slotW * 0.36, 0.085 * s * Math.min(1.25, ps)));
+    ctx.lineWidth = Math.max(1.3, hs * 0.42); ctx.lineCap = 'butt';
+    const glyph = (x, y, plus, col) => {
+      ctx.strokeStyle = col; ctx.beginPath(); ctx.moveTo(x - hs, y); ctx.lineTo(x + hs, y);
+      if (plus) { ctx.moveTo(x, y - hs); ctx.lineTo(x, y + hs); }
+      ctx.stroke();
+    };
+    for (let k = 0; k < Math.min(slots, Math.ceil(n)); k++) {
+      const order = [4, 5, 3, 6, 2, 7, 1, 8, 0, 9][k], px = px0 + (order + 0.5) * slotW;
+      ctx.globalAlpha = k < full ? 1 : part;
+      glyph(px, yt + pt / 2 + hs + 2, Q > 0, Q > 0 ? '#ff7660' : '#69a0ff');
+      glyph(px, yb - pt / 2 - hs - 2, Q < 0, Q > 0 ? '#69a0ff' : '#ff7660');
+    }
+    ctx.globalAlpha = 1; ctx.lineCap = 'round';
+    ctx.restore();
+  }
   let cHandles = [], cHover = null, cDrag = null;
   function drawCircuit() {
     const [W, H] = dims.c; if (!W || !H || !sim) return;
     const ctx = ctxs.c, ps = projScale();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    ctx.drawImage(benchLayer(W, H), 0, 0, W, H);
     const g = circuitGeom(); cg = g;
     const st = stateAt(sim, t), seg = lastSeg(sim);
     const X = g.X, Y = g.Y, s = g.s;
     const fs = Math.max(11, Math.min(14.5, s * 0.34)) * Math.min(ps, 1.22);   // the drawing is width limited, so projector text grows less here
     const isHot = (id) => (cDrag && cDrag.id === id) || (!cDrag && cHover === id);
-    // wires
-    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    const wire = (pts, active) => {
-      ctx.strokeStyle = T.wire; ctx.globalAlpha = active ? 1 : 0.55; ctx.lineWidth = 2 * ps;
-      ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y)))); ctx.stroke(); ctx.globalAlpha = 1;
-    };
     const chg = S.mode === 'charge';
-    wire([GEO.P, [9, 1], [9, g.plTop]], true);
-    wire([[9, g.plBot], [9, 5], [3, 5]], true);
-    wire([[3, 5], [1, 5], [1, 1], GEO.A], chg);
-    wire([[3, 5], GEO.B], !chg);
-    // junction
-    ctx.fillStyle = T.wire; ctx.beginPath(); ctx.arc(X(3), Y(5), 3.2 * ps, 0, 2 * Math.PI); ctx.fill();
+    const labels = [], grips = [];          // labels and grips go on last, over everything else
+    const LC = leadCols(), lw = Math.max(3, 0.085 * s) * Math.min(ps, 1.3);
+    const lead = (pts, col, active) => { ctx.save(); ctx.globalAlpha = active ? 1 : 0.5; insulated(ctx, pts.map((q) => [X(q[0]), Y(q[1])]), col, lw); ctx.restore(); };
 
-    // battery
-    {
-      const by = g.batY, cell = [[-0.36, 0.42], [-0.14, 0.22], [0.14, 0.42], [0.36, 0.22]];
-      ctx.strokeStyle = T.canvas; ctx.lineWidth = 6 * ps; ctx.beginPath(); ctx.moveTo(X(1), Y(by - 0.36)); ctx.lineTo(X(1), Y(by + 0.36)); ctx.stroke();
-      const hot = isHot('eps');
-      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.15; ctx.fillRect(X(0.5), Y(by - 0.52), 1 * s, 1.04 * s); ctx.globalAlpha = 1; }
-      for (const [dy, hw] of cell) {
-        ctx.strokeStyle = chg ? T.ink : T.wire; ctx.lineWidth = (hw > 0.3 ? 2 : 4.2) * ps; ctx.lineCap = 'butt';
-        ctx.beginPath(); ctx.moveTo(X(1 - hw), Y(by + dy)); ctx.lineTo(X(1 + hw), Y(by + dy)); ctx.stroke();
-      }
-      ctx.lineCap = 'round';
-      ctx.fillStyle = T.muted; ctx.font = `700 ${fs * 0.9}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText('+', X(1.58), Y(by - 0.44)); ctx.fillText('−', X(1.58), Y(by + 0.44));
-      ctx.fillStyle = T.ink; ctx.textBaseline = 'alphabetic';
-      richText(ctx, 'ε', X(0.38), Y(by) - 2 * ps, fs * 1.1, 700, 'right');
-      ctx.fillStyle = T.muted; ctx.font = `${fs}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
-      ctx.fillText(`${S.p.eps.toFixed(1)} V`, X(0.38), Y(by) + 2 * ps);
-      grip(ctx, X(1.95), Y(by), hot, true);
-      cHandles.push({ id: 'eps', box: [X(0.45), Y(by - 0.6), X(2.15) - X(0.45), 1.2 * s], cursor: 'ns-resize' });
-    }
-    // resistors
+    // the supply, the switch base, then the leads that run between them
+    const by = g.batY, hotEps = isHot('eps');
+    drawSupply(ctx, g, hotEps);
+    drawSwitchBase(ctx, g);
+    const r1 = g.r1.c, cn = g.can, A = GEO.A, B = GEO.B, P = GEO.P;
     const activeR1 = chg || !g.flash, activeR2 = !chg;
-    drawResistor(ctx, g, g.r1, isHot('R1'), activeR1);
+    if (g.flash) {
+      lead([P, [9, 1], [9, cn.top - 0.2]], LC.white, true);
+      lead([[3, 5], [1, 5], [1, r1[1] + 0.8]], LC.black, chg);
+      lead([[1, r1[1] - 0.8], [1, g.neg[1]], g.neg], LC.black, chg);
+      lead([[3, 5], [3, g.r2.c[1] + 0.8]], LC.black, !chg);
+      lead([[3, g.r2.c[1] - 0.8], B], LC.black, !chg);
+    } else {
+      lead([P, [r1[0] - 0.8, 1]], LC.white, true);
+      lead([[r1[0] + 0.8, 1], [9, 1], [9, cn.top - 0.2]], LC.white, true);
+      lead([[3, 5], [1, 5], [1, g.neg[1]], g.neg], LC.black, chg);
+      lead([[3, 5], B], LC.black, !chg);
+    }
+    lead([g.plus, [1, g.plus[1]], [1, 1], A], LC.red, chg);
+    lead([[9, cn.bot + 0.2], [9, 5], [3, 5]], LC.black, true);
+    // stud nuts over the lead ends on the supply posts
+    for (const q of [g.plus, g.neg]) { ctx.fillStyle = '#c9ced6'; ctx.beginPath(); ctx.arc(X(q[0]), Y(q[1]), 0.06 * s, 0, 2 * Math.PI); ctx.fill(); }
+    // the junction: a brass terminal where three leads meet
     {
-      const [cx, cy] = g.r1.c, vrt = g.r1.vert;
+      const jx = X(3), jy = Y(5), jr = 0.15 * s;
+      const gj = ctx.createRadialGradient(jx - jr * 0.35, jy - jr * 0.35, 0, jx, jy, jr); gj.addColorStop(0, shade(BRASS, 0.5)); gj.addColorStop(1, shade(BRASS, -0.4));
+      ctx.fillStyle = gj; ctx.beginPath(); ctx.arc(jx, jy, jr, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = 'rgba(60,40,0,0.6)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = shade(BRASS, -0.5); ctx.beginPath(); ctx.arc(jx, jy, jr * 0.35, 0, 2 * Math.PI); ctx.fill();
+    }
+    labels.push(() => label(ctx, 'ε', X(-1.22), Y(by - 0.95) - 5 * ps, fs * 1.1, 700, 'left', T.ink));
+    labels.push(() => { ctx.font = `700 ${fs * 1.1}px ${T.ui}`; const w = ctx.measureText('ε').width; label(ctx, 'DC supply', X(-1.22) + w + 10, Y(by - 0.95) - 5 * ps, fs * 0.85, 400, 'left', T.muted); });
+    grips.push([X(-0.1), Y(by + 0.42), hotEps, true]);
+    cHandles.push({ id: 'eps', box: [X(-1.25), Y(by - 0.95), 2 * s, 1.9 * s], cursor: 'ns-resize' });
+
+    // resistors
+    drawResistor(ctx, g, g.r1, S.p.R1, isHot('R1'), activeR1);
+    {
+      const [cx, cy] = r1, vrt = g.r1.vert;
       const VR1 = activeR1 ? st.I * S.p.R1 : 0;
-      ctx.fillStyle = T.ink; ctx.textBaseline = 'alphabetic';
       if (!vrt) {
-        const rw = richText(ctx, `R = ${fmtR(S.p.R1)}`, X(cx), Y(cy - 0.32), fs, 700, 'center');
-        ctx.fillStyle = T.resq; ctx.textBaseline = 'top';
-        const vw = richText(ctx, `V_R = ${fmtSI(Math.abs(VR1), 'V')}`, X(cx), Y(cy + 0.3), fs, 600, 'center');
+        ctx.font = `700 ${fs}px ${T.ui}`;
+        const rw = ctx.measureText(`R = ${fmtR(S.p.R1)}`).width;
+        ctx.font = `600 ${fs}px ${T.ui}`;
+        const vw = ctx.measureText(`VR = ${fmtSI(Math.abs(VR1), 'V')}`).width;
+        labels.push(() => label(ctx, `R = ${fmtR(S.p.R1)}`, X(cx), Y(cy - 0.3), fs, 700, 'center', T.ink));
+        labels.push(() => label(ctx, `V_R = ${fmtSI(Math.abs(VR1), 'V')}`, X(cx), Y(cy + 0.3), fs, 600, 'center', T.resq, 'top'));
         const gx = Math.max(X(cx + 1.15), X(cx) + vw / 2 + 12 * ps), gy = Y(cy + 0.3) + fs * 0.55;
-        grip(ctx, gx, gy, isHot('R1'), true);
+        grips.push([gx, gy, isHot('R1'), true]);
         cHandles.push({ id: 'R1', box: [X(cx - 0.9), Y(cy - 0.45), gx + 8 * ps - X(cx - 0.9), gy + 12 * ps - Y(cy - 0.45)], cursor: 'ns-resize' });
         // polarity marks: current enters the + end
         if (Math.abs(VR1) > 1e-6 * S.p.eps) {
-          const plusLeft = st.I > 0;
-          ctx.fillStyle = T.muted; ctx.font = `700 ${fs * 0.85}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-          const dx = Math.max(1.02 * s, rw / 2 + fs * 0.5);   // keep the signs clear of the R label
-          ctx.fillText(plusLeft ? '+' : '−', X(cx) - dx, Y(cy - 0.2)); ctx.fillText(plusLeft ? '−' : '+', X(cx) + dx, Y(cy - 0.2));
+          const plusLeft = st.I > 0, dx = Math.max(1.02 * s, rw / 2 + fs * 0.6);   // keep the signs clear of the R label
+          labels.push(() => {       // outlined, not boxed, so they read as marks on the bench rather than buttons
+            ctx.font = `700 ${fs * 1.05}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+            for (const [sg, ch] of [[-1, plusLeft ? '+' : '−'], [1, plusLeft ? '−' : '+']]) {
+              ctx.strokeStyle = T.canvas; ctx.lineWidth = 3.5 * ps; ctx.strokeText(ch, X(cx) + sg * dx, Y(cy - 0.24));
+              ctx.fillStyle = T.ink; ctx.fillText(ch, X(cx) + sg * dx, Y(cy - 0.24));
+            }
+          });
         }
       } else {
-        richText(ctx, 'R_1', X(cx - 0.32), Y(cy) - 5 * ps, fs, 700, 'right');
-        ctx.fillStyle = T.muted; ctx.font = `${fs}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
-        ctx.fillText(fmtR(S.p.R1), X(cx - 0.32), Y(cy) + 3 * ps);
-        grip(ctx, X(cx + 0.55), Y(cy + 0.15), isHot('R1'), true);
+        labels.push(() => label(ctx, 'R_1', X(cx - 0.32), Y(cy) - 5 * ps, fs, 700, 'right', T.ink));
+        labels.push(() => label(ctx, fmtR(S.p.R1), X(cx - 0.32), Y(cy) + 3 * ps, fs, 400, 'right', T.muted, 'top'));
+        grips.push([X(cx + 0.55), Y(cy + 0.15), isHot('R1'), true]);
         cHandles.push({ id: 'R1', box: [X(cx - 0.3), Y(cy - 0.85), 1.05 * s, 1.7 * s], cursor: 'ns-resize' });
       }
     }
     if (g.r2) {
-      drawResistor(ctx, g, g.r2, isHot('R2'), activeR2);
+      drawResistor(ctx, g, g.r2, S.p.R2, isHot('R2'), activeR2);
       const [cx, cy] = g.r2.c;
-      ctx.fillStyle = T.ink; ctx.textBaseline = 'alphabetic';
-      richText(ctx, 'R_2 flash', X(cx + 0.36), Y(cy) - 5 * ps, fs, 700, 'left');
-      ctx.fillStyle = T.muted; ctx.font = `${fs}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-      ctx.fillText(fmtR(S.p.R2), X(cx + 0.36), Y(cy) + 3 * ps);
-      grip(ctx, X(cx - 0.5), Y(cy + 0.15), isHot('R2'), true);
+      labels.push(() => label(ctx, 'R_2 flash', X(cx + 0.36), Y(cy) - 5 * ps, fs, 700, 'left', T.ink));
+      labels.push(() => label(ctx, fmtR(S.p.R2), X(cx + 0.36), Y(cy) + 3 * ps, fs, 400, 'left', T.muted, 'top'));
+      grips.push([X(cx - 0.5), Y(cy + 0.15), isHot('R2'), true]);
       cHandles.push({ id: 'R2', box: [X(cx - 0.75), Y(cy - 0.85), 1.1 * s, 1.7 * s], cursor: 'ns-resize' });
       // V_R of whichever resistor carries the current, on the top wire
-      ctx.fillStyle = T.resq; ctx.textBaseline = 'top';
-      richText(ctx, `${chg ? 'V_{R1}' : 'V_{R2}'} = ${fmtSI(Math.abs(st.I * seg.R), 'V')}`, X(6.6), Y(1.3), fs, 600, 'center');
+      labels.push(() => label(ctx, `${chg ? 'V_{R1}' : 'V_{R2}'} = ${fmtSI(Math.abs(st.I * seg.R), 'V')}`, X(6.6), Y(1.3), fs, 600, 'center', T.resq, 'top'));
     }
     // switch
     {
-      const tgt = S.mode === 'charge' ? 0 : 1;
       const hot = isHot('sw');
-      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.12; roundRect(ctx, X(2.6), Y(0.6), 2 * s, 1.85 * s, 6 * ps); ctx.fill(); ctx.globalAlpha = 1; }
-      const [ex, ey] = bladeEnd(blade);
-      ctx.strokeStyle = T.ink; ctx.lineWidth = 2.6 * ps;
-      ctx.beginPath(); ctx.moveTo(X(GEO.P[0]), Y(GEO.P[1])); ctx.lineTo(X(ex), Y(ey)); ctx.stroke();
-      for (const [cx, cy, on] of [[...GEO.A, tgt === 0], [...GEO.B, tgt === 1]]) {
-        ctx.fillStyle = T.canvas; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.8 * ps;
-        ctx.beginPath(); ctx.arc(X(cx), Y(cy), 3.6 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
-      }
-      ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(GEO.P[0]), Y(GEO.P[1]), 3.6 * ps, 0, 2 * Math.PI); ctx.fill();
-      ctx.font = `${chg ? 700 : 400} ${fs * 0.92}px ${T.ui}`; ctx.fillStyle = chg ? T.ink : T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-      ctx.fillText('charge', X(GEO.A[0]), Y(GEO.A[1] - 0.3));
-      ctx.font = `${!chg ? 700 : 400} ${fs * 0.92}px ${T.ui}`; ctx.fillStyle = !chg ? T.ink : T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-      ctx.fillText('discharge', X(GEO.B[0] + 0.22), Y(GEO.B[1] + 0.32));
+      drawSwitchTop(ctx, g, hot);
+      labels.push(() => label(ctx, 'charge', X(GEO.A[0]), Y(GEO.A[1] - 0.3), fs * 0.92, chg ? 700 : 400, 'center', chg ? T.ink : T.muted));
+      labels.push(() => label(ctx, 'discharge', X(GEO.B[0] + 0.24), Y(GEO.B[1] + 0.34), fs * 0.92, !chg ? 700 : 400, 'left', !chg ? T.ink : T.muted, 'middle'));
       cHandles.push({ id: 'sw', box: [X(2.6), Y(0.6), 2 * s, 1.85 * s], cursor: 'pointer', click: true });
     }
     // capacitor
     {
-      const cx = GEO.capX, hw = GEO.plateHalf, yt = Y(g.plTop), yb = Y(g.plBot), hot = isHot('C');
-      const Q = st.Q, frac = Q / (S.p.C * 12), n = Math.abs(frac) * 10;
-      // field between the plates
-      const gapPx = yb - yt;
-      if (S.layers.field && gapPx > 30 * ps && Math.abs(st.VC) > 0.02) {
-        const a = Math.min(1, Math.abs(st.VC) / 12) * 0.85 + 0.1, down = Q > 0;
-        ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.globalAlpha = a; ctx.lineWidth = 1.3 * ps;
-        const y0 = yt + 11 * ps, y1 = yb - 11 * ps;
-        for (const fx of [-0.55, 0, 0.55]) {
-          const px = X(cx + fx);
-          ctx.beginPath(); ctx.moveTo(px, y0); ctx.lineTo(px, y1); ctx.stroke();
-          const tip = down ? y1 : y0, d = down ? -1 : 1;
-          ctx.beginPath(); ctx.moveTo(px, tip); ctx.lineTo(px - 3.5 * ps, tip + d * 6 * ps); ctx.lineTo(px + 3.5 * ps, tip + d * 6 * ps); ctx.closePath(); ctx.fill();
-        }
-        ctx.globalAlpha = 1;
-        ctx.font = `italic 700 ${fs * 0.85}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-        ctx.fillText('E', X(cx + 0.66), (yt + yb) / 2);
-      }
-      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.14; ctx.fillRect(X(cx - hw - 0.12), yt - 0.25 * s, (2 * hw + 0.24) * s, 0.4 * s); ctx.globalAlpha = 1; }
-      ctx.strokeStyle = T.capq; ctx.lineWidth = 3.4 * ps; ctx.lineCap = 'butt';
-      ctx.beginPath(); ctx.moveTo(X(cx - hw), yt); ctx.lineTo(X(cx + hw), yt); ctx.moveTo(X(cx - hw), yb); ctx.lineTo(X(cx + hw), yb); ctx.stroke();
-      ctx.lineCap = 'round';
-      // charges: + on the top plate's inner face, − on the bottom plate's (swapped if Q < 0)
-      const full = Math.floor(n), part = n - full, slots = 10;
-      ctx.font = `700 ${Math.max(9, 0.3 * s) * Math.min(1.25, ps)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      for (let k = 0; k < Math.min(slots, Math.ceil(n)); k++) {
-        const order = [4, 5, 3, 6, 2, 7, 1, 8, 0, 9][k];
-        const px = X(cx - hw + (order + 0.5) * (2 * hw) / slots);
-        ctx.globalAlpha = k < full ? 1 : part;
-        ctx.fillStyle = Q > 0 ? T.pos : T.neg; ctx.fillText(Q > 0 ? '+' : '−', px, yt + 6.5 * ps);
-        ctx.fillStyle = Q > 0 ? T.neg : T.pos; ctx.fillText(Q > 0 ? '−' : '+', px, yb - 6.5 * ps);
-      }
-      ctx.globalAlpha = 1;
-      // labels
-      const lx = X(cx - hw - 0.2), ly = Y(GEO.capY) - fs * 0.35, lh = fs * 1.3;
-      ctx.textBaseline = 'alphabetic';
-      ctx.fillStyle = T.ink; richText(ctx, `C = ${fmtC(S.p.C)}`, lx, ly, fs, 700, 'right');
-      ctx.fillStyle = T.capq; richText(ctx, `V_C = ${fmtSI(st.VC, 'V')}`, lx, ly + lh, fs, 600, 'right');
-      ctx.fillStyle = T.muted; richText(ctx, `Q = ${fmtSI(Q, 'C')}`, lx, ly + 2 * lh, fs, 400, 'right');
-      grip(ctx, X(cx + hw + 0.3), yt, hot, true);
-      cHandles.push({ id: 'C', box: [X(cx - hw - 0.1), yt - 0.3 * s, (2 * hw + 0.55) * s, 0.6 * s], cursor: 'ns-resize' });
+      const hot = isHot('C'), yt = Y(g.plTop);
+      drawCapacitor(ctx, g, st, hot);
+      const lx = X(GEO.capX - cn.hw - 0.2), ly = Y(GEO.capY) - fs * 0.35, lh = fs * 1.36;
+      labels.push(() => {
+        label(ctx, `C = ${fmtC(S.p.C)}`, lx, ly, fs, 700, 'right', T.ink);
+        label(ctx, `V_C = ${fmtSI(st.VC, 'V')}`, lx, ly + lh, fs, 600, 'right', T.capq);
+        label(ctx, `Q = ${fmtSI(st.Q, 'C')}`, lx, ly + 2 * lh, fs, 400, 'right', T.muted);
+      });
+      const gx = X(GEO.capX + cn.hw + 0.28);
+      grips.push([gx, yt, hot, true]);
+      cHandles.push({ id: 'C', box: [X(cn.wx0), yt - 0.3 * s, gx + 8 * ps - X(cn.wx0), 0.6 * s], cursor: 'ns-resize' });
     }
     // moving charge carriers
     {
@@ -836,24 +1089,28 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const I = st.I, y = Y(5), xm = X(6.2);
       const tiny = Math.abs(I) < 1e-9 * S.p.eps / seg.R;
       if (!tiny) {
-        const dir = I > 0 ? -1 : 1, L = 0.5 * s;   // positive I runs leftward along the bottom wire
-        ctx.strokeStyle = T.equi; ctx.fillStyle = T.equi; ctx.lineWidth = 2.4 * ps;
+        const dir = I > 0 ? -1 : 1, L = 0.5 * s, ya = y - 0.3 * s;   // positive I runs leftward along the bottom wire
         const x0 = xm - dir * L / 2, x1 = xm + dir * L / 2;
-        ctx.beginPath(); ctx.moveTo(x0, y - 9 * ps); ctx.lineTo(x1, y - 9 * ps); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(x1 + dir * 4 * ps, y - 9 * ps); ctx.lineTo(x1 - dir * 4 * ps, y - 13.5 * ps); ctx.lineTo(x1 - dir * 4 * ps, y - 4.5 * ps); ctx.closePath(); ctx.fill();
+        const arrow = () => { ctx.beginPath(); ctx.moveTo(x0, ya); ctx.lineTo(x1, ya); ctx.moveTo(x1 + dir * 4 * ps, ya); ctx.lineTo(x1 - dir * 4 * ps, ya - 4.5 * ps); ctx.lineTo(x1 - dir * 4 * ps, ya + 4.5 * ps); ctx.closePath(); };
+        ctx.lineJoin = 'round';
+        arrow(); ctx.strokeStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.lineWidth = 6 * ps; ctx.stroke(); ctx.globalAlpha = 1;
+        arrow(); ctx.strokeStyle = T.equi; ctx.fillStyle = T.equi; ctx.lineWidth = 2.4 * ps; ctx.stroke(); ctx.fill();
       }
-      ctx.fillStyle = T.ink; ctx.textBaseline = 'top';
-      richText(ctx, `I = ${fmtSI(Math.abs(I), 'A')}${tiny ? '' : I > 0 ? ', charging' : ', discharging'}`, xm, y + 7 * ps, fs, 600, 'center');
+      labels.push(() => label(ctx, `I = ${fmtSI(Math.abs(I), 'A')}${tiny ? '' : I > 0 ? ', charging' : ', discharging'}`, xm, y + 0.2 * s, fs, 600, 'center', T.ink, 'top'));
     }
+    for (const f of labels) f();
+    for (const q of grips) grip(ctx, q[0], q[1], q[2], q[3]);
   }
 
-  // ---------- plots ----------
+  // ---------- oscilloscope ----------
+  // V_C and V_R are what a scope probes (channels 1 and 2); I = V_R/R and Q = C V_C are its math channels.
   const PANELS = [
-    { key: 'VC', title: 'V_C, capacitor voltage', unit: 'V', col: 'capq', fixed: true },
-    { key: 'VR', title: 'V_R = IR, resistor voltage', unit: 'V', col: 'resq', fixed: true },
-    { key: 'I', title: 'I, current', unit: 'A', col: 'equi' },
-    { key: 'Q', title: 'Q, charge on the top plate', unit: 'C', col: 'capq' }
+    { key: 'VC', title: 'V_C, capacitor voltage', unit: 'V', col: 'capq', fixed: true, ch: '1', trace: '#c7a0ff' },
+    { key: 'VR', title: 'V_R = IR, resistor voltage', unit: 'V', col: 'resq', fixed: true, ch: '2', trace: '#52d494' },
+    { key: 'I', title: 'I, current', unit: 'A', col: 'equi', ch: 'M1', trace: '#f3c34f' },
+    { key: 'Q', title: 'Q, charge on the top plate', unit: 'C', col: 'capq', ch: 'M2', trace: '#c7a0ff' }
   ];
+  const SCR = { ink: '#e4eee8', dim: '#93a39b', grid: 'rgba(150,200,175,0.24)', strong: 'rgba(170,215,190,0.5)', cursor: '#7cb4ff' };
   function val(key, st, g) { return key === 'VC' ? st.VC : key === 'VR' ? st.I * g.R : key === 'I' ? st.I : st.Q; }
   const COL = { VC: 1, VR: 2, I: 3, Q: 4 };
   const pt = (g, tt) => { const st = segState(g, tt); return [tt, st.VC, st.I * g.R, st.I, st.Q]; };
@@ -882,33 +1139,49 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return out;
   }
   let pGeom = null, pHover = false, pDrag = null, tauHandle = null;
+  // the screen: four channel bands, each a header row and two vertical divisions, so the graticule is 8 × 10 divisions
   function plotGeom(W, H) {
     const ps = projScale();
-    const L = (W < 460 ? 50 : 58) * ps, R = W - 14 * ps, top = 30 * ps, bot = H - 34 * ps;
-    const gap = 8 * ps, head = 17 * ps;
-    const ph = (bot - top - 3 * gap) / 4;
-    const boxes = PANELS.map((p, i) => { const y0 = top + i * (ph + gap); return { y0: y0 + head, y1: y0 + ph }; });
+    const L = (W < 460 ? 50 : 58) * ps, R = W - 16 * ps, top = 36 * ps, bot = H - 46 * ps;
+    const head = 18 * ps, ph = (bot - top) / 4;
+    const boxes = PANELS.map((p, i) => ({ y0: top + i * ph + head, y1: top + (i + 1) * ph }));
     const tL = view.tLshow, Lw = view.L;
     return { L, R, top, bot, boxes, W, H, X: (tt) => L + (tt - tL) / Lw * (R - L), invX: (px) => tL + (px - L) / (R - L) * Lw, tL, Lw };
   }
+  // vertical scale of a band: two divisions, a fine 1-1.2-1.5-2-2.5-3-4-5-6-8 step per division, zero on a division line
   function rangeFor(key, lo, hi) {
     const r = ranges[key];
     if (!r || lo < r[0] || hi > r[1] || (hi - lo) < 0.3 * (r[1] - r[0])) {
-      const span = Math.max(hi - lo, 1e-30), pad = 0.08 * span;
-      let a = lo < 0 ? lo - pad : 0, b = hi > 0 ? hi + pad : 0;
-      if (b - a <= 0) b = 1;
-      const st = nice((b - a) / 4);
-      a = Math.floor(a / st + 1e-9) * st; b = Math.ceil(b / st - 1e-9) * st;
-      ranges[key] = [a, b];
+      const span = Math.max(hi - lo, 1e-30), pad = 0.04 * span;
+      const a = lo < 0 ? lo - pad : 0, b = hi > 0 ? hi + pad : 0;
+      let best = null;
+      if (b - a <= 0) best = [0, 1];
+      else for (const k of [0, 1, 2]) {
+        if ((k === 0 && a < 0) || (k === 2 && b > 0)) continue;
+        const d = fineUp(Math.max(k ? -a / k : 0, k < 2 ? b / (2 - k) : 0));
+        if (!best || d < (best[1] - best[0]) / 2) best = [-k * d, (2 - k) * d];
+      }
+      ranges[key] = best;
     }
     return ranges[key];
+  }
+  function fmtDiv(v, unit) {
+    if (unit === 's' && v >= 120 * 0.9995) return `${+(v / 60).toPrecision(3)} min`;
+    const f = PFX.find(([m]) => Math.abs(v) >= m * 0.9995) || PFX[PFX.length - 1];
+    return `${+(v / f[0]).toPrecision(3)} ${f[1]}${unit}`;
   }
   function drawPlots() {
     const [W, H] = dims.p; if (!W || !H || !sim) return;
     const ctx = ctxs.p, ps = projScale();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    // the instrument: case, bezel, screen
+    const gc = ctx.createLinearGradient(0, 0, 0, H); gc.addColorStop(0, shade(T.scase, 0.1)); gc.addColorStop(1, T.scaseLo);
+    ctx.fillStyle = gc; ctx.fillRect(0, 0, W, H);
     const g = plotGeom(W, H); pGeom = g;
+    const sx = g.L - 6 * ps, sy = g.top - 4 * ps, sw = g.R - g.L + 12 * ps, sh = g.bot - g.top + 8 * ps;
+    ctx.fillStyle = shade(T.scaseLo, -0.45); roundRect(ctx, sx - 3 * ps, sy - 3 * ps, sw + 6 * ps, sh + 6 * ps, 8 * ps); ctx.fill();
+    ctx.strokeStyle = T.dark ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.6)'; ctx.lineWidth = 1; roundRect(ctx, sx - 3.5 * ps, sy - 3.5 * ps, sw + 7 * ps, sh + 7 * ps, 8.5 * ps); ctx.stroke();
+    ctx.fillStyle = T.screen; roundRect(ctx, sx, sy, sw, sh, 5 * ps); ctx.fill();
     if (g.boxes[0].y1 - g.boxes[0].y0 < 20) return;
     const n = Math.max(2, Math.floor(g.R - g.L));
     const ts = new Float64Array(n + 1);
@@ -921,21 +1194,26 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const gh = ghosts.map((G) => sampleRun(G.segs, ts, G.tEnd));
     const stNow = segState(seg, t);
     const [tu, tuName] = timeUnit(g.Lw);
-    // time grid
-    const tst = nice(g.Lw / tu / (W < 460 ? 4 : 7)) * tu;
-    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const tdiv = g.Lw / 10;
+    // time divisions: ten across the screen, labelled below it
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const unitTxt = `t (${tuName})`, unitW = ctx.measureText(unitTxt).width;
     let lastPx = -1e9;
-    for (let kk = Math.ceil(g.tL / tst - 1e-9); kk * tst <= tR + tst * 1e-6; kk++) {
-      const v = kk * tst, px = Math.round(g.X(v)) + 0.5;
-      ctx.strokeStyle = T.grid; ctx.lineWidth = 1;
-      for (const b of g.boxes) { ctx.beginPath(); ctx.moveTo(px, b.y0); ctx.lineTo(px, b.y1); ctx.stroke(); }
+    ctx.strokeStyle = SCR.grid; ctx.lineWidth = 1; ctx.setLineDash([1, 3]);
+    for (let kk = Math.ceil(g.tL / tdiv - 1e-9); kk * tdiv <= tR + tdiv * 1e-6; kk++) {
+      const v = kk * tdiv, px = Math.round(g.X(v)) + 0.5;
+      if (px > g.L + 1 && px < g.R - 1) for (const b of g.boxes) { ctx.beginPath(); ctx.moveTo(px, b.y0); ctx.lineTo(px, b.y1); ctx.stroke(); }
       const txt = +(v / tu).toPrecision(6) + '', tw = ctx.measureText(txt).width;
-      if (px - tw / 2 > lastPx + 6) { ctx.fillText(txt, Math.min(px, g.R - tw / 2), g.boxes[3].y1 + 4 * ps); lastPx = px + tw / 2; }
+      const cxl = Math.min(px, g.R - tw / 2);
+      if (cxl - tw / 2 > lastPx + 6) { ctx.fillStyle = T.sink; ctx.fillText(txt, cxl, sy + sh + 6 * ps); lastPx = cxl + tw / 2; }
     }
-    ctx.textAlign = 'right'; ctx.fillText(`t (${tuName})`, g.R, g.boxes[3].y1 + 18 * ps);
+    ctx.setLineDash([]);
+    // status line: time base and channel scales, then the unit of the time axis
+    const status = [[null, `${fmtDiv(tdiv, 's')}/div`]];
     const marks = S.layers.marks;
+    const xc = g.X(g.tL + 5 * tdiv);
     PANELS.forEach((P, i) => {
-      const b = g.boxes[i], col = T[P.col];
+      const b = g.boxes[i], col = P.trace, bh = b.y1 - b.y0;
       let levelLab = null;                  // drawn last, on a halo box, on whichever side of its line the curves leave free
       // range from everything visible
       let lo = 0, hi = 0;
@@ -944,36 +1222,47 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       scan(past); if (S.layers.pred) scan(pred); gh.forEach(scan);
       if (P.key === 'VC') hi = Math.max(hi, S.p.eps);
       if (P.key === 'Q') hi = Math.max(hi, S.p.eps * S.p.C);
-      const [ya, yb] = rangeFor(P.key, lo, hi);
-      const Y = (v) => b.y1 - (v - ya) / (yb - ya) * (b.y1 - b.y0);
+      const [ya, yb] = rangeFor(P.key, lo, hi), dv = (yb - ya) / 2;
+      const Y = (v) => b.y1 - (v - ya) / (yb - ya) * bh;
       const [us, uName] = P.fixed ? [1, P.unit] : scaleUnit(Math.max(Math.abs(ya), Math.abs(yb)), P.unit);
-      // y grid
-      const yst = nice((yb - ya) / ((b.y1 - b.y0) < 90 * ps ? 2 : 4));
+      status.push([P, `${fmtDiv(dv, P.unit)}/div`]);
+      // the band's three division lines, values on the bezel; zero brighter, with the channel's ground marker
       ctx.font = `${10 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-      for (let kk = Math.ceil(ya / yst - 1e-9); kk * yst <= yb + yst * 1e-6; kk++) {
-        const v = kk * yst, py = Math.round(Y(v)) + 0.5;
-        ctx.strokeStyle = kk === 0 ? T.gridStrong : T.grid; ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(g.L, py); ctx.lineTo(g.R, py); ctx.stroke();
-        ctx.fillStyle = T.muted; ctx.fillText(kk === 0 ? '0' : (+(v / us).toPrecision(4) + '').replace('-', '−'), g.L - 5 * ps, py);
+      for (let k = 0; k <= 2; k++) {
+        const v = ya + k * dv, py = Math.round(Y(v)) + 0.5, zero = Math.abs(v) < dv * 1e-9;
+        ctx.strokeStyle = zero ? SCR.strong : SCR.grid; ctx.lineWidth = 1; ctx.setLineDash(zero || k !== 1 ? [] : [1, 3]);
+        if (k === 1 || zero) { ctx.beginPath(); ctx.moveTo(g.L, py); ctx.lineTo(g.R, py); ctx.stroke(); }
+        ctx.setLineDash([]);
+        ctx.fillStyle = T.sink; ctx.fillText(zero ? '0' : (+(v / us).toPrecision(4) + '').replace('-', '−'), g.L - 9 * ps, py);
+        if (zero) { ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(sx + 0.5, py - 4 * ps); ctx.lineTo(g.L + 1, py); ctx.lineTo(sx + 0.5, py + 4 * ps); ctx.closePath(); ctx.fill(); }
       }
-      // title
-      ctx.fillStyle = col; ctx.textBaseline = 'alphabetic';
-      const tw = richText(ctx, `${P.title} (${uName})`, g.L, b.y0 - 5 * ps, 11.5 * ps, 700, 'left');
-      // current value at right of the title
-      ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'right';
+      // minor ticks along the middle line and the centre line, five to a division
+      ctx.strokeStyle = SCR.grid; ctx.beginPath();
+      const ym = Math.round(Y(ya + dv)) + 0.5, tq = 2.5 * ps;
+      for (let k = 1; k < 50; k++) { const px = Math.round(g.L + (g.R - g.L) * k / 50) + 0.5; ctx.moveTo(px, ym - tq); ctx.lineTo(px, ym + tq); }
+      if (xc > g.L && xc < g.R) for (let k = 1; k < 10; k++) { const py = Math.round(b.y1 - bh * k / 10) + 0.5; ctx.moveTo(xc - tq, py); ctx.lineTo(xc + tq, py); }
+      ctx.stroke();
+      // header row: channel badge, title, value now
+      ctx.font = `700 ${9.5 * ps}px ${T.mono}`;
+      const bw = ctx.measureText(P.ch).width + 8 * ps, hy = b.y0 - 5 * ps;
+      ctx.fillStyle = col; roundRect(ctx, g.L, hy - 10 * ps, bw, 12.5 * ps, 2.5 * ps); ctx.fill();
+      ctx.fillStyle = '#0b0f0d'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillText(P.ch, g.L + 4 * ps, hy);
+      ctx.fillStyle = col;
+      const tw = richText(ctx, `${P.title} (${uName})`, g.L + bw + 6 * ps, hy, 11.5 * ps, 700, 'left') + bw + 6 * ps;
+      ctx.fillStyle = SCR.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'right';
       const nowTxt = fmtSI(val(P.key, stNow, seg), P.unit);
-      if (g.L + tw + ctx.measureText(nowTxt).width + 14 * ps < g.R) ctx.fillText(nowTxt, g.R, b.y0 - 5 * ps);
-      ctx.save(); ctx.beginPath(); ctx.rect(g.L, b.y0 - 1, g.R - g.L, b.y1 - b.y0 + 2); ctx.clip();
-      // ε reference in the V_C panel
+      if (g.L + tw + ctx.measureText(nowTxt).width + 14 * ps < g.R) ctx.fillText(nowTxt, g.R, hy);
+      ctx.save(); ctx.beginPath(); ctx.rect(g.L, b.y0 - 1, g.R - g.L, bh + 2); ctx.clip();
+      // ε reference in the V_C band
       if (P.key === 'VC') {
         const py = Math.round(Y(S.p.eps)) + 0.5;
-        ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.45; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(g.L, py); ctx.lineTo(g.R, py); ctx.stroke(); ctx.globalAlpha = 1;
-        ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.font = `${10 * ps}px ${T.ui}`;
-        ctx.fillText('ε', g.L + 4 * ps, py - 1);
+        ctx.strokeStyle = SCR.ink; ctx.globalAlpha = 0.45; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(g.L, py); ctx.lineTo(g.R, py); ctx.stroke(); ctx.globalAlpha = 1;
+        ctx.fillStyle = SCR.dim; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.font = `${10 * ps}px ${T.ui}`;
+        ctx.fillText('ε', g.L + 9 * ps, py - 1);
       }
       // whole τ after the last change
       if (marks) {
-        ctx.strokeStyle = T.muted; ctx.lineWidth = 1.1; ctx.setLineDash([2, 3]); ctx.globalAlpha = 0.85;
+        ctx.strokeStyle = SCR.dim; ctx.lineWidth = 1.1; ctx.setLineDash([2, 3]); ctx.globalAlpha = 0.85;
         for (let k = 2; k <= 5; k++) { const px = Math.round(g.X(seg.t0 + k * seg.tau)) + 0.5; if (px < g.L || px > g.R) continue; ctx.beginPath(); ctx.moveTo(px, b.y0); ctx.lineTo(px, b.y1); ctx.stroke(); }
         ctx.setLineDash([]); ctx.globalAlpha = 1;
         // 63% or 37% level of this stage
@@ -984,7 +1273,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           ctx.strokeStyle = col; ctx.globalAlpha = 0.7; ctx.setLineDash([4, 4]); ctx.lineWidth = 1;
           ctx.beginPath(); ctx.moveTo(x0, py); ctx.lineTo(g.R, py); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
           const px = g.X(seg.t0 + seg.tau);
-          if (px >= g.L && px <= g.R) { ctx.fillStyle = T.canvas; ctx.strokeStyle = col; ctx.lineWidth = 1.6 * ps; ctx.beginPath(); ctx.arc(px, py, 3.6 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); }
+          if (px >= g.L && px <= g.R) { ctx.fillStyle = T.screen; ctx.strokeStyle = col; ctx.lineWidth = 1.6 * ps; ctx.beginPath(); ctx.arc(px, py, 3.6 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); }
           let lab;
           if (P.key === 'VC' || P.key === 'Q') {
             const vf = val(P.key, segState(seg, seg.t0 + 60 * seg.tau), seg);
@@ -995,7 +1284,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         }
       }
       // kept traces
-      ctx.lineWidth = 1.6 * ps; ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.6;
+      ctx.lineWidth = 1.6 * ps; ctx.strokeStyle = SCR.dim; ctx.globalAlpha = 0.7;
       for (const o of gh) line(ctx, o, ci, g, Y);
       ctx.globalAlpha = 1;
       // a kept trace's own 1τ point, when it starts with a full stage
@@ -1003,67 +1292,113 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         const g0 = G.segs[0], tt = g0.t0 + g0.tau;
         if ((G.segs.length > 1 && G.segs[1].t0 < tt) || tt > G.tEnd || tt < g.tL || tt > tR) continue;
         const q = pt(g0, tt);
-        ctx.fillStyle = T.canvas; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.6 * ps;
+        ctx.fillStyle = T.screen; ctx.strokeStyle = SCR.dim; ctx.lineWidth = 1.6 * ps;
         ctx.beginPath(); ctx.arc(g.X(tt), Y(q[ci]), 3.4 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
       }
       // what the previous stage would have done
       if (prev && S.layers.pred) { ctx.strokeStyle = col; ctx.globalAlpha = 0.35; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([3 * ps, 4 * ps]); line(ctx, prev, ci, g, Y); ctx.setLineDash([]); ctx.globalAlpha = 1; }
-      // what happened
-      ctx.strokeStyle = col; ctx.lineWidth = 2.4 * ps; ctx.lineJoin = 'round';
-      line(ctx, past, ci, g, Y);
+      // what happened: the trace, with a soft phosphor glow
+      ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      ctx.strokeStyle = col; ctx.globalAlpha = 0.2; ctx.lineWidth = 6 * ps; line(ctx, past, ci, g, Y); ctx.globalAlpha = 1;
+      ctx.lineWidth = 2.2 * ps; line(ctx, past, ci, g, Y);
+      ctx.lineCap = 'butt';
       // exact curve from the last change, dashed with a halo
       if (S.layers.pred) {
         ctx.setLineDash([7 * ps, 5 * ps]);
-        ctx.strokeStyle = T.canvas; ctx.lineWidth = 3.4 * ps; ctx.globalAlpha = 0.7; line(ctx, pred, ci, g, Y); ctx.globalAlpha = 1;
-        ctx.strokeStyle = T.ink; ctx.lineWidth = 1.4 * ps; line(ctx, pred, ci, g, Y);
+        ctx.strokeStyle = T.screen; ctx.lineWidth = 3.4 * ps; ctx.globalAlpha = 0.7; line(ctx, pred, ci, g, Y); ctx.globalAlpha = 1;
+        ctx.strokeStyle = SCR.ink; ctx.globalAlpha = 0.9; ctx.lineWidth = 1.4 * ps; line(ctx, pred, ci, g, Y); ctx.globalAlpha = 1;
         ctx.setLineDash([]);
       }
       // now
       if (t >= g.tL && t <= tR) {
-        ctx.fillStyle = T.canvas; ctx.strokeStyle = col; ctx.lineWidth = 2 * ps;
+        ctx.fillStyle = T.screen; ctx.strokeStyle = col; ctx.lineWidth = 2 * ps;
         ctx.beginPath(); ctx.arc(g.X(t), Y(val(P.key, stNow, seg)), 3.8 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
       }
       if (levelLab) {
         const { lab, py } = levelLab, fh = 10.5 * ps, pad = 3 * ps;
         ctx.font = `${10 * ps}px ${T.ui}`;
-        const lw = ctx.measureText(lab).width, bx = g.R - 6 * ps - lw - pad, bw = lw + 2 * pad, bh = fh + 2 * pad;
+        const lw = ctx.measureText(lab).width, bx = g.R - 6 * ps - lw - pad, bw2 = lw + 2 * pad, bh2 = fh + 2 * pad;
         // the curves near the right edge, in pixels, to keep the label clear of them
         const ys = [];
         for (const o of [past, S.layers.pred ? pred : null, prev && S.layers.pred ? prev : null, ...gh]) {
           if (!o) continue;
-          for (const q of o) { const px = g.X(q[0]); if (px >= bx - 4 && px <= bx + bw + 4) ys.push(Y(q[ci])); }
+          for (const q of o) { const px = g.X(q[0]); if (px >= bx - 4 && px <= bx + bw2 + 4) ys.push(Y(q[ci])); }
         }
-        const hits = (y0) => ys.some((y) => y >= y0 - 2 && y <= y0 + bh + 2);
-        const above = py - 2 * ps - bh, below = py + 2 * ps;
-        const fitsA = above >= b.y0 + 1, fitsB = below + bh <= b.y1 - 1;
+        const hits = (y0) => ys.some((y) => y >= y0 - 2 && y <= y0 + bh2 + 2);
+        const above = py - 2 * ps - bh2, below = py + 2 * ps;
+        const fitsA = above >= b.y0 + 1, fitsB = below + bh2 <= b.y1 - 1;
         let ly = fitsA ? above : below;
         if (fitsA && hits(above) && fitsB && !hits(below)) ly = below;
-        else if (!fitsA && fitsB && hits(below) && py - bh >= b.y0) ly = above;
-        ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.92; roundRect(ctx, bx, ly, bw, bh, 3 * ps); ctx.fill(); ctx.globalAlpha = 1;
+        else if (!fitsA && fitsB && hits(below) && py - bh2 >= b.y0) ly = above;
+        ctx.fillStyle = T.screen; ctx.globalAlpha = 0.9; roundRect(ctx, bx, ly, bw2, bh2, 3 * ps); ctx.fill(); ctx.globalAlpha = 1;
         ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-        ctx.fillText(lab, bx + pad, ly + bh / 2 + 0.5);
+        ctx.fillText(lab, bx + pad, ly + bh2 / 2 + 0.5);
       }
       ctx.restore();
-      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(g.L + 0.5, b.y0 + 0.5, g.R - g.L, b.y1 - b.y0);
+      // band frame: the bottom edge separates it from the next channel
+      ctx.strokeStyle = SCR.strong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(g.L, Math.round(b.y1) + 0.5); ctx.lineTo(g.R, Math.round(b.y1) + 0.5); ctx.stroke();
+      ctx.strokeStyle = SCR.grid; ctx.beginPath(); ctx.moveTo(g.L + 0.5, b.y0); ctx.lineTo(g.L + 0.5, b.y1); ctx.moveTo(g.R - 0.5, b.y0); ctx.lineTo(g.R - 0.5, b.y1); ctx.moveTo(g.L, Math.round(b.y0) + 0.5); ctx.lineTo(g.R, Math.round(b.y0) + 0.5); ctx.stroke();
     });
-    // τ labels across the top, and the draggable τ handle
+    // glass: a faint reflection across the top of the screen
+    {
+      const gg = ctx.createLinearGradient(sx, sy, sx + sw * 0.5, sy + sh * 0.6); gg.addColorStop(0, 'rgba(255,255,255,0.07)'); gg.addColorStop(0.5, 'rgba(255,255,255,0)');
+      ctx.fillStyle = gg; roundRect(ctx, sx, sy, sw, sh, 5 * ps); ctx.fill();
+    }
+    // status line below the time labels
+    {
+      const y = sy + sh + 21 * ps, fsz = 9.5 * ps;
+      ctx.textBaseline = 'top'; ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.fillStyle = T.sink;
+      ctx.fillText(unitTxt, g.R, y);
+      let x = g.L - 6 * ps;
+      const xMax = g.R - unitW - 10 * ps;
+      for (const [P, txt] of status) {
+        ctx.font = `700 ${fsz}px ${T.mono}`;
+        const tagW = P ? ctx.measureText(P.ch).width + 6 * ps : ctx.measureText('H').width + 6 * ps;
+        ctx.font = `${fsz}px ${T.mono}`;
+        const w = tagW + 3 * ps + ctx.measureText(txt).width;
+        if (x + w > xMax) break;
+        ctx.fillStyle = P ? P.trace : T.sink; roundRect(ctx, x, y - 1 * ps, tagW, fsz + 3 * ps, 2 * ps); ctx.fill();
+        ctx.fillStyle = P ? '#0b0f0d' : T.scase; ctx.font = `700 ${fsz}px ${T.mono}`; ctx.textAlign = 'left'; ctx.fillText(P ? P.ch : 'H', x + 3 * ps, y + 0.5 * ps);
+        ctx.fillStyle = T.sink; ctx.font = `${fsz}px ${T.mono}`; ctx.fillText(txt, x + tagW + 3 * ps, y + 0.5 * ps);
+        x += w + 9 * ps;
+      }
+    }
+    // run indicator, top right of the case
+    {
+      const txt = running ? 'RUN' : 'STOP', fsz = 9.5 * ps;
+      ctx.font = `700 ${fsz}px ${T.mono}`;
+      const w = ctx.measureText(txt).width + 10 * ps, x = g.R + 6 * ps - w, y = 6 * ps;
+      ctx.fillStyle = running ? '#2f9b57' : '#c0392b'; roundRect(ctx, x, y, w, fsz + 5 * ps, 3 * ps); ctx.fill();
+      ctx.fillStyle = '#ffffff'; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(txt, x + 5 * ps, y + 2.5 * ps);
+    }
+    // τ labels across the top, and the draggable τ cursor
     tauHandle = null;
     if (marks) {
-      ctx.font = `${10 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-      for (let k = 2; k <= 5; k++) { const px = g.X(seg.t0 + k * seg.tau); if (px < g.L + 10 || px > g.R - 8) continue; ctx.fillText(`${k}τ`, px, g.top - 8 * ps); }
+      ctx.font = `${10 * ps}px ${T.mono}`; ctx.fillStyle = T.sink; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+      // keep them clear of the τ cursor's tag
+      const hx0 = g.X(seg.t0 + seg.tau); ctx.font = `700 ${11 * ps}px ${T.ui}`;
+      const tw0 = ctx.measureText('τ = RC').width + 24 * ps, tx0 = Math.max(g.L + 1, Math.min(g.R - tw0 - 1, hx0 - tw0 / 2));
+      const tagOn = hx0 >= g.L - 1 && hx0 <= g.R + 1;
+      ctx.font = `${10 * ps}px ${T.mono}`;
+      for (let k = 2; k <= 5; k++) {
+        const px = g.X(seg.t0 + k * seg.tau), hw = ctx.measureText(`${k}τ`).width / 2 + 3 * ps;
+        if (px < g.L + 10 || px > g.R - 8 || (tagOn && px + hw > tx0 && px - hw < tx0 + tw0)) continue;
+        ctx.fillText(`${k}τ`, px, g.top - 9 * ps);
+      }
     }
     const hx = g.X(seg.t0 + seg.tau);
     if (hx >= g.L - 1 && hx <= g.R + 1) {
       const hot = !!pDrag || pHover;
-      ctx.strokeStyle = T.accent; ctx.lineWidth = (hot ? 2.6 : 1.5) * ps; ctx.globalAlpha = hot ? 1 : 0.8;
+      ctx.strokeStyle = SCR.cursor; ctx.lineWidth = (hot ? 2.4 : 1.4) * ps; ctx.globalAlpha = hot ? 1 : 0.9;
+      ctx.setLineDash(hot ? [] : [6 * ps, 3 * ps]);
       for (const b of g.boxes) { ctx.beginPath(); ctx.moveTo(hx, b.y0); ctx.lineTo(hx, b.y1); ctx.stroke(); }
-      ctx.globalAlpha = 1;
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
       const txt = 'τ = RC', bw = (ctx.font = `700 ${11 * ps}px ${T.ui}`, ctx.measureText(txt).width + 24 * ps), bh = 17 * ps;
-      const bx = Math.max(g.L + 1, Math.min(g.R - bw - 1, hx - bw / 2)), by = g.top - 22 * ps;
-      ctx.fillStyle = T.canvas; ctx.strokeStyle = T.accent; ctx.lineWidth = (hot ? 2 : 1.3) * ps;
+      const bx = Math.max(g.L + 1, Math.min(g.R - bw - 1, hx - bw / 2)), by = g.top - 25 * ps;
+      ctx.fillStyle = T.screen; ctx.strokeStyle = SCR.cursor; ctx.lineWidth = (hot ? 2 : 1.3) * ps;
       roundRect(ctx, bx, by, bw, bh, 4 * ps); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, bx + 5 * ps, by + bh / 2 + 0.5);
-      ctx.fillStyle = T.accent;
+      ctx.fillStyle = SCR.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, bx + 5 * ps, by + bh / 2 + 0.5);
+      ctx.fillStyle = SCR.cursor;
       const ax = bx + bw - 10 * ps, ay = by + bh / 2;
       ctx.beginPath(); ctx.moveTo(ax - 4 * ps, ay); ctx.lineTo(ax - 1 * ps, ay - 3.5 * ps); ctx.lineTo(ax - 1 * ps, ay + 3.5 * ps); ctx.closePath(); ctx.fill();
       ctx.beginPath(); ctx.moveTo(ax + 5 * ps, ay); ctx.lineTo(ax + 2 * ps, ay - 3.5 * ps); ctx.lineTo(ax + 2 * ps, ay + 3.5 * ps); ctx.closePath(); ctx.fill();
@@ -1238,10 +1573,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('clearG').addEventListener('click', () => { ghosts = []; ghostKey(); });
   function ghostKey() { $('ghostTxt').textContent = ghosts.length ? 'Kept trace: ' + ghosts.map((G) => G.label).join('; ') : 'Kept trace'; }
   // plot window: the whole run from t = 0, or zoomed onto the stage since the last change
-  $('zRun').addEventListener('click', () => { view.L = Math.max(6 * tauCharge(), t * 1.08); view.tL = 0; view.tLshow = 0; ranges = {}; if (pauseWhy === 'window') pauseWhy = ''; });
+  $('zRun').addEventListener('click', () => { view.L = snapL(Math.max(6 * tauCharge(), t * 1.08)); view.tL = 0; view.tLshow = 0; ranges = {}; if (pauseWhy === 'window') pauseWhy = ''; });
   $('zStage').addEventListener('click', () => {
-    const g = lastSeg(sim); view.L = 7 * g.tau; view.tL = Math.max(0, g.t0 - g.tau);
-    if (t > view.tL + view.L) view.tL = t - view.L * 0.9;
+    const g = lastSeg(sim); view.L = snapL(7 * g.tau); view.tL = floorDiv(g.t0 - g.tau);
+    if (t > view.tL + view.L) view.tL = floorDiv(t - view.L * 0.9);
     view.tLshow = view.tL; ranges = {};
   });
   $('tElec').addEventListener('change', (e) => { S.layers.elec = e.target.checked; staticText(); });
@@ -1250,7 +1585,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('tPred').addEventListener('change', (e) => { S.layers.pred = e.target.checked; ranges = {}; });
   const playBtn = $('play');
   function setRunning(r) {
-    if (r && pauseWhy === 'window') view.tL = Math.max(0, t - view.L / 6);
+    if (r && pauseWhy === 'window') view.tL = ceilDiv(t - view.L / 6);
     if (r) pauseWhy = '';
     running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now();
   }
