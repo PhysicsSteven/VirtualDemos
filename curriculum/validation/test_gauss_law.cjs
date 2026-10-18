@@ -1,6 +1,6 @@
 'use strict';
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),path=require('node:path');
-const src=fs.readFileSync(path.join(__dirname,'../../demos/gauss-law.html'),'utf8'),ctx={};
+const src=require('./demo_source.cjs').readDemo('gauss-law'),ctx={};
 vm.runInNewContext([...src.matchAll(/<script>([\s\S]*?)<\/script>/g)].find(m=>m[1].includes('==CORE START=='))[1],ctx,{timeout:1000});
 const g=ctx.GL,k=1e-9/g.EPS0,charge=(x,y=0,q=1e-9)=>({x,y,z:0,q});let count=0;
 const close=(a,b,tol=2e-7)=>assert(Math.abs(a-b)<=tol*k,`expected ${b}, got ${a}, scaled error ${Math.abs(a-b)/k}`);
@@ -32,3 +32,8 @@ test('symmetry fields at finite radius and point-charge singularity in SI',()=>{
   assert.equal(g.Esphere('point',1e-9,.05,0),Infinity);
 });
 console.log(`Completed ${count} Gauss-law test groups. Origin and shell-boundary defects are tracked in COLLABORATION.md; tolerance controls pending Claude.`);
+
+if(process.argv.includes('--strict-origin')){
+  console.log('Uniform sphere origin probe',g.Esphere('ball',1e-9,.05,0));
+  assert.equal(g.Esphere('ball',1e-9,.05,0),0,'Regular uniform-sphere field must vanish at its origin');
+}

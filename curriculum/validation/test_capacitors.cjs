@@ -1,6 +1,6 @@
 'use strict';
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),path=require('node:path');
-const src=fs.readFileSync(path.join(__dirname,'../../demos/capacitors.html'),'utf8'),ctx={};
+const src=require('./demo_source.cjs').readDemo('capacitors'),ctx={};
 vm.runInNewContext([...src.matchAll(/<script>([\s\S]*?)<\/script>/g)].find(m=>m[1].includes('==CORE START=='))[1],ctx,{timeout:1000});
 const c=ctx.CAP,eps=c.EPS0;let n=0;
 const close=(a,b,rel=1e-9,abs=1e-20)=>assert(Math.abs(a-b)<=abs+rel*Math.abs(b),`expected ${b}, got ${a}`);

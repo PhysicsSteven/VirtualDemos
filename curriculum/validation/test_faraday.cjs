@@ -1,10 +1,8 @@
 'use strict';
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),path=require('node:path');
-const src=fs.readFileSync(path.join(__dirname,'../../demos/faraday.html'),'utf8'),ctx={};
-vm.runInNewContext([...src.matchAll(/<script>([\s\S]*?)<\/script>/g)].find(m=>m[1].includes('==CORE START=='))[1],ctx,{timeout:1000});
-const f=ctx.FD;let count=0;
+const f=require('./demo_source.cjs').core('faraday','MU0,MAG,ellipKE,ringFlux,ringField,cylFluxUnit,cylFieldUnit,coilFlux,dipoleFlux,magMoment,tiltFluxUnit,flipSeries,seriesEval,circuitStep,makeCircuit,runMove,magnetForce,genPhi,genEmf,railsPhi,coast');let count=0;
 const close=(a,b,rel=1e-8,abs=1e-12)=>assert(Math.abs(a-b)<=abs+rel*Math.abs(b),`expected ${b}, got ${a}`);
-const test=(name,fn)=>{fn();count++;console.log('PASS',name);};
+const test=(name,fn)=>{try{fn();count++;console.log('PASS',name);}catch(e){process.exitCode=1;console.error('FAIL',name,e.message);}};
 test('ring field agrees with independent on-axis Biot-Savart formula',()=>{
  for(const b of [.01,.03])for(const z of [0,.02,.1]){const [Bz,Br]=f.ringField(b,0,z);close(Bz,f.MU0*b*b/(2*(b*b+z*z)**1.5));close(Br,0);}
 });

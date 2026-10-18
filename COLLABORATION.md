@@ -17,6 +17,9 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 | Capacitors and AC: physics validation and labs | GPT | Feature branch `curriculum/` | Completed this pass: 7 capacitor and 5 AC groups, scoped Chromium desktop/phone checks and full manual labs/keys. HTML unchanged; CSV/theory hiding pending. |
 | Faraday: measurement/physics and lab | GPT | Feature branch | Completed this pass: deterministic stepping, notebook/CSV, local physics fixes, 8 reference groups, Chromium desktop/phone and full lab/key. Drawing code preserved. Broader magnet domain and complete plot-theory hiding remain. |
 
+| Tasks 1/3/5: transient finish, seven core suites, five current-main labs | GPT | Feature branch `curriculum/` and CI | In progress, 2026-10-18 second pass. Main bc0485a read and merge confirmed. No demo source edits in this pass. |
+| Tasks 2/4: independent teaching-key audit and NaI(Tl) report | Claude Fable | `curriculum/validation/KEY_AUDIT.md` and gamma report | Running per Steve; reserved to Claude. GPT does not edit notes/ or keys/. |
+
 ### Editing a demo the other one owns
 
 Both of us will sometimes need to change the same demo file: Claude for visuals, GPT for physics fixes, measurement tools or CSV export. To avoid overwriting each other:
@@ -35,6 +38,9 @@ Add a line when you need the other assistant to do something, and remove it when
 - **GPT → Claude, Gauss, 2026-10-18:** `enclosed()` excludes charges within **0.03 cm**, but the UI says a charge is exactly on the surface. Please label this as a numerical exclusion zone; only the exact point-charge crossing is mathematically singular.
 - **GPT → Claude, Gauss, 2026-10-18:** Quantitative lab needs exact charge x/y fields, coarse/standard/fine quadrature settings, a frozen geometry/charge snapshot, signed net/out/in flux CSV with SI units and numerical metadata, and hideable predicted flux/residual. Please report adaptive-panel exhaustion; current `integrate()` returns a value without signalling unmet tolerance. Nested inner errors are not propagated into the displayed outer estimate, and outward/inward error weights are 1000 times looser: do not label that estimate a rigorous bound.
 - **GPT → Claude, Gauss, 2026-10-18:** A pre-coordination proposal is preserved for review only in `curriculum/validation/requests/gauss-law-proposal.patch` on the feature branch. It is **not applied**, and should not be applied blindly over your redesign. Numerical/browser results from that proposal are not evidence for the active demo. Port only the requested local logic changes and synchronize the lab after implementation.
+
+- **GPT → Claude, Coulomb, 2026-10-18 second pass:** The potential clamps radius at 0.12 cm while field clamps at 0.01 cm. At +1 nC and (0.05,0) cm, −∂V/∂x=0 but E_x=35,950,200 V/m. Use a consistent regularized potential/field or explicitly exclude that core from quantitative probes. Reproduce with `node curriculum/validation/test_coulomb_sandbox.cjs --strict-core`; source unchanged.
+- **GPT → Claude, current-main labs, 2026-10-18 second pass:** RC needs capture/CSV and precise time entry; current τ toggles hide plot overlays but not every answer readout. Photoelectric Record V₀ generates a theoretical endpoint plus three-uniform noise (support ±0.0375 V, σ=0.0125 V), not the selected collector voltage; please provide export/seed/blind endpoints for instrument use. These are requests only; notes/ and keys/ reserved for Fable's audit.
 
 ## Branches and merging
 
