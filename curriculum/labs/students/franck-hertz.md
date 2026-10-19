@@ -1,37 +1,83 @@
-# Franck–Hertz — Excitation Energy from Peak Spacing
-Student laboratory · 100 minutes · modern physics
+# Franck–Hertz Experiment
+Student laboratory · modern physics
 
-[Open Franck–Hertz](https://physicssteven.github.io/VirtualDemos/demos/franck-hertz.html)
+[Open the virtual Franck–Hertz apparatus](https://physicssteven.github.io/VirtualDemos/demos/franck-hertz.html)
 
-## Objectives and prelab
-Infer an atomic excitation energy from repeated current maxima, distinguish spacing from a contact-potential offset, and examine how vapor density and retarding voltage affect a measurement. Prerequisites: electron volts, energy conservation, photon energy and regression. Use the virtual run to interpret a real trace before the laboratory or as a simulated substitute. Physical tube connections, temperature stabilization and operating limits follow the department's current apparatus handout.
+## Goal
 
-Sketch cathode, accelerating grids and collector. An electron gains e(U−Uc) across the accelerating gap and may lose a discrete excitation energy in a collision. Explain why a retarding field can suppress collection after such a collision. Derive the approximate peak sequence U_n=a+nΔU, ΔE=eΔU and emitted wavelength λ=hc/ΔE. State why a is not simply a direct measurement of Uc in a tube with initial energy spread and a rising current envelope.
+Find the energy needed to excite a mercury atom by measuring the spacing between repeated peaks in the collector current.
 
-## Controls and recording
-Use **Mercury tube at 180 °C**, **New sweep**, **Mark peaks**, **Snap to the nearest maximum**, **Oven temperature**, **Accelerating voltage U (G2)**, **Retarding voltage Ur** and **Contact potential Uc**. Keep **Show lines at n·Eexc/e** off during primary measurements. The **Measure the peak spacing** preset can supply a completed curve for exploration, but mark your own maxima for the primary dataset.
+## Background
 
-There is no student Capture/CSV/Blind or exposed seed control here. Preserve screenshots and manually transcribe the marked-voltage list and fit settings. The current trace is stochastic; record the preset, gas, temperature, Ur,Uc and scan mode. A simulated trace is not measured physical-tube data. Do not infer current precision merely from the smoothness of the drawing.
+Electrons accelerate through a vapor on their way to a collector. Most of the time they keep gaining energy. Once an electron has enough energy, it can excite an atom and lose a fixed amount of energy in the collision.
 
-## A. Peak-spacing estimate (35 minutes)
-1. At the mercury preset's temperature, retain the default retarding/contact potentials and record their values. Start a new sweep and let the full range complete; use **Pause** when needed.
-2. Select **Mark peaks**, keep snapping enabled, and mark at least five consecutive resolvable maxima from left to right. Check each mark against the visible trace and record a position bracket based on width/readout resolution. Do not mix maxima and minima or silently skip a peak.
-3. Record consecutive spacing estimates, then fit U_n=a+nΔU with a free intercept. Give slope/intercept uncertainties and residuals versus n. Repeat with the first peak excluded, preserving the physical order labels rather than renumbering to force a desired intercept.
-4. Convert the fitted ΔU into excitation energy in eV and joules, then calculate the emitted wavelength. Only after this comparison reveal the reference guide/atomic-level panel. Explain why this is excitation rather than ionization.
+A small retarding voltage before the collector rejects electrons that arrive with too little energy. The current therefore falls when many electrons have just lost energy. As the accelerating voltage rises, the pattern repeats.
 
-| Gas/conditions | Peak order n | Marked U_n (V) | Position bracket (V) | ΔU to next (V) |
+If neighboring peaks are separated by ΔU, the excitation energy is approximately
+
+$$\Delta E=e\Delta U.$$
+
+The first peak need not occur at ΔE/e. Contact potentials and the electrons' starting energies shift the whole pattern. We allow for an offset by fitting
+
+$$U_n=a+n\Delta U.$$
+
+The excited atom can release its energy as a photon with wavelength
+
+$$\lambda=\frac{hc}{\Delta E}.$$
+
+## Before the lab
+
+1. Why is peak spacing more useful than the position of the first peak?
+2. What role does the retarding voltage play?
+3. If ΔU is measured in volts, how do you express ΔE in electron volts and in joules?
+
+## Safety
+
+The real apparatus has high voltage and a hot oven. Follow the department's warm-up and operating procedure. Do not touch the hot tube or change connections while powered. Do not open or attempt to repair a sealed mercury tube.
+
+## Procedure
+
+**Take a current curve.** Use the department's mercury-tube temperature and voltage settings. Let the oven stabilize, then sweep the accelerating voltage slowly while recording collector current. Keep temperature, contact potential and retarding voltage fixed during a sweep.
+
+1. Find at least five consecutive clear maxima. Record each voltage and number the peaks in order.
+2. Estimate a voltage interval within which you would place each maximum.
+3. Acquire a second curve and repeat the measurements.
+4. Change the contact potential if the apparatus allows it, and take a separate curve.
+5. Compare the normal retarding voltage with zero retarding voltage.
+6. Compare a cooler and a hotter vapor setting within the apparatus limits. Record how the current and peak visibility change.
+
+**Using the virtual apparatus.** Start with **Mercury tube at 180 °C** and write down **Retarding voltage Ur** and **Contact potential Uc**. Press **New sweep** and let the curve finish. Select **Mark peaks**, keep **Snap to the nearest maximum** on, and click the maxima in order. Leave **Show lines at n·Eexc/e** off until analysis. Record the marked voltages by hand and save a screenshot; this demo has no CSV export. Use **Too cold: few collisions** and **Too hot: weak current** for the temperature comparison. If time allows, compare **Neon: glowing layers** too.
+
+## Data
+
+| Run and settings | Peak order n | Peak U (V) | Reading uncertainty (V) | Spacing to next peak (V) |
 |---|---|---|---|---|
+| | 1 | | | |
+| | 2 | | | |
+| | 3 | | | |
 | | | | | |
 
-## B. Offset and collection tests (25 minutes)
-Repeat short sweeps at two distinct contact potentials with all other settings fixed, storing each dataset separately. Compare fitted spacing and intercept; distinguish a translated pattern from a change in excitation energy. Then compare default Ur with Ur=0. Describe changes in dip contrast/current and explain why loss of energy need not mean failure to collect when no retarding barrier is present. Do not require a peak locator to return meaningful positions if the trace no longer has distinct maxima.
+Use at least five rows per mercury run. Keep changed settings in separate runs.
 
-## C. Density and a second gas (25 minutes)
-Compare **Too cold: few collisions**, the baseline mercury run and **Too hot: weak current**. Record temperature, mean free path, transmission/current contrast and the number of resolvable maxima. Explain why increasing density can both increase excitation probability and scatter electrons out of the collected beam. Avoid interpreting a weak trace as a different atomic level energy.
+## Analysis
 
-If time remains, choose **Neon: glowing layers**. Record its larger voltage range and retarding potential. Mark at least three visible maxima if resolvable, fit their spacing and explain why the model's multiple excited levels do not identify one unique mercury-like transition. Qualitative glow bands are not a calibrated count of every collision.
+1. Calculate the neighboring peak spacings and their mean.
+2. Plot peak voltage against peak order. Fit a line with an intercept. Use its slope to find ΔE and its uncertainty.
+3. Repeat the fit without the first peak. Does the result change appreciably?
+4. Calculate the photon wavelength and compare it with the mercury reference after recording your result.
+5. Compare the slopes and intercepts of the different contact-potential runs. Then explain the changes caused by retarding voltage and temperature.
 
-## Uncertainty and submission (15 minutes)
-Use fit uncertainty, position brackets, repeated independently acquired sweeps and sensitivity to excluding the first peak. Treat differences due to envelope shape, finite mean free path and smoothing/snapping as model or analysis effects, not merely random noise. The fit's built-in reading allowance is not the complete experimental uncertainty. Estimate uλ/λ≈uΔU/ΔU if constants are fixed; discuss correlations in adjacent spacings sharing peak positions.
+## Uncertainty
 
-Submit settings, trace screenshots, raw peak tables, spacing/free-intercept fits and residuals, energy/wavelength calculation, first-peak sensitivity and offset/density/retarding tests. State that this model uses effective collision cross sections, a simplified initial energy distribution and a current envelope, and omits some atomic levels and ionization. The primary conclusion is evidence for discrete energy loss; exact numerical peak locations also depend on transport and collection assumptions.
+Use the peak-position intervals, variation between sweeps and the fit uncertainty to judge the precision of ΔU. Check how much the first peak changes the fitted slope. Adjacent spacings share a peak reading, so they are not all independent. The relative wavelength uncertainty is approximately the relative uncertainty in ΔU when h, c and e are treated as known.
+
+## Questions
+
+1. Why can an inelastic collision reduce the collected current even though the electron continues moving?
+2. Why might the repeated peaks become much less clear when the retarding voltage is zero?
+3. Why can both a very cold and a very hot mercury tube give poor results?
+4. Does this experiment measure an excitation energy or an ionization energy? Explain.
+
+## What to hand in
+
+Prelab answers, current curves or screenshots, the peak table, the graph and fit, excitation energy and photon wavelength with uncertainty, the comparison runs, and answers to the questions. Identify any simulated data.

@@ -1,43 +1,86 @@
-# Electron Diffraction — Measuring Graphite Plane Spacings
-Student laboratory · 110 minutes · modern physics
+# Electron Diffraction from Graphite
+Student laboratory · modern physics
 
-[Open the graphite-tube bench](https://physicssteven.github.io/VirtualDemos/demos/electron-diffraction.html)
+[Open the virtual diffraction tube](https://physicssteven.github.io/VirtualDemos/demos/electron-diffraction.html)
 
-## Purpose and preparation
-Determine two graphite plane spacings from measured rings, compare curved-screen geometry with the small-angle approximation, and evaluate sensitivity to apparatus dimensions. Prerequisites: de Broglie wavelength, Bragg's law, kinetic energy and regression. Use the virtual tube for preparation or as a substitute when the physical apparatus is unavailable. Label simulated data. Real tube alignment, supply and measurement procedures follow the department's current handout.
+## Goal
 
-Derive λ=h/√[2meV(1+eV/(2mc²))], the scattering cone angle ψ=2θ, and 2d sinθ=λ for first order. Explain why ψ is twice the Bragg angle. A polycrystalline sample produces cones rather than one pair of spots. For a flat distant screen derive D≈2Lλ/d and state the assumptions.
+Use the rings made by an electron beam to measure two atomic plane spacings in graphite.
 
-## Measure geometry before rings
-Record **Tube seed**, then **Blind**; leave **Show the true ring positions** off. Clear prefilled readings and move the magnet to its maximum distance. Stop **Sweep V** for each measurement. Record the chosen **Ruler** (arc along glass) or **Caliper** (straight chord) tool; never analyze an arc as a chord.
+## Background
 
-Determine L, graphite to screen pole, and R, screen sphere radius, from the assigned apparatus dimensions. The virtual tube's physical geometry is L=125 mm, R=65 mm; the analysis entries can be changed without resizing it. For the real tube, measure or obtain L for that instrument, with uncertainty. Handouts quoting 125–135 mm are not interchangeable. Enter your adopted L and R, state their source, and retain them with the dataset.
+An electron accelerated through voltage V has momentum p and de Broglie wavelength λ = h/p. Including the small relativistic correction,
 
-## A. Rings versus accelerating voltage (40 minutes)
-1. Use six voltages near 2.50, 3.00, 3.50, 4.00, 4.50 and 5.00 kV. Record the actual kV meter. Convert kV to V for momentum calculations.
-2. At each voltage select **Inner D₁**, place its two marks on a consistent center of the finite-width ring, then select **Outer D₂** and do the same. Record width/placement bounds. **Capture reading** stores both marked diameters; moving only one ring's marks leaves the other measurement unchanged.
-3. Reposition both sets of marks for a repeat at one low and one high voltage. Export CSV; preserve tool metadata. Do not use **Measure the spacings** prefilled simulated readings as your own measurements.
-4. Plot D against 1/√V and compare slopes for the two rings. Discuss small curvature expected from relativistic wavelength and screen geometry.
+$$\lambda=\frac{h}{\sqrt{2meV\left(1+\frac{eV}{2mc^2}\right)}}.$$
 
-| Meter (kV) | Tool | D₁ (mm) | D₂ (mm) | Placement bound (mm) | Adopted L,R (mm) |
+The graphite contains many small crystals with different orientations. Some planes meet Bragg's condition:
+
+$$2d\sin\theta=\lambda.$$
+
+Scattered electrons leave at angle 2θ to the beam. Many crystal orientations produce a cone, and the cone makes a ring on the screen. Each of the two main rings comes from a different plane spacing d.
+
+For small angles, the diameter D of a ring is approximately
+
+$$D\approx\frac{2L\lambda}{d},$$
+
+where L is the distance from graphite to the screen. Measuring D at several voltages lets us find d.
+
+## Before the lab
+
+1. What happens to the electron wavelength when the accelerating voltage increases?
+2. Why does a powder or polycrystalline film make rings rather than isolated spots?
+3. If you use an L that is too large, will your calculated d be too large or too small?
+
+## Safety
+
+The real tube uses high voltage and has a fragile glass bulb. Change connections with the power off. Follow the department's supply and handling instructions, and keep measuring tools from pressing on the glass.
+
+## Procedure
+
+**Measure the geometry.** Find L for the tube you are using and record its uncertainty. Do not copy a value from a different apparatus: handouts quote values from 125 to 135 mm. Record the screen radius R if using the curved-screen correction. Decide whether you are measuring a chord straight across the ring or an arc along the glass.
+
+**Take readings.**
+1. Set the accelerating voltage near 2.50 kV. Read the actual meter value.
+2. Measure the inner and outer ring diameters. Use the center of each bright band and estimate how much the band width affects the reading.
+3. Repeat near 3.00, 3.50, 4.00, 4.50 and 5.00 kV, within the physical tube's allowed range.
+4. Measure one low-voltage and one high-voltage setting again after repositioning the measuring tool.
+5. At one voltage, compare arc and chord readings if both tools are available.
+6. Bring a magnet near the tube neck and reverse its pole. Describe what happens to the whole pattern. Move the magnet away before taking more diameter readings.
+
+**Using the virtual apparatus.** Record the **Tube seed**, turn on **Blind**, click **Clear**, and leave **Show the true ring positions** off. Use **Ruler** for an arc or **Caliper** for a chord. At each voltage position both marks for **Inner D₁**, then both for **Outer D₂**, before clicking **Capture reading**. Use **Export CSV** at the end. The virtual geometry is L = 125 mm and R = 65 mm; enter these for the main analysis. Changing the analysis entries does not change the virtual tube. Keep the magnet at its maximum distance during measurements.
+
+## Data
+
+| Trial | Meter (kV) | Tool: arc or chord | D₁ (mm) | D₂ (mm) | Diameter uncertainty (mm) |
 |---|---|---|---|---|---|
+| 1 | | | | | |
+| 2 | | | | | |
+| 3 | | | | | |
 | | | | | | |
 
-## B. Exact geometry and inferred spacings (30 minutes)
-For a centered ring define α=D_arc/(2R) or α=asin[D_chord/(2R)]. The source-to-screen ray gives ψ=atan2[R sinα,R cosα+L−R]. Hence d=λ/[2sin(ψ/2)]. Derive this using a cross-sectional sketch, keeping millimeters consistent within the geometric formula.
+Add rows for all voltages and repeats. Record L, R and their uncertainties above the table.
 
-1. Use **Exact** and **Relativistic λ** to infer each d from all rows and from the fitted relation λ=d·2sin(ψ/2). Record fit slopes, uncertainty and residuals in an external spreadsheet as well as the built-in result.
-2. Reanalyze the same readings with **Small angle** and with relativistic correction disabled. Quantify each change; keep the raw data fixed.
-3. At one voltage measure with both Ruler and Caliper. Compare raw diameters, then demonstrate whether their respective exact inversions agree. Changing tool requires a new reading, not just relabeling a stored number.
+## Analysis
 
-## C. Geometry sensitivity and charged-particle evidence (20 minutes)
-Reanalyze the fixed data with L=125,130 and 135 mm, clearly labeled as assumed geometry. Distinguish the actual measurement from this deliberate sensitivity study. Compare its effect with ring-placement uncertainty and the relativistic correction. Restore the correct L before the final fit.
+1. Convert kV to V and calculate λ for each row. Plot each ring diameter against λ. Find d from the slope of the small-angle relation.
+2. Recalculate using the spherical screen. For an arc, α = D/(2R); for a chord, α = asin[D/(2R)]. Then
 
-Bring the magnet near the neck, compare N and S, and describe pattern translation. Restore it to maximum distance before any spacing measurement. This qualitative deflection establishes sensitivity to charge; the magnet model is not a calibrated magnetic spectrometer. Explain why a shifted cone can spoil a centered-ring formula.
+$$\psi=\operatorname{atan2}\left(R\sin\alpha,\ R\cos\alpha+L-R\right),\qquad d=\frac{\lambda}{2\sin(\psi/2)}.$$
 
-## Uncertainty and submission
-Repeat placement to estimate a ring-center interval. Include meter resolution, L and R uncertainties. Propagate them by recalculating d at upper/lower inputs or a numerical derivative; distinguish shared geometry errors from row-to-row placement scatter. For the small-angle model derive δd/d≈δL/L−δD/D−(1/2)δV/V as a signed sensitivity relation. Use quadrature only for independent standard uncertainties. Compare d₁/d₂ to the hexagonal-lattice prediction without expecting the raw diameter ratio to be exactly the same at finite angles.
+3. Use **Exact** and **Relativistic λ** to check your calculation. Compare the two inferred spacings and their ratio with the graphite values after finishing your measurements.
+4. Analyze the same data with L = 130 and 135 mm. How much does the assumed geometry change d? Restore the measured L for your final result.
 
-Submit raw CSV, geometry evidence, six-voltage plots, exact fitted spacings/residuals, arc/chord comparison, L sensitivity, magnet observations and uncertainty. Explain cones versus spots, why rings shrink with voltage, and why the two rings need not be first and second orders of one spacing.
+## Uncertainty
 
-The model uses a spherical screen and selected graphite plane spacings; brightness, widths, source wander and magnet deflection are illustrative. L/R entries affect analysis, not the simulated tube. A matching accepted spacing after copying an assumed L is not an independent geometry measurement.
+Estimate a diameter interval from the ring width and repeated placements. Include the voltage reading and the uncertainties in L and R. One useful check is to recalculate d at the upper and lower limits of these inputs. The same error in L affects every row, so more voltage settings do not remove it. Compare this geometry effect with the difference between the small-angle and exact results.
+
+## Questions
+
+1. Why do the rings get smaller as the voltage rises?
+2. Why must arc and chord diameters be analyzed differently?
+3. What does the magnet test tell you about the particles making the rings?
+4. Why should you not assume the two rings are the first and second orders of one plane spacing?
+
+## What to hand in
+
+Prelab answers, geometry measurements, the data table and CSV, diameter plots and fits, both spacings with uncertainty, the L comparison, and answers to the questions. Label virtual data and give the seed.
