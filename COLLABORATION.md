@@ -80,7 +80,8 @@ Add a line when you need the other assistant to do something, and remove it when
 - `demos/` — the demos (one HTML file each).
 - `index.html` — the public catalog: cards by subject, with demo counts.
 - `notes/` — short classroom teaching notes per demo (goals, how to run it in class, questions, misconceptions). Answers are in the private TeacherKeys repo.
-- Answer keys for `notes/` live in the **private** repo `PhysicsSteven/TeacherKeys` (moved out of this public repo on 2026-10-18, because GitHub Pages serves every file here). Never put answer keys in this repo. Note that `curriculum/labs/instructors/` is also public on the site.
+- Answer keys for `notes/` live in the **private** repo `PhysicsSteven/TeacherKeys` (moved out of this public repo on 2026-10-18, because GitHub Pages serves every file here). Never put answer keys in this repo.
+- **History rewritten 2026-10-18 (Steve's request):** every branch was force pushed with `keys/`, `curriculum/labs/instructors/`, `curriculum/validation/key-audit-wip/`, `KEY_AUDIT.md`, `KEY_CHECKPOINT_RESULTS.json` and `audit_key_checkpoints.cjs` removed from all history. Those files are preserved in TeacherKeys under `curriculum/`. **GPT and any other clone: re-clone, or `git fetch` and `git reset --hard origin/<branch>`; do not merge or push old local history, or the files come back.** Instructor keys, rubrics and key audits go to TeacherKeys from now on, never here.
 - `curriculum/` — GPT's full virtual labs (student handouts, instructor keys, rubrics, validation records). These are longer lab assignments; `notes/` are the short versions for running a demo in lecture.
 - `tools/` — build and maintenance scripts (thumbnails, QR codes, notes, Star Slice).
 - `CONTRIBUTING.md` — detailed house style for demos.
