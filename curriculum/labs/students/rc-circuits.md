@@ -1,70 +1,38 @@
-# RC Circuits — Quantitative Laboratory
-**Student edition · 90 minutes · calculus-based introductory physics**  
-[Open simulation](https://physicssteven.github.io/VirtualDemos/demos/rc-circuits.html)
+# RC Circuits — Time Constants and Energy on the Unified Bench
+Student laboratory ·90 minutes ·Physics II
 
-## Driving questions
-1. Can the capacitance of an unknown component be recovered from voltage-versus-time measurements?
-2. Where does the energy delivered by a battery go during charging?
-3. Does changing the discharge resistance change the total energy dissipated?
+[Open Circuits: RC](https://physicssteven.github.io/VirtualDemos/demos/circuits.html#rc)
 
-## Learning outcomes
-Derive the first-order differential equation for RC circuits; determine a time constant by three independent methods; fit a linear model with correct units; test Kirchhoff's rule and an energy balance; distinguish a perfect numerical model from a physical experiment.
+## Objectives and prelab
+Determine capacitance from time traces, verify capacitor-voltage continuity at a switch, and account for source work, stored energy and heat. Prerequisites: Kirchhoff's rule, exponentials and linear regression. Derive V_C=ε(1−exp(−t/RC)), I=εexp(−t/RC)/R, and the discharge solution. Derive the complete-charge energy split W=Cε², U=H=Cε²/2. Explain why the final split is independent of R while charging power is not.
 
-## Prelab (show derivations)
-Starting with ε−IR−Q/C=0 and I=dQ/dt, derive the solution for charging an initially uncharged capacitor. Show that τ=RC and that at t=τ, V_C/ε=1−e⁻¹. For discharging, derive Q(t)=Q₀e⁻ᵗ/τ and I(t)=−Q₀e⁻ᵗ/τ /τ. Derive W_battery=Cε², U_final=½Cε², and H_final=½Cε² for complete charging.
+## Current apparatus and recording
+Use **In time** on `circuits.html`; the old RC page remains available but is not this lab's apparatus. Choose **RC charging**, then select the battery, R1 or C1 on the drawing and enter values in **Selected**. Numeric entries use the displayed SI unit; record exactly what the controls/readouts show. Click **Scope V** or **Scope I** for the selected part to add a channel. Use **Pause**, **Reset**, **Playback rate**, **Whole run**, **Fit last change** and **Export scope CSV**. Positive component current follows that component's drawn terminal orientation; record which capacitor terminal defines V_C and use Q=CV_C consistently.
 
-## Apparatus
-Use the **Charging**, **Discharging**, and **Energy bookkeeping** presets. The Circuit panel has **Battery EMF ε**, **Resistance R**, and **Capacitance C** controls. The Time panel has **Playback rate**, **Automatic**, **Whole run**, and **Last change**. The Display panel has **τ marks** and **Exact curve** toggles. Measurements display time, V_C, V_R, I and Q; Energy displays W, U, H and instantaneous power.
+There is no complete Blind control or exact-time cursor in this bench. Predict before inspecting **Natural response**. Export samples at their actual times; the CSV contains selected voltage/current channels in V/A and t_s, not a settings log or energy ledger. Save a settings sheet and energy readings separately. Export before changing a preset. The time export is clipped to the current scope window; use **Whole run** and confirm its first/last t values cover your experiment. Do not infer precise times from playback speed.
 
-The current main version has no capture table, CSV or exact-time entry. Use **Play/Pause** and slow playback, recording actual circuit time and readouts in a spreadsheet. Turning off the two plot toggles does not hide all τ readouts or preset hints: make predictions first, and treat this as model-based parameter recovery rather than a blinded unknown-component experiment.
+## A. Determine C (30 minutes)
+1. Select **RC charging**, pause, set ε=10 V,R1=10 kΩ,C1=100 µF, then Reset to clear previous state and editing work. Record values, initial V_C and switch position.
+2. Run to at least4RC, pause and export the scope. Include V_C, V_R and I_R. Retain at least six nonsaturated samples from the charging segment; do not fit an unobserved theoretical curve.
+3. Infer τ from the time to V_C/ε=1−e⁻¹ and from a fit ln(1−V_C/ε)=a+bt, τ=−1/b. Use interpolation and actual exported timestamps. Exclude endpoints rounded to ε.
+4. Repeat at R1=4.7,6.8,10,15 and22 kΩ with C fixed. Reset after each component edit. Fit τ against R in ohms; infer C from slope and discuss the intercept. Compare with **Natural response** only after the fit.
 
-## Part A — Determine capacitance (30 min)
-1. Select Charging. Set ε=10 V (or nearest available setting), C=100 µF and R=10 kΩ (or nearest supported E12 value). Record exact displayed values.
-2. **Turn off τ marks and Exact curve.** Use Reset before each run. Use Pause and playback controls to sample V_C at six or more times spanning approximately 0 to 4τ. If a precise sample time is inaccessible, record the nearest displayed time rather than inventing an exact one.
-3. Measure the elapsed time at which V_C reaches 0.6321ε, using interpolation between two neighboring samples if necessary.
-4. Compute y=ln(1−V_C/ε) for each non-saturated point. Fit y=a+bt, report slope b in s⁻¹, and infer τ=−1/b. Compare with the 63.2% method.
-5. Repeat with five resistor settings spanning 4.7–22 kΩ (4.7, 6.8, 10, 15 and 22 kΩ are available), holding C fixed. Use the nearest supported resistor values; record those rather than forcing the nominal settings.
-6. Plot τ against R in ohms and fit τ=mR+b. Infer C=m in farads; report intercept and residuals.
-7. Enable τ marks and Exact curve and compare your inferred values to the simulation prediction.
-
-| R (Ω) | ε (V) | C display (F) | τ from 63.2% (s) | τ from log fit (s) | τ display, after measurement (s) |
+| R (Ω) | ε (V) | C entry (F) | τ crossing (s) | τ log fit (s) | Sampling/fit uncertainty |
 |---|---|---|---|---|---|
 | | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
 
-For each run retain a raw table with columns: elapsed t (s), V_C (V), V_R (V), I (A), Q (C), and ln(1−V_C/ε). Include at least six rows before building the summary table. Avoid points so near saturation that readout rounding makes the logarithm undefined.
+## B. Switching and fast discharge (25 minutes)
+1. Use **Flip mid way**, restore its displayed component values, Reset and run through the automatic switch. Export the complete visible run. Determine the switch time from the trace and fit each side separately using elapsed time relative to its own segment.
+2. Compare V_C immediately before/after switching and I_R on each side. Explain continuity of charge but a jump/reversal of resistor current. The fit initial condition is the actual voltage at the switch, not ε unless the capacitor is fully charged.
+3. Use **Camera flash**, document R1,C1 and the bulb resistance, and run beyond the switch. Compare charging/discharging time constants and initial powers using measured pre-switch voltage. State the finite charge fraction; do not assume exactly full after5τ.
 
-## Part B — Discharge and changing resistance (20 min)
-1. Charge the capacitor for at least 5τ (this is about 99.3% charged, not exactly full), then switch to Discharge. Record initial Q, V_C, and I.
-2. Record V_C and I at 0, 0.5τ, τ, 2τ, 3τ and 5τ relative to the switch event. If the UI does not permit exact sampling, record actual times.
-3. Fit ln(V_C/V_C0) versus time. Compare discharge τ with charging τ.
-4. Enable **Separate discharge resistor R₂**, choose R₂ different from R, and repeat. Explain which properties change and which remain invariant.
+## C. Energy and uncertainty (25 minutes)
+For an uncharged RC charging run, record time, source work W, capacitor U and resistor heat H from **Energy since t=0** at four times. Check W−U−H and compare with a numerical integral of εI and I²R from CSV. Keep the integration within one documented run; component editing can add a separate editing-work term and is excluded here. Repeat with a different R to distinguish invariant final energy from rate of transfer.
 
-## Part C — Energy conservation (20 min)
-1. Use **Energy bookkeeping** (ε=6 V, R=1 kΩ, C=1000 µF). Press Reset with the switch in Charge to begin with an uncharged capacitor and record W, U and H at several times, including t≈5τ.
-2. Calculate residual Δ=W−U−H for the initial charging run and express it relative to the final battery work.
-3. Repeat with a different R and identical ε,C. Compare final H and peak instantaneous power.
-4. Optional challenge: change capacitance while the capacitor is charged. Explain why the energy ledger must include mechanical work, not just W−U−H.
-
-| Elapsed t (s) | W_battery (J) | U_capacitor (J) | H_resistor (J) | W−U−H (J) |
+| t (s) | W (J) | U_C (J) | H (J) | W−U_C−H (J) |
 |---|---|---|---|---|
 | | | | | |
-| | | | | |
-| | | | | |
-| | | | | |
 
-## Analysis and uncertainty
-For each graph report axis units, fit equation, uncertainty in slope and intercept (if available), residuals, and one worked example. If measurements are from an exact deterministic trace, describe display/cursor precision as the principal measurement limitation; do **not** fabricate experimental noise. Discuss what resistor tolerance, capacitor leakage and nonzero internal resistance would do in a physical laboratory.
+State exported sample spacing, readout rounding and crossing brackets. Bound τ from nearby samples; propagate slope uncertainty into C. Deterministic traces do not justify invented random noise. Explain why a very small fitted residual does not represent resistor tolerance or capacitor leakage in a real lab.
 
-## Postlab
-1. Why is the capacitor voltage continuous at an instantaneous switch flip?
-2. Can the resistor voltage change sign without the capacitor voltage changing sign?
-3. Why does the final heat of charging not depend on R?
-4. Why does the Kirchhoff residual approach zero even while energy is dissipated?
-5. How would an oscilloscope sampling interval comparable to τ bias your estimate?
-
-## Submission (100 points)
-Prelab 15; measurements 25; three fits and units 25; energy ledger 20; interpretation and uncertainty 15. Submit tables, graphs, derivations and a concise conclusion.
+Submit settings, raw CSV, τ methods/τ-versus-R fit and residuals, switch comparison, flash comparison, energy table/integrals and uncertainty. Discuss signed current, finite charging, sampling bias and parasitic effects absent from the ideal model.
