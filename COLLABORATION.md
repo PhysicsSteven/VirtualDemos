@@ -12,7 +12,7 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 | New demos | Claude | `demos/` on `main` | Recent: gamma-spectroscopy, diffraction-grating. `spin-resonance` (ESR/PSR, Teltron TEL.2560 setup) and `speed-of-light` (Foucault, PASCO OS-9261 setup) are live with notes and keys; physics lives in its `==CORE START/END==` block. |
 
 **Current focus (Steve, 2026-10-18):** modern physics labs first, one piece at a time, each finished (apparatus, physics checks, data export, notes, key, Steve's review) before the next starts.
-| Classroom teaching notes and answer keys | Claude | `notes/`, `keys/` on `main` | All 52 demos have notes |
+| Classroom teaching notes and answer keys | Claude | `notes/` on `main`; keys in the private repo `PhysicsSteven/TeacherKeys` | All demos have notes and keys |
 | Full virtual labs, physics validation, regression tests, CI | GPT | `curriculum/`, `.github/`, `demos/transient-circuits.html` on `curriculum/virtual-lab-starter-kits` | Ongoing. Latest main merged: bc0485a (2026-10-18). See per-demo rows below. |
 | RLC transients: physics and lab | GPT | Feature branch | Physics changes and aligned lab/key committed; 18 numerical groups and Chromium desktop/phone workflows passed. Chromium/Firefox CI passed; accessibility and independent release review remain. |
 | Gauss: validation only | GPT; visual/source edits reserved for Claude | Feature branch `curriculum/validation/` | Source changes set aside on 2026-10-18 after coordination instruction. Pending requests below; no changes to active `demos/gauss-law.html`. |
@@ -29,7 +29,7 @@ Both of us will sometimes need to change the same demo file: Claude for visuals,
 1. **Before editing any `demos/*.html`, pull the latest `main`** and start from it. Demo files change often (visual passes rewrite large parts).
 2. **Check the table.** If the other assistant has that demo "in progress", don't edit it; note what you need in the "Requests" section below instead.
 3. **Keep changes minimal and local.** Physics and measurement changes go in the physics/logic code; drawing changes go in the drawing code. Don't reformat or reorganize code you aren't changing.
-4. **Never rename** a preset, control label, readout or keyboard key without updating everything that refers to it (`notes/src/<demo>.md`, `keys/answers/<demo>.md`, `curriculum/labs/*/<demo>.md`) in the same change, and say so in the commit message.
+4. **Never rename** a preset, control label, readout or keyboard key without updating everything that refers to it (`notes/src/<demo>.md`, the key `answers/<demo>.md` in TeacherKeys, `curriculum/labs/*/<demo>.md`) in the same change, and say so in the commit message.
 5. **Run the demo's existing tests** (and `node --check` on its extracted script) after any change.
 
 ### Requests between assistants
@@ -72,15 +72,15 @@ Add a line when you need the other assistant to do something, and remove it when
 | `demos/star-slice.html` (about 8 MB) | `tools/star-slice/star-slice.template.html` + `tools/star-slice/data/` | `python3 tools/star-slice/build.py` |
 | QR code block in every demo header (`<!-- vd-qr -->` and `/* vd-qr */`) | `tools/qr.py` | `python3 tools/qr.py <demo>`, then rebuild Star Slice |
 | `notes/<demo>.html`, `notes/index.html` | `notes/src/<demo>.md` | `python3 tools/notes.py <demo>` |
-| `keys/key/<demo>.html` | `keys/answers/<demo>.md` | `python3 tools/notes.py <demo> --keys <keys folder>` |
+| `key/<demo>.html` in TeacherKeys (private) | `answers/<demo>.md` in TeacherKeys | `python3 tools/notes.py <demo> --keys <TeacherKeys clone>` |
 | `thumbs/<demo>-light.webp`, `-dark.webp` | the demo itself | `python3 tools/thumbs.py <demo>` (add `--three <path>` for three.js demos) |
 
 ## Where things live
 
 - `demos/` — the demos (one HTML file each).
 - `index.html` — the public catalog: cards by subject, with demo counts.
-- `notes/` — short classroom teaching notes per demo (goals, how to run it in class, questions, misconceptions). Answers are in `keys/`.
-- `keys/` — answer keys for `notes/`. Not linked from anywhere, but the repo is currently public; Steve plans to make it private.
+- `notes/` — short classroom teaching notes per demo (goals, how to run it in class, questions, misconceptions). Answers are in the private TeacherKeys repo.
+- Answer keys for `notes/` live in the **private** repo `PhysicsSteven/TeacherKeys` (moved out of this public repo on 2026-10-18, because GitHub Pages serves every file here). Never put answer keys in this repo. Note that `curriculum/labs/instructors/` is also public on the site.
 - `curriculum/` — GPT's full virtual labs (student handouts, instructor keys, rubrics, validation records). These are longer lab assignments; `notes/` are the short versions for running a demo in lecture.
 - `tools/` — build and maintenance scripts (thumbnails, QR codes, notes, Star Slice).
 - `CONTRIBUTING.md` — detailed house style for demos.
