@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Speed of Light: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Speed of Light</h1><ul class="meta"><li><a href="../demos/speed-of-light.html">Open the demo</a></li><li>Modern physics lab</li><li>20 to 40 minutes (a full lab period with the table and fit)</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Light takes a finite time to cross the bench: about 80 ns for a 24 m round trip. Foucault's method turns that time into an angle by letting a mirror rotate while the light is away.</li>
+<li>A mirror turned by Δθ turns the reflected beam by 2Δθ. That factor of 2 is the heart of the geometry.</li>
+<li>The image shift at the microscope is Δs′ = 4AD²ω / (c(D + B)). It is tiny (about a quarter of a millimeter at 1000 rev/s), so the measurement depends on reading the micrometer carefully, taking both rotation directions and fitting many speeds.</li>
+<li>c follows from distances and a rotation rate you can measure on a bench, with no clocks fast enough to time 80 ns directly.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the law of reflection, angular speed ω = 2πf, and the thin lens equation. Pick a setup and a seed to share if you want the class on one instrument. Turn on <strong>Blind</strong> before projecting the readings table, and turn off the digital micrometer reading if you want students to read the sleeve and thimble.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>The bench at rest.</strong> Trace the beam: laser, L1 makes the point source S, the beam splitter, L2, the rotating mirror MR, out to MF and back. Ask why L2 must sit where it does (it focuses S onto MF). Center the crosshair on the spot and capture the rest reading.</li>
+<li><strong>Spinning at 1000 rev/s.</strong> Ask Q1 first. The spot moves off the crosshair; follow it with the micrometer and read the shift, about 0.25 mm.</li>
+<li><strong>Slow motion: why the beam comes back crooked.</strong> One pulse goes out and back. The mirror's turn is drawn 100 times larger than it is; the readouts show the true Δt and Δθ. Point at the 2Δθ return.</li>
+<li><strong>CW then CCW.</strong> The image moves to the other side of the rest reading. Ask why taking the difference is better than measuring from rest (Q4).</li>
+<li><strong>Longer path (D = 20 m).</strong> Predict the new shift before switching (Q3). Note that L1 has to move: A comes from the focus condition.</li>
+<li><strong>Measure c.</strong> A table filled by the procedure on this seed, labeled as simulated readings. Compare its fit with the class's own.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: with the mirror spinning at 1000 rev/s, the light makes a round trip of 2D = 24 m. How many revolutions does the mirror make while the light is away? Is it enough to notice?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> For D = 12.0 m, B = 0.500 m and f₂ = 252 mm, find A from the focus condition. Then find Δt, Δθ and the image shift Δs′ at 1000 rev/s. Check with the demo.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> If D is raised from 12 m to 20 m (B unchanged), by what factor does the shift grow? The light is away longer and the turned beam has a longer lever arm, which suggests (20/12)² ≈ 2.8. Why is the real factor much smaller?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Students measure the image at 1000 rev/s clockwise and 1000 rev/s counterclockwise instead of against the reading at rest. What is the difference between the two readings, and why is this the better measurement?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> The micrometer has 0.01 mm divisions. How well must the shift be read to get c to 1 %? What does that tell you about why the lab fits many readings instead of using one?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> A student forgets that a mirror turned by Δθ turns the reflected beam by 2Δθ. What value of c do they get, and why?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> D is measured with a tape to ±1 cm at 12 m. Roughly what fractional error in c does that cause? Which is the larger worry, D or the image shift?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The image shift shows the light slowing down on the way back."</strong> The light travels at c both ways. The shift comes from the mirror having turned during the flight.</li>
+<li><strong>"The beam comes back at the mirror's angle Δθ."</strong> Reflection doubles it: the returning beam is off by 2Δθ.</li>
+<li><strong>"Faster rotation makes the light take longer."</strong> The flight time 2D/c does not depend on the mirror. Faster rotation only turns the mirror further in that same time.</li>
+<li><strong>"A longer path just makes the shift proportionally bigger."</strong> Δs′ grows roughly as D² / (D + B): more time for the mirror to turn, and a longer lever arm for the turned beam.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Δt = 2D/c, Δθ = ωΔt with ω = 2π × (rev/s). The returning beam is turned by 2Δθ, so the image of S on MF moves 2DΔθ, and L2 reimages it at the microscope with magnification A/(D + B): Δs′ = 4AD²ω / (c(D + B)), so c = 4AD²ω / ((D + B)Δs′).</li>
+<li>The fit uses the slope k of reading against signed speed in rev/s: c = 8πAD² / ((D + B)k). With CW and CCW readings, Δs′ = |s_CW − s_CCW| and ω = 2π(f_CW + f_CCW).</li>
+<li>A is set by 1/f₂ = 1/A + 1/(D + B), with f₁ = 48 mm and f₂ = 252 mm.</li>
+<li>Idealized: thin lenses, a perfect point source, MF exactly at the image of S, the mirror at constant speed. The real image is a train of short flashes as the turning mirror sweeps the beam across MF; it looks steady and is drawn steady.</li>
+<li>Simulated from the seed: the rest position, a 2 µm jitter of the image, and a 0.15 % jitter of the speed meter. Air (n ≈ 1.000 29) is neglected; its 0.03 % effect is far below the method's resolution.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Have students propagate the uncertainties in D, A, B and the slope into c and compare with the scatter of the class's results.</li>
+<li>History: Foucault used a rotating mirror in 1862 and got about 298 000 km/s, within about 0.6 % of the modern value. Michelson refined the method over the following decades.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>
