@@ -56,7 +56,7 @@ test('e/m: Helmholtz center and independent off-axis Biot-Savart',()=>{
  for(const p of [[.02,.01,-.04],[0,.03,0],[.04,0,.02]]){const a=e.coilField(p,1.5,.15,130),b=fieldReference(p,1.5,.15,130);a.forEach((v,i)=>close(v,b[i],2e-9,1e-13));}
 });
 test('e/m: Lorentz circular orbit, kinetic-energy speed and polarity',()=>{
- const V=150,I=1.5,B=e.bCenter(130,I,.15),r=Math.sqrt(2*V/e.EM)/B,path=e.trace({V,I,uniform:true,earth:0});
+ const V=150,I=1.5,B=e.bCenter(130,I,e.A_TRUE),r=Math.sqrt(2*V/e.EM)/B,path=e.trace({V,I,uniform:true,earth:0});
  close(e.speed(V)**2,2*e.EM*V);close(e.emFrom(V,B,r),e.EM);close(e.radiusUniform(V,B),r);assert(!path.hit);assert(path.turns>.9);
  for(const p of path.pts)close(Math.hypot(p[0],p[2]-(e.GEOM.z0+r)),r,2e-7,1e-10);
  const reversed=e.trace({V,I:-I,uniform:true});assert(reversed.pts[1][2]<e.GEOM.z0);assert(path.pts[1][2]>e.GEOM.z0);

@@ -200,7 +200,7 @@ table.rows tr.sim td.n { color: var(--equi); }
   <header class="bar">
     <div>
       <h1>e/m of the Electron</h1>
-      <p>Electrons from a 150 to 300 V gun bend into a glowing circle in the field of a pair of Helmholtz coils. Read the radius on the mirrored scale without parallax and measure the charge to mass ratio of the electron.</p>
+      <p>Electrons from a 100 to 200 V gun bend into a glowing circle in the field of a pair of Helmholtz coils. Read the radius on the mirrored scale without parallax and measure the charge to mass ratio of the electron.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">r in cm · B in mT · e/m = 2V/(B²r²) · B = (4/5)<sup>3/2</sup>μ₀NI/a</div>
@@ -250,29 +250,28 @@ table.rows tr.sim td.n { color: var(--equi); }
         <h2>Power supply</h2>
         <div>
           <div class="slider-head"><label for="vSl">Accelerating voltage V</label><output id="vOut" class="mono" for="vSl"></output></div>
-          <input type="range" id="vSl" min="150" max="300" step="1" value="200">
+          <input type="range" id="vSl" min="100" max="200" step="1" value="150">
         </div>
         <div>
           <div class="slider-head"><label for="iSl">Coil current I</label><output id="iOut" class="mono" for="iSl"></output></div>
-          <input type="range" id="iSl" min="0" max="2.5" step="0.01" value="1.5">
+          <input type="range" id="iSl" min="0" max="3.5" step="0.01" value="1.5">
         </div>
         <dl class="meters">
           <div><dt>Voltmeter</dt><dd><span class="meter" id="mV">200.0<small>V</small></span></dd></div>
           <div><dt>Ammeter</dt><dd><span class="meter" id="mI">1.500<small>A</small></span></dd></div>
         </dl>
-        <p class="warn" id="overWarn" hidden>Above 2 A: the coils heat up. The apparatus manual says do not exceed 2 A.</p>
-        <p class="hint">Heater 6.3 V, fixed: the cathode glows and the lamps behind the scale are on. Read the meters, not the sliders: the meters are what go in your table.</p>
+        <p class="hint">Constant voltage supply 0 to 200 V on the anode, constant current supply up to 3.5 A through both coils in series. Heater 6.3 V, fixed: the cathode glows and the lamps behind the scale are on. Read the meters, not the sliders: the meters are what go in your table.</p>
       </section>
 
       <section>
         <h2>Tube and coils</h2>
         <div>
           <div class="slider-head"><label for="tSl">Tube rotation</label><output id="tOut" class="mono" for="tSl"></output></div>
-          <input type="range" id="tSl" min="0" max="90" step="1" value="0">
+          <input type="range" id="tSl" min="-30" max="30" step="1" value="0">
         </div>
         <div class="dims">
-          <label>Inner diameter (cm)<input class="num" id="din" type="number" step="0.1" min="20" max="35" value="29.0"></label>
-          <label>Outer diameter (cm)<input class="num" id="dout" type="number" step="0.1" min="20" max="35" value="31.0"></label>
+          <label>Inner diameter (cm)<input class="num" id="din" type="number" step="0.1" min="20" max="35" value="30.6"></label>
+          <label>Outer diameter (cm)<input class="num" id="dout" type="number" step="0.1" min="20" max="35" value="32.6"></label>
         </div>
         <dl class="readout">
           <div><dt>Your coil radius a</dt><dd id="aOut">—</dd></div>
@@ -280,7 +279,7 @@ table.rows tr.sim td.n { color: var(--equi); }
           <div class="wide"><dt>B at the center, from the ammeter</dt><dd id="bOut">—</dd></div>
         </dl>
         <p class="formula">N = 130 turns per coil, spacing = a<br>B = (4/5)<sup>3/2</sup> μ₀NI/a</p>
-        <p class="hint">a is the mean radius of the winding: half the average of your inner and outer diameters.</p>
+        <p class="hint">a is the mean radius of the winding: half the average of your inner and outer diameters. The manual gives R = 158 mm; measuring it yourself is a check.</p>
       </section>
 
       <section>
@@ -336,10 +335,10 @@ table.rows tr.sim td.n { color: var(--equi); }
 
       <section>
         <h2>Model</h2>
-        <p class="hint">The layout follows the common teaching apparatus: two coils of N = 130 turns with radius and spacing a = 15 cm, a bulb with helium at about 10⁻² mm Hg, an electron gun with a 6.3 V heater and 150 to 300 V on the anode, a socket that turns the tube, and a lit mirrored scale on the back of the rear coil.</p>
+        <p class="hint">The apparatus follows the PASCO SE-9629 manual: two coils of N = 130 turns with radius R = 158 mm (spacing taken equal to R, the Helmholtz condition), a bulb with helium at low pressure, an electron gun with a 6.3 V heater and up to 200 V on the anode, a constant current supply up to 3.5 A for the coils, a socket that turns the tube by up to 30° either way, and a mirrored scale on one coil. The deflection plates are drawn but not wired. The manual quotes e/m = 1.75 × 10¹¹ C/kg as the accepted value.</p>
         <p class="hint">Exact within the model: each electron leaves the gun with kinetic energy eV and moves under F = −e v × B. With B uniform the path is a circle, r = mv/(eB), so e/m = 2V/(B²r²). e/m = 1.75882001076 × 10¹¹ C/kg and μ₀ are CODATA 2018 values.</p>
         <p class="hint">Computed, when the coil field is on: B everywhere from the exact field of two circular loops (complete elliptic integrals), and the path from a step by step integration. Off the center the field is a little weaker, so circles come out a little larger than the center field predicts and e/m from the center field comes out low, by about 0.1% for small circles up to about 1% for a 5 cm circle. The earth's field option adds 2 × 10⁻⁵ T, about the horizontal part of the earth's field in the southern US, along the coil axis.</p>
-        <p class="hint">Idealized: each coil is one loop at its mean radius; electrons are treated without relativity (at 300 V that changes r by less than 0.02%); the gun is a point 5 cm below the center of a 6.5 cm radius bulb; the scale is 8.5 cm behind the beam and your eye 30 cm in front of it. In a real tube the electrons lose a little energy in the anode and in collisions with helium, so the real e/m comes out high; that is not simulated. The meter jitter (about 0.2 V and 2 mA) and the flicker of the beam edges (up to about 1 mm) are simulated. The moving dots only show the direction of travel, not the speed.</p>
+        <p class="hint">Idealized: each coil is one loop at its mean radius; electrons are treated without relativity (at 200 V that changes r by about 0.01%); the gun is a point 5 cm below the center of a 6.5 cm radius bulb; the scale is 8.5 cm behind the beam and your eye 30 cm in front of it. In a real tube the electrons lose a little energy in the anode and in collisions with helium, so the real e/m comes out high; that is not simulated. The meter jitter (about 0.2 V and 2 mA) and the flicker of the beam edges (up to about 1 mm) are simulated. The moving dots only show the direction of travel, not the speed.</p>
       </section>
     </aside>
   </main>
@@ -353,7 +352,7 @@ table.rows tr.sim td.n { color: var(--equi); }
   const EM = 1.75882001076e11;           // C/kg, e/m of the electron, CODATA 2018
   const MU0 = 1.25663706212e-6;          // N/A^2, CODATA 2018
   const N_TURNS = 130;
-  const A_TRUE = 0.150;                  // m, coil mean radius and spacing
+  const A_TRUE = 0.158;                  // m, coil radius and spacing (PASCO SE-9629 manual: R = 158 mm)
   const HELM = Math.pow(4 / 5, 1.5);
   const GEOM = { z0: -0.050, Rb: 0.065, ys: 0.085, D: 0.30 };   // gun height, bulb radius, scale depth, eye distance (m)
   const B_EARTH = 2e-5;                  // T, along the coil axis when switched on
@@ -490,8 +489,8 @@ table.rows tr.sim td.n { color: var(--equi); }
 
   // ---------- state ----------
   const S = {
-    V: 200, I: 1.5, tilt: 0, eye: 0, ptr: { L: -3.5, R: 3.5 }, sel: 'R', view: 'whole', zc: { L: -4, R: 4 },
-    din: 29.0, dout: 31.0, uniform: false, earth: 0, blind: false, truth: false, playing: true, seed: 2718, rows: [], preset: 'circle',
+    V: 150, I: 1.5, tilt: 0, eye: 0, ptr: { L: -3.5, R: 3.5 }, sel: 'R', view: 'whole', zc: { L: -4, R: 4 },
+    din: 30.6, dout: 32.6, uniform: false, earth: 0, blind: false, truth: false, playing: true, seed: 2718, rows: [], preset: 'circle',
   };
   let tr = null, trDirty = true, simT = 0, flickN = 0, flickClock = 0, shownV = 200, shownI = 1.5;
   function getTrace() { if (trDirty || !tr) { tr = trace({ V: S.V, I: S.I, tilt: S.tilt * Math.PI / 180, uniform: S.uniform, earth: S.earth }); trDirty = false; G.beamDirty = true; } return tr; }
@@ -795,10 +794,10 @@ table.rows tr.sim td.n { color: var(--equi); }
     box(44, 20, 2.4, dark, 0, 0, -21.8);
     for (const s of [-1, 1]) {
       // coil: black former with copper winding showing on the inside face
-      const former = new THREE.Mesh(new THREE.TorusGeometry(15, 1.15, 16, 96), std(0x1c1f23, 0.45)); former.rotation.x = Math.PI / 2; former.position.set(0, s * 7.5, 0); scene.add(former);
-      const wind = new THREE.Mesh(new THREE.TorusGeometry(15, 0.75, 12, 96), std(0xb8733a, 0.35, 0.6)); wind.rotation.x = Math.PI / 2; wind.position.set(0, s * 7.5 - s * 0.55, 0); scene.add(wind);
-      box(3, 2.2, 6.2, dark, -9, s * 7.5, -17.6); box(3, 2.2, 6.2, dark, 9, s * 7.5, -17.6);
-      box(22, 2.4, 1.2, dark, 0, s * 7.5, -15.2);
+      const former = new THREE.Mesh(new THREE.TorusGeometry(15.8, 1.15, 16, 96), std(0x1c1f23, 0.45)); former.rotation.x = Math.PI / 2; former.position.set(0, s * 7.9, 0); scene.add(former);
+      const wind = new THREE.Mesh(new THREE.TorusGeometry(15.8, 0.75, 12, 96), std(0xb8733a, 0.35, 0.6)); wind.rotation.x = Math.PI / 2; wind.position.set(0, s * 7.9 - s * 0.55, 0); scene.add(wind);
+      box(3, 2.2, 6.2, dark, -9, s * 7.9, -17.6); box(3, 2.2, 6.2, dark, 9, s * 7.9, -17.6);
+      box(22, 2.4, 1.2, dark, 0, s * 7.9, -15.2);
     }
     // the mirrored scale on the back of the rear coil, lit from above
     const scl = mkTex(1024, 480); paintScaleTex(scl);
@@ -890,7 +889,7 @@ table.rows tr.sim td.n { color: var(--equi); }
       x.fillStyle = '#e8edf2'; x.font = '700 20px sans-serif'; x.textAlign = 'center'; x.fillText(lab, cx, 186);
     };
     meter(195, shownV.toFixed(1), 'V', 'ACCELERATING VOLTAGE', false);
-    meter(525, shownI.toFixed(3), 'A', 'COIL CURRENT', S.I > 2);
+    meter(525, shownI.toFixed(3), 'A', 'COIL CURRENT', false);
     x.font = '700 22px sans-serif'; x.fillStyle = '#e8edf2'; x.textAlign = 'center'; x.fillText('V', 195, 372); x.fillText('I', 525, 372);
     x.font = '18px sans-serif'; x.fillStyle = '#c9d3dc'; x.fillText('HEATER 6.3 V', 360, 300);
     x.fillStyle = '#ffb347'; x.beginPath(); x.arc(360, 330, 9, 0, 2 * Math.PI); x.fill();
@@ -915,8 +914,8 @@ table.rows tr.sim td.n { color: var(--equi); }
     // dots travel along the path (direction only)
     if (G.curve) { const L = G.curveLen, sp = 9; G.dots.forEach((d, i) => { const u = (((simT * sp) / L + i / G.dots.length) % 1 + 1) % 1; d.position.copy(G.curve.getPointAt(u)); }); }
     G.tube.rotation.z = S.tilt * Math.PI / 180;
-    G.kV.rotation.y = -((S.V - 150) / 150 * 1.5 - 0.75) * Math.PI;
-    G.kI.rotation.y = -(S.I / 2.5 * 1.5 - 0.75) * Math.PI;
+    G.kV.rotation.y = -((S.V - 100) / 100 * 1.5 - 0.75) * Math.PI;
+    G.kI.rotation.y = -(S.I / 3.5 * 1.5 - 0.75) * Math.PI;
     G.eye.position.set(S.eye, -GEOM.D * 100, t.zc * 100);
     // line of sight from the eye through the beam edge nearer the eye to the scale
     const xb = S.eye <= 0 ? t.xL : t.xR, yb = S.eye <= 0 ? t.yL : t.yR, zb = S.eye <= 0 ? t.zL : t.zR;
@@ -1048,14 +1047,13 @@ table.rows tr.sim td.n { color: var(--equi); }
 
   // ---------- controls ----------
   function changed() { trDirty = true; G.dirty = true; G.panelDirty = true; syncUI(); dirtyAll(); }
-  function setV(v) { v = clamp(Math.round(v), 150, 300); if (v === S.V) return; S.V = v; $('vSl').value = v; refreshMeters(); changed(); }
-  function setI(v) { v = clamp(Math.round(v * 100) / 100, 0, 2.5); if (v === S.I) return; S.I = v; $('iSl').value = v; refreshMeters(); changed(); }
-  function setTilt(v) { v = clamp(Math.round(v), 0, 90); if (v === S.tilt) return; S.tilt = v; $('tSl').value = v; changed(); }
+  function setV(v) { v = clamp(Math.round(v), 100, 200); if (v === S.V) return; S.V = v; $('vSl').value = v; refreshMeters(); changed(); }
+  function setI(v) { v = clamp(Math.round(v * 100) / 100, 0, 3.5); if (v === S.I) return; S.I = v; $('iSl').value = v; refreshMeters(); changed(); }
+  function setTilt(v) { v = clamp(Math.round(v), -30, 30); if (v === S.tilt) return; S.tilt = v; $('tSl').value = v; changed(); }
   function setPlaying(p) { S.playing = p; $('play').textContent = p ? 'Pause' : 'Play'; }
   function refreshMeters() {
     shownV = meterV(S.V, S.seed, flickN); shownI = meterI(S.I, S.seed, flickN);
     $('mV').firstChild.textContent = shownV.toFixed(1); $('mI').firstChild.textContent = shownI.toFixed(3);
-    $('mI').classList.toggle('over', S.I > 2); $('overWarn').hidden = !(S.I > 2);
     const a = coilA(); $('bOut').textContent = isFinite(a) ? `${(bCenter(N_TURNS, shownI, a) * 1e3).toFixed(3)} mT` : '—';
     G.panelDirty = true; G.dirty = true; dirty.flat = true;
   }
@@ -1103,7 +1101,7 @@ table.rows tr.sim td.n { color: var(--equi); }
 
   // ---------- presets ----------
   // the procedure's own readings: eye lined up on each edge, the beam edge read with 0.6 mm of scatter (one standard deviation), to the nearest 0.5 mm
-  const PROC = [[150, 1.2], [200, 1.4], [250, 1.6], [300, 1.6], [300, 2.0], [200, 1.8]];
+  const PROC = [[100, 1.0], [105, 1.1], [110, 1.2], [115, 1.3], [120, 1.4]];   // the settings of the sample data in the PASCO SE-9629 manual
   function procedureRows() {
     const r = mulberry(S.seed * 4099 + 11), out = [];
     PROC.forEach(([V, I], n) => {
@@ -1115,12 +1113,12 @@ table.rows tr.sim td.n { color: var(--equi); }
     return out;
   }
   const PRESETS = {
-    rest: { hint: 'With no current in the coils the beam goes straight out of the gun and strikes the glass. Raise the coil current and watch it bend upward: the force evB is always at right angles to the motion.', set: { V: 200, I: 0, tilt: 0, eye: 0 } },
-    circle: { hint: 'At 200 V and 1.5 A the beam closes into a circle about 4 cm in radius. Your eye is in the middle, so the beam and its reflection do not line up on either side: move the eye to each edge before you read it.', set: { V: 200, I: 1.5, tilt: 0, eye: 0 } },
-    morev: { hint: 'At 300 V the electrons are faster, v = √(2eV/m), so the same field bends them into a bigger circle: r grows as √V.', set: { V: 300, I: 1.5, tilt: 0, eye: 0 } },
-    morei: { hint: 'At 2 A the field is stronger and the circle shrinks: r = mv/(eB) falls as 1/I. Do not go above 2 A.', set: { V: 200, I: 2.0, tilt: 0, eye: 0 } },
-    helix: { hint: 'The tube is turned 12°, so part of the velocity lies along B. That part is untouched, and the beam winds into a helix toward the rear coil. Turn the tube back to 0° before you measure: a helix gives a smaller radius.', set: { V: 200, I: 1.5, tilt: 12, eye: 0 } },
-    measure: { hint: 'The procedure took six readings at different voltages and currents, eye lined up on each edge, and filled the table (marked *, simulated readings scattered by 0.6 mm, one standard deviation). The slope of 2V against (Br)² is e/m. Add your own readings to the same table.', set: { V: 250, I: 1.6, tilt: 0, eye: 0 } },
+    rest: { hint: 'The manual starts here: 190 V on the anode and no current in the coils, so the beam goes straight out of the gun and strikes the glass. Raise the coil current and watch it bend upward: the force evB is always at right angles to the motion.', set: { V: 190, I: 0, tilt: 0, eye: 0 } },
+    circle: { hint: 'At 150 V and 1.5 A the beam closes into a circle about 3.7 cm in radius. Your eye is in the middle, so the beam and its reflection do not line up on either side: move the eye to each edge before you read it.', set: { V: 150, I: 1.5, tilt: 0, eye: 0 } },
+    morev: { hint: 'At 200 V the electrons are faster, v = √(2eV/m), so the same field bends them into a bigger circle: r grows as √V.', set: { V: 200, I: 1.5, tilt: 0, eye: 0 } },
+    morei: { hint: 'At 2 A the field is stronger and the circle shrinks: r = mv/(eB) falls as 1/I.', set: { V: 150, I: 2.0, tilt: 0, eye: 0 } },
+    helix: { hint: 'The tube is turned 12° in its socket, so part of the velocity lies along B. That part is untouched, and the beam winds into a helix toward the rear coil. Turn the tube back to 0° before you measure: a helix gives a smaller radius.', set: { V: 150, I: 1.5, tilt: 12, eye: 0 } },
+    measure: { hint: 'The procedure took five readings at the voltages and currents of the sample data in the PASCO manual (100 V, 1.0 A up to 120 V, 1.4 A), eye lined up on each edge, and filled the table (marked *, simulated readings scattered by 0.6 mm, one standard deviation). The slope of 2V against (Br)² is e/m. Add your own readings to the same table.', set: { V: 120, I: 1.4, tilt: 0, eye: 0 } },
   };
   function applyPreset(p) {
     S.preset = p; const pr = PRESETS[p], s = pr.set;
