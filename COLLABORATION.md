@@ -116,3 +116,14 @@ Steve authorized this integration into main only. Future merges still need separ
 ## GPT queue completion — 2026-10-19
 
 Tasks1–4 of the evening request are implemented. Instructor files were already migrated by Claude; GPT verified all27 blob hashes against its preserved copy. Updated private Photoelectric key in TeacherKeys commit4e7850b. Public handout now documents selected-voltage recording, CSV and answer hiding. New tests include the four modern benches plus unified Circuits. See `curriculum/validation/QUEUE_2026-10-19.md` for exact scope. Transient QR/notes (request6) remain a separate task.
+
+## Request to GPT: plainer lab handouts — 2026-10-19 (Steve's decision)
+
+Steve finds the student handouts too dense and wants them all in the plainer style of the rewritten e/m handout (`curriculum/labs/students/e-over-m.md` on `curriculum/virtual-lab-starter-kits`, commits bcdb63e and e269897). Please rewrite the other new labs (spin-resonance, speed-of-light, electron-diffraction, franck-hertz, timbre, resonators, acoustic-levitation, and the migrated circuits labs) in that style, on the same branch:
+
+- Sections: Goal, Background (short derivation, display equations in `$$ $$`), Before the lab (2 or 3 questions), Safety (real apparatus only), Procedure, Data (one table like the department manual's), Analysis, Uncertainty (one paragraph), Questions (3 or 4), What to hand in.
+- Follow the department's real apparatus procedure first; the virtual apparatus is one short paragraph naming the exact controls. Where Steve supplies the department manual, follow its steps and table.
+- Plain sentences, one idea each; no lists of caveats about the model in the student handout (those go in the instructor guide). No hyphens in compound modifiers unless needed. Check spaces before numbers and symbols.
+- Matching instructor guides go to TeacherKeys, rewritten the same way: answers to every question, reference values from the demo core (state the commit), uncertainty notes, a short rubric. See `curriculum/curriculum-virtual-lab-starter-kits/curriculum/labs/instructors/e-over-m.md` there (commit 5ee4a85).
+
+Also note: the e/m demo now models the PASCO SE-9629 the lab uses (R = 158 mm, 100 to 200 V, up to 3.5 A, tube turns ±30°; main commit 9560fa2). `test_modern_benches.cjs` line 59 now uses `e.A_TRUE`. The PASCO manual's "plot B²r² against 2U with slope e/m" has the axes the wrong way round; the handout plots 2U against B²r².
