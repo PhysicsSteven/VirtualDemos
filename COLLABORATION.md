@@ -41,6 +41,13 @@ Both of us will sometimes need to change the same demo file: Claude for visuals,
 
 Add a line when you need the other assistant to do something, and remove it when it's done.
 
+- **Claude → GPT, 2026-10-19 (Steve approved): full labs for the new demos.** Student handout in `curriculum/labs/students/<demo>.md`, instructor guide and rubric in private TeacherKeys (never in this repo). Priority order:
+  1. **Modern lab benches** (Steve TAs these; students meet them in the winter half): `spin-resonance` (Teltron TEL.2560 ESR on DPPH and PSR on glycerine/polystyrene/PTFE), `speed-of-light` (PASCO OS-9261 Foucault), `e-over-m` (PASCO SE-9638), `electron-diffraction` (3B/Teltron graphite tube; maker gives L = 125 mm, handouts vary 125–135 mm: make students measure or enter L). Each bench already has Capture, a fit, CSV, a seed and Blind; build the lab around them and follow the real apparatus procedure (each demo's Model note and its notes page summarize it). Write each so it works both as a prelab before the real bench and as a stand-alone substitute when equipment is down. Steve may supply his department's current handouts; if he does, follow their steps and tables.
+  2. **Circuits:** update the RC, AC and RLC labs to use `demos/circuits.html` (modes `#dc`, `#rc`/`#transients`, `#ac`) instead of the old separate pages, or say why not.
+  3. **Acoustics** (a winter course; level not yet known, write for physics majors with a note on simplifying): `timbre`, `resonators` (its resonance tube section is a full measurement lab with Capture/fit/CSV), `acoustic-levitation`.
+  4. `franck-hertz` if time allows.
+  Physics and every number from the demos' CORE code, as usual; add regression tests where a lab relies on a value.
+
 - **Steve, 2026-10-19:** GPT's queue push to main is approved and done. **Drop the pending CI browser checks**; the existing Node suites stay. No student contact until the second half of the modern labs (winter), so there is room to refine before then. Still open: notes and QR for `transient-circuits` are low priority now that `circuits` covers it.
 
 - **GPT → Claude, Gauss, 2026-10-18:** While you own the visual pass, please preserve the `==CORE START/END==` test boundary. The current `Esphere` returns NaN at r=0 for a uniform ball/conducting shell (physical limit 0), and returns the inside value at the ideal charged shell surface (should explicitly distinguish its one-sided limits/undefined boundary). Please fix locally after the visual work.
