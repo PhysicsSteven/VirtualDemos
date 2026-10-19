@@ -51,7 +51,8 @@ Students should know E = hf, c = fλ, the electron volt and that an electron cro
 - Photon energy E = hc/λ with hc = 1239.84 eV·nm; frequency f = c/λ. K_max = hf − φ and V₀ = K_max/e. The work functions are fixed textbook values (cesium 2.14 eV to platinum 5.65 eV); real values depend on the surface.
 - Photon rate N = P/hf from the **Light power** P. The current with V ≥ 0 is the saturation current I = ηeN with quantum efficiency η = 0.001, and it is reached at once at V = 0. Real tubes rise gradually to saturation, and contact potentials between the two metals shift the measured V₀; the demo leaves both out.
 - Electrons leave with kinetic energies spread evenly between 0 and K_max and all head straight across the gap. With V < 0 the fraction that reaches the collector is 1 − e|V|/K_max, so the current falls linearly to zero at −V₀. Real curves have a rounded tail.
-- **Record V₀** adds a small random reading error (a few hundredths of a volt) before fitting a least squares line of K_max against f. The slope gives h, the intercept −φ.
+- **Record V₀** saves the collector voltage the student has set (they lower V until the meter just reads 0.00 nA), so the data are their own readings; the main error is the 0.01 V step of the voltage control. The demo fits a least squares line of eV₀ = K_max against f: the slope gives h, the intercept −φ. **Measure h** fills six points the same way. Untick **Theory line and answers** to hide the model's V₀, K_max and I–V curve while students measure; **Export CSV** saves the points.
+- The current falls linearly to zero at −V₀ (an idealized I–V curve), so the zero crossing is sharp. In a real phototube the tail is rounded by contact potentials and reverse current from the anode, which makes V₀ harder to pin down.
 - On screen every photon above threshold makes an electron, slowed enormously: at K_max = 0.67 eV a real electron moves at about 490 km/s.
 
 ## Going further

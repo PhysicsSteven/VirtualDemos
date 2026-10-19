@@ -253,18 +253,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" class="btn primary" id="record">Record V₀</button>
           <button type="button" class="btn" id="clear">Clear points</button>
         </div>
+        <button type="button" class="btn" id="csv" style="margin-top:8px">Export CSV</button>
+        <p class="hint" id="recMsg" aria-live="polite"></p>
         <dl class="readout">
           <div><dt>h from slope</dt><dd id="rH">—</dd></div>
           <div><dt>φ from intercept</dt><dd id="rPhiFit">—</dd></div>
         </dl>
-        <p class="hint">Record V₀ at several wavelengths. The points fall on a straight line of K<sub>max</sub> against f: the slope is h, and the intercept is the work function. Accepted h = 6.626 × 10⁻³⁴ J·s. Each recording includes a small random reading error of about ±0.02 V, like a real voltmeter.</p>
+        <p class="hint">Record V₀ at several wavelengths. The points fall on a straight line of K<sub>max</sub> against f: the slope is h, and the intercept is the work function. Record V₀ saves the collector voltage you have set, so lower V until the meter just reads 0.00 nA first. The error bars are the ±0.01 V step of the voltage control. Untick <b>Theory line and answers</b> to hide the model's K<sub>max</sub> and V₀ while you measure.</p>
       </section>
 
       <section>
         <h2>Layers</h2>
         <div class="toggles">
           <label><input type="checkbox" id="tPhotons" checked>Photons</label>
-          <label><input type="checkbox" id="tTheory" checked>Theory line</label>
+          <label><input type="checkbox" id="tTheory" checked>Theory line and answers</label>
         </div>
         <p class="hint">Model: each absorbed photon frees at most one electron, with a kinetic energy spread evenly between 0 and K<sub>max</sub>. One electron per thousand photons (quantum efficiency 0.1%). Electron speeds on screen are slowed enormously; the fastest real ones move at hundreds of km/s.</p>
       </section>
@@ -903,9 +905,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           ctx.strokeStyle = T.equi; ctx.lineWidth = lw;
           ctx.beginPath(); ctx.moveTo(X(fx[0]), Y(fit.b)); ctx.lineTo(X(fx[1]), Y(fit.b + fit.m * fx[1])); ctx.stroke();
         }
-        // recorded points: open markers with the ±0.02 V reading error as bars
+        // recorded points: open markers with the ±0.01 V voltage step as bars
         for (const p of points) {
-          const px = X(p.f), py = Y(p.k), eb = Math.abs(Y(p.k + 0.02) - py);
+          const px = X(p.f), py = Y(p.k), eb = Math.abs(Y(p.k + 0.01) - py);
           ctx.strokeStyle = T.equi; ctx.lineWidth = 1.4 * ps;
           if (eb > 5 * ps) { ctx.beginPath(); ctx.moveTo(px, py - eb); ctx.lineTo(px, py + eb); ctx.moveTo(px - 3 * ps, py - eb); ctx.lineTo(px + 3 * ps, py - eb); ctx.moveTo(px - 3 * ps, py + eb); ctx.lineTo(px + 3 * ps, py + eb); ctx.stroke(); }
           ctx.fillStyle = T.paper; ctx.beginPath(); ctx.arc(px, py, 4.2 * ps, 0, Math.PI * 2); ctx.fill();
@@ -916,7 +918,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         if (fNow <= fx[1]) {
           ctx.strokeStyle = T.accent; ctx.lineWidth = 1 * ps; ctx.setLineDash([3, 3]);
           ctx.beginPath(); ctx.moveTo(X(fNow), y); ctx.lineTo(X(fNow), y + h); ctx.stroke(); ctx.setLineDash([]);
-          ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(X(fNow), Y(Kmax()), 5 * ps, 0, Math.PI * 2); ctx.fill();
+          if (layers.theory) { ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(X(fNow), Y(Kmax()), 5 * ps, 0, Math.PI * 2); ctx.fill(); }
         }
         ctx.restore();
         ctx.fillStyle = T.pos; ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
@@ -938,9 +940,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         const { X, Y } = frame(ctx, x, y, w, h, vr, ir, 'collector voltage V (volts)', 'Current I (nA) vs voltage', ps, (v) => String(+v.toFixed(1)), (v) => String(+v.toFixed(0)));
         ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
         ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(0), y); ctx.lineTo(X(0), y + h); ctx.stroke();
+        // the model curve and its −V₀ mark count as answers: hidden with "Theory line and answers"
         ctx.strokeStyle = T.accent; ctx.lineWidth = lw;
         ctx.beginPath();
-        for (let i = 0; i <= 300; i++) {
+        for (let i = 0; i <= 300 && layers.theory; i++) {
           const V = vr[0] + (vr[1] - vr[0]) * i / 300;
           const I = current(V) * 1e9;
           i ? ctx.lineTo(X(V), Y(I)) : ctx.moveTo(X(V), Y(I));
@@ -951,7 +954,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         for (const r of readings) { const rx = X(r.V), ry = Y(r.I); ctx.strokeRect(rx - 2 * ps, ry - 2 * ps, 4 * ps, 4 * ps); }
         ctx.globalAlpha = 1;
         const K = Kmax();
-        if (K > 0 && -K >= vr[0]) {
+        if (layers.theory && K > 0 && -K >= vr[0]) {
           ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(X(-K), Y(0), 4 * ps, 0, Math.PI * 2); ctx.fill();
           ctx.restore(); ctx.save();
           const tw_ = (ctx.font = `600 ${10 * ps}px ${T.mono}`, ctx.measureText('−V₀').width);
@@ -998,8 +1001,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('rE').textContent = Eph().toFixed(2) + ' eV';
     $('rF').textContent = sci(freq()) + ' Hz';
     $('rPhi').textContent = phi().toFixed(2) + ' eV';
-    $('rK').textContent = Kmax().toFixed(2) + ' eV';
-    $('rV0').textContent = Kmax() > 0 ? Kmax().toFixed(2) + ' V' : 'none';
+    $('rK').textContent = layers.theory ? Kmax().toFixed(2) + ' eV' : 'hidden';
+    $('rV0').textContent = !layers.theory ? 'hidden' : Kmax() > 0 ? Kmax().toFixed(2) + ' V' : 'none';
     $('rL0').textContent = Math.round(HC / phi()) + ' nm';
     $('rN').textContent = S.pow > 0 ? sci(photonRate(), 2) : '0';
     $('rI').textContent = fmtI(current(S.V));
@@ -1038,12 +1041,28 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const b of document.querySelectorAll('#hg button')) b.setAttribute('aria-pressed', String(+b.dataset.l === S.lam));
     dirtyCharts = true; updateReadouts(); if (!running) { drawApp(); }
   }
+  // Record V₀ stores the collector voltage the student has set, not the model's answer:
+  // they lower V until the picoammeter reads zero, and that setting is their measurement.
   function record() {
-    const K = Kmax();
-    if (K <= 0) return;
-    const noise = (Math.random() + Math.random() + Math.random() - 1.5) * 0.025;
-    points.push({ f: freq() / 1e14, k: Math.max(0, K + noise) });
+    const msg = $('recMsg');
+    if (S.V >= 0) { msg.textContent = 'Set a negative (retarding) collector voltage first: lower V until the current just reads 0.00 nA.'; return; }
+    const reading = current(S.V) * 1e9;
+    points.push({ lam: S.lam, f: freq() / 1e14, k: -S.V, metal: S.metal, pow: S.pow, I: reading });
+    msg.textContent = reading >= 0.005 ? `Recorded V₀ = ${(-S.V).toFixed(2)} V, but the meter still reads ${fmtI(reading / 1e9)}: the current had not reached zero.` : `Recorded V₀ = ${(-S.V).toFixed(2)} V at ${Math.round(S.lam)} nm.`;
     changed();
+  }
+  // what a careful student finds: the least negative voltage, on the 0.01 V step, where the meter reads 0.00 nA
+  function measuredStop() {
+    for (let k = 0; k <= 600; k++) { const V = -k / 100; if (current(V) * 1e9 < 0.005) return V; }
+    return -6;
+  }
+  function exportCSV() {
+    if (!points.length) { $('recMsg').textContent = 'No points to export yet.'; return; }
+    const rows = ['wavelength_nm,frequency_Hz,stopping_voltage_V,metal,light_power_uW,meter_reading_nA'];
+    for (const p of points) rows.push([p.lam, (p.f * 1e14).toExponential(6), p.k.toFixed(2), p.metal, p.pow, p.I.toFixed(2)].join(','));
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([rows.join('\n') + '\n'], { type: 'text/csv' }));
+    a.download = 'photoelectric-stopping-voltages.csv'; document.body.appendChild(a); a.click(); a.remove();
   }
   function applyPreset(name) {
     const p = PRESETS[name];
@@ -1051,8 +1070,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     electrons = []; photons = [];
     if (p.auto) {
       points = [];
-      for (const l of [250, 300, 350, 400, 450, 500]) { S.lam = l; record(); }
-      S.lam = p.lam;
+      for (const l of [250, 300, 350, 400, 450, 500]) { S.lam = l; S.V = measuredStop(); record(); }
+      S.lam = p.lam; S.V = p.V; $('recMsg').textContent = 'Six stopping voltages found the way a student would: the least negative setting, in 0.01 V steps, where the meter reads 0.00 nA.';
     }
     syncInputs(); setPreset(name); changed();
   }
@@ -1077,9 +1096,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('pow').addEventListener('input', (e) => { S.pow = +e.target.value; changed(); });
   $('volt').addEventListener('input', (e) => { S.V = +e.target.value; changed(); });
   $('record').addEventListener('click', record);
-  $('clear').addEventListener('click', () => { points = []; changed(); });
+  $('clear').addEventListener('click', () => { points = []; $('recMsg').textContent = ''; changed(); });
   $('tPhotons').addEventListener('change', (e) => { layers.photons = e.target.checked; drawApp(); });
-  $('tTheory').addEventListener('change', (e) => { layers.theory = e.target.checked; dirtyCharts = true; });
+  $('tTheory').addEventListener('change', (e) => { layers.theory = e.target.checked; dirtyCharts = true; updateReadouts(); });
+  $('csv').addEventListener('click', exportCSV);
   const playBtn = $('play');
   function setRunning(r) { running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now(); }
   playBtn.addEventListener('click', () => setRunning(!running));
