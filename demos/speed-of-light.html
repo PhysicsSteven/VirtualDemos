@@ -387,7 +387,11 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
   function tachReading(revs, seed, gate) { if (!revs) return 0; const r = mulberry((seed >>> 0) * 104729 + gate * 7 + 3); return Math.max(0, Math.round(Math.abs(revs) * (1 + TACH_JITTER * gauss(r)))); }
   function spotJitter(seed, n) { const r = mulberry((seed >>> 0) * 15485863 + n * 11 + 5); return JITTER * gauss(r); }   // mm
   // slow motion: a 1, 2 or 5 times power of ten factor that draws Δθ near 0.05 rad
-  function slowFactor(dtheta) { if (!(Math.abs(dtheta) > 0)) return 0; const f = 0.05 / Math.abs(dtheta), p = 10 ** Math.floor(Math.log10(f)), m = f / p; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p; }
+  // Exaggeration for slow motion: the largest 1-2-5 step that keeps the drawn turn at or below `target` rad.
+  // The caller sets target so the exaggerated return still passes through L2 (it must hit the lens to be imaged).
+  function slowFactor(dtheta, target) { if (!(Math.abs(dtheta) > 0)) return 0; const f = (target || 0.05) / Math.abs(dtheta), p = 10 ** Math.floor(Math.log10(f)), m = f / p; return (m >= 5 ? 5 : m >= 2 ? 2 : 1) * p; }
+  const L2_RADIUS = 0.026;   // m, clear radius of L2 as drawn
+  function slowTarget(B) { return Math.min(0.05, 0.6 * L2_RADIUS / (2 * B)); }   // returning ray meets L2 within 60% of its radius
   // ==CORE END==
 
   const $ = (id) => document.getElementById(id);
@@ -457,7 +461,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
   // ---------- slow motion timeline (shared by the top view and the 3D bench) ----------
   const slowTotal = () => SLOW_T.pre + SLOW_T.fly + SLOW_T.post + SLOW_T.hold;
   function slowPhase() {
-    const t = slowState.t, f = slowFactor(dth()), thx = f * dth();   // exaggerated turn during the flight, rad, signed CW positive
+    const t = slowState.t, f = slowFactor(dth(), slowTarget(S.B)), thx = f * dth();   // exaggerated turn during the flight, rad, signed CW positive
     let ph, u;
     if (t < SLOW_T.pre) { ph = 'pre'; u = t / SLOW_T.pre; }
     else if (t < SLOW_T.pre + SLOW_T.fly) { ph = 'fly'; u = (t - SLOW_T.pre) / SLOW_T.fly; }
@@ -678,7 +682,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
     // components
     ctx.fillStyle = '#5b0f0a'; ctx.fillRect(xL1 - 0.075 * sx, yb - 5 * ps, 0.065 * sx, 10 * ps);   // laser
     const lens = (x, h, col) => { ctx.fillStyle = col; ctx.globalAlpha = 0.55; ctx.beginPath(); ctx.ellipse(x, yb, 2.6 * ps, h, 0, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = T.neg; ctx.lineWidth = 1.2 * ps; ctx.stroke(); };
-    lens(xL1, 9 * ps, '#9cc4ef'); lens(xL2, 15 * ps, '#9cc4ef');
+    lens(xL1, 9 * ps, '#9cc4ef'); lens(xL2, Math.max(12 * ps, L2_RADIUS * sx), '#9cc4ef');
     // beam splitter and microscope
     ctx.strokeStyle = T.muted; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(xBS - 7 * ps, yb + 7 * ps); ctx.lineTo(xBS + 7 * ps, yb - 7 * ps); ctx.stroke();
     const my0 = yb + 0.055 * sx + 3 * ps;
