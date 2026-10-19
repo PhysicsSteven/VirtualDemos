@@ -301,7 +301,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <span><i class="swatch s"></i>Frame S: axes ct, x and its simultaneity lines</span>
           <span><i class="swatch p"></i>Frame S′: axes ct′, x′ and its simultaneity lines</span>
           <span><i class="swatch light"></i>Light lines, x = ±ct</span>
-          <span><i class="swatch cone"></i>Light cones of the selected events</span>
+          <span><i class="swatch cone"></i>Light cone of the first selected event</span>
           <span><i class="swatch tw"></i>Traveling twin</span>
           <span><i class="swatch hyp"></i>Invariant hyperbolas</span>
           <span><i class="swatch sim"></i>Dashed: lines of simultaneity</span>
@@ -547,35 +547,34 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     }
   }
 
+  // one light cone only: the first selected event, the one the readouts compare the other against.
+  // Cones on every event overlapped into an unreadable patchwork, so the others are plain dots.
   function drawCones() {
-    const R = BIG();
-    for (const e of S.events) {
-      const isSel = S.sel.includes(e.id);
-      const [td, xd] = toD(e.t, e.x);
-      const o = scr(td, xd);
-      for (const dir of [1, -1]) {
-        const a = scr(td + dir * R, xd - R), c = scr(td + dir * R, xd + R);
-        if (isSel) {
-          ctx.fillStyle = alpha(C.equi, dir > 0 ? 0.11 : 0.05);
-          ctx.beginPath(); ctx.moveTo(o[0], o[1]); ctx.lineTo(a[0], a[1]); ctx.lineTo(c[0], c[1]); ctx.closePath(); ctx.fill();
-        }
-        ctx.strokeStyle = alpha(C.equi, isSel ? 0.85 : 0.35); ctx.lineWidth = (isSel ? 1.4 : 1) * ps;
-        ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(o[0], o[1]); ctx.lineTo(c[0], c[1]); ctx.stroke();
-      }
-      if (isSel && S.sel.length && e.id === S.sel[S.sel.length - 1]) {
-        // keep "future" and "past" clear of the light line labels: slide them along the cone if needed
-        const boxes = lightLabelSpots().map((L) => L.box);
-        ctx.font = font(10);
-        const clear = (pt, str) => {
-          const hw = ctx.measureText(str).width / 2 + 3 * ps, hh = 8 * ps;
-          return !boxes.some((b) => pt[0] + hw > b[0] && pt[0] - hw < b[2] && pt[1] + hh > b[1] && pt[1] - hh < b[3]);
-        };
-        for (const [str, sg, ok] of [['future', 1, (pt) => pt[1] > topPad + 10], ['past', -1, (pt) => pt[1] < H - 10]]) {
-          for (const f of [1, 0.75, 1.3, 0.55, 1.6]) {
-            const d = 70 * f / V.s, pt = scr(td + sg * d, xd + 0.5 * d);
-            if (ok(pt) && clear(pt, str)) { text(str, pt[0], pt[1], alpha(C.equi, 0.95), { align: 'center', size: 10 }); break; }
-          }
-        }
+    const R = BIG(), e = S.events.find((v) => v.id === S.sel[0]);
+    if (!e) return;
+    const [td, xd] = toD(e.t, e.x);
+    const o = scr(td, xd);
+    for (const dir of [1, -1]) {
+      const a = scr(td + dir * R, xd - R), c = scr(td + dir * R, xd + R);
+      ctx.fillStyle = alpha(C.equi, dir > 0 ? 0.12 : 0.06);
+      ctx.beginPath(); ctx.moveTo(o[0], o[1]); ctx.lineTo(a[0], a[1]); ctx.lineTo(c[0], c[1]); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = alpha(C.equi, 0.85); ctx.lineWidth = 1.4 * ps;
+      ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(o[0], o[1]); ctx.lineTo(c[0], c[1]); ctx.stroke();
+    }
+    // region names, kept clear of the light line labels: slide them along if needed
+    const boxes = lightLabelSpots().map((L) => L.box);
+    ctx.font = font(10);
+    const clear = (pt, str) => {
+      const hw = ctx.measureText(str).width / 2 + 3 * ps, hh = 8 * ps;
+      return pt[0] - hw > 4 && pt[0] + hw < W - 4 && !boxes.some((b) => pt[0] + hw > b[0] && pt[0] - hw < b[2] && pt[1] + hh > b[1] && pt[1] - hh < b[3]);
+    };
+    const n = e.id;
+    // (dt, dx) in units of the label step: future and past sit inside the cone, elsewhere outside it, all off the axes
+    for (const [str, dt, dx, ok] of [[`future of ${n}`, 2.6, 0.7, (pt) => pt[1] > topPad + 10], [`past of ${n}`, -2.6, 0.7, (pt) => pt[1] < H - 10],
+      [`elsewhere`, 0.4, 2.8, (pt) => pt[1] > topPad + 10], [`elsewhere`, 0.4, -2.8, (pt) => pt[1] > topPad + 10]]) {
+      for (const f of [1, 0.75, 1.3, 0.55, 1.6, 2.2]) {
+        const d = 40 * f / V.s, pt = scr(td + dt * d, xd + dx * d);
+        if (ok(pt) && clear(pt, str)) { text(str, pt[0], pt[1], alpha(dx ? C.muted : C.equi, 0.95), { align: 'center', size: 10 }); break; }
       }
     }
   }

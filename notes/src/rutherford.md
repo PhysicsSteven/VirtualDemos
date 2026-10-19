@@ -19,7 +19,7 @@ Students should know Coulomb's law and conservation of energy. Angular momentum 
 1. **Start with Plum pudding.** Ask the prediction question (Q1) before you press anything. Fire a beam. The spread after the whole foil is a fraction of a degree, and the rail shows that nothing comes back. Point out the "largest kick per atom" readout: it is tiny because inside a uniform ball of charge the force grows only in proportion to r.
 2. **Switch to One alpha, gold.** Drag the handle on the incoming path to change b. Let students call out what happens as b shrinks. Stop at about b = 25 fm, where the alpha turns through about 61°.
 3. **Head on.** At b = 0 the alpha stops at D = 29.6 fm and comes straight back. Compare D with the nuclear radius in the rail (about 7 fm for gold): the alpha never touches the nucleus, so only the Coulomb force acts.
-4. **Geiger–Marsden beam.** Let the counts build on the log plot. The points follow 1/sin⁴(θ/2) over four decades. Read off the fraction turned past 90° and compare with the expected value (b₉₀/b_max)².
+4. **Geiger–Marsden beam.** Point out the scale break: the tracks are drawn on a femtometer scale, but the real screen is about a centimeter away, so each alpha lands at its final angle θ (the brief ray from the dashed circle), not where its track would cross the drawn screen. Let the counts build on the log plot. The points follow 1/sin⁴(θ/2) over four decades. Read off the fraction turned past 90° and compare with the expected value (b₉₀/b_max)².
 5. **Aluminum, high energy** (if time allows). D is now about the same as the nuclear radius, so the alpha reaches the nucleus and the strong force acts. Pure Rutherford scattering fails at large angles; this is how the size of nuclei was first measured.
 
 ## Questions

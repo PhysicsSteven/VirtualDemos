@@ -519,7 +519,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   function launch(a, animate) {
     const g = sceneGeom(); if (!g) return;
-    const rFar = g.far / g.sc, rOut = (S.mode === 'beam' ? g.ring * 0.97 : g.far) / g.sc;
+    const rFar = g.far / g.sc, rOut = (S.mode === 'beam' ? g.zone : g.far) / g.sc;
     if (a.kind === 'nuc') {
       const o = a.o; a.w0 = -o.wAt(rFar); a.w1 = o.wAt(rOut); a.t0 = o.t(a.w0); a.t1 = o.t(a.w1);
       a.len = a.t1 - a.t0;                  // fm/v₀, so at v₀ it crosses the view in about len/(2 rFar)
@@ -701,10 +701,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const s = LY.scene, ps = projScale(), beam = S.mode === 'beam';
     const cx = s.x + (beam ? s.w * 0.5 : s.w * 0.6), cy = s.y + s.h / 2 + (beam ? 4 * ps : 6 * ps);
     const half = Math.min(s.h / 2 - 34 * ps, beam ? s.w / 2 - 40 * ps : s.h);
-    const sc = (beam ? half * 0.86 : (s.h / 2 - 34 * ps)) / S.view;
-    const ring = beam ? half : 0;
+    const sc = (beam ? half * 0.62 : (s.h / 2 - 34 * ps)) / S.view;
+    const ring = beam ? half : 0, zone = beam ? half * 0.72 : 0;  // tracks end at the zone circle; the screen beyond it is far away
     const far = Math.hypot(Math.max(cx - s.x, s.x + s.w - cx), s.h) + 20;
-    return { s, cx, cy, sc, ring, far, ps };
+    return { s, cx, cy, sc, ring, zone, far, ps };
   }
   const plumUnits = () => S.model === 'plum';
   function fitView() {
@@ -943,6 +943,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // scintillations: a brief point of light where each alpha lands
     const now = performance.now() / 1000, prev = c.globalCompositeOperation;
     if (T.dark) c.globalCompositeOperation = 'lighter';
+    // the screen is really centimeters away, so an alpha lands where its final direction θ points:
+    // a brief ray from the edge of the drawn region out along θ joins each track's end to its flash
+    c.lineWidth = 1.2 * ps; c.strokeStyle = T.zns;
+    for (const fl of flashes) {
+      const age = now - fl.t; if (age > 0.6) continue;
+      const ca = Math.cos(fl.th), sa = -fl.sg * Math.sin(fl.th), r0 = g.zone, r1 = R - lw / 2;
+      c.globalAlpha = 0.5 * Math.exp(-age / 0.2); c.beginPath();
+      c.moveTo(g.cx + r0 * ca, g.cy + r0 * sa); c.lineTo(g.cx + r1 * ca, g.cy + r1 * sa); c.stroke();
+    }
     for (const fl of flashes) {
       const age = now - fl.t; if (age > 0.6) continue;
       const rr = R + fl.r * lw * 0.7, x = g.cx + rr * Math.cos(fl.th), y = g.cy - fl.sg * rr * Math.sin(fl.th), sz = (9 + 7 * Math.exp(-age / 0.08)) * ps;
@@ -953,7 +962,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const lab = (a, t, al) => { c.textAlign = al; c.fillText(t, g.cx + (R + lw) * Math.cos(a), g.cy - (R + lw + 4 * ps) * Math.sin(a)); };
     lab(0.02, '0°', 'left'); lab(Math.PI / 2, '90°', 'center'); lab(Math.PI - 0.02, '180°', 'right');
     c.textAlign = 'left'; c.textBaseline = 'top';
-    c.fillText('zinc sulfide screen, not to scale', g.s.x + 10 * ps, g.s.y + 10 * ps);
+    const farX = Math.round(Math.log10(1e13 / (R / g.sc)));
+    c.fillText(`screen really ~1 cm away (~10${supNum(farX)}× farther):`, g.s.x + 10 * ps, g.s.y + 10 * ps);
+    c.fillText('each alpha lands at its final angle θ', g.s.x + 10 * ps, g.s.y + 25 * ps);
+    // edge of the drawn region, and a scale break between it and the screen
+    c.strokeStyle = T.muted; c.globalAlpha = 0.6; c.lineWidth = 1 * ps; c.setLineDash([3 * ps, 5 * ps]);
+    c.beginPath(); c.arc(g.cx, g.cy, g.zone, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]);
+    c.globalAlpha = 1; c.lineWidth = 1.6 * ps; c.strokeStyle = T.ink;
+    for (const a of [0, Math.PI]) {
+      const rm = (g.zone + R - lw / 2) / 2, x = g.cx + rm * Math.cos(a), y = g.cy;
+      c.fillStyle = T.canvas; c.fillRect(x - 5 * ps, y - 7 * ps, 10 * ps, 14 * ps);
+      for (const d of [-3, 3]) { c.beginPath(); c.moveTo(x + d * ps - 3 * ps, y + 7 * ps); c.lineTo(x + d * ps + 3 * ps, y - 7 * ps); c.stroke(); }
+    }
   }
   // a small microscope at angle a, its objective at radius r0 from (X, Y), pointing at the center
   function drawScope(c, X, Y, r0, a, ps, z) {
