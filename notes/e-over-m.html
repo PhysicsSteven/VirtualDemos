@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>e/m of the Electron: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>e/m of the Electron</h1><ul class="meta"><li><a href="../demos/e-over-m.html">Open the demo</a></li><li>Modern physics lab</li><li>20 to 40 minutes (a full lab period with the table and fit)</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A charge moving at right angles to a uniform field feels a force evB at right angles to its velocity, so it moves in a circle of radius r = mv/(eB). Speed comes from the gun: eV = ½mv².</li>
+<li>Eliminating v gives e/m = 2V/(B²r²). Neither e nor m can be found separately this way, only their ratio, which is why Thomson measured e/m.</li>
+<li>B at the center of a Helmholtz pair is (4/5)^(3/2) μ₀NI/a, nearly uniform over the middle; the coil radius a has to be measured.</li>
+<li>Reading r is the hard part: parallax between the beam and the scale, the beam's width, and choosing the edge. Averaging both sides and fitting many settings beats one careful reading.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the magnetic force qv × B, circular motion and energy conservation. Decide whether students should enter their own coil diameters (the real lab measures inner and outer diameter). Turn on <strong>Blind</strong> before projecting the table.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>No field: a straight beam.</strong> Raise the coil current slowly and watch the beam curl upward. Ask which way the force points and why the speed never changes.</li>
+<li><strong>A circle.</strong> Ask Q1 first. Show the view through the front coil: the beam and its reflection only line up when your eye is straight in front of the edge you read. Read the left side, move the eye, read the right side.</li>
+<li><strong>More voltage, bigger circle</strong> and <strong>More current, smaller circle.</strong> Predict the new radius each time (Q2) before switching.</li>
+<li><strong>Tilt the tube: a helix.</strong> Part of the velocity is along B and is untouched. Ask why a tilted tube spoils the measurement (Q5).</li>
+<li><strong>Measure e/m.</strong> Six simulated readings fill the table; have students add their own and compare the fit with the accepted value.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: the electrons in the beam move at constant speed even though a force acts on them all the time. Why? Which way does the force point at the top of the circle?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> At V = 200 V and I = 1.50 A, with N = 130 and a = 15.0 cm, find B, the electron speed and the radius of the circle. What radius do you expect at 300 V and the same current, and at 200 V and 2.00 A? Check with the demo.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Why can this experiment give only e/m, and not e and m separately? What extra experiment did physicists need to get e itself?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A student reads r = 4.00 cm when the true radius at 200 V and 1.50 A is 4.08 cm. What value of e/m do they get, and by what percentage is it off? Why is the error in e/m about twice the error in r?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In <strong>Tilt the tube: a helix</strong> the tube is turned 12°. What happens to the velocity component along B? Find the radius and pitch of the helix at 200 V and 1.50 A. If a student measured the helix as if it were a circle, would their e/m be too high or too low?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> The earth's field (take 2 × 10⁻⁵ T along the coil axis) adds to or subtracts from the coil field. At 1.50 A, by what percentage does it change B, and e/m? How could you cancel it in the lab?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> The manual warns that real results for e/m usually come out high. Give one physical reason the electrons could have less energy than eV when they reach the circle, and say which way that biases e/m.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The magnetic force speeds the electrons up."</strong> It is always at right angles to the velocity, so it does no work: it only turns the beam.</li>
+<li><strong>"A bigger current makes the electrons go faster."</strong> The voltage sets the speed; the current sets the field and so the radius.</li>
+<li><strong>"The beam is the electrons."</strong> The glow is helium atoms excited by collisions with the electrons; it marks the path the electrons take.</li>
+<li><strong>"Reading one side carefully is enough."</strong> The beam may not be centered on the scale, and parallax shifts each side differently. Reading both sides and averaging removes much of that.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>B = (4/5)^(3/2) μ₀NI/a ≈ 7.79 × 10⁻⁴ T/A × I for N = 130, a = 0.150 m. e/m = 2V/(B²r²); the fit is 2V against (Br)² through the origin, with slope e/m.</li>
+<li>The beam is traced through the exact field of the two coils (computed with elliptic integrals), not a perfectly uniform one, so circles, helices and glass hits come from the computed motion. Off center the field is a little weaker, so e/m from the center field comes out slightly low for large circles (about 1% for a 5 cm circle).</li>
+<li>The mirrored scale and the eye: the reading pointers are set by the student; the beam flickers by up to about 1 mm (simulated). Meter readings carry small seeded jitter.</li>
+<li>Not simulated: energy lost by the electrons before they reach the circle (in the anode and in collisions with helium). The earth's field is an optional toggle.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Have students plot r against √V at fixed I and r against 1/I at fixed V, and check both are straight lines before fitting for e/m.</li>
+<li>History: J. J. Thomson measured e/m for cathode rays in 1897 with crossed electric and magnetic fields and found it about a thousand times larger than for hydrogen ions, evidence that cathode rays are particles far lighter than atoms.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>
