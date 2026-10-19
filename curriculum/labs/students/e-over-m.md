@@ -1,37 +1,89 @@
-# Electron Charge-to-Mass Ratio — Helmholtz Coils
-Student laboratory · 110 minutes · modern physics
+# Charge to Mass Ratio of the Electron
+Student laboratory · modern physics
 
-[Open the PASCO-style e/m bench](https://physicssteven.github.io/VirtualDemos/demos/e-over-m.html)
+[Open the virtual e/m apparatus](https://physicssteven.github.io/VirtualDemos/demos/e-over-m.html)
 
-## Purpose and prelab
-Estimate e/m from electron trajectories, suppress parallax with a mirrored scale, and separate readout uncertainty from field-model bias. Prerequisites: qv×B, centripetal acceleration, energy conservation and linear regression. Use the virtual bench as preparation for SE-9638 or as a substitute; identify which dataset was simulated. Real supply connections, warm-up and operating limits follow the department's apparatus instructions. Keep the main measurement below or at the displayed 2 A coil-current limit.
+## Goal
 
-Derive v=√[2(e/m)V], r=mv/(eB), B=(4/5)^(3/2)μ0NI/a and e/m=2V/(Br)². Show that a plot of y=2V against x=(Br)² has slope e/m. Here N=130 turns per coil; a is the mean winding radius, also the nominal coil spacing. If inner and outer diameters are d_in and d_out, derive a=(d_in+d_out)/4. Explain why this experiment alone does not determine e and m separately.
+Measure e/m, the charge to mass ratio of the electron, the way J. J. Thomson first did in 1897: bend a beam of electrons into a circle with a known magnetic field and measure the radius.
 
-## Setup and scale reading (20 minutes)
-1. Record **Instrument seed**. Select **A circle**, set tube rotation to zero and Earth's field **off**. Select **Blind** and leave **Show the true beam edges** off. Clear prefilled rows. Keep **Field computed from the coils (not perfectly uniform)** selected for the primary dataset.
-2. Enter coil inner/outer diameters from your assigned apparatus measurement. For the virtual reference geometry use 29.0 and 31.0 cm; these analysis entries do not physically resize the virtual coils. Record the assigned uncertainty and how you measured each diameter on the real bench.
-3. Move **Your eye, left or right** until the beam and its mirror image overlap at the left edge. Use **Zoom left** and set pointer L on a reproducible part of the glowing beam. Reposition the eye for the right edge and set pointer R. Do not use a single eye position to read both edges.
-4. Explain which beam boundary you chose and estimate its width/placement uncertainty. The stored r left is a positive distance, not a negative coordinate; use r=(r_left+r_right)/2.
+## Background
 
-## A. Recover e/m (40 minutes)
-At I≈1.50 A, use voltage settings 150, 175, 200, 225 and 250 V. Record actual voltmeter/ammeter values, not slider commands. Align and read both sides, then **Capture reading**. Repeat two settings after moving the pointers away and realigning. If the path hits glass or either extremum is missing, record that condition and exclude it from a circular-radius fit with a reason.
+The electron gun accelerates electrons through a voltage U, so each electron gains kinetic energy eU:
 
-| V meter (V) | I meter (A) | r_left (cm) | r_right (cm) | r (m) | B_center (T) | (Br)² | 2V (V) |
-|---|---|---|---|---|---|---|---|
-| | | | | | | | |
+  ½mv² = eU, so v² = 2eU/m.
 
-Use at least seven rows including repeats. Export CSV. Fit 2V against (Br)² through the origin and with a free intercept externally. Infer e/m, inspect residuals and compare the intercept with its uncertainty. A free intercept diagnoses offsets; it does not automatically correct all field or radius errors.
+A pair of Helmholtz coils makes a nearly uniform field B at right angles to the beam. The magnetic force evB is always at right angles to the velocity, so it bends the beam into a circle of radius r without changing its speed:
 
-## B. Scaling and model bias (25 minutes)
-1. Hold V=200 V; measure radii at three currents between 1.40 and 2.00 A. Test r∝1/I. At fixed current, test r∝√V using Part A.
-2. Repeat three representative measurements with **Field computed from the coils** unchecked, which selects a uniform-field model. Keep each model's rows in a separate export/fit: the built-in fit may include all stored rows. Explain differences from center-field analysis of the exact coil trajectory.
-3. On a fresh comparison dataset, choose Earth's field **adds to B**, then **opposes B**, and describe the radius bias if analysis uses only coil B. The default row calculation does not subtract this systematic for you.
-4. Observe **Tilt the tube: a helix**. Identify v_parallel and v_perpendicular; explain why a planar-circle analysis is invalid. Do not add helix rows to the main fit.
+  evB = mv²/r.
 
-## Uncertainty and conclusions (25 minutes)
-For independent standard uncertainties use [u(e/m)/(e/m)]²≈[uV/V]²+4[uI/I]²+4[ua/a]²+4[ur/r]², with N and μ0 treated as fixed here. Derive this from the measured formula. For r=(rL+rR)/2 propagate independent placement uncertainties, then discuss correlated scale calibration, common eye bias and beam-width choices separately. Shared coil-diameter error is not reduced by more voltage settings. Compare observed scatter, fitted slope uncertainty and the uniform-field approximation as distinct contributions.
+Eliminate v between the two equations:
 
-Submit the derivation, geometry measurements, raw CSV, primary fit/residuals, scaling plots and a systematic-error table. Explain why magnetic force changes direction but not kinetic energy; why electron energy loss before the observed orbit would bias e/m; and why a precise fit can still be inaccurate.
+  e/m = 2U/(B²r²).
 
-The simulation traces a nonrelativistic beam through the coil field and includes optional Earth field, simulated meter jitter and beam flicker. It omits energy loss in gas and electrodes. The glow marks helium excitation rather than a visible individual electron. Instrument-model agreement is not calibration of the physical bench.
+The field at the center of the coils is
+
+  B = (4/5)^(3/2) μ₀NI/R,
+
+where I is the current through the coils, N the number of turns on each coil and R the coil radius. For the department's apparatus (PASCO SE-9629), N = 130 and R = 158 mm, which gives B = 7.40 × 10⁻⁴ T per ampere. If you use a different apparatus, take N and R from its label or manual.
+
+The tube holds a little helium. Electrons excite the helium atoms they hit, and the glow marks the path of the beam.
+
+## Before the lab
+
+1. Show that e/m = 2U/(B²r²) follows from the two equations above.
+2. If you double U and keep I fixed, what happens to r? If you double I and keep U fixed?
+3. Why can this experiment measure only the ratio e/m and not e and m separately?
+
+## Safety
+
+The accelerating voltage is high enough to hurt you. Make and change connections only with both supplies off. Touch the tube only by its plastic base.
+
+## Procedure
+
+**Setup (real apparatus).** Follow the cabling diagram in the apparatus manual. Turn every voltage and current knob fully counterclockwise, set the voltage range to 0 to 200 V, and switch both supplies on. Wait about five minutes for the filament to warm up.
+
+**Get a circle.**
+1. Set the accelerating voltage to about 190 V. A straight beam should appear.
+2. Raise the coil current slowly. The beam should curve upward and close into a circle.
+   - If it does not bend, the coils are fighting each other: reverse one coil.
+   - If it bends downward, swap the two leads at the 3.5 A output.
+   - If it makes a spiral, turn the tube in its socket until it makes a flat circle.
+3. Adjust the voltage until the beam is sharp and bright.
+
+**Read the radius.** The mirrored scale is behind the tube. Move your head until the beam covers its own reflection in the mirror; then your eye is straight in front of the beam and there is no parallax. Read where the beam crosses the scale on the left side. Move your head and do the same on the right side. The radius r is the average of the two readings.
+
+**Take data.** Record U from the voltmeter, I from the ammeter and both radius readings. Then change the voltage or the current and repeat. Take at least five settings, spread out as far as the tube allows (the whole circle must stay inside the bulb). Settings from 100 V at 1.0 A to 120 V at 1.4 A work well.
+
+**Using the virtual apparatus.** The virtual apparatus models the same coils and tube. Write down the **Instrument seed** and turn on **Blind**. Click **Clear** to empty the table. Set the voltage and current with the sliders or the knobs, but record the values the meters show. To read a side, drag **Your eye, left or right** until the beam and its reflection line up, then drag pointer L (or R) onto the beam; **Zoom left** and **Zoom right** help. Click **Capture reading** for each setting and **Export CSV** at the end. The virtual scale reads in cm and the voltage is labelled V; convert to the units of the table.
+
+## Data
+
+| Trial | U (V) | I (A) | r left (mm) | r right (mm) | r (mm) | B (mT) | e/m (C/kg) | % error |
+|---|---|---|---|---|---|---|---|---|
+| 1 | | | | | | | | |
+| 2 | | | | | | | | |
+| 3 | | | | | | | | |
+| 4 | | | | | | | | |
+| 5 | | | | | | | | |
+
+## Analysis
+
+1. For each trial, find B from I and then e/m = 2U/(B²r²). Compare each with the accepted value, 1.76 × 10¹¹ C/kg.
+2. Make a graph with B²r² on the horizontal axis and 2U on the vertical axis. According to the equation, the points lie on a straight line through the origin with slope e/m. Fit a line and report the slope as your best value of e/m.
+3. Which is better, the average of the trials or the slope of the graph? Why?
+
+## Uncertainty
+
+e/m depends on r squared, so a 1% error in r becomes a 2% error in e/m. The same is true of B, and so of I and R. Estimate how precisely you can read each side of the circle (the beam has a width), and use that to estimate the uncertainty in e/m for one trial.
+
+## Questions
+
+1. The magnetic force acts on the electrons the whole time. Why doesn't their speed change?
+2. If the tube is turned so the beam is not quite at right angles to the field, the beam makes a spiral. Why? Would measuring the spiral as if it were a circle make e/m too high or too low?
+3. Electrons lose a little energy in collisions with the helium before they reach the circle. Does that make your measured e/m too high or too low?
+4. The earth's magnetic field also acts on the beam. How could you check whether it affects your result?
+
+## What to hand in
+
+Your prelab answers, the data table, the graph with its fit, your value of e/m with its uncertainty and percent error, and answers to the questions. If any of your data came from the virtual apparatus, say so and give the instrument seed.
