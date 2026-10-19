@@ -6,18 +6,18 @@ Student laboratory · 110 minutes · modern physics
 ## Purpose and preparation
 Determine two graphite plane spacings from measured rings, compare curved-screen geometry with the small-angle approximation, and evaluate sensitivity to apparatus dimensions. Prerequisites: de Broglie wavelength, Bragg's law, kinetic energy and regression. Use the virtual tube for preparation or as a substitute when the physical apparatus is unavailable. Label simulated data. Real tube alignment, supply and measurement procedures follow the department's current handout.
 
-Derive λ=h/√[2meV(1+eV/(2mc²))], the scattering cone angle ψ=2θ, and2d sinθ=λ for first order. Explain why ψ is twice the Bragg angle. A polycrystalline sample produces cones rather than one pair of spots. For a flat distant screen derive D≈2Lλ/d and state the assumptions.
+Derive λ=h/√[2meV(1+eV/(2mc²))], the scattering cone angle ψ=2θ, and 2d sinθ=λ for first order. Explain why ψ is twice the Bragg angle. A polycrystalline sample produces cones rather than one pair of spots. For a flat distant screen derive D≈2Lλ/d and state the assumptions.
 
 ## Measure geometry before rings
 Record **Tube seed**, then **Blind**; leave **Show the true ring positions** off. Clear prefilled readings and move the magnet to its maximum distance. Stop **Sweep V** for each measurement. Record the chosen **Ruler** (arc along glass) or **Caliper** (straight chord) tool; never analyze an arc as a chord.
 
-Determine L, graphite to screen pole, and R, screen sphere radius, from the assigned apparatus dimensions. The virtual tube's physical geometry is L=125 mm, R=65 mm; the analysis entries can be changed without resizing it. For the real tube, measure or obtain L for that instrument, with uncertainty. Handouts quoting125–135 mm are not interchangeable. Enter your adopted L and R, state their source, and retain them with the dataset.
+Determine L, graphite to screen pole, and R, screen sphere radius, from the assigned apparatus dimensions. The virtual tube's physical geometry is L=125 mm, R=65 mm; the analysis entries can be changed without resizing it. For the real tube, measure or obtain L for that instrument, with uncertainty. Handouts quoting 125–135 mm are not interchangeable. Enter your adopted L and R, state their source, and retain them with the dataset.
 
 ## A. Rings versus accelerating voltage (40 minutes)
-1. Use six voltages near2.50,3.00,3.50,4.00,4.50 and5.00 kV. Record the actual kV meter. Convert kV to V for momentum calculations.
+1. Use six voltages near 2.50, 3.00, 3.50, 4.00, 4.50 and 5.00 kV. Record the actual kV meter. Convert kV to V for momentum calculations.
 2. At each voltage select **Inner D₁**, place its two marks on a consistent center of the finite-width ring, then select **Outer D₂** and do the same. Record width/placement bounds. **Capture reading** stores both marked diameters; moving only one ring's marks leaves the other measurement unchanged.
 3. Reposition both sets of marks for a repeat at one low and one high voltage. Export CSV; preserve tool metadata. Do not use **Measure the spacings** prefilled simulated readings as your own measurements.
-4. Plot D against1/√V and compare slopes for the two rings. Discuss small curvature expected from relativistic wavelength and screen geometry.
+4. Plot D against 1/√V and compare slopes for the two rings. Discuss small curvature expected from relativistic wavelength and screen geometry.
 
 | Meter (kV) | Tool | D₁ (mm) | D₂ (mm) | Placement bound (mm) | Adopted L,R (mm) |
 |---|---|---|---|---|---|
@@ -31,7 +31,7 @@ For a centered ring define α=D_arc/(2R) or α=asin[D_chord/(2R)]. The source-to
 3. At one voltage measure with both Ruler and Caliper. Compare raw diameters, then demonstrate whether their respective exact inversions agree. Changing tool requires a new reading, not just relabeling a stored number.
 
 ## C. Geometry sensitivity and charged-particle evidence (20 minutes)
-Reanalyze the fixed data with L=125,130 and135 mm, clearly labeled as assumed geometry. Distinguish the actual measurement from this deliberate sensitivity study. Compare its effect with ring-placement uncertainty and the relativistic correction. Restore the correct L before the final fit.
+Reanalyze the fixed data with L=125,130 and 135 mm, clearly labeled as assumed geometry. Distinguish the actual measurement from this deliberate sensitivity study. Compare its effect with ring-placement uncertainty and the relativistic correction. Restore the correct L before the final fit.
 
 Bring the magnet near the neck, compare N and S, and describe pattern translation. Restore it to maximum distance before any spacing measurement. This qualitative deflection establishes sensitivity to charge; the magnet model is not a calibrated magnetic spectrometer. Explain why a shifted cone can spoil a centered-ring formula.
 

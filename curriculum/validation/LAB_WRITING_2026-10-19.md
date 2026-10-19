@@ -24,7 +24,7 @@ Private TeacherKeys commit `01094c103bd1fee5e9f914b1ae4d93112d6279f3` contains e
 
 ## Executed checks
 
-Ran all14 Node suites in the retained physics workflow:18 transient,6 RC,7 Gauss,8 Faraday,7 capacitor,5 AC,6 circuit-builder,5 Coulomb,5 grating,11 modern-bench,6 unified Circuits,1 Photoelectric recording/CSV,8 acoustics and3 Franck–Hertz groups/checks =96, all passed. Extended the Circuits damping grid to include the lab's20/50/100 Ω and190/198/200/202/210 Ω cases. Reran its six groups after that change. Syntax checks and whitespace/link checks completed.
+Ran all 14 Node suites in the retained physics workflow:18 transient,6 RC,7 Gauss,8 Faraday,7 capacitor,5 AC,6 circuit-builder,5 Coulomb,5 grating,11 modern-bench,6 unified Circuits,1 Photoelectric recording/CSV,8 acoustics and 3 Franck–Hertz groups/checks =96, all passed. Extended the Circuits damping grid to include the lab's20/50/100 Ω and 190/198/200/202/210 Ω cases. Reran its six groups after that change. Syntax checks and whitespace/link checks completed.
 
 The new acoustics suite independently checks Fourier coefficients/integrated rms, resonance/end-correction fits, skipped-order spacing, string/bottle scaling, finite-Q peak shift, source pressure gradients, force from a potential, radius/drive scaling and bowl phase gradient. Franck checks energy/collection bookkeeping, units/density trends, seeded current bounds and known-shape peak/line analysis. These do not independently validate every physical approximation or effective cross section.
 

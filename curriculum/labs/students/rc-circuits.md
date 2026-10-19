@@ -1,5 +1,5 @@
 # RC Circuits — Time Constants and Energy on the Unified Bench
-Student laboratory ·90 minutes ·Physics II
+Student laboratory · 90 minutes · Physics II
 
 [Open Circuits: RC](https://physicssteven.github.io/VirtualDemos/demos/circuits.html#rc)
 
@@ -13,9 +13,9 @@ There is no complete Blind control or exact-time cursor in this bench. Predict b
 
 ## A. Determine C (30 minutes)
 1. Select **RC charging**, pause, set ε=10 V,R1=10 kΩ,C1=100 µF, then Reset to clear previous state and editing work. Record values, initial V_C and switch position.
-2. Run to at least4RC, pause and export the scope. Include V_C, V_R and I_R. Retain at least six nonsaturated samples from the charging segment; do not fit an unobserved theoretical curve.
+2. Run to at least 4RC, pause and export the scope. Include V_C, V_R and I_R. Retain at least six nonsaturated samples from the charging segment; do not fit an unobserved theoretical curve.
 3. Infer τ from the time to V_C/ε=1−e⁻¹ and from a fit ln(1−V_C/ε)=a+bt, τ=−1/b. Use interpolation and actual exported timestamps. Exclude endpoints rounded to ε.
-4. Repeat at R1=4.7,6.8,10,15 and22 kΩ with C fixed. Reset after each component edit. Fit τ against R in ohms; infer C from slope and discuss the intercept. Compare with **Natural response** only after the fit.
+4. Repeat at R1=4.7, 6.8, 10, 15 and 22 kΩ with C fixed. Reset after each component edit. Fit τ against R in ohms; infer C from slope and discuss the intercept. Compare with **Natural response** only after the fit.
 
 | R (Ω) | ε (V) | C entry (F) | τ crossing (s) | τ log fit (s) | Sampling/fit uncertainty |
 |---|---|---|---|---|---|
@@ -24,7 +24,7 @@ There is no complete Blind control or exact-time cursor in this bench. Predict b
 ## B. Switching and fast discharge (25 minutes)
 1. Use **Flip mid way**, restore its displayed component values, Reset and run through the automatic switch. Export the complete visible run. Determine the switch time from the trace and fit each side separately using elapsed time relative to its own segment.
 2. Compare V_C immediately before/after switching and I_R on each side. Explain continuity of charge but a jump/reversal of resistor current. The fit initial condition is the actual voltage at the switch, not ε unless the capacitor is fully charged.
-3. Use **Camera flash**, document R1,C1 and the bulb resistance, and run beyond the switch. Compare charging/discharging time constants and initial powers using measured pre-switch voltage. State the finite charge fraction; do not assume exactly full after5τ.
+3. Use **Camera flash**, document R1,C1 and the bulb resistance, and run beyond the switch. Compare charging/discharging time constants and initial powers using measured pre-switch voltage. State the finite charge fraction; do not assume exactly full after 5τ.
 
 ## C. Energy and uncertainty (25 minutes)
 For an uncharged RC charging run, record time, source work W, capacitor U and resistor heat H from **Energy since t=0** at four times. Check W−U−H and compare with a numerical integral of εI and I²R from CSV. Keep the integration within one documented run; component editing can add a separate editing-work term and is excluded here. Repeat with a different R to distinguish invariant final energy from rate of transfer.

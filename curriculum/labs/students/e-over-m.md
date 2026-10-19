@@ -10,21 +10,21 @@ Derive v=√[2(e/m)V], r=mv/(eB), B=(4/5)^(3/2)μ0NI/a and e/m=2V/(Br)². Show t
 
 ## Setup and scale reading (20 minutes)
 1. Record **Instrument seed**. Select **A circle**, set tube rotation to zero and Earth's field **off**. Select **Blind** and leave **Show the true beam edges** off. Clear prefilled rows. Keep **Field computed from the coils (not perfectly uniform)** selected for the primary dataset.
-2. Enter coil inner/outer diameters from your assigned apparatus measurement. For the virtual reference geometry use 29.0 and31.0 cm; these analysis entries do not physically resize the virtual coils. Record the assigned uncertainty and how you measured each diameter on the real bench.
+2. Enter coil inner/outer diameters from your assigned apparatus measurement. For the virtual reference geometry use 29.0 and 31.0 cm; these analysis entries do not physically resize the virtual coils. Record the assigned uncertainty and how you measured each diameter on the real bench.
 3. Move **Your eye, left or right** until the beam and its mirror image overlap at the left edge. Use **Zoom left** and set pointer L on a reproducible part of the glowing beam. Reposition the eye for the right edge and set pointer R. Do not use a single eye position to read both edges.
 4. Explain which beam boundary you chose and estimate its width/placement uncertainty. The stored r left is a positive distance, not a negative coordinate; use r=(r_left+r_right)/2.
 
 ## A. Recover e/m (40 minutes)
-At I≈1.50 A, use voltage settings150,175,200,225 and250 V. Record actual voltmeter/ammeter values, not slider commands. Align and read both sides, then **Capture reading**. Repeat two settings after moving the pointers away and realigning. If the path hits glass or either extremum is missing, record that condition and exclude it from a circular-radius fit with a reason.
+At I≈1.50 A, use voltage settings 150, 175, 200, 225 and 250 V. Record actual voltmeter/ammeter values, not slider commands. Align and read both sides, then **Capture reading**. Repeat two settings after moving the pointers away and realigning. If the path hits glass or either extremum is missing, record that condition and exclude it from a circular-radius fit with a reason.
 
 | V meter (V) | I meter (A) | r_left (cm) | r_right (cm) | r (m) | B_center (T) | (Br)² | 2V (V) |
 |---|---|---|---|---|---|---|---|
 | | | | | | | | |
 
-Use at least seven rows including repeats. Export CSV. Fit2V against(Br)² through the origin and with a free intercept externally. Infer e/m, inspect residuals and compare the intercept with its uncertainty. A free intercept diagnoses offsets; it does not automatically correct all field or radius errors.
+Use at least seven rows including repeats. Export CSV. Fit 2V against (Br)² through the origin and with a free intercept externally. Infer e/m, inspect residuals and compare the intercept with its uncertainty. A free intercept diagnoses offsets; it does not automatically correct all field or radius errors.
 
 ## B. Scaling and model bias (25 minutes)
-1. Hold V=200 V; measure radii at three currents between1.40 and2.00 A. Test r∝1/I. At fixed current, test r∝√V using Part A.
+1. Hold V=200 V; measure radii at three currents between 1.40 and 2.00 A. Test r∝1/I. At fixed current, test r∝√V using Part A.
 2. Repeat three representative measurements with **Field computed from the coils** unchecked, which selects a uniform-field model. Keep each model's rows in a separate export/fit: the built-in fit may include all stored rows. Explain differences from center-field analysis of the exact coil trajectory.
 3. On a fresh comparison dataset, choose Earth's field **adds to B**, then **opposes B**, and describe the radius bias if analysis uses only coil B. The default row calculation does not subtract this systematic for you.
 4. Observe **Tilt the tube: a helix**. Identify v_parallel and v_perpendicular; explain why a planar-circle analysis is invalid. Do not add helix rows to the main fit.

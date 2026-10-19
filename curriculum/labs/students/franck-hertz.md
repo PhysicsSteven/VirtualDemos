@@ -1,5 +1,5 @@
 # Franck–Hertz — Excitation Energy from Peak Spacing
-Student laboratory ·100 minutes ·modern physics
+Student laboratory · 100 minutes · modern physics
 
 [Open Franck–Hertz](https://physicssteven.github.io/VirtualDemos/demos/franck-hertz.html)
 
