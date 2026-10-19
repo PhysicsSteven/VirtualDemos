@@ -128,6 +128,19 @@ main { padding-top: 12px; padding-bottom: 48px; }
 }
 .subject h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
 .subject h2 .n { font-size: 0.8rem; }
+/* Click a subject heading to fold its cards away; the sections below move up. Remembered per browser. */
+.fold { all: unset; display: inline-flex; align-items: baseline; gap: 10px; cursor: pointer; border-radius: 6px; }
+.fold:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.fold::before { content: ""; width: 0.5em; height: 0.5em; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
+  transform: translateY(-0.15em) rotate(45deg); transition: transform 0.15s ease; align-self: center; }
+.fold:hover::before { border-color: var(--ink); }
+.subject.collapsed .fold::before { transform: rotate(-45deg); }
+.subject.collapsed .grid { display: none; }
+.subject.collapsed h2 { margin-bottom: 0; color: var(--muted); }
+.subject.collapsed { padding-top: 22px; }
+.searching .subject.collapsed .grid { display: grid; }
+.searching .subject.collapsed h2 { margin-bottom: 16px; color: inherit; }
+@media (prefers-reduced-motion: reduce) { .fold::before { transition: none; } }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 272px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
 .grid > li { display: flex; min-width: 0; }
 .card {
@@ -1000,6 +1013,28 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   const empty = document.getElementById('empty');
   const emptyq = document.getElementById('emptyq');
   const sections = [...document.querySelectorAll('.subject')];
+  // Fold buttons: wrap each heading's text in a button at load, so the static markup (and tools that edit it) stay simple.
+  const FOLD_KEY = 'vd-folded';
+  let folded = [];
+  try { folded = JSON.parse(localStorage.getItem(FOLD_KEY) || '[]'); } catch (_) { folded = []; }
+  const saveFolds = () => { try { localStorage.setItem(FOLD_KEY, JSON.stringify(sections.filter(s => s.classList.contains('collapsed')).map(s => s.id))); } catch (_) {} };
+  for (const sec of sections) {
+    const h = sec.querySelector('h2'), b = document.createElement('button');
+    b.type = 'button'; b.className = 'fold';
+    while (h.firstChild) b.appendChild(h.firstChild);
+    h.appendChild(b);
+    const grid = sec.querySelector('.grid'); grid.id = grid.id || sec.id + '-cards';
+    b.setAttribute('aria-controls', grid.id);
+    const set = (c) => { sec.classList.toggle('collapsed', c); b.setAttribute('aria-expanded', String(!c)); b.title = c ? 'Show these demos' : 'Hide these demos'; };
+    set(folded.includes(sec.id));
+    b.addEventListener('click', () => { set(!sec.classList.contains('collapsed')); saveFolds(); });
+    sec._setFold = set;
+  }
+  // a jump link opens its section if it was folded
+  for (const a of document.querySelectorAll('.jump a[href^="#"]')) a.addEventListener('click', () => {
+    const sec = document.getElementById(a.getAttribute('href').slice(1));
+    if (sec && sec._setFold && sec.classList.contains('collapsed')) { sec._setFold(false); saveFolds(); }
+  });
   const total = document.querySelectorAll('.card').length;
   // Fold case and accents so "schrodinger" finds "Schrödinger".
   const fold = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
@@ -1024,6 +1059,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
       }
     }
     clear.hidden = !words.length;
+    document.body.classList.toggle('searching', words.length > 0);   // a search shows matches even in folded sections
     empty.hidden = shown > 0;
     emptyq.textContent = q.value.trim();
     status.textContent = words.length && shown ? 'Showing ' + shown + ' of ' + total + ' demos' : '';
