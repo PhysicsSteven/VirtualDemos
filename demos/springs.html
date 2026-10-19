@@ -243,7 +243,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <section>
         <h2>Spring and mass</h2>
         <div class="ctl">
-          <div class="slider-head"><label for="sK">Spring constant k</label><output id="oK" class="mono" for="sK"></output></div>
+          <div class="slider-head"><label for="sK" id="lK">Spring constant k</label><output id="oK" class="mono" for="sK"></output></div>
           <input type="range" id="sK" min="1" max="100" step="0.5">
         </div>
         <div class="ctl">
@@ -256,6 +256,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <section id="coupSec" hidden>
         <h2>Two coupled masses</h2>
         <div class="ctl">
+          <div class="slider-head"><label for="sK2">Right spring k<sub>2</sub></label><output id="oK2" class="mono" for="sK2"></output></div>
+          <input type="range" id="sK2" min="1" max="100" step="0.5">
+        </div>
+        <div class="ctl">
           <div class="slider-head"><label for="sKc">Coupling spring k<sub>c</sub></label><output id="oKc" class="mono" for="sKc"></output></div>
           <input type="range" id="sKc" min="0" max="40" step="0.5">
         </div>
@@ -266,7 +270,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" class="btn" data-start="one">One block</button>
         </div>
         <dl class="readout" id="coupBox"></dl>
-        <p class="hint">Mode 1: both blocks move together and the middle spring never stretches. Mode 2: they move opposite, and the middle spring is stretched twice as much as each block moves, so it adds 2k<sub>c</sub> to the stiffness. Any motion is a sum of these two.</p>
+        <p class="hint">With k<sub>1</sub> = k<sub>2</sub>, mode 1 has both blocks moving together, so the middle spring never stretches, and mode 2 has them moving opposite, so it adds 2k<sub>c</sub>. With unequal outer springs the modes are lopsided: one block swings more than the other, shown by the amplitude ratio below. Any motion is a sum of the two modes.</p>
       </section>
 
       <section>
@@ -342,7 +346,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch wall"></i>Wall motion X<sub>w</sub> cos ωt (driven)</span>
           <span><i class="swatch ghost"></i><span id="ghostTxt">Kept trace</span></span>
         </div>
-        <p class="hint" id="modelHint">Model: ideal massless springs that obey Hooke's law, a frictionless track, a damping force −bv on each block, g = 9.80665 m/s². The curves are the exact solution of the linear equation of motion, not a step by step integration; two coupled blocks move as the sum of their two normal modes. Positions are drawn to scale; the block's size grows with its mass but is not to scale. The drawing never shows a spring pressed solid, and the model has no such limit.</p>
+        <p class="hint" id="modelHint">Model: ideal massless springs that obey Hooke's law, a frictionless track, a damping force −bv on each block, g = 9.80665 m/s². The curves are the exact solution of the linear equation of motion, not a step by step integration; two coupled blocks (equal masses; outer springs k₁ and k₂, middle spring k_c, the same damping b on each) move as the sum of their two normal modes, found exactly from the 2 × 2 stiffness matrix. Positions are drawn to scale; the block's size grows with its mass but is not to scale. The drawing never shows a spring pressed solid, and the model has no such limit.</p>
       </section>
     </aside>
   </main>
@@ -398,26 +402,39 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const x = h[0] + pp[0], v = h[1] + pp[1], th = g.th0 + g.w * s, F = g.F0 * Math.cos(th);
     return { x, v, a: (F - g.b * v - g.k * x) / g.m, th, F };
   }
-  // Two equal masses between walls: k, k_c, k. Normal coordinates q₁ = (x₁ + x₂)/2 at ω₁² = k/m, q₂ = (x₁ − x₂)/2 at ω₂² = (k + 2k_c)/m.
+  // Two equal masses between walls: wall –k₁– block 1 –k_c– block 2 –k₂– wall. The stiffness matrix
+  // [[k₁ + k_c, −k_c], [−k_c, k₂ + k_c]]/m is symmetric, so its eigenvectors are orthonormal: e₁ = (cos α, sin α) at ω₁² (lower),
+  // e₂ = (−sin α, cos α) at ω₂². Equal masses with the same damping b on each make the damping proportional, so each
+  // normal coordinate q = e·x moves as its own damped oscillator. With k₁ = k₂, α = 45°: q₁ ∝ x₁ + x₂, q₂ ∝ x₂ − x₁.
+  function coupledModes(m, k1, k2, kc) {
+    const A = (k1 + kc) / m, D = (k2 + kc) / m, B = -kc / m;
+    const mean = (A + D) / 2, r = Math.hypot((A - D) / 2, B);
+    let th = (B === 0 && A === D) ? -Math.PI / 4 : 0.5 * Math.atan2(2 * B, A - D);   // direction of the higher mode
+    const c = Math.cos(th), s = Math.sin(th);
+    // e₂ = (c, s) at mean + r; e₁ = (−s, c) at mean − r
+    return { w1sq: mean - r, w2sq: mean + r, e1: [-s, c], e2: [c, s] };
+  }
   function makeCoupled(t0, x1, v1, x2, v2, p) {
-    const m = p.m, k = p.k, kc = p.kc, b = p.b;
-    return { sys: 'coupled', t0, m, k, kc, b, beta: b / (2 * m), w1sq: k / m, w2sq: (k + 2 * kc) / m,
-      q1: (x1 + x2) / 2, p1: (v1 + v2) / 2, q2: (x1 - x2) / 2, p2: (v1 - v2) / 2 };
+    const m = p.m, k1 = p.k, k2 = p.k2 === undefined ? p.k : p.k2, kc = p.kc, b = p.b, M = coupledModes(m, k1, k2, kc);
+    const [a1, a2] = M.e1, [b1, b2] = M.e2;
+    return { sys: 'coupled', t0, m, k: k1, k1, k2, kc, b, beta: b / (2 * m), w1sq: M.w1sq, w2sq: M.w2sq, e1: M.e1, e2: M.e2,
+      q1: a1 * x1 + a2 * x2, p1: a1 * v1 + a2 * v2, q2: b1 * x1 + b2 * x2, p2: b1 * v1 + b2 * v2 };
   }
   function coupledState(g, t) {
     const s = t - g.t0, a = homog(g.q1, g.p1, g.beta, g.w1sq, s), c = homog(g.q2, g.p2, g.beta, g.w2sq, s);
-    const x1 = a[0] + c[0], x2 = a[0] - c[0], v1 = a[1] + c[1], v2 = a[1] - c[1];
+    const x1 = a[0] * g.e1[0] + c[0] * g.e2[0], x2 = a[0] * g.e1[1] + c[0] * g.e2[1];
+    const v1 = a[1] * g.e1[0] + c[1] * g.e2[0], v2 = a[1] * g.e1[1] + c[1] * g.e2[1];
     return { x1, x2, v1, v2, q1: a[0], q2: c[0], p1: a[1], p2: c[1],
-      a1: (-g.k * x1 - g.kc * (x1 - x2) - g.b * v1) / g.m, a2: (-g.k * x2 - g.kc * (x2 - x1) - g.b * v2) / g.m };
+      a1: (-g.k1 * x1 - g.kc * (x1 - x2) - g.b * v1) / g.m, a2: (-g.k2 * x2 - g.kc * (x2 - x1) - g.b * v2) / g.m };
   }
   const segState = (g, t) => (g.sys === 'coupled' ? coupledState(g, t) : singleState(g, t));
   // Energies. Hanging and free: spring ½k(x + d)², gravity −mgx (x down, zero at equilibrium), d = mg/k.
   // Driven: the oscillator's own energy ½mv² + ½kx², x from equilibrium; the drive's work is ∫F v dt.
   function energy(g, st, vertical) {
     if (g.sys === 'coupled') {
-      const E1 = 0.5 * g.m * st.v1 * st.v1 + 0.5 * g.k * st.x1 * st.x1, E2 = 0.5 * g.m * st.v2 * st.v2 + 0.5 * g.k * st.x2 * st.x2;
+      const E1 = 0.5 * g.m * st.v1 * st.v1 + 0.5 * g.k1 * st.x1 * st.x1, E2 = 0.5 * g.m * st.v2 * st.v2 + 0.5 * g.k2 * st.x2 * st.x2;
       const Ec = 0.5 * g.kc * (st.x2 - st.x1) * (st.x2 - st.x1);
-      return { E1, E2, Ec, total: E1 + E2 + Ec, M1: g.m * (st.p1 * st.p1 + g.w1sq * st.q1 * st.q1), M2: g.m * (st.p2 * st.p2 + g.w2sq * st.q2 * st.q2) };
+      return { E1, E2, Ec, total: E1 + E2 + Ec, M1: 0.5 * g.m * (st.p1 * st.p1 + g.w1sq * st.q1 * st.q1), M2: 0.5 * g.m * (st.p2 * st.p2 + g.w2sq * st.q2 * st.q2) };
     }
     const grav = vertical && !g.drive, d = grav ? g.m * G / g.k : 0;
     const K = 0.5 * g.m * st.v * st.v, Us = 0.5 * g.k * (st.x + d) * (st.x + d), Ug = grav ? -g.m * G * st.x : 0;
@@ -471,7 +488,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.SP = { G, homog, steady, makeSingle, partic, singleState, makeCoupled, coupledState, segState, energy, powerIntegrals, upCrossings, phasor, hmaxOf };
+    globalThis.SP = { G, homog, steady, makeSingle, partic, singleState, coupledModes, makeCoupled, coupledState, segState, energy, powerIntegrals, upCrossings, phasor, hmaxOf };
     return;
   }
 
@@ -485,7 +502,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const bOfPos = (p) => (p <= 0 ? 0 : +(0.01 * Math.pow(10, 4 * (p - 1) / (B_N - 1))).toPrecision(3));
   const posOfB = (b) => (b <= 0 ? 0 : clamp(Math.round(1 + Math.log10(b / 0.01) / 4 * (B_N - 1)), 1, B_N));
   const SL = { k: { el: 'sK', min: 1, max: 100, step: 0.5 }, m: { el: 'sM', min: 0.1, max: 5, step: 0.05 }, b: { el: 'sB', min: 0, max: B_N, step: 1 },
-    kc: { el: 'sKc', min: 0, max: 40, step: 0.5 }, F0: { el: 'sF', min: 0, max: 2, step: 0.05 }, w: { el: 'sW', min: 0.5, max: 25, step: 0.05 } };
+    kc: { el: 'sKc', min: 0, max: 40, step: 0.5 }, k2: { el: 'sK2', min: 1, max: 100, step: 0.5 }, F0: { el: 'sF', min: 0, max: 2, step: 0.05 }, w: { el: 'sW', min: 0.5, max: 25, step: 0.05 } };
 
   // ---------- setups ----------
   const PRESETS = {
@@ -497,21 +514,22 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       hint: 'The gray traces start from the same point with ζ = 0.2, 1 and 2.5. Critical damping returns to equilibrium fastest without overshooting; overdamping creeps back more slowly. Underdamped, the swings shrink inside the envelope e^(−bt/2m).' },
     res: { sys: 'driven', vert: false, m: 1, k: 40, zeta: 0.05, F0: 0.5, w: 5, ic: { x: 0, v: 0 },
       hint: 'The moving wall drives the block. The transient dies away and the block settles at the drive frequency, with the amplitude on the resonance curve below. Drag the ω marker on the curve, or press Sweep ω to trace the whole curve.' },
-    modes: { sys: 'coupled', m: 0.5, k: 20, kc: 10, zeta: 0, ic: { x1: 0.1, v1: 0, x2: 0.1, v2: 0 },
-      hint: 'Both blocks start displaced the same way, so the middle spring never stretches: mode 1 at ω₁ = √(k/m). Press Mode 2: the blocks move opposite and the middle spring adds stiffness, ω₂ = √((k + 2k_c)/m).' },
-    beats: { sys: 'coupled', m: 0.5, k: 20, kc: 2, zeta: 0, ic: { x1: 0.12, v1: 0, x2: 0, v2: 0 },
+    modes: { sys: 'coupled', m: 0.5, k: 20, k2: 20, kc: 10, zeta: 0, ic: { x1: 0.1, v1: 0, x2: 0.1, v2: 0 },
+      hint: 'Both blocks start displaced the same way, so the middle spring never stretches: mode 1 at ω₁ = √(k/m). Press Mode 2: the blocks move opposite and the middle spring adds stiffness, ω₂ = √((k + 2k_c)/m). Then make k₂ different from k₁ and press the mode buttons again: the modes become lopsided.' },
+    beats: { sys: 'coupled', m: 0.5, k: 20, k2: 20, kc: 2, zeta: 0, ic: { x1: 0.12, v1: 0, x2: 0, v2: 0 },
       hint: 'Only block 1 is displaced. That start is an equal mix of the two modes, and their slightly different frequencies beat: the energy moves to block 2 and back with period 2π/(ω₂ − ω₁).' }
   };
 
   // ---------- state ----------
-  const S = { preset: 'shm', sys: 'free', vert: false, p: { m: 1, k: 40, b: 0, F0: 0.5, w: 5, kc: 2 },
+  const S = { preset: 'shm', sys: 'free', vert: false, p: { m: 1, k: 40, b: 0, F0: 0.5, w: 5, kc: 2, k2: 40 },
     layers: { x: true, v: true, a: true, E: true, circle: true, arrows: true, env: true, compare: false, fling: true }, speedIdx: 3 };
   let segs = [], t = 0, running = !reduce, held = null, ghosts = [], compare = [], book = null, crossings = [], lastIC = { x: 0.15, v: 0 };
   let Av = 0.25, amp = null, sweep = null, sweepPts = [], speedBeforeSweep = null;
   const view = { tL: 0, L: 5, tLshow: 0 };
   let ranges = {};
   const cfg = () => PRESETS[S.preset];
-  const P = () => ({ m: S.p.m, k: S.p.k, b: S.p.b, F0: S.p.F0, w: S.p.w, kc: S.p.kc, drive: S.sys === 'driven' });
+  const P = () => ({ m: S.p.m, k: S.p.k, b: S.p.b, F0: S.p.F0, w: S.p.w, kc: S.p.kc, k2: S.p.k2, drive: S.sys === 'driven' });
+  const cModes = () => coupledModes(S.p.m, S.p.k, S.p.k2, S.p.kc);
   const lastSeg = () => segs[segs.length - 1];
   const ori = () => (S.sys === 'coupled' ? 'c' : S.vert ? 'v' : 'h');
   const w0 = () => Math.sqrt(S.p.k / S.p.m);
@@ -580,8 +598,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function winLen() {
     const c = cfg(), wz = w0(), T0 = 2 * Math.PI / wz;
     if (S.sys === 'coupled') {
-      const w2 = Math.sqrt((S.p.k + 2 * S.p.kc) / S.p.m), Tb = 2 * Math.PI / (w2 - wz);
-      return clamp(Math.max(6 * T0, Tb < 22 ? 2.1 * Tb : 0), 3, 48);
+      const M = cModes(), w1c = Math.sqrt(M.w1sq), w2 = Math.sqrt(M.w2sq), Tb = 2 * Math.PI / Math.max(w2 - w1c, 1e-9);
+      return clamp(Math.max(6 * 2 * Math.PI / w1c, Tb < 22 ? 2.1 * Tb : 0), 3, 48);
     }
     if (S.sys === 'driven') return clamp(Math.max(4 * T0, 8 * 2 * Math.PI / S.p.w), 4, 40);
     let L = 5 * T0;
@@ -1067,15 +1085,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const r = Math.min(7 * ps, side * 0.18);
     drawSpring(ctx, wl, by, b1 - side / 2, by, { r, n: 9, lw: springLW(S.p.k), hot: isHot('k') });
     drawSpring(ctx, b1 + side / 2, by, b2 - side / 2, by, { r: r * 0.8, n: 9, lw: springLW(Math.max(S.p.kc, 0.5)), hot: isHot('kc'), col: S.p.kc > 0 ? T.equi : T.gridStrong });
-    drawSpring(ctx, b2 + side / 2, by, wr, by, { r, n: 9, lw: springLW(S.p.k), hot: isHot('k') });
+    drawSpring(ctx, b2 + side / 2, by, wr, by, { r, n: 9, lw: springLW(S.p.k2), hot: isHot('k2') });
     { const mx = (wl + b1 - side / 2) / 2, gy = by - r - 14 * ps;
       springGrip(ctx, mx, gy, 'k', true, -1, [wl, gy - 11 * ps, b1 - side / 2 - wl, by + 12 * ps - gy + 11 * ps]);
-      labelBox(ctx, 'k', mx, gy - 16 * ps, 'center', T.ink, fs, 700);
+      labelBox(ctx, `k₁ = ${sig(S.p.k, 3)}`, mx, gy - 16 * ps, 'center', T.ink, fs, 700);
       const mc = (b1 + b2) / 2, gc = by - r - 14 * ps;
       springGrip(ctx, mc, gc, 'kc', true, -1, [b1 + side / 2, gc - 11 * ps, b2 - b1 - side, by + 12 * ps - gc + 11 * ps]);
       labelBox(ctx, `k_c = ${sig(S.p.kc, 3)} N/m`, mc, gc - 40 * ps, 'center', T.equi, fs, 700);
       const mr = (b2 + side / 2 + wr) / 2;
-      labelBox(ctx, 'k', mr, gy - 16 * ps, 'center', T.ink, fs, 700);
+      springGrip(ctx, mr, gy, 'k2', true, -1, [b2 + side / 2, gy - 11 * ps, wr - b2 - side / 2, by + 12 * ps - gy + 11 * ps]);
+      labelBox(ctx, `k₂ = ${sig(S.p.k2, 3)}`, mr, gy - 16 * ps, 'center', T.ink, fs, 700);
     }
     drawBlock(ctx, b1, by, side, 'm1', '1', T.pos);
     drawBlock(ctx, b2, by, side, 'm2', '2', T.neg);
@@ -1087,7 +1106,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     // what k and m are, top line
     ctx.fillStyle = T.muted; ctx.font = `${fs * 0.88}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    ctx.fillText(`k = ${sig(S.p.k, 3)} N/m, m = ${fx(S.p.m, 2)} kg each`, W / 2, top + 4 * ps);
+    ctx.fillText(`k₁ = ${sig(S.p.k, 3)}, k₂ = ${sig(S.p.k2, 3)} N/m, m = ${fx(S.p.m, 2)} kg each`, W / 2, top + 4 * ps);
     if (S.layers.arrows) {
       const Fref = S.p.k * Av, vref = w0() * Av, len = 46 * ps;
       for (const [bxx, a, v] of [[b1, st.a1, st.v1], [b2, st.a2, st.v2]]) {
@@ -1306,10 +1325,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const g = held ? segs[0] : lastSeg(), st = held ? segState(segs[0], 0) : segState(g, t), E = energy(g, st, S.vert);
     const rows = [];
     if (S.sys === 'coupled') {
-      rows.push({ lab: 'Block 1, ½mv_1² + ½kx_1²', v: E.E1, col: T.pos }, { lab: 'Block 2, ½mv_2² + ½kx_2²', v: E.E2, col: T.neg },
+      rows.push({ lab: 'Block 1, ½mv_1² + ½k_1x_1²', v: E.E1, col: T.pos }, { lab: 'Block 2, ½mv_2² + ½k_2x_2²', v: E.E2, col: T.neg },
         { lab: 'Middle spring, ½k_c(x_2 − x_1)²', v: E.Ec, col: T.equi }, { lab: 'Total', v: E.total, col: T.ink });
       if (S.p.b > 0 || book.D > 0) rows.push({ lab: 'Lost to the oil, ∫bv² dt', v: book.D, col: T.muted });
-      rows.push({ lab: 'Mode 1 (in phase)', v: E.M1, col: T.xcol, sep: true }, { lab: 'Mode 2 (opposite)', v: E.M2, col: T.vcol });
+      rows.push({ lab: 'Mode 1 (lower ω)', v: E.M1, col: T.xcol, sep: true }, { lab: 'Mode 2 (higher ω)', v: E.M2, col: T.vcol });
     } else {
       rows.push({ lab: 'Kinetic, ½mv²', v: E.K, col: T.pos }, { lab: S.vert ? 'Spring, ½k(x + mg/k)²' : 'Spring, ½kx²', v: E.Us, col: T.neg });
       if (S.vert) rows.push({ lab: 'Gravity, −mgx', v: E.Ug, col: T.equi });
@@ -1459,10 +1478,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // ---------- readouts ----------
   function syncSliders() {
     const sync = (id, v) => { const el = $(id); if (document.activeElement !== el || dragging()) el.value = v; };
-    sync('sK', S.p.k); sync('sM', S.p.m); sync('sB', posOfB(S.p.b)); sync('sKc', S.p.kc); sync('sF', S.p.F0); sync('sW', S.p.w); sync('sRate', S.speedIdx);
+    sync('sK', S.p.k); sync('sM', S.p.m); sync('sB', posOfB(S.p.b)); sync('sKc', S.p.kc); sync('sK2', S.p.k2); sync('sF', S.p.F0); sync('sW', S.p.w); sync('sRate', S.speedIdx);
     $('oK').textContent = `${fx(S.p.k, 1)} N/m`; $('oM').textContent = `${fx(S.p.m, 2)} kg`;
     $('oB').textContent = S.p.b === 0 ? '0 (none)' : `${sig(S.p.b, 3)} kg/s`;
-    $('oKc').textContent = `${fx(S.p.kc, 1)} N/m`; $('oF').textContent = `${fx(S.p.F0, 2)} N`; $('oW').textContent = `${fx(S.p.w, 2)} rad/s`;
+    $('oKc').textContent = `${fx(S.p.kc, 1)} N/m`; $('oK2').textContent = `${fx(S.p.k2, 1)} N/m`; $('lK').innerHTML = S.sys === 'coupled' ? 'Left spring k<sub>1</sub>' : 'Spring constant k'; $('oF').textContent = `${fx(S.p.F0, 2)} N`; $('oW').textContent = `${fx(S.p.w, 2)} rad/s`;
     $('oRate').textContent = fmtRate(SPEEDS[S.speedIdx]); $('rateTag').textContent = fmtRate(SPEEDS[S.speedIdx]);
   }
   const dd = (lab, val, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${lab}</dt><dd>${val}</dd></div>`;
@@ -1492,8 +1511,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       $('driveBox').innerHTML = h2;
     }
     if (cp) {
-      const w1 = wz, w2 = Math.sqrt((k + 2 * S.p.kc) / m);
-      let h3 = dd('ω₁ = √(k/m), in phase', `${sig(w1, 4)} rad/s`) + dd('ω₂ = √((k + 2k<sub>c</sub>)/m)', `${sig(w2, 4)} rad/s`);
+      const M = cModes(), w1 = Math.sqrt(M.w1sq), w2 = Math.sqrt(M.w2sq), sym = S.p.k === S.p.k2;
+      const ratio = (e) => (Math.abs(e[0]) < 1e-12 ? '0 : 1' : `1 : ${sig(e[1] / e[0], 3)}`);
+      let h3 = dd(sym ? 'ω₁ = √(k/m), in phase' : 'ω₁, lower mode', `${sig(w1, 4)} rad/s`) + dd(sym ? 'ω₂ = √((k + 2k<sub>c</sub>)/m)' : 'ω₂, higher mode', `${sig(w2, 4)} rad/s`);
+      h3 += dd('Mode 1 shape x₁ : x₂', ratio(M.e1)) + dd('Mode 2 shape x₁ : x₂', ratio(M.e2));
       h3 += dd('Beat period 2π/(ω₂ − ω₁)', S.p.kc > 0 ? `${sig(2 * Math.PI / (w2 - w1), 4)} s` : '∞ (no coupling)', 'wide');
       $('coupBox').innerHTML = h3;
     }
@@ -1518,7 +1539,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     let h = dd('Time t', `${t.toFixed(3)} s`);
     if (cp) {
       h += dd('x₁', `<span class="c-1">${cm(st.x1, 2)}</span>`) + dd('x₂', `<span class="c-2">${cm(st.x2, 2)}</span>`) + dd('v₁', `${fx(st.v1, 3)} m/s`) + dd('v₂', `${fx(st.v2, 3)} m/s`);
-      h += dd('Mode 1, q₁ = (x₁ + x₂)/2', cm(st.q1, 2)) + dd('Mode 2, q₂ = (x₁ − x₂)/2', cm(st.q2, 2));
+      h += dd('Mode 1 coordinate q₁ = e₁·x', cm(st.q1, 2)) + dd('Mode 2 coordinate q₂ = e₂·x', cm(st.q2, 2));
       $('mFormula').innerHTML = 'x₁ = q₁ + q₂, x₂ = q₁ − q₂; each q oscillates at its own ω with its own amplitude.';
     } else {
       h += dd('Displacement x', `<span class="c-x">${cm(st.x, 2)}</span>`) + dd('Velocity v', `<span class="c-v">${fx(st.v, 3)} m/s</span>`);
@@ -1549,6 +1570,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (c.F0 !== undefined) S.p.F0 = c.F0;
     if (c.w !== undefined) S.p.w = c.w;
     if (c.kc !== undefined) S.p.kc = c.kc;
+    S.p.k2 = c.k2 !== undefined ? c.k2 : c.k;
     S.layers.compare = !!c.compare; $('tCmp').checked = S.layers.compare;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
     $('presetHint').textContent = c.hint;
@@ -1562,7 +1584,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (S.p[key] === v) return;
     if (key !== 'w' || !sweep) stopSweep(false);
     S.p[key] = v;
-    if (held) rebuildHeld(); else { branch(key === 'm' || key === 'k' || key === 'kc'); buildCompare(); }
+    if (held) rebuildHeld(); else { branch(key === 'm' || key === 'k' || key === 'kc' || key === 'k2'); buildCompare(); }
     refitWindow(); syncSliders(); staticText(); updateReadouts();
   }
   function setPos(key, pos) {
@@ -1576,6 +1598,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (sys === S.sys) return;
     stopSweep(false);
     const was = S.sys; S.sys = sys;
+    if (sys === 'coupled' && was !== 'coupled') S.p.k2 = S.p.k;
     if (sys === 'coupled' || was === 'coupled') {
       newRun(sys === 'coupled' ? { x1: 0.1, v1: 0, x2: 0, v2: 0 } : { x: 0.12, v: 0 });
     } else { branch(true); buildCompare(); view.L = winLen(); ranges = {}; }
@@ -1600,6 +1623,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('sM').addEventListener('input', (e) => setParam('m', +e.target.value));
   $('sB').addEventListener('input', (e) => setParam('b', bOfPos(+e.target.value)));
   $('sKc').addEventListener('input', (e) => setParam('kc', +e.target.value));
+  $('sK2').addEventListener('input', (e) => setParam('k2', +e.target.value));
   $('sF').addEventListener('input', (e) => setParam('F0', +e.target.value));
   $('sW').addEventListener('input', (e) => setParam('w', +e.target.value));
   for (const b of document.querySelectorAll('[data-z]')) b.addEventListener('click', () => {
@@ -1608,7 +1632,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   });
   for (const b of document.querySelectorAll('[data-start]')) b.addEventListener('click', () => {
     const A = 0.1, k = b.dataset.start;
-    newRun(k === 'm1' ? { x1: A, v1: 0, x2: A, v2: 0 } : k === 'm2' ? { x1: A, v1: 0, x2: -A, v2: 0 } : { x1: A, v1: 0, x2: 0, v2: 0 });
+    const M = cModes(), sh = (e) => { const f = A / Math.max(Math.abs(e[0]), Math.abs(e[1])); return { x1: f * e[0], v1: 0, x2: f * e[1], v2: 0 }; };
+    newRun(k === 'm1' ? sh(M.e1) : k === 'm2' ? sh(M.e2) : { x1: A, v1: 0, x2: 0, v2: 0 });
     setRunning(true);
   });
   $('tCmp').addEventListener('change', (e) => { S.layers.compare = e.target.checked; buildCompare(); ranges = {}; });
@@ -1620,7 +1645,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   for (const [id, key] of Object.entries(lay)) $(id).addEventListener('change', (e) => { S.layers[key] = e.target.checked; ranges = {}; });
   $('keep').addEventListener('click', () => {
     if (t <= 0 || held) return;
-    const lab = S.sys === 'coupled' ? `k_c = ${S.p.kc} N/m` : `x₀ = ${cm(lastIC.x, 1)}${S.p.b ? `, ζ = ${sig(zeta(), 2)}` : ''}`;
+    const lab = S.sys === 'coupled' ? `k₁ ${S.p.k}, k_c ${S.p.kc}, k₂ ${S.p.k2} N/m` : `x₀ = ${cm(lastIC.x, 1)}${S.p.b ? `, ζ = ${sig(zeta(), 2)}` : ''}`;
     ghosts.push({ segs: segs.map((g) => ({ ...g })), tEnd: t, label: lab });
     if (ghosts.length > 3) ghosts.shift();
     ghostKey();
@@ -1644,7 +1669,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const dx = Math.max(bx - x, 0, x - bx - bw), dy = Math.max(by - y, 0, y - by - bh);
       let d = Math.hypot(dx, dy);
       if (d === 0 && !h.mass) d = -1 + Math.hypot(x - (bx + bw / 2), y - (by + bh / 2)) / 1e4;   // small grips win over what is under them
-      if (h.id === 'k' || h.id === 'kc' || h.id === 'b') { if (d === 0) d = 0.5; }
+      if (h.id === 'k' || h.id === 'kc' || h.id === 'k2' || h.id === 'b') { if (d === 0) d = 0.5; }
       if (d <= tol && d < bd) { bd = d; best = h; }
     }
     return best;
@@ -1687,7 +1712,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const dt = (sm[sm.length - 1][0] - sm[j][0]) / 1000;
       if (dt > 0.008) v = (sm[sm.length - 1][1] - sm[j][1]) / dt;
     }
-    const wz = S.sys === 'coupled' ? Math.sqrt((S.p.k + 2 * S.p.kc) / S.p.m) : w0(), lim = XMAX[ori()] * 1.2;
+    const wz = S.sys === 'coupled' ? Math.sqrt(cModes().w2sq) : w0(), lim = XMAX[ori()] * 1.2;
     const xr = S.sys === 'coupled' ? (held.id === 'm2' ? held.x2 : held.x1) : held.x;
     const vmax = wz * Math.sqrt(Math.max(0, lim * lim - xr * xr));
     v = clamp(v, -vmax, vmax);
