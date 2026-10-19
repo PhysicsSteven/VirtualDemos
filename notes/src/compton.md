@@ -51,6 +51,7 @@ Students should know E = hc/λ, momentum conservation in two dimensions and E² 
 
 - The electron is free and at rest; the kinematics are exact and relativistic, in one plane. With ε = E/m_ec²: E′ = E/(1 + ε(1 − cos θ)), T = E − E′, and the electron angle follows cot φ = (1 + ε) tan(θ/2). The Compton edge is T_max = 2E²/(m_ec² + 2E), at θ = 180°.
 - The **Conservation check** adds the final momenta back up and compares the energies; only rounding error remains.
+- Photon colors: green light is drawn in its true color. X and gamma rays use a false color scale, blue for the incoming photon and shifting toward red with Δλ, red at 2λ_C (180°). Since Δλ depends only on θ, the scattered photon has the same color at a given angle for every energy, which is a quick way to show the class that the shift does not depend on λ.
 - In a real target the electrons are bound by a few eV to keV and moving, which broadens the shifted line (the Doppler width). Photons scattered by the atom as a whole keep their wavelength: the unshifted line.
 - The angular distribution is the Klein–Nishina formula for unpolarized photons on free electrons; photons are sampled from it by rejection. Pair production, which takes over above a few MeV in heavy materials, is not shown.
 - The drawn wave packets keep λ′/λ to scale but not λ itself; the electron moves at its true speed relative to the photons.

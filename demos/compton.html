@@ -131,8 +131,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
 .key span { display: flex; align-items: center; gap: 8px; }
 .swatch { flex: none; width: 22px; height: 0; border-top: 3px solid; }
-.swatch.inc { border-color: var(--equi); }
-.swatch.out { border-color: var(--pos); }
+.swatch.inc { border-color: #4f8dff; }
+.swatch.out { border-image: linear-gradient(90deg, #4f8dff, #3fd0c0, #e3e035, #ff5a3c) 1; }
 .swatch.ele { border-color: var(--elec); }
 .swatch.thom { border-color: var(--muted); border-top-style: dashed; border-top-width: 2px; }
 .swatch.hist { height: 10px; border: 1px solid var(--accent); background: color-mix(in srgb, var(--accent) 22%, transparent); }
@@ -263,6 +263,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <h2>Model</h2>
         <p class="hint">The electron is free and at rest. Exact relativistic kinematics; the photon and the electron move in one plane, drawn here. In a real target the electrons are bound by a few eV to keV and moving, which broadens the shifted line (the Doppler width), and photons scattered by the atom as a whole keep their wavelength (the unshifted line).</p>
         <p class="hint">Wave packets: the drawn wavelengths keep the ratio λ′/λ to scale, but λ itself is not to scale (a 70 pm wave is far too small to see). The electron moves at its true speed relative to the photons.</p>
+        <p class="hint">Photon colors: visible light is drawn in its true color. X rays and gamma rays have no color, so they use a false color scale: the incoming photon is blue and the scattered photon shifts toward red in proportion to Δλ, reaching red at the largest possible shift, 2λ<sub>C</sub> at 180°. Because Δλ depends only on the angle, a given angle gives the same color at every energy.</p>
         <p class="hint">Angular distribution: the Klein–Nishina formula for unpolarized photons on free electrons, summed over final polarizations. Photons are sampled from it by rejection.</p>
         <div class="key">
           <span><i class="swatch inc"></i>Incoming photon, momentum p</span>
@@ -384,6 +385,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
       gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), elec: g('--elec'),
       mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+    const hx = parseInt((T.canvas.match(/[0-9a-f]{6}/i) || ['ffffff'])[0], 16);
+    T.dark = ((hx >> 16) & 255) + ((hx >> 8) & 255) + (hx & 255) < 300;
   }
   const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
   let W = 0, Hh = 0, LY = null, PS = 1, LBOX = null;
@@ -521,7 +524,31 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // ---------- the collision ----------
   let clock = 0;          // animation time, s
   const PERIOD = 3.4, T_HIT = 1.25;
+  // ---------- photon colors ----------
+  // Real light (380 to 750 nm) is drawn in its true color. X rays and gamma rays have no color, so they get a
+  // false color scale: the incoming photon is blue, and the scattered one runs toward red in proportion to its
+  // shift, from Δλ = 0 (blue) to the largest possible shift 2λ_C at 180° (red).
+  function specRGB(nm) {
+    let r = 0, g = 0, b = 0;
+    if (nm < 440) { r = -(nm - 440) / 60; b = 1; } else if (nm < 490) { g = (nm - 440) / 50; b = 1; }
+    else if (nm < 510) { g = 1; b = -(nm - 510) / 20; } else if (nm < 580) { r = (nm - 510) / 70; g = 1; }
+    else if (nm < 645) { r = 1; g = -(nm - 645) / 65; } else { r = 1; }
+    const f = nm < 420 ? 0.3 + 0.7 * (nm - 380) / 40 : nm > 700 ? 0.3 + 0.7 * (750 - nm) / 50 : 1;
+    const k = (T && T.dark ? 1 : 0.78) * f;          // darker in the light theme so yellow stays readable
+    const w = T && T.dark ? 0.22 : 0;                 // lift toward white on dark backgrounds so deep blue stays visible
+    const ch = (v) => Math.round(255 * ((1 - w) * Math.pow(v * k, 0.8) + w));
+    return `rgb(${ch(r)}, ${ch(g)}, ${ch(b)})`;
+  }
+  const FALSE_IN = 455, FALSE_RED = 650;
+  function photonColors(s) {
+    const nmIn = s.lam / 1000, nmOut = s.lamP / 1000;
+    if (nmIn >= 380 && nmIn <= 750) return { cin: specRGB(nmIn), cout: specRGB(Math.min(750, nmOut)), real: true };
+    const t = Math.max(0, Math.min(1, s.dlam / (2 * LC)));
+    return { cin: specRGB(FALSE_IN), cout: specRGB(FALSE_IN + (FALSE_RED - FALSE_IN) * t), real: false };
+  }
+
   function drawScene(s) {
+    const PC = photonColors(s);
     const g = sceneGeom(), c = ctx, ps = g.ps, box = g.s, { cx, cy, Rg } = g, sd = S.side;
     c.save(); c.beginPath(); c.rect(box.x, box.y, box.w, box.h); c.clip();
     // directions in canvas coordinates (y down): photon on side sd (up for +1), electron on the other side
@@ -535,19 +562,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // full paths, faint
     const far = Math.hypot(box.w, box.h);
     c.lineWidth = 1.2 * ps; c.globalAlpha = 0.35;
-    c.strokeStyle = T.pos; c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + ux * far, cy + uy * far); c.stroke();
+    c.strokeStyle = PC.cout; c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + ux * far, cy + uy * far); c.stroke();
     c.strokeStyle = T.elec; c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + ex * far, cy + ey * far); c.stroke();
     c.globalAlpha = 1;
     // angle arcs
     const ra = 30 * ps, rb = 46 * ps;
     c.lineWidth = 1.3 * ps;
-    c.strokeStyle = T.pos; c.beginPath(); c.arc(cx, cy, ra, 0, -sd * S.th, sd > 0); c.stroke();
+    c.strokeStyle = PC.cout; c.beginPath(); c.arc(cx, cy, ra, 0, -sd * S.th, sd > 0); c.stroke();
     c.strokeStyle = T.elec; c.beginPath(); c.arc(cx, cy, rb, 0, sd * s.phi, sd < 0); c.stroke();
 
     // Monte Carlo photons flying out
     const now = clock;
     if (flying.length) {
-      c.fillStyle = T.pos;
+      c.fillStyle = PC.cout;
       const v = Rg * 0.9;   // px per s
       for (const f of flying) {
         const d = (now - f.t0) * v * 1.6; if (d < 0 || d > Rg) continue;
@@ -565,10 +592,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const v = (box.w * 0.5 + halfLen) / T_HIT;        // photon speed, px per s
     const tt = clock % PERIOD, dt = tt - T_HIT;
     const sIn = dt * v;                                 // packet center relative to the electron, along the beam
-    packet(c, cx, cy, 1, 0, sIn, lamIn, halfLen, 13 * ps, -far, 0, T.equi, 2.2 * ps);
-    packet(c, cx, cy, ux, uy, sIn, lamOut, halfLen, 13 * ps, 0, far, T.pos, 2.2 * ps);
+    packet(c, cx, cy, 1, 0, sIn, lamIn, halfLen, 13 * ps, -far, 0, PC.cin, 2.2 * ps);
+    packet(c, cx, cy, ux, uy, sIn, lamOut, halfLen, 13 * ps, 0, far, PC.cout, 2.2 * ps);
     // impact flash
-    if (Math.abs(dt) < 0.25 && playing) { c.globalAlpha = 0.3 * (1 - Math.abs(dt) / 0.25); c.fillStyle = T.equi; c.beginPath(); c.arc(cx, cy, 22 * ps, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1; }
+    if (Math.abs(dt) < 0.25 && playing) { c.globalAlpha = 0.3 * (1 - Math.abs(dt) / 0.25); c.fillStyle = PC.cin; c.beginPath(); c.arc(cx, cy, 22 * ps, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1; }
     // electron: at rest until hit, then at its true speed relative to the photon
     const de = dt > 0 ? Math.min(far, dt * v * s.beta) : 0;
     const exy = [cx + ex * de, cy + ey * de];
@@ -576,8 +603,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
     // momentum arrows from the collision point; |p| = L0
     const L0 = Rg * 0.55, kp = L0 / s.E;
-    arrow(c, cx - L0, cy, cx - 7 * ps, cy, T.equi, 3 * ps);
-    arrow(c, cx, cy, cx + ux * s.Ep * kp, cy + uy * s.Ep * kp, T.pos, 3 * ps);
+    arrow(c, cx - L0, cy, cx - 7 * ps, cy, PC.cin, 3 * ps);
+    arrow(c, cx, cy, cx + ux * s.Ep * kp, cy + uy * s.Ep * kp, PC.cout, 3 * ps);
     arrow(c, cx, cy, cx + ex * s.pe * kp, cy + ey * s.pe * kp, T.elec, 3 * ps);
 
     // the electron
@@ -586,23 +613,34 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
     // grips: scattered photon on the guide circle, recoil electron a little inside it
     const hP = [cx + ux * Rg, cy + uy * Rg], hE = [cx + ex * Rg * 0.8, cy + ey * Rg * 0.8];
-    grip(c, hP, T.pos, 'th'); grip(c, hE, T.elec, 'phi');
+    grip(c, hP, PC.cout, 'th'); grip(c, hE, T.elec, 'phi');
 
     // labels last
     const lab = (txt, x, y, col, al) => label(c, txt, x, y, col, al, 'middle', true);
-    lab('p', cx - L0 * 0.75, cy - 24 * ps, T.equi, 'center');
+    lab('p', cx - L0 * 0.75, cy - 24 * ps, PC.cin, 'center');
     const tp = [cx + ux * s.Ep * kp, cy + uy * s.Ep * kp], te = [cx + ex * s.pe * kp, cy + ey * s.pe * kp];
-    lab('p′', tp[0] + (ux >= -0.2 ? 8 : -8) * ps + uy * 0, tp[1] - sd * 12 * ps, T.pos, ux >= -0.2 ? 'left' : 'right');
+    lab('p′', tp[0] + (ux >= -0.2 ? 8 : -8) * ps + uy * 0, tp[1] - sd * 12 * ps, PC.cout, ux >= -0.2 ? 'left' : 'right');
     if (s.pe * kp > 10 * ps) { let nx = -ey, ny = ex; if (nx < 0) { nx = -nx; ny = -ny; } lab('pₑ', te[0] + nx * 14 * ps, te[1] + ny * 14 * ps, T.elec, 'left'); }
     const am = -sd * S.th / 2;
-    if (S.th > 4 * DEG) lab(`θ = ${fmtDeg(S.th)}`, cx + Math.cos(am) * (ra + 8 * ps) + (S.th > 120 * DEG ? -4 * ps : 6 * ps), cy + Math.sin(am) * (ra + 14 * ps) - sd * 6 * ps, T.pos, S.th > 120 * DEG ? 'right' : 'left');
+    if (S.th > 4 * DEG) lab(`θ = ${fmtDeg(S.th)}`, cx + Math.cos(am) * (ra + 8 * ps) + (S.th > 120 * DEG ? -4 * ps : 6 * ps), cy + Math.sin(am) * (ra + 14 * ps) - sd * 6 * ps, PC.cout, S.th > 120 * DEG ? 'right' : 'left');
     const bm = sd * s.phi / 2;
     lab(`φ = ${fmtDeg(s.phi)}`, cx + Math.cos(bm) * (rb + 10 * ps), cy + Math.sin(bm) * (rb + 10 * ps) + sd * 8 * ps, T.elec, 'left');
     // corner text
     const x0 = box.x + 12 * ps; let y = box.y + 16 * ps;
-    label(c, `λ  = ${fmtL(s.lam)}`, x0, y, T.equi, 'left', 'middle', true, 12); y += 18 * ps;
-    label(c, `λ′ = ${fmtL(s.lamP)}`, x0, y, T.pos, 'left', 'middle', true, 12); y += 18 * ps;
-    label(c, `Δλ = ${fmtL(s.dlam)}`, x0, y, T.ink, 'left', 'middle', true, 12);
+    label(c, `λ  = ${fmtL(s.lam)}`, x0, y, PC.cin, 'left', 'middle', true, 12); y += 18 * ps;
+    label(c, `λ′ = ${fmtL(s.lamP)}`, x0, y, PC.cout, 'left', 'middle', true, 12); y += 18 * ps;
+    label(c, `Δλ = ${fmtL(s.dlam)}`, x0, y, T.ink, 'left', 'middle', true, 12); y += 20 * ps;
+    // color key: true color for light, otherwise the false color scale with this photon's place on it
+    c.font = `${10 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = T.muted;
+    if (PC.real) c.fillText('colors: true color of the light', x0, y);
+    else {
+      const bw = 120 * ps, bh = 7 * ps;
+      for (let i = 0; i < 60; i++) { c.fillStyle = specRGB(FALSE_IN + (FALSE_RED - FALSE_IN) * i / 59); c.fillRect(x0 + bw * i / 60, y - bh / 2, bw / 60 + 0.6, bh); }
+      const t = Math.max(0, Math.min(1, s.dlam / (2 * LC))), xm = x0 + bw * t;
+      c.strokeStyle = T.ink; c.lineWidth = 1.5 * ps; c.beginPath(); c.moveTo(xm, y - bh); c.lineTo(xm, y + bh); c.stroke();
+      c.fillStyle = T.muted; c.fillText('false color', x0 + bw + 8 * ps, y);
+      c.textAlign = 'left'; c.fillText('Δλ = 0', x0, y + 12 * ps); c.textAlign = 'right'; c.fillText('2λ_C (180°)', x0 + bw, y + 12 * ps);
+    }
     c.font = `${10.5 * ps}px ${T.ui}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'bottom';
     c.fillText(capped ? 'Drawn wavelengths: λ not to scale, λ′ shortened' : 'Drawn wavelengths: λ not to scale, λ′/λ to scale', x0, box.y + box.h - 10 * ps);
     c.textAlign = 'right'; if (box.w >= 560) c.fillText('electron at rest, free', box.x + box.w - 12 * ps, box.y + box.h - 10 * ps);
@@ -617,6 +655,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- momentum triangle and energy balance ----------
   function drawTri(s) {
+    const PC = photonColors(s);
     const box = LY.tri, c = ctx, ps = PS, sd = S.side;
     c.save(); c.beginPath(); c.rect(box.x, box.y, box.w, box.h); c.clip();
     title(c, box, 'Momentum: p = p′ + pₑ, tip to tail');
@@ -632,11 +671,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const P = (x, y) => [ox + k * x, oy - k * y];
     const a = P(0, 0), b = P(s.E, 0), cc = P(C[0], C[1]);
     if (area.B - area.T > 20 * ps) {
-      arrow(c, a[0], a[1], b[0], b[1], T.equi, 3 * ps);
-      arrow(c, a[0], a[1], cc[0], cc[1], T.pos, 3 * ps);
+      arrow(c, a[0], a[1], b[0], b[1], PC.cin, 3 * ps);
+      arrow(c, a[0], a[1], cc[0], cc[1], PC.cout, 3 * ps);
       arrow(c, cc[0], cc[1], b[0], b[1], T.elec, 3 * ps);
       // θ arc at A
-      if (S.th > 3 * DEG && s.Ep * k > 30 * ps) { c.strokeStyle = T.pos; c.lineWidth = 1.2 * ps; c.beginPath(); c.arc(a[0], a[1], 18 * ps, 0, -sd * S.th, sd > 0); c.stroke(); }
+      if (S.th > 3 * DEG && s.Ep * k > 30 * ps) { c.strokeStyle = PC.cout; c.lineWidth = 1.2 * ps; c.beginPath(); c.arc(a[0], a[1], 18 * ps, 0, -sd * S.th, sd > 0); c.stroke(); }
       // each label sits off the middle of its side, on the side away from the opposite corner
       const side = (p, q, o, txt, col) => {
         const mx = (p[0] + q[0]) / 2, my = (p[1] + q[1]) / 2, L = Math.hypot(q[0] - p[0], q[1] - p[1]) || 1;
@@ -648,12 +687,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       };
       const deg = Math.abs(a[1] - cc[1]) < 3 * ps;   // flat triangle at 0° or 180°
       if (deg) {
-        label(c, `p = ${fmtP(s.E)}`, (a[0] + b[0]) / 2, a[1] + 16 * ps, T.equi, 'center', 'middle', true, 10.5);
-        label(c, `p′ = ${fmtP(s.Ep)}`, Math.min(a[0], cc[0]) - 4 * ps, a[1] - 16 * ps, T.pos, 'right', 'middle', true, 10.5);
+        label(c, `p = ${fmtP(s.E)}`, (a[0] + b[0]) / 2, a[1] + 16 * ps, PC.cin, 'center', 'middle', true, 10.5);
+        label(c, `p′ = ${fmtP(s.Ep)}`, Math.min(a[0], cc[0]) - 4 * ps, a[1] - 16 * ps, PC.cout, 'right', 'middle', true, 10.5);
         label(c, `pₑ = ${fmtP(s.pe)}`, Math.max(b[0], cc[0]) + 4 * ps, a[1] - 16 * ps, T.elec, 'left', 'middle', true, 10.5);
       } else {
-        side(a, b, cc, `p = ${fmtP(s.E)}`, T.equi);
-        side(a, cc, b, `p′ = ${fmtP(s.Ep)}`, T.pos);
+        side(a, b, cc, `p = ${fmtP(s.E)}`, PC.cin);
+        side(a, cc, b, `p′ = ${fmtP(s.Ep)}`, PC.cout);
         side(cc, b, a, `pₑ = ${fmtP(s.pe)}`, T.elec);
       }
     }
@@ -663,6 +702,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.restore();
   }
   function drawBars(s, b) {
+    const PC = photonColors(s);
     const c = ctx, ps = PS, eps = s.eps;
     const toScale = eps >= 0.25;
     const lw = 54 * ps, x0 = b.x + lw, w = b.w - lw;
@@ -679,10 +719,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const rowLab = (txt, y) => { c.font = `600 ${10.5 * ps}px ${T.ui}`; c.fillStyle = T.ink; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(txt, b.x, y + rowH / 2); };
     rowLab('Before', y1); rowLab('After', y2);
     const wE = w * fE, wM = w * fM;
-    seg(x0, y1, wE, T.equi, `E ${fmtE(s.E, 3)}`);
+    seg(x0, y1, wE, PC.cin, `E ${fmtE(s.E, 3)}`);
     seg(x0 + wE, y1, wM, T.muted, 'mₑc²', 0.45);
     const wEp = wE * s.Ep / s.E, wT = wE - wEp;
-    seg(x0, y2, wEp, T.pos, `E′ ${fmtE(s.Ep, 3)}`);
+    seg(x0, y2, wEp, PC.cout, `E′ ${fmtE(s.Ep, 3)}`);
     const fitT = seg(x0 + wEp, y2, wT, T.elec, `T ${fmtE(s.T, 3)}`);
     seg(x0 + wE, y2, wM, T.muted, 'mₑc²', 0.45);
     if (!toScale) {   // break marks on the rest energy segments
