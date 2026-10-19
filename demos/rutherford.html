@@ -701,15 +701,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const s = LY.scene, ps = projScale(), beam = S.mode === 'beam';
     const cx = s.x + (beam ? s.w * 0.5 : s.w * 0.6), cy = s.y + s.h / 2 + (beam ? 4 * ps : 6 * ps);
     const half = Math.min(s.h / 2 - 34 * ps, beam ? s.w / 2 - 40 * ps : s.h);
-    const sc = (beam ? half * 0.62 : (s.h / 2 - 34 * ps)) / S.view;
-    const ring = beam ? half : 0, zone = beam ? half * 0.72 : 0;  // tracks end at the zone circle; the screen beyond it is far away
+    // beam view: the femtometer drawing fills only a small circle (zone); beyond it the screen is far away,
+    // so the scale changes there and each alpha continues along its final angle
+    const ring = beam ? half : 0, zone = beam ? half * 0.34 : 0;
+    const sc = (beam ? zone / 1.04 : (s.h / 2 - 34 * ps)) / S.view;
     const far = Math.hypot(Math.max(cx - s.x, s.x + s.w - cx), s.h) + 20;
     return { s, cx, cy, sc, ring, zone, far, ps };
   }
   const plumUnits = () => S.model === 'plum';
   function fitView() {
     if (S.model === 'plum') S.view = atomR() * 1.35;
-    else if (S.mode === 'beam') S.view = bmax();
+    else if (S.mode === 'beam') S.view = Dnow() * Math.pow(10, +$('bm').max);   // fixed scale: the widest beam fills the zone, so b_max changes the beam, not the zoom
     else S.view = niceUp(2.6 * Dnow());
   }
   function niceUp(v) { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; for (const s of [1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (m <= s + 1e-9) return s * p; return 10 * p; }
@@ -748,6 +750,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     tctx.save(); tctx.beginPath(); tctx.rect(g.s.x, g.s.y, g.s.w, g.s.h); tctx.clip();
     tctx.strokeStyle = T.alpha; tctx.globalAlpha = (RATES[S.rate] > 200 ? 0.12 : 0.22) * (S.model === 'plum' ? 0.5 : 1); tctx.lineWidth = 1 * projScale();
     trackPath(tctx, a, g); tctx.stroke();
+    if (S.mode === 'beam' && a.theta !== undefined) {
+      // beyond the scale change: straight out along the final angle to the screen
+      const sg = a.b < 0 ? -1 : 1, ca = Math.cos(a.theta), sa = -sg * Math.sin(a.theta), r0 = g.zone, r1 = g.ring - 4.5 * g.ps;
+      tctx.beginPath(); tctx.moveTo(g.cx + r0 * ca, g.cy + r0 * sa); tctx.lineTo(g.cx + r1 * ca, g.cy + r1 * sa); tctx.stroke();
+    }
     tctx.restore();
   }
   const flashes = [];
@@ -769,7 +776,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function fmtLen(fm, d = 3) {
     if (plumUnits() && fm >= 100) return `${trim((fm / 1000).toPrecision(d))} pm`;
     if (fm === 0) return '0 fm';
-    return `${trim(fm.toPrecision(d))} fm`;
+    return fm >= 1000 && fm < 1e5 ? `${Math.round(fm)} fm` : `${trim(fm.toPrecision(d))} fm`;
   }
   const trim = (s) => (s.includes('e') ? s : s.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, ''));
   function fmtAng(th) {
@@ -826,7 +833,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.strokeStyle = T.ink; c.lineWidth = 1.5 * ps; c.beginPath();
     c.moveTo(x0, y0 - 4 * ps); c.lineTo(x0, y0); c.lineTo(x0 + px, y0); c.lineTo(x0 + px, y0 - 4 * ps); c.stroke();
     c.fillStyle = T.ink; c.font = `${11 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
-    c.fillText(fmtLen(L, 3), x0 + px + 6 * ps, y0 + 3 * ps);
+    c.fillText(fmtLen(L, 3) + (S.mode === 'beam' && S.model === 'nuc' ? ', inside the dashed circle' : ''), x0 + px + 6 * ps, y0 + 3 * ps);
   }
   // the nucleus as its Z protons and A − Z neutrons, k px per fm, slowly turning
   function paintNucleus(c, X, Y, k, M0) {
@@ -911,11 +918,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // beam edge handle (nuclear model only)
     if (S.model === 'nuc') {
       const hot = (drag && drag.id === 'bm') || (!drag && hoverId === 'bm');
-      const hx = s.x + 26 * ps, y = g.cy - bm;
+      const hx = s.x + (S.mode === 'beam' ? 64 : 26) * ps, y = g.cy - bm;
       c.strokeStyle = T.accent; c.lineWidth = (hot ? 2.2 : 1.4) * ps; c.globalAlpha = 0.8;
       c.beginPath(); c.moveTo(s.x, y); c.lineTo(hx + 40 * ps, y); c.stroke(); c.globalAlpha = 1;
       c.fillStyle = T.canvas; c.beginPath(); c.arc(hx, y, (hot ? 6 : 4.5) * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
-      label(c, `b_max = ${fmtLen(bmax())}`, hx + 10 * ps, y + (y - g.s.y > 40 * ps ? -11 : 11) * ps, T.accent, 'left', 'middle');
+      label(c, `b_max = ${fmtLen(bmax())}`, hx + 10 * ps, y + (y - g.s.y > 40 * ps ? -14 : 14) * ps, T.accent, 'left', 'middle');
     }
   }
   function drawRing(g) {
@@ -1473,7 +1480,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const xr = (g.s.x + 30 * ps - g.cx) / g.sc, t = P3(g, cm.M, xr, S.b, 0), y0 = P3(g, cm.M, xr, 0, 0)[1], y1 = P3(g, cm.M, xr, 1, 0)[1];
       out.push({ id: 'b', cursor: 'ns-resize', seg: [t[0] - 16 * ps, t[1], t[0] + 50 * ps], set: (fm) => setB(fm), fromY: (Y) => (Y - y0) / (y1 - y0) });
     } else if (S.mode === 'single') out.push({ id: 'b', cursor: 'ns-resize', seg: [g.s.x, g.cy - S.b * g.sc, g.s.x + 70 * ps, g.cy - S.b * g.sc], set: (fm) => setB(fm) });
-    else if (S.model === 'nuc') { const y = g.cy - bmax() * g.sc; out.push({ id: 'bm', cursor: 'ns-resize', seg: [g.s.x, y, g.s.x + 70 * ps, y], set: (fm) => setBm(Math.abs(fm)) }); }
+    else if (S.model === 'nuc') { const y = g.cy - bmax() * g.sc; out.push({ id: 'bm', cursor: 'ns-resize', seg: [g.s.x, y, g.s.x + 110 * ps, y], set: (fm) => setBm(Math.abs(fm)) }); }
     return out;
   }
   function setBm(fm) {
