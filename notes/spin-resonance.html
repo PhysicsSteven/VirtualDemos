@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spin Resonance: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Spin Resonance</h1><ul class="meta"><li><a href="../demos/spin-resonance.html">Open the demo</a></li><li>Modern physics lab</li><li>20 to 40 minutes (a full lab period with the table and fit)</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A magnetic moment in a field B has energy levels split by ΔE = gμB (electron) or (γħ)B (nucleus). Radiation of frequency ν is absorbed only when hν matches that splitting: hν = gμ_B B.</li>
+<li>The experiment holds ν fixed and sweeps B. The absorption peak marks the one field where the resonance condition holds, so measuring that field at several frequencies gives a straight line B = kν through the origin with k = h/(gμ_B).</li>
+<li>For the same frequency, protons need a field about 660 times larger than electrons, because the proton's magnetic moment is that much smaller. That is why proton resonance needs the 300 mT Zeeman magnet while electron resonance needs only the scan coils.</li>
+<li>Different nuclei (¹H, ¹⁹F) have different gyromagnetic ratios, and the width of a line depends on the sample's surroundings: a liquid gives a narrow line, a solid a broad one.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the energy of a magnetic dipole in a field, U = −μ·B, and E = hν. Run the demo once through the <strong>ESR on DPPH</strong> preset so you know where the cursors are, and pick an <strong>Instrument seed</strong> to give the class so everyone has the same instrument. Turn on <strong>Blind</strong> before projecting the readings table.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>ESR on DPPH.</strong> Ask Q1 before you show the peak. Raise the SENS screw slowly and point out the CH2 signal LED dimming: the peak is best just below the point where the oscillator stops. Put cursor A at the start of the ramp and B on the peak, and read Δt.</li>
+<li><strong>ESR reference.</strong> The empty black phial gives no peak. The held DPPH trace stays on the screen for comparison: the signal comes from the unpaired electrons in the sample.</li>
+<li><strong>Change the range.</strong> Switch to HI and LO. Ask the class to predict which way the peak moves before switching (Q2), then reset SENS for each range and capture all three readings. The live plot of B against ν and its slope give g.</li>
+<li><strong>PSR glycerine.</strong> Same physics with protons. The scan sweeps only 3.2 mT on top of about 300 mT, a 1 % window. Read the thermometer and B₂₀ on the magnet's shroud: the total field is B_Z + B_scan.</li>
+<li><strong>Polystyrene vs glycerine.</strong> Same number of hydrogen atoms per molecule, but a solid: the line is wider and lower.</li>
+<li><strong>Fluorine in PTFE</strong>, then <strong>Out of tune</strong> if time allows. PTFE has no hydrogen; the ¹⁹F line needs a frequency about 6 % lower, on LO. "Out of tune" makes the class do what the real lab demands: turn FREQ slowly until the peak moves onto the ramp.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: the probe frequency is held fixed while the scan coils sweep the field from 0 to 3.67 mT. Will the probe absorb power throughout the sweep, at many fields, or at one field only? What sets that field?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> The Hz selector is moved from MID (about 60 MHz) to HI (about 75 MHz). Does the DPPH peak move earlier or later in the ramp? Explain from hν = gμ_B B, then check with the demo.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> For DPPH (g = 2.0036) at exactly 60.0 MHz, find the resonance field B. In FAST mode (40 ms ramp, 3.67 mT full scale, 1 V on CH1 at full scale), what are V_R and t_R? On a SLOW chart record (25 s, 5 mm/s), how many millimeters from the start pulse is the peak?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> At 60 MHz, compare the photon energy hν with kT at room temperature (293 K). What fraction more spins sit in the lower level than the upper one? Why does this make spin resonance a weak signal, and why do research instruments often cool the sample?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> A student measures the glycerine peak at ν = 12.80 MHz with B_scan = 1.60 mT. The magnet is marked B₂₀ = 300.0 mT, and the thermometer reads 25 °C. Find the total field and γ/2π for the proton. How large an error in γ/2π comes from ignoring the temperature correction, and is it bigger or smaller than reading B_scan to ±0.05 mT?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Why does proton resonance need a field about 140 times larger than the scan coils, when the probe frequency is only about 5 times lower than for the electron? Use the measured gyromagnetic ratios.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In the real lab the earth's field (up to about 0.05 mT) adds to the scan field, and the demo leaves it out. How would it show up in a plot of B_scan against ν for DPPH, and why does it matter much more for ESR than for PSR? What does fitting a line with a free intercept, rather than one through the origin, buy you?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The sample absorbs at every frequency, just more at some."</strong> Absorption happens only within a narrow band around hν = gμ_B B. Away from it the probe sees nothing, which is why an out of tune probe shows a flat trace.</li>
+<li><strong>"More SENS is always better."</strong> The marginal oscillator is most sensitive just below the point where it stops oscillating; past that point the signal disappears entirely.</li>
+<li><strong>"The peak is the electron flipping, so its height measures g."</strong> The position of the peak in field gives g. The height depends on the number of spins, the line width and the oscillator setting.</li>
+<li><strong>"Polystyrene has fewer hydrogens, so its peak is lower."</strong> Per molecule it has the same 8 hydrogen atoms as glycerine, and only about a quarter fewer per cubic centimeter. The main reason the peak is lower is that it is wider: fixed neighbouring dipoles in a solid broaden the line, spreading the same absorption over a wider range of field.</li>
+<li><strong>"PTFE's peak is from protons."</strong> PTFE contains no hydrogen; the resonance is from ¹⁹F nuclei, which have a different gyromagnetic ratio.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>ESR: hν = gμ_B B with g = 2.0036 for DPPH. PSR: ν = (γ/2π)B with 42.577478 MHz/T for ¹H (free proton, CODATA 2018) and 40.0776 MHz/T for ¹⁹F. Chemical shielding, tens of ppm, is below this instrument's resolution and neglected.</li>
+<li>The scan field ramps linearly from 0 to B_max (3.67 mT for ESR, 3.2 mT for PSR); CH1 reads 0 to 1 V in proportion. So B = V_R·B_max/1 V or B = (t_R/t)·B_max, with t = 40 ms (FAST) or 25 s (SLOW). For PSR the total field adds the magnet: B_Z = B₂₀[1 − (t − 20 °C)·7.5×10⁻⁴].</li>
+<li>Idealized: exact linear ramp, uniform field over the sample, no earth or stray fields, probe coil at right angles to the field.</li>
+<li>Modeled, not computed: the line shapes are Lorentzians with illustrative widths (0.25 mT DPPH, 0.05 mT glycerine and water, 0.25 mT polystyrene, 0.20 mT PTFE), with heights chosen to resemble a real trace. The marginal oscillator is a behavioural model of gain rising toward a threshold. All noise is simulated and set by the instrument seed, which also sets small offsets in the LO/MID/HI frequencies, B₂₀ and room temperature.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Have students fit the ESR data with and without the origin constraint and compare g. Then repeat on the real kit, where the earth's field and the orientation of the bench matter.</li>
+<li>The g factor of DPPH is close to the free electron value 2.0023; the small difference comes from spin–orbit coupling in the molecule. Proton g_I ≈ 5.586 shows the proton is not a point Dirac particle (which would have g = 2).</li>
+<li>Lab connection: the same ν ∝ B relation, with spatially varying fields, is the basis of MRI.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>
