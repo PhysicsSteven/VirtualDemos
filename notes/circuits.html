@@ -60,19 +60,59 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 </head>
 <body>
 <main>
-<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Circuits</h1><ul class="meta"><li><a href="../demos/circuits.html">Open the demo</a></li><li>PHYS 202</li><li>depends on the tab</li></ul></header><h2>What students should come away with</h2>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Circuits</h1><ul class="meta"><li><a href="../demos/circuits.html">Open the demo</a></li><li>PHYS 202</li><li>15 to 25 minutes per mode; one class period for all three</li></ul></header><h2>What students should come away with</h2>
 <ul>
-<li>The four circuit demos live together on one page, one tab each. Each tab has its own teaching notes and questions, linked below.</li>
+<li>Kirchhoff's rules hold in every circuit at every instant: currents into a junction equal currents out, and voltage changes around a loop add to zero.</li>
+<li>Series parts share the battery voltage; parallel parts each get all of it. A real battery's terminal voltage ε − Ir falls as its current rises.</li>
+<li>A capacitor's voltage and an inductor's current cannot jump; they change exponentially with τ = RC or L/R. An LC circuit oscillates at ω₀ = 1/√(LC); R damps it, critically at R = 2√(L/C). Charging a capacitor through any resistor stores half the battery's work and heats the resistor with the other half.</li>
+<li>With a sine source, X_C = 1/(ωC) and X_L = ωL set the current and its phase; a series RLC circuit resonates at f₀ = 1/(2π√(LC)) with half power width Δf = f₀/Q.</li>
 </ul>
 <h2>Before class</h2>
-<p>Pick the tab for the day's topic and open its notes. Links to a single tab can use the page address with #dc, #rc, #ac or #transients at the end.</p>
+<p>Students should know V = IR and Q = CV; the AC part needs sines and phasors. Switching between the three modes, <strong>DC</strong>, <strong>In time</strong> and <strong>AC</strong>, keeps the circuit when it has something to show there. Links ending #dc, #rc, #transients or #ac open a mode.</p>
 <h2>Running it in class</h2>
 <ol>
-<li><strong>DC circuits</strong> (Kirchhoff's rules, series and parallel, meters): see the notes for <a href="circuit-builder.html">DC Circuit Builder</a>.</li>
-<li><strong>RC charging</strong> (time constant, energy): see the notes for <a href="rc-circuits.html">RC Circuits</a>.</li>
-<li><strong>AC and resonance</strong> (phasors, impedance, resonance and Q): see the notes for <a href="ac-circuits.html">AC Circuits and Resonance</a>.</li>
-<li><strong>Transients</strong> (RL decay, LC oscillation, damped RLC): GPT's laboratory page; classroom notes are still to be written.</li>
-</ol><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+<li><strong>DC: Series bulbs, Parallel bulbs.</strong> Ask Q1 first. Both ammeters in series read 300 mA; <strong>Loop rule</strong> under Kirchhoff check gives +6 − 3 − 3 = 0 V. In parallel, use <strong>Junction rule</strong>. Then <strong>Series vs parallel</strong> (Q2).</li>
+<li><strong>Internal resistance.</strong> Step R down with its value grip and watch the voltmeter fall (Q3). Close S1: 9 A, 0 V.</li>
+<li><strong>In time: RC charging.</strong> Ask the first part of Q4, then run it. The scope marks 1τ to 5τ; click S1 to discharge at any time. <strong>Flip mid way</strong> discharges from 63%.</li>
+<li><strong>Camera flash.</strong> It charges in fast forward; then S1 flips by itself and the scope refits to the 10 ms flash (Q5).</li>
+<li><strong>RL rise and decay</strong>, <strong>LC oscillation</strong>, <strong>RLC damping</strong> (Q6, Q7). Change R2 with its value grip and watch ζ under Natural response.</li>
+<li><strong>AC: Capacitor only</strong>, <strong>Inductor only</strong> (Q8): the rotating phasors beside the scope project onto the traces. <strong>Below resonance</strong> shows the voltage phasors tip to tail (Q9).</li>
+<li><strong>At resonance</strong>, <strong>High Q vs low Q</strong>, <strong>Sweep</strong>. Then press <strong>In time</strong>: the same circuit is switched on at t = 0 and its current builds up over several cycles (Q10).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: in Series bulbs the current leaves the battery's + terminal and reaches L1 before L2. Is L1 brighter than L2? Does the first ammeter read more than the second? Explain before you look.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Predict: in Series vs parallel all four bulbs are 10 Ω and both batteries are 6 V. Rank the four bulbs by brightness. What happens to the other bulb in each circuit if one bulb burns out? Check by deleting one bulb in each.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The battery in Internal resistance has ε = 9.0 V and r = 1.0 Ω. Find the terminal voltage and the power in the load for R = 10 Ω, 2.2 Ω and 1.0 Ω. Which load gets the most power, and what fraction of the EMF's power is that? Check each case.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Predict first: in RC charging, what are V_C, V_R and I the instant the switch connects the battery, and a long time later? Then, with ε = 12 V, R = 10 kΩ and C = 100 µF, find τ, the initial current, V_C at t = 2.0 s, and the time at which V_C reaches 6.0 V. Pause the demo to check.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In Camera flash (ε = 12 V, R1 = 10 kΩ, C1 = 1000 µF, bulb 10 Ω), find the battery's work, the stored energy and the heat in R1 for a full charge. Would a larger R1 change the heat? Then find the peak power in the bulb when a full capacitor is switched to it, compared with the peak power in R1 at the start of charging.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In RL rise and decay (ε = 12 V, R1 = 100 Ω, L1 = 1.0 H), find τ and the final current. S1 flips at t = 5τ. What is the inductor voltage just before and just after the flip, and why does it change sign while the current keeps its direction?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In LC oscillation (C = 10 µF charged to 10 V, L = 100 mH), find the period and the largest current. Then, for RLC damping, find the resistance for critical damping and the damping ratio ζ = (R/2)√(C/L) for R2 = 20 Ω and 1.0 kΩ. Which of the three settles fastest, staying within 1% of zero from then on? Check ζ under Natural response, and compare the traces.</p></div>
+
+<div class="q"><p><strong>Q8.</strong> Predict: in Capacitor only, at the instant the source voltage is at its positive peak, is the current at its peak, zero, or at its negative peak? Explain using q = Cv and i = dq/dt.</p></div>
+
+<div class="q"><p><strong>Q9.</strong> Below resonance has R = 22 Ω, L = 10 mH and C = 1.0 µF, driven at 1.00 kHz with V₀ = 10 V. Find X_L, X_C, |Z|, I_rms and the phase. The rms voltages across R, L and C add to more than the source's 7.07 V. Does that break the loop rule? Explain what does add up.</p></div>
+
+<div class="q"><p><strong>Q10.</strong> For the same parts find f₀, Q = (1/R)√(L/C) and the half power width, first for R = 22 Ω and then for R = 10 Ω. In High Q vs low Q (R = 10 Ω) press In time: the source is switched on at t = 0. The transient decays as e^(−Rt/2L). How long is that decay time, and about how many cycles is it?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Current gets used up by the first bulb."</strong> The same current comes out of a part as goes in. What the part takes is energy, q ΔV per charge.</li>
+<li><strong>"No current flows in a circuit with a capacitor."</strong> Charge flows onto one plate and off the other while the voltage changes. Only in the DC steady state is the current zero.</li>
+<li><strong>"An inductor's voltage is set by its current."</strong> It is set by how fast the current changes, V = L dI/dt: a steady current gives none, a current forced to stop suddenly gives a huge one.</li>
+<li><strong>"The rms voltages around an AC loop must add to the source voltage."</strong> The instantaneous voltages add, at every instant, and so do the phasors. The rms values do not, because the voltages peak at different times.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>One solver for every mode: modified nodal analysis with ideal wires, switches and meters. DC treats capacitors as open gaps, inductors and AC sources as plain wire.</li>
+<li>In time, the circuit equations (I = dQ/dt, V = L dI/dt) and the energies are integrated exactly between switch events (matrix exponential). Where an ideal circuit would need an infinite current or voltage, a 1 mΩ contact resistance or 1 MΩ spark path stands in.</li>
+<li>AC is the exact steady state from complex impedances, per source frequency plus the DC part. Meters read rms; the scope and phasors use peak values.</li>
+<li>Bulbs are fixed resistors with no thermal lag (glow ∝ power, full at 4 W); a real filament's resistance rises as it heats.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
 </main>
 </body>
 </html>

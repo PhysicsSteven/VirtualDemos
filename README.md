@@ -53,7 +53,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Magnetic Fields of Currents](demos/currents-fields.html) | Electricity and magnetism | Fields of straight wires, forces between them, Ampère's law on any loop, and an exact current loop and solenoid |
 | [Electromagnetic Waves](demos/em-waves.html) | Electricity and magnetism | Plane waves in 3D, polarization, intensity and radiation pressure, the spectrum, and exact dipole antenna fields |
 | [Capacitors and Dielectrics](demos/capacitors.html) | Electricity and magnetism | Parallel plates connected or isolated, dielectric slabs and the force pulling them in, energy bookkeeping, and combinations |
-| [Circuits](demos/circuits.html) | Electricity and magnetism | DC circuits, RC charging, AC resonance and RLC transients, in tabs |
+| [Circuits](demos/circuits.html) | Electricity and magnetism | DC circuits, RC and RLC transients, AC resonance, on one circuit |
 | [Optics Bench](demos/optics-bench.html) | Optics | Ray tracing through lenses, mirrors and glass, with image formation, total internal reflection and dispersion |
 | [Polarization](demos/polarization.html) | Optics | Polarizers and wave plates with Jones and Mueller calculus, Malus's law, many polarizer limit, Fresnel reflection and Brewster's angle |
 | [Thin Film Interference](demos/thin-films.html) | Optics | Exact single layer reflectance and its color under white light, soap films, air wedges, Newton's rings and quarter wave coatings |
