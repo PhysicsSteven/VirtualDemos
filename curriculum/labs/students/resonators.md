@@ -1,38 +1,85 @@
-# Resonance Tube — Speed of Sound and End Correction
-Student laboratory · 100 minutes plus optional extensions · acoustics
+# Resonance Tube: Speed of Sound
+Student laboratory · acoustics
 
 [Open Resonators](https://physicssteven.github.io/VirtualDemos/demos/resonators.html)
 
-## Objectives and prelab
-Determine sound speed from successive resonances and a multi-frequency fit; infer an end correction; test temperature dependence and compare pipes, strings and a Helmholtz resonator. Prerequisites: standing waves, c=fλ, straight-line regression and uncertainty. For a simpler course, supply the fit transformation and focus on spacing; physics majors should derive it and analyze the intercept.
+## Goal
 
-For water closing one end, derive L_k=(2k−1)c/(4f)−ΔL. Define x=(2k−1)/(4f) in seconds and fit L=cx+b, so ΔL=−b. Show that neighboring resonances areλ/2 apart, allowing c=2fΔL_spacing without knowing the end correction. Distinguish displacement nodes from pressure nodes. Compare the low-frequency unflanged correction 0.6133a with the inferred correction after measurement.
+Measure the speed of sound by finding the lengths at which an air column resonates. Use the same data to estimate the open-end correction.
 
-## Setup
-Choose **Resonance tube, find c**, record **Reading seed**, air temperature, source frequency and tube inner diameter, and select **Blind**. Clear any prefilled/previous table. Keep diameter and temperature fixed through the primary fit. Capture records your chosen water position with added simulated meniscus-reading scatter, not a true-resonance lookup. Its readout increments and seeded scatter are both part of the measurement model. Audio is an optional indicator of resonance, not a calibrated sound-level meter; use the accumulated swept-level trace as a visual alternative.
+## Background
 
-## A. Locate resonances (30 minutes)
-1. At 20 °C,3.2 cm inner diameter and 512 Hz, lower the water surface slowly from near the top. Find each resonant maximum by approaching from both directions and recording a small bracket around the loudest/highest response.
-2. Set the midpoint of that bracket and use **Capture reading**. Label k=1, 2, 3 from the top. If a resonance was skipped, correct k explicitly in the editable table; do not renumber a higher resonance as the first.
-3. Repeat the search and capture a second placement for each resonance. Preserve both the bracket table and captured values, since Capture adds scatter. Export CSV before altering settings.
-4. Set 640 Hz using the source-frequency slider and obtain all accessible resonances over the water-length range, keeping the same temperature/diameter. Save a separate raw table, then combine for analysis. Use actual f, not an assumed tuning-fork chip value.
+Water closes the bottom of the tube. At the water surface, air displacement is nearly zero. At the open top, pressure variation is nearly zero. The shortest resonating column is about a quarter wavelength long. Each next resonance adds half a wavelength.
 
-| f (Hz) | k | Lower/upper bracket L (cm) | Captured L (cm) | Temperature (°C) | Diameter (cm) |
+The pressure node sits slightly beyond the open end, so
+
+$$L_k+\Delta L=\frac{(2k-1)\lambda}{4},\qquad \lambda=\frac{c}{f}.$$
+
+Here k = 1 is the first resonance, and ΔL is the end correction. Neighboring resonances therefore give
+
+$$c=2f(L_{k+1}-L_k).$$
+
+We can also fit all the measurements at once:
+
+$$L_k=c\left(\frac{2k-1}{4f}\right)-\Delta L.$$
+
+The graph's slope is c and its intercept is −ΔL.
+
+## Before the lab
+
+1. Why are successive resonances half a wavelength apart rather than a quarter wavelength apart?
+2. Which is a displacement node: the water surface or the open end?
+3. Why does using the spacing remove the need to know the end correction first?
+
+## Safety
+
+With real equipment, secure the glass tube and adjust the water slowly. Keep water away from electrical equipment. Use a comfortable sound level; loud sound is not needed to locate a resonance.
+
+## Procedure
+
+**Find resonances.** Record air temperature, tube inner diameter and the source frequency. Start with a short air column and lower the water slowly.
+
+1. Find the first loud maximum. Approach it from each direction and record a short interval that brackets the loudest position.
+2. Record the midpoint as your chosen length. Continue downward and find the next resonances.
+3. Number them from the top. If you skip one, keep its order number in mind rather than calling the next peak the second.
+4. Repeat the placements, then use a second source frequency without changing temperature or tube diameter.
+5. If time allows, repeat selected resonances at a different temperature or compare how the peak width changes with damping.
+
+**Using the virtual apparatus.** Choose **Resonance tube, find c**, set 20 °C, diameter 3.2 cm and 512 Hz, record the **Reading seed** and select **Blind**. Clear the readings. Move **Water surface below the top** to each maximum and press **Capture reading**. Correct the editable k column if needed. Repeat at 640 Hz using **Source frequency f**, then **Export CSV**. The captured length includes a small simulated meniscus-reading error. Use the swept-level trace as a visual guide if sound is unavailable.
+
+## Data
+
+| f (Hz) | Resonance k | Lower bracket L (cm) | Upper bracket L (cm) | Captured/read L (cm) | Spacing (cm) |
 |---|---|---|---|---|---|
+| | 1 | | | | |
+| | 2 | | | | |
+| | 3 | | | | |
 | | | | | | |
 
-## B. Fit c and ΔL (25 minutes)
-Calculate successive spacing estimates at each frequency, accounting for any skipped k via c=2f(L_k−L_j)/(k−j). Do not treat all pairwise spacings from shared readings as independent. Fit all fixed-condition rows to L=cx+b; convert cm to m. The exported x column is in milliseconds, so convert it to seconds before interpreting the slope as m/s. Obtain a slope/intercept uncertainty and residuals versus f and k. Compare the built-in fit with the external fit, then reveal expected values after recording conclusions.
+Record temperature, tube diameter and seed above the table. Use a separate copy when temperature changes.
 
-Explain why an intercept/end correction can have a larger fractional uncertainty than the slope. Compare ΔL/a with the low-frequency model and discuss meniscus bias. A global length-zero offset can mimic an end correction; a small residual does not rule it out.
+## Analysis
 
-## C. Temperature and resonance width (20 minutes)
-Repeat selected placements at 30 °C, preserving a distinct dataset. Predict c(T)=331.3√[1+T_C/273.15] m/s and how resonance positions/spacing change. Do not combine temperatures in one constant-c fit. At one resonance change **Tube quality factor Q** and compare width/location by bracketing the maximum. A dissipative response's maximum need not coincide exactly with the lossless quarter-wave condition; include finite-Q peak-location sensitivity as a model effect.
+1. Calculate c from each neighboring spacing. If you skipped an order, divide by the number of order steps between the two readings.
+2. Convert lengths to meters. Plot L against x = (2k − 1)/(4f), with x in seconds. Fit a line and find c and ΔL. The CSV gives x in milliseconds, so convert that column before interpreting the slope.
+3. Compare ΔL with 0.6133a, where a is the tube's inner radius.
+4. Compare your speed with the dry-air prediction after finishing the measurement:
 
-## D. Optional comparisons (25 minutes)
-Use **Open pipe** and **Closed pipe** at length.60 m and diameter 3.0 cm. Record the first three allowed frequencies with end corrections; explain which harmonics are absent and why the frequency ratio is not exactly 2. In **Strings**, compare plucking atL/2 andL/3 and identify missing harmonics in shape versus bridge-force spectra. In **Bottle**, use 750 mL,8.0 cm neck and 1.9 cm neck diameter; test f∝1/√V_air by changing fill. These comparisons use model readouts/manual tables, not the resonance-tube capture table.
+$$c=331.3\sqrt{1+\frac{t_{\rm C}}{273.15}}\ \mathrm{m/s}.$$
 
-## Uncertainty and submission
-For spacing c=2fΔL, propagate frequency and both position uncertainties, noting common length offsets cancel. For fits include captured scatter, placement bounds, length zero, temperature and tube geometry; distinguish repeatable seed realizations from real random instrument readings. The code's noise is a bounded three-uniform sum with standard deviation 1.5 mm, not an exact Gaussian; repeated captures have different indexed scatter. Finite Q and the approximate end correction are separate from readout noise.
+5. For a temperature comparison, explain whether the positions and spacing moved in the expected direction.
 
-Submit raw CSV/settings/brackets, spacing estimates, joint fit/residuals, c and end correction with units/uncertainty, temperature comparison and optional extension tables. Explain why pressure/displacement boundary conditions, skipped resonance labels and a wrong unit in the exported x column can change the conclusion.
+## Uncertainty
+
+Use your position brackets, repeated placements and the scatter of the fit to estimate uncertainty. Include the source frequency and temperature uncertainties if available. A common error in the ruler's zero cancels from spacing, but changes the fitted end correction. This is one reason the end correction is often less precise than the speed. Discuss whether broad resonance peaks made the center hard to locate.
+
+## Questions
+
+1. Why does the tube resonate only at certain lengths?
+2. What happens to the first resonance length when the air gets warmer?
+3. Why can a good slope still give a poor end correction?
+4. How would mislabeling a skipped resonance affect your result?
+
+## What to hand in
+
+Prelab answers, the data table and CSV, spacing calculations, the fitted graph and residuals, c and ΔL with uncertainty, the temperature comparison if taken, and answers to the questions. Identify simulated data and give the seed.

@@ -1,36 +1,83 @@
-# Timbre and Harmonics — Spectrum, Phase and Repetition
-Student laboratory · 90 minutes · acoustics for physics majors
+# Timbre and Harmonics
+Student laboratory · acoustics
 
 [Open Timbre and Harmonics](https://physicssteven.github.io/VirtualDemos/demos/timbre.html)
 
-## Objectives and prelab
-Relate a Fourier spectrum to waveform and repetition period; distinguish amplitude, phase, rms and perceived pitch; test harmonic and inharmonic models quantitatively. Prerequisites: sine waves, logarithms and elementary Fourier series. Derive x(t)=Σa_n sin(2πf_n t+φ_n), f_n=nf1, and x_rms²=Σa_n²/2 over an integer number of fundamental periods. Explain why phase-dependent cross terms integrate to zero for distinct integer harmonics. Derive an amplitude level 20log10(a_n/a_ref) and state why this is not a calibrated acoustic SPL.
+## Goal
 
-For a less mathematical course, supply the Fourier coefficients and rms relation, retain the measurement tables and prediction questions, and omit the Fourier-integral derivation. Listening is optional; waveform and spectral observations support all quantitative work.
+Find how a sound's harmonic amplitudes and phases affect its waveform, repetition period and timbre.
 
-## Setup and recording
-Start with f1=220 Hz, stiffnessB=0 and detuneΔf=0. The **Fundamental f1** slider is musical/logarithmic; record the displayed Hz. The harmonic bars set amplitudes, phase dials set phase; **Strongest partials** levels are relative to the strongest present partial. Record that reference if the fundamental is removed. There is no Capture, CSV or Blind in this demo: use manual tables/screenshots and save any spreadsheet calculations. The illustrated instrument spectra are models, not recordings. Audio is normalized and frequency shaped; volume/ear loudness is not a measurement of bar-unit rms or absolute pressure.
+## Background
 
-## A. Fourier families (25 minutes)
-1. Compare **Sawtooth wave**, **Square wave** and **Triangle wave** at the same f1. Before looking, predict which harmonics vanish and how amplitude falls with n. Record harmonics 1, 2, 3, 5, 9 and 16, their frequencies and relative dB; mark absent harmonics as absent rather than taking log 0 as a finite value.
-2. Calculate the rms of the 16-term sum from the amplitudes. Compare with **RMS (bar units)**. Compare **Peak / RMS** and the waveform shape. Use **Ideal shape** to distinguish a truncated sum from an infinite-series curve at a discontinuity.
-3. Select **Closed pipe** in the harmonic ladder. Explain displacement boundary conditions and which numbered modes are unavailable; do not infer an experimentally measured spectrum from the ladder alone.
+A steady musical tone can be built by adding sine waves. Harmonics have frequencies that are whole-number multiples of a fundamental:
 
-| Preset | n | f_n (Hz) | a_n/a_ref | Level (dB) | Phase | Prediction/observation |
+$$x(t)=\sum_n a_n\sin(2\pi n f_1t+\phi_n).$$
+
+The amplitudes an tell us how much of each harmonic is present. The phases φn tell us where each sine wave starts in its cycle. Changing either can change the waveform.
+
+For distinct harmonics, the rms signal is
+
+$$x_{\rm rms}=\sqrt{\frac12\sum_n a_n^2}.$$
+
+A relative amplitude can be written in decibels:
+
+$$L_n=20\log_{10}\left(\frac{a_n}{a_{\rm ref}}\right).$$
+
+The waveform's shortest repetition period depends on all the harmonics present, not just the lowest frequency you can see in the spectrum.
+
+## Before the lab
+
+1. A tone contains harmonics 2, 3, 4 and 5 of 220 Hz. Must its repetition frequency be 440 Hz because harmonic 1 is missing?
+2. What does halving an amplitude do to its level in dB?
+3. Does the rms formula depend on harmonic phase?
+
+## Safety
+
+Use a comfortable listening level with real speakers or headphones. High volume is unnecessary for comparing tones. All quantitative parts can be completed from the plots if sound is unavailable.
+
+## Procedure
+
+**Compare spectra.** Set f1 = 220 Hz. Compare **Sawtooth wave**, **Square wave** and **Triangle wave**. Record the amplitudes, frequencies and levels of harmonics 1, 2, 3, 5, 9 and 16. Note missing harmonics. Read the rms value and compare the waveforms.
+
+**Change the harmonics.** Use **Missing fundamental**, then remove harmonic 2 as well. Record the repetition period. Next use **Pure tone** and set only harmonics 2, 4, 6 and 8 to equal heights. Record the new period and compare it with the first case.
+
+**Change phase.** Return to Sawtooth. Record the rms and peak/rms ratio, then use **Randomize phases** three times. Record what changes in the waveform and spectrum. If listening, describe the sound separately from the numerical results.
+
+**Detune a partial.** Use **Inharmonic partials**, set harmonic 3 to Δf = +1.5 Hz and watch the shape drift. Then select **Back to exact harmonics** and compare stiffness B = 0, 0.005, 0.010 and 0.020. Record the first, third and fifth partial frequencies.
+
+**Using the virtual apparatus.** Adjust amplitudes with the harmonic bars and phases with the dials. Read frequencies and relative levels in **Strongest partials**. Use **Waveform repeats every**, **RMS (bar units)** and **Peak / RMS** for the comparisons. Record values by hand and save screenshots; this demo has no Capture or CSV export. Keep f1, B and Δf written beside each run.
+
+## Data
+
+| Run or preset | Harmonic n | Frequency (Hz) | Relative amplitude | Level (dB) | Phase | RMS / period / notes |
 |---|---|---|---|---|---|---|
 | | | | | | | |
-
-## B. Missing fundamental and phase (25 minutes)
-1. Use **Missing fundamental** or remove harmonic 1 from a harmonic-rich spectrum. Record the remaining harmonic numbers, **Waveform repeats every** and **Pitch from the period**. Predict the repetition period using the greatest common divisor of the remaining indices.
-2. Starting with **Pure tone**, set only harmonics 2, 4, 6 and 8 to equal nonzero amplitudes, all others zero. Predict and record repetition period again. Explain the difference from merely removing n=1. Separate computed period-based pitch from any optional listening impression.
-3. Return to Sawtooth. Record spectrum, rms and crest factor, then use **Randomize phases** three times. Capture screenshots and readouts. Which quantities are invariant and which vary? If sound is available, report subjective comparisons separately, without treating them as a controlled psychoacoustic experiment.
-
-## C. Inharmonicity (25 minutes)
-Use **Inharmonic partials**. At f1=220 Hz, detune harmonic 3 by+1.5 Hz. Predict the actual frequency and fractional detuning, and compare the waveform's shape-drift scale with 1/|Δf|. This is a relative-phase recurrence scale, not proof that the entire signal has no long mathematical common period. Press **Back to exact harmonics**, then vary **Stiffness B** across 0, 0.005, 0.010 and 0.020. Record partials 1, 3 and 5 and compare with f_n=nf1√[(1+Bn²)/(1+B)]. Verify that this normalization holds the first partial fixed.
-
-| B | Δf (Hz) | f1 (Hz) | f3 (Hz) | f5 (Hz) | Reported repetition/drift | Notes |
-|---|---|---|---|---|---|---|
+| | | | | | | |
 | | | | | | | |
 
-## Analysis and submission (15 minutes)
-Present coefficient/level comparisons, rms calculations, phase invariants, missing-fundamental reasoning and detuning/stiffness results. Estimate bounds from control/readout increments and waveform timing resolution. Do not assign statistical error bars to exact series coefficients without a measurement process. Distinguish finite 16-term truncation, readout precision, display sampling and human perception. Explain whether phase changes total harmonic energy, why a waveform may change while its magnitude spectrum does not, and why attack/decay and room/speaker response limit a claim about real instrument timbre.
+Use rows for all requested harmonics and phase comparisons. State which partial is the dB reference.
+
+## Analysis
+
+1. Compare amplitudes with 1/n for Sawtooth and odd-only Square, and with 1/n² for the odd harmonics of Triangle. Calculate two relative dB levels yourself.
+2. Calculate rms from the amplitudes and compare with the display.
+3. Explain each missing-fundamental period using the common factor of the harmonic numbers present.
+4. Calculate the frequency of the detuned third partial and the relative-phase drift time 1/|Δf|.
+5. Compare the stiffness results with
+
+$$f_n=nf_1\sqrt{\frac{1+Bn^2}{1+B}}.$$
+
+## Uncertainty
+
+State the resolution of the frequency and amplitude controls and how closely you can read waveform timing. Compare calculations with the displayed digits rather than inventing random scatter. If you estimate a peak from a plotted curve, give a reading interval. Listening impressions are observations, but they are not calibrated measurements of amplitude or loudness.
+
+## Questions
+
+1. Why can phase change the waveform without changing rms?
+2. Why can a tone still repeat at the original fundamental frequency after harmonic 1 is removed?
+3. Why do Square and Triangle sound different even though both have only odd harmonics?
+4. What part of a real instrument's sound is missing from a comparison of steady spectra alone?
+
+## What to hand in
+
+Prelab answers, the table and screenshots, dB and rms calculations, period explanations, the detuning and stiffness comparison, and answers to the questions. State whether you listened as well as using the plots.

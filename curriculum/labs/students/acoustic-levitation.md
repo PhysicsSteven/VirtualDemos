@@ -1,42 +1,83 @@
-# Acoustic Levitation — Standing-Wave Traps and Force Scaling
-Student laboratory · 90–110 minutes · acoustics for physics majors
+# Acoustic Levitation
+Student laboratory · acoustics
 
 [Open Acoustic Levitation](https://physicssteven.github.io/VirtualDemos/demos/acoustic-levitation.html)
 
-## Objectives and prelab
-Relate standing-wave phase to trap spacing and translation; test acoustic-force scaling with drive and bead size; explain gravitational sag and the small-sphere model. Prerequisites: wave phase, interference, forces from potentials and uncertainty. For a simpler course, supply the force scaling and omit the Gor'kov derivation, retaining measured thresholds, plots and interpretation.
+## Goal
 
-For two counterpropagating plane waves derive pressure-node spacing λ/2 and shift Δz=Δφ/(2k). For converging bowls replace k with the effective axial phase gradient k_axis when comparing near-center nodes. Explain why a dense/stiff small sphere tends toward a pressure node and why gravity puts its stable position slightly below the acoustic minimum. With U_ac∝a³V_drive² and W∝a³, derive why Fmax/W is independent of radius within this model. Drive is peak to peak, not rms.
+Find how a standing sound wave holds a small bead, how the traps move with phase, and how much drive is needed to lift different materials.
 
-## Setup and data method
-Use **Slice** or 3D, **Pressure |p|** and **Potential U** views, material/radius controls, phase and drive. **Hold a bead**, **Stack of beads**, **Move with phase**, **Water droplet**, **Too heavy: steel falls**, and **Single emitter and reflector** are the relevant presets. There is no Capture, CSV, seed or Blind here: record manual readouts, trap-table positions and screenshots with settings. Readout/model values are simulated predictions; do not call them independent force measurements. Do not measure ultrasonic frequency from the animation or audible surrogate.
+## Background
 
-Choose radius 0.30 mm for primary runs, check ka and the warning as radius increases. Keep the two-bowl geometry and phase fixed through the drive/material comparison. Use only near-center traps for local plane-wave estimates; label the trap or track its position continuously to avoid jumping to an adjacent trap.
+Two sound waves traveling in opposite directions make a standing wave. A small dense bead is pushed toward a pressure node. Gravity pulls it slightly below that node until the upward acoustic force balances its weight.
 
-## A. Spatial period and phase (25 minutes)
-1. At 40 kHz and the stated air temperature calculate λ and the plane-wave spacing. With **Stack of beads**, record at least five adjacent near-center trap z values and their spacing. Distinguish pressure-node position from the gravity-shifted trap position using the table.
-2. Choose **Move with phase**, stop **Sweep the phase**, and set phase manually through 0, 30, 60, 90 and 120°. Record the same continuously followed near-center trap; use the phase-zero position as reference. Fit Δz versus Δφ in radians and infer k_axis=1/(2·slope).
-3. Compare local spacing π/k_axis with measured adjacent spacing and with λ/2. Discuss converging-wave geometry and why phase is periodic modulo 360° even though a continuously followed trap can move by one lattice spacing.
+For plane waves, neighboring pressure nodes are separated by
 
-| Phase (degrees/rad) | Tracked trap z (mm) | Δz (mm) | Nearest pressure node (mm) | Drive/radius/material |
-|---|---|---|---|---|
-| | | | | |
+$$s=\frac{\lambda}{2}=\frac{c}{2f}.$$
 
-## B. Drive, material and threshold (30 minutes)
-At fixed phase and radius, use foam, water and steel. For each material record **Largest upward push Fmax**, buoyancy-corrected weight, ratioFmax/W and hold/fall behavior at four drives within the available 0–20 V range. Plot Fmax/W against V_drive² and test a zero intercept. Keep a manual settings table; do not estimate force from screen acceleration.
+Changing the relative phase moves the nodes. Near the center of the bowl array,
 
-Find a bracket between the last failing and first holding drive by changing 0.1 V at a time and resetting/adding the bead as necessary. Compare the bracket with a threshold inferred from the ratio's V² law. Fmax>W is a necessary local force condition, not proof of an arbitrary trap's global stability; confirm a local minimum and observed holding. Repeat a safe small radius and a larger radius to test the modeled radius cancellation; mark any small-sphere warning and exclude that case from an accuracy claim.
+$$\Delta z=\frac{\Delta\phi}{2k_{\rm axis}}.$$
 
-| Material | Radius (mm) | Drive (Vpp) | Fmax (N) | W (N) | Fmax/W | Holds? | Threshold bracket |
-|---|---|---|---|---|---|---|---|
-| | | | | | | | |
+The phase is in radians. The effective axial wavenumber k_axis is smaller than 2π/λ because the sound arrives at an angle.
 
-## C. Gravity and geometry (25 minutes)
-At 10 V compare foam and water **trap−node** near the center. For upward displacement z from a pressure node, a stable restoring model is F_ac≈−Fmax sin(2k_axis z); equilibrium with gravity gives z=−asin(W/Fmax)/(2k_axis). Evaluate it from the measured ratio and inferred k_axis, then compare with the table. Explain the sign and the loss of equilibrium as W/Fmax approaches 1.
+The acoustic force grows as the square of drive voltage. In the small sphere model, force and weight both grow with the bead's volume:
 
-Switch to **Single emitter and reflector**, find a foam threshold bracket, and compare spacing/threshold with the bowl array. Change the phase and explain whether relative standing-wave geometry moves. Optional: place the microphone at the center and sweep phase once while monitoring sound; the audible tone is a scaled-frequency pressure indicator, not 40 kHz audio or an absolute sound meter.
+$$F_{\rm acoustic}\propto a^3V_{\rm drive}^2,\qquad W\propto a^3.$$
 
-## Uncertainty, limitations and submission
-Give position/readout bounds, finite phase increments and threshold brackets; vary the chosen center trap/window to assess local-wave approximation. Force readouts are computed from a specified potential, so a tight V² fit checks the implementation/model, not a calibrated real levitation force. The drive calibration is illustrative; omit claims that a physical array must lift a material at the same voltage.
+We will test these two scaling predictions.
 
-Submit tables/plots, inferred axial wavenumber, threshold comparisons, sag calculation and a model-limit discussion. Gor'kov theory assumes a small sphere and linear inviscid acoustics; this demo omits acoustic streaming/heating, full bowl reflections and coupled bead interactions, constrains motion to the axis, and slows dynamics. Explain why extrapolating radius cancellation outside ka≪1 or treating simulated water droplets as perfectly rigid real spheres would be unjustified.
+## Before the lab
+
+1. Predict how much the acoustic force changes if drive voltage doubles.
+2. Why might bead radius cancel from the ratio of acoustic force to weight?
+3. Does a bead have to sit exactly at the pressure node when gravity acts?
+
+## Safety
+
+For a real levitator, follow the department's drive and exposure limits. Keep fingers and loose objects clear of powered transducers. Switch off before adjusting hardware. Do not assume an inaudible source is off.
+
+## Procedure
+
+**Map the traps.** Use a small foam bead and a fixed drive. Locate at least five neighboring traps near the center and record their positions. Compare the spacing with c/(2f).
+
+**Move a trap.** Follow one near center trap while increasing the relative phase through 0°, 30°, 60°, 90° and 120°. Record its position each time. Follow the same trap rather than switching to a neighbor.
+
+**Change drive and material.** For foam, water and steel, compare four drive settings. Record whether a bead holds or falls and find a small interval between the last failing drive and the first holding drive. Repeat with a second small radius.
+
+**Compare geometry.** Use one emitter and a reflector if available. Compare its trap spacing and required drive with the two bowls. Check whether changing source phase moves its standing-wave pattern.
+
+**Using the virtual apparatus.** Use **Slice**, **Pressure |p|**, **Potential U** and the trap table to read positions. Start with radius 0.30 mm. Use **Stack of beads** for spacing and **Move with phase**, with **Sweep the phase** stopped, for manual phase settings. For materials use **Hold a bead**, **Water droplet** and **Too heavy: steel falls**. Record **Largest upward push Fmax**, weight and Fmax/W from the readouts. **Single emitter and reflector** supplies the last comparison. There is no Capture or CSV export, so save a manual table and screenshots.
+
+## Data
+
+| Setup / material | Radius (mm) | Drive (Vpp) | Phase (degrees) | Tracked trap z (mm) | Fmax/W | Holds or falls / notes |
+|---|---|---|---|---|---|---|
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+
+Add rows for each phase, drive and material. Record adjacent trap positions and pressure-node positions in the notes where needed.
+
+## Analysis
+
+1. Calculate the mean near center spacing and compare with the plane-wave prediction.
+2. Plot displacement of the tracked trap against phase in radians. Find k_axis from the slope, then compare π/k_axis with your measured spacing.
+3. Plot Fmax/W against drive voltage squared for each material. Use the graph to estimate the threshold where the ratio reaches 1, and compare with the observed hold/fall bracket.
+4. Compare the two bead radii. Does the modeled force-to-weight ratio change?
+5. Compare how far foam and water sit below the nearest pressure node. Explain the difference using force balance.
+
+## Uncertainty
+
+Give intervals for trap positions and the hold/fall threshold. Use the phase-control increment when estimating the slope uncertainty. Repeat the position analysis with another nearby trap to see how much the result depends on location. Force readouts in the virtual lab are calculated values; keep those separate from quantities you locate yourself, such as trap positions and threshold brackets.
+
+## Questions
+
+1. Why does gravity move a stable bead below its pressure node?
+2. Why do denser materials generally need more drive?
+3. Why can changing the relative phase of two bowls move traps, while changing the phase of one emitter and its reflection does not?
+4. Why might a large real bead fail the radius-cancellation prediction?
+
+## What to hand in
+
+Prelab answers, data and screenshots, the spacing and phase graphs, drive-squared plots, threshold and radius comparisons, uncertainty estimates, and answers to the questions. Identify which values were simulated readouts and which you located yourself.

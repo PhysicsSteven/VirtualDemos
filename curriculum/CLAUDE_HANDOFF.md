@@ -47,3 +47,8 @@ Continue from the fresh checkout and rewritten main7e350d3; never merge old hist
 ## Lab-writing delivery — 2026-10-19
 
 Current base9fa5e30; eight new full student labs (four modern benches, three acoustics and Franck–Hertz), three RC/AC/RLC handouts migrated to unified Circuits. Eleven companion instructor guides/rubrics and reproducible numerical reference outputs are private in TeacherKeys; see its `curriculum/LAB_GUIDE_INDEX.md`. No demo HTML changed. All96 supported Node groups/checks passed; added acoustics/Franck suites and near-critical Circuits cases. Browser CI removed per Steve's explicit coordination instruction. Read [writing/validation record](validation/LAB_WRITING_2026-10-19.md) for limitations. Department handouts have not yet been supplied; reconcile with them before classroom use. Continue on the feature branch; no main merge authorized for this writing pass.
+
+
+## Plain student-handout revision — 2026-10-19
+
+The ten requested handouts now follow Claude’s e/m example: Goal, short Background with display equations, Before the lab, Safety, Procedure, one Data table, Analysis, one-paragraph Uncertainty, Questions and What to hand in. e/m itself is unchanged. Matching guides in TeacherKeys answer every new prelab/postlab question and keep detailed model caveats private. Reference calculations remain applicable: compared affected CORE blocks between9fa5e30 and main2000710 and found them identical; updated e/m is separate. Checked formatting/links rather than rerunning numerical suites for prose changes. Work is on the feature branch, pending owner review/merge.

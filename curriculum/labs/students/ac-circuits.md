@@ -1,37 +1,87 @@
-# AC Circuits — Impedance, Phase and Resonance on One Bench
-Student laboratory · 100 minutes · Physics II
+# AC Circuits and Resonance
+Student laboratory · Physics II
 
-[Open Circuits: AC](https://physicssteven.github.io/VirtualDemos/demos/circuits.html#ac)
+[Open the virtual Circuits bench](https://physicssteven.github.io/VirtualDemos/demos/circuits.html#ac)
 
-## Objectives and prelab
-Infer R,L,C from frequency response, distinguish peak/rms/instantaneous readings, and compare steady resonance with transient settling. Prerequisites: sinusoids, Kirchhoff's rule and complex impedance. Derive Z=R+i(ωL−1/ωC), I_rms=V0/(√2|Z|), φ=atan2(X,R), f0=1/(2π√LC), Q=√(L/C)/R and Δf=R/(2πL). Positive φ means current lags source voltage. Explain why arithmetic sums of rms voltage magnitudes do not obey instantaneous KVL.
+## Goal
 
-## Controls and data
-Use **AC**, select components on the drawing and edit them in **Selected**. The AC source V0 is peak amplitude. Set frequency with the log slider or select the source and use its numeric **Frequency f** entry. **Go to f0** selects resonance and **Sweep** scans it. Meters read rms; scope and phasors use peak quantities. Add channels with **Scope V/I** and use **Add the voltage phasors tip to tail**. There is no complete Blind setting: make predictions first.
+Measure how current depends on frequency in a series RLC circuit. Use the resonance curve to find R, L and C.
 
-In this source snapshot, the visible **Export scope CSV** control is in **In time**. Record AC rms/phase/power manually with actual frequency, plus screenshots; do not assume an AC sweep produces a frequency-response CSV. Time-domain exports used later are separate. Do not use the obsolete standalone AC page's component toggles or switch-on control; this circuit is changed by its parts and analysis mode.
+## Background
 
-## A. Single elements and phasors (20 minutes)
-Compare **Resistor only**, **Capacitor only**, **Inductor only** at three documented frequencies. Record source amplitude, element values, rms current and phase. Plot |Z| versus f for L and versus 1/f for C. Confirm the current lead/lag with the scope, stating sign convention.
+A resistor, inductor and capacitor affect alternating current differently. The inductor's reactance grows with frequency, while the capacitor's falls:
 
-Select **Below resonance**, set R1=22 Ω,L1=10 mH,C1=1 µF,V0=10 V,f=1000 Hz. Calculate reactances, |Z|, phase and current first. Add component-voltage channels. Compare three instantaneous source/component sums, the phasor sum and the sum of rms magnitudes; explain their different meanings.
+$$X_L=2\pi fL,\qquad X_C=\frac{1}{2\pi fC}.$$
 
-## B. Measure resonance and bandwidth (35 minutes)
-1. Retain that circuit; manually sample at least twelve frequencies over 0.5–3 kHz, concentrating near the peak and half-power points. Record actual displayed or numerically entered frequency and current. Sweep may guide the search but does not replace a raw table.
-2. Plot I_rms and phase against f. Estimate peak f0 and R=V0/(√2 I_peak). Bracket each crossing I_peak/√2; refine with the numeric frequency entry and record the final intervals.
-3. Infer Δf=f_high−f_low, L=R/(2πΔf), C=1/[(2πf0)²L]. Compare the geometric mean √(f_low f_high) with f0; quantify the effect of using the arithmetic mean instead.
-4. Only then use **Go to f0** and the theoretical response to check your inferences. Repeat a smaller sweep using **High Q vs low Q** or R1=10 and 100 Ω, keeping L,C,V0 fixed.
+For the series circuit,
 
-| f (Hz) | V0 (V peak) | I_rms (A) | φ (degrees) | R,L,C | Power (W) |
+$$|Z|=\sqrt{R^2+(X_L-X_C)^2},\qquad I_{\rm rms}=\frac{V_0}{\sqrt2\,|Z|}.$$
+
+Here V0 is the source's peak voltage. Current lags the voltage when XL is larger than XC, and leads when XC is larger. At resonance the reactances cancel:
+
+$$f_0=\frac{1}{2\pi\sqrt{LC}}.$$
+
+The current is largest at resonance. The two half power frequencies occur where the current is its peak value divided by √2. Their separation is the bandwidth:
+
+$$\Delta f=\frac{R}{2\pi L},\qquad Q=\frac{f_0}{\Delta f}.$$
+
+## Before the lab
+
+1. How do the impedances of a pure inductor and a pure capacitor change when frequency doubles?
+2. At resonance, why can the inductor and capacitor each have a large voltage even when their combined voltage is zero?
+3. Explain the difference between peak voltage and rms voltage.
+
+## Safety
+
+For a real circuit, turn off the supply before changing connections. Stay within the component and generator ratings. Check the voltage across the capacitor and inductor near resonance; it can exceed the source voltage.
+
+## Procedure
+
+**Single components.** Measure current and its phase relative to the source for a resistor alone, a capacitor alone and an inductor alone. Use three frequencies for each. Record the actual component values and source voltage.
+
+**Series resonance.** Connect R = 22 Ω, L = 10 mH and C = 1 µF in series, or use the assigned values. Set the source amplitude to 10 V peak.
+
+1. Measure current from about 0.5 to 3 kHz. Take at least twelve frequencies, with more readings near the peak.
+2. Find the maximum current. Locate the half power current on both sides and take extra readings to bracket each crossing.
+3. Record phase and average power at a frequency below resonance, near resonance and above resonance.
+4. Repeat a shorter sweep with R = 10 Ω and R = 100 Ω, keeping L, C and source voltage fixed.
+5. If recording equipment is available, compare how quickly the current settles after switching on at resonance for two resistance values.
+
+**Using the virtual apparatus.** Choose **AC** and use **Resistor only**, **Capacitor only**, **Inductor only** and **Below resonance**. Click parts to edit values in **Selected**. Set frequency with the slider or select the source and enter **Frequency f** numerically. Record the displayed rms current and phase by hand. Use **Go to f0** only after locating the peak yourself. To record startup, keep the same circuit, switch to **In time**, press **Reset**, add channels with **Scope V/I**, then use **Whole run** and **Export scope CSV**. The visible export control is in In time; keep the AC frequency table manually.
+
+## Data
+
+| Run: R, L, C | f (Hz) | Source V0 (V peak) | I_rms (A) | Phase (degrees) | Power (W) |
 |---|---|---|---|---|---|
 | | | | | | |
+| | | | | | |
+| | | | | | |
 
-## C. Steady state versus startup (25 minutes)
-Keep a series RLC circuit at measured resonance, switch to **In time** on the same circuit, and Reset to zero stored state. Analysis mode changes do not replace the circuit: if a preset was selected, recheck all parts and source frequency. Add source/current channels, run several settling times, pause, use **Whole run**, and export scope CSV. Compare startup with the AC steady-state prediction. Repeat for a second R, exporting separately.
+Add rows for every frequency. Keep the three resistance sweeps separate.
 
-Estimate the envelope from differences relative to the steady sinusoid over multiple cycles; do not take logarithms through current zero crossings. Compare the transient decay scale 2L/R where the natural mode is underdamped, and discuss the limits of that statement for overdamping. Reset after edits so component-editing work is excluded from the startup run.
+## Analysis
 
-## D. Power, uncertainty and report (20 minutes)
-At below/near/above resonance, test P=I_rms²R=(V0/√2)I_rms cosφ. Explain nonzero instantaneous energy exchange but zero mean dissipation for an ideal pure C or L. Can a component voltage exceed the source? Does ideal undamped LC under exactly resonant drive have a finite steady amplitude?
+1. Plot current against frequency. Identify f0, the peak current and the half power frequencies.
+2. Infer R from the peak current, then L from the bandwidth and C from f0.
+3. Compare the measured phase with the sign of XL − XC. Use the scope or phasor diagram to check Kirchhoff's voltage rule.
+4. Calculate Q for each resistance. Explain how the width and height change.
+5. Check the power relation below, at and above resonance:
 
-Use half-power frequency brackets, current rounding and component/voltage assumptions in uncertainty. The log slider uses adjacent ratio 10^0.01, but numeric frequency entry permits a finer search; report which method you actually used. Bound Δf before propagating into L,C. Distinguish exact arithmetic from the uncertainty of reading a plot. Submit all manual frequency tables, plots/residuals, inferred components, time CSV, power checks and model limitations.
+$$P=I_{\rm rms}^2R=V_{\rm rms}I_{\rm rms}\cos\phi.$$
+
+6. If you recorded startup, compare the settling envelopes. For an underdamped circuit the natural transient decays on the scale 2L/R.
+
+## Uncertainty
+
+Use the frequency intervals that bracket the peak and half power crossings. Include current rounding and the uncertainty in source voltage when inferring R. Carry the crossing uncertainty into bandwidth, then into L and C. State whether you used the logarithmic slider or numeric frequency entry. A narrow peak needs finer frequency steps than a broad one.
+
+## Questions
+
+1. Why is the current greatest at resonance?
+2. Why do the positive rms magnitudes of the three component voltages not simply add to the source voltage?
+3. Why does an ideal capacitor or inductor dissipate no average power?
+4. Why does a sharp resonance usually take longer to settle after switching on?
+
+## What to hand in
+
+Prelab answers, the data table, current and phase graphs, inferred R, L and C with uncertainty, the Q comparison, power calculations, any startup trace, and answers to the questions. Identify simulated data.

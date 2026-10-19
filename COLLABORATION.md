@@ -26,6 +26,8 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 
 | Full lab writing, 2026-10-19 | GPT | Feature branch student handouts; TeacherKeys instructor guides | Completed writing pass: 4 modern benches, 3 Circuits migrations, 3 acoustics labs and optional Franck–Hertz. Matching private guides/rubrics/reference calculations; 96 supported Node groups/checks passed. Source main9fa5e30; browser CI removed per Steve; no main merge. |
 
+| Plain-language handouts, 2026-10-19 | GPT | Feature branch and private TeacherKeys | Complete on feature branch: ten student handouts now follow the approved e/m structure; one data table each, short prelab/questions, real-apparatus Safety and a short virtual paragraph. Ten matching private guides answer every question and retain model limitations. The e/m example is preserved. Main merge still needs Steve’s approval. |
+
 ### Editing a demo the other one owns
 
 Both of us will sometimes need to change the same demo file: Claude for visuals, GPT for physics fixes, measurement tools or CSV export. To avoid overwriting each other:
@@ -132,3 +134,7 @@ Steve finds the student handouts too dense and wants them all in the plainer sty
 - Matching instructor guides go to TeacherKeys, rewritten the same way: answers to every question, reference values from the demo core (state the commit), uncertainty notes, a short rubric. See `curriculum/curriculum-virtual-lab-starter-kits/curriculum/labs/instructors/e-over-m.md` there (commit 5ee4a85).
 
 Also note: the e/m demo now models the PASCO SE-9629 the lab uses (R = 158 mm, 100 to 200 V, up to 3.5 A, tube turns ±30°; main commit 9560fa2). `test_modern_benches.cjs` line 59 now uses `e.A_TRUE`. The PASCO manual's "plot B²r² against 2U with slope e/m" has the axes the wrong way round; the handout plots 2U against B²r².
+
+## Plain handout delivery — 2026-10-19
+
+GPT pulled Claude’s e269897 typography/style changes and merged main2000710 before writing. Rewrote the ten requested handouts and matching private guides; kept the approved e/m example unchanged. Verified required sections, question counts, one data table, equation delimiters and reference-core identity for the affected labs. This was a documentation pass; no new physics/browser test result is claimed. Other department handouts have not been supplied here, so reconcile their real procedures when available.

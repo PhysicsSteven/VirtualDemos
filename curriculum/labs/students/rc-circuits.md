@@ -1,38 +1,84 @@
-# RC Circuits — Time Constants and Energy on the Unified Bench
-Student laboratory · 90 minutes · Physics II
+# Charging and Discharging a Capacitor
+Student laboratory · Physics II
 
-[Open Circuits: RC](https://physicssteven.github.io/VirtualDemos/demos/circuits.html#rc)
+[Open the virtual Circuits bench](https://physicssteven.github.io/VirtualDemos/demos/circuits.html#rc)
 
-## Objectives and prelab
-Determine capacitance from time traces, verify capacitor-voltage continuity at a switch, and account for source work, stored energy and heat. Prerequisites: Kirchhoff's rule, exponentials and linear regression. Derive V_C=ε(1−exp(−t/RC)), I=εexp(−t/RC)/R, and the discharge solution. Derive the complete-charge energy split W=Cε², U=H=Cε²/2. Explain why the final split is independent of R while charging power is not.
+## Goal
 
-## Current apparatus and recording
-Use **In time** on `circuits.html`; the old RC page remains available but is not this lab's apparatus. Choose **RC charging**, then select the battery, R1 or C1 on the drawing and enter values in **Selected**. Numeric entries use the displayed SI unit; record exactly what the controls/readouts show. Click **Scope V** or **Scope I** for the selected part to add a channel. Use **Pause**, **Reset**, **Playback rate**, **Whole run**, **Fit last change** and **Export scope CSV**. Positive component current follows that component's drawn terminal orientation; record which capacitor terminal defines V_C and use Q=CV_C consistently.
+Measure the time constant of an RC circuit, use it to find the capacitance, and follow the energy as the capacitor charges and discharges.
 
-There is no complete Blind control or exact-time cursor in this bench. Predict before inspecting **Natural response**. Export samples at their actual times; the CSV contains selected voltage/current channels in V/A and t_s, not a settings log or energy ledger. Save a settings sheet and energy readings separately. Export before changing a preset. The time export is clipped to the current scope window; use **Whole run** and confirm its first/last t values cover your experiment. Do not infer precise times from playback speed.
+## Background
 
-## A. Determine C (30 minutes)
-1. Select **RC charging**, pause, set ε=10 V,R1=10 kΩ,C1=100 µF, then Reset to clear previous state and editing work. Record values, initial V_C and switch position.
-2. Run to at least 4RC, pause and export the scope. Include V_C, V_R and I_R. Retain at least six nonsaturated samples from the charging segment; do not fit an unobserved theoretical curve.
-3. Infer τ from the time to V_C/ε=1−e⁻¹ and from a fit ln(1−V_C/ε)=a+bt, τ=−1/b. Use interpolation and actual exported timestamps. Exclude endpoints rounded to ε.
-4. Repeat at R1=4.7, 6.8, 10, 15 and 22 kΩ with C fixed. Reset after each component edit. Fit τ against R in ohms; infer C from slope and discuss the intercept. Compare with **Natural response** only after the fit.
+A resistor limits how quickly charge reaches a capacitor. Kirchhoff's loop rule gives
 
-| R (Ω) | ε (V) | C entry (F) | τ crossing (s) | τ log fit (s) | Sampling/fit uncertainty |
+$$\varepsilon=IR+\frac{Q}{C},\qquad I=\frac{dQ}{dt}.$$
+
+For an initially uncharged capacitor connected to a battery,
+
+$$V_C=\varepsilon\left(1-e^{-t/RC}\right),\qquad I=\frac{\varepsilon}{R}e^{-t/RC}.$$
+
+The time constant is τ = RC. After one time constant, the capacitor has reached about 63% of its final voltage. During discharge,
+
+$$V_C=V_{C0}e^{-t/RC}.$$
+
+The battery does work on the charges. Some becomes electric energy in the capacitor, and the rest heats the resistor:
+
+$$W=U_C+H,\qquad U_C=\frac12 CV_C^2.$$
+
+## Before the lab
+
+1. If R doubles while C stays fixed, what happens to the time constant?
+2. Why can the capacitor voltage not jump when the switch changes position?
+3. Derive the straight-line relation obtained by plotting ln(1 − V_C/ε) against time during charging.
+
+## Safety
+
+For a real circuit, turn off the supply before changing connections. Check the capacitor's polarity and voltage rating. Discharge it through the specified resistor before handling it.
+
+## Procedure
+
+**Charging.** Assemble a series battery, resistor and capacitor circuit. Use ε = 10 V and C = 100 µF, or the values assigned for your apparatus.
+
+1. Start with the capacitor discharged. Connect the battery and record capacitor voltage and current as a function of time.
+2. Take at least six readings from the beginning until the voltage is close to its final value.
+3. Repeat for resistances near 4.7, 6.8, 10, 15 and 22 kΩ. Use the actual resistor values in the calculations.
+
+**Discharging.** Charge the capacitor, record its voltage, then switch the battery out and let it discharge through a resistor. Record voltage and current from the time of the switch. Repeat with a different discharge resistance if your circuit allows it.
+
+**Energy.** For one charging run, record source work, stored capacitor energy and resistor heat at four times. Compare their sum. Then compare a slow charge with the fast discharge of a camera-flash circuit.
+
+**Using the virtual apparatus.** Select **In time** and **RC charging**. Click a component and enter its value in **Selected**. Use **Reset** before each charging run and **Pause** when reading values. Add channels with **Scope V** and **Scope I**. Select **Whole run**, then **Export scope CSV**; record settings and the **Energy since t = 0** readings separately. **Flip mid way** shows switching during charging, and **Camera flash** provides separate charging and discharge resistances. The CSV contains the visible scope window, so check that it includes the part of the run you need.
+
+## Data
+
+| t (s) | V_C (V) | I (A) | W (J) | U_C (J) | H (J) |
 |---|---|---|---|---|---|
 | | | | | | |
+| | | | | | |
+| | | | | | |
 
-## B. Switching and fast discharge (25 minutes)
-1. Use **Flip mid way**, restore its displayed component values, Reset and run through the automatic switch. Export the complete visible run. Determine the switch time from the trace and fit each side separately using elapsed time relative to its own segment.
-2. Compare V_C immediately before/after switching and I_R on each side. Explain continuity of charge but a jump/reversal of resistor current. The fit initial condition is the actual voltage at the switch, not ε unless the capacitor is fully charged.
-3. Use **Camera flash**, document R1,C1 and the bulb resistance, and run beyond the switch. Compare charging/discharging time constants and initial powers using measured pre-switch voltage. State the finite charge fraction; do not assume exactly full after 5τ.
+Use a separate copy for each run. Write ε, R, C and the switch time above it. Fill the energy columns for the energy run.
 
-## C. Energy and uncertainty (25 minutes)
-For an uncharged RC charging run, record time, source work W, capacitor U and resistor heat H from **Energy since t=0** at four times. Check W−U−H and compare with a numerical integral of εI and I²R from CSV. Keep the integration within one documented run; component editing can add a separate editing-work term and is excluded here. Repeat with a different R to distinguish invariant final energy from rate of transfer.
+## Analysis
 
-| t (s) | W (J) | U_C (J) | H (J) | W−U_C−H (J) |
-|---|---|---|---|---|
-| | | | | |
+1. Find τ from the time when V_C reaches 63.2% of ε.
+2. Plot ln(1 − V_C/ε) against t. Find τ from the slope. Leave out points so close to the final voltage that rounding makes the logarithm unusable.
+3. Plot τ against R. Find C from the slope and compare it with the component value.
+4. For discharge, plot ln(V_C/V_C0) against time since switching. Compare its time constant with charging.
+5. Check W − U_C − H at each energy reading. If using CSV, also estimate heat from the area under I²R against time.
+6. In the flash run, calculate the stored energy and initial discharge power from the voltage just before the switch. Do not assume the capacitor has reached the full battery voltage.
 
-State exported sample spacing, readout rounding and crossing brackets. Bound τ from nearby samples; propagate slope uncertainty into C. Deterministic traces do not justify invented random noise. Explain why a very small fitted residual does not represent resistor tolerance or capacitor leakage in a real lab.
+## Uncertainty
 
-Submit settings, raw CSV, τ methods/τ-versus-R fit and residuals, switch comparison, flash comparison, energy table/integrals and uncertainty. Discuss signed current, finite charging, sampling bias and parasitic effects absent from the ideal model.
+Use the spacing between nearby time samples to estimate uncertainty in the 63.2% crossing. Compare that estimate with the uncertainty of the log-fit slope. Include voltage rounding and resistor uncertainty where available. Use actual timestamps from the exported data. Do not add random scatter to a deterministic trace; describe the resolution with which you read it.
+
+## Questions
+
+1. Why can the current change suddenly while the capacitor voltage stays continuous?
+2. Why does a larger resistor change the charging time but not the final stored energy?
+3. Where does the capacitor's energy go during discharge?
+4. Why does the same stored energy give much higher power in a fast discharge?
+
+## What to hand in
+
+Prelab answers, settings and data, CSV if available, the charging and discharge fits, the τ-versus-R graph, capacitance with uncertainty, the energy check, and answers to the questions. Identify simulated data.
