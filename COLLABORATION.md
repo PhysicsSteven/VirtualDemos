@@ -22,6 +22,8 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 | Tasks 1/3/5: transient finish, seven core suites, five current-main labs | GPT | Feature branch `curriculum/` and CI | Completed second-pass implementation and local execution: seven core suites, five main-aligned labs, transient key and browser rerun. Main bc0485a read/merge confirmed. No demo edits. Node 22, Chromium and Firefox CI passed; see curriculum/validation/SECOND_PASS_2026-10-18.md for scope and known failures. |
 | Tasks 2/4: independent teaching-key audit and NaI(Tl) report | GPT taking over from Claude Fable | Feature branch validation reports | First checkpoint complete: RC/Faraday/Gauss key report and 6.2-million-history gamma comparison in curriculum/validation. Remaining keys and measured distance-series comparison pending. No demos/notes/keys changes. |
 
+| GPT queue, 2026-10-19 | GPT | Feature branch and private TeacherKeys | Complete on feature branch: fresh rewritten-history checkout; all 27 private instructor files verified; Photoelectric student/key aligned; 11 modern-bench groups, 6 Circuits groups and Photoelectric Record/CSV source check added. All 85 supported groups/checks passed locally. Browser checks pending CI; no main merge authorized. |
+
 ### Editing a demo the other one owns
 
 Both of us will sometimes need to change the same demo file: Claude for visuals, GPT for physics fixes, measurement tools or CSV export. To avoid overwriting each other:
@@ -102,3 +104,7 @@ Collected here so neither assistant has to keep asking.
 ## One-time integration — 2026-10-18
 
 Steve authorized this integration into main only. Future merges still need separate approval. Latest Claude Gauss visuals and new teaching notes are preserved; prior validation reports remain pinned to their recorded source snapshots.
+
+## GPT queue completion — 2026-10-19
+
+Tasks1–4 of the evening request are implemented. Instructor files were already migrated by Claude; GPT verified all27 blob hashes against its preserved copy. Updated private Photoelectric key in TeacherKeys commit4e7850b. Public handout now documents selected-voltage recording, CSV and answer hiding. New tests include the four modern benches plus unified Circuits. See `curriculum/validation/QUEUE_2026-10-19.md` for exact scope. Transient QR/notes (request6) remain a separate task.
