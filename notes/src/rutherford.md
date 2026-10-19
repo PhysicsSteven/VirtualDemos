@@ -9,6 +9,7 @@ time: 15 to 30 minutes
 - The deflection of one alpha is set by its impact parameter b: smaller b, closer approach, larger angle, θ = 2 arctan(D/2b).
 - The head on distance D = zZe²/(4πε₀K) is where all the kinetic energy has become Coulomb energy. It gives the scale of the whole problem and an upper bound on the size of the nucleus.
 - Counts per solid angle fall as 1/sin⁴(θ/2), and the fraction turned past 90° tells you how small the target is.
+- Flipping the sign of the force (an antialpha, charge −2e) leaves θ(b) and the counts against angle unchanged, because they depend on (zZ)², but the path wraps around the nucleus and comes much closer.
 
 ## Before class
 
@@ -21,6 +22,7 @@ Students should know Coulomb's law and conservation of energy. Angular momentum 
 3. **Head on.** At b = 0 the alpha stops at D = 29.6 fm and comes straight back. Compare D with the nuclear radius in the rail (about 7 fm for gold): the alpha never touches the nucleus, so only the Coulomb force acts.
 4. **Geiger–Marsden beam.** Point out the scale break: the tracks are drawn on a femtometer scale, but the real screen is about a centimeter away, so each alpha lands at its final angle θ (the brief ray from the dashed circle), not where its track would cross the drawn screen. Let the counts build on the log plot. The points follow 1/sin⁴(θ/2) over four decades. Read off the fraction turned past 90° and compare with the expected value (b₉₀/b_max)².
 5. **Aluminum, high energy** (if time allows). D is now about the same as the nuclear radius, so the alpha reaches the nucleus and the strong force acts. Pure Rutherford scattering fails at large angles; this is how the size of nuclei was first measured.
+6. **Flip the charge** (if time allows). Go back to One alpha, gold, and switch Projectile to Antialpha, −2e. Ask Q7 first. The angle stays 61.2°, but the path now bends toward the nucleus, crosses the axis behind it, and comes within 14.3 fm instead of 43.8 fm. Then switch to Beam: the histogram is the same, but the shaded band shows that every antialpha turned past about 77° reaches the nucleus.
 
 ## Questions
 
@@ -36,11 +38,14 @@ Students should know Coulomb's law and conservation of energy. Angular momentum 
 
 **Q6.** In the aluminum preset the measured counts at large angles fall below the Rutherford prediction. What is happening to those alphas, and what does it tell you about the aluminum nucleus?
 
+**Q7.** Switch the projectile from the alpha to the antialpha (the same mass, charge −2e) at b = 25 fm on gold. Predict before you look: does the deflection angle change? Does the closest approach change? Why are the counts against angle in Beam mode the same for both?
+
 ## Common misconceptions
 
 - **"The alpha hits the nucleus and bounces off."** For gold at these energies it never touches it: it turns around at least 29.6 fm away, about four nuclear radii, pushed only by the Coulomb force.
 - **"Most alphas bounce back."** Almost all pass with a small deflection; only about one in tens of thousands is turned past 90° in a real foil. The surprise was that any came back at all.
 - **"The plum pudding atom fails because it has the wrong total charge."** The total charge is the same in both models. What differs is how concentrated it is, which sets how strong the force can get.
+- **"A negative particle would be pulled straight into the nucleus."** Only head on. With any impact parameter it has angular momentum, so it swings around the nucleus on a hyperbola and flies off again, turned by the same angle a positive particle would be.
 - **"The alpha follows a straight line and then turns sharply."** The path is a smooth hyperbola, symmetric about the line through the point of closest approach.
 
 ## Physics behind the demo
@@ -49,6 +54,7 @@ Students should know Coulomb's law and conservation of energy. Angular momentum 
 - The beam fires alphas at random b with uniform density over the beam's cross section. Counts are binned per steradian and compared with the Rutherford cross section, dσ/dΩ = (D/4)² / sin⁴(θ/2).
 - The plum pudding atom is a uniform sphere of positive charge with point electrons ignored; the alpha takes a small random kick from each atom it crosses, and the kicks add like a random walk.
 - An option lets the nucleus recoil (lab frame); with it off, the nucleus is fixed.
+- The Projectile control swaps the alpha for an antialpha, the antihelium 4 nucleus: the same mass, charge −2e. The orbit is then the hyperbola branch around the nucleus, with r_min = (|D|/2)(1/sin(θ/2) − 1) instead of (|D|/2)(1/sin(θ/2) + 1). Antialphas are real but have never been made as a beam, so this is a thought experiment; a real one reaching the nucleus would annihilate, which the demo only flags. A negative ion would not work as a negative probe: its extra electron is bound by about an electron volt and is stripped in the first atomic layers of the foil.
 - The aluminum preset marks where the strong force would act (the alpha reaching the nuclear radius 1.2 A^⅓ fm). The demo does not model nuclear forces; it shows where the Rutherford formula stops applying.
 
 ## Going further

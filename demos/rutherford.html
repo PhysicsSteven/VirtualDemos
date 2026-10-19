@@ -193,7 +193,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <span class="count mono" id="count" aria-live="off"></span>
       </div>
       <div class="pane" id="pane">
-        <canvas id="can" tabindex="0" aria-label="Alpha particles approaching a target atom, seen side on, and a plot. In one alpha mode the plot shows the deflection angle against the impact parameter; in beam mode it shows counts against angle with the Rutherford prediction. Drag the handle on the incoming path to change the impact parameter b, or the beam edge to change the beam radius. Keys: up and down change b or the beam radius, space plays or pauses, B switches between one alpha and beam, P switches the atom model, F fires, C clears, V switches the 3D view, and left and right turn it."></canvas>
+        <canvas id="can" tabindex="0" aria-label="Alpha particles approaching a target atom, seen side on, and a plot. In one alpha mode the plot shows the deflection angle against the impact parameter; in beam mode it shows counts against angle with the Rutherford prediction. Drag the handle on the incoming path to change the impact parameter b, or the beam edge to change the beam radius. Keys: up and down change b or the beam radius, space plays or pauses, B switches between one alpha and beam, P switches the atom model, Q switches the projectile between the alpha (charge +2e) and the antialpha (charge −2e), F fires, C clears, V switches the 3D view, and left and right turn it."></canvas>
       </div>
     </div>
 
@@ -208,6 +208,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="al" aria-pressed="false">Aluminum, high energy</button>
         </div>
         <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Projectile</h2>
+        <div class="seg" role="group" aria-label="Projectile charge">
+          <button type="button" id="qPos" aria-pressed="true">Alpha, +2e</button>
+          <button type="button" id="qNeg" aria-pressed="false">Antialpha, −2e</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="ke">Kinetic energy K</label><output id="keOut" class="mono" for="ke"></output></div>
+          <input type="range" id="ke" min="1" max="10" step="0.01" value="7.69">
+        </div>
+        <dl class="readout">
+          <div class="wide"><dt>Speed v (nonrelativistic is fine: v/c ≤ 0.074)</dt><dd id="rV">—</dd></div>
+          <div class="wide big"><dt id="rDLab">Head on distance D = zZe²/4πε₀K</dt><dd id="rD">—</dd></div>
+        </dl>
+        <p class="hint" id="projHint"></p>
       </section>
 
       <section>
@@ -234,21 +251,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <p class="hint" id="modelHint"></p>
       </section>
 
-      <section>
-        <h2>Alpha particles</h2>
-        <div>
-          <div class="slider-head"><label for="ke">Kinetic energy K</label><output id="keOut" class="mono" for="ke"></output></div>
-          <input type="range" id="ke" min="1" max="10" step="0.01" value="7.69">
-        </div>
-        <dl class="readout">
-          <div class="wide"><dt>Speed v (nonrelativistic is fine: v/c ≤ 0.074)</dt><dd id="rV">—</dd></div>
-          <div class="wide big"><dt>Head on distance D = zZe²/4πε₀K</dt><dd id="rD">—</dd></div>
-        </dl>
-        <p class="hint">An alpha is a helium nucleus, z = 2, mc² = 3727.4 MeV. Geiger and Marsden's 1913 source was radon with its short lived decay products, giving alphas of 5.49, 6.00 and 7.69 MeV; the fastest, from ²¹⁴Po (radium C′), is the default here. Many textbooks quote 5.5 MeV.</p>
-      </section>
 
       <section id="secSingle">
-        <h2>One alpha</h2>
+        <h2 id="singleH">One alpha</h2>
         <div>
           <div class="slider-head"><label for="bb">Impact parameter b</label><output id="bOut" class="mono" for="bb"></output></div>
           <input type="range" id="bb" min="0" max="1" step="0.001" value="0.3">
@@ -319,13 +324,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
       <section>
         <h2>Model</h2>
-        <p class="hint">Pure Coulomb repulsion, nonrelativistic. The trajectory is the exact hyperbola, and the alpha moves along it on the exact timing (Kepler's equation for a hyperbola). The nucleus is held fixed. The recoil readout shows the lab angle and closest approach when it is free to move: at the same b the angle changes by under 1% even for aluminum, and the closest approach grows by about 2% for gold and up to 15% for aluminum. The strong force is not simulated, only flagged.</p>
+        <p class="hint">Pure Coulomb force, nonrelativistic: repulsion for the alpha, attraction for the antialpha. The trajectory is the exact hyperbola (for attraction, the branch that wraps around the nucleus), and the projectile moves along it on the exact timing (Kepler's equation for a hyperbola). The nucleus is held fixed. The recoil readout shows the lab angle and closest approach when it is free to move: at the same b the angle changes by under 1% even for aluminum, and the closest approach grows by about 2% for gold and up to 15% for aluminum. The strong force is not simulated, only flagged; neither is annihilation, which ends any antialpha that reaches the nucleus. The antialpha is the antimatter partner of the alpha, with the same mass; only the sign of its charge is changed here.</p>
+        <p class="hint">Why not a negative ion? An O⁻ or H⁻ ion holds its extra electron by only about 1.5 or 0.75 eV, so it loses that electron in the first atomic layers of the foil, and at MeV energies it is stripped further and reaches the nuclei positive. At the nucleus only the net charge counts, so a real negative projectile has to be a bare negative particle, like an antiproton or a negative muon.</p>
         <p class="hint">Beam mode is a 3D beam: impact parameters are spread evenly over a disk, so their density grows as b, and each track is drawn in its own plane of scattering. The detector ring stands for Geiger and Marsden's zinc sulfide screen and microscope, which really sat centimeters away. Each alpha is scattered by one nucleus; the many distant, small deflections in a real foil are left out.</p>
         <div class="key">
-          <span><i class="swatch alpha"></i>Alpha path</span>
+          <span><i class="swatch alpha"></i>Alpha or antialpha path</span>
           <span><i class="swatch asym"></i>Asymptotes and closest approach</span>
           <span><i class="swatch dot"></i>Nucleus (to scale, at least a few pixels)</span>
-          <span><i class="swatch pn"></i>Protons and neutrons, radius 0.85 fm, packed at random; their jostling is only for the eye</span>
+          <span><i class="swatch pn"></i>Protons and neutrons, radius 0.85 fm, packed at random; their jostling is only for the eye. In the antialpha, antiprotons are blue.</span>
         </div>
       </section>
     </aside>
@@ -343,49 +349,84 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const R0 = 1.2;               // fm, nuclear radius R = R0 A^(1/3)
   const C_MS = 299792458;
 
-  const headOn = (Z, K) => ZA * Z * KC / K;                         // D, fm
-  const deflect = (b, D) => 2 * Math.atan2(D, 2 * Math.abs(b));     // θ, rad (π for b = 0)
-  function rMin(b, D) { const q = 2 * b / D; return D / 2 * (1 + Math.sqrt(1 + q * q)); }
-  const bOf = (th, D) => (th >= Math.PI ? 0 : D / (2 * Math.tan(th / 2)));
+  // D = zZe²/4πε₀K carries the sign of zZ: positive for repulsion (alpha, z = +2), negative for attraction
+  // (antialpha, z = −2). Its size |D| is the length scale either way; only for repulsion is it a turning point.
+  const headOn = (Z, K, z = ZA) => z * Z * KC / K;                  // D, fm (signed)
+  const deflect = (b, D) => 2 * Math.atan2(Math.abs(D), 2 * Math.abs(b));   // θ ≥ 0, rad (π for b = 0); the same for both signs
+  // r_min = D/2 + √(D²/4 + b²): (|D|/2)(√(1 + (2b/D)²) + 1) for repulsion, (|D|/2)(√(1 + (2b/D)²) − 1) for attraction
+  function rMin(b, D) { return D / 2 + Math.sqrt(D * D / 4 + b * b); }
+  const bOf = (th, D) => (th >= Math.PI ? 0 : Math.abs(D) / (2 * Math.tan(th / 2)));
+  // which way the path turns: +1 away from the side it passed on (repulsion), −1 toward and across the axis (attraction)
+  const turnSign = (D) => (D < 0 ? -1 : 1);
   const speedC = (K) => Math.sqrt(2 * K / MA);
   const nucR = (A) => R0 * Math.cbrt(A);
-  // b at which the closest approach equals Rt (alphas with smaller b reach Rt); 0 if none, Infinity if all
-  function bTouch(D, Rt) {
-    const q = 2 * Rt / D - 1;          // r_min ≥ D always, so no contact unless Rt > D
-    if (q <= 1) return 0;
-    return D / 2 * Math.sqrt(q * q - 1);
-  }
+  // b at which the closest approach equals Rt (projectiles with smaller b reach Rt); 0 if none.
+  // From r_min(b) = Rt: b² = Rt(Rt − D). Repulsion: no contact unless Rt > D. Attraction: always some, b = √(Rt(Rt + |D|)).
+  function bTouch(D, Rt) { return Rt > D ? Math.sqrt(Rt * (Rt - D)) : 0; }
   // Mass number for a custom Z from the valley of stability, Z = A / (1.98 + 0.0155 A^(2/3))
   function massNumber(Z) { let A = 2 * Z; for (let i = 0; i < 40; i++) A = Z * (1.98 + 0.0155 * Math.pow(A, 2 / 3)); return Math.max(1, Math.round(A)); }
-  // Two body correction: the same b, but the relative motion has K_cm = K M/(M + m)
-  function recoil(b, Z, A, K) {
-    const M = A * AMU, Kcm = K * M / (M + MA), Dcm = headOn(Z, Kcm), thc = deflect(b, Dcm);
+  // Two body correction: the same b, but the relative motion has K_cm = K M/(M + m). The projectile mass is MA for
+  // both the alpha and the antialpha; z sets the sign.
+  function recoil(b, Z, A, K, z = ZA) {
+    const M = A * AMU, Kcm = K * M / (M + MA), Dcm = headOn(Z, Kcm, z), thc = deflect(b, Dcm);
     const th = Math.atan2(Math.sin(thc), Math.cos(thc) + MA / M);
     return { Dcm, thc, th, rmin: rMin(b, Dcm) };
   }
 
-  // Exact repulsive Coulomb orbit in the hyperbolic parameter w. The alpha comes in from x = −∞ along y = b
-  // (b signed), the nucleus at the origin. Branch away from the focus: r = a(e cosh w + 1), a = D/2, e = √(1 + (2b/D)²).
+  // Exact Coulomb orbit in the hyperbolic parameter w. The projectile comes in from x = −∞ along y = b (b signed),
+  // the nucleus at the origin, a = |D|/2, e = √(1 + (2b/D)²).
+  // Repulsion (D > 0): the branch away from the focus, r = a(e cosh w + 1), t = a(e sinh w + w).
+  // Attraction (D < 0): the branch around the focus, r = a(e cosh w − 1), t = a(e sinh w − w); periapsis on the
+  // same side as b, the path then crosses the axis and leaves on the other side.
   function orbit(b, D) {
-    const a = D / 2, e = Math.sqrt(1 + (2 * b / D) * (2 * b / D)), k = Math.sqrt(e * e - 1);
-    const al = Math.atan2(2 * Math.abs(b), D), ca = Math.cos(al), sa = Math.sin(al), sg = b < 0 ? -1 : 1;
+    const att = D < 0, a = Math.abs(D) / 2, q = 2 * b / D, e = Math.sqrt(1 + q * q), k = Math.sqrt(e * e - 1);
+    const sg = b < 0 ? -1 : 1, th = deflect(b, D), s1 = att ? -1 : 1;
+    let pos;
+    if (!att) {
+      const al = Math.atan2(2 * Math.abs(b), Math.abs(D)), ca = Math.cos(al), sa = Math.sin(al);
+      pos = (w) => { const X = -a * (e + Math.cosh(w)), Y = a * k * Math.sinh(w); return [X * ca + Y * sa, sg * (-X * sa + Y * ca)]; };
+    } else {
+      // periapsis direction û at angle sg(π/2 − θ/2); velocity there along n̂ at angle −sg θ/2
+      const ux = Math.sin(th / 2), uy = sg * Math.cos(th / 2), nx = Math.cos(th / 2), ny = -sg * Math.sin(th / 2);
+      pos = (w) => { const X = a * (e - Math.cosh(w)), Y = a * k * Math.sinh(w); return [X * ux + Y * nx, X * uy + Y * ny]; };
+    }
+    const tOf = (w) => a * (e * Math.sinh(w) + s1 * w), dtOf = (w) => a * (e * Math.cosh(w) + s1);
     return {
-      a, e, b, D, theta: deflect(b, D),
-      pos(w) { const X = -a * (e + Math.cosh(w)), Y = a * k * Math.sinh(w); return [X * ca + Y * sa, sg * (-X * sa + Y * ca)]; },
-      r(w) { return a * (e * Math.cosh(w) + 1); },
-      t(w) { return a * (e * Math.sinh(w) + w); },          // Kepler's equation for the repulsive hyperbola, in fm/v₀
-      wAt(r) { const c = (r / a - 1) / e; return c > 1 ? Math.acosh(c) : 0; },
-      wOfT(t) { // invert t(w) by Newton, monotonic
-        let w = Math.asinh(t / (a * e + 1e-300)); if (!isFinite(w)) w = 0;
-        for (let i = 0; i < 60; i++) { const f = a * (e * Math.sinh(w) + w) - t, df = a * (e * Math.cosh(w) + 1); const dw = f / df; w -= dw; if (Math.abs(dw) < 1e-13) break; }
+      a, e, b, D, att, theta: th, side: sg * s1,
+      pos,
+      r(w) { return a * (e * Math.cosh(w) + s1); },
+      t: tOf,                                               // Kepler's equation for the hyperbola, in fm/v₀
+      wAt(r) { const c = (r / a - s1) / e; return c > 1 ? Math.acosh(c) : 0; },
+      wOfT(t) { // invert t(w): Newton inside a shrinking bracket (t(w) is monotonic; dt/dw = r ≥ 0 can vanish head on)
+        let lo = -60, hi = 60, w = Math.asinh(t / (a * e + 1e-300)); if (!isFinite(w)) w = 0;
+        w = Math.max(lo, Math.min(hi, w));
+        for (let i = 0; i < 100; i++) {
+          const f = tOf(w) - t; if (f > 0) hi = w; else lo = w;
+          const df = dtOf(w); let nw = df > 0 ? w - f / df : NaN;
+          if (!(nw > lo && nw < hi)) nw = 0.5 * (lo + hi);
+          if (Math.abs(nw - w) < 1e-13 * (1 + Math.abs(w))) { w = nw; break; }
+          w = nw;
+        }
         return w;
+      },
+      // parameter values for drawing from w0 to w1: even in w, plus (attraction) even in true anomaly, so the tight
+      // turn around the nucleus stays smooth however close it comes
+      ws(w0, w1, n) {
+        const out = []; for (let i = 0; i <= n; i++) out.push(w0 + (w1 - w0) * i / n);
+        if (att && e > 1 + 1e-9) {
+          const f = Math.sqrt((e + 1) / (e - 1)), nu = (w) => 2 * Math.atan(f * Math.tanh(w / 2)), n0 = nu(w0), n1 = nu(w1);
+          for (let i = 1; i < n; i++) { const v = n0 + (n1 - n0) * i / n, z = Math.tan(v / 2) / f; if (Math.abs(z) < 1) out.push(2 * Math.atanh(z)); }
+          out.sort((x, y) => x - y);
+          return out.filter((v, i) => i === 0 || v - out[i - 1] > 1e-12);
+        }
+        return out;
       }
     };
   }
   // Independent check: integrate m d²r/dt² = zZe²/(4πε₀) r̂/r² with RK4 and a step proportional to r.
-  // In units v₀ = 1 the acceleration is (D/2) r̂/r².
+  // In units v₀ = 1 the acceleration is (D/2) r̂/r² (D signed, so attraction points inward).
   function integrate(b, D, opt) {
-    const L = (opt && opt.L) || 1e5 * Math.max(D, Math.abs(b)), eps = (opt && opt.eps) || 2e-3;
+    const L = (opt && opt.L) || 1e5 * Math.max(Math.abs(D), Math.abs(b)), eps = (opt && opt.eps) || 2e-3;
     let x = -L, y = b, vx = Math.sqrt(1 - D / Math.hypot(x, y)), vy = 0;   // energy matched to the asymptotic speed
     const acc = (x, y) => { const r2 = x * x + y * y, r = Math.sqrt(r2), f = D / 2 / (r2 * r); return [f * x, f * y]; };
     let rmin = Infinity, steps = 0, t = 0;
@@ -406,8 +447,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // Plum pudding atom: uniform positive sphere of radius R; outside, the neutral atom exerts no force.
   // Inside, the acceleration is (D/2) r/R³ (units v₀ = 1), so r(t) = r₀ cosh ωt + (v₀/ω) sinh ωt, ω² = D/(2R³).
+  // Returns the turn for a projectile entering at height |b|: positive away from the axis (repulsion), negative toward it.
+  // Attraction (D < 0): simple harmonic, r(t) = r₀ cos ωt + (v₀/ω) sin ωt, ω² = |D|/(2R³); the path is an ellipse
+  // centered on the atom and leaves the sphere at tan ωt = −2x₀ω/(1 − R²ω²).
   function plumExact(b, D, R) {
     const ab = Math.abs(b); if (ab >= R) return 0;
+    if (D < 0) {
+      const w = Math.sqrt(-D / (2 * R * R * R)), x0 = -Math.sqrt(R * R - ab * ab), y0 = ab;
+      const t = Math.atan2(-2 * x0 * w, 1 - R * R * w * w) / w, c = Math.cos(w * t), s = Math.sin(w * t);
+      return Math.atan2(-y0 * w * s, -x0 * w * s + c);
+    }
     const w = Math.sqrt(D / (2 * R * R * R)), x0 = -Math.sqrt(R * R - ab * ab), y0 = ab;
     const pos = (t) => { const c = Math.cosh(w * t), s = Math.sinh(w * t); return [x0 * c + s / w, y0 * c]; };
     let lo = 1e-9 * R, hi = 2 * R + 1;
@@ -417,7 +466,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return Math.atan2(y0 * w * s, x0 * w * s + c);
   }
   // Small angle (impulse) form: θ = (D/R) s √(1 − s²), s = b/R; largest D/2R at s = 1/√2; mean square over the disk D²/6R²
-  const plumKick = (s, D, R) => (s >= 1 ? 0 : D / R * s * Math.sqrt(1 - s * s));
+  const plumKick = (s, D, R) => (s >= 1 ? 0 : Math.abs(D) / R * s * Math.sqrt(1 - s * s));   // size of the turn; its direction flips with the sign of D
 
   // A 3D beam spread evenly over a disk of radius bmax: b = bmax √u
   const sampleB = (bmax, u) => bmax * Math.sqrt(u);
@@ -428,11 +477,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const b1 = bOf(a, D), b2 = bOf(th2, D);
     return (b1 * b1 - b2 * b2) / (bmax * bmax);
   }
-  // Rutherford cross section per solid angle, fm²/sr
+  // Rutherford cross section per solid angle, fm²/sr; it depends on D², so it is the same for attraction
   const dsdo = (th, D) => { const s = Math.sin(th / 2); return (D / 4) * (D / 4) / (s * s * s * s); };
   // One alpha through N plum pudding atoms: sum of N random 2D kicks, each from an even spread over the atom's disk.
   function plumFoil(N, D, R, rnd) {
-    let tx = 0, ty = 0; const k = D / R;
+    let tx = 0, ty = 0; const k = Math.abs(D) / R;
     for (let i = 0; i < N; i++) {
       const s2 = rnd(), m = k * Math.sqrt(s2 * (1 - s2));
       let ux, uy, q; do { ux = 2 * rnd() - 1; uy = 2 * rnd() - 1; q = ux * ux + uy * uy; } while (q > 1 || q < 1e-12);
@@ -443,7 +492,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.RS = { KC, MA, ZA, AMU, R0, headOn, deflect, rMin, bOf, speedC, nucR, bTouch, massNumber, recoil, orbit, integrate, plumExact, plumKick, sampleB, binFrac, dsdo, plumFoil };
+    globalThis.RS = { KC, MA, ZA, AMU, R0, headOn, deflect, rMin, bOf, turnSign, speedC, nucR, bTouch, massNumber, recoil, orbit, integrate, plumExact, plumKick, sampleB, binFrac, dsdo, plumFoil };
     return;
   }
 
@@ -472,11 +521,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   };
 
   // ---------- state ----------
-  const S = { preset: 'one', model: 'nuc', mode: 'single', target: 'au', Zc: 29, K: 7.69, b: 25, rate: 7, bm: 0.756, ft: -0.3, norm: 'sr', range: 'full', view: 75 };
+  const S = { preset: 'one', q: 'pos', model: 'nuc', mode: 'single', target: 'au', Zc: 29, K: 7.69, b: 25, rate: 7, bm: 0.756, ft: -0.3, norm: 'sr', range: 'full', view: 75 };
   let playing = !reduce;
 
   const tgt = () => { const t = TARGETS[S.target]; if (S.target !== 'custom') return t; return { name: 'Custom', sym: '', Z: S.Zc, A: massNumber(S.Zc), n: 6.0e28 }; };
-  const Dnow = () => headOn(tgt().Z, S.K);
+  // the projectile: same mass for both; the antialpha (antihelium 4 nucleus) has charge −2e
+  const PROJ = { pos: { z: ZA, name: 'alpha' }, neg: { z: -ZA, name: 'antialpha' } };
+  const pj = () => PROJ[S.q];
+  const Ds = () => headOn(tgt().Z, S.K, pj().z);               // signed D: negative for attraction
+  const Dnow = () => Math.abs(Ds());                           // |D|, the length scale used for drawing and readouts
   const Rnuc = () => nucR(tgt().A);
   const Rcontact = () => nucR(tgt().A) + nucR(4);
   const bmax = () => Dnow() * Math.pow(10, S.bm);
@@ -510,12 +563,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   let flights = [], single = null, carry = 0, budgetLeft = 0;
   function newAlpha(b) {
     if (S.model === 'nuc') {
-      const o = orbit(b, Dnow());
-      return { kind: 'nuc', b, o, theta: o.theta };
+      const o = orbit(b, Ds());
+      return { kind: 'nuc', b, o, theta: o.theta, side: o.side };
     }
     // plum: one atom drawn; the counted angle is for the whole foil (beam) or this atom (single)
-    const R = atomR(), th1 = plumExact(b, Dnow(), R);
-    return { kind: 'plum', b, theta: th1 };
+    const R = atomR(), th1 = plumExact(b, Ds(), R);    // signed: negative turns toward the axis
+    return { kind: 'plum', b, theta: th1, side: (b < 0 ? -1 : 1) * turnSign(Ds()) };
   }
   function launch(a, animate) {
     const g = sceneGeom(); if (!g) return;
@@ -540,7 +593,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (S.model === 'plum') a.theta = plumFoil(nLayers(), Dnow(), atomR(), Math.random);
     th = a.theta;
     if (animate) { const f = launch(a, true); if (f) { f.start += Math.random() * 0.05; flights.push(f); } }
-    else { stampTrack(a); count(th); ringFlash(th, b); }
+    else { stampTrack(a); count(Math.abs(th)); ringFlash(Math.abs(th), a.side); }
   }
   function stepBeam(dt) {
     if (!playing || S.mode !== 'beam') return;
@@ -558,7 +611,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function stepFlights(now) {
     const keep = [];
     for (const f of flights) {
-      if ((now - f.start) >= f.dur) { stampTrack(f); count(f.theta); ringFlash(f.theta, f.b); }
+      if ((now - f.start) >= f.dur) { stampTrack(f); count(Math.abs(f.theta)); ringFlash(Math.abs(f.theta), f.side); }
       else keep.push(f);
     }
     flights = keep;
@@ -597,7 +650,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   let SP = null, bgCv = null, grain = null;
   function sprites() {
-    SP = { p: ballSprite(T.proton), n: ballSprite(T.neutron), nuc: ballSprite(T.pos), halo: glowSprite(T.alpha),
+    SP = { p: ballSprite(T.proton), n: ballSprite(T.neutron), pbar: ballSprite(T.neg), nuc: ballSprite(T.pos), halo: glowSprite(T.alpha),
       flash: glowSprite(T.zns, 64, T.dark ? '#f2fff8' : mix(T.zns, '#ffffff', 0.55)), src: glowSprite(T.dark ? '#ffcf70' : '#e08a1e', 32, '#fff6dc') };
     if (!grain) {
       grain = document.createElement('canvas'); grain.width = grain.height = 160; const g = grain.getContext('2d'), im = g.createImageData(160, 160), r = rng(7);
@@ -649,7 +702,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const mmul = (A, B) => { const o = new Array(9); for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) o[i * 3 + j] = A[i * 3] * B[j] + A[i * 3 + 1] * B[3 + j] + A[i * 3 + 2] * B[6 + j]; return o; };
   const now_s = () => (reduce ? 0 : performance.now() / 1000);
   // draw a cluster of nucleons centered at screen (X, Y) with px per fm k, rotated by M; returns false when too small to resolve
-  function drawCluster(c, list, X, Y, k, M, jig) {
+  function drawCluster(c, list, X, Y, k, M, jig, anti) {
     const rpx = RN * k; if (rpx < 1.1) return false;
     const t = now_s(), arr = [];
     for (const n of list) {
@@ -658,16 +711,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       arr.push([M[0] * x + M[1] * y + M[2] * z, M[3] * x + M[4] * y + M[5] * z, M[6] * x + M[7] * y + M[8] * z, n.p]);
     }
     arr.sort((a, b) => a[2] - b[2]);
-    for (const q of arr) c.drawImage(q[3] ? SP.p : SP.n, X + q[0] * k - rpx, Y - q[1] * k - rpx, 2 * rpx, 2 * rpx);
+    for (const q of arr) c.drawImage(q[3] ? (anti ? SP.pbar : SP.p) : SP.n, X + q[0] * k - rpx, Y - q[1] * k - rpx, 2 * rpx, 2 * rpx);
     return true;
   }
   const ALPHA4 = (() => { const l = nucleons(2, 4); l.forEach((n, i) => { n.p = i < 2; }); return l; })();
-  // the alpha: 2 protons and 2 neutrons, to scale (radius 1.2·4^(1/3) = 1.9 fm) but never under a few pixels
+  // the alpha: 2 protons and 2 neutrons, to scale (radius 1.2·4^(1/3) = 1.9 fm) but never under a few pixels;
+  // the antialpha: 2 antiprotons (drawn in the negative charge color) and 2 antineutrons
   function drawAlpha(c, X, Y, sc, ps, M0) {
     const Ra = nucR(4), k = Math.max(sc, 3.4 * ps / Ra), t = now_s(), R = Ra * k;
     const hr = R * 1.5 + 7 * ps; c.globalAlpha = 0.6; c.drawImage(SP.halo, X - hr, Y - hr, 2 * hr, 2 * hr); c.globalAlpha = 1;
     const M = mmul(M0 || rotY(0), mmul(rotY(1.1 * t + 0.4), rotX(0.7 * t + 0.9)));
-    if (!drawCluster(c, ALPHA4, X, Y, k, M, false)) c.drawImage(SP.halo, X - R * 1.4, Y - R * 1.4, R * 2.8, R * 2.8);
+    if (!drawCluster(c, ALPHA4, X, Y, k, M, false, S.q === 'neg')) c.drawImage(SP.halo, X - R * 1.4, Y - R * 1.4, R * 2.8, R * 2.8);
   }
   // the 3D view: v3.t eases from 0 (flat, side on) to 1 (tilted by the user's yaw and pitch)
   const v3 = { on: false, t: 0, psi: -0.5, chi: 0.3 };
@@ -723,10 +777,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function trackPath(c, a, g, wEnd, M) {
     c.beginPath();
     if (a.kind === 'nuc') {
-      const o = a.o, w0 = a.w0, w1 = wEnd === undefined ? a.w1 : wEnd, n = 64;
-      // denser sampling near closest approach: uniform in w is already good for hyperbolas
-      for (let i = 0; i <= n; i++) {
-        const w = w0 + (w1 - w0) * i / n, p = o.pos(w);
+      const o = a.o, w0 = a.w0, w1 = wEnd === undefined ? a.w1 : wEnd, ws = o.ws(w0, w1, 64);
+      // even in w, plus (attraction) even in true anomaly so the tight turn around the nucleus stays smooth
+      for (let i = 0; i < ws.length; i++) {
+        const p = o.pos(ws[i]);
         const [px, py] = M ? P3(g, M, p[0], p[1], 0) : [g.cx + p[0] * g.sc, g.cy - p[1] * g.sc];
         i ? c.lineTo(px, py) : c.moveTo(px, py);
       }
@@ -752,13 +806,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     trackPath(tctx, a, g); tctx.stroke();
     if (S.mode === 'beam' && a.theta !== undefined) {
       // beyond the scale change: straight out along the final angle to the screen
-      const sg = a.b < 0 ? -1 : 1, ca = Math.cos(a.theta), sa = -sg * Math.sin(a.theta), r0 = g.zone, r1 = g.ring - 4.5 * g.ps;
+      // the side it exits on: for attraction a particle passing above the nucleus leaves below the axis
+      const th = Math.abs(a.theta), sg = a.side, ca = Math.cos(th), sa = -sg * Math.sin(th), r0 = g.zone, r1 = g.ring - 4.5 * g.ps;
       tctx.beginPath(); tctx.moveTo(g.cx + r0 * ca, g.cy + r0 * sa); tctx.lineTo(g.cx + r1 * ca, g.cy + r1 * sa); tctx.stroke();
     }
     tctx.restore();
   }
   const flashes = [];
-  function ringFlash(th, b) { flashes.push({ th, sg: b < 0 ? -1 : 1, t: performance.now() / 1000, r: Math.random() - 0.5 }); if (flashes.length > 120) flashes.shift(); }
+  function ringFlash(th, side) { flashes.push({ th, sg: side, t: performance.now() / 1000, r: Math.random() - 0.5 }); if (flashes.length > 120) flashes.shift(); }
 
   // ---------- drawing ----------
   function drawAll() {
@@ -797,7 +852,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   function drawScene() {
-    const g = sceneGeom(), c = ctx, ps = g.ps, s = g.s, D = Dnow(), cm = camM();
+    const g = sceneGeom(), c = ctx, ps = g.ps, s = g.s, D = Ds(), cm = camM();   // D signed here
     c.save(); c.beginPath(); c.rect(s.x, s.y, s.w, s.h); c.clip();
     // beam axis
     c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.setLineDash([4, 5]); c.beginPath();
@@ -861,20 +916,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const c = ctx, ps = g.ps, s = g.s, t = tgt(), R = Rnuc();
     const bh = Math.min(s.h * 0.3, s.w * 0.24, 170 * ps), bw = 1.3 * bh; if (bh < 80) return;
     const kz = bh * 0.3 / R, zoom = kz / g.sc; if (zoom < 1.3) return;
-    const x0 = s.x + s.w - bw - 10 * ps, y0 = S.b < 0 ? s.y + 10 * ps : s.y + s.h - bh - 10 * ps;
+    const side = (S.b < 0 ? -1 : 1) * turnSign(Ds());   // keep the inset off the outgoing path
+    const x0 = s.x + s.w - bw - 10 * ps, y0 = side < 0 ? s.y + 10 * ps : s.y + s.h - bh - 10 * ps;
     c.save();
     c.beginPath(); c.roundRect ? c.roundRect(x0, y0, bw, bh, 8 * ps) : c.rect(x0, y0, bw, bh);
     c.fillStyle = T.canvas; c.globalAlpha = 0.92; c.fill(); c.globalAlpha = 1; c.strokeStyle = T.line; c.lineWidth = 1; c.stroke(); c.clip();
-    const nx = x0 + bw - 0.38 * bh, ny = y0 + 0.47 * bh, ax = x0 + 0.2 * bh, ra = nucR(4) * Math.max(kz, 3.4 * ps / nucR(4));
+    c.font = `${(bh < 125 * ps ? 9 : 10) * ps}px ${T.mono}`;
+    const nx = x0 + bw - 0.38 * bh, ny = y0 + 0.47 * bh, ax = Math.max(x0 + 0.2 * bh, x0 + c.measureText(pj().name).width / 2 + 5 * ps), ra = nucR(4) * Math.max(kz, 3.4 * ps / nucR(4));
     paintNucleus(c, nx, ny, kz, null);
     drawAlpha(c, ax, ny, kz, ps, null);
     const small = bh < 125 * ps, zs = zoom < 3 ? zoom.toFixed(1) : String(Math.round(zoom));
     c.font = `${(small ? 9 : 10) * ps}px ${T.mono}`; c.textBaseline = 'middle';
     c.fillStyle = T.muted; c.textAlign = 'left'; c.fillText(small ? `×${zs}` : `zoom ×${zs}`, x0 + 7 * ps, y0 + 11 * ps);
     // counts of protons and neutrons, in their colors
-    const two = (a, b, x, y, al) => { const wa = c.measureText(a).width, wb = c.measureText(b).width, x1 = al === 'right' ? x - wa - wb : x - (wa + wb) / 2; c.textAlign = 'left'; c.fillStyle = mix(T.proton, T.ink, 0.25); c.fillText(a, x1, y); c.fillStyle = mix(T.neutron, T.ink, 0.45); c.fillText(b, x1 + wa, y); };
-    if (small) { c.textAlign = 'center'; c.fillStyle = T.muted; c.fillText('alpha', ax, ny + ra + 9 * ps); two(`${t.Z} p`, ` + ${t.A - t.Z} n`, x0 + bw - 7 * ps, y0 + 11 * ps, 'right'); }
-    else { c.textAlign = 'center'; c.fillStyle = T.muted; c.fillText('alpha', ax, ny - ra - 9 * ps); two('2 p', ' + 2 n', ax, ny + ra + 10 * ps, 'center'); two(`${t.Z} p`, ` + ${t.A - t.Z} n`, x0 + bw - 8 * ps, y0 + bh - 23 * ps, 'right'); }
+    const two = (a, b, x, y, al) => { const wa = c.measureText(a).width, wb = c.measureText(b).width, x1 = al === 'right' ? x - wa - wb : x - (wa + wb) / 2; c.textAlign = 'left'; c.fillStyle = mix(a.includes('p̄') ? T.neg : T.proton, T.ink, 0.25); c.fillText(a, x1, y); c.fillStyle = mix(T.neutron, T.ink, 0.45); c.fillText(b, x1 + wa, y); };
+    const anti = S.q === 'neg', pn = anti ? ['2 p̄', ' + 2 n̄'] : ['2 p', ' + 2 n'];
+    if (small) { c.textAlign = 'center'; c.fillStyle = T.muted; c.fillText(pj().name, ax, ny + ra + 9 * ps); two(`${t.Z} p`, ` + ${t.A - t.Z} n`, x0 + bw - 7 * ps, y0 + 11 * ps, 'right'); }
+    else { c.textAlign = 'center'; c.fillStyle = T.muted; c.fillText(pj().name, ax, ny - ra - 9 * ps); two(pn[0], pn[1], ax, ny + ra + 10 * ps, 'center'); two(`${t.Z} p`, ` + ${t.A - t.Z} n`, x0 + bw - 8 * ps, y0 + bh - 23 * ps, 'right'); }
     // scale bar
     const L = nice(bh * 0.3 / kz), px = L * kz, bx = x0 + 8 * ps, by = y0 + bh - 9 * ps;
     c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(bx, by - 3 * ps); c.lineTo(bx, by); c.lineTo(bx + px, by); c.lineTo(bx + px, by - 3 * ps); c.stroke();
@@ -971,7 +1029,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.textAlign = 'left'; c.textBaseline = 'top';
     const farX = Math.round(Math.log10(1e13 / (R / g.sc)));
     c.fillText(`screen really ~1 cm away (~10${supNum(farX)}× farther):`, g.s.x + 10 * ps, g.s.y + 10 * ps);
-    c.fillText('each alpha lands at its final angle θ', g.s.x + 10 * ps, g.s.y + 25 * ps);
+    c.fillText(`each ${pj().name} lands at its final angle θ`, g.s.x + 10 * ps, g.s.y + 25 * ps);
     // edge of the drawn region, and a scale break between it and the screen
     c.strokeStyle = T.muted; c.globalAlpha = 0.6; c.lineWidth = 1 * ps; c.setLineDash([3 * ps, 5 * ps]);
     c.beginPath(); c.arc(g.cx, g.cy, g.zone, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]);
@@ -1067,8 +1125,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function drawCone(g, D, cm, front) {
     const c = ctx, ps = g.ps, b = Math.abs(S.b), M = cm.M, k = cm.k, f0 = S.b < 0 ? Math.PI : 0;
     if (b < 1e-9) return;
-    const o = orbit(b, D), L = g.far / g.sc, w0 = -o.wAt(L), w1 = o.wAt(L), n = 90, pts = [];
-    for (let i = 0; i <= n; i++) pts.push(o.pos(w0 + (w1 - w0) * i / n));
+    const o = orbit(b, D), L = g.far / g.sc, w0 = -o.wAt(L), w1 = o.wAt(L), pts = o.ws(w0, w1, 90).map(o.pos);
     const rot = (p, f) => [p[0], p[1] * Math.cos(f), p[1] * Math.sin(f)];
     c.save(); c.strokeStyle = T.alpha; c.lineWidth = 1.2 * ps;
     for (let j = 1; j < NPHI; j++) {
@@ -1110,46 +1167,56 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       // closest approach (a sphere: its outline is this circle from any direction) and D tick
       c.globalAlpha = fade; c.strokeStyle = T.muted; c.lineWidth = 1 * ps; c.setLineDash([3, 4]);
       c.beginPath(); c.arc(g.cx, g.cy, rm * g.sc, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]);
-      const rmA = b >= 0 ? Math.PI / 2 + th / 2 : -(Math.PI / 2 + th / 2);   // periapsis direction
+      const att = D < 0, ts = turnSign(D), sb = b < 0 ? -1 : 1, sg = sb * ts;   // sg: the side the path leaves on
+      const rmA = sb * (Math.PI / 2 + ts * th / 2);   // periapsis direction: in front of the nucleus (repulsion) or behind it (attraction)
       const [px, py] = Q(rm * Math.cos(rmA), rm * Math.sin(rmA));
       // D tick on the axis (head on turning point)
-      const [dx, dy] = Q(-D, 0);
-      c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(dx, dy - 5 * ps); c.lineTo(dx, dy + 5 * ps); c.stroke();
-      if (cm.k < 0.5) label(c, 'D', dx, dy + 15 * ps, T.ink, 'center', 'middle', true);
+      // (attraction has no turning point on the axis, so no tick)
+      if (!att) {
+        const [dx, dy] = Q(-D, 0);
+        c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(dx, dy - 5 * ps); c.lineTo(dx, dy + 5 * ps); c.stroke();
+        if (cm.k < 0.5) label(c, 'D', dx, dy + 15 * ps, T.ink, 'center', 'middle', true);
+      }
       c.globalAlpha = fade;
+      const fallIn = att && Math.abs(b) < 1e-9;   // head on attraction: straight in to the center; no asymptotes to draw
       // asymptotes
-      const P = [-b * Math.tan(th / 2), b];        // where they cross
-      const Pp = Q(P[0], P[1]), sg = b < 0 ? -1 : 1, Lw = g.far / g.sc;
+      const P = [-ts * Math.abs(D) / 2, b];        // where they cross, x = ∓|D|/2 = ∓b tan(θ/2), on the line through periapsis
+      const Lw = g.far / g.sc;
       c.strokeStyle = T.muted; c.lineWidth = 1 * ps; c.setLineDash([6, 5]);
       const seg = (p1, p2) => { const A = Q(p1[0], p1[1]), B = Q(p2[0], p2[1]); c.beginPath(); c.moveTo(A[0], A[1]); c.lineTo(B[0], B[1]); c.stroke(); };
-      seg(P, [(s.x + s.w - g.cx) / g.sc, P[1]]);
-      seg([P[0] - Lw * Math.cos(th) * 0.25, P[1] - sg * Lw * Math.sin(th) * 0.25], [P[0] + Lw * Math.cos(th), P[1] + sg * Lw * Math.sin(th)]);
+      if (!fallIn) seg(P, [(s.x + s.w - g.cx) / g.sc, P[1]]);
+      if (!fallIn) seg([P[0] - Lw * Math.cos(th) * 0.25, P[1] - sg * Lw * Math.sin(th) * 0.25], [P[0] + Lw * Math.cos(th), P[1] + sg * Lw * Math.sin(th)]);
       c.setLineDash([]); c.globalAlpha = 1;
       // trajectory: the full hyperbola, plus the moving alpha
-      const o = orbit(b, D), w0 = -o.wAt(g.far / g.sc), w1 = o.wAt(g.far / g.sc);
+      const o = orbit(b, D), w0 = -o.wAt(g.far / g.sc), w1 = o.wAt(g.far / g.sc), ws = o.ws(w0, w1, 200);
       c.strokeStyle = T.alpha; c.lineWidth = 2.2 * ps; c.beginPath();
-      for (let i = 0; i <= 200; i++) { const w = w0 + (w1 - w0) * i / 200, p = o.pos(w), [x, y] = Q(p[0], p[1]); i ? c.lineTo(x, y) : c.moveTo(x, y); }
+      for (let i = 0; i < ws.length; i++) { const p = o.pos(ws[i]), [x, y] = Q(p[0], p[1]); i ? c.lineTo(x, y) : c.moveTo(x, y); }
       c.globalAlpha = a ? 0.45 : 1; c.stroke(); c.globalAlpha = 1;
       if (a) drawFlying(a, g, 1, cm.k ? M : null);
       // r_min marker
       c.globalAlpha = fade; c.fillStyle = T.ink; c.beginPath(); c.arc(px, py, 2.5 * ps, 0, 2 * Math.PI); c.fill();
       c.strokeStyle = T.ink; c.lineWidth = 1 * ps; c.setLineDash([2, 3]); c.beginPath(); c.moveTo(g.cx, g.cy); c.lineTo(px, py); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
       const lx = (g.cx + px) / 2, ly = (g.cy + py) / 2;
-      if (cm.k < 0.5) label(c, 'r_min', lx + 6 * ps * Math.cos(rmA + Math.PI / 2), ly - 8 * ps, T.ink, 'left', 'middle');
-      // angle arc at the crossing
-      const ar = 30 * ps / g.sc;
-      c.strokeStyle = T.equi; c.lineWidth = 2 * ps; c.beginPath();
-      for (let i = 0; i <= 40; i++) { const u = th * i / 40, [x, y] = Q(P[0] + ar * Math.cos(u), P[1] + sg * ar * Math.sin(u)); i ? c.lineTo(x, y) : c.moveTo(x, y); }
-      c.stroke();
-      const mid = th / 2, [tx, ty] = Q(P[0] + (ar + 12 * ps / g.sc) * Math.cos(mid), P[1] + sg * (ar + 12 * ps / g.sc) * Math.sin(mid));
-      label(c, `θ = ${(th * 180 / Math.PI).toFixed(1)}°`, tx, ty, T.equi, Math.cos(mid) < -0.2 ? 'right' : 'left', 'middle', true);
+      // attraction: periapsis hugs the nucleus, so the label goes just outside it rather than on the nucleus
+      if (cm.k < 0.5 && !att) label(c, 'r_min', lx + 6 * ps * Math.cos(rmA + Math.PI / 2), ly - 8 * ps, T.ink, 'left', 'middle');
+      else if (cm.k < 0.5) { const ux = Math.cos(rmA), uy = -Math.sin(rmA), off = Math.max(14 * ps, Rnuc() * g.sc - rm * g.sc + 12 * ps); label(c, 'r_min', px + ux * off, py + uy * off, T.ink, ux > 0.3 ? 'left' : ux < -0.3 ? 'right' : 'center', 'middle'); }
+      if (fallIn) label(c, 'head on: falls straight into the nucleus', g.cx, g.cy - Math.max(Rnuc() * g.sc, 3 * ps) - 16 * ps, T.pos, 'center', 'middle', true);
+      else {
+        // angle arc at the crossing
+        const ar = 30 * ps / g.sc;
+        c.strokeStyle = T.equi; c.lineWidth = 2 * ps; c.beginPath();
+        for (let i = 0; i <= 40; i++) { const u = th * i / 40, [x, y] = Q(P[0] + ar * Math.cos(u), P[1] + sg * ar * Math.sin(u)); i ? c.lineTo(x, y) : c.moveTo(x, y); }
+        c.stroke();
+        const mid = th / 2, [tx, ty] = Q(P[0] + (ar + 12 * ps / g.sc) * Math.cos(mid), P[1] + sg * (ar + 12 * ps / g.sc) * Math.sin(mid));
+        label(c, `θ = ${(th * 180 / Math.PI).toFixed(1)}°`, tx, ty, T.equi, Math.cos(mid) < -0.2 ? 'right' : 'left', 'middle', true);
+      }
     } else {
       // plum pudding single alpha: straight to the eye
       const o = { kind: 'plum', b, theta: plumExact(b, D, atomR()) };
       launch(o, false);
       c.strokeStyle = T.alpha; c.lineWidth = 2.2 * ps; c.globalAlpha = a ? 0.45 : 1; trackPath(c, o, g); c.stroke(); c.globalAlpha = 1;
       if (a) drawFlying(a, g, 1);
-      label(c, `θ = ${fmtAng(o.theta)}: too small to see`, s.x + s.w - 10 * ps, g.cy - Math.abs(b) * g.sc * Math.sign(b || 1) - 14 * ps * Math.sign(b || 1), T.equi, 'right', 'middle', true);
+      label(c, `θ = ${fmtAng(Math.abs(o.theta))}: too small to see`, s.x + s.w - 10 * ps, g.cy - Math.abs(b) * g.sc * Math.sign(b || 1) - 14 * ps * Math.sign(b || 1), T.equi, 'right', 'middle', true);
     }
     // impact parameter: dimension line and draggable handle on the incoming path
     const [hx, by] = top, hot = (drag && drag.id === 'b') || (!drag && hoverId === 'b');
@@ -1181,7 +1248,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const bMaxP = bMaxSlider(), X = (b) => box.L + b / bMaxP * (box.R - box.L);
     let yTop, f, yUnit, ys;
     if (!plum) { yTop = 180; f = (b) => deflect(b, D) * 180 / Math.PI; ys = 30; yUnit = '°'; }
-    else { const R = atomR(); f = (b) => plumExact(b, D, R) * 1e6; yTop = niceUp(D / (2 * R) * 1e6 * 1.15); ys = nice(yTop / 4); yUnit = ' µrad'; }
+    else { const R = atomR(); f = (b) => Math.abs(plumExact(b, D, R)) * 1e6; yTop = niceUp(D / (2 * R) * 1e6 * 1.15); ys = nice(yTop / 4); yUnit = ' µrad'; }
     const Y = (v) => box.B - v / yTop * (box.B - box.T);
     title(box, plum ? 'Deflection by one atom, θ (µrad)' : 'Deflection θ against impact parameter b');
     // grid
@@ -1191,9 +1258,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const xs = nice(bMaxP / 4); c.textAlign = 'center'; c.textBaseline = 'top';
     for (let v = 0; v <= bMaxP + 1e-9; v += xs) { const x = Math.round(X(v)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.fillText(plum ? trim((v / 1000).toPrecision(3)) : trim(v.toPrecision(4)), x, box.B + 5); }
     c.textAlign = 'right'; c.fillText(plum ? 'b (pm)' : 'b (fm)', box.R, box.B + 20 * ps);
-    // contact region (alpha reaches the nucleus)
+    // contact region (the projectile reaches the nucleus)
     if (!plum) {
-      const bt = bTouch(recoil(0, tgt().Z, tgt().A, S.K).Dcm, Rcontact());
+      const bt = bTouch(recoil(0, tgt().Z, tgt().A, S.K, pj().z).Dcm, Rcontact());
       if (bt > 0) { const x1 = Math.min(box.R, X(Math.min(bt, bMaxP))); c.fillStyle = T.pos; c.globalAlpha = 0.1; c.fillRect(box.L, box.T, x1 - box.L, box.B - box.T); c.globalAlpha = 1;
         c.fillStyle = T.pos; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText('reaches the nucleus', box.L + 4, box.T + 4); }
       // b at 90°: b₉₀ = D/2
@@ -1259,9 +1326,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.save(); c.beginPath(); c.rect(box.L, box.T, box.R - box.L, box.B - box.T); c.clip();
     // contact shading
     if (!plum) {
-      const bt = bTouch(recoil(0, tgt().Z, tgt().A, S.K).Dcm, Rcontact());
+      const bt = bTouch(recoil(0, tgt().Z, tgt().A, S.K, pj().z).Dcm, Rcontact());
       if (bt > 0) { const thT = bt === Infinity ? 0 : deflect(bt, D); const x0 = X(thT); c.fillStyle = T.pos; c.globalAlpha = 0.1; c.fillRect(x0, box.T, box.R - x0, box.B - box.T); c.globalAlpha = 1;
-        c.fillStyle = T.pos; c.textAlign = 'right'; c.textBaseline = 'top'; c.font = `${10.5 * ps}px ${T.mono}`; c.fillText('alpha reaches the nucleus:', box.R - 4, box.T + 4); c.fillText('real counts depart here', box.R - 4, box.T + 18 * ps); }
+        c.fillStyle = T.pos; c.textAlign = 'right'; c.textBaseline = 'top'; c.font = `${10.5 * ps}px ${T.mono}`; c.fillText(`${pj().name} reaches the nucleus:`, box.R - 4, box.T + 4); c.fillText('real counts depart here', box.R - 4, box.T + 18 * ps); }
     }
     // bars
     for (let i = 0; i < nb; i++) {
@@ -1289,7 +1356,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       curve(gauss, T.equi, [], 2);
     } else curve(ruthBeam, T.equi, [], 2);
     c.restore();
-    if (fired === 0) { c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `${11 * ps}px ${T.ui}`; c.fillText('Press Play to fire alphas', (box.L + box.R) / 2, (box.T + box.B) / 2); }
+    if (fired === 0) { c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `${11 * ps}px ${T.ui}`; c.fillText(`Press Play to fire ${pj().name}s`, (box.L + box.R) / 2, (box.T + box.B) / 2); }
     axesFrame(box);
   }
 
@@ -1299,7 +1366,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('keOut').textContent = `${S.K.toFixed(2)} MeV`;
     const v = speedC(S.K);
     $('rV').textContent = `${v.toFixed(4)} c = ${(v * C_MS / 1e7).toFixed(2)} × 10⁷ m/s`;
+    const neg = S.q === 'neg', nm = pj().name;
+    $('rDLab').textContent = neg ? 'Length scale |D| = |zZ|e²/4πε₀K (no turning point)' : 'Head on distance D = zZe²/4πε₀K';
     $('rD').textContent = `${D.toPrecision(3)} fm`;
+    $('projHint').textContent = neg
+      ? 'The antialpha is the alpha’s antimatter partner: 2 antiprotons and 2 antineutrons, charge −2e, the same mass. The nucleus now attracts it, so it swings around the near side of the nucleus and crosses the axis. Each b gives the same angle θ as for the alpha, so the counts against angle are the same, but the orbit comes much closer. Antialphas are real (18 were first seen in 2011) but have never been made as a beam: this is a thought experiment.'
+      : 'An alpha is a helium nucleus, z = 2, mc² = 3727.4 MeV. Geiger and Marsden\'s 1913 source was radon with its short lived decay products, giving alphas of 5.49, 6.00 and 7.69 MeV; the fastest, from ²¹⁴Po (radium C′), is the default here. Many textbooks quote 5.5 MeV.';
     $('rZ').textContent = `+${t.Z}e`;
     $('rA').textContent = String(t.A) + (S.target === 'custom' ? ' (est.)' : '');
     $('zcOut').textContent = String(S.Zc);
@@ -1307,35 +1379,37 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       $('rRLab').textContent = 'Atom radius, πR² = (spacing)²';
       $('rR').innerHTML = `${(atomR() / 1000).toFixed(1)} pm = ${(atomR() / 1e6).toFixed(3)} nm <span class="ok">10⁴ times a nucleus</span>`;
     } else {
-      $('rRLab').textContent = 'Nuclear radius 1.2 fm · A^⅓; contact with the alpha';
+      $('rRLab').textContent = `Nuclear radius 1.2 fm · A^⅓; contact with the ${nm}`;
       $('rR').innerHTML = `${Rnuc().toFixed(2)} fm <span class="ok">contact at ${Rcontact().toFixed(2)} fm</span>`;
     }
     $('modelHint').textContent = plum
       ? 'Thomson (1904): the positive charge +Ze is spread evenly through the whole atom, with the electrons embedded in it. Inside, the force on the alpha grows in proportion to r; outside, the neutral atom exerts none. The electrons are left out: each is 7300 times lighter than an alpha and can turn it by at most m_e/m_α = 0.008°.'
-      : 'Rutherford (1911): all the positive charge and nearly all the mass sit in a nucleus about 10⁻¹⁴ m across. The contact distance is the sum of the alpha and nuclear radii, both from 1.2 fm · A^⅓.';
+      : `Rutherford (1911): all the positive charge and nearly all the mass sit in a nucleus about 10⁻¹⁴ m across. The contact distance is the sum of the ${nm} and nuclear radii, both from 1.2 fm · A^⅓.`;
     // single
     const b = Math.abs(S.b);
     $('bOut').textContent = fmtLen(b);
     if (!plum) {
-      const th = deflect(b, D), rm = rMin(b, D), rc = recoil(b, t.Z, t.A, S.K);
-      $('thLab').textContent = 'Deflection θ = 2 arctan(D/2b)';
+      const th = deflect(b, D), rm = rMin(b, Ds()), rc = recoil(b, t.Z, t.A, S.K, pj().z);
+      $('thLab').textContent = neg ? 'Deflection θ = 2 arctan(|D|/2b), toward the nucleus' : 'Deflection θ = 2 arctan(D/2b)';
       $('rTh').textContent = `${(th * 180 / Math.PI).toFixed(2)}°`;
-      $('rmLab').innerHTML = 'Closest approach r<sub>min</sub> = (D/2)(1 + √(1 + (2b/D)²))';
+      $('rmLab').innerHTML = neg ? 'Closest approach r<sub>min</sub> = (|D|/2)(√(1 + (2b/D)²) − 1)' : 'Closest approach r<sub>min</sub> = (D/2)(1 + √(1 + (2b/D)²))';
       $('rRm').innerHTML = `${rm.toPrecision(4)} fm <span class="ok">${(rm / Rnuc()).toFixed(1)} nuclear radii</span>`;
       $('recoilRow').hidden = false;
       $('rRec').innerHTML = `θ = ${(rc.th * 180 / Math.PI).toFixed(2)}°, r<sub>min</sub> = ${rc.rmin.toPrecision(4)} fm <span class="ok">(K in the center of mass frame ${(S.K * t.A * AMU / (t.A * AMU + MA)).toFixed(2)} MeV)</span>`;
       const touch = rc.rmin < Rcontact();
       $('touch').hidden = !touch || S.mode !== 'single';
-      if (touch) $('touch').innerHTML = `The alpha now touches the nucleus.<span>Closest approach ${rc.rmin.toFixed(2)} fm is inside the contact distance ${Rcontact().toFixed(2)} fm. The strong force acts here and pure Rutherford scattering fails; this demo keeps only the Coulomb force.</span>`;
-      $('singleHint').textContent = 'Head on (b = 0) the alpha stops at D and turns back. At b = D/2 it turns through exactly 90°. Raise K and D shrinks as 1/K, so the same b gives a smaller angle.';
+      if (touch) $('touch').innerHTML = `The ${nm} now touches the nucleus.<span>Closest approach ${rc.rmin.toFixed(2)} fm is inside the contact distance ${Rcontact().toFixed(2)} fm. ${neg ? 'A real antialpha would annihilate with the nucleus here; ' : 'The strong force acts here and pure Rutherford scattering fails; '}this demo keeps only the Coulomb force.</span>`;
+      $('singleHint').textContent = neg
+        ? `The same b gives the same θ as for the alpha, but the path bends toward the nucleus and crosses the axis behind it. Closest approach is (|D|/2)(1/sin(θ/2) − 1) instead of (|D|/2)(1/sin(θ/2) + 1), so here every antialpha turned past ${(deflect(bTouch(rc.Dcm, Rcontact()), D) * 180 / Math.PI).toFixed(0)}° reaches the nucleus. Head on it falls straight in.`
+        : 'Head on (b = 0) the alpha stops at D and turns back. At b = D/2 it turns through exactly 90°. Raise K and D shrinks as 1/K, so the same b gives a smaller angle.';
     } else {
-      const th = plumExact(b, D, atomR());
-      $('thLab').textContent = 'Deflection by this atom (exact motion inside the sphere)';
+      const th = Math.abs(plumExact(b, Ds(), atomR()));
+      $('thLab').textContent = `Deflection by this atom (exact motion inside the sphere${neg ? ', toward its center' : ''})`;
       $('rTh').textContent = fmtAng(th);
       $('rmLab').textContent = 'Largest possible for one atom, D/2R at b = R/√2';
       $('rRm').textContent = fmtAng(D / (2 * atomR()));
       $('recoilRow').hidden = true; $('touch').hidden = true;
-      $('singleHint').textContent = 'The alpha goes through the atom. Inside a uniform sphere of charge the field grows only as r and is weak everywhere, because the charge is spread over a region 10⁴ times wider than a nucleus.';
+      $('singleHint').textContent = `The ${nm} goes through the atom.` + ' Inside a uniform sphere of charge the field grows only as r and is weak everywhere, because the charge is spread over a region 10⁴ times wider than a nucleus.';
     }
     // beam settings
     $('rateOut').textContent = `${RATES[S.rate]} per second`;
@@ -1386,6 +1460,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // ---------- controls ----------
   function syncUI() {
     $('ke').value = S.K;
+    $('qPos').setAttribute('aria-pressed', String(S.q === 'pos')); $('qNeg').setAttribute('aria-pressed', String(S.q === 'neg'));
+    $('mSingle').textContent = `One ${pj().name}`; $('singleH').textContent = `One ${pj().name}`;
     $('mSingle').setAttribute('aria-pressed', String(S.mode === 'single')); $('mBeam').setAttribute('aria-pressed', String(S.mode === 'beam'));
     $('aNuc').setAttribute('aria-pressed', String(S.model === 'nuc')); $('aPlum').setAttribute('aria-pressed', String(S.model === 'plum'));
     for (const b of document.querySelectorAll('#targets button')) b.setAttribute('aria-pressed', String(b.dataset.t === S.target));
@@ -1416,7 +1492,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   function applyPreset(name) {
     const p = PRESETS[name];
-    S.model = p.model; S.mode = p.mode; S.target = p.target; S.K = p.K;
+    S.model = p.model; S.mode = p.mode; S.target = p.target; S.K = p.K; S.q = p.q || 'pos';   // the presets are alpha experiments
     if (p.b !== undefined) S.b = p.b;
     if (p.bm !== undefined) S.bm = p.bm;
     if (p.rate !== undefined) S.rate = p.rate;
@@ -1449,6 +1525,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   function setMode(m) { if (S.mode === m) return; S.mode = m; custom(); if (m === 'single' && S.model === 'nuc') S.b = Math.min(Math.abs(S.b) || Dnow(), niceUp(2.6 * Dnow())); rebuild({ fit: true }); if (m === 'single' && S.model === 'plum') { S.b = atomR() * 0.5; syncB(); readouts(); fireSingle(); } }
   function setModel(m) { if (S.model === m) return; S.model = m; custom(); if (m === 'plum' && S.mode === 'beam') S.range = 'small'; if (m === 'nuc') S.range = 'full'; fitView(); S.b = m === 'plum' ? atomR() * 0.5 : Math.min(Dnow(), S.view); rebuild(); }
+  // flipping the charge keeps every other setting, so the two paths can be compared at the same b and K
+  function setQ(q) { if (S.q === q) return; S.q = q; custom(); rebuild(); }
+  $('qPos').addEventListener('click', () => setQ('pos'));
+  $('qNeg').addEventListener('click', () => setQ('neg'));
   $('mSingle').addEventListener('click', () => setMode('single'));
   $('mBeam').addEventListener('click', () => setMode('beam'));
   $('aNuc').addEventListener('click', () => setModel('nuc'));
@@ -1541,6 +1621,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else if (e.key === ' ') setPlaying(!playing);
     else if (e.key === 'b' || e.key === 'B') setMode(S.mode === 'beam' ? 'single' : 'beam');
     else if (e.key === 'p' || e.key === 'P') setModel(S.model === 'plum' ? 'nuc' : 'plum');
+    else if (e.key === 'q' || e.key === 'Q') setQ(S.q === 'neg' ? 'pos' : 'neg');
     else if (e.key === 'f' || e.key === 'F') $('fire').click();
     else if (e.key === 'c' || e.key === 'C') { clearCounts(); countReadouts(); }
     else return;
@@ -1588,7 +1669,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     requestAnimationFrame(loop);
   }
   window.__rs = { get frameMs() { return frameMs; }, get S() { return S; }, get fired() { return fired; }, get past90() { return past90; }, get bins() { return bins; }, get throttled() { return throttled; },
-    setRate(i) { S.rate = i; $('rate').value = i; readouts(); }, setPlaying, handles() { return dragHandles().map((h) => ({ id: h.id, seg: h.seg })); }, fireMany(n) { for (let i = 0; i < n; i++) { if (i < n - 300) { const b = sampleB(S.model === 'nuc' ? bmax() : atomR(), Math.random()); count(S.model === 'nuc' ? deflect(b, Dnow()) : plumFoil(nLayers(), Dnow(), atomR(), Math.random)); } else beamOne(false); } countReadouts(); } };
+    setRate(i) { S.rate = i; $('rate').value = i; readouts(); }, setPlaying, setQ, setB, handles() { return dragHandles().map((h) => ({ id: h.id, seg: h.seg })); }, fireMany(n) { for (let i = 0; i < n; i++) { if (i < n - 300) { const b = sampleB(S.model === 'nuc' ? bmax() : atomR(), Math.random()); count(S.model === 'nuc' ? deflect(b, Dnow()) : plumFoil(nLayers(), Dnow(), atomR(), Math.random)); } else beamOne(false); } countReadouts(); } };
 
   tokens();
   const ro = new ResizeObserver(() => resize());

@@ -66,6 +66,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>The deflection of one alpha is set by its impact parameter b: smaller b, closer approach, larger angle, θ = 2 arctan(D/2b).</li>
 <li>The head on distance D = zZe²/(4πε₀K) is where all the kinetic energy has become Coulomb energy. It gives the scale of the whole problem and an upper bound on the size of the nucleus.</li>
 <li>Counts per solid angle fall as 1/sin⁴(θ/2), and the fraction turned past 90° tells you how small the target is.</li>
+<li>Flipping the sign of the force (an antialpha, charge −2e) leaves θ(b) and the counts against angle unchanged, because they depend on (zZ)², but the path wraps around the nucleus and comes much closer.</li>
 </ul>
 <h2>Before class</h2>
 <p>Students should know Coulomb's law and conservation of energy. Angular momentum helps for the closest approach readout but is not required. Open the demo once in projector mode so the preset buttons and the plot are large enough for the room.</p>
@@ -76,6 +77,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>Head on.</strong> At b = 0 the alpha stops at D = 29.6 fm and comes straight back. Compare D with the nuclear radius in the rail (about 7 fm for gold): the alpha never touches the nucleus, so only the Coulomb force acts.</li>
 <li><strong>Geiger–Marsden beam.</strong> Point out the scale break: the tracks are drawn on a femtometer scale, but the real screen is about a centimeter away, so each alpha lands at its final angle θ (the brief ray from the dashed circle), not where its track would cross the drawn screen. Let the counts build on the log plot. The points follow 1/sin⁴(θ/2) over four decades. Read off the fraction turned past 90° and compare with the expected value (b₉₀/b_max)².</li>
 <li><strong>Aluminum, high energy</strong> (if time allows). D is now about the same as the nuclear radius, so the alpha reaches the nucleus and the strong force acts. Pure Rutherford scattering fails at large angles; this is how the size of nuclei was first measured.</li>
+<li><strong>Flip the charge</strong> (if time allows). Go back to One alpha, gold, and switch Projectile to Antialpha, −2e. Ask Q7 first. The angle stays 61.2°, but the path now bends toward the nucleus, crosses the axis behind it, and comes within 14.3 fm instead of 43.8 fm. Then switch to Beam: the histogram is the same, but the shaded band shows that every antialpha turned past about 77° reaches the nucleus.</li>
 </ol>
 <h2>Questions</h2>
 <div class="q"><p><strong>Q1.</strong> Predict: in Thomson's plum pudding atom the positive charge fills the whole atom. If you fire alpha particles at a thin gold foil made of such atoms, will any come straight back? Why or why not?</p></div>
@@ -89,11 +91,14 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <div class="q"><p><strong>Q5.</strong> Only alphas with b smaller than D/2 are turned past 90°. If the alpha energy is doubled, what happens to the fraction turned past 90°?</p></div>
 
 <div class="q"><p><strong>Q6.</strong> In the aluminum preset the measured counts at large angles fall below the Rutherford prediction. What is happening to those alphas, and what does it tell you about the aluminum nucleus?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Switch the projectile from the alpha to the antialpha (the same mass, charge −2e) at b = 25 fm on gold. Predict before you look: does the deflection angle change? Does the closest approach change? Why are the counts against angle in Beam mode the same for both?</p></div>
 <h2>Common misconceptions</h2>
 <ul>
 <li><strong>"The alpha hits the nucleus and bounces off."</strong> For gold at these energies it never touches it: it turns around at least 29.6 fm away, about four nuclear radii, pushed only by the Coulomb force.</li>
 <li><strong>"Most alphas bounce back."</strong> Almost all pass with a small deflection; only about one in tens of thousands is turned past 90° in a real foil. The surprise was that any came back at all.</li>
 <li><strong>"The plum pudding atom fails because it has the wrong total charge."</strong> The total charge is the same in both models. What differs is how concentrated it is, which sets how strong the force can get.</li>
+<li><strong>"A negative particle would be pulled straight into the nucleus."</strong> Only head on. With any impact parameter it has angular momentum, so it swings around the nucleus on a hyperbola and flies off again, turned by the same angle a positive particle would be.</li>
 <li><strong>"The alpha follows a straight line and then turns sharply."</strong> The path is a smooth hyperbola, symmetric about the line through the point of closest approach.</li>
 </ul>
 <h2>Physics behind the demo</h2>
@@ -102,6 +107,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>The beam fires alphas at random b with uniform density over the beam's cross section. Counts are binned per steradian and compared with the Rutherford cross section, dσ/dΩ = (D/4)² / sin⁴(θ/2).</li>
 <li>The plum pudding atom is a uniform sphere of positive charge with point electrons ignored; the alpha takes a small random kick from each atom it crosses, and the kicks add like a random walk.</li>
 <li>An option lets the nucleus recoil (lab frame); with it off, the nucleus is fixed.</li>
+<li>The Projectile control swaps the alpha for an antialpha, the antihelium 4 nucleus: the same mass, charge −2e. The orbit is then the hyperbola branch around the nucleus, with r_min = (|D|/2)(1/sin(θ/2) − 1) instead of (|D|/2)(1/sin(θ/2) + 1). Antialphas are real but have never been made as a beam, so this is a thought experiment; a real one reaching the nucleus would annihilate, which the demo only flags. A negative ion would not work as a negative probe: its extra electron is bound by about an electron volt and is stripped in the first atomic layers of the foil.</li>
 <li>The aluminum preset marks where the strong force would act (the alpha reaching the nuclear radius 1.2 A^⅓ fm). The demo does not model nuclear forces; it shows where the Rutherford formula stops applying.</li>
 </ul>
 <h2>Going further</h2>
