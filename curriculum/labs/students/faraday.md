@@ -61,5 +61,5 @@ Why can nonzero B give zero current? Why does N not change flux per turn? Why do
 ## Optional feature-branch instrumentation
 On the curriculum branch only, **Step 1 ms**, **Advance by (s)** / **Advance and pause**, **Capture measurement**, and notebook/run CSV provide precise samples. Keep **Hide predicted amplitudes and integral checks** selected; some theoretical plot overlays remain. Exported flux belongs at endpoint t, while ε/I belong at the recorded interval midpoint. Exclude the zero-duration initial row from fits. A run retains at most 60001 samples; parameter changes start a new run and speed changes are recorded per row. Generator runs of 2 s and default magnet runs of 2 s are sufficient for the prescribed measurements. Submit raw CSV and independently fitted results if using this extension.
 
-## Submission and rubric
-Prelab 15; generator data/scaling 30; rails signs, inferred B and coasting energy 25; magnet integral comparison 15; uncertainty/conceptual answers 15. Submit settings, raw manual tables or branch CSV, screenshots, plots, fit coefficients or bracketed estimates, and conclusions.
+## Submission
+Submit settings, raw manual tables or branch CSV, screenshots, plots, fit coefficients or bracketed estimates, and conclusions.

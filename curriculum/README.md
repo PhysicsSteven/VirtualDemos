@@ -1,10 +1,10 @@
 # VirtualDemos laboratory curriculum — starter collection
 
-This directory contains **27 student laboratory documents and 27 instructor guides**. These are **draft teaching materials**, not validated measurements or approved grading keys. The feature branch includes RLC and Faraday measurement improvements. See [executed validation and limitations](validation/SPRINT_2026-10-18.md); public demo links serve main until the owner merges the branch.
+This directory contains **27 student laboratory documents**; companion instructor guides and rubrics are held in the private TeacherKeys repository. These are **draft teaching materials**, not validated measurements or approved grading keys. The feature branch includes RLC and Faraday measurement improvements. See [executed validation and limitations](validation/SPRINT_2026-10-18.md); public demo links serve main until the owner merges the branch.
 
 ## Structure
 - [Student labs](labs/students/) — guided activities, measurement tables, graphs, uncertainty and conclusions
-- [Instructor guides](labs/instructors/) — analytic benchmarks, grading guidance, pre-assignment checks
+- [Instructor guides (private)](https://github.com/PhysicsSteven/TeacherKeys/tree/main/curriculum/curriculum-virtual-lab-starter-kits/curriculum/labs/instructors) — analytic benchmarks and grading guidance
 - [Validation guide](validation/README.md) — how to check each demonstration before grading
 - [Claude handoff](CLAUDE_HANDOFF.md) — outstanding work and implementation recommendations
 

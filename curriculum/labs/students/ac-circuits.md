@@ -47,4 +47,4 @@ The frequency slider has adjacent-step ratio 10^0.01. Use neighboring sampled fr
 
 Questions: Can a component voltage exceed the source? Is the half-power bandwidth symmetric about f0? Does ideal LC at resonance have a finite steady current? What real circuit effects would lower Q?
 
-Submission/rubric: derivations 20; single-element/KVL checks 15; resonance data and inferred components 30; transient/Q comparison 20; power, uncertainty and interpretation 15.
+Submit derivations, single-element/KVL checks, resonance data and inferred components, transient/Q comparisons, and power/uncertainty analysis.

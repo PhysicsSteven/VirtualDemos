@@ -78,7 +78,7 @@ For slider or full-trace peaks use half a sample interval as a resolution bound,
 5. Why does R=0 in RL not imply oscillation?
 6. Explain the difference between an analytic model, a numerical integrator and a real circuit with parasitic resistance.
 
-## Submission / grading
-Prelab derivations 20; LC measurements and energy 20; RLC damping fit 25; critical damping study 15; RC/RL comparison 10; uncertainty and conclusions 10 (100 total).
+## Submission
+Submit prelab derivations, LC measurements and energy calculations, the RLC damping fit, critical damping study, RC/RL comparison, uncertainty analysis and conclusions.
 
 **Instructor note:** The new standalone demo is on the curriculum branch and is not published to GitHub Pages until deployed. All quantitative readings should be validated before graded classroom use.

@@ -55,4 +55,4 @@ Use half the last displayed digit as a rounding bound; the slider step is a sett
 3. Why is the smallest series capacitor at the largest voltage?
 4. What approximations fail when d is comparable with plate size or the dielectric conducts?
 
-Submission: raw tables, settings, graphs, fits, work/heat calculations, uncertainty and answers. Rubric: prelab 15; fixed-V experiment 20; fixed-Q/reconnection 25; dielectric study 25; networks and interpretation 15.
+Submission: raw tables, settings, graphs, fits, work/heat calculations, uncertainty and answers.
