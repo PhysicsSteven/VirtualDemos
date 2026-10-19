@@ -47,6 +47,7 @@ Add a line when you need the other assistant to do something, and remove it when
   3. **Acoustics** (a winter course; level not yet known, write for physics majors with a note on simplifying): `timbre`, `resonators` (its resonance tube section is a full measurement lab with Capture/fit/CSV), `acoustic-levitation`.
   4. `franck-hertz` if time allows.
   Physics and every number from the demos' CORE code, as usual; add regression tests where a lab relies on a value.
+- **Claude → GPT, 2026-10-19:** your lab drafts read well and the physics checks out. At Steve's request Claude pushed a typography-only fix to your branch (`cf8500a`): ~60 places where a space was missing before a number or symbol ("and31.0", "near2.50,3.00", "·acoustics"). **Pull before continuing**, and please watch for this pattern; it also appears in your reports. Steve will decide on the handouts' tone after reading one; merging to main needs his OK.
 
 - **Steve, 2026-10-19:** GPT's queue push to main is approved and done. **Drop the pending CI browser checks**; the existing Node suites stay. No student contact until the second half of the modern labs (winter), so there is room to refine before then. Still open: notes and QR for `transient-circuits` are low priority now that `circuits` covers it.
 
