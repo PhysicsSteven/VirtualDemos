@@ -1,0 +1,1723 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Resonators</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one canvas per resonator (resonance tube, pipe, string, bottle) on a lab bench; instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e6ecec;
+  --surface: #f7fafa;
+  --canvas: #fcfefe;
+  --ink: #142226;
+  --muted: #566a70;
+  --line: #cbd8da;
+  --grid: #e2eaeb;
+  --grid-strong: #c6d4d6;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #0d7a7e;
+  --paper: #f8faf7;
+  --water: #4aa6c4;
+  --glass: #7d98a3;
+  --brass: #a7740b;
+  --wood: #f0e4c8;
+  --wood-edge: #c9b48c;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1214; --surface: #131c1f; --canvas: #0f171a; --ink: #e0eaec; --muted: #93a6ab;
+    --line: #24353a; --grid: #162124; --grid-strong: #223238; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #3cc3c6; --paper: #0d1518; --water: #3a87a3; --glass: #5f7a84;
+    --brass: #e2b350; --wood: #2a2418; --wood-edge: #5c4d33; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b1214; --surface: #131c1f; --canvas: #0f171a; --ink: #e0eaec; --muted: #93a6ab;
+  --line: #24353a; --grid: #162124; --grid-strong: #223238; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #3cc3c6; --paper: #0d1518; --water: #3a87a3; --glass: #5f7a84;
+  --brass: #e2b350; --wood: #2a2418; --wood-edge: #5c4d33; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--paper); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.count { margin-left: auto; font-size: 0.88rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#can { touch-action: none; outline: none; }
+#can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn[aria-pressed="true"] { background: var(--accent); color: var(--canvas); border-color: var(--accent); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg.view button[aria-pressed="true"] { background: var(--accent); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; max-width: 100%; }
+
+/* the sound button: teal when on, so its state reads at a glance */
+.snd { display: inline-flex; align-items: center; gap: 7px; }
+.snd svg { width: 18px; height: 18px; flex: none; }
+.snd .waves { opacity: 0; }
+.snd[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.snd[aria-pressed="true"] .waves { opacity: 1; }
+.snd[aria-pressed="true"] .mute { opacity: 0; }
+.vol { display: inline-flex; align-items: center; gap: 6px; font-size: 0.84rem; color: var(--muted); }
+.vol input { width: 90px; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd small { font-size: 0.78rem; font-weight: 400; color: var(--muted); }
+.readout .wide { grid-column: 1 / -1; }
+.readout dd.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; font-family: var(--font-ui); }
+
+.toggles { display: grid; grid-template-columns: 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.disp { border-color: var(--neg); border-top-width: 3px; }
+.swatch.pres { border-color: var(--pos); border-top-width: 3px; }
+.swatch.acc { border-color: var(--accent); border-top-width: 3px; }
+.swatch.calc { border-color: var(--muted); border-top-style: dashed; }
+.swatch.gold { border-color: var(--equi); border-top-style: dashed; }
+.swatch.ink { border-color: var(--ink); border-top-width: 3px; }
+.swatch.water { height: 10px; border: 0; border-radius: 2px; background: var(--water); opacity: 0.7; }
+.swatch.dot { width: 10px; height: 10px; border: 0; border-radius: 50%; margin: 0 6px; background: var(--accent); }
+.swatch.brassdot { width: 10px; height: 10px; border: 0; border-radius: 50%; margin: 0 6px; background: var(--brass); }
+
+.twrap { overflow-x: auto; }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+table.rows th { text-align: left; font-weight: 700; color: var(--muted); font-size: 0.72rem; padding: 3px 3px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.rows td { padding: 3px 3px; border-bottom: 1px solid var(--grid-strong); vertical-align: middle; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+table.rows td.n { color: var(--muted); }
+table.rows input { font: inherit; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.78rem; width: 4.4em; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 4px; padding: 2px 3px; }
+table.rows input.k { width: 2.6em; }
+table.rows .u { color: var(--muted); font-size: 0.7rem; margin-left: 2px; }
+table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 2px; }
+.plotbox { position: relative; height: 190px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seed { width: 6.5em; font: inherit; font-family: var(--font-mono); font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.note { margin: 0; font-size: 0.82rem; color: var(--pos); }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines; a lower stage floor keeps the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+  :root[data-projector="on"] .stage-ctl { padding: 6px 10px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj, select, .seed { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  table.rows input { min-height: 32px; }
+  table.rows button { min-height: 36px; min-width: 32px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 86vh; min-height: 620px; }
+  .rail { overflow: visible; }
+  .count { margin-left: 0; }
+  .vol input { width: 110px; }
+}
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Resonators</h1>
+      <p>What sets the pitch of an instrument? The size of its resonator and the speed of the wave inside it. Find the speed of sound with a resonance tube, pluck a string to see which harmonics it gets, and blow across a bottle whose note follows its volume, not its height.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">f in Hz · c in m/s · lengths in cm or m · tension in N · μ in g/m</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/resonators.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/resonators.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM13 2h1v1h-1zM15 2h1v1h-1zM17 2h1v1h-1zM19 2h1v1h-1zM21 2h2v1h-2zM27 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM13 3h1v1h-1zM18 3h1v1h-1zM20 3h2v1h-2zM24 3h3v1h-3zM28 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h2v1h-2zM15 4h1v1h-1zM17 4h1v1h-1zM19 4h2v1h-2zM23 4h2v1h-2zM26 4h1v1h-1zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h5v1h-5zM17 5h1v1h-1zM20 5h1v1h-1zM26 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM16 6h1v1h-1zM19 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM14 7h1v1h-1zM18 7h2v1h-2zM21 7h2v1h-2zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM16 9h1v1h-1zM18 9h1v1h-1zM21 9h3v1h-3zM25 9h1v1h-1zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM15 10h4v1h-4zM21 10h2v1h-2zM25 10h2v1h-2zM30 10h6v1h-6zM38 10h1v1h-1zM6 11h1v1h-1zM10 11h3v1h-3zM20 11h2v1h-2zM23 11h2v1h-2zM26 11h2v1h-2zM29 11h3v1h-3zM34 11h4v1h-4zM6 12h6v1h-6zM13 12h1v1h-1zM15 12h3v1h-3zM21 12h1v1h-1zM23 12h3v1h-3zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h1v1h-1zM7 13h1v1h-1zM11 13h1v1h-1zM13 13h1v1h-1zM15 13h5v1h-5zM21 13h6v1h-6zM29 13h3v1h-3zM33 13h2v1h-2zM36 13h2v1h-2zM8 14h2v1h-2zM11 14h4v1h-4zM16 14h1v1h-1zM19 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM6 15h2v1h-2zM9 15h1v1h-1zM12 15h2v1h-2zM16 15h3v1h-3zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h3v1h-3zM8 16h3v1h-3zM14 16h1v1h-1zM17 16h1v1h-1zM19 16h1v1h-1zM22 16h1v1h-1zM25 16h3v1h-3zM29 16h1v1h-1zM31 16h1v1h-1zM33 16h5v1h-5zM5 17h2v1h-2zM10 17h1v1h-1zM13 17h3v1h-3zM17 17h1v1h-1zM19 17h4v1h-4zM24 17h1v1h-1zM26 17h1v1h-1zM30 17h5v1h-5zM36 17h1v1h-1zM38 17h1v1h-1zM4 18h1v1h-1zM6 18h3v1h-3zM16 18h1v1h-1zM20 18h1v1h-1zM24 18h1v1h-1zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM5 19h2v1h-2zM9 19h1v1h-1zM15 19h2v1h-2zM18 19h1v1h-1zM21 19h2v1h-2zM25 19h1v1h-1zM27 19h1v1h-1zM29 19h2v1h-2zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h1v1h-1zM4 20h2v1h-2zM8 20h3v1h-3zM12 20h2v1h-2zM18 20h3v1h-3zM22 20h2v1h-2zM25 20h2v1h-2zM28 20h9v1h-9zM2 21h5v1h-5zM10 21h1v1h-1zM12 21h1v1h-1zM16 21h1v1h-1zM19 21h1v1h-1zM23 21h1v1h-1zM25 21h2v1h-2zM28 21h1v1h-1zM31 21h1v1h-1zM36 21h2v1h-2zM3 22h1v1h-1zM6 22h1v1h-1zM8 22h3v1h-3zM13 22h1v1h-1zM16 22h2v1h-2zM19 22h1v1h-1zM21 22h6v1h-6zM29 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM3 23h2v1h-2zM6 23h1v1h-1zM11 23h1v1h-1zM13 23h2v1h-2zM16 23h4v1h-4zM22 23h1v1h-1zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM5 24h1v1h-1zM8 24h2v1h-2zM11 24h1v1h-1zM14 24h1v1h-1zM17 24h2v1h-2zM20 24h1v1h-1zM22 24h4v1h-4zM27 24h1v1h-1zM29 24h1v1h-1zM33 24h4v1h-4zM3 25h1v1h-1zM5 25h3v1h-3zM9 25h1v1h-1zM11 25h2v1h-2zM17 25h1v1h-1zM21 25h3v1h-3zM26 25h1v1h-1zM28 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h1v1h-1zM4 26h1v1h-1zM7 26h2v1h-2zM10 26h3v1h-3zM15 26h2v1h-2zM18 26h1v1h-1zM22 26h1v1h-1zM25 26h2v1h-2zM28 26h2v1h-2zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM7 27h1v1h-1zM9 27h1v1h-1zM13 27h2v1h-2zM16 27h1v1h-1zM20 27h2v1h-2zM24 27h2v1h-2zM27 27h5v1h-5zM34 27h2v1h-2zM6 28h3v1h-3zM10 28h3v1h-3zM14 28h1v1h-1zM17 28h1v1h-1zM19 28h3v1h-3zM24 28h2v1h-2zM27 28h3v1h-3zM31 28h4v1h-4zM36 28h1v1h-1zM5 29h1v1h-1zM10 29h1v1h-1zM13 29h1v1h-1zM15 29h1v1h-1zM17 29h10v1h-10zM33 29h2v1h-2zM36 29h3v1h-3zM2 30h4v1h-4zM7 30h2v1h-2zM11 30h3v1h-3zM15 30h1v1h-1zM19 30h1v1h-1zM22 30h2v1h-2zM26 30h1v1h-1zM29 30h6v1h-6zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h1v1h-1zM12 31h1v1h-1zM14 31h1v1h-1zM16 31h1v1h-1zM18 31h1v1h-1zM20 31h1v1h-1zM23 31h1v1h-1zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h2v1h-2zM13 32h3v1h-3zM17 32h3v1h-3zM22 32h1v1h-1zM25 32h1v1h-1zM27 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h4v1h-4zM17 33h1v1h-1zM19 33h2v1h-2zM24 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM15 34h1v1h-1zM17 34h1v1h-1zM20 34h1v1h-1zM24 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h2v1h-2zM14 35h1v1h-1zM16 35h1v1h-1zM18 35h1v1h-1zM21 35h3v1h-3zM25 35h1v1h-1zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM14 36h1v1h-1zM16 36h1v1h-1zM18 36h2v1h-2zM22 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h1v1h-1zM14 37h2v1h-2zM19 37h2v1h-2zM23 37h3v1h-3zM28 37h2v1h-2zM31 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h2v1h-2zM16 38h2v1h-2zM19 38h1v1h-1zM21 38h6v1h-6zM29 38h1v1h-1zM31 38h1v1h-1zM33 38h1v1h-1zM36 38h3v1h-3z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <button type="button" class="btn snd" id="sound" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor" stroke-width="1.5"/><path class="waves" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="mute" d="M17 9.5l5 5M22 9.5l-5 5"/></svg><span id="soundTxt">Sound off</span></button>
+        <label class="vol" for="vol">Volume <input type="range" id="vol" min="0" max="1" step="0.01" value="0.5"></label>
+        <div class="seg view" role="group" aria-label="Resonator" id="viewSeg">
+          <button type="button" data-v="pipe" aria-pressed="true">Pipes</button>
+          <button type="button" data-v="string" aria-pressed="false">Strings</button>
+          <button type="button" data-v="bottle" aria-pressed="false">Bottle</button>
+        </div>
+        <div class="seg" role="group" aria-label="Pipe" id="pipeSeg">
+          <button type="button" data-m="tube" aria-pressed="true">Resonance tube</button>
+          <button type="button" data-m="open" aria-pressed="false">Open pipe</button>
+          <button type="button" data-m="closed" aria-pressed="false">Closed pipe</button>
+        </div>
+        <div class="seg" role="group" aria-label="Excite the string" id="exSeg" hidden>
+          <button type="button" data-e="pluck" aria-pressed="true">Pluck</button>
+          <button type="button" data-e="bow" aria-pressed="false">Bow</button>
+        </div>
+        <button type="button" class="btn" id="play">Pause</button>
+        <span class="count mono" id="clock"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="Resonator drawing. Resonance tube: drag the water surface or use up and down (shift for 1 cm steps), Enter captures a reading. Pipe: drag the right end of the pipe or use left and right, up and down change the mode. String: drag the pluck grip to pull the string and let go to pluck; left and right move the pluck point, Enter plucks. Bottle: drag the water surface or use up and down, Enter starts or stops blowing. Space pauses."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Presets</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="tube" aria-pressed="true">Resonance tube, find c</button>
+          <button type="button" data-p="pipes" aria-pressed="false">Open vs closed pipe</button>
+          <button type="button" data-p="middle" aria-pressed="false">Pluck at the middle</button>
+          <button type="button" data-p="guitar" aria-pressed="false">Guitar string</button>
+          <button type="button" data-p="bottle" aria-pressed="false">Bottle, blow across it</button>
+          <button type="button" data-p="fill" aria-pressed="false">Fill the bottle</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section data-show="pipe bottle">
+        <h2>Air</h2>
+        <div>
+          <div class="slider-head"><label for="temp">Air temperature</label><output id="tempOut" class="mono" for="temp"></output></div>
+          <input type="range" id="temp" min="-10" max="40" step="0.5" value="20">
+        </div>
+        <dl class="readout">
+          <div><dt>Speed of sound c</dt><dd id="rC">—</dd></div>
+          <div><dt>Wavelength at the note</dt><dd id="rLam">—</dd></div>
+        </dl>
+        <p class="hint">c = 331.3 m/s × √(1 + t/273.15 °C), the ideal gas result c = √(γRT/M) for dry air (γ = 1.400, M = 28.96 g/mol), which gives 331.3 m/s at 0 °C. Humidity raises c slightly and is left out.</p>
+      </section>
+
+      <!-- resonance tube -->
+      <section data-show="tube">
+        <h2>Resonance tube</h2>
+        <div>
+          <div class="slider-head"><label for="fork">Source frequency f</label><output id="forkOut" class="mono" for="fork"></output></div>
+          <input type="range" id="fork" min="250" max="1000" step="1" value="512">
+        </div>
+        <div class="chips" id="forks" aria-label="Tuning forks">
+          <button type="button" data-f="256">256</button><button type="button" data-f="320">320</button><button type="button" data-f="384">384</button><button type="button" data-f="440">440</button><button type="button" data-f="512">512 Hz</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="water">Water surface below the top</label><output id="waterOut" class="mono" for="water"></output></div>
+          <input type="range" id="water" min="0.020" max="0.980" step="0.001" value="0.100">
+        </div>
+        <div>
+          <div class="slider-head"><label for="tdia">Tube inner diameter</label><output id="tdiaOut" class="mono" for="tdia"></output></div>
+          <input type="range" id="tdia" min="2.0" max="6.0" step="0.1" value="3.2">
+        </div>
+        <div>
+          <div class="slider-head"><label for="tq">Tube quality factor Q</label><output id="tqOut" class="mono" for="tq"></output></div>
+          <input type="range" id="tq" min="10" max="80" step="1" value="30">
+        </div>
+        <dl class="readout">
+          <div><dt>Level in the tube</dt><dd id="rLevel">—</dd></div>
+          <div id="rNextBox"><dt>Nearest resonance</dt><dd id="rNext">—</dd></div>
+          <div><dt>End correction 0.61a</dt><dd id="rEnd">—</dd></div>
+          <div id="rHalfBox"><dt>Spacing λ/2</dt><dd id="rHalf">—</dd></div>
+        </dl>
+        <p class="hint">Slide the water down slowly from the top and listen: the sound swells each time the air column plus its end correction is an odd number of quarter wavelengths, L + ΔL = λ/4, 3λ/4, 5λ/4. Successive resonances are λ/2 apart.</p>
+      </section>
+
+      <section data-show="tube">
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="expTab">Export CSV</button>
+          <button type="button" class="btn" id="clearTab">Clear</button>
+        </div>
+        <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>f Hz</th><th>k</th><th>L read</th><th>Δ to k−1</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <p class="hint">Capture stores the water position you chose, as read on the scale, never the true resonance. Reading the meniscus adds a small simulated scatter (σ = 1.5 mm, fixed by the seed). k counts the resonances from the top at each frequency; edit it if you skipped one. You can edit L too.</p>
+        <div class="plotbox"><canvas id="plot" role="img" aria-label="Plot of the resonance positions L against (2k − 1)/4f, with a least squares line: its slope is c and its intercept is minus the end correction."></canvas></div>
+        <dl class="readout" id="fitOut"></dl>
+        <div class="key">
+          <span><i class="swatch dot"></i>Your readings: L = c·(2k − 1)/4f − ΔL</span>
+        </div>
+      </section>
+
+      <section data-show="tube">
+        <h2>Instrument</h2>
+        <div class="inline">
+          <label class="lab" for="seed">Reading seed</label>
+          <span><input type="number" class="seed" id="seed" min="1" max="99999" step="1" value="2718"> <button type="button" class="btn" id="newSeed">New</button></span>
+        </div>
+        <div class="toggles">
+          <label><input type="checkbox" id="blind"> Blind: hide the computed response, the true resonances and the expected values</label>
+        </div>
+        <p class="hint">The reading scatter is simulated and fixed by the seed, so a class sharing a seed gets the same numbers for the same positions. The trace on the level plot is what you have swept so far.</p>
+      </section>
+
+      <!-- open and closed pipes -->
+      <section data-show="open closed">
+        <h2>Pipe</h2>
+        <div>
+          <div class="slider-head"><label for="plen">Length L</label><output id="plenOut" class="mono" for="plen"></output></div>
+          <input type="range" id="plen" min="0.10" max="1.20" step="0.01" value="0.60">
+        </div>
+        <div>
+          <div class="slider-head"><label for="pdia">Inner diameter</label><output id="pdiaOut" class="mono" for="pdia"></output></div>
+          <input type="range" id="pdia" min="1.0" max="8.0" step="0.1" value="3.0">
+        </div>
+        <div>
+          <div class="slider-head"><label for="pk">Resonance number</label><output id="pkOut" class="mono" for="pk"></output></div>
+          <input type="range" id="pk" min="1" max="8" step="1" value="1">
+        </div>
+        <div class="inline">
+          <span class="lab">Sound</span>
+          <div class="seg" role="group" aria-label="Pipe sound" id="psndSeg">
+            <button type="button" data-s="mode" aria-pressed="true">This mode</button>
+            <button type="button" data-s="all" aria-pressed="false">All modes</button>
+          </div>
+        </div>
+        <dl class="readout">
+          <div><dt>This mode</dt><dd id="rPf">—</dd></div>
+          <div><dt>Effective length</dt><dd id="rPleff">—</dd></div>
+          <div class="wide"><dt>Open at both ends: f = n c / 2(L + 2ΔL)</dt><dd id="rPopen">—</dd></div>
+          <div class="wide"><dt>Closed at one end: f = n c / 4(L + ΔL), n odd</dt><dd id="rPclosed">—</dd></div>
+        </dl>
+        <p class="hint">An open end is a pressure node, placed ΔL ≈ 0.61a beyond the pipe (a = inner radius); a closed end is a displacement node. All modes plays modes 1 to 8 with amplitude 1/n: every harmonic for the open pipe, only odd ones for the closed pipe.</p>
+      </section>
+
+      <!-- strings -->
+      <section data-show="string">
+        <h2>String</h2>
+        <div class="inline">
+          <label class="lab" for="sPreset">Typical string</label>
+          <select id="sPreset">
+            <option value="">Your own</option>
+            <option value="gE4">Guitar high E (steel 0.25 mm)</option>
+            <option value="gE2">Guitar low E (wound)</option>
+            <option value="vA">Violin A</option>
+            <option value="cC">Cello C (wound)</option>
+          </select>
+        </div>
+        <div>
+          <div class="slider-head"><label for="sLen">Length L</label><output id="sLenOut" class="mono" for="sLen"></output></div>
+          <input type="range" id="sLen" min="0.20" max="1.20" step="0.001" value="0.648">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sTen">Tension T</label><output id="sTenOut" class="mono" for="sTen"></output></div>
+          <input type="range" id="sTen" min="10" max="200" step="0.1" value="72.6">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sMu">Linear density μ</label><output id="sMuOut" class="mono" for="sMu"></output></div>
+          <input type="range" id="sMu" min="-1" max="1.5" step="0.001" value="-0.4">
+        </div>
+        <dl class="readout">
+          <div><dt>f₁ = (1/2L)√(T/μ)</dt><dd id="rSf1">—</dd></div>
+          <div><dt>Wave speed √(T/μ)</dt><dd id="rSv">—</dd></div>
+        </dl>
+        <p class="hint">Typical values: guitar strings on a 648 mm scale at E4 and E2, a violin A on 328 mm, a cello C on 690 mm. Real strings vary by maker and gauge.</p>
+      </section>
+
+      <section data-show="string">
+        <h2>Pluck</h2>
+        <div>
+          <div class="slider-head"><label for="sPos">Pluck point x₀</label><output id="sPosOut" class="mono" for="sPos"></output></div>
+          <input type="range" id="sPos" min="2" max="118" step="1" value="24">
+        </div>
+        <div class="chips" id="posChips">
+          <button type="button" data-q="60">L/2</button><button type="button" data-q="40">L/3</button><button type="button" data-q="30">L/4</button><button type="button" data-q="24">L/5</button><button type="button" data-q="12">L/10</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="sW">Finger width w</label><output id="sWOut" class="mono" for="sW"></output></div>
+          <input type="range" id="sW" min="0" max="4" step="0.1" value="0">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sTau">Decay time τ₁</label><output id="sTauOut" class="mono" for="sTau"></output></div>
+          <input type="range" id="sTau" min="0.3" max="6" step="0.1" value="2">
+        </div>
+        <button type="button" class="btn primary" id="pluckBtn">Pluck</button>
+        <dl class="readout">
+          <div class="wide"><dt>Missing harmonics (node at the pluck point)</dt><dd id="rMissing">—</dd></div>
+        </dl>
+        <div class="inline">
+          <span class="lab">Spectrum of</span>
+          <div class="seg" role="group" aria-label="Spectrum of" id="specSeg">
+            <button type="button" data-s="shape" aria-pressed="true">String shape bₙ</button>
+            <button type="button" data-s="force" aria-pressed="false">Bridge force n·bₙ</button>
+          </div>
+        </div>
+        <label class="check"><input type="checkbox" id="showModes">Show the first six modes</label>
+        <p class="hint" id="exHint"></p>
+      </section>
+
+      <!-- bottle -->
+      <section data-show="bottle">
+        <h2>Bottle</h2>
+        <div>
+          <div class="slider-head"><label for="bVol">Body volume</label><output id="bVolOut" class="mono" for="bVol"></output></div>
+          <input type="range" id="bVol" min="0.25" max="2.00" step="0.01" value="0.75">
+        </div>
+        <div>
+          <div class="slider-head"><label for="bFill">Water</label><output id="bFillOut" class="mono" for="bFill"></output></div>
+          <input type="range" id="bFill" min="0" max="90" step="1" value="0">
+        </div>
+        <div>
+          <div class="slider-head"><label for="bNeck">Neck length</label><output id="bNeckOut" class="mono" for="bNeck"></output></div>
+          <input type="range" id="bNeck" min="2" max="15" step="0.1" value="8">
+        </div>
+        <div>
+          <div class="slider-head"><label for="bDia">Neck inner diameter</label><output id="bDiaOut" class="mono" for="bDia"></output></div>
+          <input type="range" id="bDia" min="1.0" max="4.0" step="0.1" value="1.9">
+        </div>
+        <div class="btnrow">
+          <button type="button" class="btn" id="blow" aria-pressed="false">Blow across the top</button>
+          <button type="button" class="btn" id="pour" aria-pressed="false">Pour in water</button>
+        </div>
+        <dl class="readout">
+          <div class="wide"><dt>Helmholtz: f = (c/2π)√(A / V L_eff)</dt><dd id="rBf">—</dd></div>
+          <div><dt>Air volume V</dt><dd id="rBV">—</dd></div>
+          <div><dt>L_eff = L + 1.43a</dt><dd id="rBL">—</dd></div>
+          <div class="wide"><dt>A closed pipe as tall as the air space</dt><dd id="rBp">—</dd></div>
+        </dl>
+        <p class="hint">The air in the neck is a mass and the air in the body is a spring: blowing across the mouth sets the neck air bouncing on it. Less air in the body makes a stiffer spring and a higher note. The pitch depends on the volume, not on how tall the air space is, so the pipe formula gets a bottle wrong.</p>
+      </section>
+
+      <section>
+        <h2>Sound</h2>
+        <p class="hint" id="soundHint"></p>
+      </section>
+
+      <section>
+        <h2>Key</h2>
+        <div class="key" id="key"></div>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint" id="modelHint"></p>
+        <p class="hint">Animations are slowed so the lowest mode is drawn at 0.5 Hz; the sound plays at the true frequencies.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const PI = Math.PI, TAU = 2 * Math.PI;
+  // air: c = C0 √(1 + t/273.15), the ideal gas result √(γRT/M) for dry air
+  const C0 = 331.3, T0K = 273.15, R_GAS = 8.314462618, M_AIR = 0.0289647, GAMMA_AIR = 1.4;
+  // end corrections for a circular opening of radius a at low frequency (ka ≪ 1):
+  //   unflanged open end 0.6133 a (Levine and Schwinger 1948); flanged opening 0.8216 a (Rayleigh's piston in a wall)
+  const END_OPEN = 0.6133, END_FLANGED = 0.8216;
+  function soundSpeed(tc) { return C0 * Math.sqrt(1 + tc / T0K); }
+  function soundSpeedGas(tc) { return Math.sqrt(GAMMA_AIR * R_GAS * (tc + T0K) / M_AIR); }
+  // pipes: kind 'open' (open at both ends) or 'closed' (open at one end); k counts the resonances from the lowest
+  function pipeLeff(kind, L, a) { return kind === 'open' ? L + 2 * END_OPEN * a : L + END_OPEN * a; }
+  function pipeHarmonic(kind, k) { return kind === 'open' ? k : 2 * k - 1; }
+  function pipeFreq(kind, k, L, a, c) {
+    const n = pipeHarmonic(kind, k);
+    return kind === 'open' ? n * c / (2 * pipeLeff('open', L, a)) : n * c / (4 * pipeLeff('closed', L, a));
+  }
+  // mode n along the pipe, x from the open (left) end to L; displacement ξ and pressure p, each of unit amplitude
+  function pipeShape(kind, n, x, L, a) {
+    const d = END_OPEN * a;
+    if (kind === 'open') { const u = n * PI * (x + d) / (L + 2 * d); return { xi: Math.cos(u), p: Math.sin(u) }; }
+    const u = n * PI * (L - x) / (2 * (L + d)); return { xi: Math.sin(u), p: Math.cos(u) };
+  }
+  // resonance tube: air column of length L above the water, open top, driven at f
+  // resonances where L + ΔL = (2k − 1) λ/4
+  function tubeResonances(f, c, a, Lmax) {
+    const out = [];
+    for (let k = 1; k < 60; k++) { const L = (2 * k - 1) * c / (4 * f) - END_OPEN * a; if (L > Lmax) break; if (L > 0) out.push({ k, L }); }
+    return out;
+  }
+  // pressure amplitude at the water over the source pressure at the effective open end:
+  // 1/|cos(k̃ (L + ΔL))| with k̃ = (2πf/c)(1 − i/2Q), and |cos(x − iy)|² = cos²x + sinh²y
+  function tubeResponse(L, f, c, a, Q) {
+    const z = TAU * f / c * (L + END_OPEN * a), y = z / (2 * Q), cz = Math.cos(z), sh = Math.sinh(y);
+    return 1 / Math.sqrt(cz * cz + sh * sh);
+  }
+  // relative to the peak of the first resonance, 1/sinh(π/4Q)
+  function tubeRel(L, f, c, a, Q) { return tubeResponse(L, f, c, a, Q) * Math.sinh(PI / (4 * Q)); }
+  // least squares line y = m x + b with standard errors
+  function lineFit(x, y) {
+    const n = Math.min(x.length, y.length); if (n < 2) return null;
+    let sx = 0, sy = 0; for (let i = 0; i < n; i++) { sx += x[i]; sy += y[i]; }
+    const mx = sx / n, my = sy / n; let sxx = 0, sxy = 0;
+    for (let i = 0; i < n; i++) { sxx += (x[i] - mx) ** 2; sxy += (x[i] - mx) * (y[i] - my); }
+    if (sxx <= 0) return null;
+    const m = sxy / sxx, b = my - m * mx; let ss = 0;
+    for (let i = 0; i < n; i++) ss += (y[i] - m * x[i] - b) ** 2;
+    const s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { m, b, sm: Math.sqrt(s2 / sxx), sb: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), n };
+  }
+  // L = c·(2k − 1)/4f − ΔL: slope c, intercept −ΔL; rows {f (Hz), k, L (m)}
+  function tubeX(f, k) { return (2 * k - 1) / (4 * f); }
+  function tubeFit(rows) {
+    const F = lineFit(rows.map((r) => tubeX(r.f, r.k)), rows.map((r) => r.L));
+    return F ? { c: F.m, dL: -F.b, sc: F.sm, sdL: F.sb, n: F.n } : null;
+  }
+  // successive spacings at one frequency: c = 2f (L_k − L_j)/(k − j)
+  function spacingSpeeds(rows) {
+    const out = [], byF = {};
+    for (const r of rows) (byF[r.f] = byF[r.f] || []).push(r);
+    for (const f in byF) {
+      const g = byF[f].slice().sort((p, q) => p.k - q.k);
+      for (let i = 1; i < g.length; i++) if (g[i].k > g[i - 1].k) out.push(2 * +f * (g[i].L - g[i - 1].L) / (g[i].k - g[i - 1].k));
+    }
+    return out;
+  }
+  // seeded reading scatter, Gaussian-like with unit variance (sum of three uniforms), times σ
+  function mulberry(seed) { let s = seed >>> 0; return () => { s += 0x6D2B79F5; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function gauss(r) { return (r() + r() + r() - 1.5) * 2; }
+  const READ_SIGMA = 0.0015;
+  function readingScatter(seed, i) { const r = mulberry((seed >>> 0) * 7919 + i * 104729 + 17); return READ_SIGMA * gauss(r); }
+  // strings: ideal string with fixed ends
+  function stringF1(L, T, mu) { return Math.sqrt(T / mu) / (2 * L); }
+  // triangular pluck of unit height at p = x₀/L: bₙ = 2 sin(nπp) / (n²π² p(1 − p));
+  // a finger of width w (as a fraction of L) averages that shape over w, which multiplies bₙ by sin(u)/u with u = nπw/2
+  function pluckCoeffs(p, w, N) {
+    const b = [0];
+    for (let n = 1; n <= N; n++) {
+      let v = 2 * Math.sin(n * PI * p) / (n * n * PI * PI * p * (1 - p));
+      if (w > 0) { const u = n * PI * w / 2; v *= Math.sin(u) / u; }
+      b.push(Math.abs(v) < 1e-12 ? 0 : v);
+    }
+    return b;
+  }
+  // ideal Helmholtz motion of a bowed string: bₙ = 8/(π²n²) for every n, so the midpoint swings by 1
+  function bowCoeffs(N) { const b = [0]; for (let n = 1; n <= N; n++) b.push(8 / (PI * PI * n * n)); return b; }
+  // pluck: y = Σ bₙ e^(−t/τₙ) sin(nπs) cos(nθ), τₙ = τ₁/n; bow: y = Σ bₙ sin(nπs) sin(nθ)
+  function stringY(b, s, th, decay, bow) {
+    let y = 0;
+    for (let n = 1; n < b.length; n++) { if (!b[n]) continue; y += b[n] * (decay ? decay[n] : 1) * Math.sin(n * PI * s) * (bow ? Math.sin(n * th) : Math.cos(n * th)); }
+    return y;
+  }
+  // Helmholtz resonator
+  function neckLeff(Ln, a) { return Ln + (END_OPEN + END_FLANGED) * a; }
+  function helmholtzF(c, A, V, Leff) { return c / TAU * Math.sqrt(A / (V * Leff)); }
+  function closedPipeF(c, H, a) { return c / (4 * (H + END_OPEN * a)); }
+  // a cylindrical body scaled from a 750 mL bottle 7.4 cm across
+  function bottleBody(V) { const Rb = 0.037 * Math.cbrt(V / 0.75e-3); return { Rb, Hb: V / (PI * Rb * Rb) }; }
+  // sound level safety, as in Timbre and Harmonics: hold the RMS near RMS_TARGET, never let the peak pass PEAK_MAX (−12 dBFS)
+  const RMS_TARGET = 0.08, PEAK_MAX = 0.25, HF_EDGE = 8000, HF_GAIN = 0.25, F_MUTE = 18000;
+  function audioNorm(rms, peakBound) { return rms > 0 ? Math.min(RMS_TARGET / rms, PEAK_MAX / peakBound) : 0; }
+  function hfGain(f) { return f > F_MUTE ? 0 : f > HF_EDGE ? HF_GAIN : 1; }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.RES = { PI, TAU, C0, END_OPEN, END_FLANGED, soundSpeed, soundSpeedGas, pipeLeff, pipeHarmonic, pipeFreq, pipeShape, tubeResonances, tubeResponse, tubeRel,
+      lineFit, tubeX, tubeFit, spacingSpeeds, mulberry, gauss, readingScatter, READ_SIGMA, stringF1, pluckCoeffs, bowCoeffs, stringY, neckLeff, helmholtzF, closedPipeF, bottleBody,
+      audioNorm, hfGain, RMS_TARGET, PEAK_MAX, HF_EDGE, F_MUTE };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const F_VIS = 0.5, TUBE_LEN = 1.0, NS = 60, NSND = 32;
+  const NOTE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+  function noteTxt(f) { const m = 69 + 12 * Math.log2(f / 440), r = Math.round(m), c = Math.round(100 * (m - r)); return `${NOTE_NAMES[((r % 12) + 12) % 12]}${Math.floor(r / 12) - 1}${c ? ` ${c > 0 ? '+' : '−'}${Math.abs(c)}¢` : ''}`; }
+  function fmtHz(f) { return f >= 1000 ? `${(f / 1000).toFixed(f >= 10000 ? 1 : 2)} kHz` : `${f.toFixed(f < 100 ? 2 : 1)} Hz`; }
+  const cm = (m, d) => `${(m * 100).toFixed(d === undefined ? 1 : d)} cm`;
+  const SUBS = '₀₁₂₃₄₅₆₇₈₉', sub = (n) => String(n).split('').map((c) => SUBS[+c]).join('');
+
+  // ---------- state ----------
+  const S = {
+    view: 'pipe', pm: 'tube', tc: 20,
+    fork: 512, water: 0.10, tdia: 0.032, Q: 30, trace: [], rows: [], seed: 2718, blind: false, captures: 0,
+    L: 0.60, pdia: 0.030, k: 1, psnd: 'mode',
+    sL: 0.648, sT: 72.6, mu: 0.398e-3, q: 24, w: 0, tau: 2, ex: 'pluck', spec: 'shape', showModes: false, sPreset: 'gE4',
+    vb: 0.75e-3, fill: 0, neck: 0.08, bdia: 0.019, blowing: false, pouring: false
+  };
+  const ST = { tv: 0, tr: 99, amp: 1, hold: null, plucked: false };   // string: slowed phase time, real time since the pluck, pluck height, held shape
+  let presetId = 'tube', running = !reduce, tAnim = 0, frameMs = 0, dirty = true;
+
+  const STRINGS = {
+    gE4: { L: 0.648, T: 72.6, mu: 0.398e-3 },
+    gE2: { L: 0.648, T: 77.8, mu: 6.82e-3 },
+    vA: { L: 0.328, T: 50.0, mu: 0.600e-3 },
+    cC: { L: 0.690, T: 130.0, mu: 15.96e-3 }
+  };
+  const PRESETS = {
+    tube: { hint: 'A 512 Hz source over a 1 m tube. Lower the water slowly from near the top and stop where it is loudest; capture each resonance. The fit of L against (2k − 1)/4f gives c from its slope and the end correction from its intercept.',
+      set: () => { S.view = 'pipe'; S.pm = 'tube'; S.fork = 512; S.water = 0.10; S.tdia = 0.032; S.Q = 30; S.tc = 20; S.trace = []; } },
+    pipes: { hint: 'The same 60 cm pipe with one end closed: only odd harmonics fit, and the lowest note is about an octave below the open pipe\'s (not exactly, since the end corrections differ). Switch to Open pipe and compare the two rows of the ladder; try All modes to hear the hollow closed pipe.',
+      set: () => { S.view = 'pipe'; S.pm = 'closed'; S.L = 0.60; S.pdia = 0.030; S.k = 1; S.psnd = 'all'; S.tc = 20; } },
+    middle: { hint: 'Plucked at the middle, the string\'s shape is symmetric about the center, and every even mode has a node there: b₂, b₄, b₆ are exactly zero. Move the pluck point to L/3 and every third harmonic disappears instead.',
+      set: () => { S.view = 'string'; S.ex = 'pluck'; useString('gE4'); S.q = 60; S.w = 0; S.spec = 'shape'; pluck(1); } },
+    guitar: { hint: 'Typical high E string: 0.25 mm steel at 72.6 N on a 648 mm scale gives E4, 329.6 Hz. Plucked about a fifth of the way from the bridge, as a guitarist often does; a pluck close to the bridge is brighter. Try the low E string too.',
+      set: () => { S.view = 'string'; S.ex = 'pluck'; useString('gE4'); S.q = 96; S.w = 0; S.spec = 'force'; pluck(1); } },
+    bottle: { hint: 'A 750 mL bottle with an 8 cm neck: the Helmholtz formula gives about 110 Hz. A closed pipe as tall as the air space would sound about three times higher. Turn on the sound and blow.',
+      set: () => { S.view = 'bottle'; S.vb = 0.75e-3; S.neck = 0.08; S.bdia = 0.019; S.fill = 0; S.blowing = true; S.pouring = false; S.tc = 20; } },
+    fill: { hint: 'Water pours in while you blow. The note rises as 1/√V and climbs steeply near the top; the pipe estimate follows a different curve. Drag the water level or the marker on the plot to stop anywhere.',
+      set: () => { S.view = 'bottle'; S.vb = 0.75e-3; S.neck = 0.08; S.bdia = 0.019; S.fill = 0; S.blowing = true; S.pouring = !reduce; S.tc = 20; } }
+  };
+  function useString(id) { const s = STRINGS[id]; S.sL = s.L; S.sT = s.T; S.mu = s.mu; S.sPreset = id; }
+
+  const MODEL = 'Pipes: one dimensional plane waves in a rigid pipe; an open end reflects as if the pipe were ΔL = 0.6133a longer (unflanged end, Levine and Schwinger 1948, valid for ka ≪ 1); a closed end or the water surface is rigid. ' +
+    'Resonance tube: the source fixes the pressure at the effective open end; the level is the pressure amplitude at the water, 1/|cos(k̃(L + ΔL))| with complex wavenumber k̃ = (2πf/c)(1 − i/2Q) and one quality factor Q for every resonance, a stand in for wall and radiation losses (real tubes have Q of tens); its peaks sit about (L + ΔL)/4Q² above the resonance positions, at most 0.25 mm at Q = 30 in a 1 m tube. ' +
+    'Strings: ideal flexible string with fixed ends and no stiffness; triangular pluck, exact Fourier coefficients, 60 modes drawn; each mode decays as e^(−t/τₙ) with τₙ = τ₁/n, an illustrative model in which losses grow with frequency. The bowed string is the ideal Helmholtz motion, bₙ ∝ 1/n². ' +
+    'Bottle: lumped Helmholtz resonator, valid while the bottle is much smaller than the wavelength; neck end corrections 0.6133a outside (unflanged) and 0.8216a inside (flanged), L_eff = L + 1.43a; body drawn as a cylinder, shoulder volume ignored; the closed pipe comparison uses c/4(H + 0.61a) with H the height of the air space including the neck.';
+
+  // ---------- derived quantities ----------
+  const c = () => soundSpeed(S.tc);
+  const ta = () => S.tdia / 2;
+  const sP = () => S.q / 120;
+  const f1s = () => stringF1(S.sL, S.sT, S.mu);
+  let D = null;
+  function recompute() {
+    const cc = c();
+    // tube
+    const res = tubeResonances(S.fork, cc, ta(), TUBE_LEN);
+    const rel = tubeRel(S.water, S.fork, cc, ta(), S.Q);
+    // pipe
+    const pa = S.pdia / 2;
+    // string
+    const N = NS, b = S.ex === 'bow' ? bowCoeffs(N) : pluckCoeffs(sP(), S.w / S.sL, N);
+    // bottle
+    const body = bottleBody(S.vb), A = PI * (S.bdia / 2) ** 2, Vair = S.vb * (1 - S.fill / 100), Le = neckLeff(S.neck, S.bdia / 2);
+    const fH = helmholtzF(cc, A, Vair, Le), Hair = body.Hb * (1 - S.fill / 100) + S.neck, fP = closedPipeF(cc, Hair, S.bdia / 2);
+    D = { c: cc, res, rel, pa, b, body, A, Vair, Le, fH, Hair, fP, pf: pipeFreq(S.pm === 'closed' ? 'closed' : 'open', S.k, S.L, pa, cc), f1: f1s() };
+    dirty = true;
+  }
+
+  // ---------- theme and canvas ----------
+  let T = null, dpr = 1, W = 0, H = 0, ls = 1, G = {};
+  const can = $('can'), ctx = can.getContext('2d'), pane = $('pane');
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on';
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { paper: g('--paper'), canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), water: g('--water'), glass: g('--glass'), brass: g('--brass'), wood: g('--wood'), woodEdge: g('--wood-edge'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+    buildKey(); plotDirty = true;
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = pane.getBoundingClientRect();
+    can.width = Math.max(1, Math.round(r.width * dpr)); can.height = Math.max(1, Math.round(r.height * dpr));
+    can.style.width = r.width + 'px'; can.style.height = r.height + 'px';
+    W = r.width; H = r.height;
+    ls = proj() ? clamp(Math.min(W / 640, H / 420), 1, 1.4) : 1;
+    dirty = true; draw();
+    sizePlot();
+  }
+  const font = (px, bold) => `${bold ? '600 ' : ''}${px * ls}px ${T.mono}`;
+  function tag(txt, x, y, color, align, base, bold, size, bg) {
+    ctx.font = font(size || 11, bold);
+    const w = ctx.measureText(txt).width, h = (size || 11) * ls * 1.25;
+    const x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    const y0 = base === 'top' ? y : base === 'bottom' ? y - h : y - h / 2;
+    ctx.fillStyle = bg || T.paper; ctx.globalAlpha = 0.88; ctx.fillRect(x0 - 3, y0 - 1, w + 6, h + 2); ctx.globalAlpha = 1;
+    ctx.fillStyle = color; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, x0, y0 + h / 2);
+    return w;
+  }
+  function pick(opts, maxW, size, bold) { ctx.font = font(size || 11.5, bold !== false); for (const o of opts) if (ctx.measureText(o).width <= maxW) return o; return opts[opts.length - 1]; }
+  function title(txt, x, y, maxW) { tag(pick(Array.isArray(txt) ? txt : [txt], maxW, 11.5, true), x, y, T.ink, 'left', 'top', true, 11.5); }
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  function fmtTick(v, st) { const d = Math.max(0, -Math.floor(Math.log10(st) + 1e-9)); return (Math.abs(v) < st / 1e6 ? 0 : v).toFixed(d); }
+  function rrect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  function grip(x, y, hot, color) {
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = color; ctx.lineWidth = (hot ? 2.4 : 1.6) * ls;
+    ctx.beginPath(); ctx.arc(x, y, (hot ? 7 : 5.5) * ls, 0, TAU); ctx.fill(); ctx.stroke();
+    if (hot) { ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.arc(x, y, 11 * ls, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1; }
+  }
+  // a horizontal bar grip: three short marks across a line, with a highlight when hot
+  function barGrip(x1, x2, y, hot, color) {
+    if (hot) { ctx.strokeStyle = color; ctx.globalAlpha = 0.3; ctx.lineWidth = 8 * ls; ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke(); ctx.globalAlpha = 1; }
+    const mx = (x1 + x2) / 2;
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = color; ctx.lineWidth = (hot ? 2 : 1.4) * ls;
+    rrect(mx - 13 * ls, y - 5 * ls, 26 * ls, 10 * ls, 4 * ls); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); for (let k = -1; k <= 1; k++) { ctx.moveTo(mx + k * 5 * ls, y - 2.5 * ls); ctx.lineTo(mx + k * 5 * ls, y + 2.5 * ls); } ctx.stroke();
+  }
+  const isHot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+  const visTheta = () => TAU * F_VIS * tAnim;
+
+  // =====================================================================
+  // RESONANCE TUBE
+  // =====================================================================
+  function tubeGeom() {
+    const narrow = W < 560;
+    const top = 92 * ls, bot = H - 30 * ls, sy = (bot - top) / TUBE_LEN;
+    const rulerX = 14 * ls, rulerW = 30 * ls;
+    const tw = clamp(W * 0.13, 46 * ls, 130 * ls), tx = rulerX + rulerW + 10 * ls;
+    const pL = tx + tw + (narrow ? 44 : 64) * ls, pR = W - 16 * ls;
+    return { top, bot, sy, rulerX, rulerW, tx, tw, cx: tx + tw / 2, pL, pR, Y: (d) => top + d * sy, D: (py) => (py - top) / sy, narrow };
+  }
+  const LV_MIN = -40;
+  function levelDb(rel) { return Math.max(LV_MIN, 20 * Math.log10(Math.max(1e-6, rel))); }
+  function drawTube() {
+    const g = tubeGeom(), { top, bot, Y, tx, tw, cx } = g, cc = D.c, a = ta(), dL = END_OPEN * a;
+    const yW = Y(S.water), th = visTheta(), rel = D.rel;
+    G.tube = g;
+    // ruler: a meter stick with 0 at the top of the tube
+    ctx.fillStyle = T.wood; ctx.strokeStyle = T.woodEdge; ctx.lineWidth = 1;
+    rrect(g.rulerX, top - 8 * ls, g.rulerW, bot - top + 16 * ls, 3 * ls); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.font = font(9.5); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    const mmOK = g.sy * 0.001 >= 2.5;
+    for (let mm = 0; mm <= 1000; mm += mmOK ? 1 : 10) {
+      const y = Math.round(Y(mm / 1000)) + 0.5, big = mm % 100 === 0, mid = mm % 50 === 0, cmk = mm % 10 === 0;
+      const len = big ? 14 : mid ? 10 : cmk ? 7 : 4;
+      ctx.globalAlpha = cmk ? 0.85 : 0.45; ctx.lineWidth = big ? 1.4 : 1;
+      ctx.beginPath(); ctx.moveTo(g.rulerX + g.rulerW, y); ctx.lineTo(g.rulerX + g.rulerW - len * ls, y); ctx.stroke();
+      if (big) { ctx.globalAlpha = 1; ctx.fillText(String(mm / 10), g.rulerX + 3 * ls, y + (mm === 0 ? 6 : mm === 1000 ? -6 : 0) * ls); }
+    }
+    ctx.globalAlpha = 1;
+    // glass tube with water
+    ctx.fillStyle = T.water; ctx.globalAlpha = 0.55; ctx.fillRect(tx, yW, tw, bot - yW); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.glass; ctx.lineWidth = 2 * ls;
+    ctx.beginPath(); ctx.moveTo(tx, top); ctx.lineTo(tx, bot); ctx.lineTo(tx + tw, bot); ctx.lineTo(tx + tw, top); ctx.stroke();
+    // meniscus
+    ctx.strokeStyle = T.water; ctx.lineWidth = 2 * ls; ctx.beginPath(); ctx.moveTo(tx + 1, yW - 3 * ls); ctx.quadraticCurveTo(cx, yW + 3 * ls, tx + tw - 1, yW - 3 * ls); ctx.stroke();
+    // standing wave in the air column, drawn across the tube: pressure (red) and displacement (blue), amplitude ∝ response
+    const k = TAU * S.fork / cc, amp = Math.min(1, rel) * (tw / 2 - 4 * ls), osc = Math.cos(th);
+    const yTop = Y(-dL);
+    ctx.save(); ctx.beginPath(); ctx.rect(tx - tw, yTop - 2, tw * 3, yW - yTop + 2); ctx.clip();
+    for (const [fn, col] of [[(d) => Math.cos(k * (S.water - d)), T.pos], [(d) => Math.sin(k * (S.water - d)), T.neg]]) {
+      // envelope
+      ctx.strokeStyle = col; ctx.globalAlpha = 0.35; ctx.lineWidth = 1 * ls; ctx.setLineDash([3 * ls, 3 * ls]);
+      for (const sg of [1, -1]) { ctx.beginPath(); for (let py = yTop; py <= yW; py += 2) { const x = cx + sg * amp * Math.abs(fn(g.D(py))); py === yTop ? ctx.moveTo(x, py) : ctx.lineTo(x, py); } ctx.stroke(); }
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+      ctx.lineWidth = 2 * ls; ctx.beginPath();
+      for (let py = yTop; py <= yW; py += 2) { const x = cx + amp * fn(g.D(py)) * osc; py === yTop ? ctx.moveTo(x, py) : ctx.lineTo(x, py); }
+      ctx.stroke();
+    }
+    ctx.restore();
+    // effective open end
+    ctx.strokeStyle = T.muted; ctx.setLineDash([2 * ls, 3 * ls]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(tx - 6 * ls, yTop); ctx.lineTo(tx + tw + 6 * ls, yTop); ctx.stroke(); ctx.setLineDash([]);
+    // the source at the top: a tuning fork whose tines swing with the slowed motion
+    const fy = top - 14 * ls, sw = 1.5 * ls * Math.sin(th);
+    ctx.strokeStyle = T.brass; ctx.lineWidth = 3.2 * ls; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(cx - 9 * ls - sw, fy); ctx.lineTo(cx - 9 * ls - sw, fy - 38 * ls); ctx.moveTo(cx + 9 * ls + sw, fy); ctx.lineTo(cx + 9 * ls + sw, fy - 38 * ls); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx - 9 * ls, fy); ctx.quadraticCurveTo(cx, fy + 10 * ls, cx + 9 * ls, fy); ctx.moveTo(cx, fy + 6 * ls); ctx.lineTo(cx, fy + 9 * ls); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx + 24 * ls, fy - 46 * ls); ctx.lineTo(cx + 10 * ls, fy - 46 * ls); ctx.stroke(); ctx.lineCap = 'butt';
+    tag(`${S.fork} Hz`, cx + 26 * ls, fy - 46 * ls, T.brass, 'left', 'middle', true, 10.5);
+    // water handle
+    barGrip(tx - 4 * ls, tx + tw + 4 * ls, yW, isHot('water'), T.accent);
+    // captured readings: ticks on the ruler
+    for (let i = 0; i < S.rows.length; i++) {
+      const r = S.rows[i], L = parseFloat(r.Lcm) / 100; if (!isFinite(L) || r.f !== S.fork) continue;
+      const y = Y(L); ctx.fillStyle = T.brass; ctx.beginPath(); ctx.moveTo(g.rulerX + g.rulerW + 1, y); ctx.lineTo(g.rulerX + g.rulerW + 7 * ls, y - 4 * ls); ctx.lineTo(g.rulerX + g.rulerW + 7 * ls, y + 4 * ls); ctx.closePath(); ctx.fill();
+    }
+    drawLevelPlot(g);
+    // labels last
+    tag(`${(S.water * 100).toFixed(1)} cm`, tx + tw + 8 * ls, yW, T.accent, 'left', 'middle', true, 10.5);
+    if (yTop > top - 30 * ls) tag(g.narrow ? 'ΔL' : `ΔL = ${(dL * 100).toFixed(2)} cm`, tx + tw + 8 * ls, yTop - 2 * ls, T.muted, 'left', 'bottom', false, 9.5);
+  }
+  function drawLevelPlot(g) {
+    const { top, bot, Y, pL, pR } = g;
+    if (pR - pL < 60 * ls) return;
+    const X = (db) => pL + (db - LV_MIN) / -LV_MIN * (pR - pL), cc = D.c, a = ta();
+    G.lvX = X;
+    // grid
+    ctx.font = font(10); ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let db = LV_MIN; db <= 0; db += 10) {
+      const x = Math.round(X(db)) + 0.5; ctx.strokeStyle = db === 0 ? T.gridStrong : T.grid; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bot); ctx.stroke(); ctx.fillText(String(db), x, bot + 5 * ls);
+    }
+    for (let d = 0; d <= TUBE_LEN + 1e-9; d += 0.1) { const y = Math.round(Y(d)) + 0.5; ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(pL, y); ctx.lineTo(pR, y); ctx.stroke(); }
+    ctx.textAlign = 'right'; ctx.fillText('level (dB)', pR, bot + 17 * ls);
+    // true resonances
+    if (!S.blind) {
+      ctx.setLineDash([4 * ls, 4 * ls]); ctx.strokeStyle = T.equi; ctx.lineWidth = 1.2;
+      for (const r of D.res) { const y = Math.round(Y(r.L)) + 0.5; ctx.beginPath(); ctx.moveTo(g.tx + g.tw + 2, y); ctx.lineTo(pR, y); ctx.stroke(); }
+      ctx.setLineDash([]);
+      // computed response
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1.3 * ls; ctx.setLineDash([5 * ls, 4 * ls]); ctx.beginPath();
+      for (let py = top; py <= bot; py += 1) { const x = X(levelDb(tubeRel(g.D(py), S.fork, cc, a, S.Q))); py === top ? ctx.moveTo(x, py) : ctx.lineTo(x, py); }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    // the swept trace
+    if (S.trace.length) {
+      ctx.fillStyle = T.accent; ctx.strokeStyle = T.accent; ctx.lineWidth = 2.2 * ls;
+      const pts = S.trace.slice().sort((p, q) => p[0] - q[0]);
+      ctx.beginPath(); let prev = null;
+      for (const [d, db] of pts) { const x = X(db), y = Y(d); if (prev !== null && d - prev > 0.004) ctx.moveTo(x, y); else if (prev === null) ctx.moveTo(x, y); else ctx.lineTo(x, y); prev = d; }
+      ctx.stroke();
+      for (const [d, db] of pts) { ctx.beginPath(); ctx.arc(X(db), Y(d), 1.8 * ls, 0, TAU); ctx.fill(); }
+    }
+    // the current position
+    const db = levelDb(D.rel), yW = Y(S.water);
+    ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.setLineDash([2 * ls, 3 * ls]); ctx.beginPath(); ctx.moveTo(g.tx + g.tw + 2, yW); ctx.lineTo(X(db), yW); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    grip(X(db), yW, isHot('level'), T.accent);
+    // labels
+    if (!S.blind) for (const r of D.res) tag(g.narrow ? `L${sub(r.k)} ${(r.L * 100).toFixed(1)}` : `L${sub(r.k)} = ${(r.L * 100).toFixed(1)} cm`, pL + 4 * ls, Y(r.L) - 3 * ls, T.equi, 'left', 'bottom', true, 10);
+    tag(`${db.toFixed(1)} dB`, Math.min(X(db) + 10 * ls, pR - 50 * ls), yW + 3 * ls, T.accent, 'left', 'top', true, 10.5);
+    title(['Sound level in the tube against water position', 'Level against water position', 'Level'], pL, 8 * ls, pR - pL);
+    tag('L (cm)', g.rulerX, g.top - 28 * ls, T.muted, 'left', 'bottom', false, 10);
+  }
+
+  // =====================================================================
+  // OPEN AND CLOSED PIPES
+  // =====================================================================
+  function pipeGeom() {
+    const L0 = 52 * ls, R0 = W - 30 * ls, sx = (R0 - L0) / 1.25;
+    const h1 = Math.round(H * 0.33), h2 = Math.round(H * 0.34);
+    const ph = clamp(h1 * 0.36, 34 * ls, 84 * ls), pc = 40 * ls + (h1 - 40 * ls) / 2;
+    return { L0, sx, X: (x) => L0 + x * sx, pc, ph, waveTop: h1, waveH: h2, ladTop: h1 + h2, ladH: H - h1 - h2 };
+  }
+  function drawPipe() {
+    const g = pipeGeom(), kind = S.pm, L = S.L, a = S.pdia / 2, d = END_OPEN * a, n = pipeHarmonic(kind, S.k), th = visTheta(), osc = Math.cos(th);
+    G.pipe = g;
+    const x0 = g.X(0), x1 = g.X(L), yT = g.pc - g.ph / 2, yB = g.pc + g.ph / 2;
+    // air parcels: thin lines displaced by ξ, shaded by pressure
+    const NP = Math.max(8, Math.round((x1 - x0) / (11 * ls))), A = (x1 - x0) / NP * 0.9;
+    ctx.save(); ctx.beginPath(); ctx.rect(x0, yT, x1 - x0, g.ph); ctx.clip();
+    // pressure shading in columns
+    for (let i = 0; i < 80; i++) {
+      const xa = i / 80 * L, s = pipeShape(kind, n, xa + L / 160, L, a), pr = s.p * osc;
+      ctx.fillStyle = pr > 0 ? T.pos : T.neg; ctx.globalAlpha = Math.abs(pr) * 0.22;
+      ctx.fillRect(g.X(xa), yT, (x1 - x0) / 80 + 0.6, g.ph);
+    }
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.1 * ls; ctx.globalAlpha = 0.55; ctx.beginPath();
+    for (let i = 0; i <= NP; i++) { const xa = i / NP * L, xp = g.X(xa) + A * pipeShape(kind, n, xa, L, a).xi * osc; ctx.moveTo(xp, yT + 3); ctx.lineTo(xp, yB - 3); }
+    ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.restore();
+    // walls
+    ctx.strokeStyle = T.glass; ctx.lineWidth = 3 * ls;
+    ctx.beginPath(); ctx.moveTo(x0, yT); ctx.lineTo(x1, yT); ctx.moveTo(x0, yB); ctx.lineTo(x1, yB); ctx.stroke();
+    if (kind === 'closed') { ctx.lineWidth = 6 * ls; ctx.strokeStyle = T.ink; ctx.beginPath(); ctx.moveTo(x1, yT - 3 * ls); ctx.lineTo(x1, yB + 3 * ls); ctx.stroke(); }
+    // effective ends
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([2 * ls, 3 * ls]);
+    const xe0 = g.X(-d), xe1 = g.X(L + d);
+    ctx.beginPath(); ctx.moveTo(xe0, yT - 8 * ls); ctx.lineTo(xe0, yB + 8 * ls); if (kind === 'open') { ctx.moveTo(xe1, yT - 8 * ls); ctx.lineTo(xe1, yB + 8 * ls); } ctx.stroke(); ctx.setLineDash([]);
+    // end handle
+    const hot = isHot('pend');
+    if (hot) { ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.3; ctx.lineWidth = 9 * ls; ctx.beginPath(); ctx.moveTo(x1, yT); ctx.lineTo(x1, yB); ctx.stroke(); ctx.globalAlpha = 1; }
+    grip(x1, yB + 14 * ls, hot, T.accent);
+    G.pendPt = [x1, yB + 14 * ls];
+    // dimension line
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, yT - 14 * ls); ctx.lineTo(x1, yT - 14 * ls); ctx.moveTo(x0, yT - 18 * ls); ctx.lineTo(x0, yT - 10 * ls); ctx.moveTo(x1, yT - 18 * ls); ctx.lineTo(x1, yT - 10 * ls); ctx.stroke();
+    tag(`L = ${cm(L)}`, (x0 + x1) / 2, yT - 14 * ls, T.ink, 'center', 'middle', true, 10.5);
+    title([`${kind === 'open' ? 'Pipe open at both ends' : 'Pipe closed at the right end'}: mode n = ${n}, ${fmtHz(D.pf)}`, `${kind === 'open' ? 'Open pipe' : 'Closed pipe'}: n = ${n}, ${fmtHz(D.pf)}`], 14 * ls, 8 * ls, W - 28 * ls);
+    if (x1 + 40 * ls < W) tag(kind === 'open' ? 'open' : 'closed', x1 + 8 * ls, g.pc, T.muted, 'left', 'middle', false, 10);
+    tag('open', x0 - 6 * ls, g.pc, T.muted, 'right', 'middle', false, 10);
+    tag(pick(['air parcels, shaded red where compressed, blue where rarefied (diameter not to scale)', 'air parcels (diameter not to scale)', 'air parcels'], W - 28 * ls, 9.5, false), 14 * ls, yB + 26 * ls, T.muted, 'left', 'top', false, 9.5);
+    // standing waves: displacement and pressure along the pipe
+    const wt = g.waveTop + 24 * ls, wh = g.waveH - 30 * ls, rowH = wh / 2;
+    for (const [row, key, col, lab] of [[0, 'xi', T.neg, 'displacement ξ'], [1, 'p', T.pos, 'pressure p']]) {
+      const yc = wt + rowH * (row + 0.5), am = rowH * 0.36;
+      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(xe0, yc); ctx.lineTo(kind === 'open' ? xe1 : x1, yc); ctx.stroke();
+      ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(x0, yc - am - 4 * ls); ctx.lineTo(x0, yc + am + 4 * ls); ctx.moveTo(x1, yc - am - 4 * ls); ctx.lineTo(x1, yc + am + 4 * ls); ctx.stroke();
+      const xEnd = kind === 'open' ? L + d : L, steps = 220;
+      for (const pass of ['env', 'now']) {
+        ctx.strokeStyle = col; ctx.lineWidth = (pass === 'now' ? 2.2 : 1) * ls; ctx.globalAlpha = pass === 'now' ? 1 : 0.45;
+        if (pass === 'env') ctx.setLineDash([3 * ls, 3 * ls]);
+        for (const sg of pass === 'env' ? [1, -1] : [1]) {
+          ctx.beginPath();
+          for (let i = 0; i <= steps; i++) {
+            const xa = -d + (xEnd + d) * i / steps, v = pipeShape(kind, n, xa, L, a)[key], y = yc - am * (pass === 'env' ? sg * Math.abs(v) : v * osc);
+            i ? ctx.lineTo(g.X(xa), y) : ctx.moveTo(g.X(xa), y);
+          }
+          ctx.stroke();
+        }
+        ctx.setLineDash([]); ctx.globalAlpha = 1;
+      }
+      // nodes
+      ctx.fillStyle = col;
+      for (let i = 0; i <= 400; i++) {
+        const xa = -d + (xEnd + d) * i / 400, xb = -d + (xEnd + d) * (i + 1) / 400;
+        const v1 = pipeShape(kind, n, xa, L, a)[key], v2 = pipeShape(kind, n, xb, L, a)[key];
+        if (i < 400 && (v1 === 0 || v1 * v2 < 0)) { const xn = v1 === 0 ? xa : xa + (xb - xa) * v1 / (v1 - v2); ctx.beginPath(); ctx.arc(g.X(xn), yc, 2.6 * ls, 0, TAU); ctx.fill(); }
+      }
+      if (kind === 'closed' && key === 'xi') { ctx.beginPath(); ctx.arc(x1, yc, 2.6 * ls, 0, TAU); ctx.fill(); }
+      tag(lab, 14 * ls, yc - am - 2 * ls, col, 'left', 'bottom', true, 10);
+    }
+    tag(pick(['dots mark nodes; dashed lines show the envelope; ΔL beyond each open end', 'dots: nodes'], W - 28 * ls, 9.5, false), 14 * ls, g.waveTop + 6 * ls, T.muted, 'left', 'top', false, 9.5);
+    drawLadder(g);
+  }
+  function drawLadder(g) {
+    const top = g.ladTop + 30 * ls, bot = H - 30 * ls, L = 52 * ls, R = W - 30 * ls, cc = D.c, a = S.pdia / 2;
+    if (bot - top < 40 * ls) return;
+    const fo1 = pipeFreq('open', 1, S.L, a, cc), fMax = Math.max(fo1, pipeFreq('closed', 1, S.L, a, cc)) * 8.6;
+    const X = (f) => L + f / fMax * (R - L);
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(8, g.ladTop + 0.5); ctx.lineTo(W - 8, g.ladTop + 0.5); ctx.stroke();
+    title(['Allowed frequencies: the ladder of modes for this length', 'Allowed frequencies'], 14 * ls, g.ladTop + 8 * ls, W - 28 * ls);
+    const st = nice(fMax / ((R - L) < 380 ? 3 : 6));
+    ctx.font = font(10); ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = 0; v <= fMax + 1e-9; v += st) { const x = Math.round(X(v)) + 0.5; ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bot); ctx.stroke(); ctx.fillText(fmtTick(v, st), x, bot + 4 * ls); }
+    ctx.textAlign = 'right'; ctx.fillText('f (Hz)', R, bot + 16 * ls);
+    const rowH = (bot - top) / 2;
+    G.stems = [];
+    for (const [row, kind, lab] of [[0, 'open', 'open'], [1, 'closed', 'closed']]) {
+      const y0 = top + rowH * row + rowH * 0.18, y1 = top + rowH * (row + 1) - rowH * 0.12, active = kind === S.pm;
+      for (let k = 1; k <= 12; k++) {
+        const f = pipeFreq(kind, k, S.L, a, cc); if (f > fMax) break;
+        const x = X(f), sel = active && k === S.k, hot = isHot('stem' + kind + k);
+        ctx.strokeStyle = active ? (kind === 'open' ? T.accent : T.equi) : T.muted; ctx.globalAlpha = active ? 1 : 0.5;
+        ctx.lineWidth = (sel ? 4 : hot ? 3 : 2) * ls; ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x, y0); ctx.stroke();
+        ctx.fillStyle = sel ? ctx.strokeStyle : T.canvas; ctx.lineWidth = 1.5 * ls; ctx.beginPath(); ctx.arc(x, y0, (sel || hot ? 5.5 : 4) * ls, 0, TAU); ctx.fill(); ctx.stroke();
+        ctx.globalAlpha = 1;
+        if (k <= 9 || (R - L) > 500) { ctx.font = font(9.5, sel); ctx.fillStyle = active ? T.ink : T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(String(pipeHarmonic(kind, k)), x, y0 - 6 * ls); }
+        G.stems.push({ kind, k, x, y0, y1 });
+      }
+      tag(lab, L - 6 * ls, (y0 + y1) / 2, active ? T.ink : T.muted, 'right', 'middle', true, 10);
+    }
+  }
+
+  // =====================================================================
+  // STRINGS
+  // =====================================================================
+  function stringGeom() {
+    const L0 = 34 * ls, R0 = W - 34 * ls, hS = Math.round(H * (S.showModes ? 0.56 : 0.46));
+    const yc = 30 * ls + (hS - 30 * ls) * (S.showModes ? 0.3 : 0.5), amp = Math.min((hS - 30 * ls) * (S.showModes ? 0.2 : 0.34), 120 * ls);
+    return { L0, R0, X: (s) => L0 + s * (R0 - L0), S: (px) => (px - L0) / (R0 - L0), yc, amp, hS, modeTop: yc + amp + 22 * ls };
+  }
+  // decay factors at real time t: e^(−t n/τ₁)
+  function decayFactors(t) {
+    const out = [0]; for (let n = 1; n <= NS; n++) out.push(Math.exp(-t * n / S.tau)); return out;
+  }
+  // the drawing runs in slow motion: its real time since the pluck is the slowed phase over 2π f₁
+  const drawRealT = () => Math.max(0, (visTheta() - ST.th0) / (TAU * D.f1));
+  function stringNow(s) {
+    const g = G.str, bow = S.ex === 'bow';
+    if (ST.hold) { const p = ST.hold.p, hgt = ST.hold.h; return s <= p ? hgt * s / p : hgt * (1 - s) / (1 - p); }
+    if (!bow && !ST.plucked) return 0;
+    return ST.amp * stringY(D.b, s, visTheta() - ST.th0, bow ? null : G.decay, bow);
+  }
+  function drawString() {
+    const g = stringGeom(); G.str = g; G.decay = decayFactors(drawRealT()); G.decayReal = decayFactors(ST.tr);
+    const { L0, R0, X, yc, amp } = g, bow = S.ex === 'bow';
+    // nut and bridge
+    ctx.fillStyle = T.wood; ctx.strokeStyle = T.woodEdge; ctx.lineWidth = 1;
+    rrect(L0 - 14 * ls, yc - 26 * ls, 14 * ls, 52 * ls, 3 * ls); ctx.fill(); ctx.stroke();
+    rrect(R0, yc - 26 * ls, 14 * ls, 52 * ls, 3 * ls); ctx.fill(); ctx.stroke();
+    // bow motion envelope: two parabolas
+    if (bow) {
+      ctx.strokeStyle = T.muted; ctx.setLineDash([4 * ls, 4 * ls]); ctx.lineWidth = 1; ctx.beginPath();
+      for (const sg of [1, -1]) for (let i = 0; i <= 100; i++) { const s = i / 100, y = yc - sg * amp * 4 * s * (1 - s); i ? ctx.lineTo(X(s), y) : ctx.moveTo(X(s), y); }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    // the string
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2.4 * ls; ctx.lineJoin = 'round'; ctx.beginPath();
+    const steps = Math.min(400, Math.round((R0 - L0) / 2));
+    for (let i = 0; i <= steps; i++) { const s = i / steps, y = yc - amp * stringNow(s); i ? ctx.lineTo(X(s), y) : ctx.moveTo(X(s), y); }
+    ctx.stroke();
+    // pluck point and its grip
+    const p = ST.hold ? ST.hold.p : sP(), xp = X(p);
+    if (!bow) {
+      ctx.strokeStyle = T.brass; ctx.globalAlpha = 0.6; ctx.setLineDash([3 * ls, 3 * ls]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(xp, yc - amp - 10 * ls); ctx.lineTo(xp, yc + amp + 10 * ls); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+      const gy = ST.hold ? yc - amp * ST.hold.h : yc - amp * 0.0;
+      grip(xp, gy, isHot('pluck'), T.brass);
+      G.pluckPt = [xp, gy];
+      tag(`x₀ = ${(p * S.sL * 100).toFixed(1)} cm = ${fracTxt(S.q)}L`, clamp(xp + 10 * ls, L0, R0 - 150 * ls), yc + amp + 4 * ls, T.brass, 'left', 'top', true, 10);
+    } else {
+      tag('bowed: a kink circles between the two parabolas', L0, yc + amp + 4 * ls, T.muted, 'left', 'top', false, 10);
+    }
+    tag('nut', L0 - 7 * ls, yc - 30 * ls, T.muted, 'center', 'bottom', false, 9.5);
+    tag('bridge', R0 + 7 * ls, yc - 30 * ls, T.muted, 'center', 'bottom', false, 9.5);
+    const head = bow ? `Bowed string, ideal Helmholtz motion: f₁ = ${fmtHz(D.f1)}` : !ST.plucked && !ST.hold ? 'Plucked string at rest: drag the grip to pull it, let go to pluck' : `Plucked string, sum of ${NS} modes: f₁ = ${fmtHz(D.f1)}, ${noteTxt(D.f1)}`;
+    title([head, bow ? 'Bowed string' : 'Plucked string'], 14 * ls, 8 * ls, W - 28 * ls);
+    if ((bow || ST.plucked) && !ST.hold) tag(pick([`slow motion: 1 s on screen = ${(F_VIS / D.f1 * 1000).toFixed(2)} ms of real time`, `1 s here = ${(F_VIS / D.f1 * 1000).toFixed(2)} ms`], W * 0.45, 10, false), R0, 26 * ls, T.muted, 'right', 'top', false, 10);
+    // the first six modes
+    if (S.showModes) {
+      const top = g.modeTop, h = (g.hS - top) / 6;
+      for (let n = 1; n <= 6; n++) {
+        const y0 = top + h * (n - 0.5), bn = D.b[n] * ST.amp * (bow ? 1 : G.decay[n]), ph = visTheta() - ST.th0, tf = bow ? Math.sin(n * ph) : Math.cos(n * ph);
+        const on = (bow || ST.plucked) && !ST.hold, am = h * 0.42 / Math.max(1e-9, Math.abs(D.b[1]));
+        ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L0, y0); ctx.lineTo(R0, y0); ctx.stroke();
+        ctx.strokeStyle = D.b[n] ? T.accent : T.muted; ctx.globalAlpha = D.b[n] ? 0.85 : 0.5; ctx.lineWidth = 1.5 * ls; ctx.beginPath();
+        for (let i = 0; i <= 120; i++) { const s = i / 120, y = y0 - (on ? bn * tf : D.b[n] * ST.amp) * am * Math.sin(n * PI * s); i ? ctx.lineTo(X(s), y) : ctx.moveTo(X(s), y); }
+        ctx.stroke(); ctx.globalAlpha = 1;
+        tag(`n = ${n}${D.b[n] ? '' : ': zero'}`, L0 - 30 * ls, y0, D.b[n] ? T.accent : T.muted, 'left', 'middle', true, 9.5);
+      }
+    }
+    drawStringSpec(g);
+  }
+  function fracTxt(q) { const p = q / 120; for (let d = 2; d <= 12; d++) { const nn = Math.round(p * d); if (nn > 0 && Math.abs(nn / d - p) < 1e-9 && gcd(nn, d) === 1) return `${nn}/${d} `; } return `${p.toFixed(3)} `; }
+  function gcd(x, y) { while (y) [x, y] = [y, x % y]; return x; }
+  const DB_MIN = -50, NSPEC = 24;
+  // levels at the pluck (a0) and now, after the real decay (a), both relative to the largest at the pluck
+  function specAmps() {
+    const a0 = [0], a = [0], bow = S.ex === 'bow', live = !bow && ST.plucked && !ST.hold;
+    for (let n = 1; n <= NSPEC; n++) { const v = Math.abs(D.b[n]) * (S.spec === 'force' ? n : 1); a0.push(v); a.push(live ? v * G.decayReal[n] : v); }
+    let m = 0; for (let n = 1; n <= NSPEC; n++) m = Math.max(m, a0[n]);
+    return { a, a0, m, live };
+  }
+  function drawStringSpec(g) {
+    const top = g.hS + 34 * ls, bot = H - 34 * ls, L = 46 * ls, R = W - 16 * ls;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(8, g.hS + 0.5); ctx.lineTo(W - 8, g.hS + 0.5); ctx.stroke();
+    if (bot - top < 40) return;
+    const { a, a0, m, live } = specAmps(), cw = (R - L) / NSPEC, Y = (db) => top + Math.max(DB_MIN, db) / DB_MIN * (bot - top);
+    ctx.font = font(10); ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let db = 0; db >= DB_MIN; db -= (bot - top) < 140 ? 20 : 10) { const y = Math.round(Y(db)) + 0.5; ctx.strokeStyle = db === 0 ? T.gridStrong : T.grid; ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(R, y); ctx.stroke(); ctx.fillText(String(db), L - 6 * ls, y); }
+    ctx.save(); ctx.translate(12 * ls, (top + bot) / 2); ctx.rotate(-PI / 2); ctx.textAlign = 'center'; ctx.fillText('level (dB)', 0, 0); ctx.restore();
+    for (let n = 1; n <= NSPEC; n++) {
+      const x = L + (n - 0.5) * cw, bw = Math.max(3, cw * 0.56);
+      ctx.font = font(9.5, n === 1); ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      if (cw > 16 * ls || n % 2 === 1) ctx.fillText(String(n), x, bot + 4 * ls);
+      if (a0[n] <= 0 || m <= 0) {
+        ctx.strokeStyle = T.pos; ctx.lineWidth = 1.6 * ls; const s = Math.min(5 * ls, bw / 2);
+        ctx.beginPath(); ctx.moveTo(x - s, bot - 4 * ls - s); ctx.lineTo(x + s, bot - 4 * ls + s); ctx.moveTo(x + s, bot - 4 * ls - s); ctx.lineTo(x - s, bot - 4 * ls + s); ctx.stroke();
+        continue;
+      }
+      const col = S.spec === 'force' ? T.accent : T.neg;
+      if (live) { const y0 = Y(20 * Math.log10(a0[n] / m)); ctx.strokeStyle = col; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.2 * ls; ctx.strokeRect(x - bw / 2 + 0.5, y0 + 0.5, bw - 1, bot - y0); ctx.globalAlpha = 1; }
+      const db = 20 * Math.log10(Math.max(1e-12, a[n]) / m), y = Y(db);
+      if (db > DB_MIN) { ctx.fillStyle = col; ctx.globalAlpha = 0.85; rrect(x - bw / 2, y, bw, bot - y, Math.min(3, bw / 3, Math.max(0.1, (bot - y) / 2))); ctx.fill(); ctx.globalAlpha = 1; }
+    }
+    // the 1/n² (or 1/n) guide through the largest possible values
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
+    ctx.strokeStyle = T.equi; ctx.setLineDash([4 * ls, 4 * ls]); ctx.lineWidth = 1.2 * ls; ctx.beginPath();
+    const pw = S.spec === 'force' ? 1 : 2, ref = Math.abs(D.b[1]) > 0 ? Math.abs(D.b[1]) * (S.spec === 'force' ? 1 : 1) : 0;
+    const env0 = S.ex === 'bow' ? 1 : 1 / Math.max(1e-9, Math.abs(Math.sin(PI * sP())));
+    for (let n = 1; n <= NSPEC; n++) { const v = env0 / Math.pow(n, pw), db = 20 * Math.log10(v * (ref ? ref : 1) / m), x = L + (n - 0.5) * cw; n === 1 ? ctx.moveTo(x, Y(db)) : ctx.lineTo(x, Y(db)); }
+    ctx.stroke(); ctx.setLineDash([]); ctx.restore();
+    ctx.font = font(10); ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(`harmonic n (fₙ = n × ${fmtHz(D.f1)})`, R, bot + 17 * ls);
+    const when = live ? `, ${ST.tr.toFixed(1)} s after the pluck` : '';
+    title([S.spec === 'force' ? `Spectrum of the force on the bridge, n·bₙ (what you hear)${when}` : `Spectrum of the string shape, bₙ${when}`, S.spec === 'force' ? `Bridge force spectrum${when}` : `Shape spectrum${when}`, S.spec === 'force' ? 'Bridge force' : 'Shape'], 14 * ls, g.hS + 8 * ls, W - 28 * ls);
+    tag(pick([`${live ? 'outline: at the pluck · ' : ''}dashed: ${S.spec === 'force' ? '1/n' : '1/n²'} envelope · × = exactly zero`, `dashed ${S.spec === 'force' ? '1/n' : '1/n²'} · × = 0`, '× = 0'], (R - L) * 0.62, 9.5, false), R, top - 6 * ls, T.equi, 'right', 'bottom', false, 9.5);
+  }
+
+  // =====================================================================
+  // BOTTLE
+  // =====================================================================
+  function bottleGeom() {
+    const wide = W >= 620, bw = wide ? W * 0.42 : W, bh = wide ? H : H * 0.56;
+    const { Rb, Hb } = D.body, a = S.bdia / 2, Hn = S.neck, sh = 0.045;   // shoulder drawn 4.5 cm tall, volume ignored
+    const totalH = Hb + sh + Hn, s = Math.min((bh - 130 * ls) / totalH, (bw - 140 * ls) / (2 * Rb), 2600);
+    const cx = bw / 2, base = bh - 40 * ls;
+    return { wide, bw, bh, s, cx, base, Rb, Hb, a, Hn, sh, bodyTop: base - Hb * s, neckBot: base - (Hb + sh) * s, mouth: base - totalH * s,
+      plot: wide ? { x: bw, y: 0, w: W - bw, h: H } : { x: 0, y: bh, w: W, h: H - bh } };
+  }
+  function drawBottle() {
+    const g = bottleGeom(); G.bot = g;
+    const { s, cx, base, Rb, a, bodyTop, neckBot, mouth } = g, rb = Rb * s, ra = a * s, th = visTheta();
+    const yW = base - D.body.Hb * (S.fill / 100) * s;
+    // outline path
+    const path = () => {
+      ctx.beginPath(); ctx.moveTo(cx - ra, mouth); ctx.lineTo(cx - ra, neckBot);
+      ctx.bezierCurveTo(cx - ra, neckBot + (bodyTop - neckBot) * 0.6, cx - rb, neckBot + (bodyTop - neckBot) * 0.3, cx - rb, bodyTop);
+      ctx.lineTo(cx - rb, base - 6 * ls); ctx.quadraticCurveTo(cx - rb, base, cx - rb + 6 * ls, base); ctx.lineTo(cx + rb - 6 * ls, base); ctx.quadraticCurveTo(cx + rb, base, cx + rb, base - 6 * ls);
+      ctx.lineTo(cx + rb, bodyTop); ctx.bezierCurveTo(cx + rb, neckBot + (bodyTop - neckBot) * 0.3, cx + ra, neckBot + (bodyTop - neckBot) * 0.6, cx + ra, neckBot); ctx.lineTo(cx + ra, mouth);
+    };
+    // air in the body: compressed when the neck plug is pushed in (slowed oscillation)
+    const blow = S.blowing, osc = blow ? Math.cos(th) : 0;
+    ctx.save(); path(); ctx.closePath(); ctx.clip();
+    ctx.fillStyle = osc > 0 ? T.pos : T.neg; ctx.globalAlpha = Math.abs(osc) * 0.16; ctx.fillRect(cx - rb, neckBot, 2 * rb, base - neckBot); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.water; ctx.globalAlpha = 0.6; ctx.fillRect(cx - rb, yW, 2 * rb, base - yW); ctx.globalAlpha = 1;
+    // the plug of air in the neck, moving in and out
+    const dy = osc * Math.min(10 * ls, (neckBot - mouth) * 0.18);
+    ctx.fillStyle = T.accent; ctx.globalAlpha = 0.28; ctx.fillRect(cx - ra, mouth + dy, 2 * ra, neckBot - mouth); ctx.globalAlpha = 1;
+    ctx.restore();
+    ctx.strokeStyle = T.glass; ctx.lineWidth = 2.6 * ls; path(); ctx.stroke();
+    // lip
+    ctx.lineWidth = 4 * ls; ctx.beginPath(); ctx.moveTo(cx - ra - 3 * ls, mouth); ctx.lineTo(cx - ra, mouth); ctx.moveTo(cx + ra, mouth); ctx.lineTo(cx + ra + 3 * ls, mouth); ctx.stroke();
+    // neck plug arrows
+    if (blow) {
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 1.6 * ls; const ym = (mouth + neckBot) / 2 + dy;
+      ctx.beginPath(); ctx.moveTo(cx, ym - 9 * ls); ctx.lineTo(cx, ym + 9 * ls); ctx.moveTo(cx - 4 * ls, ym - 5 * ls); ctx.lineTo(cx, ym - 9 * ls); ctx.lineTo(cx + 4 * ls, ym - 5 * ls); ctx.moveTo(cx - 4 * ls, ym + 5 * ls); ctx.lineTo(cx, ym + 9 * ls); ctx.lineTo(cx + 4 * ls, ym + 5 * ls); ctx.stroke();
+      // air jet across the mouth
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ls; ctx.setLineDash([6 * ls, 5 * ls]); ctx.lineDashOffset = -(tAnim * 40) % 22;
+      for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.moveTo(cx - ra - 70 * ls, mouth - 14 * ls + i * 5 * ls); ctx.quadraticCurveTo(cx, mouth - 6 * ls + i * 3 * ls, cx + ra + 60 * ls, mouth - 18 * ls + i * 6 * ls); ctx.stroke(); }
+      ctx.setLineDash([]); ctx.lineDashOffset = 0;
+    }
+    // mouth grip: click to blow
+    grip(cx - ra - 16 * ls, mouth - 6 * ls, isHot('mouth'), T.accent);
+    G.mouthPt = [cx - ra - 16 * ls, mouth - 6 * ls];
+    // water handle
+    barGrip(cx - rb - 4 * ls, cx + rb + 4 * ls, yW, isHot('bwater'), T.accent);
+    G.bWaterY = yW;
+    // dimensions
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; const xd = cx + rb + 18 * ls;
+    ctx.beginPath(); ctx.moveTo(cx + ra + 8 * ls, mouth); ctx.lineTo(cx + ra + 8 * ls, neckBot); ctx.moveTo(cx + ra + 4 * ls, mouth); ctx.lineTo(cx + ra + 12 * ls, mouth); ctx.moveTo(cx + ra + 4 * ls, neckBot); ctx.lineTo(cx + ra + 12 * ls, neckBot); ctx.stroke();
+    tag(`neck ${cm(S.neck)}, ⌀ ${cm(S.bdia)}`, cx + ra + 14 * ls, (mouth + neckBot) / 2, T.muted, 'left', 'middle', false, 10);
+    tag(`air ${(D.Vair * 1e6).toFixed(0)} mL`, cx, (neckBot + yW) / 2 + 8 * ls, T.ink, 'center', 'middle', true, 10.5);
+    if (base - yW > 34 * ls) tag(`water ${S.fill}%`, cx, (yW + base) / 2 + 6 * ls, T.ink, 'center', 'middle', false, 10);
+    title(['Helmholtz resonator: the neck air bounces on the body air', 'Helmholtz resonator'], 14 * ls, 8 * ls, g.bw - 28 * ls);
+    tag(blow ? `blowing: ${fmtHz(D.fH)}, ${noteTxt(D.fH)}` : 'click the grip at the mouth, or Blow across the top', 14 * ls, 28 * ls, blow ? T.accent : T.muted, 'left', 'top', true, 10.5);
+    void xd;
+    drawBottlePlot(g);
+  }
+  function drawBottlePlot(g) {
+    const P = g.plot, L = P.x + 56 * ls, R = P.x + P.w - 18 * ls, top = P.y + 44 * ls, bot = P.y + P.h - 40 * ls;
+    if (R - L < 80 || bot - top < 60) return;
+    if (!g.wide) { ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(8, P.y + 0.5); ctx.lineTo(W - 8, P.y + 0.5); ctx.stroke(); }
+    else { ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(P.x + 0.5, 8); ctx.lineTo(P.x + 0.5, H - 8); ctx.stroke(); }
+    const cc = D.c, a = S.bdia / 2, fill2 = (fl) => {
+      const V = S.vb * (1 - fl / 100), Hair = D.body.Hb * (1 - fl / 100) + S.neck;
+      return [helmholtzF(cc, D.A, V, D.Le), closedPipeF(cc, Hair, a)];
+    };
+    let fMax = 0; for (let fl = 0; fl <= 90; fl += 1) { const v = fill2(fl); fMax = Math.max(fMax, v[0], v[1]); }
+    fMax = niceCeil(fMax * 1.05);
+    const X = (fl) => L + fl / 90 * (R - L), Y = (f) => bot - f / fMax * (bot - top);
+    G.bplot = { L, R, top, bot, X, Y, inv: (px) => clamp((px - L) / (R - L) * 90, 0, 90) };
+    ctx.font = font(10); ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    const st = nice(fMax / ((bot - top) < 220 ? 3 : 5));
+    for (let v = 0; v <= fMax + 1e-9; v += st) { const y = Math.round(Y(v)) + 0.5; ctx.strokeStyle = v === 0 ? T.gridStrong : T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(R, y); ctx.stroke(); ctx.fillText(fmtTick(v, st), L - 6 * ls, y); }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let fl = 0; fl <= 90; fl += (R - L) < 260 ? 30 : 15) { const x = Math.round(X(fl)) + 0.5; ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bot); ctx.stroke(); ctx.fillText(String(fl), x, bot + 5 * ls); }
+    ctx.textAlign = 'right'; ctx.fillText('water (% of the body)', R, bot + 19 * ls);
+    ctx.save(); ctx.translate(P.x + 14 * ls, (top + bot) / 2); ctx.rotate(-PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('f (Hz)', 0, 0); ctx.restore();
+    for (const [i, col, dash] of [[1, T.equi, true], [0, T.accent, false]]) {
+      ctx.strokeStyle = col; ctx.lineWidth = (dash ? 1.6 : 2.4) * ls; if (dash) ctx.setLineDash([6 * ls, 4 * ls]);
+      ctx.beginPath(); for (let fl = 0; fl <= 90; fl += 0.5) { const v = fill2(fl)[i]; fl ? ctx.lineTo(X(fl), Y(v)) : ctx.moveTo(X(fl), Y(v)); } ctx.stroke(); ctx.setLineDash([]);
+    }
+    const xf = X(S.fill);
+    ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(xf, top); ctx.lineTo(xf, bot); ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.equi; ctx.beginPath(); ctx.arc(xf, Y(D.fP), 4 * ls, 0, TAU); ctx.fill();
+    grip(xf, Y(D.fH), isHot('bmark'), T.accent);
+    G.bmarkPt = [xf, Y(D.fH)];
+    const rightSide = S.fill < 55;
+    tag(`Helmholtz ${fmtHz(D.fH)}`, rightSide ? xf + 10 * ls : xf - 10 * ls, Y(D.fH) + 12 * ls, T.accent, rightSide ? 'left' : 'right', 'top', true, 10.5);
+    tag(`closed pipe ${fmtHz(D.fP)}`, rightSide ? xf + 10 * ls : xf - 10 * ls, Y(D.fP) - 8 * ls, T.equi, rightSide ? 'left' : 'right', 'bottom', true, 10.5);
+    title(['Note against water level: Helmholtz formula and a closed pipe estimate', 'Note against water level', 'f against water'], P.x + 14 * ls, P.y + 8 * ls, P.w - 28 * ls);
+  }
+  function niceCeil(v) { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; return (m <= 1 ? 1 : m <= 1.5 ? 1.5 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 3 ? 3 : m <= 4 ? 4 : m <= 5 ? 5 : m <= 6 ? 6 : m <= 8 ? 8 : 10) * p; }
+
+  function draw() {
+    if (!T || !W || !H || !D) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.paper; ctx.fillRect(0, 0, W, H);
+    if (S.view === 'pipe') { if (S.pm === 'tube') drawTube(); else drawPipe(); }
+    else if (S.view === 'string') drawString();
+    else drawBottle();
+    dirty = false;
+  }
+
+  // ---------- pointer: handles on the drawing ----------
+  let drag = null, hoverId = null;
+  function handles() {
+    const out = [];
+    if (S.view === 'pipe' && S.pm === 'tube' && G.tube) {
+      const g = G.tube;
+      out.push({ id: 'water', cursor: 'ns-resize', seg: [g.tx - 6 * ls, g.Y(S.water), g.tx + g.tw + 6 * ls, g.Y(S.water)], set: (x, y) => setWater(g.D(y)) });
+      if (G.lvX) out.push({ id: 'level', cursor: 'ns-resize', pt: [G.lvX(levelDb(D.rel)), g.Y(S.water)], set: (x, y) => setWater(g.D(y)) });
+    } else if (S.view === 'pipe' && G.pipe) {
+      const g = G.pipe;
+      out.push({ id: 'pend', cursor: 'ew-resize', pt: G.pendPt, set: (x) => setPipeLen((x - g.L0) / g.sx) });
+      out.push({ id: 'pendLine', cursor: 'ew-resize', seg: [g.X(S.L), g.pc - g.ph / 2, g.X(S.L), g.pc + g.ph / 2], set: (x) => setPipeLen((x - g.L0) / g.sx), hl: 'pend' });
+      for (const s of G.stems || []) out.push({ id: 'stem' + s.kind + s.k, cursor: 'pointer', pt: [s.x, s.y0], click: () => { setPm(s.kind); setK(s.k); } });
+    } else if (S.view === 'string' && G.str && S.ex === 'pluck') {
+      const g = G.str;
+      out.push({ id: 'pluck', cursor: 'grab', pt: G.pluckPt, set: (x, y) => holdAt(x, y) });
+      out.push({ id: 'strline', cursor: 'grab', seg: [g.L0 + 4, g.yc, g.R0 - 4, g.yc], set: (x, y) => holdAt(x, y), hl: 'pluck', loose: true });
+    } else if (S.view === 'bottle' && G.bot) {
+      const g = G.bot;
+      out.push({ id: 'bwater', cursor: 'ns-resize', seg: [g.cx - g.Rb * g.s - 6 * ls, G.bWaterY, g.cx + g.Rb * g.s + 6 * ls, G.bWaterY], set: (x, y) => setFill((g.base - y) / (D.body.Hb * g.s) * 100) });
+      if (G.bmarkPt) out.push({ id: 'bmark', cursor: 'ew-resize', pt: G.bmarkPt, set: (x) => setFill(G.bplot.inv(x)) });
+      if (G.mouthPt) out.push({ id: 'mouth', cursor: 'pointer', pt: G.mouthPt, click: () => setBlow(!S.blowing) });
+    }
+    return out;
+  }
+  function handleAt(ev) {
+    const rc = can.getBoundingClientRect(), x = ev.clientX - rc.left, y = ev.clientY - rc.top;
+    const tol = 9 * ls * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of handles()) {
+      let d = Infinity;
+      if (h.pt) d = Math.hypot(x - h.pt[0], y - h.pt[1]) - 3 * ls;
+      else if (h.seg) {
+        const [x1, y1, x2, y2] = h.seg;
+        if (Math.abs(x2 - x1) < 1) { if (y >= Math.min(y1, y2) - 4 && y <= Math.max(y1, y2) + 4) d = Math.abs(x - x1); }
+        else if (x >= Math.min(x1, x2) - 4 && x <= Math.max(x1, x2) + 4) d = Math.abs(y - y1) - (h.loose ? G.str.amp * 0.5 : 0);
+        d += 1;
+      }
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  let dragQueued = null, dragFrame = false;
+  function queueDrag(ev) {
+    const rc = can.getBoundingClientRect();
+    dragQueued = [ev.clientX - rc.left, ev.clientY - rc.top];
+    if (dragFrame) return;
+    dragFrame = true;
+    requestAnimationFrame(() => {
+      dragFrame = false;
+      if (!drag || !dragQueued) return;
+      const h = handles().find((k) => k.id === drag.id);
+      if (h && h.set) h.set(dragQueued[0], dragQueued[1]);
+      dragQueued = null;
+    });
+  }
+  can.addEventListener('pointermove', (ev) => {
+    if (drag) { queueDrag(ev); return; }
+    const h = handleAt(ev), id = h ? (h.hl || h.id) : null;
+    can.style.cursor = h ? h.cursor : 'default';
+    if (id !== hoverId) { hoverId = id; dirty = true; }
+  });
+  can.addEventListener('pointerdown', (ev) => {
+    const h = handleAt(ev);
+    if (!h) return;
+    ev.preventDefault();
+    if (h.click) { h.click(); return; }
+    drag = { id: h.id };
+    if (S.pouring) setPour(false);
+    try { can.setPointerCapture(ev.pointerId); } catch (_) {}
+    can.style.cursor = h.cursor === 'grab' ? 'grabbing' : h.cursor;
+    queueDrag(ev);
+  });
+  const endDrag = () => {
+    if (!drag) return;
+    const id = drag.id; drag = null; hoverId = null; dirty = true;
+    if ((id === 'pluck' || id === 'strline') && ST.hold) { const hh = ST.hold.h; ST.hold = null; if (Math.abs(hh) > 0.02) pluck(hh); else { ST.plucked = false; } }
+  };
+  can.addEventListener('pointerup', endDrag);
+  can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('pointerleave', () => { if (!drag && hoverId) { hoverId = null; dirty = true; } });
+  can.addEventListener('focus', () => { dirty = true; });
+  can.addEventListener('keydown', (e) => {
+    const big = e.shiftKey;
+    if (e.key === ' ') { setRunning(!running); e.preventDefault(); return; }
+    if (S.view === 'pipe' && S.pm === 'tube') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') setWater(S.water + (e.key === 'ArrowDown' ? 1 : -1) * (big ? 0.01 : 0.001));
+      else if (e.key === 'Enter' || e.key === 'c' || e.key === 'C') capture();
+      else return;
+    } else if (S.view === 'pipe') {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') setPipeLen(S.L + (e.key === 'ArrowRight' ? 1 : -1) * (big ? 0.1 : 0.01));
+      else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') setK(S.k + (e.key === 'ArrowUp' ? 1 : -1));
+      else return;
+    } else if (S.view === 'string') {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') setQ(S.q + (e.key === 'ArrowRight' ? 1 : -1) * (big ? 6 : 1));
+      else if (e.key === 'Enter') pluck(1);
+      else return;
+    } else {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { if (S.pouring) setPour(false); setFill(S.fill + (e.key === 'ArrowUp' ? 1 : -1) * (big ? 10 : 1)); }
+      else if (e.key === 'Enter' || e.key === 'b' || e.key === 'B') setBlow(!S.blowing);
+      else return;
+    }
+    e.preventDefault();
+  });
+
+  // ---------- setters (clamped and snapped to the sliders) ----------
+  function snap(el, v) { const st = +el.step, mn = +el.min; v = clamp(v, mn, +el.max); return +(mn + Math.round((v - mn) / st) * st).toFixed(6); }
+  function changed(edit) { if (edit !== false) markPreset(null); recompute(); readouts(); soundDirty = true; }
+  function setWater(v) {
+    const el = $('water'); v = snap(el, v); if (v === S.water) return;
+    S.water = v; el.value = v; recompute();
+    S.trace.push([v, levelDb(D.rel)]); if (S.trace.length > 4000) S.trace.shift();
+    readouts(); soundDirty = true;
+  }
+  function resetTrace() { S.trace = []; }
+  function setPipeLen(v) { const el = $('plen'); v = snap(el, v); if (v === S.L) return; S.L = v; el.value = v; changed(); }
+  function setK(k) { const el = $('pk'); k = snap(el, k); S.k = k; el.value = k; changed(); }
+  function setPm(m) { S.pm = m; syncSegs(); showSections(); changed(); }
+  function setQ(q) { const el = $('sPos'); q = snap(el, q); S.q = q; el.value = q; changed(); }
+  function setFill(v) { const el = $('bFill'); v = snap(el, v); if (v === S.fill) return; S.fill = v; el.value = v; changed(); }
+  function setBlow(on) { S.blowing = on; $('blow').setAttribute('aria-pressed', String(on)); soundDirty = true; dirty = true; soundHintText(); }
+  function setPour(on) { S.pouring = on; pourAcc = 0; $('pour').setAttribute('aria-pressed', String(on)); if (on && S.fill >= 90) { S.fill = 0; $('bFill').value = 0; recompute(); readouts(); } if (on && !S.blowing) setBlow(true); dirty = true; }
+  // string pluck: hold the string in a triangle at the pointer, then let go
+  function holdAt(x, y) {
+    const g = G.str, s = clamp(g.S(x), 2 / 120, 118 / 120), q = Math.round(s * 120), hgt = clamp((g.yc - y) / g.amp, -1, 1);
+    if (q !== S.q) { S.q = q; $('sPos').value = q; markPreset(null); recompute(); readouts(); }
+    ST.hold = { p: q / 120, h: Math.abs(hgt) < 0.02 ? 0.02 : hgt }; ST.plucked = false; soundDirty = true; dirty = true;
+  }
+  function pluck(h) {
+    ST.hold = null; ST.amp = h === undefined ? 1 : h; ST.plucked = true; ST.tr = 0; ST.th0 = visTheta(); pluckId++;
+    soundDirty = true; dirty = true;
+  }
+  let pluckId = 0; ST.th0 = 0;
+
+  // ---------- rail ----------
+  function markPreset(id) {
+    presetId = id;
+    for (const b of $('presets').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.p === id));
+    $('presetHint').textContent = id ? PRESETS[id].hint : 'Your own setup. Pick a preset to start again from one of the teaching cases.';
+  }
+  function applyPreset(id) {
+    const P = PRESETS[id];
+    S.pouring = false; ST.hold = null; hoverId = null;
+    if (id !== 'middle' && id !== 'guitar') { ST.plucked = false; }
+    P.set();
+    if (id === 'tube') resetTrace();
+    syncControls(); syncSegs(); showSections(); markPreset(id);
+    recompute(); readouts(); soundDirty = true;
+    if (id === 'bottle' || id === 'fill') { setBlow(true); setPour(S.pouring); }
+    else setBlow(false);
+    if (S.view === 'string' && S.ex === 'pluck') pluck(1);
+  }
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) applyPreset(b.dataset.p); });
+  function syncControls() {
+    $('temp').value = S.tc; $('fork').value = S.fork; $('water').value = S.water; $('tdia').value = (S.tdia * 100).toFixed(1); $('tq').value = S.Q;
+    $('plen').value = S.L; $('pdia').value = (S.pdia * 100).toFixed(1); $('pk').value = S.k;
+    $('sLen').value = S.sL; $('sTen').value = S.sT; $('sMu').value = Math.log10(S.mu * 1e3).toFixed(3); $('sPos').value = S.q; $('sW').value = (S.w * 100).toFixed(1); $('sTau').value = S.tau;
+    $('sPreset').value = S.sPreset || '';
+    $('bVol').value = (S.vb * 1e3).toFixed(2); $('bFill').value = S.fill; $('bNeck').value = (S.neck * 100).toFixed(1); $('bDia').value = (S.bdia * 100).toFixed(1);
+    $('showModes').checked = S.showModes; $('blind').checked = S.blind; $('seed').value = S.seed;
+  }
+  function segSet(id, attr, val) { for (const x of $(id).querySelectorAll('button')) x.setAttribute('aria-pressed', String(x.dataset[attr] === val)); }
+  function syncSegs() {
+    segSet('viewSeg', 'v', S.view); segSet('pipeSeg', 'm', S.pm); segSet('exSeg', 'e', S.ex); segSet('psndSeg', 's', S.psnd); segSet('specSeg', 's', S.spec);
+    $('pipeSeg').hidden = S.view !== 'pipe'; $('exSeg').hidden = S.view !== 'string';
+  }
+  function showSections() {
+    const keys = [S.view, S.view === 'pipe' ? S.pm : ''];
+    for (const sec of document.querySelectorAll('.rail section[data-show]')) {
+      const list = sec.dataset.show.split(' ');
+      sec.hidden = !list.some((k) => keys.includes(k));
+    }
+    buildKey(); requestAnimationFrame(sizePlot);
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.view = b.dataset.v; S.pouring = false; $('pour').setAttribute('aria-pressed', 'false'); syncSegs(); showSections(); markPreset(null); recompute(); readouts(); soundDirty = true; hoverId = null; });
+  $('pipeSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { setPm(b.dataset.m); } });
+  $('exSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.ex = b.dataset.e; syncSegs(); changed(); if (S.ex === 'pluck') pluck(1); });
+  $('psndSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.psnd = b.dataset.s; syncSegs(); soundDirty = true; soundHintText(); });
+  $('specSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.spec = b.dataset.s; syncSegs(); dirty = true; });
+  $('temp').addEventListener('input', (e) => { S.tc = +e.target.value; resetTrace(); changed(); });
+  $('fork').addEventListener('input', (e) => { S.fork = +e.target.value; resetTrace(); changed(); });
+  $('forks').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.fork = +b.dataset.f; $('fork').value = S.fork; resetTrace(); changed(); });
+  $('water').addEventListener('input', (e) => { markPreset(null); setWater(+e.target.value); });
+  $('tdia').addEventListener('input', (e) => { S.tdia = +e.target.value / 100; resetTrace(); changed(); });
+  $('tq').addEventListener('input', (e) => { S.Q = +e.target.value; resetTrace(); changed(); });
+  $('plen').addEventListener('input', (e) => setPipeLen(+e.target.value));
+  $('pdia').addEventListener('input', (e) => { S.pdia = +e.target.value / 100; changed(); });
+  $('pk').addEventListener('input', (e) => setK(+e.target.value));
+  $('sPreset').addEventListener('change', (e) => { if (!e.target.value) return; useString(e.target.value); syncControls(); changed(); if (S.ex === 'pluck') pluck(1); });
+  const ownString = () => { S.sPreset = ''; $('sPreset').value = ''; };
+  $('sLen').addEventListener('input', (e) => { S.sL = +e.target.value; ownString(); changed(); });
+  $('sTen').addEventListener('input', (e) => { S.sT = +e.target.value; ownString(); changed(); });
+  $('sMu').addEventListener('input', (e) => { S.mu = Math.pow(10, +e.target.value) / 1e3; ownString(); changed(); });
+  $('sPos').addEventListener('input', (e) => setQ(+e.target.value));
+  $('posChips').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; setQ(+b.dataset.q); if (S.ex === 'pluck') pluck(1); });
+  $('sW').addEventListener('input', (e) => { S.w = +e.target.value / 100; changed(); });
+  $('sTau').addEventListener('input', (e) => { S.tau = +e.target.value; changed(); });
+  $('pluckBtn').addEventListener('click', () => { if (S.ex !== 'pluck') { S.ex = 'pluck'; syncSegs(); changed(); } pluck(1); });
+  $('showModes').addEventListener('change', (e) => { S.showModes = e.target.checked; dirty = true; });
+  $('bVol').addEventListener('input', (e) => { S.vb = +e.target.value / 1e3; changed(); });
+  $('bFill').addEventListener('input', (e) => { if (S.pouring) setPour(false); setFill(+e.target.value); });
+  $('bNeck').addEventListener('input', (e) => { S.neck = +e.target.value / 100; changed(); });
+  $('bDia').addEventListener('input', (e) => { S.bdia = +e.target.value / 100; changed(); });
+  $('blow').addEventListener('click', () => setBlow(!S.blowing));
+  $('pour').addEventListener('click', () => setPour(!S.pouring));
+
+  // ---------- readings, fit and plot ----------
+  function rowsSI() {
+    // k: as typed, or counted from the top among readings at the same frequency
+    const out = [];
+    S.rows.forEach((r, i) => {
+      const L = parseFloat(r.Lcm) / 100; let k = parseInt(r.k, 10);
+      if (!(k >= 1)) {
+        const same = S.rows.filter((q) => q.f === r.f && isFinite(parseFloat(q.Lcm))).map((q) => parseFloat(q.Lcm)).sort((p, q) => p - q);
+        k = same.indexOf(parseFloat(r.Lcm)) + 1;
+      }
+      out.push({ i, f: r.f, k, L, auto: !(parseInt(r.k, 10) >= 1) });
+    });
+    return out;
+  }
+  function capture() {
+    const i = S.captures++;
+    const L = S.water + readingScatter(S.seed, i);
+    S.rows.push({ f: S.fork, Lcm: (L * 100).toFixed(1), k: '', tc: S.tc, dia: S.tdia, seed: S.seed, idx: i });
+    renderTable();
+  }
+  function renderTable() {
+    const tb = $('tbl').querySelector('tbody'); tb.textContent = '';
+    const R = rowsSI();
+    R.forEach((r) => {
+      const prev = R.filter((q) => q.f === r.f && q.k === r.k - 1 && isFinite(q.L));
+      const sp = prev.length && isFinite(r.L) ? `${((r.L - prev[0].L) * 100).toFixed(1)}` : '—';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td class="n">${r.i + 1}</td><td>${r.f}</td>` +
+        `<td><input class="k" aria-label="Resonance number k, row ${r.i + 1}" data-i="${r.i}" data-f="k" value="${S.rows[r.i].k}" placeholder="${r.k}"></td>` +
+        `<td><input aria-label="Water position read, row ${r.i + 1}, cm" data-i="${r.i}" data-f="Lcm" value="${S.rows[r.i].Lcm}"><span class="u">cm</span></td>` +
+        `<td>${sp}</td><td><button type="button" data-del="${r.i}" aria-label="Delete row ${r.i + 1}">×</button></td>`;
+      tb.appendChild(tr);
+    });
+    fitOut(); plotDirty = true; dirty = true;
+  }
+  $('tbl').addEventListener('change', (e) => { const t = e.target; if (t.dataset && t.dataset.f) { S.rows[+t.dataset.i][t.dataset.f] = t.value.trim(); renderTable(); } });
+  $('tbl').addEventListener('click', (e) => { const b = e.target.closest('button[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderTable(); } });
+  $('capture').addEventListener('click', capture);
+  $('clearTab').addEventListener('click', () => { S.rows = []; renderTable(); });
+  function fitNow() { const R = rowsSI().filter((r) => isFinite(r.L) && r.k >= 1); return { R, fit: tubeFit(R), sp: spacingSpeeds(R) }; }
+  function fitOut() {
+    const { R, fit, sp } = fitNow(), dl = $('fitOut'); let html = '';
+    const pm = (v, e, d) => isFinite(e) ? `${v.toFixed(d)} ± ${e.toFixed(d)}` : v.toFixed(d);
+    if (sp.length) { const m = sp.reduce((s, v) => s + v, 0) / sp.length; html += `<div class="wide"><dt>c = 2f × spacing (mean of ${sp.length})</dt><dd>${m.toFixed(1)} m/s</dd></div>`; }
+    if (fit) {
+      html += `<div><dt>Slope: c</dt><dd>${pm(fit.c, fit.sc, 1)} <small>m/s</small></dd></div>`;
+      html += `<div><dt>Intercept: −ΔL</dt><dd>${pm(-fit.dL * 100, fit.sdL * 100, 2)} <small>cm</small></dd></div>`;
+      const a = S.tdia / 2;
+      html += `<div class="wide"><dt>End correction ΔL / a (a = ${(a * 100).toFixed(2)} cm)</dt><dd>${(fit.dL / a).toFixed(2)}</dd></div>`;
+      if (!S.blind) html += `<div class="wide"><dt>Expected at ${S.tc.toFixed(1)} °C</dt><dd>${D.c.toFixed(1)} m/s · ΔL = ${(END_OPEN * a * 100).toFixed(2)} cm</dd></div>`;
+    } else html += `<div class="wide"><dt>Fit</dt><dd class="ok">${R.length ? 'Capture a second resonance to fit a line.' : 'Find a resonance, then Capture reading.'}</dd></div>`;
+    dl.innerHTML = html;
+  }
+  function csvTable() {
+    const L = ['# Resonators: resonance tube (simulated readings; scatter fixed by the seed)', `# reading seed,${S.seed}`, `# reading scatter sigma_mm,${(READ_SIGMA * 1000).toFixed(1)}`,
+      'row,f_Hz,k,L_read_cm,x_(2k-1)/4f_ms,temperature_C,tube_diameter_cm'];
+    for (const r of rowsSI()) L.push([r.i + 1, r.f, r.k, S.rows[r.i].Lcm, isFinite(r.L) ? (tubeX(r.f, r.k) * 1000).toFixed(5) : '', S.rows[r.i].tc, (S.rows[r.i].dia * 100).toFixed(1)].join(','));
+    return L.join('\n') + '\n';
+  }
+  function download(name, text) {
+    try { const b = new Blob([text], { type: 'text/csv' }), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800); } catch (_) {}
+  }
+  $('expTab').addEventListener('click', () => download(`resonance-tube-seed${S.seed}.csv`, csvTable()));
+  $('blind').addEventListener('change', (e) => { S.blind = e.target.checked; fitOut(); readouts(); dirty = true; plotDirty = true; });
+  function setSeed(n) { n = clamp(Math.round(n) || 1, 1, 99999); S.seed = n; $('seed').value = n; }
+  $('seed').addEventListener('change', (e) => setSeed(+e.target.value));
+  $('newSeed').addEventListener('click', () => setSeed(1 + Math.floor(Math.random() * 99999)));
+  const plot = $('plot'), pctx = plot.getContext('2d'); let pW = 0, pH = 0, plotDirty = true;
+  function sizePlot() {
+    const r = plot.parentElement.getBoundingClientRect(); if (!r.width) return;
+    const d = window.devicePixelRatio || 1; pW = r.width; pH = r.height;
+    plot.width = Math.round(pW * d); plot.height = Math.round(pH * d); plotDirty = true; drawPlot();
+  }
+  function drawPlot() {
+    plotDirty = false;
+    if (!T || !pW || !pH || plot.offsetParent === null) return;
+    const ctx2 = pctx, d = window.devicePixelRatio || 1; ctx2.setTransform(d, 0, 0, d, 0, 0);
+    ctx2.fillStyle = T.canvas; ctx2.fillRect(0, 0, pW, pH);
+    const { R, fit } = fitNow(), L = 44, Rr = pW - 10, top = 10, bot = pH - 30;
+    let x1 = 3, y0 = -5, y1 = 100;
+    for (const r of R) { x1 = Math.max(x1, tubeX(r.f, r.k) * 1000 * 1.1); y1 = Math.max(y1, r.L * 100 * 1.1); }
+    const X = (v) => L + v / x1 * (Rr - L), Y = (v) => bot - (v - y0) / (y1 - y0) * (bot - top);
+    const nc = (r) => { const p = 10 ** Math.floor(Math.log10(r)), m = r / p; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p; };
+    ctx2.font = `10px ${T.mono}`; ctx2.fillStyle = T.muted; ctx2.strokeStyle = T.grid; ctx2.lineWidth = 1;
+    const xs = nc(x1 / 4), ys = nc((y1 - y0) / 4);
+    ctx2.textAlign = 'center'; ctx2.textBaseline = 'top';
+    for (let v = 0; v <= x1 + 1e-9; v += xs) { const x = Math.round(X(v)) + 0.5; ctx2.beginPath(); ctx2.moveTo(x, top); ctx2.lineTo(x, bot); ctx2.stroke(); ctx2.fillText(+v.toFixed(3) + '', x, bot + 3); }
+    ctx2.textAlign = 'right'; ctx2.textBaseline = 'middle';
+    for (let v = Math.ceil(y0 / ys) * ys; v <= y1 + 1e-9; v += ys) { const y = Math.round(Y(v)) + 0.5; ctx2.strokeStyle = Math.abs(v) < 1e-9 ? T.gridStrong : T.grid; ctx2.beginPath(); ctx2.moveTo(L, y); ctx2.lineTo(Rr, y); ctx2.stroke(); ctx2.fillText(+v.toFixed(3) + '', L - 4, y); }
+    ctx2.strokeStyle = T.gridStrong; ctx2.strokeRect(L + 0.5, top + 0.5, Rr - L, bot - top);
+    ctx2.textAlign = 'right'; ctx2.textBaseline = 'bottom'; ctx2.fillText('(2k − 1)/4f (ms)', Rr, pH - 1);
+    ctx2.save(); ctx2.translate(10, (top + bot) / 2); ctx2.rotate(-PI / 2); ctx2.textAlign = 'center'; ctx2.textBaseline = 'middle'; ctx2.fillText('L (cm)', 0, 0); ctx2.restore();
+    ctx2.save(); ctx2.beginPath(); ctx2.rect(L, top, Rr - L, bot - top); ctx2.clip();
+    if (fit) { ctx2.strokeStyle = T.accent; ctx2.lineWidth = 1.6; ctx2.beginPath(); ctx2.moveTo(X(0), Y(-fit.dL * 100)); ctx2.lineTo(X(x1), Y((fit.c * x1 / 1000 - fit.dL) * 100)); ctx2.stroke(); }
+    for (const r of R) { ctx2.fillStyle = T.accent; ctx2.beginPath(); ctx2.arc(X(tubeX(r.f, r.k) * 1000), Y(r.L * 100), 3.5, 0, TAU); ctx2.fill(); }
+    ctx2.restore();
+    if (!R.length) { ctx2.fillStyle = T.muted; ctx2.font = `11px ${T.ui}`; ctx2.textAlign = 'center'; ctx2.textBaseline = 'middle'; ctx2.fillText('No readings yet', (L + Rr) / 2, (top + bot) / 2); }
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const cc = D.c;
+    $('tempOut').textContent = `${S.tc.toFixed(1)} °C`;
+    $('rC').innerHTML = `${cc.toFixed(1)} <small>m/s</small>`;
+    // tube
+    $('forkOut').textContent = `${S.fork} Hz`;
+    $('waterOut').textContent = cm(S.water);
+    $('tdiaOut').textContent = `${(S.tdia * 100).toFixed(1)} cm`;
+    $('tqOut').textContent = String(S.Q);
+    $('rLevel').innerHTML = `${levelDb(D.rel).toFixed(1)} <small>dB</small>`;
+    $('rEnd').textContent = cm(END_OPEN * ta(), 2);
+    $('rNextBox').hidden = S.blind; $('rHalfBox').hidden = S.blind;
+    if (D.res.length) { let best = D.res[0]; for (const r of D.res) if (Math.abs(r.L - S.water) < Math.abs(best.L - S.water)) best = r; $('rNext').textContent = `k = ${best.k}, ${cm(best.L)}`; } else $('rNext').textContent = 'none in the tube';
+    $('rHalf').textContent = cm(cc / S.fork / 2);
+    for (const b of $('forks').querySelectorAll('button')) b.setAttribute('aria-pressed', String(+b.dataset.f === S.fork));
+    // pipe
+    const a = S.pdia / 2, kind = S.pm === 'closed' ? 'closed' : 'open';
+    $('plenOut').textContent = cm(S.L, 0);
+    $('pdiaOut').textContent = `${(S.pdia * 100).toFixed(1)} cm`;
+    $('pkOut').textContent = `k = ${S.k}: harmonic n = ${pipeHarmonic(kind, S.k)}`;
+    $('rPf').innerHTML = `${fmtHz(D.pf)} <small>${noteTxt(D.pf)}</small>`;
+    $('rPleff').textContent = cm(pipeLeff(kind, S.L, a));
+    const list = (kd) => [1, 2, 3, 4].map((k) => pipeFreq(kd, k, S.L, a, cc).toFixed(0)).join(', ') + ' Hz';
+    $('rPopen').textContent = list('open'); $('rPclosed').textContent = list('closed');
+    // string
+    $('sLenOut').textContent = cm(S.sL); $('sTenOut').textContent = `${S.sT.toFixed(1)} N`; $('sMuOut').textContent = `${(S.mu * 1e3).toFixed(S.mu < 1e-3 ? 3 : 2)} g/m`;
+    $('rSf1').innerHTML = `${fmtHz(D.f1)} <small>${noteTxt(D.f1)}</small>`; $('rSv').innerHTML = `${Math.sqrt(S.sT / S.mu).toFixed(0)} <small>m/s</small>`;
+    $('sPosOut').textContent = `${fracTxt(S.q)}L = ${(sP() * S.sL * 100).toFixed(1)} cm`;
+    $('sWOut').textContent = S.w > 0 ? `${(S.w * 100).toFixed(1)} cm` : '0 (a pick)';
+    $('sTauOut').textContent = `${S.tau.toFixed(1)} s`;
+    const miss = []; for (let n = 1; n <= NSPEC; n++) if (!D.b[n]) miss.push(n);
+    $('rMissing').textContent = S.ex === 'bow' ? 'none (bowed)' : miss.length ? `n = ${miss.slice(0, 8).join(', ')}${miss.length > 8 ? ', …' : ''}` : `none up to n = ${NSPEC}`;
+    for (const b of $('posChips').querySelectorAll('button')) b.setAttribute('aria-pressed', String(+b.dataset.q === S.q));
+    $('exHint').textContent = S.ex === 'bow' ? 'Bowed: the bow drags the string along, it slips back, and a single kink runs round the string once per period. Every harmonic is present with bₙ ∝ 1/n², so the bridge force is a sawtooth with n·bₙ ∝ 1/n: a bright, buzzy tone that does not decay while you bow.' :
+      'A triangular pluck: bₙ ∝ sin(nπx₀/L)/n². Any mode with a node at the pluck point is missing. The sound you hear comes from the force on the bridge, the slope of the string there, which weights mode n by n·bₙ: brighter than the shape spectrum. A wide finger rounds the corner and takes away high harmonics.';
+    // bottle
+    $('bVolOut').textContent = `${(S.vb * 1e3).toFixed(2)} L`; $('bFillOut').textContent = `${S.fill}%`; $('bNeckOut').textContent = cm(S.neck); $('bDiaOut').textContent = `${(S.bdia * 100).toFixed(1)} cm`;
+    $('rBf').innerHTML = `${fmtHz(D.fH)} <small>${noteTxt(D.fH)}</small>`;
+    $('rBV').innerHTML = `${(D.Vair * 1e6).toFixed(0)} <small>mL</small>`;
+    $('rBL').textContent = cm(D.Le, 2);
+    $('rBp').innerHTML = `${fmtHz(D.fP)} <small>H = ${cm(D.Hair, 1)}, ${(D.fP / D.fH).toFixed(2)} × Helmholtz</small>`;
+    // shared
+    const fNow = S.view === 'pipe' ? (S.pm === 'tube' ? S.fork : D.pf) : S.view === 'string' ? D.f1 : D.fH;
+    $('rLam').innerHTML = `${(cc / fNow * 100).toFixed(1)} <small>cm at ${fmtHz(fNow)}</small>`;
+    clockText();
+    soundHintText();
+  }
+  function clockText() {
+    let t = '';
+    if (S.view === 'pipe' && S.pm === 'tube') t = `L = ${cm(S.water)} <small>level ${levelDb(D.rel).toFixed(1)} dB</small>`;
+    else if (S.view === 'pipe') t = `${fmtHz(D.pf)} <small>${noteTxt(D.pf)}</small>`;
+    else if (S.view === 'string') t = `f₁ = ${fmtHz(D.f1)} <small>${noteTxt(D.f1)}</small>`;
+    else t = `${fmtHz(D.fH)} <small>${noteTxt(D.fH)}</small>`;
+    $('clock').innerHTML = t;
+  }
+  function buildKey() {
+    if (!T) return;
+    let rows;
+    if (S.view === 'pipe' && S.pm === 'tube') rows = [['pres', 'Pressure in the air column'], ['disp', 'Air displacement'], ['acc', 'Your swept level trace'], ['calc', 'Computed response (hidden when Blind)'], ['gold', 'True resonance positions (hidden when Blind)'], ['brassdot', 'Captured readings, on the scale'], ['water', 'Water']];
+    else if (S.view === 'pipe') rows = [['disp', 'Displacement ξ: nodes at closed ends'], ['pres', 'Pressure p: nodes at open ends'], ['calc', 'Envelope; dotted lines mark the effective ends'], ['acc', 'Ladder, open pipe'], ['gold', 'Ladder, closed pipe']];
+    else if (S.view === 'string') rows = [['ink', 'String, the sum of 60 modes'], ['acc', 'Single modes; bridge force spectrum'], ['disp', 'String shape spectrum bₙ'], ['gold', 'Envelope 1/n² (shape) or 1/n (force)']];
+    else rows = [['acc', 'Helmholtz resonator f'], ['gold', 'Closed pipe estimate for the same bottle'], ['water', 'Water'], ['pres', 'Body air compressed'], ['disp', 'Body air rarefied']];
+    $('key').innerHTML = rows.map(([cl, t]) => `<span><i class="swatch ${cl}"></i>${t}</span>`).join('');
+    $('modelHint').textContent = MODEL;
+  }
+
+  // ---------- play / pause ----------
+  function setRunning(on) { running = on; $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('primary', !on); dirty = true; }
+  $('play').addEventListener('click', () => setRunning(!running));
+
+  // ---------- sound: sine oscillators driven by the same numbers as the drawing ----------
+  const RAMP = 0.01;   // time constant of every gain and frequency change: 95% done in 30 ms
+  const AC = window.AudioContext || window.webkitAudioContext;
+  const snd = { ac: null, master: null, bank: null, on: false, sig: '', rebuilds: 0, masterT: 0, noise: null, noiseBuf: null };
+  const SINE_AMP = RMS_TARGET * Math.SQRT2;   // a lone sine at the target RMS: peak 0.113, about −19 dBFS
+  const NOISE_AMP = 0.035;                    // breath noise before the band pass; the filter's impulse response sums to about 4/π, so its peak stays below 0.045
+  let soundDirty = false, lastSnd = 0;
+  // what should sound now: steady voices (tube, pipe, bow, bottle) or a decaying pluck
+  function soundPlan() {
+    const v = [];
+    if (S.view === 'pipe' && S.pm === 'tube') {
+      const rel = Math.min(1, D.rel);
+      v.push({ f: S.fork, gain: SINE_AMP * Math.max(0.03, rel) * hfGain(S.fork), ph: 0 });
+      return { kind: 'steady', sig: 'tube', v };
+    }
+    if (S.view === 'pipe') {
+      const kind = S.pm, a = S.pdia / 2;
+      if (S.psnd === 'mode') { v.push({ f: D.pf, gain: SINE_AMP * hfGain(D.pf), ph: 0 }); return { kind: 'steady', sig: 'pipe1', v }; }
+      const amps = []; for (let k = 1; k <= 8; k++) amps.push(1 / pipeHarmonic(kind, k));
+      const rms = Math.sqrt(amps.reduce((s, x) => s + x * x / 2, 0)), sum = amps.reduce((s, x) => s + x, 0), norm = audioNorm(rms, sum);
+      for (let k = 1; k <= 8; k++) { const f = pipeFreq(kind, k, S.L, a, D.c); v.push({ f, gain: amps[k - 1] * norm * hfGain(f), ph: 0 }); }
+      return { kind: 'steady', sig: 'pipe8' + kind, v };
+    }
+    if (S.view === 'string') {
+      const bow = S.ex === 'bow', amps = [];
+      for (let n = 1; n <= NSND; n++) amps.push(Math.abs(D.b[n]) * n);
+      const rms = Math.sqrt(amps.reduce((s, x) => s + x * x / 2, 0)), sum = amps.reduce((s, x) => s + x, 0), norm = audioNorm(rms, sum);
+      for (let n = 1; n <= NSND; n++) {
+        const f = n * D.f1, bn = D.b[n];
+        // bridge force: pluck ∝ n bₙ cos(nωt) (phase π/2, with the sign of bₙ); bow ∝ n bₙ sin(nωt)
+        v.push({ f, gain: amps[n - 1] * norm * hfGain(f), ph: bow ? 0 : (bn < 0 ? -PI / 2 : PI / 2), tau: S.tau / n });
+      }
+      if (bow) return { kind: 'steady', sig: 'bow', v };
+      if (!ST.plucked || ST.hold) return { kind: 'steady', sig: 'silent', v: [] };
+      return { kind: 'pluck', sig: 'pluck' + pluckId, v };
+    }
+    if (!S.blowing) return { kind: 'steady', sig: 'silent', v: [] };
+    v.push({ f: D.fH, gain: SINE_AMP * 0.9 * hfGain(D.fH), ph: 0 });
+    return { kind: 'steady', sig: 'bottle', v, noise: { f: D.fH, gain: NOISE_AMP } };
+  }
+  function phaseWave(ac, ph) { return ac.createPeriodicWave(new Float32Array([0, Math.sin(ph)]), new Float32Array([0, Math.cos(ph)]), { disableNormalization: true }); }
+  function makeBank(plan, at) {
+    const ac = snd.ac, bank = [];
+    plan.v.forEach((v, idx) => {
+      if (v.gain <= 0 && plan.kind === 'pluck') return;
+      const osc = ac.createOscillator(), g = ac.createGain();
+      try { osc.setPeriodicWave(phaseWave(ac, v.ph)); } catch (_) {}
+      osc.frequency.setValueAtTime(v.f, at);
+      g.gain.setValueAtTime(0, at);
+      if (plan.kind === 'pluck') {
+        // a 20 ms attack, then each mode decays with its own time constant τₙ = τ₁/n
+        g.gain.setTargetAtTime(v.gain, at, 0.006);
+        g.gain.setTargetAtTime(0, at + 0.02, v.tau);
+      } else g.gain.setTargetAtTime(v.gain, at, RAMP);
+      osc.connect(g); g.connect(snd.master); osc.start(at);
+      if (plan.kind === 'pluck') osc.stop(at + 0.02 + 8 * v.tau + 0.1);
+      bank.push({ osc, g, f: v.f, gain: v.gain, tau: v.tau, idx });
+    });
+    if (plan.noise) {
+      if (!snd.noiseBuf) {
+        const n = Math.round(ac.sampleRate * 2), buf = ac.createBuffer(1, n, ac.sampleRate), d = buf.getChannelData(0), r = mulberry(99);
+        for (let i = 0; i < n; i++) d[i] = 2 * r() - 1;
+        snd.noiseBuf = buf;
+      }
+      const src = ac.createBufferSource(), bp = ac.createBiquadFilter(), g = ac.createGain();
+      src.buffer = snd.noiseBuf; src.loop = true; bp.type = 'bandpass'; bp.Q.value = 12; bp.frequency.setValueAtTime(plan.noise.f, at);
+      g.gain.setValueAtTime(0, at); g.gain.setTargetAtTime(plan.noise.gain, at, RAMP);
+      src.connect(bp); bp.connect(g); g.connect(snd.master); src.start(at);
+      bank.noise = { src, bp, g, f: plan.noise.f, gain: plan.noise.gain };
+    }
+    bank.kind = plan.kind;
+    snd.rebuilds++;
+    return bank;
+  }
+  function fadeBank(bank, at) {
+    const all = bank.slice(); if (bank.noise) all.push({ osc: bank.noise.src, g: bank.noise.g, extra: bank.noise.bp });
+    for (const v of all) { try { v.g.gain.cancelScheduledValues(at); v.g.gain.setTargetAtTime(0, at, RAMP); v.osc.stop(at + 0.25); } catch (_) {} }
+    setTimeout(() => { for (const v of all) { try { v.osc.disconnect(); v.g.disconnect(); if (v.extra) v.extra.disconnect(); } catch (_) {} } }, 500);
+  }
+  let lastPlan = null;
+  function soundUpdate() {
+    soundDirty = false;
+    if (!snd.ac || !snd.on) return;
+    const now = snd.ac.currentTime, plan = soundPlan(); lastPlan = plan;
+    if (!snd.bank || plan.sig !== snd.sig || (plan.kind !== 'pluck' && plan.v.length !== snd.bank.length)) {
+      if (snd.bank) fadeBank(snd.bank, now);
+      snd.bank = makeBank(plan, now + 0.005); snd.sig = plan.sig;
+      return;
+    }
+    // same voices: glide frequencies and gains (a ringing pluck only follows the tuning)
+    snd.bank.forEach((v) => {
+      const t = plan.v[v.idx]; if (!t) return;
+      if (Math.abs(t.f - v.f) > 1e-9) { v.osc.frequency.setTargetAtTime(t.f, now, RAMP); v.f = t.f; }
+      if (plan.kind !== 'pluck' && Math.abs(t.gain - v.gain) > 1e-9) { v.g.gain.setTargetAtTime(t.gain, now, RAMP); v.gain = t.gain; }
+    });
+    if (snd.bank.noise && plan.noise && Math.abs(plan.noise.f - snd.bank.noise.f) > 1e-9) { snd.bank.noise.bp.frequency.setTargetAtTime(plan.noise.f, now, RAMP); snd.bank.noise.f = plan.noise.f; }
+  }
+  function setVolume() {
+    const v = +$('vol').value; snd.masterT = snd.on ? v * v : 0;
+    if (snd.master) snd.master.gain.setTargetAtTime(snd.masterT, snd.ac.currentTime, RAMP);
+  }
+  function setSound(on) {
+    if (on && !snd.ac) {
+      if (!AC) return;
+      try { snd.ac = new AC(); } catch (_) { snd.ac = null; noAudio(); return; }
+      snd.master = snd.ac.createGain(); snd.master.gain.value = 0; snd.master.connect(snd.ac.destination);
+    }
+    snd.on = on;
+    $('sound').setAttribute('aria-pressed', String(on)); $('soundTxt').textContent = on ? 'Sound on' : 'Sound off';
+    if (!snd.ac) { soundHintText(); return; }
+    if (on) {
+      if (snd.ac.state === 'suspended') snd.ac.resume();
+      setVolume();
+      if (S.view === 'string' && S.ex === 'pluck') pluck(ST.amp || 1);
+      soundUpdate();
+    } else {
+      setVolume();
+      if (snd.bank) { fadeBank(snd.bank, snd.ac.currentTime + 0.03); snd.bank = null; snd.sig = ''; }
+      const ac = snd.ac; setTimeout(() => { if (!snd.on && ac.state === 'running') ac.suspend().catch(() => {}); }, 400);
+    }
+    soundHintText();
+  }
+  function noAudio() { const b = $('sound'); b.disabled = true; $('soundTxt').textContent = 'No sound here'; b.title = 'This browser has no Web Audio'; soundHintText(); }
+  function soundHintText() {
+    if (!D) return;
+    if (!AC || $('sound').disabled) { $('soundHint').textContent = 'This browser has no Web Audio, so the demo is silent. Everything else works.'; return; }
+    let t;
+    if (S.view === 'pipe' && S.pm === 'tube') t = `A pure tone at ${S.fork} Hz whose amplitude follows the computed pressure in the tube, so it swells at each resonance; well off resonance it drops to a quiet floor that stands for hearing the source directly.`;
+    else if (S.view === 'pipe') t = S.psnd === 'mode' ? `A pure tone at the selected mode, ${fmtHz(D.pf)}.` : `Modes 1 to 8 of this pipe together with amplitude 1/n, at their exact frequencies: all harmonics for the open pipe, odd ones only for the closed pipe.`;
+    else if (S.view === 'string') t = S.ex === 'bow' ? 'The bridge force of the ideal bowed string: 32 harmonics with amplitude 1/n, steady while you bow.' : `The bridge force of the plucked string: 32 harmonics with amplitude n·bₙ, each fading as e^(−t/τₙ) with τₙ = τ₁/n. Each pluck restarts the sound; Enter on the drawing or the Pluck button plucks again.`;
+    else t = S.blowing ? `A sine at the Helmholtz frequency, ${fmtHz(D.fH)}, with a little breath noise filtered around it. A blown bottle sounds close to a pure tone because its next resonance is far higher.` : 'Press Blow across the top to hear the bottle.';
+    let hf = '';
+    if (S.view === 'string') { const k = Math.floor(HF_EDGE / D.f1); if (k < NSND) hf = ` Harmonics above 8 kHz (n > ${k}) play 12 dB quieter to spare your ears.`; }
+    if (S.view === 'pipe' && S.pm !== 'tube' && pipeFreq(S.pm, S.psnd === 'all' ? 8 : S.k, S.L, S.pdia / 2, D.c) > HF_EDGE) hf = ' Modes above 8 kHz play 12 dB quieter to spare your ears.';
+    $('soundHint').textContent = t + hf + ' The level is capped well below full scale. Small speakers cannot play the lowest notes; headphones work best. Sound stops when you leave the page.';
+  }
+  $('sound').addEventListener('click', () => setSound(!snd.on));
+  $('vol').addEventListener('input', setVolume);
+  document.addEventListener('visibilitychange', () => { if (document.hidden && snd.on) setSound(false); });
+  window.addEventListener('pagehide', () => { if (snd.on) setSound(false); });
+  // test hook: the audio graph as set, for headless checks that cannot listen
+  window.__audio = {
+    get available() { return !!AC; }, get on() { return snd.on; }, get state() { return snd.ac ? snd.ac.state : 'none'; },
+    get master() { return snd.masterT; }, get rebuilds() { return snd.rebuilds; }, get kind() { return snd.bank ? snd.bank.kind : 'none'; },
+    voices: () => (snd.bank ? snd.bank.map((v) => ({ f: v.f, gain: v.gain, tau: v.tau })) : []),
+    noise: () => (snd.bank && snd.bank.noise ? { f: snd.bank.noise.f, gain: snd.bank.noise.gain } : null),
+    // the largest sample the set gains can produce at full volume: Σ gains (+ the filtered noise bound)
+    peakFullScale: () => { if (!snd.bank) return 0; let s = 0; for (const v of snd.bank) s += v.gain; if (snd.bank.noise) s += snd.bank.noise.gain * 4 / PI; return s; }
+  };
+
+  // ---------- projector ----------
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); dirty = true; }); } catch (_) {}
+  new MutationObserver(() => { tokens(); dirty = true; }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), pourAcc = 0;
+  function loop(now) {
+    requestAnimationFrame(loop);
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    if (running) {
+      tAnim += dt; dirty = true;
+      if (ST.plucked && !ST.hold) ST.tr += dt;
+      if (S.pouring && S.view === 'bottle') {
+        pourAcc = Math.min(90, Math.max(pourAcc, S.fill) + dt * 9);
+        if (Math.floor(pourAcc) !== S.fill) { S.fill = Math.floor(pourAcc); $('bFill').value = S.fill; recompute(); readouts(); soundDirty = true; }
+        if (S.fill >= 90) setPour(false);
+      }
+    }
+    if (dirty) { const t0 = performance.now(); draw(); frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0); }
+    if (plotDirty) drawPlot();
+    if (soundDirty && now - lastSnd > 35) { lastSnd = now; try { soundUpdate(); } catch (_) {} }
+  }
+  window.__rs = { S, ST, get D() { return D; }, get G() { return G; }, get frameMs() { return frameMs; }, get presetId() { return presetId; }, get running() { return running; },
+    applyPreset, setWater, setPipeLen, setK, setPm, setQ, setFill, setBlow, pluck, capture, rowsSI, fitNow, csvTable, handles, tubeGeom, setRunning, recompute, soundPlan };
+
+  if (!AC) noAudio();
+  recompute();
+  tokens();
+  applyPreset('tube');
+  setRunning(!reduce);
+  readouts();
+  new ResizeObserver(resize).observe(pane);
+  new ResizeObserver(sizePlot).observe(plot.parentElement);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

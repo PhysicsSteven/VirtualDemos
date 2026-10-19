@@ -66,6 +66,7 @@ OVERRIDES = {
     "projectile-drag": {"click": ['[data-p="heavy"]'], "wait": 6500},
     "diffraction-grating": {"click": ['[data-p="hydrogen"]'], "wait": 1500},
     "circuits": {"click": ['#modeSeg button[data-m="ac"]'], "wait": 2000},
+    "resonators": {"click": ['[data-p="guitar"]'], "wait": 900},
     "capacitors": {"click": ['[data-p="energy"]'], "wait": 1500, "crop": "#dPane",
                    "js": "__cap.setRunning(false); __cap.setGeom({ A: 0.0225 }); __cap.setClean(true)"},
 }

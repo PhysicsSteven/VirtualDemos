@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resonators: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Resonators</h1><ul class="meta"><li><a href="../demos/resonators.html">Open the demo</a></li><li>Acoustics; intro physics (waves and sound); intro lab (speed of sound)</li><li>20 to 35 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>An instrument's pitch is set by its resonator: the frequencies at which a wave fits it. For a pipe or a string, f = (wave speed)/(wavelength that fits), so size and wave speed set the pitch.</li>
+<li>An open end is a pressure node, a closed end a displacement node. Open at both ends: every harmonic, f = n c/2L; closed at one end: odd ones only, f = n c/4L. An open end acts as if the pipe were longer by about 0.61 radius.</li>
+<li>In a resonance tube, successive resonances are λ/2 apart, so the spacing gives c = 2f × spacing, and the end correction comes from the intercept of a straight line fit.</li>
+<li>A string's f₁ = (1/2L)√(T/μ). Where it is plucked decides which harmonics it gets: any mode with a node at the pluck point is missing.</li>
+<li>A bottle is not a pipe: it is a Helmholtz resonator, a mass of air in the neck on the spring of air in the body. Its note follows the volume: f = (c/2π)√(A/(V L_eff)).</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know standing waves on a string and the relation c = fλ. The demo has three resonators, <strong>Pipes</strong> (with <strong>Resonance tube</strong>, <strong>Open pipe</strong> and <strong>Closed pipe</strong>), <strong>Strings</strong> and <strong>Bottle</strong>. Sound starts off: press <strong>Sound off</strong> and set <strong>Volume</strong> before class; laptop speakers lose the bottle's low note. For a lab style run, tick <strong>Blind</strong> so the computed response, the true resonance positions and the expected values are hidden, and give the class one <strong>Reading seed</strong> so everyone's simulated readings agree.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Resonance tube, find c</strong>. Ask Q1 first. With sound on, drag the water surface slowly down (or use the arrow keys): the tone swells at each resonance and the swept level traces out on the plot. Press <strong>Capture reading</strong> at each loudest point.</li>
+<li>Fit the readings. The <strong>Readings</strong> plot of L against (2k − 1)/4f gives c from the slope and the end correction from the intercept. Use Q2, then change <strong>Source frequency f</strong> (the fork chips) and add readings at a second frequency: the points stay on one line. Ask Q3 and move <strong>Air temperature</strong> to check.</li>
+<li><strong>Open vs closed pipe</strong>. Play <strong>All modes</strong>, then switch to <strong>Open pipe</strong>: the closed pipe sounds hollow and lower. Compare the rows of <strong>Allowed frequencies</strong>, click a mode to see its patterns, and ask Q4.</li>
+<li><strong>Pluck at the middle</strong>. Point out the crosses: every even harmonic is exactly zero. Ask Q5 as a prediction, then press <strong>L/3</strong> and pluck again.</li>
+<li><strong>Guitar string</strong>. Switch <strong>Spectrum of</strong> between <strong>String shape bₙ</strong> and <strong>Bridge force n·bₙ</strong>, and compare plucks near the bridge (<strong>L/10</strong>) and at the middle by ear (Q6). Try <strong>Bow</strong> for the steady, buzzy sawtooth of a bowed string.</li>
+<li><strong>Bottle, blow across it</strong>, then <strong>Fill the bottle</strong>. Ask Q7 before pouring, then compare the two curves on the plot.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: a 512 Hz fork sounds over a 1 m tube of air whose bottom is water, at 20 °C (c = 343.2 m/s). The tube's inner diameter is 3.2 cm. As the water is lowered from the top, at which air column lengths L will the sound be loud? How far apart are those positions? Check with <strong>Resonance tube, find c</strong>.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> At 512 Hz a student records resonances at L = 16.0 cm, 49.1 cm and 82.9 cm. Using the first and third readings, find the wavelength, the speed of sound and the end correction ΔL. Compare ΔL with 0.61a for this 3.2 cm tube. Why is the end correction known much less precisely than c? (To see the fit, capture three readings and type these values over them.)</p></div>
+
+<div class="q"><p><strong>Q3.</strong> On a 30 °C day the same experiment is repeated. Do the resonance positions move up or down the tube, and by about how much is the first one shifted? Does the spacing between resonances change? Check with <strong>Air temperature</strong>.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A pipe 60 cm long and 3.0 cm across is played open at both ends and then with one end closed, at 20 °C. Find the lowest frequency in each case, including the end corrections, and list the next two resonances of each. Explain why the closed pipe has only odd harmonics, and why its lowest note is not exactly an octave below the open pipe's.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Predict: a string is plucked a third of the way along its length. Which harmonics are missing from its sound, and why? For a pluck at the middle, how many decibels below the fundamental is the third harmonic in the string's shape? Check with <strong>L/3</strong> and <strong>Pluck at the middle</strong>.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> A guitar's high E string is 0.25 mm steel with μ = 0.398 g/m, under 72.6 N of tension, on a 648 mm scale. Find its wave speed and f₁. By how many cents does the pitch rise if the tension goes up by 6%? Then explain why a pluck near the bridge sounds brighter than a pluck at the middle, using <strong>Bridge force n·bₙ</strong>.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Predict: a 750 mL bottle with an 8.0 cm neck of inner diameter 1.9 cm is blown across at 20 °C. Use f = (c/2π)√(A/(V L_eff)) with L_eff = L + 1.43a to find its note. How much water raises the note an octave? Check with <strong>Fill the bottle</strong>. The closed pipe formula gives about 330 Hz for this bottle: why does it fail, and what condition on size makes the Helmholtz model work?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The loud positions are a quarter wavelength apart."</strong> Successive resonances of a tube closed by water are half a wavelength apart; only the first one is (nearly) a quarter wavelength from the top.</li>
+<li><strong>"The wave stops at the open end."</strong> The pressure node sits about 0.61 radius outside an unflanged end; ignoring it makes c from one resonance too small.</li>
+<li><strong>"Plucking anywhere gives the same note and the same sound."</strong> The pitch is the same, but the pluck point removes every harmonic with a node there and changes the balance of the rest.</li>
+<li><strong>"A bottle is a pipe, so a taller bottle sounds lower."</strong> Its note depends on the air volume and the neck, not on the height.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<p>c = 331.3 m/s × √(1 + t/273.15 °C) (ideal gas, dry air). Pipes: plane waves; an open end is a pressure node ΔL = 0.6133a beyond the pipe (unflanged, Levine and Schwinger, ka ≪ 1). Open pipe fₙ = n c/2(L + 2ΔL); closed pipe fₙ = n c/4(L + ΔL), n odd. Resonance tube: resonances at L = (2k − 1)λ/4 − ΔL; the level is 1/|cos(k̃(L + ΔL))| with k̃ = (2πf/c)(1 − i/2Q), one illustrative Q for all resonances. Readings get a seeded simulated scatter, σ = 1.5 mm. Strings: ideal string, triangular pluck bₙ = 2 sin(nπp)/(n²π² p(1 − p)), p = x₀/L (a finger of width w multiplies bₙ by sin(u)/u, u = nπw/2L). The sound is the bridge force n·bₙ, each mode decaying with τₙ = τ₁/n (illustrative); bowing is the ideal Helmholtz motion, bₙ ∝ 1/n². Bottle: lumped Helmholtz resonator, L_eff = L + (0.6133 + 0.8216)a; comparison pipe c/4(H + 0.61a), H the height of the air space. Animations are slowed.</p><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

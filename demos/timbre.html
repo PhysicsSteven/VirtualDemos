@@ -1,0 +1,1197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Timbre and Harmonics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one canvas with four linked panels (waveform, spectrum, harmonic ladder, harmonic bars); instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --warm: #fdfaf5;
+  --wood: #f3eadc;
+  --wood-edge: #d6c3a5;
+  --ivory: #fffdf7;
+  --ebony: #2a241d;
+  --brass: #a7740b;
+  --hue-l: 40%;
+  --hue-s: 68%;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --warm: #13120f; --wood: #221c15; --wood-edge: #4b3f30;
+    --ivory: #ddd5c6; --ebony: #0b0a08; --brass: #e2b350; --hue-l: 66%; --hue-s: 70%; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --warm: #13120f; --wood: #221c15; --wood-edge: #4b3f30;
+  --ivory: #ddd5c6; --ebony: #0b0a08; --brass: #e2b350; --hue-l: 66%; --hue-s: 70%; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--warm); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.88rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#can { touch-action: none; outline: none; }
+#can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+
+/* the sound button: brass when on, so its state reads at a glance */
+.snd { display: inline-flex; align-items: center; gap: 7px; }
+.snd svg { width: 18px; height: 18px; flex: none; }
+.snd .waves { opacity: 0; }
+.snd[aria-pressed="true"] { background: var(--brass); border-color: var(--brass); color: var(--warm); }
+.snd[aria-pressed="true"] .waves { opacity: 1; }
+.snd[aria-pressed="true"] .mute { opacity: 0; }
+.vol { display: inline-flex; align-items: center; gap: 6px; font-size: 0.84rem; color: var(--muted); }
+.vol input { width: 96px; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd small { font-size: 0.78rem; font-weight: 400; color: var(--muted); }
+.readout .wide { grid-column: 1 / -1; }
+
+.ftab { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.8rem; }
+.ftab caption { text-align: left; font-family: var(--font-ui); font-size: 0.78rem; color: var(--muted); padding-bottom: 3px; }
+.ftab th { font-family: var(--font-ui); font-weight: 400; color: var(--muted); text-align: right; padding: 2px 4px; font-size: 0.76rem; }
+.ftab td { text-align: right; padding: 2px 4px; border-top: 1px solid var(--grid-strong); }
+.ftab th:first-child, .ftab td:first-child { text-align: left; }
+.ftab td i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.ink { border-color: var(--ink); border-top-width: 3px; }
+.swatch.env { border-color: var(--muted); border-top-style: dashed; }
+.swatch.brass { border-color: var(--brass); border-top-style: dashed; }
+.swatch.ramp { height: 10px; border: 0; border-radius: 2px; }
+.swatch.hatch { height: 10px; border: 1px solid var(--muted); background: repeating-linear-gradient(135deg, transparent 0 3px, color-mix(in srgb, var(--muted) 45%, transparent) 3px 4px); }
+
+/* piano: two octaves C3 to C5 in equal temperament */
+.piano { position: relative; display: flex; height: 70px; border-radius: 6px; overflow: hidden; border: 1px solid var(--wood-edge); background: var(--wood); padding: 4px 4px 0; }
+.piano button { font: inherit; cursor: pointer; padding: 0; }
+.piano .wk { flex: 1 1 0; min-width: 0; height: 100%; margin: 0 1px; background: var(--ivory); border: 1px solid var(--wood-edge); border-top: 0; border-radius: 0 0 4px 4px;
+  display: flex; align-items: flex-end; justify-content: center; padding-bottom: 3px; font-family: var(--font-mono); font-size: 0.62rem; color: #6d6253; }
+.piano .bk { position: absolute; top: 4px; height: 58%; width: calc((100% - 8px) / 15 * 0.62); background: var(--ebony); border: 1px solid #000; border-radius: 0 0 3px 3px; z-index: 1; }
+.piano .wk[aria-pressed="true"] { background: var(--brass); color: #fff; border-color: var(--brass); }
+.piano .bk[aria-pressed="true"] { background: var(--brass); border-color: var(--brass); }
+.piano button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; z-index: 2; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines; a lower stage floor keeps the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 92vh; min-height: 720px; }
+  .rail { overflow: visible; }
+  .count { margin-left: 0; }
+  .vol input { width: 110px; }
+}
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Timbre and Harmonics</h1>
+      <p>A steady musical tone is a sum of harmonics at whole number multiples of its fundamental. Shape the spectrum bar by bar and hear it: the mix of harmonics sets the tone color, the repetition period sets the pitch, and the phases barely matter.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">f in Hz · T in ms · level in dB = 20 log₁₀(a/a_ref) · A4 = 440 Hz</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/timbre.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 37 37" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/timbre.html" shape-rendering="crispEdges"><rect width="37" height="37" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h3v1h-3zM16 2h1v1h-1zM20 2h1v1h-1zM22 2h1v1h-1zM24 2h1v1h-1zM28 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h2v1h-2zM14 3h1v1h-1zM16 3h1v1h-1zM20 3h1v1h-1zM23 3h2v1h-2zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h3v1h-3zM16 4h1v1h-1zM18 4h1v1h-1zM21 4h4v1h-4zM26 4h1v1h-1zM28 4h1v1h-1zM30 4h3v1h-3zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h2v1h-2zM15 5h1v1h-1zM17 5h3v1h-3zM21 5h3v1h-3zM25 5h2v1h-2zM28 5h1v1h-1zM30 5h3v1h-3zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM11 6h2v1h-2zM15 6h1v1h-1zM18 6h6v1h-6zM25 6h2v1h-2zM28 6h1v1h-1zM30 6h3v1h-3zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM13 7h1v1h-1zM19 7h1v1h-1zM23 7h1v1h-1zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM14 9h1v1h-1zM16 9h1v1h-1zM18 9h1v1h-1zM20 9h1v1h-1zM22 9h1v1h-1zM24 9h3v1h-3zM2 10h1v1h-1zM8 10h1v1h-1zM10 10h2v1h-2zM13 10h1v1h-1zM15 10h3v1h-3zM19 10h1v1h-1zM24 10h1v1h-1zM26 10h3v1h-3zM31 10h3v1h-3zM4 11h1v1h-1zM6 11h2v1h-2zM10 11h2v1h-2zM14 11h8v1h-8zM25 11h1v1h-1zM30 11h3v1h-3zM2 12h2v1h-2zM8 12h2v1h-2zM13 12h2v1h-2zM16 12h2v1h-2zM22 12h3v1h-3zM27 12h2v1h-2zM30 12h1v1h-1zM32 12h2v1h-2zM2 13h1v1h-1zM5 13h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM13 13h2v1h-2zM17 13h1v1h-1zM22 13h1v1h-1zM25 13h2v1h-2zM29 13h4v1h-4zM34 13h1v1h-1zM6 14h3v1h-3zM10 14h1v1h-1zM13 14h1v1h-1zM15 14h3v1h-3zM21 14h1v1h-1zM25 14h1v1h-1zM28 14h2v1h-2zM34 14h1v1h-1zM4 15h2v1h-2zM7 15h1v1h-1zM12 15h4v1h-4zM17 15h2v1h-2zM20 15h3v1h-3zM25 15h1v1h-1zM29 15h1v1h-1zM33 15h2v1h-2zM4 16h1v1h-1zM8 16h1v1h-1zM10 16h1v1h-1zM15 16h3v1h-3zM19 16h1v1h-1zM22 16h1v1h-1zM27 16h2v1h-2zM31 16h3v1h-3zM3 17h3v1h-3zM9 17h2v1h-2zM12 17h2v1h-2zM18 17h1v1h-1zM21 17h1v1h-1zM25 17h1v1h-1zM27 17h1v1h-1zM30 17h3v1h-3zM34 17h1v1h-1zM2 18h7v1h-7zM12 18h2v1h-2zM19 18h1v1h-1zM21 18h1v1h-1zM24 18h2v1h-2zM27 18h1v1h-1zM29 18h3v1h-3zM34 18h1v1h-1zM3 19h3v1h-3zM7 19h1v1h-1zM9 19h1v1h-1zM11 19h1v1h-1zM13 19h3v1h-3zM17 19h2v1h-2zM20 19h3v1h-3zM24 19h2v1h-2zM27 19h2v1h-2zM31 19h3v1h-3zM2 20h8v1h-8zM11 20h1v1h-1zM14 20h1v1h-1zM16 20h2v1h-2zM20 20h4v1h-4zM25 20h1v1h-1zM28 20h2v1h-2zM31 20h2v1h-2zM34 20h1v1h-1zM2 21h1v1h-1zM4 21h4v1h-4zM9 21h1v1h-1zM11 21h2v1h-2zM15 21h2v1h-2zM18 21h1v1h-1zM20 21h3v1h-3zM24 21h1v1h-1zM26 21h1v1h-1zM30 21h5v1h-5zM2 22h1v1h-1zM5 22h6v1h-6zM12 22h3v1h-3zM16 22h2v1h-2zM19 22h1v1h-1zM24 22h4v1h-4zM29 22h3v1h-3zM33 22h2v1h-2zM2 23h3v1h-3zM6 23h1v1h-1zM11 23h2v1h-2zM16 23h2v1h-2zM19 23h1v1h-1zM21 23h2v1h-2zM24 23h2v1h-2zM29 23h2v1h-2zM32 23h1v1h-1zM2 24h1v1h-1zM5 24h4v1h-4zM10 24h2v1h-2zM14 24h2v1h-2zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM33 24h1v1h-1zM2 25h1v1h-1zM6 25h1v1h-1zM11 25h1v1h-1zM13 25h1v1h-1zM15 25h1v1h-1zM17 25h2v1h-2zM21 25h1v1h-1zM24 25h1v1h-1zM29 25h1v1h-1zM31 25h2v1h-2zM34 25h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM8 26h2v1h-2zM11 26h1v1h-1zM21 26h1v1h-1zM26 26h5v1h-5zM10 27h2v1h-2zM14 27h1v1h-1zM17 27h2v1h-2zM21 27h6v1h-6zM30 27h1v1h-1zM32 27h1v1h-1zM34 27h1v1h-1zM2 28h7v1h-7zM11 28h2v1h-2zM15 28h1v1h-1zM17 28h1v1h-1zM19 28h2v1h-2zM22 28h5v1h-5zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM11 29h1v1h-1zM14 29h1v1h-1zM18 29h1v1h-1zM20 29h1v1h-1zM25 29h2v1h-2zM30 29h4v1h-4zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h1v1h-1zM11 30h3v1h-3zM15 30h1v1h-1zM19 30h1v1h-1zM22 30h1v1h-1zM24 30h1v1h-1zM26 30h6v1h-6zM33 30h2v1h-2zM2 31h1v1h-1zM4 31h3v1h-3zM8 31h1v1h-1zM11 31h1v1h-1zM17 31h1v1h-1zM20 31h3v1h-3zM26 31h2v1h-2zM29 31h6v1h-6zM2 32h1v1h-1zM4 32h3v1h-3zM8 32h1v1h-1zM13 32h1v1h-1zM15 32h3v1h-3zM19 32h1v1h-1zM21 32h1v1h-1zM23 32h1v1h-1zM25 32h1v1h-1zM27 32h1v1h-1zM29 32h6v1h-6zM2 33h1v1h-1zM8 33h1v1h-1zM16 33h1v1h-1zM18 33h1v1h-1zM20 33h3v1h-3zM27 33h1v1h-1zM29 33h4v1h-4zM2 34h7v1h-7zM10 34h3v1h-3zM14 34h1v1h-1zM16 34h2v1h-2zM19 34h1v1h-1zM21 34h1v1h-1zM24 34h4v1h-4zM29 34h1v1h-1zM31 34h1v1h-1zM33 34h1v1h-1z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <button type="button" class="btn snd" id="sound" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor" stroke-width="1.5"/><path class="waves" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="mute" d="M17 9.5l5 5M22 9.5l-5 5"/></svg><span id="soundTxt">Sound off</span></button>
+        <label class="vol" for="vol">Volume <input type="range" id="vol" min="0" max="1" step="0.01" value="0.5"></label>
+        <button type="button" class="btn" id="play">Pause</button>
+        <div class="seg" role="group" aria-label="Ladder shows" id="ladSeg">
+          <button type="button" data-l="string" aria-pressed="true">String</button>
+          <button type="button" data-l="open" aria-pressed="false">Open pipe</button>
+          <button type="button" data-l="closed" aria-pressed="false">Closed pipe</button>
+        </div>
+        <span class="count mono" id="clock"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="Harmonic synthesizer. Left and right arrows select a harmonic, up and down change its amplitude by 0.05 (with Shift by 0.01), the bracket keys [ and ] turn its phase by 15 degrees, 0 or Delete silences it, Space pauses the ladder. Drag the bars to set amplitudes, the dials to set phases, the spectrum dots to set levels in dB, and the end of the period bracket on the waveform to change the fundamental."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Presets</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="square" aria-pressed="false">Square wave</button>
+          <button type="button" data-p="saw" aria-pressed="true">Sawtooth wave</button>
+          <button type="button" data-p="triangle" aria-pressed="false">Triangle wave</button>
+          <button type="button" data-p="clarinet" aria-pressed="false">Clarinet-like</button>
+          <button type="button" data-p="flute" aria-pressed="false">Flute-like</button>
+          <button type="button" data-p="missing" aria-pressed="false">Missing fundamental</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Fundamental</h2>
+        <div>
+          <div class="slider-head"><label for="f1">Fundamental f₁</label><output id="f1Out" class="mono" for="f1"></output></div>
+          <input type="range" id="f1" min="-36" max="12" step="0.01" value="-12">
+        </div>
+        <div class="piano" id="piano" role="group" aria-label="Piano keyboard, C3 to C5, equal temperament"></div>
+        <dl class="readout">
+          <div><dt>Period T₁ = 1/f₁</dt><dd id="rT1">—</dd></div>
+          <div><dt>Harmonic 16 at</dt><dd id="rF16">—</dd></div>
+        </dl>
+        <p class="hint">Equal temperament: each semitone multiplies f by 2^(1/12) ≈ 1.0595, so an octave doubles it. Keys play the note as f₁; the slider moves in steps of one cent (1/100 semitone).</p>
+      </section>
+
+      <section>
+        <h2>Harmonics</h2>
+        <div class="chips">
+          <button type="button" class="btn" id="pure">Pure tone</button>
+          <button type="button" class="btn" id="allOn">All equal</button>
+        </div>
+        <label class="check"><input type="checkbox" id="mute1">Remove harmonic 1 (the fundamental)</label>
+        <label class="check"><input type="checkbox" id="mute2">Also remove harmonic 2</label>
+        <dl class="readout">
+          <div><dt>Waveform repeats every</dt><dd id="rRep">—</dd></div>
+          <div><dt>Pitch from the period</dt><dd id="rPitch">—</dd></div>
+        </dl>
+        <table class="ftab" id="ptab"></table>
+        <p class="hint">Drag the bars (sweep across several to paint them), or a dot in the spectrum to set a level in dB. Levels in the table are relative to the strongest partial.</p>
+      </section>
+
+      <section>
+        <h2>Phase</h2>
+        <div class="chips">
+          <button type="button" class="btn" id="randPh">Randomize phases</button>
+          <button type="button" class="btn" id="zeroPh">All phases zero</button>
+        </div>
+        <label class="check"><input type="checkbox" id="showDials" checked>Phase dials under the bars</label>
+        <dl class="readout">
+          <div><dt>Peak / RMS</dt><dd id="rCrest">—</dd></div>
+          <div><dt>RMS (bar units)</dt><dd id="rRms">—</dd></div>
+        </dl>
+        <p class="hint">Each harmonic is aₙ sin(2π fₙ t + φₙ); a dial points along φₙ, measured counterclockwise from the right. Randomizing the phases reshapes the waveform and its peak but leaves every amplitude, the spectrum and the RMS unchanged. A steady tone sounds almost the same: the ear is nearly deaf to phase (Ohm's acoustic law). It is not fully deaf: at a low f₁ (try 55 Hz) several high harmonics share one filter in the cochlea, their phases shape the buzz you hear there, and sharp attacks and clicks depend on phase too.</p>
+      </section>
+
+      <section>
+        <h2>Inharmonic partials</h2>
+        <div>
+          <div class="slider-head"><label for="detN">Detune harmonic</label><output id="detNOut" class="mono" for="detN"></output></div>
+          <input type="range" id="detN" min="1" max="16" step="1" value="3">
+        </div>
+        <div>
+          <div class="slider-head"><label for="df">by Δf</label><output id="dfOut" class="mono" for="df"></output></div>
+          <input type="range" id="df" min="-20" max="20" step="0.1" value="0">
+        </div>
+        <div>
+          <div class="slider-head"><label for="stB">Stiffness B</label><output id="stBOut" class="mono" for="stB"></output></div>
+          <input type="range" id="stB" min="0" max="0.02" step="0.0001" value="0">
+        </div>
+        <dl class="readout">
+          <div><dt>Shape cycles every</dt><dd id="rDrift">—</dd></div>
+          <div><dt>Partial 16 / 16 f₁</dt><dd id="rStretch">—</dd></div>
+        </dl>
+        <p class="hint">Detune one harmonic and the waveform stops repeating: its shape drifts through a full cycle every 1/|Δf|, and you hear a slow, regular change at |Δf| per second. Mistuned by more than a few percent, the harmonic starts to stand out as a separate tone. Stiffness stretches every partial upward, fₙ = n f₁ √((1 + Bn²)/(1 + B)), as in a stiff string; piano strings have a small B, one reason pianos are tuned with slightly wide octaves. A large B gives a clangy, bell-like tone without one clear pitch. Real bells have their own particular partials; this only shows what inharmonic partials do.</p>
+        <button type="button" class="btn" id="harmonicAgain">Back to exact harmonics</button>
+      </section>
+
+      <section>
+        <h2>Display</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="showEach">Each harmonic</label>
+          <label><input type="checkbox" id="showIdeal" checked>Ideal shape</label>
+        </div>
+        <div class="inline">
+          <span class="lab">Periods shown</span>
+          <div class="seg" role="group" aria-label="Periods shown" id="perSeg">
+            <button type="button" data-n="2" aria-pressed="false">2</button>
+            <button type="button" data-n="3" aria-pressed="true">3</button>
+            <button type="button" data-n="6" aria-pressed="false">6</button>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Sound</h2>
+        <p class="hint" id="soundHint"></p>
+      </section>
+
+      <section>
+        <h2>Key</h2>
+        <div class="key" id="key"></div>
+        <p class="hint" id="modelHint"></p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const PI = Math.PI, TAU = 2 * Math.PI, NH = 16, A4 = 440;
+  const NOTE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+  // equal temperament: k semitones above A4 (negative below)
+  function etFreq(k) { return A4 * Math.pow(2, k / 12); }
+  function midiFreq(m) { return etFreq(m - 69); }
+  function noteOf(f) {
+    const m = 69 + 12 * Math.log2(f / A4), r = Math.round(m);
+    return { midi: r, name: NOTE_NAMES[((r % 12) + 12) % 12], octave: Math.floor(r / 12) - 1, cents: 100 * (m - r) };
+  }
+  // frequency of partial n: harmonic n f₁, stretched by stiffness B (stiff string, normalized so partial 1 stays at f₁), plus a detune Δf on one harmonic
+  function partialFreq(n, f1, B, detN, df) {
+    let f = n * f1 * Math.sqrt((1 + B * n * n) / (1 + B));
+    if (n === detN) f += df;
+    return f;
+  }
+  // exact Fourier series of the ideal waves, normalized so a₁ = 1, written as Σ aₙ sin(nθ + φₙ) with aₙ ≥ 0
+  function idealSeries(kind, N) {
+    const a = new Array(N + 1).fill(0), ph = new Array(N + 1).fill(0);
+    for (let n = 1; n <= N; n++) {
+      if (kind === 'square' && n % 2 === 1) a[n] = 1 / n;
+      else if (kind === 'saw') a[n] = 1 / n;
+      else if (kind === 'triangle' && n % 2 === 1) { a[n] = 1 / (n * n); ph[n] = n % 4 === 3 ? PI : 0; }
+    }
+    return { a, ph };
+  }
+  // closed forms of those infinite series
+  //   square:   Σ_odd sin(nθ)/n = (π/4) sgn(sin θ)
+  //   saw:      Σ sin(nθ)/n = (π − θ)/2 for 0 < θ < 2π
+  //   triangle: Σ_k (−1)^k sin((2k+1)θ)/(2k+1)² = (π/4) θ for |θ| ≤ π/2, (π/4)(π − θ) for π/2 ≤ θ ≤ 3π/2
+  function idealWave(kind, th) {
+    const u = ((th % TAU) + TAU) % TAU;
+    if (kind === 'square') return (u === 0 || u === PI) ? 0 : (u < PI ? PI / 4 : -PI / 4);
+    if (kind === 'saw') return u === 0 ? 0 : (PI - u) / 2;
+    if (kind === 'triangle') { const v = u > 1.5 * PI ? u - TAU : u; return v <= PI / 2 ? PI / 4 * v : PI / 4 * (PI - v); }
+    return 0;
+  }
+  function seriesAt(th, a, ph) { let s = 0; for (let n = 1; n < a.length; n++) if (a[n]) s += a[n] * Math.sin(n * th + ph[n]); return s; }
+  // numerical Fourier coefficients of fn(θ) over one period (midpoint rule), as amplitude and phase in the sine form
+  function fourier(fn, N, M) {
+    const ca = new Array(N + 1).fill(0), cb = new Array(N + 1).fill(0);
+    for (let i = 0; i < M; i++) {
+      const th = (i + 0.5) / M * TAU, y = fn(th);
+      for (let n = 1; n <= N; n++) { ca[n] += y * Math.cos(n * th); cb[n] += y * Math.sin(n * th); }
+    }
+    const a = [0], ph = [0];
+    for (let n = 1; n <= N; n++) { const A = ca[n] * 2 / M, Bc = cb[n] * 2 / M; a.push(Math.hypot(A, Bc)); ph.push(Math.atan2(A, Bc)); }
+    return { a, ph };
+  }
+  function gcd(x, y) { while (y) [x, y] = [y, x % y]; return x; }
+  // how the sound repeats: ns lists the harmonic numbers with nonzero amplitude
+  function periodInfo(ns, f1, B, detN, df) {
+    if (!ns.length) return { kind: 'silent' };
+    if (ns.length === 1) { const f = partialFreq(ns[0], f1, B, detN, df); return { kind: 'periodic', T: 1 / f, f, g: B === 0 && !(ns[0] === detN && df) ? ns[0] : null }; }
+    if (B > 0) return { kind: 'none' };
+    if (df !== 0 && ns.includes(detN)) return { kind: 'drift', Tshape: 1 / Math.abs(df) };
+    const g = ns.reduce((acc, n) => gcd(acc, n), 0);
+    return { kind: 'periodic', g, f: g * f1, T: 1 / (g * f1) };
+  }
+  // RMS of a sum of sines at distinct frequencies: √(Σ aₙ²/2)
+  function rmsOf(a) { let s = 0; for (let n = 1; n < a.length; n++) s += a[n] * a[n] / 2; return Math.sqrt(s); }
+  // largest |Σ aₙ sin(nθ + φₙ)| over one period of f₁
+  function peakOf(a, ph, M) { let p = 0; const m = M || 4096; for (let i = 0; i < m; i++) p = Math.max(p, Math.abs(seriesAt(i / m * TAU, a, ph))); return p; }
+  // mode shapes along the length, s = 0 to 1 (string: fixed ends; open pipe: air displacement, antinodes at the open ends; closed pipe: closed end at s = 0, odd n only)
+  function modeShape(kind, n, s) {
+    if (kind === 'string') return Math.sin(n * PI * s);
+    if (kind === 'open') return Math.cos(n * PI * s);
+    return n % 2 === 1 ? Math.sin(n * PI * s / 2) : null;
+  }
+  function toDb(r) { return 20 * Math.log10(r); }
+  // sound level safety: hold the RMS near RMS_TARGET, never let the peak pass PEAK_MAX (−12 dBFS) at full volume
+  const RMS_TARGET = 0.08, PEAK_MAX = 0.25, HF_EDGE = 8000, HF_GAIN = 0.25, F_MUTE = 18000;
+  function audioNorm(rms, peakBound) { return rms > 0 ? Math.min(RMS_TARGET / rms, PEAK_MAX / peakBound) : 0; }
+  function hfGain(f) { return f > F_MUTE ? 0 : f > HF_EDGE ? HF_GAIN : 1; }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.TIMBRE = { PI, TAU, NH, A4, etFreq, midiFreq, noteOf, partialFreq, idealSeries, idealWave, seriesAt, fourier, gcd, periodInfo,
+      rmsOf, peakOf, modeShape, toDb, audioNorm, hfGain, RMS_TARGET, PEAK_MAX, HF_EDGE, HF_GAIN, F_MUTE };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const SUB = '₀₁₂₃₄₅₆₇₈₉';
+  const sub = (n) => String(n).split('').map((c) => SUB[+c]).join('');
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const F_VIS = 0.5;   // the ladder shows f₁ at 0.5 Hz
+
+  // ---------- state ----------
+  const S = {
+    semi: -12, a: new Array(NH + 1).fill(0), ph: new Array(NH + 1).fill(0),
+    mute1: false, mute2: false, detN: 3, df: 0, B: 0,
+    ladder: 'string', periods: 3, showEach: false, showIdeal: true, showDials: true, sel: 1
+  };
+  let presetId = 'saw', running = !reduce, tAnim = 0, frameMs = 0, dirty = true;
+
+  const PRESETS = {
+    square: { semi: -12, set: () => setIdeal('square'),
+      hint: 'Odd harmonics only, aₙ = 1/n. With 16 harmonics the wave is nearly square, with ripples at each jump; the overshoot, about 9% of the jump, never shrinks as more harmonics are added (the Gibbs phenomenon). The missing even harmonics give it a hollow sound.' },
+    saw: { semi: -12, set: () => setIdeal('saw'),
+      hint: 'Every harmonic, aₙ = 1/n: a bright, buzzy tone. A bowed violin string moves so that the force it puts on the bridge is close to a sawtooth, which is why bowed strings sound rich in harmonics.' },
+    triangle: { semi: -12, set: () => setIdeal('triangle'),
+      hint: 'Odd harmonics again, but aₙ = 1/n², so they fade much faster than in the square wave and the tone is mellower. Harmonics 3, 7, 11 and 15 are inverted: their phase dials point the other way.' },
+    clarinet: { semi: -19, set: () => setAmps([1, 0.04, 0.75, 0.05, 0.5, 0.06, 0.32, 0.05, 0.2, 0.04, 0.12, 0.03, 0.07, 0.02, 0.04, 0.01]),
+      hint: 'Illustrative spectrum, not a recording: D3 with strong odd harmonics and weak even ones, as in the low register of a clarinet, whose bore acts roughly like a pipe closed at the reed. Switch the ladder to Closed pipe: only odd modes fit.' },
+    flute: { semi: 0, set: () => setAmps([1, 0.22, 0.08, 0.035, 0.015]),
+      hint: 'Illustrative spectrum, not a recording: A4 with a strong fundamental and a few weak harmonics, close to a pure sine wave. A softly played flute comes near this; compare the tone with Pure tone and with the sawtooth.' },
+    missing: { semi: -12, set: () => { setAmps([0.9, 0.9, 0.8, 0.7, 0.6, 0.5, 0.42, 0.35, 0.3, 0.25]); S.mute1 = true; },
+      hint: 'Harmonics 2 to 10 of A3 with nothing at 220 Hz. The waveform still repeats every 4.55 ms and you still hear A3: pitch follows the repetition period, not the energy at f₁. Small speakers that cannot play the lowest notes rely on this. Untick Remove harmonic 1 to compare, then also remove harmonic 2.' }
+  };
+  function clearAll() { for (let n = 0; n <= NH; n++) { S.a[n] = 0; S.ph[n] = 0; } }
+  function setIdeal(kind) { const s = idealSeries(kind, NH); for (let n = 0; n <= NH; n++) { S.a[n] = s.a[n]; S.ph[n] = s.ph[n]; } }
+  function setAmps(list) { clearAll(); list.forEach((v, i) => { S.a[i + 1] = v; }); }
+
+  const MODEL = 'Each harmonic is a pure sine, aₙ sin(2π fₙ t + φₙ), held steady with no attack or decay. Real instruments change their spectrum during every note, and the attack matters a great deal for telling instruments apart. ' +
+    'Harmonic n is at fₙ = n f₁; the stiffness slider uses the stiff string result fₙ = n f₁ √((1 + Bn²)/(1 + B)), scaled so partial 1 stays at f₁. Equal temperament: f = 440 Hz × 2^(k/12), k semitones from A4. ' +
+    'The square, sawtooth and triangle presets are the exact Fourier series cut off at 16 harmonics, which causes the ripples near the jumps. The clarinet-like and flute-like presets are illustrative spectra chosen to show one feature, not measurements of real instruments. ' +
+    'The ladder shows each partial as a mode of an ideal string or ideal pipe (no end correction), with amplitude aₙ, slowed so f₁ is drawn at 0.5 Hz. Spectrum levels are 20 log₁₀ aₙ, with 0 dB the top of a bar.';
+
+  // ---------- derived quantities ----------
+  const f1 = () => etFreq(S.semi);
+  const muted = (n) => (n === 1 && S.mute1) || (n === 2 && S.mute2);
+  const aEff = (n) => (muted(n) ? 0 : S.a[n]);
+  const fOf = (n) => partialFreq(n, f1(), S.B, S.detN, S.df);
+  let D = null;   // derived: effective amplitudes, period, peak and RMS, y scale
+  function recompute() {
+    const a = [0], ns = [];
+    for (let n = 1; n <= NH; n++) { a.push(aEff(n)); if (a[n] > 1e-9) ns.push(n); }
+    const info = periodInfo(ns, f1(), S.B, S.detN, S.df);
+    const rms = rmsOf(a);
+    let sumA = 0; for (let n = 1; n <= NH; n++) sumA += a[n];
+    let peak = 0;
+    if (info.kind === 'periodic' && S.B === 0 && !(S.df && ns.includes(S.detN))) peak = peakOf(a, S.ph, 2048);
+    else if (info.kind === 'drift') {
+      // the detuned harmonic slides through every phase: take the largest peak over 24 of them
+      const ph = S.ph.slice();
+      for (let k = 0; k < 24; k++) { ph[S.detN] = S.ph[S.detN] + k / 24 * TAU; peak = Math.max(peak, peakOf(a, ph, 1024)); }
+    } else if (info.kind !== 'silent') {
+      // inharmonic: the largest value over a long stretch, and the safe bound Σaₙ for the sound
+      const f = f1(), fs = []; for (let n = 1; n <= NH; n++) fs.push(partialFreq(n, f, S.B, S.detN, S.df));
+      for (let i = 0; i < 6000; i++) { const t = i / 6000 * 12 / f; let s = 0; for (let n = 1; n <= NH; n++) if (a[n]) s += a[n] * Math.sin(TAU * fs[n - 1] * t + S.ph[n]); peak = Math.max(peak, Math.abs(s)); }
+    }
+    const periodic = info.kind === 'periodic' && S.B === 0 && !(S.df && ns.includes(S.detN));
+    const peakBound = periodic ? peak * 1.02 : sumA;
+    D = { a, ns, info, rms, peak, sumA, peakBound, norm: audioNorm(rms, peakBound) };
+    if (!holdY) yMax = niceUp(Math.max(0.2, peak * 1.08));
+    dirty = true;
+  }
+  function niceUp(v) { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; return (m <= 1 ? 1 : m <= 1.5 ? 1.5 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 3 ? 3 : m <= 4 ? 4 : m <= 5 ? 5 : m <= 6 ? 6 : m <= 8 ? 8 : 10) * p; }
+  let yMax = 2, holdY = false;
+
+  // ---------- theme and canvas ----------
+  let T = null, dpr = 1, W = 0, H = 0, ls = 1, G = null;
+  const can = $('can'), ctx = can.getContext('2d'), pane = $('pane');
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on';
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    T = { warm: g('--warm'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      wood: g('--wood'), woodEdge: g('--wood-edge'), brass: g('--brass'), pos: g('--pos'), accent: g('--accent'),
+      hl: g('--hue-l') || '40%', hs: g('--hue-s') || '68%', mono: g('--font-mono') || 'monospace' };
+    buildKey(); buildTable();
+  }
+  // one color per harmonic, warm amber at n = 1 turning through red and violet to teal at n = 16
+  const hue = (n) => ((35 - (n - 1) * 215 / 15) % 360 + 360) % 360;
+  const hcol = (n, al) => `hsla(${hue(n).toFixed(0)}, ${T.hs}, ${T.hl}, ${al === undefined ? 1 : al})`;
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = pane.getBoundingClientRect();
+    can.width = Math.max(1, Math.round(r.width * dpr)); can.height = Math.max(1, Math.round(r.height * dpr));
+    can.style.width = r.width + 'px'; can.style.height = r.height + 'px';
+    W = r.width; H = r.height;
+    ls = proj() ? clamp(Math.min(W / 600, H / 400), 1, 1.4) : 1;
+    dirty = true; draw();
+  }
+  const font = (px, bold) => `${bold ? '600 ' : ''}${px * ls}px ${T.mono}`;
+  function tag(txt, x, y, color, align, base, bold, size) {
+    ctx.font = font(size || 11, bold);
+    const w = ctx.measureText(txt).width, h = (size || 11) * ls * 1.25;
+    const x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    const y0 = base === 'top' ? y : base === 'bottom' ? y - h : y - h / 2;
+    ctx.fillStyle = T.warm; ctx.globalAlpha = 0.88; ctx.fillRect(x0 - 3, y0 - 1, w + 6, h + 2); ctx.globalAlpha = 1;
+    ctx.fillStyle = color; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, x0, y0 + h / 2);
+    return w;
+  }
+  function pick(opts, maxW, size, bold) { ctx.font = font(size || 11.5, bold !== false); for (const o of opts) if (ctx.measureText(o).width <= maxW) return o; return opts[opts.length - 1]; }
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  function fmtTick(v, st) { const d = Math.max(0, -Math.floor(Math.log10(st) + 1e-9)); return (Math.abs(v) < st / 1e6 ? 0 : v).toFixed(d); }
+  function fmtHz(f) { return f >= 1000 ? `${(f / 1000).toFixed(f >= 10000 ? 1 : 2)} kHz` : `${f.toFixed(f < 100 ? 2 : 1)} Hz`; }
+  function fmtMs(t) { const ms = t * 1e3; return ms >= 100 ? `${ms.toFixed(0)} ms` : ms >= 10 ? `${ms.toFixed(1)} ms` : `${ms.toFixed(2)} ms`; }
+  function noteTxt(f) { const q = noteOf(f), c = Math.round(q.cents); return `${q.name}${q.octave}${c ? ` ${c > 0 ? '+' : '−'}${Math.abs(c)} cents` : ''}`; }
+  function rrect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+
+  // ---------- layout: waveform and spectrum on top, ladder over the bars below; stacked on narrow screens ----------
+  function layout() {
+    const wide = W >= 680;
+    let wave, spec, lad, eq;
+    if (wide) {
+      const hTop = Math.round(H * 0.44), wW = Math.round(W * 0.58);
+      wave = { x: 0, y: 0, w: wW, h: hTop }; spec = { x: wW, y: 0, w: W - wW, h: hTop };
+      const hl = Math.round((H - hTop) * 0.4);
+      lad = { x: 0, y: hTop, w: W, h: hl }; eq = { x: 0, y: hTop + hl, w: W, h: H - hTop - hl };
+    } else {
+      const h1 = Math.round(H * 0.25), h2 = Math.round(H * 0.24), h3 = Math.round(H * 0.19);
+      wave = { x: 0, y: 0, w: W, h: h1 }; spec = { x: 0, y: h1, w: W, h: h2 };
+      lad = { x: 0, y: h1 + h2, w: W, h: h3 }; eq = { x: 0, y: h1 + h2 + h3, w: W, h: H - h1 - h2 - h3 };
+    }
+    const colL = 40 * ls, colR = W - 12 * ls, cw = (colR - colL) / NH;
+    G = { wide, wave, spec, lad, eq, colL, colR, cw, cx: (n) => colL + (n - 0.5) * cw };
+  }
+
+  // ---------- waveform ----------
+  let holdSpan = null;
+  function waveGeom() {
+    const r = G.wave, L = r.x + 46 * ls, R = r.x + r.w - 14 * ls, top = r.y + 40 * ls, bot = r.y + r.h - 26 * ls;
+    const span = holdSpan || S.periods * (S.B > 0 ? 2 : 1) / f1();
+    return { L, R, top, bot, span, X: (t) => L + t / span * (R - L), Y: (v) => (top + bot) / 2 - v / yMax * (bot - top) / 2 };
+  }
+  // the time where the trace starts: whole periods of f₁, so a harmonic tone stands still, as on a triggered oscilloscope
+  function traceStart() { return D.info.kind === 'drift' ? Math.floor(tAnim / (1 / f1())) / f1() : 0; }
+  function sumAt(t, fs) { let s = 0; for (let n = 1; n <= NH; n++) { const a = D.a[n]; if (a) s += a * Math.sin(TAU * fs[n] * t + S.ph[n]); } return s; }
+  function drawWave() {
+    const r = G.wave, g = waveGeom(), { L, R, top, bot, span, X, Y } = g;
+    if (bot - top < 30) return;
+    const fs = [0]; for (let n = 1; n <= NH; n++) fs.push(fOf(n));
+    const t0 = traceStart(), T1 = 1 / f1();
+    // grid
+    ctx.font = font(10.5); ctx.fillStyle = T.muted;
+    const yst = nice(yMax / (bot - top < 140 ? 1 : 2));
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = -Math.floor(yMax / yst) * yst; v <= yMax + 1e-9; v += yst) {
+      const py = Math.round(Y(v)) + 0.5;
+      ctx.strokeStyle = Math.abs(v) < 1e-9 ? T.gridStrong : T.grid; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(L, py); ctx.lineTo(R, py); ctx.stroke();
+      ctx.fillText(fmtTick(v, yst), L - 6 * ls, py);
+    }
+    const spanMs = span * 1e3, xst = nice(spanMs / ((R - L) < 360 ? 3 : 6));
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = 0; v <= spanMs + 1e-9; v += xst) {
+      const px = Math.round(X(v / 1e3)) + 0.5;
+      ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bot); ctx.stroke();
+      ctx.fillText(fmtTick(v, xst), px, bot + 5 * ls);
+    }
+    ctx.textAlign = 'right'; ctx.fillText(D.info.kind === 'drift' ? `t − ${(t0).toFixed(2)} s (ms)` : 't (ms)', R, bot + 5 * ls + 12 * ls);
+    ctx.save(); ctx.translate(r.x + 11 * ls, (top + bot) / 2); ctx.rotate(-PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('signal (bar units)', 0, 0); ctx.restore();
+
+    // period markers
+    const per = D.info.kind === 'periodic' && D.info.T ? D.info.T : T1;
+    const exact = D.info.kind === 'periodic';
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top - 2, R - L, bot - top + 4); ctx.clip();
+    ctx.strokeStyle = T.brass; ctx.globalAlpha = exact ? 0.75 : 0.45; ctx.setLineDash([4 * ls, 4 * ls]); ctx.lineWidth = 1;
+    for (let k = 1; k * per <= span + 1e-12; k++) { const px = Math.round(X(k * per)) + 0.5; ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bot); ctx.stroke(); }
+    ctx.setLineDash([]); ctx.globalAlpha = 1;
+
+    if (D.info.kind === 'silent') { ctx.restore(); tag('Silence: every harmonic is at zero', (L + R) / 2, (top + bot) / 2, T.muted, 'center', 'middle', true, 12); return; }
+    // ideal shape (the infinite series) behind the 16 harmonic sum
+    const ideal = idealKind();
+    if (ideal && S.showIdeal) {
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ls; ctx.setLineDash([5 * ls, 4 * ls]); ctx.beginPath();
+      let prev = null;
+      for (let px = L; px <= R + 0.5; px += 1) {
+        const t = (px - L) / (R - L) * span, v = idealWave(ideal, TAU * f1() * t), py = Y(v);
+        if (prev !== null && Math.abs(py - prev) > (bot - top) * 0.3) ctx.moveTo(px, py); else if (prev === null) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        prev = py;
+      }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    // each harmonic, faint
+    if (S.showEach) {
+      ctx.lineWidth = 1.1 * ls;
+      for (let n = 1; n <= NH; n++) {
+        const a = D.a[n]; if (!a) continue;
+        ctx.strokeStyle = hcol(n, 0.55); ctx.beginPath();
+        const st = Math.max(0.5, Math.min(1.5, (R - L) / (span * fs[n] * 24)));
+        for (let px = L; px <= R + 0.01; px += st) { const t = t0 + (px - L) / (R - L) * span, py = Y(a * Math.sin(TAU * fs[n] * t + S.ph[n])); px === L ? ctx.moveTo(px, py) : ctx.lineTo(px, py); }
+        ctx.stroke();
+      }
+    }
+    // the sum: what you hear
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2.3 * ls; ctx.lineJoin = 'round'; ctx.beginPath();
+    for (let px = L; px <= R + 0.01; px += 0.75) { const t = t0 + (px - L) / (R - L) * span, py = Y(sumAt(t, fs)); px === L ? ctx.moveTo(px, py) : ctx.lineTo(px, py); }
+    ctx.stroke();
+    ctx.restore();
+
+    // the period bracket at the top, with a grip at its end that sets f₁
+    const xb = X(Math.min(per, span)), yb = top - 9 * ls;
+    ctx.strokeStyle = T.brass; ctx.lineWidth = 1.6 * ls;
+    ctx.beginPath(); ctx.moveTo(L, yb - 4 * ls); ctx.lineTo(L, yb + 4 * ls); ctx.moveTo(L, yb); ctx.lineTo(xb, yb); ctx.stroke();
+    const hot = (drag && drag.id === 'period') || (!drag && hoverKey === 'period');
+    ctx.fillStyle = T.warm; ctx.lineWidth = (hot ? 2.4 : 1.7) * ls;
+    ctx.beginPath(); ctx.arc(xb, yb, (hot ? 6.5 : 5) * ls, 0, TAU); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(xb - 2 * ls, yb - 2.5 * ls); ctx.lineTo(xb - 2 * ls, yb + 2.5 * ls); ctx.moveTo(xb + 2 * ls, yb - 2.5 * ls); ctx.lineTo(xb + 2 * ls, yb + 2.5 * ls); ctx.lineWidth = 1.2 * ls; ctx.stroke();
+    G.periodGrip = [xb, yb];
+    let btxt;
+    if (exact) btxt = D.info.g && D.info.g > 1 ? [`repeats every T = ${fmtMs(per)} = T₁/${D.info.g}`, `T = ${fmtMs(per)} = T₁/${D.info.g}`] : [`repeats every T = ${fmtMs(per)}`, `T = ${fmtMs(per)}`];
+    else if (D.info.kind === 'drift') btxt = [`T₁ = ${fmtMs(T1)}, but the shape drifts`, `T₁ = ${fmtMs(T1)}, drifting`];
+    else btxt = [`T₁ = ${fmtMs(T1)}, but it never repeats exactly`, `T₁ = ${fmtMs(T1)}, no repeat`];
+    const bx = xb + 10 * ls, room = R - bx;
+    if (room > 60 * ls) tag(pick(btxt, room, 10.5, true), bx, yb, T.brass, 'left', 'middle', true, 10.5);
+    // title
+    const title = pick([`Waveform: the sum of ${D.ns.length} harmonic${D.ns.length === 1 ? '' : 's'}`, 'Waveform'], r.w - 20 * ls, 11.5, true);
+    ctx.font = font(11.5, true); ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(title, r.x + 12 * ls, r.y + 6 * ls);
+  }
+  function idealKind() {
+    if (!['square', 'saw', 'triangle'].includes(presetId) || S.B || S.df || S.mute1 || S.mute2) return null;
+    return presetId;
+  }
+
+  // ---------- spectrum ----------
+  const DB_MIN = -50;
+  function specGeom() {
+    const r = G.spec, L = r.x + 44 * ls, R = r.x + r.w - 14 * ls, top = r.y + 40 * ls, bot = r.y + r.h - 34 * ls;
+    let fMax = 16.6 * f1();
+    for (let n = 1; n <= NH; n++) if (S.a[n] > 0 || n === NH) fMax = Math.max(fMax, fOf(n) * 1.04);
+    return { L, R, top, bot, fMax, X: (f) => L + f / fMax * (R - L), Y: (db) => top + (Math.max(DB_MIN, db) / DB_MIN) * (bot - top), dbAt: (py) => (py - top) / (bot - top) * DB_MIN };
+  }
+  function drawSpec() {
+    const r = G.spec, g = specGeom(), { L, R, top, bot, fMax, X, Y } = g;
+    if (bot - top < 30) return;
+    // divider
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1;
+    if (G.wide) { ctx.beginPath(); ctx.moveTo(r.x + 0.5, r.y + 8); ctx.lineTo(r.x + 0.5, r.y + r.h - 8); ctx.stroke(); }
+    else { ctx.beginPath(); ctx.moveTo(8, r.y + 0.5); ctx.lineTo(W - 8, r.y + 0.5); ctx.stroke(); }
+    // 8 kHz edge
+    if (fMax > HF_EDGE) {
+      const xh = X(HF_EDGE);
+      ctx.save(); ctx.beginPath(); ctx.rect(xh, top, R - xh, bot - top); ctx.clip();
+      ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.18; ctx.lineWidth = 1;
+      for (let x = xh - (bot - top); x < R; x += 6 * ls) { ctx.beginPath(); ctx.moveTo(x, bot); ctx.lineTo(x + (bot - top), top); ctx.stroke(); }
+      ctx.restore();
+    }
+    // grid
+    ctx.font = font(10.5); ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    const dst = (bot - top) < 120 ? 20 : 10;
+    for (let db = 0; db >= DB_MIN; db -= dst) {
+      const py = Math.round(Y(db)) + 0.5;
+      ctx.strokeStyle = db === 0 ? T.gridStrong : T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, py); ctx.lineTo(R, py); ctx.stroke();
+      ctx.fillText(String(db), L - 6 * ls, py);
+    }
+    const kHz = fMax > 2500, unit = kHz ? 1000 : 1, fst = nice(fMax / unit / ((R - L) < 300 ? 3 : 5));
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = 0; v <= fMax / unit + 1e-9; v += fst) { const px = Math.round(X(v * unit)) + 0.5; ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bot); ctx.stroke(); ctx.fillText(fmtTick(v, fst), px, bot + 5 * ls); }
+    ctx.textAlign = 'right'; ctx.fillText(kHz ? 'f (kHz)' : 'f (Hz)', R, bot + 18 * ls);
+    ctx.save(); ctx.translate(r.x + 11 * ls, (top + bot) / 2); ctx.rotate(-PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('level (dB)', 0, 0); ctx.restore();
+
+    // f₁ marker, and the repetition rate when it differs
+    const f = f1(), xf = X(f);
+    ctx.strokeStyle = T.brass; ctx.setLineDash([3 * ls, 3 * ls]); ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(xf, top); ctx.lineTo(xf, bot); ctx.stroke(); ctx.setLineDash([]);
+    // partials
+    const stems = [];
+    for (let n = 1; n <= NH; n++) {
+      const fn = fOf(n), x = X(fn), a = S.a[n], m = muted(n);
+      if (fn > fMax) continue;
+      if (a <= 0) { stems.push({ n, x, y: bot, zero: true }); continue; }
+      const db = toDb(a), y = Y(db);
+      if (m) {
+        ctx.strokeStyle = hcol(n, 0.6); ctx.setLineDash([3 * ls, 3 * ls]); ctx.lineWidth = 1.2 * ls;
+        ctx.beginPath(); ctx.moveTo(x, bot); ctx.lineTo(x, y); ctx.stroke(); ctx.setLineDash([]);
+        stems.push({ n, x, y, muted: true });
+        continue;
+      }
+      ctx.strokeStyle = hcol(n); ctx.lineWidth = Math.max(2, Math.min(5, (R - L) / fMax * f * 0.18)) * ls; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(x, bot); ctx.lineTo(x, Math.min(bot, y)); ctx.stroke(); ctx.lineCap = 'butt';
+      stems.push({ n, x, y });
+    }
+    G.stems = stems;
+    for (const s of stems) {
+      const hot = (drag && drag.id === 'spec' && drag.n === s.n) || (!drag && hoverKey === 'spec' + s.n);
+      if (s.zero) { if (hot) { ctx.strokeStyle = hcol(s.n); ctx.lineWidth = 1.5 * ls; ctx.beginPath(); ctx.arc(s.x, s.y, 4 * ls, 0, TAU); ctx.stroke(); } continue; }
+      ctx.fillStyle = s.muted ? T.warm : hcol(s.n); ctx.strokeStyle = s.muted ? hcol(s.n, 0.7) : T.warm; ctx.lineWidth = (hot ? 2.2 : 1.4) * ls;
+      ctx.beginPath(); ctx.arc(s.x, s.y, (hot ? 5.5 : 4) * ls, 0, TAU); ctx.fill(); ctx.stroke();
+      if (hot) { ctx.strokeStyle = hcol(s.n); ctx.beginPath(); ctx.arc(s.x, s.y, 8 * ls, 0, TAU); ctx.stroke(); }
+    }
+    // labels last
+    const a1 = D.a[1];
+    tag(a1 > 0 ? 'f₁' : pick(['f₁: no energy here', 'f₁'], (R - xf) - 70 * ls, 10.5, true), xf - 4 * ls, bot + 18 * ls, T.brass, 'left', 'top', true, 10.5);
+    if (D.info.kind === 'periodic' && D.info.g > 1) {
+      const xg = X(D.info.f);
+      ctx.strokeStyle = T.pos; ctx.setLineDash([3 * ls, 3 * ls]); ctx.beginPath(); ctx.moveTo(xg, top); ctx.lineTo(xg, bot); ctx.stroke(); ctx.setLineDash([]);
+      tag(`1/T = ${D.info.g} f₁`, xg + 4 * ls, top + 17 * ls, T.pos, 'left', 'top', true, 10.5);
+    }
+    if (fMax > HF_EDGE) {
+      const xh = X(HF_EDGE);
+      tag(pick(['above 8 kHz: played 12 dB quieter', '> 8 kHz: −12 dB', '−12 dB'], R - xh - 6 * ls, 10, true), R - 2 * ls, bot - 4 * ls, T.muted, 'right', 'bottom', true, 10);
+    }
+    if (hoverKey && hoverKey.startsWith('spec') || (drag && drag.id === 'spec')) {
+      const n = drag && drag.id === 'spec' ? drag.n : +hoverKey.slice(4), s = stems.find((q) => q.n === n);
+      if (s) {
+        const a = S.a[n], txt = `n = ${n} · ${fmtHz(fOf(n))} · ${a > 0 ? toDb(a).toFixed(1) + ' dB' : 'off'}${muted(n) ? ' (removed)' : ''}`;
+        ctx.font = font(10.5, true); const w = ctx.measureText(txt).width;
+        tag(txt, clamp(s.x - w / 2, L, R - w), Math.max(top + 32 * ls, s.y - 12 * ls), hcol(n), 'left', 'bottom', true, 10.5);
+      }
+    }
+    const title = pick(['Spectrum: one line per partial', 'Spectrum'], r.w - 20 * ls, 11.5, true);
+    ctx.font = font(11.5, true); ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(title, r.x + 12 * ls, r.y + 6 * ls);
+  }
+
+  // ---------- harmonic ladder ----------
+  function drawLadder() {
+    const r = G.lad, { colL, colR, cw } = G;
+    const yA = r.y + 26 * ls, yB = r.y + r.h - 8 * ls, len = yB - yA;
+    if (len < 20) return;
+    ctx.fillStyle = T.wood; rrect(8, r.y + 4, W - 16, r.h - 6, 8 * ls); ctx.fill();
+    ctx.strokeStyle = T.woodEdge; ctx.lineWidth = 1; ctx.stroke();
+    const kind = S.ladder, amp = cw * 0.4;
+    for (let n = 1; n <= NH; n++) {
+      const cx = G.cx(n), a = S.a[n], m = muted(n), noMode = kind === 'closed' && n % 2 === 0;
+      const fv = F_VIS * fOf(n) / f1(), osc = Math.sin(TAU * fv * tAnim + S.ph[n]);
+      // the instrument: a string between two pins, or a narrow tube
+      if (kind === 'string') {
+        ctx.fillStyle = T.woodEdge; ctx.beginPath(); ctx.arc(cx, yA, 2.4 * ls, 0, TAU); ctx.arc(cx, yB, 2.4 * ls, 0, TAU); ctx.fill();
+      } else {
+        const hw = Math.min(cw * 0.46, amp + 3 * ls);
+        ctx.strokeStyle = T.woodEdge; ctx.lineWidth = 1.2 * ls;
+        ctx.beginPath(); ctx.moveTo(cx - hw, yA); ctx.lineTo(cx - hw, yB); ctx.moveTo(cx + hw, yA); ctx.lineTo(cx + hw, yB); ctx.stroke();
+        if (kind === 'closed') { ctx.lineWidth = 3 * ls; ctx.beginPath(); ctx.moveTo(cx - hw - 1, yA); ctx.lineTo(cx + hw + 1, yA); ctx.stroke(); }
+      }
+      if (noMode) {
+        ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.5; ctx.lineWidth = 1.2 * ls;
+        ctx.beginPath(); ctx.moveTo(cx - 4 * ls, (yA + yB) / 2 - 4 * ls); ctx.lineTo(cx + 4 * ls, (yA + yB) / 2 + 4 * ls); ctx.moveTo(cx + 4 * ls, (yA + yB) / 2 - 4 * ls); ctx.lineTo(cx - 4 * ls, (yA + yB) / 2 + 4 * ls); ctx.stroke();
+        ctx.globalAlpha = 1;
+        continue;
+      }
+      const A = (m ? 0 : a) * amp, shape = (s) => modeShape(kind, n, s);
+      const steps = Math.max(24, Math.min(160, Math.round(len / 2)));
+      // envelope: the widest the mode swings
+      if (A > 0.3) {
+        ctx.fillStyle = hcol(n, 0.13); ctx.beginPath();
+        for (let i = 0; i <= steps; i++) { const s = i / steps; ctx.lineTo(cx + A * Math.abs(shape(s)), yA + s * len); }
+        for (let i = steps; i >= 0; i--) { const s = i / steps; ctx.lineTo(cx - A * Math.abs(shape(s)), yA + s * len); }
+        ctx.closePath(); ctx.fill();
+      }
+      ctx.strokeStyle = m || a === 0 ? T.muted : hcol(n); ctx.globalAlpha = m || a === 0 ? 0.45 : 1; ctx.lineWidth = (m || a === 0 ? 1 : 1.8) * ls;
+      if (m) ctx.setLineDash([3 * ls, 3 * ls]);
+      ctx.beginPath();
+      for (let i = 0; i <= steps; i++) { const s = i / steps, x = cx + A * shape(s) * osc; i ? ctx.lineTo(x, yA + s * len) : ctx.moveTo(x, yA); }
+      ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    }
+    const kindTxt = kind === 'string' ? 'string modes' : kind === 'open' ? 'air displacement in a pipe open at both ends' : 'air displacement in a pipe closed at the top: odd modes only';
+    const title = pick([`Harmonic ladder: ${kindTxt}, slowed so f₁ is drawn at 0.5 Hz`, `Ladder: ${kindTxt}`, kind === 'closed' ? 'Ladder: closed pipe, odd only' : `Ladder: ${kind === 'string' ? 'string' : 'open pipe'}`], W - 40 * ls, 11, true);
+    tag(title, 18 * ls, r.y + 15 * ls, T.ink, 'left', 'middle', true, 11);
+  }
+
+  // ---------- harmonic bars (the synthesizer) ----------
+  function eqGeom() {
+    const r = G.eq, dial = S.showDials;
+    const dr = Math.max(4, Math.min(G.cw * 0.34, 10 * ls));
+    const top = r.y + 24 * ls, rowN = r.y + r.h - (dial ? 2 * dr + 26 * ls : 22 * ls), bot = rowN - 6 * ls;
+    return { top, bot, rowN, dr, dialY: rowN + 15 * ls + dr, bw: Math.max(5, G.cw * 0.6) };
+  }
+  function drawEq() {
+    const r = G.eq, g = eqGeom(), { top, bot, rowN, dr, dialY, bw } = g, { colL, colR } = G;
+    if (bot - top < 30) return;
+    const Yv = (a) => bot - a * (bot - top);
+    ctx.font = font(10.5); ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (const v of [0, 0.25, 0.5, 0.75, 1]) {
+      const py = Math.round(Yv(v)) + 0.5;
+      ctx.strokeStyle = v === 0 ? T.gridStrong : T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(colL, py); ctx.lineTo(colR, py); ctx.stroke();
+      if (v === 0 || v === 0.5 || v === 1) ctx.fillText(String(v), colL - 6 * ls, py);
+    }
+    const focus = document.activeElement === can;
+    for (let n = 1; n <= NH; n++) {
+      const cx = G.cx(n), a = S.a[n], m = muted(n), x0 = cx - bw / 2, y = Yv(a);
+      const hot = (drag && (drag.id === 'bar') && drag.n === n) || (!drag && hoverKey === 'bar' + n);
+      // track
+      ctx.fillStyle = T.grid; ctx.globalAlpha = 0.7; rrect(x0, top, bw, bot - top, Math.min(4, bw / 3)); ctx.fill(); ctx.globalAlpha = 1;
+      if (focus && S.sel === n) { ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.setLineDash([3, 3]); rrect(x0 - 3, top - 3, bw + 6, bot - top + 6, 5); ctx.stroke(); ctx.setLineDash([]); }
+      if (a > 0) {
+        if (m) {
+          ctx.strokeStyle = hcol(n, 0.8); ctx.lineWidth = 1.3 * ls; ctx.setLineDash([3 * ls, 3 * ls]);
+          rrect(x0 + 0.5, y, bw - 1, bot - y, Math.min(3, bw / 3)); ctx.stroke(); ctx.setLineDash([]);
+        } else {
+          ctx.fillStyle = hcol(n, hot ? 1 : 0.88); rrect(x0, y, bw, bot - y, Math.min(3, bw / 3, (bot - y) / 2)); ctx.fill();
+        }
+      }
+      // grip on the bar top, always visible
+      if (!m) {
+        const gw = Math.min(bw + 4 * ls, bw * 1.3), gh = (hot ? 7 : 5) * ls;
+        ctx.fillStyle = T.warm; ctx.strokeStyle = hcol(n); ctx.lineWidth = (hot ? 2 : 1.3) * ls;
+        rrect(cx - gw / 2, y - gh / 2, gw, gh, gh / 2); ctx.fill(); ctx.stroke();
+      }
+      // n label
+      ctx.font = font(10.5, true); ctx.fillStyle = m ? T.muted : hcol(n); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillText(G.cw < 18 * ls && n % 2 === 0 && n !== NH ? '·' : String(n), cx, rowN);
+      if (m) { ctx.font = font(9.5); ctx.fillStyle = T.muted; ctx.textBaseline = 'bottom'; ctx.fillText('off', cx, bot - 2); }
+      // phase dial
+      if (S.showDials) {
+        const ph = S.ph[n], hotD = (drag && drag.id === 'dial' && drag.n === n) || (!drag && hoverKey === 'dial' + n);
+        ctx.strokeStyle = a > 0 && !m ? hcol(n) : T.muted; ctx.globalAlpha = a > 0 && !m ? 1 : 0.5; ctx.lineWidth = (hotD ? 2 : 1.2) * ls;
+        ctx.fillStyle = T.warm; ctx.beginPath(); ctx.arc(cx, dialY, dr, 0, TAU); ctx.fill(); ctx.stroke();
+        ctx.lineWidth = (hotD ? 2.4 : 1.8) * ls; ctx.beginPath(); ctx.moveTo(cx, dialY); ctx.lineTo(cx + dr * Math.cos(ph), dialY - dr * Math.sin(ph)); ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+    }
+    // a value label for the bar or dial under the pointer
+    const key = drag ? drag.id + drag.n : hoverKey;
+    if (key && (key.startsWith('bar') || key.startsWith('dial'))) {
+      const n = +key.replace(/\D/g, ''), cx = G.cx(n), a = S.a[n];
+      const txt = key.startsWith('bar') ? `a${sub(n)} = ${a.toFixed(2)}${a > 0 ? ` (${toDb(a).toFixed(1)} dB)` : ''}` : `φ${sub(n)} = ${Math.round(((S.ph[n] * 180 / PI) % 360 + 360) % 360)}°`;
+      ctx.font = font(10.5, true); const w = ctx.measureText(txt).width;
+      const yy = key.startsWith('bar') ? Math.max(top - 2, Yv(a) - 8 * ls) : dialY - dr - 4 * ls;
+      tag(txt, clamp(cx - w / 2, 8, W - w - 8), yy, hcol(n), 'left', 'bottom', true, 10.5);
+    }
+    const title = pick(['Harmonic bars: drag to set each amplitude' + (S.showDials ? ', dials set phases' : ''), 'Harmonic bars: drag to set', 'Harmonic bars'], W - 30 * ls, 11, true);
+    tag(title, 18 * ls, r.y + 10 * ls, T.ink, 'left', 'middle', true, 11);
+  }
+
+  function draw() {
+    if (!T || !W || !H || !D) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.warm; ctx.fillRect(0, 0, W, H);
+    layout();
+    drawWave(); drawSpec(); drawLadder(); drawEq();
+    dirty = false;
+  }
+
+  // ---------- pointer: bars, dials, spectrum dots, period grip ----------
+  let drag = null, hoverKey = null;
+  function hitAt(ev) {
+    if (!G) return null;
+    const rc = can.getBoundingClientRect(), x = ev.clientX - rc.left, y = ev.clientY - rc.top;
+    const tol = 8 * ls * (ev.pointerType === 'touch' ? 2 : 1);
+    // period grip
+    if (G.periodGrip && Math.hypot(x - G.periodGrip[0], y - G.periodGrip[1]) < tol + 4 * ls) return { id: 'period', cursor: 'ew-resize' };
+    // spectrum dots
+    if (G.stems) {
+      let best = null, bd = tol + 3 * ls;
+      for (const s of G.stems) { if (s.muted) continue; const d = Math.hypot(x - s.x, y - s.y); if (d < bd) { bd = d; best = s; } }
+      if (best) return { id: 'spec', n: best.n, cursor: 'ns-resize' };
+    }
+    // bars and dials
+    const e = G.eq, g = eqGeom();
+    if (x >= G.colL - 4 && x <= G.colR + 4 && y >= e.y) {
+      const n = clamp(Math.floor((x - G.colL) / G.cw) + 1, 1, NH);
+      if (S.showDials && Math.hypot(x - G.cx(n), y - g.dialY) < g.dr + tol * 0.8) return { id: 'dial', n, cursor: 'grab' };
+      if (y >= g.top - tol && y <= g.bot + tol && !muted(n)) return { id: 'bar', n, cursor: 'ns-resize' };
+    }
+    return null;
+  }
+  const keyOf = (h) => (h ? h.id + (h.n || '') : null);
+  let dragQueued = null, dragFrame = false, lastPaint = null;
+  function applyDrag(x, y) {
+    if (!drag) return;
+    if (drag.id === 'bar') {
+      const g = eqGeom(), n = clamp(Math.floor((x - G.colL) / G.cw) + 1, 1, NH);
+      const v = clamp(Math.round((g.bot - y) / (g.bot - g.top) * 100) / 100, 0, 1);
+      // paint across columns: fill the ones skipped between two pointer events
+      const from = lastPaint || { n, v };
+      const lo = Math.min(from.n, n), hi = Math.max(from.n, n);
+      for (let k = lo; k <= hi; k++) {
+        if (muted(k)) continue;
+        const f = hi === lo ? 1 : (k - from.n) / (n - from.n);
+        S.a[k] = Math.round((from.v + (v - from.v) * f) * 100) / 100;
+      }
+      lastPaint = { n, v }; drag.n = n; S.sel = n;
+      edited();
+    } else if (drag.id === 'dial') {
+      const g = eqGeom(), cx = G.cx(drag.n);
+      let ph = Math.atan2(g.dialY - y, x - cx);
+      ph = Math.round(ph / (PI / 36)) * (PI / 36);   // 5° steps
+      S.ph[drag.n] = ph < 0 ? ph + TAU : ph; S.sel = drag.n;
+      edited();
+    } else if (drag.id === 'spec') {
+      const g = specGeom(), db = g.dbAt(y);
+      S.a[drag.n] = db <= DB_MIN + 1 ? 0 : clamp(Math.round(Math.pow(10, db / 20) * 100) / 100, 0, 1);
+      if (db > DB_MIN + 1 && S.a[drag.n] === 0) S.a[drag.n] = 0.01;
+      S.sel = drag.n; edited();
+    } else if (drag.id === 'period') {
+      // drag the bracket's end: the period it marks scales with 1/f₁
+      const g = waveGeom(), t = clamp((x - g.L) / (g.R - g.L) * g.span, 1e-5, g.span);
+      const per = D.info.kind === 'periodic' && D.info.T ? D.info.T : 1 / f1();
+      const fNew = f1() * per / t;
+      setSemi(12 * Math.log2(fNew / A4));
+    }
+  }
+  function queueDrag(ev) {
+    const rc = can.getBoundingClientRect();
+    dragQueued = [ev.clientX - rc.left, ev.clientY - rc.top];
+    if (dragFrame) return;
+    dragFrame = true;
+    requestAnimationFrame(() => { dragFrame = false; if (dragQueued) { applyDrag(dragQueued[0], dragQueued[1]); dragQueued = null; } });
+  }
+  can.addEventListener('pointermove', (ev) => {
+    if (drag) { queueDrag(ev); return; }
+    const h = hitAt(ev), k = keyOf(h);
+    can.style.cursor = h ? h.cursor : 'default';
+    if (k !== hoverKey) { hoverKey = k; dirty = true; }
+  });
+  can.addEventListener('pointerdown', (ev) => {
+    const h = hitAt(ev);
+    if (!h) return;
+    drag = { id: h.id, n: h.n };
+    lastPaint = null; holdY = true;
+    if (h.id === 'period') holdSpan = waveGeom().span;
+    try { can.setPointerCapture(ev.pointerId); } catch (_) {}
+    can.style.cursor = h.cursor === 'grab' ? 'grabbing' : h.cursor;
+    ev.preventDefault();
+    queueDrag(ev);
+  });
+  const endDrag = () => {
+    if (!drag) return;
+    drag = null; hoverKey = null; lastPaint = null; holdY = false; holdSpan = null;
+    recompute(); readouts();
+  };
+  can.addEventListener('pointerup', endDrag);
+  can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('pointerleave', () => { if (!drag && hoverKey) { hoverKey = null; dirty = true; } });
+  can.addEventListener('focus', () => { dirty = true; });
+  can.addEventListener('blur', () => { hoverKey = null; dirty = true; });
+  can.addEventListener('keydown', (e) => {
+    const n = S.sel;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') S.sel = clamp(n + (e.key === 'ArrowRight' ? 1 : -1), 1, NH);
+    else if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && !muted(n)) { const st = e.shiftKey ? 0.01 : 0.05; S.a[n] = clamp(Math.round((S.a[n] + (e.key === 'ArrowUp' ? st : -st)) * 100) / 100, 0, 1); edited(); }
+    else if (e.key === '[' || e.key === ']') { const p = S.ph[n] + (e.key === ']' ? 1 : -1) * PI / 12; S.ph[n] = ((p % TAU) + TAU) % TAU; edited(); }
+    else if ((e.key === '0' || e.key === 'Delete' || e.key === 'Backspace') && !muted(n)) { S.a[n] = 0; edited(); }
+    else if (e.key === ' ') setRunning(!running);
+    else return;
+    hoverKey = 'bar' + S.sel; dirty = true;
+    e.preventDefault();
+  });
+
+  // ---------- rail ----------
+  function edited() { markPreset(null); recompute(); readouts(); soundDirty = true; }
+  function markPreset(id) {
+    presetId = id;
+    for (const b of $('presets').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.p === id));
+    $('presetHint').textContent = id ? PRESETS[id].hint : 'Your own spectrum. Pick a preset to start again from one of the shapes.';
+  }
+  function applyPreset(id) {
+    const P = PRESETS[id];
+    clearAll(); S.mute1 = false; S.mute2 = false; S.df = 0; S.B = 0; hoverKey = null;
+    P.set();
+    S.semi = P.semi;
+    syncControls();
+    markPreset(id);
+    recompute(); readouts(); soundDirty = true;
+  }
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) applyPreset(b.dataset.p); });
+  function setSemi(k) {
+    const el = $('f1');
+    k = clamp(Math.round(k / +el.step) * +el.step, +el.min, +el.max);
+    S.semi = +k.toFixed(2); el.value = S.semi;
+    recompute(); readouts(); soundDirty = true;
+  }
+  function syncControls() {
+    $('f1').value = S.semi; $('mute1').checked = S.mute1; $('mute2').checked = S.mute2;
+    $('detN').value = S.detN; $('df').value = S.df; $('stB').value = S.B;
+  }
+  $('f1').addEventListener('input', (e) => setSemi(+e.target.value));
+  $('mute1').addEventListener('change', (e) => { S.mute1 = e.target.checked; recompute(); readouts(); soundDirty = true; });
+  $('mute2').addEventListener('change', (e) => { S.mute2 = e.target.checked; recompute(); readouts(); soundDirty = true; });
+  $('pure').addEventListener('click', () => { clearAll(); S.a[1] = 1; S.mute1 = false; S.mute2 = false; syncControls(); edited(); });
+  $('allOn').addEventListener('click', () => { for (let n = 1; n <= NH; n++) S.a[n] = 0.5; edited(); });
+  $('randPh').addEventListener('click', () => { for (let n = 1; n <= NH; n++) S.ph[n] = Math.round(Math.random() * 72) * PI / 36; edited(); });
+  $('zeroPh').addEventListener('click', () => { for (let n = 1; n <= NH; n++) S.ph[n] = 0; edited(); });
+  $('showDials').addEventListener('change', (e) => { S.showDials = e.target.checked; dirty = true; });
+  $('detN').addEventListener('input', (e) => { S.detN = +e.target.value; recompute(); readouts(); soundDirty = true; });
+  $('df').addEventListener('input', (e) => { S.df = +e.target.value; recompute(); readouts(); soundDirty = true; });
+  $('stB').addEventListener('input', (e) => { S.B = +e.target.value; recompute(); readouts(); soundDirty = true; });
+  $('harmonicAgain').addEventListener('click', () => { S.df = 0; S.B = 0; syncControls(); recompute(); readouts(); soundDirty = true; });
+  $('showEach').addEventListener('change', (e) => { S.showEach = e.target.checked; dirty = true; });
+  $('showIdeal').addEventListener('change', (e) => { S.showIdeal = e.target.checked; dirty = true; });
+  $('perSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.periods = +b.dataset.n; for (const x of $('perSeg').children) x.setAttribute('aria-pressed', String(x === b)); dirty = true; });
+  $('ladSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.ladder = b.dataset.l; for (const x of $('ladSeg').children) x.setAttribute('aria-pressed', String(x === b)); buildKey(); dirty = true; });
+
+  // piano, C3 (MIDI 48) to C5 (MIDI 72)
+  function buildPiano() {
+    const p = $('piano'); let wi = 0; const html = [];
+    for (let m = 48; m <= 72; m++) {
+      const pc = m % 12, black = [1, 3, 6, 8, 10].includes(pc), nm = NOTE_NAMES[pc] + (Math.floor(m / 12) - 1), f = midiFreq(m);
+      const lab = `${nm}, ${f.toFixed(2)} Hz`;
+      if (black) html.push(`<button type="button" class="bk" data-m="${m}" aria-pressed="false" aria-label="${lab}" title="${lab}" style="left:calc(4px + (100% - 8px) / 15 * ${wi} - (100% - 8px) / 15 * 0.31)"></button>`);
+      else { html.push(`<button type="button" class="wk" data-m="${m}" aria-pressed="false" aria-label="${lab}" title="${lab}">${pc === 0 || m === 69 ? nm : ''}</button>`); wi++; }
+    }
+    p.innerHTML = html.join('');
+    p.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setSemi(+b.dataset.m - 69); });
+  }
+  function pianoMark() {
+    const m = 69 + S.semi;
+    for (const b of $('piano').querySelectorAll('button')) b.setAttribute('aria-pressed', String(Math.abs(+b.dataset.m - m) < 0.005));
+  }
+
+  function buildTable() {
+    if (!D || !T) return;
+    const rows = D.ns.map((n) => ({ n, a: D.a[n] })).sort((p, q) => q.a - p.a || p.n - q.n).slice(0, 6);
+    const top = rows.length ? rows[0].a : 1;
+    $('ptab').innerHTML = `<caption>Strongest partials</caption><tr><th>n</th><th>f</th><th>level</th></tr>` +
+      (rows.length ? rows.map((r) => `<tr><td><i style="background:${hcol(r.n)}"></i>${r.n}</td><td>${fmtHz(fOf(r.n))}</td><td>${r.a === top ? '0 dB' : `${toDb(r.a / top).toFixed(1)} dB`}</td></tr>`).join('') : '<tr><td colspan="3">none: silence</td></tr>');
+  }
+  function readouts() {
+    const f = f1();
+    $('f1Out').textContent = `${f.toFixed(2)} Hz · ${noteTxt(f)}`;
+    $('rT1').textContent = fmtMs(1 / f);
+    $('rF16').textContent = fmtHz(fOf(NH));
+    $('clock').innerHTML = `f₁ = ${f.toFixed(2)} Hz <small>${noteTxt(f)}</small>`;
+    const I = D.info;
+    if (I.kind === 'silent') { $('rRep').textContent = '—'; $('rPitch').textContent = 'none'; }
+    else if (I.kind === 'periodic') { $('rRep').textContent = fmtMs(I.T); $('rPitch').innerHTML = `${fmtHz(I.f)} <small>${noteTxt(I.f)}</small>`; }
+    else if (I.kind === 'drift') { $('rRep').innerHTML = `never exactly <small>shape drifts</small>`; $('rPitch').innerHTML = `≈ ${fmtHz(f)} <small>${noteTxt(f)}</small>`; }
+    else { $('rRep').textContent = 'never exactly'; $('rPitch').innerHTML = 'unclear <small>inharmonic</small>'; }
+    const periodic = I.kind === 'periodic' && D.peak > 0;
+    $('rCrest').textContent = periodic && D.rms > 0 ? (D.peak / D.rms).toFixed(2) : I.kind === 'silent' ? '—' : 'varies';
+    $('rRms').textContent = D.rms.toFixed(3);
+    $('detNOut').textContent = `n = ${S.detN} at ${fmtHz(S.detN * f)}`;
+    $('dfOut').textContent = `${S.df > 0 ? '+' : S.df < 0 ? '−' : ''}${Math.abs(S.df).toFixed(1)} Hz${S.df ? ` (${(100 * Math.abs(S.df) / (S.detN * f)).toFixed(1)}%)` : ''}`;
+    $('stBOut').textContent = S.B.toFixed(4);
+    $('rDrift').textContent = S.df ? `${(1 / Math.abs(S.df)).toFixed(2)} s` : '—';
+    $('rStretch').textContent = (fOf(NH) / (NH * f) - (S.detN === NH ? S.df / (NH * f) : 0)).toFixed(3);
+    pianoMark(); buildTable(); soundHintText();
+  }
+  function buildKey() {
+    if (!T) return;
+    const grad = `linear-gradient(90deg, ${[1, 4, 7, 10, 13, 16].map((n) => hcol(n)).join(', ')})`;
+    const ladTxt = S.ladder === 'string' ? 'Ladder: each harmonic as a string mode, amplitude aₙ' : S.ladder === 'open' ? 'Ladder: air displacement, pipe open at both ends' : 'Ladder: air displacement, pipe closed at the top (× = no such mode)';
+    $('key').innerHTML = [
+      ['ink', 'Waveform: the sum, what you hear'],
+      ['ramp', 'Harmonic colors, n = 1 (amber) to 16 (teal)', grad],
+      ['env', 'Ideal shape (infinitely many harmonics)'],
+      ['brass', 'Repetition period and f₁'],
+      ['hatch', 'Above 8 kHz, played 12 dB quieter'],
+      ['ramp', ladTxt, grad]
+    ].map(([c, t, bg]) => `<span><i class="swatch ${c}"${bg ? ` style="background:${bg}"` : ''}></i>${t}</span>`).join('');
+    $('modelHint').textContent = MODEL;
+  }
+
+  // ---------- play / pause ----------
+  function setRunning(on) { running = on; $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('primary', !on); dirty = true; }
+  $('play').addEventListener('click', () => setRunning(!running));
+
+  // ---------- sound: 16 sine oscillators, one per harmonic, driven by the same numbers as the drawing ----------
+  const RAMP = 0.01;   // time constant of every gain and frequency change: 95% done in 30 ms
+  const AC = window.AudioContext || window.webkitAudioContext;
+  const snd = { ac: null, master: null, bank: null, on: false, sig: '', rebuilds: 0, masterT: 0 };
+  let soundDirty = false, lastSnd = 0;
+  function targets() {
+    const out = [];
+    for (let n = 1; n <= NH; n++) { const f = fOf(n); out.push({ n, f, gain: D.a[n] * D.norm * hfGain(f), ph: S.ph[n] }); }
+    return out;
+  }
+  const phaseSig = () => S.ph.slice(1).map((p) => p.toFixed(5)).join(',');
+  function makeBank(at) {
+    const ac = snd.ac, bank = [];
+    for (const v of targets()) {
+      const osc = ac.createOscillator(), g = ac.createGain();
+      // a one term periodic wave sets the starting phase: sin(ωt + φ) = sin φ cos ωt + cos φ sin ωt
+      try { osc.setPeriodicWave(ac.createPeriodicWave(new Float32Array([0, Math.sin(v.ph)]), new Float32Array([0, Math.cos(v.ph)]), { disableNormalization: true })); } catch (_) {}
+      osc.frequency.setValueAtTime(v.f, at);
+      g.gain.setValueAtTime(0, at); g.gain.setTargetAtTime(v.gain, at, RAMP);
+      osc.connect(g); g.connect(snd.master); osc.start(at);
+      bank.push({ osc, g, n: v.n, f: v.f, gain: v.gain });
+    }
+    snd.rebuilds++;
+    return bank;
+  }
+  function fadeBank(bank, at) {
+    for (const v of bank) { try { v.g.gain.setTargetAtTime(0, at, RAMP); v.osc.stop(at + 0.2); } catch (_) {} }
+    setTimeout(() => { for (const v of bank) { try { v.osc.disconnect(); v.g.disconnect(); } catch (_) {} } }, 400);
+  }
+  function soundUpdate() {
+    soundDirty = false;
+    if (!snd.ac || !snd.on) return;
+    const now = snd.ac.currentTime, sig = phaseSig();
+    if (!snd.bank || sig !== snd.sig) {
+      // new phases: start a fresh set together, crossfade over about 30 ms
+      if (snd.bank) fadeBank(snd.bank, now);
+      snd.bank = makeBank(now + 0.005); snd.sig = sig;
+      return;
+    }
+    const tg = targets();
+    snd.bank.forEach((v, i) => {
+      const t = tg[i];
+      if (Math.abs(t.f - v.f) > 1e-9) { v.osc.frequency.setTargetAtTime(t.f, now, RAMP); v.f = t.f; }
+      if (Math.abs(t.gain - v.gain) > 1e-9) { v.g.gain.setTargetAtTime(t.gain, now, RAMP); v.gain = t.gain; }
+    });
+  }
+  function setVolume() {
+    const v = +$('vol').value; snd.masterT = snd.on ? v * v : 0;
+    if (snd.master) snd.master.gain.setTargetAtTime(snd.masterT, snd.ac.currentTime, RAMP);
+  }
+  function setSound(on) {
+    if (on && !snd.ac) {
+      if (!AC) return;
+      try { snd.ac = new AC(); } catch (_) { snd.ac = null; noAudio(); return; }
+      snd.master = snd.ac.createGain(); snd.master.gain.value = 0; snd.master.connect(snd.ac.destination);
+    }
+    snd.on = on;
+    $('sound').setAttribute('aria-pressed', String(on)); $('soundTxt').textContent = on ? 'Sound on' : 'Sound off';
+    if (!snd.ac) { soundHintText(); return; }
+    if (on) { if (snd.ac.state === 'suspended') snd.ac.resume(); setVolume(); soundUpdate(); }
+    else {
+      setVolume();
+      if (snd.bank) { fadeBank(snd.bank, snd.ac.currentTime + 0.03); snd.bank = null; snd.sig = ''; }
+      const ac = snd.ac; setTimeout(() => { if (!snd.on && ac.state === 'running') ac.suspend().catch(() => {}); }, 400);
+    }
+    soundHintText();
+  }
+  function noAudio() { const b = $('sound'); b.disabled = true; $('soundTxt').textContent = 'No sound here'; b.title = 'This browser has no Web Audio'; soundHintText(); }
+  function soundHintText() {
+    if (!AC || $('sound').disabled) { $('soundHint').textContent = 'This browser has no Web Audio, so the demo is silent. Everything else works.'; return; }
+    let hf = 0; for (let n = 1; n <= NH; n++) if (D.a[n] > 0 && fOf(n) > HF_EDGE) hf++;
+    const rmsFS = D.norm * D.rms, lvl = rmsFS > 0 ? `, ${(-toDb(rmsFS)).toFixed(0)} dB below full scale at full volume` : '';
+    $('soundHint').textContent = `You hear exactly the drawn sum: 16 sine oscillators, one per harmonic, at the drawn frequencies, amplitudes and phases. The whole tone is scaled to one RMS level${lvl}, so the presets compare fairly, and its peak stays at least 12 dB below full scale. ` +
+      (hf ? `${hf} harmonic${hf > 1 ? 's are' : ' is'} above 8 kHz at this f₁; ${hf > 1 ? 'they play' : 'it plays'} 12 dB quieter to spare your ears. ` : '') +
+      'Small laptop and phone speakers cannot play the lowest fundamentals, so headphones or room speakers work best. Sound stops when you leave the page.';
+  }
+  $('sound').addEventListener('click', () => setSound(!snd.on));
+  $('vol').addEventListener('input', setVolume);
+  document.addEventListener('visibilitychange', () => { if (document.hidden && snd.on) setSound(false); });
+  window.addEventListener('pagehide', () => { if (snd.on) setSound(false); });
+  // test hook: the audio graph as set, for headless checks that cannot listen
+  window.__audio = {
+    get available() { return !!AC; }, get on() { return snd.on; }, get state() { return snd.ac ? snd.ac.state : 'none'; },
+    get master() { return snd.masterT; }, get rebuilds() { return snd.rebuilds; },
+    voices: () => (snd.bank ? snd.bank.map((v) => ({ n: v.n, f: v.f, gain: v.gain })) : []),
+    // the largest sample the set gains can produce at full volume: norm × (peak of the drawn sum, or Σaₙ if inharmonic)
+    peakFullScale: () => D.norm * D.peakBound
+  };
+
+  // ---------- projector ----------
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); dirty = true; }); } catch (_) {}
+  new MutationObserver(() => { tokens(); dirty = true; }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now();
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    if (running) { tAnim += dt; dirty = true; }
+    if (dirty) { const t0 = performance.now(); draw(); frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0); }
+    if (soundDirty && now - lastSnd > 35) { soundUpdate(); lastSnd = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__tb = { S, get D() { return D; }, get G() { return G; }, get frameMs() { return frameMs; }, get presetId() { return presetId; }, get yMax() { return yMax; },
+    applyPreset, setSemi, setRunning, recompute, eqGeom, specGeom, waveGeom, fOf, f1, get running() { return running; } };
+
+  if (!AC) noAudio();
+  buildPiano();
+  recompute();
+  tokens();
+  applyPreset('saw');
+  setRunning(!reduce);
+  readouts();
+  new ResizeObserver(resize).observe(pane);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

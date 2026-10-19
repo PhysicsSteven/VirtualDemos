@@ -1,0 +1,1284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Acoustic Levitation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a 3D levitator (or a flat slice through its axis) on the left, the trap potential along the axis beside it; instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --heat0: #fcfdfe; --heat1: #f3d58a; --heat2: #e08a35; --heat3: #a8361f; --heat4: #3d0f0a;
+  --bowl: #8d99a8; --can: #c3c8ce; --mesh: #2a2e33; --bead: #f4f1ea; --water: #4aa3df; --steel: #8e979f; --mic: #a7740b;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff;
+    --heat0: #10161e; --heat1: #3f1b12; --heat2: #94381f; --heat3: #e3832f; --heat4: #fbe7a6;
+    --bowl: #5d6878; --can: #9aa1a9; --mesh: #1a1d21; --bead: #f4f1ea; --water: #6dbcf0; --steel: #a9b2ba; --mic: #e2b350; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff;
+  --heat0: #10161e; --heat1: #3f1b12; --heat2: #94381f; --heat3: #e3832f; --heat4: #fbe7a6;
+  --bowl: #5d6878; --can: #9aa1a9; --mesh: #1a1d21; --bead: #f4f1ea; --water: #6dbcf0; --steel: #a9b2ba; --mic: #e2b350; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.count.bad { color: var(--pos); }
+.pane { position: relative; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) clamp(180px, 27%, 300px); }
+.view, .side { position: relative; min-width: 0; min-height: 0; }
+.side { border-left: 1px solid var(--line); }
+.view canvas, .side canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; outline: none; }
+.view canvas:focus-visible, .side canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.legend { position: absolute; left: 10px; top: 10px; z-index: 2; pointer-events: none; background: color-mix(in srgb, var(--canvas) 86%, transparent); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; font-size: 0.75rem; color: var(--muted); }
+.legend b { display: block; font-weight: 700; color: var(--ink); font-size: 0.78rem; }
+.legend i { display: block; width: 150px; height: 9px; border-radius: 2px; margin: 4px 0 2px; border: 1px solid var(--line); }
+.legend span { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.7rem; }
+.tip3d { position: absolute; right: 10px; top: 8px; z-index: 2; pointer-events: none; font-size: 0.75rem; color: var(--muted); text-align: right; max-width: 60%; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dd.good { color: var(--accent); }
+.readout dd.bad { color: var(--pos); }
+.flag { margin: 0; font-size: 0.88rem; font-weight: 700; border: 1px solid var(--pos); color: var(--pos); border-radius: 6px; padding: 7px 10px; }
+.flag span { display: block; font-weight: 400; color: var(--ink); margin-top: 2px; }
+.flag.mild { border-color: var(--equi); color: var(--equi); }
+table.traps { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.traps th { text-align: right; font-weight: 400; color: var(--muted); font-size: 0.75rem; padding: 0 0 3px; }
+table.traps th:first-child, table.traps td:first-child { text-align: left; }
+table.traps td { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; padding: 1px 0; border-top: 1px solid var(--grid-strong); }
+table.traps tr.held td { color: var(--accent); font-weight: 600; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.ring { width: 14px; height: 14px; border: 2px solid var(--accent); border-radius: 50%; margin: 0 4px; }
+.swatch.bead { width: 12px; height: 12px; border: 1px solid var(--muted); border-radius: 50%; background: var(--bead); margin: 0 5px; }
+.swatch.mic { width: 12px; height: 12px; border: 2px solid var(--mic); border-radius: 50%; margin: 0 5px; }
+.swatch.curve { border-color: var(--ink); border-top-width: 2px; }
+.swatch.grav { border-color: var(--muted); border-top-style: dashed; }
+
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 86vh; min-height: 640px; }
+  .pane { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) 32%; }
+  .side { border-left: 0; border-top: 1px solid var(--line); }
+  .rail { overflow: visible; }
+  .legend i { width: 110px; }
+  .tip3d { display: none; }
+  .count { white-space: normal; flex-basis: 100%; margin-left: 0; }
+}
+:root[data-projector="on"] .tip3d { display: none; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Acoustic Levitation</h1>
+      <p>Two bowls of 40 kHz ultrasound speakers make a standing sound wave that holds small beads just below its pressure nodes. Shift the phase of the top bowl and the traps slide along the axis, carrying the beads.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">mm · 40 kHz, λ = 8.58 mm at 20 °C · kPa</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/acoustic-levitation.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/acoustic-levitation.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM13 2h1v1h-1zM18 2h4v1h-4zM25 2h1v1h-1zM27 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM13 3h2v1h-2zM16 3h2v1h-2zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h5v1h-5zM18 4h9v1h-9zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM13 5h3v1h-3zM17 5h2v1h-2zM20 5h2v1h-2zM25 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM16 6h1v1h-1zM18 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM16 7h2v1h-2zM20 7h3v1h-3zM28 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM19 9h5v1h-5zM25 9h1v1h-1zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h7v1h-7zM17 10h1v1h-1zM20 10h6v1h-6zM28 10h1v1h-1zM31 10h5v1h-5zM38 10h1v1h-1zM3 11h4v1h-4zM9 11h1v1h-1zM11 11h1v1h-1zM14 11h1v1h-1zM18 11h1v1h-1zM21 11h3v1h-3zM25 11h1v1h-1zM27 11h4v1h-4zM34 11h4v1h-4zM2 12h3v1h-3zM8 12h4v1h-4zM13 12h3v1h-3zM18 12h1v1h-1zM23 12h4v1h-4zM28 12h4v1h-4zM33 12h2v1h-2zM4 13h3v1h-3zM9 13h1v1h-1zM11 13h2v1h-2zM16 13h1v1h-1zM19 13h1v1h-1zM22 13h4v1h-4zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM4 14h1v1h-1zM6 14h3v1h-3zM10 14h2v1h-2zM13 14h2v1h-2zM16 14h2v1h-2zM19 14h1v1h-1zM23 14h2v1h-2zM26 14h1v1h-1zM30 14h3v1h-3zM36 14h3v1h-3zM2 15h1v1h-1zM7 15h1v1h-1zM10 15h2v1h-2zM13 15h1v1h-1zM15 15h1v1h-1zM17 15h3v1h-3zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h3v1h-3zM7 16h5v1h-5zM14 16h1v1h-1zM16 16h2v1h-2zM20 16h1v1h-1zM22 16h1v1h-1zM25 16h2v1h-2zM28 16h2v1h-2zM31 16h1v1h-1zM33 16h5v1h-5zM2 17h1v1h-1zM4 17h1v1h-1zM6 17h2v1h-2zM9 17h1v1h-1zM11 17h1v1h-1zM13 17h1v1h-1zM15 17h3v1h-3zM21 17h3v1h-3zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h1v1h-1zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h4v1h-4zM13 18h1v1h-1zM18 18h1v1h-1zM22 18h3v1h-3zM26 18h1v1h-1zM30 18h4v1h-4zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM9 19h1v1h-1zM12 19h1v1h-1zM14 19h2v1h-2zM20 19h1v1h-1zM25 19h1v1h-1zM27 19h4v1h-4zM33 19h3v1h-3zM37 19h1v1h-1zM3 20h4v1h-4zM8 20h3v1h-3zM13 20h1v1h-1zM15 20h3v1h-3zM19 20h2v1h-2zM22 20h2v1h-2zM25 20h1v1h-1zM28 20h2v1h-2zM31 20h6v1h-6zM3 21h5v1h-5zM9 21h1v1h-1zM11 21h1v1h-1zM13 21h1v1h-1zM16 21h4v1h-4zM22 21h2v1h-2zM25 21h2v1h-2zM28 21h1v1h-1zM30 21h2v1h-2zM36 21h2v1h-2zM6 22h1v1h-1zM8 22h1v1h-1zM10 22h2v1h-2zM14 22h2v1h-2zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h6v1h-6zM9 23h2v1h-2zM12 23h3v1h-3zM16 23h3v1h-3zM22 23h2v1h-2zM25 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h2v1h-2zM7 24h2v1h-2zM11 24h2v1h-2zM14 24h1v1h-1zM17 24h3v1h-3zM22 24h1v1h-1zM25 24h1v1h-1zM28 24h2v1h-2zM31 24h1v1h-1zM33 24h4v1h-4zM9 25h5v1h-5zM15 25h1v1h-1zM17 25h1v1h-1zM19 25h6v1h-6zM26 25h1v1h-1zM29 25h2v1h-2zM32 25h3v1h-3zM36 25h1v1h-1zM38 25h1v1h-1zM4 26h2v1h-2zM8 26h1v1h-1zM11 26h1v1h-1zM14 26h2v1h-2zM20 26h1v1h-1zM22 26h2v1h-2zM25 26h1v1h-1zM29 26h4v1h-4zM35 26h3v1h-3zM2 27h1v1h-1zM4 27h4v1h-4zM12 27h2v1h-2zM18 27h1v1h-1zM25 27h1v1h-1zM27 27h4v1h-4zM34 27h2v1h-2zM5 28h1v1h-1zM7 28h2v1h-2zM10 28h5v1h-5zM16 28h1v1h-1zM18 28h3v1h-3zM24 28h6v1h-6zM31 28h4v1h-4zM36 28h1v1h-1zM6 29h1v1h-1zM9 29h1v1h-1zM12 29h1v1h-1zM14 29h2v1h-2zM19 29h2v1h-2zM22 29h4v1h-4zM29 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM38 29h1v1h-1zM2 30h2v1h-2zM6 30h1v1h-1zM8 30h1v1h-1zM11 30h1v1h-1zM14 30h4v1h-4zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h1v1h-1zM10 31h2v1h-2zM13 31h3v1h-3zM18 31h3v1h-3zM23 31h1v1h-1zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM13 32h1v1h-1zM15 32h1v1h-1zM17 32h2v1h-2zM20 32h1v1h-1zM22 32h1v1h-1zM25 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM13 33h5v1h-5zM23 33h2v1h-2zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h2v1h-2zM16 34h3v1h-3zM23 34h4v1h-4zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM15 35h2v1h-2zM20 35h1v1h-1zM23 35h1v1h-1zM25 35h1v1h-1zM27 35h1v1h-1zM29 35h5v1h-5zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h1v1h-1zM14 36h1v1h-1zM17 36h1v1h-1zM19 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h1v1h-1zM14 37h2v1h-2zM17 37h4v1h-4zM23 37h2v1h-2zM26 37h1v1h-1zM28 37h1v1h-1zM32 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM15 38h2v1h-2zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM31 38h1v1h-1zM33 38h1v1h-1zM36 38h3v1h-3z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View">
+          <button type="button" id="v3d" aria-pressed="true">3D</button>
+          <button type="button" id="vFlat" aria-pressed="false">Slice</button>
+        </div>
+        <div class="seg" role="group" aria-label="Colors on the slice">
+          <button type="button" id="cP" aria-pressed="true">Pressure |p|</button>
+          <button type="button" id="cU" aria-pressed="false">Potential U</button>
+        </div>
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="snd" aria-pressed="false" title="Play an audible stand in for the 40 kHz sound">Sound off</button>
+        <span class="count mono" id="status" aria-live="polite"></span>
+      </div>
+      <div class="pane" id="pane">
+        <div class="view" id="viewBox">
+          <canvas id="flat" tabindex="0" hidden aria-label="Slice through the levitator axis, colored by the pressure amplitude or the trap potential. Drag a trap ring up or down to move the traps (this sets the phase of the top bowl), drag the gold microphone, click a ring or the axis to drop a bead. Keys: up and down move the traps, left and right change the drive, space pauses, B adds a bead, F fills the traps, C clears, S sweeps the phase."></canvas>
+          <div class="legend" id="legend"><b id="legT">|p|</b><i id="legBar"></i><span><em id="legLo" style="font-style:normal">0</em><em id="legHi" style="font-style:normal">1</em></span></div>
+          <div class="tip3d" id="tip3d">Drag to turn · scroll to zoom · drag a ring to move the traps</div>
+        </div>
+        <div class="side" id="sideBox">
+          <canvas id="plot" tabindex="0" aria-label="The trap potential U plus gravity along the axis, with traps and beads marked. Up and down arrows move the traps."></canvas>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="hold" aria-pressed="false">Hold a bead</button>
+          <button type="button" data-p="stack" aria-pressed="true">Stack of beads</button>
+          <button type="button" data-p="steel" aria-pressed="false">Too heavy: steel falls</button>
+          <button type="button" data-p="move" aria-pressed="false">Move with phase</button>
+          <button type="button" data-p="water" aria-pressed="false">Water droplet</button>
+          <button type="button" data-p="single" aria-pressed="false">Single emitter and reflector</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Drive</h2>
+        <div>
+          <div class="slider-head"><label for="drv">Drive voltage (peak to peak)</label><output id="drvOut" class="mono" for="drv"></output></div>
+          <input type="range" id="drv" min="0" max="20" step="0.1" value="10">
+        </div>
+        <div>
+          <div class="slider-head"><label for="ph">Top bowl phase Δφ</label><output id="phOut" class="mono" for="ph"></output></div>
+          <input type="range" id="ph" min="-720" max="720" step="1" value="0">
+        </div>
+        <div class="chips">
+          <button type="button" class="btn" id="sweep" aria-pressed="false">Sweep the phase</button>
+          <button type="button" class="btn" id="ph0">Phase to 0</button>
+        </div>
+        <p class="hint" id="phHint"></p>
+      </section>
+
+      <section>
+        <h2>Bead</h2>
+        <div class="chips" id="mats" role="group" aria-label="Bead material">
+          <button type="button" data-m="eps" aria-pressed="true">Foam polystyrene, 30 kg/m³</button>
+          <button type="button" data-m="water" aria-pressed="false">Water, 998 kg/m³</button>
+          <button type="button" data-m="steel" aria-pressed="false">Steel, 7850 kg/m³</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="rad">Bead radius a</label><output id="radOut" class="mono" for="rad"></output></div>
+          <input type="range" id="rad" min="0.2" max="2.5" step="0.05" value="0.75">
+        </div>
+        <div class="chips">
+          <button type="button" class="btn" id="fill">Fill the traps</button>
+          <button type="button" class="btn" id="add">Add a bead</button>
+          <button type="button" class="btn" id="clr">Clear</button>
+        </div>
+        <p class="flag" id="warn" hidden></p>
+        <dl class="readout">
+          <div><dt>Size ka = 2πa/λ</dt><dd id="rKa">—</dd></div>
+          <div><dt>Contrast Φ = f₁/3 + f₂/2</dt><dd id="rPhi">—</dd></div>
+        </dl>
+      </section>
+
+      <section>
+        <h2>Trapping</h2>
+        <dl class="readout">
+          <div><dt>Frequency f</dt><dd id="rF">40.0 kHz</dd></div>
+          <div><dt>Wavelength λ = c/f</dt><dd id="rLam">—</dd></div>
+          <div><dt>Plane wave node spacing λ/2</dt><dd id="rHalf">—</dd></div>
+          <div class="wide"><dt>Trap spacing at the centre, λ/(2⟨cos θ⟩)</dt><dd id="rSp">—</dd></div>
+          <div><dt>Largest |p| on the axis</dt><dd id="rP">—</dd></div>
+          <div><dt>Largest upward push F<sub>max</sub></dt><dd id="rFmax">—</dd></div>
+          <div><dt>Weight less buoyancy W</dt><dd id="rW">—</dd></div>
+          <div class="big"><dt>F<sub>max</sub> / W</dt><dd id="rRatio">—</dd></div>
+          <div class="big"><dt>Holds above</dt><dd id="rNeed">—</dd></div>
+          <div class="wide"><dt>Beads held / fallen</dt><dd id="rCount">—</dd></div>
+        </dl>
+        <table class="traps" id="trapTable" aria-label="Traps on the axis">
+          <thead><tr><th>Trap at z</th><th>trap − node</th><th>depth ΔU</th></tr></thead>
+          <tbody id="trapBody"></tbody>
+        </table>
+        <p class="hint">A trap is a minimum of U + Wz along the axis; its depth is the energy needed to lift the bead over the lower of the two barriers beside it. Gravity pulls each trap below its pressure node (trap − node negative), by about asin(W/F<sub>max</sub>)/2k for a plane wave, so more for a denser bead. Away from the centre the converging beams also shift the traps by tens of µm either way.</p>
+      </section>
+
+      <section>
+        <h2>Sound (a stand in)</h2>
+        <div>
+          <div class="slider-head"><label for="vol">Volume</label><output id="volOut" class="mono" for="vol"></output></div>
+          <input type="range" id="vol" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <dl class="readout">
+          <div><dt>|p| at the microphone</dt><dd id="rMic">—</dd></div>
+          <div><dt>You hear</dt><dd id="rTone">400 Hz</dd></div>
+        </dl>
+        <p class="hint" id="sndHint">40 kHz is ultrasound, far above the roughly 20 kHz limit of human hearing. The Sound button plays a 400 Hz tone instead, the real frequency divided by 100, whose loudness follows the pressure amplitude |p| at the gold microphone. Drag the microphone through nodes and antinodes, or sweep the phase and listen to the pattern pass it.</p>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint">The levitator follows TinyLev (A. Marzo, A. Barnes and B. W. Drinkwater, Rev. Sci. Instrum. 88, 085105, 2017): 72 transducers of 10 mm diameter at 40 kHz, 36 in each of two bowls in rings of 6, 12 and 18 on a sphere of radius 60 mm, with the centre position left open. The ring angles (10.5°, 21° and 31.5° from the axis) and the bowls sharing one centre are this page's choices. Because the waves meet the axis at angles θ, the phase along the axis advances at k⟨cos θ⟩ near the centre, so the traps there are λ/(2⟨cos θ⟩) = 4.76 mm apart rather than λ/2, closing toward λ/2 away from the centre.</p>
+        <p class="hint">Each transducer is a piston of radius 5 mm in its far field: p = P₀V D(θ) e<sup>i(kd + φ)</sup>/d with D = 2J₁(ka sin θ)/(ka sin θ). The field is the sum over all 72, in free space: the bowls do not reflect or scatter sound, and there is no nonlinear acoustics. Within about 9 mm of a transducer face (its near field) this model fails, so that region is left blank. In the single emitter setup the flat reflector is rigid and infinite, replaced by the emitter's mirror image; sound reflected back off the emitter is left out, so there is no resonance build up.</p>
+        <p class="hint">Calibration, illustrative: P₀ = 0.30 Pa·m per volt peak to peak, from the Murata MA40S4S data sheet rating of 120 dB SPL at 30 cm for 10 V rms. Real arrays fall short of this (spread between transducers, square wave drive, heating), so a real levitator needs more drive than shown here.</p>
+        <p class="hint">Force: Gor'kov's potential for a small sphere, U = K₁|p|² − K₂|∇p|² with K₁ = πa³f₁/(3ρ₀c²) and K₂ = πa³f₂/(2ρ₀ω²), f₁ = 1 − ρ₀c²/K<sub>p</sub>, f₂ = 2(ρ<sub>p</sub> − ρ₀)/(2ρ<sub>p</sub> + ρ₀). It holds for ka ≪ 1 in an inviscid fluid; the page warns above a = λ/10. Beads are rigid spheres (a real droplet flattens) and move only along the axis, where the traps also hold them sideways; they pass through each other, and acoustic streaming and heating are left out. Motion: (m + ½ρ₀V) dv/dt = −dU/dz − W + drag (Schiller and Naumann). Air at 20 °C and 1 atm: c = 343.2 m/s, ρ₀ = 1.204 kg/m³. Bulk moduli: foam 3 MPa (a rough figure), water 2.19 GPa, steel 160 GPa. Bead motion is shown 20 times slower than real.</p>
+        <div class="key">
+          <span><i class="swatch ring"></i>Trap on the axis: drag to move all traps, click to drop a bead in it</span>
+          <span><i class="swatch bead"></i>Bead, to scale when large enough; a small bead is drawn at least a few pixels across</span>
+          <span><i class="swatch mic"></i>Microphone for the sound</span>
+          <span><i class="swatch curve"></i>U + Wz along the axis</span>
+          <span><i class="swatch grav"></i>Gravity alone, Wz</span>
+        </div>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  // ==CORE START==
+  // SI units throughout (m, Pa, kg, s). Complex amplitudes: the real pressure is Re[p e^(−iωt)].
+  const PI = Math.PI, TAU = 2 * PI;
+  const G_N = 9.80665;
+  const T_C = 20, P_ATM = 101325, M_AIR = 0.0289647, R_GAS = 8.314462618;
+  const C0 = 331.3 * Math.sqrt(1 + T_C / 273.15);                 // speed of sound in dry air at 20 °C, 343.2 m/s
+  const RHO0 = P_ATM * M_AIR / (R_GAS * (T_C + 273.15));          // ideal gas, 1.204 kg/m³
+  const MU0 = 1.716e-5 * Math.pow((T_C + 273.15) / 273.15, 1.5) * (273.15 + 110.4) / (T_C + 273.15 + 110.4);   // Sutherland, 1.81e-5 Pa·s
+  const FREQ = 40e3, OMEGA = TAU * FREQ, K0 = OMEGA / C0, LAMBDA = C0 / FREQ;
+  // Transducer: a piston of radius 5 mm (10 mm diameter). Calibration from the Murata MA40S4S data sheet:
+  // 120 dB SPL (re 20 µPa) at 30 cm for 10 V rms, so amplitude 20√2 Pa × 0.30 m per 20√2 V peak to peak.
+  const PISTON_A = 5e-3;
+  const P_PER_VPP = 20 * Math.SQRT2 * 0.30 / (20 * Math.SQRT2);     // 0.300 Pa·m per volt peak to peak
+  const NEAR_FIELD = PISTON_A * PISTON_A * PI / LAMBDA;             // Rayleigh distance πa²/λ ≈ 9.2 mm
+  // Bessel functions by their power series (fine for the arguments here, u ≤ k·a ≈ 3.7)
+  function besselJ(n, u) {
+    let term = Math.pow(u / 2, n), s = 0; for (let m = 1; m <= n; m++) term /= m;
+    const q = -u * u / 4;
+    for (let m = 0; m < 40; m++) { s += term; term *= q / ((m + 1) * (m + 1 + n)); if (Math.abs(term) < 1e-17 * Math.abs(s)) break; }
+    return s;
+  }
+  // piston far field directivity D = 2J₁(u)/u, and G = 2J₂(u)/u² for its gradient; u = k a sinθ
+  const pistonD = (u) => (u < 1e-6 ? 1 - u * u / 8 : 2 * besselJ(1, u) / u);
+  const pistonG = (u) => (u < 1e-4 ? 0.25 - u * u / 48 : 2 * besselJ(2, u) / (u * u));
+  // look up tables over s = sinθ in [0, 1]
+  const NTAB = 4096, TAB_D = new Float64Array(NTAB + 1), TAB_G = new Float64Array(NTAB + 1);
+  for (let i = 0; i <= NTAB; i++) { const u = K0 * PISTON_A * i / NTAB; TAB_D[i] = pistonD(u); TAB_G[i] = pistonG(u); }
+  function tab(T, s) { const x = Math.min(1, Math.max(0, s)) * NTAB, i = Math.min(NTAB - 1, Math.floor(x)), f = x - i; return T[i] + f * (T[i + 1] - T[i]); }
+
+  // A source: position (x, y, z), unit normal (nx, ny, nz) pointing where it emits, strength A in Pa·m per unit drive, phase ph.
+  // p = A D(θ) e^(i(kd + ph)) / d, d the distance, cosθ = n̂·d̂; zero behind the face (cosθ ≤ 0).
+  // Adds p and its exact gradient ∇p into out = [pr, pi, gxr, gxi, gyr, gyi, gzr, gzi].
+  // opt (for tests): { k, ka, exact } overrides the wavenumber, the piston size and the table lookup.
+  function addSource(src, x, y, z, out, opt) {
+    const dx = x - src.x, dy = y - src.y, dz = z - src.z, d = Math.sqrt(dx * dx + dy * dy + dz * dz);
+    if (d < 1e-9) return;
+    const ux = dx / d, uy = dy / d, uz = dz / d, c = src.nx * ux + src.ny * uy + src.nz * uz;
+    if (c <= 0) return;
+    const s = Math.sqrt(Math.max(0, 1 - c * c));
+    const k = opt && opt.k !== undefined ? opt.k : K0, ka = opt && opt.ka !== undefined ? opt.ka : K0 * PISTON_A;
+    const exact = opt && (opt.exact || opt.ka !== undefined);
+    const D = exact ? pistonD(ka * s) : tab(TAB_D, s), G = exact ? pistonG(ka * s) : tab(TAB_G, s);
+    const ph = k * d + src.ph, cr = Math.cos(ph), ci = Math.sin(ph), A = src.A / d;
+    out[0] += A * D * cr; out[1] += A * D * ci;
+    // ∇p = A e^(iψ)/d · [ D (ik − 1/d) d̂ + ∇D ],  ∇D = (ka)² G cosθ ∇cosθ,  ∇cosθ = (n̂ − cosθ d̂)/d
+    const gD = ka * ka * G * c / d;
+    const ax = -D / d * ux + gD * (src.nx - c * ux), ay = -D / d * uy + gD * (src.ny - c * uy), az = -D / d * uz + gD * (src.nz - c * uz);
+    const bx = D * k * ux, by = D * k * uy, bz = D * k * uz;              // imaginary part of the bracket
+    out[2] += A * (cr * ax - ci * bx); out[3] += A * (ci * ax + cr * bx);
+    out[4] += A * (cr * ay - ci * by); out[5] += A * (ci * ay + cr * by);
+    out[6] += A * (cr * az - ci * bz); out[7] += A * (ci * az + cr * bz);
+  }
+  function fieldAt(sources, x, y, z, opt) { const o = [0, 0, 0, 0, 0, 0, 0, 0]; for (const s of sources) addSource(s, x, y, z, o, opt); return o; }
+
+  // TinyLev style bowls (Marzo, Barnes and Drinkwater 2017): 36 transducers per side in rings of 6, 12 and 18 on a sphere of
+  // radius 60 mm, the centre position left open, both bowls aimed at the shared centre. Ring angles are this page's choice.
+  const BOWL_R = 0.060, RINGS = [[6, 10.5], [12, 21], [18, 31.5]];
+  function bowl(side) {   // side = −1 bottom (emits up), +1 top (emits down)
+    const out = [];
+    for (const [n, deg] of RINGS) {
+      const th = deg * PI / 180;
+      for (let j = 0; j < n; j++) {
+        const az = TAU * (j + 0.5) / n;
+        const x = BOWL_R * Math.sin(th) * Math.cos(az), y = BOWL_R * Math.sin(th) * Math.sin(az), z = side * BOWL_R * Math.cos(th);
+        out.push({ x, y, z, nx: -x / BOWL_R, ny: -y / BOWL_R, nz: -z / BOWL_R, A: 1, ph: 0 });
+      }
+    }
+    return out;
+  }
+  // One emitter facing down at z = +h/2 over a rigid flat reflector at z = −h/2, replaced by the emitter's mirror image
+  // (same phase): exact for one reflection from a rigid plane.
+  const SINGLE_H = 0.025;
+  const singleEmitter = () => [{ x: 0, y: 0, z: SINGLE_H / 2, nx: 0, ny: 0, nz: -1, A: 1, ph: 0 }];
+  const singleImage = () => [{ x: 0, y: 0, z: -1.5 * SINGLE_H, nx: 0, ny: 0, nz: 1, A: 1, ph: 0 }];
+
+  // Bead contrast factors (Gor'kov): f₁ = 1 − ρ₀c₀²/K_p, f₂ = 2(ρ_p − ρ₀)/(2ρ_p + ρ₀)
+  function contrast(rhop, Kp) { const f1 = 1 - RHO0 * C0 * C0 / Kp, f2 = 2 * (rhop - RHO0) / (2 * rhop + RHO0); return { f1, f2, Phi: f1 / 3 + f2 / 2 }; }
+  // U = K₁|p|² − K₂|∇p|², K₁ = πa³f₁/(3ρ₀c₀²), K₂ = πa³f₂/(2ρ₀ω²)   (the same as 2πa³[f₁⟨p²⟩/3ρ₀c₀² − f₂ρ₀⟨v²⟩/2])
+  function gorkovK(a, rhop, Kp) { const co = contrast(rhop, Kp); return { K1: PI * a ** 3 * co.f1 / (3 * RHO0 * C0 * C0), K2: PI * a ** 3 * co.f2 / (2 * RHO0 * OMEGA * OMEGA), f1: co.f1, f2: co.f2, Phi: co.Phi }; }
+  const beadWeight = (a, rhop) => (rhop - RHO0) * 4 / 3 * PI * a ** 3 * G_N;     // weight less buoyancy, N
+  // hand result for a plane standing wave p = p₀ cos kz: F = F₀ sin 2kz, F₀ = πΦ k a³ p₀²/(ρ₀c₀²)
+  const planeF0 = (a, p0, Phi) => PI * Phi * K0 * a ** 3 * p0 * p0 / (RHO0 * C0 * C0);
+  // drag: Schiller–Naumann, which is Stokes drag 6πμau at low Reynolds number
+  function beadDrag(u, a) { const s = Math.abs(u); if (s === 0) return 0; const Re = 2 * a * RHO0 * s / MU0; return -Math.sign(u) * 6 * PI * MU0 * a * s * (1 + 0.15 * Math.pow(Re, 0.687)); }
+
+  // combine two precomputed fields (B fixed, T with phase φ), each 8 numbers per point, with drive V: p = V(B + e^(iφ)T)
+  function combine(B, T, i, V, cph, sph, o) {
+    for (let c = 0; c < 8; c += 2) {
+      const tr = T[i + c] * cph - T[i + c + 1] * sph, ti = T[i + c] * sph + T[i + c + 1] * cph;
+      o[c] = V * (B[i + c] + tr); o[c + 1] = V * (B[i + c + 1] + ti);
+    }
+    return o;
+  }
+  const absP2 = (o) => o[0] * o[0] + o[1] * o[1];
+  const absG2 = (o) => o[2] * o[2] + o[3] * o[3] + o[4] * o[4] + o[5] * o[5] + o[6] * o[6] + o[7] * o[7];
+  // fields of a set of sources (unit drive) at a list of points [x0, y0, z0, x1, ...]
+  function precompute(sources, pts, opt) {
+    const n = pts.length / 3, F = new Float64Array(8 * n), o = [0, 0, 0, 0, 0, 0, 0, 0];
+    for (let i = 0; i < n; i++) {
+      o.fill(0); for (const s of sources) addSource(s, pts[3 * i], pts[3 * i + 1], pts[3 * i + 2], o, opt);
+      for (let c = 0; c < 8; c++) F[8 * i + c] = o[c];
+    }
+    return F;
+  }
+  // minima of U on a uniform grid zs (traps), each with its depth: the climb to the lower of the two barriers beside it
+  function axisTraps(zs, U) {
+    const n = zs.length, out = [];
+    for (let i = 1; i < n - 1; i++) {
+      if (U[i] < U[i - 1] && U[i] <= U[i + 1]) {
+        let j = i; while (j < n - 1 && U[j + 1] >= U[j]) j++;
+        let m = i; while (m > 0 && U[m - 1] >= U[m]) m--;
+        const den = U[i - 1] - 2 * U[i] + U[i + 1], dz = zs[1] - zs[0];
+        const off = den > 0 ? 0.5 * (U[i - 1] - U[i + 1]) / den : 0;
+        out.push({ z: zs[i] + off * dz, i, depth: Math.min(U[j] - U[i], U[m] - U[i]), edge: j === n - 1 || m === 0, stiff: den / (dz * dz) });
+      }
+    }
+    return out;
+  }
+  // trap shift for a phase step: the pattern of B + e^(iφ)T with counter propagating waves moves by φ/(2k)
+  // (k → k_axis for converging waves, below)
+  const phaseShift = (phi, k) => phi / (2 * (k || K0));
+  // axial wavenumber of a set of sources at a point on the axis: the rate the phase of p advances along z.
+  // For a bowl aimed at the centre it is k⟨cosθ⟩ there, so the nodes are λ/(2⟨cosθ⟩) apart, more than λ/2.
+  function kAxis(sources, z) { const h = 1e-6, a = fieldAt(sources, 0, 0, z - h), b = fieldAt(sources, 0, 0, z + h); let d = Math.atan2(b[1], b[0]) - Math.atan2(a[1], a[0]); d -= TAU * Math.round(d / TAU); return Math.abs(d) / (2 * h); }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.LEV = { PI, TAU, G_N, C0, RHO0, MU0, FREQ, OMEGA, K0, LAMBDA, PISTON_A, P_PER_VPP, NEAR_FIELD, besselJ, pistonD, pistonG, tab, TAB_D, TAB_G,
+      addSource, fieldAt, BOWL_R, RINGS, bowl, SINGLE_H, singleEmitter, singleImage, contrast, gorkovK, beadWeight, planeF0, beadDrag,
+      combine, absP2, absG2, precompute, axisTraps, phaseShift, kAxis };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const SLOW = 20;               // bead motion shown this many times slower than real
+  const PH_RATE = 360;           // displayed degrees per second when the phase follows its slider
+  const SWEEP_T = 8, SWEEP_A = 360;
+
+  const MATS = {
+    eps: { rho: 30, K: 3e6, name: 'foam polystyrene', tok: 'bead' },
+    water: { rho: 998, K: 2.19e9, name: 'water', tok: 'water' },
+    steel: { rho: 7850, K: 1.6e11, name: 'steel', tok: 'steel' }
+  };
+
+  // ---------- configurations: geometry, slice grid and axis grid, precomputed per unit drive ----------
+  // lev: slice x ∈ ±45 mm, z ∈ ±50 mm, masked beyond 50 mm from the centre (the transducer near fields start near 51 mm)
+  const CFG = {
+    lev: { X: 0.045, Z0: -0.050, Z1: 0.050, nx: 201, nz: 223, axis: [-0.048, 0.048], win: [-0.025, 0.025], fillWin: 0.0155, floor: -0.048,
+      box: { x: 0.080, z0: -0.078, z1: 0.072 } },
+    single: { X: 0.025, Z0: -SINGLE_H / 2, Z1: SINGLE_H / 2, nx: 161, nz: 135, axis: [-SINGLE_H / 2, SINGLE_H / 2 - NEAR_FIELD], win: [-SINGLE_H / 2, SINGLE_H / 2 - NEAR_FIELD],
+      fillWin: 1, floor: null, box: { x: 0.032, z0: -0.024, z1: 0.024 } }
+  };
+  const AXIS_DZ = 2e-5;
+  function buildCfg(name) {
+    const C = CFG[name]; if (C.ready) return C;
+    const nx = C.nx, nz = C.nz, xs = new Float64Array(nx), zs = new Float64Array(nz);
+    for (let i = 0; i < nx; i++) xs[i] = -C.X + 2 * C.X * i / (nx - 1);
+    for (let j = 0; j < nz; j++) zs[j] = C.Z0 + (C.Z1 - C.Z0) * j / (nz - 1);
+    const N = nx * nz, mask = new Uint8Array(N);
+    const inside = (x, z) => (name === 'lev' ? x * x + z * z <= 0.050 * 0.050 : Math.hypot(x, z - SINGLE_H / 2) > NEAR_FIELD && z >= -SINGLE_H / 2);
+    for (let j = 0; j < nz; j++) for (let i = 0; i < nx; i++) mask[j * nx + i] = inside(xs[i], zs[j]) ? 1 : 0;
+    const FB = new Float32Array(8 * N), FT = new Float32Array(8 * N), o = [0, 0, 0, 0, 0, 0, 0, 0];
+    const srcB = name === 'lev' ? bowl(-1) : singleImage(), srcT = name === 'lev' ? bowl(1) : singleEmitter();
+    for (let j = 0; j < nz; j++) for (let i = 0; i < nx; i++) {
+      const n = j * nx + i; if (!mask[n]) continue;
+      o.fill(0); for (const s of srcB) addSource(s, xs[i], 0, zs[j], o);
+      for (let c = 0; c < 8; c++) FB[8 * n + c] = o[c];
+      if (name === 'lev') {   // the top bowl is the mirror image of the bottom one: p_T(x, z) = p_B(x, −z), ∂z flips sign
+        const m = (nz - 1 - j) * nx + i;
+        for (let c = 0; c < 6; c++) FT[8 * m + c] = o[c];
+        FT[8 * m + 6] = -o[6]; FT[8 * m + 7] = -o[7];
+      } else {
+        o.fill(0); for (const s of srcT) addSource(s, xs[i], 0, zs[j], o);
+        for (let c = 0; c < 8; c++) FT[8 * n + c] = o[c];
+      }
+    }
+    // axis
+    const na = Math.round((C.axis[1] - C.axis[0]) / AXIS_DZ) + 1, za = new Float64Array(na), pts = [];
+    for (let i = 0; i < na; i++) { za[i] = C.axis[0] + i * AXIS_DZ; pts.push(0, 0, za[i]); }
+    const AB = precompute(srcB, pts), AT = precompute(srcT, pts);
+    // reference pressure: largest |p| on the slice at unit drive, phase 0
+    let pmax = 0; const q = [0, 0, 0, 0, 0, 0, 0, 0];
+    for (let n = 0; n < N; n++) if (mask[n]) { combine(FB, FT, 8 * n, 1, 1, 0, q); pmax = Math.max(pmax, absP2(q)); }
+    const keff = name === 'lev' ? kAxis(srcB, 0) : K0;   // single: both waves run straight along the axis
+    Object.assign(C, { ready: true, name, xs, zs, mask, FB, FT, srcB, srcT, za, AB, AT, pmax1: Math.sqrt(pmax), N, keff, spacing: PI / keff,
+      Uac: new Float64Array(na), Ut: new Float64Array(na), Fz: new Float64Array(na), P2: new Float64Array(na) });
+    return C;
+  }
+
+  // ---------- state ----------
+  const S = { cfg: 'lev', V: 10, phT: 0, ph: 0, sweep: false, sweepT: 0, mat: 'eps', a: 0.75, color: 'p', view: '3d', playing: true,
+    mic: { x: 0, z: 0 }, preset: 'stack', fallen: 0, vol: 0.5 };
+  let beads = [];
+  let C = null;                  // current configuration
+  let PH = null;                 // current physics summary
+  const dirty = { phys: true, slice: true, draw: true, plot: true, ui: true };
+
+  function physics() {
+    const M = MATS[S.mat], a = S.a * 1e-3, gk = gorkovK(a, M.rho, M.K), W = beadWeight(a, M.rho);
+    const Vpa = S.V * P_PER_VPP, phr = C.name === 'lev' ? S.ph * PI / 180 : 0, cph = Math.cos(phr), sph = Math.sin(phr);
+    const n = C.za.length, o = [0, 0, 0, 0, 0, 0, 0, 0];
+    let pmax = 0;
+    for (let i = 0; i < n; i++) {
+      combine(C.AB, C.AT, 8 * i, Vpa, cph, sph, o);
+      const p2 = absP2(o); C.P2[i] = p2; if (p2 > pmax) pmax = p2;
+      C.Uac[i] = gk.K1 * p2 - gk.K2 * absG2(o);
+      C.Ut[i] = C.Uac[i] + W * C.za[i];
+    }
+    let Fup = 0;
+    for (let i = 1; i < n - 1; i++) {
+      C.Fz[i] = -(C.Ut[i + 1] - C.Ut[i - 1]) / (2 * AXIS_DZ);
+      const fa = -(C.Uac[i + 1] - C.Uac[i - 1]) / (2 * AXIS_DZ); if (fa > Fup) Fup = fa;
+    }
+    C.Fz[0] = C.Fz[1]; C.Fz[n - 1] = C.Fz[n - 2];
+    const traps = axisTraps(C.za, C.Ut).filter((t) => !t.edge && t.depth > 0);
+    // nodes: minima of |p|² on the axis (pressure nodes)
+    const nodes = []; for (let i = 1; i < n - 1; i++) if (C.P2[i] < C.P2[i - 1] && C.P2[i] <= C.P2[i + 1]) nodes.push(C.za[i]);
+    for (const t of traps) { let best = null; for (const z of nodes) if (best === null || Math.abs(z - t.z) < Math.abs(best - t.z)) best = z; t.node = best; }
+    const Fup1 = Vpa > 0 ? Fup / (Vpa * Vpa) : null;
+    PH = { M, a, gk, W, m: (M.rho + RHO0 / 2) * 4 / 3 * PI * a ** 3, Vpa, pmax: Math.sqrt(pmax), Fup, ratio: W > 0 ? Fup / W : Infinity, traps,
+      need: Fup1 ? Math.sqrt(W / Fup1) / P_PER_VPP : null, ka: K0 * a };
+  }
+  function forceAt(z) {
+    const x = (z - C.za[0]) / AXIS_DZ, n = C.za.length;
+    if (x <= 0) return C.Fz[0]; if (x >= n - 1) return C.Fz[n - 1];
+    const i = Math.floor(x), f = x - i; return C.Fz[i] + f * (C.Fz[i + 1] - C.Fz[i]);
+  }
+  function stepBeads(dtReal) {
+    if (!beads.length) return false;
+    const h = 2e-5, nsub = Math.max(1, Math.ceil(dtReal / h)), hh = dtReal / nsub, a = PH.a;
+    let moving = false;
+    const lo = C.floor !== null ? C.floor : C.axis[0] + a, hi = C.axis[1] - a;
+    for (const b of beads) {
+      if (b.out) continue;
+      for (let k = 0; k < nsub; k++) {
+        const F = forceAt(b.z) + beadDrag(b.v, a);
+        b.v += hh * F / PH.m; b.z += hh * b.v;
+        if (b.z > hi) { b.z = hi; if (b.v > 0) b.v = 0; }
+        if (C.floor !== null && b.z < lo) { b.out = true; S.fallen++; dirty.ui = true; break; }
+        if (C.floor === null && b.z < lo) { b.z = lo; if (b.v < 0) b.v = 0; }
+      }
+      if (Math.abs(b.v) > 1e-5) moving = true;
+    }
+    const n0 = beads.length; beads = beads.filter((b) => !b.out); if (beads.length !== n0) dirty.ui = true;
+    return moving;
+  }
+  function isHeld(b) { return PH.traps.some((t) => Math.abs(t.z - b.z) < LAMBDA / 8) && Math.abs(b.v) < 0.05; }
+  function addBeadAt(z, dz = 0) { if (beads.length >= 24) beads.shift(); beads.push({ z: z + dz, v: 0 }); dirty.ui = true; }
+  function trapsIn(win) { return PH.traps.filter((t) => t.z >= C.win[0] && t.z <= C.win[1] && Math.abs(t.z) <= win); }
+  function fillTraps(kick) {
+    beads = [];
+    const ts = trapsIn(C.fillWin);
+    if (!ts.length) { addBeadAt(C.name === 'lev' ? -LAMBDA / 4 : (C.axis[0] + C.axis[1]) / 2); return; }
+    ts.forEach((t, i) => addBeadAt(t.z, kick ? 0.35e-3 * (i % 2 ? 1 : -0.6) : 0));
+  }
+  function addBead() {
+    const free = PH.traps.filter((t) => t.z >= C.win[0] && t.z <= C.win[1] && !beads.some((b) => Math.abs(b.z - t.z) < 1e-3))
+      .sort((p, q) => Math.abs(p.z) - Math.abs(q.z));
+    if (free.length) addBeadAt(free[0].z, 0.3e-3);
+    else addBeadAt(C.name === 'lev' ? 0.004 : C.win[1] - 1e-3);
+  }
+
+  // ---------- theme ----------
+  let T = null, dpr = 1;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.4 : 1);
+  function rgbOf(c) { const m = /^#([0-9a-f]{6})$/i.exec((c || '').trim()); if (!m) return [128, 128, 128]; const n = parseInt(m[1], 16); return [n >> 16, (n >> 8) & 255, n & 255]; }
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'pos', 'neg', 'equi', 'accent', 'heat0', 'heat1', 'heat2', 'heat3', 'heat4',
+      'bowl', 'can', 'mesh', 'bead', 'water', 'steel', 'mic']) T[k.replace('-s', 'S')] = g('--' + k);
+    T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'sans-serif';
+    const c = rgbOf(T.canvas); T.dark = (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255 < 0.4;
+    // color ramps as 256 entry tables
+    const heat = ['heat0', 'heat1', 'heat2', 'heat3', 'heat4'].map((k) => rgbOf(T[k]));
+    T.rampP = new Uint8Array(256 * 3); T.rampU = new Uint8Array(256 * 3);
+    const neg = rgbOf(T.neg), pos = rgbOf(T.pos), cv = rgbOf(T.canvas);
+    for (let i = 0; i < 256; i++) {
+      const t = i / 255, x = t * 4, k = Math.min(3, Math.floor(x)), f = x - k;
+      for (let c2 = 0; c2 < 3; c2++) T.rampP[3 * i + c2] = Math.round(heat[k][c2] + f * (heat[k + 1][c2] - heat[k][c2]));
+      const u = 2 * t - 1, w = Math.pow(Math.abs(u), 0.75), tgt = u < 0 ? neg : pos;
+      for (let c2 = 0; c2 < 3; c2++) T.rampU[3 * i + c2] = Math.round(cv[c2] + w * (tgt[c2] - cv[c2]));
+    }
+    const css = (r) => `linear-gradient(90deg, ${[0, 64, 128, 192, 255].map((i) => `rgb(${r[3 * i]},${r[3 * i + 1]},${r[3 * i + 2]}) ${(i / 2.55).toFixed(0)}%`).join(', ')})`;
+    T.cssP = css(T.rampP); T.cssU = css(T.rampU);
+  }
+
+  // ---------- the slice image (one pixel per grid point) ----------
+  const sliceCv = document.createElement('canvas'), sliceCtx = sliceCv.getContext('2d');
+  let sliceImg = null, legendVals = [0, 1];
+  function renderSlice() {
+    const nx = C.nx, nz = C.nz;
+    if (sliceCv.width !== nx || sliceCv.height !== nz || !sliceImg) { sliceCv.width = nx; sliceCv.height = nz; sliceImg = sliceCtx.createImageData(nx, nz); }
+    const d = sliceImg.data, o = [0, 0, 0, 0, 0, 0, 0, 0];
+    const Vpa = S.V * P_PER_VPP, phr = C.name === 'lev' ? S.ph * PI / 180 : 0, cph = Math.cos(phr), sph = Math.sin(phr);
+    const pRef = Math.max(1e-9, Vpa * C.pmax1), modeU = S.color === 'u', uRef = PH.gk.K1 * pRef * pRef, ramp = modeU ? T.rampU : T.rampP;
+    const bg = rgbOf(T.canvas), lev = C.name === 'lev';
+    for (let j = 0; j < nz; j++) {
+      const row = (nz - 1 - j) * nx;   // image row 0 is the top (largest z)
+      for (let i = 0; i < nx; i++) {
+        const n = j * nx + i, px = 4 * (row + i);
+        if (!C.mask[n]) { d[px] = bg[0]; d[px + 1] = bg[1]; d[px + 2] = bg[2]; d[px + 3] = 0; continue; }
+        combine(C.FB, C.FT, 8 * n, Vpa, cph, sph, o);
+        let t;
+        if (modeU) { const u = (PH.gk.K1 * absP2(o) - PH.gk.K2 * absG2(o)) / uRef; t = 0.5 + 0.5 * Math.max(-1, Math.min(1, u)); }
+        else t = Math.min(1, Math.sqrt(absP2(o)) / pRef);
+        const k = 3 * Math.round(t * 255);
+        // fade toward the edge of the slice (display only): from 28 to 50 mm off centre, or 14 to 25 mm off the axis for one emitter
+        const x = C.xs[i], z = C.zs[j], r = lev ? Math.hypot(x, z) : Math.abs(x);
+        const f = lev ? Math.min(1, Math.max(0, (r - 0.028) / 0.022)) : Math.min(1, Math.max(0, (r - 0.014) / 0.011)), w = 0.8 * f * f * (3 - 2 * f);
+        d[px] = ramp[k] + w * (bg[0] - ramp[k]); d[px + 1] = ramp[k + 1] + w * (bg[1] - ramp[k + 1]); d[px + 2] = ramp[k + 2] + w * (bg[2] - ramp[k + 2]); d[px + 3] = 255;
+      }
+    }
+    sliceCtx.putImageData(sliceImg, 0, 0);
+    legendVals = modeU ? [-uRef, uRef] : [0, Vpa > 0 ? pRef : 0];
+    if (G.ready) G.tex.needsUpdate = true;
+    updateLegend();
+  }
+  function fmtE(J) { const a = Math.abs(J); if (a === 0) return '0'; if (a >= 1e-6) return (J * 1e6).toPrecision(3) + ' µJ'; if (a >= 1e-9) return (J * 1e9).toPrecision(3) + ' nJ'; return (J * 1e12).toPrecision(3) + ' pJ'; }
+  function fmtF(N) { const a = Math.abs(N); if (a >= 1e-3) return (N * 1e3).toPrecision(3) + ' mN'; if (a >= 1e-6) return (N * 1e6).toPrecision(3) + ' µN'; return (N * 1e9).toPrecision(3) + ' nN'; }
+  function fmtP(p) { return p >= 1000 ? (p / 1000).toFixed(2) + ' kPa' : p.toFixed(0) + ' Pa'; }
+  function updateLegend() {
+    $('legBar').style.background = S.color === 'u' ? T.cssU : T.cssP;
+    if (S.color === 'u') { $('legT').textContent = 'U, Gor\'kov potential of this bead'; $('legLo').textContent = fmtE(legendVals[0]); $('legHi').textContent = '+' + fmtE(legendVals[1]); }
+    else { $('legT').textContent = 'Pressure amplitude |p|'; $('legLo').textContent = '0'; $('legHi').textContent = fmtP(legendVals[1]); }
+  }
+  function micP() {
+    const xs = C.xs, zs = C.zs, i = Math.round((S.mic.x - xs[0]) / (xs[1] - xs[0])), j = Math.round((S.mic.z - zs[0]) / (zs[1] - zs[0]));
+    if (i < 0 || j < 0 || i >= C.nx || j >= C.nz || !C.mask[j * C.nx + i]) return 0;
+    const phr = C.name === 'lev' ? S.ph * PI / 180 : 0;
+    // exact value at the microphone, not the grid
+    const o = [0, 0, 0, 0, 0, 0, 0, 0], q = [0, 0, 0, 0, 0, 0, 0, 0];
+    for (const s of C.srcB) addSource(s, S.mic.x, 0, S.mic.z, o);
+    for (const s of C.srcT) addSource(s, S.mic.x, 0, S.mic.z, q);
+    const c = Math.cos(phr), sn = Math.sin(phr), V = S.V * P_PER_VPP;
+    const re = V * (o[0] + q[0] * c - q[1] * sn), im = V * (o[1] + q[0] * sn + q[1] * c);
+    return Math.hypot(re, im);
+  }
+  function micInside(x, z) {
+    const i = Math.round((x - C.xs[0]) / (C.xs[1] - C.xs[0])), j = Math.round((z - C.zs[0]) / (C.zs[1] - C.zs[0]));
+    return i >= 0 && j >= 0 && i < C.nx && j < C.nz && C.mask[j * C.nx + i] === 1;
+  }
+
+  // ---------- 3D scene ----------
+  const G = { ready: false };
+  const orbit = { theta: -Math.PI / 2 - 0.42, phi: 1.32, zoom: 1 };
+  function init3D() {
+    if (!window.THREE) return false;
+    let renderer;
+    try { renderer = new THREE.WebGLRenderer({ antialias: true }); } catch (_) { return false; }
+    if (!renderer || !renderer.getContext()) return false;
+    const el = renderer.domElement; el.id = 'gl'; el.tabIndex = 0;
+    el.setAttribute('role', 'application');
+    el.setAttribute('aria-label', 'The levitator in 3D with a colored slice through its axis. Drag to turn, scroll to zoom. Drag a trap ring up or down to move the traps (this sets the phase of the top bowl), drag the gold microphone on the slice, click a ring or the axis to drop a bead. Keys: up and down move the traps, left and right change the drive, comma and period turn the view, space pauses, B adds a bead, F fills the traps, C clears, S sweeps the phase.');
+    $('viewBox').insertBefore(el, $('flat'));
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 1, 4000); cam.up.set(0, 0, 1);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x666a70, 0.85));
+    const sun = new THREE.DirectionalLight(0xffffff, 0.6); sun.position.set(-60, -120, 160); scene.add(sun);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.25); fill.position.set(90, 40, -40); scene.add(fill);
+    const std = (r = 0.6, m = 0) => new THREE.MeshStandardMaterial({ color: 0x888888, roughness: r, metalness: m, side: THREE.DoubleSide });
+    const mats = { bowl: std(0.75), can: std(0.35, 0.6), mesh: std(0.9), frame: std(0.5, 0.3), refl: std(0.4, 0.5) };
+    const levGrp = new THREE.Group(), sglGrp = new THREE.Group(); scene.add(levGrp, sglGrp);
+    // bowls: shell behind the transducers and one can per transducer, aimed at the centre
+    const canGeo = new THREE.CylinderGeometry(5, 5, 7, 24), faceGeo = new THREE.CircleGeometry(4.3, 24);
+    for (const side of [-1, 1]) {
+      const shell = new THREE.Mesh(new THREE.SphereGeometry(67.5, 56, 14, 0, TAU, 0, 37 * PI / 180), mats.bowl);
+      shell.rotation.x = side > 0 ? PI / 2 : -PI / 2; levGrp.add(shell);
+      for (const s of bowl(side)) {
+        const dir = new THREE.Vector3(-s.nx, -s.ny, -s.nz), base = dir.clone().multiplyScalar(1000 * BOWL_R + 3.5);
+        const can = new THREE.Mesh(canGeo, mats.can); can.position.copy(base); can.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir); levGrp.add(can);
+        const face = new THREE.Mesh(faceGeo, mats.mesh); face.position.copy(dir.clone().multiplyScalar(1000 * BOWL_R - 0.05));
+        face.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), dir.clone().negate()); levGrp.add(face);
+      }
+    }
+    // frame: two posts and arms, a base plate
+    for (const sx of [-1, 1]) {
+      const post = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.4, 140, 16), mats.frame); post.rotation.x = PI / 2; post.position.set(sx * 74, 0, -3); levGrp.add(post);
+      for (const sz of [-1, 1]) { const arm = new THREE.Mesh(new THREE.BoxGeometry(34, 5, 4), mats.frame); arm.position.set(sx * 57, 0, sz * 54); levGrp.add(arm); }
+    }
+    { const base = new THREE.Mesh(new THREE.BoxGeometry(170, 60, 5), mats.frame); base.position.set(0, 0, -75.5); levGrp.add(base); }
+    // single emitter over a reflector
+    { const can = new THREE.Mesh(canGeo, mats.can); can.position.set(0, 0, 1000 * SINGLE_H / 2 + 3.5); can.rotation.x = PI / 2; sglGrp.add(can);
+      const face = new THREE.Mesh(faceGeo, mats.mesh); face.position.set(0, 0, 1000 * SINGLE_H / 2 - 0.05); face.rotation.x = PI; sglGrp.add(face);
+      const arm = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 20), mats.frame); arm.position.set(0, 0, 1000 * SINGLE_H / 2 + 16); sglGrp.add(arm);
+      const refl = new THREE.Mesh(new THREE.CylinderGeometry(26, 26, 3, 48), mats.refl); refl.rotation.x = PI / 2; refl.position.set(0, 0, -1000 * SINGLE_H / 2 - 1.5); sglGrp.add(refl); }
+    // slice
+    const tex = new THREE.CanvasTexture(sliceCv); tex.magFilter = THREE.LinearFilter; tex.minFilter = THREE.LinearFilter;
+    const slice = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: tex, alphaTest: 0.5, side: THREE.DoubleSide }));
+    slice.rotation.x = PI / 2; scene.add(slice);
+    // axis line
+    const axGeo = new THREE.BufferGeometry(); axGeo.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, -60, 0, 0, 60], 3));
+    const axis = new THREE.Line(axGeo, new THREE.LineDashedMaterial({ color: 0x888888, dashSize: 2, gapSize: 2, transparent: true, opacity: 0.7 }));
+    axis.computeLineDistances(); scene.add(axis);
+    // pools: trap rings, beads; the microphone
+    const ringGeo = new THREE.TorusGeometry(2.1, 0.22, 8, 40), beadGeo = new THREE.SphereGeometry(1, 28, 18);
+    const rings = [], beadMeshes = [];
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0x2b60b5, transparent: true, opacity: 0.6, depthWrite: false });
+    const ringHot = new THREE.MeshBasicMaterial({ color: 0x2b60b5, transparent: true, opacity: 1, depthWrite: false });
+    const beadMats = { eps: new THREE.MeshStandardMaterial({ roughness: 0.45 }), water: new THREE.MeshStandardMaterial({ roughness: 0.15 }), steel: new THREE.MeshStandardMaterial({ roughness: 0.25, metalness: 0.7 }) };
+    for (const k in beadMats) beadMats[k].depthTest = false;   // beads are the point: always drawn over the slice and the rings
+    const haloCv = document.createElement('canvas'); haloCv.width = haloCv.height = 64;
+    { const x = haloCv.getContext('2d'); x.strokeStyle = '#ffffff'; x.lineWidth = 5; x.beginPath(); x.arc(32, 32, 27, 0, TAU); x.stroke(); }
+    const haloMat = new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(haloCv), transparent: true, depthWrite: false, depthTest: false });
+    const halos = [];
+    const mic = new THREE.Group(); scene.add(mic);
+    const micMat = new THREE.MeshBasicMaterial({ color: 0xa7740b, transparent: true, opacity: 0.9, depthWrite: false });
+    const micRing = new THREE.Mesh(new THREE.TorusGeometry(2.6, 0.3, 8, 40), micMat); micRing.rotation.x = PI / 2; mic.add(micRing);
+    const micDot = new THREE.Mesh(new THREE.SphereGeometry(0.9, 16, 12), micMat); mic.add(micDot);
+    Object.assign(G, { ready: true, renderer, el, scene, cam, mats, levGrp, sglGrp, tex, slice, axis, rings, beadMeshes, haloMat, halos, ringGeo, beadGeo, ringMat, ringHot, beadMats, mic, micMat, micRing });
+    retheme3D();
+    bind3D(el);
+    return true;
+  }
+  const hex = (c) => new THREE.Color(c);
+  function retheme3D() {
+    if (!G.ready) return;
+    G.scene.background = hex(T.canvas);
+    G.mats.bowl.color = hex(T.bowl); G.mats.can.color = hex(T.can); G.mats.mesh.color = hex(T.mesh);
+    G.mats.frame.color = hex(T.dark ? '#3a434f' : '#9aa3ad'); G.mats.refl.color = hex(T.dark ? '#7d8691' : '#b9c0c8');
+    G.ringMat.color = hex(T.accent); G.ringHot.color = hex(T.accent); G.micMat.color = hex(T.mic);
+    G.axis.material.color = hex(T.muted);
+    G.beadMats.eps.color = hex(T.bead); G.beadMats.water.color = hex(T.water); G.beadMats.steel.color = hex(T.steel); G.haloMat.color = hex(T.dark ? '#000000' : T.ink);
+  }
+  function layout3D() {
+    if (!G.ready) return;
+    const lev = C.name === 'lev';
+    G.levGrp.visible = lev; G.sglGrp.visible = !lev;
+    G.slice.scale.set(2000 * C.X, 1000 * (C.Z1 - C.Z0), 1); G.slice.position.set(0, 0, 500 * (C.Z0 + C.Z1));
+    G.axis.geometry.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 1000 * C.axis[0], 0, 0, 1000 * C.axis[1]], 3)); G.axis.computeLineDistances();
+  }
+  function cam3D() {
+    const b = C.box, tanHalf = Math.tan(G.cam.fov * PI / 360);
+    const w = 1000 * b.x, h = 1000 * (b.z1 - b.z0) / 2, fit = Math.max(w / (tanHalf * G.cam.aspect), h / tanHalf) * 1.12;
+    const r = fit * orbit.zoom, cz = 500 * (b.z0 + b.z1);
+    G.cam.position.set(r * Math.sin(orbit.phi) * Math.cos(orbit.theta), r * Math.sin(orbit.phi) * Math.sin(orbit.theta), cz + r * Math.cos(orbit.phi));
+    G.cam.lookAt(0, 0, cz);
+    G.cam.updateMatrixWorld();
+  }
+  function render3D() {
+    const ps = projScale();
+    cam3D();
+    // trap rings: within the window; grips when the phase can move them
+    const ts = PH.traps.filter((t) => t.z >= C.win[0] - 1e-9 && t.z <= C.win[1] + 1e-9 || C.name === 'lev' && Math.abs(t.z) < 0.045);
+    while (G.rings.length < ts.length) { const m = new THREE.Mesh(G.ringGeo, G.ringMat); G.scene.add(m); G.rings.push(m); }
+    G.rings.forEach((m, i) => {
+      m.visible = i < ts.length; if (!m.visible) return;
+      const hot = hover3 === 'trap' || (drag && drag.id === 'trap');
+      m.material = hot ? G.ringHot : G.ringMat; m.position.set(0, 0, 1000 * ts[i].z); m.scale.setScalar((hot ? 1.25 : 1) * ps);
+    });
+    // beads to scale, but never smaller than about 5 px in radius, with a dark outline
+    const perPx = G.cam.position.length() * 2 * Math.tan(G.cam.fov * PI / 360) / Math.max(1, dims.f[1]);
+    const rb = Math.max(S.a, 5 * ps * perPx);
+    while (G.halos.length < beads.length) { const h = new THREE.Sprite(G.haloMat); h.renderOrder = 10; G.scene.add(h); G.halos.push(h); }
+    G.halos.forEach((h, i) => { h.visible = i < beads.length; if (!h.visible) return; h.position.set(0, 0, 1000 * beads[i].z); h.scale.setScalar(2.5 * rb); });
+    while (G.beadMeshes.length < beads.length) { const m = new THREE.Mesh(G.beadGeo, G.beadMats.eps); m.renderOrder = 11; G.scene.add(m); G.beadMeshes.push(m); }
+    G.beadMeshes.forEach((m, i) => {
+      m.visible = i < beads.length; if (!m.visible) return;
+      m.material = G.beadMats[S.mat]; m.position.set(0, 0, 1000 * beads[i].z); m.scale.setScalar(rb);
+    });
+    G.mic.position.set(1000 * S.mic.x, 0, 1000 * S.mic.z);
+    G.mic.scale.setScalar(((hover3 === 'mic' || (drag && drag.id === 'mic')) ? 1.3 : 1) * ps);
+    G.renderer.render(G.scene, G.cam);
+  }
+  // screen position of a world point (mm) in the 3D canvas
+  function project(x, y, z) { const v = new THREE.Vector3(x, y, z).project(G.cam), r = G.el.getBoundingClientRect(); return [(v.x + 1) / 2 * r.width, (1 - v.y) / 2 * r.height, v.z]; }
+
+  // ---------- handles shared by both views ----------
+  let drag = null, hover3 = null, hoverF = null;
+  function phaseFromDrag(z) {   // z in m: move the grabbed trap to z
+    let ph = drag.ph0 + (z - drag.z0) * 2 * K0 * 180 / PI;
+    ph = Math.max(-720, Math.min(720, Math.round(ph)));
+    setPhase(ph, true);
+  }
+  function setPhase(ph, now) {
+    S.phT = ph; if (now) { S.ph = ph; dirty.phys = dirty.slice = true; }
+    if (S.sweep) setSweep(false);
+    $('ph').value = ph; outs(); dirty.draw = true;
+  }
+  let dragQ = null, dragFrame = false;
+  function queueDrag(fn) { dragQ = fn; if (dragFrame) return; dragFrame = true; requestAnimationFrame(() => { dragFrame = false; if (dragQ) { dragQ(); dragQ = null; } }); }
+
+  function bind3D(el) {
+    const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), pointers = new Map();
+    let mode = null;
+    const setRay = (e) => { const r = el.getBoundingClientRect(); ndc.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1); ray.setFromCamera(ndc, G.cam); };
+    const hitPlane = (plane) => { const p = new THREE.Vector3(); return ray.ray.intersectPlane(plane, p) ? p : null; };
+    const slicePlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+    const axisPlane = () => { const c = G.cam.position, n = new THREE.Vector3(c.x, c.y, 0); if (n.lengthSq() < 1e-6) n.set(0, 1, 0); return new THREE.Plane(n.normalize(), 0); };
+    const handleAt = (e) => {
+      const r = el.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, tol = 12 * projScale() * (e.pointerType === 'touch' ? 2 : 1);
+      let best = null, bd = tol;
+      const m = project(1000 * S.mic.x, 0, 1000 * S.mic.z), dm = Math.hypot(x - m[0], y - m[1]); if (dm < bd) { bd = dm; best = { id: 'mic' }; }
+      if (C.name === 'lev') for (const t of PH.traps) {
+        if (Math.abs(t.z) > 0.045) continue;
+        const p = project(0, 0, 1000 * t.z), d = Math.hypot(x - p[0], y - p[1]) - 4; if (d < bd) { bd = d; best = { id: 'trap', z: t.z }; }
+      }
+      return best;
+    };
+    el.addEventListener('pointerdown', (e) => {
+      el.focus({ preventScroll: true });
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY }); el.setPointerCapture(e.pointerId);
+      if (pointers.size === 2) { drag = null; mode = { type: 'pinch', d0: pinch(), z0: orbit.zoom }; return; }
+      const h = handleAt(e);
+      if (h && h.id === 'trap') { setRay(e); const p = hitPlane(axisPlane()); drag = { id: 'trap', z0: p ? p.z / 1000 : h.z, ph0: S.ph, tz: h.z, sx: e.clientX, sy: e.clientY }; mode = { type: 'drag' }; el.style.cursor = 'ns-resize'; dirty.draw = true; return; }
+      if (h && h.id === 'mic') { drag = { id: 'mic' }; mode = { type: 'drag' }; el.style.cursor = 'move'; dirty.draw = true; return; }
+      mode = { type: 'orbit', lx: e.clientX, ly: e.clientY, moved: 0 }; el.style.cursor = 'grabbing';
+    });
+    const pinch = () => { const p = [...pointers.values()]; return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y); };
+    el.addEventListener('pointermove', (e) => {
+      if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (mode && mode.type === 'pinch' && pointers.size === 2) { orbit.zoom = Math.min(2.5, Math.max(0.2, mode.z0 * mode.d0 / pinch())); dirty.draw = true; return; }
+      if (mode && mode.type === 'drag') {
+        if (drag && drag.sx !== undefined && Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) > 3) drag.moved = true;
+        if (drag && drag.id === 'trap' && !drag.moved) return;
+        queueDrag(() => {
+          setRay(e);
+          if (drag && drag.id === 'trap') { const p = hitPlane(axisPlane()); if (p) phaseFromDrag(p.z / 1000); }
+          else if (drag && drag.id === 'mic') { const p = hitPlane(slicePlane); if (p) setMic(p.x / 1000, p.z / 1000); }
+        });
+        return;
+      }
+      if (mode && mode.type === 'orbit') {
+        const dx = e.clientX - mode.lx, dy = e.clientY - mode.ly; mode.lx = e.clientX; mode.ly = e.clientY; mode.moved += Math.abs(dx) + Math.abs(dy);
+        orbit.theta -= dx * 0.008; orbit.phi = Math.min(2.6, Math.max(0.35, orbit.phi - dy * 0.008)); dirty.draw = true; return;
+      }
+      if (e.pointerType === 'mouse') {
+        const h = handleAt(e), id = h ? h.id : null;
+        if (id !== hover3) { hover3 = id; dirty.draw = true; }
+        el.style.cursor = id === 'trap' ? 'ns-resize' : id === 'mic' ? 'move' : 'grab';
+      }
+    });
+    const end = (e) => {
+      if (mode && mode.type === 'orbit' && mode.moved < 5) {   // a click: drop a bead where the ray meets the axis
+        setRay(e); const p = hitPlane(slicePlane);
+        if (p && Math.abs(p.x) < 6 && p.z / 1000 > C.axis[0] && p.z / 1000 < C.axis[1]) { addBeadAt(p.z / 1000); dirty.draw = true; }
+      }
+      clickTrap();
+      pointers.delete(e.pointerId);
+      if (pointers.size < 2 && mode && mode.type === 'pinch') mode = null;
+      if (!pointers.size) { mode = null; if (drag) { drag = null; dirty.draw = true; } el.style.cursor = 'grab'; }
+    };
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+    el.addEventListener('pointerleave', () => { if (hover3 && !drag) { hover3 = null; dirty.draw = true; } });
+    el.addEventListener('wheel', (e) => { e.preventDefault(); orbit.zoom = Math.min(2.5, Math.max(0.2, orbit.zoom * Math.exp(e.deltaY * 0.0012))); dirty.draw = true; }, { passive: false });
+    el.addEventListener('dblclick', () => { orbit.theta = -Math.PI / 2 - 0.42; orbit.phi = 1.32; orbit.zoom = 1; dirty.draw = true; });
+    el.addEventListener('keydown', onKey);
+    el.style.cursor = 'grab';
+  }
+  // a click (no drag) on a trap ring drops a bead into that trap
+  function clickTrap() {
+    if (!drag || drag.id !== 'trap' || drag.moved) return;
+    if (!beads.some((b) => Math.abs(b.z - drag.tz) < 1e-3)) addBeadAt(drag.tz, 0.3e-3);
+    dirty.draw = true;
+  }
+  function setMic(x, z) {
+    x = Math.max(C.xs[0], Math.min(C.xs[C.nx - 1], x)); z = Math.max(C.zs[0], Math.min(C.zs[C.nz - 1], z));
+    if (!micInside(x, z)) return;
+    S.mic.x = x; S.mic.z = z; dirty.draw = true; dirty.ui = true;
+  }
+
+  // ---------- flat slice view (also the fallback without WebGL) ----------
+  const flat = $('flat'), fctx = flat.getContext('2d'), plot = $('plot'), pctx = plot.getContext('2d');
+  const dims = { f: [0, 0], p: [0, 0] };
+  let fGeom = null;
+  function flatGeom() {
+    const [W, H] = dims.f, b = C.box, pad = 16 * projScale(), top = 8 + (S.view === 'flat' ? 74 : 0) * projScale();
+    const s = Math.min((W - 2 * pad) / (2000 * b.x), (H - top - pad) / (1000 * (b.z1 - b.z0)));
+    const cx = W / 2 + (W > 420 ? 30 : 0) * projScale(), cy = top + (H - top - pad) / 2, zc = 500 * (b.z0 + b.z1);
+    return { s, X: (xmm) => cx + xmm * s, Y: (zmm) => cy - (zmm - zc) * s, ix: (px) => (px - cx) / s, iz: (py) => zc - (py - cy) / s };
+  }
+  function drawFlat() {
+    const [W, H] = dims.f; if (!W || !H) return;
+    const ctx = fctx, ps = projScale(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const g = fGeom = flatGeom(), X = g.X, Y = g.Y, s = g.s;
+    // slice image
+    ctx.imageSmoothingEnabled = true;
+    const x0 = X(-1000 * C.X), x1 = X(1000 * C.X), y0 = Y(1000 * C.Z1), y1 = Y(1000 * C.Z0);
+    ctx.drawImage(sliceCv, x0, y0, x1 - x0, y1 - y0);
+    // the near field: hatched
+    if (C.name === 'lev') { ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(X(0), Y(0), 50 * s, 0, TAU); ctx.stroke(); }
+    else {
+      ctx.save(); ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(X(0), Y(1000 * SINGLE_H / 2), 1000 * NEAR_FIELD * s, 0, PI); ctx.closePath(); ctx.clip();
+      ctx.beginPath(); for (let k = -H; k < W + H; k += 7 * ps) { ctx.moveTo(k, 0); ctx.lineTo(k + H, H); } ctx.stroke(); ctx.restore();
+    }
+    // hardware in section
+    const ring = (side) => {
+      ctx.strokeStyle = T.bowl; ctx.lineWidth = 6 * s; ctx.beginPath();
+      const a0 = (side > 0 ? -PI / 2 : PI / 2) - 37 * PI / 180, a1 = a0 + 74 * PI / 180;
+      for (let k = 0; k <= 40; k++) { const a = a0 + (a1 - a0) * k / 40, xx = X(67.5 * Math.cos(a)), yy = Y(-67.5 * Math.sin(a)); k ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); }
+      ctx.stroke();
+      for (const [, deg] of RINGS) for (const sx of [-1, 1]) {
+        const th = deg * PI / 180, ux = sx * Math.sin(th), uz = side * Math.cos(th);
+        ctx.save(); ctx.translate(X(1000 * BOWL_R * ux), Y(1000 * BOWL_R * uz)); ctx.rotate(Math.atan2(-uz, ux));
+        ctx.fillStyle = T.can; ctx.fillRect(0, -5 * s, 7 * s, 10 * s); ctx.fillStyle = T.mesh; ctx.fillRect(-0.6 * s, -4.3 * s, 0.9 * s, 8.6 * s); ctx.restore();
+      }
+    };
+    if (C.name === 'lev') { ring(-1); ring(1); }
+    else {
+      const ez = 1000 * SINGLE_H / 2; ctx.fillStyle = T.can; ctx.fillRect(X(-5), Y(ez + 7), 10 * s, 7 * s); ctx.fillStyle = T.mesh; ctx.fillRect(X(-4.3), Y(ez + 0.9), 8.6 * s, 0.9 * s);
+      ctx.fillStyle = T.bowl; ctx.fillRect(X(-26), Y(-ez), 52 * s, 3 * s);
+    }
+    // axis
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(X(0), Y(1000 * C.axis[1])); ctx.lineTo(X(0), Y(1000 * C.axis[0])); ctx.stroke(); ctx.setLineDash([]);
+    // traps
+    const hot = hoverF === 'trap' || (drag && drag.id === 'trap');
+    for (const t of PH.traps) {
+      if (C.name === 'lev' && Math.abs(t.z) > 0.045) continue;
+      const y = Y(1000 * t.z), r = Math.max(4 * ps, 1.6 * s) * (hot ? 1.2 : 1);
+      ctx.strokeStyle = T.accent; ctx.globalAlpha = hot ? 1 : 0.7; ctx.lineWidth = (hot ? 2.4 : 1.6) * ps;
+      ctx.beginPath(); ctx.ellipse(X(0), y, r, r * 0.35, 0, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1;
+    }
+    // beads
+    const bc = T[MATS[S.mat].tok];
+    for (const b of beads) {
+      const r = Math.max(4.5 * ps, S.a * s);
+      ctx.fillStyle = bc; ctx.strokeStyle = T.dark ? '#000000' : T.ink; ctx.lineWidth = 1.2 * ps;
+      ctx.beginPath(); ctx.arc(X(0), Y(1000 * b.z), r, 0, TAU); ctx.fill(); ctx.stroke();
+    }
+    // microphone
+    { const mh = hoverF === 'mic' || (drag && drag.id === 'mic'), mx = X(1000 * S.mic.x), my = Y(1000 * S.mic.z), r = (mh ? 7.5 : 6) * ps;
+      ctx.strokeStyle = T.mic; ctx.lineWidth = (mh ? 2.6 : 2) * ps; ctx.beginPath(); ctx.arc(mx, my, r, 0, TAU); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(mx - r * 1.5, my); ctx.lineTo(mx - r * 0.5, my); ctx.moveTo(mx + r * 0.5, my); ctx.lineTo(mx + r * 1.5, my); ctx.stroke(); }
+    // scale bar and labels, on halo boxes
+    const fs = 11 * ps; ctx.font = `${fs}px ${T.mono}`;
+    const tag = (txt, x, y, al = 'left', col = T.muted) => { ctx.textAlign = al; ctx.textBaseline = 'middle'; const w = ctx.measureText(txt).width, lx = al === 'left' ? x : al === 'right' ? x - w : x - w / 2;
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.82; ctx.fillRect(lx - 3, y - fs * 0.7, w + 6, fs * 1.4); ctx.globalAlpha = 1; ctx.fillStyle = col; ctx.fillText(txt, x, y); };
+    { const L = 10, bx = W - 14 * ps - L * s, by = H - 16 * ps; ctx.strokeStyle = T.ink; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + L * s, by); ctx.stroke(); tag('10 mm', bx + L * s / 2, by - 10 * ps, 'center', T.ink); }
+    if (C.name === 'lev') { tag('top bowl, phase Δφ', X(0), Y(70) - 4 * ps, 'center'); tag('bottom bowl, phase 0', X(0), Y(-70) + 6 * ps, 'center'); }
+    else { tag('emitter', X(7), Y(1000 * SINGLE_H / 2 + 4), 'left'); tag('flat reflector', X(28), Y(-1000 * SINGLE_H / 2 - 1.5), 'left'); tag('near field, not modelled', X(10), Y(1000 * SINGLE_H / 2 - 5), 'left'); }
+  }
+  function flatHandle(e) {
+    if (!fGeom) return null;
+    const r = flat.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, tol = 9 * projScale() * (e.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    const dm = Math.hypot(x - fGeom.X(1000 * S.mic.x), y - fGeom.Y(1000 * S.mic.z)) - 4; if (dm < bd) { bd = dm; best = { id: 'mic' }; }
+    if (C.name === 'lev') for (const t of PH.traps) {
+      if (Math.abs(t.z) > 0.045) continue;
+      const d = Math.hypot((x - fGeom.X(0)) * 0.5, y - fGeom.Y(1000 * t.z)) - 3; if (d < bd) { bd = d; best = { id: 'trap', z: t.z }; }
+    }
+    return best;
+  }
+  flat.addEventListener('pointerdown', (e) => {
+    flat.focus({ preventScroll: true });
+    const h = flatHandle(e);
+    if (h) { flat.setPointerCapture(e.pointerId); drag = h.id === 'trap' ? { id: 'trap', z0: fGeom.iz(e.clientY - flat.getBoundingClientRect().top) / 1000, ph0: S.ph, tz: h.z, sx: e.clientX, sy: e.clientY } : { id: 'mic' }; dirty.draw = true; return; }
+    const r = flat.getBoundingClientRect(), xm = fGeom.ix(e.clientX - r.left), zm = fGeom.iz(e.clientY - r.top);
+    if (Math.abs(xm) < Math.max(5, 12 / fGeom.s) && zm / 1000 > C.axis[0] && zm / 1000 < C.axis[1]) { addBeadAt(zm / 1000); dirty.draw = true; }
+  });
+  flat.addEventListener('pointermove', (e) => {
+    const r = flat.getBoundingClientRect();
+    if (drag) {
+      if (drag.sx !== undefined && Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) > 3) drag.moved = true;
+      if (drag.id === 'trap' && !drag.moved) return;
+      queueDrag(() => {
+        if (!drag) return;
+        if (drag.id === 'trap') phaseFromDrag(fGeom.iz(e.clientY - r.top) / 1000);
+        else setMic(fGeom.ix(e.clientX - r.left) / 1000, fGeom.iz(e.clientY - r.top) / 1000);
+      });
+      return;
+    }
+    const h = flatHandle(e), id = h ? h.id : null;
+    if (id !== hoverF) { hoverF = id; dirty.draw = true; }
+    flat.style.cursor = id === 'trap' ? 'ns-resize' : id === 'mic' ? 'move' : 'crosshair';
+  });
+  const endFlat = () => { if (drag) { clickTrap(); drag = null; dirty.draw = true; } };
+  flat.addEventListener('pointerup', endFlat); flat.addEventListener('pointercancel', endFlat);
+  flat.addEventListener('pointerleave', () => { if (hoverF && !drag) { hoverF = null; dirty.draw = true; } });
+  flat.addEventListener('keydown', onKey);
+  plot.addEventListener('keydown', onKey);
+
+  // ---------- the potential along the axis ----------
+  let uScale = null;
+  function drawPlot() {
+    const [W, H] = dims.p; if (!W || !H) return;
+    const ctx = pctx, ps = projScale(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const fs = 10.5 * ps, narrow = H < 300 && W > H;
+    const L = 40 * ps, R = W - 12 * ps, top = 34 * ps, bot = H - 30 * ps;
+    if (R - L < 40 || bot - top < 40) return;
+    const zlo = C.win[0], zhi = C.win[1];
+    const i0 = Math.max(0, Math.round((zlo - C.za[0]) / AXIS_DZ)), i1 = Math.min(C.za.length - 1, Math.round((zhi - C.za[0]) / AXIS_DZ));
+    let ref = Infinity, mx = -Infinity;
+    for (let i = i0; i <= i1; i++) { if (C.Ut[i] < ref) ref = C.Ut[i]; if (C.Ut[i] > mx) mx = C.Ut[i]; }
+    const span = Math.max(mx - ref, 1e-30);
+    // U is measured from its lowest point in the window; the scale only changes on a big change, so it does not jitter while the phase sweeps
+    if (!uScale || span > uScale.span * 0.97 || span < uScale.span * 0.6) uScale = { span: span * 1.06 };
+    const uL = -0.03 * uScale.span, uR = uScale.span;
+    const Xu = (u) => L + (u - uL) / (uR - uL) * (R - L), Yz = (z) => bot - (z - zlo) / (zhi - zlo) * (bot - top);
+    // grid: z ticks
+    ctx.font = `${fs}px ${T.mono}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'right';
+    const zstep = (zhi - zlo) * 1000 > 30 ? 10 : 5;
+    for (let zm = Math.ceil(zlo * 1000 / zstep) * zstep; zm <= zhi * 1000 + 1e-9; zm += zstep) {
+      const y = Math.round(Yz(zm / 1000)) + 0.5; ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(R, y); ctx.stroke();
+      ctx.fillStyle = T.muted; ctx.fillText(String(zm), L - 5, y);
+    }
+    ctx.strokeStyle = T.gridStrong; ctx.strokeRect(L + 0.5, top + 0.5, R - L, bot - top);
+    // gravity alone
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
+    ctx.strokeStyle = T.muted; ctx.setLineDash([5, 4]); ctx.lineWidth = 1.2 * ps; ctx.beginPath();
+    ctx.moveTo(Xu(0), Yz(zlo)); ctx.lineTo(Xu(PH.W * (zhi - zlo)), Yz(zhi)); ctx.stroke(); ctx.setLineDash([]);
+    // U + Wz
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.8 * ps; ctx.beginPath();
+    const stp = Math.max(1, Math.floor((i1 - i0) / 600));
+    for (let i = i0; i <= i1; i += stp) { const x = Xu(C.Ut[i] - ref), y = Yz(C.za[i]); i === i0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+    ctx.stroke();
+    // traps and beads
+    const ut = (z) => { const k = Math.max(0, Math.min(C.za.length - 1, Math.round((z - C.za[0]) / AXIS_DZ))); return C.Ut[k] - ref; };
+    for (const t of PH.traps) { if (t.z < zlo || t.z > zhi) continue; ctx.strokeStyle = T.accent; ctx.lineWidth = 1.6 * ps; ctx.beginPath(); ctx.arc(Xu(ut(t.z)), Yz(t.z), 4.5 * ps, 0, TAU); ctx.stroke(); }
+    const bc = T[MATS[S.mat].tok];
+    for (const b of beads) { if (b.z < zlo || b.z > zhi) continue; ctx.fillStyle = bc; ctx.strokeStyle = T.dark ? '#000000' : T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(Xu(ut(b.z)), Yz(b.z), 3.6 * ps, 0, TAU); ctx.fill(); ctx.stroke(); }
+    ctx.restore();
+    // labels
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.ui}`;
+    ctx.fillText(narrow ? 'U + Wz on the axis' : 'U + Wz along the axis', 8 * ps, 15 * ps);
+    ctx.font = `${fs}px ${T.mono}`; ctx.fillStyle = T.muted;
+    ctx.fillText('z (mm)', 8 * ps, 28 * ps);
+    const wTxt = `width ${fmtE(uR - uL)}`, wW = ctx.measureText(wTxt).width;
+    ctx.textAlign = 'right'; ctx.fillText(wTxt, R, H - 10 * ps);
+    ctx.textAlign = 'left';
+    for (const lab of ['lower ←  U  → higher', 'U →']) if (ctx.measureText(lab).width + wW + 12 * ps < R - L + 30 * ps) { ctx.fillText(lab, L, H - 10 * ps); break; }
+    if (!PH.traps.length) { const tx = 'No trap: the bead falls'; ctx.font = `700 ${12 * ps}px ${T.ui}`; const tw = ctx.measureText(tx).width; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.9; ctx.fillRect((L + R) / 2 - tw / 2 - 4, top + 6 * ps, tw + 8, 16 * ps); ctx.globalAlpha = 1; ctx.textAlign = 'center'; ctx.fillStyle = T.pos; ctx.fillText(tx, (L + R) / 2, top + 18 * ps); }
+  }
+
+  // ---------- UI ----------
+  const fmtDeg = (d) => (d > 0 ? '+' : d < 0 ? '−' : '') + Math.abs(Math.round(d)) + '°';
+  function outs() {
+    $('drvOut').textContent = S.V.toFixed(1) + ' V';
+    const shift = phaseShift(S.phT * PI / 180, C ? C.keff : K0) * 1000;
+    $('phOut').textContent = C && C.name === 'single' ? fmtDeg(S.phT) + ', no effect' : S.phT === 0 ? '0°' : `${fmtDeg(S.phT)}, traps ${shift > 0 ? '+' : '−'}${Math.abs(shift).toFixed(2)} mm`;
+    $('radOut').textContent = S.a.toFixed(2) + ' mm';
+    $('volOut').textContent = Math.round(S.vol * 100) + '%';
+  }
+  function updateUI() {
+    if (!PH) return;
+    const lam = LAMBDA * 1000;
+    $('rLam').textContent = lam.toFixed(2) + ' mm'; $('rHalf').textContent = (lam / 2).toFixed(2) + ' mm';
+    $('rSp').textContent = C.name === 'lev' ? `${(C.spacing * 1000).toFixed(2)} mm, ⟨cos θ⟩ = ${(C.keff / K0).toFixed(3)}` : `λ/2 = ${(C.spacing * 1000).toFixed(2)} mm, here cos θ = 1`;
+    const spl = PH.pmax > 0 ? 20 * Math.log10(PH.pmax / Math.SQRT2 / 20e-6) : null;
+    $('rP').textContent = PH.pmax > 0 ? `${fmtP(PH.pmax)} (${spl.toFixed(0)} dB)` : '0';
+    $('rFmax').textContent = fmtF(PH.Fup); $('rW').textContent = fmtF(PH.W);
+    const holds = PH.traps.length > 0, rr = $('rRatio');
+    rr.textContent = PH.Vpa === 0 ? '0, falls' : `${PH.ratio >= 100 ? PH.ratio.toFixed(0) : PH.ratio.toFixed(2)}, ${holds ? 'holds' : 'falls'}`;
+    rr.className = holds ? 'good' : 'bad';
+    $('rNeed').textContent = PH.need === null ? '—' : PH.need > 200 ? '> 200 V' : PH.need.toFixed(1) + ' V' + (PH.need > 20 ? ', over the 20 V limit' : '');
+    $('rKa').textContent = PH.ka.toFixed(2); $('rPhi').textContent = PH.gk.Phi.toFixed(3);
+    const held = beads.filter(isHeld).length;
+    $('rCount').textContent = `${held} held, ${beads.length - held} moving, ${S.fallen} fell out`;
+    const st = $('status');
+    st.textContent = holds ? `Holds ${MATS[S.mat].name}: push up to ${PH.ratio >= 100 ? PH.ratio.toFixed(0) : PH.ratio.toFixed(1)} × its weight` : `Falls: ${MATS[S.mat].name} needs ${PH.need === null ? 'sound' : PH.need.toFixed(1) + ' V'}`;
+    st.className = 'count mono' + (holds ? '' : ' bad');
+    // trap table, top to bottom, inside the window
+    const rows = PH.traps.filter((t) => t.z >= C.win[0] && t.z <= C.win[1]).sort((p, q) => q.z - p.z);
+    $('trapBody').innerHTML = rows.length ? rows.map((t) => `<tr class="${beads.some((b) => Math.abs(b.z - t.z) < LAMBDA / 8) ? 'held' : ''}"><td>${(t.z * 1000).toFixed(2)} mm</td><td>${t.node === null ? '—' : ((t.z - t.node) * 1e6 > 0.5 ? '+' : (t.z - t.node) * 1e6 < -0.5 ? '−' : '') + Math.abs((t.z - t.node) * 1e6).toFixed(0) + ' µm'}</td><td>${fmtE(t.depth)}</td></tr>`).join('')
+      : '<tr><td colspan="3">No traps: weight wins everywhere</td></tr>';
+    const w = $('warn'), r = S.a * 1e-3;
+    if (r > LAMBDA / 5) { w.hidden = false; w.className = 'flag'; w.innerHTML = `Outside the small particle theory<span>a = ${S.a.toFixed(2)} mm is more than λ/5 (ka = ${PH.ka.toFixed(2)}). Gor'kov's formula assumes ka ≪ 1; for a bead this big the real force differs a lot, and the numbers here are not reliable. Real levitators do hold beads up to about λ/2 across.</span>`; }
+    else if (r > LAMBDA / 10) { w.hidden = false; w.className = 'flag mild'; w.innerHTML = `Stretching the theory<span>a = ${S.a.toFixed(2)} mm is more than λ/10 (ka = ${PH.ka.toFixed(2)} > 0.63). Gor'kov's formula assumes a ≪ λ, so take the numbers as a rough guide.</span>`; }
+    else w.hidden = true;
+    $('rMic').textContent = fmtP(micP());
+  }
+  function setSweep(on) {
+    S.sweep = on; $('sweep').setAttribute('aria-pressed', String(on)); $('sweep').textContent = on ? 'Stop the sweep' : 'Sweep the phase';
+    if (on) { const s = Math.max(-1, Math.min(1, S.ph / SWEEP_A)); S.sweepT = Math.asin(s) * SWEEP_T / TAU; }
+  }
+  const HINTS = {
+    hold: 'One foam bead sits just below a pressure node near the centre. Lower the drive slowly: it sinks a little in its trap and then drops at about 1 V.',
+    stack: 'Every pressure node of the standing wave is a trap, so the beads stack like rungs of a ladder, 4.76 mm apart at the centre. That is a bit more than λ/2 = 4.29 mm, because the sound from each bowl meets the axis at an angle. Switch the slice to Potential U to see the wells.',
+    steel: 'At 12 V water would float, but steel is 8 times denser and falls straight through. Raise the drive: in this model steel needs about 15 V.',
+    move: 'The top bowl\'s phase sweeps back and forth. Each 360° moves the traps by one trap spacing, and the beads ride along: acoustic tweezers.',
+    water: 'A water droplet is 33 times denser than foam. It still floats at 10 V, but sits further below its node, and its trap is shallower for its weight.',
+    single: 'One transducer over a flat reflector: the sound runs straight up and down the axis, so the traps are about λ/2 = 4.29 mm apart, as in the simple standing wave. The field is far weaker: a foam bead floats at 20 V, a water droplet does not. Phase does nothing here, because the reflected wave shifts with the emitter.'
+  };
+  function applyPreset(p) {
+    S.preset = p; S.fallen = 0; setSweep(false);
+    const base = { cfg: 'lev', V: 10, mat: 'eps', a: 0.75, ph: 0 };
+    const P = { hold: {}, stack: {}, steel: { mat: 'steel', V: 12 }, move: {}, water: { mat: 'water' }, single: { cfg: 'single', V: 20 } }[p];
+    const q = Object.assign({}, base, P);
+    setCfg(q.cfg); S.V = q.V; S.mat = q.mat; S.a = q.a; S.ph = S.phT = q.ph;
+    $('drv').value = S.V; $('rad').value = S.a; $('ph').value = 0;
+    document.querySelectorAll('#mats button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.m === S.mat)));
+    S.mic = C.name === 'lev' ? { x: 0.012, z: 0 } : { x: 0.008, z: -0.004 };
+    physics();
+    beads = [];
+    if (p === 'hold' || p === 'water') { const t = trapsIn(1).sort((a, b) => (Math.abs(Math.abs(a.z) - Math.abs(b.z)) < 1e-4 ? a.z - b.z : Math.abs(a.z) - Math.abs(b.z)))[0]; if (t) addBeadAt(t.z, 0.3e-3); }   // the trap just below the centre
+    else if (p === 'steel') addBeadAt(-LAMBDA / 4 + 0.2e-3);
+    else if (p === 'move') { const ts = trapsIn(1).sort((a, b) => Math.abs(a.z) - Math.abs(b.z)).slice(0, 3); for (const t of ts) addBeadAt(t.z); }
+    else fillTraps(true);
+    if (p === 'move') setSweep(true);
+    document.querySelectorAll('#presets button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.p === p)));
+    $('presetHint').textContent = HINTS[p];
+    outs(); markAll();
+  }
+  function setCfg(name) {
+    if (C && C.name === name) return;
+    C = buildCfg(name); uScale = null; sliceImg = null;
+    const lev = name === 'lev';
+    $('ph').disabled = !lev; $('sweep').disabled = !lev; $('ph0').disabled = !lev;
+    $('phHint').textContent = lev ? `Every 360° of phase moves the traps by one trap spacing, ${(C.spacing * 1000).toFixed(2)} mm at the centre. Drag a trap ring in the drawing to do the same by hand.`
+      : 'With one emitter the phase only shifts the timing of the whole field; the reflected wave shifts with it, so the traps stay put.';
+    layout3D();
+  }
+  function markAll() { dirty.phys = dirty.slice = dirty.draw = dirty.plot = dirty.ui = true; }
+  function presetOff() { if (S.preset) { S.preset = null; document.querySelectorAll('#presets button').forEach((b) => b.setAttribute('aria-pressed', 'false')); $('presetHint').textContent = 'Your own setup. Pick a setup above to start again.'; } }
+
+  document.querySelectorAll('#presets button').forEach((b) => b.addEventListener('click', () => applyPreset(b.dataset.p)));
+  document.querySelectorAll('#mats button').forEach((b) => b.addEventListener('click', () => {
+    S.mat = b.dataset.m; document.querySelectorAll('#mats button').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); presetOff(); markAll();
+  }));
+  $('drv').addEventListener('input', () => { S.V = +$('drv').value; presetOff(); outs(); markAll(); });
+  $('ph').addEventListener('input', () => { setPhase(+$('ph').value, false); presetOff(); });
+  $('rad').addEventListener('input', () => { S.a = +$('rad').value; presetOff(); outs(); markAll(); });
+  $('vol').addEventListener('input', () => { S.vol = +$('vol').value; outs(); setVolume(); });
+  $('sweep').addEventListener('click', () => { setSweep(!S.sweep); if (S.sweep && !S.playing) setPlaying(true); });
+  $('ph0').addEventListener('click', () => { setPhase(0, false); });
+  $('fill').addEventListener('click', () => { S.fallen = 0; fillTraps(false); markAll(); });
+  $('add').addEventListener('click', () => { addBead(); markAll(); });
+  $('clr').addEventListener('click', () => { beads = []; S.fallen = 0; markAll(); });
+  function setView(v) {
+    if (v === '3d' && !G.ready) v = 'flat';
+    S.view = v; $('v3d').setAttribute('aria-pressed', String(v === '3d')); $('vFlat').setAttribute('aria-pressed', String(v === 'flat'));
+    if (G.ready) G.el.hidden = v !== '3d';
+    flat.hidden = v !== 'flat'; $('tip3d').hidden = v !== '3d';
+    resize(); markAll();
+  }
+  $('v3d').addEventListener('click', () => setView('3d'));
+  $('vFlat').addEventListener('click', () => setView('flat'));
+  const setColor = (c) => { S.color = c; $('cP').setAttribute('aria-pressed', String(c === 'p')); $('cU').setAttribute('aria-pressed', String(c === 'u')); dirty.slice = dirty.draw = true; };
+  $('cP').addEventListener('click', () => setColor('p'));
+  $('cU').addEventListener('click', () => setColor('u'));
+  function setPlaying(on) { S.playing = on; $('play').textContent = on ? 'Pause' : 'Play'; }
+  $('play').addEventListener('click', () => setPlaying(!S.playing));
+  function onKey(e) {
+    const k = e.key;
+    if (k === 'ArrowUp' || k === 'ArrowDown') { if (C.name === 'lev') { setPhase(Math.max(-720, Math.min(720, S.phT + (k === 'ArrowUp' ? 22 : -22))), false); presetOff(); } e.preventDefault(); }
+    else if (k === 'ArrowLeft' || k === 'ArrowRight') { S.V = Math.max(0, Math.min(20, +(S.V + (k === 'ArrowRight' ? 0.5 : -0.5)).toFixed(1))); $('drv').value = S.V; presetOff(); outs(); markAll(); e.preventDefault(); }
+    else if (k === ' ') { setPlaying(!S.playing); e.preventDefault(); }
+    else if (k === 'b' || k === 'B') { addBead(); markAll(); }
+    else if (k === 'f' || k === 'F') { S.fallen = 0; fillTraps(false); markAll(); }
+    else if (k === 'c' || k === 'C') { beads = []; S.fallen = 0; markAll(); }
+    else if ((k === 's' || k === 'S') && C.name === 'lev') { setSweep(!S.sweep); if (S.sweep && !S.playing) setPlaying(true); }
+    else if (k === ',' || k === '.') { orbit.theta += k === ',' ? 0.12 : -0.12; dirty.draw = true; }
+  }
+
+  // ---------- sound: a 400 Hz stand in whose loudness follows |p| at the microphone ----------
+  const TONE_DIV = 100, MASTER_MAX = 0.25;   // peak output ≤ 0.25 full scale (−12 dBFS)
+  const snd = { ac: null, osc: null, g: null, master: null, on: false, level: 0, unavailable: false };
+  function pRefSound() { return CFG.lev.ready ? 20 * P_PER_VPP * CFG.lev.pmax1 : 7200; }
+  function setVolume() { if (snd.master && snd.on) snd.master.gain.setTargetAtTime(MASTER_MAX * S.vol * S.vol, snd.ac.currentTime, 0.03); }
+  function setSound(on) {
+    if (on && !snd.ac) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) { snd.unavailable = true; $('sndHint').textContent = 'Sound is not available in this browser. The demo works the same without it.'; return; }
+      try {
+        snd.ac = new AC(); snd.master = snd.ac.createGain(); snd.master.gain.value = 0; snd.master.connect(snd.ac.destination);
+        snd.g = snd.ac.createGain(); snd.g.gain.value = 0; snd.g.connect(snd.master);
+        snd.osc = snd.ac.createOscillator(); snd.osc.type = 'sine'; snd.osc.frequency.value = FREQ / TONE_DIV; snd.osc.connect(snd.g); snd.osc.start();
+      } catch (_) { snd.ac = null; snd.unavailable = true; return; }
+    }
+    if (!snd.ac) return;
+    snd.on = on;
+    const now = snd.ac.currentTime;
+    if (on) { if (snd.ac.state === 'suspended') snd.ac.resume(); snd.master.gain.cancelScheduledValues(now); snd.master.gain.setValueAtTime(snd.master.gain.value, now); snd.master.gain.setTargetAtTime(MASTER_MAX * S.vol * S.vol, now, 0.03); }
+    else { snd.master.gain.cancelScheduledValues(now); snd.master.gain.setValueAtTime(snd.master.gain.value, now); snd.master.gain.setTargetAtTime(0, now, 0.02); }
+    $('snd').setAttribute('aria-pressed', String(on)); $('snd').textContent = on ? 'Sound on' : 'Sound off';
+    $('rTone').textContent = on ? '400 Hz' : 'nothing';
+  }
+  function updateSound() {
+    snd.level = Math.min(1, micP() / pRefSound());
+    if (snd.on && snd.g) snd.g.gain.setTargetAtTime(snd.level, snd.ac.currentTime, 0.03);
+  }
+  $('snd').addEventListener('click', () => setSound(!snd.on));
+  document.addEventListener('visibilitychange', () => { if (document.hidden && snd.on) setSound(false); });
+  window.__audio = {
+    get on() { return snd.on; }, get available() { return !snd.unavailable; }, get freq() { return snd.osc ? snd.osc.frequency.value : FREQ / TONE_DIV; },
+    get level() { return snd.level; }, get masterTarget() { return snd.on ? MASTER_MAX * S.vol * S.vol : 0; }, get peak() { return snd.on ? MASTER_MAX * S.vol * S.vol * snd.level : 0; },
+    get nodes() { return snd.ac ? { oscillators: 1, gains: 2 } : { oscillators: 0, gains: 0 }; }, divisor: TONE_DIV, maxGain: MASTER_MAX
+  };
+
+  // ---------- projector, theme, resize ----------
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(() => { resize(); markAll(); });
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  const retheme = () => { tokens(); retheme3D(); markAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  function resize() {
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    const vb = $('viewBox').getBoundingClientRect(), sb = $('sideBox').getBoundingClientRect();
+    dims.f = [vb.width, vb.height]; dims.p = [sb.width, sb.height];
+    flat.width = Math.max(1, Math.round(vb.width * dpr)); flat.height = Math.max(1, Math.round(vb.height * dpr));
+    plot.width = Math.max(1, Math.round(sb.width * dpr)); plot.height = Math.max(1, Math.round(sb.height * dpr));
+    if (G.ready) { G.renderer.setPixelRatio(dpr); G.renderer.setSize(Math.max(1, vb.width), Math.max(1, vb.height), false); G.cam.aspect = Math.max(1, vb.width) / Math.max(1, vb.height); G.cam.updateProjectionMatrix(); }
+    dirty.draw = dirty.plot = true;
+  }
+
+  // ---------- loop ----------
+  let last = performance.now(), frameMs = 0, lastUI = 0, lastSnd = 0, settled = 0;
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (S.playing) {
+      if (C.name === 'lev') {
+        if (S.sweep) { S.sweepT += dt; S.ph = S.phT = Math.round(SWEEP_A * Math.sin(TAU * S.sweepT / SWEEP_T) * 10) / 10; $('ph').value = Math.round(S.ph); outs(); dirty.phys = dirty.slice = true; }
+        else if (S.ph !== S.phT) { const st = PH_RATE * dt; S.ph = Math.abs(S.phT - S.ph) <= st ? S.phT : S.ph + Math.sign(S.phT - S.ph) * st; dirty.phys = dirty.slice = true; }
+      }
+    } else if (S.ph !== S.phT) { S.ph = S.phT; dirty.phys = dirty.slice = true; }
+    if (dirty.phys) { physics(); dirty.phys = false; dirty.plot = dirty.draw = dirty.ui = true; }
+    if (S.playing && beads.length) { const mv = stepBeads(dt / SLOW); if (mv) { dirty.draw = dirty.plot = true; settled = 0; } else if (settled++ < 3) dirty.draw = dirty.plot = true; }
+    if (dirty.slice) { renderSlice(); dirty.slice = false; dirty.draw = true; }
+    if (dirty.draw) { if (S.view === '3d' && G.ready) render3D(); else drawFlat(); dirty.draw = false; }
+    if (dirty.plot) { drawPlot(); dirty.plot = false; }
+    if ((dirty.ui && now - lastUI > 120) || now - lastUI > 500) { updateUI(); dirty.ui = false; lastUI = now; }
+    if (now - lastSnd > 50) { updateSound(); lastSnd = now; }
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    requestAnimationFrame(loop);
+  }
+  window.__lev = {
+    S, get beads() { return beads; }, get PH() { return PH; }, get C() { return C; }, get frameMs() { return frameMs; }, applyPreset, setView, setPhase,
+    micP, physics: () => { physics(); return PH; }, get use3D() { return G.ready; },
+    trapScreen() { // screen position of the trap nearest the centre, in page coordinates, for tests
+      const t = PH.traps.filter((q) => Math.abs(q.z) < 0.045).sort((a, b) => Math.abs(a.z) - Math.abs(b.z))[0]; if (!t) return null;
+      if (S.view === '3d' && G.ready) { cam3D(); const p = project(0, 0, 1000 * t.z), r = G.el.getBoundingClientRect(); return [r.left + p[0], r.top + p[1], t.z]; }
+      const r = flat.getBoundingClientRect(), g = flatGeom(); return [r.left + g.X(0), r.top + g.Y(1000 * t.z), t.z];
+    },
+    micScreen() { if (S.view === '3d' && G.ready) { cam3D(); const p = project(1000 * S.mic.x, 0, 1000 * S.mic.z), r = G.el.getBoundingClientRect(); return [r.left + p[0], r.top + p[1]]; }
+      const r = flat.getBoundingClientRect(), g = flatGeom(); return [r.left + g.X(1000 * S.mic.x), r.top + g.Y(1000 * S.mic.z)]; }
+  };
+
+  // ---------- start ----------
+  tokens();
+  setCfg('lev');
+  const use3D = init3D();
+  if (use3D) layout3D();
+  const ro = new ResizeObserver(() => { resize(); });
+  ro.observe($('viewBox')); ro.observe($('sideBox'));
+  setView(use3D ? '3d' : 'flat');
+  if (!use3D) { $('v3d').disabled = true; $('v3d').title = '3D needs WebGL and three.js, which did not load; the slice shows the same physics.'; }
+  outs();
+  applyPreset('stack');
+  setPlaying(!reduce);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { markAll(); });
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
