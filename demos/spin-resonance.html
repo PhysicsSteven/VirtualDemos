@@ -1,0 +1,1549 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Spin Resonance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a 3D lab bench across the top of the stage, the oscilloscope and the chart recorder below it; instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --bezel: #2b3038; --bezel-ink: #c9d0d8; --screen: #04110c;
+  --paper: #f6f1e3; --paper-grid: #e3b9b0; --paper-major: #c98a7e; --pen: #3a2a8c;
+  --bench-bg: #dfe5ec;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff;
+    --bezel: #1b1f25; --bezel-ink: #b8c1cc; --screen: #020a07;
+    --paper: #d9d3c4; --paper-grid: #c7a49c; --paper-major: #a9766b; --pen: #2c1f78;
+    --bench-bg: #121922; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff;
+  --bezel: #1b1f25; --bezel-ink: #b8c1cc; --screen: #020a07;
+  --paper: #d9d3c4; --paper-grid: #c7a49c; --paper-major: #a9766b; --pen: #2c1f78;
+  --bench-bg: #121922; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.panes { min-height: 0; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); grid-template-rows: minmax(0, 0.8fr) minmax(0, 1fr); }
+.pane { position: relative; min-height: 0; min-width: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+#p3d { grid-column: 1 / -1; background: var(--bench-bg); border-bottom: 1px solid var(--line); }
+#pChart { border-left: 1px solid var(--line); }
+#p3d canvas, #scope, #chart { touch-action: none; outline: none; }
+#p3d canvas:focus-visible, #scope:focus-visible, #chart:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.tip { position: absolute; left: 8px; bottom: 6px; margin: 0; font-size: 0.76rem; color: var(--muted); background: color-mix(in srgb, var(--bench-bg) 82%, transparent); padding: 2px 6px; border-radius: 4px; pointer-events: none; max-width: calc(100% - 16px); }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+select { font: inherit; font-size: 0.85rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 3px 6px; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
+.toggles { display: grid; grid-template-columns: 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 3px solid; }
+.swatch.c1 { border-color: #f2c94c; }
+.swatch.c2 { border-color: #4fd8f0; }
+.swatch.cur { border-color: #ff9f5a; border-top-style: dashed; border-top-width: 2px; }
+.swatch.held { border-color: #6f8f7f; border-top-width: 2px; }
+.swatch.dotH { width: 10px; height: 10px; border: 0; border-radius: 50%; margin: 0 6px; background: var(--pos); }
+.swatch.dotF { width: 10px; height: 10px; border: 0; border-radius: 50%; margin: 0 6px; background: var(--equi); }
+.swatch.dotE { width: 10px; height: 10px; border: 0; border-radius: 50%; margin: 0 6px; background: var(--accent); }
+
+.led { display: inline-block; width: 12px; height: 12px; border-radius: 50%; vertical-align: -1px; margin-right: 6px; background: #5a1010; box-shadow: none; }
+.meter { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.35rem; font-weight: 600; color: #ff4d3a; background: #140606; border-radius: 6px; padding: 4px 10px; display: inline-block; letter-spacing: 0.04em; text-shadow: 0 0 6px rgba(255, 70, 50, 0.6); }
+.meter small { font-size: 0.75rem; color: #e88a7e; margin-left: 4px; text-shadow: none; }
+
+.twrap { overflow-x: auto; }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+table.rows th { text-align: left; font-weight: 700; color: var(--muted); font-size: 0.72rem; padding: 3px 3px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.rows td { padding: 3px 3px; border-bottom: 1px solid var(--grid-strong); vertical-align: middle; }
+table.rows td.n { color: var(--muted); }
+table.rows td.s { font-size: 0.74rem; line-height: 1.25; }
+table.rows td.b { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+table.rows input { font: inherit; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.76rem; width: 4.6em; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 4px; padding: 2px 3px; }
+table.rows .u { color: var(--muted); font-size: 0.7rem; margin-left: 2px; }
+table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 2px; }
+table.rows td.b { font-size: 0.76rem; }
+.plotbox { position: relative; height: 190px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seed { width: 6.5em; font: inherit; font-family: var(--font-mono); font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+.note { margin: 0; font-size: 0.82rem; color: var(--pos); }
+
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+  :root[data-projector="on"] .stage-ctl { padding: 6px 10px; }
+  :root[data-projector="on"] .tip { display: none; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj, select, .seed { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  table.rows input { min-height: 32px; }
+  table.rows button { min-height: 36px; min-width: 32px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; }
+  .panes { grid-template-columns: minmax(0, 1fr); grid-template-rows: 250px 330px 230px; }
+  #pChart { border-left: 0; border-top: 1px solid var(--line); }
+  .rail { overflow: visible; }
+}
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Spin Resonance</h1>
+      <p>A virtual electron and proton spin resonance bench. Tune the probe, sweep the field, find the absorption peak on the oscilloscope, and measure g for DPPH and the gyromagnetic ratios of ¹H and ¹⁹F.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">B in mT · ν in MHz · hν = gμ<sub>B</sub>B · ν = (γ/2π)B</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/spin-resonance.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/spin-resonance.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h1v1h-1zM14 2h1v1h-1zM16 2h1v1h-1zM18 2h1v1h-1zM21 2h3v1h-3zM27 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM12 3h2v1h-2zM15 3h1v1h-1zM20 3h2v1h-2zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h2v1h-2zM16 4h1v1h-1zM18 4h1v1h-1zM21 4h1v1h-1zM23 4h2v1h-2zM26 4h4v1h-4zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h1v1h-1zM13 5h1v1h-1zM15 5h1v1h-1zM17 5h1v1h-1zM19 5h1v1h-1zM22 5h2v1h-2zM25 5h1v1h-1zM27 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM16 6h1v1h-1zM21 6h1v1h-1zM23 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM13 7h5v1h-5zM25 7h1v1h-1zM27 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM18 9h3v1h-3zM26 9h2v1h-2zM29 9h1v1h-1zM2 10h1v1h-1zM5 10h6v1h-6zM14 10h1v1h-1zM17 10h1v1h-1zM21 10h1v1h-1zM25 10h2v1h-2zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM4 11h2v1h-2zM9 11h2v1h-2zM15 11h2v1h-2zM18 11h1v1h-1zM20 11h1v1h-1zM23 11h3v1h-3zM28 11h2v1h-2zM31 11h1v1h-1zM33 11h3v1h-3zM37 11h1v1h-1zM2 12h1v1h-1zM4 12h1v1h-1zM6 12h4v1h-4zM14 12h1v1h-1zM16 12h3v1h-3zM20 12h4v1h-4zM25 12h2v1h-2zM29 12h1v1h-1zM31 12h3v1h-3zM36 12h1v1h-1zM38 12h1v1h-1zM3 13h4v1h-4zM9 13h4v1h-4zM16 13h1v1h-1zM18 13h5v1h-5zM24 13h1v1h-1zM29 13h10v1h-10zM3 14h2v1h-2zM6 14h4v1h-4zM11 14h2v1h-2zM14 14h2v1h-2zM17 14h2v1h-2zM26 14h1v1h-1zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM3 15h3v1h-3zM7 15h1v1h-1zM9 15h2v1h-2zM14 15h1v1h-1zM16 15h3v1h-3zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h2v1h-2zM5 16h2v1h-2zM8 16h2v1h-2zM14 16h1v1h-1zM17 16h1v1h-1zM20 16h4v1h-4zM28 16h2v1h-2zM32 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM3 17h3v1h-3zM7 17h1v1h-1zM9 17h2v1h-2zM12 17h2v1h-2zM15 17h2v1h-2zM21 17h1v1h-1zM25 17h1v1h-1zM29 17h3v1h-3zM33 17h1v1h-1zM35 17h3v1h-3zM2 18h1v1h-1zM4 18h8v1h-8zM14 18h1v1h-1zM16 18h2v1h-2zM19 18h3v1h-3zM24 18h4v1h-4zM29 18h2v1h-2zM32 18h1v1h-1zM36 18h3v1h-3zM2 19h3v1h-3zM7 19h1v1h-1zM10 19h1v1h-1zM12 19h2v1h-2zM15 19h1v1h-1zM19 19h1v1h-1zM24 19h1v1h-1zM26 19h1v1h-1zM29 19h1v1h-1zM35 19h2v1h-2zM2 20h1v1h-1zM4 20h3v1h-3zM8 20h1v1h-1zM11 20h1v1h-1zM18 20h2v1h-2zM21 20h1v1h-1zM23 20h1v1h-1zM25 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM31 20h1v1h-1zM35 20h2v1h-2zM38 20h1v1h-1zM4 21h3v1h-3zM9 21h1v1h-1zM11 21h1v1h-1zM13 21h3v1h-3zM17 21h2v1h-2zM20 21h3v1h-3zM24 21h1v1h-1zM27 21h1v1h-1zM30 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM6 22h1v1h-1zM8 22h3v1h-3zM14 22h3v1h-3zM18 22h2v1h-2zM21 22h1v1h-1zM26 22h1v1h-1zM28 22h1v1h-1zM30 22h6v1h-6zM4 23h4v1h-4zM9 23h1v1h-1zM12 23h1v1h-1zM14 23h4v1h-4zM19 23h1v1h-1zM21 23h5v1h-5zM27 23h1v1h-1zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM2 24h1v1h-1zM4 24h3v1h-3zM8 24h1v1h-1zM11 24h1v1h-1zM13 24h5v1h-5zM23 24h5v1h-5zM29 24h5v1h-5zM35 24h1v1h-1zM38 24h1v1h-1zM2 25h2v1h-2zM6 25h1v1h-1zM9 25h1v1h-1zM11 25h1v1h-1zM13 25h1v1h-1zM15 25h1v1h-1zM20 25h3v1h-3zM24 25h1v1h-1zM30 25h7v1h-7zM4 26h2v1h-2zM8 26h6v1h-6zM17 26h1v1h-1zM19 26h1v1h-1zM22 26h3v1h-3zM26 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h2v1h-2zM7 27h1v1h-1zM9 27h1v1h-1zM11 27h1v1h-1zM14 27h1v1h-1zM16 27h1v1h-1zM20 27h2v1h-2zM25 27h1v1h-1zM27 27h3v1h-3zM34 27h2v1h-2zM2 28h7v1h-7zM10 28h1v1h-1zM14 28h2v1h-2zM17 28h1v1h-1zM24 28h1v1h-1zM28 28h3v1h-3zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h1v1h-1zM6 29h1v1h-1zM12 29h2v1h-2zM15 29h2v1h-2zM18 29h1v1h-1zM21 29h1v1h-1zM24 29h3v1h-3zM28 29h2v1h-2zM31 29h3v1h-3zM35 29h2v1h-2zM2 30h1v1h-1zM4 30h1v1h-1zM7 30h2v1h-2zM11 30h1v1h-1zM13 30h1v1h-1zM17 30h1v1h-1zM21 30h2v1h-2zM25 30h3v1h-3zM30 30h7v1h-7zM38 30h1v1h-1zM10 31h1v1h-1zM12 31h1v1h-1zM14 31h3v1h-3zM19 31h6v1h-6zM26 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h4v1h-4zM17 32h5v1h-5zM25 32h4v1h-4zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM18 33h1v1h-1zM21 33h3v1h-3zM25 33h1v1h-1zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h4v1h-4zM15 34h1v1h-1zM18 34h1v1h-1zM20 34h1v1h-1zM22 34h2v1h-2zM25 34h2v1h-2zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h4v1h-4zM22 35h4v1h-4zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM14 36h3v1h-3zM19 36h2v1h-2zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM17 37h1v1h-1zM19 37h1v1h-1zM24 37h1v1h-1zM28 37h1v1h-1zM31 37h1v1h-1zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h2v1h-2zM14 38h1v1h-1zM18 38h1v1h-1zM21 38h2v1h-2zM26 38h1v1h-1zM30 38h1v1h-1zM32 38h2v1h-2zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="Experiment">
+          <button type="button" id="cESR" aria-pressed="true" title="Electron probe between the scan coils with pole face rings">ESR</button>
+          <button type="button" id="cPSR" aria-pressed="false" title="Proton probe in the Zeeman magnet">PSR</button>
+        </div>
+        <div class="seg" role="group" aria-label="Hz selector on the console">
+          <button type="button" data-r="LO" aria-pressed="false">LO</button>
+          <button type="button" data-r="MID" aria-pressed="true">MID</button>
+          <button type="button" data-r="HI" aria-pressed="false">HI</button>
+        </div>
+        <div class="seg" role="group" aria-label="Run mode on the cell mount">
+          <button type="button" id="sFast" aria-pressed="true">FAST</button>
+          <button type="button" id="sSlow" aria-pressed="false">SLOW</button>
+        </div>
+        <button type="button" class="btn" id="slowRun" title="One 25 s sweep, recorded on the chart">SLOW RUN</button>
+        <button type="button" class="btn" id="play">Pause</button>
+        <span class="count mono" id="status" aria-live="off"></span>
+      </div>
+      <div class="panes">
+        <div class="pane" id="p3d">
+          <canvas id="flat" tabindex="0" hidden aria-label="Flat drawing of the spin resonance bench. Drag the SENS screw or the FREQ knob up and down; click the Hz selector, the FAST or SLOW switch, or SLOW RUN."></canvas>
+          <p class="tip" id="tip">Drag to turn the bench, scroll to zoom. Drag the SENS screw and FREQ knob up or down.</p>
+        </div>
+        <div class="pane" id="pScope">
+          <canvas id="scope" tabindex="0" aria-label="Dual trace oscilloscope. Channel 1 shows the field ramp, channel 2 the probe signal. Drag cursors A and B or the V cursor, or the channel markers 1 and 2 at the left edge. Keys: A, B or V selects a cursor, 1 or 2 a channel marker; arrows move it, with shift for bigger steps; space pauses."></canvas>
+        </div>
+        <div class="pane" id="pChart">
+          <canvas id="chart" tabindex="0" aria-label="Chart recorder strip for a slow sweep, 5 mm per second, 1 V full scale. Drag the two ruler lines to measure the distance from the start pulse to the peak. Keys: 1 or 2 selects a ruler line, left and right move it, with shift for 1 mm steps."></canvas>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="esr" aria-pressed="true">ESR on DPPH</button>
+          <button type="button" data-p="ref" aria-pressed="false">ESR reference</button>
+          <button type="button" data-p="gly" aria-pressed="false">PSR glycerine</button>
+          <button type="button" data-p="poly" aria-pressed="false">Polystyrene vs glycerine</button>
+          <button type="button" data-p="ptfe" aria-pressed="false">Fluorine in PTFE</button>
+          <button type="button" data-p="tune" aria-pressed="false">Out of tune</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Sample in the probe</h2>
+        <div class="chips" id="samples" role="group" aria-label="Sample phial"></div>
+        <p class="hint" id="sampleHint"></p>
+      </section>
+
+      <section>
+        <h2 id="probeTitle">Electron probe and console</h2>
+        <div>
+          <div class="slider-head"><label for="sens">SENS screw</label><output id="sensOut" class="mono" for="sens"></output></div>
+          <input type="range" id="sens" min="0" max="10" step="0.01" value="6">
+        </div>
+        <div id="freqRow" hidden>
+          <div class="slider-head"><label for="freq">FREQ control</label><output id="freqOut" class="mono" for="freq"></output></div>
+          <input type="range" id="freq" min="0" max="10" step="0.001" value="5">
+        </div>
+        <dl class="readout">
+          <div class="wide"><dt>Frequency meter (probe frequency ÷ 1000)</dt><dd><span class="meter" id="meter">60.00<small>kHz</small></span></dd></div>
+          <div><dt>CH2 signal LED</dt><dd id="ledTxt"><i class="led" id="ledDot"></i>—</dd></div>
+          <div><dt>Stop/Run LED</dt><dd id="runTxt"><i class="led" id="runDot"></i>—</dd></div>
+        </dl>
+        <p class="hint" id="probeHint">Raise SENS slowly. The oscillator is most sensitive just below the point where it stops: the red LED starts to dim there. The point is different on LO, MID and HI.</p>
+      </section>
+
+      <section id="magSec" hidden>
+        <h2>Zeeman magnet</h2>
+        <dl class="readout">
+          <div><dt>Marked on the shroud</dt><dd id="b20">—</dd></div>
+          <div><dt>B<sub>Z</sub> at this temperature</dt><dd id="bz">—</dd></div>
+        </dl>
+        <div>
+          <div class="slider-head"><label for="temp">Thermometer t</label><output id="tempOut" class="mono" for="temp"></output></div>
+          <input type="range" id="temp" min="15" max="30" step="0.1" value="21">
+        </div>
+        <p class="formula">B<sub>Z</sub> = B<sub>20</sub>[1 − (t − 20)·7.5×10⁻⁴]<br>B = B<sub>Z</sub> + B<sub>scan</sub></p>
+      </section>
+
+      <section>
+        <h2>Oscilloscope</h2>
+        <div class="inline"><label class="lab" for="v1">CH1 volts/div</label><select id="v1"><option value="0.05">50 mV</option><option value="0.1">100 mV</option><option value="0.2" selected>200 mV</option><option value="0.5">500 mV</option><option value="1">1 V</option></select></div>
+        <div class="inline"><label class="lab" for="v2">CH2 volts/div</label><select id="v2"><option value="0.05">50 mV</option><option value="0.1">100 mV</option><option value="0.2" selected>200 mV</option><option value="0.5">500 mV</option><option value="1">1 V</option></select></div>
+        <div class="inline"><label class="lab" for="td">Time/div</label><select id="td"><option value="0.001">1 ms</option><option value="0.002">2 ms</option><option value="0.005" selected>5 ms</option><option value="0.01">10 ms</option></select></div>
+        <div class="inline">
+          <span class="lab">Measure with</span>
+          <div class="seg" role="group" aria-label="Measurement">
+            <button type="button" id="mTime" aria-pressed="true">Time A→B</button>
+            <button type="button" id="mVolt" aria-pressed="false">V cursor</button>
+          </div>
+        </div>
+        <dl class="readout">
+          <div><dt>Cursors ΔT = B − A</dt><dd id="dT">—</dd></div>
+          <div><dt>V cursor on CH1</dt><dd id="vC">—</dd></div>
+        </dl>
+        <div class="btnrow">
+          <button type="button" class="btn" id="hold" aria-pressed="false" title="Keep a dim copy of the CH2 trace on the screen">Hold CH2 trace</button>
+          <button type="button" class="btn" id="expTr">Export traces CSV</button>
+        </div>
+        <div class="key">
+          <span><i class="swatch c1"></i>CH1: field ramp, 1 V at full scan</span>
+          <span><i class="swatch c2"></i>CH2: probe signal, absorption is a peak</span>
+          <span><i class="swatch cur"></i>Cursors A, B and V</span>
+          <span><i class="swatch held"></i>Held CH2 trace</span>
+        </div>
+        <p class="hint">Triggered on CH1 falling: the ramp starts about 2 divisions in. Put A at the start of the ramp and B on the peak, then t<sub>R</sub> = ΔT and B<sub>scan</sub> = (t<sub>R</sub>/40 ms)·B<sub>max</sub>. Or put V on CH1 at the time of the peak: B<sub>scan</sub> = V<sub>R</sub>·B<sub>max</sub>/1 V.</p>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="expTab">Export table CSV</button>
+          <button type="button" class="btn" id="clearTab">Clear</button>
+        </div>
+        <p class="note" id="capNote" hidden></p>
+        <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>Sample</th><th>Meter kHz</th><th>Reading</th><th>B mT</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <p class="hint">Capture stores the meter reading and your own cursor or ruler measurement, never the true field. You can edit both. B<sub>max</sub> = 3.67 mT for ESR, 3.2 mT for the PSR scan.</p>
+        <div class="plotbox"><canvas id="plot" role="img" aria-label="Plot of B against frequency from your readings, with a least squares line through the origin."></canvas></div>
+        <dl class="readout" id="fitOut"></dl>
+        <div class="key" id="plotKey"></div>
+      </section>
+
+      <section>
+        <h2>Instrument</h2>
+        <div class="inline">
+          <label class="lab" for="seed">Instrument seed</label>
+          <span><input type="number" class="seed" id="seed" min="1" max="99999" step="1" value="4127"> <button type="button" class="btn" id="newSeed">New</button></span>
+        </div>
+        <div class="toggles">
+          <label><input type="checkbox" id="blind"> Blind: hide the expected answer and accepted values</label>
+          <label id="expectRow"><input type="checkbox" id="expect"> Show expected resonance (instructor check)</label>
+        </div>
+        <p class="hint">Noise and small instrument offsets are simulated and fixed by the seed: the exact LO, MID and HI frequencies, B<sub>20</sub>, room temperature and the SENS thresholds. Share the seed so a class works on the same bench.</p>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint">The bench is modeled on the common spin resonance teaching kit used in many modern physics labs: a console with a marginal oscillator and frequency meter, a cell mount with scan coils on steel cores, an electron probe, a proton probe and a permanent Zeeman magnet.</p>
+        <p class="hint">Exact: hν = gμ<sub>B</sub>B with g = 2.0036 held fixed for DPPH; ν = (γ/2π)B with 42.577478 MHz/T for ¹H (free proton, CODATA 2018) and 40.0776 MHz/T for ¹⁹F (γ = 25.18148×10⁷ rad s⁻¹ T⁻¹, IUPAC 2001). h, μ<sub>B</sub> and μ<sub>N</sub> are CODATA values. Chemical shielding, tens of ppm, is far below this instrument's resolution and is neglected.</p>
+        <p class="hint">Idealized: the scan current ramps exactly linearly (FAST: 40 ms ramp, 1 ms flyback, repeating at 20 Hz; SLOW: one 25 s ramp); the field is uniform over the sample; the scan field adds to the magnet field; the earth's field and stray fields are left out. The flyback is too quick for the detector, so no peak is drawn there. The magnet follows the maker's temperature law B<sub>Z</sub> = B<sub>20</sub>[1 − (t − 20)·7.5×10⁻⁴]. The probe coil is taken at right angles to the field.</p>
+        <p class="hint">Modeled, not computed from first principles: the line shapes are Lorentzians in field with illustrative widths (full width at half maximum: DPPH 0.25 mT, glycerine and water 0.05 mT, polystyrene 0.25 mT for the dipolar broadening of a solid, PTFE 0.20 mT, the plastic coil former 0.30 mT). Heights are chosen to resemble a real trace and scale with the number of spins in the coil; water is weaker than glycerine because its slow relaxation saturates.</p>
+        <p class="hint">The marginal oscillator is a behavioral model: the gain grows as (1 + ε)/(ε + 1 − s/s<sub>th</sub>) with ε = 0.08, the LED dims above 0.85 s<sub>th</sub>, oscillation stops at the threshold s<sub>th</sub>, and the noise rises with the gain and sharply just below the threshold. The frequency meter jitters by one count. All noise is simulated.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  // ==CORE START==
+  // Pure physics and instrument model; no DOM. Imported by node tests.
+  const H_PLANCK = 6.62607015e-34;       // J s, exact
+  const MU_B = 9.2740100657e-24;         // J/T, CODATA 2018
+  const MU_N = 5.0507837461e-27;         // J/T, CODATA 2018
+  const G_DPPH = 2.0036;
+  const GAMMA_H = 42.577478e6;           // Hz/T, free proton gamma/2pi, CODATA 2018
+  const GAMMA_F = 40.0776e6;             // Hz/T, 19F gamma/2pi from gamma = 25.18148e7 rad/s/T (IUPAC 2001)
+  const BMAX = { esr: 3.67e-3, psr: 3.2e-3 };            // T, full scan field, 250 mA
+  const FAST = { ramp: 0.040, flyback: 0.001, period: 0.050 };
+  const TRIG = FAST.ramp + 0.5 * FAST.flyback;           // trigger on CH1 falling through 0.5 V
+  const SLOW = { ramp: 25, lead: 1.5, tail: 1.5, paper: 5, span: 140 };   // s, s, s, mm/s, mm
+  const TEMPCO = 7.5e-4;                 // per degree C
+  const ESR_NOMINAL = { LO: 45e6, MID: 60e6, HI: 75e6 };
+  const PSR_BANDS = { LO: [11.5e6, 12.5e6], MID: [12.5e6, 13.5e6], HI: [13.5e6, 14.5e6] };
+  const SAMPLES = {
+    esr: {
+      dpph:  { cap: '#e8771e', name: 'DPPH', lines: [{ spin: 'e', g: G_DPPH, fwhm: 0.25e-3, amp: 0.075 }] },
+      black: { cap: '#1d1d1f', name: 'Empty reference', lines: [] },
+      water: { cap: '#f4f4f0', name: 'Water', lines: [] },
+    },
+    psr: {
+      gly:   { cap: '#f2d01c', name: 'Glycerine', lines: [{ spin: 'H', fwhm: 0.05e-3, amp: 0.080 }] },
+      poly:  { cap: '#2f9a4a', name: 'Polystyrene', lines: [{ spin: 'H', fwhm: 0.25e-3, amp: 0.030 }] },
+      ptfe:  { cap: '#2d62c8', name: 'PTFE', lines: [{ spin: 'F', fwhm: 0.20e-3, amp: 0.024 }] },
+      black: { cap: '#1d1d1f', name: 'Empty reference', lines: [{ spin: 'H', fwhm: 0.30e-3, amp: 0.006 }] },
+      water: { cap: '#f4f4f0', name: 'Water', lines: [{ spin: 'H', fwhm: 0.05e-3, amp: 0.030 }] },
+    },
+  };
+  const gammaOf = (spin) => spin === 'F' ? GAMMA_F : GAMMA_H;
+  function esrField(nu, g) { return H_PLANCK * nu / ((g || G_DPPH) * MU_B); }
+  function zeemanField(B20, t) { return B20 * (1 - (t - 20) * TEMPCO); }
+  function nmrField(nu, gamma) { return nu / gamma; }
+  // scan field (T) at which each line of a sample resonates; BZ is the Zeeman magnet field (0 for ESR)
+  function resonances(cfg, sample, nu, BZ) {
+    const s = SAMPLES[cfg] && SAMPLES[cfg][sample]; if (!s) return [];
+    return s.lines.map((l) => ({ B0: l.spin === 'e' ? esrField(nu, l.g) : nmrField(nu, gammaOf(l.spin)) - (BZ || 0), fwhm: l.fwhm, amp: l.amp, spin: l.spin }));
+  }
+  // FAST mode scan field at cycle time tc (s): linear ramp, quick linear flyback, then rest at zero
+  function rampFast(tc, Bmax) {
+    const P = FAST.period; tc = ((tc % P) + P) % P;
+    if (tc < FAST.ramp) return { B: Bmax * tc / FAST.ramp, ramp: true };
+    if (tc < FAST.ramp + FAST.flyback) return { B: Bmax * (1 - (tc - FAST.ramp) / FAST.flyback), ramp: false };
+    return { B: 0, ramp: false };
+  }
+  function rampSlow(t, Bmax) { return t <= 0 ? 0 : t >= SLOW.ramp ? Bmax : Bmax * t / SLOW.ramp; }
+  // time into the ramp at which the field reaches Bres, or null when the resonance lies outside the sweep
+  function resonanceTime(Bres, Bmax, T) { return (Bres >= 0 && Bres <= Bmax) ? Bres / Bmax * T : null; }
+  function fieldFromVoltage(V, Bmax) { return V * Bmax / 1; }    // CH1 is 1 V at full scan
+  function fieldFromTime(tR, T, Bmax) { return tR / T * Bmax; }
+  function lorentz(B, B0, fwhm) { const u = 2 * (B - B0) / fwhm; return 1 / (1 + u * u); }
+  // behavioral marginal oscillator: sens and thr in screw turns
+  function oscillator(sens, thr) {
+    const x = sens / thr;
+    if (!(x < 1)) return { on: false, led: 0, gain: 0, noise: 0.002, x };
+    const eps = 0.08, gain = (1 + eps) / (eps + 1 - x);
+    const led = x < 0.85 ? 1 : Math.sqrt((1 - x) / 0.15);
+    const near = Math.max(0, (x - 0.975) / 0.025);
+    return { on: true, led, gain, noise: 0.004 + 0.0015 * gain + 0.04 * near * near, x };
+  }
+  // noiseless CH2 (V) for scan field B; base is the detector's DC level
+  function ch2Clean(B, res, osc, base) {
+    if (!osc.on) return 0;
+    let v = base;
+    for (const r of res) v += osc.gain * r.amp * lorentz(B, r.B0, r.fwhm);
+    return v;
+  }
+  // noiseless FAST trace sample at screen time ts after the trigger: [CH1 (V), CH2 (V), time into the ramp]
+  function fastSample(ts, Bmax, res, osc, base) {
+    const P = FAST.period, tc = ((TRIG + ts) % P + P) % P, r = rampFast(tc, Bmax);
+    return [r.B / Bmax, osc.on ? (r.ramp ? ch2Clean(r.B, res, osc, base) : base) : 0, r.ramp ? tc : null];
+  }
+  // least squares line through the origin, y = k x
+  function fitOrigin(x, y) {
+    let sxy = 0, sxx = 0; const n = Math.min(x.length, y.length);
+    for (let i = 0; i < n; i++) { sxy += x[i] * y[i]; sxx += x[i] * x[i]; }
+    if (!n || !sxx) return null;
+    const k = sxy / sxx; let ss = 0;
+    for (let i = 0; i < n; i++) ss += (y[i] - k * x[i]) ** 2;
+    const se = n > 1 ? Math.sqrt(ss / (n - 1) / sxx) : NaN;
+    return { k, se, n };
+  }
+  function gFromSlope(k) { return H_PLANCK / (MU_B * k); }           // k = B/nu in T/Hz
+  function gammaFromSlope(k) { return 1 / k; }                       // Hz/T
+  function gNuclearFromSlope(k) { return H_PLANCK / (MU_N * k); }
+  function mulberry(seed) { let s = seed >>> 0; return () => { s += 0x6D2B79F5; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function gauss(r) { return (r() + r() + r() - 1.5) * 2; }   // unit variance, bounded
+  // the small offsets of one particular bench, fixed by its seed
+  function instrument(seed) {
+    const r = mulberry((seed >>> 0) * 7919 + 13), u = () => 2 * r() - 1;
+    const esrNu = {}, thr = { esr: {}, psr: {} }, bandOff = {};
+    for (const k of ['LO', 'MID', 'HI']) esrNu[k] = ESR_NOMINAL[k] * (1 + 0.03 * u());
+    const T0 = { esr: { LO: 6.2, MID: 7.0, HI: 7.8 }, psr: { LO: 6.6, MID: 5.8, HI: 7.4 } };
+    for (const c of ['esr', 'psr']) for (const k of ['LO', 'MID', 'HI']) thr[c][k] = T0[c][k] + 0.4 * u();
+    for (const k of ['LO', 'MID', 'HI']) bandOff[k] = 0.02e6 * u();
+    return { seed, esrNu, thr, bandOff, B20: 0.300 + 0.003 * u(), room: 21 + 2.5 * u(), base: 0.08 + 0.03 * u() };
+  }
+  function psrFreq(range, dial, inst) { const b = PSR_BANDS[range]; return b[0] + (b[1] - b[0]) * dial / 10 + inst.bandOff[range]; }
+  function psrDial(range, nu, inst) { const b = PSR_BANDS[range]; return (nu - inst.bandOff[range] - b[0]) / (b[1] - b[0]) * 10; }
+  // ==CORE END==
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const RANGES = ['LO', 'MID', 'HI'];
+
+  // ---------- state ----------
+  let inst = instrument(4127);
+  const S = {
+    cfg: 'esr', range: 'MID', sweep: 'fast', preset: 'esr',
+    sampleBy: { esr: 'dpph', psr: 'gly' },
+    sens: { esr: 6.6, psr: 5.5 }, dial: 5, temp: 21,
+    sc: { v1: 0.2, v2: 0.2, td: 0.005, pos1: -3.6, pos2: -0.2, A: 0.0095, B: 0.025, V: 0.5, measure: 'time', sel: 'B' },
+    ch: { r1: 2, r2: 40, sel: 2 },
+    playing: true, blind: false, expect: false,
+    hold: null, rows: [],
+  };
+  const slow = { running: false, t: 0, rec: new Float32Array(SLOW.span * 20).fill(NaN), filled: 0, done: false };
+  let sweepN = 0, sweepClock = 0, flickN = 0, flickClock = 0;
+  const history = [];   // last few FAST sweeps for phosphor persistence
+
+  const cfgSamples = () => SAMPLES[S.cfg];
+  const sample = () => S.sampleBy[S.cfg];
+  const Bmax = () => BMAX[S.cfg];
+  const nu = () => S.cfg === 'esr' ? inst.esrNu[S.range] : psrFreq(S.range, S.dial, inst);
+  const BZ = () => S.cfg === 'psr' ? zeemanField(inst.B20, S.temp) : 0;
+  const thr = () => inst.thr[S.cfg][S.range];
+  const osc = () => oscillator(S.sens[S.cfg], thr());
+  const res = () => resonances(S.cfg, sample(), nu(), BZ());
+  const digits = () => S.cfg === 'esr' ? 2 : 3;
+  function meterValue() {   // what the console shows, in kHz (probe frequency / 1000), with one count of jitter
+    const d = digits(), q = 10 ** d, r = mulberry(inst.seed * 31 + flickN)(); const j = r < 0.18 ? -1 : r > 0.82 ? 1 : 0;
+    return (Math.round(nu() / 1e6 * q) + j) / q;
+  }
+  let meterShown = 60;
+
+  // ---------- tokens ----------
+  let T = {};
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), bezel: g('--bezel'), bezelInk: g('--bezel-ink'), screen: g('--screen'),
+      paper: g('--paper'), paperGrid: g('--paper-grid'), paperMajor: g('--paper-major'), pen: g('--pen'), benchBg: g('--bench-bg'),
+      mono: g('--font-mono'), ui: g('--font-ui') };
+  }
+  const C1 = '#f2c94c', C2 = '#4fd8f0', CUR = '#ff9f5a';
+  const projOn = () => document.documentElement.getAttribute('data-projector') === 'on';
+  const labScale = (W, H) => projOn() ? Math.min(1.35, Math.max(1, Math.min(W, H) / 300)) : 1;
+
+  // ---------- canvases ----------
+  const dpr = () => Math.min(2, window.devicePixelRatio || 1);
+  const cans = { scope: $('scope'), chart: $('chart'), plot: $('plot'), flat: $('flat') };
+  const ctxs = {}; for (const k in cans) ctxs[k] = cans[k].getContext('2d');
+  const dims = { scope: [0, 0], chart: [0, 0], plot: [0, 0], flat: [0, 0], gl: [0, 0] };
+  function sizeCanvas(k) {
+    const c = cans[k], p = c.parentElement, w = p.clientWidth, h = p.clientHeight, d = dpr();
+    if (!w || !h) { dims[k] = [0, 0]; return; }
+    c.width = Math.round(w * d); c.height = Math.round(h * d); dims[k] = [w, h];
+  }
+  function resize() {
+    for (const k of ['scope', 'chart', 'plot', 'flat']) sizeCanvas(k);
+    if (G.ready) { const p = $('p3d'); dims.gl = [p.clientWidth, p.clientHeight]; G.renderer.setPixelRatio(dpr()); G.renderer.setSize(dims.gl[0], dims.gl[1], false); G.dirty = true; }
+    dirtyAll();
+  }
+
+  // ---------- traces ----------
+  let scopeData = null;
+  function computeSweep() {
+    const N = 900, span = 10 * S.sc.td, o = osc(), rs = res(), bm = Bmax(), base = inst.base;
+    const rng = mulberry(inst.seed * 1000003 + sweepN * 7 + 1);
+    const ch1 = new Float32Array(N), ch2 = new Float32Array(N);
+    let slowB = null;
+    if (S.sweep === 'slow') slowB = slow.running ? rampSlow(slow.t - SLOW.lead, bm) : 0;
+    for (let i = 0; i < N; i++) {
+      const ts = span * i / (N - 1);
+      let v1, v2;
+      if (slowB === null) { const s = fastSample(ts, bm, rs, o, base); v1 = s[0]; v2 = s[1]; }
+      else { v1 = slowB / bm; v2 = o.on ? ch2Clean(slowB, rs, o, base) : 0; }
+      ch1[i] = v1 + 0.003 * gauss(rng);
+      ch2[i] = v2 + (o.on ? o.noise : 0.002) * gauss(rng);
+    }
+    scopeData = { ch1, ch2, span, N };
+    history.unshift(scopeData); if (history.length > 3) history.length = 3;
+    dirty.scope = true; G.screenDirty = true;
+  }
+  function freshSweeps() { history.length = 0; computeSweep(); }
+
+  // SLOW sweep: the recorder runs for the lead, the 25 s ramp and a short tail, 20 samples per mm
+  function slowRun() {
+    if (S.sweep !== 'slow') setSweep('slow');
+    slow.running = true; slow.t = 0; slow.rec.fill(NaN); slow.filled = 0; slow.done = false;
+    if (!S.playing) setPlaying(true);
+    syncUI(); dirty.chart = true;
+  }
+  function advanceSlow(dt) {
+    const total = SLOW.lead + SLOW.ramp + SLOW.tail;
+    slow.t = Math.min(total, slow.t + dt);
+    const upto = Math.min(slow.rec.length, Math.floor(slow.t * SLOW.paper * 20));
+    const o = osc(), rs = res(), bm = Bmax(), base = inst.base;
+    for (let i = slow.filled; i < upto; i++) {
+      const mm = i / 20, t = mm / SLOW.paper - SLOW.lead, B = rampSlow(t, bm);
+      const rng = mulberry(inst.seed * 7717 + i);
+      let v = (o.on ? ch2Clean(B, rs, o, base) : 0) + 0.45 * (o.on ? o.noise : 0.002) * gauss(rng);
+      if (Math.abs(mm - SLOW.lead * SLOW.paper - 0.25) < 0.25) v += 0.55;   // start pulse
+      slow.rec[i] = Math.max(0, Math.min(1, v));
+    }
+    slow.filled = Math.max(slow.filled, upto);
+    if (slow.t >= total) { slow.running = false; slow.done = true; syncUI(); }
+    dirty.chart = true; G.paperDirty = true;
+  }
+
+  // ---------- oscilloscope ----------
+  let sg = null;   // screen geometry
+  const scopeHot = { id: null }; let scopeDrag = null;
+  function drawScope() {
+    const [W, H] = dims.scope; if (!W || !H) return;
+    const ctx = ctxs.scope, ps = labScale(W, H), d = dpr();
+    ctx.setTransform(d, 0, 0, d, 0, 0);
+    ctx.fillStyle = T.bezel; ctx.fillRect(0, 0, W, H);
+    const fs = 11 * ps, topH = 40 * ps, botH = 26 * ps, side = 26 * ps;
+    let sw = W - 2 * side, sh = sw * 0.8; const avH = H - topH - botH;
+    if (sh > avH) { sh = avH; sw = sh * 1.25; }
+    const sx = Math.round((W - sw) / 2), sy = Math.round(topH + (avH - sh) / 2);
+    sg = { sx, sy, sw, sh, dx: sw / 10, dy: sh / 8, span: 10 * S.sc.td };
+    const X = (t) => sx + t / sg.span * sw, Y = (div) => sy + sh / 2 - div * sg.dy;
+    // screen with a faint phosphor bloom
+    ctx.fillStyle = T.screen; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(sx - 4, sy - 4, sw + 8, sh + 8, 8) : ctx.rect(sx - 4, sy - 4, sw + 8, sh + 8); ctx.fill();
+    const gr = ctx.createRadialGradient(sx + sw / 2, sy + sh / 2, 0, sx + sw / 2, sy + sh / 2, sw * 0.6);
+    gr.addColorStop(0, 'rgba(60,140,100,0.16)'); gr.addColorStop(1, 'rgba(60,140,100,0)');
+    ctx.fillStyle = gr; ctx.fillRect(sx, sy, sw, sh);
+    // graticule
+    ctx.strokeStyle = 'rgba(150,210,180,0.17)'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let i = 0; i <= 10; i++) { const x = Math.round(sx + i * sg.dx) + 0.5; ctx.moveTo(x, sy); ctx.lineTo(x, sy + sh); }
+    for (let j = 0; j <= 8; j++) { const y = Math.round(sy + j * sg.dy) + 0.5; ctx.moveTo(sx, y); ctx.lineTo(sx + sw, y); }
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(150,210,180,0.32)'; ctx.beginPath();
+    const cx = Math.round(sx + sw / 2) + 0.5, cy = Math.round(sy + sh / 2) + 0.5;
+    for (let i = 0; i <= 50; i++) { const x = Math.round(sx + i * sg.dx / 5) + 0.5; ctx.moveTo(x, cy - 3); ctx.lineTo(x, cy + 3); }
+    for (let j = 0; j <= 40; j++) { const y = Math.round(sy + j * sg.dy / 5) + 0.5; ctx.moveTo(cx - 3, y); ctx.lineTo(cx + 3, y); }
+    ctx.stroke();
+
+    ctx.save(); ctx.beginPath(); ctx.rect(sx, sy, sw, sh); ctx.clip();
+    // held trace
+    if (S.hold) {
+      const h = S.hold; ctx.strokeStyle = '#6f8f7f'; ctx.lineWidth = 1.4 * ps; ctx.globalAlpha = 0.8; ctx.beginPath();
+      for (let i = 0; i < h.ch2.length; i++) { const t = h.span * i / (h.ch2.length - 1); if (t > sg.span) break; const x = X(t), y = Y(S.sc.pos2 + h.ch2[i] / S.sc.v2); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      ctx.stroke(); ctx.globalAlpha = 1;
+    }
+    // expected resonance (instructor check)
+    if (S.expect && !S.blind && S.sweep === 'fast') {
+      ctx.setLineDash([2 * ps, 4 * ps]); ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = 1;
+      for (const r of res()) {
+        const tR = resonanceTime(r.B0, Bmax(), FAST.ramp); if (tR === null) continue;
+        for (let tt = FAST.period - TRIG + tR; tt <= sg.span; tt += FAST.period) { ctx.beginPath(); ctx.moveTo(X(tt), sy); ctx.lineTo(X(tt), sy + sh); ctx.stroke(); }
+      }
+      ctx.setLineDash([]);
+    }
+    // traces with persistence: older sweeps fainter
+    const drawTrace = (arr, span, col, pos, vd, alpha) => {
+      const n = arr.length, path = new Path2D();
+      for (let i = 0; i < n; i++) { const x = X(span * i / (n - 1)), y = Y(pos + arr[i] / vd); i ? path.lineTo(x, y) : path.moveTo(x, y); }
+      ctx.strokeStyle = col; ctx.globalAlpha = 0.18 * alpha; ctx.lineWidth = 5 * ps; ctx.stroke(path);
+      ctx.globalAlpha = alpha; ctx.lineWidth = 1.5 * ps; ctx.stroke(path); ctx.globalAlpha = 1;
+    };
+    for (let h = history.length - 1; h >= 0; h--) {
+      const sd = history[h], a = h === 0 ? 1 : h === 1 ? 0.35 : 0.15;
+      if (Math.abs(sd.span - sg.span) > 1e-9) continue;
+      drawTrace(sd.ch1, sd.span, C1, S.sc.pos1, S.sc.v1, a);
+      drawTrace(sd.ch2, sd.span, C2, S.sc.pos2, S.sc.v2, a);
+    }
+    // cursors
+    const hot = (id) => (scopeDrag && scopeDrag.id === id) || (!scopeDrag && scopeHot.id === id);
+    const meas = S.sc.measure;
+    ctx.setLineDash([5 * ps, 4 * ps]);
+    for (const id of ['A', 'B']) {
+      const x = Math.round(X(S.sc[id])) + 0.5, on = meas === 'time';
+      ctx.strokeStyle = CUR; ctx.globalAlpha = on ? (hot(id) ? 1 : 0.8) : 0.3; ctx.lineWidth = (hot(id) ? 2 : 1.2) * ps;
+      ctx.beginPath(); ctx.moveTo(x, sy); ctx.lineTo(x, sy + sh); ctx.stroke();
+    }
+    { const y = Math.round(Y(S.sc.pos1 + S.sc.V / S.sc.v1)) + 0.5, on = meas === 'volt';
+      ctx.strokeStyle = CUR; ctx.globalAlpha = on ? (hot('V') ? 1 : 0.8) : 0.3; ctx.lineWidth = (hot('V') ? 2 : 1.2) * ps;
+      ctx.beginPath(); ctx.moveTo(sx, y); ctx.lineTo(sx + sw, y); ctx.stroke(); }
+    ctx.setLineDash([]); ctx.globalAlpha = 1;
+    ctx.restore();
+    // cursor tabs (grips) just outside the screen
+    ctx.font = `600 ${fs}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const tab = (x, y, w, h, txt, on, hotp) => {
+      ctx.globalAlpha = on ? 1 : 0.45; ctx.fillStyle = hotp ? '#ffd2a8' : CUR;
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - w / 2, y - h / 2, w, h, 3) : ctx.rect(x - w / 2, y - h / 2, w, h); ctx.fill();
+      ctx.fillStyle = '#1b1f25'; ctx.fillText(txt, x, y + 0.5); ctx.globalAlpha = 1;
+    };
+    for (const id of ['A', 'B']) tab(X(S.sc[id]), sy - 9 * ps, 14 * ps, 13 * ps, id, meas === 'time', hot(id));
+    tab(sx + sw + 13 * ps, Y(S.sc.pos1 + S.sc.V / S.sc.v1), 14 * ps, 13 * ps, 'V', meas === 'volt', hot('V'));
+    // channel ground markers, draggable
+    for (const [id, col, pos] of [['g1', C1, S.sc.pos1], ['g2', C2, S.sc.pos2]]) {
+      const y = Y(pos), x0 = sx - 5; if (y < sy - 2 || y > sy + sh + 2) continue;
+      ctx.fillStyle = col; ctx.globalAlpha = hot(id) ? 1 : 0.85;
+      ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x0 - 9 * ps, y - 7 * ps); ctx.lineTo(x0 - 20 * ps, y - 7 * ps); ctx.lineTo(x0 - 20 * ps, y + 7 * ps); ctx.lineTo(x0 - 9 * ps, y + 7 * ps); ctx.closePath(); ctx.fill();
+      if (hot(id)) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.2; ctx.stroke(); }
+      ctx.fillStyle = '#1b1f25'; ctx.globalAlpha = 1; ctx.fillText(id[1], x0 - 13 * ps, y + 0.5);
+    }
+    // panel legends
+    const vtxt = (v) => v < 1 ? `${Math.round(v * 1000)} mV` : `${v} V`;
+    ctx.textBaseline = 'middle'; ctx.font = `${fs}px ${T.mono}`;
+    const top1 = `CH1 ${vtxt(S.sc.v1)}/div DC`, top2 = `CH2 ${vtxt(S.sc.v2)}/div DC`, top3 = `${Math.round(S.sc.td * 1000)} ms/div`, top4 = 'TRIG CH1 ↘';
+    const yT = 12 * ps;
+    ctx.textAlign = 'left'; ctx.fillStyle = C1; ctx.fillText(top1, sx, Math.max(8 * ps, yT));
+    let xx = sx + ctx.measureText(top1 + '  ').width; ctx.fillStyle = C2; ctx.fillText(top2, xx, Math.max(8 * ps, yT));
+    xx += ctx.measureText(top2 + '  ').width; ctx.fillStyle = T.bezelInk;
+    const rest = `${top3}  ${top4}`;
+    if (xx + ctx.measureText(rest).width < sx + sw) ctx.fillText(rest, xx, Math.max(8 * ps, yT));
+    else if (xx + ctx.measureText(top3).width < sx + sw) ctx.fillText(top3, xx, Math.max(8 * ps, yT));
+    const yb = sy + sh + 4 + (H - (sy + sh + 4)) / 2;
+    const dT = (S.sc.B - S.sc.A) * 1000, vC = S.sc.V;
+    const b1 = S.sweep === 'slow' ? (slow.running ? 'SLOW sweep: CH1 rises over 25 s, untriggered' : 'SLOW: waiting for SLOW RUN') : `A→B ΔT ${dT.toFixed(2)} ms`;
+    const b2 = S.sweep === 'slow' ? '' : `V ${vC.toFixed(3)} V`;
+    ctx.textAlign = 'left'; ctx.fillStyle = CUR; ctx.fillText(b1, sx, yb);
+    if (b2) { ctx.textAlign = 'right'; const nt = '  noise simulated'; const wide = ctx.measureText(b2 + nt).width + ctx.measureText(b1).width + 20 < sw; ctx.fillText(b2, sx + sw - (wide ? ctx.measureText(nt).width : 0), yb); if (wide) { ctx.fillStyle = T.bezelInk; ctx.globalAlpha = 0.6; ctx.fillText(nt, sx + sw, yb); ctx.globalAlpha = 1; } }
+    if (!osc().on) {   // oscillator stopped: say it on the screen, on a halo box
+      const msg = 'CH2 flat: the oscillator has stopped (SENS above threshold)';
+      ctx.font = `600 ${fs}px ${T.ui}`; const w = Math.min(sw - 16, ctx.measureText(msg).width + 14);
+      ctx.fillStyle = 'rgba(4,17,12,0.85)'; ctx.fillRect(sx + (sw - w) / 2, sy + 10, w, 20 * ps);
+      ctx.fillStyle = '#ffb3a6'; ctx.textAlign = 'center'; ctx.fillText(msg, sx + sw / 2, sy + 10 + 10 * ps, sw - 20);
+    }
+  }
+  function scopeHandles() {
+    if (!sg) return [];
+    const X = (t) => sg.sx + t / sg.span * sg.sw, Y = (div) => sg.sy + sg.sh / 2 - div * sg.dy, out = [];
+    if (S.sweep === 'fast') {
+      for (const id of ['A', 'B']) out.push({ id, cursor: 'ew-resize', v: X(S.sc[id]), tab: [X(S.sc[id]), sg.sy - 9] });
+      out.push({ id: 'V', cursor: 'ns-resize', h: Y(S.sc.pos1 + S.sc.V / S.sc.v1), tab: [sg.sx + sg.sw + 13, Y(S.sc.pos1 + S.sc.V / S.sc.v1)] });
+    }
+    out.push({ id: 'g1', cursor: 'ns-resize', pt: [sg.sx - 18, Y(S.sc.pos1)] });
+    out.push({ id: 'g2', cursor: 'ns-resize', pt: [sg.sx - 18, Y(S.sc.pos2)] });
+    return out;
+  }
+  function scopeHit(ev) {
+    const r = cans.scope.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 8 * labScale(...dims.scope) * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of scopeHandles()) {
+      let d = Infinity;
+      if (h.pt) d = Math.hypot(x - h.pt[0], y - h.pt[1]) - 6;
+      else {
+        if (h.tab) d = Math.hypot(x - h.tab[0], y - h.tab[1]) - 6;
+        if (h.v !== undefined && y >= sg.sy - 16 && y <= sg.sy + sg.sh) d = Math.min(d, Math.abs(x - h.v) + 2);
+        if (h.h !== undefined && x >= sg.sx && x <= sg.sx + sg.sw + 22) d = Math.min(d, Math.abs(y - h.h) + 2);
+        if ((h.id === 'V') !== (S.sc.measure === 'volt')) d += 3;   // the active measurement wins a tie
+      }
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  function setScopeParam(id, x, y) {
+    const span = sg.span;
+    if (id === 'A' || id === 'B') { const st = S.sc.td / 100; S.sc[id] = clamp(Math.round((x - sg.sx) / sg.sw * span / st) * st, 0, span); }
+    else if (id === 'V') { const div = (sg.sy + sg.sh / 2 - y) / sg.dy, st = S.sc.v1 / 100; S.sc.V = Math.round(clamp((div - S.sc.pos1) * S.sc.v1, (-4 - S.sc.pos1) * S.sc.v1, (4 - S.sc.pos1) * S.sc.v1) / st) * st; }
+    else { const div = clamp(Math.round((sg.sy + sg.sh / 2 - y) / sg.dy * 10) / 10, -4, 4); S.sc[id === 'g1' ? 'pos1' : 'pos2'] = div; }
+    S.sc.sel = id; cursorOuts(); dirty.scope = true;
+  }
+  let qScope = null, qFrame = false;
+  cans.scope.addEventListener('pointerdown', (e) => {
+    const h = scopeHit(e); if (!h) return;
+    if (h.id === 'A' || h.id === 'B') setMeasure('time'); else if (h.id === 'V') setMeasure('volt');
+    scopeDrag = { id: h.id }; cans.scope.setPointerCapture(e.pointerId); cans.scope.focus(); e.preventDefault(); dirty.scope = true;
+  });
+  cans.scope.addEventListener('pointermove', (e) => {
+    if (!scopeDrag) {
+      const h = scopeHit(e), id = h ? h.id : null;
+      if (id !== scopeHot.id) { scopeHot.id = id; dirty.scope = true; }
+      cans.scope.style.cursor = h ? h.cursor : 'default'; return;
+    }
+    const r = cans.scope.getBoundingClientRect(); qScope = [e.clientX - r.left, e.clientY - r.top];
+    if (qFrame) return; qFrame = true;
+    requestAnimationFrame(() => { qFrame = false; if (scopeDrag && qScope) setScopeParam(scopeDrag.id, qScope[0], qScope[1]); qScope = null; });
+  });
+  const endScope = () => { if (scopeDrag) { scopeDrag = null; dirty.scope = true; } };
+  cans.scope.addEventListener('pointerup', endScope); cans.scope.addEventListener('pointercancel', endScope);
+  cans.scope.addEventListener('pointerleave', () => { if (!scopeDrag && scopeHot.id) { scopeHot.id = null; dirty.scope = true; } });
+  cans.scope.addEventListener('keydown', (e) => {
+    const k = e.key, big = e.shiftKey ? 10 : 1;
+    if (/^[abvABV]$/.test(k)) { const id = k.toUpperCase(); S.sc.sel = id; if (id === 'V') setMeasure('volt'); else setMeasure('time'); }
+    else if (k === '1' || k === '2') S.sc.sel = 'g' + k;
+    else if (k === 'ArrowLeft' || k === 'ArrowRight') {
+      const id = S.sc.sel === 'A' || S.sc.sel === 'B' ? S.sc.sel : 'B', st = S.sc.td / 100 * big;
+      S.sc[id] = clamp(+(S.sc[id] + (k === 'ArrowRight' ? st : -st)).toFixed(7), 0, 10 * S.sc.td); S.sc.sel = id;
+    } else if (k === 'ArrowUp' || k === 'ArrowDown') {
+      const s = k === 'ArrowUp' ? 1 : -1, id = S.sc.sel;
+      if (id === 'g1' || id === 'g2') { const p = id === 'g1' ? 'pos1' : 'pos2'; S.sc[p] = clamp(+(S.sc[p] + s * 0.1 * big).toFixed(2), -4, 4); }
+      else { S.sc.sel = 'V'; setMeasure('volt'); S.sc.V = clamp(+(S.sc.V + s * S.sc.v1 / 100 * big).toFixed(5), (-4 - S.sc.pos1) * S.sc.v1, (4 - S.sc.pos1) * S.sc.v1); }
+    } else if (k === ' ') setPlaying(!S.playing);
+    else return;
+    e.preventDefault(); cursorOuts(); dirty.scope = true;
+  });
+
+  // ---------- chart recorder ----------
+  let cg = null; const chartHot = { id: null }; let chartDrag = null;
+  function drawChart() {
+    const [W, H] = dims.chart; if (!W || !H) return;
+    const ctx = ctxs.chart, ps = labScale(W, H), d = dpr();
+    ctx.setTransform(d, 0, 0, d, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const fs = 11 * ps, padX = 14 * ps, topH = 50 * ps, botH = 34 * ps;
+    const px0 = padX, pw = W - 2 * padX, py0 = topH, ph = Math.max(40, H - topH - botH);
+    const mm = pw / SLOW.span;
+    cg = { px0, pw, py0, ph, mm };
+    const X = (m) => px0 + m * mm, Y = (v) => py0 + ph - (0.06 + 0.88 * v) * ph;
+    ctx.font = `600 ${fs}px ${T.ui}`; ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText('Chart recorder', px0, 13 * ps);
+    ctx.font = `${10 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right';
+    ctx.fillText('5 mm/s · 1 V full scale', px0 + pw, 13 * ps);
+    // paper
+    ctx.fillStyle = T.paper; ctx.fillRect(px0, py0, pw, ph);
+    ctx.lineWidth = 1;
+    const minorStep = mm < 2.2 ? 5 : 1;
+    ctx.strokeStyle = T.paperGrid; ctx.globalAlpha = 0.55; ctx.beginPath();
+    for (let m = 0; m <= SLOW.span; m += minorStep) { if (m % 10 === 0) continue; const x = Math.round(X(m)) + 0.5; ctx.moveTo(x, py0); ctx.lineTo(x, py0 + ph); }
+    for (let v = 0; v <= 1.0001; v += 0.05) { const y = Math.round(Y(v)) + 0.5; ctx.moveTo(px0, y); ctx.lineTo(px0 + pw, y); }
+    ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.paperMajor; ctx.beginPath();
+    for (let m = 0; m <= SLOW.span; m += 10) { const x = Math.round(X(m)) + 0.5; ctx.moveTo(x, py0); ctx.lineTo(x, py0 + ph); }
+    for (let v = 0; v <= 1.0001; v += 0.25) { const y = Math.round(Y(v)) + 0.5; ctx.moveTo(px0, y); ctx.lineTo(px0 + pw, y); }
+    ctx.stroke();
+    // mm scale under the paper
+    ctx.fillStyle = T.muted; ctx.font = `${9.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const lstep = mm * 20 < 34 * ps ? 40 : 20;
+    for (let m = 0; m <= SLOW.span; m += lstep) ctx.fillText(String(m), X(m), py0 + ph + 3);
+    ctx.textAlign = 'right'; ctx.fillText('mm', px0 + pw, py0 + ph + 3 + 11 * ps);
+    // expected position (instructor check)
+    if (S.expect && !S.blind) {
+      ctx.setLineDash([2, 3]); ctx.strokeStyle = T.muted; ctx.beginPath();
+      for (const r of res()) { const tR = resonanceTime(r.B0, Bmax(), SLOW.ramp); if (tR === null) continue; const x = X((SLOW.lead + tR) * SLOW.paper); ctx.moveTo(x, py0); ctx.lineTo(x, py0 + ph); }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    // ink
+    const rec = slow.rec; ctx.strokeStyle = T.pen; ctx.lineWidth = 1.3 * ps; ctx.beginPath(); let pen = false;
+    for (let i = 0; i < slow.filled; i++) { const v = rec[i]; if (v !== v) { pen = false; continue; } const x = X(i / 20), y = Y(v); pen ? ctx.lineTo(x, y) : ctx.moveTo(x, y); pen = true; }
+    ctx.stroke();
+    if (slow.running) {   // pen tip
+      const i = Math.max(0, slow.filled - 1), x = X(i / 20), y = Y(rec[i] === rec[i] ? rec[i] : 0);
+      ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(x, y, 3.2 * ps, 0, 2 * Math.PI); ctx.fill();
+    }
+    if (!slow.filled) {
+      ctx.font = `${11 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const msg = 'Choose SLOW and press SLOW RUN to record a 25 s sweep', mw = Math.min(pw - 16, ctx.measureText(msg).width + 16);
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.92; ctx.fillRect(px0 + (pw - mw) / 2, py0 + ph / 2 - 11 * ps, mw, 22 * ps); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.ink; ctx.fillText(msg, px0 + pw / 2, py0 + ph / 2, pw - 24);
+    }
+    // ruler lines, draggable
+    const hot = (id) => (chartDrag && chartDrag.id === id) || (!chartDrag && chartHot.id === id);
+    for (const id of [1, 2]) {
+      const x = Math.round(X(S.ch['r' + id])) + 0.5, on = hot(id);
+      ctx.strokeStyle = T.accent; ctx.lineWidth = (on ? 2.2 : 1.3) * ps; ctx.globalAlpha = on ? 1 : 0.85;
+      ctx.beginPath(); ctx.moveTo(x, py0 - 6 * ps); ctx.lineTo(x, py0 + ph); ctx.stroke();
+      ctx.fillStyle = T.accent; ctx.beginPath(); ctx.moveTo(x, py0 - 1); ctx.lineTo(x - 6 * ps, py0 - 11 * ps); ctx.lineTo(x + 6 * ps, py0 - 11 * ps); ctx.closePath(); ctx.fill();
+      ctx.globalAlpha = 1; ctx.fillStyle = T.canvas; ctx.font = `600 ${8.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(id), x, py0 - 7.5 * ps);
+    }
+    const dmm = S.ch.r2 - S.ch.r1, ttxt = `ruler ${dmm.toFixed(1)} mm → ${(dmm / SLOW.paper).toFixed(2)} s`;
+    ctx.font = `600 ${10.5 * ps}px ${T.mono}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillStyle = T.accent;
+    ctx.fillText(ttxt, px0, 28 * ps);
+    if (slow.running || slow.filled) {
+      ctx.textAlign = 'right'; ctx.fillStyle = T.muted; ctx.font = `${10 * ps}px ${T.mono}`;
+      const tr = Math.max(0, Math.min(SLOW.ramp, slow.t - SLOW.lead));
+      ctx.fillText(slow.running ? `ramp ${tr.toFixed(1)} of 25 s` : 'sweep done', px0 + pw, 28 * ps);
+    }
+  }
+  function chartHit(ev) {
+    if (!cg) return null;
+    const r = cans.chart.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 8 * labScale(...dims.chart) * (ev.pointerType === 'touch' ? 2 : 1);
+    if (y < cg.py0 - 18 || y > cg.py0 + cg.ph + 4) return null;
+    let best = null, bd = tol;
+    for (const id of [1, 2]) { const d = Math.abs(x - (cg.px0 + S.ch['r' + id] * cg.mm)); if (d < bd) { bd = d; best = id; } }
+    return best;
+  }
+  function setRuler(id, x) { S.ch['r' + id] = clamp(Math.round((x - cg.px0) / cg.mm * 10) / 10, 0, SLOW.span); S.ch.sel = id; dirty.chart = true; }
+  let qChart = null, qcFrame = false;
+  cans.chart.addEventListener('pointerdown', (e) => { const h = chartHit(e); if (!h) return; chartDrag = { id: h }; cans.chart.setPointerCapture(e.pointerId); cans.chart.focus(); e.preventDefault(); dirty.chart = true; });
+  cans.chart.addEventListener('pointermove', (e) => {
+    if (!chartDrag) { const h = chartHit(e); if (h !== chartHot.id) { chartHot.id = h; dirty.chart = true; } cans.chart.style.cursor = h ? 'ew-resize' : 'default'; return; }
+    const r = cans.chart.getBoundingClientRect(); qChart = e.clientX - r.left;
+    if (qcFrame) return; qcFrame = true;
+    requestAnimationFrame(() => { qcFrame = false; if (chartDrag && qChart !== null) setRuler(chartDrag.id, qChart); qChart = null; });
+  });
+  const endChart = () => { if (chartDrag) { chartDrag = null; dirty.chart = true; } };
+  cans.chart.addEventListener('pointerup', endChart); cans.chart.addEventListener('pointercancel', endChart);
+  cans.chart.addEventListener('pointerleave', () => { if (!chartDrag && chartHot.id) { chartHot.id = null; dirty.chart = true; } });
+  cans.chart.addEventListener('keydown', (e) => {
+    const k = e.key;
+    if (k === '1' || k === '2') S.ch.sel = +k;
+    else if (k === 'ArrowLeft' || k === 'ArrowRight') { const r = 'r' + S.ch.sel, st = e.shiftKey ? 1 : 0.1; S.ch[r] = clamp(+(S.ch[r] + (k === 'ArrowRight' ? st : -st)).toFixed(1), 0, SLOW.span); }
+    else if (k === ' ') setPlaying(!S.playing);
+    else return;
+    e.preventDefault(); dirty.chart = true;
+  });
+
+  // ---------- readings table, fit and plot ----------
+  const nucOf = (cfg, s) => cfg === 'esr' ? 'e' : s === 'ptfe' ? 'F' : 'H';
+  function rowB(r) {   // field from the student's own reading (T)
+    const v = parseFloat(r.reading), bm = BMAX[r.exp];
+    if (!isFinite(v)) return NaN;
+    const scan = r.method === 'volt' ? fieldFromVoltage(v, bm) : fieldFromTime(r.method === 'ruler' ? v : v / 1000, r.method === 'ruler' ? SLOW.ramp : FAST.ramp, bm);
+    return r.exp === 'psr' ? zeemanField(r.B20, r.temp) + scan : scan;
+  }
+  const rowNu = (r) => parseFloat(r.meter) * 1e6;   // meter kHz ×1000 = probe frequency
+  function capture() {
+    const note = $('capNote'); note.hidden = true;
+    let method, reading, unit;
+    if (S.sweep === 'slow') { method = 'ruler'; reading = ((S.ch.r2 - S.ch.r1) / SLOW.paper).toFixed(2); unit = 's';
+      if (!slow.filled) { note.textContent = 'No chart record yet: run a SLOW sweep, then place the ruler lines on the start pulse and the peak.'; note.hidden = false; } }
+    else if (S.sc.measure === 'volt') { method = 'volt'; reading = S.sc.V.toFixed(3); unit = 'V'; }
+    else { method = 'time'; reading = ((S.sc.B - S.sc.A) * 1000).toFixed(2); unit = 'ms'; }
+    S.rows.push({ exp: S.cfg, sample: sample(), nuc: nucOf(S.cfg, sample()), range: S.range, meter: meterShown.toFixed(digits()), sweep: S.sweep, method, reading, unit, temp: +S.temp.toFixed(1), B20: inst.B20, seed: inst.seed });
+    renderTable();
+  }
+  function renderTable() {
+    const tb = $('tbl').querySelector('tbody'); tb.textContent = '';
+    S.rows.forEach((r, i) => {
+      const tr = document.createElement('tr'), B = rowB(r);
+      const nm = SAMPLES[r.exp][r.sample].name.replace('Empty reference', 'Empty');
+      tr.title = `${r.exp.toUpperCase()}, ${r.range}, ${r.sweep.toUpperCase()}, ${r.method === 'volt' ? 'V cursor' : r.method === 'ruler' ? 'chart ruler' : 'cursors A to B'}${r.exp === 'psr' ? `, t = ${r.temp} °C, B20 = ${(r.B20 * 1e3).toFixed(1)} mT` : ''}`;
+      tr.innerHTML = `<td class="s"><span class="u">${i + 1}</span> ${nm}<br><span class="u">${r.exp.toUpperCase()} ${r.range} ${r.sweep === 'slow' ? 'SLOW' : 'FAST'}</span></td>` +
+        `<td><input aria-label="Meter reading row ${i + 1}, kHz" data-i="${i}" data-f="meter" value="${r.meter}"></td>` +
+        `<td><input aria-label="Reading row ${i + 1}, ${r.unit}" data-i="${i}" data-f="reading" value="${r.reading}"><span class="u">${r.unit}</span></td>` +
+        `<td class="b">${isFinite(B) ? (B * 1e3).toFixed(r.exp === 'psr' ? 2 : 3) : '—'}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td>`;
+      tb.appendChild(tr);
+    });
+    fitAndPlot();
+  }
+  $('tbl').addEventListener('change', (e) => { const t = e.target; if (t.dataset && t.dataset.f) { S.rows[+t.dataset.i][t.dataset.f] = t.value.trim(); renderTable(); } });
+  $('tbl').addEventListener('click', (e) => { const b = e.target.closest('button[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderTable(); } });
+  function fits() {
+    const groups = S.cfg === 'esr' ? ['e'] : ['H', 'F'], out = {};
+    for (const g of groups) {
+      const rows = S.rows.filter((r) => r.exp === S.cfg && r.nuc === g && isFinite(rowB(r)) && isFinite(rowNu(r)));
+      out[g] = { rows, fit: fitOrigin(rows.map(rowNu), rows.map(rowB)) };
+    }
+    return out;
+  }
+  const NUC_COL = () => ({ e: T.accent, H: T.pos, F: T.equi });
+  function fitAndPlot() {
+    const F = fits(), dl = $('fitOut'); let html = '';
+    const pm = (v, e, d) => isFinite(e) ? `${v.toFixed(d)} ± ${e.toFixed(d)}` : v.toFixed(d);
+    if (S.cfg === 'esr') {
+      const f = F.e.fit;
+      if (f) { const g = gFromSlope(f.k), eg = g * f.se / f.k;
+        html += `<div class="wide"><dt>Slope k = B/ν (${f.n} point${f.n > 1 ? 's' : ''})</dt><dd>${pm(f.k * 1e9, f.se * 1e9, 5)} mT/MHz</dd></div>`;
+        html += `<div class="wide big"><dt>g = h/(μ<sub>B</sub>k)</dt><dd>${pm(g, eg, 4)}</dd></div>`;
+        if (!S.blind) html += `<div class="wide"><dt>Accepted for DPPH</dt><dd>2.0036</dd></div>`;
+      } else html += `<div class="wide"><dt>Fit</dt><dd class="ok">Capture readings at LO, MID and HI</dd></div>`;
+    } else {
+      for (const [g, lab, acc, accg] of [['H', '¹H', '42.577', '5.586'], ['F', '¹⁹F', '40.078', '5.258']]) {
+        const f = F[g].fit; if (!f) continue;
+        const gam = gammaFromSlope(f.k), eg = gam * f.se / f.k, gi = gNuclearFromSlope(f.k), egi = gi * f.se / f.k;
+        html += `<div><dt>${lab}: γ/2π = 1/k</dt><dd>${pm(gam / 1e6, eg / 1e6, 2)} MHz/T</dd></div><div><dt>${lab}: g<sub>I</sub> = hν/(μ<sub>N</sub>B)</dt><dd>${pm(gi, egi, 3)}</dd></div>`;
+        if (!S.blind) html += `<div class="wide"><dt>Accepted ${lab}: ${acc} MHz/T, g<sub>I</sub> ${accg}</dt><dd></dd></div>`;
+      }
+      if (!html) html = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture readings for glycerine and PTFE</dd></div>`;
+    }
+    dl.innerHTML = html;
+    $('plotKey').innerHTML = S.cfg === 'esr' ? '<span><i class="swatch dotE"></i>Your ESR readings, line through the origin</span>'
+      : '<span><i class="swatch dotH"></i>¹H readings</span><span><i class="swatch dotF"></i>¹⁹F readings (PTFE)</span>';
+    drawPlot(F);
+  }
+  function drawPlot(F) {
+    F = F || fits();
+    const [W, H] = dims.plot; if (!W || !H) return;
+    const ctx = ctxs.plot, d = dpr(); ctx.setTransform(d, 0, 0, d, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const L = 46, R = W - 10, top = 10, bot = H - 30, col = NUC_COL();
+    const pts = []; for (const g in F) for (const r of F[g].rows) pts.push([rowNu(r) / 1e6, rowB(r) * 1e3, g]);
+    let x0, x1, y0, y1;
+    if (S.cfg === 'esr') { x0 = 0; x1 = 80; y0 = 0; y1 = 3.0; for (const p of pts) { x1 = Math.max(x1, p[0] * 1.08); y1 = Math.max(y1, p[1] * 1.1); } }
+    else { x0 = 11.5; x1 = 13.5; y0 = 285; y1 = 315; if (pts.length) { x0 = Math.min(...pts.map((p) => p[0])) - 0.15; x1 = Math.max(...pts.map((p) => p[0])) + 0.15; y0 = Math.min(...pts.map((p) => p[1])) - 4; y1 = Math.max(...pts.map((p) => p[1])) + 4; } }
+    const X = (v) => L + (v - x0) / (x1 - x0) * (R - L), Y = (v) => bot - (v - y0) / (y1 - y0) * (bot - top);
+    const nice = (r) => { const p = 10 ** Math.floor(Math.log10(r)), m = r / p; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p; };
+    ctx.font = `10px ${T.mono}`; ctx.fillStyle = T.muted; ctx.strokeStyle = T.grid; ctx.lineWidth = 1;
+    const xs = nice((x1 - x0) / 4), ys = nice((y1 - y0) / 4);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = Math.ceil(x0 / xs) * xs; v <= x1 + 1e-9; v += xs) { const x = Math.round(X(v)) + 0.5; ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bot); ctx.stroke(); ctx.fillText(+v.toFixed(3) + '', x, bot + 3); }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = Math.ceil(y0 / ys) * ys; v <= y1 + 1e-9; v += ys) { const y = Math.round(Y(v)) + 0.5; ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(R, y); ctx.stroke(); ctx.fillText(+v.toFixed(3) + '', L - 4, y); }
+    ctx.strokeStyle = T.gridStrong; ctx.strokeRect(L + 0.5, top + 0.5, R - L, bot - top);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('ν (MHz)', R, H - 1);
+    ctx.save(); ctx.translate(10, (top + bot) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('B (mT)', 0, 0); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
+    for (const g in F) { const f = F[g].fit; if (!f) continue; ctx.strokeStyle = col[g]; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(X(x0), Y(f.k * 1e9 * x0)); ctx.lineTo(X(x1), Y(f.k * 1e9 * x1)); ctx.stroke(); }
+    for (const p of pts) { ctx.fillStyle = col[p[2]]; ctx.beginPath(); ctx.arc(X(p[0]), Y(p[1]), 3.5, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.restore();
+    if (!pts.length) { ctx.fillStyle = T.muted; ctx.font = `11px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('No readings yet', (L + R) / 2, (top + bot) / 2); }
+  }
+  function csvTable() {
+    const L = ['# Spin Resonance virtual bench (simulated data)', `# instrument seed,${inst.seed}`,
+      'row,experiment,sample,range,meter_reading_kHz,frequency_MHz,sweep,method,reading,reading_unit,ramp_time_s,Bmax_mT,temperature_C,B20_mT,BZ_mT,Bscan_mT,B_mT'];
+    S.rows.forEach((r, i) => {
+      const B = rowB(r), BZv = r.exp === 'psr' ? zeemanField(r.B20, r.temp) : 0;
+      L.push([i + 1, r.exp.toUpperCase(), SAMPLES[r.exp][r.sample].name, r.range, r.meter, (parseFloat(r.meter)).toString(), r.sweep.toUpperCase(), r.method, r.reading, r.unit,
+        r.method === 'ruler' ? SLOW.ramp : FAST.ramp, (BMAX[r.exp] * 1e3).toFixed(2), r.exp === 'psr' ? r.temp : '', r.exp === 'psr' ? (r.B20 * 1e3).toFixed(2) : '',
+        r.exp === 'psr' ? (BZv * 1e3).toFixed(3) : '', isFinite(B) ? ((B - BZv) * 1e3).toFixed(4) : '', isFinite(B) ? (B * 1e3).toFixed(4) : ''].join(','));
+    });
+    return L.join('\n') + '\n';
+  }
+  function csvTraces() {
+    const sd = scopeData; if (!sd) return '';
+    const L = ['# Spin Resonance virtual bench: oscilloscope traces (simulated, noise from the seed)', `# instrument seed,${inst.seed}`,
+      `# experiment,${S.cfg.toUpperCase()},sample,${SAMPLES[S.cfg][sample()].name},range,${S.range},meter_kHz,${meterShown.toFixed(digits())},sweep,${S.sweep.toUpperCase()}`,
+      `# CH1 ${S.sc.v1} V/div DC; CH2 ${S.sc.v2} V/div DC; ${S.sc.td * 1000} ms/div; triggered on CH1 falling at 0.5 V; time 0 is the trigger`,
+      'time_ms,ch1_V,ch2_V'];
+    for (let i = 0; i < sd.N; i++) L.push(`${(sd.span * i / (sd.N - 1) * 1000).toFixed(4)},${sd.ch1[i].toFixed(4)},${sd.ch2[i].toFixed(4)}`);
+    return L.join('\n') + '\n';
+  }
+  function download(name, text) {
+    try { const b = new Blob([text], { type: 'text/csv' }), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800); } catch (_) {}
+  }
+
+  // ---------- 3D bench ----------
+  const G = { ready: false, dirty: true, screenDirty: true, paperDirty: true, panelDirty: true };
+  const orbit = { theta: -Math.PI / 2 - 0.12, phi: 1.02, zoom: 1 };
+  const knobVal = { sens: () => S.sens[S.cfg], freq: () => S.dial };
+  let glHover = null;
+  function mkTex(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; const t = new THREE.CanvasTexture(c); t.anisotropy = 4; return { c, x: c.getContext('2d'), t }; }
+  function init3D() {
+    if (G.ready) return true;
+    if (!window.THREE) return false;
+    let renderer;
+    try { renderer = new THREE.WebGLRenderer({ antialias: true }); } catch (_) { return false; }
+    if (!renderer || !renderer.getContext()) return false;
+    const el = renderer.domElement; el.id = 'gl'; el.tabIndex = 0;
+    el.setAttribute('role', 'application');
+    el.setAttribute('aria-label', 'The spin resonance bench in 3D: console, cell mount with probe, oscilloscope and chart recorder. Drag to turn, scroll to zoom. Drag the SENS screw or FREQ knob up and down; click the Hz selector, the FAST/SLOW switch or SLOW RUN. Keys: up and down turn SENS, left and right turn FREQ, shift for bigger steps; H changes the range, S the run mode, R starts a slow run, E and P switch ESR and PSR.');
+    $('p3d').insertBefore(el, $('flat'));
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 1, 2000); cam.up.set(0, 0, 1);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x6b6157, 0.85));
+    const sun = new THREE.DirectionalLight(0xffffff, 0.7); sun.position.set(-40, -80, 120); scene.add(sun);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.25); fill.position.set(80, 40, 60); scene.add(fill);
+    const std = (c, r = 0.6, m = 0) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m });
+    const box = (w, d, h, mat, x, y, z) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, d, h), mat); m.position.set(x, y, z); scene.add(m); return m; };
+    const cylX = (r, len, mat, x, y, z, seg = 36) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, seg), mat); m.rotation.z = Math.PI / 2; m.position.set(x, y, z); return m; };
+    const cylY = (r, len, mat, x, y, z, seg = 28) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, seg), mat); m.position.set(x, y, z); return m; };
+    const cylZ = (r, len, mat, x, y, z, seg = 28) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, seg), mat); m.rotation.x = Math.PI / 2; m.position.set(x, y, z); return m; };
+    const plane = (w, h, mat, x, y, z, face) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat); m.position.set(x, y, z); if (face === '-y') m.rotation.x = Math.PI / 2; scene.add(m); return m; };
+    const add = (...ms) => { for (const m of ms) scene.add(m); return ms[0]; };
+    // bench top, a faint wood grain
+    const wood = mkTex(512, 256); { const x = wood.x; x.fillStyle = '#9b7552'; x.fillRect(0, 0, 512, 256); const r = mulberry(5); for (let i = 0; i < 90; i++) { x.strokeStyle = `rgba(${60 + 40 * r()},${35 + 20 * r()},20,${0.08 + 0.1 * r()})`; x.lineWidth = 1 + 3 * r(); x.beginPath(); const y = r() * 256; x.moveTo(0, y); x.bezierCurveTo(170, y + 8 * (r() - 0.5), 340, y + 8 * (r() - 0.5), 512, y + 6 * (r() - 0.5)); x.stroke(); } wood.t.needsUpdate = true; }
+    box(176, 64, 4, new THREE.MeshStandardMaterial({ map: wood.t, roughness: 0.75 }), 4, -2, -2);
+    // ---- console
+    const conBody = std(0x33475b, 0.5); box(32, 20, 15, conBody, -60, 8, 7.5);
+    const con = mkTex(640, 300); const conMat = new THREE.MeshStandardMaterial({ map: con.t, roughness: 0.55 });
+    plane(32, 15, conMat, -60, -2.03, 7.5, '-y');
+    const hzKnob = add(cylY(1.7, 1.4, std(0x1d1f22, 0.4), -60 + 5, -2.7, 7.5 + 1.2));
+    const hzPtr = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.3, 1.3), std(0xf2f2f2, 0.5)); hzPtr.position.set(0, -0.72, 0.65); hzKnob.add(hzPtr);
+    hzPtr.rotation.y = 0;
+    const ledMat = (c) => new THREE.MeshStandardMaterial({ color: 0x220606, emissive: c, emissiveIntensity: 1, roughness: 0.3 });
+    const sigLed = add(new THREE.Mesh(new THREE.SphereGeometry(0.55, 16, 12), ledMat(0xff2a1a))); sigLed.position.set(-60 + 11.5, -2.2, 7.5 + 3.8);
+    const powLed = add(new THREE.Mesh(new THREE.SphereGeometry(0.45, 16, 12), ledMat(0x30ff60))); powLed.position.set(-60 - 13, -2.2, 7.5 - 4.6);
+    const bnc = std(0xc0c4c8, 0.3, 0.8);
+    for (const u of [7, 11.5, 1]) add(cylY(0.7, 1.2, bnc, -60 + u, -2.6, 7.5 - 4.4));
+    // glow sprites for LEDs
+    const glowTex = mkTex(64, 64); { const x = glowTex.x, g = x.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.25, 'rgba(255,255,255,0.45)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64); glowTex.t.needsUpdate = true; }
+    const glow = (col, pos, s) => { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex.t, color: col, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true })); sp.position.copy(pos); sp.position.y -= 0.5; sp.scale.set(s, s, 1); scene.add(sp); return sp; };
+    const sigGlow = glow(0xff3020, sigLed.position, 4.2), powGlow = glow(0x40ff70, powLed.position, 3);
+    // ---- cell mount base and scan coils (ESR) / Zeeman magnet (PSR)
+    const MX = -12;
+    box(32, 22, 1.4, std(0x4d545c, 0.6), MX, 0, 0.7);
+    const copper = std(0xb8733a, 0.38, 0.55), steel = std(0x8d949b, 0.35, 0.75), dark = std(0x202326, 0.5);
+    const esrGrp = new THREE.Group(), psrGrp = new THREE.Group(); scene.add(esrGrp, psrGrp);
+    for (const s of [-1, 1]) {
+      const cx = MX + s * 7.5;
+      esrGrp.add(cylX(6, 4.2, copper, cx, 0, 10, 48));
+      esrGrp.add(cylX(2.4, 12, steel, MX + s * 9.5, 0, 10));
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(3.1, 0.55, 12, 40), steel); ring.rotation.y = Math.PI / 2; ring.position.set(MX + s * 5.1, 0, 10); esrGrp.add(ring);
+      const ped = new THREE.Mesh(new THREE.BoxGeometry(6, 8, 3.6), std(0x3a3f45, 0.6)); ped.position.set(cx, 0, 3.2); esrGrp.add(ped);
+      // PSR: magnet cheeks, pole faces and the scan coils outside them
+      const ch = new THREE.Mesh(new THREE.BoxGeometry(9, 13, 19), std(0x9aa1a8, 0.45, 0.3)); ch.position.set(MX + s * 7, 0, 10.9); psrGrp.add(ch);
+      const pole = cylX(3.2, 0.6, steel, MX + s * 2.6, 0, 10); psrGrp.add(pole);
+      psrGrp.add(cylX(5.2, 3, copper, MX + s * 13.5, 0, 10, 40));
+      psrGrp.add(cylX(2.2, 4, steel, MX + s * 15.5, 0, 10));
+    }
+    { const b = new THREE.Mesh(new THREE.BoxGeometry(23, 13, 2.6), std(0x9aa1a8, 0.45, 0.3)); b.position.set(MX, 0, 2.7); psrGrp.add(b); }
+    const mag = mkTex(360, 380); const magMat = new THREE.MeshStandardMaterial({ map: mag.t, roughness: 0.5 });
+    { const p = new THREE.Mesh(new THREE.PlaneGeometry(9, 9.5), magMat); p.rotation.x = Math.PI / 2; p.position.set(MX - 7, -6.53, 13.5); psrGrp.add(p); }
+    // ---- probes: body on a stand, rod into the gap, RF coil, phial with a coloured cap
+    const probeGrp = new THREE.Group(); scene.add(probeGrp);
+    const PB = { x: MX, y: -17, z: 10 };
+    const probeBody = new THREE.Mesh(new THREE.BoxGeometry(7, 10, 6), std(0x56677a, 0.5)); probeBody.position.set(PB.x, PB.y, PB.z); probeGrp.add(probeBody);
+    { const st = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 7), dark); st.position.set(PB.x, PB.y, 3.5); probeGrp.add(st); }
+    probeGrp.add(cylY(0.9, 11, std(0xd8d8d0, 0.6), PB.x, -6.5, PB.z));
+    for (let k = 0; k < 4; k++) { const t = new THREE.Mesh(new THREE.TorusGeometry(1.3, 0.16, 8, 24), copper); t.rotation.x = Math.PI / 2; t.position.set(PB.x, -1.3 + k * 0.9, PB.z); probeGrp.add(t); }
+    const glass = new THREE.MeshStandardMaterial({ color: 0xd8eef2, transparent: true, opacity: 0.35, roughness: 0.1 });
+    probeGrp.add(cylY(0.8, 26, glass, PB.x, -11.5, PB.z));
+    const sampMat = std(0x66334a, 0.6); const sampMesh = cylY(0.72, 3.4, sampMat, PB.x, -0.1, PB.z); probeGrp.add(sampMesh);
+    const capMat = std(0xe8771e, 0.45); probeGrp.add(cylY(1.0, 1.6, capMat, PB.x, -25, PB.z));
+    const probeTop = mkTex(256, 360); const ptMat = new THREE.MeshStandardMaterial({ map: probeTop.t, roughness: 0.6 });
+    { const p = new THREE.Mesh(new THREE.PlaneGeometry(7, 10), ptMat); p.position.set(PB.x, PB.y, PB.z + 3.02); probeGrp.add(p); }
+    const sens = cylZ(0.75, 1.3, std(0xb9bcc0, 0.3, 0.8), PB.x + 1.7, PB.y + 2.6, PB.z + 3.6); probeGrp.add(sens);
+    { const slot = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.22, 0.2), dark); slot.position.set(0, 0.66, 0); slot.rotation.x = -Math.PI / 2; sens.add(slot); }
+    const freqK = cylZ(1.6, 1.6, std(0x1d1f22, 0.4), PB.x - 1.3, PB.y - 1.6, PB.z + 3.8); probeGrp.add(freqK);
+    { const ptr = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.2, 1.4), std(0xf2f2f2, 0.5)); ptr.position.set(0, 0.82, -0.75); freqK.add(ptr); }
+    const pLed = new THREE.Mesh(new THREE.SphereGeometry(0.4, 12, 10), ledMat(0x30ff60)); pLed.position.set(PB.x - 2.2, PB.y + 3.6, PB.z + 3.2); probeGrp.add(pLed);
+    // grip rings on everything you can turn or press: always visible, brighter on hover
+    const gripMat = () => new THREE.MeshBasicMaterial({ color: 0x69a0ff, transparent: true, opacity: 0.55, depthWrite: false });
+    const grip = (r, parent, pos, rotX) => { const g = new THREE.Mesh(new THREE.TorusGeometry(r, 0.13, 8, 40), gripMat()); g.position.copy(pos); if (rotX) g.rotation.x = rotX; parent.add(g); return g; };
+    const sensGrip = grip(1.25, probeGrp, new THREE.Vector3(PB.x + 1.7, PB.y + 2.6, PB.z + 3.2));
+    const freqGrip = grip(2.15, probeGrp, new THREE.Vector3(PB.x - 1.3, PB.y - 1.6, PB.z + 3.2));
+    const hzGrip = grip(2.3, scene, new THREE.Vector3(-55, -2.15, 8.7), Math.PI / 2);
+    // ---- cell mount controls: FAST/SLOW switch, SLOW RUN button, Stop/Run LED
+    const CM = { x: 13, y: -15 };
+    box(13, 8, 5, std(0x3a4a5a, 0.5), CM.x, CM.y, 2.5);
+    const cmTex = mkTex(390, 240); const cmMat = new THREE.MeshStandardMaterial({ map: cmTex.t, roughness: 0.55 });
+    plane(13, 8, cmMat, CM.x, CM.y, 5.02);
+    const fsBase = add(cylZ(0.8, 0.4, bnc, CM.x - 3.6, CM.y + 0.4, 5.2));
+    const lever = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.3, 2.4, 10), std(0xdcdcdc, 0.3, 0.7)); lever.position.set(CM.x - 3.6, CM.y + 0.4, 6.2); scene.add(lever);
+    const runBtn = add(cylZ(0.95, 0.9, std(0xc62a1e, 0.45), CM.x + 0.6, CM.y + 0.4, 5.45));
+    const runLed = add(new THREE.Mesh(new THREE.SphereGeometry(0.5, 14, 10), ledMat(0x30ff60))); runLed.position.set(CM.x + 4.3, CM.y + 0.4, 5.3);
+    const runGlow = glow(0x40ff70, new THREE.Vector3(CM.x + 4.3, CM.y + 0.9, 5.6), 3.2);
+    const fsGrip = grip(1.5, scene, new THREE.Vector3(CM.x - 3.6, CM.y + 0.4, 5.15));
+    const runGrip = grip(1.45, scene, new THREE.Vector3(CM.x + 0.6, CM.y + 0.4, 5.15));
+    // ---- oscilloscope
+    const SC = { x: 38, y: 7 };
+    box(36, 28, 22, std(0xc8ccd1, 0.55), SC.x, SC.y, 11);
+    box(34, 2, 2, dark, SC.x, SC.y - 13, 1);
+    const scp = mkTex(612, 374); const scpMat = new THREE.MeshBasicMaterial({ map: scp.t });
+    plane(36, 22, scpMat, SC.x, SC.y - 14.03, 11, '-y');
+    // ---- chart recorder with a paper roll and a tilted paper deck
+    const CR = { x: 72, y: -6 };
+    box(26, 20, 9, std(0x2d3034, 0.55), CR.x, CR.y, 4.5);
+    add(cylX(2.2, 22, std(0xf2eee2, 0.8), CR.x, CR.y + 7.5, 10));
+    const pap = mkTex(560, 256); const papMat = new THREE.MeshStandardMaterial({ map: pap.t, roughness: 0.85 });
+    { const p = new THREE.Mesh(new THREE.PlaneGeometry(23, 10.5), papMat); p.position.set(CR.x, CR.y - 1.2, 9.25); p.rotation.x = -0.12; scene.add(p); }
+    const crTex = mkTex(420, 70); const crMat = new THREE.MeshStandardMaterial({ map: crTex.t, roughness: 0.55 });
+    plane(26, 4.3, crMat, CR.x, CR.y - 10.03, 4.5, '-y');
+    // ---- thermometer in a stand
+    const TH = { x: -34, y: -18 };
+    add(cylZ(2.2, 0.8, dark, TH.x, TH.y, 0.4));
+    add(cylZ(0.5, 19, new THREE.MeshStandardMaterial({ color: 0xe8f4f8, transparent: true, opacity: 0.4, roughness: 0.1 }), TH.x, TH.y, 10.8));
+    const bulb = add(new THREE.Mesh(new THREE.SphereGeometry(0.8, 16, 12), std(0xc0261c, 0.3))); bulb.position.set(TH.x, TH.y, 1.8);
+    const column = add(cylZ(0.24, 1, std(0xd0281c, 0.3), TH.x, TH.y, 2));
+    // ---- cables
+    const cable = (pts, col, r = 0.32) => { const curve = new THREE.CatmullRomCurve3(pts.map((p) => new THREE.Vector3(...p))); const m = new THREE.Mesh(new THREE.TubeGeometry(curve, 80, r, 8, false), std(col, 0.55)); scene.add(m); return m; };
+    cable([[MX - 3.5, -17, 9], [MX - 8, -19, 3], [-30, -14, 0.4], [-50, -8, 0.4], [-59, -3.6, 2], [-59, -2.4, 3.1]], 0x222428);
+    cable([[-53, -2.4, 3.1], [-50, -6, 0.4], [-20, -26, 0.4], [10, -26, 0.4], [28, -14, 0.4], [44, -8.6, 3]], 0xd9b331);
+    cable([[-48.5, -2.4, 3.1], [-45, -5, 0.4], [-18, -24.5, 0.4], [12, -24.5, 0.4], [30, -12, 0.4], [49, -8.6, 3]], 0x3aaec9);
+    cable([[CM.x - 6.5, CM.y + 2, 2], [MX + 12, -9, 0.6], [MX + 10, -5, 1.3]], 0x222428);
+    cable([[CM.x + 6.5, CM.y + 2, 2], [26, -20, 0.4], [55, -22, 0.4], [62, -12, 2], [CR.x - 13, CR.y - 4, 3]], 0x222428);
+    cable([[-60, 18, 6], [-58, 24, 0.4], [-30, 22, 0.4], [CM.x, CM.y + 4, 2.5]], 0x222428, 0.28);
+
+    G.renderer = renderer; G.scene = scene; G.cam = cam; G.el = el;
+    Object.assign(G, { con, conMat, hzKnob, sigLed, sigGlow, powLed, powGlow, esrGrp, psrGrp, mag, probeBody, sampMat, capMat, probeTop, sens, freqK, pLed, sensGrip, freqGrip, hzGrip, fsGrip, runGrip, lever, runBtn, runLed, runGlow, scp, pap, crTex, column, cmTex });
+    G.pick = [{ id: 'sens', obj: sens, grip: sensGrip, cursor: 'ns-resize' }, { id: 'freq', obj: freqK, grip: freqGrip, cursor: 'ns-resize' },
+      { id: 'hz', obj: hzKnob, grip: hzGrip, cursor: 'pointer' }, { id: 'fs', obj: lever, grip: fsGrip, cursor: 'pointer', extra: fsBase }, { id: 'run', obj: runBtn, grip: runGrip, cursor: 'pointer' }];
+    paintStatic3D();
+    G.ready = true;
+    bindGL(el);
+    return true;
+  }
+  function paintStatic3D() {
+    // cell mount top
+    { const x = G.cmTex.x; x.fillStyle = '#3a4a5a'; x.fillRect(0, 0, 390, 240); x.fillStyle = '#e8edf2'; x.font = '700 26px sans-serif'; x.textAlign = 'center'; x.fillText('CELL MOUNT', 195, 40);
+      x.font = '700 22px sans-serif'; x.fillText('FAST', 50, 205); x.fillText('SLOW', 165, 205); x.fillText('SLOW RUN', 214, 160); x.fillText('STOP/RUN', 325, 160);
+      x.strokeStyle = '#e8edf2'; x.lineWidth = 2; x.beginPath(); x.moveTo(60, 175); x.lineTo(150, 175); x.stroke(); G.cmTex.t.needsUpdate = true; }
+    // chart recorder front
+    { const x = G.crTex.x; x.fillStyle = '#2d3034'; x.fillRect(0, 0, 420, 70); x.fillStyle = '#dfe3e8'; x.font = '700 30px sans-serif'; x.textAlign = 'left'; x.textBaseline = 'middle'; x.fillText('CHART RECORDER', 16, 36); x.font = '22px sans-serif'; x.textAlign = 'right'; x.fillText('5 mm/s  1 V', 404, 36); G.crTex.t.needsUpdate = true; }
+  }
+  function paintConsole() {
+    const x = G.con.x, W = 640, H = 300, s = 20, cx = (u) => W / 2 + u * s, cy = (v) => H / 2 - v * s;
+    x.fillStyle = '#34495e'; x.fillRect(0, 0, W, H);
+    x.fillStyle = '#e7edf3'; x.font = '700 26px sans-serif'; x.textAlign = 'left'; x.textBaseline = 'alphabetic'; x.fillText('SPIN RESONANCE CONSOLE', 24, 40);
+    // meter
+    x.fillStyle = '#120404'; x.fillRect(cx(-14.5), cy(5.6), 12.5 * s, 5.2 * s);
+    x.font = '600 74px "JetBrains Mono", monospace'; x.fillStyle = '#ff3b28'; x.shadowColor = 'rgba(255,60,40,0.8)'; x.shadowBlur = 14; x.textAlign = 'right'; x.textBaseline = 'middle';
+    x.fillText(meterShown.toFixed(digits()), cx(-4.3), cy(3.0)); x.shadowBlur = 0;
+    x.font = '700 22px sans-serif'; x.fillStyle = '#ff9a8a'; x.textAlign = 'left'; x.fillText('kHz', cx(-4.0), cy(2.5));
+    x.fillStyle = '#c9d3dc'; x.font = '18px sans-serif'; x.textAlign = 'left'; x.fillText('FREQUENCY ÷ 1000', cx(-14.5), cy(-0.7));
+    // Hz selector legend
+    x.font = '700 20px sans-serif'; x.fillStyle = '#e7edf3'; x.textAlign = 'center';
+    const k = { u: 5, v: 1.2 };
+    [['LO', -45], ['MID', 0], ['HI', 45]].forEach(([t, a]) => { const r = 2.9 * s, ang = a * Math.PI / 180; x.fillStyle = t === S.range ? '#ffd166' : '#e7edf3'; x.fillText(t, cx(k.u) + r * Math.sin(ang), cy(k.v) - r * Math.cos(ang) + 6); });
+    x.fillStyle = '#c9d3dc'; x.font = '18px sans-serif'; x.fillText('Hz', cx(k.u), cy(-2.3));
+    x.fillText('CH2 SIGNAL', cx(11.5), cy(5.6)); x.fillText('POWER', cx(-13), cy(-2.9));
+    x.fillText('CH1', cx(7), cy(-2.9)); x.fillText('CH2', cx(11.5), cy(-2.9)); x.fillText('PROBE', cx(1), cy(-2.9));
+    G.con.t.needsUpdate = true;
+  }
+  function paintProbeTop() {
+    const x = G.probeTop.x, psr = S.cfg === 'psr';
+    x.fillStyle = psr ? '#6a5a7e' : '#56677a'; x.fillRect(0, 0, 256, 360);
+    x.fillStyle = '#eef1f5'; x.textAlign = 'center'; x.font = '700 24px sans-serif';
+    x.save(); x.translate(128, 180); x.fillText(psr ? 'PROTON PROBE' : 'ELECTRON PROBE', 0, 160); x.restore();
+    x.font = '700 22px sans-serif'; x.fillText('SENS', 128 + 1.7 * 36.6, 180 - 2.6 * 36 - 46);
+    if (psr) x.fillText('FREQ', 128 - 1.3 * 36.6, 180 + 1.6 * 36 + 72);
+    x.font = '18px sans-serif'; x.fillText('POWER', 128 - 2.2 * 36.6, 180 - 3.6 * 36 + 34);
+    G.probeTop.t.needsUpdate = true;
+  }
+  function paintMagnet() {
+    const x = G.mag.x; x.fillStyle = '#9aa1a8'; x.fillRect(0, 0, 360, 380);
+    x.fillStyle = '#20252b'; x.textAlign = 'center'; x.font = '700 34px sans-serif'; x.fillText('ZEEMAN', 180, 70); x.fillText('MAGNET', 180, 112);
+    x.fillStyle = '#f4f4ee'; x.fillRect(30, 150, 300, 150); x.fillStyle = '#20252b'; x.font = '700 30px sans-serif'; x.fillText('B20', 180, 195);
+    x.font = '700 40px "JetBrains Mono", monospace'; x.fillText(`${(inst.B20 * 1e3).toFixed(1)} mT`, 180, 248); x.font = '22px sans-serif'; x.fillText('at 20 °C', 180, 284);
+    x.font = '24px sans-serif'; x.fillText('−0.075 % per °C', 180, 345);
+    G.mag.t.needsUpdate = true;
+  }
+  function paintScopeFront() {
+    const x = G.scp.x, W = 612, H = 374;
+    x.fillStyle = '#c8ccd1'; x.fillRect(0, 0, W, H);
+    const sx = 26, sy = 34, sw = 360, sh = 288;
+    x.fillStyle = '#20252b'; x.font = '700 20px sans-serif'; x.textAlign = 'left'; x.textBaseline = 'alphabetic'; x.fillText('DUAL TRACE OSCILLOSCOPE', sx, 24);
+    x.fillStyle = '#1c2024'; x.fillRect(sx - 8, sy - 8, sw + 16, sh + 16);
+    x.fillStyle = '#03100b'; x.fillRect(sx, sy, sw, sh);
+    x.strokeStyle = 'rgba(150,210,180,0.22)'; x.lineWidth = 1; x.beginPath();
+    for (let i = 0; i <= 10; i++) { x.moveTo(sx + i * sw / 10, sy); x.lineTo(sx + i * sw / 10, sy + sh); }
+    for (let j = 0; j <= 8; j++) { x.moveTo(sx, sy + j * sh / 8); x.lineTo(sx + sw, sy + j * sh / 8); }
+    x.stroke();
+    const sd = scopeData;
+    if (sd) {
+      const span = 10 * S.sc.td;
+      for (const [arr, col, pos, vd] of [[sd.ch1, C1, S.sc.pos1, S.sc.v1], [sd.ch2, C2, S.sc.pos2, S.sc.v2]]) {
+        x.save(); x.beginPath(); x.rect(sx, sy, sw, sh); x.clip();
+        x.strokeStyle = col; x.lineWidth = 2; x.shadowColor = col; x.shadowBlur = 8; x.beginPath();
+        for (let i = 0; i < arr.length; i += 2) { const px = sx + (sd.span * i / (arr.length - 1)) / span * sw, py = sy + sh / 2 - (pos + arr[i] / vd) * sh / 8; i ? x.lineTo(px, py) : x.moveTo(px, py); }
+        x.stroke(); x.restore();
+      }
+    }
+    // knobs and labels on the right
+    x.shadowBlur = 0; x.textAlign = 'center'; x.font = '700 15px sans-serif';
+    const knob = (cx, cy, r, lab, val) => { x.fillStyle = '#2a2e33'; x.beginPath(); x.arc(cx, cy, r, 0, 2 * Math.PI); x.fill(); x.fillStyle = '#d6d9dd'; x.fillRect(cx - 2, cy - r, 4, r * 0.6); x.fillStyle = '#20252b'; x.fillText(lab, cx, cy - r - 8); x.font = '14px sans-serif'; x.fillText(val, cx, cy + r + 18); x.font = '700 15px sans-serif'; };
+    const vt = (v) => v < 1 ? `${Math.round(v * 1000)} mV` : `${v} V`;
+    knob(450, 92, 26, 'CH1 V/DIV', vt(S.sc.v1)); knob(550, 92, 26, 'CH2 V/DIV', vt(S.sc.v2));
+    knob(500, 220, 32, 'TIME/DIV', `${Math.round(S.sc.td * 1000)} ms`);
+    x.fillStyle = '#20252b'; x.fillText('CH1', 450, 330); x.fillText('CH2', 550, 330);
+    x.fillStyle = '#9ea4aa'; for (const c of [450, 550]) { x.beginPath(); x.arc(c, 352, 10, 0, 2 * Math.PI); x.fill(); }
+    G.scp.t.needsUpdate = true;
+  }
+  function paintPaper() {
+    const x = G.pap.x, W = 560, H = 256;
+    x.fillStyle = '#f6f1e3'; x.fillRect(0, 0, W, H);
+    x.strokeStyle = 'rgba(201,138,126,0.45)'; x.lineWidth = 1; x.beginPath();
+    for (let m = 0; m <= 140; m += 5) { const px = m / 140 * W; x.moveTo(px, 0); x.lineTo(px, H); }
+    for (let j = 0; j <= 10; j++) { x.moveTo(0, j * H / 10); x.lineTo(W, j * H / 10); } x.stroke();
+    x.strokeStyle = '#3a2a8c'; x.lineWidth = 2.2; x.beginPath(); let pen = false;
+    for (let i = 0; i < slow.filled; i += 2) { const v = slow.rec[i]; if (v !== v) { pen = false; continue; } const px = i / 20 / 140 * W, py = H - (0.06 + 0.88 * v) * H; pen ? x.lineTo(px, py) : x.moveTo(px, py); pen = true; }
+    x.stroke();
+    G.pap.t.needsUpdate = true;
+  }
+  function update3D() {
+    if (!G.ready) return;
+    const o = osc(), psr = S.cfg === 'psr';
+    G.esrGrp.visible = !psr; G.psrGrp.visible = psr;
+    G.freqK.visible = psr; G.freqGrip.visible = psr;
+    G.probeBody.material.color.setHex(psr ? 0x6a5a7e : 0x56677a);
+    const sm = SAMPLES[S.cfg][sample()]; G.capMat.color.set(sm.cap);
+    const sampCol = { dpph: 0x4a1e3a, black: 0xc8dde2, water: 0xbfe0ea, gly: 0xe8e0a8, poly: 0xf0f0ea, ptfe: 0xf6f6f6 }[sample()];
+    G.sampMat.color.setHex(sampCol); G.sampMat.transparent = sample() === 'black'; G.sampMat.opacity = sample() === 'black' ? 0.2 : 1;
+    G.sigLed.material.emissiveIntensity = o.led; G.sigGlow.material.opacity = o.led * 0.9; G.sigGlow.visible = o.led > 0.02;
+    const running = S.sweep === 'fast' || slow.running;
+    G.runLed.material.emissive.setHex(running ? 0x30ff60 : 0xff2a1a); G.runGlow.material.color.setHex(running ? 0x40ff70 : 0xff3020);
+    G.lever.rotation.y = S.sweep === 'fast' ? -0.45 : 0.45; G.lever.position.x = 13 - 3.6 + (S.sweep === 'fast' ? -0.5 : 0.5);
+    G.hzKnob.rotation.y = { LO: -Math.PI / 4, MID: 0, HI: Math.PI / 4 }[S.range];
+    G.sens.rotation.y = -S.sens[S.cfg] * 0.9;   // screw turns
+    G.freqK.rotation.y = -S.dial / 10 * 1.6 * Math.PI + 0.8 * Math.PI;
+    const tf = clamp((S.temp - 0) / 40, 0, 1) * 16; G.column.scale.y = Math.max(0.1, tf); G.column.position.z = 2 + tf / 2;
+    for (const p of G.pick) { const on = glHover === p.id || (glDrag && glDrag.id === p.id); p.grip.material.opacity = on ? 1 : 0.55; p.grip.scale.setScalar(on ? 1.15 : 1); }
+    if (G.panelDirty) { paintConsole(); paintProbeTop(); paintMagnet(); G.panelDirty = false; }
+    if (G.screenDirty) { paintScopeFront(); G.screenDirty = false; }
+    if (G.paperDirty) { paintPaper(); G.paperDirty = false; }
+  }
+  function fitCam() {
+    const [W, H] = dims.gl; const asp = W / Math.max(1, H), t = Math.tan(15 * Math.PI / 180);
+    const d = Math.max(92 / (t * asp), 27 / t) * orbit.zoom;
+    const tx = 6, ty = -2, tz = 7;
+    G.cam.aspect = asp; G.cam.position.set(tx + d * Math.sin(orbit.phi) * Math.cos(orbit.theta), ty + d * Math.sin(orbit.phi) * Math.sin(orbit.theta), tz + d * Math.cos(orbit.phi));
+    G.cam.lookAt(tx, ty, tz); G.cam.updateProjectionMatrix();
+  }
+  function render3D() {
+    if (!G.ready || !dims.gl[0]) return;
+    tokens3D(); update3D(); fitCam(); G.renderer.render(G.scene, G.cam);
+  }
+  let bgCache = '';
+  function tokens3D() { if (bgCache !== T.benchBg) { bgCache = T.benchBg; G.renderer.setClearColor(new THREE.Color(T.benchBg || '#dfe5ec')); } }
+  let glDrag = null;
+  function bindGL(el) {
+    const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+    const pickAt = (e) => {
+      const r = el.getBoundingClientRect(); ndc.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
+      ray.setFromCamera(ndc, G.cam);
+      const objs = []; for (const p of G.pick) { if (!p.obj.visible || (p.id === 'freq' && S.cfg !== 'psr')) continue; objs.push(p.obj, p.grip); if (p.extra) objs.push(p.extra); }
+      const hit = ray.intersectObjects(objs, true)[0];
+      let found = hit ? G.pick.find((p) => p.obj === hit.object || p.grip === hit.object || p.extra === hit.object || (hit.object.parent === p.obj)) : null;
+      if (!found) {   // doubled tolerance in screen space for touch: nearest knob within a radius
+        const tol = 14 * (e.pointerType === 'touch' ? 2 : 1); let bd = tol;
+        for (const p of G.pick) { if (p.id === 'freq' && S.cfg !== 'psr') continue; const v = new THREE.Vector3(); p.grip.getWorldPosition(v); v.project(G.cam); const sx = (v.x + 1) / 2 * r.width, sy = (1 - v.y) / 2 * r.height, dd = Math.hypot(sx - (e.clientX - r.left), sy - (e.clientY - r.top)); if (dd < bd) { bd = dd; found = p; } }
+      }
+      return found;
+    };
+    const pointers = new Map(); let mode = null;
+    const pinch = () => { const p = [...pointers.values()]; return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y); };
+    el.addEventListener('pointerdown', (e) => {
+      el.focus(); pointers.set(e.pointerId, { x: e.clientX, y: e.clientY }); el.setPointerCapture(e.pointerId);
+      if (pointers.size === 2) { glDrag = null; mode = { type: 'pinch', d0: pinch(), z0: orbit.zoom }; return; }
+      const p = pickAt(e);
+      if (p && (p.id === 'sens' || p.id === 'freq')) { glDrag = { id: p.id, y0: e.clientY, v0: knobVal[p.id]() }; mode = null; G.dirty = true; return; }
+      if (p) { mode = { type: 'click', id: p.id }; return; }
+      mode = { type: 'orbit', lx: e.clientX, ly: e.clientY }; el.style.cursor = 'grabbing';
+    });
+    let q = null, qf = false;
+    el.addEventListener('pointermove', (e) => {
+      if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (mode && mode.type === 'pinch' && pointers.size === 2) { orbit.zoom = clamp(mode.z0 * mode.d0 / pinch(), 0.35, 2.2); G.dirty = true; return; }
+      if (glDrag) {
+        q = { y: e.clientY, fine: e.shiftKey }; if (qf) return; qf = true;
+        requestAnimationFrame(() => { qf = false; if (!glDrag || !q) return; const dy = glDrag.y0 - q.y;
+          if (glDrag.id === 'sens') setSens(glDrag.v0 + dy * (q.fine ? 0.002 : 0.015)); else setDial(glDrag.v0 + dy * (q.fine ? 0.0008 : 0.006)); q = null; });
+        return;
+      }
+      if (mode && mode.type === 'orbit') {
+        orbit.theta -= (e.clientX - mode.lx) * 0.006; orbit.phi = clamp(orbit.phi - (e.clientY - mode.ly) * 0.006, 0.25, 1.45);
+        mode.lx = e.clientX; mode.ly = e.clientY; G.dirty = true; return;
+      }
+      if (e.pointerType === 'mouse' && !mode) { const p = pickAt(e), id = p ? p.id : null; if (id !== glHover) { glHover = id; G.dirty = true; } el.style.cursor = p ? p.cursor : 'grab'; }
+    });
+    const end = (e) => {
+      if (mode && mode.type === 'click') { const p = pickAt(e); if (p && p.id === mode.id) clickPart(p.id); }
+      pointers.delete(e.pointerId); if (pointers.size < 2 && mode && mode.type === 'pinch') mode = null;
+      if (!pointers.size) { mode = null; if (glDrag) { glDrag = null; G.dirty = true; } el.style.cursor = 'grab'; }
+    };
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+    el.addEventListener('pointerleave', () => { if (glHover) { glHover = null; G.dirty = true; } });
+    el.addEventListener('wheel', (e) => { e.preventDefault(); orbit.zoom = clamp(orbit.zoom * Math.exp(e.deltaY * 0.0012), 0.35, 2.2); G.dirty = true; }, { passive: false });
+    el.addEventListener('dblclick', () => { orbit.theta = -Math.PI / 2 - 0.12; orbit.phi = 1.02; orbit.zoom = 1; G.dirty = true; });
+    el.addEventListener('keydown', benchKeys);
+    el.style.cursor = 'grab';
+  }
+  function clickPart(id) {
+    if (id === 'hz') setRange(RANGES[(RANGES.indexOf(S.range) + 1) % 3]);
+    else if (id === 'fs') setSweep(S.sweep === 'fast' ? 'slow' : 'fast');
+    else if (id === 'run') slowRun();
+  }
+  function benchKeys(e) {
+    const k = e.key, big = e.shiftKey ? 10 : 1;
+    if (k === 'ArrowUp' || k === 'ArrowDown') setSens(S.sens[S.cfg] + (k === 'ArrowUp' ? 0.05 : -0.05) * big);
+    else if (k === 'ArrowLeft' || k === 'ArrowRight') { if (S.cfg === 'psr') setDial(S.dial + (k === 'ArrowRight' ? 0.01 : -0.01) * big); }
+    else if (k === 'h' || k === 'H') clickPart('hz');
+    else if (k === 's' || k === 'S') clickPart('fs');
+    else if (k === 'r' || k === 'R') clickPart('run');
+    else if (k === 'e' || k === 'E') setCfg('esr');
+    else if (k === 'p' || k === 'P') setCfg('psr');
+    else if (k === ' ') setPlaying(!S.playing);
+    else return;
+    e.preventDefault();
+  }
+
+  // ---------- flat bench drawing when WebGL is not available ----------
+  let flatHot = null, flatDrag = null, flatGeom = null;
+  function drawFlat() {
+    const [W, H] = dims.flat; if (!W || !H) return;
+    const ctx = ctxs.flat, d = dpr(); ctx.setTransform(d, 0, 0, d, 0, 0);
+    ctx.fillStyle = T.benchBg; ctx.fillRect(0, 0, W, H);
+    const s = Math.min(W / 180, H / 46), ox = W / 2 - 90 * s, oy = H - 8 * s;
+    const X = (u) => ox + (u + 90) * s, Y = (v) => oy - v * s;
+    const rect = (u, v, w, h, col) => { ctx.fillStyle = col; ctx.fillRect(X(u), Y(v + h), w * s, h * s); };
+    rect(-90, -3, 180, 3, '#9b7552');
+    const o = osc(), psr = S.cfg === 'psr';
+    // console
+    rect(-76, 0, 32, 15, '#34495e'); ctx.fillStyle = '#120404'; ctx.fillRect(X(-74), Y(13.5), 13 * s, 5 * s);
+    ctx.fillStyle = '#ff3b28'; ctx.font = `600 ${3.4 * s}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(meterShown.toFixed(digits()), X(-62), Y(11));
+    ctx.fillStyle = '#e7edf3'; ctx.font = `700 ${1.7 * s}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText('SPIN RESONANCE CONSOLE  kHz', X(-74), Y(6.8));
+    const led = (u, v, col, b) => { ctx.fillStyle = col; ctx.globalAlpha = 0.15 + 0.85 * b; ctx.beginPath(); ctx.arc(X(u), Y(v), 0.8 * s, 0, 2 * Math.PI); ctx.fill(); if (b > 0.05) { ctx.globalAlpha = 0.25 * b; ctx.beginPath(); ctx.arc(X(u), Y(v), 2 * s, 0, 2 * Math.PI); ctx.fill(); } ctx.globalAlpha = 1; };
+    led(-48.5, 11.5, '#ff3020', o.led);
+    // cell mount
+    if (!psr) { rect(-26, 4, 5, 12, '#b8733a'); rect(-3, 4, 5, 12, '#b8733a'); rect(-30, 8.5, 6, 3, '#8d949b'); rect(1, 8.5, 6, 3, '#8d949b'); }
+    else { rect(-25, 1, 9, 19, '#9aa1a8'); rect(-8, 1, 9, 19, '#9aa1a8'); rect(-25, 1, 26, 2.6, '#9aa1a8'); ctx.fillStyle = '#20252b'; ctx.font = `700 ${1.5 * s}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText('B₂₀', X(-20.5), Y(17)); ctx.fillText(`${(inst.B20 * 1e3).toFixed(1)} mT`, X(-20.5), Y(15)); }
+    rect(-15.5, 7, 7, 6, psr ? '#6a5a7e' : '#56677a'); ctx.fillStyle = SAMPLES[S.cfg][sample()].cap; ctx.fillRect(X(-13), Y(10.8), 2 * s, 1.6 * s);
+    // cell mount control box
+    rect(6, 0, 13, 5, '#3a4a5a'); led(16.5, 2.5, S.sweep === 'fast' || slow.running ? '#40ff70' : '#ff3020', 1);
+    ctx.fillStyle = '#e8edf2'; ctx.font = `700 ${1.4 * s}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText(S.sweep === 'fast' ? 'FAST' : 'SLOW', X(9), Y(3.8)); ctx.fillText('RUN', X(13), Y(3.8));
+    // scope and recorder
+    rect(22, 0, 34, 22, '#c8ccd1'); ctx.fillStyle = '#03100b'; ctx.fillRect(X(24), Y(20), 20 * s, 16 * s);
+    if (scopeData) for (const [arr, col, pos, vd] of [[scopeData.ch1, C1, S.sc.pos1, S.sc.v1], [scopeData.ch2, C2, S.sc.pos2, S.sc.v2]]) { ctx.save(); ctx.beginPath(); ctx.rect(X(24), Y(20), 20 * s, 16 * s); ctx.clip(); ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.beginPath(); for (let i = 0; i < arr.length; i += 3) { const px = X(24) + i / (arr.length - 1) * 20 * s, py = Y(12) - (pos + arr[i] / vd) * 2 * s; i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); } ctx.stroke(); ctx.restore(); }
+    rect(60, 0, 26, 9, '#2d3034'); ctx.fillStyle = '#f6f1e3'; ctx.fillRect(X(61.5), Y(8.3), 23 * s, 6 * s);
+    // handles: SENS, FREQ, Hz, FAST/SLOW, RUN (grips always visible)
+    flatGeom = [
+      { id: 'sens', x: X(-10.5), y: Y(14.2), r: 1.2 * s, lab: 'SENS', side: 1, drag: true },
+      ...(psr ? [{ id: 'freq', x: X(-14), y: Y(14.6), r: 1.6 * s, lab: 'FREQ', side: -1, drag: true }] : []),
+      { id: 'hz', x: X(-55), y: Y(9.5), r: 1.8 * s, lab: S.range },
+      { id: 'fs', x: X(9), y: Y(2.2), r: 1.2 * s, lab: '' }, { id: 'run', x: X(13), y: Y(2.2), r: 1.1 * s, lab: '' },
+    ];
+    for (const h of flatGeom) {
+      const hot = flatHot === h.id || (flatDrag && flatDrag.id === h.id);
+      ctx.fillStyle = h.id === 'run' ? '#c62a1e' : '#1d1f22'; ctx.beginPath(); ctx.arc(h.x, h.y, h.r, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = T.accent; ctx.lineWidth = hot ? 2.4 : 1.4; ctx.globalAlpha = hot ? 1 : 0.7; ctx.beginPath(); ctx.arc(h.x, h.y, h.r + 3, 0, 2 * Math.PI); ctx.stroke(); ctx.globalAlpha = 1;
+      if (h.lab) { ctx.fillStyle = T.ink; ctx.font = `700 ${Math.max(9, 1.3 * s)}px ${T.ui}`; ctx.textBaseline = h.side ? 'middle' : 'bottom'; ctx.textAlign = h.side > 0 ? 'left' : h.side < 0 ? 'right' : 'center'; ctx.fillText(h.lab, h.side ? h.x + h.side * (h.r + 6) : h.x, h.side ? h.y : h.y - h.r - 4); }
+    }
+    ctx.fillStyle = T.muted; ctx.font = `${Math.max(10, 1.3 * s)}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillText('3D view needs WebGL: a flat drawing of the bench', W - 8, 6);
+  }
+  function flatHit(e) { if (!flatGeom) return null; const r = cans.flat.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, tol = 6 * (e.pointerType === 'touch' ? 2 : 1); let best = null, bd = Infinity; for (const h of flatGeom) { const dd = Math.hypot(x - h.x, y - h.y) - h.r; if (dd < tol && dd < bd) { bd = dd; best = h; } } return best; }
+  cans.flat.addEventListener('pointerdown', (e) => { const h = flatHit(e); if (!h) return; cans.flat.setPointerCapture(e.pointerId); if (h.drag) flatDrag = { id: h.id, y0: e.clientY, v0: knobVal[h.id]() }; else clickPart(h.id); dirty.flat = true; });
+  cans.flat.addEventListener('pointermove', (e) => {
+    if (flatDrag) { const dy = flatDrag.y0 - e.clientY; if (flatDrag.id === 'sens') setSens(flatDrag.v0 + dy * 0.015); else setDial(flatDrag.v0 + dy * 0.006); return; }
+    const h = flatHit(e), id = h ? h.id : null; if (id !== flatHot) { flatHot = id; dirty.flat = true; } cans.flat.style.cursor = h ? (h.drag ? 'ns-resize' : 'pointer') : 'default';
+  });
+  const endFlat = () => { if (flatDrag) { flatDrag = null; dirty.flat = true; } };
+  cans.flat.addEventListener('pointerup', endFlat); cans.flat.addEventListener('pointercancel', endFlat);
+  cans.flat.addEventListener('keydown', benchKeys);
+
+  // ---------- controls ----------
+  function setSens(v) { v = clamp(Math.round(v * 100) / 100, 0, 10); if (v === S.sens[S.cfg]) return; S.sens[S.cfg] = v; $('sens').value = v; changed(); }
+  function setDial(v) { v = clamp(Math.round(v * 1000) / 1000, 0, 10); if (v === S.dial) return; S.dial = v; $('freq').value = v; changed(); }
+  function setRange(r) { S.range = r; changed(true); }
+  function setSweep(m) { S.sweep = m; if (m === 'fast') { slow.running = false; } changed(true); }
+  function setCfg(c) { if (S.cfg === c) return; S.cfg = c; slow.running = false; S.hold = null; $('hold').setAttribute('aria-pressed', 'false'); changed(true); renderSamples(); fitAndPlot(); }
+  function setSample(s) { S.sampleBy[S.cfg] = s; changed(true); }
+  function setMeasure(m) { if (S.sc.measure === m) return; S.sc.measure = m; syncUI(); dirty.scope = true; }
+  function changed(panel) { if (panel) G.panelDirty = true; G.dirty = true; syncUI(); freshSweeps(); dirtyAll(); }
+  function setPlaying(p) { S.playing = p; $('play').textContent = p ? 'Pause' : 'Play'; }
+  function renderSamples() {
+    const box = $('samples'); box.textContent = '';
+    const capName = { '#e8771e': 'orange', '#1d1d1f': 'black', '#f4f4f0': 'white', '#f2d01c': 'yellow', '#2f9a4a': 'green', '#2d62c8': 'blue' };
+    for (const [id, s] of Object.entries(cfgSamples())) {
+      const b = document.createElement('button'); b.type = 'button'; b.dataset.s = id;
+      b.innerHTML = `<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${s.cap};border:1px solid var(--muted);margin-right:6px;vertical-align:-1px"></span>${s.name}`;
+      b.title = `${capName[s.cap]} cap`; b.setAttribute('aria-pressed', String(id === sample()));
+      b.addEventListener('click', () => setSample(id)); box.appendChild(b);
+    }
+  }
+  const SAMPLE_HINT = {
+    esr: { dpph: 'Orange cap: DPPH, a stable free radical with one unpaired electron per molecule.', black: 'Black cap: an empty phial. Use it to show that the peak comes from the sample.', water: 'White cap: a phial of water. No unpaired electrons, so no ESR peak.' },
+    psr: { gly: 'Yellow cap: glycerine, a liquid. Its protons give a narrow, tall line.', poly: 'Green cap: a polystyrene rod. A solid, so the proton line is broadened.', ptfe: 'Blue cap: a PTFE rod. Fluorine, no hydrogen: the line sits at a lower frequency.', black: 'Black cap: the empty reference. Only a tiny proton peak from the plastic coil former.', water: 'White phial with water: a weak proton signal.' },
+  };
+  function cursorOuts() {
+    $('dT').textContent = `${((S.sc.B - S.sc.A) * 1000).toFixed(2)} ms`;
+    $('vC').textContent = `${S.sc.V.toFixed(3)} V`;
+  }
+  function syncUI() {
+    const psr = S.cfg === 'psr';
+    $('cESR').setAttribute('aria-pressed', String(!psr)); $('cPSR').setAttribute('aria-pressed', String(psr));
+    document.querySelectorAll('[data-r]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.r === S.range)));
+    $('sFast').setAttribute('aria-pressed', String(S.sweep === 'fast')); $('sSlow').setAttribute('aria-pressed', String(S.sweep === 'slow'));
+    $('mTime').setAttribute('aria-pressed', String(S.sc.measure === 'time')); $('mVolt').setAttribute('aria-pressed', String(S.sc.measure === 'volt'));
+    $('slowRun').disabled = slow.running;
+    $('freqRow').hidden = !psr; $('magSec').hidden = !psr;
+    $('probeTitle').textContent = psr ? 'Proton probe and console' : 'Electron probe and console';
+    $('sens').value = S.sens[S.cfg]; $('sensOut').textContent = `${S.sens[S.cfg].toFixed(2)} turns`;
+    $('freq').value = S.dial; $('freqOut').textContent = `dial ${S.dial.toFixed(3)}`;
+    $('temp').value = S.temp; $('tempOut').textContent = `${S.temp.toFixed(1)} °C`;
+    $('b20').textContent = `B₂₀ = ${(inst.B20 * 1e3).toFixed(1)} mT`;
+    $('bz').textContent = `${(BZ() * 1e3).toFixed(2)} mT`;
+    document.querySelectorAll('#samples button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.s === sample())));
+    $('sampleHint').textContent = SAMPLE_HINT[S.cfg][sample()];
+    const o = osc();
+    const ld = $('ledDot'); ld.style.background = `rgb(${90 + 165 * o.led},${16 + 40 * o.led},${16 + 20 * o.led})`; ld.style.boxShadow = o.led > 0.05 ? `0 0 ${8 * o.led}px rgba(255,60,40,${o.led})` : 'none';
+    $('ledTxt').lastChild.textContent = !o.on ? 'out' : o.led > 0.98 ? 'bright' : 'dimming';
+    const running = S.sweep === 'fast' || slow.running, rd = $('runDot');
+    rd.style.background = running ? '#3be06a' : '#e8402c'; rd.style.boxShadow = `0 0 6px ${running ? 'rgba(60,230,100,0.8)' : 'rgba(240,60,40,0.8)'}`;
+    $('runTxt').lastChild.textContent = running ? 'green, run' : 'red, stop';
+    $('expectRow').hidden = S.blind;
+    $('status').innerHTML = S.sweep === 'fast' ? 'FAST <small>ramp 40 ms, 20 per second</small>' : slow.running ? `SLOW <small>${Math.max(0, Math.min(25, slow.t - SLOW.lead)).toFixed(1)} of 25 s</small>` : 'SLOW <small>stopped</small>';
+    cursorOuts();
+  }
+  document.querySelectorAll('[data-r]').forEach((b) => b.addEventListener('click', () => setRange(b.dataset.r)));
+  $('cESR').addEventListener('click', () => setCfg('esr')); $('cPSR').addEventListener('click', () => setCfg('psr'));
+  $('sFast').addEventListener('click', () => setSweep('fast')); $('sSlow').addEventListener('click', () => setSweep('slow'));
+  $('slowRun').addEventListener('click', slowRun);
+  $('play').addEventListener('click', () => setPlaying(!S.playing));
+  $('sens').addEventListener('input', (e) => setSens(+e.target.value));
+  $('freq').addEventListener('input', (e) => setDial(+e.target.value));
+  $('temp').addEventListener('input', (e) => { S.temp = +e.target.value; changed(); });
+  for (const id of ['v1', 'v2', 'td']) $(id).addEventListener('change', (e) => {
+    const v = +e.target.value;
+    if (id === 'td') { S.sc.A = clamp(S.sc.A, 0, 10 * v); S.sc.B = clamp(S.sc.B, 0, 10 * v); }
+    S.sc[id] = v; G.screenDirty = true; freshSweeps(); dirty.scope = true; cursorOuts();
+  });
+  $('mTime').addEventListener('click', () => setMeasure('time')); $('mVolt').addEventListener('click', () => setMeasure('volt'));
+  $('hold').addEventListener('click', () => {
+    if (S.hold) S.hold = null; else if (scopeData) S.hold = { ch2: Float32Array.from(scopeData.ch2), span: scopeData.span };
+    $('hold').setAttribute('aria-pressed', String(!!S.hold)); dirty.scope = true;
+  });
+  $('expTr').addEventListener('click', () => download(`spin-resonance-traces-seed${inst.seed}.csv`, csvTraces()));
+  $('expTab').addEventListener('click', () => download(`spin-resonance-readings-seed${inst.seed}.csv`, csvTable()));
+  $('capture').addEventListener('click', capture);
+  $('clearTab').addEventListener('click', () => { S.rows = []; renderTable(); $('capNote').hidden = true; });
+  $('blind').addEventListener('change', (e) => { S.blind = e.target.checked; if (S.blind) { S.expect = false; $('expect').checked = false; } syncUI(); fitAndPlot(); dirtyAll(); });
+  $('expect').addEventListener('change', (e) => { S.expect = e.target.checked; dirtyAll(); });
+  function setSeed(n) {
+    n = clamp(Math.round(n) || 1, 1, 99999); $('seed').value = n;
+    inst = instrument(n); S.temp = Math.round(inst.room * 10) / 10; G.panelDirty = true;
+    slow.rec.fill(NaN); slow.filled = 0; slow.running = false; slow.done = false;
+    applyPreset(S.preset);
+  }
+  $('seed').addEventListener('change', (e) => setSeed(+e.target.value));
+  $('newSeed').addEventListener('click', () => setSeed(1 + Math.floor(Math.random() * 99999)));
+
+  // ---------- presets ----------
+  const PRESETS = {
+    esr: { hint: 'DPPH on MID with SENS just below the threshold: a clear peak on CH2. Put cursor A at the start of the ramp and B on the peak, capture, then repeat on LO and HI. Each range needs SENS set again.',
+      apply() { S.cfg = 'esr'; S.sampleBy.esr = 'dpph'; S.range = 'MID'; S.sweep = 'fast'; S.sens.esr = r2(0.955 * inst.thr.esr.MID); } },
+    ref: { hint: 'The empty black phial gives no peak, so the DPPH signal (held as a dim trace) comes from the unpaired electrons in the sample, not from the glass or the coil.',
+      pre() { PRESETS.esr.apply(); }, apply() { this.pre(); S.sampleBy.esr = 'black'; } },
+    gly: { hint: 'The magnet gives about 300 mT, so protons need about 12.8 MHz, and the scan of 3.2 mT is only a 1% window. FREQ is already in it here. The total field is the magnet field, from B₂₀ and the thermometer, plus the scan field.',
+      apply() { S.cfg = 'psr'; S.sampleBy.psr = 'gly'; S.range = 'MID'; S.sweep = 'fast'; S.sens.psr = r2(0.955 * inst.thr.psr.MID); S.dial = dialFor('MID', GAMMA_H * (zeemanField(inst.B20, S.temp) + 0.45 * BMAX.psr)); } },
+    poly: { hint: 'Polystyrene is a solid: the fixed neighboring proton dipoles spread the resonance, so the peak is wider and lower than the glycerine trace held on the screen.',
+      pre() { PRESETS.gly.apply(); }, apply() { this.pre(); S.sampleBy.psr = 'poly'; } },
+    ptfe: { hint: 'PTFE has fluorine and no hydrogen. ¹⁹F resonates at 40.08 MHz per tesla, about 6% below the proton, so switch to LO, find the peak, and capture it as a second line on the plot.',
+      apply() { S.cfg = 'psr'; S.sampleBy.psr = 'ptfe'; S.range = 'LO'; S.sweep = 'fast'; S.sens.psr = r2(0.955 * inst.thr.psr.LO); S.dial = dialFor('LO', GAMMA_F * (zeemanField(inst.B20, S.temp) + 0.55 * BMAX.psr)); } },
+    tune: { hint: 'No peak: the resonance is outside the 1% sweep. Turn FREQ slowly while you watch CH2 until the peak moves onto the ramp. Then check SENS.',
+      apply() { S.cfg = 'psr'; S.sampleBy.psr = 'gly'; S.range = 'MID'; S.sweep = 'fast'; S.sens.psr = r2(0.955 * inst.thr.psr.MID); S.dial = dialFor('MID', GAMMA_H * (zeemanField(inst.B20, S.temp) - 1.1 * BMAX.psr)); } },
+  };
+  const r2 = (v) => Math.round(v * 100) / 100;
+  const dialFor = (rg, f) => clamp(Math.round(psrDial(rg, f, inst) * 1000) / 1000, 0, 10);
+  function applyPreset(p) {
+    S.preset = p; S.hold = null; slow.running = false;
+    const pr = PRESETS[p];
+    if (pr.pre) {   // compute the comparison trace first, then hold it
+      pr.pre(); history.length = 0; computeSweep(); S.hold = { ch2: Float32Array.from(scopeData.ch2), span: scopeData.span };
+    }
+    pr.apply();
+    $('hold').setAttribute('aria-pressed', String(!!S.hold));
+    document.querySelectorAll('#presets button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.p === p)));
+    $('presetHint').textContent = pr.hint;
+    G.panelDirty = true; renderSamples(); syncUI(); freshSweeps(); fitAndPlot(); dirtyAll();
+  }
+  document.querySelectorAll('#presets button').forEach((b) => b.addEventListener('click', () => applyPreset(b.dataset.p)));
+
+  // ---------- projector, theme ----------
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(() => { resize(); });
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  const retheme = () => { tokens(); dirtyAll(); fitAndPlot(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  const dirty = { scope: true, chart: true, flat: true };
+  function dirtyAll() { dirty.scope = dirty.chart = dirty.flat = true; G.dirty = true; G.screenDirty = true; drawPlot(); }
+  let last = performance.now(), frameMs = 0, last3D = 0, lastUI = 0;
+  function loop(now) {
+    const dt = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (S.playing) {
+      if (S.sweep === 'fast') { sweepClock += dt; if (sweepClock >= FAST.period) { sweepClock %= FAST.period; sweepN++; computeSweep(); } }
+      else { if (slow.running) advanceSlow(dt); sweepClock += dt; if (sweepClock >= 0.1) { sweepClock = 0; sweepN++; computeSweep(); } }
+      flickClock += dt; if (flickClock > 0.6) { flickClock = 0; flickN++; }
+    }
+    const mv = meterValue(); if (mv !== meterShown) { meterShown = mv; $('meter').firstChild.textContent = mv.toFixed(digits()); G.panelDirty = true; G.dirty = true; dirty.flat = true; }
+    if (dirty.scope) { drawScope(); dirty.scope = false; }
+    if (dirty.chart) { drawChart(); dirty.chart = false; }
+    if (G.ready) {
+      if ((G.dirty || G.screenDirty || G.paperDirty || G.panelDirty) && now - last3D > 1000 / 30) { render3D(); G.dirty = false; last3D = now; }
+    } else if (dirty.flat || G.screenDirty) { drawFlat(); dirty.flat = false; G.screenDirty = false; }
+    if (slow.running && now - lastUI > 200) { syncUI(); lastUI = now; }
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    requestAnimationFrame(loop);
+  }
+  window.__sr = { get frameMs() { return frameMs; }, S, slow, get inst() { return inst; }, osc, res, nu, BZ, meterValue: () => meterShown, applyPreset, setSens, setDial, setRange, setCfg, setSweep, slowRun, capture, fits, csvTable, csvTraces, scopeHandles, get sg() { return sg; }, get cg() { return cg; }, get gl() { return G.ready; }, setPlaying, advanceSlow,
+    pickScreen() { if (!G.ready) return null; const r = G.el.getBoundingClientRect(), o = {}; for (const p of G.pick) { const v = new THREE.Vector3(); p.grip.getWorldPosition(v); v.project(G.cam); o[p.id] = [r.left + (v.x + 1) / 2 * r.width, r.top + (1 - v.y) / 2 * r.height]; } return o; } };
+
+  // ---------- start ----------
+  tokens();
+  const use3D = init3D();
+  if (!use3D) { cans.flat.hidden = false; $('tip').textContent = 'Drag the SENS screw and FREQ knob up or down; click the Hz selector, FAST/SLOW or RUN.'; }
+  S.temp = Math.round(inst.room * 10) / 10;
+  const ro = new ResizeObserver(() => resize());
+  for (const id of ['p3d', 'pScope', 'pChart']) ro.observe($(id));
+  ro.observe(cans.plot.parentElement);
+  resize();
+  applyPreset('esr');
+  renderTable();
+  setPlaying(!reduce);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { G.panelDirty = true; dirtyAll(); });
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
