@@ -22,7 +22,9 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 | Tasks 1/3/5: transient finish, seven core suites, five current-main labs | GPT | Feature branch `curriculum/` and CI | Completed second-pass implementation and local execution: seven core suites, five main-aligned labs, transient key and browser rerun. Main bc0485a read/merge confirmed. No demo edits. Node 22, Chromium and Firefox CI passed; see curriculum/validation/SECOND_PASS_2026-10-18.md for scope and known failures. |
 | Tasks 2/4: independent teaching-key audit and NaI(Tl) report | GPT taking over from Claude Fable | Feature branch validation reports | First checkpoint complete: RC/Faraday/Gauss key report and 6.2-million-history gamma comparison in curriculum/validation. Remaining keys and measured distance-series comparison pending. No demos/notes/keys changes. |
 
-| GPT queue, 2026-10-19 | GPT | Feature branch and private TeacherKeys | Complete on feature branch: fresh rewritten-history checkout; all 27 private instructor files verified; Photoelectric student/key aligned; 11 modern-bench groups, 6 Circuits groups and Photoelectric Record/CSV source check added. All 85 supported groups/checks passed locally. Browser checks pending CI; no main merge authorized. |
+| GPT queue, 2026-10-19 | GPT | Feature branch and private TeacherKeys | Complete on feature branch: fresh rewritten-history checkout; all 27 private instructor files verified; Photoelectric student/key aligned; 11 modern-bench groups, 6 Circuits groups and Photoelectric Record/CSV source check added. All 85 supported groups/checks and subsequent CI passed; queue merged by Steve’s approval. This historical queue is closed. |
+
+| Full lab writing, 2026-10-19 | GPT | Feature branch student handouts; TeacherKeys instructor guides | Completed writing pass: 4 modern benches, 3 Circuits migrations, 3 acoustics labs and optional Franck–Hertz. Matching private guides/rubrics/reference calculations; 96 supported Node groups/checks passed. Source main9fa5e30; browser CI removed per Steve; no main merge. |
 
 ### Editing a demo the other one owns
 
@@ -47,6 +49,9 @@ Add a line when you need the other assistant to do something, and remove it when
   3. **Acoustics** (a winter course; level not yet known, write for physics majors with a note on simplifying): `timbre`, `resonators` (its resonance tube section is a full measurement lab with Capture/fit/CSV), `acoustic-levitation`.
   4. `franck-hertz` if time allows.
   Physics and every number from the demos' CORE code, as usual; add regression tests where a lab relies on a value.
+
+- **GPT → Claude, lab-writing delivery, 2026-10-19:** Full student labs now exist for spin-resonance, speed-of-light, e-over-m, electron-diffraction, timbre, resonators, acoustic-levitation and franck-hertz; RC/AC/RLC now target unified Circuits. Instructor solutions/rubrics and calculated reference tables are private in TeacherKeys, indexed by `curriculum/LAB_GUIDE_INDEX.md`. Drafted and Node-tested, not classroom accepted. See `curriculum/validation/LAB_WRITING_2026-10-19.md`.
+- **GPT → Claude, Circuits measurement request:** The source exporter supports AC but its visible Export scope CSV button is under `data-for="time"`; the AC handout therefore uses manual frequency-response tables. Consider exposing AC trace export and later a frequency-table export. Unified time mode still lacks an exact-time cursor, so the old transient page remains an explicitly labeled optional precision comparison. No demo source edited.
 
 - **Steve, 2026-10-19:** GPT's queue push to main is approved and done. **Drop the pending CI browser checks**; the existing Node suites stay. No student contact until the second half of the modern labs (winter), so there is room to refine before then. Still open: notes and QR for `transient-circuits` are low priority now that `circuits` covers it.
 

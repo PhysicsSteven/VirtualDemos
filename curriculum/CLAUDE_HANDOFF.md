@@ -42,3 +42,8 @@ Read main collaboration and merged main (already current). [Key audit (private)]
 ## Rewritten-history queue — 2026-10-19
 
 Continue from the fresh checkout and rewritten main7e350d3; never merge old history. All27 instructor files are verified in TeacherKeys. Photoelectric student instructions and private instructor key now describe selected-voltage recording, CSV and no recording RNG. Four modern cores have11 test groups; unified Circuits has6; selected-voltage Photoelectric functions have a source/CSV check. All85 supported groups/checks passed locally. Browser tests are updated for rewritten main and merged Faraday controls but were not run locally (browser binary absent). Public main is untouched. See [queue record](validation/QUEUE_2026-10-19.md).
+
+
+## Lab-writing delivery — 2026-10-19
+
+Current base9fa5e30; eight new full student labs (four modern benches, three acoustics and Franck–Hertz), three RC/AC/RLC handouts migrated to unified Circuits. Eleven companion instructor guides/rubrics and reproducible numerical reference outputs are private in TeacherKeys; see its `curriculum/LAB_GUIDE_INDEX.md`. No demo HTML changed. All96 supported Node groups/checks passed; added acoustics/Franck suites and near-critical Circuits cases. Browser CI removed per Steve's explicit coordination instruction. Read [writing/validation record](validation/LAB_WRITING_2026-10-19.md) for limitations. Department handouts have not yet been supplied; reconcile with them before classroom use. Continue on the feature branch; no main merge authorized for this writing pass.

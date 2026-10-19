@@ -1,6 +1,6 @@
 # VirtualDemos laboratory curriculum — starter collection
 
-This directory contains **27 student laboratory documents**; companion instructor guides and rubrics are held in the private TeacherKeys repository. These are **draft teaching materials**, not validated measurements or approved grading keys. The feature branch includes RLC and Faraday measurement improvements. See [executed validation and limitations](validation/SPRINT_2026-10-18.md); public demo links serve main until the owner merges the branch.
+This directory contains **35 student laboratory documents**; companion instructor guides and rubrics are held in the private TeacherKeys repository. These are **draft teaching materials**, not validated measurements or approved grading keys. The feature branch includes RLC and Faraday measurement improvements. See [executed validation and limitations](validation/SPRINT_2026-10-18.md); public demo links serve main until the owner merges the branch.
 
 ## Structure
 - [Student labs](labs/students/) — guided activities, measurement tables, graphs, uncertainty and conclusions
@@ -8,13 +8,16 @@ This directory contains **27 student laboratory documents**; companion instructo
 - [Validation guide](validation/README.md) — how to check each demonstration before grading
 - [Claude handoff](CLAUDE_HANDOFF.md) — outstanding work and implementation recommendations
 
-## Recommended first pilots
-1. RC Circuits — charging curve and energy conservation
-2. Gauss's Law — shape independence of closed-surface flux
-3. Photoelectric Effect — stopping potential versus frequency
-4. Blackbody Radiation — Wien's law
-5. Projectile Range — drag-free trajectory
-6. Radioactive Decay — stochastic half-life estimation
+## Current priority: modern bench laboratories
+- [Spin resonance](labs/students/spin-resonance.md) — ESR on DPPH and proton/fluorine resonance
+- [Speed of light](labs/students/speed-of-light.md) — rotating mirror and signed-speed fit
+- [Electron e/m](labs/students/e-over-m.md) — Helmholtz coils and mirrored-scale readings
+- [Electron diffraction](labs/students/electron-diffraction.md) — arc/chord geometry and graphite spacings
+- [Franck–Hertz](labs/students/franck-hertz.md) — excitation energy from peak spacing
+
+These support real-bench preparation and simulated substitute sessions. Department apparatus handouts take precedence when supplied. [Private instructor index](https://github.com/PhysicsSteven/TeacherKeys/blob/main/curriculum/LAB_GUIDE_INDEX.md).
+
+RC, AC and RLC student labs now use unified `circuits.html`. New acoustics labs cover [timbre](labs/students/timbre.md), [resonance tubes and resonators](labs/students/resonators.md), and [acoustic levitation](labs/students/acoustic-levitation.md), with simplification notes for introductory use.
 
 ## Important limitations
 The reference equations are independent theoretical checks. The browser UI, numerical solver, and data export workflows have **not** been systematically exercised for every starter. Some activities may require adjustments to match the available controls. No material in this folder should be described as a passed validation test until the checklist has been completed.
