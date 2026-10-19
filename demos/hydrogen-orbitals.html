@@ -91,7 +91,8 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .pane { position: relative; min-height: 0; }
 .pane + .pane { border-top: 1px solid var(--line); }
 .pane canvas { position: absolute; inset: 0; display: block; }
-#vPane { background: var(--cloud-bg); color: var(--cloud-ink); }
+#vPane { background: radial-gradient(ellipse at 50% 46%, color-mix(in srgb, var(--cloud-bg) 82%, #3a5a8c) 0%, var(--cloud-bg) 70%); color: var(--cloud-ink); }
+#ov { pointer-events: none; z-index: 1; }
 #gl { touch-action: none; cursor: grab; outline: none; }
 #gl:active { cursor: grabbing; }
 #gl:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
@@ -184,7 +185,7 @@ select:disabled { opacity: 0.5; }
   .stage { height: 86vh; min-height: 600px; grid-template-rows: minmax(0, 62fr) minmax(0, 38fr); }
   .rail { overflow: visible; }
   .tag .nm { font-size: 1.35rem; }
-  .scalebar { top: 54px; bottom: auto; }
+  .scalebar { top: auto; bottom: 66px; }
 }
 </style>
 </head>
@@ -215,6 +216,8 @@ select:disabled { opacity: 0.5; }
             <button type="button" data-v="slice" aria-pressed="false">Slice</button>
           </div>
           <button type="button" class="btn spin" id="spin" aria-pressed="false">Spin</button>
+          <button type="button" class="btn spin" id="cut" aria-pressed="false" title="Cut away the eighth of the cloud facing you (key C)">Cutaway</button>
+          <button type="button" class="btn spin" id="measure" aria-pressed="false" title="Find the electron one position at a time (key M)">Measure</button>
           <div class="seg" role="group" aria-label="Slice plane" id="planeSeg" hidden>
             <button type="button" data-p="xz" aria-pressed="true">xz</button>
             <button type="button" data-p="xy" aria-pressed="false">xy</button>
@@ -228,7 +231,9 @@ select:disabled { opacity: 0.5; }
             <button type="button" data-s="4" aria-pressed="false">4×</button>
           </div>
           <span class="tclock mono" id="tclock" hidden>t = 0 fs</span>
+          <span class="tclock mono" id="mclock" hidden aria-live="polite">0 measured</span>
         </div>
+        <canvas id="ov" aria-hidden="true"></canvas>
         <div class="tag" id="tag"><div class="nm" id="tagName"></div><div class="sub2 mono" id="tagSub"></div></div>
         <div class="scalebar mono" id="scaleBar"><i id="scaleLine"></i><span id="scaleText"></span></div>
         <div class="vnote" id="nodalNote" hidden></div>
@@ -333,6 +338,7 @@ select:disabled { opacity: 0.5; }
           <label><input type="checkbox" id="tSame">Same n, other l</label>
           <label><input type="checkbox" id="tR">R(r) curve</label>
           <label><input type="checkbox" id="tLock">Lock scale</label>
+          <label><input type="checkbox" id="tProton" checked>Proton label</label>
         </div>
         <div class="key" id="key">
           <span id="kSign"><i class="swatch dot" style="background:#ff7a5c"></i><i class="swatch dot" style="background:#5ea2ff;margin-left:-6px"></i>ψ positive, ψ negative</span>
@@ -342,7 +348,9 @@ select:disabled { opacity: 0.5; }
           <span><i class="swatch bohr"></i>Bohr model orbit, r = n²a₀</span>
           <span><i class="swatch node"></i>Radial node</span>
         </div>
-        <p class="hint" id="viewHint">Drag to orbit, scroll or pinch to zoom, double click to reset. With the cloud focused, arrow keys orbit and + and − zoom. Hover the radial plot to see that radius as a shell.</p>
+        <p class="hint" id="viewHint">Drag to orbit, scroll or pinch to zoom, double click to reset. With the cloud focused, arrow keys orbit and + and − zoom. Hover the radial plot to see that radius as a shell. While the cloud turns, fresh random positions keep replacing old ones, a twentieth of the cloud each second.</p>
+        <p class="hint" id="cutHint"><b>Cutaway</b> removes the eighth of the cloud facing you, like a slice cut from a cake. The three cut faces show |ψ|² in those planes through the nucleus. Nodes are dark there: radial nodes as arcs, angular nodes as lines through the nucleus, outlined when Nodal lines is on.</p>
+        <p class="hint" id="measHint"><b>Measure</b> starts from an empty atom and finds the electron one position at a time, each drawn at random from |ψ|² (inverse CDF in r and θ, rejection sampling in φ and for a superposition). Each find flashes, and the finds build up the cloud.</p>
       </section>
 
       <section>
@@ -523,6 +531,16 @@ select:disabled { opacity: 0.5; }
   }
 
   const $ = (id) => document.getElementById(id);
+
+  // ψ = (ψ_A + ψ_B e^{−iδ})/√2 at one point; out = [Re, Im, w] with w = |ψ|² / (|ψ_A|² + |ψ_B|²) ∈ [0, 1],
+  // the ratio of |ψ(t)|² to twice the mixture density the points were drawn from. Accepting a mixture
+  // point with probability w gives an exact sample of |ψ(t)|² (rejection sampling).
+  function superpose(ar, ai, br, bi, del, out) {
+    const c = Math.cos(del), s = -Math.sin(del);
+    const re = ar + br * c - bi * s, im = ai + br * s + bi * c, q = ar * ar + ai * ai + br * br + bi * bi;
+    out[0] = re; out[1] = im; out[2] = q > 0 ? (re * re + im * im) / (2 * q) : 0;
+    return out;
+  }
   const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const minus = (s) => String(s).replace(/-/g, '−');
   const fmtM = (m) => (m > 0 ? '+' + m : minus(m));
@@ -566,7 +584,7 @@ select:disabled { opacity: 0.5; }
     n: 3, l: 2, m: 0, real: true,
     mix: false, B: { n: 2, l: 1, m: 0 },
     view: '3d', plane: 'xz', color: 'phase', scale: 'sqrt', count: 40000,
-    layers: { axes: true, nodes: true, bohr: true, same: false, R: false }, lock: false,
+    layers: { axes: true, nodes: true, bohr: true, same: false, R: false, proton: true }, lock: false,
     t: 0, playing: false, speed: 1, preset: '3dz2'
   };
   const cache = new Map();
@@ -780,133 +798,462 @@ select:disabled { opacity: 0.5; }
   }
 
   // ---------- cloud data ----------
+  // References for the glow and the cut faces, from the sampled points:
+  // sigRef, the largest column density |ψ|² integrated along x, y or z (a₀⁻²), and dRef, the largest |ψ|².
+  let sigRef = 1, dRef = 1;
   function resample() {
     cloud = sampleCloud(stA, stB, S.count, Math.random);
-    if (G.ready) uploadCloud();
-    dirty.cloudColor = true;
+    const N = cloud.N, B = 40, F = targetFit * 1.05, D = 2 * F / B, h = new Float32Array(3 * B * B), p = cloud.pos;
+    const bin = (v) => Math.floor((v + F) / D);
+    let dm = 0;
+    for (let i = 0; i < N; i++) {
+      const x = bin(p[3 * i]), y = bin(p[3 * i + 1]), z = bin(p[3 * i + 2]);
+      if (x >= 0 && x < B && y >= 0 && y < B) h[x * B + y]++;
+      if (x >= 0 && x < B && z >= 0 && z < B) h[B * B + x * B + z]++;
+      if (y >= 0 && y < B && z >= 0 && z < B) h[2 * B * B + y * B + z]++;
+      const a = Math.hypot(cloud.aRe[i], cloud.aIm[i]), b = cloud.bRe ? Math.hypot(cloud.bRe[i], cloud.bIm[i]) : 0;
+      dm = Math.max(dm, cloud.bRe ? (a + b) * (a + b) / 2 : a * a);
+    }
+    let mc = 0;   // largest 2 × 2 block average, to keep the noise of single bins out
+    for (let k = 0; k < 3; k++) for (let i = 0; i < B - 1; i++) for (let j = 0; j < B - 1; j++) {
+      const o = k * B * B + i * B + j;
+      mc = Math.max(mc, (h[o] + h[o + 1] + h[o + B] + h[o + B + 1]) / 4);
+    }
+    sigRef = Math.max(mc, 1) / (N * D * D); dRef = dm || 1;
+    if (G.ready) { uploadCloud(); if (MZ.on) startMeasure(); }
+    dirty.cloudColor = true; dirty.faces = true;
   }
 
   // ---------- 3D ----------
+  // The cloud is drawn in three layers: a soft glow (every sampled point as a wide Gaussian sprite, added up in a
+  // half float buffer at half the resolution and tone mapped so the hue survives where the cloud is dense), fine grains
+  // (each point as a small spark, so single finds stay visible in the faint outskirts), and on top the cut faces.
   const G = { ready: false, failed: false };
   const ORBIT0 = { theta: -1.05, phi: 1.2, zoom: 1 };
   const orbit = { ...ORBIT0, spin: !reduce };
   let dragging = false;
-  const vPane = $('vPane'), sliceCan = $('slice'), rCan = $('rCan'), rPane = $('rPane');
+  const vPane = $('vPane'), sliceCan = $('slice'), rCan = $('rCan'), rPane = $('rPane'), ovCan = $('ov');
   let VW = 0, VH = 0, RW = 0, RH = 0;
   const MAXN = 60000;
+  const GLOW_R = 0.045;          // glow sprite radius, as a fraction of the fit radius
+  const GLOW_PEAK = 3.2;         // tone map input at the densest column seen (1 − e^(−3.2) = 0.96)
+  const FACE_N = 150, FLOOR_NY = 212;   // cut face textures: walls FACE_N square, the floor FACE_N by FLOOR_NY
+  const CUT = { on: false, az: null, zs: 1, L: 1 };
+  const MZ = { on: false, k: 0, tt: 0 };
+  const NO_FLASH = -1e4;
+  // one clock for the flashes of new finds, in seconds since the page opened
+  const T_0 = performance.now(), clk = () => (performance.now() - T_0) / 1000;
+
+  const CUT_GLSL = [
+    'uniform float uCut; uniform vec2 uC1; uniform vec2 uC2; uniform float uZs;',
+    'bool cutAway(vec3 p) { return uCut > 0.5 && dot(p.xy, uC1) > 0.0 && dot(p.xy, uC2) > 0.0 && p.z * uZs > 0.0; }'].join('\n');
+  const cutUniforms = () => ({ uCut: { value: 0 }, uC1: { value: new THREE.Vector2(1, 0) }, uC2: { value: new THREE.Vector2(0, 1) }, uZs: { value: 1 } });
 
   function init3D() {
     if (G.ready) return true;
     if (G.failed || !window.THREE) { G.failed = true; return false; }
     let renderer;
-    try { renderer = new THREE.WebGLRenderer({ antialias: true }); }
+    try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); }
     catch (_) { G.failed = true; return false; }
+    renderer.autoClear = false;
     const el = renderer.domElement;
     el.id = 'gl'; el.tabIndex = 0;
     el.setAttribute('role', 'application');
-    el.setAttribute('aria-label', 'Probability cloud in 3D. Drag to orbit, scroll to zoom. Arrow keys orbit, plus and minus zoom, 0 resets the view.');
+    el.setAttribute('aria-label', 'Probability cloud in 3D. Drag to orbit, scroll to zoom. Arrow keys orbit, plus and minus zoom, 0 resets the view, C cuts the cloud open, M measures.');
     vPane.insertBefore(el, sliceCan);
-    const scene = new THREE.Scene();
     const cam = new THREE.PerspectiveCamera(36, 1, 0.01, 5000);
     cam.up.set(0, 0, 1);
+    const camQ = new THREE.Camera();
+    const tri = new THREE.BufferGeometry(); tri.setAttribute('position', new THREE.Float32BufferAttribute([-1, -1, 0, 3, -1, 0, -1, 3, 0], 3));
+    const fullscreen = (mat) => { const m = new THREE.Mesh(tri, mat); m.frustumCulled = false; const s = new THREE.Scene(); s.add(m); return s; };
+    const ex = renderer.extensions;
+    const floatOK = renderer.capabilities.isWebGL2
+      ? ex.has('EXT_color_buffer_float') || ex.has('EXT_color_buffer_half_float')
+      : ex.has('OES_texture_half_float') && ex.has('OES_texture_half_float_linear') && ex.has('EXT_color_buffer_half_float');
+    if (floatOK) ex.get(renderer.capabilities.isWebGL2 ? (ex.has('EXT_color_buffer_float') ? 'EXT_color_buffer_float' : 'EXT_color_buffer_half_float') : 'EXT_color_buffer_half_float');
+    const rt = floatOK ? new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, format: THREE.RGBAFormat, depthBuffer: false, stencilBuffer: false,
+      minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, generateMipmaps: false }) : null;
 
+    // the sampled points, shared by the glow and the grains
     const geo = new THREE.BufferGeometry();
-    const posA = new THREE.BufferAttribute(new Float32Array(MAXN * 3), 3); posA.setUsage(THREE.DynamicDrawUsage);
-    const colA = new THREE.BufferAttribute(new Float32Array(MAXN * 3), 3); colA.setUsage(THREE.DynamicDrawUsage);
-    const wA = new THREE.BufferAttribute(new Float32Array(MAXN), 1); wA.setUsage(THREE.DynamicDrawUsage);
-    geo.setAttribute('position', posA); geo.setAttribute('aCol', colA); geo.setAttribute('aW', wA);
-    const mat = new THREE.ShaderMaterial({
-      uniforms: { uSize: { value: 10 }, uAlpha: { value: 0.2 } },
+    const dyn = (k) => { const a = new THREE.BufferAttribute(new Float32Array(MAXN * k), k); a.setUsage(THREE.DynamicDrawUsage); return a; };
+    const posA = dyn(3), colA = dyn(3), wA = dyn(1), bA = dyn(1);
+    bA.array.fill(NO_FLASH);
+    geo.setAttribute('position', posA); geo.setAttribute('aCol', colA); geo.setAttribute('aW', wA); geo.setAttribute('aB', bA);
+    const add11 = { transparent: true, depthWrite: false, depthTest: false, blending: THREE.CustomBlending, blendSrc: THREE.OneFactor, blendDst: THREE.OneFactor, blendEquation: THREE.AddEquation };
+    const glowMat = new THREE.ShaderMaterial({
+      uniforms: { uSize: { value: 10 }, uGain: { value: 1 }, ...cutUniforms() },
       vertexShader: [
         'attribute vec3 aCol; attribute float aW;',
-        'uniform float uSize; uniform float uAlpha;',
+        'uniform float uSize; uniform float uGain;', CUT_GLSL,
         'varying vec3 vCol; varying float vA;',
         'void main() {',
+        '  if (cutAway(position)) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); gl_PointSize = 0.0; vCol = vec3(0.0); vA = 0.0; return; }',
         '  vec4 mv = modelViewMatrix * vec4(position, 1.0);',
         '  gl_Position = projectionMatrix * mv;',
-        '  float s = uSize / -mv.z;',
-        '  gl_PointSize = max(1.5, s);',
-        '  vCol = aCol; vA = uAlpha * aW * min(1.0, s * s / 2.25);',
+        '  gl_PointSize = max(1.0, uSize / -mv.z);',
+        '  vCol = aCol; vA = uGain * aW;',
         '}'].join('\n'),
       fragmentShader: [
         'varying vec3 vCol; varying float vA;',
         'void main() {',
         '  vec2 c = gl_PointCoord - 0.5; float d2 = dot(c, c) * 4.0;',
         '  if (d2 > 1.0) discard;',
-        '  float g = exp(-3.2 * d2);',
-        '  gl_FragColor = vec4(vCol, vA * g);',
+        '  float g = vA * exp(-3.2 * d2);',
+        '  gl_FragColor = vec4(vCol * g, g);',
         '}'].join('\n'),
-      transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending
+      ...add11
     });
-    const pts = new THREE.Points(geo, mat); pts.frustumCulled = false; scene.add(pts);
+    // the glow has its own geometry over the same attributes, so it can draw only the first part of the points
+    const glowGeo = new THREE.BufferGeometry();
+    for (const [k, a] of Object.entries(geo.attributes)) glowGeo.setAttribute(k, a);
+    const glow = new THREE.Points(glowGeo, glowMat); glow.frustumCulled = false;
+    const cloudScene = new THREE.Scene(); cloudScene.add(glow);
+    // tone map: keep the hue, roll the brightness off as 1 − e^(−L), and let only the densest parts run toward white
+    const compMat = new THREE.ShaderMaterial({
+      uniforms: { tAcc: { value: rt ? rt.texture : null }, uK: { value: 1 } },
+      vertexShader: 'varying vec2 vUv; void main() { vUv = position.xy * 0.5 + 0.5; gl_Position = vec4(position.xy, 0.0, 1.0); }',
+      fragmentShader: [
+        'uniform sampler2D tAcc; uniform float uK; varying vec2 vUv;',
+        'void main() {',
+        '  vec3 a = texture2D(tAcc, vUv).rgb * uK;',
+        '  float L = max(max(a.r, a.g), a.b);',
+        '  float m = pow(1.0 - exp(-L), 0.8);',
+        '  vec3 c = L > 1e-6 ? a * (m / L) : vec3(0.0);',
+        // the densest columns run hot toward white, like an overexposed photograph, but keep a tint of their hue
+        '  c = mix(c, vec3(m), 0.4 * smoothstep(0.6, 1.0, m));',
+        '  gl_FragColor = vec4(c, max(max(c.r, c.g), c.b));',
+        '}'].join('\n'),
+      ...add11
+    });
+    const compScene = fullscreen(compMat);
+    const grainMat = new THREE.ShaderMaterial({
+      uniforms: { uPx: { value: 1.5 }, uA: { value: 0.3 }, uNow: { value: 0 }, uFlash: { value: 20 }, uFlashA: { value: 1.4 }, ...cutUniforms() },
+      vertexShader: [
+        'attribute vec3 aCol; attribute float aW; attribute float aB;',
+        'uniform float uPx; uniform float uA; uniform float uNow; uniform float uFlash; uniform float uFlashA;', CUT_GLSL,
+        'varying vec3 vCol; varying float vA;',
+        'void main() {',
+        '  if (cutAway(position)) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); gl_PointSize = 0.0; vCol = vec3(0.0); vA = 0.0; return; }',
+        '  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
+        '  float age = uNow - aB, f = age >= 0.0 ? exp(-age / 0.45) : 0.0;',
+        '  gl_PointSize = uPx + f * uFlash;',
+        '  vCol = mix(aCol, vec3(1.0), 0.3 + 0.35 * f); vA = uA * aW + uFlashA * f;',
+        '}'].join('\n'),
+      fragmentShader: [
+        'varying vec3 vCol; varying float vA;',
+        'void main() {',
+        '  vec2 c = gl_PointCoord - 0.5; float d2 = dot(c, c) * 4.0;',
+        '  if (d2 > 1.0) discard;',
+        '  float g = vA * exp(-4.0 * d2);',
+        '  gl_FragColor = vec4(vCol * g, g);',
+        '}'].join('\n'),
+      ...add11
+    });
+    const grainGeo = new THREE.BufferGeometry();
+    for (const [k, a] of Object.entries(geo.attributes)) grainGeo.setAttribute(k, a);
+    const grains = new THREE.Points(grainGeo, grainMat); grains.frustumCulled = false;
+    const grainScene = new THREE.Scene(); grainScene.add(grains);
 
-    // nucleus
-    const ng = new THREE.BufferGeometry(); ng.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0], 3));
-    const nucleus = new THREE.Points(ng, new THREE.PointsMaterial({ color: 0xffffff, size: 4, sizeAttenuation: false, transparent: true, opacity: 0.95, depthTest: false }));
-    nucleus.renderOrder = 2; scene.add(nucleus);
+    const top = new THREE.Scene();
+    // cut faces: two quarter disk walls and the floor sector between them, textured with |ψ|² in that plane
+    const faces = [[FACE_N, FACE_N], [FACE_N, FACE_N], [FACE_N, FLOOR_NY]].map(([nx, ny]) => {
+      // texels written straight into a data texture (row 0 at v = 0, so the top row of the face is the last uv pair)
+      const data = new Uint8Array(4 * nx * ny);
+      const tex = new THREE.DataTexture(data, nx, ny, THREE.RGBAFormat); tex.minFilter = THREE.LinearFilter; tex.magFilter = THREE.LinearFilter; tex.generateMipmaps = false;
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(12), 3));
+      g.setAttribute('uv', new THREE.Float32BufferAttribute([0, 1, 1, 1, 1, 0, 0, 0], 2));
+      g.setIndex([0, 1, 2, 0, 2, 3]);
+      const mesh = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, depthTest: false, depthWrite: false }));
+      mesh.frustumCulled = false; mesh.visible = false; mesh.renderOrder = 1;
+      top.add(mesh);
+      const n = nx * ny;
+      return { nx, ny, data, tex, g, mesh, a: new Float32Array(n), ai: new Float32Array(n), b: null, bi: null, gz: new Float32Array(n), inside: new Uint8ClampedArray(n) };
+    });
+    const nodeLines = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0xe6ecf3, transparent: true, opacity: 0.7, depthTest: false }));
+    nodeLines.renderOrder = 2; nodeLines.frustumCulled = false; nodeLines.visible = false; top.add(nodeLines);
+    const rims = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x8796ab, transparent: true, opacity: 0.25, depthTest: false }));
+    rims.renderOrder = 2; rims.frustumCulled = false; rims.visible = false; top.add(rims);
 
     // unit axes, scaled with the view
     const ag = new THREE.BufferGeometry();
     ag.setAttribute('position', new THREE.Float32BufferAttribute([-1, 0, 0, 1, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, -1, 0, 0, 1], 3));
-    const axes = new THREE.LineSegments(ag, new THREE.LineBasicMaterial({ color: 0x5a6a80, transparent: true, opacity: 0.55, depthTest: false }));
-    scene.add(axes);
+    const axes = new THREE.LineSegments(ag, new THREE.LineBasicMaterial({ color: 0x6a7a90, transparent: true, opacity: 0.5, depthTest: false }));
+    axes.renderOrder = 3; top.add(axes);
 
     // shell of radius r (from hovering the radial plot): three great circles
-    const sp = [];
+    const spts = [];
     for (let c = 0; c < 3; c++) for (let i = 0; i < 96; i++) {
       for (const k of [i, i + 1]) {
-        const a = k / 96 * 2 * Math.PI, ca = Math.cos(a), sa = Math.sin(a);
-        sp.push(...(c === 0 ? [ca, sa, 0] : c === 1 ? [ca, 0, sa] : [0, ca, sa]));
+        const a = k / 96 * 2 * Math.PI, ca = Math.cos(a), sa2 = Math.sin(a);
+        spts.push(...(c === 0 ? [ca, sa2, 0] : c === 1 ? [ca, 0, sa2] : [0, ca, sa2]));
       }
     }
-    const sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3));
+    const sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.Float32BufferAttribute(spts, 3));
     const shell = new THREE.LineSegments(sg, new THREE.LineBasicMaterial({ color: 0xe2b350, transparent: true, opacity: 0.8, depthTest: false }));
-    shell.visible = false; scene.add(shell);
+    shell.visible = false; shell.renderOrder = 3; top.add(shell);
 
     // center of charge ⟨r⟩(t)
     const dmark = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), new THREE.MeshBasicMaterial({ color: 0xffd166, depthTest: false }));
-    dmark.renderOrder = 3; dmark.visible = false; scene.add(dmark);
+    dmark.renderOrder = 4; dmark.visible = false; top.add(dmark);
     const dlg = new THREE.BufferGeometry(); dlg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(6), 3));
     const dline = new THREE.LineSegments(dlg, new THREE.LineBasicMaterial({ color: 0xffd166, depthTest: false }));
-    dline.visible = false; scene.add(dline);
+    dline.visible = false; dline.renderOrder = 4; top.add(dline);
 
-    Object.assign(G, { ready: true, renderer, el, scene, cam, geo, posA, colA, wA, mat, pts, axes, shell, dmark, dline, nucleus });
+    Object.assign(G, { ready: true, glowGeo, glowFrac: 1, grainGeo, grainFrac: 1, renderer, el, cam, camQ, rt, geo, posA, colA, wA, bA,
+      glowMat, cloudScene, compMat, compScene, grainMat, grainScene, top, faces, nodeLines, rims, axes, shell, dmark, dline });
     renderer.setPixelRatio(dpr); renderer.setSize(Math.max(1, VW), Math.max(1, VH));
+    sizeTargets();
     bind3D(el);
     if (cloud) uploadCloud();
     return true;
   }
+  function sizeTargets() {
+    if (!G.ready) return;
+    // the glow is soft, so its buffer runs at half the screen resolution (a quarter of the pixels)
+    if (G.rt) G.rt.setSize(Math.max(1, Math.round(VW * dpr / 2)), Math.max(1, Math.round(VH * dpr / 2)));
+    ovCan.width = Math.max(1, Math.round(VW * dpr)); ovCan.height = Math.max(1, Math.round(VH * dpr));
+    ovCan.style.width = VW + 'px'; ovCan.style.height = VH + 'px';
+  }
+  // Buffer uploads. three.js r128 sends one range per attribute per frame, so ranges asked for between two frames are
+  // merged, and a whole buffer upload is never narrowed by a later partial one.
+  function markAll(a) { a.updateRange.offset = 0; a.updateRange.count = -1; a.needsUpdate = true; a.pend = 'all'; }
+  function markRange(a, off, cnt) {
+    if (a.pend === 'all') return;
+    if (a.pend === 'part') { const lo = Math.min(a.updateRange.offset, off), hi = Math.max(a.updateRange.offset + a.updateRange.count, off + cnt); a.updateRange.offset = lo; a.updateRange.count = hi - lo; }
+    else { a.updateRange.offset = off; a.updateRange.count = cnt; }
+    a.needsUpdate = true; a.pend = 'part';
+  }
   function uploadCloud() {
     G.posA.array.set(cloud.pos);
-    G.posA.needsUpdate = true;
-    G.geo.setDrawRange(0, cloud.N);
+    markAll(G.posA);
+    G.bA.array.fill(NO_FLASH); markAll(G.bA);
+    G.geo.setDrawRange(0, MZ.on ? 0 : cloud.N);
     dirty.cloudColor = true;
   }
-  function colorPoints() {
-    if (!G.ready || !cloud) return;
-    const N = cloud.N, col = G.colA.array, w = G.wA.array, aRe = cloud.aRe, aIm = cloud.aIm;
-    if (cloud.bRe) {
-      const del = dE() * S.t / HBAR_EVFS, c = Math.cos(del), s = -Math.sin(del), bRe = cloud.bRe, bIm = cloud.bIm;
-      for (let i = 0; i < N; i++) {
-        const br = bRe[i] * c - bIm[i] * s, bi = bRe[i] * s + bIm[i] * c;
-        const re = aRe[i] + br, im = aIm[i] + bi;
-        const q = aRe[i] * aRe[i] + aIm[i] * aIm[i] + bRe[i] * bRe[i] + bIm[i] * bIm[i];
-        w[i] = q > 0 ? (re * re + im * im) / (2 * q) : 0;
-        const h = hueIdx(re, im);
-        col[3 * i] = HUE[h]; col[3 * i + 1] = HUE[h + 1]; col[3 * i + 2] = HUE[h + 2];
-      }
-    } else if (S.real) {
-      for (let i = 0; i < N; i++) {
-        const C = aRe[i] >= 0 ? POSC : NEGC;
-        col[3 * i] = C[0]; col[3 * i + 1] = C[1]; col[3 * i + 2] = C[2]; w[i] = 1;
-      }
-    } else {
-      for (let i = 0; i < N; i++) {
-        const h = hueIdx(aRe[i], aIm[i]);
-        col[3 * i] = HUE[h]; col[3 * i + 1] = HUE[h + 1]; col[3 * i + 2] = HUE[h + 2]; w[i] = 1;
-      }
+  // color of one point from ψ_A (and ψ_B), written into C; returns the weight w of the point
+  const SP = [0, 0, 0];
+  function pointColor(ar, ai, br, bi, del, C) {
+    if (br !== null) {
+      superpose(ar, ai, br, bi, del, SP);
+      const h = hueIdx(SP[0], SP[1]); C[0] = HUE[h]; C[1] = HUE[h + 1]; C[2] = HUE[h + 2];
+      return SP[2];
     }
-    G.colA.needsUpdate = true; G.wA.needsUpdate = true;
+    if (S.real) { const P = ar >= 0 ? POSC : NEGC; C[0] = P[0]; C[1] = P[1]; C[2] = P[2]; return 1; }
+    const h = hueIdx(ar, ai); C[0] = HUE[h]; C[1] = HUE[h + 1]; C[2] = HUE[h + 2];
+    return 1;
+  }
+  function colorPoints() {
+    if (!G.ready || !cloud || MZ.on) return;
+    const N = cloud.N, col = G.colA.array, w = G.wA.array, aRe = cloud.aRe, aIm = cloud.aIm, bRe = cloud.bRe, bIm = cloud.bIm;
+    const del = dE() * S.t / HBAR_EVFS, C = [0, 0, 0];
+    for (let i = 0; i < N; i++) {
+      w[i] = pointColor(aRe[i], aIm[i], bRe ? bRe[i] : null, bRe ? bIm[i] : 0, del, C);
+      col[3 * i] = C[0]; col[3 * i + 1] = C[1]; col[3 * i + 2] = C[2];
+    }
+    markAll(G.colA); markAll(G.wA);
+  }
+
+  // ---------- measurement: one position at a time ----------
+  // Finds come slowly at first (4 per second) and then faster, k(t) = 4τ(e^(t/τ) − 1), until the cloud is full.
+  const MEAS_TAU = 2.5, MEAS_RATE0 = 4;
+  const measTarget = (tt) => Math.floor(MEAS_RATE0 * MEAS_TAU * (Math.exp(tt / MEAS_TAU) - 1));
+  function startMeasure() {
+    MZ.on = true; MZ.k = 0; MZ.tt = 0;
+    if (G.ready) { G.bA.array.fill(NO_FLASH); markAll(G.bA); G.geo.setDrawRange(0, 0); }
+    updateMeasureUI();
+  }
+  function stopMeasure() {
+    MZ.on = false;
+    if (G.ready && cloud) { uploadCloud(); colorPoints(); }
+    updateMeasureUI();
+  }
+  function setMeasure(on) { if (on) startMeasure(); else stopMeasure(); schedule(); }
+  function updateMeasureUI() {
+    $('measure').setAttribute('aria-pressed', String(MZ.on));
+    $('mclock').hidden = !MZ.on || S.view !== '3d';
+    if (MZ.on) $('mclock').textContent = `${MZ.k.toLocaleString('en-US')} ${MZ.k === 1 ? 'position' : 'positions'} measured`;
+  }
+  // Each find is an independent exact sample: a point from |ψ_A|² (or from the mixture (|ψ_A|² + |ψ_B|²)/2,
+  // accepted with probability w at the current time, which leaves exactly |ψ(t)|²).
+  function stepMeasure(dt) {
+    MZ.tt += dt;
+    const N = cloud.N, goal = Math.min(N, measTarget(MZ.tt)), now = clk();
+    if (MZ.k >= goal) return;
+    const k0 = MZ.k, pos = G.posA.array, col = G.colA.array, w = G.wA.array, bA = G.bA.array;
+    const p = [0, 0, 0], oa = [0, 0], ob = [0, 0], C = [0, 0, 0], del = dE() * S.t / HBAR_EVFS;
+    let guard = 0;
+    while (MZ.k < goal && guard++ < 400000) {
+      samplePoint(!stB || Math.random() < 0.5 ? stA : stB, Math.random, p);
+      psiAt(stA, p[0], p[1], p[2], oa);
+      if (stB) psiAt(stB, p[0], p[1], p[2], ob);
+      const acc = pointColor(oa[0], oa[1], stB ? ob[0] : null, ob[1], del, C);
+      if (stB && Math.random() >= acc) continue;
+      const k = MZ.k++;
+      pos[3 * k] = p[0]; pos[3 * k + 1] = p[1]; pos[3 * k + 2] = p[2];
+      col[3 * k] = C[0]; col[3 * k + 1] = C[1]; col[3 * k + 2] = C[2];
+      w[k] = 1; bA[k] = now;
+    }
+    const n = MZ.k - k0;
+    for (const [a, s] of [[G.posA, 3], [G.colA, 3], [G.wA, 1], [G.bA, 1]]) markRange(a, k0 * s, n * s);
+    G.geo.setDrawRange(0, MZ.k);
+    updateMeasureUI();
+  }
+
+  // ---------- a living cloud ----------
+  // While the view moves, the oldest points are replaced by fresh draws from the same distribution, about a
+  // twentieth of the cloud per second, and each new one glints as it appears. Every point is still an independent
+  // sample, so the picture stays an exact sample of |ψ|²; only which samples are shown changes.
+  const LIVE = { i: 0, acc: 0, perSec: 0.05 };
+  function refreshPoints(dt) {
+    const N = cloud.N;
+    LIVE.acc += dt * LIVE.perSec * N;
+    let n = Math.floor(LIVE.acc);
+    if (n < 1) return;
+    LIVE.acc -= n;
+    if (LIVE.i >= N) LIVE.i = 0;
+    n = Math.min(n, N - LIVE.i, 400);
+    const i0 = LIVE.i, now = clk(), pos = G.posA.array, col = G.colA.array, w = G.wA.array, bA = G.bA.array;
+    const p = [0, 0, 0], o = [0, 0], C = [0, 0, 0], del = dE() * S.t / HBAR_EVFS;
+    for (let i = i0; i < i0 + n; i++) {
+      // the same draw as sampleCloud: from |ψ_A|², or for a superposition from the mixture
+      samplePoint(!stB || Math.random() < 0.5 ? stA : stB, Math.random, p);
+      cloud.pos[3 * i] = pos[3 * i] = p[0]; cloud.pos[3 * i + 1] = pos[3 * i + 1] = p[1]; cloud.pos[3 * i + 2] = pos[3 * i + 2] = p[2];
+      psiAt(stA, p[0], p[1], p[2], o); cloud.aRe[i] = o[0]; cloud.aIm[i] = o[1];
+      if (stB) { const ar = o[0], ai = o[1]; psiAt(stB, p[0], p[1], p[2], o); cloud.bRe[i] = o[0]; cloud.bIm[i] = o[1]; w[i] = pointColor(ar, ai, o[0], o[1], del, C); }
+      else w[i] = pointColor(o[0], o[1], null, 0, del, C);
+      col[3 * i] = C[0]; col[3 * i + 1] = C[1]; col[3 * i + 2] = C[2];
+      bA[i] = now;
+    }
+    LIVE.i = i0 + n;
+    for (const [a, s] of [[G.posA, 3], [G.colA, 3], [G.wA, 1], [G.bA, 1]]) markRange(a, i0 * s, n * s);
+  }
+
+  // ---------- cutaway ----------
+  // The octant facing the camera is removed: |φ − φ_cam| < 45° on the camera's side of z = 0. Its walls are quarter
+  // disks in the half planes at φ_cam ± 45° and its floor is the 90° sector of z = 0, each painted with |ψ|² there.
+  function setCut(on) {
+    CUT.on = on; $('cut').setAttribute('aria-pressed', String(on));
+    dirty.faces = true; schedule();
+  }
+  function contourGrid(g, nx, ny, X, Y) {
+    const segs = [];
+    for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) {
+      const g0 = g[j * nx + i] < 0, g1 = g[j * nx + i + 1] < 0, g2 = g[(j + 1) * nx + i + 1] < 0, g3 = g[(j + 1) * nx + i] < 0;
+      if (g0 === g1 && g1 === g2 && g2 === g3) continue;   // no sign change in this cell
+      const v = [g[j * nx + i], g[j * nx + i + 1], g[(j + 1) * nx + i + 1], g[(j + 1) * nx + i]];
+      const P = [[X(i), Y(j)], [X(i + 1), Y(j)], [X(i + 1), Y(j + 1)], [X(i), Y(j + 1)]];
+      const pts = [];
+      for (let e = 0; e < 4; e++) {
+        const a = v[e], b = v[(e + 1) % 4];
+        if ((a < 0) !== (b < 0)) {
+          const t = a / (a - b), p = P[e], q = P[(e + 1) % 4];
+          pts.push([p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t]);
+        }
+      }
+      if (pts.length >= 2) segs.push(pts[0][0], pts[0][1], pts[1][0], pts[1][1]);
+      if (pts.length === 4) segs.push(pts[2][0], pts[2][1], pts[3][0], pts[3][1]);
+    }
+    return segs;
+  }
+  function buildFaces() {
+    // the faces reach out to the radius holding 96% of the probability, where the glow has faded
+    const L = Math.max(stA.q(0.96), stB ? stB.q(0.96) : 0), az = orbit.theta, zs = Math.cos(orbit.phi) >= 0 ? 1 : -1, n = FACE_N, o = [0, 0];
+    const cplx = !S.real && S.m !== 0, lines = [], rim = [];
+    CUT.az = az; CUT.zs = zs; CUT.L = L;
+    // local coordinates (X, Y) of each face and the map to 3D; texture row 0 is the top (largest Y)
+    const specs = [az + Math.PI / 4, az - Math.PI / 4].map((al) => {
+      const ca = Math.cos(al), sa = Math.sin(al);
+      return { X: (i) => (i + 0.5) * L / n, Y: (j) => zs * (L - (j + 0.5) * L / n), to3: (u, v) => [u * ca, u * sa, v],
+        inside: (u, v) => u * u + v * v <= L * L, corners: [[0, 0, 0], [L * ca, L * sa, 0], [L * ca, L * sa, zs * L], [0, 0, zs * L]] };
+    });
+    const ex = Math.cos(az), ey = Math.sin(az), Hh = L * Math.SQRT1_2;
+    const fl = (a, b) => [a * ex - b * ey, a * ey + b * ex, 0];
+    specs.push({ X: (i) => (i + 0.5) * L / n, Y: (j) => Hh - (j + 0.5) * 2 * Hh / FLOOR_NY, to3: fl,
+      inside: (a, b) => a * a + b * b <= L * L && Math.abs(b) <= a, corners: [fl(0, -Hh), fl(L, -Hh), fl(L, Hh), fl(0, Hh)] });
+    // Turning the view only rotates the faces about z, so r, cos θ, R(r) and P_l^m(cos θ) at each texel are kept
+    // per state, and a turn recomputes only the factor in φ (angular(), the same function psiAt uses).
+    const ckey = [S.n, S.l, S.m, S.real, stB ? [stB.n, stB.l, stB.m].join() : '', L, zs].join('|');
+    specs.forEach((sp, fi) => {
+      const F = G.faces[fi], nx = F.nx, ny = F.ny, N2 = nx * ny;
+      if (stB && !F.b) { F.b = new Float32Array(N2); F.bi = new Float32Array(N2); }
+      if (F.ckey !== ckey) {
+        F.ckey = ckey;
+        F.RA = new Float32Array(N2); F.PA = new Float32Array(N2); F.RB = stB ? new Float32Array(N2) : null; F.PB = stB ? new Float32Array(N2) : null; F.dphi = new Float32Array(N2);
+        for (let j = 0; j < ny; j++) {
+          const v = sp.Y(j);
+          for (let i = 0; i < nx; i++) {
+            const u = sp.X(i), k = j * nx + i;
+            // in face coordinates: a wall has radius u and height v; the floor has (a, b) = (u, v) in the plane z = 0
+            const r = Math.hypot(u, fi < 2 ? v : 0, fi < 2 ? 0 : v), c = fi < 2 ? (r > 0 ? v / r : 1) : 0;
+            F.inside[k] = sp.inside(u, v) ? Math.round(255 * (1 - 0.7 * smooth(0.78, 1, r / L))) : 0;
+            F.RA[k] = radialR(stA.n, stA.l, r, stA.RN); F.PA[k] = assocP(stA.l, stA.am, c);
+            if (stB) { F.RB[k] = radialR(stB.n, stB.l, r, stB.RN); F.PB[k] = assocP(stB.l, stB.am, c); }
+            F.dphi[k] = fi < 2 ? 0 : Math.atan2(v, u);
+          }
+        }
+      }
+      // opaque inside, fading toward the rim so the face blends into the glow around it (F.inside)
+      const al = fi === 0 ? az + Math.PI / 4 : fi === 1 ? az - Math.PI / 4 : az;
+      for (let k = 0; k < N2; k++) {
+        const ph = al + F.dphi[k];
+        angular(stA, F.PA[k], ph, o); F.a[k] = o[0] * F.RA[k]; F.ai[k] = o[1] * F.RA[k];
+        if (stB) { angular(stB, F.PB[k], ph, o); F.b[k] = o[0] * F.RB[k]; F.bi[k] = o[1] * F.RB[k]; }
+        // a real function with the same zeros as ψ, for the nodal lines
+        F.gz[k] = cplx ? F.RA[k] * F.PA[k] : F.a[k];
+      }
+      F.g.attributes.position.array.set(sp.corners.flat());
+      F.g.attributes.position.needsUpdate = true;
+      if (!stB) {
+        const sg = contourGrid(F.gz, nx, ny, sp.X, sp.Y);
+        for (let q = 0; q < sg.length; q += 4) {
+          if (!sp.inside(sg[q], sg[q + 1]) || !sp.inside(sg[q + 2], sg[q + 3])) continue;
+          lines.push(...sp.to3(sg[q], sg[q + 1]), ...sp.to3(sg[q + 2], sg[q + 3]));
+        }
+      }
+    });
+    // outline of the removed octant: two quarter arcs, the floor arc and the three straight edges
+    const arc = (f, a0, a1) => { for (let q = 0; q < 32; q++) rim.push(...f(a0 + (a1 - a0) * q / 32), ...f(a0 + (a1 - a0) * (q + 1) / 32)); };
+    for (const al of [az + Math.PI / 4, az - Math.PI / 4]) {
+      const ca = Math.cos(al), sa = Math.sin(al);
+      arc((b) => [L * Math.cos(b) * ca, L * Math.cos(b) * sa, zs * L * Math.sin(b)], 0, Math.PI / 2);
+      rim.push(0, 0, 0, L * ca, L * sa, 0);
+    }
+    arc((b) => [L * Math.cos(b), L * Math.sin(b), 0], az - Math.PI / 4, az + Math.PI / 4);
+    rim.push(0, 0, 0, 0, 0, zs * L);
+    G.nodeLines.geometry.setAttribute('position', new THREE.Float32BufferAttribute(lines, 3));
+    G.rims.geometry.setAttribute('position', new THREE.Float32BufferAttribute(rim, 3));
+    paintFaces();
+  }
+  const FACE_TONE = (v) => 0.92 * (1 - Math.exp(-3 * v)) / (1 - Math.exp(-3));
+  const smooth = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  function paintFaces() {
+    const del = stB ? dE() * S.t / HBAR_EVFS : 0, c = Math.cos(del), s = -Math.sin(del);
+    const sign = S.real && !stB, dens = S.color === 'density', bg = rgbOf(T.cbg);
+    for (const F of G.faces) {
+      const data = F.data, n = F.a.length;
+      for (let k = 0; k < n; k++) {
+        const o = 4 * k;
+        if (!F.inside[k]) { data[o + 3] = 0; continue; }
+        let re = F.a[k], im = F.ai[k], d;
+        if (stB) { re += F.b[k] * c - F.bi[k] * s; im += F.b[k] * s + F.bi[k] * c; d = (re * re + im * im) / 2; }
+        else d = re * re + im * im;
+        const v = FACE_TONE(scaleV(d / dRef));
+        let r, g, b;
+        if (dens) { const ci = 3 * Math.round(v * 255); r = CMAP[ci]; g = CMAP[ci + 1]; b = CMAP[ci + 2]; }
+        else {
+          if (sign) { const C = re >= 0 ? POSC : NEGC; r = 255 * C[0] * v; g = 255 * C[1] * v; b = 255 * C[2] * v; }
+          else { const h = hueIdx(re, im); r = 255 * HUE[h] * v; g = 255 * HUE[h + 1] * v; b = 255 * HUE[h + 2] * v; }
+        }
+        data[o] = bg[0] * (1 - v) + r; data[o + 1] = bg[1] * (1 - v) + g; data[o + 2] = bg[2] * (1 - v) + b; data[o + 3] = F.inside[k];
+      }
+      F.tex.needsUpdate = true;
+    }
+  }
+  function rgbOf(c) {
+    const v = withAlpha(c, 1).match(/[\d.]+/g) || [0, 0, 0];
+    return [+v[0], +v[1], +v[2]];
   }
   const tanHalf = () => Math.tan((G.cam.fov * Math.PI / 180) / 2);
   function camDist() { return curFit * 1.08 / (tanHalf() * Math.min(1, G.cam.aspect)) / orbit.zoom; }
@@ -917,17 +1264,68 @@ select:disabled { opacity: 0.5; }
     return dip.d.map((v) => v[0] * c + v[1] * s);
   }
   function render3D() {
-    const D = camDist(), ps = projScale();
-    G.cam.aspect = VW / Math.max(1, VH); G.cam.updateProjectionMatrix();
-    G.cam.position.set(D * Math.sin(orbit.phi) * Math.cos(orbit.theta), D * Math.sin(orbit.phi) * Math.sin(orbit.theta), D * Math.cos(orbit.phi));
-    G.cam.lookAt(0, 0, 0);
-    G.cam.near = D * 0.02; G.cam.far = D * 10; G.cam.updateProjectionMatrix();
-    const N = cloud ? cloud.N : 40000;
-    const pxPerWorld = VH * dpr / (2 * tanHalf());
-    G.mat.uniforms.uSize.value = curFit * 0.024 * ps * pxPerWorld;
-    G.mat.uniforms.uAlpha.value = 0.22 * Math.sqrt(40000 / N) * (cloud && cloud.bRe ? 1.6 : 1);
+    const D = camDist(), ps = projScale(), R = G.renderer, cam = G.cam;
+    cam.aspect = VW / Math.max(1, VH);
+    cam.position.set(D * Math.sin(orbit.phi) * Math.cos(orbit.theta), D * Math.sin(orbit.phi) * Math.sin(orbit.theta), D * Math.cos(orbit.phi));
+    cam.lookAt(0, 0, 0);
+    cam.near = D * 0.02; cam.far = D * 10; cam.updateProjectionMatrix();
+    const N = cloud ? cloud.N : 40000, th = tanHalf();
+
+    // cutaway: rebuild the faces when the state changed or the view turned by more than about a degree
+    const cutOn = CUT.on && !!cloud;
+    const zsNow = Math.cos(orbit.phi) >= 0 ? 1 : -1;
+    if (cutOn && (dirty.faces || CUT.az === null || Math.abs(orbit.theta - CUT.az) > 0.02 || zsNow !== CUT.zs)) { buildFaces(); dirty.faces = false; dirty.facePaint = false; }
+    else if (cutOn && dirty.facePaint) { paintFaces(); dirty.facePaint = false; }
+    for (const F of G.faces) F.mesh.visible = cutOn;
+    G.nodeLines.visible = cutOn && S.layers.nodes; G.rims.visible = cutOn;
+    const az = CUT.az === null ? orbit.theta : CUT.az;
+    for (const m of [G.glowMat, G.grainMat]) {
+      m.uniforms.uCut.value = cutOn ? 1 : 0;
+      m.uniforms.uC1.value.set(Math.cos(az + Math.PI / 4), Math.sin(az + Math.PI / 4));
+      m.uniforms.uC2.value.set(Math.cos(az - Math.PI / 4), Math.sin(az - Math.PI / 4));
+      m.uniforms.uZs.value = CUT.zs;
+    }
+
+    // the canvas is transparent: the pane's CSS gradient is the background, and every pass writes premultiplied alpha
+    R.setRenderTarget(null); R.setClearColor(0x000000, 0); R.clear();
+
+    // glow: the expected sum at a pixel is N Σ (0.3 π R²) for column density Σ (a₀⁻²) and sprite radius R (a₀),
+    // whatever the zoom; uK scales the densest column (sigRef) to about 1.3 before the tone map
+    const Rw = curFit * GLOW_R * ps ** 0.3, avgW = cloud && cloud.bRe && !MZ.on ? 0.5 : 1;
+    const sig = viewSigma(cam);
+    const k = GLOW_PEAK / (0.3 * Math.PI * N * sig * Rw * Rw * avgW * G.glowFrac);
+    const drawn = G.geo.drawRange.count === Infinity ? N : G.geo.drawRange.count;
+    G.glowGeo.setDrawRange(0, Math.ceil(Math.min(drawn, N) * G.glowFrac));
+    G.grainGeo.setDrawRange(0, Math.ceil(Math.min(drawn, N) * G.grainFrac));
+    if (G.rt) {
+      G.glowMat.uniforms.uSize.value = 2 * Rw * G.rt.height / (2 * th);
+      G.glowMat.uniforms.uGain.value = 1;
+      R.setRenderTarget(G.rt); R.setClearColor(0x000000, 0); R.clear();
+      R.render(G.cloudScene, cam);
+      R.setRenderTarget(null);
+      G.compMat.uniforms.uK.value = k;
+      R.render(G.compScene, G.camQ);
+    } else {
+      // no float buffer: add the sprites straight onto the screen, dimmer so the core does not burn out at once
+      G.glowMat.uniforms.uSize.value = 2 * Rw * VH * dpr / (2 * th);
+      G.glowMat.uniforms.uGain.value = 0.45 * k;
+      R.render(G.cloudScene, cam);
+    }
+    // grains: each point a small spark; in the densest column they add up to about 0.35
+    const fS = VH * dpr / (2 * th), apix = (D / fS) * (D / fS);
+    // while measuring, the first finds are drawn larger so each single position reads clearly
+    G.grainMat.uniforms.uPx.value = Math.max(1.2, 1.5 * dpr) * Math.min(ps, 1.25) * (MZ.on ? 1 + 1.6 * Math.exp(-MZ.k / 1500) : 1);
+    // while measuring, the few finds so far stay visible and dim as they pile up
+    const Ng = MZ.on ? Math.max(MZ.k, 1) : N;
+    G.grainMat.uniforms.uA.value = Math.max(0.05, Math.min(MZ.on ? 0.7 : 0.5, 0.35 / (Ng * G.grainFrac * sig * apix * avgW)));
+    G.grainMat.uniforms.uNow.value = clk();
+    // a find while measuring flashes large; a fresh draw in the living cloud only glints
+    G.grainMat.uniforms.uFlash.value = MZ.on ? (reduce ? 8 : 22) * dpr * ps : 1.5 * dpr * ps;
+    G.grainMat.uniforms.uFlashA.value = MZ.on ? 1.4 : 0.45;
+    R.render(G.grainScene, cam);
+    for (const a of [G.posA, G.colA, G.wA, G.bA]) a.pend = null;
+
     G.axes.visible = S.layers.axes; G.axes.scale.setScalar(curFit * 1.12);
-    G.renderer.setClearColor(T.cbg || '#070b11');
     G.shell.visible = hoverR !== null; if (hoverR !== null) G.shell.scale.setScalar(Math.max(1e-3, hoverR));
     const dv = dipoleNow();
     G.dmark.visible = G.dline.visible = !!dv;
@@ -935,18 +1333,71 @@ select:disabled { opacity: 0.5; }
       G.dmark.position.set(dv[0], dv[1], dv[2]); G.dmark.scale.setScalar(curFit * 0.022 * ps);
       const a = G.dline.geometry.attributes.position.array; a.set([0, 0, 0, dv[0], dv[1], dv[2]]); G.dline.geometry.attributes.position.needsUpdate = true;
     }
-    G.nucleus.material.size = 4 * ps;
-    G.renderer.render(G.scene, G.cam);
-    // axis labels and the scale bar
+    R.render(G.top, cam);
+
+    // axis labels, the proton and the scale bar
     const ax = [['axX', [1, 0, 0]], ['axY', [0, 1, 0]], ['axZ', [0, 0, 1]]];
     for (const [id, d] of ax) {
       const e = $(id);
       if (!S.layers.axes) { e.hidden = true; continue; }
-      const v = new THREE.Vector3(d[0], d[1], d[2]).multiplyScalar(curFit * 1.2).project(G.cam);
+      const v = new THREE.Vector3(d[0], d[1], d[2]).multiplyScalar(curFit * 1.2).project(cam);
       e.hidden = v.z > 1;
       e.style.transform = `translate(${Math.round((v.x + 1) / 2 * VW - 4)}px, ${Math.round((1 - v.y) / 2 * VH - 9)}px)`;
     }
-    setScaleBar(VH / (2 * D * tanHalf()));
+    const octx = ovCan.getContext('2d');
+    octx.setTransform(dpr, 0, 0, dpr, 0, 0); octx.clearRect(0, 0, VW, VH);
+    const o = new THREE.Vector3(0, 0, 0).project(cam);
+    drawProton(octx, (o.x + 1) / 2 * VW, (1 - o.y) / 2 * VH, ps, Math.min(VW, VH));
+    setScaleBar(VH / (2 * D * th));
+  }
+  // Largest column density seen from the camera (a₀⁻²): the sampled points binned on the screen plane, every
+  // 2 × 2 block averaged against noise. Recomputed when the view turns by about 3° or the points change.
+  const VS = { key: '', sig: 1 };
+  function viewSigma(cam) {
+    if (!cloud) return sigRef;
+    const key = cloud.N + ':' + Math.round(orbit.theta * 20) + ':' + Math.round(orbit.phi * 20) + ':' + targetFit.toFixed(3);
+    if (key === VS.key && VS.cloud === cloud) return VS.sig;
+    const e = cam.matrixWorld.elements, ux = e[0], uy = e[1], uz = e[2], vx = e[4], vy = e[5], vz = e[6];
+    const B = 36, F = targetFit * 1.05, D = 2 * F / B, h = new Float32Array(B * B), p = cloud.pos, N = cloud.N;
+    const stride = Math.max(1, Math.ceil(N / 20000));
+    for (let i = 0; i < N; i += stride) {
+      const x = p[3 * i], y = p[3 * i + 1], z = p[3 * i + 2];
+      const a = Math.floor((x * ux + y * uy + z * uz + F) / D), b = Math.floor((x * vx + y * vy + z * vz + F) / D);
+      if (a >= 0 && a < B && b >= 0 && b < B) h[a * B + b]++;
+    }
+    let mc = 0;
+    for (let i = 0; i < B - 1; i++) for (let j = 0; j < B - 1; j++) { const o = i * B + j; mc = Math.max(mc, (h[o] + h[o + 1] + h[o + B] + h[o + B + 1]) / 4); }
+    // Exposure: the densest column alone would let one sharp peak (the 1s core in a superposition) dim everything else.
+    // So take the column density above which half the points lie, times 1.6, but never below 0.4 of the peak.
+    // For a state with no sharp peak the two agree closely and the peak sets the exposure.
+    const cs = Array.from(h).sort((a, b) => b - a), tot = cs.reduce((a, b) => a + b, 0);
+    let acc = 0, q = 0;
+    for (const c of cs) { acc += c; if (acc >= 0.5 * tot) { q = c; break; } }
+    const ref = Math.min(mc, Math.max(1.6 * q, 0.4 * mc));
+    VS.key = key; VS.cloud = cloud; VS.sig = Math.max(ref * stride, 1) / (N * D * D);
+    return VS.sig;
+  }
+  // The proton: a marked point at the center. To scale it would be far below one pixel:
+  // charge radius 0.84 fm against a₀ = 52 918 fm, a ratio of about 63,000.
+  function drawProton(ctx, cx, cy, ps, span) {
+    const gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, 7 * ps);
+    gr.addColorStop(0, 'rgba(255,244,236,0.95)'); gr.addColorStop(0.35, 'rgba(255,150,120,0.45)'); gr.addColorStop(1, 'rgba(255,120,90,0)');
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, cy, 7 * ps, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(cx, cy, 1.8 * ps, 0, 2 * Math.PI); ctx.fill();
+    if (!S.layers.proton) return;
+    // a short leader to a two line note with a dark halo instead of a box, so it reads on the cloud without hiding it
+    const l1 = 'proton, not to scale', l2 = '0.84 fm ≈ a₀ / 63,000';
+    const f1 = `700 ${11 * ps}px ${T.ui}`, f2 = `${10 * ps}px ${T.mono}`;
+    ctx.font = f1; const w1 = ctx.measureText(l1).width; ctx.font = f2; const w2 = ctx.measureText(l2).width;
+    const W = ctx.canvas.width / dpr, H = ctx.canvas.height / dpr, off = Math.max(40 * ps, Math.min(span * 0.16, 90 * ps));
+    const right = cx + off * 0.9 + Math.max(w1, w2) + 8 < W, tx = right ? cx + off * 0.9 : cx - off * 0.9, ty = Math.min(cy + off * 0.7, H - 90 * ps);
+    const ex = tx + (right ? -3 : 3) * ps, ey = ty - 3 * ps, dl = Math.hypot(ex - cx, ey - cy) || 1;
+    ctx.strokeStyle = 'rgba(230,236,243,0.55)'; ctx.lineWidth = ps;
+    ctx.beginPath(); ctx.moveTo(cx + (ex - cx) / dl * 6 * ps, cy + (ey - cy) / dl * 6 * ps); ctx.lineTo(ex, ey); ctx.stroke();
+    ctx.textAlign = right ? 'left' : 'right'; ctx.textBaseline = 'top'; ctx.lineJoin = 'round';
+    ctx.strokeStyle = 'rgba(5,8,13,0.75)'; ctx.lineWidth = 3.5 * ps;
+    ctx.font = f1; ctx.strokeText(l1, tx, ty - 6 * ps); ctx.fillStyle = 'rgba(236,241,247,0.92)'; ctx.fillText(l1, tx, ty - 6 * ps);
+    ctx.font = f2; ctx.strokeText(l2, tx, ty + 8 * ps); ctx.fillStyle = 'rgba(170,182,198,0.95)'; ctx.fillText(l2, tx, ty + 8 * ps);
   }
   function niceStep(raw) {
     const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p;
@@ -1001,6 +1452,8 @@ select:disabled { opacity: 0.5; }
       else if (e.key === '-' || e.key === '_') orbit.zoom = Math.max(0.4, orbit.zoom / 1.15);
       else if (e.key === '0') Object.assign(orbit, { theta: ORBIT0.theta, phi: ORBIT0.phi, zoom: 1 });
       else if (e.key === ' ' && mixActive()) setPlaying(!S.playing);
+      else if (e.key === 'c' || e.key === 'C') setCut(!CUT.on);
+      else if (e.key === 'm' || e.key === 'M') setMeasure(!MZ.on);
       else return;
       e.preventDefault(); schedule();
     });
@@ -1106,6 +1559,9 @@ select:disabled { opacity: 0.5; }
     const ctx = sliceCan.getContext('2d'), W = VW, H = VH, ps = projScale();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.cbg; ctx.fillRect(0, 0, W, H);
+    const pool = ctx.createRadialGradient(W / 2, H * 0.46, 0, W / 2, H * 0.46, 0.7 * Math.max(W, H));
+    pool.addColorStop(0, 'rgba(58,90,140,0.16)'); pool.addColorStop(1, 'rgba(58,90,140,0)');
+    ctx.fillStyle = pool; ctx.fillRect(0, 0, W, H);
     if (!SL.img) return;
     paintSlice();
     const bx = sliceBox(); SL.box = bx;
@@ -1143,8 +1599,6 @@ select:disabled { opacity: 0.5; }
       ctx.fillStyle = '#ffd166'; ctx.beginPath(); ctx.arc(cx + pa * sc, cy - pb * sc, 4.5 * ps, 0, 2 * Math.PI); ctx.fill();
     }
     ctx.restore();
-    // nucleus
-    ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(cx, cy, 2 * ps, 0, 2 * Math.PI); ctx.fill();
     // frame and ticks in a₀
     ctx.strokeStyle = T.cline; ctx.lineWidth = 1; ctx.strokeRect(bx.x0 + 0.5, bx.y0 + 0.5, bx.side - 1, bx.side - 1);
     const st = niceStep(2 * L / (bx.side < 300 ? 4 : 6));
@@ -1169,6 +1623,7 @@ select:disabled { opacity: 0.5; }
     ctx.fillText(va + ' / a₀', bx.x0 + 4, bx.y0 - 4);
     if (SL.plane === 'diag') { ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.cmuted; ctx.textAlign = 'right'; ctx.fillText('s along x = y', bx.x0 + bx.side - 2, bx.y0 - 4); }
     drawLegend(ctx, bx, ps);
+    drawProton(ctx, cx, cy, ps, bx.side);
     // hover readout
     if (sliceHover) {
       const { px, py } = sliceHover;
@@ -1270,17 +1725,24 @@ select:disabled { opacity: 0.5; }
     ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     for (let v = 0; v <= xMax + 1e-9; v += xs) {
       const x = X(v); ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(x, pad.T); ctx.lineTo(x, H - pad.B); ctx.stroke();
-      ctx.fillText(+v.toFixed(6), x, H - pad.B + 5);
+      if (x < W - pad.R - 44 * ps) ctx.fillText(+v.toFixed(6), x, H - pad.B + 5);
     }
+    ctx.textAlign = 'right'; ctx.fillStyle = T.ink; ctx.font = `italic ${10.5 * ps}px ${T.mono}`;
+    ctx.fillText('r / a₀', W - pad.R, H - pad.B + 5);
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted;
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     for (let v = 0; v <= yMax + 1e-12; v += ys) {
       const y = Y(v); ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(pad.L, y); ctx.lineTo(W - pad.R, y); ctx.stroke();
       ctx.fillText(+v.toPrecision(3), pad.L - 6, y);
     }
     ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(pad.L, Y(0)); ctx.lineTo(W - pad.R, Y(0)); ctx.moveTo(pad.L, pad.T); ctx.lineTo(pad.L, H - pad.B); ctx.stroke();
-    ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    ctx.font = `${11 * ps}px ${T.ui}`;
-    ctx.fillText('Radial probability P(r) = r²|R(r)|² per a₀, against r in a₀', pad.L + 6, 6 * ps);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.font = `700 ${11.5 * ps}px ${T.ui}`; ctx.fillStyle = T.ink;
+    const t1 = 'Radial probability P(r)'; ctx.fillText(t1, pad.L + 6, 7 * ps);
+    const t1w = ctx.measureText(t1).width;
+    ctx.font = `${11 * ps}px ${T.ui}`; ctx.fillStyle = T.muted;
+    const t2 = [' = r²|R(r)|², the probability per a₀ of finding the electron at distance r', ' = r²|R(r)|², per a₀', ' per a₀'].find((t) => pad.L + 6 + t1w + ctx.measureText(t).width < W - 8) || '';
+    ctx.fillText(t2, pad.L + 6 + t1w, 7 * ps);
 
     const n = Math.max(200, Math.round(W - pad.L - pad.R));
     const path = (st, f) => { ctx.beginPath(); for (let i = 0; i <= n; i++) { const r = xMax * i / n, v = f(st, r); i ? ctx.lineTo(X(r), Y(v)) : ctx.moveTo(X(r), Y(v)); } };
@@ -1299,8 +1761,12 @@ select:disabled { opacity: 0.5; }
     }
     // state A, filled
     path(stA, Pf); ctx.lineTo(X(xMax), Y(0)); ctx.lineTo(X(0), Y(0)); ctx.closePath();
-    ctx.fillStyle = withAlpha(T.accent, 0.18); ctx.fill();
-    ctx.strokeStyle = T.accent; ctx.lineWidth = 2.2 * ps; path(stA, Pf); ctx.stroke();
+    const fg = ctx.createLinearGradient(0, Y(stA.pPeak), 0, Y(0));
+    fg.addColorStop(0, withAlpha(T.accent, 0.34)); fg.addColorStop(1, withAlpha(T.accent, 0.05));
+    ctx.fillStyle = fg; ctx.fill();
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 2.2 * ps; ctx.lineJoin = 'round'; path(stA, Pf); ctx.stroke();
+    // the most probable radius, on the peak
+    ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(X(stA.rMP), Y(stA.pPeak), 3.2 * ps, 0, 2 * Math.PI); ctx.fill();
     if (cB || S.layers.same) label(ctx, (cB ? 'A ' : '') + nameText(nameOf(S.n, S.l, S.m, S.real)).replace(/ m = .*/, ''), X(stA.rMP), Y(stA.pPeak) - 4, T.accent, ps);
     // R(r), signed, scaled to fit
     if (S.layers.R) {
@@ -1385,19 +1851,25 @@ select:disabled { opacity: 0.5; }
     const is3 = v === '3d';
     if (G.ready) G.el.hidden = !is3;
     sliceCan.hidden = is3;
+    ovCan.hidden = !is3;
     spinBtn.hidden = !is3;
+    $('cut').hidden = $('measure').hidden = !is3;
+    $('cutHint').hidden = $('measHint').hidden = !is3;
+    updateMeasureUI();
     $('planeSeg').hidden = is3;
     $('scaleBar').hidden = !is3;
     for (const id of ['axX', 'axY', 'axZ']) if (!is3) $(id).hidden = true;
     for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     $('viewHint').textContent = is3
-      ? 'Drag to orbit, scroll or pinch to zoom, double click to reset. With the cloud focused, arrow keys orbit and + and − zoom. Hover the radial plot to see that radius as a shell.'
+      ? 'Drag to orbit, scroll or pinch to zoom, double click to reset. With the cloud focused, arrow keys orbit and + and − zoom. Hover the radial plot to see that radius as a shell. While the cloud turns, fresh random positions keep replacing old ones, a twentieth of the cloud each second.'
       : 'A cut through the nucleus. Dashed lines are nodes, where ψ = 0. Hover to read |ψ|². Try the xy plane for orbitals that vanish in the xz plane.';
     dirty.slice = true;
     schedule();
   }
   for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => setView(b.dataset.v));
   spinBtn.addEventListener('click', () => { orbit.spin = !orbit.spin; spinBtn.setAttribute('aria-pressed', String(orbit.spin)); schedule(); });
+  $('cut').addEventListener('click', () => setCut(!CUT.on));
+  $('measure').addEventListener('click', () => setMeasure(!MZ.on));
   for (const b of document.querySelectorAll('#planeSeg button')) b.addEventListener('click', () => {
     S.plane = b.dataset.p;
     for (const c of document.querySelectorAll('#planeSeg button')) c.setAttribute('aria-pressed', String(c === b));
@@ -1414,7 +1886,7 @@ select:disabled { opacity: 0.5; }
     playBtn.classList.toggle('primary', !S.playing);
   }
   playBtn.addEventListener('click', () => setPlaying(!S.playing));
-  $('reset').addEventListener('click', () => { S.t = 0; dirty.cloudColor = true; dirty.slice = true; schedule(); });
+  $('reset').addEventListener('click', () => { S.t = 0; dirty.cloudColor = true; dirty.slice = true; dirty.facePaint = true; schedule(); });
   for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => {
     S.speed = +b.dataset.s;
     for (const c of document.querySelectorAll('#speedSeg button')) c.setAttribute('aria-pressed', String(c === b));
@@ -1448,35 +1920,40 @@ select:disabled { opacity: 0.5; }
   });
   $('resample').addEventListener('click', () => { resample(); schedule(); });
   for (const b of document.querySelectorAll('#colorSeg button')) b.addEventListener('click', () => {
-    S.color = b.dataset.c;
+    S.color = b.dataset.c; dirty.facePaint = true;
     for (const c of document.querySelectorAll('#colorSeg button')) c.setAttribute('aria-pressed', String(c === b));
     dirty.slice = true; schedule();
   });
   function setScale(v) {
-    S.scale = v;
+    S.scale = v; dirty.facePaint = true;
     for (const c of document.querySelectorAll('#scaleSeg button')) c.setAttribute('aria-pressed', String(c.dataset.s === v));
     dirty.slice = true; schedule();
   }
   for (const b of document.querySelectorAll('#scaleSeg button')) b.addEventListener('click', () => setScale(b.dataset.s));
   const bindToggle = (id, key) => $(id).addEventListener('change', (e) => { S.layers[key] = e.target.checked; dirty.radial = true; dirty.slice = true; schedule(); });
-  bindToggle('tAxes', 'axes'); bindToggle('tNodes', 'nodes'); bindToggle('tBohr', 'bohr'); bindToggle('tSame', 'same'); bindToggle('tR', 'R');
+  bindToggle('tAxes', 'axes'); bindToggle('tNodes', 'nodes'); bindToggle('tBohr', 'bohr'); bindToggle('tSame', 'same'); bindToggle('tR', 'R'); bindToggle('tProton', 'proton');
   $('tLock').addEventListener('change', (e) => { S.lock = e.target.checked; if (!S.lock) { targetFit = fitFor(); dirty.sliceField = true; dirty.slice = true; schedule(); } });
 
   // ---------- frame loop ----------
-  const dirty = { cloudColor: true, slice: true, sliceField: true, radial: true };
+  const dirty = { cloudColor: true, slice: true, sliceField: true, radial: true, faces: true, facePaint: false };
   let raf = 0, lastT = 0;
   function schedule() { if (!raf) raf = requestAnimationFrame(frame); }
   function frame(now) {
     raf = 0;
-    const dt = lastT ? Math.min(0.05, (now - lastT) / 1000) : 0; lastT = now;
+    const rawDt = lastT ? Math.min(0.25, (now - lastT) / 1000) : 0;
+    const dt = Math.min(0.05, rawDt); lastT = now;
     let again = false;
     if (!VW || !VH) { lastT = 0; return; }
-    if (S.playing && mixActive()) { S.t += dt * S.speed * beatT() / 4; dirty.cloudColor = true; dirty.slice = true; again = true; }
+    if (S.playing && mixActive()) { S.t += dt * S.speed * beatT() / 4; dirty.cloudColor = true; dirty.slice = true; dirty.facePaint = true; again = true; }
     if (S.view === '3d' && G.ready) {
       if (orbit.spin && !dragging) { orbit.theta += dt * 0.22; again = true; }
-      if (Math.abs(curFit - targetFit) > 1e-3 * targetFit) { curFit += (targetFit - curFit) * (dt ? Math.min(1, dt * 7) : 0); again = true; }
+      if (Math.abs(curFit - targetFit) > 1e-3 * targetFit) { curFit += (targetFit - curFit) * (rawDt ? Math.min(1, rawDt * 7) : 0); again = true; }
       else curFit = targetFit;
+      // fresh draws while the view is moving anyway (before colorPoints, which may then upload every color)
+      if (!reduce && !MZ.on && cloud && dt > 0 && ((orbit.spin && !dragging) || (S.playing && mixActive()))) refreshPoints(dt);
       if (dirty.cloudColor) { colorPoints(); dirty.cloudColor = false; }
+      // measuring follows the wall clock (up to a quarter second per frame), so a slow machine is not slowed further
+      if (MZ.on && cloud) { stepMeasure(rawDt); again = true; }
       render3D();
     } else {
       curFit = targetFit;
@@ -1489,7 +1966,10 @@ select:disabled { opacity: 0.5; }
     if (dirty.radial) { drawRadial(); dirty.radial = false; }
     updateClock();
     if (again) schedule(); else lastT = 0;
+    const ms = performance.now() - now;
+    frameMs = frameMs ? 0.9 * frameMs + 0.1 * ms : ms;
   }
+  let frameMs = 0;
 
   // ---------- sizing, theme, projector ----------
   function resize() {
@@ -1500,7 +1980,7 @@ select:disabled { opacity: 0.5; }
     sliceCan.style.width = VW + 'px'; sliceCan.style.height = VH + 'px';
     rCan.width = Math.max(1, Math.round(RW * dpr)); rCan.height = Math.max(1, Math.round(RH * dpr));
     rCan.style.width = RW + 'px'; rCan.style.height = RH + 'px';
-    if (G.ready) { G.renderer.setPixelRatio(dpr); G.renderer.setSize(Math.max(1, VW), Math.max(1, VH)); }
+    if (G.ready) { G.renderer.setPixelRatio(dpr); G.renderer.setSize(Math.max(1, VW), Math.max(1, VH)); sizeTargets(); }
     dirty.slice = true; dirty.radial = true;
     schedule();
   }
@@ -1513,18 +1993,21 @@ select:disabled { opacity: 0.5; }
   }
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
-  const retheme = () => { tokens(); dirty.slice = true; dirty.radial = true; schedule(); };
+  const retheme = () => { tokens(); dirty.slice = true; dirty.radial = true; dirty.facePaint = true; schedule(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
   window.__ho = {
     S, get stA() { return stA; }, get stB() { return stB; }, get dip() { return dip; }, get cloud() { return cloud; },
-    get three() { return G.ready; }, get fit() { return curFit; }, orbit, applyPreset, setView, setPlaying, update,
+    get three() { return G.ready; }, get fit() { return curFit; }, get frameMs() { return frameMs; }, get floatGlow() { return !!G.rt; },
+    get measured() { return MZ.k; }, get glowFrac() { return G.glowFrac; }, get refs() { return { sigRef, dRef, N: cloud && cloud.N, fit: curFit, rtH: G.rt && G.rt.height }; }, orbit, applyPreset, setView, setPlaying, update, setCut, setMeasure,
     hover(r) { hoverR = r; rHoverPx = r === null ? null : rGeom().X(r); dirty.radial = true; dirty.slice = true; schedule(); }
   };
 
   // ---------- start ----------
   tokens();
+  // phones get fewer points by default (the choice stays in the Points control)
+  try { if (matchMedia('(max-width: 600px)').matches) { S.count = 20000; for (const b of document.querySelectorAll('#countSeg button')) b.setAttribute('aria-pressed', String(b.dataset.c === '20000')); } } catch (_) {}
   buildShells();
   const ro = new ResizeObserver(resize);
   ro.observe(vPane); ro.observe(rPane);
