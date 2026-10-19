@@ -11,19 +11,19 @@ Measure e/m, the charge to mass ratio of the electron, the way J. J. Thomson fir
 
 The electron gun accelerates electrons through a voltage U, so each electron gains kinetic energy eU:
 
-  ½mv² = eU, so v² = 2eU/m.
+$$\tfrac{1}{2}mv^2 = eU \quad\Rightarrow\quad v^2 = \frac{2eU}{m}$$
 
 A pair of Helmholtz coils makes a nearly uniform field B at right angles to the beam. The magnetic force evB is always at right angles to the velocity, so it bends the beam into a circle of radius r without changing its speed:
 
-  evB = mv²/r.
+$$evB = \frac{mv^2}{r}$$
 
 Eliminate v between the two equations:
 
-  e/m = 2U/(B²r²).
+$$\frac{e}{m} = \frac{2U}{B^2 r^2}$$
 
 The field at the center of the coils is
 
-  B = (4/5)^(3/2) μ₀NI/R,
+$$B = \left(\frac{4}{5}\right)^{3/2} \frac{\mu_0 N I}{R}$$
 
 where I is the current through the coils, N the number of turns on each coil and R the coil radius. For the department's apparatus (PASCO SE-9629), N = 130 and R = 158 mm, which gives B = 7.40 × 10⁻⁴ T per ampere. If you use a different apparatus, take N and R from its label or manual.
 
