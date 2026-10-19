@@ -47,15 +47,13 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Gas in a Box](demos/ideal-gas.html) | Thermodynamics | Kinetic theory of a 2D gas: pressure, temperature, Maxwell-Boltzmann speeds, adiabatic compression |
 | [Heat Engine Cycles](demos/heat-engines.html) | Thermodynamics | Ideal gas cycles on PV and T-S diagrams with per leg Q, W and ΔU, efficiency against the Carnot limit, refrigerators and custom cycles |
 | [Coulomb Sandbox](demos/coulomb-sandbox.html) | Electricity and magnetism | Electric field and potential of point charges, as a 2D map and a 3D potential landscape |
-| [RC Circuits](demos/rc-circuits.html) | Electricity and magnetism | Charging and discharging a capacitor: exponentials, the time constant, Kirchhoff's loop rule and energy bookkeeping |
 | [Charges in Magnetic Fields](demos/magnetic-force.html) | Electricity and magnetism | Circular and helical motion, E × B drift, a velocity selector, a mass spectrometer and a cyclotron |
 | [Faraday's and Lenz's Laws](demos/faraday.html) | Electricity and magnetism | A magnet and coil with exact flux, EMF and current, Lenz's law, an AC generator and a sliding bar on rails |
 | [Gauss's Law](demos/gauss-law.html) | Electricity and magnetism | Flux through any closed surface from a numerical integral, and the sphere, line and plane derivations |
-| [DC Circuit Builder](demos/circuit-builder.html) | Electricity and magnetism | Build circuits on a grid, solved exactly: series and parallel, dividers, a Wheatstone bridge and Kirchhoff's rules |
 | [Magnetic Fields of Currents](demos/currents-fields.html) | Electricity and magnetism | Fields of straight wires, forces between them, Ampère's law on any loop, and an exact current loop and solenoid |
-| [AC Circuits and Resonance](demos/ac-circuits.html) | Electricity and magnetism | Series RLC driven by a sine wave: phasors, impedance, phase, resonance and Q, power factor, and the switch on transient |
 | [Electromagnetic Waves](demos/em-waves.html) | Electricity and magnetism | Plane waves in 3D, polarization, intensity and radiation pressure, the spectrum, and exact dipole antenna fields |
 | [Capacitors and Dielectrics](demos/capacitors.html) | Electricity and magnetism | Parallel plates connected or isolated, dielectric slabs and the force pulling them in, energy bookkeeping, and combinations |
+| [Circuits](demos/circuits.html) | Electricity and magnetism | DC circuits, RC charging, AC resonance and RLC transients, in tabs |
 | [Optics Bench](demos/optics-bench.html) | Optics | Ray tracing through lenses, mirrors and glass, with image formation, total internal reflection and dispersion |
 | [Polarization](demos/polarization.html) | Optics | Polarizers and wave plates with Jones and Mueller calculus, Malus's law, many polarizer limit, Fresnel reflection and Brewster's angle |
 | [Thin Film Interference](demos/thin-films.html) | Optics | Exact single layer reflectance and its color under white light, soap films, air wedges, Newton's rings and quarter wave coatings |
