@@ -161,6 +161,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.ramp { height: 10px; border: 0; border-radius: 2px; }
 .swatch.hatch { height: 10px; border: 1px solid var(--muted); background: repeating-linear-gradient(135deg, transparent 0 3px, color-mix(in srgb, var(--muted) 45%, transparent) 3px 4px); }
 
+/* instrument slider: tick labels in two staggered rows, lined up with the thumb centers (thumb about 16 px wide) */
+.mticks { position: relative; height: 2.75em; font-size: 0.78rem; margin-top: 3px; }
+.mticks span { position: absolute; top: 0; transform: translateX(-50%); line-height: 1.2; color: var(--muted); padding: 6px 2px 2px; cursor: pointer; white-space: nowrap; user-select: none; }
+.mticks span::before { content: ''; position: absolute; left: 50%; top: 0; height: 5px; border-left: 1.5px solid var(--grid-strong); }
+.mticks span.lo { top: 1.3em; }
+.mticks span.lo::before { top: -1.3em; height: calc(1.3em + 5px); }
+.mticks span.first { transform: none; padding-left: 0; }
+.mticks span.first::before { left: 8px; }
+.mticks span.last { transform: none; padding-right: 0; }
+.mticks span.last::before { left: auto; right: 8px; }
+.mticks span[aria-pressed="true"] { color: var(--ink); font-weight: 700; }
+.mticks span[aria-pressed="true"]::before { border-color: var(--accent); }
+.mticks span:hover { color: var(--ink); }
+#morph.off { opacity: 0.55; }
+.morph-out { display: block; font-weight: 700; font-size: 0.95rem; color: var(--accent); margin-bottom: 4px; }
+.morph-out.custom { color: var(--muted); font-weight: 400; }
+
 /* piano: two octaves C3 to C5 in equal temperament */
 .piano { position: relative; display: flex; height: 70px; border-radius: 6px; overflow: hidden; border: 1px solid var(--wood-edge); background: var(--wood); padding: 4px 4px 0; }
 .piano button { font: inherit; cursor: pointer; padding: 0; }
@@ -234,6 +251,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="missing" aria-pressed="false">Missing fundamental</button>
         </div>
         <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2><label for="morph">Compare instruments</label></h2>
+        <div>
+          <output id="morphOut" class="morph-out" for="morph"></output>
+          <input type="range" id="morph" min="0" max="4" step="0.01" value="4">
+          <div class="mticks" id="mticks" aria-hidden="true"></div>
+        </div>
+        <p class="hint" id="morphHint"></p>
       </section>
 
       <section>
@@ -408,11 +435,32 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const RMS_TARGET = 0.08, PEAK_MAX = 0.25, HF_EDGE = 8000, HF_GAIN = 0.25, F_MUTE = 18000;
   function audioNorm(rms, peakBound) { return rms > 0 ? Math.min(RMS_TARGET / rms, PEAK_MAX / peakBound) : 0; }
   function hfGain(f) { return f > F_MUTE ? 0 : f > HF_EDGE ? HF_GAIN : 1; }
+  // illustrative steady spectra for the instrument slider (amplitudes a₁, a₂, …, strongest = 1), not measurements:
+  // flute nearly a sine; clarinet low register, odd harmonics strong; oboe weak fundamental, strongest near harmonic 3;
+  // trumpet played loudly, many strong harmonics; bowed string aₙ = 1/n, the sawtooth
+  const INSTRUMENTS = [
+    { id: 'flute', name: 'Flute', a: [1, 0.22, 0.08, 0.035, 0.015] },
+    { id: 'clarinet', name: 'Clarinet', a: [1, 0.04, 0.75, 0.05, 0.5, 0.06, 0.32, 0.05, 0.2, 0.04, 0.12, 0.03, 0.07, 0.02, 0.04, 0.01] },
+    { id: 'oboe', name: 'Oboe', a: [0.4, 0.7, 1, 0.85, 0.5, 0.32, 0.24, 0.2, 0.13, 0.08, 0.06, 0.04, 0.03, 0.02, 0.015, 0.01] },
+    { id: 'trumpet', name: 'Trumpet', a: [0.6, 0.9, 1, 0.85, 0.68, 0.52, 0.4, 0.3, 0.22, 0.16, 0.12, 0.09, 0.065, 0.045, 0.03, 0.02] },
+    { id: 'bowed', name: 'Bowed string', a: Array.from({ length: 16 }, (_, i) => 1 / (i + 1)) }
+  ];
+  // position x on the slider (0 = first instrument, 1 = second, …): neighbors i, i + 1 and the weight w of i + 1
+  function morphPos(x, count) {
+    const c = Math.max(0, Math.min(count - 1, x)), i = Math.min(count - 2, Math.floor(c));
+    return { i, j: i + 1, w: c - i };
+  }
+  // amplitudes a[0..N] at slider position x: linear in amplitude between neighbors, aₙ = (1 − w) aₙ(i) + w aₙ(i + 1)
+  function morphSpectrum(list, x, N) {
+    const p = morphPos(x, list.length), A = list[p.i].a, B = list[p.j].a, out = new Array(N + 1).fill(0);
+    for (let n = 1; n <= N; n++) out[n] = (1 - p.w) * (A[n - 1] || 0) + p.w * (B[n - 1] || 0);
+    return out;
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
     globalThis.TIMBRE = { PI, TAU, NH, A4, etFreq, midiFreq, noteOf, partialFreq, idealSeries, idealWave, seriesAt, fourier, gcd, periodInfo,
-      rmsOf, peakOf, modeShape, toDb, audioNorm, hfGain, RMS_TARGET, PEAK_MAX, HF_EDGE, HF_GAIN, F_MUTE };
+      rmsOf, peakOf, modeShape, toDb, audioNorm, hfGain, RMS_TARGET, PEAK_MAX, HF_EDGE, HF_GAIN, F_MUTE, INSTRUMENTS, morphPos, morphSpectrum };
     return;
   }
 
@@ -430,6 +478,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ladder: 'string', periods: 3, showEach: false, showIdeal: true, showDials: true, sel: 1
   };
   let presetId = 'saw', running = !reduce, tAnim = 0, frameMs = 0, dirty = true;
+  let morph = null;   // instrument slider position (0 to 4), or null once the bars are edited by hand
 
   const PRESETS = {
     square: { semi: -12, set: () => setIdeal('square'),
@@ -438,9 +487,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       hint: 'Every harmonic, aₙ = 1/n: a bright, buzzy tone. A bowed violin string moves so that the force it puts on the bridge is close to a sawtooth, which is why bowed strings sound rich in harmonics.' },
     triangle: { semi: -12, set: () => setIdeal('triangle'),
       hint: 'Odd harmonics again, but aₙ = 1/n², so they fade much faster than in the square wave and the tone is mellower. Harmonics 3, 7, 11 and 15 are inverted: their phase dials point the other way.' },
-    clarinet: { semi: -19, set: () => setAmps([1, 0.04, 0.75, 0.05, 0.5, 0.06, 0.32, 0.05, 0.2, 0.04, 0.12, 0.03, 0.07, 0.02, 0.04, 0.01]),
+    clarinet: { semi: -19, set: () => setAmps(INSTRUMENTS[1].a),
       hint: 'Illustrative spectrum, not a recording: D3 with strong odd harmonics and weak even ones, as in the low register of a clarinet, whose bore acts roughly like a pipe closed at the reed. Switch the ladder to Closed pipe: only odd modes fit.' },
-    flute: { semi: 0, set: () => setAmps([1, 0.22, 0.08, 0.035, 0.015]),
+    flute: { semi: 0, set: () => setAmps(INSTRUMENTS[0].a),
       hint: 'Illustrative spectrum, not a recording: A4 with a strong fundamental and a few weak harmonics, close to a pure sine wave. A softly played flute comes near this; compare the tone with Pure tone and with the sawtooth.' },
     missing: { semi: -12, set: () => { setAmps([0.9, 0.9, 0.8, 0.7, 0.6, 0.5, 0.42, 0.35, 0.3, 0.25]); S.mute1 = true; },
       hint: 'Harmonics 2 to 10 of A3 with nothing at 220 Hz. The waveform still repeats every 4.55 ms and you still hear A3: pitch follows the repetition period, not the energy at f₁. Small speakers that cannot play the lowest notes rely on this. Untick Remove harmonic 1 to compare, then also remove harmonic 2.' }
@@ -449,9 +498,75 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function setIdeal(kind) { const s = idealSeries(kind, NH); for (let n = 0; n <= NH; n++) { S.a[n] = s.a[n]; S.ph[n] = s.ph[n]; } }
   function setAmps(list) { clearAll(); list.forEach((v, i) => { S.a[i + 1] = v; }); }
 
+  // ---------- instrument slider ----------
+  const INST_HINT = {
+    flute: 'Flute-like: nearly a sine wave, a strong fundamental and a few weak harmonics.',
+    clarinet: 'Clarinet-like: odd harmonics strong, even ones weak, as in the low register of a clarinet, whose bore acts roughly like a pipe closed at the reed.',
+    oboe: 'Oboe-like: a weak fundamental, the strongest partials at harmonics 3 and 4 and a slow fall above: a nasal, reedy tone.',
+    trumpet: 'Trumpet-like: many strong harmonics that fall off slowly, as when a trumpet plays loudly: a bright, brassy tone.',
+    bowed: 'Bowed string-like: every harmonic, aₙ = 1/n, the sawtooth. The force a bowed string puts on the bridge is close to a sawtooth.'
+  };
+  const NI = INSTRUMENTS.length;
+  function morphText(x) {
+    const p = morphPos(x, NI), A = INSTRUMENTS[p.i].name, B = INSTRUMENTS[p.j].name;
+    if (p.w === 0) return A + '-like';
+    if (p.w === 1) return B + '-like';
+    return `${Math.round((1 - p.w) * 100)}% ${A} + ${Math.round(p.w * 100)}% ${B}`;
+  }
+  // the slider sits on an instrument when the bars hold exactly its spectrum (for example after a preset)
+  function matchStop() {
+    for (let k = 0; k < NI; k++) { let same = true; for (let n = 1; n <= NH; n++) if (Math.abs(S.a[n] - (INSTRUMENTS[k].a[n - 1] || 0)) > 1e-9) { same = false; break; } if (same) return k; }
+    return null;
+  }
+  function setMorph(x) {
+    const el = $('morph');
+    x = clamp(x, 0, NI - 1);
+    if (Math.abs(x - Math.round(x)) < 0.04) x = Math.round(x);   // snap onto an instrument
+    x = +x.toFixed(2); el.value = x; morph = x;
+    const a = morphSpectrum(INSTRUMENTS, x, NH);
+    for (let n = 1; n <= NH; n++) S.a[n] = a[n];
+    hoverKey = null;
+    markPreset(null); recompute(); readouts(); soundDirty = true; morphUI();
+  }
+  function morphUI() {
+    const on = morph !== null, txt = on ? morphText(morph) : 'custom';
+    const pre = presetId ? $('presets').querySelector(`[data-p="${presetId}"]`).textContent : null;
+    $('morphOut').textContent = on ? txt : pre ? 'Not on the slider' : 'Custom spectrum';
+    $('morphOut').classList.toggle('custom', !on);
+    $('morph').setAttribute('aria-valuetext', on ? txt : 'custom spectrum, edited by hand');
+    $('morph').classList.toggle('off', !on);
+    for (const b of $('mticks').children) b.setAttribute('aria-pressed', String(on && morph === +b.dataset.k));
+    let h;
+    if (!on) h = (pre ? `The ${pre} preset is not one of these instruments.` : 'Custom spectrum: the bars were edited by hand.') + ' Move the slider or pick an instrument name to return to the instruments.';
+    else if (Number.isInteger(morph)) h = INST_HINT[INSTRUMENTS[morph].id];
+    else h = 'Between two instruments every harmonic amplitude is mixed linearly, so the waveform, spectrum and ladder change smoothly.';
+    $('morphHint').textContent = h + ' Illustrative spectra, not recordings; all play at the same f₁ with the current phases, so only the mix of harmonics changes.';
+    dirty = true;
+  }
+  function buildTicks() {
+    $('mticks').innerHTML = INSTRUMENTS.map((q, k) => {
+      const cls = [k % 2 ? 'lo' : '', k === 0 ? 'first' : '', k === NI - 1 ? 'last' : ''].join(' ').trim();
+      const pos = k === 0 ? 'left:0' : k === NI - 1 ? 'right:0' : `left:calc(8px + (100% - 16px) * ${k / (NI - 1)})`;
+      return `<span data-k="${k}" class="${cls}" style="${pos}" aria-pressed="false">${q.name}</span>`;
+    }).join('');
+  }
+  // peak scale for the waveform while on the slider: the larger peak of the two neighboring instruments with the current phases
+  // (a linear mix never peaks above the larger of its two ends), so between two stops the trace grows and shrinks on a fixed scale
+  let morphPeakKey = '', morphPeaks = [];
+  function morphPeak(x) {
+    const key = S.ph.join(',') + S.mute1 + S.mute2;
+    if (key !== morphPeakKey) {
+      morphPeaks = INSTRUMENTS.map((q) => { const a = [0]; for (let n = 1; n <= NH; n++) a.push(muted(n) ? 0 : (q.a[n - 1] || 0)); return peakOf(a, S.ph, 1024); });
+      morphPeakKey = key;
+    }
+    const p = morphPos(x, NI);
+    return Math.max(morphPeaks[p.i], morphPeaks[p.j]);
+  }
+
   const MODEL = 'Each harmonic is a pure sine, aₙ sin(2π fₙ t + φₙ), held steady with no attack or decay. Real instruments change their spectrum during every note, and the attack matters a great deal for telling instruments apart. ' +
     'Harmonic n is at fₙ = n f₁; the stiffness slider uses the stiff string result fₙ = n f₁ √((1 + Bn²)/(1 + B)), scaled so partial 1 stays at f₁. Equal temperament: f = 440 Hz × 2^(k/12), k semitones from A4. ' +
     'The square, sawtooth and triangle presets are the exact Fourier series cut off at 16 harmonics, which causes the ripples near the jumps. The clarinet-like and flute-like presets are illustrative spectra chosen to show one feature, not measurements of real instruments. ' +
+    'The instrument slider uses five such illustrative spectra (flute, clarinet, oboe, trumpet and bowed string like). It keeps f₁ and the phases and, between two neighbors, mixes each amplitude linearly: aₙ = (1 − w) aₙ(left) + w aₙ(right), w from 0 to 1. Real instruments change their spectrum with pitch and loudness; these do not. ' +
     'The ladder shows each partial as a mode of an ideal string or ideal pipe (no end correction), with amplitude aₙ, slowed so f₁ is drawn at 0.5 Hz. Spectrum levels are 20 log₁₀ aₙ, with 0 dB the top of a bar.';
 
   // ---------- derived quantities ----------
@@ -480,7 +595,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const periodic = info.kind === 'periodic' && S.B === 0 && !(S.df && ns.includes(S.detN));
     const peakBound = periodic ? peak * 1.02 : sumA;
     D = { a, ns, info, rms, peak, sumA, peakBound, norm: audioNorm(rms, peakBound) };
-    if (!holdY) yMax = niceUp(Math.max(0.2, peak * 1.08));
+    if (!holdY) yMax = niceUp(Math.max(0.2, peak * 1.08, morph !== null ? morphPeak(morph) * 1.08 : 0));
     dirty = true;
   }
   function niceUp(v) { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; return (m <= 1 ? 1 : m <= 1.5 ? 1.5 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 3 ? 3 : m <= 4 ? 4 : m <= 5 ? 5 : m <= 6 ? 6 : m <= 8 ? 8 : 10) * p; }
@@ -729,7 +844,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         tag(txt, clamp(s.x - w / 2, L, R - w), Math.max(top + 32 * ls, s.y - 12 * ls), hcol(n), 'left', 'bottom', true, 10.5);
       }
     }
-    const title = pick(['Spectrum: one line per partial', 'Spectrum'], r.w - 20 * ls, 11.5, true);
+    // the instrument slider's spectrum, named at the top right
+    let instW = 0;
+    if (morph !== null) {
+      const it = morphText(morph), full = it + (Number.isInteger(morph) ? ' (illustrative)' : '');
+      const txt = pick([full, it], r.w * 0.62, 11, true);
+      instW = tag(txt, r.x + r.w - 12 * ls, r.y + 6 * ls, T.accent, 'right', 'top', true, 11) + 18 * ls;
+    }
+    const title = pick(['Spectrum: one line per partial', 'Spectrum'], r.w - 20 * ls - instW, 11.5, true);
     ctx.font = font(11.5, true); ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(title, r.x + 12 * ls, r.y + 6 * ls);
   }
@@ -898,7 +1020,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       let ph = Math.atan2(g.dialY - y, x - cx);
       ph = Math.round(ph / (PI / 36)) * (PI / 36);   // 5° steps
       S.ph[drag.n] = ph < 0 ? ph + TAU : ph; S.sel = drag.n;
-      edited();
+      edited(false);
     } else if (drag.id === 'spec') {
       const g = specGeom(), db = g.dbAt(y);
       S.a[drag.n] = db <= DB_MIN + 1 ? 0 : clamp(Math.round(Math.pow(10, db / 20) * 100) / 100, 0, 1);
@@ -950,7 +1072,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const n = S.sel;
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') S.sel = clamp(n + (e.key === 'ArrowRight' ? 1 : -1), 1, NH);
     else if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && !muted(n)) { const st = e.shiftKey ? 0.01 : 0.05; S.a[n] = clamp(Math.round((S.a[n] + (e.key === 'ArrowUp' ? st : -st)) * 100) / 100, 0, 1); edited(); }
-    else if (e.key === '[' || e.key === ']') { const p = S.ph[n] + (e.key === ']' ? 1 : -1) * PI / 12; S.ph[n] = ((p % TAU) + TAU) % TAU; edited(); }
+    else if (e.key === '[' || e.key === ']') { const p = S.ph[n] + (e.key === ']' ? 1 : -1) * PI / 12; S.ph[n] = ((p % TAU) + TAU) % TAU; edited(false); }
     else if ((e.key === '0' || e.key === 'Delete' || e.key === 'Backspace') && !muted(n)) { S.a[n] = 0; edited(); }
     else if (e.key === ' ') setRunning(!running);
     else return;
@@ -959,19 +1081,26 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   });
 
   // ---------- rail ----------
-  function edited() { markPreset(null); recompute(); readouts(); soundDirty = true; }
+  function edited(amps) {
+    const leave = amps !== false && morph !== null;
+    if (leave) morph = null;
+    markPreset(null); if (leave) morphUI();
+    recompute(); readouts(); soundDirty = true;
+  }
   function markPreset(id) {
     presetId = id;
     for (const b of $('presets').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.p === id));
-    $('presetHint').textContent = id ? PRESETS[id].hint : 'Your own spectrum. Pick a preset to start again from one of the shapes.';
+    $('presetHint').textContent = id ? PRESETS[id].hint : morph !== null ? 'Spectrum set by the instrument slider below. Pick a preset to start again from one of the shapes.' : 'Your own spectrum. Pick a preset to start again from one of the shapes.';
   }
   function applyPreset(id) {
     const P = PRESETS[id];
     clearAll(); S.mute1 = false; S.mute2 = false; S.df = 0; S.B = 0; hoverKey = null;
     P.set();
     S.semi = P.semi;
+    morph = matchStop();
+    if (morph !== null) $('morph').value = morph;
     syncControls();
-    markPreset(id);
+    markPreset(id); morphUI();
     recompute(); readouts(); soundDirty = true;
   }
   $('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) applyPreset(b.dataset.p); });
@@ -986,12 +1115,30 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('detN').value = S.detN; $('df').value = S.df; $('stB').value = S.B;
   }
   $('f1').addEventListener('input', (e) => setSemi(+e.target.value));
+  $('morph').addEventListener('input', (e) => setMorph(+e.target.value));
+  // keys: arrows step by 0.1 of the way (Shift 0.01), Page Up and Page Down jump to the next instrument
+  $('morph').addEventListener('keydown', (e) => {
+    const x = morph === null ? +$('morph').value : morph, st = e.shiftKey ? 0.01 : 0.1;
+    let v = null;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') v = x + st;
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') v = x - st;
+    else if (e.key === 'PageUp') v = Math.floor(x + 1e-9) + 1;
+    else if (e.key === 'PageDown') v = Math.ceil(x - 1e-9) - 1;
+    else if (e.key === 'Home') v = 0;
+    else if (e.key === 'End') v = NI - 1;
+    if (v === null) return;
+    e.preventDefault();
+    // a small step must not be undone by the snap: step past the snapping zone when leaving an instrument
+    if (Number.isInteger(x) && Math.abs(v - x) < 0.04 && morph !== null) v = x + Math.sign(v - x) * 0.04;
+    setMorph(v);
+  });
+  $('mticks').addEventListener('click', (e) => { const b = e.target.closest('span'); if (b) setMorph(+b.dataset.k); });
   $('mute1').addEventListener('change', (e) => { S.mute1 = e.target.checked; recompute(); readouts(); soundDirty = true; });
   $('mute2').addEventListener('change', (e) => { S.mute2 = e.target.checked; recompute(); readouts(); soundDirty = true; });
   $('pure').addEventListener('click', () => { clearAll(); S.a[1] = 1; S.mute1 = false; S.mute2 = false; syncControls(); edited(); });
   $('allOn').addEventListener('click', () => { for (let n = 1; n <= NH; n++) S.a[n] = 0.5; edited(); });
-  $('randPh').addEventListener('click', () => { for (let n = 1; n <= NH; n++) S.ph[n] = Math.round(Math.random() * 72) * PI / 36; edited(); });
-  $('zeroPh').addEventListener('click', () => { for (let n = 1; n <= NH; n++) S.ph[n] = 0; edited(); });
+  $('randPh').addEventListener('click', () => { for (let n = 1; n <= NH; n++) S.ph[n] = Math.round(Math.random() * 72) * PI / 36; edited(false); });
+  $('zeroPh').addEventListener('click', () => { for (let n = 1; n <= NH; n++) S.ph[n] = 0; edited(false); });
   $('showDials').addEventListener('change', (e) => { S.showDials = e.target.checked; dirty = true; });
   $('detN').addEventListener('input', (e) => { S.detN = +e.target.value; recompute(); readouts(); soundDirty = true; });
   $('df').addEventListener('input', (e) => { S.df = +e.target.value; recompute(); readouts(); soundDirty = true; });
@@ -1179,10 +1326,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     requestAnimationFrame(loop);
   }
   window.__tb = { S, get D() { return D; }, get G() { return G; }, get frameMs() { return frameMs; }, get presetId() { return presetId; }, get yMax() { return yMax; },
-    applyPreset, setSemi, setRunning, recompute, eqGeom, specGeom, waveGeom, fOf, f1, get running() { return running; } };
+    applyPreset, setSemi, setMorph, get morph() { return morph; }, setRunning, recompute, eqGeom, specGeom, waveGeom, fOf, f1, get running() { return running; } };
 
   if (!AC) noAudio();
   buildPiano();
+  buildTicks();
   recompute();
   tokens();
   applyPreset('saw');
