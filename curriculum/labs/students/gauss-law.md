@@ -36,8 +36,8 @@ Use the **Flux** mode, the charge list and surface shape controls (**Sphere**, *
 4. Move both charges outside; explain why the local field can remain nonzero while net flux vanishes.
 
 ## Part C — Boundary sensitivity (25 min)
-1. Reset **Charge inside**, immediately pause, and select/set q=+1 nC. Record its actual coordinates (x,y) and the sphere center (initially 0,0). Keep the charge and center fixed throughout this scan.
-2. Compute r_q=sqrt(x²+y²). Vary **Radius R** to obtain at least five clear interior/exterior distances δ=|R−r_q|. For the unanimated preset position (−1.5,1.0) cm, try R=3.0,2.5,2.1,2.0,1.9 cm inside and 1.7,1.6,1.4 cm outside. If animation moved the charge before pause, choose radii from its actual recorded position instead.
+1. Reset **Charge inside**, immediately pause, and select/set q=+1 nC. Record its actual coordinates (x,y) and the sphere center (initially 0, 0). Keep the charge and center fixed throughout this scan.
+2. Compute r_q=sqrt(x²+y²). Vary **Radius R** to obtain at least five clear interior/exterior distances δ=|R−r_q|. For the unanimated preset position (−1.5, 1.0) cm, try R=3.0, 2.5, 2.1, 2.0, 1.9 cm inside and 1.7, 1.6, 1.4 cm outside. If animation moved the charge before pause, choose radii from its actual recorded position instead.
 3. Record flux, field evaluations and integration time after the display settles. Avoid δ≤0.03 cm: main suppresses results inside that numerical exclusion zone, although its wording says exactly on the surface. Never assign its suppression to a physical layer of charge.
 4. Plot scaled error and evaluation count against δ. This is a boundary-conditioning experiment, not a controlled tolerance-convergence study: the current UI exposes no tolerance setting. Runtime depends on the machine; use evaluation count for reproducible cost comparison.
 

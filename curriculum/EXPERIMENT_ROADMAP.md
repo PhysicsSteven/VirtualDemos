@@ -64,4 +64,7 @@ RLC, Faraday, capacitors and AC now have full quantitative laboratory/key revisi
 
 Second-pass update: RC, Faraday, capacitors, photoelectric and Gauss manuals now distinguish current-main controls from requested/branch-only instrumentation. Circuit-builder, Coulomb and diffraction-grating gained core regression coverage. This is validation breadth, not automatic L2/L3 promotion; [known failures and evidence](validation/SECOND_PASS_2026-10-18.md) remain explicit.
 
-Audit checkpoint: [teaching keys](validation/KEY_AUDIT.md) and [gamma published comparison](validation/GAMMA_PUBLISHED_COMPARISON.md) now have reproducible partial evidence. Gamma remains a starter and is not experimentally calibrated; remaining keys and measured distance validation are open.
+Audit checkpoint: [teaching keys](https://github.com/PhysicsSteven/TeacherKeys/blob/main/curriculum/curriculum-virtual-lab-starter-kits/curriculum/validation/KEY_AUDIT.md) and [gamma published comparison](validation/GAMMA_PUBLISHED_COMPARISON.md) now have reproducible partial evidence. Gamma remains a starter and is not experimentally calibrated; remaining keys and measured distance validation are open.
+
+
+2026-10-19 modern-first writing pass: full student/teacher packages drafted for spin resonance, Foucault c, electron e/m and diffraction; RC/AC/RLC now use unified Circuits; acoustics and Franck–Hertz packages added. Instructor material stays in private TeacherKeys. These are authored/manual-aligned packages with scoped Node evidence, not automatic release-level promotion. [Delivery and open limits](validation/LAB_WRITING_2026-10-19.md).

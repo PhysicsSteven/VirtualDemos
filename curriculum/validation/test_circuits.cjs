@@ -45,7 +45,7 @@ test('circuits time: exact RC/RL solutions, source work and heat integrals',()=>
 });
 test('circuits time: LC conservation and RLC damping on both sides of critical',()=>{
  const L=.1,C=1e-5,V=10,q0=C*V,w0=1/Math.sqrt(L*C);
- for(const R of [0,20,200,1000]){
+ for(const R of [0,20,50,100,190,198,200,202,210,1000]){
   const els=[part(1,'cap',0,1,{C}),part(2,'ind',2,1,{L}),part(3,R?'res':'wire',0,2,R?{R}:{})],sys=c.buildTransient(els);assert(sys.ok);const x0=c.zeroState(sys);x0[sys.si.get('q1')]=q0;
   for(const t of [.0001,.001,.005,.02]){
    const out=c.stepWith(c.propagator(sys,t),x0),a=R/(2*L),disc=a*a-w0*w0;let q;

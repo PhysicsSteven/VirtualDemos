@@ -1,84 +1,90 @@
-# Transient Circuits: From RC Decay to RLC Oscillations
-**Student experiment · 120 minutes (or two 60-minute sessions) · Calculus-based Physics II**
+# From RC Decay to RLC Oscillations
+Student laboratory · Physics II
 
-[Open the new simulation](https://physicssteven.github.io/VirtualDemos/demos/transient-circuits.html) — *this GitHub Pages link will work only after the feature branch is merged and deployed.* Until then, use the branch's `demos/transient-circuits.html` locally.
+[Open the virtual Circuits bench](https://physicssteven.github.io/VirtualDemos/demos/circuits.html#transients)
 
-## Objectives and prerequisites
-Use RC/RL decay and LC/RLC oscillations to infer circuit parameters, test energy transfer, and quantify measurement resolution. Prerequisites: Kirchhoff’s voltage law, exponential functions, second-order differential equations, and spreadsheet or Python plotting.
+## Goal
 
-## Research questions
-How does an electrical system transition from exponential decay to oscillation? Can an unknown L, C, and R be inferred from the observed time series? Where does energy go when the oscillation damps?
+Observe how circuits store and lose energy. Measure an oscillation period, find a damping rate, and compare oscillating, critically damped and overdamped responses.
 
-## Theory / prelab
-For series RLC free response after disconnecting the battery, use Q as the capacitor charge and I=dQ/dt:
-```
-L Q'' + R Q' + Q/C = 0
-omega_0 = 1/sqrt(LC)
-alpha = R/(2L)
-R_crit = 2 sqrt(L/C)
-omega_d = sqrt(omega_0^2 - alpha^2) [underdamped]
-```
-With Q(0)=CV0 and I(0)=0, the underdamped solution is
-```
-Q(t) = Q0 exp(-alpha t)[cos(omega_d t)+(alpha/omega_d)sin(omega_d t)]
-I(t) = -(Q0 omega_0^2/omega_d)exp(-alpha t)sin(omega_d t).
-```
-In the ideal LC limit (R=0), Q=Q0 cos(omega0 t), I=−Q0 omega0 sin(omega0 t). In RL decay, I=I0 exp(−Rt/L). In RC decay, Q=Q0 exp(−t/RC). Derive the energy equation d[Q²/(2C)+LI²/2]/dt=−RI².
+## Background
 
-**Before opening the simulation:** Derive R_crit and explain why R=0 is a special case. Explain why energy oscillates between electric and magnetic storage without decreasing.
+A capacitor stores electric energy and an inductor stores magnetic energy:
 
-## Part A — LC oscillator (25 minutes)
-1. Choose LC, L=100 mH, C=100 µF, V0=10 V.
-2. Predict frequency f0 and initial energy. Determine the first charge zero, first negative maximum and next positive maximum.
-3. Sample charge, current and stored energy at approximately 0, T/4, T/2, 3T/4 and T using the time cursor and Capture measurement.
-4. Export CSV. Plot Q and I against time. Determine T from the measured charge peaks and infer L=1/[(2π/T)²C].
-5. Calculate U_C=Q²/(2C), U_L=LI²/2 at each sample and verify U_C+U_L≈U_initial.
+$$U_C=\frac{Q^2}{2C},\qquad U_L=\frac12 LI^2.$$
 
-Record your predictions before revealing theory; retain units throughout.
+When a charged capacitor is connected to an inductor, energy moves back and forth between them. Without resistance the natural frequency is
 
-## Part B — Damped RLC oscillator (30 minutes)
-1. Choose RLC, keep L=100 mH, C=100 µF. Begin at R=5 Ω and record four same-sign positive charge maxima, counting the initial maximum at t=0. Use **Export full trace** to obtain 1001 samples and locate peaks in your own plot.
-2. Repeat at R=10 Ω and R=20 Ω. Export each run separately or retain the notebook with settings in every row.
-3. Estimate the logarithmic decrement δ=ln(Q_n/Q_(n+1)). From the period T_d, infer α=δ/T_d and R_fit=2Lα.
-4. Compare measured damped frequency with ω_d. Explain why the oscillation frequency decreases as R increases.
-5. For each setting, compute stored energy U and cumulative heat H; check U+H=U_initial.
+$$\omega_0=\frac{1}{\sqrt{LC}}.$$
 
-| R (Ω) | T_d (ms) | Q_peak1 (mC) | Q_peak2 (mC) | δ | R inferred (Ω) |
-|---|---|---|---|---|---|
-| 5 | | | | | |
-| 10 | | | | | |
-| 20 | | | | | |
+A resistor turns some of that energy into heat. The free series circuit obeys
 
-## Part C — Critical damping (20 minutes)
-1. Predict R_crit from L and C before viewing theoretical parameters.
-2. Use **Exact resistance (Ω)** to enter five settings at 0.95, 0.99, 1, 1.01 and 1.05 times your predicted R_crit. After recording your prediction, **Set critical resistance** supplies the exact model value.
-3. Search the exported trace for a charge sign change and record the smallest magnitude you can resolve. Near critical damping, the first reversal may be too late and too small to observe. Do not infer critical damping solely from the absence of a visible crossing. Compare the complete curve with the predicted solutions.
-4. Reveal theory, compare R_crit, and discuss what makes the critical case the fastest nonoscillatory return to equilibrium under these initial conditions.
-5. Repeat after doubling L. Predict how R_crit changes.
+$$L\frac{d^2Q}{dt^2}+R\frac{dQ}{dt}+\frac{Q}{C}=0.$$
 
-## Part D — RC versus RL relaxation (20 minutes)
-1. Choose RC with R=100 Ω, C=100 µF. Measure charge at t≈RC and determine τ_RC.
-2. Choose RL with R=100 Ω, L=100 mH, I0=1 A. Measure current at t≈L/R and determine τ_RL.
-3. Compare the differential equations, stored-energy expressions and continuity constraints: capacitor voltage and inductor current cannot jump under finite ordinary excitation.
-4. For RL with R=0, verify that ideal current remains constant, rather than oscillating.
+For weak damping, the charge oscillates with a shrinking envelope. Its decay rate and damped frequency are
 
-## Measurement and analysis notes
-**Exact sample time (ms)** accepts a time within the displayed response window; the slider has 1000 intervals. Changing a circuit parameter resets time to zero. **Export CSV** exports notebook rows; **Export full trace** exports a uniformly sampled response for fitting. Columns include signed VC, VR, VL, SI units and a model version. For a fixed parameter set, the time step of that trace is the full response duration divided by 1000.
+$$\alpha=\frac{R}{2L},\qquad \omega_d=\sqrt{\omega_0^2-\alpha^2}.$$
 
-The simulation's theoretical parameter panel can be hidden using **Hide theoretical parameters**. Capture rows record actual t, R, L, C, initial settings, Q, I, U and H. The energy and charge curves are normalized for comparison; use the table for dimensional values. Time sampling is deterministic and cursor-limited, so quantify resolution instead of inventing statistical error.
+Oscillations disappear at the critical resistance:
 
-## Uncertainty analysis
-For slider or full-trace peaks use half a sample interval as a resolution bound, not a random standard deviation. Bound the period from the two endpoint times; propagate to L with |ΔL/L| ≈ 2|ΔT/T| + |ΔC/C| for worst-case bounds. Use the observed charge rounding or sampling sensitivity to bound δ=ln(Qn/Qn+1), then propagate to R=2Lδ/Td. Re-sample with exact times to assess peak-location bias. No random instrument noise is included.
+$$R_{\rm crit}=2\sqrt{\frac{L}{C}}.$$
+
+## Before the lab
+
+1. At what point in an ideal LC cycle is the magnetic energy largest?
+2. Predict what increasing R does to the oscillation period and amplitude.
+3. Find the critical resistance for L = 0.100 H and C = 10 µF.
+
+## Safety
+
+For a real circuit, turn off the supply before rewiring. Discharge capacitors through the specified resistor. Do not open an inductor circuit abruptly unless the apparatus is designed for the resulting voltage.
+
+## Procedure
+
+**LC oscillations.** Charge a capacitor to a known voltage, then connect it to the inductor. Record capacitor voltage and inductor current for several cycles.
+
+1. Find the time between successive positive voltage maxima.
+2. Read voltage and current near the beginning, quarter cycle, half cycle and full cycle.
+3. Calculate electric and magnetic energy at those times.
+
+**Damped oscillations.** Add a series resistor. For L = 0.100 H and C = 10 µF, take separate runs at R = 20, 50 and 100 Ω. Record at least three positive voltage maxima when they are large enough to read. Then compare resistances just below, at and just above your predicted critical value. Include one clearly overdamped run.
+
+**RC and RL.** Record capacitor voltage during an RC discharge and inductor current during an RL decay. Start the time measurement at the switch event and note the initial voltage or current.
+
+**Using the virtual apparatus.** Select **In time** and **LC oscillation**. Its capacitor starts charged to 10 V; use L1 = 100 mH and C1 = 10 µF. Use **RLC damping** for the resistance study and edit R2 in **Selected**, then **Reset** before each run. Add channels with **Scope V/I**, use **Whole run**, and **Export scope CSV**. **Flip mid way** provides RC discharge and **RL rise and decay** provides RL decay. Record settings and the **Energy since t = 0** readings separately from CSV. The current directions follow the drawn component terminals; check them before comparing signs.
+
+## Data
+
+| Run and R (Ω) | t (s) | V_C (V) | I_L (A) | U_C (J) | U_L (J) | Heat (J) |
+|---|---|---|---|---|---|---|
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+
+Use a separate copy for each run. Write L, C, initial voltage and switch time above it. For RC or RL, replace unused columns with the quantity you measure.
+
+## Analysis
+
+1. Find the LC period and infer L from the known C. Check whether U_C + U_L stays constant.
+2. For each oscillating RLC run, find the damped period Td. Use two successive positive maxima to calculate
+
+$$\delta=\ln\!\left(\frac{|V_n|}{|V_{n+1}|}\right),\qquad \alpha=\frac{\delta}{T_d},\qquad R_{\rm fit}=2L\alpha.$$
+
+3. Compare the measured period and damping with the predicted values. Check whether stored energy plus heat equals the initial energy.
+4. Compare runs at 0.95, 0.99, 1.00, 1.01 and 1.05 times Rcrit. Explain why a barely visible or absent sign change is not enough by itself to identify critical damping.
+5. Fit the RC and RL decays to find their time constants. Compare them with RC and L/R.
+
+## Uncertainty
+
+Bracket peak times using nearby samples and estimate how precisely you can read each peak height. Small late peaks give a poor damping estimate, so state which peaks you used and why. Check the actual CSV timestamps rather than the animation's speed. Compare fits over more than one interval to see how peak choice changes the answer. Include uncertainty in the component values when interpreting an inferred L or R.
 
 ## Questions
-1. Why does the oscillation frequency depend on R even though the undamped natural frequency does not?
-2. At what point is magnetic energy maximal in an ideal LC cycle?
-3. Why does stored energy decay faster than the charge envelope?
-4. Why does an ideal LC oscillator have no steady-state decay?
-5. Why does R=0 in RL not imply oscillation?
-6. Explain the difference between an analytic model, a numerical integrator and a real circuit with parasitic resistance.
 
-## Submission
-Submit prelab derivations, LC measurements and energy calculations, the RLC damping fit, critical damping study, RC/RL comparison, uncertainty analysis and conclusions.
+1. Why does a resistor reduce the energy even though charge still oscillates?
+2. Why is energy lost faster than the charge envelope shrinks?
+3. Why does an ideal RL loop with zero resistance keep a constant current rather than oscillate?
+4. Which response returns fastest without overshooting for an initially charged capacitor with zero current?
 
-**Instructor note:** The new standalone demo is on the curriculum branch and is not published to GitHub Pages until deployed. All quantitative readings should be validated before graded classroom use.
+## What to hand in
+
+Prelab answers, settings and raw traces, the LC period and energy check, damping calculations, the critical-damping comparison, RC/RL time constants with uncertainty, and answers to the questions. Identify simulated data.
