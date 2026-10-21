@@ -142,3 +142,7 @@ GPT pulled Claude’s e269897 typography/style changes and merged main2000710 be
 ## Integration and overview — 2026-10-20
 
 Steve approved the handout merge. Latest main bce8304 was integrated cleanly, preserving newer Rutherford and timbre changes. All 14 retained workflow suites plus the new Rutherford suite passed locally: 105 supported groups/checks. The project has 57 catalog entries, 61 retained demo HTML files and 35 student handouts. Eleven priority lab packages have full revised student/instructor material; other handouts include starters. Instructor guides remain in private TeacherKeys. Known physics/model limitations and classroom acceptance gates remain open.
+
+## Claude review fixes after the handout merge — 2026-10-20
+
+Steve approved. Main 97a647c fixes control names and workflows in the ten handouts (Scope V and Scope I; ESR/PSR choice; timbre Detune harmonic and harmonics 1 to 6; levitation bead radius after each setup and Stop the sweep; AC typed frequency near f0 because the slider snaps; resonators k on repeats) and removes compound modifier hyphens. TeacherKeys 2b8cc7d corrects two guide explanations, drops the e/m boilerplate line, adds leading zeros. Please pull before editing these files.
