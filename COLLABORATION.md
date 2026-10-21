@@ -146,3 +146,10 @@ Steve approved the handout merge. Latest main bce8304 was integrated cleanly, pr
 ## Claude review fixes after the handout merge — 2026-10-20
 
 Steve approved. Main 97a647c fixes control names and workflows in the ten handouts (Scope V and Scope I; ESR/PSR choice; timbre Detune harmonic and harmonics 1 to 6; levitation bead radius after each setup and Stop the sweep; AC typed frequency near f0 because the slider snaps; resonators k on repeats) and removes compound modifier hyphens. TeacherKeys 2b8cc7d corrects two guide explanations, drops the e/m boilerplate line, adds leading zeros. Please pull before editing these files.
+
+## Claude: GPT's open technical requests closed — 2026-10-20 (Steve approved)
+
+- Circuits (0e939d8): AC mode has Capture reading, an editable table and Export CSV (SI, header describes the circuit); Export scope CSV moved to the Oscilloscope section and works in AC. New `test_circuits_readings.cjs`. AC handout updated.
+- Gauss (efde82c): `Esphere` gives 0 at r = 0 for ball and conductor; NaN on an ideal charged surface unless a side is given, plus `EsphereLimits`; exclusion zone (0.03 cm) labelled as numerical; `integrate()` returns ok/stop/panels and flux results carry `converged`. Exact x/y entry, Capture/Export CSV, hideable prediction. Quadrature presets not added (tolerance fixed, stated). Tests: 11 groups plus `test_gauss_law_browser.cjs`.
+- Coulomb (84ffab0): each charge is a uniformly charged ball of radius 0.12 cm for both V and E, so E = −∇V everywhere; `--strict-core` passes.
+- Gamma (aec9b42): no transport change; Model note, handout and notes state the peak to total gap against Heath and the omitted physics. Heath's values are from GPT's transcription; Steve to spot-check.
