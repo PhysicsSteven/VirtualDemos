@@ -479,7 +479,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <span data-v="wire"><i class="swatch b" style="border-top-width:4px"></i>Magnetic force qv × B</span>
           <span data-v="wire"><i class="swatch" style="border-color:var(--ink);border-top-width:1px"></i>Path of the test charge in the frame drawn</span>
           <span data-v="wire"><i class="swatch" style="border-color:var(--accent);border-top-width:2px"></i>Counting bracket: a fixed length in the frame drawn</span>
-          <span data-v="wire"><i class="swatch grid"></i>Ticks: the lab spacing, for comparison</span>
+          <span data-v="wire"><i class="swatch" style="border-color:var(--pos);border-top-width:2px"></i>Ticks above: the ions' own spacing (the lab)</span>
+          <span data-v="wire"><i class="swatch" style="border-color:var(--neg);border-top-width:2px"></i>Ticks below: the electrons' own spacing (their rest frame)</span>
           <span data-v="point"><i class="swatch surf"></i>Surface of equal |E|</span>
           <span data-v="point"><i class="swatch grid"></i>Grid at rest in the lab</span>
           <span data-v="magnet"><i class="swatch dot ion"></i>Magnet's north end; <i class="swatch dot el" style="margin-left:2px"></i>south end</span>
@@ -498,7 +499,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <h2>Controls and model</h2>
         <p class="hint">Drag the 3D view to turn it, scroll or pinch to zoom, double click to reset. Ringed dots are grips: drag the test charge to change r, or an arrow tip to change a speed. With the view focused: <kbd>←</kbd> <kbd>→</kbd> speed, <kbd>↑</kbd> <kbd>↓</kbd> distance, <kbd>F</kbd> switch frame, <kbd>Space</kbd> pause.</p>
         <p class="hint" data-v="wire">Model: exact special relativity at any speed. The wire is two infinitely long, thin lines of charge: ions with density +λ₀ at rest in the lab, and electrons drifting at v with density −λ₀ in the lab, so the lab sees a neutral wire. In any frame, each line's density is its density in its own rest frame times its γ in that frame. Fields of an infinite line: E = λ/(2πε₀r), B = μ₀I/(2πr). The force is the Lorentz force q(E + u × B) on the test charge. Ignored: the test charge's own field and radiation, the wire's resistance, and the small surface charges that push current around a real circuit.</p>
-        <p class="hint" data-v="wire">What is drawn: with speeds near c each dot stands for 5 nC of charge (λ₀ × 0.5 cm), 20 of each kind per 10 cm in the lab; their spacing shows each line's density in the frame drawn. The contraction control exaggerates only the drawing: drawn spacing = lab spacing × (true spacing ratio)<sup>k</sup>, and moving charges are drawn flattened by (1/γ)<sup>k</sup>; at ×1 the drawing is true. Counts and all other numbers are always exact. Distances are to scale (the wire is drawn much thicker than a line). Time is slowed: 0.16 ns of the frame's own time per second on screen. The test charge, an electron or positron, follows the exact relativistic equation of motion dp/dt = q(E + v × B), computed separately in each frame (RK4, 1 ps steps); its own field and its radiation (about 10⁻¹⁵ of its energy) are ignored. In the real wire the true spacing, one electron per 10⁻²³ m of wire, and its 10⁻²⁶ change cannot be drawn: equal spacing is the honest picture, and the charge is not set free.</p>
+        <p class="hint" data-v="wire">What is drawn: with speeds near c each dot stands for 5 nC of charge (λ₀ × 0.5 cm), 20 of each kind per 10 cm in the lab; their spacing shows each line's density in the frame drawn. The charges are points, so only their spacing contracts. The ticks mark each line's own spacing, in its rest frame: the ions' is the lab spacing, the electrons' is γᵥ times wider (in the lab their spacing equals the ions', contracted from their own). The contraction control exaggerates only the drawing: drawn spacing = lab spacing × (true spacing ratio)<sup>k</sup>, for the dots and the ticks alike; at ×1 the drawing is true. Counts and all other numbers are always exact. Distances are to scale (the wire is drawn much thicker than a line). Time is slowed: 0.16 ns of the frame's own time per second on screen. The test charge, an electron or positron, follows the exact relativistic equation of motion dp/dt = q(E + v × B), computed separately in each frame (RK4, 1 ps steps); its own field and its radiation (about 10⁻¹⁵ of its energy) are ignored. In the real wire the true spacing, one electron per 10⁻²³ m of wire, and its 10⁻²⁶ change cannot be drawn: equal spacing is the honest picture, and the charge is not set free.</p>
         <p class="hint" data-v="point">Model: the exact field of a charge that has moved at constant velocity forever (Heaviside, 1888). It points straight away from where the charge is now: E = kq(1 − β²)/(r²(1 − β² sin²θ)^3/2), with θ measured from the direction of motion, and B = v × E/c². No acceleration, so no radiation. The view rides with the charge; the grid below is at rest in the lab and slides past at the charge's speed, slowed for the screen. Field lines are spaced so their density shows |E|.</p>
         <p class="hint" data-v="magnet">Model: the magnet is a uniformly magnetized cylinder, which is the same as a sheet of current K = M around its side. Its field is the exact field of each current loop (complete elliptic integrals), summed along the length by Gauss–Legendre quadrature, 120 nodes; the flux through the ring uses the exact mutual inductance of coaxial loops. Everything moves along the axis at constant speed; fields in the loop's frame come from the exact Lorentz transformation, at everyday speeds too. The EMFs are sums of the push on the charges over 48 pieces of the ring; −dΦ′/dt′ is a central difference. Ignored: the field of the induced current itself (a thin ring of high resistance). The motion on screen is slowed, and near c the magnet and spacing are drawn contracted by γ.</p>
         <p class="hint" data-v="xform">Model: the exact Lorentz transformation of the fields at one event, for a boost along x. Arrows show E and cB on one scale, so a field of 300 kV/m and one of 1 mT (cB = 299.8 kV/m) look about the same length.</p>
@@ -600,7 +601,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
 
   // Spacing of each line of charge in frame f, as a fraction of its lab spacing (exact): the inverse of its density ratio
-  function lineSpacings(v, f) { const gf = gammaOf(f); return { ion: 1 / gf, el: 1 / (gf * (1 - f * v)) }; }
+  // ion0, el0: each line's own spacing, in its rest frame (ions: the lab; electrons: γv times the lab spacing)
+  function lineSpacings(v, f) { const gf = gammaOf(f); return { ion: 1 / gf, el: 1 / (gf * (1 - f * v)), ion0: 1, el0: gammaOf(v) }; }
   // Drawing only: the change in spacing raised to the power k (k = 1 is the true spacing)
   function drawnSpacing(sLab, ratio, k) { return sLab * Math.pow(ratio, k); }
   // ---- the test charge set free near the wire ----
@@ -985,7 +987,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     $('tag').className = 'tag' + (real ? ' exact' : '');
     $('tag').textContent = real ? 'Real speeds: drift ' + fq(P.cw.vd, 'm/s', 2) + ', far too slow to see' : 'Speeds exaggerated: real drift speeds are about 0.1 mm/s';
     const kOn = !real && S.kx !== 1;
-    $('tagK').textContent = kOn ? 'Contraction drawn ×' + S.kx + ' (spacing and flattening); every number is exact' : '';
+    $('tagK').textContent = kOn ? 'Spacing drawn ×' + S.kx + '; every number is exact' : '';
     // the plain words caption
     const cap = $('cap'), lu = wireInFrame(P.lam0, P.v, P.u).lamNet, sign = lu > 0 ? 'positively' : 'negatively', moving = Math.abs(P.u) > 1e-300;
     cap.hidden = false;
@@ -993,7 +995,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     $('tag').hidden = shortPane; $('tagK').hidden = shortPane || !kOn;
     if (!moving) { cap.className = 'cap'; cap.innerHTML = 'The test charge does not move along the wire, so there is no magnetic force, and the wire is neutral, so there is no electric force.'; }
     else if (!settled) { cap.className = 'cap mix'; cap.innerHTML = 'Changing frames. In between, the wire is partly charged and <span class="e">both fields push</span>.<small>The charge\'s own clock is held still while the frame changes.</small>'; }
-    else if (S.frame === 'lab') { cap.className = 'cap'; cap.innerHTML = 'Lab frame: the wire is neutral. Only the <span class="m">magnetic field</span> pushes the moving charge.'; }
+    else if (S.frame === 'lab') { cap.className = 'cap'; cap.innerHTML = 'Lab frame: the wire is neutral. Only the <span class="m">magnetic field</span> pushes the moving charge.<small>In the lab the electrons are spaced exactly like the ions: their own spacing (ticks below), contracted.</small>'; }
     else { cap.className = 'cap el'; cap.innerHTML = `Charge's frame: the wire is ${sign} charged. Only the <span class="e">electric field</span> pushes the charge, which starts at rest here.<small>B is still there, but cannot push a charge at rest. Once the charge picks up speed toward the wire, B adds a small sideways push.</small>`; }
     if (shortPane) cap.insertAdjacentHTML('beforeend', '<small>' + $('tag').textContent + '.' + (kOn ? ' ' + $('tagK').textContent + '.' : '') + '</small>');
   }
@@ -1225,8 +1227,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     for (let j = 0; j < 48; j++) { const a = mkArrow('efield', { w: 0.026, opacity: 0.75 }); g.add(a); W.eLines.push(a); }
     W.bracket = new THREE.LineSegments(new THREE.BufferGeometry(), lmat({}, 'accent'));
     W.bracket.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(18), 3)); g.add(W.bracket);
-    W.ticks = new THREE.LineSegments(new THREE.BufferGeometry(), lmat({ transparent: true, opacity: 0.9 }, 'ink'));
+    W.ticks = new THREE.LineSegments(new THREE.BufferGeometry(), lmat({ transparent: true, opacity: 0.85 }, 'pos'));
     W.ticks.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(3 * 2 * 300), 3)); W.ticks.frustumCulled = false; g.add(W.ticks);
+    W.ticksE = new THREE.LineSegments(new THREE.BufferGeometry(), lmat({ transparent: true, opacity: 0.85 }, 'neg'));
+    W.ticksE.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(3 * 2 * 300), 3)); W.ticksE.frustumCulled = false; g.add(W.ticksE);
     W.dummy = new THREE.Object3D();
   }
   function ensureRun() {
@@ -1248,13 +1252,13 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   }
   const fade = (x) => Math.max(0, Math.min(1, (HALF - 0.5 - Math.abs(x)) / 3.5));
   const toD = (m) => m * 100 * RD;   // metres to display units
-  function layLine(mesh, xs, rad, z, bx0, bx1, fx) {
+  function layLine(mesh, xs, rad, z, bx0, bx1) {
     const d = G.W.dummy; let n = 0;
     for (const x of xs) {
       if (n >= 600) break;
       const sc = rad * fade(x) * (x >= bx0 && x <= bx1 ? 1.4 : 1);
       if (sc <= 0.002) continue;
-      d.position.set(x, 0, z); d.scale.set(sc * (fx || 1), sc, sc); d.updateMatrix(); mesh.setMatrixAt(n++, d.matrix);
+      d.position.set(x, 0, z); d.scale.setScalar(sc); d.updateMatrix(); mesh.setMatrixAt(n++, d.matrix);
     }
     mesh.count = n; mesh.instanceMatrix.needsUpdate = true;
   }
@@ -1282,18 +1286,22 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     { const s = drawnSpacing(D0, SP.ion, K), o = -f * C0 * Tf, k0 = Math.ceil((xmin - o) / s), k1 = Math.floor((xmax - o) / s); for (let k = k0; k <= k1 && ions.length < 600; k++) ions.push(X(k * s + o)); }
     { const s = drawnSpacing(D0, SP.el, K), o = s / 2 + W.w * C0 * Tf, k0 = Math.ceil((xmin - o) / s), k1 = Math.floor((xmax - o) / s); for (let k = k0; k <= k1 && els.length < 600; k++) els.push(X(k * s + o)); }
     const Lb = toD(narrow ? 0.05 : 0.1), bx0 = narrow ? -Lb / 2 : -1.6 - Lb / 2, bx1 = bx0 + Lb;
-    // moving charges drawn flattened along their motion by (1/γ)^K, never thinner than a quarter
-    const flat = (b) => Math.max(0.25, Math.pow(Math.sqrt(1 - b * b), K));
-    layLine(Wg.ions, ions, 0.085 * ps, 0.1, bx0, bx1, flat(f));
-    layLine(Wg.els, els, 0.066 * ps, -0.1, bx0, bx1, flat(W.w));
-    // ghost ticks at the lab spacing, shown whenever the frame drawn is not the lab
-    const showT = !real && Math.abs(f) > 1e-9, tg = Wg.ticks.geometry.attributes.position, sl = toD(D0);
-    let nt = 0;
-    if (showT) for (let k = Math.ceil((-HALF + 1) / sl); k * sl <= HALF - 1 && nt < 2 * 140; k++) {
-      const x = k * sl; tg.setXYZ(2 * nt, x, 0, 0.2); tg.setXYZ(2 * nt + 1, x, 0, 0.5); nt++; tg.setXYZ(2 * nt, x, 0, -0.2); tg.setXYZ(2 * nt + 1, x, 0, -0.5); nt++;
+    // charges are points: round dots in every frame; only their spacing changes
+    layLine(Wg.ions, ions, 0.085 * ps, 0.1, bx0, bx1);
+    layLine(Wg.els, els, 0.066 * ps, -0.1, bx0, bx1);
+    // ghost ticks at each line's own spacing (its rest frame), exaggerated like the dots:
+    // ions above the wire at the lab spacing, electrons below at γv times it
+    const tickLine = (obj, sp, z0, z1) => {
+      const tg = obj.geometry.attributes.position; let nt = 0;
+      if (!real) for (let k = Math.ceil((-HALF + 1) / sp); k * sp <= HALF - 1 && nt < 290; k++) { tg.setXYZ(2 * nt, k * sp, 0, z0); tg.setXYZ(2 * nt + 1, k * sp, 0, z1); nt++; }
+      tg.needsUpdate = true; obj.geometry.setDrawRange(0, 2 * nt); obj.visible = !real;
+    };
+    tickLine(Wg.ticks, toD(drawnSpacing(D0, SP.ion0, K)), 0.2, 0.5);
+    tickLine(Wg.ticksE, toD(drawnSpacing(D0, SP.el0, K)), -0.2, -0.5);
+    if (!real) {
+      labels.push({ p: [-HALF + 1.6, 0, 0.55], t: 'ions’ own spacing (the lab)', c: T.pos, a: 'l', dx: 2, pri: 1 });
+      labels.push({ p: [-HALF + 1.6, 0, -0.55], t: 'electrons’ own spacing (their rest frame)', c: T.neg, a: 'l', dx: 2, pri: 1 });
     }
-    tg.needsUpdate = true; Wg.ticks.geometry.setDrawRange(0, 2 * nt); Wg.ticks.visible = showT;
-    if (showT) labels.push({ p: [-HALF + 1.6, 0, 0.55], t: 'ticks: lab spacing', c: T.muted, a: 'l', dx: 2, pri: 1 });
     // the counting bracket, below the wire
     const bp = Wg.bracket.geometry.attributes.position, zb = -2.25;
     [[bx0, zb, bx1, zb], [bx0, zb - 0.14, bx0, zb + 0.14], [bx1, zb - 0.14, bx1, zb + 0.14]].forEach((a, i) => { bp.setXYZ(2 * i, a[0], 0, a[1]); bp.setXYZ(2 * i + 1, a[2], 0, a[3]); });

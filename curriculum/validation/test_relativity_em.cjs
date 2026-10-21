@@ -238,6 +238,10 @@ test('drawn contraction: k = 1 is the exact spacing; the exaggeration only touch
    assert(Math.sign(a-1)===Math.sign(s.ion-1)&&Math.abs(a-1)>=Math.abs(s.ion-1)-1e-15);
    assert(Math.sign(b-1)===Math.sign(s.el-1)&&Math.abs(b-1)>=Math.abs(s.el-1)-1e-15);}
  }
+ // each line's own spacing: ions at the lab spacing; electrons at γv times it, which is their spacing in their rest frame (f = v)
+ for(const v of [0.3,0.5,0.8,0.9,-0.6]){const L0=D.lineSpacings(v,0),Le=D.lineSpacings(v,v);
+  close(L0.el0,g(v),1e-14);close(Le.el,L0.el0,1e-12);close(L0.ion0,1,0,0);close(D.lineSpacings(v,0.4).el0,g(v),1e-14);
+  close(D.drawnSpacing(0.005,L0.el0,1),g(v)*0.005,1e-14);}
  // the lab frame stays exact for every k: ions and electrons both at the lab spacing (electrons are drawn at their lab spacing, v ≠ 0)
  const L=D.lineSpacings(0.5,0);close(L.ion,1,0,0);close(L.el,1,1e-15);
 });
