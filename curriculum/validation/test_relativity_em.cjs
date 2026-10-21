@@ -226,4 +226,19 @@ test('released charge: initial accelerations match F′/m in its rest frame and 
  // the electron moving with the electrons is pulled in (parallel currents attract)
  assert(F<0&&Fp<0);
 });
+
+test('drawn contraction: k = 1 is the exact spacing; the exaggeration only touches the drawing',()=>{
+ const D=core('relativity-em','lineSpacings,drawnSpacing,wireInFrame');
+ for(const [v,f] of [[0.5,0.5],[0.8,-0.6],[0.9,0.9],[0.3,0],[2.45e-13,2.45e-13]]){
+  const s=D.lineSpacings(v,f),W=D.wireInFrame(1,v,f);
+  close(s.ion,1/W.lamIon,1e-12);close(s.el,1/Math.abs(W.lamEl),1e-12);       // spacing = 1/density, exactly
+  close(D.drawnSpacing(0.005,s.ion,1),0.005*s.ion,1e-15);close(D.drawnSpacing(0.005,s.el,1),0.005*s.el,1e-15);
+  // k > 1 pushes each spacing further the same way, never across the lab spacing
+  for(const k of [2,3,4]){const a=D.drawnSpacing(1,s.ion,k),b=D.drawnSpacing(1,s.el,k);
+   assert(Math.sign(a-1)===Math.sign(s.ion-1)&&Math.abs(a-1)>=Math.abs(s.ion-1)-1e-15);
+   assert(Math.sign(b-1)===Math.sign(s.el-1)&&Math.abs(b-1)>=Math.abs(s.el-1)-1e-15);}
+ }
+ // the lab frame stays exact for every k: ions and electrons both at the lab spacing (electrons are drawn at their lab spacing, v ≠ 0)
+ const L=D.lineSpacings(0.5,0);close(L.ion,1,0,0);close(L.el,1,1e-15);
+});
 console.log(`${count} tests passed`);
