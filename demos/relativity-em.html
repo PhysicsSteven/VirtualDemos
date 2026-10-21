@@ -42,6 +42,7 @@ img { max-width: 100%; }
   --equi: #a7740b;
   --accent: #2b60b5;
   --bfield: #7a45b8;
+  --efield: #d0661c;
   --force: #17855f;
   --frame: #0f7c8c;
   --wire: #8b97a6;
@@ -52,13 +53,13 @@ img { max-width: 100%; }
   :root:not([data-theme="light"]) {
     --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --bfield: #bb94ff; --force: #4fd1a0; --frame: #4cc3d4; --wire: #6d7a8b; color-scheme: dark;
+    --equi: #e2b350; --accent: #69a0ff; --bfield: #bb94ff; --efield: #f59152; --force: #4fd1a0; --frame: #4cc3d4; --wire: #6d7a8b; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --bfield: #bb94ff; --force: #4fd1a0; --frame: #4cc3d4; --wire: #6d7a8b; color-scheme: dark;
+  --equi: #e2b350; --accent: #69a0ff; --bfield: #bb94ff; --efield: #f59152; --force: #4fd1a0; --frame: #4cc3d4; --wire: #6d7a8b; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -92,7 +93,14 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 #gl { touch-action: none; outline: none; cursor: grab; }
 #gl:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 #over { pointer-events: none; }
-.tag { position: absolute; top: 10px; left: 10px; z-index: 2; max-width: calc(100% - 20px); font-size: 0.8rem; font-weight: 700; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--equi); color: var(--equi); background: color-mix(in srgb, var(--canvas) 88%, transparent); pointer-events: none; }
+.ptop { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; pointer-events: none; }
+.cap { max-width: 100%; font-size: 1.02rem; font-weight: 700; line-height: 1.35; padding: 7px 12px; border-radius: 8px; border-left: 6px solid var(--bfield); background: color-mix(in srgb, var(--surface) 92%, transparent); box-shadow: 0 1px 0 var(--line); }
+.cap small { display: block; font-weight: 400; font-size: 0.86rem; color: var(--muted); }
+.cap.el { border-left-color: var(--efield); }
+.cap.mix { border-left-color: var(--accent); }
+.cap .m { color: var(--bfield); } .cap .e { color: var(--efield); }
+.seg.frame.big button { font-size: 1rem; padding: 7px 16px; }
+.tag { max-width: 100%; font-size: 0.8rem; font-weight: 700; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--equi); color: var(--equi); background: color-mix(in srgb, var(--canvas) 88%, transparent); pointer-events: none; }
 .tag.exact { border-color: var(--frame); color: var(--frame); }
 .nogl { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; color: var(--muted); }
 
@@ -108,6 +116,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .strip .badge.boost b { color: var(--accent); }
 .strip .c-e b { color: var(--equi); }
 .strip .c-b b { color: var(--bfield); }
+.strip .c-ef b { color: var(--efield); }
 .strip .c-f b { color: var(--force); }
 .meter { height: 4px; border-radius: 2px; background: var(--grid-strong); margin-top: 4px; position: relative; overflow: hidden; }
 .meter i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--frame); border-radius: 2px; }
@@ -193,6 +202,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   :root[data-projector="on"] .stage { min-height: 440px; }
   :root[data-projector="on"] .strip > div { padding: 5px 10px; }
   :root[data-projector="on"] .strip small { font-size: 0.68rem; }
+  :root[data-projector="on"] .stage-ctl { padding: 6px 8px; gap: 4px; }
+  :root[data-projector="on"] #resetView { display: none; }
+  :root[data-projector="on"] .stage-ctl .seg button, :root[data-projector="on"] .stage-ctl .btn { font-size: 0.78rem; padding: 4px 9px; }
+  :root[data-projector="on"] .seg.frame.big button { font-size: 0.86rem; padding: 4px 11px; }
+  :root[data-projector="on"] .cap { font-size: 0.86rem; padding: 4px 10px; }
+  :root[data-projector="on"] .cap small { font-size: 0.74rem; }
   :root[data-projector="on"] .strip .badge b { font-size: 0.98rem; }
   :root[data-projector="on"] .strip { grid-template-columns: minmax(180px, 1.3fr) repeat(4, minmax(0, 1fr)); }
 }
@@ -250,7 +265,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       </div>
       <div class="pane" id="pane">
         <canvas id="over" aria-hidden="true"></canvas>
-        <div class="tag" id="tag"></div>
+        <div class="ptop"><div class="cap" id="cap" hidden></div><div class="tag" id="tag"></div></div>
         <div class="nogl" id="nogl" hidden>The 3D view needs three.js, loaded from cdnjs.cloudflare.com, and WebGL. The readouts in the panel still work.</div>
       </div>
       <div class="strip" id="strip" aria-live="polite">
@@ -293,13 +308,13 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
             <input type="range" id="su" min="-0.9" max="0.9" step="0.01" value="0.5">
           </div>
           <label class="check"><input type="checkbox" id="lock" checked>u = v: the charge moves with the electrons</label>
-          <div class="inline"><span class="lab">Test charge q</span>
-            <div class="seg" role="group" aria-label="Test charge sign" id="qSeg">
-              <button type="button" data-q="1" aria-pressed="true">+1 nC</button>
-              <button type="button" data-q="-1" aria-pressed="false">−1 nC</button>
+          <div class="inline"><span class="lab">Test charge</span>
+            <div class="seg" role="group" aria-label="Test charge" id="qSeg">
+              <button type="button" data-q="-1" aria-pressed="true">Electron</button>
+              <button type="button" data-q="1" aria-pressed="false">Positron</button>
             </div>
           </div>
-          <p class="hint">Exaggerated speeds. The wire holds λ₀ = 1 μC/m of positive ions, at rest in the lab, and the same amount of electrons drifting at v, so it is neutral in the lab.</p>
+          <p class="hint">Exaggerated speeds. The wire holds λ₀ = 1 μC/m of positive ions, at rest in the lab, and the same amount of electrons drifting at v, so it is neutral in the lab. The test charge is let go at distance r and flies freely; each run lasts about a nanosecond, slowed for the screen.</p>
         </div>
         <div id="realBox" style="display:flex;flex-direction:column;gap:10px" hidden>
           <div>
@@ -309,13 +324,13 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <p class="hint">Copper, 1 mm² cross section, n = 8.49×10²⁸ conduction electrons per m³ (one per atom). The test charge is a conduction electron in a second, identical wire carrying the same current, so u = v.</p>
         </div>
         <div>
-          <div class="slider-head"><label for="sr">Distance r from the wire</label><output id="srOut" class="mono" for="sr"></output></div>
+          <div class="slider-head"><label for="sr">Starting distance r from the wire</label><output id="srOut" class="mono" for="sr"></output></div>
           <input type="range" id="sr" min="1" max="5" step="0.1" value="2">
         </div>
       </section>
 
       <section data-v="wire">
-        <h2>Both frames</h2>
+        <h2>Both frames, at the moment of release</h2>
         <div class="fcard lab" id="cardLab"><h3>Lab frame <small>ions at rest</small></h3><dl class="rows" id="tabLab"></dl></div>
         <div class="fcard chg" id="cardChg"><h3>Charge's frame <small>q at rest</small></h3><dl class="rows" id="tabChg"></dl></div>
         <p class="hint" id="propHint"></p>
@@ -329,8 +344,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div class="ok"><dt>F′/F</dt><dd id="rRatio">—</dd></div>
           <div class="ok"><dt>γᵤ of the charge</dt><dd id="rGu">—</dd></div>
           <div class="wide"><dt>E² − c²B² at q, lab and q's frame</dt><dd id="rInvW">—</dd></div>
+          <div class="wide ok"><dt>The whole run, on q's own clock τ</dt><dd id="rRun">—</dd></div>
+          <div class="wide"><dt>The same run on each frame's clock</dt><dd id="rClocks">—</dd></div>
         </dl>
-        <p class="hint">A sideways push is largest in the frame where the particle is at rest: F′ = γᵤF. Sideways momentum is the same in both frames, but the charge's clock runs slow in the lab, so the lab sees that momentum delivered over a γᵤ times longer time.</p>
+        <p class="hint">A sideways push is largest in the frame where the particle is at rest: F′ = γᵤF. Sideways momentum is the same in both frames, but the charge's clock runs slow in the lab, so the lab sees that momentum delivered over a γᵤ times longer time. The path is computed separately in each frame, and the distance from the wire against the charge's own clock τ comes out the same.</p>
         <p class="hint">B does not vanish in the charge's frame: there the ions and electrons both move, at different speeds, so the wire still carries a current. In the lab E = 0 at q, so E² − c²B² is negative, and since it is the same in every frame, no observer sees a purely electric field there.</p>
       </section>
 
@@ -451,9 +468,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <span data-v="wire"><i class="swatch dot ion"></i>Positive ions (spacing shows density)</span>
           <span data-v="wire"><i class="swatch dot el"></i>Conduction electrons</span>
           <span data-v="wire point"><i class="swatch v"></i>Velocity in the frame drawn</span>
-          <span data-v="wire point"><i class="swatch e"></i>Electric field E</span>
-          <span data-v="wire point"><i class="swatch b"></i>Magnetic field B (loops, arrow gives direction)</span>
-          <span data-v="wire"><i class="swatch f"></i>Force on q: electric part, then magnetic part</span>
+          <span data-v="point"><i class="swatch e"></i>Electric field E</span>
+          <span data-v="wire point"><i class="swatch b"></i>Magnetic field B (circles, arrow gives direction)</span>
+          <span data-v="wire"><i class="swatch" style="border-color:var(--efield);border-top-width:4px"></i>Electric force qE, and E field lines</span>
+          <span data-v="wire"><i class="swatch b" style="border-top-width:4px"></i>Magnetic force qv × B</span>
+          <span data-v="wire"><i class="swatch" style="border-color:var(--ink);border-top-width:1px"></i>Path of the test charge in the frame drawn</span>
+          <span data-v="wire"><i class="swatch" style="border-color:var(--accent);border-top-width:2px"></i>Counting bracket: a fixed length in the frame drawn</span>
           <span data-v="point"><i class="swatch surf"></i>Surface of equal |E|</span>
           <span data-v="point"><i class="swatch grid"></i>Grid at rest in the lab</span>
           <span data-v="magnet"><i class="swatch dot ion"></i>Magnet's north end; <i class="swatch dot el" style="margin-left:2px"></i>south end</span>
@@ -472,7 +492,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <h2>Controls and model</h2>
         <p class="hint">Drag the 3D view to turn it, scroll or pinch to zoom, double click to reset. Ringed dots are grips: drag the test charge to change r, or an arrow tip to change a speed. With the view focused: <kbd>←</kbd> <kbd>→</kbd> speed, <kbd>↑</kbd> <kbd>↓</kbd> distance, <kbd>F</kbd> switch frame, <kbd>Space</kbd> pause.</p>
         <p class="hint" data-v="wire">Model: exact special relativity at any speed. The wire is two infinitely long, thin lines of charge: ions with density +λ₀ at rest in the lab, and electrons drifting at v with density −λ₀ in the lab, so the lab sees a neutral wire. In any frame, each line's density is its density in its own rest frame times its γ in that frame. Fields of an infinite line: E = λ/(2πε₀r), B = μ₀I/(2πr). The force is the Lorentz force q(E + u × B) on the test charge. Ignored: the test charge's own field and radiation, the wire's resistance, and the small surface charges that push current around a real circuit.</p>
-        <p class="hint" data-v="wire">What is drawn: charges are symbols, and their spacing shows each line's density in the frame drawn. With speeds near c the motion is slowed for the screen (light would cross 2.2 grid units per second), and r is to scale with the wire much thicker than a line. In the real wire the true spacing, one electron per 10⁻²³ m of wire, and its 10⁻²⁶ change cannot be drawn: equal spacing is the honest picture.</p>
+        <p class="hint" data-v="wire">What is drawn: with speeds near c each dot stands for 5 nC of charge (λ₀ × 0.5 cm), 20 of each kind per 10 cm in the lab; their spacing shows each line's density in the frame drawn. Distances are to scale (the wire is drawn much thicker than a line). Time is slowed: 0.16 ns of the frame's own time per second on screen. The test charge, an electron or positron, follows the exact relativistic equation of motion dp/dt = q(E + v × B), computed separately in each frame (RK4, 1 ps steps); its own field and its radiation (about 10⁻¹⁵ of its energy) are ignored. In the real wire the true spacing, one electron per 10⁻²³ m of wire, and its 10⁻²⁶ change cannot be drawn: equal spacing is the honest picture, and the charge is not set free.</p>
         <p class="hint" data-v="point">Model: the exact field of a charge that has moved at constant velocity forever (Heaviside, 1888). It points straight away from where the charge is now: E = kq(1 − β²)/(r²(1 − β² sin²θ)^3/2), with θ measured from the direction of motion, and B = v × E/c². No acceleration, so no radiation. The view rides with the charge; the grid below is at rest in the lab and slides past at the charge's speed, slowed for the screen. Field lines are spaced so their density shows |E|.</p>
         <p class="hint" data-v="magnet">Model: the magnet is a uniformly magnetized cylinder, which is the same as a sheet of current K = M around its side. Its field is the exact field of each current loop (complete elliptic integrals), summed along the length by Gauss–Legendre quadrature, 120 nodes; the flux through the ring uses the exact mutual inductance of coaxial loops. Everything moves along the axis at constant speed; fields in the loop's frame come from the exact Lorentz transformation, at everyday speeds too. The EMFs are sums of the push on the charges over 48 pieces of the ring; −dΦ′/dt′ is a central difference. Ignored: the field of the induced current itself (a thin ring of high resistance). The motion on screen is slowed, and near c the magnet and spacing are drawn contracted by γ.</p>
         <p class="hint" data-v="xform">Model: the exact Lorentz transformation of the fields at one event, for a boost along x. Arrows show E and cB on one scale, so a field of 300 kV/m and one of 1 mT (cB = 299.8 kV/m) look about the same length.</p>
@@ -571,6 +591,47 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // Distance at which |E| equals the rest frame field at distance R0, in direction θ from the motion
   function isoRadius(th, b, R0) { const s = Math.sin(th); return R0 * Math.sqrt((1 - b * b) / Math.pow(1 - b * b * s * s, 1.5)); }
 
+
+  // ---- the test charge set free near the wire ----
+  const ME = 9.1093837015e-31;          // electron mass, kg
+  // Fields of the wire at distance r, seen from frame f: [E away from the wire, B along y] (the charge is above the wire, +z)
+  function wireFields(lam0, v, f, r) { const W = wireInFrame(lam0, v, f); return [W.lamNet * K2 / r, -MU0 * W.I / (2 * Math.PI * r)]; }
+  // Exact relativistic motion, dp/dt = q(E + v × B), of a charge q, mass m in the plane of the wire and the charge
+  // (x along the wire, z away from it), computed in frame f with RK4 in that frame's time.
+  // Starts at t = 0, x = 0, z = r0, velocity bx0·c along the wire. Returns points {t, x, z, bx, bz, tau}; tau is the charge's own time.
+  function flyCharge(lam0, v, f, q, m, r0, bx0, o) {
+    const W = wireInFrame(lam0, v, f), lE = W.lamNet * K2, lB = -MU0 * W.I / (2 * Math.PI), mc = m * C0;
+    const d = (s) => {
+      const g = Math.sqrt(1 + s[2] * s[2] + s[3] * s[3]), vx = C0 * s[2] / g, vz = C0 * s[3] / g, Ez = lE / s[1], By = lB / s[1];
+      return [vx, vz, q * (-vz * By) / mc, q * (Ez + vx * By) / mc, 1 / g];
+    };
+    const g0 = gammaOf(bx0), h = o.dt;
+    let s = [0, r0, g0 * bx0, 0, 0], t = 0;
+    const pt = (s, t) => { const g = Math.sqrt(1 + s[2] * s[2] + s[3] * s[3]); return { t, x: s[0], z: s[1], bx: s[2] / g, bz: s[3] / g, tau: s[4] }; };
+    const out = [pt(s, 0)];
+    for (let i = 0; i < o.nmax; i++) {
+      const k1 = d(s), s2 = s.map((x, j) => x + h / 2 * k1[j]), k2 = d(s2), s3 = s.map((x, j) => x + h / 2 * k2[j]), k3 = d(s3), s4 = s.map((x, j) => x + h * k3[j]), k4 = d(s4);
+      s = s.map((x, j) => x + h / 6 * (k1[j] + 2 * k2[j] + 2 * k3[j] + k4[j])); t += h;
+      out.push(pt(s, t));
+      if (s[1] < o.rMin || s[1] > o.rMax || Math.abs(s[0]) > o.xMax || t >= o.tMax || s[4] >= (o.tauMax || Infinity)) break;
+    }
+    return out;
+  }
+  // An event on the charge's path, and its velocity, seen from a frame moving at f along the wire
+  function eventToFrame(p, f) {
+    const g = gammaOf(f), d = 1 - f * p.bx;
+    return { t: g * (p.t - f * p.x / C0), x: g * (p.x - f * C0 * p.t), z: p.z, bx: (p.bx - f) / d, bz: p.bz / (g * d), tau: p.tau };
+  }
+  // Linear interpolation along a path at the charge's own time tau
+  function atTau(path, tau) {
+    let lo = 0, hi = path.length - 1;
+    if (tau <= path[0].tau) return path[0];
+    if (tau >= path[hi].tau) return path[hi];
+    while (hi - lo > 1) { const m = (lo + hi) >> 1; if (path[m].tau <= tau) lo = m; else hi = m; }
+    const a = path[lo], b = path[hi], w = (tau - a.tau) / (b.tau - a.tau), o = {};
+    for (const k of ['t', 'x', 'z', 'bx', 'bz', 'tau']) o[k] = a[k] + w * (b[k] - a[k]);
+    return o;
+  }
   // ---- Einstein's magnet and loop. The common axis is x. ----
   // Complete elliptic integrals K(m), E(m), parameter m = k², by the arithmetic geometric mean
   function ellipKE(m) {
@@ -678,7 +739,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const LAM0 = 1e-6, QX = 1e-9, A_CU = 1e-6;
   const S = {
     view: 'wire', scale: 'fast', frame: 'lab',
-    v: 0.5, u: 0.5, lock: true, qs: 1, r: 2, I: 1,
+    v: 0.5, u: 0.5, lock: true, qs: -1, r: 2, I: 1,
     bp: 0.8, layers: { lines: true, rings: true, surf: true, mlines: true },
     mscale: 'slow', mv: 1, mb: 0.6, mz: -9,
     xb: 0.6, xE: [0, 0, 0], xB: [0, 0, 1]
@@ -693,7 +754,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       const cw = copperWire(S.I, A_CU);
       return { lam0: cw.lam0, v: cw.b, u: cw.b, q: -QE, r: S.r / 100, cw };
     }
-    return { lam0: LAM0, v: S.v, u: S.lock ? S.v : S.u, q: S.qs * QX, r: S.r / 100 };
+    return { lam0: LAM0, v: S.v, u: S.lock ? S.v : S.u, q: S.qs * QE, r: S.r / 100 };
   }
   const MAG = { a: 0.01, L: 0.04, M: 1.2 / MU0 }, RB = 0.02;   // magnet radius, length, magnetization (μ₀M = 1.2 T); ring radius, m
   let QM = null, QL = null;
@@ -703,10 +764,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   // ---------- presets ----------
   const PRESETS = {
-    lab: { hint: 'The wire is neutral in the lab, so E = 0 at the charge. The charge moves with the electrons and feels only the magnetic force quB, away from the wire. Predict: what does the charge itself see? Then switch to Charge\'s frame: the wire is charged there, B is still present (the wire still carries current) but cannot push a charge at rest, and the force is electric.',
-      set: () => Object.assign(S, { view: 'wire', scale: 'fast', frame: 'lab', v: 0.5, u: 0.5, lock: true, qs: 1, r: 2 }) },
-    fast: { hint: 'Electrons at 0.8c, the charge at 0.6c the other way. Switch frames: the electrons move at 0.946c in the charge\'s frame, not 1.4c, the wire turns negative, and the force pulls the charge in.',
-      set: () => Object.assign(S, { view: 'wire', scale: 'fast', frame: 'lab', v: 0.8, u: -0.6, lock: false, qs: 1, r: 2 }) },
+    lab: { hint: 'The wire is neutral in the lab, so there is no electric field. An electron moving along with the wire\'s electrons is let go 2 cm away; only the magnetic force acts, and it pulls the electron in. Predict what the electron itself sees, then switch to Charge\'s frame.',
+      set: () => Object.assign(S, { view: 'wire', scale: 'fast', frame: 'lab', v: 0.5, u: 0.5, lock: true, qs: -1, r: 2 }) },
+    fast: { hint: 'Electrons at 0.8c, the test electron at 0.6c the other way. It is pushed away. Switch frames: the wire\'s electrons move at 0.946c in its frame, not 1.4c, so they crowd closer than the ions and the wire turns negative.',
+      set: () => Object.assign(S, { view: 'wire', scale: 'fast', frame: 'lab', v: 0.8, u: -0.6, lock: false, qs: -1, r: 2 }) },
     real: { hint: '1 A in a 1 mm² copper wire, to scale: the electrons drift at 0.07 mm/s. Switch frames. Nothing visible changes, yet the force stays the same, now electric.',
       set: () => Object.assign(S, { view: 'wire', scale: 'real', frame: 'lab', I: 1, r: 1 }) },
     magnet: { hint: 'Einstein\'s 1905 example. The ring moves at 1 m/s past the magnet, and its charges feel q(v × B). Switch to Loop\'s frame: now the magnet moves, and an electric field circles the axis. Same EMF, two stories.',
@@ -723,7 +784,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     boost.active = false;
     boost.phi = Math.atanh(targetF());
     resetOrbit();
-    if (G.ready) G.W.ph.xq = 0;
+    RUN.key = '';
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === p));
     $('presetHint').textContent = P.hint;
     refresh();
@@ -760,6 +821,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     for (const b of document.querySelectorAll('#scaleSeg button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.scale));
     for (const b of document.querySelectorAll('#qSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.q === S.qs));
     $('frameSeg').hidden = S.view !== 'wire' && S.view !== 'magnet';
+    $('frameSeg').classList.toggle('big', S.view === 'wire');
     const fl = S.view === 'magnet' ? ['Magnet\'s frame', 'Loop\'s frame'] : ['Lab frame', 'Charge\'s frame'];
     document.querySelectorAll('#frameSeg button').forEach((b, i) => { b.textContent = fl[i]; });
     for (const b of document.querySelectorAll('#mscaleSeg button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.mscale));
@@ -868,6 +930,13 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       $('rRatio').textContent = L.F === 0 ? 'no force' : (Q.F / L.F).toFixed(4);
       $('rGu').textContent = gu.toFixed(4);
     }
+    ensureRun();
+    if (real) { $('rRun').textContent = 'not set free: in a nanosecond it would move about 10⁻¹⁶ m'; $('rClocks').textContent = '—'; }
+    else {
+      const e = RUN.lab[RUN.lab.length - 1], c2 = RUN.chg[RUN.chg.length - 1];
+      $('rRun').textContent = `r goes from ${(P.r * 100).toFixed(1)} to ${(e.z * 100).toFixed(3)} cm in τ = ${(RUN.tauEnd * 1e9).toFixed(3)} ns, in both frames (lab: ${(e.z * 100).toFixed(4)}, q's frame: ${(c2.z * 100).toFixed(4)} cm)`;
+      $('rClocks').textContent = `lab ${(e.t * 1e9).toFixed(3)} ns, q's frame ${(c2.t * 1e9).toFixed(3)} ns, q's own clock ${(RUN.tauEnd * 1e9).toFixed(3)} ns`;
+    }
     const iL = L.Ez * L.Ez - L.cBy * L.cBy, iQ = Q.Ez * Q.Ez - Q.cBy * Q.cBy;
     $('rInvW').textContent = sci(iL, 4) + ' and ' + sci(iQ, 4) + ' V²/m²';
     if (real) {
@@ -885,21 +954,34 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   }
   function strip(i, label, value, sub) { $('sL' + i).textContent = label; $('sV' + i).textContent = value; $('sS' + i).textContent = sub || ''; }
   function wireStrip() {
-    const P = wp(), real = S.scale === 'real', f = fCur, W = wireForce(P.lam0, P.v, P.u, P.q, P.r, f);
-    const settled = !boost.active;
+    ensureRun();
+    const N = wireNow(), { P, f, ev, W } = N, real = S.scale === 'real', settled = !boost.active;
+    const FEm = Math.hypot(...N.FE), FMm = Math.hypot(...N.FM), Fm = Math.hypot(N.FE[0] + N.FM[0], N.FE[1] + N.FM[1]);
     $('sBadge').classList.toggle('boost', !settled);
     if (settled && S.frame === 'lab') strip(0, 'Observer', 'Lab frame', 'ions at rest');
-    else if (settled) strip(0, 'Observer', 'Charge\'s frame', real ? 'q at rest, moving at v = ' + fq(P.u * C0, 'm/s', 3) + ' in the lab' : 'q at rest, moving at ' + fb(P.u) + ' in the lab');
+    else if (settled) strip(0, 'Observer', 'Charge\'s frame', real ? 'q starts at rest; moves at ' + fq(P.u * C0, 'm/s', 3) + ' in the lab' : 'q starts at rest; moves at ' + fb(P.u) + ' in the lab');
     else strip(0, 'Observer moving at', fb(f), 'between the two frames');
     $('meter').hidden = real || Math.abs(P.u) < 1e-3;
     $('meterBar').style.width = (Math.abs(P.u) < 1e-9 ? 0 : Math.max(0, Math.min(1, Math.atanh(f) / Math.atanh(P.u))) * 100) + '%';
     strip(1, 'Net line charge λ', fq(W.lamNet, 'C/m', real ? 3 : 4, true), Math.abs(W.lamNet) < 1e-30 ? 'neutral' : W.lamNet > 0 ? 'ions outnumber electrons' : 'electrons outnumber ions');
-    strip(2, 'E at q', fq(Math.abs(W.Ez), 'V/m', 4), W.Ez === 0 ? 'no electric field' : '');
-    strip(3, 'B at q', fq(Math.abs(W.By), 'T', 4), Math.abs(W.uq) <= 1e-9 * Math.max(Math.abs(P.u), Math.abs(P.v), 1e-300) ? (Math.abs(W.By) > 0 ? 'still there, but q is at rest: no magnetic force' : 'q is at rest') : '');
-    const kind = Math.abs(W.FM) < 1e-12 * Math.abs(W.F) || W.FM === 0 ? 'electric' : Math.abs(W.FE) < 1e-12 * Math.abs(W.F) || W.FE === 0 ? 'magnetic' : 'electric ' + fq(W.FE, 'N', 3, true) + ', magnetic ' + fq(W.FM, 'N', 3, true);
-    strip(4, 'Force on q', fq(Math.abs(W.F), 'N', 4), W.F === 0 ? 'no force' : (kind.length > 10 ? kind : kind + ', ' + awayWord(W.F)));
+    strip(2, 'E at q', fq(Math.abs(N.Ez), 'V/m', 4), N.Ez === 0 ? 'no electric field' : 'electric force ' + fq(FEm, 'N', 3));
+    const qr = Math.hypot(ev.bx, ev.bz) <= 1e-9 * Math.max(Math.abs(P.u), Math.abs(P.v), 1e-300);
+    strip(3, 'B at q', fq(Math.abs(N.By), 'T', 4), qr ? 'still there, but q is at rest: no magnetic force' : 'magnetic force ' + fq(FMm, 'N', 3));
+    const kind = FMm <= 1e-9 * Fm ? 'all electric' : FEm <= 1e-9 * Fm ? 'all magnetic' : Math.round(100 * FEm / (FEm + FMm)) + '% electric, ' + Math.round(100 * FMm / (FEm + FMm)) + '% magnetic';
+    const dir = N.FE[1] + N.FM[1];
+    strip(4, 'Force on q', fq(Fm, 'N', 4), Fm === 0 ? 'no force' : kind + ', ' + (dir > 0 ? 'away from the wire' : 'toward the wire') + (real ? '' : ' · τ = ' + (RUN.tau * 1e9).toFixed(3) + ' ns'));
     $('tag').className = 'tag' + (real ? ' exact' : '');
     $('tag').textContent = real ? 'Real speeds: drift ' + fq(P.cw.vd, 'm/s', 2) + ', far too slow to see' : 'Speeds exaggerated: real drift speeds are about 0.1 mm/s';
+    // the plain words caption
+    const cap = $('cap'), lu = wireInFrame(P.lam0, P.v, P.u).lamNet, sign = lu > 0 ? 'positively' : 'negatively', moving = Math.abs(P.u) > 1e-300;
+    cap.hidden = false;
+    const shortPane = PH < 420 && PW >= 600;
+    $('tag').hidden = shortPane;
+    if (!moving) { cap.className = 'cap'; cap.innerHTML = 'The test charge does not move along the wire, so there is no magnetic force, and the wire is neutral, so there is no electric force.'; }
+    else if (!settled) { cap.className = 'cap mix'; cap.innerHTML = 'Changing frames. In between, the wire is partly charged and <span class="e">both fields push</span>.<small>The charge\'s own clock is held still while the frame changes.</small>'; }
+    else if (S.frame === 'lab') { cap.className = 'cap'; cap.innerHTML = 'Lab frame: the wire is neutral. Only the <span class="m">magnetic field</span> pushes the moving charge.'; }
+    else { cap.className = 'cap el'; cap.innerHTML = `Charge's frame: the wire is ${sign} charged. Only the <span class="e">electric field</span> pushes the charge, which starts at rest here.<small>B is still there, but cannot push a charge at rest. Once the charge picks up speed toward the wire, B adds a small sideways push.</small>`; }
+    if (shortPane) cap.insertAdjacentHTML('beforeend', '<small>' + $('tag').textContent + '.</small>');
   }
   function pointReadouts() {
     const b = S.bp, g = gammaOf(b), q = 1e-9;
@@ -1012,12 +1094,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function refresh() { readDirty = true; dirty = true; }
   function updateReadouts() {
     if (S.view === 'wire') {
-      $('sC1').className = ''; $('sC2').className = 'c-e'; $('sC3').className = 'c-b'; $('sC4').className = 'c-f';
+      $('sC1').className = ''; $('sC2').className = 'c-ef'; $('sC3').className = 'c-b'; $('sC4').className = 'c-f';
       if (readDirty) wireReadouts();
       wireStrip();
-    } else if (S.view === 'magnet') { magnetReadouts(); magnetStrip(); }
-    else if (S.view === 'point') { $('sC1').className = ''; $('sC2').className = 'c-e'; $('sC3').className = 'c-b'; if (readDirty) pointReadouts(); }
-    else if (readDirty) xformReadouts();
+    } else if (S.view === 'magnet') { $('tag').hidden = false; $('cap').hidden = true; magnetReadouts(); magnetStrip(); }
+    else if (S.view === 'point') { $('tag').hidden = false; $('cap').hidden = true; $('sC1').className = ''; $('sC2').className = 'c-e'; $('sC3').className = 'c-b'; if (readDirty) pointReadouts(); }
+    else { $('tag').hidden = false; $('cap').hidden = true; if (readDirty) xformReadouts(); }
     readDirty = false;
   }
 
@@ -1027,7 +1109,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
-      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), bfield: g('--bfield'), force: g('--force'), frame: g('--frame'), wire: g('--wire'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), bfield: g('--bfield'), efield: g('--efield'), force: g('--force'), frame: g('--frame'), wire: g('--wire'),
       mono: g('--font-mono') || 'monospace', dark: cs.colorScheme === 'dark' || g('color-scheme') === 'dark' };
     if (G.ready) recolor();
     dirty = true;
@@ -1040,9 +1122,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const MDISP = 3.5;       // magnet view: display speed of the relative motion, cm per second
   const RD = 0.75;         // display units per cm of r
   const HALF = 13;         // charges live on x in [−HALF, HALF]
-  const D0 = 1;            // display spacing of each line in its lab density
   const orbit = { theta: 0, phi: 0, zoom: 1 };
-  const ORBIT0 = { magnet: [-Math.PI / 2 - 0.85, 1.15], wire: [-Math.PI / 2 - 0.2, 1.3], point: [-Math.PI / 2 - 0.42, 1.2], xform: [-Math.PI / 2 - 0.72, 1.12] };
+  const ORBIT0 = { magnet: [-Math.PI / 2 - 0.85, 1.15], wire: [-Math.PI / 2 - 0.28, Math.PI / 2], point: [-Math.PI / 2 - 0.42, 1.2], xform: [-Math.PI / 2 - 0.72, 1.12] };
   function resetOrbit() { const o = ORBIT0[S.view]; orbit.theta = o[0]; orbit.phi = o[1]; orbit.zoom = 1; dirty = true; }
   let dirty = true;
 
@@ -1094,7 +1175,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (G.W) { G.W.ionMat.emissive.set(T.pos).multiplyScalar(0.25); G.W.elMat.emissive.set(T.neg).multiplyScalar(0.25); }
   }
 
-  // wire scene
+  // wire scene. Display units: RD per cm, in the plane y = 0 (x along the wire, z away from it).
+  const D0 = 0.005;        // lab spacing of each line of drawn charges, m (20 per 10 cm); each dot stands for λ₀D0 of charge
+  const RATE = 0.16e-9;    // seconds of the frame's own time shown per second on screen
+  const RUN = { key: '', lab: null, chg: null, xs: 0, tau: 0, tauEnd: 0, hold: 0 };
   function buildWire() {
     const g = new THREE.Group(); G.scene.add(g);
     const W = G.W = { g };
@@ -1103,145 +1187,202 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     W.tube.rotation.z = Math.PI / 2; g.add(W.tube);
     W.tube2 = new THREE.Mesh(tubeGeo, mat({ transparent: true, opacity: 0.09, depthWrite: false, side: THREE.DoubleSide }, 'wire'));
     W.tube2.rotation.z = Math.PI / 2; g.add(W.tube2);
-    W.axis = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-HALF, 0, 0), new THREE.Vector3(HALF, 0, 0)]), lmat({ transparent: true, opacity: 0.35 }, 'wire'));
-    g.add(W.axis);
     W.ionMat = mat({}, 'pos'); W.elMat = mat({}, 'neg');
-    W.ions = new THREE.InstancedMesh(G.sph, W.ionMat, 500); W.els = new THREE.InstancedMesh(G.sph, W.elMat, 500);
+    W.ions = new THREE.InstancedMesh(G.sph, W.ionMat, 600); W.els = new THREE.InstancedMesh(G.sph, W.elMat, 600);
     W.ions.instanceMatrix.setUsage(THREE.DynamicDrawUsage); W.els.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     W.ions.frustumCulled = false; W.els.frustumCulled = false;
     g.add(W.ions, W.els);
     W.qMat = mat({}, 'pos');
-    W.q = new THREE.Mesh(G.sph, W.qMat); W.q.scale.setScalar(0.2); g.add(W.q);
+    W.q = new THREE.Mesh(G.sph, W.qMat); g.add(W.q);
     W.aQ = mkArrow('ink'); W.aIon = mkArrow('pos'); W.aEl = mkArrow('neg');
-    W.fE = mkArrow('equi', { w: 0.07 }); W.fM = mkArrow('bfield', { w: 0.07 });
-    W.fTot = mkArrow('force', { w: 0.03, opacity: 0.0 });
+    W.fE = mkArrow('efield', { w: 0.075 }); W.fM = mkArrow('bfield', { w: 0.075 });
     g.add(W.aQ, W.aIon, W.aEl, W.fE, W.fM);
-    W.rLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(0, 0, 1)]), lmat({ dashSize: 0.12, gapSize: 0.09, transparent: true, opacity: 0.8 }, 'muted'));
-    g.add(W.rLine);
-    // force bracket: a thin line alongside the two parts, showing the total
-    W.fLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(0, 0, 1)]), lmat({}, 'force'));
-    g.add(W.fLine);
-    W.fTip = new THREE.Mesh(G.cone, mat({}, 'force')); g.add(W.fTip);
-    // field rings and spokes, in three groups along the wire
-    W.groups = [];
-    for (let k = 0; k < 3; k++) {
-      const grp = { rings: [], cones: [], spokes: [] };
-      for (let j = 0; j < 2; j++) {
-        const m = mat({ transparent: true, depthWrite: false }, 'bfield');
-        const t = new THREE.Mesh(new THREE.TorusGeometry(1, 0.022, 8, 72), m); t.rotation.y = Math.PI / 2; g.add(t);
-        const c = new THREE.Mesh(G.cone, m); g.add(c);
-        grp.rings.push(t); grp.cones.push(c);
-      }
-      for (let j = 0; j < 8; j++) { const a = mkArrow('equi', { w: 0.03 }); g.add(a); grp.spokes.push(a); }
-      W.groups.push(grp);
+    W.trail = new THREE.Line(new THREE.BufferGeometry(), lmat({ transparent: true, opacity: 0.85 }, 'ink'));
+    W.trail.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(3 * 700), 3)); W.trail.frustumCulled = false; g.add(W.trail);
+    W.start = new THREE.Mesh(G.sph, mat({ transparent: true, opacity: 0.35 }, 'muted')); g.add(W.start);
+    W.rings = [];
+    for (let j = 0; j < 2; j++) {
+      const m = mat({ transparent: true, depthWrite: false }, 'bfield');
+      const t = new THREE.Mesh(new THREE.TorusGeometry(1, 0.025, 8, 96), m); t.rotation.y = Math.PI / 2; g.add(t);
+      const c = new THREE.Mesh(G.cone, m); g.add(c);
+      W.rings.push({ t, c, R: 0 });
     }
-    W.ringR = 0;
-    W.ph = { xq: 0, i: 0, e: 0.5 };
+    W.eLines = [];
+    for (let j = 0; j < 48; j++) { const a = mkArrow('efield', { w: 0.026, opacity: 0.75 }); g.add(a); W.eLines.push(a); }
+    W.bracket = new THREE.LineSegments(new THREE.BufferGeometry(), lmat({}, 'accent'));
+    W.bracket.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(18), 3)); g.add(W.bracket);
     W.dummy = new THREE.Object3D();
   }
-  function setRings(rd) {
-    const W = G.W; if (Math.abs(W.ringR - rd) < 1e-9) return; W.ringR = rd;
-    const radii = [rd, rd * 1.75];
-    for (const grp of W.groups) grp.rings.forEach((t, j) => { t.geometry.dispose(); t.geometry = new THREE.TorusGeometry(radii[j], 0.022 * Math.min(1.25, projScale()), 8, 96); });
-  }
-  function stepWire(dt) {
-    const W = G.W, P = wp(), f = fCur, F = wireForce(P.lam0, P.v, P.u, P.q, P.r, f);
-    const sI = D0 / F.gf, sE = D0 * F.gv / F.gw;
-    const vq = F.uq * KS, vI = -f * KS, vE = F.w * KS;
-    if (playing && dt > 0) {
-      W.ph.xq += vq * dt;
-      W.ph.i = (W.ph.i + (vI - vq) * dt / sI) % 1;
-      W.ph.e = (W.ph.e + (vE - vq) * dt / sE) % 1;
-      const L = qWrap();   // the charge wraps inside the visible width
-      if (W.ph.xq > L / 2) { W.ph.xq -= L; W.ph.i = (W.ph.i + L / sI) % 1; W.ph.e = (W.ph.e + L / sE) % 1; }
-      if (W.ph.xq < -L / 2) { W.ph.xq += L; W.ph.i = (W.ph.i - L / sI) % 1; W.ph.e = (W.ph.e - L / sE) % 1; }
+  function ensureRun() {
+    const P = wp(), real = S.scale === 'real';
+    const key = [S.scale, P.v, P.u, P.q, P.r, S.I].join(':');
+    if (RUN.key === key) return;
+    RUN.key = key; RUN.tau = 0; RUN.hold = 0;
+    if (real) {
+      const p0 = { t: 0, x: 0, z: P.r, bx: P.u, bz: 0, tau: 0 };
+      RUN.lab = [p0]; RUN.chg = [eventToFrame(p0, P.u)]; RUN.xs = 0; RUN.tauEnd = 0; RUN.end = ''; return;
     }
-    return { F, P, sI, sE };
+    const o = { dt: 1e-12, nmax: 6000, rMin: 0.005, rMax: 0.055, xMax: 0.2, tMax: 4e-9 };
+    RUN.lab = flyCharge(P.lam0, P.v, 0, P.q, ME, P.r, P.u, o);
+    const e = RUN.lab[RUN.lab.length - 1];
+    RUN.tauEnd = e.tau;
+    RUN.chg = flyCharge(P.lam0, P.v, P.u, P.q, ME, P.r, 0, Object.assign({}, o, { xMax: 1, tMax: 1, tauMax: e.tau }));
+    RUN.xs = -e.x / 2;
+    RUN.end = e.z <= o.rMin ? 'hits the wire' : e.z >= o.rMax ? 'is pushed 5.5 cm away' : 'leaves the view';
   }
-  const qWrap = () => Math.min(2 * HALF - 6, 2 * (G.halfX || 9) * 0.9);
-  const qFade = (x) => Math.max(0, Math.min(1, (qWrap() / 2 - Math.abs(x)) / 1.0));
   const fade = (x) => Math.max(0, Math.min(1, (HALF - 0.5 - Math.abs(x)) / 3.5));
-  function layLine(mesh, xq, s, ph, z, rad) {
+  const toD = (m) => m * 100 * RD;   // metres to display units
+  function layLine(mesh, xs, rad, z, bx0, bx1) {
     const d = G.W.dummy; let n = 0;
-    const k0 = Math.ceil((-HALF - xq) / s - ph), k1 = Math.floor((HALF - xq) / s - ph);
-    for (let k = k0; k <= k1 && n < 500; k++) {
-      const x = xq + s * (k + ph), sc = rad * fade(x);
+    for (const x of xs) {
+      if (n >= 600) break;
+      const sc = rad * fade(x) * (x >= bx0 && x <= bx1 ? 1.4 : 1);
       if (sc <= 0.002) continue;
       d.position.set(x, 0, z); d.scale.setScalar(sc); d.updateMatrix(); mesh.setMatrixAt(n++, d.matrix);
     }
     mesh.count = n; mesh.instanceMatrix.needsUpdate = true;
   }
-  function drawWire(st, labels, handles) {
-    const W = G.W, { F, P, sI, sE } = st, real = S.scale === 'real', xq = W.ph.xq, rd = S.r * RD, lab = !boost.active && S.frame === 'lab';
-    const ps = Math.min(1.25, projScale());
-    layLine(W.ions, xq, sI, W.ph.i, 0.1, 0.1 * ps);
-    layLine(W.els, xq, sE, W.ph.e, -0.1, 0.075 * ps);
-    W.tube2.visible = real; W.tube2.position.set(0, 0, rd);
-    const qa = qFade(xq);
-    W.qMat.color.set(P.q > 0 ? T.pos : T.neg); W.qMat.emissive.set(P.q > 0 ? T.pos : T.neg).multiplyScalar(0.3);
-    W.q.position.set(xq, 0, rd); W.q.scale.setScalar(0.2 * ps * Math.max(0.001, qa));
-    // velocity arrows
-    const xs = -G.halfX * 0.6;
-    setArrow(W.aQ, [xq, 0, rd], [Math.sign(F.uq) || 1, 0, 0], qa > 0.5 ? Math.abs(F.uq) * AK : 0);
-    setArrow(W.aIon, [xs, 0, 0.62], [-Math.sign(fCur) || 1, 0, 0], Math.abs(fCur) * AK);
-    setArrow(W.aEl, [xs, 0, -0.62], [Math.sign(F.w) || 1, 0, 0], Math.abs(F.w) * AK);
-    // r marker
-    const rp = W.rLine.geometry.attributes.position;
-    rp.setXYZ(0, xq, 0, 0.3); rp.setXYZ(1, xq, 0, Math.max(0.3, rd - 0.22 * ps)); rp.needsUpdate = true; W.rLine.computeLineDistances();
-    W.rLine.visible = qa > 0.5;
-    // fields: reference is the biggest field at q in either frame
-    const ref = Math.max(Math.abs(wireForce(P.lam0, P.v, P.u, P.q, P.r, 0).cBy), Math.abs(wireForce(P.lam0, P.v, P.u, P.q, P.r, P.u).cBy), 1e-300);
-    const eRat = F.Ez / ref, bRat = Math.abs(F.cBy) / ref, bDir = -Math.sign(F.I) || 1;   // B at the front (−y) of a ring points −z for I along +x
-    setRings(rd);
-    const offs = [-G.halfX * 0.55, 0, G.halfX * 0.55];
-    W.groups.forEach((grp, k) => {
-      const x = k === 1 ? xq : (xq + offs[k] + 3 * HALF) % (2 * HALF) - HALF, a = k === 1 ? qa : fade(x) * 0.8;
-      grp.rings.forEach((t, j) => {
-        const rr = j ? rd * 1.75 : rd, op = bRat * (rd / rr) * a;
-        t.visible = op > 0.03; t.position.set(x, 0, 0); t.material.opacity = Math.min(1, 0.15 + 0.85 * op);
-        const c = grp.cones[j]; c.visible = t.visible;
-        c.position.set(x, -rr, 0); c.scale.set(0.07 * ps, 0.2 * ps, 0.07 * ps); c.rotation.set(bDir > 0 ? 0 : Math.PI, 0, 0); c.rotation.x = bDir > 0 ? Math.PI / 2 : -Math.PI / 2;
-      });
-      const len = Math.abs(eRat) * Math.max(1.4, rd * 0.9) * a;
-      grp.spokes.forEach((sp, j) => {
-        const th = (j + 0.5) / 8 * 2 * Math.PI, cy = Math.cos(th), cz = Math.sin(th);
-        if (len < 0.04) { sp.visible = false; return; }
-        const r0 = eRat > 0 ? 0.36 : 0.36 + len, d = eRat > 0 ? 1 : -1;
-        setArrow(sp, [x, r0 * cy, r0 * cz], [0, d * cy, d * cz], len, 0.038);
-      });
+  function wireNow() {
+    // the charge's event at its own time RUN.tau, seen from the frame drawn, and the fields and forces there
+    const P = wp(), f = fCur, ev = eventToFrame(atTau(RUN.lab, RUN.tau), f), [Ez, By] = wireFields(P.lam0, P.v, f, ev.z);
+    const W = wireInFrame(P.lam0, P.v, f);
+    return { P, f, ev, Ez, By, W, FE: [0, P.q * Ez], FM: [-P.q * ev.bz * C0 * By, P.q * ev.bx * C0 * By] };
+  }
+  let NOW = null;
+  function drawWire(dt, labels, handles) {
+    ensureRun();
+    const Wg = G.W, real = S.scale === 'real', ps = Math.min(1.25, projScale()), narrow = PW < 600;
+    // advance the charge's clock at the frame's own rate; frozen while the frame is changing
+    if (!real && playing && !boost.active && dt > 0) {
+      if (RUN.tau >= RUN.tauEnd) { RUN.hold += dt; if (RUN.hold > 1.6) { RUN.tau = 0; RUN.hold = 0; } }
+      else { const e = eventToFrame(atTau(RUN.lab, RUN.tau), fCur), gq = 1 / Math.sqrt(1 - e.bx * e.bx - e.bz * e.bz); RUN.tau = Math.min(RUN.tauEnd, RUN.tau + RATE * dt / gq); }
+    }
+    const N = NOW = wireNow(), { P, f, ev, W } = N;
+    const prog = Math.abs(P.u) < 1e-300 ? 0 : Math.max(0, Math.min(1, Math.atanh(f) / Math.atanh(P.u)));
+    const shift = RUN.xs * (1 - prog), X = (xm) => toD(xm + shift);
+    // ions and electrons at this frame's time t of the charge's present event
+    const Tf = real ? 0 : ev.t, gf = gammaOf(f), xmin = -HALF / (100 * RD) - shift, xmax = HALF / (100 * RD) - shift;
+    const ions = [], els = [];
+    { const s = D0 / gf, o = -f * C0 * Tf, k0 = Math.ceil((xmin - o) / s), k1 = Math.floor((xmax - o) / s); for (let k = k0; k <= k1 && ions.length < 600; k++) ions.push(X(k * s + o)); }
+    { const s = D0 / (gf * (1 - f * P.v)), o = s / 2 + W.w * C0 * Tf, k0 = Math.ceil((xmin - o) / s), k1 = Math.floor((xmax - o) / s); for (let k = k0; k <= k1 && els.length < 600; k++) els.push(X(k * s + o)); }
+    const Lb = toD(narrow ? 0.05 : 0.1), bx0 = narrow ? -Lb / 2 : -1.6 - Lb / 2, bx1 = bx0 + Lb;
+    layLine(Wg.ions, ions, 0.085 * ps, 0.1, bx0, bx1);
+    layLine(Wg.els, els, 0.066 * ps, -0.1, bx0, bx1);
+    // the counting bracket, below the wire
+    const bp = Wg.bracket.geometry.attributes.position, zb = -2.25;
+    [[bx0, zb, bx1, zb], [bx0, zb - 0.14, bx0, zb + 0.14], [bx1, zb - 0.14, bx1, zb + 0.14]].forEach((a, i) => { bp.setXYZ(2 * i, a[0], 0, a[1]); bp.setXYZ(2 * i + 1, a[2], 0, a[3]); });
+    bp.needsUpdate = true;
+    const nI = (Lb / toD(D0)) * gf, nE = (Lb / toD(D0)) * gf * (1 - f * P.v), cnt = (x) => (Math.abs(x - Math.round(x)) < 0.05 ? String(Math.round(x)) : x.toFixed(1));
+    const net = nI - nE;
+    Wg.bracket.visible = false;
+    BRK.on = true; BRK.x0 = bx0; BRK.x1 = bx1; BRK.t = `in this ${narrow ? 5 : 10} cm: ${cnt(nI)} ions, ${cnt(nE)} electrons, net ${Math.abs(net) < 0.05 ? '0' : (net > 0 ? '+' : '−') + cnt(Math.abs(net))}`;
+    Wg.tube2.visible = real; Wg.tube2.position.set(0, 0, toD(P.r));
+    // the charge, its starting point and its path so far, all in the frame drawn
+    const qx = X(ev.x), qz = toD(ev.z);
+    Wg.qMat.color.set(P.q > 0 ? T.pos : T.neg); Wg.qMat.emissive.set(P.q > 0 ? T.pos : T.neg).multiplyScalar(0.3);
+    Wg.q.position.set(qx, 0, qz); Wg.q.scale.setScalar(0.2 * ps);
+    const p0 = eventToFrame(RUN.lab[0], f); Wg.start.position.set(X(p0.x), 0, toD(p0.z)); Wg.start.scale.setScalar(0.12 * ps); Wg.start.visible = !real && RUN.tau > 0;
+    const tp = Wg.trail.geometry.attributes.position; let n = 0;
+    if (!real) {
+      const step = Math.max(1, Math.ceil(RUN.lab.length / 650));
+      for (let i = 0; i < RUN.lab.length && n < 699; i += step) { const pt = RUN.lab[i]; if (pt.tau > RUN.tau) break; const e = eventToFrame(pt, f); tp.setXYZ(n++, X(e.x), 0, toD(e.z)); }
+      tp.setXYZ(n++, qx, 0, qz);
+    }
+    tp.needsUpdate = true; Wg.trail.geometry.setDrawRange(0, n);
+    // velocities in the frame drawn
+    const xsp = -G.halfX * 0.62, spd = (b) => (real ? fq(b * C0, 'm/s', 2, true) : fb(b, 2));
+    setArrow(Wg.aQ, [qx, 0, qz], [ev.bx, 0, ev.bz], Math.hypot(ev.bx, ev.bz) * AK);
+    setArrow(Wg.aIon, [xsp, 0, -2.95], [-Math.sign(f) || 1, 0, 0], Math.abs(f) * AK);
+    setArrow(Wg.aEl, [xsp, 0, -3.4], [Math.sign(W.w) || 1, 0, 0], Math.abs(W.w) * AK);
+    labels.push({ p: [xsp, 0, -2.95], t: 'ions ' + (Math.abs(f) < 1e-3 && !real || real && f === 0 ? 'at rest' : spd(-f)), c: T.pos, a: f > 0 ? 'l' : 'r', dx: f > 0 ? 8 : -8 });
+    labels.push({ p: [xsp, 0, -3.4], t: 'electrons ' + (Math.abs(W.w) < 1e-3 && !real ? 'at rest' : spd(W.w)), c: T.neg, a: W.w < 0 ? 'l' : 'r', dx: W.w < 0 ? 8 : -8 });
+    // fields: one reference for every frame, the largest cB at the starting distance
+    const ref = Math.max(Math.abs(wireFields(P.lam0, P.v, 0, P.r)[1]), Math.abs(wireFields(P.lam0, P.v, P.u, P.r)[1])) * C0 || 1e-300;
+    const [Er] = wireFields(P.lam0, P.v, f, P.r), eRat = Er / ref, bDir = -Math.sign(W.I) || 1;
+    // B circles around the wire at the charge, in every frame
+    const cBq = Math.abs(N.By) * C0;
+    Wg.rings.forEach((R, j) => {
+      const rr = j ? qz * 1.7 : qz;
+      if (Math.abs(R.R - rr) > 0.03 * rr) { R.R = rr; R.t.geometry.dispose(); R.t.geometry = new THREE.TorusGeometry(rr, 0.025 * ps, 8, 96); }
+      const op = Math.min(1, cBq / ref * (qz / rr));
+      R.t.visible = R.c.visible = op > 0.03; R.t.position.set(qx, 0, 0); R.t.material.opacity = 0.2 + 0.8 * op;
+      R.c.position.set(qx, -rr, 0); R.c.scale.set(0.08 * ps, 0.22 * ps, 0.08 * ps); R.c.rotation.set(bDir > 0 ? -Math.PI / 2 : Math.PI / 2, 0, 0);
     });
-    // force on q: electric part from the charge, then the magnetic part from its tip; a thin line marks the total
-    const Fref = Math.abs(wireForce(P.lam0, P.v, P.u, P.q, P.r, P.u).F) || 1e-300, fs = 2.0 / Fref;
-    const lE = F.FE * fs * qa, lM = F.FM * fs * qa, base = rd + 0.24 * ps;
-    const z0 = base;
-    setArrow(W.fE, [xq + 0.05, 0, z0], [0, 0, Math.sign(lE) || 1], Math.abs(lE), 0.07);
-    setArrow(W.fM, [xq + 0.05, 0, z0 + lE], [0, 0, Math.sign(lM) || 1], Math.abs(lM), 0.07);
-    const tot = lE + lM, fx = xq + 0.38 * ps;
-    W.fLine.visible = W.fTip.visible = Math.abs(tot) > 0.05;
-    const fp = W.fLine.geometry.attributes.position; fp.setXYZ(0, fx, 0, z0); fp.setXYZ(1, fx, 0, z0 + tot - Math.sign(tot) * 0.12 * ps); fp.needsUpdate = true;
-    W.fTip.position.set(fx, 0, z0 + tot - Math.sign(tot) * 0.06 * ps); W.fTip.scale.set(0.06 * ps, 0.14 * ps, 0.06 * ps); W.fTip.rotation.set(tot > 0 ? Math.PI / 2 : -Math.PI / 2, 0, 0);
-    // labels and grips
-    const fw = (b) => (real ? fq(b * C0, 'm/s', 2, true) : fb(b, 2));
-    labels.push({ p: [xs, 0, 0.62 + 0.38], t: 'ions ' + (Math.abs(fCur) < 1e-3 && !real ? 'at rest' : real && fCur === 0 ? 'at rest' : fw(-fCur)), c: T.pos, a: 'l' });
-    labels.push({ p: [xs, 0, -0.62 - 0.4], t: 'electrons ' + (Math.abs(F.w) < 1e-3 && !real ? 'at rest' : fw(F.w)), c: T.neg, a: 'l' });
-    if (qa > 0.5) {
-      labels.push({ p: [xq - 0.3, 0, rd], t: 'q ' + (Math.abs(F.uq) < (real ? 1e-30 : 1e-3) ? 'at rest' : fw(F.uq)), c: P.q > 0 ? T.pos : T.neg, a: 'r', pri: 2 });
-      labels.push({ p: [xq, 0, rd / 2], t: 'r = ' + S.r.toFixed(1) + ' cm', c: T.muted, a: 'r', dx: -14 });
-      if (Math.abs(tot) > 0.05) labels.push({ p: [fx, 0, z0 + tot], t: 'F = ' + fq(Math.abs(F.F), 'N', 3), c: T.force, a: 'l', dx: 8, pri: 2 });
-      if (Math.abs(lE) > 0.25 && Math.abs(lM) > 0.25) {
-        labels.push({ p: [xq, 0, z0 + lE / 2], t: 'qE', c: T.equi, a: 'r', dx: -10 });
-        labels.push({ p: [xq, 0, z0 + lE + lM / 2], t: 'quB', c: T.bfield, a: 'r', dx: -10 });
-      }
-      if (bRat > 0.03) labels.push({ p: [xq, -rd * 1.75, -0.1], t: 'B', c: T.bfield, a: 'l', dx: 10 });
-      if (Math.abs(eRat) * Math.max(1.4, rd * 0.9) > 0.25) labels.push({ p: [xq, 0, -0.36 - Math.abs(eRat) * Math.max(1.4, rd * 0.9)], t: 'E', c: T.equi, a: 'l', dx: 8 });
-      if (real) labels.push({ p: [xq + 2.6, 0, rd + 0.3], t: 'second wire, same current', c: T.muted, a: 'l' });
-    }
-    // grips
-    if (qa > 0.5) handles.push({ id: 'q', p: [xq, 0, rd], cursor: 'ns-resize', set: (x, z) => setR(z / RD) });
+    if (cBq / ref > 0.03) labels.push({ p: [qx, -qz * 1.7, -0.2], t: 'B', c: T.bfield, a: 'l', dx: 8 });
+    // E field lines from the wire, only where E ≠ 0
+    const len = Math.min(1.6, Math.abs(eRat) * 1.6);
+    Wg.eLines.forEach((a, j) => {
+      const k = j >> 1, up = j & 1 ? 1 : -1, x = -HALF + 1.4 + k * 1.05, fa = fade(x) * (Math.abs(x - G.W.q.position.x) < 0.6 ? 0 : 1);
+      if (len * fa < 0.08) { a.visible = false; return; }
+      const r0 = eRat > 0 ? 0.36 : 0.36 + len * fa, d = eRat > 0 ? up : -up;
+      setArrow(a, [x, 0, up * r0], [0, 0, d], len * fa, 0.03);
+    });
+    if (len > 0.2) labels.push({ p: [-HALF + 1.4 + 3 * 1.05, 0, -0.4 - len], t: 'E', c: T.efield, a: 'l', dx: 6 });
+    // forces on the charge: electric (orange) and magnetic (purple), labelled by type
+    const Fr = Math.abs(P.q * wireFields(P.lam0, P.v, P.u, P.r)[0]) || 1e-300, fs = 2.0 / Fr, cap = (l) => Math.min(4.5, l);
+    const lE = Math.hypot(...N.FE) * fs, lM = Math.hypot(...N.FM) * fs;
+    setArrow(Wg.fE, [qx, 0, qz], [N.FE[0], 0, N.FE[1]], cap(lE), 0.075);
+    setArrow(Wg.fM, [qx, 0, qz], [N.FM[0], 0, N.FM[1]], cap(lM), 0.075);
+    const tip = (F, l) => { const m = Math.hypot(...F) || 1; return [qx + F[0] / m * cap(l), 0, qz + F[1] / m * cap(l)]; };
+    if (lM > 0.15) labels.push({ p: tip(N.FM, lM), t: 'Magnetic force qv × B', c: T.bfield, a: 'l', dx: 8, pri: 4 });
+    if (lE > 0.15) labels.push({ p: tip(N.FE, lE), t: 'Electric force qE', c: T.efield, a: lM > 0.15 ? 'r' : 'l', dx: lM > 0.15 ? -8 : 8, pri: 4 });
+    const qn = P.q > 0 ? (real ? '' : 'positron') : 'electron';
+    labels.push({ p: [qx, 0, qz], t: qn + (Math.hypot(ev.bx, ev.bz) < (real ? 1e-30 : 1e-3) ? ' at rest' : ''), c: P.q > 0 ? T.pos : T.neg, a: 'r', dx: -12, pri: 3 });
+    if (!real && RUN.tau >= RUN.tauEnd && RUN.tauEnd > 0) labels.push({ p: [qx, 0, qz + 0.5], t: RUN.end, c: T.muted, a: 'l', dx: 6, pri: 2 });
+    if (real) labels.push({ p: [toD(0.02), 0, toD(P.r) + 0.3], t: 'second wire, same current', c: T.muted, a: 'l' });
+    // grips: the charge sets the starting distance, the arrows set the speeds (lab frame only)
+    const lab = !boost.active && S.frame === 'lab';
+    handles.push({ id: 'q', p: [qx, 0, qz], cursor: 'ns-resize', set: (x, z) => setR(z / RD) });
     if (lab && !real) {
-      if (qa > 0.5 && Math.abs(F.uq) * AK > 0.25) handles.push({ id: 'u', p: [xq + F.uq * AK, 0, rd], cursor: 'ew-resize', set: (x) => setU((x - G.W.ph.xq) / AK) });
-      handles.push({ id: 'v', p: [xs + F.w * AK, 0, -0.62], cursor: 'ew-resize', set: (x) => setV((x - xs) / AK) });
+      if (Math.abs(ev.bx) * AK > 0.25 && RUN.tau === 0) handles.push({ id: 'u', p: [qx + ev.bx * AK, 0, qz], cursor: 'ew-resize', set: (x) => setU((x - qx) / AK) });
+      handles.push({ id: 'v', p: [xsp + W.w * AK, 0, -3.4], cursor: 'ew-resize', set: (x) => setV((x - xsp) / AK) });
     }
+    wirePlot.data = real ? null : { f };
+  }
+  const wirePlot = { data: null };
+  const BRK = { on: false };
+  // the counting bracket, drawn flat on the overlay under the wire so perspective does not tilt it
+  function drawBracket(ctx, ps) {
+    const a = toScreen([BRK.x0, 0, 0]), b = toScreen([BRK.x1, 0, 0]); if (!a || !b) return;
+    const y = Math.max(a[1], b[1]) + 64 * ps, t = 7 * ps;
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 1.6 * ps; ctx.beginPath();
+    ctx.moveTo(a[0], y); ctx.lineTo(b[0], y); ctx.moveTo(a[0], y - t); ctx.lineTo(a[0], y + t); ctx.moveTo(b[0], y - t); ctx.lineTo(b[0], y + t); ctx.stroke();
+    ctx.font = `600 ${11.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const tw = ctx.measureText(BRK.t).width + 10 * ps, cx = Math.max(tw / 2 + 4, Math.min(PW - tw / 2 - 4, (a[0] + b[0]) / 2));
+    ctx.globalAlpha = 0.88; ctx.fillStyle = T.canvas; ctx.fillRect(cx - tw / 2, y + 9 * ps, tw, 18 * ps); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.accent; ctx.fillText(BRK.t, cx, y + 12 * ps);
+    return [cx - tw / 2, y - t, tw, 27 * ps + t];
+  }
+  function drawWirePlot(ctx, ps) {
+    if (!wirePlot.data || !RUN.lab || RUN.lab.length < 3) return;
+    const f = wirePlot.data.f, narrow = PW < 600;
+    const short = PH < 420;
+    const w = narrow ? PW - 16 : Math.min((short ? 300 : 380) * Math.min(1.2, ps), PW * 0.36), h = (narrow ? 112 : short ? 92 : 132) * Math.min(1.2, ps), x0 = PW - w - 8, y0 = PH - h - 8;
+    ctx.globalAlpha = 0.93; ctx.fillStyle = T.canvas; ctx.fillRect(x0, y0, w, h); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(x0 + 0.5, y0 + 0.5, w - 1, h - 1);
+    const step = Math.max(1, Math.ceil(RUN.lab.length / 300)), fr = [];
+    for (let i = 0; i < RUN.lab.length; i += step) fr.push(eventToFrame(RUN.lab[i], f));
+    fr.push(eventToFrame(RUN.lab[RUN.lab.length - 1], f));
+    const tMax = Math.max(RUN.tauEnd, fr[fr.length - 1].t) * 1e9, rs = RUN.lab.map((p) => p.z), rMax = Math.max(...rs) * 100, rMin = 0;
+    const L = x0 + 34 * ps, Rr = x0 + w - 10, T0 = y0 + (short ? 20 : 30) * ps, B0 = y0 + h - 18 * ps;
+    const X = (tn) => L + tn / tMax * (Rr - L), Y = (rc) => B0 - (rc - rMin) / (rMax - rMin) * (B0 - T0);
+    ctx.font = `${10 * ps}px ${T.mono}`; ctx.textBaseline = 'middle'; ctx.fillStyle = T.muted; ctx.textAlign = 'left';
+    ctx.fillText(short ? 'r (cm) against time (ns)' : 'distance from wire r (cm) against time (ns)', x0 + 8, y0 + 10 * ps);
+    if (!short) ctx.fillText('solid: q\'s own clock τ · dashed: this frame\'s clock', x0 + 8, y0 + 21 * ps);
+    ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(L, T0); ctx.lineTo(L, B0); ctx.lineTo(Rr, B0); ctx.stroke();
+    ctx.textAlign = 'right'; ctx.fillText(rMax.toFixed(1), L - 4, T0); ctx.fillText('0', L - 4, B0);
+    ctx.textAlign = 'center'; ctx.fillText(tMax.toFixed(2), Rr - 8, B0 + 9 * ps); ctx.fillText('0', L, B0 + 9 * ps);
+    // r against τ from the lab integration (solid) and from the charge frame integration (dots): the same curve
+    ctx.strokeStyle = T.force; ctx.lineWidth = 2.2 * ps; ctx.beginPath();
+    RUN.lab.forEach((p, i) => { if (i % step) return; const a = X(p.tau * 1e9), b = Y(p.z * 100); i ? ctx.lineTo(a, b) : ctx.moveTo(a, b); }); ctx.stroke();
+    ctx.fillStyle = T.efield; const cs = Math.max(1, Math.floor(RUN.chg.length / 14));
+    for (let i = 0; i < RUN.chg.length; i += cs) { const p = RUN.chg[i]; ctx.beginPath(); ctx.arc(X(p.tau * 1e9), Y(p.z * 100), 2.3 * ps, 0, 2 * Math.PI); ctx.fill(); }
+    // r against this frame's time (dashed): stretched by time dilation when the charge moves fast in this frame
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * ps; ctx.setLineDash([5 * ps, 4 * ps]); ctx.beginPath();
+    fr.forEach((p, i) => { const a = X(p.t * 1e9), b = Y(p.z * 100); i ? ctx.lineTo(a, b) : ctx.moveTo(a, b); }); ctx.stroke(); ctx.setLineDash([]);
+    const now = atTau(RUN.lab, RUN.tau), nf = eventToFrame(now, f);
+    ctx.fillStyle = T.force; ctx.beginPath(); ctx.arc(X(RUN.tau * 1e9), Y(now.z * 100), 3.6 * ps, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = T.muted; ctx.beginPath(); ctx.arc(X(nf.t * 1e9), Y(now.z * 100), 3 * ps, 0, 2 * Math.PI); ctx.fill();
   }
   const snap = (x, lo, hi, st) => +Math.max(lo, Math.min(hi, Math.round(x / st) * st)).toFixed(4);
   function setR(r) { const v = snap(r, 1, 5, 0.1); if (v !== S.r) { S.r = v; clearPreset(); onParamChange(); } }
@@ -1514,7 +1655,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function placeCamera() {
     const asp = PW / PH, t = Math.tan(G.cam.fov * Math.PI / 360);
     let hx, hz, target;
-    if (S.view === 'wire') { hx = asp < 1 ? 4.2 : 9.2; hz = 2.9; target = [0, 0, 1.45]; }
+    if (S.view === 'wire') { const sh = asp >= 1 && PH < 420; hx = asp < 1 ? 6.4 : 9.4; hz = asp < 1 ? 5.6 : sh ? 5.3 : 4.3; target = [0, 0, sh ? 0.6 : 0]; }
     else if (S.view === 'magnet') { hx = asp < 1 ? 7.5 : 13.5; hz = asp < 1 ? 6.5 : 5.2; target = [0, 0, asp < 1 ? -3.2 : -1.6]; }
     else if (S.view === 'point') { hx = asp < 1 ? 5 : 6.2; hz = 5.3; target = [0, 0, -0.3]; }
     else { hx = asp < 1 ? 3.6 : 4.4; hz = 3.6; target = [0, 0, -0.3]; }
@@ -1533,7 +1674,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     placeCamera();
     G.W.g.visible = S.view === 'wire'; G.Pt.g.visible = S.view === 'point'; G.X.g.visible = S.view === 'xform'; G.Mg.g.visible = S.view === 'magnet';
     const labels = [], hs = [];
-    if (S.view === 'wire') drawWire(stepWire(dt), labels, hs);
+    if (S.view === 'wire') drawWire(dt, labels, hs);
     else if (S.view === 'magnet') drawMagnet(dt, labels, hs);
     else if (S.view === 'point') drawPoint(dt, labels, hs);
     else drawXform(labels, hs);
@@ -1552,14 +1693,16 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       ctx.beginPath(); ctx.arc(x, y, (hot ? 9 : 7.5) * ps, 0, 2 * Math.PI); ctx.stroke();
     }
     if (S.view === 'magnet') drawPlot(ctx, ps);
+    let brBox = null;
+    if (S.view === 'wire') { drawWirePlot(ctx, ps); if (BRK.on) brBox = drawBracket(ctx, ps); }
     // labels on halo boxes, high priority first, nudged off each other
     ctx.font = `600 ${11.5 * ps}px ${T.mono}`; ctx.textBaseline = 'middle';
-    const boxes = [];
+    const boxes = brBox ? [brBox] : [];
     labels.sort((a, b) => (b.pri || 0) - (a.pri || 0));
     for (const L of labels) {
       const s = toScreen(L.p); if (!s) continue;
       const tw = ctx.measureText(L.t).width + 10 * ps, th = 18 * ps, dx = (L.dx || 6) * ps;
-      let x = L.a === 'r' ? s[0] - Math.abs(dx) - tw : s[0] + dx, y = s[1] - th / 2;
+      let x = L.a === 'r' ? s[0] - Math.abs(dx) - tw : L.a === 'c' ? s[0] - tw / 2 : s[0] + dx, y = s[1] - th / 2;
       x = Math.max(4, Math.min(PW - tw - 4, x));
       for (let k = 0; k < 4; k++) {
         const hit = boxes.find((b) => x < b[0] + b[2] && x + tw > b[0] && y < b[1] + b[3] && y + th > b[1]);
@@ -1661,7 +1804,6 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
     projBtn.setAttribute('aria-pressed', String(on));
     try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
-    if (G.ready) G.W.ringR = 0;
     requestAnimationFrame(() => { resize(); });
   }
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
@@ -1706,7 +1848,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   requestAnimationFrame(loop);
 
   // hooks for automated checks
-  window.__relem = { S, applyPreset, setFrame, wp, frame: () => fCur, boosting: () => boost.active, frameMs: () => frameMs, handles: () => handles.map((h) => ({ id: h.id, x: h.s[0], y: h.s[1] })), core: { wireForce, wireInFrame, boostFields, movingCharge } };
+  window.__relem = { S, pause: () => { if (playing) togglePlay(); }, setTau: (fr) => { ensureRun(); RUN.tau = fr * RUN.tauEnd; RUN.hold = 0; dirty = true; }, run: () => RUN, applyPreset, setFrame, wp, frame: () => fCur, boosting: () => boost.active, frameMs: () => frameMs, handles: () => handles.map((h) => ({ id: h.id, x: h.s[0], y: h.s[1] })), core: { wireForce, wireInFrame, boostFields, movingCharge } };
 })();
 </script>
 </body>

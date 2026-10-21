@@ -197,4 +197,33 @@ test('Lenz: the induced current makes a field through the ring that opposes the 
   assert(Math.sign(Bself)===-Math.sign(dPhi),`x=${x} β=${beta}`);
  }
 });
+
+// ---------- the test charge set free near the wire ----------
+const Fl=core('relativity-em','ME,wireFields,flyCharge,eventToFrame,atTau');
+const OPT={dt:2e-13,nmax:40000,rMin:0.005,rMax:0.07,xMax:0.3,tMax:3e-9};
+
+test('released charge: the lab path, Lorentz transformed, is the path integrated in the charge frame; r(τ) agrees',()=>{
+ for(const [v,u,q] of [[0.5,0.5,-e],[0.5,0.5,e],[0.8,-0.6,-e],[0.9,0.9,-e],[0.3,0.6,e]]){
+  const lab=Fl.flyCharge(1e-6,v,0,q,Fl.ME,0.02,u,OPT),tauEnd=lab[lab.length-1].tau;
+  const chg=Fl.flyCharge(1e-6,v,u,q,Fl.ME,0.02,0,Object.assign({},OPT,{tMax:1,xMax:1,tauMax:tauEnd}));
+  let worst=0;
+  for(let i=0;i<chg.length;i+=50){
+   const c=chg[i];if(c.tau>tauEnd)break;const l=Fl.eventToFrame(Fl.atTau(lab,c.tau),u);
+   worst=Math.max(worst,Math.abs(l.z-c.z)/0.02,Math.abs(l.x-c.x)/0.02,Math.abs(l.t-c.t)/1e-9);
+  }
+  assert(worst<1e-6,`v=${v} u=${u}: worst ${worst}`);
+  // lab: E = 0, so the speed does not change
+  const sp=lab.map((p)=>Math.hypot(p.bx,p.bz));close(Math.max(...sp),Math.abs(u),1e-9);close(Math.min(...sp),Math.abs(u),1e-9);
+  console.log(`   v=${v} u=${u} q=${q>0?'+':'−'}e: run τ = ${(tauEnd*1e9).toFixed(4)} ns, lab t = ${(lab[lab.length-1].t*1e9).toFixed(4)} ns, r end = ${(lab[lab.length-1].z*100).toFixed(3)} cm, worst mismatch ${worst.toExponential(1)}`);
+ }
+});
+
+test('released charge: initial accelerations match F′/m in its rest frame and F/(γm) across the motion in the lab',()=>{
+ const v=0.5,u=0.5,q=-e,lam0=1e-6,r0=0.02,h=1e-15,o=Object.assign({},OPT,{dt:h,nmax:3});
+ const chg=Fl.flyCharge(lam0,v,u,q,Fl.ME,r0,0,o),lab=Fl.flyCharge(lam0,v,0,q,Fl.ME,r0,u,o);
+ const Fp=q*Fl.wireFields(lam0,v,u,r0)[0],F=R.wireForce(lam0,v,u,q,r0,0).F;
+ close(chg[1].bz*c/h,Fp/Fl.ME,1e-6);close(lab[1].bz*c/h,F/(g(u)*Fl.ME),1e-6);close(Fp,g(u)*F,1e-12);
+ // the electron moving with the electrons is pulled in (parallel currents attract)
+ assert(F<0&&Fp<0);
+});
 console.log(`${count} tests passed`);
