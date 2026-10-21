@@ -40,7 +40,7 @@ E=a·channel+b
 
 The simulated crystal is bare. It has no aluminum can or reflector, no photomultiplier behind it and no source holder, and electrons in it never escape or radiate. In a real detector these parts scatter photons into the Compton continuum or carry energy out of the crystal, so fewer events land in the photopeak.
 
-As a result the simulated peak to total ratio (full energy events divided by all events) is higher than on a real detector. For a 3" × 3" NaI(Tl) crystal with the source 10 cm away, Heath's measured catalogue values (R. L. Heath, *Scintillation Spectrometry: Gamma-Ray Spectrum Catalogue*, IDO-16880, 1964, Appendix III, Table I) are 2 to 17% lower, and the gap grows with energy:
+As a result the simulated peak to total ratio (full energy events divided by all events) is higher than on a real detector. The simulation opens with the department's 38 mm × 38 mm crystal (ORTEC SPA38); 2" × 2" and 3" × 3" are also available. For a 3" × 3" NaI(Tl) crystal with the source 10 cm away, Heath's measured catalogue values (R. L. Heath, *Scintillation Spectrometry: Gamma-Ray Spectrum Catalogue*, IDO-16880, 1964, Appendix III, Table I) are 2 to 17% lower, and the gap grows with energy:
 
 | Energy (keV) | Measured (Heath) | Simulated |
 |---:|---:|---:|
@@ -49,4 +49,4 @@ As a result the simulated peak to total ratio (full energy events divided by all
 | 1114 | 0.395 | 0.428 |
 | 1837 | 0.280 | 0.328 |
 
-No comparison has been made for a 2" × 2" crystal. Use the simulation for peak energies, resolution and the shape of a spectrum, not to find a real source's activity from its absolute efficiency. Close to the crystal the count rate does not follow a simple inverse square law, because the crystal's size and the depth of each interaction matter. The full comparison is in the [benchmark report](../../validation/GAMMA_PUBLISHED_COMPARISON.md).
+No comparison with published values has been made for the 38 mm × 38 mm or 2" × 2" crystals; expect their simulated ratios to be high in the same way. Use the simulation for peak energies, resolution and the shape of a spectrum. To find a source's activity, compare it with the 5 µCi Cs-137 reference standard at the same distance (ORTEC Experiment 3.5), not with a computed absolute efficiency. Close to the crystal the count rate does not follow a simple inverse square law, because the crystal's size and the depth of each interaction matter. The full comparison is in the [benchmark report](../../validation/GAMMA_PUBLISHED_COMPARISON.md).

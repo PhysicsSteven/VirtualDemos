@@ -189,7 +189,7 @@ sub, sup { line-height: 0; }
   <header class="bar">
     <div>
       <h1>Gamma Spectroscopy</h1>
-      <p>A virtual NaI(Tl) scintillation spectrometer. Every pulse is simulated from physics: Monte Carlo photon transport in the crystal, detector resolution, the electronics and counting statistics. Acquire, mark peaks, calibrate, and measure.</p>
+      <p>A virtual NaI(Tl) scintillation spectrometer, set up like ORTEC Experiment 3 (SPA38 detector, EASY-MCA-2K). Every pulse is simulated from physics: Monte Carlo photon transport in the crystal, detector resolution, the electronics and counting statistics. Acquire, mark peaks, calibrate, and measure.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">E in keV · d in cm · times in s · m<sub>e</sub>c² = 510.999 keV</div>
@@ -228,12 +228,12 @@ sub, sup { line-height: 0; }
       <section>
         <h2>Experiments</h2>
         <div class="chips" id="presets">
-          <button type="button" data-p="cs" aria-pressed="true">Cs-137: photopeak, Compton edge, backscatter</button>
-          <button type="button" data-p="co" aria-pressed="false">Co-60: two lines and a sum peak</button>
-          <button type="button" data-p="na" aria-pressed="false">Na-22: annihilation radiation</button>
-          <button type="button" data-p="cal" aria-pressed="false">Calibrate the detector</button>
-          <button type="button" data-p="pb" aria-pressed="false">Lead attenuation</button>
-          <button type="button" data-p="unk" aria-pressed="false">Identify an unknown</button>
+          <button type="button" data-p="cal" aria-pressed="false">Energy calibration</button>
+          <button type="button" data-p="unk" aria-pressed="false">Unknown source</button>
+          <button type="button" data-p="cs" aria-pressed="true">Compton edge and backscatter</button>
+          <button type="button" data-p="act" aria-pressed="false">Activity against the standard</button>
+          <button type="button" data-p="pb" aria-pressed="false">Absorption coefficient</button>
+          <button type="button" data-p="pe" aria-pressed="false">Photoelectric absorption</button>
         </div>
         <p class="hint" id="presetHint"></p>
       </section>
@@ -242,34 +242,48 @@ sub, sup { line-height: 0; }
         <h2>Source and geometry</h2>
         <div class="row"><label class="lab" for="src">Source</label>
           <select id="src">
-            <option value="cs137">Cs-137</option><option value="co60">Co-60</option><option value="na22">Na-22</option>
-            <option value="ba133">Ba-133</option><option value="mn54">Mn-54</option><option value="unk">Unknown</option><option value="none">None (background)</option>
+            <optgroup label="RSS8 set, about 1 µCi each">
+              <option value="cs137">Cs-137</option><option value="co60">Co-60</option><option value="na22">Na-22</option><option value="mn54">Mn-54</option>
+              <option value="ba133">Ba-133</option><option value="cd109">Cd-109</option><option value="co57">Co-57</option><option value="cszn">Cs-137 + Zn-65 (mixed)</option>
+            </optgroup>
+            <optgroup label="Standards">
+              <option value="csref">Cs-137, 5 µCi ± 5% (GF-137-M-5)</option><option value="co57h">Co-57, 20 µCi (GF-057-M-20)</option>
+            </optgroup>
+            <optgroup label="Other">
+              <option value="unk">Unknown from the set</option><option value="none">None (background)</option>
+            </optgroup>
           </select>
           <button type="button" class="btn" id="reveal" hidden>Reveal</button>
         </div>
-        <div class="row"><span class="lab">Activity</span>
-          <div class="seg" role="group" aria-label="Source activity">
-            <button type="button" data-act="1" aria-pressed="true">1 µCi</button>
-            <button type="button" data-act="10" aria-pressed="false">10 µCi</button>
-            <button type="button" data-act="100" aria-pressed="false">100 µCi</button>
-          </div>
-        </div>
+        <dl class="readout">
+          <div><dt>Label activity</dt><dd id="rLab">—</dd></div>
+          <div><dt>True activity</dt><dd id="rTrue">—</dd></div>
+        </dl>
+        <div class="row"><button type="button" class="btn" id="showAct" aria-pressed="false">Show true activity</button></div>
         <div>
           <div class="slider-head"><label for="dist">Source to detector face, d</label><output id="distOut" class="mono" for="dist"></output></div>
           <input type="range" id="dist" min="1" max="30" step="0.5" value="5">
         </div>
-        <div class="row"><span class="lab">Absorber</span>
-          <div class="seg" role="group" aria-label="Absorber material">
-            <button type="button" data-mat="none" aria-pressed="true">None</button>
-            <button type="button" data-mat="pb" aria-pressed="false">Lead</button>
-            <button type="button" data-mat="cu" aria-pressed="false">Copper</button>
-            <button type="button" data-mat="al" aria-pressed="false">Aluminum</button>
-          </div>
+        <div class="row"><label class="lab" for="mat">Absorber</label>
+          <select id="mat">
+            <option value="none">None</option>
+            <optgroup label="Foil sets, 10 foils each">
+              <option value="al">Al, 0.030 in per foil (FOIL-AL-30)</option><option value="fe">Fe, 0.005 in (FOIL-FE-5)</option>
+              <option value="cu">Cu, 0.010 in (FOIL-CU-10)</option><option value="mo">Mo, 0.003 in (FOIL-MO-3)</option>
+              <option value="sn">Sn, 0.004 in (FOIL-SN-4)</option><option value="ta">Ta, 0.005 in (FOIL-TA-5)</option>
+            </optgroup>
+            <option value="pb">Lead absorbers (RAS20)</option>
+          </select>
         </div>
-        <div>
-          <div class="slider-head"><label for="thk">Absorber thickness</label><output id="thkOut" class="mono" for="thk"></output></div>
-          <input type="range" id="thk" min="0" max="50" step="0.5" value="0">
+        <div id="foilBox">
+          <div class="slider-head"><label for="nf">Number of foils</label><output id="nfOut" class="mono" for="nf"></output></div>
+          <input type="range" id="nf" min="0" max="10" step="1" value="0">
         </div>
+        <div id="pbBox" hidden>
+          <span class="lab" id="pbLab">Lead in the stack (mg/cm²)</span>
+          <div class="chips" id="pbChips" role="group" aria-labelledby="pbLab"></div>
+        </div>
+        <p class="hint mono" id="thkOut"></p>
         <div class="row"><span class="lab">Behind source</span>
           <div class="seg" role="group" aria-label="Backing behind the source">
             <button type="button" data-back="pb" aria-pressed="true">Lead brick</button>
@@ -279,7 +293,8 @@ sub, sup { line-height: 0; }
         </div>
         <div class="row"><span class="lab">Crystal</span>
           <div class="seg" role="group" aria-label="Crystal size">
-            <button type="button" data-size="s2" aria-pressed="true">2″ × 2″</button>
+            <button type="button" data-size="s15" aria-pressed="true">38 mm × 38 mm (ORTEC SPA38)</button>
+            <button type="button" data-size="s2" aria-pressed="false">2″ × 2″</button>
             <button type="button" data-size="s3" aria-pressed="false">3″ × 3″</button>
           </div>
         </div>
@@ -301,21 +316,21 @@ sub, sup { line-height: 0; }
         <div class="row"><span class="lab">Coarse gain</span>
           <div class="seg" role="group" aria-label="Amplifier coarse gain" id="coarseSeg">
             <button type="button" data-cg="5" aria-pressed="false">5</button>
-            <button type="button" data-cg="10" aria-pressed="false">10</button>
-            <button type="button" data-cg="20" aria-pressed="true">20</button>
+            <button type="button" data-cg="10" aria-pressed="true">10</button>
+            <button type="button" data-cg="20" aria-pressed="false">20</button>
             <button type="button" data-cg="50" aria-pressed="false">50</button>
             <button type="button" data-cg="100" aria-pressed="false">100</button>
           </div>
         </div>
         <div>
           <div class="slider-head"><label for="fine">Fine gain</label><output id="fineOut" class="mono" for="fine"></output></div>
-          <input type="range" id="fine" min="0.5" max="1.5" step="0.01" value="1">
+          <input type="range" id="fine" min="0.5" max="1.5" step="0.01" value="1.39">
         </div>
-        <div class="row"><span class="lab">Channels</span>
+        <div class="row"><span class="lab">MCA channels</span>
           <div class="seg" role="group" aria-label="MCA channels">
             <button type="button" data-n="512" aria-pressed="false">512</button>
-            <button type="button" data-n="1024" aria-pressed="true">1024</button>
-            <button type="button" data-n="2048" aria-pressed="false">2048</button>
+            <button type="button" data-n="1024" aria-pressed="false">1024</button>
+            <button type="button" data-n="2048" aria-pressed="true">2048</button>
           </div>
         </div>
         <div>
@@ -332,7 +347,7 @@ sub, sup { line-height: 0; }
         </div>
         <div class="row"><label class="lab" for="ptime">Preset live</label>
           <select id="ptime">
-            <option value="0">Off</option><option value="10">10 s</option><option value="30">30 s</option><option value="60">60 s</option>
+            <option value="0">Off</option><option value="10">10 s</option><option value="30">30 s</option><option value="60">60 s</option><option value="100">100 s</option>
             <option value="120">120 s</option><option value="300">300 s</option><option value="600">600 s</option><option value="1800">1800 s</option>
           </select>
           <div class="seg" role="group" aria-label="Clock speed">
@@ -349,7 +364,7 @@ sub, sup { line-height: 0; }
           <div><dt>Recorded rate m = counts / real time</dt><dd id="rM">—</dd></div>
           <div><dt>Corrected n = m / (1 − mτ)</dt><dd id="rN">—</dd></div>
         </dl>
-        <p class="hint">The clock speed makes the simulated clocks run faster than the wall clock; live and real times are the simulated ones. Pulses below the LLD (electronic noise, x-rays) are ignored and do not cost dead time.</p>
+        <p class="hint">EASY-MCA-2K: 2048 channels over 0 to 10 V. At 900 V, coarse gain 10 and fine gain 1.39 the 661.7 keV peak sits near channel 475 and full scale is about 2.87 MeV, the setting of ORTEC Experiment 3.1 (channel 238 of 1024) with the ⁶⁰Co sum peak near channel 1790. The clock speed makes the simulated clocks run faster than the wall clock; live and real times are the simulated ones. Pulses below the LLD (electronic noise, x-rays) are ignored and do not cost dead time.</p>
       </section>
 
       <section>
@@ -370,7 +385,7 @@ sub, sup { line-height: 0; }
           <button type="button" class="btn" id="roiCal">Use for calibration</button>
           <button type="button" class="btn" id="roiDel">Delete ROI</button>
         </div>
-        <div class="tblwrap"><table class="tbl" id="tbl"><thead><tr><th>#</th><th>source</th><th>d cm</th><th>absorber</th><th>live s</th><th>net</th><th>±</th><th>rate /s</th><th>±</th><th>centroid</th><th>±</th><th>FWHM ch</th><th>E keV</th><th>FWHM %</th><th></th></tr></thead><tbody></tbody></table></div>
+        <div class="tblwrap"><table class="tbl" id="tbl"><thead><tr><th>#</th><th>source</th><th>d cm</th><th>absorber</th><th>g/cm²</th><th>live s</th><th>net</th><th>±</th><th>rate /s</th><th>±</th><th>centroid</th><th>±</th><th>FWHM ch</th><th>E keV</th><th>FWHM %</th><th></th></tr></thead><tbody></tbody></table></div>
         <div class="row">
           <button type="button" class="btn" id="csvSpec">Spectrum CSV</button>
           <button type="button" class="btn" id="csvTbl">Table CSV</button>
@@ -409,6 +424,7 @@ sub, sup { line-height: 0; }
           <button type="button" data-an="att" aria-pressed="false">Attenuation</button>
           <button type="button" data-an="inv" aria-pressed="false">Distance</button>
           <button type="button" data-an="res" aria-pressed="false">Resolution</button>
+          <button type="button" data-an="act" aria-pressed="false">Activity</button>
         </div>
         <canvas class="ana" id="ana" role="img" aria-label="Analysis plot of the table rows or calibration points"></canvas>
         <dl class="readout"><div class="wide"><dt id="aLab">Result</dt><dd id="aRes">—</dd></div></dl>
@@ -419,15 +435,19 @@ sub, sup { line-height: 0; }
         <h2>Model</h2>
         <p class="hint"><b>Simulated, not measured.</b> Nothing here is recorded data. Each spectrum is built from a Monte Carlo calculation of how photons deposit energy in the crystal, smeared by the detector resolution, mapped to channels by the electronics, and counted with Poisson statistics, so two acquisitions never look the same.</p>
         <p class="hint" id="modelMC"></p>
-        <p class="hint">Lines and intensities per decay from NNDC NuDat 3 (ENSDF): ¹³⁷Cs, Browne and Tuli, Nucl. Data Sheets 108, 2173 (2007); ⁶⁰Co, Browne and Tuli, NDS 114, 1849 (2013); ²²Na, Basunia, NDS 127, 69 (2015); ¹³³Ba, Khazov, Rodionov and Kondev, NDS 112, 855 (2011); ⁵⁴Mn, Dong and Huo, NDS 121, 1 (2014); ⁴⁰K, Chen, NDS 140, 1 (2017). Lines weaker than 0.3% and x-rays below 15 keV are left out. Sources are point sources on the axis; decay since the reference date is ignored.</p>
-        <p class="hint">Attenuation: NIST XCOM (Berger, Hubbell, Seltzer et al., Standard Reference Database 8) for NaI, Pb, Cu and Al, interpolated log–log. In the crystal: photoelectric absorption, Compton scattering with the Klein–Nishina angular distribution (free electrons), and pair production with both 511 keV photons followed. Coherent scattering is left out in the crystal. Electrons deposit their energy where they are made (no escape, no bremsstrahlung). Densities: NaI 3.667, Pb 11.35, Cu 8.96, Al 2.699 g/cm³.</p>
-        <p class="hint">Peak to total ratio: the crystal is bare. There is no aluminum can or reflector around its sides, no light guide or photomultiplier behind it, and no source holder; electrons never escape or radiate. In a real detector each of these moves events out of the photopeak or adds scattered photons to the continuum, so the simulated ratio of full energy events to all interacting events is too high. For a 3″&nbsp;×&nbsp;3″ crystal with the source 10&nbsp;cm away it exceeds the measured values in Heath's catalogue (R. L. Heath, <i>Scintillation Spectrometry: Gamma-Ray Spectrum Catalogue</i>, IDO&#8209;16880, 1964, Appendix III, Table I) by 2 to 17%, more at higher energy: 0.834 against 0.820 at 323&nbsp;keV, 0.568 against 0.536 at 662&nbsp;keV, 0.428 against 0.395 at 1114&nbsp;keV, 0.328 against 0.280 at 1837&nbsp;keV. How much each missing part contributes has not been worked out, and no 2″&nbsp;×&nbsp;2″ comparison has been made. Peak energies, resolution and spectral shapes are the teaching point; absolute efficiencies and peak to total ratios are not those of a particular commercial detector.</p>
+        <p class="hint">The apparatus is the one in ORTEC Experiment 3, <i>Gamma-Ray Spectroscopy Using NaI(Tl)</i> (AN34): an SPA38 integral assembly (38&nbsp;mm × 38&nbsp;mm NaI(Tl) with its photomultiplier), 556 high voltage supply, 113 preamplifier, 575A amplifier and EASY-MCA-2K. Experiment 3.10 (linear gate, coincidence gating) is not simulated.</p>
+        <p class="hint">Lines and intensities per decay from ENSDF, retrieved from NNDC (NuDat 3 and the ENSDF decay data sets) on 2026-10-21: ¹³⁷Cs, Browne and Tuli, Nucl. Data Sheets 108, 2173 (2007); ⁶⁰Co, Browne and Tuli, NDS 114, 1849 (2013); ²²Na, Basunia, NDS 127, 69 (2015); ¹³³Ba, Khazov, Rodionov and Kondev, NDS 112, 855 (2011); ⁵⁴Mn, Dong and Huo, NDS 121, 1 (2014); ¹⁰⁹Cd, Kumar, Chen and Kondev, NDS 137, 1 (2016), with its Ag K x-rays from NuDat; ⁵⁷Co, Bhat, NDS 85, 415 (1998); ⁶⁵Zn, Chen, NDS 202, 59 (2025); ⁴⁰K, Chen, NDS 140, 1 (2017). The data for the five sources that were already here agree with these evaluations. Lines weaker than 0.3% and x-rays below 15 keV (Fe, Cu and Ag L) are left out; the 14.4 keV gamma ray of ⁵⁷Co is kept. Sources are point sources on the axis (the real ones are 2.5 cm plastic disks); decay since the reference date is ignored.</p>
+        <p class="hint">Activities: the RSS8 sources are labelled about 1 µCi (the mixed source about 0.5 µCi ¹³⁷Cs and 1 µCi ⁶⁵Zn) with no stated tolerance, so each is given a hidden true activity between 0.8 and 1.2 times its label, drawn once per visit (an assumed spread). The GF-137-M-5 standard is 5.00 µCi with a stated ±5%, and the GF-057-M-20 source 20 µCi; both are simulated at exactly those values, so in Experiment 3.5 the ±5% is the uncertainty to carry, not an error in the simulation.</p>
+        <p class="hint">Attenuation: NIST XCOM (Berger, Hubbell, Seltzer et al., Standard Reference Database 8) for NaI, Pb, Cu, Al and Fe; Hubbell and Seltzer, NIST Standard Reference Database 126 (X-ray mass attenuation coefficients), retrieved 2026-10-21, for Mo, Sn and Ta. All are interpolated log–log between table energies. The Hubbell and Seltzer grid is coarser (100 and 150 keV around the ⁵⁷Co line), so at 122 keV the interpolated μ/ρ is about 2% high for Mo, 1.4% for Sn and 0.2% for Ta compared with a fine grid; these are also the values in Table 3.4 of the ORTEC manual (0.685, 1.020 and 2.592 cm²/g). For Al, Fe and Cu the manual's 122 keV values (0.154, 0.272, 0.321) are 1 to 3.5% above the XCOM fine grid values used here (0.152, 0.263, 0.311) for the same reason. In the crystal: photoelectric absorption, Compton scattering with the Klein–Nishina angular distribution (free electrons), and pair production with both 511 keV photons followed. Coherent scattering is left out in the crystal. Electrons deposit their energy where they are made (no escape, no bremsstrahlung). Densities: NaI 3.667, Pb 11.35, Cu 8.96, Al 2.699, Fe 7.874, Mo 10.22, Sn 7.31, Ta 16.654 g/cm³.</p>
+        <p class="hint">Absorbers: ORTEC pure metal foil sets of 10 identical foils each, Al 0.030 in, Fe 0.005 in, Cu 0.010 in, Mo 0.003 in, Sn 0.004 in and Ta 0.005 in per foil (FOIL-AL-30 and so on), and the lead absorbers of the RAS20 kit: 1124 mg/cm² (0.039 in, ORTEC manual Table 3.4) and 2066, 3448 and 7367 mg/cm² (the Spectrum Techniques 20 piece set, as tabulated in Commun. Phys. 35, 347 (2025)). The RAS20 has a fifth lead absorber whose value was not found; it is left out. The aluminum absorbers of the RAS20 are not offered (the manual does not use them). Absorbers sit just in front of the source and follow the narrow beam law e<sup>−μx</sup> with μ including coherent scattering; scattering in the absorber (buildup) is not modeled. Mo, Sn, Ta and Pb absorbers also give their K x-rays (normal incidence on an infinite sheet, with the photoabsorption of Elam, Ravel and Sieber); Al, Fe and Cu x-rays are below 9 keV and left out.</p>
+        <p class="hint">Crystal size, from this Monte Carlo with the source 10&nbsp;cm from the face (photons entering the face; bare crystal, no resolution or threshold): at 661.7&nbsp;keV the probability of a full energy deposit is 0.198 for 38&nbsp;mm × 38&nbsp;mm, 0.260 for 2″&nbsp;×&nbsp;2″ and 0.349 for 3″&nbsp;×&nbsp;3″, and the peak to total ratio (full energy events over all interacting events) is 0.401, 0.470 and 0.567. At 122&nbsp;keV almost every interaction ends in the photopeak (0.956, 0.959, 0.962); at 1332&nbsp;keV the ratio is 0.234, 0.294 and 0.387. A smaller crystal lets more Compton scattered photons escape, so it has the lower ratio.</p>
+        <p class="hint">Peak to total ratio: the crystal is bare. There is no aluminum can or reflector around its sides, no light guide or photomultiplier behind it, and no source holder; electrons never escape or radiate. In a real detector each of these moves events out of the photopeak or adds scattered photons to the continuum, so the simulated ratio of full energy events to all interacting events is too high. For a 3″&nbsp;×&nbsp;3″ crystal with the source 10&nbsp;cm away it exceeds the measured values in Heath's catalogue (R. L. Heath, <i>Scintillation Spectrometry: Gamma-Ray Spectrum Catalogue</i>, IDO&#8209;16880, 1964, Appendix III, Table I) by 2 to 17%, more at higher energy: 0.834 against 0.820 at 323&nbsp;keV, 0.568 against 0.536 at 662&nbsp;keV, 0.428 against 0.395 at 1114&nbsp;keV, 0.328 against 0.280 at 1837&nbsp;keV. How much each missing part contributes has not been worked out. No published 38&nbsp;mm (1.5″) or 2″ value has been compared: the 1.5″&nbsp;×&nbsp;1.5″ curves in the ORTEC manual (Fig. 3.7, intrinsic peak efficiency at 10&nbsp;cm, after Heath) and in Saint-Gobain's efficiency notes are graphs only. Expect the simulated 38&nbsp;mm ratio to be high in the same way. Peak energies, resolution and spectral shapes are the teaching point; absolute efficiencies and peak to total ratios are not those of a particular commercial detector, so find activities against the standard (Experiment 3.5), not from a computed efficiency.</p>
         <p class="hint">Iodine K x-rays: above the 33.17 keV K edge a photoabsorption leaves a K vacancy with probability 1 − 1/J = 0.834 (jump ratio J = 6.04) and gives a K x-ray with probability ω<sub>K</sub> = 0.893, which is then followed and can escape (the escape peak 28 to 33 keV below a low energy line). Lead: K edge 88.0 keV, J = 4.73, ω<sub>K</sub> = 0.978. X-ray energies, yields and jump ratios from Elam, Ravel and Sieber, Radiat. Phys. Chem. 63, 121 (2002).</p>
-        <p class="hint">Backscatter and lead x-rays: the holder carries a backing (a lead brick or a steel plate, XCOM data for Fe, 7.874 g/cm³) whose face is 5 cm behind the source, taken as a thick disk of radius 6 cm. Photons leaving the source backward that hit it are Compton scattered once (Klein–Nishina, free electrons) or, in lead, photoabsorbed in the K shell; the scattered photon or the K x-ray reaches the detector after attenuation of the incoming and outgoing photon in the backing (single scattering in a thick slab; multiple scattering is left out, so the backscatter is a lower estimate). Lead absorbers make K x-rays too (normal incidence, infinite sheet). Scattering in the castle walls, the table and the absorbers themselves is left out: absorbers follow the narrow beam law e<sup>−μx</sup>, with μ from XCOM including coherent scattering. Broad beam buildup is not modeled.</p>
-        <p class="hint">Coincidence summing: ⁶⁰Co (1173 and 1332 keV in cascade) and ²²Na (1274 keV with the two annihilation photons, back to back, from 89.96% of decays). Both photons of a decay are followed and their deposits added, directions uncorrelated. Summing in ¹³³Ba, chance pileup and x-ray summing are left out.</p>
-        <p class="hint">Resolution: Gaussian with FWHM/E = a/√E + 0.01, with a set by the FWHM at 662 keV (7.0% by default, typical of a 2″ × 2″ NaI(Tl)). The light output is taken as exactly proportional to energy (the small nonproportionality of NaI is left out). Entrance window: 0.5 mm aluminum (typical).</p>
-        <p class="hint">Electronics: PMT gain ∝ V<sup>7</sup> (typical of a 10 dynode tube); pulse height = 0.25 mV per keV × (V/900 V)<sup>7</sup> × coarse × fine; ADC full scale 10 V with a zero offset of 18 mV. Electronic noise: 3000 pulses per second with a half Gaussian height of 25 mV rms at gain 20. Dead time: nonparalyzable, τ = 8 µs per pulse between the discriminators (typical of an analog MCA); live time accumulates as dt/(1 + nτ). Counts in each channel are Poisson.</p>
-        <p class="hint">Room background inside the castle (assumed, typical): 3.0 counts per second above 20 keV for the 2″ × 2″ crystal, as a falling exponential continuum plus a flat part, with 0.3 photons per second of ⁴⁰K at 1460.8 keV and 0.05 per second of lead x-rays entering the face; scaled with crystal volume for 3″ × 3″.</p>
+        <p class="hint">Backscatter and lead x-rays: the holder carries a backing (a lead brick or a steel plate, XCOM data for Fe, 7.874 g/cm³) whose face is 5 cm behind the source, taken as a thick disk of radius 6 cm. Photons leaving the source backward that hit it are Compton scattered once (Klein–Nishina, free electrons) or, in lead, photoabsorbed in the K shell; the scattered photon or the K x-ray reaches the detector after attenuation of the incoming and outgoing photon in the backing (single scattering in a thick slab; multiple scattering is left out, so the backscatter is a lower estimate). Scattering in the castle walls and the table is left out (absorbers: see above).</p>
+        <p class="hint">Coincidence summing: ⁶⁰Co (1173 and 1332 keV in cascade) and ²²Na (1274 keV with the two annihilation photons, back to back, from 89.96% of decays). Both photons of a decay are followed and their deposits added, directions uncorrelated. Summing in ¹³³Ba and ⁵⁷Co (122.1 keV with 14.4 keV), chance pileup and x-ray summing are left out; ⁶⁵Zn has no cascade to sum.</p>
+        <p class="hint">Resolution: Gaussian with FWHM/E = a/√E + 0.01, with a set by the FWHM at 662 keV (7.0% by default, typical of a small NaI(Tl) detector; set it to the value you measure in Experiment 3.4). The light output is taken as exactly proportional to energy (the small nonproportionality of NaI is left out). Entrance window: 0.5 mm aluminum (typical).</p>
+        <p class="hint">Electronics: PMT gain ∝ V<sup>7</sup> (typical of a 10 dynode tube); pulse height = 0.25 mV per keV × (V/900 V)<sup>7</sup> × coarse × fine; ADC full scale 10 V (EASY-MCA-2K, up to 2048 channels) with a zero offset of 18 mV. Electronic noise: 3000 pulses per second with a half Gaussian height of 25 mV rms at gain 20. Dead time: nonparalyzable, τ = 8 µs per pulse between the discriminators (typical of an analog MCA); live time accumulates as dt/(1 + nτ). Counts in each channel are Poisson.</p>
+        <p class="hint">Room background inside the castle (assumed, typical): 3.0 counts per second above 20 keV for the 2″ × 2″ crystal, as a falling exponential continuum plus a flat part, with 0.3 photons per second of ⁴⁰K at 1460.8 keV and 0.05 per second of lead x-rays entering the face; scaled with crystal volume for the other sizes (0.419 times for 38 mm × 38 mm, 3.375 times for 3″ × 3″).</p>
         <p class="lines" id="lineList"></p>
         <div class="key">
           <span><i class="swatch" style="background: var(--scr-data)"></i>Counts per channel</span>
@@ -449,7 +469,7 @@ sub, sup { line-height: 0; }
     const RE = 2.8179403262e-13;     // cm, classical electron radius (CODATA 2018)
     const NAV = 6.02214076e23;       // 1/mol (exact)
     const BW = 0.5, NB = 6400;       // deposit histograms: 0.5 keV bins up to 3200 keV
-    const RHO = { nai: 3.667, pb: 11.35, cu: 8.96, al: 2.699, fe: 7.874 };   // g/cm³
+    const RHO = { nai: 3.667, pb: 11.35, cu: 8.96, al: 2.699, fe: 7.874, mo: 10.22, sn: 7.31, ta: 16.654 };   // g/cm³
     const parse = (s) => s.split('|').map((r) => r.split(',').map(Number));
     // NIST XCOM, NaI: keV, incoherent, photoelectric, pair (nuclear + electron field), coherent; cm²/g
     const XNAI = parse('8,0.05799,248.9,0,3.009|10,0.06731,137.5,0,2.437|11,0.07133,106.2,0,2.218|12.09,0.07533,82.04,0,2.013|13.3,0.07927,63.37,0,1.822|14.63,0.08311,48.94,0,1.643|15,0.0841,45.7,0,1.598|16.09,0.0868,37.67,0,1.477|17.69,0.09033,28.96,0,1.322|19.45,0.09369,22.26,0,1.176|20,0.09463,20.62,0,1.136|21.39,0.09688,17.07,0,1.04|23.53,0.09989,13.07,0,0.9136|25.87,0.1027,10.01,0,0.7989|28.45,0.1053,7.665,0,0.6963|30,0.1067,6.607,0,0.6443|31.29,0.1077,5.864,0,0.6056|33.17,0.109,4.972,0,0.5556|33.17,0.109,29.76,0,0.5556|34.41,0.1098,27.04,0,0.526|37.84,0.1117,21.09,0,0.4562|40,0.1127,18.24,0,0.4196|41.62,0.1133,16.43,0,0.3951|45.77,0.1147,12.76,0,0.3417|50,0.1157,10.06,0,0.2978|50.33,0.1157,9.883,0,0.2947|55.35,0.1165,7.627,0,0.2533|60,0.1169,6.111,0,0.2221|60.87,0.1169,5.872,0,0.2169|66.94,0.117,4.514,0,0.1851|73.62,0.1169,3.465,0,0.1575|80,0.1165,2.746,0,0.1365|80.96,0.1164,2.656,0,0.1337|89.03,0.1157,2.032,0,0.1133|97.92,0.1146,1.552,0,0.09592|100,0.1144,1.462,0,0.09243|107.7,0.1134,1.184,0,0.08112|118.4,0.1118,0.903,0,0.06855|130.2,0.1101,0.6882,0,0.05788|143.2,0.1081,0.5242,0,0.04881|150,0.1071,0.4592,0,0.04491|157.5,0.106,0.3994,0,0.04111|173.2,0.1037,0.3043,0,0.03458|190.5,0.1013,0.232,0,0.02904|200,0.1,0.2019,0,0.02654|209.5,0.09879,0.177,0,0.02435|230.4,0.09618,0.1353,0,0.0204|253.3,0.0935,0.1036,0,0.01706|278.6,0.09076,0.0795,0,0.01425|300,0.0886,0.06481,0,0.01238|306.4,0.08798,0.06117,0,0.01189|336.9,0.08518,0.04721,0,0.009913|370.6,0.08236,0.03657,0,0.008258|400,0.08009,0.02987,0,0.007126|407.5,0.07954,0.02844,0,0.006875|448.1,0.07673,0.02222,0,0.005718|492.8,0.07393,0.01746,0,0.004754|500,0.07351,0.01684,0,0.004622|542,0.07116,0.0138,0,0.00395|596,0.06841,0.01096,0,0.003281|600,0.06822,0.01079,0,0.003238|655.5,0.06568,0.008745,0,0.002723|720.8,0.063,0.007023,0,0.00226|792.7,0.06037,0.005697,0,0.001874|800,0.06012,0.005588,0,0.00184|871.8,0.0578,0.004675,0,0.001553|958.7,0.05526,0.003831,0,0.001287|1000,0.05413,0.003491,0,0.001184|1022,0.05355,0.003323,0,0.001134|1054,0.05273,0.003105,9.458e-7,0.001067|1160,0.05031,0.002573,4.877e-5,0.0008834|1250,0.04846,0.00224,0.0001634,0.0007607|1275,0.04797,0.00216,0.0002066,0.0007312|1402,0.04567,0.001813,0.0004873,0.0006052|1500,0.04407,0.001604,0.0007594,0.0005293|1542,0.04343,0.001526,0.0008886,0.0005009|1696,0.04125,0.001291,0.001408,0.0004145|1865,0.03914,0.001097,0.002042,0.000343|2000,0.03764,0.0009761,0.002575,0.0002985|2044,0.03717,0.0009415,0.002751,0.0002858|2051,0.0371,0.0009361,0.002779,0.0002838|2256,0.03513,0.0008023,0.003604,0.0002348|2481,0.03323,0.0006907,0.004509,0.0001942|2728,0.0314,0.000597,0.005485,0.0001606|3000,0.02963,0.0005178,0.006528,0.0001329');
@@ -459,6 +479,12 @@ sub, sup { line-height: 0; }
     const XCU = parse('8,52.55|8.979,38.29|8.979,278.3|10,216|12.09,132.9|14.63,79.33|15,74.05|17.69,47.27|20,33.8|21.39,28.07|25.87,16.54|30,10.91|31.29,9.693|37.84,5.679|40,4.862|45.77,3.337|50,2.613|55.35,1.979|60,1.593|66.94,1.194|80,0.763|80.96,0.7413|97.92,0.4797|100,0.4585|118.4,0.3274|143.2,0.2375|150,0.2217|173.2,0.1831|200,0.1559|209.5,0.1489|253.3,0.1264|300,0.1119|306.4,0.1104|370.6,0.09828|400,0.09413|448.1,0.08853|500,0.08363|542,0.08026|600,0.07625|655.5,0.07295|792.7,0.06636|800,0.06606|958.7,0.0603|1000,0.05901|1022,0.05834|1160,0.05466|1250,0.05261|1402,0.04966|1500,0.04803|1696,0.04528|2000,0.04205|2044,0.04166|2051,0.04159|2481,0.03851|3000,0.03599');
     const XFE = parse('8,305.6|10,170.7|12.09,102.5|14.63,61.16|15,57.09|17.69,36.19|20,25.68|21.39,21.26|25.87,12.43|30,8.176|31.29,7.256|37.84,4.24|40,3.629|45.77,2.494|50,1.957|55.35,1.489|60,1.205|66.94,0.9116|80,0.5952|80.96,0.5793|97.92,0.3873|100,0.3717|118.4,0.2751|143.2,0.2083|150,0.1964|173.2,0.1671|200,0.146|209.5,0.1405|253.3,0.1221|300,0.1099|306.4,0.1085|370.6,0.09779|400,0.094|448.1,0.08879|500,0.08415|542,0.08092|600,0.07704|655.5,0.07381|792.7,0.06729|800,0.06699|958.7,0.06124|1000,0.05995|1022,0.05928|1160,0.05558|1250,0.0535|1402,0.05049|1500,0.04883|1696,0.04602|2000,0.04265|2044,0.04224|2051,0.04217|2481,0.03891|3000,0.03621');
     const XAL = parse('8,50.32|10,26.21|12.09,14.99|14.63,8.566|15,7.955|17.69,4.91|20,3.442|21.39,2.839|25.87,1.671|30,1.128|31.29,1.013|37.84,0.6423|40,0.5684|45.77,0.4323|50,0.3681|55.35,0.3121|60,0.2778|66.94,0.242|80,0.2018|80.96,0.1997|97.92,0.1728|100,0.1704|118.4,0.1544|143.2,0.1407|150,0.1378|173.2,0.1297|200,0.1223|209.5,0.1201|253.3,0.1114|300,0.1042|306.4,0.1034|370.6,0.09573|400,0.09276|448.1,0.08847|500,0.08445|542,0.08157|600,0.07802|655.5,0.07499|792.7,0.0687|800,0.06841|958.7,0.06274|1000,0.06146|1022,0.0608|1160,0.05709|1250,0.05496|1402,0.05183|1500,0.05006|1696,0.047|2000,0.04324|2044,0.04277|2051,0.0427|2481,0.03885|3000,0.03541');
+    // Hubbell & Seltzer, NIST SRD 126 (X-ray mass attenuation coefficients), retrieved 2026-10-21: keV, μ/ρ total with coherent (cm²/g);
+    // third column: photoabsorption (cm²/g) from Elam, Ravel & Sieber (2002) via xraydb, used only for K x-ray production in the foil
+    // (a power law from the 600 to 800 keV slope above 800 keV, where xraydb stops).
+    const XMO = parse('8,156.5,153.7|10,85.76,83.42|15,28.54,27|19.9995,13.08,12|19.9995,80.55,78.45|20,80.54,78.45|30,28.1,27.43|40,12.94,12.46|50,7.037,6.667|60,4.274,3.966|80,1.962,1.728|100,1.096,0.9007|150,0.4208,0.2732|200,0.2423,0.1175|300,0.1379,0.03665|400,0.1047,0.01661|500,0.08848,0.009266|600,0.07851,0.005892|800,0.06619,0.00303|1000,0.05837,0.001809|1250,0.05167,0.00108|1500,0.04713,0.0007086|2000,0.04163,0.0003644|3000,0.03675,0.0001428');
+    const XSN = parse('8,250,246.8|10,138.4,135.7|15,46.64,44.83|20,21.46,20.15|29.2001,7.76,6.942|29.2001,43.6,42.76|30,41.21,40.43|40,19.42,18.87|50,10.7,10.27|60,6.564,6.215|80,3.029,2.77|100,1.676,1.467|150,0.6091,0.4565|200,0.326,0.1996|300,0.1639,0.06352|400,0.1156,0.02915|500,0.09374,0.0164|600,0.08113,0.01048|800,0.06662,0.005419|1000,0.058,0.003248|1250,0.05095,0.001947|1500,0.04638,0.001282|2000,0.04112,0.0006626|3000,0.03686,0.0002615');
+    const XTA = parse('8,163.9,158.5|9.8811,95.99,91.54|9.8811,244.3,239.2|10,237.9,233.5|11.1361,179.1,175.1|11.1361,244.9,240.9|11.4055,239.3,227.3|11.6815,218.2,214.5|11.6815,251.8,247.9|15,134,131.1|20,63.34,61.27|30,21.87,20.61|40,10.25,9.381|50,5.717,5.069|60,3.569,3.055|67.4164,2.652,2.208|67.4164,11.8,11.35|80,7.587,7.226|100,4.302,4.02|150,1.531,1.346|200,0.7598,0.6161|300,0.3149,0.208|400,0.1881,0.09901|500,0.1352,0.05708|600,0.1076,0.03708|800,0.07981,0.01952|1000,0.06567,0.01187|1250,0.05545,0.007219|1500,0.04977,0.004808|2000,0.04413,0.002532|3000,0.04057,0.001025');
 
     // Log–log interpolation in a table sorted by energy; a repeated energy is an absorption edge (row below, then row above).
     function interp(rows, col, E) {
@@ -472,8 +498,11 @@ sub, sup { line-height: 0; }
       if (y0 > 0 && y1 > 0) return Math.exp(Math.log(y0) + (Math.log(y1) - Math.log(y0)) * (Math.log(E) - Math.log(x0)) / (Math.log(x1) - Math.log(x0)));
       return y0 + (y1 - y0) * (E - x0) / (x1 - x0);
     }
-    const muMass = (mat, E) => mat === 'pb' ? interp(XPB, 2, E) : mat === 'cu' ? interp(XCU, 1, E) : mat === 'al' ? interp(XAL, 1, E) : mat === 'fe' ? interp(XFE, 1, E) : 0;
-    const muLin = (mat, E) => mat === 'none' ? 0 : muMass(mat, E) * RHO[mat];
+    // [table, column of μ/ρ total, column of photoabsorption or 0]
+    const MUTAB = { pb: [XPB, 2, 1], cu: [XCU, 1, 0], al: [XAL, 1, 0], fe: [XFE, 1, 0], mo: [XMO, 1, 2], sn: [XSN, 1, 2], ta: [XTA, 1, 2] };
+    const muMass = (mat, E) => MUTAB[mat] ? interp(MUTAB[mat][0], MUTAB[mat][1], E) : 0;
+    const muLin = (mat, E) => mat === 'none' || !MUTAB[mat] ? 0 : muMass(mat, E) * RHO[mat];
+    const photoMass = (mat, E) => MUTAB[mat] && MUTAB[mat][2] ? interp(MUTAB[mat][0], MUTAB[mat][2], E) : 0;
     const photoPb = (E) => interp(XPB, 1, E);
 
     // Fine table of NaI linear coefficients (cm⁻¹) on a log energy grid for fast lookup during transport
@@ -499,21 +528,74 @@ sub, sup { line-height: 0; }
     const PB_EDGE = 88.005, PB_J = 4.731, PB_W = 0.977791;
     const PBX = norm([[72.805, 0.289233], [74.970, 0.487769], [84.772, 0.168572], [87.243, 0.0497524]]);
     const PBX_MEAN = PBX.reduce((s, [e, w]) => s + e * w, 0);
+    // K shells of the absorber foils that fluoresce above 15 keV (Elam, Ravel & Sieber 2002 via xraydb): edge keV, jump ratio, yield ω_K,
+    // lines [keV, fraction] with Kβ1 and Kβ3 merged at their weighted energy
+    const KSH = {
+      mo: { edge: 19.9995, J: 6.539, w: 0.742357, lines: norm([[17.375, 0.288884], [17.480, 0.550837], [19.600, 0.136178], [19.962, 0.022584]]) },
+      sn: { edge: 29.2001, J: 6.161, w: 0.860745, lines: norm([[25.044, 0.287827], [25.271, 0.538502], [28.471, 0.141934], [29.116, 0.029618]]) },
+      ta: { edge: 67.4164, J: 5.143, w: 0.982803, lines: norm([[56.280, 0.287485], [57.535, 0.502037], [65.128, 0.164317], [66.953, 0.042924]]) },
+      pb: { edge: PB_EDGE, J: PB_J, w: PB_W, lines: PBX }
+    };
     const NE = { pb: NAV * 82 / 207.2, fe: NAV * 26 / 55.845 };   // electrons per gram
     const WIN_AL = 0.05;                        // cm, aluminum entrance window
     const WALL = { w: 5, r: 6 };                // backing behind the source: face 5 cm behind it, radius 6 cm
-    const SIZES = { s2: { R: 2.54, H: 5.08, vol: 1, label: '2″ × 2″' }, s3: { R: 3.81, H: 7.62, vol: 3.375, label: '3″ × 3″' } };
+    // Bare NaI(Tl) cylinders: radius R and length H in cm; vol relative to 2″ × 2″ (scales the room background)
+    const SIZES = {
+      s15: { R: 1.9, H: 3.8, vol: Math.pow(3.8 / 5.08, 3), label: '38 mm × 38 mm', long: '38 mm × 38 mm (ORTEC SPA38)' },
+      s2: { R: 2.54, H: 5.08, vol: 1, label: '2″ × 2″', long: '2″ × 2″' },
+      s3: { R: 3.81, H: 7.62, vol: 3.375, label: '3″ × 3″', long: '3″ × 3″' }
+    };
     const K40 = 1460.820;
 
-    // Sources: [energy keV, photons per decay] from NuDat 3 (ENSDF)
+    // Nuclides: [energy keV, photons per decay], ENSDF via NNDC (NuDat 3 and the ENSDF decay data sets), retrieved 2026-10-21
     const SRC = {
       cs137: { name: 'Cs-137', half: '30.08 y', lines: [[31.817, 0.0199], [32.194, 0.0364], [36.304, 0.00348], [36.378, 0.00672], [37.255, 0.00213], [661.657, 0.8510]] },
       co60: { name: 'Co-60', half: '5.271 y', lines: [[1173.228, 0.9985], [1332.492, 0.999826]], sum: 'cascade' },
       na22: { name: 'Na-22', half: '2.602 y', lines: [[511.0, 1.7991], [1274.537, 0.9994]], sum: 'beta+', fb: 1.7991 / 2 },
       ba133: { name: 'Ba-133', half: '10.55 y', lines: [[30.625, 0.339], [30.973, 0.622], [34.92, 0.0588], [34.987, 0.114], [35.818, 0.0351], [53.1622, 0.0214], [79.6142, 0.0265], [80.9979, 0.329], [160.612, 0.00638], [223.2368, 0.00453], [276.3989, 0.0716], [302.8508, 0.1834], [356.0129, 0.6205], [383.8485, 0.0894]] },
       mn54: { name: 'Mn-54', half: '312.2 d', lines: [[834.848, 0.99976]] },
+      cd109: { name: 'Cd-109', half: '461.9 d', lines: [[21.990, 0.298], [22.163, 0.561], [24.912, 0.0480], [24.943, 0.093], [25.455, 0.0231], [88.0336, 0.03644]] },
+      co57: { name: 'Co-57', half: '271.74 d', lines: [[14.4129, 0.0916], [122.06065, 0.8560], [136.47356, 0.1068]] },
+      zn65: { name: 'Zn-65', half: '243.93 d', lines: [[511.0, 0.02842], [1115.539, 0.5012]] },
       none: { name: 'None', half: '', lines: [] }
     };
+    // A source made of several nuclides: parts [[nuclide, activity]], lines weighted per decay of the whole source
+    function mixSource(parts, name) {
+      const A = parts.reduce((s, p) => s + p[1], 0), lines = [];
+      for (const [id, a] of parts) for (const [E, I] of SRC[id].lines) lines.push([E, A > 0 ? I * a / A : 0]);
+      lines.sort((p, q) => p[0] - q[0]);
+      const one = parts.length === 1 ? SRC[parts[0][0]] : null;
+      return { name: name || parts.map(([id]) => SRC[id].name).join(' + '), half: parts.map(([id]) => SRC[id].half).join(', '), lines, sum: one ? one.sum : undefined, fb: one ? one.fb : undefined, A, parts };
+    }
+    const UCI = 3.7e4;                           // Bq per µCi
+    // The department's sources (ORTEC Experiment 3 equipment list): nominal activities in µCi; cert = stated relative uncertainty
+    const KIT = {
+      cs137: { set: 'RSS8', label: 'Cs-137', parts: [['cs137', 1]] },
+      co60: { set: 'RSS8', label: 'Co-60', parts: [['co60', 1]] },
+      na22: { set: 'RSS8', label: 'Na-22', parts: [['na22', 1]] },
+      mn54: { set: 'RSS8', label: 'Mn-54', parts: [['mn54', 1]] },
+      ba133: { set: 'RSS8', label: 'Ba-133', parts: [['ba133', 1]] },
+      cd109: { set: 'RSS8', label: 'Cd-109', parts: [['cd109', 1]] },
+      co57: { set: 'RSS8', label: 'Co-57', parts: [['co57', 1]] },
+      cszn: { set: 'RSS8', label: 'Cs-137 + Zn-65', parts: [['cs137', 0.5], ['zn65', 1]] },
+      csref: { set: 'GF-137-M-5', label: 'Cs-137 standard', parts: [['cs137', 5]], cert: 0.05 },
+      co57h: { set: 'GF-057-M-20', label: 'Co-57 20 µCi', parts: [['co57', 20]] },
+      none: { set: '', label: 'None', parts: [] }
+    };
+    // Activity measured against a standard of the same nuclide in the same geometry (ORTEC Exp. 3.5):
+    // A_U = A_S (net rate U / net rate S); statistical and certificate uncertainties added in quadrature
+    function activityRatio(rU, sU, rS, sS, AS, certRel) {
+      const A = AS * rU / rS, stat = A * Math.hypot(sU / rU, sS / rS), cert = A * (certRel || 0);
+      return { A, stat, cert, err: Math.hypot(stat, cert) };
+    }
+    // Absorbers: ORTEC pure metal foil sets (10 foils each; thousandths of an inch per foil in the name) and RAS20 lead absorbers
+    const INCH = 2.54;
+    const FOILS = { al: { mils: 30, code: 'FOIL-AL-30' }, fe: { mils: 5, code: 'FOIL-FE-5' }, cu: { mils: 10, code: 'FOIL-CU-10' },
+      mo: { mils: 3, code: 'FOIL-MO-3' }, sn: { mils: 4, code: 'FOIL-SN-4' }, ta: { mils: 5, code: 'FOIL-TA-5' } };
+    const foilCm = (mat) => FOILS[mat].mils / 1000 * INCH;
+    const RAS20_PB = [0.039 * INCH * 11.35 * 1000, 2066, 3448, 7367];   // mg/cm²
+    const MATNAME = { none: 'none', al: 'aluminum', fe: 'iron', cu: 'copper', mo: 'molybdenum', sn: 'tin', ta: 'tantalum', pb: 'lead' };
+    const ZOF = { al: 13, fe: 26, cu: 29, mo: 42, sn: 50, ta: 73, pb: 82 };
 
     function mulberry(seed) { let s = seed >>> 0; return () => { s += 0x6D2B79F5; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 
@@ -637,14 +719,17 @@ sub, sup { line-height: 0; }
     const keyL = (sz, E, dist) => `L|${sz}|${dist}|${E}`;
     const keyB = (sz, E, dist, mat) => `B|${sz}|${dist}|${E}|${mat}`;
     // Which responses a configuration needs
+    const srcOf = (cfg) => cfg.srcObj || SRC[cfg.src];
+    const fluoresces = (cfg) => !!KSH[cfg.mat] && cfg.t > 0;
     function needed(cfg) {
-      const items = [], sz = cfg.size, d = cfg.d, src = SRC[cfg.src];
+      const items = [], sz = cfg.size, d = cfg.d, src = srcOf(cfg);
       for (const [E, I] of src.lines) {
         const big = I > 0.05, x = E < 40;
         items.push({ key: keyL(sz, E, d), kind: 'L', E, dist: d, N: x ? 12000 : big ? 60000 : 20000 });
         if (cfg.back !== 'none') items.push({ key: keyB(sz, E, d, cfg.back), kind: 'B', E, dist: d, N: x ? 2000 : big ? 24000 : 6000, mat: cfg.back });
       }
       for (const [E] of PBX) items.push({ key: keyL(sz, E, d + WALL.w), kind: 'L', E, dist: d + WALL.w, N: 8000 });
+      if (fluoresces(cfg)) for (const [E] of KSH[cfg.mat].lines) items.push({ key: keyL(sz, E, d), kind: 'L', E, dist: d, N: 8000 });
       items.push({ key: keyL(sz, K40, FAR), kind: 'L', E: K40, dist: FAR, N: 60000 });
       return items;
     }
@@ -665,22 +750,31 @@ sub, sup { line-height: 0; }
     const NOB = { bs: new Float32Array(NB), Y: 0, Yx: 0 };
     const BG = { k40: 0.3, pbx: 0.05, c1: 0.0194, e1: 150, c2: 1.5e-4 };   // per s; continuum per keV per s
     // Deposited energy spectrum, counts per second per 0.5 keV bin. get(key) returns a cached response or null.
-    // cfg: { src, size, d, A (Bq), mat, t (cm), bg }
+    // cfg: { src, srcObj (optional, e.g. a mixture), size, d, A (Bq), mat, t (cm), bg, back }
+    // K x-rays made in an absorber sheet just in front of the source, per photon of energy E emitted by the source:
+    // normal incidence on an infinite sheet, ½ g ω_K ∫₀ᵗ τ_K e^(−μ₁x) e^(−μ₂(t−x)) dx (g: solid angle fraction of the face)
+    function foilXrays(mat, t, E, g) {
+      const K = KSH[mat]; if (!K || !(t > 0) || E <= K.edge) return 0;
+      const xm = K.lines.reduce((s, [e, w]) => s + e * w, 0);
+      const m1 = muLin(mat, E), m2 = muLin(mat, xm), tk = (mat === 'pb' ? photoPb(E) : photoMass(mat, E)) * (1 - 1 / K.J) * RHO[mat];
+      const f = Math.abs(m1 - m2) < 1e-9 ? t * Math.exp(-m1 * t) : (Math.exp(-m2 * t) - Math.exp(-m1 * t)) / (m1 - m2);
+      return 0.5 * K.w * tk * g * f;
+    }
     function depositRates(cfg, get, convCache) {
-      const out = new Float64Array(NB), src = SRC[cfg.src], S = SIZES[cfg.size], R = S.R, d = cfg.d, A = cfg.A;
+      const out = new Float64Array(NB), src = srcOf(cfg), S = SIZES[cfg.size], R = S.R, d = cfg.d, A = cfg.A;
       const g = omegaFrac(d, R);
       const add = (h, s) => { if (!(s > 0)) return; for (let k = 0; k < NB; k++) out[k] += s * h[k]; };
       // combined lead x-ray response (per x-ray entering)
       const pbx = new Float64Array(NB);
       for (const [E, w] of PBX) { const r = get(keyL(cfg.size, E, d + WALL.w)); if (!r) return null; for (let k = 0; k < NB; k++) pbx[k] += w * r.hist[k]; }
       const tX = trans(cfg.mat, cfg.t, PBX_MEAN);
-      const parts = { direct: 0, bs: 0, pbx: 0 };
-      const pbAbs = (E) => {                         // lead x-rays made in a lead absorber, per emitted photon
-        if (cfg.mat !== 'pb' || !(cfg.t > 0) || E <= PB_EDGE) return 0;
-        const m1 = muLin('pb', E), m2 = muLin('pb', PBX_MEAN), tk = photoPb(E) * (1 - 1 / PB_J) * RHO.pb, t = cfg.t;
-        const f = Math.abs(m1 - m2) < 1e-9 ? t * Math.exp(-m1 * t) : (Math.exp(-m2 * t) - Math.exp(-m1 * t)) / (m1 - m2);
-        return 0.5 * PB_W * tk * g * f;
-      };
+      const parts = { direct: 0, bs: 0, pbx: 0, foil: 0 };
+      // combined K x-ray response of the absorber (per x-ray leaving it toward the face), window included
+      let fx = null;
+      if (fluoresces(cfg)) {
+        fx = new Float64Array(NB);
+        for (const [E, w] of KSH[cfg.mat].lines) { const r = get(keyL(cfg.size, E, d)); if (!r) return null; const s = w * window_(E); for (let k = 0; k < NB; k++) fx[k] += s * r.hist[k]; }
+      }
       const resp = [];
       for (const [E, I] of src.lines) {
         const r = get(keyL(cfg.size, E, d)), b = cfg.back === 'none' ? NOB : get(keyB(cfg.size, E, d, cfg.back)); if (!r || !b) return null;
@@ -704,9 +798,10 @@ sub, sup { line-height: 0; }
       }
       for (const x of resp) {
         add(x.b.bs, A * x.I * trans(cfg.mat, cfg.t, backscatterE(x.E)));
-        const yx = x.I * (x.b.Yx * tX + pbAbs(x.E) * window_(PBX_MEAN));
+        const yx = x.I * x.b.Yx * tX;
         add(pbx, A * yx);
         parts.bs += A * x.I * x.b.Y; parts.pbx += A * yx;
+        if (fx) { const yf = A * x.I * foilXrays(cfg.mat, cfg.t, x.E, g); add(fx, yf); parts.foil += yf; }
       }
       if (cfg.bg) {
         const v = S.vol, k = get(keyL(cfg.size, K40, FAR)); if (!k) return null;
@@ -845,7 +940,8 @@ sub, sup { line-height: 0; }
       return roiStats(counts, a, b);
     }
 
-    return { MEC2, RE, NAV, BW, NB, RHO, XNAI, XPB, XCU, XAL, interp, muMass, muLin, muNaI, photoPb, IK_EDGE, IK_P, IKX, PB_EDGE, PB_W, PBX, PBX_MEAN, WALL, SIZES, K40, SRC, BG,
+    return { MEC2, RE, NAV, BW, NB, RHO, XNAI, XPB, XCU, XAL, XFE, XMO, XSN, XTA, interp, muMass, muLin, muNaI, photoPb, photoMass, IK_EDGE, IK_P, IKX, PB_EDGE, PB_W, PBX, PBX_MEAN, KSH, WALL, SIZES, K40, SRC, BG,
+      mixSource, UCI, KIT, activityRatio, INCH, FOILS, foilCm, RAS20_PB, MATNAME, ZOF, foilXrays, srcOf,
       mulberry, sampleKN, KN, dsKN, comptonEdge, backscatterE, exitDist, history, omegaFrac, respLine, backstop, computeJob, needed, keyL, keyB, FAR, trans, window_, conv, depositRates,
       VPK, HV0, KPMT, FS, OFFV, TAU, NOISE, RES_B, chanGain, chanOffset, fwhmFrac, erf, Phi, channelRates, gauss, poisson, acquire, solve, polyfit, polyval, fitGauss, roiStats, findPeak };
   }
@@ -895,13 +991,25 @@ sub, sup { line-height: 0; }
 
   // ---------- state ----------
   const S = {
-    preset: 'cs', src: 'cs137', unk: 'cs137', revealed: false, act: 1, d: 5, mat: 'none', t: 0, size: 's2', back: 'pb',
-    hv: 900, coarse: 20, fine: 1, N: 1024, lld: 1, uld: 100, res: 0.07, ptime: 0, speed: 10,
+    preset: 'cs', src: 'cs137', unk: 'cs137', revealed: false, showAct: false, d: 5, mat: 'none', nf: 0, pbs: [false, false, false, false], size: 's15', back: 'pb',
+    hv: 900, coarse: 10, fine: 1.39, N: 2048, lld: 1, uld: 100, res: 0.07, ptime: 0, speed: 10,
     log: true, keV: false, mark: false, bg: true, ana: 'cal'
   };
-  const UCI = 3.7e4;               // Bq per µCi
+  const UCI = C.UCI;               // Bq per µCi
+  const RSS8 = ['cs137', 'co60', 'na22', 'mn54', 'ba133', 'cd109', 'co57', 'cszn'];
+  // The RSS8 sources are labelled "about 1 µCi": each part gets a true activity between 0.8 and 1.2 times its label, drawn once per visit.
+  // The standards are simulated at exactly their label values (5.00 µCi and 20.0 µCi).
+  const FAC = {}; for (const id of RSS8) FAC[id] = C.KIT[id].parts.map(() => 0.8 + 0.4 * Math.random());
   const trueSrc = () => S.src === 'unk' ? S.unk : S.src;
-  const depCfg = () => ({ src: trueSrc(), size: S.size, d: S.d, A: S.act * UCI, mat: S.mat, t: S.t / 10, bg: S.bg, back: S.back });
+  const trueParts = (id) => C.KIT[id].parts.map(([n, a], i) => [n, a * UCI * (FAC[id] ? FAC[id][i] : 1)]);
+  const srcObj = (id) => C.mixSource(trueParts(id), C.KIT[id].label);
+  const srcName = () => S.src === 'unk' && !S.revealed ? 'unknown' : C.KIT[trueSrc()].label;
+  const actHidden = () => S.src === 'unk' ? !S.revealed : (C.KIT[S.src].set === 'RSS8' && !S.showAct);
+  // absorber thickness: foils from the count, lead from the stack
+  const absT = () => S.mat === 'none' ? 0 : S.mat === 'pb' ? C.RAS20_PB.reduce((s, m, i) => s + (S.pbs[i] ? m : 0), 0) / 1000 / C.RHO.pb : S.nf * C.foilCm(S.mat);
+  const absMass = () => absT() * (C.RHO[S.mat] || 0);       // g/cm²
+  const absLabel = () => S.mat === 'none' || absT() === 0 ? 'none' : S.mat === 'pb' ? `Pb ${Math.round(absMass() * 1000)} mg/cm²` : `${S.mat[0].toUpperCase() + S.mat.slice(1)} × ${S.nf}`;
+  const depCfg = () => { const o = srcObj(trueSrc()); return { src: trueSrc(), srcObj: o, size: S.size, d: S.d, A: o.A, mat: S.mat, t: absT(), bg: S.bg, back: S.back }; };
   const elec = () => ({ N: S.N, hv: S.hv, coarse: S.coarse, fine: S.fine, res: S.res, lld: S.lld, uld: S.uld });
   const gainKey = () => `${S.hv}|${S.coarse}|${S.fine}|${S.N}`;
   let spec = newSpec(), dep = null, rates = null, nIn = 0, depDirty = true, chanDirty = true, acquiring = false, ready = false;
@@ -925,26 +1033,27 @@ sub, sup { line-height: 0; }
   const touchChan = () => { chanDirty = true; elecReadouts(); calReadout(); };
 
   // ---------- presets ----------
+  // Presets follow ORTEC Experiment 3 (AN34) on the department's apparatus; all use the manual's gain (661.7 keV near channel 475 of 2048).
   const PRESETS = {
-    cs: { src: 'cs137', back: 'fe', d: 5, coarse: 20, ptime: 0, speed: 10, ana: 'cal', lin: true,
-      hint: 'A 1 µCi ¹³⁷Cs source 5 cm from the crystal. The tall peak is the 661.7 keV photopeak, where the photon gave all its energy to the crystal. Below it the Compton continuum ends at the Compton edge, 2E²/(mₑc² + 2E) = 477.3 keV, where the counts fall most steeply. The bump near 190 keV is the backscatter peak: photons scattered back from the steel plate behind the source carry E/(1 + 2E/mₑc²) = 184.3 keV at exactly 180°, a little more at the smaller angles the plate also allows. Switch the backing to lead: lead absorbs most scattered photons on their way out, so the bump shrinks, and lead K x-rays appear near 75 keV. The barium K x-rays make the peak near 32 keV. Drag a region over each feature to measure it.' },
-    co: { src: 'co60', d: 1, coarse: 10, ptime: 0, speed: 10, ana: 'cal',
-      hint: '⁶⁰Co emits 1173.2 and 1332.5 keV photons in cascade, almost at the same instant. With the source 1 cm away both often reach the crystal and their energies add: the sum peak at 2505.7 keV. Move the source back and watch the sum peak fall faster than the photopeaks, because it needs two photons inside the solid angle.' },
-    na: { src: 'na22', d: 3, coarse: 10, ptime: 0, speed: 10, ana: 'cal',
-      hint: '²²Na decays by positron emission. The positron annihilates in the source capsule into two 511 keV photons going opposite ways, so only one can reach the crystal: a strong 511 keV peak beside the 1274.5 keV nuclear line. Their sum, 1785.5 keV, appears at short distance. Each line has its own Compton edge (340.7 and 1061.7 keV).' },
-    cal: { src: 'cs137', d: 5, coarse: 10, ptime: 120, speed: 100, mark: true, ana: 'cal',
-      hint: 'Acquire, then click the 661.7 keV peak in mark peak mode and add 661.657 keV. Switch the source to Co-60, clear and acquire, then mark 1173.228 and 1332.492 keV. Na-22 (511.0, 1274.537) and Ba-133 (81.0, 356.0) add more points. Keep the HV and gain fixed. Then turn on the keV axis and check the residuals.' },
-    pb: { src: 'cs137', d: 10, coarse: 20, ptime: 60, speed: 100, mat: 'pb', t: 0, roi: [661.657, 0.09], ana: 'att',
-      hint: 'Narrow beam attenuation of the 661.7 keV line in lead. The region of interest covers the photopeak. Acquire 60 s, Add to table, then add 2 mm of lead, Clear, acquire again, and repeat to 20 mm. The Attenuation plot fits ln(rate) against thickness; the slope is −μ. Compare with XCOM, μ = 1.25 cm⁻¹.' },
-    unk: { src: 'unk', d: 5, coarse: 10, ptime: 300, speed: 100, ana: 'cal', calibrate: true,
-      hint: 'A source with its label covered. The detector was calibrated with Cs-137 and Co-60 earlier (points in the calibration list), so the axis can show keV. Acquire, measure the energy of each photopeak, and compare with the line list in the Model section. Reveal the answer when you are done.' }
+    cal: { src: 'cs137', d: 2, ptime: 120, speed: 100, mark: true, ana: 'cal',
+      hint: 'ORTEC Experiment 3.1. ¹³⁷Cs is 2 cm from the crystal and the gain is set as in the manual: 661.7 keV near channel 475 of 2048, full scale about 2.87 MeV. Acquire, then in mark peak mode click the 661.7 keV peak and add 661.657 keV. Switch the source to Co-60, Clear, acquire, and mark 1173.228 and 1332.492 keV. Na-22 (511.0, 1274.537), Co-57 (122.061) and Mn-54 (834.848) add points. Keep the HV and gain fixed, then turn on the keV axis and check the residuals.' },
+    unk: { src: 'unk', d: 5, ptime: 300, speed: 100, ana: 'cal', calibrate: true,
+      hint: 'ORTEC Experiment 3.2. A source from the RSS8 set with its label covered. The detector was calibrated with Cs-137 and Co-60 earlier (points in the calibration list), so the axis can show keV. Acquire, measure the energy of each photopeak, and compare with the line list in the Model section. Some sources have more than one nuclide. Reveal the answer when you are done.' },
+    cs: { src: 'cs137', back: 'fe', d: 5, ptime: 0, speed: 10, ana: 'cal', lin: true, view: [0, 1024],
+      hint: 'ORTEC Experiment 3.3. ¹³⁷Cs 5 cm from the crystal. The tall peak is the 661.7 keV photopeak, where the photon gave all its energy to the crystal. Below it the Compton continuum ends at the Compton edge, 2E²/(mₑc² + 2E) = 477.3 keV, where the counts fall most steeply. The bump near 190 keV is the backscatter peak: photons scattered back from the steel plate behind the source carry E/(1 + 2E/mₑc²) = 184.3 keV at exactly 180°, a little more at the smaller angles the plate also allows. Switch the backing to lead: lead absorbs most scattered photons on their way out, so the bump shrinks, and lead K x-rays appear near 75 keV. The barium K x-rays make the peak near 32 keV. For the ⁶⁰Co sum peak (2505.7 keV), choose Co-60 and move the source to 1 cm.' },
+    act: { src: 'csref', d: 4, ptime: 60, speed: 100, roi: [600, 728], ana: 'act', view: [0, 1024],
+      hint: 'ORTEC Experiment 3.5. The ¹³⁷Cs standard, 5.00 µCi ± 5%, is 4 cm from the crystal with a region of interest on the 661.7 keV peak. Acquire 60 s live and Add to table. Then choose Cs-137 from the RSS8 set, keep the distance and the region, Clear, acquire 60 s live, and Add to table. The activity is A = 5.00 µCi × (net rate of the source)/(net rate of the standard); the Activity plot does this and carries the 5% certificate uncertainty. Show true activity to check. The ¹³⁷Cs part of the mixed Cs/Zn source can be measured the same way.' },
+    pb: { src: 'cs137', d: 5, ptime: 60, speed: 100, mat: 'pb', roi: [600, 728], ana: 'att', view: [0, 1024],
+      hint: 'ORTEC Experiment 3.7. ¹³⁷Cs 5 cm from the crystal with a region of interest on the 661.7 keV photopeak. Acquire 60 s live with no lead and Add to table. Add a lead absorber to the stack, Clear, acquire for the same live time, Add to table, and keep going in steps of about 1000 to 1600 mg/cm² until the rate falls below a quarter of the first one. The Attenuation plot fits ln(rate) against mass thickness; the slope is −μ/ρ. XCOM gives 0.110 cm²/g for lead at 661.7 keV (the manual quotes 0.105).' },
+    pe: { src: 'co57h', d: 10, ptime: 100, speed: 100, mat: 'ta', roi: [100, 152], ana: 'att', view: [0, 256],
+      hint: 'ORTEC Experiment 3.9. The 20 µCi ⁵⁷Co source 10 cm from the crystal; keep the input rate between 2000 and 8000 per second, and never closer than 4 cm. The region of interest covers the 122.1 keV peak; the 136.5 keV line (11% of decays) is not resolved from it, so the measured μ/ρ comes out a little below the 122 keV value. Acquire 100 s live with no foils and Add to table, then add foils of one element until the rate about halves, acquire for the same live time, and Add to table. Repeat for Al, Fe, Cu, Mo, Sn, Ta and lead: μ/ρ grows steeply with Z, roughly as Z⁴ to Z⁵.' }
   };
   function applyPreset(name) {
     const p = PRESETS[name];
-    S.preset = name; S.src = p.src; S.d = p.d; S.coarse = p.coarse; S.fine = 1; S.hv = 900; S.N = 1024; S.lld = 1; S.uld = 100; S.res = 0.07;
-    S.ptime = p.ptime; S.speed = p.speed; S.mat = p.mat || 'none'; S.t = p.t || 0; S.act = 1; S.size = 's2'; S.back = p.back || 'pb'; S.mark = !!p.mark; S.ana = p.ana; S.keV = false; S.log = !p.lin;
-    if (p.src === 'unk') { const ids = ['cs137', 'co60', 'na22', 'ba133', 'mn54']; S.unk = ids[Math.floor(Math.random() * ids.length)]; S.revealed = false; }
-    stop(); spec = newSpec(); rois = []; roiSel = -1; cand = null; view = [0, S.N];
+    S.preset = name; S.src = p.src; S.d = p.d; S.coarse = 10; S.fine = 1.39; S.hv = 900; S.N = 2048; S.lld = 1; S.uld = 100; S.res = 0.07;
+    S.ptime = p.ptime; S.speed = p.speed; S.mat = p.mat || 'none'; S.nf = 0; S.pbs = [false, false, false, false]; S.showAct = false; S.size = 's15'; S.back = p.back || 'pb'; S.mark = !!p.mark; S.ana = p.ana; S.keV = false; S.log = !p.lin;
+    if (p.src === 'unk') { S.unk = RSS8[Math.floor(Math.random() * RSS8.length)]; S.revealed = false; }
+    stop(); spec = newSpec(); rois = []; roiSel = -1; cand = null; view = p.view ? p.view.slice() : [0, S.N];
     cal.pts = []; cal.fit = null; cal.key = null; cal.deg = 1;
     if (p.calibrate) {
       // a calibration from an earlier session: centroids measured with Cs-137 and Co-60 (simulated, with their statistical scatter)
@@ -954,10 +1063,10 @@ sub, sup { line-height: 0; }
     }
     touchDep(); touchChan();
     if (p.roi) {
-      const e = elec(), kg = C.chanGain(e), c0 = C.chanOffset(e) - 0.5, E = p.roi[0], w = p.roi[1] * E;
-      rois = [{ a: Math.round(kg * (E - w * 1.15) + c0), b: Math.round(kg * (E + w * 1.15) + c0) }]; roiSel = 0;
+      const e = elec(), kg = C.chanGain(e), c0 = C.chanOffset(e) - 0.5;
+      rois = [{ a: Math.round(kg * p.roi[0] + c0), b: Math.round(kg * p.roi[1] + c0) }]; roiSel = 0;
     }
-    cursor = Math.round(C.chanGain(elec()) * 661.657);
+    cursor = rois.length ? Math.round((rois[0].a + rois[0].b) / 2) : Math.round(C.chanGain(elec()) * 661.657);
     markPresetButtons(); syncControls(); allReadouts();
     if (reduce) { prefill(p.ptime || 120); } else start();
   }
@@ -1015,12 +1124,13 @@ sub, sup { line-height: 0; }
   }
 
   // ---------- table ----------
-  const matName = { none: 'none', pb: 'lead', cu: 'copper', al: 'aluminum' };
+  const matName = C.MATNAME;
   function addRow() {
     const r = rois[roiSel]; if (!r) return;
     const st = C.roiStats(spec.counts, r.a, r.b); if (!st || !(spec.live > 0)) return;
     const E = calOK() && !calStale() ? chToE(st.cen) : NaN, fwE = calOK() && !calStale() ? Math.abs(chToE(st.cen + st.fwhm / 2) - chToE(st.cen - st.fwhm / 2)) : NaN;
-    rows.push({ n: rows.length + 1, src: S.src === 'unk' && !S.revealed ? 'unknown' : C.SRC[trueSrc()].name, srcId: trueSrc(), d: S.d, mat: S.mat, t: S.t, live: spec.live, real: spec.real, a: st.a, b: st.b, G: st.G, B: st.B,
+    const t = absT();
+    rows.push({ n: rows.length + 1, src: srcName(), srcId: trueSrc(), d: S.d, mat: t > 0 ? S.mat : 'none', t, xm: t * (C.RHO[S.mat] || 0), nf: S.mat !== 'pb' && t > 0 ? S.nf : 0, abs: absLabel(), size: S.size, live: spec.live, real: spec.real, a: st.a, b: st.b, G: st.G, B: st.B,
       net: st.net, snet: st.snet, rate: st.net / spec.live, srate: st.snet / spec.live, cen: st.cen, scen: st.scen, fwhm: st.fwhm, sfwhm: st.sfwhm, E, fwE });
     tableReadout(); drawAna();
   }
@@ -1028,7 +1138,7 @@ sub, sup { line-height: 0; }
     const tb = $('tbl').querySelector('tbody'); tb.innerHTML = '';
     for (const r of rows) {
       const tr = document.createElement('tr');
-      const cells = [r.n, r.src, r.d.toFixed(1), r.mat === 'none' || r.t === 0 ? 'none' : `${matName[r.mat]} ${r.t.toFixed(1)} mm`, r.live.toFixed(1), r.net.toFixed(0), r.snet.toFixed(0), r.rate.toPrecision(4), r.srate.toPrecision(2),
+      const cells = [r.n, r.src, r.d.toFixed(1), r.abs, r.xm > 0 ? r.xm.toFixed(4) : '0', r.live.toFixed(1), r.net.toFixed(0), r.snet.toFixed(0), r.rate.toPrecision(4), r.srate.toPrecision(2),
         r.cen.toFixed(2), r.scen.toFixed(2), r.fwhm.toFixed(1), r.E === r.E ? r.E.toFixed(1) : '—', r.E === r.E ? (100 * r.fwE / r.E).toFixed(2) : '—'];
       for (const c of cells) { const td = document.createElement('td'); td.textContent = c; tr.appendChild(td); }
       const td = document.createElement('td'), b = document.createElement('button'); b.type = 'button'; b.textContent = '×'; b.setAttribute('aria-label', `Remove row ${r.n}`);
@@ -1044,15 +1154,16 @@ sub, sup { line-height: 0; }
   }
   function specCSV() {
     const cOK = calOK() && !calStale();
-    let s = `# Simulated NaI(Tl) spectrum (Gamma Spectroscopy virtual lab). Not measured data.\n# source,${S.src === 'unk' && !S.revealed ? 'unknown' : C.SRC[trueSrc()].name}\n# activity_uCi,${S.act}\n# distance_cm,${S.d}\n# absorber,${S.mat},${S.t} mm\n# crystal,${C.SIZES[S.size].label}\n# HV_V,${S.hv}\n# coarse_gain,${S.coarse}\n# fine_gain,${S.fine}\n# channels,${S.N}\n# live_time_s,${spec.live.toFixed(3)}\n# real_time_s,${spec.real.toFixed(3)}\n`;
+    const K = C.KIT[trueSrc()], lab = S.src === 'unk' && !S.revealed ? 'unknown' : K.parts.map(([n, a]) => `${C.SRC[n].name} ${a} uCi`).join(' + ');
+    let s = `# Simulated NaI(Tl) spectrum (Gamma Spectroscopy virtual lab). Not measured data.\n# source,${srcName()}${K.set && !(S.src === 'unk' && !S.revealed) ? ` (${K.set})` : ''}\n# label_activity,${lab}\n# distance_cm,${S.d}\n# absorber,${absLabel()},${absT().toFixed(5)} cm,${absMass().toFixed(5)} g/cm2\n# crystal,${C.SIZES[S.size].long}\n# HV_V,${S.hv}\n# coarse_gain,${S.coarse}\n# fine_gain,${S.fine}\n# channels,${S.N}\n# live_time_s,${spec.live.toFixed(3)}\n# real_time_s,${spec.real.toFixed(3)}\n`;
     if (cOK) s += `# calibration_keV,${cal.fit.c.map((v) => v.toPrecision(8)).join(',')}\n`;
     s += cOK ? 'channel,counts,energy_keV\n' : 'channel,counts\n';
     for (let j = 0; j < spec.counts.length; j++) s += cOK ? `${j},${spec.counts[j]},${chToE(j).toFixed(3)}\n` : `${j},${spec.counts[j]}\n`;
     return s;
   }
   function tableCSV() {
-    let s = '# ROI table from the Gamma Spectroscopy virtual lab (simulated).\nrow,source,distance_cm,absorber,thickness_mm,live_s,real_s,roi_start,roi_end,gross,background,net,net_unc,rate_per_s,rate_unc,centroid_ch,centroid_unc,fwhm_ch,fwhm_unc,energy_keV,fwhm_keV\n';
-    for (const r of rows) s += [r.n, r.src, r.d, r.mat, r.t, r.live.toFixed(3), r.real.toFixed(3), r.a, r.b, r.G, r.B.toFixed(1), r.net.toFixed(1), r.snet.toFixed(1), r.rate.toPrecision(6), r.srate.toPrecision(3), r.cen.toFixed(3), r.scen.toFixed(3), r.fwhm.toFixed(3), r.sfwhm.toFixed(3), r.E === r.E ? r.E.toFixed(2) : '', r.fwE === r.fwE ? r.fwE.toFixed(2) : ''].join(',') + '\n';
+    let s = '# ROI table from the Gamma Spectroscopy virtual lab (simulated).\nrow,source,crystal,distance_cm,absorber,material,foils,thickness_cm,mass_thickness_g_cm2,live_s,real_s,roi_start,roi_end,gross,background,net,net_unc,rate_per_s,rate_unc,centroid_ch,centroid_unc,fwhm_ch,fwhm_unc,energy_keV,fwhm_keV\n';
+    for (const r of rows) s += [r.n, r.src, C.SIZES[r.size].label, r.d, r.abs, r.mat, r.nf, r.t.toFixed(5), r.xm.toFixed(5), r.live.toFixed(3), r.real.toFixed(3), r.a, r.b, r.G, r.B.toFixed(1), r.net.toFixed(1), r.snet.toFixed(1), r.rate.toPrecision(6), r.srate.toPrecision(3), r.cen.toFixed(3), r.scen.toFixed(3), r.fwhm.toFixed(3), r.sfwhm.toFixed(3), r.E === r.E ? r.E.toFixed(2) : '', r.fwE === r.fwE ? r.fwE.toFixed(2) : ''].join(',') + '\n';
     return s;
   }
 
@@ -1100,7 +1211,8 @@ sub, sup { line-height: 0; }
   }
 
   // ---------- the bench ----------
-  const NUC_COL = { cs137: '#d9a400', co60: '#2f7fd8', na22: '#c8402d', ba133: '#1d8a62', mn54: '#7a3ec2', unk: '#7c8796', none: '#7c8796' };
+  const NUC_COL = { cs137: '#d9a400', co60: '#2f7fd8', na22: '#c8402d', ba133: '#1d8a62', mn54: '#7a3ec2', cd109: '#d0559a', co57: '#1f9bb0', cszn: '#b07a2a', csref: '#d9a400', co57h: '#1f9bb0', unk: '#7c8796', none: '#7c8796' };
+  const MAT_COL = { al: '#c7ccd2', fe: '#8d96a3', cu: '#c27a45', mo: '#9aa3b5', sn: '#b9bfc8', ta: '#6f7c94' };
   function benchGeom() {
     const p = LY.bench, ps = p.ps, narrow = LY.narrow;
     const top = p.y + 24 * ps;
@@ -1201,8 +1313,8 @@ sub, sup { line-height: 0; }
     c.fillStyle = col; rr(c, X(zs - 0.32), Y(1.27), 0.64 * sc, 2.54 * sc, 2); c.fill();
     c.strokeStyle = T.ink; c.lineWidth = 1; c.stroke();
     // absorber sheets in front of the source
-    if (S.mat !== 'none' && S.t > 0) {
-      const tc = S.t / 10, ac = S.mat === 'pb' ? T.lead : S.mat === 'cu' ? '#c27a45' : '#c7ccd2';
+    if (S.mat !== 'none' && absT() > 0) {
+      const tc = absT(), ac = S.mat === 'pb' ? T.lead : MAT_COL[S.mat];
       c.fillStyle = ac; c.fillRect(X(zs + 0.45), Y(5), Math.max(2, tc * sc), 10 * sc);
       c.strokeStyle = T.ink; c.globalAlpha = 0.5; c.strokeRect(X(zs + 0.45) + 0.5, Y(5) + 0.5, Math.max(2, tc * sc), 10 * sc); c.globalAlpha = 1;
     }
@@ -1226,14 +1338,15 @@ sub, sup { line-height: 0; }
     c.beginPath(); for (let k = -1; k <= 1; k++) { c.moveTo(hx + k * 3.5 * ps, hy - 2.5 * ps); c.lineTo(hx + k * 3.5 * ps, hy + 2.5 * ps); } c.stroke();
     // labels, drawn last on halos
     const lb = (t, x, y, colr, al = 'center', bold = false) => label(c, t, x, y, colr, al, 'middle', bold, ps * 0.92, T.canvas, 10.5);
-    lb(`d = ${S.d.toFixed(1)} cm`, (X(zs) + X(0)) / 2, Y(R) - 10 * ps, T.accent, 'center', true);
-    c.strokeStyle = T.accent; c.lineWidth = 1 * ps; c.beginPath(); c.moveTo(X(zs), Y(R) - 3 * ps); c.lineTo(X(0), Y(R) - 3 * ps); c.stroke();
+    const yD = Math.min(Y(R) - 3 * ps, Y(1.27) - 24 * ps);          // dimension line above the source label
+    lb(`d = ${S.d.toFixed(1)} cm`, (X(zs) + X(0)) / 2, yD - 7 * ps, T.accent, 'center', true);
+    c.strokeStyle = T.accent; c.lineWidth = 1 * ps; c.beginPath(); c.moveTo(X(zs), yD); c.lineTo(X(0), yD); c.stroke();
     if (sc > 5.5) {
       lb(`NaI(Tl) ${C.SIZES[S.size].label}`, X(H / 2), Y(-canR) + 10 * ps, T.ink, 'center', true);
       if (G.cast.w > 520 && sc > 7.5) lb('photomultiplier', X(H + 7), Y(pmtR) - 8 * ps, T.muted);
-      lb(S.src === 'unk' && !S.revealed ? 'source ?' : C.SRC[trueSrc()].name, X(zs), Y(1.27) - 9 * ps, T.ink, 'center', true);
+      lb(S.src === 'unk' && !S.revealed ? 'source ?' : C.KIT[trueSrc()].label, X(zs), Y(1.27) - 9 * ps, T.ink, 'center', true);
       if (G.cast.w > 520 && S.back !== 'none') lb(S.back === 'pb' ? 'lead brick' : 'steel plate', X(zb - (S.back === 'pb' ? 2.5 : 0.5)), Y(-6) + 9 * ps, T.muted);
-      if (S.mat !== 'none' && S.t > 0) lb(`${matName[S.mat]} ${S.t.toFixed(1)} mm`, X(zs + 0.6), Y(5) - 8 * ps, T.ink, 'left');
+      if (S.mat !== 'none' && absT() > 0) lb(absLabel(), X(zs + 0.6), Y(-5) + 9 * ps, T.ink, 'left');
     }
     drawElectronics(G);
     if (!ready && S.src !== 'none') lb('computing detector response…', X(-15), Y(0), T.muted);
@@ -1270,7 +1383,7 @@ sub, sup { line-height: 0; }
       const g = c.createLinearGradient(x, 0, x + w, 0); g.addColorStop(0, T.nim); g.addColorStop(0.5, T.surface); g.addColorStop(1, T.nim);
       c.fillStyle = g; rr(c, x, e.y, w, e.h, 3); c.fill(); c.strokeStyle = T.line; c.lineWidth = 1; c.stroke();
       c.fillStyle = T.muted; c.font = `600 ${fs}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
-      c.fillText(['HV SUPPLY', 'AMPLIFIER', 'MCA / ADC'][i], x + w / 2, e.y + 4);
+      c.fillText(['556 HV', '575A AMP', 'EASY-MCA-2K'][i], x + w / 2, e.y + 4);
       // screws
       c.fillStyle = T.aluDk; for (const yy of [e.y + e.h - 5]) { c.beginPath(); c.arc(x + 5, yy, 1.6, 0, 7); c.arc(x + w - 5, yy, 1.6, 0, 7); c.fill(); }
     }
@@ -1431,15 +1544,26 @@ sub, sup { line-height: 0; }
       return { pts, xl: 'channel', yl: 'residual (keV)', zero: true, res, lab: 'Calibration fit', hint: 'Residuals: measured energy minus the fit, with the centroid uncertainty as error bars. A quadratic term should come out near zero, because this simulated detector is linear.' };
     }
     if (S.ana === 'att') {
-      const mat = S.mat !== 'none' ? S.mat : (rows.find((r) => r.mat !== 'none' && r.t > 0) || { mat: 'pb' }).mat;
+      const mat = S.mat !== 'none' ? S.mat : (rows.slice().reverse().find((r) => r.mat !== 'none' && r.t > 0) || { mat: 'pb' }).mat;
       const ref = rows.slice().reverse().find((r) => r.mat === mat && r.t > 0) || rows[rows.length - 1];
-      const sel = rows.filter((r) => r.net > 0 && (r.t === 0 || r.mat === mat) && ref && r.d === ref.d && r.srcId === ref.srcId);
-      const pts = sel.map((r) => ({ x: r.t / 10, y: Math.log(r.rate), s: r.srate / r.rate }));
-      const srcId = sel.length ? sel[0].srcId : trueSrc(), E = sel.length && sel[0].E === sel[0].E ? sel[0].E : (C.SRC[srcId].lines.slice().sort((a, b) => b[1] - a[1])[0] || [661.657])[0];
-      const muX = C.muLin(mat, E);
+      const sel = rows.filter((r) => r.net > 0 && (r.t === 0 || r.mat === mat) && ref && r.d === ref.d && r.srcId === ref.srcId && r.size === ref.size);
+      const pts = sel.map((r) => ({ x: r.xm, y: Math.log(r.rate), s: r.srate / r.rate }));
+      const srcId = sel.length ? sel[0].srcId : trueSrc(), so = srcObj(srcId);
+      const E = sel.length && sel[0].E === sel[0].E ? sel[0].E : (so.lines.filter((l) => l[0] > 45).sort((a, b) => b[1] - a[1])[0] || [661.657])[0];
+      const mm = C.muMass(mat, E), tab = mat === 'mo' || mat === 'sn' || mat === 'ta' ? 'NIST (Hubbell and Seltzer)' : 'XCOM';
       let fit = null; if (pts.length >= 2) fit = C.polyfit(pts.map((p) => p.x), pts.map((p) => p.y), pts.map((p) => p.s), 1);
-      const res = fit ? `μ = ${(-fit.c[1]).toFixed(3)} ± ${fit.err[1].toFixed(3)} cm⁻¹ · XCOM ${muX.toFixed(3)} cm⁻¹ at ${E.toFixed(1)} keV` : `XCOM narrow beam μ for ${matName[mat]} at ${E.toFixed(1)} keV: ${muX.toFixed(3)} cm⁻¹`;
-      return { pts, fit, xl: `${matName[mat]} thickness (cm)`, yl: 'ln(net rate / s⁻¹)', res, lab: 'Attenuation coefficient', hint: `Rows at the same distance and source with no absorber or with ${matName[mat]}; use the same ROI on the photopeak. Weighted fit of ln(rate) = ln(rate₀) − μx; the error bars are σ(net)/net. Keep the distance fixed.` };
+      const res = fit ? `μ/ρ = ${(-fit.c[1]).toFixed(4)} ± ${fit.err[1].toFixed(4)} cm²/g, μ = ${(-fit.c[1] * C.RHO[mat]).toFixed(3)} cm⁻¹ · ${tab} ${mm.toFixed(4)} cm²/g at ${E.toFixed(1)} keV` : `${tab} narrow beam μ/ρ for ${matName[mat]} at ${E.toFixed(1)} keV: ${mm.toFixed(4)} cm²/g`;
+      return { pts, fit, xl: `${matName[mat]}, mass thickness (g/cm²)`, yl: 'ln(net rate / s⁻¹)', res, lab: 'Mass attenuation coefficient', hint: `Rows at the same distance, crystal and source with no absorber or with ${matName[mat]}; use the same ROI on the photopeak and the same live time. Weighted fit of ln(rate) = ln(rate₀) − (μ/ρ)·ρx; the error bars are σ(net)/net. Half value layer: ρx½ = ln 2 / (μ/ρ).` };
+    }
+    if (S.ana === 'act') {
+      // ORTEC Exp. 3.5: the last standard row and the last row of another source containing the same nuclide, same distance, crystal and absorber
+      const std = rows.slice().reverse().find((r) => r.srcId === 'csref' && r.net > 0);
+      const unk = std && rows.slice().reverse().find((r) => r.srcId !== 'csref' && r.srcId !== 'none' && r.net > 0 && r.d === std.d && r.size === std.size && r.xm === std.xm && C.KIT[r.srcId].parts.some(([n]) => n === 'cs137'));
+      const pts = rows.filter((r) => r.net > 0 && std && r.d === std.d && r.size === std.size).map((r) => ({ x: r.n, y: r.rate, s: r.srate }));
+      if (!std || !unk) return { pts, msg: pts.length ? '' : 'Add a row for the standard and one for the unknown.', res: 'Needs a row for the Cs-137 standard and one for a Cs-137 source at the same distance.', lab: 'Activity against the standard', hint: 'Put the region of interest on the 661.7 keV peak, acquire the standard and the unknown for the same live time at the same distance, and add a row for each.' };
+      const k = C.KIT.csref, AS = k.parts[0][1], r = C.activityRatio(unk.rate, unk.srate, std.rate, std.srate, AS, k.cert);
+      const res = `A(row ${unk.n}) = ${r.A.toFixed(3)} ± ${r.stat.toFixed(3)} (counts) ± ${r.cert.toFixed(3)} (standard) µCi = ${(r.A * UCI).toExponential(3)} Bq of Cs-137`;
+      return { pts, xl: 'table row', yl: 'net rate (s⁻¹)', zero: true, res, lab: 'Activity against the standard', hint: `Rows at ${std.d} cm. A = 5.00 µCi × (net rate of row ${unk.n}) / (net rate of row ${std.n}). The standard's ±5% is a systematic uncertainty shared by every result; the counting uncertainty shrinks with longer runs.` };
     }
     if (S.ana === 'inv') {
       const last = rows[rows.length - 1], sel = rows.filter((r) => r.net > 0 && (r.mat === 'none' || r.t === 0) && last && r.srcId === last.srcId);
@@ -1483,20 +1607,36 @@ sub, sup { line-height: 0; }
   }
 
   // ---------- readouts ----------
+  const fmtUCi = (a) => a >= 10 ? a.toFixed(1) : a.toFixed(2);
+  const SRC_NOTE = {
+    cd109: ' The Ag K x-rays (22.0 to 25.5 keV) land near channel 19, right at the lower level discriminator: lower it to 0.5% to see the whole peak. The 88.0 keV gamma ray comes from only 3.6% of decays.',
+    co57: ' The 14.4 keV line lands below the lower level discriminator, and the aluminum window absorbs about 70% of it.',
+    co57h: ' The 14.4 keV line lands below the lower level discriminator, and the aluminum window absorbs about 70% of it.',
+    cszn: ' Two nuclides in one source: ¹³⁷Cs (661.7 keV) and ⁶⁵Zn (1115.5 keV, with weak 511 keV annihilation radiation from its 1.4% β⁺ branch).'
+  };
   function geomReadouts() {
-    const sz = C.SIZES[S.size], g = C.omegaFrac(S.d, sz.R), src = C.SRC[trueSrc()];
-    $('distOut').textContent = `${S.d.toFixed(1)} cm`; $('thkOut').textContent = S.mat === 'none' ? '—' : `${S.t.toFixed(1)} mm = ${(S.t / 10 * C.RHO[S.mat]).toFixed(2)} g/cm²`;
+    const sz = C.SIZES[S.size], g = C.omegaFrac(S.d, sz.R), id = trueSrc(), K = C.KIT[id], src = srcObj(id), hidden = actHidden(), t = absT();
+    $('distOut').textContent = `${S.d.toFixed(1)} cm`;
+    $('foilBox').hidden = S.mat === 'none' || S.mat === 'pb'; $('pbBox').hidden = S.mat !== 'pb';
+    $('nfOut').textContent = S.mat in C.FOILS ? `${S.nf} × ${(C.foilCm(S.mat) * 10).toFixed(3)} mm` : '';
+    $('thkOut').textContent = S.mat === 'none' ? 'No absorber.' : `${matName[S.mat]}: x = ${(t * 10).toFixed(3)} mm, ρx = ${(t * C.RHO[S.mat]).toFixed(4)} g/cm² (ρ = ${C.RHO[S.mat]} g/cm³)`;
     $('rOmega').textContent = `${(100 * g).toFixed(3)}%`;
-    $('rAct').textContent = S.src === 'none' ? '0' : `${(S.act * UCI).toExponential(2)} Bq`;
-    let nin = 0; for (const [E, I] of src.lines) nin += S.act * UCI * I * g * C.trans(S.mat, S.t / 10, E) * (src.sum === 'beta+' && E === 511 ? 1 : 1);
-    $('rIn').textContent = `${nin.toFixed(0)} /s`;
-    const main = src.lines.slice().sort((a, b) => b[1] * (b[0] > 100 ? 1 : 0.01) - a[1] * (a[0] > 100 ? 1 : 0.01))[0];
-    if (main && S.mat !== 'none') { $('rTrLab').textContent = S.src === 'unk' && !S.revealed ? 'Transmission, strongest line' : `Transmission at ${main[0].toFixed(1)} keV`; $('rTr').textContent = (Math.exp(-C.muLin(S.mat, main[0]) * S.t / 10)).toFixed(4); }
+    const lab = S.src === 'none' ? '0' : S.src === 'unk' && !S.revealed ? 'about 1 µCi' : K.set === 'RSS8' ? K.parts.map(([n, a]) => `≈ ${a} µCi${K.parts.length > 1 ? ' ' + C.SRC[n].name : ''}`).join(', ') : `${fmtUCi(K.parts[0][1])} µCi${K.cert ? ` ± ${100 * K.cert}%` : ''}`;
+    $('rLab').textContent = lab;
+    $('rTrue').textContent = S.src === 'none' ? '0' : hidden ? 'hidden' : trueParts(id).map(([n, a]) => `${fmtUCi(a / UCI)} µCi${K.parts.length > 1 ? ' ' + C.SRC[n].name : ''}`).join(', ');
+    $('showAct').hidden = S.src === 'none' || S.src === 'unk' || K.set !== 'RSS8';
+    $('showAct').setAttribute('aria-pressed', String(S.showAct)); $('showAct').textContent = S.showAct ? 'Hide true activity' : 'Show true activity';
+    $('rAct').textContent = S.src === 'none' ? '0' : hidden ? 'hidden' : `${src.A.toExponential(3)} Bq`;
+    let nin = 0; for (const [E, I] of src.lines) nin += src.A * I * g * C.trans(S.mat, t, E);
+    $('rIn').textContent = hidden ? 'hidden' : `${nin.toFixed(0)} /s`;
+    const main = src.lines.filter((l) => l[0] > 45).sort((a, b) => b[1] - a[1])[0];
+    if (main && S.mat !== 'none') { $('rTrLab').textContent = S.src === 'unk' && !S.revealed ? 'Transmission, strongest line' : `Transmission at ${main[0].toFixed(1)} keV`; $('rTr').textContent = Math.exp(-C.muLin(S.mat, main[0]) * t).toFixed(4); }
     else { $('rTrLab').textContent = 'Absorber transmission'; $('rTr').textContent = '1'; }
     $('reveal').hidden = S.src !== 'unk';
-    $('reveal').textContent = S.revealed ? C.SRC[S.unk].name : 'Reveal';
+    $('reveal').textContent = S.revealed ? C.KIT[S.unk].label : 'Reveal';
+    const half = S.src === 'unk' && !S.revealed ? 'unknown' : src.half;
     $('srcHint').textContent = S.src === 'none' ? 'No source: only the room background inside the castle. Count long to see ⁴⁰K at 1460.8 keV.'
-      : `Point source on the axis${src.half ? `, half life ${S.src === 'unk' && !S.revealed ? 'unknown' : src.half}` : ''}. Ω/4π = ½(1 − d/√(d² + R²)) is exact for a point on the axis of a disk of radius R. The absorber sits on the holder just in front of the source.`;
+      : `${K.set === 'RSS8' || S.src === 'unk' ? 'RSS8 set' : K.set}. Point source on the axis${half ? `, half life ${half}` : ''}. Ω/4π = ½(1 − d/√(d² + R²)) is exact for a point on the axis of a disk of radius R. The absorber sits on the holder just in front of the source.${S.src === 'unk' && !S.revealed ? '' : SRC_NOTE[id] || ''}`;
   }
   function elecReadouts() {
     const e = elec(), kg = C.chanGain(e);
@@ -1536,7 +1676,7 @@ sub, sup { line-height: 0; }
     $('cPeak').textContent = cand ? `channel ${cand.ch.toFixed(2)} ± ${Math.max(cand.sch, 0.01).toFixed(2)} (FWHM ${cand.fwhm.toFixed(1)} ch)` : '—';
     $('cAdd').disabled = !cand;
     const list = $('cList'); list.innerHTML = '';
-    if (S.src !== 'unk' && S.src !== 'none') for (const [E] of C.SRC[S.src].lines) if (E > 45) { const o = document.createElement('option'); o.value = String(E); list.appendChild(o); }
+    if (S.src !== 'unk' && S.src !== 'none') for (const [E] of srcObj(S.src).lines) if (E > 45) { const o = document.createElement('option'); o.value = String(E); list.appendChild(o); }
     if (cal.pts.length) $('cPts').textContent = cal.pts.map((p) => `${p.ch.toFixed(2)} → ${p.E.toFixed(3)}${calOK() ? ` (${(p.E - chToE(p.ch)) >= 0 ? '+' : ''}${(p.E - chToE(p.ch)).toFixed(2)})` : ''}`).join(', ');
     else $('cPts').textContent = '—';
     if (calOK()) {
@@ -1550,16 +1690,21 @@ sub, sup { line-height: 0; }
     $('cLin').setAttribute('aria-pressed', String(cal.deg === 1)); $('cQuad').setAttribute('aria-pressed', String(cal.deg === 2));
   }
   function lineList() {
-    const t = Object.entries(C.SRC).filter(([k]) => k !== 'none').map(([, s]) => `${s.name}: ${s.lines.filter(([E, I]) => E > 45 && I > 0.003).map(([E, I]) => `${E} (${(100 * I).toPrecision(3)}%)`).join(', ')}`);
+    const t = Object.entries(C.SRC).filter(([k]) => k !== 'none').map(([, s]) => {
+      const x = s.lines.filter(([E]) => E <= 45), grp = x.length >= 2;
+      const g = s.lines.filter(([E, I]) => (E > 45 || !grp) && I > 0.003).map(([E, I]) => `${E} (${(100 * I).toPrecision(3)}%)`);
+      if (grp) g.push(`K x-rays ${x[0][0]} to ${x[x.length - 1][0]} (${(100 * x.reduce((u, l) => u + l[1], 0)).toPrecision(3)}% together)`);
+      return `${s.name}, ${s.half}: ${g.join(', ')}`;
+    });
     $('lineList').textContent = 'Line energies in keV (photons per 100 decays). ' + t.join('. ') + `. ⁴⁰K: 1460.82 (10.66%). Annihilation: 511.0.`;
-    $('modelMC').textContent = 'Monte Carlo histories per line: 60 000 for gamma lines stronger than 5% per decay, 20 000 for weaker ones, 12 000 for x-rays, 8000 for each lead x-ray line, and 24 000 backscatter samples for the strong lines; recomputed in a background thread whenever the distance, source or crystal changes. Deposits are binned in 0.5 keV.';
+    $('modelMC').textContent = 'Monte Carlo histories per line: 60 000 for gamma lines stronger than 5% per decay, 20 000 for weaker ones, 12 000 for x-rays, 8000 for each lead x-ray line and each K x-ray line of an absorber, and 24 000 backscatter samples for the strong lines; recomputed in a background thread whenever the distance, source or crystal changes. Deposits are binned in 0.5 keV.';
   }
   function allReadouts() { geomReadouts(); elecReadouts(); liveReadouts(); calReadout(); tableReadout(); drawAna(); }
   function syncControls() {
-    $('src').value = S.src; $('dist').value = S.d; $('thk').value = S.t; $('thk').disabled = S.mat === 'none';
+    $('src').value = S.src; $('dist').value = S.d; $('mat').value = S.mat; $('nf').value = S.nf; pbChips();
     $('hv').value = S.hv; $('fine').value = S.fine; $('lld').value = S.lld; $('uld').value = S.uld; $('res').value = (100 * S.res).toFixed(1); $('ptime').value = String(S.ptime);
     const pr = (sel, attr, v) => { for (const b of document.querySelectorAll(sel)) b.setAttribute('aria-pressed', String(b.dataset[attr] === String(v))); };
-    pr('[data-act]', 'act', S.act); pr('[data-back]', 'back', S.back); pr('[data-mat]', 'mat', S.mat); pr('[data-size]', 'size', S.size); pr('[data-cg]', 'cg', S.coarse); pr('[data-n]', 'n', S.N); pr('[data-sp]', 'sp', S.speed);
+    pr('[data-back]', 'back', S.back); pr('[data-size]', 'size', S.size); pr('[data-cg]', 'cg', S.coarse); pr('[data-n]', 'n', S.N); pr('[data-sp]', 'sp', S.speed);
     $('yLin').setAttribute('aria-pressed', String(!S.log)); $('yLog').setAttribute('aria-pressed', String(S.log));
     $('markBtn').setAttribute('aria-pressed', String(S.mark));
   }
@@ -1579,10 +1724,17 @@ sub, sup { line-height: 0; }
   $('zIn').addEventListener('click', () => zoom(0.5));
   $('zOut').addEventListener('click', () => zoom(2));
   $('zFull').addEventListener('click', () => { view = [0, S.N]; });
-  $('src').addEventListener('change', (e) => { custom(); S.src = e.target.value; if (S.src === 'unk') { const ids = ['cs137', 'co60', 'na22', 'ba133', 'mn54']; S.unk = ids[Math.floor(Math.random() * ids.length)]; S.revealed = false; } touchDep(); calReadout(); });
+  $('src').addEventListener('change', (e) => { custom(); S.src = e.target.value; S.showAct = false; if (S.src === 'unk') { S.unk = RSS8[Math.floor(Math.random() * RSS8.length)]; S.revealed = false; } touchDep(); calReadout(); });
   $('reveal').addEventListener('click', () => { S.revealed = true; geomReadouts(); });
-  for (const b of document.querySelectorAll('[data-act]')) b.addEventListener('click', () => { custom(); S.act = +b.dataset.act; syncControls(); touchDep(); });
-  for (const b of document.querySelectorAll('[data-mat]')) b.addEventListener('click', () => { custom(); S.mat = b.dataset.mat; if (S.mat === 'none') S.t = 0; syncControls(); touchDep(); });
+  $('showAct').addEventListener('click', () => { S.showAct = !S.showAct; geomReadouts(); });
+  $('mat').addEventListener('change', (e) => { custom(); S.mat = e.target.value; S.nf = 0; S.pbs = [false, false, false, false]; syncControls(); touchDep(); });
+  $('nf').addEventListener('input', (e) => { custom(); S.nf = +e.target.value; touchDep(); });
+  // lead absorber chips, one per RAS20 lead absorber
+  function pbChips() {
+    const box = $('pbChips');
+    if (!box.children.length) C.RAS20_PB.forEach((m, i) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = String(Math.round(m)); b.setAttribute('aria-label', `${Math.round(m)} mg/cm² lead absorber`); b.addEventListener('click', () => { custom(); S.pbs[i] = !S.pbs[i]; pbChips(); touchDep(); }); box.appendChild(b); });
+    [...box.children].forEach((b, i) => b.setAttribute('aria-pressed', String(!!S.pbs[i])));
+  }
   for (const b of document.querySelectorAll('[data-back]')) b.addEventListener('click', () => { custom(); S.back = b.dataset.back; syncControls(); touchDep(); });
   for (const b of document.querySelectorAll('[data-size]')) b.addEventListener('click', () => { custom(); S.size = b.dataset.size; syncControls(); touchDep(); });
   for (const b of document.querySelectorAll('[data-cg]')) b.addEventListener('click', () => setCoarse(+b.dataset.cg));
@@ -1595,7 +1747,6 @@ sub, sup { line-height: 0; }
   function setFine(v) { v = clamp(v, $('fine')); if (v === S.fine) return; custom(); S.fine = v; $('fine').value = v; touchChan(); }
   function setCoarse(v) { if (v === S.coarse) return; custom(); S.coarse = v; syncControls(); touchChan(); }
   $('dist').addEventListener('input', (e) => setDist(+e.target.value));
-  $('thk').addEventListener('input', (e) => { custom(); S.t = +e.target.value; touchDep(); });
   $('hv').addEventListener('input', (e) => setHV(+e.target.value));
   $('fine').addEventListener('input', (e) => setFine(+e.target.value));
   $('lld').addEventListener('input', (e) => { S.lld = +e.target.value; if (S.lld >= S.uld) S.lld = S.uld - 1; touchChan(); });
@@ -1605,7 +1756,7 @@ sub, sup { line-height: 0; }
   $('addRow').addEventListener('click', addRow);
   $('roiCal').addEventListener('click', () => { const r = rois[roiSel]; if (!r) return; setCand(C.roiStats(spec.counts, r.a, r.b), 'ROI'); });
   $('roiDel').addEventListener('click', () => { if (roiSel >= 0) { rois.splice(roiSel, 1); roiSel = rois.length - 1; roiReadout(); } });
-  $('csvSpec').addEventListener('click', () => download(`gamma-spectrum-${C.SRC[trueSrc()].name}-${S.d}cm.csv`.replace(/ /g, ''), specCSV()));
+  $('csvSpec').addEventListener('click', () => download(`gamma-spectrum-${srcName()}-${S.d}cm.csv`.replace(/[^A-Za-z0-9.+-]/g, ''), specCSV()));
   $('csvTbl').addEventListener('click', () => download('gamma-roi-table.csv', tableCSV()));
   $('clrTbl').addEventListener('click', () => { rows = []; tableReadout(); drawAna(); });
   $('cAdd').addEventListener('click', addCalPoint);
