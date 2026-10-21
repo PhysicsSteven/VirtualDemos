@@ -144,6 +144,22 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .flag { margin: 0; font-size: 0.86rem; font-weight: 700; border: 1px solid var(--pos); color: var(--pos); border-radius: 6px; padding: 6px 10px; }
 .flag span { display: block; font-weight: 400; color: var(--ink); margin-top: 2px; }
 
+.num { display: flex; align-items: center; gap: 6px; font-size: 0.88rem; min-width: 0; }
+.num span { color: var(--muted); font-size: 0.8rem; }
+.num input { min-width: 0; width: 100%; font: inherit; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.86rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.num input:disabled { opacity: 0.5; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.twrap { overflow-x: auto; }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+table.rows th { text-align: left; font-weight: 700; color: var(--muted); font-size: 0.7rem; padding: 3px 2px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.rows td { padding: 3px 2px; border-bottom: 1px solid var(--grid-strong); vertical-align: middle; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.76rem; white-space: nowrap; }
+table.rows td.n { color: var(--muted); font-size: 0.72rem; }
+table.rows td.b, table.rows th.b { text-align: right; padding-left: 8px; }
+table.rows tr.warn td.n { color: var(--pos); font-weight: 700; }
+table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-space: normal; }
+#tbl.nopred .pred { display: none; }
+:root[data-projector="on"] table.rows td { font-size: 0.6rem; } :root[data-projector="on"] table.rows th { font-size: 0.56rem; }
+.flag.soft { border-color: var(--equi); color: var(--ink); }
 .qlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
 .qlist li { display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 2px 8px; font-size: 0.84rem; padding: 4px 6px; border-radius: 6px; border: 1px solid transparent; cursor: pointer; }
 .qlist li[aria-selected="true"] { border-color: var(--accent); }
@@ -183,7 +199,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   :root[data-projector="on"] .stage { min-height: 440px; }
 }
 @media (max-width: 820px) {
-  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  .chips button, .btn, .seg button, .proj, .num input { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
   html, body { height: auto; }
   .app { height: auto; }
@@ -296,22 +312,40 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="slider-head"><label for="sQ">Selected charge q</label><output id="oQ" class="mono" for="sQ"></output></div>
           <input type="range" id="sQ" min="-5" max="5" step="0.5">
         </div>
+        <div class="row2">
+          <label class="num" for="qX">x<input type="number" id="qX" step="0.01" inputmode="decimal" aria-label="Selected charge x in cm"><span>cm</span></label>
+          <label class="num" for="qY">y<input type="number" id="qY" step="0.01" inputmode="decimal" aria-label="Selected charge y in cm"><span>cm</span></label>
+        </div>
         <ul class="qlist" id="qList" aria-label="Charges, whether each is inside, and the flux each one sends through the surface"></ul>
-        <p class="hint">Each charge's own flux comes from the same numerical surface integral. A charge inside gives q/ε₀ (1 nC gives 112.9 N·m²/C); a charge outside gives 0.</p>
+        <p class="hint" id="qHint">Type an exact position for the selected charge to 0.01 cm; dragging snaps to 0.1 cm. Each charge's own flux comes from the same numerical surface integral.<span id="qPred"> A charge inside gives q/ε₀ (1 nC gives 112.9 N·m²/C); a charge outside gives 0.</span></p>
       </section>
 
       <section data-mode="flux">
         <h2>Gauss's law</h2>
         <dl class="readout">
           <div><dt>Enclosed charge Q<sub>enc</sub></dt><dd id="mQ">—</dd></div>
-          <div><dt>Q<sub>enc</sub>/ε₀</dt><dd id="mG">—</dd></div>
+          <div id="mGrow"><dt>Q<sub>enc</sub>/ε₀</dt><dd id="mG">—</dd></div>
           <div class="wide big"><dt id="mNlab">Numerical ∮E·dA over the 3D surface</dt><dd id="mN">—</dd></div>
           <div><dt>Flux out</dt><dd id="mOut" class="c-out">—</dd></div>
           <div><dt>Flux in</dt><dd id="mIn" class="c-in">—</dd></div>
           <div class="wide"><dt>Field lines crossing the slice: out, in, net</dt><dd id="mL">—</dd></div>
         </dl>
-        <p class="flag" id="onFlag" hidden>A charge sits on the surface.<span>E·dA is not integrable there, so the flux is not defined. Move the charge clearly inside or outside.</span></p>
+        <p class="flag" id="onFlag" role="status" hidden></p>
+        <p class="flag" id="tolFlag" role="status" hidden></p>
         <p class="hint" id="numHint"></p>
+      </section>
+
+      <section data-mode="flux">
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="expTab">Export CSV</button>
+          <button type="button" class="btn" id="clearTab">Clear</button>
+        </div>
+        <label class="check"><input type="checkbox" id="tPred" checked><span>Show predicted flux Q<sub>enc</sub>/ε₀</span></label>
+        <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>Surface</th><th class="b">Q<sub>enc</sub> nC</th><th class="b">∮E·dA</th><th class="b pred">Q<sub>enc</sub>/ε₀</th></tr></thead><tbody></tbody></table></div>
+        <p class="hint" id="capMsg" role="status" hidden></p>
+        <p class="hint">Capture freezes the surface, the charges and the numerical flux in a row (flux in N·m²/C). The CSV holds every row in SI units, with the closest charge distance and the quadrature status.</p>
       </section>
 
       <section data-mode="flux">
@@ -416,7 +450,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const WGK = [0.022935322010529225, 0.063092092629978553, 0.104790010322250184, 0.140653259715525919,
     0.169004726639267903, 0.190350578064785410, 0.204432940075298892, 0.209482141084727828];
   const WG = [0.129484966168869693, 0.279705391489276668, 0.381830050505118945, 0.417959183673469388];
-  const stats = { evals: 0 };
+  // evals counts field evaluations; unmet counts 1D integrals that stopped before meeting their error target
+  const stats = { evals: 0, unmet: 0 };
   // one GK15 panel on [a, b] of f: x → array of m numbers. Error measure: largest |K − G| over the
   // components, except that components 1 and 2 (the outward and inward parts, which have kinks) count 1/1000.
   function gkPanel(f, a, b, m) {
@@ -433,20 +468,27 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (let i = 0; i < m; i++) { K[i] *= h; G[i] *= h; const d = Math.abs(K[i] - G[i]) * (i === 1 || i === 2 ? 1e-3 : 1); if (d > e) e = d; }
     return { a, b, v: K, e };
   }
-  // ∫ f over [bp0, bp_last], split first at the breakpoints, then always bisecting the worst panel
+  // ∫ f over [bp0, bp_last], split first at the breakpoints, then always bisecting the worst panel.
+  // Returns { v, e, ok, panels, stop }: ok is false when the panel budget ran out (stop 'panels') or a panel
+  // could not be split further in floating point (stop 'resolution') before e met the target; each such
+  // integral also adds 1 to stats.unmet, so nested inner integrals are counted too.
   function integrate(f, bps, m, absTol, relTol, maxPanels) {
     const pan = [];
     for (let k = 0; k + 1 < bps.length; k++) if (bps[k + 1] > bps[k]) pan.push(gkPanel(f, bps[k], bps[k + 1], m));
     const sum = () => { const v = new Float64Array(m); let e = 0; for (const p of pan) { for (let i = 0; i < m; i++) v[i] += p.v[i]; e += p.e; } return { v, e }; };
-    let s = sum();
-    while (pan.length < maxPanels && s.e > Math.max(absTol, relTol * Math.abs(s.v[0]))) {
+    const target = (s) => Math.max(absTol, relTol * Math.abs(s.v[0]));
+    let s = sum(), stop = '';
+    while (s.e > target(s)) {
+      if (pan.length >= maxPanels) { stop = 'panels'; break; }
       let w = 0;
       for (let k = 1; k < pan.length; k++) if (pan[k].e > pan[w].e) w = k;
       const p = pan[w], mid = 0.5 * (p.a + p.b);
-      if (!(mid > p.a && mid < p.b)) break;
+      if (!(mid > p.a && mid < p.b)) { stop = 'resolution'; break; }
       pan.splice(w, 1, gkPanel(f, p.a, mid, m), gkPanel(f, mid, p.b, m));
       s = sum();
     }
+    s.ok = !stop; s.stop = stop; s.panels = pan.length;
+    if (stop) stats.unmet++;
     return s;
   }
   function breaks(a, b, extra) {
@@ -470,7 +512,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return out;
   }
   function tolFor(Q) { let s = 0; for (const c of Q) s += Math.abs(c.q); return Math.max(s, 1e-30) / EPS0; }
-  const MAXP = 300;
+  let MAXP = 300;                           // panel budget of each 1D integral
+  const setMaxPanels = (n) => { MAXP = n; };  // for tests only: a small budget forces unmet targets
 
   // flat parallelogram O + s·eu + t·ev (eu ⟂ ev unit vectors), s in [0, Lu], t in [0, Lv], outward normal n
   function rectFlux(Q, O, eu, ev, Lu, Lv, n, tol) {
@@ -499,16 +542,21 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return integrate(inner, [0, 1], m, tol.abs, tol.rel, MAXP);
   }
   function addInto(acc, r) { for (let i = 0; i < acc.v.length; i++) acc.v[i] += r.v[i]; acc.e += r.e; }
+  const mark = () => ({ evals: stats.evals, unmet: stats.unmet });
+  // err is the outer integrals' own error estimate only: it leaves out the inner integrals' errors and
+  // counts the outward and inward parts 1000 times more loosely, so it is not a rigorous bound.
+  // converged is true only when every inner and outer 1D integral met its error target.
   function result(Q, acc, t0) {
     const per = [];
     for (let i = 0; i < Q.length; i++) per.push(acc.v[3 + i]);
-    return { total: acc.v[0], out: acc.v[1], inw: acc.v[2], per, err: acc.e, evals: stats.evals - t0 };
+    const unmet = stats.unmet - t0.unmet;
+    return { total: acc.v[0], out: acc.v[1], inw: acc.v[2], per, err: acc.e, evals: stats.evals - t0.evals, unmet, converged: unmet === 0 };
   }
   function relTol(tol) { return { abs: 3e-9 * tolFor(tol), rel: 3e-10 }; }
 
   // sphere of radius R centered at (cx, cy, 0): u = cos θ about the z axis, φ about z; dA = R² du dφ
   function sphereFlux(Q, cx, cy, R) {
-    const t0 = stats.evals, m = 3 + Q.length, buf = new Float64Array(m), tol = relTol(Q);
+    const t0 = mark(), m = 3 + Q.length, buf = new Float64Array(m), tol = relTol(Q);
     const phis = [];
     for (const c of Q) { let p = Math.atan2(c.y - cy, c.x - cx); if (p < 0) p += 2 * Math.PI; phis.push(p); }
     const us = [0];
@@ -527,7 +575,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   // rectangular box: center (cx, cy, 0), full sizes w, h in the plane and d along z
   function boxFlux(Q, cx, cy, w, h, d) {
-    const t0 = stats.evals, a = w / 2, b = h / 2, z = d / 2, tol = relTol(Q);
+    const t0 = mark(), a = w / 2, b = h / 2, z = d / 2, tol = relTol(Q);
     const tf = { abs: tol.abs / 6, rel: tol.rel };
     const X = [1, 0, 0], Yv = [0, 1, 0], Z = [0, 0, 1];
     const acc = { v: new Float64Array(3 + Q.length), e: 0 };
@@ -542,7 +590,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // cylinder with its axis along x through (cx, cy, 0): length w, radius h/2.
   // curved side: (x, cy + ρ cos φ, ρ sin φ), dA = ρ dx dφ; end caps: disks in polar coordinates, dA = r dr dφ
   function cylFlux(Q, cx, cy, w, h) {
-    const t0 = stats.evals, a = w / 2, rho = h / 2, tol = relTol(Q), m = 3 + Q.length, buf = new Float64Array(m);
+    const t0 = mark(), a = w / 2, rho = h / 2, tol = relTol(Q), m = 3 + Q.length, buf = new Float64Array(m);
     const tf = { abs: tol.abs / 3, rel: tol.rel };
     const acc = { v: new Float64Array(m), e: 0 };
     const phis = [], xs = [];
@@ -567,7 +615,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   // prism: the simple polygon P (counterclockwise, in m) extruded from z = −d/2 to +d/2, with flat end caps
   function prismFlux(Q, P, d, tris) {
-    const t0 = stats.evals, n = P.length, z = d / 2, tol = relTol(Q);
+    const t0 = mark(), n = P.length, z = d / 2, tol = relTol(Q);
     const tf = { abs: tol.abs / (n + 2 * tris.length), rel: tol.rel };
     const acc = { v: new Float64Array(3 + Q.length), e: 0 };
     for (let i = 0; i < n; i++) {
@@ -652,19 +700,35 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   // ---------- symmetry cases (SI) ----------
-  // radial field E_r of a sphere of charge Q, radius R, at r: point charge, uniform ball, or conducting sphere
-  function enclosedSphere(kind, Q, R, r) {
+  // radial field E_r of a sphere of charge Q, radius R, at r: point charge, uniform ball, or conducting sphere.
+  // The conductor's charge is an ideal zero thickness layer at r = R, so there Q_enc and E jump and have no
+  // single value: side = −1 or +1 asks for the limit from inside or outside; without a side the value is NaN.
+  const onShell = (kind, R, r) => kind === 'shell' && Math.abs(r - R) <= 1e-12 * R;
+  function enclosedSphere(kind, Q, R, r, side) {
     if (kind === 'point') return Q;
     if (kind === 'ball') return r >= R ? Q : Q * Math.pow(r / R, 3);
+    if (onShell(kind, R, r)) return side > 0 ? Q : side < 0 ? 0 : NaN;
     return r > R ? Q : 0;                         // conducting: all of Q sits on the outer surface
   }
-  const Esphere = (kind, Q, R, r) => enclosedSphere(kind, Q, R, r) / (4 * Math.PI * EPS0 * r * r);
+  function Esphere(kind, Q, R, r, side) {
+    if (r === 0 && kind !== 'point') return 0;    // ball: E = kQr/R³ → 0; conductor: E = 0 inside
+    return enclosedSphere(kind, Q, R, r, side) / (4 * Math.PI * EPS0 * r * r);
+  }
+  // both one sided limits; they differ only on the conductor's surface, where E jumps by σ/ε₀ = kQ/R²
+  const EsphereLimits = (kind, Q, R, r) => ({ inside: Esphere(kind, Q, R, r, -1), outside: Esphere(kind, Q, R, r, 1) });
   const Eline = (lam, r) => lam / (2 * Math.PI * EPS0 * r);
   const Eplane = (sig) => sig / (2 * EPS0);
+
+  // ---------- charges near the surface ----------
+  // Only a point charge exactly on the surface (distance 0, to rounding) makes the flux undefined. Closer than
+  // EXCL_CM the integrand's peak is too narrow to integrate quickly, so the demo skips the numerical integral:
+  // a numerical exclusion zone, not a physical one.
+  const EXCL_CM = 0.03, ON_CM = 1e-9;
+  const boundaryClass = (dCm) => (dCm <= ON_CM ? 'on' : dCm < EXCL_CM ? 'zone' : 'clear');
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.GL = { EPS0, KC, sphereFlux, boxFlux, cylFlux, prismFlux, triangulate, signedArea, isSimple, spline, pointInPoly, enclosedSphere, Esphere, Eline, Eplane, stats };
+    globalThis.GL = { EPS0, KC, sphereFlux, boxFlux, cylFlux, prismFlux, triangulate, signedArea, isSimple, spline, pointInPoly, enclosedSphere, Esphere, EsphereLimits, onShell, Eline, Eplane, stats, integrate, setMaxPanels, EXCL_CM, boundaryClass };
     return;
   }
 
@@ -1011,17 +1075,25 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   // ---------- numerical flux through the 3D surface ----------
-  let num = null, numDirty = true, numLast = 0, numMs = 0, onSurface = false;
+  // onSurface: the numerical integral is skipped, because a nonzero charge is on the surface (bnd 'on')
+  // or inside the 0.03 cm numerical exclusion zone (bnd 'zone'); dMin is the closest such distance (cm)
+  let num = null, numDirty = true, numLast = 0, numMs = 0, onSurface = false, bnd = 'clear', dMin = Infinity;
   function markNum() { numDirty = true; }
   function enclosed() {
     const sh = shape();
-    let Q = 0, scale = 0; onSurface = false;
+    let Q = 0, scale = 0; onSurface = false; bnd = 'clear'; dMin = Infinity;
     for (const c of F.charges) {
       scale += Math.abs(c.q);
-      if (c.q && sh.dist(c.x, c.y) < 0.03) onSurface = true;
+      c.bnd = 'clear';
+      if (c.q) {
+        const d = sh.dist(c.x, c.y);
+        dMin = Math.min(dMin, d); c.bnd = boundaryClass(d);
+        if (c.bnd === 'on') bnd = 'on'; else if (c.bnd === 'zone' && bnd === 'clear') bnd = 'zone';
+      }
       c.inside = sh.inside(c.x, c.y);
       if (c.inside) Q += c.q;
     }
+    onSurface = bnd !== 'clear';
     return { Q, scale: scale * NC / EPS0 };
   }
   function computeNum() {
@@ -1029,7 +1101,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     enclosed();
     const Q = F.charges.map((c) => ({ x: c.x * CM, y: c.y * CM, z: 0, q: c.q * NC }));
     if (onSurface || !F.charges.some((c) => c.q)) {
-      num = onSurface ? null : { total: 0, out: 0, inw: 0, per: F.charges.map(() => 0), evals: 0 };
+      num = onSurface ? null : { total: 0, out: 0, inw: 0, per: F.charges.map(() => 0), err: 0, evals: 0, unmet: 0, converged: true };
     } else if (F.surf === 'sphere') num = sphereFlux(Q, F.sph.x * CM, F.sph.y * CM, F.sph.R * CM);
     else if (F.surf === 'box') num = boxFlux(Q, F.rect.x * CM, F.rect.y * CM, F.rect.w * CM, F.rect.h * CM, F.depth * CM);
     else if (F.surf === 'cyl') num = cylFlux(Q, F.rect.x * CM, F.rect.y * CM, F.rect.w * CM, F.rect.h * CM);
@@ -1199,12 +1271,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   // ---------- drawing: symmetry ----------
-  function symE(r) {   // signed field component (N/C) at distance r (cm) for the current case
-    if (Ysym.kind === 'sphere') return Esphere(Ysym.sk, Ysym.Q * NC, Ysym.R * CM, r * CM);
+  function symE(r, side) {   // signed field component (N/C) at distance r (cm); side picks a one sided limit
+    if (Ysym.kind === 'sphere') return Esphere(Ysym.sk, Ysym.Q * NC, Ysym.R * CM, r * CM, side);
     if (Ysym.kind === 'line') return Eline(Ysym.lam * NC, r * CM);
     return Eplane(Ysym.sig * NC) * Math.sign(r);
   }
   const symR = () => (Ysym.kind === 'sphere' ? Ysym.r : Ysym.kind === 'line' ? Ysym.rl : Ysym.h);
+  // the Gaussian sphere lies on the conductor's charged surface: E and Q_enc jump there and have no single value
+  const symOnShell = () => Ysym.kind === 'sphere' && onShell(Ysym.sk, Ysym.R * CM, Ysym.r * CM);
+  // E used for drawing arrows: on the charged surface, the limit from outside (from inside it is 0)
+  const symEdraw = (r) => (symOnShell() ? symE(r, 1) : symE(r));
+  // smallest Gaussian radius: r = 0 is allowed for the ball and the conductor, where E → 0, not for a point charge
+  const symRmin = () => (Ysym.kind === 'sphere' && Ysym.sk !== 'point' ? 0 : RANGES[Ysym.kind].r[0]);
+  const qEncTxt = (dec) => { const { sk, Q, R, r } = Ysym; return symOnShell() ? `Q_enc: 0 inside, ${fq(Q, dec)} outside` : `Q_enc = ${fq(enclosedSphere(sk, Q, R, r), dec)}`; };
   const symL = () => (Ysym.kind === 'line' ? Ysym.L : Ysym.a);
   function plotRange() {
     const k = Ysym.kind;
@@ -1227,7 +1306,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // arrow length is proportional to E: |E| = Eref gives 2.2 cm; capped close to a point or line charge
     const Eref = Math.abs(k === 'sphere' ? (Ysym.sk === 'point' ? symE(3) : KC * Ysym.Q * NC / Math.pow(Ysym.R * CM, 2)) : k === 'line' ? symE(3) : symE(1)) || 1;
     const Lmax = 2.2 * s;                           // arrow length for |E| = Eref
-    const r = symR(), E = symE(r), sgnQ = Math.sign(k === 'sphere' ? Ysym.Q : k === 'line' ? Ysym.lam : Ysym.sig) || 1;
+    const r = symR(), E = symEdraw(r), sgnQ = Math.sign(k === 'sphere' ? Ysym.Q : k === 'line' ? Ysym.lam : Ysym.sig) || 1;
     const fcol = E >= 0 ? T.fout : T.fin, qcol = sgnQ > 0 ? T.pos : T.neg;
     const alen = (e) => Math.min(Lmax * 1.6, Math.abs(e) / Eref * Lmax);
     const fs = fsz(12.5);
@@ -1283,7 +1362,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       // labels
       label(ctx, `Gaussian sphere r = ${fcm(r)}`, gx + 14 * ps, gy + fs + 10 * ps, { size: fs, color: T.ink });
       if (sk !== 'point') { const gb = 2.45; label(ctx, `R = ${fcm(R)}`, cx + R * s * Math.cos(gb) - 14 * ps, cy - R * s * Math.sin(gb) - 12 * ps, { size: fs, align: 'right', color: qcol }); }
-      label(ctx, `Q_enc = ${fq(enclosedSphere(sk, Ysym.Q, R, r), 2)}`, cx, cy + Math.max(30 * ps, Math.min(r, R || r) * s * 0.5), { size: fs, align: 'center', color: T.ink });
+      if (r * s > 40 * ps) label(ctx, qEncTxt(2), cx, cy + Math.max(30 * ps, Math.min(r, R || r) * s * 0.5), { size: fs, align: 'center', color: T.ink });
     } else if (k === 'line') {
       const L = Ysym.L, rr = r, ell = 0.3;
       // field lines perpendicular to the line
@@ -1357,7 +1436,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       label(ctx, `σ = ${minus(String(Ysym.sig))} nC/m²`, cx + 10 * ps, 22 * ps, { size: fs, color: qcol });
       label(ctx, 'side: E runs along it, no flux', (cx + xr) / 2, yb + 2 * fs + 24 * ps, { size: fsz(11), weight: 400, align: 'center', color: T.muted });
     }
-    label(ctx, `E = ${fmtSI(Math.abs(E), 'N/C', 3)} ${E > 0 ? 'outward' : E < 0 ? 'inward' : ''} on the Gaussian surface`, 12, H - 12, { size: fsz(12), color: fcol });
+    label(ctx, symOnShell() ? `On the charged surface E jumps from 0 to ${fmtSI(Math.abs(E), 'N/C', 3)} ${E > 0 ? 'outward' : E < 0 ? 'inward' : ''}`
+      : k === 'sphere' && r === 0 ? 'r = 0: the Gaussian sphere shrinks to the center, where E = 0' : `E = ${fmtSI(Math.abs(E), 'N/C', 3)} ${E > 0 ? 'outward' : E < 0 ? 'inward' : ''} on the Gaussian surface`, 12, H - 12, { size: fsz(12), color: fcol });
   }
 
   // ---------- E against distance ----------
@@ -1406,21 +1486,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const N = Math.max(200, Math.round(R - L));
     for (let i = 0; i <= N; i++) {
       let x = pr.x0 + (pr.x1 - pr.x0) * i / N;
-      if (k !== 'plane' && x < 0.02) x = 0.02;
-      const v = k === 'plane' && Math.abs(x) < 1e-9 ? 0 : symE(x), py = clamp(Yv(v), top - 50, bot + 50);
+      if (k !== 'plane' && x < 0.02 && symRmin() > 0) x = 0.02;
+      const v = k === 'plane' && Math.abs(x) < 1e-9 ? 0 : symE(x, -1), py = clamp(Yv(v), top - 50, bot + 50);
       // vertical jumps (conductor surface, sheet) drawn as vertical segments
       if (first) { ctx.moveTo(Xp2(x), py); first = false; } else ctx.lineTo(Xp2(x), py);
       prevV = v;
     }
     ctx.stroke();
     // marker at the Gaussian surface
-    const r = symR(), E = symE(r), mx = Xp2(r), my = clamp(Yv(E), top, bot);
+    const r = symR(), surf = symOnShell(), E = symEdraw(r), mx = Xp2(r), my = clamp(Yv(E), top, bot);
     ctx.strokeStyle = T.accent; ctx.lineWidth = (pDrag || pHover ? 2.4 : 1.6) * ps; ctx.beginPath(); ctx.moveTo(mx, top); ctx.lineTo(mx, bot); ctx.stroke();
     if (k === 'plane') { const gx = Xp2(-r); ctx.globalAlpha = 0.45; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(gx, top); ctx.lineTo(gx, bot); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
-    ctx.fillStyle = E >= 0 ? T.fout : T.fin; ctx.beginPath(); ctx.arc(mx, my, 5 * ps, 0, 2 * Math.PI); ctx.fill();
+    // on the charged surface: open dots at both one sided limits, E has no value between them
+    if (surf) for (const y of [clamp(Yv(0), top, bot), my]) { ctx.fillStyle = T.canvas; ctx.strokeStyle = E >= 0 ? T.fout : T.fin; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.arc(mx, y, 5 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); }
+    else { ctx.fillStyle = E >= 0 ? T.fout : T.fin; ctx.beginPath(); ctx.arc(mx, my, 5 * ps, 0, 2 * Math.PI); ctx.fill(); }
     ctx.restore();
     grip(ctx, mx, bot, pDrag || pHover, 'h');
-    const txt = `${k === 'plane' ? 'h' : 'r'} = ${fcm(r)}, E = ${fmtSI(E, 'N/C', 3)}`;
+    const txt = surf ? `r = R: E jumps from 0 to ${fmtSI(E, 'N/C', 3)}` : `${k === 'plane' ? 'h' : 'r'} = ${fcm(r)}, E = ${fmtSI(E, 'N/C', 3)}`;
     const right = mx > (L + R) / 2;
     label(ctx, txt, right ? mx - 10 * ps : mx + 10 * ps, Math.max(top + 18 * ps, Math.min(bot - 30 * ps, my - 10 * ps)), { size: 11.5 * ps, dims: dims.p, fam: T.mono, align: right ? 'right' : 'left', color: T.ink });
     if (k === 'sphere' && Ysym.sk !== 'point') label(ctx, 'R', Xp2(Ysym.R) - 4 * ps, top + 14 * ps, { align: 'right', size: 11 * ps, dims: dims.p, color: T.muted });
@@ -1437,25 +1519,39 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function updateReadouts() {
     if (mode === 'flux') fluxReadouts(); else symReadouts();
   }
+  const fcm2 = (v) => minus(String(+v.toFixed(2)));   // a position to 0.01 cm, without trailing zeros
   function fluxReadouts() {
-    const enc = enclosed(), G = enc.Q * NC / EPS0, scale = Math.max(enc.scale, 1e-30);
-    const nIn = F.charges.filter((c) => c.inside).length;
-    $('mQ').innerHTML = `${fq(enc.Q)}<span class="ok"> ${nIn} of ${F.charges.length} inside</span>`;
-    $('mG').textContent = fflux(G);
-    $('onFlag').hidden = !onSurface;
+    const enc = enclosed(), G = enc.Q * NC / EPS0, scale = Math.max(enc.scale, 1e-30), pred = $('tPred').checked;
+    const nIn = F.charges.filter((c) => c.inside).length, nOn = F.charges.filter((c) => c.bnd === 'on').length;
+    $('mQ').innerHTML = `${fq(enc.Q)}<span class="ok"> ${nIn} of ${F.charges.length} inside${nOn ? `, ${nOn} on the surface` : ''}</span>`;
+    $('mG').textContent = bnd === 'on' ? 'undefined' : fflux(G);
+    $('mGrow').hidden = !pred; $('qPred').hidden = !pred;
+    $('mQ').parentElement.classList.toggle('wide', !pred);
+    // a charge on the surface, or in the numerical exclusion zone
+    const flag = $('onFlag');
+    flag.hidden = !onSurface;
+    if (bnd === 'on') flag.innerHTML = 'A charge is on the surface.<span>For a point charge exactly on the surface, E·dA diverges at that point and the charge is neither inside nor outside, so the flux has no value. Move the charge off the surface.</span>';
+    else if (bnd === 'zone') flag.innerHTML = `A charge is ${+dMin.toFixed(3)} cm from the surface, inside the ${EXCL_CM} cm numerical exclusion zone.<span>The flux is still Q<sub>enc</sub>/ε₀ here; only a charge exactly on the surface makes it undefined. This close, E·n has a peak too narrow for the demo to integrate quickly, so it skips the numerical integral. Move the charge at least ${EXCL_CM} cm from the surface.</span>`;
+    flag.classList.toggle('soft', bnd === 'zone');
     const shapeName = { sphere: 'sphere', box: 'box', cyl: 'cylinder', free: 'prism' }[F.surf];
     $('mNlab').textContent = `Numerical ∮E·dA over the 3D ${shapeName}`;
     if (num && !onSurface) {
       const diff = Math.abs(num.total - G);
-      $('mN').innerHTML = `${fluxOrZero(num.total, scale)}<span class="ok" style="display:block">${diff === 0 ? 'agrees with Q<sub>enc</sub>/ε₀ to every digit of double precision' : `differs from Q<sub>enc</sub>/ε₀ by ${sci(diff, 1)} N·m²/C${G ? `, a fraction ${sci(diff / Math.abs(G), 1)}` : ''}`}</span>`;
+      $('mN').innerHTML = `${fluxOrZero(num.total, scale)}${pred ? `<span class="ok" style="display:block">${diff === 0 ? 'agrees with Q<sub>enc</sub>/ε₀ to every digit of double precision' : `differs from Q<sub>enc</sub>/ε₀ by ${sci(diff, 1)} N·m²/C${G ? `, a fraction ${sci(diff / Math.abs(G), 1)}` : ''}`}</span>` : ''}`;
       $('mOut').textContent = fflux(num.out);
       $('mIn').textContent = fflux(num.inw);
-    } else { $('mN').textContent = '—'; $('mOut').textContent = '—'; $('mIn').textContent = '—'; }
+    } else { $('mN').textContent = bnd === 'zone' ? 'not computed' : '—'; $('mOut').textContent = '—'; $('mIn').textContent = '—'; }
+    // quadrature that stopped short of its error target
+    const tf = $('tolFlag'), bad = !!(num && !onSurface && !num.converged);
+    tf.hidden = !bad;
+    if (bad) tf.innerHTML = `Quadrature tolerance not met.<span>${num.unmet.toLocaleString('en-US')} of the one dimensional integrals ran out of adaptive panels before reaching their error target, so the last digits of the numerical flux may be wrong. Move the charges a little farther from the surface.</span>`;
     const net = lineCount.out - lineCount.inn, expect = Math.round(enc.Q * F.density);
     $('mL').innerHTML = `${lineCount.out} out, ${lineCount.inn} in, net ${minus(String(net))}<span class="ok" style="display:block">${F.density} per nC × Q<sub>enc</sub> = ${minus(String(expect))}${net === expect ? ', a match' : '. In a slice a negative charge can collect more lines than its share, so the count is only a picture of the flux'}</span>`;
-    $('numHint').innerHTML = num && !onSurface ? `The surface integral is evaluated with adaptive Gauss–Kronrod quadrature (${num.evals.toLocaleString('en-US')} field evaluations, ${numMs.toFixed(0)} ms) using the full 3D field of every charge, with no use of Gauss's law. ${F.surf === 'sphere' ? 'The sphere is covered in latitude and longitude, ' : F.surf === 'free' ? 'Each flat side panel and the triangulated top and bottom faces are integrated separately, ' : 'Each face is integrated separately, '}and it refines wherever E·n changes fast, near a charge close to the surface.` : '';
+    $('numHint').innerHTML = num && !onSurface ? `The surface integral is evaluated with adaptive Gauss–Kronrod quadrature (${num.evals.toLocaleString('en-US')} field evaluations, ${numMs.toFixed(0)} ms) using the full 3D field of every charge, with no use of Gauss's law. ${F.surf === 'sphere' ? 'The sphere is covered in latitude and longitude, ' : F.surf === 'free' ? 'Each flat side panel and the triangulated top and bottom faces are integrated separately, ' : 'Each face is integrated separately, '}and it refines wherever E·n changes fast, near a charge close to the surface. ${num.converged ? 'Every one dimensional integral met its error target.' : ''}` : '';
     // headline
-    $('headline').innerHTML = `Q<sub>enc</sub> = ${fq(enc.Q)} · Φ<sub>E</sub> = ${onSurface ? 'undefined' : fflux(G)}<small>numerical ∮E·dA = ${num && !onSurface ? (Math.abs(num.total) < 1e-9 * scale ? '0.000 N·m²/C' : fflux(num.total)) : '—'}</small>`;
+    const numTxt = num && !onSurface ? (Math.abs(num.total) < 1e-9 * scale ? '0.000 N·m²/C' : fflux(num.total)) : bnd === 'zone' ? 'not computed in the exclusion zone' : '—';
+    $('headline').innerHTML = bnd === 'on' ? `Φ<sub>E</sub> undefined<small>a charge is on the surface</small>`
+      : `Q<sub>enc</sub> = ${fq(enc.Q)}${pred ? ` · Φ<sub>E</sub> = ${fflux(G)}` : ''}<small>numerical ∮E·dA = ${numTxt}</small>`;
     // charge list
     const key = F.charges.map((c) => c.id).join(',');
     const ul = $('qList');
@@ -1471,7 +1567,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const i = num && num.ids ? num.ids.indexOf(c.id) : -1;
       const f = i >= 0 && !onSurface ? num.per[i] : null;
       li.querySelector('.qf').innerHTML = f === null ? '—' : Math.abs(f) < 1e-9 * scale ? '0' : minus(sigStr(f, 4));
-      li.querySelector('.qs').textContent = `at (${minus(c.x.toFixed(1))}, ${minus(c.y.toFixed(1))}) cm, ${c.inside ? 'inside' : 'outside'}, q/ε₀ = ${minus(sigStr(c.q * NC / EPS0, 4))}`;
+      const where = c.bnd === 'on' ? 'on the surface' : `${c.inside ? 'inside' : 'outside'}${c.bnd === 'zone' ? ', in the exclusion zone' : ''}`;
+      li.querySelector('.qs').textContent = `at (${fcm2(c.x)}, ${fcm2(c.y)}) cm, ${where}${pred ? `, q/ε₀ = ${minus(sigStr(c.q * NC / EPS0, 4))}` : ''}`;
     }
     syncFluxRail();
   }
@@ -1484,13 +1581,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('lW').textContent = F.surf === 'cyl' ? 'Length (along x)' : 'Width';
     $('lH').textContent = F.surf === 'cyl' ? 'Diameter' : 'Height';
     const c = F.sel && F.sel.kind === 'q' ? qById(F.sel.id) : null;
+    for (const [id, v] of [['qX', c && c.x], ['qY', c && c.y]]) { const el = $(id); el.disabled = !c; if (document.activeElement !== el) el.value = c ? String(+v.toFixed(2)) : ''; }
+    if (c) { const [a, b] = qBounds(); $('qX').min = a[0]; $('qX').max = a[1]; $('qY').min = b[0]; $('qY').max = b[1]; }
     $('sQ').disabled = !c; $('delQ').disabled = !c && !(F.sel && F.sel.kind === 'cp' && F.free.length > 4);
     if (c) { sync('sQ', c.q); $('oQ').textContent = fq(c.q); } else $('oQ').textContent = 'none selected';
     $('addPos').disabled = $('addNeg').disabled = F.charges.length >= 8;
   }
   function stepsHTML(items) { return items.map(([b, t, eq]) => `<li><b>${b}</b>${t}${eq ? `<span class="eq">${eq}</span>` : ''}</li>`).join(''); }
   function symReadouts() {
-    const k = Ysym.kind, r = symR(), rm = r * CM, E = symE(r);
+    const k = Ysym.kind, r = symR(), rm = r * CM, surf = symOnShell(), E = symEdraw(r);
     const eDir = E > 0 ? 'pointing outward' : E < 0 ? 'pointing inward' : '';
     const eDirPlane = E > 0 ? 'pointing away from the sheet on both sides' : E < 0 ? 'pointing toward the sheet on both sides' : '';
     let items = [], Qenc, area;
@@ -1505,13 +1604,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         : ['Charge inside', 'The charge is spread evenly through the volume, so the Gaussian sphere holds the fraction (r/R)³ of it.', `Q<sub>enc</sub> = Q(r/R)³ = (${fq(Q, 1)})(${r.toFixed(1)}/${R.toFixed(1)})³ = ${fq(Qenc, 3)}`];
       else enc = r > R ? ['Charge inside', 'The Gaussian sphere surrounds the conductor and holds all of its charge.', `Q<sub>enc</sub> = Q = ${fq(Q, 1)}`]
         : ['Charge inside', 'In a conductor at rest E = 0 inside the metal, so all the charge sits on the outer surface. A Gaussian sphere inside holds none of it.', 'Q<sub>enc</sub> = 0'];
+      if (surf) enc = ['Charge inside', 'The Gaussian sphere lies on the charged surface itself. The ideal surface charge has no thickness, so it is neither inside nor outside: Q<sub>enc</sub> has no single value here, only its two limits.', `just inside: Q<sub>enc</sub> = 0<br>just outside: Q<sub>enc</sub> = Q = ${fq(Q, 1)}`];
       items.push(enc);
+      if (surf) {
+        items.push(['Apply Gauss\'s law on each side', 'Use a Gaussian sphere just inside and one just outside the surface.', `just inside: E = 0<br>just outside: E = Q/(4πε₀R²) = (${sci(Q * NC, 3)} C)/(4π · ${sci(EPS0, 4)} · (${sigStr(rm, 3)} m)²)`]);
+        items.push(['Result', 'E jumps across the charged surface by σ/ε₀ = kQ/R², and on the ideal surface itself it has no value. A real metal surface has a finite thickness, through which E rises smoothly.', `<span class="res">E jumps from 0 to ${fmtSI(Math.abs(E), 'N/C', 4)}${eDir ? ', ' + eDir : ''}</span><br>Φ jumps from 0 to Q/ε₀ = ${fflux(Q * NC / EPS0)}`]);
+        Qenc = Q;
+      } else if (r === 0) {
+        items.push(['At the center', 'At r = 0 the Gaussian sphere shrinks to a point, with no area and no charge inside, so Gauss\'s law reads 0 = 0 and gives E through a limit instead. Approaching the center E goes to 0 (for the ball E = kQr/R³), and by symmetry E at the center can point in no direction, so E = 0.', 'E = lim<sub>r→0</sub> Q<sub>enc</sub>/(4πε₀r²) = 0']);
+        items.push(['Result', 'The field vanishes at the center.', `<span class="res">E = 0 N/C</span><br>Φ = Q<sub>enc</sub>/ε₀ = 0`]);
+      } else {
       items.push(['Apply Gauss\'s law', 'Set the flux equal to Q<sub>enc</sub>/ε₀ and solve for E.', `E·4πr² = Q<sub>enc</sub>/ε₀  →  E = Q<sub>enc</sub>/(4πε₀r²)<br>= (${sci(Qenc * NC, 3)} C)/(4π · ${sci(EPS0, 4)} · (${sigStr(rm, 3)} m)²)`]);
       let alt = '';
       if (sk === 'ball' && r < R) alt = `Same as kQr/R³: inside, E grows in proportion to r.`;
       else if (sk === 'shell' && r <= R) alt = 'Inside the conductor and its cavity the field is zero, whatever the charge on it.';
       else alt = 'Same as kQ/r², the field of a point charge Q at the center.';
       items.push(['Result', alt, `<span class="res">E = ${fmtSI(Math.abs(E), 'N/C', 4)}${eDir ? ', ' + eDir : ''}</span><br>Φ = Q<sub>enc</sub>/ε₀ = ${fflux(Qenc * NC / EPS0)}`]);
+      }
     } else if (k === 'line') {
       const { lam, L } = Ysym, Lm = L * CM; Qenc = lam * Lm; area = 2 * Math.PI * rm * Lm;
       items.push(['Use the symmetry', `An infinite straight line looks the same from every point along it and from every direction around it. So E points straight away from (or toward) the line and depends only on the distance r. Choose a cylinder of radius r = ${fcm(r)} and length L = ${fcm(L)} around the line.`]);
@@ -1528,7 +1637,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       items.push(['Result', 'The field of an infinite sheet does not weaken with distance. Real sheets are finite, so this holds where you are close compared with the sheet\'s size.', `<span class="res">E = ${fmtSI(Math.abs(E), 'N/C', 4)}, ${eDirPlane}</span><br>Φ = Q<sub>enc</sub>/ε₀ = ${fflux(Qenc * NC / EPS0)}`]);
     }
     $('steps').innerHTML = stepsHTML(items);
-    $('headline').innerHTML = `Q<sub>enc</sub> = ${fq(Qenc, 3)} · Φ<sub>E</sub> = ${fflux(Qenc * NC / EPS0)}<small>E = ${fmtSI(E, 'N/C', 3)} at ${k === 'plane' ? 'h' : 'r'} = ${fcm(r)}</small>`;
+    $('headline').innerHTML = surf ? `Q<sub>enc</sub> jumps from 0 to ${fq(Qenc, 3)}<small>E jumps from 0 to ${fmtSI(E, 'N/C', 3)} at r = R = ${fcm(r)}</small>`
+      : `Q<sub>enc</sub> = ${fq(Qenc, 3)} · Φ<sub>E</sub> = ${fflux(Qenc * NC / EPS0)}<small>E = ${fmtSI(E, 'N/C', 3)} at ${k === 'plane' ? 'h' : 'r'} = ${fcm(r)}</small>`;
     syncSymRail();
   }
   function syncSymRail() {
@@ -1538,7 +1648,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const b of document.querySelectorAll('#symSeg button')) b.setAttribute('aria-pressed', String(b.dataset.k === k));
     for (const b of document.querySelectorAll('#sphSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === Ysym.sk));
     const rr = RANGES[k];
-    $('yr').min = rr.r[0]; $('yr').max = rr.r[1];
+    $('yr').min = symRmin(); $('yr').max = rr.r[1];
     if (rr.L) { $('yLen').min = rr.L[0]; $('yLen').max = rr.L[1]; }
     $('lyr').textContent = k === 'plane' ? 'Cap distance h' : 'Gaussian radius r';
     $('lyLen').textContent = k === 'plane' ? 'Cap radius a' : 'Cylinder length L';
@@ -1558,7 +1668,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const inView = (x, y, m) => [clamp(x, view.x0 + m, view.x1 - m), clamp(y, view.y0 + m, view.y1 - m)];
   function setSym(key, v) {
     const k = Ysym.kind, rr = RANGES[k];
-    if (key === 'r') { v = clamp(snap(v, 0.1), rr.r[0], rr.r[1]); if (k === 'sphere') Ysym.r = v; else if (k === 'line') Ysym.rl = v; else Ysym.h = v; }
+    if (key === 'r') { v = clamp(snap(v, 0.1), symRmin(), rr.r[1]); if (k === 'sphere') Ysym.r = v; else if (k === 'line') Ysym.rl = v; else Ysym.h = v; }
     else if (key === 'L') { v = clamp(snap(v, 0.1), rr.L[0], rr.L[1]); if (k === 'line') Ysym.L = v; else Ysym.a = v; }
     else if (key === 'R') Ysym.R = clamp(snap(v, 0.1), 1, 8);
     updateReadouts();
@@ -1587,6 +1697,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     hoverId = null; drag = null;
     requestAnimationFrame(resize);
     setView(); updateReadouts();
+  }
+  function leavePreset() {   // the setup no longer matches a preset: say so instead of keeping its hint
+    if (!preset) return; preset = null;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', 'false');
+    $('presetHint').textContent = 'Your own setup. Pick a setup to return to a known one.';
   }
   function applyPreset(name) {
     preset = name;
@@ -1724,6 +1839,79 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('addNeg').addEventListener('click', () => addCharge(-1));
   $('delQ').addEventListener('click', removeSel);
   $('sQ').addEventListener('input', (e) => { const c = F.sel && F.sel.kind === 'q' && qById(F.sel.id); if (c) { c.q = +e.target.value; chargesChanged(); } });
+  // exact position of the selected charge, to 0.01 cm, kept inside the drawing like a drag
+  function qBounds() { return [[+(view.x0 + 0.3).toFixed(2), +(view.x1 - 0.3).toFixed(2)], [+(view.y0 + 0.3).toFixed(2), +(view.y1 - 0.3).toFixed(2)]]; }
+  for (const [id, key] of [['qX', 'x'], ['qY', 'y']]) $(id).addEventListener('change', (e) => {
+    const c = F.sel && F.sel.kind === 'q' && qById(F.sel.id), v = parseFloat(e.target.value);
+    if (c && isFinite(v)) {
+      userPause(); F.motion = null;
+      const [bx, by] = qBounds(), b = key === 'x' ? bx : by;
+      c[key] = clamp(Math.round(v * 100) / 100, b[0], b[1]);
+      chargesChanged();
+    }
+    e.target.value = c ? String(+c[key].toFixed(2)) : '';
+  });
+
+  // ---------- readings: frozen snapshots of the surface, the charges and the numerical flux ----------
+  const rows = [];
+  const capStatus = (msg) => { const el = $('capMsg'); el.textContent = msg; el.hidden = !msg; };
+  const surfName = { sphere: 'sphere', box: 'box', cyl: 'cylinder', free: 'freeform' };
+  function capture() {
+    userPause();
+    if (numDirty || !num) computeNum();
+    const enc = enclosed();
+    if (onSurface || !num) {
+      capStatus(bnd === 'on' ? 'Not captured: a charge is on the surface, where the flux has no value.' : `Not captured: a charge is inside the ${EXCL_CM} cm exclusion zone, so there is no numerical flux to record.`);
+      return;
+    }
+    const geo = { cx: null, cy: null, R: null, w: null, h: null, d: null, cp: null };
+    if (F.surf === 'sphere') Object.assign(geo, { cx: F.sph.x, cy: F.sph.y, R: F.sph.R });
+    else if (F.surf === 'box') Object.assign(geo, { cx: F.rect.x, cy: F.rect.y, w: F.rect.w, h: F.rect.h, d: F.depth });
+    else if (F.surf === 'cyl') Object.assign(geo, { cx: F.rect.x, cy: F.rect.y, w: F.rect.w, R: F.rect.h / 2 });
+    else { const c = shape().center; Object.assign(geo, { cx: c[0], cy: c[1], d: F.depth, cp: F.free.map((p) => p.slice()) }); }
+    rows.push({ surf: F.surf, geo, charges: F.charges.map((c) => ({ q: c.q, x: c.x, y: c.y })), Qenc: enc.Q, dMin,
+      total: num.total, out: num.out, inw: num.inw, err: num.err, evals: num.evals, unmet: num.unmet, converged: num.converged, ms: numMs });
+    capStatus(`Captured reading ${rows.length}.${num.converged ? '' : ' Its quadrature did not meet the tolerance (marked !).'}`);
+    renderRows();
+  }
+  function renderRows() {
+    const pred = $('tPred').checked, tb = $('tbl').querySelector('tbody');
+    $('tbl').classList.toggle('nopred', !pred);
+    tb.innerHTML = rows.length ? rows.map((r, i) => `<tr${r.converged ? '' : ' class="warn" title="Quadrature tolerance not met"'}><td class="n">${i + 1}${r.converged ? '' : '!'}</td><td>${surfName[r.surf]}</td><td class="b">${minus(r.Qenc.toFixed(2))}</td><td class="b">${minus(sigStr(r.total, 7))}</td><td class="b pred">${minus(sigStr(r.Qenc * NC / EPS0, 7))}</td></tr>`).join('')
+      : '<tr class="empty"><td colspan="5">No readings yet</td></tr>';
+  }
+  function csvRows() {
+    const pred = $('tPred').checked, m = (v) => (v === null || v === undefined ? '' : String(+(v * CM).toPrecision(12)));
+    const L = ['# Gauss\'s Law: numerical flux readings (VirtualDemos, demos/gauss-law.html)',
+      '# Units SI. Point charges in the plane z = 0. epsilon_0 = 8.8541878188e-12 F/m (CODATA 2022).',
+      '# Geometry: sphere uses center and radius_m; box uses center, width_x_m, height_y_m, depth_z_m; cylinder (axis along x) uses center, width_x_m as its length, and radius_m; freeform is the closed centripetal Catmull-Rom spline through its control points (12 samples per span) extruded over depth_z_m, center = mean of the control points.',
+      `# Quadrature: nested adaptive Gauss-Kronrod (7, 15) rules; overall error target about max(3e-9 sum|q|/eps0, 3e-10 |flux|), shared among the faces, inner integrals 5 to 10 times tighter; at most ${MAXP} panels per one dimensional integral.`,
+      '# tolerance_met = no: at least one one dimensional integral stopped before reaching its error target (unmet_1D_integrals counts them).',
+      '# outer_error_estimate: Kronrod minus Gauss of the outer integrals only, without the inner integrals\' errors; not a rigorous bound.',
+      `# Numerical exclusion zone: no numerical flux when a nonzero charge is closer than ${EXCL_CM * CM} m to the surface.`,
+      ...(pred ? [] : ['# Predicted flux columns left out: Show predicted flux was off at export.']),
+      ['row', 'surface', 'center_x_m', 'center_y_m', 'radius_m', 'width_x_m', 'height_y_m', 'depth_z_m', 'freeform_control_points_xy_m', 'charges_q_C_x_m_y_m', 'Q_enc_C',
+        'closest_charge_to_surface_m', 'flux_numerical_N_m2_per_C', 'flux_out_N_m2_per_C', 'flux_in_N_m2_per_C', ...(pred ? ['flux_predicted_Q_enc_over_eps0_N_m2_per_C', 'residual_N_m2_per_C'] : []),
+        'field_evaluations', 'unmet_1D_integrals', 'tolerance_met', 'outer_error_estimate_N_m2_per_C', 'integration_ms'].join(',')];
+    rows.forEach((r, i) => {
+      const g = r.geo, G = r.Qenc * NC / EPS0;
+      L.push([i + 1, surfName[r.surf], m(g.cx), m(g.cy), m(g.R), m(g.w), m(g.h), m(g.d),
+        g.cp ? `"${g.cp.map((p) => `${m(p[0])} ${m(p[1])}`).join('; ')}"` : '',
+        `"${r.charges.map((c) => `${(c.q * NC).toExponential(3)} ${m(c.x)} ${m(c.y)}`).join('; ')}"`, (r.Qenc * NC).toExponential(6),
+        isFinite(r.dMin) ? m(r.dMin) : '', r.total.toExponential(12), r.out.toExponential(12), r.inw.toExponential(12),
+        ...(pred ? [G.toExponential(12), (r.total - G).toExponential(3)] : []),
+        r.evals, r.unmet, r.converged ? 'yes' : 'no', r.err.toExponential(3), r.ms.toFixed(1)].join(','));
+    });
+    return L.join('\n') + '\n';
+  }
+  function download(name, text) {
+    try { const b = new Blob([text], { type: 'text/csv' }), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800); } catch (_) {}
+  }
+  $('capture').addEventListener('click', capture);
+  $('expTab').addEventListener('click', () => { if (!rows.length) { capStatus('Capture a reading first.'); return; } download('gauss-law-flux.csv', csvRows()); });
+  $('clearTab').addEventListener('click', () => { rows.length = 0; renderRows(); capStatus('Readings cleared.'); });
+  $('tPred').addEventListener('change', () => { renderRows(); updateReadouts(); });
+  renderRows();
   $('qList').addEventListener('click', (e) => { const li = e.target.closest('li'); if (li) { F.sel = { kind: 'q', id: +li.dataset.id }; updateReadouts(); } });
   $('qList').addEventListener('keydown', (e) => { const li = e.target.closest('li'); if (li && (e.key === 'Enter' || e.key === ' ')) { F.sel = { kind: 'q', id: +li.dataset.id }; updateReadouts(); e.preventDefault(); } });
   $('tLines').addEventListener('change', (e) => { F.layers.lines = e.target.checked; });
@@ -1732,8 +1920,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('tGrid').addEventListener('change', (e) => { F.layers.grid = e.target.checked; });
   for (const id of ['tPatch', 'tPatchY']) $(id).addEventListener('change', (e) => { F.layers.patch = e.target.checked; $('tPatch').checked = $('tPatchY').checked = F.layers.patch; });
   $('sDen').addEventListener('input', (e) => { F.density = +e.target.value; $('oDen').textContent = F.density; linesKey = ''; computeLines(); updateReadouts(); });
-  for (const b of document.querySelectorAll('#symSeg button')) b.addEventListener('click', () => { Ysym.kind = b.dataset.k; setView(); symAnchor(); updateReadouts(); });
-  for (const b of document.querySelectorAll('#sphSeg button')) b.addEventListener('click', () => { Ysym.sk = b.dataset.v; updateReadouts(); });
+  for (const b of document.querySelectorAll('#symSeg button')) b.addEventListener('click', () => { leavePreset(); Ysym.kind = b.dataset.k; setView(); symAnchor(); updateReadouts(); });
+  for (const b of document.querySelectorAll('#sphSeg button')) b.addEventListener('click', () => { leavePreset(); Ysym.sk = b.dataset.v; if (Ysym.r < symRmin()) Ysym.r = symRmin(); updateReadouts(); });
   $('yQ').addEventListener('input', (e) => { Ysym.Q = +e.target.value; updateReadouts(); });
   $('yR').addEventListener('input', (e) => { Ysym.R = +e.target.value; updateReadouts(); });
   $('yL').addEventListener('input', (e) => { Ysym.lam = +e.target.value; updateReadouts(); });
@@ -2444,7 +2632,7 @@ void main() {
     if (G3.kS === key) return;
     G3.kS = key;
     const g = G3.symG, M = G3.M; clearGroup(g);
-    const r = symR(), E = symE(r), qs = k === 'sphere' ? Ysym.Q : k === 'line' ? Ysym.lam : Ysym.sig, sgnQ = Math.sign(qs) || 1;
+    const r = symR(), E = symEdraw(r), qs = k === 'sphere' ? Ysym.Q : k === 'line' ? Ysym.lam : Ysym.sig, sgnQ = Math.sign(qs) || 1;
     const fc = rgba(E >= 0 ? T.fout : T.fin, 1), qhex = sgnQ > 0 ? T.pos : T.neg, qc = hexRGB(qhex), qdim = mixC(qc, hexRGB(T.canvas), 0.55), mut = rgba(T.muted, 0.9);
     const Eref = Math.abs(k === 'sphere' ? (Ysym.sk === 'point' ? symE(3) : KC * Ysym.Q * NC / Math.pow(Ysym.R * CM, 2)) : k === 'line' ? symE(3) : symE(1)) || 1;
     const alen = (e) => Math.min(2.2 * 1.6, Math.abs(e) / Eref * 2.2), Lp = alen(E), d = Math.sign(E);
@@ -2454,7 +2642,7 @@ void main() {
     M.ball.color.set(qhex); M.rod.color.set(qhex); M.sleeve.color.set(qhex); M.sheet.color.set(qhex); M.disk.color.set(qhex);
     let Md, cellK;
     if (k === 'sphere') {
-      const { sk, Q, R } = Ysym, Qenc = enclosedSphere(sk, Q, R, r);
+      const { sk, Q, R } = Ysym, Qenc = enclosedSphere(sk, Q, R, r, 1);
       Md = mSphere(0, 0, r, 10, 20, 0);
       if (sk === 'point') bead3(g, 0, 0, 0, Q, 0.5 * ps);
       else if (sk === 'ball') {
@@ -2610,7 +2798,7 @@ void main() {
         labels.push([`${n3} lines per nC in 3D, so ${n3} × Q_enc = ${minus(String(Math.round(enc.Q * n3)))}`, 10, H - 10, { size: fsz(11), weight: 400, color: T.muted }]);
       }
     } else {
-      const k = Ysym.kind, r = symR(), E = symE(r), qcol = (k === 'sphere' ? Ysym.Q : k === 'line' ? Ysym.lam : Ysym.sig) < 0 ? T.neg : T.pos;
+      const k = Ysym.kind, r = symR(), E = symEdraw(r), qcol = (k === 'sphere' ? Ysym.Q : k === 'line' ? Ysym.lam : Ysym.sig) < 0 ? T.neg : T.pos;
       if (k === 'sphere') {
         const R = Ysym.R, sk = Ysym.sk, a = right - 0.45, b = right + Math.PI + 0.45;
         const gs = alongH('r', 'r', [r * Math.cos(a), r * Math.sin(a), 0], [0, 0, 0], 'ew-resize', { plane: 'z0', set: (p) => setSym('r', Math.hypot(p.x, p.y)) });
@@ -2620,7 +2808,7 @@ void main() {
           labels.push([`R = ${fcm(R)}`, bs[0] - 14 * ps, bs[1] - 12 * ps, { size: fs, align: 'right', color: qcol }]);
         }
         const qs = P2([0, 0, -Math.min(r, sk === 'point' ? r : R) * 0.5]);
-        labels.push([`Q_enc = ${fq(enclosedSphere(sk, Ysym.Q, R, r), 2)}`, qs[0], qs[1] + Math.max(fs, 24 * ps), { size: fs, align: 'center', color: T.ink }]);
+        if (r > 1.5) labels.push([qEncTxt(2), qs[0], qs[1] + Math.max(fs, 24 * ps), { size: fs, align: 'center', color: T.ink }]);
         if (sk === 'shell') { const ts = P2([0, 0, R]); labels.push(['Metal: E = 0 inside, charge on the surface', ts[0], ts[1] - 14 * ps, { size: fsz(11.5), align: 'center', color: T.ink }]); }
       } else if (k === 'line') {
         const L = Ysym.L;
@@ -2778,7 +2966,8 @@ void main() {
     get frameMs() { return frameMs; }, get num() { return num; }, get F() { return F; }, get sym() { return Ysym; }, get mode() { return mode; }, get running() { return running; },
     get lineCount() { return lineCount; }, get view() { return view; }, get numMs() { return numMs; },
     handles: () => (mode === 'flux' ? fluxHandles() : symHandles).map((h) => h.id),
-    X, Y: Yp, applyPreset, setRunning, setSurf, computeNum, addCharge, symE, setSym, tryFree,
+    X, Y: Yp, applyPreset, setRunning, setSurf, computeNum, addCharge, symE, setSym, tryFree, get bnd() { return bnd; }, rows: () => rows, csvRows,
+    setMaxPanels: (n) => { setMaxPanels(n); markNum(); computeNum(); },   // test API only: a small panel budget forces the tolerance flag
     enclosed: () => enclosed(), setView3d, get view3d() { return view3d; }, orbit, get lc3() { return G3.lc; }, handles3: () => G3.handles.map((h) => ({ id: h.id, s: h.s }))
   };
 

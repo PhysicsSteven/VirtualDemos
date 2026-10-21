@@ -15,7 +15,7 @@ for(const [name,flux] of Object.entries(shapes))test(name+' centered, off-center
 test('near sphere boundary at current default tolerance',()=>{
   for(const fraction of [.2,.1,.05,.02,.01])for(const side of [-1,1]){
     const x=.06*(1+side*fraction),ref=side<0?k:0,r=g.sphereFlux([charge(x)],0,0,.06);
-    close(r.total,ref,2e-8);
+    close(r.total,ref,2e-8);assert(r.converged,'default tolerance should be met');
     console.log('  boundary',side*fraction,'scaled error',Math.abs(r.total-ref)/k,'evaluations',r.evals);
   }
 });
@@ -31,9 +31,41 @@ test('symmetry fields at finite radius and point-charge singularity in SI',()=>{
   close(g.Eline(2e-9,.04),2e-9/(2*Math.PI*g.EPS0*.04));close(g.Eplane(-3e-9),-3e-9/(2*g.EPS0));
   assert.equal(g.Esphere('point',1e-9,.05,0),Infinity);
 });
-console.log(`Completed ${count} Gauss-law test groups. Origin and shell-boundary defects are tracked in COLLABORATION.md; tolerance controls pending Claude.`);
-
-if(process.argv.includes('--strict-origin')){
-  console.log('Uniform sphere origin probe',g.Esphere('ball',1e-9,.05,0));
-  assert.equal(g.Esphere('ball',1e-9,.05,0),0,'Regular uniform-sphere field must vanish at its origin');
-}
+test('regular symmetry fields vanish at the origin',()=>{
+  // uniform ball: E = kQr/R^3 -> 0; conductor: E = 0 everywhere inside, center included
+  assert.equal(g.Esphere('ball',1e-9,.05,0),0);assert.equal(g.Esphere('shell',1e-9,.05,0),0);assert.equal(g.Esphere('ball',-3e-9,.05,0),0);
+  close(g.Esphere('ball',1e-9,.05,1e-6),g.KC*1e-9*1e-6/.05**3);
+  assert.equal(g.Esphere('point',1e-9,.05,0),Infinity);
+});
+test('conducting shell surface: one sided limits, no value on the surface',()=>{
+  const Q=2e-9,R=.05,out=g.KC*Q/R**2;
+  assert(Number.isNaN(g.Esphere('shell',Q,R,R)),'E on the ideal charged surface must be undefined');
+  assert(Number.isNaN(g.enclosedSphere('shell',Q,R,R)));
+  assert.equal(g.Esphere('shell',Q,R,R,-1),0);close(g.Esphere('shell',Q,R,R,1),out);
+  assert.equal(g.enclosedSphere('shell',Q,R,R,-1),0);assert.equal(g.enclosedSphere('shell',Q,R,R,1),Q);
+  // the limits agree with the field just inside and just outside
+  assert.equal(g.Esphere('shell',Q,R,R*(1-1e-9)),0);close(g.Esphere('shell',Q,R,R*(1+1e-9)),out,1e-6);
+  const L=g.EsphereLimits('shell',Q,R,R);assert.equal(L.inside,0);close(L.outside,out);
+  close(L.outside-L.inside,Q/(4*Math.PI*R*R)/g.EPS0);   // jump = sigma/eps0
+  // a radius snapped in floating point (49 x 0.1 cm) still counts as the surface
+  assert(g.onShell('shell',4.9*.01,49*.1*.01));assert(Number.isNaN(g.Esphere('shell',Q,4.9*.01,49*.1*.01)));
+  // the ball has no surface charge: E is continuous at R
+  const B=g.EsphereLimits('ball',Q,R,R);assert.equal(B.inside,B.outside);close(B.inside,out);
+});
+test('boundary exclusion zone is numerical, only distance zero is singular',()=>{
+  assert.equal(g.EXCL_CM,.03);
+  for(const [d,c] of [[0,'on'],[1e-12,'on'],[.001,'zone'],[.02,'zone'],[.0299,'zone'],[.03,'clear'],[.5,'clear']])assert.equal(g.boundaryClass(d),c,`distance ${d} cm`);
+  // just outside the zone (0.03 cm) on either side the flux is still exactly Q_enc/eps0 and the quadrature converges
+  for(const side of [-1,1]){const r=g.sphereFlux([charge(.06+side*.0003)],0,0,.06);close(r.total,side<0?k:0,1e-12);assert(r.converged);assert.equal(r.unmet,0);}
+});
+test('integrate reports an unmet tolerance',()=>{
+  const smooth=g.integrate(x=>[Math.cos(x)],[0,1],1,1e-14,1e-14,300);assert(smooth.ok);assert.equal(smooth.stop,'');assert(Math.abs(smooth.v[0]-Math.sin(1))<1e-13);
+  const u0=g.stats.unmet,peak=g.integrate(x=>[1/Math.sqrt(Math.abs(x-.3)+1e-12)],[0,1],1,1e-14,1e-14,4);
+  assert.equal(peak.ok,false);assert.equal(peak.stop,'panels');assert.equal(peak.panels,4);assert.equal(g.stats.unmet,u0+1);
+  // a small panel budget near the boundary: the flux result carries the flag, counting nested inner integrals
+  g.setMaxPanels(10);
+  try{const r=g.sphereFlux([charge(.0597)],0,0,.06);assert.equal(r.converged,false);assert(r.unmet>1);console.log('  10 panel budget: unmet integrals',r.unmet,'scaled error',Math.abs(r.total-k)/k);}
+  finally{g.setMaxPanels(300);}
+  const r=g.sphereFlux([charge(.0597)],0,0,.06);assert(r.converged);close(r.total,k,1e-12);
+});
+console.log(`Completed ${count} Gauss-law test groups.`);

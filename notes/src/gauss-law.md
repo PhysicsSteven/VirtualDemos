@@ -45,4 +45,5 @@ Students need the point charge field, flux as E·A, and line and surface charge 
 ## Physics behind the demo
 
 - **Any surface**: point charges in the plane z = 0 (the slice you see), with 3D Gaussian surfaces (sphere, cylinder, or box or freeform prism extended ± half the depth). ∮E·dA is computed by adaptive quadrature from the full 3D field. In a slice, line spacing does not show field strength, and line counts are only a picture of the flux.
-- **Symmetry**: ideal distributions; the line and plane are infinite, the ball is a uniformly charged insulator, the conductor's charge sits on its surface. 1 nC enclosed gives 112.9 N·m²/C.
+- A point charge exactly on the surface has no defined flux. Closer than 0.03 cm the demo skips the numerical integral and says so: a numerical exclusion zone, not physics. If an adaptive integral ever runs out of panels before its error target, the rail says so. **Readings** captures the flux with the geometry and exports a CSV in SI units.
+- **Symmetry**: ideal distributions; the line and plane are infinite, the ball is a uniformly charged insulator, the conductor's charge sits on its surface, so on that surface E has no single value: it jumps from 0 to kQ/R² (by σ/ε₀). At r = 0, E = 0 for the ball and the conductor. 1 nC enclosed gives 112.9 N·m²/C.
