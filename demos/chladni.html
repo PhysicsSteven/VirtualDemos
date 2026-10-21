@@ -162,6 +162,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.curve { border-color: var(--accent); border-top-width: 3px; }
 .swatch.fline { border-color: var(--pos); }
 .swatch.gline { border-color: var(--equi); border-top-style: dashed; }
+.swatch.env { border-color: var(--muted); border-top-style: dashed; }
 .swatch.post { width: 12px; height: 12px; border: 2px solid var(--plate-lo); border-radius: 50%; background: var(--brass); margin: 0 5px; }
 .model p { margin: 0 0 6px; }
 .model p:last-child { margin-bottom: 0; }
@@ -260,7 +261,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
             <button type="button" data-d="edge" aria-pressed="false">Edge</button>
           </div>
         </div>
-        <div>
+        <div class="inline">
+          <span class="lab">Driver</span>
+          <div class="seg" role="group" aria-label="Driver" id="driverSeg">
+            <button type="button" data-dr="wave" aria-pressed="true">Wave driver</button>
+            <button type="button" data-dr="force" aria-pressed="false">Point force</button>
+          </div>
+        </div>
+        <div id="waveGrp">
+          <div class="slider-head"><label for="x0">Driver setting x₀</label><output id="x0Out" class="mono" for="x0"></output></div>
+          <input type="range" id="x0" min="0" max="100" step="1" value="80">
+        </div>
+        <div id="forceGrp" hidden>
           <div class="slider-head"><label for="force">Drive force F₀</label><output id="forceOut" class="mono" for="force"></output></div>
           <input type="range" id="force" min="0" max="100" step="1" value="50">
         </div>
@@ -271,7 +283,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <dl class="readout">
           <div><dt>Peak |a| on the plate</dt><dd id="rPeak">—</dd></div>
           <div><dt>Grains on the plate</dt><dd id="rGrains">—</dd></div>
-          <div class="wide"><dt>Nearest mode</dt><dd id="rMode" class="txt">—</dd></div>
+          <div><dt>Post motion</dt><dd id="rPost">—</dd></div>
+          <div><dt>Driver force</dt><dd id="rCoil">—</dd></div>
+          <div class="wide"><dt>Nearest resonance</dt><dd id="rMode" class="txt">—</dd></div>
         </dl>
         <p class="hint" id="driveHint"></p>
       </section>
@@ -336,6 +350,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch curve"></i>RMS acceleration of the plate vs f</span>
           <span><i class="swatch fline"></i>drive frequency f (drag it)</span>
           <span><i class="swatch gline"></i>1 g</span>
+          <span><i class="swatch env"></i>wave driver: acceleration of the post itself</span>
         </div>
       </section>
 
@@ -343,11 +358,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <h2>Model</h2>
         <div class="hint" id="modelHint">
           <p>Thin plate (Kirchhoff–Love) theory: D∇⁴w = −ρh ∂²w/∂t² with flexural rigidity D = Eh³/(12(1 − ν²)). Small, linear motion of a flat, uniform, isotropic plate. Good while the bending wavelength is long compared with the thickness (k h well below 1; shown under Plate).</p>
-          <p>Every edge is free, and the drive is an ideal point force F₀ cos(2πft) at the brass post. The driver's own mass and stiffness and the small clamp around the bolt are left out; a real driver bolted to the plate shifts the resonances, so measured kit frequencies differ. The plate's rigid bouncing and rocking are included.</p>
+          <p>Every edge is free. Two drives: <b>Wave driver</b> (the default for the center and off center posts) is a voice coil bolted to the plate: its coil pushes with force F_c on its own moving mass m_d = 50 g (an estimate) and on the plate, so the post moves x = F_c/(1/G − m_d ω²), with G the plate's point receptance at the post (the modal sum, rigid modes included, plus the share of the modes above the computed range from the plate's average mode density). The bolt is treated as a point; the clamp's width and the driver's suspension are left out. At low frequency the whole plate rides up and down with the post, |a| ≈ F_c/(M + m_d) everywhere. The plate with the driver's mass at its center has its own resonances, between those of a free plate and those of a plate pinned at the post. <b>Point force</b> (the default at the edge, like a bow) is an ideal force F₀ cos(2πft) on a free plate.</p>
           <p>Circle: exact solution, w = [J_n(λr/a) + C I_n(λr/a)] cos nθ, with the free edge frequency equation solved to 12 digits. Square: no closed form; Rayleigh–Ritz with Legendre polynomials up to degree 30 in x and in y (961 terms, split into symmetry classes), converged to better than 1 part in a million for every mode shown.</p>
           <p>Damping: every flexural mode has the same Q (default 50, a model choice: a plate bolted to a driver and carrying sand is heavily damped). The response is the sum over all computed modes, between resonances too. The sand's mass does not load the plate.</p>
-          <p>Drive level: PASCO publishes no force rating for its wave drivers (SF-9324, WA-9855). It states an amplitude of about 5 mm up to about 50 Hz for the SF-9324, which is about 50 g of acceleration at 50 Hz, a drive of ±8 V at 0.5 A, and at most 1.2 A for the WA-9855. The default F₀ = 1 N is an order of magnitude estimate for a voice coil driver at those currents, not a measured value.</p>
-          <p>Sand is phenomenological, not a granular simulation. Where the local acceleration amplitude |a| exceeds g the plate throws a grain off once a cycle, at the moment its acceleration passes −g, with launch speed v_L = (g/2πf)√((|a|/g)² − 1). Every 1/60 s such a grain moves v_L × 1/60 s (at most 3 mm) times a random step of mean length 1 in a random direction plus a drift of 0.5 toward smaller |a|. The drift stands in for grains bouncing off the tilted, moving surface, which carries them toward the nodes. Where |a| &lt; g a grain stays put. So at high frequencies, where v_L is small, sand between resonances buzzes and creeps; at low frequencies it hops far. Grains in flight are drawn with a slight blur; grains that pass the edge fall off. Very light powder (lycopodium) gathers at the antinodes instead, carried by air currents over the plate (Faraday, 1831); air is not modeled.</p>
+          <p>Drive level: PASCO publishes no force rating for its wave drivers. The SF-9324 manual gives amplitudes up to 7 mm peak to peak at low frequency, and its product page about 5 mm up to about 50 Hz; the WA-9855 takes at most 1.2 A. The demo takes full drive to be the coil force that moves the driver's 50 g alone 3.5 mm at 50 Hz, F = m_d (2π·50 Hz)² × 3.5 mm = 17 N, and never lets the post move more than 3.5 mm (the stroke limit). The <b>Driver setting x₀</b> is the amplitude the setting would give the driver alone at 50 Hz. These numbers are estimates, not measurements.</p>
+          <p>Sand is phenomenological, not a granular simulation. Where the local acceleration amplitude |a| exceeds g the plate throws a grain off once a cycle, at the moment its acceleration passes −g, with launch speed v_L = (g/2πf)√((|a|/g)² − 1). It flies for t_f = 2v_L/g. A grain moves on average at v_L: when t_f is shorter than 1/60 s it moves v_L × 1/60 s every 1/60 s; when it is longer it lands only once per flight, a hop of v_L × t_f in a random direction plus a drift of up to 0.5 of a hop toward smaller |a|: full where |a| changes by a factor of 4 or more across a half plate width relative to itself (near nodes), proportionally less where the plate moves nearly as a whole. The drift stands in for grains bouncing off the tilted, moving surface, which carries them toward the nodes. Where |a| &lt; g a grain stays put. So at low frequency, where v_L is large, sand hops far and the plate looks chaotic; at high frequency it buzzes and creeps. Grains in flight are drawn with a slight blur; grains that pass the edge fall off. Very light powder (lycopodium) gathers at the antinodes instead, carried by air currents over the plate (Faraday, 1831); air is not modeled.</p>
         </div>
       </section>
     </aside>
@@ -670,20 +685,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // moment its acceleration passes −g; the plate's speed then is the launch speed v_L = (g/ω)√(Γ² − 1).
   function launchSpeed(gam, f) { return gam > 1 ? G0 / (2 * Math.PI * f) * Math.sqrt(gam * gam - 1) : 0; }
   // Each tick a grain with Γ > 1 moves s × (a random vector of mean length 1 + drift × the unit vector down the slope of Γ),
-  // with s = hop(Γ) supplied by the caller (the demo uses a fixed fraction of v_L × tick, capped). The drift stands in for
+  // with s = hop(Γ, u) supplied by the caller (the demo uses hopLength below; 0 means no landing this tick). The drift stands in for
   // grains bouncing off the tilted, moving surface, which carries them toward the nodes. Where Γ ≤ 1 a grain stays put.
   // Grains that pass the edge fall off.
-  function sandStep(sx, sy, alive, gammaAt, inside, rng, hop, drift) {
+  function sandStep(sx, sy, alive, gammaAt, inside, rng, hop, drift, rel0) {
     let lost = 0; const h = 0.01;
     for (let i = 0; i < sx.length; i++) {
       if (!alive[i]) continue;
       const x = sx[i], y = sy[i], gam = gammaAt(x, y);
       if (gam <= 1) continue;
-      const s = hop(gam), r = 2 * rng(), th = 2 * Math.PI * rng();
+      const s = hop(gam, rng()); if (!(s > 0)) continue;
+      const r = 2 * rng(), th = 2 * Math.PI * rng();
       let dx = r * Math.cos(th), dy = r * Math.sin(th);
       if (drift) {
         const gx = gammaAt(x + h, y) - gammaAt(x - h, y), gy = gammaAt(x, y + h) - gammaAt(x, y - h), gn = Math.hypot(gx, gy);
-        if (gn > 0) { dx -= drift * gx / gn; dy -= drift * gy / gn; }
+        // full drift where |a| changes fast relative to itself (near nodes), little where the plate moves nearly as a whole
+        const wgt = rel0 ? Math.min(1, gn / (2 * h * gam * rel0)) : 1;
+        if (gn > 0) { dx -= drift * wgt * gx / gn; dy -= drift * wgt * gy / gn; }
       }
       sx[i] = x + s * dx; sy[i] = y + s * dy;
       if (!inside(sx[i], sy[i])) { alive[i] = 0; lost++; }
@@ -702,6 +720,64 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const p = (k * sxy - sx * sy) / (k * sxx - sx * sx), lnC = (sy - p * sx) / k;
     return { C: Math.exp(lnC), p, count: k };
   }
+
+  // ---- the wave driver: a voice coil bolted to the plate at the post c ----
+  // Point receptance G(c, c) = w(c)/F = Σ φ̂_k(c)² / (M (ω_k² − ω² + i ω ω_k/Q)), rigid modes included (ω_k = 0).
+  // Dimensionless form G̃ = M (2π f_s)² G, with Λ = f/f_s (so Λ_k = λ²_k). Modes above the computed range (Λ > Λ_c) still add
+  // flexibility at the post; their share is taken from the plate's average mode density (Weyl): dN/dΛ = A/(4π ℓ²) = wA,
+  // tail = wA ∫ dΛ'/(Λ'² − Λ²) from Λ_c to ∞ = wA ln((Λ_c + Λ)/(Λ_c − Λ)) / (2Λ). wA = 1/(4π) for the square, 1/4 for the circle.
+  function receptanceTail(L, Lc, wA) {
+    const x = L / Lc;
+    return x < 1e-4 ? wA / Lc * (1 + x * x / 3) : wA * Math.log((Lc + L) / (Lc - L)) / (2 * L);
+  }
+  function pointReceptance(lam2, phiP, L, Q, Lc, wA) {
+    let re = 0, im = 0;
+    for (let k = 0; k < lam2.length; k++) {
+      const p2 = phiP[k] * phiP[k]; if (p2 === 0) continue;
+      const a = lam2[k] * lam2[k] - L * L, b = L * lam2[k] / Q, den = a * a + b * b;
+      re += p2 * a / den; im -= p2 * b / den;
+    }
+    return { re: re + (Lc ? receptanceTail(L, Lc, wA) : 0), im };
+  }
+  // A voice coil driver bolted at the post: its coil pushes with force amplitude F_c on its own moving mass m_d and on the plate,
+  // so F_c = x (1/G − m_d ω²) = x Z, with x the post displacement and G = G(c, c). If |x| would pass the stroke limit x_max
+  // the drive is turned down until |x| = x_max. Returns the force on the plate F_p = x/G, the post displacement x (complex)
+  // and the coil force actually used.
+  function voiceCoilDrive(Gre, Gim, w, Fc, md, xmax) {
+    const g2 = Gre * Gre + Gim * Gim, iGre = Gre / g2, iGim = -Gim / g2;      // 1/G
+    const Zre = iGre - md * w * w, Zim = iGim, z2 = Zre * Zre + Zim * Zim;
+    let xr = Fc * Zre / z2, xi = -Fc * Zim / z2, coil = Fc, lim = false;    // x = F_c / Z
+    const xm = Math.hypot(xr, xi);
+    if (xm > xmax) { const k = xmax / xm; xr *= k; xi *= k; coil *= k; lim = true; }
+    return { Fr: xr * iGre - xi * iGim, Fi: xr * iGim + xi * iGre, xr, xi, coil, lim };
+  }
+  // Undamped resonances of plate + driver: Z = 0, i.e. Λ² G̃(Λ) = M/m_d (the mass ratio). massRatio = 0 (an infinitely heavy
+  // driver, a prescribed post displacement) gives the plate pinned at the post: the zeros of G(c, c). m_d → 0 gives back the
+  // free plate's modes that move at the post (the poles of G).
+  function driveResonances(lam2, phiP, Lc, wA, massRatio, Lmax) {
+    const h = (L) => { const g = pointReceptance(lam2, phiP, L, Infinity, Lc, wA).re; return L * L * g - massRatio; };
+    const out = [], poles = lam2.filter((v, k) => v > 0 && Math.abs(phiP[k]) > 1e-9);
+    const bisect = (lo, hi, fl) => { for (let i = 0; i < 100; i++) { const m = 0.5 * (lo + hi), fm = h(m); if (fl * fm <= 0) hi = m; else { lo = m; fl = fm; } } return 0.5 * (lo + hi); };
+    let a = 0.05, fa = h(a);
+    while (a < Lmax) {
+      let b = Math.min(Lmax, a * 1.002 + 0.01);
+      const p = poles.find((q) => q > a && q <= b);
+      if (p !== undefined) b = p * (1 - 1e-12);                       // stop just below a pole, then restart just above it
+      const fb = h(b);
+      if (fa * fb < 0) out.push(bisect(a, b, fa));
+      if (p !== undefined) { a = p * (1 + 1e-12); fa = h(a); } else { a = b; fa = fb; }
+    }
+    return out;
+  }
+  // Sand hop length for one tick. A grain launched at v_L flies for t_f = 2 v_L / g. If t_f is longer than the tick it lands
+  // only on a fraction tick/t_f of ticks (u, uniform in [0, 1), decides), so the hop is eps v_L t_f = eps 2 v_L²/g: big, rare
+  // hops at low frequency and strong drive. Otherwise it moves eps v_L × tick every tick. Either way the mean speed is eps v_L.
+  function hopLength(gam, f, eps, tick, u) {
+    const v = launchSpeed(gam, f); if (v <= 0) return 0;
+    const tf = 2 * v / G0;
+    if (tf <= tick) return eps * v * tick;
+    return u < tick / tf ? eps * v * tf : 0;
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') return;
@@ -712,8 +788,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const TAU = 2 * Math.PI;
   const GN = 101, NSAND = 6000, HALF = 0.12;      // field grid nodes per side; sand grains; half width of either plate, m
   const F_MIN = 20, F_CAP = 8000;
-  const EPS = 1, HOP_MAX = 0.003, DRIFT = 0.5, TICK = 1 / 60;   // sand: grain speed = EPS × launch speed, longest hop per tick (m), drift, tick (s)
-  const hop = (gam) => Math.min(HOP_MAX, EPS * launchSpeed(gam, S.f) * TICK) / HALF;
+  const EPS = 1, DRIFT = 0.5, REL0 = 4, TICK = 1 / 60;   // sand: grain speed = EPS × launch speed, drift, relative slope for full drift (per half width), tick (s)
+  const hop = (gam, u) => hopLength(gam, S.f, EPS, TICK, u) / HALF;
+  // wave driver: moving mass (estimate), stroke limit and full drive from PASCO's figures (see Model)
+  const MD = 0.05, X_MAX = 0.0035, W50 = TAU * 50, F_FULL = MD * W50 * W50 * X_MAX;
+  const x0Of = (p) => 0.05e-3 * Math.pow(70, p / 100), posOfX0 = (x) => 100 * Math.log(x / 0.05e-3) / Math.log(70);
   const DRIVEN = 0.15;                                    // |φ̂(p)| below this: the drive point sits on or near a nodal line
   const DRIVES = {
     square: { center: [0, 0], off: [0.42, 0.22], edge: [1, 0.36] },
@@ -721,7 +800,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   };
 
   // ---------- state ----------
-  const S = { shape: 'square', mat: 'steel', h: 1.0e-3, f: 100, Q: 50, F: 1, drive: 'center', du: 0, dv: 0,
+  const S = { shape: 'square', mat: 'steel', h: 1.0e-3, f: 100, Q: 50, F: 1, driver: 'wave', x0: 2e-3, drive: 'center', du: 0, dv: 0,
     view: 'sand', plot: 'resp', nodal: false, heat: false, follow: true, sweep: false, rate: 4 };
   let presetId = null, running = !reduce, frameMs = 0, dirty = true;
 
@@ -801,29 +880,53 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (D.ms.shape === 'square') D.phiP = Float64Array.from(D.ms.modes, (md) => squarePhi(md, S.du, S.dv));
     else { const r = Math.min(1, Math.hypot(S.du, S.dv)); D.phiP = Float64Array.from(D.ms.modes, (md) => md.N * circleRadial(md, r)); }
     D.thetaP = Math.hypot(S.du, S.dv) > 1e-9 ? Math.atan2(S.dv, S.du) : 0;
+    D.Lc = LAM2_MAX[S.shape]; D.wA = S.shape === 'square' ? 1 / (4 * Math.PI) : 0.25;
+    D.res = resonances();
     D.fit = D.ms.shape === 'circle' ? chladniFit(D.ms.modes.filter((m) => !m.rigid && m.lam2 * D.fs <= D.fmax).map((m) => ({ n: m.n, m: m.m, f: m.lam2 * D.fs }))) : null;
     updateCurve();
   }
   function modeF(md) { return md.lam2 * D.fs; }
+  // the drive at frequency f: force on the plate (complex), post displacement, coil force
+  function driveAt(f) {
+    const L = f / D.fs, w = TAU * f, norm = D.M * Math.pow(TAU * D.fs, 2);
+    const g = pointReceptance(D.ms.lam2, D.phiP, L, S.Q, D.Lc, D.wA), Gre = g.re / norm, Gim = g.im / norm;
+    if (S.driver === 'force') return { Fr: S.F, Fi: 0, xr: S.F * Gre, xi: S.F * Gim, coil: S.F, lim: false };
+    return voiceCoilDrive(Gre, Gim, w, MD * W50 * W50 * S.x0, MD, X_MAX);
+  }
+  // the mode that dominates the response at f
+  function dominant(f) {
+    const q = modalAmps(D.ms.lam2, D.phiP, f, D.fs, S.Q, 1, D.M); let best = -1, bv = 0;
+    D.ms.modes.forEach((md, k) => { if (md.rigid) return; const v = Math.hypot(q.re[k], q.im[k]); if (v > bv) { bv = v; best = k; } });
+    return best;
+  }
+  // resonances: point force, the free plate's modes that move at the drive point; wave driver, the zeros of Z (plate + driver mass)
+  function resonances() {
+    const out = [];
+    if (S.driver === 'force') D.ms.modes.forEach((md, k) => { if (!md.rigid && isDriven(k)) { const f = modeF(md); if (f >= F_MIN && f <= D.fmax) out.push({ f, k }); } });
+    else for (const L of driveResonances(D.ms.lam2, D.phiP, D.Lc, D.wA, D.M / MD, D.fmax / D.fs)) { const f = L * D.fs; if (f >= F_MIN) out.push({ f, k: dominant(f) }); }
+    return out.sort((a, b) => a.f - b.f);
+  }
   function isDriven(k) { return Math.abs(D.phiP[k]) >= DRIVEN; }
   // response curve: RMS acceleration over the plate on a log grid, plus points around every mode so no peak is missed
   function updateCurve() {
     const ms = D.ms, lo = Math.log(F_MIN), hi = Math.log(D.fmax), pts = [];
     for (let i = 0; i <= 700; i++) pts.push(Math.exp(lo + (hi - lo) * i / 700));
-    ms.modes.forEach((md, k) => {
-      if (md.rigid || Math.abs(D.phiP[k]) < 1e-9) return;
-      const f0 = modeF(md); if (f0 > D.fmax) return;
-      for (const d of [-3, -1.5, -0.75, -0.3, 0, 0.3, 0.75, 1.5, 3]) { const f = f0 * (1 + d / (2 * S.Q)); if (f > F_MIN && f < D.fmax) pts.push(f); }
-    });
+    for (const r of D.res) for (const d of [-3, -1.5, -0.75, -0.3, 0, 0.3, 0.75, 1.5, 3]) { const f = r.f * (1 + d / (2 * S.Q)); if (f > F_MIN && f < D.fmax) pts.push(f); }
     pts.sort((a, b) => a - b);
-    const a = new Float64Array(pts.length); let mx = 0;
-    for (let i = 0; i < pts.length; i++) { a[i] = rmsAccel(ms.lam2, D.phiP, pts[i], D.fs, S.Q, S.F, D.M); mx = Math.max(mx, a[i]); }
-    D.curve = { f: Float64Array.from(pts), a }; D.curveMax = mx;
+    const a = new Float64Array(pts.length), post = new Float64Array(pts.length); let mx = 0;
+    for (let i = 0; i < pts.length; i++) {
+      const dr = driveAt(pts[i]);
+      a[i] = Math.hypot(dr.Fr, dr.Fi) * rmsAccel(ms.lam2, D.phiP, pts[i], D.fs, S.Q, 1, D.M); mx = Math.max(mx, a[i]);
+      post[i] = Math.pow(TAU * pts[i], 2) * Math.hypot(dr.xr, dr.xi);
+    }
+    D.curve = { f: Float64Array.from(pts), a, post }; D.curveMax = mx;
   }
   // the complex displacement amplitude W on the grid, and Γ = ω²|W|/g
   let cosTab = null;
   function updateField() {
-    const ms = D.ms, n = ms.modes.length, q = modalAmps(ms.lam2, D.phiP, S.f, D.fs, S.Q, S.F, D.M), NN = GN * GN;
+    const ms = D.ms, n = ms.modes.length, q = modalAmps(ms.lam2, D.phiP, S.f, D.fs, S.Q, 1, D.M), NN = GN * GN;
+    const dr = driveAt(S.f); D.drv = dr;
+    for (let k = 0; k < n; k++) { const a = q.re[k], b = q.im[k]; q.re[k] = a * dr.Fr - b * dr.Fi; q.im[k] = a * dr.Fi + b * dr.Fr; }
     const Wre = D.Wre, Wim = D.Wim; Wre.fill(0); Wim.fill(0);
     let qmax = 0; for (let k = 0; k < n; k++) qmax = Math.max(qmax, Math.hypot(q.re[k], q.im[k]));
     const thr = 1e-6 * qmax;
@@ -855,7 +958,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     gm = wm * w2;
     D.gmax = gm; D.Wmax = wm;
-    D.arms = rmsAccel(ms.lam2, D.phiP, S.f, D.fs, S.Q, S.F, D.M);
+    D.arms = Math.hypot(dr.Fr, dr.Fi) * rmsAccel(ms.lam2, D.phiP, S.f, D.fs, S.Q, 1, D.M);
+    // nearest resonance in log frequency
+    let br = null, brd = Infinity;
+    D.res.forEach((r, i) => { const d = Math.abs(Math.log(S.f / r.f)); if (d < brd) { brd = d; br = i; } });
+    D.nearRes = br;
     // nearest flexural mode in log frequency
     let best = null, bd = Infinity;
     ms.modes.forEach((md, k) => { if (md.rigid) return; const d = Math.abs(Math.log(S.f / modeF(md))); if (d < bd) { bd = d; best = k; } });
@@ -886,7 +993,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     sand.count = NSAND; dirty = true; glSandDirty = true;
   }
   function sandTick() {
-    sand.count -= sandStep(sand.x, sand.y, sand.alive, gammaAt, inside, rng, hop, DRIFT); ticks++;
+    sand.count -= sandStep(sand.x, sand.y, sand.alive, gammaAt, inside, rng, hop, DRIFT, REL0); ticks++;
   }
 
   // ---------- frequency controls ----------
@@ -902,11 +1009,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   function fmtF(f) { return f >= 1000 ? (f / 1000).toFixed(f >= 1e4 ? 2 : 3) + ' kHz' : f.toFixed(f < 100 ? 2 : 1) + ' Hz'; }
   function fmtFshort(f) { return f >= 1000 ? (f / 1000).toFixed(2) + ' k' : Math.round(f) + ''; }
-  function resonanceList() {
-    const out = [];
-    D.ms.modes.forEach((md, k) => { if (!md.rigid && isDriven(k)) { const f = modeF(md); if (f >= F_MIN && f <= D.fmax) out.push({ f, k }); } });
-    return out.sort((a, b) => a.f - b.f);
-  }
+  function resonanceList() { return D.res; }
   function jumpRes(dir) {
     const list = resonanceList(); if (!list.length) return;
     const eps = 1e-6;
@@ -921,6 +1024,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const b of $('shapeSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.shape));
     for (const b of $('matSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mat));
     for (const b of $('driveSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.d === S.drive));
+    for (const b of $('driverSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.dr === S.driver));
+    $('waveGrp').hidden = S.driver !== 'wave'; $('forceGrp').hidden = S.driver !== 'force';
+    $('x0').value = Math.round(posOfX0(S.x0));
     for (const b of $('viewSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
     for (const b of $('rateSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(+b.dataset.r === S.rate));
     for (const b of $('plotSeg').querySelectorAll('button')) {
@@ -940,6 +1046,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   function setDrive(name) {
     S.drive = name; const d = DRIVES[S.shape][name]; S.du = d[0]; S.dv = d[1];
+    S.driver = name === 'edge' ? 'force' : 'wave';   // a bolt at the center or the off center hole; a bow (point force) at the rim
     staticDirty = true; dirty = true; syncControls();
   }
   $('shapeSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setShape(b.dataset.s); });
@@ -952,6 +1059,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('freq').addEventListener('input', () => { stopSweep(); $('fine').value = 0; setF(fOfPos(+$('freq').value), { fromSlider: true }); clearPreset(); });
   $('fine').addEventListener('input', () => { stopSweep(); setF(fOfPos(+$('freq').value) * Math.pow(2, +$('fine').value / 1200), { fromSlider: true }); clearPreset(); });
   $('force').addEventListener('input', () => { S.F = forceOf(+$('force').value); staticDirty = true; clearPreset(); });
+  $('x0').addEventListener('input', () => { S.x0 = x0Of(+$('x0').value); staticDirty = true; clearPreset(); });
+  $('driverSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { S.driver = b.dataset.dr; clearPreset(); staticDirty = true; syncControls(); } });
   $('qual').addEventListener('input', () => { S.Q = qOf(+$('qual').value); staticDirty = true; clearPreset(); });
   $('prevRes').addEventListener('click', () => jumpRes(-1));
   $('nextRes').addEventListener('click', () => jumpRes(1));
@@ -968,17 +1077,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- presets ----------
   const PRESETS = {
-    first: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 50, F: 1, pick: { driven: 1 },
-      hint: 'The lowest mode a center drive can excite on the square. In a few seconds the sand leaves the moving regions and gathers on the nodal lines. The lower twisting modes have a node at the center, so they stay silent.' },
-    cross: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'off', Q: 50, F: 1, pick: { nm: [2, 0] },
+    first: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 50, driver: 'wave', x0: 0.4e-3, pick: { driven: 1 },
+      hint: 'The lowest resonance of the square bolted to the wave driver at its center. In a few seconds the sand leaves the moving regions, much of it thrown off the plate, and gathers on a nodal line. The lower twisting modes have a node at the center, so the driver cannot excite them.' },
+    cross: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'off', Q: 50, driver: 'wave', x0: 0.5e-3, pick: { nm: [2, 0] },
       hint: 'Driven halfway out, like the off center hole of a kit plate: two nodal diameters cross at right angles. This is the lowest flexural mode of a free circular plate, yet a center drive could never excite it, because every mode with nodal diameters has a node at the center.' },
-    rings: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'center', Q: 50, F: 1, pick: { nm: [0, 3] },
+    rings: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'center', Q: 50, driver: 'wave', x0: 0.5e-3, pick: { nm: [0, 3] },
       hint: 'Driven at the center, a circular plate can only ring in modes without nodal diameters, so every pattern is a set of concentric nodal circles. Step through them with Next resonance.' },
-    sweep: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 50, F: 1, f: 60, sweep: true, rate: 1,
-      hint: 'Turn on Sound. The drive sweeps upward one semitone per second: the tone swells at every peak and the sand snaps into a new pattern. Between peaks the plate still moves; above a few hundred hertz it passes g over much of the plate, so the old pattern buzzes and starts to break up.' },
-    star: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 50, F: 1, pick: { driven: 7 },
-      hint: 'A higher mode of the center driven square, with nodal lines in a star around the middle. Patterns like this fill the plates in Chladni’s 1787 book.' },
-    high: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'edge', Q: 200, F: 0.3, pick: { nm: [4, 2] },
+    sweep: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 50, driver: 'wave', x0: 2e-3, f: 60, sweep: true, rate: 1,
+      hint: 'Turn on Sound. The sweep starts at 60 Hz, where the whole plate rides up and down with the driver at about 2.5 g and all the sand jumps. It rises one semitone per second: at each peak the sand snaps into a pattern, and between peaks the old pattern breaks up again.' },
+    star: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 50, driver: 'wave', x0: 1e-3, pick: { driven: 7 },
+      hint: 'A higher resonance of the center driven square: nodal lines cross on the diagonals and loop around the corners. Patterns like this fill the plates in Chladni’s 1787 book.' },
+    high: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'edge', Q: 200, driver: 'force', F: 0.3, pick: { nm: [4, 2] },
       hint: 'Driven at the rim, the way Chladni bowed his plates: four nodal diameters and two nodal circles, at Q = 200 so that neighboring modes stay out. The drive point sits on an antinode at the rim, so no nodal diameter can pass through it.' }
   };
   function clearPreset() {
@@ -989,16 +1098,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function applyPreset(id) {
     const p = PRESETS[id]; if (!p) return;
     stopSweep();
-    S.shape = p.shape; S.mat = p.mat; S.h = p.h; S.Q = p.Q; S.F = p.F; S.drive = p.drive;
+    S.shape = p.shape; S.mat = p.mat; S.h = p.h; S.Q = p.Q; S.F = p.F || 1; S.drive = p.drive; S.driver = p.driver; S.x0 = p.x0 || 2e-3;
     const d = DRIVES[S.shape][S.drive]; S.du = d[0]; S.dv = d[1];
     if (S.shape !== 'circle' && S.plot === 'law') S.plot = 'resp';
     staticDirty = true; recomputeNow();
     let f = p.f || 100;
     if (p.pick) {
-      const ms = D.ms; let k = -1;
-      if (p.pick.nm) k = ms.modes.findIndex((m) => m.n === p.pick.nm[0] && m.m === p.pick.nm[1]);
-      if (p.pick.driven) { let c = 0; k = ms.modes.findIndex((m, i) => !m.rigid && isDriven(i) && ++c === p.pick.driven); }
-      if (k >= 0) f = modeF(ms.modes[k]);
+      const ms = D.ms; let r = null;
+      if (p.pick.nm) r = D.res.find((x) => ms.modes[x.k].n === p.pick.nm[0] && ms.modes[x.k].m === p.pick.nm[1]);
+      if (p.pick.driven) r = D.res[p.pick.driven - 1];
+      if (r) f = r.f;
     }
     setF(f); sprinkle();
     if (p.sweep) { S.rate = p.rate; startSweep(); }
@@ -1024,13 +1133,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('rLow').innerHTML = `${fmtF(modeF(D.lowest))}`;
     const k = bendK(S.f, mat, S.h), kh = k * S.h;
     $('rKh').innerHTML = `wavelength ${(TAU / k * 100).toFixed(1)} cm, k h = ${kh.toFixed(3)}` + (kh > 0.25 ? ' <small>(thin plate theory a few percent high here)</small>' : '');
-    if (D.near != null) {
-      const md = D.ms.modes[D.near], fk = modeF(md), ph = Math.abs(D.phiP[D.near]), df = S.f - fk, bw = fk / S.Q;
-      let s = `${md.label} at ${fmtF(fk)}, λ² = ${md.lam2.toFixed(2)}. `;
-      s += `Detuned by ${df >= 0 ? '+' : '−'}${Math.abs(df) < 10 ? Math.abs(df).toFixed(2) : Math.abs(df).toFixed(1)} Hz; width f/Q = ${bw < 10 ? bw.toFixed(2) : bw.toFixed(1)} Hz. `;
-      if (ph < 1e-6) s += 'Not driven: the drive point lies on one of its nodal lines.';
-      else if (ph < DRIVEN) s += 'Weakly driven: the drive point is close to a nodal line.';
-      else s += 'Driven.';
+    const dr = D.drv;
+    if (dr) {
+      const xm = Math.hypot(dr.xr, dr.xi), am = Math.pow(TAU * S.f, 2) * xm / G0;
+      $('rPost').innerHTML = `${xm >= 1e-4 ? (xm * 1000).toFixed(2) + ' <small>mm</small>' : (xm * 1e6).toFixed(1) + ' <small>µm</small>'}, ${am < 10 ? am.toFixed(2) : am.toFixed(0)} <small>g</small>`;
+      $('rCoil').innerHTML = `${dr.coil < 1 ? dr.coil.toFixed(2) : dr.coil.toFixed(1)} <small>N${dr.lim ? ', stroke limit' : ''}</small>`;
+    }
+    $('x0Out').textContent = `${(S.x0 * 1000).toFixed(2)} mm (${(MD * W50 * W50 * S.x0).toFixed(1)} N)`;
+    if (D.nearRes != null && D.res[D.nearRes]) {
+      const r = D.res[D.nearRes], md = D.ms.modes[r.k], fk = r.f, df = S.f - fk, bw = fk / S.Q;
+      let s = S.driver === 'wave' ? `${fmtF(fk)}, mostly ${md.label} (free plate mode at ${fmtF(modeF(md))}; the driver's ${MD * 1000} g moving mass on the post shifts it). `
+        : `${md.label} at ${fmtF(fk)}, λ² = ${md.lam2.toFixed(2)}. `;
+      s += `Detuned by ${df >= 0 ? '+' : '−'}${Math.abs(df) < 10 ? Math.abs(df).toFixed(2) : Math.abs(df).toFixed(1)} Hz; width f/Q = ${bw < 10 ? bw.toFixed(2) : bw.toFixed(1)} Hz.`;
       if (D.ms.shape === 'square') s += ` It is ${symText(md)}.`;
       else s += ` ${md.n} nodal diameter${md.n === 1 ? '' : 's'}, ${md.m} nodal circle${md.m === 1 ? '' : 's'}.`;
       $('rMode').textContent = s;
@@ -1039,12 +1153,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('plateHint').textContent = `A ${name}, as in common teaching kits (PASCO WA-9607); makers rarely state the thickness, about 1 mm is typical. ${mat.name}: E = ${mat.E / 1e9} GPa, ρ = ${mat.rho} kg/m³, ν = ${mat.nu}. Every frequency scales as h/ℓ² × √(E/ρ(1 − ν²)): twice as thick, an octave higher. Modes are computed up to ${fmtF(D.fmax)} for this plate.`;
   }
   function driveHintText() {
-    $('driveHint').textContent = `Sand leaves the surface where the plate's acceleration amplitude passes g, which happens near resonance. A mode is excited only if the drive point moves in it: a drive on a nodal line of a mode cannot pump it. Between resonances the plate still moves (the sum of all modes, strongest near the post), and wherever |a| passes g the old pattern breaks up. The force (default 1 N, an estimate for a classroom wave driver; see Model) and Q are model choices; Q = ${Math.round(S.Q)} gives each peak a width f/Q.`;
+    $('driveHint').textContent = S.driver === 'wave'
+      ? `The wave driver shakes the post. At low frequency the whole plate rides up and down with it, so where the plate's acceleration passes g everywhere all the sand hops, farther the lower the frequency. Near a resonance the plate bends far more than the post moves, and the sand settles on the nodal lines. The driver setting x₀ = ${(S.x0 * 1000).toFixed(2)} mm means a coil force of ${(MD * W50 * W50 * S.x0).toFixed(1)} N (see Model); Q = ${Math.round(S.Q)} gives each peak a width f/Q.`
+      : `An ideal point force on a free plate. A mode is excited only if the drive point moves in it: a drive on a nodal line of a mode cannot pump it. Between resonances a free plate moves little, so the sand mostly stays put. Q = ${Math.round(S.Q)} gives each peak a width f/Q.`;
   }
   function plotHintText() {
     $('plotHint').textContent = S.plot === 'law'
       ? 'Chladni’s law is empirical: for a flat circular plate f ≈ C (n + 2m)^p, with n nodal diameters, m nodal circles and p close to 2. The line is a least squares fit to the computed modes; click a point to drive that mode.'
-      : 'Response: RMS acceleration over the plate for the drive force set, on log scales. Dark ticks along the bottom mark modes the drive point can excite, faint ticks modes it cannot. Click or drag on the plot to set f.';
+      : 'Response: RMS acceleration over the plate for the drive set, on log scales; with the wave driver the dashed curve is the acceleration of the post itself. Dark ticks along the bottom mark modes the drive point can excite, faint ticks modes it cannot. Click or drag on the plot to set f.';
   }
 
   // ---------- canvas ----------
@@ -1179,9 +1295,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const l1 = `${S.shape === 'square' ? 'Square, 24 cm' : 'Circle, 24 cm across'} · ${mat.name.toLowerCase()} ${(S.h * 1000).toFixed(2)} mm · free edges`;
     halo(c, l1, p.x + 4, p.y + 14 * ps, 'left', T.muted, ps);
     if (D.near != null) {
-      const md = D.ms.modes[D.near], fk = modeF(md), off = Math.abs(S.f - fk) / (fk / S.Q);
+      const r = D.res[D.nearRes], off = r ? Math.abs(S.f - r.f) / (r.f / S.Q) : Infinity;
       c.font = `700 ${13.5 * ps}px ${T.ui}`;
-      const t = off < 1.5 && isDriven(D.near) ? `${md.label}, at resonance` : 'between resonances';
+      const t = off < 1.5 ? `${D.ms.modes[r.k].label}, at resonance` : 'between resonances';
       halo(c, t, p.x + 4, p.y + p.s - 6 * ps, 'left', T.ink, ps);
       c.font = `${12 * ps}px ${T.mono}`;
       halo(c, `peak |a| = ${D.gmax < 10 ? D.gmax.toFixed(2) : D.gmax.toFixed(1)} g`, p.x + p.s - 4, p.y + p.s - 6 * ps, 'right', D.gmax > 1 ? T.ink : T.muted, ps);
@@ -1203,14 +1319,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   function drawResponse() {
     const g = plotGeom(), c = ctx, ps = g.ps, cv = D.curve; if (!cv || g.R - g.L < 40 || g.bot - g.top < 40) return;
-    let ymax = Math.ceil(Math.log10(Math.max(D.curveMax, 1.5) * 1.2)), ymin = Math.min(ymax - 3, Math.floor(Math.log10(Math.max(1e-6, Math.min(...cv.a)))));
+    let ymax = Math.ceil(Math.log10(Math.max(D.curveMax / G0, 1.5) * 1.2)), ymin = Math.min(ymax - 3, -1, Math.floor(Math.log10(Math.max(1e-6, Math.min(...cv.a) / G0))));
     ymin = Math.max(ymin, ymax - 6);
     g.ymin = ymin; g.ymax = ymax;
-    const Y = (a) => g.bot - (Math.log10(Math.max(a, 1e-12)) - ymin) / (ymax - ymin) * (g.bot - g.top);
+    const Y = (a) => g.bot - (Math.log10(Math.max(a / G0, 1e-12)) - ymin) / (ymax - ymin) * (g.bot - g.top);   // a in m/s², axis in g
     G.resp = g; G.respY = Y;
     c.font = `${10.5 * ps}px ${T.mono}`; c.textBaseline = 'middle'; c.textAlign = 'right';
     for (let e = ymin; e <= ymax; e++) {
-      const y = Math.round(Y(Math.pow(10, e))) + 0.5;
+      const y = Math.round(Y(G0 * Math.pow(10, e))) + 0.5;
       c.strokeStyle = T.gridStrong; c.globalAlpha = 0.6; c.lineWidth = 1; c.beginPath(); c.moveTo(g.L, y); c.lineTo(g.R, y); c.stroke(); c.globalAlpha = 1;
       c.fillStyle = T.muted; c.fillText(e >= 0 ? `${Math.pow(10, e)}` : `10${sup(e)}`, g.L - 5, y);
     }
@@ -1225,7 +1341,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.fillText('RMS acceleration of the plate (g)', g.L, g.top - 9 * ps);
     // 1 g
     if (ymin < 0 && ymax > 0) {
-      const y = Y(1); c.strokeStyle = T.equi; c.lineWidth = 1.3 * ps; c.setLineDash([6 * ps, 4 * ps]); c.beginPath(); c.moveTo(g.L, y); c.lineTo(g.R, y); c.stroke(); c.setLineDash([]);
+      const y = Y(G0); c.strokeStyle = T.equi; c.lineWidth = 1.3 * ps; c.setLineDash([6 * ps, 4 * ps]); c.beginPath(); c.moveTo(g.L, y); c.lineTo(g.R, y); c.stroke(); c.setLineDash([]);
     }
     // mode ticks along the bottom
     const ms = D.ms;
@@ -1236,14 +1352,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       c.beginPath(); c.moveTo(x, g.bot); c.lineTo(x, g.bot - (drv ? 9 : 5) * ps); c.stroke();
     });
     c.globalAlpha = 1;
-    // the curve
+    // the curve, and (wave driver) the post's own acceleration, dashed
     c.save(); c.beginPath(); c.rect(g.L, g.top - 2, g.R - g.L, g.bot - g.top + 2); c.clip();
+    if (S.driver === 'wave' && cv.post) {
+      c.strokeStyle = T.muted; c.lineWidth = 1.3 * ps; c.setLineDash([4 * ps, 3 * ps]); c.beginPath();
+      for (let i = 0; i < cv.f.length; i++) { const x = fX(g, cv.f[i]), y = Y(cv.post[i]); i ? c.lineTo(x, y) : c.moveTo(x, y); }
+      c.stroke(); c.setLineDash([]);
+    }
     c.strokeStyle = T.accent; c.lineWidth = 2 * ps; c.lineJoin = 'round'; c.beginPath();
     for (let i = 0; i < cv.f.length; i++) { const x = fX(g, cv.f[i]), y = Y(cv.a[i]); i ? c.lineTo(x, y) : c.moveTo(x, y); }
     c.stroke(); c.restore();
     // peak labels, tallest first, without overlaps
     const peaks = [];
-    ms.modes.forEach((md, k) => { if (md.rigid || !isDriven(k)) return; const f = modeF(md); if (f < F_MIN || f > D.fmax) return; peaks.push({ f, a: rmsAccel(ms.lam2, D.phiP, f, D.fs, S.Q, S.F, D.M), md }); });
+    for (const r of D.res) { if (r.f > D.fmax || r.k < 0) continue; const dr = driveAt(r.f); peaks.push({ f: r.f, a: Math.hypot(dr.Fr, dr.Fi) * rmsAccel(ms.lam2, D.phiP, r.f, D.fs, S.Q, 1, D.M), md: ms.modes[r.k] }); }
     peaks.sort((p, q) => q.a - p.a);
     const placed = []; c.font = `${10.5 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'alphabetic';
     for (const pk of peaks) {
@@ -1265,7 +1386,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.font = `600 ${11 * ps}px ${T.mono}`; c.textBaseline = 'alphabetic';
     const lab = fmtF(S.f), right = x < (g.L + g.R) / 2;
     halo(c, lab, x + (right ? 7 : -7) * ps, g.top + 12 * ps, right ? 'left' : 'right', T.pos, ps);
-    if (ymin < 0 && ymax > 0) { c.font = `${10.5 * ps}px ${T.mono}`; halo(c, '1 g', right ? g.R - 2 : g.L + 4, Y(1) - 4 * ps, right ? 'right' : 'left', T.equi, ps); }
+    if (ymin < 0 && ymax > 0) { c.font = `${10.5 * ps}px ${T.mono}`; halo(c, '1 g', right ? g.R - 2 : g.L + 4, Y(G0) - 4 * ps, right ? 'right' : 'left', T.equi, ps); }
     c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.strokeRect(g.L + 0.5, g.top + 0.5, g.R - g.L, g.bot - g.top);
   }
   const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';

@@ -4,7 +4,7 @@
 const assert = require('node:assert/strict'), { core } = require('./demo_source.cjs');
 let count = 0; const test = (name, fn) => { fn(); count++; console.log('PASS', name); };
 function close(a, b, rel = 1e-10, abs = 0) { assert(Number.isFinite(a) && Math.abs(a - b) <= abs + rel * Math.abs(b), `expected ${b}, got ${a}`); }
-const C = core('chladni', 'G0,PLATE,MATERIALS,SQ_P,LAM2_MAX,flexRigidity,fScale,plateMass,besselJ,besselI,besselJArr,circleEdge,circleModes,circleRadial,circlePhi,gaussLegendre,legendreRow,squareModes,squarePhi,modalAmps,rmsAccel,launchSpeed,sandStep,mulberry32,chladniFit');
+const C = core('chladni', 'G0,PLATE,MATERIALS,SQ_P,LAM2_MAX,flexRigidity,fScale,plateMass,besselJ,besselI,besselJArr,circleEdge,circleModes,circleRadial,circlePhi,gaussLegendre,legendreRow,squareModes,squarePhi,modalAmps,rmsAccel,launchSpeed,sandStep,mulberry32,chladniFit,symEig,circleRoots,receptanceTail,pointReceptance,voiceCoilDrive,driveResonances,hopLength');
 
 test('chladni: Bessel J_n and I_n against reference values', () => {
   // J0(1), J1(1), J0(10), I0(1), I1(1), I0(10) as tabulated in Abramowitz & Stegun (Tables 9.1, 9.8); the rest from SciPy 1.x
@@ -137,7 +137,7 @@ test('chladni: sand model leaves grains alone below g and moves them off the ant
   const meanG = () => { let s = 0, n = 0; for (let i = 0; i < N; i++) if (alive[i]) { s += gamma(x[i], y[i]); n++; } return s / n; };
   const g0 = meanG(), still = []; for (let i = 0; i < N; i++) if (gamma(x[i], y[i]) <= 1) still.push([i, x[i], y[i]]);
   // the demo's hop: grain speed = launch speed v_L at f = 200 Hz, for 1/60 s, at most 3 mm, in plate half widths (12 cm)
-  const hop = (g) => Math.min(0.003, C.launchSpeed(g, 200) / 60) / 0.12;
+  const hop = (g, u) => C.hopLength(g, 200, 1, 1 / 60, u) / 0.12;
   for (let t = 0; t < 600; t++) C.sandStep(x, y, alive, gamma, inside, rng, hop, 0.5);   // 10 s
   for (const [i, a, b] of still) { assert.equal(x[i], a); assert.equal(y[i], b); }
   const g1 = meanG(); let rest = 0, n = 0; for (let i = 0; i < N; i++) if (alive[i]) { n++; if (gamma(x[i], y[i]) <= 1) rest++; }
@@ -149,6 +149,112 @@ test('chladni: sand model leaves grains alone below g and moves them off the ant
   for (let t = 0; t < 600; t++) C.sandStep(x2, y2, al2, gamma, inside, r2, hop, 0);
   let s = 0, m = 0; for (let i = 0; i < N; i++) if (al2[i]) { s += gamma(x2[i], y2[i]); m++; }
   assert(s / m < 0.97 * g0, `no drift: mean Γ ${s / m}`); console.log(`   without drift, 10 s: mean Γ ${g0.toFixed(2)} → ${(s / m).toFixed(2)}`);
+});
+
+
+test('chladni: hop rule: ballistic flight time, mean speed v_L at any frequency', () => {
+  const tick = 1 / 60;
+  // high frequency: flight shorter than a tick, a step every tick
+  const vH = C.launchSpeed(3, 1000); assert(2 * vH / 9.80665 < tick); close(C.hopLength(3, 1000, 1, tick, 0.99), vH * tick, 1e-14);
+  // low frequency: one long hop per flight, landing on a fraction tick/t_f of ticks; the average over u is still v_L × tick
+  for (const [G, f] of [[3, 30], [8, 20], [5, 50]]) {
+    const v = C.launchSpeed(G, f), tf = 2 * v / 9.80665; assert(tf > tick);
+    close(C.hopLength(G, f, 1, tick, 0), v * tf, 1e-14); assert.equal(C.hopLength(G, f, 1, tick, 0.999), 0);
+    let m = 0; const n = 200000; for (let i = 0; i < n; i++) m += C.hopLength(G, f, 1, tick, (i + 0.5) / n);
+    close(m / n, v * tick, 2e-4);
+  }
+  assert.equal(C.hopLength(0.9, 50, 1, tick, 0), 0);
+});
+
+// ---- the wave driver ----
+const st = C.MATERIALS.steel, h = 1e-3, Msq = C.plateMass('square', st, h), fsq = C.fScale('square', st, h);
+const sqL = Float64Array.from(sq, (m) => m.lam2), sqP = Float64Array.from(sq, (m) => C.squarePhi(m, 0, 0)), wAsq = 1 / (4 * Math.PI);
+const Gphys = (f, Q, Lc) => { const g = C.pointReceptance(sqL, sqP, f / fsq, Q, Lc, wAsq), n = Msq * Math.pow(2 * Math.PI * fsq, 2); return { re: g.re / n, im: g.im / n }; };
+
+
+test('chladni: drift weight: none where the plate moves nearly as a whole, full near a node', () => {
+  const N = 200000, inside = () => true, hop = () => 0.01;
+  const run = (gamma, x0) => { const rng = C.mulberry32(3), x = new Float64Array(N).fill(x0), y = new Float64Array(N), al = new Uint8Array(N).fill(1);
+    C.sandStep(x, y, al, gamma, inside, rng, hop, 0.5, 4); let m = 0; for (let i = 0; i < N; i++) m += x[i] - x0; return m / N / 0.01; };
+  // Γ = 2 + 0.2u: relative slope 0.1 per half width, weight 0.1/4 → drift 0.5 × 0.025 = 0.0125 of a hop
+  close(run((u) => 2 + 0.2 * u, 0), -0.5 * (0.1 / 4), 0, 0.006);   // statistical: σ ≈ 0.002
+  // near a node, Γ = 30|u|: relative slope 1/|u| = 10 at u = 0.1 → full drift, half a hop toward the node
+  close(run((u) => 30 * Math.abs(u), 0.1), -0.5, 0, 0.01);
+});
+
+test('chladni: high mode tail of the point receptance (Weyl mode density) against a sum over many more modes (circle, center)', () => {
+  // the center of the circle couples only to n = 0 (and the bouncing mode); exact roots up to λ² = 20000
+  const nu = 0.3, roots = C.circleRoots(0, nu, Math.sqrt(20000)), gq = C.gaussLegendre(400);
+  const L = [0], P = [1];
+  for (const lam of roots) {
+    const e = C.circleEdge(lam, 0, nu), md = { n: 0, lam, c: -e.MJ / e.MI, iEdge: C.besselI(0, lam) * Math.exp(-lam) };
+    let s2 = 0; for (let i = 0; i < gq.x.length; i++) { const r = 0.5 * (gq.x[i] + 1), R = C.circleRadial(md, r); s2 += 0.5 * gq.w[i] * R * R * r; }
+    L.push(lam * lam); P.push(C.circleRadial(md, 0) / Math.sqrt(2 * s2));
+  }
+  const cut = (Lc) => { const k = L.filter((v) => v < Lc).length; return [Float64Array.from(L.slice(0, k)), Float64Array.from(P.slice(0, k))]; };
+  const [L1, P1] = cut(1300), [L2, P2] = cut(20000);
+  let worstNo = 0, worstTail = 0;
+  for (const x of [3, 20, 60, 150, 300, 500, 800, 1000]) {
+    const ref = C.pointReceptance(L2, P2, x, Infinity, 20000, 0.25).re;
+    const a = C.pointReceptance(L1, P1, x, Infinity, 0, 0.25).re, b = C.pointReceptance(L1, P1, x, Infinity, 1300, 0.25).re;
+    worstNo = Math.max(worstNo, Math.abs(a - ref) / Math.abs(ref)); worstTail = Math.max(worstTail, Math.abs(b - ref) / Math.abs(ref));
+  }
+  console.log(`   G(c,c) with modes below λ² = 1300 against λ² = 20000: ${(100 * worstNo).toFixed(1)} % off without the tail, ${(100 * worstTail).toFixed(2)} % with it`);
+  assert(worstTail < 0.01 && worstTail < worstNo / 5);
+});
+
+test('chladni: plate pinned at the post: zeros of G(c,c) against an independent constrained Ritz solve (square, center)', () => {
+  const pinned = C.driveResonances(sqL, sqP, C.LAM2_MAX.square, wAsq, 0, 260);
+  // Ritz with the constraint w(0, 0) = 0, built in the even/even basis directly (Householder reflection removes the constraint)
+  const P = 40, gq = C.gaussLegendre(P + 4), N1 = P + 1, rows = Array.from(gq.x, (x) => C.legendreRow(P, x)), nu = 0.3;
+  const mat = () => Array.from({ length: N1 }, () => new Float64Array(N1)), A0 = mat(), A1 = mat(), A2 = mat(), Cm = mat();
+  for (let q = 0; q < gq.x.length; q++) { const r = rows[q], w = gq.w[q]; for (let i = 0; i < N1; i++) for (let k = 0; k < N1; k++) { A0[i][k] += w * r.p[i] * r.p[k]; A1[i][k] += w * r.d[i] * r.d[k]; A2[i][k] += w * r.dd[i] * r.dd[k]; Cm[i][k] += w * r.dd[i] * r.p[k]; } }
+  const idx = []; for (let i = 0; i <= P; i += 2) for (let j = 0; j <= P; j += 2) idx.push([i, j]);
+  const n = idx.length, p0 = C.legendreRow(P, 0).p, b = idx.map(([i, j]) => p0[i] * p0[j]), bn = Math.hypot(...b);
+  const v = b.map((x) => x / bn); v[0] += Math.sign(v[0]); const vn = v.reduce((a, x) => a + x * x, 0);
+  const H = (x) => { const d = 2 * v.reduce((a, vi, i) => a + vi * x[i], 0) / vn; return x.map((xi, i) => xi - d * v[i]); };
+  const K = idx.map(([i, j]) => idx.map(([k, l]) => (A2[i][k] * A0[j][l] + A0[i][k] * A2[j][l] + nu * (Cm[i][k] * Cm[l][j] + Cm[k][i] * Cm[j][l]) + 2 * (1 - nu) * A1[i][k] * A1[j][l]) / 4));
+  const HK = K.map((row) => H(row)), HKH = Array.from({ length: n }, (_, a) => H(HK.map((r) => r[a])));
+  const sub = HKH.slice(1).map((r) => r.slice(1));
+  const ritz = Array.from(C.symEig(sub).values).map((mu) => 4 * Math.sqrt(Math.max(mu, 0))).sort((x, y) => x - y);
+  // the constrained spectrum also holds the modes that already have a node at the center (unchanged); match each zero to the nearest
+  console.log('   pinned λ²:', pinned.map((x) => x.toFixed(2)).join(' '));
+  for (const z of pinned) {
+    const r = ritz.reduce((a, x) => (Math.abs(x - z) < Math.abs(a - z) ? x : a));
+    assert(r >= z * (1 - 1e-6) && (r - z) / z < 0.004, `zero ${z}: Ritz ${r}`);
+  }
+  close(pinned[0], 11.23, 2e-3); close(pinned[1], 46.02, 2e-3); close(pinned[2], 88.00, 2e-3);
+  // m_d → 0 gives back the free modes that move at the center (poles of G)
+  const free = C.driveResonances(sqL, sqP, C.LAM2_MAX.square, wAsq, 1e7, 130);
+  [24.2702, 63.6861, 122.445].forEach((v, i) => close(free[i], v, 1e-3));
+});
+
+test('chladni: voice coil drive: identities, rigid translation at low frequency, stroke limit', () => {
+  const md = 0.05, w = (f) => 2 * Math.PI * f;
+  // F_p = x / G exactly, and the coil force is x (1/G − m_d ω²)
+  for (const f of [40, 333, 1500]) {
+    const G = Gphys(f, 50, C.LAM2_MAX.square), d = C.voiceCoilDrive(G.re, G.im, w(f), 5, md, 1);
+    close(d.xr, d.Fr * G.re - d.Fi * G.im, 1e-10, 1e-18); close(d.xi, d.Fr * G.im + d.Fi * G.re, 1e-10, 1e-18);
+    const g2 = G.re * G.re + G.im * G.im, Zr = G.re / g2 - md * w(f) ** 2, Zi = -G.im / g2;
+    close(Math.hypot(d.xr * Zr - d.xi * Zi, d.xr * Zi + d.xi * Zr), 5, 1e-10); assert(!d.lim);
+  }
+  // with no tail the modal sum gives back the post motion: Σ q_k φ̂_k(c) = x
+  { const f = 700, G = Gphys(f, 50, 0), d = C.voiceCoilDrive(G.re, G.im, w(f), 5, md, 1), q = C.modalAmps(sqL, sqP, f, fsq, 50, 1, Msq);
+    let re = 0, im = 0; for (let k = 0; k < sqL.length; k++) { const a = q.re[k] * d.Fr - q.im[k] * d.Fi, b = q.re[k] * d.Fi + q.im[k] * d.Fr; re += a * sqP[k]; im += b * sqP[k]; }
+    close(re, d.xr, 1e-9, 1e-15); close(im, d.xi, 1e-9, 1e-15); }
+  // low frequency: the plate and the driver mass move together, x = −F_c / ((M + m_d) ω²), the same at the corner as at the post
+  { const f = 2, G = Gphys(f, 50, C.LAM2_MAX.square), d = C.voiceCoilDrive(G.re, G.im, w(f), 5, md, 1);
+    close(d.xr, -5 / ((Msq + md) * w(f) ** 2), 2e-3); assert(Math.abs(d.xi) < 1e-3 * Math.abs(d.xr));
+    const q = C.modalAmps(sqL, sqP, f, fsq, 50, 1, Msq); let corner = 0;
+    for (let k = 0; k < sq.length; k++) corner += (q.re[k] * d.Fr - q.im[k] * d.Fi) * C.squarePhi(sq[k], 1, 1);
+    close(corner, d.xr, 0.01); }
+  // stroke limit: the post never moves more than x_max, and the coil force is turned down to match
+  for (const f of [3, 10, 25]) {
+    const G = Gphys(f, 50, C.LAM2_MAX.square), d = C.voiceCoilDrive(G.re, G.im, w(f), 17, md, 0.0035);
+    assert(Math.hypot(d.xr, d.xi) <= 0.0035 * (1 + 1e-12) && d.coil <= 17);
+    if (d.lim) close(Math.hypot(d.xr, d.xi), 0.0035, 1e-12);
+  }
+  const G3 = Gphys(3, 50, C.LAM2_MAX.square); assert(C.voiceCoilDrive(G3.re, G3.im, w(3), 17, md, 0.0035).lim);
 });
 
 test('chladni: Chladni’s law fit recovers C and p from exact power law data, and gives p near 2 for the plate', () => {
