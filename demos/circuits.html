@@ -184,6 +184,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .ktab .tot { border-top: 1px solid var(--line); padding-top: 3px; font-weight: 600; }
 .kres { margin: 0; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
 .c-cap { color: var(--capq); } .c-res { color: var(--resq); } .c-ind { color: var(--indq); } .c-cur { color: var(--equi); }
+.twrap { position: relative; overflow-x: auto; }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+table.rows th { text-align: left; font-weight: 700; color: var(--muted); font-size: 0.7rem; padding: 3px 1px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.rows th sub { font-size: 0.75em; }
+table.rows td { padding: 3px 1px; border-bottom: 1px solid var(--grid-strong); vertical-align: middle; }
+table.rows td.n { color: var(--muted); font-size: 0.72rem; white-space: nowrap; padding-right: 3px; }
+table.rows td.empty { color: var(--muted); font-size: 0.8rem; padding: 6px 2px; }
+table.rows input { font: inherit; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.74rem; width: calc(7ch + 6px); color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 4px; padding: 2px 2px; }
+table.rows input.s { width: calc(5ch + 6px); }
+table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 2px; }
 .chlist { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; font-size: 0.86rem; }
 .chlist li { display: flex; align-items: center; gap: 8px; }
 .chlist i { flex: none; width: 18px; height: 0; border-top: 3px solid; border-radius: 2px; }
@@ -215,10 +225,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 :root[data-projector="on"] .tools svg { width: 22px; height: 18px; }
 :root[data-projector="on"] .stage-ctl .btn { padding: 3px 8px; }
 :root[data-projector="on"] .clock { font-size: 0.78rem; }
+:root[data-projector="on"] table.rows input { font-size: 0.6rem; }
+:root[data-projector="on"] table.rows th, :root[data-projector="on"] table.rows td.n, :root[data-projector="on"] table.rows button { font-size: 0.6rem; }
 @media (max-width: 820px) {
   .chips button, .btn, .seg button, .proj { min-height: 36px; }
   .tools button { min-width: 38px; }
   input[type="range"] { min-height: 28px; }
+  table.rows input { min-height: 32px; }
+  table.rows button { min-height: 36px; min-width: 32px; }
   html, body { height: auto; }
   .app { height: auto; }
   .bench { grid-template-columns: minmax(0, 1fr); }
@@ -349,7 +363,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" class="btn" id="keep">Keep trace</button>
           <button type="button" class="btn" id="clearG">Clear traces</button>
         </div>
-        <button type="button" class="btn" id="csv">Export scope CSV</button>
         <p class="hint">Click a switch on the drawing to flip it while the circuit runs. The plots and the clock show the circuit's own time: fast changes play in slow motion, slow ones fast forward.</p>
       </section>
 
@@ -379,11 +392,24 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <p class="hint" id="acHint">The frequency slider is logarithmic and snaps to f<sub>0</sub> when it gets close. You can also drag the f marker on the resonance curve.</p>
       </section>
 
+      <section data-for="ac">
+        <h2>Frequency response readings</h2>
+        <button type="button" class="btn primary" id="capture">Capture reading</button>
+        <div class="row2">
+          <button type="button" class="btn" id="expTab">Export CSV</button>
+          <button type="button" class="btn" id="clearTab">Clear</button>
+        </div>
+        <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>f (Hz)</th><th>I<sub>rms</sub> (mA)</th><th>φ (°)</th><th>P (W)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <p class="hint" id="tblHint">Capture stores the readings at the current frequency, rounded as the panel above shows them. The table shows four; the CSV also has V<sub>0</sub>, |Z|, the part values and the rms voltage across each part. Rows can be edited or deleted.</p>
+      </section>
+
       <section data-for="time ac">
         <h2>Oscilloscope</h2>
         <ul class="chlist" id="chList"></ul>
         <label class="check" id="chainLab"><input type="checkbox" id="chain">Add the voltage phasors tip to tail</label>
         <p class="hint" id="scopeHint">Select a part and press Scope V or Scope I to add a channel. Voltages use the left scale, currents the right.</p>
+        <button type="button" class="btn" id="csv">Export scope CSV</button>
+        <p class="hint" id="csvHint"></p>
       </section>
 
       <section>
@@ -1319,12 +1345,38 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const v = (e) => (e.type === 'cap' ? e.C : e.type === 'ind' ? e.L : e.R);
     return k * (A.type === 'ind' ? v(A) / v(B) : v(A) * v(B));
   }
+  // The exact AC steady state readings at an AC source's own frequency, as the AC readouts show them before rounding:
+  // f, V0 (peak), Vrms = V0/√2, |Z| it sees, phase φ of V ahead of I, source I0 and Irms = I0/√2, average power
+  // ½V0·I0·cos φ, and the rms voltage across each named resistor, bulb, capacitor, inductor, voltmeter and probe.
+  function acReading(els, src) {
+    const V0 = src.V0, out = { f: src.f, V0, Vrms: V0 / Math.SQRT2, Z: NaN, phi: NaN, I0: NaN, Irms: NaN, P: NaN, parts: [] };
+    const z = zSeen(els, src, src.f);
+    if (z) {
+      const I0 = Math.hypot(z.I[0], z.I[1]);
+      out.I0 = I0; out.Irms = I0 / Math.SQRT2;
+      if (isFinite(z.re)) { out.Z = Math.hypot(z.re, z.im); out.phi = Math.atan2(z.im, z.re); out.P = 0.5 * V0 * I0 * Math.cos(out.phi); }
+      else { out.Z = Infinity; out.P = 0; }
+    }
+    const s = spectrum(els);
+    for (const e of els) if (e.name && ['res', 'bulb', 'cap', 'ind', 'vm', 'probe'].includes(e.type)) out.parts.push({ name: e.name, type: e.type, Vrms: specRms(s, e.id, 'V') });
+    return out;
+  }
+  // a value rounded the way the readouts print it with an SI prefix and sig significant figures (fmtSI), as a number
+  const SI_MULT = [9, 6, 3, 0, -3, -6, -9, -12, -15];
+  function roundSI(v, sig) {
+    if (!isFinite(v)) return v;
+    const a = Math.abs(v);
+    if (a < 1e-15) return 0;
+    const p = SI_MULT.find((q) => a >= Math.pow(10, q) * 0.9995);
+    const e = p === undefined ? -15 : p, x = v / Math.pow(10, e), d = Math.max(0, sig - 1 - Math.floor(Math.log10(Math.abs(x)) + 1e-12));
+    return Number(x.toFixed(d) + 'e' + e);
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
     globalThis.CIRC = { R_VALUES, RI_VALUES, C_VALUES, L_VALUES, fOfIdx, idxOfF, nearestIdx, expand, mna, solveDC, eqResistance, kclResiduals, powerBalance,
       solveAC, spectrum, specAt, specRms, zSeen, resonance, buildTransient, propagator, stepWith, storedC, storedL, zeroState, carryState, dcState,
-      eigenvalues, naturalModes, normalize, buildPreset, flipTime, PRESETS, DEFAULTS, quad, dot, kp, hasRint, R_CONTACT, R_SPARK };
+      eigenvalues, naturalModes, normalize, buildPreset, flipTime, PRESETS, DEFAULTS, quad, dot, kp, hasRint, R_CONTACT, R_SPARK, acReading, roundSI };
     return;
   }
 
@@ -3478,6 +3530,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (S.mode === 'dc') return;
     ul.innerHTML = channels.map((ch, i) => `<li><i style="border-color:${chColor(ch)}"></i><span>${chName(ch)}${ch.q === 'I' && isSource(ch.id) ? ' <span class="ok">out of +</span>' : ''}</span><button type="button" data-rm="${i}" aria-label="Remove channel ${chText(ch)}">Remove</button></li>`).join('') || '<li><span class="ok">No channels yet.</span></li>';
     $('chainLab').hidden = S.mode !== 'ac';
+    $('csvHint').textContent = S.mode === 'ac' ? 'In AC the scope CSV holds two periods of the steady state, 401 samples, at full precision.' : 'The CSV holds the visible scope window.';
     $('chain').checked = S.chain;
     $('keep').disabled = $('clearG').disabled = S.mode !== 'time';
   }
@@ -4028,6 +4081,75 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     setTimeout(() => URL.revokeObjectURL(url), 1000);
     live('Scope traces exported as CSV.');
   }
+  // ---------- AC frequency response readings ----------
+  // Each row keeps the readings as the AC panel prints them (strings, editable), never the unrounded values.
+  let readings = [];
+  const PART_Q = { res: ['R', 'ohm'], bulb: ['R', 'ohm'], cap: ['C', 'F'], ind: ['L', 'H'] };
+  const numStr = (v) => (isFinite(v) ? String(v) : v === Infinity ? 'inf' : '');
+  const scaleStr = (t, k) => { const v = Number(t); return t !== '' && isFinite(v) ? String(+(v * k).toPrecision(12)) : t; };
+  function captureReading() {
+    if (S.mode !== 'ac') return;
+    const src = mainSrc();
+    if (!src) { live('No AC source on the board to read.'); return; }
+    const r = acReading(els, src), deg = r.phi * 180 / Math.PI;
+    const row = {
+      f: numStr(+src.f.toPrecision(6)), V0: numStr(+src.V0.toPrecision(4)), Vs: numStr(roundSI(r.Vrms, 4)),
+      I: isFinite(r.Irms) ? scaleStr(numStr(roundSI(r.Irms, 4)), 1e3) : '', phi: isFinite(deg) ? deg.toFixed(1).replace(/^-0\.0$/, '0.0') : '',
+      Z: numStr(roundSI(r.Z, 4)), P: numStr(roundSI(r.P, 4)), src: src.name || 'source', parts: {}, vals: {}
+    };
+    for (const q of r.parts) row.parts[q.name] = numStr(roundSI(q.Vrms, 4));
+    for (const e of els) if (e.name && PART_Q[e.type]) { const [k, u] = PART_Q[e.type]; row.vals[e.name] = { v: +e[k].toPrecision(6), u, k }; }
+    readings.push(row); renderRows();
+    live(`Reading ${readings.length} captured: f = ${row.f} Hz, I rms = ${row.I} mA, phase ${row.phi} degrees.`);
+  }
+  function renderRows() {
+    const tb = $('tbl').querySelector('tbody');
+    if (!readings.length) { tb.innerHTML = '<tr><td class="empty" colspan="6">No readings yet. Set a frequency, then press Capture reading.</td></tr>'; return; }
+    const esc = (t) => String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    tb.innerHTML = readings.map((r, i) => {
+      const inp = (f, lab, cls) => `<td><input${cls ? ` class="${cls}"` : ''} aria-label="${lab}, row ${i + 1}" data-i="${i}" data-f="${f}" value="${esc(r[f])}" inputmode="decimal" spellcheck="false"></td>`;
+      const tip = `V0 = ${r.V0} V peak, Vrms = ${r.Vs} V, |Z| = ${r.Z} ohm; ` + Object.entries(r.vals).map(([n, o]) => `${n} = ${o.v} ${o.u}`).join(', ');
+      return `<tr title="${esc(tip)}"><td class="n">${i + 1}</td>${inp('f', 'Frequency f, Hz', 'w')}${inp('I', 'I rms, mA', 'w')}${inp('phi', 'Phase, degrees', 's')}${inp('P', 'Average power, W', '')}<td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`;
+    }).join('');
+  }
+  $('tbl').addEventListener('change', (ev) => { const t = ev.target; if (t.dataset && t.dataset.f && readings[+t.dataset.i]) readings[+t.dataset.i][t.dataset.f] = t.value.trim(); });
+  $('tbl').addEventListener('click', (ev) => {
+    const b = ev.target.closest('button[data-del]'); if (!b) return;
+    const i = +b.dataset.del; readings.splice(i, 1); renderRows(); live(`Row ${i + 1} deleted.`);
+    const nb = $('tbl').querySelector(`button[data-del="${Math.min(i, readings.length - 1)}"]`); (nb || $('capture')).focus();
+  });
+  // the readings as CSV: a comment block about the circuit, then one row per reading in SI units
+  function readingsCSV() {
+    const cell = (t) => { t = String(t == null ? '' : t); return /[",\n]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t; };
+    const ascii = (t) => t.replace(/Ω/g, 'ohm').replace(/µ/g, 'u').replace(/ · /g, ', ');
+    const m = meta(), L = ['# Circuits virtual apparatus, AC mode: frequency response readings (simulated data)',
+      `# setup,${cell(m ? m.name + (S.edited ? ' (rewired)' : '') : 'own circuit')}`];
+    const parts = els.filter((e) => e.type !== 'wire').sort((a, b) => (a.name || '').localeCompare(b.name || '', 'en', { numeric: true }));
+    L.push(`# circuit at export,${cell(parts.map((e) => ascii(`${e.type === 'ac' ? 'AC source' : TYPE[e.type].toLowerCase()} ${e.name || ''}${fmtPart(e) ? ' ' + fmtPart(e) : ''}`.replace(/ +/g, ' ').trim())).join('; '))}`);
+    for (const e of parts) {
+      if (PART_Q[e.type]) { const [k, u] = PART_Q[e.type]; L.push(`# part,${cell(e.name)},${TYPE[e.type].toLowerCase()},${k},${+e[k].toPrecision(6)},${u}`); }
+      else if (e.type === 'ac') L.push(`# part,${cell(e.name)},AC source,V0,${+e.V0.toPrecision(4)},V peak,f,${+e.f.toPrecision(6)},Hz`);
+      else if (e.type === 'bat') L.push(`# part,${cell(e.name)},battery,emf,${+e.emf.toPrecision(4)},V${hasRint(e) ? `,r,${+e.r.toPrecision(6)},ohm` : ''}`);
+    }
+    L.push('# model,ideal parts and ideal meters (ammeter 0 ohm; voltmeter and probe infinite resistance); sinusoidal steady state from complex impedances',
+      '# readings,as displayed: f as set; voltages and current to 4 significant figures; phase to 0.1 degree; edited cells exported as typed',
+      '# phase,phase of the source voltage ahead of its current (positive when the current lags)',
+      '# part columns,Vrms_<part>_V is the rms voltage across that part; <part>_ohm/_H/_F is its value when the reading was taken');
+    const pn = [], vn = [];
+    for (const r of readings) { for (const n of Object.keys(r.parts)) if (!pn.includes(n)) pn.push(n); for (const n of Object.keys(r.vals)) if (!vn.includes(n)) vn.push(n); }
+    const nsort = (a, b) => a.localeCompare(b, 'en', { numeric: true }); pn.sort(nsort); vn.sort(nsort);
+    const unitOf = (n) => { const r = readings.find((q) => q.vals[n]); return r.vals[n].u; };
+    L.push(['row', 'source', 'f_Hz', 'V0_peak_V', 'Vrms_source_V', 'Irms_A', 'phase_deg', 'Z_ohm', 'P_avg_W', ...pn.map((n) => `Vrms_${n}_V`), ...vn.map((n) => `${n}_${unitOf(n)}`)].map(cell).join(','));
+    readings.forEach((r, i) => L.push([i + 1, r.src, r.f, r.V0, r.Vs, scaleStr(r.I, 1e-3), r.phi, r.Z, r.P, ...pn.map((n) => r.parts[n] ?? ''), ...vn.map((n) => (r.vals[n] ? r.vals[n].v : ''))].map(cell).join(',')));
+    return L.join('\n') + '\n';
+  }
+  function downloadText(name, text) {
+    try { const url = URL.createObjectURL(new Blob([text], { type: 'text/csv' })), a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000); } catch (_) {}
+  }
+  $('capture').addEventListener('click', captureReading);
+  $('expTab').addEventListener('click', () => { if (!readings.length) { live('No readings to export yet.'); return; } downloadText('circuits-ac-readings.csv', readingsCSV()); live('Readings exported as CSV.'); });
+  $('clearTab').addEventListener('click', () => { readings = []; renderRows(); live('Readings cleared.'); });
+  renderRows();
   const toggle = (id, key) => $(id).addEventListener('change', (ev) => { S.layers[key] = ev.target.checked; if (key === 'elec') dotKey(); updateRail(); });
   toggle('tElec', 'elec'); toggle('tIlab', 'ilabels'); toggle('tVcol', 'vcolor'); toggle('tVlab', 'vlabels'); toggle('tPlab', 'plabels'); toggle('tField', 'field');
   function dotKey() { $('dotSw').classList.toggle('e', S.layers.elec); $('dotTxt').textContent = S.layers.elec ? 'Electrons, moving opposite to I' : 'Positive charge carriers, conventional current'; }
@@ -4149,6 +4271,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     get reso() { return reso; }, get channels() { return channels; }, get geo() { return geo; }, get GE() { return GE; }, get kLoop() { return kLoop; }, get iv() { return iv; }, get running() { return running; },
     get view() { return view; }, get preset() { return S.preset; }, get edited() { return S.edited; }, get ghosts() { return ghosts; }, get gripBox() { return gripBox; }, get rGeo() { return rGeo; },
     applyPreset, setMode, setView, setTool, placeParts, setSel, toggleSwitch, undo, redo, setRunning, doReset, energyTotals, advance,
+    get readings() { return readings; }, captureReading, readingsCSV, acReading, roundSI,
     px(u, v) { const r = can.getBoundingClientRect(); return [r.left + geo.X(u), r.top + geo.Y(v)]; },
     byName(n) { return els.find((e) => e.name === n); }
   };
