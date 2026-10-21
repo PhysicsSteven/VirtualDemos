@@ -115,6 +115,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .rail section + section { border-top: 1px solid var(--line); }
 .rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
 .hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.hint.core-note { color: var(--ink); border-left: 3px solid var(--accent); padding-left: 8px; }
 
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chips button, .btn {
@@ -234,7 +235,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>E direction</dt><dd id="rDir">—</dd></div>
           <div><dt>Position (cm)</dt><dd id="rPos">—</dd></div>
         </dl>
-        <p class="hint">Hover over the field, or tap to place the probe.</p>
+        <p class="hint core-note" id="coreNote" hidden>The probe is inside a charge's 1.2 mm model ball. A true point charge has no finite V or E here; these values are for a uniformly charged ball.</p>
+        <p class="hint">Hover over the field, or tap to place the probe. Each charge is modeled as a uniformly charged ball 1.2 mm in radius, inside its drawn disc; outside the ball V and E are exact point charge values.</p>
       </section>
 
       <section>
@@ -281,6 +283,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 (() => {
   const C_V = 898.755;   // V·cm per nC   (k q / r)
   const C_E = 89875.5;   // V/m · cm² per nC (k q / r²)
+  const CORE_R = 0.12, CORE_R3 = CORE_R ** 3;   // cm: each charge is a uniformly charged ball of this radius (always inside its drawn disc)
   const MAX_CHARGES = 8;
   const $ = (id) => document.getElementById(id);
 
@@ -330,11 +333,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const minus = (str) => str.replace(/-/g, '−');
   const fmtQ = (q) => (q > 0 ? '+' : q < 0 ? '−' : '') + (Number.isInteger(Math.abs(q)) ? Math.abs(q) : Math.abs(q).toFixed(1));
 
+  // Outside r = CORE_R both are exactly the point charge results kq/r and kq r̂/r².
+  // Inside, each charge is a uniformly charged ball: V = kq(3a² − r²)/(2a³), E = kq r/a³,
+  // so E = −∇V everywhere and both are continuous at r = a.
   function potential(x, y) {
     let v = 0;
     for (const c of charges) {
       if (!c.q) continue;
-      v += c.q / Math.max(Math.hypot(x - c.x, y - c.y), 0.12);
+      const r = Math.hypot(x - c.x, y - c.y);
+      v += r >= CORE_R ? c.q / r : c.q * (3 * CORE_R * CORE_R - r * r) / (2 * CORE_R3);
     }
     return v * C_V;
   }
@@ -342,12 +349,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     let ex = 0, ey = 0;
     for (const c of charges) {
       if (!c.q) continue;
-      const dx = x - c.x, dy = y - c.y;
-      const r2 = Math.max(dx * dx + dy * dy, 1e-4), r3 = r2 * Math.sqrt(r2);
+      const dx = x - c.x, dy = y - c.y, r2 = dx * dx + dy * dy;
+      const r3 = r2 >= CORE_R * CORE_R ? r2 * Math.sqrt(r2) : CORE_R3;
       ex += c.q * dx / r3; ey += c.q * dy / r3;
     }
     return [ex * C_E, ey * C_E];
   }
+  // the charge whose model ball contains (x, y), if any
+  const inCore = (x, y) => charges.find((c) => c.q && Math.hypot(x - c.x, y - c.y) < CORE_R) || null;
   function bounds() {
     return { x0: -cx / s, x1: (W - cx) / s, y0: -(H - cy) / s, y1: cy / s };
   }
@@ -986,8 +995,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   // ---------- panel ----------
-  const rV = $('rV'), rE = $('rE'), rDir = $('rDir'), rPos = $('rPos');
+  const rV = $('rV'), rE = $('rE'), rDir = $('rDir'), rPos = $('rPos'), coreNote = $('coreNote');
   function updateReadout() {
+    const inside = !!(probe && inCore(probe.x, probe.y));
+    if (coreNote.hidden === inside) coreNote.hidden = !inside;
     if (!probe || !charges.some((c) => c.q)) { rV.textContent = rE.textContent = rDir.textContent = rPos.textContent = '—'; return; }
     const [ex, ey] = field(probe.x, probe.y), m = Math.hypot(ex, ey);
     rV.textContent = fmtV(potential(probe.x, probe.y));

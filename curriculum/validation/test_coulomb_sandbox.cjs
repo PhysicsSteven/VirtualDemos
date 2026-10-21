@@ -2,8 +2,8 @@
 const assert=require('node:assert/strict'),vm=require('node:vm'),{readDemo}=require('./demo_source.cjs');
 const src=readDemo('coulomb-sandbox'),start=src.indexOf('  function potential('),end=src.indexOf('  function bounds(',start);
 assert(start>=0&&end>start,'source extraction boundaries changed');
-const constants=src.match(/  const C_V =[^\n]+\n  const C_E =[^\n]+/);assert(constants);
-const ctx={};vm.runInNewContext(constants[0]+'\nlet charges=[];\n'+src.slice(start,end)+'\nglobalThis.model={potential,field,set:q=>{charges=q;}};',ctx);
+const constants=src.match(/  const C_V =[^\n]+\n  const C_E =[^\n]+\n  const CORE_R =[^\n]+/);assert(constants);
+const ctx={};vm.runInNewContext(constants[0]+'\nlet charges=[];\n'+src.slice(start,end)+'\nglobalThis.model={potential,field,inCore,CORE_R,set:q=>{charges=q;}};',ctx);
 const c=ctx.model,k=8.98755e9;let n=0;
 const close=(a,b,rel=1e-8,abs=1e-6)=>assert(Math.abs(a-b)<=abs+rel*Math.abs(b),`expected ${b}, got ${a}`),test=(name,f)=>{f();n++;console.log('PASS',name);};
 test('SI units and inverse distance / inverse square for isolated charges',()=>{
@@ -26,9 +26,25 @@ test('zero charges and distant dipole scaling',()=>{
  c.set([{x:0,y:0,q:0}]);close(c.potential(0,0),0);close(c.field(0,0)[0],0);
  c.set([{x:-1,y:0,q:1},{x:1,y:0,q:-1}]);const a=Math.abs(c.field(0,1000)[0]),b=Math.abs(c.field(0,2000)[0]);close(a/b,8,2e-6);
 });
-console.log(`Completed ${n} Coulomb groups outside softened cores.`);
+test('core model: uniformly charged ball, E = -grad V inside, continuous at r = a',()=>{
+ const a=c.CORE_R;assert.equal(a,.12);
+ for(const q of [1,-3]){c.set([{x:0,y:0,q}]);
+  close(c.potential(0,0),1.5*k*q*1e-9/(a*.01));close(c.field(0,0)[0],0);
+  for(const r of [.01,.05,.09,.1199]){const rm=r*.01,am=a*.01;
+   close(c.potential(r,0),k*q*1e-9*(3*am*am-rm*rm)/(2*am**3));close(c.field(r,0)[0],k*q*1e-9*rm/am**3);
+   const h=1e-6,g=-(c.potential(r+h,0)-c.potential(r-h,0))/(2*h*.01);close(c.field(r,0)[0],g,1e-6);}
+  const e=1e-9;close(c.potential(a-e,0),c.potential(a+e,0),1e-7);close(c.field(a-e,0)[0],c.field(a+e,0)[0],1e-7);
+  assert(c.inCore(.05,0)&&!c.inCore(.13,0));}
+});
+test('E = -grad V on a grid crossing two cores (2D, both components)',()=>{
+ c.set([{x:0,y:0,q:2},{x:.3,y:.1,q:-1}]);const h=1e-6;
+ for(let i=-20;i<=20;i++)for(let j=-10;j<=10;j++){const x=i*.0173,y=j*.0191,E=c.field(x,y);
+  if([[0,0],[.3,.1]].some(([X,Y])=>Math.abs(Math.hypot(x-X,y-Y)-.12)<1e-5))continue;
+  close(E[0],-(c.potential(x+h,y)-c.potential(x-h,y))/(2*h*.01),1e-5,1e-3);close(E[1],-(c.potential(x,y+h)-c.potential(x,y-h))/(2*h*.01),1e-5,1e-3);}
+});
+console.log(`Completed ${n} Coulomb groups, including the charge cores.`);
 if(process.argv.includes('--strict-core')){
- // Deliberately checks a known failure; do not replace this reference with the demo's clamp.
+ // Independent check at a point inside the core: the field must equal the numerical -dV/dx there.
  c.set([{x:0,y:0,q:1}]);const x=.05,h=1e-5,expected=-(c.potential(x+h,0)-c.potential(x-h,0))/(2*h*.01);
  console.log('Core consistency probe (cm)',{x,field:c.field(x,0)[0],negativeGradient:expected});close(c.field(x,0)[0],expected);
 }

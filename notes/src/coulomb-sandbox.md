@@ -44,4 +44,5 @@ Students need Coulomb's law, vector components and potential. Grid squares are 1
 ## Physics behind the demo
 
 - Up to 8 point charges (−5 to +5 nC) in one plane, with the full 3D Coulomb field: V = Σ kqᵢ/rᵢ, E = Σ kqᵢ r̂ᵢ/rᵢ², k = 8.99×10⁹ N·m²/C².
+- A point charge has no finite V or E at its own position, so inside a radius a = 1.2 mm (well inside every drawn disc) each charge is treated as a uniformly charged ball: V = kq(3a² − r²)/(2a³) and E = kq r/a³. Outside that ball the values are exactly the point charge values, and E = −∇V everywhere. If the probe enters a ball, the Probe panel says so.
 - Field lines follow E, in number proportional to |q|. In 3D the height is V, compressed near each charge: read it for shape, not scale.

@@ -97,6 +97,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <h2>Physics behind the demo</h2>
 <ul>
 <li>Up to 8 point charges (−5 to +5 nC) in one plane, with the full 3D Coulomb field: V = Σ kqᵢ/rᵢ, E = Σ kqᵢ r̂ᵢ/rᵢ², k = 8.99×10⁹ N·m²/C².</li>
+<li>A point charge has no finite V or E at its own position, so inside a radius a = 1.2 mm (well inside every drawn disc) each charge is treated as a uniformly charged ball: V = kq(3a² − r²)/(2a³) and E = kq r/a³. Outside that ball the values are exactly the point charge values, and E = −∇V everywhere. If the probe enters a ball, the Probe panel says so.</li>
 <li>Field lines follow E, in number proportional to |q|. In 3D the height is V, compressed near each charge: read it for shape, not scale.</li>
 </ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
 </main>
