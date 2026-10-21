@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chladni Plates: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Chladni Plates</h1><ul class="meta"><li><a href="../demos/chladni.html">Open the demo</a></li><li>Acoustics; intro physics (waves and sound, resonance)</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A plate has a discrete set of modes, each with its own frequency and pattern of nodal lines. Driven near one of those frequencies, it moves in that mode's shape.</li>
+<li>Sand gathers on the nodal lines because it is thrown off wherever the plate's acceleration amplitude exceeds g and stays put where it does not.</li>
+<li>A drive can only excite a mode if the drive point moves in that mode. A center drive on a circle excites only the ring modes; on a square, only the modes symmetric about both center lines and both diagonals.</li>
+<li>Bending waves are dispersive: plate frequencies grow roughly as the square of the number of nodal lines (Chladni's law, f ≈ C(n + 2m)^p with p near 2), not in a harmonic series. For a given shape, f ∝ (h/ℓ²)√(E/ρ(1 − ν²)).</li>
+<li>Q sets the height and width of each resonance: Q times the static response, f/Q wide.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know standing waves on a string, nodes and antinodes, and driven resonance. The plate is shown from above with sand (<strong>Sand</strong>) or in <strong>3D</strong>, next to the computed response curve. Sound starts off (<strong>Sound off</strong>, <strong>Volume</strong>). <strong>Sprinkle fresh sand</strong> starts the sand over.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>First pattern.</strong> Ask Q1 before the sand settles. Then point to the response curve: the red line sits on the first tall peak, and the readout under <strong>Drive</strong> names the mode. Turn on <strong>Nodal lines</strong> to compare the computed nodal lines with the sand.</li>
+<li><strong>Next resonance</strong>, a few times. Each peak gives a new pattern with more nodal lines. Point out the faint ticks along the bottom of the plot: modes that exist but do not respond, because the center is on one of their nodal lines. Ask Q6, then drag the brass drive post off center and press <strong>Previous resonance</strong> back down.</li>
+<li><strong>Rings on a circle.</strong> Ask Q2 as a prediction first. Step through with <strong>Next resonance</strong>: every pattern is a set of circles.</li>
+<li><strong>A cross</strong>, then <strong>High mode</strong>. Off center and at the rim, the modes with nodal diameters appear. Switch <strong>Plot</strong> to <strong>Chladni's law</strong> and use Q5.</li>
+<li><strong>Sweep and listen.</strong> Turn on sound. The tone swells at each peak; the sand only moves when the curve crosses the 1 g line. Stop the sweep near a peak and use <strong>Fine tune</strong> to walk across it; change <strong>Modal Q (damping)</strong> and ask Q4.</li>
+<li><strong>Square: classic star</strong> (if time allows). Try <strong>Where |a| &gt; g</strong> and <strong>3D</strong> (bending exaggerated and slowed). Change <strong>Metal</strong> and <strong>Thickness h</strong> for Q3.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: sand is sprinkled evenly on a plate that is vibrating in one of its modes. After a few seconds, where will the sand be, and why does it end up there rather than somewhere else?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Predict: a circular plate is driven at its center by a vibrating post. Why can only patterns made of circles appear, never ones with straight nodal lines through the center? Check with <strong>Rings on a circle</strong> and <strong>Next resonance</strong>.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The lowest mode a center drive excites on the 24 cm, 1.00 mm steel square is at 102.4 Hz. Predict its frequency (a) for a 2.00 mm steel plate, (b) for a steel plate 18 cm on a side and 1.00 mm thick, and (c) for a 1.00 mm aluminum plate (E = 69 GPa, ρ = 2700 kg/m³ instead of 200 GPa and 7850 kg/m³). Aluminum is almost three times lighter; why is (c) nearly the same? Check (a) and (c) with the demo.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> At 102.4 Hz in <strong>First pattern</strong> the peak acceleration on the plate is 11.1 g. What is the largest displacement amplitude of the plate? If Q is doubled from 100 to 200 at exact resonance, what happens to that amplitude, and to the width of the peak?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> With <strong>High mode</strong> loaded, switch <strong>Plot</strong> to <strong>Chladni's law</strong>. Use the fitted C and p shown on the plot to predict the frequency of the (4, 2) mode, then compare with the demo's resonance. How good is the law, and what kind of statement is it?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In <strong>First pattern</strong>, the readout calls the 102.4 Hz mode the third flexural mode of the plate, yet the plot shows no peak below it. Where are modes 1 and 2, and how could you make them appear? Use the demo to check your answer and give the frequency of mode 1.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> The maker of a common square teaching plate lists its "best frequencies" starting near 345 Hz, and they do not match the demo's resonances. Give two physical reasons why a real plate on a real driver differs from this model, and one thing you could measure to tell which matters most.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The sand collects where the plate vibrates most."</strong> It is thrown away from there. Only very fine powder, like lycopodium, collects at the antinodes, carried by air currents over the plate (Faraday, 1831); the demo does not model air.</li>
+<li><strong>"The overtones of a plate are harmonics, like a string's."</strong> Plate modes are not whole number multiples of the lowest one; their frequencies grow roughly as the square of the number of nodal lines, because bending waves are dispersive.</li>
+<li><strong>"Any frequency makes a pattern if you drive hard enough."</strong> Between resonances the plate barely moves; only close to a mode, within about f/Q, does the acceleration pass g over a large area.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Thin plate (Kirchhoff–Love) theory, D∇⁴w = −ρh ∂²w/∂t², D = Eh³/(12(1 − ν²)): small, linear motion, all edges free, bending wavelength long compared with the thickness (k h ≈ 0.08 at 1.5 kHz for 1 mm steel).</li>
+<li>Mode frequencies: f = λ²/(2πℓ²) × √(D/ρh), with ℓ the side (square) or radius (circle) and λ² a number that depends on the mode and on ν. Circle: exact Bessel function solution, w = [J_n(λr/a) + C I_n(λr/a)] cos nθ, with the free edge frequency equation solved numerically. Square: no closed form; Rayleigh–Ritz with Legendre polynomials, converged to better than one part in a million.</li>
+<li>The drive is an ideal point force F₀ cos(2πft); the driver's mass, its stiffness and the clamp around the bolt are left out, which is why real kit frequencies differ. Every mode has the same Q. The response is the sum over all modes: q_k = (F₀/M) φ_k(drive point) / (ω_k² − ω² + iωω_k/Q).</li>
+<li>Sand is phenomenological, not a granular simulation: where |a| &gt; g grains hop randomly with a drift toward smaller |a|; where |a| &lt; g they stay put.</li>
+<li>Plates are 24 cm across, as in common kits, about 1 mm thick (makers rarely state it). Steel: E = 200 GPa, ρ = 7850 kg/m³, ν = 0.30; aluminum: 69 GPa, 2700 kg/m³, 0.33. The sound is a sine at f whose loudness follows the computed response; it is not the sound the plate radiates.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>History: Ernst Chladni published these figures in 1787, bowing plates held at one point. Sophie Germain won the French Academy's prize in 1816 for a theory of plate vibration, an early form of the equation the demo solves.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

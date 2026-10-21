@@ -1,0 +1,1650 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Chladni Plates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one canvas holds the plate seen from above (sand) and the frequency response plot; the 3D view of the plate replaces the top view; controls in the rail. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --warm: #f4f2ee;
+  --brass: #a7740b;
+  --bench: #e4e1da;
+  --lamp: #fffaf0;
+  --plate-hi: #59606a;
+  --plate-lo: #1d2026;
+  --plate-edge: #9aa2ad;
+  --sand: #f1e6c9;
+  --nodal: #7cc8ff;
+  --heat: #ff9a3c;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --warm: #13120f; --brass: #e2b350; --bench: #0a0c0f; --lamp: #2a2620;
+    --plate-hi: #4b525c; --plate-lo: #121418; --plate-edge: #6d7682; --sand: #eadcb8; --nodal: #7cc8ff; --heat: #ff9a3c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --warm: #13120f; --brass: #e2b350; --bench: #0a0c0f; --lamp: #2a2620;
+  --plate-hi: #4b525c; --plate-lo: #121418; --plate-edge: #6d7682; --sand: #eadcb8; --nodal: #7cc8ff; --heat: #ff9a3c; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bench); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.count { margin-left: auto; font-size: 0.95rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.pane { position: relative; min-height: 0; }
+.pane canvas { position: absolute; display: block; }
+#can { inset: 0; touch-action: none; outline: none; }
+#can:focus-visible, #gl:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+#gl { touch-action: none; outline: none; border-radius: 8px; }
+.nogl { position: absolute; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; color: var(--muted); background: var(--bench); }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg button:disabled { opacity: 0.45; cursor: not-allowed; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+/* the sound button: brass when on, so its state reads at a glance */
+.snd { display: inline-flex; align-items: center; gap: 7px; }
+.snd svg { width: 18px; height: 18px; flex: none; }
+.snd .waves { opacity: 0; }
+.snd[aria-pressed="true"] { background: var(--brass); border-color: var(--brass); color: var(--warm); }
+.snd[aria-pressed="true"] .waves { opacity: 1; }
+.snd[aria-pressed="true"] .mute { opacity: 0; }
+.vol { display: inline-flex; align-items: center; gap: 6px; font-size: 0.84rem; color: var(--muted); }
+.vol input { width: 90px; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd small { font-size: 0.78rem; font-weight: 400; color: var(--muted); }
+.readout .wide { grid-column: 1 / -1; }
+.readout dd.txt { font-family: var(--font-ui); font-weight: 400; font-size: 0.88rem; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+.swatch.sand { height: 10px; border: 0; border-radius: 2px; background: radial-gradient(circle, var(--sand) 1.2px, transparent 1.6px) 0 0 / 5px 5px, var(--plate-lo); }
+.swatch.nodal { border-color: var(--nodal); border-top-style: dashed; }
+.swatch.heat { height: 10px; border: 0; border-radius: 2px; background: color-mix(in srgb, var(--heat) 55%, var(--plate-lo)); }
+.swatch.curve { border-color: var(--accent); border-top-width: 3px; }
+.swatch.fline { border-color: var(--pos); }
+.swatch.gline { border-color: var(--equi); border-top-style: dashed; }
+.swatch.post { width: 12px; height: 12px; border: 2px solid var(--plate-lo); border-radius: 50%; background: var(--brass); margin: 0 5px; }
+.model p { margin: 0 0 6px; }
+.model p:last-child { margin-bottom: 0; }
+
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; }
+  .pane { height: calc(100vw + 190px); }
+  .rail { overflow: visible; }
+  .count { margin-left: 0; }
+}
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Chladni Plates</h1>
+      <p>Drive a thin metal plate at one of its resonant frequencies and sand sprinkled on it dances off the moving parts and settles on the lines that stay still. Sweep the drive, watch the response peak at each mode, and compare a square plate with a circular one.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">f in Hz · λ² = ω ℓ² √(ρh/D) · |a| in g = 9.81 m/s²</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/chladni.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/chladni.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM14 2h2v1h-2zM18 2h1v1h-1zM20 2h2v1h-2zM23 2h1v1h-1zM25 2h4v1h-4zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM12 3h2v1h-2zM16 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h8v1h-8zM22 4h3v1h-3zM26 4h5v1h-5zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h1v1h-1zM13 5h2v1h-2zM17 5h1v1h-1zM19 5h1v1h-1zM21 5h3v1h-3zM27 5h1v1h-1zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM14 6h3v1h-3zM19 6h1v1h-1zM21 6h1v1h-1zM27 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM13 7h1v1h-1zM18 7h3v1h-3zM23 7h1v1h-1zM25 7h1v1h-1zM27 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM12 9h2v1h-2zM15 9h4v1h-4zM23 9h1v1h-1zM26 9h4v1h-4zM2 10h1v1h-1zM5 10h6v1h-6zM12 10h2v1h-2zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h4v1h-4zM25 10h2v1h-2zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM2 11h2v1h-2zM10 11h1v1h-1zM12 11h1v1h-1zM22 11h3v1h-3zM28 11h2v1h-2zM33 11h3v1h-3zM37 11h1v1h-1zM5 12h1v1h-1zM7 12h8v1h-8zM16 12h1v1h-1zM20 12h1v1h-1zM23 12h1v1h-1zM26 12h1v1h-1zM29 12h1v1h-1zM31 12h3v1h-3zM36 12h1v1h-1zM38 12h1v1h-1zM5 13h1v1h-1zM7 13h1v1h-1zM9 13h2v1h-2zM13 13h2v1h-2zM17 13h1v1h-1zM19 13h2v1h-2zM24 13h1v1h-1zM29 13h1v1h-1zM31 13h8v1h-8zM3 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM12 14h1v1h-1zM14 14h1v1h-1zM16 14h1v1h-1zM18 14h1v1h-1zM21 14h1v1h-1zM26 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM3 15h3v1h-3zM9 15h3v1h-3zM14 15h1v1h-1zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM4 16h1v1h-1zM7 16h2v1h-2zM10 16h3v1h-3zM14 16h2v1h-2zM17 16h1v1h-1zM19 16h1v1h-1zM21 16h4v1h-4zM27 16h1v1h-1zM29 16h1v1h-1zM32 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM2 17h1v1h-1zM5 17h1v1h-1zM9 17h5v1h-5zM16 17h1v1h-1zM19 17h3v1h-3zM25 17h1v1h-1zM28 17h4v1h-4zM33 17h1v1h-1zM35 17h3v1h-3zM2 18h2v1h-2zM5 18h2v1h-2zM8 18h1v1h-1zM10 18h3v1h-3zM17 18h3v1h-3zM21 18h3v1h-3zM25 18h1v1h-1zM27 18h1v1h-1zM29 18h1v1h-1zM32 18h1v1h-1zM36 18h3v1h-3zM2 19h3v1h-3zM10 19h1v1h-1zM13 19h3v1h-3zM18 19h3v1h-3zM22 19h1v1h-1zM25 19h2v1h-2zM28 19h2v1h-2zM31 19h1v1h-1zM35 19h2v1h-2zM2 20h1v1h-1zM4 20h1v1h-1zM8 20h1v1h-1zM12 20h1v1h-1zM14 20h4v1h-4zM19 20h1v1h-1zM22 20h2v1h-2zM25 20h1v1h-1zM27 20h1v1h-1zM29 20h3v1h-3zM35 20h2v1h-2zM38 20h1v1h-1zM6 21h2v1h-2zM9 21h4v1h-4zM15 21h1v1h-1zM20 21h1v1h-1zM24 21h1v1h-1zM26 21h2v1h-2zM30 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM2 22h2v1h-2zM5 22h1v1h-1zM7 22h2v1h-2zM13 22h1v1h-1zM15 22h1v1h-1zM17 22h3v1h-3zM26 22h1v1h-1zM28 22h8v1h-8zM2 23h6v1h-6zM9 23h1v1h-1zM11 23h7v1h-7zM21 23h5v1h-5zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM4 24h1v1h-1zM7 24h2v1h-2zM11 24h3v1h-3zM15 24h3v1h-3zM19 24h2v1h-2zM24 24h3v1h-3zM29 24h3v1h-3zM33 24h1v1h-1zM35 24h1v1h-1zM38 24h1v1h-1zM3 25h1v1h-1zM5 25h1v1h-1zM9 25h1v1h-1zM11 25h1v1h-1zM14 25h1v1h-1zM19 25h1v1h-1zM21 25h4v1h-4zM30 25h7v1h-7zM2 26h2v1h-2zM5 26h1v1h-1zM7 26h2v1h-2zM10 26h3v1h-3zM14 26h1v1h-1zM17 26h4v1h-4zM23 26h1v1h-1zM26 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h1v1h-1zM4 27h2v1h-2zM7 27h1v1h-1zM11 27h1v1h-1zM13 27h2v1h-2zM16 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM27 27h4v1h-4zM34 27h2v1h-2zM2 28h2v1h-2zM6 28h1v1h-1zM8 28h1v1h-1zM12 28h1v1h-1zM15 28h2v1h-2zM18 28h1v1h-1zM21 28h2v1h-2zM24 28h3v1h-3zM28 28h2v1h-2zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h2v1h-2zM7 29h1v1h-1zM9 29h2v1h-2zM12 29h1v1h-1zM14 29h1v1h-1zM16 29h2v1h-2zM22 29h1v1h-1zM24 29h2v1h-2zM28 29h1v1h-1zM30 29h4v1h-4zM35 29h3v1h-3zM2 30h1v1h-1zM4 30h1v1h-1zM6 30h1v1h-1zM8 30h2v1h-2zM11 30h6v1h-6zM22 30h1v1h-1zM26 30h2v1h-2zM29 30h8v1h-8zM10 31h2v1h-2zM13 31h1v1h-1zM16 31h1v1h-1zM20 31h3v1h-3zM24 31h1v1h-1zM26 31h2v1h-2zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h4v1h-4zM16 32h3v1h-3zM21 32h1v1h-1zM23 32h5v1h-5zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM13 33h3v1h-3zM18 33h5v1h-5zM24 33h2v1h-2zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM13 34h3v1h-3zM23 34h4v1h-4zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM13 35h3v1h-3zM18 35h1v1h-1zM20 35h1v1h-1zM23 35h1v1h-1zM26 35h1v1h-1zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM37 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM14 36h9v1h-9zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h1v1h-1zM18 37h2v1h-2zM21 37h2v1h-2zM24 37h2v1h-2zM28 37h1v1h-1zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h4v1h-4zM17 38h2v1h-2zM22 38h1v1h-1zM26 38h1v1h-1zM30 38h4v1h-4zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <button type="button" class="btn snd" id="sound" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor" stroke-width="1.5"/><path class="waves" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="mute" d="M17 9.5l5 5M22 9.5l-5 5"/></svg><span id="soundTxt">Sound off</span></button>
+        <label class="vol" for="vol">Volume <input type="range" id="vol" min="0" max="1" step="0.01" value="0.5"></label>
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="sprinkle">Sprinkle fresh sand</button>
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="sand" aria-pressed="true">Sand</button>
+          <button type="button" data-v="3d" aria-pressed="false">3D</button>
+        </div>
+        <span class="count mono" id="fTop"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" aria-label="Chladni plate seen from above with sand, and the frequency response below or beside it. Left and right arrows change the drive frequency by one cent (with Shift by ten), up and down jump to the next or previous resonance, S sprinkles fresh sand, Space pauses. Drag the brass drive post to move the drive point, and drag the red line on the response plot to set the frequency."></canvas>
+        <div class="nogl" id="nogl" hidden>The 3D view needs three.js, loaded from cdnjs.cloudflare.com, and WebGL. The top view, the response plot and the readouts still work.</div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Presets</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="first" aria-pressed="false">First pattern</button>
+          <button type="button" data-p="cross" aria-pressed="false">A cross</button>
+          <button type="button" data-p="rings" aria-pressed="false">Rings on a circle</button>
+          <button type="button" data-p="sweep" aria-pressed="false">Sweep and listen</button>
+          <button type="button" data-p="star" aria-pressed="false">Square: classic star</button>
+          <button type="button" data-p="high" aria-pressed="false">High mode</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Drive</h2>
+        <div>
+          <div class="slider-head"><label for="freq">Frequency f</label><output id="freqOut" class="mono" for="freq"></output></div>
+          <input type="range" id="freq" min="0" max="1000" step="1" value="500">
+        </div>
+        <div>
+          <div class="slider-head"><label for="fine">Fine tune</label><output id="fineOut" class="mono" for="fine"></output></div>
+          <input type="range" id="fine" min="-50" max="50" step="0.1" value="0">
+        </div>
+        <div class="row2">
+          <button type="button" class="btn" id="prevRes">◀ Previous resonance</button>
+          <button type="button" class="btn" id="nextRes">Next resonance ▶</button>
+        </div>
+        <div class="inline">
+          <button type="button" class="btn" id="sweepBtn" aria-pressed="false">Sweep up</button>
+          <div class="seg" role="group" aria-label="Sweep rate" id="rateSeg">
+            <button type="button" data-r="1" aria-pressed="false">1 semitone/s</button>
+            <button type="button" data-r="4" aria-pressed="true">4 semitones/s</button>
+          </div>
+        </div>
+        <div class="inline">
+          <span class="lab">Drive point</span>
+          <div class="seg" role="group" aria-label="Drive point" id="driveSeg">
+            <button type="button" data-d="center" aria-pressed="true">Center</button>
+            <button type="button" data-d="off" aria-pressed="false">Off center</button>
+            <button type="button" data-d="edge" aria-pressed="false">Edge</button>
+          </div>
+        </div>
+        <div>
+          <div class="slider-head"><label for="force">Drive force F₀</label><output id="forceOut" class="mono" for="force"></output></div>
+          <input type="range" id="force" min="0" max="100" step="1" value="50">
+        </div>
+        <div>
+          <div class="slider-head"><label for="qual">Modal Q (damping)</label><output id="qualOut" class="mono" for="qual"></output></div>
+          <input type="range" id="qual" min="0" max="100" step="1" value="50">
+        </div>
+        <dl class="readout">
+          <div><dt>Peak |a| on the plate</dt><dd id="rPeak">—</dd></div>
+          <div><dt>Grains on the plate</dt><dd id="rGrains">—</dd></div>
+          <div class="wide"><dt>Nearest mode</dt><dd id="rMode" class="txt">—</dd></div>
+        </dl>
+        <p class="hint" id="driveHint"></p>
+      </section>
+
+      <section>
+        <h2>Plate</h2>
+        <div class="inline">
+          <span class="lab">Shape</span>
+          <div class="seg" role="group" aria-label="Plate shape" id="shapeSeg">
+            <button type="button" data-s="square" aria-pressed="true">Square</button>
+            <button type="button" data-s="circle" aria-pressed="false">Circle</button>
+          </div>
+        </div>
+        <div class="inline">
+          <span class="lab">Metal</span>
+          <div class="seg" role="group" aria-label="Metal" id="matSeg">
+            <button type="button" data-m="steel" aria-pressed="true">Steel</button>
+            <button type="button" data-m="aluminum" aria-pressed="false">Aluminum</button>
+          </div>
+        </div>
+        <div>
+          <div class="slider-head"><label for="thick">Thickness h</label><output id="thickOut" class="mono" for="thick"></output></div>
+          <input type="range" id="thick" min="0.5" max="2" step="0.05" value="1">
+        </div>
+        <dl class="readout">
+          <div><dt>Plate mass M</dt><dd id="rMass">—</dd></div>
+          <div><dt>Lowest flexural mode</dt><dd id="rLow">—</dd></div>
+          <div class="wide"><dt>Bending wave at f</dt><dd id="rKh" class="txt">—</dd></div>
+        </dl>
+        <p class="hint" id="plateHint"></p>
+      </section>
+
+      <section>
+        <h2>Display</h2>
+        <div class="toggles">
+          <label><input type="checkbox" id="tNodal">Nodal lines</label>
+          <label><input type="checkbox" id="tHeat">Where |a| &gt; g</label>
+        </div>
+        <div class="inline">
+          <span class="lab">Plot</span>
+          <div class="seg" role="group" aria-label="Plot" id="plotSeg">
+            <button type="button" data-pl="resp" aria-pressed="true">Response</button>
+            <button type="button" data-pl="law" aria-pressed="false">Chladni's law</button>
+          </div>
+        </div>
+        <p class="hint" id="plotHint"></p>
+      </section>
+
+      <section>
+        <h2>Sound</h2>
+        <label class="check"><input type="checkbox" id="tFollow" checked>Loudness follows the plate's response</label>
+        <p class="hint" id="soundHint"></p>
+      </section>
+
+      <section>
+        <h2>Key</h2>
+        <div class="key">
+          <span><i class="swatch sand"></i>sand grains on the plate</span>
+          <span><i class="swatch post"></i>drive post (drag it)</span>
+          <span><i class="swatch nodal"></i>nodal lines of the computed motion</span>
+          <span><i class="swatch heat"></i>|a| &gt; g: sand leaves the surface here</span>
+          <span><i class="swatch curve"></i>RMS acceleration of the plate vs f</span>
+          <span><i class="swatch fline"></i>drive frequency f (drag it)</span>
+          <span><i class="swatch gline"></i>1 g</span>
+        </div>
+      </section>
+
+      <section class="model">
+        <h2>Model</h2>
+        <div class="hint" id="modelHint">
+          <p>Thin plate (Kirchhoff–Love) theory: D∇⁴w = −ρh ∂²w/∂t² with flexural rigidity D = Eh³/(12(1 − ν²)). Small, linear motion of a flat, uniform, isotropic plate. Good while the bending wavelength is long compared with the thickness (k h well below 1; shown under Plate).</p>
+          <p>Every edge is free, and the drive is an ideal point force F₀ cos(2πft) at the brass post. The driver's own mass and stiffness and the small clamp around the bolt are left out; a real driver bolted to the plate shifts the resonances, so measured kit frequencies differ. The plate's rigid bouncing and rocking are included.</p>
+          <p>Circle: exact solution, w = [J_n(λr/a) + C I_n(λr/a)] cos nθ, with the free edge frequency equation solved to 12 digits. Square: no closed form; Rayleigh–Ritz with Legendre polynomials up to degree 30 in x and in y (961 terms, split into symmetry classes), converged to better than 1 part in a million for every mode shown.</p>
+          <p>Damping: every flexural mode has the same Q. The response is the sum over all computed modes. The sand's mass does not load the plate.</p>
+          <p>Sand is phenomenological, not a granular simulation: where the local acceleration amplitude |a| exceeds g a grain leaves the surface each cycle and, every 1/60 s, hops s × (a random step of mean length 1 in a random direction + a drift of 0.5 toward smaller |a|), with s = 0.6 mm × √min(|a|/g − 1, 4). The drift stands in for grains bouncing off the tilted, moving surface, which carries them toward the nodes. Where |a| &lt; g a grain stays put. Grains that pass the edge fall off. Very light powder (lycopodium) gathers at the antinodes instead, carried by air currents over the plate (Faraday, 1831); air is not modeled.</p>
+        </div>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  // ==CORE START==
+  // Thin (Kirchhoff–Love) plate, free edges, driven by a harmonic point force: D∇⁴w + ρh ∂²w/∂t² = F₀ δ(r − r_p) cos ωt.
+  // Modes φ̂ are normalized to a mean square of 1 over the plate, so the physical mass normalized mode is φ̂/√M.
+  const G0 = 9.80665;                                   // standard gravity, m/s²
+  const PLATE = { L: 0.24, a: 0.12 };                   // square side and circle radius, m (24 cm across, as in common kits)
+  const MATERIALS = {
+    steel: { name: 'Steel', E: 200e9, rho: 7850, nu: 0.30 },
+    aluminum: { name: 'Aluminum', E: 69e9, rho: 2700, nu: 0.33 }
+  };
+  const SQ_P = 30;                                      // Legendre degree in x and in y for the square plate (Ritz)
+  const LAM2_MAX = { square: 2200, circle: 1300 };      // modes kept: λ² below this (λ² = ω ℓ² √(ρh/D), ℓ = side or radius)
+  function flexRigidity(E, h, nu) { return E * h * h * h / (12 * (1 - nu * nu)); }
+  // f = λ² × fScale, with ℓ the side (square) or the radius (circle)
+  function fScale(shape, mat, h) {
+    const l = shape === 'square' ? PLATE.L : PLATE.a;
+    return Math.sqrt(flexRigidity(mat.E, h, mat.nu) / (mat.rho * h)) / (2 * Math.PI * l * l);
+  }
+  function plateArea(shape) { return shape === 'square' ? PLATE.L * PLATE.L : Math.PI * PLATE.a * PLATE.a; }
+  function plateMass(shape, mat, h) { return mat.rho * h * plateArea(shape); }
+  // bending wavenumber k = (ω² ρh / D)^(1/4); thin plate theory needs k h ≪ 1
+  function bendK(f, mat, h) { const w = 2 * Math.PI * f; return Math.pow(w * w * mat.rho * h / flexRigidity(mat.E, h, mat.nu), 0.25); }
+
+  // ---- Bessel functions, all orders 0..nmax at once ----
+  // J_n(x), x ≥ 0: Miller's backward recurrence J_{k−1} = (2k/x) J_k − J_{k+1}, normalized by J₀ + 2(J₂ + J₄ + …) = 1
+  function besselJArr(nmax, x) {
+    const out = new Float64Array(nmax + 1);
+    if (x === 0) { out[0] = 1; return out; }
+    const t = Math.max(nmax, x), m = 2 * Math.floor((t + 24 + Math.sqrt(40 * t)) / 2);
+    let bjp = 0, bj = 1, sum = 0;
+    for (let k = m; k > 0; k--) {
+      const bjm = 2 * k / x * bj - bjp; bjp = bj; bj = bjm;
+      if (Math.abs(bj) > 1e200) { bj *= 1e-200; bjp *= 1e-200; sum *= 1e-200; for (let i = 0; i <= nmax; i++) out[i] *= 1e-200; }
+      if (k - 1 <= nmax) out[k - 1] = bj;
+      if ((k - 1) % 2 === 0) sum += k - 1 === 0 ? bj : 2 * bj;
+    }
+    for (let i = 0; i <= nmax; i++) out[i] /= sum;
+    return out;
+  }
+  // e^(−x) I_n(x), x ≥ 0: backward recurrence I_{k−1} = (2k/x) I_k + I_{k+1}, normalized by I₀ + 2(I₁ + I₂ + …) = eˣ
+  function besselIScaledArr(nmax, x) {
+    const out = new Float64Array(nmax + 1);
+    if (x === 0) { out[0] = 1; return out; }
+    const t = Math.max(nmax, x), m = 2 * Math.floor((t + 24 + Math.sqrt(40 * t)) / 2);
+    let bip = 0, bi = 1, sum = 0;
+    for (let k = m; k > 0; k--) {
+      const bim = 2 * k / x * bi + bip; bip = bi; bi = bim;
+      if (bi > 1e200) { bi *= 1e-200; bip *= 1e-200; sum *= 1e-200; for (let i = 0; i <= nmax; i++) out[i] *= 1e-200; }
+      if (k - 1 <= nmax) out[k - 1] = bi;
+      sum += k - 1 === 0 ? bi : 2 * bi;
+    }
+    for (let i = 0; i <= nmax; i++) out[i] /= sum;
+    return out;
+  }
+  function besselJ(n, x) { return besselJArr(n, x)[n]; }
+  function besselI(n, x) { return besselIScaledArr(n, x)[n] * Math.exp(x); }
+
+  // ---- circular plate, free edge: w = [J_n(λr) + c I_n(λr)/I_n(λ)] cos nθ, r in units of the radius a ----
+  // edge moment and Kirchhoff shear for each part at r = 1 (I part divided by I_n(λ)); the frequency equation is M_J V_I − M_I V_J = 0
+  function circleEdge(lam, n, nu) {
+    const J = besselJArr(n + 1, lam), I = besselIScaledArr(n + 1, lam);
+    const j = J[n], jp = n === 0 ? -J[1] : (J[n - 1] - J[n + 1]) / 2;
+    const ip = (n === 0 ? I[1] : (I[n - 1] + I[n + 1]) / 2) / I[n];
+    const l2 = lam * lam, l3 = l2 * lam, k = 1 - nu, n2 = n * n;
+    return {
+      MJ: -(l2 * j + k * (lam * jp - n2 * j)), VJ: -l3 * jp - k * n2 * (lam * jp - j),
+      MI: l2 - k * (lam * ip - n2), VI: l3 * ip - k * n2 * (lam * ip - 1)
+    };
+  }
+  function circleDet(lam, n, nu) { const e = circleEdge(lam, n, nu); return e.MJ * e.VI - e.MI * e.VJ; }
+  // all roots λ of the frequency equation for n nodal diameters with λ < lamMax: scan for sign changes, then bisect to 1e−13
+  function circleRoots(n, nu, lamMax) {
+    const out = [], h = 0.05;
+    let a = 0.5, fa = circleDet(a, n, nu);
+    for (let b = a + h; b <= lamMax + h; b += h) {
+      const fb = circleDet(b, n, nu);
+      if (fa === 0) out.push(a);
+      else if (fa * fb < 0) {
+        let lo = a, hi = b, flo = fa;
+        for (let it = 0; it < 200 && hi - lo > 1e-13 * hi; it++) {
+          const mid = 0.5 * (lo + hi), fm = circleDet(mid, n, nu);
+          if (flo * fm <= 0) hi = mid; else { lo = mid; flo = fm; }
+        }
+        const r = 0.5 * (lo + hi); if (r < lamMax) out.push(r);
+      }
+      a = b; fa = fb;
+    }
+    return out;
+  }
+  // Gauss–Legendre nodes and weights on [−1, 1]
+  function gaussLegendre(N) {
+    const x = new Float64Array(N), w = new Float64Array(N);
+    for (let i = 0; i < N; i++) {
+      let z = Math.cos(Math.PI * (i + 0.75) / (N + 0.5)), pp = 0;
+      for (let it = 0; it < 100; it++) {
+        let p1 = 1, p2 = 0;
+        for (let j = 1; j <= N; j++) { const p3 = p2; p2 = p1; p1 = ((2 * j - 1) * z * p2 - (j - 1) * p3) / j; }
+        pp = N * (z * p1 - p2) / (z * z - 1);
+        const dz = p1 / pp; z -= dz; if (Math.abs(dz) < 1e-16) break;
+      }
+      x[i] = z; w[i] = 2 / ((1 - z * z) * pp * pp);
+    }
+    return { x, w };
+  }
+  // radial shape R(r) = J_n(λr) + c e^{λ(r−1)} Î_n(λr)/Î_n(λ), Î = e^{−x} I
+  function circleRadial(md, r) {
+    if (md.rigid) return md.n === 0 ? 1 : r;
+    const x = md.lam * r, n = md.n;
+    return besselJArr(n, x)[n] + md.c * Math.exp(md.lam * (r - 1)) * besselIScaledArr(n, x)[n] / md.iEdge;
+  }
+  // every mode with λ² < lam2Max; the two rigid modes come first (λ = 0: bouncing, n = 0, and rocking, n = 1)
+  function circleModes(nu, lam2Max) {
+    const lamMax = Math.sqrt(lam2Max), out = [
+      { n: 0, m: 0, lam: 0, lam2: 0, rigid: true, N: 1 },
+      { n: 1, m: 0, lam: 0, lam2: 0, rigid: true, N: 2 }     // N r cos θ, mean square over the disk = N²/4
+    ];
+    const gq = gaussLegendre(120);
+    for (let n = 0; ; n++) {
+      const roots = circleRoots(n, nu, lamMax);
+      if (!roots.length) break;
+      for (const lam of roots) {
+        const e = circleEdge(lam, n, nu);
+        const md = { n, m: 0, lam, lam2: lam * lam, c: -e.MJ / e.MI, iEdge: besselIScaledArr(n, lam)[n] };
+        // mean square over the disk: (1/π) ∫∫ N² R² cos² nθ r dr dθ = 1  →  N² = 1 / (c_n ∫₀¹ R² r dr), c₀ = 2, c_n = 1
+        let s = 0;
+        for (let i = 0; i < gq.x.length; i++) { const r = 0.5 * (gq.x[i] + 1), R = circleRadial(md, r); s += 0.5 * gq.w[i] * R * R * r; }
+        md.N = 1 / Math.sqrt((n === 0 ? 2 : 1) * s);
+        // nodal circles: sign changes of R on 0 < r < 1
+        let cnt = 0, prev = circleRadial(md, 1e-3);
+        for (let i = 1; i <= 500; i++) { const v = circleRadial(md, 1e-3 + (1 - 1e-3) * i / 500); if (v * prev < 0) cnt++; if (v !== 0) prev = v; }
+        md.m = cnt;
+        out.push(md);
+      }
+    }
+    out.sort((p, q) => p.lam2 - q.lam2);
+    return out;
+  }
+  // φ̂ at radius r (units of a) and angle Δθ from the drive point's direction
+  function circlePhi(md, r, dth) { return md.N * circleRadial(md, r) * Math.cos(md.n * dth); }
+
+  // ---- square plate, free edges: Rayleigh–Ritz with products of normalized Legendre polynomials ----
+  // p_i(ξ) = √(2i + 1) P_i(ξ) on −1 ≤ ξ ≤ 1 (ξ = 2x/L), with first and second derivatives; mean of p_i p_k over [−1, 1] is δ_ik
+  function legendreRow(P, x) {
+    const p = new Float64Array(P + 1), d = new Float64Array(P + 1), dd = new Float64Array(P + 1);
+    p[0] = 1; if (P > 0) { p[1] = x; d[1] = 1; }
+    for (let n = 1; n < P; n++) {
+      p[n + 1] = ((2 * n + 1) * x * p[n] - n * p[n - 1]) / (n + 1);
+      d[n + 1] = d[n - 1] + (2 * n + 1) * p[n];
+      dd[n + 1] = dd[n - 1] + (2 * n + 1) * d[n];
+    }
+    for (let n = 0; n <= P; n++) { const s = Math.sqrt(2 * n + 1); p[n] *= s; d[n] *= s; dd[n] *= s; }
+    return { p, d, dd };
+  }
+  // symmetric eigenproblem: Householder tridiagonalization and implicit QL (tred2 and tql2, as in EISPACK / JAMA)
+  function symEig(A) {
+    const n = A.length, V = A.map((r) => Float64Array.from(r)), d = new Float64Array(n), e = new Float64Array(n);
+    for (let j = 0; j < n; j++) d[j] = V[n - 1][j];
+    for (let i = n - 1; i > 0; i--) {
+      let scale = 0, h = 0;
+      for (let k = 0; k < i; k++) scale += Math.abs(d[k]);
+      if (scale === 0) {
+        e[i] = d[i - 1];
+        for (let j = 0; j < i; j++) { d[j] = V[i - 1][j]; V[i][j] = 0; V[j][i] = 0; }
+      } else {
+        for (let k = 0; k < i; k++) { d[k] /= scale; h += d[k] * d[k]; }
+        let f = d[i - 1], g = Math.sqrt(h); if (f > 0) g = -g;
+        e[i] = scale * g; h -= f * g; d[i - 1] = f - g;
+        for (let j = 0; j < i; j++) e[j] = 0;
+        for (let j = 0; j < i; j++) {
+          f = d[j]; V[j][i] = f; g = e[j] + V[j][j] * f;
+          for (let k = j + 1; k <= i - 1; k++) { g += V[k][j] * d[k]; e[k] += V[k][j] * f; }
+          e[j] = g;
+        }
+        f = 0;
+        for (let j = 0; j < i; j++) { e[j] /= h; f += e[j] * d[j]; }
+        const hh = f / (h + h);
+        for (let j = 0; j < i; j++) e[j] -= hh * d[j];
+        for (let j = 0; j < i; j++) {
+          f = d[j]; g = e[j];
+          for (let k = j; k <= i - 1; k++) V[k][j] -= (f * e[k] + g * d[k]);
+          d[j] = V[i - 1][j]; V[i][j] = 0;
+        }
+      }
+      d[i] = h;
+    }
+    for (let i = 0; i < n - 1; i++) {
+      V[n - 1][i] = V[i][i]; V[i][i] = 1;
+      const h = d[i + 1];
+      if (h !== 0) {
+        for (let k = 0; k <= i; k++) d[k] = V[k][i + 1] / h;
+        for (let j = 0; j <= i; j++) {
+          let g = 0;
+          for (let k = 0; k <= i; k++) g += V[k][i + 1] * V[k][j];
+          for (let k = 0; k <= i; k++) V[k][j] -= g * d[k];
+        }
+      }
+      for (let k = 0; k <= i; k++) V[k][i + 1] = 0;
+    }
+    for (let j = 0; j < n; j++) { d[j] = V[n - 1][j]; V[n - 1][j] = 0; }
+    V[n - 1][n - 1] = 1; e[0] = 0;
+    // tql2
+    for (let i = 1; i < n; i++) e[i - 1] = e[i];
+    e[n - 1] = 0;
+    let f = 0, tst1 = 0; const eps = Math.pow(2, -52);
+    for (let l = 0; l < n; l++) {
+      tst1 = Math.max(tst1, Math.abs(d[l]) + Math.abs(e[l]));
+      let m = l; while (m < n && Math.abs(e[m]) > eps * tst1) m++;
+      if (m === n) m = n - 1;
+      if (m > l) {
+        do {
+          let g = d[l], p = (d[l + 1] - g) / (2 * e[l]), r = Math.hypot(p, 1); if (p < 0) r = -r;
+          d[l] = e[l] / (p + r); d[l + 1] = e[l] * (p + r);
+          const dl1 = d[l + 1]; let h = g - d[l];
+          for (let i = l + 2; i < n; i++) d[i] -= h;
+          f += h; p = d[m];
+          let c = 1, c2 = c, c3 = c, el1 = e[l + 1], s = 0, s2 = 0;
+          for (let i = m - 1; i >= l; i--) {
+            c3 = c2; c2 = c; s2 = s; g = c * e[i]; h = c * p; r = Math.hypot(p, e[i]);
+            e[i + 1] = s * r; s = e[i] / r; c = p / r; p = c * d[i] - s * g; d[i + 1] = h + s * (c * g + s * d[i]);
+            for (let k = 0; k < n; k++) { h = V[k][i + 1]; V[k][i + 1] = s * V[k][i] + c * h; V[k][i] = c * V[k][i] - s * h; }
+          }
+          p = -s * s2 * c3 * el1 * e[l] / dl1; e[l] = s * p; d[l] = c * p;
+        } while (Math.abs(e[l]) > eps * tst1);
+      }
+      d[l] += f; e[l] = 0;
+    }
+    return { values: d, vectors: V };   // eigenvector j is column j: V[k][j]
+  }
+  // the free square plate's modes for Poisson's ratio nu, with Legendre degree P in each direction.
+  // The basis splits by parity in ξ and η (even/odd), and the eo and oe classes are mirror images (x ↔ y), so three
+  // eigenproblems give everything. Energy: U = (D/2)∫∫[w_xx² + w_yy² + 2ν w_xx w_yy + 2(1−ν) w_xy²] dx dy.
+  // λ² = ω L² √(ρh/D) = 4 √μ, μ an eigenvalue of K/4 (the basis is orthonormal in the mean, so the mass matrix is the identity).
+  function squareModes(nu, P, lam2Max) {
+    const gq = gaussLegendre(P + 4), Q = gq.x.length, N1 = P + 1;
+    const rows = Array.from(gq.x, (x) => legendreRow(P, x));
+    const mat = () => Array.from({ length: N1 }, () => new Float64Array(N1));
+    const A0 = mat(), A1 = mat(), A2 = mat(), C = mat();
+    for (let q = 0; q < Q; q++) {
+      const r = rows[q], w = gq.w[q];
+      for (let i = 0; i < N1; i++) for (let k = 0; k < N1; k++) {
+        A0[i][k] += w * r.p[i] * r.p[k]; A1[i][k] += w * r.d[i] * r.d[k];
+        A2[i][k] += w * r.dd[i] * r.dd[k]; C[i][k] += w * r.dd[i] * r.p[k];
+      }
+    }
+    const out = [];
+    for (const [px, py] of [[0, 0], [1, 1], [0, 1]]) {
+      const idx = [];
+      for (let i = px; i <= P; i += 2) for (let j = py; j <= P; j += 2) idx.push([i, j]);
+      const n = idx.length, K = Array.from({ length: n }, () => new Float64Array(n));
+      for (let a = 0; a < n; a++) {
+        const [i, j] = idx[a];
+        for (let b = a; b < n; b++) {
+          const [k, l] = idx[b];
+          const v = (A2[i][k] * A0[j][l] + A0[i][k] * A2[j][l] + nu * (C[i][k] * C[l][j] + C[k][i] * C[j][l]) + 2 * (1 - nu) * A1[i][k] * A1[j][l]) / 4;
+          K[a][b] = v; K[b][a] = v;
+        }
+      }
+      const ev = symEig(K);
+      for (let col = 0; col < n; col++) {
+        const mu = ev.values[col], lam2 = mu < 1e-8 ? 0 : 4 * Math.sqrt(mu);
+        if (lam2 >= lam2Max) continue;
+        const coef = new Float64Array(N1 * N1);
+        for (let a = 0; a < n; a++) coef[idx[a][0] * N1 + idx[a][1]] = ev.vectors[a][col];
+        const cls = px === py ? (px ? 'oo' : 'ee') : 'eo';
+        out.push({ lam2, cls, coef, P });
+        if (cls === 'eo') {   // the mirror image across the diagonal: same frequency
+          const c2 = new Float64Array(N1 * N1);
+          for (let i = 0; i < N1; i++) for (let j = 0; j < N1; j++) c2[j * N1 + i] = coef[i * N1 + j];
+          out.push({ lam2, cls: 'oe', coef: c2, P });
+        }
+      }
+    }
+    out.sort((p, q) => p.lam2 - q.lam2 || (p.cls < q.cls ? -1 : 1));
+    for (const md of out) {
+      md.rigid = md.lam2 === 0;
+      // symmetry under the swap x ↔ y (ee and oo classes): +1 or −1, from the coefficient matrix
+      if (md.cls === 'ee' || md.cls === 'oo') {
+        const N1 = md.P + 1; let sp = 0, sm = 0;
+        for (let i = 0; i < N1; i++) for (let j = 0; j < N1; j++) { const u = md.coef[i * N1 + j], v = md.coef[j * N1 + i]; sp += (u + v) * (u + v); sm += (u - v) * (u - v); }
+        md.swap = sp >= sm ? 1 : -1;
+      } else md.swap = 0;
+    }
+    return out;
+  }
+  // φ̂ of a square mode at (ξ, η), each from −1 to 1
+  function squarePhi(md, xi, eta) {
+    const P = md.P, N1 = P + 1, a = legendreRow(P, xi).p, b = legendreRow(P, eta).p;
+    let s = 0;
+    for (let i = 0; i < N1; i++) { if (a[i] === 0) continue; let t = 0; for (let j = 0; j < N1; j++) t += md.coef[i * N1 + j] * b[j]; s += a[i] * t; }
+    return s;
+  }
+
+  // ---- driven response: modal superposition with the same modal Q for every flexural mode ----
+  // q_k = (F/M) φ̂_k(p) / (ω_k² − ω² + i ω ω_k / Q), w(x) = Σ q_k φ̂_k(x); rigid modes (ω_k = 0) give −(F/M) φ̂(p)/ω²
+  function modalAmps(lam2, phiP, f, fs, Q, F, M) {
+    const n = lam2.length, re = new Float64Array(n), im = new Float64Array(n), w = 2 * Math.PI * f;
+    for (let k = 0; k < n; k++) {
+      const wk = 2 * Math.PI * fs * lam2[k], a = wk * wk - w * w, b = w * wk / Q, den = a * a + b * b, g = F * phiP[k] / M;
+      re[k] = g * a / den; im[k] = -g * b / den;
+    }
+    return { re, im };
+  }
+  // RMS acceleration over the plate: ω² √(Σ |q_k|²), since the φ̂ are orthonormal in the mean
+  function rmsAccel(lam2, phiP, f, fs, Q, F, M) {
+    const q = modalAmps(lam2, phiP, f, fs, Q, F, M), w = 2 * Math.PI * f;
+    let s = 0; for (let k = 0; k < lam2.length; k++) s += q.re[k] * q.re[k] + q.im[k] * q.im[k];
+    return w * w * Math.sqrt(s);
+  }
+
+  // ---- sand: a phenomenological model, not a granular simulation ----
+  // A grain where the local acceleration amplitude |a| exceeds g leaves the surface on every cycle. Each tick it hops by
+  // s × (a random vector of mean length 1 + drift × the unit vector down the slope of |a|), with s = step × √min(|a|/g − 1, cap).
+  // The drift stands in for grains bouncing off the tilted, moving surface, which carries them toward the nodes.
+  // Where |a| < g a grain stays put. Grains that pass the edge fall off.
+  function sandStep(sx, sy, alive, gammaAt, inside, rng, step, cap, drift) {
+    let lost = 0; const h = 0.01;
+    for (let i = 0; i < sx.length; i++) {
+      if (!alive[i]) continue;
+      const x = sx[i], y = sy[i], gam = gammaAt(x, y);
+      if (gam <= 1) continue;
+      const s = step * Math.sqrt(Math.min(gam - 1, cap)), r = 2 * rng(), th = 2 * Math.PI * rng();
+      let dx = r * Math.cos(th), dy = r * Math.sin(th);
+      if (drift) {
+        const gx = gammaAt(x + h, y) - gammaAt(x - h, y), gy = gammaAt(x, y + h) - gammaAt(x, y - h), gn = Math.hypot(gx, gy);
+        if (gn > 0) { dx -= drift * gx / gn; dy -= drift * gy / gn; }
+      }
+      sx[i] = x + s * dx; sy[i] = y + s * dy;
+      if (!inside(sx[i], sy[i])) { alive[i] = 0; lost++; }
+    }
+    return lost;
+  }
+  function mulberry32(seed) {
+    let a = seed >>> 0;
+    return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  }
+  // Chladni's empirical law for circular plates, f ≈ C (n + 2m)^p (n nodal diameters, m nodal circles): least squares in ln f
+  function chladniFit(pts) {
+    let sx = 0, sy = 0, sxx = 0, sxy = 0, k = 0;
+    for (const q of pts) { const s = q.n + 2 * q.m; if (s < 2 || !(q.f > 0)) continue; const x = Math.log(s), y = Math.log(q.f); sx += x; sy += y; sxx += x * x; sxy += x * y; k++; }
+    if (k < 2) return null;
+    const p = (k * sxy - sx * sy) / (k * sxx - sx * sx), lnC = (sy - p * sx) / k;
+    return { C: Math.exp(lnC), p, count: k };
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const TAU = 2 * Math.PI;
+  const GN = 101, NSAND = 6000, HALF = 0.12;      // field grid nodes per side; sand grains; half width of either plate, m
+  const F_MIN = 20, F_CAP = 8000;
+  const STEP = 0.0006 / HALF, CAP = 4, DRIFT = 0.5, TICK = 1 / 60;   // sand: hop scale (plate half widths), cap on |a|/g − 1, drift, tick (s)
+  const DRIVEN = 0.15;                                    // |φ̂(p)| below this: the drive point sits on or near a nodal line
+  const DRIVES = {
+    square: { center: [0, 0], off: [0.42, 0.22], edge: [1, 0.36] },
+    circle: { center: [0, 0], off: [0.5, 0], edge: [1, 0] }
+  };
+
+  // ---------- state ----------
+  const S = { shape: 'square', mat: 'steel', h: 1.0e-3, f: 100, Q: 100, F: 0.1, drive: 'center', du: 0, dv: 0,
+    view: 'sand', plot: 'resp', nodal: false, heat: false, follow: true, sweep: false, rate: 4 };
+  let presetId = null, running = !reduce, frameMs = 0, dirty = true;
+
+  // ---------- modes, cached per shape and Poisson's ratio ----------
+  const cache = {};
+  const gridU = (a) => -1 + 2 * a / (GN - 1);
+  function modeSet() {
+    const nu = MATERIALS[S.mat].nu, key = S.shape + ':' + nu;
+    if (cache[key]) return cache[key];
+    const t0 = performance.now(), ms = { shape: S.shape, nu };
+    if (S.shape === 'square') {
+      ms.modes = squareModes(nu, SQ_P, LAM2_MAX.square);
+      // φ̂ on the grid, separable: φ̂(u_a, v_b) = Σ_i p_i(u_a) Σ_j c_ij p_j(v_b)
+      const N1 = SQ_P + 1, rows = [];
+      for (let a = 0; a < GN; a++) rows.push(legendreRow(SQ_P, gridU(a)).p);
+      const T = new Float64Array(N1 * GN);
+      for (const md of ms.modes) {
+        T.fill(0);
+        for (let i = 0; i < N1; i++) for (let j = 0; j < N1; j++) {
+          const c = md.coef[i * N1 + j]; if (c === 0) continue;
+          for (let b = 0; b < GN; b++) T[i * GN + b] += c * rows[b][j];
+        }
+        const g = new Float32Array(GN * GN);
+        for (let b = 0; b < GN; b++) for (let a = 0; a < GN; a++) {
+          let s = 0; const ra = rows[a];
+          for (let i = 0; i < N1; i++) s += ra[i] * T[i * GN + b];
+          g[b * GN + a] = s;
+        }
+        md.grid = g;
+      }
+    } else {
+      ms.modes = circleModes(nu, LAM2_MAX.circle);
+      // radial factor N·R(r) on the grid (r clamped to the rim outside the plate), interpolated from a fine table
+      const NR = 1601, ri = new Float32Array(GN * GN), inside = new Uint8Array(GN * GN), th = new Float32Array(GN * GN);
+      for (let b = 0; b < GN; b++) for (let a = 0; a < GN; a++) {
+        const u = gridU(a), v = gridU(b), r = Math.hypot(u, v), k = b * GN + a;
+        ri[k] = Math.min(r, 1) * (NR - 1); inside[k] = r <= 1 ? 1 : 0; th[k] = Math.atan2(v, u);
+      }
+      ms.inside = inside; ms.theta = th;
+      const tab = new Float64Array(NR);
+      for (const md of ms.modes) {
+        for (let i = 0; i < NR; i++) tab[i] = md.N * circleRadial(md, i / (NR - 1));
+        const g = new Float32Array(GN * GN);
+        for (let k = 0; k < GN * GN; k++) { const x = ri[k], i = Math.min(NR - 2, Math.floor(x)), w = x - i; g[k] = tab[i] * (1 - w) + tab[i + 1] * w; }
+        md.rad = g;
+      }
+      ms.nmax = ms.modes.reduce((m, md) => Math.max(m, md.n), 0);
+    }
+    let k = 0;
+    for (const md of ms.modes) {
+      md.idx = md.rigid ? 0 : ++k;
+      md.label = ms.shape === 'circle' ? `(${md.n}, ${md.m})` : `mode ${md.idx}`;
+      md.short = ms.shape === 'circle' ? `${md.n},${md.m}` : `${md.idx}`;
+    }
+    ms.lam2 = Float64Array.from(ms.modes, (md) => md.lam2);
+    ms.ms = performance.now() - t0;
+    cache[key] = ms;
+    return ms;
+  }
+  function symText(md) {
+    if (md.cls === 'eo' || md.cls === 'oe') return 'one of a pair with the same frequency, each the other turned by 90°';
+    const c = md.cls === 'ee' ? 'symmetric' : 'antisymmetric', d = md.swap > 0 ? 'symmetric' : 'antisymmetric';
+    return c === d ? `${c} about both center lines and both diagonals` : `${c} about both center lines, ${d} about the diagonals`;
+  }
+
+  // ---------- derived quantities ----------
+  const D = { ms: null, phiP: null, fs: 1, M: 1, fmax: 1000, Wre: new Float32Array(GN * GN), Wim: new Float32Array(GN * GN),
+    gam: new Float32Array(GN * GN), gmax: 0, Wmax: 0, arms: 0, curve: null, curveMax: 0, near: null, fit: null };
+  function inside(u, v) { return S.shape === 'square' ? Math.abs(u) <= 1 && Math.abs(v) <= 1 : u * u + v * v <= 1; }
+  function recomputeStatic() {
+    const mat = MATERIALS[S.mat];
+    D.ms = modeSet();
+    D.fs = fScale(S.shape, mat, S.h);
+    D.M = plateMass(S.shape, mat, S.h);
+    D.fmax = Math.min(F_CAP, 0.98 * LAM2_MAX[S.shape] * D.fs);
+    D.lowest = D.ms.modes.find((m) => !m.rigid);
+    if (D.ms.shape === 'square') D.phiP = Float64Array.from(D.ms.modes, (md) => squarePhi(md, S.du, S.dv));
+    else { const r = Math.min(1, Math.hypot(S.du, S.dv)); D.phiP = Float64Array.from(D.ms.modes, (md) => md.N * circleRadial(md, r)); }
+    D.thetaP = Math.hypot(S.du, S.dv) > 1e-9 ? Math.atan2(S.dv, S.du) : 0;
+    D.fit = D.ms.shape === 'circle' ? chladniFit(D.ms.modes.filter((m) => !m.rigid && m.lam2 * D.fs <= D.fmax).map((m) => ({ n: m.n, m: m.m, f: m.lam2 * D.fs }))) : null;
+    updateCurve();
+  }
+  function modeF(md) { return md.lam2 * D.fs; }
+  function isDriven(k) { return Math.abs(D.phiP[k]) >= DRIVEN; }
+  // response curve: RMS acceleration over the plate on a log grid, plus points around every mode so no peak is missed
+  function updateCurve() {
+    const ms = D.ms, lo = Math.log(F_MIN), hi = Math.log(D.fmax), pts = [];
+    for (let i = 0; i <= 700; i++) pts.push(Math.exp(lo + (hi - lo) * i / 700));
+    ms.modes.forEach((md, k) => {
+      if (md.rigid || Math.abs(D.phiP[k]) < 1e-9) return;
+      const f0 = modeF(md); if (f0 > D.fmax) return;
+      for (const d of [-3, -1.5, -0.75, -0.3, 0, 0.3, 0.75, 1.5, 3]) { const f = f0 * (1 + d / (2 * S.Q)); if (f > F_MIN && f < D.fmax) pts.push(f); }
+    });
+    pts.sort((a, b) => a - b);
+    const a = new Float64Array(pts.length); let mx = 0;
+    for (let i = 0; i < pts.length; i++) { a[i] = rmsAccel(ms.lam2, D.phiP, pts[i], D.fs, S.Q, S.F, D.M); mx = Math.max(mx, a[i]); }
+    D.curve = { f: Float64Array.from(pts), a }; D.curveMax = mx;
+  }
+  // the complex displacement amplitude W on the grid, and Γ = ω²|W|/g
+  let cosTab = null;
+  function updateField() {
+    const ms = D.ms, n = ms.modes.length, q = modalAmps(ms.lam2, D.phiP, S.f, D.fs, S.Q, S.F, D.M), NN = GN * GN;
+    const Wre = D.Wre, Wim = D.Wim; Wre.fill(0); Wim.fill(0);
+    let qmax = 0; for (let k = 0; k < n; k++) qmax = Math.max(qmax, Math.hypot(q.re[k], q.im[k]));
+    const thr = 1e-6 * qmax;
+    if (ms.shape === 'square') {
+      for (let k = 0; k < n; k++) {
+        const qr = q.re[k], qi = q.im[k]; if (Math.hypot(qr, qi) <= thr) continue;
+        const g = ms.modes[k].grid;
+        for (let i = 0; i < NN; i++) { Wre[i] += qr * g[i]; Wim[i] += qi * g[i]; }
+      }
+    } else {
+      // cos n(θ − θ_p) on the grid by the recurrence cos nα = 2 cos α cos (n−1)α − cos (n−2)α
+      const nm = ms.nmax;
+      if (!cosTab || cosTab.length !== nm + 1) cosTab = Array.from({ length: nm + 1 }, () => new Float32Array(NN));
+      const th = ms.theta, c0 = cosTab[0]; c0.fill(1);
+      if (nm >= 1) { const c1 = cosTab[1]; for (let i = 0; i < NN; i++) c1[i] = Math.cos(th[i] - D.thetaP); }
+      for (let m = 2; m <= nm; m++) { const c = cosTab[m], c1 = cosTab[m - 1], c2 = cosTab[m - 2], cc = cosTab[1]; for (let i = 0; i < NN; i++) c[i] = 2 * cc[i] * c1[i] - c2[i]; }
+      for (let k = 0; k < n; k++) {
+        const qr = q.re[k], qi = q.im[k]; if (Math.hypot(qr, qi) <= thr) continue;
+        const md = ms.modes[k], g = md.rad, c = cosTab[md.n];
+        for (let i = 0; i < NN; i++) { const v = g[i] * c[i]; Wre[i] += qr * v; Wim[i] += qi * v; }
+      }
+    }
+    const w2 = Math.pow(TAU * S.f, 2) / G0, gam = D.gam;
+    let gm = 0, wm = 0;
+    for (let i = 0; i < NN; i++) {
+      const A = Math.hypot(Wre[i], Wim[i]); gam[i] = w2 * A;
+      if (ms.shape === 'circle' && !ms.inside[i]) continue;
+      if (A > wm) wm = A;
+    }
+    gm = wm * w2;
+    D.gmax = gm; D.Wmax = wm;
+    D.arms = rmsAccel(ms.lam2, D.phiP, S.f, D.fs, S.Q, S.F, D.M);
+    // nearest flexural mode in log frequency
+    let best = null, bd = Infinity;
+    ms.modes.forEach((md, k) => { if (md.rigid) return; const d = Math.abs(Math.log(S.f / modeF(md))); if (d < bd) { bd = d; best = k; } });
+    D.near = best;
+    nodalDirty = true; heatDirty = true; glDirty = true;
+  }
+  function gammaAt(u, v) {
+    const x = clamp((u + 1) * (GN - 1) / 2, 0, GN - 1.0001), y = clamp((v + 1) * (GN - 1) / 2, 0, GN - 1.0001);
+    const a = Math.floor(x), b = Math.floor(y), wx = x - a, wy = y - b, g = D.gam, k = b * GN + a;
+    return (g[k] * (1 - wx) + g[k + 1] * wx) * (1 - wy) + (g[k + GN] * (1 - wx) + g[k + GN + 1] * wx) * wy;
+  }
+  function wAt(arr, u, v) {
+    const x = clamp((u + 1) * (GN - 1) / 2, 0, GN - 1.0001), y = clamp((v + 1) * (GN - 1) / 2, 0, GN - 1.0001);
+    const a = Math.floor(x), b = Math.floor(y), wx = x - a, wy = y - b, k = b * GN + a;
+    return (arr[k] * (1 - wx) + arr[k + 1] * wx) * (1 - wy) + (arr[k + GN] * (1 - wx) + arr[k + GN + 1] * wx) * wy;
+  }
+
+  // ---------- sand ----------
+  const sand = { x: new Float32Array(NSAND), y: new Float32Array(NSAND), alive: new Uint8Array(NSAND), g: new Float32Array(NSAND), count: 0 };
+  const rng = mulberry32(20260421);
+  let tickAcc = 0, ticks = 0;
+  function sprinkle() {
+    for (let i = 0; i < NSAND; i++) {
+      let u, v;
+      do { u = 2 * rng() - 1; v = 2 * rng() - 1; } while (!inside(u, v));
+      sand.x[i] = u; sand.y[i] = v; sand.alive[i] = 1;
+    }
+    sand.count = NSAND; dirty = true; glSandDirty = true;
+  }
+  function sandTick() {
+    sand.count -= sandStep(sand.x, sand.y, sand.alive, gammaAt, inside, rng, STEP, CAP, DRIFT); ticks++;
+  }
+
+  // ---------- frequency controls ----------
+  const fOfPos = (p) => F_MIN * Math.pow(D.fmax / F_MIN, p / 1000);
+  const posOfF = (f) => 1000 * Math.log(f / F_MIN) / Math.log(D.fmax / F_MIN);
+  function setF(f, opts = {}) {
+    S.f = clamp(f, F_MIN, D.fmax);
+    if (!opts.fromSlider) {
+      const p = clamp(Math.round(posOfF(S.f)), 0, 1000);
+      $('freq').value = p; $('fine').value = (1200 * Math.log2(S.f / fOfPos(p))).toFixed(1);
+    }
+    fieldDirty = true; soundDirty = true; dirty = true;
+  }
+  function fmtF(f) { return f >= 1000 ? (f / 1000).toFixed(f >= 1e4 ? 2 : 3) + ' kHz' : f.toFixed(f < 100 ? 2 : 1) + ' Hz'; }
+  function fmtFshort(f) { return f >= 1000 ? (f / 1000).toFixed(2) + ' k' : Math.round(f) + ''; }
+  function resonanceList() {
+    const out = [];
+    D.ms.modes.forEach((md, k) => { if (!md.rigid && isDriven(k)) { const f = modeF(md); if (f >= F_MIN && f <= D.fmax) out.push({ f, k }); } });
+    return out.sort((a, b) => a.f - b.f);
+  }
+  function jumpRes(dir) {
+    const list = resonanceList(); if (!list.length) return;
+    const eps = 1e-6;
+    const t = dir > 0 ? list.find((r) => r.f > S.f * (1 + eps)) : [...list].reverse().find((r) => r.f < S.f * (1 - eps));
+    if (t) { stopSweep(); setF(t.f); }
+  }
+
+  // ---------- controls ----------
+  const forceOf = (p) => 0.01 * Math.pow(10, 2.5 * p / 100), posOfForce = (F) => 40 * Math.log10(F / 0.01);
+  const qOf = (p) => 10 * Math.pow(100, p / 100), posOfQ = (Q) => 50 * Math.log10(Q / 10);
+  function syncControls() {
+    for (const b of $('shapeSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.shape));
+    for (const b of $('matSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mat));
+    for (const b of $('driveSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.d === S.drive));
+    for (const b of $('viewSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    for (const b of $('rateSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(+b.dataset.r === S.rate));
+    for (const b of $('plotSeg').querySelectorAll('button')) {
+      b.setAttribute('aria-pressed', String(b.dataset.pl === S.plot));
+      if (b.dataset.pl === 'law') b.disabled = S.shape !== 'circle';
+    }
+    $('thick').value = (S.h * 1000).toFixed(2);
+    $('force').value = Math.round(posOfForce(S.F)); $('qual').value = Math.round(posOfQ(S.Q));
+    $('tNodal').checked = S.nodal; $('tHeat').checked = S.heat; $('tFollow').checked = S.follow;
+    $('sweepBtn').setAttribute('aria-pressed', String(S.sweep)); $('sweepBtn').textContent = S.sweep ? 'Stop sweep' : 'Sweep up';
+  }
+  function setShape(s) {
+    if (s === S.shape) return;
+    S.shape = s; if (s !== 'circle' && S.plot === 'law') S.plot = 'resp';
+    const d = DRIVES[s][S.drive] || DRIVES[s].center; S.du = d[0]; S.dv = d[1];
+    clearPreset(); staticDirty = true; recomputeNow(); sprinkle(); setF(S.f); syncControls(); glBuild();
+  }
+  function setDrive(name) {
+    S.drive = name; const d = DRIVES[S.shape][name]; S.du = d[0]; S.dv = d[1];
+    staticDirty = true; dirty = true; syncControls();
+  }
+  $('shapeSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setShape(b.dataset.s); });
+  $('matSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.mat = b.dataset.m; clearPreset(); staticDirty = true; recomputeNow(); setF(S.f); syncControls(); });
+  $('driveSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { clearPreset(); setDrive(b.dataset.d); } });
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setView(b.dataset.v); });
+  $('rateSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { S.rate = +b.dataset.r; syncControls(); } });
+  $('plotSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b && !b.disabled) { S.plot = b.dataset.pl; syncControls(); plotHintText(); dirty = true; } });
+  $('thick').addEventListener('input', () => { S.h = +$('thick').value / 1000; clearPreset(); staticDirty = true; recomputeNow(); setF(S.f); });
+  $('freq').addEventListener('input', () => { stopSweep(); $('fine').value = 0; setF(fOfPos(+$('freq').value), { fromSlider: true }); clearPreset(); });
+  $('fine').addEventListener('input', () => { stopSweep(); setF(fOfPos(+$('freq').value) * Math.pow(2, +$('fine').value / 1200), { fromSlider: true }); clearPreset(); });
+  $('force').addEventListener('input', () => { S.F = forceOf(+$('force').value); staticDirty = true; clearPreset(); });
+  $('qual').addEventListener('input', () => { S.Q = qOf(+$('qual').value); staticDirty = true; clearPreset(); });
+  $('prevRes').addEventListener('click', () => jumpRes(-1));
+  $('nextRes').addEventListener('click', () => jumpRes(1));
+  $('sprinkle').addEventListener('click', () => sprinkle());
+  $('sweepBtn').addEventListener('click', () => { if (S.sweep) stopSweep(); else startSweep(); });
+  $('tNodal').addEventListener('change', () => { S.nodal = $('tNodal').checked; dirty = true; });
+  $('tHeat').addEventListener('change', () => { S.heat = $('tHeat').checked; dirty = true; });
+  $('tFollow').addEventListener('change', () => { S.follow = $('tFollow').checked; soundDirty = true; soundHintText(); });
+  function startSweep() {
+    if (S.f >= D.fmax * 0.999) setF(F_MIN * 2);
+    S.sweep = true; if (!running) setRunning(true); syncControls();
+  }
+  function stopSweep() { if (!S.sweep) return; S.sweep = false; syncControls(); }
+
+  // ---------- presets ----------
+  const PRESETS = {
+    first: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 100, F: 0.1, pick: { driven: 1 },
+      hint: 'The lowest mode a center drive can excite on the square. In a few seconds the sand leaves the moving regions and gathers on the nodal lines. The lower twisting modes have a node at the center, so they stay silent.' },
+    cross: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'off', Q: 100, F: 0.5, pick: { nm: [2, 0] },
+      hint: 'Driven halfway out, like the off center hole of a kit plate: two nodal diameters cross at right angles. This is the lowest flexural mode of a free circular plate, yet a center drive could never excite it, because every mode with nodal diameters has a node at the center.' },
+    rings: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'center', Q: 100, F: 0.1, pick: { nm: [0, 3] },
+      hint: 'Driven at the center, a circular plate can only ring in modes without nodal diameters, so every pattern is a set of concentric nodal circles. Step through them with Next resonance.' },
+    sweep: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 100, F: 0.1, f: 60, sweep: true, rate: 1,
+      hint: 'Turn on Sound. The drive sweeps upward one semitone per second: the tone swells at every peak of the response curve while the sand jumps, and falls quiet between peaks.' },
+    star: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 100, F: 0.1, pick: { driven: 7 },
+      hint: 'A higher mode of the center driven square, with nodal lines in a star around the middle. Patterns like this fill the plates in Chladni’s 1787 book.' },
+    high: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'edge', Q: 300, F: 0.1, pick: { nm: [4, 2] },
+      hint: 'Driven at the rim, the way Chladni bowed his plates: four nodal diameters and two nodal circles, at Q = 300 so that neighboring modes stay out. The drive point sits on an antinode at the rim, so no nodal diameter can pass through it.' }
+  };
+  function clearPreset() {
+    if (!presetId) return;
+    presetId = null;
+    for (const b of $('presets').querySelectorAll('button')) b.setAttribute('aria-pressed', 'false');
+  }
+  function applyPreset(id) {
+    const p = PRESETS[id]; if (!p) return;
+    stopSweep();
+    S.shape = p.shape; S.mat = p.mat; S.h = p.h; S.Q = p.Q; S.F = p.F; S.drive = p.drive;
+    const d = DRIVES[S.shape][S.drive]; S.du = d[0]; S.dv = d[1];
+    if (S.shape !== 'circle' && S.plot === 'law') S.plot = 'resp';
+    staticDirty = true; recomputeNow();
+    let f = p.f || 100;
+    if (p.pick) {
+      const ms = D.ms; let k = -1;
+      if (p.pick.nm) k = ms.modes.findIndex((m) => m.n === p.pick.nm[0] && m.m === p.pick.nm[1]);
+      if (p.pick.driven) { let c = 0; k = ms.modes.findIndex((m, i) => !m.rigid && isDriven(i) && ++c === p.pick.driven); }
+      if (k >= 0) f = modeF(ms.modes[k]);
+    }
+    setF(f); sprinkle();
+    if (p.sweep) { S.rate = p.rate; startSweep(); }
+    presetId = id;
+    for (const b of $('presets').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.p === id));
+    $('presetHint').textContent = p.hint;
+    syncControls(); glBuild(); plotHintText(); dirty = true;
+  }
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) applyPreset(b.dataset.p); });
+
+  // ---------- readouts ----------
+  function readouts() {
+    const mat = MATERIALS[S.mat];
+    $('fTop').innerHTML = `f = ${fmtF(S.f)}`;
+    $('freqOut').textContent = fmtF(S.f);
+    const fine = +$('fine').value; $('fineOut').textContent = `${fine >= 0 ? '+' : '−'}${Math.abs(fine).toFixed(1)} cents`;
+    $('forceOut').textContent = S.F >= 0.1 ? `${S.F.toFixed(2)} N` : `${(S.F * 1000).toFixed(0)} mN`;
+    $('qualOut').textContent = Math.round(S.Q);
+    $('thickOut').textContent = `${(S.h * 1000).toFixed(2)} mm`;
+    $('rPeak').innerHTML = `${D.gmax < 10 ? D.gmax.toFixed(2) : D.gmax.toFixed(1)} <small>g</small>`;
+    $('rGrains').textContent = sand.count.toLocaleString('en-US');
+    $('rMass').innerHTML = `${(D.M * 1000).toFixed(0)} <small>g</small>`;
+    $('rLow').innerHTML = `${fmtF(modeF(D.lowest))}`;
+    const k = bendK(S.f, mat, S.h), kh = k * S.h;
+    $('rKh').innerHTML = `wavelength ${(TAU / k * 100).toFixed(1)} cm, k h = ${kh.toFixed(3)}` + (kh > 0.25 ? ' <small>(thin plate theory a few percent high here)</small>' : '');
+    if (D.near != null) {
+      const md = D.ms.modes[D.near], fk = modeF(md), ph = Math.abs(D.phiP[D.near]), df = S.f - fk, bw = fk / S.Q;
+      let s = `${md.label} at ${fmtF(fk)}, λ² = ${md.lam2.toFixed(2)}. `;
+      s += `Detuned by ${df >= 0 ? '+' : '−'}${Math.abs(df) < 10 ? Math.abs(df).toFixed(2) : Math.abs(df).toFixed(1)} Hz; width f/Q = ${bw < 10 ? bw.toFixed(2) : bw.toFixed(1)} Hz. `;
+      if (ph < 1e-6) s += 'Not driven: the drive point lies on one of its nodal lines.';
+      else if (ph < DRIVEN) s += 'Weakly driven: the drive point is close to a nodal line.';
+      else s += 'Driven.';
+      if (D.ms.shape === 'square') s += ` It is ${symText(md)}.`;
+      else s += ` ${md.n} nodal diameter${md.n === 1 ? '' : 's'}, ${md.m} nodal circle${md.m === 1 ? '' : 's'}.`;
+      $('rMode').textContent = s;
+    }
+    const name = S.shape === 'square' ? 'square, 24 cm on a side' : 'circle, 24 cm across';
+    $('plateHint').textContent = `A ${name}, as in common teaching kits (PASCO WA-9607); makers rarely state the thickness, about 1 mm is typical. ${mat.name}: E = ${mat.E / 1e9} GPa, ρ = ${mat.rho} kg/m³, ν = ${mat.nu}. Every frequency scales as h/ℓ² × √(E/ρ(1 − ν²)): twice as thick, an octave higher. Modes are computed up to ${fmtF(D.fmax)} for this plate.`;
+  }
+  function driveHintText() {
+    $('driveHint').textContent = `Sand leaves the surface where the plate's acceleration amplitude passes g, which happens near resonance. A mode is excited only if the drive point moves in it: a drive on a nodal line of a mode cannot pump it. The force and Q are model choices; Q = ${Math.round(S.Q)} gives each peak a width f/Q.`;
+  }
+  function plotHintText() {
+    $('plotHint').textContent = S.plot === 'law'
+      ? 'Chladni’s law is empirical: for a flat circular plate f ≈ C (n + 2m)^p, with n nodal diameters, m nodal circles and p close to 2. The line is a least squares fit to the computed modes; click a point to drive that mode.'
+      : 'Response: RMS acceleration over the plate for the drive force set, on log scales. Dark ticks along the bottom mark modes the drive point can excite, faint ticks modes it cannot. Click or drag on the plot to set f.';
+  }
+
+  // ---------- canvas ----------
+  const pane = $('pane'), can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = {}, G = {};
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), v = (n) => cs.getPropertyValue(n).trim();
+    T = { ink: v('--ink'), muted: v('--muted'), line: v('--line'), grid: v('--grid'), gridStrong: v('--grid-strong'), pos: v('--pos'), accent: v('--accent'),
+      equi: v('--equi'), brass: v('--brass'), bench: v('--bench'), lamp: v('--lamp'), canvas: v('--canvas'), surface: v('--surface'),
+      plateHi: v('--plate-hi'), plateLo: v('--plate-lo'), plateEdge: v('--plate-edge'), sand: v('--sand'), nodal: v('--nodal'), heat: v('--heat'),
+      ui: v('--font-ui'), mono: v('--font-mono') };
+    heatDirty = true; glTheme();
+  }
+  function projScale() {
+    if (document.documentElement.getAttribute('data-projector') !== 'on') return 1;
+    return clamp(Math.min(W, H) / 430, 1, 1.35);
+  }
+  function layout() {
+    const ps = projScale(), pad = 14 * ps;
+    if (W / H > 1.22) {   // side by side: plate on the left, plot on the right
+      const s = Math.min(H - 2 * pad, W * 0.56);
+      G.plate = { x: pad, y: (H - s) / 2, s };
+      G.plot = { x: pad + s + 18 * ps, y: pad, w: W - (pad + s + 18 * ps) - pad, h: H - 2 * pad };
+    } else {              // stacked: plate on top, plot below
+      const ph = clamp(H * 0.34, 150 * ps, 260 * ps), s = Math.min(W - 2 * pad, H - ph - 3 * pad);
+      G.plate = { x: (W - s) / 2, y: pad, s };
+      G.plot = { x: pad, y: pad + s + pad, w: W - 2 * pad, h: H - s - 3 * pad };
+    }
+    const p = G.plate; p.cx = p.x + p.s / 2; p.cy = p.y + p.s / 2; p.R = Math.max(p.s / 2 * 0.8, p.s / 2 - 24 * ps);
+  }
+  function resize() {
+    const r = pane.getBoundingClientRect();
+    W = Math.max(1, Math.round(r.width)); H = Math.max(1, Math.round(r.height)); dpr = window.devicePixelRatio || 1;
+    can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px';
+    layout(); glResize(); dirty = true;
+  }
+  const U2X = (u) => G.plate.cx + u * G.plate.R, V2Y = (v) => G.plate.cy - v * G.plate.R;
+  function platePath(c, grow = 0) {
+    const p = G.plate, R = p.R + grow;
+    c.beginPath();
+    if (S.shape === 'square') c.rect(p.cx - R, p.cy - R, 2 * R, 2 * R); else c.arc(p.cx, p.cy, R, 0, TAU);
+  }
+  function halo(c, txt, x, y, align, color, ps) {
+    c.textAlign = align; const w = c.measureText(txt).width, h = 15 * ps;
+    const x0 = align === 'left' ? x - 3 : align === 'right' ? x - w - 3 : x - w / 2 - 3;
+    c.fillStyle = T.bench; c.globalAlpha = 0.85; c.fillRect(x0, y - h + 3 * ps, w + 6, h); c.globalAlpha = 1;
+    c.fillStyle = color; c.fillText(txt, x, y);
+  }
+
+  // nodal lines: zero contour of Re(W e^{−iψ}), ψ the phase that carries most of the motion, by marching squares
+  let nodalDirty = true, nodalSegs = [];
+  function updateNodal() {
+    nodalDirty = false;
+    const re = D.Wre, im = D.Wim, NN = GN * GN; let sxx = 0, sxy = 0;
+    for (let i = 0; i < NN; i++) { sxx += re[i] * re[i] - im[i] * im[i]; sxy += 2 * re[i] * im[i]; }
+    const psi = 0.5 * Math.atan2(sxy, sxx), c = Math.cos(psi), s = Math.sin(psi);
+    const F = new Float32Array(NN); let mx = 0;
+    for (let i = 0; i < NN; i++) { F[i] = re[i] * c + im[i] * s; mx = Math.max(mx, Math.abs(F[i])); }
+    const segs = [], h = 2 / (GN - 1), circ = S.shape === 'circle';
+    if (mx === 0) { nodalSegs = segs; return; }
+    for (let b = 0; b < GN - 1; b++) for (let a = 0; a < GN - 1; a++) {
+      const u0 = gridU(a), v0 = gridU(b);
+      if (circ && Math.hypot(u0 + h / 2, v0 + h / 2) > 1 + 0.7 * h) continue;
+      const k = b * GN + a, f00 = F[k], f10 = F[k + 1], f01 = F[k + GN], f11 = F[k + GN + 1];
+      const pts = [];
+      const edge = (fa, fb, ua, va, ub, vb) => { if ((fa < 0) !== (fb < 0)) { const t = fa / (fa - fb); pts.push([ua + t * (ub - ua), va + t * (vb - va)]); } };
+      edge(f00, f10, u0, v0, u0 + h, v0); edge(f10, f11, u0 + h, v0, u0 + h, v0 + h);
+      edge(f11, f01, u0 + h, v0 + h, u0, v0 + h); edge(f01, f00, u0, v0 + h, u0, v0);
+      if (pts.length === 2) segs.push(pts[0][0], pts[0][1], pts[1][0], pts[1][1]);
+      else if (pts.length === 4) {
+        const ctr = (f00 + f10 + f01 + f11) / 4, same = (ctr < 0) === (f00 < 0);
+        if (same) segs.push(...pts[0], ...pts[1], ...pts[2], ...pts[3]);
+        else segs.push(...pts[0], ...pts[3], ...pts[1], ...pts[2]);
+      }
+    }
+    nodalSegs = segs;
+  }
+  // |a| > g map, drawn into a small offscreen canvas and scaled up
+  let heatDirty = true; const heatCv = document.createElement('canvas'); heatCv.width = GN; heatCv.height = GN;
+  function updateHeat() {
+    heatDirty = false;
+    const hc = heatCv.getContext('2d'), img = hc.createImageData(GN, GN), d = img.data;
+    const m = /^#?([0-9a-f]{6})$/i.exec(T.heat || '#ff9a3c'), rgb = m ? [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16)) : [255, 154, 60];
+    for (let b = 0; b < GN; b++) for (let a = 0; a < GN; a++) {
+      const gv = D.gam[b * GN + a], o = ((GN - 1 - b) * GN + a) * 4;
+      d[o] = rgb[0]; d[o + 1] = rgb[1]; d[o + 2] = rgb[2]; d[o + 3] = gv > 1 ? Math.round(255 * Math.min(0.3, 0.1 + 0.02 * (gv - 1))) : 0;
+    }
+    hc.putImageData(img, 0, 0);
+  }
+
+  function drawPlate(ps) {
+    const p = G.plate, c = ctx;
+    // lamp light on the bench
+    const lg = c.createRadialGradient(p.cx - p.s * 0.15, p.cy - p.s * 0.2, p.s * 0.05, p.cx, p.cy, p.s * 0.85);
+    lg.addColorStop(0, T.lamp); lg.addColorStop(1, T.bench);
+    c.fillStyle = lg; c.fillRect(p.x - 10, p.y - 10, p.s + 20, p.s + 20);
+    // shadow, plate body, lamp highlight, rim
+    c.save(); c.shadowColor = 'rgba(0,0,0,0.35)'; c.shadowBlur = 18 * ps; c.shadowOffsetY = 6 * ps;
+    platePath(c); c.fillStyle = T.plateLo; c.fill(); c.restore();
+    const hg = c.createRadialGradient(p.cx - p.R * 0.35, p.cy - p.R * 0.45, p.R * 0.05, p.cx - p.R * 0.1, p.cy - p.R * 0.1, p.R * 1.5);
+    hg.addColorStop(0, T.plateHi); hg.addColorStop(1, T.plateLo);
+    platePath(c); c.fillStyle = hg; c.fill();
+    c.save(); platePath(c); c.clip();
+    if (S.heat) { if (heatDirty) updateHeat(); c.imageSmoothingEnabled = true; c.drawImage(heatCv, U2X(-1), V2Y(1), 2 * p.R, 2 * p.R); }
+    // sand: grains in flight jitter slightly
+    c.fillStyle = T.sand; const sz = Math.max(1.3, p.R / 190) * (ps > 1 ? 1.15 : 1), hs = sz / 2;
+    const jit = running ? sz * 0.9 : 0;
+    for (let i = 0; i < NSAND; i++) {
+      if (!sand.alive[i]) continue;
+      let x = U2X(sand.x[i]), y = V2Y(sand.y[i]);
+      if (jit && sand.g[i] > 1) { x += (Math.random() - 0.5) * jit; y += (Math.random() - 0.5) * jit; }
+      c.fillRect(x - hs, y - hs, sz, sz);
+    }
+    if (S.nodal) {
+      if (nodalDirty) updateNodal();
+      c.strokeStyle = T.nodal; c.lineWidth = 1.6 * ps; c.setLineDash([5 * ps, 4 * ps]); c.beginPath();
+      const sg = nodalSegs;
+      for (let i = 0; i < sg.length; i += 4) { c.moveTo(U2X(sg[i]), V2Y(sg[i + 1])); c.lineTo(U2X(sg[i + 2]), V2Y(sg[i + 3])); }
+      c.stroke(); c.setLineDash([]);
+    }
+    c.restore();
+    platePath(c); c.strokeStyle = T.plateEdge; c.lineWidth = 1.2 * ps; c.stroke();
+    // drive post (bolt head)
+    const hot = (drag && drag.id === 'drive') || (!drag && hoverId === 'drive');
+    const dx = U2X(S.du), dy = V2Y(S.dv), rr = Math.max(5, p.R * 0.03) * (hot ? 1.25 : 1);
+    if (hot) { c.globalAlpha = 0.35; c.fillStyle = T.brass; c.beginPath(); c.arc(dx, dy, rr * 2, 0, TAU); c.fill(); c.globalAlpha = 1; }
+    c.fillStyle = T.brass; c.strokeStyle = '#111'; c.lineWidth = 1.5 * ps; c.beginPath(); c.arc(dx, dy, rr, 0, TAU); c.fill(); c.stroke();
+    c.strokeStyle = 'rgba(0,0,0,0.55)'; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(dx - rr * 0.55, dy); c.lineTo(dx + rr * 0.55, dy); c.stroke();
+    // labels
+    c.font = `${12 * ps}px ${T.ui}`; c.textBaseline = 'alphabetic';
+    const mat = MATERIALS[S.mat];
+    const l1 = `${S.shape === 'square' ? 'Square, 24 cm' : 'Circle, 24 cm across'} · ${mat.name.toLowerCase()} ${(S.h * 1000).toFixed(2)} mm · free edges`;
+    halo(c, l1, p.x + 4, p.y + 14 * ps, 'left', T.muted, ps);
+    if (D.near != null) {
+      const md = D.ms.modes[D.near], fk = modeF(md), off = Math.abs(S.f - fk) / (fk / S.Q);
+      c.font = `700 ${13.5 * ps}px ${T.ui}`;
+      const t = off < 1.5 ? `${md.label}, ${isDriven(D.near) ? 'at resonance' : 'not driven'}` : 'between resonances';
+      halo(c, t, p.x + 4, p.y + p.s - 6 * ps, 'left', T.ink, ps);
+      c.font = `${12 * ps}px ${T.mono}`;
+      halo(c, `peak |a| = ${D.gmax < 10 ? D.gmax.toFixed(2) : D.gmax.toFixed(1)} g`, p.x + p.s - 4, p.y + p.s - 6 * ps, 'right', D.gmax > 1 ? T.ink : T.muted, ps);
+    }
+  }
+
+  // ---------- plots ----------
+  function plotGeom() {
+    const ps = projScale(), r = G.plot;
+    const L = r.x + 46 * ps, R = r.x + r.w - 8 * ps, top = r.y + 26 * ps, bot = r.y + r.h - 34 * ps;
+    return { L, R, top, bot, ps, lfmin: Math.log(F_MIN), lfmax: Math.log(D.fmax) };
+  }
+  const fX = (g, f) => g.L + (Math.log(f) - g.lfmin) / (g.lfmax - g.lfmin) * (g.R - g.L);
+  const xF = (g, x) => Math.exp(g.lfmin + (x - g.L) / (g.R - g.L) * (g.lfmax - g.lfmin));
+  function fTicks(lo, hi) {
+    const out = [];
+    for (let d = 1; d <= 1e4; d *= 10) for (const m of [1, 2, 5]) { const f = d * m; if (f >= lo * 0.999 && f <= hi * 1.001) out.push(f); }
+    return out;
+  }
+  function drawResponse() {
+    const g = plotGeom(), c = ctx, ps = g.ps, cv = D.curve; if (!cv || g.R - g.L < 40 || g.bot - g.top < 40) return;
+    let ymax = Math.ceil(Math.log10(Math.max(D.curveMax, 1.5) * 1.2)), ymin = Math.min(ymax - 3, Math.floor(Math.log10(Math.max(1e-6, Math.min(...cv.a)))));
+    ymin = Math.max(ymin, ymax - 6);
+    g.ymin = ymin; g.ymax = ymax;
+    const Y = (a) => g.bot - (Math.log10(Math.max(a, 1e-12)) - ymin) / (ymax - ymin) * (g.bot - g.top);
+    G.resp = g; G.respY = Y;
+    c.font = `${10.5 * ps}px ${T.mono}`; c.textBaseline = 'middle'; c.textAlign = 'right';
+    for (let e = ymin; e <= ymax; e++) {
+      const y = Math.round(Y(Math.pow(10, e))) + 0.5;
+      c.strokeStyle = T.gridStrong; c.globalAlpha = 0.6; c.lineWidth = 1; c.beginPath(); c.moveTo(g.L, y); c.lineTo(g.R, y); c.stroke(); c.globalAlpha = 1;
+      c.fillStyle = T.muted; c.fillText(e >= 0 ? `${Math.pow(10, e)}` : `10${sup(e)}`, g.L - 5, y);
+    }
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    for (const f of fTicks(F_MIN, D.fmax)) {
+      const x = Math.round(fX(g, f)) + 0.5;
+      c.strokeStyle = T.gridStrong; c.globalAlpha = 0.6; c.beginPath(); c.moveTo(x, g.top); c.lineTo(x, g.bot); c.stroke(); c.globalAlpha = 1;
+      c.fillStyle = T.muted; c.fillText(f >= 1000 ? `${f / 1000}k` : `${f}`, x, g.bot + 4 * ps);
+    }
+    c.textAlign = 'right'; c.fillText('drive frequency f (Hz)', g.R, g.bot + 17 * ps);
+    c.textAlign = 'left'; c.textBaseline = 'alphabetic'; c.font = `${11.5 * ps}px ${T.ui}`; c.fillStyle = T.muted;
+    c.fillText('RMS acceleration of the plate (g)', g.L, g.top - 9 * ps);
+    // 1 g
+    if (ymin < 0 && ymax > 0) {
+      const y = Y(1); c.strokeStyle = T.equi; c.lineWidth = 1.3 * ps; c.setLineDash([6 * ps, 4 * ps]); c.beginPath(); c.moveTo(g.L, y); c.lineTo(g.R, y); c.stroke(); c.setLineDash([]);
+    }
+    // mode ticks along the bottom
+    const ms = D.ms;
+    ms.modes.forEach((md, k) => {
+      if (md.rigid) return; const f = modeF(md); if (f < F_MIN || f > D.fmax) return;
+      const x = Math.round(fX(g, f)) + 0.5, drv = isDriven(k);
+      c.strokeStyle = drv ? T.ink : T.muted; c.globalAlpha = drv ? 0.9 : 0.35; c.lineWidth = drv ? 1.5 * ps : 1;
+      c.beginPath(); c.moveTo(x, g.bot); c.lineTo(x, g.bot - (drv ? 9 : 5) * ps); c.stroke();
+    });
+    c.globalAlpha = 1;
+    // the curve
+    c.save(); c.beginPath(); c.rect(g.L, g.top - 2, g.R - g.L, g.bot - g.top + 2); c.clip();
+    c.strokeStyle = T.accent; c.lineWidth = 2 * ps; c.lineJoin = 'round'; c.beginPath();
+    for (let i = 0; i < cv.f.length; i++) { const x = fX(g, cv.f[i]), y = Y(cv.a[i]); i ? c.lineTo(x, y) : c.moveTo(x, y); }
+    c.stroke(); c.restore();
+    // peak labels, tallest first, without overlaps
+    const peaks = [];
+    ms.modes.forEach((md, k) => { if (md.rigid || !isDriven(k)) return; const f = modeF(md); if (f < F_MIN || f > D.fmax) return; peaks.push({ f, a: rmsAccel(ms.lam2, D.phiP, f, D.fs, S.Q, S.F, D.M), md }); });
+    peaks.sort((p, q) => q.a - p.a);
+    const placed = []; c.font = `${10.5 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'alphabetic';
+    for (const pk of peaks) {
+      const x = fX(g, pk.f), y = Math.max(g.top + 12 * ps, Y(pk.a) - 5 * ps), w = c.measureText(pk.md.short).width + 6;
+      if (placed.some((q) => Math.abs(q[0] - x) < (q[2] + w) / 2 + 2 && Math.abs(q[1] - y) < 13 * ps)) continue;
+      if (placed.length > 16) break;
+      if (x + w / 2 > g.R || x - w / 2 < g.L) continue;
+      placed.push([x, y, w]); halo(c, pk.md.short, x, y, 'center', T.ink, ps * 0.9);
+    }
+    // the drive frequency
+    const hot = (drag && drag.id === 'f') || (!drag && hoverId === 'f'), x = fX(g, S.f);
+    if (hot) { c.globalAlpha = 0.3; c.strokeStyle = T.pos; c.lineWidth = 7 * ps; c.beginPath(); c.moveTo(x, g.top); c.lineTo(x, g.bot); c.stroke(); c.globalAlpha = 1; }
+    c.strokeStyle = T.pos; c.lineWidth = 1.8 * ps; c.beginPath(); c.moveTo(x, g.top); c.lineTo(x, g.bot); c.stroke();
+    const yd = Y(D.arms); c.fillStyle = T.pos; c.beginPath(); c.arc(x, clamp(yd, g.top, g.bot), 4 * ps, 0, TAU); c.fill();
+    // grip
+    const gy = (g.top + g.bot) / 2; c.fillStyle = T.canvas; c.strokeStyle = T.pos; c.lineWidth = 1.4 * ps;
+    c.beginPath(); c.roundRect ? c.roundRect(x - 5 * ps, gy - 9 * ps, 10 * ps, 18 * ps, 3 * ps) : c.rect(x - 5 * ps, gy - 9 * ps, 10 * ps, 18 * ps); c.fill(); c.stroke();
+    c.beginPath(); for (let k = -1; k <= 1; k++) { c.moveTo(x - 2.5 * ps, gy + k * 3.5 * ps); c.lineTo(x + 2.5 * ps, gy + k * 3.5 * ps); } c.stroke();
+    c.font = `600 ${11 * ps}px ${T.mono}`; c.textBaseline = 'alphabetic';
+    const lab = fmtF(S.f), right = x < (g.L + g.R) / 2;
+    halo(c, lab, x + (right ? 7 : -7) * ps, g.top + 12 * ps, right ? 'left' : 'right', T.pos, ps);
+    if (ymin < 0 && ymax > 0) { c.font = `${10.5 * ps}px ${T.mono}`; halo(c, '1 g', right ? g.R - 2 : g.L + 4, Y(1) - 4 * ps, right ? 'right' : 'left', T.equi, ps); }
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.strokeRect(g.L + 0.5, g.top + 0.5, g.R - g.L, g.bot - g.top);
+  }
+  const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+  function sup(e) { return (e < 0 ? '⁻' : '') + String(Math.abs(e)).split('').map((d) => SUP[+d]).join(''); }
+  function drawLaw() {
+    const g = plotGeom(), c = ctx, ps = g.ps; if (g.R - g.L < 40 || g.bot - g.top < 40) return;
+    const ms = D.ms, pts = [];
+    ms.modes.forEach((md, k) => { if (md.rigid) return; const f = modeF(md); if (f > D.fmax) return; pts.push({ s: md.n + 2 * md.m, f, md, k }); });
+    if (!pts.length) return;
+    const smax = Math.max(...pts.map((p) => p.s)), fmin = Math.min(...pts.map((p) => p.f));
+    const lx0 = Math.log(1.6), lx1 = Math.log(smax * 1.15), ly0 = Math.log(fmin * 0.7), ly1 = Math.log(D.fmax * 1.1);
+    const X = (s) => g.L + (Math.log(s) - lx0) / (lx1 - lx0) * (g.R - g.L), Y = (f) => g.bot - (Math.log(f) - ly0) / (ly1 - ly0) * (g.bot - g.top);
+    G.law = { g, X, Y, pts };
+    c.font = `${10.5 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
+    for (const s of [2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 40]) {
+      if (s > smax * 1.15) break; const x = Math.round(X(s)) + 0.5;
+      c.strokeStyle = T.gridStrong; c.globalAlpha = 0.6; c.beginPath(); c.moveTo(x, g.top); c.lineTo(x, g.bot); c.stroke(); c.globalAlpha = 1;
+      c.fillStyle = T.muted; c.fillText(String(s), x, g.bot + 4 * ps);
+    }
+    c.textAlign = 'right'; c.fillText('n + 2m  (nodal diameters + 2 × nodal circles)', g.R, g.bot + 17 * ps);
+    c.textBaseline = 'middle';
+    for (const f of fTicks(fmin * 0.7, D.fmax * 1.1)) {
+      const y = Math.round(Y(f)) + 0.5;
+      c.strokeStyle = T.gridStrong; c.globalAlpha = 0.6; c.beginPath(); c.moveTo(g.L, y); c.lineTo(g.R, y); c.stroke(); c.globalAlpha = 1;
+      c.fillStyle = T.muted; c.fillText(f >= 1000 ? `${f / 1000}k` : `${f}`, g.L - 5, y);
+    }
+    c.textAlign = 'left'; c.textBaseline = 'alphabetic'; c.font = `${11.5 * ps}px ${T.ui}`; c.fillStyle = T.muted;
+    c.fillText('mode frequency f (Hz), each dot one mode of the circle', g.L, g.top - 9 * ps);
+    c.save(); c.beginPath(); c.rect(g.L, g.top, g.R - g.L, g.bot - g.top); c.clip();
+    if (D.fit) {
+      c.strokeStyle = T.equi; c.lineWidth = 1.6 * ps; c.setLineDash([6 * ps, 4 * ps]); c.beginPath();
+      for (let i = 0; i <= 40; i++) { const s = Math.exp(lx0 + (lx1 - lx0) * i / 40), f = D.fit.C * Math.pow(s, D.fit.p), x = X(s), y = Y(f); i ? c.lineTo(x, y) : c.moveTo(x, y); }
+      c.stroke(); c.setLineDash([]);
+    }
+    for (const p of pts) {
+      const x = X(p.s), y = Y(p.f), drv = isDriven(p.k), cur = p.k === D.near;
+      c.beginPath(); c.arc(x, y, (cur ? 5 : 3.2) * ps, 0, TAU);
+      c.fillStyle = drv ? T.accent : T.canvas; c.strokeStyle = cur ? T.pos : T.accent; c.lineWidth = (cur ? 2.2 : 1.2) * ps; c.fill(); c.stroke();
+    }
+    c.restore();
+    if (D.fit) {
+      c.font = `600 ${11.5 * ps}px ${T.mono}`;
+      halo(c, `fit: f ≈ ${D.fit.C.toFixed(1)} Hz × (n + 2m)^${D.fit.p.toFixed(2)}  (${D.fit.count} modes)`, g.L + 6 * ps, g.top + 16 * ps, 'left', T.equi, ps);
+      c.font = `${10.5 * ps}px ${T.ui}`;
+      halo(c, 'filled: driven at this drive point · ring: nearest mode', g.L + 6 * ps, g.top + 32 * ps, 'left', T.muted, ps);
+    }
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.strokeRect(g.L + 0.5, g.top + 0.5, g.R - g.L, g.bot - g.top);
+  }
+  function draw() {
+    const c = ctx; c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.fillStyle = T.bench; c.fillRect(0, 0, W, H);
+    const ps = projScale();
+    if (S.view === 'sand' || !G3.ok) drawPlate(ps);
+    if (S.view === '3d' && G3.ok) {
+      c.font = `${11 * ps}px ${T.ui}`; c.textBaseline = 'alphabetic';
+      halo(c, G3.note || '', G.plate.x + 4, G.plate.y + G.plate.s + 12 * ps > H ? G.plate.y + G.plate.s - 4 : G.plate.y + G.plate.s + 12 * ps, 'left', T.muted, ps);
+    }
+    if (S.plot === 'law' && S.shape === 'circle') drawLaw(); else drawResponse();
+  }
+
+  // ---------- pointer: drag the drive post, drag the frequency line, click the plots ----------
+  let drag = null, hoverId = null;
+  function dragHandles() {
+    const out = [];
+    if (S.view === 'sand' || !G3.ok) out.push({ id: 'drive', pt: [U2X(S.du), V2Y(S.dv)], cursor: 'move' });
+    if (S.plot === 'resp' || S.shape !== 'circle') { const g = G.resp; if (g) out.push({ id: 'f', seg: [fX(g, S.f), g.top, g.bot], cursor: 'ew-resize' }); }
+    return out;
+  }
+  function handleAt(ev) {
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 9 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+    let best = null, bd = tol;
+    for (const h of dragHandles()) {
+      let d = Infinity;
+      if (h.pt) d = Math.hypot(x - h.pt[0], y - h.pt[1]) - Math.max(5, G.plate.R * 0.03);
+      else if (y >= h.seg[1] - 4 && y <= h.seg[2] + 4) d = Math.abs(x - h.seg[0]);
+      if (d < bd) { bd = d; best = h; }
+    }
+    return best;
+  }
+  function inPlot(x, y) { const g = G.resp; return g && x >= g.L - 4 && x <= g.R + 4 && y >= g.top - 4 && y <= g.bot + 4; }
+  let queued = null, qFrame = false;
+  function applyDrag(x, y) {
+    if (!drag) return;
+    if (drag.id === 'drive') {
+      let u = (x - G.plate.cx) / G.plate.R, v = (G.plate.cy - y) / G.plate.R;
+      if (S.shape === 'square') { u = clamp(u, -1, 1); v = clamp(v, -1, 1); } else { const r = Math.hypot(u, v); if (r > 1) { u /= r; v /= r; } }
+      if (Math.hypot(u, v) < 0.04) { u = 0; v = 0; }
+      S.du = Math.round(u * 200) / 200; S.dv = Math.round(v * 200) / 200;
+      S.drive = S.du === 0 && S.dv === 0 ? 'center' : 'custom';
+      clearPreset(); staticDirty = true; syncControls();
+    } else if (drag.id === 'f') {
+      const g = G.resp; stopSweep(); clearPreset(); setF(xF(g, clamp(x, g.L, g.R)));
+    }
+    dirty = true;
+  }
+  can.addEventListener('pointerdown', (ev) => {
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const h = handleAt(ev);
+    if (h) { drag = { id: h.id }; can.setPointerCapture(ev.pointerId); applyDrag(x, y); ev.preventDefault(); return; }
+    if (S.plot === 'law' && S.shape === 'circle' && G.law) {
+      let best = null, bd = 12 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
+      for (const p of G.law.pts) { const d = Math.hypot(x - G.law.X(p.s), y - G.law.Y(p.f)); if (d < bd) { bd = d; best = p; } }
+      if (best) { stopSweep(); clearPreset(); setF(best.f); }
+      return;
+    }
+    if (inPlot(x, y)) { drag = { id: 'f' }; can.setPointerCapture(ev.pointerId); applyDrag(x, y); ev.preventDefault(); }
+  });
+  can.addEventListener('pointermove', (ev) => {
+    const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    if (drag) {
+      queued = [x, y]; if (qFrame) return; qFrame = true;
+      requestAnimationFrame(() => { qFrame = false; if (queued) { applyDrag(queued[0], queued[1]); queued = null; } });
+      return;
+    }
+    const h = handleAt(ev), id = h ? h.id : null;
+    if (id !== hoverId) { hoverId = id; dirty = true; }
+    can.style.cursor = h ? h.cursor : (inPlot(x, y) || (S.plot === 'law' && S.shape === 'circle' && G.law && x > G.law.g.L && y > G.law.g.top && y < G.law.g.bot) ? 'pointer' : 'default');
+  });
+  const endDrag = () => { if (drag) { drag = null; dirty = true; } };
+  can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('pointerleave', () => { if (!drag && hoverId) { hoverId = null; dirty = true; } });
+  function keyNav(e) {
+    const k = e.key;
+    if (k === 'ArrowLeft' || k === 'ArrowRight') { stopSweep(); clearPreset(); setF(S.f * Math.pow(2, (k === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 10 : 1) / 1200)); }
+    else if (k === 'ArrowUp' || k === 'PageUp') jumpRes(1);
+    else if (k === 'ArrowDown' || k === 'PageDown') jumpRes(-1);
+    else if (k === 's' || k === 'S') sprinkle();
+    else if (k === ' ') setRunning(!running);
+    else if (k === ',' || k === '.') { orbit.theta += k === ',' ? 0.12 : -0.12; glDirty = true; }
+    else return;
+    e.preventDefault();
+  }
+  can.addEventListener('keydown', keyNav);
+
+  // ---------- 3D view (three.js) ----------
+  const G3 = { ok: false, tried: false, note: '' };
+  const orbit = { theta: -Math.PI / 2 - 0.5, phi: 0.95, zoom: 1 };
+  let glDirty = true, glSandDirty = true, visPhase = 0;
+  function init3D() {
+    G3.tried = true;
+    if (!window.THREE) return false;
+    let renderer;
+    try { renderer = new THREE.WebGLRenderer({ antialias: true }); } catch (_) { return false; }
+    if (!renderer || !renderer.getContext()) return false;
+    const el = renderer.domElement; el.id = 'gl'; el.tabIndex = 0;
+    el.setAttribute('role', 'img');
+    el.setAttribute('aria-label', 'The plate in 3D, its bending exaggerated and slowed down, with the sand on it. Drag to turn, scroll or pinch to zoom, double click to reset. Comma and period turn the view; the arrow keys change the frequency as on the top view.');
+    pane.insertBefore(el, $('nogl'));
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(32, 1, 0.05, 50); cam.up.set(0, 0, 1);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x404040, 0.55));
+    const spot = new THREE.SpotLight(0xfff4e0, 0.95, 0, 0.75, 0.6, 1); spot.position.set(-1.3, -1.6, 4.2); spot.target.position.set(0, 0, 0); scene.add(spot, spot.target);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.25); fill.position.set(2, 2, 1.5); scene.add(fill);
+    const plateMat = new THREE.MeshStandardMaterial({ color: 0x3a3f47, metalness: 0.45, roughness: 0.55, side: THREE.DoubleSide });
+    const mesh = new THREE.Mesh(new THREE.BufferGeometry(), plateMat); scene.add(mesh);
+    const sandGeo = new THREE.BufferGeometry(); sandGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NSAND * 3), 3));
+    const sandMat = new THREE.PointsMaterial({ color: 0xf1e6c9, size: 2.2, sizeAttenuation: false });
+    const pts = new THREE.Points(sandGeo, sandMat); scene.add(pts);
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.7, 20), new THREE.MeshStandardMaterial({ color: 0xa7740b, metalness: 0.7, roughness: 0.35 }));
+    post.rotation.x = Math.PI / 2; scene.add(post);
+    Object.assign(G3, { ok: true, renderer, el, scene, cam, mesh, plateMat, sandGeo, sandMat, pts, post });
+    // orbit: drag to turn, wheel or pinch to zoom
+    const pointers = new Map(); let mode = null;
+    const pinch = () => { const p = [...pointers.values()]; return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y) || 1; };
+    el.addEventListener('pointerdown', (e) => { el.setPointerCapture(e.pointerId); pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pointers.size === 2) mode = { type: 'pinch', d0: pinch(), z0: orbit.zoom }; else mode = { type: 'orbit', lx: e.clientX, ly: e.clientY }; el.style.cursor = 'grabbing'; });
+    el.addEventListener('pointermove', (e) => {
+      if (!pointers.has(e.pointerId)) return; pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (mode && mode.type === 'pinch' && pointers.size === 2) { orbit.zoom = clamp(mode.z0 * mode.d0 / pinch(), 0.4, 2.5); glDirty = true; return; }
+      if (mode && mode.type === 'orbit') { orbit.theta -= (e.clientX - mode.lx) * 0.008; orbit.phi = clamp(orbit.phi - (e.clientY - mode.ly) * 0.008, 0.05, 1.5); mode.lx = e.clientX; mode.ly = e.clientY; glDirty = true; }
+    });
+    const up = (e) => { pointers.delete(e.pointerId); mode = pointers.size ? mode : null; el.style.cursor = 'grab'; };
+    el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+    el.addEventListener('wheel', (e) => { e.preventDefault(); orbit.zoom = clamp(orbit.zoom / Math.exp(e.deltaY * 0.0012), 0.4, 2.5); glDirty = true; }, { passive: false });
+    el.addEventListener('dblclick', () => { orbit.theta = -Math.PI / 2 - 0.5; orbit.phi = 0.95; orbit.zoom = 1; glDirty = true; });
+    el.addEventListener('keydown', keyNav);
+    el.style.cursor = 'grab';
+    glTheme(); glBuild(); glResize();
+    return true;
+  }
+  function glTheme() {
+    if (!G3.ok) return;
+    G3.scene.background = new THREE.Color(T.bench || '#e4e1da');
+    G3.sandMat.color = new THREE.Color(T.sand || '#f1e6c9');
+    glDirty = true;
+  }
+  // mesh: the square uses the field grid itself; the circle a polar mesh whose heights are read from the grid
+  function glBuild() {
+    if (!G3.ok) return;
+    const pos = [], idx = [];
+    if (S.shape === 'square') {
+      for (let b = 0; b < GN; b++) for (let a = 0; a < GN; a++) pos.push(gridU(a), gridU(b), 0);
+      for (let b = 0; b < GN - 1; b++) for (let a = 0; a < GN - 1; a++) { const k = b * GN + a; idx.push(k, k + 1, k + GN + 1, k, k + GN + 1, k + GN); }
+    } else {
+      const NRg = 50, NT = 160; pos.push(0, 0, 0);
+      for (let i = 1; i <= NRg; i++) for (let j = 0; j < NT; j++) { const r = i / NRg, t = TAU * j / NT; pos.push(r * Math.cos(t), r * Math.sin(t), 0); }
+      for (let j = 0; j < NT; j++) idx.push(0, 1 + j, 1 + (j + 1) % NT);
+      for (let i = 1; i < NRg; i++) for (let j = 0; j < NT; j++) {
+        const a = 1 + (i - 1) * NT + j, b = 1 + (i - 1) * NT + (j + 1) % NT, c = a + NT, d = b + NT;
+        idx.push(a, c, d, a, d, b);
+      }
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); geo.setIndex(idx);
+    G3.base = Float32Array.from(pos);
+    G3.mesh.geometry.dispose(); G3.mesh.geometry = geo;
+    glDirty = true;
+  }
+  function glResize() {
+    if (!G3.ok || !G.plate) return;
+    const p = G.plate, el = G3.el;
+    el.style.left = p.x + 'px'; el.style.top = p.y + 'px'; el.style.width = p.s + 'px'; el.style.height = p.s + 'px';
+    const n = $('nogl'); n.style.left = p.x + 'px'; n.style.top = p.y + 'px'; n.style.width = p.s + 'px'; n.style.height = p.s + 'px';
+    G3.renderer.setSize(Math.max(1, Math.round(p.s)), Math.max(1, Math.round(p.s)), false);
+    G3.cam.aspect = 1; G3.cam.updateProjectionMatrix(); glDirty = true;
+  }
+  const ZVIS = 0.14;   // largest drawn displacement, in plate half widths
+  function glFrame() {
+    if (!G3.ok || S.view !== '3d') return;
+    // exaggeration: the largest displacement draws at ZVIS, or less when |a| < g everywhere (scaled to the displacement that gives g)
+    const wg = G0 / Math.pow(TAU * S.f, 2), ref = Math.max(D.Wmax, wg), sc = ZVIS / ref;
+    G3.note = `3D: displacement exaggerated about ${fmtBig(ZVIS * HALF / ref)}×, motion slowed from ${fmtF(S.f)} to one cycle per second.`;
+    const cph = Math.cos(visPhase), sph = Math.sin(visPhase), geo = G3.mesh.geometry, P = geo.attributes.position.array, B = G3.base;
+    for (let i = 0; i < P.length; i += 3) {
+      const u = B[i], v = B[i + 1];
+      const wr = S.shape === 'square' ? D.Wre[i / 3] : wAt(D.Wre, u, v), wi = S.shape === 'square' ? D.Wim[i / 3] : wAt(D.Wim, u, v);
+      P[i + 2] = sc * (wr * cph - wi * sph);
+    }
+    geo.attributes.position.needsUpdate = true; geo.computeVertexNormals();
+    const SP = G3.sandGeo.attributes.position.array;
+    for (let i = 0; i < NSAND; i++) {
+      if (!sand.alive[i]) { SP[3 * i + 2] = -50; continue; }
+      const u = sand.x[i], v = sand.y[i];
+      SP[3 * i] = u; SP[3 * i + 1] = v; SP[3 * i + 2] = sc * (wAt(D.Wre, u, v) * cph - wAt(D.Wim, u, v) * sph) + 0.006 + (sand.g[i] > 1 && running ? 0.012 * Math.random() : 0);
+    }
+    G3.sandGeo.attributes.position.needsUpdate = true;
+    G3.post.position.set(S.du, S.dv, -0.35 + sc * (wAt(D.Wre, S.du, S.dv) * cph - wAt(D.Wim, S.du, S.dv) * sph));
+    const r = 5.4 / orbit.zoom, cam = G3.cam;
+    cam.position.set(r * Math.sin(orbit.phi) * Math.cos(orbit.theta), r * Math.sin(orbit.phi) * Math.sin(orbit.theta), r * Math.cos(orbit.phi));
+    cam.lookAt(0, 0, -0.05);
+    G3.renderer.render(G3.scene, cam);
+    glDirty = false;
+  }
+  function fmtBig(x) { return x >= 100 ? Math.round(x).toLocaleString('en-US') : x >= 10 ? x.toFixed(0) : x.toFixed(1); }
+  function setView(v) {
+    S.view = v;
+    if (v === '3d' && !G3.tried) { if (!init3D()) { $('nogl').hidden = false; } }
+    if (G3.ok) G3.el.style.display = v === '3d' ? 'block' : 'none';
+    if (!G3.ok) { $('nogl').hidden = v !== '3d'; if (v === '3d') glResizeNo(); }
+    syncControls(); dirty = true; glDirty = true;
+  }
+  function glResizeNo() { const p = G.plate, n = $('nogl'); n.style.left = p.x + 'px'; n.style.top = p.y + 'px'; n.style.width = p.s + 'px'; n.style.height = p.s + 'px'; }
+
+  // ---------- play / pause ----------
+  function setRunning(on) { running = on; $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('primary', !on); dirty = true; }
+  $('play').addEventListener('click', () => setRunning(!running));
+
+  // ---------- sound: one sine oscillator at the drive frequency ----------
+  const RAMP = 0.012, PEAK_MAX = 0.25, HF_EDGE = 8000, HF_GAIN = 0.25;   // peak never above 0.25 of full scale (−12 dBFS)
+  const AC = window.AudioContext || window.webkitAudioContext;
+  const snd = { ac: null, master: null, osc: null, g: null, on: false, f: 0, gain: 0, masterT: 0, starts: 0 };
+  let soundDirty = false, lastSnd = 0;
+  // relative tone level: the drive tone, its amplitude following √(RMS acceleration / largest on the curve) if asked (half the dB difference)
+  function toneGain() {
+    let w = 1;
+    if (S.follow && D.curveMax > 0) w = Math.max(0.03, Math.sqrt(Math.min(1, D.arms / D.curveMax)));
+    return PEAK_MAX * w * (S.f > HF_EDGE ? HF_GAIN : 1);
+  }
+  function soundUpdate() {
+    soundDirty = false;
+    if (!snd.ac || !snd.on) return;
+    const now = snd.ac.currentTime, gn = toneGain();
+    if (!snd.osc) {
+      const osc = snd.ac.createOscillator(), g = snd.ac.createGain();
+      osc.type = 'sine'; osc.frequency.setValueAtTime(S.f, now);
+      g.gain.setValueAtTime(0, now); g.gain.setTargetAtTime(gn, now, RAMP);
+      osc.connect(g); g.connect(snd.master); osc.start(now);
+      snd.osc = osc; snd.g = g; snd.f = S.f; snd.gain = gn; snd.starts++;
+      return;
+    }
+    if (Math.abs(S.f - snd.f) > 1e-9) { snd.osc.frequency.setTargetAtTime(S.f, now, RAMP); snd.f = S.f; }
+    if (Math.abs(gn - snd.gain) > 1e-9) { snd.g.gain.setTargetAtTime(gn, now, RAMP); snd.gain = gn; }
+  }
+  function setVolume() {
+    const v = +$('vol').value; snd.masterT = snd.on ? v * v : 0;
+    if (snd.master) snd.master.gain.setTargetAtTime(snd.masterT, snd.ac.currentTime, RAMP);
+  }
+  function setSound(on) {
+    if (on && !snd.ac) {
+      if (!AC) return;
+      try { snd.ac = new AC(); } catch (_) { snd.ac = null; noAudio(); return; }
+      snd.master = snd.ac.createGain(); snd.master.gain.value = 0; snd.master.connect(snd.ac.destination);
+    }
+    snd.on = on;
+    $('sound').setAttribute('aria-pressed', String(on)); $('soundTxt').textContent = on ? 'Sound on' : 'Sound off';
+    if (!snd.ac) { soundHintText(); return; }
+    if (on) { if (snd.ac.state === 'suspended') snd.ac.resume(); setVolume(); soundUpdate(); }
+    else {
+      setVolume();
+      if (snd.osc) {
+        const o = snd.osc, g = snd.g, t = snd.ac.currentTime;
+        try { g.gain.setTargetAtTime(0, t, RAMP); o.stop(t + 0.25); } catch (_) {}
+        setTimeout(() => { try { o.disconnect(); g.disconnect(); } catch (_) {} }, 500);
+        snd.osc = null; snd.g = null;
+      }
+      const ac = snd.ac; setTimeout(() => { if (!snd.on && ac.state === 'running') ac.suspend().catch(() => {}); }, 450);
+    }
+    soundHintText();
+  }
+  function noAudio() { const b = $('sound'); b.disabled = true; $('soundTxt').textContent = 'No sound here'; b.title = 'This browser has no Web Audio'; soundHintText(); }
+  function soundHintText() {
+    if (!AC || $('sound').disabled) { $('soundHint').textContent = 'This browser has no Web Audio, so the demo is silent. Everything else works.'; return; }
+    $('soundHint').textContent = 'You hear the drive tone: a sine wave at f, the same f that drives the plate. ' +
+      (S.follow ? 'Its loudness follows the computed RMS acceleration of the plate, compressed to half the dB difference so quiet stretches stay audible; it is not a calculation of the sound the plate radiates. ' : 'Its loudness is steady, so only the pitch changes. ') +
+      'The peak level stays at least 12 dB below full scale; above 8 kHz it plays 12 dB quieter. Sound stops when you leave the page.';
+  }
+  $('sound').addEventListener('click', () => setSound(!snd.on));
+  $('vol').addEventListener('input', setVolume);
+  document.addEventListener('visibilitychange', () => { if (document.hidden && snd.on) setSound(false); });
+  window.addEventListener('pagehide', () => { if (snd.on) setSound(false); });
+  window.__audio = {
+    get available() { return !!AC; }, get on() { return snd.on; }, get state() { return snd.ac ? snd.ac.state : 'none'; },
+    get master() { return snd.masterT; }, get starts() { return snd.starts; },
+    voices: () => (snd.osc ? [{ f: snd.f, gain: snd.gain }] : []),
+    peakFullScale: () => (snd.osc ? snd.gain * snd.masterT : 0)
+  };
+
+  // ---------- projector, theme ----------
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); dirty = true; }); } catch (_) {}
+  new MutationObserver(() => { tokens(); dirty = true; }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let staticDirty = true, fieldDirty = true, last = performance.now(), lastRead = 0;
+  function recomputeNow() { recomputeStatic(); staticDirty = false; fieldDirty = true; }
+  function loop(now) {
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    if (S.sweep) {
+      const nf = S.f * Math.pow(2, S.rate * dt / 12);
+      if (nf >= D.fmax) { setF(D.fmax); stopSweep(); } else setF(nf);
+    }
+    if (staticDirty) { recomputeStatic(); staticDirty = false; fieldDirty = true; driveHintText(); }
+    if (fieldDirty) { updateField(); fieldDirty = false; dirty = true; }
+    if (running) {
+      tickAcc += dt; let n = 0;
+      while (tickAcc >= TICK && n < 4) { sandTick(); tickAcc -= TICK; n++; }
+      if (n === 4) tickAcc = 0;
+      for (let i = 0; i < NSAND; i++) if (sand.alive[i]) sand.g[i] = gammaAt(sand.x[i], sand.y[i]);
+      visPhase = (visPhase + TAU * dt) % TAU;
+      dirty = true; glDirty = true;
+    }
+    if (dirty) { draw(); dirty = false; }
+    if (S.view === '3d' && glDirty) glFrame();
+    if (now - lastRead > (S.sweep ? 0 : 120)) { readouts(); lastRead = now; }
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (soundDirty && now - lastSnd > 30) { soundUpdate(); lastSnd = now; }
+    requestAnimationFrame(loop);
+  }
+  window.__ch = { S, D, sand, get frameMs() { return frameMs; }, get presetId() { return presetId; }, orbit, get running() { return running; }, get ticks() { return ticks; }, tick: (n) => { for (let i = 0; i < n; i++) sandTick(); dirty = true; }, G, G3,
+    applyPreset, setF, jumpRes, sprinkle, setView, setShape, setDrive, setRunning, resonanceList, modeF, recomputeNow, updateField, dragHandles,
+    sandStats: () => { let s = 0, n = 0, wm = D.Wmax || 1; for (let i = 0; i < NSAND; i++) if (sand.alive[i]) { s += Math.hypot(wAt(D.Wre, sand.x[i], sand.y[i]), wAt(D.Wim, sand.x[i], sand.y[i])) / wm; n++; } return { mean: n ? s / n : 0, n }; },
+    cacheMs: () => Object.fromEntries(Object.entries(cache).map(([k, v]) => [k, Math.round(v.ms)])) };
+
+  if (!AC) noAudio();
+  tokens();
+  resize();
+  applyPreset('first');
+  if (reduce) { for (let i = 0; i < 300; i++) sandTick(); for (let i = 0; i < NSAND; i++) if (sand.alive[i]) sand.g[i] = gammaAt(sand.x[i], sand.y[i]); }
+  setRunning(!reduce);
+  soundHintText(); driveHintText(); plotHintText(); readouts();
+  new ResizeObserver(resize).observe(pane);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

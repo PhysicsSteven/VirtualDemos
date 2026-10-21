@@ -66,6 +66,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Timbre and Harmonics](demos/timbre.html) | Waves and sound | Additive synthesis, timbre and pitch, with sound |
 | [Resonators](demos/resonators.html) | Waves and sound | Resonance tube, strings and Helmholtz resonators, with sound |
 | [Acoustic Levitation](demos/acoustic-levitation.html) | Waves and sound | Ultrasonic standing wave levitator in 3D |
+| [Chladni Plates](demos/chladni.html) | Waves and sound | Square and circular Kirchhoff plates driven through their resonances, sand on the nodal lines, a 3D view and Chladni's law |
 
 ## Viewing
 
