@@ -21,7 +21,7 @@ Students should know standing waves on a string, nodes and antinodes, and driven
 2. **Next resonance**, a few times. Each peak gives a new pattern with more nodal lines. Point out the faint ticks along the bottom of the plot: modes that exist but do not respond, because the center is on one of their nodal lines. Ask Q6, then drag the brass drive post off center and press **Previous resonance** back down.
 3. **Rings on a circle.** Ask Q2 as a prediction first. Step through with **Next resonance**: every pattern is a set of circles.
 4. **A cross**, then **High mode**. Off center and at the rim, the modes with nodal diameters appear. Switch **Plot** to **Chladni's law** and use Q5.
-5. **Sweep and listen.** Turn on sound. The tone swells at each peak; the sand only moves when the curve crosses the 1 g line. Stop the sweep near a peak and use **Fine tune** to walk across it; change **Modal Q (damping)** and ask Q4.
+5. **Sweep and listen.** Turn on sound. The tone swells at each peak. Between peaks the plate still moves; above a few hundred hertz it passes g over much of the plate, so the old pattern buzzes and starts to break up before the next one forms. Stop the sweep near a peak and use **Fine tune** to walk across it; change **Modal Q (damping)** and ask Q4.
 6. **Square: classic star** (if time allows). Try **Where |a| > g** and **3D** (bending exaggerated and slowed). Change **Metal** and **Thickness h** for Q3.
 
 ## Questions
@@ -32,7 +32,7 @@ Students should know standing waves on a string, nodes and antinodes, and driven
 
 **Q3.** The lowest mode a center drive excites on the 24 cm, 1.00 mm steel square is at 102.4 Hz. Predict its frequency (a) for a 2.00 mm steel plate, (b) for a steel plate 18 cm on a side and 1.00 mm thick, and (c) for a 1.00 mm aluminum plate (E = 69 GPa, ρ = 2700 kg/m³ instead of 200 GPa and 7850 kg/m³). Aluminum is almost three times lighter; why is (c) nearly the same? Check (a) and (c) with the demo.
 
-**Q4.** At 102.4 Hz in **First pattern** the peak acceleration on the plate is 11.1 g. What is the largest displacement amplitude of the plate? If Q is doubled from 100 to 200 at exact resonance, what happens to that amplitude, and to the width of the peak?
+**Q4.** At 102.4 Hz in **First pattern** the peak acceleration on the plate is 55.7 g. What is the largest displacement amplitude of the plate? If Q is doubled from 50 to 100 at exact resonance, what happens to that amplitude, and to the width of the peak?
 
 **Q5.** With **High mode** loaded, switch **Plot** to **Chladni's law**. Use the fitted C and p shown on the plot to predict the frequency of the (4, 2) mode, then compare with the demo's resonance. How good is the law, and what kind of statement is it?
 

@@ -4,7 +4,7 @@
 const assert = require('node:assert/strict'), { core } = require('./demo_source.cjs');
 let count = 0; const test = (name, fn) => { fn(); count++; console.log('PASS', name); };
 function close(a, b, rel = 1e-10, abs = 0) { assert(Number.isFinite(a) && Math.abs(a - b) <= abs + rel * Math.abs(b), `expected ${b}, got ${a}`); }
-const C = core('chladni', 'G0,PLATE,MATERIALS,SQ_P,LAM2_MAX,flexRigidity,fScale,plateMass,besselJ,besselI,besselJArr,circleEdge,circleModes,circleRadial,circlePhi,gaussLegendre,legendreRow,squareModes,squarePhi,modalAmps,rmsAccel,sandStep,mulberry32,chladniFit');
+const C = core('chladni', 'G0,PLATE,MATERIALS,SQ_P,LAM2_MAX,flexRigidity,fScale,plateMass,besselJ,besselI,besselJArr,circleEdge,circleModes,circleRadial,circlePhi,gaussLegendre,legendreRow,squareModes,squarePhi,modalAmps,rmsAccel,launchSpeed,sandStep,mulberry32,chladniFit');
 
 test('chladni: Bessel J_n and I_n against reference values', () => {
   // J0(1), J1(1), J0(10), I0(1), I1(1), I0(10) as tabulated in Abramowitz & Stegun (Tables 9.1, 9.8); the rest from SciPy 1.x
@@ -121,6 +121,14 @@ test('chladni: driven response at resonance scales with Q; rigid modes give the 
   close(C.rmsAccel(lam2, phiP, 0.5, fs, 100, 0.1, M), 0.1 / M, 1e-3);
 });
 
+test('chladni: launch speed v_L = (g/ω)√(Γ² − 1): zero at the threshold, ∝ 1/f', () => {
+  assert.equal(C.launchSpeed(1, 100), 0); assert.equal(C.launchSpeed(0.5, 100), 0);
+  close(C.launchSpeed(2, 100), 9.80665 / (2 * Math.PI * 100) * Math.sqrt(3), 1e-14);
+  close(C.launchSpeed(5, 1000) / C.launchSpeed(5, 100), 0.1, 1e-14);
+  // the plate's velocity when its acceleration passes −g: A ω sin(ωt) with A ω² cos(ωt) = g, A ω² = Γ g
+  const G = 7, w = 2 * Math.PI * 300, ct = 1 / G; close(C.launchSpeed(G, 300), G * 9.80665 / w * Math.sqrt(1 - ct * ct), 1e-13);
+});
+
 test('chladni: sand model leaves grains alone below g and moves them off the antinodes (statistical)', () => {
   // a test field: Γ = 6 |sin(πu) sin(πv)| on the square, nodal lines on u = 0, v = 0, edges
   const gamma = (u, v) => 6 * Math.abs(Math.sin(Math.PI * u) * Math.sin(Math.PI * v)), inside = (u, v) => Math.abs(u) <= 1 && Math.abs(v) <= 1;
@@ -128,17 +136,19 @@ test('chladni: sand model leaves grains alone below g and moves them off the ant
   for (let i = 0; i < N; i++) { x[i] = 2 * rng() - 1; y[i] = 2 * rng() - 1; }
   const meanG = () => { let s = 0, n = 0; for (let i = 0; i < N; i++) if (alive[i]) { s += gamma(x[i], y[i]); n++; } return s / n; };
   const g0 = meanG(), still = []; for (let i = 0; i < N; i++) if (gamma(x[i], y[i]) <= 1) still.push([i, x[i], y[i]]);
-  for (let t = 0; t < 180; t++) C.sandStep(x, y, alive, gamma, inside, rng, 0.005, 4, 0.5);
+  // the demo's hop: grain speed = launch speed v_L at f = 200 Hz, for 1/60 s, at most 3 mm, in plate half widths (12 cm)
+  const hop = (g) => Math.min(0.003, C.launchSpeed(g, 200) / 60) / 0.12;
+  for (let t = 0; t < 600; t++) C.sandStep(x, y, alive, gamma, inside, rng, hop, 0.5);   // 10 s
   for (const [i, a, b] of still) { assert.equal(x[i], a); assert.equal(y[i], b); }
   const g1 = meanG(); let rest = 0, n = 0; for (let i = 0; i < N; i++) if (alive[i]) { n++; if (gamma(x[i], y[i]) <= 1) rest++; }
   console.log(`   mean Γ under the grains ${g0.toFixed(2)} → ${g1.toFixed(3)}; at rest ${(100 * rest / n).toFixed(0)} % of ${n} grains left on the plate`);
   assert(g0 > 2.2 && g1 < 0.9 && rest / n > 0.9);
-  // with no drift the grains still leave the antinodes, slowly (pure random hops, trapped where Γ < 1)
+  // with no drift the grains still leave the antinodes, but slowly: pure random hops, trapped where Γ < 1
   const x2 = new Float64Array(N), y2 = new Float64Array(N), al2 = new Uint8Array(N).fill(1), r2 = C.mulberry32(9);
   for (let i = 0; i < N; i++) { x2[i] = 2 * r2() - 1; y2[i] = 2 * r2() - 1; }
-  for (let t = 0; t < 600; t++) C.sandStep(x2, y2, al2, gamma, inside, r2, 0.005, 4, 0);
+  for (let t = 0; t < 600; t++) C.sandStep(x2, y2, al2, gamma, inside, r2, hop, 0);
   let s = 0, m = 0; for (let i = 0; i < N; i++) if (al2[i]) { s += gamma(x2[i], y2[i]); m++; }
-  assert(s / m < 0.85 * g0, `no drift: mean Γ ${s / m}`); console.log(`   without drift, 10 s: mean Γ ${g0.toFixed(2)} → ${(s / m).toFixed(2)}`);
+  assert(s / m < 0.97 * g0, `no drift: mean Γ ${s / m}`); console.log(`   without drift, 10 s: mean Γ ${g0.toFixed(2)} → ${(s / m).toFixed(2)}`);
 });
 
 test('chladni: Chladni’s law fit recovers C and p from exact power law data, and gives p near 2 for the plate', () => {

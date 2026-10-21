@@ -345,8 +345,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <p>Thin plate (Kirchhoff–Love) theory: D∇⁴w = −ρh ∂²w/∂t² with flexural rigidity D = Eh³/(12(1 − ν²)). Small, linear motion of a flat, uniform, isotropic plate. Good while the bending wavelength is long compared with the thickness (k h well below 1; shown under Plate).</p>
           <p>Every edge is free, and the drive is an ideal point force F₀ cos(2πft) at the brass post. The driver's own mass and stiffness and the small clamp around the bolt are left out; a real driver bolted to the plate shifts the resonances, so measured kit frequencies differ. The plate's rigid bouncing and rocking are included.</p>
           <p>Circle: exact solution, w = [J_n(λr/a) + C I_n(λr/a)] cos nθ, with the free edge frequency equation solved to 12 digits. Square: no closed form; Rayleigh–Ritz with Legendre polynomials up to degree 30 in x and in y (961 terms, split into symmetry classes), converged to better than 1 part in a million for every mode shown.</p>
-          <p>Damping: every flexural mode has the same Q. The response is the sum over all computed modes. The sand's mass does not load the plate.</p>
-          <p>Sand is phenomenological, not a granular simulation: where the local acceleration amplitude |a| exceeds g a grain leaves the surface each cycle and, every 1/60 s, hops s × (a random step of mean length 1 in a random direction + a drift of 0.5 toward smaller |a|), with s = 0.6 mm × √min(|a|/g − 1, 4). The drift stands in for grains bouncing off the tilted, moving surface, which carries them toward the nodes. Where |a| &lt; g a grain stays put. Grains that pass the edge fall off. Very light powder (lycopodium) gathers at the antinodes instead, carried by air currents over the plate (Faraday, 1831); air is not modeled.</p>
+          <p>Damping: every flexural mode has the same Q (default 50, a model choice: a plate bolted to a driver and carrying sand is heavily damped). The response is the sum over all computed modes, between resonances too. The sand's mass does not load the plate.</p>
+          <p>Drive level: PASCO publishes no force rating for its wave drivers (SF-9324, WA-9855). It states an amplitude of about 5 mm up to about 50 Hz for the SF-9324, which is about 50 g of acceleration at 50 Hz, a drive of ±8 V at 0.5 A, and at most 1.2 A for the WA-9855. The default F₀ = 1 N is an order of magnitude estimate for a voice coil driver at those currents, not a measured value.</p>
+          <p>Sand is phenomenological, not a granular simulation. Where the local acceleration amplitude |a| exceeds g the plate throws a grain off once a cycle, at the moment its acceleration passes −g, with launch speed v_L = (g/2πf)√((|a|/g)² − 1). Every 1/60 s such a grain moves v_L × 1/60 s (at most 3 mm) times a random step of mean length 1 in a random direction plus a drift of 0.5 toward smaller |a|. The drift stands in for grains bouncing off the tilted, moving surface, which carries them toward the nodes. Where |a| &lt; g a grain stays put. So at high frequencies, where v_L is small, sand between resonances buzzes and creeps; at low frequencies it hops far. Grains in flight are drawn with a slight blur; grains that pass the edge fall off. Very light powder (lycopodium) gathers at the antinodes instead, carried by air currents over the plate (Faraday, 1831); air is not modeled.</p>
         </div>
       </section>
     </aside>
@@ -665,17 +666,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   // ---- sand: a phenomenological model, not a granular simulation ----
-  // A grain where the local acceleration amplitude |a| exceeds g leaves the surface on every cycle. Each tick it hops by
-  // s × (a random vector of mean length 1 + drift × the unit vector down the slope of |a|), with s = step × √min(|a|/g − 1, cap).
-  // The drift stands in for grains bouncing off the tilted, moving surface, which carries them toward the nodes.
-  // Where |a| < g a grain stays put. Grains that pass the edge fall off.
-  function sandStep(sx, sy, alive, gammaAt, inside, rng, step, cap, drift) {
+  // Where the local acceleration amplitude exceeds g (Γ = |a|/g > 1) the plate throws a grain off once a cycle, at the
+  // moment its acceleration passes −g; the plate's speed then is the launch speed v_L = (g/ω)√(Γ² − 1).
+  function launchSpeed(gam, f) { return gam > 1 ? G0 / (2 * Math.PI * f) * Math.sqrt(gam * gam - 1) : 0; }
+  // Each tick a grain with Γ > 1 moves s × (a random vector of mean length 1 + drift × the unit vector down the slope of Γ),
+  // with s = hop(Γ) supplied by the caller (the demo uses a fixed fraction of v_L × tick, capped). The drift stands in for
+  // grains bouncing off the tilted, moving surface, which carries them toward the nodes. Where Γ ≤ 1 a grain stays put.
+  // Grains that pass the edge fall off.
+  function sandStep(sx, sy, alive, gammaAt, inside, rng, hop, drift) {
     let lost = 0; const h = 0.01;
     for (let i = 0; i < sx.length; i++) {
       if (!alive[i]) continue;
       const x = sx[i], y = sy[i], gam = gammaAt(x, y);
       if (gam <= 1) continue;
-      const s = step * Math.sqrt(Math.min(gam - 1, cap)), r = 2 * rng(), th = 2 * Math.PI * rng();
+      const s = hop(gam), r = 2 * rng(), th = 2 * Math.PI * rng();
       let dx = r * Math.cos(th), dy = r * Math.sin(th);
       if (drift) {
         const gx = gammaAt(x + h, y) - gammaAt(x - h, y), gy = gammaAt(x, y + h) - gammaAt(x, y - h), gn = Math.hypot(gx, gy);
@@ -708,7 +712,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const TAU = 2 * Math.PI;
   const GN = 101, NSAND = 6000, HALF = 0.12;      // field grid nodes per side; sand grains; half width of either plate, m
   const F_MIN = 20, F_CAP = 8000;
-  const STEP = 0.0006 / HALF, CAP = 4, DRIFT = 0.5, TICK = 1 / 60;   // sand: hop scale (plate half widths), cap on |a|/g − 1, drift, tick (s)
+  const EPS = 1, HOP_MAX = 0.003, DRIFT = 0.5, TICK = 1 / 60;   // sand: grain speed = EPS × launch speed, longest hop per tick (m), drift, tick (s)
+  const hop = (gam) => Math.min(HOP_MAX, EPS * launchSpeed(gam, S.f) * TICK) / HALF;
   const DRIVEN = 0.15;                                    // |φ̂(p)| below this: the drive point sits on or near a nodal line
   const DRIVES = {
     square: { center: [0, 0], off: [0.42, 0.22], edge: [1, 0.36] },
@@ -716,7 +721,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   };
 
   // ---------- state ----------
-  const S = { shape: 'square', mat: 'steel', h: 1.0e-3, f: 100, Q: 100, F: 0.1, drive: 'center', du: 0, dv: 0,
+  const S = { shape: 'square', mat: 'steel', h: 1.0e-3, f: 100, Q: 50, F: 1, drive: 'center', du: 0, dv: 0,
     view: 'sand', plot: 'resp', nodal: false, heat: false, follow: true, sweep: false, rate: 4 };
   let presetId = null, running = !reduce, frameMs = 0, dirty = true;
 
@@ -881,7 +886,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     sand.count = NSAND; dirty = true; glSandDirty = true;
   }
   function sandTick() {
-    sand.count -= sandStep(sand.x, sand.y, sand.alive, gammaAt, inside, rng, STEP, CAP, DRIFT); ticks++;
+    sand.count -= sandStep(sand.x, sand.y, sand.alive, gammaAt, inside, rng, hop, DRIFT); ticks++;
   }
 
   // ---------- frequency controls ----------
@@ -963,18 +968,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- presets ----------
   const PRESETS = {
-    first: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 100, F: 0.1, pick: { driven: 1 },
+    first: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 50, F: 1, pick: { driven: 1 },
       hint: 'The lowest mode a center drive can excite on the square. In a few seconds the sand leaves the moving regions and gathers on the nodal lines. The lower twisting modes have a node at the center, so they stay silent.' },
-    cross: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'off', Q: 100, F: 0.5, pick: { nm: [2, 0] },
+    cross: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'off', Q: 50, F: 1, pick: { nm: [2, 0] },
       hint: 'Driven halfway out, like the off center hole of a kit plate: two nodal diameters cross at right angles. This is the lowest flexural mode of a free circular plate, yet a center drive could never excite it, because every mode with nodal diameters has a node at the center.' },
-    rings: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'center', Q: 100, F: 0.1, pick: { nm: [0, 3] },
+    rings: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'center', Q: 50, F: 1, pick: { nm: [0, 3] },
       hint: 'Driven at the center, a circular plate can only ring in modes without nodal diameters, so every pattern is a set of concentric nodal circles. Step through them with Next resonance.' },
-    sweep: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 100, F: 0.1, f: 60, sweep: true, rate: 1,
-      hint: 'Turn on Sound. The drive sweeps upward one semitone per second: the tone swells at every peak of the response curve while the sand jumps, and falls quiet between peaks.' },
-    star: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 100, F: 0.1, pick: { driven: 7 },
+    sweep: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 50, F: 1, f: 60, sweep: true, rate: 1,
+      hint: 'Turn on Sound. The drive sweeps upward one semitone per second: the tone swells at every peak and the sand snaps into a new pattern. Between peaks the plate still moves; above a few hundred hertz it passes g over much of the plate, so the old pattern buzzes and starts to break up.' },
+    star: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 50, F: 1, pick: { driven: 7 },
       hint: 'A higher mode of the center driven square, with nodal lines in a star around the middle. Patterns like this fill the plates in Chladni’s 1787 book.' },
-    high: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'edge', Q: 300, F: 0.1, pick: { nm: [4, 2] },
-      hint: 'Driven at the rim, the way Chladni bowed his plates: four nodal diameters and two nodal circles, at Q = 300 so that neighboring modes stay out. The drive point sits on an antinode at the rim, so no nodal diameter can pass through it.' }
+    high: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'edge', Q: 200, F: 0.3, pick: { nm: [4, 2] },
+      hint: 'Driven at the rim, the way Chladni bowed his plates: four nodal diameters and two nodal circles, at Q = 200 so that neighboring modes stay out. The drive point sits on an antinode at the rim, so no nodal diameter can pass through it.' }
   };
   function clearPreset() {
     if (!presetId) return;
@@ -1034,7 +1039,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('plateHint').textContent = `A ${name}, as in common teaching kits (PASCO WA-9607); makers rarely state the thickness, about 1 mm is typical. ${mat.name}: E = ${mat.E / 1e9} GPa, ρ = ${mat.rho} kg/m³, ν = ${mat.nu}. Every frequency scales as h/ℓ² × √(E/ρ(1 − ν²)): twice as thick, an octave higher. Modes are computed up to ${fmtF(D.fmax)} for this plate.`;
   }
   function driveHintText() {
-    $('driveHint').textContent = `Sand leaves the surface where the plate's acceleration amplitude passes g, which happens near resonance. A mode is excited only if the drive point moves in it: a drive on a nodal line of a mode cannot pump it. The force and Q are model choices; Q = ${Math.round(S.Q)} gives each peak a width f/Q.`;
+    $('driveHint').textContent = `Sand leaves the surface where the plate's acceleration amplitude passes g, which happens near resonance. A mode is excited only if the drive point moves in it: a drive on a nodal line of a mode cannot pump it. Between resonances the plate still moves (the sum of all modes, strongest near the post), and wherever |a| passes g the old pattern breaks up. The force (default 1 N, an estimate for a classroom wave driver; see Model) and Q are model choices; Q = ${Math.round(S.Q)} gives each peak a width f/Q.`;
   }
   function plotHintText() {
     $('plotHint').textContent = S.plot === 'law'
@@ -1150,7 +1155,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (let i = 0; i < NSAND; i++) {
       if (!sand.alive[i]) continue;
       let x = U2X(sand.x[i]), y = V2Y(sand.y[i]);
-      if (jit && sand.g[i] > 1) { x += (Math.random() - 0.5) * jit; y += (Math.random() - 0.5) * jit; }
+      if (jit && sand.g[i] > 1) { const j = jit * Math.min(2.2, 0.6 + 0.4 * (sand.g[i] - 1)); x += (Math.random() - 0.5) * j; y += (Math.random() - 0.5) * j; }
       c.fillRect(x - hs, y - hs, sz, sz);
     }
     if (S.nodal) {
@@ -1176,7 +1181,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (D.near != null) {
       const md = D.ms.modes[D.near], fk = modeF(md), off = Math.abs(S.f - fk) / (fk / S.Q);
       c.font = `700 ${13.5 * ps}px ${T.ui}`;
-      const t = off < 1.5 ? `${md.label}, ${isDriven(D.near) ? 'at resonance' : 'not driven'}` : 'between resonances';
+      const t = off < 1.5 && isDriven(D.near) ? `${md.label}, at resonance` : 'between resonances';
       halo(c, t, p.x + 4, p.y + p.s - 6 * ps, 'left', T.ink, ps);
       c.font = `${12 * ps}px ${T.mono}`;
       halo(c, `peak |a| = ${D.gmax < 10 ? D.gmax.toFixed(2) : D.gmax.toFixed(1)} g`, p.x + p.s - 4, p.y + p.s - 6 * ps, 'right', D.gmax > 1 ? T.ink : T.muted, ps);
