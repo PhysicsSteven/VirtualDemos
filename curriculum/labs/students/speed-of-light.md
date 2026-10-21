@@ -44,7 +44,7 @@ For the real apparatus, keep the laser beam away from eyes and reflective object
 **Take readings.**
 1. Run clockwise at about 400, 600, 800 and 1000 rev/s. At each speed, center the crosshair and record the actual speed meter and micrometer readings.
 2. Repeat counterclockwise. Treat clockwise speeds as positive and counterclockwise speeds as negative in your graph.
-3. Repeat the largest-speed reading in each direction after moving the crosshair away and finding the center again.
+3. Repeat the largest speed reading in each direction after moving the crosshair away and finding the center again.
 4. Return to rest and check whether the original image position has changed.
 5. If time allows, repeat four readings with a longer optical path. Recheck the focus and dimensions before calculating c.
 

@@ -35,7 +35,7 @@ The magnet's temperature coefficient is β = 7.5 × 10⁻⁴ °C⁻¹.
 
 ## Safety
 
-For real equipment, follow the department's power and sample-handling instructions. Keep magnetic objects away from the permanent magnet and take care around its pole faces. Change probe connections with the power off.
+For real equipment, follow the department's power and instructions for handling samples. Keep magnetic objects away from the permanent magnet and take care around its pole faces. Change probe connections with the power off.
 
 ## Procedure
 
@@ -47,9 +47,9 @@ For real equipment, follow the department's power and sample-handling instructio
 4. At one frequency, check the field using CH1 voltage instead of time. CH1 reads 1 V at the end of the scan. If a chart recorder is available, compare one SLOW sweep too.
 5. Replace DPPH with the empty reference. Describe what changes.
 
-**Nuclear resonance.** Put glycerine in the nuclear probe. Record the magnet's B20 and the thermometer reading. Tune the frequency until a peak appears during the scan. Take at least five frequencies, keeping the temperature fixed. Compare the width with polystyrene. Then use PTFE on LO and take at least three fluorine readings. Keep the hydrogen and fluorine results separate.
+**Nuclear resonance.** Put glycerine in the proton probe. Record the magnet's B20 and the thermometer reading. Tune the frequency until a peak appears during the scan. Take at least five frequencies, keeping the temperature fixed. Compare the width with polystyrene. Then use PTFE on LO and take at least three fluorine readings. Keep the hydrogen and fluorine results separate.
 
-**Using the virtual apparatus.** Record the **Instrument seed**, turn on **Blind**, leave **Show expected resonance** off and click **Clear**. Use **Time A→B** or **V cursor**, then **Capture reading**. For SLOW, press **SLOW RUN** and place the ruler lines on the start pulse and peak. Use **Export table CSV** when finished. The frequency meter shows the probe frequency divided by 1000: a reading of 60 kHz means a probe frequency of 60 MHz.
+**Using the virtual apparatus.** Select **ESR** for DPPH and **PSR** for glycerine, polystyrene and PTFE. Record the **Instrument seed**, turn on **Blind**, leave **Show expected resonance** off and click **Clear**. Use **Time A→B** or **V cursor**, then **Capture reading**. For SLOW, press **SLOW RUN** and place the ruler lines on the start pulse and peak. Use **Export table CSV** when finished. The frequency meter shows the probe frequency divided by 1000: a reading of 60 kHz means a probe frequency of 60 MHz.
 
 ## Data
 
@@ -63,14 +63,14 @@ Add rows for all frequencies and repeat readings. Record the seed and scan calib
 
 ## Analysis
 
-1. Convert each reading to scan field. FAST has a 40 ms ramp; SLOW has a 25 s ramp and runs at 5 mm/s. Full scan is 3.67 mT for ESR and 3.20 mT for nuclear resonance.
+1. Convert each reading to scan field. FAST has a 40 ms ramp; SLOW has a 25 s ramp, and the chart paper moves at 5 mm/s. Full scan is 3.67 mT for ESR and 3.20 mT for nuclear resonance.
 2. Plot the ESR field against frequency in Hz. Fit a line through the origin and find g. Also try a free intercept. Does it change your result appreciably?
 3. For each nuclear reading, correct the permanent field for temperature and add the scan field. Fit hydrogen and fluorine separately to find their Γ values.
 4. Compare line widths above the signal baseline. Record SENS when comparing peak heights.
 
 ## Uncertainty
 
-Estimate how far you could move a cursor while still calling it the peak center. Convert that interval to a field uncertainty. Include the scan calibration, thermometer and permanent-field uncertainties if provided. Repeated cursor placements help estimate reading scatter, but they do not remove an error shared by every field reading. Use your slope uncertainty to estimate uncertainty in g or Γ.
+Estimate how far you could move a cursor while still calling it the peak center. Convert that interval to a field uncertainty. Include the scan calibration, thermometer and uncertainties in the permanent field if provided. Repeated cursor placements help estimate reading scatter, but they do not remove an error shared by every field reading. Use your slope uncertainty to estimate uncertainty in g or Γ.
 
 ## Questions
 

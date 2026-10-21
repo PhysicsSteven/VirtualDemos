@@ -47,7 +47,7 @@ For a real circuit, turn off the supply before changing connections. Stay within
 4. Repeat a shorter sweep with R = 10 Ω and R = 100 Ω, keeping L, C and source voltage fixed.
 5. If recording equipment is available, compare how quickly the current settles after switching on at resonance for two resistance values.
 
-**Using the virtual apparatus.** Choose **AC** and use **Resistor only**, **Capacitor only**, **Inductor only** and **Below resonance**. Click parts to edit values in **Selected**. Set frequency with the slider or select the source and enter **Frequency f** numerically. Record the displayed rms current and phase by hand. Use **Go to f0** only after locating the peak yourself. To record startup, keep the same circuit, switch to **In time**, press **Reset**, add channels with **Scope V/I**, then use **Whole run** and **Export scope CSV**. The visible export control is in In time; keep the AC frequency table manually.
+**Using the virtual apparatus.** Choose **AC** and use **Resistor only**, **Capacitor only**, **Inductor only** and **Below resonance**. Click parts to edit values in **Selected**. The frequency slider snaps to f₀ near resonance, so near the peak and the half power points select the source and type **Frequency f** instead. Record the displayed rms current and phase by hand. Use **Go to f₀** only after locating the peak yourself. To record startup, keep the same circuit, switch to **In time**, press **Reset**, add channels with **Scope V** and **Scope I**, then use **Whole run** and **Export scope CSV**. The visible export control is in In time; keep the AC frequency table manually.
 
 ## Data
 
@@ -73,7 +73,7 @@ $$P=I_{\rm rms}^2R=V_{\rm rms}I_{\rm rms}\cos\phi.$$
 
 ## Uncertainty
 
-Use the frequency intervals that bracket the peak and half power crossings. Include current rounding and the uncertainty in source voltage when inferring R. Carry the crossing uncertainty into bandwidth, then into L and C. State whether you used the logarithmic slider or numeric frequency entry. A narrow peak needs finer frequency steps than a broad one.
+Use the frequency intervals that bracket the peak and half power crossings. Include current rounding and the uncertainty in source voltage when inferring R. Carry the crossing uncertainty into bandwidth, then into L and C. State the frequencies you typed near the peak. A narrow peak needs finer frequency steps than a broad one.
 
 ## Questions
 

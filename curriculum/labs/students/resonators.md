@@ -5,7 +5,7 @@ Student laboratory · acoustics
 
 ## Goal
 
-Measure the speed of sound by finding the lengths at which an air column resonates. Use the same data to estimate the open-end correction.
+Measure the speed of sound by finding the lengths at which an air column resonates. Use the same data to estimate the open end correction.
 
 ## Background
 
@@ -42,10 +42,10 @@ With real equipment, secure the glass tube and adjust the water slowly. Keep wat
 1. Find the first loud maximum. Approach it from each direction and record a short interval that brackets the loudest position.
 2. Record the midpoint as your chosen length. Continue downward and find the next resonances.
 3. Number them from the top. If you skip one, keep its order number in mind rather than calling the next peak the second.
-4. Repeat the placements, then use a second source frequency without changing temperature or tube diameter.
+4. Repeat the placements, typing the mode number k for each repeated reading, then use a second source frequency without changing temperature or tube diameter.
 5. If time allows, repeat selected resonances at a different temperature or compare how the peak width changes with damping.
 
-**Using the virtual apparatus.** Choose **Resonance tube, find c**, set 20 °C, diameter 3.2 cm and 512 Hz, record the **Reading seed** and select **Blind**. Clear the readings. Move **Water surface below the top** to each maximum and press **Capture reading**. Correct the editable k column if needed. Repeat at 640 Hz using **Source frequency f**, then **Export CSV**. The captured length includes a small simulated meniscus-reading error. Use the swept-level trace as a visual guide if sound is unavailable.
+**Using the virtual apparatus.** Choose **Resonance tube, find c**, set 20 °C, diameter 3.2 cm and 512 Hz, record the **Reading seed** and select **Blind**. Clear the readings. Move **Water surface below the top** to each maximum and press **Capture reading**. Correct the editable k column if needed. Repeat at 640 Hz using **Source frequency f**, then **Export CSV**. The captured length includes a small simulated meniscus reading error. Use the swept level trace as a visual guide if sound is unavailable.
 
 ## Data
 
@@ -63,7 +63,7 @@ Record temperature, tube diameter and seed above the table. Use a separate copy 
 1. Calculate c from each neighboring spacing. If you skipped an order, divide by the number of order steps between the two readings.
 2. Convert lengths to meters. Plot L against x = (2k − 1)/(4f), with x in seconds. Fit a line and find c and ΔL. The CSV gives x in milliseconds, so convert that column before interpreting the slope.
 3. Compare ΔL with 0.6133a, where a is the tube's inner radius.
-4. Compare your speed with the dry-air prediction after finishing the measurement:
+4. Compare your speed with the dry air prediction after finishing the measurement:
 
 $$c=331.3\sqrt{1+\frac{t_{\rm C}}{273.15}}\ \mathrm{m/s}.$$
 

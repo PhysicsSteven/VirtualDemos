@@ -51,7 +51,7 @@ For a real circuit, turn off the supply before rewiring. Discharge capacitors th
 
 **RC and RL.** Record capacitor voltage during an RC discharge and inductor current during an RL decay. Start the time measurement at the switch event and note the initial voltage or current.
 
-**Using the virtual apparatus.** Select **In time** and **LC oscillation**. Its capacitor starts charged to 10 V; use L1 = 100 mH and C1 = 10 µF. Use **RLC damping** for the resistance study and edit R2 in **Selected**, then **Reset** before each run. Add channels with **Scope V/I**, use **Whole run**, and **Export scope CSV**. **Flip mid way** provides RC discharge and **RL rise and decay** provides RL decay. Record settings and the **Energy since t = 0** readings separately from CSV. The current directions follow the drawn component terminals; check them before comparing signs.
+**Using the virtual apparatus.** Select **In time** and **LC oscillation**. Its capacitor starts charged to 10 V; use L1 = 100 mH and C1 = 10 µF. Use **RLC damping** for the resistance study and edit R2 in **Selected**, then **Reset** before each run. Add channels with **Scope V** and **Scope I**, use **Whole run**, and **Export scope CSV**. **Flip mid way** provides RC discharge and **RL rise and decay** provides RL decay. Record settings and the **Energy since t = 0** readings separately from CSV. The current directions follow the drawn component terminals; check them before comparing signs.
 
 ## Data
 
@@ -87,4 +87,4 @@ Bracket peak times using nearby samples and estimate how precisely you can read 
 
 ## What to hand in
 
-Prelab answers, settings and raw traces, the LC period and energy check, damping calculations, the critical-damping comparison, RC/RL time constants with uncertainty, and answers to the questions. Identify simulated data.
+Prelab answers, settings and raw traces, the LC period and energy check, damping calculations, the critical damping comparison, RC/RL time constants with uncertainty, and answers to the questions. Identify simulated data.

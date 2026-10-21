@@ -9,11 +9,11 @@ Find how a sound's harmonic amplitudes and phases affect its waveform, repetitio
 
 ## Background
 
-A steady musical tone can be built by adding sine waves. Harmonics have frequencies that are whole-number multiples of a fundamental:
+A steady musical tone can be built by adding sine waves. Harmonics have frequencies that are whole number multiples of a fundamental:
 
 $$x(t)=\sum_n a_n\sin(2\pi n f_1t+\phi_n).$$
 
-The amplitudes an tell us how much of each harmonic is present. The phases φn tell us where each sine wave starts in its cycle. Changing either can change the waveform.
+The amplitudes $a_n$ tell us how much of each harmonic is present. The phases $\phi_n$ tell us where each sine wave starts in its cycle. Changing either can change the waveform.
 
 For distinct harmonics, the rms signal is
 
@@ -37,15 +37,15 @@ Use a comfortable listening level with real speakers or headphones. High volume 
 
 ## Procedure
 
-**Compare spectra.** Set f1 = 220 Hz. Compare **Sawtooth wave**, **Square wave** and **Triangle wave**. Record the amplitudes, frequencies and levels of harmonics 1, 2, 3, 5, 9 and 16. Note missing harmonics. Read the rms value and compare the waveforms.
+**Compare spectra.** Set f1 = 220 Hz. Compare **Sawtooth wave**, **Square wave** and **Triangle wave**. Record the amplitudes, frequencies and levels of harmonics 1 to 6. Note missing harmonics. Read the rms value and compare the waveforms.
 
 **Change the harmonics.** Use **Missing fundamental**, then remove harmonic 2 as well. Record the repetition period. Next use **Pure tone** and set only harmonics 2, 4, 6 and 8 to equal heights. Record the new period and compare it with the first case.
 
 **Change phase.** Return to Sawtooth. Record the rms and peak/rms ratio, then use **Randomize phases** three times. Record what changes in the waveform and spectrum. If listening, describe the sound separately from the numerical results.
 
-**Detune a partial.** Use **Inharmonic partials**, set harmonic 3 to Δf = +1.5 Hz and watch the shape drift. Then select **Back to exact harmonics** and compare stiffness B = 0, 0.005, 0.010 and 0.020. Record the first, third and fifth partial frequencies.
+**Detune a partial.** In the Inharmonic partials section, set **Detune harmonic** to 3 and **by Δf** to +1.5 Hz, and watch the shape drift. Then select **Back to exact harmonics** and compare stiffness B = 0, 0.005, 0.010 and 0.020. Record the first, third and fifth partial frequencies.
 
-**Using the virtual apparatus.** Adjust amplitudes with the harmonic bars and phases with the dials. Read frequencies and relative levels in **Strongest partials**. Use **Waveform repeats every**, **RMS (bar units)** and **Peak / RMS** for the comparisons. Record values by hand and save screenshots; this demo has no Capture or CSV export. Keep f1, B and Δf written beside each run.
+**Using the virtual apparatus.** Adjust amplitudes with the harmonic bars and phases with the dials. Read frequencies and relative levels in **Strongest partials**, which lists the six strongest harmonics. Use **Waveform repeats every**, **RMS (bar units)** and **Peak / RMS** for the comparisons. Record values by hand and save screenshots; this demo has no Capture or CSV export. Keep f1, B and Δf written beside each run.
 
 ## Data
 
@@ -59,10 +59,10 @@ Use rows for all requested harmonics and phase comparisons. State which partial 
 
 ## Analysis
 
-1. Compare amplitudes with 1/n for Sawtooth and odd-only Square, and with 1/n² for the odd harmonics of Triangle. Calculate two relative dB levels yourself.
+1. Compare amplitudes with 1/n for Sawtooth and odd only Square, and with 1/n² for the odd harmonics of Triangle. Calculate two relative dB levels yourself.
 2. Calculate rms from the amplitudes and compare with the display.
-3. Explain each missing-fundamental period using the common factor of the harmonic numbers present.
-4. Calculate the frequency of the detuned third partial and the relative-phase drift time 1/|Δf|.
+3. Explain each missing fundamental period using the common factor of the harmonic numbers present.
+4. Calculate the frequency of the detuned third partial and the relative phase drift time 1/|Δf|.
 5. Compare the stiffness results with
 
 $$f_n=nf_1\sqrt{\frac{1+Bn^2}{1+B}}.$$

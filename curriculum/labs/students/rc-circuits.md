@@ -29,7 +29,7 @@ $$W=U_C+H,\qquad U_C=\frac12 CV_C^2.$$
 
 1. If R doubles while C stays fixed, what happens to the time constant?
 2. Why can the capacitor voltage not jump when the switch changes position?
-3. Derive the straight-line relation obtained by plotting ln(1 − V_C/ε) against time during charging.
+3. Derive the straight line relation obtained by plotting ln(1 − V_C/ε) against time during charging.
 
 ## Safety
 
@@ -45,7 +45,7 @@ For a real circuit, turn off the supply before changing connections. Check the c
 
 **Discharging.** Charge the capacitor, record its voltage, then switch the battery out and let it discharge through a resistor. Record voltage and current from the time of the switch. Repeat with a different discharge resistance if your circuit allows it.
 
-**Energy.** For one charging run, record source work, stored capacitor energy and resistor heat at four times. Compare their sum. Then compare a slow charge with the fast discharge of a camera-flash circuit.
+**Energy.** For one charging run, record source work, stored capacitor energy and resistor heat at four times. Compare their sum. Then compare a slow charge with the fast discharge of a camera flash circuit.
 
 **Using the virtual apparatus.** Select **In time** and **RC charging**. Click a component and enter its value in **Selected**. Use **Reset** before each charging run and **Pause** when reading values. Add channels with **Scope V** and **Scope I**. Select **Whole run**, then **Export scope CSV**; record settings and the **Energy since t = 0** readings separately. **Flip mid way** shows switching during charging, and **Camera flash** provides separate charging and discharge resistances. The CSV contains the visible scope window, so check that it includes the part of the run you need.
 
@@ -70,7 +70,7 @@ Use a separate copy for each run. Write ε, R, C and the switch time above it. F
 
 ## Uncertainty
 
-Use the spacing between nearby time samples to estimate uncertainty in the 63.2% crossing. Compare that estimate with the uncertainty of the log-fit slope. Include voltage rounding and resistor uncertainty where available. Use actual timestamps from the exported data. Do not add random scatter to a deterministic trace; describe the resolution with which you read it.
+Use the spacing between nearby time samples to estimate uncertainty in the 63.2% crossing. Compare that estimate with the uncertainty of the log fit slope. Include voltage rounding and resistor uncertainty where available. Use actual timestamps from the exported data. Do not add random scatter to a deterministic trace; describe the resolution with which you read it.
 
 ## Questions
 
@@ -81,4 +81,4 @@ Use the spacing between nearby time samples to estimate uncertainty in the 63.2%
 
 ## What to hand in
 
-Prelab answers, settings and data, CSV if available, the charging and discharge fits, the τ-versus-R graph, capacitance with uncertainty, the energy check, and answers to the questions. Identify simulated data.
+Prelab answers, settings and data, CSV if available, the charging and discharge fits, the graph of τ against R, capacitance with uncertainty, the energy check, and answers to the questions. Identify simulated data.
