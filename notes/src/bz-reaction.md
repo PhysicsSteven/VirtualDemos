@@ -17,9 +17,9 @@ Students need rate laws, steady states, and the idea that an isolated system mov
 ## Running it in class
 
 1. **Oscillating beaker.** Ask Q1 first. The solution snaps to blue each time x (HBrO₂) shoots up, then fades to red. In the 3D phase portrait the path joins one closed loop. Period: 7.74 τ = 6.45 min.
-2. **Stop the oscillation.** At f = 2.6: one pulse, then red for good. Drag the f line on the lower plot below the Hopf point at 2.33 and the clock restarts; below 0.505 it stops in the other state (Q3).
+2. **Drag f.** On the lower plot, drag the f line above the Hopf point at 2.33: one pulse, then red for good. Back inside the band the clock restarts; below 0.505 it stops in the other state (Q3).
 3. **Target waves.** Switch to the dish. A spot with φ = 0 oscillates by itself and sends out rings. Use the probe readouts: period at the probe, front speed, and the lone plane wave speed for comparison (Q4).
-4. **Make a spiral.** A wave with one free end winds into a spiral. Back in Target waves, use Cut a wave to drag from near the pacemaker to the rim: a spiral pair forms and takes over (Q5).
+4. **Make a spiral.** A wave with one free end winds into a spiral. Back in Target waves, use Cut a wave to drag from near the pacemaker to the rim: a spiral pair forms and takes over (Q5). Optionally show **Three color mosaic** next to Toy model, not BZ.
 5. **Route to chaos.** Switch to the flow reactor. The scan fills in the peaks of z against flow rate: one branch splits to 2, then 4, then 8, then a smear (Q6). Drag k_f on the diagram into the smear and watch the next peak map trace out one humped curve.
 6. **Butterfly effect.** Two runs start 10⁻⁶ apart. On the log plot the distance between them climbs along a straight line until it saturates. Ask Q7.
 
@@ -43,11 +43,12 @@ Students need rate laws, steady states, and the idea that an isolated system mov
 
 - **"The reaction runs backward and forward, so it beats the second law."** The overall reaction only goes forward and the free energy falls monotonically. The oscillating species are intermediates, kept far from equilibrium by the steady supply of bromate and malonic acid.
 - **"The BZ reaction is chaotic."** The stirred beaker is periodic and the dish patterns are deterministic waves. Chaos was found in stirred flow reactors (Hudson and Mankin 1981; Simoyi, Wolf and Swinney 1982), only at some flow rates.
-- **"The blue rings are dye spreading out."** Diffusion slows down (distance ∝ √t); these fronts keep a constant speed because each spot reacts and triggers its neighbor, and fronts that meet annihilate.
+- **"The blue rings are dye spreading out."** Diffusion slows down (distance ∝ √t); these fronts keep a constant speed because each spot triggers its neighbor.
 - **"Chaotic means random."** The equations are deterministic: each peak follows from the last through a smooth one humped map. What fails is long range prediction.
+- **"The red, green and blue spiral pictures are simulations of the BZ chemistry."** Many come from Turner's three species toy rule (rock, paper, scissors), which has no bromate chemistry in it.
 
 ## Physics behind the demo
 
-- **Beaker:** the Oregonator (Field and Noyes 1974), the five step skeleton of the Field–Körös–Noyes mechanism, in scaled form ε dx/dτ = qy − xy + x(1 − x), ε′ dy/dτ = −qy − xy + fz, dz/dτ = x − z, with ε = 9.90 × 10⁻³, ε′ = 1.98 × 10⁻⁵, q = 7.62 × 10⁻⁵ (Field, Scholarpedia 2007), and τ = 1 equal to 50 s. Reactants are held constant, so the beaker never runs down. Hopf points f = 0.5052 and 2.3324 (from the Jacobian's eigenvalues); stiff Rosenbrock integration.
-- **Dish:** the two variable Oregonator with diffusion of u only (the catalyst is fixed, as in a gel), ε = 0.02, q = 0.002, f = 1.4 and a bromide source φ = 0.05 (values used by Adamatzky and coworkers). Model units for length and time. Grid 256 × 256, Δx = 0.25, Δt = 0.005: plane wave speed within 1 % and spiral period within 3 % of finer grids.
-- **Flow reactor:** the Györgyi–Field model (Nature 1992) of the cerium catalyzed reaction, with rate constants and concentrations as tabulated by Buchlovská Nagyová, Jansík and Lampart (2020), and k_f the inverse residence time. The Lyapunov exponent is a finite time estimate.
+- **Beaker:** the Oregonator (Field and Noyes 1974) in scaled form ε dx/dτ = qy − xy + x(1 − x), ε′ dy/dτ = −qy − xy + fz, dz/dτ = x − z, with ε = 9.90 × 10⁻³, ε′ = 1.98 × 10⁻⁵, q = 7.62 × 10⁻⁵ (Field, Scholarpedia 2007); τ = 1 is 50 s. Hopf points f = 0.5052, 2.3324.
+- **Dish media:** the two variable Oregonator with diffusion of u only. Excitable: ε = 0.02, q = 0.002, f = 1.4, φ = 0.05 (Adamatzky and coworkers). Oscillatory: the beaker's values, φ = 0 (period 7.45 τ, not 7.74 τ: bromide is put in its steady state). Flow fed: Györgyi–Field kinetics in every cell (an idealization). Toy model: Turner's 2009 rule, not chemistry.
+- **Flow reactor:** Györgyi and Field (Nature 1992), parameters as tabulated by Buchlovská Nagyová et al. (2020).

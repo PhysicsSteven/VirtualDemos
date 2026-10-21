@@ -9,18 +9,6 @@
 body { margin: 0; }
 img { max-width: 100%; }
 [hidden] { display: none !important; }
-/* vd-qr */
-.vd-qr { display: none; }
-@media (min-width: 821px) {
-  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
-}
-.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
-.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
-.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
-.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
-.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
-/* /vd-qr */
 </style>
 <title>Belousov–Zhabotinsky Reaction</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -128,6 +116,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .seg.full { display: flex; }
 .seg.full button { flex: 1; padding: 4px 4px; }
+.seg.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
 
 .slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
 .slider-head label { font-size: 0.88rem; }
@@ -190,7 +179,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     <div class="bar-right">
       <div class="units mono" id="unitsLine">scaled concentrations · beaker time unit τ = 50 s</div>
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
-      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/bz-reaction.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/bz-reaction.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM13 2h1v1h-1zM15 2h6v1h-6zM22 2h2v1h-2zM26 2h1v1h-1zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h3v1h-3zM16 3h1v1h-1zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h4v1h-4zM15 4h1v1h-1zM21 4h3v1h-3zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM13 5h1v1h-1zM15 5h1v1h-1zM17 5h3v1h-3zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM15 6h4v1h-4zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM16 7h2v1h-2zM20 7h1v1h-1zM24 7h1v1h-1zM28 7h3v1h-3zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h5v1h-5zM16 9h2v1h-2zM21 9h2v1h-2zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM14 10h4v1h-4zM20 10h1v1h-1zM22 10h8v1h-8zM32 10h5v1h-5zM3 11h1v1h-1zM5 11h2v1h-2zM10 11h2v1h-2zM13 11h1v1h-1zM16 11h3v1h-3zM25 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h2v1h-2zM8 12h3v1h-3zM13 12h4v1h-4zM19 12h2v1h-2zM22 12h2v1h-2zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM11 13h1v1h-1zM15 13h1v1h-1zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM29 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h2v1h-2zM5 14h5v1h-5zM11 14h1v1h-1zM15 14h2v1h-2zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h15v1h-15zM2 15h2v1h-2zM7 15h1v1h-1zM9 15h1v1h-1zM11 15h3v1h-3zM15 15h2v1h-2zM18 15h2v1h-2zM22 15h4v1h-4zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM3 16h1v1h-1zM5 16h4v1h-4zM12 16h2v1h-2zM16 16h4v1h-4zM22 16h2v1h-2zM29 16h2v1h-2zM32 16h4v1h-4zM38 16h1v1h-1zM2 17h2v1h-2zM10 17h4v1h-4zM17 17h9v1h-9zM28 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM6 18h4v1h-4zM13 18h1v1h-1zM17 18h2v1h-2zM21 18h1v1h-1zM23 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM3 19h1v1h-1zM12 19h4v1h-4zM17 19h1v1h-1zM20 19h1v1h-1zM22 19h4v1h-4zM30 19h2v1h-2zM37 19h1v1h-1zM2 20h1v1h-1zM4 20h3v1h-3zM8 20h1v1h-1zM10 20h1v1h-1zM13 20h3v1h-3zM17 20h2v1h-2zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h1v1h-1zM7 21h1v1h-1zM10 21h1v1h-1zM12 21h1v1h-1zM17 21h1v1h-1zM20 21h5v1h-5zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM5 22h1v1h-1zM7 22h2v1h-2zM10 22h1v1h-1zM12 22h3v1h-3zM16 22h2v1h-2zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h3v1h-3zM7 23h1v1h-1zM9 23h4v1h-4zM16 23h1v1h-1zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h2v1h-2zM5 24h1v1h-1zM7 24h3v1h-3zM11 24h7v1h-7zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h5v1h-5zM33 24h3v1h-3zM37 24h2v1h-2zM3 25h1v1h-1zM6 25h2v1h-2zM10 25h1v1h-1zM13 25h1v1h-1zM17 25h2v1h-2zM21 25h2v1h-2zM25 25h1v1h-1zM28 25h2v1h-2zM33 25h2v1h-2zM37 25h1v1h-1zM2 26h1v1h-1zM5 26h2v1h-2zM8 26h2v1h-2zM11 26h1v1h-1zM13 26h1v1h-1zM15 26h1v1h-1zM17 26h1v1h-1zM20 26h6v1h-6zM27 26h2v1h-2zM32 26h3v1h-3zM36 26h2v1h-2zM2 27h1v1h-1zM4 27h2v1h-2zM9 27h2v1h-2zM15 27h4v1h-4zM23 27h1v1h-1zM25 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM8 28h1v1h-1zM10 28h1v1h-1zM12 28h1v1h-1zM14 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM26 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h1v1h-1zM6 29h1v1h-1zM9 29h1v1h-1zM13 29h3v1h-3zM18 29h1v1h-1zM23 29h1v1h-1zM26 29h1v1h-1zM31 29h4v1h-4zM37 29h1v1h-1zM2 30h1v1h-1zM5 30h2v1h-2zM8 30h2v1h-2zM11 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM25 30h12v1h-12zM38 30h1v1h-1zM10 31h5v1h-5zM16 31h8v1h-8zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h1v1h-1zM13 32h1v1h-1zM15 32h1v1h-1zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h2v1h-2zM26 32h3v1h-3zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h2v1h-2zM16 33h5v1h-5zM23 33h3v1h-3zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h4v1h-4zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h3v1h-3zM29 34h6v1h-6zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM14 35h2v1h-2zM17 35h1v1h-1zM20 35h1v1h-1zM22 35h1v1h-1zM24 35h2v1h-2zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h4v1h-4zM16 36h3v1h-3zM20 36h2v1h-2zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h1v1h-1zM14 37h1v1h-1zM16 37h2v1h-2zM21 37h3v1h-3zM25 37h1v1h-1zM28 37h1v1h-1zM30 37h2v1h-2zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h1v1h-1zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h5v1h-5zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
     </div>
   </header>
 
@@ -218,9 +206,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <h2>Setups</h2>
         <div class="chips" id="presets">
           <button type="button" data-p="osc" aria-pressed="true">Oscillating beaker</button>
-          <button type="button" data-p="stop" aria-pressed="false">Stop the oscillation</button>
           <button type="button" data-p="target" aria-pressed="false">Target waves</button>
           <button type="button" data-p="spiral" aria-pressed="false">Make a spiral</button>
+          <button type="button" data-p="mosaic" aria-pressed="false">Three color mosaic</button>
           <button type="button" data-p="route" aria-pressed="false">Route to chaos</button>
           <button type="button" data-p="fly" aria-pressed="false">Butterfly effect</button>
         </div>
@@ -241,22 +229,79 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </div>
         <p class="hint" data-for="beaker">f is the number of bromide ions made per oxidized catalyst ion reduced. Drag the f line on the lower plot too. The beaker oscillates only between the two Hopf points.</p>
 
-        <div class="seg full" role="group" aria-label="Pointer tool" id="toolSeg" data-for="dish">
+        <div class="seg full grid2" role="group" aria-label="Dish medium" id="medSeg" data-for="dish">
+          <button type="button" data-d="excite" aria-pressed="true">Excitable</button>
+          <button type="button" data-d="osc" aria-pressed="false">Oscillatory</button>
+          <button type="button" data-d="gf" aria-pressed="false">Flow fed, chaotic</button>
+          <button type="button" data-d="toy" aria-pressed="false">Toy model, not BZ</button>
+        </div>
+        <div class="seg full" role="group" aria-label="Color by" id="colSeg" data-for="dish" data-med="excite osc gf">
+          <button type="button" data-c="chem" aria-pressed="true">Chemistry color</button>
+          <button type="button" data-c="phase" aria-pressed="false">Oscillation phase</button>
+        </div>
+        <div class="seg full" role="group" aria-label="Pointer tool" id="toolSeg" data-for="dish" data-med="excite osc">
           <button type="button" data-t="cut" aria-pressed="true">Cut a wave</button>
           <button type="button" data-t="start" aria-pressed="false">Start a wave</button>
         </div>
-        <div class="toggles" data-for="dish">
+        <div class="toggles" data-for="dish" data-med="excite">
           <label><input type="checkbox" id="tPace">Pacemaker</label>
         </div>
-        <div class="ctl" data-for="dish">
+        <div class="ctl" data-for="dish" data-med="excite osc">
+          <div class="slider-head"><label for="sEps">Time scale ratio ε</label><output id="oEps" class="mono" for="sEps"></output></div>
+          <input type="range" id="sEps" min="0.005" max="0.05" step="0.0005">
+        </div>
+        <div class="ctl" data-for="dish" data-med="excite osc">
+          <div class="slider-head"><label for="sFd">Stoichiometric factor f</label><output id="oFd" class="mono" for="sFd"></output></div>
+          <input type="range" id="sFd" min="0.3" max="3" step="0.01">
+        </div>
+        <div class="ctl" data-for="dish" data-med="excite osc">
+          <div class="slider-head"><label for="sQ">Ratio q</label><output id="oQ" class="mono" for="sQ"></output></div>
+          <input type="range" id="sQ" min="-4.5" max="-2" step="0.01">
+        </div>
+        <div class="ctl" data-for="dish" data-med="excite osc">
           <div class="slider-head"><label for="sPhi">Bromide source φ</label><output id="oPhi" class="mono" for="sPhi"></output></div>
-          <input type="range" id="sPhi" min="0.02" max="0.08" step="0.005">
+          <input type="range" id="sPhi" min="0" max="0.1" step="0.005">
+        </div>
+        <div class="ctl" data-for="dish" data-med="excite osc">
+          <div class="slider-head"><label for="sD">Pattern size: diffusion D</label><output id="oD" class="mono" for="sD"></output></div>
+          <input type="range" id="sD" min="0.25" max="2" step="0.05">
+        </div>
+        <div class="ctl" data-for="dish" data-med="gf">
+          <div class="slider-head"><label for="sKf2">Flow rate k<sub>f</sub></label><output id="oKf2" class="mono" for="sKf2"></output></div>
+          <input type="range" id="sKf2" min="3" max="5" step="0.005">
+        </div>
+        <div class="ctl" data-for="dish" data-med="gf">
+          <div class="slider-head"><label for="sDiam">Dish diameter</label><output id="oDiam" class="mono" for="sDiam"></output></div>
+          <input type="range" id="sDiam" min="1" max="4" step="0.1">
+        </div>
+        <div class="ctl" data-for="dish" data-med="toy">
+          <div class="slider-head"><label for="sAl">α (a eats b)</label><output id="oAl" class="mono" for="sAl"></output></div>
+          <input type="range" id="sAl" min="0.5" max="1.5" step="0.05">
+        </div>
+        <div class="ctl" data-for="dish" data-med="toy">
+          <div class="slider-head"><label for="sBe">β (b eats c)</label><output id="oBe" class="mono" for="sBe"></output></div>
+          <input type="range" id="sBe" min="0.5" max="1.5" step="0.05">
+        </div>
+        <div class="ctl" data-for="dish" data-med="toy">
+          <div class="slider-head"><label for="sGa">γ (c eats a)</label><output id="oGa" class="mono" for="sGa"></output></div>
+          <input type="range" id="sGa" min="0.5" max="1.5" step="0.05">
+        </div>
+        <div class="ctl" data-for="dish" data-med="excite osc gf">
+          <div class="slider-head"><label for="sGrain">Random block size</label><output id="oGrain" class="mono" for="sGrain"></output></div>
+          <input type="range" id="sGrain" min="4" max="32" step="2">
         </div>
         <div class="row2" data-for="dish">
-          <button type="button" class="btn" id="clearDish">Clear dish</button>
-          <button type="button" class="btn" id="halfWave">Broken wave</button>
+          <button type="button" class="btn" id="scatter">Scatter random states</button>
+          <button type="button" class="btn" id="clearDish" data-for="dish" data-med="excite osc">Clear dish</button>
+          <button type="button" class="btn" id="uniform" data-for="dish" data-med="gf">Uniform start</button>
         </div>
-        <p class="hint" data-for="dish">Drag across a blue wave to cut it; the dashed ring shows how wide. Each free end curls into a spiral. Drag the probe (ringed cross) to measure there. A larger φ makes the medium harder to excite.</p>
+        <div class="row2" data-for="dish" data-med="excite osc">
+          <button type="button" class="btn" id="halfWave">Broken wave</button>
+          <button type="button" class="btn" id="cited">Cited values</button>
+        </div>
+        <p class="hint" data-for="dish" data-med="excite osc">Drag across a blue wave to cut it; the dashed ring shows how wide. Each free end curls into a spiral. Drag the probe (ringed cross) to measure there. Smaller D gives smaller patterns but a coarser grid relative to them.</p>
+        <p class="hint" data-for="dish" data-med="gf">Every point of this dish runs the flow reactor's chemistry, fed and drained at k<sub>f</sub>. At 3.5 × 10⁻⁴ s⁻¹ each spot alone would be chaotic; watch what diffusion does to that.</p>
+        <p class="hint" data-for="dish" data-med="toy"><b>Toy model, not BZ chemistry:</b> three made up species that eat each other in a cycle. It makes BZ like spirals, which is why it is often shown as "the BZ reaction", but it has no chemistry in it.</p>
 
         <div class="ctl" data-for="flow">
           <div class="slider-head"><label for="sKf">Flow rate k<sub>f</sub></label><output id="oKf" class="mono" for="sKf"></output></div>
@@ -475,7 +520,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const cells = dish.cells, nb = dish.nb, nc = cells.length, Ddx = par.D / (dx * dx), ie = 1 / par.eps, q = par.q, f = par.f;
     const lev = level || 0.3;
     let u = st.u, v = st.v, u2 = st.u2, v2 = st.v2;
-    const phi = st.phi, T = st.T;
+    const phi = st.phi, T = st.T, Tp = st.Tp;
     for (let s = 0; s < steps; s++) {
       for (let k = 0; k < nc; k++) {
         const i = cells[k], b = 4 * i, uu = u[i], vv = v[i];
@@ -488,7 +533,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           un = (uu + dt * (Pr + Ddx * lap)) / (1 + dt * Dc);
         }
         u2[i] = un; v2[i] = vv + dt * (uu - vv);
-        if (T && uu < lev && un >= lev) T[i] = st.t + dt * (lev - uu) / (un - uu);
+        if (T && uu < lev && un >= lev) { if (Tp) Tp[i] = T[i]; T[i] = st.t + dt * (lev - uu) / (un - uu); }
       }
       let tmp = u; u = u2; u2 = tmp; tmp = v; v = v2; v2 = tmp;
       st.t += dt;
@@ -652,6 +697,118 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     return sum / (nren * every);
   }
+
+  // ---------- 2b. Dish extras: local kinetics, random seeding, oscillation phase ----------
+  // One step of the dish's local kinetics alone (same linearly implicit scheme as rdSteps, no diffusion).
+  function rdLocalStep(par, u, v, phi, dt) {
+    const w = par.f * v + phi, uq = u + par.q, ie = 1 / par.eps;
+    const R = ie * (u - u * u - w * (u - par.q) / uq), Ru = ie * (1 - 2 * u - 2 * w * par.q / (uq * uq));
+    let un = u + dt * R / (1 - dt * Ru);
+    if (!(un > 0)) un = (u + dt * ie * (u + w * par.q / uq)) / (1 + dt * ie * (u + w / uq));
+    return [un, v + dt * (u - v)];
+  }
+  // States visited by one point after a kick to u = 0.8 from its steady state, sampled every dt for a time Tt:
+  // an excitation pulse in an excitable medium, the limit cycle (after one period) in an oscillatory one.
+  function rdTrajectory(par, phi, Tt, dt) {
+    let u0 = rdRest(par, phi);
+    if (!Number.isFinite(u0)) u0 = (-(par.f + par.q - 1) + Math.sqrt((par.f + par.q - 1) * (par.f + par.q - 1) + 4 * par.q * (1 + par.f))) / 2;
+    let u = 0.8, v = u0; const out = [];
+    for (let t = 0; t < Tt; t += dt) { const s = rdLocalStep(par, u, v, phi, dt); u = s[0]; v = s[1]; out.push([u, v]); }
+    return out;
+  }
+  // Seed the dish with random states: the dish is cut into square blocks of 'grain' cells and each block gets the
+  // state at a random point of the list 'states'. rng is a function returning numbers in [0, 1).
+  function rdSeed(dish, u, v, states, grain, rng) {
+    const n = dish.n, g = Math.max(1, grain | 0), cn = Math.ceil(n / g), pick = new Int32Array(cn * cn);
+    for (let k = 0; k < pick.length; k++) pick[k] = Math.min(states.length - 1, Math.floor(rng() * states.length));
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const s = states[pick[((j / g) | 0) * cn + ((i / g) | 0)]]; u[j * n + i] = s[0]; v[j * n + i] = s[1]; }
+  }
+  // Oscillation phase of a cell: time since the last front passed, as a fraction of the time between its last two
+  // fronts; 0 just as a front arrives, rising steadily to 1. NaN until two fronts have passed.
+  function wavePhase(t, Tlast, Tprev) {
+    const P = Tlast - Tprev;
+    if (!(Tprev > -1e300) || !(P > 0)) return NaN;
+    const x = (t - Tlast) / P;
+    return x < 0 ? 0 : x > 1 ? 1 : x;
+  }
+
+  // ---------- 3b. Flow fed dish: Györgyi–Field kinetics in every cell, x, z and v diffusing ----------
+  // Each cell is fed and drained at rate k_f as in the stirred reactor (an idealization: a gel fed evenly from
+  // below). Lengths in units of sqrt(D T0); fourth order Runge–Kutta for the kinetics at a fixed step dt (in T0),
+  // then one explicit diffusion step with the five point Laplacian (stable when dt/dx² ≤ 1/4), zero flux at the wall.
+  function gfDishSteps(c, dish, F, dt, steps, dx, lev) {
+    const cells = dish.cells, nb = dish.nb, nc = cells.length, X = F.x, Z = F.z, V = F.v, K = F.k, W = F.w;
+    const Dd = dt / (dx * dx), L = lev || 0.75, T = F.T, Tp = F.Tp;
+    const yN = c.yN, yDx = c.yDx, yD0 = c.yD0, ax1 = c.ax1, ax2 = c.ax2, ax3 = c.ax3, ax4 = c.ax4, ax5 = c.ax5, CC = c.C, Z0 = c.Z0,
+      az1 = c.az1, CZ = c.CZ, az2 = c.az2, az3 = c.az3, az4 = c.az4, av1 = c.av1, av2 = c.av2, av3 = c.av3, av4 = c.av4, kfT = c.kfT;
+    let rx = 0, rz = 0, rv = 0;
+    const f = (x, z, v) => {
+      const xp = x > 0 ? x : 0, xs = Math.sqrt(xp), y = yN * z * v / (yDx * xp + yD0);
+      rx = -ax1 * xp * y + ax2 * y - ax3 * xp * xp + ax4 * (CC - Z0 * z) * xs - ax5 * xp * z - kfT * xp;
+      rz = az1 * (CZ - z) * xs - az2 * xp * z - az3 * z * v - az4 * z - kfT * z;
+      rv = av1 * xp * y + av2 * y + av3 * xp * xp - av4 * z * v - kfT * v;
+    };
+    const h2 = dt / 2, h6 = dt / 6;
+    for (let s = 0; s < steps; s++) {
+      for (let k = 0; k < nc; k++) {
+        const i = cells[k], x0 = X[i], z0 = Z[i], v0 = V[i];
+        f(x0, z0, v0); const ax = rx, az = rz, av = rv;
+        f(x0 + h2 * ax, z0 + h2 * az, v0 + h2 * av); const bx = rx, bz = rz, bv = rv;
+        f(x0 + h2 * bx, z0 + h2 * bz, v0 + h2 * bv); const cx = rx, cz = rz, cv = rv;
+        f(x0 + dt * cx, z0 + dt * cz, v0 + dt * cv);
+        K[3 * i] = x0 + h6 * (ax + 2 * bx + 2 * cx + rx); K[3 * i + 1] = z0 + h6 * (az + 2 * bz + 2 * cz + rz); K[3 * i + 2] = v0 + h6 * (av + 2 * bv + 2 * cv + rv);
+      }
+      for (let k = 0; k < nc; k++) {
+        const i = cells[k], b = 4 * i, n0 = 3 * nb[b], n1 = 3 * nb[b + 1], n2 = 3 * nb[b + 2], n3 = 3 * nb[b + 3], m = 3 * i;
+        W[m] = K[m] + Dd * (K[n0] + K[n1] + K[n2] + K[n3] - 4 * K[m]);
+        W[m + 1] = K[m + 1] + Dd * (K[n0 + 1] + K[n1 + 1] + K[n2 + 1] + K[n3 + 1] - 4 * K[m + 1]);
+        W[m + 2] = K[m + 2] + Dd * (K[n0 + 2] + K[n1 + 2] + K[n2 + 2] + K[n3 + 2] - 4 * K[m + 2]);
+      }
+      for (let k = 0; k < nc; k++) {
+        const i = cells[k], zo = Z[i], zn = W[3 * i + 1];
+        X[i] = W[3 * i]; Z[i] = zn; V[i] = W[3 * i + 2];
+        if (T && zo < L && zn >= L) { if (Tp) Tp[i] = T[i]; T[i] = F.t + dt * (L - zo) / (zn - zo); }
+      }
+      F.t += dt;
+    }
+    return F;
+  }
+  function gfDishAlloc(n) {
+    const N = n * n;
+    return { x: new Float64Array(N), z: new Float64Array(N), v: new Float64Array(N), k: new Float64Array(3 * N), w: new Float64Array(3 * N),
+      T: new Float64Array(N).fill(-1e308), Tp: new Float64Array(N).fill(-1e308), t: 0 };
+  }
+
+  // ---------- 4. Toy model (not BZ chemistry): A. Turner (2009), UCL ----------
+  // Three species a, b, c on a grid. Each step: average each species over the cell and its eight neighbours
+  // (neighbours outside the dish count as the cell itself), then
+  //   a' = ā + ā(α b̄ − γ c̄),  b' = b̄ + b̄(β c̄ − α ā),  c' = c̄ + c̄(γ ā − β b̄),  each clipped to [0, 1].
+  function mooreDish(dish) {
+    const n = dish.n, nb8 = new Int32Array(8 * n * n);
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+      const idx = j * n + i; let m = 0;
+      for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
+        if (!di && !dj) continue;
+        const a = i + di, b = j + dj, q = b * n + a;
+        nb8[8 * idx + m++] = (a >= 0 && b >= 0 && a < n && b < n && dish.inside[q]) ? q : idx;
+      }
+    }
+    return nb8;
+  }
+  function turnerStep(dish, nb8, s, al, be, ga) {
+    const cells = dish.cells, A = s.a, B = s.b, Cc = s.c, A2 = s.a2, B2 = s.b2, C2 = s.c2;
+    const cl = (x) => x < 0 ? 0 : x > 1 ? 1 : x;
+    for (let k = 0; k < cells.length; k++) {
+      const i = cells[k], o = 8 * i;
+      let sa = A[i], sb = B[i], sc = Cc[i];
+      for (let m = 0; m < 8; m++) { const q = nb8[o + m]; sa += A[q]; sb += B[q]; sc += Cc[q]; }
+      sa /= 9; sb /= 9; sc /= 9;
+      A2[i] = cl(sa + sa * (al * sb - ga * sc)); B2[i] = cl(sb + sb * (be * sc - al * sa)); C2[i] = cl(sc + sc * (ga * sa - be * sb));
+    }
+    let t = s.a; s.a = s.a2; s.a2 = t; t = s.b; s.b = s.b2; s.b2 = t; t = s.c; s.c = s.c2; s.c2 = t;
+    s.gen++;
+    return s;
+  }
   // ==CORE END==
 
   // ---------- helpers ----------
@@ -757,9 +914,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   // ---------- state ----------
-  const S = { mode: 'beaker', preset: 'osc', playing: !reduce, rateIdx: { beaker: 2, dish: 2, flow: 2 } };
-  const RATES = { beaker: [0.5, 1, 2, 4, 8, 16], dish: [0.5, 1, 2, 3, 5, 8], flow: [0.005, 0.01, 0.02, 0.04, 0.08, 0.15] };
-  const rate = () => RATES[S.mode][S.rateIdx[S.mode]];
+  const S = { mode: 'beaker', preset: 'osc', playing: !reduce, rateIdx: { beaker: 2, dish: 2, dosc: 3, dgf: 2, dtoy: 3, flow: 2 } };
+  const RATES = { beaker: [0.5, 1, 2, 4, 8, 16], dish: [0.5, 1, 2, 3, 5, 8], dosc: [1, 2, 4, 8, 12, 16], dgf: [10, 20, 40, 80, 160, 320], dtoy: [5, 10, 20, 30, 60, 120], flow: [0.005, 0.01, 0.02, 0.04, 0.08, 0.15] };
+  const rateKey = () => S.mode !== 'dish' ? S.mode : DS.medium === 'excite' ? 'dish' : 'd' + DS.medium;
+  const rate = () => RATES[rateKey()][S.rateIdx[rateKey()]];
   const dirty = { A: true, B: true, C: true };
   function dirtyAll() { dirty.A = dirty.B = dirty.C = true; G.dirty = true; }
 
@@ -1070,108 +1228,261 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   // =====================================================================
-  // 2. Petri dish: two variable Oregonator with diffusion
+  // 2. Petri dish: four media on the same dish
+  //    excite: two variable Oregonator, excitable (light sensitive form, φ > 0)
+  //    osc:    the beaker's Oregonator (Scholarpedia values) reduced to two variables, φ = 0: every point oscillates
+  //    gf:     Györgyi–Field flow reactor kinetics in every cell, with diffusion (fed dish)
+  //    toy:    Turner's three species cyclic model, not BZ chemistry
   // =====================================================================
-  const DS = { n: 256, dx: 0.25, dt: 0.005, par: Object.assign({}, RD), dish: null, st: null, pace: { on: false, fx: 0.5, fy: 0.5, r: 2 },
-    probe: [0.78, 0.5], tool: 'cut', tr: { t: [], u: [], v: [] }, arr: [], speed: NaN, speedFor: -1, c0: NaN, ur: 0, lastT: -1e308,
-    stepMs: 0.7, stepsLast: 0, vref: 0.3, geo: null, stroke: null, hover: null, drag: null };
+  const PAR = {
+    excite: Object.assign({}, RD, { D: 1 }),
+    osc: { eps: 9.90e-3, q: 7.62e-5, f: 1, phi: 0, D: 1 }
+  };
+  const PAR0 = JSON.parse(JSON.stringify(PAR));
+  const DS = { medium: 'excite', color: 'chem', n: 256, dx: 0.25, dt: 0.005, par: PAR.excite, dish: null, st: null, pace: { on: false, fx: 0.5, fy: 0.5, r: 2 },
+    probe: [0.78, 0.5], tool: 'cut', tr: { t: [], u: [], v: [] }, arr: [], speed: NaN, speedFor: -1, c0: NaN, c0fine: NaN, ur: 0, lastT: -1e308,
+    stepMs: 0.7, stepsLast: 0, vref: 0.3, geo: null, stroke: null, hover: null, drag: null, grain: 16, offs: {} };
+  // flow fed dish (Györgyi–Field) and toy model state
+  const DLEN = Math.sqrt(2e-5 * gfMake(3.5e-4).T0);   // cm: one length unit sqrt(D T0) for D = 2 × 10⁻⁵ cm²/s
+  const DG = { n: 128, dt: 1e-4, dish: null, F: null, c: null, diam: 2.5, lev: 0.75, stepMs: 4, kf: 3.5e-4 };
+  const DT = { n: 256, dish: null, nb8: null, s: null, al: 1, be: 1, ga: 1, stepMs: 2 };
+  const isOre = () => DS.medium === 'excite' || DS.medium === 'osc';
+  const dgDx = () => DG.diam / ((DG.n - 2) * DLEN);   // grid spacing in length units sqrt(D T0)
   function dsInit() {
-    DS.dish = rdDish(DS.n, true);
-    const N = DS.n * DS.n;
-    DS.st = { u: new Float32Array(N), v: new Float32Array(N), u2: new Float32Array(N), v2: new Float32Array(N), phi: new Float32Array(N), T: new Float64Array(N), t: 0 };
-    DS.off = document.createElement('canvas'); DS.off.width = DS.off.height = DS.n;
-    DS.offCtx = DS.off.getContext('2d'); DS.img = DS.offCtx.createImageData(DS.n, DS.n); DS.img32 = new Uint32Array(DS.img.data.buffer);
+    DS.oreDish = rdDish(256, true);
+    const N = 256 * 256;
+    DS.st = { u: new Float32Array(N), v: new Float32Array(N), u2: new Float32Array(N), v2: new Float32Array(N), phi: new Float32Array(N),
+      T: new Float64Array(N), Tp: new Float64Array(N), t: 0 };
+    DG.dish = rdDish(DG.n, true); DG.F = gfDishAlloc(DG.n);
+    DT.dish = DS.oreDish; DT.nb8 = mooreDish(DT.dish);
+    DT.s = { a: new Float32Array(N), b: new Float32Array(N), c: new Float32Array(N), a2: new Float32Array(N), b2: new Float32Array(N), c2: new Float32Array(N), gen: 0 };
+    for (const n of [128, 256]) {
+      const off = document.createElement('canvas'); off.width = off.height = n;
+      const ctx = off.getContext('2d'), img = ctx.createImageData(n, n);
+      DS.offs[n] = { off, ctx, img, img32: new Uint32Array(img.data.buffer) };
+    }
+    DS.dish = DS.oreDish;
   }
   const cellOf = (fx, fy) => Math.round(clamp(fy, 0, 1) * (DS.n - 1)) * DS.n + Math.round(clamp(fx, 0, 1) * (DS.n - 1));
   const probeIdx = () => cellOf(DS.probe[0], DS.probe[1]);
   function dsPhi() {
-    const st = DS.st, n = DS.n; st.phi.fill(DS.par.phi);
-    if (DS.pace.on) {
+    const st = DS.st, n = 256; st.phi.fill(DS.par.phi);
+    if (DS.pace.on && DS.medium === 'excite') {
       const cx = DS.pace.fx * (n - 1), cy = DS.pace.fy * (n - 1), rc = DS.pace.r / DS.dx;
       for (let j = Math.floor(cy - rc - 1); j <= cy + rc + 1; j++) for (let i = Math.floor(cx - rc - 1); i <= cx + rc + 1; i++) {
         if (i >= 0 && j >= 0 && i < n && j < n && (i - cx) * (i - cx) + (j - cy) * (j - cy) <= rc * rc) st.phi[j * n + i] = 0;
       }
     }
   }
-  function dsResetProbe() { DS.tr = { t: [], u: [], v: [] }; DS.arr = []; DS.speed = NaN; DS.speedFor = -1; DS.lastT = DS.st.T[probeIdx()]; }
+  function curT() { return DS.medium === 'gf' ? DG.F.T : DS.st.T; }
+  function curTime() { return DS.medium === 'gf' ? DG.F.t : DS.medium === 'toy' ? DT.s.gen : DS.st.t; }
+  function dsResetProbe() { DS.tr = { t: [], u: [], v: [], w: [] }; DS.arr = []; DS.speed = NaN; DS.speedFor = -1; DS.lastT = DS.medium === 'toy' ? 0 : curT()[probeIdx()]; DS.peaks = []; }
+  // the steady state of the local kinetics (stable rest state, or the unstable centre of the oscillation)
+  function oreSteady(par) { const u = rdRest(par, par.phi); return Number.isFinite(u) ? u : 0.01; }
+  function oreOscillates(par) { const u = oreSteady(par), J = rdJac(par, u, u, par.phi); return J[0][0] + J[1][1] > 0 || J[0][0] * J[1][1] - J[0][1] * J[1][0] < 0; }
+  // a point on the limit cycle (just after the jump up), used to start a dish that oscillates in step
+  function oreCycleStart(par) { return oreCycle(par).states[0]; }
+  const cycleCache = {};
+  function oreCycle(par) {
+    // states along one period of the local oscillation (or along one excitation pulse), every 0.01 time units
+    const key = [par.eps, par.q, par.f, par.phi].join();
+    if (cycleCache[key]) return cycleCache[key];
+    const osc = oreOscillates(par);
+    const tr = rdTrajectory(par, par.phi, osc ? 40 : 6, 0.002);
+    let states = tr;
+    if (osc) {
+      // keep the last full period: between the last two upward crossings of u = 0.3
+      const up = []; for (let i = 1; i < tr.length; i++) if (tr[i - 1][0] < 0.3 && tr[i][0] >= 0.3) up.push(i);
+      if (up.length >= 2) states = tr.slice(up[up.length - 2], up[up.length - 1]);
+    }
+    const thin = []; for (let i = 0; i < states.length; i += 5) thin.push(states[i]);
+    return (cycleCache[key] = { osc, states: thin, period: osc ? thin.length * 0.01 : NaN });
+  }
   function dsClear() {
-    const st = DS.st; DS.ur = rdRest(DS.par, DS.par.phi);
-    for (const a of [st.u, st.v, st.u2, st.v2]) a.fill(DS.ur);
-    st.T.fill(-1e308); st.t = 0; dsPhi(); dsResetProbe();
-    DS.c0 = rdPlaneSpeed(DS.par, DS.dx, DS.dt, 40);
+    if (DS.medium === 'gf') return dgStart(false);
+    if (DS.medium === 'toy') return dtStart();
+    const st = DS.st; DS.ur = oreSteady(DS.par);
+    let u0 = DS.ur, v0 = DS.ur;
+    if (DS.medium === 'osc') { const s = oreCycleStart(DS.par); u0 = s[0]; v0 = s[1]; }   // the whole dish starts in step
+    st.u.fill(u0); st.v.fill(v0); st.u2.fill(u0); st.v2.fill(v0);
+    st.T.fill(-1e308); st.Tp.fill(-1e308); st.t = 0; dsPhi(); dsResetProbe();
+    gridCheck();
     dirtyAll();
   }
   function dsBroken() {
     // a straight wave across the upper half of the dish, moving right, with a free end at the centre
+    if (!isOre()) return;
     dsClear();
-    const n = DS.n, st = DS.st;
+    const n = 256, st = DS.st;
+    for (let i = 0; i < n * n; i++) { st.u[i] = DS.ur; st.v[i] = DS.ur; }
     for (let j = 0; j < n / 2; j++) for (let i = 0; i < n; i++) {
       const X = (i - n / 2) * DS.dx, idx = j * n + i;
       if (X > -1 && X <= 0) st.u[idx] = 0.8;
       if (X > -4 && X <= -1) st.v[idx] = 0.3;
     }
   }
+  // random start: blocks of DS.grain cells (on the 256 grid) each get the state at a random moment of one
+  // local oscillation period or one excitation pulse
+  function dsScatter() {
+    if (DS.medium === 'gf') return dgStart(true);
+    if (DS.medium === 'toy') return dtStart();
+    dsClear();
+    const cyc = oreCycle(DS.par);
+    rdSeed(DS.dish, DS.st.u, DS.st.v, cyc.states, DS.grain, Math.random);
+    DS.st.u2.set(DS.st.u); DS.st.v2.set(DS.st.v);
+    dsResetProbe(); dirtyAll();
+  }
   function dsDisc(fx, fy, r, fn) {
-    const n = DS.n, cx = fx * (n - 1), cy = fy * (n - 1), rc = r / DS.dx, st = DS.st;
+    const n = 256, cx = fx * (n - 1), cy = fy * (n - 1), rc = r / DS.dx;
     for (let j = Math.floor(cy - rc); j <= Math.ceil(cy + rc); j++) for (let i = Math.floor(cx - rc); i <= Math.ceil(cx + rc); i++) {
       if (i < 0 || j < 0 || i >= n || j >= n) continue;
       const idx = j * n + i;
-      if (DS.dish.inside[idx] && (i - cx) * (i - cx) + (j - cy) * (j - cy) <= rc * rc) fn(idx);
+      if (DS.oreDish.inside[idx] && (i - cx) * (i - cx) + (j - cy) * (j - cy) <= rc * rc) fn(idx);
     }
   }
   // a cut narrower than about 5 length units heals: the two ends grow back into the gap and rejoin
   const CUT_R = 3, START_R = 1.25;
   function dsApply(fx, fy) {
-    const st = DS.st;
-    if (DS.tool === 'cut') dsDisc(fx, fy, CUT_R, (i) => { st.u[i] = DS.ur; st.v[i] = DS.ur; });
-    else dsDisc(fx, fy, START_R, (i) => { st.u[i] = 0.8; });
+    if (!isOre()) return;
+    const st = DS.st, sc = Math.sqrt(DS.par.D);   // tool sizes scale with the pattern size √D
+    if (DS.tool === 'cut') dsDisc(fx, fy, CUT_R * sc, (i) => { st.u[i] = DS.ur; st.v[i] = DS.ur; });
+    else dsDisc(fx, fy, START_R * sc, (i) => { st.u[i] = 0.8; });
     dirty.A = true;
   }
-  function dsAdvance(steps) {
-    const st = DS.st, pi = probeIdx(), tr = DS.tr;
-    const t0 = performance.now();
-    for (let s = 0; s < steps; s++) {
-      rdSteps(DS.par, DS.dish, st, DS.dx, DS.dt, 1, 0.3);
-      tr.t.push(st.t); tr.u.push(st.u[pi]); tr.v.push(st.v[pi]);
-      if (st.T[pi] !== DS.lastT) { DS.lastT = st.T[pi]; DS.arr.push(DS.lastT); if (DS.arr.length > 30) DS.arr.shift(); }
+  // ---- fed dish ----
+  function dgStart(scatter) {
+    DG.kf = FL.kf; DG.c = gfMake(DG.kf); dgRef();
+    const S2 = gfStepper(DG.kf, [0.045, 0.9, 0.85], 1e-8, 1); gfAdvance(S2, 0.6);
+    const F = DG.F, cells = DG.dish.cells;
+    F.T.fill(-1e308); F.Tp.fill(-1e308); F.t = 0;
+    if (!scatter) { for (const i of cells) { F.x[i] = S2.y[0]; F.z[i] = S2.y[1]; F.v[i] = S2.y[2]; } }
+    else {
+      // states along about six oscillations of the stirred reactor, dealt out in random blocks
+      const samp = []; gfAdvance(S2, 0.1, null, (s) => samp.push(s.y.slice()));
+      const g = Math.max(1, Math.round(DS.grain / 2)), n = DG.n, cn = Math.ceil(n / g), pick = [];
+      for (let q = 0; q < cn * cn; q++) pick.push(samp[Math.floor(Math.random() * samp.length)]);
+      for (const i of cells) { const s = pick[((((i / n) | 0) / g) | 0) * cn + (((i % n) / g) | 0)]; F.x[i] = s[0]; F.z[i] = s[1]; F.v[i] = s[2]; }
     }
-    if (steps) DS.stepMs = 0.85 * DS.stepMs + 0.15 * (performance.now() - t0) / steps;
+    dsResetProbe(); dirtyAll();
+  }
+  // reference: next peak map of the stirred reactor at the same flow rate (computed after the slider settles)
+  let refTimer = 0;
+  function dgRef() {
+    clearTimeout(refTimer);
+    refTimer = setTimeout(() => {
+      const kf = FL.kf, S2 = gfStepper(kf, [0.045, 0.9, 0.85], 1e-8, 1), m = [];
+      gfAdvance(S2, 0.5); gfAdvance(S2, 0.6, (t, v, k) => { if (k === 0) m.push(v); });
+      DG.ref = { kf, peaks: m }; dirty.C = true;
+    }, 250);
+  }
+  // ---- toy model ----
+  function dtStart() {
+    const s = DT.s; s.gen = 0;
+    for (let i = 0; i < s.a.length; i++) { s.a[i] = Math.random(); s.b[i] = Math.random(); s.c[i] = Math.random(); }
+    dsResetProbe(); dirtyAll();
+  }
+  function dsAdvance(steps) {
+    const pi = probeIdx(), tr = DS.tr, t0 = performance.now(), m = DS.medium;
+    if (m === 'toy') {
+      for (let s = 0; s < steps; s++) { turnerStep(DT.dish, DT.nb8, DT.s, DT.al, DT.be, DT.ga); tr.t.push(DT.s.gen); tr.u.push(DT.s.a[pi]); tr.v.push(DT.s.b[pi]); tr.w.push(DT.s.c[pi]); }
+    } else if (m === 'gf') {
+      const F = DG.F, dx = dgDx();
+      for (let s = 0; s < steps; s++) {
+        gfDishSteps(DG.c, DG.dish, F, DG.dt, 1, dx, DG.lev);
+        tr.t.push(F.t); tr.u.push(F.x[pi]); tr.v.push(F.z[pi]);
+        const n = tr.v.length;   // peaks of z at the probe (three point maximum)
+        if (n > 2 && tr.v[n - 2] > tr.v[n - 3] && tr.v[n - 2] >= tr.v[n - 1]) { DS.peaks.push(tr.v[n - 2]); if (DS.peaks.length > 300) DS.peaks.shift(); }
+        if (F.T[pi] !== DS.lastT) { DS.lastT = F.T[pi]; DS.arr.push(DS.lastT); if (DS.arr.length > 30) DS.arr.shift(); }
+      }
+    } else {
+      const st = DS.st;
+      for (let s = 0; s < steps; s++) {
+        rdSteps(DS.par, DS.dish, st, DS.dx, DS.dt, 1, 0.3);
+        tr.t.push(st.t); tr.u.push(st.u[pi]); tr.v.push(st.v[pi]);
+        if (st.T[pi] !== DS.lastT) { DS.lastT = st.T[pi]; DS.arr.push(DS.lastT); if (DS.arr.length > 30) DS.arr.shift(); }
+      }
+      const la = DS.arr[DS.arr.length - 1];
+      if (DS.arr.length && la !== DS.speedFor && st.t - la > 0.3) { DS.speed = rdSpeedAt(DS.dish, st.T, pi, DS.dx, 2, 1.0); DS.speedFor = la; }
+    }
+    if (steps) {
+      const ms = (performance.now() - t0) / steps;
+      if (m === 'gf') DG.stepMs = 0.85 * DG.stepMs + 0.15 * ms; else if (m === 'toy') DT.stepMs = 0.85 * DT.stepMs + 0.15 * ms; else DS.stepMs = 0.85 * DS.stepMs + 0.15 * ms;
+    }
     DS.stepsLast = steps;
-    if (tr.t.length > 9000) for (const a of [tr.t, tr.u, tr.v]) a.splice(0, 3000);
-    // front speed at the probe once the front has passed the four neighbours used for the gradient
-    const la = DS.arr[DS.arr.length - 1];
-    if (DS.arr.length && la !== DS.speedFor && st.t - la > 0.3) { DS.speed = rdSpeedAt(DS.dish, st.T, pi, DS.dx, 2, 1.0); DS.speedFor = la; }
+    if (tr.t.length > 9000) for (const a of [tr.t, tr.u, tr.v, tr.w]) a.splice(0, 3000);
     dirty.A = dirty.B = dirty.C = true;
   }
+  const stepMsNow = () => DS.medium === 'gf' ? DG.stepMs : DS.medium === 'toy' ? DT.stepMs : DS.stepMs;
+  const stepDt = () => DS.medium === 'gf' ? DG.dt * T0 : DS.medium === 'toy' ? 1 : DS.dt;   // s, generations or model units per step
   // period at the probe: reported only for a regular train (the last two intervals agree within 3 %)
   function dsPeriod() {
     const a = DS.arr, n = a.length; if (n < 3) return NaN;
     const P = a[n - 1] - a[n - 2], Q = a[n - 2] - a[n - 3];
-    return Math.abs(P - Q) < 0.03 * P && DS.st.t - a[n - 1] < 2.2 * P ? P : NaN;
+    return Math.abs(P - Q) < 0.03 * P && curTime() - a[n - 1] < 2.2 * P ? P : NaN;
+  }
+  // grid check: lone plane wave speed on this grid against a grid four times finer (excitable medium only)
+  let gridTimer = 0;
+  function gridCheck() {
+    DS.c0 = NaN; DS.c0fine = NaN;
+    if (DS.medium !== 'excite') return;
+    DS.c0 = rdPlaneSpeed(DS.par, DS.dx, DS.dt, 40 * Math.sqrt(DS.par.D));
+    clearTimeout(gridTimer);
+    gridTimer = setTimeout(() => { DS.c0fine = rdPlaneSpeed(DS.par, DS.dx / 4, DS.dt / 16, 40 * Math.sqrt(DS.par.D)); }, 300);
   }
   function dsGeom() {
     const [W, H] = dims.A, s = ps('A'), top = 48 * s, bot = 30 * s;
     const D = Math.max(60, Math.min(W - 24 * s, H - top - bot)), ox = (W - D) / 2, oy = top + (H - top - bot - D) / 2;
     return { ox, oy, D, k: D / DS.n };
   }
+  // phase colors in three bands: red for the first third of the period after a front arrives, then green, then
+  // blue, each blending into the next over the last fifth of its band
+  const PH3 = [[226, 34, 30], [34, 190, 52], [36, 64, 224]], PH = new Uint32Array(256);
+  for (let k = 0; k < 256; k++) {
+    const x = 3 * k / 256, band = Math.floor(x), fr = x - band, w = fr < 0.8 ? 0 : (fr - 0.8) / 0.2, sm = w * w * (3 - 2 * w);
+    const c = mixc(PH3[band], PH3[(band + 1) % 3], sm);
+    PH[k] = (255 << 24) | (c[2] << 16) | (c[1] << 8) | c[0];
+  }
+  const NOPHASE = (255 << 24) | (70 << 16) | (70 << 8) | 70;
+  function renderField() {
+    const n = DS.n, O = DS.offs[n], img = O.img32, cells = DS.dish.cells, m = DS.medium;
+    img.fill(0);
+    if (m === 'toy') {
+      const s = DT.s;
+      for (let k = 0; k < cells.length; k++) { const i = cells[k]; img[i] = (255 << 24) | (((s.c[i] * 255) | 0) << 16) | (((s.b[i] * 255) | 0) << 8) | ((s.a[i] * 255) | 0); }
+    } else if (DS.color === 'phase') {
+      const T = curT(), Tp = m === 'gf' ? DG.F.Tp : DS.st.Tp, t = curTime();
+      for (let k = 0; k < cells.length; k++) {
+        const i = cells[k], P = T[i] - Tp[i];
+        if (!(Tp[i] > -1e300) || !(P > 0)) { img[i] = NOPHASE; continue; }
+        let x = (t - T[i]) / P; x = x < 0 ? 0 : x > 0.999 ? 0.999 : x;
+        img[i] = PH[(x * 256) | 0];
+      }
+    } else if (m === 'gf') {
+      const z = DG.F.z, base = shade(hex(T.glass), 0.75), ce = hex(T.cerium);
+      for (let k = 0; k < cells.length; k++) {
+        const i = cells[k]; let q = (z[i] - 0.5) / 2; q = q < 0 ? 0 : q > 1 ? 1 : q; q = 0.15 + 0.85 * q;
+        img[i] = (255 << 24) | (Math.round(base[2] + (ce[2] - base[2]) * q) << 16) | (Math.round(base[1] + (ce[1] - base[1]) * q) << 8) | Math.round(base[0] + (ce[0] - base[0]) * q);
+      }
+    } else {
+      const v = DS.st.v, inv = 255 / DS.vref;
+      for (let k = 0; k < cells.length; k++) { const i = cells[k]; let q = v[i] * inv; q = q < 0 ? 0 : q > 255 ? 255 : q; img[i] = LUT[q | 0]; }
+    }
+    O.ctx.putImageData(O.img, 0, 0);
+    return O.off;
+  }
   function drawDishA() {
     const k = 'A', ctx = begin(k), [W, H] = dims.A, s = ps(k), g = dsGeom(); DS.geo = g;
-    // field to image
-    const st = DS.st, cells = DS.dish.cells, img = DS.img32, inv = 255 / DS.vref;
-    img.fill(0);
-    for (let c = 0; c < cells.length; c++) { const i = cells[c]; let q = st.v[i] * inv; q = q < 0 ? 0 : q > 255 ? 255 : q; img[i] = LUT[q | 0]; }
-    DS.offCtx.putImageData(DS.img, 0, 0);
+    const off = renderField();
     const cx = g.ox + g.D / 2, cy = g.oy + g.D / 2, R = g.D / 2;
     // shadow and glass rim
     ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 14 * s; ctx.shadowOffsetY = 4 * s;
     ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.arc(cx, cy, R + 6 * s, 0, 7); ctx.fill(); ctx.restore();
     ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R - 1.5 * g.k, 0, 7); ctx.clip();
-    ctx.imageSmoothingEnabled = true; ctx.drawImage(DS.off, g.ox, g.oy, g.D, g.D); ctx.restore();
+    ctx.imageSmoothingEnabled = true; ctx.drawImage(off, g.ox, g.oy, g.D, g.D); ctx.restore();
     ctx.strokeStyle = T.glass; ctx.lineWidth = 3 * s; ctx.beginPath(); ctx.arc(cx, cy, R + 3 * s, 0, 7); ctx.stroke();
     ctx.globalAlpha = 0.35; ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2 * s; ctx.beginPath(); ctx.arc(cx, cy, R - 4 * s, 3.6, 4.6); ctx.stroke(); ctx.globalAlpha = 1;
-    // pacemaker and probe handles
     const px = (fx) => g.ox + (fx * (DS.n - 1) + 0.5) * g.k, py = (fy) => g.oy + (fy * (DS.n - 1) + 0.5) * g.k;
-    if (DS.pace.on) {
+    if (DS.pace.on && DS.medium === 'excite') {
       const hot = DS.drag === 'pace' || (!DS.drag && DS.hover === 'pace'), x = px(DS.pace.fx), y = py(DS.pace.fy), rr = DS.pace.r / DS.dx * g.k;
       ctx.setLineDash([3 * s, 3 * s]); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = (hot ? 2.4 : 1.5) * s; ctx.beginPath(); ctx.arc(x, y, rr, 0, 7); ctx.stroke(); ctx.setLineDash([]);
       grip(ctx, x, y + rr + 9 * s, hot, T.ink, s);
@@ -1185,50 +1496,72 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.moveTo(x, y - r - 4 * s); ctx.lineTo(x, y - 3 * s); ctx.moveTo(x, y + 3 * s); ctx.lineTo(x, y + r + 4 * s); ctx.stroke();
       ctx.font = mono(k, 10.5); halo(ctx, 'probe', x + r + 7 * s, y - r - 2 * s, T.ink, 'left');
     }
-    // the tool's footprint under the pointer
-    if (DS.ptr && !DS.drag && !DS.hover) {
-      const r = (DS.tool === 'cut' ? CUT_R : START_R) / DS.dx * g.k;
+    if (DS.ptr && !DS.drag && !DS.hover && isOre()) {
+      const r = (DS.tool === 'cut' ? CUT_R : START_R) * Math.sqrt(DS.par.D) / DS.dx * g.k;
       ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5 * s; ctx.setLineDash([4 * s, 3 * s]);
       ctx.beginPath(); ctx.arc(px(DS.ptr[0]), py(DS.ptr[1]), r, 0, 7); ctx.stroke(); ctx.setLineDash([]);
     }
     // scale bar and caption
-    const bar = 10 / DS.dx * g.k, bx = g.ox + g.D - bar, by = g.oy + g.D + 12 * s;
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * s; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + bar, by); ctx.moveTo(bx, by - 4 * s); ctx.lineTo(bx, by + 4 * s); ctx.moveTo(bx + bar, by - 4 * s); ctx.lineTo(bx + bar, by + 4 * s); ctx.stroke();
-    ctx.font = mono(k, 10); ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('10 length units', bx + bar, by + 6 * s);
-    if (W > 520 * s) { ctx.textAlign = 'left'; ctx.fillText('red: ferroin at rest · blue: oxidized catalyst v in a wave', g.ox, by + 6 * s); }
+    const m = DS.medium, by = g.oy + g.D + 12 * s;
+    ctx.font = mono(k, 10); ctx.fillStyle = T.muted; ctx.textBaseline = 'top';
+    let barLen = 0, barText = '';
+    if (isOre()) { barLen = 10 / DS.dx; barText = m === 'osc' ? `10 units = ${(10 * Math.sqrt(2e-5 * DS.par.D * TAU_S) * 10).toFixed(1)} mm` : '10 length units'; }
+    else if (m === 'gf') { barLen = 0.5 / (DG.diam / (DG.n - 2)); barText = '5 mm'; }
+    if (barLen) {
+      const bar = barLen * g.k, bx = g.ox + g.D - bar;
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * s; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + bar, by); ctx.moveTo(bx, by - 4 * s); ctx.lineTo(bx, by + 4 * s); ctx.moveTo(bx + bar, by - 4 * s); ctx.lineTo(bx + bar, by + 4 * s); ctx.stroke();
+      ctx.textAlign = 'right'; ctx.fillText(barText, bx + bar, by + 6 * s);
+    }
+    const cap = m === 'toy' ? 'TOY MODEL, not BZ chemistry · red a, green b, blue c'
+      : DS.color === 'phase' ? 'color: oscillation phase · red, green, blue for each third of the local period'
+        : m === 'gf' ? 'yellow: Ce(IV), oxidized catalyst (exaggerated)' : 'red: ferroin at rest · blue: oxidized catalyst v';
+    if (W > 520 * s || m === 'toy') { ctx.textAlign = 'left'; ctx.fillStyle = m === 'toy' ? T.pos : T.muted; if (m === 'toy') ctx.font = mono(k, 10.5, 600); ctx.fillText(cap, g.ox, by + 6 * s, Math.max(60, g.D - (barLen ? barLen * g.k + 16 * s : 0))); }
   }
-  // probe trace (pane B)
+  // pane B: what the probe sees over time
   function drawDishB() {
-    const k = 'B', ctx = begin(k), [W, H] = dims.B, s = ps(k);
+    const k = 'B', ctx = begin(k), [W, H] = dims.B, s = ps(k), m = DS.medium, tr = DS.tr;
     const b = { L: 44 * s, R: W - 14 * s, T: 54 * s, B: H - 34 * s };
     if (b.B - b.T < 40) return;
-    const tw = 15, t1 = Math.max(tw, DS.st.t), t0 = t1 - tw;
-    const { X, Y } = axes(ctx, k, b, [t0, t1], [0, 0.9], { xt: niceTicks(t0, t1, 5), yt: [0, 0.2, 0.4, 0.6, 0.8], xf: (v) => v.toFixed(0), yf: (v) => v.toFixed(1), xl: 't (model units)', title: 'At the probe', sub: 'ticks: a front arrives (u rises through 0.3)' });
+    const t1n = curTime();
+    const tw = m === 'toy' ? 150 : m === 'gf' ? 600 / T0 : m === 'osc' ? 30 : 15, t1 = Math.max(tw, t1n), t0 = t1 - tw;
+    const yr = m === 'gf' ? [0, 2.6] : m === 'toy' ? [0, 1] : m === 'osc' ? [0, 1] : [0, 0.9];
+    const xf = m === 'gf' ? (v) => (v * T0).toFixed(0) : (v) => v.toFixed(0);
+    const xt = m === 'gf' ? niceTicks(t0 * T0, t1 * T0, 5).map((v) => v / T0) : niceTicks(t0, t1, 5);
+    const xl = m === 'gf' ? 't (s)' : m === 'toy' ? 'generation' : m === 'osc' ? 't (τ, 1 τ = 50 s)' : 't (model units)';
+    const title = m === 'toy' ? 'At the probe (toy model)' : 'At the probe';
+    const sub = m === 'toy' ? 'a, b, c: three made up species' : m === 'gf' ? 'z (Ce(IV)) and x (HBrO₂, ×4); ticks: z rises through 0.75' : 'ticks: a front arrives (u rises through 0.3)';
+    const { X, Y } = axes(ctx, k, b, [t0, t1], yr, { xt, yt: niceTicks(yr[0], yr[1], 4), xf, yf: (v) => v.toFixed(1), xl, title, sub });
     ctx.save(); ctx.beginPath(); ctx.rect(b.L, b.T, b.R - b.L, b.B - b.T); ctx.clip();
-    const tr = DS.tr, i0 = Math.max(0, lowerBound(tr.t, t0) - 1), lw = projOn() ? 2.4 : 1.7;
-    ctx.lineWidth = lw; ctx.strokeStyle = T.equi; polyline(ctx, tr.t, tr.u, X, Y, i0);
-    ctx.strokeStyle = T.neg; polyline(ctx, tr.t, tr.v, X, Y, i0);
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2;
-    for (const a of DS.arr) if (a > t0) { ctx.beginPath(); ctx.moveTo(X(a), b.T); ctx.lineTo(X(a), b.T + 8 * s); ctx.stroke(); }
+    const i0 = Math.max(0, lowerBound(tr.t, t0) - 1), lw = projOn() ? 2.4 : 1.7;
+    ctx.lineWidth = lw;
+    if (m === 'toy') { ctx.strokeStyle = '#d83a2e'; polyline(ctx, tr.t, tr.u, X, Y, i0); ctx.strokeStyle = '#2f9a4a'; polyline(ctx, tr.t, tr.v, X, Y, i0); ctx.strokeStyle = '#2f5fd0'; polyline(ctx, tr.t, tr.w, X, Y, i0); }
+    else if (m === 'gf') { ctx.strokeStyle = T.equi; polyline(ctx, tr.t, tr.u.map((x) => 4 * x), X, Y, i0); ctx.strokeStyle = T.neg; polyline(ctx, tr.t, tr.v, X, Y, i0); }
+    else { ctx.strokeStyle = T.equi; polyline(ctx, tr.t, tr.u, X, Y, i0); ctx.strokeStyle = T.neg; polyline(ctx, tr.t, tr.v, X, Y, i0); }
+    if (m !== 'toy') { ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2; for (const a of DS.arr) if (a > t0) { ctx.beginPath(); ctx.moveTo(X(a), b.T); ctx.lineTo(X(a), b.T + 8 * s); ctx.stroke(); } }
     ctx.restore();
     ctx.font = mono(k, 11, 600);
-    halo(ctx, 'u  HBrO₂', b.R - 6 * s, b.T + 12 * s, T.equi, 'right');
-    halo(ctx, 'v  oxidized catalyst', b.R - 6 * s, b.T + 28 * s, T.neg, 'right');
+    if (m === 'toy') { halo(ctx, 'a', b.R - 40 * s, b.T + 12 * s, '#d83a2e', 'right'); halo(ctx, 'b', b.R - 24 * s, b.T + 12 * s, '#2f9a4a', 'right'); halo(ctx, 'c', b.R - 8 * s, b.T + 12 * s, '#2f5fd0', 'right'); }
+    else {
+      halo(ctx, m === 'gf' ? 'x  HBrO₂ × 4' : 'u  HBrO₂', b.R - 6 * s, b.T + 12 * s, T.equi, 'right');
+      halo(ctx, m === 'gf' ? 'z  Ce(IV)' : 'v  oxidized catalyst', b.R - 6 * s, b.T + 28 * s, T.neg, 'right');
+    }
   }
-  // nullclines and the probe's path (pane C)
+  // pane C: local kinetics (Oregonator media), next peak map at the probe (fed dish), or the toy triangle
   function drawDishC() {
+    const m = DS.medium;
+    if (m === 'gf') return drawDishCgf();
+    if (m === 'toy') return drawDishCtoy();
     const k = 'C', ctx = begin(k), [W, H] = dims.C, s = ps(k), p = DS.par;
     const b = { L: 44 * s, R: W - 14 * s, T: 54 * s, B: H - 34 * s };
     if (b.B - b.T < 40) return;
-    const xr = [-3, 0], yr = [0, 0.45];
-    const { X, Y } = axes(ctx, k, b, xr, yr, { xt: [-3, -2, -1, 0], yt: [0, 0.1, 0.2, 0.3, 0.4], xf: dec, yf: (v) => v.toFixed(1), xl: 'u (log scale)', title: 'Excitable kinetics: v against u', sub: 'dashed: nullclines without diffusion · black: the probe, last 15 units' });
+    const xr = [-4, 0], yr = [0, m === 'osc' ? 0.35 : 0.45];
+    const { X, Y } = axes(ctx, k, b, xr, yr, { xt: [-4, -3, -2, -1, 0], yt: niceTicks(yr[0], yr[1], 4), xf: dec, yf: (v) => v.toFixed(1), xl: 'u (log scale)', title: m === 'osc' ? 'Oscillatory kinetics: v against u' : 'Excitable kinetics: v against u', sub: 'dashed: nullclines without diffusion · black: the probe, last stretch' });
     ctx.save(); ctx.beginPath(); ctx.rect(b.L, b.T, b.R - b.L, b.B - b.T); ctx.clip();
     const lw = projOn() ? 2.2 : 1.5;
-    // du/dt = 0 (no diffusion): v = [(u − u²)(u + q)/(u − q) − φ]/f, for u > q
     ctx.strokeStyle = T.equi; ctx.lineWidth = lw; ctx.setLineDash([6, 4]); ctx.beginPath();
     let pen = false;
-    for (let i = 0; i <= 400; i++) {
-      const u = Math.pow(10, xr[0] + (xr[1] - xr[0]) * i / 400); if (u <= p.q * 1.0005) { pen = false; continue; }
+    for (let i = 0; i <= 500; i++) {
+      const u = Math.pow(10, xr[0] + (xr[1] - xr[0]) * i / 500); if (u <= p.q * 1.0005) { pen = false; continue; }
       const v = ((u - u * u) * (u + p.q) / (u - p.q) - p.phi) / p.f, y = Y(v);
       if (v < -0.1 || v > 1) { pen = false; continue; }
       if (pen) ctx.lineTo(X(Math.log10(u)), y); else { ctx.moveTo(X(Math.log10(u)), y); pen = true; }
@@ -1237,22 +1570,59 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.strokeStyle = T.neg; ctx.beginPath();
     for (let i = 0; i <= 200; i++) { const lu = xr[0] + (xr[1] - xr[0]) * i / 200, u = Math.pow(10, lu); i ? ctx.lineTo(X(lu), Y(u)) : ctx.moveTo(X(lu), Y(u)); }
     ctx.stroke(); ctx.setLineDash([]);
-    // probe path over the last 15 time units
-    const tr = DS.tr, i0 = Math.max(0, lowerBound(tr.t, DS.st.t - 15));
+    const tr = DS.tr, i0 = Math.max(0, lowerBound(tr.t, curTime() - (m === 'osc' ? 30 : 15)));
     ctx.strokeStyle = T.ink; ctx.lineWidth = lw; ctx.globalAlpha = 0.8;
-    polyline(ctx, tr.u.map((u) => Math.log10(Math.max(u, 1e-4))), tr.v, X, Y, i0);
+    polyline(ctx, tr.u.map((u) => Math.log10(Math.max(u, 1e-5))), tr.v, X, Y, i0);
     ctx.globalAlpha = 1;
-    const ur = rdRest(p, p.phi);
+    const ur = oreSteady(p);
     ctx.fillStyle = T.muted; ctx.beginPath(); ctx.arc(X(Math.log10(ur)), Y(ur), 4 * s, 0, 7); ctx.fill();
     const n = tr.t.length - 1;
-    if (n >= 0) { ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(Math.log10(Math.max(tr.u[n], 1e-4))), Y(tr.v[n]), 4.5 * s, 0, 7); ctx.fill(); }
+    if (n >= 0) { ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(Math.log10(Math.max(tr.u[n], 1e-5))), Y(tr.v[n]), 4.5 * s, 0, 7); ctx.fill(); }
     ctx.restore();
     ctx.font = mono(k, 10.5);
     halo(ctx, 'du/dt = 0', X(-0.38), Y(((0.42 - 0.42 * 0.42) * (0.42 + p.q) / (0.42 - p.q) - p.phi) / p.f) - 12 * s, T.equi, 'center');
     halo(ctx, 'dv/dt = 0', X(-0.6) - 8 * s, Y(0.251), T.neg, 'right');
-    halo(ctx, 'rest', X(Math.log10(ur)) + 7 * s, Y(ur) - 9 * s, T.muted, 'left');
+    halo(ctx, oreOscillates(p) ? 'steady state (unstable)' : 'rest', X(Math.log10(ur)) + 7 * s, Y(ur) - 9 * s, T.muted, 'left');
   }
-
+  function drawDishCgf() {
+    const k = 'C', ctx = begin(k), [W, H] = dims.C, s = ps(k);
+    const b = { L: 48 * s, R: W - 14 * s, T: 54 * s, B: H - 34 * s };
+    if (b.B - b.T < 40) return;
+    const a = DS.peaks.slice(-300), all = a.concat(DG.ref ? DG.ref.peaks : []);
+    let lo = 0.6, hi = 2.6;
+    if (all.length > 3) { lo = Math.min(...all); hi = Math.max(...all); const pad = Math.max(0.15, (hi - lo) * 0.1); lo -= pad; hi += pad; }
+    const t = niceTicks(lo, hi, 4);
+    const { X, Y } = axes(ctx, k, b, [lo, hi], [lo, hi], { xt: t, yt: t, xf: (v) => v.toFixed(2), yf: (v) => v.toFixed(2), xl: 'peak n', title: 'Next peak map at the probe', sub: 'gray: the stirred reactor at the same k_f · blue: this spot of the dish' });
+    ctx.save(); ctx.beginPath(); ctx.rect(b.L, b.T, b.R - b.L, b.B - b.T); ctx.clip();
+    ctx.strokeStyle = T.muted; ctx.setLineDash([4, 4]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(lo), Y(lo)); ctx.lineTo(X(hi), Y(hi)); ctx.stroke(); ctx.setLineDash([]);
+    if (DG.ref && Math.abs(DG.ref.kf - DG.kf) < 1e-12) { ctx.fillStyle = T.muted; ctx.globalAlpha = 0.5; const c = DG.ref.peaks; for (let i = 0; i + 1 < c.length; i++) { ctx.beginPath(); ctx.arc(X(c[i]), Y(c[i + 1]), 2.2 * s, 0, 7); ctx.fill(); } ctx.globalAlpha = 1; }
+    ctx.fillStyle = T.neg;
+    for (let i = 0; i + 1 < a.length; i++) { ctx.beginPath(); ctx.arc(X(a[i]), Y(a[i + 1]), 2.6 * s, 0, 7); ctx.fill(); }
+    ctx.restore();
+  }
+  function drawDishCtoy() {
+    const k = 'C', ctx = begin(k), [W, H] = dims.C, s = ps(k);
+    ctx.font = mono(k, 11.5, 600); ctx.fillStyle = T.pos; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Toy model, not BZ chemistry', 14 * s, 12 * s);
+    ctx.font = mono(k, 10); ctx.fillStyle = T.muted;
+    const lines = ['A. Turner (2009): average a, b, c over each 3 × 3 block,', 'then a′ = ā + ā(αb̄ − γc̄), b′ = b̄ + b̄(βc̄ − αā),', 'c′ = c̄ + c̄(γā − βb̄), each kept in [0, 1].', 'No units, rates or concentrations: a, b, c are made up.'];
+    lines.forEach((l, i) => ctx.fillText(l, 14 * s, (30 + 14 * i) * s, W - 24 * s));
+    // (a, b, c) at the probe as a point in a triangle with corners a, b, c
+    const top = (30 + 14 * lines.length + 14) * s, size = Math.min(W - 60 * s, H - top - 20 * s);
+    if (size < 60) return;
+    const cx = W / 2, A = [cx, top + 6 * s], B = [cx - size / 2, top + size * 0.87], Cc = [cx + size / 2, top + size * 0.87];
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(...A); ctx.lineTo(...B); ctx.lineTo(...Cc); ctx.closePath(); ctx.stroke();
+    ctx.font = mono(k, 11, 600);
+    halo(ctx, 'a', A[0], A[1] - 2 * s, '#d83a2e', 'center', 'bottom'); halo(ctx, 'b', B[0] - 6 * s, B[1], '#2f9a4a', 'right'); halo(ctx, 'c', Cc[0] + 6 * s, Cc[1], '#2f5fd0', 'left');
+    const tr = DS.tr, n = tr.t.length, i0 = Math.max(0, n - 120);
+    const pt = (i) => { const a = tr.u[i], bb = tr.v[i], c = tr.w[i], sm = a + bb + c || 1; return [(a * A[0] + bb * B[0] + c * Cc[0]) / sm, (a * A[1] + bb * B[1] + c * Cc[1]) / sm]; };
+    ctx.strokeStyle = T.ink; ctx.lineWidth = projOn() ? 2 : 1.4; ctx.beginPath();
+    for (let i = i0; i < n; i++) { const q = pt(i); i === i0 ? ctx.moveTo(q[0], q[1]) : ctx.lineTo(q[0], q[1]); }
+    ctx.stroke();
+    if (n) { const q = pt(n - 1); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(q[0], q[1], 4 * s, 0, 7); ctx.fill(); }
+    ctx.font = mono(k, 10); ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('the probe, last 120 generations', cx, B[1] + 8 * s);
+  }
   // =====================================================================
   // 3. Flow reactor: Györgyi and Field model
   // =====================================================================
@@ -1417,9 +1787,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // =====================================================================
   const PRESETS = {
     osc: { mode: 'beaker', hint: 'f = 1 lies between the two Hopf points, so the steady state is unstable and the beaker settles onto a limit cycle. Each time x (HBrO₂) shoots up, the catalyst is oxidized and the solution snaps to blue, then fades back to red.' },
-    stop: { mode: 'beaker', hint: 'f = 2.6 is above the upper Hopf point: the steady state is stable. After one pulse the beaker stays red. Drag f back below the Hopf point to start the clock again.' },
     target: { mode: 'dish', hint: 'A spot where φ = 0 oscillates by itself and sends out rings, as a speck of dust can in a real dish. Each ring leaves a refractory band behind it, so rings do not pass through each other or back into the spot.' },
     spiral: { mode: 'dish', hint: 'A wave with a free end curls around it into a spiral. Its tip turns with a fixed period, shorter than the pacemaker period. Cut any wave to make a pair that turn in opposite senses.' },
+    mosaic: { mode: 'dish', hint: 'The excitable dish (cited ε, q, f, φ) at pattern size D = 0.5, started from random 2 unit blocks of states along one excitation pulse. Many small spirals form and crowd each other; the field coarsens only slowly. Colored by oscillation phase, it becomes a three color mosaic. This is the real model; for the toy model that inspired the look, pick Toy model under Dish medium.' },
     route: { mode: 'flow', hint: 'The scan steps k_f from 3.10 to 3.30 × 10⁻⁴ s⁻¹. One peak height splits into 2, then 4, then 8, then a smear: period doubling to chaos. Drag k_f on the diagram and watch the next peak map.' },
     fly: { mode: 'flow', hint: 'At k_f = 3.50 × 10⁻⁴ s⁻¹ the reactor is chaotic. Two runs start 10⁻⁶ apart in x; the gap grows exponentially (a straight line on the log plot) until the runs are unrelated.' }
   };
@@ -1430,9 +1800,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('presetHint').textContent = P.hint; $('live').textContent = P.hint;
     setMode(P.mode, true);
     if (name === 'osc') { BK.p.f = 1.0; $('sF').value = 1; bkReset(); }
-    else if (name === 'stop') { BK.p.f = 2.6; $('sF').value = 2.6; bkReset(); }
-    else if (name === 'target') { DS.par.phi = 0.05; $('sPhi').value = 0.05; DS.pace = { on: true, fx: 0.5, fy: 0.5, r: 2 }; $('tPace').checked = true; DS.probe = [0.82, 0.5]; dsClear(); }
-    else if (name === 'spiral') { DS.par.phi = 0.05; $('sPhi').value = 0.05; DS.pace.on = false; $('tPace').checked = false; DS.probe = [0.78, 0.34]; dsBroken(); }
+    else if (name === 'target') { citedPar('excite'); setMedium('excite', true); setColor('chem'); DS.pace = { on: true, fx: 0.5, fy: 0.5, r: 2 }; $('tPace').checked = true; DS.probe = [0.82, 0.5]; dsClear(); }
+    else if (name === 'spiral') { citedPar('excite'); setMedium('excite', true); setColor('chem'); DS.pace.on = false; $('tPace').checked = false; DS.probe = [0.78, 0.34]; dsBroken(); }
+    else if (name === 'mosaic') { citedPar('excite'); PAR.excite.D = 0.5; DS.grain = 8; setMedium('excite', true); setColor('phase'); DS.pace.on = false; $('tPace').checked = false; DS.probe = [0.7, 0.4]; dsScatter(); }
     else if (name === 'route') { FL.kf = 3.2e-4; FL.fly = false; $('tFly').checked = false; $('sKf').value = 3.2; flStart(false); scanStart(3.1, 3.3, 81); }
     else if (name === 'fly') { FL.kf = 3.5e-4; FL.fly = true; FL.lgd = -6; $('tFly').checked = true; $('sDel').value = -6; $('sKf').value = 3.5; flStart(false); }
     syncOutputs(); setPlaying(!reduce || S.playing); dirtyAll();
@@ -1441,13 +1811,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function setMode(m, fromPreset) {
     if (!fromPreset && m !== S.mode) clearPreset();
     S.mode = m; $('stage').dataset.mode = m; setPressed($('modeSeg'), 'm', m);
-    for (const el of document.querySelectorAll('[data-for]')) el.hidden = el.dataset.for !== m;
-    $('flyCtl').hidden = m !== 'flow' || !FL.fly;
+    updateVis();
     $('gl').hidden = !(m === 'beaker' && G.ready);
-    $('sRate').value = S.rateIdx[m];
-    $('unitsLine').textContent = m === 'beaker' ? 'scaled concentrations · beaker time unit τ = 50 s'
-      : m === 'dish' ? 'dimensionless Oregonator units · D = 1 sets the length unit'
-        : 'scaled concentrations · flow rate k_f in s⁻¹ · time in s';
     cans.A.setAttribute('aria-label', m === 'dish' ? 'Petri dish. Drag across a wave to cut it, or to start a wave with the Start tool. Drag the probe or the pacemaker. Arrow keys move the probe; space plays or pauses; R resets; C clears the dish.' : m === 'beaker' ? 'Stirred beaker with its color, and the three scaled concentrations against time. Arrow keys change f.' : 'Flow reactor with its color, and z against time. Arrow keys change the flow rate.');
     cans.B.setAttribute('aria-label', m === 'beaker' ? 'Phase portrait in 3D. Drag or use the arrow keys to turn it.' : m === 'dish' ? 'u and v at the probe against time' : 'Next peak map');
     cans.C.setAttribute('aria-label', m === 'beaker' ? 'Oscillation range against f. Drag the f line to change f.' : m === 'dish' ? 'Nullclines and the path of the probe in the u, v plane' : 'Bifurcation diagram, peaks of z against flow rate. Drag the k_f line to change the flow rate.');
@@ -1455,9 +1820,50 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     requestAnimationFrame(() => { resize(); });
     dirtyAll();
   }
+  // controls shown for the current vessel and, in the dish, the current medium
+  function updateVis() {
+    const m = S.mode;
+    for (const el of document.querySelectorAll('[data-for]')) el.hidden = el.dataset.for !== m || (m === 'dish' && el.dataset.med && !el.dataset.med.split(' ').includes(DS.medium));
+    $('flyCtl').hidden = m !== 'flow' || !FL.fly;
+    $('sRate').value = S.rateIdx[rateKey()];
+    const md = DS.medium;
+    $('unitsLine').textContent = m === 'beaker' ? 'scaled concentrations · beaker time unit τ = 50 s'
+      : m === 'flow' ? 'scaled concentrations · flow rate k_f in s⁻¹ · time in s'
+        : md === 'excite' ? 'dimensionless Oregonator units · D = 1 sets the length unit'
+          : md === 'osc' ? 'beaker chemistry in a layer · τ = 50 s · lengths √(Dτ)'
+            : md === 'gf' ? 'flow reactor chemistry in a fed layer · time in s · lengths in mm'
+              : 'toy model: no units, not BZ chemistry';
+  }
+  // ---- dish medium and its parameters ----
+  function citedPar(md) { Object.assign(PAR[md], PAR0[md]); }
+  function setColor(c) { DS.color = c; setPressed($('colSeg'), 'c', c); dirty.A = true; }
+  function syncDishControls() {
+    if (isOre()) { const p = DS.par; $('sEps').value = p.eps; $('sFd').value = p.f; $('sQ').value = Math.log10(p.q); $('sPhi').value = p.phi; $('sD').value = p.D; }
+    $('sGrain').value = DS.grain; $('sKf2').value = FL.kf * 1e4; $('sDiam').value = DG.diam; $('sAl').value = DT.al; $('sBe').value = DT.be; $('sGa').value = DT.ga;
+    setPressed($('medSeg'), 'd', DS.medium);
+  }
+  function setMedium(md, keep) {
+    DS.medium = md; DS.n = md === 'gf' ? DG.n : 256; DS.dish = md === 'gf' ? DG.dish : DS.oreDish;
+    if (isOre()) DS.par = PAR[md];
+    if (md === 'toy') setColor('chem');
+    syncDishControls(); updateVis();
+    if (!keep) {
+      if (md === 'excite') dsBroken(); else dsScatter();
+      $('presetHint').textContent = {
+        excite: 'Excitable dish: at rest until a wave arrives. A broken wave is curling into a spiral.',
+        osc: 'Oscillatory dish: the beaker chemistry with every point oscillating on its own, started from random blocks of phases. Large blocks leave spirals; small blocks fall into step.',
+        gf: 'Flow fed dish: each spot runs the chaotic flow reactor chemistry, coupled to its neighbors by diffusion.',
+        toy: 'Toy model, not BZ chemistry: Turner\'s rock, paper, scissors rule makes a dense field of spirals in three colors.'
+      }[md];
+    }
+    renderModel(); renderKey(); syncOutputs(); dirtyAll();
+  }
   function renderKey() {
     const m = S.mode, kb = $('keyBox');
     if (m === 'beaker') kb.innerHTML = '<span><i class="swatch sx"></i>x: HBrO₂ (autocatalyst)</span><span><i class="swatch sy"></i>y: Br⁻ (inhibitor)</span><span><i class="swatch sz"></i>z: oxidized catalyst (the color)</span>';
+    else if (m === 'dish' && DS.medium === 'toy') kb.innerHTML = '<span><i class="chip-sw" style="background:#e02020"></i>a (made up species)</span><span><i class="chip-sw" style="background:#20c020"></i>b</span><span><i class="chip-sw" style="background:#2040e0"></i>c</span>';
+    else if (m === 'dish' && DS.color === 'phase') kb.innerHTML = '<span><i class="chip-sw" style="background:rgb(226,34,30)"></i>first third of the period after a front</span><span><i class="chip-sw" style="background:rgb(34,190,52)"></i>second third</span><span><i class="chip-sw" style="background:rgb(36,64,224)"></i>last third</span><span><i class="chip-sw" style="background:#464646"></i>fewer than two fronts so far</span>';
+    else if (m === 'dish' && DS.medium === 'gf') kb.innerHTML = `<span><i class="chip-sw" style="background:${T.cerium}"></i>Ce(IV), oxidized catalyst (exaggerated)</span>`;
     else if (m === 'dish') kb.innerHTML = `<span><i class="chip-sw" style="background:${T.ferroin}"></i>reduced catalyst, ferroin (rest)</span><span><i class="chip-sw" style="background:${T.ferriin}"></i>oxidized catalyst v ≥ ${DS.vref} (wave)</span>`;
     else kb.innerHTML = '<span><i class="swatch sz"></i>run 1</span><span><i class="swatch sb"></i>run 2 (Second run)</span>';
   }
@@ -1466,9 +1872,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (m === 'beaker') el.innerHTML = `<p>The Oregonator of Field and Noyes (1974), a five step skeleton of the Field–Körös–Noyes mechanism, in scaled form: ε dx/dτ = qy − xy + x(1 − x), ε′ dy/dτ = −qy − xy + fz, dz/dτ = x − z. Here x ∝ [HBrO₂], y ∝ [Br⁻], z ∝ [oxidized catalyst] and τ = k<sub>c</sub>Bt.</p>
       <p>ε = 9.90 × 10⁻³, ε′ = 1.98 × 10⁻⁵, q = 7.62 × 10⁻⁵ (R. J. Field, Scholarpedia 2007) for [BrO₃⁻] = 0.06 M, [malonic acid] B = 0.02 M, k<sub>c</sub> = 1 M⁻¹ s⁻¹, so τ = 1 is 50 s. Bromate and malonic acid are held fixed, so this batch never runs down, and the model does not keep the total catalyst fixed.</p>
       <p>Integration: the L stable Rosenbrock pair used by MATLAB's ode23s (Shampine and Reichelt 1997), adaptive, relative tolerance 10⁻⁶; the model is stiff (ε′/ε ≈ 0.002). Hopf points: where the steady state's complex eigenvalue pair crosses Re λ = 0, from the exact Jacobian. Period: time between upward crossings of the steady state value of x. The beaker color is a display mix of red ferroin and blue ferriin, linear in z and full blue at z = 0.2.</p>`;
-    else if (m === 'dish') el.innerHTML = `<p>The two variable Oregonator (Tyson and Fife 1980: [Br⁻] in its fast steady state) with diffusion of u only; the catalyst v stays put, as in a gel: ∂u/∂t = (1/ε)[u − u² − (fv + φ)(u − q)/(u + q)] + D∇²u, ∂v/∂t = u − v. u ∝ [HBrO₂], v ∝ [oxidized catalyst]. φ is an extra steady source of bromide (in the light sensitive ruthenium form of the reaction it is set by the light).</p>
+    else if (m === 'dish' && DS.medium === 'excite') el.innerHTML = `<p>The two variable Oregonator (Tyson and Fife 1980: [Br⁻] in its fast steady state) with diffusion of u only; the catalyst v stays put, as in a gel: ∂u/∂t = (1/ε)[u − u² − (fv + φ)(u − q)/(u + q)] + D∇²u, ∂v/∂t = u − v. u ∝ [HBrO₂], v ∝ [oxidized catalyst]. φ is an extra steady source of bromide (in the light sensitive ruthenium form of the reaction it is set by the light).</p>
       <p>ε = 0.02, q = 0.002, f = 1.4 and φ from 0.05 to 0.08 as used by Adamatzky and coworkers (arXiv:1803.01632); D = 1 sets the length unit. Times and lengths are in the model's own units.</p>
-      <p>Grid: 256 × 256 cells, Δx = 0.25, a round dish with no flux through the wall. Time step Δt = 0.005: diffusion explicit (D Δt/Δx² = 0.08, stable below 1/4), kinetics linearly implicit Euler, because the (u − q)/(u + q) term is very stiff (in the tail of a wave, where that step would push u below zero, a positivity preserving Patankar form is used). Checked against grids 4 to 8 times finer: plane wave speed within 1 %, spiral period within 3 %. The pacemaker is a disc of radius 2 where φ = 0; there the steady state is unstable and the spot oscillates. Front speed at the probe: c = 1/|∇T|, T the time each cell's u rose through 0.3. Color: mixed from red to blue linearly in v, full blue at v = ${DS.vref}.</p>`;
+      <p>Grid: 256 × 256 cells, Δx = 0.25 (pattern size: changing D rescales all lengths by √D; the grid check in Measurements compares the lone plane wave speed with a 4 times finer grid), a round dish with no flux through the wall. Time step Δt = 0.005: diffusion explicit (D Δt/Δx² = 0.08, stable below 1/4), kinetics linearly implicit Euler, because the (u − q)/(u + q) term is very stiff (in the tail of a wave, where that step would push u below zero, a positivity preserving Patankar form is used). Checked against grids 4 to 8 times finer: plane wave speed within 1 %, spiral period within 3 %. The pacemaker is a disc of radius 2 where φ = 0; there the steady state is unstable and the spot oscillates. Front speed at the probe: c = 1/|∇T|, T the time each cell's u rose through 0.3. Color: mixed from red to blue linearly in v, full blue at v = ${DS.vref}.</p>`;
+    else if (m === 'dish' && DS.medium === 'osc') el.innerHTML = `<p>The beaker's chemistry in a thin layer: the Oregonator with the beaker's values ε = 9.90 × 10⁻³, q = 7.62 × 10⁻⁵, f = 1 (Field, Scholarpedia 2007) and φ = 0, so every point oscillates on its own. Time in τ (50 s).</p>
+      <p>Two variables, not three: bromide y relaxes ε′/ε ≈ 0.002 times faster than x, so it is set to its steady state y = fz/(q + x) (Tyson and Fife 1980), as is standard for reaction diffusion work. This removes the very stiff y equation; the local period becomes 7.45 τ instead of the beaker's 7.74 τ. u = x diffuses with D (times 2 × 10⁻⁵ cm²/s, typical for a small molecule in water, so one length unit is 0.32 mm at D = 1); the catalyst does not move. Same grid and time step as the excitable dish; a uniform dish gives the local oscillation with a period within 0.5 % of the exact reduced model.</p>
+      <p>Random start: blocks of the chosen size each get the state at a random moment of one local period. Large blocks leave phase singularities that wind up into spirals; small blocks pull each other into step and the dish fills with phase waves instead.</p>`;
+    else if (m === 'dish' && DS.medium === 'gf') el.innerHTML = `<p>The flow reactor's Györgyi–Field kinetics in every cell of a 128 × 128 dish, with x, z and v diffusing at D = 2 × 10⁻⁵ cm²/s (assumed equal for all three; bromide is in its fast steady state). Every cell is fed and drained at rate k<sub>f</sub> as in the stirred reactor: an idealization (think of a thin gel fed evenly from below), not an experiment you can buy.</p>
+      <p>Kinetics: fourth order Runge–Kutta at a fixed step of 10⁻⁴ T₀ = ${(1e-4 * T0).toFixed(2)} s, then one explicit diffusion step (stable: Δt/Δx² ≪ 1/4 in units of √(D T₀) = ${(DLEN * 10).toFixed(2)} mm). Without diffusion one cell reproduces the stirred reactor (tested: same period doubling and chaos). The dish diameter sets how many diffusion lengths fit. The phase marker is z rising through 0.75.</p>`;
+    else if (m === 'dish') el.innerHTML = `<p><b>Toy model, not BZ chemistry.</b> A. Turner, "A simple model of the Belousov–Zhabotinsky reaction from first principles" (Bartlett School of Graduate Studies, UCL, 2009). Three made up species a, b, c each eat the next in a cycle, a → b → c → a, like rock, paper, scissors.</p>
+      <p>Each generation every species is averaged over the cell and its eight neighbours (neighbours outside the dish count as the cell itself), then a′ = ā + ā(αb̄ − γc̄), b′ = b̄ + b̄(βc̄ − αā), c′ = c̄ + c̄(γā − βb̄), each clipped to [0, 1]. α = β = γ = 1 is Turner's default; the start is random. There are no rate constants, concentrations, units or diffusion coefficient: the averaging stands in for diffusion and one generation for an unspecified time. It makes spirals because it is a cyclic excitable rule, not because it describes bromate chemistry. Color: red a, green b, blue c.</p>`;
     else el.innerHTML = `<p>The three variable model of Györgyi and Field (Nature 355, 808, 1992) for the cerium catalyzed reaction in a continuously stirred flow reactor: x = [HBrO₂]/X₀, z = [Ce(IV)]/Z₀, v = [bromomalonic acid]/V₀, with [Br⁻] in its fast steady state. Fresh bromate, malonic acid, acid and Ce(III) flow in and the mixture flows out at rate k<sub>f</sub>.</p>
       <p>k₁ = 4.0 × 10⁶ M⁻² s⁻¹, k₂ = 2.0 M⁻³ s⁻¹, k₃ = 3000 M⁻¹ s⁻¹, k₄ = 55.2 M⁻⁵ᐟ² s⁻¹, k₅ = 7000 M⁻¹ s⁻¹, k₆ = 0.09 M⁻¹ s⁻¹, k₇ = 0.23 M⁻¹ s⁻¹; [BrO₃⁻] = 0.1 M, [malonic acid] = 0.25 M, [H⁺] = 0.26 M, [Ce] = 8.33 × 10⁻⁴ M, α = 666.7, β = 0.3478, as tabulated by Buchlovská Nagyová, Jansík and Lampart (Sci. Rep. 2020). Time unit T₀ = 1/(10k₂AHC) = ${T0.toFixed(0)} s.</p>
       <p>Integration: Dormand–Prince 5(4), adaptive, relative tolerance 10⁻⁸. Peaks found by Hermite interpolation inside each step. The largest Lyapunov exponent is a finite time estimate: a third copy is started 10⁻⁷ away and pulled back to that distance every 0.005 T₀ (Benettin et al. 1980). A scan starts each flow rate from the state left by the previous one. The yellow of Ce(IV) is exaggerated for display.</p>`;
@@ -1476,10 +1889,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function syncOutputs() {
     $('oF').textContent = BK.p.f.toFixed(2);
     $('oPhi').textContent = DS.par.phi.toFixed(3);
+    $('oEps').textContent = DS.par.eps.toFixed(4); $('oFd').textContent = DS.par.f.toFixed(2); $('oQ').textContent = sci(DS.par.q, 3); $('oD').textContent = DS.par.D.toFixed(2);
+    $('oGrain').textContent = `${DS.grain} cells = ${(DS.grain * DS.dx).toFixed(1)} units`;
+    $('oKf2').textContent = `${(FL.kf * 1e4).toFixed(3)} × 10⁻⁴ s⁻¹`; $('oDiam').textContent = `${DG.diam.toFixed(1)} cm`;
+    $('oAl').textContent = DT.al.toFixed(2); $('oBe').textContent = DT.be.toFixed(2); $('oGa').textContent = DT.ga.toFixed(2);
     $('oKf').textContent = `${(FL.kf * 1e4).toFixed(3)} × 10⁻⁴ s⁻¹`;
     $('oDel').textContent = dec(FL.lgd);
     const r = rate();
-    $('oRate').textContent = S.mode === 'beaker' ? `${r} τ/s = ${r * TAU_S}× real time` : S.mode === 'dish' ? `${r} time units/s` : `${Math.round(r * T0)}× real time`;
+    const rk = rateKey();
+    $('oRate').textContent = rk === 'beaker' ? `${r} τ/s = ${r * TAU_S}× real time` : rk === 'dish' ? `${r} time units/s` : rk === 'dosc' ? `${r} τ/s = ${r * TAU_S}× real time`
+      : rk === 'dgf' ? `${r}× real time` : rk === 'dtoy' ? `${r} generations/s` : `${Math.round(r * T0)}× real time`;
     $('flyCtl').hidden = S.mode !== 'flow' || !FL.fly;
   }
   function measHTML(rows) { return rows.map(([dt, dd, wide]) => `<div${wide ? ' class="wide"' : ''}><dt>${dt}</dt><dd>${dd}</dd></div>`).join(''); }
@@ -1495,15 +1914,28 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         ['Steady z*', sci(BK.fixed[2], 3)],
         ['Hopf points', `f = ${HOPF[0].toFixed(4)} and ${HOPF[1].toFixed(4)}`, true]
       ]);
-    } else if (m === 'dish') {
-      const P = dsPeriod(), c = DS.speed, J = rdJac(DS.par, DS.ur, DS.ur, DS.par.phi), tr = J[0][0] + J[1][1], det = J[0][0] * J[1][1] - J[0][1] * J[1][0];
+    } else if (m === 'dish' && DS.medium === 'toy') {
+      $('meas').innerHTML = measHTML([['Generation', String(DT.s.gen)], ['Model', 'toy, not BZ chemistry'], ['At the probe', `a ${DT.s.a[probeIdx()].toFixed(2)}, b ${DT.s.b[probeIdx()].toFixed(2)}, c ${DT.s.c[probeIdx()].toFixed(2)}`, true]]);
+    } else if (m === 'dish' && DS.medium === 'gf') {
+      const P = dsPeriod(), a = DS.arr, n = a.length, last = n > 1 ? (a[n - 1] - a[n - 2]) * T0 : NaN;
       $('meas').innerHTML = measHTML([
+        ['Time between fronts at probe', Number.isFinite(P) ? `${(P * T0).toFixed(1)} s` : Number.isFinite(last) ? `${last.toFixed(1)} s<br><small>last; irregular</small>` : '—'],
+        ['Flow rate k_f', `${(FL.kf * 1e4).toFixed(3)} × 10⁻⁴ s⁻¹`],
+        ['Grid spacing', `${(DG.diam / (DG.n - 2) * 10).toFixed(2)} mm<br><small>= ${dgDx().toFixed(3)} √(D T₀)</small>`],
+        ['Peaks recorded', String(DS.peaks.length)]
+      ]);
+    } else if (m === 'dish') {
+      const P = dsPeriod(), c = DS.speed, osc = oreOscillates(DS.par), cyc = oreCycle(DS.par);
+      const sq = Math.sqrt(DS.par.D), err = (DS.c0 - DS.c0fine) / DS.c0fine;
+      const rows = [
         ['Period at probe', Number.isFinite(P) ? P.toFixed(2) : DS.arr.length >= 3 ? 'irregular' : '—'],
         ['Front speed at probe', Number.isFinite(c) && Number.isFinite(P) ? c.toFixed(2) : Number.isFinite(c) ? `${c.toFixed(2)}<br><small>last front</small>` : '—'],
         ['Wavelength c × period', Number.isFinite(c) && Number.isFinite(P) ? (c * P).toFixed(1) : '—'],
-        ['Lone plane wave c₀', `${DS.c0.toFixed(2)}<br><small>this grid, this φ</small>`],
-        ['Medium at rest', tr < 0 && det > 0 ? 'excitable: rest state stable' : 'oscillatory: rest state unstable', true]
-      ]);
+        osc ? ['Local period, no diffusion', `${cyc.period.toFixed(2)}`] : ['Lone plane wave c₀', Number.isFinite(DS.c0) ? `${DS.c0.toFixed(2)}<br><small>${Number.isFinite(err) ? `grid check: ${(100 * err).toFixed(1)} % from a 4× finer grid` : 'grid check running'}</small>` : '—'],
+        ['Local kinetics', osc ? 'oscillatory: steady state unstable' : 'excitable: rest state stable', true],
+        ['Grid spacing', `Δx/√D = ${(DS.dx / sq).toFixed(2)}<br><small>${DS.dx / sq > 0.3 ? 'coarse: patterns are less accurate' : 'as tested'}</small>`]
+      ];
+      $('meas').innerHTML = measHTML(rows);
     } else {
       const P = flPeriod(), pat = flPattern(), L = flLyap(), d = FL.sep[FL.sep.length - 1];
       const settleLeft = (FL.settle - FL.S.t) * T0;
@@ -1520,7 +1952,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function setPlaying(on) { S.playing = on; $('play').textContent = on ? 'Pause' : 'Play'; }
   function resetMode() {
     if (S.preset && PRESETS[S.preset].mode === S.mode) { applyPreset(S.preset); return; }
-    if (S.mode === 'beaker') bkReset(); else if (S.mode === 'dish') dsClear(); else flStart(false);
+    if (S.mode === 'beaker') bkReset(); else if (S.mode === 'dish') { if (DS.medium === 'excite') dsClear(); else dsScatter(); } else flStart(false);
   }
 
   $('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) applyPreset(b.dataset.p); });
@@ -1530,20 +1962,34 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('reset').addEventListener('click', resetMode);
   function setF(f) { f = clamp(Math.round(f / 0.01) * 0.01, 0.3, 3); f = +f.toFixed(2); if (f === BK.p.f) return; $('sF').value = f; bkSetF(f); clearPreset(); syncOutputs(); }
   $('sF').addEventListener('input', () => setF(+$('sF').value));
-  $('sPhi').addEventListener('input', () => {
-    DS.par.phi = +$('sPhi').value; clearPreset();
-    DS.ur = rdRest(DS.par, DS.par.phi); dsPhi(); DS.c0 = rdPlaneSpeed(DS.par, DS.dx, DS.dt, 40); syncOutputs(); dirtyAll();
-  });
+  // Oregonator dish parameters: change the kinetics in place (the pattern keeps running)
+  function setOre(key, v) { DS.par[key] = v; clearPreset(); DS.ur = oreSteady(DS.par); dsPhi(); gridCheck(); syncOutputs(); renderMeas(); dirtyAll(); }
+  $('sPhi').addEventListener('input', () => setOre('phi', +$('sPhi').value));
+  $('sEps').addEventListener('input', () => setOre('eps', +$('sEps').value));
+  $('sFd').addEventListener('input', () => setOre('f', +$('sFd').value));
+  $('sQ').addEventListener('input', () => setOre('q', Math.pow(10, +$('sQ').value)));
+  $('sD').addEventListener('input', () => setOre('D', +$('sD').value));
+  $('sGrain').addEventListener('input', () => { DS.grain = +$('sGrain').value; syncOutputs(); });
+  $('medSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { clearPreset(); setMedium(b.dataset.d); } });
+  $('colSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { setColor(b.dataset.c); renderKey(); } });
+  $('scatter').addEventListener('click', () => { clearPreset(); dsScatter(); });
+  $('cited').addEventListener('click', () => { if (!isOre()) return; citedPar(DS.medium); syncDishControls(); setOre('phi', DS.par.phi); });
+  $('sKf2').addEventListener('input', () => setKf(+$('sKf2').value));
+  $('sDiam').addEventListener('input', () => { DG.diam = +$('sDiam').value; clearPreset(); syncOutputs(); dirtyAll(); });
+  for (const [id, key] of [['sAl', 'al'], ['sBe', 'be'], ['sGa', 'ga']]) $(id).addEventListener('input', () => { DT[key] = +$(id).value; clearPreset(); syncOutputs(); });
   $('tPace').addEventListener('change', () => { DS.pace.on = $('tPace').checked; dsPhi(); clearPreset(); dirtyAll(); });
   $('clearDish').addEventListener('click', () => { clearPreset(); dsClear(); });
+  $('uniform').addEventListener('click', () => { clearPreset(); dgStart(false); });
   $('halfWave').addEventListener('click', () => { clearPreset(); dsBroken(); });
-  function setKf(v) { v = clamp(Math.round(v / 0.005) * 0.005, 3, 5); v = +v.toFixed(3); if (Math.abs(v * 1e-4 - FL.kf) < 1e-12) return; FL.kf = v * 1e-4; $('sKf').value = v; flStart(true); clearPreset(); syncOutputs(); }
+  function setKf(v) { v = clamp(Math.round(v / 0.005) * 0.005, 3, 5); v = +v.toFixed(3); if (Math.abs(v * 1e-4 - FL.kf) < 1e-12) return; FL.kf = v * 1e-4; $('sKf').value = v; $('sKf2').value = v; flStart(true);
+    if (DG.c) { DG.kf = FL.kf; DG.c = gfMake(DG.kf); DS.peaks = []; if (S.mode === 'dish' && DS.medium === 'gf') dgRef(); }
+    clearPreset(); syncOutputs(); }
   $('sKf').addEventListener('input', () => setKf(+$('sKf').value));
   $('tFly').addEventListener('change', () => { FL.fly = $('tFly').checked; if (FL.fly) flRestartB(); clearPreset(); syncOutputs(); dirtyAll(); });
   $('sDel').addEventListener('input', () => { FL.lgd = +$('sDel').value; flRestartB(); clearPreset(); syncOutputs(); });
   $('scanPD').addEventListener('click', () => scanStart(3.1, 3.3, 81));
   $('scanAll').addEventListener('click', () => scanStart(3.0, 5.0, 101));
-  $('sRate').addEventListener('input', () => { S.rateIdx[S.mode] = +$('sRate').value; syncOutputs(); });
+  $('sRate').addEventListener('input', () => { S.rateIdx[rateKey()] = +$('sRate').value; syncOutputs(); });
 
   // ---------- pointer: draggable lines on pane C (f or k_f) ----------
   function handleC(ev) {
@@ -1598,7 +2044,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const f = dishXY(ev), pxl = DS.geo.k * (DS.n - 1), tol = 10 * ps('A') * (ev.pointerType === 'touch' ? 2 : 1);
     const d = (a, b) => Math.hypot((a[0] - b[0]) * pxl, (a[1] - b[1]) * pxl);
     if (d(f, DS.probe) <= tol) return 'probe';
-    if (DS.pace.on) {
+    if (DS.pace.on && DS.medium === 'excite') {
       // the whole pacemaker disc and its grip just below it can be grabbed
       const rr = DS.pace.r / DS.dx / (DS.n - 1), gy = DS.pace.fy + rr + 9 * ps('A') / pxl;
       if (d(f, [DS.pace.fx, gy]) <= tol || d(f, [DS.pace.fx, DS.pace.fy]) <= rr * pxl + tol / 2) return 'pace';
@@ -1619,7 +2065,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ev.preventDefault(); cans.A.focus({ preventScroll: true });
     if (h) { DS.drag = h; cans.A.style.cursor = 'grabbing'; return; }
     const f = dishXY(ev);
-    if (!inDish(f)) return;
+    if (!inDish(f) || !isOre()) return;
     DS.stroke = f; dsApply(f[0], f[1]); clearPreset();
   });
   cans.A.addEventListener('pointermove', (ev) => {
@@ -1631,13 +2077,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       return;
     }
     if (DS.stroke) {
-      const a = DS.stroke, len = Math.hypot(f[0] - a[0], f[1] - a[1]) * (DS.n - 1) * DS.dx, r = DS.tool === 'cut' ? CUT_R : START_R, m = Math.max(1, Math.ceil(len / (0.5 * r)));
+      const a = DS.stroke, len = Math.hypot(f[0] - a[0], f[1] - a[1]) * (DS.n - 1) * DS.dx, r = (DS.tool === 'cut' ? CUT_R : START_R) * Math.sqrt(DS.par.D), m = Math.max(1, Math.ceil(len / (0.5 * r)));
       for (let i = 1; i <= m; i++) { const p = [a[0] + (f[0] - a[0]) * i / m, a[1] + (f[1] - a[1]) * i / m]; if (inDish(p)) dsApply(p[0], p[1]); }
       DS.stroke = f; DS.ptr = f; return;
     }
     const h = dishHandle(ev); if (h !== DS.hover) { DS.hover = h; dirty.A = true; }
     DS.ptr = inDish(f) && ev.pointerType !== 'touch' ? f : null; dirty.A = true;
-    cans.A.style.cursor = h ? 'grab' : inDish(f) ? 'crosshair' : 'default';
+    cans.A.style.cursor = h ? 'grab' : inDish(f) && isOre() ? 'crosshair' : 'default';
   });
   const endA = () => { DS.stroke = null; if (DS.drag) { DS.drag = null; dirty.A = true; } };
   cans.A.addEventListener('pointerup', endA); cans.A.addEventListener('pointercancel', endA);
@@ -1657,7 +2103,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else if (m === 'beaker' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown')) setF(BK.p.f + ((e.key === 'ArrowLeft' || e.key === 'ArrowDown') ? -0.01 : 0.01) * big);
     else if (m === 'flow' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown')) setKf(FL.kf * 1e4 + ((e.key === 'ArrowLeft' || e.key === 'ArrowDown') ? -0.005 : 0.005) * big);
     else if (m === 'dish' && e.key.startsWith('Arrow')) {
-      const st = 1 / DS.dx / (DS.n - 1) * (e.shiftKey ? 5 : 1), p = DS.probe.slice();
+      const st = 4 / (DS.n - 1) * (e.shiftKey ? 5 : 1), p = DS.probe.slice();
       if (e.key === 'ArrowLeft') p[0] -= st; else if (e.key === 'ArrowRight') p[0] += st; else if (e.key === 'ArrowUp') p[1] -= st; else p[1] += st;
       moveHandle('probe', p);
     } else return;
@@ -1709,7 +2155,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function clockText() {
     const m = S.mode;
     if (m === 'beaker') return [`t = ${(BK.t * TAU_S / 60).toFixed(1)} min`, `τ = ${BK.t.toFixed(1)}`];
-    if (m === 'dish') return [`t = ${DS.st.t.toFixed(1)}`, 'model units'];
+    if (m === 'dish') {
+      const md = DS.medium;
+      if (md === 'toy') return [`generation ${DT.s.gen}`, 'toy model'];
+      if (md === 'gf') return [`t = ${(DG.F.t * T0).toFixed(0)} s`, `${(DG.F.t * T0 / 60).toFixed(1)} min`];
+      if (md === 'osc') return [`t = ${(DS.st.t * TAU_S / 60).toFixed(1)} min`, `τ = ${DS.st.t.toFixed(1)}`];
+      return [`t = ${DS.st.t.toFixed(1)}`, 'model units'];
+    }
     return [`t = ${(FL.S.t * T0).toFixed(0)} s`, `${(FL.S.t * T0 / 60).toFixed(1)} min`];
   }
   let last = performance.now(), frameMs = 0, last3D = 0, lastUI = 0;
@@ -1719,7 +2171,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (S.playing) {
       if (m === 'beaker') { bkAdvance(rate() * dtw); stirAngle += dtw * 9; }
       else if (m === 'dish') {
-        const want = rate() * dtw / DS.dt, cap = Math.max(1, Math.floor(12 / Math.max(DS.stepMs, 0.05)));
+        const want = rate() * dtw / stepDt(), cap = Math.max(1, Math.floor(12 / Math.max(stepMsNow(), 0.05)));
         DS.acc = (DS.acc || 0) + want; let n = Math.min(cap, Math.floor(DS.acc)); DS.acc = Math.min(DS.acc - n, 2 * cap);
         if (n > 0) dsAdvance(n);
       } else { flAdvance(rate() * dtw); stirAngle += dtw * 9; flowPhase += dtw * FL.kf * 2500; }
@@ -1731,7 +2183,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (now - lastUI > 200) {
       lastUI = now; renderMeas();
       const [a, b] = clockText(); $('tclock').firstChild.textContent = a; $('rateTag').textContent = b;
-      $('perf').textContent = `Frame ${frameMs.toFixed(1)} ms` + (m === 'dish' ? ` · ${DS.stepsLast} steps of 256 × 256 per frame, ${DS.stepMs.toFixed(2)} ms each` : '');
+      $('perf').textContent = `Frame ${frameMs.toFixed(1)} ms` + (m === 'dish' ? ` · ${DS.stepsLast} steps of ${DS.n} × ${DS.n} per frame, ${stepMsNow().toFixed(2)} ms each` : '');
       if (m === 'flow') $('scanBar').style.width = (100 * (SC.on ? SC.k / SC.n : SC.pts.length ? 1 : 0)).toFixed(1) + '%';
     }
     requestAnimationFrame(loop);
@@ -1741,7 +2193,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   tokens();
   init3D();
   if (G.ready) themeGL();
-  dsInit(); dsClear();
+  dsInit(); dsClear(); syncDishControls();
   flStart(false);
   const ro = new ResizeObserver(() => resize());
   for (const id of ['paneA', 'paneB', 'paneC']) ro.observe($(id));
@@ -1750,7 +2202,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   setPlaying(!reduce);
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirtyAll(); drawAll(); });
-  window.__bz = { get frameMs() { return frameMs; }, S, BK, BD, DS, FL, SC, G, HOPF, applyPreset, setMode, setF, setKf, setPlaying, scanStart, scanTick, bdTick, dirtyAll, dsApply, dsAdvance, bkAdvance, flAdvance, renderMeas, flPattern, flLyap, bkPeriod, dsPeriod,
+  window.__bz = { get frameMs() { return frameMs; }, S, BK, BD, DS, FL, SC, G, HOPF, applyPreset, setMode, setF, setKf, setPlaying, scanStart, scanTick, bdTick, dirtyAll, setMedium, setColor, dsScatter, dsClear, DG, DT, PAR, oreCycle, dsApply, dsAdvance, bkAdvance, flAdvance, renderMeas, flPattern, flLyap, bkPeriod, dsPeriod,
     dishPx(fx, fy) { const g = DS.geo, r = cans.A.getBoundingClientRect(); return [r.left + g.ox + (fx * (DS.n - 1) + 0.5) * g.k, r.top + g.oy + (fy * (DS.n - 1) + 0.5) * g.k]; } };
   requestAnimationFrame(loop);
 })();

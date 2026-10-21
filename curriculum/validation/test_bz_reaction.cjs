@@ -9,7 +9,8 @@ const assert = require('node:assert/strict'), { core } = require('./demo_source.
 let count = 0; const test = (name, fn) => { fn(); count++; console.log('PASS', name); };
 function close(a, b, rel = 1e-10, abs = 1e-15) { assert(Number.isFinite(a) && Math.abs(a - b) <= abs + rel * Math.abs(b), `expected ${b}, got ${a}`); }
 const C = core('bz-reaction', 'ORE,oreRhs,oreJac,oreFixed,eig3,oreMaxRe,oreHopf,ros23Step,oreIntegrate,oreFixedStep,upCrossings,oreTauSeconds,' +
-  'RD,rdReact,rdRest,rdJac,rdDish,rdSteps,rdDiffuse,rdSpeedAt,rdPlaneSpeed,GF,gfMake,gfY,gfRhs,gfStepper,gfAdvance,gfLyapunov');
+  'RD,rdReact,rdRest,rdJac,rdDish,rdSteps,rdDiffuse,rdSpeedAt,rdPlaneSpeed,GF,gfMake,gfY,gfRhs,gfStepper,gfAdvance,gfLyapunov,' +
+  'rdLocalStep,rdTrajectory,rdSeed,wavePhase,gfDishSteps,gfDishAlloc,mooreDish,turnerStep');
 const P = (f) => Object.assign({}, C.ORE, { f });
 
 // ---------- stirred beaker ----------
@@ -224,6 +225,123 @@ test('Györgyi–Field: two runs 1e-6 apart separate at 3.5 but not at 3.0 × 10
   const a = sep(3.5e-4), b = sep(3.0e-4);
   console.log(`   distance after 1.5 T0: ${a.toExponential(2)} (3.5), ${b.toExponential(2)} (3.0)`);
   assert(a > 0.05 && b < 1e-4);
+});
+
+
+// ---------- dish versions of the beaker, the flow reactor, and the toy model ----------
+const OSC = { eps: 9.90e-3, q: 7.62e-5, f: 1, phi: 0, D: 1 };
+const fieldOf = (n, u0, v0) => { const N = n * n; return { u: new Float64Array(N).fill(u0), v: new Float64Array(N).fill(v0), u2: new Float64Array(N), v2: new Float64Array(N), phi: new Float64Array(N), T: new Float64Array(N).fill(-1e308), Tp: new Float64Array(N).fill(-1e308), t: 0 }; };
+
+test('oscillatory dish: a uniform dish follows the beaker kinetics (two variable reduction) cell for cell', () => {
+  const n = 24, d = C.rdDish(n, true), st = fieldOf(n, 0.5, 0.1);
+  let u = 0.5, v = 0.1;
+  for (let k = 0; k < 4000; k++) { C.rdSteps(OSC, d, st, 0.25, 0.005, 1, 0.3); [u, v] = C.rdLocalStep(OSC, u, v, 0, 0.005); }
+  let worst = 0; for (const i of d.cells) worst = Math.max(worst, Math.abs(st.u[i] - u) / u, Math.abs(st.v[i] - v) / v);
+  assert(worst < 1e-12, `uniform dish departs from one cell by ${worst}`);
+  // its period against the reduced ODE (RK4, h = 2e-6) and against the three variable beaker
+  const per = (step, dt, T) => { let a = 0.5, b = 0.1, t = 0, pa = a; const c = []; while (t < T) { [a, b] = step(a, b, dt); t += dt; if (pa < 0.1 && a >= 0.1) c.push(t); pa = a; } return c[c.length - 1] - c[c.length - 2]; };
+  const pDish = per((a, b, dt) => C.rdLocalStep(OSC, a, b, 0, dt), 0.005, 40);
+  const F = (a, b) => [(a - a * a - OSC.f * b * (a - OSC.q) / (a + OSC.q)) / OSC.eps, a - b];
+  const pRef = per((a, b, h) => { const k1 = F(a, b), k2 = F(a + h / 2 * k1[0], b + h / 2 * k1[1]), k3 = F(a + h / 2 * k2[0], b + h / 2 * k2[1]), k4 = F(a + h * k3[0], b + h * k3[1]); return [a + h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]), b + h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])]; }, 2e-6, 25);
+  console.log(`   period: dish step ${pDish.toFixed(4)} τ, reduced ODE ${pRef.toFixed(4)} τ, three variable beaker 7.7365 τ`);
+  assert(Math.abs(pDish - pRef) / pRef < 0.006);
+  assert(Math.abs(pRef - 7.7365) / 7.7365 < 0.04);
+});
+
+test('oscillatory dish: u stays positive; random block seeding gives uniform blocks of states from the list', () => {
+  const n = 64, d = C.rdDish(n, true), st = fieldOf(n, 0, 0), states = C.rdTrajectory(OSC, 0, 10, 0.01);
+  let seed = 11; const rng = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  C.rdSeed(d, st.u, st.v, states, 8, rng);
+  for (let bj = 0; bj < n / 8; bj++) for (let bi = 0; bi < n / 8; bi++) {
+    const i0 = bj * 8 * n + bi * 8;
+    for (let j = 0; j < 8; j++) for (let i = 0; i < 8; i++) { const k = i0 + j * n + i; assert(st.u[k] === st.u[i0] && st.v[k] === st.v[i0]); }
+    assert(states.some((s) => s[0] === st.u[i0] && s[1] === st.v[i0]));
+  }
+  let lo = Infinity; for (let k = 0; k < 2000; k++) { C.rdSteps(OSC, d, st, 0.25, 0.005, 1, 0.3); if (k % 50 === 0) for (const i of d.cells) lo = Math.min(lo, st.u[i]); }
+  assert(lo > 0, `u min ${lo}`);
+});
+
+test('phase coloring: in an oscillating dish the phase of a cell rises steadily from 0 to 1 over each period', () => {
+  const n = 12, d = C.rdDish(n, true), st = fieldOf(n, 0.5, 0.1), i = d.cells[10];
+  const ph = [];
+  for (let k = 0; k < 8000; k++) { C.rdSteps(OSC, d, st, 0.25, 0.005, 1, 0.3); ph.push([st.t, C.wavePhase(st.t, st.T[i], st.Tp[i]), st.T[i]]); }
+  const seg = ph.filter((p) => Number.isFinite(p[1]) && p[2] === ph[ph.length - 1][2]);   // since the last front
+  const all = ph.filter((p) => Number.isFinite(p[1]));
+  assert(all.length > 1000, 'phase defined after two fronts');
+  let drops = 0; for (let k = 1; k < all.length; k++) if (all[k][1] < all[k - 1][1]) drops++;
+  const fronts = new Set(all.map((p) => p[2])).size;
+  assert.equal(drops, fronts - 1, 'phase falls back to 0 only when a new front arrives');
+  for (let k = 1; k < seg.length; k++) assert(seg[k][1] >= seg[k - 1][1]);
+  const P = st.T[i] - st.Tp[i]; close(C.wavePhase(st.T[i] + 0.25 * P, st.T[i], st.Tp[i]), 0.25, 1e-12);
+  assert(Number.isNaN(C.wavePhase(5, 3, -1e308)));
+});
+
+test('fed dish: without diffusion each cell is the stirred reactor (RK4 at 1e-4 T0 against the adaptive DP5(4))', () => {
+  const kf = 3.5e-4, c = C.gfMake(kf), n = 6, d = C.rdDish(n, false), F = C.gfDishAlloc(n);
+  for (const i of d.cells) { F.x[i] = 0.045; F.z[i] = 0.9; F.v[i] = 0.85; }
+  // over about one oscillation (0.01 T0 = 23 s), against the adaptive integrator at tolerance 1e-12, with step halving
+  const S = C.gfStepper(kf, [0.045, 0.9, 0.85], 1e-12, 1); C.gfAdvance(S, 0.01);
+  const i = d.cells[0];
+  const errAt = (dt) => { const G = C.gfDishAlloc(n); for (const j of d.cells) { G.x[j] = 0.045; G.z[j] = 0.9; G.v[j] = 0.85; } C.gfDishSteps(c, d, G, dt, Math.round(0.01 / dt), 1e9); return Math.max(Math.abs(G.x[i] - S.y[0]) / S.y[0], Math.abs(G.z[i] - S.y[1]) / S.y[1], Math.abs(G.v[i] - S.y[2]) / S.y[2]); };
+  const e1 = errAt(1e-4), e2 = errAt(5e-5);
+  console.log(`   after 0.01 T0: relative error ${e1.toExponential(2)} at the demo step 1e-4 T0, ${e2.toExponential(2)} at half of it`);
+  assert(e1 < 1e-4 && e1 / e2 > 12, 'fourth order convergence');
+  // the same period doubling and chaos as the reactor: distinct peak heights of z in one cell
+  const peaksOf = (k) => {
+    const cc = C.gfMake(k * 1e-4), G = C.gfDishAlloc(n); for (const j of d.cells) { G.x[j] = 0.045; G.z[j] = 0.9; G.v[j] = 0.85; }
+    const pk = []; let a = 0, b = 0;
+    for (let s = 0; s < 60000; s++) { C.gfDishSteps(cc, d, G, 1e-4, 1, 1e9); const z = G.z[i]; if (s > 40000 && b > a && b >= z) { const den = a - 2 * b + z; pk.push(b - (den ? (z - a) * (z - a) / (8 * den) : 0)); } a = b; b = z; }
+    const v = pk.sort((p, q) => p - q); let m = 1; for (let k2 = 1; k2 < v.length; k2++) if (v[k2] - v[k2 - 1] > 3e-3) m++; return [m, v.length];
+  };
+  const p2 = peaksOf(3.2), pc = peaksOf(3.5);
+  console.log(`   one cell: k_f 3.2 → ${p2[0]} peak heights of ${p2[1]}; 3.5 → ${pc[0]} of ${pc[1]}`);
+  assert.equal(p2[0], 2); assert(pc[0] > 20, "no short repeat at 3.5");
+});
+
+test('fed dish: one step equals RK4 in every cell followed by one explicit diffusion step (independent code)', () => {
+  const kf = 3.3e-4, c = C.gfMake(kf), n = 7, d = C.rdDish(n, true), F = C.gfDishAlloc(n), dt = 1e-4, dx = 0.05;
+  let seed = 3; const rng = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (const i of d.cells) { F.x[i] = 0.01 + 0.3 * rng(); F.z[i] = 0.6 + rng(); F.v[i] = 0.84 + 0.01 * rng(); }
+  const x0 = Float64Array.from(F.x), z0 = Float64Array.from(F.z), v0 = Float64Array.from(F.v);
+  C.gfDishSteps(c, d, F, dt, 1, dx);
+  const rk = {}, f = (y) => C.gfRhs(c, y, [0, 0, 0]);
+  for (const i of d.cells) {
+    const y = [x0[i], z0[i], v0[i]], k1 = f(y), k2 = f(y.map((q, m) => q + dt / 2 * k1[m])), k3 = f(y.map((q, m) => q + dt / 2 * k2[m])), k4 = f(y.map((q, m) => q + dt * k3[m]));
+    rk[i] = y.map((q, m) => q + dt / 6 * (k1[m] + 2 * k2[m] + 2 * k3[m] + k4[m]));
+  }
+  let tot0 = [0, 0, 0], tot1 = [0, 0, 0];
+  for (const i of d.cells) {
+    const ii = i % n, jj = (i - ii) / n, nbrs = [[ii - 1, jj], [ii + 1, jj], [ii, jj - 1], [ii, jj + 1]].map(([a, b]) => (a >= 0 && b >= 0 && a < n && b < n && d.inside[b * n + a]) ? b * n + a : i);
+    const want = [0, 1, 2].map((m) => rk[i][m] + dt / (dx * dx) * (nbrs.reduce((s2, q) => s2 + rk[q][m], 0) - 4 * rk[i][m]));
+    close(F.x[i], want[0], 1e-12); close(F.z[i], want[1], 1e-12); close(F.v[i], want[2], 1e-12);
+    for (let m = 0; m < 3; m++) { tot0[m] += rk[i][m]; tot1[m] += [F.x[i], F.z[i], F.v[i]][m]; }
+  }
+  for (let m = 0; m < 3; m++) close(tot1[m], tot0[m], 1e-13);   // the diffusion step conserves each species
+});
+
+test('toy model (Turner 2009, not BZ): one update agrees with a hand calculation, values stay in [0, 1]', () => {
+  const n = 5, d = C.rdDish(n, false), nb8 = C.mooreDish(d), N = n * n;
+  const s = { a: new Float32Array(N), b: new Float32Array(N), c: new Float32Array(N), a2: new Float32Array(N), b2: new Float32Array(N), c2: new Float32Array(N), gen: 0 };
+  // interior cells (1..3, 1..3); the centre cell (2,2) sees all nine interior cells
+  for (let j = 1; j <= 3; j++) for (let i = 1; i <= 3; i++) { const k = j * n + i; s.a[k] = 0.1 * i; s.b[k] = 0.2 + 0.1 * j; s.c[k] = 0.05 * (i + j); }
+  // hand: ā = mean of 0.1·i = 0.2, b̄ = mean of 0.2 + 0.1·j = 0.4, c̄ = mean of 0.05(i + j) = 0.2
+  const al = 1, be = 1, ga = 1, A = 0.2, B = 0.4, Cc = 0.2;
+  C.turnerStep(d, nb8, s, al, be, ga);
+  const k = 2 * n + 2;
+  close(s.a[k], A + A * (al * B - ga * Cc), 1e-6); close(s.b[k], B + B * (be * Cc - al * A), 1e-6); close(s.c[k], Cc + Cc * (ga * A - be * B), 1e-6);
+  // corner cell (1,1): five of its eight neighbours lie outside the dish and count as the cell itself
+  const kc = n + 1, mean = (arr) => (6 * arr[kc] + arr[kc + 1] + arr[kc + n] + arr[kc + n + 1]) / 9;
+  assert.equal(s.gen, 1);
+  // run a random field: everything stays in [0, 1]
+  const t = { a: new Float32Array(N), b: new Float32Array(N), c: new Float32Array(N), a2: new Float32Array(N), b2: new Float32Array(N), c2: new Float32Array(N), gen: 0 };
+  let seed = 5; const rng = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let q = 0; q < N; q++) { t.a[q] = rng(); t.b[q] = rng(); t.c[q] = rng(); }
+  const a0 = mean(t.a), b0 = mean(t.b), c0 = mean(t.c);
+  C.turnerStep(d, nb8, t, 1, 1, 1);
+  const cl = (x) => Math.min(1, Math.max(0, x));
+  close(t.a[kc], cl(a0 + a0 * (b0 - c0)), 1e-6); close(t.b[kc], cl(b0 + b0 * (c0 - a0)), 1e-6); close(t.c[kc], cl(c0 + c0 * (a0 - b0)), 1e-6);
+  for (let r = 0; r < 50; r++) C.turnerStep(d, nb8, t, 1, 1, 1);
+  for (const q of d.cells) for (const arr of [t.a, t.b, t.c]) assert(arr[q] >= 0 && arr[q] <= 1);
 });
 
 console.log(`${count} tests passed`);
