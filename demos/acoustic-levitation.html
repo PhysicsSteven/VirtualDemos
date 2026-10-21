@@ -45,7 +45,7 @@ img { max-width: 100%; }
   --equi: #a7740b;
   --accent: #2b60b5;
   --heat0: #fcfdfe; --heat1: #f3d58a; --heat2: #e08a35; --heat3: #a8361f; --heat4: #3d0f0a;
-  --bowl: #8d99a8; --can: #c3c8ce; --mesh: #2a2e33; --bead: #f4f1ea; --water: #4aa3df; --steel: #8e979f; --mic: #a7740b;
+  --bowl: #8d99a8; --can: #c3c8ce; --mesh: #2a2e33; --bead: #f4f1ea; --water: #4aa3df; --steel: #8e979f; --mic: #a7740b; --pocket: #23897d;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -55,7 +55,7 @@ img { max-width: 100%; }
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
     --equi: #e2b350; --accent: #69a0ff;
     --heat0: #10161e; --heat1: #3f1b12; --heat2: #94381f; --heat3: #e3832f; --heat4: #fbe7a6;
-    --bowl: #5d6878; --can: #9aa1a9; --mesh: #1a1d21; --bead: #f4f1ea; --water: #6dbcf0; --steel: #a9b2ba; --mic: #e2b350; color-scheme: dark;
+    --bowl: #5d6878; --can: #9aa1a9; --mesh: #1a1d21; --bead: #f4f1ea; --water: #6dbcf0; --steel: #a9b2ba; --mic: #e2b350; --pocket: #4cc3b4; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
@@ -63,7 +63,7 @@ img { max-width: 100%; }
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
   --equi: #e2b350; --accent: #69a0ff;
   --heat0: #10161e; --heat1: #3f1b12; --heat2: #94381f; --heat3: #e3832f; --heat4: #fbe7a6;
-  --bowl: #5d6878; --can: #9aa1a9; --mesh: #1a1d21; --bead: #f4f1ea; --water: #6dbcf0; --steel: #a9b2ba; --mic: #e2b350; color-scheme: dark;
+  --bowl: #5d6878; --can: #9aa1a9; --mesh: #1a1d21; --bead: #f4f1ea; --water: #6dbcf0; --steel: #a9b2ba; --mic: #e2b350; --pocket: #4cc3b4; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -101,6 +101,10 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .legend b { display: block; font-weight: 700; color: var(--ink); font-size: 0.78rem; }
 .legend i { display: block; width: 150px; height: 9px; border-radius: 2px; margin: 4px 0 2px; border: 1px solid var(--line); }
 .legend span { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.7rem; }
+.mictag { position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; white-space: nowrap; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.74rem; color: var(--mic); font-weight: 600;
+  background: color-mix(in srgb, var(--canvas) 84%, transparent); border: 1px solid color-mix(in srgb, var(--mic) 55%, transparent); border-radius: 5px; padding: 1px 6px; }
+.mictag.off { opacity: 0.62; }
+.legend small { display: block; font-size: 0.7rem; margin-top: 2px; max-width: 190px; }
 .tip3d { position: absolute; right: 10px; top: 8px; z-index: 2; pointer-events: none; font-size: 0.75rem; color: var(--muted); text-align: right; max-width: 60%; }
 
 .rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
@@ -118,6 +122,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
+#play { min-width: 5.2em; }   /* Play and Pause take the same width, so the controls never rewrap and resize the stage */
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
 .seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
@@ -151,7 +156,8 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
 .swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
 .swatch.ring { width: 14px; height: 14px; border: 2px solid var(--accent); border-radius: 50%; margin: 0 4px; }
 .swatch.bead { width: 12px; height: 12px; border: 1px solid var(--muted); border-radius: 50%; background: var(--bead); margin: 0 5px; }
-.swatch.mic { width: 12px; height: 12px; border: 2px solid var(--mic); border-radius: 50%; margin: 0 5px; }
+.swatch.mic { width: 18px; height: 18px; margin: 0 2px; color: var(--mic); border: 0; }
+.swatch.pocket { width: 14px; height: 10px; border: 0; border-radius: 50%; background: var(--pocket); opacity: 0.8; margin: 0 4px; }
 .swatch.curve { border-color: var(--ink); border-top-width: 2px; }
 .swatch.grav { border-color: var(--muted); border-top-style: dashed; }
 
@@ -195,10 +201,16 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     <div class="stage" id="stage">
       <div class="stage-ctl">
         <div class="seg" role="group" aria-label="View">
-          <button type="button" id="v3d" aria-pressed="true">3D</button>
-          <button type="button" id="vFlat" aria-pressed="false">Slice</button>
+          <button type="button" id="vField" aria-pressed="true">3D field</button>
+          <button type="button" id="vPock" aria-pressed="false">Trap pockets</button>
+          <button type="button" id="v3d" aria-pressed="false">Slice</button>
+          <button type="button" id="vFlat" aria-pressed="false">Flat</button>
         </div>
-        <div class="seg" role="group" aria-label="Colors on the slice">
+        <div class="seg" role="group" aria-label="What the 3D field shows" id="fieldSeg">
+          <button type="button" id="fP" aria-pressed="true">Wave p(t)</button>
+          <button type="button" id="fA" aria-pressed="false">Amplitude |p|</button>
+        </div>
+        <div class="seg" role="group" aria-label="Colors on the slice" id="colorSeg">
           <button type="button" id="cP" aria-pressed="true">Pressure |p|</button>
           <button type="button" id="cU" aria-pressed="false">Potential U</button>
         </div>
@@ -209,8 +221,9 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
       <div class="pane" id="pane">
         <div class="view" id="viewBox">
           <canvas id="flat" tabindex="0" hidden aria-label="Slice through the levitator axis, colored by the pressure amplitude or the trap potential. Drag a trap ring up or down to move the traps (this sets the phase of the top bowl), drag the gold microphone, click a ring or the axis to drop a bead. Keys: up and down move the traps, left and right change the drive, space pauses, B adds a bead, F fills the traps, C clears, S sweeps the phase."></canvas>
-          <div class="legend" id="legend"><b id="legT">|p|</b><i id="legBar"></i><span><em id="legLo" style="font-style:normal">0</em><em id="legHi" style="font-style:normal">1</em></span></div>
-          <div class="tip3d" id="tip3d">Drag to turn · scroll to zoom · drag a ring to move the traps</div>
+          <div class="legend" id="legend"><b id="legT">|p|</b><i id="legBar"></i><span><em id="legLo" style="font-style:normal">0</em><em id="legHi" style="font-style:normal">1</em></span><small id="legSub" hidden></small></div>
+          <div class="mictag" id="micTag" aria-hidden="true">mic</div>
+          <div class="tip3d" id="tip3d">Drag to turn · scroll to zoom · drag a ring to move the traps · drag the microphone</div>
         </div>
         <div class="side" id="sideBox">
           <canvas id="plot" tabindex="0" aria-label="The trap potential U plus gravity along the axis, with traps and beads marked. Up and down arrows move the traps."></canvas>
@@ -247,6 +260,20 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
           <button type="button" class="btn" id="ph0">Phase to 0</button>
         </div>
         <p class="hint" id="phHint"></p>
+      </section>
+
+      <section id="sec3d">
+        <h2>3D field</h2>
+        <div id="opBox">
+          <div class="slider-head"><label for="op">Opacity</label><output id="opOut" class="mono" for="op"></output></div>
+          <input type="range" id="op" min="0.1" max="1" step="0.05" value="0.5">
+        </div>
+        <div id="lvlBox">
+          <div class="slider-head"><label for="lvl">Pocket level, share of the deepest U</label><output id="lvlOut" class="mono" for="lvl"></output></div>
+          <input type="range" id="lvl" min="0.15" max="0.8" step="0.05" value="0.25">
+        </div>
+        <div class="chips"><button type="button" class="btn" id="cut" aria-pressed="true">Cut away the near half</button></div>
+        <p class="hint" id="hint3d"></p>
       </section>
 
       <section>
@@ -303,6 +330,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
           <div><dt>|p| at the microphone</dt><dd id="rMic">—</dd></div>
           <div><dt>You hear</dt><dd id="rTone">400 Hz</dd></div>
         </dl>
+        <p class="hint"><b>Drag the microphone through nodes and antinodes; with Sound on you hear |p| here.</b></p>
         <p class="hint" id="sndHint">40 kHz is ultrasound, far above the roughly 20 kHz limit of human hearing. The Sound button plays a 400 Hz tone instead, the real frequency divided by 100, whose loudness follows the pressure amplitude |p| at the gold microphone. Drag the microphone through nodes and antinodes, or sweep the phase and listen to the pattern pass it.</p>
       </section>
 
@@ -315,7 +343,8 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
         <div class="key">
           <span><i class="swatch ring"></i>Trap on the axis: drag to move all traps, click to drop a bead in it</span>
           <span><i class="swatch bead"></i>Bead, to scale when large enough; a small bead is drawn at least a few pixels across</span>
-          <span><i class="swatch mic"></i>Microphone for the sound</span>
+          <span><svg class="swatch mic" viewBox="0 0 18 18" aria-hidden="true"><circle cx="7" cy="7" r="4.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4.6 5.6h4.8M4.6 8.4h4.8" stroke="currentColor" stroke-width="1.1"/><path d="M10.3 10.3l5.2 5.2" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Microphone: drag it; with Sound on you hear |p| at its head</span>
+          <span><i class="swatch pocket"></i>Trap pocket: where U is below the chosen level</span>
           <span><i class="swatch curve"></i>U + Wz along the axis</span>
           <span><i class="swatch grav"></i>Gravity alone, Wz</span>
         </div>
@@ -451,12 +480,50 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   // axial wavenumber of a set of sources at a point on the axis: the rate the phase of p advances along z.
   // For a bowl aimed at the centre it is k⟨cosθ⟩ there, so the nodes are λ/(2⟨cosθ⟩) apart, more than λ/2.
   function kAxis(sources, z) { const h = 1e-6, a = fieldAt(sources, 0, 0, z - h), b = fieldAt(sources, 0, 0, z + h); let d = Math.atan2(b[1], b[0]) - Math.atan2(a[1], a[0]); d -= TAU * Math.round(d / TAU); return Math.abs(d) / (2 * h); }
+
+  // ---- 3D grids for the volume views ----
+  // Uniform axis from lo to hi with spacing close to h (both ends included).
+  function gridAxis(lo, hi, h) { const n = Math.round((hi - lo) / h) + 1, a = new Float64Array(n); for (let i = 0; i < n; i++) a[i] = lo + (hi - lo) * i / (n - 1); return a; }
+  // The field of a set of sources (unit drive) at every point of a grid xs × ys × zs, point n = (k·ny + j)·nx + i (x fastest).
+  // comps = 2 stores p (re, im); comps = 8 stores p and ∇p as fieldAt does. Points where mask(x, y, z) is false stay 0.
+  // xs and ys must be symmetric about 0 and the sources mirror symmetric in the planes x = 0 and y = 0 (both bowls and the
+  // single emitter are): then p is even in x and y and ∂p/∂x is odd in x, ∂p/∂y odd in y, so only the quarter x ≥ 0, y ≥ 0
+  // is summed and the rest is copied. Work is done in steps of at most maxPts summed points so a page can spread it over frames.
+  function gridJob(sources, xs, ys, zs, comps, mask) {
+    const nx = xs.length, ny = ys.length, nz = zs.length, N = nx * ny * nz, out = new Float32Array(comps * N);
+    const ix0 = (nx - 1) >> 1, iy0 = (ny - 1) >> 1, qx = nx - ix0, qy = ny - iy0, Q = qx * qy * nz, o = [0, 0, 0, 0, 0, 0, 0, 0];
+    const job = { out, nx, ny, nz, N, comps, done: false, next: 0, total: Q, step(maxPts) {
+      const end = Math.min(Q, job.next + maxPts);
+      for (let q = job.next; q < end; q++) {
+        const i = ix0 + q % qx, j = iy0 + Math.floor(q / qx) % qy, k = Math.floor(q / (qx * qy)), x = xs[i], y = ys[j], z = zs[k];
+        if (mask && !mask(x, y, z)) continue;
+        o.fill(0); for (const s of sources) addSource(s, x, y, z, o);
+        for (const [ii, sx] of [[i, 1], [nx - 1 - i, -1]]) for (const [jj, sy] of [[j, 1], [ny - 1 - j, -1]]) {
+          const b = comps * ((k * ny + jj) * nx + ii);
+          out[b] = o[0]; out[b + 1] = o[1];
+          if (comps === 8) { out[b + 2] = sx * o[2]; out[b + 3] = sx * o[3]; out[b + 4] = sy * o[4]; out[b + 5] = sy * o[5]; out[b + 6] = o[6]; out[b + 7] = o[7]; }
+        }
+      }
+      job.next = end; job.done = end >= Q; return job.done;
+    } };
+    return job;
+  }
+  // The top bowl is the mirror image of the bottom one in z = 0: on a grid with zs symmetric about 0, T(i, j, k) = B(i, j, nz−1−k)
+  // with ∂p/∂z changing sign.
+  function mirrorZ(F, nx, ny, nz, comps) {
+    const out = new Float32Array(F.length), layer = nx * ny * comps;
+    for (let k = 0; k < nz; k++) { const a = k * layer, b = (nz - 1 - k) * layer; for (let m = 0; m < layer; m++) out[b + m] = F[a + m]; }
+    if (comps === 8) for (let m = 6; m < out.length; m += 8) { out[m] = -out[m]; out[m + 1] = -out[m + 1]; }
+    return out;
+  }
+  // The instantaneous pressure from a complex amplitude, with this page's convention p(t) = Re[p e^(−iωt)].
+  const pressureAt = (pr, pi, wt) => pr * Math.cos(wt) + pi * Math.sin(wt);
   // ==CORE END==
 
   if (typeof document === 'undefined') {
     globalThis.LEV = { PI, TAU, G_N, C0, RHO0, MU0, FREQ, OMEGA, K0, LAMBDA, PISTON_A, P_PER_VPP, NEAR_FIELD, besselJ, pistonD, pistonG, tab, TAB_D, TAB_G,
       addSource, fieldAt, BOWL_R, RINGS, bowl, SINGLE_H, singleEmitter, singleImage, contrast, gorkovK, beadWeight, planeF0, beadDrag,
-      combine, absP2, absG2, precompute, axisTraps, phaseShift, kAxis };
+      combine, absP2, absG2, precompute, axisTraps, phaseShift, kAxis, gridAxis, gridJob, mirrorZ, pressureAt };
     return;
   }
 
@@ -518,12 +585,13 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   }
 
   // ---------- state ----------
-  const S = { cfg: 'lev', V: 10, phT: 0, ph: 0, sweep: false, sweepT: 0, mat: 'eps', a: 0.75, color: 'p', view: '3d', playing: true,
+  const S = { cfg: 'lev', V: 10, phT: 0, ph: 0, sweep: false, sweepT: 0, mat: 'eps', a: 0.75, color: 'p', view: 'field', playing: true,
+    field: 'p', op: 0.5, lvl: 0.25, cut: true, wt: 0,
     mic: { x: 0, z: 0 }, preset: 'stack', fallen: 0, vol: 0.5 };
   let beads = [];
   let C = null;                  // current configuration
   let PH = null;                 // current physics summary
-  const dirty = { phys: true, slice: true, draw: true, plot: true, ui: true };
+  const dirty = { phys: true, slice: true, draw: true, plot: true, ui: true, legend: true };
 
   function physics() {
     const M = MATS[S.mat], a = S.a * 1e-3, gk = gorkovK(a, M.rho, M.K), W = beadWeight(a, M.rho);
@@ -597,7 +665,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'pos', 'neg', 'equi', 'accent', 'heat0', 'heat1', 'heat2', 'heat3', 'heat4',
-      'bowl', 'can', 'mesh', 'bead', 'water', 'steel', 'mic']) T[k.replace('-s', 'S')] = g('--' + k);
+      'bowl', 'can', 'mesh', 'bead', 'water', 'steel', 'mic', 'pocket']) T[k.replace('-s', 'S')] = g('--' + k);
     T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'sans-serif';
     const c = rgbOf(T.canvas); T.dark = (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255 < 0.4;
     // color ramps as 256 entry tables
@@ -611,7 +679,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
       for (let c2 = 0; c2 < 3; c2++) T.rampU[3 * i + c2] = Math.round(cv[c2] + w * (tgt[c2] - cv[c2]));
     }
     const css = (r) => `linear-gradient(90deg, ${[0, 64, 128, 192, 255].map((i) => `rgb(${r[3 * i]},${r[3 * i + 1]},${r[3 * i + 2]}) ${(i / 2.55).toFixed(0)}%`).join(', ')})`;
-    T.cssP = css(T.rampP); T.cssU = css(T.rampU);
+    T.cssP = css(T.rampP); T.cssU = css(T.rampU); T.cssD = `linear-gradient(90deg, ${T.neg}, ${T.canvas} 50%, ${T.pos})`;
   }
 
   // ---------- the slice image (one pixel per grid point) ----------
@@ -649,6 +717,23 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   function fmtF(N) { const a = Math.abs(N); if (a >= 1e-3) return (N * 1e3).toPrecision(3) + ' mN'; if (a >= 1e-6) return (N * 1e6).toPrecision(3) + ' µN'; return (N * 1e9).toPrecision(3) + ' nN'; }
   function fmtP(p) { return p >= 1000 ? (p / 1000).toFixed(2) + ' kPa' : p.toFixed(0) + ' Pa'; }
   function updateLegend() {
+    const sub = $('legSub');
+    if ((S.view === 'field' || S.view === 'pockets') && G.ready) {
+      const kind = S.view === 'field' ? 'vol' : 'pk', tk = V3[C.name] && V3[C.name][kind], pRef = S.V * P_PER_VPP * C.pmax1;
+      if (S.view === 'field') {
+        if (S.field === 'p') { $('legT').textContent = 'Pressure p at this instant'; $('legBar').style.background = T.cssD; $('legLo').textContent = '−' + fmtP(pRef); $('legHi').textContent = '+' + fmtP(pRef); }
+        else { $('legT').textContent = 'Pressure amplitude |p|'; $('legBar').style.background = T.cssP; $('legLo').textContent = '0'; $('legHi').textContent = fmtP(pRef); }
+        sub.textContent = S.field === 'p' ? 'blue rarefaction, red compression; 100 000 times slower than real' : 'the envelope of the wave; dark is a node';
+      } else {
+        $('legT').textContent = 'Trap pockets: U below the level'; $('legBar').style.background = T.pocket;
+        $('legLo').textContent = 'level'; $('legHi').textContent = pockInfo.min < 0 ? fmtE(pockInfo.level) : 'none';
+        sub.textContent = pockInfo.min < 0 ? `${Math.round(S.lvl * 100)}% of the deepest U; gravity not included` : 'No sound, no pockets';
+      }
+      if (tk && !tk.done) sub.textContent = `Computing the 3D grid: ${Math.round(100 * tk.prog)}%`;
+      sub.hidden = false;
+      return;
+    }
+    sub.hidden = true;
     $('legBar').style.background = S.color === 'u' ? T.cssU : T.cssP;
     if (S.color === 'u') { $('legT').textContent = 'U, Gor\'kov potential of this bead'; $('legLo').textContent = fmtE(legendVals[0]); $('legHi').textContent = '+' + fmtE(legendVals[1]); }
     else { $('legT').textContent = 'Pressure amplitude |p|'; $('legLo').textContent = '0'; $('legHi').textContent = fmtP(legendVals[1]); }
@@ -669,6 +754,207 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     const i = Math.round((x - C.xs[0]) / (C.xs[1] - C.xs[0])), j = Math.round((z - C.zs[0]) / (C.zs[1] - C.zs[0]));
     return i >= 0 && j >= 0 && i < C.nx && j < C.nz && C.mask[j * C.nx + i] === 1;
   }
+
+  // ---------- the 3D field: complex pressure on a 3D grid ----------
+  // The grid holds the complex pressure of each bowl at unit drive (bottom B, top T), summed over every transducer with the same
+  // addSource as the slice. Drive and phase enter only as p = V(B + e^(iΔφ)T), and time as p(t) = Re[p e^(−iωt)], so neither
+  // needs a recompute: the shader does both per sample. A new grid is built only for a new geometry (levitator or single emitter).
+  const PHONE = (() => { try { return matchMedia('(max-width: 820px), (pointer: coarse)').matches; } catch (_) { return false; } })();
+  const WAVE_T = 2.5;                     // one 25 µs cycle shown in 2.5 s: 100 000 times slower than real
+  const GAMMA3D = 0.6;                    // opacity and color strength grow as (|p|/p_ref)^0.6, a display choice
+  const VOL_SPEC = {
+    lev: { X: 0.032, Z0: -0.050, Z1: 0.050, h: PHONE ? 1.25e-3 : 1e-3 },
+    single: { X: 0.020, Z0: -SINGLE_H / 2, Z1: SINGLE_H / 2, h: PHONE ? 0.625e-3 : 0.5e-3 }
+  };
+  const PK_SPEC = {
+    lev: { X: 0.008, Z0: -0.025, Z1: 0.025, h: 5e-4 },
+    single: { X: 0.008, Z0: -SINGLE_H / 2, Z1: SINGLE_H / 2 - NEAR_FIELD, h: 5e-4 }
+  };
+  const V3 = {};                          // per configuration: { vol: task, pk: task }
+  let volUploaded = null, pockKey = '', pockLast = 0, pockInfo = { tris: 0, level: 0, min: 0, ms: 0 };
+  const volMask = (name) => (name === 'lev' ? (x, y, z) => x * x + y * y + z * z <= 0.050 * 0.050
+    : (x, y, z) => z >= -SINGLE_H / 2 && Math.hypot(x, y, z - SINGLE_H / 2) > NEAR_FIELD);
+  function* volGen(name) {
+    const Cf = buildCfg(name), sp = VOL_SPEC[name], xs = gridAxis(-sp.X, sp.X, sp.h), zs = gridAxis(sp.Z0, sp.Z1, sp.h), mask = volMask(name);
+    const jb = gridJob(Cf.srcB, xs, xs, zs, 2, mask), lev = name === 'lev';
+    while (!jb.step(1200)) yield (lev ? 0.92 : 0.46) * jb.next / jb.total;
+    let Tf;
+    if (lev) Tf = mirrorZ(jb.out, jb.nx, jb.ny, jb.nz, 2);
+    else { const jt = gridJob(Cf.srcT, xs, xs, zs, 2, mask); while (!jt.step(1200)) yield 0.46 + 0.46 * jt.next / jt.total; Tf = jt.out; }
+    // pack (B, T) as RGBA half floats in units of the largest |p| on the slice at unit drive
+    const N = jb.N, half = new Uint16Array(4 * N), sc = 1 / Cf.pmax1, toH = THREE.DataUtils.toHalfFloat;
+    for (let n = 0; n < N; n++) {
+      half[4 * n] = toH(jb.out[2 * n] * sc); half[4 * n + 1] = toH(jb.out[2 * n + 1] * sc); half[4 * n + 2] = toH(Tf[2 * n] * sc); half[4 * n + 3] = toH(Tf[2 * n + 1] * sc);
+      if (n % 60000 === 59999) yield 0.92 + 0.08 * n / N;
+    }
+    return { xs, ys: xs, zs, nx: jb.nx, ny: jb.ny, nz: jb.nz, B: jb.out, T: Tf, half, h: sp.h };
+  }
+  function* pkGen(name) {
+    const Cf = buildCfg(name), sp = PK_SPEC[name], xs = gridAxis(-sp.X, sp.X, sp.h), zs = gridAxis(sp.Z0, sp.Z1, sp.h), lev = name === 'lev';
+    const jb = gridJob(Cf.srcB, xs, xs, zs, 8);
+    while (!jb.step(800)) yield (lev ? 1 : 0.5) * jb.next / jb.total;
+    let Tf;
+    if (lev) Tf = mirrorZ(jb.out, jb.nx, jb.ny, jb.nz, 8);
+    else { const jt = gridJob(Cf.srcT, xs, xs, zs, 8); while (!jt.step(800)) yield 0.5 + 0.5 * jt.next / jt.total; Tf = jt.out; }
+    return { xs, ys: xs, zs, nx: jb.nx, ny: jb.ny, nz: jb.nz, B: jb.out, T: Tf, U: new Float32Array(jb.N), h: sp.h };
+  }
+  function task(name, kind) {
+    const v = V3[name] || (V3[name] = {});
+    if (!v[kind]) v[kind] = { gen: kind === 'vol' ? volGen(name) : pkGen(name), done: false, prog: 0, res: null, ms: 0 };
+    return v[kind];
+  }
+  // spend at most budget ms per frame on grid building: the visible view first, then the other one in the background
+  function work3D(budget) {
+    if (!G.ready) return;
+    const order = S.view === 'pockets' ? ['pk', 'vol'] : ['vol', 'pk'];
+    const t0 = performance.now();
+    for (const kind of order) {
+      if (kind === 'vol' && !G.gl2) continue;
+      const tk = task(C.name, kind); if (tk.done) continue;
+      while (performance.now() - t0 < budget) {
+        const t1 = performance.now(), r = tk.gen.next(); tk.ms += performance.now() - t1;
+        if (r.done) { tk.done = true; tk.res = r.value; tk.prog = 1; dirty.draw = true; dirty.legend = true; break; }
+        tk.prog = r.value;
+      }
+      dirty.legend = true;
+      return;   // one task at a time
+    }
+  }
+
+  // ---------- trap pockets: the surface U = level, by marching tetrahedra ----------
+  // Each grid cube is split into six tetrahedra around its diagonal from corner 0 to corner 7; every edge they use runs from a
+  // corner to one whose offset bits include its own, so neighbouring cubes agree on the split and share their surface points.
+  // A surface point sits on each edge where U − level changes sign, linearly interpolated; it is stored once per grid edge
+  // (indexed mesh). Normals are the interpolated gradient of U, which points out of the pocket.
+  const TETS = [0, 1, 3, 7, 0, 3, 2, 7, 0, 2, 6, 7, 0, 6, 4, 7, 0, 4, 5, 7, 0, 5, 1, 7];
+  const MT = {};
+  function marchTets(F, nx, ny, nz, xs, ys, zs, level, scale) {
+    const N = nx * ny * nz, sy = nx, sz = nx * ny;
+    if (MT.N !== N) Object.assign(MT, { N, emap: new Int32Array(8 * N), pos: new Float32Array(3 * 40000), nrm: new Float32Array(3 * 40000), idx: new Uint32Array(3 * 80000) });
+    const emap = MT.emap; emap.fill(-1);
+    let nv = 0, ni3 = 0, pos = MT.pos, nrm = MT.nrm, idx = MT.idx;
+    const cv = new Float64Array(8), ci = new Int32Array(8), vi = new Int32Array(4), ins = new Int32Array(4), outs = new Int32Array(4);
+    const OFF = [0, 1, sy, sy + 1, sz, sz + 1, sz + sy, sz + sy + 1];
+    const gAt = (n, c) => {   // central difference of F at grid point n along axis c (one sided at the faces)
+      const i = n % nx, j = ((n / nx) | 0) % ny, k = (n / sz) | 0;
+      if (c === 0) { const a = i > 0 ? i - 1 : i, b = i < nx - 1 ? i + 1 : i; return (F[n + b - i] - F[n + a - i]) / (xs[b] - xs[a]); }
+      if (c === 1) { const a = j > 0 ? j - 1 : j, b = j < ny - 1 ? j + 1 : j; return (F[n + (b - j) * sy] - F[n + (a - j) * sy]) / (ys[b] - ys[a]); }
+      const a = k > 0 ? k - 1 : k, b = k < nz - 1 ? k + 1 : k; return (F[n + (b - k) * sz] - F[n + (a - k) * sz]) / (zs[b] - zs[a]);
+    };
+    const coord = (n, c) => (c === 0 ? xs[n % nx] : c === 1 ? ys[((n / nx) | 0) % ny] : zs[(n / sz) | 0]);
+    const vert = (a, b) => {   // the surface point on the edge between cube corners a and b
+      if ((a & b) !== a) { const t = a; a = b; b = t; }   // a: the corner whose offset bits are inside b's
+      const na = ci[a], nb = ci[b], key = 8 * na + (a ^ b);
+      let v = emap[key]; if (v >= 0) return v;
+      if (3 * (nv + 1) > pos.length) { const p2 = new Float32Array(pos.length * 2), n2 = new Float32Array(pos.length * 2); p2.set(pos); n2.set(nrm); MT.pos = pos = p2; MT.nrm = nrm = n2; }
+      const t = cv[a] / (cv[a] - cv[b]), q = 3 * nv;
+      let g2 = 0;
+      for (let c = 0; c < 3; c++) {
+        const xa = coord(na, c); pos[q + c] = scale * (xa + t * (coord(nb, c) - xa));
+        const ga = gAt(na, c), g = ga + t * (gAt(nb, c) - ga); nrm[q + c] = g; g2 += g * g;
+      }
+      const s = g2 > 0 ? 1 / Math.sqrt(g2) : 1; nrm[q] *= s; nrm[q + 1] *= s; nrm[q + 2] *= s;
+      emap[key] = nv; return nv++;
+    };
+    const tri = (a, b, c) => {   // wind so the face normal agrees with the gradient (outward)
+      const A = 3 * a, B = 3 * b, C = 3 * c;
+      const ux = pos[B] - pos[A], uy = pos[B + 1] - pos[A + 1], uz = pos[B + 2] - pos[A + 2], vx = pos[C] - pos[A], vy = pos[C + 1] - pos[A + 1], vz = pos[C + 2] - pos[A + 2];
+      const flip = (uy * vz - uz * vy) * (nrm[A] + nrm[B] + nrm[C]) + (uz * vx - ux * vz) * (nrm[A + 1] + nrm[B + 1] + nrm[C + 1]) + (ux * vy - uy * vx) * (nrm[A + 2] + nrm[B + 2] + nrm[C + 2]) < 0;
+      if (ni3 + 3 > idx.length) { const i2 = new Uint32Array(idx.length * 2); i2.set(idx); MT.idx = idx = i2; }
+      idx[ni3++] = a; idx[ni3++] = flip ? c : b; idx[ni3++] = flip ? b : c;
+    };
+    for (let k = 0; k < nz - 1; k++) for (let j = 0; j < ny - 1; j++) {
+      const row = k * sz + j * sy;
+      for (let i = 0; i < nx - 1; i++) {
+        const n0 = row + i; let nin = 0;
+        for (let m = 0; m < 8; m++) { const n = n0 + OFF[m], v = F[n] - level; cv[m] = v; ci[m] = n; if (v < 0) nin++; }
+        if (nin === 0 || nin === 8) continue;
+        for (let q = 0; q < 24; q += 4) {
+          let a = 0, o = 0;
+          for (let r = 0; r < 4; r++) { const m = TETS[q + r]; if (cv[m] < 0) ins[a++] = m; else outs[o++] = m; }
+          if (a === 0 || a === 4) continue;
+          if (a === 1) tri(vert(ins[0], outs[0]), vert(ins[0], outs[1]), vert(ins[0], outs[2]));
+          else if (a === 3) tri(vert(outs[0], ins[0]), vert(outs[0], ins[1]), vert(outs[0], ins[2]));
+          else { vi[0] = vert(ins[0], outs[0]); vi[1] = vert(ins[0], outs[1]); vi[2] = vert(ins[1], outs[1]); vi[3] = vert(ins[1], outs[0]); tri(vi[0], vi[1], vi[2]); tri(vi[0], vi[2], vi[3]); }
+        }
+      }
+    }
+    return { pos: pos.slice(0, 3 * nv), nrm: nrm.slice(0, 3 * nv), idx: idx.slice(0, ni3) };
+  }
+  // U = K₁|p|² − K₂|∇p|² for the chosen bead at the current drive and phase on the pocket grid, then the surface at
+  // U = level × (the lowest U on that grid). Gravity is not part of this surface.
+  function updatePockets(now) {
+    const tk = V3[C.name] && V3[C.name].pk; if (!tk || !tk.done || !G.ready) return;
+    const key = `${C.name}|${S.ph}|${S.mat}|${S.a}|${S.V}|${S.lvl}`;
+    if (key === pockKey) return;
+    if (now - pockLast < 150 && (S.sweep || S.ph !== S.phT)) return;   // while the phase is moving, rebuild about six times a second
+    const t0 = performance.now(), g = tk.res, n = g.nx * g.ny * g.nz, o = [0, 0, 0, 0, 0, 0, 0, 0];
+    const Vpa = S.V * P_PER_VPP, phr = C.name === 'lev' ? S.ph * PI / 180 : 0, cph = Math.cos(phr), sph = Math.sin(phr), gk = PH.gk;
+    let mn = 0;
+    for (let m = 0; m < n; m++) { combine(g.B, g.T, 8 * m, Vpa, cph, sph, o); const u = gk.K1 * absP2(o) - gk.K2 * absG2(o); g.U[m] = u; if (u < mn) mn = u; }
+    const level = S.lvl * mn;
+    const mesh = mn < 0 ? marchTets(g.U, g.nx, g.ny, g.nz, g.xs, g.ys, g.zs, level, 1000) : { pos: new Float32Array(0), nrm: new Float32Array(0), idx: new Uint32Array(0) };
+    const geo = G.pock.geometry;
+    geo.setAttribute('position', new THREE.BufferAttribute(mesh.pos, 3)); geo.setAttribute('normal', new THREE.BufferAttribute(mesh.nrm, 3)); geo.setIndex(new THREE.BufferAttribute(mesh.idx, 1));
+    geo.computeBoundingSphere();
+    pockKey = key; pockLast = now;
+    pockInfo = { tris: mesh.idx.length / 3, level, min: mn, ms: performance.now() - t0 };
+    dirty.draw = true; dirty.legend = true;
+  }
+
+  // ---------- the microphone's label: what it measures, next to it ----------
+  function placeMicTag() {
+    const tag = $('micTag'); let x, y;
+    if (S.view !== 'flat' && G.ready) { const p = project(1000 * S.mic.x, 0, 1000 * S.mic.z); x = p[0]; y = p[1]; }
+    else if (fGeom) { x = fGeom.X(1000 * S.mic.x); y = fGeom.Y(1000 * S.mic.z); }
+    else return;
+    tag.textContent = `mic: |p| = ${fmtP(micP())}${snd.on ? '' : ', sound off'}`;
+    tag.classList.toggle('off', !snd.on);
+    const W = dims.f[0], w = tag.offsetWidth, off = 16 * projScale();
+    let lx = x + off; if (lx + w > W - 4) lx = x - off - w; lx = Math.max(4, lx);
+    tag.style.transform = `translate(${Math.round(lx)}px, ${Math.round(y - tag.offsetHeight / 2 - 12 * projScale())}px)`;
+  }
+
+  const VOL_VS = `
+    varying vec3 vW;
+    void main() { vec4 w = modelMatrix * vec4(position, 1.0); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`;
+  // Front to back emission and absorption along each view ray, in steps of uStep mm, starting at a random fraction of a step
+  // (hides banding). Texture: (Re B, Im B, Re T, Im T) / p_ref. p = B + e^(iΔφ)T; p(t) = Re[p e^(−iωt)].
+  const VOL_FS = `
+    precision highp sampler3D;
+    uniform sampler3D uTex; uniform vec3 uMin, uSize, uN; uniform float uC, uS, uWt, uOp, uStep, uGam;
+    uniform int uMode, uCut, uMask; uniform vec2 uCutN; uniform vec3 uSgl, uPos, uNeg, uH1, uH2, uH3, uH4;
+    varying vec3 vW;
+    vec3 heat(float t) { t = clamp(t, 0.0, 1.0) * 3.0; if (t < 1.0) return mix(uH1, uH2, t); if (t < 2.0) return mix(uH2, uH3, t - 1.0); return mix(uH3, uH4, t - 2.0); }
+    void main() {
+      vec3 ro = cameraPosition, rd = normalize(vW - ro), inv = 1.0 / rd;
+      vec3 ta = (uMin - ro) * inv, tb = (uMin + uSize - ro) * inv, tn = min(ta, tb), tx = max(ta, tb);
+      float t0 = max(max(tn.x, tn.y), max(tn.z, 0.0)), t1 = min(min(tx.x, tx.y), tx.z);
+      if (uCut == 1) {   // keep the far half: dot(p.xy, n) <= 0, n the horizontal direction toward the camera
+        float a = dot(ro.xy, uCutN), b = dot(rd.xy, uCutN);
+        if (abs(b) < 1e-6) { if (a > 0.0) discard; } else { float tc = -a / b; if (b > 0.0) t1 = min(t1, tc); else t0 = max(t0, tc); }
+      }
+      if (t1 <= t0) discard;
+      float cw = cos(uWt), sw = sin(uWt);
+      float t = t0 + uStep * fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
+      vec4 acc = vec4(0.0);
+      for (int i = 0; i < 700; i++) {
+        if (t > t1 || acc.a > 0.97) break;
+        vec3 p = ro + rd * t;
+        bool inside = uMask == 1 ? dot(p, p) <= 2500.0 : (p.z >= uSgl.z && distance(p, vec3(0.0, 0.0, uSgl.x)) > uSgl.y);
+        if (inside) {
+          vec3 q = (p - uMin) / uSize; q = (q * (uN - 1.0) + 0.5) / uN;
+          vec4 v = texture(uTex, q);
+          float pr = v.x + uC * v.z - uS * v.w, pim = v.y + uS * v.z + uC * v.w, val; vec3 col;
+          if (uMode == 0) { val = pr * cw + pim * sw; col = val > 0.0 ? uPos : uNeg; val = abs(val); }
+          else { val = length(vec2(pr, pim)); col = heat(val); }
+          float w = pow(min(val, 1.0), uGam), al = 1.0 - exp(-uOp * w * uStep);
+          acc.rgb += (1.0 - acc.a) * al * col; acc.a += (1.0 - acc.a) * al;
+        }
+        t += uStep;
+      }
+      gl_FragColor = acc;
+    }`;
 
   // ---------- 3D scene ----------
   const G = { ready: false };
@@ -726,16 +1012,43 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     const ringMat = new THREE.MeshBasicMaterial({ color: 0x2b60b5, transparent: true, opacity: 0.6, depthWrite: false });
     const ringHot = new THREE.MeshBasicMaterial({ color: 0x2b60b5, transparent: true, opacity: 1, depthWrite: false });
     const beadMats = { eps: new THREE.MeshStandardMaterial({ roughness: 0.45 }), water: new THREE.MeshStandardMaterial({ roughness: 0.15 }), steel: new THREE.MeshStandardMaterial({ roughness: 0.25, metalness: 0.7 }) };
-    for (const k in beadMats) beadMats[k].depthTest = false;   // beads are the point: always drawn over the slice and the rings
+    // beads are the point: always drawn over the slice, the rings and the 3D field (transparent at opacity 1 so they sort after the field)
+    for (const k in beadMats) { beadMats[k].depthTest = false; beadMats[k].transparent = true; }
     const haloCv = document.createElement('canvas'); haloCv.width = haloCv.height = 64;
     { const x = haloCv.getContext('2d'); x.strokeStyle = '#ffffff'; x.lineWidth = 5; x.beginPath(); x.arc(32, 32, 27, 0, TAU); x.stroke(); }
     const haloMat = new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(haloCv), transparent: true, depthWrite: false, depthTest: false });
     const halos = [];
     const mic = new THREE.Group(); scene.add(mic);
-    const micMat = new THREE.MeshBasicMaterial({ color: 0xa7740b, transparent: true, opacity: 0.9, depthWrite: false });
-    const micRing = new THREE.Mesh(new THREE.TorusGeometry(2.6, 0.3, 8, 40), micMat); micRing.rotation.x = PI / 2; mic.add(micRing);
-    const micDot = new THREE.Mesh(new THREE.SphereGeometry(0.9, 16, 12), micMat); mic.add(micDot);
-    Object.assign(G, { ready: true, renderer, el, scene, cam, mats, levGrp, sglGrp, tex, slice, axis, rings, beadMeshes, haloMat, halos, ringGeo, beadGeo, ringMat, ringHot, beadMats, mic, micMat, micRing });
+    // a small stick microphone: the centre of its head is where |p| is sampled; the handle points down and out
+    const micMat = new THREE.MeshBasicMaterial({ color: 0xa7740b, transparent: true, opacity: 1, depthWrite: false, depthTest: false });
+    const micDark = new THREE.MeshBasicMaterial({ color: 0x2a2e33, transparent: true, opacity: 1, depthWrite: false, depthTest: false });
+    { const d = new THREE.Vector3(0.55, 0, -0.835).normalize(), up = new THREE.Vector3(0, 1, 0);
+      const head = new THREE.Mesh(new THREE.SphereGeometry(1.5, 24, 16), micMat);
+      const band = new THREE.Mesh(new THREE.TorusGeometry(1.52, 0.2, 8, 36), micDark); band.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), d);
+      const band2 = new THREE.Mesh(new THREE.TorusGeometry(1.52, 0.14, 8, 36), micDark); band2.quaternion.copy(band.quaternion); band2.position.copy(d.clone().multiplyScalar(-0.75));
+      const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.42, 7, 16), micMat); handle.quaternion.setFromUnitVectors(up, d); handle.position.copy(d.clone().multiplyScalar(1.3 + 3.5));
+      const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.7, 0.9, 16), micDark); collar.quaternion.setFromUnitVectors(up, d); collar.position.copy(d.clone().multiplyScalar(1.55));
+      for (const m of [head, band, band2, handle, collar]) { m.renderOrder = 12; mic.add(m); } }
+    // the 3D field (WebGL2 only): a box ray marched through a 3D texture of the complex pressure of each bowl
+    const gl2 = !!renderer.capabilities.isWebGL2;
+    let vol = null;
+    if (gl2) {
+      const volMat = new THREE.ShaderMaterial({ uniforms: {
+          uTex: { value: null }, uMin: { value: new THREE.Vector3() }, uSize: { value: new THREE.Vector3(1, 1, 1) }, uN: { value: new THREE.Vector3(2, 2, 2) },
+          uC: { value: 1 }, uS: { value: 0 }, uWt: { value: 0 }, uMode: { value: 0 }, uOp: { value: 0.1 }, uStep: { value: 0.5 }, uGam: { value: GAMMA3D },
+          uCut: { value: 1 }, uCutN: { value: new THREE.Vector2(0, -1) }, uMask: { value: 1 }, uSgl: { value: new THREE.Vector3() },
+          uPos: { value: new THREE.Color() }, uNeg: { value: new THREE.Color() }, uH1: { value: new THREE.Color() }, uH2: { value: new THREE.Color() }, uH3: { value: new THREE.Color() }, uH4: { value: new THREE.Color() } },
+        vertexShader: VOL_VS, fragmentShader: VOL_FS, side: THREE.BackSide, transparent: true, depthWrite: false, premultipliedAlpha: true });
+      vol = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), volMat); vol.renderOrder = 1; vol.visible = false; vol.frustumCulled = false; scene.add(vol);
+    }
+    // trap pockets: a mesh rebuilt by marching tetrahedra
+    renderer.localClippingEnabled = true;
+    const cutPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+    const pockMat = new THREE.MeshStandardMaterial({ color: 0x23897d, roughness: 0.45, metalness: 0.05, transparent: true, opacity: 0.8, side: THREE.DoubleSide, clippingPlanes: [cutPlane] });
+    const pockGeo = new THREE.BufferGeometry(); pockGeo.setAttribute('position', new THREE.Float32BufferAttribute([], 3)); pockGeo.setAttribute('normal', new THREE.Float32BufferAttribute([], 3));
+    const pock = new THREE.Mesh(pockGeo, pockMat); pock.renderOrder = 2; pock.visible = false; pock.frustumCulled = false; scene.add(pock);
+    Object.assign(G, { ready: true, renderer, el, scene, cam, mats, levGrp, sglGrp, tex, slice, axis, rings, beadMeshes, haloMat, halos, ringGeo, beadGeo, ringMat, ringHot, beadMats, mic, micMat, micDark,
+      gl2, vol, pock, pockMat, cutPlane, q: PHONE ? 0.75 : 1 });
     retheme3D();
     bind3D(el);
     return true;
@@ -746,7 +1059,9 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     G.scene.background = hex(T.canvas);
     G.mats.bowl.color = hex(T.bowl); G.mats.can.color = hex(T.can); G.mats.mesh.color = hex(T.mesh);
     G.mats.frame.color = hex(T.dark ? '#3a434f' : '#9aa3ad'); G.mats.refl.color = hex(T.dark ? '#7d8691' : '#b9c0c8');
-    G.ringMat.color = hex(T.accent); G.ringHot.color = hex(T.accent); G.micMat.color = hex(T.mic);
+    G.ringMat.color = hex(T.accent); G.ringHot.color = hex(T.accent); G.micMat.color = hex(T.mic); G.micDark.color = hex(T.dark ? '#0d1218' : T.mesh);
+    G.pockMat.color = hex(T.pocket);
+    if (G.vol) { const u = G.vol.material.uniforms; u.uPos.value.set(T.pos); u.uNeg.value.set(T.neg); u.uH1.value.set(T.heat1); u.uH2.value.set(T.heat2); u.uH3.value.set(T.heat3); u.uH4.value.set(T.heat4); }
     G.axis.material.color = hex(T.muted);
     G.beadMats.eps.color = hex(T.bead); G.beadMats.water.color = hex(T.water); G.beadMats.steel.color = hex(T.steel); G.haloMat.color = hex(T.dark ? '#000000' : T.ink);
   }
@@ -756,11 +1071,19 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     G.levGrp.visible = lev; G.sglGrp.visible = !lev;
     G.slice.scale.set(2000 * C.X, 1000 * (C.Z1 - C.Z0), 1); G.slice.position.set(0, 0, 500 * (C.Z0 + C.Z1));
     G.axis.geometry.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 1000 * C.axis[0], 0, 0, 1000 * C.axis[1]], 3)); G.axis.computeLineDistances();
+    if (G.vol) {
+      const sp = VOL_SPEC[C.name], u = G.vol.material.uniforms;
+      G.vol.scale.set(2000 * sp.X, 2000 * sp.X, 1000 * (sp.Z1 - sp.Z0)); G.vol.position.set(0, 0, 500 * (sp.Z0 + sp.Z1));
+      u.uMin.value.set(-1000 * sp.X, -1000 * sp.X, 1000 * sp.Z0); u.uSize.value.set(2000 * sp.X, 2000 * sp.X, 1000 * (sp.Z1 - sp.Z0));
+      u.uMask.value = lev ? 1 : 2; u.uSgl.value.set(500 * SINGLE_H, 1000 * NEAR_FIELD, -500 * SINGLE_H);
+      u.uTex.value = null; volUploaded = null;
+    }
+    pockKey = '';
   }
   function cam3D() {
     const b = C.box, tanHalf = Math.tan(G.cam.fov * PI / 360);
     const w = 1000 * b.x, h = 1000 * (b.z1 - b.z0) / 2, fit = Math.max(w / (tanHalf * G.cam.aspect), h / tanHalf) * 1.12;
-    const r = fit * orbit.zoom, cz = 500 * (b.z0 + b.z1);
+    const r = fit * orbit.zoom * (S.view === 'pockets' ? 0.5 : 1), cz = S.view === 'pockets' ? (C.name === 'lev' ? 0 : -3) : 500 * (b.z0 + b.z1);
     G.cam.position.set(r * Math.sin(orbit.phi) * Math.cos(orbit.theta), r * Math.sin(orbit.phi) * Math.sin(orbit.theta), cz + r * Math.cos(orbit.phi));
     G.cam.lookAt(0, 0, cz);
     G.cam.updateMatrixWorld();
@@ -768,9 +1091,28 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   function render3D() {
     const ps = projScale();
     cam3D();
+    const vw = S.view, cn = new THREE.Vector2(G.cam.position.x, G.cam.position.y); if (cn.lengthSq() < 1e-9) cn.set(0, -1); cn.normalize();
+    G.slice.visible = vw === '3d';
+    const V3c = V3[C.name] || {};
+    if (G.vol) {
+      const vd = V3c.vol && V3c.vol.done ? V3c.vol.res : null;
+      if (vd && volUploaded !== vd) {
+        const t3 = new THREE.DataTexture3D(vd.half, vd.nx, vd.ny, vd.nz); t3.format = THREE.RGBAFormat; t3.type = THREE.HalfFloatType;
+        t3.minFilter = t3.magFilter = THREE.LinearFilter; t3.unpackAlignment = 1; t3.needsUpdate = true;
+        const u = G.vol.material.uniforms; if (u.uTex.value) u.uTex.value.dispose(); u.uTex.value = t3; u.uN.value.set(vd.nx, vd.ny, vd.nz); volUploaded = vd;
+      }
+      G.vol.visible = vw === 'field' && !!vd;
+      if (G.vol.visible) {
+        const u = G.vol.material.uniforms, phr = C.name === 'lev' ? S.ph * PI / 180 : 0;
+        u.uC.value = Math.cos(phr); u.uS.value = Math.sin(phr); u.uWt.value = S.wt; u.uMode.value = S.field === 'p' ? 0 : 1;
+        u.uOp.value = 1.1 * S.op * S.op; u.uStep.value = PHONE ? 0.9 : 0.5; u.uCut.value = S.cut ? 1 : 0; u.uCutN.value.copy(cn);
+      }
+    }
+    G.pock.visible = vw === 'pockets' && G.pock.geometry.getAttribute('position').count > 0;
+    G.cutPlane.normal.set(-cn.x, -cn.y, 0); G.cutPlane.constant = 0; G.pockMat.clippingPlanes = S.cut ? [G.cutPlane] : [];
     // trap rings: within the window; grips when the phase can move them
     const ts = PH.traps.filter((t) => t.z >= C.win[0] - 1e-9 && t.z <= C.win[1] + 1e-9 || C.name === 'lev' && Math.abs(t.z) < 0.045);
-    while (G.rings.length < ts.length) { const m = new THREE.Mesh(G.ringGeo, G.ringMat); G.scene.add(m); G.rings.push(m); }
+    while (G.rings.length < ts.length) { const m = new THREE.Mesh(G.ringGeo, G.ringMat); m.renderOrder = 5; G.scene.add(m); G.rings.push(m); }
     G.rings.forEach((m, i) => {
       m.visible = i < ts.length; if (!m.visible) return;
       const hot = hover3 === 'trap' || (drag && drag.id === 'trap');
@@ -787,8 +1129,10 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
       m.material = G.beadMats[S.mat]; m.position.set(0, 0, 1000 * beads[i].z); m.scale.setScalar(rb);
     });
     G.mic.position.set(1000 * S.mic.x, 0, 1000 * S.mic.z);
-    G.mic.scale.setScalar(((hover3 === 'mic' || (drag && drag.id === 'mic')) ? 1.3 : 1) * ps);
+    G.mic.scale.setScalar(((hover3 === 'mic' || (drag && drag.id === 'mic')) ? 1.3 : 1) * ps * Math.max(1, 6 * perPx / 1.5));
+    G.micMat.opacity = G.micDark.opacity = snd.on ? 1 : 0.6;
     G.renderer.render(G.scene, G.cam);
+    placeMicTag();
   }
   // screen position of a world point (mm) in the 3D canvas
   function project(x, y, z) { const v = new THREE.Vector3(x, y, z).project(G.cam), r = G.el.getBoundingClientRect(); return [(v.x + 1) / 2 * r.width, (1 - v.y) / 2 * r.height, v.z]; }
@@ -948,9 +1292,8 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
       ctx.beginPath(); ctx.arc(X(0), Y(1000 * b.z), r, 0, TAU); ctx.fill(); ctx.stroke();
     }
     // microphone
-    { const mh = hoverF === 'mic' || (drag && drag.id === 'mic'), mx = X(1000 * S.mic.x), my = Y(1000 * S.mic.z), r = (mh ? 7.5 : 6) * ps;
-      ctx.strokeStyle = T.mic; ctx.lineWidth = (mh ? 2.6 : 2) * ps; ctx.beginPath(); ctx.arc(mx, my, r, 0, TAU); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(mx - r * 1.5, my); ctx.lineTo(mx - r * 0.5, my); ctx.moveTo(mx + r * 0.5, my); ctx.lineTo(mx + r * 1.5, my); ctx.stroke(); }
+    { const mh = hoverF === 'mic' || (drag && drag.id === 'mic'), mx = X(1000 * S.mic.x), my = Y(1000 * S.mic.z);
+      ctx.save(); ctx.globalAlpha = snd.on ? 1 : 0.62; drawMic(ctx, mx, my, (mh ? 1.25 : 1) * ps); ctx.restore(); }
     // scale bar and labels, on halo boxes
     const fs = 11 * ps; ctx.font = `${fs}px ${T.mono}`;
     const tag = (txt, x, y, al = 'left', col = T.muted) => { ctx.textAlign = al; ctx.textBaseline = 'middle'; const w = ctx.measureText(txt).width, lx = al === 'left' ? x : al === 'right' ? x - w : x - w / 2;
@@ -958,6 +1301,19 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     { const L = 10, bx = W - 14 * ps - L * s, by = H - 16 * ps; ctx.strokeStyle = T.ink; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + L * s, by); ctx.stroke(); tag('10 mm', bx + L * s / 2, by - 10 * ps, 'center', T.ink); }
     if (C.name === 'lev') { tag('top bowl, phase Δφ', X(0), Y(70) - 4 * ps, 'center'); tag('bottom bowl, phase 0', X(0), Y(-70) + 6 * ps, 'center'); }
     else { tag('emitter', X(7), Y(1000 * SINGLE_H / 2 + 4), 'left'); tag('flat reflector', X(28), Y(-1000 * SINGLE_H / 2 - 1.5), 'left'); tag('near field, not modelled', X(10), Y(1000 * SINGLE_H / 2 - 5), 'left'); }
+    placeMicTag();
+  }
+  // a stick microphone: the head (where |p| is read) at (x, y), the handle down and to the right
+  function drawMic(ctx, x, y, k) {
+    const r = 6 * k, ux = 0.55, uy = 0.835;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = T.dark ? '#000000' : T.canvas; ctx.lineWidth = 6.5 * k; ctx.beginPath(); ctx.moveTo(x + ux * r, y + uy * r); ctx.lineTo(x + ux * (r + 13 * k), y + uy * (r + 13 * k)); ctx.stroke();
+    ctx.strokeStyle = T.mic; ctx.lineWidth = 4 * k; ctx.stroke();
+    ctx.fillStyle = T.mic; ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
+    ctx.strokeStyle = T.dark ? '#000000' : T.ink; ctx.lineWidth = 1.2 * k; ctx.stroke();
+    ctx.save(); ctx.beginPath(); ctx.arc(x, y, r - 0.6 * k, 0, TAU); ctx.clip(); ctx.strokeStyle = T.dark ? '#00000099' : '#00000066'; ctx.lineWidth = 1 * k; ctx.beginPath();
+    for (let d = -r; d <= r; d += 2.6 * k) { ctx.moveTo(x - r, y + d); ctx.lineTo(x + r, y + d); } ctx.stroke(); ctx.restore();
+    ctx.lineCap = 'butt';
   }
   function flatHandle(e) {
     if (!fGeom) return null;
@@ -1060,6 +1416,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     $('phOut').textContent = C && C.name === 'single' ? fmtDeg(S.phT) + ', no effect' : S.phT === 0 ? '0°' : `${fmtDeg(S.phT)}, traps ${shift > 0 ? '+' : '−'}${Math.abs(shift).toFixed(2)} mm`;
     $('radOut').textContent = S.a.toFixed(2) + ' mm';
     $('volOut').textContent = Math.round(S.vol * 100) + '%';
+    $('opOut').textContent = Math.round(S.op * 100) + '%'; $('lvlOut').textContent = Math.round(S.lvl * 100) + '%';
   }
   function updateUI() {
     if (!PH) return;
@@ -1095,7 +1452,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   }
   const HINTS = {
     hold: 'One foam bead sits just below a pressure node near the centre. Lower the drive slowly: it sinks a little in its trap and then drops at about 1 V.',
-    stack: 'Every pressure node of the standing wave is a trap, so the beads stack like rungs of a ladder, 4.76 mm apart at the centre. That is a bit more than λ/2 = 4.29 mm, because the sound from each bowl meets the axis at an angle. Switch the slice to Potential U to see the wells.',
+    stack: 'Every pressure node of the standing wave is a trap, so the beads stack like rungs of a ladder, 4.76 mm apart at the centre. That is a bit more than λ/2 = 4.29 mm, because the sound from each bowl meets the axis at an angle. Open Trap pockets to see the wells in 3D, or the Slice colored by Potential U.',
     steel: 'At 12 V water would float, but steel is 8 times denser and falls straight through. Raise the drive: in this model steel needs about 15 V.',
     move: 'The top bowl\'s phase sweeps back and forth. Each 360° moves the traps by one trap spacing, and the beads ride along: acoustic tweezers.',
     water: 'A water droplet is 33 times denser than foam. It still floats at 10 V, but sits further below its node, and its trap is shallower for its weight.',
@@ -1128,9 +1485,16 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     $('ph').disabled = !lev; $('sweep').disabled = !lev; $('ph0').disabled = !lev;
     $('phHint').textContent = lev ? `Every 360° of phase moves the traps by one trap spacing, ${(C.spacing * 1000).toFixed(2)} mm at the centre. Drag a trap ring in the drawing to do the same by hand.`
       : 'With one emitter the phase only shifts the timing of the whole field; the reflected wave shifts with it, so the traps stay put.';
+    { const sp = VOL_SPEC[name], pk = PK_SPEC[name], n = (lo, hi, h) => Math.round((hi - lo) / h) + 1, mm = (v) => +(v * 1000).toFixed(2);
+      const g = `${n(-sp.X, sp.X, sp.h)} × ${n(-sp.X, sp.X, sp.h)} × ${n(sp.Z0, sp.Z1, sp.h)}`, gp = `${n(-pk.X, pk.X, pk.h)} × ${n(-pk.X, pk.X, pk.h)} × ${n(pk.Z0, pk.Z1, pk.h)}`;
+      $('hint3d').textContent = (lev ? `The 3D grid has ${g} points ${mm(sp.h)} mm apart (λ/${(LAMBDA / sp.h).toFixed(1)}), x and y within ±${mm(sp.X)} mm, z within ±${mm(sp.Z1)} mm, inside 50 mm of the centre where the near fields begin. `
+        : `The 3D grid has ${g} points ${mm(sp.h)} mm apart, x and y within ±${mm(sp.X)} mm, between the reflector and the emitter, outside its near field. `)
+        + 'Each point holds the full source sum the slice uses, for each bowl at unit drive; drive and phase are applied when drawing, and the colors between points are interpolated linearly. '
+        + `Time runs 100 000 times slower than real: one 25 µs cycle takes ${WAVE_T} s. Opacity and color strength grow as |p|^${GAMMA3D}, a display choice so the weaker waves near the bowls still show. `
+        + `Trap pockets are the surfaces where Gor'kov's U for this bead equals the level, on a finer grid of ${gp} points ${mm(pk.h)} mm apart near the axis. Gravity is not part of them: it adds Wz, which pulls each trap below its pocket's centre and, when it wins, drops the bead (see the trap table).`; }
     layout3D();
   }
-  function markAll() { dirty.phys = dirty.slice = dirty.draw = dirty.plot = dirty.ui = true; }
+  function markAll() { dirty.phys = dirty.slice = dirty.draw = dirty.plot = dirty.ui = dirty.legend = true; }
   function presetOff() { if (S.preset) { S.preset = null; document.querySelectorAll('#presets button').forEach((b) => b.setAttribute('aria-pressed', 'false')); $('presetHint').textContent = 'Your own setup. Pick a setup above to start again.'; } }
 
   document.querySelectorAll('#presets button').forEach((b) => b.addEventListener('click', () => applyPreset(b.dataset.p)));
@@ -1147,14 +1511,26 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   $('add').addEventListener('click', () => { addBead(); markAll(); });
   $('clr').addEventListener('click', () => { beads = []; S.fallen = 0; markAll(); });
   function setView(v) {
-    if (v === '3d' && !G.ready) v = 'flat';
-    S.view = v; $('v3d').setAttribute('aria-pressed', String(v === '3d')); $('vFlat').setAttribute('aria-pressed', String(v === 'flat'));
-    if (G.ready) G.el.hidden = v !== '3d';
-    flat.hidden = v !== 'flat'; $('tip3d').hidden = v !== '3d';
-    resize(); markAll();
+    if (v === 'field' && !(G.ready && G.gl2)) v = '3d';
+    if (v !== 'flat' && !G.ready) v = 'flat';
+    S.view = v;
+    for (const [id, w] of [['vField', 'field'], ['vPock', 'pockets'], ['v3d', '3d'], ['vFlat', 'flat']]) $(id).setAttribute('aria-pressed', String(v === w));
+    if (G.ready) G.el.hidden = v === 'flat';
+    flat.hidden = v !== 'flat'; $('tip3d').hidden = v === 'flat';
+    $('fieldSeg').hidden = v !== 'field'; $('colorSeg').hidden = !(v === '3d' || v === 'flat');
+    $('sec3d').hidden = !(v === 'field' || v === 'pockets'); $('opBox').hidden = v !== 'field'; $('lvlBox').hidden = v !== 'pockets';
+    dirty.legend = true; resize(); markAll();
   }
+  $('vField').addEventListener('click', () => setView('field'));
+  $('vPock').addEventListener('click', () => setView('pockets'));
   $('v3d').addEventListener('click', () => setView('3d'));
   $('vFlat').addEventListener('click', () => setView('flat'));
+  const setField = (f) => { S.field = f; $('fP').setAttribute('aria-pressed', String(f === 'p')); $('fA').setAttribute('aria-pressed', String(f === 'a')); dirty.draw = dirty.legend = true; };
+  $('fP').addEventListener('click', () => setField('p'));
+  $('fA').addEventListener('click', () => setField('a'));
+  $('op').addEventListener('input', () => { S.op = +$('op').value; outs(); dirty.draw = true; });
+  $('lvl').addEventListener('input', () => { S.lvl = +$('lvl').value; outs(); dirty.draw = true; });
+  $('cut').addEventListener('click', () => { S.cut = !S.cut; $('cut').setAttribute('aria-pressed', String(S.cut)); dirty.draw = true; });
   const setColor = (c) => { S.color = c; $('cP').setAttribute('aria-pressed', String(c === 'p')); $('cU').setAttribute('aria-pressed', String(c === 'u')); dirty.slice = dirty.draw = true; };
   $('cP').addEventListener('click', () => setColor('p'));
   $('cU').addEventListener('click', () => setColor('u'));
@@ -1225,14 +1601,14 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     dpr = Math.min(2, window.devicePixelRatio || 1);
     const vb = $('viewBox').getBoundingClientRect(), sb = $('sideBox').getBoundingClientRect();
     dims.f = [vb.width, vb.height]; dims.p = [sb.width, sb.height];
-    flat.width = Math.max(1, Math.round(vb.width * dpr)); flat.height = Math.max(1, Math.round(vb.height * dpr));
-    plot.width = Math.max(1, Math.round(sb.width * dpr)); plot.height = Math.max(1, Math.round(sb.height * dpr));
-    if (G.ready) { G.renderer.setPixelRatio(dpr); G.renderer.setSize(Math.max(1, vb.width), Math.max(1, vb.height), false); G.cam.aspect = Math.max(1, vb.width) / Math.max(1, vb.height); G.cam.updateProjectionMatrix(); }
+    const fit = (cv, w, h) => { w = Math.max(1, Math.round(w * dpr)); h = Math.max(1, Math.round(h * dpr)); if (cv.width !== w) cv.width = w; if (cv.height !== h) cv.height = h; };   // unchanged sizes keep the drawing
+    fit(flat, vb.width, vb.height); fit(plot, sb.width, sb.height);
+    if (G.ready) { G.renderer.setPixelRatio(dpr * (S.view === 'field' ? G.q : 1)); G.renderer.setSize(Math.max(1, vb.width), Math.max(1, vb.height), false); G.cam.aspect = Math.max(1, vb.width) / Math.max(1, vb.height); G.cam.updateProjectionMatrix(); }
     dirty.draw = dirty.plot = true;
   }
 
   // ---------- loop ----------
-  let last = performance.now(), frameMs = 0, lastUI = 0, lastSnd = 0, settled = 0;
+  let last = performance.now(), frameMs = 0, rafMs = 16, qFrames = 0, lastUI = 0, lastSnd = 0, settled = 0;
   function loop(now) {
     const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
     const t0 = performance.now();
@@ -1243,24 +1619,36 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
       }
     } else if (S.ph !== S.phT) { S.ph = S.phT; dirty.phys = dirty.slice = true; }
     if (dirty.phys) { physics(); dirty.phys = false; dirty.plot = dirty.draw = dirty.ui = true; }
+    if (S.playing && S.view === 'field' && S.field === 'p') { S.wt = (S.wt + dt * TAU / WAVE_T) % TAU; dirty.draw = true; }
+    if (G.ready) { work3D(PHONE ? 8 : 10); if (S.view === 'pockets') updatePockets(now); }
+    if (dirty.legend) { updateLegend(); dirty.legend = false; }
     if (S.playing && beads.length) { const mv = stepBeads(dt / SLOW); if (mv) { dirty.draw = dirty.plot = true; settled = 0; } else if (settled++ < 3) dirty.draw = dirty.plot = true; }
+    // (before drawing, so a resize never shows a cleared canvas) the ray marched field is the costly part on slow GPUs: lower its pixel ratio while frames run slow, raise it again when quick
+    if (G.ready && S.view === 'field' && !document.hidden && ++qFrames > 45) {
+      qFrames = 0; const q0 = G.q;
+      if (rafMs > 26 && G.q > 0.5) G.q = Math.max(0.5, G.q * 0.8); else if (rafMs < 15 && G.q < (PHONE ? 0.75 : 1)) G.q = Math.min(PHONE ? 0.75 : 1, G.q / 0.8);
+      if (G.q !== q0) { G.renderer.setPixelRatio(dpr * G.q); dirty.draw = true; }
+    }
     if (dirty.slice) { renderSlice(); dirty.slice = false; dirty.draw = true; }
-    if (dirty.draw) { if (S.view === '3d' && G.ready) render3D(); else drawFlat(); dirty.draw = false; }
+    if (dirty.draw) { if (S.view !== 'flat' && G.ready) render3D(); else drawFlat(); dirty.draw = false; }
     if (dirty.plot) { drawPlot(); dirty.plot = false; }
     if ((dirty.ui && now - lastUI > 120) || now - lastUI > 500) { updateUI(); dirty.ui = false; lastUI = now; }
     if (now - lastSnd > 50) { updateSound(); lastSnd = now; }
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    rafMs = 0.95 * rafMs + 0.05 * dt * 1000;
     requestAnimationFrame(loop);
   }
   window.__lev = {
     S, get beads() { return beads; }, get PH() { return PH; }, get C() { return C; }, get frameMs() { return frameMs; }, applyPreset, setView, setPhase,
-    micP, physics: () => { physics(); return PH; }, get use3D() { return G.ready; },
+    micP, physics: () => { physics(); return PH; }, get use3D() { return G.ready; }, get gl2() { return !!G.gl2; }, get rafMs() { return rafMs; }, get q() { return G.q; },
+    setField, fieldAt, grid(kind) { const tk = V3[C.name] && V3[C.name][kind]; return tk ? { done: tk.done, prog: tk.prog, ms: tk.ms, res: tk.res } : null; },
+    get pockets() { return pockInfo; }, get texReady() { return !!(G.vol && G.vol.material.uniforms.uTex.value); },
     trapScreen() { // screen position of the trap nearest the centre, in page coordinates, for tests
       const t = PH.traps.filter((q) => Math.abs(q.z) < 0.045).sort((a, b) => Math.abs(a.z) - Math.abs(b.z))[0]; if (!t) return null;
-      if (S.view === '3d' && G.ready) { cam3D(); const p = project(0, 0, 1000 * t.z), r = G.el.getBoundingClientRect(); return [r.left + p[0], r.top + p[1], t.z]; }
+      if (S.view !== 'flat' && G.ready) { cam3D(); const p = project(0, 0, 1000 * t.z), r = G.el.getBoundingClientRect(); return [r.left + p[0], r.top + p[1], t.z]; }
       const r = flat.getBoundingClientRect(), g = flatGeom(); return [r.left + g.X(0), r.top + g.Y(1000 * t.z), t.z];
     },
-    micScreen() { if (S.view === '3d' && G.ready) { cam3D(); const p = project(1000 * S.mic.x, 0, 1000 * S.mic.z), r = G.el.getBoundingClientRect(); return [r.left + p[0], r.top + p[1]]; }
+    micScreen() { if (S.view !== 'flat' && G.ready) { cam3D(); const p = project(1000 * S.mic.x, 0, 1000 * S.mic.z), r = G.el.getBoundingClientRect(); return [r.left + p[0], r.top + p[1]]; }
       const r = flat.getBoundingClientRect(), g = flatGeom(); return [r.left + g.X(1000 * S.mic.x), r.top + g.Y(1000 * S.mic.z)]; }
   };
 
@@ -1271,8 +1659,9 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   if (use3D) layout3D();
   const ro = new ResizeObserver(() => { resize(); });
   ro.observe($('viewBox')); ro.observe($('sideBox'));
-  setView(use3D ? '3d' : 'flat');
-  if (!use3D) { $('v3d').disabled = true; $('v3d').title = '3D needs WebGL and three.js, which did not load; the slice shows the same physics.'; }
+  if (!use3D) for (const id of ['vField', 'vPock', 'v3d']) { $(id).disabled = true; $(id).title = '3D needs WebGL and three.js, which did not load; the flat slice shows the same physics.'; }
+  else if (!G.gl2) { $('vField').disabled = true; $('vField').title = 'The 3D field needs WebGL2 (3D textures), which this browser does not offer; the slice and the trap pockets still work.'; }
+  setView(use3D ? (G.gl2 ? 'field' : '3d') : 'flat');
   outs();
   applyPreset('stack');
   setPlaying(!reduce);

@@ -61,4 +61,17 @@ test('levitation: bowl phase gradient/spacing, gravitational trap and drag sign'
  const zs=Array.from({length:401},(_,i)=>(i-200)*1e-5),K=.02,W=1e-6,U=zs.map(z=>K*z*z/2+W*z),tr=l.axisTraps(zs,U);assert.equal(tr.length,1);close(tr[0].z,-W/K,1e-7,1e-12);assert(tr[0].stiff>0);
  for(const v of [-1,-.01,.01,1])assert(l.beadDrag(v,.0003)*v<0);
 });
+const g=core('acoustic-levitation','LAMBDA,bowl,fieldAt,gridAxis,gridJob,mirrorZ,pressureAt,K0');
+test('levitation: 3D grid samples equal the source sum, mirrored top bowl, and λ/2 nodes on the grid axis',()=>{
+ const B=g.bowl(-1),T=g.bowl(1),xs=g.gridAxis(-.032,.032,1e-3),zs=g.gridAxis(-.004,.004,1e-3),job=g.gridJob(B,xs,xs,zs,8);while(!job.step(700));
+ const Tm=g.mirrorZ(job.out,xs.length,xs.length,zs.length,8);
+ for(let t=0;t<300;t++){const i=(t*37)%xs.length,j=(t*53+11)%xs.length,k=t%zs.length,n=(k*xs.length+j)*xs.length+i;
+  const fb=g.fieldAt(B,xs[i],xs[j],zs[k]),ft=g.fieldAt(T,xs[i],xs[j],zs[k]);
+  for(let c=0;c<8;c++){const sc=c<2?1:100;close(job.out[8*n+c],fb[c],2e-7,1e-6*sc);close(Tm[8*n+c],ft[c],2e-7,1e-6*sc);}}
+ const S2=[{x:0,y:0,z:-10,nx:0,ny:0,nz:1,A:1,ph:0},{x:0,y:0,z:10,nx:0,ny:0,nz:-1,A:1,ph:0}],ax=g.gridAxis(-.002,.002,1e-3),az=g.gridAxis(-.02,.02,2.5e-5),j2=g.gridJob(S2,ax,ax,az,2);j2.step(1e9);
+ const a=Array.from(az,(_,k)=>{const n=(k*ax.length+2)*ax.length+2;return j2.out[2*n]**2+j2.out[2*n+1]**2;}),nd=[];
+ for(let k=1;k<az.length-1;k++)if(a[k]<a[k-1]&&a[k]<=a[k+1])nd.push(az[k]+.5*(a[k-1]-a[k+1])/(a[k-1]-2*a[k]+a[k+1])*(az[1]-az[0]));
+ assert.equal(nd.length,10);for(let i=1;i<nd.length;i++)close(nd[i]-nd[i-1],g.LAMBDA/2,0,5e-7);
+ close(g.pressureAt(Math.cos(.7),Math.sin(.7),.7),1);
+});
 console.log(`Completed ${n} acoustics lab groups. Sound hardware, perception, real force calibration and browser controls are not certified.`);

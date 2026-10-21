@@ -12,14 +12,14 @@ time: 15 to 25 minutes
 
 ## Before class
 
-Students should know what a standing wave is (nodes and antinodes), that sound is a pressure wave, and that a force is the downhill slope of a potential energy, F = −dU/dz. In projector mode the demo fits a 1280 × 720 screen; the Slice view reads best from the back of a room.
+Students should know what a standing wave is (nodes and antinodes), that sound is a pressure wave, and that a force is the downhill slope of a potential energy, F = −dU/dz. In projector mode the demo fits a 1280 × 720 screen; the Flat view reads best from the back of a room.
 
 ## Running it in class
 
-1. **Stack of beads.** The beads hang on the axis like rungs of a ladder. Ask the prediction question (Q1) before you say anything about nodes. Then switch the colors from Pressure |p| to Potential U: the beads sit in the blue wells, on the pale bands of the pressure picture.
+1. **Stack of beads.** The demo opens on the 3D field: the pressure at each instant, red for compression and blue for rarefaction, 100 000 times slower than real. Between the bowls the layers swell and fade in place (a standing wave); near each bowl the fronts run inward (traveling waves). Ask the prediction question (Q1) before you say anything about nodes. Then switch to Amplitude |p|, or to the Slice colored by Potential U: the beads sit in the wells, on the dark bands of the pressure amplitude.
 2. **Hold a bead.** Point to the readout F<sub>max</sub>/W, about 112 at 10 V. Lower the drive slowly with the left arrow key or the slider. Ask when it will fall; the rail's "Holds above" gives the answer, about 0.94 V.
 3. **Water droplet**, then **Too heavy: steel falls.** The droplet still floats at 10 V but hangs a little lower in its trap (the "trap − node" column). Steel falls out through the hole in the bottom bowl. Ask Q3, then raise the drive until steel holds.
-4. **Move with phase.** The top bowl's phase sweeps back and forth and the beads ride the traps up and down. Stop the sweep and drag a trap ring by hand. Ask Q2: why are the traps 4.76 mm apart here, not λ/2?
+4. **Move with phase.** The top bowl's phase sweeps back and forth and the beads ride the traps up and down. Stop the sweep and drag a trap ring by hand. Open Trap pockets: each trap is a flat lens of low U, wider than it is tall, so it holds the bead sideways as well as up and down. Ask Q2: why are the traps 4.76 mm apart here, not λ/2?
 5. **Single emitter and reflector.** One transducer and a flat plate make the same kind of ladder, but much weaker. Try the water droplet, then try the phase slider (it does nothing). Use Q4.
 6. **Sound.** Turn on the sound, sweep the phase, and listen with the microphone at the centre (Q6).
 
@@ -49,6 +49,7 @@ Students should know what a standing wave is (nodes and antinodes), that sound i
 - The field is the sum of 72 transducers (36 per bowl, rings of 6, 12 and 18 on a sphere of radius 60 mm, as in the TinyLev levitator of Marzo, Barnes and Drinkwater, 2017). Each is a 10 mm piston in its far field, p = P₀V D(θ) e^(i(kd + φ))/d with D = 2J₁(ka sin θ)/(ka sin θ).
 - Illustrative calibration P₀ = 0.30 Pa·m per volt peak to peak, from the data sheet; real arrays deliver less. Free field: no reflections from the bowls, no nonlinear acoustics, no near field (within about 9 mm of a transducer face). The single emitter setup uses one mirror image for a rigid flat reflector, so there is no resonance.
 - Force: Gor'kov's potential for a small sphere (ka ≪ 1), U = K₁|p|² − K₂|∇p|², with K₁ = πa³f₁/(3ρ₀c²), K₂ = πa³f₂/(2ρ₀ω²), f₁ = 1 − ρ₀c²/K<sub>p</sub>, f₂ = 2(ρ<sub>p</sub> − ρ₀)/(2ρ<sub>p</sub> + ρ₀). Traps are minima of U + Wz along the axis, with W the weight less buoyancy. The demo warns above a = λ/10.
+- The 3D views use the same source sum on a grid (1 mm spacing, about λ/9, within 50 mm of the centre; 0.5 mm near the axis for the trap pockets). Drive, phase and time are applied when drawing, as p(t) = Re[V(B + e<sup>iΔφ</sup>T)e<sup>−iωt</sup>]. A trap pocket is the surface where U equals a chosen share of its deepest value; gravity is left out of that surface.
 - Beads move only along the axis, pass through each other, and feel Schiller and Naumann drag; motion is shown 20 times slower than real. The sound is a 400 Hz stand in (40 kHz ÷ 100) whose loudness follows |p| at the microphone.
 
 ## Going further
