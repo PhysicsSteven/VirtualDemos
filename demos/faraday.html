@@ -48,6 +48,7 @@ input[type="number"], select { max-width:100%; width:100%; padding:.45rem; color
   --accent: #2b60b5;
   --flux: #7a45c0;
   --emf: #1d8a5a;
+  --drive: #0e7c8a;
   --wire: #3b4655;
   --copper: #b8692e; --copper-hi: #f2b37a; --copper-lo: #6e3412;
   --steel: #9aa5b3; --steel-hi: #eef2f6; --steel-lo: #5b6573;
@@ -60,7 +61,7 @@ input[type="number"], select { max-width:100%; width:100%; padding:.45rem; color
   :root:not([data-theme="light"]) {
     --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --flux: #b48cff; --emf: #4cc38a; --wire: #aab4c2;
+    --equi: #e2b350; --accent: #69a0ff; --flux: #b48cff; --emf: #4cc38a; --drive: #3cc4d4; --wire: #aab4c2;
     --copper: #c4773a; --copper-hi: #f6c08c; --copper-lo: #5e2b0e; --steel: #7f8a99; --steel-hi: #dfe5ec; --steel-lo: #3f4753;
     --former: #8c7b58; --bench: #3a2f24; --bench-lo: #261e16; --meter-case: #0b0d10; --meter-face: #e9e1cc; --meter-ink: #2b2620;
     color-scheme: dark;
@@ -69,7 +70,7 @@ input[type="number"], select { max-width:100%; width:100%; padding:.45rem; color
 :root[data-theme="dark"] {
   --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --flux: #b48cff; --emf: #4cc38a; --wire: #aab4c2;
+  --equi: #e2b350; --accent: #69a0ff; --flux: #b48cff; --emf: #4cc38a; --drive: #3cc4d4; --wire: #aab4c2;
     --copper: #c4773a; --copper-hi: #f6c08c; --copper-lo: #5e2b0e; --steel: #7f8a99; --steel-hi: #dfe5ec; --steel-lo: #3f4753;
     --former: #8c7b58; --bench: #3a2f24; --bench-lo: #261e16; --meter-case: #0b0d10; --meter-face: #e9e1cc; --meter-ink: #2b2620;
   color-scheme: dark;
@@ -148,7 +149,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
 .readout .wide { grid-column: 1 / -1; }
 .ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
-.c-flux { color: var(--flux); } .c-emf { color: var(--emf); } .c-cur { color: var(--equi); }
+.c-flux { color: var(--flux); } .c-emf { color: var(--emf); } .c-cur { color: var(--equi); } .c-drive { color: var(--drive); }
 .law { margin: 0; font-size: 0.92rem; }
 .law b { font-weight: 700; }
 .lenz-now { margin: 0; font-size: 0.86rem; padding: 8px 10px; border-left: 3px solid var(--equi); background: var(--canvas); border-radius: 0 6px 6px 0; }
@@ -165,6 +166,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.area { height: 10px; border: 0; background: var(--emf); opacity: 0.25; }
 .swatch.fl { border-color: var(--muted); }
 .swatch.ind { border-color: var(--equi); border-top-style: dashed; }
+.swatch.drive { border-color: var(--drive); }
+.swatch.dash { border-top-style: dashed; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 @media (max-width: 1060px) {
@@ -182,6 +185,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 }
 @media (max-width: 480px) {
   .stage { grid-template-rows: 540px 420px; }
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
 }
 </style>
 </head>
@@ -220,17 +225,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <h2>Setups</h2>
         <div class="chips" id="presets">
           <button type="button" data-p="push" aria-pressed="true">Push the magnet in</button>
-          <button type="button" data-p="speed" aria-pressed="false">Speed matters</button>
           <button type="button" data-p="through" aria-pressed="false">Pass it through</button>
           <button type="button" data-p="flip" aria-pressed="false">Flip the magnet</button>
           <button type="button" data-p="gen" aria-pressed="false">Generator</button>
           <button type="button" data-p="rails" aria-pressed="false">Sliding bar</button>
+          <button type="button" data-p="coils" aria-pressed="false">Two coils</button>
         </div>
         <p class="hint" id="presetHint"></p>
       </section>
 
       <section>
-        <h2>Motion</h2>
+        <h2 id="motionH">Motion</h2>
         <div class="sliders" id="motionSl"></div>
         <div class="slider-head"><span style="font-size:0.88rem">Playback</span></div>
         <div class="seg full" role="group" aria-label="Playback rate" id="rateSeg">
@@ -252,7 +257,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <section>
         <h2>Measurements</h2>
         <dl class="readout" id="meas"></dl>
-        <p class="hint">Flux is evaluated at the displayed time. EMF, current and velocity are averages over the preceding 1 ms interval, not endpoint values.</p>
+        <p class="hint" id="measHint">Flux is evaluated at the displayed time. EMF, current and velocity are averages over the preceding 1 ms interval, not endpoint values.</p>
         <label><input id="labBlind" type="checkbox" checked>Hide predicted amplitudes and integral checks</label>
         <button class="btn" id="labStep">Step 1 ms</button>
         <label for="labDuration">Advance by (s)</label><input id="labDuration" type="number" min="0.001" max="10" step="0.001" value="0.1">
@@ -266,10 +271,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <h2>Since the start of this move</h2>
         <dl class="readout" id="since"></dl>
         <p class="hint" id="sinceHint"></p>
-        <div class="row2">
+        <div class="row2" id="keepRow">
           <button type="button" class="btn" id="keep">Keep trace</button>
           <button type="button" class="btn" id="clearG">Clear traces</button>
         </div>
+      </section>
+
+      <section id="steadySec" hidden>
+        <h2>Steady state (phasors)</h2>
+        <dl class="readout" id="steady"></dl>
+        <p class="hint" id="steadyHint"></p>
       </section>
 
       <section>
@@ -293,12 +304,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <label><input type="checkbox" id="tCur" checked>Current arrows</label>
         </div>
         <div class="key">
-          <span><i class="swatch"></i>Φ<sub>B</sub>, flux</span>
-          <span><i class="swatch emf"></i>EMF</span>
-          <span><i class="swatch cur"></i>Current I, and its direction on the drawing</span>
-          <span><i class="swatch area"></i>∫EMF dt since the start of the move</span>
-          <span><i class="swatch ghost"></i><span id="ghostTxt">Kept trace</span></span>
-          <span id="keyFL"><i class="swatch fl"></i>Magnetic field lines of the magnet</span>
+          <span><i class="swatch"></i><span id="keyPhiTxt">Φ<sub>B</sub>, flux</span></span>
+          <span id="keyPhiM" hidden><i class="swatch dash"></i>Φ<sub>2</sub> from the primary alone, MI<sub>1</sub>/N<sub>2</sub></span>
+          <span><i class="swatch emf"></i><span id="keyEmfTxt">EMF</span></span>
+          <span id="keyI1" hidden><i class="swatch drive"></i>Primary current I<sub>1</sub>, and its direction on the drawing</span>
+          <span><i class="swatch cur"></i><span id="keyCurTxt">Current I, and its direction on the drawing</span></span>
+          <span id="keyArea"><i class="swatch area"></i>∫EMF dt since the start of the move</span>
+          <span id="keyGhost"><i class="swatch ghost"></i><span id="ghostTxt">Kept trace</span></span>
+          <span id="keyRef" hidden><i class="swatch ghost dash"></i><span id="keyRefTxt">Steady state I<sub>1</sub> with the switch the other way (computed)</span></span>
+          <span id="keyFL"><i class="swatch fl"></i><span id="keyFLTxt">Magnetic field lines of the magnet</span></span>
           <span id="keyInd"><i class="swatch ind"></i>Field of the induced current (shape only)</span>
         </div>
         <p class="hint" id="modelHint"></p>
@@ -483,15 +497,113 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const rate=p.B*p.B*p.L*p.L/(p.m*p.R),tau=1/rate;
     return {v:v0*Math.exp(-rate*t),dx:rate===0?v0*t:v0*-Math.expm1(-rate*t)/rate,tau};
   }
+  // ---------- two coaxial coils: mutual induction ----------
+  // Each coil is N turns of round copper wire WIRE_D across, wound as a bundle of circular cross section of radius
+  // c = WIRE_D √(N/π) (square packed turns) about the mean radius a; the current density is taken uniform over the bundle.
+  const RHO_CU = 1.68e-8, WIRE_D = 1.0e-3, R_SRC = 0.5;      // copper at 20 °C (Ω·m), wire diameter (m), source resistance (Ω)
+  const windC = (N) => WIRE_D * Math.sqrt(N / Math.PI);
+  const wireR = (N, a) => RHO_CU * N * 2 * Math.PI * a / (Math.PI * WIRE_D * WIRE_D / 4);
+  // Self inductance of a circular coil of circular cross section (radius c, uniform current density), Maxwell's formula as given
+  // by Rosa and Grover (1912) and Grover, Inductance Calculations (1946): L = μ₀N²a[(1 + c²/8a²) ln(8a/c) − 7/4 + c²/24a²], error O((c/a)⁴).
+  function selfL(N, a, c) { const q = c * c / (a * a), l = Math.log(8 * a / c); return MU0 * N * N * a * ((1 + q / 8) * l - 1.75 + q / 24); }
+  // average over a unit disk: Gauss-Legendre in u = ρ² (nu points), trapezoid rule in angle (nth points); [x, y, weight]
+  function diskRule(nu, nth) {
+    const g = gaussLegendre(nu), pts = [];
+    for (let i = 0; i < nu; i++) { const u = (g.x[i] + 1) / 2, w = g.w[i] / 2, r = Math.sqrt(u); for (let j = 0; j < nth; j++) { const t = 2 * Math.PI * (j + 0.5) / nth; pts.push([r * Math.cos(t), r * Math.sin(t), w / nth]); } }
+    return pts;
+  }
+  const DISK = diskRule(6, 12);
+  // Mutual inductance per pair of turns of two coaxial bundles (mean radii a1, a2, section radii c1, c2, centres d apart):
+  // Maxwell's exact formula for two coaxial rings (ringFlux), averaged over both cross sections.
+  function bundleM(a1, c1, a2, c2, d, rule) {
+    const R = rule || DISK; let s = 0;
+    for (const [x1, y1, w1] of R) for (const [x2, y2, w2] of R) s += w1 * w2 * ringFlux(a1 + c1 * x1, a2 + c2 * x2, d + c2 * y2 - c1 * y1);
+    return s;
+  }
+  // the smallest centre separation that keeps a 3 mm gap between the two windings, on the 5 mm grid of the separation control
+  const minSep = (c1, c2) => Math.ceil((c1 + c2 + 0.003) / 0.005 - 1e-9) * 0.005;
+  // p: N1, N2, a1, a2 (m), d (m), RL (load resistor, Ω). R1 = source resistance + primary wire, R2 = load + secondary wire.
+  function coilSystem(p) {
+    if (![p.N1, p.N2, p.a1, p.a2, p.d, p.RL].every(Number.isFinite) || p.N1 <= 0 || p.N2 <= 0 || p.RL < 0) throw Error('Invalid coil parameters');
+    const c1 = windC(p.N1), c2 = windC(p.N2);
+    if (p.d < c1 + c2 + 1e-9) throw Error('Windings overlap');
+    const L1 = selfL(p.N1, p.a1, c1), L2 = selfL(p.N2, p.a2, c2), h = 1e-4;
+    const M = p.N1 * p.N2 * bundleM(p.a1, c1, p.a2, c2, p.d), dM = p.N1 * p.N2 * (bundleM(p.a1, c1, p.a2, c2, p.d + h) - bundleM(p.a1, c1, p.a2, c2, p.d - h)) / (2 * h);
+    const Rw1 = wireR(p.N1, p.a1), Rw2 = wireR(p.N2, p.a2);
+    return { ...p, c1, c2, L1, L2, M, dM, k: M / Math.sqrt(L1 * L2), Rw1, Rw2, R1: R_SRC + Rw1, R2: p.RL + Rw2 };
+  }
+  // complex numbers as [re, im]
+  const cx = { add: (a, b) => [a[0] + b[0], a[1] + b[1]], mul: (a, b) => [a[0] * b[0] - a[1] * b[1], a[0] * b[1] + a[1] * b[0]],
+    div: (a, b) => { const q = b[0] * b[0] + b[1] * b[1]; return [(a[0] * b[0] + a[1] * b[1]) / q, (a[1] * b[0] - a[0] * b[1]) / q]; },
+    abs: (a) => Math.hypot(a[0], a[1]), arg: (a) => Math.atan2(a[1], a[0]), sc: (a, s) => [a[0] * s, a[1] * s] };
+  // Steady state for V₁ = V₀ sin θ, θ = ωt: every quantity is Im(X e^{iθ}). Closed: [R₁ + iωL₁, iωM; iωM, R₂ + iωL₂][X₁; X₂] = [V₀; 0].
+  function coilPhasor(s, w, V0, closed) {
+    const Z1 = [s.R1, w * s.L1], Z2 = [s.R2, w * s.L2], ZM = [0, w * s.M];
+    let X1, X2 = [0, 0], Zref = [0, 0];
+    if (closed) { Zref = cx.div(cx.mul(ZM, ZM), Z2).map((v) => -v); X1 = cx.div([V0, 0], cx.add(Z1, Zref)); X2 = cx.sc(cx.div(cx.mul(ZM, X1), Z2), -1); }
+    else X1 = cx.div([V0, 0], Z1);
+    const E2 = closed ? cx.sc(X2, s.R2) : cx.sc(cx.mul(ZM, X1), -1);           // secondary EMF, −N₂ dΦ₂/dt
+    const Phi2 = cx.sc(cx.add(cx.sc(X1, s.M), cx.sc(X2, s.L2)), 1 / s.N2);       // flux per secondary turn
+    const Pin = 0.5 * V0 * X1[0], P1 = 0.5 * s.R1 * (X1[0] ** 2 + X1[1] ** 2), P2 = 0.5 * s.R2 * (X2[0] ** 2 + X2[1] ** 2);
+    const Favg = 0.5 * s.dM * (X1[0] * X2[0] + X1[1] * X2[1]);                   // time average of I₁I₂ ∂M/∂d
+    return { X1, X2, E2, Phi2, PhiM: cx.sc(X1, s.M / s.N2), Zin: cx.add(Z1, Zref), Zref, Pin, P1, P2, Favg };
+  }
+  // e^{Ah} for the homogeneous circuit, A = −L⁻¹R (2 × 2; open secondary: I₂ = 0 and A = −R₁/L₁). Real eigenvalues, exact.
+  function coilExp(s, closed, h) {
+    if (!closed) return [[Math.exp(-s.R1 / s.L1 * h), 0], [0, 0]];
+    const D = s.L1 * s.L2 - s.M * s.M, A = [[-s.L2 * s.R1 / D, s.M * s.R2 / D], [s.M * s.R1 / D, -s.L1 * s.R2 / D]];
+    const tr = A[0][0] + A[1][1], det = A[0][0] * A[1][1] - A[0][1] * A[1][0], disc = Math.sqrt(Math.max(0, tr * tr / 4 - det));
+    const l1 = tr / 2 - disc, l2 = det / l1, dl = l1 - l2;
+    const c1 = Math.abs(dl * h) < 1e-12 ? h * Math.exp(l2 * h) : Math.exp(l2 * h) * Math.expm1(dl * h) / dl, c0 = Math.exp(l2 * h) - l2 * c1;
+    return [[c0 + c1 * A[0][0], c1 * A[0][1]], [c1 * A[1][0], c0 + c1 * A[1][1]]];
+  }
+  // A stepper for fixed settings: x(t + h) = x_p(t + h) + e^{Ah}(x(t) − x_p(t)), x_p the steady state; exact for any h.
+  function coilStepper(s, w, V0, closed, h) {
+    return { s, w, V0, closed, h, E: coilExp(s, closed, h), Eh: coilExp(s, closed, h / 2), ph: coilPhasor(s, w, V0, closed),
+      cm: Math.cos(w * h / 2), sm: Math.sin(w * h / 2), c1: Math.cos(w * h), s1: Math.sin(w * h) };
+  }
+  // instantaneous quantities for state st = {t, I1, I2, th} (th: source phase at time t)
+  function coilOut(k, st) {
+    const s = k.s, V1 = k.V0 * Math.sin(st.th), I1 = st.I1, I2 = k.closed ? st.I2 : 0;
+    let d1, d2 = 0;
+    if (k.closed) { const D = s.L1 * s.L2 - s.M * s.M, r1 = V1 - s.R1 * I1, r2 = -s.R2 * I2; d1 = (s.L2 * r1 - s.M * r2) / D; d2 = (s.L1 * r2 - s.M * r1) / D; }
+    else d1 = (V1 - s.R1 * I1) / s.L1;
+    return { V1, I1, I2, dI1: d1, dI2: d2, emf2: -s.M * d1 - s.L2 * d2, phi2: (s.M * I1 + s.L2 * I2) / s.N2, phiM: s.M * I1 / s.N2,
+      F: I1 * I2 * s.dM, Wm: 0.5 * s.L1 * I1 * I1 + s.M * I1 * I2 + 0.5 * s.L2 * I2 * I2 };
+  }
+  // one step; returns the energy from the source and the heat in R₁ and R₂ over the step (Simpson's rule with the exact midpoint state)
+  // (adds to acc when given; scalar code because it runs thousands of times a frame at high frequency)
+  function coilStep(k, st, acc) {
+    const A = k.ph.X1, B = k.ph.X2, E = k.E, H = k.Eh;
+    const s0 = Math.sin(st.th), c0 = Math.cos(st.th), sM = s0 * k.cm + c0 * k.sm, cM = c0 * k.cm - s0 * k.sm, s1 = s0 * k.c1 + c0 * k.s1, c1 = c0 * k.c1 - s0 * k.s1;
+    const i1 = st.I1, i2 = k.closed ? st.I2 : 0, d1 = i1 - (A[0] * s0 + A[1] * c0), d2 = i2 - (B[0] * s0 + B[1] * c0);
+    const m1 = A[0] * sM + A[1] * cM + H[0][0] * d1 + H[0][1] * d2, m2 = B[0] * sM + B[1] * cM + H[1][0] * d1 + H[1][1] * d2;
+    const e1 = A[0] * s1 + A[1] * c1 + E[0][0] * d1 + E[0][1] * d2, e2 = B[0] * s1 + B[1] * c1 + E[1][0] * d1 + E[1][1] * d2;
+    const h6 = k.h / 6, out = acc || { src: 0, q1: 0, q2: 0 };
+    out.src += h6 * k.V0 * (s0 * i1 + 4 * sM * m1 + s1 * e1);
+    out.q1 += h6 * k.s.R1 * (i1 * i1 + 4 * m1 * m1 + e1 * e1);
+    out.q2 += h6 * k.s.R2 * (i2 * i2 + 4 * m2 * m2 + e2 * e2);
+    st.t += k.h; st.th += k.w * k.h; st.I1 = e1; st.I2 = k.closed ? e2 : 0;
+    return out;
+  }
+  // Opening the switch stops I₂ at once; the primary's flux linkage L₁I₁ + MI₂ cannot jump, so I₁ jumps by MI₂/L₁.
+  function coilOpen(s, st) { st.I1 += s.M * st.I2 / s.L1; st.I2 = 0; return st; }
   // ==CORE END==
 
-  if (typeof document === 'undefined') { globalThis.FD={MU0,MAG,ellipKE,ringFlux,ringField,cylFluxUnit,cylFieldUnit,coilFlux,dipoleFlux,magMoment,tiltFluxUnit,flipSeries,seriesEval,circuitStep,makeCircuit,runMove,magnetForce,genPhi,genEmf,railsPhi,coast};return; }
+  if (typeof document === 'undefined') { globalThis.FD={MU0,MAG,ellipKE,ringFlux,ringField,cylFluxUnit,cylFieldUnit,coilFlux,dipoleFlux,magMoment,tiltFluxUnit,flipSeries,seriesEval,circuitStep,makeCircuit,runMove,magnetForce,genPhi,genEmf,railsPhi,coast,gaussLegendre,RHO_CU,WIRE_D,R_SRC,windC,wireR,selfL,diskRule,bundleM,minSep,coilSystem,coilPhasor,coilExp,coilStepper,coilOut,coilStep,coilOpen};return; }
 
   const $ = (id) => document.getElementById(id);
   const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const E12 = [1, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2];
   const R_VALUES = (() => { const o = []; for (let d = -1; d < 4; d++) for (const m of E12) o.push(+(m * Math.pow(10, d)).toPrecision(3)); o.push(1e4); return o; })();
-  const RATES = [[1, 'real time'], [0.5, 'slow motion ×2'], [0.25, 'slow motion ×4'], [0.1, 'slow motion ×10']];
+  // playback rates: the two coils run at audio frequencies, so their slow motion goes much further
+  const RATE_SETS = {
+    std: { r: [[1, 'real time'], [0.5, 'slow motion ×2'], [0.25, 'slow motion ×4'], [0.1, 'slow motion ×10']], lab: ['Real time', '½', '¼', '1/10'] },
+    coils: { r: [[1, 'real time'], [0.1, 'slow motion ×10'], [0.01, 'slow motion ×100'], [0.001, 'slow motion ×1000']], lab: ['Real time', '1/10', '1/100', '1/1000'] }
+  };
+  const rateSet = () => RATE_SETS[S.mode === 'coils' ? 'coils' : 'std'];
+  const F_VALUES = [10, 20, 30, 50, 60, 100, 150, 200, 300, 500, 700, 1000];   // source frequencies, Hz
+  const COIL_A1 = 0.04;                // primary mean radius, m
   const DT = 1e-3;                     // physics step, s of the apparatus's own time
   const LEN = MAG.len, RB = MAG.b;
   const DPSI = 4.5e-5;                 // flux between neighbouring drawn field lines, Wb
@@ -534,18 +646,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       motion: [['v', 'Speed of the bar v', 0.1, 3, 0.1, (x) => `${x.toFixed(1)} m/s`], ['m', 'Bar mass m', 5, 200, 5, (x) => `${x} g`]],
       setup: [['B', 'Field B, into the page', 0.1, 2, 0.1, (x) => `${x.toFixed(1)} T`], ['L', 'Rail spacing L', 5, 40, 1, (x) => `${x} cm`],
         ['Ri', 'Circuit resistance R', 0, R_VALUES.length - 1, 1, (i) => fmtR(R_VALUES[i])]]
+    },
+    coils: {
+      motion: [['fi', 'Frequency f', 0, F_VALUES.length - 1, 1, (i) => `${F_VALUES[i]} Hz`], ['V0', 'Amplitude V<sub>0</sub>', 1, 10, 0.5, (x) => `${x.toFixed(1)} V`]],
+      setup: [['N1', 'Primary turns N<sub>1</sub>', 20, 300, 10, (x) => `${x}`], ['N2', 'Secondary turns N<sub>2</sub>', 20, 300, 10, (x) => `${x}`],
+        ['a2', 'Secondary radius a<sub>2</sub>', 3, 6, 0.5, (x) => `${x.toFixed(1)} cm`], ['d', 'Separation d', 2, 20, 0.5, (x) => `${x.toFixed(1)} cm`],
+        ['Ri', 'Load resistor R<sub>L</sub>', 0, R_VALUES.length - 1, 1, (i) => fmtR(R_VALUES[i])]]
     }
   };
   const DEF = {
     magnet: { v: 0.2, N: 400, a: 2.5, Br: 1.2, Ri: 36 },
     gen: { w: 6.3, N: 100, B: 0.2, A: 100, Ri: 36 },
-    rails: { v: 1, m: 20, B: 1, L: 20, Ri: 8 }
+    rails: { v: 1, m: 20, B: 1, L: 20, Ri: 8 },
+    coils: { fi: 7, V0: 5, N1: 200, N2: 200, a2: 4, d: 2.5, Ri: 8, closed: true }
   };
   const PRESETS = {
     push: { mode: 'magnet', v: 0.2,
-      hint: 'The north pole comes closer, so more field lines thread the coil and Φ<sub>B</sub> grows. The induced current makes the coil\'s left face a north pole that pushes back on the magnet. Drag the magnet yourself, or use the buttons above the drawing.' },
-    speed: { mode: 'magnet', v: 0.4,
-      hint: 'The gray trace is the same push at 0.1 m/s; yours is four times faster. The fast push gives four times the EMF for a quarter of the time, so the shaded areas are equal and the same charge Q = NΔΦ<sub>B</sub>/R flows. Charge counts flux, not speed.' },
+      hint: 'The north pole comes closer, so more field lines thread the coil and Φ<sub>B</sub> grows. The induced current makes the coil\'s left face a north pole that pushes back on the magnet. The gray trace is the same push at half the speed: half the EMF for twice as long, so the shaded areas are equal and the same charge Q = NΔΦ<sub>B</sub>/R flows. Change the speed and push again.' },
     through: { mode: 'magnet', v: 0.3,
       hint: 'The flux rises as the magnet enters and falls as it leaves, so the EMF has two lobes of opposite sign: the coil repels the magnet on the way in and pulls it back on the way out. Starting and ending far away, ΔΦ<sub>B</sub> = 0, so the net charge is zero.' },
     flip: { mode: 'magnet', v: 0.2,
@@ -553,7 +670,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     gen: { mode: 'gen',
       hint: 'A coil turning in a uniform field has Φ<sub>B</sub> = BA cos ωt, so its EMF is NBAω sin ωt: alternating current. The EMF peaks when the coil is edge on to the field, where the flux is zero but changing fastest. Stop the motor and turn the crank yourself.' },
     rails: { mode: 'rails',
-      hint: 'Pulling the bar sweeps out area, so the flux grows at the rate BLv. The current in the bar feels a force ILB that opposes the motion: the power you supply, Fv, equals the heat I²R. Push and let go to see the bar braked to rest.' }
+      hint: 'Pulling the bar sweeps out area, so the flux grows at the rate BLv. The current in the bar feels a force ILB that opposes the motion: the power you supply, Fv, equals the heat I²R. Push and let go to see the bar braked to rest.' },
+    coils: { mode: 'coils',
+      hint: 'The alternating current I<sub>1</sub> in the primary sends a changing flux through the secondary, which induces EMF<sub>2</sub> and drives I<sub>2</sub>. I<sub>2</sub> runs nearly opposite to I<sub>1</sub>, so the facing ends are like poles and the secondary is pushed away. Open the switch to see the bare induced EMF, and compare the primary current: the closed secondary acts back on the source. Drag the secondary away to weaken the coupling.' }
   };
   const MODE_TXT = {
     magnet: {
@@ -579,16 +698,30 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       sign: 'B points into the page and so does the normal n̂, so Φ<sub>B</sub> = BLx &gt; 0. A positive current circulates the right hand way around n̂, which is clockwise on the page. Pulling the bar to the right makes EMF = −BLv &lt; 0, so the current runs counterclockwise.',
       rhr: 'Force on the bar: F = IL × B. With the current up the bar and B into the page, the force points left, against a pull to the right.',
       model: 'Frictionless rails with no resistance; R is the whole circuit resistance, bar included. Uniform B; self inductance neglected. Pulled at constant speed, your force exactly balances ILB. Let go, the bar obeys m dv/dt = −B²L²v/R, so v = v₀ e<sup>−t/τ</sup> with τ = mR/(B²L²), and stops after v₀τ; a bumper stops it at the end of the rails.'
+    },
+    coils: {
+      setupH: 'Two coils',
+      setupHint: 'Changing a setting keeps both currents as they are, and the circuits settle to the new steady state. The energy count starts again.',
+      motionHint: 'Drag the secondary along the axis, its top to change its radius, and the load resistor to change R<sub>L</sub>. Click the switch to open or close the secondary. Time runs slowly: at 1/100, one second on screen is 10 ms.',
+      sign: 'Both coil normals point along +z, to the right. Φ<sub>2</sub> &gt; 0 when the field crosses the secondary along +z. A positive current circulates the right hand way around +z: counterclockwise seen from the right. V<sub>1</sub> &gt; 0 drives a positive I<sub>1</sub>, and a positive EMF<sub>2</sub> drives a positive I<sub>2</sub>. With these choices M &gt; 0 and EMF<sub>2</sub> = −N<sub>2</sub> dΦ<sub>2</sub>/dt = −M dI<sub>1</sub>/dt − L<sub>2</sub> dI<sub>2</sub>/dt. The force on the secondary is counted positive along +z, away from the primary.',
+      rhr: 'Currents circulating the same way attract; opposite ways repel. When I₁ and I₂ have opposite signs the facing ends of the coils are like poles, and the secondary is pushed away.',
+      model: 'Two coaxial air coils of copper wire 1.0 mm across (resistivity 1.68×10<sup>−8</sup> Ω·m at 20 °C), no iron. Each winding is a bundle of circular cross section, radius c = (1.0 mm)√(N/π) for square packed turns, about its mean radius a (primary a<sub>1</sub> = 4.0 cm), with the current spread evenly over the bundle. ' +
+        'Mutual inductance M: Maxwell\'s exact formula for two coaxial rings (complete elliptic integrals), averaged over both winding cross sections by Gauss-Legendre quadrature. ' +
+        'Self inductance: Maxwell\'s formula for a circular coil of circular cross section, L = μ₀N²a[(1 + c²/8a²) ln(8a/c) − 7/4 + c²/24a²] (Rosa and Grover 1912; Grover, <i>Inductance Calculations</i>, 1946), valid for c ≪ a; it agrees with a direct numerical integral over the winding section to 0.01 % for these coils. ' +
+        'Resistance: R<sub>1</sub> = 0.5 Ω inside the source plus the primary wire; R<sub>2</sub> = R<sub>L</sub> plus the secondary wire. Skin and proximity effects and the capacitance between turns are ignored, fair below 1 kHz for 1 mm wire (the skin depth in copper is 2.1 mm at 1 kHz). ' +
+        'The coupled equations V<sub>1</sub> = R<sub>1</sub>I<sub>1</sub> + L<sub>1</sub> dI<sub>1</sub>/dt + M dI<sub>2</sub>/dt and 0 = R<sub>2</sub>I<sub>2</sub> + L<sub>2</sub> dI<sub>2</sub>/dt + M dI<sub>1</sub>/dt are solved exactly: each step adds the matrix exponential of the decaying transient to the phasor steady state, so the step (1/200 of a period or less) sets only how finely the curves are drawn. The source starts at V<sub>1</sub> = 0 with no current. ' +
+        'Changing a setting or moving the secondary keeps both currents; the EMF of the motion itself, I dM/dt, is left out: at a hand speed of 0.1 m/s it is under 1.5 % of ωMI from 50 Hz up (7 % at 10 Hz). Opening the switch stops I<sub>2</sub> at once; the primary\'s flux linkage L<sub>1</sub>I<sub>1</sub> + MI<sub>2</sub> cannot jump, so I<sub>1</sub> jumps by MI<sub>2</sub>/L<sub>1</sub> (a real switch does this in a small spark). ' +
+        'Readouts are values at the displayed time. Field lines are contours of the flux of the two windings, each taken as a thin ring at its mean radius, in the plane of the page, at equal steps of flux; inside the windings they are not drawn.'
     }
   };
 
   // ---------- state ----------
   const S = { preset: 'push', mode: 'magnet', rateIdx: 0, layers: { lines: true, ind: true, force: true, cur: true },
-    magnet: { ...DEF.magnet }, gen: { ...DEF.gen }, rails: { ...DEF.rails } };
+    magnet: { ...DEF.magnet }, gen: { ...DEF.gen }, rails: { ...DEF.rails }, coils: { ...DEF.coils } };
   const W = { t: 0, z: -0.12, zt: -0.12, th: 0, zMid: -0.12, vMag: 0, F: 0, Fmax: 1e-6,
     gth: 0, gtht: 0, gw: 0, motor: true, x: RAIL_X0, xt: RAIL_X0, rv: 0, ke: 0, ke0: 0, work: 0, eMax: 0, fv: 0 };
   let act = null, circ = null, tA = 0, running = !reduce, acc = 0;
-  let hist = { t: [], phi: [], emf: [], I: [] };
+  let hist = { t: [], phi: [], emf: [], I: [], I1: [], phiM: [] };
   let labTrace=[],labRun=0;const labRows=[];
   let ghosts = [];
   const view = { Tw: 2, wl: 0 };
@@ -598,8 +731,34 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const magP = () => ({ N: S.magnet.N, R: R_VALUES[S.magnet.Ri], Br: S.magnet.Br, a: S.magnet.a / 100, pol: Math.cos(W.th) });
   const railP = () => ({ B: S.rails.B, L: S.rails.L / 100, R: R_VALUES[S.rails.Ri], m: S.rails.m / 1000 });
   const genA = () => S.gen.A * 1e-4;
-  const Nnow = () => (S.mode === 'rails' ? 1 : P().N);
-  const rate = () => RATES[S.rateIdx][0];
+  const Nnow = () => (S.mode === 'rails' ? 1 : S.mode === 'coils' ? S.coils.N2 : P().N);
+  const rate = () => rateSet().r[S.rateIdx][0];
+
+  // ---------- two coils: run state ----------
+  // st: the two currents and the source phase at time st.t (= W.t); sys: inductances and resistances; k: the exact stepper
+  const CS = { st: { t: 0, I1: 0, I2: 0, th: 0 }, sys: null, k: null, phC: null, phO: null, out: null, h: 1e-3, dpsi: 1e-6, E: { src: 0, q1: 0, q2: 0, Wm0: 0 }, settings: '' };
+  const coilF = () => F_VALUES[S.coils.fi], coilW = () => 2 * Math.PI * coilF();
+  // the step divides 1 ms exactly and is at most 1/200 of a period
+  const coilH = () => 1e-3 / Math.ceil(200 * coilF() * 1e-3 - 1e-9);
+  const coilParams = () => ({ N1: S.coils.N1, N2: S.coils.N2, a1: COIL_A1, a2: S.coils.a2 / 100, d: S.coils.d / 100, RL: R_VALUES[S.coils.Ri] });
+  const coilMinD = () => minSep(windC(S.coils.N1), windC(S.coils.N2)) * 100;
+  // settings to inductances, stepper and steady states; the currents are left as they are
+  function coilBuild() {
+    S.coils.d = Math.max(S.coils.d, +coilMinD().toFixed(4));
+    const c = S.coils, w = coilW();
+    CS.sys = coilSystem(coilParams()); CS.h = coilH();
+    CS.k = coilStepper(CS.sys, w, c.V0, c.closed, CS.h);
+    CS.phC = coilPhasor(CS.sys, w, c.V0, true); CS.phO = coilPhasor(CS.sys, w, c.V0, false);
+    // field lines: equal steps of flux, set so about twelve lines cross the primary's plane inside 0.75 a₁ at the peak of the open circuit current
+    CS.dpsi = nice(c.N1 * cx.abs(CS.phO.X1) * ringFlux(0.75 * COIL_A1, COIL_A1, 0) / 12);
+    CS.settings = JSON.stringify({ f_Hz: coilF(), V0_V: c.V0, N1: c.N1, N2: c.N2, a1_m: COIL_A1, a2_m: c.a2 / 100, d_m: c.d / 100, RL_ohm: R_VALUES[c.Ri], R1_ohm: CS.sys.R1, R2_ohm: CS.sys.R2, L1_H: CS.sys.L1, L2_H: CS.sys.L2, M_H: CS.sys.M, k: CS.sys.k, closed: c.closed });
+    const t = $('keyFLTxt'); if (t && S.mode === 'coils') t.textContent = `Magnetic field lines, ${fmtSI(CS.dpsi, 'Wb', 2)} of flux apart`;
+  }
+  // copy the instantaneous coil quantities into the shared circuit record that the plots and readouts use
+  function coilSync() {
+    const o = coilOut(CS.k, CS.st); CS.out = o;
+    Object.assign(circ, { phi: o.phi2, emf: o.emf2, I: o.I2, I1: o.I1, V1: o.V1, phiM: o.phiM, N: S.coils.N2, R: CS.sys.R2 });
+  }
 
   // ---------- field line pictures ----------
   // ψ(ζ, ρ) for the magnet per tesla of B_r, on a grid in the magnet's own frame; field lines are its contours.
@@ -685,6 +844,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       return p.pol * coilFlux(p.Br, p.a, -W.z);
     }
     if (S.mode === 'gen') return genPhi(S.gen.B, genA(), W.gth);
+    if (S.mode === 'coils') return CS.out ? CS.out.phi2 : 0;
     const r = railP(); return railsPhi(r.B, r.L, W.x);
   }
   const followTau = () => 0.035 * rate();
@@ -716,6 +876,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       else [W.gth, W.fv] = follow(W.gth, W.fv, W.gtht, dt);
       W.gw = (W.gth - th0) / dt; W.gMid = (W.gth + th0) / 2;
       circuitStep(circ, fluxNow(), dt);
+    } else if (S.mode === 'coils') {
+      coilStep(CS.k, CS.st, CS.E);
+      coilSync();
+      // interval averages for the lab record: EMF₂ = −N₂ΔΦ₂/Δt exactly, and with the switch closed I₂ = EMF₂/R₂ at every instant
+      circ.emfAvg = -S.coils.N2 * (circ.phi - phiBefore) / dt; circ.Iavg = S.coils.closed ? circ.emfAvg / CS.sys.R2 : 0;
+      circ.Q += circ.Iavg * dt; circ.heat = CS.E.q2;
     } else {
       const x0 = W.x, r = railP(), keOld = W.ke;
       let coasting = false, vEx = 0;
@@ -738,13 +904,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       // your work = change of kinetic energy + heat (the magnetic force on the bar does work −I²R dt); none while coasting
       if (!coasting) W.work += W.ke - keOld + circ.I * circ.I * circ.R * dt;
     }
-    labTrace.push(labSample(dt,phiBefore));if(labTrace.length>60001)labTrace.shift();
+    labTrace.push(labSample(dt,phiBefore));if(labTrace.length>66000)labTrace.splice(0,labTrace.length-60001);
     hist.t.push(t); hist.phi.push(circ.phi); hist.emf.push(circ.emf); hist.I.push(circ.I);
+    if (S.mode === 'coils') { hist.I1.push(circ.I1); hist.phiM.push(circ.phiM); }
   }
   function trimHist() {
-    if (hist.t.length < 60000) return;
-    const cut = hist.t.findIndex((x) => x >= W.t - 34);
-    for (const k of ['t', 'phi', 'emf', 'I']) hist[k] = hist[k].slice(Math.max(0, cut));
+    const coils = S.mode === 'coils';
+    if (hist.t.length < (coils ? 20000 : 60000)) return;
+    const cut = hist.t.findIndex((x) => x >= W.t - (coils ? 1.5 * view.Tw : 34));
+    for (const k of Object.keys(hist)) if (hist[k].length) hist[k] = hist[k].slice(Math.max(0, cut));
   }
   // a new move: the running sums restart and the plot window starts here
   function beginMove(t0, dur) {
@@ -757,8 +925,31 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (!running) setRunning(true);
   }
   // a change of setting: no EMF from it, and a new move starts
-  function rebase() { circ.emf=circ.I=0; circ.N = Nnow(); circ.R = Rnow(); circ.phi = fluxNow(); newMove(W.t); ranges = {}; }
-  function newMove(t0) { startMove(circ); tA = t0; labRun++;labTrace=[labSample(0,circ.phi)]; W.Fmax = 1e-6; W.work = 0; W.ke0 = W.ke; }
+  function rebase() {
+    if (S.mode === 'coils') { coilBuild(); coilSync(); newMove(W.t); ranges = {}; return; }
+    circ.emf=circ.I=0; circ.N = Nnow(); circ.R = Rnow(); circ.phi = fluxNow(); newMove(W.t); ranges = {};
+  }
+  function newMove(t0) {
+    startMove(circ); tA = t0;
+    if (S.mode === 'coils') { CS.E = { src: 0, q1: 0, q2: 0, Wm0: CS.out ? CS.out.Wm : 0 }; circ.emfAvg = circ.Iavg = 0; }
+    labRun++;labTrace=[labSample(0,circ.phi)]; W.Fmax = 1e-6; W.work = 0; W.ke0 = W.ke;
+  }
+  // the coil plots show four periods, sliding with time
+  function coilWindow(keep) { const Tw = 4 / coilF(); if (keep && Math.abs(Tw - view.Tw) < 1e-12) return; view.Tw = Tw; view.wl = Math.max(0, W.t - (keep ? 0.9 : 0.04) * Tw); }
+  // the source switched off and on again: both currents start from zero, with V₁ = V₀ sin ωt from now
+  function coilRestart() {
+    CS.st = { t: W.t, I1: 0, I2: 0, th: 0 }; coilSync(); newMove(W.t); coilWindow(false); ranges = {};
+    if (!running) setRunning(true);
+    $('live').textContent = 'Source restarted: both currents start from zero.';
+  }
+  function setSwitch(closed) {
+    if (S.mode !== 'coils' || S.coils.closed === closed) return;
+    if (!closed) coilOpen(CS.sys, CS.st);
+    S.coils.closed = closed; coilBuild(); coilSync(); newMove(W.t); ranges = {};
+    renderActs(); syncSwitch();
+    $('live').textContent = closed ? 'Secondary switch closed.' : 'Secondary switch opened.';
+  }
+  function syncSwitch() { for (const b of document.querySelectorAll('#swSeg button')) b.setAttribute('aria-pressed', String((b.dataset.sw === 'closed') === S.coils.closed)); }
   function freeWindow() {
     if (S.mode !== 'gen') { growWindow(W.t + 2); return; }
     const Tf = genWindow(); if (view.Tw < Tf) { view.Tw = Tf; view.wl = Math.max(0, W.t - 0.5 * Tf); }
@@ -821,31 +1012,35 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // ---------- presets ----------
   function applyPreset(name) {
     S.preset = name;
-    const c = PRESETS[name], modeChanged = S.mode !== c.mode;
+    const c = PRESETS[name], modeChanged = S.mode !== c.mode, coilsChanged = (S.mode === 'coils') !== (c.mode === 'coils');
     S.mode = c.mode;
     if (c.mode === 'magnet') { S.magnet = { ...DEF.magnet, v: c.v }; }
     else S[c.mode] = { ...DEF[c.mode] };
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
     $('presetHint').innerHTML = c.hint;
     act = null; ghosts = []; status('');
-    W.t = 0; acc = 0; hist = { t: [], phi: [], emf: [], I: [] };
+    W.t = 0; acc = 0; hist = { t: [], phi: [], emf: [], I: [], I1: [], phiM: [] };
     W.z = W.zt = W.zMid = name === 'flip' ? -0.065 : -0.12; W.th = 0; W.vMag = 0; W.F = 0;
     W.ke=W.ke0=W.work=0;W.gMid=0;W.gth = W.gtht = 0; W.motor = true; W.fv = 0; W.x = W.xt = RAIL_X0; W.rv = 0;
     if (c.mode === 'gen') { GV.yaw = GV0.yaw; GV.pit = GV0.pit; }
     if (c.mode === 'magnet') { buildMagLines(); buildIndLines(); }
+    if (c.mode === 'coils') { CS.st = { t: 0, I1: 0, I2: 0, th: 0 }; CS.out = null; coilBuild(); }
     circ = makeCircuit(Nnow(), Rnow(), fluxNow());
+    if (c.mode === 'coils') { coilSync(); newMove(0); }
     tA = 0; view.Tw = 2; view.wl = 0; ranges = {};
     buildControls();
-    if (name === 'push') moveMagnetTo(0, 0.25);
+    if (name === 'push') {
+      // the same push at half the speed, as a gray trace to compare with
+      const g = runMove({ ...magP(), pol: 1 }, -0.12, 0, S.magnet.v / 2, DT);
+      ghosts = [{ t: g.out.map((q) => q[0]), phi: g.out.map((q) => q[1]), emf: g.out.map((q) => q[2]), I: g.out.map((q) => q[3]), Q: g.c.Q, label: `push at ${(S.magnet.v / 2).toFixed(2)} m/s` }];
+      moveMagnetTo(0, 0.25);
+    }
     else if (name === 'through') moveMagnetTo(0.12, 0.25);
     else if (name === 'flip') flipMagnet(0.3);
-    else if (name === 'speed') {
-      const g = runMove({ ...magP(), pol: 1 }, -0.12, 0, 0.1, DT);
-      ghosts = [{ t: g.out.map((q) => q[0]), phi: g.out.map((q) => q[1]), emf: g.out.map((q) => q[2]), I: g.out.map((q) => q[3]), Q: g.c.Q, label: 'push at 0.10 m/s' }];
-      moveMagnetTo(0, 0.1);
-      view.Tw = 2; view.wl = 0;
-    } else if (name === 'gen') beginMove(0, 2.6 * 2 * Math.PI / S.gen.w);
+    else if (name === 'coils') coilWindow(false);
+    else if (name === 'gen') beginMove(0, 2.6 * 2 * Math.PI / S.gen.w);
     else if (name === 'rails') railsPull(0.2);
+    if (coilsChanged) setRate(c.mode === 'coils' ? 2 : 0);
     if (reduce) setRunning(false); else setRunning(true);
     ghostKey();
     if (modeChanged) requestAnimationFrame(resize);
@@ -855,7 +1050,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const SINCE_ROWS = {
     magnet: [['sEmf', '∫EMF dt (1 V·s = 1 Wb)', 'c-emf'], ['sDphi', '−NΔΦ<sub>B</sub>', 'c-flux'], ['sQ', 'Charge Q = ∫I dt', 'c-cur'], ['sQf', '−NΔΦ<sub>B</sub>/R', 'c-cur'], ['sHeat', 'Heat ∫I²R dt'], ['sGhost', 'Kept trace Q', '']],
     gen: [['sEmf', '∫EMF dt (1 V·s = 1 Wb)', 'c-emf'], ['sDphi', '−NΔΦ<sub>B</sub>', 'c-flux'], ['sQ', 'Charge Q = ∫I dt', 'c-cur'], ['sHeat', 'Heat ∫I²R dt']],
-    rails: [['sEmf', '∫EMF dt (1 V·s = 1 Wb)', 'c-emf'], ['sDphi', '−ΔΦ<sub>B</sub>', 'c-flux'], ['sQ', 'Charge Q = ∫I dt', 'c-cur'], ['sQf', '−ΔΦ<sub>B</sub>/R', 'c-cur'], ['sHeat', 'Heat ∫I²R dt'], ['sKE', '½mv²', '']]
+    rails: [['sEmf', '∫EMF dt (1 V·s = 1 Wb)', 'c-emf'], ['sDphi', '−ΔΦ<sub>B</sub>', 'c-flux'], ['sQ', 'Charge Q = ∫I dt', 'c-cur'], ['sQf', '−ΔΦ<sub>B</sub>/R', 'c-cur'], ['sHeat', 'Heat ∫I²R dt'], ['sKE', '½mv²', '']],
+    coils: [['sSrc', 'From the source, ∫V<sub>1</sub>I<sub>1</sub> dt', 'c-drive'], ['sH1', 'Heat in R<sub>1</sub>, ∫I<sub>1</sub>²R<sub>1</sub> dt'], ['sH2', 'Heat in R<sub>2</sub>, ∫I<sub>2</sub>²R<sub>2</sub> dt', 'c-cur'],
+      ['sWm', 'Magnetic energy gained ΔW'], ['sChk', 'Source − heat − ΔW'], ['sDur', 'Time counted']]
   };
   const MEAS_ROWS = {
     magnet: [['mPhi', 'Flux per turn Φ<sub>B</sub>', 'c-flux'], ['mLink', 'Flux linkage NΦ<sub>B</sub>', 'c-flux'], ['mEmf', 'EMF', 'c-emf'], ['mI', 'Current I', 'c-cur'],
@@ -863,8 +1060,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     gen: [['mTh', 'Angle θ'], ['mW', 'Angular speed'], ['mPhi', 'Flux per turn Φ<sub>B</sub>', 'c-flux'], ['mEmf', 'EMF', 'c-emf'], ['mI', 'Current I', 'c-cur'], ['mF', 'Frequency f = ω/2π'],
       ['mPk', 'Peak EMF NBAω', 'c-emf'], ['mRms', 'rms EMF, NBAω/√2', 'c-emf'], ['mTq', 'Torque N I A B sin θ'], ['mP', 'Power I²R']],
     rails: [['mX', 'Bar position x'], ['mV', 'Bar speed v'], ['mPhi', 'Flux Φ<sub>B</sub> = BLx', 'c-flux'], ['mEmf', 'EMF = −BLv', 'c-emf'], ['mI', 'Current I', 'c-cur'], ['mF', 'Force on bar ILB'],
-      ['mPF', 'Mechanical power Fv'], ['mP', 'Heat rate I²R']]
+      ['mPF', 'Mechanical power Fv'], ['mP', 'Heat rate I²R']],
+    coils: [['mV1', 'Source V<sub>1</sub> = V<sub>0</sub> sin ωt'], ['mI1', 'Primary current I<sub>1</sub>', 'c-drive'], ['mPhi', 'Flux per secondary turn Φ<sub>2</sub>', 'c-flux'], ['mPhiM', 'of which from I<sub>1</sub>, MI<sub>1</sub>/N<sub>2</sub>', 'c-flux'],
+      ['mEmf', 'EMF<sub>2</sub> = −N<sub>2</sub> dΦ<sub>2</sub>/dt', 'c-emf'], ['mI', 'Secondary current I<sub>2</sub>', 'c-cur'], ['mF', 'Force on the secondary'], ['mP', 'Power from the source V<sub>1</sub>I<sub>1</sub>'],
+      ['mM', 'Mutual inductance M'], ['mK', 'Coupling k = M/√(L<sub>1</sub>L<sub>2</sub>)'], ['mL1', 'L<sub>1</sub>, primary'], ['mL2', 'L<sub>2</sub>, secondary'], ['mR1', 'R<sub>1</sub>: 0.5 Ω source + wire'], ['mR2', 'R<sub>2</sub>: R<sub>L</sub> + wire']]
   };
+  const STEADY_ROWS = [['pI1', 'I<sub>1</sub> amplitude', 'c-drive'], ['pI1o', 'I<sub>1</sub> amplitude, switch open', 'c-drive'], ['pI2', 'I<sub>2</sub> amplitude', 'c-cur'], ['pE2', 'EMF<sub>2</sub> amplitude', 'c-emf'],
+    ['pZref', 'Reflected impedance ω²M²/(R<sub>2</sub> + iωL<sub>2</sub>)', '', 1], ['pZin', 'Primary input impedance V<sub>1</sub>/I<sub>1</sub>', '', 1], ['pRatio', 'Open circuit |EMF<sub>2</sub>|/V<sub>0</sub>'], ['pLim', 'Its limit for ωL<sub>1</sub> ≫ R<sub>1</sub>: M/L<sub>1</sub>'],
+    ['pNN', 'Ideal transformer N<sub>2</sub>/N<sub>1</sub>'], ['pTau', 'Primary time constant L<sub>1</sub>/R<sub>1</sub>'], ['pPin', 'Average power from the source'], ['pHeat', 'Average heat, both coils'], ['pF', 'Average force on the secondary', '']];
   function slider(def) {
     const [k, lab, mn, mx, st] = def;
     return `<div class="ctl"><div class="slider-head"><label for="s_${k}">${lab}</label><output id="o_${k}" class="mono" for="s_${k}"></output></div><input type="range" id="s_${k}" min="${mn}" max="${mx}" step="${st}"></div>`;
@@ -872,25 +1075,42 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function buildControls() {
     const m = S.mode, sl = SL[m], T = MODE_TXT[m];
     $('motionSl').innerHTML = sl.motion.map(slider).join('');
-    $('setupSl').innerHTML = sl.setup.map(slider).join('');
+    $('setupSl').innerHTML = sl.setup.map(slider).join('') + (m === 'coils'
+      ? '<div class="ctl"><div class="slider-head"><span style="font-size:0.88rem">Secondary switch</span></div><div class="seg full" role="group" aria-label="Secondary switch" id="swSeg"><button type="button" data-sw="closed">Closed</button><button type="button" data-sw="open">Open</button></div></div>' : '');
+    for (const b of document.querySelectorAll('#swSeg button')) b.addEventListener('click', () => setSwitch(b.dataset.sw === 'closed'));
+    if (m === 'coils') syncSwitch();
+    $('motionH').textContent = m === 'coils' ? 'Source and playback' : 'Motion';
     for (const def of sl.motion.concat(sl.setup)) {
       const el = $('s_' + def[0]);
       el.addEventListener('input', () => setParam(def[0], +el.value));
     }
     syncSliders();
-    $('setupH').textContent = T.setupH; $('setupHint').textContent = T.setupHint; $('motionHint').textContent = T.motionHint;
+    $('setupH').textContent = T.setupH; $('setupHint').textContent = T.setupHint; $('motionHint').innerHTML = T.motionHint;
     $('signConv').innerHTML = T.sign; $('rhr').textContent = T.rhr; $('modelHint').innerHTML = T.model;
     $('meas').innerHTML = MEAS_ROWS[m].map(([id, l, c]) => `<div><dt>${l}</dt><dd id="${id}" class="${c || ''}">—</dd></div>`).join('');
     $('since').innerHTML = SINCE_ROWS[m].map(([id, l, c]) => `<div><dt>${l}</dt><dd id="${id}" class="${c || ''}">—</dd></div>`).join('');
     for(const id of ['mPk','mRms','sDphi','sQf']){const el=$(id);if(el)el.parentElement.hidden=$('labBlind').checked;}
     $('sinceHint').innerHTML = m === 'rails'
       ? 'The circuit is one loop, so ∫EMF dt = −ΔΦ<sub>B</sub> and Q = −ΔΦ<sub>B</sub>/R exactly, however the bar moved.'
+      : m === 'coils' ? 'Energy is conserved at every instant: what the source delivers becomes heat in the two resistances or magnetic energy W = ½L<sub>1</sub>I<sub>1</sub>² + MI<sub>1</sub>I<sub>2</sub> + ½L<sub>2</sub>I<sub>2</sub>². The count restarts when a setting changes.'
       : 'Summing EMF = −N dΦ<sub>B</sub>/dt over the move gives ∫EMF dt = −NΔΦ<sub>B</sub>, so the charge that flows is Q = −NΔΦ<sub>B</sub>/R whatever the speed.';
-    $('keyFL').hidden = m !== 'magnet'; $('keyInd').hidden = m !== 'magnet';
-    $('tLines').parentElement.hidden = m !== 'magnet'; $('tInd').parentElement.hidden = m !== 'magnet';
+    const co = m === 'coils';
+    $('keyFL').hidden = m !== 'magnet' && !co; $('keyInd').hidden = m !== 'magnet';
+    $('tLines').parentElement.hidden = m !== 'magnet' && !co; $('tInd').parentElement.hidden = m !== 'magnet' && !co;
+    $('tInd').parentElement.lastChild.nodeValue = co ? 'Field of I₂' : 'Induced field';
+    $('keyFLTxt').textContent = co ? `Magnetic field lines, ${fmtSI(CS.dpsi, 'Wb', 2)} of flux apart` : 'Magnetic field lines of the magnet';
+    $('keyPhiTxt').innerHTML = co ? 'Φ<sub>2</sub>, flux through one secondary turn' : 'Φ<sub>B</sub>, flux';
+    $('keyEmfTxt').innerHTML = co ? 'EMF<sub>2</sub> in the secondary' : 'EMF';
+    $('keyCurTxt').innerHTML = co ? 'Secondary current I<sub>2</sub>, and its direction on the drawing' : 'Current I, and its direction on the drawing';
+    for (const id of ['keyPhiM', 'keyI1', 'keyRef']) $(id).hidden = !co;
+    for (const id of ['keyArea', 'keyGhost', 'keepRow']) $(id).hidden = co;
+    $('steadySec').hidden = !co;
+    if (co) $('steady').innerHTML = STEADY_ROWS.map(([id, l, c, w]) => `<div${w ? ' class="wide"' : ''}><dt id="${id}L">${l}</dt><dd id="${id}" class="${c || ''}">—</dd></div>`).join('');
+    $('measHint').textContent = co ? 'All readouts are values at the displayed time, not averages. The run CSV adds the exact averages over each step.' : 'Flux is evaluated at the displayed time. EMF, current and velocity are averages over the preceding 1 ms interval, not endpoint values.';
     $('sCan').setAttribute('aria-label', m === 'magnet'
       ? 'Bar magnet and coil with field lines, connected to a galvanometer and a resistor. Drag the magnet along the axis. Keys: left and right arrows move the magnet, F flips it, P pushes it in, O pulls it out, T pushes it through, up and down arrows change the coil radius, space plays or pauses, R resets.'
       : m === 'gen' ? 'Coil turning between magnet poles, with a top view dial and a crank. Drag the crank knob to turn the coil by hand; drag empty space to turn the view. Keys: Shift with the arrow keys turns the view, M switches the motor, left and right arrows turn the crank, up and down arrows change ω, space plays or pauses, R resets.'
+        : m === 'coils' ? 'Two coaxial coils: the primary is driven by an AC source, the secondary is closed through a switch and a load resistor. Drag the secondary along the axis or its top to change its radius. Keys: left and right arrows move the secondary, up and down arrows change its radius, S opens or closes the switch, G restarts the source, space plays or pauses, R resets.'
         : 'Conducting bar on rails in a field into the page, closed by a resistor. Drag the bar along the rails. Keys: left and right arrows move the bar, up and down arrows change the rail spacing, G pulls at v, L pushes and lets go, space plays or pauses, R resets.');
     renderActs();
   }
@@ -907,6 +1127,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     let h = '';
     if (m === 'magnet') h = '<button type="button" class="btn" data-a="in">Push in</button><button type="button" class="btn" data-a="out">Pull out</button><button type="button" class="btn" data-a="thr">Push through</button><button type="button" class="btn" data-a="flip">Flip</button>';
     else if (m === 'gen') h = `<button type="button" class="btn" data-a="motor" aria-pressed="${W.motor}">Motor ${W.motor ? 'on' : 'off'}</button>`;
+    else if (m === 'coils') h = `<button type="button" class="btn" data-a="restart">Restart source</button><button type="button" class="btn" data-a="sw">${S.coils.closed ? 'Open switch' : 'Close switch'}</button>`;
     else h = '<button type="button" class="btn" data-a="pull">Pull at v</button><button type="button" class="btn" data-a="coast">Push and let go</button>';
     $('acts').innerHTML = h;
     for (const b of $('acts').querySelectorAll('button')) b.addEventListener('click', () => doAct(b.dataset.a));
@@ -914,6 +1135,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function doAct(a) {
     if (a === 'in') pushIn(); else if (a === 'out') pullOut(); else if (a === 'thr') pushThrough(); else if (a === 'flip') flipMagnet();
     else if (a === 'motor') setMotor(!W.motor); else if (a === 'pull') railsPull(); else if (a === 'coast') railsCoast();
+    else if (a === 'restart') coilRestart(); else if (a === 'sw') setSwitch(!S.coils.closed);
   }
   function setParam(key, v) {
     const m = S.mode, def = SL[m].motion.concat(SL[m].setup).find((d) => d[0] === key); if (!def) return;
@@ -925,6 +1147,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (m === 'magnet' && key === 'v') { if (act && act.kind === 'move') moveMagnetTo(act.z1); return; }
     if (m === 'gen' && key === 'w') { if (W.motor) { const Tf = genWindow(); if (Math.abs(Tf - view.Tw) > 1e-9) { view.Tw = Tf; view.wl = Math.max(0, W.t - 0.5 * Tf); } } return; }
     if (m === 'rails' && (key === 'v' || key === 'm')) return;
+    if (m === 'coils') {
+      if (key === 'd' || key === 'N1' || key === 'N2') { S.coils.d = Math.max(S.coils.d, +coilMinD().toFixed(4)); syncSliders(); }
+      rebase();
+      if (key === 'fi') coilWindow(true);
+      return;
+    }
     if (m === 'magnet' && key === 'Br') buildMagLines();
     if (m === 'magnet' && key === 'a') {
       buildIndLines();
@@ -935,14 +1163,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   function labSample(dt,phiBefore){
     const m=S.mode,p=P();
+    if(m==='coils'){const o=CS.out||{};return {version:'faraday-2026-10-21.1',run:labRun,mode:m,t:W.t,dt,mid:dt?W.t-dt/2:W.t,N:circ.N,R:circ.R,phi:circ.phi,phiBefore,emf:dt?circ.emfAvg:0,I:dt?circ.Iavg:0,Q:circ.Q,heat:circ.heat,phi0:circ.phi0,start:tA,position:S.coils.d/100,theta:CS.st.th,ke:null,settings:CS.settings,
+      V1:o.V1,I1:o.I1,I2:o.I2,emf2:o.emf2,phiM:o.phiM,F:o.F,Wm:o.Wm,Esrc:CS.E.src,Q1:CS.E.q1,switch:S.coils.closed?'closed':'open'};}
     const settings=m==='gen'?{N:p.N,R_ohm:Rnow(),B_T:p.B,A_m2:genA(),omega_rad_s:p.w}:m==='rails'?{...railP(),speed_m_s:p.v}:{...magP(),speed_m_s:p.v};
-    return {version:'faraday-2026-10-18.2',run:labRun,mode:m,t:W.t,dt,mid:dt?W.t-dt/2:W.t,N:circ.N,R:circ.R,phi:circ.phi,phiBefore,emf:dt?circ.emf:0,I:dt?circ.I:0,Q:circ.Q,heat:circ.heat,phi0:circ.phi0,start:tA,position:m==='magnet'?W.z:m==='rails'?W.x:null,theta:m==='gen'?W.gth:W.th,ke:m==='rails'?W.ke:null,settings:JSON.stringify(settings)};
+    return {version:'faraday-2026-10-21.1',run:labRun,mode:m,t:W.t,dt,mid:dt?W.t-dt/2:W.t,N:circ.N,R:circ.R,phi:circ.phi,phiBefore,emf:dt?circ.emf:0,I:dt?circ.I:0,Q:circ.Q,heat:circ.heat,phi0:circ.phi0,start:tA,position:m==='magnet'?W.z:m==='rails'?W.x:null,theta:m==='gen'?W.gth:W.th,ke:m==='rails'?W.ke:null,settings:JSON.stringify(settings)};
   }
   function labDownload(data,name){
     if(!data.length){$('labStatus').textContent='No samples yet. Advance or capture first.';return;}
-    const keys=['version','run','mode','t','dt','mid','N','R','phi','phiBefore','emf','I','Q','heat','phi0','start','position','theta','ke','settings'];
+    const keys=['version','run','mode','t','dt','mid','N','R','phi','phiBefore','emf','I','Q','heat','phi0','start','position','theta','ke','settings','V1','I1','I2','emf2','phiM','F','Wm','Esrc','Q1','switch'];
     const quote=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
-    const csv=['version,run,mode,t_s,interval_s,interval_midpoint_s,N,R_ohm,flux_Wb,previous_flux_Wb,interval_EMF_V,interval_I_A,charge_since_start_C,heat_since_start_J,initial_flux_Wb,move_start_s,position_m,angle_rad,kinetic_energy_J,settings_SI_json',...data.map(r=>keys.map(k=>quote(r[k])).join(','))].join('\n');
+    const csv=['version,run,mode,t_s,interval_s,interval_midpoint_s,N,R_ohm,flux_Wb,previous_flux_Wb,interval_EMF_V,interval_I_A,charge_since_start_C,heat_since_start_J,initial_flux_Wb,move_start_s,position_m,angle_rad,kinetic_energy_J,settings_SI_json,source_V1_V,primary_I1_A,secondary_I2_A,secondary_EMF2_V,flux_from_primary_Wb,force_on_secondary_N,magnetic_energy_J,source_energy_since_start_J,primary_heat_since_start_J,switch',...data.map(r=>keys.map(k=>quote(r[k])).join(','))].join('\n');
     const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
     $('labStatus').textContent=`Exported ${data.length} samples; interval quantities belong at the interval midpoint. Runs retain at most 60001 samples.`;
   }
@@ -960,7 +1190,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('labStatus').textContent=`Captured ${labRows.length} measurements.`;
   });
   $('labExport').addEventListener('click',()=>labDownload(labRows,'faraday-notebook.csv'));
-  $('labTrace').addEventListener('click',()=>{setRunning(false);labDownload(labTrace,'faraday-run.csv');});
+  $('labTrace').addEventListener('click',()=>{setRunning(false);labDownload(labTrace.slice(-60001),'faraday-run.csv');});
   $('labClear').addEventListener('click',()=>{labRows.length=0;$('labRows').textContent='';$('labStatus').textContent='Notebook cleared.';});
 
   // ---------- canvases ----------
@@ -970,7 +1200,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const cs = getComputedStyle(document.documentElement);
     const g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
-      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), flux: g('--flux'), emf: g('--emf'), wire: g('--wire'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), flux: g('--flux'), emf: g('--emf'), drive: g('--drive'), wire: g('--wire'),
       copper: g('--copper'), copperHi: g('--copper-hi'), copperLo: g('--copper-lo'), steel: g('--steel'), steelHi: g('--steel-hi'), steelLo: g('--steel-lo'),
       former: g('--former'), bench: g('--bench'), benchLo: g('--bench-lo'), mCase: g('--meter-case'), mFace: g('--meter-face'), mInk: g('--meter-ink'),
       dark: isDark(),
@@ -1656,6 +1886,267 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
   }
 
+  // ---------- two coils ----------
+  // Field lines are contours of Ψ(z, r), the flux through the circle of radius r at z, for both windings as thin rings
+  // at their mean radii: Ψ = N₁I₁ ψ(a₁; z, r) + N₂I₂ ψ(a₂; z − d, r), ψ per ampere from Maxwell's ring formula. Grid in the primary's frame.
+  const CZ = { zlo: -0.0875, zhi: 0.2875, dz: 0.00125, rmax: 0.18 };
+  CZ.nz = Math.round((CZ.zhi - CZ.zlo) / CZ.dz) + 1; CZ.nr = Math.round(CZ.rmax / CZ.dz) + 1;
+  const G2Z = 0.3, G2N = Math.round(2 * G2Z / CZ.dz) + 1;          // the secondary's ring is gridded once per radius, then shifted by d
+  let G1 = null, maskKey = '';
+  const G2cache = new Map(), CPSI = new Float64Array(CZ.nz * CZ.nr), CMASK = new Uint8Array(CZ.nz * CZ.nr);
+  function ringGrid(a, z0, nz) {
+    const nr = CZ.nr, g = new Float64Array(nz * nr);
+    for (let i = 0; i < nz; i++) for (let j = 1; j < nr; j++) g[i * nr + j] = ringFlux(j * CZ.dz, a, z0 + i * CZ.dz);
+    return g;
+  }
+  function coilG2() { const a2 = S.coils.a2 / 100, key = a2.toFixed(4); if (!G2cache.has(key)) G2cache.set(key, ringGrid(a2, -G2Z, G2N)); return G2cache.get(key); }
+  function coilField() {
+    if (!G1) G1 = ringGrid(COIL_A1, CZ.zlo, CZ.nz);
+    const g2 = coilG2(), nr = CZ.nr, A = S.coils.N1 * circ.I1, B = S.layers.ind && S.coils.closed ? S.coils.N2 * circ.I : 0;
+    const sh = Math.round((CZ.zlo + G2Z - S.coils.d / 100) / CZ.dz);
+    for (let i = 0; i < CZ.nz; i++) {
+      const o = i * nr, o2 = (i + sh) * nr;
+      if (B) for (let j = 0; j < nr; j++) CPSI[o + j] = A * G1[o + j] + B * g2[o2 + j];
+      else for (let j = 0; j < nr; j++) CPSI[o + j] = A * G1[o + j];
+    }
+    // cells inside the windings are left out: there the thin ring picture does not hold and the lines would crowd round the wire
+    const key = `${S.coils.d}|${S.coils.a2}|${S.coils.N1}|${S.coils.N2}`;
+    if (key !== maskKey) {
+      maskKey = key; const sy = CS.sys, d = S.coils.d / 100;
+      for (let i = 0; i < CZ.nz; i++) for (let j = 0; j < nr; j++) {
+        const z = CZ.zlo + (i + 0.5) * CZ.dz, r = (j + 0.5) * CZ.dz;
+        CMASK[i * nr + j] = Math.hypot(z, r - sy.a1) < sy.c1 + CZ.dz || Math.hypot(z - d, r - sy.a2) < sy.c2 + CZ.dz ? 1 : 0;
+      }
+    }
+  }
+  // all contours Ψ = (k + ½)ΔΨ in one pass of marching squares, as a path in metres (z, r)
+  function coilLines(dpsi) {
+    const { nz, nr, dz, zlo } = CZ, p = CPSI, path = new Path2D();
+    for (let i = 0; i < nz - 1; i++) for (let j = 0; j < nr - 1; j++) {
+      const k0 = i * nr + j; if (CMASK[k0]) continue;
+      const a = p[k0], b = p[k0 + nr], c = p[k0 + nr + 1], d = p[k0 + 1];
+      const k1 = Math.ceil(Math.min(a, b, c, d) / dpsi - 0.5), k2 = Math.floor(Math.max(a, b, c, d) / dpsi - 0.5);
+      if (k2 < k1 || k2 - k1 > 40) continue;
+      const zA = zlo + i * dz, rA = j * dz;
+      for (let k = k1; k <= k2; k++) {
+        const L = (k + 0.5) * dpsi, va = a - L, vb = b - L, vc = c - L, vd = d - L, ia = va > 0, ib = vb > 0, ic = vc > 0, id = vd > 0, e = [];
+        if (ia !== ib) e.push(zA + dz * va / (va - vb), rA);
+        if (ib !== ic) e.push(zA + dz, rA + dz * vb / (vb - vc));
+        if (ic !== id) e.push(zA + dz * vd / (vd - vc), rA + dz);
+        if (id !== ia) e.push(zA, rA + dz * va / (va - vd));
+        if (e.length === 4) { path.moveTo(e[0], e[1]); path.lineTo(e[2], e[3]); }
+        else if (e.length === 8) {
+          const ctr = (va + vb + vc + vd) / 4 > 0;
+          if (ctr === ia) { path.moveTo(e[0], e[1]); path.lineTo(e[2], e[3]); path.moveTo(e[4], e[5]); path.lineTo(e[6], e[7]); }
+          else { path.moveTo(e[0], e[1]); path.lineTo(e[6], e[7]); path.moveTo(e[2], e[3]); path.lineTo(e[4], e[5]); }
+        }
+      }
+    }
+    return path;
+  }
+  // where the drawn lines cross the plane z = zc: [r, Bz, Br] (direction only), upper half
+  function coilArrows(zc, dpsi) {
+    const { nr, dz, zlo } = CZ, i = Math.round((zc - zlo) / dz), out = [];
+    if (i < 1 || i > CZ.nz - 2) return out;
+    for (let j = 1; j < nr - 2; j++) {
+      const o = i * nr + j; if (CMASK[o] || CMASK[o + 1]) continue;
+      const v0 = CPSI[o], v1 = CPSI[o + 1];
+      const k1 = Math.ceil(Math.min(v0, v1) / dpsi - 0.5), k2 = Math.floor(Math.max(v0, v1) / dpsi - 0.5);
+      for (let k = k1; k <= k2 && k2 - k1 < 6; k++) {
+        const f = ((k + 0.5) * dpsi - v0) / (v1 - v0);
+        const dPr = v1 - v0, dPz = (CPSI[o + nr] - CPSI[o - nr] + CPSI[o + nr + 1] - CPSI[o - nr + 1]) / 4;
+        out.push([(j + f) * dz, dPr, -dPz]);      // B_z ∝ ∂Ψ/∂r, B_r ∝ −∂Ψ/∂z
+      }
+    }
+    return out;
+  }
+  // one coil seen obliquely like the coil of the magnet setup: back half (before the field lines) or front half
+  function drawCoil(ctx, part, g, zc, a, c, N, I, frac, col, sc, ps, hot) {
+    const { s, X, y0 } = g, ex = Math.max(6, OBL * a * s), ey = a * s;
+    const nD = clamp(Math.round(N / 20), 1, 15), wid = Math.max(2 * c * s, 5 * sc), pitch = wid / nD, ww = Math.max(1.2, Math.min(2.8 * sc, pitch * 0.8));
+    const dxk = (k) => -wid / 2 + pitch * (k + 0.5), fl = wid / 2 + 2.5 * sc, af = Math.max(0.004, a - c - 0.0012), rc = a + c + 0.0012, x0 = X(zc);
+    const arc = (dx, r, from, to) => { const er = OBL * r * s, fr = r * s; ctx.beginPath(); for (let i = 0; i <= 36; i++) { const ph = from + (to - from) * i / 36, px = x0 + dx - er * Math.sin(ph), py = y0 - fr * Math.cos(ph); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); } };
+    const tube = () => { const er = OBL * af * s, fr = af * s; ctx.beginPath(); ctx.moveTo(x0 - fl, y0 - fr); ctx.lineTo(x0 + fl, y0 - fr); ctx.ellipse(x0 + fl, y0, er, fr, 0, -Math.PI / 2, Math.PI / 2); ctx.lineTo(x0 - fl, y0 + fr); ctx.ellipse(x0 - fl, y0, er, fr, 0, Math.PI / 2, 1.5 * Math.PI); ctx.closePath(); };
+    if (part === 'back') {
+      if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.2; roundRect(ctx, x0 - fl - OBL * rc * s - 6 * sc, y0 - rc * s - 6 * sc, 2 * (fl + OBL * rc * s) + 12 * sc, 2 * rc * s + 12 * sc, 8 * sc); ctx.fill(); ctx.globalAlpha = 1; }
+      tube(); ctx.fillStyle = T.former; ctx.globalAlpha = 0.28; ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = shade(T.copper, -0.35); ctx.lineWidth = ww;
+      for (let k = 0; k < nD; k++) { arc(dxk(k), a, Math.PI, 2 * Math.PI); ctx.stroke(); }
+      return;
+    }
+    tube(); ctx.fillStyle = T.former; ctx.globalAlpha = 0.14; ctx.fill(); ctx.globalAlpha = 0.6; ctx.strokeStyle = shade(T.former, -0.35); ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = cylGrad(ctx, 0, y0 - ey, 0, y0 + ey, T.copper, T.copperHi, T.copperLo); ctx.lineWidth = ww;
+    for (let k = 0; k < nD; k++) { arc(dxk(k), a, 0, Math.PI); ctx.stroke(); }
+    ctx.save(); ctx.translate(-ww * 0.22, 0); ctx.strokeStyle = T.copperHi; ctx.globalAlpha = 0.5; ctx.lineWidth = Math.max(0.6, ww * 0.3);
+    for (let k = 0; k < nD; k++) { arc(dxk(k), a, 0.12 * Math.PI, 0.88 * Math.PI); ctx.stroke(); }
+    ctx.restore();
+    for (const sg of [-1, 1]) {
+      const er = OBL * rc * s, fr = rc * s, ei = OBL * af * s, fi = af * s, xc = x0 + sg * fl;
+      ctx.beginPath(); ctx.ellipse(xc, y0, er, fr, 0, 0, 2 * Math.PI); ctx.ellipse(xc, y0, ei, fi, 0, 0, 2 * Math.PI, true);
+      ctx.fillStyle = T.former; ctx.globalAlpha = 0.42; ctx.fill('evenodd'); ctx.globalAlpha = 0.9; ctx.strokeStyle = shade(T.former, -0.4); ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1;
+    }
+    if (S.layers.cur && frac > 0.02) {
+      ctx.globalAlpha = 0.35 + 0.65 * frac;
+      const sg = Math.sign(I);
+      for (const k of nD > 1 ? [0, nD - 1] : [0]) for (const ph of [0.27 * Math.PI, 0.73 * Math.PI]) {
+        const px = x0 + dxk(k) - ex * Math.sin(ph), py = y0 - ey * Math.cos(ph), tx = -ex * Math.cos(ph), ty = ey * Math.sin(ph), tl = Math.hypot(tx, ty);
+        headHalo(ctx, px, py, sg * tx / tl, sg * ty / tl, (7 + 5 * frac) * sc, col);
+      }
+      ctx.globalAlpha = 1;
+    }
+    return { xA: x0 + Math.min(dxk(0), -4 * sc), xB: x0 + Math.max(dxk(nD - 1), 4 * sc), y: y0 + ey + 1, fl, rc };
+  }
+  // a knife switch between (x0, y) and (x1, y): hinge on the left, jaw on the right
+  function drawKnife(ctx, x0, x1, y, closed, hot, sc, ps) {
+    const L = x1 - x0;
+    ctx.fillStyle = T.dark ? '#59616d' : '#3a3f47'; roundRect(ctx, x0 - 4 * sc, y + 2 * sc, L + 8 * sc, 9 * sc, 3 * sc); ctx.fill();
+    if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.28; roundRect(ctx, x0 - 8 * sc, y - L * 0.6 - 4 * sc, L + 16 * sc, L * 0.6 + 20 * sc, 7 * sc); ctx.fill(); ctx.globalAlpha = 1; }
+    for (const x of [x0 + 4 * sc, x1 - 4 * sc]) { ctx.fillStyle = T.copperLo; ctx.fillRect(x - 3 * sc, y - 5 * sc, 6 * sc, 8 * sc); ctx.fillStyle = T.copper; ctx.fillRect(x - 2 * sc, y - 5 * sc, 4 * sc, 7 * sc); }
+    const ang = closed ? 0 : -0.62, bl = L - 8 * sc, hx = x0 + 4 * sc, hy = y - 2 * sc, ex = hx + bl * Math.cos(ang), ey = hy + bl * Math.sin(ang);
+    rod(ctx, [hx, hy], [ex, ey], 3.4 * ps, T.copper, T.copperHi, T.copperLo);
+    const kx = hx + (bl + 7 * sc) * Math.cos(ang), ky = hy + (bl + 7 * sc) * Math.sin(ang) - 5 * sc;
+    ctx.strokeStyle = '#16171a'; ctx.lineWidth = 2.4 * ps; ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(kx, ky); ctx.stroke();
+    ctx.fillStyle = hot ? T.accent : '#16171a'; ctx.beginPath(); ctx.arc(kx, ky, 3.6 * sc, 0, 2 * Math.PI); ctx.fill();
+  }
+  function drawCoilsScene(ctx, W0, H0) {
+    const ps = projScale(), sc = Math.min(ps, 1.25), top = ctlH + 4, bandH = 118 * sc, fieldH = H0 - bandH - top, labH = 58 * sc;
+    const sy = CS.sys, cs = S.coils, d = cs.d / 100, a1 = sy.a1, a2 = sy.a2, o = CS.out;
+    const s = Math.max(120, Math.min((W0 - 16) / (CZ.zhi - CZ.zlo), (fieldH - labH - 8 * sc) / 0.165));
+    const xm = W0 / 2, zm = (CZ.zlo + CZ.zhi) / 2, y0 = top + labH + (fieldH - labH) / 2;
+    const X = (z) => xm + (z - zm) * s, Y = (r) => y0 - r * s;
+    geo = { s, X, Y, y0, invZ: (px) => (px - xm) / s + zm, invR: (py) => (y0 - py) / s };
+    const fs = 12.5 * sc, ph = cs.closed ? CS.phC : CS.phO;
+    const amp1 = Math.max(cx.abs(CS.phC.X1), cx.abs(CS.phO.X1), 1e-12), amp2 = Math.max(cx.abs(CS.phC.X2), 1e-12);
+    const f1 = clamp(Math.abs(o.I1) / amp1, 0, 1), f2 = cs.closed ? clamp(Math.abs(o.I2) / amp2, 0, 1) : 0;
+    { const g = ctx.createRadialGradient(xm, y0, Math.min(W0, fieldH) * 0.25, xm, y0, Math.max(W0, fieldH) * 0.8); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, T.dark ? 'rgba(0,0,0,0.3)' : 'rgba(30,50,80,0.07)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W0, H0); }
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.setLineDash([4, 5]);
+    ctx.beginPath(); ctx.moveTo(6, y0); ctx.lineTo(W0 - 6, y0); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * sc}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('+z', W0 - 8, y0 - 3);
+    const hotS = isHot('sec') || isHot('secA');
+    ctx.save(); ctx.beginPath(); ctx.rect(0, top, W0, fieldH); ctx.clip();
+    drawCoil(ctx, 'back', geo, 0, a1, sy.c1, cs.N1, o.I1, f1, T.drive, sc, ps, false);
+    drawCoil(ctx, 'back', geo, d, a2, sy.c2, cs.N2, o.I2, f2, T.equi, sc, ps, hotS);
+    if (S.layers.lines) {
+      coilField();
+      const path = coilLines(CS.dpsi);
+      for (const sg of [1, -1]) {
+        ctx.save(); ctx.translate(X(0), y0); ctx.scale(s, -sg * s); ctx.lineCap = 'round';
+        ctx.strokeStyle = T.canvas; ctx.globalAlpha = 0.7; ctx.lineWidth = 3.2 * ps / s; ctx.stroke(path);
+        ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.7; ctx.lineWidth = 1.2 * ps / s; ctx.stroke(path); ctx.restore();
+      }
+      ctx.globalAlpha = 0.85;
+      const zs = [-0.055, d / 2, d + 0.055].filter((z, i) => i !== 1 || d - sy.c1 - sy.c2 > 0.012);
+      for (const z of zs) for (const [r, bz, br] of coilArrows(z, CS.dpsi)) {
+        if (r * s > fieldH * 0.48) continue;
+        const n = Math.hypot(bz, br) || 1;
+        headAt(ctx, X(z), Y(r), bz / n, -br / n, 7 * sc, T.muted);
+        headAt(ctx, X(z), Y(-r), bz / n, br / n, 7 * sc, T.muted);
+      }
+      ctx.globalAlpha = 1;
+    }
+    ctx.restore();
+    const t1 = drawCoil(ctx, 'front', geo, 0, a1, sy.c1, cs.N1, o.I1, f1, T.drive, sc, ps, false);
+    const t2 = drawCoil(ctx, 'front', geo, d, a2, sy.c2, cs.N2, o.I2, f2, T.equi, sc, ps, hotS);
+    // poles of the facing and outer ends (the right hand rule: positive current makes the right end a north pole)
+    {
+      const xs = [X(0) - t1.fl - OBL * t1.rc * s - 13 * sc, X(0) + t1.fl + OBL * t1.rc * s + 13 * sc, X(d) - t2.fl - OBL * t2.rc * s - 13 * sc, X(d) + t2.fl + OBL * t2.rc * s + 13 * sc];
+      if (xs[2] - xs[1] > 24 * sc && xs[0] > 10 * sc && xs[3] < W0 - 10 * sc) {
+        ctx.font = `700 ${fs}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        const pill = (x, north, f, edge) => { if (f < 0.04) return; ctx.globalAlpha = 0.9; ctx.fillStyle = T.canvas; roundRect(ctx, x - 9 * sc, y0 - 9 * sc, 18 * sc, 18 * sc, 5 * sc); ctx.fill(); ctx.globalAlpha = 0.3 + 0.7 * f; ctx.strokeStyle = edge; ctx.lineWidth = 1.4 * ps; ctx.stroke(); ctx.fillStyle = north ? T.pos : T.neg; ctx.fillText(north ? 'N' : 'S', x, y0 + 0.5); ctx.globalAlpha = 1; };
+        pill(xs[0], o.I1 < 0, f1, T.drive); pill(xs[1], o.I1 > 0, f1, T.drive);
+        if (cs.closed) { pill(xs[2], o.I2 < 0, f2, T.equi); pill(xs[3], o.I2 > 0, f2, T.equi); }
+      }
+    }
+    // the secondary: move grip on the axis, radius grip on top
+    const hotA = isHot('secA');
+    grip(ctx, X(d), Y(a2 + sy.c2) - 12 * sc, hotA, true);
+    handles.push({ id: 'secA', box: [X(d) - 14 * sc, Y(a2 + sy.c2) - 24 * sc, 28 * sc, 24 * sc], cursor: 'ns-resize' });
+    grip(ctx, X(d), y0, isHot('sec'), false);
+    const hw = t2.fl + OBL * t2.rc * s + 6 * sc;
+    handles.push({ id: 'sec', box: [X(d) - hw, Y(a2 + sy.c2), 2 * hw, 2 * (a2 + sy.c2) * s], cursor: 'ew-resize' });
+    // force on the secondary
+    if (S.layers.force && cs.closed) {
+      const Fpk = Math.max(1e-12, amp1 * amp2 * Math.abs(sy.dM)), F = o.F, yF = Y(a2 + sy.c2) - 34 * sc;
+      if (Math.abs(F) > 0.02 * Fpk) {
+        const L = (10 + 46 * Math.min(1.2, Math.abs(F) / Fpk)) * sc, dir = Math.sign(F);
+        arrow(ctx, X(d), yF, X(d) + dir * L, yF, T.pos, 2.4 * ps, 8 * sc);
+        label(ctx, `${fmtSI(Math.abs(F), 'N')} ${dir > 0 ? 'apart' : 'together'}`, X(d) + dir * (L + 6 * sc), yF, fs * 0.82, 700, dir > 0 ? 'left' : 'right', T.pos, 'middle');
+      }
+    }
+    // labels
+    label(ctx, `Primary: N_1 = ${cs.N1}, a_1 = ${(a1 * 100).toFixed(1)} cm, I_1 = ${fmtSI(o.I1, 'A')}`, 12 * sc, top + 16 * sc, fs * 0.9, 700, 'left', T.drive);
+    label(ctx, `Secondary: N_2 = ${cs.N2}, a_2 = ${(a2 * 100).toFixed(1)} cm, d = ${(d * 100).toFixed(1)} cm, k = ${sy.k.toFixed(2)}`, 12 * sc, top + 34 * sc, fs * 0.9, 700, 'left', T.ink);
+    label(ctx, `Φ_2 = ${fmtSI(circ.phi, 'Wb')} through each secondary turn`, 12 * sc, top + 52 * sc, fs * 0.9, 700, 'left', T.flux);
+    // phase dial: steady state phasors turning at ω; the vertical projection of each arrow follows its quantity
+    {
+      // top right on wide panes; on narrow ones the labels need that room, so the dial sits low on the right, under the coils
+      const dr = clamp(W0 * 0.07, 26, 44) * sc, narrow = W0 < 300 * sc + 2 * dr + 40 * sc;
+      const dcx = W0 - dr - 30 * sc, dcy = narrow ? H0 - bandH - dr - 28 * sc : top + dr + 8 * sc;
+      {
+        ctx.fillStyle = T.canvas; ctx.strokeStyle = T.line; ctx.lineWidth = 1 * ps; ctx.beginPath(); ctx.arc(dcx, dcy, dr, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+        ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(dcx - dr, dcy); ctx.lineTo(dcx + dr, dcy); ctx.moveTo(dcx, dcy - dr); ctx.lineTo(dcx, dcy + dr); ctx.stroke();
+        // with the switch closed EMF₂ = R₂I₂, so the two share one arrow
+        const items = [['V_1', [cs.V0, 0], T.ink, 0.95], ['I_1', ph.X1, T.drive, 0.8], [cs.closed ? 'EMF_2, I_2' : 'EMF_2', ph.E2, T.emf, 0.9]];
+        for (const [lab, Xp, col, len] of items) {
+          if (cx.abs(Xp) < 1e-15) continue;
+          const al = CS.st.th + cx.arg(Xp), ex = dcx + Math.cos(al) * dr * len, ey = dcy - Math.sin(al) * dr * len;
+          arrow(ctx, dcx, dcy, ex, ey, col, 2 * ps, 6 * sc);
+        }
+        for (const [lab, Xp, col, len] of items) {
+          if (cx.abs(Xp) < 1e-15) continue;
+          const al = CS.st.th + cx.arg(Xp), lx = dcx + Math.cos(al) * (dr * len + 9 * sc), ly = dcy - Math.sin(al) * (dr * len + 9 * sc);
+          ctx.globalAlpha = 0.95; label(ctx, lab, lx, ly + 4 * sc, 9.5 * sc, 700, 'center', col); ctx.globalAlpha = 1;
+        }
+        label(ctx, 'phases, steady state', dcx, dcy + dr + 15 * sc, 9.5 * sc, 400, 'center', T.muted, 'top');
+      }
+    }
+    // scale bar
+    { ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * ps; const sbx = 12 * sc, sby = H0 - bandH - 10 * sc;
+      ctx.beginPath(); ctx.moveTo(sbx, sby); ctx.lineTo(sbx + 0.02 * s, sby); ctx.moveTo(sbx, sby - 4); ctx.lineTo(sbx, sby + 4); ctx.moveTo(sbx + 0.02 * s, sby - 4); ctx.lineTo(sbx + 0.02 * s, sby + 4); ctx.stroke();
+      ctx.fillStyle = T.muted; ctx.font = `${10 * sc}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('2 cm', sbx + 0.01 * s, sby - 4); }
+    // ---- the bench: AC source on the left, switch and load resistor on the right ----
+    const bandTop = H0 - bandH; drawBench(ctx, W0, bandTop, H0);
+    const yU = bandTop + 7 * sc, yL = bandTop + 15 * sc, yC = bandTop + 54 * sc, lw = 3 * sc;
+    // AC source
+    const gw = 100 * sc, gh = 62 * sc, gx = 8 * sc, gy = bandTop + 26 * sc;
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.35)'; ctx.shadowBlur = 8 * sc; ctx.shadowOffsetY = 3 * sc;
+    { const g = ctx.createLinearGradient(0, gy, 0, gy + gh); g.addColorStop(0, shade(T.mCase, 0.28)); g.addColorStop(0.45, T.mCase); g.addColorStop(1, shade(T.mCase, -0.4)); ctx.fillStyle = g; roundRect(ctx, gx, gy, gw, gh, 7 * sc); ctx.fill(); }
+    ctx.restore();
+    ctx.fillStyle = T.dark ? '#16301f' : '#1d3a26'; roundRect(ctx, gx + 6 * sc, gy + 22 * sc, gw - 12 * sc, gh - 28 * sc, 3 * sc); ctx.fill();
+    ctx.fillStyle = '#8df0a8'; ctx.font = `600 ${10 * sc}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(`${cs.V0.toFixed(1)} V`, gx + 11 * sc, gy + 26 * sc); ctx.fillText(`${coilF()} Hz`, gx + 11 * sc, gy + 40 * sc);
+    { ctx.strokeStyle = '#8df0a8'; ctx.lineWidth = 1.3 * ps; ctx.beginPath(); const sx = gx + gw - 34 * sc, sw = 22 * sc; for (let i = 0; i <= 20; i++) { const u = i / 20, px = sx + u * sw, py = gy + 40 * sc - 7 * sc * Math.sin(2 * Math.PI * u); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); } ctx.stroke(); }
+    const pm = [gx + gw - 46 * sc, gy + 10 * sc], pp = [gx + gw - 18 * sc, gy + 10 * sc];
+    for (const [q, col] of [[pm, '#2a2a2a'], [pp, '#c0392b']]) { const g = ctx.createRadialGradient(q[0] - 1.5 * sc, q[1] - 1.5 * sc, 0, q[0], q[1], 5.5 * sc); g.addColorStop(0, shade(col, 0.5)); g.addColorStop(1, shade(col, -0.3)); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(q[0], q[1], 5.2 * sc, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.fillStyle = 'rgba(255,255,255,0.75)'; ctx.font = `700 ${10 * sc}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('−', pm[0] - 12 * sc, pm[1]); ctx.fillText('+', pp[0] - 12 * sc, pp[1]);
+    label(ctx, 'AC source', gx + gw / 2, gy + gh + 4 * sc, 10 * sc, 400, 'center', T.muted, 'top');
+    // primary leads: terminal A to the − post (upper run), terminal B to the + post (lower run); positive I₁ enters at B
+    insulated(ctx, [[t1.xA, t1.y], [t1.xA, yU], [pm[0], yU], [pm[0], pm[1]]], leadCol(false), lw);
+    insulated(ctx, [[t1.xB, t1.y], [t1.xB, yL], [pp[0], yL], [pp[0], pp[1]]], leadCol(true), lw);
+    // switch and load resistor, right aligned
+    const BW = 170 * sc, xP = W0 - 12 * sc - BW, xQ = W0 - 14 * sc, swW = 48 * sc, xr0 = xP + swW + 14 * sc;
+    const hotSw = isHot('sw'), hotR = isHot('res');
+    // secondary leads: A to the switch end P, B to the resistor end Q, on runs that do not cross
+    const aLow = t2.xB < xP ? true : t2.xA > xQ ? false : true, ya = aLow ? yL : yU, yb = aLow ? yU : yL;
+    insulated(ctx, [[t2.xA, t2.y], [t2.xA, ya], [xP, ya], [xP, yC]], leadCol(false), lw);
+    insulated(ctx, [[t2.xB, t2.y], [t2.xB, yb], [xQ, yb], [xQ, yC]], leadCol(false), lw);
+    insulated(ctx, [[xP + swW, yC], [xr0, yC]], leadCol(false), lw);
+    drawKnife(ctx, xP, xP + swW, yC, cs.closed, hotSw, sc, ps);
+    handles.push({ id: 'sw', box: [xP - 6 * sc, yC - swW * 0.6, swW + 12 * sc, swW * 0.6 + 16 * sc], cursor: 'pointer' });
+    label(ctx, cs.closed ? 'closed' : 'open', xP + swW / 2, yC + 14 * sc, 10 * sc, 700, 'center', cs.closed ? T.ink : T.pos, 'top');
+    drawResistor(ctx, xr0, yC, xQ, yC, R_VALUES[cs.Ri], hotR, sc);
+    label(ctx, `R_L = ${fmtR(R_VALUES[cs.Ri])}`, (xr0 + xQ) / 2, yC - 13 * sc, fs * 0.9, 700, 'center', T.ink);
+    grip(ctx, (xr0 + xQ) / 2, yC + 21 * sc, hotR, true);
+    handles.push({ id: 'res', box: [xr0, yC - 26 * sc, xQ - xr0, 58 * sc], cursor: 'ns-resize' });
+    // current directions on the leads: positive current leaves each coil at its terminal A
+    if (S.layers.cur) {
+      if (f1 > 0.04) { ctx.globalAlpha = 0.4 + 0.6 * f1; headHalo(ctx, (t1.xA + pm[0]) / 2, yU, Math.sign(pm[0] - t1.xA || -1) * Math.sign(o.I1), 0, (6 + 5 * f1) * sc, T.drive); ctx.globalAlpha = 1; }
+      if (f2 > 0.04) { ctx.globalAlpha = 0.4 + 0.6 * f2; headHalo(ctx, (t2.xA + xP) / 2, ya, Math.sign(xP - t2.xA || 1) * Math.sign(o.I2), 0, (6 + 5 * f2) * sc, T.equi); ctx.globalAlpha = 1; }
+    }
+  }
+
   function drawScene() {
     const [W0, H0] = dims.s; if (!W0 || !H0 || !circ) return;
     const ctx = ctxs.s;
@@ -1664,12 +2155,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     handles = [];
     if (S.mode === 'magnet') drawMagnetScene(ctx, W0, H0);
     else if (S.mode === 'gen') drawGenScene(ctx, W0, H0);
+    else if (S.mode === 'coils') drawCoilsScene(ctx, W0, H0);
     else drawRailsScene(ctx, W0, H0);
   }
 
   // ---------- plots ----------
   function panels() {
     const m = S.mode;
+    if (m === 'coils') return [
+      { key: 'phi', title: 'Φ_2, flux per secondary turn', unit: 'Wb', col: 'flux', extra: [{ key: 'phiM', col: 'flux', dash: true }] },
+      { key: 'emf', title: 'EMF_2 = −N_2 dΦ_2/dt', unit: 'V', col: 'emf' },
+      { key: 'I', parts: [['I_1 primary', 'drive'], [' and ', 'muted'], ['I_2 secondary', 'equi']], unit: 'A', col: 'equi', extra: [{ key: 'I1', col: 'drive' }], ref: true }
+    ];
     return [
       { key: 'phi', title: m === 'rails' ? 'Φ_B = BLx, flux through the loop' : m === 'gen' ? 'Φ_B = BA cos θ, flux through one turn' : 'Φ_B, flux through one turn', unit: 'Wb', col: 'flux' },
       { key: 'emf', title: m === 'rails' ? 'EMF = −dΦ_B/dt' : 'EMF = −N dΦ_B/dt', unit: 'V', col: 'emf' },
@@ -1713,6 +2210,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const m = S.mode;
     if (m === 'magnet') { const p = magP(); if (key === 'phi') return p.Br * cylFluxUnit(p.a, 0, 16); const e = p.N * S.magnet.v * p.Br * magSlope(p.a); return key === 'emf' ? e : e / p.R; }
     if (m === 'gen') { const G = S.gen, A = genA(); if (key === 'phi') return G.B * A; const e = G.N * G.B * A * G.w; return key === 'emf' ? e : e / Rnow(); }
+    if (m === 'coils') { const ph = S.coils.closed ? CS.phC : CS.phO; return key === 'phi' ? Math.max(cx.abs(ph.Phi2), cx.abs(ph.PhiM)) : key === 'emf' ? cx.abs(ph.E2) : Math.max(cx.abs(CS.phC.X1), cx.abs(CS.phO.X1), cx.abs(ph.X2)); }
     const r = railP(); if (key === 'phi') return r.B * r.L * RAIL_END; const e = r.B * r.L * S.rails.v; return key === 'emf' ? e : e / r.R;
   }
   let pGeom = null;
@@ -1728,6 +2226,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const tL = view.wl, Tw = view.Tw, tR = tL + Tw;
     const X = (tt) => L + (tt - tL) / Tw * (R - L);
     pGeom = { L, R, boxes, X };
+    const tu = S.mode === 'coils' ? 1e3 : 1;
     // time grid
     const tst = nice(Tw / (W0 < 460 ? 4 : 7));
     ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
@@ -1736,18 +2235,26 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const v = k * tst, px = Math.round(X(v)) + 0.5;
       ctx.strokeStyle = T.grid; ctx.lineWidth = 1;
       for (const b of boxes) { ctx.beginPath(); ctx.moveTo(px, b.y0); ctx.lineTo(px, b.y1); ctx.stroke(); }
-      const txt = +v.toPrecision(6) + '', tw = ctx.measureText(txt).width;
+      const txt = +(v * tu).toPrecision(6) + '', tw = ctx.measureText(txt).width;
       if (px - tw / 2 > lastPx + 6) { ctx.fillText(txt, Math.min(px, R - tw / 2), boxes[boxes.length - 1].y1 + 4 * ps); lastPx = px + tw / 2; }
     }
-    ctx.textAlign = 'right'; ctx.fillText('t (s)', R, boxes[boxes.length - 1].y1 + 19 * ps);
+    ctx.textAlign = 'right'; ctx.fillText(tu === 1 ? 't (s)' : 't (ms)', R, boxes[boxes.length - 1].y1 + 19 * ps);
     const showStart = tA >= tL && tA <= tR;
     PN.forEach((Pn, i) => {
       const b = boxes[i], col = T[Pn.col], key = Pn.key;
       const pts = seriesPts(hist.t, hist[key], 0, tL, tR, X);
       const gpts = ghosts.map((G) => seriesPts(G.t, G[key], tA, tL, tR, X));
+      const xpts = (Pn.extra || []).map((e) => ({ e, pts: seriesPts(hist.t, hist[e.key], 0, tL, tR, X) }));
+      // the two coils: the steady primary current with the switch the other way, computed from its phasor, since the last change of setting
+      let rpts = [];
+      if (Pn.ref) {
+        const Xo = (S.coils.closed ? CS.phO : CS.phC).X1, w = coilW(), t0 = Math.max(tA, tL), t1 = Math.min(W.t, tR);
+        for (let i = 0; i <= 240 && t1 > t0; i++) { const tt = t0 + (t1 - t0) * i / 240, th = CS.st.th + w * (tt - W.t); rpts.push([tt, Xo[0] * Math.sin(th) + Xo[1] * Math.cos(th)]); }
+      }
       let lo = 0, hi = 0;
       const scan = (o) => { for (const q of o) { if (q[1] < lo) lo = q[1]; if (q[1] > hi) hi = q[1]; } };
-      scan(pts); gpts.forEach(scan);
+      scan(pts); gpts.forEach(scan); xpts.forEach((x) => scan(x.pts)); scan(rpts);
+      if (S.mode === 'coils') { const r = refScale(key); lo = Math.min(lo, -r); hi = Math.max(hi, r); }
       { const ref = refScale(key) * 0.05; if (key === 'phi') { if (lo >= 0) hi = Math.max(hi, ref); else if (hi <= 0) lo = Math.min(lo, -ref); } else { lo = Math.min(lo, -ref); hi = Math.max(hi, ref); } }
       if (S.mode === 'gen' && key !== 'phi') { const pk = S.gen.N * S.gen.B * genA() * S.gen.w / (key === 'I' ? Rnow() : 1); if (W.motor) { lo = Math.min(lo, -pk); hi = Math.max(hi, pk); } }
       if (key === 'phi' && S.mode === 'gen') { lo = Math.min(lo, -S.gen.B * genA()); hi = Math.max(hi, S.gen.B * genA()); }
@@ -1763,10 +2270,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         ctx.fillStyle = T.muted; ctx.fillText(k === 0 ? '0' : (+(v / us).toPrecision(4) + '').replace('-', '−'), L - 5 * ps, py);
       }
       ctx.fillStyle = col; ctx.textBaseline = 'alphabetic';
-      const tw = richText(ctx, `${Pn.title} (${uName})`, L, b.y0 - 5 * ps, 11.5 * ps, 700, 'left');
+      let tw = 0;
+      if (Pn.parts) { for (const [txt, c] of Pn.parts) { ctx.fillStyle = T[c]; tw += richText(ctx, txt, L + tw, b.y0 - 5 * ps, 11.5 * ps, 700, 'left'); } ctx.fillStyle = T.muted; tw += richText(ctx, ` (${uName})`, L + tw, b.y0 - 5 * ps, 11.5 * ps, 700, 'left'); }
+      else tw = richText(ctx, `${Pn.title} (${uName})`, L, b.y0 - 5 * ps, 11.5 * ps, 700, 'left');
       ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'right';
       const nowTxt = fmtSI(circ[key], Pn.unit);
-      if (L + tw + ctx.measureText(nowTxt).width + 14 * ps < R) ctx.fillText(nowTxt, R, b.y0 - 5 * ps);
+      if (!Pn.parts && L + tw + ctx.measureText(nowTxt).width + 14 * ps < R) ctx.fillText(nowTxt, R, b.y0 - 5 * ps);
       ctx.save(); ctx.beginPath(); ctx.rect(L, b.y0 - 1, R - L, b.y1 - b.y0 + 2); ctx.clip();
       // area under the EMF since the start of the move
       if (key === 'emf' && S.mode !== 'gen') for (const o of gpts) {
@@ -1774,7 +2283,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         ctx.beginPath(); ctx.moveTo(X(o[0][0]), Y(0)); for (const q of o) ctx.lineTo(X(q[0]), Y(q[1])); ctx.lineTo(X(o[o.length - 1][0]), Y(0)); ctx.closePath();
         ctx.fillStyle = T.muted; ctx.globalAlpha = 0.12; ctx.fill(); ctx.globalAlpha = 1;
       }
-      if (key === 'emf' && S.mode !== 'gen' && pts.length > 1) {
+      if (key === 'emf' && S.mode !== 'gen' && S.mode !== 'coils' && pts.length > 1) {
         const ar = pts.filter((q) => q[0] >= tA);
         if (ar.length > 1) {
           ctx.beginPath(); ctx.moveTo(X(ar[0][0]), Y(0)); for (const q of ar) ctx.lineTo(X(q[0]), Y(q[1])); ctx.lineTo(X(ar[ar.length - 1][0]), Y(0)); ctx.closePath();
@@ -1782,7 +2291,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         }
       }
       // flux at the start of the move
-      if (key === 'phi' && showStart) {
+      if (key === 'phi' && showStart && S.mode !== 'coils') {
         const py = Math.round(Y(circ.phi0)) + 0.5; ctx.strokeStyle = T.flux; ctx.globalAlpha = 0.6; ctx.setLineDash([4, 4]); ctx.lineWidth = 1;
         ctx.beginPath(); ctx.moveTo(X(tA), py); ctx.lineTo(R, py); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
       }
@@ -1799,9 +2308,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.lineJoin = 'round';
       ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.6; ctx.lineWidth = 1.8 * ps;
       for (const o of gpts) line(ctx, o, X, Y);
+      if (rpts.length) { ctx.setLineDash([6 * ps, 4 * ps]); ctx.lineWidth = 1.6 * ps; line(ctx, rpts, X, Y); ctx.setLineDash([]); }
       ctx.globalAlpha = 1;
+      for (const { e, pts: q } of xpts) {
+        ctx.strokeStyle = T[e.col]; ctx.lineWidth = (e.dash ? 1.6 : 2.3) * ps; if (e.dash) { ctx.setLineDash([5 * ps, 4 * ps]); ctx.globalAlpha = 0.8; }
+        line(ctx, q, X, Y); ctx.setLineDash([]); ctx.globalAlpha = 1;
+      }
       ctx.strokeStyle = col; ctx.lineWidth = 2.3 * ps; line(ctx, pts, X, Y);
-      if (W.t >= tL && W.t <= tR) { ctx.fillStyle = T.canvas; ctx.strokeStyle = col; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.arc(X(W.t), Y(circ[key]), 3.6 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); }
+      if (W.t >= tL && W.t <= tR) {
+        for (const e of Pn.extra || []) if (!e.dash) { ctx.fillStyle = T.canvas; ctx.strokeStyle = T[e.col]; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.arc(X(W.t), Y(circ[e.key]), 3.6 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); }
+        ctx.fillStyle = T.canvas; ctx.strokeStyle = col; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.arc(X(W.t), Y(circ[key]), 3.6 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      }
       ctx.restore();
       ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(L + 0.5, b.y0 + 0.5, R - L, b.y1 - b.y0);
     });
@@ -1824,8 +2341,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function updateReadouts() {
     if (!circ) return;
     const m = S.mode, c = circ, N = c.N;
-    $('tclock').firstChild.nodeValue = `t = ${fmtT(W.t)}`;
-    $('rateTag').textContent = RATES[S.rateIdx][1];
+    $('tclock').firstChild.nodeValue = S.mode === 'coils' ? `t = ${(W.t * 1e3).toFixed(2)} ms` : `t = ${fmtT(W.t)}`;
+    $('rateTag').textContent = rateSet().r[S.rateIdx][1];
     set('mPhi', fmtSI(c.phi, 'Wb', 4)); set('mEmf', fmtSI(c.emf, 'V', 4)); set('mI', fmtSI(c.I, 'A', 4));
     const dphi = c.phi - c.phi0;
     set('sEmf', fmtSI(c.intEmf, 'Wb', 5)); set('sDphi', fmtSI(-N * dphi, 'Wb', 5));
@@ -1866,6 +2383,38 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       set('mP', fmtSI(c.I * c.I * c.R, 'W', 3));
       if (Math.abs(c.emf) < 1e-9) lenz = 'The flux is not changing at this instant, so there is no EMF.';
       else lenz = `Φ<sub>B</sub> is ${-c.emf > 0 ? 'increasing' : 'decreasing'}; the current's own field opposes that, and the force on the coil's sides makes a torque against the rotation. The crank (or motor) must supply power τω = I²R = ${fmtSI(c.I * c.I * c.R, 'W', 3)}.`;
+    } else if (m === 'coils') {
+      const sy = CS.sys, o = CS.out, cl = S.coils.closed, ph = cl ? CS.phC : CS.phO, A = cx.abs;
+      const pf = (v, u, n) => fmtSI(v, u, n || 3);
+      const phase = (dp, ref) => { let dg = wrapPi(dp) * 180 / Math.PI; if (dg <= -179.5) dg = 180; return Math.abs(dg) < 0.5 ? `in phase with ${ref}` : `${dg < 0 ? 'lags' : 'leads'} ${ref} by ${Math.abs(dg).toFixed(0)}°`; };
+      const zstr = (z) => `${pf(z[0], 'Ω')} ${z[1] < 0 ? '−' : '+'} i·${pf(Math.abs(z[1]), 'Ω')}`;
+      const dirF = (F, scale) => Math.abs(F) < 1e-6 * scale ? '' : ` <span class="ok">${F > 0 ? 'apart' : 'together'}</span>`;
+      const Fpk = Math.max(1e-30, A(CS.phC.X1) * A(CS.phC.X2) * Math.abs(sy.dM));
+      set('mV1', pf(o.V1, 'V', 4)); set('mI1', pf(o.I1, 'A', 4)); set('mPhiM', pf(o.phiM, 'Wb', 4));
+      set('mF', cl ? pf(o.F, 'N') + dirF(o.F, Fpk) : '0 <span class="ok">switch open</span>'); set('mP', pf(o.V1 * o.I1, 'W'));
+      set('mM', pf(sy.M, 'H', 4)); set('mK', sy.k.toFixed(3)); set('mL1', pf(sy.L1, 'H', 4)); set('mL2', pf(sy.L2, 'H', 4)); set('mR1', pf(sy.R1, 'Ω')); set('mR2', pf(sy.R2, 'Ω'));
+      const dW = o.Wm - CS.E.Wm0;
+      set('sSrc', pf(CS.E.src, 'J', 5)); set('sH1', pf(CS.E.q1, 'J', 5)); set('sH2', pf(CS.E.q2, 'J', 5)); set('sWm', pf(dW, 'J', 4));
+      set('sChk', `${(CS.E.src - CS.E.q1 - CS.E.q2 - dW).toExponential(1).replace('-', '−')} J`); set('sDur', `${((W.t - tA) * 1e3).toFixed(1)} ms`);
+      const pnote = (dp, ref) => ` <span class="ok">${phase(dp, ref)}</span>`;
+      set('pI1', pf(A(ph.X1), 'A') + pnote(cx.arg(ph.X1), 'V<sub>1</sub>'));
+      $('pI1oL').innerHTML = `I<sub>1</sub> amplitude, switch ${cl ? 'open' : 'closed'}`; set('pI1o', pf(A((cl ? CS.phO : CS.phC).X1), 'A'));
+      set('pI2', cl ? pf(A(ph.X2), 'A') + pnote(cx.arg(ph.X2) - cx.arg(ph.X1), 'I<sub>1</sub>') : '0 <span class="ok">switch open</span>');
+      set('pE2', pf(A(ph.E2), 'V') + pnote(cx.arg(ph.E2), 'V<sub>1</sub>'));
+      set('pZref', cl ? zstr(ph.Zref) : '0 <span class="ok">switch open</span>'); set('pZin', zstr(ph.Zin));
+      const ratio = A(CS.phO.E2) / S.coils.V0;
+      set('pRatio', ratio.toFixed(3)); set('pLim', (sy.M / sy.L1).toFixed(3)); set('pNN', (S.coils.N2 / S.coils.N1).toFixed(3));
+      set('pTau', `${(sy.L1 / sy.R1 * 1e3).toFixed(2)} ms`); set('pPin', pf(ph.Pin, 'W')); set('pHeat', pf(ph.P1 + ph.P2, 'W'));
+      set('pF', cl ? pf(ph.Favg, 'N') + dirF(ph.Favg, Fpk) : '0');
+      $('steadyHint').innerHTML = `Air coils are loosely coupled: here k = ${sy.k.toFixed(2)}, so much of the flux of each coil misses the other. With the secondary open, |EMF<sub>2</sub>|/V<sub>0</sub> = ωM/|R<sub>1</sub> + iωL<sub>1</sub>| rises with frequency toward M/L<sub>1</sub> = k√(L<sub>2</sub>/L<sub>1</sub>), not toward the ideal transformer ratio N<sub>2</sub>/N<sub>1</sub>. Only with k close to 1, as on a shared iron core, does it reach N<sub>2</sub>/N<sub>1</sub>.`;
+      if (!cl) lenz = `The secondary is open, so no current flows in it and nothing opposes the change: EMF<sub>2</sub> = −M dI<sub>1</sub>/dt = ${pf(o.emf2, 'V')} is the bare induced EMF, largest when I<sub>1</sub> passes through zero. The primary current is the same as with no secondary at all.`;
+      else {
+        const tiny = Math.abs(o.I2) < 0.02 * A(ph.X2);
+        lenz = tiny ? 'I<sub>2</sub> is passing through zero: at this instant Φ<sub>2</sub> is at a turning point.'
+          : `Φ<sub>2</sub> is ${o.emf2 < 0 ? 'increasing' : 'decreasing'}, so I<sub>2</sub> circulates ${o.I2 > 0 ? 'counterclockwise' : 'clockwise'} seen from the right and its own field inside the secondary points ${o.I2 > 0 ? '+z' : '−z'}, against the change. ` +
+            (o.I1 * o.I2 < 0 ? 'I<sub>1</sub> and I<sub>2</sub> circulate in opposite senses now: the facing ends are like poles and the coils repel.' : `I<sub>1</sub> and I<sub>2</sub> circulate the same way now, so the coils attract; averaged over a cycle they ${ph.Favg > 0 ? 'repel' : 'attract'}.`);
+        lenz += ` Closing the secondary changed the primary current amplitude from ${pf(A(CS.phO.X1), 'A')} to ${pf(A(CS.phC.X1), 'A')}: its opposing flux lowers the primary's effective inductance, and its resistance adds to the primary's.`;
+      }
     } else {
       const r = railP(), Fx = c.I * r.L * r.B;
       set('mX', `${(W.x * 100).toFixed(1)} cm`); set('mV', `${W.rv.toFixed(3).replace('-', '−')} m/s`);
@@ -1887,7 +2436,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // ---------- controls ----------
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   for (const b of document.querySelectorAll('#rateSeg button')) b.addEventListener('click', () => setRate(+b.dataset.r));
-  function setRate(i) { S.rateIdx = i; for (const b of document.querySelectorAll('#rateSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.r === i)); updateReadouts(); }
+  function setRate(i) {
+    S.rateIdx = i; const lab = rateSet().lab;
+    for (const b of document.querySelectorAll('#rateSeg button')) { b.setAttribute('aria-pressed', String(+b.dataset.r === i)); b.textContent = lab[+b.dataset.r]; }
+    updateReadouts();
+  }
   $('keep').addEventListener('click', () => {
     const i0 = hist.t.findIndex((x) => x >= tA); if (i0 < 0 || W.t - tA < 0.01) return;
     const cut = (a) => a.slice(i0);
@@ -1928,7 +2481,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     } else if (h.id === 'crank') {
       if (W.motor) setMotor(false);
       d.dial = h.dial; newMove(W.t); freeWindow();
-    } else if (h.id === 'res') d.v0 = P().Ri;
+    } else if (h.id === 'sec') { d.off = geo.invZ(x) - S.coils.d / 100; }
+    else if (h.id === 'sw') { setSwitch(!S.coils.closed); return null; }
+    else if (h.id === 'res') d.v0 = P().Ri;
     else if (h.id === 'railL') d.v0 = S.rails.L;
     if (!running) setRunning(true);
     return d;
@@ -1941,6 +2496,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else if (d.id === 'res') setParam('Ri', d.v0 + Math.round(-(y - d.y0) / 10));
     else if (d.id === 'view') { GV.yaw = wrapPi(d.yaw0 + (x - d.x0) * 0.008); GV.pit = clamp(d.pit0 + (y - d.y0) * 0.006, 0.06, 1.2); }
     else if (d.id === 'railL') setParam('L', Math.abs(geo.invY(y)) * 200);
+    else if (d.id === 'sec') setParam('d', (geo.invZ(x) - d.off) * 100);
+    else if (d.id === 'secA') setParam('a2', (Math.abs(geo.invR(y + 12 * Math.min(projScale(), 1.25))) - CS.sys.c2) * 100);
   }
   let dragQueued = null, dragFrame = false;
   let lastPt = [0, 0];
@@ -2001,6 +2558,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else if (m === 'rails' && (k === 'ArrowUp' || k === 'ArrowDown')) setParam('L', S.rails.L + (k === 'ArrowUp' ? 1 : -1));
     else if (m === 'rails' && (k === 'g' || k === 'G')) railsPull();
     else if (m === 'rails' && (k === 'l' || k === 'L')) railsCoast();
+    else if (m === 'coils' && (k === 'ArrowLeft' || k === 'ArrowRight')) setParam('d', S.coils.d + (k === 'ArrowRight' ? 0.5 : -0.5));
+    else if (m === 'coils' && (k === 'ArrowUp' || k === 'ArrowDown')) setParam('a2', S.coils.a2 + (k === 'ArrowUp' ? 0.5 : -0.5));
+    else if (m === 'coils' && (k === 's' || k === 'S')) setSwitch(!S.coils.closed);
+    else if (m === 'coils' && (k === 'g' || k === 'G')) coilRestart();
     else return;
     e.preventDefault();
   });
@@ -2026,12 +2587,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function advance(dts) {
     acc += dts;
     let n = 0;
-    while (acc >= DT - 1e-12 && n < 400) { physStep(DT); acc -= DT; n++; }
-    if (n >= 400) acc = 0;
+    const step = S.mode === 'coils' ? CS.h : DT, cap = S.mode === 'coils' ? 20000 : 400;
+    while (acc >= step - 1e-12 && n < cap) { physStep(step); acc -= step; n++; }
+    if (n >= cap) acc = 0;
     // force on the magnet at the latest step (only needed for display)
     if (n > 0 && S.mode === 'magnet') { W.F = act && act.kind === 'flip' ? 0 : magnetForce(magP(), W.zMid, circ.I); W.Fmax = Math.max(W.Fmax, Math.abs(W.F)); }
     if (W.t > view.wl + 0.96 * view.Tw) {
-      if (S.mode === 'gen') view.wl = W.t - 0.96 * view.Tw;
+      if (S.mode === 'gen' || S.mode === 'coils') view.wl = W.t - 0.96 * view.Tw;
       else growWindow(view.wl + (W.t - view.wl) / 0.96);
     }
     trimHist();
@@ -2048,6 +2610,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   window.__fd = {
     get frameMs() { return frameMs; }, get W() { return W; }, get S() { return S; }, get act() { return act; }, get circ() { return circ; },
     get handles() { return handles; }, get GV() { return GV; }, get running() { return running; }, get view() { return view; }, get ghosts() { return ghosts; }, get tA() { return tA; },
+    get CS() { return CS; }, setSwitch, coilRestart, get hist() { return hist; },
     applyPreset, setRunning, setParam, doAct, go(dts) { while (dts > 1e-12) { const d = Math.min(0.2, dts); advance(d); dts -= d; } updateReadouts(); }
   };
 
