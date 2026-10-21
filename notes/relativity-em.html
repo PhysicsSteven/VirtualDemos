@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Magnetism from Relativity: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Magnetism from Relativity</h1><ul class="meta"><li><a href="../demos/relativity-em.html">Open the demo</a></li><li>PHYS 202 (magnetic force, fields of currents); modern physics (special relativity)</li><li>15 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Whether a force is "electric" or "magnetic" depends on the observer. A charge moving beside a neutral wire carrying current feels a magnetic force in the lab; in the charge's own frame the wire is charged and the same push is electric.</li>
+<li>The wire becomes charged in the moving frame because each line of charge has its own rest frame density, multiplied by its own γ in whatever frame you look from. The ions and the electrons move at different speeds there, so they contract by different amounts.</li>
+<li>B does not disappear in the charge's frame: the wire still carries a current there. B simply cannot push a charge at rest. E and B are parts of one field, and E·B and E² − c²B² are the same for every observer.</li>
+<li>The forces agree once transformed: a sideways force is γᵤ times larger in the frame where the particle is at rest, F′ = γᵤF.</li>
+<li>In a real wire the drift speed is about 0.1 mm/s and γ − 1 is about 10⁻²⁶, yet the effect is the everyday magnetic force, because it acts on roughly 10²² conduction electrons per meter.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know B = μ₀I/(2πr), F = quB, E = λ/(2πε₀r), Faraday's law, length contraction and γ. The wire argument is Purcell's (Electricity and Magnetism, chapter 5). Use projector mode.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Wire, lab frame.</strong> The ions sit still and the electrons drift at 0.5c, equally spaced, so the wire is neutral and E = 0 at the charge. The charge moves with the electrons and is pushed away from the wire by quB. Speeds are exaggerated (see the tag). Ask Q1 before switching.</li>
+<li><strong>Charge's frame.</strong> Switch the frame and watch the boost: the ions start moving and crowd together, the electrons stop and spread apart, and the strip shows the force shifting from a magnetic part to an electric part along the way. At the end the force is all electric and slightly larger (F′/F = γᵤ). Point to "B at q": still there, now 1.731 mT. Ask Q5.</li>
+<li><strong>Back to Lab frame, then compare.</strong> Compare the Both frames cards; have students check one number by hand (Q2).</li>
+<li><strong>Fast charges.</strong> Electrons at 0.8c, the charge at 0.6c the other way. Switch to Charge's frame: the electrons move at 0.946c, not 1.4c, and are now more crowded than the ions, so the wire turns negative and the charge is pulled in. Ask Q3.</li>
+<li><strong>Real copper wire.</strong> To scale in speed. Switch frames: nothing visible changes, yet the force stays 2.355×10⁻²⁸ N, now electric (Q4).</li>
+<li><strong>Magnet and loop.</strong> Einstein's 1905 opening example. In Magnet's frame the ring's charges are pushed by q(v × B); switch to Loop's frame and the same push is an induced E′ circling the axis. The two EMFs and −dΦ′/dt′ agree, and the plot traces the EMF as the magnet passes through. Ask Q8; then tell the class Einstein's point: the asymmetry is in the theory, not in the phenomena.</li>
+<li><strong>Moving point charge</strong> and <strong>Field transformation</strong> (if time allows). At 0.8c the field squeezes into a pancake. A pure B field seen from a moving frame gains an E field (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: in the lab the wire is neutral and the charge is pushed away by the magnetic force. Now ride along with the charge, so it is at rest. A charge at rest feels no magnetic force. Does it still get pushed away from the wire? If so, by what?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In Wire, lab frame: λ₀ = 1 μC/m, v = u = 0.5c, q = 1 nC, r = 2.0 cm. Find the net line charge λ′ of the wire in the charge's frame, the electric field there, and the force F′. Then find the lab force F = quB and the ratio F′/F. Check both with the demo.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In Fast charges the electrons drift at 0.8c and the charge moves at 0.6c the other way. A student says that in the charge's frame the electrons move at 1.4c. What is their speed there, and why does the wire end up negatively charged in that frame? Find λ′ in units of λ₀.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A copper wire with a 1 mm² cross section carries 1 A. Copper has 8.49×10²⁸ conduction electrons per m³. Find the drift speed, and the net line charge seen by an electron drifting along with the conduction electrons, λ′ = γλ₀v²/c². How much wire holds one extra elementary charge? Why does such a small imbalance still produce the ordinary force between two wires? Compare with the Real copper wire readouts.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In the charge's frame the demo still shows B at q, and it is larger than in the lab. Why is B not zero there, and why does it not push the charge? Is there any frame in which the field at the charge is purely electric? Use E² − c²B².</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In Moving point charge at 0.8c, the field 1 m ahead of the charge is weaker than the Coulomb value, and the field 1 m to the side is stronger. Explain the pattern using length contraction, and predict both values at 0.95c before checking with the slider.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In Field transformation, frame S has only B = 1 mT along z. Frame S′ moves at 0.6c along x. Find E′ and B′, then check that E·B and E² − c²B² are the same in both frames.</p></div>
+
+<div class="q"><p><strong>Q8.</strong> In Magnet and loop at 1 m/s, put the ring level with the magnet's north face (2.0 cm from its center). The rail shows B across the axis at the ring, 77.04 mT. Find the EMF in the magnet's frame, then E′ and EMF′ in the loop's frame. Which way does the current go, seen from the north end?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The magnetic field vanishes in the charge's frame."</strong> It does not: the wire still carries a current there, and B is γᵤ times larger. It just exerts no force on a charge at rest.</li>
+<li><strong>"Relativity is irrelevant at 0.1 mm/s."</strong> The fractional effect is about 10⁻²⁶, but it multiplies an enormous charge density, 1.36×10⁴ C/m of electrons in a 1 mm² copper wire. Magnetism is a relativistic effect we see every day.</li>
+<li><strong>"The force is the same in every frame."</strong> The sideways force is largest in the particle's rest frame and 1/γ of that in the lab.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>The wire is two infinitely long, thin lines of charge: ions with density +λ₀ at rest in the lab and electrons drifting at v with density −λ₀ in the lab. In a frame moving at f, ions have density γ_f λ₀ and electrons (λ₀/γᵥ)γ_w with w = (v − f)/(1 − vf/c²). Net: λ′ = γ_f λ₀ f v/c², the same as transforming the four vector (cλ, I). Fields E = λ/(2πε₀r), B = μ₀I/(2πr); force q(E + u × B).</li>
+<li>Ignored: the test charge's own field and radiation, the wire's resistance, and the small surface charges that drive current in a real circuit. Spacing of the drawn charges shows density; motion near c is slowed for the screen.</li>
+<li>Magnet and loop: a uniformly magnetized cylinder (current sheet K = M) from exact loop fields; EMF = ∮(v × B)·dl, EMF′ = ∮E′·dl with E′ = γ v × B, and −dΦ′/dt′.</li>
+<li>Point charge: the exact Heaviside field, B = v × E/c². Field transform: exact, E′⊥ = γ(E + v × B)⊥, B′⊥ = γ(B − v × E/c²)⊥.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

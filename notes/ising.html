@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ising Model: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Ising Model</h1><ul class="meta"><li><a href="../demos/ising.html">Open the demo</a></li><li>Thermal physics and statistical mechanics (upper level); intro thermodynamics (qualitative)</li><li>20 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Order can appear on its own. Each spin feels only its four neighbors, yet below T_c = 2/ln(1 + √2) ≈ 2.269 J/k_B the whole lattice picks one direction with no field to choose it: spontaneous symmetry breaking.</li>
+<li>The transition is a contest between energy and entropy, F = E − TS. At low T aligned states win because they cost little energy; at high T the vast number of mixed states wins.</li>
+<li>At T_c fluctuations happen on every length scale: domains of all sizes, and the heat capacity and susceptibility peak. Only an infinite lattice has a true singularity; a finite one rounds and shifts the peaks.</li>
+<li>Monte Carlo samples states with Boltzmann weight e^(−E/T) by a rule obeying detailed balance. Averages are physical, sweep "time" is not, and errors must allow for correlated samples, worst near T_c (critical slowing down).</li>
+<li>A hysteresis loop is not equilibrium behavior: it comes from metastable states that last until a domain of the other sign nucleates.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the Boltzmann factor; for the upper level version, also C = (⟨E²⟩ − ⟨E⟩²)/(k_B T²). Units: J = 1, k_B = 1, so T is in J/k_B and e is the energy per spin in units of J. Drag the thermometer beside the lattice to change T, the bar below it to change h, and drag on the lattice to paint spins. <strong>Blind</strong> hides every exact result if students should find T_c themselves. A 64 × 64 <strong>Scan T</strong> takes under a minute.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Hot: paramagnet.</strong> Small patches form and dissolve, and m wanders near zero. Point out that e is about −0.56, not 0 (Q4). Then drag the thermometer slowly down past T_c and let the class watch one color take over.</li>
+<li><strong>Cold: one domain.</strong> One domain fills the lattice and single spins blink. Do Q2 here with the <strong>Flipped per sweep</strong> readout. m(t) sits on the dashed Onsager line at 0.986.</li>
+<li><strong>At Tc: fractal domains.</strong> Exactly at T_c, Wolff updates. Domains of every size sit inside each other. Tick <strong>Show the last Wolff cluster</strong> to show what one update flips.</li>
+<li><strong>Quench and coarsen.</strong> Ask Q1 first. From the infinite temperature state at T = 1.2, domains grow slowly and their walls straighten.</li>
+<li><strong>Measure.</strong> Set L = 64, T = 2.0, Metropolis, and press <strong>Measure at this T</strong> (Q3). Then <strong>Scan T</strong> at L = 32 and at L = 64 and open the <strong>T scan</strong> tab: the points follow the dashed exact curves for each size, and the peaks grow and sharpen with L (Q5). At T_c, compare Metropolis with Wolff (Q6).</li>
+<li><strong>Hysteresis.</strong> Ask Q7 first. The <strong>m against h</strong> tab draws the loop; at 0.0005 per sweep it narrows.</li>
+<li><strong>Antiferromagnet</strong> (if time allows). With J = −1 the order is a checkerboard; m_s follows the same Onsager curve as m.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: the <strong>Quench and coarsen</strong> setup starts from a random lattice (infinite temperature) and holds it at T = 1.2 on a 256 × 256 lattice. Will it become a single domain within 1000 sweeps? Sketch what you expect m(t) to do.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In <strong>Cold: one domain</strong> (T = 1.5, h = 0), consider a spin whose four neighbors all point the same way it does. How much energy does flipping it cost, and with what probability does a Metropolis step flip it? The <strong>Flipped per sweep</strong> readout shows about 1.3 %, nearly three times your answer. Why is the readout larger?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Use Yang's exact result m = (1 − sinh⁻⁴(2/T))^(1/8) to find the spontaneous magnetization at T = 2.0. Then measure ⟨|m|⟩ at T = 2.0 on a 64 × 64 lattice with Metropolis and compare. Why does the demo average |m| rather than m?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In <strong>Hot: paramagnet</strong> (T = 4) the magnetization is near zero, but the energy per spin is about −0.557, not 0. What does this tell you about neighboring spins? What fraction of nearest neighbor pairs agree?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> The exact heat capacity of a finite L × L lattice peaks at c = 1.905 near T = 2.294 for L = 32, and at c = 2.252 near T = 2.282 for L = 64. For the infinite lattice c diverges as −(8/(πT_c²)) ln|1 − T/T_c|, so the finite size peak grows by a fixed amount each time L doubles. Find that amount and predict the peak for L = 128 and L = 256. Where is the peak heading?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> At T_c on a 64 × 64 lattice, measure with Metropolis (1000 sweeps discarded, 5000 averaged), then with Wolff. Compare τ_int, the error bars and c with the exact L = 64 value shown. Which reading would you trust, and why does Metropolis struggle here?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Predict: in <strong>Hysteresis</strong> the lattice switches near h = ∓0.5 when h changes by 0.002 per sweep. If the sweep is four times slower, will it switch at a larger field, a smaller one, or the same one? Is the switching field an equilibrium property of the magnet?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Something has to line the spins up."</strong> With h = 0 nothing favors up over down. Below T_c the lattice picks one direction at random; that is what spontaneous means.</li>
+<li><strong>"Above T_c the spins are completely random."</strong> Neighbors still agree more often than not (64 % of pairs at T = 4); only the long range order is gone.</li>
+<li><strong>"The demo shows a sharp transition at 2.269."</strong> A finite lattice has no singularity: the peaks in c and χ are rounded and sit slightly above T_c, closer as L grows.</li>
+<li><strong>"A sweep is a unit of real time."</strong> Sweeps count attempted spin updates; the rate is not physical, and a Wolff sweep has no dynamical meaning at all.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Model: an L × L square lattice (L = 32 to 256), periodic edges, H = −J Σ s_i s_j − h Σ s_i over nearest neighbor pairs, s_i = ±1, J = ±1, k_B = 1.</li>
+<li>Updates, each obeying detailed balance: Metropolis picks sites at random and flips with probability min(1, e^(−ΔE/T)), ΔE = 2s(JS + h), S the sum of the four neighbors. Heat bath sets a spin up with probability 1/(1 + e^(−2(JS + h)/T)), visiting even sites, then odd ones. Wolff (h = 0) flips a cluster grown through agreeing bonds with probability 1 − e^(−2|J|/T). A sweep is N single spin steps, or for Wolff a fixed number of clusters flipping about N spins. A seed reproduces a run.</li>
+<li>Exact curves, h = 0: T_c = 2/ln(1 + √2); m = (1 − sinh⁻⁴(2/T))^(1/8) (Yang); Onsager's e and c, through complete elliptic integrals, for the infinite lattice; dashed, Kaufman's exact e and c for the finite lattice. No exact χ is known. With J = −1 the same curves hold for m_s.</li>
+<li>Errors: ⟨|m|⟩ and ⟨e⟩ by blocking; c = N(⟨e²⟩ − ⟨e⟩²)/T² and χ = N(⟨m²⟩ − ⟨|m|⟩²)/T by jackknife over 20 blocks; readings with too few independent samples are flagged. No error analysis sees states a run never visits (below T_c with h ≠ 0 the reversed state may never be reached). Using ⟨|m|⟩ makes χ smaller than N⟨m²⟩/T above T_c by the factor 1 − 2/π.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

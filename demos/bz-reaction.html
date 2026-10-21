@@ -1,0 +1,1759 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Belousov–Zhabotinsky Reaction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the vessel (beaker, dish or flow reactor) on the left; two plots stacked on the right; instrument rail on the right; stacks on narrow screens. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --br: #2f8a57;
+  --ferroin: #c9472f;
+  --ferriin: #2f63c4;
+  --cerium: #d9a514;
+  --glass: #8ea3b8;
+  --bench: #eef1f4;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --br: #5bc28a; --ferroin: #d4523a; --ferriin: #4a84ea;
+    --cerium: #e6bb3a; --glass: #61758b; --bench: #131a22;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --br: #5bc28a; --ferroin: #d4523a; --ferriin: #4a84ea;
+  --cerium: #e6bb3a; --glass: #61758b; --bench: #131a22;
+  color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 640px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
+  display: grid; grid-template-columns: minmax(0, 56fr) minmax(0, 44fr); grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
+.pane { position: relative; min-height: 0; min-width: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#paneA { grid-column: 1; grid-row: 1 / 3; background: var(--bench); }
+#paneB { grid-column: 2; grid-row: 1; border-left: 1px solid var(--line); }
+#paneC { grid-column: 2; grid-row: 2; border-left: 1px solid var(--line); border-top: 1px solid var(--line); }
+#cA, #cB, #cC { touch-action: none; outline: none; }
+#cA:focus-visible, #cB:focus-visible, #cC:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+#gl { position: absolute; inset: 0; pointer-events: none; }
+#gl canvas { position: absolute; inset: 0; }
+.stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
+.stage-ctl > * { pointer-events: auto; }
+.stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
+.tclock { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; font-size: 0.86rem; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--canvas) 85%, transparent); padding: 2px 6px; border-radius: 6px; white-space: nowrap; line-height: 1.25; }
+.tclock small { font-size: 0.74rem; font-weight: 400; color: var(--muted); }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg.full { display: flex; }
+.seg.full button { flex: 1; padding: 4px 4px; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.ctl { display: flex; flex-direction: column; gap: 4px; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd small { font-size: 0.78rem; font-weight: 400; color: var(--muted); }
+.readout .wide { grid-column: 1 / -1; }
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid var(--accent); }
+.swatch.sx { border-color: var(--equi); } .swatch.sy { border-color: var(--br); } .swatch.sz { border-color: var(--neg); } .swatch.sb { border-color: var(--pos); border-top-style: dashed; }
+.chip-sw { flex: none; width: 22px; height: 12px; border-radius: 3px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.progress { height: 6px; border-radius: 3px; background: var(--grid); overflow: hidden; }
+.progress > i { display: block; height: 100%; width: 0; background: var(--accent); }
+.model p { margin: 0; }
+.model p + p { margin-top: 6px; }
+
+@media (max-width: 1060px) {
+  .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: 460px 300px 300px; min-height: 0; }
+  #paneA { grid-row: 1; }
+  #paneB { grid-column: 1; grid-row: 2; border-left: 0; border-top: 1px solid var(--line); }
+  #paneC { grid-column: 1; grid-row: 3; border-left: 0; }
+  .stage[data-mode="beaker"], .stage[data-mode="flow"] { grid-template-rows: 600px 300px 300px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { grid-template-rows: 410px 280px 290px; }
+  .stage[data-mode="beaker"], .stage[data-mode="flow"] { grid-template-rows: 580px 280px 290px; }
+  .rail { overflow: visible; }
+}
+
+/* projector on a short screen: let the stage shrink to fit under the header */
+@media (min-width: 1061px) and (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 440px !important; } }
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Belousov–Zhabotinsky Reaction</h1>
+      <p>A chemical clock. Stirred in a beaker, the solution flips from red to blue and back on a steady beat: a limit cycle, periodic and not chaotic. Left unstirred in a thin layer, it carries waves that form targets and spirals. Fed through a stirred flow reactor, it can turn chaotic.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="unitsLine">scaled concentrations · beaker time unit τ = 50 s</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/bz-reaction.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/bz-reaction.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM13 2h1v1h-1zM15 2h6v1h-6zM22 2h2v1h-2zM26 2h1v1h-1zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h3v1h-3zM16 3h1v1h-1zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h4v1h-4zM15 4h1v1h-1zM21 4h3v1h-3zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM13 5h1v1h-1zM15 5h1v1h-1zM17 5h3v1h-3zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM15 6h4v1h-4zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM16 7h2v1h-2zM20 7h1v1h-1zM24 7h1v1h-1zM28 7h3v1h-3zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h5v1h-5zM16 9h2v1h-2zM21 9h2v1h-2zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM14 10h4v1h-4zM20 10h1v1h-1zM22 10h8v1h-8zM32 10h5v1h-5zM3 11h1v1h-1zM5 11h2v1h-2zM10 11h2v1h-2zM13 11h1v1h-1zM16 11h3v1h-3zM25 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h2v1h-2zM8 12h3v1h-3zM13 12h4v1h-4zM19 12h2v1h-2zM22 12h2v1h-2zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM11 13h1v1h-1zM15 13h1v1h-1zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM29 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h2v1h-2zM5 14h5v1h-5zM11 14h1v1h-1zM15 14h2v1h-2zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h15v1h-15zM2 15h2v1h-2zM7 15h1v1h-1zM9 15h1v1h-1zM11 15h3v1h-3zM15 15h2v1h-2zM18 15h2v1h-2zM22 15h4v1h-4zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM3 16h1v1h-1zM5 16h4v1h-4zM12 16h2v1h-2zM16 16h4v1h-4zM22 16h2v1h-2zM29 16h2v1h-2zM32 16h4v1h-4zM38 16h1v1h-1zM2 17h2v1h-2zM10 17h4v1h-4zM17 17h9v1h-9zM28 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM6 18h4v1h-4zM13 18h1v1h-1zM17 18h2v1h-2zM21 18h1v1h-1zM23 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM3 19h1v1h-1zM12 19h4v1h-4zM17 19h1v1h-1zM20 19h1v1h-1zM22 19h4v1h-4zM30 19h2v1h-2zM37 19h1v1h-1zM2 20h1v1h-1zM4 20h3v1h-3zM8 20h1v1h-1zM10 20h1v1h-1zM13 20h3v1h-3zM17 20h2v1h-2zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h1v1h-1zM7 21h1v1h-1zM10 21h1v1h-1zM12 21h1v1h-1zM17 21h1v1h-1zM20 21h5v1h-5zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM5 22h1v1h-1zM7 22h2v1h-2zM10 22h1v1h-1zM12 22h3v1h-3zM16 22h2v1h-2zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h3v1h-3zM7 23h1v1h-1zM9 23h4v1h-4zM16 23h1v1h-1zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h2v1h-2zM5 24h1v1h-1zM7 24h3v1h-3zM11 24h7v1h-7zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h5v1h-5zM33 24h3v1h-3zM37 24h2v1h-2zM3 25h1v1h-1zM6 25h2v1h-2zM10 25h1v1h-1zM13 25h1v1h-1zM17 25h2v1h-2zM21 25h2v1h-2zM25 25h1v1h-1zM28 25h2v1h-2zM33 25h2v1h-2zM37 25h1v1h-1zM2 26h1v1h-1zM5 26h2v1h-2zM8 26h2v1h-2zM11 26h1v1h-1zM13 26h1v1h-1zM15 26h1v1h-1zM17 26h1v1h-1zM20 26h6v1h-6zM27 26h2v1h-2zM32 26h3v1h-3zM36 26h2v1h-2zM2 27h1v1h-1zM4 27h2v1h-2zM9 27h2v1h-2zM15 27h4v1h-4zM23 27h1v1h-1zM25 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM8 28h1v1h-1zM10 28h1v1h-1zM12 28h1v1h-1zM14 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM26 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h1v1h-1zM6 29h1v1h-1zM9 29h1v1h-1zM13 29h3v1h-3zM18 29h1v1h-1zM23 29h1v1h-1zM26 29h1v1h-1zM31 29h4v1h-4zM37 29h1v1h-1zM2 30h1v1h-1zM5 30h2v1h-2zM8 30h2v1h-2zM11 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM25 30h12v1h-12zM38 30h1v1h-1zM10 31h5v1h-5zM16 31h8v1h-8zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h1v1h-1zM13 32h1v1h-1zM15 32h1v1h-1zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h2v1h-2zM26 32h3v1h-3zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h2v1h-2zM16 33h5v1h-5zM23 33h3v1h-3zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h4v1h-4zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h3v1h-3zM29 34h6v1h-6zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM14 35h2v1h-2zM17 35h1v1h-1zM20 35h1v1h-1zM22 35h1v1h-1zM24 35h2v1h-2zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h4v1h-4zM16 36h3v1h-3zM20 36h2v1h-2zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h1v1h-1zM14 37h1v1h-1zM16 37h2v1h-2zM21 37h3v1h-3zM25 37h1v1h-1zM28 37h1v1h-1zM30 37h2v1h-2zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h1v1h-1zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h5v1h-5zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage" data-mode="beaker">
+      <div class="pane" id="paneA">
+        <canvas id="cA" tabindex="0" aria-label="Vessel"></canvas>
+        <div class="stage-ctl">
+          <button type="button" class="btn" id="play">Pause</button>
+          <button type="button" class="btn" id="reset">Reset</button>
+          <span class="tclock mono" id="tclock">t = 0<small id="rateTag"></small></span>
+        </div>
+      </div>
+      <div class="pane" id="paneB">
+        <div id="gl"></div>
+        <canvas id="cB" tabindex="0" aria-label="Upper plot"></canvas>
+      </div>
+      <div class="pane" id="paneC">
+        <canvas id="cC" tabindex="0" aria-label="Lower plot"></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="osc" aria-pressed="true">Oscillating beaker</button>
+          <button type="button" data-p="stop" aria-pressed="false">Stop the oscillation</button>
+          <button type="button" data-p="target" aria-pressed="false">Target waves</button>
+          <button type="button" data-p="spiral" aria-pressed="false">Make a spiral</button>
+          <button type="button" data-p="route" aria-pressed="false">Route to chaos</button>
+          <button type="button" data-p="fly" aria-pressed="false">Butterfly effect</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Vessel</h2>
+        <div class="seg full" role="group" aria-label="Vessel" id="modeSeg">
+          <button type="button" data-m="beaker" aria-pressed="true">Stirred beaker</button>
+          <button type="button" data-m="dish" aria-pressed="false">Petri dish</button>
+          <button type="button" data-m="flow" aria-pressed="false">Flow reactor</button>
+        </div>
+
+        <div class="ctl" data-for="beaker">
+          <div class="slider-head"><label for="sF">Stoichiometric factor f</label><output id="oF" class="mono" for="sF"></output></div>
+          <input type="range" id="sF" min="0.3" max="3" step="0.01">
+        </div>
+        <p class="hint" data-for="beaker">f is the number of bromide ions made per oxidized catalyst ion reduced. Drag the f line on the lower plot too. The beaker oscillates only between the two Hopf points.</p>
+
+        <div class="seg full" role="group" aria-label="Pointer tool" id="toolSeg" data-for="dish">
+          <button type="button" data-t="cut" aria-pressed="true">Cut a wave</button>
+          <button type="button" data-t="start" aria-pressed="false">Start a wave</button>
+        </div>
+        <div class="toggles" data-for="dish">
+          <label><input type="checkbox" id="tPace">Pacemaker</label>
+        </div>
+        <div class="ctl" data-for="dish">
+          <div class="slider-head"><label for="sPhi">Bromide source φ</label><output id="oPhi" class="mono" for="sPhi"></output></div>
+          <input type="range" id="sPhi" min="0.02" max="0.08" step="0.005">
+        </div>
+        <div class="row2" data-for="dish">
+          <button type="button" class="btn" id="clearDish">Clear dish</button>
+          <button type="button" class="btn" id="halfWave">Broken wave</button>
+        </div>
+        <p class="hint" data-for="dish">Drag across a blue wave to cut it; the dashed ring shows how wide. Each free end curls into a spiral. Drag the probe (ringed cross) to measure there. A larger φ makes the medium harder to excite.</p>
+
+        <div class="ctl" data-for="flow">
+          <div class="slider-head"><label for="sKf">Flow rate k<sub>f</sub></label><output id="oKf" class="mono" for="sKf"></output></div>
+          <input type="range" id="sKf" min="3" max="5" step="0.005">
+        </div>
+        <div class="toggles" data-for="flow">
+          <label><input type="checkbox" id="tFly">Second run</label>
+        </div>
+        <div class="ctl" data-for="flow" id="flyCtl">
+          <div class="slider-head"><label for="sDel">Start difference δ in x</label><output id="oDel" class="mono" for="sDel"></output></div>
+          <input type="range" id="sDel" min="-10" max="-2" step="1">
+        </div>
+        <div class="row2" data-for="flow">
+          <button type="button" class="btn" id="scanPD">Scan 3.10 to 3.30</button>
+          <button type="button" class="btn" id="scanAll">Scan 3.0 to 5.0</button>
+        </div>
+        <div class="progress" data-for="flow"><i id="scanBar"></i></div>
+        <p class="hint" data-for="flow" id="scanHint">A scan runs the reactor at one flow rate after another and plots every peak of z. Drag the k<sub>f</sub> line on the diagram to choose a flow rate.</p>
+      </section>
+
+      <section>
+        <h2>Measurements</h2>
+        <dl class="readout" id="meas"></dl>
+      </section>
+
+      <section>
+        <h2>Time and display</h2>
+        <div class="ctl">
+          <div class="slider-head"><label for="sRate">Simulation speed</label><output id="oRate" class="mono" for="sRate"></output></div>
+          <input type="range" id="sRate" min="0" max="5" step="1">
+        </div>
+        <div class="key" id="keyBox"></div>
+        <p class="hint mono" id="perf"></p>
+      </section>
+
+      <section class="model">
+        <h2>Model</h2>
+        <div class="hint" id="modelHint"></div>
+      </section>
+    </aside>
+  </main>
+  <p class="sr" aria-live="polite" id="live"></p>
+</div>
+<script>
+(function () {
+  'use strict';
+  // ==CORE START==
+  // Pure functions only: no DOM. Tested by curriculum/validation/test_bz_reaction.cjs.
+
+  // ---------- 1. Stirred beaker: three variable Oregonator (Field and Noyes 1974) ----------
+  // Scaled form (R. J. Field, Scholarpedia 2(5):1386, 2007):
+  //   eps  dx/dτ = q y − x y + x(1 − x)
+  //   eps' dy/dτ = −q y − x y + f z
+  //        dz/dτ = x − z
+  // x ∝ [HBrO2], y ∝ [Br−], z ∝ [oxidized catalyst], τ = k_c B t.
+  const ORE = { eps: 9.90e-3, epsp: 1.98e-5, q: 7.62e-5, f: 1, kc: 1, B: 0.02 };
+  function oreTauSeconds(p) { return 1 / (p.kc * p.B); }
+  function oreRhs(p, s, o) {
+    const x = s[0], y = s[1], z = s[2];
+    o[0] = (p.q * y - x * y + x * (1 - x)) / p.eps;
+    o[1] = (-p.q * y - x * y + p.f * z) / p.epsp;
+    o[2] = x - z;
+    return o;
+  }
+  function oreJac(p, s) {
+    const x = s[0], y = s[1];
+    return [
+      [(1 - 2 * x - y) / p.eps, (p.q - x) / p.eps, 0],
+      [-y / p.epsp, -(p.q + x) / p.epsp, p.f / p.epsp],
+      [1, 0, -1]
+    ];
+  }
+  // Positive steady state: z = x, y = f x/(q + x), and −x² + (1 − q − f) x + q(1 + f) = 0.
+  function oreFixed(p) {
+    const b = 1 - p.q - p.f, x = (b + Math.sqrt(b * b + 4 * p.q * (1 + p.f))) / 2;
+    return [x, p.f * x / (p.q + x), x];
+  }
+  // Eigenvalues of a real 3x3 matrix: characteristic cubic, one real root by bisection, then a quadratic.
+  function eig3(J) {
+    const tr = J[0][0] + J[1][1] + J[2][2];
+    const m2 = J[0][0] * J[1][1] - J[0][1] * J[1][0] + J[0][0] * J[2][2] - J[0][2] * J[2][0] + J[1][1] * J[2][2] - J[1][2] * J[2][1];
+    const det = J[0][0] * (J[1][1] * J[2][2] - J[1][2] * J[2][1]) - J[0][1] * (J[1][0] * J[2][2] - J[1][2] * J[2][0]) + J[0][2] * (J[1][0] * J[2][1] - J[1][1] * J[2][0]);
+    // λ³ − tr λ² + m2 λ − det = 0
+    const P = (l) => ((l - tr) * l + m2) * l - det;
+    let R = 1 + Math.max(Math.abs(tr), Math.abs(m2), Math.abs(det)), lo = -R, hi = R;
+    for (let i = 0; i < 200; i++) { const mid = (lo + hi) / 2; if (P(lo) * P(mid) <= 0) hi = mid; else lo = mid; }
+    let r = (lo + hi) / 2;
+    for (let i = 0; i < 3; i++) { const d = (3 * r - 2 * tr) * r + m2; if (d !== 0) { const rn = r - P(r) / d; if (Math.abs(P(rn)) <= Math.abs(P(r))) r = rn; } }
+    // deflate: λ² + b1 λ + c1 with b1 = r − tr, c1 = det / r (or from m2)
+    const b1 = r - tr, c1 = Math.abs(r) > 1e-300 ? det / r : m2 - r * b1;
+    const disc = b1 * b1 - 4 * c1, out = [{ re: r, im: 0 }];
+    if (disc >= 0) { const sq = Math.sqrt(disc), r1 = (-b1 - (b1 < 0 ? -sq : sq)) / 2; out.push({ re: r1, im: 0 }, { re: r1 !== 0 ? c1 / r1 : 0, im: 0 }); }
+    else { const im = Math.sqrt(-disc) / 2; out.push({ re: -b1 / 2, im: im }, { re: -b1 / 2, im: -im }); }
+    return out;
+  }
+  function oreMaxRe(p) { return Math.max(...eig3(oreJac(p, oreFixed(p))).map(e => e.re)); }
+  // f where the steady state changes stability, by bisection on the largest real part in [fa, fb].
+  function oreHopf(p, fa, fb) {
+    const g = (f) => oreMaxRe(Object.assign({}, p, { f: f }));
+    let a = fa, b = fb, ga = g(a);
+    if (ga * g(b) > 0) return NaN;
+    for (let i = 0; i < 100; i++) { const m = (a + b) / 2, gm = g(m); if (ga * gm <= 0) b = m; else { a = m; ga = gm; } }
+    return (a + b) / 2;
+  }
+  function solve3(W, r) {
+    // Gaussian elimination with partial pivoting on a copy.
+    const a = [W[0].slice(), W[1].slice(), W[2].slice()], b = r.slice();
+    for (let c = 0; c < 3; c++) {
+      let piv = c; for (let k = c + 1; k < 3; k++) if (Math.abs(a[k][c]) > Math.abs(a[piv][c])) piv = k;
+      if (piv !== c) { const t = a[c]; a[c] = a[piv]; a[piv] = t; const tb = b[c]; b[c] = b[piv]; b[piv] = tb; }
+      for (let k = c + 1; k < 3; k++) { const m = a[k][c] / a[c][c]; for (let j = c; j < 3; j++) a[k][j] -= m * a[c][j]; b[k] -= m * b[c]; }
+    }
+    const x = [0, 0, 0];
+    for (let c = 2; c >= 0; c--) { let s = b[c]; for (let j = c + 1; j < 3; j++) s -= a[c][j] * x[j]; x[c] = s / a[c][c]; }
+    return x;
+  }
+  // One step of the L stable Rosenbrock pair of Shampine and Reichelt (1997), as in MATLAB ode23s,
+  // for an autonomous system. Returns the new state and the error estimate vector (order 2 solution).
+  function ros23Step(rhs, jac, p, y, h) {
+    const d = 1 / (2 + Math.SQRT2), e32 = 6 + Math.SQRT2, J = jac(p, y);
+    const W = [0, 1, 2].map(i => [0, 1, 2].map(j => (i === j ? 1 : 0) - h * d * J[i][j]));
+    const F0 = rhs(p, y, [0, 0, 0]);
+    const k1 = solve3(W, F0);
+    const F1 = rhs(p, [y[0] + 0.5 * h * k1[0], y[1] + 0.5 * h * k1[1], y[2] + 0.5 * h * k1[2]], [0, 0, 0]);
+    const t2 = solve3(W, [F1[0] - k1[0], F1[1] - k1[1], F1[2] - k1[2]]);
+    const k2 = [t2[0] + k1[0], t2[1] + k1[1], t2[2] + k1[2]];
+    const yn = [y[0] + h * k2[0], y[1] + h * k2[1], y[2] + h * k2[2]];
+    const F2 = rhs(p, yn, [0, 0, 0]);
+    const k3 = solve3(W, [0, 1, 2].map(i => F2[i] - e32 * (k2[i] - F1[i]) - 2 * (k1[i] - F0[i])));
+    const err = [0, 1, 2].map(i => h / 6 * (k1[i] - 2 * k2[i] + k3[i]));
+    return { y: yn, err: err, f0: F0, f1: F2 };
+  }
+  // Adaptive driver: integrates from τ = t0 to t1, rtol relative error per step,
+  // floor 'thr' on the scale (MATLAB's atol/rtol). Calls sample(t, y) after every accepted step.
+  function oreIntegrate(p, y0, t0, t1, rtol, thr, h0, sample) {
+    let y = y0.slice(), t = t0, h = h0 || 1e-4, n = 0, rej = 0, hKeep = h;
+    while (t < t1) {
+      let cut = false;
+      if (t + h > t1) { hKeep = h; h = t1 - t; cut = true; }
+      const r = ros23Step(oreRhs, oreJac, p, y, h);
+      let e = 0;
+      for (let i = 0; i < 3; i++) e = Math.max(e, Math.abs(r.err[i]) / Math.max(Math.abs(y[i]), Math.abs(r.y[i]), thr));
+      const ok = e <= rtol && r.y.every(Number.isFinite);
+      if (ok) { t += h; y = r.y; n++; if (sample) sample(t, y, h); }
+      else rej++;
+      // a step shortened only to land on t1 does not shrink the step carried to the next call
+      h = (ok && cut) ? hKeep : h * Math.min(5, Math.max(0.1, 0.8 * Math.cbrt(rtol / Math.max(e, 1e-300))));
+    }
+    return { y: y, t: t, h: h, steps: n, rejected: rej };
+  }
+  function oreFixedStep(p, y0, T, n) {
+    let y = y0.slice(); const h = T / n;
+    for (let i = 0; i < n; i++) y = ros23Step(oreRhs, oreJac, p, y, h).y;
+    return y;
+  }
+  // Times of upward crossings of level 'lev' in a sampled series (linear interpolation).
+  function upCrossings(ts, xs, lev) {
+    const out = [];
+    for (let i = 1; i < xs.length; i++) if (xs[i - 1] < lev && xs[i] >= lev) out.push(ts[i - 1] + (lev - xs[i - 1]) / (xs[i] - xs[i - 1]) * (ts[i] - ts[i - 1]));
+    return out;
+  }
+
+  // ---------- 2. Petri dish: two variable Oregonator with diffusion of u ----------
+  // Tyson and Fife (1980) reduction of the Oregonator (y in steady state), with the light
+  // term φ of the photosensitive version, as used by Adamatzky (arXiv:1803.01632):
+  //   ∂u/∂t = (1/ε) [u − u² − (f v + φ)(u − q)/(u + q)] + D ∇²u,   ∂v/∂t = u − v
+  const RD = { eps: 0.02, q: 0.002, f: 1.4, phi: 0.05, D: 1 };
+  function rdReact(par, u, v, phi) { return (u - u * u - (par.f * v + phi) * (u - par.q) / (u + par.q)) / par.eps; }
+  // Rest state for a given φ: v = u and the u nullcline; the root near u = q, by bisection.
+  function rdRest(par, phi) {
+    const g = (u) => rdReact(par, u, u, phi);
+    let a = par.q * 0.5, b = 0.2;
+    // find the smallest root: scan then bisect
+    let prev = g(a), x0 = a;
+    for (let i = 1; i <= 4000; i++) {
+      const x = a + (b - a) * i / 4000, gx = g(x);
+      if (prev * gx <= 0) { let lo = x0, hi = x; for (let k = 0; k < 100; k++) { const m = (lo + hi) / 2; if (g(lo) * g(m) <= 0) hi = m; else lo = m; } return (lo + hi) / 2; }
+      prev = gx; x0 = x;
+    }
+    return NaN;
+  }
+  // Jacobian of the local (no diffusion) kinetics at a state.
+  function rdJac(par, u, v, phi) {
+    const dg = 2 * par.q / ((u + par.q) * (u + par.q)), g = (u - par.q) / (u + par.q);
+    return [[(1 - 2 * u - (par.f * v + phi) * dg) / par.eps, -par.f * g / par.eps], [1, -1]];
+  }
+  // Circular dish of n x n cells: index lists and the four neighbour indices of each cell.
+  // A neighbour outside the dish points back at the cell itself, so no reactant crosses the wall
+  // (zero flux) and every link inside is used symmetrically: diffusion alone conserves Σu exactly.
+  function rdDish(n, round) {
+    const inside = new Uint8Array(n * n), r0 = n / 2 - 1, c = (n - 1) / 2;
+    let count = 0;
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+      const ok = round ? ((i - c) * (i - c) + (j - c) * (j - c) <= r0 * r0) : (i > 0 && j > 0 && i < n - 1 && j < n - 1);
+      if (ok) { inside[j * n + i] = 1; count++; }
+    }
+    const cells = new Int32Array(count), nb = new Int32Array(4 * n * n);
+    let k = 0;
+    for (let idx = 0; idx < n * n; idx++) {
+      const nn = [idx - 1, idx + 1, idx - n, idx + n];
+      for (let m = 0; m < 4; m++) nb[4 * idx + m] = (nn[m] >= 0 && nn[m] < n * n && inside[nn[m]]) ? nn[m] : idx;
+      if (inside[idx]) cells[k++] = idx;
+    }
+    return { n: n, inside: inside, cells: cells, nb: nb };
+  }
+  // Time step: linearly implicit (Rosenbrock) Euler for the stiff local kinetics of u,
+  //   u_new = u + dt [R(u, v) + D ∇²u] / (1 − dt ∂R/∂u),
+  // explicit Euler for v and for diffusion (five point Laplacian, stable when D dt/dx² ≤ 1/4).
+  // First order in dt, like forward Euler, but stable at dt ≫ 1/|∂R/∂u|. The exact kinetics keep u > 0
+  // (for u < q the bracket is positive). Where the linearized step would undershoot to u ≤ 0 (in the wave's
+  // tail, where u drops towards q), that cell uses the positivity preserving Patankar form instead:
+  //   R = P − L u with P = (u + w q/(u + q))/ε ≥ 0, L = (u + w/(u + q))/ε ≥ 0, w = f v + φ,
+  //   u_new = (u + dt (P + D ∇²u)) / (1 + dt L),  which is > 0 whenever 4 D dt/dx² < 1.
+  // st = {u, v, u2, v2, phi (per cell), T (arrival time of the last front), t}
+  function rdSteps(par, dish, st, dx, dt, steps, level) {
+    const cells = dish.cells, nb = dish.nb, nc = cells.length, Ddx = par.D / (dx * dx), ie = 1 / par.eps, q = par.q, f = par.f;
+    const lev = level || 0.3;
+    let u = st.u, v = st.v, u2 = st.u2, v2 = st.v2;
+    const phi = st.phi, T = st.T;
+    for (let s = 0; s < steps; s++) {
+      for (let k = 0; k < nc; k++) {
+        const i = cells[k], b = 4 * i, uu = u[i], vv = v[i];
+        const lap = u[nb[b]] + u[nb[b + 1]] + u[nb[b + 2]] + u[nb[b + 3]] - 4 * uu;
+        const w = f * vv + phi[i], uq = uu + q;
+        const R = ie * (uu - uu * uu - w * (uu - q) / uq), Ru = ie * (1 - 2 * uu - 2 * w * q / (uq * uq));
+        let un = uu + dt * (R + Ddx * lap) / (1 - dt * Ru);
+        if (!(un > 0)) {   // positivity preserving (Patankar) form: production explicit, loss implicit
+          const Pr = ie * (uu + w * q / uq), Dc = ie * (uu + w / uq);
+          un = (uu + dt * (Pr + Ddx * lap)) / (1 + dt * Dc);
+        }
+        u2[i] = un; v2[i] = vv + dt * (uu - vv);
+        if (T && uu < lev && un >= lev) T[i] = st.t + dt * (lev - uu) / (un - uu);
+      }
+      let tmp = u; u = u2; u2 = tmp; tmp = v; v = v2; v2 = tmp;
+      st.t += dt;
+    }
+    st.u = u; st.v = v; st.u2 = u2; st.v2 = v2;
+    return st;
+  }
+  // Diffusion only (no reaction), same stencil, for the conservation and stability checks.
+  function rdDiffuse(dish, u, u2, D, dx, dt, steps) {
+    const cells = dish.cells, nb = dish.nb, c = D * dt / (dx * dx);
+    for (let s = 0; s < steps; s++) {
+      for (let k = 0; k < cells.length; k++) { const i = cells[k], b = 4 * i; u2[i] = u[i] + c * (u[nb[b]] + u[nb[b + 1]] + u[nb[b + 2]] + u[nb[b + 3]] - 4 * u[i]); }
+      const t = u; u = u2; u2 = t;
+    }
+    return u;
+  }
+  // Local front speed from the arrival time field: c = 1/|∇T| (central differences, h cells apart).
+  // Returns NaN unless all five arrival times belong to the same front (spread below 'win').
+  function rdSpeedAt(dish, T, i, dx, h, win) {
+    const n = dish.n, x = i % n, y = (i - x) / n;
+    if (x - h < 0 || y - h < 0 || x + h >= n || y + h >= n) return NaN;
+    const idx = [i, i - h, i + h, i - h * n, i + h * n];
+    for (const j of idx) if (!dish.inside[j] || !(T[j] > -1e300)) return NaN;
+    const ts = idx.map(j => T[j]), spread = Math.max(...ts) - Math.min(...ts);
+    if (!(spread < win)) return NaN;
+    const gx = (ts[2] - ts[1]) / (2 * h * dx), gy = (ts[4] - ts[3]) / (2 * h * dx), g = Math.hypot(gx, gy);
+    return g > 0 ? 1 / g : NaN;
+  }
+  // Plane wave speed on a 1D line with the same kinetics and stencil: a wave is started at the
+  // left end, and its arrival times at two points far from both ends give the speed.
+  function rdPlaneSpeed(par, dx, dt, L) {
+    const n = Math.round(L / dx), u = new Float64Array(n), v = new Float64Array(n), u2 = new Float64Array(n), v2 = new Float64Array(n);
+    const ur = rdRest(par, par.phi); u.fill(ur); v.fill(ur);
+    for (let i = 0; i < Math.round(1 / dx); i++) u[i] = 0.9;
+    const xa = Math.round(0.4 * n), xb = Math.round(0.7 * n), lev = 0.3; let ta = NaN, tb = NaN, t = 0;
+    const ie = 1 / par.eps, Ddx = par.D / (dx * dx), maxSteps = Math.round(4 * L / dt);
+    let a = u, b = v, a2 = u2, b2 = v2;
+    for (let s = 0; s < maxSteps && !(tb > 0); s++) {
+      for (let i = 0; i < n; i++) {
+        const l = a[i > 0 ? i - 1 : i] + a[i < n - 1 ? i + 1 : i] - 2 * a[i];
+        const w = par.f * b[i] + par.phi, uu = a[i], uq = uu + par.q;
+        const R = ie * (uu - uu * uu - w * (uu - par.q) / uq), Ru = ie * (1 - 2 * uu - 2 * w * par.q / (uq * uq));
+        let un = uu + dt * (R + Ddx * l) / (1 - dt * Ru);
+        if (!(un > 0)) un = (uu + dt * (ie * (uu + w * par.q / uq) + Ddx * l)) / (1 + dt * ie * (uu + w / uq));
+        a2[i] = un;
+        b2[i] = b[i] + dt * (a[i] - b[i]);
+      }
+      if (!(ta > 0) && a[xa] < lev && a2[xa] >= lev) ta = t + dt * (lev - a[xa]) / (a2[xa] - a[xa]);
+      if (!(tb > 0) && a[xb] < lev && a2[xb] >= lev) tb = t + dt * (lev - a[xb]) / (a2[xb] - a[xb]);
+      let tt = a; a = a2; a2 = tt; tt = b; b = b2; b2 = tt; t += dt;
+    }
+    return (xb - xa) * dx / (tb - ta);
+  }
+
+  // ---------- 3. Flow reactor: Györgyi and Field (1992) three variable model ----------
+  // Rate constants and parameters as tabulated in Bartoszewski et al. (Sci. Rep. 10, 21782, 2020; arXiv:2005.03325):
+  // x = [HBrO2]/X0, z = [Ce(IV)]/Z0, v = [BrMA]/V0, τ = t/T0; [Br−] from its steady state.
+  const GF = { k1: 4.0e6, k2: 2.0, k3: 3000, k4: 55.2, k5: 7000, k6: 0.09, k7: 0.23, A: 0.1, M: 0.25, H: 0.26, C: 0.000833, alpha: 666.7, beta: 0.3478 };
+  function gfMake(kf, P) {
+    const g = P || GF, A = g.A, H = g.H, C = g.C, M = g.M;
+    const X0 = g.k2 * A * H * H / g.k5, Y0 = 4 * X0, Z0 = C * A / (40 * M), V0 = 4 * A * H * C / (M * M), T0 = 1 / (10 * g.k2 * A * H * C);
+    const s4 = g.k4 * Math.sqrt(A) * Math.pow(H, 1.5);
+    return {
+      kf: kf, X0: X0, Y0: Y0, Z0: Z0, V0: V0, T0: T0,
+      yN: g.alpha * g.k6 * Z0 * V0 / Y0, yDx: g.k1 * H * X0, yD0: g.k2 * A * H * H + kf,
+      ax1: T0 * g.k1 * H * Y0, ax2: T0 * g.k2 * A * H * H * Y0 / X0, ax3: T0 * 2 * g.k3 * X0, ax4: T0 * 0.5 * s4 / Math.sqrt(X0), ax5: T0 * 0.5 * g.k5 * Z0, C: C,
+      az1: T0 * s4 * Math.sqrt(X0), CZ: C / Z0, az2: T0 * g.k5 * X0, az3: T0 * g.alpha * g.k6 * V0, az4: T0 * g.beta * g.k7 * M,
+      av1: T0 * 2 * g.k1 * H * X0 * Y0 / V0, av2: T0 * g.k2 * A * H * H * Y0 / V0, av3: T0 * g.k3 * X0 * X0 / V0, av4: T0 * g.alpha * g.k6 * Z0,
+      kfT: T0 * kf
+    };
+  }
+  function gfY(c, s) { const x = s[0] > 0 ? s[0] : 0; return c.yN * s[1] * s[2] / (c.yDx * x + c.yD0); }
+  function gfRhs(c, s, o) {
+    const x = s[0] > 0 ? s[0] : 0, z = s[1], v = s[2], xs = Math.sqrt(x);
+    const y = c.yN * z * v / (c.yDx * x + c.yD0);
+    o[0] = -c.ax1 * x * y + c.ax2 * y - c.ax3 * x * x + c.ax4 * (c.C - c.Z0 * z) * xs - c.ax5 * x * z - c.kfT * x;
+    o[1] = c.az1 * (c.CZ - z) * xs - c.az2 * x * z - c.az3 * z * v - c.az4 * z - c.kfT * z;
+    o[2] = c.av1 * x * y + c.av2 * y + c.av3 * x * x - c.av4 * z * v - c.kfT * v;
+    return o;
+  }
+  // Dormand and Prince 5(4) with local extrapolation; works on any dimension (3, or 6 for two copies).
+  const DP = {
+    a: [[], [1 / 5], [3 / 40, 9 / 40], [44 / 45, -56 / 15, 32 / 9], [19372 / 6561, -25360 / 2187, 64448 / 6561, -212 / 729], [9017 / 3168, -355 / 33, 46732 / 5247, 49 / 176, -5103 / 18656], [35 / 384, 0, 500 / 1113, 125 / 192, -2187 / 6784, 11 / 84]],
+    e: [71 / 57600, 0, -71 / 16695, 71 / 1920, -17253 / 339200, 22 / 525, -1 / 40]
+  };
+  function gfRhsN(c, s, o) {
+    // one or two copies of the model side by side
+    for (let k = 0; k < s.length; k += 3) {
+      const a = [s[k], s[k + 1], s[k + 2]], r = gfRhs(c, a, [0, 0, 0]);
+      o[k] = r[0]; o[k + 1] = r[1]; o[k + 2] = r[2];
+    }
+    return o;
+  }
+  // One attempted step; K[0] must hold f(y) on entry. On success K[6] holds f(ynew) (FSAL).
+  function dpStep(rhs, c, y, K, h, tol, yn) {
+    const n = y.length, tmp = new Array(n);
+    for (let i = 1; i < 7; i++) {
+      for (let d = 0; d < n; d++) { let acc = y[d]; const ai = DP.a[i]; for (let j = 0; j < i; j++) acc += h * ai[j] * K[j][d]; tmp[d] = acc; }
+      rhs(c, tmp, K[i]);
+      if (i === 6) for (let d = 0; d < n; d++) yn[d] = tmp[d];
+    }
+    let err = 0;
+    for (let d = 0; d < n; d++) {
+      let e = 0; for (let j = 0; j < 7; j++) e += DP.e[j] * K[j][d];
+      err = Math.max(err, Math.abs(h * e) / (tol * (1 + Math.max(Math.abs(y[d]), Math.abs(yn[d])))));
+    }
+    return err;
+  }
+  // Integrator object for the flow reactor. advance(T) moves by T in τ; onMax(t, value, k) is called at
+  // every local maximum of component 'mv' (Hermite interpolation inside the step).
+  function gfStepper(kf, y0, tol, mv) {
+    const c = gfMake(kf), n = y0.length;
+    const S = { c: c, y: y0.slice(), t: 0, h: 1e-5, tol: tol || 1e-8, mv: mv || 0, steps: 0, K: [] };
+    for (let i = 0; i < 7; i++) S.K.push(new Array(n).fill(0));
+    gfRhsN(c, S.y, S.K[0]);
+    return S;
+  }
+  function gfAdvance(S, T, onMax, onStep) {
+    const n = S.y.length, yn = new Array(n).fill(0), tEnd = S.t + T;
+    while (S.t < tEnd - 1e-15) {
+      const cut = S.h > tEnd - S.t; let h = cut ? tEnd - S.t : S.h;
+      const err = dpStep(gfRhsN, S.c, S.y, S.K, h, S.tol, yn);
+      if (err <= 1 && yn.every(Number.isFinite)) {
+        for (let k = S.mv; k < n && onMax; k += 3) {
+          const d0 = S.K[0][k], d1 = S.K[6][k];
+          if (d0 > 0 && d1 <= 0) {
+            const y0 = S.y[k], y1 = yn[k], m0 = d0 * h, m1 = d1 * h;
+            const A = 6 * (y0 - y1) + 3 * (m0 + m1), B = -6 * (y0 - y1) - 4 * m0 - 2 * m1, C = m0;
+            let th;
+            if (Math.abs(A) < 1e-14 * (Math.abs(B) + Math.abs(C))) th = -C / B;
+            else { const D = Math.sqrt(Math.max(0, B * B - 4 * A * C)), r1 = (-B + D) / (2 * A), r2 = (-B - D) / (2 * A); th = (r1 >= 0 && r1 <= 1) ? r1 : r2; }
+            th = Math.min(1, Math.max(0, th));
+            const h00 = 2 * th ** 3 - 3 * th ** 2 + 1, h10 = th ** 3 - 2 * th ** 2 + th, h01 = -2 * th ** 3 + 3 * th ** 2, h11 = th ** 3 - th ** 2;
+            onMax(S.t + th * h, h00 * y0 + h10 * m0 + h01 * y1 + h11 * m1, (k - S.mv) / 3);
+          }
+        }
+        S.t += h; for (let d = 0; d < n; d++) { S.y[d] = yn[d]; S.K[0][d] = S.K[6][d]; }
+        S.steps++;
+        if (onStep) onStep(S);
+      }
+      const hn = h * Math.min(5, Math.max(0.2, 0.9 * Math.pow(Math.max(err, 1e-12), -0.2)));
+      S.h = (err <= 1 && cut) ? Math.max(S.h, hn) : hn;   // a step shortened to land on tEnd does not shrink the next one
+      if (!(S.h > 1e-14)) throw new Error('step size underflow');
+    }
+    return S;
+  }
+  // Largest Lyapunov exponent (per unit τ) by the two trajectory method of Benettin et al. (1980):
+  // a copy started d0 away is pulled back to d0 every 'every' τ; the mean log growth rate is returned.
+  function gfLyapunov(kf, y0, Ttr, Tavg, every, d0, tol) {
+    const S = gfStepper(kf, y0, tol);
+    gfAdvance(S, Ttr);
+    const a = S.y.slice(), S2 = gfStepper(kf, a.concat([a[0] + d0, a[1], a[2]]), tol);
+    let sum = 0, nren = 0;
+    const m = Math.round(Tavg / every);
+    for (let i = 0; i < m; i++) {
+      gfAdvance(S2, every);
+      const y = S2.y, dd = Math.hypot(y[3] - y[0], y[4] - y[1], y[5] - y[2]);
+      sum += Math.log(dd / d0); nren++;
+      for (let k = 0; k < 3; k++) y[3 + k] = y[k] + (y[3 + k] - y[k]) * d0 / dd;
+      gfRhsN(S2.c, S2.y, S2.K[0]);
+    }
+    return sum / (nren * every);
+  }
+  // ==CORE END==
+
+  // ---------- helpers ----------
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const SUPS = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  const sup = (n) => String(n).split('').map((c) => SUPS[c] || c).join('');
+  function sci(v, sig) {
+    sig = sig || 3;
+    if (!Number.isFinite(v)) return '—';
+    if (v === 0) return '0';
+    const a = Math.abs(v);
+    if (a >= 0.01 && a < 1000) return v.toPrecision(sig);
+    if (a >= 1000 && a < 1e5) return String(Math.round(v));
+    let e = Math.floor(Math.log10(a)), m = v / Math.pow(10, e);
+    if (Math.abs(+m.toFixed(sig - 1)) >= 10) { m /= 10; e++; }
+    return m.toFixed(sig - 1) + ' × 10' + sup(e);
+  }
+  const dec = (e) => '10' + sup(e);
+  const hex = (h) => { h = h.replace('#', ''); if (h.length === 3) h = h.split('').map((c) => c + c).join(''); const n = parseInt(h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  const mixc = (a, b, s) => [0, 1, 2].map((i) => Math.round(a[i] + (b[i] - a[i]) * s));
+  const shade = (c, k) => c.map((x) => Math.round(clamp(k >= 0 ? x + (255 - x) * k : x * (1 + k), 0, 255)));
+  const rgb = (c, a) => a === undefined ? `rgb(${c[0]},${c[1]},${c[2]})` : `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+
+  // ---------- colors from the CSS tokens ----------
+  let T = {};
+  const LUT = new Uint32Array(256);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), br: g('--br'), ferroin: g('--ferroin'), ferriin: g('--ferriin'),
+      cerium: g('--cerium'), glass: g('--glass'), bench: g('--bench'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+    const r = hex(T.ferroin), b = hex(T.ferriin);
+    for (let k = 0; k < 256; k++) { const c = mixc(r, b, k / 255); LUT[k] = (255 << 24) | (c[2] << 16) | (c[1] << 8) | c[0]; }
+    if (G.ready) themeGL();
+  }
+  // solution color for an oxidized fraction s in [0, 1] (display scale)
+  const solution = (s) => mixc(hex(T.ferroin), hex(T.ferriin), clamp(s, 0, 1));
+
+  // ---------- canvases ----------
+  const cans = { A: $('cA'), B: $('cB'), C: $('cC') }, ctxs = {}, dims = { A: [1, 1], B: [1, 1], C: [1, 1] };
+  for (const k in cans) ctxs[k] = cans[k].getContext('2d');
+  let dpr = 1;
+  const projOn = () => document.documentElement.getAttribute('data-projector') === 'on';
+  // label scale: larger in projector mode, capped by the pane size so labels do not pile up
+  function ps(k) { if (!projOn()) return 1; const d = dims[k]; return clamp(Math.min(d[0], d[1]) / 300, 1, 1.35); }
+  function begin(k) { const ctx = ctxs[k], d = dims[k]; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, d[0], d[1]); return ctx; }
+  const mono = (k, px, w) => `${w || ''} ${px * ps(k)}px ${T.mono}`;
+  function halo(ctx, txt, x, y, color, align, base) {
+    ctx.textAlign = align || 'left'; ctx.textBaseline = base || 'middle';
+    const w = ctx.measureText(txt).width, m = /([\d.]+)px/.exec(ctx.font), fs = m ? +m[1] : 11;
+    const x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    const y0 = base === 'top' ? y : base === 'bottom' ? y - fs : y - fs / 2;
+    ctx.save(); ctx.globalAlpha = 0.85; ctx.fillStyle = T.canvas; ctx.fillRect(x0 - 3, y0 - 2, w + 6, fs + 4); ctx.restore();
+    ctx.fillStyle = color; ctx.fillText(txt, x, y);
+  }
+  function niceTicks(a, b, n) {
+    const span = b - a, raw = span / Math.max(1, n), mag = Math.pow(10, Math.floor(Math.log10(raw))), r = raw / mag;
+    const step = (r < 1.5 ? 1 : r < 3 ? 2 : r < 7 ? 5 : 10) * mag, out = [];
+    for (let v = Math.ceil(a / step - 1e-9) * step; v <= b + 1e-9 * step; v += step) out.push(+v.toFixed(10));
+    return out;
+  }
+  // frame with grid and tick labels; returns the coordinate maps
+  function axes(ctx, k, b, xr, yr, o) {
+    const s = ps(k);
+    const X = (v) => b.L + (v - xr[0]) / (xr[1] - xr[0]) * (b.R - b.L), Y = (v) => b.B - (v - yr[0]) / (yr[1] - yr[0]) * (b.B - b.T);
+    ctx.lineWidth = 1; ctx.strokeStyle = T.grid; ctx.font = mono(k, 10.5); ctx.fillStyle = T.muted;
+    for (const v of o.xt) { const x = Math.round(X(v)) + 0.5; ctx.beginPath(); ctx.moveTo(x, b.T); ctx.lineTo(x, b.B); ctx.stroke(); }
+    for (const v of o.yt) { const y = Math.round(Y(v)) + 0.5; ctx.beginPath(); ctx.moveTo(b.L, y); ctx.lineTo(b.R, y); ctx.stroke(); }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    let lastR = -1e9;
+    for (const v of o.xt) { const x = X(v), t = o.xf(v), w = ctx.measureText(t).width; if (x - w / 2 > lastR + 6) { ctx.fillText(t, x, b.B + 4 * s); lastR = x + w / 2; } }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (const v of o.yt) ctx.fillText(o.yf(v), b.L - 5 * s, Y(v));
+    ctx.strokeStyle = T.gridStrong; ctx.strokeRect(b.L + 0.5, b.T + 0.5, b.R - b.L, b.B - b.T);
+    if (o.xl) { ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(o.xl, b.R, b.B + 17 * s); }
+    if (o.title) {
+      ctx.font = mono(k, 11.5, 600); ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+      ctx.fillText(o.title, b.L, o.sub !== undefined ? b.T - 20 * s : b.T - 6 * s);
+      if (o.sub) { ctx.font = mono(k, 10); ctx.fillStyle = T.muted; ctx.fillText(o.sub, b.L, b.T - 6 * s, Math.max(40, b.R - b.L)); }
+    }
+    return { X, Y };
+  }
+  function polyline(ctx, xs, ys, X, Y, i0) {
+    ctx.beginPath(); let pen = false;
+    for (let i = i0 || 0; i < xs.length; i++) {
+      const x = X(xs[i]), y = Y(ys[i]);
+      if (!Number.isFinite(y)) { pen = false; continue; }
+      if (pen) ctx.lineTo(x, y); else { ctx.moveTo(x, y); pen = true; }
+    }
+    ctx.stroke();
+  }
+  // first index with xs[i] >= v (xs ascending)
+  function lowerBound(xs, v) { let a = 0, b = xs.length; while (a < b) { const m = (a + b) >> 1; if (xs[m] < v) a = m + 1; else b = m; } return a; }
+  function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  function grip(ctx, x, y, hot, color, s) {
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = color; ctx.lineWidth = (hot ? 2.4 : 1.6) * s;
+    ctx.beginPath(); ctx.arc(x, y, (hot ? 7 : 5.5) * s, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    ctx.lineWidth = 1.2 * s; ctx.beginPath();
+    for (let k = -1; k <= 1; k++) { ctx.moveTo(x + k * 2.4 * s, y - 2.6 * s); ctx.lineTo(x + k * 2.4 * s, y + 2.6 * s); }
+    ctx.stroke();
+  }
+
+  // ---------- state ----------
+  const S = { mode: 'beaker', preset: 'osc', playing: !reduce, rateIdx: { beaker: 2, dish: 2, flow: 2 } };
+  const RATES = { beaker: [0.5, 1, 2, 4, 8, 16], dish: [0.5, 1, 2, 3, 5, 8], flow: [0.005, 0.01, 0.02, 0.04, 0.08, 0.15] };
+  const rate = () => RATES[S.mode][S.rateIdx[S.mode]];
+  const dirty = { A: true, B: true, C: true };
+  function dirtyAll() { dirty.A = dirty.B = dirty.C = true; G.dirty = true; }
+
+  // =====================================================================
+  // 1. Stirred beaker: three variable Oregonator
+  // =====================================================================
+  const HOPF = [oreHopf(ORE, 0.3, 1.0), oreHopf(ORE, 1.5, 3.0)];
+  const TAU_S = oreTauSeconds(ORE);   // 50 s
+  const BK = { p: Object.assign({}, ORE), y: [1, 1, 1], t: 0, h: 1e-6, ts: [], xs: [], ys: [], zs: [], lastS: -1,
+    cross: [], cyc: null, lastCyc: null, fixed: null, eig: null, prevX: 1 };
+  const freshCyc = () => ({ zmax: -Infinity, zmin: Infinity, xmax: -Infinity });
+  function bkSetF(f) {
+    BK.p.f = f; BK.fixed = oreFixed(BK.p); BK.eig = eig3(oreJac(BK.p, BK.fixed));
+    BK.cross = []; BK.lastCyc = null; BK.cyc = freshCyc(); BK.prevX = BK.y[0];
+    dirty.C = true; dirty.A = true;
+  }
+  function bkReset() {
+    BK.y = [1, 1, 1]; BK.t = 0; BK.h = 1e-6; BK.ts = []; BK.xs = []; BK.ys = []; BK.zs = []; BK.lastS = -1;
+    bkSetF(BK.p.f); BK.prevX = 1; bkSample(0, BK.y); G.dirty = true; dirtyAll();
+  }
+  function bkSample(t, y) {
+    const fx = BK.fixed[0];
+    if (BK.prevX < fx && y[0] >= fx) {   // one upward crossing of the steady state value of x per cycle
+      BK.cross.push(t); if (BK.cross.length > 8) BK.cross.shift();
+      if (BK.cross.length > 1 && BK.cyc.zmax > -Infinity) BK.lastCyc = BK.cyc;
+      BK.cyc = freshCyc();
+    }
+    BK.prevX = y[0];
+    const c = BK.cyc; if (y[2] > c.zmax) c.zmax = y[2]; if (y[2] < c.zmin) c.zmin = y[2]; if (y[0] > c.xmax) c.xmax = y[0];
+    if (t - BK.lastS >= 0.01) {
+      BK.lastS = t; BK.ts.push(t); BK.xs.push(y[0]); BK.ys.push(y[1]); BK.zs.push(y[2]);
+      if (BK.ts.length > 9000) for (const a of [BK.ts, BK.xs, BK.ys, BK.zs]) a.splice(0, 3000);
+    }
+  }
+  function bkAdvance(dtau) {
+    const r = oreIntegrate(BK.p, BK.y, BK.t, BK.t + dtau, 1e-6, 1e-8, BK.h, bkSample);
+    BK.y = r.y; BK.t = r.t; BK.h = Math.max(r.h, 1e-9);
+    G.dirty = true; dirty.A = true;
+  }
+  function bkPeriod() {
+    const c = BK.cross, n = c.length;
+    if (n < 3 || bkStable()) return NaN;   // with a stable steady state any ringing dies away: no period
+    const P = c[n - 1] - c[n - 2];
+    return BK.t - c[n - 1] < 2.5 * P ? P : NaN;
+  }
+  const bkStable = () => Math.max(...BK.eig.map((e) => e.re)) < 0;
+
+  // oscillation range diagram, computed in the background a few milliseconds per frame
+  const BD = { fs: [], res: [], k: 0, run: null, done: false, TR: 30, TT: 60 };
+  (() => { const s = new Set(); for (let f = 0.3; f <= 3.0001; f += 0.1) s.add(+f.toFixed(2)); for (const f of [0.52, 0.55, 2.25, 2.3, 2.32, 2.34]) s.add(f); BD.fs = [...s].sort((a, b) => a - b); })();
+  function bdTick(budget) {
+    const t0 = performance.now();
+    while (!BD.done && performance.now() - t0 < budget) {
+      if (!BD.run) BD.run = { p: Object.assign({}, ORE, { f: BD.fs[BD.k] }), y: [1, 1, 1], t: 0, h: 1e-6, zmax: -Infinity, zmin: Infinity };
+      const R = BD.run;
+      const r = oreIntegrate(R.p, R.y, R.t, Math.min(BD.TT, R.t + 1), 1e-5, 1e-8, R.h, (t, y) => { if (t > BD.TR) { if (y[2] > R.zmax) R.zmax = y[2]; if (y[2] < R.zmin) R.zmin = y[2]; } });
+      R.y = r.y; R.t = r.t; R.h = r.h;
+      if (R.t >= BD.TT - 1e-9) {
+        BD.res.push({ f: R.p.f, zmax: R.zmax, zmin: R.zmin, osc: R.zmax - R.zmin > 0.05 * R.zmax });
+        BD.run = null; BD.k++; if (BD.k >= BD.fs.length) BD.done = true;
+        if (S.mode === 'beaker') dirty.C = true;
+      }
+    }
+  }
+
+  // ---------- beaker pane A: the beaker and the time series ----------
+  function drawVessel(ctx, k, cx, top, w, h, fill, o) {
+    const s = ps(k), L = cx - w / 2, R = cx + w / 2, B = top + h, r = Math.min(16 * s, w * 0.14), lvl = top + h * 0.24;
+    // stir plate
+    ctx.fillStyle = T.line; roundRect(ctx, L - 16 * s, B + 5 * s, w + 32 * s, 16 * s, 4 * s); ctx.fill();
+    ctx.fillStyle = T.muted; ctx.beginPath(); ctx.arc(R + 6 * s, B + 13 * s, 3.2 * s, 0, 2 * Math.PI); ctx.fill();
+    // liquid with a little cylindrical shading
+    ctx.save();
+    ctx.beginPath(); ctx.moveTo(L + 2, lvl); ctx.lineTo(L + 2, B - r); ctx.quadraticCurveTo(L + 2, B - 2, L + r, B - 2); ctx.lineTo(R - r, B - 2); ctx.quadraticCurveTo(R - 2, B - 2, R - 2, B - r); ctx.lineTo(R - 2, lvl); ctx.closePath();
+    const g = ctx.createLinearGradient(L, 0, R, 0);
+    g.addColorStop(0, rgb(shade(fill, -0.18))); g.addColorStop(0.32, rgb(shade(fill, 0.12))); g.addColorStop(1, rgb(shade(fill, -0.25)));
+    ctx.fillStyle = g; ctx.fill();
+    ctx.fillStyle = rgb(shade(fill, 0.25)); ctx.beginPath(); ctx.ellipse(cx, lvl, w / 2 - 2, 4 * s, 0, 0, 2 * Math.PI); ctx.fill();
+    ctx.restore();
+    // stir bar (turns while running)
+    const bw = Math.max(8 * s, w * 0.36 * Math.abs(Math.cos(o.stir)));
+    ctx.fillStyle = '#eef1f4'; ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1;
+    roundRect(ctx, cx - bw / 2, B - 11 * s, bw, 7 * s, 3.5 * s); ctx.fill(); ctx.stroke();
+    // flow reactor: inlet and outlet tubes with moving dots
+    if (o.flow) {
+      ctx.strokeStyle = T.glass; ctx.lineWidth = 5 * s; ctx.lineCap = 'round';
+      const ix = L + w * 0.28, oy = lvl + 6 * s;
+      ctx.beginPath(); ctx.moveTo(L - 34 * s, top - 14 * s); ctx.lineTo(ix, top - 14 * s); ctx.lineTo(ix, lvl + h * 0.25); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(R, oy); ctx.lineTo(R + 34 * s, oy); ctx.lineTo(R + 34 * s, B + 2 * s); ctx.stroke();
+      ctx.lineCap = 'butt';
+      ctx.fillStyle = T.surface;
+      const ph = o.flowPhase % 1;
+      for (let i = 0; i < 4; i++) { const u = (i + ph) / 4; const px = L - 34 * s + u * (ix - L + 34 * s); ctx.beginPath(); ctx.arc(px, top - 14 * s, 1.6 * s, 0, 2 * Math.PI); ctx.fill(); }
+      for (let i = 0; i < 2; i++) { const u = (i + ph) / 2; const px = R + u * 34 * s; ctx.fillStyle = rgb(fill); ctx.beginPath(); ctx.arc(px, oy, 1.6 * s, 0, 2 * Math.PI); ctx.fill(); }
+    }
+    // glass
+    ctx.strokeStyle = T.glass; ctx.lineWidth = 2.4 * s; ctx.lineJoin = 'round';
+    ctx.beginPath(); ctx.moveTo(L - 6 * s, top); ctx.quadraticCurveTo(L, top, L, top + 7 * s); ctx.lineTo(L, B - r); ctx.quadraticCurveTo(L, B, L + r, B);
+    ctx.lineTo(R - r, B); ctx.quadraticCurveTo(R, B, R, B - r); ctx.lineTo(R, top + 7 * s); ctx.quadraticCurveTo(R, top, R + 6 * s, top); ctx.stroke();
+    ctx.lineWidth = 1 * s;
+    for (let i = 1; i <= 5; i++) { const yy = B - i * (B - lvl) / 5.5; ctx.beginPath(); ctx.moveTo(L + 4 * s, yy); ctx.lineTo(L + (i % 2 ? 9 : 14) * s, yy); ctx.stroke(); }
+    ctx.globalAlpha = 0.28; ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3.5 * s;
+    ctx.beginPath(); ctx.moveTo(R - 10 * s, top + 16 * s); ctx.lineTo(R - 10 * s, B - 22 * s); ctx.stroke(); ctx.globalAlpha = 1;
+  }
+  let stirAngle = 0, flowPhase = 0;
+  function colorBar(ctx, k, x, y, w, s, label0, label1, cols) {
+    const sc = ps(k), h = 8 * sc, g = ctx.createLinearGradient(x, 0, x + w, 0);
+    for (let i = 0; i <= 8; i++) g.addColorStop(i / 8, rgb(cols(i / 8)));
+    ctx.fillStyle = g; roundRect(ctx, x, y, w, h, 3); ctx.fill();
+    const mx = x + clamp(s, 0, 1) * w;
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.moveTo(mx, y - 1); ctx.lineTo(mx - 4 * sc, y - 7 * sc); ctx.lineTo(mx + 4 * sc, y - 7 * sc); ctx.closePath(); ctx.fill();
+    ctx.font = mono(k, 10); ctx.fillStyle = T.muted; ctx.textBaseline = 'top';
+    ctx.textAlign = 'left'; ctx.fillText(label0, x, y + h + 3 * sc); ctx.textAlign = 'right'; ctx.fillText(label1, x + w, y + h + 3 * sc);
+  }
+  function vesselBlock(k, W, H, fill, o) {
+    // vessel at upper left, a text block to its right; returns the bottom of the block
+    const ctx = ctxs[k], s = ps(k), top = 54 * s, hv = clamp(H * 0.36, 120 * s, 250 * s);
+    const vw = clamp(hv * 0.78, 90 * s, W * 0.34), cx = 30 * s + vw / 2 + (o.flow ? 24 * s : 0);
+    drawVessel(ctx, k, cx, top + (o.flow ? 18 * s : 0), vw, hv - (o.flow ? 18 * s : 0), fill, o);
+    let tx = cx + vw / 2 + (o.flow ? 56 : 26) * s;
+    const tw = W - tx - 14 * s;
+    if (tw < 120 * s) return { bottom: top + hv + 26 * s, tx: null };
+    let ty = top + 4 * s;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    for (const line of o.lines) {
+      ctx.font = mono(k, line.size || 11.5, line.bold ? 600 : 400); ctx.fillStyle = line.color || T.ink;
+      ctx.fillText(line.text, tx, ty, tw); ty += (line.size || 11.5) * 1.55 * s;
+    }
+    if (o.bar) { ty += 10 * s; colorBar(ctx, k, tx, ty, Math.min(tw, 230 * s), o.bar.s, o.bar.l0, o.bar.l1, o.bar.cols); }
+    return { bottom: top + hv + 26 * s, tx };
+  }
+  function drawBeakerA() {
+    const k = 'A', ctx = begin(k), [W, H] = dims.A, s = ps(k);
+    const z = BK.y[2], sZ = z / 0.2, fill = solution(sZ);
+    const blk = vesselBlock(k, W, H, fill, { stir: stirAngle, lines: [
+      { text: 'Now in the beaker', bold: true },
+      { text: `x  HBrO₂   ${sci(BK.y[0], 3)}`, color: T.equi },
+      { text: `y  Br⁻     ${sci(BK.y[1], 3)}`, color: T.br },
+      { text: `z  catalyst, oxidized  ${sci(z, 3)}`, color: T.neg }
+    ], bar: { s: sZ, l0: 'red ferroin', l1: 'blue ferriin', cols: solution } });
+    // time series of the three scaled concentrations, log scale
+    const b = { L: 50 * s, R: W - 16 * s, T: blk.bottom + 18 * s, B: H - 34 * s };
+    if (b.B - b.T < 60) return;
+    const tw = 40, t1 = Math.max(tw, BK.t), t0 = t1 - tw, m = TAU_S / 60;
+    const xt = niceTicks(t0 * m, t1 * m, Math.max(3, Math.floor((b.R - b.L) / (70 * s))));
+    const { X, Y } = axes(ctx, k, b, [t0, t1], [-4.5, 3.5], { xt: xt.map((v) => v / m), yt: [-4, -3, -2, -1, 0, 1, 2, 3], xf: (v) => (v * m).toFixed(0), yf: (v) => dec(v), xl: 't (min)', title: 'Scaled concentrations, log scale' });
+    ctx.save(); ctx.beginPath(); ctx.rect(b.L, b.T, b.R - b.L, b.B - b.T); ctx.clip();
+    const i0 = Math.max(0, lowerBound(BK.ts, t0) - 1), lw = (projOn() ? 2.4 : 1.7);
+    const series = [[BK.xs, T.equi], [BK.ys, T.br], [BK.zs, T.neg]];
+    for (const [arr, col] of series) { ctx.strokeStyle = col; ctx.lineWidth = lw; polyline(ctx, BK.ts, arr.map((v) => Math.log10(Math.max(v, 1e-12))), X, Y, i0); }
+    ctx.restore();
+    // curve labels at the right end, drawn last on a halo
+    ctx.font = mono(k, 11, 600);
+    const n = BK.ts.length - 1;
+    if (n > 0) {
+      const labs = [['x', BK.xs[n], T.equi], ['y', BK.ys[n], T.br], ['z', BK.zs[n], T.neg]].map((a) => [a[0], Y(Math.log10(Math.max(a[1], 1e-12))), a[2]]).sort((a, b2) => a[1] - b2[1]);
+      for (let i = 1; i < labs.length; i++) if (labs[i][1] - labs[i - 1][1] < 14 * s) labs[i][1] = labs[i - 1][1] + 14 * s;
+      for (const [t, y, c] of labs) halo(ctx, t, Math.min(X(BK.t) + 6 * s, b.R - 10 * s), clamp(y, b.T + 7 * s, b.B - 7 * s), c, 'left');
+    }
+  }
+
+  // ---------- beaker pane B: the phase portrait in 3D (three.js) ----------
+  const G = { ready: false, dirty: true, az: -2.25, el: 0.38, dist: 6.2, MAXP: 5000, drag: null };
+  const RANGE = { x: [-4, 0.5], y: [-2.5, 3.5], z: [-4, 0.5] };
+  const map1 = (v, r) => -1 + 2 * (v - r[0]) / (r[1] - r[0]);
+  const lg = (v) => Math.log10(Math.max(v, 1e-12));
+  const to3 = (x, y, z) => [map1(lg(x), RANGE.x), map1(lg(y), RANGE.y), map1(lg(z), RANGE.z)];
+  function init3D() {
+    if (!window.THREE) return false;
+    let renderer;
+    try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); } catch (_) { return false; }
+    if (!renderer || !renderer.getContext()) return false;
+    $('gl').appendChild(renderer.domElement);
+    renderer.setClearColor(0x000000, 0);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
+    cam.up.set(0, 0, 1);
+    const box = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(2, 2, 2)), new THREE.LineBasicMaterial({ color: 0x888888 }));
+    scene.add(box);
+    const gp = [];
+    for (let e = Math.ceil(RANGE.x[0]); e <= RANGE.x[1]; e++) { const a = map1(e, RANGE.x); gp.push(a, -1, -1, a, 1, -1); }
+    for (let e = Math.ceil(RANGE.y[0]); e <= RANGE.y[1]; e++) { const a = map1(e, RANGE.y); gp.push(-1, a, -1, 1, a, -1); }
+    const gg = new THREE.BufferGeometry(); gg.setAttribute('position', new THREE.Float32BufferAttribute(gp, 3));
+    const grid = new THREE.LineSegments(gg, new THREE.LineBasicMaterial({ color: 0x888888, transparent: true, opacity: 0.5 }));
+    scene.add(grid);
+    const mk = () => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(G.MAXP * 3), 3)); return g; };
+    const trailGeo = mk(); trailGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(G.MAXP * 3), 3));
+    const trail = new THREE.Line(trailGeo, new THREE.LineBasicMaterial({ vertexColors: true }));
+    const shadowGeo = mk(), shadow = new THREE.Line(shadowGeo, new THREE.LineBasicMaterial({ color: 0x888888, transparent: true, opacity: 0.35 }));
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.055, 18, 12), new THREE.MeshBasicMaterial());
+    const fixed = new THREE.Mesh(new THREE.OctahedronGeometry(0.06), new THREE.MeshBasicMaterial());
+    const drop = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), new THREE.LineDashedMaterial({ color: 0x888888, dashSize: 0.04, gapSize: 0.03 }));
+    scene.add(shadow, trail, head, fixed, drop);
+    Object.assign(G, { ready: true, renderer, scene, cam, box, grid, trail, trailGeo, shadow, shadowGeo, head, fixed, drop });
+    return true;
+  }
+  function themeGL() {
+    G.box.material.color.set(T.gridStrong); G.grid.material.color.set(T.grid);
+    G.shadow.material.color.set(T.muted); G.head.material.color.set(T.ink); G.fixed.material.color.set(T.muted);
+    G.drop.material.color.set(T.muted); G.dirty = true;
+  }
+  function placeCam() {
+    const c = G.cam, d = G.dist;
+    c.position.set(d * Math.cos(G.el) * Math.cos(G.az), d * Math.cos(G.el) * Math.sin(G.az), d * Math.sin(G.el));
+    c.lookAt(0, 0, 0); c.updateMatrixWorld();
+  }
+  function updateTrail() {
+    const t0 = BK.t - 30, i0 = Math.max(lowerBound(BK.ts, t0), BK.ts.length - G.MAXP), n = BK.ts.length - i0;
+    const P = G.trailGeo.attributes.position.array, Cc = G.trailGeo.attributes.color.array, Q = G.shadowGeo.attributes.position.array;
+    const bg = hex(T.canvas);
+    for (let j = 0; j < n; j++) {
+      const i = i0 + j, p = to3(BK.xs[i], BK.ys[i], BK.zs[i]);
+      P[3 * j] = p[0]; P[3 * j + 1] = p[1]; P[3 * j + 2] = p[2];
+      Q[3 * j] = p[0]; Q[3 * j + 1] = p[1]; Q[3 * j + 2] = -1;
+      const age = n > 1 ? j / (n - 1) : 1, col = mixc(bg, solution(BK.zs[i] / 0.2), clamp(0.25 + age * 1.2, 0, 1));
+      Cc[3 * j] = col[0] / 255; Cc[3 * j + 1] = col[1] / 255; Cc[3 * j + 2] = col[2] / 255;
+    }
+    for (const g of [G.trailGeo, G.shadowGeo]) { g.setDrawRange(0, n); g.attributes.position.needsUpdate = true; g.computeBoundingSphere(); }
+    G.trailGeo.attributes.color.needsUpdate = true;
+    const h = to3(BK.y[0], BK.y[1], BK.y[2]); G.head.position.set(h[0], h[1], h[2]);
+    const fx = to3(BK.fixed[0], BK.fixed[1], BK.fixed[2]); G.fixed.position.set(fx[0], fx[1], fx[2]);
+    const dp = G.drop.geometry.attributes.position.array; dp[0] = h[0]; dp[1] = h[1]; dp[2] = h[2]; dp[3] = h[0]; dp[4] = h[1]; dp[5] = -1;
+    G.drop.geometry.attributes.position.needsUpdate = true; G.drop.computeLineDistances();
+  }
+  function project(p) { const v = new THREE.Vector3(p[0], p[1], p[2]).project(G.cam); const [W, H] = dims.B; return [(v.x + 1) / 2 * W, (1 - v.y) / 2 * H]; }
+  function render3D() {
+    if (!G.ready) return;
+    placeCam(); updateTrail();
+    G.renderer.render(G.scene, G.cam);
+    // labels on the 2D overlay
+    const k = 'B', ctx = begin(k), s = ps(k), [W] = dims.B;
+    ctx.font = mono(k, 11.5, 600); ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Phase portrait, log scales', 12 * s, 10 * s);
+    ctx.font = mono(k, 10); ctx.fillStyle = T.muted; ctx.fillText('drag to turn', 12 * s, 26 * s);
+    const cp = G.cam.position, xs = cp.y > 0 ? 1 : -1, ys = cp.x > 0 ? 1 : -1;
+    const axis = (name, col, pts, mid, out) => {
+      ctx.font = mono(k, 9.5); ctx.fillStyle = T.muted;
+      for (const [e, p] of pts) { if (e % 1) continue; const q = project(p); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(dec(e), q[0], q[1]); }
+      const q = project(mid); ctx.font = mono(k, 11, 600); halo(ctx, name, q[0] + out[0], Math.max(q[1] + out[1], 48 * s), col, 'center');
+    };
+    const xp = [], yp = [], zp = [];
+    for (let e = -4; e <= 0; e++) xp.push([e, [map1(e, RANGE.x), xs * 1.16, -1.06]]);
+    for (let e = -2; e <= 3; e++) yp.push([e, [ys * 1.16, map1(e, RANGE.y), -1.06]]);
+    for (let e = -4; e <= 0; e++) zp.push([e, [ys * 1.12, -xs * 1.12, map1(e, RANGE.z)]]);
+    axis('x  HBrO₂', T.equi, xp, [0, xs * 1.42, -1.12], [0, 0]);
+    axis('y  Br⁻', T.br, yp, [ys * 1.42, 0, -1.12], [0, 0]);
+    axis('z  catalyst', T.neg, zp, [ys * 1.12, -xs * 1.12, 1.18], [0, 0]);
+    const fq = project(to3(BK.fixed[0], BK.fixed[1], BK.fixed[2]));
+    ctx.font = mono(k, 10); halo(ctx, bkStable() ? 'steady state, stable' : 'steady state, unstable', fq[0] + 9 * s, fq[1] - 10 * s, T.muted, 'left');
+  }
+  function draw2DPortrait() {
+    // fallback when three.js is not available: log z against log x
+    const k = 'B', ctx = begin(k), [W, H] = dims.B, s = ps(k);
+    const b = { L: 52 * s, R: W - 14 * s, T: 40 * s, B: H - 34 * s };
+    const { X, Y } = axes(ctx, k, b, RANGE.x, RANGE.z, { xt: [-4, -3, -2, -1, 0], yt: [-4, -3, -2, -1, 0], xf: dec, yf: dec, xl: 'x (HBrO₂)', title: 'Phase portrait: z against x (3D view needs three.js)' });
+    const i0 = Math.max(0, lowerBound(BK.ts, BK.t - 30));
+    ctx.save(); ctx.beginPath(); ctx.rect(b.L, b.T, b.R - b.L, b.B - b.T); ctx.clip();
+    ctx.lineWidth = 1.6; ctx.strokeStyle = T.neg;
+    polyline(ctx, BK.xs.map(lg), BK.zs.map(lg), X, Y, i0);
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(lg(BK.y[0])), Y(lg(BK.y[2])), 4 * s, 0, 7); ctx.fill();
+    ctx.restore();
+  }
+
+  // ---------- beaker pane C: oscillation range against f ----------
+  let geoC = null, hoverC = null, dragC = null;
+  function drawBeakerC() {
+    const k = 'C', ctx = begin(k), [W, H] = dims.C, s = ps(k);
+    const b = { L: 50 * s, R: W - 16 * s, T: 54 * s, B: H - 34 * s };
+    if (b.B - b.T < 40) return;
+    const xr = [0.3, 3.0], yr = [-4.2, 0.2];
+    const sub = BD.done ? '● highest and lowest z on the cycle · line: steady state, dashed where unstable' : `computing the cycle at f = ${BD.fs[BD.k].toFixed(2)} (${BD.k + 1} of ${BD.fs.length})`;
+    const { X, Y } = axes(ctx, k, b, xr, yr, { xt: niceTicks(0.5, 3, 5), yt: [-4, -3, -2, -1, 0], xf: (v) => v.toFixed(1), yf: dec, xl: 'f', title: 'Oxidized catalyst z against f', sub });
+    geoC = { b, X, xr, kind: 'f' };
+    ctx.save(); ctx.beginPath(); ctx.rect(b.L, b.T, b.R - b.L, b.B - b.T); ctx.clip();
+    // oscillation window between the Hopf points
+    ctx.fillStyle = T.accent; ctx.globalAlpha = 0.07; ctx.fillRect(X(HOPF[0]), b.T, X(HOPF[1]) - X(HOPF[0]), b.B - b.T); ctx.globalAlpha = 1;
+    ctx.setLineDash([4, 4]); ctx.strokeStyle = T.accent; ctx.lineWidth = 1;
+    for (const h of HOPF) { ctx.beginPath(); ctx.moveTo(X(h), b.T); ctx.lineTo(X(h), b.B); ctx.stroke(); }
+    ctx.setLineDash([]);
+    // steady state z*(f): solid where stable, dashed where unstable
+    const lw = projOn() ? 2.2 : 1.6;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = lw;
+    let prevStable = null, pts = [];
+    const flush = (st) => { if (pts.length < 2) return; ctx.setLineDash(st ? [] : [5, 4]); ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke(); ctx.setLineDash([]); };
+    for (let i = 0; i <= 300; i++) {
+      const f = xr[0] + (xr[1] - xr[0]) * i / 300, p = Object.assign({}, ORE, { f }), st = oreMaxRe(p) < 0, pt = [X(f), Y(lg(oreFixed(p)[2]))];
+      if (prevStable !== null && st !== prevStable) { pts.push(pt); flush(prevStable); pts = []; }
+      pts.push(pt); prevStable = st;
+    }
+    flush(prevStable);
+    // computed cycle extremes
+    for (const r of BD.res) {
+      const x = X(r.f);
+      if (r.osc) {
+        ctx.strokeStyle = T.neg; ctx.globalAlpha = 0.35; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, Y(lg(r.zmin))); ctx.lineTo(x, Y(lg(r.zmax))); ctx.stroke(); ctx.globalAlpha = 1;
+        ctx.fillStyle = T.neg; for (const v of [r.zmin, r.zmax]) { ctx.beginPath(); ctx.arc(x, Y(lg(v)), 3.2 * s, 0, 7); ctx.fill(); }
+      } else { ctx.strokeStyle = T.neg; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(x, Y(lg(r.zmax)), 3.2 * s, 0, 7); ctx.stroke(); }
+    }
+    ctx.restore();
+    // Hopf labels
+    ctx.font = mono(k, 10);
+    halo(ctx, `Hopf ${HOPF[0].toFixed(3)}`, X(HOPF[0]) + 4 * s, b.T + 9 * s, T.accent, 'left');
+    halo(ctx, `Hopf ${HOPF[1].toFixed(3)}`, X(HOPF[1]) - 4 * s, b.T + 9 * s, T.accent, 'right');
+    // current f: a draggable line with a grip
+    const hot = (dragC && dragC.id === 'f') || (!dragC && hoverC === 'f'), xf = X(BK.p.f);
+    ctx.strokeStyle = T.ink; ctx.lineWidth = hot ? 2.6 : 1.6; ctx.beginPath(); ctx.moveTo(xf, b.T); ctx.lineTo(xf, b.B); ctx.stroke();
+    grip(ctx, xf, b.B - 14 * s, hot, T.ink, s);
+    ctx.font = mono(k, 11, 600); halo(ctx, `f = ${BK.p.f.toFixed(2)}`, xf + (xf > (b.L + b.R) / 2 ? -8 : 8) * s, b.T + 26 * s, T.ink, xf > (b.L + b.R) / 2 ? 'right' : 'left');
+  }
+
+  // =====================================================================
+  // 2. Petri dish: two variable Oregonator with diffusion
+  // =====================================================================
+  const DS = { n: 256, dx: 0.25, dt: 0.005, par: Object.assign({}, RD), dish: null, st: null, pace: { on: false, fx: 0.5, fy: 0.5, r: 2 },
+    probe: [0.78, 0.5], tool: 'cut', tr: { t: [], u: [], v: [] }, arr: [], speed: NaN, speedFor: -1, c0: NaN, ur: 0, lastT: -1e308,
+    stepMs: 0.7, stepsLast: 0, vref: 0.3, geo: null, stroke: null, hover: null, drag: null };
+  function dsInit() {
+    DS.dish = rdDish(DS.n, true);
+    const N = DS.n * DS.n;
+    DS.st = { u: new Float32Array(N), v: new Float32Array(N), u2: new Float32Array(N), v2: new Float32Array(N), phi: new Float32Array(N), T: new Float64Array(N), t: 0 };
+    DS.off = document.createElement('canvas'); DS.off.width = DS.off.height = DS.n;
+    DS.offCtx = DS.off.getContext('2d'); DS.img = DS.offCtx.createImageData(DS.n, DS.n); DS.img32 = new Uint32Array(DS.img.data.buffer);
+  }
+  const cellOf = (fx, fy) => Math.round(clamp(fy, 0, 1) * (DS.n - 1)) * DS.n + Math.round(clamp(fx, 0, 1) * (DS.n - 1));
+  const probeIdx = () => cellOf(DS.probe[0], DS.probe[1]);
+  function dsPhi() {
+    const st = DS.st, n = DS.n; st.phi.fill(DS.par.phi);
+    if (DS.pace.on) {
+      const cx = DS.pace.fx * (n - 1), cy = DS.pace.fy * (n - 1), rc = DS.pace.r / DS.dx;
+      for (let j = Math.floor(cy - rc - 1); j <= cy + rc + 1; j++) for (let i = Math.floor(cx - rc - 1); i <= cx + rc + 1; i++) {
+        if (i >= 0 && j >= 0 && i < n && j < n && (i - cx) * (i - cx) + (j - cy) * (j - cy) <= rc * rc) st.phi[j * n + i] = 0;
+      }
+    }
+  }
+  function dsResetProbe() { DS.tr = { t: [], u: [], v: [] }; DS.arr = []; DS.speed = NaN; DS.speedFor = -1; DS.lastT = DS.st.T[probeIdx()]; }
+  function dsClear() {
+    const st = DS.st; DS.ur = rdRest(DS.par, DS.par.phi);
+    for (const a of [st.u, st.v, st.u2, st.v2]) a.fill(DS.ur);
+    st.T.fill(-1e308); st.t = 0; dsPhi(); dsResetProbe();
+    DS.c0 = rdPlaneSpeed(DS.par, DS.dx, DS.dt, 40);
+    dirtyAll();
+  }
+  function dsBroken() {
+    // a straight wave across the upper half of the dish, moving right, with a free end at the centre
+    dsClear();
+    const n = DS.n, st = DS.st;
+    for (let j = 0; j < n / 2; j++) for (let i = 0; i < n; i++) {
+      const X = (i - n / 2) * DS.dx, idx = j * n + i;
+      if (X > -1 && X <= 0) st.u[idx] = 0.8;
+      if (X > -4 && X <= -1) st.v[idx] = 0.3;
+    }
+  }
+  function dsDisc(fx, fy, r, fn) {
+    const n = DS.n, cx = fx * (n - 1), cy = fy * (n - 1), rc = r / DS.dx, st = DS.st;
+    for (let j = Math.floor(cy - rc); j <= Math.ceil(cy + rc); j++) for (let i = Math.floor(cx - rc); i <= Math.ceil(cx + rc); i++) {
+      if (i < 0 || j < 0 || i >= n || j >= n) continue;
+      const idx = j * n + i;
+      if (DS.dish.inside[idx] && (i - cx) * (i - cx) + (j - cy) * (j - cy) <= rc * rc) fn(idx);
+    }
+  }
+  // a cut narrower than about 5 length units heals: the two ends grow back into the gap and rejoin
+  const CUT_R = 3, START_R = 1.25;
+  function dsApply(fx, fy) {
+    const st = DS.st;
+    if (DS.tool === 'cut') dsDisc(fx, fy, CUT_R, (i) => { st.u[i] = DS.ur; st.v[i] = DS.ur; });
+    else dsDisc(fx, fy, START_R, (i) => { st.u[i] = 0.8; });
+    dirty.A = true;
+  }
+  function dsAdvance(steps) {
+    const st = DS.st, pi = probeIdx(), tr = DS.tr;
+    const t0 = performance.now();
+    for (let s = 0; s < steps; s++) {
+      rdSteps(DS.par, DS.dish, st, DS.dx, DS.dt, 1, 0.3);
+      tr.t.push(st.t); tr.u.push(st.u[pi]); tr.v.push(st.v[pi]);
+      if (st.T[pi] !== DS.lastT) { DS.lastT = st.T[pi]; DS.arr.push(DS.lastT); if (DS.arr.length > 30) DS.arr.shift(); }
+    }
+    if (steps) DS.stepMs = 0.85 * DS.stepMs + 0.15 * (performance.now() - t0) / steps;
+    DS.stepsLast = steps;
+    if (tr.t.length > 9000) for (const a of [tr.t, tr.u, tr.v]) a.splice(0, 3000);
+    // front speed at the probe once the front has passed the four neighbours used for the gradient
+    const la = DS.arr[DS.arr.length - 1];
+    if (DS.arr.length && la !== DS.speedFor && st.t - la > 0.3) { DS.speed = rdSpeedAt(DS.dish, st.T, pi, DS.dx, 2, 1.0); DS.speedFor = la; }
+    dirty.A = dirty.B = dirty.C = true;
+  }
+  // period at the probe: reported only for a regular train (the last two intervals agree within 3 %)
+  function dsPeriod() {
+    const a = DS.arr, n = a.length; if (n < 3) return NaN;
+    const P = a[n - 1] - a[n - 2], Q = a[n - 2] - a[n - 3];
+    return Math.abs(P - Q) < 0.03 * P && DS.st.t - a[n - 1] < 2.2 * P ? P : NaN;
+  }
+  function dsGeom() {
+    const [W, H] = dims.A, s = ps('A'), top = 48 * s, bot = 30 * s;
+    const D = Math.max(60, Math.min(W - 24 * s, H - top - bot)), ox = (W - D) / 2, oy = top + (H - top - bot - D) / 2;
+    return { ox, oy, D, k: D / DS.n };
+  }
+  function drawDishA() {
+    const k = 'A', ctx = begin(k), [W, H] = dims.A, s = ps(k), g = dsGeom(); DS.geo = g;
+    // field to image
+    const st = DS.st, cells = DS.dish.cells, img = DS.img32, inv = 255 / DS.vref;
+    img.fill(0);
+    for (let c = 0; c < cells.length; c++) { const i = cells[c]; let q = st.v[i] * inv; q = q < 0 ? 0 : q > 255 ? 255 : q; img[i] = LUT[q | 0]; }
+    DS.offCtx.putImageData(DS.img, 0, 0);
+    const cx = g.ox + g.D / 2, cy = g.oy + g.D / 2, R = g.D / 2;
+    // shadow and glass rim
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 14 * s; ctx.shadowOffsetY = 4 * s;
+    ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.arc(cx, cy, R + 6 * s, 0, 7); ctx.fill(); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R - 1.5 * g.k, 0, 7); ctx.clip();
+    ctx.imageSmoothingEnabled = true; ctx.drawImage(DS.off, g.ox, g.oy, g.D, g.D); ctx.restore();
+    ctx.strokeStyle = T.glass; ctx.lineWidth = 3 * s; ctx.beginPath(); ctx.arc(cx, cy, R + 3 * s, 0, 7); ctx.stroke();
+    ctx.globalAlpha = 0.35; ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2 * s; ctx.beginPath(); ctx.arc(cx, cy, R - 4 * s, 3.6, 4.6); ctx.stroke(); ctx.globalAlpha = 1;
+    // pacemaker and probe handles
+    const px = (fx) => g.ox + (fx * (DS.n - 1) + 0.5) * g.k, py = (fy) => g.oy + (fy * (DS.n - 1) + 0.5) * g.k;
+    if (DS.pace.on) {
+      const hot = DS.drag === 'pace' || (!DS.drag && DS.hover === 'pace'), x = px(DS.pace.fx), y = py(DS.pace.fy), rr = DS.pace.r / DS.dx * g.k;
+      ctx.setLineDash([3 * s, 3 * s]); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = (hot ? 2.4 : 1.5) * s; ctx.beginPath(); ctx.arc(x, y, rr, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+      grip(ctx, x, y + rr + 9 * s, hot, T.ink, s);
+      ctx.font = mono(k, 10.5); halo(ctx, 'pacemaker, φ = 0', x, y - rr - 9 * s, T.ink, 'center');
+    }
+    {
+      const hot = DS.drag === 'probe' || (!DS.drag && DS.hover === 'probe'), x = px(DS.probe[0]), y = py(DS.probe[1]), r = (hot ? 9 : 7.5) * s;
+      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = (hot ? 3.4 : 2.6) * s; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.stroke();
+      ctx.strokeStyle = T.ink; ctx.lineWidth = (hot ? 2 : 1.4) * s; ctx.beginPath(); ctx.arc(x, y, r, 0, 7);
+      ctx.moveTo(x - r - 4 * s, y); ctx.lineTo(x - 3 * s, y); ctx.moveTo(x + 3 * s, y); ctx.lineTo(x + r + 4 * s, y);
+      ctx.moveTo(x, y - r - 4 * s); ctx.lineTo(x, y - 3 * s); ctx.moveTo(x, y + 3 * s); ctx.lineTo(x, y + r + 4 * s); ctx.stroke();
+      ctx.font = mono(k, 10.5); halo(ctx, 'probe', x + r + 7 * s, y - r - 2 * s, T.ink, 'left');
+    }
+    // the tool's footprint under the pointer
+    if (DS.ptr && !DS.drag && !DS.hover) {
+      const r = (DS.tool === 'cut' ? CUT_R : START_R) / DS.dx * g.k;
+      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5 * s; ctx.setLineDash([4 * s, 3 * s]);
+      ctx.beginPath(); ctx.arc(px(DS.ptr[0]), py(DS.ptr[1]), r, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+    }
+    // scale bar and caption
+    const bar = 10 / DS.dx * g.k, bx = g.ox + g.D - bar, by = g.oy + g.D + 12 * s;
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * s; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + bar, by); ctx.moveTo(bx, by - 4 * s); ctx.lineTo(bx, by + 4 * s); ctx.moveTo(bx + bar, by - 4 * s); ctx.lineTo(bx + bar, by + 4 * s); ctx.stroke();
+    ctx.font = mono(k, 10); ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('10 length units', bx + bar, by + 6 * s);
+    if (W > 520 * s) { ctx.textAlign = 'left'; ctx.fillText('red: ferroin at rest · blue: oxidized catalyst v in a wave', g.ox, by + 6 * s); }
+  }
+  // probe trace (pane B)
+  function drawDishB() {
+    const k = 'B', ctx = begin(k), [W, H] = dims.B, s = ps(k);
+    const b = { L: 44 * s, R: W - 14 * s, T: 54 * s, B: H - 34 * s };
+    if (b.B - b.T < 40) return;
+    const tw = 15, t1 = Math.max(tw, DS.st.t), t0 = t1 - tw;
+    const { X, Y } = axes(ctx, k, b, [t0, t1], [0, 0.9], { xt: niceTicks(t0, t1, 5), yt: [0, 0.2, 0.4, 0.6, 0.8], xf: (v) => v.toFixed(0), yf: (v) => v.toFixed(1), xl: 't (model units)', title: 'At the probe', sub: 'ticks: a front arrives (u rises through 0.3)' });
+    ctx.save(); ctx.beginPath(); ctx.rect(b.L, b.T, b.R - b.L, b.B - b.T); ctx.clip();
+    const tr = DS.tr, i0 = Math.max(0, lowerBound(tr.t, t0) - 1), lw = projOn() ? 2.4 : 1.7;
+    ctx.lineWidth = lw; ctx.strokeStyle = T.equi; polyline(ctx, tr.t, tr.u, X, Y, i0);
+    ctx.strokeStyle = T.neg; polyline(ctx, tr.t, tr.v, X, Y, i0);
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2;
+    for (const a of DS.arr) if (a > t0) { ctx.beginPath(); ctx.moveTo(X(a), b.T); ctx.lineTo(X(a), b.T + 8 * s); ctx.stroke(); }
+    ctx.restore();
+    ctx.font = mono(k, 11, 600);
+    halo(ctx, 'u  HBrO₂', b.R - 6 * s, b.T + 12 * s, T.equi, 'right');
+    halo(ctx, 'v  oxidized catalyst', b.R - 6 * s, b.T + 28 * s, T.neg, 'right');
+  }
+  // nullclines and the probe's path (pane C)
+  function drawDishC() {
+    const k = 'C', ctx = begin(k), [W, H] = dims.C, s = ps(k), p = DS.par;
+    const b = { L: 44 * s, R: W - 14 * s, T: 54 * s, B: H - 34 * s };
+    if (b.B - b.T < 40) return;
+    const xr = [-3, 0], yr = [0, 0.45];
+    const { X, Y } = axes(ctx, k, b, xr, yr, { xt: [-3, -2, -1, 0], yt: [0, 0.1, 0.2, 0.3, 0.4], xf: dec, yf: (v) => v.toFixed(1), xl: 'u (log scale)', title: 'Excitable kinetics: v against u', sub: 'dashed: nullclines without diffusion · black: the probe, last 15 units' });
+    ctx.save(); ctx.beginPath(); ctx.rect(b.L, b.T, b.R - b.L, b.B - b.T); ctx.clip();
+    const lw = projOn() ? 2.2 : 1.5;
+    // du/dt = 0 (no diffusion): v = [(u − u²)(u + q)/(u − q) − φ]/f, for u > q
+    ctx.strokeStyle = T.equi; ctx.lineWidth = lw; ctx.setLineDash([6, 4]); ctx.beginPath();
+    let pen = false;
+    for (let i = 0; i <= 400; i++) {
+      const u = Math.pow(10, xr[0] + (xr[1] - xr[0]) * i / 400); if (u <= p.q * 1.0005) { pen = false; continue; }
+      const v = ((u - u * u) * (u + p.q) / (u - p.q) - p.phi) / p.f, y = Y(v);
+      if (v < -0.1 || v > 1) { pen = false; continue; }
+      if (pen) ctx.lineTo(X(Math.log10(u)), y); else { ctx.moveTo(X(Math.log10(u)), y); pen = true; }
+    }
+    ctx.stroke();
+    ctx.strokeStyle = T.neg; ctx.beginPath();
+    for (let i = 0; i <= 200; i++) { const lu = xr[0] + (xr[1] - xr[0]) * i / 200, u = Math.pow(10, lu); i ? ctx.lineTo(X(lu), Y(u)) : ctx.moveTo(X(lu), Y(u)); }
+    ctx.stroke(); ctx.setLineDash([]);
+    // probe path over the last 15 time units
+    const tr = DS.tr, i0 = Math.max(0, lowerBound(tr.t, DS.st.t - 15));
+    ctx.strokeStyle = T.ink; ctx.lineWidth = lw; ctx.globalAlpha = 0.8;
+    polyline(ctx, tr.u.map((u) => Math.log10(Math.max(u, 1e-4))), tr.v, X, Y, i0);
+    ctx.globalAlpha = 1;
+    const ur = rdRest(p, p.phi);
+    ctx.fillStyle = T.muted; ctx.beginPath(); ctx.arc(X(Math.log10(ur)), Y(ur), 4 * s, 0, 7); ctx.fill();
+    const n = tr.t.length - 1;
+    if (n >= 0) { ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(Math.log10(Math.max(tr.u[n], 1e-4))), Y(tr.v[n]), 4.5 * s, 0, 7); ctx.fill(); }
+    ctx.restore();
+    ctx.font = mono(k, 10.5);
+    halo(ctx, 'du/dt = 0', X(-0.38), Y(((0.42 - 0.42 * 0.42) * (0.42 + p.q) / (0.42 - p.q) - p.phi) / p.f) - 12 * s, T.equi, 'center');
+    halo(ctx, 'dv/dt = 0', X(-0.6) - 8 * s, Y(0.251), T.neg, 'right');
+    halo(ctx, 'rest', X(Math.log10(ur)) + 7 * s, Y(ur) - 9 * s, T.muted, 'left');
+  }
+
+  // =====================================================================
+  // 3. Flow reactor: Györgyi and Field model
+  // =====================================================================
+  const T0 = gfMake(3.5e-4).T0;   // time unit of the scaled model, s
+  const FL = { kf: 3.5e-4, fly: false, lgd: -6, S: null, ts: [], zA: [], zB: [], sep: [], lastS: -1, maxA: [], tMax: [], settle: 0,
+    ly: { sum: 0, T: 0, last: 0 }, d0: 1e-7, flyT0: 0, lastRet: 0 };
+  function flStart(keep) {
+    const a = keep && FL.S ? FL.S.y.slice(0, 3) : [0.045, 0.9, 0.85], t = keep && FL.S ? FL.S.t : 0, del = Math.pow(10, FL.lgd);
+    FL.S = gfStepper(FL.kf, [a[0], a[1], a[2], a[0] + del, a[1], a[2], a[0] + FL.d0, a[1], a[2]], 1e-8, 1);
+    FL.S.t = t; FL.ly = { sum: 0, T: 0, last: t }; FL.maxA = []; FL.tMax = []; FL.settle = t + 0.15; FL.flyT0 = t;
+    if (!keep) { FL.ts = []; FL.zA = []; FL.zB = []; FL.sep = []; FL.lastS = -1; }
+    dirtyAll();
+  }
+  function flRestartB() {
+    const y = FL.S.y, del = Math.pow(10, FL.lgd);
+    y[3] = y[0] + del; y[4] = y[1]; y[5] = y[2]; gfRhsN(FL.S.c, y, FL.S.K[0]); FL.flyT0 = FL.S.t;
+  }
+  const flOnMax = (t, v, k) => { if (k !== 0) return; FL.tMax.push(t); if (FL.tMax.length > 200) FL.tMax.shift(); if (t > FL.settle) { FL.maxA.push(v); if (FL.maxA.length > 600) FL.maxA.shift(); dirty.B = true; } };
+  const flOnStep = (S2) => {
+    if (S2.t - FL.lastS < 2e-4) return;
+    FL.lastS = S2.t; const y = S2.y;
+    FL.ts.push(S2.t * T0); FL.zA.push(y[1]); FL.zB.push(y[4]); FL.sep.push(Math.hypot(y[3] - y[0], y[4] - y[1], y[5] - y[2]));
+    if (FL.ts.length > 12000) for (const a of [FL.ts, FL.zA, FL.zB, FL.sep]) a.splice(0, 4000);
+  };
+  function flAdvance(dtau) {
+    gfAdvance(FL.S, dtau, flOnMax, flOnStep);
+    const y = FL.S.y;
+    if (FL.S.t - FL.ly.last >= 0.005) {   // pull the third copy back to distance d0 (Benettin et al. 1980)
+      const d = Math.hypot(y[6] - y[0], y[7] - y[1], y[8] - y[2]);
+      if (d > 0 && Number.isFinite(d)) { FL.ly.sum += Math.log(d / FL.d0); FL.ly.T += FL.S.t - FL.ly.last; for (let i = 0; i < 3; i++) y[6 + i] = y[i] + (y[6 + i] - y[i]) * FL.d0 / d; gfRhsN(FL.S.c, y, FL.S.K[0]); }
+      FL.ly.last = FL.S.t;
+    }
+    dirty.A = true;
+  }
+  function flPeriod() { const t = FL.tMax, n = t.length; if (n < 6) return NaN; const m = Math.min(n - 1, 30); return (t[n - 1] - t[n - 1 - m]) / m * T0; }
+  function flPattern() {
+    const a = FL.maxA, n = a.length;
+    if (n < 24) return { text: 'settling', p: 0 };
+    const last = a.slice(-48), tol = 2e-3;
+    for (let p = 1; p <= 8; p++) {
+      let ok = true;
+      for (let i = p; i < last.length && ok; i++) if (Math.abs(last[i] - last[i - p]) > tol) ok = false;
+      if (ok) return { text: p === 1 ? 'period 1: every peak the same' : `period ${p}: ${p} peak heights repeat`, p };
+    }
+    return { text: `no repeat in ${last.length} peaks`, p: -1 };
+  }
+  const flLyap = () => FL.ly.T > 0.2 ? FL.ly.sum / FL.ly.T / T0 : NaN;   // per second
+
+  // bifurcation diagram built by a scan, a few milliseconds per frame
+  const SC = { on: false, lo: 3.1, hi: 3.3, n: 81, k: 0, S: null, y0: null, pts: [], vals: [], view: null, SETTLE: 1.0, REC: 0.5 };
+  function scanStart(lo, hi, n) {
+    Object.assign(SC, { on: true, lo, hi, n, k: 0, S: null, y0: [0.045, 0.9, 0.85], pts: [], vals: [], view: [lo, hi] });
+    dirty.C = true;
+  }
+  function scanTick(budget) {
+    const t0 = performance.now();
+    while (SC.on && performance.now() - t0 < budget) {
+      if (!SC.S) { const kf = (SC.lo + (SC.hi - SC.lo) * SC.k / (SC.n - 1)) * 1e-4; SC.S = gfStepper(kf, SC.y0, 1e-8, 1); SC.vals = []; }
+      gfAdvance(SC.S, 0.05, (t, v) => { if (t >= SC.SETTLE) SC.vals.push(v); });
+      if (SC.S.t >= SC.SETTLE + SC.REC - 1e-9) {
+        SC.pts.push({ kf: SC.S.c.kf * 1e4, z: SC.vals.slice() }); SC.y0 = SC.S.y.slice(); SC.S = null; SC.k++;
+        if (SC.k >= SC.n) SC.on = false;
+        dirty.C = true;
+      }
+    }
+    $('scanBar').style.width = (100 * (SC.on ? SC.k / SC.n : SC.pts.length ? 1 : 0)).toFixed(1) + '%';
+  }
+
+  function drawFlowA() {
+    const k = 'A', ctx = begin(k), [W, H] = dims.A, s = ps(k);
+    const z = FL.S.y[1], ce = z / 100, sZ = clamp((z - 0.5) / 2.0, 0, 1);
+    const fill = mixc(shade(hex(T.glass), 0.75), hex(T.cerium), 0.15 + 0.85 * sZ);
+    const lines = [
+      { text: 'Now in the reactor', bold: true },
+      { text: `z  Ce(IV)  ${z.toFixed(3)}`, color: T.neg },
+      { text: `   = ${(ce * 100).toFixed(2)} % of the cerium`, color: T.muted, size: 10.5 },
+      { text: `residence time 1/k_f = ${(1 / FL.kf / 60).toFixed(1)} min`, color: T.muted, size: 10.5 }
+    ];
+    const blk = vesselBlock(k, W, H, fill, { flow: true, stir: stirAngle, flowPhase, lines, bar: { s: sZ, l0: 'Ce(III)', l1: 'Ce(IV) yellow', cols: (q) => mixc(shade(hex(T.glass), 0.75), hex(T.cerium), 0.15 + 0.85 * q) } });
+    const fly = FL.fly, gap = 16 * s, totalT = blk.bottom + 18 * s, bottom = H - 34 * s;
+    const hSep = fly ? clamp((bottom - totalT) * 0.36, 60 * s, 140 * s) : 0;
+    const b = { L: 50 * s, R: W - 16 * s, T: totalT, B: bottom - (fly ? hSep + gap + 18 * s : 0) };
+    if (b.B - b.T < 50) return;
+    const tw = 1500, t1 = Math.max(tw, FL.S.t * T0), t0 = t1 - tw;
+    const { X, Y } = axes(ctx, k, b, [t0, t1], [0.4, 2.6], { xt: niceTicks(t0, t1, Math.max(3, Math.floor((b.R - b.L) / (70 * s)))), yt: [0.5, 1, 1.5, 2, 2.5], xf: (v) => v.toFixed(0), yf: (v) => v.toFixed(1), xl: fly ? '' : 't (s)', title: 'Oxidized catalyst z = [Ce(IV)]/Z₀' });
+    ctx.save(); ctx.beginPath(); ctx.rect(b.L, b.T, b.R - b.L, b.B - b.T); ctx.clip();
+    const i0 = Math.max(0, lowerBound(FL.ts, t0) - 1), lw = projOn() ? 2.4 : 1.6;
+    if (fly) { ctx.strokeStyle = T.pos; ctx.lineWidth = lw; ctx.setLineDash([5, 3]); polyline(ctx, FL.ts, FL.zB, X, Y, Math.max(i0, lowerBound(FL.ts, FL.flyT0 * T0))); ctx.setLineDash([]); }
+    ctx.strokeStyle = T.neg; ctx.lineWidth = lw; polyline(ctx, FL.ts, FL.zA, X, Y, i0);
+    ctx.restore();
+    ctx.font = mono(k, 11, 600);
+    halo(ctx, 'run 1', b.R - 6 * s, b.T + 12 * s, T.neg, 'right');
+    if (fly) halo(ctx, 'run 2', b.R - 6 * s, b.T + 28 * s, T.pos, 'right');
+    if (fly) {
+      const b2 = { L: b.L, R: b.R, T: b.B + gap + 18 * s, B: bottom };
+      const { X: X2, Y: Y2 } = axes(ctx, k, b2, [t0, t1], [-10, 1], { xt: niceTicks(t0, t1, Math.max(3, Math.floor((b.R - b.L) / (70 * s)))), yt: [-9, -6, -3, 0], xf: (v) => v.toFixed(0), yf: dec, xl: 't (s)', title: 'Distance between the two runs' });
+      ctx.save(); ctx.beginPath(); ctx.rect(b2.L, b2.T, b2.R - b2.L, b2.B - b2.T); ctx.clip();
+      ctx.strokeStyle = T.ink; ctx.lineWidth = lw;
+      polyline(ctx, FL.ts, FL.sep.map((d) => Math.log10(Math.max(d, 1e-12))), X2, Y2, Math.max(i0, lowerBound(FL.ts, FL.flyT0 * T0)));
+      ctx.restore();
+    }
+  }
+  function drawFlowB() {
+    const k = 'B', ctx = begin(k), [W, H] = dims.B, s = ps(k);
+    const b = { L: 48 * s, R: W - 14 * s, T: 54 * s, B: H - 34 * s };
+    if (b.B - b.T < 40) return;
+    const a = FL.maxA.slice(-400);
+    let lo = 0.6, hi = 2.6;
+    if (a.length > 3) { lo = Math.min(...a); hi = Math.max(...a); const pad = Math.max(0.15, (hi - lo) * 0.1); lo -= pad; hi += pad; }
+    const ext = Math.max(hi - lo, 0.3); const mid = (lo + hi) / 2; lo = mid - ext / 2; hi = mid + ext / 2;
+    const t = niceTicks(lo, hi, 4);
+    const { X, Y } = axes(ctx, k, b, [lo, hi], [lo, hi], { xt: t, yt: t, xf: (v) => v.toFixed(2), yf: (v) => v.toFixed(2), xl: 'peak n', title: 'Next peak map: peak n + 1 against peak n', sub: a.length < 2 ? 'waiting for peaks after the reactor settles' : `${a.length} peaks of z at this flow rate; lines: the last few steps` });
+    ctx.save(); ctx.beginPath(); ctx.rect(b.L, b.T, b.R - b.L, b.B - b.T); ctx.clip();
+    ctx.strokeStyle = T.muted; ctx.setLineDash([4, 4]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(lo), Y(lo)); ctx.lineTo(X(hi), Y(hi)); ctx.stroke(); ctx.setLineDash([]);
+    const n = a.length;
+    for (let i = 0; i + 1 < n; i++) {
+      const age = (n - 2 - i);
+      ctx.fillStyle = T.neg; ctx.globalAlpha = age < 6 ? 1 : 0.55;
+      ctx.beginPath(); ctx.arc(X(a[i]), Y(a[i + 1]), (age < 1 ? 4.5 : 2.6) * s, 0, 7); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    // cobweb of the last few peaks: up to the map, across to the diagonal
+    if (n > 3) {
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.1; ctx.globalAlpha = 0.6; ctx.beginPath();
+      const j0 = Math.max(0, n - 7);
+      ctx.moveTo(X(a[j0]), Y(a[j0]));
+      for (let j = j0; j + 1 < n; j++) { ctx.lineTo(X(a[j]), Y(a[j + 1])); ctx.lineTo(X(a[j + 1]), Y(a[j + 1])); }
+      ctx.stroke(); ctx.globalAlpha = 1;
+    }
+    ctx.restore();
+  }
+  function drawFlowC() {
+    const k = 'C', ctx = begin(k), [W, H] = dims.C, s = ps(k);
+    const b = { L: 48 * s, R: W - 16 * s, T: 54 * s, B: H - 34 * s };
+    if (b.B - b.T < 40) return;
+    const xr = SC.view || [3.0, 5.0];
+    const sub = SC.on ? `scanning k_f = ${(SC.lo + (SC.hi - SC.lo) * SC.k / (SC.n - 1)).toFixed(3)}, ${SC.k + 1} of ${SC.n}: ${SC.SETTLE * T0 / 60 | 0} min to settle, then ${SC.REC * T0 / 60 | 0} min of peaks` : SC.pts.length ? `${SC.pts.length} flow rates, each run for ${(SC.SETTLE + SC.REC) * T0 / 60 | 0} min of reactor time` : 'built by a scan';
+    const zs = []; for (const p of SC.pts) for (const v of p.z) zs.push(v);
+    let lo = 0.5, hi = 2.6; if (zs.length) { lo = Math.min(...zs) - 0.05; hi = Math.max(...zs) + 0.05; }
+    const { X, Y } = axes(ctx, k, b, xr, [lo, hi], { xt: niceTicks(xr[0], xr[1], 5), yt: niceTicks(lo, hi, 4), xf: (v) => v.toFixed(xr[1] - xr[0] < 0.5 ? 2 : 1), yf: (v) => v.toFixed(1), xl: 'k_f (10⁻⁴ s⁻¹)', title: 'Peaks of z against flow rate', sub });
+    geoC = { b, X, xr, kind: 'kf' };
+    ctx.save(); ctx.beginPath(); ctx.rect(b.L, b.T, b.R - b.L, b.B - b.T); ctx.clip();
+    ctx.fillStyle = T.neg;
+    const r = Math.max(0.8, 1.1 * s);
+    for (const p of SC.pts) { const x = X(p.kf); for (const v of p.z) ctx.fillRect(x - r, Y(v) - r, 2 * r, 2 * r); }
+    ctx.restore();
+    if (!SC.pts.length && !SC.on) {
+      ctx.font = mono(k, 11); ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('Press a Scan button to build this diagram', (b.L + b.R) / 2, (b.T + b.B) / 2);
+    }
+    const kf = FL.kf * 1e4;
+    if (kf >= xr[0] && kf <= xr[1]) {
+      const hot = (dragC && dragC.id === 'kf') || (!dragC && hoverC === 'kf'), x = X(kf);
+      ctx.strokeStyle = T.ink; ctx.lineWidth = hot ? 2.6 : 1.5; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.moveTo(x, b.T); ctx.lineTo(x, b.B); ctx.stroke(); ctx.globalAlpha = 1;
+      grip(ctx, x, b.B - 14 * s, hot, T.ink, s);
+      ctx.font = mono(k, 11, 600); halo(ctx, `k_f = ${kf.toFixed(3)}`, x + (x > (b.L + b.R) / 2 ? -8 : 8) * s, b.T + 12 * s, T.ink, x > (b.L + b.R) / 2 ? 'right' : 'left');
+    }
+  }
+
+  // =====================================================================
+  // UI: presets, modes, sliders
+  // =====================================================================
+  const PRESETS = {
+    osc: { mode: 'beaker', hint: 'f = 1 lies between the two Hopf points, so the steady state is unstable and the beaker settles onto a limit cycle. Each time x (HBrO₂) shoots up, the catalyst is oxidized and the solution snaps to blue, then fades back to red.' },
+    stop: { mode: 'beaker', hint: 'f = 2.6 is above the upper Hopf point: the steady state is stable. After one pulse the beaker stays red. Drag f back below the Hopf point to start the clock again.' },
+    target: { mode: 'dish', hint: 'A spot where φ = 0 oscillates by itself and sends out rings, as a speck of dust can in a real dish. Each ring leaves a refractory band behind it, so rings do not pass through each other or back into the spot.' },
+    spiral: { mode: 'dish', hint: 'A wave with a free end curls around it into a spiral. Its tip turns with a fixed period, shorter than the pacemaker period. Cut any wave to make a pair that turn in opposite senses.' },
+    route: { mode: 'flow', hint: 'The scan steps k_f from 3.10 to 3.30 × 10⁻⁴ s⁻¹. One peak height splits into 2, then 4, then 8, then a smear: period doubling to chaos. Drag k_f on the diagram and watch the next peak map.' },
+    fly: { mode: 'flow', hint: 'At k_f = 3.50 × 10⁻⁴ s⁻¹ the reactor is chaotic. Two runs start 10⁻⁶ apart in x; the gap grows exponentially (a straight line on the log plot) until the runs are unrelated.' }
+  };
+  function setPressed(container, attr, val) { for (const b of container.querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset[attr] === val)); }
+  function applyPreset(name) {
+    const P = PRESETS[name]; if (!P) return;
+    S.preset = name; setPressed($('presets'), 'p', name);
+    $('presetHint').textContent = P.hint; $('live').textContent = P.hint;
+    setMode(P.mode, true);
+    if (name === 'osc') { BK.p.f = 1.0; $('sF').value = 1; bkReset(); }
+    else if (name === 'stop') { BK.p.f = 2.6; $('sF').value = 2.6; bkReset(); }
+    else if (name === 'target') { DS.par.phi = 0.05; $('sPhi').value = 0.05; DS.pace = { on: true, fx: 0.5, fy: 0.5, r: 2 }; $('tPace').checked = true; DS.probe = [0.82, 0.5]; dsClear(); }
+    else if (name === 'spiral') { DS.par.phi = 0.05; $('sPhi').value = 0.05; DS.pace.on = false; $('tPace').checked = false; DS.probe = [0.78, 0.34]; dsBroken(); }
+    else if (name === 'route') { FL.kf = 3.2e-4; FL.fly = false; $('tFly').checked = false; $('sKf').value = 3.2; flStart(false); scanStart(3.1, 3.3, 81); }
+    else if (name === 'fly') { FL.kf = 3.5e-4; FL.fly = true; FL.lgd = -6; $('tFly').checked = true; $('sDel').value = -6; $('sKf').value = 3.5; flStart(false); }
+    syncOutputs(); setPlaying(!reduce || S.playing); dirtyAll();
+  }
+  function clearPreset() { S.preset = null; setPressed($('presets'), 'p', ''); }
+  function setMode(m, fromPreset) {
+    if (!fromPreset && m !== S.mode) clearPreset();
+    S.mode = m; $('stage').dataset.mode = m; setPressed($('modeSeg'), 'm', m);
+    for (const el of document.querySelectorAll('[data-for]')) el.hidden = el.dataset.for !== m;
+    $('flyCtl').hidden = m !== 'flow' || !FL.fly;
+    $('gl').hidden = !(m === 'beaker' && G.ready);
+    $('sRate').value = S.rateIdx[m];
+    $('unitsLine').textContent = m === 'beaker' ? 'scaled concentrations · beaker time unit τ = 50 s'
+      : m === 'dish' ? 'dimensionless Oregonator units · D = 1 sets the length unit'
+        : 'scaled concentrations · flow rate k_f in s⁻¹ · time in s';
+    cans.A.setAttribute('aria-label', m === 'dish' ? 'Petri dish. Drag across a wave to cut it, or to start a wave with the Start tool. Drag the probe or the pacemaker. Arrow keys move the probe; space plays or pauses; R resets; C clears the dish.' : m === 'beaker' ? 'Stirred beaker with its color, and the three scaled concentrations against time. Arrow keys change f.' : 'Flow reactor with its color, and z against time. Arrow keys change the flow rate.');
+    cans.B.setAttribute('aria-label', m === 'beaker' ? 'Phase portrait in 3D. Drag or use the arrow keys to turn it.' : m === 'dish' ? 'u and v at the probe against time' : 'Next peak map');
+    cans.C.setAttribute('aria-label', m === 'beaker' ? 'Oscillation range against f. Drag the f line to change f.' : m === 'dish' ? 'Nullclines and the path of the probe in the u, v plane' : 'Bifurcation diagram, peaks of z against flow rate. Drag the k_f line to change the flow rate.');
+    renderKey(); renderModel(); syncOutputs();
+    requestAnimationFrame(() => { resize(); });
+    dirtyAll();
+  }
+  function renderKey() {
+    const m = S.mode, kb = $('keyBox');
+    if (m === 'beaker') kb.innerHTML = '<span><i class="swatch sx"></i>x: HBrO₂ (autocatalyst)</span><span><i class="swatch sy"></i>y: Br⁻ (inhibitor)</span><span><i class="swatch sz"></i>z: oxidized catalyst (the color)</span>';
+    else if (m === 'dish') kb.innerHTML = `<span><i class="chip-sw" style="background:${T.ferroin}"></i>reduced catalyst, ferroin (rest)</span><span><i class="chip-sw" style="background:${T.ferriin}"></i>oxidized catalyst v ≥ ${DS.vref} (wave)</span>`;
+    else kb.innerHTML = '<span><i class="swatch sz"></i>run 1</span><span><i class="swatch sb"></i>run 2 (Second run)</span>';
+  }
+  function renderModel() {
+    const m = S.mode, el = $('modelHint');
+    if (m === 'beaker') el.innerHTML = `<p>The Oregonator of Field and Noyes (1974), a five step skeleton of the Field–Körös–Noyes mechanism, in scaled form: ε dx/dτ = qy − xy + x(1 − x), ε′ dy/dτ = −qy − xy + fz, dz/dτ = x − z. Here x ∝ [HBrO₂], y ∝ [Br⁻], z ∝ [oxidized catalyst] and τ = k<sub>c</sub>Bt.</p>
+      <p>ε = 9.90 × 10⁻³, ε′ = 1.98 × 10⁻⁵, q = 7.62 × 10⁻⁵ (R. J. Field, Scholarpedia 2007) for [BrO₃⁻] = 0.06 M, [malonic acid] B = 0.02 M, k<sub>c</sub> = 1 M⁻¹ s⁻¹, so τ = 1 is 50 s. Bromate and malonic acid are held fixed, so this batch never runs down, and the model does not keep the total catalyst fixed.</p>
+      <p>Integration: the L stable Rosenbrock pair used by MATLAB's ode23s (Shampine and Reichelt 1997), adaptive, relative tolerance 10⁻⁶; the model is stiff (ε′/ε ≈ 0.002). Hopf points: where the steady state's complex eigenvalue pair crosses Re λ = 0, from the exact Jacobian. Period: time between upward crossings of the steady state value of x. The beaker color is a display mix of red ferroin and blue ferriin, linear in z and full blue at z = 0.2.</p>`;
+    else if (m === 'dish') el.innerHTML = `<p>The two variable Oregonator (Tyson and Fife 1980: [Br⁻] in its fast steady state) with diffusion of u only; the catalyst v stays put, as in a gel: ∂u/∂t = (1/ε)[u − u² − (fv + φ)(u − q)/(u + q)] + D∇²u, ∂v/∂t = u − v. u ∝ [HBrO₂], v ∝ [oxidized catalyst]. φ is an extra steady source of bromide (in the light sensitive ruthenium form of the reaction it is set by the light).</p>
+      <p>ε = 0.02, q = 0.002, f = 1.4 and φ from 0.05 to 0.08 as used by Adamatzky and coworkers (arXiv:1803.01632); D = 1 sets the length unit. Times and lengths are in the model's own units.</p>
+      <p>Grid: 256 × 256 cells, Δx = 0.25, a round dish with no flux through the wall. Time step Δt = 0.005: diffusion explicit (D Δt/Δx² = 0.08, stable below 1/4), kinetics linearly implicit Euler, because the (u − q)/(u + q) term is very stiff (in the tail of a wave, where that step would push u below zero, a positivity preserving Patankar form is used). Checked against grids 4 to 8 times finer: plane wave speed within 1 %, spiral period within 3 %. The pacemaker is a disc of radius 2 where φ = 0; there the steady state is unstable and the spot oscillates. Front speed at the probe: c = 1/|∇T|, T the time each cell's u rose through 0.3. Color: mixed from red to blue linearly in v, full blue at v = ${DS.vref}.</p>`;
+    else el.innerHTML = `<p>The three variable model of Györgyi and Field (Nature 355, 808, 1992) for the cerium catalyzed reaction in a continuously stirred flow reactor: x = [HBrO₂]/X₀, z = [Ce(IV)]/Z₀, v = [bromomalonic acid]/V₀, with [Br⁻] in its fast steady state. Fresh bromate, malonic acid, acid and Ce(III) flow in and the mixture flows out at rate k<sub>f</sub>.</p>
+      <p>k₁ = 4.0 × 10⁶ M⁻² s⁻¹, k₂ = 2.0 M⁻³ s⁻¹, k₃ = 3000 M⁻¹ s⁻¹, k₄ = 55.2 M⁻⁵ᐟ² s⁻¹, k₅ = 7000 M⁻¹ s⁻¹, k₆ = 0.09 M⁻¹ s⁻¹, k₇ = 0.23 M⁻¹ s⁻¹; [BrO₃⁻] = 0.1 M, [malonic acid] = 0.25 M, [H⁺] = 0.26 M, [Ce] = 8.33 × 10⁻⁴ M, α = 666.7, β = 0.3478, as tabulated by Buchlovská Nagyová, Jansík and Lampart (Sci. Rep. 2020). Time unit T₀ = 1/(10k₂AHC) = ${T0.toFixed(0)} s.</p>
+      <p>Integration: Dormand–Prince 5(4), adaptive, relative tolerance 10⁻⁸. Peaks found by Hermite interpolation inside each step. The largest Lyapunov exponent is a finite time estimate: a third copy is started 10⁻⁷ away and pulled back to that distance every 0.005 T₀ (Benettin et al. 1980). A scan starts each flow rate from the state left by the previous one. The yellow of Ce(IV) is exaggerated for display.</p>`;
+  }
+  function syncOutputs() {
+    $('oF').textContent = BK.p.f.toFixed(2);
+    $('oPhi').textContent = DS.par.phi.toFixed(3);
+    $('oKf').textContent = `${(FL.kf * 1e4).toFixed(3)} × 10⁻⁴ s⁻¹`;
+    $('oDel').textContent = dec(FL.lgd);
+    const r = rate();
+    $('oRate').textContent = S.mode === 'beaker' ? `${r} τ/s = ${r * TAU_S}× real time` : S.mode === 'dish' ? `${r} time units/s` : `${Math.round(r * T0)}× real time`;
+    $('flyCtl').hidden = S.mode !== 'flow' || !FL.fly;
+  }
+  function measHTML(rows) { return rows.map(([dt, dd, wide]) => `<div${wide ? ' class="wide"' : ''}><dt>${dt}</dt><dd>${dd}</dd></div>`).join(''); }
+  let lastMeas = 0;
+  function renderMeas() {
+    const m = S.mode;
+    if (m === 'beaker') {
+      const P = bkPeriod(), c = BK.lastCyc, st = bkStable(), mr = Math.max(...BK.eig.map((e) => e.re));
+      $('meas').innerHTML = measHTML([
+        ['Period', Number.isFinite(P) ? `${P.toFixed(3)} τ<br><small>= ${(P * TAU_S / 60).toFixed(2)} min</small>` : st ? 'none<br><small>it settles</small>' : 'none yet'],
+        ['z over a cycle', c && Number.isFinite(P) ? `${sci(c.zmin, 2)}<br><small>to ${sci(c.zmax, 3)}</small>` : '—'],
+        ['Steady state', `${st ? 'stable' : 'unstable'}<br><small>largest Re λ = ${sci(mr, 3)}</small>`],
+        ['Steady z*', sci(BK.fixed[2], 3)],
+        ['Hopf points', `f = ${HOPF[0].toFixed(4)} and ${HOPF[1].toFixed(4)}`, true]
+      ]);
+    } else if (m === 'dish') {
+      const P = dsPeriod(), c = DS.speed, J = rdJac(DS.par, DS.ur, DS.ur, DS.par.phi), tr = J[0][0] + J[1][1], det = J[0][0] * J[1][1] - J[0][1] * J[1][0];
+      $('meas').innerHTML = measHTML([
+        ['Period at probe', Number.isFinite(P) ? P.toFixed(2) : DS.arr.length >= 3 ? 'irregular' : '—'],
+        ['Front speed at probe', Number.isFinite(c) && Number.isFinite(P) ? c.toFixed(2) : Number.isFinite(c) ? `${c.toFixed(2)}<br><small>last front</small>` : '—'],
+        ['Wavelength c × period', Number.isFinite(c) && Number.isFinite(P) ? (c * P).toFixed(1) : '—'],
+        ['Lone plane wave c₀', `${DS.c0.toFixed(2)}<br><small>this grid, this φ</small>`],
+        ['Medium at rest', tr < 0 && det > 0 ? 'excitable: rest state stable' : 'oscillatory: rest state unstable', true]
+      ]);
+    } else {
+      const P = flPeriod(), pat = flPattern(), L = flLyap(), d = FL.sep[FL.sep.length - 1];
+      const settleLeft = (FL.settle - FL.S.t) * T0;
+      const rows = [
+        ['Mean time between peaks', Number.isFinite(P) ? `${P.toFixed(1)} s` : '—'],
+        ['Residence time 1/k_f', `${(1 / FL.kf / 60).toFixed(1)} min`],
+        ['Peak pattern', settleLeft > 0 ? `settling, ${Math.ceil(settleLeft)} s` : pat.text, true],
+        ['Largest Lyapunov exponent λ (estimate)', Number.isFinite(L) ? `${L > 0 ? '+' : ''}${sci(L, 2)} s⁻¹${Number.isFinite(P) && L * P > 0.05 ? `<br><small>a small gap grows e times in ${(1 / L).toFixed(0)} s: chaotic</small>` : '<br><small>no steady growth of a small gap: not chaotic</small>'}` : `estimating, ${Math.ceil(Math.max(0, 0.2 - FL.ly.T) * T0)} s`, true]
+      ];
+      if (FL.fly) rows.push(['Distance between runs', sci(d, 2)]);
+      $('meas').innerHTML = measHTML(rows);
+    }
+  }
+  function setPlaying(on) { S.playing = on; $('play').textContent = on ? 'Pause' : 'Play'; }
+  function resetMode() {
+    if (S.preset && PRESETS[S.preset].mode === S.mode) { applyPreset(S.preset); return; }
+    if (S.mode === 'beaker') bkReset(); else if (S.mode === 'dish') dsClear(); else flStart(false);
+  }
+
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) applyPreset(b.dataset.p); });
+  $('modeSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setMode(b.dataset.m); });
+  $('toolSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { DS.tool = b.dataset.t; setPressed($('toolSeg'), 't', DS.tool); } });
+  $('play').addEventListener('click', () => setPlaying(!S.playing));
+  $('reset').addEventListener('click', resetMode);
+  function setF(f) { f = clamp(Math.round(f / 0.01) * 0.01, 0.3, 3); f = +f.toFixed(2); if (f === BK.p.f) return; $('sF').value = f; bkSetF(f); clearPreset(); syncOutputs(); }
+  $('sF').addEventListener('input', () => setF(+$('sF').value));
+  $('sPhi').addEventListener('input', () => {
+    DS.par.phi = +$('sPhi').value; clearPreset();
+    DS.ur = rdRest(DS.par, DS.par.phi); dsPhi(); DS.c0 = rdPlaneSpeed(DS.par, DS.dx, DS.dt, 40); syncOutputs(); dirtyAll();
+  });
+  $('tPace').addEventListener('change', () => { DS.pace.on = $('tPace').checked; dsPhi(); clearPreset(); dirtyAll(); });
+  $('clearDish').addEventListener('click', () => { clearPreset(); dsClear(); });
+  $('halfWave').addEventListener('click', () => { clearPreset(); dsBroken(); });
+  function setKf(v) { v = clamp(Math.round(v / 0.005) * 0.005, 3, 5); v = +v.toFixed(3); if (Math.abs(v * 1e-4 - FL.kf) < 1e-12) return; FL.kf = v * 1e-4; $('sKf').value = v; flStart(true); clearPreset(); syncOutputs(); }
+  $('sKf').addEventListener('input', () => setKf(+$('sKf').value));
+  $('tFly').addEventListener('change', () => { FL.fly = $('tFly').checked; if (FL.fly) flRestartB(); clearPreset(); syncOutputs(); dirtyAll(); });
+  $('sDel').addEventListener('input', () => { FL.lgd = +$('sDel').value; flRestartB(); clearPreset(); syncOutputs(); });
+  $('scanPD').addEventListener('click', () => scanStart(3.1, 3.3, 81));
+  $('scanAll').addEventListener('click', () => scanStart(3.0, 5.0, 101));
+  $('sRate').addEventListener('input', () => { S.rateIdx[S.mode] = +$('sRate').value; syncOutputs(); });
+
+  // ---------- pointer: draggable lines on pane C (f or k_f) ----------
+  function handleC(ev) {
+    if (!geoC || (S.mode === 'beaker' ? geoC.kind !== 'f' : S.mode === 'flow' ? geoC.kind !== 'kf' : true)) return null;
+    const r = cans.C.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, b = geoC.b;
+    if (y < b.T - 4 || y > b.B + 4) return null;
+    const v = geoC.kind === 'f' ? BK.p.f : FL.kf * 1e4;
+    if (v < geoC.xr[0] || v > geoC.xr[1]) return null;
+    const tol = 8 * ps('C') * (ev.pointerType === 'touch' ? 2 : 1);
+    return Math.abs(x - geoC.X(v)) <= tol ? geoC.kind : null;
+  }
+  let qC = null, frameC = false;
+  function dragCTo(ev) {
+    const r = cans.C.getBoundingClientRect(), b = geoC.b, x = clamp(ev.clientX - r.left, b.L, b.R);
+    qC = geoC.xr[0] + (x - b.L) / (b.R - b.L) * (geoC.xr[1] - geoC.xr[0]);
+    if (frameC) return; frameC = true;
+    requestAnimationFrame(() => { frameC = false; if (!dragC || qC === null) return; if (dragC.id === 'f') setF(qC); else setKf(qC); qC = null; dirty.C = true; });
+  }
+  cans.C.addEventListener('pointermove', (ev) => {
+    if (dragC) { dragCTo(ev); return; }
+    const h = handleC(ev); if (h !== hoverC) { hoverC = h; dirty.C = true; }
+    cans.C.style.cursor = h ? 'ew-resize' : 'default';
+  });
+  cans.C.addEventListener('pointerdown', (ev) => {
+    const h = handleC(ev); if (!h) return;
+    dragC = { id: h }; try { cans.C.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault(); dirty.C = true;
+  });
+  const endC = () => { if (!dragC) return; dragC = null; hoverC = null; dirty.C = true; };
+  cans.C.addEventListener('pointerup', endC); cans.C.addEventListener('pointercancel', endC);
+  cans.C.addEventListener('pointerleave', () => { if (!dragC && hoverC) { hoverC = null; dirty.C = true; } });
+
+  // ---------- pointer: orbit the 3D portrait ----------
+  cans.B.addEventListener('pointerdown', (ev) => {
+    if (S.mode !== 'beaker' || !G.ready) return;
+    G.drag = { x: ev.clientX, y: ev.clientY, az: G.az, el: G.el }; try { cans.B.setPointerCapture(ev.pointerId); } catch (_) {}
+    cans.B.style.cursor = 'grabbing'; ev.preventDefault();
+  });
+  cans.B.addEventListener('pointermove', (ev) => {
+    if (S.mode === 'beaker' && G.ready) cans.B.style.cursor = G.drag ? 'grabbing' : 'grab'; else cans.B.style.cursor = 'default';
+    if (!G.drag) return;
+    G.az = G.drag.az - (ev.clientX - G.drag.x) * 0.01; G.el = clamp(G.drag.el + (ev.clientY - G.drag.y) * 0.01, -1.3, 1.45); G.dirty = true;
+  });
+  const endB = () => { G.drag = null; };
+  cans.B.addEventListener('pointerup', endB); cans.B.addEventListener('pointercancel', endB);
+
+  // ---------- pointer: the dish ----------
+  function dishXY(ev) { const r = cans.A.getBoundingClientRect(), g = DS.geo; return [(ev.clientX - r.left - g.ox) / g.k / (DS.n - 1) - 0.5 / (DS.n - 1), (ev.clientY - r.top - g.oy) / g.k / (DS.n - 1) - 0.5 / (DS.n - 1)]; }
+  function inDish(f) { return Math.hypot(f[0] - 0.5, f[1] - 0.5) * (DS.n - 1) <= DS.n / 2 - 1; }
+  function dishHandle(ev) {
+    if (!DS.geo) return null;
+    const f = dishXY(ev), pxl = DS.geo.k * (DS.n - 1), tol = 10 * ps('A') * (ev.pointerType === 'touch' ? 2 : 1);
+    const d = (a, b) => Math.hypot((a[0] - b[0]) * pxl, (a[1] - b[1]) * pxl);
+    if (d(f, DS.probe) <= tol) return 'probe';
+    if (DS.pace.on) {
+      // the whole pacemaker disc and its grip just below it can be grabbed
+      const rr = DS.pace.r / DS.dx / (DS.n - 1), gy = DS.pace.fy + rr + 9 * ps('A') / pxl;
+      if (d(f, [DS.pace.fx, gy]) <= tol || d(f, [DS.pace.fx, DS.pace.fy]) <= rr * pxl + tol / 2) return 'pace';
+    }
+    return null;
+  }
+  let qA = null, frameA = false;
+  function moveHandle(id, f) {
+    const lim = (a) => { const dx = a[0] - 0.5, dy = a[1] - 0.5, r = Math.hypot(dx, dy), rm = 0.45; return r > rm ? [0.5 + dx * rm / r, 0.5 + dy * rm / r] : a; };
+    if (id === 'probe') { DS.probe = lim(f); dsResetProbe(); }
+    else { const p = lim(f); DS.pace.fx = p[0]; DS.pace.fy = p[1]; dsPhi(); }
+    clearPreset(); dirtyAll();
+  }
+  cans.A.addEventListener('pointerdown', (ev) => {
+    if (S.mode !== 'dish' || !DS.geo) return;
+    const h = dishHandle(ev);
+    try { cans.A.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault(); cans.A.focus({ preventScroll: true });
+    if (h) { DS.drag = h; cans.A.style.cursor = 'grabbing'; return; }
+    const f = dishXY(ev);
+    if (!inDish(f)) return;
+    DS.stroke = f; dsApply(f[0], f[1]); clearPreset();
+  });
+  cans.A.addEventListener('pointermove', (ev) => {
+    if (S.mode !== 'dish' || !DS.geo) { cans.A.style.cursor = 'default'; return; }
+    const f = dishXY(ev);
+    if (DS.drag) {
+      qA = f; if (frameA) return; frameA = true;
+      requestAnimationFrame(() => { frameA = false; if (DS.drag && qA) moveHandle(DS.drag, qA); qA = null; });
+      return;
+    }
+    if (DS.stroke) {
+      const a = DS.stroke, len = Math.hypot(f[0] - a[0], f[1] - a[1]) * (DS.n - 1) * DS.dx, r = DS.tool === 'cut' ? CUT_R : START_R, m = Math.max(1, Math.ceil(len / (0.5 * r)));
+      for (let i = 1; i <= m; i++) { const p = [a[0] + (f[0] - a[0]) * i / m, a[1] + (f[1] - a[1]) * i / m]; if (inDish(p)) dsApply(p[0], p[1]); }
+      DS.stroke = f; DS.ptr = f; return;
+    }
+    const h = dishHandle(ev); if (h !== DS.hover) { DS.hover = h; dirty.A = true; }
+    DS.ptr = inDish(f) && ev.pointerType !== 'touch' ? f : null; dirty.A = true;
+    cans.A.style.cursor = h ? 'grab' : inDish(f) ? 'crosshair' : 'default';
+  });
+  const endA = () => { DS.stroke = null; if (DS.drag) { DS.drag = null; dirty.A = true; } };
+  cans.A.addEventListener('pointerup', endA); cans.A.addEventListener('pointercancel', endA);
+  cans.A.addEventListener('pointerleave', () => { DS.ptr = null; if (!DS.drag && DS.hover) DS.hover = null; dirty.A = true; });
+
+  // ---------- keys ----------
+  function onKey(e) {
+    const big = e.shiftKey ? 10 : 1, m = S.mode, id = e.currentTarget.id;
+    if (e.key === ' ') setPlaying(!S.playing);
+    else if (e.key === 'r' || e.key === 'R') resetMode();
+    else if ((e.key === 'c' || e.key === 'C') && m === 'dish') { clearPreset(); dsClear(); }
+    else if (m === 'beaker' && id === 'cB' && G.ready && e.key.startsWith('Arrow')) {
+      if (e.key === 'ArrowLeft') G.az += 0.1; else if (e.key === 'ArrowRight') G.az -= 0.1;
+      else if (e.key === 'ArrowUp') G.el = clamp(G.el + 0.08, -1.3, 1.45); else G.el = clamp(G.el - 0.08, -1.3, 1.45);
+      G.dirty = true;
+    }
+    else if (m === 'beaker' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown')) setF(BK.p.f + ((e.key === 'ArrowLeft' || e.key === 'ArrowDown') ? -0.01 : 0.01) * big);
+    else if (m === 'flow' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown')) setKf(FL.kf * 1e4 + ((e.key === 'ArrowLeft' || e.key === 'ArrowDown') ? -0.005 : 0.005) * big);
+    else if (m === 'dish' && e.key.startsWith('Arrow')) {
+      const st = 1 / DS.dx / (DS.n - 1) * (e.shiftKey ? 5 : 1), p = DS.probe.slice();
+      if (e.key === 'ArrowLeft') p[0] -= st; else if (e.key === 'ArrowRight') p[0] += st; else if (e.key === 'ArrowUp') p[1] -= st; else p[1] += st;
+      moveHandle('probe', p);
+    } else return;
+    e.preventDefault();
+  }
+  for (const c of Object.values(cans)) c.addEventListener('keydown', onKey);
+
+  // ---------- sizes, projector, theme ----------
+  function resize() {
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    for (const k of ['A', 'B', 'C']) {
+      const c = cans[k], r = c.parentElement.getBoundingClientRect(), W = Math.max(1, Math.round(r.width)), H = Math.max(1, Math.round(r.height));
+      dims[k] = [W, H]; c.width = Math.round(W * dpr); c.height = Math.round(H * dpr); c.style.width = W + 'px'; c.style.height = H + 'px';
+    }
+    if (G.ready) { const [W, H] = dims.B; G.renderer.setPixelRatio(dpr); G.renderer.setSize(W, H, false); G.renderer.domElement.style.width = W + 'px'; G.renderer.domElement.style.height = H + 'px'; G.cam.aspect = W / H; G.cam.fov = W / H < 1 ? 38 : 30; G.cam.updateProjectionMatrix(); }
+    dirtyAll(); drawAll();
+  }
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(() => { resize(); });
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  const retheme = () => { tokens(); renderKey(); dirtyAll(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- drawing and the loop ----------
+  function drawAll(now) {
+    const m = S.mode;
+    if (m === 'beaker') {
+      if (dirty.A) { drawBeakerA(); dirty.A = false; }
+      if (G.ready) { if (G.dirty && (!now || now - last3D >= 24)) { render3D(); G.dirty = false; last3D = now || performance.now(); } }
+      else if (dirty.B) { draw2DPortrait(); dirty.B = false; }
+      if (dirty.C) { drawBeakerC(); dirty.C = false; }
+    } else if (m === 'dish') {
+      if (dirty.A) { drawDishA(); dirty.A = false; }
+      if (dirty.B) { drawDishB(); dirty.B = false; }
+      if (dirty.C) { drawDishC(); dirty.C = false; }
+    } else {
+      if (dirty.A) { drawFlowA(); dirty.A = false; }
+      if (dirty.B) { drawFlowB(); dirty.B = false; }
+      if (dirty.C) { drawFlowC(); dirty.C = false; }
+    }
+  }
+  function clockText() {
+    const m = S.mode;
+    if (m === 'beaker') return [`t = ${(BK.t * TAU_S / 60).toFixed(1)} min`, `τ = ${BK.t.toFixed(1)}`];
+    if (m === 'dish') return [`t = ${DS.st.t.toFixed(1)}`, 'model units'];
+    return [`t = ${(FL.S.t * T0).toFixed(0)} s`, `${(FL.S.t * T0 / 60).toFixed(1)} min`];
+  }
+  let last = performance.now(), frameMs = 0, last3D = 0, lastUI = 0;
+  function loop(now) {
+    const dtw = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now(), m = S.mode;
+    if (S.playing) {
+      if (m === 'beaker') { bkAdvance(rate() * dtw); stirAngle += dtw * 9; }
+      else if (m === 'dish') {
+        const want = rate() * dtw / DS.dt, cap = Math.max(1, Math.floor(12 / Math.max(DS.stepMs, 0.05)));
+        DS.acc = (DS.acc || 0) + want; let n = Math.min(cap, Math.floor(DS.acc)); DS.acc = Math.min(DS.acc - n, 2 * cap);
+        if (n > 0) dsAdvance(n);
+      } else { flAdvance(rate() * dtw); stirAngle += dtw * 9; flowPhase += dtw * FL.kf * 2500; }
+    }
+    if (m === 'beaker' && !BD.done) bdTick(S.playing ? 4 : 8);
+    if (m === 'flow' && SC.on) scanTick(8);
+    drawAll(now);   // the 3D view is redrawn at most about 40 times a second
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    if (now - lastUI > 200) {
+      lastUI = now; renderMeas();
+      const [a, b] = clockText(); $('tclock').firstChild.textContent = a; $('rateTag').textContent = b;
+      $('perf').textContent = `Frame ${frameMs.toFixed(1)} ms` + (m === 'dish' ? ` · ${DS.stepsLast} steps of 256 × 256 per frame, ${DS.stepMs.toFixed(2)} ms each` : '');
+      if (m === 'flow') $('scanBar').style.width = (100 * (SC.on ? SC.k / SC.n : SC.pts.length ? 1 : 0)).toFixed(1) + '%';
+    }
+    requestAnimationFrame(loop);
+  }
+
+  // ---------- start ----------
+  tokens();
+  init3D();
+  if (G.ready) themeGL();
+  dsInit(); dsClear();
+  flStart(false);
+  const ro = new ResizeObserver(() => resize());
+  for (const id of ['paneA', 'paneB', 'paneC']) ro.observe($(id));
+  setPlaying(!reduce);
+  applyPreset('osc');
+  setPlaying(!reduce);
+  resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirtyAll(); drawAll(); });
+  window.__bz = { get frameMs() { return frameMs; }, S, BK, BD, DS, FL, SC, G, HOPF, applyPreset, setMode, setF, setKf, setPlaying, scanStart, scanTick, bdTick, dirtyAll, dsApply, dsAdvance, bkAdvance, flAdvance, renderMeas, flPattern, flLyap, bkPeriod, dsPeriod,
+    dishPx(fx, fy) { const g = DS.geo, r = cans.A.getBoundingClientRect(); return [r.left + g.ox + (fx * (DS.n - 1) + 0.5) * g.k, r.top + g.oy + (fy * (DS.n - 1) + 0.5) * g.k]; } };
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

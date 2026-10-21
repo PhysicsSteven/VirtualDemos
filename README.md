@@ -46,6 +46,8 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Fluids: Pressure, Buoyancy and Flow](demos/fluids.html) | Mechanics | Hydrostatic pressure, Pascal's paradox, barometers, buoyancy with a spring scale and overflow can, Venturi tubes and Torricelli's law |
 | [Gas in a Box](demos/ideal-gas.html) | Thermodynamics | Kinetic theory of a 2D gas: pressure, temperature, Maxwell-Boltzmann speeds, adiabatic compression |
 | [Heat Engine Cycles](demos/heat-engines.html) | Thermodynamics | Ideal gas cycles on PV and T-S diagrams with per leg Q, W and ΔU, efficiency against the Carnot limit, refrigerators and custom cycles |
+| [Ising Model](demos/ising.html) | Thermodynamics | 2D Ising model with Metropolis, heat bath and Wolff updates; magnetization, heat capacity and susceptibility against Onsager's exact results |
+| [Belousov–Zhabotinsky Reaction](demos/bz-reaction.html) | Thermodynamics | Oregonator oscillations and Hopf points, reaction–diffusion target and spiral waves, and Györgyi–Field chaos in a flow reactor |
 | [Coulomb Sandbox](demos/coulomb-sandbox.html) | Electricity and magnetism | Electric field and potential of point charges, as a 2D map and a 3D potential landscape |
 | [Charges in Magnetic Fields](demos/magnetic-force.html) | Electricity and magnetism | Circular and helical motion, E × B drift, a velocity selector, a mass spectrometer and a cyclotron |
 | [Faraday's and Lenz's Laws](demos/faraday.html) | Electricity and magnetism | A magnet and coil with exact flux, EMF and current, Lenz's law, an AC generator and a sliding bar on rails |
@@ -54,6 +56,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Electromagnetic Waves](demos/em-waves.html) | Electricity and magnetism | Plane waves in 3D, polarization, intensity and radiation pressure, the spectrum, and exact dipole antenna fields |
 | [Capacitors and Dielectrics](demos/capacitors.html) | Electricity and magnetism | Parallel plates connected or isolated, dielectric slabs and the force pulling them in, energy bookkeeping, and combinations |
 | [Circuits](demos/circuits.html) | Electricity and magnetism | DC circuits, RC and RLC transients, AC resonance, on one circuit |
+| [Magnetism from Relativity](demos/relativity-em.html) | Electricity and magnetism | Purcell's wire argument in both frames, Einstein's moving magnet and loop, the field of a moving charge, and Lorentz transformation of E and B |
 | [Optics Bench](demos/optics-bench.html) | Optics | Ray tracing through lenses, mirrors and glass, with image formation, total internal reflection and dispersion |
 | [Polarization](demos/polarization.html) | Optics | Polarizers and wave plates with Jones and Mueller calculus, Malus's law, many polarizer limit, Fresnel reflection and Brewster's angle |
 | [Thin Film Interference](demos/thin-films.html) | Optics | Exact single layer reflectance and its color under white light, soap films, air wedges, Newton's rings and quarter wave coatings |

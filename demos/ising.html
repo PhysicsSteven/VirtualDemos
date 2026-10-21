@@ -1,0 +1,1417 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Ising Model</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the spin lattice with its thermometer and field bar on the left of the stage, live plots on the right;
+   instrument rail on the right; stacks on phones. Spins are amber (up) and navy (down). */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --up: #f2b134; --down: #1e3557; --clu: #1fae96; --frame: #c9d1dc;
+  --l32: #7b5fb8; --l64: #2b60b5; --l128: #c23f2c; --l256: #2d8a5f;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff;
+    --up: #f0b445; --down: #2a4a7c; --clu: #3fd1b6; --frame: #33404f;
+    --l32: #b39cf0; --l64: #69a0ff; --l128: #ff7660; --l256: #5cc98f; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff;
+  --up: #f0b445; --down: #2a4a7c; --clu: #3fd1b6; --frame: #33404f;
+  --l32: #b39cf0; --l64: #69a0ff; --l128: #ff7660; --l256: #5cc98f; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.count { margin-left: auto; font-size: 0.86rem; font-weight: 600; white-space: nowrap; text-align: right; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.78rem; }
+.panes { min-height: 0; display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); }
+.pane { position: relative; min-height: 0; min-width: 0; }
+.pane canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+#pPlot { border-left: 1px solid var(--line); display: flex; flex-direction: column; }
+.ptabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 10px 0; }
+.pcan { position: relative; flex: 1; min-height: 0; }
+#lat { touch-action: none; outline: none; cursor: crosshair; }
+#lat:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn.small { font-size: 0.8rem; padding: 3px 8px; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg button:disabled { opacity: 0.4; cursor: not-allowed; }
+.seg.full { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; }
+.seg.full button { padding: 4px 6px; white-space: nowrap; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+select { font: inherit; font-size: 0.85rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 3px 6px; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-scale { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.2rem; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .theory dd { color: var(--muted); font-weight: 400; font-size: 0.92rem; }
+.toggles { display: grid; grid-template-columns: 1fr; gap: 6px 10px; }
+.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input, .check input { accent-color: var(--accent); margin: 0; }
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.sq { flex: none; width: 13px; height: 13px; border-radius: 2px; border: 1px solid var(--frame); }
+.sq.up { background: var(--up); } .sq.down { background: var(--down); } .sq.clu { background: linear-gradient(135deg, color-mix(in srgb, var(--up) 40%, var(--clu)) 50%, color-mix(in srgb, var(--down) 40%, var(--clu)) 50%); }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px solid var(--ink); }
+.swatch.dash { border-top-style: dashed; }
+
+.progress { height: 8px; border-radius: 4px; background: var(--grid-strong); overflow: hidden; }
+.progress i { display: block; height: 100%; width: 0; background: var(--accent); }
+.note { margin: 0; font-size: 0.82rem; color: var(--pos); }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.twrap { overflow-x: auto; }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.7rem; }
+#result { gap: 6px 12px; }
+#result dd { font-size: 0.9rem; }
+table.rows th { text-align: right; font-weight: 700; color: var(--muted); font-size: 0.7rem; padding: 3px 2px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.rows td { padding: 3px 2px; border-bottom: 1px solid var(--grid-strong); vertical-align: top; text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.rows td small { display: block; color: var(--muted); font-size: 0.66rem; }
+table.rows td.flag { color: var(--pos); }
+table.rows button { font: inherit; font-size: 0.85rem; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 0 2px; }
+.seed { width: 6.5em; font: inherit; font-family: var(--font-mono); font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+
+@media (min-width: 821px) {
+  :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 340px; }
+}
+/* projector on a short screen: a lower stage floor keeps the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .stage { min-height: 440px; }
+  :root[data-projector="on"] .stage-ctl { padding: 6px 10px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj, select, .seed { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  table.rows button { min-height: 36px; min-width: 32px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; }
+  .panes { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 360px; }
+  #pLat { height: min(calc(100vw - 24px), 640px); }
+  #pPlot { border-left: 0; border-top: 1px solid var(--line); }
+  .rail { overflow: visible; }
+  .count { margin-left: 0; width: 100%; text-align: left; }
+}
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Ising Model</h1>
+      <p>Spins on a square lattice, each favoring its neighbors' direction. Cool through T<sub>c</sub> and order appears on its own; at T<sub>c</sub>, domains of every size.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">J = 1, k<sub>B</sub> = 1 · T in J/k<sub>B</sub> · h in J · time in sweeps</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/ising.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 37 37" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/ising.html" shape-rendering="crispEdges"><rect width="37" height="37" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h2v1h-2zM14 2h2v1h-2zM18 2h1v1h-1zM20 2h2v1h-2zM25 2h1v1h-1zM28 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h1v1h-1zM14 3h1v1h-1zM16 3h2v1h-2zM19 3h2v1h-2zM24 3h1v1h-1zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h2v1h-2zM18 4h1v1h-1zM21 4h4v1h-4zM26 4h1v1h-1zM28 4h1v1h-1zM30 4h3v1h-3zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM13 5h2v1h-2zM19 5h1v1h-1zM21 5h2v1h-2zM24 5h3v1h-3zM28 5h1v1h-1zM30 5h3v1h-3zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM14 6h2v1h-2zM18 6h6v1h-6zM25 6h2v1h-2zM28 6h1v1h-1zM30 6h3v1h-3zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h1v1h-1zM17 7h3v1h-3zM22 7h1v1h-1zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h7v1h-7zM10 9h2v1h-2zM13 9h1v1h-1zM16 9h3v1h-3zM20 9h1v1h-1zM23 9h4v1h-4zM2 10h1v1h-1zM4 10h5v1h-5zM12 10h2v1h-2zM15 10h2v1h-2zM19 10h1v1h-1zM21 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h5v1h-5zM2 11h1v1h-1zM4 11h1v1h-1zM7 11h1v1h-1zM9 11h1v1h-1zM13 11h1v1h-1zM15 11h1v1h-1zM19 11h7v1h-7zM28 11h2v1h-2zM31 11h2v1h-2zM34 11h1v1h-1zM2 12h1v1h-1zM4 12h5v1h-5zM10 12h1v1h-1zM15 12h3v1h-3zM20 12h1v1h-1zM22 12h3v1h-3zM27 12h2v1h-2zM30 12h1v1h-1zM32 12h2v1h-2zM5 13h2v1h-2zM10 13h1v1h-1zM12 13h2v1h-2zM15 13h1v1h-1zM22 13h2v1h-2zM25 13h2v1h-2zM30 13h3v1h-3zM34 13h1v1h-1zM3 14h1v1h-1zM8 14h4v1h-4zM13 14h1v1h-1zM16 14h2v1h-2zM19 14h1v1h-1zM24 14h1v1h-1zM27 14h1v1h-1zM29 14h3v1h-3zM33 14h1v1h-1zM4 15h1v1h-1zM6 15h2v1h-2zM11 15h5v1h-5zM18 15h1v1h-1zM20 15h4v1h-4zM25 15h1v1h-1zM33 15h2v1h-2zM3 16h2v1h-2zM7 16h4v1h-4zM12 16h1v1h-1zM14 16h1v1h-1zM16 16h2v1h-2zM19 16h1v1h-1zM22 16h1v1h-1zM27 16h2v1h-2zM31 16h3v1h-3zM3 17h3v1h-3zM7 17h1v1h-1zM9 17h2v1h-2zM12 17h3v1h-3zM17 17h2v1h-2zM21 17h5v1h-5zM27 17h3v1h-3zM31 17h2v1h-2zM3 18h1v1h-1zM5 18h2v1h-2zM8 18h2v1h-2zM11 18h2v1h-2zM15 18h1v1h-1zM17 18h1v1h-1zM19 18h1v1h-1zM21 18h1v1h-1zM24 18h2v1h-2zM27 18h1v1h-1zM29 18h3v1h-3zM34 18h1v1h-1zM3 19h1v1h-1zM7 19h1v1h-1zM10 19h1v1h-1zM12 19h1v1h-1zM15 19h1v1h-1zM18 19h8v1h-8zM27 19h3v1h-3zM31 19h3v1h-3zM3 20h2v1h-2zM7 20h6v1h-6zM14 20h1v1h-1zM17 20h3v1h-3zM23 20h2v1h-2zM27 20h1v1h-1zM29 20h2v1h-2zM32 20h2v1h-2zM2 21h1v1h-1zM4 21h1v1h-1zM9 21h1v1h-1zM14 21h1v1h-1zM17 21h2v1h-2zM20 21h5v1h-5zM26 21h1v1h-1zM29 21h6v1h-6zM2 22h1v1h-1zM5 22h1v1h-1zM7 22h2v1h-2zM13 22h1v1h-1zM17 22h3v1h-3zM24 22h4v1h-4zM29 22h3v1h-3zM33 22h2v1h-2zM2 23h2v1h-2zM5 23h1v1h-1zM7 23h1v1h-1zM9 23h3v1h-3zM13 23h1v1h-1zM16 23h1v1h-1zM18 23h4v1h-4zM23 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM32 23h1v1h-1zM34 23h1v1h-1zM2 24h1v1h-1zM4 24h3v1h-3zM8 24h5v1h-5zM14 24h2v1h-2zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM33 24h1v1h-1zM2 25h1v1h-1zM5 25h2v1h-2zM9 25h1v1h-1zM13 25h2v1h-2zM16 25h2v1h-2zM21 25h1v1h-1zM23 25h2v1h-2zM31 25h3v1h-3zM2 26h1v1h-1zM4 26h1v1h-1zM7 26h2v1h-2zM10 26h2v1h-2zM16 26h1v1h-1zM18 26h2v1h-2zM22 26h1v1h-1zM24 26h8v1h-8zM33 26h2v1h-2zM10 27h7v1h-7zM18 27h1v1h-1zM21 27h2v1h-2zM24 27h3v1h-3zM30 27h1v1h-1zM32 27h1v1h-1zM34 27h1v1h-1zM2 28h7v1h-7zM11 28h4v1h-4zM16 28h2v1h-2zM19 28h1v1h-1zM22 28h5v1h-5zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM10 29h5v1h-5zM16 29h2v1h-2zM22 29h5v1h-5zM30 29h5v1h-5zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h1v1h-1zM10 30h1v1h-1zM15 30h2v1h-2zM19 30h2v1h-2zM22 30h1v1h-1zM24 30h1v1h-1zM26 30h6v1h-6zM33 30h2v1h-2zM2 31h1v1h-1zM4 31h3v1h-3zM8 31h1v1h-1zM10 31h1v1h-1zM12 31h1v1h-1zM16 31h1v1h-1zM18 31h1v1h-1zM20 31h4v1h-4zM26 31h2v1h-2zM30 31h5v1h-5zM2 32h1v1h-1zM4 32h3v1h-3zM8 32h1v1h-1zM10 32h1v1h-1zM12 32h6v1h-6zM22 32h3v1h-3zM28 32h2v1h-2zM32 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h4v1h-4zM16 33h1v1h-1zM18 33h1v1h-1zM20 33h4v1h-4zM27 33h1v1h-1zM30 33h3v1h-3zM2 34h7v1h-7zM10 34h1v1h-1zM15 34h1v1h-1zM19 34h1v1h-1zM21 34h1v1h-1zM24 34h4v1h-4zM29 34h1v1h-1zM31 34h1v1h-1zM33 34h1v1h-1z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="step" title="One sweep">Step</button>
+        <div class="seg" role="group" aria-label="Reset the spins">
+          <button type="button" data-start="up" aria-pressed="false" title="Every spin up">All up</button>
+          <button type="button" data-start="random" aria-pressed="false" title="Each spin up or down at random: the state at infinite temperature">Random, T = ∞</button>
+        </div>
+        <span class="count mono" id="status" aria-live="off"></span>
+      </div>
+      <div class="panes">
+        <div class="pane" id="pLat">
+          <canvas id="lat" tabindex="0" aria-label="The spin lattice, amber spins up and navy spins down, with a thermometer on the right and the field bar below. Drag the thermometer to set T and the field bar to set h. Drag on the lattice to paint spins. Keys: up and down arrows change T, left and right change h, with shift for bigger steps; space plays or pauses; U sets all spins up; R randomizes them."></canvas>
+        </div>
+        <div class="pane" id="pPlot">
+          <div class="ptabs">
+            <div class="seg" role="group" aria-label="Plot">
+              <button type="button" data-tab="time" aria-pressed="true">Time series</button>
+              <button type="button" data-tab="scan" aria-pressed="false">T scan</button>
+              <button type="button" data-tab="mh" aria-pressed="false">m against h</button>
+            </div>
+          </div>
+          <div class="pcan" id="pcan"><canvas id="plot" role="img" aria-label="Live plot"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="cold" aria-pressed="false">Cold: one domain</button>
+          <button type="button" data-p="hot" aria-pressed="false">Hot: paramagnet</button>
+          <button type="button" data-p="tc" aria-pressed="true">At T<sub>c</sub>: fractal domains</button>
+          <button type="button" data-p="quench" aria-pressed="false">Quench and coarsen</button>
+          <button type="button" data-p="hyst" aria-pressed="false">Hysteresis</button>
+          <button type="button" data-p="af" aria-pressed="false">Antiferromagnet</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Now</h2>
+        <dl class="readout">
+          <div class="big"><dt>Temperature T</dt><dd id="rT">—</dd></div>
+          <div class="big" id="rTcBox"><dt>T / T<sub>c</sub></dt><dd id="rTc">—</dd></div>
+          <div><dt id="rMlab">Magnetization m</dt><dd id="rM">—</dd></div>
+          <div><dt>Energy e = E/N</dt><dd id="rE">—</dd></div>
+          <div id="rMsBox"><dt>Staggered m<sub>s</sub></dt><dd id="rMs">—</dd></div>
+          <div><dt id="rAccLab">Flipped per sweep</dt><dd id="rAcc">—</dd></div>
+          <div class="wide theory" id="rExact"><dt>Exact at this T, h = 0</dt><dd id="rEx">—</dd></div>
+        </dl>
+      </section>
+
+      <section>
+        <h2>Temperature and field</h2>
+        <div>
+          <div class="slider-head"><label for="tIn">Temperature T</label><output id="tOut" class="mono" for="tIn"></output></div>
+          <input type="range" id="tIn" min="0.5" max="5" step="0.01" value="2.27">
+          <div class="slider-scale mono"><span>0.5</span><span>T<sub>c</sub> = 2.269</span><span>5</span></div>
+        </div>
+        <div class="btnrow"><button type="button" class="btn small" id="toTc">Set T = T<sub>c</sub></button></div>
+        <div>
+          <div class="slider-head"><label for="hIn">Field h</label><output id="hOut" class="mono" for="hIn"></output></div>
+          <input type="range" id="hIn" min="-1" max="1" step="0.01" value="0">
+        </div>
+        <div class="inline">
+          <label class="check"><input type="checkbox" id="hSweep">Sweep h between ±1</label>
+          <select id="hRate" aria-label="Change in h per sweep">
+            <option value="0.0005">0.0005 per sweep</option><option value="0.001">0.001 per sweep</option>
+            <option value="0.002" selected>0.002 per sweep</option><option value="0.005">0.005 per sweep</option><option value="0.01">0.01 per sweep</option>
+          </select>
+        </div>
+        <div>
+          <div class="slider-head"><span class="lab">Coupling J</span></div>
+          <div class="seg full" role="group" aria-label="Coupling">
+            <button type="button" data-j="1" aria-pressed="true">Ferro, J = +1</button>
+            <button type="button" data-j="-1" aria-pressed="false">Antiferro, J = −1</button>
+          </div>
+        </div>
+        <p class="hint">Drag the thermometer and the field bar on the lattice too. H = −J Σ s<sub>i</sub>s<sub>j</sub> − h Σ s<sub>i</sub>, the first sum over nearest neighbor pairs.</p>
+      </section>
+
+      <section>
+        <h2>Simulation</h2>
+        <div>
+          <div class="slider-head"><span class="lab">Lattice L × L</span><output id="nOut" class="mono"></output></div>
+          <div class="seg full" role="group" aria-label="Lattice size" id="sizeSeg">
+            <button type="button" data-l="32">32</button><button type="button" data-l="64">64</button>
+            <button type="button" data-l="128">128</button><button type="button" data-l="256">256</button>
+          </div>
+        </div>
+        <div>
+          <div class="slider-head"><span class="lab">Update</span></div>
+          <div class="seg full" role="group" aria-label="Update method" id="methSeg">
+            <button type="button" data-m="metropolis">Metropolis</button><button type="button" data-m="heat">Heat bath</button><button type="button" data-m="wolff">Wolff</button>
+          </div>
+        </div>
+        <p class="note" id="methNote" hidden></p>
+        <div>
+          <div class="slider-head"><label for="spIn">Speed</label><output id="spOut" class="mono" for="spIn"></output></div>
+          <input type="range" id="spIn" min="0" max="10" step="1" value="3">
+        </div>
+        <div class="inline">
+          <label class="lab" for="seed">Random seed</label>
+          <span><input type="number" class="seed" id="seed" min="1" max="999999" step="1" value="2026"> <button type="button" class="btn small" id="newSeed">New</button></span>
+        </div>
+        <p class="hint" id="methHint"></p>
+      </section>
+
+      <section>
+        <h2>Measure</h2>
+        <div class="inline"><label class="lab" for="eqSel">Discard first</label>
+          <select id="eqSel"><option value="200">200 sweeps</option><option value="1000" selected>1000 sweeps</option><option value="5000">5000 sweeps</option><option value="20000">20000 sweeps</option></select></div>
+        <div class="inline"><label class="lab" for="avSel">Average over</label>
+          <select id="avSel"><option value="1000">1000 sweeps</option><option value="5000" selected>5000 sweeps</option><option value="20000">20000 sweeps</option><option value="100000">100000 sweeps</option></select></div>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="measure">Measure at this T</button>
+          <button type="button" class="btn" id="scan" title="Measure at 17 temperatures from 1.5 to 3.6, closer together near Tc, heating from the ordered state; every reading is captured">Scan T</button>
+          <button type="button" class="btn" id="stopM" hidden>Stop</button>
+        </div>
+        <div class="progress" id="prog" hidden><i></i></div>
+        <p class="hint" id="measState">Measures at the current T, h, J, L and update method, at full speed. Changing any of them stops the run.</p>
+        <dl class="readout" id="result"></dl>
+        <p class="note" id="resNote" hidden></p>
+        <div class="btnrow">
+          <button type="button" class="btn" id="capture" disabled>Capture reading</button>
+          <button type="button" class="btn" id="export">Export CSV</button>
+          <button type="button" class="btn" id="clear">Clear</button>
+        </div>
+        <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>T, L</th><th>⟨|m|⟩</th><th>⟨e⟩</th><th>c</th><th>χ</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <p class="hint">Errors are one standard error. ⟨|m|⟩ and ⟨e⟩: blocking analysis of the correlated series (Flyvbjerg and Petersen), taking the largest error over levels with at least 32 blocks, which errs on the large side. c = N(⟨e²⟩ − ⟨e⟩²)/T² and χ = N(⟨m²⟩ − ⟨|m|⟩²)/T: jackknife over 20 blocks. τ<sub>int</sub> is the integrated autocorrelation time. With J = −1 the order parameter is m<sub>s</sub>.</p>
+        <label class="check"><input type="checkbox" id="blind">Blind: hide the exact results</label>
+      </section>
+
+      <section>
+        <h2>Display</h2>
+        <div class="toggles">
+          <label id="exactRow"><input type="checkbox" id="exact" checked>Exact results (h = 0)</label>
+          <label><input type="checkbox" id="clu">Show the last Wolff cluster</label>
+          <label><input type="checkbox" id="stag">Staggered colors: s(−1)<sup>x+y</sup></label>
+        </div>
+        <div class="key">
+          <span><i class="sq up"></i>spin up, s = +1</span>
+          <span><i class="sq down"></i>spin down, s = −1</span>
+          <span><i class="sq clu"></i>tint: the last Wolff cluster, just flipped</span>
+          <span id="keyOns"><i class="swatch"></i>Onsager, infinite lattice</span>
+          <span id="keyKau"><i class="swatch dash"></i>exact for this L × L (Kaufman)</span>
+        </div>
+      </section>
+
+      <section>
+        <h2>Model</h2>
+        <p class="hint">Exact model, sampled: an L × L square lattice with periodic edges, H = −J Σ s<sub>i</sub>s<sub>j</sub> − h Σ s<sub>i</sub>. Monte Carlo draws configurations with probability ∝ exp(−E/T); averages over a finite run carry the statistical errors shown. No error estimate can see states a run never visits: below T<sub>c</sub> with h ≠ 0 the reversed state is metastable and may not be reached for a very long time. Random numbers: xoshiro128**, fixed by the seed.</p>
+        <p class="hint">Updates: Metropolis picks sites at random and flips a spin with probability min(1, e<sup>−ΔE/T</sup>), ΔE = 2s(JS + h) with S the sum of its four neighbors. Heat bath sets a spin up with probability 1/(1 + e<sup>−2(JS + h)/T</sup>), visiting the even sites, then the odd ones; sites of one color share no bond. Every step obeys detailed balance. Wolff grows a cluster through satisfied bonds, each added with probability 1 − e<sup>−2|J|/T</sup>, and flips it; it needs h = 0.</p>
+        <p class="hint">Time: one sweep is N single spin steps; for Wolff, a fixed number of clusters chosen so that about N spins flip (held fixed while a measurement averages, since stopping at exactly N flips would bias the averages). Sweeps are not seconds. Metropolis and heat bath mimic a lattice trading energy with a heat bath, but only the averages, not the speed, are physical; Wolff dynamics has no physical meaning at all.</p>
+        <p class="hint">Finite size: a finite lattice has no sharp transition. The peaks of c and χ are rounded and shifted, and ⟨|m|⟩ stays above zero above T<sub>c</sub> (about N<sup>−1/2</sup>). χ uses ⟨|m|⟩, the usual finite lattice form; above T<sub>c</sub> it is (1 − 2/π) times N⟨m²⟩/T.</p>
+        <p class="hint">Exact curves, h = 0 only: Onsager (1944) e and c, and the spontaneous magnetization m = (1 − sinh<sup>−4</sup>(2/T))<sup>1/8</sup> (Yang 1952), for the infinite lattice; T<sub>c</sub> = 2/ln(1 + √2). Dashed: Kaufman's (1949) exact partition function of the L × L lattice. No exact χ is known, so none is drawn. With J = −1 the same curves hold with m<sub>s</sub> in place of m.</p>
+        <p class="hint">Hysteresis: the loop is not an equilibrium property. Its width depends on the sweep rate, L and T; in equilibrium below T<sub>c</sub>, m would jump at h = 0.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  // ==CORE START==
+  // Pure functions only: the lattice, the three update rules, the exact results and the statistics.
+  // Units: J = ±1, k_B = 1, T in units of |J|/k_B, h in units of |J|. H = −J Σ⟨ij⟩ s_i s_j − h Σ s_i.
+  const TC = 2 / Math.log(1 + Math.SQRT2);   // Onsager critical temperature, 2.269185...
+  const TWO32 = 4294967296;
+
+  // ----- seeded random numbers: xoshiro128** seeded through splitmix32 -----
+  function rngFrom(seed) {
+    const st = new Uint32Array(4);
+    let x = seed >>> 0;
+    for (let k = 0; k < 4; k++) {
+      x = (x + 0x9e3779b9) >>> 0;
+      let z = x;
+      z = Math.imul(z ^ (z >>> 16), 0x85ebca6b);
+      z = Math.imul(z ^ (z >>> 13), 0xc2b2ae35);
+      st[k] = (z ^ (z >>> 16)) >>> 0;
+    }
+    if (!(st[0] | st[1] | st[2] | st[3])) st[0] = 1;
+    return st;
+  }
+  // (const bindings, no global lookups in the hot path, so it runs fast in any context)
+  const imul = Math.imul;
+  const nextU32 = function (st) {
+    const a = imul(st[1], 5), r = imul((a << 7) | (a >>> 25), 9) >>> 0, t = st[1] << 9;
+    st[2] ^= st[0]; st[3] ^= st[1]; st[1] ^= st[2]; st[0] ^= st[3]; st[2] ^= t;
+    st[3] = (st[3] << 11) | (st[3] >>> 21);
+    return r;
+  };
+  const uniform = (st) => nextU32(st) / TWO32;
+
+  // ----- the lattice: L × L, periodic, spins ±1 in an Int8Array, row major (i = y L + x) -----
+  function makeLattice(L) {
+    const N = L * L, xm = new Int32Array(L), xp = new Int32Array(L);
+    for (let x = 0; x < L; x++) { xm[x] = (x + L - 1) % L; xp[x] = (x + 1) % L; }
+    return { L, N, s: new Int8Array(N), xm, xp, B: 0, M: 0, Ms: 0, stamp: new Int32Array(N), queue: new Int32Array(N), cid: 0, lastSize: 0 };
+  }
+  // full recount: B = Σ over the 2N bonds of s_i s_j, M = Σ s_i, Ms = Σ (−1)^(x+y) s_i
+  function totals(lat) {
+    const { L, s } = lat;
+    let B = 0, M = 0, Ms = 0;
+    for (let y = 0; y < L; y++) {
+      const r = y * L, dn = ((y + 1) % L) * L;
+      for (let x = 0; x < L; x++) {
+        const v = s[r + x];
+        B += v * (s[r + lat.xp[x]] + s[dn + x]);
+        M += v; Ms += ((x + y) & 1) ? -v : v;
+      }
+    }
+    return { B, M, Ms };
+  }
+  function recount(lat) { const t = totals(lat); lat.B = t.B; lat.M = t.M; lat.Ms = t.Ms; return lat; }
+  function fillSpins(lat, mode, st) {
+    const { L, s } = lat;
+    for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+      const i = y * L + x;
+      s[i] = mode === 'up' ? 1 : mode === 'down' ? -1 : mode === 'neel' ? (((x + y) & 1) ? -1 : 1) : (nextU32(st) & 1 ? 1 : -1);
+    }
+    return recount(lat);
+  }
+  const energyOf = (lat, J, h) => -J * lat.B - h * lat.M;        // total E
+  const ePerSpin = (lat, J, h) => energyOf(lat, J, h) / lat.N;
+  // energy change for flipping spin s with neighbor sum S: ΔE = 2 s (J S + h)
+  const dEflip = (s, S, J, h) => 2 * s * (J * S + h);
+
+  // ----- acceptance rules; index = 5·(s+1)/2 + (S+4)/2 for spin s and neighbor sum S ∈ {−4,−2,0,2,4} -----
+  function metropolisProb(T, J, h) {      // probability to flip: min(1, exp(−ΔE/T))
+    const p = new Float64Array(10);
+    for (let a = 0; a < 2; a++) for (let k = 0; k < 5; k++) {
+      const dE = dEflip(a ? 1 : -1, 2 * k - 4, J, h);
+      p[a * 5 + k] = dE <= 0 ? 1 : Math.exp(-dE / T);
+    }
+    return p;
+  }
+  function heatBathProb(T, J, h) {        // probability that the new spin is +1: 1/(1 + exp(−2(J S + h)/T))
+    const p = new Float64Array(5);
+    for (let k = 0; k < 5; k++) p[k] = 1 / (1 + Math.exp(-2 * (J * (2 * k - 4) + h) / T));
+    return p;
+  }
+  const thresholds = (p) => Float64Array.from(p, (v) => (v >= 1 ? TWO32 : Math.floor(v * TWO32)));
+
+  // one Metropolis sweep: N single spin steps at sites picked at random (random sequential updating).
+  // Each step obeys detailed balance. (A checkerboard order would also sample the Boltzmann distribution, but with
+  // Metropolis it flips every ΔE = 0 spin deterministically, which makes domain walls slide unphysically fast.)
+  function sweepMetropolis(lat, thr, st) {
+    const { L, N, s, xm, xp } = lat;
+    let dB = 0, dM = 0, dMs = 0, acc = 0;
+    for (let k = 0; k < N; k++) {
+      const i = (nextU32(st) * N / TWO32) | 0, y = (i / L) | 0, x = i - y * L, r = y * L;
+      const si = s[i], S = s[r + xm[x]] + s[r + xp[x]] + s[(y === 0 ? N - L : r - L) + x] + s[(y === L - 1 ? 0 : r + L) + x];
+      const t = thr[((si + 1) >> 1) * 5 + ((S + 4) >> 1)];
+      if (t >= TWO32 || nextU32(st) < t) { s[i] = -si; dB -= 2 * si * S; dM -= 2 * si; dMs -= ((x + y) & 1) ? -2 * si : 2 * si; acc++; }
+    }
+    lat.B += dB; lat.M += dM; lat.Ms += dMs;
+    return acc;
+  }
+  // one heat bath sweep: all even sites (x + y even), then all odd sites. Sites of one color share no bond, so each
+  // half sweep is N/2 independent single spin steps; the new spin is drawn from its conditional Boltzmann distribution.
+  function sweepHeatBath(lat, thrUp, st) {
+    const { L, s, xm, xp } = lat;
+    let dB = 0, dM = 0, dMs = 0, acc = 0;
+    for (let par = 0; par < 2; par++) {
+      const sg = par ? -1 : 1;
+      for (let y = 0; y < L; y++) {
+        const r = y * L, up = ((y + L - 1) % L) * L, dn = ((y + 1) % L) * L;
+        for (let x = (y + par) & 1; x < L; x += 2) {
+          const i = r + x, si = s[i], S = s[r + xm[x]] + s[r + xp[x]] + s[up + x] + s[dn + x];
+          const nw = nextU32(st) < thrUp[(S + 4) >> 1] ? 1 : -1;
+          if (nw !== si) { s[i] = nw; dB -= 2 * si * S; dM -= 2 * si; dMs -= 2 * si * sg; acc++; }
+        }
+      }
+    }
+    lat.B += dB; lat.M += dM; lat.Ms += dMs;
+    return acc;
+  }
+  // one Wolff cluster (h = 0 only): grow from a random seed through satisfied bonds (J s_i s_j > 0),
+  // each added with probability 1 − exp(−2|J|/T), then flip the whole cluster. Returns the cluster size.
+  function wolffCluster(lat, T, J, st) {
+    const { L, N, s, stamp, queue: q, xm, xp } = lat;
+    const thrP = Math.floor((1 - Math.exp(-2 * Math.abs(J) / T)) * TWO32), sgJ = J > 0 ? 1 : -1;
+    const id = ++lat.cid, seed = Math.floor(nextU32(st) / TWO32 * N);
+    stamp[seed] = id; q[0] = seed;
+    let n = 1;
+    for (let k = 0; k < n; k++) {
+      const i = q[k], x = i % L, r = i - x, y = r / L, want = s[i] * sgJ;
+      const nb0 = r + xm[x], nb1 = r + xp[x], nb2 = ((y + L - 1) % L) * L + x, nb3 = ((y + 1) % L) * L + x;
+      if (stamp[nb0] !== id && s[nb0] === want && nextU32(st) < thrP) { stamp[nb0] = id; q[n++] = nb0; }
+      if (stamp[nb1] !== id && s[nb1] === want && nextU32(st) < thrP) { stamp[nb1] = id; q[n++] = nb1; }
+      if (stamp[nb2] !== id && s[nb2] === want && nextU32(st) < thrP) { stamp[nb2] = id; q[n++] = nb2; }
+      if (stamp[nb3] !== id && s[nb3] === want && nextU32(st) < thrP) { stamp[nb3] = id; q[n++] = nb3; }
+    }
+    // bookkeeping: only bonds that cross the cluster boundary change sign
+    let dB = 0, dM = 0, dMs = 0;
+    for (let k = 0; k < n; k++) {
+      const i = q[k], x = i % L, r = i - x, y = r / L, si = s[i];
+      const nb0 = r + xm[x], nb1 = r + xp[x], nb2 = ((y + L - 1) % L) * L + x, nb3 = ((y + 1) % L) * L + x;
+      if (stamp[nb0] !== id) dB -= 2 * si * s[nb0];
+      if (stamp[nb1] !== id) dB -= 2 * si * s[nb1];
+      if (stamp[nb2] !== id) dB -= 2 * si * s[nb2];
+      if (stamp[nb3] !== id) dB -= 2 * si * s[nb3];
+      dM -= 2 * si; dMs -= ((x + y) & 1) ? -2 * si : 2 * si;
+    }
+    for (let k = 0; k < n; k++) s[q[k]] = -s[q[k]];
+    lat.B += dB; lat.M += dM; lat.Ms += dMs; lat.lastSize = n;
+    return n;
+  }
+  // one sweep equivalent of Wolff updates: a fixed number nc of clusters, returns the number of spins flipped.
+  // nc must not depend on the clusters of this sweep: stopping once N spins have flipped would bias the averages.
+  function sweepWolff(lat, T, J, st, nc) {
+    let flipped = 0;
+    for (let k = 0; k < nc; k++) flipped += wolffCluster(lat, T, J, st);
+    return flipped;
+  }
+  // clusters per sweep so that about N spins flip, from a mean cluster size measured earlier
+  const wolffPerSweep = (meanSize, N) => (meanSize > 0 ? Math.max(1, Math.round(N / meanSize)) : 1);
+
+  // ----- exact results for the infinite lattice at h = 0 (Onsager 1944; Yang 1952) -----
+  // complete elliptic integrals K(k) and E(k) by the arithmetic geometric mean; kp = √(1 − k²)
+  function ellipKE(k, kp) {
+    if (kp === undefined) kp = Math.sqrt(Math.max(0, 1 - k * k));
+    if (kp === 0) return { K: Infinity, E: 1 };
+    let a = 1, b = kp, c = k, sum = 0.5 * c * c, pow = 0.5;
+    for (let n = 0; n < 40 && Math.abs(c) > 1e-17; n++) {
+      const an = (a + b) / 2, bn = Math.sqrt(a * b);
+      c = (a - b) / 2; a = an; b = bn; pow *= 2; sum += pow * c * c;
+    }
+    const K = Math.PI / (2 * a);
+    return { K, E: K * (1 - sum) };
+  }
+  // spontaneous magnetization per spin, m = (1 − sinh⁻⁴(2/T))^(1/8) below T_c, 0 above (|J| = 1)
+  function onsagerM(T) {
+    if (!(T > 0)) return 1;
+    if (T >= TC) return 0;
+    const sh = Math.sinh(2 / T);
+    return Math.pow(1 - 1 / (sh * sh * sh * sh), 0.125);
+  }
+  // κ = 2 sinh 2K / cosh² 2K and κ' = √(1 − κ²) = |sinh² 2K − 1| / cosh² 2K, written without cancellation
+  function onsagerKappa(T) {
+    const K2 = 2 / T, sh = Math.sinh(K2), ch = Math.cosh(K2);
+    return { k: 2 * sh / (ch * ch), kp: Math.abs(sh * sh - 1) / (ch * ch), K2 };
+  }
+  // energy per spin: e = −coth 2K [1 + (2/π)(2 tanh² 2K − 1) K(κ)]
+  function onsagerE(T) {
+    if (!(T > 0)) return -2;
+    const { k, kp, K2 } = onsagerKappa(T), th = Math.tanh(K2), q = 2 * th * th - 1;
+    if (kp === 0) return -1 / th;
+    return -(1 / th) * (1 + (2 / Math.PI) * q * ellipKE(k, kp).K);
+  }
+  // heat capacity per spin: c = (4/π)(K coth 2K)² {K(κ) − E(κ) − (1 − tanh² 2K)[π/2 + (2 tanh² 2K − 1) K(κ)]}, K = 1/T
+  function onsagerC(T) {
+    if (!(T > 0)) return 0;
+    const { k, kp, K2 } = onsagerKappa(T), th = Math.tanh(K2), q = 2 * th * th - 1, KK = K2 / 2;
+    if (kp === 0) return Infinity;
+    const { K, E } = ellipKE(k, kp), a = KK / th;
+    return (4 / Math.PI) * a * a * (K - E - (1 - th * th) * (Math.PI / 2 + q * K));
+  }
+
+  // ----- exact partition function of the L × L periodic lattice at h = 0 (Kaufman 1949) -----
+  // Z = ½ (2 sinh 2K)^(L²/2) Σ Z_i with Z_1,2 = Π_r 2cosh, 2sinh (L γ_{2r+1}/2), Z_3,4 = Π_r 2cosh, 2sinh (L γ_{2r}/2),
+  // r = 0..L−1, cosh γ_l = cosh 2K coth 2K − cos(π l / L) for l ≥ 1, and γ_0 = 2K + ln tanh K (negative below T_c).
+  function kaufmanLnZ(L, beta) {
+    const K = beta, c0 = Math.cosh(2 * K) / Math.tanh(2 * K);
+    const gam = (l) => (l === 0 ? 2 * K + Math.log(Math.tanh(K)) : Math.acosh(c0 - Math.cos(Math.PI * l / L)));
+    const lch = (x) => { const a = Math.abs(x); return a + Math.log1p(Math.exp(-2 * a)); };            // ln 2cosh x
+    const lsh = (x) => { const a = Math.abs(x); return a === 0 ? -Infinity : a + Math.log(-Math.expm1(-2 * a)); }; // ln |2sinh x|
+    const lg = [0, 0, 0, 0], sg = [1, 1, 1, 1];
+    for (let r = 0; r < L; r++) {
+      const go = L * gam(2 * r + 1) / 2, ge = L * gam(2 * r) / 2;
+      lg[0] += lch(go); lg[1] += lsh(go); lg[2] += lch(ge); lg[3] += lsh(ge);
+      if (go < 0) sg[1] = -sg[1];
+      if (ge < 0) sg[3] = -sg[3];
+      if (ge === 0) sg[3] = 0;
+    }
+    const mx = Math.max(lg[0], lg[2]);
+    let sum = 0;
+    for (let i = 0; i < 4; i++) if (sg[i] !== 0 && lg[i] > -Infinity) sum += sg[i] * Math.exp(lg[i] - mx);
+    return Math.log(0.5) + (L * L / 2) * Math.log(2 * Math.sinh(2 * K)) + mx + Math.log(sum);
+  }
+  // energy and heat capacity per spin of the finite lattice from derivatives of ln Z in β (five point stencils)
+  function exactFinite(L, T) {
+    const b = 1 / T, d = 2e-4 * b, N = L * L;
+    const f = [-2, -1, 0, 1, 2].map((k) => kaufmanLnZ(L, b + k * d));
+    const d1 = (f[0] - 8 * f[1] + 8 * f[3] - f[4]) / (12 * d);
+    const d2 = (-f[0] + 16 * f[1] - 30 * f[2] + 16 * f[3] - f[4]) / (12 * d * d);
+    return { e: -d1 / N, c: b * b * d2 / N };
+  }
+
+  // ----- statistics of a run -----
+  // blocking (Flyvbjerg and Petersen 1989): halve the series by pairwise averaging; the standard error of the
+  // mean rises to a plateau once blocks are longer than the correlation time. We take the largest error over
+  // the levels that still have at least 32 blocks; τ_int = ½ (σ/σ_naive)².
+  function blocking(x, n) {
+    if (n === undefined) n = x.length;
+    let mean = 0;
+    for (let i = 0; i < n; i++) mean += x[i];
+    mean /= n;
+    const a = Float64Array.from(x.subarray ? x.subarray(0, n) : x.slice(0, n));
+    const errs = [], ms = [];
+    let m = n;
+    while (m >= 32) {
+      let v = 0;
+      for (let i = 0; i < m; i++) { const d = a[i] - mean; v += d * d; }
+      errs.push(Math.sqrt(v / (m * (m - 1)))); ms.push(m);
+      const h = m >> 1;
+      for (let i = 0; i < h; i++) a[i] = 0.5 * (a[2 * i] + a[2 * i + 1]);
+      // an odd leftover sample is dropped at the next level (the mean above is from all samples)
+      m = h;
+    }
+    if (!errs.length) return { mean, err: NaN, naive: NaN, tau: NaN, plateau: false, errs };
+    let err = 0, at = 0;
+    errs.forEach((e, k) => { if (e > err) { err = e; at = k; } });
+    const naive = errs[0], tau = naive > 0 ? 0.5 * (err / naive) * (err / naive) : 0;
+    // plateau: the error at the last level is not still rising, beyond 2σ of its own scatter σ ≈ err/√(2(m − 1))
+    const L = errs.length, sd = (k) => errs[k] / Math.sqrt(2 * (ms[k] - 1));
+    const plateau = L >= 3 && errs[L - 1] - errs[L - 3] <= 2 * Math.hypot(sd(L - 1), sd(L - 3)) + 1e-300;
+    return { mean, err, naive, tau, plateau, errs, at };
+  }
+  // full analysis of one measurement run: per sweep series of e (energy per spin) and q (order parameter per spin).
+  // ⟨|q|⟩ and ⟨e⟩ errors from blocking; c = N(⟨e²⟩ − ⟨e⟩²)/T² and χ = N(⟨q²⟩ − ⟨|q|⟩²)/T with jackknife errors over nb blocks.
+  function analyzeRun(e, q, n, N, T, nb) {
+    nb = nb || 20;
+    const absq = new Float64Array(n);
+    for (let i = 0; i < n; i++) absq[i] = Math.abs(q[i]);
+    const be = blocking(e, n), bq = blocking(absq, n);
+    const bl = Math.floor(n / nb), use = bl * nb;
+    const S = new Float64Array(nb * 4);
+    for (let b = 0; b < nb; b++) for (let i = b * bl; i < (b + 1) * bl; i++) {
+      S[4 * b] += e[i]; S[4 * b + 1] += e[i] * e[i]; S[4 * b + 2] += absq[i]; S[4 * b + 3] += q[i] * q[i];
+    }
+    const tot = [0, 0, 0, 0];
+    for (let b = 0; b < nb; b++) for (let k = 0; k < 4; k++) tot[k] += S[4 * b + k];
+    const est = (se, see, sa, sqq, cnt) => {
+      const me = se / cnt, ma = sa / cnt;
+      return [N * (see / cnt - me * me) / (T * T), N * (sqq / cnt - ma * ma) / T];
+    };
+    const full = est(tot[0], tot[1], tot[2], tot[3], use);
+    const jc = [], jx = [];
+    for (let b = 0; b < nb; b++) {
+      const r = est(tot[0] - S[4 * b], tot[1] - S[4 * b + 1], tot[2] - S[4 * b + 2], tot[3] - S[4 * b + 3], use - bl);
+      jc.push(r[0]); jx.push(r[1]);
+    }
+    const jkErr = (arr) => { const mu = arr.reduce((p, v) => p + v, 0) / nb; return Math.sqrt((nb - 1) / nb * arr.reduce((p, v) => p + (v - mu) * (v - mu), 0)); };
+    const tau = Math.max(be.tau || 0, bq.tau || 0);
+    const indep = tau > 0 ? n / (2 * tau) : n;
+    return {
+      n, absq: bq.mean, absqErr: bq.err, e: be.mean, eErr: be.err, c: full[0], cErr: jkErr(jc), chi: full[1], chiErr: jkErr(jx),
+      tau, indep, blockLen: bl, reliable: indep >= 100 && bl >= 4 * tau && be.plateau !== false && bq.plateau !== false,
+    };
+  }
+  // ==CORE END==
+
+  const $ = (id) => document.getElementById(id);
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const SPEEDS = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, Infinity];
+  const T_MIN = 0.5, T_MAX = 5, H_MAX = 1;
+  const RING = 4096, WIN = 1000, LOOPCAP = 12000;
+  const SCAN_T = [1.5, 1.7, 1.9, 2.0, 2.1, 2.15, 2.2, 2.25, 2.3, 2.35, 2.4, 2.5, 2.6, 2.8, 3.0, 3.3, 3.6];
+  const BUDGET_MS = 10;
+
+  const S = {
+    T: TC, h: 0, J: 1, L: 128, method: 'wolff', speed: 3, seed: 2026, start: 'random',
+    playing: !reduce, blind: false, exact: true, showClu: false, stagger: false,
+    hSweep: false, hRate: 0.002, hDir: -1, preset: 'tc', tab: 'time',
+    sweeps: 0, rows: [], result: null, captured: true, lastAct: NaN,
+  };
+  let lat = null, rng = null, tabM = null, tabH = null;
+  const ring = { m: new Float32Array(RING), e: new Float32Array(RING), ms: new Float32Array(RING), n: 0, end: 0 };   // end = sweep count of the newest entry
+  const loop = { h: new Float32Array(LOOPCAP), m: new Float32Array(LOOPCAP), n: 0, head: 0 };
+  let meas = null, sweepAcc = 0, rate = 0, frameMs = 0, simMs = 0, wMean = 0, wNc = 0;
+  const dirty = { lat: true, plot: true, ui: true };
+
+  // ---------- state changes ----------
+  const rebuildTables = () => { tabM = thresholds(metropolisProb(S.T, S.J, S.h)); tabH = thresholds(heatBathProb(S.T, S.J, S.h)); };
+  function clearSeries() { ring.n = 0; ring.end = 0; loop.n = 0; loop.head = 0; }
+  function resetSpins(mode) {
+    if (mode) S.start = mode;
+    if (!lat || lat.L !== S.L) lat = makeLattice(S.L);
+    rng = rngFrom(S.seed);
+    fillSpins(lat, S.start, rng);
+    lat.cid = 0; lat.lastSize = 0; lat.stamp.fill(0);
+    S.sweeps = 0; S.lastAct = NaN; sweepAcc = 0; wMean = 0; wNc = 0; clearSeries();
+    stopMeasure('reset');
+    dirty.lat = dirty.plot = dirty.ui = true;
+  }
+  function stopMeasure(why) {
+    if (!meas) return;
+    const wasScan = !!meas.scan;
+    meas = null;
+    $('resNote').textContent = why === 'user' ? 'Measurement stopped.' : `Measurement stopped: ${why === 'reset' ? 'the spins were reset' : 'a setting changed'}.${wasScan ? ' Readings already taken are kept.' : ''}`;
+    $('resNote').hidden = false;
+    syncMeasureUI();
+  }
+  function setT(v, internal) {
+    v = clamp(+v, T_MIN, T_MAX);
+    if (v === S.T) return;
+    S.T = v; rebuildTables(); wMean = 0; wNc = 0;
+    if (!internal) stopMeasure('setting');
+    dirty.ui = dirty.lat = dirty.plot = true; exactCache = null;
+  }
+  function setH(v, internal) {
+    v = clamp(Math.round(+v * 1e6) / 1e6, -H_MAX, H_MAX);
+    if (Math.abs(v) < 1e-9) v = 0;
+    if (v === S.h) return;
+    S.h = v; rebuildTables();
+    if (S.method === 'wolff' && v !== 0) { S.method = 'metropolis'; methNote('Wolff needs h = 0, so the update switched to Metropolis.'); }
+    if (!internal) stopMeasure('setting');
+    dirty.ui = dirty.lat = dirty.plot = true;
+  }
+  function setJ(j) {
+    j = j < 0 ? -1 : 1;
+    if (j === S.J) return;
+    S.J = j; rebuildTables(); wMean = 0; wNc = 0; stopMeasure('setting'); loop.n = 0; loop.head = 0;
+    dirty.ui = dirty.lat = dirty.plot = true;
+  }
+  function setL(L) {
+    if (L === S.L) return;
+    S.L = L; resetSpins(); exactCache = null; kauCache.clear();
+  }
+  function setMethod(m) {
+    if (m === S.method) return;
+    if (m === 'wolff' && S.h !== 0) { S.hSweep = false; setH(0); methNote('Wolff needs h = 0, so h was set to 0.'); }
+    else methNote('');
+    S.method = m; wMean = 0; wNc = 0; stopMeasure('setting'); dirty.ui = dirty.lat = true;
+  }
+  function methNote(t) { const n = $('methNote'); n.textContent = t; n.hidden = !t; }
+
+  // ---------- one sweep ----------
+  function doSweep() {
+    if (S.method === 'wolff') {
+      // clusters per sweep from the running mean cluster size; frozen while a measurement averages
+      const avg = meas && meas.eqLeft === 0;
+      if (avg && !meas.nc) meas.nc = wolffPerSweep(wMean, lat.N);
+      // (between measurements the count may at most double from one sweep to the next and is also capped by the last
+      // sweep's mean cluster size, so it follows quickly growing clusters after a quench without a burst of work)
+      const nc = avg ? meas.nc : Math.min(wolffPerSweep(wMean, lat.N), wolffPerSweep(S.lastAct, lat.N), 2 * wNc + 1);
+      const flipped = sweepWolff(lat, S.T, S.J, rng, nc);
+      wNc = nc;
+      S.lastAct = flipped / nc;          // mean cluster size this sweep
+      wMean = wMean > 0 ? 0.9 * wMean + 0.1 * S.lastAct : S.lastAct;
+    } else {
+      S.lastAct = (S.method === 'heat' ? sweepHeatBath(lat, tabH, rng) : sweepMetropolis(lat, tabM, rng)) / lat.N;
+    }
+    S.sweeps++;
+    const m = lat.M / lat.N, ms = lat.Ms / lat.N, e = ePerSpin(lat, S.J, S.h);
+    const k = ring.end % RING;
+    ring.m[k] = m; ring.ms[k] = ms; ring.e[k] = e; ring.end++; ring.n = Math.min(RING, ring.n + 1);
+    if (S.hSweep) {
+      loop.h[loop.head] = S.h; loop.m[loop.head] = m; loop.head = (loop.head + 1) % LOOPCAP; loop.n = Math.min(LOOPCAP, loop.n + 1);
+      let h = S.h + S.hDir * S.hRate;
+      if (h >= H_MAX) { h = H_MAX; S.hDir = -1; } else if (h <= -H_MAX) { h = -H_MAX; S.hDir = 1; }
+      setH(h, true);
+    }
+    if (meas) measStep(e, S.J > 0 ? m : ms);
+  }
+
+  // ---------- measurement bench ----------
+  function startMeasure(scanList) {
+    stopMeasure('user'); $('resNote').hidden = true;
+    if (S.hSweep) { S.hSweep = false; $('hSweep').checked = false; }
+    const nAvg = +$('avSel').value, nEq = +$('eqSel').value;
+    if (scanList) {
+      S.hSweep = false;
+      if (S.method === 'wolff' && S.h !== 0) setH(0, true);
+      fillSpins(lat, S.J > 0 ? 'up' : 'neel', rng); dirty.lat = true;
+      setT(scanList[0], true); syncSliders();
+    }
+    meas = { eqLeft: nEq, nEq, N: nAvg, n: 0, e: new Float64Array(nAvg), q: new Float64Array(nAvg), T: S.T, h: S.h, J: S.J, L: S.L, method: S.method, seed: S.seed,
+      startSweep: S.sweeps, avgFrom: S.sweeps + nEq, scan: scanList ? { list: scanList, k: 0 } : null };
+    syncMeasureUI();
+  }
+  function measStep(e, q) {
+    if (meas.eqLeft > 0) { meas.eqLeft--; return; }
+    meas.e[meas.n] = e; meas.q[meas.n] = q; meas.n++;
+    if (meas.n >= meas.N) finishMeasure();
+  }
+  function finishMeasure() {
+    const m = meas, N = S.L * S.L;
+    const r = analyzeRun(m.e, m.q, m.n, N, m.T, 20);
+    S.result = Object.assign(r, { T: m.T, h: m.h, J: m.J, L: m.L, method: m.method, seed: m.seed, eq: m.nEq, sweeps: m.N, nc: m.nc || 0 });
+    S.captured = false;
+    if (m.scan) {
+      capture();
+      const k = m.scan.k + 1;
+      if (k < m.scan.list.length) {
+        setT(m.scan.list[k], true); syncSliders();
+        meas = Object.assign({}, m, { eqLeft: m.nEq, n: 0, nc: 0, T: S.T, startSweep: S.sweeps, avgFrom: S.sweeps + m.nEq, scan: { list: m.scan.list, k } });
+      } else meas = null;
+    } else meas = null;
+    renderResult(); syncMeasureUI(); dirty.plot = true;
+  }
+  const fmtNum = (v, d) => (v < 0 ? '−' : '') + Math.abs(v).toFixed(d);
+  function decs(err, min, max) { if (!(err > 0) || !isFinite(err)) return max; return clamp(1 - Math.floor(Math.log10(err)), min, max); }
+  const pm = (v, err) => { const d = decs(err, 0, 5); return `${fmtNum(v, d)} ± ${isFinite(err) ? err.toFixed(d) : '?'}`; };
+  const qName = (J) => (J > 0 ? '⟨|m|⟩' : '⟨|m<sub>s</sub>|⟩');
+  function renderResult() {
+    const r = S.result, dl = $('result'), note = $('resNote');
+    if (!r) { dl.innerHTML = ''; return; }
+    let html = `<div class="wide"><dt>Reading at T = ${r.T.toFixed(3)}, h = ${fmtNum(r.h, 2)}, L = ${r.L}, ${methName(r.method)}, ${r.sweeps} sweeps after ${r.eq}</dt><dd></dd></div>`;
+    html += `<div class="wide"><dt>${qName(r.J)}</dt><dd>${pm(r.absq, r.absqErr)}</dd></div><div class="wide"><dt>⟨e⟩</dt><dd>${pm(r.e, r.eErr)}</dd></div>`;
+    html += `<div class="wide"><dt>c</dt><dd>${pm(r.c, r.cErr)}</dd></div><div class="wide"><dt>χ</dt><dd>${pm(r.chi, r.chiErr)}</dd></div>`;
+    html += `<div class="wide"><dt>τ<sub>int</sub> (blocking) · independent samples n/2τ</dt><dd>${r.tau < 10 ? r.tau.toFixed(2) : Math.round(r.tau)} sweeps · ${Math.round(r.indep)}</dd></div>`;
+    if (!S.blind && r.h === 0) {
+      const ex = exactFinite(r.L, r.T);
+      html += `<div class="wide theory"><dt>Exact at this T, h = 0</dt><dd>L = ${r.L}: e ${fmtNum(ex.e, 4)}, c ${ex.c.toFixed(3)}<br>L → ∞: ${r.J > 0 ? 'm' : 'mₛ'} ${onsagerM(r.T).toFixed(4)}, e ${fmtNum(onsagerE(r.T), 4)}</dd></div>`;
+    }
+    dl.innerHTML = html;
+    if (!r.reliable) { note.innerHTML = `Few independent samples (about ${Math.round(r.indep)}) or the blocking error had not leveled off: treat these errors as rough. Average over more sweeps, or use Wolff near T<sub>c</sub>.`; note.hidden = false; }
+    else if (!meas) note.hidden = true;
+  }
+  function capture() {
+    const r = S.result; if (!r || S.captured) return;
+    S.rows.push(Object.assign({}, r)); S.captured = true;
+    renderTable(); syncMeasureUI(); dirty.plot = true;
+  }
+  function renderTable() {
+    const tb = $('tbl').querySelector('tbody'); tb.textContent = '';
+    S.rows.forEach((r, i) => {
+      const tr = document.createElement('tr');
+      tr.title = `${r.J > 0 ? 'J = +1' : 'J = −1, order parameter m_s'}, h = ${r.h}, ${methName(r.method)}, ${r.sweeps} sweeps after ${r.eq}, seed ${r.seed}, τ_int ${r.tau.toFixed(1)}${r.reliable ? '' : ', errors rough'}`;
+      const cell = (v, e) => { const d = decs(e, 0, 4); return `<td${r.reliable ? '' : ' class="flag"'}>${fmtNum(v, d)}<small>±${isFinite(e) ? e.toFixed(d) : '?'}</small></td>`; };
+      tr.innerHTML = `<td>${r.T.toFixed(3)}<small>L ${r.L}${r.J < 0 ? ' AF' : ''}${r.h !== 0 ? ` h ${fmtNum(r.h, 2)}` : ''}</small></td>` +
+        cell(r.absq, r.absqErr) + cell(r.e, r.eErr) + cell(r.c, r.cErr) + cell(r.chi, r.chiErr) +
+        `<td><button type="button" data-del="${i}" aria-label="Delete reading ${i + 1}">×</button></td>`;
+      tb.appendChild(tr);
+    });
+  }
+  function csvTable() {
+    const lines = ['# Ising Model readings. Units: J = 1, k_B = 1; T in J/k_B; e and c per spin; time in sweeps (MC steps per spin).',
+      '# Errors: one standard error. abs_m and e by blocking (Flyvbjerg and Petersen); c and chi by jackknife over 20 blocks. With J = -1 the order parameter is the staggered magnetization m_s.',
+      'T,T_over_Tc,L,J,h,update,seed,discarded_sweeps,averaged_sweeps,abs_order,abs_order_err,e,e_err,c,c_err,chi,chi_err,tau_int_sweeps,errors_reliable'];
+    for (const r of S.rows) lines.push([r.T.toFixed(4), (r.T / TC).toFixed(5), r.L, r.J, r.h, r.method, r.seed, r.eq, r.sweeps,
+      r.absq.toPrecision(7), r.absqErr.toPrecision(3), r.e.toPrecision(7), r.eErr.toPrecision(3), r.c.toPrecision(6), r.cErr.toPrecision(3),
+      r.chi.toPrecision(6), r.chiErr.toPrecision(3), r.tau.toPrecision(3), r.reliable ? 'yes' : 'no'].join(','));
+    return lines.join('\n') + '\n';
+  }
+  function download(name, text) {
+    try { const b = new Blob([text], { type: 'text/csv' }), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800); } catch (_) {}
+  }
+  function syncMeasureUI() {
+    const on = !!meas;
+    $('measure').disabled = on; $('scan').disabled = on; $('stopM').hidden = !on; $('prog').hidden = !on;
+    $('capture').disabled = !S.result || S.captured;
+    $('capture').textContent = S.result && S.captured ? 'Captured' : 'Capture reading';
+    progressUI();
+  }
+  function progressUI() {
+    if (!meas) { $('measState').textContent = 'Measures at the current T, h, J, L and update method, at full speed. Changing any of them stops the run.'; return; }
+    const done = meas.nEq - meas.eqLeft + meas.n, all = meas.nEq + meas.N;
+    $('prog').firstElementChild.style.width = (100 * done / all).toFixed(1) + '%';
+    const sc = meas.scan ? `Scan ${meas.scan.k + 1} of ${meas.scan.list.length}, T = ${S.T.toFixed(2)}: ` : '';
+    $('measState').textContent = sc + (meas.eqLeft > 0 ? `discarding, ${meas.nEq - meas.eqLeft} of ${meas.nEq} sweeps` : `averaging, ${meas.n} of ${meas.N} sweeps`);
+  }
+  const methName = (m) => (m === 'wolff' ? 'Wolff' : m === 'heat' ? 'heat bath' : 'Metropolis');
+
+  // ---------- exact values (cached) ----------
+  let exactCache = null;
+  function exactNow() {
+    if (!exactCache || exactCache.T !== S.T || exactCache.L !== S.L) exactCache = { T: S.T, L: S.L, m: onsagerM(S.T), e: onsagerE(S.T), fin: exactFinite(S.L, S.T) };
+    return exactCache;
+  }
+  const kauCache = new Map();
+  function kaufmanCurve(L, t0, t1) {
+    const key = `${L}|${t0}|${t1}`;
+    if (kauCache.has(key)) return kauCache.get(key);
+    const n = 220, T = new Float64Array(n + 1), e = new Float64Array(n + 1), c = new Float64Array(n + 1);
+    for (let k = 0; k <= n; k++) { T[k] = t0 + (t1 - t0) * k / n; const r = exactFinite(L, T[k]); e[k] = r.e; c[k] = r.c; }
+    const out = { T, e, c }; kauCache.set(key, out);
+    if (kauCache.size > 16) kauCache.delete(kauCache.keys().next().value);
+    return out;
+  }
+
+  // ---------- theme ----------
+  let T = {};
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), surface: g('--surface'),
+      up: g('--up'), down: g('--down'), clu: g('--clu'), frame: g('--frame'),
+      L: { 32: g('--l32'), 64: g('--l64'), 128: g('--l128'), 256: g('--l256') },
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+    const px = (hex) => { hex = hex.replace('#', ''); if (hex.length === 3) hex = hex.split('').map((c) => c + c).join(''); const n = parseInt(hex, 16); return (255 << 24 | ((n & 255) << 16) | (n & 0xff00) | ((n >> 16) & 255)) >>> 0; };
+    // the last Wolff cluster is tinted toward teal, so its spins keep their up or down color underneath
+    const mix = (a, b, t) => { const A = parseInt(a.replace('#', ''), 16), B = parseInt(b.replace('#', ''), 16), ch = (n, k) => (n >> k) & 255;
+      return '#' + [16, 8, 0].map((k) => Math.round(ch(A, k) + (ch(B, k) - ch(A, k)) * t).toString(16).padStart(2, '0')).join(''); };
+    PIX.up = px(T.up); PIX.down = px(T.down); PIX.cluUp = px(mix(T.up, T.clu, 0.6)); PIX.cluDown = px(mix(T.down, T.clu, 0.6));
+    dirty.lat = dirty.plot = true;
+  }
+  const PIX = { up: 0, down: 0, cluUp: 0, cluDown: 0 };
+  const projOn = () => document.documentElement.getAttribute('data-projector') === 'on';
+
+  // ---------- canvases ----------
+  const cv = { lat: $('lat'), plot: $('plot') }, cx = { lat: cv.lat.getContext('2d'), plot: cv.plot.getContext('2d') };
+  const dims = { lat: [0, 0], plot: [0, 0] };
+  let dpr = 1;
+  const off = document.createElement('canvas'), offCtx = off.getContext('2d');
+  let img = null, img32 = null;
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const [k, el] of [['lat', $('pLat')], ['plot', $('pcan')]]) {
+      const r = el.getBoundingClientRect(), w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height));
+      dims[k] = [w, h]; cv[k].width = Math.round(w * dpr); cv[k].height = Math.round(h * dpr);
+    }
+    dirty.lat = dirty.plot = true;
+  }
+  // label scale: larger in projector mode, but capped by the pane so labels never pile up
+  function labelScale(W, H) { return projOn() ? clamp(Math.min(W, H) / 330, 1, 1.4) : 1; }
+
+  // geometry of the lattice pane: lattice square, thermometer at its right, field bar below it
+  let LG = null;
+  function latGeom() {
+    const [W, H] = dims.lat, ps = labelScale(W, H);
+    const top = 28 * ps, thermW = 70 * ps, hbarH = 54 * ps, pad = 12;
+    const side = Math.max(40, Math.floor(Math.min(W - 2 * pad - thermW, H - top - hbarH - 6)));
+    const x0 = Math.round(pad + Math.max(0, (W - 2 * pad - thermW - side) / 2));
+    const y0 = Math.round(top + Math.max(0, (H - top - hbarH - 6 - side) / 2));
+    const tx = x0 + side + 20 * ps, tw = 12 * ps, ty0 = y0 + 10 * ps, ty1 = y0 + side - 4;
+    const hx0 = x0 + 8, hx1 = x0 + side - 8, hy = y0 + side + 18 * ps, hh = 10 * ps;
+    LG = { W, H, ps, side, x0, y0, tx, tw, ty0, ty1, hx0, hx1, hy, hh, top };
+    return LG;
+  }
+  const tY = (t) => LG.ty1 - (t - T_MIN) / (T_MAX - T_MIN) * (LG.ty1 - LG.ty0);
+  const tFromY = (y) => T_MIN + (LG.ty1 - y) / (LG.ty1 - LG.ty0) * (T_MAX - T_MIN);
+  const hX = (h) => LG.hx0 + (h + H_MAX) / (2 * H_MAX) * (LG.hx1 - LG.hx0);
+  const hFromX = (x) => -H_MAX + (x - LG.hx0) / (LG.hx1 - LG.hx0) * 2 * H_MAX;
+
+  function paintImage() {
+    const L = lat.L, N = lat.N;
+    if (!img || img.width !== L) { off.width = L; off.height = L; img = offCtx.createImageData(L, L); img32 = new Uint32Array(img.data.buffer); }
+    const s = lat.s, up = PIX.up, dn = PIX.down;
+    if (S.stagger) { for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) { const i = y * L + x; img32[i] = (s[i] > 0) !== !!((x + y) & 1) ? up : dn; } }
+    else for (let i = 0; i < N; i++) img32[i] = s[i] > 0 ? up : dn;
+    if (S.showClu && S.method === 'wolff' && lat.cid > 0) {
+      const id = lat.cid, st = lat.stamp, cu = PIX.cluUp, cd = PIX.cluDown;
+      for (let i = 0; i < N; i++) if (st[i] === id) img32[i] = img32[i] === up ? cu : cd;
+    }
+    offCtx.putImageData(img, 0, 0);
+  }
+  // "T" with a subscript "c", left aligned at x, vertically centered at y
+  function subText(ctx, a, b, x, y, fs) {
+    const font = ctx.font; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(a, x, y); const w = ctx.measureText(a).width;
+    ctx.font = font.replace(/[\d.]+px/, (fs * 0.75).toFixed(1) + 'px'); ctx.fillText(b, x + w, y + fs * 0.3); ctx.font = font;
+  }
+  function pill(ctx, x, y, w, h, r) { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h); }
+  function drawLattice() {
+    const ctx = cx.lat, g = latGeom(), ps = g.ps;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, g.W, g.H);
+    paintImage();
+    // crisp spins: a whole number of device pixels per spin when that still fills most of the square;
+    // otherwise nearest neighbor scaling to the full square (spins then differ in width by one device pixel)
+    const L = lat.L, sideDev = g.side * dpr, per = Math.floor(sideDev / L), dside = per >= 1 && per * L >= 0.85 * sideDev ? per * L : Math.round(sideDev);
+    const dx = Math.round(g.x0 * dpr + (sideDev - dside) / 2), dy = Math.round(g.y0 * dpr + (sideDev - dside) / 2);
+    g.lx = dx / dpr; g.ly = dy / dpr; g.ls = dside / dpr;
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.fillStyle = T.frame; ctx.fillRect(dx - 3 * dpr, dy - 3 * dpr, dside + 6 * dpr, dside + 6 * dpr);
+    ctx.imageSmoothingEnabled = false; ctx.drawImage(off, dx, dy, dside, dside);
+    ctx.restore();
+    // size label and color key above the lattice
+    const f = (sz, w) => `${w || 400} ${sz * ps}px ${T.mono}`;
+    ctx.font = f(11, 600); ctx.fillStyle = T.muted; ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left';
+    ctx.fillText(`${L} × ${L} = ${(L * L).toLocaleString('en-US')} spins, periodic${S.stagger ? ' · staggered colors' : ''}`, g.lx - 3, g.ly - 9 * ps);
+    // thermometer
+    const tx = g.tx, tw = g.tw, y0 = g.ty0, y1 = g.ty1;
+    const grad = ctx.createLinearGradient(0, y1, 0, y0); grad.addColorStop(0, T.neg); grad.addColorStop(1, T.pos);
+    ctx.globalAlpha = 0.85; ctx.fillStyle = grad; pill(ctx, tx, y0, tw, y1 - y0, tw / 2); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.stroke();
+    ctx.font = f(10.5); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    const gy = tY(S.T), hot = hover === 'T' || drag === 'T';
+    const tcy = tY(TC), showTc = !S.blind;
+    for (let t = 1; t <= 5; t++) {
+      const y = tY(t);
+      ctx.strokeStyle = T.muted; ctx.beginPath(); ctx.moveTo(tx + tw, y); ctx.lineTo(tx + tw + 4 * ps, y); ctx.stroke();
+      if (Math.abs(y - gy) > 13 * ps && (!showTc || Math.abs(y - tcy) > 11 * ps)) { ctx.fillStyle = T.muted; ctx.fillText(String(t), tx + tw + 7 * ps, y); }
+    }
+    if (showTc) {
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.moveTo(tx - 3 * ps, tcy); ctx.lineTo(tx + tw + 4 * ps, tcy); ctx.stroke(); ctx.lineWidth = 1;
+      if (Math.abs(tcy - gy) > 13 * ps) { ctx.fillStyle = T.ink; ctx.font = f(10.5, 600); subText(ctx, 'T', 'c', tx + tw + 7 * ps, tcy, 10.5 * ps); }
+    }
+    ctx.font = f(11, 700); ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('T', tx + tw / 2, y0 - 6 * ps);
+    // T grip
+    ctx.fillStyle = hot ? T.ink : T.accent; pill(ctx, tx - 5 * ps, gy - 4 * ps, tw + 10 * ps, 8 * ps, 3 * ps); ctx.fill();
+    ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5; ctx.stroke(); ctx.lineWidth = 1;
+    ctx.font = f(11, 700); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    const tl = S.T.toFixed(2), tlw = ctx.measureText(tl).width + 8 * ps;
+    ctx.fillStyle = T.canvas; ctx.fillRect(tx + tw + 5 * ps, gy - 8 * ps, tlw, 16 * ps);
+    ctx.fillStyle = hot ? T.ink : T.accent; ctx.fillText(tl, tx + tw + 9 * ps, gy + 0.5);
+    // field bar
+    const hx0 = g.hx0, hx1 = g.hx1, hy = g.hy, hh = g.hh;
+    const hg = ctx.createLinearGradient(hx0, 0, hx1, 0); hg.addColorStop(0, T.down); hg.addColorStop(0.5, T.grid); hg.addColorStop(1, T.up);
+    ctx.fillStyle = hg; pill(ctx, hx0, hy - hh / 2, hx1 - hx0, hh, hh / 2); ctx.fill(); ctx.strokeStyle = T.line; ctx.stroke();
+    const hgx = hX(S.h), hhot = hover === 'h' || drag === 'h';
+    ctx.font = f(10.5); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillStyle = T.muted;
+    const lab = `h = ${fmtNum(S.h, 2)}`; ctx.font = f(11, 700); const lw = ctx.measureText(lab).width; ctx.font = f(10.5);
+    for (const hv of [-1, -0.5, 0, 0.5, 1]) {
+      const x = hX(hv); ctx.strokeStyle = T.muted; ctx.beginPath(); ctx.moveTo(x, hy + hh / 2); ctx.lineTo(x, hy + hh / 2 + 4 * ps); ctx.stroke();
+      if (Math.abs(x - hgx) > lw / 2 + 14 * ps) ctx.fillText(hv === 0 ? '0' : fmtNum(hv, hv % 1 ? 1 : 0), x, hy + hh / 2 + 6 * ps);
+    }
+    ctx.fillStyle = hhot ? T.ink : T.accent; pill(ctx, hgx - 4 * ps, hy - hh / 2 - 5 * ps, 8 * ps, hh + 10 * ps, 3 * ps); ctx.fill();
+    ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5; ctx.stroke(); ctx.lineWidth = 1;
+    ctx.font = f(11, 700); ctx.fillStyle = hhot ? T.ink : T.accent; ctx.textBaseline = 'top';
+    ctx.fillText(lab, clamp(hgx, hx0 + lw / 2, hx1 - lw / 2), hy + hh / 2 + 6 * ps);
+    ctx.font = f(11, 700); ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText('h', tx + tw / 2 - 3 * ps, hy);
+    if (S.hSweep) { ctx.font = f(10); ctx.fillText(S.hDir > 0 ? '→' : '←', tx + tw / 2 + 8 * ps, hy); }
+  }
+
+  // ---------- plots ----------
+  function nice(r) { const p = 10 ** Math.floor(Math.log10(r)), m = r / p; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p; }
+  function frame(ctx, b, xr, yr, o) {
+    const ps = o.ps, X = (v) => b.x + (v - xr[0]) / (xr[1] - xr[0]) * b.w, Y = (v) => b.y + b.h - (v - yr[0]) / (yr[1] - yr[0]) * b.h;
+    ctx.fillStyle = T.canvas; ctx.fillRect(b.x, b.y, b.w, b.h);
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.font = `${10 * ps}px ${T.mono}`; ctx.fillStyle = T.muted;
+    const xs = o.xstep || nice((xr[1] - xr[0]) / Math.max(2, Math.floor(b.w / (70 * ps)))), ys = o.ystep || nice((yr[1] - yr[0]) / Math.max(2, Math.floor(b.h / (34 * ps))));
+    ctx.beginPath();
+    for (let v = Math.ceil(xr[0] / xs) * xs; v <= xr[1] + 1e-9; v += xs) { const x = Math.round(X(v)) + 0.5; ctx.moveTo(x, b.y); ctx.lineTo(x, b.y + b.h); }
+    for (let v = Math.ceil(yr[0] / ys) * ys; v <= yr[1] + 1e-9; v += ys) { const y = Math.round(Y(v)) + 0.5; ctx.moveTo(b.x, y); ctx.lineTo(b.x + b.w, y); }
+    ctx.stroke();
+    if (o.zero && yr[0] < 0 && yr[1] > 0) { ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(b.x, Math.round(Y(0)) + 0.5); ctx.lineTo(b.x + b.w, Math.round(Y(0)) + 0.5); ctx.stroke(); }
+    ctx.strokeStyle = T.line; ctx.strokeRect(b.x + 0.5, b.y + 0.5, b.w - 1, b.h - 1);
+    const lab = (v, s) => { const d = (String(+s.toPrecision(6)).split('.')[1] || '').length; return fmtNum(Math.abs(v) < s * 1e-6 ? 0 : v, d); };
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = Math.ceil(yr[0] / ys) * ys; v <= yr[1] + 1e-9; v += ys) ctx.fillText(lab(v, ys), b.x - 4 * ps, Y(v));
+    if (o.xlabels !== false) {
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      for (let v = Math.ceil(xr[0] / xs) * xs; v <= xr[1] + 1e-9; v += xs) ctx.fillText(o.xfmt ? o.xfmt(v) : lab(v, xs), X(v), b.y + b.h + 4 * ps);
+    }
+    if (o.title) { ctx.font = `700 ${11 * ps}px ${T.ui}`; ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(o.title, b.x, b.y - 5 * ps); }
+    if (o.xname) { ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(o.xname, b.x + b.w, b.y + b.h + 18 * ps); }
+    return { X, Y };
+  }
+  function haloText(ctx, s, x, y) {
+    const w = ctx.measureText(s).width, fs = parseFloat(ctx.font.match(/([\d.]+)px/)[1]);
+    const fill = ctx.fillStyle; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85;
+    const ax = ctx.textAlign === 'right' ? x - w : ctx.textAlign === 'center' ? x - w / 2 : x;
+    const ay = ctx.textBaseline === 'top' ? y : ctx.textBaseline === 'middle' ? y - fs / 2 : y - fs;
+    ctx.fillRect(ax - 3, ay - 2, w + 6, fs + 4); ctx.globalAlpha = 1; ctx.fillStyle = fill; ctx.fillText(s, x, y);
+  }
+  function hline(ctx, b, y, color, dash, label, ps) {
+    if (y < b.y || y > b.y + b.h) return;
+    ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = 1.5 * ps; ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(b.x, y); ctx.lineTo(b.x + b.w, y); ctx.stroke(); ctx.restore();
+    if (label) { const below = y - b.y < 18 * ps; ctx.font = `${10 * ps}px ${T.mono}`; ctx.fillStyle = color; ctx.textAlign = 'right'; ctx.textBaseline = below ? 'top' : 'bottom'; haloText(ctx, label, b.x + b.w - 5 * ps, below ? y + 4 * ps : y - 3 * ps); }
+  }
+  const exactShown = () => S.exact && !S.blind;
+
+  function drawPlot() {
+    const ctx = cx.plot, [W, H] = dims.plot; if (W < 20 || H < 20) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const ps = labelScale(W, H);
+    if (S.tab === 'scan') drawScan(ctx, W, H, ps); else if (S.tab === 'mh') drawLoop(ctx, W, H, ps); else drawTime(ctx, W, H, ps);
+  }
+  function drawTime(ctx, W, H, ps) {
+    const L = 46 * ps, R = 12 * ps, top = 24 * ps, gap = 46 * ps, bot = 36 * ps;
+    const ph = (H - top - bot - gap) / 2, b1 = { x: L, y: top, w: W - L - R, h: ph }, b2 = { x: L, y: top + ph + gap, w: W - L - R, h: ph };
+    const s1 = Math.max(WIN, ring.end), xr = [s1 - WIN, s1];
+    const af = S.J < 0, q = af ? ring.ms : ring.m;
+    // energy range: fixed [−2, 0] unless the data or the field needs more
+    let lo = -2, hi = 0;
+    const n = Math.min(ring.n, WIN + 1);
+    for (let k = 0; k < n; k++) { const v = ring.e[(ring.end - 1 - k) % RING]; if (v < lo) lo = v; if (v > hi) hi = v; }
+    lo = lo < -2 ? Math.floor((lo - 0.05) * 4) / 4 : -2; hi = hi > 0 ? Math.ceil((hi + 0.05) * 4) / 4 : 0;
+    const xf = (v) => (v >= 10000 ? Math.round(v / 1000) + 'k' : String(Math.round(v)));
+    const A = frame(ctx, b1, xr, [-1.08, 1.08], { ps, zero: true, title: af ? 'staggered magnetization mₛ(t)' : 'magnetization per spin m(t)', xlabels: false, ystep: 0.5 });
+    const B = frame(ctx, b2, xr, [lo, hi], { ps, title: 'energy per spin e(t)', xfmt: xf, xname: 'sweeps' });
+    const ex = exactNow(), showEx = exactShown() && S.h === 0;
+    if (showEx) {
+      if (ex.m > 0) { hline(ctx, b1, A.Y(ex.m), T.ink, [6 * ps, 4 * ps], `Onsager ±${ex.m.toFixed(3)}`, ps); hline(ctx, b1, A.Y(-ex.m), T.ink, [6 * ps, 4 * ps], '', ps); }
+      else hline(ctx, b1, A.Y(0), T.ink, [6 * ps, 4 * ps], 'Onsager: m = 0 here', ps);
+      hline(ctx, b2, B.Y(ex.e), T.ink, [6 * ps, 4 * ps], `Onsager ${fmtNum(ex.e, 3)}`, ps);
+    }
+    if (meas && meas.avgFrom > xr[0] && meas.avgFrom <= xr[1]) {
+      for (const [b] of [[b1], [b2]]) { const x = b.x + (meas.avgFrom - xr[0]) / WIN * b.w; ctx.save(); ctx.strokeStyle = T.accent; ctx.setLineDash([2 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(x, b.y); ctx.lineTo(x, b.y + b.h); ctx.stroke(); ctx.restore(); }
+      ctx.font = `${10 * ps}px ${T.mono}`; ctx.fillStyle = T.accent; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+      haloText(ctx, 'averaging →', b1.x + (meas.avgFrom - xr[0]) / WIN * b1.w + 4 * ps, b1.y + b1.h - 4 * ps);
+    }
+    const trace = (arr, b, M, color) => {
+      if (!ring.n) return;
+      ctx.save(); ctx.beginPath(); ctx.rect(b.x, b.y, b.w, b.h); ctx.clip();
+      ctx.strokeStyle = color; ctx.lineWidth = 1.6 * ps; ctx.lineJoin = 'round'; ctx.beginPath();
+      const k0 = Math.max(ring.end - n, 0);
+      for (let s = k0; s < ring.end; s++) { const x = M.X(s + 1), y = M.Y(arr[s % RING]); s === k0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+      ctx.stroke(); ctx.restore();
+    };
+    trace(q, b1, A, af ? T.L[32] : T.neg); trace(ring.e, b2, B, T.equi);
+    if (!ring.n) { ctx.font = `${12 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(S.playing ? 'starting' : 'Press Play or Step', b1.x + b1.w / 2, b1.y + b1.h / 2); }
+  }
+  function drawScan(ctx, W, H, ps) {
+    const rows = S.rows, legH = 24 * ps;
+    let t0 = 1, t1 = 4;
+    for (const r of rows) { t0 = Math.min(t0, Math.floor(r.T * 2) / 2); t1 = Math.max(t1, Math.ceil(r.T * 2) / 2); }
+    t0 = Math.max(T_MIN, t0); t1 = Math.min(T_MAX, t1);
+    const narrow = W < 520 * ps;
+    const L = 42 * ps, R = 10 * ps, top = legH + 22 * ps, bot = 34 * ps, gx = (narrow ? 38 : 46) * ps, gy = 44 * ps;
+    const cols = 2, pw = (W - L - R - gx) / cols, ph = (H - top - bot - gy) / 2;
+    const box = (i) => ({ x: L + (i % 2) * (pw + gx), y: top + Math.floor(i / 2) * (ph + gy), w: pw, h: ph });
+    let cmax = 2, xmax = 0;
+    for (const r of rows) { cmax = Math.max(cmax, r.c + r.cErr); xmax = Math.max(xmax, r.chi + r.chiErr); }
+    const showEx = exactShown();
+    const sizes = [...new Set(rows.map((r) => r.L).concat(showEx ? [S.L] : []))].sort((a, b) => a - b);
+    if (showEx) for (const Ls of sizes) { const k = kaufmanCurve(Ls, t0, t1); for (let i = 0; i < k.c.length; i++) cmax = Math.max(cmax, k.c[i]); }
+    cmax = Math.min(cmax * 1.08, 6); xmax = xmax > 0 ? xmax * 1.1 : 10;
+    const defs = [
+      { key: 'absq', err: 'absqErr', title: '⟨|m|⟩ or ⟨|mₛ|⟩', yr: [0, 1.05], ys: 0.25 },
+      { key: 'e', err: 'eErr', title: '⟨e⟩', yr: [-2.05, 0], ys: 0.5 },
+      { key: 'c', err: 'cErr', title: 'heat capacity c', yr: [0, cmax] },
+      { key: 'chi', err: 'chiErr', title: 'susceptibility χ', yr: [0, xmax] },
+    ];
+    defs.forEach((d, i) => {
+      const b = box(i), M = frame(ctx, b, [t0, t1], d.yr, { ps, title: d.title, ystep: d.ys, xlabels: i >= 2 || narrow, xname: i >= 2 ? 'T' : '' });
+      ctx.save(); ctx.beginPath(); ctx.rect(b.x, b.y, b.w, b.h); ctx.clip();
+      if (showEx) {
+        ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([2 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(M.X(TC), b.y); ctx.lineTo(M.X(TC), b.y + b.h); ctx.stroke(); ctx.setLineDash([]);
+        if (d.key !== 'chi') {
+          ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * ps; ctx.beginPath();
+          const n = 300;
+          for (let k = 0; k <= n; k++) {
+            const t = t0 + (t1 - t0) * k / n, v = d.key === 'absq' ? onsagerM(t) : d.key === 'e' ? onsagerE(t) : Math.min(onsagerC(t), d.yr[1] * 2);
+            k ? ctx.lineTo(M.X(t), M.Y(v)) : ctx.moveTo(M.X(t), M.Y(v));
+          }
+          ctx.stroke();
+          if (d.key === 'e' || d.key === 'c') for (const Ls of sizes) {
+            const kc = kaufmanCurve(Ls, t0, t1), arr = d.key === 'e' ? kc.e : kc.c;
+            ctx.strokeStyle = T.L[Ls]; ctx.lineWidth = 1.5 * ps; ctx.setLineDash([6 * ps, 4 * ps]); ctx.beginPath();
+            for (let k = 0; k < arr.length; k++) k ? ctx.lineTo(M.X(kc.T[k]), M.Y(arr[k])) : ctx.moveTo(M.X(kc.T[k]), M.Y(arr[k]));
+            ctx.stroke(); ctx.setLineDash([]);
+          }
+        }
+      }
+      for (const r of rows) {
+        const x = M.X(r.T), y = M.Y(r[d.key]), e = r[d.err], col = T.L[r.L] || T.ink;
+        ctx.strokeStyle = col; ctx.lineWidth = 1.3 * ps;
+        if (isFinite(e) && e > 0) { ctx.beginPath(); ctx.moveTo(x, M.Y(r[d.key] - e)); ctx.lineTo(x, M.Y(r[d.key] + e)); ctx.moveTo(x - 3 * ps, M.Y(r[d.key] - e)); ctx.lineTo(x + 3 * ps, M.Y(r[d.key] - e)); ctx.moveTo(x - 3 * ps, M.Y(r[d.key] + e)); ctx.lineTo(x + 3 * ps, M.Y(r[d.key] + e)); ctx.stroke(); }
+        ctx.beginPath(); ctx.arc(x, y, 3.2 * ps, 0, 2 * Math.PI);
+        if (r.h !== 0) { ctx.fillStyle = T.canvas; ctx.fill(); ctx.stroke(); } else { ctx.fillStyle = col; ctx.fill(); }
+      }
+      ctx.restore();
+      if (showEx && i === 0) { ctx.font = `${10 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; subText(ctx, 'T', 'c', M.X(TC) + 4 * ps, b.y + b.h - 10 * ps, 10 * ps); }
+    });
+    // legend
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+    let x = L, y = legH / 2 + 2 * ps;
+    const item = (draw, label) => { const w = ctx.measureText(label).width; if (x + 26 * ps + w > W - R) { return; } draw(x, y); ctx.fillStyle = T.muted; ctx.fillText(label, x + 22 * ps, y); x += 30 * ps + w; };
+    for (const Ls of sizes) item((a, b) => { ctx.fillStyle = T.L[Ls]; ctx.beginPath(); ctx.arc(a + 9 * ps, b, 3.5 * ps, 0, 2 * Math.PI); ctx.fill(); if (showEx) { ctx.strokeStyle = T.L[Ls]; ctx.setLineDash([4 * ps, 3 * ps]); ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.moveTo(a, b + 5 * ps); ctx.lineTo(a + 18 * ps, b + 5 * ps); ctx.stroke(); ctx.setLineDash([]); } }, `L = ${Ls}`);
+    if (showEx) item((a, b) => { ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * ps; ctx.beginPath(); ctx.moveTo(a, b); ctx.lineTo(a + 18 * ps, b); ctx.stroke(); }, narrow ? 'Onsager' : 'Onsager, infinite');
+    if (!rows.length) {
+      ctx.font = `${12 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const b = box(0); haloText(ctx, 'No readings yet: Measure, then Capture, or Scan T', W / 2, b.y + b.h + gy / 2);
+    }
+  }
+  function drawLoop(ctx, W, H, ps) {
+    const side = Math.min(W - 70 * ps, H - 90 * ps), b = { x: (W - side) / 2 + 14 * ps, y: (H - side) / 2 + 2 * ps, w: side, h: side };
+    const M = frame(ctx, b, [-1, 1], [-1.08, 1.08], { ps, zero: true, xstep: 0.5, ystep: 0.5, xname: 'field h' });
+    ctx.font = `700 ${11 * ps}px ${T.ui}`; ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    const full = `magnetization m against field h · T = ${S.T.toFixed(2)}, L = ${S.L}, ${S.hRate} per sweep`, short = `m against h · T = ${S.T.toFixed(2)}, L = ${S.L}`;
+    ctx.fillText(ctx.measureText(full).width < W - b.x - 8 ? full : short, b.x, b.y - 6 * ps);
+    ctx.save(); ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(M.X(0), b.y); ctx.lineTo(M.X(0), b.y + b.h); ctx.stroke(); ctx.restore();
+    if (loop.n > 1) {
+      ctx.save(); ctx.beginPath(); ctx.rect(b.x, b.y, b.w, b.h); ctx.clip(); ctx.lineWidth = 1.6 * ps; ctx.lineJoin = 'round';
+      const n = loop.n, start = (loop.head - n + LOOPCAP) % LOOPCAP, chunks = 8, per = Math.ceil(n / chunks);
+      for (let c = 0; c < chunks; c++) {
+        const a = c * per, z = Math.min(n - 1, (c + 1) * per); if (z <= a) continue;
+        ctx.globalAlpha = 0.25 + 0.75 * (c + 1) / chunks; ctx.strokeStyle = T.neg; ctx.beginPath();
+        for (let k = a; k <= z; k++) { const i = (start + k) % LOOPCAP, x = M.X(loop.h[i]), y = M.Y(loop.m[i]); k === a ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1; const i = (loop.head - 1 + LOOPCAP) % LOOPCAP;
+      ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(M.X(loop.h[i]), M.Y(loop.m[i]), 4.5 * ps, 0, 2 * Math.PI); ctx.fill();
+      ctx.restore();
+    }
+    if (exactShown() && S.J > 0 && S.T < TC) {
+      const m0 = onsagerM(S.T);
+      for (const s of [1, -1]) { ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.arc(M.X(0), M.Y(s * m0), 5 * ps, 0, 2 * Math.PI); ctx.stroke(); }
+      ctx.font = `${10 * ps}px ${T.mono}`; ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      haloText(ctx, `±m₀ = ±${m0.toFixed(3)}, Onsager`, M.X(0) + 9 * ps, M.Y(m0) + 14 * ps);
+    }
+    if (loop.n < 2) {
+      ctx.font = `${12 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      haloText(ctx, 'Turn on Sweep h, or pick Hysteresis', b.x + b.w / 2, b.y + b.h * 0.3);
+    }
+  }
+
+  // ---------- lattice interaction: thermometer, field bar, painting ----------
+  let hover = null, drag = null, paintVal = 0, queued = null, qFrame = false;
+  function partAt(ev) {
+    if (!LG) return null;
+    const r = cv.lat.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const tol = 8 * LG.ps * (ev.pointerType === 'touch' ? 2 : 1);
+    if (x >= LG.tx - tol && x <= LG.tx + LG.tw + 40 * LG.ps && y >= LG.ty0 - tol && y <= LG.ty1 + tol) return { id: 'T', x, y };
+    if (x >= LG.hx0 - tol && x <= LG.hx1 + tol && Math.abs(y - LG.hy) <= LG.hh / 2 + tol + 4) return { id: 'h', x, y };
+    if (LG.ls && x >= LG.lx && x < LG.lx + LG.ls && y >= LG.ly && y < LG.ly + LG.ls) return { id: 'lat', x, y };
+    return null;
+  }
+  function applyDrag(p) {
+    if (!p) return;
+    if (drag === 'T') { setT(Math.round(clamp(tFromY(p.y), T_MIN, T_MAX) * 100) / 100); syncSliders(); }
+    else if (drag === 'h') { if (S.hSweep) { S.hSweep = false; $('hSweep').checked = false; } setH(Math.round(clamp(hFromX(p.x), -H_MAX, H_MAX) * 100) / 100); syncSliders(); }
+    else if (drag === 'lat') paintAt(p.x, p.y);
+  }
+  function paintAt(x, y) {
+    const L = lat.L, cs = LG.ls / L, cx0 = Math.floor((x - LG.lx) / cs), cy0 = Math.floor((y - LG.ly) / cs), r = Math.max(0, Math.round(L / 48));
+    for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) {
+      if (dx * dx + dy * dy > r * r + r) continue;
+      const xx = (cx0 + dx + L) % L, yy = (cy0 + dy + L) % L, i = yy * L + xx;
+      lat.s[i] = S.stagger && ((xx + yy) & 1) ? -paintVal : paintVal;
+    }
+    recount(lat); lat.cid++; dirty.lat = dirty.ui = true;
+  }
+  cv.lat.addEventListener('pointerdown', (ev) => {
+    const p = partAt(ev); if (!p) return;
+    drag = p.id; cv.lat.setPointerCapture(ev.pointerId); cv.lat.focus(); ev.preventDefault();
+    if (p.id === 'lat') {
+      const L = lat.L, cs = LG.ls / L, xx = clamp(Math.floor((p.x - LG.lx) / cs), 0, L - 1), yy = clamp(Math.floor((p.y - LG.ly) / cs), 0, L - 1);
+      const sv = lat.s[yy * L + xx]; paintVal = -(S.stagger && ((xx + yy) & 1) ? -sv : sv);
+      stopMeasure('setting');
+    }
+    applyDrag(p); dirty.lat = true;
+  });
+  cv.lat.addEventListener('pointermove', (ev) => {
+    if (!drag) {
+      const p = partAt(ev), id = p ? p.id : null;
+      if (id !== hover) { hover = id; dirty.lat = true; cv.lat.style.cursor = id === 'T' ? 'ns-resize' : id === 'h' ? 'ew-resize' : id === 'lat' ? 'crosshair' : 'default'; }
+      return;
+    }
+    const r = cv.lat.getBoundingClientRect(); queued = { x: ev.clientX - r.left, y: ev.clientY - r.top };
+    if (qFrame) return; qFrame = true;
+    requestAnimationFrame(() => { qFrame = false; if (drag && queued) applyDrag(queued); queued = null; });
+  });
+  const endDrag = () => { if (drag) { drag = null; dirty.lat = true; } };
+  cv.lat.addEventListener('pointerup', endDrag); cv.lat.addEventListener('pointercancel', endDrag);
+  cv.lat.addEventListener('pointerleave', () => { if (!drag && hover) { hover = null; dirty.lat = true; } });
+  cv.lat.addEventListener('keydown', (e) => {
+    const big = e.shiftKey ? 10 : 1;
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { setT(Math.round((S.T + (e.key === 'ArrowUp' ? 0.01 : -0.01) * big) * 100) / 100); syncSliders(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { S.hSweep = false; $('hSweep').checked = false; setH(S.h + (e.key === 'ArrowRight' ? 0.01 : -0.01) * big); syncSliders(); e.preventDefault(); }
+    else if (e.key === ' ') { setPlaying(!S.playing); e.preventDefault(); }
+    else if (e.key === 'u' || e.key === 'U') resetSpins('up');
+    else if (e.key === 'r' || e.key === 'R') resetSpins('random');
+  });
+
+  // ---------- rail controls ----------
+  function syncSliders() {
+    $('tIn').value = S.T; $('hIn').value = S.h;
+    $('tOut').innerHTML = `${S.T.toFixed(Math.abs(S.T - TC) < 1e-9 ? 3 : 2)}${Math.abs(S.T - TC) < 1e-9 && !S.blind ? ' = T<sub>c</sub>' : ''}`;
+    $('hOut').textContent = fmtNum(S.h, 2);
+  }
+  function syncUI() {
+    syncSliders();
+    document.querySelectorAll('[data-j]').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.j === S.J)));
+    document.querySelectorAll('[data-l]').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.l === S.L)));
+    document.querySelectorAll('[data-m]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.m === S.method)));
+    document.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tab === S.tab)));
+    $('nOut').textContent = `N = ${(S.L * S.L).toLocaleString('en-US')}`;
+    $('spIn').value = S.speed; $('spOut').textContent = S.speed === SPEEDS.length - 1 ? 'as fast as possible' : `${SPEEDS[S.speed]} sweeps/s`;
+    $('play').textContent = S.playing ? 'Pause' : 'Play';
+    $('hSweep').checked = S.hSweep; $('hRate').value = String(S.hRate);
+    $('exact').checked = S.exact; $('clu').checked = S.showClu; $('stag').checked = S.stagger; $('blind').checked = S.blind;
+    $('exactRow').hidden = S.blind; $('toTc').hidden = S.blind;
+    $('keyOns').hidden = $('keyKau').hidden = S.blind || !S.exact;
+    $('methHint').innerHTML = S.method === 'wolff' ? 'Wolff flips whole clusters, so it decorrelates quickly near T<sub>c</sub>, where single spin updates slow down badly (critical slowing down).'
+      : S.method === 'heat' ? 'Heat bath draws each new spin from its Boltzmann probability given its neighbors. It changes fewer spins per sweep than Metropolis at high T.'
+      : 'Metropolis: flip if the energy drops; otherwise flip with probability e<sup>−ΔE/T</sup>. The standard single spin rule.';
+    document.querySelector('[data-m="wolff"]').title = S.h !== 0 ? 'Wolff needs h = 0; choosing it sets h to 0' : 'Cluster updates, h = 0 only';
+    readouts(); dirty.ui = false;
+  }
+  function readouts() {
+    $('rT').textContent = S.T.toFixed(3);
+    $('rTcBox').hidden = S.blind; $('rTc').textContent = (S.T / TC).toFixed(3);
+    const m = lat.M / lat.N, ms = lat.Ms / lat.N, e = ePerSpin(lat, S.J, S.h);
+    $('rM').textContent = fmtNum(m, 4); $('rE').textContent = fmtNum(e, 4);
+    $('rMsBox').hidden = S.J > 0; $('rMs').textContent = fmtNum(ms, 4);
+    $('rAccLab').textContent = S.method === 'wolff' ? 'Cluster size / N' : 'Flipped per sweep';
+    $('rAcc').textContent = !isFinite(S.lastAct) ? '—' : S.method === 'wolff' ? (S.lastAct / lat.N).toPrecision(3) : (100 * S.lastAct).toFixed(1) + '%';
+    const exBox = $('rExact');
+    exBox.hidden = S.blind || S.h !== 0;
+    if (!exBox.hidden) {
+      const ex = exactNow(), q = S.J > 0 ? 'm' : 'mₛ';
+      $('rEx').innerHTML = `L → ∞: ${q} ${ex.m.toFixed(4)}, e ${fmtNum(ex.e, 4)}<br>L = ${S.L}: e ${fmtNum(ex.fin.e, 4)}, c ${ex.fin.c.toFixed(3)}`;
+    }
+  }
+  function statusUI() {
+    const sp = rate >= 100 ? Math.round(rate) : rate.toFixed(1);
+    $('status').innerHTML = `sweep ${S.sweeps.toLocaleString('en-US')} <small>${S.playing || meas ? `${sp} sweeps/s` : 'paused'}${meas ? ' · measuring' : ''}</small>`;
+  }
+  function setPlaying(p) { S.playing = p; $('play').textContent = p ? 'Pause' : 'Play'; }
+
+  $('play').addEventListener('click', () => setPlaying(!S.playing));
+  $('step').addEventListener('click', () => { setPlaying(false); doSweep(); dirty.lat = dirty.plot = dirty.ui = true; });
+  document.querySelectorAll('[data-start]').forEach((b) => b.addEventListener('click', () => resetSpins(b.dataset.start)));
+  $('tIn').addEventListener('input', (e) => { setT(+e.target.value); syncSliders(); });
+  $('hIn').addEventListener('input', (e) => { S.hSweep = false; $('hSweep').checked = false; setH(+e.target.value); syncSliders(); });
+  $('toTc').addEventListener('click', () => { setT(TC); syncSliders(); });
+  $('hSweep').addEventListener('change', (e) => {
+    S.hSweep = e.target.checked;
+    if (S.hSweep) { stopMeasure('setting'); if (S.method === 'wolff') { setMethod('metropolis'); methNote('Wolff needs h = 0, so the update switched to Metropolis.'); } loop.n = 0; loop.head = 0; S.tab = 'mh'; }
+    dirty.ui = dirty.plot = true;
+  });
+  $('hRate').addEventListener('change', (e) => { S.hRate = +e.target.value; loop.n = 0; loop.head = 0; dirty.plot = true; });
+  document.querySelectorAll('[data-j]').forEach((b) => b.addEventListener('click', () => setJ(+b.dataset.j)));
+  document.querySelectorAll('[data-l]').forEach((b) => b.addEventListener('click', () => setL(+b.dataset.l)));
+  document.querySelectorAll('[data-m]').forEach((b) => b.addEventListener('click', () => setMethod(b.dataset.m)));
+  document.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => { S.tab = b.dataset.tab; dirty.ui = dirty.plot = true; }));
+  $('spIn').addEventListener('input', (e) => { S.speed = +e.target.value; dirty.ui = true; });
+  function setSeed(n) { S.seed = clamp(Math.round(n) || 1, 1, 999999); $('seed').value = S.seed; resetSpins(); }
+  $('seed').addEventListener('change', (e) => setSeed(+e.target.value));
+  $('newSeed').addEventListener('click', () => setSeed(1 + Math.floor(Math.random() * 999999)));
+  $('measure').addEventListener('click', () => startMeasure(null));
+  $('scan').addEventListener('click', () => { startMeasure(SCAN_T); S.tab = 'scan'; dirty.ui = dirty.plot = true; });
+  $('stopM').addEventListener('click', () => stopMeasure('user'));
+  $('capture').addEventListener('click', capture);
+  $('export').addEventListener('click', () => download(`ising-readings-seed${S.seed}.csv`, csvTable()));
+  $('clear').addEventListener('click', () => { S.rows = []; renderTable(); dirty.plot = true; });
+  $('tbl').addEventListener('click', (e) => { const b = e.target.closest('button[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderTable(); dirty.plot = true; } });
+  $('blind').addEventListener('change', (e) => { S.blind = e.target.checked; renderResult(); dirty.ui = dirty.plot = dirty.lat = true; });
+  $('exact').addEventListener('change', (e) => { S.exact = e.target.checked; dirty.ui = dirty.plot = true; });
+  $('clu').addEventListener('change', (e) => { S.showClu = e.target.checked; dirty.lat = true; });
+  $('stag').addEventListener('change', (e) => { S.stagger = e.target.checked; dirty.lat = true; });
+
+  // ---------- presets ----------
+  const PRESETS = {
+    cold: { hint: 'T = 1.5, well below T_c. One domain fills the lattice; single spins blink against it and flip back. m sits on the Onsager value, 0.986.',
+      set: { T: 1.5, h: 0, J: 1, L: 128, method: 'metropolis', start: 'up', speed: 5, tab: 'time', stagger: false } },
+    hot: { hint: 'T = 4, far above T_c. Neighbors only slightly prefer to agree: small patches form and dissolve, and m wanders near zero, here by about 2/√N, less on a larger lattice.',
+      set: { T: 4, h: 0, J: 1, L: 128, method: 'metropolis', start: 'random', speed: 4, tab: 'time', stagger: false } },
+    tc: { hint: 'Exactly at T_c = 2/ln(1 + √2). Domains of every size, inside each other: zoom in and it looks the same. Wolff updates flip whole clusters to beat critical slowing down; tick Show the last Wolff cluster to see one.',
+      set: { T: TC, h: 0, J: 1, L: 256, method: 'wolff', start: 'random', speed: 3, tab: 'time', stagger: false } },
+    quench: { hint: 'A random lattice (infinite T) dropped to T = 1.2. Domains coarsen: their size grows roughly as the square root of the sweeps. Sometimes stripes wrap around the lattice and last a very long time.',
+      set: { T: 1.2, h: 0, J: 1, L: 256, method: 'metropolis', start: 'random', speed: 4, tab: 'time', stagger: false } },
+    hyst: { hint: 'T = 1.5 with h swept between ±1 at 0.002 per sweep. The lattice stays magnetized against the field until a domain nucleates, near h = ∓0.5 here (it varies a little from loop to loop). Slower sweeps give a narrower loop.',
+      set: { T: 1.5, h: 0, J: 1, L: 64, method: 'metropolis', start: 'up', speed: 8, tab: 'mh', stagger: false, hSweep: true, hRate: 0.002, hDir: -1 } },
+    af: { hint: 'J = −1: neighbors prefer to be opposite. The order is a checkerboard (Néel state); staggered colors show its two domains as solid patches. m stays near 0 while m_s orders.',
+      set: { T: 1.5, h: 0, J: -1, L: 128, method: 'metropolis', start: 'random', speed: 5, tab: 'time', stagger: true } },
+  };
+  function applyPreset(p) {
+    const pr = PRESETS[p]; if (!pr) return;
+    stopMeasure('reset'); $('resNote').hidden = true;
+    const s = pr.set;
+    S.preset = p; S.T = s.T; S.h = s.h; S.J = s.J; S.method = s.method; S.speed = s.speed; S.tab = s.tab; S.stagger = s.stagger;
+    S.hSweep = !!s.hSweep; if (s.hRate) S.hRate = s.hRate; if (s.hDir) S.hDir = s.hDir;
+    S.L = s.L; methNote(''); rebuildTables(); exactCache = null;
+    resetSpins(s.start);
+    document.querySelectorAll('#presets button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.p === p)));
+    $('presetHint').innerHTML = pr.hint.replace(/T_c/g, 'T<sub>c</sub>').replace(/m_s/g, 'm<sub>s</sub>');
+    dirty.ui = dirty.lat = dirty.plot = true;
+  }
+  document.querySelectorAll('#presets button').forEach((b) => b.addEventListener('click', () => applyPreset(b.dataset.p)));
+
+  // ---------- projector, theme ----------
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  const retheme = () => tokens();
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), lastPlot = 0, lastUI = 0, rateN = 0, rateT = 0;
+  function frameLoop(now) {
+    const dt = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
+    const t0 = performance.now();
+    let n = 0;
+    if (S.playing || meas) {
+      const sp = meas ? Infinity : SPEEDS[S.speed];
+      if (sp === Infinity) { while (performance.now() - t0 < BUDGET_MS) { doSweep(); n++; } sweepAcc = 0; }
+      else {
+        sweepAcc = Math.min(sweepAcc + sp * dt, sp * 0.25 + 1);
+        while (sweepAcc >= 1 && performance.now() - t0 < BUDGET_MS) { doSweep(); n++; sweepAcc--; }
+      }
+    }
+    const t1 = performance.now();
+    if (n) { simMs = 0.9 * simMs + 0.1 * (t1 - t0) / n; dirty.lat = true; dirty.plot = true; }
+    rateN += n; rateT += dt;
+    if (rateT >= 0.5) { rate = rateN / rateT; rateN = 0; rateT = 0; statusUI(); }
+    if (dirty.lat) { drawLattice(); dirty.lat = false; }
+    if (dirty.plot && now - lastPlot > 33) { drawPlot(); dirty.plot = false; lastPlot = now; }
+    if (dirty.ui) syncUI();
+    if (now - lastUI > 150) { lastUI = now; readouts(); if (meas) progressUI(); if (S.hSweep) syncSliders(); }
+    frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
+    requestAnimationFrame(frameLoop);
+  }
+  window.__ising = { S, get lat() { return lat; }, get meas() { return meas; }, get frameMs() { return frameMs; }, get simMs() { return simMs; }, get rate() { return rate; },
+    applyPreset, setT, setH, setJ, setL, setMethod, startMeasure, capture, csvTable, resetSpins, doSweep, setPlaying, SCAN_T, get LG() { return LG; } };
+
+  // ---------- start ----------
+  tokens();
+  const ro = new ResizeObserver(() => resize());
+  ro.observe($('pLat')); ro.observe($('pcan'));
+  resize();
+  applyPreset('tc');
+  setPlaying(!reduce);
+  renderTable(); syncMeasureUI(); statusUI();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty.lat = dirty.plot = true; });
+  requestAnimationFrame(frameLoop);
+})();
+</script>
+</body>
+</html>

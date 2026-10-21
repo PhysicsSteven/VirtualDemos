@@ -45,6 +45,8 @@ OVERRIDES = {
                    "js": "setTimeout(() => { const m = document.getElementById('mass'); m.value = 1000; m.dispatchEvent(new Event('input', { bubbles: true })); "
                          "setTimeout(() => { const b = [...document.querySelectorAll('#presets button')].find((x) => x.textContent === 'Onion shells'); if (b) b.click(); }, 3500); }, 1500)"},
     "hydrogen-orbitals": {"wait": 2500},
+    "bz-reaction": {"click": ['[data-p="spiral"]'], "wait": 800,
+                    "js": "__bz.setPlaying(false); for (let i = 0; i < 45; i++) __bz.dsAdvance(100); __bz.dirtyAll(); __bz.setPlaying(true)"},
     "coulomb-sandbox": {"wait": 1500},
     "double-slit": {"wait": 4000},
     "radioactive-decay": {"wait": 3000},
@@ -58,6 +60,7 @@ OVERRIDES = {
     "gauss-law": {"click": ['[data-p="outside"]', '#tPatch'], "wait": 1500},
     "black-holes": {"click": ['[data-p="ring"]'], "wait": 2500},
     "doppler": {"click": ['[data-p="jet"]'], "wait": 9000},
+    "ising": {"crop": "#pLat", "wait": 2500},
     "polarization": {"click": ['[data-p="three"]'], "wait": 1500},
     "collisions": {"click": ['[data-p="glance"]'], "wait": 1300},
     "double-pendulum": {"click": ['[data-p="fly"]'], "wait": 9000},

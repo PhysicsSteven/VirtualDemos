@@ -1,0 +1,1713 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Magnetism from Relativity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a 3D stage (wire, point charge or field calculator) over a strip that tells the current frame's story; instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --bfield: #7a45b8;
+  --force: #17855f;
+  --frame: #0f7c8c;
+  --wire: #8b97a6;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --bfield: #bb94ff; --force: #4fd1a0; --frame: #4cc3d4; --wire: #6d7a8b; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --bfield: #bb94ff; --force: #4fd1a0; --frame: #4cc3d4; --wire: #6d7a8b; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.units .nw { white-space: nowrap; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+:root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 360px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.stage-ctl .grow { flex: 1; }
+.pane { position: relative; min-height: 0; overflow: hidden; }
+.pane canvas { position: absolute; inset: 0; display: block; }
+#gl { touch-action: none; outline: none; cursor: grab; }
+#gl:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+#over { pointer-events: none; }
+.tag { position: absolute; top: 10px; left: 10px; z-index: 2; max-width: calc(100% - 20px); font-size: 0.8rem; font-weight: 700; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--equi); color: var(--equi); background: color-mix(in srgb, var(--canvas) 88%, transparent); pointer-events: none; }
+.tag.exact { border-color: var(--frame); color: var(--frame); }
+.nogl { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; color: var(--muted); }
+
+/* the strip under the stage: what the current frame says */
+.strip { display: grid; grid-template-columns: minmax(150px, 1.1fr) repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--line); background: var(--surface); }
+.strip > div { padding: 8px 12px; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.strip > div + div { border-left: 1px solid var(--line); }
+.strip span { font-size: 0.74rem; color: var(--muted); }
+.strip b { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.strip small { font-size: 0.76rem; color: var(--muted); }
+.strip .badge { border-left: 5px solid var(--frame); }
+.strip .badge b { font-family: var(--font-ui); font-size: 1.08rem; font-weight: 700; color: var(--frame); }
+.strip .badge.boost b { color: var(--accent); }
+.strip .c-e b { color: var(--equi); }
+.strip .c-b b { color: var(--bfield); }
+.strip .c-f b { color: var(--force); }
+.meter { height: 4px; border-radius: 2px; background: var(--grid-strong); margin-top: 4px; position: relative; overflow: hidden; }
+.meter i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--frame); border-radius: 2px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg.frame button[aria-pressed="true"] { background: var(--frame); color: var(--canvas); }
+.seg.full { display: flex; }
+.seg.full button { flex: 1; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+input[type="range"]:disabled { opacity: 0.45; }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.88rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .big dd { font-size: 1.15rem; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .ok dd { color: var(--force); }
+
+/* the two frame cards */
+.fcard { border: 1px solid var(--line); border-radius: 8px; background: var(--canvas); overflow: hidden; }
+.fcard h3 { margin: 0; padding: 6px 10px; font-size: 0.86rem; display: flex; justify-content: space-between; gap: 8px; border-left: 4px solid var(--muted); background: var(--surface); border-bottom: 1px solid var(--line); }
+.fcard h3 small { font-weight: 400; color: var(--muted); font-size: 0.78rem; }
+.fcard.chg h3 { border-left-color: var(--frame); }
+.fcard.now { box-shadow: 0 0 0 2px var(--frame); }
+.rows { margin: 0; padding: 6px 10px 8px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 3px 10px; font-size: 0.84rem; }
+.rows dt { color: var(--muted); }
+.rows dd { margin: 0; text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.82rem; overflow-wrap: anywhere; }
+.rows .em dd { font-weight: 600; }
+.rows .ef dd { color: var(--force); font-weight: 600; }
+
+.vec { display: grid; grid-template-columns: auto repeat(3, minmax(0, 1fr)); gap: 4px 6px; align-items: center; font-size: 0.84rem; }
+.vec span { color: var(--muted); font-size: 0.78rem; text-align: center; }
+.vec label { font-size: 0.86rem; white-space: nowrap; }
+.vec input { width: 100%; min-width: 0; font: inherit; font-family: var(--font-mono); font-size: 0.84rem; padding: 3px 5px; border: 1px solid var(--line); border-radius: 5px; background: var(--canvas); color: var(--ink); }
+.loads { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.loads .lab { font-size: 0.84rem; color: var(--muted); }
+
+.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: flex; align-items: center; gap: 8px; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 3px solid; }
+.swatch.dot { width: 10px; height: 10px; border: 0; border-radius: 50%; margin: 0 6px; }
+.swatch.ion { background: var(--pos); }
+.swatch.el { background: var(--neg); width: 8px; height: 8px; margin: 0 7px; }
+.swatch.e { border-color: var(--equi); }
+.swatch.b { border-color: var(--bfield); }
+.swatch.f { border-color: var(--force); border-top-width: 4px; }
+.swatch.v { border-color: var(--ink); }
+.swatch.surf { height: 10px; border: 1px solid var(--equi); background: color-mix(in srgb, var(--equi) 22%, transparent); border-radius: 5px; }
+.swatch.grid { border-color: var(--grid-strong); border-top-width: 2px; }
+.swatch.ghost { border-color: var(--muted); border-top-style: dashed; }
+kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--canvas); }
+
+/* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+  :root[data-projector="on"] .strip > div { padding: 5px 10px; }
+  :root[data-projector="on"] .strip small { font-size: 0.68rem; }
+  :root[data-projector="on"] .strip .badge b { font-size: 0.98rem; }
+  :root[data-projector="on"] .strip { grid-template-columns: minmax(180px, 1.3fr) repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 1100px) {
+  .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .strip > div + div { border-left: 0; }
+  .strip > div { border-top: 1px solid var(--line); }
+  .strip > div:nth-child(2n + 1) { border-left: 1px solid var(--line); }
+  .strip > div:first-child { grid-column: 1 / -1; border-top: 0; border-left: 5px solid var(--frame); }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench, :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; grid-template-rows: auto 62vh auto; }
+  .rail { overflow: visible; }
+}
+@media (max-width: 820px) and (max-height: 700px) { .stage { grid-template-rows: auto 380px auto; } }
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Magnetism from Relativity</h1>
+      <p>A wire carrying current is neutral, so a charge moving beside it feels only a magnetic force. Ride along with the charge and length contraction leaves the wire charged: the same push is now electric.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono"><span class="nw">c = 299 792 458 m/s</span> · <span class="nw">γ = 1/√(1 − β²)</span> · <span class="nw">μ₀ε₀ = 1/c²</span> · <span class="nw">speeds as β = v/c</span></div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/relativity-em.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/relativity-em.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM12 2h3v1h-3zM16 2h2v1h-2zM19 2h2v1h-2zM22 2h2v1h-2zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM13 3h1v1h-1zM15 3h1v1h-1zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM18 4h1v1h-1zM21 4h3v1h-3zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM15 5h3v1h-3zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM15 7h2v1h-2zM18 7h1v1h-1zM20 7h1v1h-1zM23 7h2v1h-2zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM15 9h1v1h-1zM17 9h1v1h-1zM21 9h4v1h-4zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM12 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h2v1h-2zM27 10h4v1h-4zM32 10h5v1h-5zM2 11h1v1h-1zM4 11h4v1h-4zM9 11h3v1h-3zM14 11h1v1h-1zM17 11h2v1h-2zM25 11h1v1h-1zM28 11h1v1h-1zM30 11h2v1h-2zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h2v1h-2zM6 12h1v1h-1zM8 12h1v1h-1zM10 12h1v1h-1zM13 12h3v1h-3zM19 12h2v1h-2zM22 12h2v1h-2zM26 12h1v1h-1zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h3v1h-3zM13 13h2v1h-2zM16 13h1v1h-1zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM26 13h1v1h-1zM29 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h2v1h-2zM5 14h2v1h-2zM8 14h2v1h-2zM12 14h1v1h-1zM14 14h3v1h-3zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h5v1h-5zM30 14h9v1h-9zM2 15h1v1h-1zM4 15h4v1h-4zM12 15h2v1h-2zM15 15h1v1h-1zM18 15h2v1h-2zM22 15h1v1h-1zM24 15h2v1h-2zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h3v1h-3zM6 16h1v1h-1zM8 16h1v1h-1zM11 16h1v1h-1zM13 16h1v1h-1zM15 16h1v1h-1zM17 16h3v1h-3zM22 16h3v1h-3zM28 16h3v1h-3zM32 16h4v1h-4zM38 16h1v1h-1zM3 17h5v1h-5zM11 17h2v1h-2zM14 17h10v1h-10zM25 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h2v1h-2zM7 18h3v1h-3zM12 18h1v1h-1zM15 18h1v1h-1zM17 18h2v1h-2zM21 18h1v1h-1zM23 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h2v1h-2zM5 19h2v1h-2zM9 19h2v1h-2zM12 19h1v1h-1zM16 19h2v1h-2zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM28 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM2 20h1v1h-1zM8 20h2v1h-2zM12 20h2v1h-2zM15 20h1v1h-1zM17 20h2v1h-2zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h2v1h-2zM5 21h3v1h-3zM10 21h1v1h-1zM13 21h2v1h-2zM16 21h2v1h-2zM20 21h6v1h-6zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h2v1h-2zM7 22h3v1h-3zM14 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM3 23h2v1h-2zM6 23h2v1h-2zM10 23h1v1h-1zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM4 24h3v1h-3zM8 24h1v1h-1zM10 24h2v1h-2zM14 24h2v1h-2zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h1v1h-1zM29 24h7v1h-7zM37 24h2v1h-2zM2 25h1v1h-1zM13 25h2v1h-2zM17 25h2v1h-2zM21 25h2v1h-2zM25 25h1v1h-1zM28 25h2v1h-2zM31 25h4v1h-4zM37 25h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM8 26h2v1h-2zM12 26h1v1h-1zM17 26h1v1h-1zM20 26h8v1h-8zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h4v1h-4zM7 27h1v1h-1zM10 27h1v1h-1zM14 27h1v1h-1zM16 27h3v1h-3zM23 27h1v1h-1zM25 27h2v1h-2zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM6 28h5v1h-5zM12 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h1v1h-1zM6 29h2v1h-2zM11 29h1v1h-1zM18 29h1v1h-1zM23 29h1v1h-1zM29 29h1v1h-1zM31 29h4v1h-4zM37 29h2v1h-2zM2 30h1v1h-1zM5 30h1v1h-1zM8 30h1v1h-1zM10 30h1v1h-1zM12 30h1v1h-1zM14 30h1v1h-1zM16 30h1v1h-1zM19 30h1v1h-1zM25 30h14v1h-14zM10 31h1v1h-1zM12 31h1v1h-1zM14 31h1v1h-1zM17 31h7v1h-7zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h2v1h-2zM14 32h2v1h-2zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h2v1h-2zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h3v1h-3zM16 33h5v1h-5zM23 33h3v1h-3zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM15 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h10v1h-10zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h2v1h-2zM15 35h3v1h-3zM20 35h1v1h-1zM22 35h1v1h-1zM24 35h2v1h-2zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h4v1h-4zM17 36h2v1h-2zM20 36h2v1h-2zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h5v1h-5zM17 37h1v1h-1zM21 37h3v1h-3zM28 37h4v1h-4zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h3v1h-3zM15 38h1v1h-1zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM32 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="wire" aria-pressed="true">Wire</button>
+          <button type="button" data-v="magnet" aria-pressed="false">Magnet and loop</button>
+          <button type="button" data-v="point" aria-pressed="false">Point charge</button>
+          <button type="button" data-v="xform" aria-pressed="false">Field transform</button>
+        </div>
+        <div class="seg frame" role="group" aria-label="Observer's frame" id="frameSeg">
+          <button type="button" data-f="lab" aria-pressed="true">Lab frame</button>
+          <button type="button" data-f="charge" aria-pressed="false">Charge's frame</button>
+        </div>
+        <span class="grow"></span>
+        <button type="button" class="btn primary" id="play">Pause</button>
+        <button type="button" class="btn" id="resetView">Reset view</button>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="over" aria-hidden="true"></canvas>
+        <div class="tag" id="tag"></div>
+        <div class="nogl" id="nogl" hidden>The 3D view needs three.js, loaded from cdnjs.cloudflare.com, and WebGL. The readouts in the panel still work.</div>
+      </div>
+      <div class="strip" id="strip" aria-live="polite">
+        <div class="badge" id="sBadge"><span id="sL0">Observer</span><b id="sV0">Lab frame</b><small id="sS0"></small><div class="meter" id="meter"><i id="meterBar"></i></div></div>
+        <div id="sC1"><span id="sL1"></span><b id="sV1"></b><small id="sS1"></small></div>
+        <div class="c-e" id="sC2"><span id="sL2"></span><b id="sV2"></b><small id="sS2"></small></div>
+        <div class="c-b" id="sC3"><span id="sL3"></span><b id="sV3"></b><small id="sS3"></small></div>
+        <div class="c-f" id="sC4"><span id="sL4"></span><b id="sV4"></b><small id="sS4"></small></div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Scenarios</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="lab" aria-pressed="true">Wire, lab frame</button>
+          <button type="button" data-p="fast" aria-pressed="false">Fast charges</button>
+          <button type="button" data-p="real" aria-pressed="false">Real copper wire</button>
+          <button type="button" data-p="magnet" aria-pressed="false">Magnet and loop</button>
+          <button type="button" data-p="point" aria-pressed="false">Moving point charge</button>
+          <button type="button" data-p="xform" aria-pressed="false">Field transformation</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <!-- wire view -->
+      <section data-v="wire">
+        <h2>Wire and test charge</h2>
+        <div class="seg full" role="group" aria-label="Speeds" id="scaleSeg">
+          <button type="button" data-s="fast" aria-pressed="true">Speeds near c</button>
+          <button type="button" data-s="real" aria-pressed="false">Real copper wire</button>
+        </div>
+        <div id="fastBox" style="display:flex;flex-direction:column;gap:10px">
+          <div>
+            <div class="slider-head"><label for="sv">Electron drift v, in the lab</label><output id="svOut" class="mono" for="sv"></output></div>
+            <input type="range" id="sv" min="-0.9" max="0.9" step="0.01" value="0.5">
+          </div>
+          <div>
+            <div class="slider-head"><label for="su">Test charge speed u, in the lab</label><output id="suOut" class="mono" for="su"></output></div>
+            <input type="range" id="su" min="-0.9" max="0.9" step="0.01" value="0.5">
+          </div>
+          <label class="check"><input type="checkbox" id="lock" checked>u = v: the charge moves with the electrons</label>
+          <div class="inline"><span class="lab">Test charge q</span>
+            <div class="seg" role="group" aria-label="Test charge sign" id="qSeg">
+              <button type="button" data-q="1" aria-pressed="true">+1 nC</button>
+              <button type="button" data-q="-1" aria-pressed="false">−1 nC</button>
+            </div>
+          </div>
+          <p class="hint">Exaggerated speeds. The wire holds λ₀ = 1 μC/m of positive ions, at rest in the lab, and the same amount of electrons drifting at v, so it is neutral in the lab.</p>
+        </div>
+        <div id="realBox" style="display:flex;flex-direction:column;gap:10px" hidden>
+          <div>
+            <div class="slider-head"><label for="sI">Current I</label><output id="sIOut" class="mono" for="sI"></output></div>
+            <input type="range" id="sI" min="0.1" max="20" step="0.1" value="1">
+          </div>
+          <p class="hint">Copper, 1 mm² cross section, n = 8.49×10²⁸ conduction electrons per m³ (one per atom). The test charge is a conduction electron in a second, identical wire carrying the same current, so u = v.</p>
+        </div>
+        <div>
+          <div class="slider-head"><label for="sr">Distance r from the wire</label><output id="srOut" class="mono" for="sr"></output></div>
+          <input type="range" id="sr" min="1" max="5" step="0.1" value="2">
+        </div>
+      </section>
+
+      <section data-v="wire">
+        <h2>Both frames</h2>
+        <div class="fcard lab" id="cardLab"><h3>Lab frame <small>ions at rest</small></h3><dl class="rows" id="tabLab"></dl></div>
+        <div class="fcard chg" id="cardChg"><h3>Charge's frame <small>q at rest</small></h3><dl class="rows" id="tabChg"></dl></div>
+        <p class="hint" id="propHint"></p>
+      </section>
+
+      <section data-v="wire">
+        <h2>Do the frames agree?</h2>
+        <dl class="readout">
+          <div class="big"><dt>F in the lab (magnetic)</dt><dd id="rF">—</dd></div>
+          <div class="big"><dt>F′ in q's frame (electric)</dt><dd id="rFp">—</dd></div>
+          <div class="ok"><dt>F′/F</dt><dd id="rRatio">—</dd></div>
+          <div class="ok"><dt>γᵤ of the charge</dt><dd id="rGu">—</dd></div>
+          <div class="wide"><dt>E² − c²B² at q, lab and q's frame</dt><dd id="rInvW">—</dd></div>
+        </dl>
+        <p class="hint">A sideways push is largest in the frame where the particle is at rest: F′ = γᵤF. Sideways momentum is the same in both frames, but the charge's clock runs slow in the lab, so the lab sees that momentum delivered over a γᵤ times longer time.</p>
+        <p class="hint">B does not vanish in the charge's frame: there the ions and electrons both move, at different speeds, so the wire still carries a current. In the lab E = 0 at q, so E² − c²B² is negative, and since it is the same in every frame, no observer sees a purely electric field there.</p>
+      </section>
+
+      <section data-v="wire" id="realSec" hidden>
+        <h2>Real copper wire, to scale</h2>
+        <dl class="readout">
+          <div><dt>Drift speed v</dt><dd id="rVd">—</dd></div>
+          <div><dt>γ − 1 at that speed</dt><dd id="rGm1">—</dd></div>
+          <div><dt>Electrons per meter</dt><dd id="rNpm">—</dd></div>
+          <div><dt>Their charge, λ₀</dt><dd id="rLam0">—</dd></div>
+          <div class="wide"><dt>Net charge the electron sees, λ′</dt><dd id="rLamP">—</dd></div>
+          <div class="wide"><dt>That is one extra elementary charge per</dt><dd id="rPer">—</dd></div>
+          <div class="wide"><dt>Force per meter on the second wire, N·F = μ₀I²/(2πr)</dt><dd id="rFpm">—</dd></div>
+        </dl>
+        <p class="hint">The imbalance is a part in 10²⁶, far too small to measure as charge, but it acts on every one of the 10²² or so conduction electrons in each meter of the second wire. Their tiny forces add up to the ordinary force between two currents.</p>
+      </section>
+
+      <!-- magnet and loop view -->
+      <section data-v="magnet">
+        <h2>Magnet and loop</h2>
+        <div class="seg full" role="group" aria-label="Speed" id="mscaleSeg">
+          <button type="button" data-s="slow" aria-pressed="true">Everyday speed</button>
+          <button type="button" data-s="fast" aria-pressed="false">Near c</button>
+        </div>
+        <div id="mSlow">
+          <div class="slider-head"><label for="smv">Speed of the loop past the magnet</label><output id="smvOut" class="mono" for="smv"></output></div>
+          <input type="range" id="smv" min="0.1" max="10" step="0.1" value="1">
+        </div>
+        <div id="mFast" hidden>
+          <div class="slider-head"><label for="smb">Speed of the loop past the magnet, β</label><output id="smbOut" class="mono" for="smb"></output></div>
+          <input type="range" id="smb" min="0.05" max="0.9" step="0.01" value="0.6">
+        </div>
+        <div>
+          <div class="slider-head"><label for="smz">Ring from the magnet's center (magnet's frame)</label><output id="smzOut" class="mono" for="smz"></output></div>
+          <input type="range" id="smz" min="-13" max="13" step="0.1" value="-9">
+        </div>
+        <label class="check"><input type="checkbox" id="lyMlines" checked>Magnetic field lines</label>
+        <p class="hint">A cylinder magnet 4 cm long and 2 cm across, magnetized along its axis (B<sub>r</sub> = 1.2 T, like neodymium), and a ring 4 cm across on the same axis. The magnet passes through the ring.</p>
+      </section>
+      <section data-v="magnet">
+        <h2>Both frames</h2>
+        <div class="fcard lab" id="cardMLab"><h3>Magnet's frame <small>magnet at rest</small></h3><dl class="rows" id="tabMLab"></dl></div>
+        <div class="fcard chg" id="cardMLoop"><h3>Loop's frame <small>ring at rest</small></h3><dl class="rows" id="tabMLoop"></dl></div>
+      </section>
+      <section data-v="magnet">
+        <h2>Do the frames agree?</h2>
+        <dl class="readout">
+          <div class="big"><dt>EMF, magnet's frame, ∮(v × B)·dl</dt><dd id="mE">—</dd></div>
+          <div class="big"><dt>EMF′, loop's frame, ∮E′·dl</dt><dd id="mEp">—</dd></div>
+          <div class="ok"><dt>EMF′/EMF</dt><dd id="mRatio">—</dd></div>
+          <div class="ok"><dt>γ</dt><dd id="mG">—</dd></div>
+          <div class="wide ok"><dt>−dΦ′/dt′ in the loop's frame, from the flux</dt><dd id="mRate">—</dd></div>
+          <div class="wide"><dt>Induced current (Lenz)</dt><dd id="mCur" style="font-family:var(--font-ui);font-weight:400;font-size:0.9rem">—</dd></div>
+        </dl>
+        <p class="hint">EMF′ = γ EMF exactly: the loop's frame is the ring's rest frame, where the push on its charges is γ times larger, as for the wire. At 1 m/s, γ − 1 = 5.6×10⁻¹⁸.</p>
+      </section>
+      <section data-v="magnet">
+        <h2>Einstein, 1905</h2>
+        <p class="hint">Einstein opened "On the Electrodynamics of Moving Bodies" with this example. The current in the loop depends only on the relative motion, yet the physics of the day told two different stories: a moving loop's charges feel a magnetic force; a moving magnet makes an electric field. The asymmetry, he pointed out, is in the theory, not in the phenomena. In relativity both are one field seen from two frames.</p>
+        <p class="hint">A moving magnet also carries an electric dipole, p = v × m/c² at low speed. Here the motion is along m, so it is zero, and E′ only circles the axis.</p>
+      </section>
+
+      <!-- point charge view -->
+      <section data-v="point">
+        <h2>Moving point charge</h2>
+        <div>
+          <div class="slider-head"><label for="sb">Charge speed β = v/c</label><output id="sbOut" class="mono" for="sb"></output></div>
+          <input type="range" id="sb" min="-0.95" max="0.95" step="0.01" value="0.8">
+        </div>
+        <div class="inline">
+          <label class="check"><input type="checkbox" id="lyLines" checked>E field lines</label>
+          <label class="check"><input type="checkbox" id="lyRings" checked>B loops</label>
+          <label class="check"><input type="checkbox" id="lySurf" checked>Equal |E| surface</label>
+        </div>
+        <dl class="readout">
+          <div class="big"><dt>γ</dt><dd id="pG">—</dd></div>
+          <div class="big"><dt>|E| ahead and behind</dt><dd id="pAhead">—</dd></div>
+          <div class="big"><dt>|E| sideways</dt><dd id="pSide">—</dd></div>
+          <div class="big"><dt>|B| sideways</dt><dd id="pBside">—</dd></div>
+          <div class="wide"><dt>Same field from boosting the Coulomb field (check)</dt><dd id="pCheck">—</dd></div>
+        </dl>
+        <p class="hint">q = 1 nC, fields at 1 m from where the charge is now. At rest, E = kq/r² = 8.988 V/m in every direction. Moving, ahead and behind drop to 1/γ² of that, sideways rises to γ times it, and B = v × E/c² circles the line of motion.</p>
+      </section>
+
+      <!-- field transform view -->
+      <section data-v="xform">
+        <h2>Fields in frame S</h2>
+        <div class="vec">
+          <span></span><span>x</span><span>y</span><span>z</span>
+          <label for="ex">E, kV/m</label><input type="number" id="ex" step="10" value="0"><input type="number" id="ey" step="10" value="0" aria-label="E y, kV/m"><input type="number" id="ez" step="10" value="0" aria-label="E z, kV/m">
+          <label for="bx">B, mT</label><input type="number" id="bx" step="0.1" value="0"><input type="number" id="by" step="0.1" value="0" aria-label="B y, mT"><input type="number" id="bz" step="0.1" value="1" aria-label="B z, mT">
+        </div>
+        <div class="loads"><span class="lab">Load:</span>
+          <button type="button" class="btn" data-load="b">Pure B</button>
+          <button type="button" class="btn" data-load="e">Pure E</button>
+          <button type="button" class="btn" data-load="x">Crossed E and B</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="sx">Frame S′ moves along x at β</label><output id="sxOut" class="mono" for="sx"></output></div>
+          <input type="range" id="sx" min="-0.95" max="0.95" step="0.01" value="0.6">
+        </div>
+      </section>
+      <section data-v="xform">
+        <h2>Fields in frame S′</h2>
+        <dl class="readout">
+          <div class="wide big"><dt>E′, kV/m</dt><dd id="xE">—</dd></div>
+          <div class="wide big"><dt>B′, mT</dt><dd id="xB">—</dd></div>
+          <div class="wide ok"><dt>E·B, in S and in S′ (kV/m·mT)</dt><dd id="xDot">—</dd></div>
+          <div class="wide ok"><dt>E² − c²B², in S and in S′ ((kV/m)²)</dt><dd id="xDiff">—</dd></div>
+        </dl>
+        <p class="hint" id="xNote"></p>
+        <p class="hint">Along the boost nothing changes. Across it, E′ = γ(E + v × B) and B′ = γ(B − v × E/c²). Neither field is the same for everyone; E·B and E² − c²B² are.</p>
+      </section>
+
+      <section>
+        <h2>Key</h2>
+        <div class="key">
+          <span data-v="wire"><i class="swatch dot ion"></i>Positive ions (spacing shows density)</span>
+          <span data-v="wire"><i class="swatch dot el"></i>Conduction electrons</span>
+          <span data-v="wire point"><i class="swatch v"></i>Velocity in the frame drawn</span>
+          <span data-v="wire point"><i class="swatch e"></i>Electric field E</span>
+          <span data-v="wire point"><i class="swatch b"></i>Magnetic field B (loops, arrow gives direction)</span>
+          <span data-v="wire"><i class="swatch f"></i>Force on q: electric part, then magnetic part</span>
+          <span data-v="point"><i class="swatch surf"></i>Surface of equal |E|</span>
+          <span data-v="point"><i class="swatch grid"></i>Grid at rest in the lab</span>
+          <span data-v="magnet"><i class="swatch dot ion"></i>Magnet's north end; <i class="swatch dot el" style="margin-left:2px"></i>south end</span>
+          <span data-v="magnet"><i class="swatch b"></i>Magnetic field lines of the magnet</span>
+          <span data-v="magnet"><i class="swatch e"></i>Push on + charges: electric part, qE</span>
+          <span data-v="magnet"><i class="swatch b" style="border-top-width:5px"></i>Push on + charges: magnetic part, q(v × B)</span>
+          <span data-v="magnet"><i class="swatch v"></i>Velocity in the frame drawn</span>
+          <span data-v="magnet"><i class="swatch f"></i>Plot: EMF in the magnet's frame; dashed EMF′; dots −dΦ′/dt′</span>
+          <span data-v="xform"><i class="swatch e"></i>E′, and E in S dashed</span>
+          <span data-v="xform"><i class="swatch b"></i>cB′, and cB in S dashed</span>
+          <span data-v="xform"><i class="swatch v"></i>Velocity of S′ relative to S</span>
+        </div>
+      </section>
+
+      <section>
+        <h2>Controls and model</h2>
+        <p class="hint">Drag the 3D view to turn it, scroll or pinch to zoom, double click to reset. Ringed dots are grips: drag the test charge to change r, or an arrow tip to change a speed. With the view focused: <kbd>←</kbd> <kbd>→</kbd> speed, <kbd>↑</kbd> <kbd>↓</kbd> distance, <kbd>F</kbd> switch frame, <kbd>Space</kbd> pause.</p>
+        <p class="hint" data-v="wire">Model: exact special relativity at any speed. The wire is two infinitely long, thin lines of charge: ions with density +λ₀ at rest in the lab, and electrons drifting at v with density −λ₀ in the lab, so the lab sees a neutral wire. In any frame, each line's density is its density in its own rest frame times its γ in that frame. Fields of an infinite line: E = λ/(2πε₀r), B = μ₀I/(2πr). The force is the Lorentz force q(E + u × B) on the test charge. Ignored: the test charge's own field and radiation, the wire's resistance, and the small surface charges that push current around a real circuit.</p>
+        <p class="hint" data-v="wire">What is drawn: charges are symbols, and their spacing shows each line's density in the frame drawn. With speeds near c the motion is slowed for the screen (light would cross 2.2 grid units per second), and r is to scale with the wire much thicker than a line. In the real wire the true spacing, one electron per 10⁻²³ m of wire, and its 10⁻²⁶ change cannot be drawn: equal spacing is the honest picture.</p>
+        <p class="hint" data-v="point">Model: the exact field of a charge that has moved at constant velocity forever (Heaviside, 1888). It points straight away from where the charge is now: E = kq(1 − β²)/(r²(1 − β² sin²θ)^3/2), with θ measured from the direction of motion, and B = v × E/c². No acceleration, so no radiation. The view rides with the charge; the grid below is at rest in the lab and slides past at the charge's speed, slowed for the screen. Field lines are spaced so their density shows |E|.</p>
+        <p class="hint" data-v="magnet">Model: the magnet is a uniformly magnetized cylinder, which is the same as a sheet of current K = M around its side. Its field is the exact field of each current loop (complete elliptic integrals), summed along the length by Gauss–Legendre quadrature, 120 nodes; the flux through the ring uses the exact mutual inductance of coaxial loops. Everything moves along the axis at constant speed; fields in the loop's frame come from the exact Lorentz transformation, at everyday speeds too. The EMFs are sums of the push on the charges over 48 pieces of the ring; −dΦ′/dt′ is a central difference. Ignored: the field of the induced current itself (a thin ring of high resistance). The motion on screen is slowed, and near c the magnet and spacing are drawn contracted by γ.</p>
+        <p class="hint" data-v="xform">Model: the exact Lorentz transformation of the fields at one event, for a boost along x. Arrows show E and cB on one scale, so a field of 300 kV/m and one of 1 mT (cB = 299.8 kV/m) look about the same length.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  // ==CORE START==
+  // SI units. Speeds are β = v/c unless a name says otherwise.
+  const C0 = 299792458;                 // m/s
+  const EPS0 = 8.8541878128e-12;        // F/m (CODATA 2018)
+  const MU0 = 1 / (EPS0 * C0 * C0);     // T·m/A
+  const QE = 1.602176634e-19;           // C
+  const NA = 6.02214076e23;             // 1/mol
+  const CU_RHO = 8960, CU_M = 0.063546; // copper: kg/m³, kg/mol
+  const N_CU = CU_RHO / CU_M * NA;      // conduction electrons per m³, one per atom
+  const K2 = 1 / (2 * Math.PI * EPS0);  // E of a line charge: λ K2 / r
+  const KC = 1 / (4 * Math.PI * EPS0);  // Coulomb constant
+
+  function gammaOf(b) { return 1 / Math.sqrt(1 - b * b); }
+  // γ − 1 without cancellation, good for drift speeds of 10⁻¹³ c
+  function gm1(b) { const s = Math.sqrt(1 - b * b); return b * b / (s * (1 + s)); }
+  // velocity of something moving at v (lab), seen from a frame moving at u (lab): relativistic velocity difference
+  function relVel(v, u) { return (v - u) / (1 - u * v); }
+
+  // The wire seen from a frame moving at f along it. In the lab: ions +lam0 at rest, electrons −lam0 moving at v.
+  // Each line's density = its rest frame density × its γ in this frame.
+  function wireInFrame(lam0, v, f) {
+    const gf = gammaOf(f), gv = gammaOf(v), w = relVel(v, f), gw = gammaOf(w);
+    const lamIon = gf * lam0;                // rest density lam0, contracted by γf
+    const lamEl = -(lam0 / gv) * gw;         // rest density lam0/γv, contracted by γw
+    return {
+      gf, gv, w, gw, lamIon, lamEl,
+      dIon: gm1(f),                          // lamIon/lam0 − 1
+      dEl: gm1(f) - gf * f * v,              // |lamEl|/lam0 − 1 = γf(1 − v f) − 1, since γw = γf γv (1 − v f)
+      lamNet: lam0 * gf * f * v,             // lamIon + lamEl in closed form (no cancellation)
+      lamSum: lamIon + lamEl,                // the same, summed directly
+      I: -lam0 * gf * v * C0,                // current along +x, A
+      Isum: C0 * (lamIon * -f + lamEl * w)   // the same, from the two moving lines
+    };
+  }
+  // Fields and force on q at distance r (q above the wire, +z), q moving at u (lab) along the wire, seen from frame f.
+  // Ez > 0 points away from the wire; B at q is along y. F > 0 pushes q away from the wire.
+  function wireForce(lam0, v, u, q, r, f) {
+    const W = wireInFrame(lam0, v, f), uq = relVel(u, f);
+    const Ez = W.lamNet * K2 / r;            // λ/(2πε₀ r)
+    const By = -MU0 * W.I / (2 * Math.PI * r);  // μ₀I/(2πr); x̂ × ẑ = −ŷ
+    const FE = q * Ez, FM = q * uq * C0 * By;   // q(u × B)_z = q u By
+    return Object.assign(W, { uq, gq: gammaOf(uq), Ez, By, cBy: C0 * By, FE, FM, F: FE + FM });
+  }
+  // Lab frame, directly: B = μ₀I/(2πr) and F = quB
+  function labForce(lam0, v, u, q, r) {
+    const I = -lam0 * v * C0, B = MU0 * Math.abs(I) / (2 * Math.PI * r);
+    return { I, B, F: q * u * v * lam0 * C0 * C0 * MU0 / (2 * Math.PI * r) };
+  }
+  // Copper wire of cross section A (m²) carrying I (A): λ₀ = n e A of conduction electrons, drift v = I/(n e A)
+  function copperWire(I, A) { const lam0 = N_CU * QE * A, vd = I / lam0; return { n: N_CU, lam0, vd, b: vd / C0, perMeter: N_CU * A }; }
+
+  // Lorentz transformation of E and cB (same units) into a frame moving at β along +x
+  function boostFields(E, cB, b) {
+    const g = gammaOf(b);
+    return [
+      [E[0], g * (E[1] - b * cB[2]), g * (E[2] + b * cB[1])],
+      [cB[0], g * (cB[1] + b * E[2]), g * (cB[2] - b * E[1])]
+    ];
+  }
+  function invariants(E, cB) {
+    return { dot: E[0] * cB[0] + E[1] * cB[1] + E[2] * cB[2],
+      diff: E[0] * E[0] + E[1] * E[1] + E[2] * E[2] - cB[0] * cB[0] - cB[1] * cB[1] - cB[2] * cB[2] };
+  }
+  // Coulomb field of q at the origin (V/m)
+  function coulomb(q, x, y, z) { const r2 = x * x + y * y + z * z, k = KC * q / (r2 * Math.sqrt(r2)); return [k * x, k * y, k * z]; }
+  // Exact field of q moving at β along +x, now at the origin (Heaviside): E (V/m) and cB (V/m)
+  function movingCharge(q, b, x, y, z) {
+    const r2 = x * x + y * y + z * z, s2 = (y * y + z * z) / r2;
+    const k = KC * q * (1 - b * b) / (r2 * Math.sqrt(r2) * Math.pow(1 - b * b * s2, 1.5));
+    const E = [k * x, k * y, k * z];
+    return { E, cB: [0, -b * E[2], b * E[1]] };   // cB = β x̂ × E
+  }
+  // The same field built from the rest frame: find the event in the charge's frame, take Coulomb there, boost the fields
+  // back by −β (the lab moves at −β relative to the charge). At lab time 0 the event is at x_rest = γ x.
+  function movingFromCoulomb(q, b, x, y, z) {
+    const g = gammaOf(b), E0 = coulomb(q, g * x, y, z), out = boostFields(E0, [0, 0, 0], -b);
+    return { E: out[0], cB: out[1] };
+  }
+  // A field line leaving at θ0 from the motion in the rest frame leaves at θ in the lab: tan θ = γ tan θ0
+  function lineAngle(th0, b) { return Math.atan2(gammaOf(b) * Math.sin(th0), Math.cos(th0)); }
+  // Distance at which |E| equals the rest frame field at distance R0, in direction θ from the motion
+  function isoRadius(th, b, R0) { const s = Math.sin(th); return R0 * Math.sqrt((1 - b * b) / Math.pow(1 - b * b * s * s, 1.5)); }
+
+  // ---- Einstein's magnet and loop. The common axis is x. ----
+  // Complete elliptic integrals K(m), E(m), parameter m = k², by the arithmetic geometric mean
+  function ellipKE(m) {
+    let a = 1, b = Math.sqrt(1 - m), c = Math.sqrt(m), s = 0.5 * m, p = 0.5;
+    for (let i = 0; i < 40 && c > 1e-16 * a; i++) { const an = (a + b) / 2; c = (a - b) / 2; b = Math.sqrt(a * b); a = an; p *= 2; s += p * c * c; }
+    const K = Math.PI / (2 * a);
+    return [K, K * (1 - s)];
+  }
+  // Exact field of a circular loop, radius R, current I, centered on the axis: returns [B along axis, B away from axis] at (x, rho)
+  function loopField(R, I, x, rho) {
+    const k0 = MU0 * I / (2 * Math.PI);
+    if (rho < 1e-7 * R) {
+      const d2 = R * R + x * x;
+      return [MU0 * I * R * R / (2 * d2 * Math.sqrt(d2)), 3 * MU0 * I * R * R * x * rho / (4 * d2 * d2 * Math.sqrt(d2))];
+    }
+    const q = (R + rho) * (R + rho) + x * x, d = (R - rho) * (R - rho) + x * x, m = 4 * R * rho / q, [K, E] = ellipKE(m), sq = Math.sqrt(q);
+    return [k0 / sq * (K + (R * R - rho * rho - x * x) / d * E), k0 * x / (rho * sq) * (-K + (R * R + rho * rho + x * x) / d * E)];
+  }
+  // Gauss–Legendre nodes and weights on [−1, 1]
+  function gaussLegendre(n) {
+    const xs = [], ws = [];
+    for (let i = 1; i <= n; i++) {
+      let x = Math.cos(Math.PI * (i - 0.25) / (n + 0.5)), dp = 0;
+      for (let it = 0; it < 100; it++) {
+        let p0 = 1, p1 = x;
+        for (let k = 2; k <= n; k++) { const p2 = ((2 * k - 1) * x * p1 - (k - 1) * p0) / k; p0 = p1; p1 = p2; }
+        dp = n * (x * p1 - p0) / (x * x - 1);
+        const dx = p1 / dp; x -= dx; if (Math.abs(dx) < 1e-16) break;
+      }
+      xs.push(x); ws.push(2 / ((1 - x * x) * dp * dp));
+    }
+    return { xs, ws };
+  }
+  // A uniformly magnetized cylinder (radius a, length L, magnetization M along +x) is a sheet of current K = M on its side.
+  // Its field is the loop field summed along the length: composite Gauss–Legendre with the given panels and nodes.
+  function magnetQuad(mag, panels, n) {
+    const g = gaussLegendre(n), zs = [], ws = [], h = mag.L / panels;
+    for (let p = 0; p < panels; p++) for (let i = 0; i < n; i++) { zs.push(-mag.L / 2 + h * (p + 0.5 + 0.5 * g.xs[i])); ws.push(0.5 * h * g.ws[i] * mag.M); }
+    return { zs, ws };
+  }
+  function magnetField(mag, Q, x, rho) {
+    let bx = 0, br = 0;
+    for (let i = 0; i < Q.zs.length; i++) { const f = loopField(mag.a, Q.ws[i], x - Q.zs[i], rho); bx += f[0]; br += f[1]; }
+    return [bx, br];
+  }
+  // Mutual inductance of two coaxial loops (radii a, b, axial distance d)
+  function mutual(a, b, d) {
+    const k2 = 4 * a * b / ((a + b) * (a + b) + d * d), k = Math.sqrt(k2), [K, E] = ellipKE(k2);
+    return MU0 * Math.sqrt(a * b) * ((2 / k - k) * K - 2 / k * E);
+  }
+  // Flux of the magnet's B through a ring of radius b whose plane is at x (normal +x)
+  function magnetFlux(mag, Q, b, x) { let f = 0; for (let i = 0; i < Q.zs.length; i++) f += Q.ws[i] * mutual(mag.a, b, x - Q.zs[i]); return f; }
+  // Magnet's frame: the ring moves at β along +x. EMF = ∮(v × B)·dl, summed over N pieces; dl runs along φ̂ = x̂ × ρ̂.
+  function motionalEMF(mag, Q, b, x, beta, N) {
+    const v = beta * C0; let emf = 0;
+    for (let j = 0; j < N; j++) {
+      const ph = 2 * Math.PI * (j + 0.5) / N, cy = Math.cos(ph), cz = Math.sin(ph), [bx, br] = magnetField(mag, Q, x, b);
+      const B = [bx, br * cy, br * cz], F = [0, -v * B[2], v * B[1]], dl = [0, -cz * b * 2 * Math.PI / N, cy * b * 2 * Math.PI / N];
+      emf += F[1] * dl[1] + F[2] * dl[2];
+    }
+    return emf;
+  }
+  // Loop's frame (moving at β along +x relative to the magnet): E′ from the exact field transformation, EMF′ = ∮E′·dl.
+  // The ring's points at one loop time all map to one magnet time, at the magnet frame position x.
+  function loopFrameEMF(mag, Q, b, x, beta, N) {
+    let emf = 0;
+    for (let j = 0; j < N; j++) {
+      const ph = 2 * Math.PI * (j + 0.5) / N, cy = Math.cos(ph), cz = Math.sin(ph), [bx, br] = magnetField(mag, Q, x, b);
+      const Ep = boostFields([0, 0, 0], [C0 * bx, C0 * br * cy, C0 * br * cz], beta)[0];
+      emf += Ep[1] * (-cz * b * 2 * Math.PI / N) + Ep[2] * (cy * b * 2 * Math.PI / N);
+    }
+    return emf;
+  }
+  // −dΦ′/dt′ in the loop's frame. B along the axis is unchanged by the boost, so Φ′ = Φ; the magnet frame separation
+  // grows as x = γ v t′. Central difference with step h.
+  function fluxRateLoopFrame(mag, Q, b, x, beta, h) {
+    return -gammaOf(beta) * beta * C0 * (magnetFlux(mag, Q, b, x + h) - magnetFlux(mag, Q, b, x - h)) / (2 * h);
+  }
+  // ==CORE END==
+
+  // ---------- formatting ----------
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  const minus = (s) => s.replace(/-/g, '−');
+  function sci(x, d = 2) {
+    if (x === 0) return '0';
+    let e = Math.floor(Math.log10(Math.abs(x))), m = Math.abs(x) / 10 ** e;
+    if (+m.toFixed(d) >= 10) { m /= 10; e += 1; }
+    return (x < 0 ? '−' : '') + m.toFixed(d) + '×10' + String(e).split('').map((c) => SUP[c]).join('');
+  }
+  const PREF = [[1e9, 'G'], [1e6, 'M'], [1e3, 'k'], [1, ''], [1e-3, 'm'], [1e-6, 'μ'], [1e-9, 'n'], [1e-12, 'p']];
+  function num(x, sig, sign) { let s = x.toPrecision(sig); if (/e/.test(s)) s = String(+s); s = minus(s); return sign && x > 0 ? '+' + s : s; }
+  function fq(x, unit, sig = 4, sign = false) {
+    if (!Number.isFinite(x)) return '—';
+    if (x === 0) return '0 ' + unit;
+    const a = Math.abs(x);
+    if (a >= 1e12 || a < 1e-12) return (sign && x > 0 ? '+' : '') + sci(x, sig - 1) + ' ' + unit;
+    for (const [p, n] of PREF) if (a >= p * 0.99995) return num(x / p, sig, sign) + ' ' + n + unit;
+    return num(x, sig, sign) + ' ' + unit;
+  }
+  const fb = (b, d = 3) => (Math.abs(b) < 5e-4 * 10 ** (3 - d) ? '0' : (b > 0 ? '+' : '−') + Math.abs(b).toFixed(d) + 'c');
+  const fmtVec = (v, d = 1) => '(' + v.map((x) => { const s = Math.abs(x) < 0.5 * 10 ** -d ? '0' : minus(x.toFixed(d)); return s; }).join(', ') + ')';
+  const awayWord = (F) => (F > 0 ? 'away from the wire' : F < 0 ? 'toward the wire' : 'none');
+
+  // ---------- state ----------
+  const LAM0 = 1e-6, QX = 1e-9, A_CU = 1e-6;
+  const S = {
+    view: 'wire', scale: 'fast', frame: 'lab',
+    v: 0.5, u: 0.5, lock: true, qs: 1, r: 2, I: 1,
+    bp: 0.8, layers: { lines: true, rings: true, surf: true, mlines: true },
+    mscale: 'slow', mv: 1, mb: 0.6, mz: -9,
+    xb: 0.6, xE: [0, 0, 0], xB: [0, 0, 1]
+  };
+  let preset = 'lab';
+  let playing = !reduce;
+  const boost = { active: false, phi: 0, rate: 1 };
+  let fCur = 0;
+
+  function wp() {
+    if (S.scale === 'real') {
+      const cw = copperWire(S.I, A_CU);
+      return { lam0: cw.lam0, v: cw.b, u: cw.b, q: -QE, r: S.r / 100, cw };
+    }
+    return { lam0: LAM0, v: S.v, u: S.lock ? S.v : S.u, q: S.qs * QX, r: S.r / 100 };
+  }
+  const MAG = { a: 0.01, L: 0.04, M: 1.2 / MU0 }, RB = 0.02;   // magnet radius, length, magnetization (μ₀M = 1.2 T); ring radius, m
+  let QM = null, QL = null;
+  const quads = () => { if (!QM) { QM = magnetQuad(MAG, 10, 12); QL = magnetQuad(MAG, 4, 8); } };
+  const mBeta = () => (S.mscale === 'slow' ? S.mv / C0 : S.mb);
+  const targetF = () => (S.frame !== 'charge' ? 0 : S.view === 'magnet' ? mBeta() : wp().u);
+
+  // ---------- presets ----------
+  const PRESETS = {
+    lab: { hint: 'The wire is neutral in the lab, so E = 0 at the charge. The charge moves with the electrons and feels only the magnetic force quB, away from the wire. Predict: what does the charge itself see? Then switch to Charge\'s frame: the wire is charged there, B is still present (the wire still carries current) but cannot push a charge at rest, and the force is electric.',
+      set: () => Object.assign(S, { view: 'wire', scale: 'fast', frame: 'lab', v: 0.5, u: 0.5, lock: true, qs: 1, r: 2 }) },
+    fast: { hint: 'Electrons at 0.8c, the charge at 0.6c the other way. Switch frames: the electrons move at 0.946c in the charge\'s frame, not 1.4c, the wire turns negative, and the force pulls the charge in.',
+      set: () => Object.assign(S, { view: 'wire', scale: 'fast', frame: 'lab', v: 0.8, u: -0.6, lock: false, qs: 1, r: 2 }) },
+    real: { hint: '1 A in a 1 mm² copper wire, to scale: the electrons drift at 0.07 mm/s. Switch frames. Nothing visible changes, yet the force stays the same, now electric.',
+      set: () => Object.assign(S, { view: 'wire', scale: 'real', frame: 'lab', I: 1, r: 1 }) },
+    magnet: { hint: 'Einstein\'s 1905 example. The ring moves at 1 m/s past the magnet, and its charges feel q(v × B). Switch to Loop\'s frame: now the magnet moves, and an electric field circles the axis. Same EMF, two stories.',
+      set: () => Object.assign(S, { view: 'magnet', mscale: 'slow', mv: 1, frame: 'lab', mz: -9 }) },
+    point: { hint: 'A charge moving at 0.8c. Its field still points straight out from where it is now, but it is squeezed into a pancake across the motion, and B circles the line of motion.',
+      set: () => Object.assign(S, { view: 'point', bp: 0.8 }) },
+    xform: { hint: 'A pure magnetic field in S. Seen from S′, moving across it, there is also an electric field: E′ = γ(v × B). The two invariants do not change.',
+      set: () => { Object.assign(S, { view: 'xform', xb: 0.6 }); loadFields('b'); } }
+  };
+  function applyPreset(p) {
+    preset = p; const P = PRESETS[p];
+    P.set();
+    syncControls();
+    boost.active = false;
+    boost.phi = Math.atanh(targetF());
+    resetOrbit();
+    if (G.ready) G.W.ph.xq = 0;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === p));
+    $('presetHint').textContent = P.hint;
+    refresh();
+  }
+  function clearPreset() {
+    preset = null;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', 'false');
+  }
+
+  function startBoost() {
+    const phT = Math.atanh(targetF());
+    if (reduce || Math.abs(phT - boost.phi) < 1e-9) { boost.active = false; boost.phi = phT; return; }
+    boost.active = true; boost.rate = Math.abs(phT - boost.phi) / 1.6;
+  }
+  function setFrame(fr) {
+    if (S.frame === fr) return;
+    S.frame = fr; clearPreset();
+    if (S.view === 'wire' && S.scale === 'real') {
+      // rapidities of 10⁻¹³ cannot be eased; the switch is instant and the strip says what changed
+      boost.active = false; boost.phi = Math.atanh(targetF());
+    } else startBoost();
+    syncControls(); refresh();
+  }
+
+  // ---------- controls ----------
+  const slid = { sv: 'v', su: 'u', sr: 'r', sI: 'I', sb: 'bp', sx: 'xb', smv: 'mv', smb: 'mb', smz: 'mz' };
+  function syncControls() {
+    for (const [id, k] of Object.entries(slid)) $(id).value = S[k];
+    $('lock').checked = S.lock;
+    $('su').disabled = S.lock;
+    if (S.lock) $('su').value = S.v;
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    for (const b of document.querySelectorAll('#frameSeg button')) b.setAttribute('aria-pressed', String(b.dataset.f === S.frame));
+    for (const b of document.querySelectorAll('#scaleSeg button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.scale));
+    for (const b of document.querySelectorAll('#qSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.q === S.qs));
+    $('frameSeg').hidden = S.view !== 'wire' && S.view !== 'magnet';
+    const fl = S.view === 'magnet' ? ['Magnet\'s frame', 'Loop\'s frame'] : ['Lab frame', 'Charge\'s frame'];
+    document.querySelectorAll('#frameSeg button').forEach((b, i) => { b.textContent = fl[i]; });
+    for (const b of document.querySelectorAll('#mscaleSeg button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.mscale));
+    $('mSlow').hidden = S.mscale !== 'slow'; $('mFast').hidden = S.mscale !== 'fast';
+    $('lyMlines').checked = S.layers.mlines;
+    $('fastBox').hidden = S.scale !== 'fast';
+    $('realBox').hidden = S.scale !== 'real';
+    for (const el of document.querySelectorAll('.rail [data-v]')) el.hidden = !el.dataset.v.split(' ').includes(S.view);
+    $('realSec').hidden = S.view !== 'wire' || S.scale !== 'real';
+    $('lyLines').checked = S.layers.lines; $('lyRings').checked = S.layers.rings; $('lySurf').checked = S.layers.surf;
+    ['ex', 'ey', 'ez'].forEach((id, i) => { if (document.activeElement !== $(id)) $(id).value = +S.xE[i].toFixed(3); });
+    ['bx', 'by', 'bz'].forEach((id, i) => { if (document.activeElement !== $(id)) $(id).value = +S.xB[i].toFixed(4); });
+    sliderOuts();
+  }
+  function sliderOuts() {
+    const P = wp();
+    $('svOut').textContent = fb(S.v, 2);
+    $('suOut').textContent = fb(S.lock ? S.v : S.u, 2);
+    $('srOut').textContent = S.r.toFixed(1) + ' cm';
+    $('sIOut').textContent = S.I.toFixed(1) + ' A';
+    $('sbOut').textContent = fb(S.bp, 2);
+    $('sxOut').textContent = fb(S.xb, 2);
+    $('smvOut').textContent = S.mv.toFixed(1) + ' m/s';
+    $('smbOut').textContent = fb(S.mb, 2);
+    $('smzOut').textContent = minus(S.mz.toFixed(1)) + ' cm';
+    void P;
+  }
+  for (const [id, k] of Object.entries(slid)) {
+    $(id).addEventListener('input', () => {
+      S[k] = +$(id).value;
+      if (k === 'v' && S.lock) S.u = S.v;
+      clearPreset(); onParamChange();
+    });
+  }
+  $('lock').addEventListener('change', () => { S.lock = $('lock').checked; if (!S.lock) S.u = S.v; clearPreset(); syncControls(); onParamChange(); });
+  for (const b of document.querySelectorAll('#qSeg button')) b.addEventListener('click', () => { S.qs = +b.dataset.q; clearPreset(); syncControls(); refresh(); });
+  for (const b of document.querySelectorAll('#scaleSeg button')) b.addEventListener('click', () => {
+    if (S.scale === b.dataset.s) return;
+    S.scale = b.dataset.s; clearPreset(); boost.active = false; boost.phi = Math.atanh(targetF()); syncControls(); refresh();
+  });
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => {
+    if (S.view === b.dataset.v) return;
+    S.view = b.dataset.v; clearPreset(); boost.active = false; boost.phi = Math.atanh(targetF()); resetOrbit(); syncControls(); refresh();
+  });
+  for (const b of document.querySelectorAll('#frameSeg button')) b.addEventListener('click', () => setFrame(b.dataset.f));
+  for (const b of document.querySelectorAll('#mscaleSeg button')) b.addEventListener('click', () => {
+    if (S.mscale === b.dataset.s) return;
+    S.mscale = b.dataset.s; clearPreset(); boost.active = false; boost.phi = Math.atanh(targetF()); syncControls(); refresh();
+  });
+  $('lyMlines').addEventListener('change', (e) => { S.layers.mlines = e.target.checked; refresh(); });
+  $('lyLines').addEventListener('change', (e) => { S.layers.lines = e.target.checked; refresh(); });
+  $('lyRings').addEventListener('change', (e) => { S.layers.rings = e.target.checked; refresh(); });
+  $('lySurf').addEventListener('change', (e) => { S.layers.surf = e.target.checked; refresh(); });
+  for (const [i, id] of ['ex', 'ey', 'ez'].entries()) $(id).addEventListener('input', () => { const x = parseFloat($(id).value); S.xE[i] = Number.isFinite(x) ? x : 0; clearPreset(); refresh(); });
+  for (const [i, id] of ['bx', 'by', 'bz'].entries()) $(id).addEventListener('input', () => { const x = parseFloat($(id).value); S.xB[i] = Number.isFinite(x) ? x : 0; clearPreset(); refresh(); });
+  function loadFields(k) {
+    if (k === 'b') { S.xE = [0, 0, 0]; S.xB = [0, 0, 1]; }
+    else if (k === 'e') { S.xE = [0, 300, 0]; S.xB = [0, 0, 0]; }
+    else { S.xE = [0, 0.5 * C0 * 1e-6, 0]; S.xB = [0, 0, 1]; S.xb = 0.5; }   // E = βcB with β = 0.5
+  }
+  for (const b of document.querySelectorAll('[data-load]')) b.addEventListener('click', () => {
+    loadFields(b.dataset.load); clearPreset(); syncControls(); refresh();
+  });
+  function onParamChange() {
+    if ((S.view === 'wire' || S.view === 'magnet') && !boost.active) boost.phi = Math.atanh(targetF());
+    syncControls(); refresh();
+  }
+
+  // ---------- readouts ----------
+  function rowsHTML(rows) {
+    return rows.map(([k, v, cls]) => `<div class="${cls || ''}" style="display:contents"><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+  }
+  function wireReadouts() {
+    const P = wp(), real = S.scale === 'real';
+    const L = wireForce(P.lam0, P.v, P.u, P.q, P.r, 0), Q = wireForce(P.lam0, P.v, P.u, P.q, P.r, P.u);
+    const speed = (b) => (real ? (Math.abs(b) < 1e-30 ? 'at rest' : fq(b * C0, 'm/s', 3, true)) : (Math.abs(b) < 5e-4 ? 'at rest' : fb(b)));
+    const dens = (d, sgn) => (real ? `${sgn}λ₀${d === 0 ? '' : ' × (1 ' + (d < 0 ? '− ' : '+ ') + sci(Math.abs(d), 2) + ')'}` : fq(sgn === '−' ? -P.lam0 * (1 + d) : P.lam0 * (1 + d), 'C/m', 4, true));
+    const net = (W) => (real ? fq(W.lamNet, 'C/m', 3, true) : fq(W.lamNet, 'C/m', 4, true));
+    const frameRows = (W) => [
+      ['Ions move at', speed(-W.f)],
+      ['Electrons move at', speed(W.w)],
+      ['λ of ions', dens(W.dIon, '+')],
+      ['λ of electrons', dens(W.dEl, '−')],
+      ['Net λ', net(W), 'em'],
+      ['q moves at', speed(W.uq)],
+      ['E at q', fq(Math.abs(W.Ez), 'V/m', 4)],
+      ['B at q', fq(Math.abs(W.By), 'T', 4)],
+      ['Force on q', fq(Math.abs(W.F), 'N', 4) + ', ' + (W.FE === 0 && W.FM === 0 ? 'none' : W.F === 0 ? '0' : awayWord(W.F)), 'ef']
+    ];
+    L.f = 0; Q.f = P.u;
+    $('tabLab').innerHTML = rowsHTML(frameRows(L));
+    $('tabChg').innerHTML = rowsHTML(frameRows(Q));
+    $('cardLab').classList.toggle('now', !boost.active && S.frame === 'lab');
+    $('cardChg').classList.toggle('now', !boost.active && S.frame === 'charge');
+    const gv = gammaOf(P.v);
+    $('propHint').textContent = real
+      ? 'Each density is its rest frame density times γ in that frame. At drift speeds γ − 1 is about 10⁻²⁶, so the changes show only as these tiny corrections.'
+      : `Each density is its rest frame density times γ in that frame. The ions' rest density is λ₀; the electrons' is λ₀/γᵥ = ${fq(P.lam0 / gv, 'C/m', 4)}, since the lab sees them contracted by γᵥ = ${gv.toFixed(4)}.`;
+    $('rF').textContent = fq(L.F, 'N', 4, true);
+    $('rFp').textContent = fq(Q.F, 'N', 4, true);
+    const gu = gammaOf(P.u);
+    if (real) {
+      $('rRatio').textContent = L.F === 0 ? '—' : (Q.F / L.F).toFixed(6);
+      $('rGu').textContent = '1 + ' + sci(gm1(P.u), 2);
+    } else {
+      $('rRatio').textContent = L.F === 0 ? 'no force' : (Q.F / L.F).toFixed(4);
+      $('rGu').textContent = gu.toFixed(4);
+    }
+    const iL = L.Ez * L.Ez - L.cBy * L.cBy, iQ = Q.Ez * Q.Ez - Q.cBy * Q.cBy;
+    $('rInvW').textContent = sci(iL, 4) + ' and ' + sci(iQ, 4) + ' V²/m²';
+    if (real) {
+      const cw = P.cw;
+      $('rVd').textContent = fq(cw.vd, 'm/s', 3);
+      $('rGm1').textContent = sci(gm1(cw.b), 2);
+      $('rNpm').textContent = sci(cw.perMeter, 2);
+      $('rLam0').textContent = fq(cw.lam0, 'C/m', 4);
+      $('rLamP').textContent = fq(Q.lamNet, 'C/m', 3, true) + ' (positive)';
+      const per = QE / Q.lamNet;
+      $('rPer').textContent = per >= 1000 ? (per / 1000).toPrecision(3) + ' km of wire' : per.toPrecision(3) + ' m of wire';
+      $('rFpm').textContent = fq(cw.perMeter * Math.abs(L.F), 'N/m', 4) + ' = ' + fq(MU0 * S.I * S.I / (2 * Math.PI * P.r), 'N/m', 4) + ', attractive';
+    }
+    return { L, Q, P };
+  }
+  function strip(i, label, value, sub) { $('sL' + i).textContent = label; $('sV' + i).textContent = value; $('sS' + i).textContent = sub || ''; }
+  function wireStrip() {
+    const P = wp(), real = S.scale === 'real', f = fCur, W = wireForce(P.lam0, P.v, P.u, P.q, P.r, f);
+    const settled = !boost.active;
+    $('sBadge').classList.toggle('boost', !settled);
+    if (settled && S.frame === 'lab') strip(0, 'Observer', 'Lab frame', 'ions at rest');
+    else if (settled) strip(0, 'Observer', 'Charge\'s frame', real ? 'q at rest, moving at v = ' + fq(P.u * C0, 'm/s', 3) + ' in the lab' : 'q at rest, moving at ' + fb(P.u) + ' in the lab');
+    else strip(0, 'Observer moving at', fb(f), 'between the two frames');
+    $('meter').hidden = real || Math.abs(P.u) < 1e-3;
+    $('meterBar').style.width = (Math.abs(P.u) < 1e-9 ? 0 : Math.max(0, Math.min(1, Math.atanh(f) / Math.atanh(P.u))) * 100) + '%';
+    strip(1, 'Net line charge λ', fq(W.lamNet, 'C/m', real ? 3 : 4, true), Math.abs(W.lamNet) < 1e-30 ? 'neutral' : W.lamNet > 0 ? 'ions outnumber electrons' : 'electrons outnumber ions');
+    strip(2, 'E at q', fq(Math.abs(W.Ez), 'V/m', 4), W.Ez === 0 ? 'no electric field' : '');
+    strip(3, 'B at q', fq(Math.abs(W.By), 'T', 4), Math.abs(W.uq) <= 1e-9 * Math.max(Math.abs(P.u), Math.abs(P.v), 1e-300) ? (Math.abs(W.By) > 0 ? 'still there, but q is at rest: no magnetic force' : 'q is at rest') : '');
+    const kind = Math.abs(W.FM) < 1e-12 * Math.abs(W.F) || W.FM === 0 ? 'electric' : Math.abs(W.FE) < 1e-12 * Math.abs(W.F) || W.FE === 0 ? 'magnetic' : 'electric ' + fq(W.FE, 'N', 3, true) + ', magnetic ' + fq(W.FM, 'N', 3, true);
+    strip(4, 'Force on q', fq(Math.abs(W.F), 'N', 4), W.F === 0 ? 'no force' : (kind.length > 10 ? kind : kind + ', ' + awayWord(W.F)));
+    $('tag').className = 'tag' + (real ? ' exact' : '');
+    $('tag').textContent = real ? 'Real speeds: drift ' + fq(P.cw.vd, 'm/s', 2) + ', far too slow to see' : 'Speeds exaggerated: real drift speeds are about 0.1 mm/s';
+  }
+  function pointReadouts() {
+    const b = S.bp, g = gammaOf(b), q = 1e-9;
+    const ahead = movingCharge(q, b, 1, 0, 0), side = movingCharge(q, b, 0, 1, 0);
+    const EC = KC * q;
+    $('pG').textContent = g.toFixed(4);
+    $('pAhead').textContent = fq(Math.hypot(...ahead.E), 'V/m', 4);
+    $('pSide').textContent = fq(Math.hypot(...side.E), 'V/m', 4);
+    $('pBside').textContent = fq(Math.hypot(...side.cB) / C0, 'T', 4);
+    // probe at 40° from the motion: Heaviside against the boosted Coulomb field
+    const th = 40 * Math.PI / 180, h = movingCharge(q, b, Math.cos(th), Math.sin(th), 0), t = movingFromCoulomb(q, b, Math.cos(th), Math.sin(th), 0);
+    const err = Math.max(...h.E.map((x, i) => Math.abs(x - t.E[i])), ...h.cB.map((x, i) => Math.abs(x - t.cB[i]))) / Math.hypot(...h.E);
+    $('pCheck').textContent = `at 40°: ${fq(Math.hypot(...h.E), 'V/m', 5)}, agree to ${sci(err, 0)}`;
+    strip(0, 'Charge moves at', fb(b), 'γ = ' + g.toFixed(3) + '; view rides with it');
+    strip(1, 'At rest, at 1 m', fq(EC, 'V/m', 4), 'Coulomb, every direction');
+    strip(2, '|E| ahead, behind', fq(Math.hypot(...ahead.E), 'V/m', 4), '= kq/(γ²r²)');
+    strip(3, '|B| sideways', fq(Math.hypot(...side.cB) / C0, 'T', 4), 'B = v × E/c²');
+    strip(4, '|E| sideways', fq(Math.hypot(...side.E), 'V/m', 4), '= γkq/r²');
+    $('sBadge').classList.remove('boost'); $('meter').hidden = true;
+    $('sC4').className = 'c-e';
+    $('tag').className = 'tag exact'; $('tag').textContent = 'Exact field at any speed; motion slowed for the screen';
+  }
+  function xfFields() {
+    const cB = S.xB.map((x) => x * 1e-3 * C0 / 1e3);   // mT → T → V/m → kV/m
+    const [Ep, cBp] = boostFields(S.xE, cB, S.xb);
+    return { E: S.xE, cB, Ep, cBp, Bp: cBp.map((x) => x / C0 * 1e3 * 1e3) };
+  }
+  function xformReadouts() {
+    const X = xfFields(), i0 = invariants(X.E, X.cB), i1 = invariants(X.Ep, X.cBp);
+    const toMT = (x) => x / C0 * 1e6;    // kV/m of cB → mT
+    $('xE').textContent = fmtVec(X.Ep, 1);
+    $('xB').textContent = fmtVec(X.Bp, 4);
+    const dotS = (d) => (Math.abs(d) < 1e-9 ? '0' : minus(toMT(d).toPrecision(5)));
+    $('xDot').textContent = dotS(i0.dot) + ' and ' + dotS(i1.dot);
+    const df = (d) => (Math.abs(d) < 1e-6 ? '0' : minus(d.toPrecision(6)));
+    $('xDiff').textContent = df(i0.diff) + ' and ' + df(i1.diff);
+    let note = '';
+    const magE = Math.hypot(...X.E), magB = Math.hypot(...X.cB), magEp = Math.hypot(...X.Ep), magBp = Math.hypot(...X.cBp);
+    if (magB > 0 && magE === 0) note = 'S has only B. S′ moves through it, and sees an electric field too, perpendicular to both the motion and B.';
+    else if (magE > 0 && magB === 0) note = 'S has only E, like a charge at rest. S′ sees the source moving, and moving charges make B.';
+    else if (magEp < 1e-5 * Math.max(magE, magB)) note = 'At this speed the electric field vanishes in S′: a charge moving at β through crossed fields with E = βcB goes straight.';
+    else if (i1.diff < 0 && Math.abs(i1.dot) < 1e-9) note = 'E·B = 0 and E² < c²B²: there is a frame, moving at β = E/cB across both, where only B remains.';
+    else if (i1.diff > 0 && Math.abs(i1.dot) < 1e-9) note = 'E·B = 0 and E² > c²B²: there is a frame where only E remains.';
+    $('xNote').textContent = note;
+    strip(0, 'S′ moves along x at', fb(S.xb), 'γ = ' + gammaOf(S.xb).toFixed(4));
+    strip(1, '|E| in S → S′', fq(magE * 1e3, 'V/m', 4) + ' → ' + fq(magEp * 1e3, 'V/m', 4));
+    strip(2, '|B| in S → S′', fq(toMT(magB) * 1e-3, 'T', 4) + ' → ' + fq(toMT(magBp) * 1e-3, 'T', 4));
+    strip(3, 'E² − c²B²', df(i1.diff) + ' (kV/m)²', 'same in both frames');
+    strip(4, 'E·B', dotS(i1.dot) + ' kV/m·mT', 'same in both frames');
+    $('sC2').className = 'c-e'; $('sC3').className = 'c-b'; $('sC4').className = '';
+    $('sBadge').classList.remove('boost'); $('meter').hidden = true;
+    $('tag').className = 'tag exact'; $('tag').textContent = 'Exact transformation; arrows show E and cB on one scale';
+  }
+
+  // ---------- magnet and loop readouts ----------
+  function mState(f) {
+    quads();
+    const b = mBeta(), x = S.mz / 100, [bx, br] = magnetField(MAG, QM, x, RB), gf = gammaOf(f), ur = relVel(b, f);
+    const flux = magnetFlux(MAG, QM, RB, x), h = 2e-6, dPdx = (magnetFlux(MAG, QM, RB, x + h) - magnetFlux(MAG, QM, RB, x - h)) / (2 * h);
+    return { b, x, bx, br, gf, ur, flux, dPdx,
+      Ef: gf * f * C0 * br, Mf: gf * ur * C0 * br,                 // tangential push per unit charge in frame f, electric and magnetic parts
+      emfF: 2 * Math.PI * RB * gf * C0 * br * (f + ur) };
+  }
+  const mSpeed = (b) => (S.mscale === 'slow' ? (Math.abs(b * C0) < 5e-4 ? 'at rest' : minus((b * C0).toFixed(2)) + ' m/s') : (Math.abs(b) < 5e-4 ? 'at rest' : fb(b)));
+  function magnetReadouts() {
+    const st = mState(0), b = st.b, g = gammaOf(b), slow = S.mscale === 'slow';
+    const emf = motionalEMF(MAG, QM, RB, st.x, b, 48), emfp = loopFrameEMF(MAG, QM, RB, st.x, b, 48);
+    const rateM = -b * C0 * st.dPdx, rateL = fluxRateLoopFrame(MAG, QM, RB, st.x, b, 2e-6);
+    const len = slow ? '4.000 cm × (1 − ' + sci(gm1(b) / g, 1) + ')' : fq(MAG.L / g, 'm', 4);
+    const Bm = Math.hypot(st.bx, st.br);
+    $('tabMLab').innerHTML = rowsHTML([
+      ['Loop moves at', mSpeed(b)], ['Magnet is', '4.000 cm long'], ['E at the ring', '0', 'em'],
+      ['B at the ring', fq(Bm, 'T', 4)], ['B across the axis', fq(Math.abs(st.br), 'T', 4)],
+      ['Push per charge, v × B', fq(Math.abs(b * C0 * st.br), 'V/m', 4)],
+      ['EMF = ∮(v × B)·dl', fq(emf, 'V', 5, true), 'ef'], ['−dΦ/dt', fq(rateM, 'V', 5, true)]]);
+    $('tabMLoop').innerHTML = rowsHTML([
+      ['Magnet moves at', mSpeed(-b)], ['Magnet is', len], ['E′ at the ring', fq(Math.abs(g * b * C0 * st.br), 'V/m', 4), 'em'],
+      ['B′ across the axis', fq(Math.abs(g * st.br), 'T', 4)], ['Push per charge, E′', fq(Math.abs(g * b * C0 * st.br), 'V/m', 4)],
+      ['EMF′ = ∮E′·dl', fq(emfp, 'V', 5, true), 'ef'], ['−dΦ′/dt′', fq(rateL, 'V', 5, true)]]);
+    $('cardMLab').classList.toggle('now', !boost.active && S.frame === 'lab');
+    $('cardMLoop').classList.toggle('now', !boost.active && S.frame === 'charge');
+    $('mE').textContent = fq(emf, 'V', 5, true); $('mEp').textContent = fq(emfp, 'V', 5, true);
+    $('mRatio').textContent = Math.abs(emf) < 1e-15 ? '—' : (emfp / emf).toFixed(slow ? 9 : 5);
+    $('mG').textContent = slow ? '1 + ' + sci(gm1(b), 1) : g.toFixed(5);
+    const rd = Math.abs(emfp) < 1e-15 ? 0 : Math.abs(rateL / emfp - 1);
+    $('mRate').textContent = fq(rateL, 'V', 5, true) + (Math.abs(emfp) > 1e-15 ? ', matches EMF′ to ' + sci(Math.max(rd, 1e-16), 0) : '');
+    const rising = b * st.dPdx > 0;
+    $('mCur').textContent = Math.abs(emf) < 1e-12 * Math.max(1, Math.abs(b * C0)) ? 'none at this instant: the flux is not changing'
+      : (emf > 0 ? 'Counterclockwise' : 'Clockwise') + ' seen from the north end of the axis. Flux through the ring is ' + (rising ? 'rising' : 'falling') + ', and the current\'s own field ' + (rising ? 'opposes it' : 'tries to keep it up') + ': Lenz\'s law.';
+    return { emf, emfp };
+  }
+  function magnetStrip() {
+    const f = fCur, st = mState(f), slow = S.mscale === 'slow', settled = !boost.active;
+    $('sBadge').classList.toggle('boost', !settled);
+    if (settled && S.frame === 'lab') strip(0, 'Observer', 'Magnet\'s frame', 'magnet at rest, loop moves');
+    else if (settled) strip(0, 'Observer', 'Loop\'s frame', 'ring at rest, magnet moves');
+    else strip(0, 'Observer moving at', slow ? minus((f * C0).toFixed(2)) + ' m/s' : fb(f), 'between the two frames');
+    $('meter').hidden = false;
+    $('meterBar').style.width = (st.b === 0 ? 0 : Math.max(0, Math.min(1, Math.atanh(f) / Math.atanh(st.b))) * 100) + '%';
+    strip(1, 'Flux through the ring', fq(st.flux, 'Wb', 4), '−dΦ/dt = ' + fq(-st.gf * (f + st.ur) * C0 * st.dPdx, 'V', 4, true) + ' in this frame');
+    strip(2, 'E at the ring', fq(Math.abs(st.Ef), 'V/m', 4), Math.abs(st.Ef) === 0 ? 'none: the magnet is at rest' : 'circles the axis');
+    strip(3, 'B at the ring', fq(Math.hypot(st.bx, st.br * st.gf), 'T', 4), 'across the axis ' + fq(Math.abs(st.br * st.gf), 'T', 3));
+    const kind = Math.abs(st.Mf) <= 1e-12 * Math.abs(st.Ef) ? 'all electric: qE′' : Math.abs(st.Ef) <= 1e-12 * Math.abs(st.Mf) ? 'all magnetic: q(v × B)' : 'electric ' + Math.round(100 * st.Ef / (st.Ef + st.Mf)) + '%, magnetic ' + Math.round(100 * st.Mf / (st.Ef + st.Mf)) + '%';
+    strip(4, 'EMF around the ring', fq(st.emfF, 'V', 4, true), st.br === 0 ? 'no push' : kind);
+    $('sC1').className = ''; $('sC2').className = 'c-e'; $('sC3').className = 'c-b'; $('sC4').className = 'c-f';
+    $('tag').className = 'tag' + (slow ? ' exact' : '');
+    $('tag').textContent = slow ? 'Real speed ' + S.mv.toFixed(1) + ' m/s; motion slowed ' + Math.round(S.mv * 100 / MDISP) + '× for the screen' : 'Speed exaggerated: near c, motion slowed for the screen';
+  }
+  let readDirty = true;
+  function refresh() { readDirty = true; dirty = true; }
+  function updateReadouts() {
+    if (S.view === 'wire') {
+      $('sC1').className = ''; $('sC2').className = 'c-e'; $('sC3').className = 'c-b'; $('sC4').className = 'c-f';
+      if (readDirty) wireReadouts();
+      wireStrip();
+    } else if (S.view === 'magnet') { magnetReadouts(); magnetStrip(); }
+    else if (S.view === 'point') { $('sC1').className = ''; $('sC2').className = 'c-e'; $('sC3').className = 'c-b'; if (readDirty) pointReadouts(); }
+    else if (readDirty) xformReadouts();
+    readDirty = false;
+  }
+
+  // ---------- theme ----------
+  let T = null;
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.4 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), bfield: g('--bfield'), force: g('--force'), frame: g('--frame'), wire: g('--wire'),
+      mono: g('--font-mono') || 'monospace', dark: cs.colorScheme === 'dark' || g('color-scheme') === 'dark' };
+    if (G.ready) recolor();
+    dirty = true;
+  }
+
+  // ---------- 3D ----------
+  const G = { ready: false };
+  const AK = 2.6;          // display length of a velocity arrow per unit β
+  const KS = 2.2;          // display units per second at the speed of light (wire view animation)
+  const MDISP = 3.5;       // magnet view: display speed of the relative motion, cm per second
+  const RD = 0.75;         // display units per cm of r
+  const HALF = 13;         // charges live on x in [−HALF, HALF]
+  const D0 = 1;            // display spacing of each line in its lab density
+  const orbit = { theta: 0, phi: 0, zoom: 1 };
+  const ORBIT0 = { magnet: [-Math.PI / 2 - 0.85, 1.15], wire: [-Math.PI / 2 - 0.2, 1.3], point: [-Math.PI / 2 - 0.42, 1.2], xform: [-Math.PI / 2 - 0.72, 1.12] };
+  function resetOrbit() { const o = ORBIT0[S.view]; orbit.theta = o[0]; orbit.phi = o[1]; orbit.zoom = 1; dirty = true; }
+  let dirty = true;
+
+  function init3D() {
+    if (!window.THREE) return false;
+    let renderer;
+    try { renderer = new THREE.WebGLRenderer({ antialias: true }); } catch (_) { return false; }
+    const el = renderer.domElement;
+    el.id = 'gl'; el.tabIndex = 0;
+    el.setAttribute('role', 'application');
+    el.setAttribute('aria-label', '3D view. Drag to turn, scroll to zoom. Drag the test charge or an arrow tip to change it. Arrow keys change speed and distance, F switches frame, space pauses.');
+    $('pane').insertBefore(el, $('over'));
+    UPY = new THREE.Vector3(0, 1, 0); tv = new THREE.Vector3();
+    const scene = new THREE.Scene();
+    const cam = new THREE.PerspectiveCamera(36, 1, 0.1, 400);
+    cam.up.set(0, 0, 1);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x6f7a88, 0.85); hemi.position.set(0, 0, 1); scene.add(hemi);
+    const sun = new THREE.DirectionalLight(0xffffff, 0.6); sun.position.set(-6, -10, 14); scene.add(sun);
+    Object.assign(G, { ready: true, renderer, el, scene, cam,
+      cyl: new THREE.CylinderGeometry(1, 1, 1, 14), cone: new THREE.ConeGeometry(1, 1, 18), sph: new THREE.SphereGeometry(1, 20, 14),
+      mats: [], arrows: [] });
+    buildWire(); buildPoint(); buildXform(); buildMagnet();
+    bind3D(el);
+    return true;
+  }
+  const mat = (opts, key) => { const m = new THREE.MeshStandardMaterial(Object.assign({ roughness: 0.55, metalness: 0 }, opts)); m.userData.key = key; G.mats.push(m); return m; };
+  const lmat = (opts, key) => { const m = (opts.dashSize ? new THREE.LineDashedMaterial(opts) : new THREE.LineBasicMaterial(opts)); m.userData.key = key; G.mats.push(m); return m; };
+  function mkArrow(key, opts = {}) {
+    const mo = Object.assign({ transparent: true }, opts); delete mo.w; const m = mat(mo, key);
+    const g = new THREE.Group(), shaft = new THREE.Mesh(G.cyl, m), head = new THREE.Mesh(G.cone, m);
+    g.add(shaft, head); g.userData = { shaft, head, m, w: opts.w || 0.045 };
+    return g;
+  }
+  let UPY = null, tv = null;   // made in init3D, once three.js is known to be there
+  function setArrow(a, o, d, len, w) {
+    if (!(len > 0.02)) { a.visible = false; return; }
+    a.visible = true;
+    const ps = Math.min(1.25, projScale()), sw = (w || a.userData.w) * ps;
+    const hl = Math.min(len * 0.5, 0.3 * ps), hw = sw * 2.9;
+    a.position.set(o[0], o[1], o[2]);
+    a.quaternion.setFromUnitVectors(UPY, tv.set(d[0], d[1], d[2]).normalize());
+    const sl = len - hl;
+    a.userData.shaft.scale.set(sw, Math.max(sl, 1e-4), sw); a.userData.shaft.position.set(0, sl / 2, 0);
+    a.userData.head.scale.set(hw, hl, hw); a.userData.head.position.set(0, sl + hl / 2, 0);
+  }
+  function recolor() {
+    for (const m of G.mats) { const k = m.userData.key; if (k && T[k]) m.color.set(T[k]); }
+    G.renderer.setClearColor(new THREE.Color(T.canvas), 1);
+    if (G.W) { G.W.ionMat.emissive.set(T.pos).multiplyScalar(0.25); G.W.elMat.emissive.set(T.neg).multiplyScalar(0.25); }
+  }
+
+  // wire scene
+  function buildWire() {
+    const g = new THREE.Group(); G.scene.add(g);
+    const W = G.W = { g };
+    const tubeGeo = new THREE.CylinderGeometry(0.3, 0.3, 2 * HALF, 32, 1, true);
+    W.tube = new THREE.Mesh(tubeGeo, mat({ transparent: true, opacity: 0.13, depthWrite: false, side: THREE.DoubleSide }, 'wire'));
+    W.tube.rotation.z = Math.PI / 2; g.add(W.tube);
+    W.tube2 = new THREE.Mesh(tubeGeo, mat({ transparent: true, opacity: 0.09, depthWrite: false, side: THREE.DoubleSide }, 'wire'));
+    W.tube2.rotation.z = Math.PI / 2; g.add(W.tube2);
+    W.axis = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-HALF, 0, 0), new THREE.Vector3(HALF, 0, 0)]), lmat({ transparent: true, opacity: 0.35 }, 'wire'));
+    g.add(W.axis);
+    W.ionMat = mat({}, 'pos'); W.elMat = mat({}, 'neg');
+    W.ions = new THREE.InstancedMesh(G.sph, W.ionMat, 500); W.els = new THREE.InstancedMesh(G.sph, W.elMat, 500);
+    W.ions.instanceMatrix.setUsage(THREE.DynamicDrawUsage); W.els.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    W.ions.frustumCulled = false; W.els.frustumCulled = false;
+    g.add(W.ions, W.els);
+    W.qMat = mat({}, 'pos');
+    W.q = new THREE.Mesh(G.sph, W.qMat); W.q.scale.setScalar(0.2); g.add(W.q);
+    W.aQ = mkArrow('ink'); W.aIon = mkArrow('pos'); W.aEl = mkArrow('neg');
+    W.fE = mkArrow('equi', { w: 0.07 }); W.fM = mkArrow('bfield', { w: 0.07 });
+    W.fTot = mkArrow('force', { w: 0.03, opacity: 0.0 });
+    g.add(W.aQ, W.aIon, W.aEl, W.fE, W.fM);
+    W.rLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(0, 0, 1)]), lmat({ dashSize: 0.12, gapSize: 0.09, transparent: true, opacity: 0.8 }, 'muted'));
+    g.add(W.rLine);
+    // force bracket: a thin line alongside the two parts, showing the total
+    W.fLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(0, 0, 1)]), lmat({}, 'force'));
+    g.add(W.fLine);
+    W.fTip = new THREE.Mesh(G.cone, mat({}, 'force')); g.add(W.fTip);
+    // field rings and spokes, in three groups along the wire
+    W.groups = [];
+    for (let k = 0; k < 3; k++) {
+      const grp = { rings: [], cones: [], spokes: [] };
+      for (let j = 0; j < 2; j++) {
+        const m = mat({ transparent: true, depthWrite: false }, 'bfield');
+        const t = new THREE.Mesh(new THREE.TorusGeometry(1, 0.022, 8, 72), m); t.rotation.y = Math.PI / 2; g.add(t);
+        const c = new THREE.Mesh(G.cone, m); g.add(c);
+        grp.rings.push(t); grp.cones.push(c);
+      }
+      for (let j = 0; j < 8; j++) { const a = mkArrow('equi', { w: 0.03 }); g.add(a); grp.spokes.push(a); }
+      W.groups.push(grp);
+    }
+    W.ringR = 0;
+    W.ph = { xq: 0, i: 0, e: 0.5 };
+    W.dummy = new THREE.Object3D();
+  }
+  function setRings(rd) {
+    const W = G.W; if (Math.abs(W.ringR - rd) < 1e-9) return; W.ringR = rd;
+    const radii = [rd, rd * 1.75];
+    for (const grp of W.groups) grp.rings.forEach((t, j) => { t.geometry.dispose(); t.geometry = new THREE.TorusGeometry(radii[j], 0.022 * Math.min(1.25, projScale()), 8, 96); });
+  }
+  function stepWire(dt) {
+    const W = G.W, P = wp(), f = fCur, F = wireForce(P.lam0, P.v, P.u, P.q, P.r, f);
+    const sI = D0 / F.gf, sE = D0 * F.gv / F.gw;
+    const vq = F.uq * KS, vI = -f * KS, vE = F.w * KS;
+    if (playing && dt > 0) {
+      W.ph.xq += vq * dt;
+      W.ph.i = (W.ph.i + (vI - vq) * dt / sI) % 1;
+      W.ph.e = (W.ph.e + (vE - vq) * dt / sE) % 1;
+      const L = qWrap();   // the charge wraps inside the visible width
+      if (W.ph.xq > L / 2) { W.ph.xq -= L; W.ph.i = (W.ph.i + L / sI) % 1; W.ph.e = (W.ph.e + L / sE) % 1; }
+      if (W.ph.xq < -L / 2) { W.ph.xq += L; W.ph.i = (W.ph.i - L / sI) % 1; W.ph.e = (W.ph.e - L / sE) % 1; }
+    }
+    return { F, P, sI, sE };
+  }
+  const qWrap = () => Math.min(2 * HALF - 6, 2 * (G.halfX || 9) * 0.9);
+  const qFade = (x) => Math.max(0, Math.min(1, (qWrap() / 2 - Math.abs(x)) / 1.0));
+  const fade = (x) => Math.max(0, Math.min(1, (HALF - 0.5 - Math.abs(x)) / 3.5));
+  function layLine(mesh, xq, s, ph, z, rad) {
+    const d = G.W.dummy; let n = 0;
+    const k0 = Math.ceil((-HALF - xq) / s - ph), k1 = Math.floor((HALF - xq) / s - ph);
+    for (let k = k0; k <= k1 && n < 500; k++) {
+      const x = xq + s * (k + ph), sc = rad * fade(x);
+      if (sc <= 0.002) continue;
+      d.position.set(x, 0, z); d.scale.setScalar(sc); d.updateMatrix(); mesh.setMatrixAt(n++, d.matrix);
+    }
+    mesh.count = n; mesh.instanceMatrix.needsUpdate = true;
+  }
+  function drawWire(st, labels, handles) {
+    const W = G.W, { F, P, sI, sE } = st, real = S.scale === 'real', xq = W.ph.xq, rd = S.r * RD, lab = !boost.active && S.frame === 'lab';
+    const ps = Math.min(1.25, projScale());
+    layLine(W.ions, xq, sI, W.ph.i, 0.1, 0.1 * ps);
+    layLine(W.els, xq, sE, W.ph.e, -0.1, 0.075 * ps);
+    W.tube2.visible = real; W.tube2.position.set(0, 0, rd);
+    const qa = qFade(xq);
+    W.qMat.color.set(P.q > 0 ? T.pos : T.neg); W.qMat.emissive.set(P.q > 0 ? T.pos : T.neg).multiplyScalar(0.3);
+    W.q.position.set(xq, 0, rd); W.q.scale.setScalar(0.2 * ps * Math.max(0.001, qa));
+    // velocity arrows
+    const xs = -G.halfX * 0.6;
+    setArrow(W.aQ, [xq, 0, rd], [Math.sign(F.uq) || 1, 0, 0], qa > 0.5 ? Math.abs(F.uq) * AK : 0);
+    setArrow(W.aIon, [xs, 0, 0.62], [-Math.sign(fCur) || 1, 0, 0], Math.abs(fCur) * AK);
+    setArrow(W.aEl, [xs, 0, -0.62], [Math.sign(F.w) || 1, 0, 0], Math.abs(F.w) * AK);
+    // r marker
+    const rp = W.rLine.geometry.attributes.position;
+    rp.setXYZ(0, xq, 0, 0.3); rp.setXYZ(1, xq, 0, Math.max(0.3, rd - 0.22 * ps)); rp.needsUpdate = true; W.rLine.computeLineDistances();
+    W.rLine.visible = qa > 0.5;
+    // fields: reference is the biggest field at q in either frame
+    const ref = Math.max(Math.abs(wireForce(P.lam0, P.v, P.u, P.q, P.r, 0).cBy), Math.abs(wireForce(P.lam0, P.v, P.u, P.q, P.r, P.u).cBy), 1e-300);
+    const eRat = F.Ez / ref, bRat = Math.abs(F.cBy) / ref, bDir = -Math.sign(F.I) || 1;   // B at the front (−y) of a ring points −z for I along +x
+    setRings(rd);
+    const offs = [-G.halfX * 0.55, 0, G.halfX * 0.55];
+    W.groups.forEach((grp, k) => {
+      const x = k === 1 ? xq : (xq + offs[k] + 3 * HALF) % (2 * HALF) - HALF, a = k === 1 ? qa : fade(x) * 0.8;
+      grp.rings.forEach((t, j) => {
+        const rr = j ? rd * 1.75 : rd, op = bRat * (rd / rr) * a;
+        t.visible = op > 0.03; t.position.set(x, 0, 0); t.material.opacity = Math.min(1, 0.15 + 0.85 * op);
+        const c = grp.cones[j]; c.visible = t.visible;
+        c.position.set(x, -rr, 0); c.scale.set(0.07 * ps, 0.2 * ps, 0.07 * ps); c.rotation.set(bDir > 0 ? 0 : Math.PI, 0, 0); c.rotation.x = bDir > 0 ? Math.PI / 2 : -Math.PI / 2;
+      });
+      const len = Math.abs(eRat) * Math.max(1.4, rd * 0.9) * a;
+      grp.spokes.forEach((sp, j) => {
+        const th = (j + 0.5) / 8 * 2 * Math.PI, cy = Math.cos(th), cz = Math.sin(th);
+        if (len < 0.04) { sp.visible = false; return; }
+        const r0 = eRat > 0 ? 0.36 : 0.36 + len, d = eRat > 0 ? 1 : -1;
+        setArrow(sp, [x, r0 * cy, r0 * cz], [0, d * cy, d * cz], len, 0.038);
+      });
+    });
+    // force on q: electric part from the charge, then the magnetic part from its tip; a thin line marks the total
+    const Fref = Math.abs(wireForce(P.lam0, P.v, P.u, P.q, P.r, P.u).F) || 1e-300, fs = 2.0 / Fref;
+    const lE = F.FE * fs * qa, lM = F.FM * fs * qa, base = rd + 0.24 * ps;
+    const z0 = base;
+    setArrow(W.fE, [xq + 0.05, 0, z0], [0, 0, Math.sign(lE) || 1], Math.abs(lE), 0.07);
+    setArrow(W.fM, [xq + 0.05, 0, z0 + lE], [0, 0, Math.sign(lM) || 1], Math.abs(lM), 0.07);
+    const tot = lE + lM, fx = xq + 0.38 * ps;
+    W.fLine.visible = W.fTip.visible = Math.abs(tot) > 0.05;
+    const fp = W.fLine.geometry.attributes.position; fp.setXYZ(0, fx, 0, z0); fp.setXYZ(1, fx, 0, z0 + tot - Math.sign(tot) * 0.12 * ps); fp.needsUpdate = true;
+    W.fTip.position.set(fx, 0, z0 + tot - Math.sign(tot) * 0.06 * ps); W.fTip.scale.set(0.06 * ps, 0.14 * ps, 0.06 * ps); W.fTip.rotation.set(tot > 0 ? Math.PI / 2 : -Math.PI / 2, 0, 0);
+    // labels and grips
+    const fw = (b) => (real ? fq(b * C0, 'm/s', 2, true) : fb(b, 2));
+    labels.push({ p: [xs, 0, 0.62 + 0.38], t: 'ions ' + (Math.abs(fCur) < 1e-3 && !real ? 'at rest' : real && fCur === 0 ? 'at rest' : fw(-fCur)), c: T.pos, a: 'l' });
+    labels.push({ p: [xs, 0, -0.62 - 0.4], t: 'electrons ' + (Math.abs(F.w) < 1e-3 && !real ? 'at rest' : fw(F.w)), c: T.neg, a: 'l' });
+    if (qa > 0.5) {
+      labels.push({ p: [xq - 0.3, 0, rd], t: 'q ' + (Math.abs(F.uq) < (real ? 1e-30 : 1e-3) ? 'at rest' : fw(F.uq)), c: P.q > 0 ? T.pos : T.neg, a: 'r', pri: 2 });
+      labels.push({ p: [xq, 0, rd / 2], t: 'r = ' + S.r.toFixed(1) + ' cm', c: T.muted, a: 'r', dx: -14 });
+      if (Math.abs(tot) > 0.05) labels.push({ p: [fx, 0, z0 + tot], t: 'F = ' + fq(Math.abs(F.F), 'N', 3), c: T.force, a: 'l', dx: 8, pri: 2 });
+      if (Math.abs(lE) > 0.25 && Math.abs(lM) > 0.25) {
+        labels.push({ p: [xq, 0, z0 + lE / 2], t: 'qE', c: T.equi, a: 'r', dx: -10 });
+        labels.push({ p: [xq, 0, z0 + lE + lM / 2], t: 'quB', c: T.bfield, a: 'r', dx: -10 });
+      }
+      if (bRat > 0.03) labels.push({ p: [xq, -rd * 1.75, -0.1], t: 'B', c: T.bfield, a: 'l', dx: 10 });
+      if (Math.abs(eRat) * Math.max(1.4, rd * 0.9) > 0.25) labels.push({ p: [xq, 0, -0.36 - Math.abs(eRat) * Math.max(1.4, rd * 0.9)], t: 'E', c: T.equi, a: 'l', dx: 8 });
+      if (real) labels.push({ p: [xq + 2.6, 0, rd + 0.3], t: 'second wire, same current', c: T.muted, a: 'l' });
+    }
+    // grips
+    if (qa > 0.5) handles.push({ id: 'q', p: [xq, 0, rd], cursor: 'ns-resize', set: (x, z) => setR(z / RD) });
+    if (lab && !real) {
+      if (qa > 0.5 && Math.abs(F.uq) * AK > 0.25) handles.push({ id: 'u', p: [xq + F.uq * AK, 0, rd], cursor: 'ew-resize', set: (x) => setU((x - G.W.ph.xq) / AK) });
+      handles.push({ id: 'v', p: [xs + F.w * AK, 0, -0.62], cursor: 'ew-resize', set: (x) => setV((x - xs) / AK) });
+    }
+  }
+  const snap = (x, lo, hi, st) => +Math.max(lo, Math.min(hi, Math.round(x / st) * st)).toFixed(4);
+  function setR(r) { const v = snap(r, 1, 5, 0.1); if (v !== S.r) { S.r = v; clearPreset(); onParamChange(); } }
+  function setU(u) { const v = snap(u, -0.9, 0.9, 0.01); if (S.lock) { if (v !== S.v) { S.v = S.u = v; clearPreset(); onParamChange(); } } else if (v !== S.u) { S.u = v; clearPreset(); onParamChange(); } }
+  function setV(u) { const v = snap(u, -0.9, 0.9, 0.01); if (v !== S.v) { S.v = v; if (S.lock) S.u = v; clearPreset(); onParamChange(); } }
+  function setBp(b) { const v = snap(b, -0.95, 0.95, 0.01); if (v !== S.bp) { S.bp = v; clearPreset(); syncControls(); refresh(); } }
+  function setXb(b) { const v = snap(b, -0.95, 0.95, 0.01); if (v !== S.xb) { S.xb = v; clearPreset(); syncControls(); refresh(); } }
+
+  // point charge scene
+  const NL = 56, RL0 = 0.32, RL1 = 4.8, RHEAD = 2.9;
+  function buildPoint() {
+    const g = new THREE.Group(); G.scene.add(g);
+    const Pt = G.Pt = { g };
+    Pt.q = new THREE.Mesh(G.sph, mat({}, 'pos')); Pt.q.scale.setScalar(0.24); g.add(Pt.q);
+    Pt.v = mkArrow('ink'); g.add(Pt.v);
+    // rest frame directions: a Fibonacci sphere
+    Pt.dirs = [];
+    for (let i = 0; i < NL; i++) {
+      const y = 1 - 2 * (i + 0.5) / NL, rr = Math.sqrt(1 - y * y), a = i * Math.PI * (3 - Math.sqrt(5));
+      Pt.dirs.push([y, rr * Math.cos(a), rr * Math.sin(a)]);   // x component first: x is the motion
+    }
+    Pt.lines = new THREE.LineSegments(new THREE.BufferGeometry(), lmat({ transparent: true, opacity: 0.85 }, 'equi'));
+    Pt.lines.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NL * 6), 3));
+    g.add(Pt.lines);
+    Pt.heads = new THREE.InstancedMesh(G.cone, mat({}, 'equi'), NL); g.add(Pt.heads);
+    Pt.rings = [];
+    for (const x of [-1.8, 0, 1.8]) for (const rr of [1.4, 2.8]) {
+      const m = mat({ transparent: true, depthWrite: false }, 'bfield');
+      const t = new THREE.Mesh(new THREE.TorusGeometry(rr, 0.022, 8, 96), m); t.rotation.y = Math.PI / 2; t.position.x = x; g.add(t);
+      const c = new THREE.Mesh(G.cone, m); g.add(c);
+      Pt.rings.push({ t, c, x, rr });
+    }
+    Pt.surfMat = mat({ transparent: true, opacity: 0.13, depthWrite: false, side: THREE.DoubleSide }, 'equi');
+    Pt.surf = new THREE.Mesh(new THREE.BufferGeometry(), Pt.surfMat); Pt.surf.rotation.z = -Math.PI / 2; g.add(Pt.surf);
+    Pt.grid = new THREE.LineSegments(new THREE.BufferGeometry(), lmat({}, 'gridStrong'));
+    Pt.grid.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(40 * 6), 3));
+    g.add(Pt.grid);
+    Pt.gridX = 0; Pt.b = null;
+  }
+  function drawPoint(dt, labels, handles) {
+    const Pt = G.Pt, b = S.bp, g = gammaOf(b), ps = Math.min(1.25, projScale());
+    Pt.q.scale.setScalar(0.24 * ps);
+    if (Pt.b !== b || Pt.ps !== ps) {
+      Pt.b = b; Pt.ps = ps;
+      const pos = Pt.lines.geometry.attributes.position, d = G.W.dummy;
+      Pt.dirs.forEach((u, i) => {
+        let x = u[0] / g, y = u[1], z = u[2]; const n = Math.hypot(x, y, z); x /= n; y /= n; z /= n;
+        pos.setXYZ(2 * i, x * RL0, y * RL0, z * RL0); pos.setXYZ(2 * i + 1, x * RL1, y * RL1, z * RL1);
+        d.position.set(x * RHEAD, y * RHEAD, z * RHEAD); d.quaternion.setFromUnitVectors(UPY, tv.set(x, y, z)); d.scale.set(0.07 * ps, 0.2 * ps, 0.07 * ps); d.updateMatrix();
+        Pt.heads.setMatrixAt(i, d.matrix);
+      });
+      pos.needsUpdate = true; Pt.heads.instanceMatrix.needsUpdate = true;
+      const prof = [];
+      for (let i = 0; i <= 64; i++) { const th = Math.PI * i / 64, R = isoRadius(th, b, 2.1); prof.push(new THREE.Vector2(Math.max(1e-4, R * Math.sin(th)), R * Math.cos(th))); }
+      Pt.surf.geometry.dispose(); Pt.surf.geometry = new THREE.LatheGeometry(prof, 64);
+      // B loops: |cB| relative to the rest frame field at the inner loop radius
+      const ref = 1 / (1.4 * 1.4);
+      for (const R of Pt.rings) {
+        const f = movingCharge(1 / KC, b, R.x, R.rr, 0), cb = Math.hypot(...f.cB), op = Math.sqrt(Math.min(1, cb / ref));
+        R.t.material.opacity = 0.1 + 0.9 * op; R.on = op > 0.06;
+        // at the front (−y) the loop direction is (β x̂ × E) ∝ sign(β) (x̂ × −ŷ) = −sign(β) ẑ
+        R.c.position.set(R.x, -R.rr, 0); R.c.scale.set(0.07 * ps, 0.2 * ps, 0.07 * ps); R.c.rotation.set(b > 0 ? -Math.PI / 2 : Math.PI / 2, 0, 0);
+      }
+    }
+    Pt.lines.visible = Pt.heads.visible = S.layers.lines;
+    Pt.surf.visible = S.layers.surf;
+    for (const R of Pt.rings) R.t.visible = R.c.visible = S.layers.rings && R.on;
+    setArrow(Pt.v, [0, 0, 0], [Math.sign(b) || 1, 0, 0], Math.abs(b) * AK + 0.24 * ps);
+    // the lab grid slides past at −β
+    if (playing) Pt.gridX = (Pt.gridX - b * KS * 0.6 * dt) % 1;
+    const gp = Pt.grid.geometry.attributes.position, zg = -3.4; let n = 0;
+    for (let k = -9; k <= 9; k++) { const x = (k + Pt.gridX) * 1; gp.setXYZ(n++, x, -4.5, zg); gp.setXYZ(n++, x, 4.5, zg); }
+    gp.setXYZ(n++, -9, -4.5, zg); gp.setXYZ(n++, 9, -4.5, zg); gp.setXYZ(n++, -9, 4.5, zg); gp.setXYZ(n++, 9, 4.5, zg);
+    gp.needsUpdate = true; Pt.grid.geometry.setDrawRange(0, n);
+    labels.push({ p: [0.3, 0, 0.45], t: 'q ' + fb(b, 2), c: T.pos, a: 'l', pri: 2 });
+    if (S.layers.surf) labels.push({ p: [0, 0, isoRadius(Math.PI / 2, b, 2.1)], t: '|E| = kq/(2.1)²', c: T.equi, a: 'l', dx: 6 });
+    if (S.layers.rings && Math.abs(b) > 0.05) labels.push({ p: [0, -2.8, -0.2], t: 'B', c: T.bfield, a: 'l', dx: 8 });
+    labels.push({ p: [8.2, -4.5, -3.4], t: 'lab grid', c: T.muted, a: 'r' });
+    handles.push({ id: 'b', p: [b * AK + (Math.sign(b) || 1) * 0.24 * ps, 0, 0], cursor: 'ew-resize', set: (x) => setBp((x - (Math.sign(x) || 1) * 0.24 * ps) / AK) });
+  }
+
+
+  // magnet and loop scene (display units: cm; the common axis is x)
+  function buildMagnet() {
+    const g = new THREE.Group(); G.scene.add(g);
+    const Mg = G.Mg = { g };
+    Mg.mag = new THREE.Group(); g.add(Mg.mag);
+    const half = new THREE.CylinderGeometry(1, 1, 2, 48);
+    const nH = new THREE.Mesh(half, mat({ roughness: 0.45 }, 'pos')), sH = new THREE.Mesh(half, mat({ roughness: 0.45 }, 'neg'));
+    nH.rotation.z = sH.rotation.z = Math.PI / 2; nH.position.x = 1; sH.position.x = -1; Mg.mag.add(nH, sH);
+    Mg.lines = new THREE.LineSegments(new THREE.BufferGeometry(), lmat({ transparent: true, opacity: 0.55 }, 'bfield'));
+    Mg.mag.add(Mg.lines);
+    Mg.ring = new THREE.Mesh(new THREE.TorusGeometry(RB * 100, 0.08, 12, 96), mat({ roughness: 0.3, metalness: 0.5 }, 'wire'));
+    Mg.ring.rotation.y = Math.PI / 2; g.add(Mg.ring);
+    Mg.aE = []; Mg.aM = []; Mg.aO = [];
+    for (let j = 0; j < 12; j++) { const a = mkArrow('equi', { w: 0.055 }), b = mkArrow('bfield', { w: 0.055 }); g.add(a, b); Mg.aE.push(a); Mg.aM.push(b); }
+    for (let j = 0; j < 16; j++) { const a = mkArrow('equi', { w: 0.035, opacity: 0.55 }); g.add(a); Mg.aO.push(a); }
+    Mg.vR = mkArrow('ink'); Mg.vM = mkArrow('ink'); g.add(Mg.vR, Mg.vM);
+    Mg.traced = false;
+  }
+  // magnetic field lines in one plane through the axis (cm), traced once, then turned about the axis
+  function traceLines() {
+    quads();
+    const F = (x, r) => { const b = magnetField(MAG, QL, x / 100, Math.max(r, 1e-6) / 100); const n = Math.hypot(b[0], b[1]) || 1; return [b[0] / n, (r < 1e-6 ? 0 : b[1]) / n]; };
+    const segs = [], ds = 0.05;
+    for (const r0 of [0.3, 0.55, 0.75, 0.88, 0.96]) {
+      let x = 0, r = r0, walked = 0; const pts = [[x, r]];
+      for (let i = 0; i < 2400; i++) {
+        const k1 = F(x, r), k2 = F(x + ds / 2 * k1[0], r + ds / 2 * k1[1]);
+        const nx = x + ds * k2[0], nr = Math.max(0, r + ds * k2[1]); walked += ds;
+        if (walked > 1 && x < 0 && nx >= 0) { pts.push([0, nr]); break; }
+        x = nx; r = nr; pts.push([x, r]);
+        if (Math.abs(x) > 11 || r > 6.5) break;
+      }
+      for (let i = 0; i < pts.length - 1; i += 1) segs.push(pts[i], pts[i + 1]);
+    }
+    const arr = [];
+    for (let k = 0; k < 6; k++) {
+      const ph = k * Math.PI / 3, c = Math.cos(ph), sn = Math.sin(ph);
+      for (const [x, r] of segs) arr.push(x, r * c, r * sn);
+    }
+    G.Mg.lines.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(arr), 3));
+    G.Mg.traced = true;
+  }
+  const MVK = 0.9;   // display length of the velocity arrow per m/s at everyday speed
+  const mLen = (b) => (S.mscale === 'slow' ? Math.abs(b) * C0 * MVK : Math.abs(b) * AK);
+  let plotCache = null;
+  function plotData() {
+    const key = S.mscale + ':' + mBeta();
+    if (plotCache && plotCache.key === key) return plotCache;
+    quads();
+    const b = mBeta(), zs = [], e = [], ep = [], dots = [];
+    for (let i = 0; i <= 104; i++) {
+      const z = -13 + 26 * i / 104, x = z / 100;
+      zs.push(z); e.push(motionalEMF(MAG, QM, RB, x, b, 16)); ep.push(loopFrameEMF(MAG, QM, RB, x, b, 16));
+      if (i % 4 === 2) dots.push([z, fluxRateLoopFrame(MAG, QM, RB, x, b, 2e-6)]);
+    }
+    const mx = Math.max(...ep.map(Math.abs), ...e.map(Math.abs), 1e-300);
+    let ref = 0; for (let i = 0; i <= 104; i++) ref = Math.max(ref, Math.abs(magnetField(MAG, QM, zs[i] / 100, RB)[1]));
+    return (plotCache = { key, zs, e, ep, dots, mx, brMax: ref });
+  }
+  function drawMagnet(dt, labels, handles) {
+    const Mg = G.Mg, f = fCur, b = mBeta(), ps = Math.min(1.25, projScale());
+    if (!Mg.traced) traceLines();
+    if (playing && dt > 0) {
+      S.mz += (b >= 0 ? 1 : -1) * MDISP * dt;
+      if (S.mz > 13) S.mz = -13; if (S.mz < -13) S.mz = 13;
+      $('smz').value = S.mz; $('smzOut').textContent = minus(S.mz.toFixed(1)) + ' cm';
+    }
+    const st = mState(f), gf = st.gf, d = S.mz / gf;
+    const al = Math.abs(b) < 1e-300 ? 1 : (b - f) / (b * (1 - f * f));
+    const xr = al * d, xm = xr - d;
+    Mg.mag.position.x = xm; Mg.mag.scale.set(1 / gf, 1, 1);
+    Mg.lines.visible = S.layers.mlines;
+    Mg.ring.position.x = xr;
+    // push on + charges around the ring, electric part then magnetic part, on one scale for every frame
+    const P = plotData(), ref = gammaOf(b) * Math.abs(b) * C0 * P.brMax || 1, sc = 2.2 / ref, R = RB * 100;
+    for (let j = 0; j < 12; j++) {
+      const ph = 2 * Math.PI * (j + 0.5) / 12, cy = Math.cos(ph), cz = Math.sin(ph), t = [0, -cz, cy];
+      const lE = st.Ef * sc, lM = st.Mf * sc, o = [xr, R * cy, R * cz];
+      const sE = Math.sign(lE) || 1, sM = Math.sign(lM) || 1;
+      setArrow(Mg.aE[j], o, t.map((c) => c * sE), Math.abs(lE), 0.07);
+      setArrow(Mg.aM[j], [o[0], o[1] + t[1] * lE, o[2] + t[2] * lE], t.map((c) => c * sM), Math.abs(lM), 0.07);
+    }
+    // the induced electric field also exists away from the ring
+    const Ro = 3.6, bro = magnetField(MAG, QM, st.x, Ro / 100)[1], lo = gf * f * C0 * bro * sc;
+    for (let j = 0; j < 16; j++) {
+      const ph = 2 * Math.PI * (j + 0.25) / 16, cy = Math.cos(ph), cz = Math.sin(ph), sg = Math.sign(lo) || 1;
+      setArrow(Mg.aO[j], [xr, Ro * cy, Ro * cz], [0, -cz * sg, cy * sg], Math.abs(lo), 0.035);
+    }
+    setArrow(Mg.vR, [xr, 0, R + 0.5], [Math.sign(st.ur) || 1, 0, 0], mLen(st.ur));
+    setArrow(Mg.vM, [xm, 0, 1.45], [-Math.sign(f) || 1, 0, 0], mLen(f));
+    const sp = (v) => (S.mscale === 'slow' ? (Math.abs(v * C0) < 0.005 ? 'at rest' : minus((v * C0).toFixed(2)) + ' m/s') : (Math.abs(v) < 5e-4 ? 'at rest' : fb(v, 2)));
+    labels.push({ p: [xr, 0, R + 0.95], t: 'loop ' + sp(st.ur), c: T.ink, a: 'l', pri: 2 });
+    labels.push({ p: [xm, 0, 2.0], t: 'magnet ' + sp(-f), c: T.ink, a: 'r', pri: 2, dx: -4 });
+    labels.push({ p: [xm + 2 / gf, 0, 0], t: 'N', c: T.pos, a: 'l', dx: 4, pri: 1 });
+    labels.push({ p: [xm - 2 / gf, 0, 0], t: 'S', c: T.neg, a: 'r', dx: -4, pri: 1 });
+    if (Math.abs(lo) > 0.2) labels.push({ p: [xr, 0, -Ro - 0.2], t: 'E′ circles the axis', c: T.equi, a: 'l', dx: 6 });
+    if (Math.abs(st.Mf * sc) > 0.25 && Math.abs(st.Ef * sc) < 0.05) labels.push({ p: [xr, 0, -R - 0.3], t: 'q(v × B)', c: T.bfield, a: 'l', dx: 6 });
+    if (Math.abs(st.Ef * sc) > 0.25 && Math.abs(st.Mf * sc) < 0.05) labels.push({ p: [xr, 0, -R - 0.3], t: 'qE′', c: T.equi, a: 'l', dx: 6 });
+    const lab = !boost.active && S.frame === 'lab';
+    if (lab) {
+      handles.push({ id: 'ring', p: [xr, 0, R], cursor: 'ew-resize', set: (x) => setMz(gf * (x - xm)) });
+      if (mLen(st.ur) > 0.3) handles.push({ id: 'mv', p: [xr + Math.sign(st.ur) * mLen(st.ur), 0, R + 0.5], cursor: 'ew-resize', set: (x) => setMv(x - xr) });
+    } else handles.push({ id: 'mag', p: [xm, 0, 1], cursor: 'ew-resize', set: (x) => setMz(gf * (xr - x)) });
+    void ps;
+  }
+  function setMz(z) { const v = snap(z, -13, 13, 0.1); if (v !== S.mz) { S.mz = v; clearPreset(); syncControls(); refresh(); } }
+  function setMv(len) {
+    if (S.mscale === 'slow') { const v = snap(len / MVK, 0.1, 10, 0.1); if (v !== S.mv) { S.mv = v; clearPreset(); onParamChange(); } }
+    else { const v = snap(len / AK, 0.05, 0.9, 0.01); if (v !== S.mb) { S.mb = v; clearPreset(); onParamChange(); } }
+  }
+  function drawPlot(ctx, ps) {
+    const P = plotData(), slow = S.mscale === 'slow', narrow = PW < 600;
+    const w = narrow ? PW - 16 : Math.min(400 * Math.min(1.2, ps), PW * 0.4), h = (narrow ? 124 : 140) * Math.min(1.2, ps), x0 = PW - w - 8, y0 = PH - h - 8;
+    ctx.globalAlpha = 0.93; ctx.fillStyle = T.canvas; ctx.fillRect(x0, y0, w, h); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(x0 + 0.5, y0 + 0.5, w - 1, h - 1);
+    ctx.font = `${10 * ps}px ${T.mono}`;
+    const note = slow ? 'curves overlap: γ − 1 = ' + sci(gm1(mBeta()), 0) : 'EMF′ = γ EMF, γ = ' + gammaOf(mBeta()).toFixed(3);
+    const two = ctx.measureText('EMF against ring position').width + ctx.measureText(note).width + 30 > w;
+    const L = x0 + 40 * ps, Rr = x0 + w - 10, T0 = y0 + (two ? 34 : 22) * ps, B0 = y0 + h - 20 * ps, mid = (T0 + B0) / 2;
+    const X = (z) => L + (z + 13) / 26 * (Rr - L), Y = (v) => mid - v / P.mx * (B0 - T0) / 2 * 0.95;
+    // unit for the y axis
+    const e3 = Math.floor(Math.log10(P.mx) / 3) * 3, units = { '-6': 'μV', '-3': 'mV', '0': 'V', '3': 'kV', '6': 'MV' }, un = units[e3] || 'V', uf = units[e3] ? 10 ** e3 : 1;
+    ctx.font = `${10 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textBaseline = 'middle';
+    ctx.textAlign = 'left'; ctx.fillText('EMF against ring position', x0 + 8, y0 + 11 * ps);
+    ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(L, mid); ctx.lineTo(Rr, mid); ctx.moveTo(L, T0); ctx.lineTo(L, B0); ctx.stroke();
+    ctx.textAlign = 'right';
+    ctx.fillText(num(P.mx / uf, 2), L - 4, Y(P.mx)); ctx.fillText(minus(num(-P.mx / uf, 2)), L - 4, Y(-P.mx)); ctx.fillText(un, L - 4, mid);
+    ctx.textAlign = 'center';
+    for (const z of [-10, -5, 0, 5, 10]) { ctx.fillText(minus(String(z)), X(z), B0 + 9 * ps); }
+    ctx.textAlign = 'right'; ctx.fillText('cm', Rr, B0 + 9 * ps);
+    // magnet's extent, in the magnet's frame
+    ctx.globalAlpha = 0.15; ctx.fillStyle = T.muted; ctx.fillRect(X(-2), T0, X(2) - X(-2), B0 - T0); ctx.globalAlpha = 1;
+    const curve = (arr, col, dash, lw) => {
+      ctx.strokeStyle = col; ctx.lineWidth = lw * ps; ctx.setLineDash(dash.map((v) => v * ps)); ctx.beginPath();
+      P.zs.forEach((z, i) => (i ? ctx.lineTo(X(z), Y(arr[i])) : ctx.moveTo(X(z), Y(arr[i])))); ctx.stroke(); ctx.setLineDash([]);
+    };
+    curve(P.e, T.force, [], 2.4); curve(P.ep, T.equi, [5, 4], 1.8);
+    ctx.fillStyle = T.ink; for (const [z, v] of P.dots) { ctx.beginPath(); ctx.arc(X(z), Y(v), 2.1 * ps, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.moveTo(X(S.mz), T0); ctx.lineTo(X(S.mz), B0); ctx.stroke();
+    ctx.textAlign = 'right'; ctx.fillStyle = T.muted;
+    ctx.fillText(note, Rr, y0 + (two ? 23 : 11) * ps);
+  }
+
+  // field transform scene
+  function buildXform() {
+    const g = new THREE.Group(); G.scene.add(g);
+    const X = G.X = { g };
+    const ax = [];
+    for (const [dx, dy, dz] of [[1, 0, 0], [0, 1, 0], [0, 0, 1]]) ax.push(-3.4 * dx, -3.4 * dy, -3.4 * dz, 3.4 * dx, 3.4 * dy, 3.4 * dz);
+    X.axes = new THREE.LineSegments(new THREE.BufferGeometry(), lmat({ transparent: true, opacity: 0.7 }, 'gridStrong'));
+    X.axes.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(ax), 3)); g.add(X.axes);
+    X.E0 = mkArrow('equi', { opacity: 0.28, w: 0.05 }); X.B0 = mkArrow('bfield', { opacity: 0.28, w: 0.05 });
+    X.E1 = mkArrow('equi', { w: 0.06 }); X.B1 = mkArrow('bfield', { w: 0.06 });
+    X.V = mkArrow('ink', { w: 0.05 });
+    g.add(X.E0, X.B0, X.E1, X.B1, X.V);
+  }
+  function drawXform(labels, handles) {
+    const X = G.X, F = xfFields(), ps = Math.min(1.25, projScale());
+    const m = Math.max(Math.hypot(...F.E), Math.hypot(...F.cB), Math.hypot(...F.Ep), Math.hypot(...F.cBp), 1e-12), s = 3 / m;
+    const put = (a, v, lab, col) => {
+      const l = Math.hypot(...v) * s; setArrow(a, [0, 0, 0], l > 0 ? v : [1, 0, 0], l);
+      if (l > 0.2 && lab) labels.push({ p: v.map((c) => c * s * 1.06), t: lab, c: col, a: 'l', dx: 6, pri: col === T.muted ? 0 : 2 });
+    };
+    put(X.E0, F.E, 'E', T.muted); put(X.B0, F.cB, 'cB', T.muted);
+    put(X.E1, F.Ep, 'E′', T.equi); put(X.B1, F.cBp, 'cB′', T.bfield);
+    const zb = -2.6, xb0 = -AK * 0.5;
+    setArrow(X.V, [xb0, 0, zb], [Math.sign(S.xb) || 1, 0, 0], Math.abs(S.xb) * AK);
+    labels.push({ p: [xb0 + S.xb * AK, 0, zb - 0.3], t: 'S′ moves at ' + fb(S.xb, 2), c: T.ink, a: S.xb >= 0 ? 'l' : 'r', dx: 4, pri: 1 });
+    labels.push({ p: [3.6, 0, 0], t: 'x', c: T.muted, a: 'l' }); labels.push({ p: [0, 3.6, 0], t: 'y', c: T.muted, a: 'l' }); labels.push({ p: [0, 0, 3.6], t: 'z', c: T.muted, a: 'l' });
+    handles.push({ id: 'xb', p: [xb0 + S.xb * AK, 0, zb], cursor: 'ew-resize', set: (x) => setXb((x - xb0) / AK) });
+    void ps;
+  }
+
+  // ---------- render ----------
+  const over = $('over'), octx = over.getContext('2d');
+  let PW = 0, PH = 0, dpr = 1;
+  function resize() {
+    const r = $('pane').getBoundingClientRect();
+    PW = Math.max(1, Math.round(r.width)); PH = Math.max(1, Math.round(r.height)); dpr = window.devicePixelRatio || 1;
+    over.width = Math.round(PW * dpr); over.height = Math.round(PH * dpr); over.style.width = PW + 'px'; over.style.height = PH + 'px';
+    if (G.ready) {
+      G.renderer.setPixelRatio(Math.min(2, dpr)); G.renderer.setSize(PW, PH, false);
+      G.el.style.width = PW + 'px'; G.el.style.height = PH + 'px';
+      G.cam.aspect = PW / PH; G.cam.updateProjectionMatrix();
+    }
+    dirty = true;
+  }
+  function placeCamera() {
+    const asp = PW / PH, t = Math.tan(G.cam.fov * Math.PI / 360);
+    let hx, hz, target;
+    if (S.view === 'wire') { hx = asp < 1 ? 4.2 : 9.2; hz = 2.9; target = [0, 0, 1.45]; }
+    else if (S.view === 'magnet') { hx = asp < 1 ? 7.5 : 13.5; hz = asp < 1 ? 6.5 : 5.2; target = [0, 0, asp < 1 ? -3.2 : -1.6]; }
+    else if (S.view === 'point') { hx = asp < 1 ? 5 : 6.2; hz = 5.3; target = [0, 0, -0.3]; }
+    else { hx = asp < 1 ? 3.6 : 4.4; hz = 3.6; target = [0, 0, -0.3]; }
+    G.halfX = hx;
+    const d = Math.max(hx / (t * asp), hz / t) * 1.04 * orbit.zoom;
+    G.cam.position.set(target[0] + d * Math.sin(orbit.phi) * Math.cos(orbit.theta), target[1] + d * Math.sin(orbit.phi) * Math.sin(orbit.theta), target[2] + d * Math.cos(orbit.phi));
+    G.cam.lookAt(target[0], target[1], target[2]);
+    G.cam.updateMatrixWorld();
+  }
+  const pv = () => new THREE.Vector3();
+  function toScreen(p) { const v = pv().set(p[0], p[1], p[2]).project(G.cam); if (v.z > 1) return null; return [(v.x + 1) / 2 * PW, (1 - v.y) / 2 * PH]; }
+
+  let handles = [], hoverId = null, drag = null;
+  function render(dt) {
+    if (!G.ready) return;
+    placeCamera();
+    G.W.g.visible = S.view === 'wire'; G.Pt.g.visible = S.view === 'point'; G.X.g.visible = S.view === 'xform'; G.Mg.g.visible = S.view === 'magnet';
+    const labels = [], hs = [];
+    if (S.view === 'wire') drawWire(stepWire(dt), labels, hs);
+    else if (S.view === 'magnet') drawMagnet(dt, labels, hs);
+    else if (S.view === 'point') drawPoint(dt, labels, hs);
+    else drawXform(labels, hs);
+    G.renderer.render(G.scene, G.cam);
+    handles = hs.map((h) => Object.assign(h, { s: toScreen(h.p) })).filter((h) => h.s);
+    drawOverlay(labels);
+  }
+  function drawOverlay(labels) {
+    const ctx = octx, ps = Math.min(1.35, projScale() * (PW < 520 ? 0.9 : 1));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, PW, PH);
+    // grips
+    for (const h of handles) {
+      const hot = (drag && drag.id === h.id) || (!drag && hoverId === h.id), [x, y] = h.s;
+      ctx.lineWidth = (hot ? 2.4 : 1.6) * ps; ctx.strokeStyle = T.accent; ctx.fillStyle = T.canvas;
+      if (hot) { ctx.globalAlpha = 0.25; ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(x, y, 13 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1; }
+      ctx.beginPath(); ctx.arc(x, y, (hot ? 9 : 7.5) * ps, 0, 2 * Math.PI); ctx.stroke();
+    }
+    if (S.view === 'magnet') drawPlot(ctx, ps);
+    // labels on halo boxes, high priority first, nudged off each other
+    ctx.font = `600 ${11.5 * ps}px ${T.mono}`; ctx.textBaseline = 'middle';
+    const boxes = [];
+    labels.sort((a, b) => (b.pri || 0) - (a.pri || 0));
+    for (const L of labels) {
+      const s = toScreen(L.p); if (!s) continue;
+      const tw = ctx.measureText(L.t).width + 10 * ps, th = 18 * ps, dx = (L.dx || 6) * ps;
+      let x = L.a === 'r' ? s[0] - Math.abs(dx) - tw : s[0] + dx, y = s[1] - th / 2;
+      x = Math.max(4, Math.min(PW - tw - 4, x));
+      for (let k = 0; k < 4; k++) {
+        const hit = boxes.find((b) => x < b[0] + b[2] && x + tw > b[0] && y < b[1] + b[3] && y + th > b[1]);
+        if (!hit) break;
+        y = hit[1] + hit[3] + 2;
+      }
+      if (y < 2 || y + th > PH - 2) continue;
+      boxes.push([x, y, tw, th]);
+      ctx.globalAlpha = 0.86; ctx.fillStyle = T.canvas; ctx.beginPath();
+      ctx.roundRect ? ctx.roundRect(x, y, tw, th, 4 * ps) : ctx.rect(x, y, tw, th); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.fillStyle = L.c; ctx.textAlign = 'left'; ctx.fillText(L.t, x + 5 * ps, y + th / 2 + 0.5);
+    }
+  }
+
+  // ---------- pointer ----------
+  function bind3D(el) {
+    const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+    const pointers = new Map(); let mode = null, queued = null;
+    const local = (e) => { const r = el.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    const handleAt = (e) => {
+      const [x, y] = local(e), tol = 12 * projScale() * (e.pointerType === 'touch' ? 2 : 1);
+      let best = null, bd = tol;
+      for (const h of handles) { const d = Math.hypot(x - h.s[0], y - h.s[1]); if (d < bd) { bd = d; best = h; } }
+      return best;
+    };
+    const worldAt = (cx, cy) => {
+      const r = el.getBoundingClientRect();
+      ndc.set(((cx - r.left) / r.width) * 2 - 1, -((cy - r.top) / r.height) * 2 + 1);
+      ray.setFromCamera(ndc, G.cam);
+      const p = new THREE.Vector3();
+      return ray.ray.intersectPlane(plane, p) ? p : null;
+    };
+    G.applyDrag = () => {
+      if (!drag || !queued) return;
+      const h = handles.find((k) => k.id === drag.id), p = worldAt(queued[0], queued[1]); queued = null;
+      if (h && p) h.set(p.x, p.z);
+    };
+    const pinchDist = () => { const p = [...pointers.values()]; return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y); };
+    el.addEventListener('pointerdown', (e) => {
+      el.focus({ preventScroll: true });
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      try { el.setPointerCapture(e.pointerId); } catch (_) {}
+      if (pointers.size === 2) { drag = null; mode = { type: 'pinch', d0: pinchDist(), z0: orbit.zoom }; return; }
+      const h = handleAt(e);
+      if (h) { drag = { id: h.id }; mode = { type: 'drag' }; el.style.cursor = h.cursor; queued = [e.clientX, e.clientY]; dirty = true; return; }
+      mode = { type: 'orbit', lx: e.clientX, ly: e.clientY }; el.style.cursor = 'grabbing';
+    });
+    el.addEventListener('pointermove', (e) => {
+      if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (mode && mode.type === 'pinch' && pointers.size === 2) { orbit.zoom = Math.min(2.5, Math.max(0.4, mode.z0 * mode.d0 / pinchDist())); dirty = true; return; }
+      if (mode && mode.type === 'drag') { queued = [e.clientX, e.clientY]; return; }
+      if (mode && mode.type === 'orbit') {
+        const dx = e.clientX - mode.lx, dy = e.clientY - mode.ly; mode.lx = e.clientX; mode.ly = e.clientY;
+        orbit.theta -= dx * 0.008; orbit.phi = Math.min(1.6, Math.max(0.15, orbit.phi - dy * 0.008)); dirty = true; return;
+      }
+      if (e.pointerType === 'mouse') {
+        const h = handleAt(e), id = h ? h.id : null;
+        if (id !== hoverId) { hoverId = id; dirty = true; }
+        el.style.cursor = h ? h.cursor : 'grab';
+      }
+    });
+    const end = (e) => {
+      pointers.delete(e.pointerId);
+      if (pointers.size < 2 && mode && mode.type === 'pinch') mode = null;
+      if (!pointers.size) { if (drag) { drag = null; dirty = true; } mode = null; el.style.cursor = 'grab'; }
+    };
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+    el.addEventListener('pointerleave', () => { if (hoverId && !drag) { hoverId = null; dirty = true; } });
+    el.addEventListener('wheel', (e) => { e.preventDefault(); orbit.zoom = Math.min(2.5, Math.max(0.4, orbit.zoom * Math.exp(e.deltaY * 0.0012))); dirty = true; }, { passive: false });
+    el.addEventListener('dblclick', () => resetOrbit());
+    el.addEventListener('keydown', onKey);
+  }
+  function onKey(e) {
+    const big = e.shiftKey ? 5 : 1;
+    if (e.key === ' ') togglePlay();
+    else if (e.key === 'f' || e.key === 'F') { if (S.view === 'wire' || S.view === 'magnet') setFrame(S.frame === 'lab' ? 'charge' : 'lab'); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      const d = (e.key === 'ArrowRight' ? 0.01 : -0.01) * big;
+      if (S.view === 'wire' && S.scale === 'fast') setU((S.lock ? S.v : S.u) + d);
+      else if (S.view === 'wire') { S.I = snap(S.I + d * 10, 0.1, 20, 0.1); clearPreset(); onParamChange(); }
+      else if (S.view === 'magnet') { if (S.mscale === 'slow') { S.mv = snap(S.mv + d * 10, 0.1, 10, 0.1); } else S.mb = snap(S.mb + d, 0.05, 0.9, 0.01); clearPreset(); onParamChange(); }
+      else if (S.view === 'point') setBp(S.bp + d);
+      else setXb(S.xb + d);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      if (S.view === 'magnet') { setMz(S.mz + (e.key === 'ArrowUp' ? 0.5 : -0.5) * big); }
+      else if (S.view !== 'wire') return;
+      else setR(S.r + (e.key === 'ArrowUp' ? 0.1 : -0.1) * big);
+    } else return;
+    e.preventDefault();
+  }
+  function togglePlay() { playing = !playing; $('play').textContent = playing ? 'Pause' : 'Play'; $('play').classList.toggle('primary', !playing); }
+  $('play').addEventListener('click', togglePlay);
+  $('resetView').addEventListener('click', resetOrbit);
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+
+  // projector mode
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    if (G.ready) G.W.ringR = 0;
+    requestAnimationFrame(() => { resize(); });
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+
+  const retheme = () => { tokens(); dirty = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- loop ----------
+  let last = performance.now(), frameMs = 0;
+  function loop(now) {
+    const dtReal = Math.min(0.25, Math.max(0, (now - last) / 1000)), dt = Math.min(0.05, dtReal); last = now;
+    const t0 = performance.now();
+    if (G.applyDrag) G.applyDrag();
+    if (S.view === 'wire' || S.view === 'magnet') {
+      if (boost.active) {
+        const phT = Math.atanh(targetF()), st = boost.rate * dtReal;
+        if (Math.abs(phT - boost.phi) <= st) { boost.phi = phT; boost.active = false; readDirty = true; }
+        else boost.phi += Math.sign(phT - boost.phi) * st;
+        dirty = true;
+      }
+      fCur = boost.active ? Math.tanh(boost.phi) : targetF();
+    }
+    const animating = playing && S.view !== 'xform';
+    if (dirty || animating || readDirty) {
+      updateReadouts();
+      render(dt);
+      dirty = false;
+      frameMs = frameMs * 0.9 + (performance.now() - t0) * 0.1;
+    }
+    requestAnimationFrame(loop);
+  }
+
+  tokens();
+  if (!init3D()) $('nogl').hidden = false;
+  else recolor();
+  new ResizeObserver(resize).observe($('pane'));
+  resize();
+  if (!playing) { $('play').textContent = 'Play'; $('play').classList.remove('primary'); }
+  applyPreset('lab');
+  requestAnimationFrame(loop);
+
+  // hooks for automated checks
+  window.__relem = { S, applyPreset, setFrame, wp, frame: () => fCur, boosting: () => boost.active, frameMs: () => frameMs, handles: () => handles.map((h) => ({ id: h.id, x: h.s[0], y: h.s[1] })), core: { wireForce, wireInFrame, boostFields, movingCharge } };
+})();
+</script>
+</body>
+</html>

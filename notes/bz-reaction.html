@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Belousov–Zhabotinsky Reaction: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Belousov–Zhabotinsky Reaction</h1><ul class="meta"><li><a href="../demos/bz-reaction.html">Open the demo</a></li><li>Thermodynamics (systems far from equilibrium); intro nonlinear dynamics and chaos</li><li>20 to 35 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A reaction can oscillate without breaking the second law: reactants are used up steadily and the free energy falls the whole time; only intermediates (HBrO₂, Br⁻, oxidized catalyst) rise and fall.</li>
+<li>The stirred beaker is a limit cycle: every start settles onto the same closed loop with the same period. It is periodic, not chaotic. It oscillates only when its steady state is unstable, here for f between two Hopf points.</li>
+<li>In an unstirred layer the same chemistry is excitable. A front of autocatalysis, relayed by diffusion of HBrO₂, travels at a constant speed and leaves a refractory band behind it, so waves do not pass through each other. A spot that oscillates on its own makes target rings; a wave with a free end curls into a spiral.</li>
+<li>Chaos needs more than oscillation. In a stirred flow reactor the Györgyi–Field model goes from one peak height to 2, 4, 8 and then to chaos as the flow rate changes, and two runs that start almost together separate exponentially.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need rate laws, steady states, and the idea that an isolated system moves toward equilibrium. Define autocatalysis. Use Projector mode; the flow reactor scan takes a minute.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Oscillating beaker.</strong> Ask Q1 first. The solution snaps to blue each time x (HBrO₂) shoots up, then fades to red. In the 3D phase portrait the path joins one closed loop. Period: 7.74 τ = 6.45 min.</li>
+<li><strong>Stop the oscillation.</strong> At f = 2.6: one pulse, then red for good. Drag the f line on the lower plot below the Hopf point at 2.33 and the clock restarts; below 0.505 it stops in the other state (Q3).</li>
+<li><strong>Target waves.</strong> Switch to the dish. A spot with φ = 0 oscillates by itself and sends out rings. Use the probe readouts: period at the probe, front speed, and the lone plane wave speed for comparison (Q4).</li>
+<li><strong>Make a spiral.</strong> A wave with one free end winds into a spiral. Back in Target waves, use Cut a wave to drag from near the pacemaker to the rim: a spiral pair forms and takes over (Q5).</li>
+<li><strong>Route to chaos.</strong> Switch to the flow reactor. The scan fills in the peaks of z against flow rate: one branch splits to 2, then 4, then 8, then a smear (Q6). Drag k_f on the diagram into the smear and watch the next peak map trace out one humped curve.</li>
+<li><strong>Butterfly effect.</strong> Two runs start 10⁻⁶ apart. On the log plot the distance between them climbs along a straight line until it saturates. Ask Q7.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: two identical stirred beakers of BZ solution are started a few minutes apart, so one is partway through its cycle when the other begins. After an hour, do their color changes keep the same rhythm, or does the small difference between them grow until their behavior is unrelated?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In the Oscillating beaker the period is 7.74 τ, and one unit of τ is 50 s for the concentrations in the model. How long is one cycle in minutes, and how many blue flashes does the beaker give in an hour?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The parameter f sets how much bromide (the inhibitor) is made each time oxidized catalyst is reduced. Explain why the beaker stops oscillating when f is above about 2.33. Then predict the color of a beaker with f = 0.4, below the lower Hopf point, and check it with the demo (full blue in the demo means z ≥ 0.2).</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In Target waves the probe reads a period of 4.50 and a front speed of 6.19. In Make a spiral it reads 2.60 and 4.72. Find the wavelength in each case. Both speeds are below the lone plane wave speed, 6.53. Why does a wave that follows closely behind another move more slowly?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Use the demo: cut a ring of the target pattern with a long cut from near the pacemaker to the rim. Why do two spirals form, and why do they turn in opposite senses? Then try a short cut across just one ring. Over the next few minutes, which source ends up controlling the whole dish, and why?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In the Route to chaos scan, the number of peak heights doubles at k_f ≈ 3.164, 3.223 and 3.238 × 10⁻⁴ s⁻¹. Find the ratio of the first gap to the second. For a period doubling cascade this ratio should approach Feigenbaum's δ ≈ 4.67 as more doublings are included. How close is this first estimate, and where do you expect chaos to begin?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> At k_f = 3.50 × 10⁻⁴ s⁻¹ the largest Lyapunov exponent is about λ = 0.011 s⁻¹. Two runs start 10⁻⁶ apart. Roughly how long until they differ by order 1 (the size of the attractor)? If you could make the starting difference 1000 times smaller, how much longer would the prediction stay good?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The reaction runs backward and forward, so it beats the second law."</strong> The overall reaction only goes forward and the free energy falls monotonically. The oscillating species are intermediates, kept far from equilibrium by the steady supply of bromate and malonic acid.</li>
+<li><strong>"The BZ reaction is chaotic."</strong> The stirred beaker is periodic and the dish patterns are deterministic waves. Chaos was found in stirred flow reactors (Hudson and Mankin 1981; Simoyi, Wolf and Swinney 1982), only at some flow rates.</li>
+<li><strong>"The blue rings are dye spreading out."</strong> Diffusion slows down (distance ∝ √t); these fronts keep a constant speed because each spot reacts and triggers its neighbor, and fronts that meet annihilate.</li>
+<li><strong>"Chaotic means random."</strong> The equations are deterministic: each peak follows from the last through a smooth one humped map. What fails is long range prediction.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li><strong>Beaker:</strong> the Oregonator (Field and Noyes 1974), the five step skeleton of the Field–Körös–Noyes mechanism, in scaled form ε dx/dτ = qy − xy + x(1 − x), ε′ dy/dτ = −qy − xy + fz, dz/dτ = x − z, with ε = 9.90 × 10⁻³, ε′ = 1.98 × 10⁻⁵, q = 7.62 × 10⁻⁵ (Field, Scholarpedia 2007), and τ = 1 equal to 50 s. Reactants are held constant, so the beaker never runs down. Hopf points f = 0.5052 and 2.3324 (from the Jacobian's eigenvalues); stiff Rosenbrock integration.</li>
+<li><strong>Dish:</strong> the two variable Oregonator with diffusion of u only (the catalyst is fixed, as in a gel), ε = 0.02, q = 0.002, f = 1.4 and a bromide source φ = 0.05 (values used by Adamatzky and coworkers). Model units for length and time. Grid 256 × 256, Δx = 0.25, Δt = 0.005: plane wave speed within 1 % and spiral period within 3 % of finer grids.</li>
+<li><strong>Flow reactor:</strong> the Györgyi–Field model (Nature 1992) of the cerium catalyzed reaction, with rate constants and concentrations as tabulated by Buchlovská Nagyová, Jansík and Lampart (2020), and k_f the inverse residence time. The Lyapunov exponent is a finite time estimate.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>
