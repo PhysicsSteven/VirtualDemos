@@ -113,6 +113,10 @@ def main():
     if a.base:
         BASE = a.base.rstrip("/") + "/"
     demos = sorted((ROOT / "demos").glob("*.html"))
+    if a.check and not a.names:
+        # only pages listed on the index need a projector QR code; legacy pages kept off the index are skipped
+        listed = (ROOT / "index.html").read_text(encoding="utf-8")
+        demos = [d for d in demos if f'href="demos/{d.stem}.html"' in listed]
     if a.names:
         demos = [d for d in demos if d.stem in a.names]
     bad = []
