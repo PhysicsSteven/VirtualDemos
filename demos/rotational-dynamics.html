@@ -276,7 +276,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
     const p = ps(), M = mot(), tt = Math.min(S.t, M.t), y = 0.5 * M.a * tt * tt, th = y / S.r, wide = W > 560;
     // turntable from above
-    const cx = wide ? W * 0.32 : W / 2, cy = Hh * 0.45, R = Math.min(wide ? W * 0.26 : W * 0.4, Hh * 0.33), sc = R / 0.13;
+    const cx = wide ? W * 0.32 : W * 0.4, cy = Hh * 0.45, R = Math.min(wide ? W * 0.26 : W * 0.3, Hh * 0.33), sc = R / 0.13;
     ctx.fillStyle = T.plat; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill(); ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5; ctx.stroke();
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(-th);
     ctx.strokeStyle = T.mark; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(R * 0.95, 0); ctx.stroke();
@@ -290,15 +290,15 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     ctx.fillStyle = T.str; ctx.beginPath(); ctx.arc(cx, cy, Math.max(4 * p, S.r * sc), 0, 7); ctx.fill();
     ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 3 * p, 0, 7); ctx.fill();
     // string to the pulley, falling mass from the side
-    const px = wide ? W * 0.72 : W * 0.85, py = cy - Math.max(4 * p, S.r * sc), top = cy + 20 * p, bot = Hh - 40 * p;
+    const px = wide ? W * 0.72 : W * 0.8, py = cy - Math.max(4 * p, S.r * sc), top = cy + 20 * p, bot = Hh - 40 * p;
     ctx.strokeStyle = T.str; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(cx, py); ctx.lineTo(px, py); ctx.stroke();
     ctx.strokeStyle = T.ink; ctx.beginPath(); ctx.arc(px, py + 10 * p, 10 * p, 0, 7); ctx.stroke();
     const my = top + (bot - top - 40 * p) * y / H; ctx.strokeStyle = T.str; ctx.beginPath(); ctx.moveTo(px + 10 * p, py + 10 * p); ctx.lineTo(px + 10 * p, my); ctx.stroke();
     const ms = (16 + 60 * Math.sqrt(S.m)) * p; ctx.fillStyle = T.mass; ctx.fillRect(px + 10 * p - ms / 2, my, ms, ms * 0.7);
     ctx.fillStyle = T.canvas; ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${Math.round(S.m * 1000)} g`, px + 10 * p, my + ms * 0.35);
     // drop marks
-    ctx.strokeStyle = T.accent; ctx.setLineDash([4 * p, 4 * p]); for (const yy of [top, bot - 40 * p]) { ctx.beginPath(); ctx.moveTo(px - 40 * p, yy); ctx.lineTo(px + 60 * p, yy); ctx.stroke(); } ctx.setLineDash([]);
-    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText('0.500 m drop', px + 30 * p, (top + bot - 40 * p) / 2);
+    ctx.strokeStyle = T.accent; ctx.setLineDash([4 * p, 4 * p]); for (const yy of [top, bot - 40 * p]) { ctx.beginPath(); ctx.moveTo(px - 40 * p, yy); ctx.lineTo(Math.min(px + 60 * p, W - 6 * p), yy); ctx.stroke(); } ctx.setLineDash([]);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = wide ? 'left' : 'right'; ctx.fillText('0.500 m drop', wide ? px + 30 * p : px - 14 * p, (top + bot - 40 * p) / 2);
     // timer
     ctx.fillStyle = T.ink; ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(!M.moves ? 'too little torque to turn it' : S.done ? `timer: ${M.t.toFixed(3)} s for 0.500 m` : `timer: ${f(S.t, 3)} s`, 14 * p, 48 * p);

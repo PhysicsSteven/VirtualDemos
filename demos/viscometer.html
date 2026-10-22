@@ -314,7 +314,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
-    const p = ps(), top = 70 * p, bot = Hh - 30 * p, sc = (bot - top) / (LTUBE + 0.03), tw = Math.max(46 * p, Math.min(W * 0.32, S.D * sc)), cx = W * 0.42;
+    const p = ps(), top = (W < 560 ? 104 : 70) * p, bot = Hh - 30 * p, sc = (bot - top) / (LTUBE + 0.03), tw = Math.max(46 * p, Math.min(W * 0.32, S.D * sc)), cx = W * 0.42;
     const yOf = (z) => top + 0.03 * sc + z * sc;
     ctx.fillStyle = T.fluid; ctx.globalAlpha = 0.75; ctx.fillRect(cx - tw / 2, yOf(0), tw, LTUBE * sc); ctx.globalAlpha = 1;
     ctx.strokeStyle = T.glass; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(cx - tw / 2, top); ctx.lineTo(cx - tw / 2, yOf(LTUBE)); ctx.lineTo(cx + tw / 2, yOf(LTUBE)); ctx.lineTo(cx + tw / 2, top); ctx.stroke();

@@ -261,7 +261,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
     const p = ps(), wide = W > 640, K = clocks(S.r, S.mode, S.spin);
-    const pw = wide ? W * 0.5 : W, ph = wide ? Hh : Hh * 0.55, cx = pw / 2, cy = ph / 2 + 20 * p, rMax = Math.min(pw, ph) / 2 - 40 * p, sc = rMax / Math.max(S.r, 1.6 * RE);
+    const pw = wide ? W * 0.5 : W, ph = wide ? Hh : Hh * 0.55, cx = pw / 2, cy = ph / 2 + (wide ? 20 : 40) * p, rMax = Math.min(pw, ph) / 2 - 40 * p, sc = rMax / Math.max(S.r, 1.6 * RE);
     ctx.fillStyle = T.earth; ctx.beginPath(); ctx.arc(cx, cy, RE * sc, 0, 7); ctx.fill();
     ctx.strokeStyle = T.gridStrong; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.arc(cx, cy, S.r * sc, 0, 7); ctx.stroke(); ctx.setLineDash([]);
     const omega = S.mode === 'orbit' ? K.v2 / S.r : WE, th = omega * S.t, sx = cx + S.r * sc * Math.cos(th), sy = cy - S.r * sc * Math.sin(th);

@@ -260,8 +260,8 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     else { q = stateAt(v0(), atS(), S.r, S.t); px = cx + R * Math.sin(q.th); py = cy + R * Math.cos(q.th); }
     ctx.fillStyle = T.car; ctx.beginPath(); ctx.arc(px, py, 8 * p, 0, 7); ctx.fill();
     if (q && !S.blind) {
-      const th = q.th, tx = Math.cos(th), ty = -Math.sin(th), nx = (cx - px) / R, ny = (cy - py) / R, k = 14 * p;
-      arrow(px, py, tx * q.v * 3 * p, ty * q.v * 3 * p, T.vel, 'v');
+      const th = q.th, tx = Math.cos(th), ty = -Math.sin(th), nx = (cx - px) / R, ny = (cy - py) / R, k = Math.min(40 * p, R * 1.2 / Math.max(1, S.mu * G));   // arrows: 1 m/s² = k px; at the slip point the total is 1.2 R long
+      arrow(px, py, tx * Math.min(q.v * 3 * p, R * 0.6), ty * Math.min(q.v * 3 * p, R * 0.6), T.vel, 'v');
       arrow(px, py, tx * q.at * k, ty * q.at * k, T.at, 'a_t'); arrow(px, py, nx * q.ac * k, ny * q.ac * k, T.ac, 'a_c'); arrow(px, py, tx * q.at * k + nx * q.ac * k, ty * q.at * k + ny * q.ac * k, T.atot, 'a');
     }
     if (S.slid) { ctx.fillStyle = T.atot; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('Slipped: friction cannot supply the whole acceleration', 14 * p, 54 * p); }
@@ -272,7 +272,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('accelerations (m/s²) against time', gx, gy0 - 4);
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(f(amax, 1), gx - 3, Y(amax)); ctx.fillText('0', gx - 3, Y(0)); ctx.textBaseline = 'top'; ctx.fillText(`${f(tmax, 1)} s`, gx + gw, gy0 + gh + 3);
     ctx.strokeStyle = T.gridStrong; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(gx, Y(S.mu * G)); ctx.lineTo(gx + gw, Y(S.mu * G)); ctx.stroke(); ctx.setLineDash([]); ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillStyle = T.muted; ctx.fillText('μs g: the most friction can give', gx + 4 * p, Y(S.mu * G) - 2);
-    if (!S.blind) for (const [k, col] of [[1, T.at], [2, T.ac], [3, T.atot]]) { ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.beginPath(); S.hist.forEach((h, i) => (i ? ctx.lineTo(X(h[0]), Y(h[k])) : ctx.moveTo(X(h[0]), Y(h[k])))); ctx.stroke(); }
+    if (!S.blind) for (const [k, col] of [[1, T.at], [2, T.ac], [3, T.atot]]) { ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.beginPath(); S.hist.forEach((h, i) => (i ? ctx.lineTo(X(h[0]), Y(h[k])) : ctx.moveTo(X(h[0]), Y(h[k])))); ctx.stroke(); if (S.hist.length) { const h = S.hist[S.hist.length - 1]; ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(['', 'a_t', 'a_c', '|a|'][k], Math.min(X(h[0]) + 5 * p, gx + gw - 26 * p), Y(h[k]) + (k === 1 ? 8 : -8) * p); } }
   }
   function init() { sync(); readouts(); }
   function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }
