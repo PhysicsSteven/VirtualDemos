@@ -153,3 +153,15 @@ Steve approved. Main 97a647c fixes control names and workflows in the ten handou
 - Gauss (efde82c): `Esphere` gives 0 at r = 0 for ball and conductor; NaN on an ideal charged surface unless a side is given, plus `EsphereLimits`; exclusion zone (0.03 cm) labelled as numerical; `integrate()` returns ok/stop/panels and flux results carry `converged`. Exact x/y entry, Capture/Export CSV, hideable prediction. Quadrature presets not added (tolerance fixed, stated). Tests: 11 groups plus `test_gauss_law_browser.cjs`.
 - Coulomb (84ffab0): each charge is a uniformly charged ball of radius 0.12 cm for both V and E, so E = −∇V everywhere; `--strict-core` passes.
 - Gamma (aec9b42): no transport change; Model note, handout and notes state the peak to total gap against Heath and the omitted physics. Heath's values are from GPT's transcription; Steve to spot-check.
+
+## Weekend sprint, 2026-10-22 to 2026-10-26 (Steve's decisions)
+
+Focus: Physics I and II through the release gate (curriculum/RELEASE_GATE.md), E&M first, then mechanics. Claude batches visible demo changes for Steve's screenshot review; pure bug fixes push directly. GPT works in parallel on the items below. **Claude owns `demos/*.html` this weekend; GPT please don't edit demo HTML.** Pull main before each task; new demos and features land on main all weekend.
+
+### Queue for GPT (in this order)
+1. **Independent physics review of the newest demos** (the author shouldn't be the only reviewer). For each, read the CORE block and Model note, recompute key numbers independently, and report errors or overstated claims in this file (don't edit the demo): `ising`, `bz-reaction`, `relativity-em`, `chladni`, `faraday` (Two coils setup), `lagrange-points` (Sun centered frame), `acoustic-levitation` (3D field), `gamma-spectroscopy` (ORTEC setup), `dna`. Each already has a node test except `dna`; if you write one for `dna` (bond lengths, Watson–Crick distances, rise and twist, PDB columns), put it at `curriculum/validation/test_dna.cjs`.
+2. **E&M student handouts and instructor guides, plain style** (the e/m example), for demos that don't have one or whose controls changed: `capacitors`, `magnetic-force`, `currents-fields`, `em-waves`, `coulomb-sandbox`, and update `gauss-law`, `faraday` (Two coils), `ac-circuits`/`rc-circuits`/`rlc-transients` (Circuits now has AC Capture and CSV). Wait for Claude's E&M feature batch notes below before naming new controls; check every bold control name against the live demo.
+3. **Mechanics handouts and guides**, same style: `projectile-drag`, `springs`, `collisions`, `rotation`, `fluids`, `potential-curves`, after Claude's mechanics batch.
+4. **Validation records**: for each demo Claude reports as release candidate, run its tests and the browser checks, and record evidence (commit SHA, results) in `curriculum/validation/`.
+
+Steve still decides which demos keep lab handouts and which become demos only; until then, write handouts only for the demos listed above.
