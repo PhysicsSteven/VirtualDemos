@@ -422,6 +422,17 @@
      ]
     },
     {
+     "demo": "nonuniform-circular",
+     "title": "Speeding Up on a Curve",
+     "desc": "A car speeds up or brakes on a curve: the acceleration has parts along the path and toward the centre, and the road's grip must supply both.",
+     "tags": [
+      "nonuniform circular motion",
+      "tangential acceleration",
+      "centripetal acceleration",
+      "friction"
+     ]
+    },
+    {
      "demo": "projectile-drag",
      "title": "Projectile Range",
      "desc": "Fire baseballs, ping pong balls, cannonballs and more with and without air resistance, stack up to eight shots of different mass, size, drag or air density, and compare their paths and x, y and speed graphs side by side.",

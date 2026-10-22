@@ -1206,12 +1206,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "circular-motion"
+        "circular-motion",
+        "nonuniform-circular"
       ],
       "unit": "kinematics",
-      "note": "Circular Motion shows a = v²/r toward the center at constant speed; nonuniform circular motion (tangential acceleration) only in the loop."
+      "note": "Circular Motion covers uniform circular motion; Speeding Up on a Curve (2026-10-22, Claude) covers nonuniform motion: tangential and centripetal parts, total acceleration and its angle, slip when √(a_t² + a_c²) > μs g."
     },
     {
       "vol": 1,
@@ -4391,6 +4392,26 @@
       "handouts": [],
       "title": "Circular Motion",
       "url": "demos/circular-motion.html"
+    },
+    {
+      "demo": "nonuniform-circular",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "4.4",
+          "title": "Uniform and Nonuniform Circular Motion"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Car on a flat circular road speeding up from rest or braking to a stop at constant |a_t|; radius, braking start speed, μs; v, a_t, a_c and total a arrows; accelerations against time with the μs g line; slides off when grip runs out; Blind.",
+      "handouts": [],
+      "title": "Speeding Up on a Curve",
+      "url": "demos/nonuniform-circular.html"
     },
     {
       "demo": "forces",

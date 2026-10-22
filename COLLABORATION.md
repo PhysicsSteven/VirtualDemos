@@ -339,3 +339,7 @@ Also: Rotational Dynamics shipped with its theme block not loading (a stray `<st
 ## Claude, 2026-10-22 21:20: Center of Mass (new Physics I lecture demo)
 
 `demos/center-of-mass.html`, role `demo`, status `usable`, Vol 1 §9.6 now `usable`. Setups **Masses on a plate / Exploding firework / Walking on a boat**. Plate: drag masses, **Add a mass**, **Remove the selected mass**, **Selected mass**. Firework: **Mass of the front piece, fraction of the total**, **Speed the explosion gives the pieces apart**, **Direction the front piece is thrown**; **Launch / Pause**, **Start over**. Boat: **Person's mass**, **Boat's mass**; **Walk**. Blind hides the CM. No handout needed.
+
+## Claude, 2026-10-22 21:40: Speeding Up on a Curve (new Physics I lecture demo)
+
+`demos/nonuniform-circular.html`, role `demo`, status `usable`, Vol 1 §4.4 now `usable` alongside circular-motion. **Speeding up from rest / Braking to a stop**, **Rate of change of speed |a_t|**, **Radius of the curve r**, **Speed when braking starts**, **Road grip μs**; buttons **Go / Pause**, **Start over**. Blind hides the accelerations and slip prediction. No handout needed.
