@@ -62,10 +62,10 @@ const server=http.createServer((req,res)=>{
       const expected=-100*.002*(Math.cos(6.3*fg.t)-Math.cos(6.3*(fg.t-.001)))/.001;
       assert(Math.abs(fg.emf-expected)<1e-10);
       const [ftrace]=await Promise.all([page.waitForEvent('download'),page.click('#labTrace')]);
-      const ftext=fs.readFileSync(await ftrace.path(),'utf8');assert.equal(ftext.trim().split('\n').length,103);assert(ftext.includes('interval_midpoint_s'));
+      const ftext=fs.readFileSync(await ftrace.path(),'utf8');assert.equal(ftext.trim().split('\n').filter(l=>!l.startsWith('#')).length,103);assert.match(ftext,/^# demo version,faraday@/m);assert(ftext.includes('interval_midpoint_s'));
       await page.click('[data-p="rails"]');await page.fill('#labDuration','0.3');await page.click('#labAdvance');await page.click('#labCapture');
       const rail=await page.evaluate(()=>({emf:window.__fd.circ.emf,I:window.__fd.circ.I}));assert(Math.abs(rail.emf+.2)<1e-10);assert(Math.abs(rail.I+.2/.47)<1e-10);
-      const [fcsv]=await Promise.all([page.waitForEvent('download'),page.click('#labExport')]);assert.equal(fs.readFileSync(await fcsv.path(),'utf8').trim().split('\n').length,3);
+      const [fcsv]=await Promise.all([page.waitForEvent('download'),page.click('#labExport')]);assert.equal(fs.readFileSync(await fcsv.path(),'utf8').trim().split('\n').filter(l=>!l.startsWith('#')).length,3);
       await page.click('[data-p="gen"]');assert.equal(await page.evaluate(()=>window.__fd.W.ke),0);
       assert.equal(await page.locator('#mPk').isVisible(),false);await page.uncheck('#labBlind');assert.equal(await page.locator('#mPk').isVisible(),true);
       assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Faraday horizontal overflow');assert.deepEqual(errors,[]);

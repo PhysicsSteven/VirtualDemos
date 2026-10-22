@@ -68,4 +68,10 @@ test('integrate reports an unmet tolerance',()=>{
   finally{g.setMaxPanels(300);}
   const r=g.sphereFlux([charge(.0597)],0,0,.06);assert(r.converged);close(r.total,k,1e-12);
 });
+test('CSV carries the demo version line',()=>{
+ assert.match(g.GL_VERSION,/^gauss-law@\d{4}-\d{2}-\d{2}\.\d+$/);
+ // the export writes it as the second comment line, right after the title
+ assert.match(src,/\[\'# Gauss\\'s Law: numerical flux readings \(simulated data;[^\n]*\n\s*`# demo version,\$\{GL_VERSION\}`,/);
+});
 console.log(`Completed ${count} Gauss-law test groups.`);
+console.log(`${count} gauss-law test groups passed`);

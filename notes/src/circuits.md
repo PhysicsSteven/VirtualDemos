@@ -23,6 +23,7 @@ Students should know V = IR and Q = CV; the AC part needs sines and phasors. Swi
 5. **RL rise and decay**, **LC oscillation**, **RLC damping** (Q6, Q7). Change R2 with its value grip and watch ζ under Natural response.
 6. **AC: Capacitor only**, **Inductor only** (Q8): the rotating phasors beside the scope project onto the traces. **Below resonance** shows the voltage phasors tip to tail (Q9).
 7. **At resonance**, **High Q vs low Q**, **Sweep**. Then press **In time**: the same circuit is switched on at t = 0 and its current builds up over several cycles (Q10).
+8. **For a lab.** Tick **Blind: hide predictions and answers** under **Lab**: it hides f₀, Δf, Q, τ, ζ and the like, so students measure them. In time, **Step forward** moves on by the chosen **Step Δt**; click or drag on the scope to place the time cursor, which reads every channel at that instant. **Capture reading** fills a table in each mode, and **Export CSV** saves it with the circuit in the header.
 
 ## Questions
 
@@ -59,3 +60,4 @@ Students should know V = IR and Q = CV; the AC part needs sines and phasors. Swi
 - In time, the circuit equations (I = dQ/dt, V = L dI/dt) and the energies are integrated exactly between switch events (matrix exponential). Where an ideal circuit would need an infinite current or voltage, a 1 mΩ contact resistance or 1 MΩ spark path stands in.
 - AC is the exact steady state from complex impedances, per source frequency plus the DC part. Meters read rms; the scope and phasors use peak values.
 - Bulbs are fixed resistors with no thermal lag (glow ∝ power, full at 4 W); a real filament's resistance rises as it heats.
+- The time cursor is exact: between stored samples the state is carried to the cursor time by the same matrix exponential, not drawn as a straight line.

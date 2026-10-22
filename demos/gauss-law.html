@@ -149,7 +149,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .num input { min-width: 0; width: 100%; font: inherit; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.86rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
 .num input:disabled { opacity: 0.5; }
 .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
-.twrap { overflow-x: auto; }
+.twrap { position: relative; overflow-x: auto; }
+.twrap.tall { overflow-y: auto; max-height: 260px; }
+table.rows tr.mark td { color: var(--accent); font-weight: 700; }
+table.rows .note { padding-left: 12px; font-family: var(--font-ui); white-space: normal; }
 table.rows { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
 table.rows th { text-align: left; font-weight: 700; color: var(--muted); font-size: 0.7rem; padding: 3px 2px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 table.rows td { padding: 3px 2px; border-bottom: 1px solid var(--grid-strong); vertical-align: middle; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.76rem; white-space: nowrap; }
@@ -250,7 +253,7 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
           <p class="toast" id="toast" hidden></p>
         </div>
         <div class="pane" id="pPane" hidden>
-          <canvas id="pCan" tabindex="0" aria-label="Plot of the field E against distance with the Gaussian surface marked. Drag the marker or use the left and right arrow keys to move the Gaussian surface."></canvas>
+          <canvas id="pCan" tabindex="0" aria-describedby="eDataNote" aria-label="Plot of the field E against distance with the Gaussian surface marked. Drag the marker or use the left and right arrow keys to move the Gaussian surface. Show data table in the rail lists the plotted values."></canvas>
         </div>
       </div>
     </div>
@@ -343,7 +346,7 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
           <button type="button" class="btn" id="clearTab">Clear</button>
         </div>
         <label class="check"><input type="checkbox" id="tPred" checked><span>Show predicted flux Q<sub>enc</sub>/ε₀</span></label>
-        <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>Surface</th><th class="b">Q<sub>enc</sub> nC</th><th class="b">∮E·dA</th><th class="b pred">Q<sub>enc</sub>/ε₀</th></tr></thead><tbody></tbody></table></div>
+        <div class="twrap"><table class="rows" id="tbl"><caption class="sr">Captured flux readings: surface, enclosed charge, numerical flux and, when shown, the predicted flux Q_enc/ε₀ in N·m²/C</caption><thead><tr><th>#</th><th>Surface</th><th class="b">Q<sub>enc</sub> nC</th><th class="b">∮E·dA</th><th class="b pred">Q<sub>enc</sub>/ε₀</th></tr></thead><tbody></tbody></table></div>
         <p class="hint" id="capMsg" role="status" hidden></p>
         <p class="hint">Capture freezes the surface, the charges and the numerical flux in a row (flux in N·m²/C). The CSV holds every row in SI units, with the closest charge distance and the quadrature status.</p>
       </section>
@@ -356,6 +359,7 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
           <label><input type="checkbox" id="tCross" checked>Crossings</label>
           <label><input type="checkbox" id="tGrid" checked>Grid</label>
           <label><input type="checkbox" id="tPatch">Flux patches</label>
+          <label><input type="checkbox" id="tReduce">Reduce motion</label>
         </div>
         <div class="ctl">
           <div class="slider-head"><label for="sDen">Field lines per nC</label><output id="oDen" class="mono" for="sDen"></output></div>
@@ -419,6 +423,13 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
       </section>
 
       <section data-mode="sym" hidden>
+        <h2>Plot data</h2>
+        <button type="button" class="btn" id="eDataBtn" aria-expanded="false" aria-controls="eDataWrap">Show data table</button>
+        <p class="hint" id="eDataNote">A table of E against distance, read from the same formula the plot draws, with the Gaussian surface row marked.</p>
+        <div class="twrap tall" id="eDataWrap" hidden><table class="rows" id="eDataTab"><caption class="hint" id="eDataCap" style="caption-side: top; text-align: left; padding-bottom: 4px"></caption><thead id="eDataHead"></thead><tbody id="eDataBody"></tbody></table></div>
+      </section>
+
+      <section data-mode="sym" hidden>
         <h2>Display</h2>
         <div class="key">
           <span><i class="swatch out"></i>Gaussian surface, flux out</span>
@@ -427,7 +438,7 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
           <span><i class="swatch grip"></i>Grip: drag on the drawing or the plot</span>
           <span><i class="swatch patch"></i>Flux patch (3D): an area element colored by its E·dA</span>
         </div>
-        <div class="toggles"><label><input type="checkbox" id="tPatchY">Flux patches</label></div>
+        <div class="toggles"><label><input type="checkbox" id="tPatchY">Flux patches</label><label><input type="checkbox" id="tReduceY">Reduce motion</label></div>
         <p class="hint">3D view: charge dots inside the Gaussian surface are bright, the rest faint. With flux patches on, the caps of the line's cylinder and the side of the pillbox stay gray: E runs along them, so E·dA = 0.</p>
         <p class="hint" id="symModel">Model: ideal charge distributions. The line and the plane are infinitely long and wide; the drawing shows only a piece. Arrows on the Gaussian surface have a length proportional to E, capped close to a point or line charge. The ball is an insulator with its charge spread evenly through its volume; its field lines are drawn from the center for simplicity, although in the ball they begin all through the charged volume.</p>
       </section>
@@ -440,6 +451,7 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
 (() => {
   // ==CORE START==
   // SI constants (CODATA 2022)
+  const GL_VERSION = 'gauss-law@2026-10-22.1';   // demo version, written into every CSV
   const EPS0 = 8.8541878188e-12;            // F/m
   const KC = 1 / (4 * Math.PI * EPS0);      // N·m²/C²
   const NC = 1e-9, CM = 1e-2;
@@ -728,12 +740,15 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.GL = { EPS0, KC, sphereFlux, boxFlux, cylFlux, prismFlux, triangulate, signedArea, isSimple, spline, pointInPoly, enclosedSphere, Esphere, EsphereLimits, onShell, Eline, Eplane, stats, integrate, setMaxPanels, EXCL_CM, boundaryClass };
+    globalThis.GL = { GL_VERSION, EPS0, KC, sphereFlux, boxFlux, cylFlux, prismFlux, triangulate, signedArea, isSimple, spline, pointInPoly, enclosedSphere, Esphere, EsphereLimits, onShell, Eline, Eplane, stats, integrate, setMaxPanels, EXCL_CM, boundaryClass };
     return;
   }
 
   const $ = (id) => document.getElementById(id);
-  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const reduceOS = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  // Reduce motion: the OS setting, or the in-page toggle remembered for this browser session only
+  let reduce = reduceOS;
+  try { const v = sessionStorage.getItem('gauss-law-reduce-motion'); if (v === 'on') reduce = true; else if (v === 'off') reduce = false; } catch (_) {}
   const KCM = KC * NC / (CM * CM);          // N/C per (nC/cm²)
   const SPAN = 12;                          // spline samples between two control points
   const E0 = KCM * 1 / 25;                  // reference field for colors and arrows: 1 nC at 5 cm, 3595 N/C
@@ -1882,7 +1897,8 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
   }
   function csvRows() {
     const pred = $('tPred').checked, m = (v) => (v === null || v === undefined ? '' : String(+(v * CM).toPrecision(12)));
-    const L = ['# Gauss\'s Law: numerical flux readings (VirtualDemos, demos/gauss-law.html)',
+    const L = ['# Gauss\'s Law: numerical flux readings (simulated data; VirtualDemos, demos/gauss-law.html)',
+      `# demo version,${GL_VERSION}`,
       '# Units SI. Point charges in the plane z = 0. epsilon_0 = 8.8541878188e-12 F/m (CODATA 2022).',
       '# Geometry: sphere uses center and radius_m; box uses center, width_x_m, height_y_m, depth_z_m; cylinder (axis along x) uses center, width_x_m as its length, and radius_m; freeform is the closed centripetal Catmull-Rom spline through its control points (12 samples per span) extruded over depth_z_m, center = mean of the control points.',
       `# Quadrature: nested adaptive Gauss-Kronrod (7, 15) rules; overall error target about max(3e-9 sum|q|/eps0, 3e-10 |flux|), shared among the faces, inner integrals 5 to 10 times tighter; at most ${MAXP} panels per one dimensional integral.`,
@@ -1912,6 +1928,59 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
   $('clearTab').addEventListener('click', () => { rows.length = 0; renderRows(); capStatus('Readings cleared.'); });
   $('tPred').addEventListener('change', () => { renderRows(); updateReadouts(); });
   renderRows();
+
+  // ---------- readable table of the E against distance plot ----------
+  let eDataOpen = false, eDataKey = '', eDataLast = 0;
+  const symDesc = () => {
+    const k = Ysym.kind;
+    if (k === 'sphere') return Ysym.sk === 'point' ? `a point charge Q = ${minus(String(Ysym.Q))} nC` : `a ${Ysym.sk === 'ball' ? 'uniformly charged insulating ball' : 'conducting sphere'} with Q = ${minus(String(Ysym.Q))} nC and radius R = ${fcm(Ysym.R)}`;
+    if (k === 'line') return `an infinite line of charge, λ = ${minus(String(Ysym.lam))} nC/m`;
+    return `an infinite plane of charge, σ = ${minus(String(Ysym.sig))} nC/m²`;
+  };
+  function eTableRows() {
+    const k = Ysym.kind, pr = plotRange(), r = symR(), xs = new Set();
+    const raw = (pr.x1 - pr.x0) / 24, p10 = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p10, st = (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p10;
+    for (let i = Math.ceil(pr.x0 / st - 1e-9); i * st <= pr.x1 + 1e-9; i++) xs.add(+(i * st).toFixed(4));
+    xs.add(+r.toFixed(4)); if (k === 'plane') { xs.add(+(-r).toFixed(4)); xs.add(0); }
+    if (k === 'sphere' && Ysym.sk !== 'point') xs.add(+Ysym.R.toFixed(4));
+    const out = [];
+    for (const x of [...xs].sort((a, b) => a - b)) {
+      const gs = Math.abs(Math.abs(x) - r) < 1e-6 ? 'Gaussian surface' : '';
+      if (k !== 'plane' && x <= 0 && symRmin() > 0) continue;             // E diverges at a point or line charge
+      if (k === 'plane' && x === 0) { out.push([x, symE(-1e-9), 'just left of the sheet'], [x, symE(1e-9), 'just right of the sheet']); continue; }
+      if (k === 'sphere' && Ysym.sk === 'shell' && Math.abs(x - Ysym.R) < 1e-6) { out.push([x, symE(x, -1), (gs ? gs + ', ' : '') + 'just inside R'], [x, symE(x, 1), (gs ? gs + ', ' : '') + 'just outside R']); continue; }
+      out.push([x, symE(x, -1), gs || (k === 'sphere' && Ysym.sk !== 'point' && Math.abs(x - Ysym.R) < 1e-6 ? 'r = R' : '')]);
+    }
+    return out;
+  }
+  function renderEData(force) {
+    if (mode !== 'sym') return;
+    const now = performance.now(); if (!force && now - eDataLast < 300) return; eDataLast = now;
+    const k = Ysym.kind, key = JSON.stringify([Ysym, eDataOpen]);
+    if (!force && key === eDataKey) return; eDataKey = key;
+    const d = k === 'plane' ? 'x' : 'r', E = symEdraw(symR());
+    $('pCan').setAttribute('aria-label', `Plot of ${k === 'plane' ? 'E_x against x, measured from the sheet,' : 'E_r against r'} for ${symDesc()}. The Gaussian surface is at ${d === 'x' ? 'h' : 'r'} = ${fcm(symR())}, where E = ${fmtSI(E, 'N/C', 3)}${symOnShell() ? ' just outside (0 just inside)' : ''}. Drag the marker or use the left and right arrow keys to move the Gaussian surface. Show data table in the rail lists the plotted values.`);
+    if (!eDataOpen) return;
+    const rows = eTableRows();
+    // one unit for the column, as on the plot's axis
+    const pr = plotRange(), big = Math.max(Math.abs(pr.y0), Math.abs(pr.y1)), [usc, un] = big >= 1e3 ? [1e3, 'kN/C'] : [1, 'N/C'];
+    $('eDataHead').innerHTML = `<tr><th scope="col">${d} (cm)</th><th scope="col" class="b">${k === 'plane' ? 'E<sub>x</sub>' : 'E<sub>r</sub>'} (${un})</th><th scope="col" class="note">Note</th></tr>`;
+    $('eDataBody').innerHTML = rows.map(([x, v, note]) => `<tr${/Gaussian/.test(note) ? ' class="mark"' : ''}><td>${minus(String(+x.toFixed(2)))}</td><td class="b">${v === 0 ? '0' : minus((v / usc).toPrecision(4))}</td><td class="note">${note}</td></tr>`).join('');
+    $('eDataCap').textContent = `${rows.length} values of ${k === 'plane' ? 'E_x' : 'E_r'} for ${symDesc()}, at even steps across the plot plus the Gaussian surface${k === 'sphere' && Ysym.sk !== 'point' ? ' and R' : ''}. ${k === 'plane' ? 'Positive E_x points along +x.' : 'Positive E_r points outward.'}`;
+  }
+  $('eDataBtn').addEventListener('click', () => {
+    eDataOpen = !eDataOpen; $('eDataWrap').hidden = !eDataOpen;
+    $('eDataBtn').setAttribute('aria-expanded', String(eDataOpen)); $('eDataBtn').textContent = eDataOpen ? 'Hide data table' : 'Show data table';
+    renderEData(true);
+  });
+  // Reduce motion: pause now and open every setup paused; Play still runs the motion
+  function setReduce(on) {
+    reduce = on; $('tReduce').checked = on; $('tReduceY').checked = on;
+    try { sessionStorage.setItem('gauss-law-reduce-motion', on ? 'on' : 'off'); } catch (_) {}
+    if (on) setRunning(false);
+  }
+  $('tReduce').checked = $('tReduceY').checked = reduce;
+  for (const id of ['tReduce', 'tReduceY']) $(id).addEventListener('change', (e) => setReduce(e.target.checked));
   $('qList').addEventListener('click', (e) => { const li = e.target.closest('li'); if (li) { F.sel = { kind: 'q', id: +li.dataset.id }; updateReadouts(); } });
   $('qList').addEventListener('keydown', (e) => { const li = e.target.closest('li'); if (li && (e.key === 'Enter' || e.key === ' ')) { F.sel = { kind: 'q', id: +li.dataset.id }; updateReadouts(); e.preventDefault(); } });
   $('tLines').addEventListener('change', (e) => { F.layers.lines = e.target.checked; });
@@ -2959,7 +3028,7 @@ void main() {
     }
     drawAll();
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
-    if (now - lastRead > 120) { if (mode === 'sym' || !numDirty) updateReadouts(); lastRead = now; }
+    if (now - lastRead > 120) { if (mode === 'sym' || !numDirty) updateReadouts(); renderEData(); lastRead = now; }
     requestAnimationFrame(loop);
   }
   window.__gl = {

@@ -99,6 +99,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .spin { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
 .spin[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.seg button:disabled, .spin:disabled { opacity: 0.45; cursor: not-allowed; }
 .hint3d {
   position: absolute; right: 10px; bottom: 10px; z-index: 2; max-width: calc(100% - 20px); box-sizing: border-box;
   font-size: 0.8rem; color: var(--muted); background: var(--surface); border: 1px solid var(--line);
@@ -160,6 +161,32 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.zero { border-top-style: dashed; border-color: var(--muted); }
 .swatch.line { border-color: var(--field); }
 
+/* readings (lab kit) */
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; overflow: auto; max-height: 240px; }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); font-size: 0.7rem; padding: 3px 2px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.rows td { padding: 3px 2px; border-bottom: 1px solid var(--grid-strong); vertical-align: middle; }
+table.rows td.n { color: var(--muted); font-size: 0.72rem; white-space: nowrap; }
+table.rows td.b { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; font-size: 0.76rem; }
+#rowsTbl { table-layout: fixed; }
+#rowsTbl th:nth-child(1) { width: 8%; } #rowsTbl th:nth-child(2), #rowsTbl th:nth-child(3) { width: 15%; } #rowsTbl th:nth-child(4) { width: 19%; } #rowsTbl th:nth-child(5) { width: 21%; } #rowsTbl th:nth-child(6) { width: 13%; } #rowsTbl th:nth-child(7) { width: 9%; }
+#rowsTbl input { width: 100%; min-width: 0; }
+#mapTbl th { text-align: right; padding-right: 4px; }
+table.rows input { font: inherit; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.74rem; width: 3.4em; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 4px; padding: 2px; }
+table.rows button { font: inherit; font-size: 0.85rem; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 4px; }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.toggles label.off { opacity: 0.5; cursor: not-allowed; }
+.blindtag {
+  position: absolute; top: 10px; right: 10px; z-index: 2; pointer-events: none;
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px;
+}
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
 @media (min-width: 821px) {
   :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 340px; }
 }
@@ -169,6 +196,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .bench { grid-template-columns: minmax(0, 1fr); }
   .stage { height: 64vh; min-height: 340px; }
   .rail { overflow: visible; }
+  .btn, .chips button, .seg button, .spin, .proj { min-height: 36px; }
+  input[type="range"] { height: 28px; }
+  .toggles label, .check { min-height: 32px; }
+  table.rows button { min-width: 32px; min-height: 32px; }
 }
 </style>
 </head>
@@ -189,7 +220,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <main class="bench">
     <div class="stage" id="stage">
       <canvas id="base" aria-hidden="true"></canvas>
-      <canvas id="over" tabindex="0" role="application" aria-label="Field of point charges. Drag charges to move them; select one and use arrow keys to nudge it, plus and minus keys to change its charge."></canvas>
+      <canvas id="over" tabindex="0" role="application" aria-label="Field map of point charges in a plane on a 1 cm grid." aria-describedby="kbHelp"></canvas>
       <div class="viewbar">
         <div class="seg" role="group" aria-label="View">
           <button type="button" data-v="2d" aria-pressed="true">2D map</button>
@@ -198,6 +229,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <button type="button" class="spin" id="spin" aria-pressed="false" hidden>Spin</button>
       </div>
       <div class="qtag mono" id="qTag" hidden></div>
+      <div class="blindtag" id="blindTag" hidden>Blind</div>
+      <p class="sr-only" id="kbHelp">Keys: Tab or ] selects the next charge, Shift+Tab or [ the previous one. Arrow keys move the selected charge 0.1 cm, Shift+arrow 1 cm. + and − change its charge by 0.5 nC. Delete removes it. P switches between the probe and the last selected charge (Escape also switches to the probe); with the probe selected, arrow keys move it 0.1 cm, Shift+arrow 1 cm. C captures a reading. In the 3D landscape, A and D rotate the view, W and S tilt it, Z and X zoom in and out, 0 resets it.</p>
+      <p class="sr-only" id="kbLive" aria-live="polite"></p>
       <div class="hint3d" id="hint3d" hidden></div>
     </div>
 
@@ -224,7 +258,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <input type="range" id="q" min="-5" max="5" step="0.5" value="2">
           <div class="selfoot"><span id="selPos" class="mono"></span><button type="button" class="link" id="del">Remove</button></div>
         </div>
-        <p class="hint" id="selHint">Click a charge to select it.</p>
+        <p class="hint" id="selHint">Click a charge to select it, or click the field and press Tab.</p>
       </section>
 
       <section>
@@ -236,7 +270,25 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>Position (cm)</dt><dd id="rPos">—</dd></div>
         </dl>
         <p class="hint core-note" id="coreNote" hidden>The probe is inside a charge's 1.2 mm model ball. A true point charge has no finite V or E here; these values are for a uniformly charged ball.</p>
-        <p class="hint">Hover over the field, or tap to place the probe. Each charge is modeled as a uniformly charged ball 1.2 mm in radius, inside its drawn disc; outside the ball V and E are exact point charge values.</p>
+        <p class="hint">Hover over the field, tap to place the probe, or press P on the field and use the arrow keys. The probe sits on a 0.1 cm grid. Each charge is modeled as a uniformly charged ball 1.2 mm in radius, inside its drawn disc; outside the ball V and E are exact point charge values.</p>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="exportCsv">Export CSV</button>
+          <button type="button" class="btn" id="clearRows">Clear</button>
+        </div>
+        <p class="status" id="capStatus" aria-live="polite"></p>
+        <div class="twrap" id="rowsWrap" hidden><table class="rows" id="rowsTbl"><caption class="sr-only">Captured probe readings</caption><thead><tr><th scope="col">#</th><th scope="col">x cm</th><th scope="col">y cm</th><th scope="col">V (V)</th><th scope="col">|E| (V/m)</th><th scope="col" title="E direction, degrees from +x">Dir °</th><th scope="col"><span class="sr-only">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <p class="hint">Capture stores the probe position and the values shown above, rounded as displayed, with the charges that produced them (listed in the CSV header). Cells can be edited; rows stay through setup changes until Clear. Press C on the field to capture.</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind" autocomplete="off">Blind: hide predictions and answers</label>
+        <p class="hint">Blind hides the field lines, the equipotentials, the potential shading, the 3D landscape and the field map data table. The charges, the grid and the probe stay, so students map the field from probe readings.</p>
       </section>
 
       <section>
@@ -246,6 +298,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <label><input type="checkbox" id="tEqui" checked>Equipotentials</label>
           <label><input type="checkbox" id="tLines" checked>Field lines</label>
           <label><input type="checkbox" id="tGrid" checked>1 cm grid</label>
+          <label><input type="checkbox" id="tMotion" autocomplete="off">Reduce motion</label>
         </div>
         <div>
           <div class="slider-head"><label for="dV">Equipotential spacing ΔV</label><output id="dVOut" class="mono" for="dV">250 V</output></div>
@@ -273,6 +326,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch zero"></i>The V = 0 equipotential</span>
         </div>
         <p class="hint">In 3D, height is the potential: hills at positive charges, wells at negative ones. Heights are compressed near each charge, where V grows without bound.</p>
+        <button type="button" class="btn" id="mapTblBtn" aria-expanded="false" aria-controls="mapWrap">Show data table</button>
+        <div class="twrap" id="mapWrap" hidden><table class="rows" id="mapTbl"><caption class="sr-only">Field map values on a 2 cm grid</caption><thead><tr><th scope="col">x cm</th><th scope="col">y cm</th><th scope="col">V (V)</th><th scope="col">|E| (V/m)</th><th scope="col">E dir °</th></tr></thead><tbody></tbody></table></div>
       </section>
     </aside>
   </main>
@@ -281,9 +336,101 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (() => {
-  const C_V = 898.755;   // V·cm per nC   (k q / r)
+  // ==CORE START==
+  // Pure physics and reading helpers, no DOM. Lengths in cm, charges in nC, V in volts, E in V/m.
+  const DEMO_VERSION = 'coulomb-sandbox@2026-10-22';
+  const C_V = 898.755;   // V·cm per nC   (k q / r), k = 8.98755×10⁹ N·m²/C²
   const C_E = 89875.5;   // V/m · cm² per nC (k q / r²)
   const CORE_R = 0.12, CORE_R3 = CORE_R ** 3;   // cm: each charge is a uniformly charged ball of this radius (always inside its drawn disc)
+
+  // Outside r = CORE_R both are exactly the point charge results kq/r and kq r̂/r².
+  // Inside, each charge is a uniformly charged ball: V = kq(3a² − r²)/(2a³), E = kq r/a³,
+  // so E = −∇V everywhere and both are continuous at r = a.
+  function potentialAt(list, x, y) {
+    let v = 0;
+    for (const c of list) {
+      if (!c.q) continue;
+      const r = Math.hypot(x - c.x, y - c.y);
+      v += r >= CORE_R ? c.q / r : c.q * (3 * CORE_R * CORE_R - r * r) / (2 * CORE_R3);
+    }
+    return v * C_V;
+  }
+  function fieldAt(list, x, y) { // V/m
+    let ex = 0, ey = 0;
+    for (const c of list) {
+      if (!c.q) continue;
+      const dx = x - c.x, dy = y - c.y, r2 = dx * dx + dy * dy;
+      const r3 = r2 >= CORE_R * CORE_R ? r2 * Math.sqrt(r2) : CORE_R3;
+      ex += c.q * dx / r3; ey += c.q * dy / r3;
+    }
+    return [ex * C_E, ey * C_E];
+  }
+  // the charge whose model ball contains (x, y), if any
+  const coreAt = (list, x, y) => list.find((c) => c.q && Math.hypot(x - c.x, y - c.y) < CORE_R) || null;
+  // the visible region in cm for a W × H pane with origin at (cx, cy) px and s px per cm
+  const viewBounds = (W, H, cx, cy, s) => ({ x0: -cx / s, x1: (W - cx) / s, y0: -(H - cy) / s, y1: cy / s });
+
+  // ---- what the panel shows, rounded exactly as displayed ----
+  const minus = (str) => str.replace(/-/g, '−');
+  const nz = (v) => (v === 0 ? 0 : v);                       // no negative zero
+  const snap01 = (v) => nz(Math.round(v * 10) / 10);          // 0.1 cm grid
+  const roundV = (v) => nz(Math.abs(v) >= 1000 ? Math.round(v / 10) * 10 : Math.round(v));
+  const roundE = (e) => e >= 1e6 ? Math.round(e / 1e4) * 1e4 : e >= 1e5 ? Math.round(e / 1e3) * 1e3 : e >= 1e3 ? Math.round(e / 100) * 100 : Math.round(e);
+  function fmtV(v) { const r = roundV(v); return minus(Math.abs(v) >= 1000 ? (r / 1000).toFixed(2) + ' kV' : r + ' V'); }
+  function fmtE(e) {
+    const r = roundE(e);
+    if (e >= 1e6) return (r / 1e6).toFixed(2) + ' MV/m';
+    if (e >= 1e5) return (r / 1e3).toFixed(0) + ' kV/m';
+    if (e >= 1e3) return (r / 1e3).toFixed(1) + ' kV/m';
+    return r + ' V/m';
+  }
+  // direction of E in whole degrees counterclockwise from +x, or null where E = 0
+  function dirDeg(ex, ey) {
+    if (!(Math.hypot(ex, ey) > 0)) return null;
+    let d = Math.atan2(ey, ex) * 180 / Math.PI; if (d < 0) d += 360;
+    return Math.round(d) % 360;
+  }
+  // one probe reading as a student reads it off the panel
+  function probeReading(list, x, y) {
+    const [ex, ey] = fieldAt(list, x, y);
+    return { x: snap01(x), y: snap01(y), V: roundV(potentialAt(list, x, y)), E: roundE(Math.hypot(ex, ey)), dir: dirDeg(ex, ey), inCore: !!coreAt(list, x, y) };
+  }
+  // readings at the grid points (every `step` cm) inside region b: the field map data table
+  function fieldGrid(list, b, step) {
+    const out = [];
+    for (let y = Math.floor(b.y1 / step) * step; y >= b.y0; y -= step) {
+      for (let x = Math.ceil(b.x0 / step) * step; x <= b.x1; x += step) out.push(probeReading(list, x, y));
+    }
+    return out;
+  }
+  const chargeKey = (list) => list.map((c) => `${snap01(c.x)},${snap01(c.y)},${c.q}`).join(';');
+
+  // ---- CSV ----
+  const csvCell = (v) => { const t = v === null || v === undefined ? '' : String(v); return /[",\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; };
+  const tidy = (v) => String(nz(+v.toPrecision(12)));
+  // a typed centimetre cell in metres; text that is not a number passes through as typed
+  const cmToM = (t) => { const u = String(t).trim().replace(/−/g, '-'), n = Number(u); return u !== '' && isFinite(n) ? tidy(n / 100) : u; };
+  // rows: [{ config, x, y, V, E, dir, inCore }] with x, y in cm (typed strings are fine)
+  // configs: [{ name, charges: [{ x, y, q }] }] in cm and nC; row.config is its 1 based index
+  function readingsCsv(rows, configs) {
+    const L = [
+      '# Coulomb Sandbox probe readings (simulated data)',
+      `# demo version,${DEMO_VERSION}`,
+      '# model,point charges in one plane with the full 3D Coulomb field: V = sum of k q/r and E = sum of k q r_hat/r^2; within 1.2 mm of a charge it is a uniformly charged ball',
+      '# k_N_m2_per_C2,8.98755e9',
+      '# charge_ball_radius_m,0.0012',
+      '# rounding,positions to 0.001 m (the probe sits on a 0.1 cm grid); V to 1 V below 1 kV and 10 V from 1 kV; |E| to 1 V/m below 1 kV/m then 100 V/m below 100 kV/m then 1 kV/m below 1 MV/m then 10 kV/m; direction to 1 degree counterclockwise from +x'
+    ];
+    configs.forEach((cf, i) => {
+      L.push(`# config ${i + 1},${csvCell(cf.name)}`);
+      cf.charges.forEach((c, j) => L.push(`# config ${i + 1} charge ${j + 1},x_m,${tidy(c.x / 100)},y_m,${tidy(c.y / 100)},q_C,${tidy(c.q * 1e-9)}`));
+    });
+    L.push('row,config,x_m,y_m,V_volts,E_V_per_m,E_direction_deg,inside_charge_ball');
+    rows.forEach((r, i) => L.push([i + 1, r.config, cmToM(r.x), cmToM(r.y), r.V, r.E, r.dir === null ? '' : r.dir, r.inCore ? 1 : 0].map(csvCell).join(',')));
+    return L.join('\n') + '\n';
+  }
+  // ==CORE END==
+
   const MAX_CHARGES = 8;
   const $ = (id) => document.getElementById(id);
 
@@ -297,7 +444,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   let probe = { x: 0, y: 2.5 };
   const layers = { shade: true, equi: true, lines: true, grid: true };
   let dV = 250, density = 6, reliefMult = 1;
-  let view = '2d';
+  let view = '2d', blind = false, kbFocus = false, lastSel = null;
+  const show = (k) => layers[k] && (k === 'grid' || !blind);   // Blind hides every theory layer but the grid
   let baseDirty = true, overDirty = true, raf = 0;
 
   const mk = (x, y, q) => ({ id: nextId++, x, y, q });
@@ -330,36 +478,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const toW = (px, py) => ({ x: (px - cx) / s, y: (cy - py) / s });
   const radius = (c) => 11 + 4 * Math.sqrt(Math.abs(c.q));
   const drawRadius = (c) => radius(c) * chargeScale();   // drawn and grabbed size; field lines still start from radius()
-  const minus = (str) => str.replace(/-/g, '−');
   const fmtQ = (q) => (q > 0 ? '+' : q < 0 ? '−' : '') + (Number.isInteger(Math.abs(q)) ? Math.abs(q) : Math.abs(q).toFixed(1));
 
-  // Outside r = CORE_R both are exactly the point charge results kq/r and kq r̂/r².
-  // Inside, each charge is a uniformly charged ball: V = kq(3a² − r²)/(2a³), E = kq r/a³,
-  // so E = −∇V everywhere and both are continuous at r = a.
-  function potential(x, y) {
-    let v = 0;
-    for (const c of charges) {
-      if (!c.q) continue;
-      const r = Math.hypot(x - c.x, y - c.y);
-      v += r >= CORE_R ? c.q / r : c.q * (3 * CORE_R * CORE_R - r * r) / (2 * CORE_R3);
-    }
-    return v * C_V;
-  }
-  function field(x, y) { // V/m
-    let ex = 0, ey = 0;
-    for (const c of charges) {
-      if (!c.q) continue;
-      const dx = x - c.x, dy = y - c.y, r2 = dx * dx + dy * dy;
-      const r3 = r2 >= CORE_R * CORE_R ? r2 * Math.sqrt(r2) : CORE_R3;
-      ex += c.q * dx / r3; ey += c.q * dy / r3;
-    }
-    return [ex * C_E, ey * C_E];
-  }
-  // the charge whose model ball contains (x, y), if any
-  const inCore = (x, y) => charges.find((c) => c.q && Math.hypot(x - c.x, y - c.y) < CORE_R) || null;
-  function bounds() {
-    return { x0: -cx / s, x1: (W - cx) / s, y0: -(H - cy) / s, y1: cy / s };
-  }
+  const potential = (x, y) => potentialAt(charges, x, y);
+  const field = (x, y) => fieldAt(charges, x, y);
+  const inCore = (x, y) => coreAt(charges, x, y);
+  const bounds = () => viewBounds(W, H, cx, cy, s);
 
   // ---------- shared geometry: contours and field lines ----------
   const SEG = [[], [[3, 0]], [[0, 1]], [[3, 1]], [[1, 2]], [[3, 0], [1, 2]], [[0, 2]], [[3, 2]],
@@ -542,7 +666,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    if (layers.grid) drawGrid(ctx, T);
+    if (show('grid')) drawGrid(ctx, T);
 
     const g = 4, nx = Math.ceil(W / g) + 2, ny = Math.ceil(H / g) + 2;
     const V = new Float32Array(nx * ny);
@@ -550,7 +674,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const y = (cy - j * g) / s;
       for (let i = 0; i < nx; i++) V[j * nx + i] = potential((i * g - cx) / s, y);
     }
-    if (layers.shade) {
+    if (show('shade')) {
       off.width = nx; off.height = ny;
       const img = offctx.createImageData(nx, ny), d = img.data, P = rgb(T.pos), N = rgb(T.neg);
       for (let k = 0; k < nx * ny; k++) {
@@ -561,7 +685,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(off, -g / 2, -g / 2, nx * g, ny * g);
     }
-    if (layers.equi) {
+    if (show('equi')) {
       const main = new Path2D(), zero = new Path2D();
       for (const [ai, aj, bi, bj, k] of contourSegments(V, nx, ny)) {
         const p = k === 0 ? zero : main;
@@ -572,7 +696,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.globalAlpha = 1; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * ps; ctx.setLineDash([6 * ps, 5 * ps]); ctx.stroke(zero);
       ctx.restore();
     }
-    if (layers.lines) {
+    if (show('lines')) {
       ctx.save();
       ctx.strokeStyle = T.field; ctx.fillStyle = T.field; ctx.lineWidth = 1.3 * ps; ctx.globalAlpha = 0.82; ctx.lineJoin = 'round';
       for (const pts of computeLines()) {
@@ -600,16 +724,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   // ---------- 2D overlay ----------
-  function fmtV(v) {
-    const a = Math.abs(v);
-    return minus(a >= 1000 ? (v / 1000).toFixed(2) + ' kV' : v.toFixed(0) + ' V');
-  }
-  function fmtE(e) {
-    if (e >= 1e6) return (e / 1e6).toFixed(2) + ' MV/m';
-    if (e >= 1e3) return (e / 1e3).toFixed(e >= 1e5 ? 0 : 1) + ' kV/m';
-    return e.toFixed(0) + ' V/m';
-  }
-
   function drawOver() {
     const ctx = octx, T = tokens();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -671,6 +785,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(tx, ty); ctx.stroke();
       ctx.fillStyle = T.accent; arrowHead(ctx, tx, ty, ang, 8 * ps);
     }
+    if (kbFocus && !sel) {   // the probe is what the arrow keys move
+      ctx.save(); ctx.setLineDash([4 * ps, 3 * ps]); ctx.lineWidth = 2 * ps; ctx.strokeStyle = T.accent;
+      ctx.beginPath(); ctx.arc(px, py, 11 * ps, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+    }
     ctx.beginPath(); ctx.arc(px, py, 5 * ps, 0, 2 * Math.PI);
     ctx.fillStyle = T.canvas; ctx.fill(); ctx.lineWidth = 2 * ps; ctx.strokeStyle = T.ink; ctx.stroke();
 
@@ -700,6 +818,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     el.id = 'gl'; el.tabIndex = 0; el.hidden = true;
     el.setAttribute('role', 'application');
     el.setAttribute('aria-label', 'Potential landscape in 3D. Drag to orbit, scroll to zoom, drag a sphere to move its charge.');
+    el.setAttribute('aria-describedby', 'kbHelp');
+    el.addEventListener('focus', () => { kbFocus = true; });
+    el.addEventListener('blur', () => { kbFocus = false; });
     stage.insertBefore(el, stage.querySelector('.viewbar'));
 
     const scene = new THREE.Scene();
@@ -774,7 +895,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const k = j * nx + i, x = gx(i), y = gy(j), v = potential(x, y);
       V[k] = v;
       pos[k * 3] = x; pos[k * 3 + 1] = y; pos[k * 3 + 2] = height(v);
-      const t = Math.tanh(v / 1600), a = layers.shade ? Math.abs(t) * 0.9 : 0, C = t > 0 ? P : N;
+      const t = Math.tanh(v / 1600), a = show('shade') ? Math.abs(t) * 0.9 : 0, C = t > 0 ? P : N;
       col[k * 3] = R[0] + (C[0] - R[0]) * a; col[k * 3 + 1] = R[1] + (C[1] - R[1]) * a; col[k * 3 + 2] = R[2] + (C[2] - R[2]) * a;
     }
     G.surf.geometry.attributes.position.needsUpdate = true;
@@ -784,7 +905,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
     // 1 cm grid draped on the surface
     const grid = [];
-    if (layers.grid) {
+    if (show('grid')) {
       const zAt = (x, y) => height(potential(x, y)) + 0.012;
       for (let x = Math.ceil(b.x0); x <= b.x1; x++) {
         let py = b.y0, pz = zAt(x, py);
@@ -799,7 +920,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
     // equipotentials sit at their own height: horizontal slices of the landscape
     const eq = [], zr = [];
-    if (layers.equi) {
+    if (show('equi')) {
       for (const [ai, aj, bi, bj, k] of contourSegments(V, nx, ny)) {
         const z = height(k * dV) + 0.02, arr = k === 0 ? zr : eq;
         arr.push(gx(ai), gy(aj), z, gx(bi), gy(bj), z);
@@ -810,7 +931,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // field lines draped on the surface: paths of steepest descent
     const fl = [];
     G.cones.clear();
-    if (layers.lines) {
+    if (show('lines')) {
       for (const pts of computeLines()) {
         const p3 = pts.map((p) => [p[0], p[1], height(potential(p[0], p[1])) + 0.035]);
         for (let i = 1; i < p3.length; i++) fl.push(...p3[i - 1], ...p3[i]);
@@ -929,7 +1050,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const h = hitSphere();
       if (h) {
         const c = h.object.userData.c;
-        sel = c;
+        sel = c; lastSel = c;
         const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), -h.object.position.z);
         const p = new THREE.Vector3(); ray.ray.intersectPlane(plane, p);
         mode = { type: 'charge', c, plane, ox: p.x - c.x, oy: p.y - c.y };
@@ -950,7 +1071,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         setRay(e);
         const p = new THREE.Vector3();
         if (ray.ray.intersectPlane(mode.plane, p)) {
-          mode.c.x = p.x - mode.ox; mode.c.y = p.y - mode.oy; clampToView(mode.c);
+          mode.c.x = p.x - mode.ox; mode.c.y = p.y - mode.oy; clampToView(mode.c); snapC(mode.c);
           setPreset(null); markBase();
         }
         return;
@@ -970,12 +1091,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         if (hitSphere()) { el.style.cursor = 'grab'; return; }
         el.style.cursor = 'move';
         const p = hitSurface();
-        if (p) { probe = { x: p.x, y: p.y }; markOver(); }
+        if (p) { probe = { x: snap01(p.x), y: snap01(p.y) }; markOver(); }
       }
     });
     const end = (e) => {
       if (mode && mode.type === 'orbit' && mode.moved < 5 && e.pointerType !== 'mouse') {
-        setRay(e); const p = hitSurface(); if (p) { probe = { x: p.x, y: p.y }; markOver(); }
+        setRay(e); const p = hitSurface(); if (p) { probe = { x: snap01(p.x), y: snap01(p.y) }; markOver(); }
       }
       if (mode && mode.type === 'q') endQDrag();
       pointers.delete(e.pointerId);
@@ -1003,13 +1124,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const [ex, ey] = field(probe.x, probe.y), m = Math.hypot(ex, ey);
     rV.textContent = fmtV(potential(probe.x, probe.y));
     rE.textContent = fmtE(m);
-    let deg = Math.atan2(ey, ex) * 180 / Math.PI; if (deg < 0) deg += 360;
-    rDir.textContent = m > 0 ? deg.toFixed(0) + '° from +x' : '—';
+    const deg = dirDeg(ex, ey);
+    rDir.textContent = deg === null ? '—' : deg + '° from +x';
     rPos.textContent = minus(`(${probe.x.toFixed(1)}, ${probe.y.toFixed(1)})`);
   }
   const selEditor = $('selEditor'), selHint = $('selHint'), qIn = $('q'), qOut = $('qOut'), selPos = $('selPos');
-  const HINT_NONE = 'Click a charge to select it.';
-  const HINT_SEL = 'Drag the knob above the charge up or down, scroll over the charge, or press + and − to change its value. Arrow keys nudge it.';
+  const HINT_NONE = 'Click a charge to select it, or click the field and press Tab.';
+  const HINT_SEL = 'Drag the knob above the charge up or down, scroll over the charge, or press + and − to change its value. Arrow keys move it 0.1 cm, Shift+arrow 1 cm. P switches to the probe.';
   function updateSel() {
     selEditor.hidden = !sel;
     const hintText = sel ? HINT_SEL : HINT_NONE;
@@ -1075,7 +1196,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   // ---------- scheduling ----------
-  function markBase() { baseDirty = true; overDirty = true; schedule(); }
+  let mapDirty = true;
+  function markBase() { baseDirty = true; overDirty = true; mapDirty = true; schedule(); }
   function markOver() { overDirty = true; schedule(); }
   function schedule() {
     if (raf) return;
@@ -1092,12 +1214,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         if (baseDirty) { drawBase(); baseDirty = false; }
         if (overDirty) { drawOver(); overDirty = false; }
       }
+      if (mapDirty) { mapDirty = false; renderMap(); describe(); }
       updateReadout(); updateSel(); updateTag();
     });
   }
 
   // ---------- 2D interaction ----------
   function eventW(e) { const r = over.getBoundingClientRect(); return toW(e.clientX - r.left, e.clientY - r.top); }
+  const snapP = (p) => ({ x: snap01(p.x), y: snap01(p.y) });
   function hit(p) {
     for (let i = charges.length - 1; i >= 0; i--) {
       const c = charges[i];
@@ -1110,6 +1234,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.x = Math.min(b.x1 - m, Math.max(b.x0 + m, c.x));
     c.y = Math.min(b.y1 - m, Math.max(b.y0 + m, c.y));
   }
+  function snapC(c) { c.x = snap01(c.x); c.y = snap01(c.y); }
 
   over.addEventListener('pointerdown', (e) => {
     over.focus({ preventScroll: true });
@@ -1120,11 +1245,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     const p = eventW(e), c = hit(p);
     if (c) {
-      sel = c; drag = { type: 'charge', c, dx: p.x - c.x, dy: p.y - c.y };
+      sel = c; lastSel = c; drag = { type: 'charge', c, dx: p.x - c.x, dy: p.y - c.y };
       charges = charges.filter((k) => k !== c).concat(c);
       over.style.cursor = 'grabbing';
     } else {
-      drag = { type: 'probe' }; probe = p;
+      drag = { type: 'probe' }; probe = snapP(p);
     }
     over.setPointerCapture(e.pointerId);
     markBase();
@@ -1138,14 +1263,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (k) { over.style.cursor = 'ns-resize'; return; }
     }
     if (drag && drag.type === 'charge') {
-      drag.c.x = p.x - drag.dx; drag.c.y = p.y - drag.dy; clampToView(drag.c);
+      drag.c.x = p.x - drag.dx; drag.c.y = p.y - drag.dy; clampToView(drag.c); snapC(drag.c);
       setPreset(null); markBase();
     } else if (drag && drag.type === 'probe') {
-      probe = p; markOver();
+      probe = snapP(p); markOver();
     } else if (e.pointerType === 'mouse') {
       const h = hit(p);
       over.style.cursor = h ? 'grab' : 'crosshair';
-      if (!h) { probe = p; markOver(); }
+      if (!h) { probe = snapP(p); markOver(); }
     }
   });
   const endDrag = (e) => {
@@ -1172,23 +1297,69 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     setQ(c, c.q + dir * +qIn.step); flashTag();
   }, { passive: false });
 
+  // ---------- keyboard ----------
+  // Tab and ] / [ select charges in the order they were made; P switches to the probe; arrows move whichever is selected.
+  const kbLive = $('kbLive');
+  const order = () => charges.slice().sort((a, b) => a.id - b.id);
+  const posText = (x, y) => minus(`(${x.toFixed(1)}, ${y.toFixed(1)}) cm`);
+  function announce(t) { kbLive.textContent = t; }
+  function announceSel() {
+    if (sel) {
+      const o = order();
+      announce(`Charge ${o.indexOf(sel) + 1} of ${o.length} selected: ${minus(fmtQ(sel.q))} nC at ${posText(sel.x, sel.y)}.`);
+    } else announceProbe('Probe selected');
+  }
+  function announceProbe(lead) {
+    if (!charges.some((c) => c.q)) { announce(`${lead} at ${posText(probe.x, probe.y)}. No charge, so no field.`); return; }
+    const [ex, ey] = field(probe.x, probe.y), d = dirDeg(ex, ey);
+    announce(`${lead} at ${posText(probe.x, probe.y)}: V = ${fmtV(potential(probe.x, probe.y))}, |E| = ${fmtE(Math.hypot(ex, ey))}${d === null ? '' : ', ' + d + ' degrees from +x'}.`);
+  }
+  function selectCharge(c) { sel = c || null; if (sel) lastSel = sel; announceSel(); }
+  // step through the charges; without wrap, stepping past either end returns false so Tab can leave the field
+  function cycle(dir, wrap) {
+    const o = order();
+    if (!o.length) return false;
+    let i = sel ? o.indexOf(sel) + dir : (dir > 0 ? 0 : o.length - 1);
+    if (i < 0 || i >= o.length) { if (!wrap) return false; i = (i + o.length) % o.length; }
+    selectCharge(o[i]); return true;
+  }
+  const ORBIT_KEYS = { a: [-0.12, 0, 1], d: [0.12, 0, 1], w: [0, -0.08, 1], s: [0, 0.08, 1], z: [0, 0, 0.9], x: [0, 0, 1 / 0.9] };
   function onKey(e) {
-    if (!sel) return;
-    const step = e.shiftKey ? 0.1 : 0.5;
-    const moves = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, step], ArrowDown: [0, -step] };
-    if (moves[e.key]) {
-      sel.x += moves[e.key][0]; sel.y += moves[e.key][1]; clampToView(sel); setPreset(null);
-    } else if (e.key === 'Delete' || e.key === 'Backspace') {
-      charges = charges.filter((c) => c !== sel); sel = null; setPreset(null);
-    } else if (e.key === 'Escape') {
-      sel = null;
-    } else if (e.key === '+' || e.key === '=') {
-      setQ(sel, sel.q + +qIn.step); flashTag();
-    } else if (e.key === '-' || e.key === '_' || e.key === '−') {
-      setQ(sel, sel.q - +qIn.step); flashTag();
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const k = e.key, lk = k.length === 1 ? k.toLowerCase() : k;
+    if (k === 'Tab') { if (cycle(e.shiftKey ? -1 : 1, false)) { e.preventDefault(); markBase(); } return; }
+    const moves = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] };
+    if (k === ']') cycle(1, true);
+    else if (k === '[') cycle(-1, true);
+    else if (lk === 'p') selectCharge(sel ? null : (lastSel && charges.includes(lastSel) ? lastSel : order()[0]));
+    else if (lk === 'c') capture();
+    else if (view === '3d' && ORBIT_KEYS[lk]) {
+      const [dt, dp, z] = ORBIT_KEYS[lk];
+      orbit.theta += dt; orbit.phi = Math.min(1.52, Math.max(0.05, orbit.phi + dp));
+      orbit.zoom = Math.min(3, Math.max(0.3, orbit.zoom * z));
+    } else if (view === '3d' && k === '0') { orbit.theta = -Math.PI / 2 - 0.35; orbit.phi = 0.95; orbit.zoom = 1; }
+    else if (moves[k]) {
+      const st = e.shiftKey ? 1 : 0.1, [mx, my] = moves[k];
+      if (sel) {
+        sel.x += mx * st; sel.y += my * st; clampToView(sel); snapC(sel); setPreset(null);
+        announce(`Charge at ${posText(sel.x, sel.y)}.`);
+      } else {
+        const b = bounds();
+        probe = { x: snap01(Math.min(b.x1 - 0.1, Math.max(b.x0 + 0.1, probe.x + mx * st))), y: snap01(Math.min(b.y1 - 0.1, Math.max(b.y0 + 0.1, probe.y + my * st))) };
+        announceProbe('Probe');
+      }
+    } else if (sel && (k === 'Delete' || k === 'Backspace')) {
+      charges = charges.filter((c) => c !== sel); sel = null; setPreset(null); announce('Charge removed. Probe selected.');
+    } else if (sel && k === 'Escape') {
+      selectCharge(null);
+    } else if (sel && (k === '+' || k === '=')) {
+      setQ(sel, sel.q + +qIn.step); flashTag(); announce(`Charge ${minus(fmtQ(sel.q))} nC.`);
+    } else if (sel && (k === '-' || k === '_' || k === '−')) {
+      setQ(sel, sel.q - +qIn.step); flashTag(); announce(`Charge ${minus(fmtQ(sel.q))} nC.`);
     } else return;
     e.preventDefault(); markBase();
   }
+  for (const [ev, on] of [['focus', true], ['blur', false]]) over.addEventListener(ev, () => { kbFocus = on; markOver(); });
   over.addEventListener('keydown', onKey);
 
   function addCharge(q) {
@@ -1221,9 +1392,100 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('dens').addEventListener('input', (e) => { density = +e.target.value; $('densOut').textContent = density; markBase(); });
   $('relief').addEventListener('input', (e) => { reliefMult = +e.target.value; $('reliefOut').textContent = reliefMult.toFixed(1) + '×'; markBase(); });
 
+  // ---------- readings (lab kit): capture what the panel shows, edit, export ----------
+  let rows = [], configs = [];
+  const rowsWrap = $('rowsWrap'), rowsBody = $('rowsTbl').querySelector('tbody'), capStatus = $('capStatus');
+  const status = (t) => { capStatus.textContent = t; };
+  const presetName = () => { const b = document.querySelector('#presets button[aria-pressed="true"]'); return b ? b.textContent : 'Custom'; };
+  function configIndex() {
+    const key = chargeKey(charges);
+    let i = configs.findIndex((c) => c.key === key);
+    if (i < 0) { configs.push({ key, name: presetName(), charges: order().map((c) => ({ x: snap01(c.x), y: snap01(c.y), q: c.q })) }); i = configs.length - 1; }
+    return i + 1;
+  }
+  function capture() {
+    if (!charges.some((c) => c.q)) { status('There is no charge, so there is nothing to read. Add a charge first.'); return; }
+    const r = probeReading(charges, probe.x, probe.y);
+    rows.push({ config: configIndex(), x: r.x.toFixed(1), y: r.y.toFixed(1), V: String(r.V), E: String(r.E), dir: r.dir === null ? '' : String(r.dir), inCore: r.inCore });
+    renderRows();
+    status(minus(`Reading ${rows.length} captured at (${r.x.toFixed(1)}, ${r.y.toFixed(1)}) cm.`) + (r.inCore ? ' The probe is inside a charge’s model ball.' : ''));
+  }
+  const esc = (t) => String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  function renderRows() {
+    rowsWrap.hidden = !rows.length;
+    rowsBody.innerHTML = rows.map((r, i) => {
+      const inp = (f, lab, w) => `<td><input aria-label="${lab}, row ${i + 1}" data-i="${i}" data-f="${f}" value="${esc(r[f])}" inputmode="decimal" autocomplete="off"></td>`;
+      const cf = configs[r.config - 1];
+      return `<tr title="Setup ${r.config}: ${esc(cf ? cf.name : '')}${r.inCore ? '. Inside a charge’s model ball' : ''}"><td class="n">${i + 1}${r.inCore ? '*' : ''}</td>` +
+        inp('x', 'x in cm', 3) + inp('y', 'y in cm', 3) + inp('V', 'V in volts', 4.3) + inp('E', '|E| in V/m', 4.6) + inp('dir', 'E direction in degrees from +x', 2.6) +
+        `<td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`;
+    }).join('');
+    const sc = rowsWrap; sc.scrollTop = sc.scrollHeight;
+  }
+  rowsBody.addEventListener('change', (e) => { const t = e.target; if (t.dataset && t.dataset.f) rows[+t.dataset.i][t.dataset.f] = t.value.trim(); });
+  rowsBody.addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-del]'); if (!b) return;
+    rows.splice(+b.dataset.del, 1); renderRows(); status(`Row deleted. ${rows.length} row${rows.length === 1 ? '' : 's'} left.`);
+  });
+  function download(name, text) {
+    try {
+      const b = new Blob([text], { type: 'text/csv' }), a = document.createElement('a');
+      a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800);
+    } catch (_) {}
+  }
+  $('capture').addEventListener('click', capture);
+  $('exportCsv').addEventListener('click', () => {
+    if (!rows.length) { status('Capture a reading first.'); return; }
+    download('coulomb-sandbox-readings.csv', readingsCsv(rows, configs)); status(`Exported ${rows.length} row${rows.length === 1 ? '' : 's'}.`);
+  });
+  $('clearRows').addEventListener('click', () => { rows = []; configs = []; renderRows(); status('Readings cleared.'); });
+
+  // ---------- field map data table (a text version of the 2D map) ----------
+  const mapBtn = $('mapTblBtn'), mapWrap = $('mapWrap'), mapBody = $('mapTbl').querySelector('tbody');
+  let mapOpen = false;
+  function renderMap() {
+    if (!mapOpen) return;
+    if (!charges.some((c) => c.q)) { mapBody.innerHTML = '<tr><td colspan="5">No charge, so V = 0 and E = 0 everywhere.</td></tr>'; return; }
+    const b = bounds();
+    mapBody.innerHTML = fieldGrid(charges, { x0: b.x0 + 0.3, x1: b.x1 - 0.3, y0: b.y0 + 0.3, y1: b.y1 - 0.3 }, 2).map((r) =>
+      `<tr${r.inCore ? ' title="Inside a charge’s model ball"' : ''}><td class="b">${minus(String(r.x))}</td><td class="b">${minus(String(r.y))}</td><td class="b">${minus(String(r.V))}</td><td class="b">${r.E}</td><td class="b">${r.dir === null ? '—' : r.dir}</td></tr>`).join('');
+  }
+  function setMap(on) {
+    mapOpen = on && !blind; mapWrap.hidden = !mapOpen;
+    mapBtn.setAttribute('aria-expanded', String(mapOpen)); mapBtn.textContent = mapOpen ? 'Hide data table' : 'Show data table';
+    renderMap();
+  }
+  mapBtn.addEventListener('click', () => setMap(!mapOpen));
+
+  // ---------- Blind: hide predictions and answers ----------
+  const blindTag = $('blindTag');
+  function setBlind(on) {
+    blind = on; $('labBlind').checked = on; blindTag.hidden = !on;
+    for (const id of ['tShade', 'tEqui', 'tLines']) { $(id).disabled = on; $(id).parentElement.classList.toggle('off', on); }
+    const b3 = document.querySelector('.seg button[data-v="3d"]');
+    b3.disabled = on; b3.title = on ? 'The 3D landscape shows V everywhere, so Blind hides it' : '';
+    if (on && view === '3d') setView('2d');
+    mapBtn.disabled = on; if (on) setMap(false);
+    markBase();
+  }
+  $('labBlind').addEventListener('change', (e) => setBlind(e.target.checked));
+
+  // ---------- text descriptions of the canvases ----------
+  let lastDesc = '';
+  function describe() {
+    const o = order(), list = o.length ? o.map((c) => `${minus(fmtQ(c.q))} nC at ${posText(c.x, c.y)}`).join('; ') : 'no charges';
+    const d = `${o.length} point charge${o.length === 1 ? '' : 's'}: ${list}.` + (blind ? ' Blind is on: field lines, equipotentials and shading are hidden.' : '');
+    if (d === lastDesc) return;
+    lastDesc = d;
+    over.setAttribute('aria-label', 'Field map on a 1 cm grid with ' + d);
+    if (G.ready) G.el.setAttribute('aria-label', 'Potential landscape in 3D, height is V, with ' + d + ' Drag to orbit, scroll to zoom, drag a sphere to move its charge.');
+  }
+
   // ---------- view switching ----------
   const viewBtns = document.querySelectorAll('.seg button'), spinBtn = $('spin'), hint3d = $('hint3d');
   function setView(v) {
+    if (v === '3d' && blind) return;
     if (v === '3d' && !init3D()) {
       hint3d.textContent = 'The 3D view could not load its graphics library. Check your connection and reload the page.';
       hint3d.hidden = false; return;
@@ -1233,16 +1495,29 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     base.hidden = over.hidden = is3;
     if (G.ready) G.el.hidden = !is3;
     spinBtn.hidden = hint3d.hidden = !is3;
-    if (is3) hint3d.textContent = 'Drag to orbit · Scroll or pinch to zoom · Drag a sphere to move it · Drag its knob up or down to change its charge · Double-click to reset';
+    if (is3) hint3d.textContent = 'Drag to orbit · Scroll or pinch to zoom · Drag a sphere to move it · Drag its knob up or down to change its charge · Double-click to reset · Keys A D W S Z X, 0 to reset';
     hoverKnob = false; qDrag = null;
     for (const b of viewBtns) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     if (!is3) { orbit.spin = false; spinBtn.setAttribute('aria-pressed', 'false'); }
-    markBase();
+    lastDesc = ''; markBase();
   }
   for (const b of viewBtns) b.addEventListener('click', () => setView(b.dataset.v));
   spinBtn.addEventListener('click', () => {
+    if (reduceMotion) return;
     orbit.spin = !orbit.spin; spinBtn.setAttribute('aria-pressed', String(orbit.spin)); schedule();
   });
+
+  // reduce motion: the only motion is Spin; it follows the system setting, and the toggle lasts for this session
+  let reduceMotion = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  try { const m = sessionStorage.getItem('vd-reduce-motion'); if (m) reduceMotion = m === 'on'; } catch (_) {}
+  function setReduce(on, save) {
+    reduceMotion = on; $('tMotion').checked = on;
+    if (save) { try { sessionStorage.setItem('vd-reduce-motion', on ? 'on' : 'off'); } catch (_) {} }
+    spinBtn.disabled = on; spinBtn.title = on ? 'Spin is off while Reduce motion is on' : '';
+    if (on && orbit.spin) { orbit.spin = false; spinBtn.setAttribute('aria-pressed', 'false'); }
+    schedule();
+  }
+  $('tMotion').addEventListener('change', (e) => setReduce(e.target.checked, true));
 
   // theme changes
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', markBase); } catch (_) {}
@@ -1261,6 +1536,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- boot ----------
   charges = PRESETS.dipole();
+  setBlind(false); setReduce(reduceMotion, false);
+  window.__cs = { get rows() { return rows; }, get configs() { return configs; }, get probe() { return probe; }, get sel() { return sel; }, get view() { return view; },
+    get charges() { return charges; }, get orbit() { return orbit; }, csv: () => readingsCsv(rows, configs), probeReading, potentialAt, fieldAt };
   new ResizeObserver(resize).observe(stage);
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(markBase);
