@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Rotational Dynamics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the turntable from above and the falling mass from the side on the left; the rail on the right. */
+<style>
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+
+:root { --plat: #c9d1db; --obj: #2b60b5; --mark: #b0452f; --mass: #6b7787; --str: #a7740b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --plat: #3b4554; --obj: #69a0ff; --mark: #ff8a70; --mass: #9aa6b6; --str: #e2b350; } }
+:root[data-theme="dark"] { --plat: #3b4554; --obj: #69a0ff; --mark: #ff8a70; --mass: #9aa6b6; --str: #e2b350; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.lab { font-size: 0.88rem; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 500px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .chips button, .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Rotational Dynamics</h1>
+      <p>A hanging mass unwinds a string from a spool and spins a turntable. The string's torque gives the table an angular acceleration α = τ/I. Time the fall, work out α, and measure the moment of inertia of what you put on the table.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">drop 0.500 m · g = 9.81 m/s²</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/rotational-dynamics.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/rotational-dynamics.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM15 2h6v1h-6zM22 2h2v1h-2zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM15 3h1v1h-1zM18 3h1v1h-1zM20 3h2v1h-2zM23 3h2v1h-2zM27 3h1v1h-1zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM14 4h4v1h-4zM21 4h3v1h-3zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM15 5h1v1h-1zM17 5h1v1h-1zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM17 6h2v1h-2zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM15 7h1v1h-1zM20 7h1v1h-1zM23 7h1v1h-1zM27 7h4v1h-4zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h3v1h-3zM17 9h2v1h-2zM21 9h4v1h-4zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h3v1h-3zM15 10h2v1h-2zM20 10h1v1h-1zM24 10h6v1h-6zM32 10h5v1h-5zM4 11h3v1h-3zM10 11h1v1h-1zM12 11h1v1h-1zM14 11h5v1h-5zM25 11h1v1h-1zM30 11h2v1h-2zM33 11h1v1h-1zM36 11h2v1h-2zM3 12h2v1h-2zM6 12h3v1h-3zM10 12h3v1h-3zM15 12h1v1h-1zM19 12h2v1h-2zM23 12h1v1h-1zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h1v1h-1zM5 13h1v1h-1zM7 13h1v1h-1zM10 13h2v1h-2zM13 13h2v1h-2zM16 13h1v1h-1zM18 13h1v1h-1zM20 13h1v1h-1zM22 13h2v1h-2zM26 13h1v1h-1zM29 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM3 14h1v1h-1zM5 14h4v1h-4zM13 14h3v1h-3zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h3v1h-3zM30 14h9v1h-9zM2 15h4v1h-4zM7 15h1v1h-1zM9 15h1v1h-1zM11 15h1v1h-1zM13 15h1v1h-1zM16 15h1v1h-1zM18 15h2v1h-2zM22 15h4v1h-4zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h1v1h-1zM4 16h1v1h-1zM6 16h1v1h-1zM8 16h3v1h-3zM12 16h2v1h-2zM15 16h5v1h-5zM22 16h1v1h-1zM29 16h2v1h-2zM32 16h4v1h-4zM38 16h1v1h-1zM2 17h3v1h-3zM6 17h1v1h-1zM9 17h1v1h-1zM11 17h2v1h-2zM14 17h1v1h-1zM16 17h10v1h-10zM28 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM6 18h3v1h-3zM10 18h1v1h-1zM13 18h1v1h-1zM16 18h3v1h-3zM21 18h1v1h-1zM24 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h2v1h-2zM11 19h1v1h-1zM16 19h2v1h-2zM20 19h6v1h-6zM30 19h1v1h-1zM37 19h1v1h-1zM2 20h3v1h-3zM7 20h2v1h-2zM10 20h1v1h-1zM12 20h2v1h-2zM15 20h4v1h-4zM22 20h3v1h-3zM26 20h1v1h-1zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h2v1h-2zM5 21h1v1h-1zM9 21h1v1h-1zM11 21h3v1h-3zM16 21h2v1h-2zM20 21h1v1h-1zM22 21h4v1h-4zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM3 22h1v1h-1zM5 22h2v1h-2zM8 22h1v1h-1zM13 22h2v1h-2zM16 22h2v1h-2zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM6 23h2v1h-2zM11 23h5v1h-5zM18 23h1v1h-1zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM4 24h2v1h-2zM7 24h2v1h-2zM13 24h1v1h-1zM15 24h1v1h-1zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM26 24h1v1h-1zM28 24h4v1h-4zM33 24h3v1h-3zM37 24h2v1h-2zM6 25h1v1h-1zM9 25h4v1h-4zM14 25h1v1h-1zM16 25h3v1h-3zM21 25h5v1h-5zM29 25h1v1h-1zM31 25h1v1h-1zM33 25h2v1h-2zM37 25h1v1h-1zM2 26h2v1h-2zM6 26h5v1h-5zM14 26h2v1h-2zM17 26h1v1h-1zM20 26h2v1h-2zM25 26h3v1h-3zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h1v1h-1zM6 27h1v1h-1zM9 27h3v1h-3zM13 27h6v1h-6zM21 27h3v1h-3zM25 27h1v1h-1zM30 27h2v1h-2zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM6 28h1v1h-1zM8 28h4v1h-4zM13 28h2v1h-2zM16 28h1v1h-1zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM7 29h1v1h-1zM9 29h1v1h-1zM15 29h1v1h-1zM18 29h1v1h-1zM22 29h2v1h-2zM26 29h1v1h-1zM29 29h1v1h-1zM31 29h4v1h-4zM37 29h1v1h-1zM2 30h1v1h-1zM5 30h2v1h-2zM8 30h3v1h-3zM14 30h1v1h-1zM19 30h1v1h-1zM25 30h12v1h-12zM10 31h2v1h-2zM13 31h10v1h-10zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h2v1h-2zM14 32h2v1h-2zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM15 33h1v1h-1zM17 33h4v1h-4zM23 33h1v1h-1zM25 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM13 34h2v1h-2zM16 34h1v1h-1zM18 34h1v1h-1zM21 34h2v1h-2zM24 34h2v1h-2zM27 34h8v1h-8zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h1v1h-1zM14 35h1v1h-1zM16 35h2v1h-2zM20 35h3v1h-3zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM17 36h2v1h-2zM20 36h1v1h-1zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM15 37h1v1h-1zM17 37h1v1h-1zM23 37h1v1h-1zM28 37h5v1h-5zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM32 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="img" aria-label="A turntable seen from above with whatever sits on it, and beside it, from the side, the hanging mass falling as the string unwinds. Space releases, R winds the string back up."></canvas>
+      <div class="viewbar"><button type="button" class="spin attn" id="go">Release</button><button type="button" class="spin" id="wind">Wind it back up</button></div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>On the turntable</h2>
+        <div class="seg" role="group" aria-label="What sits on the turntable" id="objSeg">
+          <button type="button" data-o="none" aria-pressed="true">Nothing</button>
+          <button type="button" data-o="disk" aria-pressed="false">Disk</button>
+          <button type="button" data-o="ring" aria-pressed="false">Ring</button>
+          <button type="button" data-o="pair" aria-pressed="false">Two masses</button>
+          <button type="button" data-o="mystery" aria-pressed="false">Mystery object</button>
+        </div>
+        <div id="rowD"><div class="slider-head"><label for="sD">Distance of the two masses from the axis</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="0" max="0.12" step="0.005"></div>
+        <p class="hint" id="objHint"></p>
+      </section>
+
+      <section>
+        <h2>Drive</h2>
+        <div><div class="slider-head"><label for="sM">Hanging mass m</label><output id="oM" for="sM"></output></div><input type="range" id="sM" min="0.005" max="0.2" step="0.005"></div>
+        <div class="inline"><span class="lab">Spool radius r</span>
+          <div class="seg" role="group" aria-label="Spool radius" id="rSeg"><button type="button" data-r="0.01" aria-pressed="false">1.0 cm</button><button type="button" data-r="0.02" aria-pressed="true">2.0 cm</button><button type="button" data-r="0.03" aria-pressed="false">3.0 cm</button></div></div>
+        <label class="check"><input type="checkbox" id="fric"><span>Bearing friction</span></label>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="formula">mg − T = ma · Tr − τ_f = Iα · a = αr</p>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="exportCsv">Export CSV</button>
+          <button type="button" class="btn" id="clearRows">Clear</button>
+        </div>
+        <p class="status" id="capStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>m (kg)</th><th>r (m)</th><th>t (s)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <div class="plotbox"><canvas id="fitCan" role="img" aria-label="String torque against angular acceleration for the captured rows, with a least squares line and residuals."></canvas></div>
+        <dl class="readout" id="fitOut"></dl>
+        <p class="hint">Capture stores m, r, what is on the table and the timer reading for the 0.500 m drop (0.001 s). From each row: a = 2h/t², α = a/r, and the string's torque τ = m(g − a)r. Plotting τ against α for one load gives a line: slope I, intercept the friction torque.</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides moments of inertia, the predicted motion, the energies and I from the fit, leaving the timer, the masses and the settings. The Mystery object always hides its I.</p>
+        <p class="hint">Model: a rigid turntable on its axle, a massless string that does not slip on the spool, a massless frictionless pulley, and (optionally) a constant friction torque at the bearing. Turntable I₀ = 2.00 × 10⁻³ kg·m². Disk 1.00 kg, radius 10.0 cm; ring 1.00 kg, radii 9.0 and 10.0 cm; two 0.200 kg masses (small cylinders, 1.5 cm radius).</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.81, H = 0.5, RD_VERSION = 'rotational-dynamics@2026-10-22';
+  const I0 = 2.0e-3, TAU_F = 4.0e-4;   // turntable, kg·m²; bearing friction torque when on, N·m
+  // moment of inertia of what sits on the table about its axis
+  const IOBJ = {
+    none: () => 0,
+    disk: () => 0.5 * 1.0 * 0.1 ** 2,                                   // ½MR²
+    ring: () => 0.5 * 1.0 * (0.09 ** 2 + 0.1 ** 2),                     // ½M(R₁² + R₂²)
+    pair: (d) => 2 * (0.2 * d * d + 0.5 * 0.2 * 0.015 ** 2),            // two small cylinders: md² each plus their own ½mρ² (parallel axis)
+    mystery: () => 7.3e-3
+  };
+  // falling mass m on a string around a spool of radius r on a table of total I; constant friction torque tf
+  function motion(m, r, I, tf) {
+    const drive = m * G * r - tf;
+    if (drive <= 0) return { a: 0, alpha: 0, T: m * G, t: Infinity, moves: false };
+    const a = drive * r / (I + m * r * r), alpha = a / r, T = m * (G - a);
+    return { a, alpha, T, t: Math.sqrt(2 * H / a), moves: true };
+  }
+  function fitLine(xs, ys) {
+    const n = xs.length; if (n < 2) return null;
+    const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n;
+    let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    if (sxx < 1e-30) return null;
+    const b = sxy / sxx, a0 = my - b * mx, res = xs.map((x, i) => ys[i] - a0 - b * x), ss = res.reduce((q, r) => q + r * r, 0), s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { b, a: a0, seB: Math.sqrt(s2 / sxx), seA: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), res, n };
+  }
+  // from a timed drop: a = 2h/t², α = a/r, string torque τ = m(g − a)r
+  function fromRow(m, r, t) { const a = 2 * H / (t * t); return { a, alpha: a / r, tau: m * (G - a) * r }; }
+  const cellNum = (s) => { const v = parseFloat(String(s).replace('−', '-')); return isFinite(v) ? v : NaN; };
+  const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  function readingsCSV(rows, meta) {
+    const L = ['# Rotational Dynamics virtual turntable: captured readings (simulated data)', `# demo version,${meta.version}`, `# drop_height_m,${H}`, `# g_m_per_s2,${G}`, `# friction,${csvCell(meta.friction)}`,
+      '# model,"rigid turntable, massless non-slipping string, frictionless pulley; constant bearing friction torque when on"',
+      '# rounding,"m to 0.005 kg, r as set, t to 0.001 s; a, alpha and tau computed from the row; edited cells exported as typed"', '# noise,none',
+      'row,load,m_kg,r_m,t_s,a_m_per_s2,alpha_rad_per_s2,tau_N_m'];
+    rows.forEach((r, i) => { const m = cellNum(r.m), rr = cellNum(r.r), t = cellNum(r.t); const q = isFinite(m) && rr > 0 && t > 0 ? fromRow(m, rr, t) : null;
+      L.push([i + 1, r.load, r.m, r.r, r.t, q ? +q.a.toPrecision(6) : '', q ? +q.alpha.toPrecision(6) : '', q ? +q.tau.toPrecision(6) : ''].map(csvCell).join(',')); });
+    return L.join('\n') + '\n';
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const HINT = { none: 'The empty turntable: measure its own moment of inertia first, so you can subtract it later.', disk: 'A solid disk, 1.00 kg and 10.0 cm in radius: I = ½MR².', ring: 'A ring with the same mass and outer radius as the disk, but its mass far from the axis: I = ½M(R₁² + R₂²), nearly twice the disk.', pair: 'Two 0.200 kg masses at equal distances from the axis: I grows as d². Slide them out and time the drop again.', mystery: 'An unknown object. Measure the table with and without it and subtract.' };
+  const S = { obj: 'none', d: 0.08, m: 0.05, r: 0.02, fric: false, t: 0, run: false, done: false, blind: false, rows: [], ang: 0 };
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, Hh = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      plat: g('--plat'), obj: g('--obj'), mark: g('--mark'), mass: g('--mass'), str: g('--str'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const Iobj = () => IOBJ[S.obj](S.d), Itot = () => I0 + Iobj(), tf = () => (S.fric ? TAU_F : 0);
+  const mot = () => motion(S.m, S.r, Itot(), tf());
+  const hidden = () => S.blind || S.obj === 'mystery';
+  function sci(v, n = 3) { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+    return `${(v / 10 ** e).toFixed(n - 1).replace('-', '−')} × 10${String(e).split('').map((c) => SUP[c]).join('')}`; }
+
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const p = ps(), M = mot(), tt = Math.min(S.t, M.t), y = 0.5 * M.a * tt * tt, th = y / S.r, wide = W > 560;
+    // turntable from above
+    const cx = wide ? W * 0.32 : W / 2, cy = Hh * 0.45, R = Math.min(wide ? W * 0.26 : W * 0.4, Hh * 0.33), sc = R / 0.13;
+    ctx.fillStyle = T.plat; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill(); ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(-th);
+    ctx.strokeStyle = T.mark; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(R * 0.95, 0); ctx.stroke();
+    ctx.fillStyle = T.obj; ctx.strokeStyle = T.obj;
+    if (S.obj === 'disk') { ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.arc(0, 0, 0.1 * sc, 0, 7); ctx.fill(); ctx.globalAlpha = 1; }
+    if (S.obj === 'ring') { ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.arc(0, 0, 0.1 * sc, 0, 7); ctx.arc(0, 0, 0.09 * sc, 0, 7, true); ctx.fill('evenodd'); ctx.globalAlpha = 1; }
+    if (S.obj === 'pair') for (const s of [1, -1]) { ctx.beginPath(); ctx.arc(0, s * S.d * sc, 0.015 * sc, 0, 7); ctx.fill(); }
+    if (S.obj === 'mystery') { ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.moveTo(0.11 * sc, 0); for (let k = 1; k <= 5; k++) ctx.lineTo(0.11 * sc * Math.cos(k * 2 * Math.PI / 5), 0.11 * sc * Math.sin(k * 2 * Math.PI / 5)); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.canvas; ctx.font = `700 ${16 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('?', 0, 0); }
+    ctx.restore();
+    ctx.fillStyle = T.str; ctx.beginPath(); ctx.arc(cx, cy, Math.max(4 * p, S.r * sc), 0, 7); ctx.fill();
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 3 * p, 0, 7); ctx.fill();
+    // string to the pulley, falling mass from the side
+    const px = wide ? W * 0.72 : W * 0.85, py = cy - Math.max(4 * p, S.r * sc), top = cy + 20 * p, bot = Hh - 40 * p;
+    ctx.strokeStyle = T.str; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(cx, py); ctx.lineTo(px, py); ctx.stroke();
+    ctx.strokeStyle = T.ink; ctx.beginPath(); ctx.arc(px, py + 10 * p, 10 * p, 0, 7); ctx.stroke();
+    const my = top + (bot - top - 40 * p) * y / H; ctx.strokeStyle = T.str; ctx.beginPath(); ctx.moveTo(px + 10 * p, py + 10 * p); ctx.lineTo(px + 10 * p, my); ctx.stroke();
+    const ms = (16 + 60 * Math.sqrt(S.m)) * p; ctx.fillStyle = T.mass; ctx.fillRect(px + 10 * p - ms / 2, my, ms, ms * 0.7);
+    ctx.fillStyle = T.canvas; ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${Math.round(S.m * 1000)} g`, px + 10 * p, my + ms * 0.35);
+    // drop marks
+    ctx.strokeStyle = T.accent; ctx.setLineDash([4 * p, 4 * p]); for (const yy of [top, bot - 40 * p]) { ctx.beginPath(); ctx.moveTo(px - 40 * p, yy); ctx.lineTo(px + 60 * p, yy); ctx.stroke(); } ctx.setLineDash([]);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText('0.500 m drop', px + 30 * p, (top + bot - 40 * p) / 2);
+    // timer
+    ctx.fillStyle = T.ink; ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(!M.moves ? 'too little torque to turn it' : S.done ? `timer: ${M.t.toFixed(3)} s for 0.500 m` : `timer: ${f(S.t, 3)} s`, 14 * p, 48 * p);
+  }
+  function readouts() {
+    const M = mot(), dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, tt = Math.min(S.t, M.t);
+    let h = dd('Timer', S.done ? `${M.t.toFixed(3)} s` : `${f(S.t, 3)} s`) + dd('Mass m', `${f(S.m * 1000, 0)} g`);
+    if (hidden()) h += '<div class="wide"><dt>I, accelerations, tension and energy</dt><dd class="ok">hidden: work them out from your timings</dd></div>';
+    else {
+      const w = M.alpha * tt, v = M.a * tt, y = 0.5 * M.a * tt * tt;
+      h += dd('I of the table + load', `${sci(Itot())} kg·m²`) + dd('I of the load alone', `${sci(Iobj())} kg·m²`);
+      h += dd('a of the mass', `${f(M.a, 4)} m/s²`) + dd('α of the table', `${f(M.alpha, 3)} rad/s²`) + dd('Tension T', `${f(M.T, 4)} N`) + dd('Torque Tr', `${sci(M.T * S.r)} N·m`);
+      h += dd('ω now', `${f(w, 2)} rad/s`) + dd('Power of the string Tv', `${f(M.T * v * 1000, 1)} mW`);
+      h += dd('Lost by gravity mgy', `${f(S.m * G * y * 1000, 1)} mJ`) + dd('½mv² + ½Iω² + τ_f θ', `${f((0.5 * S.m * v * v + 0.5 * Itot() * w * w + tf() * y / S.r) * 1000, 1)} mJ`);
+    }
+    $('out').innerHTML = h;
+  }
+  // ---------- controls ----------
+  function sync() {
+    for (const b of document.querySelectorAll('#objSeg button')) b.setAttribute('aria-pressed', String(b.dataset.o === S.obj));
+    for (const b of document.querySelectorAll('#rSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.r === S.r));
+    $('rowD').hidden = S.obj !== 'pair'; $('sD').value = S.d; $('oD').textContent = `${f(S.d * 100, 1)} cm`; $('sM').value = S.m; $('oM').textContent = `${f(S.m * 1000, 0)} g`; $('fric').checked = S.fric; $('objHint').textContent = HINT[S.obj];
+  }
+  const wind = () => { S.t = 0; S.done = false; setRun(false); sync(); draw(); readouts(); };
+  $('objSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-o]'); if (b) { S.obj = b.dataset.o; wind(); fit(); } });
+  $('rSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-r]'); if (b) { S.r = +b.dataset.r; wind(); } });
+  $('sD').addEventListener('input', (e) => { S.d = +e.target.value; wind(); fit(); });
+  $('sM').addEventListener('input', (e) => { S.m = +e.target.value; wind(); });
+  $('fric').addEventListener('change', (e) => { S.fric = e.target.checked; wind(); fit(); });
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : 'Release'; $('go').classList.toggle('attn', !on); }
+  $('go').addEventListener('click', () => { if (S.done) { S.t = 0; S.done = false; } if (reduce) { const M = mot(); S.t = M.moves ? M.t : 0; S.done = M.moves; setRun(false); draw(); readouts(); return; } setRun(!S.run); });
+  $('wind').addEventListener('click', wind);
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) { const M = mot(); S.t += dt; if (!M.moves || S.t >= M.t) { S.t = Math.min(S.t, M.t); S.done = M.moves; setRun(false); } draw(); readouts(); }
+    requestAnimationFrame(frame);
+  }
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') $('go').click(); else if (e.key === 'r' || e.key === 'R') wind(); else return; e.preventDefault(); });
+  // ---------- readings ----------
+  function capStatus(m) { $('capStatus').textContent = m; }
+  const loadKey = () => (S.obj === 'pair' ? `pair at ${f(S.d * 100, 1)} cm` : S.obj) + (S.fric ? ', friction' : '');
+  $('capture').addEventListener('click', () => { if (!S.done) { capStatus('Release and let the mass fall the full 0.500 m first.'); return; }
+    S.rows.push({ load: loadKey(), m: S.m.toFixed(3), r: S.r.toFixed(2), t: mot().t.toFixed(3) }); renderRows(); capStatus(`Row ${S.rows.length} captured.`); });
+  $('clearRows').addEventListener('click', () => { S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  $('exportCsv').addEventListener('click', () => {
+    if (!S.rows.length) { capStatus('No readings to export.'); return; }
+    const txt = readingsCSV(S.rows, { version: RD_VERSION, friction: S.rows.some((r) => r.load.includes('friction')) ? 'constant bearing torque on some rows (see load)' : 'none' });
+    try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'rotational-dynamics-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+    capStatus('CSV exported.');
+  });
+  function renderRows() {
+    const tb = $('rowsTbl').querySelector('tbody');
+    tb.innerHTML = S.rows.length ? S.rows.map((r, i) => `<tr title="${r.load}"><td>${i + 1}</td><td><input data-i="${i}" data-f="m" value="${r.m}" aria-label="m, row ${i + 1}"></td><td>${r.r}</td><td><input data-i="${i}" data-f="t" value="${r.t}" aria-label="t, row ${i + 1}"></td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : '<tr><td class="empty" colspan="5">No readings yet. Release, let it fall, capture.</td></tr>';
+    fit();
+  }
+  $('rowsTbl').addEventListener('change', (e) => { const el = e.target; if (el.dataset.f) { S.rows[+el.dataset.i][el.dataset.f] = el.value.trim(); fit(); } });
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderRows(); } });
+  const fitCan = $('fitCan'), fctx = fitCan.getContext('2d');
+  function fit() {
+    const key = loadKey(), pts = S.rows.filter((r) => r.load === key).map((r) => { const m = cellNum(r.m), rr = cellNum(r.r), t = cellNum(r.t); if (!(m > 0 && rr > 0 && t > 0)) return null; const q = fromRow(m, rr, t); return [q.alpha, q.tau]; }).filter(Boolean);
+    const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
+    let h;
+    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two drops (different m or r) with this load: ${key}.</dd></div>`;
+    else { h = `<div><dt>Intercept: friction torque</dt><dd>${sci(F.a, 2)} N·m</dd></div>`;
+      h += S.blind ? '<div class="wide"><dt>Slope = I of the table and load</dt><dd class="ok">hidden in Blind: read it from the slope</dd></div>' : `<div class="wide"><dt>Slope = I of the table and load</dt><dd>${sci(F.b, 4)}${isFinite(F.seB) ? ` ± ${sci(F.seB, 2)}` : ''} kg·m²</dd></div>`; }
+    $('fitOut').innerHTML = h; drawFit(pts, F);
+  }
+  function drawFit(pts, F) {
+    const r = fitCan.getBoundingClientRect(), w = r.width, h = r.height; if (!w || !T) return;
+    fitCan.width = Math.round(w * dpr); fitCan.height = Math.round(h * dpr); fctx.setTransform(dpr, 0, 0, dpr, 0, 0); fctx.fillStyle = T.canvas; fctx.fillRect(0, 0, w, h);
+    const L = 44, Rr = w - 8, top = 8, mainB = h - 58, resT = h - 46, resB = h - 18;
+    fctx.strokeStyle = T.line; fctx.strokeRect(L + 0.5, top + 0.5, Rr - L, mainB - top); fctx.strokeRect(L + 0.5, resT + 0.5, Rr - L, resB - resT);
+    fctx.fillStyle = T.muted; fctx.font = `10px ${T.mono}`; fctx.textAlign = 'center'; fctx.textBaseline = 'top'; fctx.fillText('α (rad/s²)', (L + Rr) / 2, resB + 3);
+    fctx.save(); fctx.translate(10, (top + mainB) / 2); fctx.rotate(-Math.PI / 2); fctx.fillText('τ (N·m)', 0, 0); fctx.restore();
+    if (!pts.length) return;
+    const xh = Math.max(...pts.map((q) => q[0])) * 1.08, yh = Math.max(...pts.map((q) => q[1])) * 1.1, PX = (x) => L + (Rr - L) * x / xh, PY = (y) => mainB - (mainB - top) * y / yh;
+    fctx.textAlign = 'right'; fctx.textBaseline = 'middle'; fctx.fillText(yh.toExponential(1), L - 3, PY(yh)); fctx.fillText('0', L - 3, PY(0));
+    if (F) { fctx.strokeStyle = T.accent; fctx.lineWidth = 1.5; fctx.beginPath(); fctx.moveTo(PX(0), PY(F.a)); fctx.lineTo(PX(xh), PY(F.a + F.b * xh)); fctx.stroke(); }
+    fctx.fillStyle = T.obj; for (const [x, y] of pts) { fctx.beginPath(); fctx.arc(PX(x), PY(y), 3.2, 0, 7); fctx.fill(); }
+    if (F) { const m = Math.max(...F.res.map(Math.abs), 1e-12), RY = (v) => (resT + resB) / 2 - (resB - resT) / 2 * 0.85 * v / m; fctx.strokeStyle = T.gridStrong; fctx.beginPath(); fctx.moveTo(L, RY(0)); fctx.lineTo(Rr, RY(0)); fctx.stroke(); fctx.fillStyle = T.obj; pts.forEach(([x], i) => { fctx.beginPath(); fctx.arc(PX(x), RY(F.res[i]), 2.6, 0, 7); fctx.fill(); }); }
+  }
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; readouts(); fit(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); fit(); }
+  const retheme = () => { tokens(); draw(); fit(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  tokens(); new ResizeObserver(resize).observe(stage); wind(); renderRows(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

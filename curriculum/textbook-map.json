@@ -1708,12 +1708,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "rotation"
+        "rotation",
+        "rotational-dynamics"
       ],
       "unit": "rotation",
-      "note": "Selected torque dynamics only; general rotational kinematics exercise needs review."
+      "note": "Rotational Dynamics lab (2026-10-22, Claude): falling mass spins a turntable; time the drop, α from a = 2h/t², I from the τ against α slope; constant α kinematics."
     },
     {
       "vol": 1,
@@ -1757,12 +1758,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "rotation"
+        "rotation",
+        "rotational-dynamics"
       ],
       "unit": "rotation",
-      "note": "Discrete point-mass I = Σmr² in the spinner/seesaw and supplied standard-shape coefficients are present. No continuous-body ∫r²dm derivation/integration activity; do not label that part complete."
+      "note": "Rotational Dynamics lab (2026-10-22, Claude): falling mass spins a turntable; time the drop, α from a = 2h/t², I from the τ against α slope; disk, ring, two masses at an adjustable distance (parallel axis), mystery object. Continuous bodies still use supplied coefficients (no ∫r²dm activity)."
     },
     {
       "vol": 1,
@@ -1790,12 +1792,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "rotation"
+        "rotation",
+        "rotational-dynamics"
       ],
       "unit": "rotation",
-      "note": "Selected door/rolling apparatus; not every rotational dynamics application."
+      "note": "Rotational Dynamics lab (2026-10-22, Claude): falling mass spins a turntable; time the drop, α from a = 2h/t², I from the τ against α slope; τ = Iα with a friction torque intercept."
     },
     {
       "vol": 1,
@@ -1807,10 +1810,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "rotational-dynamics"
+      ],
       "unit": "rotation",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Rotational Dynamics lab (2026-10-22, Claude): falling mass spins a turntable; time the drop, α from a = 2h/t², I from the τ against α slope; energy readout mgh = ½mv² + ½Iω² + τ_f θ and string power Tv."
     },
     {
       "vol": 1,
@@ -4887,6 +4892,41 @@
       "handouts": [],
       "title": "Pendulum",
       "url": "demos/pendulum.html"
+    },
+    {
+      "demo": "rotational-dynamics",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "10.2",
+          "title": "Rotation with Constant Angular Acceleration"
+        },
+        {
+          "vol": 1,
+          "sec": "10.5",
+          "title": "Calculating Moments of Inertia"
+        },
+        {
+          "vol": 1,
+          "sec": "10.7",
+          "title": "Newton’s Second Law for Rotation"
+        },
+        {
+          "vol": 1,
+          "sec": "10.8",
+          "title": "Work and Power for Rotational Motion"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-22 (Claude). Hanging mass on a string around a spool (1, 2, 3 cm) spins a turntable carrying nothing, a disk, a ring, two masses at an adjustable distance or a Mystery object; optional bearing friction torque; timer for a 0.500 m drop to 0.001 s; Capture, CSV, τ against α fit (slope I, intercept friction); energy and power readouts; Blind.",
+      "handouts": [],
+      "title": "Rotational Dynamics",
+      "url": "demos/rotational-dynamics.html"
     },
     {
       "demo": "double-pendulum",
