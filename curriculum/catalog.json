@@ -345,6 +345,17 @@
    "title": "Mechanics",
    "demos": [
     {
+     "demo": "vectors",
+     "title": "Vectors and Relative Motion",
+     "desc": "Drag arrow tips to see components, sums, differences, and dot and cross products, then steer a boat across a river where its velocity adds to the current's.",
+     "tags": [
+      "vectors",
+      "components",
+      "dot and cross product",
+      "relative velocity"
+     ]
+    },
+    {
      "demo": "motion-graphs",
      "title": "Motion Graphs",
      "desc": "Position, velocity and acceleration graphs of a cart, linked: each is the slope of the one above and the area under it is the change in the one above. Then try to walk a target graph yourself.",

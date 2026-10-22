@@ -45,6 +45,7 @@ OVERRIDES = {
                    "js": "setTimeout(() => { const m = document.getElementById('mass'); m.value = 1000; m.dispatchEvent(new Event('input', { bubbles: true })); "
                          "setTimeout(() => { const b = [...document.querySelectorAll('#presets button')].find((x) => x.textContent === 'Onion shells'); if (b) b.click(); }, 3500); }, 1500)"},
     "hydrogen-orbitals": {"wait": 2500},
+    "vectors": {"wait": 500, "js": "document.querySelector('#presets button[data-p=\"add\"]').click();"},
     "motion-graphs": {"wait": 600, "js": "document.querySelector('#presets button[data-p=\"stopgo\"]').click(); const c = document.getElementById('can'); c.focus(); for (let i = 0; i < 45; i++) c.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));"},
     "bz-reaction": {"click": ['[data-p="spiral"]'], "wait": 800,
                     "js": "__bz.setPlaying(false); for (let i = 0; i < 45; i++) __bz.dsAdvance(100); __bz.dirtyAll(); __bz.setPlaying(true)"},

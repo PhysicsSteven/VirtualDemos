@@ -983,10 +983,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "vectors"
+      ],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Vectors and Relative Motion: components, sums, differences, dot and cross products on a grid; river crossing for relative velocity."
     },
     {
       "vol": 1,
@@ -998,10 +1000,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "vectors"
+      ],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Vectors and Relative Motion: components, sums, differences, dot and cross products on a grid; river crossing for relative velocity."
     },
     {
       "vol": 1,
@@ -1013,10 +1017,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "vectors"
+      ],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Vectors and Relative Motion: components, sums, differences, dot and cross products on a grid; river crossing for relative velocity."
     },
     {
       "vol": 1,
@@ -1028,10 +1034,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "vectors"
+      ],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Vectors and Relative Motion: components, sums, differences, dot and cross products on a grid; river crossing for relative velocity."
     },
     {
       "vol": 1,
@@ -1205,10 +1213,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "vectors"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Vectors and Relative Motion: components, sums, differences, dot and cross products on a grid; river crossing for relative velocity."
     },
     {
       "vol": 1,
@@ -4165,6 +4175,46 @@
       ],
       "title": "Projectile Range",
       "url": "demos/projectile-drag.html"
+    },
+    {
+      "demo": "vectors",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "2.1",
+          "title": "Scalars and Vectors"
+        },
+        {
+          "vol": 1,
+          "sec": "2.2",
+          "title": "Coordinate Systems and Components of a Vector"
+        },
+        {
+          "vol": 1,
+          "sec": "2.3",
+          "title": "Algebra of Vectors"
+        },
+        {
+          "vol": 1,
+          "sec": "2.4",
+          "title": "Products of Vectors"
+        },
+        {
+          "vol": 1,
+          "sec": "4.5",
+          "title": "Relative Motion in One and Two Dimensions"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Lecture demo: draggable vectors with components, A + B (head to tail or parallelogram), A − B, dot and cross products; river crossing with v_bs = v_bw + v_ws, aim to land straight across. Blind hides results. 3D vectors and unit vector algebra in 3D not covered.",
+      "handouts": [],
+      "title": "Vectors and Relative Motion",
+      "url": "demos/vectors.html"
     },
     {
       "demo": "motion-graphs",
