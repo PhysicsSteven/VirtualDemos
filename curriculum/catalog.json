@@ -576,6 +576,17 @@
    "title": "Electricity and magnetism",
    "demos": [
     {
+     "demo": "induction",
+     "title": "Charging by Induction",
+     "desc": "Charge two metal spheres without touching them: bring a charged rod near, separate the spheres or ground one, then take the rod away. Every mark on the spheres comes from an exact electrostatics solution.",
+     "tags": [
+      "charging by induction",
+      "conductors",
+      "grounding",
+      "surface charge"
+     ]
+    },
+    {
      "demo": "coulomb-sandbox",
      "title": "Coulomb Sandbox",
      "desc": "Drag point charges and watch the field lines, equipotentials and potential update live, as a 2D map or a rotatable 3D landscape.",

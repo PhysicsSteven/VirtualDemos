@@ -2265,10 +2265,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "induction"
+      ],
       "unit": "charge-fields",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Charging by Induction: two conducting spheres and a charged rod solved exactly (image charges); induction, grounding, contact. Insulator polarization not shown."
     },
     {
       "vol": 2,
@@ -2280,10 +2282,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "induction"
+      ],
       "unit": "charge-fields",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Charging by Induction: two conducting spheres and a charged rod solved exactly (image charges); induction, grounding, contact. Insulator polarization not shown."
     },
     {
       "vol": 2,
@@ -2426,7 +2430,8 @@
       "requirement": "required",
       "status": "needs-feature",
       "demos": [
-        "gauss-law"
+        "gauss-law",
+        "induction"
       ],
       "unit": "flux-gauss",
       "note": "Spherical conductor example only, not arbitrary conductors."
@@ -4813,6 +4818,36 @@
       "note": "Small-angle pendulum comparison is relevant; nonlinear double-pendulum chaos is an extension beyond this section.",
       "title": "Pendulums and Chaos",
       "url": "demos/double-pendulum.html"
+    },
+    {
+      "demo": "induction",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "5.1",
+          "title": "Electric Charge"
+        },
+        {
+          "vol": 2,
+          "sec": "5.2",
+          "title": "Conductors, Insulators, and Charging by Induction"
+        },
+        {
+          "vol": 2,
+          "sec": "6.4",
+          "title": "Conductors in Electrostatic Equilibrium"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Lecture demo: two metal spheres and a charged rod tip (point charge), exact Kelvin image solution; step through charging by induction, by grounding, and by contact; surface charge marks from σ; net charges and potentials. Conductors only.",
+      "handouts": [],
+      "title": "Charging by Induction",
+      "url": "demos/induction.html"
     },
     {
       "demo": "coulomb-sandbox",
