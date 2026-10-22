@@ -183,7 +183,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>m (kg)</th><th>ΔL (mm)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">Capture stores the hanging mass and the dial gauge reading (to 0.001 mm), with the wire's diameter. The fit is a straight line of the load F = mg against ΔL; Y = slope × L / A. Use only loads below the yield point.</p>
+        <p class="hint">Capture stores the hanging mass and the dial gauge reading (to 0.001 mm), with the wire's diameter. The fit is a straight line of the load F = mg against ΔL; Y = slope × L / A. Use only loads below the yield point. The fit uses the rows from the wire now hanging; New wire starts afresh (the CSV keeps every row).</p>
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Load against extension for the captured rows, with a least squares line and residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
         <button type="button" class="btn" id="fitTblBtn" aria-expanded="false" aria-controls="fitWrap">Show data table</button>
@@ -283,7 +283,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     }
     sync(); draw(); readouts();
   }
-  function newWire() { S.ep = 0; S.broke = false; S.m = 0; S.path = [[0, 0]]; sync(); draw(); readouts(); }
+  function newWire() { S.wire = (S.wire || 0) + 1; S.ep = 0; S.broke = false; S.m = 0; S.path = [[0, 0]]; sync(); draw(); readouts(); }
   function sync() {
     const mx = Math.ceil(maxLoad() * 10) / 10; $('sL').max = mx; $('sL').step = mx > 30 ? 0.5 : 0.1; $('sL').value = S.m; $('oL').textContent = `${f(S.m, 1)} kg (F = ${f(S.m * G, 1)} N)`;
     $('sD').value = S.d; $('oD').textContent = `${f(S.d, 2)} mm`; $('matHint').textContent = HINT[S.mat];
@@ -349,7 +349,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 
   // ---------- readings ----------
   function capStatus(m) { $('capStatus').textContent = m; }
-  $('capture').addEventListener('click', () => { if (S.broke) { capStatus('The wire has broken.'); return; } const q = now(); S.rows.push({ m: S.m.toFixed(1), d: S.d.toFixed(2), dL: (q.dL * 1000).toFixed(3), mat: S.mat }); renderRows(); capStatus(`Row ${S.rows.length} captured.`); });
+  $('capture').addEventListener('click', () => { if (S.broke) { capStatus('The wire has broken.'); return; } const q = now(); S.rows.push({ m: S.m.toFixed(1), d: S.d.toFixed(2), dL: (q.dL * 1000).toFixed(3), mat: S.mat, wire: S.wire }); renderRows(); capStatus(`Row ${S.rows.length} captured.`); });
   $('clearRows').addEventListener('click', () => { S.rows = []; renderRows(); capStatus('Readings cleared.'); });
   $('exportCsv').addEventListener('click', () => {
     if (!S.rows.length) { capStatus('No readings to export.'); return; }
@@ -369,15 +369,15 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   $('fitTblBtn').addEventListener('click', () => { const o = $('fitWrap').hidden; $('fitWrap').hidden = !o; $('fitTblBtn').setAttribute('aria-expanded', String(o)); $('fitTblBtn').textContent = o ? 'Hide data table' : 'Show data table'; });
   const fitCan = $('fitCan'), fctx = fitCan.getContext('2d');
   function fit() {
-    const rows = S.rows.filter((r) => r.mat === S.mat && Math.abs(cellNum(r.d) - S.d) < 1e-9);
+    const rows = S.rows.filter((r) => r.wire === S.wire);
     const pts = rows.map((r) => [cellNum(r.dL), cellNum(r.m) * G]).filter(([a, b]) => isFinite(a) && isFinite(b));
     const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0] / 1000), pts.map((q) => q[1])) : null;
     let h;
-    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two rows for this wire (${MATS[S.mat].name}, d = ${f(S.d, 2)} mm).</dd></div>`;
+    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two rows on this wire (${MATS[S.mat].name}, d = ${f(S.d, 2)} mm). The fit uses only rows from the wire now hanging; New wire starts a new fit.</dd></div>`;
     else {
       const A = area(S.d), Y = F.b * LEN / A, sY = F.seB * LEN / A;
       h = `<div><dt>Slope F/ΔL</dt><dd>${f(F.b / 1000, 2)}${isFinite(F.seB) ? ` ± ${f(F.seB / 1000, 2)}` : ''} N/mm</dd></div><div><dt>Intercept</dt><dd>${f(F.a, 2)} N</dd></div>`;
-      h += S.blind ? '<div class="wide"><dt>Y = slope × L / A</dt><dd class="ok">hidden in Blind: work it out</dd></div>' : `<div class="wide"><dt>Y = slope × L / A</dt><dd>${f(Y / 1e9, 1)}${isFinite(sY) ? ` ± ${f(sY / 1e9, 1)}` : ''} GPa</dd></div>`;
+      h += hidden() ? '<div class="wide"><dt>Y = slope × L / A</dt><dd class="ok">hidden: work it out</dd></div>' : `<div class="wide"><dt>Y = slope × L / A</dt><dd>${f(Y / 1e9, 1)}${isFinite(sY) ? ` ± ${f(sY / 1e9, 1)}` : ''} GPa</dd></div>`;
     }
     $('fitOut').innerHTML = h;
     $('fitTbl').querySelector('tbody').innerHTML = pts.map(([x, y], i) => `<tr><td>${x}</td><td>${y.toFixed(2)}</td><td>${F ? (F.a + F.b * x / 1000).toFixed(2) : '—'}</td><td>${F ? F.res[i].toFixed(3) : '—'}</td></tr>`).join('');
@@ -404,7 +404,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   $('sD').addEventListener('input', (e) => { S.d = +e.target.value; newWire(); fit(); });
   $('sL').addEventListener('input', (e) => setLoad(+e.target.value));
   $('unload').addEventListener('click', () => setLoad(0));
-  $('fresh').addEventListener('click', newWire);
+  $('fresh').addEventListener('click', () => { newWire(); fit(); });
   $('zoom').addEventListener('change', (e) => { S.zoom = e.target.checked; draw(); });
   can.addEventListener('keydown', (e) => { if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { setLoad(Math.round((S.m + (e.key === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 1 : 0.1)) * 10) / 10); e.preventDefault(); } });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); fit(); });

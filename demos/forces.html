@@ -328,7 +328,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     S.p[k] = +e.target.value;
     if (k === 'mk' && S.p.mk > S.p.ms) S.p.ms = S.p.mk;
     if (k === 'ms' && S.p.mk > S.p.ms) S.p.mk = S.p.ms;
-    S.preset = 'custom'; mark(); S.timing = null; sync(); draw(); readouts();
+    S.preset = 'custom'; mark(); S.timing = null; S.lastGate = null; sync(); draw(); readouts();
   });
   function mark() { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); }
   function applyPreset(k) {
@@ -339,7 +339,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   function setMystery(on) {
     if (on) { const ms = 0.25 + Math.round(Math.random() * 45) / 100, mk = Math.round(ms * (0.55 + Math.random() * 0.3) * 100) / 100; S.mystery = { ms, mk }; S.p.ms = ms; S.p.mk = mk; if (!S.blind) setBlind(true); capStatus('Mystery surface: μs and μk are hidden. Blind is on.'); }
     else { if (S.mystery) capStatus(`Mystery surface off: it was μs = ${f(S.mystery.ms, 2)}, μk = ${f(S.mystery.mk, 2)}.`); S.mystery = null; }
-    S.v = 0; setRun(false); sync(); draw(); readouts();
+    S.v = 0; S.timing = null; S.lastGate = null; setRun(false); sync(); draw(); readouts();
   }
   $('mystery').addEventListener('change', (e) => setMystery(e.target.checked));
   $('newMystery').addEventListener('click', () => { setMystery(true); capStatus('A new mystery surface. Earlier rows used a different one.'); });
@@ -360,10 +360,16 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     if (S.run) {
       const n = 10; let s = S.s, v = S.v;
       for (let i = 0; i < n; i++) {
-        const r = workStep(S.p, s, v, dt / n, S.work); s = r.s; v = r.v;
+        const lo = 0.25, hi = LEN - 0.25, W0 = { ...S.work };
+        let r = workStep(S.p, s, v, dt / n, S.work), hit = false;
+        if (r.s < lo || r.s > hi) {   // split the step at the end stop, so the work matches the path actually travelled
+          const b = r.s < lo ? lo : hi, out = (x) => (b === lo ? x < lo : x > hi); let t0 = 0, t1 = dt / n;
+          for (let k = 0; k < 60; k++) { const tm = (t0 + t1) / 2; if (out(workStep(S.p, s, v, tm, { g: 0, F: 0, f: 0, T: 0 }).s)) t1 = tm; else t0 = tm; }
+          S.work = W0; r = workStep(S.p, s, v, t1, S.work); r = { s: b, v: r.v }; hit = true;
+        }
+        s = r.s; v = r.v;
         if (S.timing && !S.timing.done) { S.timing.t += dt / n; if (Math.abs(s - S.timing.s0) >= GATE_D) { const a = forces(S.p, v).a; S.timing.done = true; S.lastGate = Math.round(gateTime(a, GATE_D) * 1000) / 1000; S.timing.t = S.lastGate; } }
-        const lo = 0.25, hi = LEN - 0.25;
-        if (s < lo || s > hi) { s = Math.max(lo, Math.min(hi, s)); S.work.stop = (S.work.stop || 0) - 0.5 * S.p.m * v * v; v = 0; setRun(false); break; }
+        if (hit) { S.work.stop = (S.work.stop || 0) - 0.5 * S.p.m * v * v; v = 0; setRun(false); break; }
       }
       S.s = s; S.v = v; draw(); readouts();
     }
@@ -442,7 +448,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     }
   }
   function drawFBD(x0, y0, w, h) {
-    const p = ps(), P = S.p, th = P.th * Math.PI / 180, fz = forces(S.p, S.run ? S.v : 0), bl = S.blind;
+    const p = ps(), P = S.p, th = P.th * Math.PI / 180, fz = forces(S.p, S.v), bl = S.blind;
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); if (x0 > 0) { ctx.moveTo(x0, 12 * p); ctx.lineTo(x0, H - 12 * p); } else { ctx.moveTo(12 * p, y0); ctx.lineTo(W - 12 * p, y0); } ctx.stroke();
     ctx.fillStyle = T.muted; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('FREE BODY DIAGRAM OF THE BLOCK', x0 + 14 * p, y0 + 12 * p);
     const cx = x0 + w / 2, cy = y0 + h / 2 + 10 * p, Rm = Math.min(w, h) * 0.36;
@@ -472,7 +478,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 
   // ---------- readouts ----------
   function readouts() {
-    const fz = forces(S.p, S.run ? S.v : 0), bl = S.blind, dd = (a, b, w, cls) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd${cls ? ` class="${cls}"` : ''}>${b}</dd></div>`;
+    const fz = forces(S.p, S.v), bl = S.blind, dd = (a, b, w, cls) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd${cls ? ` class="${cls}"` : ''}>${b}</dd></div>`;
     let h = dd('Weight mg', `${f(fz.W, 1)} N`);
     if (bl) h += '<div class="wide"><dt>N, friction, tension, acceleration</dt><dd class="ok">hidden in Blind</dd></div>';
     else {
@@ -486,7 +492,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     h += dd('Timer, last run', S.lastGate ? `${S.lastGate.toFixed(3)} s for 1.000 m` : '—', true);
     $('forceOut').innerHTML = h;
     // work and energy
-    const Wk = S.work, v = S.run ? S.v : 0, K = 0.5 * S.p.m * v * v, sum = Wk.g + Wk.F + Wk.f + Wk.T, J = (x) => `${f(x, 2)} J`, Wt = (x) => `${f(x, 2)} W`;
+    const Wk = S.work, v = S.v, K = 0.5 * S.p.m * v * v, sum = Wk.g + Wk.F + Wk.f + Wk.T, J = (x) => `${f(x, 2)} J`, Wt = (x) => `${f(x, 2)} W`;
     let w;
     if (bl) w = '<div class="wide"><dt>Work, kinetic energy and power</dt><dd class="ok">hidden in Blind</dd></div>';
     else {

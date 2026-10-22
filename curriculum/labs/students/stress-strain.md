@@ -1,0 +1,75 @@
+# Finding the Elastic Properties of a Wire
+Student laboratory · Physics I
+
+Textbook: OpenStax *University Physics*, Vol. 1, §§12.3–12.4. Access for free at https://openstax.org/details/books/university-physics-volume-1.
+
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/stress-strain.html)
+
+## Goal
+
+Determine an unknown wire's Young's modulus from load and extension, then distinguish elastic stretching from permanent deformation.
+
+## Background
+
+A hanging load exerts force F = mg. For a wire of original length L and diameter d,
+
+$$A=\frac{\pi d^2}{4},\qquad \sigma=\frac{F}{A},\qquad
+\epsilon=\frac{\Delta L}{L}.$$
+
+Below yield, stress is proportional to strain: σ = Yε. Therefore a plot of F against ΔL has slope YA/L, and
+
+$$Y=\text{slope}\,\frac{L}{A}.$$
+
+Use metres for extension when applying that formula. After yielding, unloading can leave a permanent extension. A wire that has already yielded is not the same initial specimen as a fresh wire. This model uses an idealized engineering stress–strain curve with smooth hardening; it does not model necking or every behavior of a real alloy. Bulk and shear moduli are outside this experiment.
+
+## Before the lab
+
+1. Predict how doubling diameter changes extension at the same load, length and material.
+2. What are the units of the F-versus-ΔL slope and of Young's modulus?
+3. How would you test whether a measured extension is elastic?
+
+## Safety
+
+A real stretched wire can snap. Use eye protection, secure the support, shield the wire and keep feet clear of hanging masses. Add loads gently and follow the instructor's load limit.
+
+## Procedure
+
+**Elastic measurements.** Measure the original length and diameter of a fresh wire. On real equipment, measure diameter at several positions and note the zero reading. Increase the load in small steps, recording mass and extension. Unload to check that the wire returns to its original length. Obtain at least six elastic points, including zero; do not include a point that leaves a permanent extension in your elastic fit.
+
+**Diameter check.** Repeat the elastic measurements with a fresh wire of the same material but a second diameter. Compare the two fitted slopes and the moduli inferred from them. Keep each wire's data separate.
+
+**Yielding.** Return to a fresh specimen at the first diameter. Increase the peak load, unload fully, and record the residual extension. Start with small loads, then use smaller increments near the first detectable permanent set. Bracket the onset between the largest peak load that returned to zero and the first that did not. Once it yields, do not use subsequent loading points as fresh-wire elastic data. Stop after detecting a clear permanent set; fracture is unnecessary.
+
+**Using the virtual apparatus.** Choose **Mystery metal**, enable **Blind: hide predictions and answers**, set **Diameter d** to 0.60 mm, and press **New wire**. The original length is 2.000 m. Use **Hanging mass** values 0, 1, 2, 3, 4 and 5 kg for the first elastic scan; record the dial with **Capture reading**. Use **Take all the load off** to check recovery. Export with **Export CSV** before clearing or mixing specimens. Repeat the elastic scan at 0.80 mm with a fresh wire. For the yield investigation, return to 0.60 mm and press **New wire**; increase peak mass gradually, unloading after each peak. Record residual extensions by hand as well as load readings. **Graph: zoom in on the elastic part** helps inspect the initial region. Keep Blind on while making your estimate; the current fit can reveal the calculated modulus if it is off. The built-in fit can mix rows from successive wires of the same material and diameter, so use separate files or clear earlier rows before the yield investigation.
+
+## Data
+
+| Specimen/cycle | d (mm) | L (m) | Peak/load mass (kg) | Loaded ΔL (mm) | Unloaded ΔL (mm) | Elastic/set |
+|---|---|---|---|---|---|---|
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+
+Save each elastic series separately. For yield cycles, pair each peak load with its subsequent unloaded reading.
+
+## Analysis
+
+1. Convert masses to forces and fit F against ΔL for each elastic series. Report slope, intercept and residuals. Convert extension to metres before calculating Y, or explicitly convert a slope in N/mm to N/m.
+2. Compare the two estimates of Y. Test whether the slope ratio agrees with the squared diameter ratio.
+3. Convert the two peak loads bracketing permanent set to stresses. Report a yield-onset interval rather than an exact material constant from a coarse step.
+4. Explain the difference between total extension under load and residual extension after unloading. Distinguish the operational detection threshold from an exact yield stress.
+
+## Uncertainty
+
+The virtual dial rounds to 0.001 mm. Diameter controls are specified settings in the ideal model; their 0.05 mm adjustment step is not random measurement error. For a real wire, estimate diameter uncertainty from the measuring tool and variation along the wire. Since A depends on d², its fractional uncertainty is approximately twice that of diameter. Include length and slope uncertainty in Y. A tiny fit error does not eliminate calibration errors. For yielding, use load-step brackets and the smallest detectable residual extension; repeated exact simulation readings do not supply random scatter.
+
+## Questions
+
+1. Why do thicker wires have steeper F-versus-ΔL graphs but not necessarily larger Young's moduli?
+2. Can a material be stiff yet have a low yield stress?
+3. Why can an unloaded yielded wire remain longer even though its stress is zero?
+4. Why should you avoid fitting one straight line through elastic and plastic loading points?
+
+## What to hand in
+
+Prelab answers, wire dimensions, separate elastic CSV files, both fits with residuals, Young's modulus estimates and uncertainty, the yield-onset bracket with unloading evidence, and answers to the questions. Identify simulated data.
