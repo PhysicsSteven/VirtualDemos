@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sources of Energy: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Sources of Energy</h1><ul class="meta"><li><a href="../demos/energy-sources.html">Open the demo</a></li><li>PHYS 201</li><li>10 to 20 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Energy per kilogram spans about eight powers of ten: lithium ion batteries 0.7 MJ, chemical fuels 15 to 55 MJ, uranium 235 about 8 × 10⁷ MJ. Nuclear energy per kilogram is millions of times chemical because nuclear binding energies are MeV, chemical bonds eV.</li>
+<li>Making electricity from heat loses most of it: a power station converts roughly a third of the heat.</li>
+<li>Renewables move huge masses for modest energy: water falling 100 m gives under a kilojoule per kilogram, so hydro and wind need enormous flows.</li>
+<li>Food is a fuel: fat carries more energy per kilogram than TNT (TNT's advantage is how fast it releases it).</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need units of energy (J, kWh) and the idea of efficiency. The chart is logarithmic: each grid line is ten times the last. <strong>Blind</strong> hides the bars and numbers so the class can rank the sources first.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Rank first.</strong> Blind on, a household's 30 kWh for a day as electricity: ask for a ranking of the sources by mass needed. Reveal: 3.8 mg of uranium, 6.7 kg of gasoline, 150 kg of batteries, 120 tonnes of water through a 100 m dam, 3600 tonnes of air at 10 m/s.</li>
+<li><strong>Heat vs electricity.</strong> Uncheck "Delivered as electricity": every fuel mass drops by the factor 1/0.35. The battery and the renewables do not change.</li>
+<li><strong>TNT vs food.</strong> TNT 74 kg, food fat 8.2 kg for the same energy (as electricity). Discuss power: energy per second, not per kilogram.</li>
+<li><strong>Wind speed.</strong> Double the wind speed and the air needed drops by 4 (½v² per kg); per second through a rotor it delivers 8 times the power (more air arrives too).</li>
+<li><strong>Solar.</strong> 31 m² of 20% panels collect 30 kWh in a day at an average 200 W/m², which depends strongly on place and season.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Show that fissioning 1 kg of U-235 at 200 MeV per fission releases 8.2 × 10¹³ J.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> How much gasoline does it take to provide 1 kWh of electricity at 35% efficiency? How much heat?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Why is so much water needed for hydroelectric power? Find the mass of water falling 100 m for 30 kWh at 90% efficiency.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Why does doubling the wind speed increase a turbine's power by eight times?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Fat has about nine times the energy per kilogram of TNT. Why is TNT an explosive and fat is not?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Energy is used up."</strong> It is converted; a power station's "lost" two thirds goes into the cooling water and air as heat.</li>
+<li><strong>"Batteries are an energy source."</strong> They store energy made elsewhere, and hold far less per kilogram than fuels.</li>
+<li><strong>"Explosives contain the most energy."</strong> They release it fastest; per kilogram they hold less than fuels and food.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Energy per kilogram: typical higher heating values (natural gas 55, gasoline 46, coal 27, dry wood 18 MJ/kg; samples vary). Food from the Atwater factors 9 and 4 kcal/g. TNT 4.184 MJ/kg by definition. Lithium ion cells about 200 Wh/kg.</li>
+<li>Uranium: 200 MeV per fission (thermal fission of U-235 releases about 200 MeV in total, some of it to neutrinos), 1 kg = (1000/235) mol of nuclei, all fissioned. Real fuel is a few percent U-235 and is not fully burned.</li>
+<li>Fuels delivering electricity are divided by the power station efficiency; batteries deliver electricity directly.</li>
+<li>Hydro: gh per kilogram at 90% turbine efficiency. Wind: the kinetic energy ½v² per kilogram of air passing through the rotor times the Betz limit 16/27. Solar: 20% panels at the average irradiance set on the slider, including nights.</li>
+<li>No national energy statistics are used.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

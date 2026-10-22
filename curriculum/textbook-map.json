@@ -1577,10 +1577,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "energy-sources"
+      ],
       "unit": "energy",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Sources of Energy (2026-10-22, Claude): energy per kilogram of fuels, food, TNT, batteries and uranium (from 200 MeV per fission); hydro, wind (Betz) and solar from their physics; heat engine efficiency. No national consumption statistics."
     },
     {
       "vol": 1,
@@ -4629,6 +4631,26 @@
       "handouts": [
         "potential-curves"
       ]
+    },
+    {
+      "demo": "energy-sources",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "8.5",
+          "title": "Sources of Energy"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Energy needed (examples and a log slider), electricity or heat with power station efficiency; mass of each source on a log bar chart; dam height, wind speed, average sunlight; gasoline and water volumes, solar panel area; Blind.",
+      "handouts": [],
+      "title": "Sources of Energy",
+      "url": "demos/energy-sources.html"
     },
     {
       "demo": "impulse",

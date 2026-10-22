@@ -510,6 +510,17 @@
      ]
     },
     {
+     "demo": "energy-sources",
+     "title": "Sources of Energy",
+     "desc": "How much uranium, gas, coal, food, battery, falling water or wind it takes to supply a given amount of energy: energy per kilogram across eight powers of ten.",
+     "tags": [
+      "energy density",
+      "power stations",
+      "renewables",
+      "efficiency"
+     ]
+    },
+    {
      "demo": "rotation",
      "title": "Rotation and Torque",
      "desc": "Push a door near the hinge and at the handle, race a hoop, disk and sphere down a ramp, spin a skater who pulls her arms in, and balance a seesaw.",
