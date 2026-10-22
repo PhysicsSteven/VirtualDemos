@@ -1,8 +1,8 @@
 # Textbook coverage and gaps
 
-Source inventory: main `3a13c79bc5f7bc330d05eaffe16fce44c3b1451b`, reviewed 2026-10-22. This is curriculum/source coverage, not collection-wide numerical or release validation.
+Source inventory: main `7dab492884c004636ade7fb68d02edcc4ff172ab`, reviewed 2026-10-22. This is curriculum/source coverage, not collection-wide numerical or release validation.
 
-74 demos from `curriculum/catalog.json` mapped once; 209 section records. Claude’s new demos and section additions are preserved. Legacy HTML outside the catalog is not duplicated.
+76 demos from `curriculum/catalog.json` mapped once; 209 section records. Claude’s new demos and section additions are preserved. Legacy HTML outside the catalog is not duplicated.
 
 ## Contract for course-page construction
 
@@ -16,8 +16,8 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 
 ## Current priorities
 
-- Three new Physics I lab packages are written: motion-graphs is usable within its scope; forces and stress-strain need the reported UI fixes. Browser/classroom review remains open.
-- Next writing queue: resistivity and wire-force (Physics II). The new lecture demos do not need full student labs.
+- Three new Physics I lab packages are written: motion-graphs is usable within its scope; forces and stress-strain are usable after Claude fixed the four reported UI issues (2026-10-22). Pendulum (§15.4) and Rotational Dynamics (§§10.2, 10.5, 10.7, 10.8) were added on main the same day. Browser/classroom review remains open.
+- Resistivity and wire-force handouts/private guides are now written; their Mystery fits need the answer-hiding fix. Next handouts: pendulum and rotational-dynamics. The lecture demos do not need full student labs.
 - Near-surface gravity §13.2 remains missing; fixed-g projectile motion does not close this gap.
 - Moment-of-inertia calculation §10.5 is partial: discrete masses/standard formulas exist; a continuous-body integration activity is absent.
 - Chapter 1 remains worksheet material. Owner-deferred gaps include §8.5, §11.4, §13.7 and §14.7; a missing label is not authorization to build them now.
@@ -35,7 +35,6 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 | physics-1 | 1 | 1.6 | Significant Figures | missing |
 | physics-1 | 1 | 1.7 | Solving Problems in Physics | missing |
 | physics-1 | 1 | 8.5 | Sources of Energy | missing |
-| physics-1 | 1 | 10.8 | Work and Power for Rotational Motion | missing |
 | physics-1 | 1 | 11.4 | Precession of a Gyroscope | missing |
 | physics-1 | 1 | 13.2 | Gravitation Near Earth's Surface | missing |
 | physics-1 | 1 | 13.7 | Einstein's Theory of Gravity | missing |
@@ -72,10 +71,7 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 | 1 / 5.4 | forces | Forces and Friction uses W = mg; apparent weight (elevator) not covered. |
 | 1 / 9.2 | collisions | Collision impulse context; a general force-time integral measurement is missing. |
 | 1 / 9.6 | collisions | Collision center-of-mass example only. |
-| 1 / 10.2 | rotation | Selected torque dynamics only; general rotational kinematics exercise needs review. |
 | 1 / 10.5 | rotation | Discrete point-mass I = Σmr² in the spinner/seesaw and supplied standard-shape coefficients are present. No continuous-body ∫r²dm derivation/integration activity; do not label that part complete. |
-| 1 / 10.7 | rotation | Selected door/rolling apparatus; not every rotational dynamics application. |
-| 1 / 15.4 | double-pendulum | Double-pendulum small-angle comparison; a simple pendulum lab is not provided. |
 | 2 / 5.5 | coulomb-sandbox | Point-charge sums only; general extended-distribution integration is missing. |
 | 2 / 6.4 | gauss-law, induction | Spherical conductor example only, not arbitrary conductors. |
 | 2 / 9.1 | circuits | Circuit-level current only, not a microscopic charge-flow experiment. |
@@ -106,4 +102,9 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 
 Volumes 1/2 titles: owner-supplied OpenStax University Physics PDF contents. Optional Volume 3 titles: official [Chapter 1](https://openstax.org/books/university-physics-volume-3/pages/1-introduction) and [Chapter 2](https://openstax.org/books/university-physics-volume-3/pages/2-introduction) outlines. Full Volume 3 mapping remains deferred.
 
-The prior 16 aligned student/private activity packages remain preserved. Status usable describes a scoped activity that can be surfaced, not full topic coverage, release certification or classroom acceptance. The three new Physics I handouts are written; forces/stress-strain remain needs-feature for documented UI issues. See [new lab evidence](validation/NEW_MECHANICS_LABS_2026-10-22.md). Claude should copy the updated JSON and this gap list from the feature branch and regenerate his course pages.
+The prior 16 aligned student/private activity packages remain preserved. Status usable describes a scoped activity that can be surfaced, not full topic coverage, release certification or classroom acceptance. The three new Physics I handouts are written; Claude’s forces/stress-strain fixes are source reviewed and their workarounds removed. Resistivity/wire-force now have handouts but remain needs-feature for Mystery-fit answer hiding. See [new lab evidence](validation/NEW_MECHANICS_LABS_2026-10-22.md). Claude should copy the updated JSON and this gap list from the feature branch and regenerate his course pages.
+
+
+## E&M bench packages, 2026-10-22
+
+[Checks and limitations](validation/EM_BENCH_LABS_2026-10-22.md). Added resistivity and current-balance student/private packages; the resistivity current check also maps to Vol. 2 §9.4. Both new benches need a small Mystery-fit answer-hiding fix, reproduced by the strict source-function test. Main’s two newer Physics I labs remain needs-handout and are next. No course-page or demo HTML edits by GPT.

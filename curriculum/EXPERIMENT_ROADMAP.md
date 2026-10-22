@@ -87,3 +87,8 @@ Seven existing Physics I activities now aligned (five labs and two lecture works
 ## New Physics I labs delivered — 2026-10-22
 
 Motion-graphs, forces and stress-strain now have student/private instructor packages against main 3a13c79. Local results: 21 core groups, 97 independent comparisons, map contract and 34 exact control labels passed. Browser launch blocked by absent Chromium. Forces/stress-strain remain needs-feature for reported UI defects; no release promotion. See [evidence and requests](validation/NEW_MECHANICS_LABS_2026-10-22.md). Next handouts: resistivity and wire-force, after fresh coordination/main sync. No demo edits or main merge by GPT.
+
+
+## Resistivity and current balance — 2026-10-22
+
+Main 7dab492 merged; two student/private lab packages written and 95 independent comparisons passed. New source-fit tests pass supported row filtering/unit paths; strict Mystery-only answer hiding fails for both benches and is requested from Claude. Removed old forces/stress-strain workarounds after source fixes, reran their 14 groups and 97 reference comparisons. Total this pass: 25 supported groups, map contract (76 demos), 46 control-label checks. Browser remains unavailable; no remote CI/classroom acceptance claim. No demo edits/main merge. Evidence: validation/EM_BENCH_LABS_2026-10-22.md. Next: pendulum and rotational-dynamics.

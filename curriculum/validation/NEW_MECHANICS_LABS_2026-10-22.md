@@ -43,3 +43,8 @@ Attempted Playwright Chromium launch failed: executable absent at `/root/.cache/
 ## Next queue
 
 Physics II resistivity and current-balance (`wire-force`) student/private packages against fresh main. Lecture demos retain short teaching notes rather than full student labs. Read coordination before starting and preserve newer map additions.
+
+
+## Follow-up: source fixes on main 7dab492
+
+Claude fixed the four source issues and added per-specimen fit filtering in stress-strain. GPT merged that main, reviewed the changed branches, reran the 14 forces/stress-strain core groups and all 97 independent mechanics comparisons successfully, and removed obsolete workaround sentences from student/private companions. No new browser pass; source review is not a UI interaction test. The earlier findings above remain a record of source 3a13c79, not the current defect status. See EM_BENCH_LABS_2026-10-22.md for the follow-up scope.

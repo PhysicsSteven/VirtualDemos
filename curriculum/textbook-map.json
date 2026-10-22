@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": {
-    "repository_commit": "3a13c79bc5f7bc330d05eaffe16fce44c3b1451b",
+    "repository_commit": "7dab492884c004636ade7fb68d02edcc4ff172ab",
     "review_date": "2026-10-22",
     "textbooks": [
       {
@@ -1708,12 +1708,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "rotation"
+        "rotation",
+        "rotational-dynamics"
       ],
       "unit": "rotation",
-      "note": "Selected torque dynamics only; general rotational kinematics exercise needs review."
+      "note": "Rotational Dynamics lab (2026-10-22, Claude): falling mass spins a turntable; time the drop, α from a = 2h/t², I from the τ against α slope; constant α kinematics."
     },
     {
       "vol": 1,
@@ -1757,12 +1758,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "rotation"
+        "rotation",
+        "rotational-dynamics"
       ],
       "unit": "rotation",
-      "note": "Discrete point-mass I = Σmr² in the spinner/seesaw and supplied standard-shape coefficients are present. No continuous-body ∫r²dm derivation/integration activity; do not label that part complete."
+      "note": "Rotational Dynamics lab (2026-10-22, Claude): falling mass spins a turntable; time the drop, α from a = 2h/t², I from the τ against α slope; disk, ring, two masses at an adjustable distance (parallel axis), mystery object. Continuous bodies still use supplied coefficients (no ∫r²dm activity)."
     },
     {
       "vol": 1,
@@ -1790,12 +1792,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "rotation"
+        "rotation",
+        "rotational-dynamics"
       ],
       "unit": "rotation",
-      "note": "Selected door/rolling apparatus; not every rotational dynamics application."
+      "note": "Rotational Dynamics lab (2026-10-22, Claude): falling mass spins a turntable; time the drop, α from a = 2h/t², I from the τ against α slope; τ = Iα with a friction torque intercept."
     },
     {
       "vol": 1,
@@ -1807,10 +1810,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "rotational-dynamics"
+      ],
       "unit": "rotation",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Rotational Dynamics lab (2026-10-22, Claude): falling mass spins a turntable; time the drop, α from a = 2h/t², I from the τ against α slope; energy readout mgh = ½mv² + ½Iω² + τ_f θ and string power Tv."
     },
     {
       "vol": 1,
@@ -2228,12 +2233,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "double-pendulum"
+        "double-pendulum",
+        "pendulum"
       ],
       "unit": "oscillations",
-      "note": "Double-pendulum small-angle comparison; a simple pendulum lab is not provided."
+      "note": "Pendulum: simple and physical (rod) pendulums, photogate period, exact large-angle period, g from T² against L, Mystery planet."
     },
     {
       "vol": 1,
@@ -2683,7 +2689,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "circuits"
+        "circuits",
+        "resistivity"
       ],
       "unit": "current-resistance"
     },
@@ -4453,8 +4460,8 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-feature",
-      "note": "Student/private instructor package written 2026-10-22, with source-checked threshold/timer procedures. Core/reference checks passed. Remaining UI defects: held kinetic energy reads zero, stale timer may be captured with changed settings, end-stop work uses an overshot step. See NEW_MECHANICS_LABS_2026-10-22.md; no browser/classroom acceptance.",
+      "status": "usable",
+      "note": "Student/private instructor package written 2026-10-22, with source-checked threshold/timer procedures. Core/reference checks passed. UI requests fixed by Claude 2026-10-22: paused readouts keep the real v (K no longer reads 0), editing a control or switching the Mystery surface clears the last timer reading, and the end stop splits the step at impact so work matches the displayed path.",
       "handouts": [
         "forces"
       ],
@@ -4776,8 +4783,8 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-feature",
-      "note": "Student/private instructor package written 2026-10-22; elastic fits, diameter scaling and permanent-set yield bracket. Core/reference checks passed. Mystery fit can disclose Y unless Blind explicitly enabled; source fix requested. Browser/classroom acceptance pending.",
+      "status": "usable",
+      "note": "Student/private instructor package written 2026-10-22; elastic fits, diameter scaling and permanent-set yield bracket. Core/reference checks passed. Fixed by Claude 2026-10-22: the fitted Y is hidden for the Mystery material as well as in Blind.",
       "handouts": [
         "stress-strain"
       ],
@@ -4872,6 +4879,61 @@
       ],
       "title": "Springs and Oscillations",
       "url": "demos/springs.html"
+    },
+    {
+      "demo": "pendulum",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "15.4",
+          "title": "Pendulums"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-22 (Claude). Bob on a string or uniform rod; length, release angle, mass, Earth/Moon/Mars/Mystery planet, optional air drag; RK4 motion; photogate to 0.001 s; Capture, CSV, T² against L fit for g, T against θ₀ with the exact curve; Blind.",
+      "handouts": [],
+      "title": "Pendulum",
+      "url": "demos/pendulum.html"
+    },
+    {
+      "demo": "rotational-dynamics",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "10.2",
+          "title": "Rotation with Constant Angular Acceleration"
+        },
+        {
+          "vol": 1,
+          "sec": "10.5",
+          "title": "Calculating Moments of Inertia"
+        },
+        {
+          "vol": 1,
+          "sec": "10.7",
+          "title": "Newton’s Second Law for Rotation"
+        },
+        {
+          "vol": 1,
+          "sec": "10.8",
+          "title": "Work and Power for Rotational Motion"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-22 (Claude). Hanging mass on a string around a spool (1, 2, 3 cm) spins a turntable carrying nothing, a disk, a ring, two masses at an adjustable distance or a Mystery object; optional bearing friction torque; timer for a 0.500 m drop to 0.001 s; Capture, CSV, τ against α fit (slope I, intercept friction); energy and power readouts; Blind.",
+      "handouts": [],
+      "title": "Rotational Dynamics",
+      "url": "demos/rotational-dynamics.html"
     },
     {
       "demo": "double-pendulum",
@@ -5073,13 +5135,20 @@
           "vol": 2,
           "sec": "9.3",
           "title": "Resistivity and Resistance"
+        },
+        {
+          "vol": 2,
+          "sec": "9.4",
+          "title": "Ohm's Law"
         }
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "New 2026-10-22 (Claude). Four-wire measurement on a wire along a metre rule: nichrome, constantan, copper, mystery wire; four AWG gauges; length, current, temperature; Capture, CSV, R against L (ρ) and R against T (α) fits; Blind. Handbook ρ at 20 °C, linear in T.",
-      "handouts": [],
+      "status": "needs-feature",
+      "note": "New 2026-10-22 (Claude). Four-wire measurement on a wire along a metre rule: nichrome, constantan, copper, mystery wire; four AWG gauges; length, current, temperature; Capture, CSV, R against L (ρ) and R against T (α) fits; Blind. Handbook ρ at 20 °C, linear in T. Student/private instructor package written and source/numerically checked 2026-10-22. Mystery fit discloses calculated answers unless Blind is explicitly on; strict regression reproduces this. See EM_BENCH_LABS_2026-10-22.md. Browser/classroom acceptance pending.",
+      "handouts": [
+        "resistivity"
+      ],
       "title": "Resistivity of a Wire",
       "url": "demos/resistivity.html"
     },
@@ -5254,9 +5323,11 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "New 2026-10-22 (Claude). Current balance lab (magnet on a balance, Δm = F/g, B from F against I, Mystery magnet), wire at an angle, loop torque with release, DC motor with commutator; Blind. Uniform field between the poles, constant current (no back emf).",
-      "handouts": [],
+      "status": "needs-feature",
+      "note": "New 2026-10-22 (Claude). Current balance lab (magnet on a balance, Δm = F/g, B from F against I, Mystery magnet), wire at an angle, loop torque with release, DC motor with commutator; Blind. Uniform field between the poles, constant current (no back emf). Student/private instructor package written and source/numerically checked 2026-10-22. Mystery fit discloses calculated answers unless Blind is explicitly on; strict regression reproduces this. See EM_BENCH_LABS_2026-10-22.md. Browser/classroom acceptance pending.",
+      "handouts": [
+        "wire-force"
+      ],
       "title": "Force on a Current",
       "url": "demos/wire-force.html"
     },

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rotational Dynamics: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Rotational Dynamics</h1><ul class="meta"><li><a href="../demos/rotational-dynamics.html">Open the demo</a></li><li>PHYS 201</li><li>30 to 50 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Torque gives angular acceleration the way force gives linear acceleration: τ_net = Iα.</li>
+<li>The moment of inertia depends on where the mass is, not just how much: a ring of the same mass and radius as a disk has nearly twice its I, and two masses moved twice as far out have about four times their contribution.</li>
+<li>A string that does not slip ties the two motions together: a = αr. The tension is less than the hanging weight, because the mass accelerates.</li>
+<li>Energy bookkeeping: the hanging mass's lost potential energy goes into the table's rotational kinetic energy, the mass's own kinetic energy and, with friction, work against the friction torque. The string delivers power Tv = τω.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need τ = rF, I for a disk and a hoop, and the rolling constraint a = αr. The turntable is seen from above; the falling mass beside it is seen from the side, with the string running over a pulley. The timer stops when the mass has fallen 0.500 m. Bearing friction adds a constant 4.0 × 10⁻⁴ N·m torque against the motion. The <strong>Mystery object</strong> always hides its I; <strong>Blind</strong> hides every I, the accelerations, the tension and the energies.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Empty table.</strong> 50 g, 2.0 cm spool: the drop takes 3.209 s. Ask for α from the timing before showing it: a = 2h/t² = 0.0971 m/s², α = a/r = 4.86 rad/s².</li>
+<li><strong>Disk vs ring.</strong> Same mass, same outer radius, both 1.00 kg and 10 cm. Ask which is slower first. Disk: 5.982 s. Ring: 7.511 s.</li>
+<li><strong>Two masses.</strong> Slide them from 4 cm to 8 cm to 12 cm: 3.713, 4.855, 6.315 s. The I they add grows as d².</li>
+<li><strong>Tension.</strong> On the disk run T = 0.4891 N against mg = 0.4905 N. The difference is small because a is small, but it is not zero.</li>
+<li><strong>Energy.</strong> At the end of the disk drop, mgh = 245.3 mJ; the table has 244.6 mJ and the mass only 0.70 mJ.</li>
+<li><strong>Lab.</strong> With friction on, capture several drops with one load at different m and r, and fit τ against α. The slope is I, the intercept the friction torque. Subtract the empty table's I to get the load's.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> On the empty table with m = 50 g and r = 2.0 cm the drop takes 3.209 s. Find a, α, the tension and the turntable's moment of inertia (ignore friction).</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Predict whether the disk or the ring (same mass and outer radius) reaches the floor first, and explain. Then estimate the ratio of their drop times.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The two 0.200 kg masses go from 4 cm to 8 cm from the axis. By what factor does their contribution to I grow? Why does the drop time not double?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In the disk run, where does the 245 mJ of lost gravitational energy go? Why is so little of it in the falling mass?</p>
+<p><strong>Q5 (lab).</strong> Show that for one load τ = m(g − a)r plotted against α = a/r is a straight line with slope I and intercept τ_f. Use it to find the Mystery object's I, and say how big an error you would make from a single drop if you ignored friction.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The tension equals the hanging weight."</strong> Only if nothing accelerates. Here T = m(g − a).</li>
+<li><strong>"Same mass, same I."</strong> I depends on how far the mass sits from the axis; the ring beats the disk.</li>
+<li><strong>"Doubling the distance doubles I."</strong> Each point mass contributes md²; doubling d quadruples that part (the table's own I and the masses' own ½mρ² do not change).</li>
+<li><strong>"A heavier hanging mass just makes it faster in proportion."</strong> a = mgr²/(I + mr²): nearly proportional to m while mr² ≪ I, but not exactly.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Newton for the mass, mg − T = ma, and for the table, Tr − τ_f = Iα, with a = αr: a = (mgr − τ_f) r/(I + mr²), constant, so the drop takes t = √(2h/a). If mgr ≤ τ_f the table does not turn.</li>
+<li>Turntable I₀ = 2.00 × 10⁻³ kg·m². Disk ½MR² = 5.00 × 10⁻³ kg·m²; ring ½M(R₁² + R₂²) = 9.05 × 10⁻³ kg·m² (radii 9.0 and 10.0 cm); each of the two masses adds md² + ½mρ² with ρ = 1.5 cm (parallel axis).</li>
+<li>String massless and not slipping, pulley massless and frictionless; the only friction is the constant bearing torque.</li>
+<li>The timer reads the exact drop time rounded to 0.001 s; there is no added noise. With friction on, ignoring it in a single drop makes I about 4% too large for the disk at 50 g on 2 cm (7.30 against 7.00 × 10⁻³ kg·m²); the τ against α fit separates the two.</li>
+<li>Energy readout: mgy = ½mv² + ½Iω² + τ_f θ, with θ = y/r.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

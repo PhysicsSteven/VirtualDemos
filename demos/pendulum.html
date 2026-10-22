@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Pendulum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the pendulum with a photogate at the bottom of its swing on the left; the rail on the right. */
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+:root { --bob: #2b60b5; --rod: #6b7787; --gate: #a7740b; --beam: #b0452f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bob: #69a0ff; --rod: #9aa6b6; --gate: #e2b350; --beam: #ff8a70; } }
+:root[data-theme="dark"] { --bob: #69a0ff; --rod: #9aa6b6; --gate: #e2b350; --beam: #ff8a70; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 500px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; touch-action: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.lab { font-size: 0.88rem; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 460px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 500px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .chips button, .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Pendulum</h1>
+      <p>Pull the bob aside and let go. For small swings the period T = 2π√(L/g) depends only on the length and gravity, not on the mass or (almost) the swing. Time it with the photogate and measure g.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">photogate at the bottom, 0.001 s</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/pendulum.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/pendulum.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h2v1h-2zM16 2h1v1h-1zM19 2h1v1h-1zM23 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM13 3h3v1h-3zM17 3h2v1h-2zM20 3h1v1h-1zM22 3h6v1h-6zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM23 4h1v1h-1zM25 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM15 5h1v1h-1zM19 5h1v1h-1zM24 5h2v1h-2zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM16 6h4v1h-4zM21 6h3v1h-3zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h2v1h-2zM17 7h1v1h-1zM19 7h1v1h-1zM23 7h1v1h-1zM28 7h3v1h-3zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM14 9h1v1h-1zM17 9h8v1h-8zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM15 10h2v1h-2zM18 10h1v1h-1zM23 10h1v1h-1zM25 10h1v1h-1zM27 10h1v1h-1zM29 10h2v1h-2zM32 10h5v1h-5zM2 11h2v1h-2zM5 11h2v1h-2zM10 11h4v1h-4zM15 11h3v1h-3zM20 11h1v1h-1zM22 11h1v1h-1zM24 11h1v1h-1zM26 11h1v1h-1zM30 11h2v1h-2zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h1v1h-1zM5 12h1v1h-1zM8 12h2v1h-2zM13 12h1v1h-1zM16 12h6v1h-6zM23 12h1v1h-1zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM4 13h2v1h-2zM7 13h1v1h-1zM11 13h1v1h-1zM15 13h1v1h-1zM17 13h1v1h-1zM20 13h4v1h-4zM26 13h1v1h-1zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM7 14h4v1h-4zM12 14h2v1h-2zM16 14h2v1h-2zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h3v1h-3zM30 14h9v1h-9zM2 15h4v1h-4zM7 15h1v1h-1zM9 15h1v1h-1zM11 15h1v1h-1zM14 15h1v1h-1zM16 15h1v1h-1zM18 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h3v1h-3zM6 16h1v1h-1zM8 16h1v1h-1zM11 16h2v1h-2zM14 16h1v1h-1zM17 16h2v1h-2zM20 16h1v1h-1zM22 16h1v1h-1zM24 16h1v1h-1zM27 16h4v1h-4zM32 16h4v1h-4zM38 16h1v1h-1zM4 17h2v1h-2zM9 17h2v1h-2zM14 17h5v1h-5zM21 17h2v1h-2zM25 17h1v1h-1zM32 17h3v1h-3zM37 17h1v1h-1zM3 18h3v1h-3zM8 18h3v1h-3zM12 18h1v1h-1zM15 18h1v1h-1zM17 18h1v1h-1zM20 18h5v1h-5zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM3 19h1v1h-1zM9 19h3v1h-3zM13 19h2v1h-2zM17 19h2v1h-2zM23 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM2 20h3v1h-3zM6 20h4v1h-4zM11 20h1v1h-1zM13 20h1v1h-1zM15 20h2v1h-2zM22 20h5v1h-5zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM9 21h2v1h-2zM12 21h1v1h-1zM14 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM23 21h3v1h-3zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h1v1h-1zM5 22h1v1h-1zM8 22h1v1h-1zM14 22h1v1h-1zM19 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h1v1h-1zM7 23h1v1h-1zM10 23h3v1h-3zM14 23h1v1h-1zM16 23h1v1h-1zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h6v1h-6zM12 24h4v1h-4zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h2v1h-2zM26 24h1v1h-1zM29 24h7v1h-7zM37 24h2v1h-2zM2 25h1v1h-1zM5 25h2v1h-2zM9 25h4v1h-4zM14 25h12v1h-12zM29 25h1v1h-1zM31 25h4v1h-4zM37 25h1v1h-1zM3 26h2v1h-2zM8 26h1v1h-1zM10 26h1v1h-1zM13 26h2v1h-2zM17 26h2v1h-2zM21 26h1v1h-1zM23 26h1v1h-1zM25 26h4v1h-4zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h1v1h-1zM5 27h1v1h-1zM7 27h1v1h-1zM12 27h2v1h-2zM16 27h2v1h-2zM20 27h1v1h-1zM22 27h3v1h-3zM26 27h1v1h-1zM28 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM6 28h1v1h-1zM8 28h2v1h-2zM12 28h3v1h-3zM17 28h2v1h-2zM21 28h1v1h-1zM26 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h2v1h-2zM7 29h1v1h-1zM9 29h1v1h-1zM14 29h1v1h-1zM17 29h1v1h-1zM21 29h3v1h-3zM29 29h6v1h-6zM38 29h1v1h-1zM2 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM12 30h1v1h-1zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM25 30h12v1h-12zM38 30h1v1h-1zM10 31h1v1h-1zM14 31h2v1h-2zM17 31h2v1h-2zM20 31h3v1h-3zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM13 32h1v1h-1zM15 32h3v1h-3zM20 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM14 33h1v1h-1zM17 33h2v1h-2zM25 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM15 34h1v1h-1zM20 34h15v1h-15zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM13 35h1v1h-1zM15 35h4v1h-4zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h2v1h-2zM14 36h3v1h-3zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h3v1h-3zM15 37h2v1h-2zM18 37h1v1h-1zM23 37h1v1h-1zM28 37h4v1h-4zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM14 38h1v1h-1zM16 38h1v1h-1zM19 38h1v1h-1zM24 38h5v1h-5zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="application" aria-label="A pendulum with a photogate at the bottom of its swing, and a trace of the angle against time. Drag the bob to set the release angle. Space releases or holds, left and right arrows change the angle."></canvas>
+      <div class="viewbar"><button type="button" class="spin attn" id="go">Release</button><button type="button" class="spin" id="hold">Hold at release angle</button></div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="simple" aria-pressed="true">Simple pendulum</button>
+          <button type="button" data-p="mass" aria-pressed="false">Does mass matter?</button>
+          <button type="button" data-p="big" aria-pressed="false">Large swings</button>
+          <button type="button" data-p="rod" aria-pressed="false">Swinging rod</button>
+          <button type="button" data-p="moon" aria-pressed="false">On the Moon</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Pendulum</h2>
+        <div class="inline"><span class="lab">Type</span>
+          <div class="seg" role="group" aria-label="Pendulum type"><button type="button" id="tSimple" aria-pressed="true">Bob on a string</button><button type="button" id="tRod" aria-pressed="false">Uniform rod</button></div></div>
+        <div><div class="slider-head"><label for="sL">Length L (pivot to bob centre, or rod length)</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="0.1" max="2" step="0.01"></div>
+        <div><div class="slider-head"><label for="sA">Release angle θ₀</label><output id="oA" for="sA"></output></div><input type="range" id="sA" min="1" max="170" step="1"></div>
+        <div><div class="slider-head"><label for="sM">Mass</label><output id="oM" for="sM"></output></div><input type="range" id="sM" min="0.05" max="2" step="0.05"></div>
+        <div class="inline"><span class="lab">Gravity</span>
+          <div class="seg" role="group" aria-label="Where" id="gSeg"><button type="button" data-g="9.81" aria-pressed="true">Earth</button><button type="button" data-g="1.62" aria-pressed="false">Moon</button><button type="button" data-g="3.71" aria-pressed="false">Mars</button><button type="button" data-g="mystery" aria-pressed="false">Mystery planet</button></div></div>
+        <label class="check"><input type="checkbox" id="damp"><span>Air drag (slow decay)</span></label>
+      </section>
+
+      <section>
+        <h2>Photogate and readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="formula">T₀ = 2π√(L/g) · rod: 2π√(2L/3g) · exact: T = T₀ · (2/π) K(sin(θ₀/2))</p>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="exportCsv">Export CSV</button>
+          <button type="button" class="btn" id="clearRows">Clear</button>
+        </div>
+        <p class="status" id="capStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>L (m)</th><th>θ₀ (°)</th><th>T (s)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <div class="inline"><span class="lab">Plot</span>
+          <div class="seg" role="group" aria-label="What to plot"><button type="button" data-plot="TL" aria-pressed="true">T² against L</button><button type="button" data-plot="TA" aria-pressed="false">T against θ₀</button></div></div>
+        <div class="plotbox"><canvas id="fitCan" role="img" aria-label="The captured readings with a least squares line and residuals."></canvas></div>
+        <dl class="readout" id="fitOut"></dl>
+        <p class="hint">Capture stores L, θ₀ and the last full period from the photogate. T² against L uses bob rows with θ₀ ≤ 10°: slope 4π²/g. T against θ₀ shows how far large swings depart from T₀.</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides the predicted periods and g from the fit; the photogate, the settings and the trace stay. The Mystery planet always hides its g.</p>
+        <p class="hint">Model: a point bob on a massless, inextensible string (or a thin uniform rod) about a frictionless pivot, integrated exactly enough (fourth order Runge–Kutta, 1 ms steps) that the photogate's 0.001 s readings are reliable. Air drag, when on, is a small force in proportion to speed. The photogate times every second pass of the bottom.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const PD_VERSION = 'pendulum@2026-10-22';
+  // complete elliptic integral of the first kind K(k) by the arithmetic geometric mean
+  function ellipK(k) { let a = 1, b = Math.sqrt(1 - k * k); for (let i = 0; i < 40; i++) { const an = (a + b) / 2; b = Math.sqrt(a * b); a = an; if (Math.abs(a - b) < 1e-16) break; } return Math.PI / (2 * a); }
+  const effLen = (L, rod) => (rod ? 2 * L / 3 : L);               // a uniform rod about its end swings like a simple pendulum of length 2L/3
+  const smallT = (L, g, rod) => 2 * Math.PI * Math.sqrt(effLen(L, rod) / g);
+  const exactT = (L, g, rod, th0) => smallT(L, g, rod) * (2 / Math.PI) * ellipK(Math.sin(th0 / 2));
+  // θ'' = −(g/ℓ) sin θ − b θ', one RK4 step
+  function rk4(s, w0sq, b, h) {
+    const f = (th, w) => [w, -w0sq * Math.sin(th) - b * w];
+    const [k1a, k1b] = f(s.th, s.w), [k2a, k2b] = f(s.th + h * k1a / 2, s.w + h * k1b / 2), [k3a, k3b] = f(s.th + h * k2a / 2, s.w + h * k2b / 2), [k4a, k4b] = f(s.th + h * k3a, s.w + h * k3b);
+    return { th: s.th + h * (k1a + 2 * k2a + 2 * k3a + k4a) / 6, w: s.w + h * (k1b + 2 * k2b + 2 * k3b + k4b) / 6 };
+  }
+  function fitLine(xs, ys) {
+    const n = xs.length; if (n < 2) return null;
+    const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n;
+    let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    if (sxx < 1e-30) return null;
+    const b = sxy / sxx, a0 = my - b * mx, res = xs.map((x, i) => ys[i] - a0 - b * x), ss = res.reduce((q, r) => q + r * r, 0), s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { b, a: a0, seB: Math.sqrt(s2 / sxx), seA: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), res, n };
+  }
+  const cellNum = (s) => { const v = parseFloat(String(s).replace('−', '-')); return isFinite(v) ? v : NaN; };
+  const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  function readingsCSV(rows, meta) {
+    const L = ['# Pendulum virtual apparatus: captured readings (simulated data)', `# demo version,${meta.version}`, `# gravity,${csvCell(meta.g)}`,
+      '# model,"point bob on a massless string (or a uniform rod about its end), frictionless pivot; RK4 with 1 ms steps; air drag in proportion to speed when on"',
+      '# rounding,"L to 0.01 m, theta0 to 1 deg, mass to 0.05 kg, photogate period to 0.001 s; T2_s2 from the row; edited cells exported as typed"', '# noise,none',
+      'row,type,L_m,theta0_deg,m_kg,T_s,T2_s2'];
+    rows.forEach((r, i) => { const t = cellNum(r.T); L.push([i + 1, r.type, r.L, r.A, r.m, r.T, isFinite(t) ? +(t * t).toPrecision(6) : ''].map(csvCell).join(',')); });
+    return L.join('\n') + '\n';
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const PRESETS = {
+    simple: { rod: false, L: 1.0, A: 8, m: 0.2, g: 9.81, hint: 'A 1.00 m pendulum on Earth, released at 8°. Its period is 2.006 s, and a "seconds pendulum" (one second per swing) is very nearly 1 m long. Change L and capture a reading at each length to measure g.' },
+    mass: { rod: false, L: 1.0, A: 8, m: 2.0, g: 9.81, hint: 'A heavy bob: change the mass from 2 kg to 50 g and watch the period. Gravity pulls harder on a heavier bob, but it also has more inertia, and the two cancel exactly.' },
+    big: { rod: false, L: 1.0, A: 90, m: 0.2, g: 9.81, hint: 'Released at 90°, the period is 18% longer than 2π√(L/g). The small angle formula assumes sin θ ≈ θ; capture T at several angles and plot T against θ₀ to see how large swings depart from it.' },
+    rod: { rod: true, L: 1.0, A: 8, m: 0.5, g: 9.81, hint: 'A uniform 1.00 m rod swinging from one end has a shorter period than a 1.00 m simple pendulum: its mass is spread along it. It swings like a simple pendulum 2L/3 long: T = 2π√(2L/3g).' },
+    moon: { rod: false, L: 1.0, A: 8, m: 0.2, g: 1.62, hint: 'The same pendulum on the Moon, where g = 1.62 m/s²: the period grows by √(9.81/1.62) = 2.46. Try the Mystery planet and measure its g.' }
+  };
+  const S = { preset: 'simple', rod: false, L: 1.0, A: 8, m: 0.2, g: 9.81, gKey: '9.81', mystery: null, damp: false, st: { th: 8 * Math.PI / 180, w: 0 }, run: false, t: 0, trace: [], passes: [], lastT: null, blind: false, rows: [], plot: 'TL' };
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, H = 0, dpr = 1, T = null, geo = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      bob: g('--bob'), rod: g('--rod'), gate: g('--gate'), beam: g('--beam'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const gNow = () => (S.mystery ? S.mystery : S.g), hideG = () => S.blind || !!S.mystery;
+  const w0sq = () => gNow() / effLen(S.L, S.rod);
+  const bDamp = () => (S.damp ? 0.02 : 0);
+
+  function release() { S.st = { th: S.A * Math.PI / 180, w: 0 }; S.t = 0; S.trace = []; S.passes = []; S.lastT = null; }
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const p = ps(), wide = W > 640, sw = wide ? W * 0.55 : W, sh = wide ? H : H * 0.62;
+    const px = sw / 2, py = 96 * p, Lmax = 2, sc = Math.min((sh - py - 60 * p) / Lmax, (sw - 40 * p) / (2 * Lmax * Math.max(0.3, Math.sin(Math.min(S.A, 90) * Math.PI / 180)))), Lpx = S.L * sc;
+    geo = { px, py, sc };
+    ctx.fillStyle = T.gridStrong; ctx.fillRect(px - 40 * p, py - 8 * p, 80 * p, 8 * p);
+    // photogate at the bottom
+    const gy = py + Lpx; ctx.fillStyle = T.gate; ctx.fillRect(px - 26 * p, gy + 12 * p, 8 * p, 30 * p); ctx.fillRect(px + 18 * p, gy + 12 * p, 8 * p, 30 * p);
+    const th = S.st.th, bx = px + Lpx * Math.sin(th), by = py + Lpx * Math.cos(th);
+    const inBeam = Math.abs(bx - px) < 10 * p; ctx.strokeStyle = T.beam; ctx.globalAlpha = inBeam ? 1 : 0.35; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(px - 18 * p, gy + 27 * p); ctx.lineTo(px + 18 * p, gy + 27 * p); ctx.stroke(); ctx.globalAlpha = 1;
+    // release angle guide
+    ctx.strokeStyle = T.grid; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py + Lpx + 50 * p); ctx.stroke(); ctx.setLineDash([]);
+    if (S.rod) { ctx.strokeStyle = T.rod; ctx.lineWidth = 10 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke(); ctx.lineCap = 'butt'; }
+    else { ctx.strokeStyle = T.rod; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke();
+      const r = (8 + 6 * Math.cbrt(S.m)) * p; ctx.fillStyle = T.bob; ctx.beginPath(); ctx.arc(bx, by, r, 0, 7); ctx.fill(); }
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(px, py, 4 * p, 0, 7); ctx.fill();
+    ctx.fillStyle = T.ink; ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(S.lastT ? `photogate: T = ${S.lastT.toFixed(3)} s` : 'photogate: —', 14 * p, 48 * p);
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`; ctx.fillText(`θ = ${f(th * 180 / Math.PI, 1)}°   t = ${f(S.t, 2)} s`, 14 * p, 70 * p);
+    // angle trace
+    const tx0 = wide ? sw + 30 * p : 40 * p, tx1 = W - 14 * p, ty0 = wide ? 70 * p : sh + 10 * p, ty1 = wide ? H - 40 * p : H - 24 * p, mid = (ty0 + ty1) / 2, span = 10;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(tx0 + 0.5, ty0 + 0.5, tx1 - tx0, ty1 - ty0);
+    ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(tx0, mid); ctx.lineTo(tx1, mid); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; const am = Math.max(S.A, 5);
+    ctx.fillText(`+${am}°`, tx0 - 4 * p, ty0 + 6 * p); ctx.fillText(`−${am}°`, tx0 - 4 * p, ty1 - 6 * p); ctx.fillText('0', tx0 - 4 * p, mid);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`last ${span} s`, (tx0 + tx1) / 2, ty1 + 4 * p);
+    const t0 = Math.max(0, S.t - span); ctx.strokeStyle = T.bob; ctx.lineWidth = 2 * p; ctx.beginPath(); let first = true;
+    for (const [t, a] of S.trace) { if (t < t0) continue; const x = tx0 + (tx1 - tx0) * (t - t0) / span, y = mid - (ty1 - ty0) / 2 * 0.95 * (a * 180 / Math.PI) / am; first ? ctx.moveTo(x, y) : ctx.lineTo(x, y); first = false; }
+    ctx.stroke();
+  }
+  function readouts() {
+    const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, g = gNow(), th0 = S.A * Math.PI / 180;
+    let h = dd('Photogate period (last full swing)', S.lastT ? `${S.lastT.toFixed(3)} s` : '—', true) + dd('Swings timed', String(Math.max(0, Math.floor((S.passes.length - 1) / 2))));
+    if (hideG()) h += '<div class="wide"><dt>g and the predicted periods</dt><dd class="ok">hidden: measure them</dd></div>';
+    else h += dd('g', `${f(g, 2)} m/s²`) + dd('T₀ = 2π√(ℓ/g)', `${f(smallT(S.L, g, S.rod), 3)} s`) + dd(`Exact period at θ₀ = ${S.A}°`, `${f(exactT(S.L, g, S.rod, th0), 3)} s`) + dd('Longer than T₀ by', `${f((exactT(S.L, g, S.rod, th0) / smallT(S.L, g, S.rod) - 1) * 100, 2)} %`);
+    $('out').innerHTML = h;
+  }
+  // ---------- controls ----------
+  function sync() {
+    $('sL').value = S.L; $('oL').textContent = `${f(S.L, 2)} m`; $('sA').value = S.A; $('oA').textContent = `${S.A}°`; $('sM').value = S.m; $('oM').textContent = `${f(S.m, 2)} kg`;
+    $('tSimple').setAttribute('aria-pressed', String(!S.rod)); $('tRod').setAttribute('aria-pressed', String(S.rod)); $('damp').checked = S.damp;
+    for (const b of document.querySelectorAll('#gSeg button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.gKey));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('[data-plot]')) b.setAttribute('aria-pressed', String(b.dataset.plot === S.plot));
+  }
+  const changed = (keepRun) => { S.preset = 'custom'; release(); if (!keepRun) setRun(false); sync(); draw(); readouts(); };
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; Object.assign(S, { rod: c.rod, L: c.L, A: c.A, m: c.m, g: c.g, gKey: String(c.g), mystery: null }); $('presetHint').textContent = c.hint; release(); setRun(false); sync(); draw(); readouts(); fit(); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('sL').addEventListener('input', (e) => { S.L = +e.target.value; changed(); });
+  $('sA').addEventListener('input', (e) => { S.A = +e.target.value; changed(); });
+  $('sM').addEventListener('input', (e) => { S.m = +e.target.value; S.preset = 'custom'; sync(); draw(); readouts(); });   // mass changes nothing in the motion
+  $('tSimple').addEventListener('click', () => { S.rod = false; changed(); });
+  $('tRod').addEventListener('click', () => { S.rod = true; changed(); });
+  $('gSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (!b) return; S.gKey = b.dataset.g; if (S.gKey === 'mystery') S.mystery = Math.round((2 + Math.random() * 20) * 100) / 100; else { S.mystery = null; S.g = +S.gKey; } changed(); fit(); });
+  $('damp').addEventListener('change', (e) => { S.damp = e.target.checked; draw(); });
+  for (const b of document.querySelectorAll('[data-plot]')) b.addEventListener('click', () => { S.plot = b.dataset.plot; sync(); fit(); });
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : S.t > 0 ? 'Resume' : 'Release'; $('go').classList.toggle('attn', !on); }
+  $('go').addEventListener('click', () => setRun(!S.run));
+  $('hold').addEventListener('click', () => { release(); setRun(false); draw(); readouts(); });
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      const h = 0.001, n = Math.round(dt / h); const ws = w0sq(), b = bDamp();
+      for (let i = 0; i < n; i++) {
+        const prev = S.st; S.st = rk4(S.st, ws, b, h); S.t += h;
+        if (prev.th * S.st.th < 0 || (prev.th !== 0 && S.st.th === 0)) {   // passing the bottom: interpolate the crossing time
+          const tc = S.t - h * Math.abs(S.st.th) / (Math.abs(prev.th) + Math.abs(S.st.th)); S.passes.push(tc);
+          if (S.passes.length >= 3) S.lastT = Math.round((S.passes[S.passes.length - 1] - S.passes[S.passes.length - 3]) * 1000) / 1000;
+        }
+      }
+      S.trace.push([S.t, S.st.th]); if (S.trace.length > 3000) S.trace.shift();
+      draw(); readouts();
+    }
+    requestAnimationFrame(frame);
+  }
+  // drag the bob to set the release angle
+  let drag = false;
+  const local = (e) => { const r = can.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  function setAngle(x, y) { const a = Math.round(Math.atan2(x - geo.px, y - geo.py) * 180 / Math.PI); S.A = Math.max(1, Math.min(170, Math.abs(a))); changed(); S.st.th = Math.sign(a || 1) * S.A * Math.PI / 180; draw(); }
+  can.addEventListener('pointerdown', (e) => { if (!geo) return; const [x, y] = local(e); const L = S.L * geo.sc, bx = geo.px + L * Math.sin(S.st.th), by = geo.py + L * Math.cos(S.st.th); if (Math.hypot(x - bx, y - by) < 40 * ps()) { drag = true; can.setPointerCapture(e.pointerId); setAngle(x, y); } });
+  can.addEventListener('pointermove', (e) => { if (drag) { const [x, y] = local(e); setAngle(x, y); } });
+  can.addEventListener('pointerup', () => { drag = false; }); can.addEventListener('pointercancel', () => { drag = false; });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') $('go').click(); else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { S.A = Math.max(1, Math.min(170, S.A + (e.key === 'ArrowRight' ? 1 : -1))); changed(); } else return; e.preventDefault(); });
+
+  // ---------- readings ----------
+  function capStatus(m) { $('capStatus').textContent = m; }
+  $('capture').addEventListener('click', () => { if (!S.lastT) { capStatus('Release the pendulum and let the photogate time a full swing first.'); return; }
+    S.rows.push({ type: S.rod ? 'rod' : 'bob', L: S.L.toFixed(2), A: String(S.A), m: S.m.toFixed(2), T: S.lastT.toFixed(3), gKey: S.gKey }); renderRows(); capStatus(`Row ${S.rows.length} captured.`); });
+  $('clearRows').addEventListener('click', () => { S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  $('exportCsv').addEventListener('click', () => {
+    if (!S.rows.length) { capStatus('No readings to export.'); return; }
+    const txt = readingsCSV(S.rows, { version: PD_VERSION, g: S.mystery ? 'mystery planet (hidden)' : `${S.g} m/s2` });
+    try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'pendulum-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+    capStatus('CSV exported.');
+  });
+  function renderRows() {
+    const tb = $('rowsTbl').querySelector('tbody');
+    tb.innerHTML = S.rows.length ? S.rows.map((r, i) => `<tr title="${r.type}, m ${r.m} kg"><td>${i + 1}</td><td><input data-i="${i}" data-f="L" value="${r.L}" aria-label="L, row ${i + 1}"></td><td>${r.A}</td><td><input data-i="${i}" data-f="T" value="${r.T}" aria-label="T, row ${i + 1}"></td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : '<tr><td class="empty" colspan="5">No readings yet. Release, wait for a period, capture.</td></tr>';
+    fit();
+  }
+  $('rowsTbl').addEventListener('change', (e) => { const el = e.target; if (el.dataset.f) { S.rows[+el.dataset.i][el.dataset.f] = el.value.trim(); fit(); } });
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderRows(); } });
+  const fitCan = $('fitCan'), fctx = fitCan.getContext('2d');
+  function fit() {
+    let pts, F = null, h;
+    if (S.plot === 'TL') {
+      pts = S.rows.filter((r) => r.type === 'bob' && +r.A <= 10 && r.gKey === S.gKey).map((r) => [cellNum(r.L), cellNum(r.T) ** 2]).filter(([a, b]) => isFinite(a) && isFinite(b));
+      F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
+      if (!F) h = '<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two lengths with a bob, θ₀ ≤ 10°, on this planet.</dd></div>';
+      else { const g = 4 * Math.PI ** 2 / F.b, sg = g * F.seB / F.b;
+        h = `<div><dt>Slope (s²/m)</dt><dd>${f(F.b, 4)}${isFinite(F.seB) ? ` ± ${f(F.seB, 4)}` : ''}</dd></div><div><dt>Intercept (s²)</dt><dd>${f(F.a, 4)}</dd></div>`;
+        h += S.blind ? '<div class="wide"><dt>g = 4π²/slope</dt><dd class="ok">hidden in Blind: work it out</dd></div>' : `<div class="wide"><dt>g = 4π²/slope</dt><dd>${f(g, 3)}${isFinite(sg) ? ` ± ${f(sg, 3)}` : ''} m/s²</dd></div>`; }
+    } else {
+      pts = S.rows.filter((r) => r.L === S.L.toFixed(2) && r.type === (S.rod ? 'rod' : 'bob') && r.gKey === S.gKey).map((r) => [cellNum(r.A), cellNum(r.T)]).filter(([a, b]) => isFinite(a) && isFinite(b));
+      h = pts.length ? `<div class="wide"><dt>Points at L = ${f(S.L, 2)} m</dt><dd class="ok">${pts.length} captured; ${S.blind || S.mystery ? 'the curve is hidden' : 'the dashed curve is the exact period, the flat line T₀'}.</dd></div>` : '<div class="wide"><dt>Plot</dt><dd class="ok">Capture T at several release angles at one length.</dd></div>';
+    }
+    $('fitOut').innerHTML = h; drawFit(pts, F);
+  }
+  function drawFit(pts, F) {
+    const r = fitCan.getBoundingClientRect(), w = r.width, h = r.height; if (!w || !T) return;
+    fitCan.width = Math.round(w * dpr); fitCan.height = Math.round(h * dpr); fctx.setTransform(dpr, 0, 0, dpr, 0, 0); fctx.fillStyle = T.canvas; fctx.fillRect(0, 0, w, h);
+    const L = 44, Rr = w - 8, top = 8, mainB = h - 58, resT = h - 46, resB = h - 18, TL = S.plot === 'TL';
+    fctx.strokeStyle = T.line; fctx.strokeRect(L + 0.5, top + 0.5, Rr - L, mainB - top); if (TL) fctx.strokeRect(L + 0.5, resT + 0.5, Rr - L, resB - resT);
+    fctx.fillStyle = T.muted; fctx.font = `10px ${T.mono}`; fctx.textAlign = 'center'; fctx.textBaseline = 'top'; fctx.fillText(TL ? 'L (m)' : 'θ₀ (°)', (L + Rr) / 2, resB + 3);
+    fctx.save(); fctx.translate(10, (top + mainB) / 2); fctx.rotate(-Math.PI / 2); fctx.fillText(TL ? 'T² (s²)' : 'T (s)', 0, 0); fctx.restore();
+    const xh = TL ? Math.max(0.1, ...pts.map((q) => q[0])) * 1.05 : 180, yl = TL ? 0 : Math.min(...pts.map((q) => q[1]), smallT(S.L, gNow(), S.rod)) * 0.95, yh = Math.max(...pts.map((q) => q[1]), TL ? 0.1 : exactT(S.L, gNow(), S.rod, Math.max(...pts.map((q) => q[0]), 90) * Math.PI / 180)) * 1.05;
+    const PX = (x) => L + (Rr - L) * x / xh, PY = (y) => mainB - (mainB - top) * (y - yl) / ((yh - yl) || 1);
+    fctx.textAlign = 'right'; fctx.textBaseline = 'middle'; fctx.fillText(f(yh, 2), L - 3, PY(yh)); fctx.fillText(f(yl, 2), L - 3, PY(yl));
+    if (TL && F) { fctx.strokeStyle = T.accent; fctx.lineWidth = 1.5; fctx.beginPath(); fctx.moveTo(PX(0), PY(F.a)); fctx.lineTo(PX(xh), PY(F.a + F.b * xh)); fctx.stroke(); }
+    if (!TL && !S.blind && !S.mystery) { fctx.strokeStyle = T.accent; fctx.setLineDash([5, 4]); fctx.lineWidth = 1.5; fctx.beginPath(); for (let a = 1; a <= 175; a += 2) { const y = exactT(S.L, gNow(), S.rod, a * Math.PI / 180); a === 1 ? fctx.moveTo(PX(a), PY(y)) : fctx.lineTo(PX(a), PY(y)); } fctx.stroke(); fctx.setLineDash([]);
+      fctx.strokeStyle = T.gridStrong; fctx.beginPath(); fctx.moveTo(PX(0), PY(smallT(S.L, gNow(), S.rod))); fctx.lineTo(PX(180), PY(smallT(S.L, gNow(), S.rod))); fctx.stroke(); }
+    fctx.fillStyle = T.bob; for (const [x, y] of pts) { fctx.beginPath(); fctx.arc(PX(x), PY(y), 3.2, 0, 7); fctx.fill(); }
+    if (TL && F) { const m = Math.max(...F.res.map(Math.abs), 1e-9), RY = (v) => (resT + resB) / 2 - (resB - resT) / 2 * 0.85 * v / m; fctx.strokeStyle = T.gridStrong; fctx.beginPath(); fctx.moveTo(L, RY(0)); fctx.lineTo(Rr, RY(0)); fctx.stroke(); fctx.fillStyle = T.bob; pts.forEach(([x], i) => { fctx.beginPath(); fctx.arc(PX(x), RY(F.res[i]), 2.6, 0, 7); fctx.fill(); }); }
+  }
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; readouts(); fit(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; if (reduce) setRun(false); });
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); fit(); }
+  const retheme = () => { tokens(); draw(); fit(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  tokens(); new ResizeObserver(resize).observe(stage); applyPreset('simple'); renderRows(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

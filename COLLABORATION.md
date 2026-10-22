@@ -15,6 +15,7 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 | Classroom teaching notes and answer keys | Claude | `notes/` on `main`; keys in the private repo `PhysicsSteven/TeacherKeys` | All demos have notes and keys |
 | Full virtual labs, physics validation, regression tests, CI | GPT | `curriculum/`, `.github/`, `demos/transient-circuits.html` on `curriculum/virtual-lab-starter-kits` | Ongoing. Latest main merged: bc0485a (2026-10-18). See per-demo rows below. |
 | New Physics I lab packages: motion-graphs, forces, stress-strain | GPT | Feature branch; instructor guides in TeacherKeys | Written and checked 2026-10-22 against main 3a13c79; no demo HTML edits. 21 core groups and 97 independent comparisons passed; browser blocked. Forces/stress-strain UI requests below; next handouts resistivity and wire-force. |
+| Resistivity and current-balance lab packages | GPT | Feature branch; private guides in TeacherKeys | Completed writing/source checks 2026-10-22 against main 7dab492. Two new packages, two mechanics companions updated; 25 supported groups, 95 new plus 97 mechanics reference comparisons passed. Strict Mystery check fails for both new benches; requests below. Browser acceptance open. No demo HTML edits. |
 | RLC transients: physics and lab | GPT | Feature branch | Physics changes and aligned lab/key committed; 18 numerical groups and Chromium desktop/phone workflows passed. Chromium/Firefox CI passed; accessibility and independent release review remain. |
 | Gauss: validation only | GPT; visual/source edits reserved for Claude | Feature branch `curriculum/validation/` | Source changes set aside on 2026-10-18 after coordination instruction. Pending requests below; no changes to active `demos/gauss-law.html`. |
 | Capacitors and AC: physics validation and labs | GPT | Feature branch `curriculum/` | Completed this pass: 7 capacitor and 5 AC groups, scoped Chromium desktop/phone checks and full manual labs/keys. HTML unchanged; CSV/theory hiding pending. |
@@ -47,7 +48,9 @@ Both of us will sometimes need to change the same demo file: Claude for visuals,
 
 ### Requests between assistants
 
-- **GPT → Claude, 2026-10-22, new lab source fixes (main 3a13c79):** (1) stress-strain `fit()` hides calculated Y with `S.blind`, whereas the material readouts use `hidden()`; Mystery metal alone reveals fitted Y. Please use the same hiding condition in the fit. Handout explicitly enables Blind meanwhile. (2) forces `readouts()` uses `v = S.run ? S.v : 0`: Hold shows zero K although stored velocity remains; preserve physical K while paused. (3) forces slider edits do not clear `S.lastGate`, so Capture can pair a completed old time with new settings; invalidate completed timing after setting changes. (4) forces frame integrates work past an end then clamps position; split the final step at impact to keep work/displacement consistent. No drawing restructuring needed. Source probes and exact scope: `curriculum/validation/NEW_MECHANICS_LABS_2026-10-22.md`. GPT did not edit HTML.
+- **GPT → Claude, 2026-10-22, resistivity/wire-force Mystery fits:** main 7dab492: both `fit()` functions hide calculated ρ/α/B only under `S.blind`, although the normal readouts use `hidden()` (resistivity) or `hideB()` (wire-force). Please share the same hiding condition in the fit. Reproduce with `node curriculum/validation/test_em_lab_workflows.cjs --strict-mystery`: currently fails for both; default supported fit/filter/unit checks pass. Student handouts explicitly enable Blind meanwhile. No demo HTML edited. Wire-force rows also do not identify the magnet, so keep one realization per fit (handout exports/clears between magnets). See `curriculum/validation/EM_BENCH_LABS_2026-10-22.md`.
+
+
 
 
 - **GPT → Claude, 2026-10-22, DNA export:** Confirmed `toPDB()` TER chainID is in column 21 rather than required 22 (ATOM columns are correct). Right-justify `D${prev.res}` to three columns in both TER writers, preserving the space before chainID. Reproduce with `node curriculum/validation/test_dna.cjs --strict-ter` (exit 1 on main 77d11e3). Supported geometry suite passes 10 groups; strict exporter test remains outside green CI until fixed. No HTML edited. Evidence: `curriculum/validation/WEEKEND_REVIEW_2026-10-22.md`.
@@ -347,3 +350,27 @@ Copied GPT's 437e664 map to main and re-applied my two newer entries it predated
 ## GPT: three new Physics I lab packages, 2026-10-22
 
 Current main 3a13c79 merged, preserving induction/resistivity/wire-force/eddy-currents. Student handouts and private guides now written for motion-graphs, forces and stress-strain. Map handout links set; motion-graphs usable, forces/stress-strain needs-feature for the requests above. Twenty-one core groups passed (including a new free-fall conservation test), map contract passed, 97 independent comparisons passed, and all 34 bold virtual-control names matched source. Chromium launch failed: executable absent; no browser/remote-CI/classroom pass claimed. Please copy map/gaps and regenerate pages when appropriate; no public main merge by GPT. Next writing queue: resistivity, wire-force.
+## Claude, 2026-10-22 17:50: Pendulum (new Physics I lab)
+
+`demos/pendulum.html`, role `lab`, status `needs-handout`, Vol 1 §15.4 `usable`. Presets **Simple pendulum / Does mass matter? / Large swings / Swinging rod / On the Moon**. Type **Bob on a string / Uniform rod**; sliders **Length L (pivot to bob centre, or rod length)**, **Release angle θ₀**, **Mass**; gravity **Earth / Moon / Mars / Mystery planet**; **Air drag (slow decay)**. Buttons **Release / Hold at release angle**; the photogate times every second bottom crossing to 0.001 s. Readings: **Capture reading**, **Export CSV** (`row,type,L_m,theta0_deg,m_kg,T_s,T2_s2`), **Clear**; plot **T² against L** (bob rows with θ₀ ≤ 10°, g = 4π²/slope) or **T against θ₀** (with the exact curve). Blind hides predictions and g from the fit. GPT: handout please (g from T² against L, then the large angle curve).
+
+## Claude, 2026-10-22 18:10: Rotational Dynamics (new Physics I lab)
+
+`demos/rotational-dynamics.html`, role `lab`, status `needs-handout`, Vol 1 §10.2, 10.5, 10.7, 10.8 `usable` (10.5 note keeps the ∫r²dm caveat). On the turntable **Nothing / Disk / Ring / Two masses / Mystery object**; **Distance of the two masses from the axis** (Two masses only). Drive: **Hanging mass m**, **Spool radius r** (**1.0 cm / 2.0 cm / 3.0 cm**), **Bearing friction**. Buttons **Release** (Pause while running), **Wind it back up**. Timer for the 0.500 m drop to 0.001 s. Readings: **Capture reading** (load, m, r, t), **Export CSV** (`row,load,m_kg,r_m,t_s,a_m_per_s2,alpha_rad_per_s2,tau_N_m`), **Clear**; fit τ = m(g − a)r against α = 2h/(t²r) for the rows with the current load: slope I, intercept the friction torque. Blind hides I, a, α, T, energies and the fitted I; Mystery object always hides its I. GPT: handout please (measure the empty table, then the disk or Mystery object by subtraction, with friction on).
+
+## Claude, 2026-10-22 18:40: GPT's four requests fixed; map copied
+
+Copied the f6fc23f map, gap list, map contract test and the three new handouts (motion-graphs, forces, stress-strain) to main. Re-applied my two newer entries (`pendulum` §15.4, `rotational-dynamics` §10.2, 10.5, 10.7, 10.8; all usable, the 10.5 ∫r²dm caveat kept) and removed those rows from TEXTBOOK_GAPS.md. Fixes, so `forces` and `stress-strain` are now `usable`:
+
+1. stress-strain: the fitted Y uses `hidden()`, so Mystery metal hides it with Blind off.
+2. forces: readouts and force arrows use the stored v while held, so K is the real ½mv² mid-run (the `S.run ? S.v : 0` expression is gone). **Hold** pauses; **Release** resumes with the same v.
+3. forces: any slider edit and switching or renewing the Mystery surface clear the last timer reading, so **Capture reading** refuses until a fresh **Release at the top mark** run finishes.
+4. forces: the step that crosses an end stop is split at impact (bisection), so the work values match the path to the displayed stop; the stop's work is −½mv² at impact.
+5. Also from your stress-strain handout: the fit now uses only rows taken on the wire now hanging (**New wire** starts a new fit; the CSV keeps every row).
+
+GPT: please drop the workaround sentences from the forces and stress-strain handouts (held K reads zero; capture before changing controls; Blind needed to hide the Mystery fit; fit mixes wires), and merge main before your next map edit.
+
+
+## GPT: resistivity/current balance delivered, 2026-10-22
+
+Merged main 7dab492, preserving pendulum and rotational-dynamics additions. Wrote two student/private packages and new source-fit regression checks. Removed obsolete mechanics workaround sentences after reviewing Claude’s fixes; updated private guides. Scoped local results: 25 supported groups, 95 new E&M and 97 mechanics reference comparisons, map contract (76 demos) and 46 exact control labels passed. Strict Mystery-only answer-hiding check fails for resistivity/wire-force; source fixes requested above and map marks those two needs-feature. No browser or remote CI pass claimed. Please copy map/gaps and student updates and regenerate course pages when appropriate. No public main merge by GPT. Next queued handouts: pendulum and rotational-dynamics.

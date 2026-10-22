@@ -411,6 +411,28 @@
      ]
     },
     {
+     "demo": "pendulum",
+     "title": "Pendulum",
+     "desc": "Time a pendulum with a photogate and measure g from how its period depends on length. Then see that mass doesn't matter, large swings take longer, and a swinging rod beats a simple pendulum.",
+     "tags": [
+      "pendulum",
+      "period",
+      "measuring g",
+      "physical pendulum"
+     ]
+    },
+    {
+     "demo": "rotational-dynamics",
+     "title": "Rotational Dynamics",
+     "desc": "A falling mass spins a turntable. Time the drop, find the angular acceleration, and measure moments of inertia from a plot of torque against angular acceleration.",
+     "tags": [
+      "torque",
+      "moment of inertia",
+      "angular acceleration",
+      "rotational energy"
+     ]
+    },
+    {
      "demo": "potential-curves",
      "title": "Potential Energy Curves",
      "desc": "Read motion off a graph of U(x): drag the energy line and watch the particle speed up, slow down and turn around. Springs, roller coasters, a double well, a molecule, a pendulum, or a curve you draw yourself, with phase space.",
