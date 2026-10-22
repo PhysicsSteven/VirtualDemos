@@ -1230,10 +1230,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction: free body diagram to scale, Newton's second law on a ramp with static and kinetic friction, applied force at an angle, hanging mass over a pulley."
     },
     {
       "vol": 1,
@@ -1245,10 +1247,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "needs-feature",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction shows balanced forces at rest; constant velocity with zero net force is not set up directly."
     },
     {
       "vol": 1,
@@ -1260,10 +1264,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction: free body diagram to scale, Newton's second law on a ramp with static and kinetic friction, applied force at an angle, hanging mass over a pulley."
     },
     {
       "vol": 1,
@@ -1275,10 +1281,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "needs-feature",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction uses W = mg; apparent weight (elevator) not covered."
     },
     {
       "vol": 1,
@@ -1305,10 +1313,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction: free body diagram to scale, Newton's second law on a ramp with static and kinetic friction, applied force at an angle, hanging mass over a pulley."
     },
     {
       "vol": 1,
@@ -1320,10 +1330,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction: free body diagram to scale, Newton's second law on a ramp with static and kinetic friction, applied force at an angle, hanging mass over a pulley."
     },
     {
       "vol": 1,
@@ -1335,10 +1347,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction: free body diagram to scale, Newton's second law on a ramp with static and kinetic friction, applied force at an angle, hanging mass over a pulley."
     },
     {
       "vol": 1,
@@ -1350,10 +1364,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction: free body diagram to scale, Newton's second law on a ramp with static and kinetic friction, applied force at an angle, hanging mass over a pulley."
     },
     {
       "vol": 1,
@@ -4215,6 +4231,61 @@
       "handouts": [],
       "title": "Vectors and Relative Motion",
       "url": "demos/vectors.html"
+    },
+    {
+      "demo": "forces",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "5.1",
+          "title": "Forces"
+        },
+        {
+          "vol": 1,
+          "sec": "5.2",
+          "title": "Newton's First Law"
+        },
+        {
+          "vol": 1,
+          "sec": "5.3",
+          "title": "Newton's Second Law"
+        },
+        {
+          "vol": 1,
+          "sec": "5.4",
+          "title": "Mass and Weight"
+        },
+        {
+          "vol": 1,
+          "sec": "5.6",
+          "title": "Common Forces"
+        },
+        {
+          "vol": 1,
+          "sec": "5.7",
+          "title": "Drawing Free-Body Diagrams"
+        },
+        {
+          "vol": 1,
+          "sec": "6.1",
+          "title": "Solving Problems with Newton’s Laws"
+        },
+        {
+          "vol": 1,
+          "sec": "6.2",
+          "title": "Friction"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-22 (Claude). Block on a tilting ramp: applied force at an angle, hanging mass over an ideal pulley, Coulomb friction (static up to μs N), exact stepping with stops; free body diagram to scale with weight components and net force; timer for 1.000 m from rest; fit a/cos θ against tan θ for μk; Mystery surface; Blind. Third law pairs, centripetal force and apparent weight not covered.",
+      "handouts": [],
+      "title": "Forces and Friction",
+      "url": "demos/forces.html"
     },
     {
       "demo": "motion-graphs",

@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Forces and Friction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the ramp and its free body diagram on the left; the instrument rail on the right. */
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+:root { --w: #5a6575; --n: #2b60b5; --fr: #b0452f; --ap: #6f4bb3; --tn: #a7740b; --net: #2f7d4f; --wood: #c9a77a; --ramp: #dfe5ec; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w: #b4bfcc; --n: #69a0ff; --fr: #ff8a70; --ap: #b49bff; --tn: #e2b350; --net: #5fcf8a; --wood: #8d6c45; --ramp: #2a3442; } }
+:root[data-theme="dark"] { --w: #b4bfcc; --n: #69a0ff; --fr: #ff8a70; --ap: #b49bff; --tn: #e2b350; --net: #5fcf8a; --wood: #8d6c45; --ramp: #2a3442; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; left: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.readout dd.warn { font-family: var(--font-ui); font-size: 0.85rem; color: var(--fr); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 190px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 200px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 480px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 600px; max-height: 90vh; }
+  .rail { overflow: visible; }
+  .chips button, .btn, .proj, .spin { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Forces and Friction</h1>
+      <p>A block on a ramp you can tilt, push, and tie to a hanging mass. The free body diagram shows every force on the block; their sum gives its acceleration through F = ma.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">g = 9.81 m/s² · ramp 3.0 m long</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/forces.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 37 37" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/forces.html" shape-rendering="crispEdges"><rect width="37" height="37" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM12 2h1v1h-1zM15 2h3v1h-3zM19 2h7v1h-7zM28 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM13 3h1v1h-1zM16 3h3v1h-3zM20 3h1v1h-1zM25 3h2v1h-2zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h2v1h-2zM14 4h1v1h-1zM16 4h2v1h-2zM19 4h1v1h-1zM21 4h2v1h-2zM25 4h2v1h-2zM28 4h1v1h-1zM30 4h3v1h-3zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h2v1h-2zM14 5h1v1h-1zM16 5h1v1h-1zM20 5h1v1h-1zM24 5h1v1h-1zM28 5h1v1h-1zM30 5h3v1h-3zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM12 6h1v1h-1zM16 6h4v1h-4zM25 6h2v1h-2zM28 6h1v1h-1zM30 6h3v1h-3zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM13 7h5v1h-5zM19 7h4v1h-4zM26 7h1v1h-1zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h7v1h-7zM11 9h1v1h-1zM13 9h2v1h-2zM16 9h2v1h-2zM19 9h1v1h-1zM21 9h3v1h-3zM2 10h1v1h-1zM5 10h1v1h-1zM7 10h2v1h-2zM10 10h1v1h-1zM12 10h1v1h-1zM15 10h2v1h-2zM18 10h1v1h-1zM23 10h1v1h-1zM25 10h3v1h-3zM29 10h1v1h-1zM2 11h2v1h-2zM5 11h1v1h-1zM9 11h1v1h-1zM12 11h2v1h-2zM19 11h1v1h-1zM22 11h3v1h-3zM26 11h4v1h-4zM33 11h2v1h-2zM2 12h1v1h-1zM4 12h3v1h-3zM8 12h1v1h-1zM10 12h1v1h-1zM12 12h4v1h-4zM19 12h3v1h-3zM24 12h1v1h-1zM29 12h2v1h-2zM32 12h1v1h-1zM34 12h1v1h-1zM2 13h1v1h-1zM4 13h1v1h-1zM7 13h1v1h-1zM10 13h1v1h-1zM12 13h2v1h-2zM15 13h2v1h-2zM21 13h1v1h-1zM23 13h1v1h-1zM25 13h1v1h-1zM27 13h2v1h-2zM30 13h2v1h-2zM33 13h1v1h-1zM2 14h2v1h-2zM8 14h2v1h-2zM11 14h2v1h-2zM14 14h1v1h-1zM16 14h1v1h-1zM19 14h1v1h-1zM22 14h2v1h-2zM27 14h2v1h-2zM31 14h1v1h-1zM33 14h2v1h-2zM2 15h2v1h-2zM6 15h1v1h-1zM11 15h1v1h-1zM13 15h3v1h-3zM19 15h1v1h-1zM21 15h4v1h-4zM26 15h1v1h-1zM30 15h5v1h-5zM5 16h4v1h-4zM10 16h7v1h-7zM18 16h1v1h-1zM22 16h4v1h-4zM27 16h4v1h-4zM32 16h2v1h-2zM2 17h1v1h-1zM4 17h1v1h-1zM6 17h2v1h-2zM11 17h1v1h-1zM13 17h5v1h-5zM19 17h2v1h-2zM22 17h3v1h-3zM26 17h1v1h-1zM28 17h2v1h-2zM33 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM6 18h3v1h-3zM10 18h3v1h-3zM15 18h3v1h-3zM19 18h1v1h-1zM22 18h4v1h-4zM28 18h1v1h-1zM30 18h2v1h-2zM33 18h1v1h-1zM6 19h2v1h-2zM10 19h2v1h-2zM13 19h1v1h-1zM16 19h1v1h-1zM18 19h1v1h-1zM23 19h4v1h-4zM29 19h1v1h-1zM31 19h1v1h-1zM34 19h1v1h-1zM2 20h1v1h-1zM4 20h1v1h-1zM8 20h1v1h-1zM13 20h2v1h-2zM19 20h2v1h-2zM22 20h1v1h-1zM27 20h2v1h-2zM32 20h3v1h-3zM2 21h1v1h-1zM4 21h1v1h-1zM6 21h2v1h-2zM9 21h1v1h-1zM11 21h1v1h-1zM13 21h5v1h-5zM19 21h5v1h-5zM25 21h1v1h-1zM29 21h1v1h-1zM33 21h2v1h-2zM2 22h1v1h-1zM7 22h6v1h-6zM14 22h2v1h-2zM18 22h1v1h-1zM23 22h1v1h-1zM26 22h2v1h-2zM33 22h2v1h-2zM3 23h2v1h-2zM9 23h2v1h-2zM12 23h4v1h-4zM18 23h1v1h-1zM23 23h1v1h-1zM26 23h3v1h-3zM31 23h1v1h-1zM33 23h2v1h-2zM2 24h2v1h-2zM5 24h4v1h-4zM13 24h1v1h-1zM16 24h1v1h-1zM20 24h2v1h-2zM23 24h1v1h-1zM27 24h3v1h-3zM34 24h1v1h-1zM3 25h2v1h-2zM6 25h1v1h-1zM10 25h1v1h-1zM16 25h1v1h-1zM18 25h1v1h-1zM20 25h1v1h-1zM22 25h3v1h-3zM26 25h3v1h-3zM31 25h1v1h-1zM33 25h1v1h-1zM2 26h1v1h-1zM5 26h5v1h-5zM15 26h1v1h-1zM17 26h1v1h-1zM19 26h1v1h-1zM23 26h1v1h-1zM25 26h7v1h-7zM33 26h1v1h-1zM10 27h4v1h-4zM15 27h1v1h-1zM19 27h4v1h-4zM26 27h1v1h-1zM30 27h2v1h-2zM34 27h1v1h-1zM2 28h7v1h-7zM11 28h1v1h-1zM13 28h1v1h-1zM15 28h2v1h-2zM18 28h2v1h-2zM22 28h1v1h-1zM26 28h1v1h-1zM28 28h1v1h-1zM30 28h3v1h-3zM2 29h1v1h-1zM8 29h1v1h-1zM10 29h4v1h-4zM15 29h3v1h-3zM19 29h6v1h-6zM26 29h1v1h-1zM30 29h1v1h-1zM34 29h1v1h-1zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h1v1h-1zM12 30h3v1h-3zM16 30h2v1h-2zM19 30h1v1h-1zM21 30h1v1h-1zM23 30h2v1h-2zM26 30h6v1h-6zM2 31h1v1h-1zM4 31h3v1h-3zM8 31h1v1h-1zM10 31h1v1h-1zM15 31h2v1h-2zM20 31h1v1h-1zM23 31h1v1h-1zM28 31h1v1h-1zM30 31h2v1h-2zM2 32h1v1h-1zM4 32h3v1h-3zM8 32h1v1h-1zM11 32h1v1h-1zM13 32h1v1h-1zM16 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h3v1h-3zM16 33h1v1h-1zM18 33h2v1h-2zM21 33h7v1h-7zM2 34h7v1h-7zM10 34h1v1h-1zM13 34h2v1h-2zM16 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM26 34h2v1h-2zM30 34h1v1h-1zM33 34h1v1h-1z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="application" aria-label="A block on a ramp with its free body diagram. Space releases or holds the block, R puts it back, T releases it at the top mark for the timer. Up and down arrows tilt the ramp by half a degree."></canvas>
+      <div class="viewbar">
+        <button type="button" class="spin attn" id="go">Release</button>
+        <button type="button" class="spin" id="back">Put back</button>
+        <button type="button" class="spin" id="timed">Release at the top mark</button>
+      </div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="push" aria-pressed="true">Push on a level floor</button>
+          <button type="button" data-p="slip" aria-pressed="false">Ramp: when does it slip?</button>
+          <button type="button" data-p="angle" aria-pressed="false">Pull at an angle</button>
+          <button type="button" data-p="table" aria-pressed="false">Hanging mass on a table</button>
+          <button type="button" data-p="rampm" aria-pressed="false">Ramp and hanging mass</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Ramp and block</h2>
+        <div><div class="slider-head"><label for="sTh">Ramp angle θ</label><output id="oTh" for="sTh"></output></div><input type="range" id="sTh" min="0" max="60" step="0.5"></div>
+        <div><div class="slider-head"><label for="sM">Block mass m</label><output id="oM" for="sM"></output></div><input type="range" id="sM" min="1" max="20" step="0.5"></div>
+        <div id="muRows">
+          <div><div class="slider-head"><label for="sMs">Static friction μs</label><output id="oMs" for="sMs"></output></div><input type="range" id="sMs" min="0" max="1" step="0.01"></div>
+          <div style="margin-top:8px"><div class="slider-head"><label for="sMk">Kinetic friction μk</label><output id="oMk" for="sMk"></output></div><input type="range" id="sMk" min="0" max="1" step="0.01"></div>
+        </div>
+        <label class="check"><input type="checkbox" id="mystery"><span>Mystery surface: hide μs and μk</span></label>
+        <button type="button" class="btn" id="newMystery" hidden>New mystery surface</button>
+      </section>
+
+      <section>
+        <h2>Pulls on the block</h2>
+        <div><div class="slider-head"><label for="sF">Applied force F</label><output id="oF" for="sF"></output></div><input type="range" id="sF" min="0" max="150" step="1"></div>
+        <div><div class="slider-head"><label for="sPhi">Angle of F above the surface</label><output id="oPhi" for="sPhi"></output></div><input type="range" id="sPhi" min="-45" max="60" step="1"></div>
+        <div><div class="slider-head"><label for="sM2">Hanging mass m₂ (0 = none)</label><output id="oM2" for="sM2"></output></div><input type="range" id="sM2" min="0" max="10" step="0.5"></div>
+        <p class="hint">F points up the ramp, tilted above the surface by its angle (below for a negative angle, pressing into the ramp). The string over the pulley runs parallel to the ramp. The string and pulley are massless and frictionless.</p>
+      </section>
+
+      <section>
+        <h2>Forces now</h2>
+        <dl class="readout" id="forceOut"></dl>
+        <label class="check"><input type="checkbox" id="tComp" checked><span>Show the weight's components along and across the ramp</span></label>
+        <label class="check"><input type="checkbox" id="tNet" checked><span>Show the net force</span></label>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="exportCsv">Export CSV</button>
+          <button type="button" class="btn" id="clearRows">Clear</button>
+        </div>
+        <p class="status" id="capStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>θ (°)</th><th>t (s)</th><th>a (m/s²)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <p class="hint">Use <b>Release at the top mark</b>: the timer reads the time for the block to slide 1.000 m from rest (to 0.001 s). Capture stores θ, m, m₂, F and that time; a = 2d/t² is worked out from your time.</p>
+        <div class="plotbox"><canvas id="fitCan" role="img" aria-label="a / cos θ against tan θ for the captured rows, with a least squares line and residuals."></canvas></div>
+        <dl class="readout" id="fitOut"></dl>
+        <button type="button" class="btn" id="fitTblBtn" aria-expanded="false" aria-controls="fitWrap">Show data table</button>
+        <div class="twrap" id="fitWrap" hidden><table class="rows" id="fitTbl"><caption class="sr">Plotted points</caption><thead><tr><th>tan θ</th><th>a/cos θ</th><th>fit</th><th>resid.</th></tr></thead><tbody></tbody></table></div>
+        <p class="hint">Sliding down with no push or hanging mass, a = g sin θ − μk g cos θ, so a/cos θ = g tan θ − μk g: a straight line with slope g and intercept −μk g. The fit uses only rows with F = 0 and m₂ = 0.</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides every force size, the acceleration, the friction type, the slip angle, the arrows' lengths (all drawn the same size) and μk from the fit. The timer, the settings and the force directions stay.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.81, LEN = 3.0, GATE_D = 1.0, FF_VERSION = 'forces@2026-10-22';
+  // Forces on the block, s measured up the ramp. p: { m, th (deg), F, phi (deg above the surface), m2, ms, mk }, v: velocity along s.
+  function forces(p, v) {
+    const th = p.th * Math.PI / 180, ph = p.phi * Math.PI / 180;
+    const W = p.m * G, Wpar = -W * Math.sin(th), Wperp = W * Math.cos(th);
+    const Fpar = p.F * Math.cos(ph), Fperp = p.F * Math.sin(ph);
+    let N = Wperp - Fperp, lift = false;
+    if (N < 0) { N = 0; lift = true; }
+    const M = p.m + p.m2, D = Fpar + Wpar + p.m2 * G;       // everything but friction, along +s, on the block and hanging mass together
+    let f, a, kind;
+    if (Math.abs(v) < 1e-12) {
+      if (Math.abs(D) <= p.ms * N + 1e-12) { f = -D; a = 0; kind = 'static'; }
+      else { f = -Math.sign(D) * p.mk * N; a = (D + f) / M; kind = 'kinetic'; }
+    } else { f = -Math.sign(v) * p.mk * N; a = (D + f) / M; kind = 'kinetic'; }
+    const T = p.m2 > 0 ? p.m2 * (G - a) : 0;                 // tension; the string pulls the block up the ramp
+    return { W, Wpar, Wperp, Fpar, Fperp, N, f, a, kind, T, D, M, lift, net: p.m * a };
+  }
+  // One step of length dt with the acceleration constant between events; a sliding block that comes to rest is caught.
+  function step(p, s, v, dt) {
+    let F = forces(p, v);
+    if (v !== 0) {
+      const a = F.a, tStop = a * v < 0 ? -v / a : Infinity;
+      if (tStop < dt) { s += v * tStop + 0.5 * a * tStop * tStop; v = 0; return step(p, s, v, dt - tStop); }
+      return { s: s + v * dt + 0.5 * a * dt * dt, v: v + a * dt };
+    }
+    if (F.a === 0) return { s, v: 0 };
+    return { s: s + 0.5 * F.a * dt * dt, v: F.a * dt };
+  }
+  const gateTime = (a, d) => (a !== 0 ? Math.sqrt(2 * d / Math.abs(a)) : Infinity);
+  const slipAngle = (ms) => Math.atan(ms) * 180 / Math.PI;      // free block on a ramp starts to slide when tan θ > μs
+  function fitLine(xs, ys) {
+    const n = xs.length; if (n < 2) return null;
+    const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n;
+    let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    if (sxx < 1e-15) return null;
+    const b = sxy / sxx, a0 = my - b * mx, res = xs.map((x, i) => ys[i] - a0 - b * x), ss = res.reduce((q, r) => q + r * r, 0);
+    const s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { b, a: a0, seB: Math.sqrt(s2 / sxx), seA: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), res, n };
+  }
+  const cellNum = (s) => { const v = parseFloat(String(s).replace('−', '-')); return isFinite(v) ? v : NaN; };
+  const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  function readingsCSV(rows, meta) {
+    const L = ['# Forces and Friction virtual ramp: captured readings (simulated data)', `# demo version,${meta.version}`, `# setup at export,${csvCell(meta.setup)}`,
+      `# g_m_per_s2,${G}`, `# gate_distance_m,${GATE_D}`, `# surface,${csvCell(meta.surface)}`,
+      '# model,"block on a ramp, Coulomb friction (static up to mu_s N, kinetic mu_k N), massless string and frictionless pulley; time to slide 1.000 m from rest"',
+      '# rounding,"theta to 0.5 deg, m and m2 to 0.5 kg, F to 1 N, phi to 1 deg, time to 0.001 s; a_m_per_s2 = 2 d / t^2 from the row time; edited cells exported as typed"', '# noise,none',
+      'row,theta_deg,m_kg,m2_kg,F_N,phi_deg,t_gate_s,a_m_per_s2'];
+    rows.forEach((r, i) => { const t = cellNum(r.t); L.push([i + 1, r.th, r.m, r.m2, r.F, r.phi, r.t, isFinite(t) && t > 0 ? +(2 * GATE_D / (t * t)).toPrecision(6) : ''].map(csvCell).join(',')); });
+    return L.join('\n') + '\n';
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  try { const r = sessionStorage.getItem('vd-ff-motion'); if (r) reduce = r === 'reduce'; } catch (_) {}
+  const PRESETS = {
+    push: { p: { th: 0, m: 10, F: 40, phi: 0, m2: 0, ms: 0.5, mk: 0.3 }, s: 0.4, hint: 'A 10 kg block on a level floor, μs = 0.5. Static friction matches the push exactly, up to μs N = 49 N. Push harder than that and the block slides; kinetic friction μk N = 29 N is then smaller, so it speeds up.' },
+    slip: { p: { th: 20, m: 5, F: 0, phi: 0, m2: 0, ms: 0.5, mk: 0.35 }, s: 2.4, hint: 'Tilt the ramp slowly (↑ ↓ keys or the slider) until the block starts to slide. With no push it slips when tan θ = μs, whatever its mass. Then use Release at the top mark to time it and measure μk.' },
+    angle: { p: { th: 0, m: 10, F: 50, phi: 30, m2: 0, ms: 0.4, mk: 0.3 }, s: 0.4, hint: 'Pulling upward at an angle lifts some of the weight off the floor, so N is less than mg and so is the friction. Too steep an angle wastes the pull. Find the angle that gives the largest acceleration.' },
+    table: { p: { th: 0, m: 4, F: 0, phi: 0, m2: 2, ms: 0.3, mk: 0.2 }, s: 0.4, hint: 'A hanging mass pulls the block across a table. Both move with the same acceleration a = (m₂g − μk m g)/(m + m₂), and the tension is less than m₂g while they accelerate.' },
+    rampm: { p: { th: 30, m: 5, F: 0, phi: 0, m2: 2, ms: 0.2, mk: 0.15 }, s: 1.2, hint: 'Which way does it go? Compare m₂g with mg sin θ. Friction always opposes the motion, or the motion that would happen without it, so it can point up or down the ramp.' }
+  };
+  const S = { preset: 'push', p: { ...PRESETS.push.p }, s: 0.4, v: 0, run: false, timing: null, blind: false, comp: true, net: true, mystery: null, rows: [], lastGate: null };
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, H = 0, dpr = 1, T = null;
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      w: g('--w'), n: g('--n'), fr: g('--fr'), ap: g('--ap'), tn: g('--tn'), net: g('--net'), wood: g('--wood'), ramp: g('--ramp'), surface: g('--surface'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+  }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 1) => (Math.abs(v) < 0.5 * 10 ** -d ? (0).toFixed(d) : v.toFixed(d)).replace('-', '−');
+
+  // ---------- controls ----------
+  const SL = [['sTh', 'th', (v) => `${f(v, 1)}°`], ['sM', 'm', (v) => `${f(v, 1)} kg`], ['sMs', 'ms', (v) => f(v, 2)], ['sMk', 'mk', (v) => f(v, 2)], ['sF', 'F', (v) => `${f(v, 0)} N`], ['sPhi', 'phi', (v) => `${f(v, 0)}°`], ['sM2', 'm2', (v) => (v ? `${f(v, 1)} kg` : 'none')]];
+  function sync() {
+    for (const [id, k, fmt] of SL) { $(id).value = S.p[k]; $('o' + id.slice(1)).textContent = fmt(S.p[k]); }
+    $('muRows').hidden = !!S.mystery; $('newMystery').hidden = !S.mystery; $('mystery').checked = !!S.mystery;
+  }
+  for (const [id, k] of SL) $(id).addEventListener('input', (e) => {
+    S.p[k] = +e.target.value;
+    if (k === 'mk' && S.p.mk > S.p.ms) S.p.ms = S.p.mk;
+    if (k === 'ms' && S.p.mk > S.p.ms) S.p.mk = S.p.ms;
+    S.preset = 'custom'; mark(); S.timing = null; sync(); draw(); readouts();
+  });
+  function mark() { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; mark(); $('presetHint').textContent = c.hint;
+    const keep = S.mystery ? { ms: S.p.ms, mk: S.p.mk } : {};
+    S.p = { ...c.p, ...keep }; S.s = c.s; S.v = 0; S.lastGate = null; setRun(false); S.timing = null; sync(); draw(); readouts();
+  }
+  function setMystery(on) {
+    if (on) { const ms = 0.25 + Math.round(Math.random() * 45) / 100, mk = Math.round(ms * (0.55 + Math.random() * 0.3) * 100) / 100; S.mystery = { ms, mk }; S.p.ms = ms; S.p.mk = mk; if (!S.blind) setBlind(true); capStatus('Mystery surface: μs and μk are hidden. Blind is on.'); }
+    else { if (S.mystery) capStatus(`Mystery surface off: it was μs = ${f(S.mystery.ms, 2)}, μk = ${f(S.mystery.mk, 2)}.`); S.mystery = null; }
+    S.v = 0; setRun(false); sync(); draw(); readouts();
+  }
+  $('mystery').addEventListener('change', (e) => setMystery(e.target.checked));
+  $('newMystery').addEventListener('click', () => { setMystery(true); capStatus('A new mystery surface. Earlier rows used a different one.'); });
+
+  // ---------- run ----------
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Hold' : 'Release'; $('go').classList.toggle('attn', !on); }
+  $('go').addEventListener('click', () => { S.timing = null; setRun(!S.run); });
+  $('back').addEventListener('click', () => { S.s = PRESETS[S.preset] ? PRESETS[S.preset].s : 1.2; S.v = 0; S.timing = null; setRun(false); draw(); readouts(); });
+  $('timed').addEventListener('click', () => {
+    const fz = forces(S.p, 0), top = LEN - 0.45, bottom = 0.45;
+    S.v = 0; S.s = fz.D < 0 || fz.a <= 0 ? top : bottom;   // start at the end it will move away from
+    S.timing = { s0: S.s, t: 0, done: false }; S.lastGate = null; setRun(true); draw(); readouts();
+  });
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      const n = 10; let s = S.s, v = S.v;
+      for (let i = 0; i < n; i++) {
+        const r = step(S.p, s, v, dt / n); s = r.s; v = r.v;
+        if (S.timing && !S.timing.done) { S.timing.t += dt / n; if (Math.abs(s - S.timing.s0) >= GATE_D) { const a = forces(S.p, v).a; S.timing.done = true; S.lastGate = Math.round(gateTime(a, GATE_D) * 1000) / 1000; S.timing.t = S.lastGate; } }
+        const lo = 0.25, hi = LEN - 0.25;
+        if (s < lo || s > hi) { s = Math.max(lo, Math.min(hi, s)); v = 0; setRun(false); break; }
+      }
+      S.s = s; S.v = v; draw(); readouts();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // ---------- drawing ----------
+  function arrow(x0, y0, dx, dy, col, lw, lab, dashed, side) {
+    const p = ps(), L = Math.hypot(dx, dy); if (L < 2) return;
+    const x1 = x0 + dx, y1 = y0 + dy, ang = Math.atan2(dy, dx), hl = Math.min(12 * p, L * 0.5);
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = lw; if (dashed) ctx.setLineDash([5 * p, 4 * p]);
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - Math.cos(ang) * hl * 0.8, y1 - Math.sin(ang) * hl * 0.8); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - Math.cos(ang - 0.42) * hl, y1 - Math.sin(ang - 0.42) * hl); ctx.lineTo(x1 - Math.cos(ang + 0.42) * hl, y1 - Math.sin(ang + 0.42) * hl); ctx.closePath(); ctx.fill();
+    if (lab) { ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; const sd = (side || 0) * 15 * p, tx = x1 + Math.cos(ang) * 14 * p - Math.sin(ang) * sd, ty = y1 + Math.sin(ang) * 14 * p + Math.cos(ang) * sd;
+      const w = ctx.measureText(lab).width + 6 * p; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(tx - w / 2, ty - 8 * p, w, 16 * p); ctx.globalAlpha = 1; ctx.fillStyle = col; ctx.fillText(lab, tx, ty); }
+  }
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const p = ps(), wide = W > 760, sw = wide ? W * 0.6 : W, sh = wide ? H : H * 0.56;
+    drawScene(0, 46 * p, sw, sh - 46 * p);
+    drawFBD(wide ? sw : 0, wide ? 0 : sh, wide ? W - sw : W, wide ? H : H - sh);
+  }
+  function drawScene(x0, y0, w, h) {
+    const p = ps(), P = S.p, th = P.th * Math.PI / 180, fz = forces(S.p, S.v);
+    const drop = P.m2 > 0 ? 1.1 : 0;                                       // room under the pulley for the hanging mass
+    const sc = Math.min((w - 90 * p) / (LEN * Math.cos(th) + 0.6), (h - 40 * p) / (LEN * Math.sin(th) + 0.9 + drop));
+    const bx = x0 + 30 * p, by = y0 + h - 30 * p - drop * sc;              // bottom corner of the ramp (on a bench when a mass hangs)
+    const R = (s, u) => [bx + sc * (s * Math.cos(th) - u * Math.sin(th)), by - sc * (s * Math.sin(th) + u * Math.cos(th))];
+    // ramp
+    const top = R(LEN, 0);
+    ctx.fillStyle = T.ramp; ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(top[0], top[1]); ctx.lineTo(top[0], by); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(x0 + 8 * p, by); ctx.lineTo(top[0] + 6 * p, by); ctx.stroke();
+    if (drop) { ctx.fillStyle = T.ramp; ctx.fillRect(x0 + 8 * p, by, top[0] - x0 - 2 * p, 6 * p); ctx.fillRect(x0 + 14 * p, by, 6 * p, drop * sc); ctx.fillRect(top[0] - 10 * p, by, 6 * p, drop * sc);
+      ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(x0 + 8 * p, by + drop * sc); ctx.lineTo(x0 + w - 8 * p, by + drop * sc); ctx.stroke(); }
+    if (P.th > 0) { ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(bx, by, 40 * p, -th, 0); ctx.stroke(); ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(`${f(P.th, 1)}°`, bx + 46 * p, by - 10 * p); }
+    // timing marks
+    if (S.timing) { for (const s of [S.timing.s0, S.timing.s0 + (S.timing.s0 > LEN / 2 ? -GATE_D : GATE_D)]) { const a = R(s, 0), b = R(s, 0.55); ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); ctx.setLineDash([]); } }
+    // pulley and hanging mass
+    const bs = 0.32, c = R(S.s, bs / 2);
+    if (P.m2 > 0) {
+      const pc = R(LEN + 0.08, 0.16), pr = 0.09 * sc, tie = R(S.s + bs / 2, bs / 2);
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(tie[0], tie[1]); ctx.lineTo(pc[0] - pr * Math.sin(th), pc[1] - pr * Math.cos(th)); ctx.stroke();
+      // the string's length is fixed: when the block moves up the ramp by Δs, m₂ drops by Δs
+      const hangX = pc[0] + pr, hy = Math.min(by + (drop - 0.3) * sc, pc[1] + (0.3 + S.s - 0.25) * sc);
+      ctx.beginPath(); ctx.moveTo(hangX, pc[1]); ctx.lineTo(hangX, hy); ctx.stroke();
+      ctx.fillStyle = T.surface; ctx.strokeStyle = T.ink; ctx.beginPath(); ctx.arc(pc[0], pc[1], pr, 0, 7); ctx.fill(); ctx.stroke();
+      const hs = Math.min(0.32, 0.12 + 0.025 * P.m2) * sc; ctx.fillStyle = T.tn; ctx.fillRect(hangX - hs / 2, hy, hs, hs);
+      ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(`m₂ = ${f(P.m2, 1)} kg`, hangX + hs / 2 + 6 * p, hy + hs / 2);
+    }
+    // block
+    ctx.save(); ctx.translate(c[0], c[1]); ctx.rotate(-th);
+    ctx.fillStyle = T.wood; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5; ctx.fillRect(-bs / 2 * sc, -bs / 2 * sc, bs * sc, bs * sc); ctx.strokeRect(-bs / 2 * sc, -bs / 2 * sc, bs * sc, bs * sc);
+    ctx.fillStyle = T.ink; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${f(P.m, 1)} kg`, 0, 0);
+    ctx.restore();
+    // applied force on the scene
+    if (P.F > 0) { const ang = th + P.phi * Math.PI / 180, L = 50 * p, tail = R(S.s + bs / 2, bs / 2); arrow(tail[0], tail[1], Math.cos(ang) * L, -Math.sin(ang) * L, T.ap, 3 * p, 'F'); }
+    // status
+    ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.ink;
+    const dirWord = P.th > 0 ? (S.v > 0 ? 'up the ramp' : 'down the ramp') : (S.v > 0 ? 'to the right' : 'to the left');
+    let st = S.run ? (Math.abs(S.v) > 1e-9 ? `Sliding ${dirWord}` : 'At rest: static friction holds it') : 'Held in place. Press Release.';
+    if (S.blind && S.run) st = Math.abs(S.v) > 1e-9 ? 'Moving' : 'At rest';
+    ctx.fillText(st, x0 + 14 * p, y0 + 4 * p);
+    if (S.timing) { ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.fillStyle = T.accent; ctx.fillText(S.timing.done ? `Timer: ${S.lastGate.toFixed(3)} s for 1.000 m` : `Timer: ${S.timing.t.toFixed(3)} s`, x0 + 14 * p, y0 + 24 * p); }
+    if (fz.lift) { ctx.fillStyle = T.fr; ctx.font = `600 ${12 * p}px ${T.ui}`; ctx.fillText('F lifts the block off the surface: N = 0 (beyond this model)', x0 + 14 * p, y0 + 44 * p); }
+  }
+  function drawFBD(x0, y0, w, h) {
+    const p = ps(), P = S.p, th = P.th * Math.PI / 180, fz = forces(S.p, S.run ? S.v : 0), bl = S.blind;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); if (x0 > 0) { ctx.moveTo(x0, 12 * p); ctx.lineTo(x0, H - 12 * p); } else { ctx.moveTo(12 * p, y0); ctx.lineTo(W - 12 * p, y0); } ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('FREE BODY DIAGRAM OF THE BLOCK', x0 + 14 * p, y0 + 12 * p);
+    const cx = x0 + w / 2, cy = y0 + h / 2 + 10 * p, Rm = Math.min(w, h) * 0.36;
+    const items = [['W = mg', T.w, 0, -fz.W], ['N', T.n, -Math.sin(th) * fz.N, Math.cos(th) * fz.N]];
+    const up = [Math.cos(th), Math.sin(th)];
+    if (Math.abs(fz.f) > 1e-9) items.push([fz.kind === 'static' && !bl ? 'f (static)' : bl ? 'f' : 'f (kinetic)', T.fr, up[0] * fz.f, up[1] * fz.f, 1]);
+    if (P.F > 0) { const a = th + P.phi * Math.PI / 180; items.push(['F', T.ap, Math.cos(a) * P.F, Math.sin(a) * P.F]); }
+    if (P.m2 > 0) items.push(['T', T.tn, up[0] * fz.T, up[1] * fz.T, -1]);
+    const big = Math.max(...items.map((q) => Math.hypot(q[2], q[3])), 1e-9), k = Rm / big;
+    const len = (vx, vy) => (bl ? [vx / (Math.hypot(vx, vy) || 1) * Rm * 0.6, vy / (Math.hypot(vx, vy) || 1) * Rm * 0.6] : [vx * k, vy * k]);
+    // axes along and across the ramp
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.setLineDash([4 * p, 4 * p]);
+    ctx.beginPath(); ctx.moveTo(cx - up[0] * Rm * 1.15, cy + up[1] * Rm * 1.15); ctx.lineTo(cx + up[0] * Rm * 1.15, cy - up[1] * Rm * 1.15);
+    ctx.moveTo(cx + up[1] * Rm * 1.15, cy + up[0] * Rm * 1.15); ctx.lineTo(cx - up[1] * Rm * 1.15, cy - up[0] * Rm * 1.15); ctx.stroke(); ctx.setLineDash([]);
+    if (S.comp && P.th > 0) {
+      const [ax, ay] = len(up[0] * fz.Wpar, up[1] * fz.Wpar), [bx2, by2] = len(Math.sin(th) * fz.Wperp, -Math.cos(th) * fz.Wperp);
+      arrow(cx, cy, ax, -ay, T.w, 1.6 * p, bl ? 'mg sin θ' : `mg sin θ = ${f(-fz.Wpar, 1)} N`, true);
+      arrow(cx, cy, bx2, -by2, T.w, 1.6 * p, bl ? 'mg cos θ' : `mg cos θ = ${f(fz.Wperp, 1)} N`, true);
+    }
+    for (const [lab, col, vx, vy, side] of items) { const [dx, dy] = len(vx, vy); arrow(cx, cy, dx, -dy, col, 3.2 * p, bl ? lab : `${lab} = ${f(Math.hypot(vx, vy), 1)} N`, false, side); }
+    // the net force is drawn beside the ramp axis, so it does not hide friction and tension
+    if (S.net && !bl && Math.abs(fz.net) > 1e-6) { const [dx, dy] = len(up[0] * fz.net, up[1] * fz.net), ox = Math.sin(th) * 30 * p, oy = Math.cos(th) * 30 * p; arrow(cx + ox, cy + oy, dx, -dy, T.net, 4.5 * p, `net = ma = ${f(Math.abs(fz.net), 1)} N`, false, 1); }
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 5 * p, 0, 7); ctx.fill();
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(bl ? 'Blind: arrows show directions only' : 'Arrow lengths are to scale', x0 + 14 * p, y0 + h - 10 * p);
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const fz = forces(S.p, S.run ? S.v : 0), bl = S.blind, dd = (a, b, w, cls) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd${cls ? ` class="${cls}"` : ''}>${b}</dd></div>`;
+    let h = dd('Weight mg', `${f(fz.W, 1)} N`);
+    if (bl) h += '<div class="wide"><dt>N, friction, tension, acceleration</dt><dd class="ok">hidden in Blind</dd></div>';
+    else {
+      h += dd('Normal force N', `${f(fz.N, 1)} N`) + dd(`Friction (${fz.kind})`, `${f(Math.abs(fz.f), 1)} N`) + dd('Largest static friction μs N', `${f(S.p.ms * fz.N, 1)} N`);
+      if (S.p.m2 > 0) h += dd('Tension T', `${f(fz.T, 1)} N`) + dd('m₂g', `${f(S.p.m2 * G, 1)} N`);
+      h += dd('Acceleration a (up the ramp +)', `${f(fz.a, 3)} m/s²`, true);
+      if (S.p.F === 0 && S.p.m2 === 0) h += dd('Slips when tan θ > μs, at θ =', `${f(slipAngle(S.p.ms), 1)}°`, true);
+    }
+    if (fz.lift) h += dd('Warning', 'F lifts the block: the vertical part of F exceeds the weight\'s part across the ramp. Not modeled.', true, 'warn');
+    h += dd('Timer, last run', S.lastGate ? `${S.lastGate.toFixed(3)} s for 1.000 m` : '—', true);
+    $('forceOut').innerHTML = h;
+  }
+
+  // ---------- readings and fit ----------
+  function capStatus(m) { $('capStatus').textContent = m; }
+  $('capture').addEventListener('click', () => {
+    if (!S.lastGate) { capStatus('Use Release at the top mark first, and let the timer finish.'); return; }
+    S.rows.push({ th: S.p.th.toFixed(1), m: S.p.m.toFixed(1), m2: S.p.m2.toFixed(1), F: S.p.F.toFixed(0), phi: S.p.phi.toFixed(0), t: S.lastGate.toFixed(3) });
+    renderRows(); capStatus(`Row ${S.rows.length} captured.`);
+  });
+  $('clearRows').addEventListener('click', () => { S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  $('exportCsv').addEventListener('click', () => {
+    if (!S.rows.length) { capStatus('No readings to export.'); return; }
+    const txt = readingsCSV(S.rows, { version: FF_VERSION, setup: document.querySelector(`#presets button[data-p="${S.preset}"]`)?.textContent || 'Your own setup', surface: S.mystery ? 'mystery surface (coefficients hidden)' : `mu_s ${S.p.ms}, mu_k ${S.p.mk} at export` });
+    try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'forces-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+    capStatus('CSV exported.');
+  });
+  function renderRows() {
+    const tb = $('rowsTbl').querySelector('tbody');
+    tb.innerHTML = S.rows.length ? S.rows.map((r, i) => { const t = cellNum(r.t), a = isFinite(t) && t > 0 ? 2 * GATE_D / (t * t) : NaN;
+      return `<tr title="m ${r.m} kg, m2 ${r.m2} kg, F ${r.F} N at ${r.phi}°"><td>${i + 1}</td><td><input data-i="${i}" data-f="th" value="${r.th}" aria-label="theta, row ${i + 1}"></td><td><input data-i="${i}" data-f="t" value="${r.t}" aria-label="time, row ${i + 1}"></td><td>${isFinite(a) ? a.toFixed(3) : '—'}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`; }).join('')
+      : '<tr><td class="empty" colspan="5">No readings yet. Release at the top mark, then capture.</td></tr>';
+    fit();
+  }
+  $('rowsTbl').addEventListener('change', (e) => { const el = e.target; if (el.dataset.f) { S.rows[+el.dataset.i][el.dataset.f] = el.value.trim(); renderRows(); } });
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderRows(); } });
+  $('fitTblBtn').addEventListener('click', () => { const o = $('fitWrap').hidden; $('fitWrap').hidden = !o; $('fitTblBtn').setAttribute('aria-expanded', String(o)); $('fitTblBtn').textContent = o ? 'Hide data table' : 'Show data table'; });
+  const fitCan = $('fitCan'), fctx = fitCan.getContext('2d');
+  function fitPoints() {
+    const pts = [];
+    for (const r of S.rows) { const th = cellNum(r.th) * Math.PI / 180, t = cellNum(r.t); if (cellNum(r.F) !== 0 || cellNum(r.m2) !== 0 || !isFinite(th) || !(t > 0)) continue; const a = 2 * GATE_D / (t * t); pts.push([Math.tan(th), a / Math.cos(th)]); }
+    return pts;
+  }
+  function fit() {
+    const pts = fitPoints(), F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
+    let h;
+    if (!F) h = '<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two sliding-down rows at different angles, with F = 0 and no hanging mass.</dd></div>';
+    else {
+      const pm = (v, e, d) => `${f(v, d)}${isFinite(e) ? ` ± ${f(e, d)}` : ''}`;
+      h = `<div><dt>Slope (m/s²)</dt><dd>${pm(F.b, F.seB, 3)}</dd></div><div><dt>Intercept (m/s²)</dt><dd>${pm(F.a, F.seA, 3)}</dd></div>`;
+      h += S.blind ? '<div class="wide"><dt>μk = −intercept / slope</dt><dd class="ok">hidden in Blind: work it out</dd></div>' : `<div class="wide"><dt>μk = −intercept / slope</dt><dd>${f(-F.a / F.b, 3)}</dd></div>`;
+    }
+    $('fitOut').innerHTML = h;
+    $('fitTbl').querySelector('tbody').innerHTML = pts.map(([x, y], i) => `<tr><td>${x.toFixed(4)}</td><td>${y.toFixed(4)}</td><td>${F ? (F.a + F.b * x).toFixed(4) : '—'}</td><td>${F ? F.res[i].toFixed(4) : '—'}</td></tr>`).join('');
+    drawFit(pts, F);
+  }
+  function drawFit(pts, F) {
+    const r = fitCan.getBoundingClientRect(), w = r.width, h = r.height; if (!w || !T) return;
+    fitCan.width = Math.round(w * dpr); fitCan.height = Math.round(h * dpr); fctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    fctx.fillStyle = T.canvas; fctx.fillRect(0, 0, w, h);
+    const L = 40, Rr = w - 8, top = 8, mainB = h - 62, resT = h - 50, resB = h - 18;
+    fctx.strokeStyle = T.line; fctx.strokeRect(L + 0.5, top + 0.5, Rr - L, mainB - top); fctx.strokeRect(L + 0.5, resT + 0.5, Rr - L, resB - resT);
+    fctx.fillStyle = T.muted; fctx.font = `10px ${T.mono}`; fctx.textAlign = 'center'; fctx.textBaseline = 'top'; fctx.fillText('tan θ', (L + Rr) / 2, resB + 3);
+    fctx.save(); fctx.translate(10, (top + mainB) / 2); fctx.rotate(-Math.PI / 2); fctx.fillText('a / cos θ (m/s²)', 0, 0); fctx.restore();
+    if (!pts.length) return;
+    const xl = Math.min(...pts.map((q) => q[0])), xh = Math.max(...pts.map((q) => q[0]), xl + 0.05), yl = Math.min(0, ...pts.map((q) => q[1])), yh = Math.max(...pts.map((q) => q[1]), yl + 0.1);
+    const PX = (x) => L + (Rr - L) * (x - xl + 0.05 * (xh - xl)) / (1.1 * (xh - xl)), PY = (y) => mainB - (mainB - top) * (y - yl) / (1.08 * (yh - yl) || 1);
+    fctx.textAlign = 'right'; fctx.textBaseline = 'middle'; fctx.fillText(f(yh, 1), L - 3, PY(yh)); fctx.fillText(f(yl, 1), L - 3, PY(yl));
+    if (F) { fctx.strokeStyle = T.accent; fctx.lineWidth = 1.5; fctx.beginPath(); fctx.moveTo(PX(xl), PY(F.a + F.b * xl)); fctx.lineTo(PX(xh), PY(F.a + F.b * xh)); fctx.stroke(); }
+    fctx.fillStyle = T.n; for (const [x, y] of pts) { fctx.beginPath(); fctx.arc(PX(x), PY(y), 3.2, 0, 7); fctx.fill(); }
+    if (F) { const m = Math.max(...F.res.map(Math.abs), 1e-4), RY = (v) => (resT + resB) / 2 - (resB - resT) / 2 * 0.85 * v / m;
+      fctx.strokeStyle = T.gridStrong; fctx.beginPath(); fctx.moveTo(L, RY(0)); fctx.lineTo(Rr, RY(0)); fctx.stroke();
+      fctx.fillStyle = T.n; pts.forEach(([x], i) => { fctx.beginPath(); fctx.arc(PX(x), RY(F.res[i]), 2.6, 0, 7); fctx.fill(); }); }
+  }
+
+  // ---------- keys, toggles, Blind, boot ----------
+  can.addEventListener('keydown', (e) => {
+    const k = e.key;
+    if (k === ' ') $('go').click(); else if (k === 'r' || k === 'R') $('back').click(); else if (k === 't' || k === 'T') $('timed').click();
+    else if (k === 'ArrowUp' || k === 'ArrowDown') { S.p.th = Math.max(0, Math.min(60, S.p.th + (k === 'ArrowUp' ? 0.5 : -0.5))); S.preset = 'custom'; mark(); sync(); draw(); readouts(); }
+    else return;
+    e.preventDefault();
+  });
+  $('tComp').addEventListener('change', (e) => { S.comp = e.target.checked; draw(); });
+  $('tNet').addEventListener('change', (e) => { S.net = e.target.checked; draw(); });
+  function setBlind(on) { S.blind = on; $('labBlind').checked = on; $('blindTag').hidden = !on; draw(); readouts(); fit(); }
+  $('labBlind').addEventListener('change', (e) => { if (!e.target.checked && S.mystery) setMystery(false); setBlind(e.target.checked); });
+  $('rmToggle').checked = reduce;
+  $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; try { sessionStorage.setItem('vd-ff-motion', reduce ? 'reduce' : 'full'); } catch (_) {} });
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); fit(); }
+  const retheme = () => { tokens(); draw(); fit(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  tokens(); new ResizeObserver(resize).observe(stage); applyPreset('push'); renderRows(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
