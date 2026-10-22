@@ -214,9 +214,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="free" aria-pressed="false">Free particle</button>
           <button type="button" data-p="step" aria-pressed="false">Step</button>
           <button type="button" data-p="barrier" aria-pressed="true">Barrier</button>
-          <button type="button" data-p="dbar" aria-pressed="false">Double barrier</button>
-          <button type="button" data-p="fwell" aria-pressed="false">Finite well</button>
-          <button type="button" data-p="iwell" aria-pressed="false">Infinite well</button>
+          <button type="button" data-p="iwell" aria-pressed="false">Square well</button>
           <button type="button" data-p="ho" aria-pressed="false">Oscillator</button>
           <button type="button" data-p="dwell" aria-pressed="false">Double well</button>
         </div>
@@ -225,6 +223,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
       <section id="potSec">
         <h2>Potential</h2>
+        <div class="inline" id="variantRow" hidden>
+          <span class="lab" id="variantLab">Barriers</span>
+          <div class="seg" role="group" aria-labelledby="variantLab" id="variantSeg"></div>
+        </div>
         <div id="s1Row">
           <div class="slider-head"><label for="s1" id="s1Lab">Height V₀</label><output id="s1Out" class="mono" for="s1"></output></div>
           <input type="range" id="s1" min="0" max="1" step="0.01" value="0.5">
@@ -623,7 +625,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       hint: 'Even with E above the step, part of the packet reflects, which a classical particle never does. Drop E₀ below the step and everything reflects after a brief dip into the step.' },
     barrier: { kind: 'scatter', view: [-25, 25], dx: 0.025,
       params: { h: 0.5, w: 0.5 }, packet: { x0: -12, sigma: 2, E0: 0.3, dir: 1 },
-      hint: 'Part of the packet appears beyond the barrier even though ⟨E⟩ is below the top. Make the barrier wider or taller and the transmitted part shrinks roughly exponentially.' },
+      hint: 'Part of the packet appears beyond the barrier even though ⟨E⟩ is below the top. Make the barrier wider or taller and the transmitted part shrinks roughly exponentially. Set Barriers to Two for resonant tunneling.' },
     dbar: { kind: 'scatter', view: [-45, 45], dx: 0.04, cap: { L: 20, W0: 0.4 },
       params: { h: 0.4, w: 0.4, g: 1.5 }, packet: { x0: -26, sigma: 8, E0: 'res', dir: 1 },
       hint: 'Each barrier alone lets through only a little. Together, at a resonant energy where a standing wave fits between them, they let through far more: the packet builds up between the barriers and leaks out the far side. E₀ starts at the first resonance; nudge it off and T drops.' },
@@ -631,7 +633,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       params: { h: 0.5, w: 2 }, levels: [0, 1], packet: { x0: -0.5, sigma: 0.3, E0: 0, dir: 1 },
       hint: 'A finite well holds only a few bound states, and each one leaks a little into the walls where a classical particle could never be. Two of them together slosh back and forth at the beat period.' },
     iwell: { kind: 'well', params: { w: 1 }, levels: [0, 1], packet: { x0: -0.2, sigma: 0.08, E0: 2, dir: 1 },
-      hint: 'Particle in a box. One energy eigenstate is stationary: |ψ|² never moves and only the phase turns (watch the color). Two together slosh with period h/(E₂ − E₁).' },
+      hint: 'Particle in a box. One energy eigenstate is stationary: |ψ|² never moves and only the phase turns (watch the color). Two together slosh with period h/(E₂ − E₁). Set Walls to Finite and the states leak into the walls.' },
     ho: { kind: 'well', view: [-4, 4], N: 1000, params: { h: 0.2 }, levels: null, packet: { x0: -1.5, sigma: 'coh', E0: 0, dir: 1 },
       hint: 'The levels are evenly spaced by ħω. A Gaussian of just the right width, a coherent state, swings back and forth like a classical mass on a spring without spreading. Change σ and it breathes as it swings.' },
     dwell: { kind: 'well', view: [-4, 4], N: 1000, params: { h: 0.15, g: 3 }, levels: [0, 1], packet: { x0: -1.5, sigma: 0.35, E0: 0, dir: 1 },
@@ -747,7 +749,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     prepared = { re: Float64Array.from(sim.re), im: Float64Array.from(sim.im) };
     lastObs = observe(sim, split());
     let mx = 0; for (let i = 0; i < sim.N; i++) mx = Math.max(mx, sim.re[i] * sim.re[i] + sim.im[i] * sim.im[i]);
-    psiBase = psiScale = 1.18 * mx;
+    psiBase = psiScale = 1.2 * mx;   // equal to the relaxation target, so a fresh packet does not rescale
     clearHist();
     chooseTiming();
     computeKView();
@@ -1180,7 +1182,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     let mx = 0; for (let i = 0; i < sim.N; i++) mx = Math.max(mx, sim.re[i] * sim.re[i] + sim.im[i] * sim.im[i]);
     // the scale relaxes toward the current peak (down to half the launch scale), so a spread or split packet still fills the pane
     const target = Math.max(0.5 * psiBase, 1.2 * mx);
-    psiScale = mx * 1.02 > psiScale ? 1.1 * mx : psiScale + (target - psiScale) * 0.05;
+    // while paused the picture must hold still, so the scale settles at once instead of easing
+    psiScale = mx * 1.02 > psiScale ? 1.1 * mx : running ? psiScale + (target - psiScale) * 0.05 : target;
     const sc = psiScale;
     const mid = amp ? (top + bot) / 2 : bot;
     const hgt = amp ? (bot - top) / 2 : (bot - top);
@@ -1461,9 +1464,32 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   // ---------- controls ----------
+  // two chips each cover a pair of potentials, switched in the Potential section
+  const VARIANTS = {
+    barrier: ['Barriers', [['barrier', 'One'], ['dbar', 'Two']]],
+    well: ['Walls', [['fwell', 'Finite'], ['iwell', 'Infinite']]]
+  };
+  const GROUP = { barrier: 'barrier', dbar: 'barrier', fwell: 'well', iwell: 'well' };
+  const CHIP = { dbar: 'barrier', fwell: 'iwell' };
   function setPresetPressed(name, keepHint) {
     if (name === null) return;
-    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    const chip = CHIP[name] || name;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === chip));
+  }
+  function syncVariant() {
+    const g = VARIANTS[GROUP[S.preset]], row = $('variantRow'), seg = $('variantSeg');
+    row.hidden = !g;
+    if (!g) return;
+    $('variantLab').textContent = g[0];
+    if (seg.dataset.group !== GROUP[S.preset]) {
+      seg.dataset.group = GROUP[S.preset]; seg.textContent = '';
+      for (const [key, lab] of g[1]) {
+        const b = document.createElement('button'); b.type = 'button'; b.dataset.v = key; b.textContent = lab;
+        b.addEventListener('click', () => { if (S.preset !== key) applyPreset(key); });
+        seg.append(b);
+      }
+    }
+    for (const b of seg.querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.preset));
   }
   function syncSliders() {
     const defs = SLIDERS[S.preset] || [];
@@ -1512,6 +1538,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (S.packet.E0 === 'res') S.packet.E0 = resE ? +resE.toFixed(4) : 0.1;
     if (S.packet.sigma === 'coh') S.packet.sigma = +cohSigma().toFixed(3);
     setPresetPressed(name);
+    syncVariant();
     $('presetHint').textContent = c.hint;
     syncSliders();
     if (c.levels) { S.sel = c.levels.slice(); prepareLevels(); } else launch();

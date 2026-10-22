@@ -20,7 +20,7 @@ Students need the idea of a spectrum and the order of the visible colors; wavele
 1. **Sun.** Ask Q1 before touching anything. Point out the peak near 502 nm, inside the visible band, and the **Visible share** of 43.8%. The disk in the strip below is nearly white, although the **Traditional color** readout says yellow.
 2. **Drag the peak marker** to the left. Tick **Lock axes** first so the curve visibly grows. Doubling T from 5772 K to about 11,540 K halves the peak to 251 nm and multiplies the flux by 16.
 3. **Betelgeuse**, then **Pin this curve**, then **Sun**. Switch **B** to **Log**: the Sun's curve lies above Betelgeuse's everywhere. Yet the **Luminosity** readout for Betelgeuse is about 87,000 L☉. Ask where that comes from (Q2).
-4. **Sirius A** and **Rigel.** Both peak in the ultraviolet; the visible part is nearly flat for Sirius and tilts toward blue for Rigel. Read the **Why no green stars?** panel aloud and ask Q3.
+4. **Rigel**, then Sirius A. Rigel peaks in the ultraviolet and its visible part tilts toward blue. Slide **Temperature T** down to about 9940 K for Sirius A: the peak is still ultraviolet, but the visible part is nearly flat. Read the **Why no green stars?** panel aloud and ask Q3.
 5. **Human body** and **Light bulb.** The peak sits in the infrared. Only about 8% of a 2800 K filament's power is visible light. For the human body the **Visible share** readout is about 5×10⁻²¹ %: not zero, but far too small for any eye.
 6. **Rayleigh-Jeans** (for majors and physics students). Turn the layer on at the Sun. It agrees at long wavelengths and runs off the top at short ones. Finish with **Cosmic background** (Q6).
 

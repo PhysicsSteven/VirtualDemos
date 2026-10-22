@@ -19,7 +19,7 @@ Students should know the law of reflection and Snell's law. The sign conventions
 
 1. **Converging lens.** Ask Q1 first. The readouts give d_o = +30.0 cm, d_i = +15.0 cm, m = −0.50. Drag the object toward the lens: inside 2F the image is enlarged, at F it goes to infinity, inside F it becomes virtual.
 2. **Magnifier.** The object is inside F (6 cm from an f = 12 cm lens). The rays leave diverging; the dashed lines trace them back to a virtual, upright image at d_i = −12.0 cm with m = +2.00 (Q2).
-3. **Diverging lens.** d_i = −6.7 cm, m = +0.33. Drag the object anywhere in front of the lens: the image stays virtual, upright and reduced (Q3).
+3. **Diverging.** Back in **Converging lens**, click the lens and choose **Diverging**: f = −10 cm with the object still at 30 cm gives d_i = −7.5 cm, m = +0.25. Drag the object anywhere in front of the lens: the image stays virtual, upright and reduced (Q3).
 4. **Concave mirror.** Traced d_i = +19.7 cm, while the mirror equation gives +20.0 cm. Ask what causes the difference, then try the fix students suggest (Q4).
 5. **Telescope.** A beam at 3° to the axis enters a 16 cm lens; the 5 cm lens sits 21 cm behind it. The beam leaves parallel, narrower, tilted the other way and steeper (Q5).
 6. **Prism**, then **Total internal reflection.** A single white ray splits; violet bends most. Then select the beam and turn **Angle (pivots on the glass)**: the beam enters the semicircle along a radius and meets the flat face at the angle in **Angle inside, at exit face**. Step past 41.8° and the outgoing ray disappears (Q6).

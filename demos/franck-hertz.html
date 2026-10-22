@@ -872,7 +872,8 @@ sub, sup { line-height: 0; }
     c.strokeStyle = T.ink; c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(lineL, yG); c.lineTo(lineR, yG); c.stroke();
     const lab = (txt, y, col, bold) => label(c, txt, lineR + 6 * ps, y, col, 'left', 'middle', bold, ps * 0.95);
     const ex = sample && sample.nx > 0 && S.U > S.Uc;
-    const pulse = ex ? 0.5 + 0.5 * Math.sin(now * 6) : 0;
+    // the impact arrow throbs only while electrons are flowing; paused or with reduced motion it holds still
+    const pulse = ex ? (playing && !reduce ? 0.5 + 0.5 * Math.sin(now * 6) : 0.5) : 0;
     if (hg) {
       const E = HG.levels.map((l) => eVof(l.cm));
       HG.levels.forEach((l, i) => { c.strokeStyle = i === 1 ? T.ink : T.muted; c.lineWidth = (i === 1 ? 2.2 : 1.4) * ps; c.beginPath(); c.moveTo(lineL, Y(E[i])); c.lineTo(lineR, Y(E[i])); c.stroke(); });

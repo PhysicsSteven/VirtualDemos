@@ -95,7 +95,9 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 #ov { pointer-events: none; z-index: 1; }
 #gl { touch-action: none; cursor: grab; outline: none; }
 #gl:active { cursor: grabbing; }
-#gl:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+#gl:focus-visible, #slice:focus-visible, #rCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+#slice, #rCan { outline: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 #slice { touch-action: none; cursor: crosshair; }
 #rCan { touch-action: none; cursor: crosshair; }
 .stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
@@ -177,7 +179,7 @@ select:disabled { opacity: 0.5; }
   :root[data-projector="on"] .stage { min-height: 440px; }
 }
 @media (max-width: 820px) {
-  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  .chips button, .btn, .seg button, .proj, select { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
   html, body { height: auto; }
   .app { height: auto; }
@@ -206,7 +208,7 @@ select:disabled { opacity: 0.5; }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="pane" id="vPane">
-        <canvas id="slice" hidden aria-label="Slice through the atom: probability density |ψ|² in a plane through the nucleus, with nodal lines dashed. Hover to read values."></canvas>
+        <canvas id="slice" hidden tabindex="0" role="application" aria-label="Slice through the atom: probability density |ψ|² in a plane through the nucleus, with nodal lines dashed. Hover to read values; or use the arrow keys to move the readout point (Shift for bigger steps), Home to return it to the nucleus, Escape to hide it."></canvas>
         <span class="axlab" id="axX" hidden>x</span>
         <span class="axlab" id="axY" hidden>y</span>
         <span class="axlab" id="axZ" hidden>z</span>
@@ -240,7 +242,8 @@ select:disabled { opacity: 0.5; }
         <div class="fail" id="failNote" hidden>The 3D view could not load its graphics library. Check your connection and reload the page. The slice view works without it.</div>
       </div>
       <div class="pane" id="rPane">
-        <canvas id="rCan" aria-label="Radial probability distribution P(r) = r²|R(r)|² against r in Bohr radii, with the mean radius, the Bohr model radius and the radial nodes marked. Hover to read values."></canvas>
+        <canvas id="rCan" tabindex="0" role="application" aria-label="Radial probability distribution P(r) = r²|R(r)|² against r in Bohr radii, with the mean radius, the Bohr model radius and the radial nodes marked. Hover to read values; or use the left and right arrow keys to move the readout along r (Shift for bigger steps), Home and End to jump to the ends, Escape to hide it."></canvas>
+        <p class="sr-only" id="probeLive" aria-live="polite"></p>
       </div>
     </div>
 
@@ -1547,7 +1550,9 @@ select:disabled { opacity: 0.5; }
     }
     SL.off.getContext('2d').putImageData(SL.img, 0, 0);
   }
-  let sliceHover = null;
+  let sliceHover = null, sliceKbd = false, rKbd = false, sayTimer = 0;
+  // what the keyboard readout shows, for screen readers (debounced so held keys do not flood them)
+  function sayProbe(t) { clearTimeout(sayTimer); sayTimer = setTimeout(() => { $('probeLive').textContent = t; }, 250); }
   function sliceBox() {
     const ps = projScale(), W = VW, H = VH;
     const top = (W < 520 ? 100 : 74) * (ps > 1 ? 1.25 : 1), bot = (W < 520 ? 82 : 58) * ps, left = 40 * ps, right = (W < 520 ? 44 : 64) * ps;
@@ -1639,6 +1644,7 @@ select:disabled { opacity: 0.5; }
         }
         const lines = [`${ha} = ${minus(a.toFixed(2))}, ${va} = ${minus(b.toFixed(2))} a₀`, `r = ${Math.hypot(a, b).toFixed(2)} a₀ = ${(Math.hypot(a, b) * A0_NM).toFixed(3)} nm`, `|ψ|² = ${fmtSci(d)} a₀⁻³`];
         tipBox(ctx, px, py, lines, ps, W, H, true);
+        if (sliceKbd) sayProbe(lines.join('; '));
       }
     }
   }
@@ -1686,8 +1692,8 @@ select:disabled { opacity: 0.5; }
     ctx.fillStyle = dark ? T.cink : T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     lines.forEach((s, i) => ctx.fillText(s, lx + 7, ly + 5 + i * lh));
   }
-  sliceCan.addEventListener('pointermove', (e) => { const r = sliceCan.getBoundingClientRect(); sliceHover = { px: e.clientX - r.left, py: e.clientY - r.top }; dirty.slice = true; schedule(); });
-  sliceCan.addEventListener('pointerdown', (e) => { const r = sliceCan.getBoundingClientRect(); sliceHover = { px: e.clientX - r.left, py: e.clientY - r.top }; dirty.slice = true; schedule(); });
+  sliceCan.addEventListener('pointermove', (e) => { sliceKbd = false; const r = sliceCan.getBoundingClientRect(); sliceHover = { px: e.clientX - r.left, py: e.clientY - r.top }; dirty.slice = true; schedule(); });
+  sliceCan.addEventListener('pointerdown', (e) => { sliceKbd = false; const r = sliceCan.getBoundingClientRect(); sliceHover = { px: e.clientX - r.left, py: e.clientY - r.top }; dirty.slice = true; schedule(); });
   sliceCan.addEventListener('pointerleave', () => { sliceHover = null; dirty.slice = true; schedule(); });
 
   // ---------- radial plot ----------
@@ -1809,6 +1815,7 @@ select:disabled { opacity: 0.5; }
       const lines = [`r = ${r.toFixed(2)} a₀ = ${(r * A0_NM).toFixed(3)} nm`, `P(r) = ${p.toFixed(4)} per a₀`, `inside r: ${(100 * inside).toFixed(1)}%`];
       if (stB) lines.push(`B: P(r) = ${Pf(stB, r).toFixed(4)}`);
       tipBox(ctx, x, Math.max(pad.T + 10, Y(p) - 20), lines, ps, W, H, false);
+      if (rKbd) sayProbe(lines.join('; '));
     }
   }
   // cumulative probability inside radius r, from the table
@@ -1833,6 +1840,7 @@ select:disabled { opacity: 0.5; }
     return v.replace(/rgba?\(([^)]+)\)/, (m, s) => `rgba(${s.split(',').slice(0, 3).join(',')},${a})`);
   }
   function rHover(e) {
+    rKbd = false;
     const r = rCan.getBoundingClientRect(), px = e.clientX - r.left, gm = rGeom();
     rHoverPx = Math.max(gm.pad.L, Math.min(gm.W - gm.pad.R, px));
     hoverR = Math.max(0, Math.min(gm.xMax, gm.inv(rHoverPx)));
@@ -1841,6 +1849,32 @@ select:disabled { opacity: 0.5; }
   rCan.addEventListener('pointermove', rHover);
   rCan.addEventListener('pointerdown', rHover);
   rCan.addEventListener('pointerleave', () => { rHoverPx = null; hoverR = null; dirty.radial = true; dirty.slice = true; schedule(); });
+  // keyboard equivalents of hovering: arrow keys move the readout point
+  sliceCan.addEventListener('keydown', (e) => {
+    const W = sliceCan.clientWidth, H = sliceCan.clientHeight, st = Math.min(W, H) * (e.shiftKey ? 0.1 : 0.02);
+    const k = e.key; let { px, py } = sliceHover || { px: W / 2, py: H / 2 };
+    if (k === 'ArrowLeft') px -= st; else if (k === 'ArrowRight') px += st;
+    else if (k === 'ArrowUp') py -= st; else if (k === 'ArrowDown') py += st;
+    else if (k === 'Home') { px = W / 2; py = H / 2; }
+    else if (k === 'Escape') { sliceHover = null; sliceKbd = false; dirty.slice = true; schedule(); return; }
+    else return;
+    e.preventDefault();
+    sliceHover = { px: Math.max(0, Math.min(W, px)), py: Math.max(0, Math.min(H, py)) }; sliceKbd = true;
+    dirty.slice = true; schedule();
+  });
+  sliceCan.addEventListener('blur', () => { if (sliceKbd) { sliceHover = null; sliceKbd = false; dirty.slice = true; schedule(); } });
+  rCan.addEventListener('keydown', (e) => {
+    const gm = rGeom(), L = gm.pad.L, R = gm.W - gm.pad.R, st = (R - L) * (e.shiftKey ? 0.1 : 0.01);
+    let px = rHoverPx === null ? L + 0.25 * (R - L) : rHoverPx;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') px -= st; else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') px += st;
+    else if (e.key === 'Home') px = L; else if (e.key === 'End') px = R;
+    else if (e.key === 'Escape') { rHoverPx = null; hoverR = null; rKbd = false; dirty.radial = true; dirty.slice = true; schedule(); return; }
+    else return;
+    e.preventDefault();
+    rHoverPx = Math.max(L, Math.min(R, px)); hoverR = Math.max(0, Math.min(gm.xMax, gm.inv(rHoverPx))); rKbd = true;
+    dirty.radial = true; dirty.slice = true; schedule();
+  });
+  rCan.addEventListener('blur', () => { if (rKbd) { rHoverPx = null; hoverR = null; rKbd = false; dirty.radial = true; dirty.slice = true; schedule(); } });
 
   // ---------- view switching ----------
   const spinBtn = $('spin');

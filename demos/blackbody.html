@@ -99,6 +99,8 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .pane { position: relative; min-height: 0; }
 .pane + .pane { border-top: 1px solid var(--line); }
 .stage canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; }
+/* pictures, not controls: let a finger on them scroll the page */
+.stage canvas#strip { touch-action: auto; }
 #chart { cursor: crosshair; }
 .stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 
@@ -177,6 +179,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   :root[data-projector="on"] .pane.strip { height: 245px; }
   .rail { overflow: visible; }
 }
+/* phone touch targets: the house minimums (buttons 36 px, sliders 28 px) */
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj, #proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
 </style>
 </head>
 <body>
@@ -211,7 +218,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <canvas id="chart" tabindex="0" role="application" aria-label="Planck spectrum chart. Drag the peak marker sideways to change the temperature. Arrow keys up and down change the temperature, left and right move the peak."></canvas>
       </div>
       <div class="pane strip">
-        <canvas id="strip" aria-label="Perceived color of a blackbody at this temperature, and the blackbody color scale from 1000 K to 40,000 K with spectral classes."></canvas>
+        <canvas id="strip" role="img" aria-label="Perceived color of a blackbody at this temperature, and the blackbody color scale from 1000 K to 40,000 K with spectral classes."></canvas>
       </div>
     </div>
 
@@ -223,7 +230,6 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="bulb" aria-pressed="false">Light bulb</button>
           <button type="button" data-p="sun" aria-pressed="true">Sun</button>
           <button type="button" data-p="betel" aria-pressed="false">Betelgeuse</button>
-          <button type="button" data-p="sirius" aria-pressed="false">Sirius A</button>
           <button type="button" data-p="rigel" aria-pressed="false">Rigel</button>
           <button type="button" data-p="cmb" aria-pressed="false">Cosmic background</button>
         </div>
@@ -451,8 +457,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     bulb:   { T: 2800,  hint: 'A tungsten filament at 2800 K peaks near 1 μm, just past red. Only about 8% of its power lands in the visible band; the rest is heat.' },
     sun:    { T: 5772, R: 1, hint: 'The Sun at 5772 K peaks near 500 nm, right in the visible band, and about 44% of its power is visible light. Its color is close to white, not yellow.' },
     betel:  { T: 3600, R: 760, hint: 'Betelgeuse is a red supergiant: cooler than the Sun, so each square meter emits about 15% as much, but 760 times wider, so it outshines the Sun nearly 90,000 times.' },
-    sirius: { T: 9940, R: 1.711, hint: 'Sirius A at 9940 K is a white A star. Its peak is in the ultraviolet near 290 nm, yet it looks white because the visible part of the curve is nearly flat.' },
-    rigel:  { T: 12100, R: 78.9, hint: 'Rigel is a blue supergiant at 12,100 K. Most of its output is ultraviolet, and the visible part tilts toward blue.' },
+    rigel:  { T: 12100, R: 78.9, hint: 'Rigel is a blue supergiant at 12,100 K. Most of its output is ultraviolet, and the visible part tilts toward blue. Slide T down to about 9940 K for Sirius A: its peak is still in the ultraviolet, near 290 nm, but the visible part is nearly flat, so it looks white.' },
     cmb:    { T: 2.725, hint: 'The cosmic microwave background is the most perfect blackbody known, at 2.725 K. Its peak sits near 1 mm, in microwaves. The slider stops at 300 K, so this preset is a special case.' }
   };
   const S = { T: 5772, R: 1, star: true, xMode: 'lin', yMode: 'lin', rj: false, band: true, eye: false, lock: false };
