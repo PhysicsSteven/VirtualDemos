@@ -1,4 +1,4 @@
-name: E&M laboratory regression
+name: Physics regression (all node suites)
 on:
   workflow_dispatch:
   push:
@@ -23,8 +23,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Independent numerical references
+      - name: Independent numerical references (every node suite)
         run: |
-          for demo in transient_circuits rc_circuits gauss_law faraday capacitors ac_circuits circuit_builder coulomb_sandbox diffraction_grating modern_benches circuits photoelectric_record acoustic_labs franck_hertz; do
-            node "curriculum/validation/test_${demo}.cjs" || exit 1
+          set -e
+          for f in curriculum/validation/test_*.cjs; do
+            if grep -q "playwright\|chromium" "$f"; then echo "skip (browser): $f"; continue; fi
+            echo "== $f"; node "$f"
           done
