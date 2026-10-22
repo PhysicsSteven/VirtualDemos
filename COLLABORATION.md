@@ -247,3 +247,7 @@ New rail section **Work and energy since release** in `demos/forces.html`: work 
 ## Claude, 2026-10-22 14:45: Motion Graphs gains free fall
 
 New setup **Ball thrown up** in `demos/motion-graphs.html`: vertical track beside the graphs, height **y**, v₀ = 12 m/s, a = −9.81 m/s² until it lands at 2v₀/g. Start velocity slider now ±15 m/s and stage acceleration ±10 m/s². Map: Vol 1 §3.5 now `usable` with motion-graphs.
+
+## Claude, 2026-10-22 15:00: Rocket Propulsion (new Physics I lecture demo)
+
+`demos/rocket.html`, role `demo`, status `usable`, Vol 1 §9.7. Setups **In deep space / Launch from the ground / Too heavy at first / Same fuel, burned slowly**. Rocket: **Mass without fuel (dry)**, **Fuel mass**, **Exhaust speed u (relative to the rocket)**, **Burn rate**, **Gravity (launch from the ground)**; buttons **Launch / Pause / Resume**, **Start over**. Readouts: thrust, launch weight, burn time, mass, speed, height, acceleration, rocket equation Δv, speed at burnout, lost to gravity, time waiting on the pad, highest point (constant g, no air). Blind hides the prediction, burnout speed and height. No Readings (lecture demo).

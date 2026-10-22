@@ -1667,10 +1667,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "rocket"
+      ],
       "unit": "momentum",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Rocket Propulsion: rocket equation, thrust against weight, gravity losses, waiting on the pad; exact solution with constant g."
     },
     {
       "vol": 1,
@@ -4490,6 +4492,26 @@
       ],
       "title": "Collisions and Momentum",
       "url": "demos/collisions.html"
+    },
+    {
+      "demo": "rocket",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "9.7",
+          "title": "Rocket Propulsion"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Lecture demo: Δv = u ln(m0/m) in deep space, vertical launch in constant g with no air, gravity loss g × burn time, too heavy to lift off at first, slow against fast burn; v(t) and m(t) graphs. Constant g is rough above ~100 km (stated in the readout).",
+      "handouts": [],
+      "title": "Rocket Propulsion",
+      "url": "demos/rocket.html"
     },
     {
       "demo": "rotation",
