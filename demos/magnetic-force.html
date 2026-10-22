@@ -176,6 +176,11 @@ table.rows td.b { font-family: var(--font-mono); font-variant-numeric: tabular-n
 table.rows input { font: inherit; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.74rem; width: 5.2em; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 4px; padding: 2px; }
 table.rows button { font: inherit; font-size: 0.85rem; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 4px; }
 .plotbox { position: relative; height: 230px; }
+details.hall > summary { font-weight: 700; cursor: pointer; min-height: 36px; display: flex; align-items: center; }
+details.hall[open] > summary { margin-bottom: 8px; }
+.hallbox { position: relative; height: 210px; }
+.hallbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+:root[data-projector="on"] .hallbox { height: 260px; }
 .plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 :root[data-projector="on"] .plotbox { height: 270px; }
 .blindtag { font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
@@ -491,6 +496,42 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <p class="hint">Lay the ruler across the track: drag its two ends onto opposite sides of the circle. It reads to one screen pixel, so zoom in (wheel or +) for a finer reading. The timer counts time in the simulation and stops while paused. Start it as the particle passes a mark, such as the launch ring, and stop it after a whole number of turns. Keys on the drawing: M ruler, T timer, S picks what the arrow keys move.</p>
       </section>
 
+      <section id="secHall">
+        <details class="hall" id="hallDet">
+          <summary>Hall effect in a strip</summary>
+          <div class="inline">
+            <span class="lab">Strip</span>
+            <div class="seg" role="group" aria-label="Strip material" id="hallMat">
+              <button type="button" data-hm="cu" aria-pressed="true">Copper</button>
+              <button type="button" data-hm="nge" aria-pressed="false">n-type Ge</button>
+              <button type="button" data-hm="pge" aria-pressed="false">p-type Ge</button>
+            </div>
+          </div>
+          <div>
+            <div class="slider-head"><label for="hI">Current I</label><output id="hIOut" class="mono" for="hI"></output></div>
+            <input type="range" id="hI" min="0" max="50" step="0.5" value="20">
+          </div>
+          <div class="inline">
+            <span class="lab">B</span>
+            <div class="seg" role="group" aria-label="Field direction at the strip">
+              <button type="button" id="hBin" aria-pressed="true">⊗ Into page</button>
+              <button type="button" id="hBout" aria-pressed="false">⊙ Out</button>
+            </div>
+          </div>
+          <div>
+            <div class="slider-head"><label for="hB">Field |B| at the strip</label><output id="hBOut" class="mono" for="hB"></output></div>
+            <input type="range" id="hB" min="0" max="1" step="0.01" value="0.3">
+          </div>
+          <div>
+            <div class="slider-head"><label for="hT">Thickness t (along B)</label><output id="hTOut" class="mono" for="hT"></output></div>
+            <input type="range" id="hT" min="0.05" max="2" step="0.05" value="1">
+          </div>
+          <div class="hallbox"><canvas id="hallCan" role="img" aria-label="Top view of a strip 10 mm wide carrying current I to the right in a field B perpendicular to the page, with a voltmeter across its width reading the Hall voltage."></canvas></div>
+          <dl class="readout" id="hallOut"></dl>
+          <p class="hint" id="hallHint">The voltmeter reads V<sub>H</sub> = V<sub>top</sub> − V<sub>bottom</sub>. In the steady state the edge charge makes a field E<sub>H</sub> whose force qE<sub>H</sub> cancels qv<sub>d</sub> × B, so the carriers flow straight; V<sub>H</sub> = IB/(nqt), and its sign gives the sign of the carriers. The edge charge builds up in far less than a nanosecond, so only the steady state is drawn. The strip is 10 mm wide. One kind of carrier, free carrier model: copper has n = 8.49 × 10²⁸ m⁻³ (one electron per atom), whose measured Hall coefficient differs from this by tens of percent because its electrons are not free; the germanium samples use n = 1.0 × 10²¹ m⁻³, a typical value for doped teaching samples, not one particular crystal. The dots move at a speed chosen for the drawing; the true v<sub>d</sub> is in the readouts. Blind renames the strips and hides the carriers, their density and v<sub>d</sub>; the voltmeter stays.</p>
+        </details>
+      </section>
+
       <section id="secReadings">
         <h2>Readings</h2>
         <div class="btnrow">
@@ -519,7 +560,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides the r, T, f, turns, drift and pitch readouts, the r label, the circle's center, the dashed path ahead and the period axis, and in the other setups the predicted speeds, landing points, f<sub>c</sub> and K<sub>max</sub>. The ruler, the timer, the settings and the speed and energy readouts stay.</p>
+        <p class="hint">Blind hides the r, T, f, turns, drift and pitch readouts, the r label, the circle's center, the dashed path ahead and the period axis, and in the other setups the predicted speeds, landing points, f<sub>c</sub> and K<sub>max</sub>. In the Hall strip it renames the samples and hides the carriers, n, R<sub>H</sub> and v<sub>d</sub>. The ruler, the timer, the settings, the Hall voltmeter and the speed and energy readouts stay.</p>
       </section>
 
       <section>
@@ -827,11 +868,21 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   // CSV: '# ' comment lines, one header row, then the rows; cells with commas or quotes are quoted
   const csvCell = (v) => { const s = v === null || v === undefined ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
   const csvText = (meta, header, rows) => [...meta.map((l) => '# ' + l), header.join(','), ...rows.map((r) => r.map(csvCell).join(','))].join('\n') + '\n';
+  // Hall effect in a strip: current I along +x, B = Bz ẑ, voltage across the width (y).
+  // Steady state: qE_H = −q v_d × B, so V_H = V(top, +y) − V(bottom) = −I Bz/(n q t), with q signed.
+  const HALL = { w: 0.010,
+    cu: { name: 'Copper', n: 8.49e28, q: -1 },        // 8.96 g/cm³, 63.55 g/mol, one conduction electron per atom
+    nge: { name: 'n-type germanium', n: 1.0e21, q: -1 },
+    pge: { name: 'p-type germanium', n: 1.0e21, q: 1 } };
+  const hallVoltage = (I, Bz, n, q, t) => -I * Bz / (n * q * t);
+  const hallDrift = (I, n, q, w, t) => I / (n * Math.abs(q) * w * t);      // carrier speed; direction +x for q > 0, −x for q < 0
+  const hallCoefficient = (n, q) => 1 / (n * q);
   // ==CORE END==
 
   if (typeof document === 'undefined') {
     globalThis.MF = { QE, ME, MP, MD, MA, U, C, PARTICLES, ISOTOPES, ionMass, radius, period, specRadius, F12, advance, fieldsFor, gyroCenter, makeTraj, freeModel, selectorModel, selectorRun, selectorBand, specModel, specRun, cycModel, cycRun, cycSourceY,
-      frequency, driftVelocity, selectorSpeed, cyclotronFrequency, cyclotronGain, cyclotronKmax, specLanding, niceStep, roundSig, rulerResolution, rulerReading, measuredPeriod, fitOrigin, fitLine, csvText };
+      frequency, driftVelocity, selectorSpeed, cyclotronFrequency, cyclotronGain, cyclotronKmax, specLanding, niceStep, roundSig, rulerResolution, rulerReading, measuredPeriod, fitOrigin, fitLine, csvText,
+      HALL, hallVoltage, hallDrift, hallCoefficient };
     return;
   }
 
@@ -865,7 +916,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   };
   let playing = !reduce, simT = 0, tScale = 1e-7;
   // lab state: Blind, the ruler (ends in world metres), the timer (simulation seconds) and the captured rows
-  const DEMO_VERSION = 'magnetic-force@2026-10-22';
+  const DEMO_VERSION = 'magnetic-force@2026-10-22.2';
   const LAB = { blind: false, ruler: false, reads: 'd', ra: { x: 0, y: 0 }, rb: { x: 0.01, y: 0 }, tRun: false, tEl: 0, turns: 1, rows: [], plot: 'rv', table: false, kb: 'v0', kbFocus: false };
 
   // ---------- particles ----------
@@ -2679,11 +2730,111 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       }
     }
     drawAll();
+    if ($('hallDet').open) { if (playing && HS.I > 0) HS.ph += dt * 40 * projScale() * Math.min(1, 0.25 + HS.I / 0.02); drawHall(); }
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
     if (now - lastRead > 150) { countText(); lastRead = now; }
     else if (LAB.tRun) $('timerOut').textContent = timerText();
     requestAnimationFrame(loop);
   }
+  // ---------- Hall effect strip ----------
+  const HS = { mat: 'cu', I: 0.020, bz: -1, B: 0.3, t: 0.001, ph: 0 };
+  const hallCan = $('hallCan'), hctx = hallCan.getContext('2d');
+  const BLIND_NAMES = { cu: 'Sample A', nge: 'Sample B', pge: 'Sample C' };
+  function hallNums() {
+    const M = HALL[HS.mat], q = M.q * QE, Bz = HS.bz * HS.B;
+    return { M, q, Bz, V: hallVoltage(HS.I, Bz, M.n, q, HS.t), vd: hallDrift(HS.I, M.n, q, HALL.w, HS.t), EH: Math.abs(hallVoltage(HS.I, Bz, M.n, q, HS.t)) / HALL.w, RH: hallCoefficient(M.n, q) };
+  }
+  function hallText() {
+    for (const b of document.querySelectorAll('#hallMat button')) { b.setAttribute('aria-pressed', String(b.dataset.hm === HS.mat)); b.textContent = LAB.blind ? BLIND_NAMES[b.dataset.hm] : { cu: 'Copper', nge: 'n-type Ge', pge: 'p-type Ge' }[b.dataset.hm]; }
+    press('#hBin, #hBout', (b) => (b.id === 'hBin') === (HS.bz < 0));
+    $('hIOut').textContent = si(HS.I, 'A', 3); $('hBOut').textContent = HS.B ? si(HS.B, 'T', 3) : '0 T'; $('hTOut').textContent = `${trim((HS.t * 1000).toPrecision(3))} mm`;
+    const h = hallNums(), dd = (a, b, c) => `<div${c ? ` class="${c}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    let html = dd('Hall voltage V<sub>top</sub> − V<sub>bottom</sub>', si(roundSig(h.V, 3), 'V', 3), 'wide');
+    if (LAB.blind) html += `<div class="wide"><dt>Carriers</dt><dd class="ok">Sign, density n, R<sub>H</sub> and v<sub>d</sub> are hidden. Find them from V<sub>H</sub> against I or B.</dd></div>`;
+    else {
+      html += dd('Carriers', `${h.M.q < 0 ? 'electrons, q = −e' : 'holes, q = +e'}`) + dd('Density n', `${sci(h.M.n, 3)} m⁻³`);
+      html += dd('Drift speed v<sub>d</sub> = I/(n|q|wt)', fmtV(h.vd)) + dd('Hall field E<sub>H</sub> = v<sub>d</sub>B', `${si(roundSig(h.EH, 3), 'V/m', 3)}`);
+      html += dd('Hall coefficient R<sub>H</sub> = 1/(nq)', `${sci(h.RH, 3)} m³/C`, 'wide');
+    }
+    $('hallOut').innerHTML = html;
+  }
+  function drawHall() {
+    if (!$('hallDet').open || !T) return;
+    const r = hallCan.getBoundingClientRect(), W = r.width, H = r.height; if (!W || !H) return;
+    if (hallCan.width !== Math.round(W * dpr) || hallCan.height !== Math.round(H * dpr)) { hallCan.width = Math.round(W * dpr); hallCan.height = Math.round(H * dpr); }
+    const c = hctx, ps = projScale(), h = hallNums(), fs = 11 * ps;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, W, H);
+    const meterW = Math.min(118 * ps, W * 0.32), L = 14 * ps, R = W - meterW - 28 * ps, top = 30 * ps, bot = H - 46 * ps, mid = (top + bot) / 2;
+    // B symbols behind the strip
+    c.fillStyle = T.bfield; c.strokeStyle = T.bfield; c.lineWidth = 1;
+    const drawB = () => { if (HS.B > 0) for (let x = L + 13 * ps; x < R - 4 * ps; x += 26 * ps) for (let y = top + 13 * ps; y < bot - 4 * ps; y += 26 * ps) {
+      c.beginPath(); c.arc(x, y, 4 * ps, 0, 7); c.stroke();
+      if (HS.bz < 0) { c.beginPath(); c.moveTo(x - 2.8 * ps, y - 2.8 * ps); c.lineTo(x + 2.8 * ps, y + 2.8 * ps); c.moveTo(x + 2.8 * ps, y - 2.8 * ps); c.lineTo(x - 2.8 * ps, y + 2.8 * ps); c.stroke(); }
+      else { c.beginPath(); c.arc(x, y, 1.3 * ps, 0, 7); c.fill(); }
+    } };
+    // strip
+    c.fillStyle = HS.mat === 'cu' && !LAB.blind ? T.copper : T.steel; c.globalAlpha = 0.55; c.fillRect(L, top, R - L, bot - top); c.globalAlpha = 1;
+    c.strokeStyle = T.ink; c.lineWidth = 1.5; c.strokeRect(L + 0.5, top + 0.5, R - L, bot - top);
+    c.fillStyle = T.bfield; c.strokeStyle = T.bfield; c.lineWidth = 1; c.globalAlpha = 0.45; drawB(); c.globalAlpha = 1;
+    // conventional current arrow
+    c.strokeStyle = T.ink; c.fillStyle = T.ink; c.lineWidth = 2 * ps;
+    const ay = bot + 14 * ps; c.beginPath(); c.moveTo(L + 10 * ps, ay); c.lineTo(R - 20 * ps, ay); c.stroke();
+    c.beginPath(); c.moveTo(R - 12 * ps, ay); c.lineTo(R - 22 * ps, ay - 5 * ps); c.lineTo(R - 22 * ps, ay + 5 * ps); c.fill();
+    c.font = `600 ${fs}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(`I = ${si(HS.I, 'A', 3)} (conventional)`, L + 2 * ps, ay + 16 * ps);
+    c.textBaseline = 'alphabetic'; c.fillText(HS.B ? `B ${HS.bz < 0 ? 'into' : 'out of'} the page, ${si(HS.B, 'T', 3)}` : 'B = 0', L, 16 * ps);
+    const on = HS.I > 0 && HS.B > 0;
+    if (!LAB.blind) {
+      // edge charge: carriers pile up on the edge their magnetic force points to
+      const pushUp = on && (-(HS.I) * h.Bz) > 0;             // F_y ∝ −J Bz, the same for either sign of carrier
+      const edgeQ = h.M.q;                                    // the piled up edge carries the carriers' sign
+      if (on) {
+        const upSign = pushUp ? edgeQ : -edgeQ;
+        c.font = `700 ${fs * 1.1}px ${T.mono}`; c.textAlign = 'center';
+        for (let x = L + 14 * ps; x < R - 6 * ps; x += 22 * ps) {
+          c.fillStyle = upSign > 0 ? T.pos : T.neg; c.fillText(upSign > 0 ? '+' : '−', x, top + 13 * ps);
+          c.fillStyle = upSign > 0 ? T.neg : T.pos; c.fillText(upSign > 0 ? '−' : '+', x, bot - 5 * ps);
+        }
+      }
+      // carriers drifting along the strip
+      const dir = h.M.q > 0 ? 1 : -1, span = R - L, rows = 3, gap = 26 * ps;
+      for (let j = 0; j < rows; j++) {
+        const y = mid + (j - 1) * (bot - top) * 0.22;
+        for (let x0 = 0; x0 < span; x0 += gap) {
+          let x = ((x0 + dir * HS.ph * (j % 2 ? 0.9 : 1) + j * 9 * ps) % span + span) % span;
+          x += L;
+          c.fillStyle = h.M.q > 0 ? T.pos : T.neg; c.beginPath(); c.arc(x, y, 3.6 * ps, 0, 7); c.fill();
+          c.fillStyle = T.canvas; c.font = `700 ${7 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(h.M.q > 0 ? '+' : '−', x, y + 0.3 * ps); c.textBaseline = 'alphabetic';
+        }
+      }
+      // balanced forces on one carrier
+      if (on) {
+        const x = (L + R) / 2, y = mid, len = 22 * ps, up = pushUp ? -1 : 1;
+        const arrow = (y1, col, lab) => { c.strokeStyle = col; c.fillStyle = col; c.lineWidth = 2.2 * ps; c.beginPath(); c.moveTo(x, y); c.lineTo(x, y1); c.stroke();
+          const s = Math.sign(y1 - y); c.beginPath(); c.moveTo(x, y1 + s * 4 * ps); c.lineTo(x - 4 * ps, y1 - s * 3 * ps); c.lineTo(x + 4 * ps, y1 - s * 3 * ps); c.fill();
+          c.font = `600 ${fs * 0.9}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(lab, x + 7 * ps, (y + y1) / 2); c.textBaseline = 'alphabetic'; };
+        arrow(y + up * len, T.force, 'qv × B'); arrow(y - up * len, T.equi, 'qE');
+      }
+    }
+    // voltmeter across the width
+    const mx = R + 22 * ps, mw = meterW, my = mid - 26 * ps, mh = 52 * ps;
+    c.strokeStyle = T.muted; c.lineWidth = 1.5 * ps;
+    c.beginPath(); c.moveTo(R - 30 * ps, top); c.lineTo(R - 30 * ps, top - 10 * ps); c.lineTo(mx + mw * 0.3, top - 10 * ps); c.lineTo(mx + mw * 0.3, my); c.stroke();
+    c.beginPath(); c.moveTo(R - 30 * ps, bot); c.lineTo(R - 30 * ps, bot + 6 * ps); c.lineTo(mx + mw * 0.7, bot + 6 * ps); c.lineTo(mx + mw * 0.7, my + mh); c.stroke();
+    c.fillStyle = T.surface; c.strokeStyle = T.ink; c.lineWidth = 1.5; c.fillRect(mx, my, mw, mh); c.strokeRect(mx + 0.5, my + 0.5, mw, mh);
+    c.fillStyle = T.muted; c.font = `${fs * 0.85}px ${T.ui}`; c.textAlign = 'center'; c.fillText('V_top − V_bottom', mx + mw / 2, my + 15 * ps);
+    c.fillStyle = T.ink; c.font = `700 ${fs * 1.3}px ${T.mono}`; c.fillText(si(roundSig(h.V, 3), 'V', 3), mx + mw / 2, my + 38 * ps);
+  }
+  function hallChanged() { hallText(); drawHall(); }
+  for (const b of document.querySelectorAll('#hallMat button')) b.addEventListener('click', () => { HS.mat = b.dataset.hm; hallChanged(); });
+  $('hI').addEventListener('input', (e) => { HS.I = +e.target.value / 1000; hallChanged(); });
+  $('hB').addEventListener('input', (e) => { HS.B = +e.target.value; hallChanged(); });
+  $('hT').addEventListener('input', (e) => { HS.t = +e.target.value / 1000; hallChanged(); });
+  $('hBin').addEventListener('click', () => { HS.bz = -1; hallChanged(); });
+  $('hBout').addEventListener('click', () => { HS.bz = 1; hallChanged(); });
+  $('hallDet').addEventListener('toggle', () => { if ($('hallDet').open) requestAnimationFrame(hallChanged); });
+  $('labBlind').addEventListener('change', hallChanged);
+  new MutationObserver(() => requestAnimationFrame(drawHall)).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector'] });
+
   window.__mf = { get frameMs() { return frameMs; }, get S() { return S; }, get simT() { return simT; }, set simT(v) { simT = v; }, get counts() { return counts; }, get band() { return band; },
     get cyc() { return cyc; }, get main() { return main; }, get tScale() { return tScale; }, get hist() { return hist; }, setPlaying, applyPreset, rebuild,
     handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt, seg: h.seg })); }, get view() { return { ...view() }; },
@@ -2700,6 +2851,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   setPlaying(!reduce);
   if (reduce) stillFrame();
   renderTable();
+  hallText();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);
 })();

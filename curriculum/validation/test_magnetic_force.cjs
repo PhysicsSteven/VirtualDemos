@@ -153,4 +153,25 @@ test('CSV text: comment lines, one header, quoted cells', () => {
   assert.equal(L[2], 'row,particle,r_measured_m'); assert.equal(L[3], '1,Proton,0.0104'); assert.equal(L[4], '2,"Custom, q = 2e",');
 });
 
+test('Hall effect strip: V_H = IB/(nqt), sign from the carriers, balance of forces', () => {
+  const H = core('magnetic-force', 'QE,HALL,hallVoltage,hallDrift,hallCoefficient');
+  const e = H.QE, w = H.HALL.w;
+  // copper: one conduction electron per atom from density and molar mass
+  const nCu = 8.96e3 / 63.546e-3 * 6.02214076e23; assert(Math.abs(nCu / H.HALL.cu.n - 1) < 2e-3);
+  // holes, B into the page (Bz < 0): positive charge piles on the top edge, V_top − V_bottom > 0
+  const Vp = H.hallVoltage(0.02, -0.3, 1e21, e, 1e-3); assert(Vp > 0); near(Vp, 0.02 * 0.3 / (1e21 * e * 1e-3), 1e-12);
+  // electrons in the same setup: opposite sign, same size
+  near(H.hallVoltage(0.02, -0.3, 1e21, -e, 1e-3), -Vp, 1e-12);
+  // reversing B reverses V_H; linear in I and B, inverse in t
+  near(H.hallVoltage(0.02, 0.3, 1e21, e, 1e-3), -Vp, 1e-12);
+  near(H.hallVoltage(0.04, -0.3, 1e21, e, 2e-3), Vp, 1e-12);
+  // steady state: qE_H balances q v_d B, with E_H = |V_H|/w
+  const vd = H.hallDrift(0.02, 1e21, e, w, 1e-3); near(Math.abs(Vp) / w, vd * 0.3, 1e-12);
+  near(vd, 0.02 / (1e21 * e * w * 1e-3), 1e-12);
+  // R_H = 1/(nq): V_H = R_H I B / t; copper free electron value about −7.4e-11 m³/C
+  near(H.hallCoefficient(1e21, e) * 0.02 * 0.3 / 1e-3, Vp, 1e-12);
+  const RCu = H.hallCoefficient(H.HALL.cu.n, -e); assert(RCu < 0 && Math.abs(RCu + 7.35e-11) < 0.05e-11);
+  assert(H.HALL.nge.q === -1 && H.HALL.pge.q === 1 && H.HALL.cu.q === -1);
+});
+
 console.log(`${count} magnetic-force test groups passed`);

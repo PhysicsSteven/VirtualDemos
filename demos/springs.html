@@ -379,6 +379,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind">Blind: hide predictions and answers</label>
         <p class="hint">Blind hides the period, ω₀ and f₀ predicted from m and k, the damping ratio, Q, the damped period and decay time, the predicted steady amplitude, phase and peak, the mode frequencies and beat period, the static stretch, the reference circle, the envelope, the ζ comparison traces, the curves on the resonance plot and the k derived from your fit. The stopwatch, the ruler, the clock, the measured period and amplitude, and the settings stay.</p>
+        <label class="check"><input type="checkbox" id="labUnknown">Unknown spring: hide k</label>
+        <button type="button" class="btn" id="newUnknown" hidden>New unknown spring</button>
+        <p class="hint">Unknown spring picks a random k from 5 to 60 N/m and hides it: the k slider, the k labels, the energy values, the wall amplitude and the k column of the CSV. It turns Blind on, and the ζ buttons are off because they would give k away. The measured period stays. Change m, time the period and find k from the slope of T² against m. One block only. Turning it off shows k, so you can check your answer.</p>
       </section>
 
       <section>
@@ -555,7 +558,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     return { R: Math.hypot(g.y0, c), phi: Math.atan2(-c, g.y0), wd };
   }
   // ---- lab helpers: the period model, the fit, and the readings CSV ----
-  const SP_VERSION = 'springs@2026-10-22.1';     // demo version, written into every CSV
+  const SP_VERSION = 'springs@2026-10-22.2';     // demo version, written into every CSV
   const periodOf = (m, k) => 2 * Math.PI * Math.sqrt(m / k);          // undamped, any amplitude
   const qualityOf = (m, k, b) => (b > 0 ? Math.sqrt(k * m) / b : Infinity);
   // a table cell as typed: blank is NaN, a typographic minus is accepted
@@ -609,6 +612,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       `# setup at export,${csvCell(meta.setup)}`,
       '# parameters,"each row lists the settings it was captured with: m (kg), k, k2 and kc (N/m), b (kg/s), F0 (N), omega (rad/s); k2 and kc only for two blocks, F0 and omega only when driven"',
       `# g_m_per_s2,${G}`,
+      ...(meta.unknown ? ['# unknown spring,"k was hidden from the student; rows captured with it list k as unknown"'] : []),
       meta.blind ? '# model,"m x\'\' + b x\' + k x = F0 cos(omega t) for one block (the driven wall moves as (F0/k) cos(omega t)); exact analytic solution; ideal massless Hooke\'s law springs, frictionless track; blind on at export, so no predicted values are listed"'
         : '# model,"m x\'\' + b x\' + k x = F0 cos(omega t) for one block (the driven wall moves as (F0/k) cos(omega t)); exact analytic solution; ideal massless Hooke\'s law springs, frictionless track; with b = 0, T = 2 pi sqrt(m/k) for any amplitude"',
       '# rounding,"as displayed: m to 0.01 kg, k to 0.1 N/m, b to 3 significant figures, F0 to 0.01 N, omega to 0.01 rad/s, stopwatch to 0.01 s (truncated, like a stopwatch), ruler peak to 0.1 cm, drive cycle amplitude to 0.01 cm, zero crossing period to 0.0001 s; A_m is the displayed cm divided by 100; T_stopwatch = t/N and T_squared computed from the row to 6 significant figures; edited cells exported as typed"',
@@ -662,7 +666,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   // ---------- state ----------
   const S = { preset: 'shm', sys: 'free', vert: false, p: { m: 1, k: 40, b: 0, F0: 0.5, w: 5, kc: 2, k2: 40 },
     layers: { x: true, v: true, a: true, E: true, circle: true, arrows: true, env: true, compare: false, fling: true }, speedIdx: 3,
-    blind: false, rows: [], fitKind: 'T2m' };
+    blind: false, unk: null, rows: [], fitKind: 'T2m' };
   const sw = { on: false, acc: 0 };     // stopwatch on simulation time
   let peak = 0;                         // largest |x| (block 1 for two blocks) since Reset peak or the last release
   let fitDirty = true;
@@ -981,6 +985,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     cHandles.push({ id: 'm', box: [x - 11 * ps, y - 11 * ps, 22 * ps, 22 * ps], cursor: vertical ? 'ns-resize' : 'ew-resize', param: 'm', axis: vertical ? 'y' : 'x', dir });
   }
   function springGrip(ctx, x, y, id, perpVertical, dir, box) {
+    if (id === 'k' && S.unk) return;          // an unknown spring cannot be adjusted on the drawing
     grip(ctx, x, y, isHot(id), perpVertical);
     cHandles.push({ id, box, cursor: perpVertical ? 'ns-resize' : 'ew-resize', param: id, axis: perpVertical ? 'y' : 'x', dir });
   }
@@ -1065,7 +1070,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       grip(ctx, gx, gy, isHot('F0'), true);
       cHandles.push({ id: 'F0', box: [gx - 11 * ps, gy - 12 * ps, 22 * ps, 24 * ps], cursor: 'ns-resize', param: 'F0', axis: 'y', dir: -1 });
       ctx.textBaseline = 'alphabetic';
-      labelBox(ctx, `wall moves ±X_w = ±${cm(S.p.F0 / S.p.k, 2)}`, pad + 4, top + fs * 1.4, 'left', T.equi, fs * 0.9, 600);
+      if (!S.unk) labelBox(ctx, `wall moves ±X_w = ±${cm(S.p.F0 / S.p.k, 2)}`, pad + 4, top + fs * 1.4, 'left', T.equi, fs * 0.9, 600);
     }
     // spring
     const sx1 = bx - side / 2;
@@ -1073,7 +1078,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     { const mx = (ax + sx1) / 2, gy = by - Math.min(8 * ps, side * 0.2) - 16 * ps;
       springGrip(ctx, mx, gy, 'k', true, -1, [Math.min(ax, sx1), gy - 11 * ps, Math.abs(sx1 - ax), by + 12 * ps - (gy - 11 * ps)]);
       ctx.fillStyle = T.ink; ctx.textBaseline = 'alphabetic';
-      const kl = `k = ${sig(S.p.k, 3)} N/m`, kw = richWidth(ctx, kl, fs, 600);
+      const kl = S.unk ? 'k = ? (unknown)' : `k = ${sig(S.p.k, 3)} N/m`, kw = richWidth(ctx, kl, fs, 600);
       labelBox(ctx, kl, Math.max(wallB + 2 * ps + kw / 2, Math.min(mx, sx1 - kw / 2 - 6 * ps)), gy - 16 * ps, 'center', T.ink, fs, 600);
     }
     // reference circle
@@ -1176,7 +1181,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       grip(ctx, gx, gy, isHot('F0'), false);
       cHandles.push({ id: 'F0', box: [gx - 12 * ps, gy - 11 * ps, 24 * ps, 22 * ps], cursor: 'ew-resize', param: 'F0', axis: 'x', dir: 1 });
       ctx.fillStyle = T.equi; ctx.font = `${fs * 0.88}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-      ctx.fillText(`Xw = ${cm(S.p.F0 / S.p.k, 2)}`, gx + 14 * ps, gy);
+      if (!S.unk) ctx.fillText(`Xw = ${cm(S.p.F0 / S.p.k, 2)}`, gx + 14 * ps, gy);
     }
     // beaker of oil around the block's range
     const bkTop = Y(-Av) - side / 2 - 6 * ps, bkBot = Math.min(H - 6 * ps, Y(Av) + side / 2 + 8 * ps), bkL = bx - side / 2 - 12 * ps, bkR = bx + side / 2 + 12 * ps;
@@ -1210,7 +1215,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     drawSpring(ctx, bx, ay, bx, byc - side / 2, { r: Math.min(10 * ps, side * 0.32), n: 12, lw: springLW(S.p.k), hot: isHot('k') });
     { const my = (ay + byc - side / 2) / 2, gx = bx + 24 * ps;
       springGrip(ctx, gx, my, 'k', false, 1, [bx - 12 * ps, Math.min(ay, byc - side / 2), 48 * ps, Math.abs(byc - side / 2 - ay)]);
-      labelBox(ctx, `k = ${sig(S.p.k, 3)} N/m`, gx + 14 * ps, my + fs * 0.35, 'left', T.ink, fs, 600);
+      labelBox(ctx, S.unk ? 'k = ? (unknown)' : `k = ${sig(S.p.k, 3)} N/m`, gx + 14 * ps, my + fs * 0.35, 'left', T.ink, fs, 600);
     }
     // block and labels
     drawCircle(ctx, g, st, bkR + 40 * ps + Av * s, yEq, s, 'v', bx + side / 2, 0, fs);
@@ -1518,7 +1523,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       ctx.fillStyle = T.muted; ctx.textBaseline = 'alphabetic';
       richText(ctx, r.lab, L, y + fs, fs, 400, 'left');
       ctx.fillStyle = T.ink; ctx.font = `600 ${fs * 0.95}px ${T.mono}`; ctx.textAlign = 'right';
-      ctx.fillText(fmtE(r.v), R, y + fs);
+      ctx.fillText(S.unk ? '—' : fmtE(r.v), R, y + fs);
       const by = y + fs + 4 * ps;
       ctx.fillStyle = T.grid; ctx.fillRect(L, by, R - L, bh);
       const w = clamp(r.v * sc, -(z - L), R - z);
@@ -1529,7 +1534,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     // bookkeeping
     ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     const chk = book.E0 - E.total - book.D;
-    const txt = held ? 'Let go: this energy is what the motion starts with.' : `E₀ − E − ∫bv² dt = ${fmtSci(chk)} J`;
+    const txt = S.unk ? 'Values hidden: an unknown spring.' : held ? 'Let go: this energy is what the motion starts with.' : `E₀ − E − ∫bv² dt = ${fmtSci(chk)} J`;
     ctx.fillText(txt, L, Math.min(H - 10 * ps, y + 16 * ps));
   }
 
@@ -1652,7 +1657,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function syncSliders() {
     const sync = (id, v) => { const el = $(id); if (document.activeElement !== el || dragging()) el.value = v; };
     sync('sK', S.p.k); sync('sM', S.p.m); sync('sB', posOfB(S.p.b)); sync('sKc', S.p.kc); sync('sK2', S.p.k2); sync('sF', S.p.F0); sync('sW', S.p.w); sync('sRate', S.speedIdx);
-    $('oK').textContent = `${fx(S.p.k, 1)} N/m`; $('oM').textContent = `${fx(S.p.m, 2)} kg`;
+    $('oK').textContent = S.unk ? 'unknown' : `${fx(S.p.k, 1)} N/m`; $('sK').closest('.ctl').hidden = !!S.unk;
+    for (const zb of document.querySelectorAll('[data-z]')) zb.disabled = !!S.unk; $('oM').textContent = `${fx(S.p.m, 2)} kg`;
     $('oB').textContent = S.p.b === 0 ? '0 (none)' : `${sig(S.p.b, 3)} kg/s`;
     $('oKc').textContent = `${fx(S.p.kc, 1)} N/m`; $('oK2').textContent = `${fx(S.p.k2, 1)} N/m`; $('lK').innerHTML = S.sys === 'coupled' ? 'Left spring k<sub>1</sub>' : 'Spring constant k'; $('oF').textContent = `${fx(S.p.F0, 2)} N`; $('oW').textContent = `${fx(S.p.w, 2)} rad/s`;
     $('oRate').textContent = fmtRate(SPEEDS[S.speedIdx]); $('rateTag').textContent = fmtRate(SPEEDS[S.speedIdx]);
@@ -1682,7 +1688,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       h2 += dd('Measured, last cycle', '<span id="ampMeas">—</span>');
       h2 += dd('Phase lag δ', deg(st.delta)) + dd('Peak at ω<sub>r</sub>', r2 > 0 ? `${sig(Math.sqrt(r2), 4)} rad/s` : 'ω = 0 (no peak)');
       h2 += `<div class="wide formula">A = (F₀/m) / √((ω₀² − ω²)² + (bω/m)²), tan δ = (bω/m)/(ω₀² − ω²)</div>`;
-      $('driveBox').innerHTML = bl ? dd('Wall amplitude X<sub>w</sub> = F₀/k', cm(S.p.F0 / k, 2)) + dd('Measured, last cycle', '<span id="ampMeas">—</span>') + hid('Predicted amplitude, phase lag and peak') : h2;
+      $('driveBox').innerHTML = bl ? (S.unk ? hid('Wall amplitude X<sub>w</sub> = F₀/k') : dd('Wall amplitude X<sub>w</sub> = F₀/k', cm(S.p.F0 / k, 2))) + dd('Measured, last cycle', '<span id="ampMeas">—</span>') + hid('Predicted amplitude, phase lag and peak') : h2;
     }
     if (cp) {
       const M = cModes(), w1 = Math.sqrt(M.w1sq), w2 = Math.sqrt(M.w2sq), sym = S.p.k === S.p.k2;
@@ -1749,6 +1755,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (c.w !== undefined) S.p.w = c.w;
     if (c.kc !== undefined) S.p.kc = c.kc;
     S.p.k2 = c.k2 !== undefined ? c.k2 : c.k;
+    if (S.unk && S.sys === 'coupled') setUnknown(false, 'Unknown spring off: it works with one block only.');
+    else if (S.unk) S.p.k = S.unk.k;                  // presets keep the unknown spring
     S.layers.compare = !!c.compare; $('tCmp').checked = S.layers.compare;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
     $('presetHint').textContent = c.hint;
@@ -1758,8 +1766,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     syncSliders(); staticText();
     setRunning(!reduce || running);
   }
-  function setParam(key, v) {
+  function setParam(key, v, force) {
     if (S.p[key] === v) return;
+    if (key === 'k' && S.unk && !force) return;    // k is locked while the spring is unknown
     if (key !== 'w' || !sweep) stopSweep(false);
     S.p[key] = v;
     if (held) rebuildHeld(); else { branch(key === 'm' || key === 'k' || key === 'kc' || key === 'k2'); buildCompare(); }
@@ -1777,6 +1786,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (sys === S.sys) return;
     stopSweep(false);
     const was = S.sys; S.sys = sys;
+    if (sys === 'coupled' && S.unk) setUnknown(false, 'Unknown spring off: it works with one block only.');
     if (sys === 'coupled' && was !== 'coupled') S.p.k2 = S.p.k;
     if (sys === 'coupled' || was === 'coupled') {
       newRun(sys === 'coupled' ? { x1: 0.1, v1: 0, x2: 0, v2: 0 } : { x: 0.12, v: 0 });
@@ -1806,6 +1816,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   $('sF').addEventListener('input', (e) => setParam('F0', +e.target.value));
   $('sW').addEventListener('input', (e) => setParam('w', +e.target.value));
   for (const b of document.querySelectorAll('[data-z]')) b.addEventListener('click', () => {
+    if (S.unk) return;
     const z = +b.dataset.z; setParam('b', z * 2 * Math.sqrt(S.p.k * S.p.m));
     if (S.sys !== 'driven' && !held) { newRun(S.sys === 'coupled' ? lastIC : lastIC); }
   });
@@ -1871,7 +1882,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const Tm = crossings.length >= 2 ? crossings[crossings.length - 1] - crossings[crossings.length - 2] : null;
     const row = {
       preset: presetName(), sys: drv ? 'driven' : cp ? 'two blocks' : 'free', ori: cp ? 'horizontal, two blocks' : S.vert ? 'hanging' : 'horizontal',
-      m: S.p.m.toFixed(2), k: S.p.k.toFixed(1), k2: cp ? S.p.k2.toFixed(1) : '', kc: cp ? S.p.kc.toFixed(1) : '',
+      m: S.p.m.toFixed(2), k: S.unk ? 'unknown' : S.p.k.toFixed(1), k2: cp ? S.p.k2.toFixed(1) : '', kc: cp ? S.p.kc.toFixed(1) : '',
       b: S.p.b === 0 ? '0' : sig(S.p.b, 3), F0: drv ? S.p.F0.toFixed(2) : '', w: drv ? S.p.w.toFixed(2) : '',
       N: sw.acc > 0 ? String($('nOsc').value).trim() : '', t: sw.acc > 0 ? swShown() : '', Tzc: Tm ? Tm.toFixed(4) : '',
       A: drv ? (amp && amp.last !== null ? (amp.last * 100).toFixed(2) : '') : peakShown(),
@@ -1897,7 +1908,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         if (f === '=T') { const T = rowPeriod(r); return `<td class="b">${isFinite(T) ? sig(T, 4) : '—'}</td>`; }
         return `<td><input aria-label="${lab}, row ${i + 1}" data-i="${i}" data-f="${f}" value="${String(r[f]).replace(/"/g, '&quot;')}" style="width:${w}em"></td>`;
       }).join('');
-      return `<tr title="${r.preset}; ${r.sys}; m ${r.m} kg, k ${r.k} N/m, b ${r.b} kg/s${r.w ? `, ω ${r.w} rad/s` : ''}"><td class="n">${i + 1}</td>${tds}<td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`;
+      return `<tr title="${r.preset}; ${r.sys}; m ${r.m} kg, k ${r.k === 'unknown' ? 'unknown' : r.k + ' N/m'}, b ${r.b} kg/s${r.w ? `, ω ${r.w} rad/s` : ''}"><td class="n">${i + 1}</td>${tds}<td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`;
     }).join('');
     updateFitOut();
   }
@@ -1907,7 +1918,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const i = +b.dataset.del; S.rows.splice(i, 1); renderRows(); capStatus(`Row ${i + 1} deleted.`);
     const nb = $('rowsTbl').querySelector(`button[data-del="${Math.min(i, S.rows.length - 1)}"]`); (nb || $('capture')).focus();
   });
-  function csvText() { return readingsCSV(S.rows, { version: SP_VERSION, setup: presetName(), blind: S.blind }); }
+  function csvText() { return readingsCSV(S.rows, { version: SP_VERSION, setup: presetName(), blind: S.blind, unknown: !!S.unk }); }
   function download(name, text) {
     try { const url = URL.createObjectURL(new Blob([text], { type: 'text/csv' })), a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000); } catch (_) {}
   }
@@ -2048,7 +2059,26 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     staticText(); updateReadouts(); updateFitOut(); drawAll();
     $('live').textContent = S.blind ? 'Blind on: predictions hidden.' : 'Blind off: predictions shown.';
   }
-  $('labBlind').addEventListener('change', (e) => setBlind(e.target.checked));
+  $('labBlind').addEventListener('change', (e) => { if (!e.target.checked && S.unk) setUnknown(false); setBlind(e.target.checked); });
+  // Unknown spring: a random k, hidden until the student turns the option off
+  function setUnknown(on, msg) {
+    if (on && S.sys === 'coupled') { $('labUnknown').checked = false; capStatus('Unknown spring works with one block only. Choose Free or Driven first.'); return; }
+    if (on) {
+      S.unk = { k: 5 + 0.5 * Math.floor(Math.random() * 111) };   // 5 to 60 N/m on the slider's 0.5 N/m steps
+      if (!S.blind) setBlind(true);
+      setParam('k', S.unk.k, true);
+    } else {
+      const k = S.unk ? S.unk.k : null;
+      S.unk = null;
+      if (k !== null && !msg) msg = `Unknown spring off: k was ${fx(k, 1)} N/m.`;
+    }
+    $('labUnknown').checked = !!S.unk; $('newUnknown').hidden = !S.unk;
+    syncSliders(); staticText(); updateReadouts(); drawAll();
+    capStatus(msg || 'Unknown spring on: k is hidden. Blind is on.');
+    $('live').textContent = $('capStatus').textContent;
+  }
+  $('labUnknown').addEventListener('change', (e) => setUnknown(e.target.checked));
+  $('newUnknown').addEventListener('click', () => { const old = S.unk.k; do setUnknown(true); while (S.unk.k === old); capStatus('A new unknown spring. Earlier rows used a different k.'); });
   // Reduce motion: pauses the run and stops the plots gliding; Play still runs it
   $('tMotion').checked = reduce;
   $('tMotion').addEventListener('change', (e) => {
