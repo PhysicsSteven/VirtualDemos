@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Stress and Strain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the loaded wire on the left, its stress against strain curve on the right of the stage; the rail on the right. */
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+:root { --wire: #8a6a3c; --scol: #2b60b5; --plast: #b0452f; --mass: #6b7787; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wire: #d0a868; --scol: #69a0ff; --plast: #ff8a70; --mass: #9aa6b6; } }
+:root[data-theme="dark"] { --wire: #d0a868; --scol: #69a0ff; --plast: #ff8a70; --mass: #9aa6b6; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.blindtag { position: absolute; left: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 190px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 5em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 190px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 480px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 600px; max-height: 90vh; }
+  .rail { overflow: visible; }
+  .chips button, .btn, .proj, .spin { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Stress and Strain</h1>
+      <p>Hang a load on a long thin wire and read how much it stretches. Stress F/A over strain ΔL/L is Young's modulus, as long as the wire springs back. Load it past its yield point and it stays longer; keep going and it breaks.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">wire 2.000 m long · g = 9.81 m/s²</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/stress-strain.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/stress-strain.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM14 2h2v1h-2zM17 2h5v1h-5zM25 2h1v1h-1zM27 2h1v1h-1zM29 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM16 3h3v1h-3zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h2v1h-2zM14 4h1v1h-1zM17 4h10v1h-10zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM14 5h5v1h-5zM20 5h2v1h-2zM25 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM15 6h3v1h-3zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM16 7h3v1h-3zM20 7h3v1h-3zM24 7h1v1h-1zM28 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM13 9h3v1h-3zM17 9h7v1h-7zM25 9h1v1h-1zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h4v1h-4zM14 10h2v1h-2zM17 10h1v1h-1zM20 10h2v1h-2zM23 10h3v1h-3zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h2v1h-2zM6 11h2v1h-2zM9 11h2v1h-2zM12 11h2v1h-2zM15 11h2v1h-2zM18 11h1v1h-1zM21 11h3v1h-3zM25 11h1v1h-1zM27 11h1v1h-1zM29 11h1v1h-1zM31 11h1v1h-1zM34 11h4v1h-4zM3 12h3v1h-3zM7 12h2v1h-2zM10 12h1v1h-1zM12 12h1v1h-1zM15 12h1v1h-1zM18 12h1v1h-1zM22 12h4v1h-4zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h6v1h-6zM9 13h2v1h-2zM12 13h1v1h-1zM16 13h1v1h-1zM19 13h1v1h-1zM23 13h3v1h-3zM30 13h2v1h-2zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h1v1h-1zM4 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM10 14h3v1h-3zM14 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM3 15h1v1h-1zM7 15h1v1h-1zM9 15h2v1h-2zM12 15h2v1h-2zM16 15h4v1h-4zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM4 16h1v1h-1zM7 16h2v1h-2zM11 16h2v1h-2zM14 16h4v1h-4zM20 16h1v1h-1zM22 16h2v1h-2zM25 16h2v1h-2zM28 16h2v1h-2zM31 16h1v1h-1zM33 16h5v1h-5zM4 17h2v1h-2zM7 17h1v1h-1zM13 17h1v1h-1zM15 17h3v1h-3zM21 17h4v1h-4zM26 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM4 18h1v1h-1zM6 18h3v1h-3zM10 18h3v1h-3zM15 18h2v1h-2zM18 18h1v1h-1zM22 18h1v1h-1zM26 18h1v1h-1zM30 18h4v1h-4zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM6 19h1v1h-1zM11 19h1v1h-1zM14 19h3v1h-3zM20 19h2v1h-2zM25 19h1v1h-1zM27 19h1v1h-1zM29 19h3v1h-3zM33 19h3v1h-3zM37 19h1v1h-1zM5 20h5v1h-5zM15 20h1v1h-1zM17 20h1v1h-1zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h2v1h-2zM31 20h6v1h-6zM3 21h1v1h-1zM5 21h1v1h-1zM9 21h1v1h-1zM12 21h1v1h-1zM16 21h4v1h-4zM21 21h3v1h-3zM26 21h1v1h-1zM28 21h1v1h-1zM30 21h2v1h-2zM36 21h2v1h-2zM2 22h1v1h-1zM4 22h2v1h-2zM7 22h2v1h-2zM10 22h2v1h-2zM14 22h3v1h-3zM19 22h1v1h-1zM22 22h5v1h-5zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h1v1h-1zM5 23h3v1h-3zM9 23h1v1h-1zM11 23h1v1h-1zM15 23h4v1h-4zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM4 24h2v1h-2zM8 24h1v1h-1zM10 24h2v1h-2zM13 24h1v1h-1zM16 24h4v1h-4zM22 24h1v1h-1zM25 24h1v1h-1zM27 24h1v1h-1zM29 24h1v1h-1zM33 24h4v1h-4zM3 25h1v1h-1zM11 25h2v1h-2zM15 25h1v1h-1zM17 25h1v1h-1zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM29 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM5 26h1v1h-1zM7 26h2v1h-2zM11 26h2v1h-2zM15 26h2v1h-2zM20 26h1v1h-1zM24 26h3v1h-3zM29 26h4v1h-4zM35 26h3v1h-3zM2 27h1v1h-1zM5 27h1v1h-1zM7 27h1v1h-1zM9 27h1v1h-1zM11 27h1v1h-1zM15 27h2v1h-2zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h7v1h-7zM34 27h2v1h-2zM8 28h1v1h-1zM10 28h1v1h-1zM13 28h2v1h-2zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h2v1h-2zM27 28h3v1h-3zM31 28h4v1h-4zM36 28h1v1h-1zM5 29h1v1h-1zM9 29h1v1h-1zM11 29h4v1h-4zM19 29h2v1h-2zM23 29h2v1h-2zM26 29h1v1h-1zM29 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM2 30h2v1h-2zM8 30h1v1h-1zM11 30h2v1h-2zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h3v1h-3zM10 31h3v1h-3zM14 31h3v1h-3zM18 31h3v1h-3zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h4v1h-4zM15 32h4v1h-4zM20 32h1v1h-1zM22 32h4v1h-4zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM12 33h1v1h-1zM16 33h2v1h-2zM23 33h1v1h-1zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM14 34h2v1h-2zM17 34h2v1h-2zM22 34h1v1h-1zM25 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM13 35h1v1h-1zM16 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM13 36h2v1h-2zM17 36h1v1h-1zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM13 37h1v1h-1zM15 37h1v1h-1zM17 37h9v1h-9zM28 37h2v1h-2zM31 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM16 38h1v1h-1zM19 38h1v1h-1zM22 38h5v1h-5zM29 38h1v1h-1zM33 38h1v1h-1zM36 38h3v1h-3z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="img" aria-label="A wire hanging from a beam with a load on it and a dial gauge reading the extension, beside a graph of stress against strain. Up and down arrows change the load."></canvas>
+      <div class="viewbar">
+        <button type="button" class="spin" id="unload">Take all the load off</button>
+        <button type="button" class="spin" id="fresh">New wire</button>
+      </div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Wire</h2>
+        <div class="chips" id="mats">
+          <button type="button" data-m="steel" aria-pressed="true">Mild steel</button>
+          <button type="button" data-m="copper" aria-pressed="false">Copper (annealed)</button>
+          <button type="button" data-m="aluminium" aria-pressed="false">Aluminium alloy</button>
+          <button type="button" data-m="mystery" aria-pressed="false">Mystery metal</button>
+        </div>
+        <div><div class="slider-head"><label for="sD">Diameter d</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="0.2" max="1.2" step="0.05"></div>
+        <p class="hint" id="matHint"></p>
+      </section>
+
+      <section>
+        <h2>Load</h2>
+        <div><div class="slider-head"><label for="sL">Hanging mass</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="0" max="60" step="0.1"></div>
+        <dl class="readout" id="out"></dl>
+        <label class="check"><input type="checkbox" id="zoom"><span>Graph: zoom in on the elastic part</span></label>
+        <p class="formula">stress σ = F/A · strain ε = ΔL/L · Y = σ/ε (elastic)</p>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="exportCsv">Export CSV</button>
+          <button type="button" class="btn" id="clearRows">Clear</button>
+        </div>
+        <p class="status" id="capStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>m (kg)</th><th>ΔL (mm)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <p class="hint">Capture stores the hanging mass and the dial gauge reading (to 0.001 mm), with the wire's diameter. The fit is a straight line of the load F = mg against ΔL; Y = slope × L / A. Use only loads below the yield point.</p>
+        <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Load against extension for the captured rows, with a least squares line and residuals."></canvas></div>
+        <dl class="readout" id="fitOut"></dl>
+        <button type="button" class="btn" id="fitTblBtn" aria-expanded="false" aria-controls="fitWrap">Show data table</button>
+        <div class="twrap" id="fitWrap" hidden><table class="rows" id="fitTbl"><caption class="sr">Plotted points</caption><thead><tr><th>ΔL (mm)</th><th>F (N)</th><th>fit (N)</th><th>resid. (N)</th></tr></thead><tbody></tbody></table></div>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <p class="hint">Blind hides Young's modulus, the yield and breaking stresses, the stress and strain readouts, the material curve and Y from the fit, leaving the load, the diameter and the dial gauge. The Mystery metal is always blind about its own properties.</p>
+        <p class="hint">Model: an idealized stress against strain curve: straight to the yield stress, then hardening up to the tensile strength, breaking at the fracture strain; unloading follows a line parallel to the elastic one, leaving a permanent stretch. Values are typical for each metal; real samples vary. Necking, creep and the wire's own weight are ignored.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.81, LEN = 2.0, SS_VERSION = 'stress-strain@2026-10-22';
+  // typical properties: Young's modulus Y (Pa), yield stress sy, tensile strength su (Pa), strain at the tensile strength eu and at fracture ef
+  const MATS = {
+    steel: { name: 'Mild steel', Y: 200e9, sy: 250e6, su: 400e6, eu: 0.15, ef: 0.25 },
+    copper: { name: 'Copper (annealed)', Y: 120e9, sy: 70e6, su: 220e6, eu: 0.3, ef: 0.45 },
+    aluminium: { name: 'Aluminium alloy', Y: 70e9, sy: 270e6, su: 310e6, eu: 0.08, ef: 0.12 },
+    mystery: { name: 'Mystery metal', Y: 110e9, sy: 300e6, su: 420e6, eu: 0.12, ef: 0.2 }   // a titanium-like alloy; kept hidden
+  };
+  // flow stress after plastic strain ep: rises smoothly from sy to su by ep = eu − su/Y, then stays at su (engineering curve, necking ignored)
+  function flow(M, ep) {
+    const epu = Math.max(1e-6, M.eu - M.su / M.Y), x = Math.min(1, ep / epu);
+    return M.sy + (M.su - M.sy) * (1 - (1 - x) * (1 - x));
+  }
+  function invFlow(M, s) {   // plastic strain at which the flow stress reaches s (s between sy and su)
+    const epu = Math.max(1e-6, M.eu - M.su / M.Y), r = (s - M.sy) / (M.su - M.sy);
+    return epu * (1 - Math.sqrt(Math.max(0, 1 - Math.min(1, r))));
+  }
+  // load a wire with stress s, given the plastic strain it already has; returns the new plastic strain, the total strain, and whether it broke
+  function loadAt(M, s, ep) {
+    if (s > flow(M, ep)) {
+      if (s >= M.su) return { ep, e: M.ef, broke: true };
+      ep = Math.max(ep, invFlow(M, s));
+    }
+    return { ep, e: ep + s / M.Y, broke: false };
+  }
+  const area = (dmm) => Math.PI * (dmm / 1000) ** 2 / 4;
+  const extension = (e) => e * LEN;   // m
+  function fitLine(xs, ys) {
+    const n = xs.length; if (n < 2) return null;
+    const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n;
+    let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    if (sxx < 1e-30) return null;
+    const b = sxy / sxx, a0 = my - b * mx, res = xs.map((x, i) => ys[i] - a0 - b * x), ss = res.reduce((q, r) => q + r * r, 0), s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { b, a: a0, seB: Math.sqrt(s2 / sxx), seA: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), res, n };
+  }
+  const cellNum = (s) => { const v = parseFloat(String(s).replace('−', '-')); return isFinite(v) ? v : NaN; };
+  const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  function readingsCSV(rows, meta) {
+    const L = ['# Stress and Strain virtual wire: captured readings (simulated data)', `# demo version,${meta.version}`, `# material,${csvCell(meta.material)}`,
+      `# wire_length_m,${LEN}`, `# g_m_per_s2,${G}`, '# model,"idealized stress-strain curve: elastic to the yield stress, smooth hardening to the tensile strength, unloading parallel to the elastic line"',
+      '# rounding,"mass to 0.1 kg, diameter to 0.05 mm, extension to 0.001 mm; F_N = m g; edited cells exported as typed"', '# noise,none', 'row,m_kg,d_mm,dL_mm,F_N'];
+    rows.forEach((r, i) => { const m = cellNum(r.m); L.push([i + 1, r.m, r.d, r.dL, isFinite(m) ? +(m * G).toPrecision(6) : ''].map(csvCell).join(',')); });
+    return L.join('\n') + '\n';
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const HINT = {
+    steel: 'Mild steel: Y about 200 GPa, yield about 250 MPa, strength about 400 MPa. Stiff and strong; it stretches a lot before it breaks.',
+    copper: 'Annealed copper: Y about 120 GPa but it yields early, about 70 MPa, then hardens a long way. Bend a copper wire and it stays bent.',
+    aluminium: 'An aluminium alloy: Y about 70 GPa, so it stretches almost three times as much as steel under the same stress, but it breaks soon after it yields.',
+    mystery: 'An unknown metal. Find its Young\'s modulus from your readings, then load it until it yields. Its properties stay hidden.'
+  };
+  const S = { zoom: false, mat: 'steel', d: 0.5, m: 0, ep: 0, broke: false, blind: false, path: [[0, 0]], rows: [] };
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, H = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      wire: g('--wire'), s: g('--scol'), pl: g('--plast'), mass: g('--mass'), surface: g('--surface'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 1) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? (0).toFixed(d) : v.toFixed(d)).replace('-', '−'));
+  const M = () => MATS[S.mat];
+  const hidden = () => S.blind || S.mat === 'mystery';
+  function niceStep(r) { const e = 10 ** Math.floor(Math.log10(r)), q = r / e; return (q < 1.5 ? 1 : q < 3.5 ? 2 : q < 7.5 ? 5 : 10) * e; }
+  function now() { const A = area(S.d), s = S.broke ? 0 : S.m * G / A, r = S.broke ? { e: S.ep, ep: S.ep } : loadAt(M(), s, S.ep); return { A, s, e: r.e, dL: extension(r.e) }; }
+  function maxLoad() { return 1.15 * M().su * area(S.d) / G; }
+
+  function setLoad(m) {
+    if (S.broke) { $('capStatus').textContent = 'The wire has broken. Press New wire.'; return; }
+    const A = area(S.d), s0 = S.m * G / A;
+    S.m = Math.max(0, Math.min(+$('sL').max, m));
+    const s1 = S.m * G / A, n = s1 > s0 ? 60 : 1;          // loading follows the curve in small steps; unloading is a straight line
+    for (let i = 1; i <= n; i++) {
+      const s = s0 + (s1 - s0) * i / n, r = loadAt(M(), s, S.ep);
+      if (r.broke) { S.broke = true; S.path.push([M().ef, M().su]); $('capStatus').textContent = 'Snap! The stress reached the tensile strength and the wire broke.'; break; }
+      S.ep = r.ep; S.path.push([r.e, s]);
+    }
+    sync(); draw(); readouts();
+  }
+  function newWire() { S.ep = 0; S.broke = false; S.m = 0; S.path = [[0, 0]]; sync(); draw(); readouts(); }
+  function sync() {
+    const mx = Math.ceil(maxLoad() * 10) / 10; $('sL').max = mx; $('sL').step = mx > 30 ? 0.5 : 0.1; $('sL').value = S.m; $('oL').textContent = `${f(S.m, 1)} kg (F = ${f(S.m * G, 1)} N)`;
+    $('sD').value = S.d; $('oD').textContent = `${f(S.d, 2)} mm`; $('matHint').textContent = HINT[S.mat];
+    for (const b of document.querySelectorAll('#mats button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mat));
+  }
+
+  // ---------- drawing ----------
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const p = ps(), q = now(), wide = W > 640, colW = wide ? Math.min(260 * p, W * 0.34) : W, colH = wide ? H : H * 0.55;
+    // beam, wire, load, gauge
+    const bx = colW / 2, top = 112 * p, L0 = colH - top - 120 * p, stretch = Math.min(1.6, 1 + q.e * 4);   // the drawing exaggerates the stretch
+    ctx.fillStyle = T.gridStrong; ctx.fillRect(bx - 70 * p, top - 10 * p, 140 * p, 10 * p);
+    const wl = S.broke ? L0 * 0.55 : L0 * (0.85 + 0.15 * (stretch - 1) / 0.6);
+    ctx.strokeStyle = T.wire; ctx.lineWidth = Math.max(1.5, S.d * 3) * p; ctx.beginPath(); ctx.moveTo(bx, top); ctx.lineTo(bx, top + wl); ctx.stroke();
+    if (S.broke) {
+      ctx.beginPath(); ctx.moveTo(bx, top + wl + 40 * p); ctx.lineTo(bx, top + wl + 70 * p); ctx.stroke();
+      ctx.fillStyle = T.mass; ctx.fillRect(bx - 26 * p, colH - 46 * p, 52 * p, 36 * p);
+      ctx.fillStyle = T.pl; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('broken', bx + 40 * p, top + wl + 20 * p);
+    } else if (S.m > 0) {
+      const sz = Math.min(60, 18 + Math.sqrt(S.m) * 6) * p; ctx.fillStyle = T.mass; ctx.fillRect(bx - sz / 2, top + wl, sz, sz * 0.8);
+      ctx.fillStyle = T.canvas; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${f(S.m, 1)} kg`, bx, top + wl + sz * 0.4);
+    }
+    // dial gauge
+    ctx.fillStyle = T.ink; ctx.font = `700 ${16 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(`ΔL = ${f(q.dL * 1000, 3)} mm`, 12 * p, 44 * p + (wide ? 0 : 0));
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.fillText('dial gauge, 0.001 mm · stretch drawn exaggerated', 12 * p, 66 * p);
+    if (S.ep > 1e-6 && !hidden()) { ctx.fillStyle = T.pl; ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.fillText(`permanent stretch ${f(extension(S.ep) * 1000, 2)} mm`, 12 * p, 84 * p); }
+    else if (S.ep > 1e-6) { ctx.fillStyle = T.pl; ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.fillText('it no longer returns to zero', 12 * p, 84 * p); }
+    // stress against strain
+    const gx0 = wide ? colW + 58 * p : 58 * p, gx1 = W - 16 * p, gy0 = wide ? 64 * p : colH + 30 * p, gy1 = H - 40 * p;
+    const Mm = M(), eMax = S.zoom && !hidden() ? 3 * Mm.sy / Mm.Y : hidden() ? Math.max(0.004, ...S.path.map((v) => v[0])) * 1.2 : Math.max(Mm.ef * 1.05, 0.01), sMax = S.zoom && !hidden() ? Mm.sy * 1.6 : hidden() ? Math.max(1e6, ...S.path.map((v) => v[1])) * 1.2 : Mm.su * 1.12;
+    // plot elastic detail when everything so far is small
+    const X = (e) => gx0 + (gx1 - gx0) * e / eMax, Y = (s) => gy1 - (gy1 - gy0) * s / sMax;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(gx0 + 0.5, gy0 + 0.5, gx1 - gx0, gy1 - gy0);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    { const st = niceStep(eMax * 100 / 5); for (let v = 0; v <= eMax * 100 + 1e-9; v += st) ctx.fillText(`${f(v, st < 0.1 ? 2 : st < 1 ? 1 : 0)}%`, X(v / 100), gy1 + 4 * p); }
+    ctx.fillText('strain ε = ΔL/L', (gx0 + gx1) / 2, gy1 + 18 * p);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; for (let i = 0; i <= 4; i++) ctx.fillText(`${f(sMax * i / 4 / 1e6, 0)}`, gx0 - 4 * p, Y(sMax * i / 4));
+    ctx.save(); ctx.translate(14 * p, (gy0 + gy1) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.fillText('stress σ (MPa)', 0, 0); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(gx0, gy0, gx1 - gx0, gy1 - gy0); ctx.clip();
+    if (!hidden()) {   // the material's curve
+      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 2 * p; ctx.setLineDash([6 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(Mm.sy / Mm.Y), Y(Mm.sy));
+      for (let i = 1; i <= 100; i++) { const ep = (Mm.eu - Mm.su / Mm.Y) * i / 100, s = flow(Mm, ep); ctx.lineTo(X(ep + s / Mm.Y), Y(s)); }
+      ctx.lineTo(X(Mm.ef), Y(Mm.su)); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+      ctx.fillText('yield', X(Mm.sy / Mm.Y) + 4 * p, Y(Mm.sy) - 2 * p); ctx.fillText('tensile strength', X(Mm.eu) - 30 * p, Y(Mm.su) - 3 * p); ctx.fillText('fracture', X(Mm.ef) - 46 * p, Y(Mm.su) + 14 * p);
+    }
+    ctx.strokeStyle = T.s; ctx.lineWidth = 2.5 * p; ctx.beginPath(); S.path.forEach(([e, s], i) => (i ? ctx.lineTo(X(e), Y(s)) : ctx.moveTo(X(e), Y(s)))); ctx.stroke();
+    if (!S.broke) { ctx.fillStyle = T.s; ctx.beginPath(); ctx.arc(X(q.e), Y(q.s), 5 * p, 0, 7); ctx.fill(); }
+    ctx.restore();
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const q = now(), Mm = M(), dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    let h = dd('Load F = mg', `${f(S.m * G, 2)} N`) + dd('Area A = πd²/4', `${f(q.A * 1e6, 4)} mm²`) + dd('Extension ΔL (dial)', `${f(q.dL * 1000, 3)} mm`);
+    if (hidden()) h += '<div class="wide"><dt>Stress, strain, Y, yield and strength</dt><dd class="ok">hidden: work them out</dd></div>';
+    else h += dd('Stress σ = F/A', `${f(q.s / 1e6, 1)} MPa`) + dd('Strain ε = ΔL/L', `${f(q.e * 100, 4)} %`) + dd("Young's modulus Y", `${f(Mm.Y / 1e9, 0)} GPa`) + dd('Yield stress', `${f(Mm.sy / 1e6, 0)} MPa (at ${f(Mm.sy * q.A / G, 1)} kg)`) + dd('Tensile strength', `${f(Mm.su / 1e6, 0)} MPa (at ${f(Mm.su * q.A / G, 1)} kg)`, true);
+    $('out').innerHTML = h;
+  }
+
+  // ---------- readings ----------
+  function capStatus(m) { $('capStatus').textContent = m; }
+  $('capture').addEventListener('click', () => { if (S.broke) { capStatus('The wire has broken.'); return; } const q = now(); S.rows.push({ m: S.m.toFixed(1), d: S.d.toFixed(2), dL: (q.dL * 1000).toFixed(3), mat: S.mat }); renderRows(); capStatus(`Row ${S.rows.length} captured.`); });
+  $('clearRows').addEventListener('click', () => { S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  $('exportCsv').addEventListener('click', () => {
+    if (!S.rows.length) { capStatus('No readings to export.'); return; }
+    const mats = [...new Set(S.rows.map((r) => MATS[r.mat].name))].join('; ');
+    const txt = readingsCSV(S.rows, { version: SS_VERSION, material: mats });
+    try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'stress-strain-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+    capStatus('CSV exported.');
+  });
+  function renderRows() {
+    const tb = $('rowsTbl').querySelector('tbody');
+    tb.innerHTML = S.rows.length ? S.rows.map((r, i) => `<tr title="${MATS[r.mat].name}, d = ${r.d} mm"><td>${i + 1}</td><td><input data-i="${i}" data-f="m" value="${r.m}" aria-label="mass, row ${i + 1}"></td><td><input data-i="${i}" data-f="dL" value="${r.dL}" aria-label="extension, row ${i + 1}"></td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : '<tr><td class="empty" colspan="4">No readings yet. Set a load, then capture.</td></tr>';
+    fit();
+  }
+  $('rowsTbl').addEventListener('change', (e) => { const el = e.target; if (el.dataset.f) { S.rows[+el.dataset.i][el.dataset.f] = el.value.trim(); fit(); } });
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderRows(); } });
+  $('fitTblBtn').addEventListener('click', () => { const o = $('fitWrap').hidden; $('fitWrap').hidden = !o; $('fitTblBtn').setAttribute('aria-expanded', String(o)); $('fitTblBtn').textContent = o ? 'Hide data table' : 'Show data table'; });
+  const fitCan = $('fitCan'), fctx = fitCan.getContext('2d');
+  function fit() {
+    const rows = S.rows.filter((r) => r.mat === S.mat && Math.abs(cellNum(r.d) - S.d) < 1e-9);
+    const pts = rows.map((r) => [cellNum(r.dL), cellNum(r.m) * G]).filter(([a, b]) => isFinite(a) && isFinite(b));
+    const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0] / 1000), pts.map((q) => q[1])) : null;
+    let h;
+    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two rows for this wire (${MATS[S.mat].name}, d = ${f(S.d, 2)} mm).</dd></div>`;
+    else {
+      const A = area(S.d), Y = F.b * LEN / A, sY = F.seB * LEN / A;
+      h = `<div><dt>Slope F/ΔL</dt><dd>${f(F.b / 1000, 2)}${isFinite(F.seB) ? ` ± ${f(F.seB / 1000, 2)}` : ''} N/mm</dd></div><div><dt>Intercept</dt><dd>${f(F.a, 2)} N</dd></div>`;
+      h += S.blind ? '<div class="wide"><dt>Y = slope × L / A</dt><dd class="ok">hidden in Blind: work it out</dd></div>' : `<div class="wide"><dt>Y = slope × L / A</dt><dd>${f(Y / 1e9, 1)}${isFinite(sY) ? ` ± ${f(sY / 1e9, 1)}` : ''} GPa</dd></div>`;
+    }
+    $('fitOut').innerHTML = h;
+    $('fitTbl').querySelector('tbody').innerHTML = pts.map(([x, y], i) => `<tr><td>${x}</td><td>${y.toFixed(2)}</td><td>${F ? (F.a + F.b * x / 1000).toFixed(2) : '—'}</td><td>${F ? F.res[i].toFixed(3) : '—'}</td></tr>`).join('');
+    drawFit(pts, F);
+  }
+  function drawFit(pts, F) {
+    const r = fitCan.getBoundingClientRect(), w = r.width, h = r.height; if (!w || !T) return;
+    fitCan.width = Math.round(w * dpr); fitCan.height = Math.round(h * dpr); fctx.setTransform(dpr, 0, 0, dpr, 0, 0); fctx.fillStyle = T.canvas; fctx.fillRect(0, 0, w, h);
+    const L = 40, Rr = w - 8, top = 8, mainB = h - 62, resT = h - 50, resB = h - 18;
+    fctx.strokeStyle = T.line; fctx.strokeRect(L + 0.5, top + 0.5, Rr - L, mainB - top); fctx.strokeRect(L + 0.5, resT + 0.5, Rr - L, resB - resT);
+    fctx.fillStyle = T.muted; fctx.font = `10px ${T.mono}`; fctx.textAlign = 'center'; fctx.textBaseline = 'top'; fctx.fillText('ΔL (mm)', (L + Rr) / 2, resB + 3);
+    fctx.save(); fctx.translate(10, (top + mainB) / 2); fctx.rotate(-Math.PI / 2); fctx.fillText('F (N)', 0, 0); fctx.restore();
+    if (!pts.length) return;
+    const xh = Math.max(...pts.map((q) => q[0]), 1e-6), yh = Math.max(...pts.map((q) => q[1]), 1e-6), PX = (x) => L + (Rr - L) * x / (xh * 1.08), PY = (y) => mainB - (mainB - top) * y / (yh * 1.1);
+    fctx.textAlign = 'right'; fctx.textBaseline = 'middle'; fctx.fillText(f(yh, 0), L - 3, PY(yh)); fctx.fillText('0', L - 3, PY(0));
+    if (F) { fctx.strokeStyle = T.accent; fctx.lineWidth = 1.5; fctx.beginPath(); fctx.moveTo(PX(0), PY(F.a)); fctx.lineTo(PX(xh), PY(F.a + F.b * xh / 1000)); fctx.stroke(); }
+    fctx.fillStyle = T.s; for (const [x, y] of pts) { fctx.beginPath(); fctx.arc(PX(x), PY(y), 3.2, 0, 7); fctx.fill(); }
+    if (F) { const m = Math.max(...F.res.map(Math.abs), 1e-6), RY = (v) => (resT + resB) / 2 - (resB - resT) / 2 * 0.85 * v / m; fctx.strokeStyle = T.gridStrong; fctx.beginPath(); fctx.moveTo(L, RY(0)); fctx.lineTo(Rr, RY(0)); fctx.stroke();
+      fctx.fillStyle = T.s; pts.forEach(([x], i) => { fctx.beginPath(); fctx.arc(PX(x), RY(F.res[i]), 2.6, 0, 7); fctx.fill(); }); }
+  }
+
+  // ---------- controls and boot ----------
+  for (const b of document.querySelectorAll('#mats button')) b.addEventListener('click', () => { S.mat = b.dataset.m; newWire(); fit(); });
+  $('sD').addEventListener('input', (e) => { S.d = +e.target.value; newWire(); fit(); });
+  $('sL').addEventListener('input', (e) => setLoad(+e.target.value));
+  $('unload').addEventListener('click', () => setLoad(0));
+  $('fresh').addEventListener('click', newWire);
+  $('zoom').addEventListener('change', (e) => { S.zoom = e.target.checked; draw(); });
+  can.addEventListener('keydown', (e) => { if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { setLoad(Math.round((S.m + (e.key === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 1 : 0.1)) * 10) / 10); e.preventDefault(); } });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); fit(); });
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); fit(); }
+  const retheme = () => { tokens(); draw(); fit(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  tokens(); new ResizeObserver(resize).observe(stage); sync(); readouts(); renderRows(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+})();
+</script>
+</body>
+</html>

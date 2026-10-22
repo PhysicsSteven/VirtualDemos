@@ -2020,10 +2020,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "stress-strain"
+      ],
       "unit": "equilibrium-elasticity",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Stress and Strain: tensile test of a wire, Young's modulus from a fit, yield, permanent set, fracture. Bulk and shear moduli not covered."
     },
     {
       "vol": 1,
@@ -2035,10 +2037,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "stress-strain"
+      ],
       "unit": "equilibrium-elasticity",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Stress and Strain: elastic limit, plastic deformation, permanent set on unloading, fracture (idealized curve)."
     },
     {
       "vol": 1,
@@ -4645,6 +4649,31 @@
       "note": "Specialized equilibrium of a hanging chain/arch. Does not replace a general free-body-diagram or equilibrium activity.",
       "title": "Hanging Chains and Arches",
       "url": "demos/catenary.html"
+    },
+    {
+      "demo": "stress-strain",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "12.3",
+          "title": "Stress, Strain, and Elastic Modulus"
+        },
+        {
+          "vol": 1,
+          "sec": "12.4",
+          "title": "Elasticity and Plasticity"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-22 (Claude). Wire tensile test: mild steel, annealed copper, aluminium alloy, mystery metal; diameter and hanging mass; dial gauge to 0.001 mm; idealized curve (elastic, hardening, fracture), unloading parallel to the elastic line; Capture, CSV, F against ΔL fit for Y; Blind. Typical values; necking and creep ignored.",
+      "handouts": [],
+      "title": "Stress and Strain",
+      "url": "demos/stress-strain.html"
     },
     {
       "demo": "fluids",

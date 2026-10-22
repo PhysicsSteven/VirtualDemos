@@ -486,6 +486,17 @@
       "Archimedes' principle",
       "Bernoulli"
      ]
+    },
+    {
+     "demo": "stress-strain",
+     "title": "Stress and Strain",
+     "desc": "Hang loads on a thin metal wire and read the stretch on a dial gauge. Find Young's modulus from the straight part, then pass the yield point, see the wire stay longer, and load it until it snaps.",
+     "tags": [
+      "Young's modulus",
+      "stress and strain",
+      "yield",
+      "elasticity"
+     ]
     }
    ]
   },
