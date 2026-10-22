@@ -12,12 +12,12 @@ time: 15 to 25 minutes
 
 ## Before class
 
-Students should know Newton's gravity, circular orbits and Kepler's third law, and have met the centrifugal and Coriolis effects. Lengths are in a (the separation), times in P (the period). The stage shows effective potential contours, the five points (stable green, unstable red), the gold zero velocity curve and the shaded forbidden region. Click empty space to drop a particle at rest, or drag to throw it. Switch **Rotating** and **Inertial**, pick a system under **The two masses** or set **Mass ratio μ**. Turn on **Projector** for the room.
+Students should know Newton's gravity, circular orbits and Kepler's third law, and have met the centrifugal and Coriolis effects. Lengths are in a (the separation), times in P (the period). The stage shows effective potential contours, the five points (stable green, unstable red), the gold zero velocity curve and the shaded forbidden region. Click empty space to drop a particle at rest, or drag to throw it. Switch **Rotating frame** and **Sun centered** (key I): the Sun centered frame holds the big mass fixed at the center with the second mass circling it, and there you can throw a particle with an inertial velocity (the readout compares its speed with the circular and escape speeds and says bound or unbound). **Follow** keeps the camera on the newest particle in either frame, and **Inset: the other frame** shows the same paths in the other frame. Pick a system under **The two masses** or set **Mass ratio μ**. Turn on **Projector** for the room.
 
 ## Running it in class
 
 1. **Jupiter's Trojans.** This is the opening setup: pause, ask Q1, then press **Reset** and play. A swarm of 140 test asteroids starts at rest near L4 and L5. None falls off; each swings around its point in a tadpole, about 150 years per swing.
-2. **Tadpole orbit.** One particle starts at rest at 95° from Jupiter. It librates between about 40° and 95°, and its own zero velocity curve (C = 3.00051, just above 3) encloses a small forbidden island around L4 that the path circles.
+2. **Comet meets Jupiter.** This one opens in the Sun centered frame. A comet on an ellipse from 2.6 AU to 5.7 AU passes close to Jupiter three times in its first 2.5 Jupiter orbits; each pass reshapes its orbit (perihelion 2.6 AU, then 3.6 AU, then 1.5 AU, then 2.1 AU in the rail). Ask Q7. Then press **Rotating frame**: the same path, and the Jacobi constant has not changed at all.
 3. **Horseshoe orbit.** A particle on a circular orbit 1% outside Jupiter's drifts backward, turns around before reaching Jupiter, and drifts the other way past L3. Ask Q6.
 4. **Sun–Earth: JWST at L2.** Two planar orbits around L1 and L2, each about 0.004 AU across, last two or three loops and then leave. Read the e-folding times in the rail (23 d at L1, 23.4 d at L2) and ask Q4.
 5. **Earth–Moon.** C is between C(L2) and C(L1): the particle wanders between Earth and the Moon through L1 but cannot get out past L2. Drag the gold curve (or **Jacobi constant C**) and read **Where a particle with this C can go** (Q5).
@@ -37,18 +37,22 @@ Students should know Newton's gravity, circular orbits and Kepler's third law, a
 
 **Q6.** In **Horseshoe orbit** the particle starts on a circular orbit of radius 1.01 a. Use Kepler's third law to explain why it drifts backward and estimate how many degrees it falls behind per Jupiter orbit. Why does it turn around before it reaches Jupiter?
 
+**Q7.** In **Comet meets Jupiter** the comet's perihelion and period change at every close pass, but the rail's Jacobi constant C stays fixed and Tisserand's parameter T = a_J/a + 2√((a/a_J)(1 − e²)) stays near 2.91. Why is C conserved when the comet's energy about the Sun is not? (Hint: C = −2(E − nL) + μ(1 − μ), a combination of energy and angular momentum, not the energy alone.)
+
 ## Common misconceptions
 
 - **"A Lagrange point is where the two gravities cancel."** The forces balance only in the rotating frame, with the centrifugal effect included. In the inertial frame the net gravity is exactly the centripetal force for a circular orbit with the second body's period.
 - **"Stable points must be at the bottom of a valley."** L4 and L5 are maxima of the effective potential, stable (for μ < 0.0385) only because the Coriolis effect bends a sliding particle into a loop.
 - **"Trojans and spacecraft sit at the points."** Trojans librate in tadpoles around L4 and L5; spacecraft orbit L1 or L2 and correct every few weeks.
 - **"The zero velocity curve is a path the particle follows."** It is the edge of the region the particle may visit.
+- **"A planet's gravity just adds energy to a comet."** A close pass can raise or lower the comet's energy about the Sun; what it cannot change is the Jacobi constant.
 
 ## Physics behind the demo
 
 - The circular restricted three body problem: two masses on circular orbits, a massless test particle in their plane. Units a = 1, G(m₁ + m₂) = 1, so n = 1 and P = 2π.
 - Ω = ½(x² + y²) + ½μ(1 − μ) + (1 − μ)/r₁ + μ/r₂. Exact rotating frame equations, ẍ − 2ẏ = ∂Ω/∂x, ÿ + 2ẋ = ∂Ω/∂y (Coriolis included). C = 2Ω − v² is conserved; C(L1) > C(L2) > C(L3) > C(L4) = C(L5) = 3.
 - L1, L2, L3 are roots of fifth degree equations (Newton's method). Stability, growth times and libration periods come from the linearized motion; Routh's criterion is μ < (1 − √(23/27))/2 = 0.03852.
+- The Sun centered frame is the same motion transformed exactly, point by point; it is never integrated separately. Strictly the Sun circles the center of mass at μa (742,000 km for Sun–Jupiter), so that frame accelerates slightly and is not quite inertial; the page says so. Bound or unbound uses the two body energy about the big mass, ignoring the second one, and the page warns when the particle is close to it.
 - Orbits use an adaptive Dormand–Prince 5(4) integrator; **Drift since launch** checks it. The Sun–Earth m₂ is the Earth–Moon barycenter.
 - Left out: other planets, the Sun's pull on the Moon, eccentric orbits, radiation pressure and motion out of the plane. Real L1 and L2 spacecraft fly three dimensional halo orbits; the planar Lyapunov orbits here are their flat relatives. Real Trojans have tilted, eccentric orbits.
 

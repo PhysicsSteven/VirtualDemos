@@ -152,6 +152,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.forb { height: 10px; border: 1px solid var(--equi); background: color-mix(in srgb, var(--forbid) 40%, transparent); }
 .swatch.cont { border-color: var(--contour); }
 .swatch.sep { border-color: var(--muted); border-top-style: dashed; }
+.swatch.orb { border-color: var(--grid-strong); border-top-style: dashed; border-top-width: 2px; }
+.swatch.kep { border-color: var(--accent); border-top-style: dotted; border-top-width: 2px; }
+.toggles .span2 { grid-column: 1 / -1; }
 .swatch.trail { border-color: var(--accent); border-top-width: 3px; }
 .swatch.dot { width: 10px; height: 10px; border: 0; border-radius: 50%; margin: 0 6px; }
 .swatch.dot.st { background: var(--stable); }
@@ -195,19 +198,20 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <button type="button" class="btn" id="reset">Reset</button>
         <button type="button" class="btn" id="clear">Clear</button>
         <div class="seg" role="group" aria-label="Frame">
-          <button type="button" id="fRot" aria-pressed="true">Rotating</button>
-          <button type="button" id="fIn" aria-pressed="false">Inertial</button>
+          <button type="button" id="fRot" aria-pressed="true">Rotating frame</button>
+          <button type="button" id="fIn" aria-pressed="false">Sun centered</button>
         </div>
         <div class="seg" role="group" aria-label="View">
           <button type="button" id="vWhole" aria-pressed="true">Whole</button>
           <button type="button" id="vNear" aria-pressed="false">Near m₂</button>
+          <button type="button" id="vFollow" aria-pressed="false">Follow</button>
         </div>
         <button type="button" class="btn sq" id="zOut" aria-label="Zoom out">−</button>
         <button type="button" class="btn sq" id="zIn" aria-label="Zoom in">+</button>
         <span class="count mono" id="count" aria-live="off"></span>
       </div>
       <div class="pane" id="pane">
-        <canvas id="can" tabindex="0" aria-label="The restricted three body problem. In the rotating frame: contours of the effective potential, the five Lagrange points, the zero velocity curve with its forbidden region shaded, and test particles with trails. Click or tap empty space to drop a particle at rest, or press and drag to throw it. Drag the newest particle's start ring or arrow tip to relaunch it, and drag the zero velocity curve to change the Jacobi constant. Keys: arrows turn and speed up the newest particle's launch, Shift with arrows pans, plus and minus zoom, brackets change C, space plays or pauses, I switches frame, F shows the whole system, N zooms near the second mass, X clears."></canvas>
+        <canvas id="can" tabindex="0" aria-label="The restricted three body problem. In the rotating frame: contours of the effective potential, the five Lagrange points, the zero velocity curve with its forbidden region shaded, and test particles with trails. Click or tap empty space to drop a particle at rest, or press and drag to throw it. Drag the newest particle's start ring or arrow tip to relaunch it, and drag the zero velocity curve to change the Jacobi constant. In the Sun centered frame the big mass is held fixed at the center and the second mass circles it; click to drop a particle at rest relative to the Sun, or drag to throw it. Keys: arrows turn and speed up the newest particle's launch, Shift with arrows pans, plus and minus zoom, brackets change C, space plays or pauses, I switches frame, F shows the whole system, N zooms near the second mass, P follows the newest particle, X clears."></canvas>
       </div>
     </div>
 
@@ -218,7 +222,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="jwst" aria-pressed="false">Sun–Earth: JWST at L2</button>
           <button type="button" data-p="em" aria-pressed="false">Earth–Moon</button>
           <button type="button" data-p="trojans" aria-pressed="true">Jupiter's Trojans</button>
-          <button type="button" data-p="tadpole" aria-pressed="false">Tadpole orbit</button>
+          <button type="button" data-p="comet" aria-pressed="false">Comet meets Jupiter</button>
           <button type="button" data-p="horseshoe" aria-pressed="false">Horseshoe orbit</button>
           <button type="button" data-p="l1" aria-pressed="false">Unstable L1</button>
         </div>
@@ -260,7 +264,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div class="slider-head"><label for="cj">Jacobi constant C</label><output id="cjOut" class="mono" for="cj"></output></div>
           <input type="range" id="cj" min="0" max="500" step="1" value="150">
         </div>
-        <label class="check"><input type="checkbox" id="follow" checked> Follow the newest particle</label>
+        <label class="check"><input type="checkbox" id="follow" checked> Curve uses the newest particle's C</label>
         <dl class="readout">
           <div class="wide"><dt>Where a particle with this C can go</dt><dd id="rRegion" class="prose">—</dd></div>
         </dl>
@@ -269,9 +273,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
       <section>
         <h2>Test particle</h2>
-        <p class="hint" id="partHint">Click or tap empty space to drop a particle at rest; press and drag to throw it. The arrow shows how far it would go in 0.1 P at its launch speed.</p>
+        <p class="hint" id="partHint"></p>
+        <label class="check"><input type="checkbox" id="circ"> <span id="circLab">A click starts a circular orbit about the Sun</span></label>
         <div>
-          <div class="slider-head"><label for="vs">Launch speed, rotating frame</label><output id="vsOut" class="mono" for="vs"></output></div>
+          <div class="slider-head"><label for="vs" id="vsLab">Launch speed, rotating frame</label><output id="vsOut" class="mono" for="vs"></output></div>
           <input type="range" id="vs" min="0" max="1000" step="1" value="0">
         </div>
         <div>
@@ -282,6 +287,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div class="wide big"><dt>Jacobi constant C of the newest particle</dt><dd id="rC">—</dd></div>
           <div class="wide"><dt>Drift since launch, |ΔC/C|</dt><dd id="rDC">—</dd></div>
           <div class="wide"><dt>Now</dt><dd id="rNow" class="prose">—</dd></div>
+          <div class="wide"><dt id="rKepT">Two body estimate about the Sun, ignoring m₂</dt><dd id="rKep" class="prose">—</dd></div>
         </dl>
         <div>
           <div class="slider-head"><label for="sp">Time speed</label><output id="spOut" class="mono" for="sp"></output></div>
@@ -296,6 +302,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <label><input type="checkbox" id="tLab" checked> Labels</label>
           <label><input type="checkbox" id="tTrail" checked> Trails</label>
           <label><input type="checkbox" id="tReal" checked> Real examples</label>
+          <label class="span2"><input type="checkbox" id="tInset"> Inset: the other frame</label>
         </div>
         <div class="key">
           <span><i class="swatch cont"></i>Contours of the effective potential −Ω</span>
@@ -304,13 +311,20 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <span><i class="swatch forb"></i>Forbidden region, 2Ω &lt; C</span>
           <span><i class="swatch dot st"></i>Stable point</span>
           <span><i class="swatch dot un"></i>Unstable point</span>
+          <span><i class="swatch orb"></i>Orbit of m₂ about the Sun (Sun centered frame)</span>
+          <span><i class="swatch kep"></i>Two body orbit while you throw, ignoring m₂</span>
         </div>
+      </section>
+
+      <section>
+        <h2>Frames</h2>
+        <p class="hint" id="frameHint"></p>
       </section>
 
       <section>
         <h2>Model</h2>
         <p class="hint">The circular restricted three body problem: two masses on circular orbits about their center of mass, and a test particle too light to disturb them. Motion is in their orbital plane only. Real L1 and L2 spacecraft such as JWST fly three dimensional halo orbits; the planar Lyapunov orbits here are their flat relatives. Other planets, the Sun's pull on the Moon, the eccentricity of the real orbits and radiation pressure are left out.</p>
-        <p class="hint">The exact equations in the rotating frame, ẍ − 2ẏ = ∂Ω/∂x and ÿ + 2ẋ = ∂Ω/∂y, include the Coriolis (2ẏ, 2ẋ) and centrifugal terms. They are integrated with an adaptive Dormand–Prince 5(4) method with local error 10⁻¹² (10⁻¹⁰ for the swarm); the drift readout checks it. A particle that touches a body stops there. The Sun–Earth system uses the Earth–Moon barycenter as m₂.</p>
+        <p class="hint">The exact equations in the rotating frame, ẍ − 2ẏ = ∂Ω/∂x and ÿ + 2ẋ = ∂Ω/∂y, include the Coriolis (2ẏ, 2ẋ) and centrifugal terms. They are integrated with an adaptive Dormand–Prince 5(4) method with local error 10⁻¹² (10⁻¹⁰ for the swarm); the drift readout checks it. A particle that touches a body stops there, and one beyond 8 a stops too. The Sun centered view is the same motion transformed exactly, never integrated separately. The Sun–Earth system uses the Earth–Moon barycenter as m₂.</p>
       </section>
     </aside>
   </main>
@@ -495,10 +509,41 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     }
     return { x0: xL + Ax, vy0: vy, T };
   }
+
+  // ---- Frames. The rotating frame turns at n = 1 and its x axis lies along the line from m₁ to m₂; at t = 0 it coincides
+  // with the fixed (star) axes. A rotating state s = [x, y, ẋ, ẏ] at time t has inertial velocity R(t)[(ẋ, ẏ) + n ẑ × (x, y)].
+  // m₁ centered frame: origin on m₁, axes fixed to the stars. m₁ itself circles the barycenter at radius μ, so this frame
+  // accelerates (by the indirect term n²μ toward m₂'s side); it is used only to display and to set states, never to integrate.
+  function rotToSun(mu, s, t) {
+    const c = Math.cos(t), sn = Math.sin(t), x = s[0] + mu, y = s[1], u = s[2] - y, v = s[3] + x;
+    return [x * c - y * sn, x * sn + y * c, u * c - v * sn, u * sn + v * c];
+  }
+  function sunToRot(mu, h, t) {
+    const c = Math.cos(t), sn = Math.sin(t);
+    const x = h[0] * c + h[1] * sn, y = -h[0] * sn + h[1] * c, u = h[2] * c + h[3] * sn, v = -h[2] * sn + h[3] * c;
+    return [x - mu, y, u + y, v - x];
+  }
+  // barycentric inertial frame (truly inertial): used by the tests and the energy identity
+  function rotToBary(mu, s, t) {
+    const c = Math.cos(t), sn = Math.sin(t), x = s[0], y = s[1], u = s[2] - y, v = s[3] + x;
+    return [x * c - y * sn, x * sn + y * c, u * c - v * sn, u * sn + v * c];
+  }
+  // Two body estimate about m₁ from an m₁ centered state h, ignoring m₂: speeds, energy per unit mass, osculating ellipse.
+  // Lengths in a, speeds in a·n, G m₁ = 1 − μ. Tisserand's parameter relative to m₂ (planar): 1/A + 2√(A(1 − e²)).
+  function twoBody(mu, h) {
+    const k = 1 - mu, r = Math.hypot(h[0], h[1]), v2 = h[2] * h[2] + h[3] * h[3];
+    const vc = Math.sqrt(k / r), ve = Math.SQRT2 * vc, eps = v2 / 2 - k / r, L = h[0] * h[3] - h[1] * h[2];
+    const rv = h[0] * h[2] + h[1] * h[3], ex = ((v2 - k / r) * h[0] - rv * h[2]) / k, ey = ((v2 - k / r) * h[1] - rv * h[3]) / k;
+    const e = Math.hypot(ex, ey), out = { r, v: Math.sqrt(v2), vc, ve, eps, L, e, w: Math.atan2(ey, ex), p: L * L / k, bound: eps < 0 };
+    if (eps < 0) { const A = -k / (2 * eps); Object.assign(out, { A, peri: A * (1 - e), apo: A * (1 + e), T: 2 * Math.PI * Math.sqrt(A * A * A / k), tiss: 1 / A + 2 * Math.sign(L) * Math.sqrt(Math.max(0, A * (1 - e * e))) }); }
+    return out;
+  }
+  // circular prograde orbit about m₁ through the m₁ centered point (X, Y)
+  function circularAt(mu, X, Y) { const r = Math.hypot(X, Y), vc = Math.sqrt((1 - mu) / r); return [X, Y, -vc * Y / r, vc * X / r]; }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.LP = { ROUTH, omega2, gradOmega, hessOmega, jacobi, lagrange, stability, deriv, dpStep, advance, makeParticle, lyapunov, toCrossing };
+    globalThis.LP = { ROUTH, omega2, gradOmega, hessOmega, jacobi, lagrange, stability, deriv, dpStep, advance, makeParticle, lyapunov, toCrossing, rotToSun, sunToRot, rotToBary, twoBody, circularAt };
     return;
   }
   const $ = (id) => document.getElementById(id);
@@ -521,6 +566,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   };
   const SPEEDS = [0.05, 0.1, 0.2, 0.5, 1, 2, 4, 8, 16, 32];   // orbital periods per second
   const ARW = 0.1 * TWO_PI;                                    // launch arrow = distance covered in 0.1 P
+
+  const ARW_SUN = 0.05 * TWO_PI;                               // in the Sun centered frame: distance covered in 0.05 P
 
   // ---------- presets ----------
   const deg = Math.PI / 180;
@@ -553,9 +600,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         }
         return out;
       } },
-    tadpole: { sys: 'sj', view: 'whole', speed: 6, follow: true,
-      hint: 'A particle starts at rest 95° from Jupiter, 35° beyond L4. It librates around L4 between about 40° and 95° from Jupiter, never reaching it, once every 150 years or so, while its own zero velocity curve encloses the forbidden island it circles. Earth has Trojans like this too: 2010 TK7 and 2020 XL5 librate about Sun–Earth L4.',
-      make(mu) { const th = 95 * deg; return [{ s: [Math.cos(th) - mu, Math.sin(th), 0, 0], col: 0 }]; } },
+    comet: { sys: 'sj', frame: 'sun', view: 'whole', speed: 2, follow: true, fitR: 1.45,
+      hint: 'Sun centered. A comet starts on an ellipse from 2.6 AU to 5.7 AU, across Jupiter’s orbit. Each close pass of Jupiter reshapes the orbit: watch perihelion and aphelion in the rail jump while C stays fixed and Tisserand’s T stays near 2.91. Comet 67P, visited by Rosetta, was moved onto its present orbit by a close pass of Jupiter in 1959.',
+      make(mu) {   // m₁ centered ellipse, perihelion 0.5 a at 318° from Jupiter at t = 0, aphelion 1.1 a
+        const q = 0.5, Q = 1.1, e = (Q - q) / (Q + q), vp = Math.sqrt((1 - mu) * (1 + e) / q), th = 318 * deg;
+        return [{ s: sunToRot(mu, [q * Math.cos(th), q * Math.sin(th), -vp * Math.sin(th), vp * Math.cos(th)], 0), col: 0 }];
+      } },
     horseshoe: { sys: 'sj', view: 'whole', speed: 6, follow: true,
       hint: 'Start on a circular orbit 1% outside Jupiter’s, opposite it. The particle drifts slowly backward, is turned around before it reaches Jupiter, drifts the other way past L3, and turns again: a horseshoe enclosing L3, L4 and L5. Saturn’s moons Janus and Epimetheus swap orbits like this every four years.',
       make(mu) { return [{ s: circ(mu, 1.01, 180), col: 0 }]; } },
@@ -565,8 +615,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   };
 
   // ---------- state ----------
-  const S = { preset: 'trojans', sys: 'sj', mu: SYS.sj.mu, frame: 'rot', view: 'whole', speed: 5, cPos: 150, C: 3, follow: true,
-    show: { cont: true, lab: true, trail: true, real: true } };
+  const S = { preset: 'trojans', sys: 'sj', mu: SYS.sj.mu, frame: 'rot', view: 'whole', speed: 5, speedR: 5, speedS: 2, cPos: 150, C: 3, follow: true, circ: false, fitR: 1.3,
+    show: { cont: true, lab: true, trail: true, real: true, inset: false } };
   let playing = !reduce, t = 0, parts = [], sel = null, LPT = null, CL = null;
   const sysNow = () => {
     if (S.sys !== 'custom') return SYS[S.sys];
@@ -577,6 +627,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     LPT = lagrange(S.mu); CL = {};
     for (const k of ['L1', 'L2', 'L3', 'L4', 'L5']) { const p = LPT[k]; CL[k] = omega2(S.mu, p.x, p.y); p.st = stability(S.mu, p.x, p.y); }
   }
+  // m₁ centered position of a rotating frame point at time tt (exact rotation; m₁ sits at (−μ, 0) in the rotating frame)
+  function sunXY(x, y, tt) { const c = Math.cos(tt), s = Math.sin(tt), X = x + S.mu; return [X * c - y * s, X * s + y * c]; }
 
   // Jacobi slider: piecewise linear between landmarks, so each of the five topologies gets the same slider length
   function marks() { const d = Math.max(CL.L1 - 3, 1e-12); return [3 - 0.6 * d, 3, CL.L3, CL.L2, CL.L1, CL.L1 + 0.8 * d]; }
@@ -584,23 +636,26 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function posOfC(C) { const m = marks(); if (C <= m[0]) return 0; for (let k = 0; k < 5; k++) if (C <= m[k + 1]) { const d = m[k + 1] - m[k]; return 100 * k + (d > 0 ? 100 * (C - m[k]) / d : 100); } return 500; }
 
   // ---------- particles ----------
+  // Every particle is integrated in the rotating frame. Its trail stores, per point, the rotating position, the time,
+  // and the m₁ centered position at that time (x, y, t, X, Y), so either frame draws it without recomputing.
   const COLS = ['accent', 'pos', 'stable', 'violet'];
   let colNext = 0;
   function newPart(s, opts = {}) {
     const p = makeParticle(s[0], s[1], s[2], s[3], t);
     p.s0 = s.slice(); p.t0 = t; p.C0 = jacobi(S.mu, s); p.swarm = !!opts.swarm;
     p.col = opts.col !== undefined ? opts.col : colNext++ % COLS.length;
-    p.cap = p.swarm ? 360 : 40000; p.buf = new Float64Array(p.cap * 3); p.n = 0; p.head = 0;
+    p.cap = p.swarm ? 360 : 40000; p.buf = new Float64Array(p.cap * 5); p.n = 0; p.head = 0;
     record(p, true);
     return p;
   }
   function record(p, force) {
     const s = p.s;
     if (!force && p.n) {
-      const i = ((p.head - 1 + p.cap) % p.cap) * 3, b = p.buf, dt = p.t - b[i + 2];
+      const i = ((p.head - 1 + p.cap) % p.cap) * 5, b = p.buf, dt = p.t - b[i + 2];
       if (dt < (p.swarm ? 0.06 : 0.01) && Math.hypot(s[0] - b[i], s[1] - b[i + 1]) < 2e-5) return;
     }
-    const j = p.head * 3; p.buf[j] = s[0]; p.buf[j + 1] = s[1]; p.buf[j + 2] = p.t;
+    const j = p.head * 5, h = sunXY(s[0], s[1], p.t);
+    p.buf[j] = s[0]; p.buf[j + 1] = s[1]; p.buf[j + 2] = p.t; p.buf[j + 3] = h[0]; p.buf[j + 4] = h[1];
     p.head = (p.head + 1) % p.cap; if (p.n < p.cap) p.n++;
   }
   const onStep = (p) => record(p, false);
@@ -627,11 +682,13 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const tEnd = t + dtSim, R = radii(); stepsFrame = 0;
     for (const p of parts) {
       if (!p.alive) continue;
-      stepsFrame += advance(S.mu, p, tEnd, { tol: p.swarm ? 1e-10 : 1e-12, hMax: p.swarm ? 0.03 : 0.02, radii: R, rEsc: 4, onStep, maxSteps: p.swarm ? 4000 : 30000 });
+      stepsFrame += advance(S.mu, p, tEnd, { tol: p.swarm ? 1e-10 : 1e-12, hMax: p.swarm ? 0.03 : 0.02, radii: R, rEsc: 8, onStep, maxSteps: p.swarm ? 4000 : 30000 });
       if (!p.alive) record(p, true);
     }
     t = tEnd;
   }
+  // the launch state of the selected particle in the m₁ centered frame (fixed in that frame once thrown)
+  const launchSun = (p) => rotToSun(S.mu, p.s0, p.t0);
 
   // ---------- theme, canvas, view ----------
   let T = null, dpr = 1, W = 0, H = 0;
@@ -643,67 +700,124 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'grid', 'pos', 'neg', 'equi', 'accent', 'stable', 'violet', 'sun', 'forbid', 'contour']) T[k] = g('--' + k);
     T.gridStrong = g('--grid-strong'); T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'sans-serif';
-    field.key = ''; zvc.key = '';
+    zvc.key = ''; layer.key = '';
   }
-  const V = { x0: 0, y0: 0, s: 300 };
+  // The camera: center (x0, y0) in the current frame's coordinates (rotating, or m₁ centered with star fixed axes), scale s px per a.
+  // Views: 'whole', 'near' (m₂), 'follow' (the selected particle) and 'free'. Each frame keeps its own camera.
+  const V = { x0: 0, y0: 0, s: 300 }, saved = { rot: null, sun: null }, cam = { glide: null };
   function fitView(mode) {
     if (mode) S.view = mode;
-    const pad = 18 * projScale();
-    if (S.view === 'near') {
-      const h = 2.3 * Math.max(LPT.L1.g, LPT.L2.g);
-      V.x0 = 1 - S.mu; V.y0 = 0; V.s = Math.min((W / 2 - pad) / h, (H / 2 - pad) / (h * 0.8));
-    } else if (S.view === 'whole') {
-      V.x0 = 0.02; V.y0 = 0; V.s = Math.min((W / 2 - pad) / 1.36, (H / 2 - pad) / 1.04);
+    const pad = 18 * projScale(), nearS = () => { const h = 2.3 * Math.max(LPT.L1.g, LPT.L2.g); return Math.min((W / 2 - pad) / h, (H / 2 - pad) / (h * 0.8)); };
+    if (S.frame === 'rot') {
+      if (S.view === 'near') { V.x0 = 1 - S.mu; V.y0 = 0; V.s = nearS(); }
+      else if (S.view === 'whole') { V.x0 = 0.02; V.y0 = 0; V.s = Math.min((W / 2 - pad) / 1.36, (H / 2 - pad) / 1.04); }
+    } else {
+      if (S.view === 'near') { V.s = nearS(); }
+      else if (S.view === 'whole') { const R = S.fitR; V.x0 = 0; V.y0 = 0; V.s = Math.min((W / 2 - pad) / R, (H / 2 - pad) / R); }
     }
-    syncView();
+    cam.glide = null; updateCamera(); syncView();
   }
-  function syncView() { $('vWhole').setAttribute('aria-pressed', String(S.view === 'whole')); $('vNear').setAttribute('aria-pressed', String(S.view === 'near')); }
+  function syncView() {
+    $('vWhole').setAttribute('aria-pressed', String(S.view === 'whole')); $('vNear').setAttribute('aria-pressed', String(S.view === 'near'));
+    $('vFollow').setAttribute('aria-pressed', String(S.view === 'follow')); $('vFollow').disabled = !sel;
+  }
+  // The point the camera locks onto, recomputed from the same t that the drawing uses, so a followed object stands still on screen.
+  function camTarget() {
+    if (S.view === 'follow' && sel) return S.frame === 'rot' ? [sel.s[0], sel.s[1]] : sunXY(sel.s[0], sel.s[1], sel.t);
+    if (S.view === 'near' && S.frame === 'sun') return [Math.cos(t), Math.sin(t)];   // m₂, at distance a from m₁
+    return null;
+  }
+  function updateCamera() {
+    const g = camTarget(); if (!g) { cam.glide = null; return; }
+    if (cam.glide) {
+      const f = (performance.now() - cam.glide.t0) / 450;
+      if (f < 1) { const e = f * f * (3 - 2 * f); V.x0 = cam.glide.from[0] + (g[0] - cam.glide.from[0]) * e; V.y0 = cam.glide.from[1] + (g[1] - cam.glide.from[1]) * e; return; }
+      cam.glide = null;
+    }
+    V.x0 = g[0]; V.y0 = g[1];
+  }
+  function lockView(mode) {   // follow or (Sun centered) near: glide from where the camera is now
+    if (mode === 'follow' && !sel) return;
+    S.view = mode; if (mode === 'near') { const keep = [V.x0, V.y0]; fitView('near'); V.x0 = keep[0]; V.y0 = keep[1]; }
+    cam.glide = reduce ? null : { from: [V.x0, V.y0], t0: performance.now() };
+    syncView(); drawAll();
+  }
   function zoom(f, px, py) {
-    if (px === undefined) { px = W / 2; py = H / 2; }
+    const locked = S.view === 'follow' || (S.view === 'near' && S.frame === 'sun');
+    if (px === undefined || locked) { px = W / 2; py = H / 2; }
     const w = toW(px, py), sMin = Math.min(W, H) / 8, sMax = Math.min(W, H) * 2e7;
     const ns = Math.max(sMin, Math.min(sMax, V.s * f)); if (ns === V.s) return;
     V.s = ns;
-    const c = S.frame === 'rot' ? [w.x, w.y] : null;
-    if (c) { V.x0 = w.x - (px - W / 2) / V.s; V.y0 = w.y + (py - H / 2) / V.s; }
-    else { const cn = viewCenter(), nx = w.X - (px - W / 2) / V.s, ny = w.Y + (py - H / 2) / V.s; shiftCenterInertial(nx - cn[0], ny - cn[1]); }
-    S.view = 'free'; syncView(); drawAll();
+    if (!locked) { V.x0 = w.x - (px - W / 2) / V.s; V.y0 = w.y + (py - H / 2) / V.s; S.view = 'free'; }
+    syncView(); drawAll();
   }
-  // In the inertial frame the camera keeps its rotating frame target (the near view follows m₂ around its orbit).
-  function viewCenter() { if (S.frame === 'rot') return [V.x0, V.y0]; const c = Math.cos(t), s = Math.sin(t); return [V.x0 * c - V.y0 * s, V.x0 * s + V.y0 * c]; }
-  function shiftCenterInertial(dX, dY) { const c = Math.cos(t), s = Math.sin(t); V.x0 += dX * c + dY * s; V.y0 += -dX * s + dY * c; }
-  function toPx(x, y) { const c = viewCenter(); return [W / 2 + (x - c[0]) * V.s, H / 2 - (y - c[1]) * V.s]; }
-  function toW(px, py) { const c = viewCenter(), X = c[0] + (px - W / 2) / V.s, Y = c[1] - (py - H / 2) / V.s; return { x: X, y: Y, X, Y }; }
-  const rot = (x, y, a) => { const c = Math.cos(a), s = Math.sin(a); return [x * c - y * s, x * s + y * c]; };
-  const P = (x, y, tt) => (S.frame === 'rot' ? toPx(x, y) : toPx(...rot(x, y, tt === undefined ? t : tt)));
+  function toPx(x, y) { return [W / 2 + (x - V.x0) * V.s, H / 2 - (y - V.y0) * V.s]; }
+  function toW(px, py) { return { x: V.x0 + (px - W / 2) / V.s, y: V.y0 - (py - H / 2) / V.s }; }
+  // a rotating frame point, drawn in the current frame at time tt
+  const P = (x, y, tt) => (S.frame === 'rot' ? toPx(x, y) : toPx(...sunXY(x, y, tt === undefined ? t : tt)));
 
   function resize() {
     dpr = window.devicePixelRatio || 1;
     const r = pane.getBoundingClientRect(); W = r.width; H = r.height;
     can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(H * dpr));
     can.style.width = W + 'px'; can.style.height = H + 'px';
-    if (S.view !== 'free') fitView(); else drawAll();
+    if (S.view !== 'free' && S.view !== 'follow') fitView();
     drawAll();
   }
 
   // ---------- potential field on a grid (rotating frame) ----------
+  // The field is sampled on a grid anchored at a world point. When the camera follows a particle the grid gets a margin,
+  // the cached map is drawn shifted, and a fresh grid is built a few rows per frame in the background, keeping the same
+  // contour levels, so nothing jumps when it swaps in.
   const GS = 3;   // grid spacing, CSS px
-  const field = { key: '' }, zvc = { key: '' }, fimg = document.createElement('canvas'), layer = document.createElement('canvas');
+  const field = { cur: null, job: null }, zvc = { key: '' }, fimg = document.createElement('canvas'), layer = document.createElement('canvas');
   layer.key = '';
   function hexRgb(h) { const m = /^#?([0-9a-f]{6})$/i.exec(h || ''); if (!m) return [128, 128, 128]; const n = parseInt(m[1], 16); return [n >> 16, (n >> 8) & 255, n & 255]; }
-  function buildField() {
-    const key = [S.mu, V.x0, V.y0, V.s, W, H].join('|');
-    if (field.key === key) return;
-    const nx = Math.ceil(W / GS) + 2, ny = Math.ceil(H / GS) + 2, v = new Float64Array(nx * ny);
-    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) { const w = toW(i * GS, j * GS); const f = omega2(S.mu, w.x, w.y); v[j * nx + i] = isFinite(f) ? Math.min(f, 1e9) : 1e9; }
-    // contour levels at evenly spaced quantiles of the values in view, plus the collinear points
-    const sm = []; for (let k = 0; k < 4000; k++) sm.push(v[Math.floor((k + 0.5) / 4000 * v.length)]);
-    sm.sort((a, b) => a - b);
-    const lv = []; const N = 13;
-    for (let k = 1; k < N; k++) { const q = sm[Math.floor(k / N * sm.length)]; if (!lv.length || q - lv[lv.length - 1] > 1e-9 * Math.abs(q)) lv.push(q); }
-    Object.assign(field, { key, nx, ny, v, lines: lv.map((L) => march(v, nx, ny, L)), seps: ['L1', 'L2', 'L3'].map((k) => march(v, nx, ny, CL[k])) });
-    fimg.width = nx; fimg.height = ny; zvc.key = '';
+  function wantSpec() { const m = S.view === 'follow' ? Math.round(0.3 * Math.max(W, H)) : 0; return { mu: S.mu, s: V.s, W, H, m, ax: V.x0, ay: V.y0 }; }
+  const sameBase = (a, b) => !!a && a.mu === b.mu && a.s === b.s && a.W === b.W && a.H === b.H;
+  function* fieldGen(sp, keepLv, CLk) {
+    const { mu, s, m, ax, ay } = sp, w = sp.W + 2 * m, h = sp.H + 2 * m;
+    const nx = Math.ceil(w / GS) + 2, ny = Math.ceil(h / GS) + 2, v = new Float64Array(nx * ny), cx = sp.W / 2 + m, cy = sp.H / 2 + m;
+    for (let j = 0; j < ny; j++) {
+      const y = ay - (j * GS - cy) / s;
+      for (let i = 0; i < nx; i++) { const f = omega2(mu, ax + (i * GS - cx) / s, y); v[j * nx + i] = isFinite(f) ? Math.min(f, 1e9) : 1e9; }
+      if ((j & 15) === 15) yield;
+    }
+    let lv = keepLv;
+    if (!lv) {   // contour levels at evenly spaced quantiles of the values in the visible part, plus the collinear points
+      const i0 = Math.floor(m / GS), j0 = Math.floor(m / GS), vx = Math.ceil(sp.W / GS), vy = Math.ceil(sp.H / GS), sm = [];
+      for (let k = 0; k < 4000; k++) { const q = Math.floor((k + 0.5) / 4000 * vx * vy), ii = i0 + (q % vx), jj = j0 + Math.floor(q / vx); sm.push(v[Math.min(ny - 1, jj) * nx + Math.min(nx - 1, ii)]); }
+      sm.sort((a, b) => a - b);
+      lv = []; const N = 13;
+      for (let k = 1; k < N; k++) { const q = sm[Math.floor(k / N * sm.length)]; if (!lv.length || q - lv[lv.length - 1] > 1e-9 * Math.abs(q)) lv.push(q); }
+    }
+    const lines = []; for (const L of lv) { lines.push(march(v, nx, ny, L)); yield; }
+    const seps = []; for (const k of ['L1', 'L2', 'L3']) { seps.push(march(v, nx, ny, CLk[k])); yield; }
+    return { spec: sp, nx, ny, v, lv, lines, seps };
   }
-  function march(v, nx, ny, L) {     // marching squares: segments in CSS px
+  function runAll(gen) { let r; do { r = gen.next(); } while (!r.done); return r.value; }
+  // returns the field to draw this frame, building or scheduling as needed
+  function ensureField() {
+    const want = wantSpec(), cur = field.cur;
+    const off = (f) => [Math.abs(want.ax - f.spec.ax) * want.s, Math.abs(want.ay - f.spec.ay) * want.s];
+    const covers = (f, frac) => { const [dx, dy] = off(f); return f.spec.m > 0 ? dx <= f.spec.m * frac && dy <= f.spec.m * frac : dx < 1e-6 && dy < 1e-6; };
+    if (cur && sameBase(cur.spec, want) && cur.spec.m === want.m && covers(cur, 1)) {
+      if (want.m > 0 && !covers(cur, 0.35) && !field.job) field.job = { gen: fieldGen(want, cur.lv, CL), spec: want };
+    } else if (cur && sameBase(cur.spec, want) && want.m > 0 && cur.spec.m === want.m && field.job) {
+      // the camera outran the margin while the new grid is being built: keep drawing the old map, the edge stays blank briefly
+    } else {
+      field.job = null;
+      const keep = cur && sameBase(cur.spec, want) && want.m > 0 ? cur.lv : null;
+      field.cur = runAll(fieldGen(want, keep, CL)); zvc.key = '';
+    }
+    if (field.job) {
+      const t0 = performance.now(); let r;
+      do { r = field.job.gen.next(); } while (!r.done && performance.now() - t0 < 5);
+      if (r.done) { field.cur = r.value; field.job = null; zvc.key = ''; }
+    }
+    return field.cur;
+  }
+  function march(v, nx, ny, L) {     // marching squares: segments in grid px
     const out = [];
     const ip = (a, b) => (L - a) / (b - a);
     for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) {
@@ -726,15 +840,20 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     }
     return new Float32Array(out);
   }
-  function buildZvc() {
-    buildField();
-    const key = field.key + '|' + S.C + '|' + T.forbid;
+  let fieldId = 0;
+  function buildZvc(f) {
+    if (!f.id) f.id = ++fieldId;
+    const key = f.id + '|' + S.C + '|' + T.forbid;
     if (zvc.key === key) return;
-    const { nx, ny, v } = field, fx = fimg.getContext('2d'), im = fx.createImageData(nx, ny), [r, g, b] = hexRgb(T.forbid);
+    const { nx, ny, v } = f, fx = fimg.getContext('2d');
+    fimg.width = nx; fimg.height = ny;
+    const im = fx.createImageData(nx, ny), [r, g, b] = hexRgb(T.forbid);
     for (let k = 0; k < nx * ny; k++) { const o = k * 4; im.data[o] = r; im.data[o + 1] = g; im.data[o + 2] = b; im.data[o + 3] = v[k] < S.C ? 110 : 0; }
     fx.putImageData(im, 0, 0);
-    zvc.key = key; zvc.segs = march(v, nx, ny, S.C);
+    zvc.key = key; zvc.segs = march(v, nx, ny, S.C); zvc.f = f;
   }
+  // screen offset of the cached map: screen px = grid px + offset
+  const layerOff = (f) => [-f.spec.m + (f.spec.ax - V.x0) * V.s, -f.spec.m + (V.y0 - f.spec.ay) * V.s];
   function strokeSegs(c, segs) { c.beginPath(); for (let k = 0; k < segs.length; k += 4) { c.moveTo(segs[k], segs[k + 1]); c.lineTo(segs[k + 2], segs[k + 3]); } c.stroke(); }
 
   // ---------- formatting ----------
@@ -765,44 +884,49 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function fmtC(C) { if (CL.L1 - 3 < 0.01) { const d = C - 3; return `3 ${d < 0 ? '−' : '+'} ${sci(Math.abs(d), 4)}`; } return C.toFixed(5); }
 
   // ---------- drawing ----------
-  function label(c, txt, x, y, col, align = 'left', base = 'middle', bold = false) {
+  function label(c, txt, x, y, col, align = 'left', base = 'middle', bold = false, alpha = 1) {
     const ps = projScale();
     c.font = `${bold ? '600 ' : ''}${11 * ps}px ${T.mono}`; c.textAlign = align; c.textBaseline = base;
     const w = c.measureText(txt).width, h = 14 * ps;
     const x0 = align === 'left' ? x : align === 'right' ? x - w : x - w / 2;
     const y0 = base === 'middle' ? y - h / 2 : base === 'bottom' ? y - h : y;
-    c.fillStyle = T.canvas; c.globalAlpha = 0.85; c.fillRect(x0 - 3, y0, w + 6, h); c.globalAlpha = 1;
-    c.fillStyle = col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
+    c.fillStyle = T.canvas; c.globalAlpha = 0.85 * alpha; c.fillRect(x0 - 3, y0, w + 6, h); c.globalAlpha = alpha;
+    c.fillStyle = col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0)); c.globalAlpha = 1;
     return [x0 - 3, y0, w + 6, h];
   }
-  let throwing = null, hover = null, drag = null, hoverId = null, zvcGrip = null;
+  let throwing = null, hover = null, drag = null, hoverId = null, zvcGrip = null, lastDrawT = null, placedLabels = [];
   function drawAll() {
     if (!T || !W || !LPT) return;
+    updateCamera();
     const c = ctx, ps = projScale(), mu = S.mu, rotF = S.frame === 'rot', sys = sysNow(), [R1, R2] = radii();
     c.setTransform(dpr, 0, 0, dpr, 0, 0);
     c.fillStyle = T.canvas; c.fillRect(0, 0, W, H);
     const labels = [];   // drawn last on halos
     if (rotF) {
-      buildZvc();
+      const f = ensureField();
+      buildZvc(f);
       const lkey = zvc.key + '|' + S.show.cont + '|' + ps + '|' + dpr + '|' + T.contour + T.muted + T.equi;
-      if (layer.key !== lkey) {   // the static map is drawn once per view, μ, C and theme, then copied every frame
-        layer.key = lkey; layer.width = can.width; layer.height = can.height;
+      if (layer.key !== lkey) {   // the static map is drawn once per grid, C and theme, then copied (shifted) every frame
+        layer.key = lkey; layer.width = Math.round((W + 2 * f.spec.m) * dpr); layer.height = Math.round((H + 2 * f.spec.m) * dpr);
         const g = layer.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
         g.imageSmoothingEnabled = true;
-        g.drawImage(fimg, -GS / 2, -GS / 2, field.nx * GS, field.ny * GS);
+        g.drawImage(fimg, -GS / 2, -GS / 2, f.nx * GS, f.ny * GS);
         if (S.show.cont) {
-          g.strokeStyle = T.contour; g.lineWidth = 1; for (const sg of field.lines) strokeSegs(g, sg);
-          g.strokeStyle = T.muted; g.globalAlpha = 0.7; g.setLineDash([4, 4]); for (const sg of field.seps) strokeSegs(g, sg); g.setLineDash([]); g.globalAlpha = 1;
+          g.strokeStyle = T.contour; g.lineWidth = 1; for (const sg of f.lines) strokeSegs(g, sg);
+          g.strokeStyle = T.muted; g.globalAlpha = 0.7; g.setLineDash([4, 4]); for (const sg of f.seps) strokeSegs(g, sg); g.setLineDash([]); g.globalAlpha = 1;
         }
         g.strokeStyle = T.equi; g.lineWidth = 2.2 * ps; g.lineJoin = 'round'; strokeSegs(g, zvc.segs);
       }
-      c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(layer, 0, 0); c.setTransform(dpr, 0, 0, dpr, 0, 0);
-      zvcGrip = gripPoint();
+      const o = layerOff(f);
+      c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(layer, o[0] * dpr, o[1] * dpr); c.setTransform(dpr, 0, 0, dpr, 0, 0);
+      zvcGrip = gripPoint(o);
     } else {
       zvcGrip = null;
-      // the circular orbits of the two masses
-      c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.setLineDash([4, 5]);
-      for (const r of [mu, 1 - mu]) { const o = toPx(0, 0); c.beginPath(); c.arc(o[0], o[1], r * V.s, 0, TWO_PI); c.stroke(); }
+      const o = toPx(0, 0);
+      // m₂'s circular orbit about m₁, radius a; and the barycenter's circle of radius μa when it is big enough to see
+      c.strokeStyle = T.gridStrong; c.lineWidth = 1.5 * ps; c.setLineDash([5, 6]);
+      c.beginPath(); c.arc(o[0], o[1], V.s, 0, TWO_PI); c.stroke();
+      if (mu * V.s > 6) { c.lineWidth = 1; c.beginPath(); c.arc(o[0], o[1], mu * V.s, 0, TWO_PI); c.stroke(); }
       c.setLineDash([]);
     }
     // barycenter
@@ -814,22 +938,33 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         labels.push({ t: `Moon's orbit`, x: ex, y: ey + r, r: 0, dir: 1, col: T.muted }); }
     }
     // trails
-    if (S.show.trail) for (const p of parts) drawTrail(c, p);
+    const view = { k: rotF ? 0 : 3, cx: V.x0, cy: V.y0, s: V.s, ox: W / 2, oy: H / 2 };
+    if (S.show.trail) for (const p of parts) drawTrail(c, p, view);
     // bodies
     const [x1, y1] = P(-mu, 0), [x2, y2] = P(1 - mu, 0);
     const r1 = Math.max(R1 * V.s, 7 * ps), r2 = Math.max(R2 * V.s, 4 * ps);
+    // at high time speeds in the Sun centered frame m₂ moves far between frames; draw the arc it swept as a blur
+    if (!rotF && playing && lastDrawT !== null && t - lastDrawT > 0.12) {
+      const o = toPx(0, 0), sw = Math.min(TWO_PI, t - lastDrawT);
+      c.strokeStyle = T[sys.c2 || 'neg']; c.globalAlpha = 0.35; c.lineWidth = 2 * r2; c.lineCap = 'round';
+      c.beginPath(); c.arc(o[0], o[1], V.s, -t, -t + sw); c.stroke(); c.globalAlpha = 1; c.lineCap = 'butt';
+    }
+    lastDrawT = t;
     c.fillStyle = T[sys.c1 || 'sun']; c.beginPath(); c.arc(x1, y1, Math.min(r1, 4 * Math.max(W, H)), 0, TWO_PI); c.fill();
     c.fillStyle = T[sys.c2 || 'neg']; c.beginPath(); c.arc(x2, y2, Math.min(r2, 4 * Math.max(W, H)), 0, TWO_PI); c.fill();
+    // in the Sun centered frame, moving labels sit radially outward from m₁, so they slide smoothly with their body
+    const radial = (x, y) => { if (rotF) return null; const d = Math.hypot(x - x1, y - y1); return d > 1 ? [(x - x1) / d, (y - y1) / d] : null; };
     if (S.show.lab) {
       labels.push({ t: sys.m1, x: x1, y: y1, r: r1, dir: 1, col: T.ink, bold: true });
-      labels.push({ t: sys.m2, x: x2, y: y2, r: r2, dir: 1, col: T.ink, bold: true });
+      { const u = radial(x2, y2); labels.push({ t: sys.m2, x: x2, y: y2, r: r2, dir: 1, col: T.ink, bold: true, u: u && [u[1], -u[0]] }); }   // m₂'s label sideways, along its orbit, clear of L1 and L2
     }
-    // Lagrange points
-    const keys = ['L1', 'L2', 'L3', 'L4', 'L5'], pts = {};
+    // Lagrange points (in the Sun centered frame they ride along with m₂, drawn fainter)
+    const keys = ['L1', 'L2', 'L3', 'L4', 'L5'], pts = {}, la = rotF ? 1 : 0.6;
     for (const k of keys) pts[k] = P(LPT[k].x, LPT[k].y);
     const close = Math.hypot(pts.L1[0] - pts.L2[0], pts.L1[1] - pts.L2[1]) < 44 * ps;
+    c.globalAlpha = la;
     for (const k of keys) {
-      const [px, py] = pts[k], st = LPT[k].st.stable, rr = 4.2 * ps;
+      const [px, py] = pts[k], st = LPT[k].st.stable, rr = (rotF ? 4.2 : 3.6) * ps;
       if (px < -20 || px > W + 20 || py < -20 || py > H + 20) continue;
       c.lineWidth = 1.6 * ps;
       if (st) { c.fillStyle = T.stable; c.beginPath(); c.arc(px, py, rr, 0, TWO_PI); c.fill(); }
@@ -837,18 +972,16 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       if (!S.show.lab || (close && (k === 'L1' || k === 'L2'))) continue;
       const tag = S.show.real && sys.tags && sys.tags[k] ? ` · ${sys.tags[k]}` : '';
       const dir = k === 'L4' ? 1 : -1;   // L4 and L5 labels toward the center, where the drawing is emptier
-      labels.push({ t: k + tag, x: px, y: py, r: rr, dir, col: st ? T.stable : T.pos, bold: true });
+      const u = radial(px, py);   // L1's label points inward, toward m₁; the others outward
+      labels.push({ t: k + tag, x: px, y: py, r: rr, dir, col: st ? T.stable : T.pos, bold: true, a: la, u: u && (k === 'L1' ? [-u[0], -u[1]] : u) });
     }
-    if (S.show.lab && close) labels.push({ t: 'L1, L2: zoom in', x: x2, y: y2, r: r2 + 2 * ps, dir: -1, col: T.pos, bold: true });
+    c.globalAlpha = 1;
+    if (S.show.lab && close) { const u = radial(x2, y2); labels.push({ t: 'L1, L2: zoom in', x: x2, y: y2, r: r2 + (u ? 18 : 2) * ps, dir: -1, col: T.pos, bold: true, a: la, u: u && [-u[0], -u[1]] }); }
     // particles
     for (const p of parts) drawParticle(c, p);
     // newest particle's launch handles
-    if (rotF) drawHandles(c);
-    if (throwing) {
-      const a = throwing; c.strokeStyle = T.accent; c.fillStyle = T.accent; c.lineWidth = 2 * ps;
-      c.beginPath(); c.arc(a.x0, a.y0, 5 * ps, 0, TWO_PI); c.stroke();
-      if (Math.hypot(a.x1 - a.x0, a.y1 - a.y0) > 5) arrow(c, a.x0, a.y0, a.x1, a.y1, ps);
-    }
+    drawHandles(c);
+    if (throwing) drawThrow(c, ps);
     placeLabels(c, labels, [[x1, y1, r1], [x2, y2, r2]]);
     // ZVC grip (always visible in the rotating frame)
     if (zvcGrip) {
@@ -858,27 +991,45 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       if (hot) label(c, `C = ${fmtC(S.C)}`, zvcGrip[0] + 10 * ps, zvcGrip[1] - 12 * ps, T.equi, 'left', 'middle', true);
     }
     drawScale(c, ps);
-    if (!rotF) label(c, 'Inertial frame: the potential map belongs to the rotating frame', 10 * ps, 14 * ps, T.muted, 'left', 'middle');
-    else if (hover) {
-      const d = Math.hypot(hover.x - 1 + mu, hover.y);
-      label(c, `${fmtLen(d, 4)} from ${sys.m2}`, 10 * ps, 14 * ps, T.muted, 'left', 'middle');
+    if (S.show.inset) drawInset(c, ps);
+    // frame statement and hover readout, top left
+    let ly = 14 * ps;
+    const line = (txt, col = T.muted, bold = false) => { label(c, txt, 10 * ps, ly, col, 'left', 'middle', bold); ly += 16 * ps; };
+    if (!rotF) {
+      const narrow = W < 520 * ps;
+      line(narrow ? `${sys.m1} centered: ${sys.m1} held fixed` : `${sys.m1} centered frame: ${sys.m1} held fixed, axes fixed to the stars`, T.ink, true);
+      line(narrow ? `(it really circles the center of mass at ${fmtLen(mu, 3)})` : `${sys.m1} really circles the center of mass at ${fmtLen(mu, 3)}`);
+    }
+    if (hover) {
+      if (rotF) line(`${fmtLen(Math.hypot(hover.x - 1 + mu, hover.y), 4)} from ${sys.m2}`);
+      else { const r = Math.hypot(hover.x, hover.y); line(`${fmtLen(r, 4)} from ${sys.m1} · circular speed ${fmtSpeed(Math.sqrt((1 - mu) / r))}`); }
     }
   }
-  // labels on halos, each moved to the first free spot: its preferred side, the opposite side, right, left
+  // labels on halos. Rotating frame: each moved to the first free spot (its preferred side, the opposite side, right, left).
+  // Sun centered frame: a label with a direction u sits along u, beyond its body, so it moves smoothly and never flips side.
   function placeLabels(c, labels, discs) {
     const ps = projScale(), placed = [], h = 14 * ps, gap = 6 * ps;
     const obst = discs.map(([x, y, r]) => [x - r, y - r, 2 * r, 2 * r]);
-    const L = S.frame === 'rot' ? launchPx() : null;
+    const L = launchPx();
     if (L) for (const p of [L.a, L.b]) obst.push([p[0] - 8 * ps, p[1] - 8 * ps, 16 * ps, 16 * ps]);
     const hit = (b) => placed.concat(obst).some((q) => b[0] < q[0] + q[2] && q[0] < b[0] + b[2] && b[1] < q[1] + q[3] && q[1] < b[1] + b[3]);
+    placedLabels = [];
     for (const lb of labels) {
       c.font = `${lb.bold ? '600 ' : ''}${11 * ps}px ${T.mono}`;
       const w = c.measureText(lb.t).width + 6, off = lb.r + gap + h / 2;
-      const cands = [[lb.x, lb.y + lb.dir * off], [lb.x, lb.y - lb.dir * off], [lb.x + lb.r + gap + w / 2, lb.y], [lb.x - lb.r - gap - w / 2, lb.y]];
-      let pick = cands[0];
-      for (const cd of cands) { if (!hit([cd[0] - w / 2, cd[1] - h / 2, w, h])) { pick = cd; break; } }
+      let pick, pinned = false;
+      if (lb.u) {
+        const [ux, uy] = lb.u, k = lb.r + gap + Math.abs(ux) * w / 2 + Math.abs(uy) * h / 2;   // the box's extent along u: turns smoothly with u
+        pick = [Math.max(w / 2 + 2, Math.min(W - w / 2 - 2, lb.x + ux * k)), Math.max(h / 2 + 2, Math.min(H - h / 2 - 2, lb.y + uy * k))];   // kept inside the pane
+        pinned = pick[0] !== lb.x + ux * k || pick[1] !== lb.y + uy * k;
+      } else {
+        const cands = [[lb.x, lb.y + lb.dir * off], [lb.x, lb.y - lb.dir * off], [lb.x + lb.r + gap + w / 2, lb.y], [lb.x - lb.r - gap - w / 2, lb.y]];
+        pick = cands[0];
+        for (const cd of cands) { if (!hit([cd[0] - w / 2, cd[1] - h / 2, w, h])) { pick = cd; break; } }
+      }
       placed.push([pick[0] - w / 2, pick[1] - h / 2, w, h]);
-      label(c, lb.t, pick[0], pick[1], lb.col, 'center', 'middle', lb.bold);
+      placedLabels.push({ t: lb.t, x: pick[0], y: pick[1], ax: lb.x, ay: lb.y, w, h, pinned });
+      label(c, lb.t, pick[0], pick[1], lb.col, 'center', 'middle', lb.bold, lb.a || 1);
     }
   }
   function arrow(c, x0, y0, x1, y1, ps) {
@@ -886,17 +1037,18 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1 - Math.cos(a) * L * 0.6, y1 - Math.sin(a) * L * 0.6); c.stroke();
     c.beginPath(); c.moveTo(x1, y1); c.lineTo(x1 - L * Math.cos(a - 0.4), y1 - L * Math.sin(a - 0.4)); c.lineTo(x1 - L * Math.cos(a + 0.4), y1 - L * Math.sin(a + 0.4)); c.closePath(); c.fill();
   }
-  function drawTrail(c, p) {
+  // view: { k: 0 for rotating coordinates or 3 for m₁ centered, cx, cy, s, ox, oy }
+  function drawTrail(c, p, view, lw) {
     if (p.n < 2) return;
-    const ps = projScale(), b = p.buf, start = (p.head - p.n + p.cap) % p.cap;
-    c.strokeStyle = p.swarm ? T.stable : T[COLS[p.col]]; c.lineWidth = (p.swarm ? 1 : 1.6) * ps; c.globalAlpha = p.swarm ? 0.32 : 0.9; c.lineJoin = 'round';
+    const ps = projScale(), { k: o, cx, cy, s, ox, oy } = view, n = p.swarm && o === 3 ? Math.min(p.n, 60) : p.n, b = p.buf, start = (p.head - n + p.cap) % p.cap;
+    c.strokeStyle = p.swarm ? T.stable : T[COLS[p.col]]; c.lineWidth = (lw || (p.swarm ? 1 : 1.6)) * ps; c.globalAlpha = p.swarm ? 0.32 : 0.9; c.lineJoin = 'round';
     c.beginPath();
-    let lx = -1e9, ly = -1e9, k0 = 0;
-    for (let k = 0; k < p.n; k++) {
-      const i = ((start + k) % p.cap) * 3, q = P(b[i], b[i + 1], b[i + 2]);
-      if (k === 0) { c.moveTo(q[0], q[1]); lx = q[0]; ly = q[1]; continue; }
-      if (k < p.n - 1 && Math.abs(q[0] - lx) + Math.abs(q[1] - ly) < 1.2) continue;
-      c.lineTo(q[0], q[1]); lx = q[0]; ly = q[1]; k0 = k;
+    let lx = -1e9, ly = -1e9;
+    for (let k = 0; k < n; k++) {
+      const i = ((start + k) % p.cap) * 5, qx = ox + (b[i + o] - cx) * s, qy = oy - (b[i + o + 1] - cy) * s;
+      if (k === 0) { c.moveTo(qx, qy); lx = qx; ly = qy; continue; }
+      if (k < n - 1 && Math.abs(qx - lx) + Math.abs(qy - ly) < 1.2) continue;
+      c.lineTo(qx, qy); lx = qx; ly = qy;
     }
     c.stroke(); c.globalAlpha = 1;
   }
@@ -907,10 +1059,14 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     c.beginPath(); c.arc(q[0], q[1], 4.5 * ps, 0, TWO_PI); c.fill(); c.stroke();
     if (!p.alive && p.end && p.end !== 'escape') { c.strokeStyle = T[COLS[p.col]]; c.lineWidth = 1.5 * ps; c.beginPath(); c.moveTo(q[0] - 6 * ps, q[1] - 6 * ps); c.lineTo(q[0] + 6 * ps, q[1] + 6 * ps); c.moveTo(q[0] + 6 * ps, q[1] - 6 * ps); c.lineTo(q[0] - 6 * ps, q[1] + 6 * ps); c.stroke(); }
   }
+  // the selected particle's launch: start ring and arrow tip, in the current frame
   function launchPx() {
     if (!sel) return null;
-    const ps = projScale(), s0 = sel.s0, a = toPx(s0[0], s0[1]);
-    let b = toPx(s0[0] + s0[2] * ARW, s0[1] + s0[3] * ARW), knob = false;
+    const ps = projScale();
+    let a, b;
+    if (S.frame === 'rot') { const s0 = sel.s0; a = toPx(s0[0], s0[1]); b = toPx(s0[0] + s0[2] * ARW, s0[1] + s0[3] * ARW); }
+    else { const h = launchSun(sel); a = toPx(h[0], h[1]); b = toPx(h[0] + h[2] * ARW_SUN, h[1] + h[3] * ARW_SUN); }
+    let knob = false;
     if (Math.hypot(b[0] - a[0], b[1] - a[1]) < 14 * ps) { b = [a[0] + 18 * ps, a[1]]; knob = true; }
     return { a, b, knob };
   }
@@ -926,14 +1082,64 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     // tip grip
     const hs2 = hs('tip'); c.fillStyle = hs2 ? col : T.canvas; c.lineWidth = (hs2 ? 2.4 : 1.6) * ps;
     c.beginPath(); c.arc(L.b[0], L.b[1], (hs2 ? 6 : 4.5) * ps, 0, TWO_PI); c.fill(); c.stroke();
+    if (drag && drag.id === 'tip' && S.frame === 'sun') { const h = launchSun(sel); drawKepler(c, h, ps); throwLabel(c, h, L.b, ps); }
   }
-  function gripPoint() {
+  // While a throw is set up in the Sun centered frame: snap to the circular speed when within 3% and 4°.
+  function snapCirc(h) {
+    const r = Math.hypot(h[0], h[1]), v = Math.hypot(h[2], h[3]); if (r === 0 || v === 0) return { h, snapped: false };
+    const cv = circularAt(S.mu, h[0], h[1]), ang = Math.acos(Math.max(-1, Math.min(1, (h[2] * cv[2] + h[3] * cv[3]) / (v * Math.hypot(cv[2], cv[3])))));
+    if (Math.abs(v / Math.hypot(cv[2], cv[3]) - 1) < 0.03 && ang < 4 * deg) return { h: cv, snapped: true };
+    return { h, snapped: false };
+  }
+  // the throw being drawn: returns the m₁ centered state it would launch
+  function throwState(a) {
+    const w0 = toW(a.x0, a.y0), w1 = toW(a.x1, a.y1), moved = Math.hypot(a.x1 - a.x0, a.y1 - a.y0) > 5;
+    if (S.frame === 'sun') {
+      if (!moved) return { h: S.circ ? circularAt(S.mu, w0.x, w0.y) : [w0.x, w0.y, 0, 0], snapped: S.circ };
+      return snapCirc([w0.x, w0.y, (w1.x - w0.x) / ARW_SUN, (w1.y - w0.y) / ARW_SUN]);
+    }
+    const s = [w0.x, w0.y, moved ? (w1.x - w0.x) / ARW : 0, moved ? (w1.y - w0.y) / ARW : 0];
+    if (!moved && S.circ) { const X = sunXY(w0.x, w0.y, t); return { h: circularAt(S.mu, X[0], X[1]), snapped: true }; }
+    return { h: rotToSun(S.mu, s, t), snapped: false, rot: s };
+  }
+  function drawThrow(c, ps) {
+    const a = throwing, st = throwState(a);
+    c.strokeStyle = T.accent; c.fillStyle = T.accent; c.lineWidth = 2 * ps;
+    if (S.frame === 'sun') drawKepler(c, st.h, ps);
+    c.strokeStyle = T.accent; c.fillStyle = T.accent;
+    c.beginPath(); c.arc(a.x0, a.y0, 5 * ps, 0, TWO_PI); c.stroke();
+    let tip = [a.x1, a.y1];
+    if (S.frame === 'sun' && st.snapped && Math.hypot(a.x1 - a.x0, a.y1 - a.y0) > 5) tip = toPx(st.h[0] + st.h[2] * ARW_SUN, st.h[1] + st.h[3] * ARW_SUN);
+    if (Math.hypot(tip[0] - a.x0, tip[1] - a.y0) > 5) arrow(c, a.x0, a.y0, tip[0], tip[1], ps);
+    throwLabel(c, st.h, tip, ps, st.snapped);
+  }
+  function throwLabel(c, h, tip, ps, snapped) {
+    const tb = twoBody(S.mu, h);
+    const txt = `${fmtSpeed(tb.v)} rel. ${sysNow().m1} · ${(tb.v / tb.vc).toFixed(2)} × circular · ${snapped && Math.abs(tb.v / tb.vc - 1) < 1e-9 ? 'circular' : tb.bound ? 'bound' : 'unbound'}`;
+    c.font = `600 ${11 * ps}px ${T.mono}`;
+    const w = c.measureText(txt).width + 8, x = Math.max(w / 2 + 6, Math.min(W - w / 2 - 6, tip[0])), y = tip[1] > 40 * ps ? tip[1] - 18 * ps : tip[1] + 18 * ps;
+    label(c, txt, x, y, tb.bound ? T.stable : T.pos, 'center', 'middle', true);
+  }
+  // the two body orbit about m₁ (m₂ ignored) through the m₁ centered state h, dotted
+  function drawKepler(c, h, ps) {
+    const tb = twoBody(S.mu, h); if (!(tb.p > 1e-9)) return;
+    c.strokeStyle = T.accent; c.lineWidth = 1.5 * ps; c.setLineDash([2, 4]); c.globalAlpha = 0.85;
+    c.beginPath(); let pen = false;
+    for (let k = 0; k <= 360; k++) {
+      const f = -Math.PI + k * TWO_PI / 360, den = 1 + tb.e * Math.cos(f);
+      if (den < 0.02 || tb.p / den > 12) { pen = false; continue; }
+      const r = tb.p / den, q = toPx(r * Math.cos(f + tb.w), r * Math.sin(f + tb.w));
+      if (pen) c.lineTo(q[0], q[1]); else c.moveTo(q[0], q[1]); pen = true;
+    }
+    c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+  }
+  function gripPoint(o) {
     const sg = zvc.segs; if (!sg || !sg.length) return null;
     const ax = drag && drag.id === 'zvc' && drag.px !== undefined ? drag.px : W * 0.5, ay = drag && drag.id === 'zvc' && drag.py !== undefined ? drag.py : H * 0.12;
     const m = 14 * projScale();
     let best = null, bd = Infinity;
     for (let k = 0; k < sg.length; k += 4) {
-      const x = sg[k], y = sg[k + 1]; if (x < m || x > W - m || y < m || y > H - m) continue;
+      const x = sg[k] + o[0], y = sg[k + 1] + o[1]; if (x < m || x > W - m || y < m || y > H - m) continue;
       const d = (x - ax) * (x - ax) + (y - ay) * (y - ay); if (d < bd) { bd = d; best = [x, y]; }
     }
     return best;
@@ -944,6 +1150,33 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     c.strokeStyle = T.ink; c.lineWidth = 1.5 * ps; c.beginPath(); c.moveTo(x0, y - 4 * ps); c.lineTo(x0, y); c.lineTo(x1, y); c.lineTo(x1, y - 4 * ps); c.stroke();
     const s = sysNow(), txt = s.aKm ? `${trimz(L.toPrecision(3))} a = ${fmtLen(L, 3)}` : `${trimz(L.toPrecision(3))} a`;
     label(c, txt, x1, y - 13 * ps, T.ink, 'right', 'middle');
+  }
+  // inset, bottom left: the same particles in the other frame, whole system in view
+  function drawInset(c, ps) {
+    const size = Math.round(Math.min(0.36 * Math.min(W, H), 230 * ps)), x0 = 10 * ps, y0 = H - size - 10 * ps, other = S.frame === 'rot' ? 'sun' : 'rot', mu = S.mu, sys = sysNow();
+    const R = other === 'sun' ? Math.max(1.3, S.fitR) : 1.36, s = (size / 2 - 6 * ps) / R, cx = x0 + size / 2, cy = y0 + size / 2;
+    c.save();
+    c.fillStyle = T.canvas; c.globalAlpha = 0.95; c.fillRect(x0, y0, size, size); c.globalAlpha = 1;
+    c.strokeStyle = T.line; c.lineWidth = 1; c.strokeRect(x0 + 0.5, y0 + 0.5, size - 1, size - 1);
+    c.beginPath(); c.rect(x0, y0, size, size); c.clip();
+    const map = (x, y) => [cx + x * s, cy - y * s];
+    let b1, b2;
+    if (other === 'sun') {
+      c.strokeStyle = T.gridStrong; c.setLineDash([3, 4]); c.beginPath(); c.arc(cx, cy, s, 0, TWO_PI); c.stroke(); c.setLineDash([]);
+      b1 = map(0, 0); b2 = map(Math.cos(t), Math.sin(t));
+    } else { b1 = map(-mu, 0); b2 = map(1 - mu, 0); }
+    const view = { k: other === 'sun' ? 3 : 0, cx: 0, cy: 0, s, ox: cx, oy: cy };
+    for (const p of parts) if (!p.swarm) drawTrail(c, p, view, 1.2);
+    for (const k of ['L4', 'L5']) { const q = other === 'sun' ? map(...sunXY(LPT[k].x, LPT[k].y, t)) : map(LPT[k].x, LPT[k].y); c.fillStyle = LPT[k].st.stable ? T.stable : T.pos; c.globalAlpha = 0.7; c.beginPath(); c.arc(q[0], q[1], 2.5 * ps, 0, TWO_PI); c.fill(); c.globalAlpha = 1; }
+    c.fillStyle = T[sys.c1 || 'sun']; c.beginPath(); c.arc(b1[0], b1[1], 4.5 * ps, 0, TWO_PI); c.fill();
+    c.fillStyle = T[sys.c2 || 'neg']; c.beginPath(); c.arc(b2[0], b2[1], 3 * ps, 0, TWO_PI); c.fill();
+    for (const p of parts) {
+      if (p.swarm) continue;
+      const q = other === 'sun' ? map(...sunXY(p.s[0], p.s[1], p.t)) : map(p.s[0], p.s[1]);
+      c.fillStyle = T[COLS[p.col]]; c.beginPath(); c.arc(q[0], q[1], 3 * ps, 0, TWO_PI); c.fill();
+    }
+    c.restore();
+    label(c, other === 'sun' ? `${sys.m1} centered` : 'Rotating frame', x0 + 6 * ps, y0 + 11 * ps, T.muted, 'left', 'middle', true);
   }
 
   // ---------- readouts ----------
@@ -991,22 +1224,35 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const own = parts.filter((p) => !p.swarm);
     const sw = parts.length - own.length;
     $('count').innerHTML = `t = ${(t / TWO_PI).toFixed(2)} <small>P</small>${s.Pd ? ` · ${fmtT(t, 3)}` : ''}${sw ? ` · ${sw} <small>asteroids</small>` : ''}`;
-    if (!sel) { $('rC').textContent = '—'; $('rDC').textContent = '—'; $('rNow').textContent = sw ? 'The swarm has no single launch to edit. Click to add your own particle.' : 'No particle yet.'; return; }
-    const C = jacobi(S.mu, sel.s), dC = Math.abs((C - sel.C0) / sel.C0);
+    if (!sel) { for (const id of ['rC', 'rDC', 'rKep']) $(id).textContent = '—'; $('rNow').textContent = sw ? 'The swarm has no single launch to edit. Click to add your own particle.' : 'No particle yet.'; return; }
+    const C = jacobi(S.mu, sel.s), dC = Math.abs((C - sel.C0) / sel.C0), el = Math.max(0, sel.t - sel.t0);
     $('rC').textContent = fmtC(C);
-    $('rDC').innerHTML = `${dC === 0 ? '0' : sci(dC, 2)} <span class="ok">after ${(Math.max(0, sel.t - sel.t0) / TWO_PI).toFixed(1)} P</span>`;
-    const d2 = Math.hypot(sel.s[0] - 1 + S.mu, sel.s[1]), v = Math.hypot(sel.s[2], sel.s[3]);
+    $('rDC').innerHTML = `${dC === 0 ? '0' : sci(dC, 2)} <span class="ok">after ${(el / TWO_PI).toFixed(1)} P${s.Pd ? ` = ${fmtT(el, 3)}` : ''}</span>`;
+    const d2 = Math.hypot(sel.s[0] - 1 + S.mu, sel.s[1]), h = rotToSun(S.mu, sel.s, sel.t), tb = twoBody(S.mu, h);
     let status = '';
-    if (!sel.alive) status = sel.end === 'hit1' ? `Hit ${s.m1}.` : sel.end === 'hit2' ? `Hit ${s.m2}.` : sel.end === 'escape' ? 'Left the system (beyond 4 a); stopped.' : 'Stopped.';
-    $('rNow').innerHTML = `${fmtLen(d2, 4)} from ${s.m2}, speed ${fmtSpeed(v)} in the rotating frame${status ? `<br>${status}` : ''}`;
+    if (!sel.alive) status = sel.end === 'hit1' ? `Hit ${s.m1}.` : sel.end === 'hit2' ? `Hit ${s.m2}.` : sel.end === 'escape' ? 'Left the system (beyond 8 a); stopped.' : 'Stopped.';
+    $('rNow').innerHTML = S.frame === 'rot'
+      ? `${fmtLen(d2, 4)} from ${s.m2}, speed ${fmtSpeed(Math.hypot(sel.s[2], sel.s[3]))} in the rotating frame${status ? `<br>${status}` : ''}`
+      : `${fmtLen(tb.r, 4)} from ${s.m1} and ${fmtLen(d2, 3)} from ${s.m2}, speed ${fmtSpeed(tb.v)} relative to ${s.m1}${status ? `<br>${status}` : ''}`;
+    $('rKepT').textContent = `Two body estimate about ${s.m1}, ignoring ${s.m2}`;
+    const near = d2 < 3 * Math.cbrt(S.mu / 3);
+    let k = `Speed ${fmtSpeed(tb.v)} relative to ${s.m1}; here a circular orbit needs ${fmtSpeed(tb.vc)} and escape needs ${fmtSpeed(tb.ve)}.<br>`;
+    if (tb.bound) k += `<span class="good">Bound</span>: perihelion ${fmtLen(tb.peri, 3)}, aphelion ${fmtLen(tb.apo, 3)}, period ${fmtT(tb.T, 3)}; Tisserand T = ${tb.tiss.toFixed(4)}.`;
+    else k += `<span class="bad">Unbound</span>: energy above zero, so it leaves ${s.m1} unless ${s.m2} turns it back.`;
+    if (near) k += ` <span class="ok">Inside ${s.m2}'s pull: this estimate changes quickly here.</span>`;
+    $('rKep').innerHTML = k;
   }
-  // launch sliders <-> newest particle
-  const vOf = (k) => (k <= 0 ? 0 : Math.pow(10, -6 + 6.5 * k / 1000));
-  const kOf = (v) => (v <= 1e-6 ? 0 : Math.max(1, Math.min(1000, Math.round((Math.log10(v) + 6) / 6.5 * 1000))));
+  // launch sliders <-> newest particle (speed is relative to the current frame)
+  const vOf = (k) => (k <= 0 ? 0 : Math.pow(10, -6 + 7 * k / 1000));
+  const kOf = (v) => (v <= 1e-6 ? 0 : Math.max(1, Math.min(1000, Math.round((Math.log10(v) + 6) / 7 * 1000))));
+  const launchVel = () => (S.frame === 'rot' ? [sel.s0[2], sel.s0[3]] : launchSun(sel).slice(2));
   function syncLaunch() {
     const on = !!sel; $('vs').disabled = !on; $('vd').disabled = !on;
+    $('vsLab').textContent = S.frame === 'rot' ? 'Launch speed, rotating frame' : `Launch speed relative to ${sysNow().m1}`;
+    if (!sel && S.view === 'follow') { S.view = 'free'; }
+    syncView();
     if (!sel) { $('vsOut').textContent = '—'; $('vdOut').textContent = '—'; return; }
-    const v = Math.hypot(sel.s0[2], sel.s0[3]), a = ((Math.atan2(sel.s0[3], sel.s0[2]) / deg) + 360) % 360;
+    const [vx, vy] = launchVel(), v = Math.hypot(vx, vy), a = ((Math.atan2(vy, vx) / deg) + 360) % 360;
     $('vs').value = kOf(v); if (v > 0) $('vd').value = Math.round(a) % 360;
     $('vsOut').textContent = v > 0 ? `${fmtSpeed(v)}` : 'at rest';
     $('vdOut').textContent = `${$('vd').value}°`;
@@ -1014,8 +1260,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function setLaunch(k, dDeg) {
     if (!sel) return;
     k = Math.max(0, Math.min(1000, Math.round(k))); dDeg = ((Math.round(dDeg) % 360) + 360) % 360;
-    const v = vOf(k), s0 = sel.s0;
-    relaunch(sel, [s0[0], s0[1], v * Math.cos(dDeg * deg), v * Math.sin(dDeg * deg)]);
+    const v = vOf(k), vx = v * Math.cos(dDeg * deg), vy = v * Math.sin(dDeg * deg);
+    if (S.frame === 'rot') { const s0 = sel.s0; relaunch(sel, [s0[0], s0[1], vx, vy]); }
+    else { const h = launchSun(sel); relaunch(sel, sunToRot(S.mu, [h[0], h[1], vx, vy], t)); }
     $('vd').value = dDeg; $('vs').value = k;
     $('vsOut').textContent = v > 0 ? fmtSpeed(v) : 'at rest'; $('vdOut').textContent = `${dDeg}°`;
     custom();
@@ -1038,29 +1285,31 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     for (const b of document.querySelectorAll('#systems button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.sys));
     $('mu').value = Math.log10(S.mu).toFixed(3);
     $('vNear').textContent = `Near ${sysNow().m2}`;
+    syncFrame();
   }
   function setMu(mu, sys) {
     S.mu = mu; S.sys = sys; refreshPoints();
-    parts = []; sel = null; t = 0; colNext = 0;
+    parts = []; sel = null; t = 0; colNext = 0; lastDrawT = null;
     S.C = cOfPos(S.cPos);
-    field.key = ''; syncSys(); syncLaunch();
-    if (S.view !== 'free') fitView(); else fitView('whole');
+    field.cur = null; field.job = null; syncSys(); syncLaunch();
+    if (S.view !== 'free' && S.view !== 'follow') fitView(); else fitView('whole');
     readouts(); drawAll();
   }
   function applyPreset(name) {
     const p = PRESETS[name];
-    S.frame = 'rot'; syncFrame();
-    S.view = p.view; S.speed = p.speed; $('sp').value = p.speed;
+    S.frame = p.frame || 'rot'; S.fitR = p.fitR || 1.3; saved.rot = saved.sun = null;
+    S.speed = p.speed; S[S.frame === 'rot' ? 'speedR' : 'speedS'] = p.speed; $('sp').value = p.speed;
+    S.view = p.view;
     S.follow = p.follow; $('follow').checked = p.follow;
     if (p.cPos !== undefined) S.cPos = p.cPos;
     setMu(SYS[p.sys].mu, p.sys);
     markPreset(name);
     for (const q of p.make(S.mu, CL, LPT)) addParticle(q.s, { swarm: q.swarm, col: q.col });
     if (!sel || !S.follow) setC(cOfPos(S.cPos), false);
-    syncLaunch(); readouts(); drawAll();
+    syncFrame(); syncLaunch(); readouts(); drawAll();
   }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => { applyPreset(b.dataset.p); if (!reduce) setPlaying(true); });
-  for (const b of document.querySelectorAll('#systems button')) b.addEventListener('click', () => { custom(); S.view = S.view === 'free' ? 'whole' : S.view; setMu(SYS[b.dataset.s].mu, b.dataset.s); });
+  for (const b of document.querySelectorAll('#systems button')) b.addEventListener('click', () => { custom(); S.view = S.view === 'free' || S.view === 'follow' ? 'whole' : S.view; setMu(SYS[b.dataset.s].mu, b.dataset.s); });
   $('mu').addEventListener('input', (e) => {
     custom();
     let mu = Math.pow(10, +e.target.value), sys = 'custom';
@@ -1069,33 +1318,60 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   });
   $('cj').addEventListener('input', (e) => { custom(); setCPos(+e.target.value); });
   $('follow').addEventListener('change', (e) => { S.follow = e.target.checked; if (S.follow && sel) setC(jacobi(S.mu, sel.s0), false); });
+  $('circ').addEventListener('change', (e) => { S.circ = e.target.checked; });
   $('vs').addEventListener('input', (e) => setLaunch(+e.target.value, +$('vd').value));
   $('vd').addEventListener('input', (e) => setLaunch(+$('vs').value, +e.target.value));
-  $('sp').addEventListener('input', (e) => { S.speed = +e.target.value; readouts(); });
-  for (const [id, k] of [['tCont', 'cont'], ['tLab', 'lab'], ['tTrail', 'trail'], ['tReal', 'real']]) $(id).addEventListener('change', (e) => { S.show[k] = e.target.checked; drawAll(); });
-  function syncFrame() { $('fRot').setAttribute('aria-pressed', String(S.frame === 'rot')); $('fIn').setAttribute('aria-pressed', String(S.frame === 'in'));
-    $('partHint').textContent = S.frame === 'rot' ? 'Click or tap empty space to drop a particle at rest; press and drag to throw it. The arrow shows how far it would go in 0.1 P at its launch speed.' : 'Inertial frame: the same motion seen from the stars, with both masses going around. Switch back to the rotating frame to drop or edit particles.'; }
-  function setFrame(f) { S.frame = f; syncFrame(); hoverId = null; drawAll(); }
+  $('sp').addEventListener('input', (e) => { S.speed = +e.target.value; S[S.frame === 'rot' ? 'speedR' : 'speedS'] = S.speed; readouts(); });
+  for (const [id, k] of [['tCont', 'cont'], ['tLab', 'lab'], ['tTrail', 'trail'], ['tReal', 'real'], ['tInset', 'inset']]) $(id).addEventListener('change', (e) => { S.show[k] = e.target.checked; drawAll(); });
+  function syncFrame() {
+    const s = sysNow(), rotF = S.frame === 'rot';
+    $('fRot').setAttribute('aria-pressed', String(rotF)); $('fIn').setAttribute('aria-pressed', String(!rotF));
+    $('fIn').textContent = `${s.m1} centered`;
+    $('circLab').textContent = `A click starts a circular orbit about ${s.m1}`;
+    $('partHint').textContent = rotF
+      ? 'Click or tap empty space to drop a particle at rest in the rotating frame; press and drag to throw it. The arrow shows how far it would go in 0.1 P at its launch speed.'
+      : `Click or tap to drop a particle at rest relative to ${s.m1}; press and drag to throw it. The arrow shows how far it would go in 0.05 P. While you drag, the dotted curve is the orbit it would follow about ${s.m1} alone, and the arrow snaps to the circular speed when close.`;
+    $('frameHint').innerHTML = rotF
+      ? `<b>Rotating frame</b>: it turns once per P with the two masses, so they and the five Lagrange points stand still. The contours, the zero velocity curve and C belong to this frame, and particles are integrated here. Time speed is set separately in each frame.`
+      : `<b>${s.m1} centered</b>: axes fixed to the stars, ${s.m1} held fixed at the center, ${s.m2} on its circle of radius a. Strictly ${s.m1} circles the center of mass at μa = ${fmtLen(S.mu, 3)}, so this frame accelerates slightly and is not quite inertial. The paths are still exact: the same motion as in the rotating frame, transformed point by point. The Lagrange points ride along with ${s.m2}. At high time speeds ${s.m2} is drawn as a blur along its orbit instead of jumping, and a swarm keeps only the last half orbit of its trails.`;
+  }
+  function setFrame(f) {
+    if (f === S.frame) return;
+    saved[S.frame] = { x0: V.x0, y0: V.y0, s: V.s, view: S.view };
+    S.frame = f; S.speed = S[f === 'rot' ? 'speedR' : 'speedS']; $('sp').value = S.speed;
+    const q = saved[f];
+    if (S.view === 'follow' && sel) { cam.glide = null; updateCamera(); }   // keep following at the same zoom
+    else if (q && (q.view === 'free' || q.view === 'follow') && S.view === 'free') { V.x0 = q.x0; V.y0 = q.y0; V.s = q.s; S.view = 'free'; }
+    else fitView(S.view === 'free' || S.view === 'follow' ? 'whole' : S.view);
+    hoverId = null; hover = null; lastDrawT = null; layer.key = '';
+    syncFrame(); syncView(); syncLaunch(); readouts(); drawAll();
+  }
   $('fRot').addEventListener('click', () => setFrame('rot'));
-  $('fIn').addEventListener('click', () => setFrame('in'));
+  $('fIn').addEventListener('click', () => setFrame('sun'));
   $('vWhole').addEventListener('click', () => { fitView('whole'); drawAll(); });
-  $('vNear').addEventListener('click', () => { fitView('near'); drawAll(); });
+  $('vNear').addEventListener('click', () => { if (S.frame === 'sun') lockView('near'); else { fitView('near'); drawAll(); } });
+  $('vFollow').addEventListener('click', () => lockView('follow'));
   $('zIn').addEventListener('click', () => zoom(1.5));
   $('zOut').addEventListener('click', () => zoom(1 / 1.5));
   const playBtn = $('play');
-  function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); }
+  function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); lastDrawT = null; }
   playBtn.addEventListener('click', () => setPlaying(!playing));
-  $('reset').addEventListener('click', () => { if (S.preset) applyPreset(S.preset); else { const keep = parts.map((p) => ({ s: p.s0, swarm: p.swarm, col: p.col })); t = 0; parts = []; sel = null; for (const q of keep) addParticle(q.s, q); readouts(); drawAll(); } });
+  $('reset').addEventListener('click', () => { if (S.preset) applyPreset(S.preset); else { const keep = parts.map((p) => ({ s: p.s0, swarm: p.swarm, col: p.col })); t = 0; lastDrawT = null; parts = []; sel = null; for (const q of keep) addParticle(q.s, q); syncLaunch(); readouts(); drawAll(); } });
   function clearParts() { parts = []; sel = null; custom(); syncLaunch(); readouts(); drawAll(); }
   $('clear').addEventListener('click', clearParts);
 
   // ---------- dragging on the drawing ----------
   function dragHandles() {
-    const out = []; if (S.frame !== 'rot') return out;
+    const out = [];
     const L = launchPx();
     if (L) {
-      out.push({ id: 'tip', pt: L.b, cursor: 'grab', set: (w) => { const s0 = sel.s0, vx = (w.x - s0[0]) / ARW, vy = (w.y - s0[1]) / ARW; setLaunch(kOf(Math.hypot(vx, vy)), Math.atan2(vy, vx) / deg); } });
-      out.push({ id: 'start', pt: L.a, cursor: 'move', set: (w) => { const s0 = sel.s0; const [R1, R2] = radii(); if (Math.hypot(w.x + S.mu, w.y) < R1 || Math.hypot(w.x - 1 + S.mu, w.y) < R2) return; relaunch(sel, [w.x, w.y, s0[2], s0[3]]); custom(); } });
+      if (S.frame === 'rot') {
+        out.push({ id: 'tip', pt: L.b, cursor: 'grab', set: (w) => { const s0 = sel.s0, vx = (w.x - s0[0]) / ARW, vy = (w.y - s0[1]) / ARW; setLaunch(kOf(Math.hypot(vx, vy)), Math.atan2(vy, vx) / deg); } });
+        out.push({ id: 'start', pt: L.a, cursor: 'move', set: (w) => { const s0 = sel.s0; const [R1, R2] = radii(); if (Math.hypot(w.x + S.mu, w.y) < R1 || Math.hypot(w.x - 1 + S.mu, w.y) < R2) return; relaunch(sel, [w.x, w.y, s0[2], s0[3]]); custom(); } });
+      } else {
+        out.push({ id: 'tip', pt: L.b, cursor: 'grab', set: (w) => { const h = launchSun(sel), st = snapCirc([h[0], h[1], (w.x - h[0]) / ARW_SUN, (w.y - h[1]) / ARW_SUN]); relaunch(sel, sunToRot(S.mu, st.h, t)); custom(); } });
+        out.push({ id: 'start', pt: L.a, cursor: 'move', set: (w) => { const h = launchSun(sel), s = sunToRot(S.mu, [w.x, w.y, h[2], h[3]], t); const [R1, R2] = radii(); if (Math.hypot(s[0] + S.mu, s[1]) < R1 || Math.hypot(s[0] - 1 + S.mu, s[1]) < R2) return; relaunch(sel, s); custom(); } });
+      }
     }
     if (zvcGrip) out.push({ id: 'zvc', pt: zvcGrip, curve: true, cursor: 'grab', set: (w) => { const v = posOfC(omega2(S.mu, w.x, w.y)); custom(); setCPos(v); } });
     return out;
@@ -1123,10 +1399,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       if (!dragFrame) { dragFrame = true; requestAnimationFrame(() => { dragFrame = false; if (!drag || !dragQ) return; drag.px = dragQ[0]; drag.py = dragQ[1]; const h = dragHandles().find((k) => k.id === drag.id); if (h) h.set(toW(dragQ[0], dragQ[1])); dragQ = null; drawAll(); }); }
       return;
     }
-    if (throwing) { throwing.x1 = x; throwing.y1 = y; drawAll(); return; }
+    if (throwing) { throwing.x1 = x; throwing.y1 = y; if (!playing) drawAll(); return; }
     const h = handleAt(x, y, ev.pointerType === 'touch'); hoverId = h ? h.id : null;
-    can.style.cursor = h ? h.cursor : (S.frame === 'rot' ? 'crosshair' : 'default');
-    hover = S.frame === 'rot' ? toW(x, y) : null;
+    can.style.cursor = h ? h.cursor : 'crosshair';
+    hover = toW(x, y);
     if (!playing) drawAll();
   });
   can.addEventListener('pointerdown', (ev) => {
@@ -1134,17 +1410,16 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     can.focus({ preventScroll: true });
     const h = handleAt(x, y, ev.pointerType === 'touch');
     if (h) { drag = { id: h.id }; hoverId = h.id; if (h.id !== 'zvc') can.style.cursor = 'grabbing'; }
-    else if (S.frame === 'rot') throwing = { x0: x, y0: y, x1: x, y1: y };
-    else return;
+    else throwing = { x0: x, y0: y, x1: x, y1: y };
     try { can.setPointerCapture(ev.pointerId); } catch (_) {}
     ev.preventDefault();
   });
   function endPointer() {
     if (throwing) {
       const a = throwing; throwing = null;
-      const w0 = toW(a.x0, a.y0), w1 = toW(a.x1, a.y1), moved = Math.hypot(a.x1 - a.x0, a.y1 - a.y0) > 5;
-      const vx = moved ? (w1.x - w0.x) / ARW : 0, vy = moved ? (w1.y - w0.y) / ARW : 0;
-      if (addParticle([w0.x, w0.y, vx, vy])) { custom(); if (!reduce && !playing) setPlaying(true); }
+      // a launch set in a moving camera (follow, or near in the Sun centered frame) is read where the camera is now
+      const st = throwState(a), s = st.rot || sunToRot(S.mu, st.h, t);
+      if (addParticle(s)) { custom(); if (!reduce && !playing) setPlaying(true); }
       readouts(); drawAll();
     }
     if (drag) { drag = null; drawAll(); }
@@ -1156,9 +1431,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   can.addEventListener('keydown', (e) => {
     const k = e.key, big = e.shiftKey;
     if (k.startsWith('Arrow')) {
-      if (big || !sel || S.frame !== 'rot') {
+      if (big || !sel) {
         const step = 0.08 * Math.min(W, H) / V.s, dx = k === 'ArrowLeft' ? -step : k === 'ArrowRight' ? step : 0, dy = k === 'ArrowDown' ? -step : k === 'ArrowUp' ? step : 0;
-        if (S.frame === 'rot') { V.x0 += dx; V.y0 += dy; } else shiftCenterInertial(dx, dy);
+        updateCamera(); V.x0 += dx; V.y0 += dy; cam.glide = null;
         S.view = 'free'; syncView(); drawAll();
       } else if (k === 'ArrowLeft' || k === 'ArrowRight') setLaunch(+$('vs').value, +$('vd').value + (k === 'ArrowLeft' ? 5 : -5));
       else setLaunch(+$('vs').value + (k === 'ArrowUp' ? 10 : -10), +$('vd').value);
@@ -1166,9 +1441,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     else if (k === '-' || k === '_') zoom(0.8);
     else if (k === '[' || k === ']') { custom(); setCPos(S.cPos + (k === ']' ? 5 : -5)); }
     else if (k === ' ') setPlaying(!playing);
-    else if (k === 'i' || k === 'I') setFrame(S.frame === 'rot' ? 'in' : 'rot');
+    else if (k === 'i' || k === 'I') setFrame(S.frame === 'rot' ? 'sun' : 'rot');
     else if (k === 'f' || k === 'F') { fitView('whole'); drawAll(); }
-    else if (k === 'n' || k === 'N') { fitView('near'); drawAll(); }
+    else if (k === 'n' || k === 'N') { if (S.frame === 'sun') lockView('near'); else { fitView('near'); drawAll(); } }
+    else if (k === 'p' || k === 'P') lockView('follow');
     else if (k === 'x' || k === 'X') clearParts();
     else return;
     e.preventDefault();
@@ -1189,17 +1465,22 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
   // ---------- loop ----------
-  let last = performance.now(), lastRead = 0, frameMs = 0;
+  // The simulated time per frame follows a smoothed frame interval, so one slow frame does not make everything lurch forward.
+  let last = performance.now(), lastRead = 0, frameMs = 0, dtS = 1 / 60;
   function loop(now) {
     const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    dtS += 0.25 * (dt - dtS);
     const t0 = performance.now();
-    if (playing) { stepParticles(SPEEDS[S.speed] * TWO_PI * dt); drawAll(); }
+    if (playing) { stepParticles(SPEEDS[S.speed] * TWO_PI * dtS); drawAll(); }
+    else if (cam.glide || field.job) drawAll();
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
     if (now - lastRead > 150) { partReadouts(); lastRead = now; }
     requestAnimationFrame(loop);
   }
   window.__lp = { get frameMs() { return frameMs; }, get S() { return S; }, get t() { return t; }, get parts() { return parts; }, get sel() { return sel; }, get L() { return LPT; }, get CL() { return CL; },
-    get V() { return V; }, get grip() { return zvcGrip; }, toPx, handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt })); }, setPlaying, applyPreset, run(P) { stepParticles(P * TWO_PI); readouts(); drawAll(); }, step(P) { stepParticles(P * TWO_PI); }, draw: () => drawAll() };
+    get V() { return V; }, get grip() { return zvcGrip; }, get labels() { return placedLabels; }, get fieldBusy() { return !!field.job; }, toPx, P, sunXY, setFrame, lockView, fitView,
+    handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt })); }, setPlaying, applyPreset, run(P) { stepParticles(P * TWO_PI); readouts(); drawAll(); }, step(P) { stepParticles(P * TWO_PI); }, draw: () => drawAll(),
+    core: { rotToSun, sunToRot, twoBody } };
 
   tokens();
   refreshPoints();
