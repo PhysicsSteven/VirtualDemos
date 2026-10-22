@@ -182,3 +182,10 @@ Physics 1 uses **University Physics Volume 1** (chapters 1–17), Physics 2 uses
    Use the exact section numbers and titles from the PDFs. A demo can list several sections and both courses. Mark `"beyond_book": true` for demos with no Volume 1/2 home (e.g. ising, bz-reaction, dna, chladni, acoustic-levitation, relativity-em) and give Volume 3 sections where relevant. Leave `"role"` as your best guess; Steve's labs versus demos list will override it. Also list, in `curriculum/TEXTBOOK_GAPS.md`, every Volume 1 and 2 section with no demo, so Claude can prioritize new demos.
 2. **Rewrite handouts and instructor guides to the book**, lab by lab, in course order (Physics 1: projectile-drag, springs, collisions, fluids, kepler-orbits, then Physics 2: capacitors, circuits labs, gauss-law, magnetic-force, faraday): the book's notation and sign conventions, "Textbook: Vol. N, §x.y" references at the top and where each idea is used, the book's terminology. Keep the plain e/m style and the control names listed in the feature batches above. Notation conflicts between a demo's on-screen labels and the book: list them in this file for Claude rather than working around them in prose.
 3. Keep the earlier queue items (independent physics review; validation records) going in between as you see fit.
+
+### Steve's decisions, 2026-10-22 late morning
+- **Focus:** Physics 1 and 2 (University Physics Vols 1 and 2) only for now. Astronomy, modern physics labs, thermal/statistical extras and quantum demos are on the back burner (no new work on them; the modern lab manual alignment is paused).
+- **Lecture demos, not labs (for now):** em-waves, currents-fields, catenary, relativity-em. Mark them `"role": "demo"` in the textbook map; no handouts for them yet.
+- **Springs:** add an "unknown spring" option to Blind (k hidden); keep the automatic period readout visible (no forced hand timing for now). Claude's task, after Sunday's reset.
+- **Star slice:** loading the stellar models on demand is fine (it doesn't need to work as a downloaded file). Back burner with the astronomy set.
+- **Labs versus demos:** GPT's textbook map makes the first guess; Steve reviews it.
