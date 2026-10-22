@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motion Graphs: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Motion Graphs</h1><ul class="meta"><li><a href="../demos/motion-graphs.html">Open the demo</a></li><li>PHYS 201</li><li>20 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Position, velocity and acceleration graphs describe one motion. Each is the slope of the one above it; the area under each (from 0 to t) is the change in the one above.</li>
+<li>A straight x(t) means constant velocity; a curved x(t) means acceleration. The sign of a says which way v is changing, not which way the object moves.</li>
+<li>At a turning point v = 0 but a need not be zero (the ball at the top of its flight).</li>
+<li>Displacement and distance differ once the object turns around.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the definitions of average and instantaneous velocity and acceleration. The cart moves through up to three stages of constant acceleration. Drag on any graph, or use ← and →, to move the time marker; the tangent lines show slopes and the shading shows areas from 0 to t. Blind leaves only the position graph, as a motion detector would give.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Constant velocity.</strong> v = 2 m/s from x₀ = −6 m for 6 s: x is a straight line ending at 6 m, a is zero. Move the marker and read the area under v: it equals x − x₀.</li>
+<li><strong>Speeding up.</strong> a = 1 m/s² from rest at −8 m: x curves upward and reaches 4.5 m at 5 s, where v = 5 m/s. The tangent on x gets steeper.</li>
+<li><strong>Slowing down and turning around.</strong> v₀ = 4 m/s, a = −1 m/s². Ask Q2 first. The cart stops at t = 4 s at x = 2 m and returns to −6 m at 8 s: displacement 0, distance 16 m.</li>
+<li><strong>Stop and go.</strong> Three stages; v is a trapezoid whose area, 20 m, is the trip from −8 m to 12 m.</li>
+<li><strong>Ball thrown up.</strong> 12 m/s upward with a = −9.81 m/s² throughout: top at 1.22 s, 7.34 m high, back down at 2.45 s.</li>
+<li><strong>Walk the graph.</strong> A volunteer drives the cart (drag it, or hold ← → with Shift for faster) to follow a dashed target, as with a real motion detector. Then switch to Match a velocity graph instead.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Sketch v(t) and a(t) for the Speeding up setup before showing them. Then use the graphs to find the cart's position at t = 3 s two ways: from the x graph and from x₀ plus the area under v.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In Slowing down and turning around, the acceleration is −1 m/s² the whole time. Is the cart slowing down the whole time? When does it turn around, where, and what is its acceleration at that moment?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> For Stop and go, find the total displacement from the area under the v graph and check it on the x graph. What are the slopes of the three pieces of v?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In Ball thrown up, a student says "at the top the ball's acceleration is zero because it stops". Use the a graph and the tangent to the v graph to answer. How long does the ball take to reach the top, and how high does it go?</p>
+<p><strong>Q5 (lab).</strong> With Blind on in Speeding up, capture x at five times between 1 s and 5 s and fit the parabola. What are v₀ and a from c₁ and c₂? What would the fit give if you captured rows from two different stages of Stop and go, and why?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Negative acceleration means slowing down."</strong> It means v is decreasing; a cart moving in the −x direction with a &lt; 0 speeds up.</li>
+<li><strong>"Zero velocity means zero acceleration."</strong> At the turning point v = 0 but v is still changing.</li>
+<li><strong>"The graph is a picture of the path."</strong> An x(t) graph that goes up and down describes a cart moving back and forth on a straight track.</li>
+<li><strong>"Area under v is distance."</strong> It is displacement; parts below the axis count negative.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Each stage has constant acceleration and is computed exactly: x = x₀ + v₀t + ½at², v = v₀ + at. Stages join continuously in x and v; a jumps between stages.</li>
+<li>Walk the graph records the cart's position every 0.02 s. Velocity is a centered difference over ±0.2 s and acceleration a second difference over ±0.3 s, like the smoothing in a motion detector, so quick jerks appear as spikes.</li>
+<li>The parabola fit is least squares on the captured (t, x) rows with standard errors from the residuals. Rows are rounded as displayed: t to 0.01 s, x to 0.01 m.</li>
+<li>Ball thrown up ignores air resistance (compare Projectile Range for drag).</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

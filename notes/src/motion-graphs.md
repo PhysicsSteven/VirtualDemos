@@ -1,0 +1,50 @@
+---
+title: Motion Graphs
+level: PHYS 201
+time: 20 to 40 minutes
+---
+## What students should come away with
+
+- Position, velocity and acceleration graphs describe one motion. Each is the slope of the one above it; the area under each (from 0 to t) is the change in the one above.
+- A straight x(t) means constant velocity; a curved x(t) means acceleration. The sign of a says which way v is changing, not which way the object moves.
+- At a turning point v = 0 but a need not be zero (the ball at the top of its flight).
+- Displacement and distance differ once the object turns around.
+
+## Before class
+
+Students should know the definitions of average and instantaneous velocity and acceleration. The cart moves through up to three stages of constant acceleration. Drag on any graph, or use ← and →, to move the time marker; the tangent lines show slopes and the shading shows areas from 0 to t. Blind leaves only the position graph, as a motion detector would give.
+
+## Running it in class
+
+1. **Constant velocity.** v = 2 m/s from x₀ = −6 m for 6 s: x is a straight line ending at 6 m, a is zero. Move the marker and read the area under v: it equals x − x₀.
+2. **Speeding up.** a = 1 m/s² from rest at −8 m: x curves upward and reaches 4.5 m at 5 s, where v = 5 m/s. The tangent on x gets steeper.
+3. **Slowing down and turning around.** v₀ = 4 m/s, a = −1 m/s². Ask Q2 first. The cart stops at t = 4 s at x = 2 m and returns to −6 m at 8 s: displacement 0, distance 16 m.
+4. **Stop and go.** Three stages; v is a trapezoid whose area, 20 m, is the trip from −8 m to 12 m.
+5. **Ball thrown up.** 12 m/s upward with a = −9.81 m/s² throughout: top at 1.22 s, 7.34 m high, back down at 2.45 s.
+6. **Walk the graph.** A volunteer drives the cart (drag it, or hold ← → with Shift for faster) to follow a dashed target, as with a real motion detector. Then switch to Match a velocity graph instead.
+
+## Questions
+
+**Q1.** Sketch v(t) and a(t) for the Speeding up setup before showing them. Then use the graphs to find the cart's position at t = 3 s two ways: from the x graph and from x₀ plus the area under v.
+
+**Q2.** In Slowing down and turning around, the acceleration is −1 m/s² the whole time. Is the cart slowing down the whole time? When does it turn around, where, and what is its acceleration at that moment?
+
+**Q3.** For Stop and go, find the total displacement from the area under the v graph and check it on the x graph. What are the slopes of the three pieces of v?
+
+**Q4.** In Ball thrown up, a student says "at the top the ball's acceleration is zero because it stops". Use the a graph and the tangent to the v graph to answer. How long does the ball take to reach the top, and how high does it go?
+
+**Q5 (lab).** With Blind on in Speeding up, capture x at five times between 1 s and 5 s and fit the parabola. What are v₀ and a from c₁ and c₂? What would the fit give if you captured rows from two different stages of Stop and go, and why?
+
+## Common misconceptions
+
+- **"Negative acceleration means slowing down."** It means v is decreasing; a cart moving in the −x direction with a < 0 speeds up.
+- **"Zero velocity means zero acceleration."** At the turning point v = 0 but v is still changing.
+- **"The graph is a picture of the path."** An x(t) graph that goes up and down describes a cart moving back and forth on a straight track.
+- **"Area under v is distance."** It is displacement; parts below the axis count negative.
+
+## Physics behind the demo
+
+- Each stage has constant acceleration and is computed exactly: x = x₀ + v₀t + ½at², v = v₀ + at. Stages join continuously in x and v; a jumps between stages.
+- Walk the graph records the cart's position every 0.02 s. Velocity is a centered difference over ±0.2 s and acceleration a second difference over ±0.3 s, like the smoothing in a motion detector, so quick jerks appear as spikes.
+- The parabola fit is least squares on the captured (t, x) rows with standard errors from the residuals. Rows are rounded as displayed: t to 0.01 s, x to 0.01 m.
+- Ball thrown up ignores air resistance (compare Projectile Range for drag).
