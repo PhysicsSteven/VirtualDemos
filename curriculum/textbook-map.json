@@ -2702,7 +2702,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "circuits"
+        "circuits",
+        "resistivity"
       ],
       "unit": "current-resistance"
     },
@@ -4989,9 +4990,11 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "New 2026-10-22 (Claude). Glycerol, castor oil, motor oil, water or a Mystery liquid in a 40 or 100 mm tube; steel, glass or nylon balls 1 to 10 mm; gate timer between marks 0.200 m apart (0.01 s), playback ×1/×10/×100; drag from Stokes × standard drag curve × Haberman–Sayre wall factor, with buoyancy and added mass; Capture, CSV, v against d² fit for η; Reynolds number; Blind.",
-      "handouts": [],
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Glycerol, castor oil, motor oil, water or a Mystery liquid in a 40 or 100 mm tube; steel, glass or nylon balls 1 to 10 mm; gate timer between marks 0.200 m apart (0.01 s), playback ×1/×10/×100; drag from Stokes × standard drag curve × Haberman–Sayre wall factor, with buoyancy and added mass; Capture, CSV, v against d² fit for η; Reynolds number; Blind. Full student/private package written 2026-10-22 for low-Re glass balls in glycerol, with CSV wall correction and model-limit diagnostic. Core/source-fit/reference checks passed; full empirical-drag bibliographic audit and browser/classroom review remain open. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind.",
+      "handouts": [
+        "viscometer"
+      ],
       "title": "Falling Ball Viscometer",
       "url": "demos/viscometer.html"
     },
@@ -5051,9 +5054,11 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "New 2026-10-22 (Claude). Bob on a string or uniform rod; length, release angle, mass, Earth/Moon/Mars/Mystery planet, optional air drag; RK4 motion; photogate to 0.001 s; Capture, CSV, T² against L fit for g, T against θ₀ with the exact curve; Blind.",
-      "handouts": [],
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Bob on a string or uniform rod; length, release angle, mass, Earth/Moon/Mars/Mystery planet, optional air drag; RK4 motion; photogate to 0.001 s; Capture, CSV, T² against L fit for g, T against θ₀ with the exact curve; Blind. Full student/private instructor package written and numerically checked 2026-10-22. Mystery fit answer hiding requires Blind; strict source-fit check fails without it. Browser/classroom acceptance pending. String-bob lab restricted to release angles at or below 90 degrees; above-horizontal release requires slack-string dynamics or a rigid support. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind.",
+      "handouts": [
+        "pendulum"
+      ],
       "title": "Pendulum",
       "url": "demos/pendulum.html"
     },
@@ -5086,9 +5091,11 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "New 2026-10-22 (Claude). Hanging mass on a string around a spool (1, 2, 3 cm) spins a turntable carrying nothing, a disk, a ring, two masses at an adjustable distance or a Mystery object; optional bearing friction torque; timer for a 0.500 m drop to 0.001 s; Capture, CSV, τ against α fit (slope I, intercept friction); energy and power readouts; Blind.",
-      "handouts": [],
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Hanging mass on a string around a spool (1, 2, 3 cm) spins a turntable carrying nothing, a disk, a ring, two masses at an adjustable distance or a Mystery object; optional bearing friction torque; timer for a 0.500 m drop to 0.001 s; Capture, CSV, τ against α fit (slope I, intercept friction); energy and power readouts; Blind. Full student/private instructor package written and numerically checked 2026-10-22. Mystery fit answer hiding requires Blind; strict source-fit check fails without it. Browser/classroom acceptance pending. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind.",
+      "handouts": [
+        "rotational-dynamics"
+      ],
       "title": "Rotational Dynamics",
       "url": "demos/rotational-dynamics.html"
     },
@@ -5312,13 +5319,20 @@
           "vol": 2,
           "sec": "9.3",
           "title": "Resistivity and Resistance"
+        },
+        {
+          "vol": 2,
+          "sec": "9.4",
+          "title": "Ohm's Law"
         }
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "New 2026-10-22 (Claude). Four-wire measurement on a wire along a metre rule: nichrome, constantan, copper, mystery wire; four AWG gauges; length, current, temperature; Capture, CSV, R against L (ρ) and R against T (α) fits; Blind. Handbook ρ at 20 °C, linear in T.",
-      "handouts": [],
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Four-wire measurement on a wire along a metre rule: nichrome, constantan, copper, mystery wire; four AWG gauges; length, current, temperature; Capture, CSV, R against L (ρ) and R against T (α) fits; Blind. Handbook ρ at 20 °C, linear in T. Student/private instructor package written and source/numerically checked 2026-10-22. Mystery fit discloses calculated answers unless Blind is explicitly on; strict regression reproduces this. See EM_BENCH_LABS_2026-10-22.md. Browser/classroom acceptance pending. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind.",
+      "handouts": [
+        "resistivity"
+      ],
       "title": "Resistivity of a Wire",
       "url": "demos/resistivity.html"
     },
@@ -5493,9 +5507,11 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "New 2026-10-22 (Claude). Current balance lab (magnet on a balance, Δm = F/g, B from F against I, Mystery magnet), wire at an angle, loop torque with release, DC motor with commutator; Blind. Uniform field between the poles, constant current (no back emf).",
-      "handouts": [],
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Current balance lab (magnet on a balance, Δm = F/g, B from F against I, Mystery magnet), wire at an angle, loop torque with release, DC motor with commutator; Blind. Uniform field between the poles, constant current (no back emf). Student/private instructor package written and source/numerically checked 2026-10-22. Mystery fit discloses calculated answers unless Blind is explicitly on; strict regression reproduces this. See EM_BENCH_LABS_2026-10-22.md. Browser/classroom acceptance pending. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind.",
+      "handouts": [
+        "wire-force"
+      ],
       "title": "Force on a Current",
       "url": "demos/wire-force.html"
     },

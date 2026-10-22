@@ -57,3 +57,33 @@ The ten requested handouts now follow Claude’s e/m example: Goal, short Backgr
 ## Owner-approved integration — 2026-10-20
 
 The plain-language handouts are merged with latest main bce8304 under Steve’s explicit approval. Newer Rutherford/timbre source updates are preserved. Ran the 14 workflow Node suites plus Rutherford: 105 supported groups/checks passed locally. Counts: 57 catalog entries, 61 retained demo HTML pages, 35 student handouts. Eleven priority packages have full revised student/instructor materials; the rest are at mixed draft/starter stages. Browser CI stays off as requested. Recommended next work: review one modern bench package against its departmental handout and reconcile controls/materials, then continue through the priority modern benches; do not promote the collection to release-ready. Future main merges still need approval.
+
+
+## Weekend review checkpoint — 2026-10-22
+
+Clean feature checkout fast forwarded to main 77d11e3. Claude owns all demo HTML this weekend. Ran seven existing newest-demo suites (111 groups) and new DNA (10) and Lagrange (5) suites: 126 supported groups passed on Node v24.19.0. DNA `--strict-ter` fails: TER chainID is one column early; requested correction in COLLABORATION.md. Supported-case Node workflow includes both new suites; browser CI remains off. No remote CI result claimed. See [review and remaining scope](validation/WEEKEND_REVIEW_2026-10-22.md). Independent nine-demo review is partial, not release approval. New handout batches wait for Claude's E&M/mechanics notes. Do not merge to main without Steve's approval.
+
+
+## OpenStax map and Physics II alignment — 2026-10-22
+
+Map pushed first in c03ab7e, with 62 catalog entries and 209 section records. Claude can consume the JSON root courses/sections/demos contract described in TEXTBOOK_GAPS.md. Main 24564e4 then integrated; Hall strip and unknown-spring controls received. Nine Physics II handouts and private guides aligned; TeacherKeys f75bc1d. No em-waves/currents-fields lab added. Source/numerical and document checks passed; Chromium launch blocked, no browser pass claimed. See validation/TEXTBOOK_ALIGNMENT_2026-10-22.md. Next: existing Physics I activities, with springs hold now fulfilled by posted controls. Demo HTML stays Claude-owned; no main merge without Steve.
+
+
+## Physics I alignment delivered — 2026-10-22
+
+Seven existing Physics I activities now aligned (five labs and two lecture worksheets); private guides/references in TeacherKeys f5b1575. No missing demos built. Sixteen packages total across Physics I/II; 149 numerical groups in 14 suites passed, plus map contract and independent-reference checks. Browser/classroom acceptance remains open. Updated map/gaps need Claude’s recopy and course-page regeneration; verify deployed handout HTML routes. See validation/TEXTBOOK_ALIGNMENT_2026-10-22.md. No main merge authorized.
+
+
+## Three new Physics I labs — 2026-10-22
+
+Merged main 3a13c79 into feature. Motion-graphs, forces and stress-strain now have full plain student labs and private guides/reference generators in TeacherKeys. Twenty-one scoped Node groups, map contract, 97 independent reference comparisons and 34 exact control-label checks passed. Chromium absent; no browser/CI/acceptance pass claimed. Forces has held-K/stale-timer/end-stop requests; stress-strain Mystery fit leaks Y without Blind. Map labels those two needs-feature. See validation/NEW_MECHANICS_LABS_2026-10-22.md. No demo edits; no main merge. Next authorized writing: resistivity and wire-force.
+
+
+## Resistivity and current balance — 2026-10-22
+
+Main 7dab492 merged; two student/private lab packages written and 95 independent comparisons passed. New source-fit tests pass supported row filtering/unit paths; strict Mystery-only answer hiding fails for both benches and is requested from Claude. Removed old forces/stress-strain workarounds after source fixes, reran their 14 groups and 97 reference comparisons. Total this pass: 25 supported groups, map contract (76 demos), 46 control-label checks. Browser remains unavailable; no remote CI/classroom acceptance claim. No demo edits/main merge. Evidence: validation/EM_BENCH_LABS_2026-10-22.md. Next: pendulum and rotational-dynamics.
+
+
+## Physics I written-package checkpoint — 2026-10-22
+
+Merged main db5f27b, including Claude’s viscometer. Added full pendulum, rotational-dynamics and viscometer student/private packages. All 11 current Physics I labs now have written companions; 21 demos have notes. Inventory: PHYSICS_I_STATUS.md. Ten textbook sections remain missing and five partial; do not imply syllabus completion. Executed: 147 supported groups in 22 scoped suites, map/package contracts, 202 independent comparisons and 47 new exact control labels passed. Strict Mystery fit hiding fails for pendulum/rotational-dynamics; source requests in COLLABORATION. No browser or classroom acceptance. Evidence: validation/PHYSICS_I_COMPLETION_2026-10-22.md. No demo edits/main merge by GPT.

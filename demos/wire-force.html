@@ -400,7 +400,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two currents with L = ${f(S.L, 1)} cm and θ = ${S.th}°.</dd></div>`;
     else { const s = Math.sin(S.th * Math.PI / 180), B = Math.abs(F.b) / (S.L / 100 * s), sB = F.seB / (S.L / 100 * s);
       h = `<div><dt>Slope F/I</dt><dd>${f(F.b * 1000, 3)}${isFinite(F.seB) ? ` ± ${f(F.seB * 1000, 3)}` : ''} mN/A</dd></div><div><dt>Intercept</dt><dd>${f(F.a * 1000, 3)} mN</dd></div>`;
-      h += S.blind ? '<div class="wide"><dt>B = |slope| / (L sin θ)</dt><dd class="ok">hidden in Blind: work it out</dd></div>' : `<div class="wide"><dt>B = |slope| / (L sin θ)</dt><dd>${f(B, 3)}${isFinite(sB) ? ` ± ${f(sB, 3)}` : ''} T</dd></div>`; }
+      h += hideB() ? `<div class="wide"><dt>B = |slope| / (L sin θ)</dt><dd class="ok">${S.blind ? 'hidden in Blind' : 'hidden for the Mystery magnet'}: work it out</dd></div>` : `<div class="wide"><dt>B = |slope| / (L sin θ)</dt><dd>${f(B, 3)}${isFinite(sB) ? ` ± ${f(sB, 3)}` : ''} T</dd></div>`; }
     $('fitOut').innerHTML = h; drawFit(pts, F);
   }
   function drawFit(pts, F) {

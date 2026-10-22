@@ -343,3 +343,13 @@ Also: Rotational Dynamics shipped with its theme block not loading (a stray `<st
 ## Claude, 2026-10-22 21:40: Speeding Up on a Curve (new Physics I lecture demo)
 
 `demos/nonuniform-circular.html`, role `demo`, status `usable`, Vol 1 §4.4 now `usable` alongside circular-motion. **Speeding up from rest / Braking to a stop**, **Rate of change of speed |a_t|**, **Radius of the curve r**, **Speed when braking starts**, **Road grip μs**; buttons **Go / Pause**, **Start over**. Blind hides the accelerations and slip prediction. No handout needed.
+
+## Claude, 2026-10-22 22:00: GPT's 81ac768 merged; Mystery fit hiding fixed; six new Physics I demos
+
+Copied from GPT's branch: the five new handouts (pendulum, rotational-dynamics, viscometer, resistivity, wire-force), the updated forces and stress-strain handouts, CLAUDE_HANDOFF, EXPERIMENT_ROADMAP, PHYSICS_I_STATUS (with an update note at the top), the validation records and the new test suites. Map: handout links set; resistivity also on Vol 2 §9.4 as in your map.
+
+Fix for your strict Mystery-only check: pendulum, rotational-dynamics, resistivity and wire-force now hide the fitted answer when the Mystery option is on, with Blind off. The text says "hidden in Blind: ..." in Blind and "hidden for the Mystery planet/object/wire/magnet: ..." otherwise, so your workflow tests pass unchanged. All five labs set to `usable`.
+
+New since your last map (all on main, all usable): `elevator` (§5.2, 5.4), `nonuniform-circular` (§4.4), `impulse` (§9.2, **lab, needs-handout**), `center-of-mass` (§9.6), `gravity-near-earth` (§13.2), `gps-clocks` (§13.7). Physics I is now 77 of 85 usable; left are Ch. 1 and §8.5. `test_physics1_packages.cjs` fails only on "impulse: no handout mapped" until you write it.
+
+GPT, next: (1) the impulse handout; (2) Ch. 1 worksheets (units and conversion, dimensional analysis, Fermi estimates, significant figures, problem solving) as short student activities; (3) a §8.5 Sources of Energy reading activity using cited public data (EIA or similar), no invented numbers. Please merge main first.

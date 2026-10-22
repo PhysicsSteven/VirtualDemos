@@ -68,3 +68,32 @@ Audit checkpoint: [teaching keys](https://github.com/PhysicsSteven/TeacherKeys/b
 
 
 2026-10-19 modern-first writing pass: full student/teacher packages drafted for spin resonance, Foucault c, electron e/m and diffraction; RC/AC/RLC now use unified Circuits; acoustics and Franck–Hertz packages added. Instructor material stays in private TeacherKeys. These are authored/manual-aligned packages with scoped Node evidence, not automatic release-level promotion. [Delivery and open limits](validation/LAB_WRITING_2026-10-19.md).
+
+
+## Weekend checkpoint — 2026-10-22
+
+Follow the current COLLABORATION.md queue: independent review of nine newest demos, then the listed E&M handouts after Claude's feature notes, followed by mechanics after its batch. Initial local evidence: 126 supported Node groups passed, including new DNA topology/geometry and Lagrange frame checks; strict DNA TER export check fails. The broader independent review remains partial. [Scope and next checks](validation/WEEKEND_REVIEW_2026-10-22.md). No release level upgraded.
+
+
+## Course alignment — 2026-10-22
+
+Use textbook-map.json for the two course pages; TEXTBOOK_GAPS.md explicitly separates missing and partial topics. Required Physics II ends at Maxwell/EM waves; basic optics is optional. Ch. 12 follows Gravitation in Physics I. Nine Physics II packages now have OpenStax references and current measurement instructions/private guides; these are source/numerical checked, not classroom accepted. Existing Physics I activities are next; do not fill missing units in this writing pass.
+
+
+## Physics I alignment delivered — 2026-10-22
+
+Seven existing Physics I activities now aligned (five labs and two lecture worksheets); private guides/references in TeacherKeys f5b1575. No missing demos built. Sixteen packages total across Physics I/II; 149 numerical groups in 14 suites passed, plus map contract and independent-reference checks. Browser/classroom acceptance remains open. Updated map/gaps need Claude’s recopy and course-page regeneration; verify deployed handout HTML routes. See validation/TEXTBOOK_ALIGNMENT_2026-10-22.md. No main merge authorized.
+
+## New Physics I labs delivered — 2026-10-22
+
+Motion-graphs, forces and stress-strain now have student/private instructor packages against main 3a13c79. Local results: 21 core groups, 97 independent comparisons, map contract and 34 exact control labels passed. Browser launch blocked by absent Chromium. Forces/stress-strain remain needs-feature for reported UI defects; no release promotion. See [evidence and requests](validation/NEW_MECHANICS_LABS_2026-10-22.md). Next handouts: resistivity and wire-force, after fresh coordination/main sync. No demo edits or main merge by GPT.
+
+
+## Resistivity and current balance — 2026-10-22
+
+Main 7dab492 merged; two student/private lab packages written and 95 independent comparisons passed. New source-fit tests pass supported row filtering/unit paths; strict Mystery-only answer hiding fails for both benches and is requested from Claude. Removed old forces/stress-strain workarounds after source fixes, reran their 14 groups and 97 reference comparisons. Total this pass: 25 supported groups, map contract (76 demos), 46 control-label checks. Browser remains unavailable; no remote CI/classroom acceptance claim. No demo edits/main merge. Evidence: validation/EM_BENCH_LABS_2026-10-22.md. Next: pendulum and rotational-dynamics.
+
+
+## Physics I written-package checkpoint — 2026-10-22
+
+Merged main db5f27b, including Claude’s viscometer. Added full pendulum, rotational-dynamics and viscometer student/private packages. All 11 current Physics I labs now have written companions; 21 demos have notes. Inventory: PHYSICS_I_STATUS.md. Ten textbook sections remain missing and five partial; do not imply syllabus completion. Executed: 147 supported groups in 22 scoped suites, map/package contracts, 202 independent comparisons and 47 new exact control labels passed. Strict Mystery fit hiding fails for pendulum/rotational-dynamics; source requests in COLLABORATION. No browser or classroom acceptance. Evidence: validation/PHYSICS_I_COMPLETION_2026-10-22.md. No demo edits/main merge by GPT.

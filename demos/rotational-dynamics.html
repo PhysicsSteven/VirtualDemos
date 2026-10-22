@@ -365,7 +365,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     let h;
     if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two drops (different m or r) with this load: ${key}.</dd></div>`;
     else { h = `<div><dt>Intercept: friction torque</dt><dd>${sci(F.a, 2)} N·m</dd></div>`;
-      h += S.blind ? '<div class="wide"><dt>Slope = I of the table and load</dt><dd class="ok">hidden in Blind: read it from the slope</dd></div>' : `<div class="wide"><dt>Slope = I of the table and load</dt><dd>${sci(F.b, 4)}${isFinite(F.seB) ? ` ± ${sci(F.seB, 2)}` : ''} kg·m²</dd></div>`; }
+      h += hidden() ? `<div class="wide"><dt>Slope = I of the table and load</dt><dd class="ok">${S.blind ? 'hidden in Blind' : 'hidden for the Mystery object'}: read it from the slope</dd></div>` : `<div class="wide"><dt>Slope = I of the table and load</dt><dd>${sci(F.b, 4)}${isFinite(F.seB) ? ` ± ${sci(F.seB, 2)}` : ''} kg·m²</dd></div>`; }
     $('fitOut').innerHTML = h; drawFit(pts, F);
   }
   function drawFit(pts, F) {
