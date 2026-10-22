@@ -411,6 +411,17 @@
      ]
     },
     {
+     "demo": "pendulum",
+     "title": "Pendulum",
+     "desc": "Time a pendulum with a photogate and measure g from how its period depends on length. Then see that mass doesn't matter, large swings take longer, and a swinging rod beats a simple pendulum.",
+     "tags": [
+      "pendulum",
+      "period",
+      "measuring g",
+      "physical pendulum"
+     ]
+    },
+    {
      "demo": "potential-curves",
      "title": "Potential Energy Curves",
      "desc": "Read motion off a graph of U(x): drag the energy line and watch the particle speed up, slow down and turn around. Springs, roller coasters, a double well, a molecule, a pendulum, or a curve you draw yourself, with phase space.",

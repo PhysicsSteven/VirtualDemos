@@ -2228,12 +2228,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "double-pendulum"
+        "double-pendulum",
+        "pendulum"
       ],
       "unit": "oscillations",
-      "note": "Double-pendulum small-angle comparison; a simple pendulum lab is not provided."
+      "note": "Pendulum: simple and physical (rod) pendulums, photogate period, exact large-angle period, g from T² against L, Mystery planet."
     },
     {
       "vol": 1,
@@ -4866,6 +4867,26 @@
       ],
       "title": "Springs and Oscillations",
       "url": "demos/springs.html"
+    },
+    {
+      "demo": "pendulum",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "15.4",
+          "title": "Pendulums"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-22 (Claude). Bob on a string or uniform rod; length, release angle, mass, Earth/Moon/Mars/Mystery planet, optional air drag; RK4 motion; photogate to 0.001 s; Capture, CSV, T² against L fit for g, T against θ₀ with the exact curve; Blind.",
+      "handouts": [],
+      "title": "Pendulum",
+      "url": "demos/pendulum.html"
     },
     {
       "demo": "double-pendulum",
