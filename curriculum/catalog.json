@@ -705,6 +705,17 @@
       "temperature coefficient",
       "four-wire measurement"
      ]
+    },
+    {
+     "demo": "wire-force",
+     "title": "Force on a Current",
+     "desc": "Weigh the force on a current-carrying wire with a magnet on a balance and find B, then see the forces on a loop make a torque, and add a commutator to build a DC motor.",
+     "tags": [
+      "F = IL × B",
+      "current balance",
+      "torque on a loop",
+      "DC motor"
+     ]
     }
    ]
   },

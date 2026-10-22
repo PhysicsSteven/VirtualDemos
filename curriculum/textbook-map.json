@@ -2871,12 +2871,13 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "currents-fields"
+        "currents-fields",
+        "wire-force"
       ],
       "unit": "magnetic-forces",
-      "note": "Parallel-wire force example only; arbitrary wire geometry is missing."
+      "note": "Force on a Current: current balance (F = ILB sin θ, B from a fit) and wire at an angle; currents-fields for the force between parallel wires."
     },
     {
       "vol": 2,
@@ -2888,12 +2889,13 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "currents-fields"
+        "currents-fields",
+        "wire-force"
       ],
       "unit": "magnetic-forces",
-      "note": "Selected dipole/loop illustration; check full torque procedure before assigning a lab."
+      "note": "Force on a Current: torque on a rectangular loop, μ = NIA, U = −μ·B, release and settle."
     },
     {
       "vol": 2,
@@ -2922,11 +2924,13 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "magnetic-force"
+        "magnetic-force",
+        "wire-force"
       ],
-      "unit": "magnetic-forces"
+      "unit": "magnetic-forces",
+      "note": "Force on a Current, DC motor with a commutator; magnetic-force for the velocity selector, mass spectrometer, cyclotron and Hall effect."
     },
     {
       "vol": 2,
@@ -5217,6 +5221,36 @@
       ],
       "title": "Charges in Magnetic Fields",
       "url": "demos/magnetic-force.html"
+    },
+    {
+      "demo": "wire-force",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "11.4",
+          "title": "Magnetic Force on a Current-Carrying Conductor"
+        },
+        {
+          "vol": 2,
+          "sec": "11.5",
+          "title": "Force and Torque on a Current Loop"
+        },
+        {
+          "vol": 2,
+          "sec": "11.7",
+          "title": "Applications of Magnetic Forces and Fields"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-22 (Claude). Current balance lab (magnet on a balance, Δm = F/g, B from F against I, Mystery magnet), wire at an angle, loop torque with release, DC motor with commutator; Blind. Uniform field between the poles, constant current (no back emf).",
+      "handouts": [],
+      "title": "Force on a Current",
+      "url": "demos/wire-force.html"
     },
     {
       "demo": "currents-fields",
