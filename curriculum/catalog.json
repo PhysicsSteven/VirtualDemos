@@ -510,6 +510,17 @@
      ]
     },
     {
+     "demo": "impulse",
+     "title": "Impulse and Momentum",
+     "desc": "Bounce a cart off a force sensor and show that the area under the force against time graph equals its change of momentum. Soft and stiff bumpers give the same impulse with very different forces.",
+     "tags": [
+      "impulse",
+      "momentum",
+      "force sensor",
+      "restitution"
+     ]
+    },
+    {
      "demo": "collisions",
      "title": "Collisions and Momentum",
      "desc": "Crash carts on an air track and pucks on an air table: momentum is always conserved, kinetic energy only when the bounce is elastic. Also an explosion, Newton's cradle, and why a soft bumper lowers the peak force for the same impulse.",

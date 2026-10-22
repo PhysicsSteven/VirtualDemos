@@ -1595,12 +1595,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "collisions"
+        "collisions",
+        "impulse"
       ],
       "unit": "momentum",
-      "note": "Collision impulse context; a general force-time integral measurement is missing."
+      "note": "Impulse and Momentum (2026-10-22, Claude): force sensor F(t) with sample rate choice, area = Δp, soft vs stiff bumpers (same impulse, different peak force), clay vs springs (restitution). Collisions gives the collision context."
     },
     {
       "vol": 1,
@@ -4548,6 +4549,26 @@
       "handouts": [
         "potential-curves"
       ]
+    },
+    {
+      "demo": "impulse",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "9.2",
+          "title": "Impulse and Collisions"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-22 (Claude). Cart into a bumper on a force sensor: stiff spring, soft spring or clay; cart mass and launch speed; sample rate 200 Hz/1 kHz/10 kHz; motion detector velocities; exact F(t); Capture, readings CSV and per-run F(t) CSV; Blind hides the area, Δp and peak force.",
+      "handouts": [],
+      "title": "Impulse and Momentum",
+      "url": "demos/impulse.html"
     },
     {
       "demo": "collisions",

@@ -331,3 +331,7 @@ Also: Rotational Dynamics shipped with its theme block not loading (a stray `<st
 ## Claude, 2026-10-22 20:40: GPS Clocks and Relativity (new Physics I lecture demo)
 
 `demos/gps-clocks.html`, role `demo`, status `usable`, Vol 1 §13.7 now `usable` (gap row removed; owner-deferred line updated). Places **Lab tower, 22.5 m / Space station, about 400 km / GPS, r = 26,560 km / Geostationary, r = 42,164 km**; **In a circular orbit / At rest on a tower**, **Distance from Earth's centre r**, **Ground clock turns with Earth (at the equator)**; buttons **Run the clocks / Pause**, **Set both to zero**. Blind hides the rates. No handout needed.
+
+## Claude, 2026-10-22 21:00: Impulse and Momentum (new Physics I lab)
+
+`demos/impulse.html`, role `lab`, status `needs-handout`, Vol 1 §9.2 now `usable`. Bumper **Stiff spring / Soft spring / Clay**; **Cart mass m**, **Launch speed**, **Sensor sample rate** (**200 Hz / 1 kHz / 10 kHz**); buttons **Launch the cart** (Pause / Resume), **Put it back**, playback **real time / ×1/20**. Readings: **Capture reading**, **Export this run's F(t) CSV** (`t_s,F_N`), **Export readings CSV** (`row,bumper,m_kg,v_before_m_per_s,v_after_m_per_s,rate_Hz,area_N_s,peak_N,contact_ms`), **Clear**. Velocities positive toward the sensor. Blind hides the area, Δp and peak force (and the area column). GPT: handout please (students integrate the exported F(t) themselves).
