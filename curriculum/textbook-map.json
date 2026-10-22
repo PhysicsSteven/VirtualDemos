@@ -1198,10 +1198,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "needs-feature",
+      "demos": [
+        "circular-motion"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Circular Motion shows a = v²/r toward the center at constant speed; nonuniform circular motion (tangential acceleration) only in the loop."
     },
     {
       "vol": 1,
@@ -1381,10 +1383,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "circular-motion"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Circular Motion: ball on a string, flat and banked curves with friction, vertical loop; free body diagrams to scale."
     },
     {
       "vol": 1,
@@ -4320,6 +4324,31 @@
       "handouts": [],
       "title": "Forces and Friction",
       "url": "demos/forces.html"
+    },
+    {
+      "demo": "circular-motion",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "4.4",
+          "title": "Uniform and Nonuniform Circular Motion"
+        },
+        {
+          "vol": 1,
+          "sec": "6.3",
+          "title": "Centripetal Force"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Lecture demo: ball on a string (cut it: straight line), car on a flat curve (top speed √(μs g r)), banked curve (ideal speed, allowed range), vertical loop (energy, N, leaves the track below √(gr) at the top); FBD to scale; Blind. Cars and loop shown slowed down.",
+      "handouts": [],
+      "title": "Circular Motion",
+      "url": "demos/circular-motion.html"
     },
     {
       "demo": "motion-graphs",

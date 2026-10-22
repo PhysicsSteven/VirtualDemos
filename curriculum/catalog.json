@@ -378,6 +378,17 @@
      ]
     },
     {
+     "demo": "circular-motion",
+     "title": "Circular Motion",
+     "desc": "What supplies mv²/r? Whirl a ball on a string and cut it, take a car round a flat or banked curve until it slides, and send a ball round a vertical loop, with the free body diagram for each.",
+     "tags": [
+      "centripetal force",
+      "banked curve",
+      "vertical loop",
+      "friction"
+     ]
+    },
+    {
      "demo": "projectile-drag",
      "title": "Projectile Range",
      "desc": "Fire baseballs, ping pong balls, cannonballs and more with and without air resistance, stack up to eight shots of different mass, size, drag or air density, and compare their paths and x, y and speed graphs side by side.",
