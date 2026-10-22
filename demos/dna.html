@@ -1,0 +1,1272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>DNA in 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the double helix in 3D on a dark stage; instrument rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --cloud-bg: #0b111a;
+  --cloud-ink: #e6ecf3;
+  --cloud-muted: #93a0b2;
+  --cloud-line: #2b3646;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #69a0ff; --cloud-bg: #070b11; --cloud-ink: #e6ecf3; --cloud-muted: #93a0b2;
+    --cloud-line: #263040; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #69a0ff; --cloud-bg: #070b11; --cloud-ink: #e6ecf3; --cloud-muted: #93a0b2;
+  --cloud-line: #263040; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app {
+  height: 100%; display: flex; flex-direction: column; gap: 12px;
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+.stage { position: relative; min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
+  background: radial-gradient(ellipse at 50% 46%, color-mix(in srgb, var(--cloud-bg) 82%, #3a5a8c) 0%, var(--cloud-bg) 72%); color: var(--cloud-ink); }
+.stage canvas { position: absolute; inset: 0; display: block; }
+#ov { pointer-events: none; z-index: 1; }
+#gl { touch-action: none; cursor: grab; outline: none; }
+#gl.dragging { cursor: grabbing; }
+#gl.picking { cursor: pointer; }
+#gl:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
+.stage-ctl > * { pointer-events: auto; }
+.stage .seg { background: color-mix(in srgb, var(--cloud-bg) 70%, transparent); border-color: var(--cloud-line); }
+.stage .seg button { color: var(--cloud-muted); }
+.stage .seg button[aria-pressed="true"] { background: var(--cloud-ink); color: var(--cloud-bg); }
+.stage .btn { background: color-mix(in srgb, var(--cloud-bg) 70%, transparent); color: var(--cloud-ink); border-color: var(--cloud-line); }
+.stage .btn[aria-pressed="true"] { color: #8fb8ff; border-color: #8fb8ff; }
+.tag { position: absolute; left: 12px; bottom: 10px; z-index: 2; pointer-events: none; color: var(--cloud-ink); text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7); max-width: calc(100% - 24px); }
+.tag .nm { font-size: 1.5rem; font-weight: 700; line-height: 1.1; }
+.tag .sub2 { font-size: 0.8rem; color: var(--cloud-muted); }
+.tip { position: absolute; z-index: 4; pointer-events: none; font-size: 0.82rem; line-height: 1.35; color: var(--cloud-ink); background: color-mix(in srgb, var(--cloud-bg) 90%, transparent);
+  border: 1px solid var(--cloud-line); border-radius: 6px; padding: 5px 8px; white-space: nowrap; }
+.tip b { font-family: var(--font-mono); }
+.tip .d { color: var(--cloud-muted); }
+.fail { position: absolute; left: 10px; right: 10px; top: 56px; z-index: 2; font-size: 0.86rem; color: var(--cloud-ink); background: color-mix(in srgb, var(--cloud-bg) 85%, transparent); border: 1px solid var(--cloud-line); border-radius: 6px; padding: 6px 10px; }
+
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail h3 { margin: 2px 0 0; font-size: 0.8rem; font-weight: 700; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.hint a { color: var(--accent); }
+.err { margin: 0; font-size: 0.85rem; color: var(--pos); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn {
+  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.chips button:hover, .btn:hover { border-color: var(--muted); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn { font-weight: 700; }
+.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.inline .lab { font-size: 0.88rem; }
+.row { display: flex; gap: 6px; flex-wrap: wrap; }
+
+textarea { font-family: var(--font-mono); font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; width: 100%; resize: vertical; min-height: 56px; letter-spacing: 0.04em; overflow-wrap: anywhere; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.88rem; }
+.slider-head output { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 600; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+
+.duplex { font-family: var(--font-mono); font-size: 0.86rem; line-height: 1.2; display: flex; flex-wrap: wrap; gap: 8px 10px; }
+.duplex .blk { display: grid; grid-auto-flow: column; grid-template-rows: auto auto auto; }
+.duplex .blk .n { grid-row: 1; font-size: 0.62rem; color: var(--muted); height: 0.9rem; }
+.duplex button { font: inherit; padding: 1px 0; width: 0.95em; border: 0; background: none; cursor: pointer; text-align: center; border-radius: 3px; }
+.duplex button.s1 { grid-row: 2; }
+.duplex button.s2 { grid-row: 3; }
+.duplex button.sel { background: color-mix(in srgb, var(--accent) 28%, transparent); }
+.duplex .end { font-size: 0.72rem; color: var(--muted); }
+.b-A { color: #d4442c; } .b-T { color: #2f6fd6; } .b-G { color: #23964a; } .b-C { color: #a77a00; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .b-A { color: #ff7a63; } :root:not([data-theme="light"]) .b-T { color: #6ea4ff; } :root:not([data-theme="light"]) .b-G { color: #5fd07f; } :root:not([data-theme="light"]) .b-C { color: #f0cd4a; } }
+:root[data-theme="dark"] .b-A { color: #ff7a63; } :root[data-theme="dark"] .b-T { color: #6ea4ff; } :root[data-theme="dark"] .b-G { color: #5fd07f; } :root[data-theme="dark"] .b-C { color: #f0cd4a; }
+
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout .wide { grid-column: 1 / -1; }
+.readout .small dd { font-size: 0.88rem; font-weight: 400; }
+.readout sub { font-size: 0.72em; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input { accent-color: var(--accent); margin: 0; }
+.key { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 0.84rem; color: var(--muted); }
+.key span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; flex: none; }
+.swatch { flex: none; width: 22px; height: 0; border-top: 2px dashed; display: inline-block; }
+.swatch.band { height: 9px; border: 0; border-radius: 2px; opacity: 0.75; }
+
+@media (min-width: 821px) and (max-height: 820px) {
+  :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
+  :root[data-projector="on"] .stage { min-height: 440px; }
+}
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  html, body { height: auto; }
+  .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 72vh; min-height: 460px; }
+  .rail { overflow: visible; }
+  .tag .nm { font-size: 1.2rem; }
+  .duplex button { min-height: 24px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>DNA in 3D</h1>
+      <p>Build a DNA double helix atom by atom from any sequence. Turn it, look into the grooves, and see how the bases pair.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">lengths in Å = 0.1 nm · angles in degrees</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/dna.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 37 37" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/dna.html" shape-rendering="crispEdges"><rect width="37" height="37" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM14 2h3v1h-3zM20 2h1v1h-1zM22 2h1v1h-1zM24 2h1v1h-1zM28 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM12 3h3v1h-3zM19 3h1v1h-1zM23 3h2v1h-2zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h5v1h-5zM16 4h1v1h-1zM18 4h1v1h-1zM20 4h5v1h-5zM26 4h1v1h-1zM28 4h1v1h-1zM30 4h3v1h-3zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM13 5h1v1h-1zM16 5h4v1h-4zM21 5h3v1h-3zM25 5h2v1h-2zM28 5h1v1h-1zM30 5h3v1h-3zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM11 6h13v1h-13zM25 6h2v1h-2zM28 6h1v1h-1zM30 6h3v1h-3zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM12 7h1v1h-1zM14 7h1v1h-1zM17 7h1v1h-1zM19 7h1v1h-1zM23 7h1v1h-1zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h7v1h-7zM10 9h2v1h-2zM16 9h3v1h-3zM20 9h1v1h-1zM22 9h1v1h-1zM24 9h3v1h-3zM2 10h1v1h-1zM8 10h1v1h-1zM10 10h2v1h-2zM13 10h4v1h-4zM19 10h1v1h-1zM24 10h1v1h-1zM26 10h3v1h-3zM31 10h3v1h-3zM2 11h2v1h-2zM5 11h3v1h-3zM9 11h1v1h-1zM11 11h3v1h-3zM15 11h4v1h-4zM20 11h2v1h-2zM25 11h1v1h-1zM30 11h3v1h-3zM2 12h1v1h-1zM4 12h2v1h-2zM7 12h2v1h-2zM11 12h2v1h-2zM15 12h3v1h-3zM20 12h1v1h-1zM22 12h3v1h-3zM27 12h2v1h-2zM30 12h1v1h-1zM32 12h2v1h-2zM4 13h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM15 13h1v1h-1zM17 13h1v1h-1zM22 13h1v1h-1zM25 13h2v1h-2zM29 13h4v1h-4zM34 13h1v1h-1zM5 14h5v1h-5zM11 14h1v1h-1zM13 14h3v1h-3zM17 14h2v1h-2zM20 14h3v1h-3zM25 14h1v1h-1zM28 14h2v1h-2zM34 14h1v1h-1zM2 15h1v1h-1zM4 15h1v1h-1zM10 15h4v1h-4zM15 15h1v1h-1zM20 15h3v1h-3zM25 15h1v1h-1zM29 15h1v1h-1zM33 15h2v1h-2zM3 16h1v1h-1zM6 16h3v1h-3zM11 16h5v1h-5zM17 16h1v1h-1zM19 16h1v1h-1zM22 16h1v1h-1zM27 16h2v1h-2zM31 16h3v1h-3zM3 17h1v1h-1zM5 17h3v1h-3zM9 17h6v1h-6zM16 17h1v1h-1zM21 17h1v1h-1zM25 17h1v1h-1zM27 17h1v1h-1zM30 17h3v1h-3zM34 17h1v1h-1zM4 18h7v1h-7zM13 18h1v1h-1zM15 18h2v1h-2zM19 18h1v1h-1zM21 18h1v1h-1zM24 18h2v1h-2zM27 18h1v1h-1zM29 18h3v1h-3zM34 18h1v1h-1zM3 19h1v1h-1zM6 19h1v1h-1zM10 19h1v1h-1zM12 19h1v1h-1zM14 19h2v1h-2zM17 19h6v1h-6zM24 19h2v1h-2zM27 19h2v1h-2zM31 19h3v1h-3zM2 20h1v1h-1zM5 20h1v1h-1zM8 20h1v1h-1zM16 20h2v1h-2zM21 20h3v1h-3zM25 20h1v1h-1zM28 20h2v1h-2zM31 20h2v1h-2zM34 20h1v1h-1zM3 21h1v1h-1zM5 21h1v1h-1zM9 21h1v1h-1zM12 21h1v1h-1zM14 21h2v1h-2zM18 21h1v1h-1zM20 21h3v1h-3zM24 21h1v1h-1zM26 21h1v1h-1zM30 21h5v1h-5zM2 22h1v1h-1zM5 22h1v1h-1zM7 22h2v1h-2zM10 22h3v1h-3zM17 22h1v1h-1zM19 22h1v1h-1zM24 22h4v1h-4zM29 22h3v1h-3zM33 22h2v1h-2zM2 23h2v1h-2zM7 23h1v1h-1zM10 23h3v1h-3zM14 23h1v1h-1zM16 23h2v1h-2zM19 23h4v1h-4zM24 23h2v1h-2zM29 23h2v1h-2zM32 23h1v1h-1zM2 24h1v1h-1zM5 24h2v1h-2zM8 24h2v1h-2zM11 24h3v1h-3zM17 24h2v1h-2zM20 24h1v1h-1zM22 24h1v1h-1zM33 24h1v1h-1zM2 25h1v1h-1zM4 25h3v1h-3zM9 25h4v1h-4zM14 25h1v1h-1zM18 25h1v1h-1zM21 25h1v1h-1zM24 25h1v1h-1zM29 25h1v1h-1zM31 25h4v1h-4zM2 26h2v1h-2zM6 26h1v1h-1zM8 26h2v1h-2zM13 26h2v1h-2zM16 26h1v1h-1zM21 26h1v1h-1zM26 26h5v1h-5zM33 26h1v1h-1zM10 27h2v1h-2zM13 27h2v1h-2zM16 27h4v1h-4zM21 27h6v1h-6zM30 27h1v1h-1zM32 27h1v1h-1zM34 27h1v1h-1zM2 28h7v1h-7zM14 28h2v1h-2zM17 28h1v1h-1zM20 28h1v1h-1zM22 28h5v1h-5zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM11 29h2v1h-2zM15 29h1v1h-1zM18 29h1v1h-1zM20 29h1v1h-1zM25 29h2v1h-2zM30 29h4v1h-4zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h1v1h-1zM12 30h1v1h-1zM19 30h1v1h-1zM22 30h1v1h-1zM24 30h1v1h-1zM26 30h6v1h-6zM33 30h2v1h-2zM2 31h1v1h-1zM4 31h3v1h-3zM8 31h1v1h-1zM11 31h2v1h-2zM14 31h2v1h-2zM17 31h2v1h-2zM21 31h2v1h-2zM26 31h2v1h-2zM29 31h6v1h-6zM2 32h1v1h-1zM4 32h3v1h-3zM8 32h1v1h-1zM11 32h1v1h-1zM16 32h4v1h-4zM21 32h1v1h-1zM23 32h1v1h-1zM25 32h1v1h-1zM27 32h1v1h-1zM29 32h6v1h-6zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h2v1h-2zM14 33h3v1h-3zM18 33h1v1h-1zM20 33h3v1h-3zM27 33h1v1h-1zM29 33h4v1h-4zM2 34h7v1h-7zM10 34h1v1h-1zM12 34h2v1h-2zM16 34h2v1h-2zM19 34h1v1h-1zM21 34h1v1h-1zM24 34h4v1h-4zM29 34h1v1h-1zM31 34h1v1h-1zM33 34h1v1h-1z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="ball" aria-pressed="true">Ball and stick</button>
+          <button type="button" data-v="space" aria-pressed="false">Space filling</button>
+          <button type="button" data-v="cartoon" aria-pressed="false">Cartoon</button>
+        </div>
+        <button type="button" class="btn" id="spin" aria-pressed="false" title="Turn the helix about its axis (key S)">Spin</button>
+        <button type="button" class="btn" id="resetView" title="Back to the side view of the whole molecule (key 0)">Whole molecule</button>
+      </div>
+      <canvas id="ov" aria-hidden="true"></canvas>
+      <div class="tag"><div class="nm" id="tagName"></div><div class="sub2 mono" id="tagSub"></div></div>
+      <div class="tip" id="tip" hidden></div>
+      <div class="fail" id="failNote" hidden>The 3D view could not load its graphics library. Check your connection and reload the page. The readouts in the rail still work.</div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Presets</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="dickerson" aria-pressed="true">Dickerson dodecamer</button>
+          <button type="button" data-p="pair" aria-pressed="false">One base pair close up</button>
+          <button type="button" data-p="grooves" aria-pressed="false">Two grooves</button>
+          <button type="button" data-p="ab" aria-pressed="false">A versus B</button>
+          <button type="button" data-p="tata" aria-pressed="false">TATA box</button>
+          <button type="button" data-p="gc" aria-pressed="false">GC rich</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Sequence</h2>
+        <label class="hint" for="seqIn">Strand 1, read 5′ to 3′ (A, C, G, T; 2 to 60 letters). The partner strand is built for you.</label>
+        <textarea id="seqIn" rows="2" spellcheck="false" autocomplete="off" autocapitalize="characters"></textarea>
+        <p class="err" id="seqErr" hidden></p>
+        <div class="row"><button type="button" class="btn primary" id="buildBtn">Build</button></div>
+        <h3>Random sequence</h3>
+        <div>
+          <div class="slider-head"><label for="lenS">Length</label><output id="lenO" class="mono"></output></div>
+          <input type="range" id="lenS" min="4" max="60" step="1" value="24">
+        </div>
+        <div>
+          <div class="slider-head"><label for="gcS">GC fraction</label><output id="gcO" class="mono"></output></div>
+          <input type="range" id="gcS" min="0" max="100" step="5" value="50">
+        </div>
+        <div class="row"><button type="button" class="btn" id="randBtn">Random</button><span class="hint mono" id="seedO" style="align-self:center"></span></div>
+        <div class="inline">
+          <span class="lab">Helix form</span>
+          <div class="seg" role="group" aria-label="Helix form" id="formSeg">
+            <button type="button" data-f="B" aria-pressed="true">B</button>
+            <button type="button" data-f="A" aria-pressed="false">A</button>
+            <button type="button" data-f="AB" aria-pressed="false">Both</button>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>The two strands</h2>
+        <div class="duplex" id="duplex" aria-label="Duplex sequence. Click a letter to select that base pair."></div>
+        <p class="hint">Strand 1 on top, 5′ to 3′; strand 2 under it runs 3′ to 5′, antiparallel. Click a letter to select its base pair.</p>
+      </section>
+
+      <section>
+        <h2>Display</h2>
+        <div class="inline">
+          <span class="lab">Color by</span>
+          <div class="seg" role="group" aria-label="Color by" id="colorSeg">
+            <button type="button" data-c="element" aria-pressed="true">Element</button>
+            <button type="button" data-c="base" aria-pressed="false">Base</button>
+            <button type="button" data-c="strand" aria-pressed="false">Strand</button>
+          </div>
+        </div>
+        <div class="toggles">
+          <label><input type="checkbox" id="tHb" checked>Hydrogen bonds</label>
+          <label><input type="checkbox" id="tGr">Grooves</label>
+          <label><input type="checkbox" id="tAx">Helix axis</label>
+          <label><input type="checkbox" id="tEnds" checked>5′ and 3′ ends</label>
+        </div>
+        <div class="key" id="key"></div>
+        <p class="hint">Drag to turn, scroll or pinch to zoom, double click to go back to the whole molecule. Hover an atom for its name; click to select its base pair. With the view focused, arrow keys turn it, + and − zoom, S spins.</p>
+      </section>
+
+      <section>
+        <h2>This molecule</h2>
+        <dl class="readout">
+          <div><dt>Length</dt><dd id="rLen">—</dd></div>
+          <div><dt>Helical turns</dt><dd id="rTurns">—</dd></div>
+          <div><dt>Rise per pair</dt><dd id="rRise">—</dd></div>
+          <div><dt>Twist per pair</dt><dd id="rTwist">—</dd></div>
+          <div><dt>Heavy atoms</dt><dd id="rAtoms">—</dd></div>
+          <div><dt>GC content</dt><dd id="rGC">—</dd></div>
+          <div><dt>Minor groove</dt><dd id="rMinor">—</dd></div>
+          <div><dt>Major groove</dt><dd id="rMajor">—</dd></div>
+          <div class="wide"><dt>Molar mass, both strands</dt><dd id="rMW">—</dd></div>
+          <div class="wide"><dt>Melting temperature T<sub>m</sub>, estimate</dt><dd id="rTm">—</dd></div>
+        </dl>
+        <div class="inline">
+          <span class="lab">Na<sup>+</sup></span>
+          <div class="seg" role="group" aria-label="Sodium concentration" id="naSeg">
+            <button type="button" data-na="0.05" aria-pressed="true">50 mM</button>
+            <button type="button" data-na="0.15" aria-pressed="false">150 mM</button>
+            <button type="button" data-na="1" aria-pressed="false">1 M</button>
+          </div>
+        </div>
+        <p class="hint" id="tmHint"></p>
+        <p class="hint">Rise and twist are measured back from the built coordinates. Groove widths are the closest phosphorus to phosphorus distance across each groove minus 5.8 Å, twice the phosphate van der Waals radius (El Hassan and Calladine), measured along the phosphate helices of this model.</p>
+      </section>
+
+      <section>
+        <h2>Selected base pair</h2>
+        <dl class="readout" id="pairRead">
+          <div class="wide"><dt>Pair</dt><dd id="pName">Click a base or a letter</dd></div>
+          <div class="wide small"><dt>Hydrogen bonds, donor to acceptor</dt><dd id="pHb">—</dd></div>
+          <div><dt>C1′ to C1′</dt><dd id="pC1">—</dd></div>
+          <div><dt>Rise, twist to next</dt><dd id="pStep">—</dd></div>
+        </dl>
+        <div class="row">
+          <button type="button" class="btn" id="lookBtn" disabled>Look down the axis</button>
+          <button type="button" class="btn" id="clearBtn" disabled>Clear</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Export</h2>
+        <div class="row">
+          <button type="button" class="btn" id="pdbBtn">Download PDB file</button>
+          <button type="button" class="btn" id="copyBtn">Copy sequence</button>
+        </div>
+        <p class="hint" id="exportHint">The PDB file holds this model's heavy atoms (chains A and B, residues DA, DC, DG, DT). It is a model built from fiber geometry, not an experimental structure.</p>
+      </section>
+
+      <section>
+        <h2>About the model</h2>
+        <p class="hint"><b>Coordinates.</b> Every atom is placed from the A and B DNA fiber models of Arnott and coworkers, refined against X ray fiber diffraction: cylindrical coordinates (r, φ, z) for each atom of each nucleotide, as tabulated in the fd_helix routine of the Nucleic Acid Builder (D. A. Case, AmberTools/AmberClassic), which cites Fuller et al., J. Mol. Biol. 12, 60 (1965) and Arnott, Campbell Smith and Chandrasekaran, CRC Handbook of Biochemistry and Molecular Biology, 3rd ed., Nucleic Acids vol. II, 411 (1976). Pair k is turned by k times the twist and raised by k times the rise; strand 2 is the image of strand 1 under a twofold axis through each pair, which makes the strands antiparallel. B form: 3.38 Å and 36.0° per pair, 10 pairs per turn. A form: 2.56 Å and 32.7°, 11 pairs per turn.</p>
+        <p class="hint"><b>Approximations.</b> The helix is uniform: every step has the same rise and twist, and every A·T or G·C pair the same shape. Real DNA varies from step to step with sequence (roll, twist, propeller twist, groove width), and crystal structures in the Protein Data Bank, such as the Dickerson dodecamer (PDB 1BNA), differ from this model by up to a few ångströms. Hydrogen atoms are not placed, so hydrogen bonds are shown between donor and acceptor atoms (N or O), and space filling spheres are heavy atoms only. Z DNA is not offered: the fiber table used here has no Z form. The cartoon is a drawing aid: a tube through the phosphorus atoms and a slab for each base.</p>
+        <p class="hint"><b>Other numbers.</b> Space filling radii are Bondi's van der Waals radii (J. Phys. Chem. 68, 441, 1964): C 1.70, N 1.55, O 1.52, P 1.80 Å. Molar mass sums the nucleotide residues (dA 313.21, dC 289.18, dG 329.21, dT 304.20 g/mol) minus 61.96 g/mol per strand for strands with no 5′ phosphate, as in this model. T<sub>m</sub> uses the unified nearest neighbor parameters of SantaLucia, PNAS 95, 1460 (1998), with the salt correction ΔS += 0.368 (N − 1) ln[Na<sup>+</sup>], total strand concentration 0.5 µM, and no magnesium. It is an estimate for a two state transition of short duplexes.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* Fiber coordinates below are from fd_helix.c of the Nucleic Acid Builder:
+   Copyright (c) 2018 David A. Case. Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions are met: Redistributions of source code
+   must retain the above copyright notice, this list of conditions and the following disclaimer. Redistributions
+   in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer
+   listed in this license in the documentation and/or other materials provided with the distribution.
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+   WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+   PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY
+   DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+   CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+   OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
+(() => {
+  // ==CORE START==
+  // Units: Å and degrees. Fiber tables: atom name, r (Å), φ (degrees), z (Å) for strand 2 of a pair at level 0;
+  // strand 1 is the twofold image (r, −φ, −z). Pair k is turned k·twist and raised k·rise (as fd_helix builds it).
+  const FIBER_SRC = {
+    B: {
+      A: "P 8.973 94.2 2.141 OP1 10.292 90.28 2 OP2 8.919 102.25 1.359 O3' 8.696 60.18 0.307 O5' 7.838 86.88 1.788 C1' 5.811 66.6 0.452 C2' 7.016 72.17 -0.247 C3' 8.159 68.8 0.665 C4' 7.519 69 2.053 C5' 7.647 79.12 2.756 O4' 6.151 66.25 1.823 N6 1.91 154.18 0.051 C6 1.43 109.71 0.105 C5 2.73 94.61 0.217 N7 3.971 105.33 0.296 C8 4.836 92.72 0.385 N9 4.601 76.19 0.37 C4 3.288 70.63 0.262 N3 3.155 46.59 0.209 C2 2.077 29.84 0.105 N1 0.773 41.89 0.051",
+      G: "P 8.973 94.2 2.141 OP1 10.292 90.28 2 OP2 8.919 102.25 1.359 O3' 8.696 60.18 0.307 O5' 7.838 86.88 1.788 C1' 5.811 66.6 0.452 C2' 7.016 72.17 -0.247 C3' 8.159 68.8 0.665 C4' 7.519 69 2.053 C5' 7.647 79.12 2.756 O4' 6.151 66.25 1.823 N2 2.893 2.14 0.043 O6 1.816 154.21 0.047 C6 1.429 111.85 0.103 C5 2.714 94.6 0.216 N7 3.958 105.52 0.295 C8 4.833 92.75 0.384 N9 4.601 76.19 0.37 C4 3.284 70.42 0.261 N3 3.205 46.3 0.212 C2 2.176 28.04 0.106 N1 0.828 40.69 0.053",
+      T: "P 8.973 94.2 2.141 OP1 10.292 90.28 2 OP2 8.919 102.25 1.359 O3' 8.696 60.18 0.307 O5' 7.838 86.88 1.788 C1' 5.811 66.6 0.452 C2' 7.016 72.17 -0.247 C3' 8.159 68.8 0.665 C4' 7.519 69 2.053 C5' 7.647 79.12 2.756 O4' 6.151 66.25 1.823 O4 2.903 135.96 0.141 C4 3.029 112.13 0.214 N3 2.349 86.11 0.191 C2 3.375 67.28 0.265 O2 3.557 47.25 0.237 N1 4.601 76.19 0.37 C6 5.015 91.81 0.4 C5 4.422 106.49 0.327 C7 5.499 118.64 0.358",
+      C: "P 8.973 94.2 2.141 OP1 10.292 90.28 2 OP2 8.919 102.25 1.359 O3' 8.696 60.18 0.307 O5' 7.838 86.88 1.788 C1' 5.811 66.6 0.452 C2' 7.016 72.17 -0.247 C3' 8.159 68.8 0.665 C4' 7.519 69 2.053 C5' 7.647 79.12 2.756 O4' 6.151 66.25 1.823 N4 2.859 136.26 0.138 C4 2.99 110.26 0.215 N3 2.296 85.02 0.187 C2 3.351 67.37 0.263 O2 3.606 47.32 0.241 N1 4.601 76.19 0.37 C6 5.007 91.73 0.399 C5 4.399 106.56 0.325",
+    },
+    A: {
+      A: "P 8.92 69.2 -4.06 OP1 9.96 67.9 -5.1 OP2 7.69 73.9 -4.53 O3' 9.58 41.43 -5.43 O5' 8.7 60.1 -3.33 C1' 8.59 35.9 -2.04 C2' 8.81 33.4 -3.5 C3' 8.91 42.2 -4.17 C4' 9.77 46.6 -3.13 C5' 9.91 55.4 -3.19 O4' 9.22 44 -1.86 N6 3.19 14.8 -0.13 C6 4.49 16.7 -0.43 C5 5.22 29.8 -0.91 N7 5.18 44.8 -1.19 C8 6.4 45.7 -1.61 N9 7.16 36.1 -1.62 C4 6.52 26.7 -1.17 N3 7.25 17.3 -1.02 C2 6.65 8.4 -0.56 N1 5.4 5.3 -0.26",
+      G: "P 8.92 69.2 -4.06 OP1 9.96 67.9 -5.1 OP2 7.69 73.9 -4.53 O3' 9.58 41.43 -5.43 O5' 8.7 60.1 -3.33 C1' 8.59 35.9 -2.04 C2' 8.81 33.4 -3.5 C3' 8.91 42.2 -4.17 C4' 9.77 46.6 -3.13 C5' 9.91 55.4 -3.19 O4' 9.22 44 -1.86 N2 7.71 0.7 -0.37 O6 3.27 13.2 -0.11 C6 4.44 16.4 -0.41 C5 5.2 29.4 -0.9 N7 5.14 44.6 -1.17 C8 6.38 45.7 -1.6 N9 7.16 36.1 -1.62 C4 6.52 26.6 -1.17 N3 7.3 17.4 -1.03 C2 6.78 8.1 -0.57 N1 5.46 5.3 -0.27",
+      T: "P 8.92 69.2 -4.06 OP1 9.96 67.9 -5.1 OP2 7.69 73.9 -4.53 O3' 9.58 41.43 -5.43 O5' 8.7 60.1 -3.33 C1' 8.59 35.9 -2.04 C2' 8.81 33.4 -3.5 C3' 8.91 42.2 -4.17 C4' 9.77 46.6 -3.13 C5' 9.91 55.4 -3.19 O4' 9.22 44 -1.86 O4 3.3 35.5 -0.47 C4 4.48 36.4 -0.83 N3 5.39 24.3 -0.82 C2 6.71 26 -1.2 O2 7.56 19 -1.15 N1 7.16 36.1 -1.62 C6 6.55 46.4 -1.67 C5 5.3 49.3 -1.3 C7 4.98 65.7 -1.33",
+      C: "P 8.92 69.2 -4.06 OP1 9.96 67.9 -5.1 OP2 7.69 73.9 -4.53 O3' 9.58 41.43 -5.43 O5' 8.7 60.1 -3.33 C1' 8.59 35.9 -2.04 C2' 8.81 33.4 -3.5 C3' 8.91 42.2 -4.17 C4' 9.77 46.6 -3.13 C5' 9.91 55.4 -3.19 O4' 9.22 44 -1.86 N4 3.3 34.5 -0.46 C4 4.57 35.5 -0.84 N3 5.41 23.4 -0.8 C2 6.69 25.9 -1.19 O2 7.61 19.2 -1.17 N1 7.16 36.1 -1.62 C6 6.55 46.3 -1.66 C5 5.28 49.1 -1.29",
+    },
+  };
+  const FORMS = {
+    B: { name: 'B-DNA', rise: 3.38, twist: 36.0 },
+    A: { name: 'A-DNA', rise: 2.56, twist: 32.7 }
+  };
+  const FIBER = {};
+  for (const f of Object.keys(FIBER_SRC)) {
+    FIBER[f] = {};
+    for (const b of 'ACGT') {
+      const t = FIBER_SRC[f][b].split(' '), rows = [];
+      for (let i = 0; i < t.length; i += 4) rows.push({ name: t[i], r: +t[i + 1], phi: +t[i + 2], z: +t[i + 3] });
+      FIBER[f][b] = rows;
+    }
+  }
+  const COMP = { A: 'T', T: 'A', G: 'C', C: 'G' };
+  const BACKBONE = new Set(['P', 'OP1', 'OP2', "O5'", "C5'", "C4'", "O4'", "C3'", "O3'", "C2'", "C1'"]);
+  const BONDI = { C: 1.70, N: 1.55, O: 1.52, P: 1.80 };       // van der Waals radii, Å (Bondi 1964)
+  const COV = { C: 0.76, N: 0.71, O: 0.66, P: 1.07 };         // covalent radii, Å, for finding bonds only
+  const NUC_MASS = { A: 313.21, C: 289.18, G: 329.21, T: 304.20 }; // g/mol, nucleotide residues in a chain
+  const MAXLEN = 60, MINLEN = 2;
+
+  // clean a typed sequence: drop spaces, digits and line breaks; anything else that is not ACGT is an error
+  function cleanSeq(s) {
+    const t = String(s).toUpperCase().replace(/[\s\d\-_.,;:]/g, '').replace(/^5['′]?|3['′]?$/g, '');
+    const bad = [...new Set(t.replace(/[ACGT]/g, ''))];
+    return { seq: t.replace(/[^ACGT]/g, ''), bad, raw: t };
+  }
+  const revComp = (s) => [...s].reverse().map((c) => COMP[c]).join('');
+  const isSelfComp = (s) => s === revComp(s);
+
+  function mulberry32(a) {
+    return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  }
+  // exactly round(n·gc) G or C, the rest A or T, in random order
+  function randomSeq(n, gc, seed) {
+    const rnd = mulberry32(seed), k = Math.round(n * gc), out = [];
+    for (let i = 0; i < n; i++) out.push(i < k ? (rnd() < 0.5 ? 'G' : 'C') : (rnd() < 0.5 ? 'A' : 'T'));
+    for (let i = n - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [out[i], out[j]] = [out[j], out[i]]; }
+    return out.join('');
+  }
+
+  // Build the duplex. Strand 1 (chain A) residues 1..n, 5′→3′ going up the axis; strand 2 (chain B) residues n+1..2n,
+  // 5′→3′ going down, residue 2n+1−i paired with i. The 5′ residue of each strand has no phosphate (as in fd_helix).
+  function buildModel(seq, form) {
+    const F = FORMS[form], T = FIBER[form], n = seq.length, atoms = [], d2r = Math.PI / 180;
+    const z0 = -(n - 1) * F.rise / 2;   // center the molecule on the origin
+    for (let i = 1; i <= n; i++) {        // strand 1, pair level k = i − 1
+      const k = i - 1, b = seq[i - 1];
+      for (const a of T[b]) {
+        if (i === 1 && a.name.indexOf('P') >= 0) continue;
+        const ang = (-a.phi + k * F.twist) * d2r;
+        atoms.push({ name: a.name, el: a.name[0], res: b, chain: 'A', resi: i, pair: k, x: a.r * Math.cos(ang), y: a.r * Math.sin(ang), z: -a.z + k * F.rise + z0, bb: BACKBONE.has(a.name) });
+      }
+    }
+    for (let i = n + 1; i <= 2 * n; i++) { // strand 2: residue i sits at pair level k = 2n − i
+      const k = 2 * n - i, b = COMP[seq[k]];
+      for (const a of T[b]) {
+        if (i === n + 1 && a.name.indexOf('P') >= 0) continue;
+        const ang = (a.phi + k * F.twist) * d2r;
+        atoms.push({ name: a.name, el: a.name[0], res: b, chain: 'B', resi: i, pair: k, x: a.r * Math.cos(ang), y: a.r * Math.sin(ang), z: a.z + k * F.rise + z0, bb: BACKBONE.has(a.name) });
+      }
+    }
+    atoms.forEach((a, i) => { a.i = i; });
+    const index = new Map(atoms.map((a) => [a.chain + a.resi + ':' + a.name, a]));
+    return { seq, form, n, rise: F.rise, twist: F.twist, z0, atoms, index, bonds: findBonds(atoms) };
+  }
+  const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
+
+  // covalent bonds from distances: d < r_cov,1 + r_cov,2 + 0.4 Å, searched on a 2.2 Å grid
+  function findBonds(atoms) {
+    const cell = 2.2, grid = new Map(), key = (x, y, z) => x + ',' + y + ',' + z, bonds = [];
+    atoms.forEach((a, i) => { const k = key(Math.floor(a.x / cell), Math.floor(a.y / cell), Math.floor(a.z / cell)); (grid.get(k) || grid.set(k, []).get(k)).push(i); });
+    atoms.forEach((a, i) => {
+      const cx = Math.floor(a.x / cell), cy = Math.floor(a.y / cell), cz = Math.floor(a.z / cell);
+      for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (let dz = -1; dz <= 1; dz++) {
+        const list = grid.get(key(cx + dx, cy + dy, cz + dz)); if (!list) continue;
+        for (const j of list) if (j > i && dist(a, atoms[j]) < COV[a.el] + COV[atoms[j].el] + 0.4) bonds.push([i, j]);
+      }
+    });
+    return bonds;
+  }
+
+  // Watson–Crick hydrogen bonds, donor → acceptor (heavy atoms)
+  const WC = {
+    AT: [['N6', 'O4'], ['N3', 'N1', true]],                 // A N6–H···O4 T; T N3–H···N1 A (flag: donor on the second base)
+    GC: [['N1', 'N3'], ['N2', 'O2'], ['N4', 'O6', true]]    // G N1–H···N3 C; G N2–H···O2 C; C N4–H···O6 G
+  };
+  function hbonds(model) {
+    const out = [];
+    for (let k = 0; k < model.n; k++) {
+      const i = k + 1, j = 2 * model.n - k, b1 = model.seq[k], b2 = COMP[b1];
+      const pur = b1 === 'A' || b1 === 'G' ? [b1, 'A', i, b2, 'B', j] : [b2, 'B', j, b1, 'A', i];
+      const [pb, pc, pi, qb, qc, qi] = pur, list = WC[pb === 'A' ? 'AT' : 'GC'];
+      for (const [x, y, flip] of list) {
+        const ax = flip ? model.index.get(qc + qi + ':' + x) : model.index.get(pc + pi + ':' + x);
+        const ay = flip ? model.index.get(pc + pi + ':' + y) : model.index.get(qc + qi + ':' + y);
+        const don = ax, acc = ay;
+        out.push({ pair: k, don, acc, label: `${don.res}${don.resi} ${don.name} – ${acc.res}${acc.resi} ${acc.name}`, d: dist(don, acc) });
+      }
+    }
+    return out;
+  }
+
+  // phosphorus helices: strand 1 P at level t and strand 2 P at level s, as continuous helices of the fiber model
+  function pHelix(form, strand, t) {
+    const F = FORMS[form], P = FIBER[form].A[0], d2r = Math.PI / 180;
+    const ang = (strand === 1 ? -P.phi : P.phi) + t * F.twist, z = (strand === 1 ? -P.z : P.z) + t * F.rise;
+    return { x: P.r * Math.cos(ang * d2r), y: P.r * Math.sin(ang * d2r), z };
+  }
+  // closest P–P distance across each groove: minimize |P1(0) − P2(s)| on each side of s = 0.
+  // The minimum at negative s spans the minor groove, the one at positive s the major groove.
+  function grooves(form) {
+    const p1 = pHelix(form, 1, 0), f = (s) => dist(p1, pHelix(form, 2, s));
+    const minIn = (a, b) => {
+      let best = a; for (let s = a; s <= b; s += 0.01) if (f(s) < f(best)) best = s;
+      let lo = best - 0.01, hi = best + 0.01;
+      for (let it = 0; it < 80; it++) { const m1 = lo + (hi - lo) / 3, m2 = hi - (hi - lo) / 3; if (f(m1) < f(m2)) hi = m2; else lo = m1; }
+      const s = (lo + hi) / 2; return { s, pp: f(s) };
+    };
+    const mi = minIn(-8, 0), ma = minIn(0, 9);
+    return { minorS: mi.s, minorPP: mi.pp, minor: mi.pp - 5.8, majorS: ma.s, majorPP: ma.pp, major: ma.pp - 5.8 };
+  }
+
+  // rise and twist of each step, measured back from the C1′ atoms: midpoint height, and the turn of the C1′–C1′ line about z
+  function stepParams(model) {
+    const out = [];
+    const mid = (k) => { const a = model.index.get('A' + (k + 1) + ":C1'"), b = model.index.get('B' + (2 * model.n - k) + ":C1'"); return { a, b, z: (a.z + b.z) / 2, ang: Math.atan2(b.y - a.y, b.x - a.x) }; };
+    for (let k = 0; k + 1 < model.n; k++) {
+      const p = mid(k), q = mid(k + 1);
+      let tw = (q.ang - p.ang) * 180 / Math.PI; tw = ((tw + 540) % 360) - 180;
+      out.push({ rise: q.z - p.z, twist: tw });
+    }
+    return out;
+  }
+
+  // molar mass of the duplex, g/mol: each strand Σ residues − 61.96 (no 5′ phosphate)
+  function molarMass(seq) {
+    const strand = (s) => [...s].reduce((m, c) => m + NUC_MASS[c], 0) - 61.96;
+    return strand(seq) + strand(revComp(seq));
+  }
+  // SantaLucia (1998) unified nearest neighbor parameters: ΔH kcal/mol, ΔS cal/(mol K), at 1 M NaCl
+  const NN = {
+    AA: [-7.9, -22.2], TT: [-7.9, -22.2], AT: [-7.2, -20.4], TA: [-7.2, -21.3],
+    CA: [-8.5, -22.7], TG: [-8.5, -22.7], GT: [-8.4, -22.4], AC: [-8.4, -22.4],
+    CT: [-7.8, -21.0], AG: [-7.8, -21.0], GA: [-8.2, -22.2], TC: [-8.2, -22.2],
+    CG: [-10.6, -27.2], GC: [-9.8, -24.4], GG: [-8.0, -19.9], CC: [-8.0, -19.9]
+  };
+  const R_GAS = 1.98720;   // cal/(mol K)
+  function meltTemp(seq, na, ct) {
+    let dH = 0, dS = 0;
+    for (let i = 0; i + 1 < seq.length; i++) { const p = NN[seq[i] + seq[i + 1]]; dH += p[0]; dS += p[1]; }
+    for (const e of [seq[0], seq[seq.length - 1]]) { if (e === 'A' || e === 'T') { dH += 2.3; dS += 4.1; } else { dH += 0.1; dS += -2.8; } }
+    const self = isSelfComp(seq);
+    if (self) dS += -1.4;
+    dS += 0.368 * (seq.length - 1) * Math.log(na);
+    const x = self ? 1 : 4;
+    return { tm: dH * 1000 / (dS + R_GAS * Math.log(ct / x)) - 273.15, dH, dS, self };
+  }
+
+  // PDB text, fixed columns
+  function toPDB(model) {
+    const L = [];
+    const pad = (s, n) => String(s).padStart(n), f3 = (v) => v.toFixed(3).padStart(8);
+    L.push('HEADER    DNA                                     ' + 'MODEL');
+    L.push(`TITLE     ${FORMS[model.form].name} FIBER MODEL OF ${model.seq}`.slice(0, 80));
+    L.push('REMARK   1 MODEL BUILT BY "DNA IN 3D" FROM ARNOTT FIBER COORDINATES (NAB FD_HELIX).');
+    L.push('REMARK   1 UNIFORM HELIX, HEAVY ATOMS ONLY. NOT AN EXPERIMENTAL STRUCTURE.');
+    L.push(`REMARK   1 RISE ${model.rise.toFixed(2)} A, TWIST ${model.twist.toFixed(1)} DEG PER BASE PAIR.`);
+    let serial = 0, prev = null;
+    for (const a of model.atoms) {
+      if (prev && prev.chain !== a.chain) { serial++; L.push(`TER   ${pad(serial, 5)}      D${prev.res} ${prev.chain}${pad(prev.resi, 4)}`); }
+      serial++;
+      const nm = a.name.length >= 4 ? a.name : ' ' + a.name.padEnd(3);
+      L.push('ATOM  ' + pad(serial, 5) + ' ' + nm + ' ' + pad('D' + a.res, 3) + ' ' + a.chain + pad(a.resi, 4) + '    ' +
+        f3(a.x) + f3(a.y) + f3(a.z) + '  1.00' + '  0.00' + '          ' + pad(a.el, 2));
+      prev = a;
+    }
+    serial++; L.push(`TER   ${pad(serial, 5)}      D${prev.res} ${prev.chain}${pad(prev.resi, 4)}`);
+    L.push('END');
+    return L.join('\n') + '\n';
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') {
+    globalThis.DNA = { FIBER, FORMS, COMP, cleanSeq, revComp, isSelfComp, randomSeq, buildModel, findBonds, hbonds, pHelix, grooves, stepParams, molarMass, meltTemp, toPDB };
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const stage = $('stage'), ov = $('ov'), octx = ov.getContext('2d'), tip = $('tip');
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const projOn = () => document.documentElement.getAttribute('data-projector') === 'on';
+
+  // colors on the dark stage
+  const EL_COL = { C: 0xa9b2bd, N: 0x5b86ff, O: 0xff5a4e, P: 0xffa133 };
+  const BASE_COL = { A: 0xff6f59, T: 0x5c97ff, G: 0x52c973, C: 0xf2cd3c };
+  const STRAND_COL = { A: 0xff8a66, B: 0x6fb0ff };
+  const BB_GREY = 0x8a94a3;
+  const HB_COL = 0xffd166, MINOR_COL = 0xffc04d, MAJOR_COL = 0x7fd0ff;
+
+  const S = {
+    seq: 'CGCGAATTCGCG', form: 'B', view: 'ball', color: 'element', na: 0.05, ct: 0.5e-6,
+    show: { hb: true, gr: false, ax: false, ends: true },
+    sel: null, seed: 1, spin: !reduce, label: 'Dickerson dodecamer', preset: 'dickerson'
+  };
+  let models = [];   // one or two built models with their meshes
+
+  // ---------- 3D ----------
+  const G = { ready: false, failed: false };
+  const orbit = { theta: -Math.PI / 2, phi: 1.36, dist: 80, target: null, fitDist: 80 };
+  let W = 1, H = 1, dpr = 1, frameMs = 0, needs = true, raf = 0, tween = null, spinAng = 0, lastT = 0;
+
+  function init3D() {
+    if (!window.THREE) { G.failed = true; return false; }
+    let renderer;
+    try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); } catch (_) { G.failed = true; return false; }
+    renderer.localClippingEnabled = true;
+    const el = renderer.domElement;
+    el.id = 'gl'; el.tabIndex = 0; el.setAttribute('role', 'application');
+    el.setAttribute('aria-label', 'DNA double helix in 3D. Drag to turn, scroll to zoom. Arrow keys turn, plus and minus zoom, 0 shows the whole molecule, S spins.');
+    stage.insertBefore(el, ov);
+    const scene = new THREE.Scene();
+    const cam = new THREE.PerspectiveCamera(30, 1, 0.5, 4000);
+    cam.up.set(0, 0, 1);
+    scene.add(cam);
+    scene.add(new THREE.HemisphereLight(0xdfe8ff, 0x2a3240, 0.75));
+    const key = new THREE.DirectionalLight(0xffffff, 0.75); key.position.set(-0.4, 0.6, 1); cam.add(key);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.2); fill.position.set(0.6, -0.3, 0.4); cam.add(fill);
+    const world = new THREE.Group(); scene.add(world);
+    orbit.target = new THREE.Vector3();
+    Object.assign(G, { ready: true, renderer, scene, cam, world, el, ray: new THREE.Raycaster(),
+      clip: new THREE.Plane(new THREE.Vector3(1, 0, 0), 1e4), clip2: new THREE.Plane(new THREE.Vector3(-1, 0, 0), 1e4),
+      sphere: { hi: new THREE.SphereGeometry(1, 20, 14), lo: new THREE.SphereGeometry(1, 12, 9) },
+      cyl: new THREE.CylinderGeometry(1, 1, 1, 10, 1, true) });
+    G.clips = [G.clip, G.clip2]; G.clipOn = false;
+    bindPointer(el);
+    return true;
+  }
+  const hex = (h) => new THREE.Color(h);
+
+  function disposeModel(m) {
+    if (!m.root) return;
+    m.root.traverse((o) => { if (o.geometry && o.geometry !== G.sphere.hi && o.geometry !== G.sphere.lo && o.geometry !== G.cyl) o.geometry.dispose(); if (o.material) o.material.dispose(); });
+    G.world.remove(m.root);
+  }
+
+  // all meshes for one model; the model's axis (z) is laid along world x, and the inner group spins about it
+  function buildMeshes(m, offsetZ) {
+    const outer = new THREE.Group(), inner = new THREE.Group();
+    outer.rotation.y = Math.PI / 2;    // model z → world x
+    outer.position.set(0, 0, offsetZ);
+    outer.add(inner); G.world.add(outer);
+    m.root = outer; m.inner = inner;
+    const N = m.atoms.length, many = models.length > 1 || N > 1400;
+    const matA = new THREE.MeshPhongMaterial({ shininess: 50, specular: 0x333333, clippingPlanes: G.clips });
+    const atoms = new THREE.InstancedMesh(many ? G.sphere.lo : G.sphere.hi, matA, N);
+    atoms.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    const matB = new THREE.MeshPhongMaterial({ shininess: 30, specular: 0x222222, clippingPlanes: G.clips });
+    const bonds = new THREE.InstancedMesh(G.cyl, matB, 2 * m.bonds.length);
+    const dummy = new THREE.Object3D(), up = new THREE.Vector3(0, 1, 0), dir = new THREE.Vector3(), q = new THREE.Quaternion();
+    m.bonds.forEach(([i, j], b) => {
+      const A = m.atoms[i], B = m.atoms[j];
+      const mx = (A.x + B.x) / 2, my = (A.y + B.y) / 2, mz = (A.z + B.z) / 2;
+      [[A, 2 * b], [B, 2 * b + 1]].forEach(([P, idx]) => {
+        dir.set(mx - P.x, my - P.y, mz - P.z); const len = dir.length(); dir.normalize();
+        q.setFromUnitVectors(up, dir);
+        dummy.position.set((P.x + mx) / 2, (P.y + my) / 2, (P.z + mz) / 2); dummy.quaternion.copy(q); dummy.scale.set(0.15, len, 0.15);
+        dummy.updateMatrix(); bonds.setMatrixAt(idx, dummy.matrix);
+      });
+    });
+    inner.add(atoms); inner.add(bonds);
+    m.mAtoms = atoms; m.mBonds = bonds;
+
+    // hydrogen bonds: dashed donor–acceptor lines
+    m.hb = hbonds(m);
+    const hp = [];
+    for (const h of m.hb) hp.push(h.don.x, h.don.y, h.don.z, h.acc.x, h.acc.y, h.acc.z);
+    const hg = new THREE.BufferGeometry(); hg.setAttribute('position', new THREE.Float32BufferAttribute(hp, 3));
+    hg.setAttribute('color', new THREE.Float32BufferAttribute(new Float32Array(hp.length), 3));
+    const hl = new THREE.LineSegments(hg, new THREE.LineDashedMaterial({ vertexColors: true, dashSize: 0.32, gapSize: 0.22, transparent: true, opacity: 0.95, clippingPlanes: G.clips }));
+    hl.computeLineDistances(); inner.add(hl); m.mHb = hl;
+
+    // cartoon: phosphorus tubes and base slabs
+    const cart = new THREE.Group(); inner.add(cart); m.mCart = cart;
+    m.tubes = {};
+    for (const ch of ['A', 'B']) {
+      const res = m.atoms.filter((a) => a.chain === ch);
+      const first = res[0].resi, last = res[res.length - 1].resi, pts = [];
+      const at = (ri, nm) => m.index.get(ch + ri + ':' + nm);
+      pts.push(at(first, "O5'"));
+      for (let r = first + 1; r <= last; r++) pts.push(at(r, 'P'));
+      pts.push(at(last, "O3'"));
+      const curve = new THREE.CatmullRomCurve3(pts.map((p) => new THREE.Vector3(p.x, p.y, p.z)));
+      const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, Math.max(24, pts.length * 8), 0.9, 10, false), new THREE.MeshPhongMaterial({ shininess: 40, clippingPlanes: G.clips }));
+      tube.userData = { chain: ch }; cart.add(tube); m.tubes[ch] = tube;
+    }
+    // slabs: each ring polygon extruded ±0.35 Å along its normal; one merged geometry with per vertex colors
+    const RINGS = { pur: [['N1', 'C2', 'N3', 'C4', 'C5', 'C6'], ['C4', 'C5', 'N7', 'C8', 'N9']], pyr: [['N1', 'C2', 'N3', 'C4', 'C5', 'C6']] };
+    const pos = [], triRes = [], vRes = [];
+    const resList = [];
+    for (const a of m.atoms) if (a.name === "C1'") resList.push(a);
+    resList.forEach((c1, ri) => {
+      const pur = c1.res === 'A' || c1.res === 'G', key = c1.chain + c1.resi + ':';
+      for (const ring of RINGS[pur ? 'pur' : 'pyr']) {
+        const P = ring.map((nm) => m.index.get(key + nm));
+        const c = P.reduce((s, p) => ({ x: s.x + p.x / P.length, y: s.y + p.y / P.length, z: s.z + p.z / P.length }), { x: 0, y: 0, z: 0 });
+        const u = new THREE.Vector3(P[0].x - c.x, P[0].y - c.y, P[0].z - c.z), v = new THREE.Vector3(P[1].x - c.x, P[1].y - c.y, P[1].z - c.z);
+        const nrm = u.clone().cross(v).normalize().multiplyScalar(0.35);
+        const push = (p, s) => { pos.push(p.x + s * nrm.x, p.y + s * nrm.y, p.z + s * nrm.z); vRes.push(ri); };
+        for (let i = 0; i < P.length; i++) {
+          const p = P[i], q2 = P[(i + 1) % P.length];
+          for (const s of [1, -1]) { push(c, s); push(p, s); push(q2, s); triRes.push(ri); }
+          push(p, 1); push(p, -1); push(q2, 1); triRes.push(ri);
+          push(q2, 1); push(p, -1); push(q2, -1); triRes.push(ri);
+        }
+      }
+      // stick from the sugar to the base
+      const n = m.index.get(key + (pur ? 'N9' : 'N1')), c4 = m.index.get(key + "C4'");
+      m.sticks = m.sticks || [];
+      m.sticks.push([c4, c1, ri], [c1, n, ri]);
+    });
+    const sg = new THREE.BufferGeometry();
+    sg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    sg.setAttribute('color', new THREE.Float32BufferAttribute(new Float32Array(pos.length), 3));
+    sg.computeVertexNormals();
+    const slabs = new THREE.Mesh(sg, new THREE.MeshPhongMaterial({ vertexColors: true, shininess: 30, side: THREE.DoubleSide, clippingPlanes: G.clips }));
+    slabs.userData = { triRes, vRes, resList }; cart.add(slabs); m.mSlabs = slabs;
+    const st = new THREE.InstancedMesh(G.cyl, new THREE.MeshPhongMaterial({ shininess: 30, clippingPlanes: G.clips }), m.sticks.length);
+    m.sticks.forEach(([A, B], k) => {
+      dir.set(B.x - A.x, B.y - A.y, B.z - A.z); const len = dir.length(); dir.normalize(); q.setFromUnitVectors(up, dir);
+      dummy.position.set((A.x + B.x) / 2, (A.y + B.y) / 2, (A.z + B.z) / 2); dummy.quaternion.copy(q); dummy.scale.set(0.38, len, 0.38); dummy.updateMatrix(); st.setMatrixAt(k, dummy.matrix);
+    });
+    cart.add(st); m.mSticks = st;
+
+    // grooves: bands across each groove between the two phosphorus helices, plus the axis
+    m.gr = grooves(m.form);
+    const grp = new THREE.Group(); inner.add(grp); m.mGr = grp;
+    const band = (sOff, col) => {
+      const t0 = Math.max(1, -sOff), t1 = Math.min(m.n - 1, m.n - 2 - sOff);
+      if (!(t1 > t0)) return null;
+      const steps = Math.max(8, Math.round((t1 - t0) * 8)), p = [], idx = [];
+      for (let i = 0; i <= steps; i++) {
+        const t = t0 + (t1 - t0) * i / steps, a = pHelix(m.form, 1, t), b = pHelix(m.form, 2, t + sOff);
+        p.push(a.x, a.y, a.z + m.z0, b.x, b.y, b.z + m.z0);
+        if (i < steps) { const k = 2 * i; idx.push(k, k + 1, k + 2, k + 1, k + 3, k + 2); }
+      }
+      const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(p, 3)); g.setIndex(idx);
+      const mesh = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.28, side: THREE.DoubleSide, depthWrite: false, clippingPlanes: G.clips }));
+      grp.add(mesh);
+      // caliper at the middle of the molecule: the measured P–P chord, drawn on top
+      const tm = Math.min(t1, Math.max(t0, Math.round((t0 + t1) / 2))), a = pHelix(m.form, 1, tm), b = pHelix(m.form, 2, tm + sOff);
+      const cg = new THREE.BufferGeometry(); cg.setAttribute('position', new THREE.Float32BufferAttribute([a.x, a.y, a.z + m.z0, b.x, b.y, b.z + m.z0], 3));
+      const cl = new THREE.Line(cg, new THREE.LineBasicMaterial({ color: col, depthTest: false, transparent: true })); cl.renderOrder = 5; grp.add(cl);
+      return { a: new THREE.Vector3(a.x, a.y, a.z + m.z0), b: new THREE.Vector3(b.x, b.y, b.z + m.z0) };
+    };
+    m.calMinor = band(m.gr.minorS, MINOR_COL);
+    m.calMajor = band(m.gr.majorS, MAJOR_COL);
+    const half = (m.n - 1) * m.rise / 2 + 6;
+    const axg = new THREE.BufferGeometry(); axg.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, -half, 0, 0, half], 3));
+    const axl = new THREE.LineSegments(axg, new THREE.LineDashedMaterial({ color: 0xcfd8e6, dashSize: 1.2, gapSize: 0.8, transparent: true, opacity: 0.85, depthTest: false }));
+    axl.computeLineDistances(); axl.renderOrder = 4; inner.add(axl); m.mAx = axl;
+    m.half = half;
+  }
+
+  function atomColor(a) {
+    if (S.color === 'element') return EL_COL[a.el];
+    if (S.color === 'base') return a.bb ? BB_GREY : BASE_COL[a.res];
+    return STRAND_COL[a.chain];
+  }
+  function dimmed(hexv, on) {
+    const c = new THREE.Color(hexv);
+    if (on) c.lerp(new THREE.Color(0x0b111a), 0.72);
+    return c;
+  }
+  function applyLook() {
+    for (const m of models) {
+      const space = S.view === 'space', cart = S.view === 'cartoon';
+      const selM = S.sel && S.sel.model === m ? S.sel.pair : null, anySel = S.sel !== null;
+      const dimOf = (pair) => anySel && pair !== selM;
+      const dummy = new THREE.Object3D();
+      m.atoms.forEach((a, i) => {
+        const r = space ? BONDI[a.el] : (a.el === 'P' ? 0.46 : 0.34);
+        dummy.position.set(a.x, a.y, a.z); dummy.scale.set(r, r, r); dummy.updateMatrix();
+        m.mAtoms.setMatrixAt(i, dummy.matrix);
+        m.mAtoms.setColorAt(i, dimmed(atomColor(a), dimOf(a.pair)));
+      });
+      m.mAtoms.instanceMatrix.needsUpdate = true; m.mAtoms.instanceColor.needsUpdate = true;
+      m.bonds.forEach(([i, j], b) => {
+        m.mBonds.setColorAt(2 * b, dimmed(atomColor(m.atoms[i]), dimOf(m.atoms[i].pair)));
+        m.mBonds.setColorAt(2 * b + 1, dimmed(atomColor(m.atoms[j]), dimOf(m.atoms[j].pair)));
+      });
+      if (m.mBonds.instanceColor) m.mBonds.instanceColor.needsUpdate = true;
+      m.mAtoms.visible = !cart; m.mBonds.visible = !cart && !space;
+      m.mCart.visible = cart;
+      // cartoon colors
+      for (const ch of ['A', 'B']) m.tubes[ch].material.color.set(S.color === 'base' ? BB_GREY : S.color === 'element' ? EL_COL.P : STRAND_COL[ch]);
+      const { vRes, resList } = m.mSlabs.userData, col = m.mSlabs.geometry.attributes.color;
+      const slabCol = (c1) => (S.color === 'strand' ? STRAND_COL[c1.chain] : BASE_COL[c1.res]);
+      for (let v = 0; v < vRes.length; v++) { const c1 = resList[vRes[v]], c = dimmed(slabCol(c1), dimOf(c1.pair)); col.setXYZ(v, c.r, c.g, c.b); }
+      col.needsUpdate = true;
+      m.sticks.forEach(([, , ri], k) => { const c1 = resList[ri]; m.mSticks.setColorAt(k, dimmed(S.color === 'base' ? BB_GREY : slabCol(c1), dimOf(c1.pair))); });
+      if (m.mSticks.instanceColor) m.mSticks.instanceColor.needsUpdate = true;
+      m.mHb.visible = S.show.hb && !space;
+      const hc = m.mHb.geometry.attributes.color;
+      m.hb.forEach((h, k) => { const c = dimmed(HB_COL, dimOf(h.pair)); hc.setXYZ(2 * k, c.r, c.g, c.b); hc.setXYZ(2 * k + 1, c.r, c.g, c.b); });
+      hc.needsUpdate = true;
+      m.mGr.visible = S.show.gr;
+      m.mAx.visible = S.show.ax;
+    }
+    needs = true; schedule();
+  }
+
+  function rebuild3D() {
+    if (!G.ready) return;
+    for (const m of models) disposeModel(m);
+    const gap = 26;
+    models.forEach((m, k) => buildMeshes(m, models.length > 1 ? (k === 0 ? gap / 2 : -gap / 2) : 0));
+    applySpin();
+    applyLook();
+    fitView(false);
+  }
+
+  function fitView(animate) {
+    if (!G.ready) return;
+    const len = Math.max(...models.map((m) => 2 * m.half)), hgt = models.length > 1 ? 26 + 24 : 24;
+    const t = Math.tan(15 * Math.PI / 180), aspect = W / Math.max(1, H);
+    const fit = Math.max((len / 2 + 2) / (t * aspect), (hgt / 2 + 3) / t) + 10;
+    orbit.fitDist = fit;
+    const goal = { theta: -Math.PI / 2, phi: 1.36, dist: fit, target: new THREE.Vector3(0, 0, models.length > 1 ? 0 : 0) };
+    setClip(null);
+    if (animate) startTween(goal); else { Object.assign(orbit, { theta: goal.theta, phi: goal.phi, dist: goal.dist }); orbit.target.copy(goal.target); needs = true; schedule(); }
+  }
+  function startTween(goal, dur = reduce ? 0 : 900) {
+    tween = { t0: performance.now(), dur, from: { theta: orbit.theta, phi: orbit.phi, dist: orbit.dist, target: orbit.target.clone() }, goal };
+    if (!dur) { finishTween(); return; }
+    schedule();
+  }
+  function finishTween() { const g = tween.goal; Object.assign(orbit, { theta: g.theta, phi: g.phi, dist: g.dist }); orbit.target.copy(g.target); tween = null; needs = true; schedule(); }
+  function stepTween(now) {
+    if (!tween) return;
+    let u = Math.min(1, (now - tween.t0) / tween.dur); u = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+    const f = tween.from, g = tween.goal;
+    let dth = g.theta - f.theta; dth = Math.atan2(Math.sin(dth), Math.cos(dth));
+    orbit.theta = f.theta + dth * u; orbit.phi = f.phi + (g.phi - f.phi) * u;
+    orbit.dist = Math.exp(Math.log(f.dist) + (Math.log(g.dist) - Math.log(f.dist)) * u);
+    orbit.target.lerpVectors(f.target, g.target, u);
+    if (u >= 1) finishTween();
+  }
+  function setClip(x) {
+    // keep only what lies at world x ≥ x (for looking down the axis at one pair)
+    // a slab 3.8 Å thick: the selected pair and its own sugars and phosphates, nothing in front or behind
+    if (x === null) { G.clip.constant = 1e4; G.clip2.constant = 1e4; G.clipOn = false; }
+    else { G.clip.constant = -x; G.clip2.constant = x + 3.8; G.clipOn = true; }
+  }
+
+  function applySpin() { for (const m of models) m.inner.rotation.z = spinAng; }
+
+  function render() {
+    if (!G.ready) return;
+    const t0 = performance.now();
+    const c = G.cam, o = orbit;
+    c.position.set(o.target.x + o.dist * Math.sin(o.phi) * Math.cos(o.theta), o.target.y + o.dist * Math.sin(o.phi) * Math.sin(o.theta), o.target.z + o.dist * Math.cos(o.phi));
+    c.lookAt(o.target);
+    c.near = Math.max(0.5, o.dist / 200); c.far = o.dist * 20 + 500; c.updateProjectionMatrix();
+    G.renderer.render(G.scene, c);
+    drawOverlay();
+    const ms = performance.now() - t0; frameMs = frameMs ? 0.9 * frameMs + 0.1 * ms : ms;
+  }
+  function schedule() { if (!raf) raf = requestAnimationFrame(frame); }
+  function frame(now) {
+    raf = 0;
+    const dt = lastT ? Math.min(0.1, (now - lastT) / 1000) : 0; lastT = now;
+    let again = false;
+    if (S.spin && !dragging) { spinAng += dt * 0.35; applySpin(); needs = true; again = true; }
+    if (tween) { stepTween(now); needs = true; again = true; }
+    if (needs) { needs = false; render(); }
+    if (again) schedule(); else lastT = 0;
+  }
+
+  // ---------- overlay labels ----------
+  const v3 = () => new THREE.Vector3();
+  function toScreen(m, p) {
+    const w = v3().set(p.x, p.y, p.z).applyMatrix4(m.inner.matrixWorld);
+    const s = w.clone().project(G.cam);
+    return { x: (s.x + 1) / 2 * W, y: (1 - s.y) / 2 * H, z: s.z, w };
+  }
+  function label(ctx, text, x, y, color, opts = {}) {
+    const ps = projOn() ? 1.3 : 1;
+    ctx.font = `${opts.bold ? 700 : 600} ${(opts.size || 12) * ps}px ${getComputedStyle(document.body).fontFamily}`;
+    const tw = ctx.measureText(text).width, h = (opts.size || 12) * ps + 6;
+    let bx = x - tw / 2 - 5, by = y - h / 2;
+    bx = Math.max(4, Math.min(W - tw - 14, bx)); by = Math.max(46, Math.min(H - h - 4, by));
+    ctx.fillStyle = 'rgba(7,11,17,0.78)'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx, by, tw + 10, h, 4) : ctx.rect(bx, by, tw + 10, h); ctx.fill();
+    ctx.fillStyle = color; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillText(text, bx + 5, by + h / 2 + 0.5);
+  }
+  function drawOverlay() {
+    const ctx = octx; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    if (!G.ready) return;
+    G.scene.updateMatrixWorld();
+    const css = (c) => '#' + new THREE.Color(c).getHexString();
+    for (const m of models) {
+      const vis = (p) => p.z < 1 && p.x > -20 && p.x < W + 20 && p.y > -20 && p.y < H + 20 && (!G.clipOn || p.w.x >= -G.clip.constant - 0.01 && p.w.x <= G.clip2.constant + 0.01);
+      if (S.show.ends && !G.clipOn) {
+        for (const ch of ['A', 'B']) {
+          const first = ch === 'A' ? 1 : m.n + 1, last = ch === 'A' ? m.n : 2 * m.n;
+          const p5 = toScreen(m, m.index.get(ch + first + ":O5'")), p3 = toScreen(m, m.index.get(ch + last + ":O3'"));
+          const col = css(S.color === 'strand' ? STRAND_COL[ch] : 0xe6ecf3);
+          // push labels outward from the middle of the molecule along the axis direction on screen
+          const mid = toScreen(m, { x: 0, y: 0, z: 0 });
+          for (const [p, t] of [[p5, "5′"], [p3, "3′"]]) {
+            if (!vis(p)) continue;
+            const dx = p.x - mid.x, dy = p.y - mid.y, dl = Math.hypot(dx, dy) || 1;
+            label(ctx, t, p.x + dx / dl * 16, p.y + dy / dl * 16, col, { bold: true, size: 13 });
+          }
+        }
+      }
+      if (S.show.gr) {
+        for (const [cal, col, nm, w] of [[m.calMinor, MINOR_COL, 'minor groove', m.gr.minor], [m.calMajor, MAJOR_COL, 'major groove', m.gr.major]]) {
+          if (!cal) continue;
+          const a = toScreen(m, cal.a), b = toScreen(m, cal.b);
+          if (!vis(a) && !vis(b)) continue;
+          label(ctx, `${nm} ${w.toFixed(1)} Å`, (a.x + b.x) / 2, (a.y + b.y) / 2, css(col), { size: 12 });
+        }
+      }
+      if (models.length > 1 && !G.clipOn) {
+        const e = toScreen(m, { x: 0, y: 0, z: -m.half });
+        label(ctx, FORMS[m.form].name, Math.max(40, e.x - 40), e.y, '#e6ecf3', { bold: true, size: 14 });
+      }
+    }
+    if (hoverHb) {
+      const a = toScreen(hoverHb.m, hoverHb.h.don), b = toScreen(hoverHb.m, hoverHb.h.acc);
+      ctx.strokeStyle = '#ffd166'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    }
+  }
+
+  // ---------- picking ----------
+  let dragging = false, hoverHb = null;
+  const ndc = (x, y) => new THREE.Vector2(x / W * 2 - 1, -(y / H) * 2 + 1);
+  function pick(x, y) {
+    if (!G.ready) return null;
+    G.scene.updateMatrixWorld();
+    // hydrogen bonds first: within 7 px of the projected donor–acceptor segment
+    if (S.show.hb && S.view !== 'space') {
+      let best = null;
+      for (const m of models) for (const h of m.hb) {
+        const a = toScreen(m, h.don), b = toScreen(m, h.acc);
+        if (a.z > 1 || b.z > 1) continue;
+        if (G.clipOn && (a.w.x < -G.clip.constant || b.w.x < -G.clip.constant || a.w.x > G.clip2.constant || b.w.x > G.clip2.constant)) continue;
+        const dx = b.x - a.x, dy = b.y - a.y, L2 = dx * dx + dy * dy || 1;
+        const u = Math.max(0.15, Math.min(0.85, ((x - a.x) * dx + (y - a.y) * dy) / L2));
+        const d = Math.hypot(a.x + u * dx - x, a.y + u * dy - y), depth = (a.z + b.z) / 2;
+        if (d < 7 && (!best || depth < best.depth)) best = { kind: 'hb', m, h, depth };
+      }
+      if (best) {
+        // only if no atom sits clearly in front of it
+        const at = pickAtom(x, y);
+        if (!at || at.depth > best.depth - 0.002) return best;
+        return at;
+      }
+    }
+    return pickAtom(x, y);
+  }
+  function pickAtom(x, y) {
+    G.ray.setFromCamera(ndc(x, y), G.cam);
+    const objs = [];
+    for (const m of models) { if (S.view === 'cartoon') objs.push(m.mSlabs, m.tubes.A, m.tubes.B); else objs.push(m.mAtoms); }
+    const hits = G.ray.intersectObjects(objs, false).filter((h) => !G.clipOn || (h.point.x >= -G.clip.constant && h.point.x <= G.clip2.constant));
+    if (!hits.length) return null;
+    const h = hits[0], m = models.find((mm) => mm.mAtoms === h.object || mm.mSlabs === h.object || mm.tubes.A === h.object || mm.tubes.B === h.object);
+    const depth = h.point.clone().project(G.cam).z;
+    if (h.object === m.mAtoms) return { kind: 'atom', m, a: m.atoms[h.instanceId], depth };
+    if (h.object === m.mSlabs) { const ri = m.mSlabs.userData.triRes[h.faceIndex]; return { kind: 'base', m, a: m.mSlabs.userData.resList[ri], depth }; }
+    return { kind: 'tube', m, ch: h.object.userData.chain, depth };
+  }
+  const strandName = (ch) => (ch === 'A' ? 'strand 1' : 'strand 2');
+  const resLabel = (m, a) => `D${a.res}${a.resi}`;
+  function showTip(p, x, y) {
+    if (!p) { tip.hidden = true; return; }
+    let html = '';
+    if (p.kind === 'atom') {
+      const a = p.a, part = a.bb ? (a.name === 'P' || a.name.startsWith('OP') ? 'phosphate' : 'sugar') : 'base';
+      html = `<b>${a.name.replace(/'/g, '′')}</b> · ${({ C: 'carbon', N: 'nitrogen', O: 'oxygen', P: 'phosphorus' })[a.el]} · ${part}<br><span class="d">${resLabel(p.m, a)}, ${strandName(a.chain)}, pair ${a.pair + 1}${models.length > 1 ? ', ' + FORMS[p.m.form].name : ''}</span>`;
+    } else if (p.kind === 'base') {
+      html = `<b>${({ A: 'adenine', T: 'thymine', G: 'guanine', C: 'cytosine' })[p.a.res]}</b><br><span class="d">${resLabel(p.m, p.a)}, ${strandName(p.a.chain)}, pair ${p.a.pair + 1}</span>`;
+    } else if (p.kind === 'tube') {
+      html = `<b>${strandName(p.ch)}</b><br><span class="d">sugar phosphate backbone, ${p.ch === 'A' ? '5′ to 3′ along the arrow of the sequence' : 'antiparallel to strand 1'}</span>`;
+    } else if (p.kind === 'hb') {
+      const h = p.h;
+      html = `<b>hydrogen bond ${h.d.toFixed(2)} Å</b><br><span class="d">donor ${h.don.res}${h.don.resi} ${h.don.name} to acceptor ${h.acc.res}${h.acc.resi} ${h.acc.name}</span>`;
+    }
+    tip.innerHTML = html; tip.hidden = false;
+    const r = tip.getBoundingClientRect();
+    let tx = x + 14, ty = y + 14;
+    if (tx + r.width > W - 6) tx = x - r.width - 12;
+    if (ty + r.height > H - 6) ty = y - r.height - 12;
+    tip.style.left = Math.max(4, tx) + 'px'; tip.style.top = Math.max(4, ty) + 'px';
+  }
+
+  function bindPointer(el) {
+    const pointers = new Map();
+    let mode = null, down = null;
+    const pinch = () => { const p = [...pointers.values()]; return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y); };
+    const local = (e) => { const r = el.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+    el.addEventListener('pointerdown', (e) => {
+      el.setPointerCapture(e.pointerId); el.focus({ preventScroll: true });
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pointers.size === 2) { mode = { type: 'pinch', d0: pinch(), dist0: orbit.dist }; down = null; return; }
+      mode = { type: 'orbit', lx: e.clientX, ly: e.clientY }; down = { x: e.clientX, y: e.clientY, moved: false, touch: e.pointerType === 'touch' };
+      tween = null;
+    });
+    el.addEventListener('pointermove', (e) => {
+      const L = local(e);
+      if (!pointers.has(e.pointerId)) {
+        const p = pick(L.x, L.y); hoverHb = p && p.kind === 'hb' ? p : null;
+        el.classList.toggle('picking', !!p); showTip(p, L.x, L.y); needs = true; schedule(); return;
+      }
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (mode && mode.type === 'pinch' && pointers.size === 2) { orbit.dist = clampDist(mode.dist0 * mode.d0 / pinch()); needs = true; schedule(); return; }
+      if (mode && mode.type === 'orbit') {
+        const dx = e.clientX - mode.lx, dy = e.clientY - mode.ly;
+        if (down && Math.hypot(e.clientX - down.x, e.clientY - down.y) > (down.touch ? 8 : 4)) { down.moved = true; dragging = true; el.classList.add('dragging'); tip.hidden = true; }
+        if (!dragging) return;
+        mode.lx = e.clientX; mode.ly = e.clientY;
+        orbit.theta -= dx * 0.008; orbit.phi = Math.min(Math.PI - 0.05, Math.max(0.05, orbit.phi - dy * 0.008));
+        needs = true; schedule();
+      }
+    });
+    const end = (e) => {
+      const L = local(e);
+      if (down && !down.moved && pointers.size === 1) {
+        const p = pick(L.x, L.y);
+        if (p && (p.kind === 'atom' || p.kind === 'base')) selectPair(p.m, p.a.pair);
+        else if (p && p.kind === 'hb') selectPair(p.m, p.h.pair);
+        if (down.touch) showTip(p, L.x, L.y);
+      }
+      pointers.delete(e.pointerId);
+      if (pointers.size === 0) { mode = null; down = null; dragging = false; el.classList.remove('dragging'); schedule(); }
+      else if (mode && mode.type === 'pinch') mode = null;
+    };
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+    el.addEventListener('pointerleave', () => { if (!pointers.size) { tip.hidden = true; hoverHb = null; needs = true; schedule(); } });
+    el.addEventListener('wheel', (e) => { e.preventDefault(); orbit.dist = clampDist(orbit.dist * Math.exp(e.deltaY * 0.0012)); tween = null; needs = true; schedule(); }, { passive: false });
+    el.addEventListener('dblclick', () => { clearSel(); fitView(true); });
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') orbit.theta += 0.12;
+      else if (e.key === 'ArrowRight') orbit.theta -= 0.12;
+      else if (e.key === 'ArrowUp') orbit.phi = Math.max(0.05, orbit.phi - 0.1);
+      else if (e.key === 'ArrowDown') orbit.phi = Math.min(Math.PI - 0.05, orbit.phi + 0.1);
+      else if (e.key === '+' || e.key === '=') orbit.dist = clampDist(orbit.dist / 1.15);
+      else if (e.key === '-' || e.key === '_') orbit.dist = clampDist(orbit.dist * 1.15);
+      else if (e.key === '0') { clearSel(); fitView(true); }
+      else if (e.key === 's' || e.key === 'S') setSpin(!S.spin);
+      else if (e.key === 'Escape') clearSel();
+      else return;
+      e.preventDefault(); needs = true; schedule();
+    });
+  }
+  const clampDist = (d) => Math.min(orbit.fitDist * 3, Math.max(8, d));
+
+  // ---------- selection ----------
+  function selectPair(m, k) {
+    S.sel = { model: m, pair: k };
+    applyLook(); updatePairPanel(); markDuplex();
+  }
+  function clearSel() {
+    if (!S.sel && !G.clipOn) return;
+    S.sel = null; setClip(null); applyLook(); updatePairPanel(); markDuplex();
+  }
+  function lookDown() {
+    if (!S.sel || !G.ready) return;
+    const m = S.sel.model, k = S.sel.pair;
+    setSpin(false);
+    G.scene.updateMatrixWorld();
+    const c1a = m.index.get('A' + (k + 1) + ":C1'"), c1b = m.index.get('B' + (2 * m.n - k) + ":C1'");
+    const mid = v3().set(0, 0, (c1a.z + c1b.z) / 2).applyMatrix4(m.inner.matrixWorld);
+    // in the A form the bases sit off the axis, so aim at the middle of the pair, not the axis
+    const pm = v3().set((c1a.x + c1b.x) / 2, (c1a.y + c1b.y) / 2, (c1a.z + c1b.z) / 2).applyMatrix4(m.inner.matrixWorld);
+    setClip(mid.x - 1.9);
+    startTween({ theta: Math.PI, phi: Math.PI / 2 - 0.0001, dist: 44, target: new THREE.Vector3(mid.x, pm.y, pm.z) });
+    needs = true; schedule();
+  }
+  function updatePairPanel() {
+    const has = !!S.sel;
+    $('lookBtn').disabled = !has; $('clearBtn').disabled = !has && !G.clipOn;
+    if (!has) { $('pName').textContent = 'Click a base or a letter'; $('pHb').textContent = '—'; $('pC1').textContent = '—'; $('pStep').textContent = '—'; return; }
+    const m = S.sel.model, k = S.sel.pair, b1 = m.seq[k], b2 = COMP[b1];
+    $('pName').textContent = `${k + 1}: ${b1}·${b2} (${b1}${k + 1} on strand 1, ${b2}${2 * m.n - k} on strand 2)${models.length > 1 ? ', ' + FORMS[m.form].name : ''}`;
+    $('pHb').innerHTML = m.hb.filter((h) => h.pair === k).map((h) => `${h.don.name.replace(/'/g, '′')}–${h.acc.name} ${h.d.toFixed(2)} Å`).join('<br>');
+    $('pC1').textContent = dist(m.index.get('A' + (k + 1) + ":C1'"), m.index.get('B' + (2 * m.n - k) + ":C1'")).toFixed(2) + ' Å';
+    const st = m.steps[k];
+    $('pStep').textContent = st ? `${st.rise.toFixed(2)} Å, ${st.twist.toFixed(1)}°` : 'last pair';
+  }
+
+  // ---------- UI: sequence, duplex, readouts ----------
+  function buildAll() {
+    const forms = S.form === 'AB' ? ['B', 'A'] : [S.form];
+    for (const m of models) if (G.ready) disposeModel(m);
+    models = forms.map((f) => { const m = buildModel(S.seq, f); m.steps = stepParams(m); return m; });
+    S.sel = null;
+    if (G.ready) rebuild3D();
+    renderDuplex(); updateReadouts(); updatePairPanel();
+    $('seqIn').value = S.seq;
+    $('tagName').textContent = S.label || 'Your sequence';
+    const fm = forms.map((f) => FORMS[f].name).join(' and ');
+    $('tagSub').textContent = `${fm} · ${S.seq.length} bp · ${S.seq.length > 24 ? S.seq.slice(0, 24) + '…' : S.seq}`;
+  }
+  function renderDuplex() {
+    const d = $('duplex'), s = S.seq, c = [...s].map((x) => COMP[x]).join('');
+    let html = '<div class="blk end"><span class="n"></span><span>5′</span><span>3′</span></div>';
+    for (let b = 0; b < s.length; b += 10) {
+      html += '<div class="blk">';
+      for (let i = b; i < Math.min(s.length, b + 10); i++) {
+        html += `<span class="n">${i === b ? i + 1 : ''}</span><button type="button" class="s1 b-${s[i]}" data-k="${i}" aria-label="pair ${i + 1}, ${s[i]} on strand 1">${s[i]}</button><button type="button" class="s2 b-${c[i]}" data-k="${i}" aria-label="pair ${i + 1}, ${c[i]} on strand 2">${c[i]}</button>`;
+      }
+      html += '</div>';
+    }
+    html += '<div class="blk end"><span class="n"></span><span>3′</span><span>5′</span></div>';
+    d.innerHTML = html;
+  }
+  function markDuplex() {
+    for (const b of document.querySelectorAll('#duplex button')) b.classList.toggle('sel', !!S.sel && +b.dataset.k === S.sel.pair);
+  }
+  $('duplex').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    const k = +b.dataset.k, m = models[0];
+    if (S.sel && S.sel.pair === k && S.sel.model === m) clearSel(); else selectPair(m, k);
+  });
+  function updateReadouts() {
+    const s = S.seq, n = s.length, m = models[0];
+    const fmtForms = (fn) => models.map((mm) => fn(mm)).join(' · ');
+    $('rLen').textContent = fmtForms((mm) => (n * mm.rise / 10).toFixed(2) + ' nm');
+    $('rTurns').textContent = fmtForms((mm) => (n * mm.twist / 360).toFixed(2));
+    const avg = (mm, k) => mm.steps.length ? mm.steps.reduce((a, st) => a + st[k], 0) / mm.steps.length : null;
+    $('rRise').textContent = fmtForms((mm) => (avg(mm, 'rise') ?? mm.rise).toFixed(2) + ' Å');
+    $('rTwist').textContent = fmtForms((mm) => (avg(mm, 'twist') ?? mm.twist).toFixed(1) + '°');
+    $('rAtoms').textContent = String(m.atoms.length);
+    const gc = [...s].filter((c) => c === 'G' || c === 'C').length;
+    $('rGC').textContent = `${(100 * gc / n).toFixed(0)}% (${gc} of ${n})`;
+    $('rMinor').textContent = fmtForms((mm) => grooves(mm.form).minor.toFixed(1) + ' Å');
+    $('rMajor').textContent = fmtForms((mm) => grooves(mm.form).major.toFixed(1) + ' Å');
+    const mw = molarMass(s);
+    $('rMW').textContent = `${Math.round(mw).toLocaleString('en-US')} g/mol = ${(mw / 1000).toFixed(2)} kDa`;
+    const t = meltTemp(s, S.na, S.ct);
+    $('rTm').textContent = n >= 2 ? `≈ ${t.tm.toFixed(1)} °C` : '—';
+    $('tmHint').textContent = (t.self ? 'This sequence is self complementary: both strands are the same 5′ to 3′. ' : '') +
+      `ΔH° = ${t.dH.toFixed(1)} kcal/mol, ΔS° = ${t.dS.toFixed(1)} cal/(mol K) at this salt. ` +
+      (n > 30 ? 'Nearest neighbor parameters are fitted to short duplexes; for a long one treat this as rough.' : 'Nearest neighbor model for a short duplex in solution.');
+  }
+
+  // ---------- presets ----------
+  const PRESETS = {
+    dickerson: { seq: 'CGCGAATTCGCG', form: 'B', view: 'ball', color: 'element', label: 'Dickerson dodecamer', gr: false, ax: false,
+      hint: 'CGCGAATTCGCG, the first B DNA solved as a single crystal (Drew and Dickerson, 1981). Twelve pairs make just over one turn. Hover the atoms: every nucleotide is a phosphate, a sugar and a base.' },
+    pair: { seq: 'CGCGAATTCGCG', form: 'B', view: 'ball', color: 'base', label: 'One base pair', gr: false, ax: false, select: 3, look: true,
+      hint: 'Looking down the helix axis at pair 4, G·C, with the other pairs cut away. Count the dashed hydrogen bonds: three for G·C, two for A·T (click pair 5 in the strands panel).' },
+    grooves: { seq: 'CGCGAATTCGCGCGAATTCGCG', form: 'B', view: 'space', color: 'strand', label: 'Major and minor grooves', gr: true, ax: false,
+      hint: 'Space filling with the two strands colored. The backbones wind around the outside and leave two grooves of different widths, where proteins read the edges of the bases.' },
+    ab: { seq: 'GCGATCGCGATCGCGATCGC', form: 'AB', view: 'cartoon', color: 'base', label: 'Same sequence, two forms', gr: false, ax: true,
+      hint: 'The same 20 pairs as B DNA (top) and A DNA (bottom). A is shorter and wider, its pairs tilt and sit off the axis, leaving a hollow core. Dehydrated DNA and RNA duplexes take the A form.' },
+    tata: { seq: 'GCCTATAAAAGGGCTGCG', form: 'B', view: 'cartoon', color: 'base', label: 'TATA box', gr: true, ax: false,
+      hint: 'A promoter element, TATAAAAG, read through the minor groove by the TATA binding protein. A·T pairs have only two hydrogen bonds: compare the melting temperature with the GC rich preset.' },
+    gc: { seq: 'GCGGCGCCGCGGCCGCGGCG', form: 'B', view: 'ball', color: 'base', label: 'GC rich', gr: false, ax: false,
+      hint: 'All G·C pairs with three hydrogen bonds each. The melting temperature is far higher than for the same length of A·T. Note: the geometry here is the same uniform helix; only the estimate changes.' }
+  };
+  function applyPreset(name) {
+    const p = PRESETS[name]; if (!p) return;
+    S.preset = name; S.seq = p.seq; S.form = p.form; S.view = p.view; S.color = p.color; S.label = p.label;
+    S.show.gr = p.gr; S.show.ax = p.ax; S.show.hb = true;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint').textContent = p.hint;
+    syncControls(); $('seqErr').hidden = true;
+    buildAll();
+    if (p.select !== undefined) { selectPair(models[0], p.select); if (p.look) { setSpin(false); lookDown(); } }
+    else if (!reduce && name !== 'pair') setSpin(true);
+  }
+  function clearPreset() { S.preset = null; for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', 'false'); $('presetHint').textContent = ''; }
+
+  function syncControls() {
+    const segSet = (id, attr, val) => { for (const b of document.querySelectorAll(`#${id} button`)) b.setAttribute('aria-pressed', String(b.dataset[attr] === String(val))); };
+    segSet('viewSeg', 'v', S.view); segSet('colorSeg', 'c', S.color); segSet('formSeg', 'f', S.form); segSet('naSeg', 'na', S.na);
+    $('tHb').checked = S.show.hb; $('tGr').checked = S.show.gr; $('tAx').checked = S.show.ax; $('tEnds').checked = S.show.ends;
+    $('tHb').disabled = S.view === 'space';
+    renderKey();
+  }
+  function renderKey() {
+    const dot = (c, t) => `<span><i class="dot" style="background:#${c.toString(16).padStart(6, '0')}"></i>${t}</span>`;
+    let html = '';
+    if (S.view !== 'cartoon') {
+      if (S.color === 'element') html += dot(EL_COL.C, 'C') + dot(EL_COL.N, 'N') + dot(EL_COL.O, 'O') + dot(EL_COL.P, 'P');
+    }
+    if (S.color === 'base' || (S.color === 'element' && S.view === 'cartoon')) html += dot(BASE_COL.A, 'A') + dot(BASE_COL.T, 'T') + dot(BASE_COL.G, 'G') + dot(BASE_COL.C, 'C') + (S.color === 'base' ? dot(BB_GREY, 'backbone') : '');
+    if (S.color === 'strand') html += dot(STRAND_COL.A, 'strand 1') + dot(STRAND_COL.B, 'strand 2');
+    if (S.show.hb && S.view !== 'space') html += `<span><i class="swatch" style="border-color:#ffd166"></i>hydrogen bond</span>`;
+    if (S.show.gr) html += `<span><i class="swatch band" style="background:#ffc04d"></i>minor groove</span><span><i class="swatch band" style="background:#7fd0ff"></i>major groove</span>`;
+    $('key').innerHTML = html;
+  }
+
+  // ---------- controls ----------
+  function segBind(id, attr, fn) {
+    $(id).addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; fn(b.dataset[attr]); syncControls(); });
+  }
+  segBind('viewSeg', 'v', (v) => { S.view = v; applyLook(); });
+  segBind('colorSeg', 'c', (v) => { S.color = v; applyLook(); });
+  segBind('formSeg', 'f', (v) => { if (S.form === v) return; S.form = v; clearPreset(); S.label = S.label || 'Your sequence'; buildAll(); });
+  segBind('naSeg', 'na', (v) => { S.na = +v; updateReadouts(); });
+  for (const [id, k] of [['tHb', 'hb'], ['tGr', 'gr'], ['tAx', 'ax'], ['tEnds', 'ends']]) $(id).addEventListener('change', (e) => { S.show[k] = e.target.checked; renderKey(); applyLook(); });
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) applyPreset(b.dataset.p); });
+  function buildTyped() {
+    const r = cleanSeq($('seqIn').value), err = $('seqErr');
+    let msg = '';
+    if (r.bad.length) msg = `Only A, C, G and T can be built. Remove: ${r.bad.join(' ')}`;
+    else if (r.seq.length < MINLEN) msg = `Type at least ${MINLEN} bases.`;
+    else if (r.seq.length > MAXLEN) msg = `That is ${r.seq.length} bases; the limit here is ${MAXLEN}.`;
+    err.hidden = !msg; err.textContent = msg;
+    if (msg) return false;
+    S.seq = r.seq; S.label = 'Your sequence'; clearPreset(); buildAll(); return true;
+  }
+  $('buildBtn').addEventListener('click', buildTyped);
+  $('seqIn').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); buildTyped(); } });
+  const lenS = $('lenS'), gcS = $('gcS');
+  const sliderText = () => { $('lenO').textContent = lenS.value + ' bp'; $('gcO').textContent = gcS.value + '%'; };
+  lenS.addEventListener('input', sliderText); gcS.addEventListener('input', sliderText);
+  $('randBtn').addEventListener('click', () => {
+    S.seed = (Math.random() * 1e9) >>> 0;
+    S.seq = randomSeq(+lenS.value, +gcS.value / 100, S.seed);
+    S.label = 'Random sequence'; clearPreset(); $('seqErr').hidden = true; buildAll();
+    $('seedO').textContent = `seed ${S.seed}`;
+  });
+  const spinBtn = $('spin');
+  function setSpin(on) { S.spin = on; spinBtn.setAttribute('aria-pressed', String(on)); schedule(); }
+  spinBtn.addEventListener('click', () => setSpin(!S.spin));
+  $('resetView').addEventListener('click', () => { clearSel(); fitView(true); });
+  $('lookBtn').addEventListener('click', lookDown);
+  $('clearBtn').addEventListener('click', () => { clearSel(); fitView(true); });
+  $('pdbBtn').addEventListener('click', () => {
+    const txt = models.map((m) => toPDB(m)).join('');
+    const blob = new Blob([models.length > 1 ? toPDB(models[0]) : txt], { type: 'chemical/x-pdb' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `dna-${models[0].form}-${S.seq.slice(0, 20)}.pdb`; document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    $('exportHint').textContent = `Saved ${a.download}${models.length > 1 ? ' (the B form; choose A to save the A form)' : ''}. It is a model built from fiber geometry, not an experimental structure.`;
+  });
+  $('copyBtn').addEventListener('click', async () => {
+    const t = `5'-${S.seq}-3'\n3'-${[...S.seq].map((c) => COMP[c]).join('')}-5'`;
+    try { await navigator.clipboard.writeText(t); $('exportHint').textContent = 'Copied both strands.'; } catch (_) { $('exportHint').textContent = t; }
+  });
+
+  // ---------- sizing, theme, projector ----------
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = stage.getBoundingClientRect(); W = Math.max(1, r.width); H = Math.max(1, r.height);
+    ov.width = Math.round(W * dpr); ov.height = Math.round(H * dpr); ov.style.width = W + 'px'; ov.style.height = H + 'px';
+    if (G.ready) {
+      G.renderer.setPixelRatio(dpr); G.renderer.setSize(W, H);
+      G.cam.aspect = W / H; G.cam.updateProjectionMatrix();
+      const was = orbit.fitDist; fitDistOnly(); if (Math.abs(orbit.dist - was) < 0.5 && !S.sel) orbit.dist = orbit.fitDist;
+    }
+    needs = true; schedule();
+  }
+  function fitDistOnly() {
+    if (!models.length) return;
+    const len = Math.max(...models.map((m) => 2 * m.half)), hgt = models.length > 1 ? 50 : 24, t = Math.tan(15 * Math.PI / 180), aspect = W / Math.max(1, H);
+    orbit.fitDist = Math.max((len / 2 + 2) / (t * aspect), (hgt / 2 + 3) / t) + 10;
+  }
+  const projBtn = $('proj');
+  function setProjector(on) {
+    document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
+    projBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
+    requestAnimationFrame(resize);
+  }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  const retheme = () => { needs = true; schedule(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  window.__dna = { S, get models() { return models; }, get frameMs() { return frameMs; }, get three() { return G.ready; }, orbit, applyPreset, selectPair, lookDown, clearSel, setSpin, toPDB, pick, render: () => { needs = true; render(); } };
+
+  // ---------- start ----------
+  init3D();
+  if (G.failed) $('failNote').hidden = false;
+  sliderText();
+  new ResizeObserver(resize).observe(stage);
+  resize();
+  setSpin(!reduce);
+  applyPreset('dickerson');
+  if (reduce) setSpin(false);
+})();
+</script>
+</body>
+</html>

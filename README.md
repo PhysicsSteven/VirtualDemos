@@ -36,6 +36,7 @@ Interactive physics demonstrations for introductory courses. Each demo is a sing
 | [Speed of Light](demos/speed-of-light.html) | Modern physics | Foucault rotating mirror measurement of c |
 | [e/m of the Electron](demos/e-over-m.html) | Modern physics | Thomson's e/m with Helmholtz coils |
 | [Electron Diffraction](demos/electron-diffraction.html) | Modern physics | Electron diffraction from graphite |
+| [DNA in 3D](demos/dna.html) | Modern physics | Atomic B and A DNA from the Arnott fiber models for any sequence: views, hydrogen bonds, grooves, melting temperature estimate and PDB export |
 | [Projectile Range](demos/projectile-drag.html) | Mechanics | Projectile motion with and without quadratic air drag, up to eight stacked shots compared on shared graphs |
 | [Hanging Chains and Arches](demos/catenary.html) | Mechanics | The catenary under its own weight vs a parabola, tension and free body diagrams along the chain, and the inverted arch |
 | [Springs and Oscillations](demos/springs.html) | Mechanics | Simple harmonic motion, hanging springs, damping regimes, driven resonance and coupled normal modes and beats |
