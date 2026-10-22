@@ -1984,13 +1984,14 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "rotation",
-        "catenary"
+        "catenary",
+        "equilibrium"
       ],
       "unit": "equilibrium-elasticity",
-      "note": "Seesaw and chain equilibrium only; a general equilibrium/free-body-diagram apparatus is still planned."
+      "note": "Static Equilibrium: seesaw, plank on two supports (tipping), sign on a strut and cable (hinge force), ladder against a wall (friction, critical angle); forces drawn to scale."
     },
     {
       "vol": 1,
@@ -2002,13 +2003,14 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "rotation",
-        "catenary"
+        "catenary",
+        "equilibrium"
       ],
       "unit": "equilibrium-elasticity",
-      "note": "Limited seesaw/chain examples, not complete static-equilibrium coverage."
+      "note": "Static Equilibrium: seesaw, plank on two supports (tipping), sign on a strut and cable (hinge force), ladder against a wall (friction, critical angle); forces drawn to scale."
     },
     {
       "vol": 1,
@@ -4649,6 +4651,31 @@
       "note": "Specialized equilibrium of a hanging chain/arch. Does not replace a general free-body-diagram or equilibrium activity.",
       "title": "Hanging Chains and Arches",
       "url": "demos/catenary.html"
+    },
+    {
+      "demo": "equilibrium",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "12.1",
+          "title": "Conditions for Static Equilibrium"
+        },
+        {
+          "vol": 1,
+          "sec": "12.2",
+          "title": "Examples of Static Equilibrium"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Lecture demo: seesaw balance, plank support forces and tipping, sign with strut, cable tension and hinge force, ladder with wall push, floor friction and the slipping angle. Rigid uniform members, massless cables, frictionless hinge and wall.",
+      "handouts": [],
+      "title": "Static Equilibrium",
+      "url": "demos/equilibrium.html"
     },
     {
       "demo": "stress-strain",

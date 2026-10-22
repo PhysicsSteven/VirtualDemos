@@ -488,6 +488,17 @@
      ]
     },
     {
+     "demo": "equilibrium",
+     "title": "Static Equilibrium",
+     "desc": "Balance a seesaw, walk a painter off the end of a plank until it tips, hang a sign from a strut and cable, and climb a ladder until it slips, with every force drawn to scale.",
+     "tags": [
+      "torque",
+      "static equilibrium",
+      "support forces",
+      "ladder"
+     ]
+    },
+    {
      "demo": "stress-strain",
      "title": "Stress and Strain",
      "desc": "Hang loads on a thin metal wire and read the stretch on a dial gauge. Find Young's modulus from the straight part, then pass the yield point, see the wire stay longer, and load it until it snaps.",
