@@ -629,6 +629,16 @@
       "field transformation",
       "Faraday's law"
      ]
+    },
+    {
+     "demo": "displacement-current",
+     "title": "Displacement Current",
+     "desc": "Charge a capacitor and move an Amperian loop along the wire and into the gap. Stretch its surface between the plates and see why Maxwell added ε₀ dΦE/dt to Ampère's law.",
+     "tags": [
+      "Ampère–Maxwell law",
+      "displacement current",
+      "charging capacitor"
+     ]
     }
    ]
   },

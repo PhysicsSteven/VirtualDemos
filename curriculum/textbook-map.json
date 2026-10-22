@@ -2962,7 +2962,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "currents-fields"
+        "currents-fields",
+        "displacement-current"
       ],
       "unit": "magnetic-sources"
     },
@@ -3215,12 +3216,13 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "em-waves"
+        "em-waves",
+        "displacement-current"
       ],
       "unit": "maxwell-waves",
-      "note": "Plane-wave relationships and equation discussion; induced-B/displacement-current apparatus is missing."
+      "note": "Displacement current: Ampère–Maxwell with a charging capacitor (flat disk against a bag through the gap, B inside and outside the plates); em-waves for the plane-wave relations."
     },
     {
       "vol": 2,
@@ -5050,6 +5052,31 @@
       ],
       "title": "Faraday's and Lenz's Laws",
       "url": "demos/faraday.html"
+    },
+    {
+      "demo": "displacement-current",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "12.5",
+          "title": "Ampère’s Law"
+        },
+        {
+          "vol": 2,
+          "sec": "16.1",
+          "title": "Maxwell’s Equations and Electromagnetic Waves"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Lecture demo: RC charging of ideal circular parallel plates (no fringing), Amperian loop movable along the wire and into the gap, flat disk or bag surface, conduction and displacement current through it, B(r) inside and outside the plates. Quasistatic; real fields are picotesla.",
+      "handouts": [],
+      "title": "Displacement Current",
+      "url": "demos/displacement-current.html"
     },
     {
       "demo": "em-waves",
