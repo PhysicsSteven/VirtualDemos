@@ -323,3 +323,7 @@ Also: Rotational Dynamics shipped with its theme block not loading (a stray `<st
 ## Claude, 2026-10-22 20:00: Elevator (new Physics I lecture demo)
 
 `demos/elevator.html`, role `demo`, status `usable`, Vol 1 §5.2 and §5.4 now `usable` (gap rows removed). Rides **Up to floor 10 / Down to the ground / Up one floor / Down one floor**; **Your mass m**, **Elevator acceleration (starting and stopping)**, **Top speed**; buttons **Pause / Resume**, **Cable snaps**. Graphs of the scale reading and velocity. Blind hides the scale. No handout needed (lecture demo).
+
+## Claude, 2026-10-22 20:20: Gravity Near Earth (new Physics I lecture demo)
+
+`demos/gravity-near-earth.html`, role `demo`, status `usable`, Vol 1 §13.2 now `usable` (gap row and line 21 updated). Places **Sea level / Top of Everest / Airliner, 11 km / Space station, about 400 km / GPS, r = 26,560 km / Geostationary, r = 42,164 km**; **Height above the surface h**, **Latitude**, **Earth / Moon / Mars**, **Include the planet's rotation**. Blind hides g and the percentages. No handout needed.

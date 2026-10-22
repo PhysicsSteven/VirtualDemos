@@ -18,7 +18,7 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 
 - Three new Physics I lab packages are written: motion-graphs is usable within its scope; forces and stress-strain are usable after Claude fixed the four reported UI issues (2026-10-22). Pendulum (§15.4) and Rotational Dynamics (§§10.2, 10.5, 10.7, 10.8) were added on main the same day. Browser/classroom review remains open.
 - Next writing queue: resistivity and wire-force (Physics II). The new lecture demos do not need full student labs.
-- Near-surface gravity §13.2 remains missing; fixed-g projectile motion does not close this gap.
+- Near-surface gravity §13.2 is covered by Gravity Near Earth (Claude, 2026-10-22).
 - Moment-of-inertia calculation §10.5 is partial: discrete masses/standard formulas exist; a continuous-body integration activity is absent.
 - Chapter 1 remains worksheet material. Owner-deferred gaps include §8.5 and §13.7 (§11.4 and §14.7 were built on main 2026-10-22 after Steve said to keep filling gaps); a missing label is not authorization to build them now.
 - Thermodynamics and non-syllabus waves/sound remain later. Basic optics remains optional after Maxwell/EM waves.
@@ -35,7 +35,6 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 | physics-1 | 1 | 1.6 | Significant Figures | missing |
 | physics-1 | 1 | 1.7 | Solving Problems in Physics | missing |
 | physics-1 | 1 | 8.5 | Sources of Energy | missing |
-| physics-1 | 1 | 13.2 | Gravitation Near Earth's Surface | missing |
 | physics-1 | 1 | 13.7 | Einstein's Theory of Gravity | missing |
 | physics-2 | 2 | 7.6 | Applications of Electrostatics | missing |
 | physics-2 | 2 | 8.5 | Molecular Model of a Dielectric | missing |

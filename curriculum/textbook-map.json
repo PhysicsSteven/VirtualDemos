@@ -1910,10 +1910,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "gravity-near-earth"
+      ],
       "unit": "gravitation",
-      "note": "Fixed g in projectile/motion graphs and a Sun-centered AU orbit model do not investigate g = GM_E/(R_E+h)² or its near-surface approximation. No direct activity yet."
+      "note": "Gravity Near Earth (2026-10-22, Claude): g = GM/(R + h)² against height, the near surface approximation g₀(1 − 2h/R), rotation and latitude (effective g, plumb line tilt), sphere vs WGS 84, Moon and Mars."
     },
     {
       "vol": 1,
@@ -4688,6 +4690,26 @@
       "handouts": [
         "rotation"
       ]
+    },
+    {
+      "demo": "gravity-near-earth",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "13.2",
+          "title": "Gravitation Near Earth's Surface"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). g against height from sea level to geostationary orbit, latitude and rotation, Earth/Moon/Mars, spring scale reading, near surface line and its error, orbit speed and period; Blind.",
+      "handouts": [],
+      "title": "Gravity Near Earth",
+      "url": "demos/gravity-near-earth.html"
     },
     {
       "demo": "kepler-orbits",

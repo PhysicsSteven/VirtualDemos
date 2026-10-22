@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gravity Near Earth: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Gravity Near Earth</h1><ul class="meta"><li><a href="../demos/gravity-near-earth.html">Open the demo</a></li><li>PHYS 201</li><li>10 to 20 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>g = GM/r² with r measured from Earth's centre. Near the surface r ≈ R, so g barely changes with height: g ≈ g₀(1 − 2h/R).</li>
+<li>At the space station's height (about 400 km) gravity is still about 89% of its surface value. Astronauts float because they are in free fall, not because gravity is gone.</li>
+<li>Earth's rotation reduces the effective g by up to ω²R = 0.034 m/s² at the equator and tilts the plumb line slightly away from Earth's centre.</li>
+<li>The measured sea level g (9.780 at the equator to 9.832 at the poles) also reflects Earth's flattening, which a sphere misses.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need Newton's law of gravitation. The left panel shows the planet with its axis vertical and a 1 kg mass at the chosen height and latitude, with arrows for gravity and the centrifugal term (drawn 100 times longer so it shows). The right panel plots GM/(R + h)² against height, with the near surface line. <strong>Blind</strong> hides g and the percentages for predictions.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Predict.</strong> Turn on Blind. Ask what fraction of surface gravity acts at the space station's height. Typical guesses are zero or "a little". Then show 88.5%.</li>
+<li><strong>Small heights.</strong> Everest (8849 m): 9.7930 m/s², 0.28% less. The near surface line is accurate to 0.0006% here.</li>
+<li><strong>Large heights.</strong> At GPS orbit g is 0.57 m/s²; at geostationary orbit 0.22 m/s², and the orbit period there is one sidereal day.</li>
+<li><strong>Latitude.</strong> At sea level move from 0° to 90°: the effective g rises from 9.7864 to 9.8203 m/s² in the sphere model. Compare with the real Earth's 9.7803 and 9.8322 (WGS 84): the flattening adds more than the spin.</li>
+<li><strong>Moon and Mars.</strong> 1.62 and 3.73 m/s² at the surface.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Show that for h ≪ R, g(h) ≈ g₀(1 − 2h/R). Use it to estimate g at the top of Everest.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Find g at 400 km. Why do astronauts on the space station float?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> How much does Earth's rotation reduce g at the equator? At what latitude is the plumb line tilted most from the direction to Earth's centre?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A 1.000 kg mass on a spring scale reads 9.786 N at the equator and 9.820 N at the pole in the sphere model. The real values are about 9.780 and 9.832 N. What explains the difference?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> At what height is g one quarter of its surface value?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"There is no gravity in space."</strong> At 400 km it is 89% of the surface value; orbiting objects are in free fall.</li>
+<li><strong>"g is the same everywhere on Earth."</strong> It varies by about 0.5% between the equator and the poles, and slightly with height.</li>
+<li><strong>"g falls off linearly with height."</strong> Only approximately, for h ≪ R; the true dependence is 1/r².</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>A uniform sphere with GM = 3.986004418 × 10¹⁴ m³/s² and mean radius 6371 km (Moon 4.905 × 10¹² and 1737.4 km; Mars 4.283 × 10¹³ and 3389.5 km), turning at the sidereal rate.</li>
+<li>Effective g at rest on the ground or on a tower turning with the planet: gravity GM/r² toward the centre plus ω²r cos(latitude) outward from the axis. The plumb line tilt is largest near 45° (5.9 arcmin on Earth).</li>
+<li>The real Earth comparison uses the WGS 84 normal gravity formula at sea level (Somigliana): it includes both rotation and flattening.</li>
+<li>The GPS and geostationary presets set the orbit radius (26,560 km and 42,164 km), so the heights above the mean radius are 20,189 and 35,793 km. Geostationary altitude is usually quoted as 35,786 km above the equator, whose radius is 6378 km.</li>
+<li>The height slider runs on a square root scale so small heights are reachable.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

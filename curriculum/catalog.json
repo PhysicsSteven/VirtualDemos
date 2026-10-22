@@ -28,6 +28,17 @@
      ]
     },
     {
+     "demo": "gravity-near-earth",
+     "title": "Gravity Near Earth",
+     "desc": "How g changes with height and latitude: from sea level to the space station and geostationary orbit, and how Earth's spin takes a little off at the equator.",
+     "tags": [
+      "g",
+      "inverse square law",
+      "latitude",
+      "weightlessness"
+     ]
+    },
+    {
      "demo": "kepler-orbits",
      "title": "Kepler's Laws",
      "desc": "Launch a planet by dragging its velocity arrow. Watch ellipses form, equal areas sweep out in equal times, and the orbit land on P² = a³/M with the real planets.",
