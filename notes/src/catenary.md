@@ -13,7 +13,7 @@ time: 15 to 25 minutes
 
 ## Before class
 
-Students need free body diagrams and force components. Besides the chain, the page shows the **Free body diagram** of a chosen piece and a graph of **Largest tension against sag**. Drag the supports A and B, the grip at the middle (this changes the length), and the two small markers that choose the piece. The rail has **Length S**, **Mass per length λ**, a **Hanging chain** / **Arch (flipped)** switch and checkboxes such as **Color by tension** and **Directrix**. Turn on **Projector** for the room.
+Students need free body diagrams and force components. Besides the chain, the page shows the **Free body diagram** of a chosen piece and a graph of **Largest tension against sag**. Drag the supports A and B, the grip at the middle (this changes the length), and the two small markers that choose the piece. The rail has **Length S**, **Mass per length λ**, a **Hanging chain** / **Arch (flipped)** switch and checkboxes such as **Color by tension** and **Directrix**. Turn on **Projector** for the room. **Show data table** under **Plot data** lists the chain's shape and tension, the forces on the chosen piece and the tension against sag curve; **Reduce motion** in **Display** stops the drawing from easing when it refits.
 
 ## Running it in class
 

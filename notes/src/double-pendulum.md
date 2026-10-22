@@ -12,7 +12,7 @@ time: 15 to 30 minutes
 
 ## Before class
 
-For an intro class, steps 1, 2, 4 and 5 are enough; the mode numbers and the Poincaré section suit an upper level class that has seen Lagrangians. The **Pendulum** switch picks **Simple** or **Double**. Drag a bob to set its angle and let go; with **Release with drag speed** on, a moving pointer gives it a starting speed, so hold still before releasing. The lower right plot switches between **Angle path**, **Separation** and **Poincaré**. Turn on **Projector** for the room.
+For an intro class, steps 1, 2, 4 and 5 are enough; the mode numbers and the Poincaré section suit an upper level class that has seen Lagrangians. The **Pendulum** switch picks **Simple** or **Double**. Drag a bob to set its angle and let go; with **Release with drag speed** on, a moving pointer gives it a starting speed, so hold still before releasing. The lower right plot switches between **Angle path**, **Separation** and **Poincaré**. To start from a point on the phase portrait or the Poincaré section without a mouse, focus the plot, move the cross with the arrow keys and press **Enter**. **Show data table** under **Plot data** lists the plotted points, and **Reduce motion** in **Time and display** pauses the pendulum. Turn on **Projector** for the room.
 
 ## Running it in class
 

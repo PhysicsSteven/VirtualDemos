@@ -13,7 +13,9 @@ time: 15 to 25 minutes
 
 ## Before class
 
-Students should know the constant acceleration equations and how to split a velocity into components. Each preset puts the ball's real mass, diameter and drag coefficient in the **Ball** sliders. Drag in the flight view or across the range chart to aim; arrow keys change the angle and **Enter** launches. The 0.25× button slows the flight for the room. Leave **Vacuum path** and **Time dots** on: the dashed vacuum parabola is the comparison every step uses.
+Students should know the constant acceleration equations and how to split a velocity into components. Each preset puts the ball's real mass, diameter and drag coefficient in the **Ball** sliders. Drag in the flight view or across the range chart to aim; arrow keys change the angle and **Enter** launches. The 0.25× button slows the flight for the room. Leave **Vacuum path** and **Time dots** on: the dashed vacuum parabola is the comparison every step uses. **Page Up** and **Page Down** on the flight view raise and lower the launcher.
+
+For a measurement lab, the **Measure** section sets the **Dot interval** (Auto, 0.05 s to 0.5 s) and reads the time cursor: click a time graph, or use **Earlier dot** and **Later dot** (or the comma and period keys on the view), to read t, x and y of the selected shot to 1 cm, and its range R. **Capture reading** stores a row, **Export CSV** saves them, and the fit plot shows **y against t** (a parabola, g = −2c) or **R against sin 2θ** (a line through the origin, slope v₀²/g) with residuals. **Blind: hide predictions and answers** in the **Lab** section hides g, the vacuum path, the next shot, the predicted readouts, the terminal speed and the model curves.
 
 ## Running it in class
 
@@ -52,6 +54,8 @@ Students should know the constant acceleration equations and how to split a velo
 
 - The ball feels gravity and a drag force F = ½ρC_dAv² opposite its velocity, with A = πd²/4. The equation of motion is a = −g ŷ − k|v|v with k = ρC_dA/(2m), integrated with fourth order Runge–Kutta. The landing point is found on a cubic interpolation within the last step.
 - The vacuum path is the exact parabola. The terminal speed is v_t = √(g/k) = √(2mg/ρC_dA).
+- Each shot uses steps of at most 1 ms (and at most 1/100 of the drag time 1/√(kg)); halving the step changes the range by less than 1 part in 10⁹. Cursor readings interpolate samples a few ms apart, far below the 1 cm display.
+- Sea level air is the standard atmosphere, 1.225 kg/m³. The Denver button uses 1.0 kg/m³: the standard pressure at 1609 m (83.4 kPa) at about 17 °C.
 - The range chart sweeps the launch angle in 1° steps and refines the best angle with a golden section search near the peak.
 - Approximations: C_d is constant (no dependence on speed or Reynolds number), the ball does not spin (no Magnus lift), there is no wind, the ground is flat, and g and ρ do not change with height. The ball is drawn larger than scale.
 - **Air resistance Off** keeps the same air and only removes the drag force. **Moon (no air)** sets ρ = 0 but keeps g = 9.81 m/s², so it is a vacuum on Earth, not the lunar gravity.

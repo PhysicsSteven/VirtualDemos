@@ -13,7 +13,7 @@ time: 20 to 30 minutes
 
 ## Before class
 
-Students should know work, kinetic energy and conservation of mechanical energy; the upper level questions use Taylor series and the period integral T = 2∫dx/v. Drag the dashed energy line to change E and drag the particle to choose a start; round grips on the curve reshape it. Keep **Particle on a line**: it is the exact motion, while **Ball on a track** is only an illustration.
+Students should know work, kinetic energy and conservation of mechanical energy; the upper level questions use Taylor series and the period integral T = 2∫dx/v. Drag the dashed energy line to change E and drag the particle to choose a start; round grips on the curve reshape it. Keep **Particle on a line**: it is the exact motion, while **Ball on a track** is only an illustration. Under **Plot data**, **Show data table** lists the points behind the energy diagram, the phase space plot and the period curve; **Reduce motion** in **Display** pauses the particle and opens every setup paused.
 
 ## Running it in class
 

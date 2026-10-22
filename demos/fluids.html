@@ -109,6 +109,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 #gPane { border-top: 1px solid var(--line); }
 .stage.cols { grid-template-columns: minmax(0, 56fr) minmax(0, 44fr); grid-template-rows: minmax(0, 1fr); }
 .stage.cols #gPane { border-top: 0; border-left: 1px solid var(--line); }
+.stage.fitv:not(.cols) { grid-template-rows: minmax(0, 52fr) minmax(0, 48fr); }
 #sCan { touch-action: none; outline: none; }
 #sCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
@@ -164,8 +165,33 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch { flex: none; width: 22px; height: 0; border-top: 2px solid var(--pos); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
+/* readings, lab mode and data tables */
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.twrap { position: relative; overflow-x: auto; }
+.twrap.tall { overflow-y: auto; max-height: 260px; }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+table.rows caption.cap { caption-side: top; text-align: left; color: var(--muted); font-size: 0.78rem; padding-bottom: 4px; }
+table.rows th { text-align: left; font-weight: 700; color: var(--muted); font-size: 0.7rem; padding: 3px 2px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.rows th sub { font-size: 0.75em; }
+table.rows td { padding: 3px 2px; border-bottom: 1px solid var(--grid-strong); vertical-align: middle; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.76rem; white-space: nowrap; }
+table.rows td.n { color: var(--muted); font-size: 0.72rem; padding-right: 3px; }
+table.rows td.empty { color: var(--muted); font-family: var(--font-ui); font-size: 0.8rem; white-space: normal; padding: 6px 2px; }
+table.rows input { font: inherit; font-size: 0.74rem; width: calc(7ch + 6px); color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 4px; padding: 2px 2px; }
+table.rows button { font: inherit; font-size: 0.85rem; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 4px; }
+table.rows button:hover { color: var(--pos); }
+:root[data-projector="on"] table.rows td { font-size: 0.62rem; } :root[data-projector="on"] table.rows th { font-size: 0.58rem; }
+.blindtag { position: absolute; top: 8px; right: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--canvas); background: var(--ink); border-radius: 4px; padding: 2px 8px; pointer-events: none; }
+.cavflag { position: absolute; left: 10px; right: 10px; top: 52px; z-index: 3; margin: 0; font-size: 0.86rem; font-weight: 700; color: var(--pos);
+  background: color-mix(in srgb, var(--canvas) 92%, transparent); border: 1px solid var(--pos); border-radius: 6px; padding: 6px 10px; }
+.cavflag span { display: block; font-weight: 400; color: var(--ink); font-size: 0.8rem; }
+.seg button:disabled { opacity: 0.45; cursor: not-allowed; }
+
 @media (max-width: 820px) {
   .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  table.rows button { min-height: 32px; min-width: 32px; }
   input[type="range"] { min-height: 28px; }
   html, body { height: auto; }
   .app { height: auto; }
@@ -207,9 +233,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" class="btn" id="reset">Drop again</button>
           <span class="tclock mono" id="tclock">t = 0<small id="rateTag">real time</small></span>
         </div>
+        <p class="cavflag" id="cavFlag" role="status" hidden>Cavitation: pressure would fall below vapor pressure; model invalid<span id="cavMore"></span></p>
       </div>
       <div class="pane" id="gPane">
-        <canvas id="gCan" aria-label="Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, or jet range against hole depth."></canvas>
+        <canvas id="gCan" role="img" aria-label="Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, or jet range against hole depth. Show data table in the Lab section lists the plotted values."></canvas>
+        <span class="blindtag" id="blindTag" hidden>Blind</span>
       </div>
     </div>
 
@@ -280,6 +308,33 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <p class="formula mono" id="formula"></p>
       </section>
 
+      <section id="readSec">
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="expCsv">Export CSV</button>
+          <button type="button" class="btn" id="clearRows">Clear</button>
+        </div>
+        <p class="hint" id="capStat" role="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="tbl"><caption class="sr" id="tblCap">Captured readings</caption><thead></thead><tbody></tbody></table></div>
+        <p class="hint" id="readHint"></p>
+      </section>
+
+      <section id="labSec">
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="blind">Blind: hide predictions and answers</label>
+        <p class="hint" id="blindHint" hidden>Blind hides the model graph, the formula line, the force arrows, the buoyant force, ρgh, the throat speed v₂, the computed pressures and Δh, the jet speed and the worked numbers in the hints. The instruments stay: pressure gauge, depth ruler, spring scale, flow meter, standpipes and the splash mark.</p>
+        <div class="inline"><span>Graph shows</span>
+          <div class="seg" role="group" aria-label="Graph shows" id="graphSeg">
+            <button type="button" data-v="model" aria-pressed="true">Model</button>
+            <button type="button" data-v="fit" aria-pressed="false">Your readings</button>
+          </div>
+        </div>
+        <div class="toggles"><label><input type="checkbox" id="tReduce">Reduce motion</label></div>
+        <button type="button" class="btn" id="dataBtn" aria-expanded="false" aria-controls="dataWrap">Show data table</button>
+        <div class="twrap tall" id="dataWrap" hidden><table class="rows" id="dataTab"><caption class="cap" id="dataCap"></caption><thead></thead><tbody></tbody></table></div>
+      </section>
+
       <section id="timeSec">
         <h2>Time</h2>
         <div class="seg full" role="group" aria-label="Playback rate" id="rateSeg">
@@ -310,12 +365,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // ==CORE START==
   const G = 9.80665;            // standard gravity, m/s²
   const PATM = 101325;          // standard atmosphere, Pa
-  const PVAP = 2339;            // vapour pressure of water at 20 °C, Pa
+  const PVAP = 2339;            // vapor pressure of water at 20 °C, Pa
+  // pv: vapor pressure in Pa near room temperature, used only to flag cavitation in the Venturi (oil's is tiny and taken as 0)
   const LIQ = {
-    water: { name: 'Water', rho: 1000, note: 'fresh water, 1000 kg/m³ (998 at 20 °C)' },
-    oil: { name: 'Oil', rho: 920, note: 'vegetable oil, 920 kg/m³' },
-    sea: { name: 'Seawater', rho: 1025, note: 'seawater, 1025 kg/m³' },
-    hg: { name: 'Mercury', rho: 13595.1, note: 'mercury at 0 °C, 13 595 kg/m³ (13.6 g/cm³)' }
+    water: { name: 'Water', rho: 1000, pv: PVAP, note: 'fresh water, 1000 kg/m³ (998 at 20 °C)' },
+    oil: { name: 'Oil', rho: 920, pv: 0, note: 'vegetable oil, 920 kg/m³' },
+    sea: { name: 'Seawater', rho: 1025, pv: 2300, note: 'seawater, 1025 kg/m³' },
+    hg: { name: 'Mercury', rho: 13595.1, pv: 0.16, note: 'mercury at 0 °C, 13 595 kg/m³ (13.6 g/cm³)' }
   };
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   // hydrostatics: pressure at depth d below a free surface at pressure P0
@@ -397,10 +453,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // Venturi: continuity A1 v1 = A2 v2 and Bernoulli along the axis, P1 + ½ρv1² = P2 + ½ρv2².
   // An open standpipe shows the gauge pressure at the pipe axis as a column h = P_gauge/(ρg).
+  // P1 and P2 are gauge pressures. Where the absolute throat pressure P_atm + P2 would fall below the vapor pressure pv
+  // (water 2339 Pa when p.pv is not given) the liquid boils there (cavitation), so the ideal result no longer describes any real flow: cav is true.
   function venturi(p) {
     const r = (p.D1 / p.D2) * (p.D1 / p.D2), v2 = p.v1 * r;
     const P1 = p.rho * G * p.h1, P2 = P1 - 0.5 * p.rho * (v2 * v2 - p.v1 * p.v1);
-    return { v1: p.v1, v2, ratio: r, P1, P2, h2: P2 / (p.rho * G), dh: (v2 * v2 - p.v1 * p.v1) / (2 * G), Q: Math.PI * p.D1 * p.D1 / 4 * p.v1 };
+    const pv = p.pv === undefined ? PVAP : p.pv;
+    return { v1: p.v1, v2, ratio: r, P1, P2, P2abs: PATM + P2, cav: PATM + P2 < pv, h2: P2 / (p.rho * G), dh: (v2 * v2 - p.v1 * p.v1) / (2 * G), Q: Math.PI * p.D1 * p.D1 / 4 * p.v1 };
   }
   // Torricelli: a small hole at depth h below the surface of a tank whose water stands H above the floor.
   // v = √(2gh); the jet falls H − h in t = √(2(H − h)/g) and lands R = v t = 2√(h(H − h)) from the wall.
@@ -408,15 +467,68 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const v = Math.sqrt(2 * G * Math.max(0, h)), t = Math.sqrt(2 * Math.max(0, H - h) / G);
     return { v, t, R: v * t };
   }
+
+  // ---- readings: the student's own fits and the CSV ----
+  // a number typed in a table cell ("−1.5" and "1,5" are not numbers; "" is missing)
+  const num = (s) => { const t = String(s == null ? '' : s).trim().replace(/−/g, '-'); return t === '' ? NaN : Number(t); };
+  // least squares line y = a + b x, equal weights; standard errors from the scatter about the line (n − 2 degrees of freedom)
+  function fitLine(xs, ys) {
+    const n = Math.min(xs.length, ys.length);
+    if (n < 2) return null;
+    let mx = 0, my = 0;
+    for (let i = 0; i < n; i++) { mx += xs[i]; my += ys[i]; }
+    mx /= n; my /= n;
+    let sxx = 0, sxy = 0;
+    for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    if (!(sxx > 0)) return null;
+    const b = sxy / sxx, a = my - b * mx, res = [];
+    let ss = 0;
+    for (let i = 0; i < n; i++) { const r = ys[i] - a - b * xs[i]; res.push(r); ss += r * r; }
+    const s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { a, b, sb: Math.sqrt(s2 / sxx), sa: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), res, n, origin: false };
+  }
+  // least squares line y = b x through the origin; standard error with n − 1 degrees of freedom
+  function fitOrigin(xs, ys) {
+    const n = Math.min(xs.length, ys.length);
+    if (n < 1) return null;
+    let sxx = 0, sxy = 0;
+    for (let i = 0; i < n; i++) { sxx += xs[i] * xs[i]; sxy += xs[i] * ys[i]; }
+    if (!(sxx > 0)) return null;
+    const b = sxy / sxx, res = [];
+    let ss = 0;
+    for (let i = 0; i < n; i++) { const r = ys[i] - b * xs[i]; res.push(r); ss += r * r; }
+    return { a: 0, b, sb: n > 1 ? Math.sqrt(ss / (n - 1) / sxx) : NaN, sa: 0, res, n, origin: true };
+  }
+  // move the decimal point of a typed decimal k places (k > 0 multiplies by 10^k) on the digits themselves,
+  // so a unit change (cm to m, kPa to Pa) keeps exactly the digits that were displayed or typed; anything else is returned as typed
+  function shiftDec(s, k) {
+    const t = String(s == null ? '' : s).trim().replace(/−/g, '-'), m = /^([+-]?)(\d*)(?:\.(\d*))?$/.exec(t);
+    if (!m || (m[2] === '' && !m[3])) return t;
+    let int = m[2], frac = m[3] || '';
+    if (k > 0) { frac = frac.padEnd(k, '0'); int += frac.slice(0, k); frac = frac.slice(k); }
+    else if (k < 0) { int = int.padStart(1 - k, '0'); frac = int.slice(int.length + k) + frac; int = int.slice(0, int.length + k); }
+    int = int.replace(/^0+(?=\d)/, '') || '0';
+    return m[1] + int + (frac ? '.' + frac : '');
+  }
+  function csvCell(t) { t = String(t == null ? '' : t); return /[",\n\r]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t; }
+  // a CSV file: comment lines "# ...", then one header row of column names, then the rows
+  function buildCSV(meta, columns, rows) {
+    const L = meta.map((m) => '# ' + (Array.isArray(m) ? m.map(csvCell).join(',') : String(m)));
+    L.push(columns.map(csvCell).join(','));
+    for (const r of rows) L.push(r.map(csvCell).join(','));
+    return L.join('\n') + '\n';
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.FL = { G, PATM, LIQ, hydro, columnHeight, vesselR, vesselVolume, submerged, kEff, blockMass, dragB, buoyForces, floatEq, bobStep, bobRun, hangState, venturi, torricelli };
+    globalThis.FL = { G, PATM, LIQ, hydro, columnHeight, vesselR, vesselVolume, submerged, kEff, blockMass, dragB, buoyForces, floatEq, bobStep, bobRun, hangState, venturi, torricelli, fitLine, fitOrigin, shiftDec, buildCSV };
     return;
   }
 
   const $ = (id) => document.getElementById(id);
-  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  // Reduce motion: the OS setting, or the in-page toggle remembered for this browser session only
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  try { const v = sessionStorage.getItem('fluids-reduce-motion'); if (v === 'on') reduce = true; else if (v === 'off') reduce = false; } catch (_) {}
 
   // ---------- apparatus constants ----------
   const TANK = { W: 0.5, D: 0.3, H: 0.5, spout: 0.42, top: 0.28 };   // buoyancy tank: inner width, depth front to back, wall height, spout height; room above
@@ -463,9 +575,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const MODEL = {
     press: 'Model: a liquid at rest with constant density (incompressible), g = 9.80665 m/s², and standard air pressure P₀ = 101.325 kPa on the surface. The drawing’s width is schematic; the depth scale is to size.',
     pascal: 'Model: liquid at rest, open to the air. Each vessel is round with a base 8 cm across (area 50.3 cm²); the narrowing vessel ends 2.4 cm across, the flared one 34 cm. Gauge pressures are shown.',
-    baro: 'Model: incompressible liquid, g = 9.80665 m/s². The space above a barometer column is taken as a vacuum (mercury vapour adds only 0.2 Pa; water vapour would add 2.3 kPa, which a real water barometer must allow for). The manometer arms have the same width.',
+    baro: 'Model: incompressible liquid, g = 9.80665 m/s². The space above a barometer column is taken as a vacuum (mercury vapor adds only 0.2 Pa; water vapor would add 2.3 kPa, which a real water barometer must allow for). The manometer arms have the same width.',
     buoy: 'Model: a cube in a glass tank 50 cm wide and 30 cm from front to back (floor area 0.15 m²), so the level rises by V_sub/A. The liquid pushes up with ρ_f V_sub g. Motion is vertical only, with linear drag F = −b v on the wet block (b = 2ζ√(km), k = the buoyant force per metre of sinking, so ζ is the damping ratio of small bobs) and no added mass, so real blocks bob a little more slowly and real water drag grows faster than v. The floor stops the block dead. The spring scale is read with the block hanging still.',
-    venturi: 'Model: ideal flow, meaning incompressible, inviscid and steady, with the speed uniform across each section. The pipe is horizontal; each open standpipe shows the gauge pressure at the axis. Pipe widths are drawn larger than to scale. A real pipe loses some pressure to friction, so the outlet standpipe would stand a little lower.',
+    venturi: 'Model: ideal flow, meaning incompressible, inviscid and steady, with the speed uniform across each section. The pipe is horizontal; each open standpipe shows the gauge pressure at the axis. Pipe widths are drawn larger than to scale. A real pipe loses some pressure to friction, so the outlet standpipe would stand a little lower. If the absolute pressure at the throat would fall below the liquid’s vapor pressure (water 2.34 kPa, seawater about 2.3 kPa at 20 °C, mercury 0.16 Pa, oil taken as 0), the liquid boils there (cavitation) and the ideal model is invalid; the demo then says so instead of showing the numbers.',
     torr: 'Model: ideal flow from a small hole in a wide tank, so the surface hardly moves and v = √(2gh). A supply keeps the level steady. Air drag on the jet is neglected and the hole has rounded edges, so the jet does not contract.'
   };
   const PRESETS = {
@@ -483,9 +595,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       hint: 'Water leaves the hole as fast as if it had fallen freely from the surface, v = √(2gh). The jet lands farthest when the hole is halfway down; holes a quarter of the way from the top and from the bottom land at the same spot.' }
   };
   const SCENE_PRESET = { press: 'depth', buoy: 'float', venturi: 'venturi', torr: 'torr' };
+  // the preset hints with the worked answers left out, for Blind
+  const BLIND_HINT = {
+    depth: 'Move the probe down in steps. At each depth capture the pressure gauge and the depth ruler, then plot P against depth and find the slope.',
+    float: 'Let the block settle, then compare how far its bottom sits below the surface with its height. Try other materials and liquids.',
+    iceberg: 'Ice in seawater: once the block is still, how much of it is under the surface? Turn on the spring scale to measure forces.',
+    weigh: 'Lower the aluminum block into the full overflow can in steps. At each step capture the spring scale and the depth ruler, then plot the buoyant force (scale reading in air minus scale reading) against the submerged volume.',
+    venturi: 'Change the inlet speed v₁ and capture the flow meter and both standpipes each time, keeping the pipe and the throat fixed. Plot the drop h₁ − h₂ against v₁².',
+    torr: 'Move the hole and watch where the jet lands. Which hole depth throws the water farthest?'
+  };
 
   // ---------- state ----------
-  const S = { scene: 'buoy', preset: 'float', liq: 'water', gmode: 'abs', baro: 'baro', rate: 1, sel: 0,
+  const S = { scene: 'buoy', preset: 'float', liq: 'water', gmode: 'abs', baro: 'baro', rate: 1, sel: 0, blind: false, gview: 'model',
     P: JSON.parse(JSON.stringify(DEF)), layers: { forces: true, ghost: true, cmp: true } };
   let running = !reduce, held = false, t = 0;
   let bs = null;          // buoyancy state {zb, v, Vw, caught, t}
@@ -557,7 +678,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (x < PIPE.d1) return D2 + (D1 - D2) * smooth((x - PIPE.d0) / (PIPE.d1 - PIPE.d0));
     return D1;
   }
-  const vp = () => { const q = S.P.venturi; return { D1: q.D1 / 100, D2: q.D2 / 100, v1: q.v1, h1: q.h1, rho: rhoF() }; };
+  const vp = () => { const q = S.P.venturi; return { D1: q.D1 / 100, D2: q.D2 / 100, v1: q.v1, h1: q.h1, rho: rhoF(), pv: LIQ[S.liq].pv }; };
   function seedParts() {
     parts = []; const n = 260;
     const q = S.P.venturi, Dm = Math.max(q.D1, q.D2) / 100;
@@ -825,7 +946,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const Pmax = nice(Math.max(Pbot, 1) * 1.05) * Math.ceil(Math.max(Pbot, 1) * 1.05 / nice(Math.max(Pbot, 1) * 1.05));
     dial(ctx, dcx, dcy, dialR, Pshow / 1000, Pmax / 1000, 'kPa', ls, T.pos);
     labelBox(ctx, S.gmode === 'abs' ? 'absolute pressure' : 'gauge pressure', dcx, dcy + dialR + 16 * ls, 'center', T.muted, 11 * ls);
-    labelBox(ctx, `${fx(Pshow / 1000, Pshow < 1e5 ? 2 : 1)} kPa`, dcx, dcy + dialR + 32 * ls, 'center', T.ink, 13 * ls, 700, T.mono);
+    labelBox(ctx, `${fx(Pshow / 1000, 2)} kPa`, dcx, dcy + dialR + 32 * ls, 'center', T.ink, 13 * ls, 700, T.mono);
     // labels last
     labelBox(ctx, `P_0 = ${fx(PATM / 1000, 3)} kPa (air)`, x0 + 6 * ls, ySurf - 8 * ls, 'left', T.muted, 11 * ls);
     const lbl = `P = ${fx(Pshow / 1000, 2)} kPa at h = ${fx(q.pd, 2)} m`;
@@ -1065,7 +1186,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // force arrows: weight at the center, buoyant force at the center of the submerged part
     const cxB = (bx0 + bx1) / 2, Fmax = Math.max(b.W, b.FB, 1e-9), aMax = clamp(0.16 * sc, 40 * ps, 110 * ps), k = aMax / Fmax;
     const labels = [];
-    if (S.layers.forces) {
+    if (S.layers.forces && !S.blind) {
       const lw = 3 * ps, off = Math.min(12 * ps, (bx1 - bx0) * 0.25);
       const yc = (by0 + by1) / 2;
       arrow(ctx, cxB - off, yc, cxB - off, yc + b.W * k, T.pos, lw, 10);
@@ -1081,13 +1202,21 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     // labels last
     for (const [txt, x, y, al, col] of labels) labelBox(ctx, txt, x, y, al, col, 12 * ls, 700);
-    if (bx1 - bx0 > 64 * ls && !S.layers.forces) { ctx.fillStyle = T.ink; ctx.font = `600 ${10.5 * ls}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${fx(q.rho, 0)} kg/m³`, cxB, (by0 + by1) / 2); }
+    if (bx1 - bx0 > 64 * ls && (!S.layers.forces || S.blind)) { ctx.fillStyle = T.ink; ctx.font = `600 ${10.5 * ls}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${fx(q.rho, 0)} kg/m³`, cxB, (by0 + by1) / 2); }
     labelBox(ctx, `${LIQ[S.liq].name}, ${fx(rhoF(), 0)} kg/m³`, x0 + 6 * ls, Y(0) - 8 * ls, 'left', T.muted, 11 * ls);
     if (S.layers.ghost && Math.abs(b.hs - b.hs0) * sc > 1.5) {
       const dh = b.hs - b.hs0;
       labelBox(ctx, `level ${dh >= 0 ? 'up' : 'down'} ${fx(Math.abs(dh) * 1000, 1)} mm = V_{sub}/A`, x0 + 6 * ls, Math.max(yS, Y(b.hs0)) + 16 * ls, 'left', T.muted, 11 * ls);
     }
-    if (scaleInfo) { labelBox(ctx, `scale ${fN(b.T)}`, scaleInfo.x, scaleInfo.y, 'left', T.xcol, 12.5 * ls, 700, T.mono); }
+    if (scaleInfo) {
+      labelBox(ctx, `scale ${fx(b.T, 2)} N`, scaleInfo.x, scaleInfo.y, 'left', T.xcol, 12.5 * ls, 700, T.mono);
+      // depth ruler: the block bottom below the surface, read to 1 mm
+      const rx = bx0 - 16 * ls, dd = b.hs - bs.zb;
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([3 * ps, 3 * ps]);
+      ctx.beginPath(); ctx.moveTo(rx - 5 * ls, by1); ctx.lineTo(bx0, by1); ctx.stroke(); ctx.setLineDash([]);
+      if (Math.abs(by1 - yS) > 10 * ls) { arrow(ctx, rx, (yS + by1) / 2, rx, yS, T.ink, 1.2 * ps, 6); arrow(ctx, rx, (yS + by1) / 2, rx, by1, T.ink, 1.2 * ps, 6); }
+      labelBox(ctx, `d = ${fx(dd * 100, 1)} cm`, rx - 6 * ls, (yS + by1) / 2 + 4 * ls, 'right', T.ink, 12 * ls, 700, T.mono);
+    }
     if (beakerInfo) {
       labelBox(ctx, 'displaced water', beakerInfo.x, beakerInfo.top - 22 * ls, 'center', T.muted, 11 * ls);
       labelBox(ctx, `${fx(bs.caught * 1000, 2)} L, ${fN(beakerInfo.Wc)}`, beakerInfo.x, beakerInfo.top - 7 * ls, 'center', T.neg, 11.5 * ls, 700, T.mono);
@@ -1145,23 +1274,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const xt1 = X(PIPE.taps[1]), yl1 = cy - Math.max(0, r.h2) * sy;
     ctx.setLineDash([5 * ps, 4 * ps]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps;
     ctx.beginPath(); ctx.moveTo(xt0 + sw, yl0); ctx.lineTo(X(PIPE.taps[2]) - sw, yl0); ctx.stroke(); ctx.setLineDash([]);
-    if (r.dh * sy > 14) { const mx = xt1 + sw + 12 * ls; arrow(ctx, mx, (yl0 + yl1) / 2, mx, yl0, T.ink, 1.2 * ps, 6); arrow(ctx, mx, (yl0 + yl1) / 2, mx, Math.min(yl1, cy - rpx(0.8)), T.ink, 1.2 * ps, 6); }
+    if (r.dh * sy > 14 && !r.cav) { const mx = xt1 + sw + 12 * ls; arrow(ctx, mx, (yl0 + yl1) / 2, mx, yl0, T.ink, 1.2 * ps, 6); arrow(ctx, mx, (yl0 + yl1) / 2, mx, Math.min(yl1, cy - rpx(0.8)), T.ink, 1.2 * ps, 6); }
     // labels last
     const lab = (txt, x, y, al, col, fs, wt, fam) => labelBox(ctx, txt, x, y, al, col, fs * ls, wt, fam);
-    lab(`h_1 = ${fx(q.h1 * 100, 0)} cm`, xt0 + sw + 6 * ls, yl0 - 6 * ls, 'left', T.ink, 12, 700);
-    if (r.h2 > 0) lab(`h_2 = ${fx(r.h2 * 100, 0)} cm`, xt1 - sw - 6 * ls, yl1 - 6 * ls, 'right', T.ink, 12, 700);
+    lab(`h_1 = ${fx(q.h1 * 100, 1)} cm`, xt0 + sw + 6 * ls, yl0 - 6 * ls, 'left', T.ink, 12, 700);
+    if (r.cav) { /* the stage banner says it: no throat standpipe reading */ }
+    else if (r.h2 > 0) lab(`h_2 = ${fx(r.h2 * 100, 1)} cm`, xt1 - sw - 6 * ls, yl1 - 6 * ls, 'right', T.ink, 12, 700);
     else { lab('below atmospheric pressure:', xt1 - sw - 6 * ls, cy - hMax * sy + 16 * ls, 'right', T.pos, 12, 700); lab('air is sucked in', xt1 - sw - 6 * ls, cy - hMax * sy + 32 * ls, 'right', T.pos, 12, 700); }
     const dhs = r.dh < 2 ? `${fx(r.dh * 100, 1)} cm` : `${fx(r.dh, 1)} m`;
-    if (r.dh * sy > 14) {
+    if (r.dh * sy > 14 && !S.blind && !r.cav) {
       const long = `Δh = (v_2² − v_1²)/2g = ${dhs}`, fits = xt1 + sw + 24 * ls + richWidth(ctx, long, 11 * ls) < X(PIPE.taps[2]) - sw;
       lab(fits ? long : `Δh = ${dhs}`, xt1 + sw + 18 * ls, (yl0 + yl1) / 2 + 4 * ls, 'left', T.muted, 11);
     }
     lab(`v_1 = ${fx(q.v1, 2)} m/s`, ax0, cy + rpx(0) + 16 * ls, 'left', T.acol, 12, 700);
-    lab(`v_2 = ${fx(r.v2, 2)} m/s`, X(0.8), cy + rpx(0.8) + 16 * ls, 'center', T.acol, 12, 700);
+    if (!S.blind) lab(`v_2 = ${fx(r.v2, 2)} m/s`, X(0.8), cy + rpx(0.8) + 16 * ls, 'center', T.acol, 12, 700);
     lab(`D_1 = ${fx(q.D1, 1)} cm`, xi + 12 * ls, cy + rpx(0.1) + 32 * ls, 'left', T.muted, 10.5, 400, T.mono);
     lab(`D_2 = ${fx(q.D2, 1)} cm`, xth, cy + rpx(0.8) + 32 * ls, 'center', T.muted, 10.5, 400, T.mono);
     lab('flow →', X(1.12), cy - rpx(1.12) - 8 * ls, 'center', T.muted, 11);
-    if (hydro(rhoF(), r.h2) < PVAP) lab('absolute pressure below the vapour pressure: the water would boil (cavitate)', W / 2, top - 8 * ls, 'center', T.pos, 11.5, 700);
   }
 
   // ---------- scene: Torricelli's tank ----------
@@ -1194,7 +1323,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.stroke(); ctx.setLineDash([]);
       return tt;
     };
-    if (S.layers.cmp) {
+    if (S.layers.cmp && !S.blind) {
       for (const f of [0.25, 0.5, 0.75]) {
         const tt = jet(q.H * f, T.muted, 1.2 * ps, [4 * ps, 4 * ps]);
         const yy = Y(q.H * (1 - f));
@@ -1227,11 +1356,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // labels last
     labelBox(ctx, `h = ${fx(q.hh, 2)} m`, bx - 6 * ls, (yS + yh) / 2 + 4 * ls, 'right', T.ink, 12 * ls, 700);
     if (q.hh > 0.002) {
-      labelBox(ctx, `v = √(2gh) = ${fx(tr.v, 2)} m/s`, X(0) + 10 * ps, yh - 10 * ls, 'left', T.acol, 12 * ls, 700);
+      if (!S.blind) labelBox(ctx, `v = √(2gh) = ${fx(tr.v, 2)} m/s`, X(0) + 10 * ps, yh - 10 * ls, 'left', T.acol, 12 * ls, 700);
       labelBox(ctx, `R = ${fx(tr.R, 2)} m`, (X(0) + X(tr.R)) / 2, Y(0) + 32 * ls, 'center', T.pos, 12 * ls, 700);
     }
     labelBox(ctx, `H = ${fx(q.H, 2)} m`, x0 + 6 * ls, Y(0) - 8 * ls, 'left', T.muted, 11 * ls);
-    if (S.layers.cmp && W > 600) labelBox(ctx, 'dashed: holes at H/4, H/2 and 3H/4', W - 16 * ls, Y(0) - 10 * ls, 'right', T.muted, 11 * ls);
+    if (S.layers.cmp && !S.blind && W > 600) labelBox(ctx, 'dashed: holes at H/4, H/2 and 3H/4', W - 16 * ls, Y(0) - 10 * ls, 'right', T.muted, 11 * ls);
   }
 
   // ---------- graphs ----------
@@ -1243,14 +1372,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const Y = opts.flipY ? (v) => top + (v - yr[0]) / (yr[1] - yr[0]) * (bot - top) : (v) => bot - (v - yr[0]) / (yr[1] - yr[0]) * (bot - top);
     const xs = nice((xr[1] - xr[0]) / Math.max(2, Math.floor((R - L) / (70 * ls)))), ys = nice((yr[1] - yr[0]) / Math.max(2, Math.floor((bot - top) / (34 * ls))));
     ctx.beginPath();
-    if (!opts.noX) for (let v = Math.ceil(xr[0] / xs - 1e-9) * xs; v <= xr[1] + 1e-9; v += xs) { ctx.moveTo(Math.round(X(v)) + 0.5, top); ctx.lineTo(Math.round(X(v)) + 0.5, bot); }
-    for (let v = Math.ceil(yr[0] / ys - 1e-9) * ys; v <= yr[1] + 1e-9; v += ys) { ctx.moveTo(L, Math.round(Y(v)) + 0.5); ctx.lineTo(R, Math.round(Y(v)) + 0.5); }
+    if (!opts.noX) for (let v = Math.ceil(xr[0] / xs - 1e-9) * xs; v <= xr[1] + xs * 1e-6; v += xs) { ctx.moveTo(Math.round(X(v)) + 0.5, top); ctx.lineTo(Math.round(X(v)) + 0.5, bot); }
+    for (let v = Math.ceil(yr[0] / ys - 1e-9) * ys; v <= yr[1] + ys * 1e-6; v += ys) { ctx.moveTo(L, Math.round(Y(v)) + 0.5); ctx.lineTo(R, Math.round(Y(v)) + 0.5); }
     ctx.stroke();
     const dec = (s) => (s < 0.01 ? 3 : s < 0.1 ? 2 : s < 1 ? 1 : 0);
     ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    if (!opts.noX) for (let v = Math.ceil(xr[0] / xs - 1e-9) * xs; v <= xr[1] + 1e-9; v += xs) ctx.fillText(fx(v, dec(xs)), X(v), bot + 4 * ls);
+    if (!opts.noX) for (let v = Math.ceil(xr[0] / xs - 1e-9) * xs; v <= xr[1] + xs * 1e-6; v += xs) ctx.fillText(fx(v, dec(xs)), X(v), bot + 4 * ls);
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-    for (let v = Math.ceil(yr[0] / ys - 1e-9) * ys; v <= yr[1] + 1e-9; v += ys) ctx.fillText(fx(v, dec(ys)), L - 4 * ls, Y(v));
+    for (let v = Math.ceil(yr[0] / ys - 1e-9) * ys; v <= yr[1] + ys * 1e-6; v += ys) ctx.fillText(fx(v, dec(ys)), L - 4 * ls, Y(v));
     ctx.strokeStyle = T.gridStrong; ctx.strokeRect(L + 0.5, top + 0.5, R - L, bot - top);
     ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(xlab, R, bot + 16 * ls);
     ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(ylab, L, top - 4 * ls);
@@ -1289,6 +1418,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const L = 58 * ls, R = W - 20 * ls, top = 40 * ls, bot = H - 36 * ls;
     if (bot - top < 30) return;
     const rho = rhoF();
+    if (S.blind || S.gview === 'fit') { drawFitGraph(ctx, W, H, ls, ps); return; }
     if (S.scene === 'press') {
       const q = S.P.press, abs = S.gmode === 'abs', off = abs ? PATM : 0;
       const Pb = (hydro(rho, q.D) - PATM + off) / 1000;
@@ -1326,29 +1456,43 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const left = 22 * lsc(dims.s[0], dims.s[1]), right = W - 22 * lsc(dims.s[0], dims.s[1]);
       const tb = gTitle(ctx, 'Along the pipe: gauge pressure P (blue) plus ½ρv² (orange) stays the same total (Bernoulli)', 12 * ls, 10 * ls, ls);
       const tot = r.P1 + 0.5 * v.rho * v.v1 * v.v1;
-      const ymin = Math.min(0, r.P2) / 1000, ymax = tot / 1000 * 1.12;
+      // with cavitation the ideal pressure would plunge far below the vapor pressure; the curve stops there and the region is marked invalid
+      const pvG = (v.pv - PATM) / 1000;
+      const ymin = r.cav ? pvG - 0.1 * (tot / 1000 - pvG) : Math.min(0, r.P2) / 1000, ymax = tot / 1000 * 1.12;
       const LL = Math.max(left, 52 * ls);
       const { X, Y } = axes(ctx, LL, right, Math.max(top + 6 * ls, tb + 26 * ls), bot, [0, PIPE.L], [ymin, ymax], 'distance along the pipe (m)', 'kPa', ls);
       const Px = (x) => { const D = pipeD(x, q), vv = q.v1 * (v.D1 / D) * (v.D1 / D); return [tot - 0.5 * v.rho * vv * vv, 0.5 * v.rho * vv * vv]; };
+      const Pc = (x) => Math.max(Px(x)[0] / 1000, r.cav ? pvG : -Infinity);
       const N = 160;
       ctx.fillStyle = T.neg; ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.moveTo(X(0), Y(0));
-      for (let i = 0; i <= N; i++) { const x = PIPE.L * i / N; ctx.lineTo(X(x), Y(Px(x)[0] / 1000)); }
+      for (let i = 0; i <= N; i++) { const x = PIPE.L * i / N; ctx.lineTo(X(x), Y(Pc(x))); }
       ctx.lineTo(X(PIPE.L), Y(0)); ctx.closePath(); ctx.fill();
       ctx.fillStyle = T.acol; ctx.beginPath();
-      for (let i = 0; i <= N; i++) { const x = PIPE.L * i / N; i ? ctx.lineTo(X(x), Y(Px(x)[0] / 1000)) : ctx.moveTo(X(x), Y(Px(x)[0] / 1000)); }
+      for (let i = 0; i <= N; i++) { const x = PIPE.L * i / N; i ? ctx.lineTo(X(x), Y(Pc(x))) : ctx.moveTo(X(x), Y(Pc(x))); }
       ctx.lineTo(X(PIPE.L), Y(tot / 1000)); ctx.lineTo(X(0), Y(tot / 1000)); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
       ctx.strokeStyle = T.neg; ctx.lineWidth = 2 * ps; ctx.beginPath();
-      for (let i = 0; i <= N; i++) { const x = PIPE.L * i / N; i ? ctx.lineTo(X(x), Y(Px(x)[0] / 1000)) : ctx.moveTo(X(x), Y(Px(x)[0] / 1000)); }
+      for (let i = 0; i <= N; i++) { const x = PIPE.L * i / N; i ? ctx.lineTo(X(x), Y(Pc(x))) : ctx.moveTo(X(x), Y(Pc(x))); }
       ctx.stroke();
       ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * ps; ctx.setLineDash([6 * ps, 4 * ps]); ctx.beginPath(); ctx.moveTo(X(0), Y(tot / 1000)); ctx.lineTo(X(PIPE.L), Y(tot / 1000)); ctx.stroke(); ctx.setLineDash([]);
       if (ymin < 0) { ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(PIPE.L), Y(0)); ctx.stroke(); }
-      const pv = (PVAP - PATM) / 1000;          // gauge pressure at which water at 20 °C boils
-      if (ymin < pv) {
-        ctx.strokeStyle = T.pos; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([3 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(X(0), Y(pv)); ctx.lineTo(X(PIPE.L), Y(pv)); ctx.stroke(); ctx.setLineDash([]);
-        labelBox(ctx, 'vapour pressure: below this line the water boils, so the ideal result fails', X(PIPE.L) - 6 * ls, Y(pv) + 14 * ls, 'right', T.pos, 10.5 * ls, 700);
+      if (r.cav) {
+        // the stretch of pipe where the ideal pressure is below the vapor pressure: hatched, no curve values
+        let xa = null, xb = null;
+        for (let i = 0; i <= 400; i++) { const x = PIPE.L * i / 400; if (Px(x)[0] / 1000 < pvG) { if (xa === null) xa = x; xb = x; } }
+        if (xa !== null) {
+          const yT = Y(ymax), yB = Y(ymin);
+          ctx.save(); ctx.beginPath(); ctx.rect(X(xa), yT, X(xb) - X(xa), yB - yT); ctx.clip();
+          ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.7; ctx.fillRect(X(xa), yT, X(xb) - X(xa), yB - yT); ctx.globalAlpha = 1;
+          ctx.strokeStyle = T.pos; ctx.lineWidth = 1 * ps; ctx.beginPath();
+          for (let k = -(yB - yT); k < X(xb) - X(xa); k += 9 * ps) { ctx.moveTo(X(xa) + k, yB); ctx.lineTo(X(xa) + k + (yB - yT), yT); }
+          ctx.stroke(); ctx.restore();
+        }
+        ctx.strokeStyle = T.pos; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([3 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(X(0), Y(pvG)); ctx.lineTo(X(PIPE.L), Y(pvG)); ctx.stroke(); ctx.setLineDash([]);
+        labelBox(ctx, 'vapor pressure', X(0.03), Y(pvG) - 5 * ls, 'left', T.pos, 10.5 * ls, 700);
+        if (xa !== null) labelBox(ctx, 'model invalid: cavitation', X((xa + xb) / 2), Y((ymin + ymax) / 2), 'center', T.pos, 11 * ls, 700);
       }
-      labelBox(ctx, `P + ½ρv² = ${fx(tot / 1000, 2)} kPa`, X(0.03), Y(tot / 1000) - 5 * ls, 'left', T.ink, 11 * ls, 700);
-      labelBox(ctx, `P_2 = ${fx(r.P2 / 1000, 2)} kPa`, X(0.8), Y(r.P2 / 1000) + (r.P2 > tot * 0.3 ? 14 * ls : -6 * ls), 'center', T.neg, 11 * ls, 700);
+      labelBox(ctx, `P + ½ρv² = ${fx(tot / 1000, 2)} kPa`, X(PIPE.L) - 4 * ls, Y(tot / 1000) - 5 * ls, 'right', T.ink, 11 * ls, 700);
+      if (!r.cav) labelBox(ctx, `P_2 = ${fx(r.P2 / 1000, 2)} kPa`, X(0.8), Y(r.P2 / 1000) + (r.P2 > tot * 0.3 ? 14 * ls : -6 * ls), 'center', T.neg, 11 * ls, 700);
       labelBox(ctx, `P_1 = ${fx(r.P1 / 1000, 2)} kPa`, X(0.22), Y(r.P1 / 1000 * 0.5) + 4 * ls, 'center', T.neg, 11 * ls, 700);
     } else if (S.scene === 'torr') {
       const q = S.P.torr, tr = torricelli(q.H, q.hh);
@@ -1436,14 +1580,33 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function dl(rows) {
     $('readBox').innerHTML = rows.map(([k, v, cls, wide]) => `<div${wide ? ' class="wide"' : ''}><dt>${k}</dt><dd${cls ? ` class="${cls}"` : ''}>${v}</dd></div>`).join('');
   }
+  // What the instruments display, as strings: the readouts, the canvas labels and Capture all use these, so a captured row is what was on screen.
+  function inst() {
+    const rho = rhoF();
+    if (S.scene === 'press') {
+      const q = S.P.press, Pa = hydro(rho, q.pd), Pshow = S.gmode === 'abs' ? Pa : Pa - PATM;
+      return { h: fx(q.pd, 2), P: fx(Pshow / 1000, 2), mode: S.gmode };
+    }
+    if (S.scene === 'buoy') {
+      const b = buoyNow(), d = b.hs - bs.zb;
+      return { d: fx(d * 100, 1), T: fx(b.T, 2), W: fx(b.W, 2), L: fx(b.p.L * 100, 0), Vb: fx(bs.caught * 1e6, 0), scale: b.q.scale, over: b.q.over };
+    }
+    if (S.scene === 'venturi') {
+      const q = S.P.venturi, r = venturi(vp());
+      return { v1: fx(q.v1, 2), Q: fx(r.Q * 1000, 3), h1: fx(q.h1 * 100, 1), h2: r.cav || r.h2 < 0 ? '' : fx(r.h2 * 100, 1), D1: fx(q.D1, 1), D2: fx(q.D2, 1), cav: r.cav, empty: r.h2 < 0 };
+    }
+    return null;
+  }
   let lastRead = '';
   function updateReadouts() {
-    const rho = rhoF();
+    const rho = rhoF(), I = inst();
+    // rows: [label, value, class, wide, hidden in Blind]
     let rows = [], f = '';
     if (S.scene === 'press') {
-      const q = S.P.press, Pa = hydro(rho, q.pd);
-      rows = [['Depth h', `${fx(q.pd, 2)} m`], ['ρgh', kPa(rho * G * q.pd)], ['Absolute P', kPa(Pa), S.gmode === 'abs' ? 'c-w' : ''], ['Gauge P', kPa(Pa - PATM), S.gmode === 'gauge' ? 'c-w' : ''],
-        ['At the bottom', kPa(hydro(rho, q.D) - (S.gmode === 'abs' ? 0 : PATM)) + (S.gmode === 'abs' ? ' abs' : ' gauge')], ['In atmospheres', `${fx(Pa / PATM, 3)} atm`]];
+      const q = S.P.press, Pa = hydro(rho, q.pd), abs = S.gmode === 'abs';
+      rows = [['Depth ruler h', `${I.h} m`], [`Pressure gauge (${abs ? 'absolute' : 'gauge'})`, `${I.P} kPa`, 'c-w'],
+        [abs ? 'Gauge P' : 'Absolute P', kPa(abs ? Pa - PATM : Pa), '', false, true], ['ρgh', kPa(rho * G * q.pd), '', false, true],
+        ['At the bottom', kPa(hydro(rho, q.D) - (abs ? 0 : PATM)) + (abs ? ' abs' : ' gauge'), '', false, true], ['In atmospheres', `${fx(Pa / PATM, 3)} atm`, '', false, true]];
       f = `P = P₀ + ρgh = ${fx(PATM / 1000, 3)} + ${fx(rho, 0)}·${fx(G, 3)}·${fx(q.pd, 2)} Pa = ${kPa(Pa)}`;
     } else if (S.scene === 'pascal') {
       const d = pascalData(), h = S.P.pascal.hp, Pg = rho * G * h;
@@ -1464,28 +1627,37 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     } else if (S.scene === 'buoy') {
       const b = buoyNow(), p = b.p, Vs = p.L * p.L * b.s;
       const fr = b.s / p.L, fe = p.rhoO / p.rhoF;
-      rows = [['Weight W', fN(b.W), 'c-w'], ['Buoyant force F_B', fN(b.FB), 'c-b'],
-        b.q.scale ? ['Scale reading T', fN(b.T), 'c-t'] : ['Floor pushes N', fN(b.N), 'c-t'],
-        ['W − F_B', fN(b.W - b.FB)],
-        ['Fraction under now', `${fx(fr * 100, 1)}%`], ['ρ_obj/ρ_fluid', fe < 1 ? `${fx(fe * 100, 1)}% (floats)` : `${fx(fe, 2)} (sinks)`],
-        ['Submerged volume', `${fx(Vs * 1e6, 0)} cm³`], b.q.over ? ['Water in beaker', `${fx(bs.caught * 1e6, 0)} cm³, ${fN(rhoF() * G * bs.caught)}`, 'c-p'] : ['Level rise V_sub/A', `${fx(Vs / p.A * 1000, 2)} mm`]];
+      rows = [[b.q.scale ? 'Scale reading in air (weight W)' : 'Weight W', `${I.W} N`, 'c-w'],
+        b.q.scale ? ['Spring scale T', `${I.T} N`, 'c-t'] : ['Floor pushes N', fN(b.N), 'c-t', false, true],
+        ['Depth ruler: block bottom below surface', `${I.d} cm`, '', true],
+        ['Buoyant force F_B', fN(b.FB), 'c-b', false, true], ['W − F_B', fN(b.W - b.FB), '', false, true],
+        ['Fraction under now', `${fx(fr * 100, 1)}%`, '', false, true], ['ρ_obj/ρ_fluid', fe < 1 ? `${fx(fe * 100, 1)}% (floats)` : `${fx(fe, 2)} (sinks)`, '', false, true],
+        ['Submerged volume', `${fx(Vs * 1e6, 0)} cm³`, '', false, true],
+        b.q.over ? ['Water in beaker', `${I.Vb} cm³, ${fN(rhoF() * G * bs.caught)}`, 'c-p', true] : ['Level rise V_sub/A', `${fx(Vs / p.A * 1000, 2)} mm`, '', false, true]];
       f = b.q.scale ? 'Scale reading T = W − F_B = W − ρ_f V_sub g; the beaker gains ρ_f V_sub g.' : 'Floating: ρ_f V_sub g = ρ_obj V g, so V_sub/V = ρ_obj/ρ_fluid.';
     } else if (S.scene === 'venturi') {
       const v = vp(), r = venturi(v), abs = S.gmode === 'abs', off = abs ? PATM : 0;
-      rows = [['v₁ (inlet)', `${fx(v.v1, 2)} m/s`, 'c-d'], ['v₂ (throat)', `${fx(r.v2, 2)} m/s`, 'c-d'], ['A₁/A₂', fx(r.ratio, 2)], ['Flow rate Q', `${fx(r.Q * 1000, 3)} L/s`],
-        [`P₁ (${abs ? 'abs' : 'gauge'})`, kPa(r.P1 + off), 'c-p'], [`P₂ (${abs ? 'abs' : 'gauge'})`, kPa(r.P2 + off), 'c-p'], ['P₁ − P₂', kPa(r.P1 - r.P2)], ['Δh', r.dh < 2 ? `${fx(r.dh * 100, 1)} cm` : `${fx(r.dh, 2)} m`]];
-      if (r.P2 + PATM < PVAP) rows.push(['Throat', 'the water would boil (cavitation): no real flow can follow these numbers', 'c-w', true]);
+      rows = [['v₁ (inlet)', `${I.v1} m/s`, 'c-d'], ['Flow meter Q', `${I.Q} L/s`],
+        ['Standpipe h₁', `${I.h1} cm`, 'c-p'], ['Standpipe h₂', r.cav ? '—' : I.empty ? 'empty (below air pressure)' : `${I.h2} cm`, 'c-p'],
+        ['v₂ (throat)', `${fx(r.v2, 2)} m/s`, 'c-d', false, true], ['A₁/A₂', fx(r.ratio, 2)],
+        [`P₁ (${abs ? 'abs' : 'gauge'})`, kPa(r.P1 + off), 'c-p', false, true],
+        [`P₂ (${abs ? 'abs' : 'gauge'})`, r.cav ? 'below vapor pressure' : kPa(r.P2 + off), r.cav ? 'c-w' : 'c-p', false, true],
+        ['P₁ − P₂', r.cav ? '—' : kPa(r.P1 - r.P2), '', false, true], ['Δh', r.cav ? '—' : r.dh < 2 ? `${fx(r.dh * 100, 1)} cm` : `${fx(r.dh, 2)} m`, '', false, true]];
       f = `A₁v₁ = A₂v₂; P₁ − P₂ = ½ρ(v₂² − v₁²) = ${kPa(r.P1 - r.P2)}`;
     } else {
       const q = S.P.torr, tr = torricelli(q.H, q.hh);
-      rows = [['Hole depth h', `${fx(q.hh, 2)} m`], ['Hole height H − h', `${fx(q.H - q.hh, 2)} m`], ['Exit speed v', `${fx(tr.v, 2)} m/s`, 'c-d'], ['Fall time', `${fx(tr.t, 3)} s`],
-        ['Range R', `${fx(tr.R, 3)} m`, 'c-w'], ['Largest range', `${fx(q.H, 2)} m at h = ${fx(q.H / 2, 2)} m`]];
+      rows = [['Hole depth h', `${fx(q.hh, 2)} m`], ['Hole height H − h', `${fx(q.H - q.hh, 2)} m`], ['Exit speed v', `${fx(tr.v, 2)} m/s`, 'c-d', false, true], ['Fall time', `${fx(tr.t, 3)} s`, '', false, true],
+        ['Range R (splash mark)', `${fx(tr.R, 3)} m`, 'c-w'], ['Largest range', `${fx(q.H, 2)} m at h = ${fx(q.H / 2, 2)} m`, '', false, true]];
       f = 'v = √(2gh), t = √(2(H − h)/g), R = vt = 2√(h(H − h))';
     }
-    const html = JSON.stringify(rows) + f;
+    if (S.blind) { rows = rows.filter((r) => !r[4]); f = ''; }
+    const cav = S.scene === 'venturi' && venturi(vp()).cav;
+    const html = JSON.stringify(rows) + f + cav;
     if (html === lastRead) return;
     lastRead = html;
-    dl(rows); $('formula').textContent = f;
+    dl(rows.map((r) => [r[0].replace(/_(\w+)/g, '<sub>$1</sub>'), r[1], r[2], r[3]])); $('formula').textContent = f; $('formula').hidden = !f;
+    $('cavFlag').hidden = !cav;
+    if (cav) { const r = venturi(vp()); $('cavMore').textContent = `The ideal flow would need ${fx(r.P2abs / 1000, 1)} kPa absolute at the throat, below the ${LIQ[S.liq].pv ? fx(LIQ[S.liq].pv / 1000, 2) + ' kPa' : 'near zero'} vapor pressure of ${LIQ[S.liq].name.toLowerCase()}: the liquid would boil there. Lower v₁ or widen the throat.`; }
   }
 
   // ---------- rail: sliders ----------
@@ -1548,7 +1720,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('keyBox').innerHTML = KEYS[sc].map(([c, txt]) => `<span><i class="swatch" style="border-color: var(${c})${c === '--muted' ? '; border-top-style: dashed' : ''}"></i>${txt.replace(/_(\w+)/g, '<sub>$1</sub>')}</span>`).join('');
     S.sel = 0;
     if (sc === 'venturi' && !parts.length) seedParts();
-    syncLiq(); syncSliders(); syncMat(); updateReadouts();
+    syncLiq(); syncSliders(); syncMat(); updateReadouts(); renderRows(); lastData = ''; renderData();
     $('tScale').checked = S.P.buoy.scale; $('tOver').checked = S.P.buoy.over;
   }
   function syncLiq() {
@@ -1576,7 +1748,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (c.scene === 'venturi') { seedParts(); setRate(0.25); }
     if (c.scene === 'torr') { drops = []; setRate(1); }
     setScene(c.scene);
-    $('presetHint').textContent = c.hint;
+    S.hintFrom = name; $('presetHint').textContent = S.blind ? BLIND_HINT[name] : c.hint;
     if (!reduce) setRunning(true);
     drawAll();
   }
@@ -1591,7 +1763,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (SCENE_PRESET[sc] && !S.P[sc].__touched) { applyPreset(SCENE_PRESET[sc]); return; }
     clearPreset(); setScene(sc);
     if (sc === 'baro' && S.liq !== 'hg') { S.liq = 'hg'; syncLiq(); }
-    $('presetHint').textContent = SCENE_HINT[sc] || '';
+    S.hintFrom = null; $('presetHint').textContent = SCENE_HINT[sc] || '';
     if (sc === 'buoy') buoyReset(true);
     updateReadouts(); drawAll();
   });
@@ -1728,6 +1900,299 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     e.preventDefault(); syncSliders(); updateReadouts(); drawAll();
   });
 
+  // ---------- readings: capture, table, CSV, the student's fit ----------
+  const VERSION = 'fluids@2026-10-22';
+  let rows = [];            // {kind, liq, rho, preset, mode?, rhoO?, over?, cells: {...}} as displayed or as typed
+  let dataOpen = false;
+  const KIND_OF = { press: 'depth', buoy: 'buoy', venturi: 'venturi' };
+  const KIND_NAME = { depth: 'Depth', buoy: 'Buoyancy', venturi: 'Venturi' };
+  // table columns per kind: [cell key or derived key, header, aria name, editable]
+  const COLS = {
+    depth: [['h', 'h m', 'depth h in m', true], ['P', 'P kPa', 'pressure P in kPa', true], ['mode', 'mode', 'pressure mode', false]],
+    buoy: [['d', 'd cm', 'depth d in cm', true], ['T', 'T N', 'scale reading T in N', true], ['Vs', 'V<sub>sub</sub> cm³', 'submerged volume in cm³', false], ['FB', 'F<sub>B</sub> N', 'buoyant force in N', false]],
+    venturi: [['v1', 'v₁ m/s', 'inlet speed in m/s', true], ['Q', 'Q L/s', 'flow meter in L/s', true], ['h1', 'h₁ cm', 'standpipe 1 in cm', true], ['h2', 'h₂ cm', 'standpipe 2 in cm', true]]
+  };
+  const clean = (v) => (isFinite(v) ? String(+v.toPrecision(10)) : '');
+  // derived values from a row's cells (typed values included), in the units of the table
+  function derived(r) {
+    const c = r.cells, o = {};
+    if (r.kind === 'buoy') {
+      const L = num(c.L), d = num(c.d), W = num(c.W), T = num(c.T);
+      o.Vs = L * L * clamp(d, 0, L); o.FB = W - T;
+    } else if (r.kind === 'venturi') { o.dh = num(c.h1) - num(c.h2); o.v1sq = num(c.v1) ** 2; }
+    return o;
+  }
+  const escH = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+  const capStat = (msg) => { $('capStat').textContent = msg; };
+  function capture() {
+    const I = inst(), base = { liq: S.liq, rho: rhoF(), preset: S.preset ? PRESET_NAME[S.preset] : '' };
+    let row = null;
+    if (S.scene === 'press') row = { kind: 'depth', ...base, mode: I.mode, cells: { h: I.h, P: I.P } };
+    else if (S.scene === 'buoy') {
+      if (!I.scale) { capStat('Turn on Spring scale first: the scale and the depth ruler are read with the block hanging still.'); return; }
+      row = { kind: 'buoy', ...base, rhoO: S.P.buoy.rho, over: I.over, cells: { d: I.d, T: I.T, W: I.W, L: I.L, Vb: I.over ? I.Vb : '' } };
+    } else if (S.scene === 'venturi') {
+      if (I.cav) { capStat('No reading: the throat would cavitate, so the ideal model is invalid there. Lower v₁ or widen the throat.'); return; }
+      if (I.empty) { capStat('No reading: the throat standpipe is empty because the pressure there is below air pressure. Lower v₁ or raise h₁.'); return; }
+      row = { kind: 'venturi', ...base, cells: { v1: I.v1, Q: I.Q, h1: I.h1, h2: I.h2, D1: I.D1, D2: I.D2 } };
+    } else { capStat('Capture works in the Depth, Buoyancy and Venturi scenes.'); return; }
+    rows.push(row); renderRows();
+    const n = rows.filter((r) => r.kind === row.kind).length;
+    const msg = row.kind === 'depth' ? `Reading ${n} captured: h = ${I.h} m, P = ${I.P} kPa.`
+      : row.kind === 'buoy' ? `Reading ${n} captured: d = ${I.d} cm, T = ${I.T} N.`
+      : `Reading ${n} captured: v₁ = ${I.v1} m/s, h₁ = ${I.h1} cm, h₂ = ${I.h2} cm.`;
+    capStat(msg); $('live').textContent = msg;
+    drawAll();
+  }
+  function renderRows() {
+    const kind = KIND_OF[S.scene], tb = $('tbl');
+    const others = rows.filter((r) => r.kind !== kind).length;
+    if (!kind) {
+      tb.tHead.innerHTML = '';
+      tb.tBodies[0].innerHTML = `<tr><td class="empty">${rows.length ? `${rows.length} reading${rows.length > 1 ? 's' : ''} kept from other scenes. They all go into the CSV.` : 'No readings yet.'}</td></tr>`;
+      $('tblCap').textContent = 'Captured readings';
+    } else {
+      const cols = COLS[kind];
+      tb.tHead.innerHTML = `<tr><th>#</th>${cols.map((c) => `<th>${c[1]}</th>`).join('')}<th><span class="sr">Delete</span></th></tr>`;
+      $('tblCap').textContent = `Captured ${KIND_NAME[kind]} readings`;
+      const mine = rows.map((r, i) => [r, i]).filter(([r]) => r.kind === kind);
+      if (!mine.length) tb.tBodies[0].innerHTML = `<tr><td class="empty" colspan="${cols.length + 2}">No ${KIND_NAME[kind]} readings yet. Set up, then press Capture reading.</td></tr>`;
+      else tb.tBodies[0].innerHTML = mine.map(([r, i], j) => {
+        const dv = derived(r);
+        return `<tr title="${escH(LIQ[r.liq].name + (r.preset ? ', ' + r.preset : ''))}"><td class="n">${j + 1}</td>${cols.map(([k, , aria, ed]) => ed
+          ? `<td><input aria-label="${aria}, row ${j + 1}" data-i="${i}" data-k="${k}" value="${escH(r.cells[k])}" inputmode="decimal" spellcheck="false"></td>`
+          : `<td>${k === 'mode' ? r.mode : k === 'Vs' ? fx(dv.Vs, 1) : k === 'FB' ? fx(dv.FB, 2) : ''}</td>`).join('')}<td><button type="button" data-del="${i}" aria-label="Delete row ${j + 1}">×</button></td></tr>`;
+      }).join('');
+    }
+    $('readHint').textContent = READ_HINT[kind || 'none'] + (kind && others ? ` ${others} reading${others > 1 ? 's' : ''} from other scenes are kept for the CSV.` : '');
+  }
+  const READ_HINT = {
+    depth: 'Capture stores the depth ruler and the pressure gauge as displayed, in the mode shown. The fit uses the readings for the present liquid and pressure mode: P = intercept + slope·h.',
+    buoy: 'Turn on Spring scale. Capture stores the depth ruler d, the spring scale T and the scale reading in air W. The table works out V_sub = L²·d (at most L³) and F_B = W − T; the fit is F_B = intercept + slope·V_sub.',
+    venturi: 'Capture stores v₁, the flow meter and both standpipes. Keep D₁ and D₂ fixed: the fit uses the readings with the present pipe and throat, Δh = h₁ − h₂ against v₁², with intercept.',
+    none: 'Capture works in the Depth, Buoyancy and Venturi scenes. Rows from every scene stay until Clear, and all of them go into the CSV.'
+  };
+  $('tbl').addEventListener('input', (e) => {
+    const t = e.target; if (!t.dataset || t.dataset.k === undefined) return;
+    const r = rows[+t.dataset.i]; if (!r) return;
+    r.cells[t.dataset.k] = t.value; drawGraph(); lastData = ''; renderData();
+  });
+  $('tbl').addEventListener('change', () => renderRows());
+  $('tbl').addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-del]'); if (!b) return;
+    rows.splice(+b.dataset.del, 1); renderRows(); drawAll(); capStat('Row deleted.');
+    const first = $('tbl').querySelector('button[data-del]'); (first || $('capture')).focus();
+  });
+  const PRESET_NAME = {};
+  for (const b of document.querySelectorAll('#presets button')) PRESET_NAME[b.dataset.p] = b.textContent;
+  function csvText() {
+    const meta = ['Fluids: Pressure, Buoyancy and Flow, captured readings (simulated data)', ['demo version', VERSION],
+      'setup,each row names its scene and the preset it came from (blank: changed by hand)',
+      ['g', G, 'm/s^2 (standard gravity)'], ['P0', PATM, 'Pa (standard atmosphere on the free surface)'],
+      'buoyancy apparatus,cube block in a tank with inner floor 0.5 m x 0.3 m (area 0.15 m^2); overflow spout at 0.42 m; the block hangs still from the spring scale by a 0.05 m string',
+      'venturi apparatus,horizontal round pipe; standpipes at the inlet and at the throat read the gauge pressure at the axis as a column height',
+      'model,incompressible liquid; at rest P = P0 + rho g h; buoyant force F_B = rho_f V_sub g; ideal steady flow with continuity A1 v1 = A2 v2 and Bernoulli P + rho v^2/2 = constant along the axis',
+      'rounding,as displayed: depth h 0.01 m; pressure gauge 0.01 kPa; spring scale 0.01 N; depth ruler d 0.1 cm; beaker 1 cm^3; v1 0.01 m/s; flow meter 0.001 L/s; standpipes 0.1 cm. Edited cells are exported as typed (units converted to SI by moving the decimal point)',
+      'derived columns,V_sub_m3 = L^2 min(max(d 0) L); F_B_N = W_air - T; dh_m = h1 - h2',
+      'seed,none (the model is deterministic)'];
+    const cols = ['row', 'scene', 'preset', 'liquid', 'rho_fluid_kg_m3', 'pressure_mode', 'depth_h_m', 'P_Pa',
+      'block_edge_L_m', 'block_density_kg_m3', 'scale_in_air_W_N', 'scale_T_N', 'depth_d_m', 'V_sub_m3', 'F_B_N', 'beaker_V_m3',
+      'D1_m', 'D2_m', 'v1_m_s', 'Q_m3_s', 'h1_m', 'h2_m', 'dh_m'];
+    const out = rows.map((r, i) => {
+      const c = r.cells, o = Object.fromEntries(cols.map((k) => [k, '']));
+      Object.assign(o, { row: i + 1, scene: KIND_NAME[r.kind], preset: r.preset, liquid: LIQ[r.liq].name, rho_fluid_kg_m3: r.rho });
+      if (r.kind === 'depth') Object.assign(o, { pressure_mode: r.mode === 'abs' ? 'absolute' : 'gauge', depth_h_m: c.h, P_Pa: shiftDec(c.P, 3) });
+      else if (r.kind === 'buoy') {
+        const L = num(c.L) / 100, d = num(c.d) / 100;
+        Object.assign(o, { block_edge_L_m: shiftDec(c.L, -2), block_density_kg_m3: r.rhoO, scale_in_air_W_N: c.W, scale_T_N: c.T, depth_d_m: shiftDec(c.d, -2),
+          V_sub_m3: clean(L * L * clamp(d, 0, L)), F_B_N: clean(num(c.W) - num(c.T)), beaker_V_m3: r.over ? shiftDec(c.Vb, -6) : '' });
+      } else {
+        Object.assign(o, { D1_m: shiftDec(c.D1, -2), D2_m: shiftDec(c.D2, -2), v1_m_s: c.v1, Q_m3_s: shiftDec(c.Q, -3), h1_m: shiftDec(c.h1, -2), h2_m: shiftDec(c.h2, -2),
+          dh_m: clean((num(c.h1) - num(c.h2)) / 100) });
+      }
+      return cols.map((k) => o[k]);
+    });
+    return buildCSV(meta, cols, out);
+  }
+  function download(name, text) {
+    try { const b = new Blob([text], { type: 'text/csv' }), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800); } catch (_) {}
+  }
+  $('capture').addEventListener('click', capture);
+  $('expCsv').addEventListener('click', () => { if (!rows.length) { capStat('No readings to export yet.'); return; } download('fluids-readings.csv', csvText()); capStat(`${rows.length} reading${rows.length > 1 ? 's' : ''} exported as fluids-readings.csv.`); });
+  $('clearRows').addEventListener('click', () => { rows = []; renderRows(); drawAll(); capStat('Readings cleared.'); });
+
+  // the student's fit for the current scene, from the captured rows only
+  function pm(v, e) {
+    if (!(e > 0) || !isFinite(e)) return `${sig(v, 4)} ± ${isFinite(e) ? '0' : '—'}`;
+    const d = clamp(1 - Math.floor(Math.log10(e)), 0, 8);
+    return `${fx(v, d)} ± ${fx(e, d)}`;
+  }
+  function fitSpec() {
+    const kind = KIND_OF[S.scene]; if (!kind) return null;
+    const all = rows.filter((r) => r.kind === kind);
+    let use, xs = [], ys = [], o;
+    if (kind === 'depth') {
+      use = all.filter((r) => r.liq === S.liq && r.mode === S.gmode);
+      for (const r of use) { const x = num(r.cells.h), y = num(r.cells.P); if (isFinite(x) && isFinite(y)) { xs.push(x); ys.push(y); } }
+      const rho = rhoF();
+      o = { title: `Your readings: ${S.gmode === 'abs' ? 'absolute' : 'gauge'} pressure against depth, ${LIQ[S.liq].name.toLowerCase()}`, xlab: 'depth h (m)', ylab: 'P (kPa)', ru: 'kPa',
+        model: { a: S.gmode === 'abs' ? PATM / 1000 : 0, b: rho * G / 1000, txt: `model: slope ρg = ${fx(rho * G / 1000, 3)} kPa/m, intercept ${S.gmode === 'abs' ? fx(PATM / 1000, 3) : '0'} kPa` },
+        res: (f) => [`P = a + b·h: slope b = ${pm(f.b, f.sb)} kPa/m, intercept a = ${pm(f.a, f.sa)} kPa`, `so ρ = b/g = ${pm(f.b * 1000 / G, f.sb * 1000 / G)} kg/m³ (g = 9.80665 m/s²)`] };
+    } else if (kind === 'buoy') {
+      use = all.filter((r) => r.liq === S.liq);
+      for (const r of use) { const d = derived(r); if (isFinite(d.Vs) && isFinite(d.FB)) { xs.push(d.Vs); ys.push(d.FB); } }
+      const rho = rhoF();
+      o = { title: `Your readings: buoyant force W − T against submerged volume, ${LIQ[S.liq].name.toLowerCase()}`, xlab: 'submerged volume (cm³)', ylab: 'buoyant force (N)', ru: 'N',
+        model: { a: 0, b: rho * G * 1e-6, txt: `model: slope ρ_f g = ${fx(rho * G, 0)} N/m³, through the origin` },
+        res: (f) => [`F_B = a + b·V_sub: slope b = ${pm(f.b * 1e6, f.sb * 1e6)} N/m³, intercept a = ${pm(f.a, f.sa)} N`, `so ρ_f = b/g = ${pm(f.b * 1e6 / G, f.sb * 1e6 / G)} kg/m³`] };
+    } else {
+      const q = S.P.venturi;
+      use = all.filter((r) => num(r.cells.D1) === +fx(q.D1, 1) && num(r.cells.D2) === +fx(q.D2, 1));
+      for (const r of use) { const d = derived(r); if (isFinite(d.v1sq) && isFinite(d.dh)) { xs.push(d.v1sq); ys.push(d.dh / 100); } }
+      const ra = (q.D1 / q.D2) ** 4;
+      o = { title: `Your readings: standpipe drop h₁ − h₂ against v₁², D₁ = ${fx(q.D1, 1)} cm, D₂ = ${fx(q.D2, 1)} cm`, xlab: 'v₁² (m²/s²)', ylab: 'Δh (m)', ru: 'm',
+        model: { a: 0, b: (ra - 1) / (2 * G), txt: `model: slope ((A₁/A₂)² − 1)/(2g) = ${sig((ra - 1) / (2 * G), 4)} s²/m` },
+        res: (f) => [`Δh = a + b·v₁²: slope b = ${pm(f.b, f.sb)} s²/m, intercept a = ${pm(f.a * 100, f.sa * 100)} cm`] };
+    }
+    o.kind = kind; o.xs = xs; o.ys = ys; o.nAll = all.length; o.fit = fitLine(xs, ys);
+    o.note = `${xs.length} of ${all.length} ${KIND_NAME[kind]} reading${all.length === 1 ? '' : 's'} used` + (kind === 'depth' ? ` (this liquid and pressure mode)` : kind === 'buoy' ? ' (this liquid)' : ' (this pipe and throat)');
+    return o;
+  }
+  // a block of wrapped text; returns the y below it
+  function wrapText(ctx, txt, x, y, maxW, size, col, weight, fam) {
+    const words = txt.split(' '), lines = []; let cur = '';
+    for (const w of words) { const t2 = cur ? cur + ' ' + w : w; if (richWidth(ctx, t2, size, weight, fam) > maxW && cur) { lines.push(cur); cur = w; } else cur = t2; }
+    lines.push(cur);
+    ctx.fillStyle = col; ctx.textBaseline = 'top';
+    lines.forEach((l, i) => richText(ctx, l, x, y + i * size * 1.3, size, weight, 'left', fam));
+    return y + lines.length * size * 1.3;
+  }
+  function drawFitGraph(ctx, W, H, ls, ps) {
+    const F = fitSpec(), x0 = 12 * ls, maxW = W - 24 * ls;
+    if (!F) {
+      const y = gTitle(ctx, 'Your readings', x0, 10 * ls, ls);
+      wrapText(ctx, S.blind ? 'Blind: the model graph is hidden. Readings and fits work in the Depth, Buoyancy and Venturi scenes.' : 'Readings and fits work in the Depth, Buoyancy and Venturi scenes.', x0, y + 6 * ls, maxW, 11.5 * ls, T.muted);
+      return;
+    }
+    // a short pane (projector, phone) gets one line of results and no note, so the plot keeps its room
+    const compact = H < 330 * ls;
+    let y = gTitle(ctx, F.title, x0, 8 * ls, ls);
+    const f = F.fit;
+    if (f) {
+      if (compact) y = wrapText(ctx, F.res(f)[0], x0, y + 1 * ls, maxW, 9.5 * ls, T.ink, 600, T.mono);
+      else for (const line of F.res(f)) y = wrapText(ctx, line, x0, y + 2 * ls, maxW, 10.5 * ls, T.ink, 600, T.mono);
+    }
+    if (!compact) y = wrapText(ctx, F.note + (S.blind ? '' : '. ' + F.model.txt), x0, y + 2 * ls, maxW, 10.5 * ls, T.muted);
+    const L = 58 * ls, R = W - 20 * ls, bot = H - 34 * ls, top = y + 20 * ls;
+    if (bot - top < 60 * ls) return;
+    const stripH = Math.max((compact ? 26 : 36) * ls, (bot - top) * 0.24), mainBot = bot - stripH - 24 * ls, stripTop = bot - stripH;
+    const xs = F.xs, ys = F.ys;
+    const xmax = xs.length ? Math.max(...xs) : 1, xmin = xs.length ? Math.min(...xs) : 0;
+    const xr = [Math.min(0, xmin), xmax > 0 ? xmax * 1.08 : 1];
+    const lineY = (k, x) => k.a + k.b * x, cand = ys.slice();
+    if (f) cand.push(lineY(f, xr[0]), lineY(f, xr[1]));
+    if (!S.blind) cand.push(lineY(F.model, xr[0]), lineY(F.model, xr[1]));
+    let y0 = cand.length ? Math.min(...cand) : 0, y1 = cand.length ? Math.max(...cand) : 1;
+    if (y1 - y0 < 1e-9) { y0 -= 1; y1 += 1; }
+    const pad = (y1 - y0) * 0.1; y0 -= pad; y1 += pad;
+    const A = axes(ctx, L, R, top, mainBot, xr, [y0, y1], '', F.ylab, ls, { noX: true });
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, mainBot - top); ctx.clip();
+    if (!S.blind) { ctx.strokeStyle = T.equi; ctx.lineWidth = 1.6 * ps; ctx.setLineDash([6 * ps, 4 * ps]); ctx.beginPath(); ctx.moveTo(A.X(xr[0]), A.Y(lineY(F.model, xr[0]))); ctx.lineTo(A.X(xr[1]), A.Y(lineY(F.model, xr[1]))); ctx.stroke(); ctx.setLineDash([]); }
+    if (f) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(A.X(xr[0]), A.Y(lineY(f, xr[0]))); ctx.lineTo(A.X(xr[1]), A.Y(lineY(f, xr[1]))); ctx.stroke(); }
+    ctx.restore();
+    ctx.fillStyle = T.neg;
+    for (let i = 0; i < xs.length; i++) { ctx.beginPath(); ctx.arc(A.X(xs[i]), A.Y(ys[i]), 4.5 * ps, 0, 2 * Math.PI); ctx.fill(); }
+    if (!f) labelBox(ctx, xs.length ? 'Capture another reading to fit a line.' : 'No readings for this fit yet: press Capture reading.', (L + R) / 2, (top + mainBot) / 2, 'center', T.muted, 11.5 * ls, 700);
+    else labelBox(ctx, S.blind ? 'dots: your readings; line: least squares fit' : 'dots: your readings; line: least squares fit; dashed: model', R - 6 * ls, mainBot - 8 * ls, 'right', T.muted, 10.5 * ls);
+    // residual strip
+    // residual axis: ±1.3 times the largest residual, but not narrower than 1% of the plotted y range (an exact fit shows a flat strip)
+    const rmax = f && f.res.length ? Math.max(...f.res.map(Math.abs)) : 0, rh = Math.max(rmax * 1.3, 0.01 * (y1 - y0)), rr = [-rh, rh];
+    const B = axes(ctx, L, R, stripTop, bot, xr, rr, F.xlab, `residual (${F.ru})`, ls);
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, B.Y(0)); ctx.lineTo(R, B.Y(0)); ctx.stroke();
+    if (f) { ctx.fillStyle = T.neg; for (let i = 0; i < xs.length; i++) { ctx.beginPath(); ctx.arc(B.X(xs[i]), B.Y(f.res[i]), 3.5 * ps, 0, 2 * Math.PI); ctx.fill(); } }
+  }
+
+  // ---------- data table for the graph pane ----------
+  let lastData = '';
+  function graphData() {
+    const rho = rhoF();
+    if (S.blind || S.gview === 'fit') {
+      const F = fitSpec();
+      if (!F) return { cap: 'No readings fit for this scene.', head: [], rows: [] };
+      const f = F.fit;
+      return { cap: `${F.title}. ${f ? F.res(f).join('; ') + '.' : 'Not enough readings to fit.'}`, head: [F.xlab, F.ylab, `residual (${F.ru})`],
+        rows: F.xs.map((x, i) => [sig(x, 5), sig(F.ys[i], 5), f ? sig(f.res[i], 3) : '—']) };
+    }
+    if (S.scene === 'press') {
+      const q = S.P.press, off = S.gmode === 'abs' ? PATM : 0;
+      return { cap: `${S.gmode === 'abs' ? 'Absolute' : 'Gauge'} pressure against depth, ${LIQ[S.liq].name.toLowerCase()}, model P = P₀ + ρgh`, head: ['depth (m)', 'P (kPa)'],
+        rows: [0, 0.2, 0.4, 0.6, 0.8, 1].map((k) => [fx(k * q.D, 2), fx((off + rho * G * k * q.D) / 1000, 2)]) };
+    }
+    if (S.scene === 'pascal') return { cap: 'Liquid in each vessel and force on its base', head: ['vessel', 'volume (L)', 'weight W (N)', 'force on base (N)'], rows: pascalData().map((e) => [e.v.name, fx(e.V * 1000, 2), sig(e.Wl, 3), sig(e.F, 3)]) };
+    if (S.scene === 'baro') {
+      const dP = S.baro === 'baro' ? S.P.baro.Pa * 1000 : Math.abs(S.P.baro.Pg * 1000);
+      return { cap: `Height of a column that balances ${fx(dP / 1000, 1)} kPa`, head: ['liquid', 'h (m)'], rows: Object.keys(LIQ).map((k) => [LIQ[k].name, sig(columnHeight(dP, LIQ[k].rho), 4)]) };
+    }
+    if (S.scene === 'buoy') {
+      const b = buoyNow(), r = [['weight W', sig(b.W, 3)], ['buoyant force F_B', sig(b.FB, 3)], [b.q.scale ? 'scale T' : 'floor N', sig(b.q.scale ? b.T : b.N, 3)]];
+      if (b.q.over) r.push(['water caught in the beaker, weight', sig(rhoF() * G * bs.caught, 3)]);
+      return { cap: 'Forces on the block now (N)', head: ['force', 'N'], rows: r };
+    }
+    if (S.scene === 'venturi') {
+      const q = S.P.venturi, v = vp(), r = venturi(v), tot = r.P1 + 0.5 * v.rho * v.v1 * v.v1;
+      return { cap: `Gauge pressure and ½ρv² along the pipe (kPa)${r.cav ? '; the throat values are not physical: cavitation' : ''}`, head: ['x (m)', 'D (cm)', 'v (m/s)', 'P (kPa)', '½ρv² (kPa)'],
+        rows: [0, 0.3, 0.55, 0.8, 1.15, 1.45].map((x) => { const D = pipeD(x, q), vv = q.v1 * (v.D1 / D) ** 2, P = tot - 0.5 * v.rho * vv * vv; return [fx(x, 2), fx(D * 100, 2), fx(vv, 2), r.cav && P + PATM < v.pv ? 'invalid' : fx(P / 1000, 2), fx(0.5 * v.rho * vv * vv / 1000, 2)]; }) };
+    }
+    const q = S.P.torr;
+    return { cap: `Range against hole depth, H = ${fx(q.H, 2)} m, R = 2√(h(H − h))`, head: ['h (m)', 'R (m)'], rows: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9].map((k) => [fx(k * q.H, 3), fx(torricelli(q.H, k * q.H).R, 3)]) };
+  }
+  function renderData() {
+    if (!dataOpen) return;
+    const d = graphData(), key = JSON.stringify(d);
+    if (key === lastData) return;
+    lastData = key;
+    $('dataCap').textContent = d.cap.replace(/_(\w+)/g, '$1');
+    const t = $('dataTab');
+    t.tHead.innerHTML = d.head.length ? `<tr>${d.head.map((h) => `<th>${escH(h)}</th>`).join('')}</tr>` : '';
+    t.tBodies[0].innerHTML = d.rows.length ? d.rows.map((r) => `<tr>${r.map((c) => `<td>${escH(c)}</td>`).join('')}</tr>`).join('') : `<tr><td class="empty">No points to list.</td></tr>`;
+  }
+  $('dataBtn').addEventListener('click', () => {
+    dataOpen = !dataOpen; $('dataWrap').hidden = !dataOpen;
+    $('dataBtn').setAttribute('aria-expanded', String(dataOpen)); $('dataBtn').textContent = dataOpen ? 'Hide data table' : 'Show data table';
+    lastData = ''; renderData();
+  });
+
+  // ---------- lab mode: Blind, graph choice, reduce motion ----------
+  function graphLabel() {
+    const fit = S.blind || S.gview === 'fit';
+    $('gCan').setAttribute('aria-label', (fit ? 'Plot of your captured readings for this scene with a least squares line and a residual strip below it.'
+      : 'Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, or jet range against hole depth.') + ' Show data table in the Lab section lists the plotted values.');
+  }
+  function syncLab() {
+    $('blindTag').hidden = !S.blind; $('blindHint').hidden = !S.blind;
+    const gv = S.blind ? 'fit' : S.gview;
+    $('stage').classList.toggle('fitv', gv === 'fit');
+    for (const b of document.querySelectorAll('#graphSeg button')) { b.setAttribute('aria-pressed', String(b.dataset.v === gv)); b.disabled = S.blind && b.dataset.v === 'model'; }
+    // the hint on show came from a preset (it may have been changed by hand since): swap in the version without answers
+    if (S.hintFrom) $('presetHint').textContent = S.blind ? BLIND_HINT[S.hintFrom] : PRESETS[S.hintFrom].hint;
+    graphLabel();
+  }
+  function setBlind(on) {
+    S.blind = on; $('blind').checked = on; syncLab();
+    lastRead = ''; lastData = ''; updateReadouts(); renderData(); drawAll();
+    $('live').textContent = on ? 'Blind on: predictions and answers are hidden.' : 'Blind off: predictions and answers are shown.';
+  }
+  $('blind').addEventListener('change', (e) => setBlind(e.target.checked));
+  $('graphSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b || b.disabled) return; S.gview = b.dataset.v; syncLab(); lastData = ''; renderData(); drawAll(); });
+  function setReduce(on) {
+    reduce = on; $('tReduce').checked = on;
+    try { sessionStorage.setItem('fluids-reduce-motion', on ? 'on' : 'off'); } catch (_) {}
+    if (on) { setRunning(false); if (S.scene === 'buoy' && !S.P.buoy.scale) settleBuoy(); drops = []; }
+    else setRunning(true);
+    drawAll();
+  }
+  $('tReduce').addEventListener('change', (e) => setReduce(e.target.checked));
+
   // ---------- projector and theme ----------
   const projBtn = $('proj');
   function setProjector(on) {
@@ -1763,13 +2228,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (running && dtr > 0 && dyn) { advance(dtr * S.rate); drawAll(); }
     else if (held) drawAll();
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
-    if (now - lastR > 150) { updateReadouts(); lastR = now; }
+    if (now - lastR > 150) { updateReadouts(); renderData(); lastR = now; }
     requestAnimationFrame(loop);
   }
   window.__fl = {
     get frameMs() { return frameMs; }, get t() { return t; }, get S() { return S; }, get bs() { return bs; }, get handles() { return handles; },
     get running() { return running; }, get trace() { return trace; },
-    applyPreset, setScene, setParam, setRunning, buoyNow, bp,
+    applyPreset, setScene, setParam, setRunning, buoyNow, bp, capture, csvText, fitSpec, setBlind, setReduce, inst, graphData, get rows() { return rows; },
     go(dts, step) { step = step || 0.01; for (let x = 0; x < dts - 1e-12; x += step) advance(Math.min(step, dts - x)); updateReadouts(); drawAll(); }
   };
 
@@ -1778,8 +2243,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   bs = { zb: DEF.buoy.z0, v: 0, Vw: Vw0(), caught: 0, t: 0 };
   const ro = new ResizeObserver(resize);
   for (const k of ['s', 'g']) ro.observe(panes[k]);
+  $('tReduce').checked = reduce;
   applyPreset('float');
   setRunning(!reduce);
+  syncLab(); renderRows();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);
 })();
