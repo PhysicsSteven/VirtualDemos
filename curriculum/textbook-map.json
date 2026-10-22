@@ -1120,10 +1120,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "motion-graphs"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Motion Graphs, Ball thrown up: free fall with a = −g throughout, height, velocity and acceleration graphs; no air resistance."
     },
     {
       "vol": 1,
@@ -4378,6 +4380,11 @@
         },
         {
           "vol": 1,
+          "sec": "3.5",
+          "title": "Free Fall"
+        },
+        {
+          "vol": 1,
           "sec": "3.6",
           "title": "Finding Velocity and Displacement from Acceleration"
         }
@@ -4385,7 +4392,7 @@
       "role": "lab",
       "beyond_book": false,
       "status": "needs-handout",
-      "note": "New 2026-10-22 (Claude). Exact piecewise constant acceleration; x, v, a graphs with tangent and area; Walk the graph with motion detector estimates; Capture, CSV, parabola fit with residuals, Blind. Free fall (3.5) not covered: horizontal track only.",
+      "note": "New 2026-10-22 (Claude). Exact piecewise constant acceleration; x, v, a graphs with tangent and area; Walk the graph with motion detector estimates; Capture, CSV, parabola fit with residuals, Blind. Ball thrown up preset covers free fall (3.5) on a vertical track.",
       "handouts": [],
       "title": "Motion Graphs",
       "url": "demos/motion-graphs.html"

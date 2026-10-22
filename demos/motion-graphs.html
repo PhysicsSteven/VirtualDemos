@@ -164,6 +164,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <button type="button" data-p="speed" aria-pressed="false">Speeding up</button>
           <button type="button" data-p="turn" aria-pressed="false">Slowing down and turning around</button>
           <button type="button" data-p="stopgo" aria-pressed="false">Stop and go</button>
+          <button type="button" data-p="toss" aria-pressed="false">Ball thrown up</button>
           <button type="button" data-p="walk" aria-pressed="false">Walk the graph</button>
         </div>
         <p class="hint" id="presetHint"></p>
@@ -172,7 +173,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <section id="secMotion">
         <h2>Motion</h2>
         <div><div class="slider-head"><label for="sx0">Start position x₀</label><output id="ox0" for="sx0"></output></div><input type="range" id="sx0" min="-8" max="8" step="0.5"></div>
-        <div><div class="slider-head"><label for="sv0">Start velocity v₀</label><output id="ov0" for="sv0"></output></div><input type="range" id="sv0" min="-5" max="5" step="0.5"></div>
+        <div><div class="slider-head"><label for="sv0">Start velocity v₀</label><output id="ov0" for="sv0"></output></div><input type="range" id="sv0" min="-15" max="15" step="0.5"></div>
         <div id="segs"></div>
         <p class="hint">Three stages, each with a constant acceleration for a set time. Set a stage's time to 0 to skip it.</p>
       </section>
@@ -299,9 +300,10 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     speed: { x0: -8, v0: 0, segs: [[1, 5], [0, 0], [0, 0]], hint: 'Constant a = 1 m/s²: v grows as a straight line and x curves upward as a parabola. The tangent to x gets steeper; its slope is the v at that moment.' },
     turn: { x0: -6, v0: 4, segs: [[-1, 8], [0, 0], [0, 0]], hint: 'The acceleration is negative the whole time, yet the cart first moves forward. It stops at t = 4 s (v = 0, the top of the x parabola) and comes back. a is not zero at the turning point.' },
     stopgo: { x0: -8, v0: 0, segs: [[2, 2], [0, 3], [-2, 2]], hint: 'Speed up, cruise, slow to a stop. Each stage has its own constant a. x is curved, straight, then curved again; v is a trapezoid, and the area under it is the total distance.' },
+    toss: { x0: 0, v0: 12, segs: [[-9.81, 2 * 12 / 9.81], [0, 0], [0, 0]], vert: true, hint: 'Free fall: thrown up at 12 m/s, the ball has a = −9.81 m/s² the whole time, on the way up, at the top and on the way down. At the top v = 0 but a is not. It lands after 2v₀/g = 2.45 s, back at the height it started. Air resistance is ignored.' },
     walk: { hint: 'Move the cart so that its position graph follows the dashed target. Flat parts mean stand still; steeper parts mean move faster.' }
   };
-  const S = { preset: 'const', x0: -6, v0: 2, segs: [{ a: 0, T: 6 }, { a: 0, T: 0 }, { a: 0, T: 0 }], t: 0, blind: false, tan: true, area: true, dots: false, rows: [],
+  const S = { vert: false, preset: 'const', x0: -6, v0: 2, segs: [{ a: 0, T: 6 }, { a: 0, T: 0 }, { a: 0, T: 0 }], t: 0, blind: false, tan: true, area: true, dots: false, rows: [],
     walk: { pts: null, vel: false, run: false, t: 0, xs: [], x: 0, key: 0, score: null } };
   const WALK_T = 10, WALK_DT = 0.02, X_LIM = 10;
   let run = buildRun(S.x0, S.v0, S.segs), playing = false;
@@ -321,7 +323,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   function buildSegControls() {
     let h = '';
     for (let k = 0; k < 3; k++) h += `<div class="seg-title">Stage ${k + 1}</div>
-      <div><div class="slider-head"><label for="sa${k}">Acceleration a</label><output id="oa${k}" for="sa${k}"></output></div><input type="range" id="sa${k}" min="-3" max="3" step="0.5"></div>
+      <div><div class="slider-head"><label for="sa${k}">Acceleration a</label><output id="oa${k}" for="sa${k}"></output></div><input type="range" id="sa${k}" min="-10" max="10" step="0.5"></div>
       <div><div class="slider-head"><label for="sT${k}">Time</label><output id="oT${k}" for="sT${k}"></output></div><input type="range" id="sT${k}" min="0" max="8" step="0.5"></div>`;
     $('segs').innerHTML = h;
     for (let k = 0; k < 3; k++) {
@@ -347,9 +349,10 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     $('presetHint').textContent = c.hint;
     const walk = p === 'walk';
     $('secMotion').hidden = walk; $('secWalk').hidden = !walk;
-    if (walk) { newTarget(); }
+    if (walk) { newTarget(); S.vert = false; }
     else {
       S.x0 = c.x0; S.v0 = c.v0; c.segs.forEach(([a, T], k) => { S.segs[k] = { a, T }; });
+      S.vert = !!c.vert;
       run = buildRun(S.x0, S.v0, S.segs); S.t = 0; syncControls();
     }
     setPlaying(false); draw(); readouts();
@@ -397,7 +400,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 
   // ---------- layout and scales ----------
   function layout() {
-    const p = ps(), pad = 12 * p, trackH = Math.max(96, Math.min(150, H * 0.2)) * p * 0.9, left = 58 * p, right = W - 14 * p;
+    const p = ps(), pad = 12 * p, trackH = S.vert ? 44 * p : Math.max(96, Math.min(150, H * 0.2)) * p * 0.9, left = (S.vert ? 150 : 58) * p, right = W - 14 * p;
     const top = trackH + 6 * p, gap = 8 * p, gh = (H - top - 30 * p - 2 * gap) / 3;
     const blind = S.blind && S.preset !== 'walk';
     const panes = blind ? [{ k: 'x', y0: top, h: H - top - 30 * p }] : ['x', 'v', 'a'].map((k, i) => ({ k, y0: top + i * (gh + gap), h: gh }));
@@ -425,12 +428,32 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     ctx.beginPath(); ctx.moveTo(x1 + Math.cos(ang) * head * 0.4, y1 + Math.sin(ang) * head * 0.4);
     ctx.lineTo(x1 - Math.cos(ang - 0.5) * head, y1 - Math.sin(ang - 0.5) * head); ctx.lineTo(x1 - Math.cos(ang + 0.5) * head, y1 - Math.sin(ang + 0.5) * head); ctx.fill();
   }
+  function drawShaft(L, xr, blind) {
+    const p = L.p, top = L.panes[0].y0, bot = L.panes[L.panes.length - 1].y0 + L.panes[L.panes.length - 1].h, sx = 62 * p;
+    const Yh = (y) => bot - (bot - top) * (y - xr.lo) / (xr.hi - xr.lo);
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sx, top); ctx.lineTo(sx, bot); ctx.stroke();
+    ctx.font = `${10 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let y = xr.lo; y <= xr.hi + 1e-9; y += xr.step) { ctx.fillRect(sx - 4 * p, Yh(y) - 0.5, 8 * p, 1); ctx.fillText(fx(y, xr.step < 1 ? 1 : 0), sx - 8 * p, Yh(y)); }
+    ctx.fillStyle = T.gridStrong; ctx.fillRect(sx - 30 * p, Yh(0), 60 * p, 3 * p);
+    if (S.dots) { for (let t = 0; t <= run.T + 1e-9; t += 0.25) { ctx.fillStyle = T.x; ctx.globalAlpha = 0.3; ctx.beginPath(); ctx.arc(sx + 16 * p, Yh(stateAt(run, t).x), 3.5 * p, 0, 7); ctx.fill(); } ctx.globalAlpha = 1; }
+    const q = stateAt(run, S.t), by = Yh(q.x);
+    ctx.fillStyle = T.x; ctx.beginPath(); ctx.arc(sx, by, 8 * p, 0, 7); ctx.fill();
+    if (!blind) {
+      const k = 3.2 * p;
+      if (Math.abs(q.v) > 0.01) arrow(sx + 24 * p, by, sx + 24 * p, by - q.v * k, T.v, 2.5 * p, 8 * p);
+      if (Math.abs(q.a) > 0.01) arrow(sx + 44 * p, by, sx + 44 * p, by - q.a * k, T.a, 2.5 * p, 8 * p);
+      ctx.font = `600 ${10.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillStyle = T.v; ctx.fillText('v', sx + 24 * p, by + 6 * p); ctx.fillStyle = T.a; ctx.fillText('a', sx + 44 * p, by + 6 * p);
+    }
+  }
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     LY = layout(); const L = LY, p = L.p, R = ranges(), tm = tMax(), walk = S.preset === 'walk', blind = S.blind && !walk;
     const tX = (t) => L.left + (L.right - L.left) * t / tm;
-    // track
+    // track (vertical for a ball thrown up: the height axis runs alongside the graphs)
+    if (S.vert) drawShaft(L, R.x, blind);
+    else {
     const xr = R.x, ty = L.trackH * 0.62, tx0 = L.left, tx1 = L.right, X = (x) => tx0 + (tx1 - tx0) * (x - xr.lo) / (xr.hi - xr.lo);
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(tx0, ty + 12 * p); ctx.lineTo(tx1, ty + 12 * p); ctx.stroke();
     ctx.font = `${10 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
@@ -452,6 +475,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       if (Math.abs(s.v) > 0.01) { ctx.textAlign = s.v > 0 ? 'right' : 'left'; ctx.fillStyle = T.v; ctx.fillText('v', cx - Math.sign(s.v) * 6 * p, ty - ch - 6 * p); }
       if (Math.abs(s.a) > 0.01) { ctx.textAlign = s.a > 0 ? 'right' : 'left'; ctx.fillStyle = T.a; ctx.fillText('a', cx - Math.sign(s.a) * 6 * p, ty - ch - 20 * p); }
     }
+    }
     // graphs
     const Ncurve = 400;
     for (const pane of L.panes) {
@@ -463,8 +487,8 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         ctx.beginPath(); ctx.moveTo(L.left, py); ctx.lineTo(L.right, py); ctx.stroke();
         if (h > 60 * p || Math.abs(v) < 1e-9 || v === r.lo || v === r.hi) { ctx.fillStyle = T.muted; ctx.fillText(fx(v, r.step < 1 ? 1 : 0), L.left - 5 * p, py); }
       }
-      ctx.save(); ctx.translate(14 * p, y0 + h / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`;
-      ctx.fillText({ x: 'x (m)', v: 'v (m/s)', a: 'a (m/s²)' }[pane.k], 0, 0); ctx.restore();
+      ctx.save(); ctx.translate(L.left - 44 * p, y0 + h / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`;
+      ctx.fillText({ x: S.vert ? 'y (m)' : 'x (m)', v: 'v (m/s)', a: 'a (m/s²)' }[pane.k], 0, 0); ctx.restore();
       ctx.save(); ctx.beginPath(); ctx.rect(L.left, y0, L.right - L.left, h); ctx.clip();
       // target (walk)
       if (walk && S.walk.pts && ((pane.k === 'x' && !S.walk.vel) || (pane.k === 'v' && S.walk.vel))) {
@@ -518,7 +542,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   // ---------- readouts ----------
   function readouts() {
     const walk = S.preset === 'walk', blind = S.blind && !walk, q = st(S.t), dd = (a, b, c) => `<div${c ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
-    let h = dd('Time t', `${S.t.toFixed(2)} s`) + dd('Position x', `${fx(q.x, 2)} m`);
+    let h = dd('Time t', `${S.t.toFixed(2)} s`) + dd(S.vert ? 'Height y' : 'Position x', `${fx(q.x, 2)} m`);
     if (blind) h += '<div class="wide"><dt>v, a, slopes and areas</dt><dd class="ok">hidden in Blind</dd></div>';
     else {
       h += dd('Velocity v', `${fx(q.v, 2)} m/s`) + dd('Acceleration a', `${fx(q.a, 2)} m/s²`);
