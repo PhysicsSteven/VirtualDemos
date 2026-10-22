@@ -1,0 +1,723 @@
+{
+ "about": "Every demo on the site: title, one line description and tags, grouped by subject. Source for the course pages (tools/courses.py), the teaching notes index (tools/notes.py) and the QR check (tools/qr.py). The order within a subject is the display order.",
+ "subjects": [
+  {
+   "id": "astronomy",
+   "title": "Astronomy",
+   "demos": [
+    {
+     "demo": "seasons",
+     "title": "Reasons for Seasons",
+     "desc": "Earth's tilted axis, the Sun's path across your sky, day length and sunlight through the year, and why distance from the Sun is not the reason.",
+     "tags": [
+      "axial tilt",
+      "solar declination",
+      "day length",
+      "insolation"
+     ]
+    },
+    {
+     "demo": "moon-phases",
+     "title": "Moon Phases",
+     "desc": "Drag the Moon around Earth and see its phase from the ground, when it rises and sets, and why eclipses only happen in eclipse seasons.",
+     "tags": [
+      "lunar phases",
+      "synodic month",
+      "line of nodes",
+      "eclipses"
+     ]
+    },
+    {
+     "demo": "kepler-orbits",
+     "title": "Kepler's Laws",
+     "desc": "Launch a planet by dragging its velocity arrow. Watch ellipses form, equal areas sweep out in equal times, and the orbit land on P² = a³/M with the real planets.",
+     "tags": [
+      "ellipses",
+      "equal areas",
+      "P² = a³",
+      "escape speed"
+     ]
+    },
+    {
+     "demo": "hr-diagram",
+     "title": "Stellar Evolution",
+     "desc": "Follow a star of any mass across the HR diagram from the main sequence to a cooling white dwarf or a supernova, and date a star cluster from its turnoff.",
+     "tags": [
+      "HR diagram",
+      "main sequence lifetime",
+      "white dwarf cooling",
+      "cluster turnoff"
+     ]
+    },
+    {
+     "demo": "exoplanets",
+     "title": "Finding Exoplanets",
+     "desc": "Watch a planet tug its star and cross its face, with the transit light curve and radial velocity curve drawing live. See why Earth twins are so hard to find.",
+     "tags": [
+      "transit method",
+      "radial velocity",
+      "Kepler's third law",
+      "planet density"
+     ]
+    },
+    {
+     "demo": "distance-ladder",
+     "title": "Cosmic Distance Ladder",
+     "desc": "Measure a parallax from two photos, time a Cepheid's light curve, find a supernova's peak, and fit Hubble's law to galaxy redshifts. Each rung calibrates the next.",
+     "tags": [
+      "parallax",
+      "Cepheid variables",
+      "Type Ia supernovae",
+      "Hubble constant"
+     ]
+    },
+    {
+     "demo": "tides",
+     "title": "Tides",
+     "desc": "See why the Moon raises two ocean bulges, not one: subtract the pull at Earth's center from the pull everywhere else. Watch a city's tides over a day and spring and neap tides over a month.",
+     "tags": [
+      "tidal force",
+      "1/d³",
+      "spring and neap tides",
+      "lunar day"
+     ]
+    },
+    {
+     "demo": "star-slice",
+     "title": "Star Slice",
+     "desc": "Cut a real MESA star model in half and zoom from the envelope to the core: composition, convection zones, burning shells, and a white dwarf crystallizing from the center out.",
+     "tags": [
+      "stellar interiors",
+      "convection",
+      "shell burning",
+      "MESA"
+     ]
+    },
+    {
+     "demo": "rotation-curves",
+     "title": "Galaxy Rotation Curves",
+     "desc": "Stars far from a galaxy's center orbit as fast as those near it, though the visible matter says they should slow down. Build the curve from a bulge, disk, gas and a dark matter halo, measure it with Doppler shifts, and compare the Milky Way and NGC 3198.",
+     "tags": [
+      "rotation curves",
+      "dark matter",
+      "Doppler shift",
+      "Kepler's laws"
+     ]
+    },
+    {
+     "demo": "black-holes",
+     "title": "Black Holes and Lensing",
+     "desc": "Slide a galaxy behind a lens to make an Einstein ring, watch a microlensing event brighten, ray trace a black hole's shadow exactly, and see what gravity does to clocks, light and a person near Sagittarius A* and a stellar black hole.",
+     "tags": [
+      "gravitational lensing",
+      "Einstein ring",
+      "black hole shadow",
+      "gravitational time dilation"
+     ]
+    },
+    {
+     "demo": "lagrange-points",
+     "title": "Lagrange Points",
+     "desc": "Drop or throw test particles in the rotating frame of two orbiting bodies: the five Lagrange points, zero velocity curves, Jupiter's Trojans, tadpole and horseshoe orbits, and halo style orbits near JWST's L2.",
+     "tags": [
+      "restricted three body problem",
+      "Jacobi constant",
+      "Trojan asteroids",
+      "JWST"
+     ]
+    },
+    {
+     "demo": "white-dwarf-cooling",
+     "title": "White Dwarf Cooling",
+     "desc": "Watch a white dwarf fade: Mestel's cooling law, the core freezing from the center out once the ion coupling reaches 175, the latent heat that slows it, the Gaia Q branch and white dwarfs as a cosmic clock.",
+     "tags": [
+      "Mestel cooling",
+      "crystallization",
+      "Gaia Q branch",
+      "cosmic clock"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "modern-physics",
+   "title": "Modern physics",
+   "demos": [
+    {
+     "demo": "photoelectric",
+     "title": "Photoelectric Effect",
+     "desc": "Shine light on a metal, find the stopping voltage, and measure Planck's constant from the slope, the way Millikan did in 1916.",
+     "tags": [
+      "photons",
+      "work function",
+      "stopping voltage",
+      "Planck's constant"
+     ]
+    },
+    {
+     "demo": "spectra",
+     "title": "Spectra Explorer",
+     "desc": "Click any of 99 elements to see its emission or absorption lines, measured by NIST. Includes the Bohr model of hydrogen and a mystery spectrum game, including a star.",
+     "tags": [
+      "atomic spectra",
+      "Bohr model",
+      "Balmer series",
+      "stellar absorption lines"
+     ]
+    },
+    {
+     "demo": "spacetime",
+     "title": "Spacetime Diagrams",
+     "desc": "Place events on a Minkowski diagram and change observers. Light cones stay at 45° while simultaneity, clocks and lengths change, through the train, the rod and the twin paradox.",
+     "tags": [
+      "light cones",
+      "Lorentz transformation",
+      "relativity of simultaneity",
+      "twin paradox"
+     ]
+    },
+    {
+     "demo": "quantum-waves",
+     "title": "Quantum Wave Packets",
+     "desc": "Launch an electron at a barrier and watch part of it tunnel through, settle into energy eigenstates in a box or an oscillator, and collapse when you measure where it is.",
+     "tags": [
+      "Schrödinger equation",
+      "tunneling",
+      "energy eigenstates",
+      "uncertainty principle",
+      "measurement"
+     ]
+    },
+    {
+     "demo": "hydrogen-orbitals",
+     "title": "Hydrogen Orbitals",
+     "desc": "Every hydrogen state up to n = 6 as a 3D cloud sampled from |ψ|², a slice showing its nodes, and its radial probability against the Bohr orbit. Mix 1s and 2p and watch the charge slosh at the Lyman α frequency.",
+     "tags": [
+      "quantum numbers",
+      "orbitals",
+      "radial and angular nodes",
+      "superposition"
+     ]
+    },
+    {
+     "demo": "double-slit",
+     "title": "Double Slit, One Particle at a Time",
+     "desc": "Fire photons, electrons or buckyballs through two slits one at a time. Single dots pile up into fringes, and a which slit detector washes them out.",
+     "tags": [
+      "wave particle duality",
+      "de Broglie wavelength",
+      "interference",
+      "which path information"
+     ]
+    },
+    {
+     "demo": "radioactive-decay",
+     "title": "Radioactive Decay",
+     "desc": "A grid of nuclei that each decay at random, and a count that halves every half life anyway. Carbon 14 dating, iodine 131 and decay chains where a daughter builds up and dies away.",
+     "tags": [
+      "half life",
+      "exponential decay",
+      "decay chains",
+      "statistics of small samples"
+     ]
+    },
+    {
+     "demo": "rutherford",
+     "title": "Rutherford Scattering",
+     "desc": "Fire alpha particles at a gold nucleus one at a time or as a beam, count them by angle against 1/sin⁴(θ/2), and see why Thomson's plum pudding atom can never send one back.",
+     "tags": [
+      "nuclear atom",
+      "impact parameter",
+      "closest approach",
+      "cross section"
+     ]
+    },
+    {
+     "demo": "binding-energy",
+     "title": "Nuclear Binding Energy",
+     "desc": "The curve of binding energy from 2,550 measured AME2020 masses: why fusing light nuclei and splitting heavy ones both release energy, why stars stop at iron, the liquid drop model term by term, magic numbers and the chart of nuclides.",
+     "tags": [
+      "binding energy",
+      "liquid drop model",
+      "fusion and fission",
+      "magic numbers"
+     ]
+    },
+    {
+     "demo": "compton",
+     "title": "Compton Scattering",
+     "desc": "A photon bounces off a free electron and comes away with a longer wavelength. Drag the scattered photon around to see the shift, the electron's recoil and the momentum triangle, from Compton's 1923 x rays to cesium 137 gamma rays and the Compton edge.",
+     "tags": [
+      "Compton shift",
+      "photon momentum",
+      "Klein–Nishina",
+      "Compton edge"
+     ]
+    },
+    {
+     "demo": "lasers",
+     "title": "Lasers and Stimulated Emission",
+     "desc": "A photon can make an excited atom emit an exact copy of itself. See why there is no laser without population inversion, find the threshold of an Nd:YAG laser, watch it spike as it switches on, compare ruby, Nd:YAG and He–Ne levels, and count cavity modes.",
+     "tags": [
+      "stimulated emission",
+      "population inversion",
+      "laser threshold",
+      "cavity modes"
+     ]
+    },
+    {
+     "demo": "franck-hertz",
+     "title": "Franck–Hertz Experiment",
+     "desc": "Sweep the accelerating voltage across a mercury tube and watch the collector current drop every 4.9 V, then mark the peaks and fit their spacing like in the lab. Switch to neon to see glowing layers march toward the cathode.",
+     "tags": [
+      "Franck–Hertz",
+      "quantized energy levels",
+      "inelastic collisions",
+      "lab analysis"
+     ]
+    },
+    {
+     "demo": "gamma-spectroscopy",
+     "title": "Gamma Spectroscopy",
+     "desc": "A virtual NaI(Tl) spectrometer in a lead castle: set the high voltage and gain, acquire Cs-137, Co-60, Na-22 or Ba-133 spectra on a multichannel analyzer, mark peaks, calibrate, measure resolution and lead attenuation, and identify an unknown source.",
+     "tags": [
+      "gamma spectroscopy",
+      "Compton edge",
+      "energy calibration",
+      "attenuation"
+     ]
+    },
+    {
+     "demo": "spin-resonance",
+     "title": "Spin Resonance",
+     "desc": "Tune an electron or proton spin resonance probe, sweep the field, find the absorption peak on the oscilloscope, and measure g for DPPH and the gyromagnetic ratios of hydrogen and fluorine.",
+     "tags": [
+      "ESR",
+      "NMR",
+      "lab"
+     ]
+    },
+    {
+     "demo": "speed-of-light",
+     "title": "Speed of Light",
+     "desc": "Foucault's rotating mirror bench: spin the mirror, read the shifted image on the microscope micrometer, and fit your readings for c.",
+     "tags": [
+      "lab",
+      "optics",
+      "relativity"
+     ]
+    },
+    {
+     "demo": "e-over-m",
+     "title": "e/m of the Electron",
+     "desc": "Bend an electron beam into a glowing circle with Helmholtz coils, read its radius on the mirrored scale without parallax, and measure the charge to mass ratio.",
+     "tags": [
+      "lab",
+      "magnetism",
+      "electron"
+     ]
+    },
+    {
+     "demo": "electron-diffraction",
+     "title": "Electron Diffraction",
+     "desc": "Fire electrons through graphite, measure the two rings on the tube's screen at several voltages, and find the lattice spacings from de Broglie's λ = h/p.",
+     "tags": [
+      "lab",
+      "quantum",
+      "de Broglie"
+     ]
+    },
+    {
+     "demo": "dna",
+     "title": "DNA in 3D",
+     "desc": "Build a DNA double helix atom by atom from any sequence or a random one: B and A forms, ball and stick, space filling or cartoon, hydrogen bonds, the two grooves, and a PDB export.",
+     "tags": [
+      "DNA",
+      "molecular structure",
+      "hydrogen bonds",
+      "biophysics"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mechanics",
+   "title": "Mechanics",
+   "demos": [
+    {
+     "demo": "projectile-drag",
+     "title": "Projectile Range",
+     "desc": "Fire baseballs, ping pong balls, cannonballs and more with and without air resistance, stack up to eight shots of different mass, size, drag or air density, and compare their paths and x, y and speed graphs side by side.",
+     "tags": [
+      "projectile motion",
+      "quadratic drag",
+      "terminal speed",
+      "compare shots"
+     ]
+    },
+    {
+     "demo": "springs",
+     "title": "Springs and Oscillations",
+     "desc": "Pull a mass on a spring and let go: simple harmonic motion, a period that ignores the amplitude, three kinds of damping, a driven oscillator sweeping through resonance, and two coupled masses trading energy in beats.",
+     "tags": [
+      "simple harmonic motion",
+      "damping",
+      "resonance",
+      "normal modes"
+     ]
+    },
+    {
+     "demo": "potential-curves",
+     "title": "Potential Energy Curves",
+     "desc": "Read motion off a graph of U(x): drag the energy line and watch the particle speed up, slow down and turn around. Springs, roller coasters, a double well, a molecule, a pendulum, or a curve you draw yourself, with phase space.",
+     "tags": [
+      "energy conservation",
+      "turning points",
+      "stable and unstable equilibrium",
+      "phase space"
+     ]
+    },
+    {
+     "demo": "rotation",
+     "title": "Rotation and Torque",
+     "desc": "Push a door near the hinge and at the handle, race a hoop, disk and sphere down a ramp, spin a skater who pulls her arms in, and balance a seesaw.",
+     "tags": [
+      "torque",
+      "moment of inertia",
+      "rolling without slipping",
+      "angular momentum"
+     ]
+    },
+    {
+     "demo": "catenary",
+     "title": "Hanging Chains and Arches",
+     "desc": "Drag the ends of a hanging chain and compare its catenary with a parabola, follow the tension along it, then flip it into an arch that stands in pure compression, like the Gateway Arch.",
+     "tags": [
+      "catenary",
+      "tension",
+      "free body diagram",
+      "arches"
+     ]
+    },
+    {
+     "demo": "collisions",
+     "title": "Collisions and Momentum",
+     "desc": "Crash carts on an air track and pucks on an air table: momentum is always conserved, kinetic energy only when the bounce is elastic. Also an explosion, Newton's cradle, and why a soft bumper lowers the peak force for the same impulse.",
+     "tags": [
+      "momentum",
+      "coefficient of restitution",
+      "center of mass",
+      "impulse"
+     ]
+    },
+    {
+     "demo": "double-pendulum",
+     "title": "Pendulums and Chaos",
+     "desc": "Big swings take longer than the small angle formula says. Hang a second pendulum from the first for normal modes at low energy and chaos at high energy: 100 copies a millionth of a radian apart fan out, and a Poincaré section shows islands in a chaotic sea.",
+     "tags": [
+      "large amplitude pendulum",
+      "normal modes",
+      "chaos",
+      "Poincaré section"
+     ]
+    },
+    {
+     "demo": "fluids",
+     "title": "Fluids: Pressure, Buoyancy and Flow",
+     "desc": "Drag a pressure probe down a tank, drop blocks that float or sink, weigh one in an overflow can like Archimedes, see an iceberg float 89% under, watch a Venturi tube trade pressure for speed, and aim Torricelli's jet.",
+     "tags": [
+      "pressure",
+      "buoyancy",
+      "Archimedes' principle",
+      "Bernoulli"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "thermodynamics",
+   "title": "Thermodynamics",
+   "demos": [
+    {
+     "demo": "blackbody",
+     "title": "Blackbody Radiation",
+     "desc": "Explore thermal emission across temperatures, test Planck’s spectrum, Wien’s displacement law and Stefan–Boltzmann scaling, and connect the results to visible color.",
+     "tags": [
+      "Planck curve",
+      "Wien's law",
+      "Stefan-Boltzmann",
+      "star colors"
+     ]
+    },
+    {
+     "demo": "ideal-gas",
+     "title": "Gas in a Box",
+     "desc": "Watch pressure and temperature emerge from molecules hitting the walls, speeds relax to Maxwell-Boltzmann, and a moving piston heat the gas.",
+     "tags": [
+      "kinetic theory",
+      "ideal gas law",
+      "adiabatic compression"
+     ]
+    },
+    {
+     "demo": "heat-engines",
+     "title": "Heat Engine Cycles",
+     "desc": "Run an ideal gas around Carnot, Otto, Diesel, Stirling and Brayton cycles, or drag your own: the PV loop's area is the net work, a T–S diagram shows the heat, and no engine beats the Carnot limit. Reverse it for a refrigerator.",
+     "tags": [
+      "PV diagram",
+      "first law",
+      "Carnot efficiency",
+      "entropy"
+     ]
+    },
+    {
+     "demo": "ising",
+     "title": "Ising Model",
+     "desc": "Spins on a lattice that each favor their neighbors: cool through T<sub>c</sub> and order appears on its own, with fractal domains at T<sub>c</sub>, hysteresis, and heat capacity and susceptibility measured against Onsager's exact solution.",
+     "tags": [
+      "phase transitions",
+      "statistical mechanics",
+      "Monte Carlo",
+      "critical point"
+     ]
+    },
+    {
+     "demo": "bz-reaction",
+     "title": "Belousov–Zhabotinsky Reaction",
+     "desc": "A chemical clock: a stirred beaker oscillates on a limit cycle, an unstirred dish carries target and spiral waves, and a flow reactor goes through period doubling to chaos.",
+     "tags": [
+      "oscillating reaction",
+      "reaction–diffusion",
+      "spiral waves",
+      "chaos"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "electricity-and-magnetism",
+   "title": "Electricity and magnetism",
+   "demos": [
+    {
+     "demo": "coulomb-sandbox",
+     "title": "Coulomb Sandbox",
+     "desc": "Drag point charges and watch the field lines, equipotentials and potential update live, as a 2D map or a rotatable 3D landscape.",
+     "tags": [
+      "electric field",
+      "potential",
+      "superposition"
+     ]
+    },
+    {
+     "demo": "magnetic-force",
+     "title": "Charges in Magnetic Fields",
+     "desc": "Launch protons, electrons and alphas into a magnetic field and watch them circle at a period that doesn't depend on speed. Build a velocity selector, a mass spectrometer that separates neon isotopes, and a cyclotron.",
+     "tags": [
+      "magnetic force",
+      "cyclotron frequency",
+      "velocity selector",
+      "mass spectrometer"
+     ]
+    },
+    {
+     "demo": "faraday",
+     "title": "Faraday's and Lenz's Laws",
+     "desc": "Push a magnet into a coil and watch the flux, EMF and current, with the coil pushing back. Move it fast or slow and the same total charge flows. Spin a generator coil and slide a bar along rails.",
+     "tags": [
+      "magnetic flux",
+      "induced EMF",
+      "Lenz's law",
+      "generators"
+     ]
+    },
+    {
+     "demo": "gauss-law",
+     "title": "Gauss's Law",
+     "desc": "Drag charges in and out of a Gaussian surface of any shape and watch the flux: Q<sub>enc</sub>/ε₀ from a real numerical surface integral, zero for charges outside. Then the sphere, line and plane derivations step by step.",
+     "tags": [
+      "electric flux",
+      "Gauss's law",
+      "symmetry",
+      "field of a sphere, line and plane"
+     ]
+    },
+    {
+     "demo": "currents-fields",
+     "title": "Magnetic Fields of Currents",
+     "desc": "Drag wires and watch their fields add and the forces between them, test Ampère's law on any loop with a numerical integral, and bend the current into a loop or a solenoid computed exactly from Biot–Savart.",
+     "tags": [
+      "Biot–Savart law",
+      "Ampère's law",
+      "force between wires",
+      "solenoid"
+     ]
+    },
+    {
+     "demo": "em-waves",
+     "title": "Electromagnetic Waves",
+     "desc": "A plane wave in 3D with E, B and the Poynting vector, polarization from linear to circular, the energy and pressure of sunlight and a laser, the full spectrum, and a dipole antenna launching waves with exact field lines.",
+     "tags": [
+      "Maxwell's equations",
+      "speed of light",
+      "polarization",
+      "intensity",
+      "dipole radiation"
+     ]
+    },
+    {
+     "demo": "capacitors",
+     "title": "Capacitors and Dielectrics",
+     "desc": "Pull the plates apart and slide in a dielectric with the battery connected or not, and follow Q, V, E, C and the energy, including the work your hand does. Field lines come from a real solution with fringing at the edges.",
+     "tags": [
+      "capacitance",
+      "dielectrics",
+      "stored energy",
+      "series and parallel"
+     ]
+    },
+    {
+     "demo": "circuits",
+     "title": "Circuits",
+     "desc": "Everything in one place: build DC circuits with batteries, bulbs and meters, charge a capacitor through a resistor, drive an RLC circuit to resonance, and watch circuits ring down on their own.",
+     "tags": [
+      "circuits",
+      "RC",
+      "RLC",
+      "resonance"
+     ]
+    },
+    {
+     "demo": "relativity-em",
+     "title": "Magnetism from Relativity",
+     "desc": "Ride along with a charge beside a current and length contraction turns the magnetic force into an electric one. Then Einstein's magnet and loop, the field of a fast charge, and how E and B transform.",
+     "tags": [
+      "special relativity",
+      "length contraction",
+      "field transformation",
+      "Faraday's law"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "waves",
+   "title": "Waves and sound",
+   "demos": [
+    {
+     "demo": "standing-waves",
+     "title": "Standing Waves",
+     "desc": "Add two traveling waves into a standing wave, find the harmonics of a guitar string, drive it into resonance, pluck it and see which harmonics vanish, compare open and closed pipes, hear two close tones beat, and float beads at the pressure nodes of a 40 kHz acoustic levitator.",
+     "tags": [
+      "superposition",
+      "harmonics",
+      "resonance",
+      "beats",
+      "acoustic levitation"
+     ]
+    },
+    {
+     "demo": "doppler",
+     "title": "Doppler Effect and Shock Waves",
+     "desc": "Drag a source and an observer through the wavefronts: hear an ambulance's pitch fall as it passes, break the sound barrier into a Mach cone and a sonic boom, then switch to light for redshift, blueshift and the transverse Doppler effect.",
+     "tags": [
+      "Doppler shift",
+      "Mach cone",
+      "sonic boom",
+      "redshift"
+     ]
+    },
+    {
+     "demo": "timbre",
+     "title": "Timbre and Harmonics",
+     "desc": "Build a tone from its harmonics and hear it: square, sawtooth and triangle waves, instrument-like spectra, the missing fundamental, and why phase barely matters.",
+     "tags": [
+      "sound",
+      "Fourier",
+      "harmonics"
+     ]
+    },
+    {
+     "demo": "resonators",
+     "title": "Resonators",
+     "desc": "What sets an instrument's pitch: find the speed of sound with a resonance tube, pluck and bow a string, and blow across a bottle as you fill it, with sound.",
+     "tags": [
+      "sound",
+      "resonance",
+      "lab"
+     ]
+    },
+    {
+     "demo": "acoustic-levitation",
+     "title": "Acoustic Levitation",
+     "desc": "Hold beads in midair with two bowls of 40 kHz speakers: traps in the standing wave, the Gor'kov force against gravity, and beads carried along by shifting the phase.",
+     "tags": [
+      "sound",
+      "ultrasound",
+      "3D"
+     ]
+    },
+    {
+     "demo": "chladni",
+     "title": "Chladni Plates",
+     "desc": "Drive a metal plate at its resonances and watch sand gather on the nodal lines: square and circular plates, a response curve with every mode, a 3D view and Chladni's law.",
+     "tags": [
+      "plate vibration",
+      "resonance",
+      "nodal lines",
+      "sound"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "optics",
+   "title": "Optics",
+   "demos": [
+    {
+     "demo": "optics-bench",
+     "title": "Optics Bench",
+     "desc": "Drag lenses, mirrors, prisms and light sources. Rays bend and bounce live, and images form where they cross.",
+     "tags": [
+      "thin lens equation",
+      "mirrors",
+      "total internal reflection",
+      "dispersion"
+     ]
+    },
+    {
+     "demo": "polarization",
+     "title": "Polarization",
+     "desc": "Send light through polarizers and wave plates and watch the electric field after each one: Malus's law, the three polarizer surprise, circular light from a quarter wave plate, and glare at Brewster's angle.",
+     "tags": [
+      "Malus's law",
+      "wave plates",
+      "Jones calculus",
+      "Brewster angle"
+     ]
+    },
+    {
+     "demo": "thin-films",
+     "title": "Thin Film Interference",
+     "desc": "See why soap bubbles and oil slicks are colored: two reflections from a thin film add or cancel, computed exactly with the reflected color of white light, plus the black film, air wedge fringes, Newton's rings and anti reflection coatings.",
+     "tags": [
+      "thin films",
+      "interference",
+      "Newton's rings",
+      "anti reflection coating"
+     ]
+    },
+    {
+     "demo": "diffraction-grating",
+     "title": "Diffraction Grating",
+     "desc": "Shine lasers, an RGB module, white light or H, He, Ne, Hg and Na lamps through gratings from 100 to 1000 lines/mm, a CD or a DVD. See the orders land on the wall, overlapping rainbows and missing orders, then measure a spot with calipers to find the wavelength.",
+     "tags": [
+      "diffraction grating",
+      "d sin θ = mλ",
+      "spectra",
+      "measure wavelength"
+     ]
+    }
+   ]
+  }
+ ]
+}

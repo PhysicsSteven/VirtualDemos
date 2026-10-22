@@ -114,9 +114,11 @@ def main():
         BASE = a.base.rstrip("/") + "/"
     demos = sorted((ROOT / "demos").glob("*.html"))
     if a.check and not a.names:
-        # only pages listed on the index need a projector QR code; legacy pages kept off the index are skipped
-        listed = (ROOT / "index.html").read_text(encoding="utf-8")
-        demos = [d for d in demos if f'href="demos/{d.stem}.html"' in listed]
+        # only pages in curriculum/catalog.json need a projector QR code; legacy pages kept off the site are skipped
+        import json
+        cat = json.loads((ROOT / "curriculum" / "catalog.json").read_text(encoding="utf-8"))
+        listed = {d["demo"] for sub in cat["subjects"] for d in sub["demos"]}
+        demos = [d for d in demos if d.stem in listed]
     if a.names:
         demos = [d for d in demos if d.stem in a.names]
     bad = []

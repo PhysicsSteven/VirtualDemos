@@ -222,15 +222,10 @@ def build_key(name, keys):
 
 
 def sections_from_index():
-    """[(subject, [(name, title)])] in the order of index.html."""
-    t = INDEX.read_text(encoding="utf-8")
-    out = []
-    for sm in re.finditer(r'<h2 id="[^"]+-h">(.*?)<span', t, re.S):
-        subj = html.unescape(re.sub(r"<[^>]+>", "", sm.group(1))).strip()
-        end = t.find("</section>", sm.end())
-        names = re.findall(r'href="demos/([a-z0-9-]+)\.html"', t[sm.end():end])
-        out.append((subj, [(n, demo_title(n) or n) for n in names]))
-    return out
+    """[(subject, [(name, title)])] in the order of curriculum/catalog.json."""
+    import json
+    cat = json.loads((ROOT / "curriculum" / "catalog.json").read_text(encoding="utf-8"))
+    return [(sub["title"], [(d["demo"], demo_title(d["demo"]) or d["demo"]) for d in sub["demos"]]) for sub in cat["subjects"]]
 
 
 def committed_sources():
