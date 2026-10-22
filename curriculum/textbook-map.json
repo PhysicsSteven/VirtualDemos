@@ -1043,10 +1043,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "motion-graphs"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Motion Graphs: position, velocity and acceleration graphs with slopes (tangents) and areas, for stages of constant acceleration; Walk the graph for x(t) and v(t)."
     },
     {
       "vol": 1,
@@ -1058,10 +1060,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "motion-graphs"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Motion Graphs: position, velocity and acceleration graphs with slopes (tangents) and areas, for stages of constant acceleration; Walk the graph for x(t) and v(t)."
     },
     {
       "vol": 1,
@@ -1073,10 +1077,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "motion-graphs"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Motion Graphs: position, velocity and acceleration graphs with slopes (tangents) and areas, for stages of constant acceleration; Walk the graph for x(t) and v(t)."
     },
     {
       "vol": 1,
@@ -1088,12 +1094,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "projectile-drag"
+        "projectile-drag",
+        "motion-graphs"
       ],
       "unit": "kinematics",
-      "note": "Projectile motion uses these equations; a general 1D motion/graph activity is missing."
+      "note": "Motion Graphs: position, velocity and acceleration graphs with slopes (tangents) and areas, for stages of constant acceleration; Walk the graph for x(t) and v(t)."
     },
     {
       "vol": 1,
@@ -1120,10 +1127,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "motion-graphs"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Motion Graphs: position, velocity and acceleration graphs with slopes (tangents) and areas, for stages of constant acceleration; Walk the graph for x(t) and v(t)."
     },
     {
       "vol": 1,
@@ -4156,6 +4165,46 @@
       ],
       "title": "Projectile Range",
       "url": "demos/projectile-drag.html"
+    },
+    {
+      "demo": "motion-graphs",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "3.1",
+          "title": "Position, Displacement, and Average Velocity"
+        },
+        {
+          "vol": 1,
+          "sec": "3.2",
+          "title": "Instantaneous Velocity and Speed"
+        },
+        {
+          "vol": 1,
+          "sec": "3.3",
+          "title": "Average and Instantaneous Acceleration"
+        },
+        {
+          "vol": 1,
+          "sec": "3.4",
+          "title": "Motion with Constant Acceleration"
+        },
+        {
+          "vol": 1,
+          "sec": "3.6",
+          "title": "Finding Velocity and Displacement from Acceleration"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-22 (Claude). Exact piecewise constant acceleration; x, v, a graphs with tangent and area; Walk the graph with motion detector estimates; Capture, CSV, parabola fit with residuals, Blind. Free fall (3.5) not covered: horizontal track only.",
+      "handouts": [],
+      "title": "Motion Graphs",
+      "url": "demos/motion-graphs.html"
     },
     {
       "demo": "potential-curves",

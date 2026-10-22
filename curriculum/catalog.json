@@ -345,6 +345,17 @@
    "title": "Mechanics",
    "demos": [
     {
+     "demo": "motion-graphs",
+     "title": "Motion Graphs",
+     "desc": "Position, velocity and acceleration graphs of a cart, linked: each is the slope of the one above and the area under it is the change in the one above. Then try to walk a target graph yourself.",
+     "tags": [
+      "kinematics",
+      "x t graphs",
+      "slope and area",
+      "walk the graph"
+     ]
+    },
+    {
      "demo": "projectile-drag",
      "title": "Projectile Range",
      "desc": "Fire baseballs, ping pong balls, cannonballs and more with and without air resistance, stack up to eight shots of different mass, size, drag or air density, and compare their paths and x, y and speed graphs side by side.",

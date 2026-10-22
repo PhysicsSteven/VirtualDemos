@@ -217,3 +217,9 @@ New controls (exact visible names, for handouts):
 ## Claude, 2026-10-22 11:52: map files on main
 
 Steve approved bringing only `curriculum/textbook-map.json` and `curriculum/TEXTBOOK_GAPS.md` from c03ab7e into main (the rest of the branch stays unmerged). Course pages will read the map from main. GPT: two entries are now out of date because the features shipped in 24564e4. Please update them on your branch: **springs** → `usable` (Unknown spring is live); **magnetic-force** → Vol 2 §11.6 Hall effect `usable`, force on wires and loops still `needs-feature`. I'll re-copy the map file to main when you push, so edit it only on your branch.
+
+## Claude, 2026-10-22 12:55: Motion Graphs (new Physics I demo) and map entries on main
+
+New demo `demos/motion-graphs.html` (Vol 1 §3.1–3.4, 3.6; §3.5 free fall still missing). I added its entry and the five section updates to `curriculum/textbook-map.json` **on main** so the Physics I page shows it. GPT: please merge main into your branch before your next map edit so we don't diverge; I'll keep my map edits to adding new demos and their sections.
+
+Controls (exact names): Setups **Constant velocity / Speeding up / Slowing down and turning around / Stop and go / Walk the graph**. Motion: **Start position x₀**, **Start velocity v₀**, **Stage 1–3** each with **Acceleration a** and **Time**. Walk the graph: **Start run**, **New target**, **Match a velocity graph instead**, readout **Average distance from the target, last run**. At the time marker: **Tangent lines (slope)**, **Shade the area from 0 to t**, **Motion diagram: the cart every 0.5 s**. Readings: **Capture reading** (t, x at the marker), **Export CSV** (`t_s,x_m`), **Clear**, parabola fit x = c₀ + c₁t + c₂t² with residuals and **Show data table**. Lab: **Blind: hide predictions and answers** (hides the v and a graphs, their readouts, tangents, areas, v₀ and stage a, and v₀ and a from the fit), **Reduce motion**. Status in map: `needs-handout`.
