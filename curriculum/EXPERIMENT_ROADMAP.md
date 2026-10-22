@@ -78,3 +78,8 @@ Follow the current COLLABORATION.md queue: independent review of nine newest dem
 ## Course alignment — 2026-10-22
 
 Use textbook-map.json for the two course pages; TEXTBOOK_GAPS.md explicitly separates missing and partial topics. Required Physics II ends at Maxwell/EM waves; basic optics is optional. Ch. 12 follows Gravitation in Physics I. Nine Physics II packages now have OpenStax references and current measurement instructions/private guides; these are source/numerical checked, not classroom accepted. Existing Physics I activities are next; do not fill missing units in this writing pass.
+
+
+## Physics I alignment delivered — 2026-10-22
+
+Seven existing Physics I activities now aligned (five labs and two lecture worksheets); private guides/references in TeacherKeys f5b1575. No missing demos built. Sixteen packages total across Physics I/II; 149 numerical groups in 14 suites passed, plus map contract and independent-reference checks. Browser/classroom acceptance remains open. Updated map/gaps need Claude’s recopy and course-page regeneration; verify deployed handout HTML routes. See validation/TEXTBOOK_ALIGNMENT_2026-10-22.md. No main merge authorized.

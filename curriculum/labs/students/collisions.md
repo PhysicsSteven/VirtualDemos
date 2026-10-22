@@ -1,37 +1,76 @@
-# Collisions and Momentum: Student Lab Starter
+# Momentum and Collisions
+Student laboratory · Physics I
 
-**Simulation:** [Open](../../demos/collisions.html) (from curriculum/labs/students use repository link instead: https://physicssteven.github.io/VirtualDemos/demos/collisions.html)
+Textbook: OpenStax *University Physics*, Vol. 1, §§9.1–9.6. Access for free at https://openstax.org/details/books/university-physics-volume-1.
 
-**Research question:** Test momentum conservation for different coefficients of restitution.
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/collisions.html)
 
-## Model
-m₁u₁+m₂u₂=m₁v₁+m₂v₂; v₂-v₁=e(u₁-u₂)
+## Goal
 
-## Procedure (50–75 minutes)
-1. State a prediction and identify independent, dependent and controlled variables.
-2. Choose the mode matching the equation; record every fixed parameter.
-3. Collect five or more independent measurements, recording values, units and measurement method.
-4. Where the model is stochastic, repeat each setting and report variability.
-5. Plot the measurements with labeled axes. Plot total momentum difference and kinetic-energy loss against e.
-6. Compute the inferred physical parameter, check dimensions and compare with theory.
-7. Describe systematic limitations and explain any discrepancies.
+Test momentum conservation with measured velocities and distinguish momentum conservation from kinetic-energy conservation.
 
-## Raw data
-| Trial | Controlled setting (units) | Measured response (units) | Uncertainty / notes |
-|---|---|---|---|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
+## Background
 
-## Analysis questions
-1. Derive or justify the model equation.
-2. What does the graph slope represent?
-3. What limiting case can you test?
-4. How would measurement uncertainty propagate to your result?
-5. What assumptions would fail in a real experiment?
+Choose one positive direction for both carts. With negligible external impulse (§9.3),
 
-**Caution:** Use one-dimensional collision with no external force.
+$$m_1u_1+m_2u_2=m_1v_1+m_2v_2.$$
 
-**Submit:** Data table, graph, calculations, units and a short conclusion.
+Here u denotes velocity before the collision and v after it. Kinetic energy is conserved only in an elastic collision (§9.4). The coefficient of restitution compares separation speed with approach speed:
+
+$$e=\frac{v_2-v_1}{u_1-u_2}.$$
+
+For a one-dimensional collision, reduced mass μ = m1m2/(m1+m2) gives
+
+$$K_i-K_f=\frac12\mu(1-e^2)(u_1-u_2)^2.$$
+
+## Before the lab
+
+1. Predict the final velocities when equal masses collide elastically and one is initially at rest.
+2. Derive the shared velocity when two carts stick together.
+3. Can momentum be conserved while kinetic energy decreases? Where can that energy go?
+
+## Safety
+
+Keep fingers out of real cart bumpers and catch carts before they leave the track. Use only the approved spring or magnetic bumper energy.
+
+## Procedure
+
+**Mass and speed scan.** Use a level track. Keep one bumper type fixed and collect five approaching-cart configurations with varied masses or speeds. Measure each signed velocity before and after collision. Include both positive and negative initial total momentum where practical.
+
+**Bumper comparison.** Keep masses and initial velocities fixed. Repeat with at least three bumper types. Infer restitution from measured velocities before revealing its value. Include a sticking collision as a limiting case if the apparatus supports it.
+
+**Center of mass.** For one run, compare the center-of-mass velocity before and after collision (§9.6). Explain why individual cart velocities change but this velocity stays fixed.
+
+**Using the virtual apparatus.** Choose **1D track** and **Elastic, equal masses**, then turn on **Blind: hide predictions and answers**. Set the cart masses and initial velocities, select a **Bumper**, and press **Place gates for this run**. Check **Gate A position** and **Gate B position**. Let the run finish before **Capture reading**; **Export CSV** stores measured photogate velocities and settings. A gate reads speed from the 5 cm flag's blocking time; attach the observed direction to obtain signed velocity. If a cart never crosses a gate or a crossing is incomplete, reposition/replay rather than inventing a reading. Use **p′ vs p**, **Separation vs approach** and **K lost vs ½μu²** to compare your runs.
+
+## Data
+
+| Run/bumper | m1 (kg) | m2 (kg) | u1 (m/s) | u2 (m/s) | v1 (m/s) | v2 (m/s) |
+|---|---|---|---|---|---|---|
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+
+Keep masses and signed velocities as raw data. Calculate momentum, energy and restitution afterward.
+
+## Analysis
+
+1. Plot final total momentum against initial total momentum. Compare the fitted slope/intercept with conservation.
+2. For each bumper, plot separation speed against approach speed. Infer e from the slope.
+3. Plot kinetic energy lost against ½μ(u1−u2)² for one bumper. Compare its slope with 1−e².
+4. Calculate the center-of-mass velocity and separate the system's overall translation from relative motion.
+
+## Uncertainty
+
+Propagate mass and gate-time resolution into momentum and energy. Gate times are rounded to 0.1 ms in the simulation; short crossings can have substantial fractional uncertainty. Use signed differences and a nonzero momentum scale when initial total momentum is near zero. Do not divide by zero to report a percentage error.
+
+## Questions
+
+1. Why does equal-and-opposite contact force conserve total momentum?
+2. Why is e a speed ratio rather than a ratio of total kinetic energies?
+3. What external effects could spoil a real track experiment?
+4. Why is kinetic energy loss nonnegative for 0 ≤ e ≤ 1?
+
+## What to hand in
+
+Prelab answers, settings and CSV, the three graphs, inferred restitution, a center-of-mass calculation, uncertainty and answers to the questions. Identify simulated data.

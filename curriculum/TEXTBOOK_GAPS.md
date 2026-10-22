@@ -1,6 +1,6 @@
 # Textbook coverage and gaps
 
-Draft source inventory: main `24564e476e0d5ac1acf737527c18550cfda75172`, 2026-10-22. This is a curriculum map, not numerical or browser validation.
+Draft source inventory: main `07fc9abefafe2ae1c6c921734f58740f698aa247`, 2026-10-22. This is a curriculum map, not numerical or browser validation.
 
 62 catalog demos mapped once each; 209 section records (99 in Volume 1, 95 in Volume 2, 15 optional Volume 3 sections). Existing legacy HTML pages outside the index are not duplicated.
 
@@ -138,7 +138,6 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 | 1.5 | Dispersion | missing |
 | 1.6 | Huygens’s Principle | missing |
 | 2.5 | The Eye | missing |
-| 2.6 | The Camera | missing |
 
 ## Sources and limits
 
@@ -151,3 +150,7 @@ Map describes source/UI inventory, not a fresh independent physics audit. Topic 
 ## Physics II handout checkpoint
 
 Nine aligned student handouts and private guides now cover Coulomb/potential, Gauss, capacitors, DC, RC, magnetic motion/Hall, Faraday/Two coils, RLC and optional AC. “Usable” marks the documented activity package, not release certification. Browser workflow remains unverified. Springs is now `needs-handout` rather than `needs-feature`: Claude posted its final unknown-spring controls.
+
+## Physics I handout checkpoint
+
+Five full labs (projectile-drag, collisions, fluids, kepler-orbits, springs) and two short lecture activities (rotation, potential-curves) aligned with private guides. Springs now uses the posted unknown-spring controls and keeps the automatic-period route primary; stopwatch timing remains optional. Full-lab entries are `usable` in the package sense, with browser/classroom acceptance still open. No missing early-unit demo was invented or built. Optional camera image formation maps to optics-bench §2.6 following Claude’s source note.

@@ -67,3 +67,8 @@ Clean feature checkout fast forwarded to main 77d11e3. Claude owns all demo HTML
 ## OpenStax map and Physics II alignment — 2026-10-22
 
 Map pushed first in c03ab7e, with 62 catalog entries and 209 section records. Claude can consume the JSON root courses/sections/demos contract described in TEXTBOOK_GAPS.md. Main 24564e4 then integrated; Hall strip and unknown-spring controls received. Nine Physics II handouts and private guides aligned; TeacherKeys f75bc1d. No em-waves/currents-fields lab added. Source/numerical and document checks passed; Chromium launch blocked, no browser pass claimed. See validation/TEXTBOOK_ALIGNMENT_2026-10-22.md. Next: existing Physics I activities, with springs hold now fulfilled by posted controls. Demo HTML stays Claude-owned; no main merge without Steve.
+
+
+## Physics I alignment delivered — 2026-10-22
+
+Seven existing Physics I activities now aligned (five labs and two lecture worksheets); private guides/references in TeacherKeys f5b1575. No missing demos built. Sixteen packages total across Physics I/II; 149 numerical groups in 14 suites passed, plus map contract and independent-reference checks. Browser/classroom acceptance remains open. Updated map/gaps need Claude’s recopy and course-page regeneration; verify deployed handout HTML routes. See validation/TEXTBOOK_ALIGNMENT_2026-10-22.md. No main merge authorized.

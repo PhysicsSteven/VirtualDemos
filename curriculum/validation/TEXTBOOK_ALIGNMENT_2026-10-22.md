@@ -46,3 +46,31 @@ Source inspection checked bold virtual-control labels for the first eight handou
 ## Final Physics II document checks
 
 Executed a structural/source check on all nine handouts: required plain-style sections, exactly one data table each, balanced display equations, and 160 bold virtual-control labels matched to their demo source (HTML/subscript normalization). All passed. The map contract passed again after Hall/spring status changes. `git diff --check` passed. These are document/source checks, not browser execution.
+
+## Physics I executed completion
+
+Main **07fc9abefafe2ae1c6c921734f58740f698aa247** integrated before the Physics I writing batch. This preserves Claude’s course/misc pages and generator; GPT did not edit those outputs or demo HTML. Mechanics cores are unchanged from 24564e4.
+
+Five full student labs (projectile-drag, collisions, fluids, kepler-orbits, springs) and two short lecture worksheets (rotation, potential-curves) now use OpenStax notation/references and the posted controls. Matching private guides/answers/rubrics and reference generators/results are in **TeacherKeys f5b15752b949444473bcc9a9f8474bc01052e41d**. Unknown spring was rewritten only after its exact controls landed; automatic period is the primary route, hand timing optional. No missing-unit activity was built.
+
+Executed `node curriculum/validation/test_<name>.cjs`:
+
+| Suite | Result |
+|---|---|
+| projectile_drag | 12 groups passed |
+| collisions | 14 groups passed |
+| fluids | 13 groups passed |
+| kepler_orbits | 8 groups passed |
+| springs | 10 groups passed |
+| rotation | 6 groups passed |
+| potential_curves | 8 groups passed |
+
+**71 mechanics groups passed; 149 numerical groups across the 14 Physics I/II suites in this alignment pass, plus the separate map contract.** Springs is counted once in this total. The older nine-demo review counts are not added to this overlapping set.
+
+Executed independent `generate_mechanics_references.py` and `check_mechanics_cores.cjs` (with VIRTUALDEMOS_ROOT): analytic references agree with all seven demo cores. Seven handout structures and 97 bold virtual-control labels passed source checks, including dynamically generated labels. Rotation/potential-curves retain lecture roles. No new browser pass claimed.
+
+Public course-page regeneration remains Claude’s work. Re-copy the updated map/gaps and regenerate to expose the new handout links. Student `.html` links rely on the Pages Markdown rendering; no deployed-route check was performed. Source/doc verification does not substitute for this integration check.
+
+## Final combined document audit
+
+All 16 student/private pairs passed structural checks: textbook reference, required sections, 2–3 prelab questions, 3–4 interpretation questions, exactly one data table and balanced display equations. All 257 bold virtual-control labels matched their source, including runtime-label literals. Instructor companion existence checked locally; the two private pushes are recorded above. This audit does not replace review of every numerical sentence or browser/classroom use.

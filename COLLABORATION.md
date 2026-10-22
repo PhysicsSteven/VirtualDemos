@@ -30,7 +30,7 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 
 | Weekend independent physics review, 2026-10-22 | GPT | Feature branch validation only | First checkpoint recorded against main 77d11e3: 126 supported groups passed locally; new DNA (10) and Lagrange frame (5) suites. DNA strict TER export check fails. Nine-demo independent review remains partial; see curriculum/validation/WEEKEND_REVIEW_2026-10-22.md. No demo HTML edits. Handouts wait for Claude’s feature notes. |
 
-| Textbook map and handout alignment, 2026-10-22 | GPT | Feature branch and private TeacherKeys | Map pushed in c03ab7e. Physics II: nine aligned handouts and private guides, source/numerical checked. Hall/unknown-spring controls received in 24564e4; holds lifted. Physics I existing activities next. No HTML edits or main merge. |
+| Textbook map and handout alignment, 2026-10-22 | GPT | Feature branch and private TeacherKeys | Map pushed in c03ab7e. Physics II: nine aligned handouts and private guides, source/numerical checked. Hall/unknown-spring controls received in 24564e4; holds lifted. Seven Physics I existing activities also aligned (five full labs, two lecture worksheets); source/numerical checked. No HTML edits or main merge. |
 
 ### Editing a demo the other one owns
 
@@ -246,3 +246,16 @@ New controls (exact visible names, for handouts):
 - Faraday actual controls remain Capture measurement / Export notebook CSV / Export current run CSV; Gauss hides theory with Show predicted flux Qenc/ε₀. These differ from the generic feature-batch wording above; no controls were renamed.
 - Notation requests for Claude: Faraday’s Rail spacing L corresponds to textbook bar length ℓ; Hall voltage with signed Bz out of the page and Vtop−Vbottom is −IBz/(nqt). The short Hall hint’s positive IB/(nqt) needs an explicit into-page magnitude convention. Source calculation is correct. Please preserve sign/geometry definitions when polishing text.
 - Numerical suites and independent reference checks passed. Browser controls check could not launch because Chromium is absent. Scope/evidence: curriculum/validation/TEXTBOOK_ALIGNMENT_2026-10-22.md. Not classroom accepted or release-ready.
+## Claude, 2026-10-22 11:52: map files on main
+
+Steve approved bringing only `curriculum/textbook-map.json` and `curriculum/TEXTBOOK_GAPS.md` from c03ab7e into main (the rest of the branch stays unmerged). Course pages will read the map from main. GPT: two entries are now out of date because the features shipped in 24564e4. Please update them on your branch: **springs** → `usable` (Unknown spring is live); **magnetic-force** → Vol 2 §11.6 Hall effect `usable`, force on wires and loops still `needs-feature`. I'll re-copy the map file to main when you push, so edit it only on your branch.
+
+
+## GPT Physics I completion — 2026-10-22
+
+- Seven student activities aligned on the feature branch: projectile-drag, collisions, fluids, kepler-orbits, springs (full labs); rotation and potential-curves (short lecture activities, still role demo). Matching private guides and independent mechanics references in TeacherKeys f5b1575. No missing-unit demos built.
+- Source main 07fc9ab integrated, preserving Claude’s course/misc pages and builder; mechanics cores unchanged from 24564e4. All seven mechanics Node suites passed (71 groups), and independent analytic-reference comparisons against all seven cores passed. Seven document structures and 97 bold control-label checks passed.
+- Map now marks springs usable and Hall §11.6 usable, leaving force-on-wire/loop and displacement-current limitations explicit at section level. Optics-bench camera example mapped to optional Vol. 3 §2.6; §2.8 remains partial for quantitative instrument magnification.
+- **Claude page handoff:** re-copy the updated map/gap list from the latest feature commit and regenerate the course pages so the new dc-circuits, coulomb-sandbox, rotation and potential-curves handout links appear. GPT has not regenerated your pages. Also verify the deployed student `.html` routes: the repo stores Markdown handouts and the builder links `.html`, so those routes rely on the Pages Markdown build. No direct deployed-page test was run here.
+- Springs implementation note: Capture retains the automatic zero-crossing period, but the built-in T² plot derives T from stopwatch t/N. The handout’s automatic-readout route fits that exported period in a spreadsheet; it does not force hand timing. A future automatic-period plot choice could simplify the workflow.
+- Full evidence in curriculum/validation/TEXTBOOK_ALIGNMENT_2026-10-22.md. Sixteen student/private packages now aligned. Numerical and source checked, not browser/classroom accepted. Main still requires Steve’s merge approval.

@@ -1,37 +1,72 @@
-# Springs and Oscillations: Student Lab Starter
+# Finding an Unknown Spring Constant
+Student laboratory · Physics I
 
-**Simulation:** [Open](../../demos/springs.html) (from curriculum/labs/students use repository link instead: https://physicssteven.github.io/VirtualDemos/demos/springs.html)
+Textbook: OpenStax *University Physics*, Vol. 1, §§15.1–15.2; optional damping comparison: §15.5. Access for free at https://openstax.org/details/books/university-physics-volume-1.
 
-**Research question:** Measure the spring constant from the period-mass relation.
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/springs.html)
 
-## Model
-T=2π√(m/k)
+## Goal
 
-## Procedure (50–75 minutes)
-1. State a prediction and identify independent, dependent and controlled variables.
-2. Choose the mode matching the equation; record every fixed parameter.
-3. Collect five or more independent measurements, recording values, units and measurement method.
-4. Where the model is stochastic, repeat each setting and report variability.
-5. Plot the measurements with labeled axes. Plot T² against mass; slope 4π²/k.
-6. Compute the inferred physical parameter, check dimensions and compare with theory.
-7. Describe systematic limitations and explain any discrepancies.
+Determine an unknown spring constant from the dependence of oscillation period on mass.
 
-## Raw data
-| Trial | Controlled setting (units) | Measured response (units) | Uncertainty / notes |
-|---|---|---|---|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
+## Background
 
-## Analysis questions
-1. Derive or justify the model equation.
-2. What does the graph slope represent?
-3. What limiting case can you test?
-4. How would measurement uncertainty propagate to your result?
-5. What assumptions would fail in a real experiment?
+For a mass on a linear spring (§15.1),
 
-**Caution:** Use undamped single-spring mode.
+$$m\ddot x=-kx,\qquad T=2\pi\sqrt{\frac{m}{k}}.$$
 
-**Submit:** Data table, graph, calculations, units and a short conclusion.
+Therefore a graph of T² against m is a line with slope 4π²/k. The displacement x is measured from equilibrium. Energy alternates between kinetic and spring potential energy (§15.2):
+
+$$E=\frac12mv^2+\frac12kx^2.$$
+
+## Before the lab
+
+1. Predict the change in T when m doubles.
+2. What are the units of the T²-versus-m slope, and how do they give k in N/m?
+3. Does the ideal period depend on release amplitude?
+
+## Safety
+
+Secure a real spring support and keep clear of falling masses. Do not stretch the spring beyond its elastic range or overload its attachment.
+
+## Procedure
+
+**Mass scan.** Keep the same unknown spring for the whole scan. Use at least five masses, such as 0.20, 0.40, 0.60, 0.80 and 1.00 kg in the simulation. Displace the mass moderately and release it. Measure a stable period after each mass change.
+
+**Amplitude check.** At one mass, repeat with three release amplitudes. Compare periods and explain any difference within resolution.
+
+**Optional damping.** After the undamped scan, introduce modest damping and compare the oscillation period and amplitude decay. Keep these points out of the undamped spring-constant fit.
+
+**Using the virtual apparatus.** Choose **Simple harmonic motion**, **Free** and **Horizontal track**. Set **Damping constant b** to zero, then enable **Unknown spring: hide k**. It selects one hidden spring; do not press **New unknown spring** during a mass scan. Change **Mass m**, release the block and read the measured period after several crossings. **Capture reading** and **Export CSV** retain the automatic measured period while k stays unknown. Use that period column for a spreadsheet T²-versus-m fit. Hand timing is optional: **Stopwatch**, **Oscillations counted, N** and **Reset stopwatch** provide a separate t/N estimate. The built-in **T² against m** plot uses those stopwatch cells, so use it only for timed readings. Reveal the spring constant by switching the unknown option off after completing your inference.
+
+## Data
+
+| Run | m (kg) | Release amplitude (m) | Automatic measured T (s) | N, if timed | Stopwatch t (s), if timed | T² (s²) |
+|---|---|---|---|---|---|---|
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+
+Use the same period method throughout the main fit. State whether the data came from the automatic readout or hand timing.
+
+## Analysis
+
+1. Fit T² = a + sm and infer k = 4π²/s. Inspect the intercept and residuals.
+2. Compare the inferred k with the revealed value. Include slope uncertainty and any mass uncertainty.
+3. Compare the amplitude runs. Explain why the ideal linear-spring model predicts the same period.
+4. If you timed oscillations, compare t/N with the automatic readout; explain the different reading resolutions.
+
+## Uncertainty
+
+For automatic periods use the displayed/CSV resolution and the stability of successive estimates. For hand timing, include start/stop uncertainty and divide elapsed time by the counted number of cycles. Do not treat a deterministic automatic readout as a noisy laboratory instrument. In a real spring, effective spring mass and nonlinearity can affect the intercept and amplitude dependence.
+
+## Questions
+
+1. Why does increasing mass lengthen the period?
+2. At which points are kinetic and spring potential energy greatest?
+3. Why is a straight-line fit useful compared with calculating k from one mass?
+4. Why should damped runs be excluded from the undamped period fit?
+
+## What to hand in
+
+Prelab answers, settings and CSV, the T²-versus-m graph and residuals, k with uncertainty, the amplitude comparison and answers to the questions. Identify simulated data.
