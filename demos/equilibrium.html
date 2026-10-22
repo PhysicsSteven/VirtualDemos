@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Static Equilibrium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the structure with every force on it drawn to scale on the left; the rail on the right. */
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+:root { --w: #5a6575; --sup: #2b60b5; --tn: #a7740b; --fr: #b0452f; --beam: #c9a77a; --load: #6b7787; --ok: #2f7d4f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w: #b4bfcc; --sup: #69a0ff; --tn: #e2b350; --fr: #ff8a70; --beam: #8d6c45; --load: #9aa6b6; --ok: #5fcf8a; } }
+:root[data-theme="dark"] { --w: #b4bfcc; --sup: #69a0ff; --tn: #e2b350; --fr: #ff8a70; --beam: #8d6c45; --load: #9aa6b6; --ok: #5fcf8a; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 520px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; touch-action: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.blindtag { position: absolute; left: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 460px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 460px; max-height: 80vh; }
+  .rail { overflow: visible; }
+  .chips button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Static Equilibrium</h1>
+      <p>An object stays still only if the forces on it add to zero and the torques about any point add to zero. Drag the loads and watch the support forces share the weight, until one of them would have to pull and the object tips.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">g = 9.81 m/s²</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/equilibrium.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/equilibrium.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h1v1h-1zM17 2h1v1h-1zM19 2h3v1h-3zM26 2h2v1h-2zM29 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h3v1h-3zM15 3h1v1h-1zM17 3h2v1h-2zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h1v1h-1zM13 4h3v1h-3zM17 4h1v1h-1zM19 4h8v1h-8zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h4v1h-4zM20 5h2v1h-2zM26 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM18 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h3v1h-3zM16 7h1v1h-1zM20 7h5v1h-5zM28 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM16 9h7v1h-7zM24 9h2v1h-2zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h5v1h-5zM15 10h1v1h-1zM20 10h2v1h-2zM24 10h3v1h-3zM31 10h5v1h-5zM38 10h1v1h-1zM4 11h1v1h-1zM6 11h2v1h-2zM15 11h2v1h-2zM18 11h1v1h-1zM21 11h3v1h-3zM25 11h1v1h-1zM27 11h4v1h-4zM34 11h4v1h-4zM3 12h7v1h-7zM12 12h1v1h-1zM15 12h2v1h-2zM18 12h1v1h-1zM22 12h5v1h-5zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h1v1h-1zM5 13h3v1h-3zM10 13h3v1h-3zM14 13h2v1h-2zM19 13h1v1h-1zM23 13h4v1h-4zM29 13h3v1h-3zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h1v1h-1zM4 14h1v1h-1zM6 14h3v1h-3zM10 14h1v1h-1zM13 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM29 14h4v1h-4zM36 14h3v1h-3zM4 15h2v1h-2zM7 15h1v1h-1zM10 15h4v1h-4zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM5 16h4v1h-4zM14 16h2v1h-2zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h5v1h-5zM29 16h1v1h-1zM33 16h5v1h-5zM2 17h1v1h-1zM10 17h1v1h-1zM14 17h2v1h-2zM17 17h1v1h-1zM21 17h3v1h-3zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h1v1h-1zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM3 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM13 18h4v1h-4zM18 18h1v1h-1zM22 18h1v1h-1zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM3 19h3v1h-3zM7 19h1v1h-1zM9 19h1v1h-1zM11 19h3v1h-3zM20 19h2v1h-2zM24 19h2v1h-2zM27 19h1v1h-1zM29 19h3v1h-3zM33 19h3v1h-3zM37 19h1v1h-1zM4 20h1v1h-1zM7 20h3v1h-3zM12 20h1v1h-1zM15 20h1v1h-1zM17 20h1v1h-1zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h9v1h-9zM5 21h2v1h-2zM13 21h1v1h-1zM17 21h3v1h-3zM21 21h3v1h-3zM25 21h2v1h-2zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM3 22h2v1h-2zM7 22h3v1h-3zM11 22h5v1h-5zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM29 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h1v1h-1zM5 23h1v1h-1zM7 23h1v1h-1zM11 23h2v1h-2zM15 23h1v1h-1zM17 23h2v1h-2zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM5 24h2v1h-2zM8 24h2v1h-2zM11 24h1v1h-1zM15 24h5v1h-5zM22 24h1v1h-1zM25 24h1v1h-1zM28 24h2v1h-2zM31 24h1v1h-1zM33 24h4v1h-4zM2 25h2v1h-2zM6 25h2v1h-2zM10 25h3v1h-3zM14 25h4v1h-4zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM28 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM8 26h1v1h-1zM12 26h2v1h-2zM15 26h1v1h-1zM20 26h1v1h-1zM24 26h2v1h-2zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM4 27h1v1h-1zM9 27h5v1h-5zM16 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h5v1h-5zM34 27h2v1h-2zM4 28h6v1h-6zM14 28h1v1h-1zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h2v1h-2zM27 28h3v1h-3zM31 28h4v1h-4zM36 28h1v1h-1zM5 29h1v1h-1zM7 29h1v1h-1zM9 29h1v1h-1zM12 29h2v1h-2zM15 29h1v1h-1zM19 29h2v1h-2zM23 29h3v1h-3zM29 29h2v1h-2zM33 29h2v1h-2zM36 29h1v1h-1zM38 29h1v1h-1zM2 30h3v1h-3zM6 30h1v1h-1zM8 30h3v1h-3zM16 30h2v1h-2zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM29 30h6v1h-6zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h1v1h-1zM12 31h3v1h-3zM18 31h3v1h-3zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM14 32h1v1h-1zM17 32h2v1h-2zM20 32h1v1h-1zM22 32h4v1h-4zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h1v1h-1zM14 33h2v1h-2zM17 33h1v1h-1zM23 33h1v1h-1zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h4v1h-4zM17 34h2v1h-2zM22 34h1v1h-1zM25 34h2v1h-2zM28 34h1v1h-1zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM14 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM13 36h1v1h-1zM16 36h2v1h-2zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM13 37h1v1h-1zM16 37h9v1h-9zM26 37h1v1h-1zM28 37h2v1h-2zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM15 38h2v1h-2zM19 38h1v1h-1zM22 38h5v1h-5zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="application" aria-label="A structure with every force on it drawn as an arrow to scale. Drag a load along the beam. Left and right arrow keys move the selected load; Tab picks the next one with 1 and 2."></canvas>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="seesaw" aria-pressed="true">Seesaw</button>
+          <button type="button" data-p="plank" aria-pressed="false">Plank on two supports</button>
+          <button type="button" data-p="sign" aria-pressed="false">Sign on a strut and cable</button>
+          <button type="button" data-p="ladder" aria-pressed="false">Ladder against a wall</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Settings</h2>
+        <div id="ctl"></div>
+      </section>
+
+      <section>
+        <h2>Forces and torques</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="formula">ΣF<sub>x</sub> = 0 · ΣF<sub>y</sub> = 0 · Στ = 0 about any point</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <p class="hint">Blind hides the support forces, tension, friction, the torques and whether it will stay, and draws every arrow the same length. The masses and positions stay. Beams and ladders are rigid and uniform; strings and cables are massless; the pivot and hinge are frictionless.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.81;
+  // Seesaw on a central pivot (x = 0): beam mass mb centred; loads (m, x). Torque counterclockwise positive, x to the right.
+  function seesaw(mb, loads) {
+    const tau = loads.reduce((s, l) => s - l.m * G * l.x, 0), P = (mb + loads.reduce((s, l) => s + l.m, 0)) * G;
+    return { tau, P, balanced: Math.abs(tau) < 1e-9 };
+  }
+  // Plank of length L, mass mb, on supports at a and b (0 ≤ a < b ≤ L); loads (m, x). Support forces from ΣF = 0 and Στ about a = 0.
+  function plank(L, mb, a, b, loads) {
+    const all = [{ m: mb, x: L / 2 }, ...loads], W = all.reduce((s, l) => s + l.m * G, 0), M = all.reduce((s, l) => s + l.m * G * (l.x - a), 0);
+    const F2 = M / (b - a), F1 = W - F2;
+    return { F1, F2, W, tips: F1 < -1e-9 ? 'right' : F2 < -1e-9 ? 'left' : null };
+  }
+  // Horizontal strut of length L, mass ms, hinged at the wall; sign mass m hung at distance d; cable from the strut's end to the wall at height h above it.
+  function sign(L, ms, m, d, h) {
+    const th = Math.atan2(h, L), T = G * (ms * L / 2 + m * d) / (L * Math.sin(th));
+    return { th, T, Hx: T * Math.cos(th), Hy: (ms + m) * G - T * Math.sin(th) };
+  }
+  // Ladder of length L, mass ml, at angle th (deg) to the floor, against a frictionless wall; person mass mp a fraction f of the way up; floor friction μs.
+  function ladder(L, ml, mp, f, thDeg, mu) {
+    const th = thDeg * Math.PI / 180, N = (ml + mp) * G, Nw = G * Math.cos(th) * (ml * L / 2 + mp * f * L) / (L * Math.sin(th));
+    const thMin = Math.atan((ml / 2 + mp * f) / (mu * (ml + mp))) * 180 / Math.PI;
+    return { N, Nw, fs: Nw, fmax: mu * N, slips: Nw > mu * N + 1e-9, thMin };
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const PRESETS = {
+    seesaw: { hint: 'A 40 kg child at 1.5 m and a 30 kg child: where must the lighter one sit? Torques balance when m₁x₁ = m₂x₂, so 2.0 m. The pivot pushes up with the whole weight.', s: { mb: 20, m1: 40, x1: -1.5, m2: 30, x2: 1.6 } },
+    plank: { hint: 'A 4 m, 20 kg plank on supports at 0.5 m and 2.5 m, with a 60 kg painter. Walk the painter out past the right support: the left support\'s push drops, and when it would have to pull down, the plank tips.', s: { L: 4, mb: 20, a: 0.5, b: 2.5, m1: 60, x1: 1.5 } },
+    sign: { hint: 'A sign hangs from a 2 m strut hinged to the wall, held up by a cable. A shallow cable (small h) needs a huge tension, because only its vertical part T sin θ holds the strut up. The hinge pushes on the strut too.', s: { L: 2, ms: 5, m1: 25, x1: 1.8, h: 1 } },
+    ladder: { hint: 'A 5 m ladder on a floor with friction, against a smooth wall. As the person climbs, the wall pushes harder and the floor friction must match it. Below the angle shown in the readouts, it slips before they reach the top.', s: { L: 5, mb: 15, m1: 70, f: 0.5, th: 60, mu: 0.4 } }
+  };
+  const S = { preset: 'seesaw', v: { ...PRESETS.seesaw.s }, blind: false, sel: 1 };
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, H = 0, dpr = 1, T = null, geo = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      w: g('--w'), sup: g('--sup'), tn: g('--tn'), fr: g('--fr'), beam: g('--beam'), load: g('--load'), ok: g('--ok'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 1) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? (0).toFixed(d) : v.toFixed(d)).replace('-', '−'));
+
+  // ---------- controls per setup ----------
+  const CTL = {
+    seesaw: [['mb', 'Beam mass', 0, 50, 1, 'kg'], ['m1', 'Left child m₁', 10, 80, 1, 'kg'], ['x1', 'Left child position x₁', -2.5, 0, 0.05, 'm'], ['m2', 'Right child m₂', 10, 80, 1, 'kg'], ['x2', 'Right child position x₂', 0, 2.5, 0.05, 'm']],
+    plank: [['L', 'Plank length', 2, 6, 0.1, 'm'], ['mb', 'Plank mass', 0, 60, 1, 'kg'], ['a', 'Left support at', 0, 3, 0.05, 'm'], ['b', 'Right support at', 1, 6, 0.05, 'm'], ['m1', 'Painter mass', 0, 120, 1, 'kg'], ['x1', 'Painter position', 0, 6, 0.05, 'm']],
+    sign: [['L', 'Strut length', 1, 3, 0.1, 'm'], ['ms', 'Strut mass', 0, 20, 0.5, 'kg'], ['m1', 'Sign mass', 1, 60, 1, 'kg'], ['x1', 'Sign position from the wall', 0.1, 3, 0.05, 'm'], ['h', 'Cable anchor height above the strut', 0.2, 3, 0.05, 'm']],
+    ladder: [['L', 'Ladder length', 2, 8, 0.1, 'm'], ['mb', 'Ladder mass', 5, 40, 1, 'kg'], ['m1', 'Person mass', 0, 120, 1, 'kg'], ['f', 'How far up (fraction)', 0, 1, 0.01, ''], ['th', 'Angle to the floor', 30, 85, 0.5, '°'], ['mu', 'Floor friction μs', 0, 1, 0.01, '']]
+  };
+  function buildCtl() {
+    $('ctl').innerHTML = CTL[S.preset].map(([k, lab, lo, hi, st]) => `<div style="margin-bottom:8px"><div class="slider-head"><label for="c_${k}">${lab}</label><output id="o_${k}" for="c_${k}"></output></div><input type="range" id="c_${k}" min="${lo}" max="${hi}" step="${st}"></div>`).join('');
+    for (const [k] of CTL[S.preset]) $('c_' + k).addEventListener('input', (e) => { S.v[k] = +e.target.value; clampV(); sync(); draw(); readouts(); });
+  }
+  function clampV() {
+    const v = S.v;
+    if (S.preset === 'plank') { v.b = Math.min(v.b, v.L); v.a = Math.min(v.a, v.b - 0.2); v.x1 = Math.min(v.x1, v.L); }
+    if (S.preset === 'sign') v.x1 = Math.min(v.x1, v.L);
+  }
+  function sync() { for (const [k, , , , st, u] of CTL[S.preset]) { $('c_' + k).value = S.v[k]; $('o_' + k).textContent = `${f(S.v[k], st < 0.1 ? 2 : st < 1 ? 1 : 0)}${u ? ' ' + u : ''}`; } }
+  function applyPreset(k) { S.preset = k; S.v = { ...PRESETS[k].s }; S.sel = 1; $('presetHint').textContent = PRESETS[k].hint; for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); buildCtl(); sync(); draw(); readouts(); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+
+  // ---------- drawing ----------
+  function arrow(x0, y0, dx, dy, col, lw, lab) {
+    const p = ps(), L = Math.hypot(dx, dy); if (L < 2) return;
+    const x1 = x0 + dx, y1 = y0 + dy, ang = Math.atan2(dy, dx), hl = Math.min(12 * p, L * 0.5);
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - Math.cos(ang) * hl * 0.8, y1 - Math.sin(ang) * hl * 0.8); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - Math.cos(ang - 0.42) * hl, y1 - Math.sin(ang - 0.42) * hl); ctx.lineTo(x1 - Math.cos(ang + 0.42) * hl, y1 - Math.sin(ang + 0.42) * hl); ctx.closePath(); ctx.fill();
+    if (lab) { ctx.font = `700 ${11.5 * p}px ${T.ui}`; ctx.textBaseline = 'middle'; const w = ctx.measureText(lab).width + 6 * p, c = Math.cos(ang), s = Math.sin(ang);
+      let tx, ty, xb; if (Math.abs(c) > 0.45) { tx = x1 + Math.sign(c) * 8 * p; ty = y1; xb = c < 0 ? tx - w : tx; } else { tx = x1; ty = y1 + Math.sign(s) * 13 * p; xb = tx - w / 2; }
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(xb, ty - 8 * p, w, 16 * p); ctx.globalAlpha = 1; ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.fillText(lab, xb + 3 * p, ty); }
+  }
+  function forceScale(list) { const big = Math.max(...list.map((q) => Math.abs(q)), 1e-9); return Math.min(W, H) * 0.22 / big; }
+  const lbl = (name, F) => (S.blind ? name : `${name} = ${f(F, 0)} N`);
+  function box(x, y, m, sel) { const p = ps(), s = (14 + Math.sqrt(m) * 2.2) * p; ctx.fillStyle = T.load; ctx.fillRect(x - s / 2, y - s, s, s); if (sel) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.strokeRect(x - s / 2 - 2, y - s - 2, s + 4, s + 4); }
+    ctx.fillStyle = T.canvas; ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${f(m, 0)} kg`, x, y - s / 2); return s; }
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const p = ps(), v = S.v, bl = S.blind;
+    ctx.fillStyle = T.ink; ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    if (S.preset === 'seesaw') {
+      const r = seesaw(v.mb, [{ m: v.m1, x: v.x1 }, { m: v.m2, x: v.x2 }]), sc = (W - 80 * p) / 6, cx = W / 2, cy = H * 0.55;
+      const tilt = bl || r.balanced ? 0 : Math.sign(r.tau) * Math.min(0.16, Math.abs(r.tau) / 400 * 0.16 + 0.04);
+      geo = { kind: 'seesaw', cx, cy, sc, tilt };
+      ctx.fillText(bl ? 'Is it balanced?' : r.balanced ? 'Balanced: the torques cancel.' : `Not balanced: it tips ${r.tau > 0 ? 'left side down' : 'right side down'}.`, 14 * p, 14 * p);
+      ctx.fillStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx - 18 * p, cy + 46 * p); ctx.lineTo(cx + 18 * p, cy + 46 * p); ctx.closePath(); ctx.fill();
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(-tilt);
+      ctx.fillStyle = T.beam; ctx.fillRect(-2.5 * sc, -8 * p, 5 * sc, 8 * p);
+      ctx.fillStyle = T.muted; ctx.font = `${9.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; for (let x = -2.5; x <= 2.5; x += 0.5) { ctx.fillRect(x * sc - 0.5, -8 * p, 1, 4 * p); if (Math.abs(x % 1) < 1e-9) ctx.fillText(`${f(x, 0)}`, x * sc, 4 * p); }
+      const s1 = box(v.x1 * sc, -8 * p, v.m1, S.sel === 1), s2 = box(v.x2 * sc, -8 * p, v.m2, S.sel === 2);
+      const k = forceScale([v.m1 * G, v.m2 * G, r.P, v.mb * G]), L = (F) => (bl ? 50 * p : F * k);
+      arrow(v.x1 * sc, -8 * p - s1 / 2, 0, L(v.m1 * G), T.w, 3 * p, lbl('m₁g', v.m1 * G));
+      arrow(v.x2 * sc, -8 * p - s2 / 2, 0, L(v.m2 * G), T.w, 3 * p, lbl('m₂g', v.m2 * G));
+      if (v.mb > 0) arrow(0, -4 * p, 0, L(v.mb * G) * 0.999, T.w, 2 * p, lbl('beam', v.mb * G));
+      ctx.restore();
+      arrow(cx, cy + 4 * p, 0, -L(r.P), T.sup, 3.5 * p, lbl('pivot P', r.P));
+      return;
+    }
+    if (S.preset === 'plank') {
+      const r = plank(v.L, v.mb, v.a, v.b, [{ m: v.m1, x: v.x1 }]), sc = (W - 80 * p) / v.L, x0 = 40 * p, y = H * 0.55, X = (x) => x0 + x * sc;
+      geo = { kind: 'plank', X, sc, y };
+      const tipAng = bl || !r.tips ? 0 : 0.12;
+      ctx.fillText(bl ? 'Will the plank stay?' : r.tips ? `It tips about the ${r.tips === 'right' ? 'right' : 'left'} support: the other one would have to pull down.` : 'In equilibrium: both supports push up.', 14 * p, 14 * p);
+      for (const s of [v.a, v.b]) { ctx.fillStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(X(s), y); ctx.lineTo(X(s) - 14 * p, y + 40 * p); ctx.lineTo(X(s) + 14 * p, y + 40 * p); ctx.closePath(); ctx.fill(); }
+      ctx.save(); const piv = r.tips === 'right' ? X(v.b) : X(v.a); ctx.translate(piv, y); ctx.rotate(r.tips === 'right' ? tipAng : -tipAng); ctx.translate(-piv, -y);
+      ctx.fillStyle = T.beam; ctx.fillRect(X(0), y - 10 * p, v.L * sc, 10 * p);
+      const s1 = box(X(v.x1), y - 10 * p, v.m1, true);
+      const k = forceScale([r.F1, r.F2, v.m1 * G, v.mb * G]), L = (F) => (bl ? 50 * p : F * k);
+      arrow(X(v.x1), y - 10 * p - s1 / 2, 0, L(v.m1 * G), T.w, 3 * p, lbl('painter', v.m1 * G));
+      if (v.mb > 0) arrow(X(v.L / 2), y - 5 * p, 0, L(v.mb * G), T.w, 2 * p, lbl('plank', v.mb * G));
+      ctx.restore();
+      if (!r.tips || bl) { arrow(X(v.a), y + 2 * p, 0, -L(Math.max(0, r.F1)), T.sup, 3.5 * p, lbl('F₁', r.F1)); arrow(X(v.b), y + 2 * p, 0, -L(Math.max(0, r.F2)), T.sup, 3.5 * p, lbl('F₂', r.F2)); }
+      return;
+    }
+    if (S.preset === 'sign') {
+      const r = sign(v.L, v.ms, v.m1, v.x1, v.h), sc = Math.min((W - 220 * p) / v.L, (H - 200 * p) / (v.h + 1.2)), wx = 70 * p, y = 90 * p + v.h * sc, X = (x) => wx + x * sc;
+      geo = { kind: 'sign', X, sc, y };
+      ctx.fillText(bl ? 'Find the cable tension and the hinge force.' : `Cable at θ = ${f(r.th * 180 / Math.PI, 1)}° to the strut`, 14 * p, 14 * p);
+      ctx.fillStyle = T.gridStrong; ctx.fillRect(wx - 16 * p, 40 * p, 16 * p, H - 60 * p);
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(X(v.L), y - 4 * p); ctx.lineTo(wx, y - v.h * sc); ctx.stroke();
+      ctx.fillStyle = T.beam; ctx.fillRect(wx, y - 8 * p, v.L * sc, 8 * p);
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(X(v.x1), y); ctx.lineTo(X(v.x1), y + 26 * p); ctx.stroke();
+      ctx.fillStyle = T.load; ctx.fillRect(X(v.x1) - 32 * p, y + 26 * p, 64 * p, 30 * p); ctx.fillStyle = T.canvas; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${f(v.m1, 0)} kg`, X(v.x1), y + 41 * p);
+      const k = forceScale([r.T, Math.hypot(r.Hx, r.Hy), v.m1 * G]), L = (F) => (bl ? 50 * p : F * k);
+      const ux = -Math.cos(r.th), uy = -Math.sin(r.th);
+      arrow(X(v.L), y - 4 * p, ux * L(r.T), uy * L(r.T), T.tn, 3.5 * p, lbl('T', r.T));
+      arrow(X(v.x1), y + 2 * p, 0, L(v.m1 * G), T.w, 3 * p, lbl('sign', v.m1 * G));
+      if (v.ms > 0) arrow(X(v.L / 2), y - 4 * p, 0, L(v.ms * G), T.w, 2 * p, lbl('strut', v.ms * G));
+      const hm = Math.hypot(r.Hx, r.Hy), hx = bl ? r.Hx / hm * 50 * p : r.Hx * k, hy = bl ? r.Hy / hm * 50 * p : r.Hy * k;
+      arrow(wx, y - 4 * p, hx, -hy, T.sup, 3.5 * p, lbl('hinge H', hm));
+      ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(wx, y - 4 * p, 4 * p, 0, 7); ctx.fill();
+      return;
+    }
+    // ladder
+    const r = ladder(v.L, v.mb, v.m1, v.f, v.th, v.mu), th = v.th * Math.PI / 180, sc = Math.min((W - 160 * p) / (v.L * Math.cos(th) + 0.5), (H - 120 * p) / (v.L * Math.sin(th) + 0.3));
+    const wallX = W - 70 * p, floorY = H - 50 * p, footX = wallX - v.L * Math.cos(th) * sc, topY = floorY - v.L * Math.sin(th) * sc, P = (s) => [footX + (wallX - footX) * s, floorY + (topY - floorY) * s];
+    geo = { kind: 'ladder', P, footX, wallX, floorY, topY };
+    ctx.fillText(bl ? 'Will the ladder slip?' : r.slips ? `It slips: it needs ${f(r.fs, 0)} N of friction but the floor can give only ${f(r.fmax, 0)} N.` : 'It holds: static friction is enough.', 14 * p, 14 * p);
+    ctx.fillStyle = T.gridStrong; ctx.fillRect(wallX, 30 * p, 14 * p, floorY - 30 * p); ctx.fillRect(10 * p, floorY, W - 20 * p, 8 * p);
+    ctx.strokeStyle = T.beam; ctx.lineWidth = 8 * p; ctx.beginPath(); ctx.moveTo(footX, floorY); ctx.lineTo(wallX, topY); ctx.stroke();
+    const pp = P(v.f); ctx.fillStyle = T.load; ctx.beginPath(); ctx.arc(pp[0], pp[1] - 14 * p, 10 * p, 0, 7); ctx.fill(); ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.stroke();
+    const k = forceScale([r.N, r.Nw, v.m1 * G, v.mb * G]), L = (F) => (bl ? 50 * p : F * k);
+    arrow(footX, floorY, 0, -L(r.N), T.sup, 3.5 * p, lbl('N', r.N));
+    arrow(footX, floorY - 4 * p, L(Math.min(r.fs, r.fmax)), 0, T.fr, 3.5 * p, lbl(r.slips && !bl ? 'f (at its limit)' : 'f', Math.min(r.fs, r.fmax)));
+    arrow(wallX, topY, -L(r.Nw), 0, T.sup, 3.5 * p, lbl('N_wall', r.Nw));
+    const mid = P(0.5); arrow(mid[0] - 10 * p, mid[1], 0, L(v.mb * G), T.w, 2.5 * p, lbl('ladder', v.mb * G));
+    if (v.m1 > 0) arrow(pp[0] + 12 * p, pp[1], 0, L(v.m1 * G), T.w, 3 * p, lbl('person', v.m1 * G));
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const v = S.v, bl = S.blind, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, N = (x) => `${f(x, 1)} N`, Nm = (x) => `${f(x, 1)} N·m`;
+    let h = '';
+    if (bl) h = '<div class="wide"><dt>Forces, torques and the verdict</dt><dd class="ok">hidden in Blind: work them out</dd></div>';
+    else if (S.preset === 'seesaw') { const r = seesaw(v.mb, [{ m: v.m1, x: v.x1 }, { m: v.m2, x: v.x2 }]);
+      h = dd('Torque of m₁ about the pivot', Nm(-v.m1 * G * v.x1)) + dd('Torque of m₂', Nm(-v.m2 * G * v.x2)) + dd('Net torque (counterclockwise +)', Nm(r.tau)) + dd('Pivot force', N(r.P)) + dd('Balance point for m₂', `${f(v.m1 * -v.x1 / v.m2, 2)} m`, true); }
+    else if (S.preset === 'plank') { const r = plank(v.L, v.mb, v.a, v.b, [{ m: v.m1, x: v.x1 }]);
+      h = dd('Left support F₁', N(r.F1)) + dd('Right support F₂', N(r.F2)) + dd('Total weight', N(r.W)) + dd('F₁ + F₂', N(r.F1 + r.F2));
+      if (r.tips) h += dd('Note', `${r.tips === 'right' ? 'F₁' : 'F₂'} would be negative: a support can only push, so the plank tips instead.`, true); }
+    else if (S.preset === 'sign') { const r = sign(v.L, v.ms, v.m1, v.x1, v.h);
+      h = dd('Cable angle θ', `${f(r.th * 180 / Math.PI, 1)}°`) + dd('Tension T', N(r.T)) + dd('Hinge, horizontal', N(r.Hx)) + dd('Hinge, vertical', N(r.Hy)) + dd('Torque of T about the hinge', Nm(r.T * Math.sin(r.th) * v.L)) + dd('Torque of the weights', Nm(-G * (v.ms * v.L / 2 + v.m1 * v.x1))); }
+    else { const r = ladder(v.L, v.mb, v.m1, v.f, v.th, v.mu);
+      h = dd('Floor normal N', N(r.N)) + dd('Wall push N_wall', N(r.Nw)) + dd('Friction needed', N(r.fs)) + dd('Most friction μs N', N(r.fmax)) + dd('Slips below this angle (person here)', `${f(r.thMin, 1)}°`, true); }
+    $('out').innerHTML = h;
+  }
+
+  // ---------- drag and keys ----------
+  let drag = null;
+  function local(e) { const r = can.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+  function setPos(which, px) {
+    const v = S.v, g = geo; if (!g) return;
+    if (g.kind === 'seesaw') { const x = Math.round(((px - g.cx) / g.sc) * 20) / 20; if (which === 1) v.x1 = Math.max(-2.5, Math.min(0, x)); else v.x2 = Math.max(0, Math.min(2.5, x)); }
+    else if (g.kind === 'plank') v.x1 = Math.max(0, Math.min(v.L, Math.round(((px - g.X(0)) / g.sc) * 20) / 20));
+    else if (g.kind === 'sign') v.x1 = Math.max(0.1, Math.min(v.L, Math.round(((px - g.X(0)) / g.sc) * 20) / 20));
+    else v.f = Math.max(0, Math.min(1, Math.round(((px - g.footX) / (g.wallX - g.footX)) * 100) / 100));
+    sync(); draw(); readouts();
+  }
+  can.addEventListener('pointerdown', (e) => {
+    const [x] = local(e); can.focus(); if (!geo) return;
+    if (geo.kind === 'seesaw') { const x1 = geo.cx + S.v.x1 * geo.sc, x2 = geo.cx + S.v.x2 * geo.sc; drag = Math.abs(x - x1) < Math.abs(x - x2) ? 1 : 2; S.sel = drag; } else drag = 1;
+    can.setPointerCapture(e.pointerId); setPos(drag, x);
+  });
+  can.addEventListener('pointermove', (e) => { if (drag) setPos(drag, local(e)[0]); });
+  const end = () => { drag = null; }; can.addEventListener('pointerup', end); can.addEventListener('pointercancel', end);
+  can.addEventListener('keydown', (e) => {
+    const v = S.v, k = e.key;
+    if (k === '1' || k === '2') { S.sel = +k; draw(); return; }
+    if (k !== 'ArrowLeft' && k !== 'ArrowRight') return;
+    e.preventDefault(); const d = (k === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 0.25 : 0.05);
+    if (S.preset === 'seesaw') { if (S.sel === 1) v.x1 = Math.max(-2.5, Math.min(0, +(v.x1 + d).toFixed(2))); else v.x2 = Math.max(0, Math.min(2.5, +(v.x2 + d).toFixed(2))); }
+    else if (S.preset === 'ladder') v.f = Math.max(0, Math.min(1, +(v.f + d / 2).toFixed(2)));
+    else v.x1 = Math.max(S.preset === 'sign' ? 0.1 : 0, Math.min(v.L, +(v.x1 + d).toFixed(2)));
+    sync(); draw(); readouts();
+  });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  tokens(); new ResizeObserver(resize).observe(stage); applyPreset('seesaw'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Rocket Propulsion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the rocket on the left, graphs of speed and mass against time on the right of the stage; the rail on the right. */
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+:root { --vcol: #b0452f; --mcol: #2b60b5; --ycol: #2f7d4f; --flame: #e08a2c; --body: #c9d1db; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --vcol: #ff8a70; --mcol: #69a0ff; --ycol: #5fcf8a; --flame: #f0a050; --body: #6b7787; } }
+:root[data-theme="dark"] { --vcol: #ff8a70; --mcol: #69a0ff; --ycol: #5fcf8a; --flame: #f0a050; --body: #6b7787; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; left: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 480px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 600px; max-height: 90vh; }
+  .rail { overflow: visible; }
+  .chips button, .proj, .spin { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Rocket Propulsion</h1>
+      <p>A rocket pushes on its exhaust and the exhaust pushes back. As fuel burns the rocket gets lighter, so the same thrust gives more and more acceleration, and the speed it gains is Δv = u ln(m₀/m).</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">g = 9.81 m/s², constant · no air</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/rocket.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 37 37" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/rocket.html" shape-rendering="crispEdges"><rect width="37" height="37" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM15 2h1v1h-1zM18 2h4v1h-4zM25 2h1v1h-1zM28 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM14 3h1v1h-1zM16 3h2v1h-2zM19 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM13 4h2v1h-2zM16 4h1v1h-1zM18 4h1v1h-1zM21 4h4v1h-4zM26 4h1v1h-1zM28 4h1v1h-1zM30 4h3v1h-3zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h5v1h-5zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h3v1h-3zM28 5h1v1h-1zM30 5h3v1h-3zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM15 6h1v1h-1zM18 6h6v1h-6zM25 6h2v1h-2zM28 6h1v1h-1zM30 6h3v1h-3zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM13 7h1v1h-1zM17 7h1v1h-1zM19 7h1v1h-1zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h7v1h-7zM10 9h3v1h-3zM14 9h1v1h-1zM16 9h3v1h-3zM20 9h2v1h-2zM23 9h4v1h-4zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h1v1h-1zM15 10h3v1h-3zM19 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h5v1h-5zM2 11h1v1h-1zM5 11h1v1h-1zM7 11h1v1h-1zM12 11h1v1h-1zM14 11h2v1h-2zM20 11h6v1h-6zM28 11h2v1h-2zM31 11h2v1h-2zM34 11h1v1h-1zM2 12h1v1h-1zM6 12h1v1h-1zM8 12h2v1h-2zM13 12h2v1h-2zM16 12h2v1h-2zM19 12h2v1h-2zM22 12h3v1h-3zM27 12h2v1h-2zM30 12h1v1h-1zM32 12h2v1h-2zM3 13h1v1h-1zM6 13h2v1h-2zM9 13h1v1h-1zM11 13h4v1h-4zM22 13h2v1h-2zM25 13h2v1h-2zM30 13h3v1h-3zM34 13h1v1h-1zM2 14h1v1h-1zM4 14h1v1h-1zM8 14h3v1h-3zM12 14h1v1h-1zM14 14h1v1h-1zM17 14h3v1h-3zM22 14h1v1h-1zM24 14h1v1h-1zM27 14h1v1h-1zM29 14h3v1h-3zM33 14h1v1h-1zM3 15h3v1h-3zM10 15h2v1h-2zM14 15h2v1h-2zM18 15h1v1h-1zM20 15h4v1h-4zM25 15h1v1h-1zM33 15h2v1h-2zM5 16h1v1h-1zM8 16h3v1h-3zM14 16h4v1h-4zM19 16h1v1h-1zM22 16h1v1h-1zM27 16h2v1h-2zM31 16h3v1h-3zM3 17h2v1h-2zM6 17h1v1h-1zM9 17h3v1h-3zM14 17h1v1h-1zM16 17h2v1h-2zM21 17h5v1h-5zM27 17h3v1h-3zM31 17h2v1h-2zM2 18h7v1h-7zM12 18h2v1h-2zM19 18h1v1h-1zM21 18h1v1h-1zM24 18h2v1h-2zM27 18h1v1h-1zM29 18h3v1h-3zM34 18h1v1h-1zM2 19h3v1h-3zM6 19h2v1h-2zM9 19h1v1h-1zM13 19h3v1h-3zM18 19h8v1h-8zM27 19h3v1h-3zM31 19h3v1h-3zM2 20h1v1h-1zM5 20h4v1h-4zM10 20h11v1h-11zM23 20h2v1h-2zM27 20h1v1h-1zM29 20h2v1h-2zM32 20h2v1h-2zM4 21h1v1h-1zM9 21h1v1h-1zM17 21h2v1h-2zM21 21h4v1h-4zM26 21h1v1h-1zM29 21h6v1h-6zM2 22h2v1h-2zM5 22h2v1h-2zM8 22h2v1h-2zM11 22h3v1h-3zM15 22h3v1h-3zM19 22h1v1h-1zM24 22h4v1h-4zM29 22h3v1h-3zM33 22h2v1h-2zM2 23h2v1h-2zM10 23h1v1h-1zM13 23h2v1h-2zM16 23h1v1h-1zM18 23h4v1h-4zM23 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM32 23h1v1h-1zM34 23h1v1h-1zM2 24h1v1h-1zM4 24h1v1h-1zM6 24h6v1h-6zM15 24h1v1h-1zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM33 24h1v1h-1zM2 25h1v1h-1zM6 25h1v1h-1zM13 25h3v1h-3zM18 25h1v1h-1zM21 25h1v1h-1zM23 25h2v1h-2zM31 25h2v1h-2zM34 25h1v1h-1zM2 26h1v1h-1zM7 26h2v1h-2zM10 26h3v1h-3zM15 26h2v1h-2zM18 26h2v1h-2zM22 26h1v1h-1zM24 26h8v1h-8zM33 26h2v1h-2zM10 27h1v1h-1zM14 27h2v1h-2zM18 27h1v1h-1zM21 27h2v1h-2zM24 27h3v1h-3zM30 27h1v1h-1zM32 27h1v1h-1zM34 27h1v1h-1zM2 28h7v1h-7zM12 28h1v1h-1zM15 28h3v1h-3zM22 28h5v1h-5zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM10 29h3v1h-3zM14 29h1v1h-1zM16 29h2v1h-2zM22 29h5v1h-5zM30 29h5v1h-5zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h1v1h-1zM10 30h1v1h-1zM12 30h2v1h-2zM16 30h1v1h-1zM19 30h1v1h-1zM22 30h1v1h-1zM24 30h1v1h-1zM26 30h6v1h-6zM33 30h2v1h-2zM2 31h1v1h-1zM4 31h3v1h-3zM8 31h1v1h-1zM10 31h1v1h-1zM12 31h1v1h-1zM14 31h1v1h-1zM16 31h1v1h-1zM21 31h3v1h-3zM26 31h2v1h-2zM30 31h5v1h-5zM2 32h1v1h-1zM4 32h3v1h-3zM8 32h1v1h-1zM10 32h1v1h-1zM12 32h3v1h-3zM17 32h1v1h-1zM22 32h3v1h-3zM28 32h2v1h-2zM32 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h1v1h-1zM16 33h3v1h-3zM20 33h4v1h-4zM27 33h1v1h-1zM30 33h3v1h-3zM2 34h7v1h-7zM10 34h5v1h-5zM16 34h2v1h-2zM19 34h1v1h-1zM21 34h1v1h-1zM24 34h4v1h-4zM29 34h1v1h-1zM31 34h1v1h-1zM33 34h1v1h-1z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="img" aria-label="A rocket rising with its exhaust, beside graphs of its speed and mass against time. Space launches or pauses, R starts over."></canvas>
+      <div class="viewbar">
+        <button type="button" class="spin attn" id="go">Launch</button>
+        <button type="button" class="spin" id="again">Start over</button>
+      </div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="space" aria-pressed="true">In deep space</button>
+          <button type="button" data-p="earth" aria-pressed="false">Launch from the ground</button>
+          <button type="button" data-p="heavy" aria-pressed="false">Too heavy at first</button>
+          <button type="button" data-p="slow" aria-pressed="false">Same fuel, burned slowly</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Rocket</h2>
+        <div><div class="slider-head"><label for="sM0">Mass without fuel (dry)</label><output id="oM0" for="sM0"></output></div><input type="range" id="sM0" min="200" max="5000" step="100"></div>
+        <div><div class="slider-head"><label for="sMf">Fuel mass</label><output id="oMf" for="sMf"></output></div><input type="range" id="sMf" min="0" max="20000" step="250"></div>
+        <div><div class="slider-head"><label for="sU">Exhaust speed u (relative to the rocket)</label><output id="oU" for="sU"></output></div><input type="range" id="sU" min="500" max="4500" step="100"></div>
+        <div><div class="slider-head"><label for="sB">Burn rate</label><output id="oB" for="sB"></output></div><input type="range" id="sB" min="10" max="500" step="10"></div>
+        <label class="check"><input type="checkbox" id="grav"><span>Gravity (launch from the ground)</span></label>
+        <p class="formula">thrust = u × (burn rate) · m dv/dt = thrust − mg</p>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides the rocket equation prediction, the final speed and height and the dashed predicted curves, leaving the clock, the settings, the mass and the thrust. The animation is sped up so a whole flight takes about 25 s; the clock shows real time.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.81;
+  // Rocket with dry mass md, fuel mf, exhaust speed u relative to the rocket, constant burn rate b (kg/s), in uniform gravity g (0 in deep space).
+  // Exact: while burning m = m1 − b(t − t0) after lift off at t0, v = u ln(m1/m) − g(t − t0); after burnout it coasts with a = −g.
+  function flight(p) {
+    const m0 = p.md + p.mf, g = p.g, thrust = p.u * p.b, tb = p.mf / p.b;
+    const t0 = g > 0 ? Math.max(0, (m0 - thrust / g) / p.b) : 0;          // sits on the pad until thrust exceeds the weight
+    const lifts = t0 < tb;
+    const m1 = m0 - p.b * t0;
+    function at(t) {
+      const m = Math.max(p.md, m0 - p.b * Math.min(t, tb));
+      if (!lifts || t <= t0) return { t, m, v: 0, y: 0, a: 0, burning: t < tb, onPad: true };
+      const tt = Math.min(t, tb) - t0, k = p.b / m1, mm = m1 - p.b * tt;
+      let v = p.u * Math.log(m1 / mm) - g * tt;
+      let y = p.u * ((1 - k * tt) * Math.log(1 - k * tt) / k + tt) - 0.5 * g * tt * tt;
+      let a = t < tb ? thrust / mm - g : -g;
+      if (t > tb) { const dt = t - tb; y += v * dt - 0.5 * g * dt * dt; v -= g * dt; }
+      if (y < 0 && t > tb) return { t, m, v: 0, y: 0, a: 0, burning: false, onPad: true, landed: true };
+      return { t, m, v, y, a, burning: t < tb, onPad: false };
+    }
+    const dvIdeal = p.u * Math.log(m0 / p.md);                            // the rocket equation, no gravity
+    const burn = at(tb);
+    const tTop = g > 0 && lifts ? tb + Math.max(0, burn.v) / g : Infinity;
+    return { m0, thrust, tb, t0, lifts, at, dvIdeal, vBurnout: burn.v, yBurnout: burn.y, tTop, yTop: g > 0 && lifts ? burn.y + Math.max(0, burn.v) ** 2 / (2 * g) : Infinity };
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  try { const r = sessionStorage.getItem('vd-rk-motion'); if (r) reduce = r === 'reduce'; } catch (_) {}
+  const PRESETS = {
+    space: { md: 1000, mf: 9000, u: 2500, b: 200, g: 0, hint: 'No gravity and no air. Burning 9000 kg of fuel from a 10 000 kg rocket gives Δv = u ln(10) = 2.30u, faster than the exhaust itself. Burn rate does not matter here, only how much fuel and how fast it leaves.' },
+    earth: { md: 1000, mf: 9000, u: 2500, b: 200, g: 1, hint: 'The same rocket from the ground. Thrust 500 kN against a 98 kN weight. Gravity takes g × (burn time) off the speed: compare the burnout speed with u ln(m₀/m).' },
+    heavy: { md: 1000, mf: 18000, u: 2500, b: 70, g: 1, hint: 'Twice the fuel but a slow burn: thrust 175 kN is less than the 186 kN launch weight. The engine fires but the rocket sits on the pad, burning fuel until it is light enough to rise. That fuel is wasted: it never helped the rocket move.' },
+    slow: { md: 1000, mf: 9000, u: 2500, b: 60, g: 1, hint: 'Same fuel and exhaust speed as Launch from the ground, burned over 150 s instead of 45 s. The rocket equation gives the same Δv, but gravity pulls for longer, so it ends up slower and lower. Rockets burn fast for this reason.' }
+  };
+  const S = { preset: 'space', p: { ...PRESETS.space }, t: 0, run: false, blind: false, ghost: null };
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, H = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      v: g('--vcol'), m: g('--mcol'), y: g('--ycol'), flame: g('--flame'), body: g('--body'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const n0 = (v, d = 0) => (!isFinite(v) ? '∞' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d })).replace('-', '−');
+  const P = () => ({ md: S.p.md, mf: S.p.mf, u: S.p.u, b: S.p.b, g: S.p.g ? G : 0 });
+  function niceStep(r) { const e = 10 ** Math.floor(Math.log10(r)), f = r / e; return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * e; }
+
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const p = ps(), F = flight(P()), q = F.at(S.t), bl = S.blind, wide = W > 640;
+    const colW = wide ? Math.min(240 * p, W * 0.32) : W * 0.5, top = 96 * p, bot = H - 30 * p;
+    // altitude column: scale to the highest point reached (or the burnout height in space)
+    const yMax = Math.max(100, isFinite(F.yTop) ? F.yTop : F.yBurnout * 1.05), Yp = (y) => bot - (bot - top) * Math.min(1, y / yMax);
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(74 * p, top); ctx.lineTo(74 * p, bot); ctx.stroke();
+    ctx.font = `${10 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    const ys = niceStep(yMax / 5); for (let y = 0; y <= yMax + 1e-9; y += ys) { ctx.fillRect(70 * p, Yp(y) - 0.5, 8 * p, 1); ctx.fillText(y >= 1000 ? `${n0(y / 1000, ys < 1000 ? 1 : 0)} km` : `${n0(y)} m`, 66 * p, Yp(y)); }
+    if (S.p.g) { ctx.fillStyle = T.gridStrong; ctx.fillRect(0, bot, colW, 3 * p); }
+    // rocket
+    const rx = colW * 0.62, ry = Yp(q.y), rw = 18 * p, rh = 58 * p, fuelFrac = Math.max(0, (q.m - S.p.md) / Math.max(1, S.p.mf));
+    if (q.burning && !(q.onPad && S.t === 0 && !S.run)) {
+      ctx.fillStyle = T.flame; const fl = (16 + 14 * Math.random()) * p * (S.run ? 1 : 0.6);
+      ctx.beginPath(); ctx.moveTo(rx - rw * 0.4, ry); ctx.lineTo(rx, ry + fl); ctx.lineTo(rx + rw * 0.4, ry); ctx.closePath(); ctx.fill();
+    }
+    ctx.fillStyle = T.body; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(rx - rw / 2, ry); ctx.lineTo(rx - rw / 2, ry - rh + 14 * p); ctx.lineTo(rx, ry - rh); ctx.lineTo(rx + rw / 2, ry - rh + 14 * p); ctx.lineTo(rx + rw / 2, ry); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = T.flame; ctx.globalAlpha = 0.55; ctx.fillRect(rx - rw / 2 + 3 * p, ry - 3 * p - (rh - 20 * p) * fuelFrac, rw - 6 * p, (rh - 20 * p) * fuelFrac); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('fuel', rx, ry + 4 * p + (q.burning ? 30 * p : 0));
+    // status
+    ctx.fillStyle = T.ink; ctx.font = `600 ${12.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const st = !F.lifts && S.p.g ? 'Thrust never beats the weight: it never leaves the pad.' : q.landed ? 'Back on the ground.' : q.onPad && S.t > 0 && q.burning ? 'Burning on the pad: thrust is less than the weight.' : q.burning ? 'Engine on' : S.t > 0 ? 'Engine off: coasting' : 'Ready';
+    ctx.fillText(st, 10 * p, 46 * p, colW - 14 * p);
+    ctx.font = `700 ${14 * p}px ${T.mono}`; ctx.fillText(`t = ${n0(S.t, 1)} s`, 10 * p, 64 * p);
+    // graphs: v(t) and m(t)
+    const gx0 = wide ? colW + 50 * p : 50 * p, gx1 = W - 14 * p, gy0 = 64 * p, pane = (bot - gy0 - 30 * p) / 2;
+    const tEnd = Math.max(F.tb * 1.15, isFinite(F.tTop) ? Math.min(F.tTop * 1.05, F.tb * 6) : F.tb * 1.15, 1);
+    if (!wide) return;   // phones: rocket and readouts only
+    const X = (t) => gx0 + (gx1 - gx0) * t / tEnd;
+    const vMax = Math.max(bl ? 1 : F.dvIdeal, F.vBurnout, 1) * 1.08, vMin = Math.min(0, F.at(tEnd).v) * 1.08;
+    const panes = [['v', 'speed v (m/s)', gy0, vMin, vMax], ['m', 'mass m (kg)', gy0 + pane + 30 * p, 0, (S.p.md + S.p.mf) * 1.08]];
+    for (const [k, lab, y0, lo, hi] of panes) {
+      const Y = (v) => y0 + pane - pane * (v - lo) / (hi - lo);
+      ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(gx0 + 0.5, y0 + 0.5, gx1 - gx0, pane);
+      ctx.fillStyle = T[k]; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(lab, gx0, y0 - 3 * p);
+      ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      const sv = niceStep((hi - lo) / 4); for (let v = Math.ceil(lo / sv) * sv; v <= hi; v += sv) { ctx.fillText(n0(v), gx0 - 4 * p, Y(v)); ctx.strokeStyle = Math.abs(v) < 1e-9 ? T.gridStrong : T.grid; ctx.beginPath(); ctx.moveTo(gx0, Y(v)); ctx.lineTo(gx1, Y(v)); ctx.stroke(); }
+      // burnout line
+      ctx.strokeStyle = T.gridStrong; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(X(F.tb), y0); ctx.lineTo(X(F.tb), y0 + pane); ctx.stroke(); ctx.setLineDash([]);
+      if (k === 'v' && !bl) {   // the rocket equation with no gravity, for comparison
+        ctx.strokeStyle = T.v; ctx.globalAlpha = 0.35; ctx.setLineDash([6 * p, 4 * p]); ctx.lineWidth = 2 * p; ctx.beginPath();
+        for (let i = 0; i <= 200; i++) { const t = tEnd * i / 200, m = Math.max(S.p.md, S.p.md + S.p.mf - S.p.b * t), v = S.p.u * Math.log((S.p.md + S.p.mf) / m); i ? ctx.lineTo(X(t), Y(v)) : ctx.moveTo(X(t), Y(v)); }
+        ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+        ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('dashed: u ln(m₀/m), no gravity', gx1 - 4 * p, y0 + 4 * p);
+      }
+      ctx.strokeStyle = T[k]; ctx.lineWidth = 2.5 * p; ctx.beginPath();
+      const n = 300; for (let i = 0; i <= n; i++) { const t = Math.min(S.t, tEnd) * i / n, r = F.at(t); i ? ctx.lineTo(X(t), Y(r[k])) : ctx.moveTo(X(t), Y(r[k])); } ctx.stroke();
+    }
+    ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.font = `${10 * p}px ${T.mono}`;
+    const ts = niceStep(tEnd / 6); for (let t = 0; t <= tEnd; t += ts) ctx.fillText(n0(t), X(t), bot - 26 * p + 6 * p);
+    ctx.textAlign = 'right'; ctx.fillText('t (s) · dashed vertical line: burnout', gx1, bot - 4 * p);
+  }
+
+  function readouts() {
+    const F = flight(P()), q = F.at(S.t), bl = S.blind, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    let h = dd('Thrust u × burn rate', `${n0(F.thrust / 1000, 0)} kN`) + dd('Weight at launch m₀g', S.p.g ? `${n0(F.m0 * G / 1000, 0)} kN` : '0 (no gravity)') + dd('Burn time', `${n0(F.tb, 1)} s`) + dd('Mass now', `${n0(q.m)} kg`);
+    h += dd('Speed now', `${n0(q.v, 0)} m/s`) + dd('Height now', `${q.y >= 1000 ? n0(q.y / 1000, 2) + ' km' : n0(q.y) + ' m'}`) + dd('Acceleration now', `${n0(q.a, 1)} m/s²`);
+    if (bl) h += '<div class="wide"><dt>Rocket equation, burnout speed and height</dt><dd class="ok">hidden in Blind</dd></div>';
+    else {
+      h += dd('Rocket equation u ln(m₀/m_dry)', `${n0(F.dvIdeal)} m/s`, true) + dd('Speed at burnout', `${n0(F.vBurnout)} m/s`) + dd('Lost to gravity', S.p.g ? `${n0(F.dvIdeal - F.vBurnout)} m/s` : '0');
+      if (S.p.g && F.t0 > 0) h += dd('Time waiting on the pad', F.lifts ? `${n0(F.t0, 1)} s` : 'the whole burn', true);
+      if (S.p.g && F.lifts) h += dd('Highest point (constant g, no air)', `${n0(F.yTop / 1000, 1)} km at ${n0(F.tTop, 0)} s`, true) + (F.yTop > 1e5 ? '<div class="wide"><dt>Note</dt><dd class="ok">At hundreds of kilometres gravity is noticeably weaker than 9.81 m/s², so this height is only a rough figure.</dd></div>' : '');
+    }
+    $('out').innerHTML = h;
+  }
+
+  const SL = [['sM0', 'md', (v) => `${n0(v)} kg`], ['sMf', 'mf', (v) => `${n0(v)} kg`], ['sU', 'u', (v) => `${n0(v)} m/s`], ['sB', 'b', (v) => `${n0(v)} kg/s`]];
+  function sync() { for (const [id, k, fmt] of SL) { $(id).value = S.p[k]; $('o' + id.slice(1)).textContent = fmt(S.p[k]); } $('grav').checked = !!S.p.g; }
+  for (const [id, k] of SL) $(id).addEventListener('input', (e) => { S.p[k] = +e.target.value; S.preset = 'custom'; mark(); restart(); });
+  $('grav').addEventListener('change', (e) => { S.p.g = e.target.checked ? 1 : 0; S.preset = 'custom'; mark(); restart(); });
+  function mark() { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); }
+  function restart() { S.t = 0; setRun(false); sync(); draw(); readouts(); }
+  function applyPreset(k) { S.preset = k; S.p = { ...PRESETS[k] }; $('presetHint').textContent = PRESETS[k].hint; mark(); restart(); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : S.t > 0 ? 'Resume' : 'Launch'; $('go').classList.toggle('attn', !on); }
+  $('go').addEventListener('click', () => { const F = flight(P()); if (!S.run && S.t >= endTime(F)) S.t = 0; setRun(!S.run); });
+  $('again').addEventListener('click', restart);
+  const endTime = (F) => Math.max(F.tb * 1.15, isFinite(F.tTop) ? Math.min(F.tTop * 1.05, F.tb * 6) : F.tb * 1.15, 1);
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) { const F = flight(P()), speed = Math.max(1, endTime(F) / 25); S.t = Math.min(endTime(F), S.t + dt * speed); if (S.t >= endTime(F)) setRun(false); draw(); readouts(); }
+    requestAnimationFrame(frame);
+  }
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') $('go').click(); else if (e.key === 'r' || e.key === 'R') restart(); else return; e.preventDefault(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
+  $('rmToggle').checked = reduce;
+  $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; try { sessionStorage.setItem('vd-rk-motion', reduce ? 'reduce' : 'full'); } catch (_) {} if (reduce) setRun(false); });
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  tokens(); new ResizeObserver(resize).observe(stage); applyPreset('space'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

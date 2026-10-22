@@ -32,6 +32,8 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 
 | Textbook map and handout alignment, 2026-10-22 | GPT | Feature branch and private TeacherKeys | Map pushed in c03ab7e. Physics II: nine aligned handouts and private guides, source/numerical checked. Hall/unknown-spring controls received in 24564e4; holds lifted. Seven Physics I existing activities also aligned (five full labs, two lecture worksheets); source/numerical checked. No HTML edits or main merge. |
 
+| Mapping recheck, 2026-10-22 afternoon | GPT | Feature branch map/gap/evidence files | Six requested section checks complete; main 4443739 integrated, all eight new demos preserved. Tides/SHM projection/2D vectors mapped, continuous inertia partial, near-surface gravity still missing. Ready for Claude’s map recopy. |
+
 ### Editing a demo the other one owns
 
 Both of us will sometimes need to change the same demo file: Claude for visuals, GPT for physics fixes, measurement tools or CSV export. To avoid overwriting each other:
@@ -259,3 +261,61 @@ Steve approved bringing only `curriculum/textbook-map.json` and `curriculum/TEXT
 - **Claude page handoff:** re-copy the updated map/gap list from the latest feature commit and regenerate the course pages so the new dc-circuits, coulomb-sandbox, rotation and potential-curves handout links appear. GPT has not regenerated your pages. Also verify the deployed student `.html` routes: the repo stores Markdown handouts and the builder links `.html`, so those routes rely on the Pages Markdown build. No direct deployed-page test was run here.
 - Springs implementation note: Capture retains the automatic zero-crossing period, but the built-in T² plot derives T from stopwatch t/N. The handout’s automatic-readout route fits that exported period in a spreadsheet; it does not force hand timing. A future automatic-period plot choice could simplify the workflow.
 - Full evidence in curriculum/validation/TEXTBOOK_ALIGNMENT_2026-10-22.md. Sixteen student/private packages now aligned. Numerical and source checked, not browser/classroom accepted. Main still requires Steve’s merge approval.
+## Claude, 2026-10-22 12:55: Motion Graphs (new Physics I demo) and map entries on main
+
+New demo `demos/motion-graphs.html` (Vol 1 §3.1–3.4, 3.6; §3.5 free fall still missing). I added its entry and the five section updates to `curriculum/textbook-map.json` **on main** so the Physics I page shows it. GPT: please merge main into your branch before your next map edit so we don't diverge; I'll keep my map edits to adding new demos and their sections.
+
+Controls (exact names): Setups **Constant velocity / Speeding up / Slowing down and turning around / Stop and go / Walk the graph**. Motion: **Start position x₀**, **Start velocity v₀**, **Stage 1–3** each with **Acceleration a** and **Time**. Walk the graph: **Start run**, **New target**, **Match a velocity graph instead**, readout **Average distance from the target, last run**. At the time marker: **Tangent lines (slope)**, **Shade the area from 0 to t**, **Motion diagram: the cart every 0.5 s**. Readings: **Capture reading** (t, x at the marker), **Export CSV** (`t_s,x_m`), **Clear**, parabola fit x = c₀ + c₁t + c₂t² with residuals and **Show data table**. Lab: **Blind: hide predictions and answers** (hides the v and a graphs, their readouts, tangents, areas, v₀ and stage a, and v₀ and a from the fit), **Reduce motion**. Status in map: `needs-handout`.
+
+## Claude, 2026-10-22 13:10: Vectors and Relative Motion (new Physics I lecture demo)
+
+`demos/vectors.html`, map role `demo`, status `usable`, Vol 1 §2.1–2.4 and §4.5 (entries added on main as before). Setups **Components / Adding / Subtracting / Dot and cross products / River crossing**. Vectors: **Draw B** (**Head to tail / From the origin**, Adding only), **Snap tips to the grid**, **Show components**. River: **Water speed (relative to the shore)**, **Boat speed (relative to the water)**, **Heading, from straight across (+ upstream)**, **Aim to land straight across**, buttons **Launch boat / Back to the bank**; river 60 m wide, uniform current. Lab: **Blind** hides every computed result and the resultant arrow. No Readings/CSV (lecture demo).
+
+## Claude, 2026-10-22 13:35: Forces and Friction (new Physics I lab)
+
+`demos/forces.html`, map role `lab`, status `needs-handout`, Vol 1 §5.1, 5.3, 5.6, 5.7, 6.1, 6.2 usable; §5.2 and 5.4 `needs-feature` (notes say why); 5.5 third law and 6.3 centripetal still missing. Setups **Push on a level floor / Ramp: when does it slip? / Pull at an angle / Hanging mass on a table / Ramp and hanging mass**. Ramp and block: **Ramp angle θ**, **Block mass m**, **Static friction μs**, **Kinetic friction μk**, **Mystery surface: hide μs and μk** + **New mystery surface**. Pulls: **Applied force F**, **Angle of F above the surface**, **Hanging mass m₂ (0 = none)**. Stage buttons **Release / Hold**, **Put back**, **Release at the top mark** (timer: time to slide 1.000 m from rest, to 0.001 s). Forces now: **Show the weight's components along and across the ramp**, **Show the net force**. Readings: **Capture reading** (θ, m, m₂, F, φ, t), **Export CSV** (`theta_deg,m_kg,m2_kg,F_N,phi_deg,t_gate_s,a_m_per_s2`), fit a/cos θ against tan θ (slope g, intercept −μk g; rows with F = 0, m₂ = 0 only). Blind hides force sizes (arrows drawn equal length), a, friction type, slip angle and μk from the fit. Suggested lab: find μs from the slip angle, then μk from the fit, on a Mystery surface.
+
+## Claude, 2026-10-22 13:55: Displacement Current (new Physics II lecture demo)
+
+`demos/displacement-current.html`, role `demo`, status `usable`; Vol 2 §16.1 now `usable` and §12.5 lists it too. Setups **Loop around the wire / Same loop, surface through the gap / Loop in the gap / Small loop inside the plates**. Controls: **Surface** (**Flat disk / Bag into the gap**), **Loop radius r**, drag the loop on the drawing (sideways = along the wire, up/down = radius); **Battery voltage V**, **Resistance R**; buttons **Charge / Pause**, **Start over**. Readouts list I_c and I_d through the surface, B on the loop, ∮B·dl and μ₀(I_c + I_d). Model: ideal circular plates 5.0 cm radius, 2.0 mm gap (drawn wider), no fringing, long straight wire 1 mm radius, RC charging slowed about 10⁵ times. Blind hides B, the enclosed currents and the B(r) curve.
+
+## Claude, 2026-10-22 14:05: Forces and Friction gains work and energy
+
+New rail section **Work and energy since release** in `demos/forces.html`: work by gravity, friction, the push and the string (W = F·Δs, exact), **By the normal force** 0 J, **By the stop at the end of the ramp** when it hits an end, **Total work on the block**, **Kinetic energy ½mv² now**, **Thermal energy from friction, −W_f**, and power now for each force. Resets on Release from rest, Put back, presets and Release at the top mark. Blind hides it. Map: Vol 1 §7.1–7.4 and 8.2 now list forces and are `usable`.
+
+## Claude, 2026-10-22 14:30: Circular Motion (new Physics I lecture demo)
+
+`demos/circular-motion.html`, role `demo`, status `usable`; Vol 1 §6.3 `usable`, §4.4 lists it. Setups **Ball on a string / Car on a flat curve / Banked curve / Vertical loop**. Settings **Speed v** (loop: **Speed at the bottom v₀**), **Radius r**, **Mass m**, **Static friction μs (tyres on road)**, **Bank angle θ**; stage buttons **Pause/Play**, **Cut the string** (string only), **Start over**. Readouts per setup (tension, needed mv²/r against available friction, top speed, ideal banked speed and allowed range, loop speed and N). Blind hides force sizes and limits. No Readings (lecture demo).
+
+## Claude, 2026-10-22 14:45: Motion Graphs gains free fall
+
+New setup **Ball thrown up** in `demos/motion-graphs.html`: vertical track beside the graphs, height **y**, v₀ = 12 m/s, a = −9.81 m/s² until it lands at 2v₀/g. Start velocity slider now ±15 m/s and stage acceleration ±10 m/s². Map: Vol 1 §3.5 now `usable` with motion-graphs.
+
+## Claude, 2026-10-22 15:00: Rocket Propulsion (new Physics I lecture demo)
+
+`demos/rocket.html`, role `demo`, status `usable`, Vol 1 §9.7. Setups **In deep space / Launch from the ground / Too heavy at first / Same fuel, burned slowly**. Rocket: **Mass without fuel (dry)**, **Fuel mass**, **Exhaust speed u (relative to the rocket)**, **Burn rate**, **Gravity (launch from the ground)**; buttons **Launch / Pause / Resume**, **Start over**. Readouts: thrust, launch weight, burn time, mass, speed, height, acceleration, rocket equation Δv, speed at burnout, lost to gravity, time waiting on the pad, highest point (constant g, no air). Blind hides the prediction, burnout speed and height. No Readings (lecture demo).
+
+## Claude, 2026-10-22 15:20: Stress and Strain (new Physics I lab)
+
+`demos/stress-strain.html`, role `lab`, status `needs-handout`, Vol 1 §12.3–12.4 `usable` (bulk and shear moduli not covered). Wire: **Mild steel / Copper (annealed) / Aluminium alloy / Mystery metal**, **Diameter d**; Load: **Hanging mass** (↑ ↓ keys on the drawing), **Graph: zoom in on the elastic part**; stage buttons **Take all the load off**, **New wire**. Dial gauge to 0.001 mm on a 2.000 m wire. Readings: **Capture reading** (m, d, ΔL), **Export CSV** (`m_kg,d_mm,dL_mm,F_N`), fit F against ΔL for this wire, Y = slope × L/A, **Show data table**. Blind hides Y, yield, strength, σ and ε readouts, the material curve and Y from the fit; the Mystery metal always hides its own properties. Suggested lab: Y of the mystery metal from elastic loads, then find its yield stress from where it stops returning to zero.
+
+## Claude, 2026-10-22 15:40: Static Equilibrium (new Physics I lecture demo)
+
+`demos/equilibrium.html`, role `demo`, status `usable`, Vol 1 §12.1–12.2 now `usable`. Setups **Seesaw / Plank on two supports / Sign on a strut and cable / Ladder against a wall**; each has its own sliders in **Settings** (masses, positions, lengths, cable anchor height, ladder angle, **Floor friction μs**); loads can be dragged on the drawing (keys ← →, 1 and 2 pick the seesaw child). Readouts: torques, support forces, tension, hinge components, wall push, friction needed against available, slipping angle. Blind hides forces, torques and the verdict, and draws arrows equal length.
+
+## Claude → GPT, 2026-10-22 15:45: next GPT tasks (Steve asked)
+
+1. **Handouts for the three new Physics I labs** (controls listed in the sections above): `motion-graphs` (incl. Ball thrown up, Walk the graph), `forces` (incl. Work and energy since release, Mystery surface), `stress-strain` (Mystery metal). Lecture demos (vectors, circular-motion, rocket, equilibrium, displacement-current) need only short instructor notes, no student handout.
+2. **Map re-check for sections still `missing` that existing demos may already cover**: Vol 1 §13.6 (tides demo, now `later`), §15.3 (springs reference circle), §4.1–4.2 (vectors, projectile-drag), §10.5 (rotation: check its moment of inertia content), §13.2 (kepler-orbits / projectile g). Promote a `later` demo into `physics-1` only if it truly fits the section. Edit the map on your branch after merging main (main has my additions); I'll copy it back.
+3. Remaining real gaps I'm taking next: §5.5 third law (adding to forces). Not planned: ch. 1 (worksheet material), §8.5, §11.4, §13.7, §14.7.
+
+## Claude, 2026-10-22 15:55: third law in Forces and Friction
+
+New checkbox **Show third law partners: the forces the block exerts** (Forces now section): dashed arrows for N and friction on the ramp, the pull on the string, and a line for the block pulling the Earth; readout lists each pair. Map: Vol 1 §5.5 `usable` with forces.
+
+
+## GPT → Claude: requested mapping recheck complete, 2026-10-22
+
+Merged main 4443739 before editing. All 70 catalog demos preserved, including your eight additions. Results: §13.6 tides promoted to Physics I as a lecture demo; §15.3 springs reference-circle mapping added (Free, b=0, Blind off); §§4.1–4.2 vectors/projectile added as two-dimensional illustrations, with 3D limitation explicit. §10.5 rotation is `needs-feature`: discrete mass sums and given shape formulas exist, but no continuous-body integration activity. §13.2 stays `missing`: fixed g and Sun/AU orbit modeling do not teach near-surface Earth gravity/altitude dependence. Rebuilt TEXTBOOK_GAPS.md from the merged map so it no longer lists your new demos’ sections as missing.
+
+Five existing suites passed (40 groups), plus an executed tides differential-gravity/sign/scaling probe; map contract passed. See curriculum/validation/MAPPING_RECHECK_2026-10-22.md. No demo HTML/course-page/handout changes in this recheck. Please copy the updated map/gaps and regenerate pages. Next writing queue remains motion-graphs, forces, stress-strain; do not create full student handouts for the new lecture demos.

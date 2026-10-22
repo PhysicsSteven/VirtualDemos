@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": {
-    "repository_commit": "07fc9abefafe2ae1c6c921734f58740f698aa247",
+    "repository_commit": "4443739435f0a28e21e0a420e9c6df31f7a74f76",
     "review_date": "2026-10-22",
     "textbooks": [
       {
@@ -983,10 +983,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "vectors"
+      ],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Vectors and Relative Motion: components, sums, differences, dot and cross products on a grid; river crossing for relative velocity."
     },
     {
       "vol": 1,
@@ -998,10 +1000,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "vectors"
+      ],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Vectors and Relative Motion: components, sums, differences, dot and cross products on a grid; river crossing for relative velocity."
     },
     {
       "vol": 1,
@@ -1013,10 +1017,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "vectors"
+      ],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Vectors and Relative Motion: components, sums, differences, dot and cross products on a grid; river crossing for relative velocity."
     },
     {
       "vol": 1,
@@ -1028,10 +1034,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "vectors"
+      ],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Vectors and Relative Motion: components, sums, differences, dot and cross products on a grid; river crossing for relative velocity."
     },
     {
       "vol": 1,
@@ -1043,10 +1051,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "motion-graphs"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Motion Graphs: position, velocity and acceleration graphs with slopes (tangents) and areas, for stages of constant acceleration; Walk the graph for x(t) and v(t)."
     },
     {
       "vol": 1,
@@ -1058,10 +1068,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "motion-graphs"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Motion Graphs: position, velocity and acceleration graphs with slopes (tangents) and areas, for stages of constant acceleration; Walk the graph for x(t) and v(t)."
     },
     {
       "vol": 1,
@@ -1073,10 +1085,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "motion-graphs"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Motion Graphs: position, velocity and acceleration graphs with slopes (tangents) and areas, for stages of constant acceleration; Walk the graph for x(t) and v(t)."
     },
     {
       "vol": 1,
@@ -1088,12 +1102,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "projectile-drag"
+        "projectile-drag",
+        "motion-graphs"
       ],
       "unit": "kinematics",
-      "note": "Projectile motion uses these equations; a general 1D motion/graph activity is missing."
+      "note": "Motion Graphs: position, velocity and acceleration graphs with slopes (tangents) and areas, for stages of constant acceleration; Walk the graph for x(t) and v(t)."
     },
     {
       "vol": 1,
@@ -1105,10 +1120,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "motion-graphs"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Motion Graphs, Ball thrown up: free fall with a = −g throughout, height, velocity and acceleration graphs; no air resistance."
     },
     {
       "vol": 1,
@@ -1120,10 +1137,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "motion-graphs"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Motion Graphs: position, velocity and acceleration graphs with slopes (tangents) and areas, for stages of constant acceleration; Walk the graph for x(t) and v(t)."
     },
     {
       "vol": 1,
@@ -1135,10 +1154,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "vectors",
+        "projectile-drag"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Two-dimensional displacement/velocity components and trajectory examples. The demos do not provide a general three-dimensional motion viewer."
     },
     {
       "vol": 1,
@@ -1150,10 +1172,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "vectors",
+        "projectile-drag"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Use vector subtraction Δv and projectile time-dot positions/velocity arrows to discuss acceleration components. Two-dimensional illustration; no dedicated acceleration-vector or general 3D viewer. Derivatives can be calculated from the trajectory data."
     },
     {
       "vol": 1,
@@ -1181,10 +1206,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "needs-feature",
+      "demos": [
+        "circular-motion"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Circular Motion shows a = v²/r toward the center at constant speed; nonuniform circular motion (tangential acceleration) only in the loop."
     },
     {
       "vol": 1,
@@ -1196,10 +1223,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "vectors"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Vectors and Relative Motion: components, sums, differences, dot and cross products on a grid; river crossing for relative velocity."
     },
     {
       "vol": 1,
@@ -1211,10 +1240,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction: free body diagram to scale, Newton's second law on a ramp with static and kinetic friction, applied force at an angle, hanging mass over a pulley."
     },
     {
       "vol": 1,
@@ -1226,10 +1257,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "needs-feature",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction shows balanced forces at rest; constant velocity with zero net force is not set up directly."
     },
     {
       "vol": 1,
@@ -1241,10 +1274,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction: free body diagram to scale, Newton's second law on a ramp with static and kinetic friction, applied force at an angle, hanging mass over a pulley."
     },
     {
       "vol": 1,
@@ -1256,10 +1291,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "needs-feature",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction uses W = mg; apparent weight (elevator) not covered."
     },
     {
       "vol": 1,
@@ -1271,10 +1308,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction, Show third law partners: the block pushes the ramp, pulls the string and pulls the Earth, equal and opposite to the forces on it."
     },
     {
       "vol": 1,
@@ -1286,10 +1325,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction: free body diagram to scale, Newton's second law on a ramp with static and kinetic friction, applied force at an angle, hanging mass over a pulley."
     },
     {
       "vol": 1,
@@ -1301,10 +1342,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction: free body diagram to scale, Newton's second law on a ramp with static and kinetic friction, applied force at an angle, hanging mass over a pulley."
     },
     {
       "vol": 1,
@@ -1316,10 +1359,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction: free body diagram to scale, Newton's second law on a ramp with static and kinetic friction, applied force at an angle, hanging mass over a pulley."
     },
     {
       "vol": 1,
@@ -1331,10 +1376,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction: free body diagram to scale, Newton's second law on a ramp with static and kinetic friction, applied force at an angle, hanging mass over a pulley."
     },
     {
       "vol": 1,
@@ -1346,10 +1393,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "circular-motion"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Circular Motion: ball on a string, flat and banked curves with friction, vertical loop; free body diagrams to scale."
     },
     {
       "vol": 1,
@@ -1377,12 +1426,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "potential-curves"
+        "potential-curves",
+        "forces"
       ],
       "unit": "energy",
-      "note": "Conservative-force work only; a general applied-work apparatus is missing."
+      "note": "Forces and Friction, Work and energy since release: work by each force, ΣW = ΔK, friction work as thermal energy, power P = F·v. Potential Curves for energy diagrams."
     },
     {
       "vol": 1,
@@ -1394,10 +1444,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "energy",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction, Work and energy since release: work by each force, ΣW = ΔK, friction work as thermal energy, power P = F·v."
     },
     {
       "vol": 1,
@@ -1409,12 +1461,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "potential-curves"
+        "potential-curves",
+        "forces"
       ],
       "unit": "energy",
-      "note": "Energy-diagram illustration only; general work/kinetic-energy measurement is missing."
+      "note": "Forces and Friction, Work and energy since release: work by each force, ΣW = ΔK, friction work as thermal energy, power P = F·v. Potential Curves for energy diagrams."
     },
     {
       "vol": 1,
@@ -1426,10 +1479,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "energy",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction, Work and energy since release: work by each force, ΣW = ΔK, friction work as thermal energy, power P = F·v."
     },
     {
       "vol": 1,
@@ -1457,12 +1512,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "potential-curves"
+        "potential-curves",
+        "forces"
       ],
       "unit": "energy",
-      "note": "Conservative potentials are shown; general nonconservative work is incomplete."
+      "note": "Forces and Friction, Work and energy since release: work by each force, ΣW = ΔK, friction work as thermal energy, power P = F·v. Potential Curves for energy diagrams."
     },
     {
       "vol": 1,
@@ -1619,10 +1675,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "rocket"
+      ],
       "unit": "momentum",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Rocket Propulsion: rocket equation, thrust against weight, gravity losses, waiting on the pad; exact solution with constant g."
     },
     {
       "vol": 1,
@@ -1699,10 +1757,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "needs-feature",
+      "demos": [
+        "rotation"
+      ],
       "unit": "rotation",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Discrete point-mass I = Σmr² in the spinner/seesaw and supplied standard-shape coefficients are present. No continuous-body ∫r²dm derivation/integration activity; do not label that part complete."
     },
     {
       "vol": 1,
@@ -1844,7 +1904,7 @@
       "status": "missing",
       "demos": [],
       "unit": "gravitation",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Fixed g in projectile/motion graphs and a Sun-centered AU orbit model do not investigate g = GM_E/(R_E+h)² or its near-surface approximation. No direct activity yet."
     },
     {
       "vol": 1,
@@ -1904,10 +1964,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "tides"
+      ],
       "unit": "gravitation",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Direct differential-gravity and axial/transverse tidal-force demonstration. Equilibrium-ocean approximations are stated; no real coastal tide prediction."
     },
     {
       "vol": 1,
@@ -1934,13 +1996,14 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "rotation",
-        "catenary"
+        "catenary",
+        "equilibrium"
       ],
       "unit": "equilibrium-elasticity",
-      "note": "Seesaw and chain equilibrium only; a general equilibrium/free-body-diagram apparatus is still planned."
+      "note": "Static Equilibrium: seesaw, plank on two supports (tipping), sign on a strut and cable (hinge force), ladder against a wall (friction, critical angle); forces drawn to scale."
     },
     {
       "vol": 1,
@@ -1952,13 +2015,14 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "rotation",
-        "catenary"
+        "catenary",
+        "equilibrium"
       ],
       "unit": "equilibrium-elasticity",
-      "note": "Limited seesaw/chain examples, not complete static-equilibrium coverage."
+      "note": "Static Equilibrium: seesaw, plank on two supports (tipping), sign on a strut and cable (hinge force), ladder against a wall (friction, critical angle); forces drawn to scale."
     },
     {
       "vol": 1,
@@ -1970,10 +2034,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "stress-strain"
+      ],
       "unit": "equilibrium-elasticity",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Stress and Strain: tensile test of a wire, Young's modulus from a fit, yield, permanent set, fracture. Bulk and shear moduli not covered."
     },
     {
       "vol": 1,
@@ -1985,10 +2051,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "stress-strain"
+      ],
       "unit": "equilibrium-elasticity",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Stress and Strain: elastic limit, plastic deformation, permanent set on unloading, fracture (idealized curve)."
     },
     {
       "vol": 1,
@@ -2143,10 +2211,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "springs"
+      ],
       "unit": "oscillations",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Reference circle projects uniform circular motion onto undamped SHM. Select Free, b=0; Reference circle is hidden in Blind/Unknown spring. Damped shrinking-circle extension is not uniform circular motion."
     },
     {
       "vol": 1,
@@ -2927,7 +2997,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "currents-fields"
+        "currents-fields",
+        "displacement-current"
       ],
       "unit": "magnetic-sources"
     },
@@ -3180,12 +3251,13 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "em-waves"
+        "em-waves",
+        "displacement-current"
       ],
       "unit": "maxwell-waves",
-      "note": "Plane-wave relationships and equation discussion; induced-B/displacement-current apparatus is missing."
+      "note": "Displacement current: Ampère–Maxwell with a charging capacitor (flat disk against a bag through the gap, B inside and outside the plates); em-waves for the plane-wave relations."
     },
     {
       "vol": 2,
@@ -4126,6 +4198,101 @@
   ],
   "demos": [
     {
+      "demo": "vectors",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "2.1",
+          "title": "Scalars and Vectors"
+        },
+        {
+          "vol": 1,
+          "sec": "2.2",
+          "title": "Coordinate Systems and Components of a Vector"
+        },
+        {
+          "vol": 1,
+          "sec": "2.3",
+          "title": "Algebra of Vectors"
+        },
+        {
+          "vol": 1,
+          "sec": "2.4",
+          "title": "Products of Vectors"
+        },
+        {
+          "vol": 1,
+          "sec": "4.1",
+          "title": "Displacement and Velocity Vectors"
+        },
+        {
+          "vol": 1,
+          "sec": "4.2",
+          "title": "Acceleration Vector"
+        },
+        {
+          "vol": 1,
+          "sec": "4.5",
+          "title": "Relative Motion in One and Two Dimensions"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Lecture demo: draggable vectors with components, A + B (head to tail or parallelogram), A − B, dot and cross products; river crossing with v_bs = v_bw + v_ws, aim to land straight across. Blind hides results. 3D vectors and unit vector algebra in 3D not covered.",
+      "handouts": [],
+      "title": "Vectors and Relative Motion",
+      "url": "demos/vectors.html"
+    },
+    {
+      "demo": "motion-graphs",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "3.1",
+          "title": "Position, Displacement, and Average Velocity"
+        },
+        {
+          "vol": 1,
+          "sec": "3.2",
+          "title": "Instantaneous Velocity and Speed"
+        },
+        {
+          "vol": 1,
+          "sec": "3.3",
+          "title": "Average and Instantaneous Acceleration"
+        },
+        {
+          "vol": 1,
+          "sec": "3.4",
+          "title": "Motion with Constant Acceleration"
+        },
+        {
+          "vol": 1,
+          "sec": "3.5",
+          "title": "Free Fall"
+        },
+        {
+          "vol": 1,
+          "sec": "3.6",
+          "title": "Finding Velocity and Displacement from Acceleration"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-22 (Claude). Exact piecewise constant acceleration; x, v, a graphs with tangent and area; Walk the graph with motion detector estimates; Capture, CSV, parabola fit with residuals, Blind. Ball thrown up preset covers free fall (3.5) on a vertical track.",
+      "handouts": [],
+      "title": "Motion Graphs",
+      "url": "demos/motion-graphs.html"
+    },
+    {
       "demo": "projectile-drag",
       "course": [
         "physics-1"
@@ -4135,6 +4302,16 @@
           "vol": 1,
           "sec": "3.4",
           "title": "Motion with Constant Acceleration"
+        },
+        {
+          "vol": 1,
+          "sec": "4.1",
+          "title": "Displacement and Velocity Vectors"
+        },
+        {
+          "vol": 1,
+          "sec": "4.2",
+          "title": "Acceleration Vector"
         },
         {
           "vol": 1,
@@ -4156,6 +4333,116 @@
       ],
       "title": "Projectile Range",
       "url": "demos/projectile-drag.html"
+    },
+    {
+      "demo": "circular-motion",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "4.4",
+          "title": "Uniform and Nonuniform Circular Motion"
+        },
+        {
+          "vol": 1,
+          "sec": "6.3",
+          "title": "Centripetal Force"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Lecture demo: ball on a string (cut it: straight line), car on a flat curve (top speed √(μs g r)), banked curve (ideal speed, allowed range), vertical loop (energy, N, leaves the track below √(gr) at the top); FBD to scale; Blind. Cars and loop shown slowed down.",
+      "handouts": [],
+      "title": "Circular Motion",
+      "url": "demos/circular-motion.html"
+    },
+    {
+      "demo": "forces",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "5.1",
+          "title": "Forces"
+        },
+        {
+          "vol": 1,
+          "sec": "5.2",
+          "title": "Newton's First Law"
+        },
+        {
+          "vol": 1,
+          "sec": "5.3",
+          "title": "Newton's Second Law"
+        },
+        {
+          "vol": 1,
+          "sec": "5.4",
+          "title": "Mass and Weight"
+        },
+        {
+          "vol": 1,
+          "sec": "5.5",
+          "title": "Newton’s Third Law"
+        },
+        {
+          "vol": 1,
+          "sec": "5.6",
+          "title": "Common Forces"
+        },
+        {
+          "vol": 1,
+          "sec": "5.7",
+          "title": "Drawing Free-Body Diagrams"
+        },
+        {
+          "vol": 1,
+          "sec": "6.1",
+          "title": "Solving Problems with Newton’s Laws"
+        },
+        {
+          "vol": 1,
+          "sec": "6.2",
+          "title": "Friction"
+        },
+        {
+          "vol": 1,
+          "sec": "7.1",
+          "title": "Work"
+        },
+        {
+          "vol": 1,
+          "sec": "7.2",
+          "title": "Kinetic Energy"
+        },
+        {
+          "vol": 1,
+          "sec": "7.3",
+          "title": "Work-Energy Theorem"
+        },
+        {
+          "vol": 1,
+          "sec": "7.4",
+          "title": "Power"
+        },
+        {
+          "vol": 1,
+          "sec": "8.2",
+          "title": "Conservative and Non-Conservative Forces"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-22 (Claude). Block on a tilting ramp: applied force at an angle, hanging mass over an ideal pulley, Coulomb friction (static up to μs N), exact stepping with stops; free body diagram to scale with weight components and net force; timer for 1.000 m from rest; fit a/cos θ against tan θ for μk; Mystery surface; Blind. Third law partners shown on request; apparent weight not covered. Work and energy readouts added: work by gravity, friction, push and string, ΣW = ΔK, thermal energy, power.",
+      "handouts": [],
+      "title": "Forces and Friction",
+      "url": "demos/forces.html"
     },
     {
       "demo": "potential-curves",
@@ -4252,6 +4539,26 @@
       "url": "demos/collisions.html"
     },
     {
+      "demo": "rocket",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "9.7",
+          "title": "Rocket Propulsion"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Lecture demo: Δv = u ln(m0/m) in deep space, vertical launch in constant g with no air, gravity loss g × burn time, too heavy to lift off at first, slow against fast burn; v(t) and m(t) graphs. Constant g is rough above ~100 km (stated in the readout).",
+      "handouts": [],
+      "title": "Rocket Propulsion",
+      "url": "demos/rocket.html"
+    },
+    {
       "demo": "rotation",
       "course": [
         "physics-1"
@@ -4276,6 +4583,11 @@
           "vol": 1,
           "sec": "10.4",
           "title": "Moment of Inertia and Rotational Kinetic Energy"
+        },
+        {
+          "vol": 1,
+          "sec": "10.5",
+          "title": "Calculating Moments of Inertia"
         },
         {
           "vol": 1,
@@ -4361,6 +4673,25 @@
       "url": "demos/kepler-orbits.html"
     },
     {
+      "demo": "tides",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "13.6",
+          "title": "Tidal Forces"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Vol. 1 §13.6 lecture illustration of differential gravitational acceleration and equilibrium tides. Ideal ocean, circular coplanar source orbits, no basin dynamics; not a quantitative real-tide forecast. Promoted only for this direct syllabus topic.",
+      "title": "Tides",
+      "url": "demos/tides.html"
+    },
+    {
       "demo": "catenary",
       "course": [
         "physics-1"
@@ -4383,6 +4714,56 @@
       "note": "Specialized equilibrium of a hanging chain/arch. Does not replace a general free-body-diagram or equilibrium activity.",
       "title": "Hanging Chains and Arches",
       "url": "demos/catenary.html"
+    },
+    {
+      "demo": "equilibrium",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "12.1",
+          "title": "Conditions for Static Equilibrium"
+        },
+        {
+          "vol": 1,
+          "sec": "12.2",
+          "title": "Examples of Static Equilibrium"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Lecture demo: seesaw balance, plank support forces and tipping, sign with strut, cable tension and hinge force, ladder with wall push, floor friction and the slipping angle. Rigid uniform members, massless cables, frictionless hinge and wall.",
+      "handouts": [],
+      "title": "Static Equilibrium",
+      "url": "demos/equilibrium.html"
+    },
+    {
+      "demo": "stress-strain",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "12.3",
+          "title": "Stress, Strain, and Elastic Modulus"
+        },
+        {
+          "vol": 1,
+          "sec": "12.4",
+          "title": "Elasticity and Plasticity"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-22 (Claude). Wire tensile test: mild steel, annealed copper, aluminium alloy, mystery metal; diameter and hanging mass; dial gauge to 0.001 mm; idealized curve (elastic, hardening, fracture), unloading parallel to the elastic line; Capture, CSV, F against ΔL fit for Y; Blind. Typical values; necking and creep ignored.",
+      "handouts": [],
+      "title": "Stress and Strain",
+      "url": "demos/stress-strain.html"
     },
     {
       "demo": "fluids",
@@ -4446,6 +4827,11 @@
           "vol": 1,
           "sec": "15.2",
           "title": "Energy in Simple Harmonic Motion"
+        },
+        {
+          "vol": 1,
+          "sec": "15.3",
+          "title": "Comparing Simple Harmonic Motion and Circular Motion"
         },
         {
           "vol": 1,
@@ -4756,13 +5142,13 @@
         },
         {
           "vol": 2,
-          "sec": "11.7",
-          "title": "Applications of Magnetic Forces and Fields"
+          "sec": "11.6",
+          "title": "The Hall Effect"
         },
         {
           "vol": 2,
-          "sec": "11.6",
-          "title": "The Hall Effect"
+          "sec": "11.7",
+          "title": "Applications of Magnetic Forces and Fields"
         }
       ],
       "role": "lab",
@@ -4828,6 +5214,31 @@
       "note": "Lecture demonstration only. Parallel-current force and dipole torque support selected magnetic-force topics; no new handout requested.",
       "title": "Magnetic Fields of Currents",
       "url": "demos/currents-fields.html"
+    },
+    {
+      "demo": "displacement-current",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "12.5",
+          "title": "Ampère’s Law"
+        },
+        {
+          "vol": 2,
+          "sec": "16.1",
+          "title": "Maxwell’s Equations and Electromagnetic Waves"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Lecture demo: RC charging of ideal circular parallel plates (no fringing), Amperian loop movable along the wire and into the gap, flat disk or bag surface, conduction and displacement current through it, B(r) inside and outside the plates. Quasistatic; real fields are picotesla.",
+      "handouts": [],
+      "title": "Displacement Current",
+      "url": "demos/displacement-current.html"
     },
     {
       "demo": "faraday",
@@ -4963,6 +5374,11 @@
         },
         {
           "vol": 3,
+          "sec": "2.6",
+          "title": "The Camera"
+        },
+        {
+          "vol": 3,
           "sec": "2.7",
           "title": "The Simple Magnifier"
         },
@@ -4970,11 +5386,6 @@
           "vol": 3,
           "sec": "2.8",
           "title": "Microscopes and Telescopes"
-        },
-        {
-          "vol": 3,
-          "sec": "2.6",
-          "title": "The Camera"
         }
       ],
       "role": "demo",
@@ -5666,25 +6077,6 @@
       "note": "Wave optics beyond the optional basic-optics scope; Volume 3 alignment deferred.",
       "title": "Thin Film Interference",
       "url": "demos/thin-films.html"
-    },
-    {
-      "demo": "tides",
-      "course": [
-        "later"
-      ],
-      "sections": [
-        {
-          "vol": 1,
-          "sec": "13.6",
-          "title": "Tidal Forces"
-        }
-      ],
-      "role": "demo",
-      "beyond_book": false,
-      "status": "usable",
-      "note": "Not in the specified teaching sequence; retain for later.",
-      "title": "Tides",
-      "url": "demos/tides.html"
     },
     {
       "demo": "timbre",

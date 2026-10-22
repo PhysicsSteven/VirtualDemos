@@ -1,8 +1,8 @@
 # Textbook coverage and gaps
 
-Draft source inventory: main `07fc9abefafe2ae1c6c921734f58740f698aa247`, 2026-10-22. This is a curriculum map, not numerical or browser validation.
+Source inventory: main `4443739435f0a28e21e0a420e9c6df31f7a74f76`, reviewed 2026-10-22. This is curriculum/source coverage, not collection-wide numerical or release validation.
 
-62 catalog demos mapped once each; 209 section records (99 in Volume 1, 95 in Volume 2, 15 optional Volume 3 sections). Existing legacy HTML pages outside the index are not duplicated.
+70 demos from `curriculum/catalog.json` mapped once; 209 section records. Claude’s eight new demos and section additions are preserved. Legacy HTML outside the catalog is not duplicated.
 
 ## Contract for course-page construction
 
@@ -14,14 +14,13 @@ Both `sections[*].status` and `demos[*].status` are explicit. Section status des
 
 Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basename may be a planned handout, so check existence before displaying its link. No instructor links or answers belong on public course pages. Lecture demos do not require a full lab. Steve’s final lab/demo decisions override this first draft.
 
-## Priority gaps
+## Current priorities
 
-- Early Physics I: measurements/vectors, general 1D motion graphs and relative motion, Newton’s laws/free-body diagrams, friction/inclines and centripetal force.
-- General work/kinetic-energy experiments and static equilibrium: existing potential/seesaw/chain illustrations provide partial support, not a complete replacement.
-- Elastic stress/strain: missing.
-- Physics II Hall effect: Claude’s steady Hall strip landed in 24564e4 and is now mapped to §11.6; voltages require manual recording. Its one-carrier model does not imply precision copper Hall coefficients.
-- Maxwell/displacement current: EM wave demo provides partial coverage, but a charging-capacitor/induced-B activity is missing.
-- Thermodynamics and sound/waves outside the supplied syllabi stay `later`; do not build these gaps now.
+- New Physics I lab packages awaiting handouts: motion-graphs, forces and stress-strain. The new lecture demos do not need full student labs.
+- Near-surface gravity §13.2 remains missing; fixed-g projectile motion does not close this gap.
+- Moment-of-inertia calculation §10.5 is partial: discrete masses/standard formulas exist; a continuous-body integration activity is absent.
+- Chapter 1 remains worksheet material. Owner-deferred gaps include §8.5, §11.4, §13.7 and §14.7; a missing label is not authorization to build them now.
+- Thermodynamics and non-syllabus waves/sound remain later. Basic optics remains optional after Maxwell/EM waves.
 
 ## Every unmapped Volume 1/2 section
 
@@ -34,43 +33,12 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 | physics-1 | 1 | 1.5 | Estimates and Fermi Calculations | missing |
 | physics-1 | 1 | 1.6 | Significant Figures | missing |
 | physics-1 | 1 | 1.7 | Solving Problems in Physics | missing |
-| physics-1 | 1 | 2.1 | Scalars and Vectors | missing |
-| physics-1 | 1 | 2.2 | Coordinate Systems and Components of a Vector | missing |
-| physics-1 | 1 | 2.3 | Algebra of Vectors | missing |
-| physics-1 | 1 | 2.4 | Products of Vectors | missing |
-| physics-1 | 1 | 3.1 | Position, Displacement, and Average Velocity | missing |
-| physics-1 | 1 | 3.2 | Instantaneous Velocity and Speed | missing |
-| physics-1 | 1 | 3.3 | Average and Instantaneous Acceleration | missing |
-| physics-1 | 1 | 3.5 | Free Fall | missing |
-| physics-1 | 1 | 3.6 | Finding Velocity and Displacement from Acceleration | missing |
-| physics-1 | 1 | 4.1 | Displacement and Velocity Vectors | missing |
-| physics-1 | 1 | 4.2 | Acceleration Vector | missing |
-| physics-1 | 1 | 4.4 | Uniform and Nonuniform Circular Motion | missing |
-| physics-1 | 1 | 4.5 | Relative Motion in One and Two Dimensions | missing |
-| physics-1 | 1 | 5.1 | Forces | missing |
-| physics-1 | 1 | 5.2 | Newton's First Law | missing |
-| physics-1 | 1 | 5.3 | Newton's Second Law | missing |
-| physics-1 | 1 | 5.4 | Mass and Weight | missing |
-| physics-1 | 1 | 5.5 | Newton’s Third Law | missing |
-| physics-1 | 1 | 5.6 | Common Forces | missing |
-| physics-1 | 1 | 5.7 | Drawing Free-Body Diagrams | missing |
-| physics-1 | 1 | 6.1 | Solving Problems with Newton’s Laws | missing |
-| physics-1 | 1 | 6.2 | Friction | missing |
-| physics-1 | 1 | 6.3 | Centripetal Force | missing |
-| physics-1 | 1 | 7.2 | Kinetic Energy | missing |
-| physics-1 | 1 | 7.4 | Power | missing |
 | physics-1 | 1 | 8.5 | Sources of Energy | missing |
-| physics-1 | 1 | 9.7 | Rocket Propulsion | missing |
-| physics-1 | 1 | 10.5 | Calculating Moments of Inertia | missing |
 | physics-1 | 1 | 10.8 | Work and Power for Rotational Motion | missing |
 | physics-1 | 1 | 11.4 | Precession of a Gyroscope | missing |
 | physics-1 | 1 | 13.2 | Gravitation Near Earth's Surface | missing |
-| physics-1 | 1 | 13.6 | Tidal Forces | missing |
 | physics-1 | 1 | 13.7 | Einstein's Theory of Gravity | missing |
-| physics-1 | 1 | 12.3 | Stress, Strain, and Elastic Modulus | missing |
-| physics-1 | 1 | 12.4 | Elasticity and Plasticity | missing |
 | physics-1 | 1 | 14.7 | Viscosity and Turbulence | missing |
-| physics-1 | 1 | 15.3 | Comparing Simple Harmonic Motion and Circular Motion | missing |
 | physics-2 | 2 | 5.1 | Electric Charge | missing |
 | physics-2 | 2 | 5.2 | Conductors, Insulators, and Charging by Induction | missing |
 | physics-2 | 2 | 7.6 | Applications of Electrostatics | missing |
@@ -102,31 +70,28 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 
 | Volume / section | Existing activities | Limitation |
 |---|---|---|
-| 1 / 3.4 | projectile-drag | Projectile motion uses these equations; a general 1D motion/graph activity is missing. |
-| 1 / 7.1 | potential-curves | Conservative-force work only; a general applied-work apparatus is missing. |
-| 1 / 7.3 | potential-curves | Energy-diagram illustration only; general work/kinetic-energy measurement is missing. |
-| 1 / 8.2 | potential-curves | Conservative potentials are shown; general nonconservative work is incomplete. |
+| 1 / 4.4 | circular-motion | Circular Motion shows a = v²/r toward the center at constant speed; nonuniform circular motion (tangential acceleration) only in the loop. |
+| 1 / 5.2 | forces | Forces and Friction shows balanced forces at rest; constant velocity with zero net force is not set up directly. |
+| 1 / 5.4 | forces | Forces and Friction uses W = mg; apparent weight (elevator) not covered. |
 | 1 / 9.2 | collisions | Collision impulse context; a general force-time integral measurement is missing. |
 | 1 / 9.6 | collisions | Collision center-of-mass example only. |
 | 1 / 10.2 | rotation | Selected torque dynamics only; general rotational kinematics exercise needs review. |
+| 1 / 10.5 | rotation | Discrete point-mass I = Σmr² in the spinner/seesaw and supplied standard-shape coefficients are present. No continuous-body ∫r²dm derivation/integration activity; do not label that part complete. |
 | 1 / 10.7 | rotation | Selected door/rolling apparatus; not every rotational dynamics application. |
-| 1 / 12.1 | rotation, catenary | Seesaw and chain equilibrium only; a general equilibrium/free-body-diagram apparatus is still planned. |
-| 1 / 12.2 | rotation, catenary | Limited seesaw/chain examples, not complete static-equilibrium coverage. |
 | 1 / 15.4 | double-pendulum | Double-pendulum small-angle comparison; a simple pendulum lab is not provided. |
 | 2 / 5.5 | coulomb-sandbox | Point-charge sums only; general extended-distribution integration is missing. |
 | 2 / 6.4 | gauss-law | Spherical conductor example only, not arbitrary conductors. |
 | 2 / 9.1 | circuits | Circuit-level current only, not a microscopic charge-flow experiment. |
 | 2 / 11.2 | magnetic-force | Uniform imposed field; field-line exploration is limited. |
-| 2 / 11.3 | magnetic-force | Awaiting feature work listed on the demo entry. |
+| 2 / 11.3 | magnetic-force | See the activity entry. |
 | 2 / 11.4 | currents-fields | Parallel-wire force example only; arbitrary wire geometry is missing. |
 | 2 / 11.5 | currents-fields | Selected dipole/loop illustration; check full torque procedure before assigning a lab. |
-| 2 / 11.7 | magnetic-force | Awaiting feature work listed on the demo entry. |
+| 2 / 11.7 | magnetic-force | See the activity entry. |
 | 2 / 14.2 | circuits, faraday | Lumped inductors and fixed coil model, not every inductor geometry. |
-| 2 / 16.1 | em-waves | Plane-wave relationships and equation discussion; induced-B/displacement-current apparatus is missing. |
-| 2 / 16.2 | em-waves | Awaiting feature work listed on the demo entry. |
-| 2 / 16.3 | em-waves | Awaiting feature work listed on the demo entry. |
-| 2 / 16.4 | em-waves | Awaiting feature work listed on the demo entry. |
-| 2 / 16.5 | em-waves | Awaiting feature work listed on the demo entry. |
+| 2 / 16.2 | em-waves | See the activity entry. |
+| 2 / 16.3 | em-waves | See the activity entry. |
+| 2 / 16.4 | em-waves | See the activity entry. |
+| 2 / 16.5 | em-waves | See the activity entry. |
 | 3 / 2.3 | optics-bench | Basic refraction supported; general curved-surface image formation needs review. |
 | 3 / 2.8 | optics-bench | Instrument examples require review before section-complete labeling. |
 
@@ -139,18 +104,12 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 | 1.6 | Huygens’s Principle | missing |
 | 2.5 | The Eye | missing |
 
-## Sources and limits
+## Mapping recheck, 2026-10-22
 
-Volumes 1 and 2: the owner-supplied OpenStax University Physics PDFs, table of contents. Titles are retained as printed, including capitalization and apostrophes. Bibliographic links: [Volume 1](https://openstax.org/details/books/university-physics-volume-1), [Volume 2](https://openstax.org/details/books/university-physics-volume-2).
+[Evidence and scope](validation/MAPPING_RECHECK_2026-10-22.md). Tides now serves Physics I §13.6; springs reference circle serves §15.3; vectors/projectiles support two-dimensional §§4.1–4.2. Rotation supports only part of §10.5. §13.2 remains missing. No demo source, course page or handout edited in this recheck.
 
-Volume 3 titles verified against official [Chapter 1 outline](https://openstax.org/books/university-physics-volume-3/pages/1-introduction) and [Chapter 2 outline](https://openstax.org/books/university-physics-volume-3/pages/2-introduction), accessed 2026-10-22. Full Volume 3 modern/wave-optics mapping is deferred; those entries state this explicitly rather than inventing section references.
+## Sources and package status
 
-Map describes source/UI inventory, not a fresh independent physics audit. Topic references are deliberately selective. A source update, new activity or revised handout should update the map; rerun its structural validation after changes.
+Volumes 1/2 titles: owner-supplied OpenStax University Physics PDF contents. Optional Volume 3 titles: official [Chapter 1](https://openstax.org/books/university-physics-volume-3/pages/1-introduction) and [Chapter 2](https://openstax.org/books/university-physics-volume-3/pages/2-introduction) outlines. Full Volume 3 mapping remains deferred.
 
-## Physics II handout checkpoint
-
-Nine aligned student handouts and private guides now cover Coulomb/potential, Gauss, capacitors, DC, RC, magnetic motion/Hall, Faraday/Two coils, RLC and optional AC. “Usable” marks the documented activity package, not release certification. Browser workflow remains unverified. Springs is now `needs-handout` rather than `needs-feature`: Claude posted its final unknown-spring controls.
-
-## Physics I handout checkpoint
-
-Five full labs (projectile-drag, collisions, fluids, kepler-orbits, springs) and two short lecture activities (rotation, potential-curves) aligned with private guides. Springs now uses the posted unknown-spring controls and keeps the automatic-period route primary; stopwatch timing remains optional. Full-lab entries are `usable` in the package sense, with browser/classroom acceptance still open. No missing early-unit demo was invented or built. Optional camera image formation maps to optics-bench §2.6 following Claude’s source note.
+The prior 16 aligned student/private activity packages remain preserved. Status usable describes a scoped activity that can be surfaced, not full topic coverage, release certification or classroom acceptance. New motion-graphs/forces/stress-strain remain needs-handout. Claude should copy the updated JSON and this gap list from the feature branch and regenerate his course pages.

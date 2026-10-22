@@ -5,8 +5,8 @@ from curriculum/textbook-map.json.
     python3 tools/courses.py          # write the pages and update index.html
     python3 tools/courses.py --check  # exit 1 if any output is out of date
 
-Card titles, descriptions and thumbnails come from the demo cards on index.html, so the
-two stay in step. Demo URLs are unchanged: course pages only link to demos/<name>.html.
+Titles and descriptions come from curriculum/catalog.json, the list of every demo on the
+site; thumbnails are thumbs/<demo>-light.webp and -dark.webp. Demo URLs are unchanged: course pages only link to demos/<name>.html.
 """
 import html
 import json
@@ -17,6 +17,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 MAP = ROOT / 'curriculum' / 'textbook-map.json'
 INDEX = ROOT / 'index.html'
+CATALOG = ROOT / 'curriculum' / 'catalog.json'
 BOOK = {1: 'University Physics Volume 1', 2: 'University Physics Volume 2', 3: 'University Physics Volume 3'}
 BOOK_URL = {1: 'https://openstax.org/details/books/university-physics-volume-1',
             2: 'https://openstax.org/details/books/university-physics-volume-2',
@@ -30,25 +31,17 @@ esc = html.escape
 
 
 def index_cards():
-    """demo name -> title, description, thumbnail base, from the cards on index.html"""
-    src = INDEX.read_text()
-    cards = {}
-    for m in re.finditer(r'<a class="card" href="demos/([\w-]+)\.html">(.*?)</a>', src, re.S):
-        name, body = m.group(1), m.group(2)
-        title = re.search(r'<h3>(.*?)</h3>', body, re.S).group(1).strip()
-        desc = re.search(r'<p>(.*?)</p>', body, re.S).group(1).strip()
-        cards[name] = {'title': title, 'desc': desc}
-    return cards
+    """demo name -> title, description (inline HTML allowed), from curriculum/catalog.json"""
+    return {d['demo']: d for sub in CATALOG_DATA()['subjects'] for d in sub['demos']}
 
 
 def index_subjects():
-    """[(subject title, [demo names])] in index.html order"""
-    src = INDEX.read_text()
-    out = []
-    for m in re.finditer(r'<section class="subject" id="[\w-]+" aria-labelledby="[\w-]+">\s*<h2 id="[\w-]+">(.*?)<span', src, re.S):
-        end = src.find('</section>', m.end())
-        out.append((m.group(1).strip(), re.findall(r'<a class="card" href="demos/([\w-]+)\.html">', src[m.end():end])))
-    return out
+    """[(subject title, [demo names])] in catalog order"""
+    return [(sub['title'], [d['demo'] for d in sub['demos']]) for sub in CATALOG_DATA()['subjects']]
+
+
+def CATALOG_DATA():
+    return json.loads(CATALOG.read_text())
 
 
 MISC = {'id': 'misc', 'title': 'Misc.', 'sub': 'Everything else',
@@ -74,7 +67,7 @@ def misc_page(m, cards, notes):
             items.append(f'''      <li class="item">
         <a class="pic" href="demos/{n}.html" tabindex="-1" aria-hidden="true">{thumb(n, '')}</a>
         <div class="body">
-          <h3><a href="demos/{n}.html">{c['title']}</a></h3>
+          <h3><a href="demos/{n}.html">{esc(c['title'])}</a></h3>
           <p>{c['desc']}</p>
           <p class="links">{' '.join(links)}</p>
         </div>
@@ -134,7 +127,7 @@ def card(name, demo, unit_secs, cards, notes):
         <a class="pic" href="demos/{name}.html" tabindex="-1" aria-hidden="true">{thumb(name, '')}</a>
         <div class="body">
           <p class="kind"><span class="role role-{demo['role']}">{role}</span>{f'<span class="flag">{flag}</span>' if flag else ''}</p>
-          <h3><a href="demos/{name}.html">{c['title']}</a></h3>
+          <h3><a href="demos/{name}.html">{esc(c['title'])}</a></h3>
           <p>{c['desc']}</p>
           <ul class="secs" aria-label="Textbook sections">{chips}</ul>
           <p class="links">{' '.join(links)}</p>
@@ -331,7 +324,6 @@ def tiles(m, cards):
   <ul class="ctiles">
 {chr(10).join(out)}
   </ul>
-  <p class="allnote">Every demo, grouped by subject, is below.</p>
 </section>
 {TILE_END}'''
 
@@ -354,10 +346,12 @@ def build():
     out[ROOT / 'misc.html'] = misc_page(m, cards, notes)
     idx = INDEX.read_text()
     block = tiles(m, cards)
-    if TILE_START in idx:
-        idx = re.sub(re.escape(TILE_START) + '.*?' + re.escape(TILE_END), lambda _: block, idx, flags=re.S)
-    else:
-        idx = idx.replace('<nav class="tools" aria-label="Find a demo">', block + '\n\n<nav class="tools" aria-label="Find a demo">', 1)
+    # the homepage is the hero, the course tiles and the footer
+    idx = re.sub(re.escape(TILE_START) + '.*?<footer>', lambda _: block + '\n\n<footer>', idx, count=1, flags=re.S)
+    idx = re.sub(r'\n<script>.*?</script>', '', idx, count=1, flags=re.S)
+    n_all = sum(len(sub['demos']) for sub in CATALOG_DATA()['subjects'])
+    idx = re.sub(r'<li><span><strong>\d+</strong> demos</span></li>\s*<li><span><strong>\d+</strong> (subjects|courses)</span></li>',
+                 f'<li><span><strong>{n_all}</strong> demos</span></li>\n      <li><span><strong>{len(m["courses"]) + 1}</strong> courses</span></li>', idx, count=1)
     idx = re.sub(r'\n/\* course tiles \(tools/courses.py\) \*/.*?\n</style>', '\n</style>', idx, count=1, flags=re.S)
     idx = idx.replace('\n</style>', TILE_CSS.rstrip() + '\n</style>', 1)
     out[INDEX] = idx

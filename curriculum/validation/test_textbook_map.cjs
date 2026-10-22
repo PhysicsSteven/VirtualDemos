@@ -5,8 +5,9 @@ const root = path.resolve(__dirname, '../..'), map = JSON.parse(fs.readFileSync(
 const status = new Set(['usable', 'needs-handout', 'needs-feature', 'missing']);
 const key = s => `${s.vol}:${s.sec}`, sections = new Map(map.sections.map(s => [key(s), s]));
 const demos = new Map(map.demos.map(d => [d.demo, d]));
-const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-const catalog = [...index.matchAll(/<a class="card" href="demos\/([^"/]+)\.html">/g)].map(m => m[1]);
+const catalogData = JSON.parse(fs.readFileSync(path.join(root, 'curriculum/catalog.json'), 'utf8'));
+const catalog = catalogData.subjects.flatMap(subject => subject.demos.map(d => d.demo));
+assert.equal(new Set(catalog).size, catalog.length, 'duplicate catalog entry');
 assert.equal(map.schema_version, 1); assert.equal(demos.size, map.demos.length);
 assert.deepEqual([...demos.keys()].sort(), catalog.sort());
 assert.equal(sections.size, map.sections.length);
