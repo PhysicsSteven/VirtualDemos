@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Resistivity of a Wire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a wire on a metre rule with a sliding contact, a supply, ammeter and voltmeter on the left; the rail on the right. */
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+:root { --wire: #b06a2c; --meter: #f2f4f7; --clip: #2b60b5; --ecol: #6f4bb3; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wire: #e0955a; --meter: #1c2430; --clip: #69a0ff; --ecol: #b49bff; } }
+:root[data-theme="dark"] { --wire: #e0955a; --meter: #1c2430; --clip: #69a0ff; --ecol: #b49bff; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 460px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; touch-action: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.blindtag { position: absolute; left: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.lab { font-size: 0.88rem; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 190px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 190px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 420px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 420px; max-height: 80vh; }
+  .rail { overflow: visible; }
+  .chips button, .btn, .proj, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Resistivity of a Wire</h1>
+      <p>Clip onto a length of wire, drive a current through it and read the voltage across it. R = V/I grows in proportion to the length and falls with the cross-section: R = ρL/A, where the resistivity ρ belongs to the metal and rises with temperature.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">wire on a 1.000 m rule · four-wire measurement</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/resistivity.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/resistivity.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h5v1h-5zM20 2h2v1h-2zM23 2h5v1h-5zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h3v1h-3zM15 3h1v1h-1zM17 3h2v1h-2zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h2v1h-2zM17 4h2v1h-2zM22 4h3v1h-3zM27 4h4v1h-4zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h3v1h-3zM15 5h3v1h-3zM19 5h1v1h-1zM21 5h3v1h-3zM25 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h3v1h-3zM17 6h3v1h-3zM21 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM11 7h1v1h-1zM13 7h1v1h-1zM15 7h2v1h-2zM18 7h3v1h-3zM23 7h1v1h-1zM25 7h1v1h-1zM27 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h4v1h-4zM16 9h1v1h-1zM23 9h1v1h-1zM26 9h4v1h-4zM2 10h1v1h-1zM5 10h6v1h-6zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h3v1h-3zM20 10h4v1h-4zM25 10h2v1h-2zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM9 11h2v1h-2zM13 11h2v1h-2zM16 11h1v1h-1zM22 11h4v1h-4zM28 11h2v1h-2zM31 11h1v1h-1zM33 11h3v1h-3zM37 11h1v1h-1zM2 12h2v1h-2zM7 12h2v1h-2zM10 12h1v1h-1zM14 12h2v1h-2zM20 12h1v1h-1zM23 12h1v1h-1zM25 12h1v1h-1zM29 12h1v1h-1zM31 12h3v1h-3zM36 12h1v1h-1zM38 12h1v1h-1zM4 13h1v1h-1zM6 13h2v1h-2zM9 13h2v1h-2zM12 13h2v1h-2zM15 13h1v1h-1zM17 13h1v1h-1zM19 13h2v1h-2zM24 13h2v1h-2zM31 13h8v1h-8zM2 14h1v1h-1zM4 14h2v1h-2zM8 14h5v1h-5zM18 14h1v1h-1zM21 14h1v1h-1zM26 14h1v1h-1zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM2 15h1v1h-1zM4 15h2v1h-2zM7 15h1v1h-1zM10 15h1v1h-1zM12 15h2v1h-2zM15 15h1v1h-1zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM3 16h1v1h-1zM5 16h5v1h-5zM12 16h2v1h-2zM15 16h3v1h-3zM19 16h1v1h-1zM21 16h4v1h-4zM27 16h1v1h-1zM29 16h1v1h-1zM32 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM2 17h6v1h-6zM13 17h1v1h-1zM16 17h1v1h-1zM19 17h3v1h-3zM25 17h1v1h-1zM29 17h2v1h-2zM33 17h1v1h-1zM35 17h3v1h-3zM2 18h2v1h-2zM7 18h3v1h-3zM12 18h1v1h-1zM17 18h3v1h-3zM21 18h3v1h-3zM25 18h3v1h-3zM29 18h2v1h-2zM32 18h1v1h-1zM36 18h3v1h-3zM3 19h2v1h-2zM6 19h1v1h-1zM11 19h2v1h-2zM15 19h1v1h-1zM18 19h3v1h-3zM22 19h1v1h-1zM28 19h2v1h-2zM31 19h1v1h-1zM35 19h2v1h-2zM2 20h2v1h-2zM7 20h2v1h-2zM10 20h1v1h-1zM12 20h1v1h-1zM16 20h2v1h-2zM19 20h1v1h-1zM22 20h2v1h-2zM25 20h3v1h-3zM29 20h1v1h-1zM31 20h1v1h-1zM35 20h2v1h-2zM38 20h1v1h-1zM2 21h3v1h-3zM7 21h1v1h-1zM11 21h3v1h-3zM15 21h2v1h-2zM20 21h1v1h-1zM24 21h1v1h-1zM27 21h1v1h-1zM29 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM3 22h8v1h-8zM14 22h6v1h-6zM26 22h1v1h-1zM28 22h8v1h-8zM3 23h1v1h-1zM5 23h1v1h-1zM7 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM17 23h1v1h-1zM21 23h5v1h-5zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM4 24h2v1h-2zM7 24h4v1h-4zM12 24h1v1h-1zM14 24h2v1h-2zM17 24h1v1h-1zM19 24h2v1h-2zM24 24h3v1h-3zM29 24h2v1h-2zM32 24h2v1h-2zM35 24h1v1h-1zM38 24h1v1h-1zM5 25h1v1h-1zM7 25h1v1h-1zM10 25h1v1h-1zM12 25h1v1h-1zM16 25h1v1h-1zM19 25h1v1h-1zM21 25h4v1h-4zM30 25h1v1h-1zM32 25h5v1h-5zM3 26h2v1h-2zM7 26h2v1h-2zM10 26h2v1h-2zM14 26h2v1h-2zM17 26h4v1h-4zM23 26h1v1h-1zM32 26h1v1h-1zM2 27h2v1h-2zM7 27h1v1h-1zM10 27h2v1h-2zM13 27h2v1h-2zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h1v1h-1zM29 27h3v1h-3zM34 27h2v1h-2zM2 28h3v1h-3zM6 28h1v1h-1zM8 28h1v1h-1zM13 28h4v1h-4zM18 28h1v1h-1zM21 28h2v1h-2zM24 28h1v1h-1zM26 28h1v1h-1zM28 28h2v1h-2zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h2v1h-2zM9 29h1v1h-1zM11 29h3v1h-3zM15 29h3v1h-3zM22 29h1v1h-1zM24 29h1v1h-1zM26 29h1v1h-1zM28 29h1v1h-1zM30 29h4v1h-4zM35 29h3v1h-3zM2 30h1v1h-1zM4 30h5v1h-5zM10 30h2v1h-2zM15 30h2v1h-2zM22 30h1v1h-1zM26 30h2v1h-2zM30 30h9v1h-9zM10 31h1v1h-1zM14 31h3v1h-3zM20 31h3v1h-3zM24 31h1v1h-1zM26 31h2v1h-2zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h2v1h-2zM15 32h4v1h-4zM21 32h1v1h-1zM23 32h6v1h-6zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h2v1h-2zM15 33h2v1h-2zM18 33h5v1h-5zM24 33h2v1h-2zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h4v1h-4zM16 34h1v1h-1zM23 34h4v1h-4zM29 34h6v1h-6zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h1v1h-1zM14 35h2v1h-2zM18 35h1v1h-1zM20 35h1v1h-1zM23 35h1v1h-1zM25 35h1v1h-1zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h3v1h-3zM17 36h6v1h-6zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM13 37h1v1h-1zM16 37h1v1h-1zM18 37h2v1h-2zM21 37h2v1h-2zM24 37h1v1h-1zM28 37h1v1h-1zM31 37h2v1h-2zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h4v1h-4zM15 38h4v1h-4zM22 38h1v1h-1zM26 38h1v1h-1zM30 38h1v1h-1zM33 38h1v1h-1zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="application" aria-label="A wire stretched along a metre rule with a fixed clip at zero and a sliding clip. An ammeter reads the current and a voltmeter the voltage between the clips. Drag the sliding clip, or use the left and right arrow keys."></canvas>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Wire</h2>
+        <div class="chips" id="mats">
+          <button type="button" data-m="nichrome" aria-pressed="true">Nichrome</button>
+          <button type="button" data-m="constantan" aria-pressed="false">Constantan</button>
+          <button type="button" data-m="copper" aria-pressed="false">Copper</button>
+          <button type="button" data-m="mystery" aria-pressed="false">Mystery wire</button>
+        </div>
+        <div class="inline"><span class="lab">Gauge</span>
+          <div class="seg" role="group" aria-label="Wire diameter" id="gauges"></div></div>
+        <div><div class="slider-head"><label for="sL">Length between the clips L</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="0.05" max="1" step="0.005"></div>
+        <div><div class="slider-head"><label for="sI">Supply current I</label><output id="oI" for="sI"></output></div><input type="range" id="sI" min="0.05" max="1" step="0.05"></div>
+        <div><div class="slider-head"><label for="sT">Wire temperature</label><output id="oT" for="sT"></output></div><input type="range" id="sT" min="0" max="200" step="5"></div>
+        <p class="hint" id="matHint"></p>
+      </section>
+
+      <section>
+        <h2>Meters</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="formula">R = V/I · R = ρL/A · ρ(T) = ρ₂₀[1 + α(T − 20 °C)]</p>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="exportCsv">Export CSV</button>
+          <button type="button" class="btn" id="clearRows">Clear</button>
+        </div>
+        <p class="status" id="capStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>L (m)</th><th>V (V)</th><th>I (A)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <div class="inline"><span class="lab">Plot</span>
+          <div class="seg" role="group" aria-label="What to plot">
+            <button type="button" data-plot="RL" aria-pressed="true">R against L</button>
+            <button type="button" data-plot="RT" aria-pressed="false">R against T</button>
+          </div></div>
+        <div class="plotbox"><canvas id="fitCan" role="img" aria-label="The captured readings with a least squares line and residuals."></canvas></div>
+        <dl class="readout" id="fitOut"></dl>
+        <button type="button" class="btn" id="fitTblBtn" aria-expanded="false" aria-controls="fitWrap">Show data table</button>
+        <div class="twrap" id="fitWrap" hidden><table class="rows" id="fitTbl"><caption class="sr">Plotted points</caption><thead><tr><th>x</th><th>R (Ω)</th><th>fit</th><th>resid.</th></tr></thead><tbody></tbody></table></div>
+        <p class="hint">Capture stores L, the meter readings (V to 4 significant figures, I as set to 3), the gauge and the temperature. R against L uses rows at one temperature and gauge: ρ = slope × A. R against T uses rows at one length and gauge: α = slope / R(20 °C).</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <p class="hint">Blind hides ρ, α, the wire's resistance per metre, and ρ and α from the fits, leaving the meters, the rule and the settings. The Mystery wire always hides its own values.</p>
+        <p class="hint">Model: R = ρL/A with ρ linear in temperature; the voltmeter is ideal (four-wire, so the clips and leads add nothing) and the current is set by a constant current supply. Resistivities are handbook values at 20 °C; real alloys vary by a few percent.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const RS_VERSION = 'resistivity@2026-10-22';
+  // resistivity at 20 °C (Ω·m) and its temperature coefficient α (1/K); handbook values
+  const MATS = {
+    nichrome: { name: 'Nichrome', rho: 1.10e-6, alpha: 0.0004 },
+    constantan: { name: 'Constantan', rho: 4.9e-7, alpha: 0.00001 },
+    copper: { name: 'Copper', rho: 1.68e-8, alpha: 0.00393 },
+    mystery: { name: 'Mystery wire', rho: 4.2e-7, alpha: 0.0012 }   // a manganin-like alloy with a made-up α; kept hidden
+  };
+  const GAUGES = [['22', 0.644], ['26', 0.405], ['30', 0.255], ['34', 0.160]];   // AWG 22, 26, 30, 34 diameters in mm
+  const rhoAt = (M, T) => M.rho * (1 + M.alpha * (T - 20));
+  const area = (dmm) => Math.PI * (dmm / 1000) ** 2 / 4;
+  const resistance = (M, L, dmm, T) => rhoAt(M, T) * L / area(dmm);
+  const sig = (v, n) => (v === 0 ? '0' : String(+v.toPrecision(n)));
+  function fitLine(xs, ys) {
+    const n = xs.length; if (n < 2) return null;
+    const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n;
+    let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    if (sxx < 1e-30) return null;
+    const b = sxy / sxx, a0 = my - b * mx, res = xs.map((x, i) => ys[i] - a0 - b * x), ss = res.reduce((q, r) => q + r * r, 0), s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { b, a: a0, seB: Math.sqrt(s2 / sxx), seA: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), res, n };
+  }
+  const cellNum = (s) => { const v = parseFloat(String(s).replace('−', '-')); return isFinite(v) ? v : NaN; };
+  const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  function readingsCSV(rows, meta) {
+    const L = ['# Resistivity of a Wire virtual apparatus: captured readings (simulated data)', `# demo version,${meta.version}`, `# materials,${csvCell(meta.material)}`,
+      '# model,"R = rho L / A, rho(T) = rho20 [1 + alpha (T - 20 C)], ideal four-wire measurement, constant current supply"',
+      '# rounding,"L to 0.005 m, I as set (3 significant figures), V to 4 significant figures, T to 5 C; R_ohm = V / I from the row; edited cells exported as typed"', '# noise,none',
+      'row,material,d_mm,T_C,L_m,I_A,V_V,R_ohm'];
+    rows.forEach((r, i) => { const v = cellNum(r.V), c = cellNum(r.I); L.push([i + 1, r.mat, r.d, r.T, r.L, r.I, r.V, isFinite(v) && c > 0 ? sig(v / c, 6) : ''].map(csvCell).join(',')); });
+    return L.join('\n') + '\n';
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const HINT = { nichrome: 'Nichrome (nickel and chromium): high resistivity, used in toaster and heater elements. ρ about 1.1 × 10⁻⁶ Ω·m.', constantan: 'Constantan (copper and nickel): its resistivity hardly changes with temperature, which is why it is used for precision resistors.',
+    copper: 'Copper: about 65 times lower resistivity than nichrome, so the voltages are tiny. Its resistance rises about 0.4% per kelvin.', mystery: 'An unknown alloy. Find ρ from R against L, then α from R against T. Its values stay hidden.' };
+  const S = { mat: 'nichrome', g: 1, L: 0.5, I: 0.2, T: 20, blind: false, rows: [], plot: 'RL' };
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, H = 0, dpr = 1, T = null, geo = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      wire: g('--wire'), meter: g('--meter'), clip: g('--clip'), e: g('--ecol'), pos: g('--pos'), neg: g('--neg'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  function sci(v, n) { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); if (e >= -2 && e < 4) return sig(v, n).replace('-', '−');
+    return `${(v / 10 ** e).toFixed(n - 1).replace('-', '−')} × 10${String(e).split('').map((c) => SUP[c]).join('')}`; }
+  const M = () => MATS[S.mat], d = () => GAUGES[S.g][1], hidden = () => S.blind || S.mat === 'mystery';
+  const volts = () => S.I * resistance(M(), S.L, d(), S.T);
+  const vShown = () => sig(volts(), 4);
+
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const p = ps(), x0 = 40 * p, x1 = W - 40 * p, X = (l) => x0 + (x1 - x0) * l, y = H * 0.62;
+    geo = { X, x0, x1, y };
+    // metre rule
+    ctx.fillStyle = T.grid; ctx.fillRect(x0 - 8 * p, y + 8 * p, x1 - x0 + 16 * p, 26 * p);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let i = 0; i <= 100; i++) { const h = i % 10 === 0 ? 12 : i % 5 === 0 ? 8 : 4; ctx.fillRect(X(i / 100) - 0.5, y + 8 * p, 1, h * p); if (i % 10 === 0) ctx.fillText(`${i}`, X(i / 100), y + 21 * p); }
+    ctx.textAlign = 'left'; ctx.fillText('cm', x1 + 10 * p, y + 21 * p);
+    // wire
+    ctx.strokeStyle = T.wire; ctx.lineWidth = Math.max(1.5, d() * 4) * p; ctx.beginPath(); ctx.moveTo(x0 - 20 * p, y); ctx.lineTo(x1 + 20 * p, y); ctx.stroke();
+    // clips
+    const clip = (x, lab) => { ctx.fillStyle = T.clip; ctx.fillRect(x - 5 * p, y - 22 * p, 10 * p, 26 * p); ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(lab, x, y - 26 * p); };
+    clip(X(0), 'fixed clip'); clip(X(S.L), `L = ${(S.L * 100).toFixed(1)} cm`);
+    // current flow: supply leads at the ends; voltmeter leads on the clips
+    const my = 80 * p, meter = (cx, label, val) => { ctx.fillStyle = T.meter; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5; ctx.fillRect(cx - 80 * p, my - 30 * p, 160 * p, 56 * p); ctx.strokeRect(cx - 80 * p, my - 30 * p, 160 * p, 56 * p);
+      ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(label, cx, my - 26 * p); ctx.fillStyle = T.ink; ctx.font = `700 ${18 * p}px ${T.mono}`; ctx.fillText(val, cx, my - 6 * p); };
+    const vx = (X(0) + X(S.L)) / 2;
+    ctx.strokeStyle = T.e; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(X(0), y - 22 * p); ctx.lineTo(X(0), my + 10 * p); ctx.lineTo(vx - 80 * p, my + 10 * p); ctx.moveTo(X(S.L), y - 22 * p); ctx.lineTo(X(S.L), my + 10 * p); ctx.lineTo(vx + 80 * p, my + 10 * p); ctx.stroke();
+    meter(Math.max(x0 + 80 * p, Math.min(x1 - 80 * p, vx)), 'voltmeter across the clips', `${vShown()} V`);
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x0 - 20 * p, y); ctx.lineTo(x0 - 20 * p, H - 24 * p); ctx.lineTo(x1 + 20 * p, H - 24 * p); ctx.lineTo(x1 + 20 * p, y); ctx.stroke();
+    ctx.fillStyle = T.meter; ctx.strokeStyle = T.ink; ctx.fillRect(W / 2 - 110 * p, H - 40 * p, 220 * p, 30 * p); ctx.strokeRect(W / 2 - 110 * p, H - 40 * p, 220 * p, 30 * p);
+    ctx.fillStyle = T.ink; ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`supply ${sig(S.I, 3)} A  ·  ${S.T} °C`, W / 2, H - 25 * p);
+  }
+
+  function readouts() {
+    const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, R = volts() / S.I;
+    let h = dd('Current I (ammeter)', `${sig(S.I, 3)} A`) + dd('Voltage V (voltmeter)', `${vShown()} V`) + dd('R = V/I', `${sig(R, 4)} Ω`) + dd('Area A = πd²/4', `${sig(area(d()) * 1e6, 4)} mm²`);
+    if (hidden()) h += '<div class="wide"><dt>ρ, α and R per metre</dt><dd class="ok">hidden: work them out</dd></div>';
+    else h += dd('Resistivity ρ at this temperature', `${sci(rhoAt(M(), S.T), 4)} Ω·m`) + dd('α', `${sci(M().alpha, 3)} /K`) + dd('Resistance per metre', `${sig(resistance(M(), 1, d(), S.T), 4)} Ω/m`, true);
+    $('out').innerHTML = h;
+  }
+
+  // ---------- controls ----------
+  $('gauges').innerHTML = GAUGES.map(([g, dm], i) => `<button type="button" data-g="${i}" aria-pressed="${i === S.g}">${dm.toFixed(3)} mm</button>`).join('');
+  function sync() {
+    $('sL').value = S.L; $('oL').textContent = `${S.L.toFixed(3)} m`; $('sI').value = S.I; $('oI').textContent = `${sig(S.I, 3)} A`; $('sT').value = S.T; $('oT').textContent = `${S.T} °C`;
+    for (const b of document.querySelectorAll('#gauges button')) b.setAttribute('aria-pressed', String(+b.dataset.g === S.g));
+    for (const b of document.querySelectorAll('#mats button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mat));
+    for (const b of document.querySelectorAll('[data-plot]')) b.setAttribute('aria-pressed', String(b.dataset.plot === S.plot));
+    $('matHint').textContent = HINT[S.mat];
+  }
+  const upd = () => { sync(); draw(); readouts(); };
+  for (const b of document.querySelectorAll('#mats button')) b.addEventListener('click', () => { S.mat = b.dataset.m; upd(); fit(); });
+  $('gauges').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (b) { S.g = +b.dataset.g; upd(); fit(); } });
+  $('sL').addEventListener('input', (e) => { S.L = +e.target.value; upd(); });
+  $('sI').addEventListener('input', (e) => { S.I = +e.target.value; upd(); });
+  $('sT').addEventListener('input', (e) => { S.T = +e.target.value; upd(); });
+  for (const b of document.querySelectorAll('[data-plot]')) b.addEventListener('click', () => { S.plot = b.dataset.plot; sync(); fit(); });
+  let drag = false;
+  const local = (e) => { const r = can.getBoundingClientRect(); return e.clientX - r.left; };
+  const setL = (px) => { S.L = Math.max(0.05, Math.min(1, Math.round(((px - geo.x0) / (geo.x1 - geo.x0)) * 200) / 200)); upd(); };
+  can.addEventListener('pointerdown', (e) => { if (!geo) return; can.focus(); drag = true; can.setPointerCapture(e.pointerId); setL(local(e)); });
+  can.addEventListener('pointermove', (e) => { if (drag) setL(local(e)); });
+  can.addEventListener('pointerup', () => { drag = false; }); can.addEventListener('pointercancel', () => { drag = false; });
+  can.addEventListener('keydown', (e) => { if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; e.preventDefault(); S.L = Math.max(0.05, Math.min(1, +(S.L + (e.key === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 0.05 : 0.005)).toFixed(3))); upd(); });
+
+  // ---------- readings and fits ----------
+  function capStatus(m) { $('capStatus').textContent = m; }
+  $('capture').addEventListener('click', () => { S.rows.push({ mat: M().name, key: S.mat, d: d().toFixed(3), T: String(S.T), L: S.L.toFixed(3), I: sig(S.I, 3), V: vShown() }); renderRows(); capStatus(`Row ${S.rows.length} captured.`); });
+  $('clearRows').addEventListener('click', () => { S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  $('exportCsv').addEventListener('click', () => {
+    if (!S.rows.length) { capStatus('No readings to export.'); return; }
+    const txt = readingsCSV(S.rows, { version: RS_VERSION, material: [...new Set(S.rows.map((r) => r.mat))].join('; ') });
+    try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'resistivity-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+    capStatus('CSV exported.');
+  });
+  function renderRows() {
+    const tb = $('rowsTbl').querySelector('tbody');
+    tb.innerHTML = S.rows.length ? S.rows.map((r, i) => `<tr title="${r.mat}, d = ${r.d} mm, ${r.T} °C"><td>${i + 1}</td><td><input data-i="${i}" data-f="L" value="${r.L}" aria-label="L, row ${i + 1}"></td><td><input data-i="${i}" data-f="V" value="${r.V}" aria-label="V, row ${i + 1}"></td><td>${r.I}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : '<tr><td class="empty" colspan="5">No readings yet. Set L, then capture.</td></tr>';
+    fit();
+  }
+  $('rowsTbl').addEventListener('change', (e) => { const el = e.target; if (el.dataset.f) { S.rows[+el.dataset.i][el.dataset.f] = el.value.trim(); fit(); } });
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderRows(); } });
+  $('fitTblBtn').addEventListener('click', () => { const o = $('fitWrap').hidden; $('fitWrap').hidden = !o; $('fitTblBtn').setAttribute('aria-expanded', String(o)); $('fitTblBtn').textContent = o ? 'Hide data table' : 'Show data table'; });
+  const fitCan = $('fitCan'), fctx = fitCan.getContext('2d');
+  function fit() {
+    const same = S.rows.filter((r) => r.key === S.mat && r.d === d().toFixed(3));
+    const rows = S.plot === 'RL' ? same.filter((r) => r.T === String(S.T)) : same.filter((r) => r.L === S.L.toFixed(3));
+    const pts = rows.map((r) => [cellNum(S.plot === 'RL' ? r.L : r.T), cellNum(r.V) / cellNum(r.I)]).filter(([a, b]) => isFinite(a) && isFinite(b));
+    const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null, A = area(d());
+    let h;
+    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">${S.plot === 'RL' ? `Capture at least two lengths of this wire at ${S.T} °C.` : `Capture at least two temperatures of this wire at L = ${S.L.toFixed(3)} m.`}</dd></div>`;
+    else {
+      const pm = (v, e, n) => `${sci(v, n)}${isFinite(e) ? ` ± ${sci(e, 2)}` : ''}`;
+      h = `<div><dt>Slope</dt><dd>${pm(F.b, F.seB, 4)} ${S.plot === 'RL' ? 'Ω/m' : 'Ω/K'}</dd></div><div><dt>Intercept</dt><dd>${pm(F.a, F.seA, 4)} Ω</dd></div>`;
+      const ans = S.plot === 'RL' ? ['ρ = slope × A', `${pm(F.b * A, F.seB * A, 4)} Ω·m (at ${S.T} °C)`] : ['α = slope / R(20 °C)', `${sci(F.b / (F.a + 20 * F.b), 3)} /K`];
+      h += S.blind ? `<div class="wide"><dt>${ans[0]}</dt><dd class="ok">hidden in Blind: work it out</dd></div>` : `<div class="wide"><dt>${ans[0]}</dt><dd>${ans[1]}</dd></div>`;
+    }
+    $('fitOut').innerHTML = h;
+    $('fitTbl').querySelector('thead').innerHTML = `<tr><th>${S.plot === 'RL' ? 'L (m)' : 'T (°C)'}</th><th>R (Ω)</th><th>fit</th><th>resid.</th></tr>`;
+    $('fitTbl').querySelector('tbody').innerHTML = pts.map(([x, y], i) => `<tr><td>${x}</td><td>${sig(y, 5)}</td><td>${F ? sig(F.a + F.b * x, 5) : '—'}</td><td>${F ? sig(F.res[i], 2) : '—'}</td></tr>`).join('');
+    drawFit(pts, F);
+  }
+  function drawFit(pts, F) {
+    const r = fitCan.getBoundingClientRect(), w = r.width, h = r.height; if (!w || !T) return;
+    fitCan.width = Math.round(w * dpr); fitCan.height = Math.round(h * dpr); fctx.setTransform(dpr, 0, 0, dpr, 0, 0); fctx.fillStyle = T.canvas; fctx.fillRect(0, 0, w, h);
+    const L = 44, Rr = w - 8, top = 8, mainB = h - 62, resT = h - 50, resB = h - 18;
+    fctx.strokeStyle = T.line; fctx.strokeRect(L + 0.5, top + 0.5, Rr - L, mainB - top); fctx.strokeRect(L + 0.5, resT + 0.5, Rr - L, resB - resT);
+    fctx.fillStyle = T.muted; fctx.font = `10px ${T.mono}`; fctx.textAlign = 'center'; fctx.textBaseline = 'top'; fctx.fillText(S.plot === 'RL' ? 'L (m)' : 'T (°C)', (L + Rr) / 2, resB + 3);
+    fctx.save(); fctx.translate(10, (top + mainB) / 2); fctx.rotate(-Math.PI / 2); fctx.fillText('R (Ω)', 0, 0); fctx.restore();
+    if (!pts.length) return;
+    const xh = Math.max(...pts.map((q) => q[0]), 1e-9), yh = Math.max(...pts.map((q) => q[1]), 1e-12), PX = (x) => L + (Rr - L) * x / (xh * 1.08), PY = (y) => mainB - (mainB - top) * y / (yh * 1.1);
+    fctx.textAlign = 'right'; fctx.textBaseline = 'middle'; fctx.fillText(sig(yh, 3), L - 3, PY(yh)); fctx.fillText('0', L - 3, PY(0));
+    if (F) { fctx.strokeStyle = T.accent; fctx.lineWidth = 1.5; fctx.beginPath(); fctx.moveTo(PX(0), PY(F.a)); fctx.lineTo(PX(xh), PY(F.a + F.b * xh)); fctx.stroke(); }
+    fctx.fillStyle = T.clip; for (const [x, y] of pts) { fctx.beginPath(); fctx.arc(PX(x), PY(y), 3.2, 0, 7); fctx.fill(); }
+    if (F) { const m = Math.max(...F.res.map(Math.abs), 1e-12), RY = (v) => (resT + resB) / 2 - (resB - resT) / 2 * 0.85 * v / m; fctx.strokeStyle = T.gridStrong; fctx.beginPath(); fctx.moveTo(L, RY(0)); fctx.lineTo(Rr, RY(0)); fctx.stroke();
+      fctx.fillStyle = T.clip; pts.forEach(([x], i) => { fctx.beginPath(); fctx.arc(PX(x), RY(F.res[i]), 2.6, 0, 7); fctx.fill(); }); }
+  }
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); fit(); });
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); fit(); }
+  const retheme = () => { tokens(); draw(); fit(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  tokens(); new ResizeObserver(resize).observe(stage); upd(); renderRows(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+})();
+</script>
+</body>
+</html>

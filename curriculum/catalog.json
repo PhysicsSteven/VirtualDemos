@@ -683,6 +683,17 @@
       "displacement current",
       "charging capacitor"
      ]
+    },
+    {
+     "demo": "resistivity",
+     "title": "Resistivity of a Wire",
+     "desc": "Slide a clip along a wire, read the voltmeter and work out its resistance. Change length, thickness, metal and temperature, then fit your readings to find the resistivity and its temperature coefficient.",
+     "tags": [
+      "resistivity",
+      "R = ρL/A",
+      "temperature coefficient",
+      "four-wire measurement"
+     ]
     }
    ]
   },

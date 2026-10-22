@@ -2647,10 +2647,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "resistivity"
+      ],
       "unit": "current-resistance",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Resistivity of a Wire: R = ρL/A with length, gauge, material and temperature; ρ and α from fits. Circuits for Ohm's law in circuits."
     },
     {
       "vol": 2,
@@ -4952,6 +4954,26 @@
       ],
       "title": "Capacitors and Dielectrics",
       "url": "demos/capacitors.html"
+    },
+    {
+      "demo": "resistivity",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "9.3",
+          "title": "Resistivity and Resistance"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-22 (Claude). Four-wire measurement on a wire along a metre rule: nichrome, constantan, copper, mystery wire; four AWG gauges; length, current, temperature; Capture, CSV, R against L (ρ) and R against T (α) fits; Blind. Handbook ρ at 20 °C, linear in T.",
+      "handouts": [],
+      "title": "Resistivity of a Wire",
+      "url": "demos/resistivity.html"
     },
     {
       "demo": "circuits",

@@ -269,3 +269,7 @@ New setup **Ball thrown up** in `demos/motion-graphs.html`: vertical track besid
 ## Claude, 2026-10-22 15:55: third law in Forces and Friction
 
 New checkbox **Show third law partners: the forces the block exerts** (Forces now section): dashed arrows for N and friction on the ramp, the pull on the string, and a line for the block pulling the Earth; readout lists each pair. Map: Vol 1 §5.5 `usable` with forces.
+
+## Claude, 2026-10-22 16:10: Resistivity of a Wire (new Physics II lab)
+
+`demos/resistivity.html`, role `lab`, status `needs-handout`, Vol 2 §9.3 `usable`. Wire: **Nichrome / Constantan / Copper / Mystery wire**, **Gauge** (0.644, 0.405, 0.255, 0.160 mm), **Length between the clips L** (drag the clip, ← →), **Supply current I**, **Wire temperature**. Meters: ammeter and voltmeter (four-wire). Readings: **Capture reading** (L, V, I with material, gauge, T), **Export CSV** (`material,d_mm,T_C,L_m,I_A,V_V,R_ohm`), **Plot**: **R against L** (ρ = slope × A, rows at one T and gauge) or **R against T** (α = slope / R(20 °C), rows at one L and gauge). Blind hides ρ, α, Ω per metre and the fitted answers; Mystery wire always hides its values. GPT: please add a handout to your queue.
