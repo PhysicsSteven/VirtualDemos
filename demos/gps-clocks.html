@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>GPS Clocks and Relativity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: Earth, the orbit and the two clocks on the left, the rate against radius graph on the right; the rail on the right. */
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+
+:root { --earth: #6b8fb8; --sat: #4a5563; --grav: #2b60b5; --speed: #b0452f; --net: #1f8a5a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --earth: #3d5a7a; --sat: #c3cad4; --grav: #69a0ff; --speed: #ff8a70; --net: #4cd08f; } }
+:root[data-theme="dark"] { --earth: #3d5a7a; --sat: #c3cad4; --grav: #69a0ff; --speed: #ff8a70; --net: #4cd08f; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.lab { font-size: 0.88rem; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 540px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+@media (max-width: 820px) { .chips button { min-height: 36px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>GPS Clocks and Relativity</h1>
+      <p>General relativity: clocks higher in a gravitational field run faster. Special relativity: moving clocks run slower. A GPS satellite's clock gains about 38 microseconds a day on a clock on the ground; uncorrected, positions would drift by kilometres a day.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">c = 299,792,458 m/s · GM = 3.986 × 10¹⁴ m³/s²</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/gps-clocks.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/gps-clocks.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM14 2h1v1h-1zM16 2h1v1h-1zM19 2h1v1h-1zM23 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM13 3h1v1h-1zM15 3h2v1h-2zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h6v1h-6zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h3v1h-3zM23 4h1v1h-1zM25 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM17 5h3v1h-3zM24 5h2v1h-2zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM17 6h1v1h-1zM19 6h1v1h-1zM21 6h3v1h-3zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h2v1h-2zM17 7h3v1h-3zM23 7h1v1h-1zM27 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h5v1h-5zM19 9h6v1h-6zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM15 10h2v1h-2zM18 10h1v1h-1zM23 10h1v1h-1zM25 10h5v1h-5zM32 10h5v1h-5zM3 11h2v1h-2zM6 11h2v1h-2zM10 11h1v1h-1zM12 11h6v1h-6zM20 11h1v1h-1zM22 11h1v1h-1zM24 11h1v1h-1zM26 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h1v1h-1zM4 12h2v1h-2zM8 12h1v1h-1zM11 12h3v1h-3zM15 12h7v1h-7zM23 12h1v1h-1zM26 12h1v1h-1zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM5 13h2v1h-2zM10 13h3v1h-3zM15 13h3v1h-3zM20 13h4v1h-4zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM3 14h3v1h-3zM8 14h3v1h-3zM12 14h4v1h-4zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h5v1h-5zM30 14h9v1h-9zM3 15h3v1h-3zM7 15h1v1h-1zM10 15h4v1h-4zM18 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h3v1h-3zM6 16h6v1h-6zM13 16h1v1h-1zM17 16h2v1h-2zM20 16h1v1h-1zM22 16h1v1h-1zM24 16h1v1h-1zM27 16h1v1h-1zM29 16h7v1h-7zM38 16h1v1h-1zM2 17h2v1h-2zM5 17h3v1h-3zM10 17h2v1h-2zM16 17h3v1h-3zM21 17h2v1h-2zM25 17h1v1h-1zM28 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h1v1h-1zM8 18h2v1h-2zM12 18h1v1h-1zM14 18h4v1h-4zM20 18h5v1h-5zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM6 19h2v1h-2zM9 19h1v1h-1zM11 19h1v1h-1zM13 19h2v1h-2zM17 19h2v1h-2zM23 19h1v1h-1zM25 19h1v1h-1zM28 19h1v1h-1zM30 19h2v1h-2zM37 19h1v1h-1zM5 20h4v1h-4zM13 20h1v1h-1zM22 20h3v1h-3zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM3 21h2v1h-2zM7 21h1v1h-1zM9 21h1v1h-1zM16 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM23 21h2v1h-2zM28 21h1v1h-1zM32 21h1v1h-1zM38 21h1v1h-1zM5 22h2v1h-2zM8 22h2v1h-2zM11 22h1v1h-1zM13 22h1v1h-1zM15 22h1v1h-1zM19 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h1v1h-1zM5 23h1v1h-1zM9 23h2v1h-2zM13 23h2v1h-2zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM5 24h1v1h-1zM8 24h2v1h-2zM11 24h1v1h-1zM13 24h1v1h-1zM15 24h3v1h-3zM19 24h1v1h-1zM22 24h2v1h-2zM26 24h2v1h-2zM29 24h2v1h-2zM32 24h4v1h-4zM37 24h2v1h-2zM3 25h1v1h-1zM5 25h2v1h-2zM9 25h1v1h-1zM11 25h4v1h-4zM17 25h9v1h-9zM28 25h2v1h-2zM32 25h3v1h-3zM37 25h1v1h-1zM2 26h1v1h-1zM5 26h8v1h-8zM14 26h1v1h-1zM17 26h2v1h-2zM21 26h1v1h-1zM23 26h1v1h-1zM25 26h3v1h-3zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h4v1h-4zM7 27h1v1h-1zM11 27h1v1h-1zM13 27h3v1h-3zM17 27h1v1h-1zM20 27h1v1h-1zM22 27h4v1h-4zM30 27h2v1h-2zM33 27h1v1h-1zM2 28h1v1h-1zM8 28h1v1h-1zM11 28h1v1h-1zM14 28h1v1h-1zM17 28h2v1h-2zM21 28h1v1h-1zM26 28h5v1h-5zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM5 29h3v1h-3zM12 29h2v1h-2zM15 29h1v1h-1zM17 29h1v1h-1zM21 29h3v1h-3zM29 29h6v1h-6zM2 30h1v1h-1zM4 30h1v1h-1zM7 30h2v1h-2zM10 30h1v1h-1zM12 30h2v1h-2zM16 30h2v1h-2zM19 30h1v1h-1zM21 30h1v1h-1zM26 30h3v1h-3zM30 30h7v1h-7zM38 30h1v1h-1zM10 31h1v1h-1zM12 31h1v1h-1zM14 31h2v1h-2zM17 31h2v1h-2zM20 31h3v1h-3zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h1v1h-1zM15 32h3v1h-3zM20 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM26 32h3v1h-3zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM15 33h1v1h-1zM17 33h2v1h-2zM25 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM14 34h3v1h-3zM20 34h6v1h-6zM27 34h8v1h-8zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h7v1h-7zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM12 36h3v1h-3zM16 36h1v1h-1zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM14 37h2v1h-2zM18 37h1v1h-1zM23 37h1v1h-1zM26 37h1v1h-1zM28 37h3v1h-3zM32 37h1v1h-1zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM13 38h3v1h-3zM19 38h1v1h-1zM24 38h6v1h-6zM31 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="img" aria-label="Earth with a satellite in a circular orbit, two clocks showing the time difference built up so far, and a graph of how much a clock at each orbit radius gains or loses per day."></canvas>
+      <div class="viewbar"><button type="button" class="spin attn" id="go">Run the clocks</button><button type="button" class="spin" id="reset">Set both to zero</button></div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Where is the second clock</h2>
+        <div class="chips" id="places">
+          <button type="button" data-k="tower">Lab tower, 22.5 m</button>
+          <button type="button" data-k="iss">Space station, about 400 km</button>
+          <button type="button" data-k="gps">GPS, r = 26,560 km</button>
+          <button type="button" data-k="geo">Geostationary, r = 42,164 km</button>
+        </div>
+        <div class="seg" role="group" aria-label="Second clock" id="modeSeg"><button type="button" data-m="orbit" aria-pressed="true">In a circular orbit</button><button type="button" data-m="tower" aria-pressed="false">At rest on a tower</button></div>
+        <div><div class="slider-head"><label for="sR">Distance from Earth's centre r</label><output id="oR" for="sR"></output></div><input type="range" id="sR" min="0" max="1000" step="1"></div>
+        <label class="check"><input type="checkbox" id="spin" checked><span>Ground clock turns with Earth (at the equator)</span></label>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="formula">dτ/dt = √(1 − 2GM/(rc²) − v²/c²)</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides the rates and the gain per day, leaving r, v and the clocks' accumulated difference.</p>
+        <p class="hint">Model: Earth is a non-rotating spherical mass (Schwarzschild field); each clock's rate relative to coordinate time is √(1 − 2GM/(rc²) − v²/c²), with v its speed in the non-rotating frame. The ground clock sits on a sphere of radius 6371 km, at rest or carried round at the equator once per sidereal day. Earth's flattening and the Sun and Moon are left out. The clocks run 1 simulated hour per second.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  const C = 299792458, GM = 3.986004418e14, RE = 6.371e6, WE = 7.2921159e-5, DAY = 86400, GPS_VERSION = 'gps-clocks@2026-10-22';
+  // rate of a clock relative to coordinate time, minus 1, computed without cancellation: √(1 − x) − 1 = −x/(1 + √(1 − x))
+  const rateM1 = (x) => -x / (1 + Math.sqrt(1 - x));
+  const xGrav = (r) => 2 * GM / (r * C * C), xSpeed = (v) => (v * v) / (C * C);
+  const orbitSpeed = (r) => Math.sqrt(GM / r);
+  // fractional gain of clock 2 over clock 1: (rate2 − rate1)/rate1, from (rate − 1) values
+  const gain = (m2, m1) => (m2 - m1) / (1 + m1);
+  function clocks(r, mode, groundSpin) {
+    const vG = groundSpin ? WE * RE : 0, v2 = mode === 'orbit' ? orbitSpeed(r) : (groundSpin ? WE * r : 0);
+    const g1 = rateM1(xGrav(RE) + xSpeed(vG)), g2 = rateM1(xGrav(r) + xSpeed(v2));
+    // the two pieces separately, each against the ground clock: gravity only, then speed only
+    const gravOnly = gain(rateM1(xGrav(r) + xSpeed(vG)), g1), total = gain(g2, g1);
+    return { v2, vG, total, grav: gravOnly, speed: total - gravOnly, perDay: total * DAY };
+  }
+  // orbit radius where the two effects cancel for a clock in orbit vs a ground clock at rest: 2GM/R − ... gives r = 3R/2 to first order
+  function crossover(groundSpin) { let lo = RE * 1.0001, hi = 10 * RE; for (let i = 0; i < 200; i++) { const m = (lo + hi) / 2; if (clocks(m, 'orbit', groundSpin).total < 0) lo = m; else hi = m; } return (lo + hi) / 2; }
+  const schwarzschild = (gm) => 2 * gm / (C * C);
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const PL = { tower: { r: RE + 22.5, m: 'tower' }, iss: { r: RE + 4e5, m: 'orbit' }, gps: { r: 2.656e7, m: 'orbit' }, geo: { r: 4.2164e7, m: 'orbit' } };
+  const S = { r: 2.656e7, mode: 'orbit', spin: true, run: false, t: 0, blind: false, place: 'gps' };
+  const RMAX = 5e7, toS = (r) => Math.round(1000 * Math.sqrt((r - RE) / (RMAX - RE))), fromS = (v) => RE + (RMAX - RE) * (v / 1000) ** 2;
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, Hh = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      earth: g('--earth'), sat: g('--sat'), grav: g('--grav'), speed: g('--speed'), net: g('--net'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d).replace('-', '−'));
+  function sci(v, n = 3) { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+    return `${(v / 10 ** e).toFixed(n - 1).replace('-', '−')} × 10${String(e).split('').map((c) => SUP[c]).join('')}`; }
+  const us = (v) => (Math.abs(v) < 0.01 ? `${f(v * 1e6, 2)} ps` : `${f(v, 3)} μs`);   // v in μs
+  const rText = (r) => `${Math.round(r / 1000).toLocaleString('en-US')} km`;
+  function sync() {
+    for (const b of document.querySelectorAll('#places button')) b.setAttribute('aria-pressed', String(b.dataset.k === S.place));
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
+    $('sR').value = toS(S.r); $('oR').textContent = `${rText(S.r)} (h = ${(S.r - RE) < 1e4 ? f(S.r - RE, 1) + ' m' : rText(S.r - RE)})`; $('spin').checked = S.spin;
+  }
+  const upd = () => { sync(); draw(); readouts(); };
+  $('places').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (b) { S.place = b.dataset.k; S.r = PL[S.place].r; S.mode = PL[S.place].m; S.t = 0; upd(); } });
+  $('modeSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (b) { S.mode = b.dataset.m; S.place = null; S.t = 0; upd(); } });
+  $('sR').addEventListener('input', (e) => { S.r = fromS(+e.target.value); S.place = null; S.t = 0; upd(); });
+  $('spin').addEventListener('change', (e) => { S.spin = e.target.checked; S.t = 0; upd(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
+  $('go').addEventListener('click', () => { S.run = !S.run; $('go').textContent = S.run ? 'Pause' : 'Run the clocks'; $('go').classList.toggle('attn', !S.run); if (reduce && S.run) { S.t += DAY; S.run = false; $('go').textContent = 'Run the clocks'; $('go').classList.add('attn'); draw(); readouts(); } });
+  $('reset').addEventListener('click', () => { S.t = 0; draw(); readouts(); });
+  function tick(dt) { if (S.run) { S.t += dt * 3600; draw(); readouts(); } }
+  function readouts() {
+    const K = clocks(S.r, S.mode, S.spin), dd = (a, v, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${v}</dd></div>`;
+    let h = dd('Second clock speed', `${f(K.v2 / 1000, 3)} km/s`) + dd('Ground clock speed', `${f(K.vG, 0)} m/s`);
+    h += dd('Time run so far', `${f(S.t / 3600, 1)} h`) + dd('Second clock ahead by', us(K.total * S.t * 1e6));
+    if (S.blind) h += '<div class="wide"><dt>Rates and the gain per day</dt><dd class="ok">hidden in Blind: work them out</dd></div>';
+    else {
+      h += dd('Gravity (higher runs faster)', `${us(K.grav * DAY * 1e6)}/day`) + dd('Speed (moving runs slower)', `${us(K.speed * DAY * 1e6)}/day`);
+      h += dd('Net gain per day', `${us(K.perDay * 1e6)}/day`) + dd('Fractional rate difference', sci(K.total));
+      h += dd('Light travel distance of one day\'s gain', Math.abs(K.perDay) * C >= 1000 ? `${f(Math.abs(K.perDay) * C / 1000, 2)} km` : `${f(Math.abs(K.perDay) * C * 1000, 2)} mm`, true);
+      h += dd('Orbits where the effects cancel', `r = ${rText(crossover(S.spin))}`, true);
+    }
+    h += dd('Schwarzschild radius 2GM/c²: Earth', `${f(schwarzschild(GM) * 1000, 2)} mm`) + dd('Sun', `${f(schwarzschild(1.32712440018e20) / 1000, 2)} km`);
+    $('out').innerHTML = h;
+  }
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const p = ps(), wide = W > 640, K = clocks(S.r, S.mode, S.spin);
+    const pw = wide ? W * 0.5 : W, ph = wide ? Hh : Hh * 0.55, cx = pw / 2, cy = ph / 2 + 20 * p, rMax = Math.min(pw, ph) / 2 - 40 * p, sc = rMax / Math.max(S.r, 1.6 * RE);
+    ctx.fillStyle = T.earth; ctx.beginPath(); ctx.arc(cx, cy, RE * sc, 0, 7); ctx.fill();
+    ctx.strokeStyle = T.gridStrong; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.arc(cx, cy, S.r * sc, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+    const omega = S.mode === 'orbit' ? K.v2 / S.r : WE, th = omega * S.t, sx = cx + S.r * sc * Math.cos(th), sy = cy - S.r * sc * Math.sin(th);
+    const gth = (S.spin ? WE : 0) * S.t, gx = cx + RE * sc * Math.cos(gth), gy = cy - RE * sc * Math.sin(gth);
+    ctx.fillStyle = T.sat; ctx.fillRect(sx - 5 * p, sy - 5 * p, 10 * p, 10 * p); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(gx, gy, 4 * p, 0, 7); ctx.fill();
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('view from above the North Pole', cx, ph - 20 * p);
+    // clocks
+    ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.ink;
+    ctx.fillText(`ground clock:  ${f(S.t / 3600, 3)} h`, 14 * p, 54 * p);
+    ctx.fillText(`second clock:  ${f(S.t / 3600, 3)} h ${K.total >= 0 ? '+' : '−'} ${us(Math.abs(K.total * S.t) * 1e6)}`, 14 * p, 74 * p);
+    // graph: gain per day against r
+    const gx0 = wide ? pw + 50 * p : 60 * p, gw = wide ? W - gx0 - 20 * p : W - 80 * p, gy0 = wide ? 110 * p : ph + 30 * p, gh = wide ? Hh - gy0 - 60 * p : Hh - gy0 - 40 * p;
+    const rLo = RE, rHi = RMAX, X = (r) => gx0 + gw * (r - rLo) / (rHi - rLo);
+    const fn = (r, which) => { const k = clocks(r, S.mode, S.spin); return (which === 'g' ? k.grav : which === 's' ? k.speed : k.total) * DAY * 1e6; };
+    let lo = 0, hi = 0; for (let i = 0; i <= 100; i++) { const r = rLo + (rHi - rLo) * i / 100; for (const w of 'gsn') { const v = fn(r, w); lo = Math.min(lo, v); hi = Math.max(hi, v); } }
+    lo *= 1.1; hi *= 1.1; const Y = (v) => gy0 + gh - gh * (v - lo) / (hi - lo || 1);
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(gx0, gy0, gw, gh); ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(gx0, Y(0)); ctx.lineTo(gx0 + gw, Y(0)); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('second clock gains per day (μs) against r', gx0, gy0 - 4);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(f(hi, 0), gx0 - 3, Y(hi)); ctx.fillText('0', gx0 - 3, Y(0)); ctx.fillText(f(lo, 0), gx0 - 3, Y(lo));
+    ctx.textBaseline = 'top'; ctx.fillText(rText(rHi), gx0 + gw, gy0 + gh + 3); ctx.textAlign = 'left'; ctx.fillText('R', gx0, gy0 + gh + 3);
+    if (!S.blind) for (const [w, col, lab] of [['g', T.grav, 'gravity'], ['s', T.speed, 'speed'], ['n', T.net, 'net']]) {
+      ctx.strokeStyle = col; ctx.lineWidth = (w === 'n' ? 2.5 : 1.5) * p; ctx.beginPath(); for (let i = 0; i <= 200; i++) { const r = rLo + (rHi - rLo) * i / 200; const x = X(r), y = Y(fn(r, w)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke();
+      ctx.fillStyle = col; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(lab, gx0 + gw - 4 * p, Y(fn(rHi, w)) - 3 * p);
+    }
+    ctx.strokeStyle = T.accent; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(X(S.r), gy0); ctx.lineTo(X(S.r), gy0 + gh); ctx.stroke(); ctx.setLineDash([]);
+  }
+  function init() { sync(); readouts(); }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
+  tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  let last = performance.now();
+  (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();
+})();
+</script>
+</body>
+</html>

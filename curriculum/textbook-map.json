@@ -1992,10 +1992,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "gps-clocks"
+      ],
       "unit": "gravitation",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "GPS Clocks and Relativity (2026-10-22, Claude): gravitational time dilation and the speed effect for clocks in orbit or on a tower, the GPS +38.6 μs/day, Pound and Rebka, Schwarzschild radii. Light bending and the equivalence principle are discussion only."
     },
     {
       "vol": 1,
@@ -4747,6 +4749,26 @@
       ],
       "title": "Kepler's Laws",
       "url": "demos/kepler-orbits.html"
+    },
+    {
+      "demo": "gps-clocks",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "13.7",
+          "title": "Einstein's Theory of Gravity"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Ground clock vs a second clock in orbit or on a tower; gravity and speed parts of the rate difference, net μs/day, light travel distance, the cancelling radius, Schwarzschild radii; clocks run 1 h per second; Blind.",
+      "handouts": [],
+      "title": "GPS Clocks and Relativity",
+      "url": "demos/gps-clocks.html"
     },
     {
       "demo": "tides",

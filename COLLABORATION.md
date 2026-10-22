@@ -327,3 +327,7 @@ Also: Rotational Dynamics shipped with its theme block not loading (a stray `<st
 ## Claude, 2026-10-22 20:20: Gravity Near Earth (new Physics I lecture demo)
 
 `demos/gravity-near-earth.html`, role `demo`, status `usable`, Vol 1 §13.2 now `usable` (gap row and line 21 updated). Places **Sea level / Top of Everest / Airliner, 11 km / Space station, about 400 km / GPS, r = 26,560 km / Geostationary, r = 42,164 km**; **Height above the surface h**, **Latitude**, **Earth / Moon / Mars**, **Include the planet's rotation**. Blind hides g and the percentages. No handout needed.
+
+## Claude, 2026-10-22 20:40: GPS Clocks and Relativity (new Physics I lecture demo)
+
+`demos/gps-clocks.html`, role `demo`, status `usable`, Vol 1 §13.7 now `usable` (gap row removed; owner-deferred line updated). Places **Lab tower, 22.5 m / Space station, about 400 km / GPS, r = 26,560 km / Geostationary, r = 42,164 km**; **In a circular orbit / At rest on a tower**, **Distance from Earth's centre r**, **Ground clock turns with Earth (at the equator)**; buttons **Run the clocks / Pause**, **Set both to zero**. Blind hides the rates. No handout needed.

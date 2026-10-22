@@ -50,6 +50,17 @@
      ]
     },
     {
+     "demo": "gps-clocks",
+     "title": "GPS Clocks and Relativity",
+     "desc": "Why a GPS satellite's clock gains 38 microseconds a day: gravity makes higher clocks run fast, speed makes moving clocks run slow.",
+     "tags": [
+      "general relativity",
+      "time dilation",
+      "GPS",
+      "gravitational redshift"
+     ]
+    },
+    {
      "demo": "hr-diagram",
      "title": "Stellar Evolution",
      "desc": "Follow a star of any mass across the HR diagram from the main sequence to a cooling white dwarf or a supernova, and date a star cluster from its turnoff.",

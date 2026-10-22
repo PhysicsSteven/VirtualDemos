@@ -51,6 +51,7 @@ OVERRIDES = {
     "viscometer": {"wait": 1500, "js": "document.querySelector('#speedSeg [data-s=\"10\"]').click(); document.getElementById('go').click();"},
     "elevator": {"wait": 1200, "js": "document.querySelector('#trips [data-to=\"10\"]').click();"},
     "gravity-near-earth": {"wait": 600, "js": "const s = document.getElementById('sL'); s.value = 40; s.dispatchEvent(new Event('input'));"},
+    "gps-clocks": {"wait": 1500, "js": "document.getElementById('go').click();"},
     "eddy-currents": {"wait": 3500, "js": "document.getElementById('drop').click();"},
     "wire-force": {"wait": 2500, "js": "document.querySelector('#presets button[data-p=\"motor\"]').click(); document.getElementById('spin').click();"},
     "induction": {"wait": 500, "js": "document.getElementById('next').click();"},
