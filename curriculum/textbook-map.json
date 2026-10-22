@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": {
-    "repository_commit": "07fc9abefafe2ae1c6c921734f58740f698aa247",
+    "repository_commit": "4443739435f0a28e21e0a420e9c6df31f7a74f76",
     "review_date": "2026-10-22",
     "textbooks": [
       {
@@ -1154,10 +1154,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "vectors",
+        "projectile-drag"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Two-dimensional displacement/velocity components and trajectory examples. The demos do not provide a general three-dimensional motion viewer."
     },
     {
       "vol": 1,
@@ -1169,10 +1172,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "vectors",
+        "projectile-drag"
+      ],
       "unit": "kinematics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Use vector subtraction Δv and projectile time-dot positions/velocity arrows to discuss acceleration components. Two-dimensional illustration; no dedicated acceleration-vector or general 3D viewer. Derivatives can be calculated from the trajectory data."
     },
     {
       "vol": 1,
@@ -1751,10 +1757,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "needs-feature",
+      "demos": [
+        "rotation"
+      ],
       "unit": "rotation",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Discrete point-mass I = Σmr² in the spinner/seesaw and supplied standard-shape coefficients are present. No continuous-body ∫r²dm derivation/integration activity; do not label that part complete."
     },
     {
       "vol": 1,
@@ -1896,7 +1904,7 @@
       "status": "missing",
       "demos": [],
       "unit": "gravitation",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Fixed g in projectile/motion graphs and a Sun-centered AU orbit model do not investigate g = GM_E/(R_E+h)² or its near-surface approximation. No direct activity yet."
     },
     {
       "vol": 1,
@@ -1956,10 +1964,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "tides"
+      ],
       "unit": "gravitation",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Direct differential-gravity and axial/transverse tidal-force demonstration. Equilibrium-ocean approximations are stated; no real coastal tide prediction."
     },
     {
       "vol": 1,
@@ -2201,10 +2211,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "springs"
+      ],
       "unit": "oscillations",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Reference circle projects uniform circular motion onto undamped SHM. Select Free, b=0; Reference circle is hidden in Blind/Unknown spring. Damped shrinking-circle extension is not uniform circular motion."
     },
     {
       "vol": 1,
@@ -4193,38 +4205,6 @@
   ],
   "demos": [
     {
-      "demo": "projectile-drag",
-      "course": [
-        "physics-1"
-      ],
-      "sections": [
-        {
-          "vol": 1,
-          "sec": "3.4",
-          "title": "Motion with Constant Acceleration"
-        },
-        {
-          "vol": 1,
-          "sec": "4.3",
-          "title": "Projectile Motion"
-        },
-        {
-          "vol": 1,
-          "sec": "6.4",
-          "title": "Drag Force and Terminal Speed"
-        }
-      ],
-      "role": "lab",
-      "beyond_book": false,
-      "status": "usable",
-      "note": "OpenStax student handout and matching private guide aligned on 2026-10-22; current controls and numerical reference checks passed. Browser/classroom acceptance remains open.",
-      "handouts": [
-        "projectile-drag"
-      ],
-      "title": "Projectile Range",
-      "url": "demos/projectile-drag.html"
-    },
-    {
       "demo": "vectors",
       "course": [
         "physics-1"
@@ -4252,6 +4232,16 @@
         },
         {
           "vol": 1,
+          "sec": "4.1",
+          "title": "Displacement and Velocity Vectors"
+        },
+        {
+          "vol": 1,
+          "sec": "4.2",
+          "title": "Acceleration Vector"
+        },
+        {
+          "vol": 1,
           "sec": "4.5",
           "title": "Relative Motion in One and Two Dimensions"
         }
@@ -4263,6 +4253,118 @@
       "handouts": [],
       "title": "Vectors and Relative Motion",
       "url": "demos/vectors.html"
+    },
+    {
+      "demo": "motion-graphs",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "3.1",
+          "title": "Position, Displacement, and Average Velocity"
+        },
+        {
+          "vol": 1,
+          "sec": "3.2",
+          "title": "Instantaneous Velocity and Speed"
+        },
+        {
+          "vol": 1,
+          "sec": "3.3",
+          "title": "Average and Instantaneous Acceleration"
+        },
+        {
+          "vol": 1,
+          "sec": "3.4",
+          "title": "Motion with Constant Acceleration"
+        },
+        {
+          "vol": 1,
+          "sec": "3.5",
+          "title": "Free Fall"
+        },
+        {
+          "vol": 1,
+          "sec": "3.6",
+          "title": "Finding Velocity and Displacement from Acceleration"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-22 (Claude). Exact piecewise constant acceleration; x, v, a graphs with tangent and area; Walk the graph with motion detector estimates; Capture, CSV, parabola fit with residuals, Blind. Ball thrown up preset covers free fall (3.5) on a vertical track.",
+      "handouts": [],
+      "title": "Motion Graphs",
+      "url": "demos/motion-graphs.html"
+    },
+    {
+      "demo": "projectile-drag",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "3.4",
+          "title": "Motion with Constant Acceleration"
+        },
+        {
+          "vol": 1,
+          "sec": "4.1",
+          "title": "Displacement and Velocity Vectors"
+        },
+        {
+          "vol": 1,
+          "sec": "4.2",
+          "title": "Acceleration Vector"
+        },
+        {
+          "vol": 1,
+          "sec": "4.3",
+          "title": "Projectile Motion"
+        },
+        {
+          "vol": 1,
+          "sec": "6.4",
+          "title": "Drag Force and Terminal Speed"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "OpenStax student handout and matching private guide aligned on 2026-10-22; current controls and numerical reference checks passed. Browser/classroom acceptance remains open.",
+      "handouts": [
+        "projectile-drag"
+      ],
+      "title": "Projectile Range",
+      "url": "demos/projectile-drag.html"
+    },
+    {
+      "demo": "circular-motion",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "4.4",
+          "title": "Uniform and Nonuniform Circular Motion"
+        },
+        {
+          "vol": 1,
+          "sec": "6.3",
+          "title": "Centripetal Force"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Lecture demo: ball on a string (cut it: straight line), car on a flat curve (top speed √(μs g r)), banked curve (ideal speed, allowed range), vertical loop (energy, N, leaves the track below √(gr) at the top); FBD to scale; Blind. Cars and loop shown slowed down.",
+      "handouts": [],
+      "title": "Circular Motion",
+      "url": "demos/circular-motion.html"
     },
     {
       "demo": "forces",
@@ -4348,76 +4450,6 @@
       "handouts": [],
       "title": "Forces and Friction",
       "url": "demos/forces.html"
-    },
-    {
-      "demo": "circular-motion",
-      "course": [
-        "physics-1"
-      ],
-      "sections": [
-        {
-          "vol": 1,
-          "sec": "4.4",
-          "title": "Uniform and Nonuniform Circular Motion"
-        },
-        {
-          "vol": 1,
-          "sec": "6.3",
-          "title": "Centripetal Force"
-        }
-      ],
-      "role": "demo",
-      "beyond_book": false,
-      "status": "usable",
-      "note": "New 2026-10-22 (Claude). Lecture demo: ball on a string (cut it: straight line), car on a flat curve (top speed √(μs g r)), banked curve (ideal speed, allowed range), vertical loop (energy, N, leaves the track below √(gr) at the top); FBD to scale; Blind. Cars and loop shown slowed down.",
-      "handouts": [],
-      "title": "Circular Motion",
-      "url": "demos/circular-motion.html"
-    },
-    {
-      "demo": "motion-graphs",
-      "course": [
-        "physics-1"
-      ],
-      "sections": [
-        {
-          "vol": 1,
-          "sec": "3.1",
-          "title": "Position, Displacement, and Average Velocity"
-        },
-        {
-          "vol": 1,
-          "sec": "3.2",
-          "title": "Instantaneous Velocity and Speed"
-        },
-        {
-          "vol": 1,
-          "sec": "3.3",
-          "title": "Average and Instantaneous Acceleration"
-        },
-        {
-          "vol": 1,
-          "sec": "3.4",
-          "title": "Motion with Constant Acceleration"
-        },
-        {
-          "vol": 1,
-          "sec": "3.5",
-          "title": "Free Fall"
-        },
-        {
-          "vol": 1,
-          "sec": "3.6",
-          "title": "Finding Velocity and Displacement from Acceleration"
-        }
-      ],
-      "role": "lab",
-      "beyond_book": false,
-      "status": "needs-handout",
-      "note": "New 2026-10-22 (Claude). Exact piecewise constant acceleration; x, v, a graphs with tangent and area; Walk the graph with motion detector estimates; Capture, CSV, parabola fit with residuals, Blind. Ball thrown up preset covers free fall (3.5) on a vertical track.",
-      "handouts": [],
-      "title": "Motion Graphs",
-      "url": "demos/motion-graphs.html"
     },
     {
       "demo": "potential-curves",
@@ -4561,6 +4593,11 @@
         },
         {
           "vol": 1,
+          "sec": "10.5",
+          "title": "Calculating Moments of Inertia"
+        },
+        {
+          "vol": 1,
           "sec": "10.6",
           "title": "Torque"
         },
@@ -4641,6 +4678,25 @@
       ],
       "title": "Kepler's Laws",
       "url": "demos/kepler-orbits.html"
+    },
+    {
+      "demo": "tides",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "13.6",
+          "title": "Tidal Forces"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Vol. 1 §13.6 lecture illustration of differential gravitational acceleration and equilibrium tides. Ideal ocean, circular coplanar source orbits, no basin dynamics; not a quantitative real-tide forecast. Promoted only for this direct syllabus topic.",
+      "title": "Tides",
+      "url": "demos/tides.html"
     },
     {
       "demo": "catenary",
@@ -4778,6 +4834,11 @@
           "vol": 1,
           "sec": "15.2",
           "title": "Energy in Simple Harmonic Motion"
+        },
+        {
+          "vol": 1,
+          "sec": "15.3",
+          "title": "Comparing Simple Harmonic Motion and Circular Motion"
         },
         {
           "vol": 1,
@@ -5138,13 +5199,13 @@
         },
         {
           "vol": 2,
-          "sec": "11.7",
-          "title": "Applications of Magnetic Forces and Fields"
+          "sec": "11.6",
+          "title": "The Hall Effect"
         },
         {
           "vol": 2,
-          "sec": "11.6",
-          "title": "The Hall Effect"
+          "sec": "11.7",
+          "title": "Applications of Magnetic Forces and Fields"
         }
       ],
       "role": "lab",
@@ -5212,6 +5273,31 @@
       "url": "demos/currents-fields.html"
     },
     {
+      "demo": "displacement-current",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "12.5",
+          "title": "Ampère’s Law"
+        },
+        {
+          "vol": 2,
+          "sec": "16.1",
+          "title": "Maxwell’s Equations and Electromagnetic Waves"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Lecture demo: RC charging of ideal circular parallel plates (no fringing), Amperian loop movable along the wire and into the gap, flat disk or bag surface, conduction and displacement current through it, B(r) inside and outside the plates. Quasistatic; real fields are picotesla.",
+      "handouts": [],
+      "title": "Displacement Current",
+      "url": "demos/displacement-current.html"
+    },
+    {
       "demo": "faraday",
       "course": [
         "physics-2"
@@ -5262,31 +5348,6 @@
       ],
       "title": "Faraday's and Lenz's Laws",
       "url": "demos/faraday.html"
-    },
-    {
-      "demo": "displacement-current",
-      "course": [
-        "physics-2"
-      ],
-      "sections": [
-        {
-          "vol": 2,
-          "sec": "12.5",
-          "title": "Ampère’s Law"
-        },
-        {
-          "vol": 2,
-          "sec": "16.1",
-          "title": "Maxwell’s Equations and Electromagnetic Waves"
-        }
-      ],
-      "role": "demo",
-      "beyond_book": false,
-      "status": "usable",
-      "note": "New 2026-10-22 (Claude). Lecture demo: RC charging of ideal circular parallel plates (no fringing), Amperian loop movable along the wire and into the gap, flat disk or bag surface, conduction and displacement current through it, B(r) inside and outside the plates. Quasistatic; real fields are picotesla.",
-      "handouts": [],
-      "title": "Displacement Current",
-      "url": "demos/displacement-current.html"
     },
     {
       "demo": "em-waves",
@@ -5370,6 +5431,11 @@
         },
         {
           "vol": 3,
+          "sec": "2.6",
+          "title": "The Camera"
+        },
+        {
+          "vol": 3,
           "sec": "2.7",
           "title": "The Simple Magnifier"
         },
@@ -5377,11 +5443,6 @@
           "vol": 3,
           "sec": "2.8",
           "title": "Microscopes and Telescopes"
-        },
-        {
-          "vol": 3,
-          "sec": "2.6",
-          "title": "The Camera"
         }
       ],
       "role": "demo",
@@ -6073,25 +6134,6 @@
       "note": "Wave optics beyond the optional basic-optics scope; Volume 3 alignment deferred.",
       "title": "Thin Film Interference",
       "url": "demos/thin-films.html"
-    },
-    {
-      "demo": "tides",
-      "course": [
-        "later"
-      ],
-      "sections": [
-        {
-          "vol": 1,
-          "sec": "13.6",
-          "title": "Tidal Forces"
-        }
-      ],
-      "role": "demo",
-      "beyond_book": false,
-      "status": "usable",
-      "note": "Not in the specified teaching sequence; retain for later.",
-      "title": "Tides",
-      "url": "demos/tides.html"
     },
     {
       "demo": "timbre",

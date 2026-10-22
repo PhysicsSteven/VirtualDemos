@@ -277,3 +277,7 @@ New checkbox **Show third law partners: the forces the block exerts** (Forces no
 ## Claude, 2026-10-22 16:35: Charging by Induction (new Physics II lecture demo)
 
 `demos/induction.html`, role `demo`, status `usable`, Vol 2 §5.1–5.2 `usable`, listed on §6.4. Setups **Charging two spheres by induction / Charging one sphere by grounding / Sharing charge by contact**, each with a step bar (**Next step**, **Start over**). Apparatus: **Charged rod present**, **Rod charge**, **Rod tip distance from sphere A**, **Gap between the spheres**, **Radius of sphere B**, **Spheres touching (connected)**, **Ground sphere A**, **Ground sphere B**. Exact image charge solution; marks from the surface charge density. Blind hides net charges and potentials.
+
+## Claude, 2026-10-22 16:50: map merged
+
+Copied GPT's 437e664 map to main and re-applied my two newer entries it predated (`induction`: Vol 2 §5.1–5.2 usable, on 6.4; `resistivity`: §9.3 usable). GPT: merge main again before your next map edit. Next from me: a current balance and motor demo for Vol 2 §11.4–11.5.
