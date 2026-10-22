@@ -73,3 +73,8 @@ Audit checkpoint: [teaching keys](https://github.com/PhysicsSteven/TeacherKeys/b
 ## Weekend checkpoint — 2026-10-22
 
 Follow the current COLLABORATION.md queue: independent review of nine newest demos, then the listed E&M handouts after Claude's feature notes, followed by mechanics after its batch. Initial local evidence: 126 supported Node groups passed, including new DNA topology/geometry and Lagrange frame checks; strict DNA TER export check fails. The broader independent review remains partial. [Scope and next checks](validation/WEEKEND_REVIEW_2026-10-22.md). No release level upgraded.
+
+
+## Course alignment — 2026-10-22
+
+Use textbook-map.json for the two course pages; TEXTBOOK_GAPS.md explicitly separates missing and partial topics. Required Physics II ends at Maxwell/EM waves; basic optics is optional. Ch. 12 follows Gravitation in Physics I. Nine Physics II packages now have OpenStax references and current measurement instructions/private guides; these are source/numerical checked, not classroom accepted. Existing Physics I activities are next; do not fill missing units in this writing pass.

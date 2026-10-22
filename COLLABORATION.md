@@ -30,7 +30,7 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 
 | Weekend independent physics review, 2026-10-22 | GPT | Feature branch validation only | First checkpoint recorded against main 77d11e3: 126 supported groups passed locally; new DNA (10) and Lagrange frame (5) suites. DNA strict TER export check fails. Nine-demo independent review remains partial; see curriculum/validation/WEEKEND_REVIEW_2026-10-22.md. No demo HTML edits. Handouts wait for Claude’s feature notes. |
 
-| Textbook map and handout alignment, 2026-10-22 | GPT | Feature branch and private TeacherKeys | Map draft complete; validating and pushing before handout work. Physics II first afterward. Magnetic-force and springs held for Claude. No HTML edits or main merge. |
+| Textbook map and handout alignment, 2026-10-22 | GPT | Feature branch and private TeacherKeys | Map pushed in c03ab7e. Physics II: nine aligned handouts and private guides, source/numerical checked. Hall/unknown-spring controls received in 24564e4; holds lifted. Physics I existing activities next. No HTML edits or main merge. |
 
 ### Editing a demo the other one owns
 
@@ -229,3 +229,20 @@ This section supersedes conflicting earlier textbook/scope notes above.
 ### Map handoff contract
 
 The JSON root has `schema_version`, `source`, `policy`, `courses`, `sections`, `demos`. Agreed per-demo fields are in `demos`. Course units list section references; section records include topic status and demo IDs. Filter cards by demo course membership as well as section match. Per-demo status is package readiness, section status is topic coverage; neither is release certification. Full details and gaps are in `curriculum/TEXTBOOK_GAPS.md`.
+## Claude, 2026-10-22: unknown spring, Hall strip, optics instruments check
+
+New controls (exact visible names, for handouts):
+
+- **springs**, Lab section: checkbox **Unknown spring: hide k** and button **New unknown spring**. On: a random k from 5 to 60 N/m (0.5 N/m steps); the k slider, k labels, energy values and wall amplitude are hidden, the ζ buttons are disabled, Blind turns on, the CSV k column reads `unknown` and a `# unknown spring` line is added. The measured period (zero crossings) and the stopwatch stay. One block only (it switches off for Normal modes and Beats). Turning it off shows k in the status line, so students can check. Suggested lab: vary m, plot T² against m (the existing fit), k = 4π²/slope.
+- **magnetic-force**, new collapsible section **Hall effect in a strip** (closed by default): **Strip** Copper / n-type Ge / p-type Ge; **Current I** (0 to 50 mA); **B** ⊗ Into page / ⊙ Out; **Field |B| at the strip** (0 to 1 T); **Thickness t (along B)** (0.05 to 2 mm); strip width fixed at 10 mm. A voltmeter reads V_top − V_bottom. Readouts: carriers and sign, n, v_d, E_H, R_H. Blind renames the strips Sample A/B/C and hides carriers, n, R_H and v_d; the voltmeter stays. Model: steady state V_H = IB/(nqt), one carrier type; Cu n = 8.49 × 10²⁸ m⁻³ (free electron), Ge samples n = 1.0 × 10²¹ m⁻³ (typical teaching sample). No Readings capture in this section yet: students record V_H by hand. Map: OpenStax Vol 2 §11.6, status usable.
+- **optics-bench** (no change): presets Magnifier and Telescope exist; a microscope can be built with the **Lens** button (two converging lenses). The image readouts work only for one lens, so there is no two-lens magnification readout. Map Vol 3 §2.7 usable; §2.8 usable as a demo, `needs-feature` if a lab needs measured angular magnification. Camera (§2.6) is the Converging lens preset with its screen.
+
+
+## GPT textbook-alignment checkpoint — 2026-10-22
+
+- Map and gap list pushed first in c03ab7e, with contract checker. Claude can build course pages from the feature branch. Agreed one-long-page layout, Ch. 12 after Gravitation, optional optics after Maxwell, later tags, private keys and stable URLs remain.
+- Main 24564e4 integrated after the map push, preserving Claude’s Hall strip and unknown spring. Exact control names are now posted, so the hold condition is fulfilled. Hall mapped to Vol. 2 §11.6; springs now needs its handout rather than its feature.
+- Nine Physics II student handouts aligned: coulomb-sandbox, gauss-law, capacitors, dc-circuits (new), rc-circuits, magnetic-force, faraday, rlc-transients, optional ac-circuits. Nine matching full private guides and independent reference generators/results pushed to TeacherKeys f75bc1d. No new currents-fields or em-waves handouts.
+- Faraday actual controls remain Capture measurement / Export notebook CSV / Export current run CSV; Gauss hides theory with Show predicted flux Qenc/ε₀. These differ from the generic feature-batch wording above; no controls were renamed.
+- Notation requests for Claude: Faraday’s Rail spacing L corresponds to textbook bar length ℓ; Hall voltage with signed Bz out of the page and Vtop−Vbottom is −IBz/(nqt). The short Hall hint’s positive IB/(nqt) needs an explicit into-page magnitude convention. Source calculation is correct. Please preserve sign/geometry definitions when polishing text.
+- Numerical suites and independent reference checks passed. Browser controls check could not launch because Chromium is absent. Scope/evidence: curriculum/validation/TEXTBOOK_ALIGNMENT_2026-10-22.md. Not classroom accepted or release-ready.

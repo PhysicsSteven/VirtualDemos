@@ -1,6 +1,8 @@
 # Charging and Discharging a Capacitor
 Student laboratory · Physics II
 
+Textbook: OpenStax *University Physics*, Vol. 2, §§10.3, 10.5 and 8.3. Access for free at https://openstax.org/details/books/university-physics-volume-2.
+
 [Open the virtual Circuits bench](https://physicssteven.github.io/VirtualDemos/demos/circuits.html#rc)
 
 ## Goal
@@ -9,7 +11,7 @@ Measure the time constant of an RC circuit, use it to find the capacitance, and 
 
 ## Background
 
-A resistor limits how quickly charge reaches a capacitor. Kirchhoff's loop rule gives
+A resistor limits how quickly charge reaches a capacitor. Kirchhoff's loop rule (§10.3) gives
 
 $$\varepsilon=IR+\frac{Q}{C},\qquad I=\frac{dQ}{dt}.$$
 
@@ -17,11 +19,11 @@ For an initially uncharged capacitor connected to a battery,
 
 $$V_C=\varepsilon\left(1-e^{-t/RC}\right),\qquad I=\frac{\varepsilon}{R}e^{-t/RC}.$$
 
-The time constant is τ = RC. After one time constant, the capacitor has reached about 63% of its final voltage. During discharge,
+The time constant is τ = RC (§10.5). After one time constant, the capacitor has reached about 63% of its final voltage. During discharge,
 
 $$V_C=V_{C0}e^{-t/RC}.$$
 
-The battery does work on the charges. Some becomes electric energy in the capacitor, and the rest heats the resistor:
+Stored energy follows §8.3. The battery does work on the charges. Some becomes electric energy in the capacitor, and the rest heats the resistor:
 
 $$W=U_C+H,\qquad U_C=\frac12 CV_C^2.$$
 
@@ -47,7 +49,7 @@ For a real circuit, turn off the supply before changing connections. Check the c
 
 **Energy.** For one charging run, record source work, stored capacitor energy and resistor heat at four times. Compare their sum. Then compare a slow charge with the fast discharge of a camera flash circuit.
 
-**Using the virtual apparatus.** Select **In time** and **RC charging**. Click a component and enter its value in **Selected**. Use **Reset** before each charging run and **Pause** when reading values. Add channels with **Scope V** and **Scope I**. Select **Whole run**, then **Export scope CSV**; record settings and the **Energy since t = 0** readings separately. **Flip mid way** shows switching during charging, and **Camera flash** provides separate charging and discharge resistances. The CSV contains the visible scope window, so check that it includes the part of the run you need.
+**Using the virtual apparatus.** Select **In time** and **RC charging**. Click a component and enter its value in **Selected**. Turn on **Blind: hide predictions and answers**. Use **Reset** before each charging run and **Pause** when reading values. Select **Step Δt** and **Step forward** for controlled sampling, or click the scope to place the **Time cursor**. Press **Capture reading** under **Readings** at each chosen time and **Export CSV** to save the cursor readings, energies and part values. Add channels with **Scope V** and **Scope I**. Select **Whole run**, then **Export scope CSV**; record settings and the **Energy since t = 0** readings separately. **Flip mid way** shows switching during charging, and **Camera flash** provides separate charging and discharge resistances. The CSV contains the visible scope window, so check that it includes the part of the run you need.
 
 ## Data
 

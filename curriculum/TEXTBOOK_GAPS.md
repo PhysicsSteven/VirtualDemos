@@ -1,6 +1,6 @@
 # Textbook coverage and gaps
 
-Draft source inventory: main `e6be55f71fcf15d123f41bc802ed53f8bf42194f`, 2026-10-22. This is a curriculum map, not numerical or browser validation.
+Draft source inventory: main `24564e476e0d5ac1acf737527c18550cfda75172`, 2026-10-22. This is a curriculum map, not numerical or browser validation.
 
 62 catalog demos mapped once each; 209 section records (99 in Volume 1, 95 in Volume 2, 15 optional Volume 3 sections). Existing legacy HTML pages outside the index are not duplicated.
 
@@ -19,7 +19,7 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 - Early Physics I: measurements/vectors, general 1D motion graphs and relative motion, Newton’s laws/free-body diagrams, friction/inclines and centripetal force.
 - General work/kinetic-energy experiments and static equilibrium: existing potential/seesaw/chain illustrations provide partial support, not a complete replacement.
 - Elastic stress/strain: missing.
-- Physics II Hall effect: missing pending Claude’s Hall probe work. A Hall probe measuring B is not itself a Hall-effect derivation or experiment.
+- Physics II Hall effect: Claude’s steady Hall strip landed in 24564e4 and is now mapped to §11.6; voltages require manual recording. Its one-carrier model does not imply precision copper Hall coefficients.
 - Maxwell/displacement current: EM wave demo provides partial coverage, but a charging-capacitor/induced-B activity is missing.
 - Thermodynamics and sound/waves outside the supplied syllabi stay `later`; do not build these gaps now.
 
@@ -80,7 +80,6 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 | physics-2 | 2 | 9.6 | Superconductors | missing |
 | physics-2 | 2 | 10.6 | Household Wiring and Electrical Safety | missing |
 | physics-2 | 2 | 11.1 | Magnetism and Its Historical Discoveries | missing |
-| physics-2 | 2 | 11.6 | The Hall Effect | missing |
 | physics-2 | 2 | 12.7 | Magnetism in Matter | missing |
 | physics-2 | 2 | 13.4 | Induced Electric Fields | missing |
 | physics-2 | 2 | 13.5 | Eddy Currents | missing |
@@ -113,11 +112,7 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 | 1 / 10.7 | rotation | Selected door/rolling apparatus; not every rotational dynamics application. |
 | 1 / 12.1 | rotation, catenary | Seesaw and chain equilibrium only; a general equilibrium/free-body-diagram apparatus is still planned. |
 | 1 / 12.2 | rotation, catenary | Limited seesaw/chain examples, not complete static-equilibrium coverage. |
-| 1 / 15.1 | springs | Awaiting feature work listed on the demo entry. |
-| 1 / 15.2 | springs | Awaiting feature work listed on the demo entry. |
 | 1 / 15.4 | double-pendulum | Double-pendulum small-angle comparison; a simple pendulum lab is not provided. |
-| 1 / 15.5 | springs | Awaiting feature work listed on the demo entry. |
-| 1 / 15.6 | springs | Awaiting feature work listed on the demo entry. |
 | 2 / 5.5 | coulomb-sandbox | Point-charge sums only; general extended-distribution integration is missing. |
 | 2 / 6.4 | gauss-law | Spherical conductor example only, not arbitrary conductors. |
 | 2 / 9.1 | circuits | Circuit-level current only, not a microscopic charge-flow experiment. |
@@ -152,3 +147,7 @@ Volumes 1 and 2: the owner-supplied OpenStax University Physics PDFs, table of c
 Volume 3 titles verified against official [Chapter 1 outline](https://openstax.org/books/university-physics-volume-3/pages/1-introduction) and [Chapter 2 outline](https://openstax.org/books/university-physics-volume-3/pages/2-introduction), accessed 2026-10-22. Full Volume 3 modern/wave-optics mapping is deferred; those entries state this explicitly rather than inventing section references.
 
 Map describes source/UI inventory, not a fresh independent physics audit. Topic references are deliberately selective. A source update, new activity or revised handout should update the map; rerun its structural validation after changes.
+
+## Physics II handout checkpoint
+
+Nine aligned student handouts and private guides now cover Coulomb/potential, Gauss, capacitors, DC, RC, magnetic motion/Hall, Faraday/Two coils, RLC and optional AC. “Usable” marks the documented activity package, not release certification. Browser workflow remains unverified. Springs is now `needs-handout` rather than `needs-feature`: Claude posted its final unknown-spring controls.

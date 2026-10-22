@@ -217,6 +217,12 @@ test('readings: T = t/N, plot points, CSV header, SI columns and cells exported 
   assert(body[3].includes('"n/a, ""edge"""') && body[3].includes('about 1'));
   const blind = c.readingsCSV(rows, { version: c.SP_VERSION, setup: 'x', blind: true });
   assert(!/2 pi sqrt/.test(blind) && /blind on at export/.test(blind));
+  // unknown spring: k is written as unknown and the metadata says so; T² against m still works without k
+  const unk = rows.slice(0, 2).map((r) => ({ ...r, k: 'unknown' }));
+  const ucsv = c.readingsCSV(unk, { version: c.SP_VERSION, setup: 'x', blind: true, unknown: true });
+  assert(/^# unknown spring,/m.test(ucsv) && !/40\.0/.test(ucsv));
+  assert(!/^# unknown spring,/m.test(blind));
+  assert.equal(c.plotPoints(unk, 'T2m').row.length, 2);
   // the ideal stopwatch: the T² fit of exact periods recovers k
   const exact = [0.4, 0.8, 1.2, 1.6].map((m) => ({ m: String(m), N: '10', t: String(10 * c.periodOf(m, 25)) }));
   const Q = c.plotPoints(exact, 'T2m'), f = c.fitLine(Q.x, Q.y); close(c.kFromSlope(f.b, f.seB).k, 25, 1e-10);

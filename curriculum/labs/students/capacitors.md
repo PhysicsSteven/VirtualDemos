@@ -1,58 +1,75 @@
-# Capacitors and Dielectrics: Charge, Energy and Work
-Student laboratory · 100 minutes · Physics II
+# Capacitance, Dielectrics and Stored Energy
+Student laboratory · Physics II
 
-[Open simulation](https://physicssteven.github.io/VirtualDemos/demos/capacitors.html). Controls checked against main bc0485a.
+Textbook: OpenStax *University Physics*, Vol. 2, §§8.1–8.4. Access for free at https://openstax.org/details/books/university-physics-volume-2.
 
-## Objectives and prerequisites
-Infer capacitance from geometry; distinguish fixed-charge and fixed-voltage processes; test a complete energy ledger; measure dielectric effects; compare series and parallel networks. Prerequisites: electric potential, parallel-plate fields, work, and basic graphing.
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/capacitors.html)
 
-## Model and prelab
-Ideal parallel plates obey C=ε₀A/d, Q=CV, U=CV²/2. A partially inserted slab divides the area into parallel regions. If the slab thickness is t, relative permittivity κ and inserted area fraction f, derive
+## Goal
 
-C=ε₀A[(1−f)/d+f/(d−t+t/κ)].
+Find how plate geometry and a dielectric change capacitance, then compare charge, voltage and energy with the battery connected and disconnected.
 
-The inserted region itself contains air and dielectric in series. Explain why changing C has different consequences at fixed Q and fixed V. Derive the energy balance ΔU=W_hand+W_battery−H, taking work **on** the capacitor as positive. The ideal quantitative model neglects fringing; the drawn fringe-field grid is a separate qualitative aid, not a numerical capacitance measurement.
+## Background
 
-## Controls and recording
-Select the named preset and press **Pause** immediately if the automatic sweep is running. **Mark start** establishes the energy-ledger reference. Use **Separation d**, **Plate area A**, **Battery voltage Vb**, **Connected**, **Isolated**, and dielectric controls. Record actual displayed settings rather than assuming defaults survived animation. Keyboard arrows adjust sliders; Home/End reach their limits.
+Capacitance relates charge magnitude to potential difference (§8.1):
 
-This demo currently has no measurement CSV notebook. Record tables manually and enter them in a spreadsheet. Preserve units and screenshot settings. Quantities already shown as theoretical readouts are model predictions; calculate your own predictions before reading them. Instrument-style theory hiding and export remain future work.
+$$C=\frac{Q}{V},\qquad C_0=\frac{\epsilon_0A}{d}.$$
 
-## A. Fixed voltage (25 minutes)
-1. Select **Pull apart, connected**, pause, set A=144 cm², d=1.00 cm and Vb=100 V, then **Mark start**.
-2. Record C, Q, V, E and U at d=1.00, 1.50, 2.00, 2.50 and 3.00 cm. Record hand and battery work relative to the initial state; do not mark start again between points.
-3. Plot C versus 1/d in SI units. Use the slope to infer ε₀ and compare with the model's constant. Explain why this is a consistency test of an ideal simulation, not an experimental determination of a new physical constant.
-4. Verify the energy ledger at each point. Explain how your hand can do positive work while stored energy decreases.
+A dielectric filling the whole gap gives C = κC0 (§8.4). Stored energy can be written in three equivalent forms (§8.3):
 
-| d (m) | C (F) | Q (C) | V (V) | E (V/m) | U (J) | W_hand (J) | W_battery (J) |
+$$U=\frac{Q^2}{2C}=\frac12 CV^2=\frac12 QV.$$
+
+Disconnecting the battery holds Q fixed. Leaving it connected holds V fixed. The same increase in capacitance can therefore change stored energy in opposite directions.
+
+## Before the lab
+
+1. Predict C, Q and U when d doubles with the battery connected.
+2. Repeat the prediction when the charged capacitor is disconnected first.
+3. For three capacitors, explain why charge is equal in series but voltage is equal in parallel (§8.2).
+
+## Safety
+
+Discharge real capacitors through a suitable resistor before handling them. Observe polarity and voltage ratings. Move plates or dielectric pieces only under the instructor's approved procedure.
+
+## Procedure
+
+**Geometry.** Use parallel plates with known area. With the battery connected, measure C, Q and V at five plate separations. Begin near A = 144 cm², d = 1.00 cm and V = 100 V in the simulation; use safe assigned values on a real bench. Repeat after charging and disconnecting the battery. Calculate stored energy from your own measurements.
+
+**Dielectric.** Begin with an empty gap. Insert a dielectric in five steps while holding the gap fixed. Repeat connected and isolated. Measure the inserted area fraction, capacitance and voltage. At full insertion, compare C/C0 with κ.
+
+**Combinations.** Measure the equivalent capacitance and component voltages for 10, 22 and 47 pF capacitors in series, parallel and the mixed arrangement. Draw each circuit and calculate its predicted equivalent capacitance before measuring.
+
+**Using the virtual apparatus.** Choose **Pull apart, connected**, press **Pause**, set **Plate area A**, **Separation d** and **Battery voltage Vb**, then **Mark start**. Turn on **Blind: hide predictions and answers**. Press **Capture reading** at each separation and use **Export CSV** before changing setup. Repeat with **Pull apart, isolated**. Use **Slide in a dielectric**, keep its gap unchanged, and vary **Inserted x/s**. Use **C vs 1/d**, **C vs x/s** or **V vs d** for the relevant scan. Finally choose **Series and parallel**, **Three**, then **Series**, **Parallel** and **Mixed**. Record the energy/work readouts separately if hidden while collecting; reveal predictions only after completing your calculations.
+
+## Data
+
+| Run: connected/isolated/network | d (m) | A (m²) | Inserted fraction | C (F) | Q (C) | V (V) | U (J) |
 |---|---|---|---|---|---|---|---|
 | | | | | | | | |
 | | | | | | | | |
 | | | | | | | | |
-| | | | | | | | |
-| | | | | | | | |
 
-## B. Fixed charge and reconnection (25 minutes)
-1. Select **Pull apart, isolated**, pause and confirm A=144 cm², d=1.00 cm, initially charged to 100 V. Mark start.
-2. Repeat the five separations, recording the same quantities. Plot V versus d and U versus d. Which quantities remain constant?
-3. At d=2.00 cm, reconnect using **Connected** with the battery at 100 V. Record the charge change and heat. Compare the ledger before/after reconnection. Explain why an instantaneous ideal connection can release finite heat even though no resistance value is specified.
-4. Compute the attractive plate force from Q²/(2ε₀A) and compare force×displacement with hand work while isolated.
+Use a separate copy for each scan. For networks, put the component label in the first column and leave geometry columns blank.
 
-## C. Dielectric insertion (25 minutes)
-1. Select **Slide in a dielectric**, pause, and confirm Pyrex κ=5.6, d=t=1.50 cm, A=144 cm², initial V=100 V and **Isolated**. Set insertion to 0%, then mark start.
-2. Record f, C, V, Q, U and hand work for f=0, 0.25, 0.50, 0.75 and 1.00. Fit C versus f and infer κ from the slope/intercept ratio.
-3. Reset the preset, pause, return insertion to 0%, select **Connected**, and mark start. Repeat. Explain the direction of the dielectric force in both modes.
-4. At full insertion, increase the gap to 2.00 cm. The slab thickness remains fixed. Compare the series air/dielectric formula with the incorrect formula κε₀A/d.
+## Analysis
 
-## D. Networks (15 minutes)
-Select **Series and parallel** with three capacitors, C1=10 pF, C2=22 pF, C3=47 pF and V=100 V. Record equivalent capacitance and each capacitor's Q, V and U for **Series**, **Parallel**, and **Mixed**. Mixed means C1 in series with C2 parallel to C3. Test charge/voltage constraints and sum component energies.
+1. Plot C against 1/d and infer ε0 from the slope and plate area. Treat this as a consistency test of the ideal model.
+2. For the isolated scan, plot V against d and explain its slope using Q = CV.
+3. Plot C against inserted fraction. Infer κ from the fully filled and empty values. Do not use C = κC0 if an air gap remains beside the slab thickness.
+4. Compare stored energy in connected and isolated scans. Use the battery work VΔQ to explain the energy change in the connected case.
+5. Test the series/parallel formulas and sum the component energies. The mixed arrangement has C1 in series with the parallel pair C2 and C3.
 
-## Uncertainty and questions (10 minutes)
-Use half the last displayed digit as a rounding bound; the slider step is a setting resolution, not random noise. Propagate bounds through fitted slopes and energy differences. Do not treat an exact built-in ledger residual as independent validation: calculate force work and component field energies separately.
+## Uncertainty
 
-1. Why does U increase on separation only in the isolated case?
-2. Why is the slab pulled inward even when fixed-V stored energy rises?
+Include plate area and gap resolution in the capacitance comparison. A small gap error can dominate C. For real plates, fringing and misalignment can shift the slope. The virtual model is ideal; captured rounding and setting resolution are not random instrumental noise. State which values you measured and which you calculated.
+
+## Questions
+
+1. Why does disconnecting the battery change what remains constant?
+2. Why can inserting a dielectric increase U at fixed V but decrease U at fixed Q?
 3. Why is the smallest series capacitor at the largest voltage?
-4. What approximations fail when d is comparable with plate size or the dielectric conducts?
+4. Does the battery's work all become stored electric energy when capacitance changes?
 
-Submission: raw tables, settings, graphs, fits, work/heat calculations, uncertainty and answers.
+## What to hand in
+
+Prelab answers, settings and CSV, the geometry/dielectric graphs, inferred ε0 and κ with uncertainty, network calculations, energy interpretation and answers to the questions. Identify simulated data.

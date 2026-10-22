@@ -30,7 +30,8 @@ assert(p1.units.findIndex(u => u.id === 'gravitation') < p1.units.findIndex(u =>
 const p2 = map.courses.find(c => c.id === 'physics-2');
 assert.equal(p2.units.at(-2).id, 'maxwell-waves'); assert.equal(p2.units.at(-1).requirement, 'optional');
 assert(p2.units.at(-1).sections.every(r => r.vol === 3));
-for (const name of ['magnetic-force', 'springs']) assert.equal(demos.get(name).status, 'needs-feature');
+assert(demos.get('magnetic-force').sections.some(s => s.vol === 2 && s.sec === '11.6'));
+assert(['needs-handout', 'usable'].includes(demos.get('springs').status));
 for (const name of ['currents-fields', 'em-waves', 'catenary', 'relativity-em']) assert.equal(demos.get(name).role, 'demo');
 for (const [vol, count] of [[1, 99], [2, 95], [3, 15]]) assert.equal(map.sections.filter(s => s.vol === vol).length, count);
 console.log(`PASS textbook map contract: ${demos.size} catalog entries, ${sections.size} sections, ordered course units and explicit gaps`);

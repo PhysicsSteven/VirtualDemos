@@ -62,3 +62,8 @@ The plain-language handouts are merged with latest main bce8304 under Steve’s 
 ## Weekend review checkpoint — 2026-10-22
 
 Clean feature checkout fast forwarded to main 77d11e3. Claude owns all demo HTML this weekend. Ran seven existing newest-demo suites (111 groups) and new DNA (10) and Lagrange (5) suites: 126 supported groups passed on Node v24.19.0. DNA `--strict-ter` fails: TER chainID is one column early; requested correction in COLLABORATION.md. Supported-case Node workflow includes both new suites; browser CI remains off. No remote CI result claimed. See [review and remaining scope](validation/WEEKEND_REVIEW_2026-10-22.md). Independent nine-demo review is partial, not release approval. New handout batches wait for Claude's E&M/mechanics notes. Do not merge to main without Steve's approval.
+
+
+## OpenStax map and Physics II alignment — 2026-10-22
+
+Map pushed first in c03ab7e, with 62 catalog entries and 209 section records. Claude can consume the JSON root courses/sections/demos contract described in TEXTBOOK_GAPS.md. Main 24564e4 then integrated; Hall strip and unknown-spring controls received. Nine Physics II handouts and private guides aligned; TeacherKeys f75bc1d. No em-waves/currents-fields lab added. Source/numerical and document checks passed; Chromium launch blocked, no browser pass claimed. See validation/TEXTBOOK_ALIGNMENT_2026-10-22.md. Next: existing Physics I activities, with springs hold now fulfilled by posted controls. Demo HTML stays Claude-owned; no main merge without Steve.

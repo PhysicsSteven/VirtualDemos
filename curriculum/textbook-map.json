@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": {
-    "repository_commit": "e6be55f71fcf15d123f41bc802ed53f8bf42194f",
+    "repository_commit": "24564e476e0d5ac1acf737527c18550cfda75172",
     "review_date": "2026-10-22",
     "textbooks": [
       {
@@ -2111,7 +2111,7 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "springs"
       ],
@@ -2127,7 +2127,7 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "springs"
       ],
@@ -2175,7 +2175,7 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "springs"
       ],
@@ -2191,7 +2191,7 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "springs"
       ],
@@ -2828,10 +2828,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "magnetic-force"
+      ],
       "unit": "magnetic-forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "One-carrier steady Hall strip now exists; manual voltage recording, no Hall CSV."
     },
     {
       "vol": 2,
@@ -4450,8 +4452,8 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-feature",
-      "note": "Hold handout revision for Claude’s unknown-spring controls; keep automatic period readout available.",
+      "status": "needs-handout",
+      "note": "Unknown spring: hide k / New unknown spring landed on main 24564e4; period stays visible. Textbook handout revision is next.",
       "handouts": [
         "springs"
       ],
@@ -4536,8 +4538,8 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "Discrete charges and probe V/E. Extended distributions and conducting-surface equilibrium are not general models here.",
+      "status": "usable",
+      "note": "Discrete charges and probe V/E. Extended distributions and conducting-surface equilibrium are not general models here. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance.",
       "handouts": [
         "coulomb-sandbox"
       ],
@@ -4573,8 +4575,8 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "Numerical flux for point charges and symmetry profiles; conductor examples do not imply a general electrostatic conductor solver.",
+      "status": "usable",
+      "note": "Numerical flux for point charges and symmetry profiles; conductor examples do not imply a general electrostatic conductor solver. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance.",
       "handouts": [
         "gauss-law"
       ],
@@ -4610,8 +4612,8 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "Ideal parallel plates, dielectric and networks; microscopic polarization is not simulated.",
+      "status": "usable",
+      "note": "Ideal parallel plates, dielectric and networks; microscopic polarization is not simulated. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance.",
       "handouts": [
         "capacitors"
       ],
@@ -4717,8 +4719,8 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "One demo, several handouts. AC Chapter 15 references are going-further/later material, not required syllabus coverage. No microscopic resistivity model.",
+      "status": "usable",
+      "note": "One demo, several handouts. AC Chapter 15 references are going-further/later material, not required syllabus coverage. No microscopic resistivity model. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance.",
       "handouts": [
         "dc-circuits",
         "rc-circuits",
@@ -4748,12 +4750,17 @@
           "vol": 2,
           "sec": "11.7",
           "title": "Applications of Magnetic Forces and Fields"
+        },
+        {
+          "vol": 2,
+          "sec": "11.6",
+          "title": "The Hall Effect"
         }
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-feature",
-      "note": "Hold for Claude’s Hall probe and final control names. Charged particles/cyclotron exist; Hall effect and force on wires/loops are not certified by this entry.",
+      "status": "usable",
+      "note": "Charged-particle ruler/timer and new Hall strip. Hall voltage recorded manually; separate particle Capture/CSV. OpenStax handout/private guide aligned; not browser/classroom accepted.",
       "handouts": [
         "magnetic-force"
       ],
@@ -4858,8 +4865,8 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "Magnet, generator, sliding bar and Two coils. Does not directly visualize nonconservative induced electric-field loops or eddy-current distributions.",
+      "status": "usable",
+      "note": "Magnet, generator, sliding bar and Two coils. Does not directly visualize nonconservative induced electric-field loops or eddy-current distributions. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance.",
       "handouts": [
         "faraday"
       ],

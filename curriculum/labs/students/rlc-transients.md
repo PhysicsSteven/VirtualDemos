@@ -1,6 +1,8 @@
 # From RC Decay to RLC Oscillations
 Student laboratory · Physics II
 
+Textbook: OpenStax *University Physics*, Vol. 2, §§14.3–14.6; RC comparison: §10.5. Access for free at https://openstax.org/details/books/university-physics-volume-2.
+
 [Open the virtual Circuits bench](https://physicssteven.github.io/VirtualDemos/demos/circuits.html#transients)
 
 ## Goal
@@ -9,7 +11,7 @@ Observe how circuits store and lose energy. Measure an oscillation period, find 
 
 ## Background
 
-A capacitor stores electric energy and an inductor stores magnetic energy:
+A capacitor stores electric energy (§8.3) and an inductor stores magnetic energy (§14.3):
 
 $$U_C=\frac{Q^2}{2C},\qquad U_L=\frac12 LI^2.$$
 
@@ -17,7 +19,7 @@ When a charged capacitor is connected to an inductor, energy moves back and fort
 
 $$\omega_0=\frac{1}{\sqrt{LC}}.$$
 
-A resistor turns some of that energy into heat. The free series circuit obeys
+A resistor turns some of that energy into heat. The free series circuit (§14.6) obeys
 
 $$L\frac{d^2Q}{dt^2}+R\frac{dQ}{dt}+\frac{Q}{C}=0.$$
 
@@ -51,7 +53,7 @@ For a real circuit, turn off the supply before rewiring. Discharge capacitors th
 
 **RC and RL.** Record capacitor voltage during an RC discharge and inductor current during an RL decay. Start the time measurement at the switch event and note the initial voltage or current.
 
-**Using the virtual apparatus.** Select **In time** and **LC oscillation**. Its capacitor starts charged to 10 V; use L1 = 100 mH and C1 = 10 µF. Use **RLC damping** for the resistance study and edit R2 in **Selected**, then **Reset** before each run. Add channels with **Scope V** and **Scope I**, use **Whole run**, and **Export scope CSV**. **Flip mid way** provides RC discharge and **RL rise and decay** provides RL decay. Record settings and the **Energy since t = 0** readings separately from CSV. The current directions follow the drawn component terminals; check them before comparing signs.
+**Using the virtual apparatus.** Select **In time** and **LC oscillation**. Turn on **Blind: hide predictions and answers**. Its capacitor starts charged to 10 V; use L1 = 100 mH and C1 = 10 µF. Use **RLC damping** for the resistance study and edit R2 in **Selected**, then **Reset** before each run. Add channels with **Scope V** and **Scope I**. Use **Step Δt** and **Step forward**, or place the **Time cursor** on the scope. Press **Capture reading** under **Readings** and **Export CSV** to save selected values and energies. Use **Whole run** and **Export scope CSV** for the full visible trace. **Flip mid way** provides RC discharge and **RL rise and decay** provides RL decay. Record settings and the **Energy since t = 0** readings separately from CSV. The current directions follow the drawn component terminals; check them before comparing signs.
 
 ## Data
 
