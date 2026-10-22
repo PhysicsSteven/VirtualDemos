@@ -1,0 +1,5712 @@
+{
+  "schema_version": 1,
+  "source": {
+    "repository_commit": "e6be55f71fcf15d123f41bc802ed53f8bf42194f",
+    "review_date": "2026-10-22",
+    "textbooks": [
+      {
+        "vol": 1,
+        "title": "University Physics Volume 1",
+        "source": "Owner-supplied PDF table of contents",
+        "url": "https://openstax.org/books/university-physics-volume-1/pages/1-introduction"
+      },
+      {
+        "vol": 2,
+        "title": "University Physics Volume 2",
+        "source": "Owner-supplied PDF table of contents",
+        "url": "https://openstax.org/books/university-physics-volume-2/pages/1-introduction"
+      },
+      {
+        "vol": 3,
+        "title": "University Physics Volume 3",
+        "source": "Official OpenStax chapter outlines",
+        "url": "https://openstax.org/books/university-physics-volume-3/pages/1-introduction"
+      }
+    ]
+  },
+  "policy": {
+    "layout": "One long page per course; cards link directly to existing demos and public student handouts.",
+    "urls": "Keep all demo URLs and QR codes unchanged.",
+    "keys": "Instructor guides and answers remain private in PhysicsSteven/TeacherKeys.",
+    "scope": "Required Physics I and II first; basic optics optional; other material later.",
+    "status_meanings": {
+      "usable": "Existing activity can be surfaced in this role; not a release certification or full-section coverage claim.",
+      "needs-handout": "Existing lab apparatus needs a current textbook-aligned student handout and private guide.",
+      "needs-feature": "A required feature or topic is absent/partial; see note.",
+      "missing": "No mapped activity exists for this section."
+    },
+    "section_status": "Section status describes topic/apparatus coverage; demo status describes its activity package. A usable section can still have a lab needing a handout.",
+    "later_mapping": "beyond_book means no direct Volume 1/2 activity home, not that the demo is physically incorrect. Later entries are not promoted into courses merely because a section is related.",
+    "optional_duration": "duration_minutes may be added after review; absent until estimated.",
+    "exam_metadata": "Course metadata may later hold exam_boundaries; omitted for now."
+  },
+  "courses": [
+    {
+      "id": "physics-1",
+      "title": "Physics I",
+      "metadata": {},
+      "units": [
+        {
+          "id": "measurements-vectors",
+          "title": "Measurements and vectors",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 1,
+              "sec": "1.1"
+            },
+            {
+              "vol": 1,
+              "sec": "1.2"
+            },
+            {
+              "vol": 1,
+              "sec": "1.3"
+            },
+            {
+              "vol": 1,
+              "sec": "1.4"
+            },
+            {
+              "vol": 1,
+              "sec": "1.5"
+            },
+            {
+              "vol": 1,
+              "sec": "1.6"
+            },
+            {
+              "vol": 1,
+              "sec": "1.7"
+            },
+            {
+              "vol": 1,
+              "sec": "2.1"
+            },
+            {
+              "vol": 1,
+              "sec": "2.2"
+            },
+            {
+              "vol": 1,
+              "sec": "2.3"
+            },
+            {
+              "vol": 1,
+              "sec": "2.4"
+            }
+          ]
+        },
+        {
+          "id": "kinematics",
+          "title": "Kinematics",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 1,
+              "sec": "3.1"
+            },
+            {
+              "vol": 1,
+              "sec": "3.2"
+            },
+            {
+              "vol": 1,
+              "sec": "3.3"
+            },
+            {
+              "vol": 1,
+              "sec": "3.4"
+            },
+            {
+              "vol": 1,
+              "sec": "3.5"
+            },
+            {
+              "vol": 1,
+              "sec": "3.6"
+            },
+            {
+              "vol": 1,
+              "sec": "4.1"
+            },
+            {
+              "vol": 1,
+              "sec": "4.2"
+            },
+            {
+              "vol": 1,
+              "sec": "4.3"
+            },
+            {
+              "vol": 1,
+              "sec": "4.4"
+            },
+            {
+              "vol": 1,
+              "sec": "4.5"
+            }
+          ]
+        },
+        {
+          "id": "forces",
+          "title": "Forces",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 1,
+              "sec": "5.1"
+            },
+            {
+              "vol": 1,
+              "sec": "5.2"
+            },
+            {
+              "vol": 1,
+              "sec": "5.3"
+            },
+            {
+              "vol": 1,
+              "sec": "5.4"
+            },
+            {
+              "vol": 1,
+              "sec": "5.5"
+            },
+            {
+              "vol": 1,
+              "sec": "5.6"
+            },
+            {
+              "vol": 1,
+              "sec": "5.7"
+            },
+            {
+              "vol": 1,
+              "sec": "6.1"
+            },
+            {
+              "vol": 1,
+              "sec": "6.2"
+            },
+            {
+              "vol": 1,
+              "sec": "6.3"
+            },
+            {
+              "vol": 1,
+              "sec": "6.4"
+            }
+          ]
+        },
+        {
+          "id": "energy",
+          "title": "Work and energy",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 1,
+              "sec": "7.1"
+            },
+            {
+              "vol": 1,
+              "sec": "7.2"
+            },
+            {
+              "vol": 1,
+              "sec": "7.3"
+            },
+            {
+              "vol": 1,
+              "sec": "7.4"
+            },
+            {
+              "vol": 1,
+              "sec": "8.1"
+            },
+            {
+              "vol": 1,
+              "sec": "8.2"
+            },
+            {
+              "vol": 1,
+              "sec": "8.3"
+            },
+            {
+              "vol": 1,
+              "sec": "8.4"
+            },
+            {
+              "vol": 1,
+              "sec": "8.5"
+            }
+          ]
+        },
+        {
+          "id": "momentum",
+          "title": "Momentum and collisions",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 1,
+              "sec": "9.1"
+            },
+            {
+              "vol": 1,
+              "sec": "9.2"
+            },
+            {
+              "vol": 1,
+              "sec": "9.3"
+            },
+            {
+              "vol": 1,
+              "sec": "9.4"
+            },
+            {
+              "vol": 1,
+              "sec": "9.5"
+            },
+            {
+              "vol": 1,
+              "sec": "9.6"
+            },
+            {
+              "vol": 1,
+              "sec": "9.7"
+            }
+          ]
+        },
+        {
+          "id": "rotation",
+          "title": "Rotation and angular momentum",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 1,
+              "sec": "10.1"
+            },
+            {
+              "vol": 1,
+              "sec": "10.2"
+            },
+            {
+              "vol": 1,
+              "sec": "10.3"
+            },
+            {
+              "vol": 1,
+              "sec": "10.4"
+            },
+            {
+              "vol": 1,
+              "sec": "10.5"
+            },
+            {
+              "vol": 1,
+              "sec": "10.6"
+            },
+            {
+              "vol": 1,
+              "sec": "10.7"
+            },
+            {
+              "vol": 1,
+              "sec": "10.8"
+            },
+            {
+              "vol": 1,
+              "sec": "11.1"
+            },
+            {
+              "vol": 1,
+              "sec": "11.2"
+            },
+            {
+              "vol": 1,
+              "sec": "11.3"
+            },
+            {
+              "vol": 1,
+              "sec": "11.4"
+            }
+          ]
+        },
+        {
+          "id": "gravitation",
+          "title": "Gravitation and orbital mechanics",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 1,
+              "sec": "13.1"
+            },
+            {
+              "vol": 1,
+              "sec": "13.2"
+            },
+            {
+              "vol": 1,
+              "sec": "13.3"
+            },
+            {
+              "vol": 1,
+              "sec": "13.4"
+            },
+            {
+              "vol": 1,
+              "sec": "13.5"
+            },
+            {
+              "vol": 1,
+              "sec": "13.6"
+            },
+            {
+              "vol": 1,
+              "sec": "13.7"
+            }
+          ]
+        },
+        {
+          "id": "equilibrium-elasticity",
+          "title": "Static equilibrium and elasticity",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 1,
+              "sec": "12.1"
+            },
+            {
+              "vol": 1,
+              "sec": "12.2"
+            },
+            {
+              "vol": 1,
+              "sec": "12.3"
+            },
+            {
+              "vol": 1,
+              "sec": "12.4"
+            }
+          ]
+        },
+        {
+          "id": "fluids",
+          "title": "Fluids",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 1,
+              "sec": "14.1"
+            },
+            {
+              "vol": 1,
+              "sec": "14.2"
+            },
+            {
+              "vol": 1,
+              "sec": "14.3"
+            },
+            {
+              "vol": 1,
+              "sec": "14.4"
+            },
+            {
+              "vol": 1,
+              "sec": "14.5"
+            },
+            {
+              "vol": 1,
+              "sec": "14.6"
+            },
+            {
+              "vol": 1,
+              "sec": "14.7"
+            }
+          ]
+        },
+        {
+          "id": "oscillations",
+          "title": "Oscillations",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 1,
+              "sec": "15.1"
+            },
+            {
+              "vol": 1,
+              "sec": "15.2"
+            },
+            {
+              "vol": 1,
+              "sec": "15.3"
+            },
+            {
+              "vol": 1,
+              "sec": "15.4"
+            },
+            {
+              "vol": 1,
+              "sec": "15.5"
+            },
+            {
+              "vol": 1,
+              "sec": "15.6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "physics-2",
+      "title": "Physics II",
+      "metadata": {},
+      "units": [
+        {
+          "id": "charge-fields",
+          "title": "Charge and electric fields",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "5.1"
+            },
+            {
+              "vol": 2,
+              "sec": "5.2"
+            },
+            {
+              "vol": 2,
+              "sec": "5.3"
+            },
+            {
+              "vol": 2,
+              "sec": "5.4"
+            },
+            {
+              "vol": 2,
+              "sec": "5.5"
+            },
+            {
+              "vol": 2,
+              "sec": "5.6"
+            },
+            {
+              "vol": 2,
+              "sec": "5.7"
+            }
+          ]
+        },
+        {
+          "id": "flux-gauss",
+          "title": "Flux and Gauss’s law",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "6.1"
+            },
+            {
+              "vol": 2,
+              "sec": "6.2"
+            },
+            {
+              "vol": 2,
+              "sec": "6.3"
+            },
+            {
+              "vol": 2,
+              "sec": "6.4"
+            }
+          ]
+        },
+        {
+          "id": "potential",
+          "title": "Electric potential",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "7.1"
+            },
+            {
+              "vol": 2,
+              "sec": "7.2"
+            },
+            {
+              "vol": 2,
+              "sec": "7.3"
+            },
+            {
+              "vol": 2,
+              "sec": "7.4"
+            },
+            {
+              "vol": 2,
+              "sec": "7.5"
+            },
+            {
+              "vol": 2,
+              "sec": "7.6"
+            }
+          ]
+        },
+        {
+          "id": "capacitance",
+          "title": "Capacitance",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "8.1"
+            },
+            {
+              "vol": 2,
+              "sec": "8.2"
+            },
+            {
+              "vol": 2,
+              "sec": "8.3"
+            },
+            {
+              "vol": 2,
+              "sec": "8.4"
+            },
+            {
+              "vol": 2,
+              "sec": "8.5"
+            }
+          ]
+        },
+        {
+          "id": "current-resistance",
+          "title": "Current and resistance",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "9.1"
+            },
+            {
+              "vol": 2,
+              "sec": "9.2"
+            },
+            {
+              "vol": 2,
+              "sec": "9.3"
+            },
+            {
+              "vol": 2,
+              "sec": "9.4"
+            },
+            {
+              "vol": 2,
+              "sec": "9.5"
+            },
+            {
+              "vol": 2,
+              "sec": "9.6"
+            }
+          ]
+        },
+        {
+          "id": "dc-circuits",
+          "title": "DC circuits",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "10.1"
+            },
+            {
+              "vol": 2,
+              "sec": "10.2"
+            },
+            {
+              "vol": 2,
+              "sec": "10.3"
+            },
+            {
+              "vol": 2,
+              "sec": "10.4"
+            },
+            {
+              "vol": 2,
+              "sec": "10.5"
+            },
+            {
+              "vol": 2,
+              "sec": "10.6"
+            }
+          ]
+        },
+        {
+          "id": "magnetic-forces",
+          "title": "Magnetic forces and fields",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "11.1"
+            },
+            {
+              "vol": 2,
+              "sec": "11.2"
+            },
+            {
+              "vol": 2,
+              "sec": "11.3"
+            },
+            {
+              "vol": 2,
+              "sec": "11.4"
+            },
+            {
+              "vol": 2,
+              "sec": "11.5"
+            },
+            {
+              "vol": 2,
+              "sec": "11.6"
+            },
+            {
+              "vol": 2,
+              "sec": "11.7"
+            }
+          ]
+        },
+        {
+          "id": "magnetic-sources",
+          "title": "Sources of magnetic fields",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "12.1"
+            },
+            {
+              "vol": 2,
+              "sec": "12.2"
+            },
+            {
+              "vol": 2,
+              "sec": "12.3"
+            },
+            {
+              "vol": 2,
+              "sec": "12.4"
+            },
+            {
+              "vol": 2,
+              "sec": "12.5"
+            },
+            {
+              "vol": 2,
+              "sec": "12.6"
+            },
+            {
+              "vol": 2,
+              "sec": "12.7"
+            }
+          ]
+        },
+        {
+          "id": "induction",
+          "title": "Induction and inductance",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "13.1"
+            },
+            {
+              "vol": 2,
+              "sec": "13.2"
+            },
+            {
+              "vol": 2,
+              "sec": "13.3"
+            },
+            {
+              "vol": 2,
+              "sec": "13.4"
+            },
+            {
+              "vol": 2,
+              "sec": "13.5"
+            },
+            {
+              "vol": 2,
+              "sec": "13.6"
+            },
+            {
+              "vol": 2,
+              "sec": "13.7"
+            },
+            {
+              "vol": 2,
+              "sec": "14.1"
+            },
+            {
+              "vol": 2,
+              "sec": "14.2"
+            },
+            {
+              "vol": 2,
+              "sec": "14.3"
+            },
+            {
+              "vol": 2,
+              "sec": "14.4"
+            },
+            {
+              "vol": 2,
+              "sec": "14.5"
+            },
+            {
+              "vol": 2,
+              "sec": "14.6"
+            }
+          ]
+        },
+        {
+          "id": "maxwell-waves",
+          "title": "Maxwell’s equations and electromagnetic waves",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "16.1"
+            },
+            {
+              "vol": 2,
+              "sec": "16.2"
+            },
+            {
+              "vol": 2,
+              "sec": "16.3"
+            },
+            {
+              "vol": 2,
+              "sec": "16.4"
+            },
+            {
+              "vol": 2,
+              "sec": "16.5"
+            }
+          ]
+        },
+        {
+          "id": "optional-optics",
+          "title": "If time allows: basic optics",
+          "requirement": "optional",
+          "sections": [
+            {
+              "vol": 3,
+              "sec": "1.1"
+            },
+            {
+              "vol": 3,
+              "sec": "1.2"
+            },
+            {
+              "vol": 3,
+              "sec": "1.3"
+            },
+            {
+              "vol": 3,
+              "sec": "1.4"
+            },
+            {
+              "vol": 3,
+              "sec": "1.5"
+            },
+            {
+              "vol": 3,
+              "sec": "1.6"
+            },
+            {
+              "vol": 3,
+              "sec": "1.7"
+            },
+            {
+              "vol": 3,
+              "sec": "2.1"
+            },
+            {
+              "vol": 3,
+              "sec": "2.2"
+            },
+            {
+              "vol": 3,
+              "sec": "2.3"
+            },
+            {
+              "vol": 3,
+              "sec": "2.4"
+            },
+            {
+              "vol": 3,
+              "sec": "2.5"
+            },
+            {
+              "vol": 3,
+              "sec": "2.6"
+            },
+            {
+              "vol": 3,
+              "sec": "2.7"
+            },
+            {
+              "vol": 3,
+              "sec": "2.8"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "vol": 1,
+      "sec": "1.1",
+      "title": "The Scope and Scale of Physics",
+      "chapter": 1,
+      "chapter_title": "Units and Measurement",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "measurements-vectors",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "1.2",
+      "title": "Units and Standards",
+      "chapter": 1,
+      "chapter_title": "Units and Measurement",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "measurements-vectors",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "1.3",
+      "title": "Unit Conversion",
+      "chapter": 1,
+      "chapter_title": "Units and Measurement",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "measurements-vectors",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "1.4",
+      "title": "Dimensional Analysis",
+      "chapter": 1,
+      "chapter_title": "Units and Measurement",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "measurements-vectors",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "1.5",
+      "title": "Estimates and Fermi Calculations",
+      "chapter": 1,
+      "chapter_title": "Units and Measurement",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "measurements-vectors",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "1.6",
+      "title": "Significant Figures",
+      "chapter": 1,
+      "chapter_title": "Units and Measurement",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "measurements-vectors",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "1.7",
+      "title": "Solving Problems in Physics",
+      "chapter": 1,
+      "chapter_title": "Units and Measurement",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "measurements-vectors",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "2.1",
+      "title": "Scalars and Vectors",
+      "chapter": 2,
+      "chapter_title": "Vectors",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "measurements-vectors",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "2.2",
+      "title": "Coordinate Systems and Components of a Vector",
+      "chapter": 2,
+      "chapter_title": "Vectors",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "measurements-vectors",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "2.3",
+      "title": "Algebra of Vectors",
+      "chapter": 2,
+      "chapter_title": "Vectors",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "measurements-vectors",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "2.4",
+      "title": "Products of Vectors",
+      "chapter": 2,
+      "chapter_title": "Vectors",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "measurements-vectors",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "3.1",
+      "title": "Position, Displacement, and Average Velocity",
+      "chapter": 3,
+      "chapter_title": "Motion Along a Straight Line",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "kinematics",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "3.2",
+      "title": "Instantaneous Velocity and Speed",
+      "chapter": 3,
+      "chapter_title": "Motion Along a Straight Line",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "kinematics",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "3.3",
+      "title": "Average and Instantaneous Acceleration",
+      "chapter": 3,
+      "chapter_title": "Motion Along a Straight Line",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "kinematics",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "3.4",
+      "title": "Motion with Constant Acceleration",
+      "chapter": 3,
+      "chapter_title": "Motion Along a Straight Line",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "projectile-drag"
+      ],
+      "unit": "kinematics",
+      "note": "Projectile motion uses these equations; a general 1D motion/graph activity is missing."
+    },
+    {
+      "vol": 1,
+      "sec": "3.5",
+      "title": "Free Fall",
+      "chapter": 3,
+      "chapter_title": "Motion Along a Straight Line",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "kinematics",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "3.6",
+      "title": "Finding Velocity and Displacement from Acceleration",
+      "chapter": 3,
+      "chapter_title": "Motion Along a Straight Line",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "kinematics",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "4.1",
+      "title": "Displacement and Velocity Vectors",
+      "chapter": 4,
+      "chapter_title": "Motion in Two and Three Dimensions",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "kinematics",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "4.2",
+      "title": "Acceleration Vector",
+      "chapter": 4,
+      "chapter_title": "Motion in Two and Three Dimensions",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "kinematics",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "4.3",
+      "title": "Projectile Motion",
+      "chapter": 4,
+      "chapter_title": "Motion in Two and Three Dimensions",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "projectile-drag"
+      ],
+      "unit": "kinematics"
+    },
+    {
+      "vol": 1,
+      "sec": "4.4",
+      "title": "Uniform and Nonuniform Circular Motion",
+      "chapter": 4,
+      "chapter_title": "Motion in Two and Three Dimensions",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "kinematics",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "4.5",
+      "title": "Relative Motion in One and Two Dimensions",
+      "chapter": 4,
+      "chapter_title": "Motion in Two and Three Dimensions",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "kinematics",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "5.1",
+      "title": "Forces",
+      "chapter": 5,
+      "chapter_title": "Newton's Laws of Motion",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "forces",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "5.2",
+      "title": "Newton's First Law",
+      "chapter": 5,
+      "chapter_title": "Newton's Laws of Motion",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "forces",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "5.3",
+      "title": "Newton's Second Law",
+      "chapter": 5,
+      "chapter_title": "Newton's Laws of Motion",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "forces",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "5.4",
+      "title": "Mass and Weight",
+      "chapter": 5,
+      "chapter_title": "Newton's Laws of Motion",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "forces",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "5.5",
+      "title": "Newton’s Third Law",
+      "chapter": 5,
+      "chapter_title": "Newton's Laws of Motion",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "forces",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "5.6",
+      "title": "Common Forces",
+      "chapter": 5,
+      "chapter_title": "Newton's Laws of Motion",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "forces",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "5.7",
+      "title": "Drawing Free-Body Diagrams",
+      "chapter": 5,
+      "chapter_title": "Newton's Laws of Motion",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "forces",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "6.1",
+      "title": "Solving Problems with Newton’s Laws",
+      "chapter": 6,
+      "chapter_title": "Applications of Newton's Laws",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "forces",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "6.2",
+      "title": "Friction",
+      "chapter": 6,
+      "chapter_title": "Applications of Newton's Laws",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "forces",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "6.3",
+      "title": "Centripetal Force",
+      "chapter": 6,
+      "chapter_title": "Applications of Newton's Laws",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "forces",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "6.4",
+      "title": "Drag Force and Terminal Speed",
+      "chapter": 6,
+      "chapter_title": "Applications of Newton's Laws",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "projectile-drag"
+      ],
+      "unit": "forces"
+    },
+    {
+      "vol": 1,
+      "sec": "7.1",
+      "title": "Work",
+      "chapter": 7,
+      "chapter_title": "Work and Kinetic Energy",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "potential-curves"
+      ],
+      "unit": "energy",
+      "note": "Conservative-force work only; a general applied-work apparatus is missing."
+    },
+    {
+      "vol": 1,
+      "sec": "7.2",
+      "title": "Kinetic Energy",
+      "chapter": 7,
+      "chapter_title": "Work and Kinetic Energy",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "energy",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "7.3",
+      "title": "Work-Energy Theorem",
+      "chapter": 7,
+      "chapter_title": "Work and Kinetic Energy",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "potential-curves"
+      ],
+      "unit": "energy",
+      "note": "Energy-diagram illustration only; general work/kinetic-energy measurement is missing."
+    },
+    {
+      "vol": 1,
+      "sec": "7.4",
+      "title": "Power",
+      "chapter": 7,
+      "chapter_title": "Work and Kinetic Energy",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "energy",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "8.1",
+      "title": "Potential Energy of a System",
+      "chapter": 8,
+      "chapter_title": "Potential Energy and Conservation of Energy",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "potential-curves"
+      ],
+      "unit": "energy"
+    },
+    {
+      "vol": 1,
+      "sec": "8.2",
+      "title": "Conservative and Non-Conservative Forces",
+      "chapter": 8,
+      "chapter_title": "Potential Energy and Conservation of Energy",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "potential-curves"
+      ],
+      "unit": "energy",
+      "note": "Conservative potentials are shown; general nonconservative work is incomplete."
+    },
+    {
+      "vol": 1,
+      "sec": "8.3",
+      "title": "Conservation of Energy",
+      "chapter": 8,
+      "chapter_title": "Potential Energy and Conservation of Energy",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "potential-curves"
+      ],
+      "unit": "energy"
+    },
+    {
+      "vol": 1,
+      "sec": "8.4",
+      "title": "Potential Energy Diagrams and Stability",
+      "chapter": 8,
+      "chapter_title": "Potential Energy and Conservation of Energy",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "potential-curves"
+      ],
+      "unit": "energy"
+    },
+    {
+      "vol": 1,
+      "sec": "8.5",
+      "title": "Sources of Energy",
+      "chapter": 8,
+      "chapter_title": "Potential Energy and Conservation of Energy",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "energy",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "9.1",
+      "title": "Linear Momentum",
+      "chapter": 9,
+      "chapter_title": "Linear Momentum and Collisions",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "collisions"
+      ],
+      "unit": "momentum"
+    },
+    {
+      "vol": 1,
+      "sec": "9.2",
+      "title": "Impulse and Collisions",
+      "chapter": 9,
+      "chapter_title": "Linear Momentum and Collisions",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "collisions"
+      ],
+      "unit": "momentum",
+      "note": "Collision impulse context; a general force-time integral measurement is missing."
+    },
+    {
+      "vol": 1,
+      "sec": "9.3",
+      "title": "Conservation of Linear Momentum",
+      "chapter": 9,
+      "chapter_title": "Linear Momentum and Collisions",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "collisions"
+      ],
+      "unit": "momentum"
+    },
+    {
+      "vol": 1,
+      "sec": "9.4",
+      "title": "Types of Collisions",
+      "chapter": 9,
+      "chapter_title": "Linear Momentum and Collisions",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "collisions"
+      ],
+      "unit": "momentum"
+    },
+    {
+      "vol": 1,
+      "sec": "9.5",
+      "title": "Collisions in Multiple Dimensions",
+      "chapter": 9,
+      "chapter_title": "Linear Momentum and Collisions",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "collisions"
+      ],
+      "unit": "momentum"
+    },
+    {
+      "vol": 1,
+      "sec": "9.6",
+      "title": "Center of Mass",
+      "chapter": 9,
+      "chapter_title": "Linear Momentum and Collisions",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "collisions"
+      ],
+      "unit": "momentum",
+      "note": "Collision center-of-mass example only."
+    },
+    {
+      "vol": 1,
+      "sec": "9.7",
+      "title": "Rocket Propulsion",
+      "chapter": 9,
+      "chapter_title": "Linear Momentum and Collisions",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "momentum",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "10.1",
+      "title": "Rotational Variables",
+      "chapter": 10,
+      "chapter_title": "Fixed-Axis Rotation",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "rotation"
+      ],
+      "unit": "rotation"
+    },
+    {
+      "vol": 1,
+      "sec": "10.2",
+      "title": "Rotation with Constant Angular Acceleration",
+      "chapter": 10,
+      "chapter_title": "Fixed-Axis Rotation",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "rotation"
+      ],
+      "unit": "rotation",
+      "note": "Selected torque dynamics only; general rotational kinematics exercise needs review."
+    },
+    {
+      "vol": 1,
+      "sec": "10.3",
+      "title": "Relating Angular and Translational Quantities",
+      "chapter": 10,
+      "chapter_title": "Fixed-Axis Rotation",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "rotation"
+      ],
+      "unit": "rotation"
+    },
+    {
+      "vol": 1,
+      "sec": "10.4",
+      "title": "Moment of Inertia and Rotational Kinetic Energy",
+      "chapter": 10,
+      "chapter_title": "Fixed-Axis Rotation",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "rotation"
+      ],
+      "unit": "rotation"
+    },
+    {
+      "vol": 1,
+      "sec": "10.5",
+      "title": "Calculating Moments of Inertia",
+      "chapter": 10,
+      "chapter_title": "Fixed-Axis Rotation",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "rotation",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "10.6",
+      "title": "Torque",
+      "chapter": 10,
+      "chapter_title": "Fixed-Axis Rotation",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "rotation"
+      ],
+      "unit": "rotation"
+    },
+    {
+      "vol": 1,
+      "sec": "10.7",
+      "title": "Newton’s Second Law for Rotation",
+      "chapter": 10,
+      "chapter_title": "Fixed-Axis Rotation",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "rotation"
+      ],
+      "unit": "rotation",
+      "note": "Selected door/rolling apparatus; not every rotational dynamics application."
+    },
+    {
+      "vol": 1,
+      "sec": "10.8",
+      "title": "Work and Power for Rotational Motion",
+      "chapter": 10,
+      "chapter_title": "Fixed-Axis Rotation",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "rotation",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "11.1",
+      "title": "Rolling Motion",
+      "chapter": 11,
+      "chapter_title": "Angular Momentum",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "rotation"
+      ],
+      "unit": "rotation"
+    },
+    {
+      "vol": 1,
+      "sec": "11.2",
+      "title": "Angular Momentum",
+      "chapter": 11,
+      "chapter_title": "Angular Momentum",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "rotation"
+      ],
+      "unit": "rotation"
+    },
+    {
+      "vol": 1,
+      "sec": "11.3",
+      "title": "Conservation of Angular Momentum",
+      "chapter": 11,
+      "chapter_title": "Angular Momentum",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "rotation"
+      ],
+      "unit": "rotation"
+    },
+    {
+      "vol": 1,
+      "sec": "11.4",
+      "title": "Precession of a Gyroscope",
+      "chapter": 11,
+      "chapter_title": "Angular Momentum",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "rotation",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "13.1",
+      "title": "Newton's Law of Universal Gravitation",
+      "chapter": 13,
+      "chapter_title": "Gravitation",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "kepler-orbits"
+      ],
+      "unit": "gravitation"
+    },
+    {
+      "vol": 1,
+      "sec": "13.2",
+      "title": "Gravitation Near Earth's Surface",
+      "chapter": 13,
+      "chapter_title": "Gravitation",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "gravitation",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "13.3",
+      "title": "Gravitational Potential Energy and Total Energy",
+      "chapter": 13,
+      "chapter_title": "Gravitation",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "kepler-orbits"
+      ],
+      "unit": "gravitation"
+    },
+    {
+      "vol": 1,
+      "sec": "13.4",
+      "title": "Satellite Orbits and Energy",
+      "chapter": 13,
+      "chapter_title": "Gravitation",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "kepler-orbits"
+      ],
+      "unit": "gravitation"
+    },
+    {
+      "vol": 1,
+      "sec": "13.5",
+      "title": "Kepler's Laws of Planetary Motion",
+      "chapter": 13,
+      "chapter_title": "Gravitation",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "kepler-orbits"
+      ],
+      "unit": "gravitation"
+    },
+    {
+      "vol": 1,
+      "sec": "13.6",
+      "title": "Tidal Forces",
+      "chapter": 13,
+      "chapter_title": "Gravitation",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "gravitation",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "13.7",
+      "title": "Einstein's Theory of Gravity",
+      "chapter": 13,
+      "chapter_title": "Gravitation",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "gravitation",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "12.1",
+      "title": "Conditions for Static Equilibrium",
+      "chapter": 12,
+      "chapter_title": "Static Equilibrium and Elasticity",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "rotation",
+        "catenary"
+      ],
+      "unit": "equilibrium-elasticity",
+      "note": "Seesaw and chain equilibrium only; a general equilibrium/free-body-diagram apparatus is still planned."
+    },
+    {
+      "vol": 1,
+      "sec": "12.2",
+      "title": "Examples of Static Equilibrium",
+      "chapter": 12,
+      "chapter_title": "Static Equilibrium and Elasticity",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "rotation",
+        "catenary"
+      ],
+      "unit": "equilibrium-elasticity",
+      "note": "Limited seesaw/chain examples, not complete static-equilibrium coverage."
+    },
+    {
+      "vol": 1,
+      "sec": "12.3",
+      "title": "Stress, Strain, and Elastic Modulus",
+      "chapter": 12,
+      "chapter_title": "Static Equilibrium and Elasticity",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "equilibrium-elasticity",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "12.4",
+      "title": "Elasticity and Plasticity",
+      "chapter": 12,
+      "chapter_title": "Static Equilibrium and Elasticity",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "equilibrium-elasticity",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "14.1",
+      "title": "Fluids, Density, and Pressure",
+      "chapter": 14,
+      "chapter_title": "Fluid Mechanics",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "fluids"
+      ],
+      "unit": "fluids"
+    },
+    {
+      "vol": 1,
+      "sec": "14.2",
+      "title": "Measuring Pressure",
+      "chapter": 14,
+      "chapter_title": "Fluid Mechanics",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "fluids"
+      ],
+      "unit": "fluids"
+    },
+    {
+      "vol": 1,
+      "sec": "14.3",
+      "title": "Pascal's Principle and Hydraulics",
+      "chapter": 14,
+      "chapter_title": "Fluid Mechanics",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "fluids"
+      ],
+      "unit": "fluids"
+    },
+    {
+      "vol": 1,
+      "sec": "14.4",
+      "title": "Archimedes’ Principle and Buoyancy",
+      "chapter": 14,
+      "chapter_title": "Fluid Mechanics",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "fluids"
+      ],
+      "unit": "fluids"
+    },
+    {
+      "vol": 1,
+      "sec": "14.5",
+      "title": "Fluid Dynamics",
+      "chapter": 14,
+      "chapter_title": "Fluid Mechanics",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "fluids"
+      ],
+      "unit": "fluids"
+    },
+    {
+      "vol": 1,
+      "sec": "14.6",
+      "title": "Bernoulli’s Equation",
+      "chapter": 14,
+      "chapter_title": "Fluid Mechanics",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "fluids"
+      ],
+      "unit": "fluids"
+    },
+    {
+      "vol": 1,
+      "sec": "14.7",
+      "title": "Viscosity and Turbulence",
+      "chapter": 14,
+      "chapter_title": "Fluid Mechanics",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "fluids",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "15.1",
+      "title": "Simple Harmonic Motion",
+      "chapter": 15,
+      "chapter_title": "Oscillations",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "springs"
+      ],
+      "unit": "oscillations"
+    },
+    {
+      "vol": 1,
+      "sec": "15.2",
+      "title": "Energy in Simple Harmonic Motion",
+      "chapter": 15,
+      "chapter_title": "Oscillations",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "springs"
+      ],
+      "unit": "oscillations"
+    },
+    {
+      "vol": 1,
+      "sec": "15.3",
+      "title": "Comparing Simple Harmonic Motion and Circular Motion",
+      "chapter": 15,
+      "chapter_title": "Oscillations",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "oscillations",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "15.4",
+      "title": "Pendulums",
+      "chapter": 15,
+      "chapter_title": "Oscillations",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "double-pendulum"
+      ],
+      "unit": "oscillations",
+      "note": "Double-pendulum small-angle comparison; a simple pendulum lab is not provided."
+    },
+    {
+      "vol": 1,
+      "sec": "15.5",
+      "title": "Damped Oscillations",
+      "chapter": 15,
+      "chapter_title": "Oscillations",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "springs"
+      ],
+      "unit": "oscillations"
+    },
+    {
+      "vol": 1,
+      "sec": "15.6",
+      "title": "Forced Oscillations",
+      "chapter": 15,
+      "chapter_title": "Oscillations",
+      "course": [
+        "physics-1"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "springs"
+      ],
+      "unit": "oscillations"
+    },
+    {
+      "vol": 2,
+      "sec": "5.1",
+      "title": "Electric Charge",
+      "chapter": 5,
+      "chapter_title": "Electric Charges and Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "charge-fields",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "5.2",
+      "title": "Conductors, Insulators, and Charging by Induction",
+      "chapter": 5,
+      "chapter_title": "Electric Charges and Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "charge-fields",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "5.3",
+      "title": "Coulomb's Law",
+      "chapter": 5,
+      "chapter_title": "Electric Charges and Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "coulomb-sandbox"
+      ],
+      "unit": "charge-fields"
+    },
+    {
+      "vol": 2,
+      "sec": "5.4",
+      "title": "Electric Field",
+      "chapter": 5,
+      "chapter_title": "Electric Charges and Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "coulomb-sandbox"
+      ],
+      "unit": "charge-fields"
+    },
+    {
+      "vol": 2,
+      "sec": "5.5",
+      "title": "Calculating Electric Fields of Charge Distributions",
+      "chapter": 5,
+      "chapter_title": "Electric Charges and Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "coulomb-sandbox"
+      ],
+      "unit": "charge-fields",
+      "note": "Point-charge sums only; general extended-distribution integration is missing."
+    },
+    {
+      "vol": 2,
+      "sec": "5.6",
+      "title": "Electric Field Lines",
+      "chapter": 5,
+      "chapter_title": "Electric Charges and Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "coulomb-sandbox"
+      ],
+      "unit": "charge-fields"
+    },
+    {
+      "vol": 2,
+      "sec": "5.7",
+      "title": "Electric Dipoles",
+      "chapter": 5,
+      "chapter_title": "Electric Charges and Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "coulomb-sandbox"
+      ],
+      "unit": "charge-fields"
+    },
+    {
+      "vol": 2,
+      "sec": "6.1",
+      "title": "Electric Flux",
+      "chapter": 6,
+      "chapter_title": "Gauss's Law",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "gauss-law"
+      ],
+      "unit": "flux-gauss"
+    },
+    {
+      "vol": 2,
+      "sec": "6.2",
+      "title": "Explaining Gauss’s Law",
+      "chapter": 6,
+      "chapter_title": "Gauss's Law",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "gauss-law"
+      ],
+      "unit": "flux-gauss"
+    },
+    {
+      "vol": 2,
+      "sec": "6.3",
+      "title": "Applying Gauss’s Law",
+      "chapter": 6,
+      "chapter_title": "Gauss's Law",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "gauss-law"
+      ],
+      "unit": "flux-gauss"
+    },
+    {
+      "vol": 2,
+      "sec": "6.4",
+      "title": "Conductors in Electrostatic Equilibrium",
+      "chapter": 6,
+      "chapter_title": "Gauss's Law",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "gauss-law"
+      ],
+      "unit": "flux-gauss",
+      "note": "Spherical conductor example only, not arbitrary conductors."
+    },
+    {
+      "vol": 2,
+      "sec": "7.1",
+      "title": "Electric Potential Energy",
+      "chapter": 7,
+      "chapter_title": "Electric Potential",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "coulomb-sandbox"
+      ],
+      "unit": "potential"
+    },
+    {
+      "vol": 2,
+      "sec": "7.2",
+      "title": "Electric Potential and Potential Difference",
+      "chapter": 7,
+      "chapter_title": "Electric Potential",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "coulomb-sandbox"
+      ],
+      "unit": "potential"
+    },
+    {
+      "vol": 2,
+      "sec": "7.3",
+      "title": "Calculations of Electric Potential",
+      "chapter": 7,
+      "chapter_title": "Electric Potential",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "coulomb-sandbox"
+      ],
+      "unit": "potential"
+    },
+    {
+      "vol": 2,
+      "sec": "7.4",
+      "title": "Determining Field from Potential",
+      "chapter": 7,
+      "chapter_title": "Electric Potential",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "coulomb-sandbox"
+      ],
+      "unit": "potential"
+    },
+    {
+      "vol": 2,
+      "sec": "7.5",
+      "title": "Equipotential Surfaces and Conductors",
+      "chapter": 7,
+      "chapter_title": "Electric Potential",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "coulomb-sandbox"
+      ],
+      "unit": "potential"
+    },
+    {
+      "vol": 2,
+      "sec": "7.6",
+      "title": "Applications of Electrostatics",
+      "chapter": 7,
+      "chapter_title": "Electric Potential",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "potential",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "8.1",
+      "title": "Capacitors and Capacitance",
+      "chapter": 8,
+      "chapter_title": "Capacitance",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "capacitors"
+      ],
+      "unit": "capacitance"
+    },
+    {
+      "vol": 2,
+      "sec": "8.2",
+      "title": "Capacitors in Series and in Parallel",
+      "chapter": 8,
+      "chapter_title": "Capacitance",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "capacitors"
+      ],
+      "unit": "capacitance"
+    },
+    {
+      "vol": 2,
+      "sec": "8.3",
+      "title": "Energy Stored in a Capacitor",
+      "chapter": 8,
+      "chapter_title": "Capacitance",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "capacitors"
+      ],
+      "unit": "capacitance"
+    },
+    {
+      "vol": 2,
+      "sec": "8.4",
+      "title": "Capacitor with a Dielectric",
+      "chapter": 8,
+      "chapter_title": "Capacitance",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "capacitors"
+      ],
+      "unit": "capacitance"
+    },
+    {
+      "vol": 2,
+      "sec": "8.5",
+      "title": "Molecular Model of a Dielectric",
+      "chapter": 8,
+      "chapter_title": "Capacitance",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "capacitance",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "9.1",
+      "title": "Electrical Current",
+      "chapter": 9,
+      "chapter_title": "Current and Resistance",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "circuits"
+      ],
+      "unit": "current-resistance",
+      "note": "Circuit-level current only, not a microscopic charge-flow experiment."
+    },
+    {
+      "vol": 2,
+      "sec": "9.2",
+      "title": "Model of Conduction in Metals",
+      "chapter": 9,
+      "chapter_title": "Current and Resistance",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "current-resistance",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "9.3",
+      "title": "Resistivity and Resistance",
+      "chapter": 9,
+      "chapter_title": "Current and Resistance",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "current-resistance",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "9.4",
+      "title": "Ohm's Law",
+      "chapter": 9,
+      "chapter_title": "Current and Resistance",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "circuits"
+      ],
+      "unit": "current-resistance"
+    },
+    {
+      "vol": 2,
+      "sec": "9.5",
+      "title": "Electrical Energy and Power",
+      "chapter": 9,
+      "chapter_title": "Current and Resistance",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "circuits"
+      ],
+      "unit": "current-resistance"
+    },
+    {
+      "vol": 2,
+      "sec": "9.6",
+      "title": "Superconductors",
+      "chapter": 9,
+      "chapter_title": "Current and Resistance",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "current-resistance",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "10.1",
+      "title": "Electromotive Force",
+      "chapter": 10,
+      "chapter_title": "Direct-Current Circuits",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "circuits"
+      ],
+      "unit": "dc-circuits"
+    },
+    {
+      "vol": 2,
+      "sec": "10.2",
+      "title": "Resistors in Series and Parallel",
+      "chapter": 10,
+      "chapter_title": "Direct-Current Circuits",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "circuits"
+      ],
+      "unit": "dc-circuits"
+    },
+    {
+      "vol": 2,
+      "sec": "10.3",
+      "title": "Kirchhoff's Rules",
+      "chapter": 10,
+      "chapter_title": "Direct-Current Circuits",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "circuits"
+      ],
+      "unit": "dc-circuits"
+    },
+    {
+      "vol": 2,
+      "sec": "10.4",
+      "title": "Electrical Measuring Instruments",
+      "chapter": 10,
+      "chapter_title": "Direct-Current Circuits",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "circuits"
+      ],
+      "unit": "dc-circuits"
+    },
+    {
+      "vol": 2,
+      "sec": "10.5",
+      "title": "RC Circuits",
+      "chapter": 10,
+      "chapter_title": "Direct-Current Circuits",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "circuits"
+      ],
+      "unit": "dc-circuits"
+    },
+    {
+      "vol": 2,
+      "sec": "10.6",
+      "title": "Household Wiring and Electrical Safety",
+      "chapter": 10,
+      "chapter_title": "Direct-Current Circuits",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "dc-circuits",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "11.1",
+      "title": "Magnetism and Its Historical Discoveries",
+      "chapter": 11,
+      "chapter_title": "Magnetic Forces and Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "magnetic-forces",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "11.2",
+      "title": "Magnetic Fields and Lines",
+      "chapter": 11,
+      "chapter_title": "Magnetic Forces and Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "magnetic-force"
+      ],
+      "unit": "magnetic-forces",
+      "note": "Uniform imposed field; field-line exploration is limited."
+    },
+    {
+      "vol": 2,
+      "sec": "11.3",
+      "title": "Motion of a Charged Particle in a Magnetic Field",
+      "chapter": 11,
+      "chapter_title": "Magnetic Forces and Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "magnetic-force"
+      ],
+      "unit": "magnetic-forces"
+    },
+    {
+      "vol": 2,
+      "sec": "11.4",
+      "title": "Magnetic Force on a Current-Carrying Conductor",
+      "chapter": 11,
+      "chapter_title": "Magnetic Forces and Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "currents-fields"
+      ],
+      "unit": "magnetic-forces",
+      "note": "Parallel-wire force example only; arbitrary wire geometry is missing."
+    },
+    {
+      "vol": 2,
+      "sec": "11.5",
+      "title": "Force and Torque on a Current Loop",
+      "chapter": 11,
+      "chapter_title": "Magnetic Forces and Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "currents-fields"
+      ],
+      "unit": "magnetic-forces",
+      "note": "Selected dipole/loop illustration; check full torque procedure before assigning a lab."
+    },
+    {
+      "vol": 2,
+      "sec": "11.6",
+      "title": "The Hall Effect",
+      "chapter": 11,
+      "chapter_title": "Magnetic Forces and Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "magnetic-forces",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "11.7",
+      "title": "Applications of Magnetic Forces and Fields",
+      "chapter": 11,
+      "chapter_title": "Magnetic Forces and Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "magnetic-force"
+      ],
+      "unit": "magnetic-forces"
+    },
+    {
+      "vol": 2,
+      "sec": "12.1",
+      "title": "The Biot-Savart Law",
+      "chapter": 12,
+      "chapter_title": "Sources of Magnetic Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "currents-fields"
+      ],
+      "unit": "magnetic-sources"
+    },
+    {
+      "vol": 2,
+      "sec": "12.2",
+      "title": "Magnetic Field Due to a Thin Straight Wire",
+      "chapter": 12,
+      "chapter_title": "Sources of Magnetic Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "currents-fields"
+      ],
+      "unit": "magnetic-sources"
+    },
+    {
+      "vol": 2,
+      "sec": "12.3",
+      "title": "Magnetic Force between Two Parallel Currents",
+      "chapter": 12,
+      "chapter_title": "Sources of Magnetic Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "currents-fields"
+      ],
+      "unit": "magnetic-sources"
+    },
+    {
+      "vol": 2,
+      "sec": "12.4",
+      "title": "Magnetic Field of a Current Loop",
+      "chapter": 12,
+      "chapter_title": "Sources of Magnetic Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "currents-fields"
+      ],
+      "unit": "magnetic-sources"
+    },
+    {
+      "vol": 2,
+      "sec": "12.5",
+      "title": "Ampère’s Law",
+      "chapter": 12,
+      "chapter_title": "Sources of Magnetic Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "currents-fields"
+      ],
+      "unit": "magnetic-sources"
+    },
+    {
+      "vol": 2,
+      "sec": "12.6",
+      "title": "Solenoids and Toroids",
+      "chapter": 12,
+      "chapter_title": "Sources of Magnetic Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "currents-fields"
+      ],
+      "unit": "magnetic-sources"
+    },
+    {
+      "vol": 2,
+      "sec": "12.7",
+      "title": "Magnetism in Matter",
+      "chapter": 12,
+      "chapter_title": "Sources of Magnetic Fields",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "magnetic-sources",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "13.1",
+      "title": "Faraday’s Law",
+      "chapter": 13,
+      "chapter_title": "Electromagnetic Induction",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "faraday"
+      ],
+      "unit": "induction"
+    },
+    {
+      "vol": 2,
+      "sec": "13.2",
+      "title": "Lenz's Law",
+      "chapter": 13,
+      "chapter_title": "Electromagnetic Induction",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "faraday"
+      ],
+      "unit": "induction"
+    },
+    {
+      "vol": 2,
+      "sec": "13.3",
+      "title": "Motional Emf",
+      "chapter": 13,
+      "chapter_title": "Electromagnetic Induction",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "faraday"
+      ],
+      "unit": "induction"
+    },
+    {
+      "vol": 2,
+      "sec": "13.4",
+      "title": "Induced Electric Fields",
+      "chapter": 13,
+      "chapter_title": "Electromagnetic Induction",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "induction",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "13.5",
+      "title": "Eddy Currents",
+      "chapter": 13,
+      "chapter_title": "Electromagnetic Induction",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "induction",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "13.6",
+      "title": "Electric Generators and Back Emf",
+      "chapter": 13,
+      "chapter_title": "Electromagnetic Induction",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "faraday"
+      ],
+      "unit": "induction"
+    },
+    {
+      "vol": 2,
+      "sec": "13.7",
+      "title": "Applications of Electromagnetic Induction",
+      "chapter": 13,
+      "chapter_title": "Electromagnetic Induction",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "missing",
+      "demos": [],
+      "unit": "induction",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "14.1",
+      "title": "Mutual Inductance",
+      "chapter": 14,
+      "chapter_title": "Inductance",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "faraday"
+      ],
+      "unit": "induction"
+    },
+    {
+      "vol": 2,
+      "sec": "14.2",
+      "title": "Self-Inductance and Inductors",
+      "chapter": 14,
+      "chapter_title": "Inductance",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "circuits",
+        "faraday"
+      ],
+      "unit": "induction",
+      "note": "Lumped inductors and fixed coil model, not every inductor geometry."
+    },
+    {
+      "vol": 2,
+      "sec": "14.3",
+      "title": "Energy in a Magnetic Field",
+      "chapter": 14,
+      "chapter_title": "Inductance",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "circuits",
+        "faraday"
+      ],
+      "unit": "induction"
+    },
+    {
+      "vol": 2,
+      "sec": "14.4",
+      "title": "RL Circuits",
+      "chapter": 14,
+      "chapter_title": "Inductance",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "circuits"
+      ],
+      "unit": "induction"
+    },
+    {
+      "vol": 2,
+      "sec": "14.5",
+      "title": "Oscillations in an LC Circuit",
+      "chapter": 14,
+      "chapter_title": "Inductance",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "circuits"
+      ],
+      "unit": "induction"
+    },
+    {
+      "vol": 2,
+      "sec": "14.6",
+      "title": "RLC Series Circuits",
+      "chapter": 14,
+      "chapter_title": "Inductance",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "usable",
+      "demos": [
+        "circuits"
+      ],
+      "unit": "induction"
+    },
+    {
+      "vol": 2,
+      "sec": "16.1",
+      "title": "Maxwell’s Equations and Electromagnetic Waves",
+      "chapter": 16,
+      "chapter_title": "Electromagnetic Waves",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "em-waves"
+      ],
+      "unit": "maxwell-waves",
+      "note": "Plane-wave relationships and equation discussion; induced-B/displacement-current apparatus is missing."
+    },
+    {
+      "vol": 2,
+      "sec": "16.2",
+      "title": "Plane Electromagnetic Waves",
+      "chapter": 16,
+      "chapter_title": "Electromagnetic Waves",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "em-waves"
+      ],
+      "unit": "maxwell-waves"
+    },
+    {
+      "vol": 2,
+      "sec": "16.3",
+      "title": "Energy Carried by Electromagnetic Waves",
+      "chapter": 16,
+      "chapter_title": "Electromagnetic Waves",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "em-waves"
+      ],
+      "unit": "maxwell-waves"
+    },
+    {
+      "vol": 2,
+      "sec": "16.4",
+      "title": "Momentum and Radiation Pressure",
+      "chapter": 16,
+      "chapter_title": "Electromagnetic Waves",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "em-waves"
+      ],
+      "unit": "maxwell-waves"
+    },
+    {
+      "vol": 2,
+      "sec": "16.5",
+      "title": "The Electromagnetic Spectrum",
+      "chapter": 16,
+      "chapter_title": "Electromagnetic Waves",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "required",
+      "status": "needs-feature",
+      "demos": [
+        "em-waves"
+      ],
+      "unit": "maxwell-waves"
+    },
+    {
+      "vol": 3,
+      "sec": "1.1",
+      "title": "The Propagation of Light",
+      "chapter": 1,
+      "chapter_title": "The Nature of Light",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "optional",
+      "status": "missing",
+      "demos": [],
+      "unit": "optional-optics",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 3,
+      "sec": "1.2",
+      "title": "The Law of Reflection",
+      "chapter": 1,
+      "chapter_title": "The Nature of Light",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "optional",
+      "status": "usable",
+      "demos": [
+        "optics-bench"
+      ],
+      "unit": "optional-optics"
+    },
+    {
+      "vol": 3,
+      "sec": "1.3",
+      "title": "Refraction",
+      "chapter": 1,
+      "chapter_title": "The Nature of Light",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "optional",
+      "status": "usable",
+      "demos": [
+        "optics-bench"
+      ],
+      "unit": "optional-optics"
+    },
+    {
+      "vol": 3,
+      "sec": "1.4",
+      "title": "Total Internal Reflection",
+      "chapter": 1,
+      "chapter_title": "The Nature of Light",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "optional",
+      "status": "usable",
+      "demos": [
+        "optics-bench"
+      ],
+      "unit": "optional-optics"
+    },
+    {
+      "vol": 3,
+      "sec": "1.5",
+      "title": "Dispersion",
+      "chapter": 1,
+      "chapter_title": "The Nature of Light",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "optional",
+      "status": "missing",
+      "demos": [],
+      "unit": "optional-optics",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 3,
+      "sec": "1.6",
+      "title": "Huygens’s Principle",
+      "chapter": 1,
+      "chapter_title": "The Nature of Light",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "optional",
+      "status": "missing",
+      "demos": [],
+      "unit": "optional-optics",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 3,
+      "sec": "1.7",
+      "title": "Polarization",
+      "chapter": 1,
+      "chapter_title": "The Nature of Light",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "optional",
+      "status": "usable",
+      "demos": [
+        "polarization"
+      ],
+      "unit": "optional-optics"
+    },
+    {
+      "vol": 3,
+      "sec": "2.1",
+      "title": "Images Formed by Plane Mirrors",
+      "chapter": 2,
+      "chapter_title": "Geometric Optics and Image Formation",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "optional",
+      "status": "usable",
+      "demos": [
+        "optics-bench"
+      ],
+      "unit": "optional-optics"
+    },
+    {
+      "vol": 3,
+      "sec": "2.2",
+      "title": "Spherical Mirrors",
+      "chapter": 2,
+      "chapter_title": "Geometric Optics and Image Formation",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "optional",
+      "status": "usable",
+      "demos": [
+        "optics-bench"
+      ],
+      "unit": "optional-optics"
+    },
+    {
+      "vol": 3,
+      "sec": "2.3",
+      "title": "Images Formed by Refraction",
+      "chapter": 2,
+      "chapter_title": "Geometric Optics and Image Formation",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "optional",
+      "status": "needs-feature",
+      "demos": [
+        "optics-bench"
+      ],
+      "unit": "optional-optics",
+      "note": "Basic refraction supported; general curved-surface image formation needs review."
+    },
+    {
+      "vol": 3,
+      "sec": "2.4",
+      "title": "Thin Lenses",
+      "chapter": 2,
+      "chapter_title": "Geometric Optics and Image Formation",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "optional",
+      "status": "usable",
+      "demos": [
+        "optics-bench"
+      ],
+      "unit": "optional-optics"
+    },
+    {
+      "vol": 3,
+      "sec": "2.5",
+      "title": "The Eye",
+      "chapter": 2,
+      "chapter_title": "Geometric Optics and Image Formation",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "optional",
+      "status": "missing",
+      "demos": [],
+      "unit": "optional-optics",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 3,
+      "sec": "2.6",
+      "title": "The Camera",
+      "chapter": 2,
+      "chapter_title": "Geometric Optics and Image Formation",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "optional",
+      "status": "missing",
+      "demos": [],
+      "unit": "optional-optics",
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 3,
+      "sec": "2.7",
+      "title": "The Simple Magnifier",
+      "chapter": 2,
+      "chapter_title": "Geometric Optics and Image Formation",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "optional",
+      "status": "usable",
+      "demos": [
+        "optics-bench"
+      ],
+      "unit": "optional-optics"
+    },
+    {
+      "vol": 3,
+      "sec": "2.8",
+      "title": "Microscopes and Telescopes",
+      "chapter": 2,
+      "chapter_title": "Geometric Optics and Image Formation",
+      "course": [
+        "physics-2"
+      ],
+      "requirement": "optional",
+      "status": "needs-feature",
+      "demos": [
+        "optics-bench"
+      ],
+      "unit": "optional-optics",
+      "note": "Instrument examples require review before section-complete labeling."
+    },
+    {
+      "vol": 1,
+      "sec": "16.1",
+      "title": "Traveling Waves",
+      "chapter": 16,
+      "chapter_title": "Waves",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "standing-waves"
+      ]
+    },
+    {
+      "vol": 1,
+      "sec": "16.2",
+      "title": "Mathematics of Waves",
+      "chapter": 16,
+      "chapter_title": "Waves",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "standing-waves"
+      ]
+    },
+    {
+      "vol": 1,
+      "sec": "16.3",
+      "title": "Wave Speed on a Stretched String",
+      "chapter": 16,
+      "chapter_title": "Waves",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "standing-waves"
+      ]
+    },
+    {
+      "vol": 1,
+      "sec": "16.4",
+      "title": "Energy and Power of a Wave",
+      "chapter": 16,
+      "chapter_title": "Waves",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "16.5",
+      "title": "Interference of Waves",
+      "chapter": 16,
+      "chapter_title": "Waves",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "standing-waves"
+      ]
+    },
+    {
+      "vol": 1,
+      "sec": "16.6",
+      "title": "Standing Waves and Resonance",
+      "chapter": 16,
+      "chapter_title": "Waves",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "standing-waves"
+      ]
+    },
+    {
+      "vol": 1,
+      "sec": "17.1",
+      "title": "Sound Waves",
+      "chapter": 17,
+      "chapter_title": "Sound",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "17.2",
+      "title": "Speed of Sound",
+      "chapter": 17,
+      "chapter_title": "Sound",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "resonators"
+      ]
+    },
+    {
+      "vol": 1,
+      "sec": "17.3",
+      "title": "Sound Intensity",
+      "chapter": 17,
+      "chapter_title": "Sound",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 1,
+      "sec": "17.4",
+      "title": "Normal Modes of a Standing Sound Wave",
+      "chapter": 17,
+      "chapter_title": "Sound",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "timbre",
+        "resonators"
+      ]
+    },
+    {
+      "vol": 1,
+      "sec": "17.5",
+      "title": "Sources of Musical Sound",
+      "chapter": 17,
+      "chapter_title": "Sound",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "timbre"
+      ]
+    },
+    {
+      "vol": 1,
+      "sec": "17.6",
+      "title": "Beats",
+      "chapter": 17,
+      "chapter_title": "Sound",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "timbre"
+      ]
+    },
+    {
+      "vol": 1,
+      "sec": "17.7",
+      "title": "The Doppler Effect",
+      "chapter": 17,
+      "chapter_title": "Sound",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "doppler"
+      ]
+    },
+    {
+      "vol": 1,
+      "sec": "17.8",
+      "title": "Shock Waves",
+      "chapter": 17,
+      "chapter_title": "Sound",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "doppler"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "1.1",
+      "title": "Temperature and Thermal Equilibrium",
+      "chapter": 1,
+      "chapter_title": "Temperature and Heat",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "1.2",
+      "title": "Thermometers and Temperature Scales",
+      "chapter": 1,
+      "chapter_title": "Temperature and Heat",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "1.3",
+      "title": "Thermal Expansion",
+      "chapter": 1,
+      "chapter_title": "Temperature and Heat",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "1.4",
+      "title": "Heat Transfer, Specific Heat, and Calorimetry",
+      "chapter": 1,
+      "chapter_title": "Temperature and Heat",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "1.5",
+      "title": "Phase Changes",
+      "chapter": 1,
+      "chapter_title": "Temperature and Heat",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "1.6",
+      "title": "Mechanisms of Heat Transfer",
+      "chapter": 1,
+      "chapter_title": "Temperature and Heat",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "blackbody"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "2.1",
+      "title": "Molecular Model of an Ideal Gas",
+      "chapter": 2,
+      "chapter_title": "The Kinetic Theory of Gases",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "ideal-gas"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "2.2",
+      "title": "Pressure, Temperature, and RMS Speed",
+      "chapter": 2,
+      "chapter_title": "The Kinetic Theory of Gases",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "ideal-gas"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "2.3",
+      "title": "Heat Capacity and Equipartition of Energy",
+      "chapter": 2,
+      "chapter_title": "The Kinetic Theory of Gases",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "ideal-gas"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "2.4",
+      "title": "Distribution of Molecular Speeds",
+      "chapter": 2,
+      "chapter_title": "The Kinetic Theory of Gases",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "ideal-gas"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "3.1",
+      "title": "Thermodynamic Systems",
+      "chapter": 3,
+      "chapter_title": "The First Law of Thermodynamics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "heat-engines"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "3.2",
+      "title": "Work, Heat, and Internal Energy",
+      "chapter": 3,
+      "chapter_title": "The First Law of Thermodynamics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "heat-engines"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "3.3",
+      "title": "First Law of Thermodynamics",
+      "chapter": 3,
+      "chapter_title": "The First Law of Thermodynamics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "heat-engines"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "3.4",
+      "title": "Thermodynamic Processes",
+      "chapter": 3,
+      "chapter_title": "The First Law of Thermodynamics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "heat-engines"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "3.5",
+      "title": "Heat Capacities of an Ideal Gas",
+      "chapter": 3,
+      "chapter_title": "The First Law of Thermodynamics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "3.6",
+      "title": "Adiabatic Processes for an Ideal Gas",
+      "chapter": 3,
+      "chapter_title": "The First Law of Thermodynamics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "heat-engines"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "4.1",
+      "title": "Reversible and Irreversible Processes",
+      "chapter": 4,
+      "chapter_title": "The Second Law of Thermodynamics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "4.2",
+      "title": "Heat Engines",
+      "chapter": 4,
+      "chapter_title": "The Second Law of Thermodynamics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "heat-engines"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "4.3",
+      "title": "Refrigerators and Heat Pumps",
+      "chapter": 4,
+      "chapter_title": "The Second Law of Thermodynamics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "heat-engines"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "4.4",
+      "title": "Statements of the Second Law of Thermodynamics",
+      "chapter": 4,
+      "chapter_title": "The Second Law of Thermodynamics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "4.5",
+      "title": "The Carnot Cycle",
+      "chapter": 4,
+      "chapter_title": "The Second Law of Thermodynamics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "heat-engines"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "4.6",
+      "title": "Entropy",
+      "chapter": 4,
+      "chapter_title": "The Second Law of Thermodynamics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "heat-engines"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "4.7",
+      "title": "Entropy on a Microscopic Scale",
+      "chapter": 4,
+      "chapter_title": "The Second Law of Thermodynamics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 2,
+      "sec": "15.1",
+      "title": "AC Sources",
+      "chapter": 15,
+      "chapter_title": "Alternating-Current Circuits",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "circuits"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "15.2",
+      "title": "Simple AC Circuits",
+      "chapter": 15,
+      "chapter_title": "Alternating-Current Circuits",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "circuits"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "15.3",
+      "title": "RLC Series Circuits with AC",
+      "chapter": 15,
+      "chapter_title": "Alternating-Current Circuits",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "circuits"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "15.4",
+      "title": "Power in an AC Circuit",
+      "chapter": 15,
+      "chapter_title": "Alternating-Current Circuits",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "circuits"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "15.5",
+      "title": "Resonance in an AC Circuit",
+      "chapter": 15,
+      "chapter_title": "Alternating-Current Circuits",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "circuits"
+      ]
+    },
+    {
+      "vol": 2,
+      "sec": "15.6",
+      "title": "Transformers",
+      "chapter": 15,
+      "chapter_title": "Alternating-Current Circuits",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    }
+  ],
+  "demos": [
+    {
+      "demo": "projectile-drag",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "3.4",
+          "title": "Motion with Constant Acceleration"
+        },
+        {
+          "vol": 1,
+          "sec": "4.3",
+          "title": "Projectile Motion"
+        },
+        {
+          "vol": 1,
+          "sec": "6.4",
+          "title": "Drag Force and Terminal Speed"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "Two dimensional projectile measurements and drag. Not a general motion-graph or relative-motion lesson.",
+      "handouts": [
+        "projectile-drag"
+      ],
+      "title": "Projectile Range",
+      "url": "demos/projectile-drag.html"
+    },
+    {
+      "demo": "potential-curves",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "7.1",
+          "title": "Work"
+        },
+        {
+          "vol": 1,
+          "sec": "7.3",
+          "title": "Work-Energy Theorem"
+        },
+        {
+          "vol": 1,
+          "sec": "8.1",
+          "title": "Potential Energy of a System"
+        },
+        {
+          "vol": 1,
+          "sec": "8.2",
+          "title": "Conservative and Non-Conservative Forces"
+        },
+        {
+          "vol": 1,
+          "sec": "8.3",
+          "title": "Conservation of Energy"
+        },
+        {
+          "vol": 1,
+          "sec": "8.4",
+          "title": "Potential Energy Diagrams and Stability"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Potential diagrams and conservative force/work; limited support for general applied-work problems. Owner authorized a short student activity, not a full apparatus lab.",
+      "title": "Potential Energy Curves",
+      "url": "demos/potential-curves.html"
+    },
+    {
+      "demo": "collisions",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "9.1",
+          "title": "Linear Momentum"
+        },
+        {
+          "vol": 1,
+          "sec": "9.2",
+          "title": "Impulse and Collisions"
+        },
+        {
+          "vol": 1,
+          "sec": "9.3",
+          "title": "Conservation of Linear Momentum"
+        },
+        {
+          "vol": 1,
+          "sec": "9.4",
+          "title": "Types of Collisions"
+        },
+        {
+          "vol": 1,
+          "sec": "9.5",
+          "title": "Collisions in Multiple Dimensions"
+        },
+        {
+          "vol": 1,
+          "sec": "9.6",
+          "title": "Center of Mass"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "Photogate measurements, momentum and restitution; impulse and center-of-mass topics are partial.",
+      "handouts": [
+        "collisions"
+      ],
+      "title": "Collisions and Momentum",
+      "url": "demos/collisions.html"
+    },
+    {
+      "demo": "rotation",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "10.1",
+          "title": "Rotational Variables"
+        },
+        {
+          "vol": 1,
+          "sec": "10.2",
+          "title": "Rotation with Constant Angular Acceleration"
+        },
+        {
+          "vol": 1,
+          "sec": "10.3",
+          "title": "Relating Angular and Translational Quantities"
+        },
+        {
+          "vol": 1,
+          "sec": "10.4",
+          "title": "Moment of Inertia and Rotational Kinetic Energy"
+        },
+        {
+          "vol": 1,
+          "sec": "10.6",
+          "title": "Torque"
+        },
+        {
+          "vol": 1,
+          "sec": "10.7",
+          "title": "Newton’s Second Law for Rotation"
+        },
+        {
+          "vol": 1,
+          "sec": "11.1",
+          "title": "Rolling Motion"
+        },
+        {
+          "vol": 1,
+          "sec": "11.2",
+          "title": "Angular Momentum"
+        },
+        {
+          "vol": 1,
+          "sec": "11.3",
+          "title": "Conservation of Angular Momentum"
+        },
+        {
+          "vol": 1,
+          "sec": "12.1",
+          "title": "Conditions for Static Equilibrium"
+        },
+        {
+          "vol": 1,
+          "sec": "12.2",
+          "title": "Examples of Static Equilibrium"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Door, rolling race, spinner and seesaw; partial static equilibrium examples, no stress/strain model. Short activity authorized; lecture role retained pending Steve’s review.",
+      "title": "Rotation and Torque",
+      "url": "demos/rotation.html"
+    },
+    {
+      "demo": "kepler-orbits",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "13.1",
+          "title": "Newton's Law of Universal Gravitation"
+        },
+        {
+          "vol": 1,
+          "sec": "13.3",
+          "title": "Gravitational Potential Energy and Total Energy"
+        },
+        {
+          "vol": 1,
+          "sec": "13.4",
+          "title": "Satellite Orbits and Energy"
+        },
+        {
+          "vol": 1,
+          "sec": "13.5",
+          "title": "Kepler's Laws of Planetary Motion"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "Orbit timer/ruler and third-law readings; gravity remains a Physics I application.",
+      "handouts": [
+        "kepler-orbits"
+      ],
+      "title": "Kepler's Laws",
+      "url": "demos/kepler-orbits.html"
+    },
+    {
+      "demo": "catenary",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "12.1",
+          "title": "Conditions for Static Equilibrium"
+        },
+        {
+          "vol": 1,
+          "sec": "12.2",
+          "title": "Examples of Static Equilibrium"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Specialized equilibrium of a hanging chain/arch. Does not replace a general free-body-diagram or equilibrium activity.",
+      "title": "Hanging Chains and Arches",
+      "url": "demos/catenary.html"
+    },
+    {
+      "demo": "fluids",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "14.1",
+          "title": "Fluids, Density, and Pressure"
+        },
+        {
+          "vol": 1,
+          "sec": "14.2",
+          "title": "Measuring Pressure"
+        },
+        {
+          "vol": 1,
+          "sec": "14.3",
+          "title": "Pascal's Principle and Hydraulics"
+        },
+        {
+          "vol": 1,
+          "sec": "14.4",
+          "title": "Archimedes’ Principle and Buoyancy"
+        },
+        {
+          "vol": 1,
+          "sec": "14.5",
+          "title": "Fluid Dynamics"
+        },
+        {
+          "vol": 1,
+          "sec": "14.6",
+          "title": "Bernoulli’s Equation"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "Pressure, buoyancy and ideal flow; viscosity/turbulence not modeled quantitatively.",
+      "handouts": [
+        "fluids"
+      ],
+      "title": "Fluids: Pressure, Buoyancy and Flow",
+      "url": "demos/fluids.html"
+    },
+    {
+      "demo": "springs",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "15.1",
+          "title": "Simple Harmonic Motion"
+        },
+        {
+          "vol": 1,
+          "sec": "15.2",
+          "title": "Energy in Simple Harmonic Motion"
+        },
+        {
+          "vol": 1,
+          "sec": "15.5",
+          "title": "Damped Oscillations"
+        },
+        {
+          "vol": 1,
+          "sec": "15.6",
+          "title": "Forced Oscillations"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-feature",
+      "note": "Hold handout revision for Claude’s unknown-spring controls; keep automatic period readout available.",
+      "handouts": [
+        "springs"
+      ],
+      "title": "Springs and Oscillations",
+      "url": "demos/springs.html"
+    },
+    {
+      "demo": "double-pendulum",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "15.4",
+          "title": "Pendulums"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Small-angle pendulum comparison is relevant; nonlinear double-pendulum chaos is an extension beyond this section.",
+      "title": "Pendulums and Chaos",
+      "url": "demos/double-pendulum.html"
+    },
+    {
+      "demo": "coulomb-sandbox",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "5.3",
+          "title": "Coulomb's Law"
+        },
+        {
+          "vol": 2,
+          "sec": "5.4",
+          "title": "Electric Field"
+        },
+        {
+          "vol": 2,
+          "sec": "5.5",
+          "title": "Calculating Electric Fields of Charge Distributions"
+        },
+        {
+          "vol": 2,
+          "sec": "5.6",
+          "title": "Electric Field Lines"
+        },
+        {
+          "vol": 2,
+          "sec": "5.7",
+          "title": "Electric Dipoles"
+        },
+        {
+          "vol": 2,
+          "sec": "7.1",
+          "title": "Electric Potential Energy"
+        },
+        {
+          "vol": 2,
+          "sec": "7.2",
+          "title": "Electric Potential and Potential Difference"
+        },
+        {
+          "vol": 2,
+          "sec": "7.3",
+          "title": "Calculations of Electric Potential"
+        },
+        {
+          "vol": 2,
+          "sec": "7.4",
+          "title": "Determining Field from Potential"
+        },
+        {
+          "vol": 2,
+          "sec": "7.5",
+          "title": "Equipotential Surfaces and Conductors"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "Discrete charges and probe V/E. Extended distributions and conducting-surface equilibrium are not general models here.",
+      "handouts": [
+        "coulomb-sandbox"
+      ],
+      "title": "Coulomb Sandbox",
+      "url": "demos/coulomb-sandbox.html"
+    },
+    {
+      "demo": "gauss-law",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "6.1",
+          "title": "Electric Flux"
+        },
+        {
+          "vol": 2,
+          "sec": "6.2",
+          "title": "Explaining Gauss’s Law"
+        },
+        {
+          "vol": 2,
+          "sec": "6.3",
+          "title": "Applying Gauss’s Law"
+        },
+        {
+          "vol": 2,
+          "sec": "6.4",
+          "title": "Conductors in Electrostatic Equilibrium"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "Numerical flux for point charges and symmetry profiles; conductor examples do not imply a general electrostatic conductor solver.",
+      "handouts": [
+        "gauss-law"
+      ],
+      "title": "Gauss's Law",
+      "url": "demos/gauss-law.html"
+    },
+    {
+      "demo": "capacitors",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "8.1",
+          "title": "Capacitors and Capacitance"
+        },
+        {
+          "vol": 2,
+          "sec": "8.2",
+          "title": "Capacitors in Series and in Parallel"
+        },
+        {
+          "vol": 2,
+          "sec": "8.3",
+          "title": "Energy Stored in a Capacitor"
+        },
+        {
+          "vol": 2,
+          "sec": "8.4",
+          "title": "Capacitor with a Dielectric"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "Ideal parallel plates, dielectric and networks; microscopic polarization is not simulated.",
+      "handouts": [
+        "capacitors"
+      ],
+      "title": "Capacitors and Dielectrics",
+      "url": "demos/capacitors.html"
+    },
+    {
+      "demo": "circuits",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "9.1",
+          "title": "Electrical Current"
+        },
+        {
+          "vol": 2,
+          "sec": "9.4",
+          "title": "Ohm's Law"
+        },
+        {
+          "vol": 2,
+          "sec": "9.5",
+          "title": "Electrical Energy and Power"
+        },
+        {
+          "vol": 2,
+          "sec": "10.1",
+          "title": "Electromotive Force"
+        },
+        {
+          "vol": 2,
+          "sec": "10.2",
+          "title": "Resistors in Series and Parallel"
+        },
+        {
+          "vol": 2,
+          "sec": "10.3",
+          "title": "Kirchhoff's Rules"
+        },
+        {
+          "vol": 2,
+          "sec": "10.4",
+          "title": "Electrical Measuring Instruments"
+        },
+        {
+          "vol": 2,
+          "sec": "10.5",
+          "title": "RC Circuits"
+        },
+        {
+          "vol": 2,
+          "sec": "14.2",
+          "title": "Self-Inductance and Inductors"
+        },
+        {
+          "vol": 2,
+          "sec": "14.3",
+          "title": "Energy in a Magnetic Field"
+        },
+        {
+          "vol": 2,
+          "sec": "14.4",
+          "title": "RL Circuits"
+        },
+        {
+          "vol": 2,
+          "sec": "14.5",
+          "title": "Oscillations in an LC Circuit"
+        },
+        {
+          "vol": 2,
+          "sec": "14.6",
+          "title": "RLC Series Circuits"
+        },
+        {
+          "vol": 2,
+          "sec": "15.1",
+          "title": "AC Sources"
+        },
+        {
+          "vol": 2,
+          "sec": "15.2",
+          "title": "Simple AC Circuits"
+        },
+        {
+          "vol": 2,
+          "sec": "15.3",
+          "title": "RLC Series Circuits with AC"
+        },
+        {
+          "vol": 2,
+          "sec": "15.4",
+          "title": "Power in an AC Circuit"
+        },
+        {
+          "vol": 2,
+          "sec": "15.5",
+          "title": "Resonance in an AC Circuit"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "One demo, several handouts. AC Chapter 15 references are going-further/later material, not required syllabus coverage. No microscopic resistivity model.",
+      "handouts": [
+        "dc-circuits",
+        "rc-circuits",
+        "rlc-transients",
+        "ac-circuits"
+      ],
+      "title": "Circuits",
+      "url": "demos/circuits.html"
+    },
+    {
+      "demo": "magnetic-force",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "11.2",
+          "title": "Magnetic Fields and Lines"
+        },
+        {
+          "vol": 2,
+          "sec": "11.3",
+          "title": "Motion of a Charged Particle in a Magnetic Field"
+        },
+        {
+          "vol": 2,
+          "sec": "11.7",
+          "title": "Applications of Magnetic Forces and Fields"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-feature",
+      "note": "Hold for Claude’s Hall probe and final control names. Charged particles/cyclotron exist; Hall effect and force on wires/loops are not certified by this entry.",
+      "handouts": [
+        "magnetic-force"
+      ],
+      "title": "Charges in Magnetic Fields",
+      "url": "demos/magnetic-force.html"
+    },
+    {
+      "demo": "currents-fields",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "11.4",
+          "title": "Magnetic Force on a Current-Carrying Conductor"
+        },
+        {
+          "vol": 2,
+          "sec": "11.5",
+          "title": "Force and Torque on a Current Loop"
+        },
+        {
+          "vol": 2,
+          "sec": "12.1",
+          "title": "The Biot-Savart Law"
+        },
+        {
+          "vol": 2,
+          "sec": "12.2",
+          "title": "Magnetic Field Due to a Thin Straight Wire"
+        },
+        {
+          "vol": 2,
+          "sec": "12.3",
+          "title": "Magnetic Force between Two Parallel Currents"
+        },
+        {
+          "vol": 2,
+          "sec": "12.4",
+          "title": "Magnetic Field of a Current Loop"
+        },
+        {
+          "vol": 2,
+          "sec": "12.5",
+          "title": "Ampère’s Law"
+        },
+        {
+          "vol": 2,
+          "sec": "12.6",
+          "title": "Solenoids and Toroids"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Lecture demonstration only. Parallel-current force and dipole torque support selected magnetic-force topics; no new handout requested.",
+      "title": "Magnetic Fields of Currents",
+      "url": "demos/currents-fields.html"
+    },
+    {
+      "demo": "faraday",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "13.1",
+          "title": "Faraday’s Law"
+        },
+        {
+          "vol": 2,
+          "sec": "13.2",
+          "title": "Lenz's Law"
+        },
+        {
+          "vol": 2,
+          "sec": "13.3",
+          "title": "Motional Emf"
+        },
+        {
+          "vol": 2,
+          "sec": "13.6",
+          "title": "Electric Generators and Back Emf"
+        },
+        {
+          "vol": 2,
+          "sec": "14.1",
+          "title": "Mutual Inductance"
+        },
+        {
+          "vol": 2,
+          "sec": "14.2",
+          "title": "Self-Inductance and Inductors"
+        },
+        {
+          "vol": 2,
+          "sec": "14.3",
+          "title": "Energy in a Magnetic Field"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "Magnet, generator, sliding bar and Two coils. Does not directly visualize nonconservative induced electric-field loops or eddy-current distributions.",
+      "handouts": [
+        "faraday"
+      ],
+      "title": "Faraday's and Lenz's Laws",
+      "url": "demos/faraday.html"
+    },
+    {
+      "demo": "em-waves",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "16.1",
+          "title": "Maxwell’s Equations and Electromagnetic Waves"
+        },
+        {
+          "vol": 2,
+          "sec": "16.2",
+          "title": "Plane Electromagnetic Waves"
+        },
+        {
+          "vol": 2,
+          "sec": "16.3",
+          "title": "Energy Carried by Electromagnetic Waves"
+        },
+        {
+          "vol": 2,
+          "sec": "16.4",
+          "title": "Momentum and Radiation Pressure"
+        },
+        {
+          "vol": 2,
+          "sec": "16.5",
+          "title": "The Electromagnetic Spectrum"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "needs-feature",
+      "note": "Plane-wave E/B, energy and radiation-pressure examples exist. Maxwell/displacement-current coverage is partial: no charging-capacitor displacement-current apparatus. Required endpoint is Maxwell and light as an EM wave; no full lab requested.",
+      "title": "Electromagnetic Waves",
+      "url": "demos/em-waves.html"
+    },
+    {
+      "demo": "optics-bench",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "1.2",
+          "title": "The Law of Reflection"
+        },
+        {
+          "vol": 3,
+          "sec": "1.3",
+          "title": "Refraction"
+        },
+        {
+          "vol": 3,
+          "sec": "1.4",
+          "title": "Total Internal Reflection"
+        },
+        {
+          "vol": 3,
+          "sec": "2.1",
+          "title": "Images Formed by Plane Mirrors"
+        },
+        {
+          "vol": 3,
+          "sec": "2.2",
+          "title": "Spherical Mirrors"
+        },
+        {
+          "vol": 3,
+          "sec": "2.3",
+          "title": "Images Formed by Refraction"
+        },
+        {
+          "vol": 3,
+          "sec": "2.4",
+          "title": "Thin Lenses"
+        },
+        {
+          "vol": 3,
+          "sec": "2.7",
+          "title": "The Simple Magnifier"
+        },
+        {
+          "vol": 3,
+          "sec": "2.8",
+          "title": "Microscopes and Telescopes"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Optional after required E&M endpoint. Verify each optical-instrument setup before treating the section as complete.",
+      "title": "Optics Bench",
+      "url": "demos/optics-bench.html"
+    },
+    {
+      "demo": "polarization",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "1.7",
+          "title": "Polarization"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Optional optics only; current handout remains outside the rewrite queue.",
+      "title": "Polarization",
+      "url": "demos/polarization.html"
+    },
+    {
+      "demo": "acoustic-levitation",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Acoustic Levitation",
+      "url": "demos/acoustic-levitation.html"
+    },
+    {
+      "demo": "binding-energy",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Nuclear Binding Energy",
+      "url": "demos/binding-energy.html"
+    },
+    {
+      "demo": "black-holes",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "13.7",
+          "title": "Einstein's Theory of Gravity"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Qualitative GR connection; detailed lensing exceeds this section.",
+      "title": "Black Holes and Lensing",
+      "url": "demos/black-holes.html"
+    },
+    {
+      "demo": "blackbody",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "1.6",
+          "title": "Mechanisms of Heat Transfer"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Thermal radiation connection; spectral/quantum treatment extends beyond Vol. 2 §1.6.",
+      "title": "Blackbody Radiation",
+      "url": "demos/blackbody.html"
+    },
+    {
+      "demo": "bz-reaction",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Belousov–Zhabotinsky Reaction",
+      "url": "demos/bz-reaction.html"
+    },
+    {
+      "demo": "chladni",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Chladni Plates",
+      "url": "demos/chladni.html"
+    },
+    {
+      "demo": "compton",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Compton Scattering",
+      "url": "demos/compton.html"
+    },
+    {
+      "demo": "diffraction-grating",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Diffraction beyond the two syllabi; Volume 3 alignment deferred.",
+      "title": "Diffraction Grating",
+      "url": "demos/diffraction-grating.html"
+    },
+    {
+      "demo": "distance-ladder",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Cosmic Distance Ladder",
+      "url": "demos/distance-ladder.html"
+    },
+    {
+      "demo": "dna",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "DNA in 3D",
+      "url": "demos/dna.html"
+    },
+    {
+      "demo": "doppler",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "17.7",
+          "title": "The Doppler Effect"
+        },
+        {
+          "vol": 1,
+          "sec": "17.8",
+          "title": "Shock Waves"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Sound not in the supplied syllabi.",
+      "title": "Doppler Effect and Shock Waves",
+      "url": "demos/doppler.html"
+    },
+    {
+      "demo": "double-slit",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Interference and single-particle extension; Volume 3 alignment deferred.",
+      "title": "Double Slit, One Particle at a Time",
+      "url": "demos/double-slit.html"
+    },
+    {
+      "demo": "e-over-m",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "11.3",
+          "title": "Motion of a Charged Particle in a Magnetic Field"
+        },
+        {
+          "vol": 2,
+          "sec": "11.7",
+          "title": "Applications of Magnetic Forces and Fields"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Dedicated modern lab manual alignment paused.",
+      "title": "e/m of the Electron",
+      "url": "demos/e-over-m.html"
+    },
+    {
+      "demo": "electron-diffraction",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Electron Diffraction",
+      "url": "demos/electron-diffraction.html"
+    },
+    {
+      "demo": "exoplanets",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Finding Exoplanets",
+      "url": "demos/exoplanets.html"
+    },
+    {
+      "demo": "franck-hertz",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Franck–Hertz Experiment",
+      "url": "demos/franck-hertz.html"
+    },
+    {
+      "demo": "gamma-spectroscopy",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Gamma Spectroscopy",
+      "url": "demos/gamma-spectroscopy.html"
+    },
+    {
+      "demo": "heat-engines",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "3.1",
+          "title": "Thermodynamic Systems"
+        },
+        {
+          "vol": 2,
+          "sec": "3.2",
+          "title": "Work, Heat, and Internal Energy"
+        },
+        {
+          "vol": 2,
+          "sec": "3.3",
+          "title": "First Law of Thermodynamics"
+        },
+        {
+          "vol": 2,
+          "sec": "3.4",
+          "title": "Thermodynamic Processes"
+        },
+        {
+          "vol": 2,
+          "sec": "3.6",
+          "title": "Adiabatic Processes for an Ideal Gas"
+        },
+        {
+          "vol": 2,
+          "sec": "4.2",
+          "title": "Heat Engines"
+        },
+        {
+          "vol": 2,
+          "sec": "4.3",
+          "title": "Refrigerators and Heat Pumps"
+        },
+        {
+          "vol": 2,
+          "sec": "4.5",
+          "title": "The Carnot Cycle"
+        },
+        {
+          "vol": 2,
+          "sec": "4.6",
+          "title": "Entropy"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Thermodynamics deferred.",
+      "title": "Heat Engine Cycles",
+      "url": "demos/heat-engines.html"
+    },
+    {
+      "demo": "hr-diagram",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Stellar Evolution",
+      "url": "demos/hr-diagram.html"
+    },
+    {
+      "demo": "hydrogen-orbitals",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Hydrogen Orbitals",
+      "url": "demos/hydrogen-orbitals.html"
+    },
+    {
+      "demo": "ideal-gas",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "2.1",
+          "title": "Molecular Model of an Ideal Gas"
+        },
+        {
+          "vol": 2,
+          "sec": "2.2",
+          "title": "Pressure, Temperature, and RMS Speed"
+        },
+        {
+          "vol": 2,
+          "sec": "2.3",
+          "title": "Heat Capacity and Equipartition of Energy"
+        },
+        {
+          "vol": 2,
+          "sec": "2.4",
+          "title": "Distribution of Molecular Speeds"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Thermodynamics deferred; numerical gas assumptions require separate review.",
+      "title": "Gas in a Box",
+      "url": "demos/ideal-gas.html"
+    },
+    {
+      "demo": "ising",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Ising Model",
+      "url": "demos/ising.html"
+    },
+    {
+      "demo": "lagrange-points",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Lagrange Points",
+      "url": "demos/lagrange-points.html"
+    },
+    {
+      "demo": "lasers",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Lasers and Stimulated Emission",
+      "url": "demos/lasers.html"
+    },
+    {
+      "demo": "moon-phases",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Moon Phases",
+      "url": "demos/moon-phases.html"
+    },
+    {
+      "demo": "photoelectric",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Photoelectric Effect",
+      "url": "demos/photoelectric.html"
+    },
+    {
+      "demo": "quantum-waves",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Quantum Wave Packets",
+      "url": "demos/quantum-waves.html"
+    },
+    {
+      "demo": "radioactive-decay",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Radioactive Decay",
+      "url": "demos/radioactive-decay.html"
+    },
+    {
+      "demo": "relativity-em",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Magnetism from Relativity",
+      "url": "demos/relativity-em.html"
+    },
+    {
+      "demo": "resonators",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "17.2",
+          "title": "Speed of Sound"
+        },
+        {
+          "vol": 1,
+          "sec": "17.4",
+          "title": "Normal Modes of a Standing Sound Wave"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Acoustics deferred.",
+      "title": "Resonators",
+      "url": "demos/resonators.html"
+    },
+    {
+      "demo": "rotation-curves",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Galaxy Rotation Curves",
+      "url": "demos/rotation-curves.html"
+    },
+    {
+      "demo": "rutherford",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Rutherford Scattering",
+      "url": "demos/rutherford.html"
+    },
+    {
+      "demo": "seasons",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Reasons for Seasons",
+      "url": "demos/seasons.html"
+    },
+    {
+      "demo": "spacetime",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Spacetime Diagrams",
+      "url": "demos/spacetime.html"
+    },
+    {
+      "demo": "spectra",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Spectra Explorer",
+      "url": "demos/spectra.html"
+    },
+    {
+      "demo": "speed-of-light",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "1.1",
+          "title": "The Propagation of Light"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Dedicated modern bench deferred despite introductory speed-of-light connection.",
+      "title": "Speed of Light",
+      "url": "demos/speed-of-light.html"
+    },
+    {
+      "demo": "spin-resonance",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Spin Resonance",
+      "url": "demos/spin-resonance.html"
+    },
+    {
+      "demo": "standing-waves",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "16.1",
+          "title": "Traveling Waves"
+        },
+        {
+          "vol": 1,
+          "sec": "16.2",
+          "title": "Mathematics of Waves"
+        },
+        {
+          "vol": 1,
+          "sec": "16.3",
+          "title": "Wave Speed on a Stretched String"
+        },
+        {
+          "vol": 1,
+          "sec": "16.5",
+          "title": "Interference of Waves"
+        },
+        {
+          "vol": 1,
+          "sec": "16.6",
+          "title": "Standing Waves and Resonance"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Waves not in the supplied syllabi.",
+      "title": "Standing Waves",
+      "url": "demos/standing-waves.html"
+    },
+    {
+      "demo": "star-slice",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "Star Slice",
+      "url": "demos/star-slice.html"
+    },
+    {
+      "demo": "thin-films",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Wave optics beyond the optional basic-optics scope; Volume 3 alignment deferred.",
+      "title": "Thin Film Interference",
+      "url": "demos/thin-films.html"
+    },
+    {
+      "demo": "tides",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "13.6",
+          "title": "Tidal Forces"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Not in the specified teaching sequence; retain for later.",
+      "title": "Tides",
+      "url": "demos/tides.html"
+    },
+    {
+      "demo": "timbre",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "17.4",
+          "title": "Normal Modes of a Standing Sound Wave"
+        },
+        {
+          "vol": 1,
+          "sec": "17.5",
+          "title": "Sources of Musical Sound"
+        },
+        {
+          "vol": 1,
+          "sec": "17.6",
+          "title": "Beats"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Acoustics deferred.",
+      "title": "Timbre and Harmonics",
+      "url": "demos/timbre.html"
+    },
+    {
+      "demo": "white-dwarf-cooling",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "title": "White Dwarf Cooling",
+      "url": "demos/white-dwarf-cooling.html"
+    }
+  ]
+}
