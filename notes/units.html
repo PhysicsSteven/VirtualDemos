@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Units, Scales and Estimates: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Units, Scales and Estimates</h1><ul class="meta"><li><a href="../demos/units.html">Open the demo</a></li><li>PHYS 201</li><li>15 to 40 minutes, a tab at a time</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Physics spans about 42 powers of ten in length alone; a logarithmic scale is the only way to see it at once.</li>
+<li>A unit conversion multiplies by factors equal to 1; with exact definitions (1 in = 2.54 cm, 1 mi = 1609.344 m, 1 lb = 0.45359237 kg) there is no rounding until the end.</li>
+<li>Dimensions check any formula, and often find it: the period of a pendulum must be √(L/g) times a pure number, and its mass cannot appear.</li>
+<li>A result should carry the precision of the least precise measurement: significant figures for products and quotients, decimal places for sums and differences.</li>
+<li>A Fermi estimate breaks a question into factors you can guess, and gives an order of magnitude with a range.</li>
+</ul>
+<h2>Before class</h2>
+<p>No prerequisites. Each tab stands alone, so use them across the first week. <strong>Blind</strong> hides the results (and the object names on the ruler) for predictions.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Scale of things.</strong> Blind on: ask where a red blood cell, Everest and the Moon's distance go on the ruler, then reveal. A person sits near 10⁰ m; the hydrogen atom is as far below us (10 powers) as the Earth–Sun distance is above.</li>
+<li><strong>Convert units.</strong> 65 mi/h = 29.0576 m/s exactly. Point at the chain: mi cancels mi, h cancels h. Then 2000 kcal (a day's food) = 2.32 kWh.</li>
+<li><strong>Dimensional analysis.</strong> Pendulum: students move the sliders until the dimensions read T. The mass exponent must be 0. Show the answer: t = C√(L/g), C = 2π. Then the orbit: t ∝ √(r³/GM), Kepler's third law.</li>
+<li><strong>Significant figures.</strong> 12.07 × 0.0350 = 0.42245 on the calculator, written 0.422. 100.0 − 2.351 = 97.6. Then 1500 ÷ 3.2: is 1500 two figures or four? Writing 1.5 × 10³ or 1500. removes the doubt.</li>
+<li><strong>Fermi.</strong> Heartbeats in a lifetime: 2.2 × 10⁹ to 4.7 × 10⁹, about 3 billion.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Convert 65 mi/h to m/s with a chain of exact factors.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Use dimensions to show that the speed of a wave on a string is v = C√(T/μ).</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Why can't dimensional analysis find the 2π in the pendulum's period? Can it tell you that the mass does not matter?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Give the results with the right precision: 12.07 × 0.0350; 100.0 − 2.351; 3.50 × 10⁻² × 1.2 × 10³.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Estimate how many days it would take to walk around the equator. State your factors.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"More digits means more accurate."</strong> A result cannot be more precise than the measurements behind it.</li>
+<li><strong>"Unit conversion changes the quantity."</strong> Each factor equals 1; only the units change.</li>
+<li><strong>"Dimensional analysis gives the whole formula."</strong> It gives the powers, not dimensionless constants like 2π or √2, and fails if the answer depends on a dimensionless ratio of the inputs.</li>
+<li><strong>"An estimate is a guess."</strong> A Fermi estimate is a reasoned product of factors, with a range.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Ruler sizes are typical or approximate (proton charge diameter 1.7 fm; hydrogen atom 2a₀ = 0.106 nm; human hair about 70 μm, ranging 20 to 180 μm; 1 au = 149,597,870,700 m exactly; light year from c and the Julian year; Milky Way disk about 100,000 ly; observable universe about 93 billion ly across).</li>
+<li>Conversion factors are the exact definitions, except the BTU (international table value) and the year (Julian, 365.25 days). The eV is exact since the 2019 SI.</li>
+<li>Dimensional analysis solves the exponent equations for [M, L, T]; a variable that cannot appear gets exponent 0.</li>
+<li>Significant figures: a decimal point makes trailing zeros significant; trailing zeros in a whole number without one are ambiguous and counted as not significant. Products keep the fewest significant figures, sums the fewest decimal places; halves round up.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

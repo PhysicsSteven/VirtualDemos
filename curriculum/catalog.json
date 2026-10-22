@@ -367,6 +367,17 @@
    "title": "Mechanics",
    "demos": [
     {
+     "demo": "units",
+     "title": "Units, Scales and Estimates",
+     "desc": "The first week toolkit: the scale of things from protons to the universe, exact unit conversions, dimensional analysis, significant figures and Fermi estimates.",
+     "tags": [
+      "units",
+      "dimensional analysis",
+      "significant figures",
+      "Fermi estimates"
+     ]
+    },
+    {
      "demo": "vectors",
      "title": "Vectors and Relative Motion",
      "desc": "Drag arrow tips to see components, sums, differences, and dot and cross products, then steer a boat across a river where its velocity adds to the current's.",

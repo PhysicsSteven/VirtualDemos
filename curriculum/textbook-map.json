@@ -878,10 +878,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "units"
+      ],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Scale of things: a logarithmic ruler from a proton to the observable universe."
     },
     {
       "vol": 1,
@@ -893,10 +895,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "units"
+      ],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Convert units: SI and customary units with their exact definitions."
     },
     {
       "vol": 1,
@@ -908,10 +912,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "units"
+      ],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Convert units: factor label chains with exact factors."
     },
     {
       "vol": 1,
@@ -923,10 +929,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "units"
+      ],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Dimensional analysis: find exponents for five formulas; dimensionless constants are stated."
     },
     {
       "vol": 1,
@@ -938,10 +946,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "units"
+      ],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Fermi estimates: three guided estimates with low/high factors."
     },
     {
       "vol": 1,
@@ -953,10 +963,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "units"
+      ],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Significant figures: sig figs, decimal places and the combination rules."
     },
     {
       "vol": 1,
@@ -971,7 +983,7 @@
       "status": "missing",
       "demos": [],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Problem solving strategy: worksheet material (requested from GPT). Units, Scales and Estimates supports the unit and dimension checks."
     },
     {
       "vol": 1,
@@ -4230,6 +4242,51 @@
     }
   ],
   "demos": [
+    {
+      "demo": "units",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "1.1",
+          "title": "The Scope and Scale of Physics"
+        },
+        {
+          "vol": 1,
+          "sec": "1.2",
+          "title": "Units and Standards"
+        },
+        {
+          "vol": 1,
+          "sec": "1.3",
+          "title": "Unit Conversion"
+        },
+        {
+          "vol": 1,
+          "sec": "1.4",
+          "title": "Dimensional Analysis"
+        },
+        {
+          "vol": 1,
+          "sec": "1.5",
+          "title": "Estimates and Fermi Calculations"
+        },
+        {
+          "vol": 1,
+          "sec": "1.6",
+          "title": "Significant Figures"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Tabs: Scale of things (log ruler of typical sizes), Convert units (exact factor chains), Dimensional analysis (exponent sliders for five formulas, Show the answer), Significant figures (two measurements and an operation), Fermi estimates (three questions with low/high factors); Blind hides the results.",
+      "handouts": [],
+      "title": "Units, Scales and Estimates",
+      "url": "demos/units.html"
+    },
     {
       "demo": "vectors",
       "course": [

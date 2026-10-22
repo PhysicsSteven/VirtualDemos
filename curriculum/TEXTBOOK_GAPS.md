@@ -20,19 +20,13 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 - Next writing queue: resistivity and wire-force (Physics II). The new lecture demos do not need full student labs.
 - Near-surface gravity §13.2 is covered by Gravity Near Earth (Claude, 2026-10-22).
 - Moment-of-inertia calculation §10.5 is partial: discrete masses/standard formulas exist; a continuous-body integration activity is absent.
-- Chapter 1 remains worksheet material. Owner-deferred gaps include §8.5 (§11.4, §13.7 and §14.7 were built on main 2026-10-22 after Steve said to keep filling gaps); a missing label is not authorization to build them now.
+- Chapter 1: §§1.1–1.6 are covered by Units, Scales and Estimates (Claude, 2026-10-22); §1.7 problem solving remains worksheet material. Owner-deferred gap: §8.5 (§11.4, §13.7 and §14.7 were built on main 2026-10-22 after Steve said to keep filling gaps); a missing label is not authorization to build them now.
 - Thermodynamics and non-syllabus waves/sound remain later. Basic optics remains optional after Maxwell/EM waves.
 
 ## Every unmapped Volume 1/2 section
 
 | Course / priority | Volume | Section | Exact textbook title | Status |
 |---|---:|---|---|---|
-| physics-1 | 1 | 1.1 | The Scope and Scale of Physics | missing |
-| physics-1 | 1 | 1.2 | Units and Standards | missing |
-| physics-1 | 1 | 1.3 | Unit Conversion | missing |
-| physics-1 | 1 | 1.4 | Dimensional Analysis | missing |
-| physics-1 | 1 | 1.5 | Estimates and Fermi Calculations | missing |
-| physics-1 | 1 | 1.6 | Significant Figures | missing |
 | physics-1 | 1 | 1.7 | Solving Problems in Physics | missing |
 | physics-1 | 1 | 8.5 | Sources of Energy | missing |
 | physics-2 | 2 | 7.6 | Applications of Electrostatics | missing |

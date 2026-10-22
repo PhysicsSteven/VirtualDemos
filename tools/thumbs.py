@@ -55,6 +55,7 @@ OVERRIDES = {
     "impulse": {"wait": 2600, "js": "document.getElementById('go').click();"},
     "center-of-mass": {"wait": 600, "js": ""},
     "nonuniform-circular": {"wait": 3000, "js": "document.getElementById('go').click();"},
+    "units": {"wait": 600, "js": ""},
     "eddy-currents": {"wait": 3500, "js": "document.getElementById('drop').click();"},
     "wire-force": {"wait": 2500, "js": "document.querySelector('#presets button[data-p=\"motor\"]').click(); document.getElementById('spin').click();"},
     "induction": {"wait": 500, "js": "document.getElementById('next').click();"},
