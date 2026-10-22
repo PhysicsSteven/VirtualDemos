@@ -83,3 +83,7 @@ Use textbook-map.json for the two course pages; TEXTBOOK_GAPS.md explicitly sepa
 ## Physics I alignment delivered — 2026-10-22
 
 Seven existing Physics I activities now aligned (five labs and two lecture worksheets); private guides/references in TeacherKeys f5b1575. No missing demos built. Sixteen packages total across Physics I/II; 149 numerical groups in 14 suites passed, plus map contract and independent-reference checks. Browser/classroom acceptance remains open. Updated map/gaps need Claude’s recopy and course-page regeneration; verify deployed handout HTML routes. See validation/TEXTBOOK_ALIGNMENT_2026-10-22.md. No main merge authorized.
+
+## New Physics I labs delivered — 2026-10-22
+
+Motion-graphs, forces and stress-strain now have student/private instructor packages against main 3a13c79. Local results: 21 core groups, 97 independent comparisons, map contract and 34 exact control labels passed. Browser launch blocked by absent Chromium. Forces/stress-strain remain needs-feature for reported UI defects; no release promotion. See [evidence and requests](validation/NEW_MECHANICS_LABS_2026-10-22.md). Next handouts: resistivity and wire-force, after fresh coordination/main sync. No demo edits or main merge by GPT.

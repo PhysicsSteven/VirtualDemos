@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stress and Strain: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Stress and Strain</h1><ul class="meta"><li><a href="../demos/stress-strain.html">Open the demo</a></li><li>PHYS 201</li><li>25 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Stress is force per area, σ = F/A; strain is fractional stretch, ε = ΔL/L. Below the elastic limit they are proportional, σ = Yε, with Young's modulus Y a property of the material, not of the wire.</li>
+<li>So the same load stretches a thin wire more than a thick one, and a long wire more than a short one: ΔL = FL/(AY).</li>
+<li>Past the yield stress the wire stays longer when unloaded (plastic deformation); unloading follows a line parallel to the elastic one. At the tensile strength it breaks.</li>
+<li>Metals are stiff: a 3 kg load stretches a 2 m steel wire by about 1.5 mm.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know Hooke's law for springs. The wire is 2.000 m long; a dial gauge reads its extension to 0.001 mm. The drawing exaggerates the stretch; the gauge does not. Use <strong>Graph: zoom in on the elastic part</strong> to see the straight line, which is too steep to see on the full curve. The <strong>Mystery metal</strong> hides its own properties.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Mild steel, 0.50 mm.</strong> Add 1, 2, 3 kg: the gauge reads 0.500, 0.999, 1.499 mm, in proportion. Take the load off: back to zero.</li>
+<li>Ask Q2, then switch to <strong>Aluminium alloy</strong>: 3 kg now stretches it 4.28 mm, since Y is about 2.9 times smaller.</li>
+<li><strong>Copper (annealed).</strong> It yields at only 1.4 kg on this wire. Load it to 5 kg and take the load off: it stays much longer. Load it again: it is elastic up to the new, higher point (work hardening).</li>
+<li>Steel again, load slowly past 5.0 kg (yield) toward 8.0 kg (the tensile strength): watch the curve bend over, then the wire snaps.</li>
+<li>Lab: on the <strong>Mystery metal</strong>, capture several elastic loads and fit for Y; then find roughly where it stops returning to zero.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> A 0.50 mm steel wire 2.000 m long carries 3.0 kg. Find the stress, the strain and the extension (Y = 200 GPa). Check with the gauge.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Predict the extension under the same 3.0 kg for (a) a wire of the same steel with twice the diameter, (b) twice the length, (c) aluminium alloy (Y = 70 GPa).</p></div>
+
+<div class="q"><p><strong>Q3.</strong> What mass would make the 0.50 mm steel wire yield (250 MPa), and what mass would break it (400 MPa)? Why doesn't a thicker wire have a higher yield stress?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Annealed copper is loaded to 150 MPa and unloaded. Explain from the curve why it ends up longer, and estimate how much longer (the demo shows the permanent stretch).</p>
+<p><strong>Q5 (lab).</strong> From a fit of F against ΔL for loads in the elastic range, show that Y = slope × L/A. Why should the fit pass through the origin, and what would a nonzero intercept tell you?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A thicker wire is stiffer, so it has a larger Young's modulus."</strong> It takes more force per millimetre, but Y (stress over strain) is the same: area is divided out.</li>
+<li><strong>"Elastic means stretchy."</strong> Steel is very elastic (it returns exactly) while stretching very little.</li>
+<li><strong>"When the load is removed, the wire returns to its original length."</strong> Only below yield.</li>
+<li><strong>"The wire breaks at the highest point of the stress strain curve, and is weakest there."</strong> It reaches its tensile strength there; real wires then neck and break a little later.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Engineering stress and strain (original area and length). Curve: straight to the yield stress σ_y with slope Y; then smooth hardening to the tensile strength σ_u, reached at strain ε_u, held until fracture at ε_f. Unloading and reloading below the current flow stress are elastic with slope Y.</li>
+<li>Typical values: mild steel Y 200 GPa, σ_y 250 MPa, σ_u 400 MPa; annealed copper 120 GPa, 70 MPa, 220 MPa; an aluminium alloy 70 GPa, 270 MPa, 310 MPa. Real samples vary with composition and treatment.</li>
+<li>Ignored: necking, rate effects and creep, temperature, and the wire's own weight. The load is applied slowly (no dynamic overshoot).</li>
+<li>The dial gauge reads to 0.001 mm with no noise; scatter in a fit comes only from rounding.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

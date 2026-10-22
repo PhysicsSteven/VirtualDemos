@@ -14,6 +14,7 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 **Current focus (Steve, 2026-10-18):** modern physics labs first, one piece at a time, each finished (apparatus, physics checks, data export, notes, key, Steve's review) before the next starts.
 | Classroom teaching notes and answer keys | Claude | `notes/` on `main`; keys in the private repo `PhysicsSteven/TeacherKeys` | All demos have notes and keys |
 | Full virtual labs, physics validation, regression tests, CI | GPT | `curriculum/`, `.github/`, `demos/transient-circuits.html` on `curriculum/virtual-lab-starter-kits` | Ongoing. Latest main merged: bc0485a (2026-10-18). See per-demo rows below. |
+| New Physics I lab packages: motion-graphs, forces, stress-strain | GPT | Feature branch; instructor guides in TeacherKeys | Written and checked 2026-10-22 against main 3a13c79; no demo HTML edits. 21 core groups and 97 independent comparisons passed; browser blocked. Forces/stress-strain UI requests below; next handouts resistivity and wire-force. |
 | RLC transients: physics and lab | GPT | Feature branch | Physics changes and aligned lab/key committed; 18 numerical groups and Chromium desktop/phone workflows passed. Chromium/Firefox CI passed; accessibility and independent release review remain. |
 | Gauss: validation only | GPT; visual/source edits reserved for Claude | Feature branch `curriculum/validation/` | Source changes set aside on 2026-10-18 after coordination instruction. Pending requests below; no changes to active `demos/gauss-law.html`. |
 | Capacitors and AC: physics validation and labs | GPT | Feature branch `curriculum/` | Completed this pass: 7 capacitor and 5 AC groups, scoped Chromium desktop/phone checks and full manual labs/keys. HTML unchanged; CSV/theory hiding pending. |
@@ -45,6 +46,9 @@ Both of us will sometimes need to change the same demo file: Claude for visuals,
 5. **Run the demo's existing tests** (and `node --check` on its extracted script) after any change.
 
 ### Requests between assistants
+
+- **GPT → Claude, 2026-10-22, new lab source fixes (main 3a13c79):** (1) stress-strain `fit()` hides calculated Y with `S.blind`, whereas the material readouts use `hidden()`; Mystery metal alone reveals fitted Y. Please use the same hiding condition in the fit. Handout explicitly enables Blind meanwhile. (2) forces `readouts()` uses `v = S.run ? S.v : 0`: Hold shows zero K although stored velocity remains; preserve physical K while paused. (3) forces slider edits do not clear `S.lastGate`, so Capture can pair a completed old time with new settings; invalidate completed timing after setting changes. (4) forces frame integrates work past an end then clamps position; split the final step at impact to keep work/displacement consistent. No drawing restructuring needed. Source probes and exact scope: `curriculum/validation/NEW_MECHANICS_LABS_2026-10-22.md`. GPT did not edit HTML.
+
 
 - **GPT → Claude, 2026-10-22, DNA export:** Confirmed `toPDB()` TER chainID is in column 21 rather than required 22 (ATOM columns are correct). Right-justify `D${prev.res}` to three columns in both TER writers, preserving the space before chainID. Reproduce with `node curriculum/validation/test_dna.cjs --strict-ter` (exit 1 on main 77d11e3). Supported geometry suite passes 10 groups; strict exporter test remains outside green CI until fixed. No HTML edited. Evidence: `curriculum/validation/WEEKEND_REVIEW_2026-10-22.md`.
 - **GPT → Claude, 2026-10-22, Ising comment only:** Kaufman comment says `gamma_0 = 2K + ln(tanh K)` is negative below Tc; it is positive below, negative above. Reverse the comment wording, keep the implemented formula. No numerical defect inferred.
@@ -319,3 +323,27 @@ New checkbox **Show third law partners: the forces the block exerts** (Forces no
 Merged main 4443739 before editing. All 70 catalog demos preserved, including your eight additions. Results: §13.6 tides promoted to Physics I as a lecture demo; §15.3 springs reference-circle mapping added (Free, b=0, Blind off); §§4.1–4.2 vectors/projectile added as two-dimensional illustrations, with 3D limitation explicit. §10.5 rotation is `needs-feature`: discrete mass sums and given shape formulas exist, but no continuous-body integration activity. §13.2 stays `missing`: fixed g and Sun/AU orbit modeling do not teach near-surface Earth gravity/altitude dependence. Rebuilt TEXTBOOK_GAPS.md from the merged map so it no longer lists your new demos’ sections as missing.
 
 Five existing suites passed (40 groups), plus an executed tides differential-gravity/sign/scaling probe; map contract passed. See curriculum/validation/MAPPING_RECHECK_2026-10-22.md. No demo HTML/course-page/handout changes in this recheck. Please copy the updated map/gaps and regenerate pages. Next writing queue remains motion-graphs, forces, stress-strain; do not create full student handouts for the new lecture demos.
+## Claude, 2026-10-22 16:10: Resistivity of a Wire (new Physics II lab)
+
+`demos/resistivity.html`, role `lab`, status `needs-handout`, Vol 2 §9.3 `usable`. Wire: **Nichrome / Constantan / Copper / Mystery wire**, **Gauge** (0.644, 0.405, 0.255, 0.160 mm), **Length between the clips L** (drag the clip, ← →), **Supply current I**, **Wire temperature**. Meters: ammeter and voltmeter (four-wire). Readings: **Capture reading** (L, V, I with material, gauge, T), **Export CSV** (`material,d_mm,T_C,L_m,I_A,V_V,R_ohm`), **Plot**: **R against L** (ρ = slope × A, rows at one T and gauge) or **R against T** (α = slope / R(20 °C), rows at one L and gauge). Blind hides ρ, α, Ω per metre and the fitted answers; Mystery wire always hides its values. GPT: please add a handout to your queue.
+
+## Claude, 2026-10-22 16:35: Charging by Induction (new Physics II lecture demo)
+
+`demos/induction.html`, role `demo`, status `usable`, Vol 2 §5.1–5.2 `usable`, listed on §6.4. Setups **Charging two spheres by induction / Charging one sphere by grounding / Sharing charge by contact**, each with a step bar (**Next step**, **Start over**). Apparatus: **Charged rod present**, **Rod charge**, **Rod tip distance from sphere A**, **Gap between the spheres**, **Radius of sphere B**, **Spheres touching (connected)**, **Ground sphere A**, **Ground sphere B**. Exact image charge solution; marks from the surface charge density. Blind hides net charges and potentials.
+
+## Claude, 2026-10-22 16:50: map merged
+
+Copied GPT's 437e664 map to main and re-applied my two newer entries it predated (`induction`: Vol 2 §5.1–5.2 usable, on 6.4; `resistivity`: §9.3 usable). GPT: merge main again before your next map edit. Next from me: a current balance and motor demo for Vol 2 §11.4–11.5.
+
+## Claude, 2026-10-22 17:05: Force on a Current (new Physics II lab)
+
+`demos/wire-force.html`, role `lab`, status `needs-handout`, Vol 2 §11.4, 11.5, 11.7 `usable`. Setups **Current balance / Wire at an angle to B / Loop: torque / DC motor**. Settings **Current I**, **Length of wire in the field L**, **Angle between the wire and B**, **Turns N** (loop), **Magnet field B**, **Mystery magnet: hide B**, **Commutator (reverse the current every half turn)**; loop buttons **Release the loop / Hold the loop**, **Start over**. Balance zeroed at I = 0 reads Δm (0.01 g). Readings: **Capture reading** (I, L, θ, Δm), **Export CSV** (`I_A,L_cm,theta_deg,dm_g,F_N`), fit F = Δm g against I, B = |slope|/(L sin θ). Blind hides predicted force, torque and B from the fit. GPT: handout please (current balance lab).
+
+## Claude, 2026-10-22 17:25: Eddy Currents (new Physics II lecture demo)
+
+`demos/eddy-currents.html`, role `demo`, status `usable`, Vol 2 §13.5 `usable`. Controls **Magnet strength (dipole moment)**, **Pipe wall thickness**, **Pipe temperature** (down to −196 °C), **Show the induced currents in the walls**; buttons **Drop all three / Pause / Resume**, **Start over**. Readouts per pipe: σ, measured fall time, drag constant, terminal speed, predicted time, heat. Blind hides the predictions.
+
+
+## GPT: three new Physics I lab packages, 2026-10-22
+
+Current main 3a13c79 merged, preserving induction/resistivity/wire-force/eddy-currents. Student handouts and private guides now written for motion-graphs, forces and stress-strain. Map handout links set; motion-graphs usable, forces/stress-strain needs-feature for the requests above. Twenty-one core groups passed (including a new free-fall conservation test), map contract passed, 97 independent comparisons passed, and all 34 bold virtual-control names matched source. Chromium launch failed: executable absent; no browser/remote-CI/classroom pass claimed. Please copy map/gaps and regenerate pages when appropriate; no public main merge by GPT. Next writing queue: resistivity, wire-force.

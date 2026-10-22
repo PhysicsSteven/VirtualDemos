@@ -48,6 +48,19 @@ group('parabola fit recovers x0, v0 and a/2; standard errors vanish for exact da
   assert.equal(c.quadFit([1, 2], [1, 2]), null); assert.equal(c.quadFit([1, 1, 1], [1, 2, 3]), null);
 });
 
+group('free fall: a stays negative through the apex; height and speed agree with energy until return', () => {
+  const g = 9.81, v0 = 12, r = c.buildRun(0, v0, [{ a: -g, T: 2 * v0 / g }]);
+  const top = c.stateAt(r, v0 / g);
+  near(top.v, 0, 1e-12); near(top.x, v0 * v0 / (2 * g), 1e-12); near(top.a, -g, 1e-12);
+  for (const t of [0, 0.3, 0.9, 1.4, 2.2]) {
+    const q = c.stateAt(r, t);
+    near(q.a, -g, 1e-12); near(q.v * q.v + 2 * g * q.x, v0 * v0, 1e-10, 'energy per unit mass');
+  }
+  const landed = c.stateAt(r, 2 * v0 / g);
+  near(landed.x, 0, 1e-12); near(landed.v, -v0, 1e-12);
+  // stateAt clamps to the terminal flight state; it does not model the impact.
+});
+
 group('CSV: comment lines, version, SI snake case header, rows as typed', () => {
   const L = c.readingsCSV([{ t: '1.00', x: '-2.50' }, { t: '2.00', x: 'about 1' }], { version: c.MG_VERSION, setup: 'Speeding up', settings: 'x0 -8 m, a 1 m/s2' }).trim().split('\n');
   assert.match(L[0], /\(simulated data\)$/); assert.equal(L[1], `# demo version,${c.MG_VERSION}`); assert.match(c.MG_VERSION, /^motion-graphs@\d{4}-\d{2}-\d{2}/);

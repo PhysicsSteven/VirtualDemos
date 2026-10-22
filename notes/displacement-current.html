@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Displacement Current: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Displacement Current</h1><ul class="meta"><li><a href="../demos/displacement-current.html">Open the demo</a></li><li>PHYS 202</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Ampère's law with only conduction current gives two different answers for the same loop around a charging capacitor's wire, depending on which surface you choose.</li>
+<li>Maxwell's fix: a changing electric field counts as a current, I_d = ε₀ dΦ_E/dt. Between the plates it equals the wire's current exactly.</li>
+<li>So there is a magnetic field between the plates, circling the axis, even though no charge crosses the gap.</li>
+</ul>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Loop around the wire.</strong> Flat disk: the wire carries I through it; ∮B·dl = μ₀I.</li>
+<li><strong>Same loop, surface through the gap.</strong> No wire crosses the bag; without displacement current ∮B·dl would be zero for the same loop. With it, I_d through the bag equals I.</li>
+<li><strong>Loop in the gap.</strong> A 7 cm loop between 5 cm plates encloses all the displacement current: B = μ₀I/(2πr), the same as around the wire at that radius.</li>
+<li><strong>Small loop inside the plates.</strong> It encloses only r²/R² of I_d, so B grows in proportion to r inside, like inside a thick wire.</li>
+<li>Press <strong>Charge</strong> and watch everything fall as the current dies away with τ = RC = 34.8 µs (slowed about 10⁵ times).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Explain the contradiction Maxwell faced: for one loop around the wire, a flat disk is crossed by the current but a bag reaching between the plates is not. What does Ampère's law (without I_d) predict for each?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Show that ε₀ dΦ_E/dt between ideal parallel plates equals the current in the wire.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> With I = 70.5 µA, find B on a 3.0 cm loop around the wire and on a 7.0 cm loop between the 5.0 cm plates. Find B on a 2.5 cm loop between the plates.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Why is it hard to measure this field in a classroom capacitor?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Displacement current is charge moving across the gap."</strong> No charge crosses; it is the changing E field.</li>
+<li><strong>"Ampère's law applies only to the wire."</strong> It applies to any loop; the trouble is which surface to count through.</li>
+<li><strong>"There's no B field between the plates."</strong> There is, circling the axis.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Ideal circular plates (R = 5.0 cm, gap 2.0 mm, C = 34.8 pF) with uniform E between them and no fringing; long straight wire of radius 1 mm; quasistatic fields; RC charging I = (V/R)e^(−t/RC).</li>
+<li>B from Ampère–Maxwell with the enclosed conduction and displacement currents; around the wire B = μ₀I/(2πr), between the plates μ₀I_d,enc/(2πr) with I_d,enc = I r²/R² inside the plates.</li>
+<li>The gap is drawn much wider than to scale. Real fields here are picotesla.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

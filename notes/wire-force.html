@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Force on a Current: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Force on a Current</h1><ul class="meta"><li><a href="../demos/wire-force.html">Open the demo</a></li><li>PHYS 202</li><li>25 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A current in a magnetic field feels F = IL × B, size ILB sin θ, perpendicular to both the wire and the field. A current along B feels nothing.</li>
+<li>The magnet feels an equal and opposite force (Newton's third law), which is how a current balance weighs it.</li>
+<li>On a loop, the forces on opposite sides make a couple: torque τ = μ × B with μ = NIA, largest when the loop's plane lies along B and zero when μ lines up with B.</li>
+<li>A commutator that reverses the current each half turn keeps the torque one way: a DC motor.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the right hand rule for F = qv × B. All views are from above, with B to the right from N to S. The balance sits under the magnet and was zeroed with no current, so it reads the reaction on the magnet in grams. The <strong>Mystery magnet</strong> hides B.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Current balance.</strong> 2.0 A through 4.0 cm of wire in 0.20 T: 16 mN on the wire, into the page (down). The balance reads −1.63 g: the magnet is pushed up. Reverse the current: +1.63 g.</li>
+<li><strong>Wire at an angle to B.</strong> At 30° the force halves (8.0 mN); at 0° it vanishes.</li>
+<li><strong>Loop: torque.</strong> 20 turns, 1.0 A, 4 cm × 4 cm, 0.20 T: μ = 32 mA·m², largest torque 6.4 mN·m. Release it: it swings about μ ∥ B and settles, like a compass needle.</li>
+<li><strong>DC motor.</strong> With the commutator it keeps turning. Watch the torque readout rise and fall twice per turn.</li>
+<li>Lab: capture the balance reading at six currents from −3 A to +3 A and fit for B; repeat with the Mystery magnet.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict the balance reading for 3.0 A through 4.0 cm of wire in a 0.20 T field, at right angles. Which way is the wire pushed, and which way the magnet?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Why does the balance, which sits under the magnet, measure a force on the wire, which does not touch it?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In Loop: torque, find μ and the largest torque. Where in the turn is the torque largest and where is it zero? Which position is stable?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Without a commutator the loop just swings and settles. Explain how reversing the current every half turn turns it into a motor. Where should the reversal happen?</p>
+<p><strong>Q5 (lab).</strong> From a plot of F = Δm g against I at fixed L and θ, show that |slope| = BL sin θ, and find B for the Mystery magnet.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The force is along the field lines."</strong> It is perpendicular to both the wire and B.</li>
+<li><strong>"The magnet pushes the wire but the wire doesn't push the magnet."</strong> The forces are equal and opposite; the balance measures exactly that.</li>
+<li><strong>"The torque on a loop is largest when it faces the field."</strong> When μ ∥ B the torque is zero; it is largest when the loop's plane lies along B.</li>
+<li><strong>"A motor runs on a steady torque."</strong> The torque varies through each turn; the rotor's inertia smooths the motion.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Uniform field between the poles and zero outside; L is the length of wire inside the field. F = ILB sin θ with the direction from IL × B.</li>
+<li>The balance reads Δm = F_z/g with F_z the vertical force on the wire, since the magnet receives −F; rounding 0.01 g.</li>
+<li>The loop is 4 cm × 4 cm, mass 20 g, moment of inertia ma²/6 about its axis, with a small viscous friction at the axle. Torque τ = −NIAB sin θ toward μ ∥ B.</li>
+<li>The supply holds the current fixed, so back emf is ignored; a real motor's speed is limited mainly by back emf, not friction. The commutator reverses the current each time μ lines up with B.</li>
+<li>The loop is shown 4 times slower than real, the motor about 30 times slower; the rotation rate readout is real.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

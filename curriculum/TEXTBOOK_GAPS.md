@@ -1,8 +1,8 @@
 # Textbook coverage and gaps
 
-Source inventory: main `4443739435f0a28e21e0a420e9c6df31f7a74f76`, reviewed 2026-10-22. This is curriculum/source coverage, not collection-wide numerical or release validation.
+Source inventory: main `3a13c79bc5f7bc330d05eaffe16fce44c3b1451b`, reviewed 2026-10-22. This is curriculum/source coverage, not collection-wide numerical or release validation.
 
-70 demos from `curriculum/catalog.json` mapped once; 209 section records. Claude’s eight new demos and section additions are preserved. Legacy HTML outside the catalog is not duplicated.
+74 demos from `curriculum/catalog.json` mapped once; 209 section records. Claude’s new demos and section additions are preserved. Legacy HTML outside the catalog is not duplicated.
 
 ## Contract for course-page construction
 
@@ -16,7 +16,8 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 
 ## Current priorities
 
-- New Physics I lab packages awaiting handouts: motion-graphs, forces and stress-strain. The new lecture demos do not need full student labs.
+- Three new Physics I lab packages are written: motion-graphs is usable within its scope; forces and stress-strain need the reported UI fixes. Browser/classroom review remains open.
+- Next writing queue: resistivity and wire-force (Physics II). The new lecture demos do not need full student labs.
 - Near-surface gravity §13.2 remains missing; fixed-g projectile motion does not close this gap.
 - Moment-of-inertia calculation §10.5 is partial: discrete masses/standard formulas exist; a continuous-body integration activity is absent.
 - Chapter 1 remains worksheet material. Owner-deferred gaps include §8.5, §11.4, §13.7 and §14.7; a missing label is not authorization to build them now.
@@ -39,18 +40,14 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 | physics-1 | 1 | 13.2 | Gravitation Near Earth's Surface | missing |
 | physics-1 | 1 | 13.7 | Einstein's Theory of Gravity | missing |
 | physics-1 | 1 | 14.7 | Viscosity and Turbulence | missing |
-| physics-2 | 2 | 5.1 | Electric Charge | missing |
-| physics-2 | 2 | 5.2 | Conductors, Insulators, and Charging by Induction | missing |
 | physics-2 | 2 | 7.6 | Applications of Electrostatics | missing |
 | physics-2 | 2 | 8.5 | Molecular Model of a Dielectric | missing |
 | physics-2 | 2 | 9.2 | Model of Conduction in Metals | missing |
-| physics-2 | 2 | 9.3 | Resistivity and Resistance | missing |
 | physics-2 | 2 | 9.6 | Superconductors | missing |
 | physics-2 | 2 | 10.6 | Household Wiring and Electrical Safety | missing |
 | physics-2 | 2 | 11.1 | Magnetism and Its Historical Discoveries | missing |
 | physics-2 | 2 | 12.7 | Magnetism in Matter | missing |
 | physics-2 | 2 | 13.4 | Induced Electric Fields | missing |
-| physics-2 | 2 | 13.5 | Eddy Currents | missing |
 | physics-2 | 2 | 13.7 | Applications of Electromagnetic Induction | missing |
 | later | 1 | 16.4 | Energy and Power of a Wave | missing |
 | later | 1 | 17.1 | Sound Waves | missing |
@@ -68,7 +65,7 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 
 ## Partial section coverage / missing features
 
-| Volume / section | Existing activities | Limitation |
+| Volume / section | Demos | Limitation |
 |---|---|---|
 | 1 / 4.4 | circular-motion | Circular Motion shows a = v²/r toward the center at constant speed; nonuniform circular motion (tangential acceleration) only in the loop. |
 | 1 / 5.2 | forces | Forces and Friction shows balanced forces at rest; constant velocity with zero net force is not set up directly. |
@@ -80,13 +77,10 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 | 1 / 10.7 | rotation | Selected door/rolling apparatus; not every rotational dynamics application. |
 | 1 / 15.4 | double-pendulum | Double-pendulum small-angle comparison; a simple pendulum lab is not provided. |
 | 2 / 5.5 | coulomb-sandbox | Point-charge sums only; general extended-distribution integration is missing. |
-| 2 / 6.4 | gauss-law | Spherical conductor example only, not arbitrary conductors. |
+| 2 / 6.4 | gauss-law, induction | Spherical conductor example only, not arbitrary conductors. |
 | 2 / 9.1 | circuits | Circuit-level current only, not a microscopic charge-flow experiment. |
 | 2 / 11.2 | magnetic-force | Uniform imposed field; field-line exploration is limited. |
 | 2 / 11.3 | magnetic-force | See the activity entry. |
-| 2 / 11.4 | currents-fields | Parallel-wire force example only; arbitrary wire geometry is missing. |
-| 2 / 11.5 | currents-fields | Selected dipole/loop illustration; check full torque procedure before assigning a lab. |
-| 2 / 11.7 | magnetic-force | See the activity entry. |
 | 2 / 14.2 | circuits, faraday | Lumped inductors and fixed coil model, not every inductor geometry. |
 | 2 / 16.2 | em-waves | See the activity entry. |
 | 2 / 16.3 | em-waves | See the activity entry. |
@@ -112,4 +106,4 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 
 Volumes 1/2 titles: owner-supplied OpenStax University Physics PDF contents. Optional Volume 3 titles: official [Chapter 1](https://openstax.org/books/university-physics-volume-3/pages/1-introduction) and [Chapter 2](https://openstax.org/books/university-physics-volume-3/pages/2-introduction) outlines. Full Volume 3 mapping remains deferred.
 
-The prior 16 aligned student/private activity packages remain preserved. Status usable describes a scoped activity that can be surfaced, not full topic coverage, release certification or classroom acceptance. New motion-graphs/forces/stress-strain remain needs-handout. Claude should copy the updated JSON and this gap list from the feature branch and regenerate his course pages.
+The prior 16 aligned student/private activity packages remain preserved. Status usable describes a scoped activity that can be surfaced, not full topic coverage, release certification or classroom acceptance. The three new Physics I handouts are written; forces/stress-strain remain needs-feature for documented UI issues. See [new lab evidence](validation/NEW_MECHANICS_LABS_2026-10-22.md). Claude should copy the updated JSON and this gap list from the feature branch and regenerate his course pages.

@@ -72,3 +72,8 @@ Map pushed first in c03ab7e, with 62 catalog entries and 209 section records. Cl
 ## Physics I alignment delivered — 2026-10-22
 
 Seven existing Physics I activities now aligned (five labs and two lecture worksheets); private guides/references in TeacherKeys f5b1575. No missing demos built. Sixteen packages total across Physics I/II; 149 numerical groups in 14 suites passed, plus map contract and independent-reference checks. Browser/classroom acceptance remains open. Updated map/gaps need Claude’s recopy and course-page regeneration; verify deployed handout HTML routes. See validation/TEXTBOOK_ALIGNMENT_2026-10-22.md. No main merge authorized.
+
+
+## Three new Physics I labs — 2026-10-22
+
+Merged main 3a13c79 into feature. Motion-graphs, forces and stress-strain now have full plain student labs and private guides/reference generators in TeacherKeys. Twenty-one scoped Node groups, map contract, 97 independent reference comparisons and 34 exact control-label checks passed. Chromium absent; no browser/CI/acceptance pass claimed. Forces has held-K/stale-timer/end-stop requests; stress-strain Mystery fit leaks Y without Blind. Map labels those two needs-feature. See validation/NEW_MECHANICS_LABS_2026-10-22.md. No demo edits; no main merge. Next authorized writing: resistivity and wire-force.

@@ -576,6 +576,17 @@
    "title": "Electricity and magnetism",
    "demos": [
     {
+     "demo": "induction",
+     "title": "Charging by Induction",
+     "desc": "Charge two metal spheres without touching them: bring a charged rod near, separate the spheres or ground one, then take the rod away. Every mark on the spheres comes from an exact electrostatics solution.",
+     "tags": [
+      "charging by induction",
+      "conductors",
+      "grounding",
+      "surface charge"
+     ]
+    },
+    {
      "demo": "coulomb-sandbox",
      "title": "Coulomb Sandbox",
      "desc": "Drag point charges and watch the field lines, equipotentials and potential update live, as a 2D map or a rotatable 3D landscape.",
@@ -682,6 +693,39 @@
       "Ampère–Maxwell law",
       "displacement current",
       "charging capacitor"
+     ]
+    },
+    {
+     "demo": "resistivity",
+     "title": "Resistivity of a Wire",
+     "desc": "Slide a clip along a wire, read the voltmeter and work out its resistance. Change length, thickness, metal and temperature, then fit your readings to find the resistivity and its temperature coefficient.",
+     "tags": [
+      "resistivity",
+      "R = ρL/A",
+      "temperature coefficient",
+      "four-wire measurement"
+     ]
+    },
+    {
+     "demo": "wire-force",
+     "title": "Force on a Current",
+     "desc": "Weigh the force on a current-carrying wire with a magnet on a balance and find B, then see the forces on a loop make a torque, and add a commutator to build a DC motor.",
+     "tags": [
+      "F = IL × B",
+      "current balance",
+      "torque on a loop",
+      "DC motor"
+     ]
+    },
+    {
+     "demo": "eddy-currents",
+     "title": "Eddy Currents: Magnet in a Pipe",
+     "desc": "Drop a strong magnet down copper, aluminium and plastic pipes side by side. Currents induced in the metal walls push back by Lenz's law, and the magnet drifts down at a slow terminal speed.",
+     "tags": [
+      "eddy currents",
+      "Lenz's law",
+      "magnetic braking",
+      "terminal speed"
      ]
     }
    ]

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Static Equilibrium: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Static Equilibrium</h1><ul class="meta"><li><a href="../demos/equilibrium.html">Open the demo</a></li><li>PHYS 201</li><li>15 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>An object stays at rest only if ΣF = 0 and Στ = 0 about any point. Choosing the point where an unknown force acts removes that force from the torque equation.</li>
+<li>Supports can only push. When the equations ask a support to pull, the object tips instead.</li>
+<li>A shallow cable needs a large tension, because only its component across the strut holds the strut up.</li>
+<li>A ladder against a smooth wall relies on floor friction; climbing raises the friction it needs.</li>
+</ul>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Seesaw.</strong> A 40 kg child at 1.5 m left of the pivot balances a 30 kg child at 2.0 m: m₁x₁ = m₂x₂. The pivot pushes up 883 N, the whole weight.</li>
+<li><strong>Plank on two supports.</strong> A 4 m, 20 kg plank on supports at 0.5 m and 2.5 m with a 60 kg painter at 1.5 m: F₁ = 343 N, F₂ = 441 N. Walk the painter right: past 2.67 m, F₁ would be negative and the plank tips.</li>
+<li><strong>Sign on a strut and cable.</strong> 25 kg sign at 1.8 m on a 2 m, 5 kg strut, cable to a point 1 m above the hinge: T = 548 N. Lower the anchor to 0.3 m and watch T climb.</li>
+<li><strong>Ladder against a wall.</strong> 5 m, 15 kg ladder at 60°, a 70 kg person halfway up, μs = 0.4: the wall pushes 241 N and friction must match it, out of 334 N available. Below 51.3° it slips.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> On the seesaw, where must the 30 kg child sit to balance the 40 kg child at 1.5 m? Does the beam's own mass matter? Why?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Find F₁ and F₂ for the plank setup. How far out can the painter walk before the plank tips?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> For the sign, find the cable tension T and the hinge force components. What happens to T as the anchor point is lowered, and why?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> For the ladder, take torques about the foot to find the wall's push. What friction is needed, and what is the smallest angle at which the ladder holds with the person halfway up?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Equilibrium means no forces."</strong> It means no net force and no net torque.</li>
+<li><strong>"A support always carries half the weight."</strong> It depends on where the loads are.</li>
+<li><strong>"The hinge force is along the strut."</strong> Not when the strut has weight or carries a load away from its end.</li>
+<li><strong>"A ladder slips because it is too steep."</strong> It slips when it is too shallow.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Rigid, uniform beams and ladders; massless cables; a frictionless pivot, hinge and wall; g = 9.81 m/s². Each setup is solved from ΣF = 0 and Στ = 0 (all are statically determinate).</li>
+<li>When a support force would be negative the demo reports tipping and draws the tilt; it does not model the motion.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

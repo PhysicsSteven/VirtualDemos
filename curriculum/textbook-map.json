@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": {
-    "repository_commit": "4443739435f0a28e21e0a420e9c6df31f7a74f76",
+    "repository_commit": "3a13c79bc5f7bc330d05eaffe16fce44c3b1451b",
     "review_date": "2026-10-22",
     "textbooks": [
       {
@@ -2277,10 +2277,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "induction"
+      ],
       "unit": "charge-fields",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Charging by Induction: two conducting spheres and a charged rod solved exactly (image charges); induction, grounding, contact. Insulator polarization not shown."
     },
     {
       "vol": 2,
@@ -2292,10 +2294,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "induction"
+      ],
       "unit": "charge-fields",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Charging by Induction: two conducting spheres and a charged rod solved exactly (image charges); induction, grounding, contact. Insulator polarization not shown."
     },
     {
       "vol": 2,
@@ -2438,7 +2442,8 @@
       "requirement": "required",
       "status": "needs-feature",
       "demos": [
-        "gauss-law"
+        "gauss-law",
+        "induction"
       ],
       "unit": "flux-gauss",
       "note": "Spherical conductor example only, not arbitrary conductors."
@@ -2659,10 +2664,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "resistivity"
+      ],
       "unit": "current-resistance",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Resistivity of a Wire: R = ρL/A with length, gauge, material and temperature; ρ and α from fits. Circuits for Ohm's law in circuits."
     },
     {
       "vol": 2,
@@ -2864,12 +2871,13 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "currents-fields"
+        "currents-fields",
+        "wire-force"
       ],
       "unit": "magnetic-forces",
-      "note": "Parallel-wire force example only; arbitrary wire geometry is missing."
+      "note": "Force on a Current: current balance (F = ILB sin θ, B from a fit) and wire at an angle; currents-fields for the force between parallel wires."
     },
     {
       "vol": 2,
@@ -2881,12 +2889,13 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "currents-fields"
+        "currents-fields",
+        "wire-force"
       ],
       "unit": "magnetic-forces",
-      "note": "Selected dipole/loop illustration; check full torque procedure before assigning a lab."
+      "note": "Force on a Current: torque on a rectangular loop, μ = NIA, U = −μ·B, release and settle."
     },
     {
       "vol": 2,
@@ -2915,11 +2924,13 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "magnetic-force"
+        "magnetic-force",
+        "wire-force"
       ],
-      "unit": "magnetic-forces"
+      "unit": "magnetic-forces",
+      "note": "Force on a Current, DC motor with a commutator; magnetic-force for the velocity selector, mass spectrometer, cyclotron and Hall effect."
     },
     {
       "vol": 2,
@@ -3106,10 +3117,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "eddy-currents"
+      ],
       "unit": "induction",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Eddy Currents: magnet falling through copper, aluminium and plastic pipes; induced wall currents (Lenz), terminal speed, heat; point dipole, thin-wall model."
     },
     {
       "vol": 2,
@@ -4286,9 +4299,11 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "New 2026-10-22 (Claude). Exact piecewise constant acceleration; x, v, a graphs with tangent and area; Walk the graph with motion detector estimates; Capture, CSV, parabola fit with residuals, Blind. Ball thrown up preset covers free fall (3.5) on a vertical track.",
-      "handouts": [],
+      "status": "usable",
+      "note": "Student/private instructor package written and source checked 2026-10-22. Single-stage quadratic fits, multi-stage areas, free fall and graph matching. Node and independent reference checks passed; browser/classroom acceptance pending.",
+      "handouts": [
+        "motion-graphs"
+      ],
       "title": "Motion Graphs",
       "url": "demos/motion-graphs.html"
     },
@@ -4438,9 +4453,11 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "New 2026-10-22 (Claude). Block on a tilting ramp: applied force at an angle, hanging mass over an ideal pulley, Coulomb friction (static up to μs N), exact stepping with stops; free body diagram to scale with weight components and net force; timer for 1.000 m from rest; fit a/cos θ against tan θ for μk; Mystery surface; Blind. Third law partners shown on request; apparent weight not covered. Work and energy readouts added: work by gravity, friction, push and string, ΣW = ΔK, thermal energy, power.",
-      "handouts": [],
+      "status": "needs-feature",
+      "note": "Student/private instructor package written 2026-10-22, with source-checked threshold/timer procedures. Core/reference checks passed. Remaining UI defects: held kinetic energy reads zero, stale timer may be captured with changed settings, end-stop work uses an overshot step. See NEW_MECHANICS_LABS_2026-10-22.md; no browser/classroom acceptance.",
+      "handouts": [
+        "forces"
+      ],
       "title": "Forces and Friction",
       "url": "demos/forces.html"
     },
@@ -4759,9 +4776,11 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "New 2026-10-22 (Claude). Wire tensile test: mild steel, annealed copper, aluminium alloy, mystery metal; diameter and hanging mass; dial gauge to 0.001 mm; idealized curve (elastic, hardening, fracture), unloading parallel to the elastic line; Capture, CSV, F against ΔL fit for Y; Blind. Typical values; necking and creep ignored.",
-      "handouts": [],
+      "status": "needs-feature",
+      "note": "Student/private instructor package written 2026-10-22; elastic fits, diameter scaling and permanent-set yield bracket. Core/reference checks passed. Mystery fit can disclose Y unless Blind explicitly enabled; source fix requested. Browser/classroom acceptance pending.",
+      "handouts": [
+        "stress-strain"
+      ],
       "title": "Stress and Strain",
       "url": "demos/stress-strain.html"
     },
@@ -4872,6 +4891,36 @@
       "note": "Small-angle pendulum comparison is relevant; nonlinear double-pendulum chaos is an extension beyond this section.",
       "title": "Pendulums and Chaos",
       "url": "demos/double-pendulum.html"
+    },
+    {
+      "demo": "induction",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "5.1",
+          "title": "Electric Charge"
+        },
+        {
+          "vol": 2,
+          "sec": "5.2",
+          "title": "Conductors, Insulators, and Charging by Induction"
+        },
+        {
+          "vol": 2,
+          "sec": "6.4",
+          "title": "Conductors in Electrostatic Equilibrium"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Lecture demo: two metal spheres and a charged rod tip (point charge), exact Kelvin image solution; step through charging by induction, by grounding, and by contact; surface charge marks from σ; net charges and potentials. Conductors only.",
+      "handouts": [],
+      "title": "Charging by Induction",
+      "url": "demos/induction.html"
     },
     {
       "demo": "coulomb-sandbox",
@@ -5013,6 +5062,26 @@
       ],
       "title": "Capacitors and Dielectrics",
       "url": "demos/capacitors.html"
+    },
+    {
+      "demo": "resistivity",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "9.3",
+          "title": "Resistivity and Resistance"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-22 (Claude). Four-wire measurement on a wire along a metre rule: nichrome, constantan, copper, mystery wire; four AWG gauges; length, current, temperature; Capture, CSV, R against L (ρ) and R against T (α) fits; Blind. Handbook ρ at 20 °C, linear in T.",
+      "handouts": [],
+      "title": "Resistivity of a Wire",
+      "url": "demos/resistivity.html"
     },
     {
       "demo": "circuits",
@@ -5162,6 +5231,36 @@
       "url": "demos/magnetic-force.html"
     },
     {
+      "demo": "wire-force",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "11.4",
+          "title": "Magnetic Force on a Current-Carrying Conductor"
+        },
+        {
+          "vol": 2,
+          "sec": "11.5",
+          "title": "Force and Torque on a Current Loop"
+        },
+        {
+          "vol": 2,
+          "sec": "11.7",
+          "title": "Applications of Magnetic Forces and Fields"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-22 (Claude). Current balance lab (magnet on a balance, Δm = F/g, B from F against I, Mystery magnet), wire at an angle, loop torque with release, DC motor with commutator; Blind. Uniform field between the poles, constant current (no back emf).",
+      "handouts": [],
+      "title": "Force on a Current",
+      "url": "demos/wire-force.html"
+    },
+    {
       "demo": "currents-fields",
       "course": [
         "physics-2"
@@ -5291,6 +5390,26 @@
       ],
       "title": "Faraday's and Lenz's Laws",
       "url": "demos/faraday.html"
+    },
+    {
+      "demo": "eddy-currents",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "13.5",
+          "title": "Eddy Currents"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Lecture demo: NdFeB magnet dropped through copper, aluminium and PVC pipes side by side; drag k = 45 μ0² m² σ w/(1024 a⁴) (point dipole, thin wall), exact fall with linear drag, induced wall currents with Lenz sense, heat, liquid nitrogen cooling; Blind.",
+      "handouts": [],
+      "title": "Eddy Currents: Magnet in a Pipe",
+      "url": "demos/eddy-currents.html"
     },
     {
       "demo": "em-waves",

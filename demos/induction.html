@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Charging by Induction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: two metal spheres, a charged rod and ground on the left; the rail on the right. */
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+:root { --metal: #c9d1db; --metal-hi: #eef2f6; --rod: #8a6a3c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --metal: #4a5566; --metal-hi: #6b7787; --rod: #d0a868; } }
+:root[data-theme="dark"] { --metal: #4a5566; --metal-hi: #6b7787; --rod: #d0a868; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 460px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; touch-action: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.stepbar { position: absolute; left: 10px; right: 10px; bottom: 10px; z-index: 2; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: color-mix(in srgb, var(--canvas) 88%, transparent); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+.stepbar p { margin: 0; flex: 1 1 260px; font-size: 0.92rem; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; top: 10px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 480px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .chips button, .proj, .spin { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Charging by Induction</h1>
+      <p>Bring a charged rod near two metal spheres without touching them. Free electrons in the metal move, so the near side and the far side get opposite charges. Separate the spheres, or ground one, before taking the rod away, and the charge stays.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">spheres 5 cm radius · exact image charge solution</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/induction.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/induction.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h4v1h-4zM17 2h1v1h-1zM19 2h3v1h-3zM24 2h1v1h-1zM26 2h5v1h-5zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h2v1h-2zM15 3h2v1h-2zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h2v1h-2zM16 4h1v1h-1zM19 4h7v1h-7zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h3v1h-3zM17 5h2v1h-2zM20 5h2v1h-2zM25 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM16 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM18 7h1v1h-1zM20 7h5v1h-5zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM13 9h1v1h-1zM19 9h4v1h-4zM24 9h2v1h-2zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM15 10h1v1h-1zM20 10h2v1h-2zM24 10h3v1h-3zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h2v1h-2zM5 11h2v1h-2zM9 11h3v1h-3zM15 11h1v1h-1zM18 11h1v1h-1zM21 11h3v1h-3zM27 11h4v1h-4zM34 11h4v1h-4zM3 12h1v1h-1zM6 12h4v1h-4zM11 12h1v1h-1zM13 12h2v1h-2zM16 12h1v1h-1zM18 12h1v1h-1zM22 12h3v1h-3zM28 12h4v1h-4zM33 12h2v1h-2zM2 13h1v1h-1zM4 13h2v1h-2zM11 13h1v1h-1zM15 13h2v1h-2zM19 13h1v1h-1zM23 13h2v1h-2zM26 13h1v1h-1zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h2v1h-2zM5 14h2v1h-2zM8 14h1v1h-1zM10 14h1v1h-1zM13 14h5v1h-5zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM4 15h4v1h-4zM9 15h1v1h-1zM11 15h1v1h-1zM14 15h1v1h-1zM16 15h4v1h-4zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM5 16h6v1h-6zM13 16h1v1h-1zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h8v1h-8zM31 16h7v1h-7zM2 17h1v1h-1zM4 17h1v1h-1zM6 17h2v1h-2zM9 17h2v1h-2zM12 17h1v1h-1zM15 17h1v1h-1zM17 17h1v1h-1zM21 17h3v1h-3zM26 17h1v1h-1zM30 17h1v1h-1zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM11 18h1v1h-1zM13 18h4v1h-4zM18 18h1v1h-1zM22 18h1v1h-1zM26 18h1v1h-1zM28 18h1v1h-1zM30 18h4v1h-4zM35 18h2v1h-2zM38 18h1v1h-1zM5 19h2v1h-2zM9 19h1v1h-1zM11 19h1v1h-1zM13 19h2v1h-2zM20 19h2v1h-2zM24 19h1v1h-1zM26 19h5v1h-5zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h2v1h-2zM5 20h1v1h-1zM7 20h3v1h-3zM11 20h2v1h-2zM16 20h2v1h-2zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h2v1h-2zM31 20h6v1h-6zM3 21h2v1h-2zM6 21h2v1h-2zM10 21h1v1h-1zM12 21h3v1h-3zM16 21h4v1h-4zM21 21h3v1h-3zM25 21h2v1h-2zM28 21h1v1h-1zM30 21h2v1h-2zM36 21h2v1h-2zM2 22h2v1h-2zM6 22h4v1h-4zM12 22h1v1h-1zM19 22h1v1h-1zM22 22h5v1h-5zM31 22h3v1h-3zM36 22h1v1h-1zM9 23h1v1h-1zM13 23h1v1h-1zM15 23h4v1h-4zM22 23h2v1h-2zM25 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h8v1h-8zM11 24h2v1h-2zM14 24h1v1h-1zM16 24h4v1h-4zM22 24h1v1h-1zM25 24h1v1h-1zM27 24h3v1h-3zM32 24h5v1h-5zM2 25h1v1h-1zM6 25h1v1h-1zM12 25h6v1h-6zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM29 25h6v1h-6zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h2v1h-2zM6 26h1v1h-1zM8 26h5v1h-5zM16 26h1v1h-1zM20 26h1v1h-1zM24 26h3v1h-3zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h2v1h-2zM5 27h1v1h-1zM7 27h1v1h-1zM9 27h1v1h-1zM12 27h2v1h-2zM15 27h2v1h-2zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h4v1h-4zM34 27h2v1h-2zM4 28h1v1h-1zM7 28h3v1h-3zM11 28h4v1h-4zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h6v1h-6zM31 28h4v1h-4zM36 28h1v1h-1zM6 29h2v1h-2zM9 29h1v1h-1zM13 29h2v1h-2zM19 29h2v1h-2zM23 29h4v1h-4zM29 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM2 30h3v1h-3zM7 30h2v1h-2zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h1v1h-1zM13 31h2v1h-2zM18 31h3v1h-3zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h9v1h-9zM20 32h1v1h-1zM22 32h4v1h-4zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h1v1h-1zM16 33h2v1h-2zM23 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h1v1h-1zM15 34h1v1h-1zM17 34h2v1h-2zM22 34h1v1h-1zM25 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM14 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM27 35h1v1h-1zM29 35h5v1h-5zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h2v1h-2zM15 36h3v1h-3zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM14 37h1v1h-1zM17 37h10v1h-10zM28 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM32 38h2v1h-2zM36 38h3v1h-3z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="img" aria-label="Two metal spheres on insulating stands, a charged rod on the left and a ground connection. The plus and minus marks around each sphere show its surface charge density: darker marks mean more charge per area."></canvas>
+      <div class="stepbar"><p id="stepText"></p><button type="button" class="spin attn" id="next">Next step</button><button type="button" class="spin" id="restart">Start over</button></div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="induce" aria-pressed="true">Charging two spheres by induction</button>
+          <button type="button" data-p="ground" aria-pressed="false">Charging one sphere by grounding</button>
+          <button type="button" data-p="contact" aria-pressed="false">Sharing charge by contact</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Apparatus</h2>
+        <label class="check"><input type="checkbox" id="rodOn"><span>Charged rod present</span></label>
+        <div><div class="slider-head"><label for="sQ">Rod charge</label><output id="oQ" for="sQ"></output></div><input type="range" id="sQ" min="-20" max="20" step="1"></div>
+        <div><div class="slider-head"><label for="sD">Rod tip distance from sphere A</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="1" max="30" step="0.5"></div>
+        <div><div class="slider-head"><label for="sG">Gap between the spheres</label><output id="oG" for="sG"></output></div><input type="range" id="sG" min="0.05" max="40" step="0.05"></div>
+        <div><div class="slider-head"><label for="sRB">Radius of sphere B</label><output id="oRB" for="sRB"></output></div><input type="range" id="sRB" min="1" max="10" step="0.5"></div>
+        <label class="check"><input type="checkbox" id="wire"><span>Spheres touching (connected)</span></label>
+        <label class="check"><input type="checkbox" id="gA"><span>Ground sphere A</span></label>
+        <label class="check"><input type="checkbox" id="gB"><span>Ground sphere B</span></label>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <p class="hint">Blind hides the net charges and potentials; the marks on the spheres stay, as an electroscope or a charge probe would show.</p>
+        <p class="hint">Model: two perfectly conducting spheres on ideal insulating stands and the rod's tip as a point charge, solved exactly with Kelvin image charges (a thin wire or contact makes the spheres one conductor; ground holds a sphere at zero potential). The marks are drawn from the surface charge density in the plane of the drawing: their darkness is in proportion to the density, and their sign is its sign. Real charge sits as a tiny excess or shortage of electrons; only electrons move.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  // Electrostatics of two conducting spheres A and B on the x axis and a point charge q0 (the rod's tip), solved with Kelvin image charges.
+  const EPS0 = 8.8541878188e-12, K = 1 / (4 * Math.PI * EPS0);
+  // image of a point charge q at x in a grounded sphere (centre c, radius r): q' = −q r/d at c + (r²/d) toward the charge
+  function image(q, x, c, r) { const d = x - c, dd = Math.abs(d); return { q: -q * r / dd, x: c + Math.sign(d) * r * r / dd }; }
+  // all images produced in both spheres (kept at zero potential) by a list of seed charges outside them; the chain bounces until the charges are negligible
+  function chain(seeds, A, B, into) {
+    const out = [];
+    for (const s of seeds) {
+      for (const first of [A, B]) {
+        if (s.inside === first.id) continue;
+        let cur = { q: s.q, x: s.x }, sph = first;
+        for (let k = 0; k < 400; k++) {
+          const im = image(cur.q, cur.x, sph.c, sph.r); out.push({ ...im, inside: sph.id });
+          if (Math.abs(im.q) < 1e-13 * Math.abs(s.q)) break;
+          cur = im; sph = sph === A ? B : A;
+        }
+      }
+    }
+    return into ? into.concat(out) : out;
+  }
+  const chargeIn = (list, id) => list.reduce((s, c) => s + (c.inside === id ? c.q : 0), 0);
+  // Solve for the charges on A and B. state: { q0, x0 (null: no rod), A: {c, r}, B: {c, r}, QA, QB, wire, gA, gB }:
+  //   a grounded sphere is at zero potential; a wire makes VA = VB with QA + QB fixed; otherwise each sphere keeps its total.
+  function solve(st) {
+    const A = { id: 'A', ...st.A }, B = { id: 'B', ...st.B };
+    const rod = st.x0 == null ? [] : [{ q: st.q0, x: st.x0, inside: null }];
+    const base = chain(rod, A, B);                                       // both spheres grounded, with the rod
+    const unit = (S) => { const seed = { q: S.r / K, x: S.c, inside: S.id }; return [seed, ...chain([seed], A, B)]; };   // sphere S at 1 V, the other at 0
+    const uA = unit(A), uB = unit(B);
+    const QA0 = chargeIn(base, 'A'), QB0 = chargeIn(base, 'B');
+    const CAA = chargeIn(uA, 'A'), CBA = chargeIn(uA, 'B'), CAB = chargeIn(uB, 'A'), CBB = chargeIn(uB, 'B');
+    // QA = QA0 + CAA VA + CAB VB, QB = QB0 + CBA VA + CBB VB
+    let VA, VB;
+    if ((st.gA || st.gB) && st.wire || (st.gA && st.gB)) { VA = VB = 0; }
+    else if (st.gA) { VA = 0; VB = (st.QB - QB0) / CBB; }
+    else if (st.gB) { VB = 0; VA = (st.QA - QA0) / CAA; }
+    else if (st.wire) { const Qt = st.QA + st.QB; VA = VB = (Qt - QA0 - QB0) / (CAA + CAB + CBA + CBB); }
+    else { const r1 = st.QA - QA0, r2 = st.QB - QB0, det = CAA * CBB - CAB * CBA; VA = (r1 * CBB - CAB * r2) / det; VB = (CAA * r2 - CBA * r1) / det; }
+    const charges = [...rod, ...base, ...uA.map((c) => ({ ...c, q: c.q * VA })), ...uB.map((c) => ({ ...c, q: c.q * VB }))];
+    return { VA, VB, QA: QA0 + CAA * VA + CAB * VB, QB: QB0 + CBA * VA + CBB * VB, charges };
+  }
+  // surface charge density just outside a sphere at angle th (from +x), in the plane: σ = ε0 E·n
+  function sigma(charges, S, th) {
+    const px = S.c + S.r * Math.cos(th) * 1.0001, py = S.r * Math.sin(th) * 1.0001;
+    let ex = 0, ey = 0;
+    for (const c of charges) { const dx = px - c.x, dy = py, r3 = (dx * dx + dy * dy) ** 1.5; ex += K * c.q * dx / r3; ey += K * c.q * dy / r3; }
+    return EPS0 * (ex * Math.cos(th) + ey * Math.sin(th));
+  }
+  function potentialAt(charges, x, y) { let v = 0; for (const c of charges) v += K * c.q / Math.hypot(x - c.x, y); return v; }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const CM = 0.01, NC = 1e-9;
+  // the state of the apparatus; charges QA, QB carry over whenever the connections change
+  const S = { preset: 'induce', step: 0, rod: false, q: 10, d: 5, gap: 0.05, rB: 5, wire: true, gA: false, gB: false, QA: 0, QB: 0, blind: false, sol: null };
+  const STEPS = {
+    induce: [
+      ['Two neutral metal spheres touch, so they are one conductor. No net charge anywhere.', (s) => Object.assign(s, { rod: false, gap: 0.05, wire: true, gA: false, gB: false, QA: 0, QB: 0, rB: 5 })],
+      ['Bring the positive rod near A without touching. Electrons are pulled toward it: A\'s near side turns negative, B\'s far side positive. The total is still zero.', (s) => Object.assign(s, { rod: true })],
+      ['Pull B away while the rod is still there. Now the spheres are separate, and each keeps the charge it had: A negative, B positive.', (s) => Object.assign(s, { wire: false, gap: 15 })],
+      ['Take the rod away. The charges stay, spread over each sphere: equal and opposite. Neither sphere was touched by the rod.', (s) => Object.assign(s, { rod: false })]
+    ],
+    ground: [
+      ['One neutral sphere A, with B far away and out of the picture.', (s) => Object.assign(s, { rod: false, gap: 40, wire: false, gA: false, gB: false, QA: 0, QB: 0, rB: 5 })],
+      ['Bring the positive rod near A. A polarizes: negative near the rod, positive on the far side.', (s) => Object.assign(s, { rod: true })],
+      ['Connect A to ground. Electrons flow up from the Earth, drawn by the rod: A becomes negative overall, held at zero potential.', (s) => Object.assign(s, { gA: true })],
+      ['Disconnect the ground first, with the rod still there. A keeps its negative charge.', (s) => Object.assign(s, { gA: false })],
+      ['Now take the rod away. A stays negative, opposite to the rod, and the charge spreads evenly.', (s) => Object.assign(s, { rod: false })]
+    ],
+    contact: [
+      ['Sphere A carries +10 nC; B is neutral and smaller (3 cm). They are apart.', (s) => Object.assign(s, { rod: false, gap: 15, wire: false, gA: false, gB: false, QA: 10 * NC, QB: 0, rB: 3 })],
+      ['Touch them together. They become one conductor at one potential, and the charge redistributes: the bigger sphere takes more.', (s) => Object.assign(s, { gap: 0.05, wire: true })],
+      ['Separate them. Each keeps its share. Joined by a long wire far apart, the shares would go as the radii (5 : 3), since V = kQ/R must match; touching, each sphere crowds the other\'s charge, and the smaller one ends up with less than that.', (s) => Object.assign(s, { wire: false, gap: 15 })]
+    ]
+  };
+  const HINT = { induce: 'The classic demonstration with two spheres on insulating stands. Step through it, or use the controls.', ground: 'Grounding lets charge flow to or from the Earth. The order of the last two steps matters: try removing the rod before the ground.', contact: 'Charging by contact: charge is shared until both spheres are at the same potential.' };
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, H = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      pos: g('--pos'), neg: g('--neg'), metal: g('--metal'), metalHi: g('--metal-hi'), rod: g('--rod'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 2) => (Math.abs(v) < 0.5 * 10 ** -d ? (0).toFixed(d) : v.toFixed(d)).replace('-', '−');
+  function geomSI() { const A = { c: 0, r: 0.05 }, B = { c: 0.05 + S.gap * CM + S.rB * CM, r: S.rB * CM }; return { A, B, x0: S.rod ? -0.05 - S.d * CM : null }; }
+  function compute() {
+    const g = geomSI(), sol = solve({ q0: S.q * NC, x0: g.x0, A: g.A, B: g.B, QA: S.QA, QB: S.QB, wire: S.wire, gA: S.gA, gB: S.gB });
+    S.sol = sol; S.QA = sol.QA; S.QB = sol.QB;   // the charge each sphere now holds carries into the next change of connections
+  }
+
+  function draw() {
+    if (!T || !W || !S.sol) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const p = ps(), g = geomSI(), sol = S.sol;
+    // view: from the rod tip (or a bit left of A) to B's far side, clipped so B far away runs off to the right
+    const left = Math.min(-0.09, (g.x0 ?? -0.09) - 0.03), right = Math.max(0.2, Math.min(g.B.c + g.B.r + 0.03, 0.55));
+    const sc = Math.min((W - 40 * p) / (right - left), (H - 150 * p) / 0.2), cx = (x) => 20 * p + (x - left) * sc, cy = H * 0.42;
+    // stands and ground
+    for (const [Sp, gnd, lab] of [[g.A, S.gA, 'A'], [g.B, S.gB, 'B']]) {
+      const x = cx(Sp.c); if (x > W + 50) continue;
+      ctx.fillStyle = T.gridStrong; ctx.fillRect(x - 3 * p, cy + Sp.r * sc, 6 * p, H - 90 * p - (cy + Sp.r * sc)); ctx.fillRect(x - 24 * p, H - 92 * p, 48 * p, 6 * p);
+      if (gnd) { const gx = x + Sp.r * sc * 0.7, gy = cy + Sp.r * sc * 0.7; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx + 30 * p, gy + 20 * p); ctx.lineTo(gx + 30 * p, H - 104 * p); ctx.stroke();
+        for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.moveTo(gx + 30 * p - (14 - 5 * i) * p, H - 104 * p + i * 5 * p); ctx.lineTo(gx + 30 * p + (14 - 5 * i) * p, H - 104 * p + i * 5 * p); ctx.stroke(); }
+        ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('to ground', gx + 36 * p, H - 112 * p); }
+    }
+    if (S.wire && S.gap > 0.5) { ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(cx(g.A.c), cy - g.A.r * sc); ctx.quadraticCurveTo(cx((g.A.c + g.B.c) / 2), cy - 0.1 * sc, cx(g.B.c), cy - g.B.r * sc); ctx.stroke(); }
+    // spheres with their surface charge
+    const sig = [[g.A, []], [g.B, []]];
+    let smax = 0;
+    for (const s of sig) for (let i = 0; i < 48; i++) { const th = 2 * Math.PI * i / 48, v = sigma(sol.charges, s[0], th); s[1].push([th, v]); smax = Math.max(smax, Math.abs(v)); }
+    for (const [Sp, list] of sig) {
+      const x = cx(Sp.c), r = Sp.r * sc; if (x - r > W + 20) continue;
+      const grd = ctx.createRadialGradient(x - r * 0.35, cy - r * 0.35, r * 0.1, x, cy, r); grd.addColorStop(0, T.metalHi); grd.addColorStop(1, T.metal);
+      ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(x, cy, r, 0, 7); ctx.fill(); ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.stroke();
+      ctx.font = `700 ${Math.max(10, Math.min(15, r * 0.22)) * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      if (smax > 0) for (const [th, v] of list) { const a = Math.abs(v) / smax; if (a < 0.04) continue; ctx.globalAlpha = 0.15 + 0.85 * a; ctx.fillStyle = v > 0 ? T.pos : T.neg; ctx.fillText(v > 0 ? '+' : '−', x + (r - 9 * p) * Math.cos(th), cy - (r - 9 * p) * Math.sin(th)); }
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = T.ink; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.fillText(Sp === g.A ? 'A' : 'B', x, cy - r - 12 * p);
+      if (!S.blind) { ctx.font = `600 ${12 * p}px ${T.mono}`; ctx.fillText(`${f((Sp === g.A ? sol.QA : sol.QB) / NC, 2)} nC`, x, cy + r + 14 * p); }
+    }
+    if (g.B.c - g.B.r > right) { ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(`B is ${f(S.gap, 0)} cm away →`, W - 14 * p, cy); }
+    // rod
+    if (g.x0 != null) {
+      const tx = cx(g.x0); ctx.fillStyle = T.rod; ctx.beginPath(); ctx.moveTo(tx, cy); ctx.lineTo(tx - 14 * p, cy - 8 * p); ctx.lineTo(-10, cy - 8 * p); ctx.lineTo(-10, cy + 8 * p); ctx.lineTo(tx - 14 * p, cy + 8 * p); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = S.q >= 0 ? T.pos : T.neg; ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      for (let i = 0; i < 4; i++) ctx.fillText(S.q >= 0 ? '+' : '−', tx - 10 * p - i * 16 * p, cy - 16 * p);
+      ctx.fillStyle = T.ink; ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.fillText(`rod ${S.q > 0 ? '+' : ''}${S.q} nC`.replace('-', '−'), Math.max(50 * p, tx - 40 * p), cy + 24 * p);
+    }
+  }
+  function readouts() {
+    const sol = S.sol, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    let h;
+    if (S.blind) h = '<div class="wide"><dt>Net charges and potentials</dt><dd class="ok">hidden in Blind: read the marks</dd></div>';
+    else h = dd('Net charge on A', `${f(sol.QA / NC, 3)} nC`) + dd('Net charge on B', `${f(sol.QB / NC, 3)} nC`) + dd('Potential of A', `${f(sol.VA, 0)} V`) + dd('Potential of B', `${f(sol.VB, 0)} V`) + dd('A + B', `${f((sol.QA + sol.QB) / NC, 3)} nC`, true);
+    $('out').innerHTML = h;
+  }
+  function sync() {
+    $('rodOn').checked = S.rod; $('sQ').value = S.q; $('oQ').textContent = `${S.q > 0 ? '+' : ''}${S.q} nC`.replace('-', '−'); $('sD').value = S.d; $('oD').textContent = `${f(S.d, 1)} cm`;
+    $('sG').value = S.gap; $('oG').textContent = S.gap < 0.1 ? 'touching' : `${f(S.gap, 1)} cm`; $('sRB').value = S.rB; $('oRB').textContent = `${f(S.rB, 1)} cm`;
+    $('wire').checked = S.wire; $('gA').checked = S.gA; $('gB').checked = S.gB;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    const st = STEPS[S.preset]; $('stepText').textContent = S.step >= 0 ? `Step ${S.step + 1} of ${st.length}: ${st[S.step][0]}` : 'Your own arrangement. Press Start over for the steps.';
+    $('next').disabled = S.step < 0 || S.step >= st.length - 1; $('next').classList.toggle('attn', !$('next').disabled);
+  }
+  function update() { compute(); sync(); draw(); readouts(); }
+  function goStep(k) { S.step = k; STEPS[S.preset][k][1](S); update(); }
+  function applyPreset(p) { S.preset = p; $('presetHint').textContent = HINT[p]; goStep(0); }
+  $('next').addEventListener('click', () => goStep(Math.min(S.step + 1, STEPS[S.preset].length - 1)));
+  $('restart').addEventListener('click', () => goStep(0));
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const own = () => { S.step = -1; };
+  $('rodOn').addEventListener('change', (e) => { S.rod = e.target.checked; own(); update(); });
+  $('sQ').addEventListener('input', (e) => { S.q = +e.target.value; own(); update(); });
+  $('sD').addEventListener('input', (e) => { S.d = +e.target.value; own(); update(); });
+  $('sG').addEventListener('input', (e) => { S.gap = +e.target.value; if (S.gap >= 0.1) S.wire = false; else S.wire = true; own(); update(); });
+  $('sRB').addEventListener('input', (e) => { S.rB = +e.target.value; own(); update(); });
+  $('wire').addEventListener('change', (e) => { S.wire = e.target.checked; own(); update(); });
+  $('gA').addEventListener('change', (e) => { S.gA = e.target.checked; own(); update(); });
+  $('gB').addEventListener('change', (e) => { S.gB = e.target.checked; own(); update(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  tokens(); new ResizeObserver(resize).observe(stage); applyPreset('induce'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+})();
+</script>
+</body>
+</html>
