@@ -3117,10 +3117,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "eddy-currents"
+      ],
       "unit": "induction",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Eddy Currents: magnet falling through copper, aluminium and plastic pipes; induced wall currents (Lenz), terminal speed, heat; point dipole, thin-wall model."
     },
     {
       "vol": 2,
@@ -5382,6 +5384,26 @@
       ],
       "title": "Faraday's and Lenz's Laws",
       "url": "demos/faraday.html"
+    },
+    {
+      "demo": "eddy-currents",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "13.5",
+          "title": "Eddy Currents"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Lecture demo: NdFeB magnet dropped through copper, aluminium and PVC pipes side by side; drag k = 45 μ0² m² σ w/(1024 a⁴) (point dipole, thin wall), exact fall with linear drag, induced wall currents with Lenz sense, heat, liquid nitrogen cooling; Blind.",
+      "handouts": [],
+      "title": "Eddy Currents: Magnet in a Pipe",
+      "url": "demos/eddy-currents.html"
     },
     {
       "demo": "em-waves",

@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Eddy Currents: Magnet in a Pipe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: three vertical pipes in cross-section with the falling magnets, and a speed graph; the rail on the right. */
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+:root { --cu: #b87333; --al: #9aa6b6; --pvc: #dfe5ec; --mag: #b0452f; --mag2: #2b60b5; --cur: #6f4bb3; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cu: #d08a4a; --al: #7c8898; --pvc: #2a3442; --mag: #ff8a70; --mag2: #69a0ff; --cur: #b49bff; } }
+:root[data-theme="dark"] { --cu: #d08a4a; --al: #7c8898; --pvc: #2a3442; --mag: #ff8a70; --mag2: #69a0ff; --cur: #b49bff; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 520px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.clock { position: absolute; top: 10px; right: 10px; z-index: 2; font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600; background: color-mix(in srgb, var(--canvas) 85%, transparent); border-radius: 6px; padding: 4px 8px; }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px 10px; font-size: 0.9rem; }
+.readout div { min-width: 0; }
+.readout .head { font-size: 0.78rem; color: var(--muted); font-weight: 700; }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 600; }
+.readout dt { font-size: 0.78rem; color: var(--muted); grid-column: 1 / -1; margin-top: 4px; }
+.ok { font-size: 0.85rem; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 480px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 560px; max-height: 90vh; }
+  .rail { overflow: visible; }
+  .proj, .spin { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Eddy Currents: Magnet in a Pipe</h1>
+      <p>Drop the same strong magnet down a copper pipe, an aluminium pipe and a plastic pipe. In the metal pipes the moving magnet's changing flux drives currents around the wall, and by Lenz's law those currents push back: the magnet drifts down at a slow, steady speed.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">pipes 1.00 m long · g = 9.81 m/s²</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/eddy-currents.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/eddy-currents.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM13 2h1v1h-1zM16 2h1v1h-1zM19 2h2v1h-2zM22 2h2v1h-2zM25 2h1v1h-1zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM13 3h1v1h-1zM15 3h1v1h-1zM17 3h1v1h-1zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h1v1h-1zM17 4h2v1h-2zM21 4h3v1h-3zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM15 5h2v1h-2zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM15 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM16 7h1v1h-1zM18 7h1v1h-1zM20 7h1v1h-1zM23 7h2v1h-2zM27 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM17 9h1v1h-1zM21 9h4v1h-4zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM14 10h2v1h-2zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h2v1h-2zM27 10h4v1h-4zM32 10h5v1h-5zM2 11h6v1h-6zM10 11h3v1h-3zM16 11h3v1h-3zM25 11h1v1h-1zM28 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h3v1h-3zM6 12h1v1h-1zM8 12h2v1h-2zM13 12h3v1h-3zM19 12h2v1h-2zM22 12h2v1h-2zM26 12h1v1h-1zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h1v1h-1zM5 13h1v1h-1zM9 13h2v1h-2zM13 13h1v1h-1zM16 13h1v1h-1zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM26 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h2v1h-2zM5 14h2v1h-2zM8 14h2v1h-2zM12 14h5v1h-5zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h15v1h-15zM2 15h1v1h-1zM4 15h4v1h-4zM11 15h3v1h-3zM18 15h2v1h-2zM22 15h1v1h-1zM24 15h2v1h-2zM30 15h1v1h-1zM33 15h1v1h-1zM4 16h1v1h-1zM7 16h2v1h-2zM11 16h1v1h-1zM13 16h1v1h-1zM15 16h1v1h-1zM17 16h3v1h-3zM22 16h3v1h-3zM27 16h1v1h-1zM29 16h7v1h-7zM38 16h1v1h-1zM3 17h3v1h-3zM7 17h1v1h-1zM12 17h1v1h-1zM14 17h10v1h-10zM25 17h1v1h-1zM31 17h4v1h-4zM37 17h1v1h-1zM2 18h2v1h-2zM6 18h6v1h-6zM15 18h1v1h-1zM17 18h2v1h-2zM21 18h1v1h-1zM23 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h5v1h-5zM9 19h1v1h-1zM13 19h2v1h-2zM16 19h2v1h-2zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM2 20h1v1h-1zM4 20h2v1h-2zM8 20h1v1h-1zM12 20h2v1h-2zM15 20h1v1h-1zM17 20h2v1h-2zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h3v1h-3zM6 21h2v1h-2zM9 21h2v1h-2zM16 21h2v1h-2zM20 21h6v1h-6zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h3v1h-3zM7 22h3v1h-3zM13 22h2v1h-2zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h5v1h-5zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h3v1h-3zM6 23h2v1h-2zM10 23h2v1h-2zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h2v1h-2zM8 24h1v1h-1zM10 24h1v1h-1zM14 24h1v1h-1zM16 24h2v1h-2zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h1v1h-1zM28 24h8v1h-8zM37 24h2v1h-2zM2 25h1v1h-1zM13 25h3v1h-3zM17 25h2v1h-2zM21 25h2v1h-2zM25 25h1v1h-1zM28 25h2v1h-2zM32 25h3v1h-3zM37 25h1v1h-1zM4 26h2v1h-2zM8 26h2v1h-2zM12 26h1v1h-1zM14 26h2v1h-2zM17 26h1v1h-1zM20 26h9v1h-9zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h3v1h-3zM7 27h1v1h-1zM12 27h1v1h-1zM14 27h1v1h-1zM16 27h3v1h-3zM23 27h1v1h-1zM25 27h2v1h-2zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h7v1h-7zM12 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM6 29h2v1h-2zM11 29h1v1h-1zM13 29h1v1h-1zM18 29h1v1h-1zM23 29h1v1h-1zM25 29h2v1h-2zM29 29h1v1h-1zM31 29h4v1h-4zM37 29h2v1h-2zM2 30h1v1h-1zM4 30h2v1h-2zM8 30h3v1h-3zM12 30h1v1h-1zM14 30h1v1h-1zM16 30h1v1h-1zM19 30h1v1h-1zM26 30h3v1h-3zM30 30h9v1h-9zM10 31h3v1h-3zM14 31h2v1h-2zM17 31h7v1h-7zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM14 32h1v1h-1zM16 32h2v1h-2zM19 32h1v1h-1zM22 32h2v1h-2zM26 32h3v1h-3zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM13 33h8v1h-8zM23 33h3v1h-3zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM15 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h1v1h-1zM27 34h8v1h-8zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h1v1h-1zM14 35h2v1h-2zM17 35h1v1h-1zM20 35h1v1h-1zM22 35h1v1h-1zM24 35h2v1h-2zM28 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h3v1h-3zM14 36h1v1h-1zM17 36h2v1h-2zM20 36h2v1h-2zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h5v1h-5zM17 37h1v1h-1zM21 37h3v1h-3zM28 37h1v1h-1zM30 37h3v1h-3zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h3v1h-3zM15 38h1v1h-1zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM32 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="img" aria-label="Three vertical pipes cut open to show the falling magnets and the induced currents in their walls, with a graph of speed against time. Space drops or pauses, R starts over."></canvas>
+      <div class="viewbar"><button type="button" class="spin attn" id="drop">Drop all three</button><button type="button" class="spin" id="again">Start over</button></div>
+      <div class="clock" id="clock">t = 0.00 s</div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Magnet and pipes</h2>
+        <div><div class="slider-head"><label for="sM">Magnet strength (dipole moment)</label><output id="oM" for="sM"></output></div><input type="range" id="sM" min="0.2" max="2" step="0.05"></div>
+        <div><div class="slider-head"><label for="sW">Pipe wall thickness</label><output id="oW" for="sW"></output></div><input type="range" id="sW" min="0.5" max="3" step="0.1"></div>
+        <div><div class="slider-head"><label for="sT">Pipe temperature</label><output id="oT" for="sT"></output></div><input type="range" id="sT" min="-196" max="100" step="1"></div>
+        <label class="check"><input type="checkbox" id="tCur" checked><span>Show the induced currents in the walls</span></label>
+        <p class="hint">The magnet is a neodymium cylinder 12.7 mm across and 12.7 mm long (12.2 g); the pipes have a 9.5 mm inner radius. Cooling copper in liquid nitrogen (−196 °C) raises its conductivity about seven times.</p>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <div class="readout" id="out"></div>
+        <p class="formula">M dv/dt = Mg − kv · k = 45 μ₀² m² σ w / (1024 a⁴) · v<sub>T</sub> = Mg/k</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides the drag constant, the terminal speed and the predicted fall times and the heat, leaving the clock and the timer for each pipe. Time how long each magnet takes and work out its steady speed.</p>
+        <p class="hint">Model: the magnet as a point dipole on the pipe's axis and a thin-walled pipe (w much less than a), which gives a drag force in proportion to speed with the constant k above (Levin and coworkers, Am. J. Phys. 2006). A real magnet that nearly fills the pipe falls at the same order of speed but not exactly this one. The magnet does not touch the wall; air drag is ignored.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.81, MU0 = 1.25663706127e-6, LEN = 1.0, ED_VERSION = 'eddy-currents@2026-10-22';
+  const MAG = { mass: 0.0122 };     // magnet mass (kg): NdFeB, 7500 kg/m³, 12.7 mm by 12.7 mm
+  // conductivity at 20 °C (S/m) and temperature coefficient of resistivity (1/K), linear; copper at 77 K uses its measured ratio
+  const PIPES = [
+    { id: 'cu', name: 'Copper', sigma20: 5.96e7, alpha: 0.00393 },
+    { id: 'al', name: 'Aluminium', sigma20: 3.77e7, alpha: 0.00429 },
+    { id: 'pvc', name: 'Plastic (PVC)', sigma20: 0, alpha: 0 }
+  ];
+  // resistivity ρ(T) = ρ20 [1 + α (T − 20)] above about −50 °C; at liquid nitrogen temperature use the measured ratio ρ(293 K)/ρ(77 K) ≈ 7.2 for copper and 8 for aluminium, interpolated linearly in between
+  function sigmaAt(P, T) {
+    if (!P.sigma20) return 0;
+    const lin = (t) => P.sigma20 / (1 + P.alpha * (t - 20)), cold = P.sigma20 * (P.id === 'cu' ? 7.2 : 8);
+    if (T >= -50) return lin(T);
+    const f = (T + 196) / (146), s50 = lin(-50);   // linear between −196 °C and −50 °C in conductivity
+    return cold + (s50 - cold) * f;
+  }
+  const dragK = (m, sigma, w, a) => 45 * MU0 * MU0 * m * m * sigma * w / (1024 * a ** 4);   // N·s/m
+  // exact motion with linear drag from rest: v = vT (1 − e^(−t/τ)), y = vT (t − τ (1 − e^(−t/τ))); free fall when k = 0
+  function fall(M, k, t) {
+    if (k <= 0) return { v: G * t, y: 0.5 * G * t * t, vT: Infinity, tau: Infinity };
+    const tau = M / k, vT = G * tau, e = Math.exp(-t / tau);
+    return { v: vT * (1 - e), y: vT * (t - tau * (1 - e)), vT, tau };
+  }
+  function fallTime(M, k, L) {   // time to fall L from rest (bisection on y(t) = L)
+    if (k <= 0) return Math.sqrt(2 * L / G);
+    let lo = 0, hi = L / (G * M / k) + 10 * M / k + Math.sqrt(2 * L / G);
+    for (let i = 0; i < 100; i++) { const mid = (lo + hi) / 2; if (fall(M, k, mid).y < L) lo = mid; else hi = mid; }
+    return (lo + hi) / 2;
+  }
+  // induced emf around the ring of wall at height z above the magnet (z > 0 above): ε = −dΦ/dt = v dΦ/dz for a magnet moving down at speed v,
+  // with Φ(z) = μ0 m a² / (2 (z² + a²)^(3/2)); the sign gives the sense of circulation seen from above (counterclockwise positive)
+  const ringEmf = (m, a, z, v) => v * (-3 * MU0 * m * a * a * z / (2 * (z * z + a * a) ** 2.5));
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const S = { m: 1.6, w: 1.6, T: 20, t: 0, run: false, blind: false, cur: true };
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, H = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      cu: g('--cu'), al: g('--al'), pvc: g('--pvc'), mag: g('--mag'), mag2: g('--mag2'), cur: g('--cur'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 2) => (!isFinite(v) ? '∞' : v.toFixed(d).replace('-', '−'));
+  const radius = () => 0.0095 + S.w / 2000;   // mid-wall radius
+  const ks = () => PIPES.map((P) => dragK(S.m, sigmaAt(P, S.T), S.w / 1000, radius()));
+  const tFall = () => ks().map((k) => fallTime(MAG.mass, k, LEN));
+
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const p = ps(), wide = W > 640, top = 92 * p, bot = H - (wide ? 40 : 230) * p, colW = wide ? W * 0.55 : W, k = ks(), tf = tFall();
+    const Y = (y) => top + (bot - top) * y / LEN;
+    PIPES.forEach((P, i) => {
+      const cx = colW * (i + 0.5) / 3, pw = Math.min(46 * p, colW / 9), col = T[P.id];
+      ctx.fillStyle = col; ctx.fillRect(cx - pw / 2 - 7 * p, top, 7 * p, bot - top); ctx.fillRect(cx + pw / 2, top, 7 * p, bot - top);
+      ctx.fillStyle = T.ink; ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(P.name, cx, top - 6 * p);
+      const tt = Math.min(S.t, tf[i]), st = fall(MAG.mass, k[i], tt), y = Math.min(LEN, st.y), my = Y(y);
+      // induced currents in the walls near the magnet: ⊙ / ⊗ on the two cut edges, darker where the current is larger
+      if (S.cur && k[i] > 0 && S.t > 0 && tt < tf[i]) {
+        const a = radius(), ref = Math.abs(ringEmf(S.m, a, a / 2, 1));
+        for (let dz = -0.08; dz <= 0.0801; dz += 0.008) {
+          const e = ringEmf(S.m, a, -dz, st.v) / (ref * Math.max(st.v, 1e-6)), al = Math.min(1, Math.abs(e)); if (al < 0.06 || Y(y + dz) < top || Y(y + dz) > bot) continue;
+          // e > 0: counterclockwise seen from above. Looking at the cut pipe from the front, that current comes out of the page on the left edge and goes in on the right
+          for (const [x, outSide] of [[cx - pw / 2 - 3.5 * p, e > 0], [cx + pw / 2 + 3.5 * p, e < 0]]) {
+            ctx.globalAlpha = 0.2 + 0.8 * al; ctx.strokeStyle = T.cur; ctx.fillStyle = T.cur; ctx.lineWidth = 1.4 * p; const yy = Y(y + dz), r = 4 * p;
+            ctx.beginPath(); ctx.arc(x, yy, r, 0, 7); ctx.stroke();
+            if (outSide) { ctx.beginPath(); ctx.arc(x, yy, 1.3 * p, 0, 7); ctx.fill(); } else { ctx.beginPath(); ctx.moveTo(x - 2.6 * p, yy - 2.6 * p); ctx.lineTo(x + 2.6 * p, yy + 2.6 * p); ctx.moveTo(x + 2.6 * p, yy - 2.6 * p); ctx.lineTo(x - 2.6 * p, yy + 2.6 * p); ctx.stroke(); }
+          }
+        }
+        ctx.globalAlpha = 1;
+      }
+      // magnet: N at the bottom
+      const mh = Math.max(10 * p, 0.0127 / LEN * (bot - top)), mw = pw * 0.8;
+      ctx.fillStyle = T.mag2; ctx.fillRect(cx - mw / 2, my - mh / 2, mw, mh / 2); ctx.fillStyle = T.mag; ctx.fillRect(cx - mw / 2, my, mw, mh / 2);
+      ctx.fillStyle = T.canvas; ctx.font = `700 ${8 * p}px ${T.ui}`; ctx.textBaseline = 'middle'; ctx.fillText('S', cx, my - mh / 4); ctx.fillText('N', cx, my + mh / 4);
+      // timer under each pipe
+      ctx.fillStyle = T.ink; ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textBaseline = 'top';
+      ctx.fillText(S.t >= tf[i] ? `${f(tf[i], 2)} s` : S.t > 0 ? `${f(S.t, 2)} s` : '—', cx, bot + 6 * p);
+    });
+    // speed against time
+    const gx0 = wide ? colW + 40 * p : 50 * p, gx1 = W - 14 * p, gy0 = wide ? top : bot + 40 * p, gy1 = wide ? bot : H - 30 * p, tEnd = Math.max(1, Math.min(Math.max(...tf.filter(isFinite)) * 1.05, 60));
+    const vMetal = k.filter((x) => x > 0).map((x) => MAG.mass * G / x), vMax = (vMetal.length ? Math.max(...vMetal) : 1) * 1.3;   // scaled to the metal pipes; free fall runs off the top
+    const X = (t) => gx0 + (gx1 - gx0) * t / tEnd, V = (v) => gy1 - (gy1 - gy0) * Math.min(v, vMax) / vMax;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(gx0 + 0.5, gy0 + 0.5, gx1 - gx0, gy1 - gy0);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('t (s)', (gx0 + gx1) / 2, gy1 + 14 * p); ctx.fillText('0', gx0, gy1 + 3 * p); ctx.fillText(f(tEnd, 1), gx1, gy1 + 3 * p);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(f(vMax, 2), gx0 - 4 * p, gy0 + 6 * p); ctx.fillText('0', gx0 - 4 * p, gy1);
+    ctx.save(); ctx.translate(gx0 - 30 * p, (gy0 + gy1) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.fillText('speed (m/s)', 0, 0); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(gx0, gy0, gx1 - gx0, gy1 - gy0); ctx.clip();
+    PIPES.forEach((P, i) => { ctx.strokeStyle = T[P.id] === T.pvc ? T.muted : T[P.id]; ctx.lineWidth = 2.5 * p; ctx.beginPath(); const tm = Math.min(S.t, tf[i], tEnd);
+      for (let j = 0; j <= 200; j++) { const t = tm * j / 200, v = fall(MAG.mass, k[i], t).v; j ? ctx.lineTo(X(t), V(v)) : ctx.moveTo(X(t), V(v)); } ctx.stroke(); });
+    ctx.restore();
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('plastic pipe: free fall, off the top of the scale', gx0 + 6 * p, gy0 + 4 * p);
+    $('clock').textContent = `t = ${f(S.t, 2)} s`;
+  }
+  function readouts() {
+    const k = ks(), tf = tFall(), bl = S.blind;
+    let h = '<div class="head">Copper</div><div class="head">Aluminium</div><div class="head">Plastic</div>';
+    const row = (lab, vals) => `<dt>${lab}</dt>${vals.map((v) => `<dd>${v}</dd>`).join('')}`;
+    h += row('Conductivity σ (MS/m)', PIPES.map((P) => f(sigmaAt(P, S.T) / 1e6, 1)));
+    h += row('Time to fall 1.00 m, measured', tf.map((t) => (S.t >= t ? `${f(t, 2)} s` : '—')));
+    if (bl) h += '<dt>Drag constant, terminal speed, predicted times, heat</dt><dd class="ok" style="grid-column:1/-1">hidden in Blind</dd>';
+    else {
+      h += row('Drag constant k (N·s/m)', k.map((x) => f(x, 3)));
+      h += row('Terminal speed v_T (cm/s)', k.map((x) => (x > 0 ? f(MAG.mass * G / x * 100, 1) : '∞')));
+      h += row('Predicted fall time (s)', tf.map((t) => f(t, 2)));
+      h += row('Heat in the pipe (mJ)', PIPES.map((P, i) => { const st = fall(MAG.mass, k[i], tf[i]); return f(Math.max(0, (MAG.mass * G * LEN - 0.5 * MAG.mass * st.v * st.v) * 1000), 1); }));
+    }
+    $('out').innerHTML = h;
+  }
+  function sync() { $('sM').value = S.m; $('oM').textContent = `${f(S.m, 2)} A·m²`; $('sW').value = S.w; $('oW').textContent = `${f(S.w, 1)} mm`; $('sT').value = S.T; $('oT').textContent = `${S.T} °C`; }
+  const restart = () => { S.t = 0; S.run = false; $('drop').textContent = 'Drop all three'; sync(); draw(); readouts(); };
+  $('sM').addEventListener('input', (e) => { S.m = +e.target.value; restart(); });
+  $('sW').addEventListener('input', (e) => { S.w = +e.target.value; restart(); });
+  $('sT').addEventListener('input', (e) => { S.T = +e.target.value; restart(); });
+  $('tCur').addEventListener('change', (e) => { S.cur = e.target.checked; draw(); });
+  $('drop').addEventListener('click', () => { if (!S.run && S.t >= Math.max(...tFall())) S.t = 0; S.run = !S.run; $('drop').textContent = S.run ? 'Pause' : S.t > 0 ? 'Resume' : 'Drop all three'; });
+  $('again').addEventListener('click', restart);
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') $('drop').click(); else if (e.key === 'r' || e.key === 'R') restart(); else return; e.preventDefault(); });
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) { S.t += dt; const end = Math.max(...tFall()); if (S.t >= end) { S.t = end; S.run = false; $('drop').textContent = 'Drop all three'; } draw(); readouts(); }
+    requestAnimationFrame(frame);
+  }
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; readouts(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  tokens(); new ResizeObserver(resize).observe(stage); restart(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

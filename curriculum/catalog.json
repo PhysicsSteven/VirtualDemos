@@ -716,6 +716,17 @@
       "torque on a loop",
       "DC motor"
      ]
+    },
+    {
+     "demo": "eddy-currents",
+     "title": "Eddy Currents: Magnet in a Pipe",
+     "desc": "Drop a strong magnet down copper, aluminium and plastic pipes side by side. Currents induced in the metal walls push back by Lenz's law, and the magnet drifts down at a slow terminal speed.",
+     "tags": [
+      "eddy currents",
+      "Lenz's law",
+      "magnetic braking",
+      "terminal speed"
+     ]
     }
    ]
   },

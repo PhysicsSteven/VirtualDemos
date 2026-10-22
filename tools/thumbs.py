@@ -45,6 +45,7 @@ OVERRIDES = {
                    "js": "setTimeout(() => { const m = document.getElementById('mass'); m.value = 1000; m.dispatchEvent(new Event('input', { bubbles: true })); "
                          "setTimeout(() => { const b = [...document.querySelectorAll('#presets button')].find((x) => x.textContent === 'Onion shells'); if (b) b.click(); }, 3500); }, 1500)"},
     "hydrogen-orbitals": {"wait": 2500},
+    "eddy-currents": {"wait": 3500, "js": "document.getElementById('drop').click();"},
     "wire-force": {"wait": 2500, "js": "document.querySelector('#presets button[data-p=\"motor\"]').click(); document.getElementById('spin').click();"},
     "induction": {"wait": 500, "js": "document.getElementById('next').click();"},
     "resistivity": {"wait": 500, "js": "const s = document.getElementById('sL'); s.value = 0.62; s.dispatchEvent(new Event('input'));"},

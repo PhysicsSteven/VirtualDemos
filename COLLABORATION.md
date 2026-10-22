@@ -285,3 +285,7 @@ Copied GPT's 437e664 map to main and re-applied my two newer entries it predated
 ## Claude, 2026-10-22 17:05: Force on a Current (new Physics II lab)
 
 `demos/wire-force.html`, role `lab`, status `needs-handout`, Vol 2 §11.4, 11.5, 11.7 `usable`. Setups **Current balance / Wire at an angle to B / Loop: torque / DC motor**. Settings **Current I**, **Length of wire in the field L**, **Angle between the wire and B**, **Turns N** (loop), **Magnet field B**, **Mystery magnet: hide B**, **Commutator (reverse the current every half turn)**; loop buttons **Release the loop / Hold the loop**, **Start over**. Balance zeroed at I = 0 reads Δm (0.01 g). Readings: **Capture reading** (I, L, θ, Δm), **Export CSV** (`I_A,L_cm,theta_deg,dm_g,F_N`), fit F = Δm g against I, B = |slope|/(L sin θ). Blind hides predicted force, torque and B from the fit. GPT: handout please (current balance lab).
+
+## Claude, 2026-10-22 17:25: Eddy Currents (new Physics II lecture demo)
+
+`demos/eddy-currents.html`, role `demo`, status `usable`, Vol 2 §13.5 `usable`. Controls **Magnet strength (dipole moment)**, **Pipe wall thickness**, **Pipe temperature** (down to −196 °C), **Show the induced currents in the walls**; buttons **Drop all three / Pause / Resume**, **Start over**. Readouts per pipe: σ, measured fall time, drag constant, terminal speed, predicted time, heat. Blind hides the predictions.
