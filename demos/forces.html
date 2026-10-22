@@ -196,6 +196,12 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       </section>
 
       <section>
+        <h2>Work and energy since release</h2>
+        <dl class="readout" id="workOut"></dl>
+        <p class="hint">Work by each force on the block, W = F·Δs, added up as it moves. Their sum equals the change in the block's kinetic energy (the work energy theorem). The normal force does no work. Friction's work is negative: that energy becomes thermal energy of the block and ramp. Power is the rate of work now, P = F·v.</p>
+      </section>
+
+      <section>
         <h2>Readings</h2>
         <div class="btnrow">
           <button type="button" class="btn primary" id="capture">Capture reading</button>
@@ -253,6 +259,18 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     if (F.a === 0) return { s, v: 0 };
     return { s: s + 0.5 * F.a * dt * dt, v: F.a * dt };
   }
+  // The same step, also returning the work each force does on the block. Within each piece the forces are constant, so W = F_s Δs exactly
+  // and their sum is m a Δs = ΔK of the block. The normal force does no work.
+  function workStep(p, s, v, dt, W) {
+    const F = forces(p, v);
+    let a = F.a, t1 = dt, stops = false;
+    if (v !== 0 && a * v < 0 && -v / a < dt) { t1 = -v / a; stops = true; }
+    if (v === 0 && a === 0) return { s, v: 0 };
+    const ds = v * t1 + 0.5 * a * t1 * t1;
+    W.g += F.Wpar * ds; W.F += F.Fpar * ds; W.f += F.f * ds; W.T += F.T * ds;
+    if (stops) return workStep(p, s + ds, 0, dt - t1, W);
+    return { s: s + ds, v: v + a * t1 };
+  }
   const gateTime = (a, d) => (a !== 0 ? Math.sqrt(2 * d / Math.abs(a)) : Infinity);
   const slipAngle = (ms) => Math.atan(ms) * 180 / Math.PI;      // free block on a ramp starts to slide when tan θ > μs
   function fitLine(xs, ys) {
@@ -288,7 +306,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     table: { p: { th: 0, m: 4, F: 0, phi: 0, m2: 2, ms: 0.3, mk: 0.2 }, s: 0.4, hint: 'A hanging mass pulls the block across a table. Both move with the same acceleration a = (m₂g − μk m g)/(m + m₂), and the tension is less than m₂g while they accelerate.' },
     rampm: { p: { th: 30, m: 5, F: 0, phi: 0, m2: 2, ms: 0.2, mk: 0.15 }, s: 1.2, hint: 'Which way does it go? Compare m₂g with mg sin θ. Friction always opposes the motion, or the motion that would happen without it, so it can point up or down the ramp.' }
   };
-  const S = { preset: 'push', p: { ...PRESETS.push.p }, s: 0.4, v: 0, run: false, timing: null, blind: false, comp: true, net: true, mystery: null, rows: [], lastGate: null };
+  const S = { preset: 'push', p: { ...PRESETS.push.p }, s: 0.4, v: 0, run: false, timing: null, blind: false, comp: true, net: true, mystery: null, rows: [], lastGate: null, work: { g: 0, F: 0, f: 0, T: 0 } };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
   function tokens() {
@@ -315,7 +333,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   function applyPreset(k) {
     const c = PRESETS[k]; S.preset = k; mark(); $('presetHint').textContent = c.hint;
     const keep = S.mystery ? { ms: S.p.ms, mk: S.p.mk } : {};
-    S.p = { ...c.p, ...keep }; S.s = c.s; S.v = 0; S.lastGate = null; setRun(false); S.timing = null; sync(); draw(); readouts();
+    S.p = { ...c.p, ...keep }; S.s = c.s; S.v = 0; S.lastGate = null; S.work = { g: 0, F: 0, f: 0, T: 0 }; setRun(false); S.timing = null; sync(); draw(); readouts();
   }
   function setMystery(on) {
     if (on) { const ms = 0.25 + Math.round(Math.random() * 45) / 100, mk = Math.round(ms * (0.55 + Math.random() * 0.3) * 100) / 100; S.mystery = { ms, mk }; S.p.ms = ms; S.p.mk = mk; if (!S.blind) setBlind(true); capStatus('Mystery surface: μs and μk are hidden. Blind is on.'); }
@@ -327,12 +345,13 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 
   // ---------- run ----------
   function setRun(on) { S.run = on; $('go').textContent = on ? 'Hold' : 'Release'; $('go').classList.toggle('attn', !on); }
-  $('go').addEventListener('click', () => { S.timing = null; setRun(!S.run); });
-  $('back').addEventListener('click', () => { S.s = PRESETS[S.preset] ? PRESETS[S.preset].s : 1.2; S.v = 0; S.timing = null; setRun(false); draw(); readouts(); });
+  $('go').addEventListener('click', () => { S.timing = null; if (!S.run && S.v === 0) clearWork(); setRun(!S.run); });
+  function clearWork() { S.work = { g: 0, F: 0, f: 0, T: 0 }; S.v0 = S.v; }
+  $('back').addEventListener('click', () => { S.s = PRESETS[S.preset] ? PRESETS[S.preset].s : 1.2; S.v = 0; S.timing = null; clearWork(); setRun(false); draw(); readouts(); });
   $('timed').addEventListener('click', () => {
     const fz = forces(S.p, 0), top = LEN - 0.45, bottom = 0.45;
     S.v = 0; S.s = fz.D < 0 || fz.a <= 0 ? top : bottom;   // start at the end it will move away from
-    S.timing = { s0: S.s, t: 0, done: false }; S.lastGate = null; setRun(true); draw(); readouts();
+    S.timing = { s0: S.s, t: 0, done: false }; S.lastGate = null; S.work = { g: 0, F: 0, f: 0, T: 0 }; setRun(true); draw(); readouts();
   });
   let last = performance.now();
   function frame(now) {
@@ -340,10 +359,10 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     if (S.run) {
       const n = 10; let s = S.s, v = S.v;
       for (let i = 0; i < n; i++) {
-        const r = step(S.p, s, v, dt / n); s = r.s; v = r.v;
+        const r = workStep(S.p, s, v, dt / n, S.work); s = r.s; v = r.v;
         if (S.timing && !S.timing.done) { S.timing.t += dt / n; if (Math.abs(s - S.timing.s0) >= GATE_D) { const a = forces(S.p, v).a; S.timing.done = true; S.lastGate = Math.round(gateTime(a, GATE_D) * 1000) / 1000; S.timing.t = S.lastGate; } }
         const lo = 0.25, hi = LEN - 0.25;
-        if (s < lo || s > hi) { s = Math.max(lo, Math.min(hi, s)); v = 0; setRun(false); break; }
+        if (s < lo || s > hi) { s = Math.max(lo, Math.min(hi, s)); S.work.stop = (S.work.stop || 0) - 0.5 * S.p.m * v * v; v = 0; setRun(false); break; }
       }
       S.s = s; S.v = v; draw(); readouts();
     }
@@ -454,6 +473,20 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     if (fz.lift) h += dd('Warning', 'F lifts the block: the vertical part of F exceeds the weight\'s part across the ramp. Not modeled.', true, 'warn');
     h += dd('Timer, last run', S.lastGate ? `${S.lastGate.toFixed(3)} s for 1.000 m` : '—', true);
     $('forceOut').innerHTML = h;
+    // work and energy
+    const Wk = S.work, v = S.run ? S.v : 0, K = 0.5 * S.p.m * v * v, sum = Wk.g + Wk.F + Wk.f + Wk.T, J = (x) => `${f(x, 2)} J`, Wt = (x) => `${f(x, 2)} W`;
+    let w;
+    if (bl) w = '<div class="wide"><dt>Work, kinetic energy and power</dt><dd class="ok">hidden in Blind</dd></div>';
+    else {
+      w = dd('By gravity, W_g', J(Wk.g)) + dd('By friction, W_f', J(Wk.f));
+      if (S.p.F > 0) w += dd('By the push F, W_F', J(Wk.F));
+      if (S.p.m2 > 0) w += dd('By the string, W_T', J(Wk.T));
+      w += dd('By the normal force', '0 J') + (Wk.stop ? dd('By the stop at the end of the ramp', J(Wk.stop)) : '') + dd('Total work on the block', J(sum + (Wk.stop || 0))) + dd('Kinetic energy ½mv² now', J(K)) + dd('Thermal energy from friction, −W_f', J(-Wk.f));
+      const P = (Fs) => Wt(Fs * v);
+      w += dd('Power now: gravity, friction', `${P(fz.Wpar)}, ${P(fz.f)}`, true);
+      if (S.p.F > 0 || S.p.m2 > 0) w += dd('Power now: push, string', `${S.p.F > 0 ? P(fz.Fpar) : '—'}, ${S.p.m2 > 0 ? P(fz.T) : '—'}`, true);
+    }
+    $('workOut').innerHTML = w;
   }
 
   // ---------- readings and fit ----------

@@ -1412,12 +1412,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "potential-curves"
+        "potential-curves",
+        "forces"
       ],
       "unit": "energy",
-      "note": "Conservative-force work only; a general applied-work apparatus is missing."
+      "note": "Forces and Friction, Work and energy since release: work by each force, ΣW = ΔK, friction work as thermal energy, power P = F·v. Potential Curves for energy diagrams."
     },
     {
       "vol": 1,
@@ -1429,10 +1430,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "energy",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction, Work and energy since release: work by each force, ΣW = ΔK, friction work as thermal energy, power P = F·v."
     },
     {
       "vol": 1,
@@ -1444,12 +1447,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "potential-curves"
+        "potential-curves",
+        "forces"
       ],
       "unit": "energy",
-      "note": "Energy-diagram illustration only; general work/kinetic-energy measurement is missing."
+      "note": "Forces and Friction, Work and energy since release: work by each force, ΣW = ΔK, friction work as thermal energy, power P = F·v. Potential Curves for energy diagrams."
     },
     {
       "vol": 1,
@@ -1461,10 +1465,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "energy",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction, Work and energy since release: work by each force, ΣW = ΔK, friction work as thermal energy, power P = F·v."
     },
     {
       "vol": 1,
@@ -1492,12 +1498,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "potential-curves"
+        "potential-curves",
+        "forces"
       ],
       "unit": "energy",
-      "note": "Conservative potentials are shown; general nonconservative work is incomplete."
+      "note": "Forces and Friction, Work and energy since release: work by each force, ΣW = ΔK, friction work as thermal energy, power P = F·v. Potential Curves for energy diagrams."
     },
     {
       "vol": 1,
@@ -4279,12 +4286,37 @@
           "vol": 1,
           "sec": "6.2",
           "title": "Friction"
+        },
+        {
+          "vol": 1,
+          "sec": "7.1",
+          "title": "Work"
+        },
+        {
+          "vol": 1,
+          "sec": "7.2",
+          "title": "Kinetic Energy"
+        },
+        {
+          "vol": 1,
+          "sec": "7.3",
+          "title": "Work-Energy Theorem"
+        },
+        {
+          "vol": 1,
+          "sec": "7.4",
+          "title": "Power"
+        },
+        {
+          "vol": 1,
+          "sec": "8.2",
+          "title": "Conservative and Non-Conservative Forces"
         }
       ],
       "role": "lab",
       "beyond_book": false,
       "status": "needs-handout",
-      "note": "New 2026-10-22 (Claude). Block on a tilting ramp: applied force at an angle, hanging mass over an ideal pulley, Coulomb friction (static up to μs N), exact stepping with stops; free body diagram to scale with weight components and net force; timer for 1.000 m from rest; fit a/cos θ against tan θ for μk; Mystery surface; Blind. Third law pairs, centripetal force and apparent weight not covered.",
+      "note": "New 2026-10-22 (Claude). Block on a tilting ramp: applied force at an angle, hanging mass over an ideal pulley, Coulomb friction (static up to μs N), exact stepping with stops; free body diagram to scale with weight components and net force; timer for 1.000 m from rest; fit a/cos θ against tan θ for μk; Mystery surface; Blind. Third law pairs, centripetal force and apparent weight not covered. Work and energy readouts added: work by gravity, friction, push and string, ΣW = ΔK, thermal energy, power.",
       "handouts": [],
       "title": "Forces and Friction",
       "url": "demos/forces.html"

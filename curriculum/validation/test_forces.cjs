@@ -2,7 +2,7 @@
 // Forces and Friction: Newton's second law on a ramp with Coulomb friction, a hanging mass, the timer and the μk fit.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('forces', 'G,LEN,GATE_D,FF_VERSION,forces,step,gateTime,slipAngle,fitLine,readingsCSV');
+const c = core('forces', 'G,LEN,GATE_D,FF_VERSION,forces,step,workStep,gateTime,slipAngle,fitLine,readingsCSV');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol, `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -50,4 +50,17 @@ group('CSV: metadata, SI header, a from the row time', () => {
   assert.match(L[0], /\(simulated data\)$/); assert.equal(L[1], `# demo version,${c.FF_VERSION}`);
   const h = L.indexOf('row,theta_deg,m_kg,m2_kg,F_N,phi_deg,t_gate_s,a_m_per_s2'); assert(h > 0); assert.equal(L[h + 1], '1,35.0,5.0,0.0,0,0,0.800,3.125');
 });
+group('work energy theorem: Σ W on the block = ΔK; friction work = −μk N × distance; N does no work', () => {
+  for (const p of [P({ th: 35, mk: 0.25 }), P({ m: 4, m2: 2, ms: 0.3, mk: 0.2 }), P({ F: 80, phi: 20 }), P({ m: 5, th: 30, m2: 4, ms: 0.2, mk: 0.15 })]) {
+    const W = { g: 0, F: 0, f: 0, T: 0 }; let s = 1.5, v = 0, path = 0;
+    for (let i = 0; i < 400; i++) { const r = c.workStep(p, s, v, 0.002, W); path += Math.abs(r.s - s); s = r.s; v = r.v; }
+    const sum = W.g + W.F + W.f + W.T, fz = c.forces(p, v || 1e-9);
+    near(sum, 0.5 * p.m * v * v, 1e-9, 'ΣW = ΔK');
+    near(W.f, -p.mk * fz.N * path, 1e-9, 'friction work');
+  }
+  const p = P({ ms: 0.5, mk: 0.3 }), W = { g: 0, F: 0, f: 0, T: 0 }; let s = 0, v = 2;
+  for (let i = 0; i < 1000; i++) { const r = c.workStep(p, s, v, 0.001, W); s = r.s; v = r.v; }
+  assert.equal(v, 0); near(W.f, -0.5 * 10 * 4, 1e-9, 'friction removes all of ½mv²');
+});
+
 console.log(`${n} forces test groups passed`);

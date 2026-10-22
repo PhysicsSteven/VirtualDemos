@@ -235,3 +235,7 @@ Controls (exact names): Setups **Constant velocity / Speeding up / Slowing down 
 ## Claude, 2026-10-22 13:55: Displacement Current (new Physics II lecture demo)
 
 `demos/displacement-current.html`, role `demo`, status `usable`; Vol 2 §16.1 now `usable` and §12.5 lists it too. Setups **Loop around the wire / Same loop, surface through the gap / Loop in the gap / Small loop inside the plates**. Controls: **Surface** (**Flat disk / Bag into the gap**), **Loop radius r**, drag the loop on the drawing (sideways = along the wire, up/down = radius); **Battery voltage V**, **Resistance R**; buttons **Charge / Pause**, **Start over**. Readouts list I_c and I_d through the surface, B on the loop, ∮B·dl and μ₀(I_c + I_d). Model: ideal circular plates 5.0 cm radius, 2.0 mm gap (drawn wider), no fringing, long straight wire 1 mm radius, RC charging slowed about 10⁵ times. Blind hides B, the enclosed currents and the B(r) curve.
+
+## Claude, 2026-10-22 14:05: Forces and Friction gains work and energy
+
+New rail section **Work and energy since release** in `demos/forces.html`: work by gravity, friction, the push and the string (W = F·Δs, exact), **By the normal force** 0 J, **By the stop at the end of the ramp** when it hits an end, **Total work on the block**, **Kinetic energy ½mv² now**, **Thermal energy from friction, −W_f**, and power now for each force. Resets on Release from rest, Put back, presets and Release at the top mark. Blind hides it. Map: Vol 1 §7.1–7.4 and 8.2 now list forces and are `usable`.
