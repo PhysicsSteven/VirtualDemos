@@ -193,6 +193,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <dl class="readout" id="forceOut"></dl>
         <label class="check"><input type="checkbox" id="tComp" checked><span>Show the weight's components along and across the ramp</span></label>
         <label class="check"><input type="checkbox" id="tNet" checked><span>Show the net force</span></label>
+        <label class="check"><input type="checkbox" id="tPairs"><span>Show third law partners: the forces the block exerts</span></label>
       </section>
 
       <section>
@@ -429,6 +430,16 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     ctx.fillText(st, x0 + 14 * p, y0 + 4 * p);
     if (S.timing) { ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.fillStyle = T.accent; ctx.fillText(S.timing.done ? `Timer: ${S.lastGate.toFixed(3)} s for 1.000 m` : `Timer: ${S.timing.t.toFixed(3)} s`, x0 + 14 * p, y0 + 24 * p); }
     if (fz.lift) { ctx.fillStyle = T.fr; ctx.font = `600 ${12 * p}px ${T.ui}`; ctx.fillText('F lifts the block off the surface: N = 0 (beyond this model)', x0 + 14 * p, y0 + 44 * p); }
+    // Newton's third law: the partners of the forces on the block act on other objects (ramp, string, Earth), equal in size and opposite in direction
+    if (S.pairs) {
+      const k = 64 * p / Math.max(fz.W, fz.N, Math.abs(fz.f), fz.T, 1e-9), bl = S.blind, len = (F) => (bl ? 40 * p : F * k), cp = R(S.s, 0);
+      const into = [Math.sin(th), Math.cos(th)], upS = [Math.cos(th), -Math.sin(th)];
+      if (fz.N > 0) arrow(cp[0] - 8 * p * upS[0], cp[1] - 8 * p * upS[1], into[0] * len(fz.N), into[1] * len(fz.N), T.n, 2.6 * p, bl ? 'N on the ramp' : `N on the ramp = ${f(fz.N, 1)} N`, true);
+      if (Math.abs(fz.f) > 1e-9) arrow(cp[0] + 8 * p * upS[0], cp[1] + 8 * p * upS[1], -Math.sign(fz.f) * upS[0] * len(Math.abs(fz.f)), -Math.sign(fz.f) * upS[1] * len(Math.abs(fz.f)), T.fr, 2.6 * p, bl ? 'f on the ramp' : `f on the ramp = ${f(Math.abs(fz.f), 1)} N`, true);
+      if (P.m2 > 0) { const tie = R(S.s + bs / 2, bs / 2); arrow(tie[0] + (10 * p + len(fz.T)) * upS[0], tie[1] + (10 * p + len(fz.T)) * upS[1], -upS[0] * len(fz.T), -upS[1] * len(fz.T), T.tn, 2.6 * p, bl ? 'on the string' : `on the string = ${f(fz.T, 1)} N`, true); }
+      ctx.fillStyle = T.w; ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      ctx.fillText(bl ? 'The block also pulls the Earth up.' : `The block also pulls the Earth up with ${f(fz.W, 1)} N.`, x0 + 14 * p, y0 + 64 * p);
+    }
   }
   function drawFBD(x0, y0, w, h) {
     const p = ps(), P = S.p, th = P.th * Math.PI / 180, fz = forces(S.p, S.run ? S.v : 0), bl = S.blind;
@@ -470,6 +481,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       h += dd('Acceleration a (up the ramp +)', `${f(fz.a, 3)} m/s²`, true);
       if (S.p.F === 0 && S.p.m2 === 0) h += dd('Slips when tan θ > μs, at θ =', `${f(slipAngle(S.p.ms), 1)}°`, true);
     }
+    if (S.pairs && !bl) h += dd('Third law pairs', `Earth pulls block ${f(fz.W, 1)} N down ↔ block pulls Earth ${f(fz.W, 1)} N up; ramp pushes block ${f(fz.N, 1)} N ↔ block pushes ramp ${f(fz.N, 1)} N${Math.abs(fz.f) > 1e-9 ? `; friction ${f(Math.abs(fz.f), 1)} N each way` : ''}${S.p.m2 > 0 ? `; string ${f(fz.T, 1)} N each way` : ''}. Partners act on different objects, so they never cancel each other.`, true, 'ok');
     if (fz.lift) h += dd('Warning', 'F lifts the block: the vertical part of F exceeds the weight\'s part across the ramp. Not modeled.', true, 'warn');
     h += dd('Timer, last run', S.lastGate ? `${S.lastGate.toFixed(3)} s for 1.000 m` : '—', true);
     $('forceOut').innerHTML = h;
@@ -561,6 +573,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   });
   $('tComp').addEventListener('change', (e) => { S.comp = e.target.checked; draw(); });
   $('tNet').addEventListener('change', (e) => { S.net = e.target.checked; draw(); });
+  $('tPairs').addEventListener('change', (e) => { S.pairs = e.target.checked; draw(); readouts(); });
   function setBlind(on) { S.blind = on; $('labBlind').checked = on; $('blindTag').hidden = !on; draw(); readouts(); fit(); }
   $('labBlind').addEventListener('change', (e) => { if (!e.target.checked && S.mystery) setMystery(false); setBlind(e.target.checked); });
   $('rmToggle').checked = reduce;

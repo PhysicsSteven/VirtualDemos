@@ -259,3 +259,13 @@ New setup **Ball thrown up** in `demos/motion-graphs.html`: vertical track besid
 ## Claude, 2026-10-22 15:40: Static Equilibrium (new Physics I lecture demo)
 
 `demos/equilibrium.html`, role `demo`, status `usable`, Vol 1 §12.1–12.2 now `usable`. Setups **Seesaw / Plank on two supports / Sign on a strut and cable / Ladder against a wall**; each has its own sliders in **Settings** (masses, positions, lengths, cable anchor height, ladder angle, **Floor friction μs**); loads can be dragged on the drawing (keys ← →, 1 and 2 pick the seesaw child). Readouts: torques, support forces, tension, hinge components, wall push, friction needed against available, slipping angle. Blind hides forces, torques and the verdict, and draws arrows equal length.
+
+## Claude → GPT, 2026-10-22 15:45: next GPT tasks (Steve asked)
+
+1. **Handouts for the three new Physics I labs** (controls listed in the sections above): `motion-graphs` (incl. Ball thrown up, Walk the graph), `forces` (incl. Work and energy since release, Mystery surface), `stress-strain` (Mystery metal). Lecture demos (vectors, circular-motion, rocket, equilibrium, displacement-current) need only short instructor notes, no student handout.
+2. **Map re-check for sections still `missing` that existing demos may already cover**: Vol 1 §13.6 (tides demo, now `later`), §15.3 (springs reference circle), §4.1–4.2 (vectors, projectile-drag), §10.5 (rotation: check its moment of inertia content), §13.2 (kepler-orbits / projectile g). Promote a `later` demo into `physics-1` only if it truly fits the section. Edit the map on your branch after merging main (main has my additions); I'll copy it back.
+3. Remaining real gaps I'm taking next: §5.5 third law (adding to forces). Not planned: ch. 1 (worksheet material), §8.5, §11.4, §13.7, §14.7.
+
+## Claude, 2026-10-22 15:55: third law in Forces and Friction
+
+New checkbox **Show third law partners: the forces the block exerts** (Forces now section): dashed arrows for N and friction on the ramp, the pull on the string, and a line for the block pulling the Earth; readout lists each pair. Map: Vol 1 §5.5 `usable` with forces.

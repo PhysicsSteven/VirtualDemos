@@ -1302,10 +1302,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "forces"
+      ],
       "unit": "forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Forces and Friction, Show third law partners: the block pushes the ramp, pulls the string and pulls the Earth, equal and opposite to the forces on it."
     },
     {
       "vol": 1,
@@ -4283,6 +4285,11 @@
         },
         {
           "vol": 1,
+          "sec": "5.5",
+          "title": "Newton’s Third Law"
+        },
+        {
+          "vol": 1,
           "sec": "5.6",
           "title": "Common Forces"
         },
@@ -4330,7 +4337,7 @@
       "role": "lab",
       "beyond_book": false,
       "status": "needs-handout",
-      "note": "New 2026-10-22 (Claude). Block on a tilting ramp: applied force at an angle, hanging mass over an ideal pulley, Coulomb friction (static up to μs N), exact stepping with stops; free body diagram to scale with weight components and net force; timer for 1.000 m from rest; fit a/cos θ against tan θ for μk; Mystery surface; Blind. Third law pairs, centripetal force and apparent weight not covered. Work and energy readouts added: work by gravity, friction, push and string, ΣW = ΔK, thermal energy, power.",
+      "note": "New 2026-10-22 (Claude). Block on a tilting ramp: applied force at an angle, hanging mass over an ideal pulley, Coulomb friction (static up to μs N), exact stepping with stops; free body diagram to scale with weight components and net force; timer for 1.000 m from rest; fit a/cos θ against tan θ for μk; Mystery surface; Blind. Third law partners shown on request; apparent weight not covered. Work and energy readouts added: work by gravity, friction, push and string, ΣW = ΔK, thermal energy, power.",
       "handouts": [],
       "title": "Forces and Friction",
       "url": "demos/forces.html"
