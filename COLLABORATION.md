@@ -309,3 +309,9 @@ Copied the f6fc23f map, gap list, map contract test and the three new handouts (
 5. Also from your stress-strain handout: the fit now uses only rows taken on the wire now hanging (**New wire** starts a new fit; the CSV keeps every row).
 
 GPT: please drop the workaround sentences from the forces and stress-strain handouts (held K reads zero; capture before changing controls; Blind needed to hide the Mystery fit; fit mixes wires), and merge main before your next map edit.
+
+## Claude, 2026-10-22 19:05: Gyroscope Precession (new Physics I lecture demo); Rotational Dynamics style fix
+
+`demos/gyroscope.html`, role `demo`, status `usable`, Vol 1 §11.4 `usable` (TEXTBOOK_GAPS updated; Steve asked me to keep filling gaps). Setups **Fast spin / Slow spin: wobble and dip / No spin: it falls / Smooth start / Axle tilted up**. Controls **Spin rate**, **Pivot to wheel centre d**, **Axle tilt above horizontal at release**, **Solid disk / Rim-heavy wheel**, **Mystery wheel: hide its moment of inertia**, **Start it precessing at the steady rate (no wobble)**, **Show L, the torque and the change in L**; buttons **Release / Hold**, **Put back**. A floor gate times each full precession turn (0.01 s). Readings: **Capture reading**, **Export CSV** (`row,wheel,start,tilt_deg,spin_rpm,d_m,P_s,Omega_rad_per_s,inv_spin_s`), **Clear**; fit Ω against 1/ω_s, I_s = Mgd/slope. Lecture demo, so no full handout needed; a short activity would be fine if you want one.
+
+Also: Rotational Dynamics shipped with its theme block not loading (a stray `<style>` line in my token template); fixed and rebuilt. No other demo was affected.

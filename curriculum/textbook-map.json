@@ -1875,10 +1875,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "gyroscope"
+      ],
       "unit": "rotation",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Gyroscope Precession (2026-10-22, Claude): exact heavy symmetric top; precession rate against spin, steady start, nutation, tilt, Mystery wheel; Ω against 1/ω_s fit for I_s."
     },
     {
       "vol": 1,
@@ -4933,6 +4935,26 @@
       "handouts": [],
       "title": "Rotational Dynamics",
       "url": "demos/rotational-dynamics.html"
+    },
+    {
+      "demo": "gyroscope",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "11.4",
+          "title": "Precession of a Gyroscope"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Wheel on an axle pivoted at one end; spin 0 to 6000 rpm, pivot distance, release tilt, solid or rim-heavy wheel, Mystery wheel; exact symmetric top equations (RK4) show the dip and nutation from rest or a steady start; L, τ and Mg arrows; gate times each precession turn to 0.01 s; Capture, CSV, Ω against 1/ω_s fit gives I_s; Blind.",
+      "handouts": [],
+      "title": "Gyroscope Precession",
+      "url": "demos/gyroscope.html"
     },
     {
       "demo": "double-pendulum",

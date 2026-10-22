@@ -433,6 +433,17 @@
      ]
     },
     {
+     "demo": "gyroscope",
+     "title": "Gyroscope Precession",
+     "desc": "A spinning wheel held up at one end swings round instead of falling. See the torque turn the angular momentum, and measure how the precession rate depends on the spin.",
+     "tags": [
+      "precession",
+      "angular momentum",
+      "torque",
+      "nutation"
+     ]
+    },
+    {
      "demo": "potential-curves",
      "title": "Potential Energy Curves",
      "desc": "Read motion off a graph of U(x): drag the energy line and watch the particle speed up, slow down and turn around. Springs, roller coasters, a double well, a molecule, a pendulum, or a curve you draw yourself, with phase space.",
