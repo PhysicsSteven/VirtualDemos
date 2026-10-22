@@ -1,55 +1,74 @@
-# Kepler's Laws — Student Virtual Laboratory
-**Simulation:** [Open Kepler's Laws](../../demos/kepler-orbits.html)  
-**Duration:** 50–75 minutes · **Level:** introductory calculus-based physics  
-**Research question:** How does the orbital period depend on semimajor axis?
+# Measuring Orbits and Kepler's Third Law
+Student laboratory · Physics I
 
-## Learning objectives
-1. State the assumptions of the model and identify measurable variables.
-2. Gather a minimum of five observations from the simulation without copying theoretical readouts.
-3. Fit or graph the governing relationship, estimate a physical parameter, and interpret discrepancies.
+Textbook: OpenStax *University Physics*, Vol. 1, §§13.1 and 13.3–13.5. Access for free at https://openstax.org/details/books/university-physics-volume-1.
+
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/kepler-orbits.html)
+
+## Goal
+
+Measure orbital size and period, infer the central mass and test how orbital speed changes around an ellipse.
 
 ## Background
-The reference model is **the physical model described in the simulation**.
 
-\[P^2 = a^3/M (a in AU, P in years, central mass M in solar masses)\]
+For a light body orbiting central mass M (§13.5),
 
-**Important limitation:** Use bound orbits; semimajor axis is not instantaneous radius. Compare measured time to a complete orbital cycle.
+$$T^2=\frac{4\pi^2}{GM}a^3.$$
 
-## Apparatus and setup
-Open the linked simulation. Record the model/preset, initial settings, units, and any toggles. Identify which controls adjust **Semimajor axis a in AU** and which displays permit measuring **Orbital period P in years**. If a requested setting or measurement is not directly supported, document the limitation; do not invent data. Disable overlays that reveal the expected answer during measurement when possible.
+Here a is the semimajor axis, not the instantaneous distance from the star. For a bound orbit (§§13.3–13.4),
+
+$$\frac{E}{m}=-\frac{GM}{2a},\qquad v^2=GM\left(\frac{2}{r}-\frac1a\right).$$
+
+Angular-momentum conservation gives equal swept areas in equal times and faster motion near periapsis.
+
+## Before the lab
+
+1. How should the period change if a doubles at fixed M?
+2. Why is the star generally at a focus rather than the center of an ellipse?
+3. What is the expected slope of T² against a³, and how does it determine M?
+
+## Safety
+
+For an analogous real rotating apparatus, follow the instructor's speed limits and keep clear of moving masses. No physical apparatus is required for the orbital simulation.
 
 ## Procedure
-1. Before running the simulation, sketch or state the expected relationship between the controlled and measured quantities.
-2. Choose an initial configuration compatible with the assumptions above; record all fixed parameters.
-3. Set the independent variable to the first of five values. Allow the system to settle or complete the relevant cycle; measure the response.
-4. Repeat for four additional settings, keeping all other controls fixed. Record at least one repeated measurement where stochastic variation or manual measurement matters.
-5. Export data if the simulation offers it; otherwise enter values in the table below.
-6. Produce a labeled graph with units, a model fit, and residuals or percentage differences.
-7. Enable theory overlays only after your first analysis and compare with the expected relationship.
 
-## Data sheet
-| Trial | Semimajor axis a in AU | Orbital period P in years | Measurement method / uncertainty |
-|---|---|---|---|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
+**Third-law scan.** Make five distinct bound orbits around the same central mass. For each, measure the full major-axis length and time one complete revolution between passages of the same reference point in the same direction. Divide the measured major axis by two to obtain a.
+
+**Eccentric orbit.** Choose one clear ellipse. Compare distances and speeds at periapsis and apoapsis, and compare areas swept in equal time intervals.
+
+**Central mass.** Repeat a shorter size-period scan at a different M. Compare the fitted slopes and inferred mass ratio.
+
+**Using the virtual apparatus.** Enable **Blind: hide predictions and answers**. Begin with **Earth**, **Mars**, **Mercury** and **Circular orbit**, then drag the launch point or velocity arrow to obtain additional distinct bound orbits. Use **Reset** between runs. Enable **Ruler**, placing its endpoints at opposite ends of the major axis; **Ruler point** lets the arrow keys move a selected endpoint. Use **Zero timer**, **Start timer** and **Stop timer** for one complete revolution. Press **Capture reading** and **Export CSV**. Its a value is half your ruler distance, not a theoretical orbital element. Use **Third law** and **Your readings** for the comparison. Change **Star mass M** only between scans, recording whether **Keep the orbit's shape when M changes** is selected. Reveal **Foci and axis** and **Sweep wedges** after making your own measurements.
+
+## Data
+
+| Orbit | M (solar masses) | Major-axis ruler distance (AU) | a (AU) | T (yr) | a³ (AU³) | T² (yr²) |
+|---|---|---|---|---|---|---|
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+
+Add all orbits and keep the two central-mass scans separate. Record your reference crossing and timing method.
 
 ## Analysis
-**Recommended graph/fit:** Plot P^2 versus a^3; for a one-solar-mass central body, expect slope approximately 1.
 
-Calculate the physical quantity implied by the slope or fit parameters. Show units and at least one worked calculation. If the simulation is deterministic, estimate uncertainty from display resolution, cursor placement, or model sensitivity rather than inventing random error.
+1. Fit T² against a³. In the simulation's AU, year and solar-mass units, infer M = 1/slope.
+2. Inspect intercept and residuals for timing or ruler-placement bias. Compare results using near-circular and eccentric orbits.
+3. For the eccentric orbit, test r_p v_p = r_a v_a and compare with the energy relation.
+4. Compare fitted slopes at the two central masses. Explain why escape trajectories do not belong on this period plot.
+
+## Uncertainty
+
+Use ruler placement and time-crossing resolution. The fractional errors in a³ and T² are approximately 3δa/a and 2δT/T. Eccentric orbits make major-axis placement and timing near periapsis harder. Do not use the star-to-planet separation as a substitute for a, and do not count several revolutions as one.
 
 ## Questions
-1. Which assumptions were required for the reference equation?
-2. What does the graph slope or fitted parameter mean physically?
-3. Which display choices could bias your measurement?
-4. Does the discrepancy indicate random uncertainty, numerical error, or a model limitation? Defend your classification.
-5. What result would falsify your prediction?
 
-## Extension
-Repeat with changed central mass; estimate mass from fitted slope.
+1. Why can an ellipse have the same period as a circle with the same a?
+2. Why does the body speed up near the star without gaining total mechanical energy?
+3. Why does increasing M shorten the period at fixed a?
+4. Which part of your measurement is most sensitive to eccentricity?
 
-## Submission
-Submit the completed data sheet, labeled graph, parameter estimate with units, comparison to theory, and a 150–250-word conclusion. Cite the simulation version/commit if provided.
+## What to hand in
+
+Prelab answers, settings and CSV, both third-law fits, inferred masses with uncertainty, the eccentric-orbit comparison and answers to the questions. Identify simulated data.

@@ -1,65 +1,79 @@
-# Faraday Induction: Measuring Flux Change and Induced Voltage
-Student laboratory · 120 minutes · Calculus-based Physics II
+# Magnetic Flux and Electromagnetic Induction
+Student laboratory · Physics II
 
-[Open simulation](https://physicssteven.github.io/VirtualDemos/demos/faraday.html). This procedure supports main at bc0485a. A feature-branch CSV extension is described at the end.
+Textbook: OpenStax *University Physics*, Vol. 2, §§13.1–13.3, 13.6 and 14.1–14.3. Access for free at https://openstax.org/details/books/university-physics-volume-2.
 
-## Objectives and prerequisites
-Measure magnetic flux and induced EMF; test sign and integral forms of Faraday's law; infer generator amplitude scaling and magnetic field from motional EMF; account for mechanical energy converted into heat. Prerequisites: magnetic flux, derivatives/integrals, Ohm's law, work/energy and spreadsheet graphing.
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/faraday.html)
 
-## Model and prelab
-For N turns, flux per turn Φ=∫B·dA, flux linkage NΦ, EMF ε=−N dΦ/dt and I=ε/R when self-inductance is negligible. Derive ε for Φ=BA cos(ωt). For a sliding bar of length L at x in uniform perpendicular B, use Φ=BLx to derive the EMF, magnetic drag and mechanical power. Derive the coasting decay from m dv/dt=−B²L²v/R.
+## Goal
 
-The magnet is a uniformly magnetized finite cylinder, not a point dipole near the coil. The generator motor prescribes angular speed. Rails are frictionless; a bumper terminates travel. Numerical EMF/current are averages over a preceding 1 ms interval, whereas flux is an endpoint value. Distinguish a model prediction from an experimental measurement.
+Measure how changing magnetic flux produces an emf, determine a mutual inductance, and connect induced current with energy transfer.
 
-## Current-main controls and recording
-Use **Generator**, **Sliding bar** and **Push the magnet in** presets. Press **Pause** when preparing each run. Main offers playback and apparatus controls but no numerical time entry, single-step button, notebook or CSV. Sample with Play/Pause and slow playback; record actual displayed time, never an intended exact time. Make manual tables and screenshots. Presets/reset restore settings, so reapply changes afterward. Theoretical amplitudes/integral checks are visible: write predictions before consulting them. Use the actual trace amplitude for your measurement, not a theoretical peak label.
+## Background
 
-## A. Generator (40 minutes)
-1. Select Generator; set N=100, B=0.20 T, A=100 cm², R=100 Ω, ω=6.3 rad/s. Record unit conversions and predict period and amplitude.
-2. Record at least twelve tuples (t, Φ, ε, I) over two cycles. Use repeated runs if needed; the motion is deterministic. Screenshot the trace and time scale.
-3. Plot flux and EMF versus actual time. Estimate period, amplitudes and relative phase. If timing/readout precision permits, fit a sinusoid; otherwise use bracketed peaks and report resolution rather than claiming a precise fit.
-4. Repeat at ω=3.0 and 12.0 rad/s. Plot measured EMF amplitude versus ω; infer NBA from the slope. Double N for an additional run and compare flux per turn, EMF and current.
-5. Compare finite differences −NΔΦ/Δt with the EMF at each interval midpoint. With coarse manually sampled flux, the finite difference is an interval average and need not match an endpoint readout.
+For N turns with flux Φ_B through each turn (§13.1),
 
-| N | B (T) | A (m²) | ω (rad/s) | Period (s) | Flux amplitude (Wb) | EMF amplitude (V) | Phase |
-|---|---|---|---|---|---|---|---|
-| | | | | | | | |
-| | | | | | | | |
-| | | | | | | | |
+$$\mathcal E=-N\frac{d\Phi_B}{dt},\qquad \Phi_B=\int\mathbf B\cdot d\mathbf A.$$
 
-Also submit your twelve-row raw table for each run, including actual time and units.
+The minus sign expresses Lenz's law (§13.2). For a rotating coil, Φ_B = BA cos(ωt). A moving bar of length ℓ in a perpendicular field has emf magnitude Bℓv (§13.3).
 
-## B. Sliding bar (35 minutes)
-1. Select Sliding bar: B=1 T, L=20 cm, v=1 m/s, R=0.47 Ω, m=20 g. Play and pause during uniform motion, away from the initial 0.2 s delay and the bumper.
-2. Using the displayed normal into the page and positive clockwise loop direction, predict the signs of ε and I. Record x, Φ, ε, I and velocity.
-3. Calculate F=ILB, I²R and −Fv; compare electrical and mechanical power. Repeat at v=0.5 and 1.5 m/s, keeping other settings fixed. Fit ε versus v and infer B from its slope.
-4. Select **Push and let go** from a reset starting position. Sample velocity and actual elapsed time since release at least six times before reaching the bumper. Plot ln|v| versus time and infer the coasting time constant. Record the uncertainty in release time; an unknown common time offset affects the intercept rather than the slope.
-5. Compare resistor heat with (m/2)(v0²−v²), computing kinetic energy yourself from the same velocity convention. Main's kinetic-energy readout uses interval-average velocity; the feature branch corrects it to endpoint energy. Finite-step heat also has averaging error. Exclude bumper losses from the electrical heat balance. Keep B nonzero: main's zero-field coasting core is defective.
+In two coupled coils, a changing primary current produces an emf in the secondary (§14.1):
 
-| v (m/s) | ε (V) | I (A) | F (N) | I²R (W) | −Fv (W) |
-|---|---|---|---|---|---|
-| | | | | | |
-| | | | | | |
-| | | | | | |
+$$\mathcal E_2=-M\frac{dI_1}{dt}.$$
 
-## C. Magnet (25 minutes)
-1. Select Push the magnet in, pause, set speed 0.10 m/s, then complete the move. Keep coil radius, N, R and magnet strength fixed. Record initial/final flux and the displayed cumulative EMF integral and charge since the move began.
-2. Repeat from the same reset position at 0.40 m/s. Record peak EMF from the trace with an uncertainty interval. Compare duration, peak and total transported charge.
-3. Predict −N(Φ_final−Φ_initial) and divide by R to predict charge. Compare with the cumulative displays, identifying this as an internal consistency check because both use the same flux differences.
-4. Use **Pull out** to reverse the move. Explain the changed EMF sign and why the induced force opposes motion in both directions.
+With the secondary open and a sinusoidal primary current, its emf amplitude is MωI_1,peak. The current amplitude must be measured; it need not be proportional to the applied source voltage.
 
-| Speed (m/s) | Initial/final position (m) | Φ_initial (Wb) | Φ_final (Wb) | Peak ε (V) | ∫εdt (V s) | Q (C) |
+## Before the lab
+
+1. Derive the generator emf from Φ_B = BA cos(ωt).
+2. Predict what doubling ω does to emf amplitude and period.
+3. Can an open secondary have a nonzero emf but zero current? Explain.
+
+## Safety
+
+Keep real magnets away from sensitive electronics. Switch off supplies before rewiring coils. Do not open a powered inductor circuit abruptly unless the apparatus is designed for it. Keep hands away from rotating parts.
+
+## Procedure
+
+**Generator.** Use N = 100, B = 0.20 T, A = 100 cm² and R = 100 Ω in the simulation, or assigned real-apparatus values. Measure flux and emf over two cycles at angular speeds near 3.0, 6.3 and 12.0 rad/s. Take enough points to locate both signs and the peaks. Repeat one run with twice as many turns.
+
+**Mutual induction.** Use two coaxial coils with the secondary open. Keep their turns, radii and separation fixed. Measure primary-current and secondary-emf amplitudes at three frequencies. Infer M for each run. Then change separation and repeat. Close the secondary for one setting and compare its current and the primary current after the transient has settled.
+
+**Motional emf.** Move a conducting bar across a perpendicular magnetic field. At three speeds, measure emf and current. Infer B from the emf-speed slope and compare electrical heating with the mechanical power needed to maintain motion.
+
+**Magnet check.** Move a magnet into the coil at two speeds with matched starting and ending positions. Compare peak emf and the time integral of emf. Reverse the motion and explain the sign change.
+
+**Using the virtual apparatus.** Choose **Generator**, **Two coils**, **Sliding bar** or **Push the magnet in**. Keep **Blind: hide predictions and answers** on while collecting. Use **Pause**, **Step 1 ms**, or enter **Advance by (s)** and press **Advance and pause**. Press **Capture measurement** for selected points; **Export notebook CSV** saves these points and **Export current run CSV** saves the trace. Export before changing setup. For **Two coils**, use **Primary turns N₁**, **Secondary turns N₂**, **Secondary radius a₂**, **Separation d**, **Frequency f** and **Amplitude V₀**. Choose **Open** or **Closed** under Secondary switch. Wait until successive cycles agree before fitting amplitudes. Record the displayed winding resistance and settings needed for your calculations after your measurements are complete.
+
+## Data
+
+| Setup and settings | t (s) | Φ_B per turn (Wb) | emf (V) | Current (A) | I₁ (A), two coils | Speed/frequency |
 |---|---|---|---|---|---|---|
 | | | | | | | |
 | | | | | | | |
+| | | | | | | |
 
-## Uncertainty and questions (20 minutes)
-Use half the last displayed digit as a rounding bound and bracket paused times/trace peaks. Report time-axis resolution and how it affects periods and slopes. For a sinusoid sampled in intervals Δt, EMF amplitude is multiplied by sin(ωΔt/2)/(ωΔt/2). Distinguish this time averaging from spatial quadrature of the magnet field. Do not invent random noise or treat cumulative identities as independent validation.
+Use a separate copy for each run and state which current is recorded. Keep both endpoint time and interval-midpoint time from the CSV when present.
 
-Why can nonzero B give zero current? Why does N not change flux per turn? Why does faster motion change peak voltage but not total charge for matched endpoints? Where does heat energy come from? When would neglected inductance invalidate I=ε/R?
+## Analysis
 
-## Optional feature-branch instrumentation
-On the curriculum branch only, **Step 1 ms**, **Advance by (s)** / **Advance and pause**, **Capture measurement**, and notebook/run CSV provide precise samples. Keep **Hide predicted amplitudes and integral checks** selected; some theoretical plot overlays remain. Exported flux belongs at endpoint t, while ε/I belong at the recorded interval midpoint. Exclude the zero-duration initial row from fits. A run retains at most 60001 samples; parameter changes start a new run and speed changes are recorded per row. Generator runs of 2 s and default magnet runs of 2 s are sufficient for the prescribed measurements. Submit raw CSV and independently fitted results if using this extension.
+1. Plot flux and emf against time. Compare period, relative phase and sign with Faraday's law. Plot generator emf amplitude against ω and infer NBA.
+2. Estimate −NΔΦ_B/Δt from nearby flux readings. Compare with emf averaged over that same interval, not a different endpoint value.
+3. For the open secondary, calculate M = emf_peak/(2πf I₁,peak). Compare frequency scans and separations. Explain why the air-core pair need not obey an ideal transformer's turns ratio.
+4. For the sliding bar, infer B from the emf-speed slope. Compare |F|v, |emf I| and I²R during steady motion.
+5. Compare the magnet runs using ∫emf dt = −NΔΦ_B. Distinguish this integral check from an independent measurement of the magnetic field.
 
-## Submission
-Submit settings, raw manual tables or branch CSV, screenshots, plots, fit coefficients or bracketed estimates, and conclusions.
+## Uncertainty
+
+Use time spacing, peak bracketing and readout rounding to estimate amplitude and period uncertainty. Avoid fitting only one sampled peak. For M, include uncertainties in emf amplitude, primary-current amplitude and frequency. The generator/rails/magnet emf and current are interval averages; the flux is an endpoint value. State your sampling interval and check whether reducing it changes the result.
+
+## Questions
+
+1. Why is emf zero at a generator's maximum flux?
+2. Why can faster magnet motion change peak emf without changing its integral between matched endpoints?
+3. Why does closing the secondary change the primary current?
+4. Where does the resistor's heat energy come from in each setup?
+
+## What to hand in
+
+Prelab answers, settings and CSV, flux/emf plots, generator scaling, mutual-inductance estimates, motional-emf and energy calculations, uncertainty and answers to the questions. Identify simulated data.

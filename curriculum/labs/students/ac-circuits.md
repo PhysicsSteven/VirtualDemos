@@ -1,6 +1,8 @@
 # AC Circuits and Resonance
 Student laboratory · Physics II
 
+Textbook: OpenStax *University Physics*, Vol. 2, §§15.1–15.5 (optional: going further beyond the required PHYS 202 sequence). Access for free at https://openstax.org/details/books/university-physics-volume-2.
+
 [Open the virtual Circuits bench](https://physicssteven.github.io/VirtualDemos/demos/circuits.html#ac)
 
 ## Goal
@@ -9,15 +11,15 @@ Measure how current depends on frequency in a series RLC circuit. Use the resona
 
 ## Background
 
-A resistor, inductor and capacitor affect alternating current differently. The inductor's reactance grows with frequency, while the capacitor's falls:
+This optional activity follows Chapter 15. A resistor, inductor and capacitor affect alternating current differently (§15.2). The inductor's reactance grows with frequency, while the capacitor's falls:
 
 $$X_L=2\pi fL,\qquad X_C=\frac{1}{2\pi fC}.$$
 
-For the series circuit,
+For the series circuit (§15.3),
 
 $$|Z|=\sqrt{R^2+(X_L-X_C)^2},\qquad I_{\rm rms}=\frac{V_0}{\sqrt2\,|Z|}.$$
 
-Here V0 is the source's peak voltage. Current lags the voltage when XL is larger than XC, and leads when XC is larger. At resonance the reactances cancel:
+Here V0 is the source's peak voltage. Current lags the voltage when XL is larger than XC, and leads when XC is larger. At resonance (§15.5) the reactances cancel:
 
 $$f_0=\frac{1}{2\pi\sqrt{LC}}.$$
 
@@ -47,7 +49,7 @@ For a real circuit, turn off the supply before changing connections. Stay within
 4. Repeat a shorter sweep with R = 10 Ω and R = 100 Ω, keeping L, C and source voltage fixed.
 5. If recording equipment is available, compare how quickly the current settles after switching on at resonance for two resistance values.
 
-**Using the virtual apparatus.** Choose **AC** and use **Resistor only**, **Capacitor only**, **Inductor only** and **Below resonance**. Click parts to edit values in **Selected**. The frequency slider snaps to f₀ near resonance, so near the peak and the half power points select the source and type **Frequency f** instead. At each frequency press **Capture reading** under **Frequency response readings**. It stores f, the source V0 and rms voltage, the rms current, the phase, |Z|, the average power, the part values and the rms voltage across each part, all as the panel displays them. The table on the page shows f, I_rms in mA, phase and power; the CSV has every column, in SI units. Check each new row against the readout, and delete any row you took by mistake. Rows from different circuits can share the table, because every row keeps the part values; you may still press **Clear** after exporting each sweep. Press **Export CSV** to save the table; the file starts with comment lines that list the circuit and mark the data as simulated. Use **Go to f₀** only after locating the peak yourself. **Export scope CSV** under **Oscilloscope** saves two periods of the steady state traces for the channels you added with **Scope V** and **Scope I**. To record startup, keep the same circuit, switch to **In time**, press **Reset**, add channels with **Scope V** and **Scope I** if they are not already listed, then use **Whole run** and **Export scope CSV**.
+**Using the virtual apparatus.** Turn on **Blind: hide predictions and answers**, choose **AC** and use **Resistor only**, **Capacitor only**, **Inductor only** and **Below resonance**. Click parts to edit values in **Selected**. The frequency slider snaps to f₀ near resonance, so near the peak and the half power points select the source and type **Frequency f** instead. At each frequency press **Capture reading** under **Frequency response readings**. It stores f, the source V0 and rms voltage, the rms current, the phase, |Z|, the average power, the part values and the rms voltage across each part, all as the panel displays them. The table on the page shows f, I_rms in mA, phase and power; the CSV has every column, in SI units. Check each new row against the readout, and delete any row you took by mistake. Rows from different circuits can share the table, because every row keeps the part values; you may still press **Clear** after exporting each sweep. Press **Export CSV** to save the table; the file starts with comment lines that list the circuit and mark the data as simulated. Use **Go to f₀** only after locating the peak yourself. **Export scope CSV** under **Oscilloscope** saves two periods of the steady state traces for the channels you added with **Scope V** and **Scope I**. To record startup, keep the same circuit, switch to **In time**, press **Reset**, add channels with **Scope V** and **Scope I** if they are not already listed, then use **Whole run** and **Export scope CSV**.
 
 ## Data
 

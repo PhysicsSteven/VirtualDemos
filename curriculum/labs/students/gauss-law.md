@@ -1,65 +1,76 @@
-# Gauss's Law — Measuring Electric Flux with Numerical Integration
-**Student edition · 90 minutes · calculus-based introductory physics**  
-[Open simulation](https://physicssteven.github.io/VirtualDemos/demos/gauss-law.html)
+# Electric Flux and Gauss's Law
+Student laboratory · Physics II
 
-## Research question
-Does total electric flux depend on the shape or size of a closed surface, and how accurately can it be computed numerically when a charge approaches the boundary?
+Textbook: OpenStax *University Physics*, Vol. 2, §§6.1–6.4. Access for free at https://openstax.org/details/books/university-physics-volume-2.
 
-## Objectives
-Distinguish net flux from outward and inward contributions; predict flux using Q_enclosed/ε₀; compare numerical surface integration for different shapes; investigate numerical conditioning near a boundary.
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/gauss-law.html)
 
-## Prelab
-Derive Φ_E=q/ε₀ for a point charge at the center of a sphere using Coulomb's law. Explain why the result also holds for an arbitrary closed surface not crossing the charge, and why a charge outside can contribute nonzero local flux while its **net** contribution is zero. Show the SI units of Φ_E.
+## Goal
 
-## Controls
-Use the **Flux** mode, the charge list and surface shape controls (**Sphere**, **Box**, **Cylinder**, **Freeform**; Freeform is extruded into a prism). The demo displays numerical ∮E·dA, Q_enclosed/ε₀, outward/inward flux, field-evaluation count, and integration time. Record which surface and charge positions you actually use. Start with **Charge inside** and immediately Pause; select its charge in the list and set **Selected charge q** to +1 nC. The list reports coordinates in cm. Type exact coordinates for the selected charge in the **x** and **y** fields under the charge slider (to 0.01 cm; press Enter); dragging snaps to 0.1 cm, and the canvas arrow keys nudge by 0.1 cm (Shift: 1 cm). Untick **Show predicted flux Q_enc/ε₀** to hide the prediction and the residual while you make your own predictions. **Capture reading** adds the current surface, charges and numerical flux to the table; **Export CSV** saves all rows in SI units with the geometry, the closest charge to surface distance, field evaluations and quadrature status. The quadrature tolerance is fixed.
+Test how enclosed charge, surface shape and charge position affect electric flux. Use symmetry to connect total flux with electric field.
 
-## Part A — Shape independence (25 min)
-1. Place a single +1 nC charge clearly inside the closed surface. Choose a sphere with the charge well away from its boundary.
-2. Record analytic Q_enclosed/ε₀ and numerical flux, including sign and units. Calculate signed and absolute difference.
-3. Repeat with Box, Cylinder and Freeform, ensuring the charge remains inside. Keep charge and surface dimensions as similar as the UI allows.
-4. Move the charge to an off-center interior location without crossing the boundary. Repeat at least two surface shapes.
-5. Explain why the outward and inward contributions may change even when net flux does not.
+## Background
 
-| Shape | Charge position | Q_enclosed (nC) | Predicted Φ (N m²/C) | Numerical Φ | Abs. difference | Field evaluations |
+Electric flux uses the outward area normal (§6.1):
+
+$$\Phi_E=\oint\mathbf E\cdot d\mathbf A.$$
+
+Gauss's law relates net outward flux to enclosed charge (§6.2):
+
+$$\Phi_E=\frac{Q_{\rm enc}}{\epsilon_0}.$$
+
+It holds for every closed surface. Extracting E from the integral requires sufficient symmetry (§6.3). A drawing's field-line count is a visual aid, not a measurement of the continuous integral.
+
+## Before the lab
+
+1. Predict net flux when a +1 nC charge is moved within a closed surface without crossing it.
+2. Can an external charge change the field on the surface without changing its net flux?
+3. Why can a spherical Gaussian surface simplify a spherically symmetric problem?
+
+## Safety
+
+For a real electrostatics bench, follow the instructor's high voltage and discharge procedures. Do not touch charged conductors or move leads with the supply on.
+
+## Procedure
+
+**Shape and position.** Place one +1 nC charge inside a closed surface. Record numerical flux for a sphere, box and cylinder, keeping the charge clearly inside. Repeat with the charge displaced from the center. Predict flux before consulting a theoretical readout.
+
+**Superposition.** Put +2 nC and −1 nC inside the same surface. Record flux. Move only the negative charge outside and repeat. Then compare equal-and-opposite charges both inside with both outside. Record enough information to reconstruct the charge positions.
+
+**Approach to a boundary.** Keep a charge fixed and change the surface size to approach it from either side. Record five or more separations where the numerical integral is available. Compare numerical error and field-evaluation count as the separation shrinks.
+
+**Symmetry.** Compare a uniformly charged ball and a conducting sphere with the same Q and R. Record E at several radii inside and outside. Use the conductor's one-sided surface limits rather than assigning one field value to the ideal charged surface (§6.4).
+
+**Using the virtual apparatus.** Choose **Any surface**, then **Charge inside** and **Pause**. Select the charge, set **Selected charge q**, and enter its x/y coordinates. Use **Sphere**, **Box** and **Cylinder**. Clear **Show predicted flux Qenc/ε₀** while measuring. Press **Capture reading** and **Export CSV**; the export includes geometry and numerical status. Use **Dipole inside** for the charge combinations. Keep the charge at least 0.03 cm from the surface: this is a numerical exclusion zone. Flag rows marked **Quadrature tolerance not met** rather than treating them as reliable measurements. For the last part choose **Symmetry**, **Sphere**, then **Ball** or **Conductor**.
+
+## Data
+
+| Geometry/distribution | Charge positions or r (m) | Q_enc (C) | Numerical flux (N m²/C) | Predicted flux (N m²/C) | E (N/C), if used | Numerical status/evaluations |
 |---|---|---|---|---|---|---|
-| Sphere | | | | | | |
-| Box | | | | | | |
-| Cylinder | | | | | | |
-| Prism | | | | | | |
-| Off-center | | | | | | |
-
-## Part B — Superposition and cancellation (20 min)
-1. Select **Dipole inside**, pause, then select its −2 nC charge and set it to −1 nC. The +2 nC charge remains unchanged. Predict net flux before observing.
-2. Move the negative charge outside the box using its selected canvas arrow controls or dragging. Confirm the list says outside and record actual coordinates. Record numerical and predicted net flux.
-3. Place equal and opposite charges inside; compare the net flux to the outward and inward totals.
-4. Move both charges outside; explain why the local field can remain nonzero while net flux vanishes.
-
-## Part C — Boundary sensitivity (25 min)
-1. Reset **Charge inside**, immediately pause, and select/set q=+1 nC. Record its actual coordinates (x,y) and the sphere center (initially 0, 0). Keep the charge and center fixed throughout this scan.
-2. Compute r_q=sqrt(x²+y²). Vary **Radius R** to obtain at least five clear interior/exterior distances δ=|R−r_q|. For the unanimated preset position (−1.5, 1.0) cm, try R=3.0, 2.5, 2.1, 2.0, 1.9 cm inside and 1.7, 1.6, 1.4 cm outside. If animation moved the charge before pause, choose radii from its actual recorded position instead.
-3. Record flux, field evaluations and integration time after the display settles, or capture each point. Avoid δ<0.03 cm: the demo skips the numerical integral inside this numerical exclusion zone and says so. Only δ=0 exactly is physically singular; never assign the exclusion to a physical layer of charge. If the rail reports **Quadrature tolerance not met**, flag that row (the table marks it with !).
-4. Plot scaled error and evaluation count against δ. This is a boundary-conditioning experiment, not a controlled tolerance-convergence study: the current UI exposes no tolerance setting. Runtime depends on the machine; use evaluation count for reproducible cost comparison.
-
-| Position / δ | Inside? | Predicted Φ | Numerical Φ | Difference | Evaluations | Integration time |
-|---|---|---|---|---|---|---|
-| | | | | | | |
-| | | | | | | |
 | | | | | | | |
 | | | | | | | |
 | | | | | | | |
 
-Coordinate display rounding contributes at most 0.05 cm to each coordinate read to one decimal place. If exact preset coordinates were preserved, the setting values are known; otherwise propagate the coordinate bound into δ and omit points whose inside/outside status is uncertain. In **Symmetry** mode, E=0 at the center of the ball and of the conductor, and on the conductor's charged surface the demo shows E jumping from 0 to kQ/R² rather than a single value.
+Record all shape dimensions and Q, R above the relevant table. Keep separate copies for each investigation.
 
-## Data analysis
-Calculate relative error |Φ_num−Φ_theory|/max(|Φ_theory|,Φ_scale), where Φ_scale is a clearly stated nonzero characteristic flux (e.g. |q|/ε₀). This avoids division by zero when Q_enclosed=0. Plot error and evaluation count against δ (log axes if appropriate). Compare shapes. Do not interpret an exact floating-point match as a rigorous bound on quadrature error.
+## Analysis
+
+1. Calculate Q_enc/ε0 independently for every flux row. Compare shapes and charge positions.
+2. Use a nonzero scale such as |q|/ε0 to normalize errors when predicted net flux is zero.
+3. Plot flux error and evaluation count against the closest charge-to-surface separation. Distinguish boundary sensitivity from a controlled quadrature-tolerance study.
+4. Derive E(r) inside/outside a uniform ball and a conductor using symmetry. Compare with the radial measurements and discuss continuity or a jump at R.
+
+## Uncertainty
+
+Include coordinate and surface-size resolution when deciding whether a charge is inside. Omit positions whose classification is uncertain. Numerical quadrature error is different from measurement rounding. Near a charge, the field changes rapidly and cancellation can be difficult; an integration warning is not a physical violation of Gauss's law. Only an exact point charge on the surface creates the mathematical singularity.
 
 ## Questions
-1. Why does an external charge give zero net flux through a closed surface?
-2. Why is a charge exactly on the surface excluded from the standard point-charge integral?
-3. Can net flux be zero while the electric field is nonzero everywhere on the surface?
-4. What changes physically versus numerically when δ approaches zero?
-5. Why might outward and inward flux be individually large even when their sum is small?
 
-## Submission
-Prelab 15; Part A 25; Part B 15; Part C 25; graphs and discussion 20. Include numerical settings, units and a defensible error metric.
+1. Does zero net flux imply zero electric field on the surface?
+2. Why can changing shape alter outward and inward contributions while leaving their sum unchanged?
+3. When can E be taken outside the flux integral?
+4. Why is the field zero inside a conductor in electrostatic equilibrium but not generally inside a uniformly charged insulating ball?
+
+## What to hand in
+
+Prelab answers, configurations and CSV, calculated fluxes, the boundary-error graph, radial-field comparison, uncertainty and answers to the questions. Identify simulated data.
