@@ -192,11 +192,13 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 /* course tiles (tools/courses.py) */
 .courses { padding-top: 30px; }
 .courses h2 { margin: 0 0 14px; font-size: 1.35rem; letter-spacing: -0.01em; }
-.ctiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.ctiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
 .ctile { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; height: 100%; text-decoration: none; color: inherit;
   background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: border-color 0.15s, box-shadow 0.2s, translate 0.2s; }
 .ctile .mosaic { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--line); background: var(--canvas); }
-.ctile .mosaic .thumb { border-bottom: 0; }
+.ctile .mosaic { height: 92px; overflow: hidden; }
+.ctile .mosaic .thumb { border-bottom: 0; height: 92px; aspect-ratio: auto; }
+.ctile .mosaic .thumb img { height: 92px; }
 .ctile .cbody { grid-column: 1 / -1; padding: 14px 18px 18px; }
 .ctile h3 { margin: 0; font-size: 1.45rem; }
 .ctile .sub { margin: 2px 0 6px; font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); }
@@ -245,6 +247,10 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
       <li><a class="ctile" href="physics-2.html">
         <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/coulomb-sandbox-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/coulomb-sandbox-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/gauss-law-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/gauss-law-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/capacitors-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/capacitors-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/circuits-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/circuits-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
         <div class="cbody"><h3>Physics II</h3><p class="sub">Electricity and magnetism · 11 units · 10 demos</p><p>Charges and fields through Maxwell’s equations and electromagnetic waves, with basic optics at the end if time allows. OpenStax University Physics Volume 2, and Volume 3 for optics.</p></div>
+      </a></li>
+      <li><a class="ctile" href="misc.html">
+        <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/star-slice-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/star-slice-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/hydrogen-orbitals-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/hydrogen-orbitals-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/ising-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/ising-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/chladni-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/chladni-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
+        <div class="cbody"><h3>Misc.</h3><p class="sub">Everything else · 43 demos</p><p>Astronomy, modern physics, thermodynamics, waves and more: every demo that is not part of Physics I or II yet. These will become their own courses later.</p></div>
       </a></li>
   </ul>
   <p class="allnote">Every demo, grouped by subject, is below.</p>
