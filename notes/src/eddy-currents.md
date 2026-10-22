@@ -1,5 +1,5 @@
 ---
-title: "Eddy Currents: Magnet in a Pipe"
+title: Eddy Currents: Magnet in a Pipe
 level: PHYS 202
 time: 10 to 20 minutes
 ---
