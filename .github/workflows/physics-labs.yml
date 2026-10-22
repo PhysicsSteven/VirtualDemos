@@ -25,6 +25,6 @@ jobs:
           node-version: '22'
       - name: Independent numerical references
         run: |
-          for demo in transient_circuits rc_circuits gauss_law faraday capacitors ac_circuits circuit_builder coulomb_sandbox diffraction_grating modern_benches circuits photoelectric_record acoustic_labs franck_hertz; do
+          for demo in transient_circuits rc_circuits gauss_law faraday capacitors ac_circuits circuit_builder coulomb_sandbox diffraction_grating modern_benches circuits photoelectric_record acoustic_labs franck_hertz dna lagrange_points; do
             node "curriculum/validation/test_${demo}.cjs" || exit 1
           done

@@ -68,3 +68,8 @@ Audit checkpoint: [teaching keys](https://github.com/PhysicsSteven/TeacherKeys/b
 
 
 2026-10-19 modern-first writing pass: full student/teacher packages drafted for spin resonance, Foucault c, electron e/m and diffraction; RC/AC/RLC now use unified Circuits; acoustics and Franck–Hertz packages added. Instructor material stays in private TeacherKeys. These are authored/manual-aligned packages with scoped Node evidence, not automatic release-level promotion. [Delivery and open limits](validation/LAB_WRITING_2026-10-19.md).
+
+
+## Weekend checkpoint — 2026-10-22
+
+Follow the current COLLABORATION.md queue: independent review of nine newest demos, then the listed E&M handouts after Claude's feature notes, followed by mechanics after its batch. Initial local evidence: 126 supported Node groups passed, including new DNA topology/geometry and Lagrange frame checks; strict DNA TER export check fails. The broader independent review remains partial. [Scope and next checks](validation/WEEKEND_REVIEW_2026-10-22.md). No release level upgraded.

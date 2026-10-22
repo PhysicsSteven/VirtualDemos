@@ -29,3 +29,8 @@ Do not mistake exact agreement between two derived readouts for independent vali
 ## Second pass: tasks 1, 3 and 5
 
 [Executed report](SECOND_PASS_2026-10-18.md) and [machine-readable numerical results](SECOND_PASS_RESULTS.json): 67 supported branch groups passed; seven requested suites give 42/44 groups on main (Faraday failures). Strict Gauss-origin and Coulomb-core probes intentionally fail and remain outside the supported-case green CI. See exact commands and scope before using any passing count as validation evidence.
+
+
+## Weekend review checkpoint, 2026-10-22
+
+[Review record](WEEKEND_REVIEW_2026-10-22.md): 126 supported local Node groups passed on main 77d11e3, including new `test_dna.cjs` and `test_lagrange_points.cjs`. DNA `--strict-ter` exits 1 for misaligned TER chain fields; it remains a known failure outside supported-case CI. This is partial review, with no browser or remote CI result claimed.

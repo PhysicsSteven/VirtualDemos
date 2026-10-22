@@ -57,3 +57,8 @@ The ten requested handouts now follow Claude’s e/m example: Goal, short Backgr
 ## Owner-approved integration — 2026-10-20
 
 The plain-language handouts are merged with latest main bce8304 under Steve’s explicit approval. Newer Rutherford/timbre source updates are preserved. Ran the 14 workflow Node suites plus Rutherford: 105 supported groups/checks passed locally. Counts: 57 catalog entries, 61 retained demo HTML pages, 35 student handouts. Eleven priority packages have full revised student/instructor materials; the rest are at mixed draft/starter stages. Browser CI stays off as requested. Recommended next work: review one modern bench package against its departmental handout and reconcile controls/materials, then continue through the priority modern benches; do not promote the collection to release-ready. Future main merges still need approval.
+
+
+## Weekend review checkpoint — 2026-10-22
+
+Clean feature checkout fast forwarded to main 77d11e3. Claude owns all demo HTML this weekend. Ran seven existing newest-demo suites (111 groups) and new DNA (10) and Lagrange (5) suites: 126 supported groups passed on Node v24.19.0. DNA `--strict-ter` fails: TER chainID is one column early; requested correction in COLLABORATION.md. Supported-case Node workflow includes both new suites; browser CI remains off. No remote CI result claimed. See [review and remaining scope](validation/WEEKEND_REVIEW_2026-10-22.md). Independent nine-demo review is partial, not release approval. New handout batches wait for Claude's E&M/mechanics notes. Do not merge to main without Steve's approval.

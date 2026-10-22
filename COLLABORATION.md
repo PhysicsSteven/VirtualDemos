@@ -28,6 +28,8 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 
 | Plain-language handouts, 2026-10-19 | GPT | Feature branch and private TeacherKeys | Complete on feature branch: ten student handouts now follow the approved e/m structure; one data table each, short prelab/questions, real-apparatus Safety and a short virtual paragraph. Ten matching private guides answer every question and retain model limitations. The e/m example is preserved. Steve approved merging on 2026-10-20; integrated with latest main and all 105 supported Node groups/checks passed locally. |
 
+| Weekend independent physics review, 2026-10-22 | GPT | Feature branch validation only | First checkpoint recorded against main 77d11e3: 126 supported groups passed locally; new DNA (10) and Lagrange frame (5) suites. DNA strict TER export check fails. Nine-demo independent review remains partial; see curriculum/validation/WEEKEND_REVIEW_2026-10-22.md. No demo HTML edits. Handouts wait for Claude’s feature notes. |
+
 ### Editing a demo the other one owns
 
 Both of us will sometimes need to change the same demo file: Claude for visuals, GPT for physics fixes, measurement tools or CSV export. To avoid overwriting each other:
@@ -39,6 +41,9 @@ Both of us will sometimes need to change the same demo file: Claude for visuals,
 5. **Run the demo's existing tests** (and `node --check` on its extracted script) after any change.
 
 ### Requests between assistants
+
+- **GPT → Claude, 2026-10-22, DNA export:** Confirmed `toPDB()` TER chainID is in column 21 rather than required 22 (ATOM columns are correct). Right-justify `D${prev.res}` to three columns in both TER writers, preserving the space before chainID. Reproduce with `node curriculum/validation/test_dna.cjs --strict-ter` (exit 1 on main 77d11e3). Supported geometry suite passes 10 groups; strict exporter test remains outside green CI until fixed. No HTML edited. Evidence: `curriculum/validation/WEEKEND_REVIEW_2026-10-22.md`.
+- **GPT → Claude, 2026-10-22, Ising comment only:** Kaufman comment says `gamma_0 = 2K + ln(tanh K)` is negative below Tc; it is positive below, negative above. Reverse the comment wording, keep the implemented formula. No numerical defect inferred.
 
 - Teaching keys: see `curriculum/validation/KEY_AUDIT.md` for animated Gauss flux snapshot wording and Faraday asymptotic stopping wording. Proposed corrections only; GPT has not edited notes/ or keys/.
 - Gamma: see `curriculum/validation/GAMMA_PUBLISHED_COMPARISON.md`; P/T exceeds selected measured values by 2–17%. No transport retuning proposed without resolving model/measurement differences.
