@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vectors and Relative Motion: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Vectors and Relative Motion</h1><ul class="meta"><li><a href="../demos/vectors.html">Open the demo</a></li><li>PHYS 201</li><li>15 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A vector has components: A = A_x î + A_y ĵ with A_x = |A| cos θ and A_y = |A| sin θ, θ measured counterclockwise from +x.</li>
+<li>Vectors add by components (head to tail, or the parallelogram); magnitudes add only when the vectors point the same way.</li>
+<li>A − B is A + (−B); drawn from a common tail it runs from B's head to A's head.</li>
+<li>The dot product is a number, A·B = |A||B| cos φ = A_xB_x + A_yB_y. The cross product's size is the parallelogram's area, |A||B| sin φ, and its direction is out of or into the page; B × A = −A × B.</li>
+<li>Velocities add the same way: v(boat, shore) = v(boat, water) + v(water, shore).</li>
+</ul>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Components.</strong> A = (4, 3): |A| = 5.00, θ = 36.9°. Drag the tip into each quadrant and watch the signs and the angle.</li>
+<li><strong>Adding.</strong> (5, 1) + (−2, 4) = (3, 5), |R| = 5.83 against |A| + |B| = 9.57. Switch Draw B between Head to tail and From the origin.</li>
+<li><strong>Subtracting.</strong> (5, 2) − (2, 4) = (3, −2). Point out the faint copy of A − B from B's head to A's head.</li>
+<li><strong>Dot and cross products.</strong> (5, 1)·(2, 4) = 14 and (A × B)_z = 18, with φ = 52.1°. Make them perpendicular (dot product 0) and parallel (cross product 0).</li>
+<li><strong>River crossing.</strong> Boat 2.5 m/s straight across a 60 m river flowing at 1.5 m/s: 24 s, 36 m downstream. <strong>Aim to land straight across</strong>: 36.9° upstream, 30 s.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> A = (−3, 4). Find |A| and its angle from +x. Which quadrant, and why does tan⁻¹(A_y/A_x) alone give the wrong angle?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Find A + B and A − B for A = (5, 1) and B = (−2, 4), and their magnitudes. Is |A + B| ever bigger than |A| + |B|?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> For A = (5, 1) and B = (2, 4), find A·B, the angle between them, and (A × B)_z. Which one is the area of the parallelogram the two vectors make?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> The river is 60 m wide and flows at 1.5 m/s; the boat goes 2.5 m/s relative to the water. (a) Heading straight across, how long does the crossing take and where does it land? (b) Which heading lands it straight across, and how long does that take? (c) What if the current were 3.0 m/s?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"|A + B| = |A| + |B|."</strong> Only for parallel vectors.</li>
+<li><strong>"The x component is always the cosine."</strong> Only when θ is measured from +x.</li>
+<li><strong>"Aiming straight across gets you across fastest and lands you opposite."</strong> It is the fastest crossing, but the current carries you downstream.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Exact vector algebra on a grid (tips snap to whole units, or tenths with Shift and the arrow keys). Angles are from +x, counterclockwise, 0 to 360°.</li>
+<li>River: uniform current everywhere (a real river is slower near its banks); the boat keeps its speed and heading relative to the water. Arrows at the boat show 8 s of motion at each velocity.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>
