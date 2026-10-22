@@ -521,6 +521,17 @@
      ]
     },
     {
+     "demo": "viscometer",
+     "title": "Falling Ball Viscometer",
+     "desc": "Time balls falling through glycerol, oil or water and measure viscosity with Stokes' law. Then find where it fails: tube walls and fast, high Reynolds number flow.",
+     "tags": [
+      "viscosity",
+      "Stokes' law",
+      "terminal speed",
+      "Reynolds number"
+     ]
+    },
+    {
      "demo": "equilibrium",
      "title": "Static Equilibrium",
      "desc": "Balance a seesaw, walk a painter off the end of a plank until it tips, hang a sign from a strut and cable, and climb a ladder until it slips, with every force drawn to scale.",

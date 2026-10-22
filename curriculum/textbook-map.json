@@ -2171,10 +2171,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "viscometer"
+      ],
       "unit": "fluids",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Falling Ball Viscometer (2026-10-22, Claude): Stokes drag, terminal speed, η from v against d², wall effect and Reynolds number; turbulence only as the high Re drag regime (water), no flow visualisation."
     },
     {
       "vol": 1,
@@ -4838,6 +4840,26 @@
       ],
       "title": "Fluids: Pressure, Buoyancy and Flow",
       "url": "demos/fluids.html"
+    },
+    {
+      "demo": "viscometer",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "14.7",
+          "title": "Viscosity and Turbulence"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-22 (Claude). Glycerol, castor oil, motor oil, water or a Mystery liquid in a 40 or 100 mm tube; steel, glass or nylon balls 1 to 10 mm; gate timer between marks 0.200 m apart (0.01 s), playback ×1/×10/×100; drag from Stokes × standard drag curve × Haberman–Sayre wall factor, with buoyancy and added mass; Capture, CSV, v against d² fit for η; Reynolds number; Blind.",
+      "handouts": [],
+      "title": "Falling Ball Viscometer",
+      "url": "demos/viscometer.html"
     },
     {
       "demo": "springs",

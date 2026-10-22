@@ -20,7 +20,7 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 - Next writing queue: resistivity and wire-force (Physics II). The new lecture demos do not need full student labs.
 - Near-surface gravity §13.2 remains missing; fixed-g projectile motion does not close this gap.
 - Moment-of-inertia calculation §10.5 is partial: discrete masses/standard formulas exist; a continuous-body integration activity is absent.
-- Chapter 1 remains worksheet material. Owner-deferred gaps include §8.5, §13.7 and §14.7 (§11.4 was built on main 2026-10-22 after Steve said to keep filling gaps); a missing label is not authorization to build them now.
+- Chapter 1 remains worksheet material. Owner-deferred gaps include §8.5 and §13.7 (§11.4 and §14.7 were built on main 2026-10-22 after Steve said to keep filling gaps); a missing label is not authorization to build them now.
 - Thermodynamics and non-syllabus waves/sound remain later. Basic optics remains optional after Maxwell/EM waves.
 
 ## Every unmapped Volume 1/2 section
@@ -37,7 +37,6 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 | physics-1 | 1 | 8.5 | Sources of Energy | missing |
 | physics-1 | 1 | 13.2 | Gravitation Near Earth's Surface | missing |
 | physics-1 | 1 | 13.7 | Einstein's Theory of Gravity | missing |
-| physics-1 | 1 | 14.7 | Viscosity and Turbulence | missing |
 | physics-2 | 2 | 7.6 | Applications of Electrostatics | missing |
 | physics-2 | 2 | 8.5 | Molecular Model of a Dielectric | missing |
 | physics-2 | 2 | 9.2 | Model of Conduction in Metals | missing |
