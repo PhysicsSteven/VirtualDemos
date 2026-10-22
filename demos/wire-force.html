@@ -369,7 +369,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
-    if (isLoop() && S.loop.run && !reduce) { const r = loopStep(S.loop, { N: S.N, I: S.I, B: Bnow(), comm: S.comm }, dt * (S.comm ? 0.03 : 0.25));   // shown slowed: 4× for the swinging loop, about 30× for the motor S.loop.th = r.th; S.loop.w = r.w; draw(); readouts(); }
+    if (isLoop() && S.loop.run && !reduce) { const r = loopStep(S.loop, { N: S.N, I: S.I, B: Bnow(), comm: S.comm }, dt * (S.comm ? 0.03 : 0.25)); /* shown slowed: 4× for the swinging loop, about 30× for the motor */ S.loop.th = r.th; S.loop.w = r.w; draw(); readouts(); }
     requestAnimationFrame(frame);
   }
   can.addEventListener('keydown', (e) => { if (e.key === ' ' && isLoop()) { $('spin').click(); e.preventDefault(); } });
