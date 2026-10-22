@@ -135,13 +135,31 @@ def card(name, demo, unit_secs, cards, notes):
       </li>'''
 
 
+def activity_card(activity, unit_secs):
+    """Standalone worksheet or reading (GPT's renderer patch, 2026-10-22): no demo or thumbnail."""
+    secs = sorted([s for s in activity['sections'] if (s['vol'], s['sec']) in unit_secs], key=sec_key)
+    chips = ''.join(f'<li><span class="sec">{s["vol"]}:{s["sec"]}</span> {esc(s["title"])}</li>' for s in secs)
+    href = activity['url'].removesuffix('.md') + '.html'
+    role = 'Worksheet' if activity['kind'] == 'worksheet' else 'Reading and data activity'
+    return f'''      <li class="item">
+        <div class="body" style="grid-column: 1 / -1">
+          <p class="kind"><span class="role">{role}</span></p>
+          <h3><a href="{esc(href)}">{esc(activity['title'])}</a></h3>
+          <p>{esc(activity['description'])}</p>
+          <ul class="secs" aria-label="Textbook sections">{chips}</ul>
+          <p class="links"><a class="go" href="{esc(href)}">Open student activity</a></p>
+        </div>
+      </li>'''
+
+
 def course_page(course, m, cards, notes):
     secs = {(s['vol'], s['sec']): s for s in m['sections']}
     demos = {d['demo']: d for d in m['demos']}
+    activities = {a['id']: a for a in m.get('activities', [])}
     cid = course['id']
     title, lede = course['title'], BLURB[cid][1]
     jump, units = [], []
-    n_demo = set()
+    n_demo, n_activity = set(), set()
     for u in course['units']:
         us = [secs[(x['vol'], x['sec'])] for x in u['sections']]
         ukeys = {(s['vol'], s['sec']) for s in us}
@@ -150,12 +168,17 @@ def course_page(course, m, cards, notes):
             for d in s['demos']:
                 if d not in names and d in demos and cid in demos[d]['course'] and d in cards:
                     names.append(d)
+        activity_names = list(dict.fromkeys(a for s in sorted(us, key=sec_key) for a in s.get('activities', [])
+                                            if a in activities and cid in activities[a]['course']))
         n_demo.update(names)
+        n_activity.update(activity_names)
         covered = sum(1 for s in us if s['status'] == 'usable')
         gaps = [s for s in sorted(us, key=sec_key) if s['status'] != 'usable']
         opt = u['requirement'] == 'optional'
         jump.append(f'<li><a href="#{u["id"]}"{" class=\"opt\"" if opt else ""}>{esc(u["title"])}</a></li>')
-        grid = '\n'.join(card(n, demos[n], ukeys, cards, notes) for n in names) if names else '      <li class="none">No activity for this unit yet.</li>'
+        items = [card(n, demos[n], ukeys, cards, notes) for n in names]
+        items.extend(activity_card(activities[a], ukeys) for a in activity_names)
+        grid = '\n'.join(items) if items else '      <li class="none">No activity for this unit yet.</li>'
         gap_html = ''
         if gaps:
             rows = ''.join(f'<li><span class="sec">{s["vol"]}:{s["sec"]}</span> {esc(s["title"])}'
@@ -177,6 +200,8 @@ def course_page(course, m, cards, notes):
     books = ' · '.join(f'<a href="{BOOK_URL[v]}">{BOOK[v]}</a>' for v in vols)
     facts = (f'<li><span><strong>{len(course["units"])}</strong> units</span></li><li><span><strong>{len(n_demo)}</strong> demos and labs</span></li>'
              f'<li><span>Free textbook: {books}</span></li>')
+    if n_activity:
+        facts += f'<li><span><strong>{len(n_activity)}</strong> worksheets and readings</span></li>'
     return page_shell(title, BLURB[cid][0], lede, facts, ''.join(jump), '\n'.join(units),
                       'Units follow the course schedule. Section numbers are volume:section in OpenStax University Physics. A demo can appear in more than one unit. Sections with no activity yet are listed under each unit.')
 

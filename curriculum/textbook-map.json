@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": {
-    "repository_commit": "3a13c79bc5f7bc330d05eaffe16fce44c3b1451b",
+    "repository_commit": "9bbb97b3a281e72c2f853a18f49b14e95b79e25f",
     "review_date": "2026-10-22",
     "textbooks": [
       {
@@ -35,10 +35,11 @@
       "needs-feature": "A required feature or topic is absent/partial; see note.",
       "missing": "No mapped activity exists for this section."
     },
-    "section_status": "Section status describes topic/apparatus coverage; demo status describes its activity package. A usable section can still have a lab needing a handout.",
+    "section_status": "Section status describes scoped topic coverage through demos and/or standalone activities. Demo and activity statuses describe their packages; usable does not mean full-section mastery or release certification.",
     "later_mapping": "beyond_book means no direct Volume 1/2 activity home, not that the demo is physically incorrect. Later entries are not promoted into courses merely because a section is related.",
     "optional_duration": "duration_minutes may be added after review; absent until estimated.",
-    "exam_metadata": "Course metadata may later hold exam_boundaries; omitted for now."
+    "exam_metadata": "Course metadata may later hold exam_boundaries; omitted for now.",
+    "activities": "Optional activities array contains standalone worksheet/reading resources, distinct from the real-demo catalog. Sections reference activities by id; render both section.demos and section.activities, filtering course membership and deduplicating within a unit."
   },
   "courses": [
     {
@@ -883,7 +884,10 @@
         "units"
       ],
       "unit": "measurements-vectors",
-      "note": "Units, Scales and Estimates (2026-10-22, Claude). Scale of things: a logarithmic ruler from a proton to the observable universe."
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Scale of things: a logarithmic ruler from a proton to the observable universe. Covered by the standalone worksheet measurement-and-units; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "activities": [
+        "measurement-and-units"
+      ]
     },
     {
       "vol": 1,
@@ -900,7 +904,10 @@
         "units"
       ],
       "unit": "measurements-vectors",
-      "note": "Units, Scales and Estimates (2026-10-22, Claude). Convert units: SI and customary units with their exact definitions."
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Convert units: SI and customary units with their exact definitions. Covered by the standalone worksheet measurement-and-units; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "activities": [
+        "measurement-and-units"
+      ]
     },
     {
       "vol": 1,
@@ -917,7 +924,10 @@
         "units"
       ],
       "unit": "measurements-vectors",
-      "note": "Units, Scales and Estimates (2026-10-22, Claude). Convert units: factor label chains with exact factors."
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Convert units: factor label chains with exact factors. Covered by the standalone worksheet measurement-and-units; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "activities": [
+        "measurement-and-units"
+      ]
     },
     {
       "vol": 1,
@@ -934,7 +944,10 @@
         "units"
       ],
       "unit": "measurements-vectors",
-      "note": "Units, Scales and Estimates (2026-10-22, Claude). Dimensional analysis: find exponents for five formulas; dimensionless constants are stated."
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Dimensional analysis: find exponents for five formulas; dimensionless constants are stated. Covered by the standalone worksheet measurement-and-units; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "activities": [
+        "measurement-and-units"
+      ]
     },
     {
       "vol": 1,
@@ -951,7 +964,10 @@
         "units"
       ],
       "unit": "measurements-vectors",
-      "note": "Units, Scales and Estimates (2026-10-22, Claude). Fermi estimates: three guided estimates with low/high factors."
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Fermi estimates: three guided estimates with low/high factors. Covered by the standalone worksheet estimation-and-evidence; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "activities": [
+        "estimation-and-evidence"
+      ]
     },
     {
       "vol": 1,
@@ -968,7 +984,10 @@
         "units"
       ],
       "unit": "measurements-vectors",
-      "note": "Units, Scales and Estimates (2026-10-22, Claude). Significant figures: sig figs, decimal places and the combination rules."
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Significant figures: sig figs, decimal places and the combination rules. Covered by the standalone worksheet estimation-and-evidence; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "activities": [
+        "estimation-and-evidence"
+      ]
     },
     {
       "vol": 1,
@@ -980,10 +999,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
+      "status": "usable",
       "demos": [],
       "unit": "measurements-vectors",
-      "note": "Problem solving strategy: worksheet material (requested from GPT). Units, Scales and Estimates supports the unit and dimension checks."
+      "note": "Covered by the standalone worksheet estimation-and-evidence; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "activities": [
+        "estimation-and-evidence"
+      ]
     },
     {
       "vol": 1,
@@ -1582,7 +1604,10 @@
         "energy-sources"
       ],
       "unit": "energy",
-      "note": "Sources of Energy (2026-10-22, Claude): energy per kilogram of fuels, food, TNT, batteries and uranium (from 200 MeV per fission); hydro, wind (Betz) and solar from their physics; heat engine efficiency. No national consumption statistics."
+      "note": "Sources of Energy (2026-10-22, Claude): energy per kilogram of fuels, food, TNT, batteries and uranium (from 200 MeV per fission); hydro, wind (Betz) and solar from their physics; heat engine efficiency. No national consumption statistics. Covered by the standalone reading energy-sources; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "activities": [
+        "energy-sources"
+      ]
     },
     {
       "vol": 1,
@@ -4666,9 +4691,11 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "New 2026-10-22 (Claude). Cart into a bumper on a force sensor: stiff spring, soft spring or clay; cart mass and launch speed; sample rate 200 Hz/1 kHz/10 kHz; motion detector velocities; exact F(t); Capture, readings CSV and per-run F(t) CSV; Blind hides the area, Δp and peak force.",
-      "handouts": [],
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Cart into a bumper on a force sensor: stiff spring, soft spring or clay; cart mass and launch speed; sample rate 200 Hz/1 kHz/10 kHz; motion detector velocities; exact F(t); Capture, readings CSV and per-run F(t) CSV; Blind hides the area, Δp and peak force. Student/private instructor lab completed 2026-10-22, including signed impulse, independent force CSV integration, bumper comparison and sensor sampling. Source/core/reference checks only; browser/classroom acceptance pending.",
+      "handouts": [
+        "impulse"
+      ],
       "title": "Impulse and Momentum",
       "url": "demos/impulse.html"
     },
@@ -6572,6 +6599,106 @@
       "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
       "title": "White Dwarf Cooling",
       "url": "demos/white-dwarf-cooling.html"
+    }
+  ],
+  "activities": [
+    {
+      "id": "measurement-and-units",
+      "title": "Measuring, Converting and Checking Units",
+      "kind": "worksheet",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "1.1",
+          "title": "The Scope and Scale of Physics"
+        },
+        {
+          "vol": 1,
+          "sec": "1.2",
+          "title": "Units and Standards"
+        },
+        {
+          "vol": 1,
+          "sec": "1.3",
+          "title": "Unit Conversion"
+        },
+        {
+          "vol": 1,
+          "sec": "1.4",
+          "title": "Dimensional Analysis"
+        }
+      ],
+      "status": "usable",
+      "handouts": [
+        "measurement-and-units"
+      ],
+      "url": "curriculum/labs/students/measurement-and-units.md",
+      "description": "Measurements, unit conversions and dimensional checks using a ruler and supplied exercises.",
+      "note": "Standalone student activity with private instructor guide and checked references; no simulation claimed. Browser/course-page integration and classroom acceptance pending."
+    },
+    {
+      "id": "estimation-and-evidence",
+      "title": "Estimating and Reporting a Physical Result",
+      "kind": "worksheet",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "1.5",
+          "title": "Estimates and Fermi Calculations"
+        },
+        {
+          "vol": 1,
+          "sec": "1.6",
+          "title": "Significant Figures"
+        },
+        {
+          "vol": 1,
+          "sec": "1.7",
+          "title": "Solving Problems in Physics"
+        }
+      ],
+      "status": "usable",
+      "handouts": [
+        "estimation-and-evidence"
+      ],
+      "url": "curriculum/labs/students/estimation-and-evidence.md",
+      "description": "Fermi estimates, uncertainty versus rounding, and a structured mechanics solution.",
+      "note": "Standalone student activity with private instructor guide and checked references; no simulation claimed. Browser/course-page integration and classroom acceptance pending."
+    },
+    {
+      "id": "energy-sources",
+      "title": "Where Does Electrical Energy Come From?",
+      "kind": "reading",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "8.5",
+          "title": "Sources of Energy"
+        }
+      ],
+      "status": "usable",
+      "handouts": [
+        "energy-sources"
+      ],
+      "url": "curriculum/labs/students/energy-sources.md",
+      "description": "Energy-conversion pathways, power and efficiency using a dated EIA electricity-generation snapshot.",
+      "note": "Standalone student activity with private instructor guide and checked references; no simulation claimed. Browser/course-page integration and classroom acceptance pending.",
+      "data": [
+        "curriculum/data/eia-electricity-2024.json"
+      ],
+      "sources": [
+        "https://www.eia.gov/electricity/annual/html/epa_03_01_a.html",
+        "https://www.eia.gov/energyexplained/electricity/electricity-in-the-us.php"
+      ]
     }
   ]
 }

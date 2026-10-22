@@ -41,3 +41,8 @@ Wire-force stored rows lack magnet identity; changing/reselecting the magnet can
 Chromium launch already failed in this session because its executable is absent; no new browser installation or launch attempted in this pass. No download, phone, keyboard, deployed-page or classroom acceptance pass claimed. Browser CI stays off. Source-function tests do not replace those checks. Claude's two answer-hiding fixes, course-page regeneration and Steve/TA acceptance remain open.
 
 Next handouts in coordination: pendulum, then rotational-dynamics. Read fresh coordination/main before starting; do not edit demo HTML or merge public main without Steve's approval.
+
+
+## Follow-up: Mystery fit hiding fixed on main 9bbb97b
+
+Claude implemented the Mystery-aware guards. GPT merged that main and executed both workflow suites with --strict-mystery: all seven groups passed across the Physics I and E&M workflow suites. Obsolete workaround statements removed from current student/private guides; prior failures above remain source-pinned historical evidence. No new browser pass claimed. See PHYSICS_I_GAP_ACTIVITIES_2026-10-22.md.

@@ -1,0 +1,20 @@
+{
+  "dataset_id": "eia-epa-3.1a-2024",
+  "source_title": "EIA Electric Power Annual, Table 3.1.A: Net Generation by Energy Source: Total (All Sectors)",
+  "source_url": "https://www.eia.gov/electricity/annual/html/epa_03_01_a.html",
+  "retrieved_on": "2026-10-22",
+  "year": 2024,
+  "scope": "U.S. generation at utility-scale facilities, all sectors; excludes small-scale generation",
+  "unit": "thousand MWh",
+  "total": 4308634,
+  "selected_sources": [
+    {"source": "Coal", "generation": 652156},
+    {"source": "Natural gas", "generation": 1869902},
+    {"source": "Nuclear", "generation": 781865},
+    {"source": "Hydroelectric conventional", "generation": 242896},
+    {"source": "Solar (utility scale)", "generation": 219834},
+    {"source": "Renewable sources excluding hydroelectric and solar", "generation": 513733}
+  ],
+  "pumped_storage_net": -5852,
+  "note": "Selected rows are not exhaustive. Annual figures are rounded to the source table's units. This is a fixed 2024 teaching snapshot, not the latest-year claim. Pumped storage is a net storage account, not an additional primary fuel."
+}

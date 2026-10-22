@@ -12,7 +12,7 @@ for(const d of labs){
   assert.equal((text.match(/^\|---/gm)||[]).length,1,`${h}: one data table`);
   for(const [head,lo,hi] of [['Before the lab',2,3],['Questions',3,4]]){const part=text.split('## '+head+'\n')[1].split('\n## ')[0],n=(part.match(/^\d+\./gm)||[]).length;assert(n>=lo&&n<=hi,`${h}: ${head}`);}
   assert(!/^# .*Instructor Guide/m.test(text),`${h}: private guide heading in student file`);
-  if(['pendulum','rotational-dynamics','viscometer'].includes(d.demo)){
+  if(['pendulum','rotational-dynamics','viscometer','impulse'].includes(d.demo)){
    const para=text.split('**Using the virtual apparatus.**')[1].split('\n## Data')[0];
    const src=fs.readFileSync(path.join(root,d.url),'utf8').replace(/<\/?(?:sub|sup|span|b|strong|em|i)(?:\s[^>]*)?>/g,'');
    for(const [,label] of para.matchAll(/\*\*(.*?)\*\*/g)){assert(src.includes(label),`${h}: control ${label}`);labels++;}
@@ -21,4 +21,11 @@ for(const d of labs){
  assert(fs.existsSync(path.join(root,'notes/src',d.demo+'.md')),`${d.demo}: teaching notes missing`);
 }
 for(const d of demos) assert(fs.existsSync(path.join(root,'notes/src',d.demo+'.md')),`${d.demo}: missing teaching notes`);
-console.log(`PASS Physics I package contract: ${labs.length} lab packages, complete student sections and ${labels} new exact control labels`);
+const activities=(map.activities||[]).filter(a=>a.course.includes('physics-1'));
+for(const a of activities){
+ const text=fs.readFileSync(path.join(root,a.url),'utf8'),headings=[...text.matchAll(/^## (.+)$/gm)].map(m=>m[1]);
+ assert.deepEqual(headings,expected.map(h=>h==='Before the lab'?'Before the activity':h),a.id);
+ assert.equal((text.match(/^\|---/gm)||[]).length,1,`${a.id}: one data table`);
+ for(const [head,lo,hi] of [['Before the activity',2,3],['Questions',3,4]]){const part=text.split('## '+head+'\n')[1].split('\n## ')[0],n=(part.match(/^\d+\./gm)||[]).length;assert(n>=lo&&n<=hi,`${a.id}: ${head}`);}
+}
+console.log(`PASS Physics I package contract: ${labs.length} lab packages, complete student sections and ${labels} new exact control labels; ${activities.length} standalone activities`);
