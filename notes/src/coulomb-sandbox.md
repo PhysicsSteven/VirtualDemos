@@ -20,6 +20,9 @@ Students need Coulomb's law, vector components and potential. Grid squares are 1
 3. **3D landscape**, then **Spin**. Positive charges are hills, negative ones wells; equipotentials are contour lines and field lines run straight downhill. The like pair's midpoint is a saddle (Q5).
 4. **+3 and −1.** In **2D map**, count lines: 18 leave the +3, only 6 end on the −1, and 12 go off screen. The dashed V = 0 line is now a closed loop around the −1. Hunt for the point where E = 0 (Q4).
 5. **Equipotential spacing ΔV.** On **Dipole**, compare the packing of equipotentials near the charges and the midpoint (Q6). Build your own with **Add +1 nC** and **Add −1 nC**.
+6. **Field mapping (lab).** Tick **Blind: hide predictions and answers** in Lab: field lines, equipotentials, shading, the 3D landscape and the field map data table disappear, and a Blind tag shows on the field. Students move the probe (tap, or press P on the field and use the arrow keys, 0.1 cm per press, 1 cm with Shift), press **Capture reading** (or C) at each point, then **Export CSV**. The CSV lists every setup's charges in SI in its header, so readings can be checked against V = Σ kq/r.
+
+Keyboard on the field: Tab or ] and [ select charges, arrows move the selected one, + and − change it by 0.5 nC, P switches between the probe and a charge, C captures. In 3D: A and D rotate, W and S tilt, Z and X zoom, 0 resets. **Reduce motion** (in Layers) turns off Spin; it starts on when the system asks for reduced motion. **Show data table** (in Key) lists V and E on a 2 cm grid as text.
 
 ## Questions
 

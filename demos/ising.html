@@ -570,7 +570,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 
   // ----- exact partition function of the L × L periodic lattice at h = 0 (Kaufman 1949) -----
   // Z = ½ (2 sinh 2K)^(L²/2) Σ Z_i with Z_1,2 = Π_r 2cosh, 2sinh (L γ_{2r+1}/2), Z_3,4 = Π_r 2cosh, 2sinh (L γ_{2r}/2),
-  // r = 0..L−1, cosh γ_l = cosh 2K coth 2K − cos(π l / L) for l ≥ 1, and γ_0 = 2K + ln tanh K (negative below T_c).
+  // r = 0..L−1, cosh γ_l = cosh 2K coth 2K − cos(π l / L) for l ≥ 1, and γ_0 = 2K + ln tanh K (positive below T_c, negative above; it changes sign at T_c).
   function kaufmanLnZ(L, beta) {
     const K = beta, c0 = Math.cosh(2 * K) / Math.tanh(2 * K);
     const gam = (l) => (l === 0 ? 2 * K + Math.log(Math.tanh(K)) : Math.acosh(c0 - Math.cos(Math.PI * l / L)));

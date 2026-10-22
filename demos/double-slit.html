@@ -1500,7 +1500,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const total = nHits;
     // scale: the larger of the data and the prediction, eased so it does not jump
     const target = Math.max(4, 1.12 * Math.max(maxC, maxE * total * (show.curve || show.env ? 1 : 0)));
-    hx = target > hx ? target : hx + (target - hx) * 0.08;
+    hx = target > hx || reduce ? target : hx + (target - hx) * 0.08;   // with reduced motion the axis jumps instead of gliding
     const X = (c) => hs.x + Math.min(1, c / hx) * hs.w;
     // grid ticks on counts
     const st = nice(hx / 3);

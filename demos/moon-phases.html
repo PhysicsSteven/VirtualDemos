@@ -98,6 +98,8 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .pane.main { grid-row: 1 / span 2; border-right: 1px solid var(--line); }
 .pane.clock { border-top: 1px solid var(--line); }
 .stage canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; }
+/* pictures, not controls: let a finger on them scroll the page */
+.stage canvas#moonview { touch-action: auto; }
 #main { cursor: grab; }
 #sky { cursor: grab; }
 .stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
@@ -173,6 +175,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   :root[data-projector="on"] .pane.view, :root[data-projector="on"] .pane.clock { height: 320px; }
   .pane.clock { border-top: 0; border-left: 1px solid var(--line); }
   .rail { overflow: visible; }
+}
+/* phone touch targets: the house minimums (buttons 36 px, sliders 28 px) */
+@media (max-width: 820px) {
+  .chips button, .btn, .seg button, .proj, #proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
 }
 </style>
 </head>

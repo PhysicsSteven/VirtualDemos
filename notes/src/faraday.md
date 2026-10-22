@@ -23,7 +23,7 @@ Students need Φ_B = BA cos θ, the field of a bar magnet and the right hand rul
 4. **Flip the magnet.** Φ_B goes from +Φ to −Φ: the current runs one way all the turn, and Q is twice what removing the magnet would give.
 5. **Generator.** Pause at an EMF peak: the coil is edge on to the field. Then turn the **Motor** off.
 6. **Sliding bar.** **Pull at v**: the readouts show your power Fv equal to I²R. Then **Push and let go** to see the bar braked to rest.
-7. **Two coils.** Time runs 100 times slower. Ask Q7(a) first, then **Open switch**: Φ₂ follows I₁ and EMF₂ is largest where I₁ crosses zero. Close it again: the dashed flux (from I₁ alone) is much bigger than the actual Φ₂, because I₂ runs nearly opposite to I₁ and cancels much of it; the force arrow shows the secondary pushed away. Compare I₁ with the gray dashed curve (the open switch steady state), then drag the secondary away and watch k fall.
+7. **Two coils.** Time runs 100 times slower. For lecture, untick **Blind: hide predictions and answers** first: Blind hides the dashed model curves, the phasor dial, k and the steady state readouts. Ask Q7(a) first, then **Open switch**: Φ₂ follows I₁ and EMF₂ is largest where I₁ crosses zero. Close it again: the dashed flux (from I₁ alone) is much bigger than the actual Φ₂, because I₂ runs nearly opposite to I₁ and cancels much of it; the force arrow shows the secondary pushed away. Compare I₁ with the gray dashed curve (the open switch steady state), then drag the secondary away and watch k fall.
 
 ## Questions
 

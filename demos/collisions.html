@@ -144,6 +144,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .readout dt { font-size: 0.78rem; color: var(--muted); }
 .readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
 .readout .wide { grid-column: 1 / -1; }
+.readout dd.ok { font-family: var(--font-ui); font-weight: 400; font-size: 0.84rem; color: var(--muted); }
 .ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
 .formula { margin: 0; font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
 .c-1 { color: var(--pos); } .c-2 { color: var(--neg); } .c-t { color: var(--equi); } .c-s { color: var(--xcol); } .c-f { color: var(--vcol); }
@@ -160,9 +161,41 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .box.fill { background: var(--muted); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
+/* lab kit: readings, photogates, fit plot, Blind */
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; overflow-x: auto; }
+.twrap.tall { overflow-y: auto; max-height: 240px; }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+table.rows caption.cap { caption-side: top; text-align: left; color: var(--muted); font-size: 0.78rem; padding-bottom: 4px; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); font-size: 0.7rem; padding: 3px 2px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.rows td { padding: 3px 1px; border-bottom: 1px solid var(--grid-strong); vertical-align: middle; white-space: nowrap; }
+table.rows td.n { color: var(--muted); font-size: 0.72rem; }
+table.rows td.b { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; font-size: 0.76rem; padding-left: 6px; }
+table.rows td.m { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.72rem; color: var(--muted); }
+table.rows td.empty { color: var(--muted); font-size: 0.8rem; white-space: normal; }
+table.rows input { font: inherit; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.7rem; width: 4.75em; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 4px; padding: 2px 2px; }
+table.rows button { font: inherit; font-size: 0.85rem; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 3px; }
+:root[data-projector="on"] table.rows td, :root[data-projector="on"] table.rows input { font-size: 0.62rem; } :root[data-projector="on"] table.rows th { font-size: 0.58rem; }
+.plotbox { position: relative; height: 230px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.gates { margin: 0; padding: 0; list-style: none; display: grid; gap: 3px; font-size: 0.82rem; }
+.gates li { display: grid; grid-template-columns: 1.6em 1fr auto auto; gap: 8px; align-items: baseline; }
+.gates .g { font-weight: 700; color: var(--muted); }
+.gates .t, .gates .v { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.gates .bad { grid-column: 2 / -1; color: var(--pos); font-size: 0.78rem; }
+.gates li.none { display: block; color: var(--muted); }
+.blind-tag { display: none; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--muted); border-radius: 4px; padding: 3px 7px; }
+:root[data-blind="on"] .blind-tag { display: inline-block; }
+
 @media (max-width: 820px) {
   .chips button, .btn, .seg button, .proj { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
+  table.rows button { min-width: 36px; min-height: 36px; }
+  table.rows input { min-height: 30px; }
+  .toggles label, .check { min-height: 32px; }
   html, body { height: auto; }
   .app { height: auto; }
   .bench { grid-template-columns: minmax(0, 1fr); }
@@ -197,10 +230,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="pane" id="cPane">
-        <canvas id="cCan" tabindex="0" role="application" aria-label="Collision scene. Drag the round grips on the velocity arrows to set velocities, drag a cart or puck to move its start, and drag the small square grips to change masses, the stored energy or a bumper's stiffness. Keys: 1 and 2 pick a body, left and right arrows change its velocity, up and down arrows change e, space plays or pauses, R replays."></canvas>
+        <canvas id="cCan" tabindex="0" role="application" aria-label="Collision scene. Drag the round grips on the velocity arrows to set velocities, drag a cart or puck to move its start, and drag the small square grips to change masses, the stored energy or a bumper's stiffness, and drag a photogate's grip to move it along the track. Keys: 1 and 2 pick a body, left and right arrows change its velocity, up and down arrows change e (with Blind on, they step through the bumpers), space plays or pauses, R replays, C captures a reading. Every drag also has a slider in the rail, including Gate A position and Gate B position."></canvas>
         <div class="stage-ctl">
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="reset">Replay</button>
+          <span class="blind-tag" id="blindTag" title="Blind is on: predictions and answers are hidden">Blind</span>
           <span class="tclock mono" id="tclock">t = 0<small id="rateTag">real time</small></span>
         </div>
       </div>
@@ -208,7 +242,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <canvas id="eCan" aria-label="Momentum and kinetic energy of each body before and after the collision, as bars."></canvas>
       </div>
       <div class="pane" id="pPane">
-        <canvas id="pCan" aria-label="Graph for the current scene: position against time, the momentum diagram, force against time, or the possible Newton's cradle outcomes."></canvas>
+        <canvas id="pCan" aria-label="Graph for the current scene: position against time with the photogate positions, the momentum diagram, force against time, or the possible Newton's cradle outcomes. Show data table, in the Time section of the rail, lists the plotted values."></canvas>
       </div>
     </div>
 
@@ -246,7 +280,60 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" class="btn" id="gunBtn">Gun and bullet</button>
           <button type="button" class="btn" id="eqBtn">Equal halves</button>
         </div>
+        <div class="ctl" id="bumperWrap" hidden>
+          <span class="slider-head"><span id="bumperLab">Bumper</span><output class="mono" id="bumperOut">e hidden</output></span>
+          <div class="seg full" role="group" aria-labelledby="bumperLab" id="bumperSeg">
+            <button type="button" data-b="A" aria-pressed="false">A</button>
+            <button type="button" data-b="B" aria-pressed="false">B</button>
+            <button type="button" data-b="C" aria-pressed="false">C</button>
+            <button type="button" data-b="D" aria-pressed="false">D</button>
+          </div>
+        </div>
         <p class="hint" id="parHint"></p>
+      </section>
+
+      <section id="gateSec">
+        <h2>Photogates</h2>
+        <div class="ctl">
+          <div class="slider-head"><label for="gA">Gate A position</label><output id="gAo" class="mono" for="gA"></output></div>
+          <input type="range" id="gA" min="-1" max="1" step="0.01">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="gB">Gate B position</label><output id="gBo" class="mono" for="gB"></output></div>
+          <input type="range" id="gB" min="-1" max="1" step="0.01">
+        </div>
+        <button type="button" class="btn" id="placeGates">Place gates for this run</button>
+        <p class="status" id="gateStatus" aria-live="polite"></p>
+        <ul class="gates" id="gateList" aria-live="off"></ul>
+        <p class="hint">Each cart carries a 5.0 cm flag. A gate times how long the flag blocks its beam, to 0.1 ms, and shows the speed as flag length ÷ Δt. The timer cannot tell direction: the arrow is the way the cart was seen moving. A cart at rest never reaches a gate and reads 0. Place gates for this run sets them as you would after one trial run: gate A between cart 1's start and where it meets cart 2, gate B the same for cart 2 (or 20 cm beyond a cart that starts at rest). When both carts move the same way, one gate goes where both pass before they meet and the other beyond the collision.</p>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="exportCsv">Export CSV</button>
+          <button type="button" class="btn" id="clearRows">Clear</button>
+        </div>
+        <p class="status" id="capStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings: the velocities before (u) and after (v′) from the photogates, in m/s; the masses are in each row's tooltip</caption><thead><tr><th scope="col">#</th><th scope="col">u₁</th><th scope="col">u₂</th><th scope="col">v₁′</th><th scope="col">v₂′</th><th scope="col"><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <p class="hint">Capture stores one finished run: the masses as displayed (in the capture message, the row's tooltip and the CSV) and each cart's velocity before (u) and after (v′) the collision from the gate readings, in m/s, signed +x to the right. Cells can be edited; rows stay through setup changes until Clear. Press C on the drawing to capture.</p>
+        <div class="seg full" role="group" aria-label="Plot of the readings" id="fitSeg">
+          <button type="button" data-k="p" aria-pressed="true">p′ vs p</button>
+          <button type="button" data-k="e" aria-pressed="false">Separation vs approach</button>
+          <button type="button" data-k="K" aria-pressed="false">K lost vs ½μu²</button>
+        </div>
+        <div class="plotbox"><canvas id="fCan" role="img" aria-label="Plot of the captured readings with a least squares line and, below it, the residuals."></canvas></div>
+        <dl class="readout" id="fitOut"></dl>
+        <button type="button" class="btn" id="fitTblBtn" aria-expanded="false" aria-controls="fitWrap">Show data table</button>
+        <div class="twrap tall" id="fitWrap" hidden><table class="rows" id="fitTbl"><caption class="sr">Plotted readings, fitted line and residuals</caption><thead></thead><tbody></tbody></table></div>
+        <p class="hint" id="fitHint"></p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind" autocomplete="off">Blind: hide predictions and answers</label>
+        <p class="hint" id="blindHint">Blind hides the Results panel, the predicted velocities, momenta and energies drawn on the track, the after bars, the future paths on the graphs, the momentum triangle after the collision, the setup hints and the value of e. On the 1D track and the 2D table the e slider gives way to four bumpers, A to D, each with a fixed e that you measure. The photogates, the motion itself and your fit stay.</p>
       </section>
 
       <section>
@@ -268,7 +355,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <label><input type="checkbox" id="tCM" checked>Center of mass</label>
           <label><input type="checkbox" id="tGhost" checked>Start positions</label>
           <label><input type="checkbox" id="tLoop" checked>Replay at the end</label>
+          <label><input type="checkbox" id="tReduce">Reduce motion</label>
         </div>
+        <button type="button" class="btn" id="graphBtn" aria-expanded="false" aria-controls="graphWrap">Show data table</button>
+        <div class="twrap tall" id="graphWrap" hidden><table class="rows" id="graphTbl"><caption class="cap" id="graphCap"></caption><thead id="graphHead"></thead><tbody id="graphBody"></tbody></table></div>
       </section>
 
       <section>
@@ -473,15 +563,116 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     let E = 0; for (let i = 0; i < st.th.length; i++) E += 0.5 * m * L * L * st.om[i] * st.om[i] + m * G * L * (1 - Math.cos(st.th[i]));
     return E;
   }
+  // e recovered from measured velocities: separation speed over approach speed, e = (v₂′ − v₁′)/(u₁ − u₂)
+  const restitution = (u1, u2, v1, v2) => (v2 - v1) / (u1 - u2);
+  // fraction of the kinetic energy lost, ΔK/K = μ(1 − e²)(u₁ − u₂)² / (m₁u₁² + m₂u₂²); (1 − e²)m₂/(m₁ + m₂) for a target at rest
+  function keLossFraction(m1, m2, u1, u2, e) {
+    const K = 0.5 * (m1 * u1 * u1 + m2 * u2 * u2);
+    return K > 0 ? keLoss(m1, m2, u1, u2, e) / K : 0;
+  }
+  // center of mass velocity and the velocities relative to it; there m₁u₁* = −m₂u₂*, and a collision turns each u* into −e u*
+  function cmFrame(m1, m2, u1, u2) {
+    const V = (m1 * u1 + m2 * u2) / (m1 + m2);
+    return { V, u1: u1 - V, u2: u2 - V };
+  }
+  // Photogates. A flag of length Lf rides centered on a cart; the beam at xg is blocked while |x(t) − xg| < Lf/2.
+  // The timer reports the blocked time rounded to its tick; the instrument's speed is Lf divided by that time.
+  const GATE = { flag: 0.05, tick: 1e-4 };
+  // blocked intervals [ta, tb] over 0..T for a position function x(t): scan at dt, then bisect each edge to 1e-10 s.
+  // open: true when the flag was already in the beam at t = 0 or still in it at T (no complete reading).
+  function gateIntervals(x, xg, Lf, T, dt) {
+    dt = dt || 1e-3;
+    const h = Lf / 2, inB = (tt) => Math.abs(x(tt) - xg) < h, edge = (a, b, va) => {
+      for (let k = 0; k < 60 && b - a > 1e-10; k++) { const m = (a + b) / 2; if (inB(m) === va) a = m; else b = m; }
+      return (a + b) / 2;
+    };
+    const out = []; let prev = inB(0), t0 = prev ? 0 : null, tp = 0;
+    const n = Math.max(1, Math.ceil(T / dt));
+    for (let k = 1; k <= n; k++) {
+      const tt = Math.min(T, k * dt), cur = inB(tt);
+      if (cur !== prev) {
+        const te = edge(tp, tt, prev);
+        if (cur) t0 = te; else { out.push({ ta: t0, tb: te, open: t0 === 0 }); t0 = null; }
+        prev = cur;
+      }
+      tp = tt;
+    }
+    if (t0 !== null) out.push({ ta: t0, tb: T, open: true });
+    return out;
+  }
+  // the timer's reading: the blocked time rounded to the tick, its digits as shown, and the speed Lf/Δt to as many significant figures
+  function gateReading(dtTrue, Lf, tick) {
+    tick = tick || GATE.tick;
+    const ticks = Math.round(dtTrue / tick), dtShown = ticks * tick, ms = dtShown * 1000;
+    const msStr = ms.toFixed(Math.max(0, -Math.round(Math.log10(tick * 1000))));
+    const sf = Math.min(4, msStr.replace('.', '').replace(/^0+/, '').length || 1);
+    return { ticks, dt: dtShown, msStr, speed: ticks > 0 ? Lf / dtShown : NaN, sf, speedStr: ticks > 0 ? (Lf / dtShown).toPrecision(sf) : '' };
+  }
+  // least squares line y = a + bx, equal weights; standard errors from the scatter about the line (n − 2 degrees of freedom)
+  function fitLine(xs, ys) {
+    const n = Math.min(xs.length, ys.length);
+    if (n < 2) return null;
+    let mx = 0, my = 0;
+    for (let i = 0; i < n; i++) { mx += xs[i]; my += ys[i]; }
+    mx /= n; my /= n;
+    let sxx = 0, sxy = 0;
+    for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    if (!(sxx > 0)) return null;
+    const b = sxy / sxx, a = my - b * mx, res = [];
+    let ss = 0;
+    for (let i = 0; i < n; i++) { const r = ys[i] - a - b * xs[i]; res.push(r); ss += r * r; }
+    const s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { a, b, seA: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), seB: Math.sqrt(s2 / sxx), n, res };
+  }
+  // a cell as typed, read as a number ("−0.58" and "-0.58" both work; blank is NaN)
+  const num = (s) => { s = String(s == null ? '' : s).trim().replace(/−/g, '-'); return s === '' ? NaN : Number(s); };
+  // The plots of the captured rows, from the row strings (so edited cells count):
+  // p: total momentum after against before (slope 1); e: separation speed against approach speed (slope e);
+  // K: kinetic energy lost against ½μ(u₁ − u₂)² (slope 1 − e²).
+  const FIT_KINDS = {
+    p: (r) => [num(r.m1) * num(r.u1) + num(r.m2) * num(r.u2), num(r.m1) * num(r.v1) + num(r.m2) * num(r.v2)],
+    e: (r) => [num(r.u1) - num(r.u2), num(r.v2) - num(r.v1)],
+    K: (r) => { const m1 = num(r.m1), m2 = num(r.m2), d = num(r.u1) - num(r.u2);
+      return [0.5 * m1 * m2 / (m1 + m2) * d * d, 0.5 * (m1 * num(r.u1) ** 2 + m2 * num(r.u2) ** 2) - 0.5 * (m1 * num(r.v1) ** 2 + m2 * num(r.v2) ** 2)]; }
+  };
+  function fitPoints(rows, kind) {
+    const out = { x: [], y: [], row: [] };
+    rows.forEach((r, i) => { const [x, y] = FIT_KINDS[kind](r); if (isFinite(x) && isFinite(y)) { out.x.push(x); out.y.push(y); out.row.push(i); } });
+    return out;
+  }
+  // CSV of the captured rows: comment lines, one header row in SI, then the cells as displayed (or as typed)
+  const CSV_COLS = [['scene', 'scene'], ['setup', 'preset'], ['bumper', 'bumper'], ['e_setting', 'e'], ['m1_kg', 'm1'], ['m2_kg', 'm2'],
+    ['flag_length_m', 'Lf'], ['gate_A_x_m', 'gA'], ['gate_B_x_m', 'gB'],
+    ['dt_u1_s', 'du1'], ['dt_u2_s', 'du2'], ['dt_v1_after_s', 'dv1'], ['dt_v2_after_s', 'dv2'],
+    ['u1_m_per_s', 'u1'], ['u2_m_per_s', 'u2'], ['v1_after_m_per_s', 'v1'], ['v2_after_m_per_s', 'v2'], ['notes', 'notes']];
+  const csvCell = (t) => { t = String(t == null ? '' : t); return /[",\n]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t; };
+  function readingsCSV(rows, meta) {
+    const L = ['# Collisions and Momentum: photogate readings (simulated data)',
+      `# demo version,${csvCell(meta.version)}`,
+      `# setup at export,${csvCell(meta.setup)}`,
+      `# flag_length_m,${GATE.flag}`,
+      `# timer_tick_s,${GATE.tick}`,
+      meta.blind ? '# blind,"on at export: e_setting is blank in rows captured with Blind on; the bumper letter names the setting"' : '# blind,off at export',
+      '# model,"frictionless air track, rigid carts, instant collision: m1*u1 + m2*u2 = m1*v1 + m2*v2 and v2 - v1 = e*(u1 - u2); explosion: an ideal spring inside the pair pushes the pieces apart"',
+      '# method,"each speed is flag_length / dt, dt the time the cart\'s flag blocks a gate; the sign is the direction the cart was seen moving (+x to the right); a cart at rest reads 0 and has no dt"',
+      '# rounding,"dt rounded to the timer tick (0.1 ms); speeds to as many significant figures as dt shows (at most 4); masses as displayed to 0.1 kg; edited cells exported as typed"',
+      '# noise,none: values are the ideal model rounded as displayed (no seed)',
+      ['row', ...CSV_COLS.map((c) => c[0])].join(',')];
+    rows.forEach((r, i) => L.push([i + 1, ...CSV_COLS.map(([, k]) => csvCell(r[k]))].join(',')));
+    return L.join('\n') + '\n';
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.COL = { G, collide1D, keLoss, trackRun, collide2D, tableRun, explode, explodeRun, eOfZeta, zetaForE, bumper, integrate, cradleInit, cradleStep, cradleResolve, cradleGap, cradleEnergy };
+    globalThis.COL = { G, collide1D, keLoss, trackRun, collide2D, tableRun, explode, explodeRun, eOfZeta, zetaForE, bumper, integrate, cradleInit, cradleStep, cradleResolve, cradleGap, cradleEnergy,
+      restitution, keLossFraction, cmFrame, GATE, gateIntervals, gateReading, fitLine, fitPoints, readingsCSV };
     return;
   }
 
   const $ = (id) => document.getElementById(id);
-  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  // Reduce motion: the OS setting, or the in-page toggle remembered for this browser session only
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  try { const v = sessionStorage.getItem('collisions-reduce-motion'); if (v === 'on') reduce = true; else if (v === 'off') reduce = false; } catch (_) {}
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const hyp = (v) => Math.hypot(v[0], v[1]);
 
@@ -555,6 +746,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   let run = null, t = 0, running = !reduce, hold = 0, Trun = 3, held = false, cr = null, crE0 = 0, crLog = null;
   let bumps = null, frozen = null;
   const P = () => S.P[S.mode];
+  // photogates (1D track and explosion), captured rows, Blind and its bumpers with fixed e
+  const GATE_DEF = { track: { A: -0.35, B: 0.45 }, explode: { A: -0.4, B: 0.4 } };
+  const BUMPERS = { A: 0.93, B: 0.68, C: 0.41, D: 0.17 };
+  S.gates = JSON.parse(JSON.stringify(GATE_DEF)); S.rows = []; S.fitKind = 'p'; S.blind = false;
+  let gd = null, runDone = false;
+  const hasGates = () => S.mode === 'track' || S.mode === 'explode';
+  const blind = () => S.blind;
+  const bumperOf = (e) => Object.keys(BUMPERS).find((k) => Math.abs(BUMPERS[k] - e) < 1e-9) || '';
 
   // ---------- formatting ----------
   const MIN = (s) => s.replace(/-/g, '−');
@@ -594,6 +793,71 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       Trun = tcon + bumps[1].ts + Math.max(0.25, 0.12 / p.v0);
       L0imp = Math.max(BUMP.L0, 1.25 * Math.max(...bumps.map((b) => b.x(Math.atan2(b.wd, b.be) / b.wd))));
     }
+    // with photogates, keep the run going until every moving cart has cleared the gates ahead of it (at most 20 s)
+    if (hasGates() && isFinite(run.tc) && isFinite(run.tq === undefined ? 0 : run.tq)) {
+      const t1 = run.tc + (run.tq || 0); let tx = 0;
+      run.bodies.forEach((b, i) => {
+        const v = run.after[i][0], xc = b.pos(t1)[0]; if (Math.abs(v) < 1e-9) return;
+        for (const gn of ['A', 'B']) { const d = (S.gates[S.mode][gn] - xc) * Math.sign(v); if (d > -GATE.flag / 2) tx = Math.max(tx, (d + GATE.flag / 2 + 0.03) / Math.abs(v)); }
+      });
+      Trun = Math.max(Trun, Math.min(20, t1 + tx + 0.3));
+    }
+    runDone = false;
+    gd = computeGates();
+  }
+  // Place gates for this run: gate A between cart 1's start and where it meets cart 2, gate B the same for cart 2;
+  // a cart that starts at rest gets its gate 20 cm beyond it, on the side it will be pushed toward.
+  function placeGates() {
+    if (!hasGates()) return;
+    const h = GATE.flag / 2 + 0.01, g = S.gates[S.mode], msg = [];
+    const put = (gn, x) => { g[gn] = +clamp(Math.round(x * 100) / 100, -1, 1).toFixed(2); };
+    if (S.mode === 'track') {
+      if (!isFinite(run.tc)) { $('gateStatus').textContent = 'The carts never meet in this setup, so there is nowhere to put the gates.'; return; }
+      const u1 = run.before[0][0], u2 = run.before[1][0];
+      if (u1 * u2 > 0) {
+        // a chase: one gate where both carts pass before they meet, and one beyond the collision that both pass after
+        const d = Math.sign(u1), x0 = run.bodies.map((q) => q.pos(0)[0]), xc = run.bodies.map((q) => q.pos(run.tc)[0]);
+        const lo = d > 0 ? x0[1] + h : xc[1] + h, hi = d > 0 ? xc[0] - h : x0[0] - h;
+        const after = d > 0 ? xc[1] + 0.15 : xc[0] - 0.15;
+        put(d > 0 ? 'B' : 'A', after);
+        if (lo <= hi) put(d > 0 ? 'A' : 'B', (lo + hi) / 2); else msg.push('the carts start too close together for one gate to time both before they meet; start them farther apart');
+      } else run.bodies.forEach((b, i) => {
+        const x0 = b.pos(0)[0], xc = b.pos(run.tc)[0], u = run.before[i][0], gn = i ? 'B' : 'A';
+        if (Math.abs(u) < 1e-9) { put(gn, x0 + (i ? 0.2 : -0.2)); return; }
+        const lo = Math.min(x0, xc) + h, hi = Math.max(x0, xc) - h;
+        if (lo <= hi) put(gn, (lo + hi) / 2); else msg.push(`cart ${i + 1} starts too close to the collision for a gate in between; move its start back`);
+      });
+    } else {
+      const t1 = run.tc + (isFinite(run.tq) ? run.tq : 0);
+      put('A', run.bodies[0].pos(t1)[0] - 0.15); put('B', run.bodies[1].pos(t1)[0] + 0.15);
+    }
+    buildRun(); syncGates(); updateReadouts(); restart();
+    $('gateStatus').textContent = msg.length ? `Gates moved, but ${msg.join(' and ')}.` : `Gate A at ${fx(g.A, 2)} m, gate B at ${fx(g.B, 2)} m.`;
+  }
+  // every passage of a flag through a gate in this run, classed as before, during or after the collision (or the push)
+  function computeGates() {
+    if (!hasGates() || !run || !run.bodies.length) return null;
+    const pos = S.gates[S.mode], w0 = run.tc, w1 = S.mode === 'explode' ? run.tc + run.tq : run.tc, ev = [];
+    for (const g of ['A', 'B']) run.bodies.forEach((b, i) => {
+      for (const iv of gateIntervals((tt) => b.pos(tt)[0], pos[g], GATE.flag, Trun, 1e-3)) {
+        const vm = b.vel((iv.ta + iv.tb) / 2)[0];
+        const phase = iv.open ? 'open' : !isFinite(w0) || iv.tb <= w0 + 1e-12 ? 'before' : iv.ta >= w1 - 1e-12 ? 'after' : 'during';
+        ev.push({ g, i, ta: iv.ta, tb: iv.tb, rd: gateReading(iv.tb - iv.ta, GATE.flag), dir: vm < 0 ? -1 : 1, phase, start: iv.ta === 0 });
+      }
+    });
+    ev.sort((a, b) => a.tb - b.tb);
+    return { ev };
+  }
+  // what the gates have shown so far: the events finished by now, or the whole run once it has played to the end
+  const shownEvents = () => (gd ? gd.ev.filter((q) => runDone || q.tb <= t + 1e-9) : []);
+  // one cart's velocity before (u) or after (v′), read the way a student would: 0 if it sat still, else the first clean gate passage
+  function gateValue(i, which) {
+    const after = which === 'v', vTrue = after ? run.after[i][0] : run.before[i][0], tag = `${after ? 'v' : 'u'}${i + 1}${after ? '′' : ''}`;
+    if (Math.abs(vTrue) < 1e-12) return { str: '0', dt: '', note: `${tag} at rest` };
+    const e = gd.ev.find((q) => q.i === i && q.phase === (after ? 'after' : 'before'));
+    if (e) return { str: (e.dir < 0 ? '-' : '') + e.rd.speedStr, dt: e.rd.dt.toFixed(4), note: '' };
+    const bad = gd.ev.find((q) => q.i === i && (q.phase === 'during' || (q.phase === 'open' && (after ? q.ta > run.tc : q.start))));
+    return { str: '', dt: '', note: bad ? `${tag}: no clean gate reading (${bad.phase === 'during' ? 'the collision happened while the flag was in a beam' : 'the flag was in a beam at the start or end of the run'})` : `${tag}: did not pass a gate` };
   }
   const M = () => run.bodies.reduce((s, b) => s + b.m, 0);
   function cmAt(tt) {
@@ -814,6 +1078,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.setLineDash([5 * ps, 4 * ps]); ctx.strokeStyle = opts.hot ? T.accent : col; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.3 * ps;
       roundRect(ctx, x0, y0, w, h, 5 * ps); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
     } else {
+      if (opts.flagTop !== undefined) {         // the photogate flag: a thin plate GATE.flag long, standing on the cart's center
+        const fw = GATE.flag * g.s, fx0 = g.X(xw) - fw / 2;
+        ctx.fillStyle = T.wire; ctx.globalAlpha = 0.75; ctx.fillRect(fx0, opts.flagTop, fw, y0 - opts.flagTop + 1); ctx.globalAlpha = 1;
+      }
       if (opts.hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.2; roundRect(ctx, x0 - 5 * ps, y0 - 5 * ps, w + 10 * ps, h + 10 * ps, 8 * ps); ctx.fill(); ctx.globalAlpha = 1; }
       ctx.fillStyle = T.block; roundRect(ctx, x0, y0, w, h, 5 * ps); ctx.fill();
       ctx.fillStyle = col; ctx.globalAlpha = 0.85; roundRect(ctx, x0, y0, w, Math.max(5 * ps, h * 0.22), 5 * ps); ctx.fill(); ctx.globalAlpha = 1;
@@ -859,7 +1127,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     trackBase(ctx, W, H, g, off.x[0]);
     const labels = [];
     const nb = run.bodies.length, names = ['1', '2'];
-    const ex = S.mode === 'explode';
+    const ex = S.mode === 'explode', BL = blind();
+    // photogates: a post behind the track with its beam at flag height; the timer shows its latest reading
+    const maxH = Math.max(...run.bodies.map((b) => cartH(b.m, ps, g.s))), flagTop = g.yT - 3 * ps - maxH - 12 * ps, gateTop = flagTop - 9 * ps;
+    const arrowY = gateTop - fs - 14 * ps, shownEv = shownEvents();
+    const gatePx = {};
+    for (const gn of ['A', 'B']) {
+      const gx = g.X(S.gates[S.mode][gn] - off.x[0]); gatePx[gn] = gx;
+      if (gx < 2 || gx > W - 2) continue;
+      const hot = isHot('g' + gn), blocked = run.bodies.some((b) => Math.abs(b.pos(t)[0] - S.gates[S.mode][gn]) < GATE.flag / 2);
+      ctx.fillStyle = hot ? T.accent : T.muted; ctx.globalAlpha = hot ? 0.8 : 0.55;
+      ctx.fillRect(gx - 2 * ps, gateTop, 4 * ps, g.yT - gateTop); ctx.globalAlpha = 1;
+      ctx.fillStyle = blocked ? T.pos : T.canvas; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps;
+      ctx.beginPath(); ctx.arc(gx, flagTop + 5 * ps, 3.2 * ps, 0, 7); ctx.fill(); ctx.stroke();
+      const last = shownEv.filter((q) => q.g === gn).pop();
+      const rt = gx > W - 100 * ls;
+      labels.push([`${gn}${last ? '  ' + last.rd.msStr + ' ms' : ''}`, gx + (rt ? -12 : 12) * ps, gateTop - 4 * ps, rt ? 'right' : 'left', T.ink, true]);
+    }
     // start ghosts
     if (S.layers.ghost && !atStart) {
       run.bodies.forEach((b, i) => {
@@ -871,7 +1155,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     let boxes = [];
     run.bodies.forEach((b, i) => {
       const x = b.pos(t)[0] - off.x[0];
-      boxes.push(drawCart(ctx, g, x, b.m, b.size, T.body[i], `${ex ? '' : 'm' + (i ? '₂' : '₁') + ' '}${sig(b.m, 2)} kg`, { hot: atStart && (isHot('c' + i) || isHot('pair')), short: String(i + 1) }));
+      boxes.push(drawCart(ctx, g, x, b.m, b.size, T.body[i], `${ex ? '' : 'm' + (i ? '₂' : '₁') + ' '}${sig(b.m, 2)} kg`, { hot: atStart && (isHot('c' + i) || isHot('pair')), short: String(i + 1), flagTop }));
     });
     if (ex) {
       const gap = run.gapAt(t)[0], xr = boxes[0].x0 + boxes[0].w, len = Math.min(gap, EXP.Ls) * g.s, yS = g.yT - 3 * ps - Math.min(boxes[0].h, boxes[1].h) * 0.45;
@@ -896,11 +1180,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const pre = ex && t < EXP.ts;
       run.bodies.forEach((b, i) => {
         if (pre && i === 1) return;     // one arrow for the pair before the thread is cut
-        const v = b.vel(t)[0] - off.v[0], y = (pre ? Math.min(boxes[0].y0, boxes[1].y0) : boxes[i].y0) - 14 * ps;
+        const v = b.vel(t)[0] - off.v[0], y = arrowY;
         const xc = pre ? cmAt(t)[0] - off.x[0] : b.pos(t)[0] - off.x[0], col = pre ? T.equi : T.body[i];
         const lab = pre ? `V = ${fv(v)}` : `v_${names[i]} = ${fv(v)}`;
         const a = velArrow(ctx, g, xc, y, v, col, lab);
-        labels.push([lab, (g.X(xc) + a.x1) / 2, y - 7 * ps, 'center', col]);
+        if (!BL) labels.push([lab, (g.X(xc) + a.x1) / 2, y - 7 * ps, 'center', col]);    // Blind: the arrows stay, the numbers go
       });
     }
     // start handles: carts, velocity tips, mass grips (always on the start state)
@@ -911,7 +1195,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         const w = b.size * g.s, h = cartH(b.m, ps, g.s), x0 = g.X(x) - w / 2, y0 = g.yT - 3 * ps - h;
         handles.push({ id: 'c' + i, cursor: 'grab', grabbing: 'grabbing', box: [x0, y0, w, h], body: true,
           set: (px) => { const q = P(); q[i ? 'x2' : 'x1'] = g.invX(px) + off0.x[0]; trackKeep(q, i + 1); } });
-        const vy = y0 - 14 * ps, v0 = (i ? p.v2 : p.v1) - off0.v[0];
+        const vy = arrowY, v0 = (i ? p.v2 : p.v1) - off0.v[0];
         if (S.layers.arrows) {
           const tipx = g.X(x) + v0 * g.sv;
           if (atStart) { const a = velArrow(ctx, g, x, vy, v0, T.body[i], ''); labels.push([`v_${names[i]} = ${fv(v0)}`, (g.X(x) + a.x1) / 2, vy - 9 * ps, 'center', T.body[i]]); }
@@ -928,7 +1212,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       handles.push({ id: 'pair', cursor: 'grab', grabbing: 'grabbing', box: [xa, ytop, xb - xa, g.yT - ytop], body: true,
         set: (px) => { const q = P(); q.x0 = +clamp(g.invX(px) + off0.x[0], -0.7, 0.7).toFixed(3); } });
       if (S.layers.arrows) {
-        const vy = Math.min(boxes[0].y0, boxes[1].y0, ytop) - 14 * ps, V0 = p.V - off0.v[0], tipx = g.X(xc) + V0 * g.sv;
+        const vy = arrowY, V0 = p.V - off0.v[0], tipx = g.X(xc) + V0 * g.sv;
         if (atStart) { const a = velArrow(ctx, g, xc, vy, V0, T.equi, ''); labels.push([`V = ${fv(V0)}`, (g.X(xc) + a.x1) / 2, vy - 9 * ps, 'center', T.equi]); }
         else if (S.layers.ghost) { velArrow(ctx, g, xc, vy, V0, T.equi, '', true); }
         if (atStart || S.layers.ghost) handles.push({ id: 'V', cursor: 'ew-resize', pt: [tipx, vy], tip: [tipx, vy], set: (px) => setParam('V', (px - g.X(xc)) / g.sv + off0.v[0], { nosync: true }) });
@@ -940,6 +1224,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         handles.push({ id: 'E', cursor: 'ew-resize', pt: [xr + (EXP.Ls - EXP.comp) * g.s / 2, yS + 14 * ps], grip: 'h', param: 'E', dirX: 1 });
       }
     }
+    // gate grips: drag along the track (the Gate A and Gate B position sliders do the same)
+    for (const gn of ['A', 'B']) if (gatePx[gn] > 2 && gatePx[gn] < W - 2)
+      handles.push({ id: 'g' + gn, cursor: 'ew-resize', pt: [gatePx[gn], gateTop], grip: 'h', gate: true,
+        set: (px) => { S.gates[S.mode][gn] = +clamp(Math.round((g.invX(px) + off0.x[0]) * 100) / 100, -1, 1).toFixed(2); } });
     // the moment of contact
     if (!ex && isFinite(run.tc) && Math.abs(t - run.tc) < 0.12 && t > 0) {
       const a = 1 - Math.abs(t - run.tc) / 0.12, xs = (run.bodies[0].pos(run.tc)[0] + run.bodies[0].size / 2) - off.x[0];
@@ -949,7 +1237,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.globalAlpha = 1;
     }
     drawGrips(ctx);
-    for (const [txt, x, y, al, col] of labels) labelBox(ctx, txt, clamp(x, 40 * ls, W - 40 * ls), y, al, col, fs, 600);
+    for (const [txt, x, y, al, col, raw] of labels) labelBox(ctx, txt, raw ? x : clamp(x, 40 * ls, W - 40 * ls), y, al, col, fs, 600);
     // the bookkeeping, written out: momentum and kinetic energy before and after
     {
       const B = pk('before'), A = pk('after'), done = held || t >= run.tc + (run.tq && isFinite(run.tq) ? run.tq : 0) || !isFinite(run.tc);
@@ -958,11 +1246,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const rows = [[`before:  p_1 + p_2 = ${pS(B[0].p[0])} + ${pS(B[1].p[0])} = ${pS(tp(B))} kg·m/s    K = ${fx(tk(B), 3)} J`, 1],
         [`after:   p_1′ + p_2′ = ${pS(A[0].p[0])} + ${pS(A[1].p[0])} = ${pS(tp(A))} kg·m/s    K = ${fx(tk(A), 3)} J`, done ? 1 : 0.35]];
       if (W < 640) { rows[0][0] = rows[0][0].replace('before:  ', 'before: ').replace(/ {4}K = .*/, ''); rows[1][0] = rows[1][0].replace('after:   ', 'after: ').replace(/ {4}K = .*/, ''); }
-      const cutoff = boxes.length ? Math.min(...boxes.map((b) => b.y0)) - 40 * ps : H;
+      const cutoff = arrowY - fs - 14 * ps;
       const yb = Math.max(y1, (y1 + cutoff) / 2 - dy);
-      if (y1 + dy < cutoff) rows.forEach(([txt, a], k) => { ctx.globalAlpha = a; ctx.fillStyle = k ? T.ink : T.muted; ctx.textBaseline = 'alphabetic'; richText(ctx, txt, W / 2, yb + ef + k * dy, ef, 600, 'center', T.mono); ctx.globalAlpha = 1; });
+      if (!BL && y1 + dy < cutoff) rows.forEach(([txt, a], k) => { ctx.globalAlpha = a; ctx.fillStyle = k ? T.ink : T.muted; ctx.textBaseline = 'alphabetic'; richText(ctx, txt, W / 2, yb + ef + k * dy, ef, 600, 'center', T.mono); ctx.globalAlpha = 1; });
     }
-    if (!ex && !isFinite(run.tc)) labelBox(ctx, 'No collision: cart 1 never catches cart 2', W / 2, ctlH + 30 * ps, 'center', T.muted, fs, 400);
+    if (BL) labelBox(ctx, 'Blind: read the velocities from the photogates', W / 2, ctlH + 18 * ls + fs, 'center', T.muted, fs, 400);
+    if (!ex && !isFinite(run.tc)) labelBox(ctx, 'No collision: cart 1 never catches cart 2', W / 2, ctlH + 30 * ps + (BL ? 1.6 * fs : 0), 'center', T.muted, fs, 400);
     if (ex && t >= EXP.ts && t < EXP.ts + 0.5 && !held) labelBox(ctx, 'thread cut', W / 2, ctlH + 30 * ps, 'center', T.muted, fs, 400);
   }
   function drawGrips(ctx) {
@@ -980,8 +1269,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return { ps, s, X: (x) => cx + x * s, Y: (y) => cy - y * s, invX: (px) => (px - cx) / s, invY: (py) => (cy - py) / s, sv: clamp(0.18 * s, 40, 120 * ps) };
   }
   function drawTableScene(ctx, W, H) {
-    const g = tableGeom(W, H), ps = g.ps, ls = lsc(W, H), fs = 11.5 * ls, p = P();
-    const off = frameOff(t), off0 = frameOff(0), atStart = t === 0 || held;
+    const g = tableGeom(W, H), ps = g.ps, ls = lsc(W, H), fs = 11.5 * ls, p = P(), B = blind();
+    const off = frameOff(t), off0 = frameOff(0), atStart = t === 0 || held, tEnd = B ? t : Trun;   // Blind: no future paths
     sg = g;
     const X = (r, o) => g.X(r[0] - o.x[0]), Y = (r, o) => g.Y(r[1] - o.x[1]);
     // table
@@ -997,11 +1286,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.strokeStyle = T.body[i]; ctx.lineWidth = 1.4 * ps; ctx.globalAlpha = 0.45; ctx.setLineDash([6 * ps, 5 * ps]);
       ctx.beginPath();
       const n = 120;
-      for (let k = 0; k <= n; k++) { const tt = Trun * k / n, r = b.pos(tt), o = frameOff(tt); k ? ctx.lineTo(X(r, o), Y(r, o)) : ctx.moveTo(X(r, o), Y(r, o)); }
+      for (let k = 0; k <= n; k++) { const tt = tEnd * k / n, r = b.pos(tt), o = frameOff(tt); k ? ctx.lineTo(X(r, o), Y(r, o)) : ctx.moveTo(X(r, o), Y(r, o)); }
       ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
     });
     // contact: ghost discs and the line of centers
-    if (isFinite(run.tc)) {
+    if (isFinite(run.tc) && (!B || t >= run.tc)) {
       const oc = frameOff(run.tc), r1 = run.bodies[0].pos(run.tc), r2 = run.bodies[1].pos(run.tc);
       const shown = t >= run.tc - 1e-9 || atStart;
       ctx.globalAlpha = shown ? 0.7 : 0.3;
@@ -1043,7 +1332,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (S.layers.cm) {
       const c = cmAt(t), px = X(c, off), py = Y(c, off);
       ctx.strokeStyle = T.equi; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([2 * ps, 4 * ps]);
-      const c0 = cmAt(0), c1 = cmAt(Trun); ctx.beginPath(); ctx.moveTo(X(c0, frameOff(0)), Y(c0, frameOff(0))); ctx.lineTo(X(c1, frameOff(Trun)), Y(c1, frameOff(Trun))); ctx.stroke(); ctx.setLineDash([]);
+      const c0 = cmAt(0), c1 = cmAt(tEnd); ctx.beginPath(); ctx.moveTo(X(c0, frameOff(0)), Y(c0, frameOff(0))); ctx.lineTo(X(c1, frameOff(tEnd)), Y(c1, frameOff(tEnd))); ctx.stroke(); ctx.setLineDash([]);
       ctx.fillStyle = T.equi; ctx.beginPath(); ctx.moveTo(px, py - 6 * ps); ctx.lineTo(px + 6 * ps, py); ctx.lineTo(px, py + 6 * ps); ctx.lineTo(px - 6 * ps, py); ctx.closePath(); ctx.fill();
       labels.push(['CM', px + 8 * ps, py + 14 * ps, 'left', T.equi]);
     }
@@ -1065,7 +1354,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         const ux = u[0] / hyp(u), uy = u[1] / hyp(u);
         arrow(ctx, px + ux * R, py - uy * R, px + u[0] * g.sv, py - u[1] * g.sv, T.body[i], 2.4 * ps);
       }
-      if (S.layers.arrows && !atStart && hyp(u) > 1e-6) labels.push([`${hyp(u) ? fv(hyp(u)) : ''}`, px + u[0] * g.sv + 6 * ps, py - u[1] * g.sv - 6 * ps, 'left', T.body[i]]);
+      if (S.layers.arrows && !atStart && !B && hyp(u) > 1e-6) labels.push([`${hyp(u) ? fv(hyp(u)) : ''}`, px + u[0] * g.sv + 6 * ps, py - u[1] * g.sv - 6 * ps, 'left', T.body[i]]);
       // start handles
       const r0 = b.pos(0), q0x = X(r0, off0), q0y = Y(r0, off0);
       handles.push({ id: 'c' + i, cursor: 'grab', grabbing: 'grabbing', circle: [q0x, q0y, R], body: true,
@@ -1267,23 +1556,25 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const C = [T.pos, T.neg, T.equi];
     if (S.mode === 'track' || S.mode === 'explode' || S.mode === 'table') {
-      const B = pk('before'), A = pk('after'), pending = !held && t < run.tc + (run.tq && isFinite(run.tq) ? run.tq : 0);
+      const B = pk('before'), A0 = pk('after'), pending = !held && t < run.tc + (run.tq && isFinite(run.tq) ? run.tq : 0), BL = blind();
+      // Blind: the after bars are predictions, so they go (NaN bars are not drawn)
+      const A = BL ? A0.map(() => ({ p: [NaN, NaN], K: NaN })) : A0;
       const tot = (arr, f) => arr.reduce((s, q) => s + f(q), 0);
       const grpP = (ax, title) => ({ title, items: [
         { lab: 'p_1', b: B[0].p[ax], a: A[0].p[ax], col: C[0] }, { lab: 'p_2', b: B[1].p[ax], a: A[1].p[ax], col: C[1] },
-        { lab: 'total', b: tot(B, (q) => q.p[ax]), a: tot(A, (q) => q.p[ax]), col: C[2], val: fx(tot(A, (q) => q.p[ax]), 2) }] });
+        { lab: 'total', b: tot(B, (q) => q.p[ax]), a: tot(A, (q) => q.p[ax]), col: C[2], val: BL ? '' : fx(tot(A, (q) => q.p[ax]), 2) }] });
       const dK = tot(A, (q) => q.K) - tot(B, (q) => q.K);
       const gK = { title: 'Kinetic energy K (J)', items: [
         { lab: 'K_1', b: B[0].K, a: A[0].K, col: C[0] }, { lab: 'K_2', b: B[1].K, a: A[1].K, col: C[1] },
-        { lab: 'total', b: tot(B, (q) => q.K), a: tot(A, (q) => q.K), col: C[2], val: fx(tot(A, (q) => q.K), 3) }],
-        note: Math.abs(dK) < 5e-7 ? 'ΔK = 0' : `ΔK = ${dK > 0 ? '+' : ''}${fx(dK, 3)} J${S.mode === 'explode' ? ' (spring energy)' : ''}` };
+        { lab: 'total', b: tot(B, (q) => q.K), a: tot(A, (q) => q.K), col: C[2], val: BL ? '' : fx(tot(A, (q) => q.K), 3) }],
+        note: BL ? 'after: hidden (Blind)' : Math.abs(dK) < 5e-7 ? 'ΔK = 0' : `ΔK = ${dK > 0 ? '+' : ''}${fx(dK, 3)} J${S.mode === 'explode' ? ' (spring energy)' : ''}` };
       const groups = S.mode === 'table' ? [grpP(0, 'p_x (kg·m/s)'), grpP(1, 'p_y (kg·m/s)'), gK] : [grpP(0, 'Momentum p (kg·m/s)'), gK];
       drawBars(ctx, W, H, groups, { pending: isFinite(run.tc) && pending, legend: true });
     } else if (S.mode === 'impulse') {
       const p = P(), [a, b] = bumps, Jm = p.m * p.v0 * (1 + p.e);
       const Ja = integrate(a.F, 0, a.ts), Jb = integrate(b.F, 0, b.ts);
       drawBars(ctx, W, H, [
-        { title: 'Impulse (N·s)', items: [{ lab: 'mΔv', a: Jm, col: T.muted, val: fx(Jm, 2) }, { lab: 'stiff', a: Ja, col: T.xcol, val: fx(Ja, 2) }, { lab: 'soft', a: Jb, col: T.vcol, val: fx(Jb, 2) }] },
+        { title: 'Impulse (N·s)', items: [...(blind() ? [] : [{ lab: 'mΔv', a: Jm, col: T.muted, val: fx(Jm, 2) }]), { lab: 'stiff', a: Ja, col: T.xcol, val: fx(Ja, 2) }, { lab: 'soft', a: Jb, col: T.vcol, val: fx(Jb, 2) }] },
         { title: 'Peak force (N)', items: [{ lab: 'stiff', a: a.Fpk, col: T.xcol, val: sig(a.Fpk, 3) }, { lab: 'soft', a: b.Fpk, col: T.vcol, val: sig(b.Fpk, 3) }] },
         { title: 'Contact time (ms)', items: [{ lab: 'stiff', a: a.ts * 1000, col: T.xcol, val: sig(a.ts * 1000, 3) }, { lab: 'soft', a: b.ts * 1000, col: T.vcol, val: sig(b.ts * 1000, 3) }] }
       ]);
@@ -1329,22 +1620,29 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       for (let k = 0; k <= n; k++) { const tt = Math.min(t1, Trun * k / n); const y = f(tt); k ? ctx.lineTo(X(tt), Y(y)) : ctx.moveTo(X(tt), Y(y)); if (tt >= t1) break; }
       ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
     };
-    if (isFinite(run.tc) && run.tc <= Trun) {
+    const B = blind(), tEnd = B ? t : Trun, showC = isFinite(run.tc) && run.tc <= Trun && (!B || t >= run.tc);
+    // photogate positions, as lines across the graph
+    for (const gn of ['A', 'B']) {
+      const xg = S.gates[S.mode][gn];
+      if (S.frame === 'lab' && xg > -XR && xg < XR) { ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.setLineDash([2, 4]); ctx.beginPath(); ctx.moveTo(L, Y(xg)); ctx.lineTo(R, Y(xg)); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+    }
+    if (showC) {
       ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(X(run.tc), top); ctx.lineTo(X(run.tc), bot); ctx.stroke(); ctx.setLineDash([]);
     }
     run.bodies.forEach((b, i) => {
       const f = (tt) => b.pos(tt)[0] - frameOff(tt).x[0];
-      line(f, T.body[i], 1.4 * ps, null, 0.3, Trun);
+      if (!B) line(f, T.body[i], 1.4 * ps, null, 0.3, Trun);
       line(f, T.body[i], 2.4 * ps, null, 1, t);
     });
-    if (S.layers.cm) line((tt) => cmAt(tt)[0] - frameOff(tt).x[0], T.equi, 1.8 * ps, [6 * ps, 4 * ps], 1, Trun);
+    if (S.layers.cm) line((tt) => cmAt(tt)[0] - frameOff(tt).x[0], T.equi, 1.8 * ps, [6 * ps, 4 * ps], 1, tEnd);
     ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.45; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.moveTo(X(t), top); ctx.lineTo(X(t), bot); ctx.stroke(); ctx.globalAlpha = 1;
     ctx.restore();
-    if (isFinite(run.tc) && run.tc <= Trun) labelBox(ctx, S.mode === 'explode' ? 'thread cut' : 'collision', X(run.tc) + 4 * ls, top + 14 * ls, 'left', T.muted, 10.5 * ls, 400);
+    if (S.frame === 'lab') for (const gn of ['A', 'B']) { const xg = S.gates[S.mode][gn]; if (xg > -XR && xg < XR) labelBox(ctx, `gate ${gn}`, L + 4 * ls, Y(xg) - 3 * ls, 'left', T.muted, 9.5 * ls, 400); }
+    if (showC) labelBox(ctx, S.mode === 'explode' ? 'thread cut' : 'collision', X(run.tc) + 4 * ls, top + 14 * ls, 'left', T.muted, 10.5 * ls, 400);
     // line labels at the right end
     const lab = [];
-    run.bodies.forEach((b, i) => lab.push([`cart ${i + 1}`, Y(clamp(b.pos(Trun)[0] - frameOff(Trun).x[0], -XR, XR)), T.body[i]]));
-    if (S.layers.cm) lab.push(['CM', Y(clamp(cmAt(Trun)[0] - frameOff(Trun).x[0], -XR, XR)), T.equi]);
+    run.bodies.forEach((b, i) => lab.push([`cart ${i + 1}`, Y(clamp(b.pos(tEnd)[0] - frameOff(tEnd).x[0], -XR, XR)), T.body[i]]));
+    if (S.layers.cm) lab.push(['CM', Y(clamp(cmAt(tEnd)[0] - frameOff(tEnd).x[0], -XR, XR)), T.equi]);
     lab.sort((a, b) => a[1] - b[1]);
     for (let k = 1; k < lab.length; k++) if (lab[k][1] - lab[k - 1][1] < 13 * ls) lab[k][1] = lab[k - 1][1] + 13 * ls;
     for (const [txt, y, col] of lab) labelBox(ctx, txt, R - 4 * ls, clamp(y + 4 * ls, top + 12 * ls, bot - 3), 'right', col, 10.5 * ls, 700);
@@ -1355,8 +1653,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.fillStyle = T.ink; ctx.font = `700 ${fs}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(S.frame === 'cm' ? 'Momentum vectors, center of mass frame' : 'Momentum vectors, tip to tail', 10 * ls, 9 * ls);
     const B = pk('before'), A = pk('after'), Pt = [B[0].p[0] + B[1].p[0], B[0].p[1] + B[1].p[1]];
-    const pts = [[0, 0], B[0].p, Pt, A[0].p];
-    const p = P(), thales = S.frame === 'lab' && Math.abs(p.m1 - p.m2) < 1e-9 && p.e === 1 && hyp(p.v2) < 1e-9 && isFinite(run.tc);
+    const BL = blind(), pts = BL ? [[0, 0], B[0].p, Pt] : [[0, 0], B[0].p, Pt, A[0].p];
+    const p = P(), thales = !BL && S.frame === 'lab' && Math.abs(p.m1 - p.m2) < 1e-9 && p.e === 1 && hyp(p.v2) < 1e-9 && isFinite(run.tc);
     if (thales) { const c = [Pt[0] / 2, Pt[1] / 2], r = hyp(Pt) / 2; pts.push([c[0] - r, c[1] - r], [c[0] + r, c[1] + r]); }
     let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
     for (const q of pts) { x0 = Math.min(x0, q[0]); x1 = Math.max(x1, q[0]); y0 = Math.min(y0, q[1]); y1 = Math.max(y1, q[1]); }
@@ -1382,16 +1680,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     vec(B[0].p, [B[0].p[0] + B[1].p[0], B[0].p[1] + B[1].p[1]], T.neg, 1.8 * ps, [5 * ps, 4 * ps], 0.8);
     if (hyp(Pt) * s > 4) vec(O, Pt, T.equi, 2.6 * ps, null, 1);
     const aA = pend ? 0.25 : 1;
-    vec(O, A[0].p, T.pos, 2.6 * ps, null, aA);
-    vec(A[0].p, [A[0].p[0] + A[1].p[0], A[0].p[1] + A[1].p[1]], T.neg, 2.6 * ps, null, aA);
+    if (!BL) {
+      vec(O, A[0].p, T.pos, 2.6 * ps, null, aA);
+      vec(A[0].p, [A[0].p[0] + A[1].p[0], A[0].p[1] + A[1].p[1]], T.neg, 2.6 * ps, null, aA);
+    }
     if (hyp(B[0].p) * s > 14) { const m = mid(O, B[0].p, -12 * ls); labels.push(['p_1', m[0], m[1] + 4, 'center', T.pos]); }
     if (hyp(B[1].p) * s > 14) { const m = mid(B[0].p, Pt, -12 * ls); labels.push(['p_2', m[0], m[1] + 4, 'center', T.neg]); }
-    if (!pend || true) {
+    if (!BL) {
       if (hyp(A[0].p) * s > 14) { const m = mid(O, A[0].p, 13 * ls); labels.push(['p_1′', m[0], m[1] + 4, 'center', T.pos]); }
       if (hyp(A[1].p) * s > 14) { const m = mid(A[0].p, Pt, 13 * ls); labels.push(['p_2′', m[0], m[1] + 4, 'center', T.neg]); }
     }
     // angle between outgoing momenta at their junction
-    if (isFinite(run.tc) && hyp(A[0].p) * s > 10 && hyp(A[1].p) * s > 10) {
+    if (BL) labels.push(['after the collision: hidden (Blind)', 10 * ls, H - 10 * ls, 'left', T.muted]);
+    else if (isFinite(run.tc) && hyp(A[0].p) * s > 10 && hyp(A[1].p) * s > 10) {
       const a1 = A[0].p, a2 = A[1].p, cos = (a1[0] * a2[0] + a1[1] * a2[1]) / (hyp(a1) * hyp(a2)), ang = Math.acos(clamp(cos, -1, 1));
       const J = A[0].p, r = 14 * ls;
       const angA = Math.atan2(-(0 - J[1]), 0 - J[0]), angB = Math.atan2(-(Pt[1] - J[1]), Pt[0] - J[0]);
@@ -1435,12 +1736,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, 3.5 * ps, 0, 7); ctx.fill();
       labelBox(ctx, `${j ? 'soft' : 'stiff'}: peak ${sig(bp.Fpk, 3)} N`, x + 8 * ls, y + (j ? -6 : 12) * ls, 'left', col, 10.5 * ls, 700);
     });
-    labelBox(ctx, `each area = ${fx(J, 3)} N·s = m(1 + e)v_0`, R - 6 * ls, top + 16 * ls, 'right', T.ink, 10.5 * ls, 600);
+    if (!blind()) labelBox(ctx, `each area = ${fx(J, 3)} N·s = m(1 + e)v_0`, R - 6 * ls, top + 16 * ls, 'right', T.ink, 10.5 * ls, 600);
   }
   // Newton's cradle: if n balls came out, momentum fixes their speed at kv/n; only n = k keeps the energy
   function drawCradleOutcomes(ctx, W, H) {
     const ls = lsc(W, H), ps = projScale(), p = P(), N = p.N, k = p.k, fs = 10.5 * ls;
     ctx.fillStyle = T.ink; ctx.font = `700 ${11 * ls}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    if (blind()) { ctx.fillText('Possible outcomes: hidden while Blind is on.', 10 * ls, 9 * ls); return; }
     ctx.fillText(`${k} ball${k > 1 ? 's' : ''} in at speed v. What if n balls came out?`, 10 * ls, 9 * ls);
     ctx.font = `${fs}px ${T.ui}`; ctx.fillStyle = T.muted;
     ctx.fillText('Momentum fixes their speed at kv/n. Kinetic energy out ÷ in = k/n.', 10 * ls, 25 * ls);
@@ -1546,9 +1848,29 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         ['Impulse, both', `${fx(a.J, 3)} N·s`], ['m(1 + e)v<sub>0</sub>', `${fx(p.m * p.v0 * (1 + p.e), 3)} N·s`]];
       f = `c = 2ζ√(km) with ζ set by e alone; peak force scales as √k, contact time as 1/√k, the area stays m(1 + e)v₀.`;
     }
+    if (blind()) {
+      rows = [['Results', `Hidden while Blind is on. ${hasGates() ? 'Read the velocities from the photogates and the graph.' : 'Measure from the graphs and the motion.'}`, 'wide ok']];
+      f = '';
+    }
     const html = dl(rows);
     if (html !== lastRead) { $('readBox').innerHTML = html; lastRead = html; }
     if ($('formula').textContent !== f) $('formula').textContent = f;
+    renderGates();
+    renderGraphData();
+  }
+  // the gate timers in the rail: every passage shown so far, with Δt and the speed flag length ÷ Δt
+  let lastGates = '';
+  function renderGates() {
+    $('gateSec').hidden = !hasGates();
+    if (!hasGates() || !gd) return;
+    const ev = shownEvents(), arrowCh = (d) => (d < 0 ? '←' : '→');
+    const html = ev.length ? ev.map((q) => {
+      const head = `<li><span class="g">${q.g}</span><span>cart ${q.i + 1} ${arrowCh(q.dir)}</span>`;
+      if (q.phase === 'during') return `${head}<span class="t">${q.rd.msStr} ms</span><span class="v">—</span><span class="bad">The collision happened while this flag was in the beam: not one speed.</span></li>`;
+      if (q.phase === 'open') return `${head}<span class="t">—</span><span class="v">—</span><span class="bad">${q.start ? 'The flag was already in the beam at the start.' : 'Still in the beam at the end of the run.'}</span></li>`;
+      return `${head}<span class="t">${q.rd.msStr} ms</span><span class="v">${q.rd.speedStr} m/s</span></li>`;
+    }).join('') : `<li class="none">${gd.ev.length ? 'No flag has passed a gate yet.' : 'No flag passes a gate in this run. Move the gates or the carts.'}</li>`;
+    if (html !== lastGates) { $('gateList').innerHTML = html; lastGates = html; }
   }
 
   // ---------- rail: sliders ----------
@@ -1614,7 +1936,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     kb[1].hidden = m === 'cradle'; kb[2].hidden = m === 'cradle'; kb[3].hidden = m === 'cradle' || m === 'impulse';
     if (!keepRate) setRate(MODE_RATE[m]);
     S.sel = 0;
-    buildRun(); syncSliders(); updateReadouts();
+    buildRun(); syncSliders(); syncGates(); applyBlind();
   }
   function setFrame(f, quiet) {
     S.frame = f;
@@ -1633,7 +1955,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     setFrame('lab', true);
     setMode(c.mode, true);
     setRate(c.rate);
-    $('presetHint').textContent = c.hint;
+    setHint(c.hint);
     restart();
   }
   function restart() { t = 0; hold = 0; if (S.mode === 'cradle') buildRun(); if (!held && !reduce) setRunning(true); drawAll(); }
@@ -1642,14 +1964,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const b = e.target.closest('button'); if (!b || b.dataset.m === S.mode) return;
     const pr = Object.keys(PRESETS).find((k) => PRESETS[k].mode === b.dataset.m);
     if (pr && !S.P[b.dataset.m].__touched) applyPreset(pr);
-    else { clearPreset(); setMode(b.dataset.m); $('presetHint').textContent = b.dataset.m === 'cradle' ? 'Pull back one ball and let go: one ball comes out the far side. Pull two: two come out. The chart on the right shows why no other number can, with both momentum and energy conserved.' : ''; restart(); }
+    else { clearPreset(); setMode(b.dataset.m); setHint(b.dataset.m === 'cradle' ? 'Pull back one ball and let go: one ball comes out the far side. Pull two: two come out. The chart on the right shows why no other number can, with both momentum and energy conserved.' : ''); restart(); }
   });
   $('frameSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setFrame(b.dataset.f); });
   $('rateSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { setRate(+b.dataset.r); clock(); } });
   const lay = { tArrows: 'arrows', tCM: 'cm', tGhost: 'ghost', tLoop: 'loop' };
   for (const [id, key] of Object.entries(lay)) $(id).addEventListener('change', (e) => { S.layers[key] = e.target.checked; drawAll(); });
   $('gunBtn').addEventListener('click', () => { const q = S.P.explode; q.m1 = 5; q.m2 = 0.2; q.E = 2; q.V = 0; clearPreset(); buildRun(); syncSliders(); updateReadouts(); restart();
-    $('presetHint').textContent = 'A heavy gun and a light bullet: equal and opposite momenta, but the bullet is 25 times faster and takes 25/26 of the energy. A real rifle is 500 times heavier than its bullet.'; });
+    setHint('A heavy gun and a light bullet: equal and opposite momenta, but the bullet is 25 times faster and takes 25/26 of the energy. A real rifle is 500 times heavier than its bullet.'); });
   $('eqBtn').addEventListener('click', () => { const q = S.P.explode; q.m1 = 1; q.m2 = 1; clearPreset(); buildRun(); syncSliders(); updateReadouts(); restart(); });
   const playBtn = $('play');
   let last = performance.now();
@@ -1687,7 +2009,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         else setParam(drag.param, drag.v0 + dist * (d[3] - d[2]) / (220 * projScale()));
       } else {
         const h = handles.find((k) => k.id === drag.id);
-        if (h && h.set) { h.set(x - drag.off[0], y - drag.off[1]); S.P[S.mode].__touched = true; clearPreset(); buildRun(); if (S.mode === 'cradle') pullCradle(); }
+        if (h && h.set) { h.set(x - drag.off[0], y - drag.off[1]); if (!h.gate) { S.P[S.mode].__touched = true; clearPreset(); } buildRun(); syncGates(); if (S.mode === 'cradle') pullCradle(); }
       }
       syncSliders(); updateReadouts(); drawAll();
     });
@@ -1714,7 +2036,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       drag.param = h.param; drag.axis = h.grip === 'v' ? 'y' : 'x'; drag.dir = h.grip === 'v' ? (h.dirY || -1) : (h.dirX || 1); drag.x0 = x; drag.y0 = y;
       drag.v0 = d[6] === 'logk' ? posOfK(h.param, P()[h.param]) : P()[h.param];
     }
-    if (S.mode === 'track' || S.mode === 'table') S.sel = +h.id.slice(-1) || 0;
+    if ((S.mode === 'track' || S.mode === 'table') && !h.gate) S.sel = +h.id.slice(-1) || 0;
     try { cans.c.setPointerCapture(ev.pointerId); } catch (_) {}
     cans.c.style.cursor = h.grabbing || h.cursor; ev.preventDefault();
     drawAll();
@@ -1743,11 +2065,237 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       else step('v0', dir);
     } else if (k === 'ArrowUp' || k === 'ArrowDown') {
       const dir = k === 'ArrowUp' ? 1 : -1;
-      if (S.mode === 'cradle') step('th', dir); else if (S.mode === 'explode') step('E', dir); else if (S.mode === 'table' && e.shiftKey) step('b', dir); else step('e', dir);
+      if (S.mode === 'cradle') step('th', dir); else if (S.mode === 'explode') step('E', dir); else if (S.mode === 'table' && e.shiftKey) step('b', dir);
+      else if (blind() && (S.mode === 'track' || S.mode === 'table')) {     // Blind: step through the bumpers instead of e
+        const ks = Object.keys(BUMPERS), cur = ks.indexOf(bumperOf(p.e)); setBumper(ks[clamp(cur < 0 ? (dir > 0 ? 0 : ks.length - 1) : cur - dir, 0, ks.length - 1)]);
+      } else step('e', dir);
     } else if (k === ' ') setRunning(!running);
+    else if (k === 'c' || k === 'C') captureReading();
     else if (k === 'r' || k === 'R') { restart(); setRunning(true); }
     else return;
     e.preventDefault();
+  });
+
+  // ---------- lab kit: gate sliders, readings, CSV, fit of the captured rows, Blind, reduce motion, graph data ----------
+  const VERSION = 'collisions@2026-10-22';
+  function syncGates() {
+    if (!hasGates()) return;
+    for (const gn of ['A', 'B']) { const v = S.gates[S.mode][gn]; $('g' + gn).value = v; $('g' + gn + 'o').textContent = `x = ${fx(v, 2)} m`; }
+  }
+  $('placeGates').addEventListener('click', placeGates);
+  for (const gn of ['A', 'B']) $('g' + gn).addEventListener('input', (e) => {
+    if (!hasGates()) return;
+    S.gates[S.mode][gn] = +(+e.target.value).toFixed(2); buildRun(); syncGates(); updateReadouts(); restart();
+  });
+  const presetName = (p) => { const b = document.querySelector(`#presets [data-p="${p}"]`); return b ? b.textContent.trim() : 'custom'; };
+  const capStatus = (msg) => { $('capStatus').textContent = msg; };
+  function captureReading() {
+    if (!hasGates()) { capStatus('Capture reads the photogates, on the 1D track and in the Explosion scene.'); return; }
+    if (held) return;
+    if (S.mode === 'track' && !isFinite(run.tc)) { capStatus('Not captured: the carts never collide in this setup.'); return; }
+    if (S.mode === 'explode' && !(P().E > 0)) { capStatus('Not captured: with no stored energy the pieces never separate.'); return; }
+    if (!runDone) { capStatus('Not captured yet: let the run play to the end so every cart has passed its gates, then capture (Play, or Space on the drawing).'); return; }
+    if (running) setRunning(false);
+    const p = P(), m1 = p.m1, m2 = p.m2;
+    const vals = { u1: gateValue(0, 'u'), u2: gateValue(1, 'u'), v1: gateValue(0, 'v'), v2: gateValue(1, 'v') };
+    const notes = Object.values(vals).map((q) => q.note).filter(Boolean);
+    const r = { scene: S.mode === 'track' ? '1D track' : 'explosion', preset: presetName(S.preset), bumper: S.mode === 'track' ? bumperOf(p.e) : '',
+      e: S.mode === 'track' && !blind() ? fx(p.e, 2) : '', m1: fx(m1, 1), m2: fx(m2, 1), Lf: String(GATE.flag),
+      gA: fx(S.gates[S.mode].A, 2).replace('−', '-'), gB: fx(S.gates[S.mode].B, 2).replace('−', '-'),
+      du1: vals.u1.dt, du2: vals.u2.dt, dv1: vals.v1.dt, dv2: vals.v2.dt,
+      u1: vals.u1.str, u2: vals.u2.str, v1: vals.v1.str, v2: vals.v2.str, notes: notes.join('; ') };
+    S.rows.push(r); renderRows();
+    const miss = ['u1', 'u2', 'v1', 'v2'].filter((k) => r[k] === '');
+    capStatus(`Reading ${S.rows.length} captured: m₁ = ${r.m1} kg, m₂ = ${r.m2} kg; u₁ = ${MIN(r.u1 || '?')}, u₂ = ${MIN(r.u2 || '?')}, v₁′ = ${MIN(r.v1 || '?')}, v₂′ = ${MIN(r.v2 || '?')} m/s.${miss.length ? ` No clean reading for ${miss.length} of the velocities: move a gate and run again.` : ''}`);
+  }
+  const esc = (x) => String(x).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  function renderRows() {
+    const tb = $('rowsTbl').querySelector('tbody');
+    if (!S.rows.length) tb.innerHTML = '<tr><td class="empty" colspan="6">No readings yet. Let a collision run to the end, then press Capture reading.</td></tr>';
+    else tb.innerHTML = S.rows.map((r, i) => {
+      const inp = (f, lab) => `<td><input aria-label="${lab}, row ${i + 1}" data-i="${i}" data-f="${f}" value="${esc(MIN(r[f]))}" inputmode="decimal" spellcheck="false"></td>`;
+      const tip = `m₁ = ${r.m1} kg, m₂ = ${r.m2} kg; ${r.scene}, ${r.preset}${r.bumper ? `, bumper ${r.bumper}` : ''}${r.e ? `, e = ${r.e}` : ''}; gates at ${r.gA} m and ${r.gB} m${r.notes ? '; ' + r.notes : ''}`;
+      return `<tr title="${esc(tip)}"><td class="n">${i + 1}</td>${inp('u1', 'u1 before, m/s')}${inp('u2', 'u2 before, m/s')}${inp('v1', 'v1 after, m/s')}${inp('v2', 'v2 after, m/s')}<td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`;
+    }).join('');
+    updateFitOut();
+  }
+  $('rowsTbl').addEventListener('change', (ev) => { const x = ev.target; if (x.dataset && x.dataset.f && S.rows[+x.dataset.i]) { S.rows[+x.dataset.i][x.dataset.f] = x.value.trim().replace(/−/g, '-'); updateFitOut(); } });
+  $('rowsTbl').addEventListener('click', (ev) => {
+    const b = ev.target.closest('button[data-del]'); if (!b) return;
+    const i = +b.dataset.del; S.rows.splice(i, 1); renderRows(); capStatus(`Row ${i + 1} deleted.`);
+    const nb = $('rowsTbl').querySelector(`button[data-del="${Math.min(i, S.rows.length - 1)}"]`); (nb || $('capture')).focus();
+  });
+  function csvText() { return readingsCSV(S.rows, { version: VERSION, setup: S.preset ? presetName(S.preset) : `custom ${S.mode === 'explode' ? 'explosion' : '1D track'}`, blind: blind() }); }
+  function download(name, text) {
+    try { const url = URL.createObjectURL(new Blob([text], { type: 'text/csv' })), a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000); } catch (_) {}
+  }
+  $('capture').addEventListener('click', captureReading);
+  $('exportCsv').addEventListener('click', () => { if (!S.rows.length) { capStatus('No readings to export yet.'); return; } download('collisions-readings.csv', csvText()); capStatus(`${S.rows.length} reading${S.rows.length > 1 ? 's' : ''} exported as collisions-readings.csv.`); });
+  $('clearRows').addEventListener('click', () => { S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+
+  // the plot of the captured rows with a least squares line and a residual strip
+  const FIT_AX = {
+    p: { name: 'total momentum after against before', xl: 'p before (kg·m/s)', yl: 'p after (kg·m/s)', bu: '', au: 'kg·m/s',
+      hint: 'Each point is one run: x = m₁u₁ + m₂u₂, y = m₁v₁′ + m₂v₂′. If momentum is conserved the points lie on y = x: slope 1, intercept 0.' },
+    e: { name: 'separation speed against approach speed', xl: 'u₁ − u₂ (m/s)', yl: 'v₂′ − v₁′ (m/s)', bu: '', au: 'm/s',
+      hint: 'x = u₁ − u₂, the speed of approach; y = v₂′ − v₁′, the speed of separation. For rows with one bumper the slope is its coefficient of restitution e.' },
+    K: { name: 'kinetic energy lost against ½μ(u₁ − u₂)²', xl: '½μ(u₁ − u₂)² (J)', yl: 'K before − K after (J)', bu: '', au: 'J',
+      hint: 'x = ½μ(u₁ − u₂)² with μ = m₁m₂/(m₁ + m₂), the kinetic energy of motion relative to the center of mass; y = the kinetic energy lost. For rows with one bumper the slope is 1 − e².' }
+  };
+  const fCan = $('fCan'), fCtx = fCan.getContext('2d');
+  let fDims = [0, 0];
+  function fitResize() {
+    const r = fCan.parentElement.getBoundingClientRect(); if (!r.width) return;
+    fCan.width = Math.max(1, Math.round(r.width * dpr)); fCan.height = Math.max(1, Math.round(r.height * dpr));
+    fDims = [r.width, r.height]; drawFit();
+  }
+  const fitNow = () => { const Pp = fitPoints(S.rows, S.fitKind); return { P: Pp, fit: fitLine(Pp.x, Pp.y) }; };
+  const shortNum = (v) => (isFinite(v) ? MIN(String(+v.toPrecision(3))) : '—');
+  function fmtPM(v, se, unit) {
+    if (!isFinite(v)) return '—';
+    const u = unit ? ` ${unit}` : '';
+    if (!(se > 0) || !isFinite(se)) return `${MIN(String(+v.toPrecision(4)))}${u}`;
+    const dp = clamp(1 - Math.floor(Math.log10(se) + 1e-12), 0, 9);
+    return `${MIN(v.toFixed(dp))} ± ${se.toFixed(dp)}${u}`;
+  }
+  function drawFit() {
+    const [W, H] = fDims; if (!W || !H || !T) return;
+    const ctx = fCtx, A = FIT_AX[S.fitKind], { P: Pp, fit } = fitNow();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const xs = Pp.x, ys = Pp.y, L = 46, R = W - 10, top = 8, bot = H - 84, rTop = H - 76, rBot = H - 34;
+    let x0 = 0, x1 = 1, y0 = 0, y1 = 1;
+    if (xs.length) {
+      x0 = Math.min(0, ...xs); x1 = Math.max(0, ...xs); y0 = Math.min(0, ...ys); y1 = Math.max(0, ...ys);
+      const px = (x1 - x0) * 0.08 || 0.5, py = (y1 - y0) * 0.1 || 0.5; x0 -= x0 < 0 ? px : 0; x1 += px; y0 -= y0 < 0 ? py : 0; y1 += py;
+    }
+    const X = (v) => L + (v - x0) / (x1 - x0) * (R - L), Y = (v) => bot - (v - y0) / (y1 - y0) * (bot - top);
+    ctx.font = `10px ${T.mono}`; ctx.lineWidth = 1;
+    const xst = nice((x1 - x0) / 4), yst = nice((y1 - y0) / 4);
+    ctx.fillStyle = T.muted; ctx.strokeStyle = T.grid; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = Math.ceil(x0 / xst) * xst; v <= x1 + 1e-12; v += xst) {
+      const x = Math.round(X(v)) + 0.5;
+      ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bot); ctx.moveTo(x, rTop); ctx.lineTo(x, rBot); ctx.stroke();
+      ctx.fillText(shortNum(Math.abs(v) < xst * 1e-6 ? 0 : v), x, rBot + 3);
+    }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = Math.ceil(y0 / yst) * yst; v <= y1 + 1e-12; v += yst) { const y = Math.round(Y(v)) + 0.5; ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(R, y); ctx.stroke(); ctx.fillText(shortNum(Math.abs(v) < yst * 1e-6 ? 0 : v), L - 4, y); }
+    ctx.strokeStyle = T.gridStrong; ctx.strokeRect(L + 0.5, top + 0.5, R - L, bot - top); ctx.strokeRect(L + 0.5, rTop + 0.5, R - L, rBot - rTop);
+    ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.font = `10px ${T.ui}`;
+    ctx.fillText(A.xl, R, H - 2);
+    ctx.save(); ctx.translate(10, (top + bot) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(A.yl, 0, 0); ctx.restore();
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(`residual (${A.au})`, L + 4, rTop + 2);
+    const rs = fit ? fit.res : [];
+    let rmax = rs.length ? Math.max(...rs.map(Math.abs)) : 0;
+    rmax = rmax > 1e-15 ? nice(rmax * 1.15) : 1e-3;
+    const Yr = (v) => (rTop + rBot) / 2 - v / rmax * (rBot - rTop) / 2;
+    ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.moveTo(L, Math.round(Yr(0)) + 0.5); ctx.lineTo(R, Math.round(Yr(0)) + 0.5); ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.muted; ctx.font = `9.5px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    if (rs.length) { ctx.fillText(`+${shortNum(rmax)}`, L - 4, rTop + 5); ctx.fillText(`−${shortNum(rmax)}`, L - 4, rBot - 5); }
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
+    if (fit) { ctx.strokeStyle = T.accent; ctx.lineWidth = 1.8; ctx.beginPath(); ctx.moveTo(X(x0), Y(fit.a + fit.b * x0)); ctx.lineTo(X(x1), Y(fit.a + fit.b * x1)); ctx.stroke(); }
+    ctx.fillStyle = T.ink; for (let i = 0; i < xs.length; i++) { ctx.beginPath(); ctx.arc(X(xs[i]), Y(ys[i]), 3.6, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.restore();
+    ctx.fillStyle = T.accent; for (let i = 0; i < rs.length; i++) { ctx.beginPath(); ctx.arc(X(xs[i]), Yr(rs[i]), 3, 0, 2 * Math.PI); ctx.fill(); }
+    if (xs.length < 2) { ctx.fillStyle = T.muted; ctx.font = `11px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(xs.length ? 'Capture another row to fit a line' : 'No readings yet', (L + R) / 2, (top + bot) / 2); }
+  }
+  function updateFitOut() {
+    const A = FIT_AX[S.fitKind], { P: Pp, fit } = fitNow();
+    let html = '';
+    if (fit) {
+      html += `<div class="wide"><dt>Slope b of ${A.name}, ${fit.n} rows</dt><dd>${fmtPM(fit.b, fit.seB, A.bu)}</dd></div>`;
+      html += `<div class="wide"><dt>Intercept a</dt><dd>${fmtPM(fit.a, fit.seA, A.au)}</dd></div>`;
+      if (fit.n < 3) html += '<div class="wide"><dt>Standard errors</dt><dd class="ok">need 3 or more rows</dd></div>';
+      if (!blind() && S.fitKind !== 'p') {
+        const es = Pp.row.map((i) => S.rows[i].e), same = es.length && es.every((x) => x !== '' && x === es[0]);
+        if (same) html += `<div class="wide"><dt>e set for these rows, to compare</dt><dd>${S.fitKind === 'e' ? `e = ${es[0]}` : `1 − e² = ${fx(1 - (+es[0]) ** 2, 4)}`}</dd></div>`;
+      }
+    } else html = `<div class="wide"><dt>Fit of ${A.name}</dt><dd class="ok">${Pp.x.length ? 'needs 2 or more rows with different x' : 'capture readings first'}</dd></div>`;
+    $('fitOut').innerHTML = html;
+    $('fitHint').textContent = `${A.hint} The fit is a least squares line y = a + bx with equal weights, through your captured rows only; rows with a blank cell are left out. The standard errors come from the scatter of the rows about the line, which here is only the timer and display rounding.`;
+    $('fitTbl').querySelector('thead').innerHTML = `<tr><th scope="col">#</th><th scope="col">x</th><th scope="col">y</th><th scope="col">fit</th><th scope="col">residual</th></tr>`;
+    $('fitTbl').querySelector('tbody').innerHTML = Pp.x.length ? Pp.x.map((x, k) => `<tr><td class="n">${Pp.row[k] + 1}</td><td class="b">${shortNum(x)}</td><td class="b">${shortNum(Pp.y[k])}</td><td class="b">${fit ? shortNum(fit.a + fit.b * x) : '—'}</td><td class="b">${fit ? shortNum(fit.res[k]) : '—'}</td></tr>`).join('')
+      : '<tr><td class="empty" colspan="5">No plotted readings.</td></tr>';
+    fCan.setAttribute('aria-label', `Plot of ${A.name}, x: ${A.xl}, y: ${A.yl}, for ${Pp.x.length} captured row${Pp.x.length === 1 ? '' : 's'}${fit ? `, with a least squares line of slope ${fmtPM(fit.b, fit.seB, A.bu)} and intercept ${fmtPM(fit.a, fit.seA, A.au)}` : ''}; the residuals are in a strip below. Show data table lists the points.`);
+    drawFit();
+  }
+  for (const b of document.querySelectorAll('#fitSeg button')) b.addEventListener('click', () => {
+    S.fitKind = b.dataset.k; for (const c of document.querySelectorAll('#fitSeg button')) c.setAttribute('aria-pressed', String(c === b)); updateFitOut();
+  });
+  $('fitTblBtn').addEventListener('click', () => {
+    const open = $('fitWrap').hidden; $('fitWrap').hidden = !open;
+    $('fitTblBtn').setAttribute('aria-expanded', String(open)); $('fitTblBtn').textContent = open ? 'Hide data table' : 'Show data table';
+  });
+
+  // Blind: hide every prediction and answer; on the track and the table the e slider gives way to bumpers A to D
+  let hintText = '';
+  function setHint(txt) { hintText = txt; $('presetHint').textContent = blind() && txt ? 'Blind is on: setup hints are hidden.' : txt; }
+  function applyBlind() {
+    const on = blind();
+    document.documentElement.setAttribute('data-blind', on ? 'on' : 'off');
+    $('labBlind').checked = on;
+    const bm = on && (S.mode === 'track' || S.mode === 'table');
+    for (const m of ['track', 'table']) { const el = slEls[`${m}.e`]; if (el) el.inp.closest('.ctl').hidden = on; }
+    $('bumperWrap').hidden = !bm;
+    const cur = bm ? bumperOf(P().e) : '';
+    for (const b of document.querySelectorAll('#bumperSeg button')) b.setAttribute('aria-pressed', String(b.dataset.b === cur));
+    $('bumperOut').textContent = cur ? `bumper ${cur}, e hidden` : 'e hidden';
+    $('presetHint').textContent = on && hintText ? 'Blind is on: setup hints are hidden.' : hintText;
+    lastRead = ''; updateReadouts(); updateFitOut(); drawAll();
+  }
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; applyBlind(); });
+  function setBumper(k) {
+    if (!(k in BUMPERS)) return;
+    setParam('e', BUMPERS[k]); restart(); applyBlind();
+    $('live').textContent = `Bumper ${k} fitted.`;
+  }
+  $('bumperSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setBumper(b.dataset.b); });
+
+  // Reduce motion: pause now and open every setup paused; Play still runs the motion
+  function setReduce(on) {
+    reduce = on; $('tReduce').checked = on;
+    try { sessionStorage.setItem('collisions-reduce-motion', on ? 'on' : 'off'); } catch (_) {}
+    if (on) setRunning(false);
+  }
+  $('tReduce').checked = reduce;
+  $('tReduce').addEventListener('change', (e) => setReduce(e.target.checked));
+
+  // the lower right graph as a table: positions against time, the momentum vectors, F against t, or the cradle outcomes
+  let graphOpen = false, graphKey = '';
+  function graphRows() {
+    const BL = blind(), f3 = (v) => MIN(fx(v, 3));
+    if (S.mode === 'track' || S.mode === 'explode') {
+      const tEnd = BL && !runDone ? t : Trun, rows = [], dt = 0.05;
+      for (let k = 0; k * dt <= tEnd + 1e-9; k++) { const tt = k * dt, o = frameOff(tt).x[0]; rows.push([fx(tt, 2), ...run.bodies.map((b) => f3(b.pos(tt)[0] - o)), f3(cmAt(tt)[0] - o)]); }
+      return { cap: `Position against time${S.frame === 'cm' ? ', center of mass frame' : ''}, every 0.05 s${BL && !runDone ? ' up to now' : ''}.`, head: ['t (s)', 'x₁ (m)', 'x₂ (m)', 'x_cm (m)'], rows };
+    }
+    if (S.mode === 'table') {
+      const B = pk('before'), A = pk('after'), v = (q) => `(${f3(q[0])}, ${f3(q[1])})`;
+      const rows = [['p₁ before', v(B[0].p)], ['p₂ before', v(B[1].p)], ['total before', v([B[0].p[0] + B[1].p[0], B[0].p[1] + B[1].p[1]])]];
+      if (!BL) rows.push(['p₁′ after', v(A[0].p)], ['p₂′ after', v(A[1].p)], ['total after', v([A[0].p[0] + A[1].p[0], A[0].p[1] + A[1].p[1]])]);
+      return { cap: `Momentum vectors (p_x, p_y) in kg·m/s${S.frame === 'cm' ? ', center of mass frame' : ''}${BL ? '; after the collision: hidden (Blind)' : ''}.`, head: ['vector', '(p_x, p_y)'], rows };
+    }
+    if (S.mode === 'impulse') {
+      const tm = Math.max(bumps[0].ts, bumps[1].ts), rows = [];
+      for (let k = 0; k <= 24; k++) { const tt = tm * k / 24; rows.push([fx(tt * 1000, 1), sig(bumps[0].F(tt), 3), sig(bumps[1].F(tt), 3)]); }
+      return { cap: 'Force on the cart against time after contact, at 25 even steps.', head: ['t (ms)', 'F stiff (N)', 'F soft (N)'], rows };
+    }
+    if (BL) return { cap: 'Possible outcomes: hidden while Blind is on.', head: ['n'], rows: [] };
+    const p = P(), rows = [];
+    for (let n = 1; n <= p.N; n++) rows.push([String(n), `${sig(p.k / n, 3)}v`, fx(p.k / n, 3)]);
+    return { cap: `If ${p.k} ball${p.k > 1 ? 's' : ''} come in at speed v and n balls go out, momentum fixes their speed at kv/n; kinetic energy out ÷ in is k/n.`, head: ['n out', 'speed', 'K out ÷ K in'], rows };
+  }
+  function renderGraphData(force) {
+    if (!graphOpen) return;
+    const g = graphRows(), key = JSON.stringify(g);
+    if (!force && key === graphKey) return; graphKey = key;
+    $('graphCap').textContent = `Data of the lower right graph. ${g.cap}`;
+    $('graphHead').innerHTML = `<tr>${g.head.map((h) => `<th scope="col">${h}</th>`).join('')}</tr>`;
+    $('graphBody').innerHTML = g.rows.length ? g.rows.map((r) => `<tr>${r.map((c, j) => `<td class="${j ? 'b' : 'n'}">${c}</td>`).join('')}</tr>`).join('') : `<tr><td class="empty" colspan="${g.head.length}">No rows.</td></tr>`;
+  }
+  $('graphBtn').addEventListener('click', () => {
+    graphOpen = !graphOpen; $('graphWrap').hidden = !graphOpen;
+    $('graphBtn').setAttribute('aria-expanded', String(graphOpen)); $('graphBtn').textContent = graphOpen ? 'Hide data table' : 'Show data table';
+    renderGraphData(true);
   });
 
   // ---------- projector and theme ----------
@@ -1756,12 +2304,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
     projBtn.setAttribute('aria-pressed', String(on));
     try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
-    requestAnimationFrame(resize);
+    requestAnimationFrame(() => { resize(); fitResize(); });
   }
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
-  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); drawAll(); }); } catch (_) {}
-  new MutationObserver(() => { tokens(); drawAll(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); drawAll(); drawFit(); }); } catch (_) {}
+  new MutationObserver(() => { tokens(); drawAll(); drawFit(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
   // ---------- loop ----------
   function advance(dts) {
@@ -1777,7 +2325,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       }
       return;
     }
-    if (t < Trun) { t = Math.min(Trun, t + dts); return; }
+    if (t < Trun) { t = Math.min(Trun, t + dts); if (t >= Trun) runDone = true; return; }
+    runDone = true;
     if (!S.layers.loop) { setRunning(false); return; }
     hold += dts / S.rate;
     if (hold > 1.2) { t = 0; hold = 0; }
@@ -1795,7 +2344,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   window.__col = {
     get frameMs() { return frameMs; }, get t() { return t; }, get S() { return S; }, get run() { return run; }, get handles() { return handles; },
     get bumps() { return bumps; }, get cr() { return cr; }, get crLog() { return crLog; }, get Trun() { return Trun; }, get running() { return running; },
-    applyPreset, setMode, setParam, setFrame, setRunning, pk,
+    applyPreset, setMode, setParam, setFrame, setRunning, pk, get gd() { return gd; }, get runDone() { return runDone; }, get rows() { return S.rows; },
+    csvText, captureReading, gateValue, placeGates,
     go(dts, step) { step = step || 0.01; for (let x = 0; x < dts - 1e-12; x += step) advance(Math.min(step, dts - x)); updateReadouts(); drawAll(); },
     seek(tt) { t = tt; drawAll(); }
   };
@@ -1804,7 +2354,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   buildSliders();
   const ro = new ResizeObserver(resize);
   for (const k of ['c', 'e', 'p']) ro.observe(panes[k]);
+  new ResizeObserver(() => fitResize()).observe(fCan.parentElement);
   applyPreset('elastic');
+  renderRows();
   setRunning(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);

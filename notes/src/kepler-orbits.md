@@ -12,7 +12,9 @@ time: 20 to 30 minutes
 
 ## Before class
 
-Students should know what an ellipse, its foci and its semi major axis are; a string and two pins on a board is a quick reminder. Majors and physics students should know Newton's law of gravity and the idea of angular momentum. The demo opens on **Mercury** and plays. Turn on **Projector** for a large room. The arrow tip snaps to the gold circular speed circle and the red escape speed circle; hold **Shift** to place it freely. Focus the view and press **F** to fit the orbit.
+Students should know what an ellipse, its foci and its semi major axis are; a string and two pins on a board is a quick reminder. Majors and physics students should know Newton's law of gravity and the idea of angular momentum. The demo opens on **Mercury** and plays. Turn on **Projector** for a large room. The arrow tip snaps to the gold circular speed circle and the red escape speed circle; hold **Shift** to place it freely. Focus the view and press **F** to fit the orbit. Under **Arrow keys move** you choose what the arrow keys move: **Arrow tip**, **Launch point**, **View** or **Ruler point** (**M** switches, **+** and **−** zoom).
+
+For a lab, **Measure** has **Start timer** / **Stop timer**, **Zero timer** (simulated time) and **Ruler** (click two points in the view). **Readings** has **Capture reading**, **Export CSV** and **Clear**. **Lab** has **Blind: hide predictions and answers**, **Chart shows** (**Third law** or **Your readings**, T² against a³ with a fit through the origin and a residual strip), **Reduce motion** and **Show data table**.
 
 ## Running it in class
 

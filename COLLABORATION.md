@@ -30,6 +30,8 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 
 | Weekend independent physics review, 2026-10-22 | GPT | Feature branch validation only | First checkpoint recorded against main 77d11e3: 126 supported groups passed locally; new DNA (10) and Lagrange frame (5) suites. DNA strict TER export check fails. Nine-demo independent review remains partial; see curriculum/validation/WEEKEND_REVIEW_2026-10-22.md. No demo HTML edits. Handouts wait for Claude’s feature notes. |
 
+| Textbook map and handout alignment, 2026-10-22 | GPT | Feature branch and private TeacherKeys | Map draft complete; validating and pushing before handout work. Physics II first afterward. Magnetic-force and springs held for Claude. No HTML edits or main merge. |
+
 ### Editing a demo the other one owns
 
 Both of us will sometimes need to change the same demo file: Claude for visuals, GPT for physics fixes, measurement tools or CSV export. To avoid overwriting each other:
@@ -170,3 +172,60 @@ Focus: Physics I and II through the release gate (curriculum/RELEASE_GATE.md), E
 4. **Validation records**: for each demo Claude reports as release candidate, run its tests and the browser checks, and record evidence (commit SHA, results) in `curriculum/validation/`.
 
 Steve still decides which demos keep lab handouts and which become demos only; until then, write handouts only for the demos listed above.
+
+### Claude feature batches landed on main, 2026-10-22 (for GPT's handouts and guides)
+- **E&M (1b88d9a):** faraday, gauss-law, circuits, capacitors, coulomb-sandbox, magnetic-force. Common new controls: **Blind: hide predictions and answers** (Lab section, stage tag "Blind"), **Capture reading**, **Export CSV**, **Clear** (Readings section), **Show data table** / **Hide data table**, **Reduce motion**. Circuits adds **Step Δt**, **Step forward**, a scope **Time cursor** (click/drag or ←/→, Home/End, Esc, C captures), and Readings in In time and DC; AC keeps **Frequency response readings**. Capacitors plot choices **C vs 1/d**, **C vs x/s**, **V vs d**. Magnetic force adds **Show ruler**, **Ruler reads** (Diameter/Radius), **Start timer**/**Stop timer**, **Reset timer**, **Turns timed**, plots **r against v**, **r against m/|q|**, **T against v**. Coulomb: probe readings and keys (P probe, ]/[ cycle charges, arrows move, +/− change q, C capture). Stale text to fix: capacitors handout "no measurement CSV notebook"; Faraday handout's old "Hide predicted amplitudes and integral checks" name; the Faraday, Gauss and AC instructor guides that say Step/Capture/CSV or AC export don't exist.
+- **Mechanics (3602495):** projectile-drag (**Dot interval**, **Earlier dot**/**Later dot**, **Hide cursor**, plots **y against t**, **R against sin 2θ**), springs (**Stopwatch**, **Oscillations counted, N**, **Reset stopwatch**, **Reset peak**, plots **T² against m**, **A against ω**), collisions (**Photogates** section with **Gate A position**, **Gate B position**, **Place gates for this run**; fits **p′ vs p**, **Separation vs approach**, **K lost vs ½μu²**; in Blind the e slider becomes **Bumper** A–D with fixed hidden e), fluids (readouts Depth ruler h, Pressure gauge, Spring scale T, Flow meter Q, Standpipe h₁/h₂; cavitation banner; g = 9.80665 so the guide's 9.81 N should read 9.807 N), kepler-orbits (**Start timer**/**Stop timer**, **Zero timer**, **Ruler**, "Arrow keys move" options, **Third law**/**Your readings**). All have node tests now. potential-curves, rotation, catenary, double-pendulum stay lecture demos (labels, keyboard, data tables, Reduce motion, tests).
+- **From GPT's review:** Ising γ₀ comment fixed (e43dffb). DNA TER column fix is in progress in Claude's polish batch.
+
+## Textbook alignment (Steve's decision, 2026-10-22): OpenStax University Physics
+Physics 1 uses **University Physics Volume 1** (chapters 1–17), Physics 2 uses **Volume 2** (chapters 1–16). Volume 3 isn't used in a course; it is free supplementary reading (optics and modern physics demos, modern physics labs). Steve is giving GPT the Volume 1 and 2 PDFs (current OpenStax web editions, April 2026). Calculus-based level, so the existing calculus in handouts is fine.
+
+**Plan:** the site will later get course pages (Physics 1, Physics 2, Modern Physics Labs, Acoustics, Astronomy, Explore) built from one mapping file; demo URLs and QR codes stay unchanged. Claude builds the pages after Sunday's usage reset; Claude also adds the missing Physics 1 demos (motion along a line, Newton's laws with friction and inclines, circular motion, work and energy, static equilibrium) and a Physics 2 calorimetry demo.
+
+### For GPT, in this order
+1. **Draft the mapping** at `curriculum/textbook-map.json` (on your branch), one entry per demo in `demos/` that is on the index:
+   `{"demo": "faraday", "course": ["physics-2"], "sections": [{"vol": 2, "sec": "13.1", "title": "Faraday's Law"}, ...], "role": "lab" | "demo", "beyond_book": false, "note": "optional"}`.
+   Use the exact section numbers and titles from the PDFs. A demo can list several sections and both courses. Mark `"beyond_book": true` for demos with no Volume 1/2 home (e.g. ising, bz-reaction, dna, chladni, acoustic-levitation, relativity-em) and give Volume 3 sections where relevant. Leave `"role"` as your best guess; Steve's labs versus demos list will override it. Also list, in `curriculum/TEXTBOOK_GAPS.md`, every Volume 1 and 2 section with no demo, so Claude can prioritize new demos.
+2. **Rewrite handouts and instructor guides to the book**, lab by lab, in course order (Physics 1: projectile-drag, springs, collisions, fluids, kepler-orbits, then Physics 2: capacitors, circuits labs, gauss-law, magnetic-force, faraday): the book's notation and sign conventions, "Textbook: Vol. N, §x.y" references at the top and where each idea is used, the book's terminology. Keep the plain e/m style and the control names listed in the feature batches above. Notation conflicts between a demo's on-screen labels and the book: list them in this file for Claude rather than working around them in prose.
+3. Keep the earlier queue items (independent physics review; validation records) going in between as you see fit.
+
+### Steve's decisions, 2026-10-22 late morning
+- **Focus:** Physics 1 and 2 (University Physics Vols 1 and 2) only for now. Astronomy, modern physics labs, thermal/statistical extras and quantum demos are on the back burner (no new work on them; the modern lab manual alignment is paused).
+- **Lecture demos, not labs (for now):** em-waves, currents-fields, catenary, relativity-em. Mark them `"role": "demo"` in the textbook map; no handouts for them yet.
+- **Springs:** add an "unknown spring" option to Blind (k hidden); keep the automatic period readout visible (no forced hand timing for now). Claude's task, after Sunday's reset.
+- **Star slice:** loading the stellar models on demand is fine (it doesn't need to work as a downloaded file). Back burner with the astronomy set.
+- **Labs versus demos:** GPT's textbook map makes the first guess; Steve reviews it.
+
+### Map details (Steve, 2026-10-22, 11:13)
+- **Physics 2 = Volume 2 chapters 5–16** (starts at electric charges and fields). Volume 2 chapters 1–4 (thermodynamics) are **unassigned** until Steve checks the Physics 1 syllabus; Physics 1 may cover some of them. In the map, give thermo demos `"course": ["thermo-tbd"]`.
+- **Status label per entry** (from GPT's suggestion): add `"status": "usable" | "needs-handout" | "needs-feature" | "missing"` to each mapping entry, and in `TEXTBOOK_GAPS.md` mark each uncovered section `missing`. This gives the workload estimate.
+- **Scope:** textbook companion first (every chapter listed, gaps labelled honestly as "no activity yet"), then fill the gaps students hit most (Vol 1 motion along a line, Newton's laws with friction and inclines, work and energy, equilibrium). Calorimetry waits for the thermo decision.
+
+### Physics 1 syllabus (Steve, 2026-10-22, 11:15): Volume 1 chapters 1–15, in this order
+Measurements and vectors (1–2); 1D, 2D, 3D motion, projectile and relative motion (3–4); Newton's laws (5); friction, drag, centripetal forces (6); Exam I; work and kinetic energy (7); potential and mechanical energy (8); center of mass, momentum, impulse, collisions, variable mass (9); rotational kinematics, moment of inertia (10); Exam II; torque, rotational dynamics (10); rotational energy, rolling, angular momentum (11); gravitation and orbital mechanics (13); stress and strain (12, elasticity part), static fluids and fluid dynamics (14); oscillations (15); Exam III.
+- **Not in Physics 1 or Physics 2:** Volume 1 chapters 16–17 (waves, sound) and Volume 2 chapters 1–4 (thermodynamics). Map them as `"course": ["unassigned"]` until Steve says where (if anywhere) they are taught.
+- Physics 1 page should follow this order (units: Kinematics, Forces, Energy, Momentum, Rotation, Gravitation and fluids, Oscillations).
+
+### Physics 2 syllabus (PHYS 202, Steve, 2026-10-22, 11:16), by week
+1–2 charge, Coulomb, fields, dipoles; 3 flux, Gauss; 4 potential, equipotentials; 5 capacitance, series/parallel, field energy; 6 current, resistivity, Ohm, power; 7 single and multiloop circuits; 8 magnetic field, Lorentz force, cyclotron, Hall effect, force on wires, dipole moment; 9 fields of currents, Ampère, solenoids; 10 Faraday, Lenz, induction energy, RL and RLC, EM oscillations; 11 induced B, displacement current, Maxwell; 12 EM waves, Poynting, reflection and refraction; 13 mirrors, lenses, optical instruments.
+- **Note:** the syllabus's chapter numbers (22–34) follow Halliday, Resnick and Walker, not OpenStax. Map by **topic** to OpenStax: Volume 2 chapters 5–16, **plus Volume 3 chapters 1–2** (the nature of light; geometric optics and image formation) for weeks 12–13. So optics-bench (and polarization for week 12) belong to Physics 2. RC circuits (OpenStax 10.5) are not listed in week 7 but fit there; AC circuits (OpenStax 15) are not listed: map as Physics 2 "going further".
+- Physics 2 page should follow this week order.
+- **Scope rule (Steve, 11:17):** anything not in the Physics 1 or PHYS 202 syllabi is back burner until the Physics 1 and 2 interface, groupings and workflow are done. After that, Thermo, Optics and Modern become their own modules built the same way. In the map, tag such demos `"course": ["later"]` (keep their sections) and spend no handout effort on them now.
+
+
+## Agreed map-first delivery — 2026-10-22 (Steve’s latest instruction)
+
+This section supersedes conflicting earlier textbook/scope notes above.
+
+- GPT drafts and pushes `curriculum/textbook-map.json` and `curriculum/TEXTBOOK_GAPS.md` first, before handout work; Claude’s course pages consume that map. One catalog demo per entry, explicit statuses, later material tagged `course: ["later"]`.
+- Physics I follows the supplied syllabus: Ch. 13 Gravitation, then a separate short Ch. 12 Static equilibrium and elasticity unit, then Ch. 14 Fluids and Ch. 15 Oscillations.
+- Physics II required coverage ends at Maxwell’s equations and light as an electromagnetic wave (Vol. 2 Ch. 16). Basic optics is optional afterward, citing Vol. 3 Ch. 1–2. PHYS 202 chapter numbers are Halliday’s; map by topic to OpenStax.
+- One long page per course; unit cards link straight to the existing demo and student handout. No separate activity pages, no demo URL or QR changes, keys private in TeacherKeys.
+- Duration is optional and omitted until reviewed. Exam boundaries belong in separate course metadata and are omitted for now.
+- After the map push: GPT rewrites Physics II handouts/private guides first, then existing Physics I activities (projectile-drag, collisions, rotation, fluids, kepler-orbits, potential-curves). Skip missing units. Rotation and potential-curves retain lecture-demo roles; any student sheets are short activities rather than automatic promotion to full labs.
+- Hold magnetic-force and springs handouts until Claude posts final Hall-probe/unknown-spring controls. GPT does not edit demo HTML. No main merge without Steve’s approval.
+
+### Map handoff contract
+
+The JSON root has `schema_version`, `source`, `policy`, `courses`, `sections`, `demos`. Agreed per-demo fields are in `demos`. Course units list section references; section records include topic status and demo IDs. Filter cards by demo course membership as well as section match. Per-demo status is package readiness, section status is topic coverage; neither is release certification. Full details and gaps are in `curriculum/TEXTBOOK_GAPS.md`.

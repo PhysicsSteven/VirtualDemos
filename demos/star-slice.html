@@ -30,6 +30,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
+/* ☉ (U+2609): neither web font has it, so name system fonts known to draw it before the generic fallback */
+@font-face { font-family: "VD Symbols"; src: local("Segoe UI Symbol"), local("Menlo"), local("DejaVu Sans Mono"), local("DejaVu Sans"), local("Noto Sans Symbols 2"), local("Noto Sans Symbols"), local("Apple Symbols"); unicode-range: U+2609; }
 /* Layout: a cutaway bench. The half star cross section fills the left with the timeline and profile charts under it, a narrow rail of controls and readouts on the right; stacks on phones. */
 :root {
   --bg: #e9edf2;
@@ -60,8 +62,8 @@ img { max-width: 100%; }
   --liquid: #8fb6dc;
   --solid: #eef6ff;
   --space: #04060a;
-  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-ui: "Atkinson Hyperlegible", "VD Symbols", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "VD Symbols", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -211,6 +213,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .chart { position: relative; height: 210px; }
 .chart canvas { cursor: crosshair; touch-action: pan-y; }
+.chart canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 :root[data-projector="on"] .chart { height: 260px; }
 :root[data-projector="on"] .hr { height: 210px; }
 
@@ -243,6 +246,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .tl-grid .readout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   #views button { min-height: 36px; }
   .tl-row .inline-toggle { min-height: 36px; }
+  /* phone touch targets: the house minimums (buttons 36 px, sliders 28 px) */
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+/* projector on a wide screen: the page fits the window; the left column and the rail scroll inside it */
+@media (min-width: 821px) {
+  :root[data-projector="on"] .app { height: 100vh; height: 100dvh; }
+  :root[data-projector="on"] .bench { flex: 1 1 auto; min-height: 0; grid-template-rows: minmax(0, 1fr); align-items: stretch; }
+  :root[data-projector="on"] .main, :root[data-projector="on"] .rail { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+  :root[data-projector="on"] .main { padding-right: 4px; }
+  :root[data-projector="on"] .main > * { flex-shrink: 0; }
+  /* stage, its bar and the Play row of the timeline all on the first screen */
+  :root[data-projector="on"] .stage { height: max(300px, calc(100dvh - 360px)); }
 }
 </style>
 </head>
@@ -332,8 +348,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           </div>
         </div>
         <div class="charts">
-          <div class="chart"><canvas id="chComp" aria-label="Mass fractions against position"></canvas></div>
-          <div class="chart"><canvas id="chTR" aria-label="Log temperature and log density against position"></canvas></div>
+          <div class="chart"><canvas id="chComp" tabindex="0" role="application" aria-label="Mass fractions against position. Hover or tap to probe a zone; or use the left and right arrow keys to move the probe one zone (Shift for ten), Home and End for the center and the surface. The Probe section in the rail reads it out."></canvas></div>
+          <div class="chart"><canvas id="chTR" tabindex="0" role="application" aria-label="Log temperature and log density against position. Hover or tap to probe a zone; or use the left and right arrow keys to move the probe one zone (Shift for ten), Home and End for the center and the surface. The Probe section in the rail reads it out."></canvas></div>
         </div>
         <p class="hint" style="margin-top:8px">Gray bands are convective zones. The tinted range is what the slice view shows. In a freezing white dwarf, hatching marks the solid core inside the freezing front. Hover a chart to probe that zone.</p>
       </section>
@@ -351,7 +367,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div class="chips" id="datasets"></div>
         <div class="filebtn">
           <button type="button" class="btn" id="loadBtn">Load MESA file…</button>
-          <input type="file" id="fileIn" accept=".json.gz,.gz,.json,application/json,application/gzip">
+          <input type="file" id="fileIn" tabindex="-1" aria-label="MESA profile file (.json.gz or .json)" accept=".json.gz,.gz,.json,application/json,application/gzip">
         </div>
         <p class="hint">Load a .json.gz made by extract_profiles.py. The file is read in this browser only and is never uploaded.</p>
         <p class="err" id="loadErr" hidden></p>
@@ -3148,8 +3164,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const rows = [[1, 'conv'], [2, 'faint'], [9, 'faint'], [10, 'psep'], [3, 'semi'], [4, 'thermo'], [5, 'dots'], [6, 'dots'], [7, 'dots'], [8, 'dots']];
       const extra = [...D.codes].filter((c) => !(c in MIX));
       K.innerHTML = '<span><b style="color:var(--ink)">MESA mixing_type</b></span>' + rows.map(([c, t]) =>
-        `<span class="${D.codes.has(c) ? 'present' : ''}"><canvas data-t="${t}"></canvas>${c} ${MIX[c]}${D.codes.has(c) ? '' : ' (not in this run)'}</span>`).join('') +
-        extra.map((c) => `<span class="present"><canvas data-t="dots"></canvas>mixing code ${c}</span>`).join('') +
+        `<span class="${D.codes.has(c) ? 'present' : ''}"><canvas data-t="${t}" aria-hidden="true"></canvas>${c} ${MIX[c]}${D.codes.has(c) ? '' : ' (not in this run)'}</span>`).join('') +
+        extra.map((c) => `<span class="present"><canvas data-t="dots" aria-hidden="true"></canvas>mixing code ${c}</span>`).join('') +
         '<span>0 none: plain color</span>';
       for (const cvs of K.querySelectorAll('canvas')) swatch(cvs, cvs.dataset.t, T);
     }
@@ -3675,6 +3691,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       chartsDirty = true; schedule();
     };
     el.addEventListener('pointermove', at); el.addEventListener('pointerdown', at);
+    el.addEventListener('keydown', (e) => {
+      const mo = cur(), k = e.key; if (!mo) return;
+      if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(k)) return;
+      e.preventDefault();
+      const st = e.shiftKey ? 10 : 1, i0 = S.probe ? probeZone(mo) : -1;
+      let i = k === 'Home' ? 0 : k === 'End' ? mo.n - 1 : i0 < 0 ? Math.floor(mo.n / 2) : i0 + (k === 'ArrowLeft' || k === 'ArrowDown' ? -st : st);
+      i = clamp(i, 0, mo.n - 1);
+      S.probe = { m: mo.mass[i], ang: S.probe ? S.probe.ang : 0.5 };
+      chartsDirty = true; schedule(); hoverAtProbe();
+    });
   }
 
   // projector mode

@@ -13,7 +13,9 @@ time: 20 to 30 minutes
 
 ## Before class
 
-Students should know p = mv, kinetic energy and Newton's third law. The **Scene** buttons pick **1D track**, **2D table**, **Explosion**, **Newton's cradle** or **Impulse**; each preset loads one. Drag the round grip on a velocity arrow to set a velocity and the square grips to change a mass, the stored energy or a bumper's stiffness, or use the sliders. The bars show momentum and energy (outline before, filled after). **0.25×** and **0.1×** slow the playback.
+Students should know p = mv, kinetic energy and Newton's third law. The **Scene** buttons pick **1D track**, **2D table**, **Explosion**, **Newton's cradle** or **Impulse**; each preset loads one. Drag the round grip on a velocity arrow to set a velocity and the square grips to change a mass, the stored energy or a bumper's stiffness, or use the sliders. The bars show momentum and energy (outline before, filled after). **0.25×** and **0.1×** slow the playback; **Reduce motion** starts every setup paused.
+
+For a measurement lab, the 1D track and the Explosion have two photogates (**Gate A position**, **Gate B position**, or drag the gate grips). Each cart carries a 5.0 cm flag; a gate shows the time its beam is blocked, to 0.1 ms, and the speed flag length ÷ Δt. **Place gates for this run** puts them where each cart passes one before and after the collision. When a run has played to the end, **Capture reading** stores the masses and the four velocities u₁, u₂, v₁′, v₂′; **Export CSV** saves the rows. The plot under the table fits a line to the rows: **p′ vs p** (slope 1), **Separation vs approach** (slope e) or **K lost vs ½μu²** (slope 1 − e²), with residuals; **Show data table** lists the points. **Blind: hide predictions and answers** (in the Lab section) hides the Results panel, the predicted values on the drawing, the after bars and the setup hints, and swaps the e slider for **Bumper** A to D, each with a fixed e for students to measure.
 
 ## Running it in class
 
@@ -57,4 +59,4 @@ Students should know p = mv, kinetic energy and Newton's third law. The **Scene*
 
 ## Going further
 
-- Lab: on an air track with photogates, measure e for magnetic and Velcro bumpers and compare ΔK with ½μ(1 − e²)v_rel².
+- Lab: turn on Blind, pick a bumper, and capture five or more runs with different masses and speeds. The slope of **Separation vs approach** recovers e, **p′ vs p** tests momentum conservation, and **K lost vs ½μu²** tests ΔK = ½μ(1 − e²)v_rel². The scatter about each line comes only from the 0.1 ms timer and the display rounding, so it is small; ask students how a real air track (friction, flag width, gate placement) would change it.

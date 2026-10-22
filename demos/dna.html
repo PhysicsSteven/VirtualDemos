@@ -186,7 +186,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .stage { height: 72vh; min-height: 460px; }
   .rail { overflow: visible; }
   .tag .nm { font-size: 1.2rem; }
-  .duplex button { min-height: 24px; }
+  .duplex button { min-height: 36px; }
 }
 </style>
 </head>
@@ -548,14 +548,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     L.push(`REMARK   1 RISE ${model.rise.toFixed(2)} A, TWIST ${model.twist.toFixed(1)} DEG PER BASE PAIR.`);
     let serial = 0, prev = null;
     for (const a of model.atoms) {
-      if (prev && prev.chain !== a.chain) { serial++; L.push(`TER   ${pad(serial, 5)}      D${prev.res} ${prev.chain}${pad(prev.resi, 4)}`); }
+      if (prev && prev.chain !== a.chain) { serial++; L.push(`TER   ${pad(serial, 5)}      ${pad('D' + prev.res, 3)} ${prev.chain}${pad(prev.resi, 4)}`); }
       serial++;
       const nm = a.name.length >= 4 ? a.name : ' ' + a.name.padEnd(3);
       L.push('ATOM  ' + pad(serial, 5) + ' ' + nm + ' ' + pad('D' + a.res, 3) + ' ' + a.chain + pad(a.resi, 4) + '    ' +
         f3(a.x) + f3(a.y) + f3(a.z) + '  1.00' + '  0.00' + '          ' + pad(a.el, 2));
       prev = a;
     }
-    serial++; L.push(`TER   ${pad(serial, 5)}      D${prev.res} ${prev.chain}${pad(prev.resi, 4)}`);
+    serial++; L.push(`TER   ${pad(serial, 5)}      ${pad('D' + prev.res, 3)} ${prev.chain}${pad(prev.resi, 4)}`);
     L.push('END');
     return L.join('\n') + '\n';
   }

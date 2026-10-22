@@ -150,6 +150,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.dash { border-top-style: dashed; border-color: var(--muted); }
 .swatch.gold { border-top-style: dashed; border-color: var(--equi); }
 .swatch.rainbow { border-image: linear-gradient(90deg, hsl(250 75% 55%), hsl(160 70% 42%), hsl(45 85% 50%), hsl(0 75% 52%)) 1; }
+.twrap { position: relative; overflow: auto; max-height: 240px; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+.dtab { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.76rem; }
+.dtab caption { text-align: left; font-family: var(--font-ui); font-size: 0.78rem; color: var(--muted); padding: 6px 8px 4px; caption-side: top; }
+.dtab th { position: sticky; top: 0; background: var(--surface); font-family: var(--font-ui); font-weight: 700; text-align: right; padding: 4px 5px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.dtab td { text-align: right; padding: 2px 5px; white-space: nowrap; }
+.dtab th:first-child, .dtab td:first-child { text-align: left; }
+.dtab tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--grid) 60%, transparent); }
+#dataWrap:not([hidden]) { display: flex; flex-direction: column; gap: 6px; }
+.dcap { font-size: 0.8rem; margin-top: 4px; }
+#dBwrap:not([hidden]) { display: flex; flex-direction: column; gap: 6px; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 @media (max-width: 1060px) {
@@ -189,7 +199,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="pane" id="pPane">
-        <canvas id="pCan" tabindex="0" aria-label="Pendulum drawing. Drag a bob to set its angle and let go; moving the pointer as you let go gives it a starting speed. Drag the grip in the middle of a rod to change its length. Keys: left and right arrows turn the upper rod by 1 degree and release from rest, shift with the arrows turns the lower rod, space plays or pauses, R resets."></canvas>
+        <canvas id="pCan" tabindex="0" aria-label="Pendulum drawing. Drag a bob to set its angle and let go; moving the pointer as you let go gives it a starting speed. Drag the grip in the middle of a rod to change its length; the length sliders in the rail do the same. Keys: left and right arrows turn the upper rod by 1 degree and release from rest, shift with the arrows turns the lower rod, space plays or pauses, R resets. To start with a speed from the keyboard, use the lower plot."></canvas>
         <div class="stage-ctl">
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="reset">Reset</button>
@@ -197,10 +207,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </div>
       </div>
       <div class="pane" id="aPane">
-        <canvas id="aCan" tabindex="0" aria-label="Top plot"></canvas>
+        <canvas id="aCan" tabindex="0" aria-label="Angles θ₁ and θ₂ against time over the last 20 seconds. Show data table in the rail lists the points."></canvas>
       </div>
       <div class="pane" id="bPane">
-        <canvas id="bCan" tabindex="0" aria-label="Bottom plot"></canvas>
+        <canvas id="bCan" tabindex="0" aria-label="Angle path: θ₂ against θ₁ over the last 20 seconds, with the two normal mode directions. Show data table in the rail lists the points."></canvas>
       </div>
     </div>
 
@@ -311,6 +321,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section>
+        <h2>Plot data</h2>
+        <button type="button" class="btn" id="dataBtn" aria-expanded="false" aria-controls="dataWrap">Show data table</button>
+        <p class="hint">Tables of the points drawn in the two plots, for readers who cannot see them. While the pendulum runs they refresh twice a second.</p>
+        <div id="dataWrap" hidden>
+          <p class="hint dcap" id="dAcap"></p><div class="twrap"><table class="dtab" aria-labelledby="dAcap"><thead id="dAhead"></thead><tbody id="dAbody"></tbody></table></div>
+          <p class="hint dcap" id="dBcap"></p><div class="twrap"><table class="dtab" aria-labelledby="dBcap"><thead id="dBhead"></thead><tbody id="dBbody"></tbody></table></div>
+        </div>
+      </section>
+
+      <section>
         <h2>Time and display</h2>
         <div class="ctl">
           <div class="slider-head"><label for="sRate">Playback rate</label><output id="oRate" class="mono" for="sRate"></output></div>
@@ -321,6 +341,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <label data-for="simple"><input type="checkbox" id="tGhost" checked>Small angle model</label>
           <label><input type="checkbox" id="tArcs" checked>Angle arcs</label>
           <label><input type="checkbox" id="tFling" checked>Release with drag speed</label>
+          <label><input type="checkbox" id="tReduce">Reduce motion</label>
         </div>
         <div class="key" id="keyBox"></div>
         <p class="hint" id="modelHint">Model: point masses on rigid massless rods, frictionless pivots, no air drag, uniform g. The motion comes from the exact nonlinear equations of motion (from the Lagrangian), integrated with an adaptive Dormand–Prince 5(4) method at a tolerance of 10⁻¹¹ per step; the energy drift readout shows how well the integration keeps energy fixed. The small angle period 2π√(L/g) and the normal mode frequencies are the linearized limits, drawn as references.</p>
@@ -493,7 +514,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   const $ = (id) => document.getElementById(id);
-  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  // Reduce motion: the OS setting, or the in-page toggle remembered for this browser session only
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  try { const v = sessionStorage.getItem('double-pendulum-reduce-motion'); if (v === 'on') reduce = true; else if (v === 'off') reduce = false; } catch (_) {}
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const DEG = Math.PI / 180;
   const TOL = 1e-11;
@@ -1056,7 +1079,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const L = S.sp.L, g = S.p.g, w0 = Math.sqrt(g / L), b = box(W, H, ls, { L: 50, B: 32 });
     const yr = [-3, 3];
     const m = axes(ctx, b, [-180, 180], yr, ls, { title: 'Phase portrait: ω/ω₀ against θ', xlab: 'θ', xstep: 90, ystep: 1, xfmt: degFmt, zeroX: true, zeroY: true });
-    bGeom = { b, m, w0 };
+    bGeom = { b, m, w0, xr: [-180, 180], yr };
     clipBox(ctx, b);
     // level curves of energy: (ω/ω₀)² = 4(k² − sin²(θ/2))
     const curve = (k2, sgn) => {
@@ -1088,10 +1111,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     halo(ctx, 'separatrix', m.X(135), m.Y(2 * Math.cos(67.5 * DEG)) - 5 * ls, T.equi, 'center', 'bottom', ls);
     const y = drag && drag.y ? drag.y : r ? Array.from(r.I.y) : null;
     if (y) { ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(m.X(wrapPi(y[0]) / DEG), m.Y(y[1] / w0), 4.5 * ls, 0, TAU); ctx.fill(); }
+    drawKeyCursor(ctx, m, ls);
     ctx.restore();
     frameBox(ctx, b);
     ctx.font = `${10 * ls}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    ctx.fillText('click to start from that point', b.L, b.B + 16 * ls);
+    ctx.fillText(bFocus ? 'arrows move the cross, Enter starts there' : 'click to start from that point', b.L, b.B + 16 * ls);
   }
   function drawConfig(ctx, W, H, ls) {
     const r = R; if (!r) return;
@@ -1183,7 +1207,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const xr = [-Math.min(180, PC.thmax / DEG * 1.08), Math.min(180, PC.thmax / DEG * 1.08)], yr = [-emax * 1.1, emax * 1.1];
     const m = axes(ctx, b, xr, yr, ls, { title: `Poincaré section at E = ${sig(E, 3)} J`, xlab: 'θ₁ when θ₂ = 0, ω₂ > 0', xfmt: degFmt, zeroX: true, zeroY: true,
       xstep: xr[1] > 120 ? 90 : undefined });
-    bGeom = { b, m };
+    bGeom = { b, m, xr, yr };
     clipBox(ctx, b);
     // edge of the energetically allowed region
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.4; for (const sg of [1, -1]) {
@@ -1202,6 +1226,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.fillStyle = T.ink; const q = R.sec, s2 = sz * 1.9;
       for (let i = 0; i < q.length; i += 2) ctx.fillRect(m.X(q[i] / DEG) - s2 / 2, m.Y(q[i + 1]) - s2 / 2, s2, s2);
     }
+    drawKeyCursor(ctx, m, ls);
     ctx.restore();
     frameBox(ctx, b);
     ctx.save(); ctx.translate(14 * ls, (b.T + b.B) / 2); ctx.rotate(-Math.PI / 2);
@@ -1275,9 +1300,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const b of $('plotSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
     $('tTrail').checked = S.layers.trail; $('tGhost').checked = S.layers.ghost; $('tArcs').checked = S.layers.arcs; $('tFling').checked = S.layers.fling;
     syncESlider();
-    $('aCan').setAttribute('aria-label', S.mode === 'simple' ? 'Period divided by the small angle period against release angle. Drag the marker, or use the left and right arrows, to change the release angle.' : 'θ₁ and θ₂ against time over the last 20 seconds.');
-    $('bCan').setAttribute('aria-label', S.mode === 'simple' ? 'Phase portrait, angular velocity against angle, with the separatrix. Click to start the pendulum from that point.'
-      : S.view === 'poinc' ? 'Poincaré section, ω₁ against θ₁ each time the lower rod passes straight down moving right. Click to start an orbit there.' : S.view === 'sep' ? 'Separation between copies against time, log scale.' : 'θ₂ against θ₁ over the last 20 seconds.');
+    const more = ' Show data table in the rail lists the points.';
+    $('aCan').setAttribute('aria-label', (S.mode === 'simple' ? 'Period divided by the small angle period against release angle: the exact curve 2K(sin(θ₀/2))/π, the series 1 + θ₀²/16 + 11θ₀⁴/3072, and the small angle value 1. It grows without limit toward 180°. Drag the marker, or use the left and right arrows (shift for 10°), to change the release angle.' : 'Angles θ₁ and θ₂ against time over the last 20 seconds.') + more);
+    $('bCan').setAttribute('aria-label', (S.mode === 'simple' ? 'Phase portrait: ω/ω₀ against θ, with energy contours and the gold separatrix between swinging and going over the top. Click a point to start the pendulum there, or use the keys: arrows move a cross, shift for bigger steps, Enter starts there.'
+      : S.view === 'poinc' ? 'Poincaré section: ω₁ against θ₁ each time the lower rod passes straight down moving right, at one energy. Islands are regular orbits, scattered dots are chaotic. Click a point to start an orbit there, or use the keys: arrows move a cross, shift for bigger steps, Enter starts there.'
+      : S.view === 'sep' ? 'Separation d between copies against time on a log scale, with the renormalized nearby orbit; a straight rise means exponential growth with rate λ.'
+      : 'Angle path: θ₂ against θ₁ over the last 20 seconds, with the two normal mode directions as gold lines.') + more);
   }
   function syncESlider() {
     const top = dpTop(S.p), el = $('sE');
@@ -1508,17 +1536,115 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const xv = (px) => { const x0 = m.X(0), x1 = m.X(1); return (px - x0) / (x1 - x0); };
     const yv = (py) => { const y0 = m.Y(0), y1 = m.Y(1); return (py - y0) / (y1 - y0); };
     void inv;
+    startAtB(xv(x), yv(y));
+    ev.preventDefault();
+  });
+  // start from a point on the bottom plot: θ in degrees and ω/ω₀ (simple), or θ₁ in degrees and ω₁ in rad/s (section)
+  function startAtB(xd, yy) {
     clearPreset();
     if (S.mode === 'simple') {
-      const th = clamp(xv(x), -179.9, 179.9) * DEG, om = yv(y) * bGeom.w0;
+      const th = clamp(xd, -179.9, 179.9) * DEG, om = yy * Math.sqrt(S.p.g / S.sp.L);
       S.A = clamp(Math.round(Math.abs(th) / DEG), 1, 179);
       newSimple([th, om]); syncSliders();
+      $('live').textContent = `Started at θ = ${deg(th)} with ω = ${sig(om, 3)} rad/s.`;
     } else if (S.view === 'poinc') {
-      const st = sectionStart(S.p, S.Esec, xv(x) * DEG, yv(y));
-      if (st) newDouble(st);
+      const st = sectionStart(S.p, S.Esec, xd * DEG, yy);
+      if (st) { newDouble(st); $('live').textContent = `Orbit started at θ₁ = ${deg(xd * DEG)}, ω₁ = ${sig(yy, 3)} rad/s.`; }
       else { $('live').textContent = 'No orbit with this energy passes through that point.'; }
     }
-    ev.preventDefault();
+  }
+  // keyboard path for the bottom plot: a cross moved by the arrows, Enter starts there
+  let bKey = null, bFocus = false;
+  const bKeyOk = () => bGeom && (S.mode === 'simple' || S.view === 'poinc');
+  function drawKeyCursor(ctx, m, ls) {
+    if (!bFocus || !bKey) return;
+    const x = m.X(bKey.x), y = m.Y(bKey.y), r = 9 * ls;
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * Math.min(ls, 1.3);
+    ctx.beginPath(); ctx.moveTo(x - r, y); ctx.lineTo(x + r, y); ctx.moveTo(x, y - r); ctx.lineTo(x, y + r); ctx.stroke();
+    ctx.beginPath(); ctx.arc(x, y, r * 0.55, 0, TAU); ctx.stroke();
+  }
+  cans.b.addEventListener('focus', () => { bFocus = true; bKey = null; });
+  cans.b.addEventListener('blur', () => { bFocus = false; bKey = null; });
+  cans.b.addEventListener('keydown', (e) => {
+    if (!bKeyOk()) return;
+    const k = e.key, g = bGeom, big = e.shiftKey ? 5 : 1;
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Enter', 'Escape'].includes(k)) return;
+    if (!bKey) {
+      if (S.mode === 'simple') { const y = Rs ? Rs.I.y : [S.A * DEG, 0]; bKey = { x: wrapPi(y[0]) / DEG, y: y[1] / Math.sqrt(S.p.g / S.sp.L) }; }
+      else bKey = { x: 0, y: 0 };
+    }
+    const ys = (g.yr[1] - g.yr[0]) / 60;
+    if (k === 'ArrowLeft') bKey.x -= 2 * big; else if (k === 'ArrowRight') bKey.x += 2 * big;
+    else if (k === 'ArrowUp') bKey.y += ys * big; else if (k === 'ArrowDown') bKey.y -= ys * big;
+    else if (k === 'Enter') { startAtB(bKey.x, bKey.y); e.preventDefault(); return; }
+    else if (k === 'Escape') { bKey = null; e.preventDefault(); return; }
+    bKey.x = clamp(bKey.x, g.xr[0], g.xr[1]); bKey.y = clamp(bKey.y, g.yr[0], g.yr[1]);
+    $('live').textContent = S.mode === 'simple' ? `θ ${bKey.x.toFixed(0)}°, ω/ω₀ ${sig(bKey.y, 2)}` : `θ₁ ${bKey.x.toFixed(0)}°, ω₁ ${sig(bKey.y, 2)} rad/s`;
+    e.preventDefault();
+  });
+
+  // ---------- plot data tables ----------
+  let dataOpen = false, dataLast = 0;
+  const cells = (r) => '<tr>' + r.map((c) => `<td>${c}</td>`).join('') + '</tr>';
+  const dg = (rad) => MIN((wrapPi(rad) / DEG).toFixed(1));
+  function pickEvery(arr, nMax) { const every = Math.max(1, Math.ceil(arr.length / nMax)), out = []; for (let i = 0; i < arr.length; i += every) out.push(arr[i]); if (arr.length && out[out.length - 1] !== arr[arr.length - 1]) out.push(arr[arr.length - 1]); return out; }
+  function plotTables() {
+    const out = [];
+    if (S.mode === 'simple') {
+      const r = Rs, rows = [];
+      for (const a of [10, 20, 30, 45, 60, 75, 90, 105, 120, 135, 150, 160, 170, 175, 179]) {
+        const t = a * DEG; rows.push([`${a}°`, (2 * ellipK(Math.sin(t / 2)) / Math.PI).toFixed(4), (1 + t * t / 16 + 11 * t ** 4 / 3072).toFixed(4)]);
+      }
+      let now = '';
+      if (r) { const pk = simplePeriod(S.sp.L, S.p.g, r.y0[0], r.y0[1]); now = pk.rot ? ' This start goes over the top, so it has no release angle.' : ` This start: θ₀ = ${(2 * Math.asin(pk.k) / DEG).toFixed(0)}°, T/T₀ = ${(2 * ellipK(pk.k) / Math.PI).toFixed(3)}.`; }
+      out.push({ cap: 'Period ÷ small angle period against release angle: exact 2K(sin(θ₀/2))/π, and the series 1 + θ₀²/16 + 11θ₀⁴/3072.' + now, head: ['θ₀', 'T/T₀ exact', 'series'], rows });
+      const w0 = r ? r.w0 : 1, tr = r ? pickEvery(r.trace.slice(-480), 40) : [];
+      out.push({ cap: `Phase portrait: the last ${r ? Math.min(r.trace.length, 480) / 120 : 0} s of this pendulum, sampled; ω₀ = √(g/L) = ${sig(w0, 4)} rad/s. The separatrix is (ω/ω₀)² = 4cos²(θ/2).`,
+        head: ['θ (°)', 'ω (rad/s)', 'ω/ω₀'], rows: tr.map((q) => [dg(q[0]), sig(q[1], 3), sig(q[1] / w0, 3)]) });
+      return out;
+    }
+    const r = R; if (!r) return out;
+    const h = pickEvery(r.hist.filter((q) => q[0] >= r.t - 20), 41);
+    out.push({ cap: `Angles against time over the last 20 s, sampled; now t = ${r.t.toFixed(1)} s. The angle path in the lower plot is θ₂ against θ₁ from the same samples.`, head: ['t (s)', 'θ₁ (°)', 'θ₂ (°)'], rows: h.map((q) => [q[0].toFixed(2), dg(q[1]), dg(q[2])]) });
+    if (S.view === 'sep') {
+      const sp = pickEvery(r.sep, 40);
+      out.push({ cap: r.N > 1 ? `Separation d from copy 0 in phase space, sampled.${isFinite(r.ly.lam) ? ` Lyapunov estimate λ ≈ ${sig(r.ly.lam, 2)} s⁻¹ after ${sig(r.ly.tsum, 3)} s.` : ''}` : 'Separation: add copies to watch two starts separate.',
+        head: ['t (s)', 'd, copy 1', 'd, farthest copy'], rows: sp.map((q) => [q[0].toFixed(2), fmtSci(q[1], 2), isFinite(q[2]) ? fmtSci(q[2], 2) : '—']) });
+    } else if (S.view === 'poinc') {
+      const q = r.sec, pts = []; for (let i = Math.max(0, q.length - 120); i < q.length; i += 2) pts.push([dg(q[i]), sig(q[i + 1], 3)]);
+      out.push({ cap: `Poincaré section at E = ${sig(S.Esec, 3)} J: the last ${pts.length} crossings of the pendulum shown (θ₂ = 0, ω₂ > 0). ${PC ? PC.orbits.length : 0} background orbits are drawn in color.`, head: ['θ₁ (°)', 'ω₁ (rad/s)'], rows: pts });
+    } else {
+      const nm = normalModes(r.p), rows = [];
+      for (let k = 0; k < Math.min(r.N, 25); k++) { const y = r.copies[k].y; rows.push([String(k), dg(y[0]), dg(y[1])]); }
+      out.push({ cap: `Angle path: θ₂ against θ₁ (samples in the table above). Normal mode directions θ₂ = ${sig(nm.r1, 4)} θ₁ and θ₂ = ${sig(nm.r2, 4)} θ₁. Where each copy is now${r.N > 25 ? ' (first 25 of ' + r.N + ')' : ''}:`, head: ['copy', 'θ₁ (°)', 'θ₂ (°)'], rows });
+    }
+    return out;
+  }
+  let dataSig = '';
+  function renderData(force) {
+    if (!dataOpen) return;
+    // while running: twice a second; while paused: only when something changed
+    const r = S.mode === 'simple' ? Rs : R;
+    const sg = [S.mode, S.view, r && r.t, r && r.y0.join(), R && R.sec.length, R && R.N, S.sp.L, S.p.g, S.Esec, PC && PC.orbits.length].join('|');
+    const now = performance.now(); if (!force && (running ? now - dataLast < 500 : sg === dataSig)) return; dataLast = now; dataSig = sg;
+    plotTables().forEach((tb, i) => {
+      const k = i ? 'dB' : 'dA';
+      $(k + 'cap').textContent = tb.cap;
+      $(k + 'head').innerHTML = '<tr>' + tb.head.map((c) => `<th scope="col">${c}</th>`).join('') + '</tr>';
+      $(k + 'body').innerHTML = tb.rows.length ? tb.rows.map(cells).join('') : `<tr><td colspan="${tb.head.length}">No points yet</td></tr>`;
+    });
+  }
+  $('dataBtn').addEventListener('click', () => {
+    dataOpen = !dataOpen; $('dataWrap').hidden = !dataOpen;
+    $('dataBtn').setAttribute('aria-expanded', String(dataOpen)); $('dataBtn').textContent = dataOpen ? 'Hide data table' : 'Show data table';
+    renderData(true);
+  });
+  $('tReduce').checked = reduce;
+  $('tReduce').addEventListener('change', (e) => {
+    reduce = e.target.checked;
+    try { sessionStorage.setItem('double-pendulum-reduce-motion', reduce ? 'on' : 'off'); } catch (_) {}
+    if (reduce) setRunning(false);
+    $('live').textContent = reduce ? 'Reduce motion is on: paused. Press Play to run.' : 'Reduce motion is off.';
   });
 
   // projector mode
@@ -1552,7 +1678,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     poincWork(Math.max(1, 8 - (performance.now() - t0)));
     drawAll();
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
-    if (now - lastRead > 150) { updateReadouts(); updateClock(); lastRead = now; }
+    if (now - lastRead > 150) { updateReadouts(); updateClock(); renderData(); lastRead = now; }
     requestAnimationFrame(loop);
   }
   window.__dp = { get frameMs() { return frameMs; }, get R() { return R; }, get Rs() { return Rs; }, get PC() { return PC; }, S, advance, setRunning, applyPreset,

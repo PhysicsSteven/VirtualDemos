@@ -150,6 +150,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .tbl th:first-child, .tbl td:first-child { text-align: left; font-family: var(--font-ui); }
 .tbl tr.sel td { font-weight: 700; }
 .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
+.twrap { position: relative; overflow: auto; max-height: 240px; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+.dtab { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.76rem; }
+.dtab caption { text-align: left; font-family: var(--font-ui); font-size: 0.78rem; color: var(--muted); padding: 6px 8px 4px; caption-side: top; }
+.dtab th { position: sticky; top: 0; background: var(--surface); font-family: var(--font-ui); font-weight: 700; text-align: right; padding: 4px 5px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.dtab td { text-align: right; padding: 2px 5px; white-space: nowrap; }
+.dtab th:first-child, .dtab td:first-child { text-align: left; }
+.dtab tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--grid) 60%, transparent); }
+#dataWrap:not([hidden]) { display: flex; flex-direction: column; gap: 6px; }
+.dcap { font-size: 0.8rem; margin-top: 4px; }
+#dBwrap:not([hidden]) { display: flex; flex-direction: column; gap: 6px; }
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.toggles input { accent-color: var(--accent); margin: 0; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 .key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
 .key span { display: flex; align-items: center; gap: 8px; }
@@ -207,7 +221,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   <main class="bench">
     <div class="stage" id="stage">
       <div class="pane main" id="mainPane">
-        <canvas id="view" tabindex="0" role="application" aria-label="Scene view. Drag the round grips to change the setup. Keys are listed in the rail for each scene."></canvas>
+        <canvas id="view" tabindex="0" role="application" aria-label="Door seen from above, turning about its hinge."></canvas>
         <div class="stage-ctl" id="ctl">
           <button type="button" class="btn primary" id="act">Push</button>
           <button type="button" class="btn" id="reset">Reset</button>
@@ -220,8 +234,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </div>
       </div>
       <div class="charts" id="charts">
-        <div class="pane" id="pA"><canvas id="cA" aria-label="Chart for the current scene"></canvas></div>
-        <div class="pane" id="pB"><canvas id="cB" aria-label="Second chart for the current scene"></canvas></div>
+        <div class="pane" id="pA"><canvas id="cA" role="img" aria-label="Torque against push point r for this force."></canvas></div>
+        <div class="pane" id="pB"><canvas id="cB" role="img" aria-label="Door angle against time."></canvas></div>
       </div>
     </div>
 
@@ -272,7 +286,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
             <button type="button" data-m="room" aria-pressed="false">its direction</button>
           </div>
         </div>
-        <p class="hint">Drag the push point along the door and drag the arrow tip to aim and size the force. Keys: <kbd>←</kbd> <kbd>→</kbd> move the push point, <kbd>↑</kbd> <kbd>↓</kbd> turn the force, <kbd>Enter</kbd> pushes.</p>
+        <p class="hint">Drag the push point along the door and drag the arrow tip to aim and size the force. Keys: <kbd>←</kbd> <kbd>→</kbd> move the push point, <kbd>↑</kbd> <kbd>↓</kbd> turn the force, <kbd>+</kbd> <kbd>−</kbd> change its size, <kbd>Enter</kbd> pushes.</p>
       </section>
       <section data-scene="torque">
         <h2>Door</h2>
@@ -443,9 +457,24 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       <section>
         <h2>Key</h2>
         <div class="key" id="keyBox"></div>
+        <div class="toggles">
+          <label><input type="checkbox" id="tReduce">Reduce motion</label>
+        </div>
+        <p class="hint" id="reduceHint">Reduce motion: Push, Race and Release jump straight to the end, and the spinner stops; Play still runs it.</p>
+      </section>
+
+      <section>
+        <h2>Plot data</h2>
+        <button type="button" class="btn" id="dataBtn" aria-expanded="false" aria-controls="dataWrap">Show data table</button>
+        <p class="hint">Tables of the values drawn in the charts for this scene, for readers who cannot see the plots.</p>
+        <div id="dataWrap" hidden>
+          <p class="hint dcap" id="dAcap"></p><div class="twrap"><table class="dtab" aria-labelledby="dAcap"><thead id="dAhead"></thead><tbody id="dAbody"></tbody></table></div>
+          <div id="dBwrap"><p class="hint dcap" id="dBcap"></p><div class="twrap"><table class="dtab" aria-labelledby="dBcap"><thead id="dBhead"></thead><tbody id="dBbody"></tbody></table></div></div>
+        </div>
       </section>
     </aside>
   </main>
+  <p class="sr" aria-live="polite" id="live"></p>
 </div>
 
 <script>
@@ -567,7 +596,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // ==CORE END==
 
   const $ = (id) => document.getElementById(id);
-  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  // Reduce motion: the OS setting, or the in-page toggle remembered for this browser session only
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  try { const v = sessionStorage.getItem('rotation-reduce-motion'); if (v === 'on') reduce = true; else if (v === 'off') reduce = false; } catch (_) {}
+  const say = (t) => { const el = document.getElementById('live'); if (el) el.textContent = t; };
 
   // ---------- formatting ----------
   const minus = (s) => String(s).replace(/-/g, '−');
@@ -627,8 +659,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (TQ.sw && !same && !TQ.sw.none && TQ.t > 0) TQ.ghost = TQ.sw;
     TQ.sw = same ? TQ.sw : makeSwing(p);
     TQ.t = 0;
-    if (TQ.sw.none) return;
-    if (reduce) TQ.t = TQ.sw.tEnd; else TQ.run = true;
+    if (TQ.sw.none) { say('No torque: the force points through the pivot, so nothing turns.'); return; }
+    if (reduce) { TQ.t = TQ.sw.tEnd; sayTorque(); } else TQ.run = true;
+  }
+  function sayTorque() {
+    const sw = TQ.sw; if (!sw || sw.none) return;
+    say(sw.t90 ? `Turned 90° in ${fx(sw.t90, 2)} s, reaching ω = ${s3(sw.w90)} rad/s.` : 'Did not reach 90° within 8 s.');
   }
 
   // ---------- rolling scene ----------
@@ -638,7 +674,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (RO.run) { RO.run = false; return; }
     if (RO.t > 0 && RO.t < tEnd) { RO.run = true; return; }
     RO.t = 0;
-    if (reduce) RO.t = tEnd; else RO.run = true;
+    if (reduce) { RO.t = tEnd; sayRace(); } else RO.run = true;
+  }
+  function sayRace() {
+    const b = RO.beta * DEG, res = RO.lanes.map((o, k) => ({ k, o, T: rollAt(o, b, RO.D, 0).T })).sort((p, q) => p.T - q.T);
+    say('Race over: ' + res.map((r) => `lane ${r.k + 1}, ${SHAPES[r.o.shape].name.replace('Sliding block', 'block').toLowerCase()}, ${fx(r.T, 2)} s`).join('; ') + '.');
   }
 
   // ---------- spin scene ----------
@@ -683,8 +723,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     SE.held = false;
     SE.tip = seesawTip(liveMasses(), SE.Mb, SE.Lb, SE_STOP);
     SE.t = 0;
-    if (SE.tip.none) return;
-    if (reduce) SE.t = SE.tip.tEnd; else SE.run = true;
+    if (SE.tip.none) { say('Released and balanced: the beam stays level.'); return; }
+    if (reduce) { SE.t = SE.tip.tEnd; saySeesaw(); } else SE.run = true;
+  }
+  function saySeesaw() {
+    const tip = SE.tip; if (!tip || tip.none) return;
+    say(`The ${seesawMoment(liveMasses()) < 0 ? 'left' : 'right'} end touched the ground after ${fx(tip.tHit, 2)} s.`);
   }
   const seesawPhi = () => (SE.tip && !SE.tip.none ? SE.tip.at(SE.t)[0] : 0);
 
@@ -1527,6 +1571,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     }
     setText('tclock', 't = ' + fx(t, 2) + ' s');
     actLabel();
+    chartsA11y();
   }
   function raceTable() {
     const b = RO.beta * DEG;
@@ -1550,6 +1595,97 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     else txt = SE.held ? 'Release' : 'Hold level';
     setText('act', txt);
   }
+
+  // ---------- text alternatives: the view, the charts and their data tables ----------
+  const VIEW_LABEL = {
+    torque: () => `${TQ.obj === 'door' ? 'Door' : 'Wrench'} seen from above, turning about its ${TQ.obj === 'door' ? 'hinge' : 'bolt'}, with the force F at the push point, its line of action and the lever arm r⊥. Pointer: drag the grip on the ${TQ.obj} to move the push point and the arrow tip to aim and size the force. Keys: left and right arrows move the push point, up and down arrows turn the force, plus and minus change its size, Enter or space pushes. The sliders in the rail do the same.`,
+    roll: () => `Ramp with ${RO.lanes.length} lanes, one object in each, at the top. Pointer: click an object to select its lane, drag the round grip at the top of the lowest board to tilt the ramp. Keys: 1 to ${RO.lanes.length} select a lane, up and down arrows tilt the ramp, Enter or space races.`,
+    spin: () => `${SP.look === 'skater' ? 'Skater' : 'Platform'} seen from above, spinning with two masses at radius ${fx(SP.r, 2)} m. Pointer: drag a mass in or out. Keys: up and down arrows move the masses out and in, Enter or space plays or pauses. Pull in and Push out in the rail move them smoothly.`,
+    seesaw: () => `Beam on a center pivot with blocks on it, held level by supports until released. Pointer: drag a block along the beam. Keys: 1, 2 and 3 pick a block, left and right arrows move it, Enter or space releases or holds the beam.`
+  };
+  // the values behind each chart: { cap, head, rows }; captions double as the charts' aria labels
+  function chartTables() {
+    const sc = S.scene, out = [];
+    if (sc === 'torque') {
+      const sn = Math.sin(TQ.th * DEG), rows = [];
+      for (let i = 0; i <= 6; i++) { const r = TQ.L * i / 6; rows.push([fx(r, 3), s3(r * TQ.F * sn), s3(r * TQ.F)]); }
+      out.push({ cap: `Torque against push point r, a straight line through the pivot, for F = ${fx(TQ.F, 1)} N at θ = ${fx(TQ.th, 0)}°; dashed, the largest torque, at θ = 90°. This push: r = ${fx(TQ.r, 2)} m, τ = ${s3(TQ.r * TQ.F * sn)} N·m.`,
+        head: ['r (m)', 'τ (N·m)', 'τ at θ = 90° (N·m)'], rows });
+      const sws = [TQ.ghost, TQ.sw].filter((q) => q && !q.none);
+      let tMax = Math.max(0.5, ...sws.map((q) => q.tEnd));
+      tMax = nice(tMax / 4) * Math.ceil(tMax / nice(tMax / 4));
+      const cur = TQ.sw && !TQ.sw.none ? TQ.sw : null, gh = TQ.ghost && !TQ.ghost.none ? TQ.ghost : null, r2 = [];
+      const ang = (q, t, lim) => (q && t <= Math.min(lim, q.tEnd) + 1e-9 ? fsg(q.at(t)[0] / DEG, 1) : '—');
+      for (let i = 0; i <= 20; i++) { const t = tMax * i / 20; r2.push([fx(t, 3), ang(cur, t, TQ.t), ang(gh, t, Infinity)]); }
+      const t90 = (q) => (q.t90 ? `turns 90° in ${fx(q.t90, 2)} s` : 'does not reach 90° in 8 s');
+      out.push({ cap: `${TQ.obj === 'door' ? 'Door' : 'Wrench'} angle φ against time. ${cur ? `This push ${t90(cur)}${TQ.t < cur.tEnd ? `; drawn up to t = ${fx(TQ.t, 2)} s` : ''}.` : 'Press Push to swing.'}${gh ? ` Earlier push, at r = ${fx(gh.p.r, 2)} m, ${t90(gh)}.` : ''}`,
+        head: ['t (s)', 'φ this push (°)', 'φ earlier push (°)'], rows: r2 });
+    } else if (sc === 'roll') {
+      const b = RO.beta * DEG, tEnd = rollEnd(), rows = [];
+      const nm = (o, k) => `${k + 1}. ${SHAPES[o.shape].name.replace('Sliding block', 'Block')}`;
+      for (let i = 0; i <= 10; i++) { const t = tEnd * i / 10; rows.push([fx(t, 3), ...RO.lanes.map((o) => fx(rollAt(o, b, RO.D, t).s, 3))]); }
+      out.push({ cap: `Distance down the ${fx(RO.D, 1)} m ramp against time at β = ${fx(RO.beta, 1)}°, s = ½at², one line per lane: ${RO.lanes.map((o, k) => `${nm(o, k)} reaches the bottom at ${fx(rollAt(o, b, RO.D, 0).T, 2)} s`).join(', ')}. Now t = ${fx(RO.t, 2)} s.`,
+        head: ['t (s)', ...RO.lanes.map((o, k) => `${nm(o, k)} s (m)`)], rows });
+      const o = RO.lanes[RO.sel], st = rollAt(o, b, RO.D, RO.t);
+      out.push({ cap: `Energy of lane ${RO.sel + 1}, ${SHAPES[o.shape].name.toLowerCase()}, at t = ${fx(RO.t, 2)} s: height lost mgh = ${s3(st.drop)} J, moving along ½mv² = ${s3(st.KEt)} J, spinning ½Iω² = ${s3(st.KEr)} J.`,
+        head: ['Energy', 'J'], rows: [['Height lost, mgh', s3(st.drop)], ['Moving along, ½mv²', s3(st.KEt)], ['Spinning, ½Iω²', s3(st.KEr)]] });
+    } else if (sc === 'spin') {
+      const ref = SP.ref, w0 = ref.L / ref.I, KE0 = ref.L * w0 / 2, h = SP.hist, rows = [];
+      const every = Math.max(1, Math.ceil(h.length / 40));
+      for (let i = 0; i < h.length; i += every) { const [t, I, w] = h[i]; rows.push([fx(t, 2), fx(I / ref.I, 3), fx(w / w0, 3), fx(I * w * w / 2 / KE0, 3), fx(I * w / ref.L, 3)]); }
+      const I = spinNowI(), w = SP.L / I;
+      out.push({ cap: `Compared with the start, over the last 8 s: I, ω, kinetic energy and L as ratios. Now I is ${fx(I / ref.I, 3)} times, ω ${fx(w / w0, 3)} times and the kinetic energy ${fx(I * w * w / 2 / KE0, 3)} times their starting values; L stays at ${fx(I * w / ref.L, 3)}.`,
+        head: ['t (s)', 'I ratio', 'ω ratio', 'KE ratio', 'L ratio'], rows });
+      const K0 = ref.L * ref.L / (2 * ref.I), KE = SP.L * SP.L / (2 * I), Wk = spinWork(SP.L, ref.I, I);
+      out.push({ cap: `Rotational energy: ${s3(K0)} J at the start, plus ${s3(Wk)} J of work done moving the masses, equals ${s3(KE)} J now.`,
+        head: ['Energy', 'J'], rows: [['At the start, L²/2I₀', s3(K0)], ['Work done moving the masses', s3(Wk)], ['Now, ½Iω²', s3(KE)]] });
+    } else {
+      const c = Math.cos(seesawPhi()), rows = SE.ms.map((q) => [`Block ${q.id}`, q.m > 0 ? fx(q.m, 1) : 'off', q.m > 0 ? fx(q.x, 2) : '—', q.m > 0 ? s3(-G * q.m * q.x * c) : '—']);
+      const net = seesawTorque(liveMasses(), seesawPhi());
+      rows.push(['Net torque', '', '', s3(net)]);
+      out.push({ cap: `Torques about the pivot, counterclockwise positive: ${SE.ms.filter((q) => q.m > 0).map((q) => `block ${q.id} ${s3(-G * q.m * q.x * c)} N·m`).join(', ')}; net ${s3(net)} N·m.`,
+        head: ['Block', 'm (kg)', 'x (m)', 'τ (N·m)'], rows });
+    }
+    return out;
+  }
+  let dataOpen = false, dataLast = 0;
+  const cellRow = (r) => '<tr>' + r.map((c) => `<td>${c}</td>`).join('') + '</tr>';
+  function setAttr(el, k, v) { if (el.getAttribute(k) !== v) el.setAttribute(k, v); }
+  function chartsA11y(force) {
+    const tabs = chartTables(), anim = TQ.run || RO.run || SP.run || SE.run;
+    setAttr(view, 'aria-label', VIEW_LABEL[S.scene]());
+    setAttr(cA, 'aria-label', tabs[0].cap + ' Show data table in the rail lists the values.');
+    if (tabs[1]) setAttr(cB, 'aria-label', tabs[1].cap + ' Show data table in the rail lists the values.');
+    if (!dataOpen) return;
+    const now = performance.now(); if (!force && anim && now - dataLast < 500) return; dataLast = now;
+    tabs.forEach((tb, i) => {
+      const k = i ? 'dB' : 'dA';
+      $(k + 'cap').textContent = tb.cap;
+      $(k + 'head').innerHTML = '<tr>' + tb.head.map((h) => `<th scope="col">${h}</th>`).join('') + '</tr>';
+      $(k + 'body').innerHTML = tb.rows.map(cellRow).join('');
+    });
+    $('dBwrap').hidden = !tabs[1];
+  }
+  $('dataBtn').addEventListener('click', () => {
+    dataOpen = !dataOpen; $('dataWrap').hidden = !dataOpen;
+    $('dataBtn').setAttribute('aria-expanded', String(dataOpen)); $('dataBtn').textContent = dataOpen ? 'Hide data table' : 'Show data table';
+    chartsA11y(true);
+  });
+  // Reduce motion: finish a running push, race or tip at once, stop the spinner; later actions jump to their end
+  $('tReduce').checked = reduce;
+  $('tReduce').addEventListener('change', (e) => {
+    reduce = e.target.checked;
+    try { sessionStorage.setItem('rotation-reduce-motion', reduce ? 'on' : 'off'); } catch (_) {}
+    if (reduce) {
+      if (TQ.run && TQ.sw) { TQ.t = TQ.sw.tEnd; TQ.run = false; }
+      if (RO.run) { RO.t = rollEnd(); RO.run = false; }
+      if (SE.run && SE.tip) { SE.t = SE.tip.tEnd; SE.run = false; }
+      if (SP.pull) { SP.r = SP.pull.r2; SP.pull = null; recordSpin(); }
+      SP.run = false;
+    }
+    say(reduce ? 'Reduce motion is on.' : 'Reduce motion is off.');
+    dirty = true;
+  });
 
   // ---------- key ----------
   const KEYS = {
@@ -1771,6 +1907,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     else if (sc === 'torque') {
       if (k === 'ArrowLeft') nudge('tR', -1); else if (k === 'ArrowRight') nudge('tR', 1);
       else if (k === 'ArrowUp') nudge('tTh', 5); else if (k === 'ArrowDown') nudge('tTh', -5);
+      else if (k === '+' || k === '=') nudge('tF', 2); else if (k === '-' || k === '_') nudge('tF', -2);
       else if (k === ' ') act(); else return;
     } else if (sc === 'roll') {
       if (k === 'ArrowUp') nudge('rB', 1); else if (k === 'ArrowDown') nudge('rB', -1);
@@ -1805,10 +1942,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function loop(now) {
     const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)) * S.ts; last = now;
     let anim = false;
-    if (S.scene === 'torque' && TQ.run && TQ.sw) { TQ.t += dt; if (TQ.t >= TQ.sw.tEnd) { TQ.t = TQ.sw.tEnd; TQ.run = false; dirty = true; } anim = true; }
-    else if (S.scene === 'roll' && RO.run) { const e = rollEnd(); RO.t += dt; if (RO.t >= e) { RO.t = e; RO.run = false; dirty = true; } anim = true; }
+    if (S.scene === 'torque' && TQ.run && TQ.sw) { TQ.t += dt; if (TQ.t >= TQ.sw.tEnd) { TQ.t = TQ.sw.tEnd; TQ.run = false; dirty = true; sayTorque(); } anim = true; }
+    else if (S.scene === 'roll' && RO.run) { const e = rollEnd(); RO.t += dt; if (RO.t >= e) { RO.t = e; RO.run = false; dirty = true; sayRace(); } anim = true; }
     else if (S.scene === 'spin' && SP.run) { advanceSpin(dt); anim = true; }
-    else if (S.scene === 'seesaw' && SE.run && SE.tip) { SE.t += dt / S.ts; if (SE.t >= SE.tip.tEnd) { SE.t = SE.tip.tEnd; SE.run = false; dirty = true; } anim = true; }
+    else if (S.scene === 'seesaw' && SE.run && SE.tip) { SE.t += dt / S.ts; if (SE.t >= SE.tip.tEnd) { SE.t = SE.tip.tEnd; SE.run = false; dirty = true; saySeesaw(); } anim = true; }
     if (anim || dirty) {
       const t0 = performance.now();
       tokens(); drawAll();

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DNA in 3D: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>DNA in 3D</h1><ul class="meta"><li><a href="../demos/dna.html">Open the demo</a></li><li>PHYS 202 (Coulomb forces and screening); biophysics; general science</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>DNA is two antiparallel strands wound into a right handed helix. Each strand is a chain of nucleotides (phosphate, sugar, base); the bases pair across the middle, A with T and G with C, so one strand fixes the other.</li>
+<li>Every Watson–Crick pair is one purine plus one pyrimidine, so A·T and G·C pairs have the same width. That is what lets any sequence wind into the same regular helix.</li>
+<li>In B DNA each pair rises 3.38 Å and turns 36°, ten pairs per turn. The sugars sit on one side of each pair, so the backbones leave a wide major groove and a narrow minor groove.</li>
+<li>The two strands are held together by hydrogen bonds and by stacking between neighboring pairs, and pushed apart by the negative charge on every phosphate. More G·C, a longer duplex and more salt all raise the melting temperature.</li>
+</ul>
+<h2>Before class</h2>
+<p>For the salt question students need Coulomb's law and the idea that ions in water screen a charge; no biology is assumed beyond the four letters. The 3D view loads a graphics library from the web, so open the page once before class (the readouts work without it). Hover an atom to name it; click a letter in <strong>The two strands</strong> to select a base pair.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Dickerson dodecamer.</strong> Let it turn (press <strong>Spin</strong> if it is still) and ask what repeats along the chain. Hover a few atoms: every nucleotide is a phosphate, a sugar and a base. The <strong>5′ and 3′ ends</strong> labels show that the two strands run in opposite directions. Ask Q2, then read <strong>Length</strong> and <strong>Helical turns</strong>.</li>
+<li><strong>One base pair close up.</strong> The view looks down the axis at pair 4, G·C, with three dashed hydrogen bonds. Click pair 5 (an A in the strand panel): two bonds. Compare <strong>C1′ to C1′</strong> for the two pairs and ask Q3.</li>
+<li><strong>Two grooves.</strong> Space filling, strands colored. Turn the molecule until both grooves face the room; read <strong>Minor groove</strong> and <strong>Major groove</strong> (Q6).</li>
+<li><strong>A versus B.</strong> The same 20 pairs drawn in both forms, B on top. Point out that A is shorter, wider and has a hollow core, then ask Q7.</li>
+<li><strong>GC rich</strong>, then a typed sequence. Ask Q1 first. Read <strong>Melting temperature Tm, estimate</strong>. Type twenty A's into the <strong>Sequence</strong> box and press <strong>Build</strong>; compare. Then return to <strong>Dickerson dodecamer</strong> and step <strong>Na+</strong> from <strong>50 mM</strong> to <strong>1 M</strong> (Q5).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: a 20 pair duplex made only of G·C pairs (<strong>GC rich</strong>) and one made only of A·T pairs (type AAAAAAAAAAAAAAAAAAAA and press <strong>Build</strong>). Which melts at the higher temperature, and is the difference a few degrees or tens of degrees? Give a reason, then check with <strong>Melting temperature Tm, estimate</strong> at 50 mM Na⁺.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In B DNA each base pair rises 3.38 Å and turns 36.0° relative to the one below. For the 12 pairs of the <strong>Dickerson dodecamer</strong>, find the length the demo reports (12 rises) in nm and the number of helical turns. How many pairs make one full turn? Repeat for the A form (2.56 Å and 32.7° per pair), then check both with <strong>Helix form</strong>.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In <strong>One base pair close up</strong>, compare the <strong>C1′ to C1′</strong> distance for pair 4 (G·C) and pair 5 (A·T). Why must they be nearly equal for any sequence to form a regular helix? Why would an A·G or a C·T pair not fit?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> The residue masses are dA 313.21, dC 289.18, dG 329.21 and dT 304.20 g/mol, and each strand in this model loses 61.96 g/mol because its 5′ end has no phosphate. Find the molar mass of both strands of CGCGAATTCGCG. Why are the two strands' masses equal for this particular sequence? Check with <strong>Molar mass, both strands</strong>.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> At <strong>Dickerson dodecamer</strong>, step <strong>Na+</strong> from <strong>50 mM</strong> to <strong>1 M</strong> and watch the melting temperature. Every phosphate on the backbone carries a charge of −e. Use Coulomb's law to explain why more salt makes the double helix harder to pull apart.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In <strong>Two grooves</strong> the demo reports a minor groove of about 5.6 Å and a major groove of about 11.4 Å. Use <strong>One base pair close up</strong> (where do the two sugars attach to a pair?) to explain why the grooves are unequal. What happens to the two grooves in the A form?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Strand 1 of the <strong>TATA box</strong> reads 5′ GCCTATAAAAGGGCTGCG 3′. Write strand 2, also read 5′ to 3′, then check against <strong>The two strands</strong> panel. Why is the <strong>Dickerson dodecamer</strong> called self complementary?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The two strands are identical copies."</strong> They are complementary, not identical, and they run in opposite directions. Only a self complementary sequence such as CGCGAATTCGCG reads the same on both strands.</li>
+<li><strong>"G·C pairs are stronger only because they have three hydrogen bonds instead of two."</strong> Stacking between neighboring pairs contributes as much or more. That is why the melting estimate is built from pairs of neighbors: in its parameters a CG step gives −10.6 kcal/mol of enthalpy but an AT step only −7.2.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Atom positions come from the Arnott fiber models of A and B DNA (X ray fiber diffraction), as tabulated in the Nucleic Acid Builder. Pair k is turned k times the twist and raised k times the rise; strand 2 is the twofold image of strand 1, which makes the strands antiparallel.</li>
+<li>The helix is uniform: every step has the same rise and twist and every pair the same shape. Real structures, such as the Dickerson dodecamer crystal (PDB 1BNA), differ by up to a few ångströms. Hydrogen atoms are not placed; hydrogen bonds are measured between donor and acceptor (N or O) atoms.</li>
+<li><strong>Length</strong> is the number of pairs times the rise. Groove widths are the closest phosphorus to phosphorus distance across each groove minus 5.8 Å (twice the phosphate radius), measured along the phosphate helices of the model.</li>
+<li>The melting temperature is the SantaLucia (1998) unified nearest neighbor estimate for a two state transition: ΔH and ΔS summed over neighboring pairs plus end terms, a salt correction ΔS += 0.368 (N − 1) ln[Na⁺], total strand concentration 0.5 µM and no magnesium. It is meant for short duplexes; the demo warns when a sequence is longer than 30 pairs.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: the GC rich preset (20 pairs) and the TATA box (18 pairs, 10 of them G·C) differ in both length and composition. Design a fair test of each effect with typed sequences and report the melting temperatures.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

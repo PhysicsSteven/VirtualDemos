@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),{core}=require('./demo_source.cjs');
-const c=core('circuits','solveDC,eqResistance,kclResiduals,powerBalance,solveAC,spectrum,specAt,specRms,zSeen,buildTransient,propagator,stepWith,storedC,storedL,zeroState,carryState,buildPreset,PRESETS,quad,dot');
+const c=core('circuits','solveDC,eqResistance,kclResiduals,powerBalance,solveAC,spectrum,specAt,specRms,zSeen,buildTransient,propagator,stepWith,storedC,storedL,zeroState,carryState,buildPreset,PRESETS,quad,dot,stateAt,locateSample');
 let count=0;const test=(name,fn)=>{fn();count++;console.log('PASS',name);};
 const close=(a,b,r=2e-8,abs=1e-12)=>assert(Number.isFinite(a)&&Math.abs(a-b)<=abs+r*Math.abs(b),`expected ${b}, got ${a}`);
 const part=(id,type,a,b,props={})=>({id,type,a:[a,0],b:[b,0],...props});
@@ -62,5 +62,43 @@ test('circuits time: switch preserves reactive state; propagator semigroup',()=>
  for(const [key,i] of next.si)if(key.startsWith('q')||key.startsWith('i'))close(y[i],x[sys.si.get(key)]);
  const full=c.stepWith(c.propagator(next,.6),y),half=c.stepWith(c.propagator(next,.3),y),twice=c.stepWith(c.propagator(next,.3),half.x);
  full.x.forEach((v,i)=>close(v,twice.x[i]));full.dE.forEach((v,i)=>close(v,half.dE[i]+twice.dE[i]));
+});
+test('circuits time cursor: stateAt reads exact values and energies between samples and across a switch',()=>{
+ // a run as the page stores it: RC charging (12 V, 10 kOhm, 100 uF, tau = 1 s) sampled every h, S1 flipped to discharge at t1
+ const els=c.buildPreset('rc').els,sw=els.find(e=>e.type==='sw2'),cap=els.find(e=>e.type==='cap'),res=els.find(e=>e.name==='R1');
+ const E=12,R=res.R,C=cap.C,tau=R*C,h=6/400,t1=0.6;
+ const totals=(sys,dE,e)=>{const o=Float64Array.from(e);sys.forms.forEach((F,k)=>{o[F.key==='src'?0:F.key==='heat'?1:2]+=dE[k];});return o;};
+ const run=(sys,x,t0,n,e)=>{const P=c.propagator(sys,h),sg={sys,ts:[t0],xs:[x],es:[e]};for(let k=1;k<=n;k++){const r=c.stepWith(P,x);x=r.x;e=totals(sys,r.dE,e);sg.ts.push(t0+k*h);sg.xs.push(x);sg.es.push(e);}return sg;};
+ const s0=c.buildTransient(els),seg0=run(s0,c.zeroState(s0),0,40,new Float64Array(3));
+ close(seg0.ts[40],t1,1e-12);
+ sw.pos=1;const s1=c.buildTransient(els),x1=c.carryState(s0,seg0.xs[40],s1,t1),seg1=run(s1,x1,t1,60,seg0.es[40]);
+ const segs=[seg0,seg1];
+ const V=(st)=>Math.abs(c.dot(st.sys.Vrow.get(cap.id),st.x)),I=(st)=>c.dot(st.sys.Irow.get(res.id),st.x);
+ const V1=E*(1-Math.exp(-t1/tau)),W1=C*E*E*(1-Math.exp(-t1/tau)),H1=0.5*C*E*E*(1-Math.exp(-2*t1/tau));
+ let worstLinear=0;
+ for(const t of [0,0.0001,0.00731,0.0151,0.2468,0.333,0.5999,0.61,0.6123,0.9,1.2345,1.5]){
+  const st=c.stateAt(segs,t);assert(st,`state at ${t}`);
+  let v,i,W,H;
+  if(t<t1){v=E*(1-Math.exp(-t/tau));i=E/R*Math.exp(-t/tau);W=C*E*E*(1-Math.exp(-t/tau));H=0.5*C*E*E*(1-Math.exp(-2*t/tau));}
+  else{const d=t-t1;v=V1*Math.exp(-d/tau);i=V1/R*Math.exp(-d/tau);W=W1;H=H1+0.5*C*V1*V1*(1-Math.exp(-2*d/tau));}
+  close(V(st),v,1e-10,1e-12);close(Math.abs(I(st)),i,1e-10,1e-15);
+  close(st.E.W,W,1e-10,1e-15);close(st.E.H,H,1e-10,1e-15);close(st.E.Sp,0,0,1e-15);
+  close(c.storedC(st.sys,st.x),0.5*C*v*v,1e-10,1e-15);
+  // a straight line between the two stored samples would be off by up to h^2/(8 tau^2) of the range
+  const sg=segs[st.si];if(st.i+1<sg.ts.length){const a=sg.ts[st.i],b=sg.ts[st.i+1],u=(t-a)/(b-a),va=Math.abs(c.dot(sg.sys.Vrow.get(cap.id),sg.xs[st.i])),vb=Math.abs(c.dot(sg.sys.Vrow.get(cap.id),sg.xs[st.i+1]));worstLinear=Math.max(worstLinear,Math.abs(va+u*(vb-va)-v));}
+ }
+ assert(worstLinear>1e-6,'the test points fall between samples');
+ // at the switch instant the cursor reads the circuit after the switch: same charge, current reversed
+ const a=c.stateAt([seg0],t1),b=c.stateAt(segs,t1);
+ close(V(a),V(b),1e-12);assert(I(a)*I(b)<0,'current reverses at the flip');close(Math.abs(I(b)),V1/R,1e-10);
+ // before t = 0 there is nothing to read; past the last sample the state is carried on exactly
+ assert.equal(c.stateAt(segs,-1e-9),null);
+ close(V(c.stateAt(segs,1.6)),V1*Math.exp(-(1.6-t1)/tau),1e-10);
+ // a thinned record (every other sample, as the page keeps long runs) reads the same values
+ const thin=(sg)=>{const n=sg.ts.length,f=(arr)=>arr.filter((_,k)=>k%2===0||k===n-1);return {sys:sg.sys,ts:f(sg.ts),xs:f(sg.xs),es:f(sg.es)};};
+ const segsT=segs.map(thin);
+ for(const t of [0.0151,0.333,0.6123,1.2345]){const p=c.stateAt(segs,t),q=c.stateAt(segsT,t);close(V(q),V(p),1e-11);close(q.E.H,p.E.H,1e-11,1e-16);}
+ // locateSample: the last sample at or before t, by bisection, equals a plain scan
+ for(let k=0;k<300;k++){const t=k*0.005+0.0007*(k%3),L=c.locateSample(segs,t);let si=-1;segs.forEach((s,j)=>{if(s.ts[0]<=t)si=j;});let i=0;segs[si].ts.forEach((u,j)=>{if(u<=t)i=j;});assert.deepEqual([L.si,L.i],[si,i],`locate ${t}`);}
 });
 console.log(`Completed ${count} unified Circuits core groups. Drawing, export and arbitrary topology coverage remain separate.`);

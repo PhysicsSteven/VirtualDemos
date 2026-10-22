@@ -13,7 +13,7 @@ time: 25 to 40 minutes (or one scene at a time)
 
 ## Before class
 
-Students should know Newton's second law, rF sin θ and kinetic energy. The four scenes (**Torque**, **Rolling**, **Spin**, **Seesaw**) are independent and can be spread over several lectures. Drag the round grips in the view to change the setup. Counterclockwise torques are positive.
+Students should know Newton's second law, rF sin θ and kinetic energy. The four scenes (**Torque**, **Rolling**, **Spin**, **Seesaw**) are independent and can be spread over several lectures. Drag the round grips in the view to change the setup; every grip also has keys, listed in the rail (in **Torque**, the + and − keys change the size of the force). Counterclockwise torques are positive. **Show data table** under **Plot data** lists the values in the charts, and **Reduce motion** in **Key** makes Push, Race and Release jump to the end.
 
 ## Running it in class
 

@@ -70,6 +70,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 </ul>
 <h2>Before class</h2>
 <p>Students should know Newton's second law and the derivatives of sine and cosine. Drag a block to pull it from equilibrium and let go; moving the pointer as you let go gives it a starting speed (turn off <strong>Release with drag speed</strong> to always release from rest). <strong>Keep trace</strong> freezes the current x(t) as a gray curve for comparison. The <strong>Playback rate</strong> slider slows everything down for the room.</p>
+<p>For the lab, students time N oscillations with <strong>Stopwatch</strong> on the stage (press to start, press again to stop; W on the drawing does the same), enter their count in <strong>Oscillations counted, N</strong>, and press <strong>Capture reading</strong>. The ruler's gold ticks hold the largest |x| since <strong>Reset peak</strong>. Rows collect in the <strong>Readings</strong> table; <strong>T² against m</strong> fits a line with its residuals (slope 4π²/k), <strong>A against ω</strong> plots driven captures, <strong>Show data table</strong> lists the plotted points and <strong>Export CSV</strong> saves everything. <strong>Blind: hide predictions and answers</strong> (Lab section) hides every predicted value, the reference circle, the envelope, the resonance curves and the k from the fit. <strong>Reduce motion</strong> pauses the run and stops the plots gliding.</p>
 <h2>Running it in class</h2>
 <ol>
 <li><strong>Simple harmonic motion.</strong> Ask Q1. Press <strong>Keep trace</strong>, then drag the block from 15 cm to 25 cm and let go. The new peaks are taller but line up in time; the measured period stays 0.9935 s. Point to the reference circle: x is the shadow of a point going around at ω₀.</li>
@@ -77,6 +78,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>Three kinds of damping.</strong> The gray traces for ζ = 0.2, 1 and 2.5 start from the same 20 cm. Before playing, ask which returns to equilibrium first. Then measure the decay of the underdamped peaks (Q4).</li>
 <li><strong>Resonance.</strong> The block starts at rest; watch the transient beat with the drive and die away. Drag the ω marker on the resonance curve through ω₀ and watch the phase lag pass 90° (Q5). Press <strong>Sweep ω</strong> to trace the whole curve.</li>
 <li><strong>Damping on the resonance.</strong> Still driven, use the <strong>ζ = 0.2</strong> button or the damping slider and ask Q6 before the curve redraws.</li>
+<li><strong>Lab: k from T² against m.</strong> In Simple harmonic motion, turn on Blind, time 10 oscillations at four or five masses and capture each. The fitted slope is 4π²/k; the intercept should be zero within the scatter because these springs have no mass (Q8).</li>
 <li><strong>Normal modes, then Beats.</strong> Show mode 1, press <strong>Mode 2</strong>, then switch to <strong>Beats</strong> with a weak coupling spring and watch block 2 take all the motion and give it back (Q7).</li>
 </ol>
 <h2>Questions</h2>
@@ -93,6 +95,8 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <div class="q"><p><strong>Q6.</strong> Predict: if b is doubled, what happens to the steady amplitude at ω₀, and to the amplitude at ω = 5.00 rad/s, well off resonance? Explain why damping matters so much more at resonance than away from it.</p></div>
 
 <div class="q"><p><strong>Q7.</strong> In Beats, m = 0.50 kg, k = 20 N/m and k_c = 2.0 N/m. Find the two mode frequencies, the beat period, and the time after release at which block 1 is momentarily still and block 2 has all the motion. Check with the clock and the x₁, x₂ plots.</p></div>
+
+<div class="q"><p><strong>Q8.</strong> Students timed 10 oscillations at m = 0.50, 1.00, 1.50, 2.00 and 3.00 kg on one spring. Explain why T² against m should be a straight line, find k from its slope, and say what a positive intercept would mean for a real spring of mass mₛ (T² = 4π²(m + mₛ/3)/k). Why is timing 10 oscillations better than timing one?</p></div>
 <h2>Common misconceptions</h2>
 <ul>
 <li><strong>"Pulling farther makes it take longer to come back."</strong> It has farther to go, but the larger force makes it go faster in proportion. For F = −kx the period is the same for every amplitude.</li>

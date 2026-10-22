@@ -14,12 +14,14 @@ time: 20 to 35 minutes
 
 Students should know pressure as force per area and the work–energy theorem. The **Scene** buttons pick **Depth**, **Shapes**, **Barometer**, **Buoyancy**, **Venturi** and **Torricelli**; each preset loads a scene, and the **Liquid** buttons switch the liquid. You can drag the probe, the block, the spring scale, the water surface, the pipe throat and the hole, or use the sliders. **Show pressure as** switches **Absolute** and **Gauge**. Turn on **Projector** for the room.
 
+For a lab, the **Readings** section has **Capture reading**, **Export CSV** and **Clear**; Capture works in **Depth** (depth ruler and pressure gauge), **Buoyancy** with **Spring scale** on (depth ruler, spring scale, scale reading in air) and **Venturi** (inlet speed, flow meter, both standpipes). The **Lab** section has **Blind: hide predictions and answers**, **Graph shows** (**Model** or **Your readings**, a least squares line with a residual strip), **Reduce motion** and **Show data table**. If the Venturi settings would drive the throat below the vapor pressure, a banner says the model is invalid (cavitation) instead of showing the numbers.
+
 ## Running it in class
 
 1. **Pressure grows with depth.** The probe at 1.20 m reads 113.09 kPa absolute, 1.116 atm. Drag it sideways: nothing changes. Switch to **Gauge** and to **Mercury**: the ρgh part is 13.6 times larger. Ask Q2.
 2. **Shapes** (scene button). Ask Q1 before you say anything about the vessels. At a fill height of 0.32 m all four bases feel 3.14 kPa and 15.8 N, though the vessels hold from 1.00 L to 7.27 L.
 3. **Floating and sinking.** The 10 cm pine cube settles half under; the level rises 3.33 mm. Try **Steel** or **Ice**, or slide **Block density ρ_obj** through 1000 kg/m³. Then switch the liquid to **Oil** and **Mercury** (Q3). Press **Iceberg** to see 89.5% of the ice under seawater.
-4. **Weighing in water (Archimedes).** Drag the spring scale down to lower the aluminum cube into the full overflow can. The scale falls from 26.5 N to 16.7 N as 1000 cm³ of water, weighing 9.81 N, runs into the beaker (Q4). Ask Q5 while it is submerged.
+4. **Weighing in water (Archimedes).** Drag the spring scale down to lower the aluminum cube into the full overflow can. The scale falls from 26.48 N to 16.67 N as 1000 cm³ of water, weighing 9.81 N, runs into the beaker (Q4). Ask Q5 while it is submerged.
 5. **Venturi tube.** Halving the diameter makes the throat flow 4 times faster, 3.20 m/s, and the throat standpipe stands 48.9 cm lower than the inlet one (Q6). Drag the throat grip to widen it back.
 6. **Torricelli's tank.** The hole 0.30 m below the surface sends water out at 2.43 m/s, landing 0.917 m from the wall. With **Compare holes** on, ask the class to predict which hole throws farthest, then drag the hole (Q7).
 

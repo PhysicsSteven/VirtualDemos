@@ -168,6 +168,29 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.esc { border-color: var(--pos); border-top-style: dashed; }
 .swatch.second { border-color: var(--pos); border-top-width: 3px; }
 .swatch.law { border-color: var(--accent); }
+/* measuring, readings, lab mode */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg.wrap { display: flex; flex-wrap: wrap; gap: 2px; }
+.seg.wrap button { flex: 1 1 40%; padding: 5px 6px; }
+.seg button:disabled { opacity: 0.45; cursor: not-allowed; }
+.twrap { position: relative; overflow-x: auto; }
+.twrap.tall { overflow-y: auto; max-height: 260px; }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+table.rows caption.cap { caption-side: top; text-align: left; color: var(--muted); font-size: 0.78rem; padding-bottom: 4px; }
+table.rows th { text-align: left; font-weight: 700; color: var(--muted); font-size: 0.7rem; padding: 3px 2px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.rows td { padding: 3px 2px; border-bottom: 1px solid var(--grid-strong); vertical-align: middle; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.76rem; white-space: nowrap; }
+table.rows td.n { color: var(--muted); font-size: 0.72rem; padding-right: 3px; }
+table.rows td.empty { color: var(--muted); font-family: var(--font-ui); font-size: 0.8rem; white-space: normal; padding: 6px 2px; }
+table.rows input { font: inherit; font-size: 0.74rem; width: calc(7ch + 6px); color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 4px; padding: 2px 2px; }
+table.rows button { font: inherit; font-size: 0.85rem; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 4px; }
+table.rows button:hover { color: var(--pos); }
+:root[data-projector="on"] table.rows td { font-size: 0.62rem; } :root[data-projector="on"] table.rows th { font-size: 0.58rem; }
+.blindtag { position: absolute; top: 8px; right: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--canvas); background: var(--ink); border-radius: 4px; padding: 2px 8px; pointer-events: none; }
+.stage.fitv { grid-template-rows: minmax(0, 1fr) 300px; }
+:root[data-projector="on"] .stage.fitv { grid-template-rows: minmax(0, 1fr) 330px; }
+@media (max-height: 820px) { :root[data-projector="on"] .stage.fitv { grid-template-rows: minmax(0, 1fr) 270px; } }
 kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--canvas); }
 
 @media (max-width: 820px) {
@@ -179,6 +202,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   .pane.main { height: 58vh; min-height: 320px; }
   .pane.chart { height: 210px; }
   :root[data-projector="on"] .pane.chart { height: 250px; }
+  .stage.fitv, :root[data-projector="on"] .stage.fitv { grid-template-rows: auto auto; }
+  .stage.fitv .pane.chart, :root[data-projector="on"] .stage.fitv .pane.chart { height: 340px; }
+  table.rows button { min-height: 32px; min-width: 32px; }
   .rail { overflow: visible; }
 }
 </style>
@@ -200,7 +226,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   <main class="bench">
     <div class="stage" id="stage">
       <div class="pane main" id="mainPane">
-        <canvas id="view" tabindex="0" role="application" aria-label="Orbit view. Drag the arrow tip to set the launch velocity, drag the hollow launch marker to move the launch point, drag empty space to pan, scroll to zoom. Arrow keys nudge the launch velocity, space plays or pauses, F fits the view."></canvas>
+        <canvas id="view" tabindex="0" role="application" aria-label="Orbit view."></canvas>
         <div class="viewbar">
           <button type="button" class="btn primary" id="play">Pause</button>
           <button type="button" class="btn" id="reset">Reset</button>
@@ -208,7 +234,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </div>
       </div>
       <div class="pane chart" id="chartPane">
-        <canvas id="chart" aria-label="Kepler's third law: orbital period against semi major axis on log scales, with the planets of the solar system and the current orbit."></canvas>
+        <canvas id="chart" role="img" aria-label="Kepler's third law: orbital period against semi major axis on log scales, with the planets of the solar system and the current orbit."></canvas>
+        <span class="blindtag" id="blindTag" hidden>Blind</span>
       </div>
     </div>
 
@@ -234,7 +261,59 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div><dt>Circular speed here</dt><dd id="lC">—</dd></div>
           <div><dt>Escape speed here</dt><dd id="lE">—</dd></div>
         </dl>
-        <p class="hint">Drag the arrow tip to set speed and direction. Drag the hollow marker to move the launch point. The tip snaps to the gold circular and red escape circles; hold <kbd>Shift</kbd> to place it freely. Arrow keys nudge it.</p>
+        <p class="hint">Drag the arrow tip to set speed and direction. Drag the hollow marker to move the launch point. The tip snaps to the gold circular and red escape circles; hold <kbd>Shift</kbd> to place it freely.</p>
+        <div class="slider-head"><span class="hint" id="keyLab">Arrow keys move</span></div>
+        <div class="seg wrap" role="group" aria-labelledby="keyLab" id="keySeg">
+          <button type="button" data-k="vel" aria-pressed="true">Arrow tip</button>
+          <button type="button" data-k="pos" aria-pressed="false">Launch point</button>
+          <button type="button" data-k="pan" aria-pressed="false">View</button>
+          <button type="button" data-k="ruler" aria-pressed="false">Ruler point</button>
+        </div>
+        <p class="hint">Focus the orbit view, then use the arrow keys (<kbd>Shift</kbd> for small steps). <kbd>M</kbd> switches what they move, <kbd>+</kbd> and <kbd>−</kbd> zoom, <kbd>1</kbd> and <kbd>2</kbd> pick a ruler point, <kbd>F</kbd> fits the view, <kbd>Space</kbd> plays or pauses.</p>
+      </section>
+
+      <section>
+        <h2>Measure</h2>
+        <div class="btnrow">
+          <button type="button" class="btn" id="timerBtn">Start timer</button>
+          <button type="button" class="btn" id="timerZero">Zero timer</button>
+        </div>
+        <dl class="readout">
+          <div class="big wide"><dt>Timer</dt><dd id="timerOut">0 yr</dd></div>
+        </dl>
+        <label class="check"><input type="checkbox" id="tRuler">Ruler</label>
+        <dl class="readout">
+          <div><dt>Point 1 to the star</dt><dd id="ru1">—</dd></div>
+          <div><dt>Point 2 to the star</dt><dd id="ru2">—</dd></div>
+          <div class="wide"><dt>Point 1 to point 2</dt><dd id="ru12">—</dd></div>
+        </dl>
+        <p class="hint">The timer runs on simulated time, so it stops when the planet is paused. Reset puts the planet back at the launch point at t = 0. With Ruler on, click or drag in the view to place points 1 and 2 (the launch arrow is locked meanwhile). Zoom in for precise placement.</p>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="expCsv">Export CSV</button>
+          <button type="button" class="btn" id="clearRows">Clear</button>
+        </div>
+        <p class="hint" id="capStat" role="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="tbl"><caption class="sr">Captured readings: semi major axis, period from the timer, ruler distance and star mass</caption><thead></thead><tbody></tbody></table></div>
+        <p class="hint">Capture stores the timer and the ruler as displayed, with the star mass and the launch. The a column starts as half the ruler distance, which is the semi major axis when the points sit on perihelion and aphelion; edit it if you measured another way. The fit is T² = slope·a³ through the origin, using the rows with the present star mass.</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="blind">Blind: hide predictions and answers</label>
+        <p class="hint" id="blindHint" hidden>Blind hides a, e, the period P and P measured, the energy, Δt per wedge and ½·h·Δt, the second planet's a and P, the distances on the orbit drawing and the third law chart. The timer, the ruler, the clock and the launch readouts stay.</p>
+        <div class="slider-head"><span class="hint" id="chartLab">Chart shows</span></div>
+        <div class="seg" role="group" aria-labelledby="chartLab" id="chartSeg">
+          <button type="button" data-v="law" aria-pressed="true">Third law</button>
+          <button type="button" data-v="fit" aria-pressed="false">Your readings</button>
+        </div>
+        <label class="check"><input type="checkbox" id="tReduce">Reduce motion</label>
+        <button type="button" class="btn" id="dataBtn" aria-expanded="false" aria-controls="dataWrap">Show data table</button>
+        <div class="twrap tall" id="dataWrap" hidden><table class="rows" id="dataTab"><caption class="cap" id="dataCap"></caption><thead></thead><tbody></tbody></table></div>
       </section>
 
       <section>
@@ -321,6 +400,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       </section>
     </aside>
   </main>
+  <p class="sr" aria-live="polite" id="live"></p>
 </div>
 
 <script>
@@ -385,11 +465,154 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 </script>
 <script>
 (() => {
+  // ==CORE START==
+  // Units: AU, years and solar masses, so G = 4π² AU³/(M_sun·yr²) and GM = m = 4π² M. The star is fixed at the origin.
   const TAU = 2 * Math.PI;
   const KMS = 4.740470;          // km/s per AU/yr
   const ETA = 0.002;             // step = ETA * sqrt(r^3 / GM)
   const R_HIT = 0.005;           // AU, about one solar radius
+
+  // orbital elements of a state {x, y, vx, vy} around GM = m
+  function orbitElements(st, m) {
+    const { x, y, vx, vy } = st;
+    const r = Math.hypot(x, y), v2 = vx * vx + vy * vy, rv = x * vx + y * vy;
+    const h = x * vy - y * vx;
+    const eps = 0.5 * v2 - m / r;
+    const ex = ((v2 - m / r) * x - rv * vx) / m, ey = ((v2 - m / r) * y - rv * vy) / m;
+    const e = Math.hypot(ex, ey);
+    const p = h * h / m;
+    const w = e > 1e-9 ? Math.atan2(ey, ex) : Math.atan2(y, x);
+    const radial = Math.abs(h) < 1e-9 * Math.max(1, r * Math.sqrt(v2));
+    const parabolic = Math.abs(e - 1) < 0.002;
+    const bound = eps < 0 && !parabolic;
+    const a = bound ? -m / (2 * eps) : Infinity;
+    const q = radial ? 0 : p / (1 + e);
+    const Q = bound ? a * (1 + e) : Infinity;
+    const P = bound ? TAU * Math.sqrt(a * a * a / m) : Infinity;
+    return {
+      r, v: Math.sqrt(v2), h, eps, e, ex, ey, p, w, a, q, Q, P, bound, parabolic, radial,
+      vp: radial ? Infinity : Math.abs(h) / q, va: bound && !radial ? Math.abs(h) / Q : NaN,
+      vinf: eps > 0 ? Math.sqrt(2 * eps) : 0, vesc: Math.sqrt(2 * m / r), vcirc: Math.sqrt(m / r)
+    };
+  }
+  function accelOf(b, m) {
+    const r = Math.hypot(b.x, b.y), f = -m / (r * r * r);
+    b.ax = f * b.x; b.ay = f * b.y;
+  }
+  const specificEnergy = (b, m) => 0.5 * (b.vx * b.vx + b.vy * b.vy) - m / Math.hypot(b.x, b.y);
+  // a body at time t0 with the bookkeeping the integrator keeps: trail, wedges, unwrapped angle for the measured period, energy at the start
+  function newBody(st, t0, m) {
+    const b = { x: st.x, y: st.y, vx: st.vx, vy: st.vy, ax: 0, ay: 0, t: t0, done: null,
+                trail: [[st.x, st.y]], wedges: null, cur: null, tNext: 0, dtW: 0, wk: 0,
+                th: 0, turns: 0, tP0: t0, Pm: NaN, E0: 0, r0: Math.hypot(st.x, st.y) };
+    accelOf(b, m); b.E0 = specificEnergy(b, m);
+    return b;
+  }
+  // equal time wedges: nW per period (per circular period at r0 for an open orbit)
+  function startWedgesOn(b, m, nW) {
+    const el = orbitElements(b, m);
+    const base = el.bound ? el.P : TAU * Math.sqrt(Math.pow(b.r0, 3) / m);
+    b.dtW = base / nW;
+    b.wedges = [];
+    b.cur = { pts: [[b.x, b.y]], area: 0, k: 0 };
+    b.wk = 1; b.tNext = b.t + b.dtW;
+  }
+  function resetPeriodClock(b) { b.th = 0; b.turns = 0; b.tP0 = b.t; b.Pm = NaN; }
+
+  // advance body b to time T with velocity Verlet (kick, drift, kick) and a time symmetric step
+  // dt = (f(r_n) + f(r_n+1))/2 with f(r) = ETA·√(r³/GM); steps land exactly on wedge boundaries; returns steps used
+  function advanceBody(b, T, budget, m, nW) {
+    const stepLen = (r) => ETA * Math.sqrt(r * r * r / m);
+    let n = 0;
+    while (b.t < T - 1e-13 && !b.done && n < budget) {
+      const rn = Math.hypot(b.x, b.y);
+      let dt = stepLen(rn);
+      for (let it = 0; it < 2; it++) {   // time symmetric step: dt = (f(r_n) + f(r_n+1)) / 2
+        const hx = b.vx + 0.5 * dt * b.ax, hy = b.vy + 0.5 * dt * b.ay;
+        dt = 0.5 * (stepLen(rn) + stepLen(Math.hypot(b.x + dt * hx, b.y + dt * hy)));
+      }
+      let lim = T - b.t, atWedge = false;
+      if (b.cur && b.tNext - b.t <= lim) { lim = b.tNext - b.t; }
+      if (dt >= lim) { dt = lim; atWedge = !!b.cur && Math.abs(b.t + dt - b.tNext) < 1e-12; }
+      const x0 = b.x, y0 = b.y;
+      // kick, drift, kick
+      b.vx += 0.5 * dt * b.ax; b.vy += 0.5 * dt * b.ay;
+      b.x += dt * b.vx; b.y += dt * b.vy;
+      accelOf(b, m);
+      b.vx += 0.5 * dt * b.ax; b.vy += 0.5 * dt * b.ay;
+      b.t += dt; n++;
+      const r = Math.hypot(b.x, b.y);
+
+      // swept area (triangle star, old, new) and unwrapped angle
+      const cr = x0 * b.y - y0 * b.x, dot = x0 * b.x + y0 * b.y;
+      const dth = Math.atan2(cr, dot);
+      const thOld = Math.abs(b.th);
+      b.th += dth;
+      const thNew = Math.abs(b.th);
+      if (thNew >= TAU * (b.turns + 1) && thNew > thOld) {
+        const target = TAU * (b.turns + 1);
+        const tc = b.t - dt + dt * (target - thOld) / (thNew - thOld);
+        b.turns++; b.Pm = (tc - b.tP0) / b.turns;
+      }
+      if (b.cur) {
+        b.cur.area += 0.5 * cr;
+        const lp = b.cur.pts[b.cur.pts.length - 1];
+        if (atWedge || Math.hypot(b.x - lp[0], b.y - lp[1]) > 0.012 * r) b.cur.pts.push([b.x, b.y]);
+        if (atWedge) {
+          b.t = b.tNext;
+          b.wedges.push(b.cur);
+          if (b.wedges.length > nW) b.wedges.shift();
+          b.cur = { pts: [[b.x, b.y]], area: 0, k: b.wk++ };
+          b.tNext += b.dtW;
+        }
+      }
+      const tl = b.trail[b.trail.length - 1];
+      if (Math.hypot(b.x - tl[0], b.y - tl[1]) > 0.01 * Math.max(r, 0.02)) {
+        b.trail.push([b.x, b.y]);
+        if (b.trail.length > 5000) b.trail.splice(0, b.trail.length - 5000);
+      }
+      if (r < R_HIT) b.done = 'hit';
+      else if (r > 1000 * Math.max(1, b.r0)) b.done = 'far';
+    }
+    return n;
+  }
+  // launch states for the presets: {a, e, at: 'peri' | 'aph'} on the +x axis, or {r, f}: f times the circular speed at r
+  function launchState(P, m) {
+    if (P.r) return { x: P.r, y: 0, vx: 0, vy: P.f * Math.sqrt(m / P.r) };
+    const { a, e } = P;
+    if (P.at === 'peri') { const q = a * (1 - e); return { x: q, y: 0, vx: 0, vy: Math.sqrt(m * (1 + e) / q) }; }
+    const Q = a * (1 + e);
+    return { x: Q, y: 0, vx: 0, vy: Math.sqrt(m * (1 - e) / Q) };
+  }
+
+  // ---- readings: the student's fit and the CSV ----
+  const num = (s) => { const t = String(s == null ? '' : s).trim().replace(/−/g, '-'); return t === '' ? NaN : Number(t); };
+  // least squares line y = b x through the origin; standard error with n − 1 degrees of freedom
+  function fitOrigin(xs, ys) {
+    const n = Math.min(xs.length, ys.length);
+    if (n < 1) return null;
+    let sxx = 0, sxy = 0;
+    for (let i = 0; i < n; i++) { sxx += xs[i] * xs[i]; sxy += xs[i] * ys[i]; }
+    if (!(sxx > 0)) return null;
+    const b = sxy / sxx, res = [];
+    let ss = 0;
+    for (let i = 0; i < n; i++) { const r = ys[i] - b * xs[i]; res.push(r); ss += r * r; }
+    return { a: 0, b, sb: n > 1 ? Math.sqrt(ss / (n - 1) / sxx) : NaN, sa: 0, res, n, origin: true };
+  }
+  function csvCell(t) { t = String(t == null ? '' : t); return /[",\n\r]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t; }
+  // a CSV file: comment lines "# ...", then one header row of column names, then the rows
+  function buildCSV(meta, columns, rows) {
+    const L = meta.map((m) => '# ' + (Array.isArray(m) ? m.map(csvCell).join(',') : String(m)));
+    L.push(columns.map(csvCell).join(','));
+    for (const r of rows) L.push(r.map(csvCell).join(','));
+    return L.join('\n') + '\n';
+  }
+  // ==CORE END==
+
   const $ = (id) => document.getElementById(id);
+  // Reduce motion: the OS setting, or the in-page toggle remembered for this browser session only
+  let reduce = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  try { const v = sessionStorage.getItem('kepler-orbits-reduce-motion'); if (v === 'on') reduce = true; else if (v === 'off') reduce = false; } catch (_) {}
 
   // ---------- state ----------
   const S = {
@@ -397,7 +620,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     launch: { x: 0.3075, y: 0, vx: 0, vy: 12.32 },
     A: null, B: null, Blaunch: null,
     layers: { wedge: true, conic: true, trail: true, foci: true, circ: true, vel: true, grid: true },
-    kw: 0.05, preset: 'mercury'
+    kw: 0.05, preset: 'mercury',
+    blind: false, cview: 'law', keyMode: 'vel',
+    timer: { on: false, acc: 0 }, ruler: { on: false, pts: [null, null], active: 0 }
   };
   const mu = () => TAU * TAU * S.M;
 
@@ -424,118 +649,22 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
                hint: 'Launch at 1.2 times the escape speed. Energy is positive, the path is a hyperbola and the planet leaves for good at a finite speed v∞.' }
   };
 
-  // ---------- physics ----------
-  function elements(st, M) {
-    const m = TAU * TAU * (M == null ? S.M : M);
-    const { x, y, vx, vy } = st;
-    const r = Math.hypot(x, y), v2 = vx * vx + vy * vy, rv = x * vx + y * vy;
-    const h = x * vy - y * vx;
-    const eps = 0.5 * v2 - m / r;
-    const ex = ((v2 - m / r) * x - rv * vx) / m, ey = ((v2 - m / r) * y - rv * vy) / m;
-    const e = Math.hypot(ex, ey);
-    const p = h * h / m;
-    const w = e > 1e-9 ? Math.atan2(ey, ex) : Math.atan2(y, x);
-    const radial = Math.abs(h) < 1e-9 * Math.max(1, r * Math.sqrt(v2));
-    const parabolic = Math.abs(e - 1) < 0.002;
-    const bound = eps < 0 && !parabolic;
-    const a = bound ? -m / (2 * eps) : Infinity;
-    const q = radial ? 0 : p / (1 + e);
-    const Q = bound ? a * (1 + e) : Infinity;
-    const P = bound ? TAU * Math.sqrt(a * a * a / m) : Infinity;
-    return {
-      r, v: Math.sqrt(v2), h, eps, e, ex, ey, p, w, a, q, Q, P, bound, parabolic, radial,
-      vp: radial ? Infinity : Math.abs(h) / q, va: bound && !radial ? Math.abs(h) / Q : NaN,
-      vinf: eps > 0 ? Math.sqrt(2 * eps) : 0, vesc: Math.sqrt(2 * m / r), vcirc: Math.sqrt(m / r)
-    };
-  }
 
-  function makeBody(st, wedges) {
-    const b = { x: st.x, y: st.y, vx: st.vx, vy: st.vy, ax: 0, ay: 0, t: S.t, done: null,
-                trail: [[st.x, st.y]], wedges: wedges ? [] : null, cur: null, tNext: 0, dtW: 0, wk: 0,
-                th: 0, turns: 0, tP0: S.t, Pm: NaN, E0: 0, r0: Math.hypot(st.x, st.y) };
-    accel(b); b.E0 = energy(b);
-    if (wedges) startWedges(b);
-    return b;
-  }
-  function accel(b) {
-    const r = Math.hypot(b.x, b.y), f = -mu() / (r * r * r);
-    b.ax = f * b.x; b.ay = f * b.y;
-  }
-  const energy = (b) => 0.5 * (b.vx * b.vx + b.vy * b.vy) - mu() / Math.hypot(b.x, b.y);
-
-  function startWedges(b) {
-    const el = elements(b);
-    const base = el.bound ? el.P : TAU * Math.sqrt(Math.pow(b.r0, 3) / mu());
-    b.dtW = base / S.nW;
-    b.wedges = [];
-    b.cur = { pts: [[b.x, b.y]], area: 0, k: 0 };
-    b.wk = 1; b.tNext = b.t + b.dtW;
-  }
-  function resetPeriodClock(b) { b.th = 0; b.turns = 0; b.tP0 = b.t; b.Pm = NaN; }
-
-  // advance body b to time T; returns steps used
-  function advance(b, T, budget) {
-    const m = mu(), stepLen = (r) => ETA * Math.sqrt(r * r * r / m);
-    let n = 0;
-    while (b.t < T - 1e-13 && !b.done && n < budget) {
-      const rn = Math.hypot(b.x, b.y);
-      let dt = stepLen(rn);
-      for (let it = 0; it < 2; it++) {   // time symmetric step: dt = (f(r_n) + f(r_n+1)) / 2
-        const hx = b.vx + 0.5 * dt * b.ax, hy = b.vy + 0.5 * dt * b.ay;
-        dt = 0.5 * (stepLen(rn) + stepLen(Math.hypot(b.x + dt * hx, b.y + dt * hy)));
-      }
-      let lim = T - b.t, atWedge = false;
-      if (b.cur && b.tNext - b.t <= lim) { lim = b.tNext - b.t; }
-      if (dt >= lim) { dt = lim; atWedge = !!b.cur && Math.abs(b.t + dt - b.tNext) < 1e-12; }
-      const x0 = b.x, y0 = b.y;
-      // kick, drift, kick
-      b.vx += 0.5 * dt * b.ax; b.vy += 0.5 * dt * b.ay;
-      b.x += dt * b.vx; b.y += dt * b.vy;
-      accel(b);
-      b.vx += 0.5 * dt * b.ax; b.vy += 0.5 * dt * b.ay;
-      b.t += dt; n++;
-      const r = Math.hypot(b.x, b.y);
-
-      // swept area (triangle star, old, new) and unwrapped angle
-      const cr = x0 * b.y - y0 * b.x, dot = x0 * b.x + y0 * b.y;
-      const dth = Math.atan2(cr, dot);
-      const thOld = Math.abs(b.th);
-      b.th += dth;
-      const thNew = Math.abs(b.th);
-      if (thNew >= TAU * (b.turns + 1) && thNew > thOld) {
-        const target = TAU * (b.turns + 1);
-        const tc = b.t - dt + dt * (target - thOld) / (thNew - thOld);
-        b.turns++; b.Pm = (tc - b.tP0) / b.turns;
-      }
-      if (b.cur) {
-        b.cur.area += 0.5 * cr;
-        const lp = b.cur.pts[b.cur.pts.length - 1];
-        if (atWedge || Math.hypot(b.x - lp[0], b.y - lp[1]) > 0.012 * r) b.cur.pts.push([b.x, b.y]);
-        if (atWedge) {
-          b.t = b.tNext;
-          b.wedges.push(b.cur);
-          if (b.wedges.length > S.nW) b.wedges.shift();
-          b.cur = { pts: [[b.x, b.y]], area: 0, k: b.wk++ };
-          b.tNext += b.dtW;
-        }
-      }
-      const tl = b.trail[b.trail.length - 1];
-      if (Math.hypot(b.x - tl[0], b.y - tl[1]) > 0.01 * Math.max(r, 0.02)) {
-        b.trail.push([b.x, b.y]);
-        if (b.trail.length > 5000) b.trail.splice(0, b.trail.length - 5000);
-      }
-      if (r < R_HIT) b.done = 'hit';
-      else if (r > 1000 * Math.max(1, b.r0)) b.done = 'far';
-    }
-    return n;
-  }
+  // ---------- physics (the CORE functions, with this page's star mass and wedge count) ----------
+  const elements = (st, M) => orbitElements(st, TAU * TAU * (M == null ? S.M : M));
+  function makeBody(st, wedges) { const b = newBody(st, S.t, mu()); if (wedges) startWedges(b); return b; }
+  const accel = (b) => accelOf(b, mu());
+  const energy = (b) => specificEnergy(b, mu());
+  const startWedges = (b) => startWedgesOn(b, mu(), S.nW);
+  const advance = (b, T, budget) => advanceBody(b, T, budget, mu(), S.nW);
 
   function stepSim(Dt) {
-    const T = S.t + Dt;
+    const T = S.t + Dt, t0 = S.t;
     advance(S.A, T, 60000);
     const tA = S.A.done ? T : S.A.t;
     if (S.B) advance(S.B, tA, 60000);
     S.t = tA;
+    if (S.timer.on) S.timer.acc += tA - t0;
     if (S.A.done && (!S.B || S.B.done)) setPlaying(false);
   }
 
@@ -545,20 +674,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     S.B = S.Blaunch ? makeBody(S.Blaunch, false) : null;
   }
 
-  function presetState(name) {
-    const P = PRESETS[name], m = mu();
-    if (P.r) {
-      const v = P.f * Math.sqrt(m / P.r);
-      return { x: P.r, y: 0, vx: 0, vy: v };
-    }
-    const { a, e } = P;
-    if (P.at === 'peri') {
-      const q = a * (1 - e);
-      return { x: q, y: 0, vx: 0, vy: Math.sqrt(m * (1 + e) / q) };
-    }
-    const Q = a * (1 + e);
-    return { x: Q, y: 0, vx: 0, vy: Math.sqrt(m * (1 - e) / Q) };
-  }
+  const presetState = (name) => launchState(PRESETS[name], mu());
 
   // ---------- canvas setup ----------
   const view = $('view'), chart = $('chart'), mainPane = $('mainPane'), chartPane = $('chartPane');
@@ -632,7 +748,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     return Math.abs(V.s - VT.s) > 1e-3 * VT.s || Math.abs(V.cx - VT.cx) > 0.3 || Math.abs(V.cy - VT.cy) > 0.3;
   }
   function animateView() {
-    if (!viewMoving()) { Object.assign(V, VT); return; }
+    if (!viewMoving() || reduce) { Object.assign(V, VT); return; }
     const k = 0.22;
     const ls = Math.log(V.s) + (Math.log(VT.s) - Math.log(V.s)) * k;
     V.s = Math.exp(ls); V.cx += (VT.cx - V.cx) * k; V.cy += (VT.cy - V.cy) * k;
@@ -835,10 +951,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         const nx = -s, ny = c, off = 12 * ps; // normal in world, flip y for screen
         const ox = nx * off, oy = -ny * off;
         ctx.strokeStyle = T.ink; ctx.lineWidth = 1.4 * ps;
-        ctx.beginPath(); ctx.moveTo(cx + ox, cy + oy); ctx.lineTo(Qx + ox, Qy + oy); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(cx + ox * 0.5, cy + oy * 0.5); ctx.lineTo(cx + ox * 1.5, cy + oy * 1.5);
-        ctx.moveTo(Qx + ox * 0.5, Qy + oy * 0.5); ctx.lineTo(Qx + ox * 1.5, Qy + oy * 1.5); ctx.stroke();
-        if (Math.hypot(Qx - cx, Qy - cy) > 40 * ps) {
+        if (!S.blind) {
+          ctx.beginPath(); ctx.moveTo(cx + ox, cy + oy); ctx.lineTo(Qx + ox, Qy + oy); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(cx + ox * 0.5, cy + oy * 0.5); ctx.lineTo(cx + ox * 1.5, cy + oy * 1.5);
+          ctx.moveTo(Qx + ox * 0.5, Qy + oy * 0.5); ctx.lineTo(Qx + ox * 1.5, Qy + oy * 1.5); ctx.stroke();
+        }
+        if (Math.hypot(Qx - cx, Qy - cy) > 40 * ps && !S.blind) {
           const aTxt = 'a = ' + sig(elA.a, 3) + ' AU', ax = (cx + Qx) / 2 + ox * 2.4, ay = (cy + Qy) / 2 + oy * 2.4;
           text(ctx, T, aTxt, ax, ay, 'center', 'middle', T.ink, fs, 600, true);
           ctx.font = `600 ${fs}px ${T.mono}`; aBox = { x0: ax - ctx.measureText(aTxt).width / 2 - 6 * ps, x1: ax + ctx.measureText(aTxt).width / 2 + 6 * ps, y: ay };
@@ -850,7 +968,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         ctx.moveTo(fx + 3 * ps, fy - 3 * ps); ctx.lineTo(fx - 3 * ps, fy + 3 * ps); ctx.stroke();
         const [sx0, sy0] = toPx(0, 0);
         // aphelion; the empty focus label is left out when the two would overlap on a small view
-        const aphTxt = 'aphelion ' + sig(elA.Q, 3) + ' AU';
+        const aphTxt = S.blind ? 'aphelion' : 'aphelion ' + sig(elA.Q, 3) + ' AU';
         ctx.font = `400 ${fs}px ${T.mono}`;
         const wA = ctx.measureText(aphTxt).width, gap = (wA + ctx.measureText('empty focus').width) / 2 + 8 * ps;
         const aphX = Math.max(4 * ps + wA / 2, Math.min(W - 4 * ps - wA / 2, Qx - ox * 1.8));   // where text() will put it
@@ -864,7 +982,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       }
       ctx.fillStyle = T.muted; ctx.beginPath(); ctx.arc(qx, qy, 3 * ps, 0, TAU); ctx.fill();
       const ux = qx - toPx(0, 0)[0], uy = qy - toPx(0, 0)[1], ul = Math.hypot(ux, uy) || 1;
-      const lab = 'perihelion ' + sig(elA.q, 3) + ' AU';
+      const lab = S.blind ? 'perihelion' : 'perihelion ' + sig(elA.q, 3) + ' AU';
       text(ctx, T, lab, qx + ux / ul * 10 * ps, qy + uy / ul * 10 * ps + 14 * ps, ux >= 0 ? 'left' : 'right', 'middle', T.muted, fs, 400);
     }
 
@@ -923,6 +1041,25 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (S.B) drawBody(S.B, T.pos);
     drawBody(A, T.neg);
 
+    // ruler: two picked points, the line between them and its length
+    if (S.ruler.on) {
+      const P = S.ruler.pts.map((q) => (q ? toPx(q.x, q.y) : null));
+      if (P[0] && P[1]) {
+        ctx.strokeStyle = T.ink; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([6 * ps, 4 * ps]);
+        ctx.beginPath(); ctx.moveTo(P[0][0], P[0][1]); ctx.lineTo(P[1][0], P[1][1]); ctx.stroke(); ctx.setLineDash([]);
+        const d = Math.hypot(S.ruler.pts[1].x - S.ruler.pts[0].x, S.ruler.pts[1].y - S.ruler.pts[0].y);
+        text(ctx, T, rulerVals().d12 + ' AU', 0.25 * P[0][0] + 0.75 * P[1][0], 0.25 * P[0][1] + 0.75 * P[1][1] - 14 * ps, 'center', 'middle', T.ink, 11 * ps, 700, true);
+      }
+      P.forEach((q, i) => {
+        if (!q) return;
+        const hot = S.keyMode === 'ruler' && S.ruler.active === i, r = 9 * ps;
+        ctx.strokeStyle = hot ? T.accent : T.ink; ctx.lineWidth = (hot ? 2 : 1.4) * ps;
+        ctx.beginPath(); ctx.moveTo(q[0] - r, q[1]); ctx.lineTo(q[0] + r, q[1]); ctx.moveTo(q[0], q[1] - r); ctx.lineTo(q[0], q[1] + r); ctx.stroke();
+        ctx.beginPath(); ctx.arc(q[0], q[1], 4 * ps, 0, TAU); ctx.stroke();
+        text(ctx, T, String(i + 1), q[0] + 8 * ps, q[1] - 8 * ps, 'left', 'bottom', hot ? T.accent : T.ink, 11 * ps, 700);
+      });
+    }
+
     // scale bar and time
     const barW = step * V.s, bx = 14 * ps, by = H - 14 * ps;
     ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * ps;
@@ -948,6 +1085,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const T = tokens(), ps = T.ps, ctx = cctx;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, CW, CH);
+    if (S.blind || S.cview === 'fit') { drawFitChart(ctx, T, ps); return; }
     const mL = 52 * ps, mR = 14 * ps, mT = 30 * ps, mB = 30 * ps;
     const pw = CW - mL - mR, ph = CH - mT - mB;
     if (pw < 40 || ph < 30) return;
@@ -1026,7 +1164,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // ---------- rail readouts ----------
   const R = {};
   ['lV', 'lR', 'lC', 'lE', 'rStatus', 'rA', 'rE', 'rP', 'rPm', 'rV', 'rR', 'rVp', 'rVa', 'rVaLabel', 'rVesc', 'rT', 'rEps', 'rDrift',
-   'wDt', 'wTheory', 'wSpread', 'areas', 'spdOut', 'massOut', 'secondInfo'].forEach((id) => { R[id] = $(id); });
+   'wDt', 'wTheory', 'wSpread', 'areas', 'spdOut', 'massOut', 'secondInfo', 'timerOut', 'ru1', 'ru2', 'ru12'].forEach((id) => { R[id] = $(id); });
   let areaCells = [];
   function buildAreas() {
     R.areas.textContent = '';
@@ -1074,7 +1212,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         R.wSpread.textContent = minus(sci((mx - mn) / (sm / list.length))) + ' of the mean (' + list.length + ' wedges)';
       } else R.wSpread.textContent = 'waiting for 2 wedges';
     }
-    if (S.B) {
+    R.timerOut.textContent = timerStr() + (S.timer.on ? ' (running)' : '');
+    const ru = rulerVals();
+    R.ru1.textContent = ru.r1 ? ru.r1 + ' AU' : '—'; R.ru2.textContent = ru.r2 ? ru.r2 + ' AU' : '—'; R.ru12.textContent = ru.d12 ? ru.d12 + ' AU' : '—';
+    renderData();
+    if (S.B && S.blind) R.secondInfo.textContent = `Second planet: ${elements(S.B).bound ? 'bound' : 'unbound'}, speed ${kms(elements(S.B).v)} (a and P hidden in Blind).`;
+    else if (S.B) {
       const eb = elements(S.B);
       R.secondInfo.textContent = eb.bound
         ? `Second planet: a = ${sig(eb.a, 3)} AU, e = ${eb.e.toFixed(3)}, P = ${fmtT(eb.P)}, speed ${kms(eb.v)}.`
@@ -1114,7 +1257,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function setPresetUI(name) {
     S.preset = name;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
-    if (name) $('presetHint').textContent = PRESETS[name].hint;
+    if (name) { S.hintFrom = name; $('presetHint').textContent = (S.blind && BLIND_HINT[name]) || PRESETS[name].hint; }
   }
   function setSpeed(v) {
     S.speed = v;
@@ -1179,6 +1322,213 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     schedule();
   });
 
+  // ---------- measure: timer and ruler ----------
+  const VERSION = 'kepler-orbits@2026-10-22';
+  const fx = (v, d) => (isFinite(v) ? minus((+(+v).toFixed(d) || 0).toFixed(d)) : '—');
+  const clean = (v) => (isFinite(v) ? String(+v.toPrecision(10)) : '');
+  // n significant figures, rounded first so 0.9999997 shows as 1.0000
+  const sp = (x, n) => (isFinite(x) && x !== 0 && Math.abs(x) >= 1e-4 && Math.abs(x) < 1e15 ? minus(x.toPrecision(n)) : sig(x, n));
+  const timerStr = () => sp(S.timer.acc, 5) + ' yr';
+  const rPt = (i) => S.ruler.pts[i];
+  const rulerVals = () => {
+    const p = S.ruler.pts, on = S.ruler.on;
+    return { r1: on && p[0] ? sp(Math.hypot(p[0].x, p[0].y), 4) : '', r2: on && p[1] ? sp(Math.hypot(p[1].x, p[1].y), 4) : '',
+             d12: on && p[0] && p[1] ? sp(Math.hypot(p[1].x - p[0].x, p[1].y - p[0].y), 4) : '' };
+  };
+  const timerBtn = $('timerBtn');
+  function syncTimer() { timerBtn.textContent = S.timer.on ? 'Stop timer' : 'Start timer'; timerBtn.classList.toggle('primary', S.timer.on); }
+  timerBtn.addEventListener('click', () => { S.timer.on = !S.timer.on; syncTimer(); live(S.timer.on ? 'Timer started.' : `Timer stopped at ${timerStr()}.`); schedule(); });
+  $('timerZero').addEventListener('click', () => { S.timer.acc = 0; live('Timer zeroed.'); schedule(); });
+  function ensureRulerPoint(i) {
+    if (!S.ruler.pts[i]) { const c = toW(W / 2 + (i ? 30 : -30), H / 2); S.ruler.pts[i] = c; }
+  }
+  function setRuler(on) {
+    S.ruler.on = on; $('tRuler').checked = on;
+    if (!on && S.keyMode === 'ruler') setKeyMode('vel');
+    view.style.cursor = on ? 'crosshair' : 'move';
+    schedule();
+  }
+  $('tRuler').addEventListener('change', (e) => setRuler(e.target.checked));
+  const KEY_NAMES = { vel: 'the arrow tip (launch velocity)', pos: 'the launch point', pan: 'the view', ruler: 'the selected ruler point' };
+  function setKeyMode(k) {
+    S.keyMode = k;
+    if (k === 'ruler') { if (!S.ruler.on) setRuler(true); ensureRulerPoint(S.ruler.active); }
+    for (const b of document.querySelectorAll('#keySeg button')) b.setAttribute('aria-pressed', String(b.dataset.k === k));
+    viewLabel(); schedule();
+  }
+  $('keySeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setKeyMode(b.dataset.k); });
+  function viewLabel() {
+    view.setAttribute('aria-label', `Orbit view. Drag the arrow tip to set the launch velocity, drag the hollow launch marker to move the launch point, drag empty space to pan, scroll to zoom. With Ruler on, click or drag to place ruler points 1 and 2. Keys: the arrow keys move ${KEY_NAMES[S.keyMode]} (Shift for small steps); M switches what they move; 1 and 2 pick a ruler point; plus and minus zoom; space plays or pauses; F fits the view.`);
+  }
+  const live = (msg) => { $('live').textContent = msg; };
+
+  // ---------- readings: capture, table, CSV, fit ----------
+  let rows = [];     // {preset, M, r0, v0, cells: {a, T, d12, r1, r2}} as displayed or typed
+  const escH = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+  const capStat = (msg) => { $('capStat').textContent = msg; };
+  function capture() {
+    const ru = rulerVals(), Tm = S.timer.acc > 0 ? sp(S.timer.acc, 5) : '';
+    if (!Tm && !ru.d12) { capStat('Nothing measured yet: time an orbit with the timer and place both ruler points.'); return; }
+    const el = elements(S.launch);
+    rows.push({ preset: S.preset ? $('presets').querySelector(`[data-p="${S.preset}"]`).textContent : '', M: S.M.toFixed(2), r0: sig(el.r, 4), v0: sig(el.v * KMS, 4),
+      cells: { a: ru.d12 ? sp(num(ru.d12) / 2, 4) : '', T: Tm, d12: ru.d12, r1: ru.r1, r2: ru.r2 } });
+    renderRows(); lastData = '';
+    const msg = `Reading ${rows.length} captured: ${Tm ? 'timer ' + Tm + ' yr' : 'no timer reading'}, ${ru.d12 ? 'ruler ' + ru.d12 + ' AU' : 'no ruler distance'}.`;
+    capStat(msg); live(msg); schedule();
+  }
+  function renderRows() {
+    const tb = $('tbl');
+    tb.tHead.innerHTML = '<tr><th>#</th><th>a AU</th><th>T yr</th><th>ruler AU</th><th>M</th><th><span class="sr">Delete</span></th></tr>';
+    if (!rows.length) { tb.tBodies[0].innerHTML = '<tr><td class="empty" colspan="6">No readings yet. Time an orbit, place the ruler points, then press Capture reading.</td></tr>'; return; }
+    tb.tBodies[0].innerHTML = rows.map((r, i) => `<tr title="${escH((r.preset || 'custom launch') + ', r0 = ' + r.r0 + ' AU, v0 = ' + r.v0 + ' km/s')}"><td class="n">${i + 1}</td>`
+      + `<td><input aria-label="semi major axis a in AU, row ${i + 1}" data-i="${i}" data-k="a" value="${escH(r.cells.a)}" inputmode="decimal" spellcheck="false"></td>`
+      + `<td><input aria-label="period T in years, row ${i + 1}" data-i="${i}" data-k="T" value="${escH(r.cells.T)}" inputmode="decimal" spellcheck="false"></td>`
+      + `<td>${r.cells.d12 || '—'}</td><td>${r.M}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('');
+  }
+  $('tbl').addEventListener('input', (e) => { const t = e.target; if (t.dataset.k === undefined) return; const r = rows[+t.dataset.i]; if (r) { r.cells[t.dataset.k] = t.value; lastData = ''; schedule(); } });
+  $('tbl').addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-del]'); if (!b) return;
+    rows.splice(+b.dataset.del, 1); renderRows(); lastData = ''; capStat('Row deleted.'); schedule();
+    const first = $('tbl').querySelector('button[data-del]'); (first || $('capture')).focus();
+  });
+  function csvText() {
+    const meta = ["Kepler's Laws, captured readings (simulated data)", ['demo version', VERSION],
+      'setup,each row names the preset it came from (blank: a custom launch) with the star mass and the launch distance and speed',
+      'units,AU; yr; solar masses M_sun; G = 4 pi^2 AU^3/(M_sun yr^2) so GM = 4 pi^2 M; 1 AU/yr = 4.740470 km/s',
+      'model,star held fixed; planet mass neglected; Newtonian gravity; velocity Verlet with a time symmetric step 0.002 sqrt(r^3/GM); in this model T^2 = a^3/M exactly',
+      'instruments,timer: simulated time between Start and Stop; ruler: two points placed by hand in the orbit view (precision set by the zoom)',
+      'rounding,as displayed: timer 5 significant figures; ruler 4 significant figures; a_AU starts as half the ruler distance; edited cells exported as typed',
+      'seed,none (the model is deterministic)'];
+    const cols = ['row', 'preset', 'M_Msun', 'launch_r0_AU', 'launch_v0_km_s', 'timer_T_yr', 'ruler_r1_AU', 'ruler_r2_AU', 'ruler_d12_AU', 'a_AU', 'a3_AU3', 'T2_yr2'];
+    return buildCSV(meta, cols, rows.map((r, i) => { const c = r.cells; return [i + 1, r.preset, r.M, r.r0, r.v0, c.T, c.r1, c.r2, c.d12, c.a, clean(num(c.a) ** 3), clean(num(c.T) ** 2)]; }));
+  }
+  function download(name, text) {
+    try { const b = new Blob([text], { type: 'text/csv' }), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800); } catch (_) {}
+  }
+  $('capture').addEventListener('click', capture);
+  $('expCsv').addEventListener('click', () => { if (!rows.length) { capStat('No readings to export yet.'); return; } download('kepler-orbits-readings.csv', csvText()); capStat(`${rows.length} reading${rows.length > 1 ? 's' : ''} exported as kepler-orbits-readings.csv.`); });
+  $('clearRows').addEventListener('click', () => { rows = []; renderRows(); lastData = ''; capStat('Readings cleared.'); schedule(); });
+
+  function pm(v, e) {
+    if (!(e > 0) || !isFinite(e)) return `${sig(v, 4)} ± ${isFinite(e) ? '0' : '—'}`;
+    const d = Math.max(0, Math.min(8, 1 - Math.floor(Math.log10(e))));
+    return `${fx(v, d)} ± ${fx(e, d)}`;
+  }
+  function fitSpec() {
+    const Mn = +S.M.toFixed(2), use = rows.filter((r) => num(r.M) === Mn), xs = [], ys = [];
+    for (const r of use) { const a = num(r.cells.a), Tt = num(r.cells.T); if (isFinite(a) && isFinite(Tt) && a > 0 && Tt > 0) { xs.push(a ** 3); ys.push(Tt * Tt); } }
+    const f = fitOrigin(xs, ys);
+    return { xs, ys, f, n: rows.length, Mn, model: 1 / S.M,
+      res: f ? [`T² = b·a³: slope b = ${pm(f.b, f.sb)} yr²/AU³`, `so GM = 4π²/b = ${pm(TAU * TAU / f.b, TAU * TAU * f.sb / (f.b * f.b))} AU³/yr², M = 1/b = ${pm(1 / f.b, f.sb / (f.b * f.b))} M☉`] : [] };
+  }
+  function linTicks(ctx, T, ps, L, R, top, bot, xr, yr, showX, xlab, ylab) {
+    const X = (v) => L + (v - xr[0]) / (xr[1] - xr[0]) * (R - L), Y = (v) => bot - (v - yr[0]) / (yr[1] - yr[0]) * (bot - top);
+    const fs = 10 * ps, xs = niceStep(xr[1] - xr[0], Math.max(2, Math.floor((R - L) / (70 * ps)))), ys = niceStep(yr[1] - yr[0], Math.max(3, Math.floor((bot - top) / (30 * ps))));
+    const dec = (s) => Math.max(0, -Math.floor(Math.log10(s) + 1e-9));
+    ctx.lineWidth = 1; ctx.strokeStyle = T.grid; ctx.beginPath();
+    for (let v = Math.ceil(xr[0] / xs - 1e-9) * xs; v <= xr[1] + xs * 1e-6; v += xs) { ctx.moveTo(Math.round(X(v)) + 0.5, top); ctx.lineTo(Math.round(X(v)) + 0.5, bot); }
+    for (let v = Math.ceil(yr[0] / ys - 1e-9) * ys; v <= yr[1] + ys * 1e-6; v += ys) { ctx.moveTo(L, Math.round(Y(v)) + 0.5); ctx.lineTo(R, Math.round(Y(v)) + 0.5); }
+    ctx.stroke(); ctx.strokeStyle = T.muted; ctx.strokeRect(L + 0.5, top + 0.5, R - L, bot - top);
+    ctx.font = `400 ${fs}px ${T.mono}`; ctx.fillStyle = T.muted;
+    if (showX) { ctx.textAlign = 'center'; ctx.textBaseline = 'top'; for (let v = Math.ceil(xr[0] / xs - 1e-9) * xs; v <= xr[1] + xs * 1e-6; v += xs) ctx.fillText(fx(v, dec(xs)), X(v), bot + 3 * ps); }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; for (let v = Math.ceil(yr[0] / ys - 1e-9) * ys; v <= yr[1] + ys * 1e-6; v += ys) ctx.fillText(fx(v, dec(ys)), L - 4 * ps, Y(v));
+    ctx.fillStyle = T.ink; ctx.font = `600 ${fs}px ${T.mono}`;
+    if (xlab) { ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(xlab, R, bot + 15 * ps); }
+    ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(ylab, L, top - 3 * ps);
+    return { X, Y };
+  }
+  function drawFitChart(ctx, T, ps) {
+    const F = fitSpec(), f = F.f;
+    // text lines wrapped to the pane (a phone is narrow); the first is the title
+    const lines = [[`Your readings: T² against a³, star mass ${S.M.toFixed(2)} M☉`, T.ink, 700, 11]];
+    if (f) for (const l of F.res) lines.push([l, T.ink, 600, 10]);
+    lines.push([`${F.xs.length} of ${F.n} reading${F.n === 1 ? '' : 's'} used (rows with M = ${F.Mn.toFixed(2)} and both a and T)` + (S.blind ? '' : `; model: slope 4π²/GM = 1/M = ${sig(F.model, 4)} yr²/AU³`), T.muted, 600, 10]);
+    let y = 6 * ps;
+    const maxW = CW - 20 * ps - (S.blind ? 70 * ps : 0);
+    for (const [l, col, wt, sz] of lines) {
+      ctx.font = `${wt} ${sz * ps}px ${T.mono}`; ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      let cur = '';
+      for (const w of l.split(' ')) { const t2 = cur ? cur + ' ' + w : w; if (ctx.measureText(t2).width > maxW && cur) { ctx.fillText(cur, 10 * ps, y); y += (sz + 3) * ps; cur = w; } else cur = t2; }
+      ctx.fillText(cur, 10 * ps, y); y += (sz + 3) * ps;
+    }
+    const L = 56 * ps, R = CW - 14 * ps, bot = CH - 30 * ps, top = y + 16 * ps;
+    if (bot - top < 60 * ps) return;
+    const stripH = Math.max(30 * ps, (bot - top) * 0.28), mainBot = bot - stripH - 18 * ps, stripTop = bot - stripH;
+    const xs = F.xs, ys = F.ys, xmax = xs.length ? Math.max(...xs) : 1;
+    const xr = [0, xmax * 1.08 || 1];
+    const cand = ys.slice(); if (f) cand.push(f.b * xr[1]); if (!S.blind) cand.push(F.model * xr[1]);
+    const yr = [0, (cand.length ? Math.max(...cand) : 1) * 1.1 || 1];
+    const A = linTicks(ctx, T, ps, L, R, top, mainBot, xr, yr, false, '', 'T² (yr²)');
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, mainBot - top); ctx.clip();
+    if (!S.blind) { ctx.strokeStyle = T.equi; ctx.lineWidth = 1.6 * ps; ctx.setLineDash([6 * ps, 4 * ps]); ctx.beginPath(); ctx.moveTo(A.X(0), A.Y(0)); ctx.lineTo(A.X(xr[1]), A.Y(F.model * xr[1])); ctx.stroke(); ctx.setLineDash([]); }
+    if (f) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(A.X(0), A.Y(0)); ctx.lineTo(A.X(xr[1]), A.Y(f.b * xr[1])); ctx.stroke(); }
+    ctx.restore();
+    ctx.fillStyle = T.neg; for (let i = 0; i < xs.length; i++) { ctx.beginPath(); ctx.arc(A.X(xs[i]), A.Y(ys[i]), 4.5 * ps, 0, TAU); ctx.fill(); }
+    if (!f) text(ctx, T, xs.length ? 'Fit needs a and T.' : 'No readings yet.', (L + R) / 2, (top + mainBot) / 2, 'center', 'middle', T.muted, 11 * ps, 600, true);
+    else text(ctx, T, S.blind ? 'dots: readings; line: fit through 0' : 'dots: readings; line: fit through 0; dashed: model', R - 4 * ps, mainBot - 4 * ps, 'right', 'bottom', T.muted, 9.5 * ps, 400);
+    // residual axis: ±1.3 times the largest residual, but not narrower than 1% of the plotted y range (an exact fit shows a flat strip)
+    const rmax = f && f.res.length ? Math.max(...f.res.map(Math.abs)) : 0, rh = Math.max(rmax * 1.3, 0.01 * yr[1]), rr = [-rh, rh];
+    const B = linTicks(ctx, T, ps, L, R, stripTop, bot, xr, rr, true, 'a³ (AU³)', 'residual (yr²)');
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, B.Y(0)); ctx.lineTo(R, B.Y(0)); ctx.stroke();
+    if (f) { ctx.fillStyle = T.neg; for (let i = 0; i < xs.length; i++) { ctx.beginPath(); ctx.arc(B.X(xs[i]), B.Y(f.res[i]), 3.5 * ps, 0, TAU); ctx.fill(); } }
+  }
+
+  // ---------- data table for the chart ----------
+  let dataOpen = false, lastData = '';
+  function chartData() {
+    if (S.blind || S.cview === 'fit') {
+      const F = fitSpec();
+      return { cap: `Your readings, T² against a³ for star mass ${F.Mn.toFixed(2)} M☉. ${F.f ? F.res.join('; ') + '.' : 'Not enough readings to fit.'}`,
+        head: ['a³ (AU³)', 'T² (yr²)', 'residual (yr²)'], rows: F.xs.map((x, i) => [sig(x, 5), sig(F.ys[i], 5), F.f ? sig(F.f.res[i], 3) : '—']) };
+    }
+    const r = PLANETS.concat([HALLEY]).map((p) => [p[0], String(p[2]), String(+p[3].toPrecision(5))]);
+    const el = elements(S.A);
+    if (el.bound) r.push(['this orbit', sig(el.a, 4), sig(el.P, 4)]);
+    if (S.B) { const eb = elements(S.B); if (eb.bound) r.push(['second planet', sig(eb.a, 4), sig(eb.P, 4)]); }
+    return { cap: `Third law chart: period against semi major axis (log scales), line P² = a³/M for M = ${S.M.toFixed(2)} M☉`, head: ['body', 'a (AU)', 'P (yr)'], rows: r };
+  }
+  function renderData() {
+    if (!dataOpen) return;
+    const d = chartData(), key = JSON.stringify(d);
+    if (key === lastData) return;
+    lastData = key;
+    $('dataCap').textContent = d.cap;
+    const t = $('dataTab');
+    t.tHead.innerHTML = `<tr>${d.head.map((h) => `<th>${escH(h)}</th>`).join('')}</tr>`;
+    t.tBodies[0].innerHTML = d.rows.length ? d.rows.map((r) => `<tr>${r.map((c) => `<td>${escH(c)}</td>`).join('')}</tr>`).join('') : `<tr><td class="empty" colspan="${d.head.length}">No points to list.</td></tr>`;
+  }
+  $('dataBtn').addEventListener('click', () => {
+    dataOpen = !dataOpen; $('dataWrap').hidden = !dataOpen;
+    $('dataBtn').setAttribute('aria-expanded', String(dataOpen)); $('dataBtn').textContent = dataOpen ? 'Hide data table' : 'Show data table';
+    lastData = ''; renderData();
+  });
+
+  // ---------- lab mode: Blind, chart choice, reduce motion ----------
+  const BLIND_HINT = { halley: 'Launched at aphelion at under 1 km/s. Time one full orbit with the timer and measure the orbit with the ruler.' };
+  function syncLab() {
+    const fit = S.blind || S.cview === 'fit';
+    $('blindTag').hidden = !S.blind; $('blindHint').hidden = !S.blind;
+    for (const b of document.querySelectorAll('#chartSeg button')) { b.setAttribute('aria-pressed', String(b.dataset.v === (fit ? 'fit' : 'law'))); b.disabled = S.blind && b.dataset.v === 'law'; }
+    for (const id of ['rA', 'rE', 'rP', 'rPm', 'rEps', 'wDt', 'wTheory']) R[id].parentElement.hidden = S.blind;
+    chart.setAttribute('aria-label', (fit ? 'Plot of your captured readings, period squared against semi major axis cubed, with a least squares line through the origin and a residual strip below it.'
+      : "Kepler's third law: orbital period against semi major axis on log scales, with the planets of the solar system and the current orbit.") + ' Show data table in the Lab section lists the plotted values.');
+    // the hint on show came from a preset (it may have been changed by hand since): swap in the version without answers
+    if (S.hintFrom) $('presetHint').textContent = (S.blind && BLIND_HINT[S.hintFrom]) || PRESETS[S.hintFrom].hint;
+    const st = $('stage'), was = st.classList.contains('fitv');
+    st.classList.toggle('fitv', fit);
+    if (was !== fit) resize();
+    lastData = ''; renderData(); schedule();
+  }
+  function setBlind(on) { S.blind = on; $('blind').checked = on; syncLab(); live(on ? 'Blind on: predictions and answers are hidden.' : 'Blind off: predictions and answers are shown.'); }
+  $('blind').addEventListener('change', (e) => setBlind(e.target.checked));
+  $('chartSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b || b.disabled) return; S.cview = b.dataset.v; syncLab(); });
+  function setReduce(on) {
+    reduce = on; $('tReduce').checked = on;
+    try { sessionStorage.setItem('kepler-orbits-reduce-motion', on ? 'on' : 'off'); } catch (_) {}
+    if (on) setPlaying(false); else setPlaying(true);
+  }
+  $('tReduce').addEventListener('change', (e) => setReduce(e.target.checked));
+
   // ---------- pointer interaction ----------
   let drag = null, wasPlaying = false;
   function evPx(e) { const r = view.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
@@ -1209,8 +1559,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     }
     L.vx = v * Math.cos(ang); L.vy = v * Math.sin(ang);
   }
-  function setPosFromPx(px, py) {
-    const L = S.launch, p = toW(px, py);
+  function setPosFromPx(px, py) { setPosWorld(toW(px, py)); }
+  function setPosWorld(p) {
+    const L = S.launch;
     let r = Math.hypot(p.x, p.y);
     if (r < 0.05 * Math.min(1, elements(L).r)) return;
     const el = elements(L);
@@ -1223,13 +1574,24 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   view.addEventListener('pointerdown', (e) => {
     view.focus({ preventScroll: true });
-    const [px, py] = evPx(e), h = hitTest(px, py);
+    const [px, py] = evPx(e);
     view.setPointerCapture(e.pointerId);
+    if (S.ruler.on) {
+      // ruler: grab a point near the pointer, or place the next point here
+      const tol = (e.pointerType === 'touch' ? 24 : 12) * tokens().ps;
+      let i = -1;
+      S.ruler.pts.forEach((q, k) => { if (q) { const [qx, qy] = toPx(q.x, q.y); if (Math.hypot(qx - px, qy - py) < tol && (i < 0 || k === S.ruler.active)) i = k; } });
+      if (i < 0) { i = S.ruler.pts[0] ? (S.ruler.pts[1] ? S.ruler.next || 0 : 1) : 0; S.ruler.next = 1 - i; }
+      S.ruler.pts[i] = toW(px, py); S.ruler.active = i;
+      drag = { type: 'ruler', i };
+      schedule(); return;
+    }
+    const h = hitTest(px, py);
     if (h) {
       wasPlaying = S.playing;
       drag = { type: h };
       view.style.cursor = 'grabbing';
-      setPresetUI(null); $('presetHint').textContent = h === 'vel'
+      setPresetUI(null); S.hintFrom = null; $('presetHint').textContent = h === 'vel'
         ? 'Custom launch. Watch the orbit path reshape as you drag; release to launch.'
         : 'Custom launch. Moving the launch point keeps the speed ratio to circular, so the orbit keeps its shape and scales with distance.';
       schedule();
@@ -1240,9 +1602,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   view.addEventListener('pointermove', (e) => {
     const [px, py] = evPx(e);
     if (!drag) {
-      if (e.pointerType === 'mouse') view.style.cursor = hitTest(px, py) ? 'grab' : 'move';
+      if (e.pointerType === 'mouse') view.style.cursor = S.ruler.on ? 'crosshair' : hitTest(px, py) ? 'grab' : 'move';
       return;
     }
+    if (drag.type === 'ruler') { S.ruler.pts[drag.i] = toW(px, py); schedule(); return; }
     if (drag.type === 'pan') {
       V.cx = VT.cx = drag.cx + px - drag.px; V.cy = VT.cy = drag.cy + py - drag.py; autoView = false;
     } else {
@@ -1254,7 +1617,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function endDrag() {
     if (!drag) return;
     const t = drag.type;
-    drag = null; view.style.cursor = 'move';
+    drag = null; view.style.cursor = S.ruler.on ? 'crosshair' : 'move';
+    if (t === 'ruler') { schedule(); return; }
     if (t === 'pos') fitView(false, true);
     else if (t === 'vel' && autoView) {
       // refit if the new orbit no longer fits, or now fills little of the view
@@ -1275,18 +1639,46 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     VT.cx = px - (px - VT.cx) * s / VT.s; VT.cy = py - (py - VT.cy) * s / VT.s; VT.s = s;
     Object.assign(V, VT); autoView = false; schedule();
   }, { passive: false });
-  view.addEventListener('dblclick', (e) => { if (!hitTest(...evPx(e))) fitView(false, false); });
+  view.addEventListener('dblclick', (e) => { if (!S.ruler.on && !hitTest(...evPx(e))) fitView(false, false); });
+  function zoomBy(f) {
+    const px = W / 2, py = H / 2, s = Math.min(1e6, Math.max(0.05, VT.s * f));
+    VT.cx = px - (px - VT.cx) * s / VT.s; VT.cy = py - (py - VT.cy) * s / VT.s; VT.s = s;
+    Object.assign(V, VT); autoView = false; schedule();
+  }
   view.addEventListener('keydown', (e) => {
-    const L = S.launch, step = (e.shiftKey ? 0.1 : 0.5) / KMS;
-    const moves = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, step], ArrowDown: [0, -step] };
-    if (moves[e.key]) {
-      L.vx += moves[e.key][0]; L.vy += moves[e.key][1];
-      setPresetUI(null); $('presetHint').textContent = 'Custom launch, nudged from the keyboard (0.5 km/s per press, 0.1 with Shift).';
-      relaunch();
-    } else if (e.key === ' ') {
+    const L = S.launch, k = e.key, fine = e.shiftKey;
+    const dirs = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] };
+    if (dirs[k]) {
+      const [dx, dy] = dirs[k];
+      if (S.keyMode === 'vel') {
+        const step = (fine ? 0.1 : 0.5) / KMS;
+        L.vx += dx * step; L.vy += dy * step;
+        setPresetUI(null); S.hintFrom = null; $('presetHint').textContent = 'Custom launch, nudged from the keyboard (0.5 km/s per press, 0.1 with Shift).';
+        relaunch();
+      } else if (S.keyMode === 'pos') {
+        const st = (fine ? 0.002 : 0.01) * Math.min(W, H) / V.s;
+        setPosWorld({ x: L.x + dx * st, y: L.y + dy * st });
+        setPresetUI(null); S.hintFrom = null; $('presetHint').textContent = 'Custom launch. Moving the launch point keeps the speed ratio to circular, so the orbit keeps its shape and scales with distance.';
+        relaunch();
+      } else if (S.keyMode === 'pan') {
+        const st = fine ? 8 : 40;
+        V.cx = VT.cx = V.cx - dx * st; V.cy = VT.cy = V.cy + dy * st; autoView = false;
+      } else {
+        const i = S.ruler.active; ensureRulerPoint(i);
+        const st = (fine ? 1 : 4) / V.s;
+        S.ruler.pts[i] = { x: S.ruler.pts[i].x + dx * st, y: S.ruler.pts[i].y + dy * st };
+      }
+    } else if (k === 'm' || k === 'M') {
+      const order = ['vel', 'pos', 'pan', 'ruler'], nx = order[(order.indexOf(S.keyMode) + 1) % order.length];
+      setKeyMode(nx); live(`Arrow keys now move ${KEY_NAMES[nx]}.`);
+    } else if (k === '1' || k === '2') {
+      S.ruler.active = +k - 1; setKeyMode('ruler'); live(`Ruler point ${k} selected; the arrow keys move it.`);
+    } else if (k === '+' || k === '=') zoomBy(1.25);
+    else if (k === '-' || k === '_') zoomBy(0.8);
+    else if (k === ' ') {
       if (!S.playing && S.A.done) relaunch();
       setPlaying(!S.playing);
-    } else if (e.key === 'f' || e.key === 'F') {
+    } else if (k === 'f' || k === 'F') {
       fitView(false, true);
     } else return;
     e.preventDefault(); schedule();
@@ -1311,15 +1703,16 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // ---------- boot ----------
   buildAreas();
   loadPreset('mercury');
-  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  $('tReduce').checked = reduce;
   setPlaying(!reduce);
+  viewLabel(); renderRows(); syncTimer(); syncLab();
   new ResizeObserver(resize).observe($('stage'));
   resize();
   fitView(true, true);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
 
   // exposed for testing
-  window.__kepler = { S, elements, makeBody, advance, presetState, relaunch, loadPreset, mu };
+  window.__kepler = { S, elements, makeBody, advance, presetState, relaunch, loadPreset, mu, capture, csvText, fitSpec, setBlind, setReduce, setKeyMode, setRuler, get rows() { return rows; }, get V() { return V; }, toPx, chartData };
 })();
 </script>
 </body>

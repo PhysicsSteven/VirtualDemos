@@ -1,6 +1,6 @@
 'use strict';
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),path=require('node:path');
-const f=require('./demo_source.cjs').core('faraday','MU0,MAG,ellipKE,ringFlux,ringField,cylFluxUnit,cylFieldUnit,coilFlux,dipoleFlux,magMoment,tiltFluxUnit,flipSeries,seriesEval,circuitStep,makeCircuit,runMove,magnetForce,genPhi,genEmf,railsPhi,coast,gaussLegendre,RHO_CU,WIRE_D,R_SRC,windC,wireR,selfL,diskRule,bundleM,minSep,coilSystem,coilPhasor,coilExp,coilStepper,coilOut,coilStep,coilOpen');let count=0;
+const f=require('./demo_source.cjs').core('faraday','MU0,MAG,ellipKE,ringFlux,ringField,cylFluxUnit,cylFieldUnit,coilFlux,dipoleFlux,magMoment,tiltFluxUnit,flipSeries,seriesEval,circuitStep,makeCircuit,runMove,magnetForce,genPhi,genEmf,railsPhi,coast,gaussLegendre,RHO_CU,WIRE_D,R_SRC,windC,wireR,selfL,diskRule,bundleM,minSep,coilSystem,coilPhasor,coilExp,coilStepper,coilOut,coilStep,coilOpen,FD_VERSION,csvHeader,tableRows');let count=0;
 const close=(a,b,rel=1e-8,abs=1e-12)=>assert(Math.abs(a-b)<=abs+rel*Math.abs(b),`expected ${b}, got ${a}`);
 const test=(name,fn)=>{try{fn();count++;console.log('PASS',name);}catch(e){process.exitCode=1;console.error('FAIL',name,e.message);}};
 test('ring field agrees with independent on-axis Biot-Savart formula',()=>{
@@ -163,4 +163,24 @@ test('average force: the closed secondary is repelled, and opening the switch ke
  const st={t:0,I1:.7,I2:-.4,th:0},l1=s.L1*st.I1+s.M*st.I2;f.coilOpen(s,st);close(s.L1*st.I1,l1,1e-14);assert.equal(st.I2,0);
  assert.throws(()=>f.coilSystem({N1:300,N2:300,a1:.04,a2:.04,d:.01,RL:1}),/overlap/);
 });
+// ---------- lab data helpers ----------
+test('CSV header: every line a comment, version line, SI parameters exact, no stray line breaks',()=>{
+ assert.match(f.FD_VERSION,/^faraday@\d{4}-\d{2}-\d{2}\.\d+$/);
+ const L=f.csvHeader({title:"Faraday's and Lenz's Laws",version:f.FD_VERSION,setup:'Generator\n(apparatus: gen)',params:[['coil_turns_N',100],['coil_area_A_m2',100*1e-4],['field_B_T',.2],['motor','on']],model:'Phi = B A cos(theta)',rounding:'none',seed:null,notes:['two\nlines']});
+ for(const l of L){assert(l.startsWith('# '),l);assert(!/[\r\n]/.test(l));}
+ assert.equal(L[0],"# Faraday's and Lenz's Laws (simulated data)");assert.equal(L[1],'# demo version,'+f.FD_VERSION);
+ assert.equal(L[2],'# setup,Generator (apparatus: gen)');
+ // 100 cm² is 0.01 m² exactly in the header, not 0.010000000000000002
+ assert(L.includes('# coil_area_A_m2,0.01'));assert(L.includes('# field_B_T,0.2'));assert(L.includes('# motor,on'));
+ assert(L.includes('# seed,none'));assert(L.includes('# two lines'));assert(L.some(l=>l.startsWith('# model,'))&&L.some(l=>l.startsWith('# rounding,')));
+});
+test('plot table rows: window, thinning, first and last kept, never more than asked',()=>{
+ const ts=Array.from({length:2001},(_,i)=>i*1e-3);
+ let r=f.tableRows(ts,.5,1.5,120);assert.equal(r.idx[0],500);assert.equal(r.idx[r.idx.length-1],1500);assert(r.idx.length<=121);
+ for(let j=1;j<r.idx.length;j++)assert(r.idx[j]>r.idx[j-1]);
+ assert.equal(r.every,Math.ceil(1000/119));
+ r=f.tableRows(ts,0,.01,120);assert.equal(r.every,1);assert.deepEqual([...r.idx],Array.from({length:11},(_,i)=>i));
+ assert.equal(f.tableRows(ts,3,4,10).idx.length,0);assert.equal(f.tableRows([],0,1,10).idx.length,0);
+});
 console.log(`Completed ${count} Faraday test groups.`);
+console.log(`${count} faraday test groups passed`);

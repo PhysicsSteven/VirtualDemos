@@ -15,6 +15,8 @@ time: 20 to 35 minutes
 
 Students should know Newton's second law and the derivatives of sine and cosine. Drag a block to pull it from equilibrium and let go; moving the pointer as you let go gives it a starting speed (turn off **Release with drag speed** to always release from rest). **Keep trace** freezes the current x(t) as a gray curve for comparison. The **Playback rate** slider slows everything down for the room.
 
+For the lab, students time N oscillations with **Stopwatch** on the stage (press to start, press again to stop; W on the drawing does the same), enter their count in **Oscillations counted, N**, and press **Capture reading**. The ruler's gold ticks hold the largest |x| since **Reset peak**. Rows collect in the **Readings** table; **T² against m** fits a line with its residuals (slope 4π²/k), **A against ω** plots driven captures, **Show data table** lists the plotted points and **Export CSV** saves everything. **Blind: hide predictions and answers** (Lab section) hides every predicted value, the reference circle, the envelope, the resonance curves and the k from the fit. **Reduce motion** pauses the run and stops the plots gliding.
+
 ## Running it in class
 
 1. **Simple harmonic motion.** Ask Q1. Press **Keep trace**, then drag the block from 15 cm to 25 cm and let go. The new peaks are taller but line up in time; the measured period stays 0.9935 s. Point to the reference circle: x is the shadow of a point going around at ω₀.
@@ -22,7 +24,8 @@ Students should know Newton's second law and the derivatives of sine and cosine.
 3. **Three kinds of damping.** The gray traces for ζ = 0.2, 1 and 2.5 start from the same 20 cm. Before playing, ask which returns to equilibrium first. Then measure the decay of the underdamped peaks (Q4).
 4. **Resonance.** The block starts at rest; watch the transient beat with the drive and die away. Drag the ω marker on the resonance curve through ω₀ and watch the phase lag pass 90° (Q5). Press **Sweep ω** to trace the whole curve.
 5. **Damping on the resonance.** Still driven, use the **ζ = 0.2** button or the damping slider and ask Q6 before the curve redraws.
-6. **Normal modes, then Beats.** Show mode 1, press **Mode 2**, then switch to **Beats** with a weak coupling spring and watch block 2 take all the motion and give it back (Q7).
+6. **Lab: k from T² against m.** In Simple harmonic motion, turn on Blind, time 10 oscillations at four or five masses and capture each. The fitted slope is 4π²/k; the intercept should be zero within the scatter because these springs have no mass (Q8).
+7. **Normal modes, then Beats.** Show mode 1, press **Mode 2**, then switch to **Beats** with a weak coupling spring and watch block 2 take all the motion and give it back (Q7).
 
 ## Questions
 
@@ -39,6 +42,8 @@ Students should know Newton's second law and the derivatives of sine and cosine.
 **Q6.** Predict: if b is doubled, what happens to the steady amplitude at ω₀, and to the amplitude at ω = 5.00 rad/s, well off resonance? Explain why damping matters so much more at resonance than away from it.
 
 **Q7.** In Beats, m = 0.50 kg, k = 20 N/m and k_c = 2.0 N/m. Find the two mode frequencies, the beat period, and the time after release at which block 1 is momentarily still and block 2 has all the motion. Check with the clock and the x₁, x₂ plots.
+
+**Q8.** Students timed 10 oscillations at m = 0.50, 1.00, 1.50, 2.00 and 3.00 kg on one spring. Explain why T² against m should be a straight line, find k from its slope, and say what a positive intercept would mean for a real spring of mass mₛ (T² = 4π²(m + mₛ/3)/k). Why is timing 10 oscillations better than timing one?
 
 ## Common misconceptions
 

@@ -19,7 +19,7 @@ Students should know the de Broglie relation p = h/λ, E = p²/2m for a free par
 1. **Free particle.** Watch Δx grow while Δp stays at 196 eV/c; the uncertainty product starts at 0.506 ħ. The readouts describe only the part still in view, so pause before the packet reaches the right edge (after that, its leading part is being absorbed and Δp and ⟨p⟩ drift down).
 2. **Step.** Ask Q1 first. E₀ = 0.6 eV over a 0.4 eV step: about 9% reflects. Then drag E₀ below 0.4 eV and relaunch: everything comes back, after a brief dip into the step.
 3. **Barrier.** ⟨E⟩ = 0.30 eV, V₀ = 0.5 eV, a = 0.5 nm: once the packet splits, T ≈ 33%. Then set **Barrier width a** to 1.00 nm (Q3).
-4. **Infinite well.** It starts in the superposition of n = 1 and n = 2, sloshing with the 3.67 fs beat. Click the **n=2** level chip to drop it, leaving n = 1 alone: |ψ|² freezes and only the color turns (Q5). Click **n=2** again to bring the sloshing back.
+4. **Square well.** With **Walls** on **Infinite**, it starts in the superposition of n = 1 and n = 2, sloshing with the 3.67 fs beat. Click the **n=2** level chip to drop it, leaving n = 1 alone: |ψ|² freezes and only the color turns (Q5). Click **n=2** again to bring the sloshing back.
 5. **Measure x.** In the well, press **Pause** and then **Measure x** twice; press **Play** and measure again. Press **Reset** to return to the prepared state, then **Measure 200 copies**, and let the histogram build up |ψ|² (Q7).
 6. **Oscillator** and **Double well** (if time allows). The oscillator's levels are evenly spaced, and its coherent state swings without spreading. In the double well the electron tunnels from one well to the other and back every 290 fs.
 
@@ -31,7 +31,7 @@ Students should know the de Broglie relation p = h/λ, E = p²/2m for a free par
 
 **Q3.** In **Barrier** (V₀ = 0.5 eV, a = 0.5 nm, E = 0.3 eV), find the decay constant κ = √(2m(V₀ − E))/ħ inside the barrier and κa. Predict: if the barrier width is doubled to 1.0 nm, will T be about half as large, or much smaller than that? Check with **Plane wave T(E₀)**.
 
-**Q4.** An electron is in an infinite well of width L = 1.00 nm. Find E₁ and E₂ from E_n = n²π²ħ²/(2mL²), and the period with which the superposition of n = 1 and n = 2 sloshes back and forth. Check with the table and the **Beat period** readout in **Infinite well**.
+**Q4.** An electron is in an infinite well of width L = 1.00 nm. Find E₁ and E₂ from E_n = n²π²ħ²/(2mL²), and the period with which the superposition of n = 1 and n = 2 sloshes back and forth. Check with the table and the **Beat period** readout in **Square well**.
 
 **Q5.** In an energy eigenstate, ψ keeps changing (the colors cycle), yet nothing you could measure about position changes. Explain why. Why does a superposition of two eigenstates move, and why does its period depend only on the difference of the two energies?
 
@@ -57,4 +57,4 @@ Students should know the de Broglie relation p = h/λ, E = p²/2m for a free par
 
 ## Going further
 
-- Homework: in **Double barrier**, one barrier alone transmits 23% at E₀ = 0.0774 eV, but the pair transmits 100% for a plane wave. Explain the resonance as a standing wave between the barriers, and explain why the packet's T (about 64%) is lower.
+- Homework: in **Barrier** with **Barriers** set to **Two**, one barrier alone transmits 23% at E₀ = 0.0774 eV, but the pair transmits 100% for a plane wave. Explain the resonance as a standing wave between the barriers, and explain why the packet's T (about 64%) is lower.

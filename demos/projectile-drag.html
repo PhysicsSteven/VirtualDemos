@@ -179,6 +179,31 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 .shots-head span { font-size: 0.8rem; color: var(--muted); }
 .shots-empty { margin: 0; color: var(--muted); font-size: 0.85rem; font-style: italic; }
 
+/* measurement tools, readings table, fit plot and lab mode */
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dd.ok { font-family: var(--font-ui); font-weight: 400; font-size: 0.85rem; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.toggles input:disabled + span, .toggles label:has(input:disabled) { color: var(--muted); }
+.twrap { position: relative; overflow-x: auto; }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+table.rows th { text-align: left; font-weight: 700; color: var(--muted); font-size: 0.7rem; padding: 3px 2px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.rows td { padding: 3px 2px; border-bottom: 1px solid var(--grid-strong); vertical-align: middle; }
+table.rows td.n { color: var(--muted); font-size: 0.72rem; white-space: nowrap; }
+table.rows td.b { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; font-size: 0.76rem; }
+table.rows input { font: inherit; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.74rem; width: 4.9em; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 4px; padding: 2px; }
+table.rows button { font: inherit; font-size: 0.85rem; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 4px; }
+table.rows .empty td { color: var(--muted); font-style: italic; }
+.plotbox { position: relative; height: 230px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+:root[data-projector="on"] .plotbox { height: 270px; }
+.blindtag { align-self: center; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.status { min-height: 1.2em; }
+.seg.wrap { flex-wrap: wrap; }
+#strobeSeg button { padding: 5px 8px; }
+
 @media (min-width: 821px) {
   :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 340px; }
 }
@@ -190,6 +215,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   .chips button, .btn, .seg button, .proj { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
   .shot-x { width: 36px; height: 36px; top: 0; right: 0; }
+  table.rows input { min-height: 32px; }
+  table.rows button { min-height: 36px; min-width: 32px; }
   html, body { height: auto; }
   .app { height: auto; }
   .bench { grid-template-columns: minmax(0, 1fr); }
@@ -210,7 +237,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       <p>Launch balls with and without air resistance and compare them side by side. Drag bends the path, and it matters more for light balls than for heavy ones of the same size.</p>
     </div>
     <div class="bar-right">
-      <div class="units mono">SI units · g = 9.81 m/s² · F = ½ρC<sub>d</sub>Av²</div>
+      <div class="units mono">SI units<span id="unitsG"> · g = 9.81 m/s²</span> · F = ½ρC<sub>d</sub>Av²</div>
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
       <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/projectile-drag.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/projectile-drag.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h2v1h-2zM14 2h1v1h-1zM18 2h3v1h-3zM22 2h2v1h-2zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM14 3h4v1h-4zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h2v1h-2zM15 4h3v1h-3zM21 4h3v1h-3zM25 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM16 5h1v1h-1zM18 5h2v1h-2zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM16 7h1v1h-1zM20 7h1v1h-1zM23 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h4v1h-4zM15 9h2v1h-2zM18 9h1v1h-1zM21 9h3v1h-3zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h2v1h-2zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h7v1h-7zM32 10h5v1h-5zM3 11h1v1h-1zM5 11h2v1h-2zM9 11h2v1h-2zM13 11h2v1h-2zM16 11h3v1h-3zM24 11h3v1h-3zM30 11h2v1h-2zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h5v1h-5zM8 12h5v1h-5zM19 12h2v1h-2zM22 12h2v1h-2zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h1v1h-1zM6 13h2v1h-2zM9 13h2v1h-2zM12 13h3v1h-3zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM25 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h1v1h-1zM6 14h3v1h-3zM12 14h2v1h-2zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h1v1h-1zM26 14h13v1h-13zM4 15h2v1h-2zM7 15h1v1h-1zM9 15h3v1h-3zM14 15h3v1h-3zM18 15h2v1h-2zM22 15h4v1h-4zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h1v1h-1zM4 16h1v1h-1zM7 16h4v1h-4zM14 16h6v1h-6zM22 16h3v1h-3zM28 16h3v1h-3zM32 16h4v1h-4zM38 16h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM15 17h9v1h-9zM25 17h1v1h-1zM32 17h3v1h-3zM37 17h1v1h-1zM2 18h4v1h-4zM8 18h2v1h-2zM16 18h3v1h-3zM21 18h1v1h-1zM24 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM7 19h1v1h-1zM9 19h1v1h-1zM13 19h2v1h-2zM17 19h1v1h-1zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM30 19h2v1h-2zM37 19h1v1h-1zM3 20h1v1h-1zM8 20h1v1h-1zM11 20h4v1h-4zM16 20h3v1h-3zM21 20h1v1h-1zM23 20h2v1h-2zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h1v1h-1zM6 21h1v1h-1zM10 21h1v1h-1zM12 21h3v1h-3zM17 21h1v1h-1zM20 21h5v1h-5zM26 21h1v1h-1zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM3 22h1v1h-1zM6 22h4v1h-4zM11 22h1v1h-1zM13 22h1v1h-1zM15 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h5v1h-5zM9 23h2v1h-2zM12 23h2v1h-2zM15 23h2v1h-2zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM3 24h1v1h-1zM5 24h1v1h-1zM8 24h1v1h-1zM10 24h2v1h-2zM15 24h1v1h-1zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h3v1h-3zM26 24h1v1h-1zM28 24h3v1h-3zM32 24h4v1h-4zM37 24h2v1h-2zM3 25h1v1h-1zM10 25h2v1h-2zM14 25h1v1h-1zM17 25h2v1h-2zM21 25h5v1h-5zM28 25h2v1h-2zM33 25h2v1h-2zM37 25h1v1h-1zM3 26h1v1h-1zM5 26h1v1h-1zM8 26h1v1h-1zM13 26h5v1h-5zM20 26h3v1h-3zM24 26h4v1h-4zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h3v1h-3zM11 27h1v1h-1zM13 27h1v1h-1zM15 27h4v1h-4zM23 27h1v1h-1zM25 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM7 28h2v1h-2zM10 28h2v1h-2zM14 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM26 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h2v1h-2zM7 29h1v1h-1zM9 29h5v1h-5zM15 29h1v1h-1zM18 29h1v1h-1zM23 29h1v1h-1zM25 29h2v1h-2zM31 29h4v1h-4zM37 29h1v1h-1zM2 30h1v1h-1zM5 30h5v1h-5zM12 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM26 30h3v1h-3zM30 30h9v1h-9zM10 31h1v1h-1zM14 31h2v1h-2zM17 31h6v1h-6zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h4v1h-4zM16 32h2v1h-2zM19 32h1v1h-1zM22 32h3v1h-3zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM13 33h1v1h-1zM15 33h6v1h-6zM23 33h1v1h-1zM25 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h3v1h-3zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h1v1h-1zM27 34h8v1h-8zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM13 35h5v1h-5zM20 35h1v1h-1zM22 35h1v1h-1zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM15 36h1v1h-1zM17 36h2v1h-2zM20 36h2v1h-2zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM13 37h5v1h-5zM21 37h3v1h-3zM28 37h4v1h-4zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM16 38h2v1h-2zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM31 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
     </div>
@@ -219,9 +246,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   <main class="bench">
     <div class="stage" id="stage">
       <div class="pane main">
-        <canvas id="view" tabindex="0" role="application" aria-label="Flight view. Drag anywhere to aim the launcher, drag the arrow tip to set speed and angle, drag the round hub up or down to set the launch height. Arrow keys change the launch angle, Enter launches."></canvas>
+        <canvas id="view" tabindex="0" role="application" aria-label="Flight view. Drag anywhere to aim the launcher, drag the arrow tip to set speed and angle, drag the round hub up or down to set the launch height. Keys: arrow keys change the launch angle (Shift for 5 degrees), Page Up and Page Down change the launch height (Shift for 1 m), Enter launches, comma and period move the time cursor one dot earlier or later, Home and End jump to launch and landing, Escape hides the cursor, C captures a reading."></canvas>
         <div class="viewbar">
-          <div class="seg" role="group" aria-label="Time scale">
+          <span class="blindtag" id="blindTag" hidden>Blind</span>
+          <div class="seg" id="tsSeg" role="group" aria-label="Time scale">
             <button type="button" data-ts="0.25" aria-pressed="false">0.25×</button>
             <button type="button" data-ts="1" aria-pressed="true">1×</button>
           </div>
@@ -231,7 +259,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </div>
       </div>
       <div class="pane chart">
-        <canvas id="chart" tabindex="0" role="application" aria-label="Graphs of horizontal position, height and speed against time for every shot, and range against launch angle. Point at a time graph to place every ball at that time. Drag across the range graph to set the launch angle."></canvas>
+        <canvas id="chart" tabindex="0" role="application" aria-label="Graphs of horizontal position, height and speed against time for every shot, and range against launch angle. Point at a time graph to preview a time, click to set the time cursor there. Drag across the range graph to set the launch angle. The same keys as the flight view work here."></canvas>
       </div>
     </div>
 
@@ -281,7 +309,52 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div class="slider-head"><label for="height">Launch height</label><output id="heightOut" class="mono" for="height"></output></div>
           <input type="range" id="height" min="0" max="10" step="0.1" value="0">
         </div>
-        <p class="hint">Drag in the view to aim, drag the arrow tip to change the speed too, and drag the hub up to raise the launcher. Arrow keys change the angle, <kbd>Enter</kbd> launches.</p>
+        <p class="hint">Drag in the view to aim, drag the arrow tip to change the speed too, and drag the hub up to raise the launcher. On the view, arrow keys change the angle, <kbd>Page Up</kbd> and <kbd>Page Down</kbd> the height, <kbd>Enter</kbd> launches.</p>
+      </section>
+
+      <section id="secMeasure">
+        <h2>Measure</h2>
+        <div class="slider-head"><span>Dot interval</span></div>
+        <div class="seg wrap" id="strobeSeg" role="group" aria-label="Time between dots">
+          <button type="button" data-dt="auto" aria-pressed="true">Auto</button>
+          <button type="button" data-dt="0.05" aria-pressed="false">0.05 s</button>
+          <button type="button" data-dt="0.1" aria-pressed="false">0.1 s</button>
+          <button type="button" data-dt="0.2" aria-pressed="false">0.2 s</button>
+          <button type="button" data-dt="0.5" aria-pressed="false">0.5 s</button>
+        </div>
+        <dl class="readout" id="cursorOut">
+          <div><dt>Shot</dt><dd id="mShot">—</dd></div>
+          <div><dt>Time t</dt><dd id="mT">—</dd></div>
+          <div><dt>Position x</dt><dd id="mX">—</dd></div>
+          <div><dt>Height y</dt><dd id="mY">—</dd></div>
+          <div class="wide"><dt>Landing point, range R</dt><dd id="mR">—</dd></div>
+        </dl>
+        <div class="btnrow">
+          <button type="button" class="btn" id="dotPrev">Earlier dot</button>
+          <button type="button" class="btn" id="dotNext">Later dot</button>
+          <button type="button" class="btn" id="dotHide">Hide cursor</button>
+        </div>
+        <p class="hint">The time cursor sits on a dot of the selected shot: t is a whole number of dot intervals after launch. Click a time graph to place it, or use the buttons, or <kbd>,</kbd> and <kbd>.</kbd> on the view (<kbd>Home</kbd>, <kbd>End</kbd> jump to launch and the last dot). x and y read to 1 cm from the launcher's foot; R is where the ball lands, to 1 cm.</p>
+      </section>
+
+      <section id="secReadings">
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="expCsv">Export CSV</button>
+          <button type="button" class="btn" id="clearRows">Clear</button>
+        </div>
+        <p class="hint status" id="labStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="tbl"><caption class="sr-only">Captured readings: launch angle, cursor time, height and range</caption><thead><tr><th>#</th><th>θ (°)</th><th>t (s)</th><th>y (m)</th><th>R (m)</th><th><span class="sr-only">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <p class="hint">Capture stores what you read for the selected shot: its settings as displayed, the cursor's t, x and y, and its range R. Cells can be edited; rows stay through preset changes until Clear. The CSV also has x and every setting.</p>
+        <div class="seg" id="plotSeg" role="group" aria-label="What to plot">
+          <button type="button" data-plot="yt" aria-pressed="true">y against t</button>
+          <button type="button" data-plot="rs" aria-pressed="false">R against sin 2θ</button>
+        </div>
+        <div class="plotbox" id="fitBox"><canvas id="fitPlot" role="img" aria-label="Plot of your readings with a least squares fit and a strip of residuals underneath."></canvas></div>
+        <dl class="readout" id="fitOut"></dl>
+        <button type="button" class="btn" id="dataBtn" aria-expanded="false" aria-controls="dataWrap">Show data table</button>
+        <div class="twrap" id="dataWrap" hidden><table class="rows" id="dataTbl"></table></div>
       </section>
 
       <section>
@@ -317,10 +390,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div class="slider-head"><label for="rho">Air density ρ</label><output id="rhoOut" class="mono" for="rho"></output></div>
           <input type="range" id="rho" min="0" max="1.4" step="0.005" value="1.225">
         </div>
-        <p class="hint">Turning air resistance off keeps you on Earth with the same ball and the same air; only the drag force is switched off. Moon removes the air itself but keeps g = 9.81 m/s². A drag coefficient of 0 does the same thing gradually.</p>
+        <p class="hint">Turning air resistance off keeps you on Earth with the same ball and the same air; only the drag force is switched off. Moon removes the air itself but keeps Earth's g<span id="airG"> = 9.81 m/s²</span>. A drag coefficient of 0 does the same thing gradually. Sea level is the standard atmosphere, 1.225 kg/m³ (101.3 kPa, 15 °C); Denver is 1.0 kg/m³, the standard pressure at 1609 m (83.4 kPa) at about 17 °C.</p>
       </section>
 
-      <section>
+      <section id="secPred">
         <h2>Current settings</h2>
         <dl class="readout">
           <div class="big"><dt>Range, with drag</dt><dd id="rR">—</dd></div>
@@ -335,7 +408,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <p class="hint">What the next shot will do. Each shot in the list keeps its own numbers.</p>
       </section>
 
-      <section>
+      <section id="secVt">
         <h2>Terminal speed</h2>
         <dl class="readout">
           <div class="big"><dt>v<sub>t</sub> = √(2mg / ρC<sub>d</sub>A)</dt><dd id="rVt">—</dd></div>
@@ -354,7 +427,15 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <label><input type="checkbox" id="tPrev" checked>Next shot</label>
           <label class="wide"><input type="checkbox" id="tAcc">Graph of drag acceleration</label>
         </div>
+        <p class="hint" id="layersBlind" hidden>Blind is on: the vacuum path, the next shot and the drag graph are predictions of the model, so they stay hidden.</p>
         <p class="hint" id="dotHint">Dots mark every 0.1 s. They bunch up on the steep way down when drag matters.</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides g, the vacuum path, the next shot preview, the predicted range, height, time and best angles, the terminal speed, the model curves on the range graph and the drag graph. The flight of each shot, the dots, the cursor reading and the range of each shot stay, as a real camera and tape would give them. Reduce motion shows each shot already landed instead of flying.</p>
       </section>
 
       <section>
@@ -375,39 +456,16 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
 <script>
 (() => {
-  const G = 9.81;
-  const $ = (id) => document.getElementById(id);
+  // ==CORE START==
+  // Pure physics and measurement helpers (no DOM). Tested by curriculum/validation/test_projectile_drag.cjs.
+  const G = 9.81;                 // m/s², uniform; the model value students infer in the lab
   const DEG = Math.PI / 180;
-  const MAX_SHOTS = 8;
-
-  // ---------- state ----------
-  const P = { v: 40, th: 45, h: 0, m: 0.145, d: 0.074, cd: 0.35, rho: 1.225, drag: true, look: 'baseball' };
-  const PRESETS = {
-    baseball: { m: 0.145,  d: 0.074, cd: 0.35, v: 40, h: 0 },
-    pingpong: { m: 0.0027, d: 0.040, cd: 0.47, v: 20, h: 0 },
-    cannon:   { m: 5,      d: 0.12,  cd: 0.47, v: 50, h: 0 },
-    shotput:  { m: 7.26,   d: 0.12,  cd: 0.47, v: 14, h: 2 },
-    soccer:   { m: 0.43,   d: 0.22,  cd: 0.25, v: 25, h: 0 }
-  };
-  const NAMES = { baseball: 'Baseball', pingpong: 'Ping pong ball', cannon: 'Cannonball', shotput: 'Shot put', soccer: 'Soccer ball' };
-  const PRESET_HINTS = {
-    baseball: 'A hit baseball: v₀ is about the terminal speed, so drag takes away almost half the range.',
-    pingpong: 'Very light for its size. The terminal speed is far below v₀, so drag rules the whole flight.',
-    cannon: 'Dense and heavy: v₀ is well below the terminal speed and the path is close to the vacuum parabola.',
-    shotput: 'Released 2 m above the ground: the best angle is below 45° even without air.',
-    soccer: 'Large and light, so a long kick loses a lot of range to drag.',
-    heavy: 'Four balls the size of a baseball with ½, 1, 2 and 4 times its mass. At the same speed they feel the same drag force, but the heavier ones are slowed less.'
-  };
-  const AIRS = { sea: 1.225, denver: 1.0, moon: 0 };
-  const layers = { vac: true, vel: true, dots: true, prev: true, acc: false };
-  let timeScale = 1;
-  let cur = null, vac = null, sw = null, vacOptDeg = 45;   // the current settings
-  let shots = [], nextN = 1, sel = null, hotShot = null;
-  const famCache = new Map();                               // range against angle, per ball, air and speed
-  let anim = null, scrubT = null;
-  let sweepDirty = true, curDirty = true, raf = 0;
-
-  // ---------- physics ----------
+  // Air density from the ideal gas law, ρ = pM/(RT), dry air
+  const R_GAS = 8.314462618, M_AIR = 0.0289652;   // J/(mol K) CODATA; kg/mol, dry air
+  const airDensity = (pPa, TK) => pPa * M_AIR / (R_GAS * TK);
+  // International Standard Atmosphere pressure below 11 km: p = p0 (1 − L z / T0)^(g0 M/(R L))
+  const isaPressure = (z) => 101325 * Math.pow(1 - 0.0065 * z / 288.15, 9.80665 * M_AIR / (R_GAS * 0.0065));
+  // Drag: F = ½ ρ C_d A v² against the velocity, A = π d²/4, constant C_d.
   // k = (½ ρ C_d A) / m, so the drag acceleration is −k |v| v
   const kDrag = (p) => p.drag === false ? 0 : p.rho * p.cd * Math.PI * p.d * p.d / (8 * p.m);
   const vTerm = (p) => { const k = kDrag(p); return k > 0 ? Math.sqrt(G / k) : Infinity; };
@@ -416,7 +474,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     return (2 * u3 - 3 * u2 + 1) * p0 + (u3 - 2 * u2 + u) * h * m0 + (-2 * u3 + 3 * u2) * p1 + (u3 - u2) * h * m1;
   };
 
-  // RK4 with fixed step; N sets steps per longest possible flight. Landing found on the cubic Hermite interpolant.
+  // Classical fourth order Runge–Kutta with a fixed step: dt = min(Tvac/N, τ/100, dtCap), where Tvac is the vacuum
+  // flight time and τ = 1/√(kg) the drag time scale. The landing point is found by bisection on the cubic Hermite
+  // interpolant of the last step. With the shot settings (N = 8000, dtCap = 1 ms) halving dt changes the range by
+  // less than 1 part in 10⁹ (checked in the node test).
   function simulate(p, thDeg, N, record, dtCap) {
     const k = kDrag(p), th = thDeg * DEG;
     const Tmax = (p.v + Math.sqrt(p.v * p.v + 2 * G * p.h)) / G;
@@ -429,7 +490,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const every = record ? Math.max(1, Math.round(Tmax / dt / 1500)) : 0;
     const done = (tL, xL, vxL, vyL) => {
       if (record && (pts[pts.length - 1][0] < tL)) pts.push([tL, xL, 0, vxL, vyL]);
-      return { range: xL, ymax, T: tL, vImp: Math.hypot(vxL, vyL), aImp: Math.atan2(-vyL, vxL) / DEG, pts };
+      return { range: xL, ymax, T: tL, vImp: Math.hypot(vxL, vyL), aImp: Math.atan2(-vyL, vxL) / DEG, pts, dt };
     };
     if (y <= 0 && vy <= 0) return done(0, 0, vx, vy);
     const acc = (ux, uy) => { const s = k * Math.hypot(ux, uy); return [-s * ux, -G - s * uy]; };
@@ -459,6 +520,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     return done(t, x, vx, vy);
   }
 
+  // the exact vacuum parabola
   function vacuumShot(p, thDeg) {
     const vx = p.v * Math.cos(thDeg * DEG), vy = p.v * Math.sin(thDeg * DEG);
     const T = (vy + Math.sqrt(vy * vy + 2 * G * p.h)) / G;
@@ -471,9 +533,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     return { range: vx * T, ymax: p.h + (vy > 0 ? vy * vy / (2 * G) : 0), T, vImp: Math.hypot(vx, vyI), aImp: Math.atan2(-vyI, vx) / DEG, pts };
   }
   const vacRange = (p, a) => vacuumShot(p, a).range;
+  // best angle in vacuum from height h: tan θ = v₀ / √(v₀² + 2gh); 45° when h = 0
   const vacOpt = (p) => Math.atan(p.v / Math.sqrt(p.v * p.v + 2 * G * p.h)) / DEG;
 
-  // range vs angle with drag: 1° sweep, then golden section near the peak
+  // range against angle with drag: 1° sweep, then golden section near the peak
   function sweep(p) {
     const R = [];
     const noAir = kDrag(p) === 0;
@@ -497,6 +560,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     return { R, opt, Ropt };
   }
 
+  // linear interpolation in the recorded samples [t, x, y, vx, vy] (samples a few ms apart)
   function sampleAt(pts, t) {
     if (t <= pts[0][0]) return pts[0];
     const last = pts[pts.length - 1];
@@ -506,6 +570,86 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const a = pts[lo], b = pts[hi], u = (t - a[0]) / (b[0] - a[0]);
     return a.map((v, i) => v + (b[i] - v) * u);
   }
+
+  // ---- measurement: the strobe cursor and what the student reads ----
+  const roundTo = (v, step) => +(Math.round(v / step) * step).toFixed(Math.max(0, Math.ceil(-Math.log10(step) - 1e-9)));
+  // cursor times sit on the strobe grid t = n Δt, from launch to the last dot before landing
+  const snapT = (t, dt, T) => Math.max(0, Math.min(Math.floor(T / dt + 1e-9) * dt, Math.round(t / dt) * dt));
+  // the cursor reading: t on the grid, x and y read to 1 cm
+  function readAt(pts, t) { const q = sampleAt(pts, t); return { t: roundTo(t, 0.001), x: roundTo(q[1], 0.01), y: roundTo(q[2], 0.01) }; }
+
+  // least squares fits on the student's rows
+  function fitOrigin(xs, ys) {
+    const n = xs.length; if (!n) return null;
+    let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += xs[i] * xs[i]; sxy += xs[i] * ys[i]; }
+    if (!(sxx > 0)) return null;
+    const k = sxy / sxx, res = ys.map((y, i) => y - k * xs[i]);
+    const se = n > 1 ? Math.sqrt(res.reduce((s, r) => s + r * r, 0) / (n - 1) / sxx) : NaN;
+    return { k, se, n, res, at: (x) => k * x };
+  }
+  // y = a + b t + c t², with standard errors from the residual variance (n − 3 degrees of freedom)
+  function fitQuad(xs, ys) {
+    const n = xs.length; if (n < 3) return null;
+    const S = [0, 0, 0, 0, 0], Y = [0, 0, 0];
+    for (let i = 0; i < n; i++) { let p = 1; for (let j = 0; j < 5; j++) { S[j] += p; if (j < 3) Y[j] += p * ys[i]; p *= xs[i]; } }
+    const A = [[S[0], S[1], S[2]], [S[1], S[2], S[3]], [S[2], S[3], S[4]]];
+    const det = (m) => m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1]) - m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0]) + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);
+    const D = det(A); if (!(Math.abs(D) > 1e-12 * Math.abs(S[0] * S[2] * S[4] || 1))) return null;
+    const inv = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+    for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
+      const m = A.filter((_, r) => r !== j).map((row) => row.filter((_, c) => c !== i));
+      inv[i][j] = ((i + j) % 2 ? -1 : 1) * (m[0][0] * m[1][1] - m[0][1] * m[1][0]) / D;
+    }
+    const c3 = [0, 1, 2].map((i) => inv[i][0] * Y[0] + inv[i][1] * Y[1] + inv[i][2] * Y[2]);
+    const at = (x) => c3[0] + c3[1] * x + c3[2] * x * x, res = ys.map((y, i) => y - at(xs[i]));
+    const s2 = n > 3 ? res.reduce((s, r) => s + r * r, 0) / (n - 3) : NaN;
+    return { a: c3[0], b: c3[1], c: c3[2], sa: Math.sqrt(s2 * inv[0][0]), sb: Math.sqrt(s2 * inv[1][1]), sc: Math.sqrt(s2 * inv[2][2]), n, res, at };
+  }
+  // Preset balls. Masses and diameters lie inside the official ranges: baseball, Official Baseball Rules 3.01
+  // (5 to 5¼ oz, 9 to 9¼ in around); table tennis, ITTF Laws of Table Tennis 2.3 (40 mm, 2.7 g); shot put, World
+  // Athletics Technical Rules (men, 7.26 kg, 110 to 130 mm); football, IFAB Law 2 (size 5: 68 to 70 cm around, 410 to 450 g).
+  // C_d: 0.47 is the textbook smooth sphere value below the drag crisis; 0.35 (baseball) and 0.25 (soccer ball)
+  // are typical values at these speeds, where measured values scatter. The cannonball is a generic heavy ball.
+  const PRESETS = {
+    baseball: { m: 0.145,  d: 0.074, cd: 0.35, v: 40, h: 0 },
+    pingpong: { m: 0.0027, d: 0.040, cd: 0.47, v: 20, h: 0 },
+    cannon:   { m: 5,      d: 0.12,  cd: 0.47, v: 50, h: 0 },
+    shotput:  { m: 7.26,   d: 0.12,  cd: 0.47, v: 14, h: 2 },
+    soccer:   { m: 0.43,   d: 0.22,  cd: 0.25, v: 25, h: 0 }
+  };
+  const csvCell = (v) => { const s = v === null || v === undefined ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  const csvText = (meta, header, rows) => [...meta.map((l) => '# ' + l), header.join(','), ...rows.map((r) => r.map(csvCell).join(','))].join('\n') + '\n';
+  // ==CORE END==
+
+  const $ = (id) => document.getElementById(id);
+  const MAX_SHOTS = 8;
+
+  // ---------- state ----------
+  const P = { v: 40, th: 45, h: 0, m: 0.145, d: 0.074, cd: 0.35, rho: 1.225, drag: true, look: 'baseball' };
+  const NAMES = { baseball: 'Baseball', pingpong: 'Ping pong ball', cannon: 'Cannonball', shotput: 'Shot put', soccer: 'Soccer ball' };
+  const PRESET_HINTS = {
+    baseball: 'A hit baseball: v₀ is about the terminal speed, so drag takes away almost half the range.',
+    pingpong: 'Very light for its size. The terminal speed is far below v₀, so drag rules the whole flight.',
+    cannon: 'Dense and heavy: v₀ is well below the terminal speed and the path is close to the vacuum parabola.',
+    shotput: 'Released 2 m above the ground: the best angle is below 45° even without air.',
+    soccer: 'Large and light, so a long kick loses a lot of range to drag.',
+    heavy: 'Four balls the size of a baseball with ½, 1, 2 and 4 times its mass. At the same speed they feel the same drag force, but the heavier ones are slowed less.'
+  };
+  const AIRS = { sea: 1.225, denver: 1.0, moon: 0 };
+  const layers = { vac: true, vel: true, dots: true, prev: true, acc: false };
+  let timeScale = 1;
+  let cur = null, vac = null, sw = null, vacOptDeg = 45;   // the current settings
+  let shots = [], nextN = 1, sel = null, hotShot = null;
+  const famCache = new Map();                               // range against angle, per ball, air and speed
+  let anim = null, scrubT = null, pinT = null;   // scrubT: the time shown (hover preview or the pinned cursor); pinT: the time cursor
+  // lab state: Blind, captured rows, which fit to plot, the dot interval (strobe), the data table
+  const DEMO_VERSION = 'projectile-drag@2026-10-22';
+  const LAB = { blind: false, rows: [], plot: 'yt', table: false, strobe: 'auto' };
+  const prefersReduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  // the Reduce motion toggle: on when the system asks for it, or when chosen in this session
+  let reduce = prefersReduce;
+  try { const v = sessionStorage.getItem('vd-projectile-reduce'); if (v === '1') reduce = true; else if (v === '0') reduce = false; } catch (_) {}
+  let sweepDirty = true, curDirty = true, raf = 0;
 
   // ---------- shots ----------
   const FIELDS = ['v', 'th', 'h', 'm', 'd', 'cd', 'rho', 'drag'];
@@ -580,7 +724,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const narrow = () => window.matchMedia('(max-width: 820px)').matches;
 
   // graph panes: x(t), y(t), v(t), optionally a_drag(t), and range against angle
-  function panelIds() { const ids = ['x', 'y', 'v']; if (layers.acc) ids.push('a'); ids.push('R'); return ids; }
+  function panelIds() { const ids = ['x', 'y', 'v']; if (layers.acc && !LAB.blind) ids.push('a'); ids.push('R'); return ids; }
   function gridFor(W, n) {
     const ps = projScale(), minW = (narrow() ? 160 : 205) * Math.min(ps, 1.2);
     let cols = n;
@@ -636,7 +780,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (curPt && started) { const [x, y] = toPx(curPt[1], curPt[2]); ctx.lineTo(x, y); }
     ctx.stroke();
   }
-  const dotStep = (Tm) => (Tm > 4 ? 0.5 : 0.1);
+  const dotStep = (Tm) => (LAB.strobe === 'auto' ? (Tm > 4 ? 0.5 : 0.1) : +LAB.strobe);
+  const vacOn = () => layers.vac && !LAB.blind;          // the vacuum ghost is a prediction: hidden in Blind
+  // the dot interval in use now, and the longest flight on screen
+  function flightMax() { let m = vacOn() && vac ? vac.T : 0; for (const s of shots) m = Math.max(m, s.T); return m; }
+  const stepNow = () => dotStep(flightMax() || (cur ? cur.T : 1));
   // how far along its flight each shot is drawn right now
   function tShown(s) {
     if (anim && anim.ids.has(s.id)) return Math.min(anim.t, s.T);
@@ -644,7 +792,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     return s.T;
   }
   const flying = (s) => anim && anim.ids.has(s.id) && anim.t < s.T;
-  const previewShown = () => layers.prev && !shots.some((s) => s.key === keyOf(P));
+  const previewShown = () => layers.prev && !LAB.blind && !shots.some((s) => s.key === keyOf(P));
 
   // a ball drawn as the object it is
   function drawBall(ctx, x, y, r, look, ring) {
@@ -711,7 +859,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const ext = (r, y) => { xm = Math.max(xm, r); ym = Math.max(ym, y); };
     for (const s of shots) ext(s.range, s.ymax);
     if (prev || !shots.length) ext(cur.range, cur.ymax);
-    if (layers.vac) ext(vac.range, vac.ymax);
+    if (vacOn()) ext(vac.range, vac.ymax);
     const padL = 48 * ps, padR = 30 * ps, padT = (W < 560 ? 60 : 50) * ps, padB = 30 * ps;
     const xs = Math.max(xm * 1.04, 1), ys = Math.max(ym * 1.06, 1);
     const s = Math.max(1e-6, Math.min((W - padL - padR) / xs, (H - padT - padB) / ys));
@@ -753,13 +901,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     for (let gy = step; L.oy - gy * s > padT * 0.6; gy += step) ctx.fillText(fmtTick(gy, step), L.ox - 8 * ps, L.oy - gy * s);
 
     const vacT = anim ? Math.min(anim.t, vac.T) : scrubT != null ? Math.min(scrubT, vac.T) : vac.T;
-    let maxT = vac.T * (layers.vac ? 1 : 0);
-    for (const sh of shots) maxT = Math.max(maxT, sh.T);
-    const dStep = dotStep(maxT || cur.T);
+    const dStep = stepNow();
 
     // vacuum reference and the next shot, both for the current settings
     ctx.save(); ctx.lineJoin = 'round';
-    if (layers.vac) {
+    if (vacOn()) {
       ctx.strokeStyle = T.muted; ctx.lineWidth = 1.8 * ps; ctx.setLineDash([6 * ps, 5 * ps]);
       strokeTraj(ctx, vac.pts, Infinity); ctx.setLineDash([]);
     }
@@ -789,7 +935,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       }
       ctx.restore();
     }
-    if (layers.vac && layers.dots) {
+    if (vacOn() && layers.dots) {
       ctx.save(); ctx.strokeStyle = T.muted; ctx.fillStyle = T.canvas; ctx.lineWidth = 1.2 * ps;
       for (let t = dStep; t < vacT - 1e-9; t += dStep) {
         const q = sampleAt(vac.pts, t), [x, y] = toPx(q[1], q[2]);
@@ -839,7 +985,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     }
     if (!anim && scrubT == null) {
       if (prev) labs.push({ x: toPx(cur.range, 0)[0], full: 'next  ' + fmtM(cur.range), short: 'next', col: null, ink: T.ink });
-      if (layers.vac && kDrag(P) > 0) labs.push({ x: toPx(vac.range, 0)[0], full: 'vacuum  ' + fmtM(vac.range), short: 'vacuum', col: null, ink: T.muted });
+      if (vacOn() && kDrag(P) > 0) labs.push({ x: toPx(vac.range, 0)[0], full: 'vacuum  ' + fmtM(vac.range), short: 'vacuum', col: null, ink: T.muted });
     }
     labs.sort((a, b) => a.x - b.x);
     // the lowest row sits above the balls resting on the ground; a leader line drops to each landing point
@@ -885,7 +1031,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     };
 
     // balls
-    if (layers.vac && (anim || scrubT != null) && kDrag(P) > 0) {
+    if (vacOn() && (anim || scrubT != null) && kDrag(P) > 0) {
       const q = sampleAt(vac.pts, vacT), [bx, by] = toPx(q[1], q[2]);
       ctx.save(); ctx.strokeStyle = T.muted; ctx.fillStyle = T.canvas; ctx.lineWidth = 2 * ps; ctx.setLineDash([3 * ps, 2 * ps]);
       ctx.beginPath(); ctx.arc(bx, by, ballR(P.d, ps), 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); ctx.restore();
@@ -951,10 +1097,28 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
     drawLabels();
 
+    // the time cursor on the selected shot: guide lines to both axes and the reading
+    const cs = scrubT != null && !anim ? shotById(sel) : null, rd = cs && scrubT <= cs.T + 1e-9 ? readAt(cs.pts, scrubT) : null;
+    if (rd) {
+      const [cx, cy] = toPx(rd.x, rd.y), col = T.c[cs.slot];
+      ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([4 * ps, 3 * ps]);
+      ctx.beginPath(); ctx.moveTo(L.ox, cy); ctx.lineTo(cx, cy); ctx.moveTo(cx, cy); ctx.lineTo(cx, L.oy); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * ps;
+      ctx.beginPath(); ctx.arc(cx, cy, ballR(cs.p.d, ps) + 4 * ps, 0, 2 * Math.PI); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx - 5 * ps, cy); ctx.lineTo(cx + 5 * ps, cy); ctx.moveTo(cx, cy - 5 * ps); ctx.lineTo(cx, cy + 5 * ps); ctx.stroke();
+      ctx.restore();
+    }
     if (anim || scrubT != null) {
       const tt = anim ? Math.min(anim.t, anim.Tend) : scrubT;
-      ctx.save(); ctx.font = `600 ${12 * ps}px ` + mono; ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-      ctx.fillText('t = ' + fmtS(tt), L.ox + 10 * ps, (W < 560 ? 60 : 12) * ps); ctx.restore();
+      const x0 = L.ox + 10 * ps, y0 = (W < 560 ? 60 : 12) * ps;
+      ctx.save(); ctx.font = `600 ${12 * ps}px ` + mono; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      const l1 = 't = ' + tt.toFixed(2) + ' s' + (cs ? (pinT != null && Math.abs(pinT - scrubT) < 1e-9 ? '  cursor' : '  preview') : '');
+      const l2 = rd ? `shot ${cs.n}: x = ${rd.x.toFixed(2)} m, y = ${rd.y.toFixed(2)} m` : cs ? `shot ${cs.n} has landed` : '';
+      const w = Math.max(ctx.measureText(l1).width, l2 ? ctx.measureText(l2).width : 0);
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.8; ctx.fillRect(x0 - 4 * ps, y0 - 3 * ps, w + 8 * ps, (l2 ? 34 : 19) * ps); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.ink; ctx.fillText(l1, x0, y0);
+      if (l2) ctx.fillText(l2, x0, y0 + 16 * ps);
+      ctx.restore();
     }
   }
 
@@ -983,7 +1147,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     let tMax = 0;
     for (const s of shots) tMax = Math.max(tMax, s.T);
     if (prev || !shots.length) tMax = Math.max(tMax, cur.T);
-    if (layers.vac) tMax = Math.max(tMax, vac.T);
+    if (vacOn()) tMax = Math.max(tMax, vac.T);
     tMax = Math.max(tMax, 0.1);
     const vacN = 120;
 
@@ -1035,7 +1199,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     let top = 0;
     for (const s of shots) for (const q of s.pts) top = Math.max(top, val(q, s.k));
     if (prev || !shots.length) for (const q of cur.pts) top = Math.max(top, val(q, kDrag(P)));
-    if (layers.vac && id !== 'a') for (let i = 0; i <= vacN; i++) top = Math.max(top, vacPt(P, vac.T * i / vacN)['xyv'.indexOf(id)]);
+    if (vacOn() && id !== 'a') for (let i = 0; i <= vacN; i++) top = Math.max(top, vacPt(P, vac.T * i / vacN)['xyv'.indexOf(id)]);
     if (id === 'a') top = Math.max(top, G * 1.15);
     const top0 = Math.max(top * 1.08, 1e-3);
     const ystep = niceStep(top0 / Math.max(2, Math.min(4, Math.floor((pn.y1 - pn.y0) / (28 * ps))))), yTop = Math.ceil(top0 / ystep - 1e-9) * ystep;
@@ -1054,7 +1218,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       ctx.fillText('g', pn.x1 - 2, Y(G) - 2);
     }
     // terminal speed of each shot, as a short dashed mark on the speed panel
-    if (id === 'v') {
+    if (id === 'v' && !LAB.blind) {
       for (const s of shots) {
         if (!isFinite(s.vt) || s.vt > yTop) continue;
         ctx.strokeStyle = T.c[s.slot]; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([2 * ps, 3 * ps]);
@@ -1069,7 +1233,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       }
       ctx.setLineDash([]); ctx.globalAlpha = 1;
     }
-    if (layers.vac && id !== 'a') {
+    if (vacOn() && id !== 'a') {
       const j = 'xyv'.indexOf(id);
       ctx.strokeStyle = T.muted; ctx.lineWidth = 1.6 * ps; ctx.setLineDash([5 * ps, 4 * ps]); ctx.beginPath();
       const tEnd = anim ? Math.min(anim.t, vac.T) : vac.T;
@@ -1107,40 +1271,44 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   function drawRangePanel(ctx, pn, prev, mono, ui) {
     const ps = pn.ps;
-    const vMax = vacRange(P, vacOptDeg);
+    const vMax = vacRange(P, vacOptDeg), bl = LAB.blind;
     const fams = [];
     for (const s of shots) if (!fams.some((f) => f.fam === s.fam)) fams.push(s);
-    let top = Math.max(vMax, sw.Ropt, 1e-3);
-    for (const s of fams) top = Math.max(top, famSweep(s).Ropt, s.range);
+    // in Blind the scale comes from the shots alone, so the axis does not give away the model's best range
+    let top = bl ? 1 : Math.max(vMax, sw.Ropt, 1e-3);
+    for (const s of fams) top = Math.max(top, bl ? s.range : Math.max(famSweep(s).Ropt, s.range));
+    for (const s of shots) top = Math.max(top, s.range);
     const top0 = top * 1.12;
     const ystep = niceStep(top0 / Math.max(2, Math.min(4, Math.floor((pn.y1 - pn.y0) / (28 * ps))))), yTop = Math.ceil(top0 / ystep - 1e-9) * ystep;
     const xstep = pn.x1 - pn.x0 > 260 * ps ? 15 : 30;
     const { X: Xd, Y } = axes(ctx, pn, 90, yTop, xstep, ystep, (a) => a + '°', mono);
     const X = (a) => Xd(a);
-    panelTitle(ctx, pn, 'range (m) vs launch angle', ui);
+    panelTitle(ctx, pn, bl ? 'range (m) vs launch angle, shots only' : 'range (m) vs launch angle', ui);
 
     ctx.save(); ctx.beginPath(); ctx.rect(pn.x0 - 6 * ps, pn.y0 - 14 * ps, pn.x1 - pn.x0 + 12 * ps, pn.y1 - pn.y0 + 18 * ps); ctx.clip();
     ctx.lineJoin = 'round';
-    // vacuum curve for the current settings
-    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.8 * ps; ctx.setLineDash([6 * ps, 4 * ps]); ctx.beginPath();
-    for (let i = 0; i <= 180; i++) { const a = i / 2, x = X(a), y = Y(vacRange(P, a)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
-    ctx.stroke(); ctx.setLineDash([]);
-    // one curve per different ball, air and speed among the shots
+    // vacuum curve for the current settings (a prediction: not in Blind)
     const curFam = famOf(P);
     let curCol = null;
-    for (const s of fams) {
-      const R = famSweep(s).R, isCur = s.fam === curFam;
-      if (isCur) curCol = T.c[s.slot];
-      ctx.globalAlpha = hotShot != null && !shots.some((q) => q.id === hotShot && q.fam === s.fam) ? 0.2 : 1;
-      ctx.strokeStyle = T.c[s.slot]; ctx.lineWidth = (isCur ? 2.4 : 1.6) * ps; ctx.beginPath();
-      R.forEach((r, a) => { const x = X(a), y = Y(r); a ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
-      ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
-    if (!curCol) {
-      ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.6; ctx.lineWidth = 1.8 * ps; ctx.beginPath();
-      sw.R.forEach((r, a) => { const x = X(a), y = Y(r); a ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
-      ctx.stroke(); ctx.globalAlpha = 1;
+    if (!bl) {
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1.8 * ps; ctx.setLineDash([6 * ps, 4 * ps]); ctx.beginPath();
+      for (let i = 0; i <= 180; i++) { const a = i / 2, x = X(a), y = Y(vacRange(P, a)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      ctx.stroke(); ctx.setLineDash([]);
+      // one curve per different ball, air and speed among the shots
+      for (const s of fams) {
+        const R = famSweep(s).R, isCur = s.fam === curFam;
+        if (isCur) curCol = T.c[s.slot];
+        ctx.globalAlpha = hotShot != null && !shots.some((q) => q.id === hotShot && q.fam === s.fam) ? 0.2 : 1;
+        ctx.strokeStyle = T.c[s.slot]; ctx.lineWidth = (isCur ? 2.4 : 1.6) * ps; ctx.beginPath();
+        R.forEach((r, a) => { const x = X(a), y = Y(r); a ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      if (!curCol) {
+        ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.6; ctx.lineWidth = 1.8 * ps; ctx.beginPath();
+        sw.R.forEach((r, a) => { const x = X(a), y = Y(r); a ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+        ctx.stroke(); ctx.globalAlpha = 1;
+      }
     }
     // current angle, the drag handle of this graph
     const cx = X(P.th), hot = chartDrag || chartHover === 'angle';
@@ -1159,10 +1327,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       ctx.beginPath(); ctx.arc(X(s.p.th), Y(s.range), 4.5 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
     }
     ctx.globalAlpha = 1;
-    // best angles for the current settings
-    const marks = [{ a: vacOptDeg, r: vMax, c: T.muted }];
+    // best angles for the current settings (predictions: not in Blind)
+    const marks = bl ? [] : [{ a: vacOptDeg, r: vMax, c: T.muted }];
     const same = Math.abs(sw.opt - vacOptDeg) < 0.3 && Math.abs(sw.Ropt - vMax) < 0.01 * vMax;
-    if (!same) marks.push({ a: sw.opt, r: sw.Ropt, c: curCol || T.ink });
+    if (!same && !bl) marks.push({ a: sw.opt, r: sw.Ropt, c: curCol || T.ink });
     ctx.font = `600 ${10.5 * ps}px ` + mono; ctx.textBaseline = 'bottom';
     let lastBox = null;
     for (const mk of marks.sort((a, b) => a.r - b.r)) {
@@ -1207,10 +1375,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       : ratio < 0.3 ? 'Here v₀ is much smaller than vₜ, so drag barely changes the shot.'
       : ratio < 0.8 ? 'Here v₀ is a sizable fraction of vₜ, so drag is noticeable.'
       : 'Here v₀ is comparable to or above vₜ, so drag changes the shot a lot.';
-    let maxT = layers.vac ? vac.T : 0;
-    for (const s of shots) maxT = Math.max(maxT, s.T);
-    const ds = dotStep(maxT || cur.T);
+    const ds = stepNow();
     $('dotHint').textContent = 'Dots mark every ' + ds + ' s. They bunch up on the steep way down when drag matters.';
+    measureReadout();
   }
 
   // the shot list in the rail
@@ -1232,7 +1399,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       const l1 = b('m', fmtMass(p.m)) + b('d', fmtDiam(p.d)) + b('cd', 'Cd ' + p.cd.toFixed(2)) + b('rho', air);
       const l2 = b('v', trimZ(p.v.toFixed(1)) + ' m/s') + b('th', trimZ(p.th.toFixed(1)) + '°') + b('h', 'h ' + trimZ(p.h.toFixed(1)) + ' m');
       const r1 = c('R ' + fmtM(s.range)) + c('H ' + fmtM(s.ymax)) + c('T ' + fmtS(s.T));
-      const r2 = c('impact ' + fmtV(s.vImp)) + c('vₜ ' + (isFinite(s.vt) ? fmtV(s.vt) : '∞'));
+      const r2 = c('impact ' + fmtV(s.vImp)) + (LAB.blind ? '' : c('vₜ ' + (isFinite(s.vt) ? fmtV(s.vt) : '∞')));
       const nm = s.name ? '<span class="nm">' + esc(s.name) + '</span>' : '';
       return `<li class="shot${s.id === sel ? ' sel' : ''}" data-id="${s.id}" style="--shot:${col};--badge-ink:${badgeInk(col)}">` +
         `<button type="button" class="shot-main" aria-label="Shot ${s.n}: load its settings into the controls">` +
@@ -1285,6 +1452,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     T = tokens();
     if (sweepDirty) { sw = sweep(P); vacOptDeg = vacOpt(P); sweepDirty = false; }
     if (curDirty) { cur = simulate(P, P.th, 8000, true, 1e-3); vac = vacuumShot(P, P.th); curDirty = false; }
+    // keep the time cursor on a dot when the dot interval or the shots change
+    if (pinT != null) { const np = snapT(pinT, stepNow(), flightMax() || cur.T); if (scrubT === pinT) scrubT = np; pinT = np; }
     if (anim) {
       if (anim.last == null) anim.last = now;
       anim.t += Math.min(0.1, (now - anim.last) / 1000) * timeScale; anim.last = now;
@@ -1355,19 +1524,18 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   for (const b of document.querySelectorAll('#airs button')) {
     b.addEventListener('click', () => { P.rho = AIRS[b.dataset.a]; syncSliders(); syncAirChips(); changed(true); });
   }
-  for (const b of document.querySelectorAll('.seg button')) {
-    b.addEventListener('click', () => { timeScale = +b.dataset.ts; setPressed('.seg', 'ts', b.dataset.ts); });
+  for (const b of document.querySelectorAll('#tsSeg button')) {
+    b.addEventListener('click', () => { timeScale = +b.dataset.ts; setPressed('#tsSeg', 'ts', b.dataset.ts); });
   }
   const bindToggle = (id, key, re) => $(id).addEventListener('change', (e) => { layers[key] = e.target.checked; if (re) resize(); else schedule(); });
   bindToggle('tVac', 'vac'); bindToggle('tVel', 'vel'); bindToggle('tDots', 'dots'); bindToggle('tPrev', 'prev'); bindToggle('tAcc', 'acc', true);
 
-  const reduceMotion = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   function fly(list) {
-    scrubT = null;
-    if (reduceMotion() || !list.length) { anim = null; schedule(); return; }
+    scrubT = null; pinT = null;
+    if (reduce || !list.length) { anim = null; schedule(); return; }
     let Tend = 0;
     for (const s of list) Tend = Math.max(Tend, s.T);
-    if (layers.vac && kDrag(P) > 0) Tend = Math.max(Tend, vac ? vac.T : 0);
+    if (vacOn() && kDrag(P) > 0) Tend = Math.max(Tend, vac ? vac.T : 0);
     anim = { t: 0, last: null, Tend, ids: new Set(list.map((s) => s.id)) };
     schedule();
   }
@@ -1382,7 +1550,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   }
   $('launch').addEventListener('click', launch);
   $('replay').addEventListener('click', () => { if (shots.length) fly(shots.slice()); else launch(); });
-  $('clear').addEventListener('click', () => { shots = []; sel = null; hotShot = null; anim = null; scrubT = null; renderList(); schedule(); });
+  $('clear').addEventListener('click', () => { shots = []; sel = null; hotShot = null; anim = null; scrubT = null; pinT = null; renderList(); schedule(); });
 
   // ---------- compare sets: one setting varies, everything else is the current settings ----------
   // scale a set of factors so every value stays inside the slider range, then drop repeats
@@ -1499,7 +1667,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function tFromPanel(pn, x) {
     let tMax = 0; for (const s of shots) tMax = Math.max(tMax, s.T);
     if (previewShown() || !shots.length) tMax = Math.max(tMax, cur.T);
-    if (layers.vac) tMax = Math.max(tMax, vac.T);
+    if (vacOn()) tMax = Math.max(tMax, vac.T);
     const xstep = niceStep(Math.max(tMax, 0.1) / Math.max(2, Math.floor((pn.x1 - pn.x0) / (48 * pn.ps))));
     const xTop = Math.max(tMax, 0.1) * 1.02;
     return Math.min(tMax, Math.max(0, (x - pn.x0) / (pn.x1 - pn.x0) * xTop));
@@ -1512,7 +1680,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (pn.id === 'R') {
       const tol = 8 * pn.ps * (e.pointerType === 'touch' ? 2 : 1), near = Math.abs(x - (pn.x0 + P.th / 90 * (pn.x1 - pn.x0))) < tol ? 'angle' : null;
       chart.style.cursor = 'ew-resize';
-      if (scrubT != null) { scrubT = null; schedule(); }
+      if (scrubT !== pinT) { scrubT = pinT; schedule(); }
       if (near !== chartHover) { chartHover = near; schedule(); }
       if (pressed || chartDrag) {
         chartQueued = (x - pn.x0) / (pn.x1 - pn.x0) * 90;
@@ -1525,7 +1693,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       if (chartHover) chartHover = null;
       if (anim) return;
       if (e.pointerType === 'touch' && !pressed && !chartScrub) return;
-      scrubT = tFromPanel(pn, x); schedule();
+      const t = tFromPanel(pn, x), tm = flightMax() || cur.T;
+      scrubT = snapT(t, stepNow(), tm);
+      if (pressed) pinT = scrubT;
+      schedule();
     }
   }
   let chartScrub = false;
@@ -1549,7 +1720,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   chart.addEventListener('pointerleave', (e) => {
     if (chartDrag || chartScrub) return;
     chartHover = null;
-    if (e.pointerType !== 'touch' && scrubT != null) scrubT = null;
+    if (e.pointerType !== 'touch') scrubT = pinT;
     schedule();
   });
 
@@ -1558,7 +1729,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (e.key === 'ArrowUp' || e.key === 'ArrowRight') setAngle(P.th + step);
     else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') setAngle(P.th - step);
     else if (e.key === 'Enter' || e.key === ' ') launch();
-    else if (e.key === 'Escape' && scrubT != null) { scrubT = null; schedule(); }
+    else if (e.key === 'PageUp' || e.key === 'PageDown') setHeight(P.h + (e.key === 'PageUp' ? 1 : -1) * (e.shiftKey ? 1 : 0.1));
+    else if (e.key === ',' || e.key === '<') stepCursor(e.key === '<' || e.shiftKey ? -10 : -1);
+    else if (e.key === '.' || e.key === '>') stepCursor(e.key === '>' || e.shiftKey ? 10 : 1);
+    else if (e.key === 'Home' || e.key === 'End') cursorTo(e.key === 'Home' ? 'start' : 'end');
+    else if (e.key === 'c' || e.key === 'C') capture();
+    else if (e.key === 'Escape' && (scrubT != null || pinT != null)) { scrubT = null; pinT = null; schedule(); }
     else return;
     e.preventDefault();
   }
@@ -1566,7 +1742,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   chart.addEventListener('keydown', onKey);
 
   // theme changes
-  const rethemed = () => { T = tokens(); renderList(); schedule(); };
+  const rethemed = () => { T = tokens(); renderList(); fitAndPlot(); schedule(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', rethemed); } catch (_) {}
   new MutationObserver(rethemed).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class', 'style'] });
 
@@ -1576,13 +1752,217 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     document.documentElement.setAttribute('data-projector', on ? 'on' : 'off');
     projBtn.setAttribute('aria-pressed', String(on));
     try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {}
-    requestAnimationFrame(resize);
+    requestAnimationFrame(() => { resize(); fitAndPlot(); });
   }
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
 
+  // ---------- lab: time cursor, readings, fits, CSV, Blind, reduce motion ----------
+  const status = (msg) => { $('labStatus').textContent = msg; };
+  // move the time cursor along the dots of the selected shot (the newest shot if none is selected)
+  function cursorShot() {
+    const s = shotById(sel) || shots[shots.length - 1] || null;
+    if (!s) { status('Launch a shot first.'); return null; }
+    if (sel !== s.id) { sel = s.id; renderList(); }
+    if (anim) anim = null;
+    return s;
+  }
+  function stepCursor(n) {
+    const s = cursorShot(); if (!s) return;
+    const dt = stepNow(), last = snapT(s.T, dt, s.T);
+    pinT = pinT == null ? (n > 0 ? 0 : last) : snapT(Math.min(pinT, last) + n * dt, dt, s.T);
+    scrubT = pinT; schedule();
+  }
+  function cursorTo(where) {
+    const s = cursorShot(); if (!s) return;
+    const dt = stepNow();
+    pinT = where === 'start' ? 0 : snapT(s.T, dt, s.T); scrubT = pinT; schedule();
+  }
+  function cursorReading() {
+    const s = shotById(sel);
+    if (!s || pinT == null) return { s, rd: null };
+    return { s, rd: pinT <= s.T + 1e-9 ? readAt(s.pts, pinT) : null };
+  }
+  function measureReadout() {
+    const { s, rd } = cursorReading();
+    $('mShot').textContent = s ? String(s.n) : '—';
+    $('mT').textContent = s && pinT != null ? pinT.toFixed(2) + ' s' : '—';
+    $('mX').textContent = rd ? rd.x.toFixed(2) + ' m' : s && pinT != null ? 'landed' : '—';
+    $('mY').textContent = rd ? rd.y.toFixed(2) + ' m' : s && pinT != null ? 'landed' : '—';
+    $('mR').textContent = s ? roundTo(s.range, 0.01).toFixed(2) + ' m' : '—';
+  }
+  function capture() {
+    const { s, rd } = cursorReading();
+    if (!s) { status('Launch a shot first, then capture.'); return; }
+    const p = s.p;
+    LAB.rows.push({ shot: s.n, key: s.key, setup: s.name || 'Custom ball', v: p.v.toFixed(1), th: p.th.toFixed(1), h: p.h.toFixed(1),
+      m: String(+p.m.toPrecision(3)), d: p.d.toFixed(3), cd: p.cd.toFixed(2), rho: p.rho.toFixed(3), drag: p.drag ? 'on' : 'off',
+      dt: rd ? String(stepNow()) : '', t: rd ? rd.t.toFixed(2) : '', x: rd ? rd.x.toFixed(2) : '', y: rd ? rd.y.toFixed(2) : '',
+      R: roundTo(s.range, 0.01).toFixed(2) });
+    status(`Row ${LAB.rows.length} captured from shot ${s.n}${rd ? '' : pinT == null ? ': range only (no time cursor)' : ': range only (the cursor is after landing)'}.`);
+    renderTable();
+  }
+  function renderTable() {
+    const tb = $('tbl').querySelector('tbody'); tb.textContent = '';
+    if (!LAB.rows.length) { tb.innerHTML = '<tr class="empty"><td colspan="6">No readings yet</td></tr>'; fitAndPlot(); return; }
+    LAB.rows.forEach((r, i) => {
+      const tr = document.createElement('tr');
+      tr.title = `Shot ${r.shot}, ${r.setup}: v0 ${r.v} m/s, ${r.th}°, h ${r.h} m, air resistance ${r.drag}${r.t !== '' ? `; t ${r.t} s, x ${r.x} m, y ${r.y} m` : ''}; R ${r.R} m`;
+      const inp = (f, lab) => `<td><input aria-label="${lab}, row ${i + 1}" data-i="${i}" data-f="${f}" value="${r[f]}" inputmode="decimal" spellcheck="false"></td>`;
+      tr.innerHTML = `<td class="n">${i + 1}</td><td class="b">${r.th}</td>` + inp('t', 't in s') + inp('y', 'y in m') + inp('R', 'R in m') +
+        `<td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td>`;
+      tb.appendChild(tr);
+    });
+    fitAndPlot();
+  }
+  $('tbl').addEventListener('change', (e) => { const t = e.target; if (t.dataset && t.dataset.f) { LAB.rows[+t.dataset.i][t.dataset.f] = t.value.trim(); fitAndPlot(); } });
+  $('tbl').addEventListener('click', (e) => { const b = e.target.closest('button[data-del]'); if (b) { LAB.rows.splice(+b.dataset.del, 1); status(`Row ${+b.dataset.del + 1} deleted.`); renderTable(); } });
+  const num = (v) => { const t = String(v).replace(/−/g, '-').trim(); return t === '' ? NaN : +t; };
+  const PLOTS = {
+    yt: { x: 't', xu: 's', y: 'y', yu: 'm', fx: (r) => num(r.t), fy: (r) => num(r.y) },
+    rs: { x: 'sin 2θ', xu: '', y: 'R', yu: 'm', fx: (r) => Math.sin(2 * num(r.th) * DEG), fy: (r) => num(r.R) }
+  };
+  function fitData() {
+    const Pl = PLOTS[LAB.plot], pts = [];
+    for (const r of LAB.rows) { const x = Pl.fx(r), y = Pl.fy(r); if (isFinite(x) && isFinite(y)) pts.push({ x, y, r }); }
+    const xs = pts.map((q) => q.x), ys = pts.map((q) => q.y);
+    return { Pl, pts, fit: LAB.plot === 'yt' ? fitQuad(xs, ys) : fitOrigin(xs, ys) };
+  }
+  // value ± error, both to the error's second significant figure, at most 4 decimals (0.1 mm, far below the 1 cm readings)
+  const pm = (v, e) => {
+    if (!isFinite(e)) return minus(v.toFixed(Math.min(4, Math.max(0, 4 - Math.floor(Math.log10(Math.abs(v) || 1))))));
+    const d = e > 0 ? Math.min(4, Math.max(0, 1 - Math.floor(Math.log10(e)))) : 4;
+    return minus(v.toFixed(d)) + ' ± ' + (+e.toFixed(d) > 0 ? e.toFixed(d) : '< ' + (10 ** -d).toFixed(d));
+  };
+  const allSame = (pts, f) => pts.length && pts.every((q) => String(q.r[f]) === String(pts[0].r[f]));
+  const row = (dt, dd, cls) => `<div class="wide${cls ? ' ' + cls : ''}"><dt>${dt}</dt><dd${cls === 'note' ? ' class="ok"' : ''}>${dd}</dd></div>`;
+  function fitAndPlot() {
+    if (!T) T = tokens();
+    const F = fitData(), f = F.fit, pts = F.pts, bl = LAB.blind;
+    const dragOn = pts.some((q) => q.r.drag === 'on'), first = pts.length ? pts[0].r : null;
+    let html = '';
+    if (LAB.plot === 'yt') {
+      if (f) {
+        html += row(`Fit y = a + b t + c t², ${f.n} points`, `c = ${pm(f.c, f.sc)} m/s²`, 'big');
+        html += row('g = −2c from your fit (m/s²)', pm(-2 * f.c, 2 * f.sc));
+        html += row('b, the vertical launch speed (m/s)', pm(f.b, f.sb));
+        html += row('a, the launch height (m)', pm(f.a, f.sa));
+        if (f.n < 4) html += row('Note', 'Four or more points give error bars.', 'note');
+        if (!bl) html += row('Model g in this demo', '9.81 m/s²');
+        if (!allSame(pts, 'key')) html += row('Note', 'These rows come from more than one launch. Fit one launch at a time.', 'note');
+        if (dragOn) html += row('Note', 'Air resistance was on, so y(t) is not a parabola. Look for a pattern in the residuals.', 'note');
+      } else html += row('Fit', 'Capture three or more readings with the time cursor on different dots of one shot.', 'note');
+    } else {
+      if (f) {
+        html += row(`Slope of R against sin 2θ, line through the origin, ${f.n} point${f.n > 1 ? 's' : ''} (m)`, pm(f.k, f.se), 'big');
+        const v = num(first.v), oneV = allSame(pts, 'v'), ground = pts.every((q) => num(q.r.h) === 0);
+        if (oneV && v > 0) html += row(`g = v₀²/slope, v₀ = ${first.v} m/s (m/s²)`, pm(v * v / f.k, isFinite(f.se) ? v * v / f.k * f.se / f.k : NaN));
+        if (!bl && oneV && v > 0) html += row('Model slope v₀²/g from the settings', (v * v / G).toFixed(2) + ' m');
+        if (!oneV) html += row('Note', 'The rows have different launch speeds, so the slope mixes them.', 'note');
+        if (!ground) html += row('Note', 'Some rows were launched above the ground. R = v₀² sin 2θ / g holds only from the ground.', 'note');
+        if (dragOn) html += row('Note', 'Air resistance was on for some rows. R = v₀² sin 2θ / g holds only without drag.', 'note');
+      } else html += row('Fit', 'Capture the range of shots at three or more angles, same speed, from the ground, with Air resistance Off.', 'note');
+    }
+    $('fitOut').innerHTML = html;
+    drawFitPlot(F);
+    dataTable(F);
+  }
+  let fdpr = 1;
+  function drawFitPlot(F) {
+    const cv = $('fitPlot'), box = $('fitBox').getBoundingClientRect(), Wd = box.width, Hd = box.height;
+    if (!Wd || !Hd || !T) return;
+    fdpr = window.devicePixelRatio || 1;
+    if (cv.width !== Math.round(Wd * fdpr) || cv.height !== Math.round(Hd * fdpr)) { cv.width = Math.round(Wd * fdpr); cv.height = Math.round(Hd * fdpr); }
+    const c = cv.getContext('2d'), ps = projScale() > 1 ? 1.2 : 1, Pl = F.Pl, f = F.fit, mono = monoFont(), ui = uiFont();
+    c.setTransform(fdpr, 0, 0, fdpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, Wd, Hd);
+    const L0 = 40 * ps, R0 = Wd - 10, top = 10, rsH = Math.round(Hd * 0.18), bot = Hd - rsH - 34 * ps, rTop = bot + 30 * ps, rBot = Hd - 6;
+    let xm = 0, ym = 0; for (const q of F.pts) { xm = Math.max(xm, q.x); ym = Math.max(ym, q.y); }
+    const x1 = LAB.plot === 'rs' ? 1.05 : xm > 0 ? xm * 1.08 : 1;
+    if (f) for (let i = 0; i <= 60; i++) ym = Math.max(ym, f.at(x1 * i / 60));
+    const y1 = ym > 0 ? ym * 1.12 : 1;
+    const Xp = (v) => L0 + v / x1 * (R0 - L0), Yp = (v) => bot - v / y1 * (bot - top);
+    c.font = `${10 * ps}px ${mono}`; c.lineWidth = 1;
+    const xs = niceStep(x1 / 4), ys = niceStep(y1 / 3), tf = (v, st) => fmtTick(v, st);
+    c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let v = 0; v <= x1 + 1e-9; v += xs) { const x = Math.round(Xp(v)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, top); c.lineTo(x, bot); c.stroke(); if (v > 0) c.fillText(tf(v, xs), x, bot + 3); }
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let v = 0; v <= y1 + 1e-9; v += ys) { const y = Math.round(Yp(v)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(L0, y); c.lineTo(R0, y); c.stroke(); c.fillText(tf(v, ys), L0 - 4, y); }
+    c.strokeStyle = T.gridStrong; c.strokeRect(L0 + 0.5, top + 0.5, R0 - L0, bot - top);
+    const xl = Pl.x + (Pl.xu ? ` (${Pl.xu})` : ''), yl = `${Pl.y} (${Pl.yu})`;
+    c.textAlign = 'right'; c.textBaseline = 'bottom';
+    { const w = c.measureText(xl).width; c.fillStyle = T.canvas; c.globalAlpha = 0.85; c.fillRect(R0 - w - 6, bot - 16 * ps, w + 4, 14 * ps); c.globalAlpha = 1; c.fillStyle = T.ink; c.fillText(xl, R0 - 4, bot - 3); }
+    c.textAlign = 'left'; c.textBaseline = 'top'; c.fillStyle = T.ink; c.fillText(yl, L0 + 5, top + 3);
+    c.save(); c.beginPath(); c.rect(L0, top, R0 - L0, bot - top); c.clip();
+    if (f) { c.strokeStyle = T.accent; c.lineWidth = 1.6 * ps; c.beginPath(); for (let i = 0; i <= 120; i++) { const x = x1 * i / 120, X = Xp(x), Y = Yp(f.at(x)); i ? c.lineTo(X, Y) : c.moveTo(X, Y); } c.stroke(); }
+    c.fillStyle = T.ink; for (const q of F.pts) { c.beginPath(); c.arc(Xp(q.x), Yp(q.y), 3.4 * ps, 0, 2 * Math.PI); c.fill(); }
+    c.restore();
+    if (!F.pts.length) { c.fillStyle = T.muted; c.font = `${11 * ps}px ${ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('No readings yet', (L0 + R0) / 2, (top + bot) / 2); }
+    // residual strip: y − fit, on its own scale
+    c.strokeStyle = T.gridStrong; c.strokeRect(L0 + 0.5, rTop + 0.5, R0 - L0, rBot - rTop);
+    let rm = 0; if (f) for (const r of f.res) rm = Math.max(rm, Math.abs(r));
+    const rr = Math.max(rm * 1.3, 0.001), Yr = (v) => (rTop + rBot) / 2 - v / rr * (rBot - rTop) / 2;
+    c.strokeStyle = T.muted; c.setLineDash([3, 3]); c.beginPath(); c.moveTo(L0, Yr(0)); c.lineTo(R0, Yr(0)); c.stroke(); c.setLineDash([]);
+    if (f) { c.fillStyle = T.equi; F.pts.forEach((q, i) => { c.beginPath(); c.arc(Xp(q.x), Yr(f.res[i]), 3 * ps, 0, 2 * Math.PI); c.fill(); }); }
+    c.fillStyle = T.muted; c.font = `${9.5 * ps}px ${mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    c.fillText(`residuals${f && rm > 0 ? `, strip ±${String(+rr.toPrecision(2))} ${Pl.yu}` : ''}`, L0, rTop - 2);
+    const kind = LAB.plot === 'yt' ? 'a least squares parabola y = a + b t + c t²' : 'a least squares line through the origin';
+    cv.setAttribute('aria-label', `Plot of ${Pl.y} against ${Pl.x} from your readings, ${F.pts.length} point${F.pts.length === 1 ? '' : 's'}, with ${kind}${f ? (LAB.plot === 'yt' ? `, c = ${f.c.toPrecision(4)} m/s²` : `, slope ${f.k.toPrecision(4)} m`) : ''}, and a strip of residuals underneath. Show data table lists the points.`);
+  }
+  function dataTable(F) {
+    const Pl = F.Pl, f = F.fit;
+    let html = `<caption class="sr-only">Points on the fit plot</caption><thead><tr><th>#</th><th>${Pl.x}${Pl.xu ? ` (${Pl.xu})` : ''}</th><th>${Pl.y} (${Pl.yu})</th><th>fit</th><th>residual</th></tr></thead><tbody>`;
+    const xd = LAB.plot === 'yt' ? 2 : 4, z = (v) => minus((Math.abs(v) < 5e-4 ? 0 : v).toFixed(3));
+    F.pts.forEach((q, i) => { html += `<tr><td class="n">${LAB.rows.indexOf(q.r) + 1}</td><td class="b">${q.x.toFixed(xd)}</td><td class="b">${minus(q.y.toFixed(2))}</td><td class="b">${f ? z(f.at(q.x)) : '—'}</td><td class="b">${f ? z(f.res[i]) : '—'}</td></tr>`; });
+    if (!F.pts.length) html += '<tr><td colspan="5" class="n">No points yet</td></tr>';
+    $('dataTbl').innerHTML = html + '</tbody>';
+  }
+  function csvNow() {
+    const pk = document.querySelector('#presets button[aria-pressed="true"]');
+    const meta = ['Projectile Range (simulated data)', `demo version,${DEMO_VERSION}`,
+      `setup at export,${pk ? pk.textContent : 'Custom ball'} (each row lists its own settings)`,
+      `model,point ball; uniform gravity ${LAB.blind ? 'g (value withheld: Blind was on at export)' : 'g = 9.81 m/s^2'}; drag F = 1/2 rho C_d A v^2 against the velocity with A = pi d^2/4 and constant C_d (or no drag when air_resistance is off); no spin, lift or wind; flat ground; g and rho constant with height`,
+      'integration,classical fourth order Runge-Kutta with steps of at most 1 ms; landing point on the cubic Hermite interpolant of the last step; positions sampled every few ms and interpolated linearly to the cursor time',
+      'coordinates,x horizontal from the foot of the launcher; y height above the flat ground; t from launch',
+      'rounding,settings as displayed (v0 to 0.1 m/s; angle to 0.1 deg; height to 0.1 m; mass to 3 significant figures; diameter to 0.001 m; C_d to 0.01; rho to 0.001 kg/m^3); t on the dot grid (a whole number of strobe_interval_s); x and y and range to 0.01 m; edited cells as typed',
+      'seed,none (no random noise is added; the simulation is deterministic)'];
+    const header = ['row', 'shot', 'preset', 'v0_m_per_s', 'launch_angle_deg', 'sin_2theta', 'launch_height_m', 'mass_kg', 'diameter_m', 'drag_coefficient', 'air_density_kg_per_m3', 'air_resistance',
+      'strobe_interval_s', 't_s', 'x_m', 'y_m', 'range_m'];
+    const rows = LAB.rows.map((r, i) => [i + 1, r.shot, r.setup, r.v, r.th, +Math.sin(2 * num(r.th) * DEG).toFixed(6), r.h, r.m, r.d, r.cd, r.rho, r.drag, r.dt, r.t, r.x, r.y, r.R]);
+    return csvText(meta, header, rows);
+  }
+  function download(name, text) {
+    try { const b = new Blob([text], { type: 'text/csv' }), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800); } catch (_) {}
+  }
+  $('capture').addEventListener('click', capture);
+  $('expCsv').addEventListener('click', () => { if (!LAB.rows.length) { status('No rows to export yet.'); return; } download('projectile-drag-readings.csv', csvNow()); status(`Exported ${LAB.rows.length} row${LAB.rows.length > 1 ? 's' : ''}.`); });
+  $('clearRows').addEventListener('click', () => { LAB.rows = []; status('Readings cleared.'); renderTable(); });
+  for (const b of document.querySelectorAll('#plotSeg button')) b.addEventListener('click', () => { LAB.plot = b.dataset.plot; setPressed('#plotSeg', 'plot', LAB.plot); fitAndPlot(); });
+  for (const b of document.querySelectorAll('#strobeSeg button')) b.addEventListener('click', () => { LAB.strobe = b.dataset.dt; setPressed('#strobeSeg', 'dt', LAB.strobe); schedule(); });
+  $('dotPrev').addEventListener('click', () => stepCursor(-1));
+  $('dotNext').addEventListener('click', () => stepCursor(1));
+  $('dotHide').addEventListener('click', () => { pinT = null; scrubT = null; schedule(); });
+  $('dataBtn').addEventListener('click', () => { LAB.table = !LAB.table; $('dataWrap').hidden = !LAB.table; $('dataBtn').setAttribute('aria-expanded', String(LAB.table)); $('dataBtn').textContent = LAB.table ? 'Hide data table' : 'Show data table'; });
+  function setBlind(on) {
+    LAB.blind = on; $('labBlind').checked = on; $('blindTag').hidden = !on;
+    for (const id of ['secPred', 'secVt', 'unitsG', 'airG']) $(id).hidden = on;
+    for (const id of ['tVac', 'tPrev', 'tAcc']) $(id).disabled = on;
+    $('layersBlind').hidden = !on;
+    status(on ? 'Blind on: g, the predicted paths, ranges and angles and the terminal speed are hidden.' : 'Blind off.');
+    renderList(); fitAndPlot(); resize();
+  }
+  $('labBlind').addEventListener('change', (e) => setBlind(e.target.checked));
+  function setReduce(on) {
+    reduce = on; $('rmToggle').checked = on;
+    try { sessionStorage.setItem('vd-projectile-reduce', on ? '1' : '0'); } catch (_) {}
+    if (on && anim) anim = null;
+    schedule();
+  }
+  $('rmToggle').addEventListener('change', (e) => setReduce(e.target.checked));
+  $('rmToggle').checked = reduce;
+  new ResizeObserver(() => fitAndPlot()).observe($('fitBox'));
+
   // ---------- boot ----------
-  syncSliders(); syncAirChips(); presetHint(); renderList();
+  syncSliders(); syncAirChips(); presetHint(); renderList(); renderTable();
   new ResizeObserver(resize).observe(stage);
   resize();
   launch(); // open with a shot in the air (static picture if reduced motion)
@@ -1590,6 +1970,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   // exposed for testing
   window.__projectile = { simulate, vacuumShot, sweep, vTerm, kDrag, PRESETS, makeShot, compareSet, compare, launch, loadShot,
+    LAB, capture, csvNow, fitData, readAt, snapT, stepCursor, cursorTo, setBlind, pinT: () => pinT, stepNow, G,
     shots: () => shots, state: () => ({ P: Object.assign({}, P), sel, anim: !!anim, scrubT, layers: Object.assign({}, layers), panels: panels.map((p) => ({ id: p.id, x: p.x, y: p.y, w: p.w, h: p.h, x0: p.x0, x1: p.x1, y0: p.y0, y1: p.y1 })), L: Object.assign({}, L), handles: viewHandles.map((h) => ({ id: h.id, pt: h.pt.slice() })) }) };
 })();
 </script>

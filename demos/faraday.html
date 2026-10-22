@@ -168,6 +168,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.ind { border-color: var(--equi); border-top-style: dashed; }
 .swatch.drive { border-color: var(--drive); }
 .swatch.dash { border-top-style: dashed; }
+.blind-tag { display: none; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--muted); border-radius: 4px; padding: 3px 7px; }
+:root[data-blind="on"] .blind-tag { display: inline-block; }
+#dataWrap:not([hidden]) { display: flex; flex-direction: column; gap: 6px; }
+.twrap { position: relative; overflow: auto; max-height: 240px; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+.dtab { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.76rem; }
+.dtab caption { text-align: left; font-family: var(--font-ui); font-size: 0.78rem; color: var(--muted); padding: 6px 8px 4px; caption-side: top; }
+.dtab th { position: sticky; top: 0; background: var(--surface); font-family: var(--font-ui); font-weight: 700; text-align: right; padding: 4px 5px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.dtab td { text-align: right; padding: 2px 5px; white-space: nowrap; }
+.dtab th:first-child, .dtab td:first-child { text-align: left; }
+.dtab tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--grid) 60%, transparent); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 @media (max-width: 1060px) {
@@ -207,16 +217,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="pane" id="sPane">
-        <canvas id="sCan" tabindex="0" aria-label="Apparatus drawing."></canvas>
+        <canvas id="sCan" tabindex="0" aria-label="Apparatus drawing: bar magnet and coil connected to a galvanometer and a resistor. Drag the magnet along the axis, or focus the drawing and use the left and right arrow keys."></canvas>
         <div class="stage-ctl" id="stageCtl">
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="reset">Reset</button>
           <span id="acts" style="display:contents"></span>
+          <span class="blind-tag" id="blindTag" title="Blind is on: predictions and answers are hidden">Blind</span>
           <span class="tclock mono" id="tclock">t = 0<small id="rateTag">real time</small></span>
         </div>
       </div>
       <div class="pane" id="pPane">
-        <canvas id="pCan" tabindex="0" aria-label="Flux through one turn, EMF and current against time. The shaded area under the EMF curve is the integral of the EMF since the start of the move."></canvas>
+        <canvas id="pCan" tabindex="0" aria-describedby="dataNote" aria-label="Flux through one turn, EMF and current against time. The shaded area under the EMF curve is the integral of the EMF since the start of the move. Show data table in the rail lists the plotted points."></canvas>
       </div>
     </div>
 
@@ -258,13 +269,21 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <h2>Measurements</h2>
         <dl class="readout" id="meas"></dl>
         <p class="hint" id="measHint">Flux is evaluated at the displayed time. EMF, current and velocity are averages over the preceding 1 ms interval, not endpoint values.</p>
-        <label><input id="labBlind" type="checkbox" checked>Hide predicted amplitudes and integral checks</label>
+        <label class="check"><input id="labBlind" type="checkbox" checked><span>Blind: hide predictions and answers</span></label>
+        <p class="hint" id="blindHint">Blind hides the predicted amplitudes, the integral checks, the steady state predictions and phasor dial, M and k, and the theory curves on the plots. A CSV exported while it is on leaves out the model only columns.</p>
         <button class="btn" id="labStep">Step 1 ms</button>
         <label for="labDuration">Advance by (s)</label><input id="labDuration" type="number" min="0.001" max="10" step="0.001" value="0.1">
         <button class="btn" id="labAdvance">Advance and pause</button>
         <button class="btn" id="labCapture">Capture measurement</button><button class="btn" id="labExport">Export notebook CSV</button><button class="btn" id="labTrace">Export current run CSV</button><button class="btn" id="labClear">Clear notebook</button>
         <p id="labStatus" role="status" aria-live="polite"></p>
-        <div style="overflow:auto;max-height:220px"><table><caption>Measurement notebook</caption><thead><tr><th>Mode</th><th>t (s)</th><th>Φ (Wb)</th><th>EMF (V)</th><th>I (A)</th></tr></thead><tbody id="labRows"></tbody></table></div>
+        <div class="twrap"><table class="dtab"><caption>Measurement notebook</caption><thead><tr><th>Mode</th><th>t (s)</th><th>Φ (Wb)</th><th>EMF (V)</th><th>I (A)</th></tr></thead><tbody id="labRows"></tbody></table></div>
+      </section>
+
+      <section>
+        <h2>Plot data</h2>
+        <button type="button" class="btn" id="dataBtn" aria-expanded="false" aria-controls="dataWrap">Show data table</button>
+        <p class="hint" id="dataNote">A table of the points drawn in the Φ, EMF and I plots for the visible time window.</p>
+        <div id="dataWrap" hidden><p class="hint" id="dataCap"></p><div class="twrap"><table class="dtab" id="dataTab" aria-describedby="dataCap"><thead id="dataHead"></thead><tbody id="dataBody"></tbody></table></div></div>
       </section>
 
       <section>
@@ -302,6 +321,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <label><input type="checkbox" id="tInd" checked>Induced field</label>
           <label><input type="checkbox" id="tForce" checked>Forces</label>
           <label><input type="checkbox" id="tCur" checked>Current arrows</label>
+          <label><input type="checkbox" id="tReduce">Reduce motion</label>
         </div>
         <div class="key">
           <span><i class="swatch"></i><span id="keyPhiTxt">Φ<sub>B</sub>, flux</span></span>
@@ -588,12 +608,41 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   // Opening the switch stops I₂ at once; the primary's flux linkage L₁I₁ + MI₂ cannot jump, so I₁ jumps by MI₂/L₁.
   function coilOpen(s, st) { st.I1 += s.M * st.I2 / s.L1; st.I2 = 0; return st; }
+
+  // ---------- lab data helpers ----------
+  const FD_VERSION = 'faraday@2026-10-22.1';
+  // The "# " comment block that opens every CSV: title, version, setup, SI parameters [name_unit, value], model, rounding, seed, notes.
+  // Line breaks inside a value would end the comment line, so they become spaces.
+  function csvHeader(h) {
+    const one = (s) => String(s).replace(/[\r\n]+/g, ' ').trim();
+    const num = (v) => (typeof v === 'number' ? String(+v.toPrecision(12)) : one(v));
+    const L = [`# ${one(h.title)} (simulated data)`, `# demo version,${one(h.version)}`, `# setup,${one(h.setup)}`];
+    for (const [k, v] of h.params || []) L.push(`# ${one(k)},${num(v)}`);
+    L.push(`# model,${one(h.model)}`, `# rounding,${one(h.rounding)}`, `# seed,${h.seed === undefined || h.seed === null ? 'none' : one(h.seed)}`);
+    for (const n of h.notes || []) L.push(`# ${one(n)}`);
+    return L;
+  }
+  // Rows for the readable plot table: indices of the samples with t0 <= t <= t1, thinned evenly to at most maxRows,
+  // always keeping the first and the last sample in the window.
+  function tableRows(ts, t0, t1, maxRows) {
+    let a = 0, b = ts.length;
+    while (a < b) { const m = (a + b) >> 1; if (ts[m] < t0) a = m + 1; else b = m; }
+    let e = a; while (e < ts.length && ts[e] <= t1) e++;
+    const n = e - a; if (n <= 0) return { idx: [], every: 1 };
+    const every = Math.max(1, Math.ceil((n - 1) / Math.max(1, maxRows - 1)));
+    const idx = []; for (let i = a; i < e; i += every) idx.push(i);
+    if (idx[idx.length - 1] !== e - 1) idx.push(e - 1);
+    return { idx, every };
+  }
   // ==CORE END==
 
-  if (typeof document === 'undefined') { globalThis.FD={MU0,MAG,ellipKE,ringFlux,ringField,cylFluxUnit,cylFieldUnit,coilFlux,dipoleFlux,magMoment,tiltFluxUnit,flipSeries,seriesEval,circuitStep,makeCircuit,runMove,magnetForce,genPhi,genEmf,railsPhi,coast,gaussLegendre,RHO_CU,WIRE_D,R_SRC,windC,wireR,selfL,diskRule,bundleM,minSep,coilSystem,coilPhasor,coilExp,coilStepper,coilOut,coilStep,coilOpen};return; }
+  if (typeof document === 'undefined') { globalThis.FD={MU0,MAG,ellipKE,ringFlux,ringField,cylFluxUnit,cylFieldUnit,coilFlux,dipoleFlux,magMoment,tiltFluxUnit,flipSeries,seriesEval,circuitStep,makeCircuit,runMove,magnetForce,genPhi,genEmf,railsPhi,coast,gaussLegendre,RHO_CU,WIRE_D,R_SRC,windC,wireR,selfL,diskRule,bundleM,minSep,coilSystem,coilPhasor,coilExp,coilStepper,coilOut,coilStep,coilOpen,FD_VERSION,csvHeader,tableRows};return; }
 
   const $ = (id) => document.getElementById(id);
-  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const reduceOS = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  // Reduce motion: the OS setting, or the in-page toggle remembered for this browser session only
+  let reduce = reduceOS;
+  try { const v = sessionStorage.getItem('faraday-reduce-motion'); if (v === 'on') reduce = true; else if (v === 'off') reduce = false; } catch (_) {}
   const E12 = [1, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2];
   const R_VALUES = (() => { const o = []; for (let d = -1; d < 4; d++) for (const m of E12) o.push(+(m * Math.pow(10, d)).toPrecision(3)); o.push(1e4); return o; })();
   // playback rates: the two coils run at audio frequencies, so their slow motion goes much further
@@ -1089,7 +1138,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('signConv').innerHTML = T.sign; $('rhr').textContent = T.rhr; $('modelHint').innerHTML = T.model;
     $('meas').innerHTML = MEAS_ROWS[m].map(([id, l, c]) => `<div><dt>${l}</dt><dd id="${id}" class="${c || ''}">—</dd></div>`).join('');
     $('since').innerHTML = SINCE_ROWS[m].map(([id, l, c]) => `<div><dt>${l}</dt><dd id="${id}" class="${c || ''}">—</dd></div>`).join('');
-    for(const id of ['mPk','mRms','sDphi','sQf']){const el=$(id);if(el)el.parentElement.hidden=$('labBlind').checked;}
     $('sinceHint').innerHTML = m === 'rails'
       ? 'The circuit is one loop, so ∫EMF dt = −ΔΦ<sub>B</sub> and Q = −ΔΦ<sub>B</sub>/R exactly, however the bar moved.'
       : m === 'coils' ? 'Energy is conserved at every instant: what the source delivers becomes heat in the two resistances or magnetic energy W = ½L<sub>1</sub>I<sub>1</sub>² + MI<sub>1</sub>I<sub>2</sub> + ½L<sub>2</sub>I<sub>2</sub>². The count restarts when a setting changes.'
@@ -1107,12 +1155,31 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('steadySec').hidden = !co;
     if (co) $('steady').innerHTML = STEADY_ROWS.map(([id, l, c, w]) => `<div${w ? ' class="wide"' : ''}><dt id="${id}L">${l}</dt><dd id="${id}" class="${c || ''}">—</dd></div>`).join('');
     $('measHint').textContent = co ? 'All readouts are values at the displayed time, not averages. The run CSV adds the exact averages over each step.' : 'Flux is evaluated at the displayed time. EMF, current and velocity are averages over the preceding 1 ms interval, not endpoint values.';
-    $('sCan').setAttribute('aria-label', m === 'magnet'
-      ? 'Bar magnet and coil with field lines, connected to a galvanometer and a resistor. Drag the magnet along the axis. Keys: left and right arrows move the magnet, F flips it, P pushes it in, O pulls it out, T pushes it through, up and down arrows change the coil radius, space plays or pauses, R resets.'
-      : m === 'gen' ? 'Coil turning between magnet poles, with a top view dial and a crank. Drag the crank knob to turn the coil by hand; drag empty space to turn the view. Keys: Shift with the arrow keys turns the view, M switches the motor, left and right arrows turn the crank, up and down arrows change ω, space plays or pauses, R resets.'
-        : m === 'coils' ? 'Two coaxial coils: the primary is driven by an AC source, the secondary is closed through a switch and a load resistor. Drag the secondary along the axis or its top to change its radius. Keys: left and right arrows move the secondary, up and down arrows change its radius, S opens or closes the switch, G restarts the source, space plays or pauses, R resets.'
-        : 'Conducting bar on rails in a field into the page, closed by a resistor. Drag the bar along the rails. Keys: left and right arrows move the bar, up and down arrows change the rail spacing, G pulls at v, L pushes and lets go, space plays or pauses, R resets.');
-    renderActs();
+    renderActs(); applyBlind(); sceneAria(true);
+  }
+  // the drawing's accessible name: what it shows, the current setup, and every keyboard path for the pointer actions
+  const SCENE_TXT = {
+    magnet: ['Bar magnet and coil with field lines, connected to a galvanometer and a resistor. Drag the magnet along the axis, the grip on top of the coil to change its radius, and the resistor up or down to change R.',
+      'Keys: left and right arrows move the magnet, F flips it, P pushes it in, O pulls it out, T pushes it through, up and down arrows change the coil radius, plus and minus change R, space plays or pauses, R resets.'],
+    gen: ['Coil turning between magnet poles, with a top view dial and a crank. Drag the crank knob to turn the coil by hand, drag the resistor up or down to change R, drag empty space to turn the view, double click to reset the view.',
+      'Keys: left and right arrows turn the crank, M switches the motor, up and down arrows change ω, plus and minus change R, Shift with the arrow keys turns the view, 0 resets the view, space plays or pauses, R resets.'],
+    rails: ['Conducting bar on rails in a field into the page, closed by a resistor. Drag the bar along the rails, the grip at the end of the rails to change their spacing, and the resistor up or down to change R.',
+      'Keys: left and right arrows move the bar, up and down arrows change the rail spacing, plus and minus change R, G pulls at v, L pushes and lets go, space plays or pauses, R resets.'],
+    coils: ['Two coaxial coils: the primary is driven by an AC source, the secondary is closed through a switch and a load resistor. Drag the secondary along the axis, its top to change its radius, the load resistor up or down to change R_L, and click the switch.',
+      'Keys: left and right arrows move the secondary, up and down arrows change its radius, plus and minus change R_L, S opens or closes the switch, G restarts the source, space plays or pauses, R resets.']
+  };
+  let sceneTxt = '', sceneLast = 0;
+  function sceneState() {
+    const m = S.mode, n = (v, d) => (+v).toFixed(d).replace('-', '−');
+    if (m === 'magnet') { const q = magP(); return `Now: coil of ${q.N} turns, radius ${n(S.magnet.a, 1)} cm, R = ${fmtR(q.R)}, magnet B_r = ${n(q.Br, 1)} T, its centre at z = ${n(W.z * 100, 1)} cm, move speed ${n(S.magnet.v, 2)} m/s.`; }
+    if (m === 'gen') { const G = S.gen; let deg = wrapPi(W.gth) * 180 / Math.PI; if (deg < 0) deg += 360; return `Now: ${G.N} turns, B = ${n(G.B, 2)} T, area ${G.A} cm², R = ${fmtR(Rnow())}, motor ${W.motor ? `on at ω = ${n(G.w, 1)} rad/s` : 'off'}, coil angle ${n(deg, 0)}°.`; }
+    if (m === 'rails') { const r = railP(); return `Now: B = ${n(r.B, 2)} T, rail spacing ${n(S.rails.L, 0)} cm, R = ${fmtR(r.R)}, bar mass ${n(S.rails.m, 0)} g, bar at x = ${n(W.x * 100, 0)} cm.`; }
+    const c = S.coils; return `Now: source ${n(c.V0, 1)} V at ${n(coilF(), 0)} Hz, ${c.N1} and ${c.N2} turns, secondary radius ${n(c.a2, 1)} cm, ${n(c.d, 1)} cm from the primary, R_L = ${fmtR(R_VALUES[c.Ri])}, switch ${c.closed ? 'closed' : 'open'}.`;
+  }
+  function sceneAria(force) {
+    const now = performance.now(); if (!force && now - sceneLast < 1000) return; sceneLast = now;
+    const [d, k] = SCENE_TXT[S.mode], txt = `${d} ${sceneState()} ${k}`;
+    if (txt !== sceneTxt) { sceneTxt = txt; $('sCan').setAttribute('aria-label', txt); }
   }
   function syncSliders() {
     const m = S.mode;
@@ -1163,19 +1230,94 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   function labSample(dt,phiBefore){
     const m=S.mode,p=P();
-    if(m==='coils'){const o=CS.out||{};return {version:'faraday-2026-10-21.1',run:labRun,mode:m,t:W.t,dt,mid:dt?W.t-dt/2:W.t,N:circ.N,R:circ.R,phi:circ.phi,phiBefore,emf:dt?circ.emfAvg:0,I:dt?circ.Iavg:0,Q:circ.Q,heat:circ.heat,phi0:circ.phi0,start:tA,position:S.coils.d/100,theta:CS.st.th,ke:null,settings:CS.settings,
+    if(m==='coils'){const o=CS.out||{};return {version:FD_VERSION,run:labRun,mode:m,t:W.t,dt,mid:dt?W.t-dt/2:W.t,N:circ.N,R:circ.R,phi:circ.phi,phiBefore,emf:dt?circ.emfAvg:0,I:dt?circ.Iavg:0,Q:circ.Q,heat:circ.heat,phi0:circ.phi0,start:tA,position:S.coils.d/100,theta:CS.st.th,ke:null,settings:CS.settings,
       V1:o.V1,I1:o.I1,I2:o.I2,emf2:o.emf2,phiM:o.phiM,F:o.F,Wm:o.Wm,Esrc:CS.E.src,Q1:CS.E.q1,switch:S.coils.closed?'closed':'open'};}
     const settings=m==='gen'?{N:p.N,R_ohm:Rnow(),B_T:p.B,A_m2:genA(),omega_rad_s:p.w}:m==='rails'?{...railP(),speed_m_s:p.v}:{...magP(),speed_m_s:p.v};
-    return {version:'faraday-2026-10-21.1',run:labRun,mode:m,t:W.t,dt,mid:dt?W.t-dt/2:W.t,N:circ.N,R:circ.R,phi:circ.phi,phiBefore,emf:dt?circ.emf:0,I:dt?circ.I:0,Q:circ.Q,heat:circ.heat,phi0:circ.phi0,start:tA,position:m==='magnet'?W.z:m==='rails'?W.x:null,theta:m==='gen'?W.gth:W.th,ke:m==='rails'?W.ke:null,settings:JSON.stringify(settings)};
+    return {version:FD_VERSION,run:labRun,mode:m,t:W.t,dt,mid:dt?W.t-dt/2:W.t,N:circ.N,R:circ.R,phi:circ.phi,phiBefore,emf:dt?circ.emf:0,I:dt?circ.I:0,Q:circ.Q,heat:circ.heat,phi0:circ.phi0,start:tA,position:m==='magnet'?W.z:m==='rails'?W.x:null,theta:m==='gen'?W.gth:W.th,ke:m==='rails'?W.ke:null,settings:JSON.stringify(settings)};
   }
-  function labDownload(data,name){
+  // ---------- lab: CSV header, Blind, plot data table, reduce motion ----------
+  const blind = () => $('labBlind').checked;
+  const presetName = () => { const b = document.querySelector(`#presets [data-p="${S.preset}"]`); return b ? b.textContent : S.preset; };
+  // the current setup in SI units, for the CSV header and the drawing's description
+  function setupParams() {
+    const m = S.mode;
+    if (m === 'magnet') { const q = magP(); return [['coil_turns_N', q.N], ['coil_radius_m', q.a], ['circuit_resistance_R_ohm', q.R], ['magnet_remanence_Br_T', q.Br], ['magnet_length_m', MAG.len], ['magnet_diameter_m', 2 * MAG.b], ['move_speed_m_s', S.magnet.v], ['time_step_s', DT]]; }
+    if (m === 'gen') { const G = S.gen; return [['coil_turns_N', G.N], ['field_B_T', G.B], ['coil_area_A_m2', genA()], ['circuit_resistance_R_ohm', Rnow()], ['motor_omega_rad_s', G.w], ['motor', W.motor ? 'on' : 'off'], ['time_step_s', DT]]; }
+    if (m === 'rails') { const r = railP(); return [['field_B_T', r.B], ['rail_spacing_L_m', r.L], ['circuit_resistance_R_ohm', r.R], ['bar_mass_kg', r.m], ['pull_speed_m_s', S.rails.v], ['time_step_s', DT]]; }
+    const o = JSON.parse(CS.settings), out = [];
+    for (const [k, v] of Object.entries(o)) if (!(blind() && (k === 'M_H' || k === 'k'))) out.push([k === 'closed' ? 'secondary_switch' : k, k === 'closed' ? (v ? 'closed' : 'open') : v]);
+    out.push(['time_step_s', CS.h]);
+    return out;
+  }
+  const MODEL_LINE = {
+    magnet: 'finite cylinder magnet uniformly magnetized along its axis; flux per turn from the exact field of current rings (elliptic integrals); all N turns at one place; EMF = -N dPhi/dt averaged exactly over each time step; I = EMF/R; coil self inductance neglected',
+    gen: 'uniform field B; Phi = B A cos(theta) through each of N turns; EMF = -N dPhi/dt averaged exactly over each time step; I = EMF/R; coil self inductance neglected; the motor holds omega fixed',
+    rails: 'uniform field B into the page; Phi = B L x; EMF = -dPhi/dt averaged exactly over each time step; I = EMF/R; frictionless rails; self inductance neglected; let go the bar obeys m dv/dt = -B^2 L^2 v/R',
+    coils: 'two coaxial air coils: V1 = R1 I1 + L1 dI1/dt + M dI2/dt and 0 = R2 I2 + L2 dI2/dt + M dI1/dt solved exactly each step (matrix exponential plus phasor steady state); M from Maxwell\'s ring formula averaged over the winding sections; L from Maxwell\'s formula for a circular coil; skin effect and turn capacitance ignored; the EMF of moving the secondary (I dM/dt) left out'
+  };
+  // columns that only the model knows (left out of a CSV exported in Blind)
+  const MODEL_ONLY = ['phiM', 'Wm'];
+  function labDownload(data,name,kind){
     if(!data.length){$('labStatus').textContent='No samples yet. Advance or capture first.';return;}
-    const keys=['version','run','mode','t','dt','mid','N','R','phi','phiBefore','emf','I','Q','heat','phi0','start','position','theta','ke','settings','V1','I1','I2','emf2','phiM','F','Wm','Esrc','Q1','switch'];
+    const B=blind();
+    let keys=['version','run','mode','t','dt','mid','N','R','phi','phiBefore','emf','I','Q','heat','phi0','start','position','theta','ke','settings','V1','I1','I2','emf2','phiM','F','Wm','Esrc','Q1','switch'];
+    let cols='version,run,mode,t_s,interval_s,interval_midpoint_s,N,R_ohm,flux_Wb,previous_flux_Wb,interval_EMF_V,interval_I_A,charge_since_start_C,heat_since_start_J,initial_flux_Wb,move_start_s,position_m,angle_rad,kinetic_energy_J,settings_SI_json,source_V1_V,primary_I1_A,secondary_I2_A,secondary_EMF2_V,flux_from_primary_Wb,force_on_secondary_N,magnetic_energy_J,source_energy_since_start_J,primary_heat_since_start_J,switch'.split(',');
+    if(B){const keep=keys.map(k=>!MODEL_ONLY.includes(k));cols=cols.filter((_,i)=>keep[i]);keys=keys.filter((_,i)=>keep[i]);}
     const quote=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
-    const csv=['version,run,mode,t_s,interval_s,interval_midpoint_s,N,R_ohm,flux_Wb,previous_flux_Wb,interval_EMF_V,interval_I_A,charge_since_start_C,heat_since_start_J,initial_flux_Wb,move_start_s,position_m,angle_rad,kinetic_energy_J,settings_SI_json,source_V1_V,primary_I1_A,secondary_I2_A,secondary_EMF2_V,flux_from_primary_Wb,force_on_secondary_N,magnetic_energy_J,source_energy_since_start_J,primary_heat_since_start_J,switch',...data.map(r=>keys.map(k=>quote(r[k])).join(','))].join('\n');
+    const cell=(r,k)=>{if(k==='settings'&&B&&r.mode==='coils'){try{const o=JSON.parse(r.settings);delete o.M_H;delete o.k;return quote(JSON.stringify(o));}catch(_){}}return quote(r[k]);};
+    const modes=[...new Set(data.map(r=>r.mode))];
+    const head=csvHeader({title:"Faraday's and Lenz's Laws, "+(kind==='run'?'current run samples':'measurement notebook'),version:FD_VERSION,setup:`${presetName()} (apparatus: ${S.mode}) at export`,params:setupParams(),model:MODEL_LINE[S.mode],
+      rounding:'none: values are the model\'s double precision output, unrounded; the on screen notebook shows 6 significant figures',seed:'none (deterministic model, no simulated noise)',
+      notes:[...(kind==='run'?['rows: every 1 ms sample of the current run (at most 60001); flux_Wb is the value at t_s, interval quantities are averages over the interval ending at t_s']:['rows: captured measurements, which may come from different setups; settings_SI_json gives each row\'s own settings']),
+        ...(modes.length>1||modes[0]!==S.mode?[`rows include apparatus: ${modes.join(' ')}; the parameters above are the setup at export`]:[]),
+        ...(B?['Blind was on at export: flux_from_primary_Wb, magnetic_energy_J and M_H, k in settings_SI_json are left out']:[])]});
+    const csv=[...head,cols.join(','),...data.map(r=>keys.map(k=>cell(r,k)).join(','))].join('\n')+'\n';
     const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
     $('labStatus').textContent=`Exported ${data.length} samples; interval quantities belong at the interval midpoint. Runs retain at most 60001 samples.`;
   }
+  // Blind: hide every prediction and answer the labs ask for, on the rail and on the plots
+  function applyBlind() {
+    const B = blind();
+    document.documentElement.setAttribute('data-blind', B ? 'on' : 'off');
+    for (const id of ['mPk', 'mRms', 'sDphi', 'sQf', 'mM', 'mK', 'mPhiM']) { const el = $(id); if (el) el.parentElement.hidden = B; }
+    const co = S.mode === 'coils';
+    $('steady').hidden = B; $('keyPhiM').hidden = !co || B; $('keyRef').hidden = !co || B;
+    if (B && co) $('steadyHint').textContent = 'Blind is on: the steady state predictions (amplitudes, phases, impedances, ratios, τ) are hidden. Measure them from the traces.';
+  }
+  // the readable table of the plotted points
+  let dataOpen = false, dataLast = 0;
+  // columns of the plot table, each in the unit prefix that suits its largest value in the window (as on the plot axes)
+  function dataCols(idx) {
+    const co = S.mode === 'coils';
+    const c = [['t', co ? 't (ms)' : 't (s)', co ? 1e-3 : 1]];
+    const add = (key, name, unit) => { let mx = 0; for (const i of idx) mx = Math.max(mx, Math.abs(hist[key][i] || 0)); const [us, un] = scaleUnit(mx || 1, unit); c.push([key, `${name} (${un})`, us]); };
+    if (co) { add('phi', 'Φ₂', 'Wb'); if (!blind()) add('phiM', 'MI₁/N₂', 'Wb'); add('emf', 'EMF₂', 'V'); add('I1', 'I₁', 'A'); add('I', 'I₂', 'A'); }
+    else { add('phi', 'Φ', 'Wb'); add('emf', 'EMF', 'V'); add('I', 'I', 'A'); }
+    return c;
+  }
+  const cellTxt = (v, us, isT) => (v === undefined || !isFinite(v) ? '' : isT ? (v / us).toFixed(3) : Math.abs(v / us) < 5e-13 ? '0' : (v / us).toPrecision(4).replace('-', '−'));
+  function renderData(force) {
+    if (!dataOpen || !circ) return;
+    const now = performance.now(); if (!force && now - dataLast < 500) return; dataLast = now;
+    const tL = view.wl, tR = view.wl + view.Tw, { idx, every } = tableRows(hist.t, tL, tR, 120), cols = dataCols(idx);
+    $('dataHead').innerHTML = '<tr>' + cols.map((c) => `<th scope="col">${c[1]}</th>`).join('') + '</tr>';
+    $('dataBody').innerHTML = idx.length ? idx.map((i) => '<tr>' + cols.map((c) => `<td>${cellTxt(hist[c[0]][i], c[2], c[0] === 't')}</td>`).join('') + '</tr>').join('') : `<tr><td colspan="${cols.length}">No points in the visible window yet</td></tr>`;
+    const step = (S.mode === 'coils' ? CS.h : DT) * every;
+    $('dataCap').textContent = `${idx.length} points from ${fmtT(tL)} to ${fmtT(tR)}${every > 1 ? `, every ${every}th sample (${fmtSI(step, 's', 3)} apart) plus the last` : ''}. EMF and current are interval averages; flux is the value at t.${running ? ' Refreshes twice a second while running.' : ''}`;
+  }
+  $('dataBtn').addEventListener('click', () => {
+    dataOpen = !dataOpen; $('dataWrap').hidden = !dataOpen;
+    $('dataBtn').setAttribute('aria-expanded', String(dataOpen)); $('dataBtn').textContent = dataOpen ? 'Hide data table' : 'Show data table';
+    renderData(true);
+  });
+  // Reduce motion: pause now, and open every setup paused; Play still runs it
+  $('tReduce').checked = reduce;
+  $('tReduce').addEventListener('change', (e) => {
+    reduce = e.target.checked;
+    try { sessionStorage.setItem('faraday-reduce-motion', reduce ? 'on' : 'off'); } catch (_) {}
+    if (reduce) setRunning(false);
+    $('labStatus').textContent = reduce ? 'Reduce motion is on: setups open paused. Press Play to run.' : 'Reduce motion is off.';
+  });
   function labAdvance(seconds){
     setRunning(false);const n=Math.round(seconds/DT);
     for(let j=0;j<n;j++)advance(DT);
@@ -1183,14 +1325,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   $('labStep').addEventListener('click',()=>labAdvance(DT));
   $('labAdvance').addEventListener('click',()=>{const el=$('labDuration');if(el.value!==''&&el.checkValidity())labAdvance(+el.value);else $('labStatus').textContent='Enter 0.001 to 10 seconds in 0.001 s increments.';});
-  $('labBlind').addEventListener('change',updateReadouts);
+  $('labBlind').addEventListener('change',()=>{updateReadouts();renderData(true);drawAll();});
   $('labCapture').addEventListener('click',()=>{
     setRunning(false);const last=labTrace[labTrace.length-1];labRows.push(last?{...last}:labSample(0,circ.phi));
     $('labRows').innerHTML=labRows.map(r=>`<tr><td>${r.mode}</td><td>${r.t.toFixed(3)}</td><td>${r.phi.toPrecision(6)}</td><td>${r.emf.toPrecision(6)}</td><td>${r.I.toPrecision(6)}</td></tr>`).join('');
     $('labStatus').textContent=`Captured ${labRows.length} measurements.`;
   });
-  $('labExport').addEventListener('click',()=>labDownload(labRows,'faraday-notebook.csv'));
-  $('labTrace').addEventListener('click',()=>{setRunning(false);labDownload(labTrace.slice(-60001),'faraday-run.csv');});
+  $('labExport').addEventListener('click',()=>labDownload(labRows,'faraday-notebook.csv','notebook'));
+  $('labTrace').addEventListener('click',()=>{setRunning(false);labDownload(labTrace.slice(-60001),'faraday-run.csv','run');});
   $('labClear').addEventListener('click',()=>{labRows.length=0;$('labRows').textContent='';$('labStatus').textContent='Notebook cleared.';});
 
   // ---------- canvases ----------
@@ -2076,10 +2218,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     // labels
     label(ctx, `Primary: N_1 = ${cs.N1}, a_1 = ${(a1 * 100).toFixed(1)} cm, I_1 = ${fmtSI(o.I1, 'A')}`, 12 * sc, top + 16 * sc, fs * 0.9, 700, 'left', T.drive);
-    label(ctx, `Secondary: N_2 = ${cs.N2}, a_2 = ${(a2 * 100).toFixed(1)} cm, d = ${(d * 100).toFixed(1)} cm, k = ${sy.k.toFixed(2)}`, 12 * sc, top + 34 * sc, fs * 0.9, 700, 'left', T.ink);
+    label(ctx, `Secondary: N_2 = ${cs.N2}, a_2 = ${(a2 * 100).toFixed(1)} cm, d = ${(d * 100).toFixed(1)} cm${blind() ? '' : `, k = ${sy.k.toFixed(2)}`}`, 12 * sc, top + 34 * sc, fs * 0.9, 700, 'left', T.ink);
     label(ctx, `Φ_2 = ${fmtSI(circ.phi, 'Wb')} through each secondary turn`, 12 * sc, top + 52 * sc, fs * 0.9, 700, 'left', T.flux);
     // phase dial: steady state phasors turning at ω; the vertical projection of each arrow follows its quantity
-    {
+    // the steady state phasor dial is a prediction: Blind leaves it out
+    if (!blind()) {
       // top right on wide panes; on narrow ones the labels need that room, so the dial sits low on the right, under the coils
       const dr = clamp(W0 * 0.07, 26, 44) * sc, narrow = W0 < 300 * sc + 2 * dr + 40 * sc;
       const dcx = W0 - dr - 30 * sc, dcy = narrow ? H0 - bandH - dr - 28 * sc : top + dr + 8 * sc;
@@ -2220,7 +2363,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W0, H0);
     const L = (W0 < 460 ? 52 : 60) * ps, R = W0 - 14 * ps, top = 16 * ps, bot = H0 - 36 * ps, gap = 10 * ps, head = 18 * ps;
-    const PN = panels(), ph = (bot - top - (PN.length - 1) * gap) / PN.length;
+    const PN = panels(), ph = (bot - top - (PN.length - 1) * gap) / PN.length, B = blind();
     const boxes = PN.map((_, i) => { const y0 = top + i * (ph + gap); return { y0: y0 + head, y1: y0 + ph }; });
     if (boxes[0].y1 - boxes[0].y0 < 20) return;
     const tL = view.wl, Tw = view.Tw, tR = tL + Tw;
@@ -2244,19 +2387,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const b = boxes[i], col = T[Pn.col], key = Pn.key;
       const pts = seriesPts(hist.t, hist[key], 0, tL, tR, X);
       const gpts = ghosts.map((G) => seriesPts(G.t, G[key], tA, tL, tR, X));
-      const xpts = (Pn.extra || []).map((e) => ({ e, pts: seriesPts(hist.t, hist[e.key], 0, tL, tR, X) }));
+      // Blind: the dashed model curves (MI₁/N₂, and I₁ with the switch the other way) are left out
+      const xpts = (Pn.extra || []).filter((e) => !(B && e.dash)).map((e) => ({ e, pts: seriesPts(hist.t, hist[e.key], 0, tL, tR, X) }));
       // the two coils: the steady primary current with the switch the other way, computed from its phasor, since the last change of setting
       let rpts = [];
-      if (Pn.ref) {
+      if (Pn.ref && !B) {
         const Xo = (S.coils.closed ? CS.phO : CS.phC).X1, w = coilW(), t0 = Math.max(tA, tL), t1 = Math.min(W.t, tR);
         for (let i = 0; i <= 240 && t1 > t0; i++) { const tt = t0 + (t1 - t0) * i / 240, th = CS.st.th + w * (tt - W.t); rpts.push([tt, Xo[0] * Math.sin(th) + Xo[1] * Math.cos(th)]); }
       }
       let lo = 0, hi = 0;
       const scan = (o) => { for (const q of o) { if (q[1] < lo) lo = q[1]; if (q[1] > hi) hi = q[1]; } };
       scan(pts); gpts.forEach(scan); xpts.forEach((x) => scan(x.pts)); scan(rpts);
-      if (S.mode === 'coils') { const r = refScale(key); lo = Math.min(lo, -r); hi = Math.max(hi, r); }
+      if (S.mode === 'coils' && !B) { const r = refScale(key); lo = Math.min(lo, -r); hi = Math.max(hi, r); }
       { const ref = refScale(key) * 0.05; if (key === 'phi') { if (lo >= 0) hi = Math.max(hi, ref); else if (hi <= 0) lo = Math.min(lo, -ref); } else { lo = Math.min(lo, -ref); hi = Math.max(hi, ref); } }
-      if (S.mode === 'gen' && key !== 'phi') { const pk = S.gen.N * S.gen.B * genA() * S.gen.w / (key === 'I' ? Rnow() : 1); if (W.motor) { lo = Math.min(lo, -pk); hi = Math.max(hi, pk); } }
+      if (S.mode === 'gen' && key !== 'phi' && !B) { const pk = S.gen.N * S.gen.B * genA() * S.gen.w / (key === 'I' ? Rnow() : 1); if (W.motor) { lo = Math.min(lo, -pk); hi = Math.max(hi, pk); } }
       if (key === 'phi' && S.mode === 'gen') { lo = Math.min(lo, -S.gen.B * genA()); hi = Math.max(hi, S.gen.B * genA()); }
       const [ya, yb] = rangeFor(key, lo, hi);
       const Y = (v) => b.y1 - (v - ya) / (yb - ya) * (b.y1 - b.y0);
@@ -2295,7 +2439,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         const py = Math.round(Y(circ.phi0)) + 0.5; ctx.strokeStyle = T.flux; ctx.globalAlpha = 0.6; ctx.setLineDash([4, 4]); ctx.lineWidth = 1;
         ctx.beginPath(); ctx.moveTo(X(tA), py); ctx.lineTo(R, py); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
       }
-      if (S.mode === 'gen' && key === 'emf' && W.motor) {
+      if (S.mode === 'gen' && key === 'emf' && W.motor && !B) {
         const pk = S.gen.N * S.gen.B * genA() * S.gen.w;
         ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.45; ctx.setLineDash([5, 4]); ctx.lineWidth = 1;
         for (const v of [pk, -pk]) { const py = Math.round(Y(v)) + 0.5; ctx.beginPath(); ctx.moveTo(L, py); ctx.lineTo(R, py); ctx.stroke(); }
@@ -2413,7 +2557,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         lenz = tiny ? 'I<sub>2</sub> is passing through zero: at this instant Φ<sub>2</sub> is at a turning point.'
           : `Φ<sub>2</sub> is ${o.emf2 < 0 ? 'increasing' : 'decreasing'}, so I<sub>2</sub> circulates ${o.I2 > 0 ? 'counterclockwise' : 'clockwise'} seen from the right and its own field inside the secondary points ${o.I2 > 0 ? '+z' : '−z'}, against the change. ` +
             (o.I1 * o.I2 < 0 ? 'I<sub>1</sub> and I<sub>2</sub> circulate in opposite senses now: the facing ends are like poles and the coils repel.' : `I<sub>1</sub> and I<sub>2</sub> circulate the same way now, so the coils attract; averaged over a cycle they ${ph.Favg > 0 ? 'repel' : 'attract'}.`);
-        lenz += ` Closing the secondary changed the primary current amplitude from ${pf(A(CS.phO.X1), 'A')} to ${pf(A(CS.phC.X1), 'A')}: its opposing flux lowers the primary's effective inductance, and its resistance adds to the primary's.`;
+        if (!blind()) lenz += ` Closing the secondary changed the primary current amplitude from ${pf(A(CS.phO.X1), 'A')} to ${pf(A(CS.phC.X1), 'A')}: its opposing flux lowers the primary's effective inductance, and its resistance adds to the primary's.`;
       }
     } else {
       const r = railP(), Fx = c.I * r.L * r.B;
@@ -2427,7 +2571,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       }
     }
     $('lenzNow').innerHTML = lenz;
-    for(const id of ['mPk','mRms','sDphi','sQf']){const el=$(id);if(el)el.parentElement.hidden=$('labBlind').checked;}
+    applyBlind(); renderData(); sceneAria();
     // flip button availability
     const fb = $('acts').querySelector('[data-a="flip"]');
     if (fb) { const ok = flipClear(S.magnet.a / 100, -W.z) && !(act && act.kind === 'flip'); fb.disabled = !ok; fb.title = ok ? '' : 'Too close to the coil to turn'; }
@@ -2562,6 +2706,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else if (m === 'coils' && (k === 'ArrowUp' || k === 'ArrowDown')) setParam('a2', S.coils.a2 + (k === 'ArrowUp' ? 0.5 : -0.5));
     else if (m === 'coils' && (k === 's' || k === 'S')) setSwitch(!S.coils.closed);
     else if (m === 'coils' && (k === 'g' || k === 'G')) coilRestart();
+    else if (k === '+' || k === '=' || k === '-' || k === '_' || k === '−') setParam('Ri', P().Ri + (k === '+' || k === '=' ? 1 : -1));
+    else if (m === 'gen' && k === '0') { GV.yaw = GV0.yaw; GV.pit = GV0.pit; }
     else return;
     e.preventDefault();
   });
