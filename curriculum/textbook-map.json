@@ -4309,7 +4309,7 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-22 (Claude). Tabs: Scale of things (log ruler of typical sizes), Convert units (exact factor chains), Dimensional analysis (exponent sliders for five formulas, Show the answer), Significant figures (two measurements and an operation), Fermi estimates (three questions with low/high factors); Blind hides the results.",
+      "note": "New 2026-10-22 (Claude). Tabs: Scale of things (Zoom through: true size models from the observable universe to a proton, Fly in / Fly out; or a log ruler), Convert units (exact factor chains), Dimensional analysis (exponent sliders for five formulas, Show the answer), Significant figures (two measurements and an operation), Fermi estimates (three questions with low/high factors); Blind hides the results.",
       "handouts": [],
       "title": "Units, Scales and Estimates",
       "url": "demos/units.html"

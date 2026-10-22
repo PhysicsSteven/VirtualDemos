@@ -133,6 +133,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   input[type="range"] { min-height: 28px; }
 }
 
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 .tabs { display: flex; flex-wrap: wrap; gap: 6px; }
 .tabs button { font: inherit; font-size: 0.9rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
 .tabs button[aria-selected="true"] { color: var(--canvas); background: var(--ink); border-color: var(--ink); }
@@ -178,7 +179,9 @@ table.grid th { color: var(--muted); font-weight: 700; }
 
   <main class="bench">
     <div class="stage" id="stage">
-      <canvas id="can" tabindex="0" role="img" aria-label="A logarithmic ruler of lengths from a proton to the observable universe, one tick per power of ten, with objects marked."></canvas>
+      <canvas id="can" tabindex="0" role="img" aria-label="Zoom through the scales of the universe, from the observable universe to a proton, with a model of each thing at its true size; or a logarithmic ruler of the same sizes. Scroll, drag up and down, or use the arrow keys to zoom, with objects marked."></canvas>
+      <div class="viewbar" id="zoomBar"><div class="seg" role="group" aria-label="Scale view" id="scaleView"><button type="button" data-v="zoom" aria-pressed="true">Zoom through</button><button type="button" data-v="ruler" aria-pressed="false">Ruler</button></div>
+        <button type="button" class="spin attn" id="flyIn">Fly in</button><button type="button" class="spin" id="flyOut">Fly out</button></div>
       <div class="panel" id="pConvert" hidden>
         <h3>Convert with a chain of exact factors</h3>
         <p>Each factor equals 1 (top and bottom are the same amount), so multiplying by it changes the units, not the quantity. Units that appear on top and bottom cancel.</p>
@@ -215,6 +218,11 @@ table.grid th { color: var(--muted); font-weight: 700; }
     </div>
 
     <aside class="rail">
+      <section id="zoomCtl">
+        <h2>Zoom</h2>
+        <div><div class="slider-head"><label for="sZoom">Width of the view</label><output id="oZoom" for="sZoom"></output></div><input type="range" id="sZoom" min="-15.3" max="27" step="0.01"></div>
+        <p class="hint">Each object is drawn at its true size, centred where you are standing: zooming in heads into your hand, zooming out heads up through the sky. Scroll or pinch on the picture, drag up and down, or use the arrow keys.</p>
+      </section>
       <section>
         <h2>About this tool</h2>
         <p class="hint" id="aboutHint"></p>
@@ -223,7 +231,7 @@ table.grid th { color: var(--muted); font-weight: 700; }
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides the results (the converted value, the dimension check, the rounded answer, the estimate and the object names on the ruler) so students can work first.</p>
+        <p class="hint">Blind hides the results (the converted value, the dimension check, the rounded answer, the estimate and the object names on the ruler and in the zoom) so students can work first.</p>
         <p class="hint">Sizes on the ruler are typical or approximate values; ranges in nature are wide (a human hair is 20 to 180 μm). Conversion factors are the exact legal definitions (1 in = 2.54 cm, 1 lb = 0.45359237 kg, 1 cal = 4.184 J), except where marked.</p>
       </section>
     </aside>
@@ -295,17 +303,40 @@ table.grid th { color: var(--muted); font-weight: 700; }
     breaths: { q: 'How many litres of air do you breathe in a day?', f: [['breaths per minute at rest', 12, 20], ['litres per breath', 0.4, 0.6], ['minutes per day (exact)', 1440, 1440]] }
   };
   const fermi = (rows) => rows.reduce((q, r) => [q[0] * r[1], q[1] * r[2]], [1, 1]);
+
+  // the zoom: objects at true size, in metres, positioned around the viewer (origin at a hand held in front of a standing person)
+  const RE_ = 6.371e6, AU = 1.495978707e11, LY = 9.4607304725808e15;
+  const ZOOM = [
+    { id: 'proton', name: 'proton', size: 1.7e-15, x: 0, y: 0 },
+    { id: 'atom', name: 'hydrogen atom', size: 1.06e-10, x: 0, y: 0 },
+    { id: 'dna', name: 'DNA double helix', size: 2e-9, x: 0, y: 0 },
+    { id: 'virus', name: 'virus', size: 1e-7, x: 0, y: 0 },
+    { id: 'cell', name: 'red blood cell', size: 8e-6, x: 0, y: 0 },
+    { id: 'hair', name: 'human hair (width)', size: 7e-5, x: 0, y: 0 },
+    { id: 'sand', name: 'grain of sand', size: 5e-4, x: 0, y: 0 },
+    { id: 'person', name: 'person', size: 1.7, x: -0.25, y: -0.1 },
+    { id: 'everest', name: 'Mount Everest (height)', size: 8849, x: 2500, y: -1.0 + 8849 / 2 },
+    { id: 'earth', name: 'Earth (diameter)', size: 2 * RE_, x: 0, y: -1.0 - RE_ },
+    { id: 'moon', name: 'Moon\'s orbit (diameter)', size: 2 * 3.844e8, x: 0, y: -1.0 - RE_ },
+    { id: 'solar', name: 'Earth\'s orbit (diameter)', size: 2 * AU, x: -AU, y: 0 },
+    { id: 'stars', name: 'nearest stars (Proxima Centauri 4.24 ly)', size: 2 * 4.24 * LY, x: -AU, y: 0 },
+    { id: 'galaxy', name: 'Milky Way (disk)', size: 1e5 * LY, x: -AU - 2.6e4 * LY, y: 0 },
+    { id: 'universe', name: 'observable universe', size: 8.8e26, x: 0, y: 0 }
+  ];
+  // visibility of an object of pixel size P on a screen W pixels wide: fades in from 4 to 24 px, out from 1.5 to 6 screen widths
+  const smooth = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  const zoomAlpha = (P, W) => smooth(4, 24, P) * (1 - smooth(1.5 * W, 6 * W, P));
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
   const $ = (id) => document.getElementById(id);
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
-  const ABOUT = { scale: 'Each tick on the ruler is ten times the one before. A person is about 10⁰ m; the ruler runs over about 42 powers of ten. Drag along it (or use the arrow keys) to read off a size.',
+  const ABOUT = { scale: 'Zoom through: fly from the observable universe down to a proton; every object is drawn at its true size, and each power of ten takes the same scroll. Ruler: each tick on the ruler is ten times the one before. A person is about 10⁰ m; the ruler runs over about 42 powers of ten. Drag along it (or use the arrow keys) to read off a size.',
     convert: 'Choose a quantity and units. The chain shows each exact factor, so students can see which units cancel. Try 65 mi/h to m/s, or 2000 kcal to kWh.',
     dims: 'Choose exponents with the sliders until the dimensions [M L T] on the left match the answer\'s. Then press Show the answer. Variables that do not appear in the answer get exponent 0.',
     sig: 'Type two measurements as you would write them. A decimal point makes trailing zeros significant; 1500 with no decimal point is ambiguous (taken as 2 figures here).',
     fermi: 'Adjust the low and high values to your own estimates. The answer is the product, shown as a range and to the nearest power of ten.' };
-  const S = { tab: 'scale', kind: 'speed', from: 'mi/h', to: 'm/s', q: 'pendulum', ex: [0, 0, 0], fq: 'beats', fr: null, blind: false, cursor: 0 };
+  const S = { tab: 'scale', kind: 'speed', from: 'mi/h', to: 'm/s', q: 'pendulum', ex: [0, 0, 0], fq: 'beats', fr: null, blind: false, cursor: 0, view: 'zoom', zoom: 0.4, fly: 0 };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -317,7 +348,7 @@ table.grid th { color: var(--muted); font-weight: 700; }
   function setTab(t) {
     S.tab = t; for (const b of document.querySelectorAll('#tabs button')) b.setAttribute('aria-selected', String(b.dataset.t === t));
     can.hidden = t !== 'scale'; $('pConvert').hidden = t !== 'convert'; $('pDims').hidden = t !== 'dims'; $('pSig').hidden = t !== 'sig'; $('pFermi').hidden = t !== 'fermi'; stage.classList.toggle('tools', t !== 'scale');
-    $('aboutHint').textContent = ABOUT[t]; render(); if (t === 'scale') requestAnimationFrame(resize);
+    $('aboutHint').textContent = ABOUT[t]; $('zoomBar').hidden = t !== 'scale'; $('zoomCtl').hidden = t !== 'scale' || S.view !== 'zoom'; render(); if (t === 'scale') requestAnimationFrame(resize);
   }
   $('tabs').addEventListener('click', (e) => { const b = e.target.closest('[data-t]'); if (b) setTab(b.dataset.t); });
   // ----- convert -----
@@ -373,13 +404,14 @@ table.grid th { color: var(--muted); font-weight: 700; }
   $('fQ').addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (b) { S.fq = b.dataset.f; fermiUI(); render(); } });
   function renderFermi() { const [lo, hi] = fermi(S.fr), mid = Math.sqrt(lo * hi); $('fOut').textContent = S.blind ? 'Estimate: hidden in Blind' : `Between ${sci(lo)} and ${sci(hi)}: about 10${sup(Math.round(Math.log10(mid)))} (geometric middle ${sci(mid, 2)})`; }
   // ----- scale ruler -----
-  can.addEventListener('pointermove', (e) => { if (e.buttons !== 1 && e.pointerType === 'mouse') return; const r = can.getBoundingClientRect(); S.cursor = posToExp(e.clientX - r.left, e.clientY - r.top); draw(); });
-  can.addEventListener('pointerdown', (e) => { const r = can.getBoundingClientRect(); S.cursor = posToExp(e.clientX - r.left, e.clientY - r.top); draw(); });
-  can.addEventListener('keydown', (e) => { const d = { ArrowLeft: -0.25, ArrowRight: 0.25, ArrowUp: 0.25, ArrowDown: -0.25 }[e.key]; if (d) { S.cursor = Math.max(-15, Math.min(27, S.cursor + d)); draw(); e.preventDefault(); } });
+  can.addEventListener('pointermove', (e) => { if (S.view !== 'ruler') return; if (e.buttons !== 1 && e.pointerType === 'mouse') return; const r = can.getBoundingClientRect(); S.cursor = posToExp(e.clientX - r.left, e.clientY - r.top); draw(); });
+  can.addEventListener('pointerdown', (e) => { if (S.view !== 'ruler') return; const r = can.getBoundingClientRect(); S.cursor = posToExp(e.clientX - r.left, e.clientY - r.top); draw(); });
+  can.addEventListener('keydown', (e) => { if (S.view !== 'ruler') return; const d = { ArrowLeft: -0.25, ArrowRight: 0.25, ArrowUp: 0.25, ArrowDown: -0.25 }[e.key]; if (d) { S.cursor = Math.max(-15, Math.min(27, S.cursor + d)); draw(); e.preventDefault(); } });
   let geom = null;
   function posToExp(x, y) { if (!geom) return 0; const t = geom.vert ? (geom.y1 - y) / (geom.y1 - geom.y0) : (x - geom.x0) / (geom.x1 - geom.x0); return Math.max(-15, Math.min(27, -15 + 42 * t)); }
   function draw() {
     if (!T || !W || S.tab !== 'scale') return;
+    if (S.view === 'zoom') { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawZoom(); return; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh); const p = ps(), vert = W < 640;
     const x0 = vert ? 40 * p : 30 * p, x1 = vert ? x0 : W - 130 * p, y0 = vert ? 40 * p : Hh * 0.5, y1 = vert ? Hh - 30 * p : y0; geom = { vert, x0, x1, y0, y1 };
     const P = (e) => vert ? [x0, y1 - (y1 - y0) * (e + 15) / 42] : [x0 + (x1 - x0) * (e + 15) / 42, y0];
@@ -397,10 +429,95 @@ table.grid th { color: var(--muted); font-weight: 700; }
     ctx.fillText(`cursor: ${sci(val, 2)} m${S.blind ? '' : `   nearest: ${near[0]}`}`, 14 * p, 14 * p);
     if (!vert) { ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('one tick per power of ten; drag to read a size', 14 * p, 34 * p); }
   }
+
+  // ---------- 3D zoom ----------
+  const rng = (seed) => () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+  const PTS = (() => { const r = rng(7), gal = [], web = [], stars = [];
+    for (let i = 0; i < 1400; i++) { const arm = i % 2, t = r() * 3.2, rad = 0.06 + t / 3.4, a = t * 1.9 + arm * Math.PI + (r() - 0.5) * 0.5; gal.push([rad * Math.cos(a) * 0.5, rad * Math.sin(a) * 0.5 * 0.92, r()]); }
+    for (let i = 0; i < 160; i++) gal.push([(r() - 0.5) * 0.12, (r() - 0.5) * 0.1, 1]);
+    const nodes = Array.from({ length: 40 }, () => [r() - 0.5, r() - 0.5]);
+    for (let i = 0; i < 1600; i++) { const a = nodes[Math.floor(r() * 40)], b = nodes[Math.floor(r() * 40)], t = r(); if (Math.hypot(a[0] - b[0], a[1] - b[1]) > 0.3) { i--; continue; } web.push([a[0] + (b[0] - a[0]) * t + (r() - 0.5) * 0.02, a[1] + (b[1] - a[1]) * t + (r() - 0.5) * 0.02]); }
+    for (let i = 0; i < 70; i++) { const a = r() * 7, d = Math.sqrt(r()) * 0.5; stars.push([d * Math.cos(a), d * Math.sin(a), 0.3 + r() * 0.7]); }
+    const sand = Array.from({ length: 9 }, (_, i) => { const a = i / 9 * 2 * Math.PI; return [Math.cos(a) * (0.75 + r() * 0.3), Math.sin(a) * (0.7 + r() * 0.3)]; });
+    return { gal, web, stars, sand }; })();
+  function ball(x, y, r, c0, c1, a) { const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r); g.addColorStop(0, c0); g.addColorStop(1, c1); ctx.globalAlpha = a; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); ctx.globalAlpha = 1; }
+  const DRAW = {
+    proton(x, y, r, a) { ball(x, y, r, '#ffb3a3', '#a8321e', a); ctx.globalAlpha = a; [['#ff4d4d', -0.35, -0.2], ['#3dbf6e', 0.35, -0.15], ['#4d7dff', 0, 0.35]].forEach(([c, dx, dy]) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x + dx * r, y + dy * r, r * 0.16, 0, 7); ctx.fill(); }); ctx.globalAlpha = 1; },
+    atom(x, y, r, a) { const g = ctx.createRadialGradient(x, y, 0, x, y, r * 1.6); g.addColorStop(0, 'rgba(90,140,255,0.55)'); g.addColorStop(0.45, 'rgba(90,140,255,0.22)'); g.addColorStop(1, 'rgba(90,140,255,0)'); ctx.globalAlpha = a; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * 1.6, 0, 7); ctx.fill(); ctx.fillStyle = '#c0392b'; ctx.beginPath(); ctx.arc(x, y, Math.max(1, r * 1.6e-5), 0, 7); ctx.fill(); ctx.globalAlpha = 1; },
+    dna(x, y, r, a) {   // r is half the 2 nm width; one turn per 3.4 nm along x, shown over ±12 nm
+      const L = r * 12, pitch = r * 3.4; ctx.globalAlpha = a; ctx.lineWidth = Math.max(1, r * 0.22);
+      for (let k = -L; k < L; k += pitch / 6) { const ph = 2 * Math.PI * k / pitch, y1 = y + r * Math.sin(ph), y2 = y + r * Math.sin(ph + 2.4); ctx.strokeStyle = 'rgba(150,160,175,0.7)'; ctx.beginPath(); ctx.moveTo(x + k, y1); ctx.lineTo(x + k, y2); ctx.stroke(); }
+      for (const [off, col] of [[0, '#2b60b5'], [2.4, '#b0452f']]) { ctx.strokeStyle = col; ctx.lineWidth = Math.max(1.5, r * 0.3); ctx.beginPath(); for (let k = -L; k <= L; k += pitch / 40) { const yy = y + r * Math.sin(2 * Math.PI * k / pitch + off); k === -L ? ctx.moveTo(x + k, yy) : ctx.lineTo(x + k, yy); } ctx.stroke(); }
+      ctx.globalAlpha = 1; },
+    virus(x, y, r, a) { ctx.globalAlpha = a; ctx.strokeStyle = '#7a3e9d'; ctx.lineWidth = Math.max(1, r * 0.06); for (let i = 0; i < 24; i++) { const t = i / 24 * 2 * Math.PI; ctx.beginPath(); ctx.moveTo(x + r * 0.8 * Math.cos(t), y + r * 0.8 * Math.sin(t)); ctx.lineTo(x + r * 1.15 * Math.cos(t), y + r * 1.15 * Math.sin(t)); ctx.stroke(); ctx.fillStyle = '#b07cd0'; ctx.beginPath(); ctx.arc(x + r * 1.15 * Math.cos(t), y + r * 1.15 * Math.sin(t), r * 0.07, 0, 7); ctx.fill(); } ctx.globalAlpha = 1; ball(x, y, r * 0.85, '#d9b8ee', '#7a3e9d', a); },
+    cell(x, y, r, a) { ball(x, y, r, '#f08a7a', '#9e2a1c', a); ctx.globalAlpha = a * 0.55; const g = ctx.createRadialGradient(x, y, 0, x, y, r * 0.55); g.addColorStop(0, '#7d1d12'); g.addColorStop(1, 'rgba(125,29,18,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * 0.55, 0, 7); ctx.fill(); ctx.globalAlpha = 1; },
+    hair(x, y, r, a) { ctx.globalAlpha = a; const g = ctx.createLinearGradient(0, y - r, 0, y + r); g.addColorStop(0, '#3b2a1e'); g.addColorStop(0.4, '#8a6a4f'); g.addColorStop(1, '#2a1d14'); ctx.fillStyle = g; ctx.fillRect(0, y - r, W, 2 * r); ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; for (let k = (x % (r * 0.8)) - r; k < W; k += r * 0.8) { ctx.beginPath(); ctx.moveTo(k, y - r); ctx.quadraticCurveTo(k + r * 0.3, y, k, y + r); ctx.stroke(); } ctx.globalAlpha = 1; },
+    sand(x, y, r, a) { ctx.globalAlpha = a; const g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, r * 0.1, x, y, r); g.addColorStop(0, '#f1dca6'); g.addColorStop(1, '#a8834a'); ctx.fillStyle = g; ctx.beginPath(); PTS.sand.forEach(([u, v], i) => (i ? ctx.lineTo(x + u * r, y + v * r) : ctx.moveTo(x + u * r, y + v * r))); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; },
+    person(x, y, r, a) {   // r = half the height; feet at y + r
+      ctx.globalAlpha = a; ctx.fillStyle = T.ink; const h = 2 * r, top = y - r;
+      ctx.beginPath(); ctx.arc(x, top + h * 0.065, h * 0.065, 0, 7); ctx.fill();
+      ctx.fillRect(x - h * 0.08, top + h * 0.14, h * 0.16, h * 0.38); ctx.fillRect(x - h * 0.075, top + h * 0.5, h * 0.06, h * 0.5); ctx.fillRect(x + h * 0.015, top + h * 0.5, h * 0.06, h * 0.5);
+      ctx.save(); ctx.translate(x + h * 0.07, top + h * 0.17); ctx.rotate(1.35); ctx.fillRect(0, -h * 0.025, h * 0.36, h * 0.05); ctx.restore(); ctx.fillRect(x - h * 0.13, top + h * 0.16, h * 0.05, h * 0.33); ctx.globalAlpha = 1; },
+    everest(x, y, r, a) {   // r = half the 8849 m height; base at y + r
+      const base = y + r, h = 2 * r; ctx.globalAlpha = a; const g = ctx.createLinearGradient(0, base - h, 0, base); g.addColorStop(0, '#9aa6b6'); g.addColorStop(1, '#5c6675'); ctx.fillStyle = g;
+      ctx.beginPath(); ctx.moveTo(x - h * 1.8, base); ctx.lineTo(x - h * 0.6, base - h * 0.55); ctx.lineTo(x - h * 0.25, base - h * 0.75); ctx.lineTo(x, base - h); ctx.lineTo(x + h * 0.35, base - h * 0.7); ctx.lineTo(x + h * 0.9, base - h * 0.5); ctx.lineTo(x + h * 2, base); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#f4f7fb'; ctx.beginPath(); ctx.moveTo(x - h * 0.25, base - h * 0.75); ctx.lineTo(x, base - h); ctx.lineTo(x + h * 0.35, base - h * 0.7); ctx.lineTo(x + h * 0.1, base - h * 0.8); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; },
+    earth(x, y, r, a) { ball(x, y, r, '#8fc1ef', '#1d4f87', a); ctx.globalAlpha = a * 0.75; ctx.fillStyle = '#4f8a4a'; ctx.beginPath(); ctx.ellipse(x - r * 0.25, y - r * 0.1, r * 0.3, r * 0.45, 0.4, 0, 7); ctx.fill(); ctx.beginPath(); ctx.ellipse(x + r * 0.35, y + r * 0.2, r * 0.22, r * 0.3, -0.3, 0, 7); ctx.fill(); ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.ellipse(x, y - r * 0.88, r * 0.35, r * 0.1, 0, 0, 7); ctx.fill(); ctx.globalAlpha = 1; },
+    moon(x, y, r, a) { ctx.globalAlpha = a; ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; ball(x + r * Math.cos(0.7), y - r * Math.sin(0.7), Math.max(2, r * 1737 / 384400), '#e6e6e6', '#777', a); ball(x, y, Math.max(2.5, r * 6371 / 384400), '#8fc1ef', '#1d4f87', a); },
+    solar(x, y, r, a) { ctx.globalAlpha = a; ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; ball(x, y, Math.max(4, r * 6.957e8 / AU), '#fff3b0', '#e08a1e', a); ball(x + r, y, 3, '#8fc1ef', '#1d4f87', a); },
+    stars(x, y, r, a) { ctx.globalAlpha = a; for (const [u, v, b] of PTS.stars) { ctx.fillStyle = `rgba(${255},${200 + 55 * b | 0},${150 + 100 * b | 0},${b})`; ctx.beginPath(); ctx.arc(x + u * 2 * r, y + v * 2 * r, 1.5 + b * 1.5, 0, 7); ctx.fill(); } ctx.fillStyle = '#ffe08a'; ctx.beginPath(); ctx.arc(x, y, 3.5, 0, 7); ctx.fill(); ctx.fillStyle = '#ff8a70'; ctx.beginPath(); ctx.arc(x + r * 0.62, y - r * 0.78, 3, 0, 7); ctx.fill(); ctx.globalAlpha = 1; },
+    galaxy(x, y, r, a) { ctx.globalAlpha = a; const g = ctx.createRadialGradient(x, y, 0, x, y, r * 0.3); g.addColorStop(0, 'rgba(255,236,190,0.9)'); g.addColorStop(1, 'rgba(255,236,190,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * 0.3, 0, 7); ctx.fill();
+      for (const [u, v, b] of PTS.gal) { ctx.fillStyle = b > 0.66 ? 'rgba(170,200,255,0.8)' : 'rgba(255,240,210,0.7)'; ctx.fillRect(x + u * 2 * r, y + v * 2 * r, 1.6, 1.6); } ctx.globalAlpha = 1; },
+    universe(x, y, r, a) { ctx.globalAlpha = a; ctx.fillStyle = 'rgba(160,180,255,0.75)'; for (const [u, v] of PTS.web) ctx.fillRect(x + u * 2 * r, y + v * 2 * r, 1.8, 1.8); ctx.globalAlpha = 1; }
+  };
+  function drawZoom() {
+    const p = ps(), view = 10 ** S.zoom, k = W / view, cx = W / 2, cy = Hh / 2 + 10 * p;
+    // the camera drifts to centre whichever object about fills the view (weights smooth in the zoom, so it glides)
+    let sw = 0, mx = 0, my = 0; for (const o of ZOOM) { const P = o.size * k, w = zoomAlpha(P, W) * Math.exp(-((Math.log10(P / (0.6 * W))) ** 2) / 0.18); sw += w; mx += w * o.x; my += w * o.y; }
+    const camX = sw > 1e-12 ? mx / sw : 0, camY = sw > 1e-12 ? my / sw : 0, X = (x) => cx + (x - camX) * k, Y = (y) => cy - (y - camY) * k;
+    const dark = S.zoom > 7.6;   // beyond Earth, space is black
+    ctx.fillStyle = dark ? '#05070d' : T.canvas; ctx.fillRect(0, 0, W, Hh);
+    // the ground: Earth's surface when Earth is much bigger than the view
+    const Ez = ZOOM.find((o) => o.id === 'earth'), Ep = Ez.size * k;
+    if (Ep > 6 * W) {
+      if (Ep < 2e5 * W) { const ex = X(Ez.x), ey = Y(Ez.y); ctx.fillStyle = T.grid; ctx.beginPath(); ctx.arc(ex, ey, Ep / 2, 0, 7); ctx.fill(); ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.stroke(); }   // curved horizon
+      else { const gy = Y(-1.0); if (gy < Hh) { ctx.fillStyle = T.grid; ctx.fillRect(0, Math.max(0, gy), W, Hh); ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); } }
+    }
+    // between the planets and the stars: the Sun is a lone point
+    if (S.zoom > 13 && S.zoom < 16.6) { const a = smooth(13, 13.6, S.zoom) * (1 - smooth(16, 16.6, S.zoom)), sx = X(-AU), sy = Y(0); ctx.globalAlpha = a; ctx.fillStyle = '#ffe08a'; ctx.beginPath(); ctx.arc(sx, sy, 3.5 * p, 0, 7); ctx.fill();
+      if (!S.blind) { ctx.fillStyle = '#e7ecf3'; ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('the Sun: no other star within 4.2 light years', sx, sy - 10 * p); } ctx.globalAlpha = 1; }
+    const labels = [];
+    for (const o of [...ZOOM].sort((u, v) => v.size - u.size)) {   // largest first, so smaller things are drawn on top
+      const P = o.size * k, a = zoomAlpha(P, W); if (a < 0.01) continue;
+      DRAW[o.id](X(o.x), Y(o.y), P / 2, a);
+      if (a > 0.45 && !S.blind) labels.push([o, X(o.x), Y(o.y) - P / 2, a]);
+    }
+    ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    for (const [o, x, y, a] of labels) { const half = ctx.measureText(`${o.name}: ${sci(o.size, 2)} m`).width / 2 + 8 * p, lx = Math.max(half, Math.min(W - half, x)), ly = Math.max(66 * p, Math.min(Hh - 50 * p, y - 6 * p)); ctx.globalAlpha = a; ctx.fillStyle = dark ? '#e7ecf3' : T.ink; ctx.fillText(`${o.name}: ${sci(o.size, 2)} m`, lx, ly); ctx.globalAlpha = 1; }
+    // scale bar: the largest 1, 2 or 5 × 10ⁿ m that fits in a quarter of the width
+    const raw = view / 4, e = Math.floor(Math.log10(raw)), m = raw / 10 ** e, step = (m >= 5 ? 5 : m >= 2 ? 2 : 1) * 10 ** e, bw = step * k;
+    ctx.strokeStyle = dark ? '#e7ecf3' : T.ink; ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth = 2 * p; const bx = 16 * p, by = Hh - 20 * p;
+    ctx.beginPath(); ctx.moveTo(bx, by - 6 * p); ctx.lineTo(bx, by); ctx.lineTo(bx + bw, by); ctx.lineTo(bx + bw, by - 6 * p); ctx.stroke();
+    ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(sci(step, 1) + ' m', bx, by - 8 * p);
+    ctx.textAlign = 'right'; ctx.fillText(`width of view: ${sci(view, 2)} m (10${sup(S.zoom.toFixed(1))})`, W - 14 * p, Hh - 12 * p);
+    $('oZoom').textContent = `${sci(view, 2)} m`; $('sZoom').value = S.zoom;
+  }
+  function setView(v) { S.view = v; S.fly = 0; for (const b of document.querySelectorAll('#scaleView button')) b.setAttribute('aria-pressed', String(b.dataset.v === v)); $('flyIn').hidden = $('flyOut').hidden = v !== 'zoom'; $('zoomCtl').hidden = v !== 'zoom' || S.tab !== 'scale'; draw(); }
+  $('scaleView').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b) setView(b.dataset.v); });
+  const zoomTo = (z) => { S.zoom = Math.max(-15.3, Math.min(27, z)); draw(); };
+  $('sZoom').addEventListener('input', (e) => { S.fly = 0; zoomTo(+e.target.value); });
+  can.addEventListener('wheel', (e) => { if (S.view !== 'zoom' || S.tab !== 'scale') return; e.preventDefault(); S.fly = 0; zoomTo(S.zoom + Math.sign(e.deltaY) * 0.08 * Math.min(4, Math.abs(e.deltaY) / 40 + 0.5)); }, { passive: false });
+  let dragY = null, pinch = null; const touches = new Map();
+  can.addEventListener('pointerdown', (e) => { if (S.view !== 'zoom') return; touches.set(e.pointerId, e.clientY + 0 * e.clientX); dragY = e.clientY; S.fly = 0; can.setPointerCapture(e.pointerId); });
+  can.addEventListener('pointermove', (e) => { if (S.view !== 'zoom' || dragY == null) return; zoomTo(S.zoom + (e.clientY - dragY) * 0.02); dragY = e.clientY; });
+  can.addEventListener('pointerup', (e) => { touches.delete(e.pointerId); dragY = null; });
+  can.addEventListener('keydown', (e) => { if (S.view !== 'zoom') return; const d = { ArrowUp: -0.1, ArrowRight: -0.1, ArrowDown: 0.1, ArrowLeft: 0.1 }[e.key]; if (d) { S.fly = 0; zoomTo(S.zoom + d); e.preventDefault(); e.stopImmediatePropagation(); } }, true);
+  $('flyIn').addEventListener('click', () => { if (reduce) { zoomTo(Math.round(S.zoom - 3)); return; } if (S.zoom < -15) S.zoom = 27; S.fly = S.fly === -1 ? 0 : -1; });
+  $('flyOut').addEventListener('click', () => { if (reduce) { zoomTo(Math.round(S.zoom + 3)); return; } if (S.zoom > 26.9) S.zoom = -15.3; S.fly = S.fly === 1 ? 0 : 1; });
+  function tick(dt) { if (S.fly && S.tab === 'scale' && S.view === 'zoom') { zoomTo(S.zoom + S.fly * dt * 0.8); $('flyIn').textContent = S.fly === -1 ? 'Pause' : 'Fly in'; $('flyOut').textContent = S.fly === 1 ? 'Pause' : 'Fly out'; if (S.zoom <= -15.3 || S.zoom >= 27) { S.fly = 0; } } else { $('flyIn').textContent = 'Fly in'; $('flyOut').textContent = 'Fly out'; } }
   function render() { if (S.tab === 'scale') draw(); else if (S.tab === 'convert') renderConvert(); else if (S.tab === 'dims') renderDims(); else if (S.tab === 'sig') renderSig(); else renderFermi(); }
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; render(); });
   function init() { convUI(); dimsUI(); fermiUI(); setTab('scale'); }
-  function tick() {}
   function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; render(); }
   const retheme = () => { tokens(); render(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}

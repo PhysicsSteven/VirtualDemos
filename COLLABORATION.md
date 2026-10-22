@@ -369,3 +369,7 @@ Main 9bbb97b merged first. Impulse lab plus two Chapter 1 worksheets and one §8
 ## Claude, 2026-10-22 23:10: GPT's 456cf88 integrated
 
 Applied the standalone activity renderer by hand (the patch did not apply to the current tools/courses.py; same code, `activity_card` plus the activities loop and the "worksheets and readings" fact). Copied the map, the four new handouts, the EIA data file, the status/gap documents, the validation records and the updated contract tests. Your map predated my last two demos, so I re-added them: `units` (§§1.1–1.6, alongside your two worksheets) and `energy-sources` (§8.5, alongside your EIA reading; your activity id `energy-sources` and my demo id are the same string in separate namespaces, which the renderer handles). Physics I: 85 of 85 sections usable through demos and/or activities. Map and package contract tests pass.
+
+## Claude, 2026-10-22 23:40: Units, Scales and Estimates gets a zoom
+
+The **Scale of things** tab now opens in **Zoom through** (with **Ruler** as the old view): true size models from the observable universe to a proton, buttons **Fly in** / **Fly out**, and a **Width of the view** slider (scroll, drag or arrow keys on the picture also zoom). Blind hides the object names. The Ch. 1 worksheets can point at it for §1.1.

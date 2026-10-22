@@ -17,7 +17,7 @@ No prerequisites. Each tab stands alone, so use them across the first week. **Bl
 
 ## Running it in class
 
-1. **Scale of things.** Blind on: ask where a red blood cell, Everest and the Moon's distance go on the ruler, then reveal. A person sits near 10⁰ m; the hydrogen atom is as far below us (10 powers) as the Earth–Sun distance is above.
+1. **Scale of things.** Start in **Zoom through** at the person and press **Fly out**: Everest, Earth's curve, Earth, the Moon's orbit, the Sun alone in the dark, the nearest stars, the Milky Way, the cosmic web. Then **Fly in** to a proton through a hair, a red blood cell, a virus, DNA and a hydrogen atom (whose nucleus is too small to show). Each power of ten takes the same time. With Blind on, ask what comes next before it appears. **Ruler** shows the same sizes on one logarithmic line; a person sits near 10⁰ m and the hydrogen atom is as far below us (10 powers) as the Earth–Sun distance is above.
 2. **Convert units.** 65 mi/h = 29.0576 m/s exactly. Point at the chain: mi cancels mi, h cancels h. Then 2000 kcal (a day's food) = 2.32 kWh.
 3. **Dimensional analysis.** Pendulum: students move the sliders until the dimensions read T. The mass exponent must be 0. Show the answer: t = C√(L/g), C = 2π. Then the orbit: t ∝ √(r³/GM), Kepler's third law.
 4. **Significant figures.** 12.07 × 0.0350 = 0.42245 on the calculator, written 0.422. 100.0 − 2.351 = 97.6. Then 1500 ÷ 3.2: is 1500 two figures or four? Writing 1.5 × 10³ or 1500. removes the doubt.
@@ -44,7 +44,8 @@ No prerequisites. Each tab stands alone, so use them across the first week. **Bl
 
 ## Physics behind the demo
 
-- Ruler sizes are typical or approximate (proton charge diameter 1.7 fm; hydrogen atom 2a₀ = 0.106 nm; human hair about 70 μm, ranging 20 to 180 μm; 1 au = 149,597,870,700 m exactly; light year from c and the Julian year; Milky Way disk about 100,000 ly; observable universe about 93 billion ly across).
+- Zoom: every object is drawn at its true size about where you stand (the hair, cell, virus, DNA and atom in your hand; Earth below your feet; the Sun 1 au away; the Galactic Centre about 26,000 light years away), and the view glides to centre whichever object fills it. The shapes are simplified models: the proton shows three quarks as coloured dots, the atom's electron cloud is a fuzzy ball, and the cosmic web and galaxy are drawn from random points. Objects fade in at a few pixels across and out at a few screen widths.
+- Ruler and zoom sizes are typical or approximate (proton charge diameter 1.7 fm; hydrogen atom 2a₀ = 0.106 nm; human hair about 70 μm, ranging 20 to 180 μm; 1 au = 149,597,870,700 m exactly; light year from c and the Julian year; Milky Way disk about 100,000 ly; observable universe about 93 billion ly across).
 - Conversion factors are the exact definitions, except the BTU (international table value) and the year (Julian, 365.25 days). The eV is exact since the 2019 SI.
 - Dimensional analysis solves the exponent equations for [M, L, T]; a variable that cannot appear gets exponent 0.
 - Significant figures: a decimal point makes trailing zeros significant; trailing zeros in a whole number without one are ambiguous and counted as not significant. Products keep the fewest significant figures, sums the fewest decimal places; halves round up.
