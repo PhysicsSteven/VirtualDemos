@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Center of Mass: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Center of Mass</h1><ul class="meta"><li><a href="../demos/center-of-mass.html">Open the demo</a></li><li>PHYS 201</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>The centre of mass is the mass weighted average position, x_cm = Σmᵢxᵢ/Σmᵢ, pulled toward the heavier masses.</li>
+<li>The centre of mass moves as if all the mass were concentrated there and all the external forces acted on it: M a_cm = F_external. Internal forces, however violent, cannot change its motion.</li>
+<li>An exploding firework's pieces follow different parabolas, but their centre of mass carries on along the original one until a piece hits the ground (a new external force).</li>
+<li>With no horizontal external force, walking on a boat cannot move the centre of mass of you and the boat: the boat slides back by mL/(m + M).</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need momentum conservation. In <strong>Masses on a plate</strong> drag the masses (keyboard: 1 to 4 to select, arrows to move); the slider sets the selected mass. In <strong>Exploding firework</strong> the firework is launched at 20 m/s and 60° and splits at the top; the dashed curve is the unexploded path. In <strong>Walking on a boat</strong> the person walks the 4.0 m boat from back to front. <strong>Blind</strong> hides the centre of mass.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Plate.</strong> Blind on: ask for the centre of mass of 2.0 kg at (0.25, 0.30), 1.0 kg at (0.75, 0.45) and 1.0 kg at (0.60, 0.12). It is (0.463, 0.292) m. Double one mass and predict which way it moves.</li>
+<li><strong>Firework.</strong> Default split: equal halves thrown apart horizontally at 8 m/s. They land together at 28.25 and 42.37 m; their midpoint is 35.31 m, the unexploded range.</li>
+<li><strong>Unequal pieces.</strong> Front piece 0.3 of the mass: it flies farther, the heavy piece less, and the mass weighted average is still 35.31 m.</li>
+<li><strong>Throw a piece upward.</strong> Then the pieces land at different times and the centre of mass leaves the parabola as soon as the first one lands: the ground's force is external.</li>
+<li><strong>Boat.</strong> 70 kg person, 150 kg boat: the boat moves back 1.27 m while the person walks 4.0 m along it; the centre of mass stays at −0.636 m.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Find the centre of mass of the three masses in step 1.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Why does the centre of mass of the firework's pieces follow the original parabola after the explosion?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The firework splits horizontally into a 0.3 piece and a 0.7 piece. With the explosion speed at 10 m/s the light piece lands 12.36 m beyond the unexploded landing point. Where does the heavy piece land?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Show that the boat moves back by mL/(m + M). How far does a 150 kg boat move when a 70 kg person walks 4.0 m along it?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> What happens to the centre of mass of the firework after the first piece lands, and why?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The centre of mass is the middle of the object."</strong> Only for symmetric mass distributions.</li>
+<li><strong>"An explosion changes where the system goes."</strong> Internal forces come in third law pairs and cancel; only external forces change the centre of mass motion.</li>
+<li><strong>"Walking forward on a boat doesn't move the boat."</strong> Your push on the boat moves it backward; the total momentum stays zero.</li>
+<li><strong>"There must be mass at the centre of mass."</strong> A ring's centre of mass is in empty space.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Point masses on a massless 1.0 m × 0.6 m plate; positions to 0.01 m.</li>
+<li>The firework is a point that splits at the top of its flight into pieces with fractions f and 1 − f of the mass. The explosion gives them a relative speed u along the chosen direction with zero total momentum change: the front piece gains (1 − f)u, the back piece −fu. No air drag. Each piece stops when it reaches the ground.</li>
+<li>The boat floats with no water drag (real water would slowly stop it). The person walks at 1.0 m/s relative to the boat.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

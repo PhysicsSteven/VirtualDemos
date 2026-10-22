@@ -1661,12 +1661,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "collisions"
+        "collisions",
+        "center-of-mass"
       ],
       "unit": "momentum",
-      "note": "Collision center-of-mass example only."
+      "note": "Center of Mass (2026-10-22, Claude): weighted average of draggable point masses, an exploding firework whose pieces keep the CM parabola, and a person walking on a boat (CM fixed). Continuous bodies are not integrated."
     },
     {
       "vol": 1,
@@ -4616,6 +4617,26 @@
       ],
       "title": "Collisions and Momentum",
       "url": "demos/collisions.html"
+    },
+    {
+      "demo": "center-of-mass",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "9.6",
+          "title": "Center of Mass"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Masses on a plate (drag, add, remove, set mass), exploding firework (mass split, explosion speed and direction) and walking on a boat (masses); CM marker and coordinates; Blind hides the CM.",
+      "handouts": [],
+      "title": "Center of Mass",
+      "url": "demos/center-of-mass.html"
     },
     {
       "demo": "rocket",

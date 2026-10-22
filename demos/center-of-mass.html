@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Center of Mass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the scene on the left; the rail on the right. */
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+
+:root { --m1: #2b60b5; --m2: #b0452f; --m3: #1f8a5a; --m4: #a7740b; --cm: #17202b; --water: #9cc3e6; --boat: #8a6d4a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --m1: #69a0ff; --m2: #ff8a70; --m3: #4cd08f; --m4: #e2b350; --cm: #e7ecf3; --water: #24425e; --boat: #a8876a; } }
+:root[data-theme="dark"] { --m1: #69a0ff; --m2: #ff8a70; --m3: #4cd08f; --m4: #e2b350; --cm: #e7ecf3; --water: #24425e; --boat: #a8876a; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.lab { font-size: 0.88rem; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 540px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+
+.stage canvas { touch-action: none; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Center of Mass</h1>
+      <p>The centre of mass is the mass weighted average position. Find it for masses on a plate, then see that it keeps moving as if all the mass were there: a firework's pieces scatter but their centre of mass follows the same parabola, and walking on a boat cannot move the centre of mass of you and the boat.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">g = 9.81 m/s²</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/center-of-mass.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/center-of-mass.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h2v1h-2zM16 2h1v1h-1zM21 2h3v1h-3zM27 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM12 3h2v1h-2zM15 3h1v1h-1zM17 3h1v1h-1zM20 3h2v1h-2zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h2v1h-2zM16 4h2v1h-2zM21 4h1v1h-1zM23 4h2v1h-2zM26 4h4v1h-4zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h1v1h-1zM13 5h1v1h-1zM15 5h1v1h-1zM17 5h1v1h-1zM19 5h1v1h-1zM22 5h2v1h-2zM25 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM16 6h1v1h-1zM21 6h1v1h-1zM23 6h1v1h-1zM27 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM11 7h4v1h-4zM16 7h2v1h-2zM25 7h1v1h-1zM27 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM18 9h3v1h-3zM26 9h2v1h-2zM29 9h1v1h-1zM2 10h1v1h-1zM5 10h6v1h-6zM15 10h3v1h-3zM21 10h1v1h-1zM25 10h2v1h-2zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM4 11h2v1h-2zM15 11h1v1h-1zM18 11h1v1h-1zM20 11h1v1h-1zM23 11h3v1h-3zM28 11h3v1h-3zM33 11h3v1h-3zM37 11h1v1h-1zM2 12h1v1h-1zM4 12h6v1h-6zM13 12h2v1h-2zM16 12h3v1h-3zM20 12h4v1h-4zM25 12h2v1h-2zM29 12h1v1h-1zM31 12h3v1h-3zM36 12h1v1h-1zM38 12h1v1h-1zM3 13h4v1h-4zM10 13h3v1h-3zM14 13h1v1h-1zM16 13h1v1h-1zM18 13h5v1h-5zM24 13h1v1h-1zM29 13h10v1h-10zM3 14h1v1h-1zM6 14h3v1h-3zM11 14h5v1h-5zM17 14h2v1h-2zM26 14h1v1h-1zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM3 15h5v1h-5zM9 15h3v1h-3zM14 15h5v1h-5zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM3 16h1v1h-1zM5 16h2v1h-2zM8 16h2v1h-2zM11 16h2v1h-2zM14 16h1v1h-1zM16 16h2v1h-2zM20 16h4v1h-4zM28 16h2v1h-2zM32 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM3 17h4v1h-4zM9 17h5v1h-5zM15 17h2v1h-2zM21 17h1v1h-1zM25 17h1v1h-1zM28 17h4v1h-4zM33 17h1v1h-1zM35 17h3v1h-3zM3 18h2v1h-2zM6 18h6v1h-6zM16 18h2v1h-2zM19 18h3v1h-3zM24 18h7v1h-7zM32 18h1v1h-1zM36 18h3v1h-3zM2 19h2v1h-2zM5 19h1v1h-1zM12 19h2v1h-2zM15 19h2v1h-2zM19 19h1v1h-1zM24 19h1v1h-1zM26 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM35 19h2v1h-2zM2 20h1v1h-1zM5 20h2v1h-2zM8 20h1v1h-1zM10 20h2v1h-2zM18 20h2v1h-2zM21 20h1v1h-1zM23 20h1v1h-1zM25 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM31 20h1v1h-1zM35 20h2v1h-2zM38 20h1v1h-1zM6 21h1v1h-1zM11 21h1v1h-1zM14 21h2v1h-2zM17 21h2v1h-2zM20 21h3v1h-3zM24 21h4v1h-4zM30 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM6 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM14 22h3v1h-3zM18 22h2v1h-2zM21 22h1v1h-1zM26 22h1v1h-1zM28 22h8v1h-8zM4 23h2v1h-2zM7 23h1v1h-1zM9 23h1v1h-1zM12 23h1v1h-1zM14 23h4v1h-4zM19 23h1v1h-1zM21 23h5v1h-5zM27 23h1v1h-1zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM2 24h1v1h-1zM4 24h2v1h-2zM7 24h2v1h-2zM12 24h3v1h-3zM17 24h1v1h-1zM23 24h4v1h-4zM29 24h2v1h-2zM32 24h2v1h-2zM35 24h1v1h-1zM38 24h1v1h-1zM3 25h1v1h-1zM6 25h2v1h-2zM9 25h1v1h-1zM11 25h3v1h-3zM15 25h2v1h-2zM20 25h3v1h-3zM24 25h1v1h-1zM28 25h1v1h-1zM30 25h1v1h-1zM32 25h5v1h-5zM2 26h1v1h-1zM4 26h1v1h-1zM8 26h3v1h-3zM12 26h3v1h-3zM16 26h2v1h-2zM19 26h1v1h-1zM22 26h3v1h-3zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h2v1h-2zM9 27h3v1h-3zM13 27h1v1h-1zM20 27h2v1h-2zM25 27h1v1h-1zM27 27h4v1h-4zM34 27h2v1h-2zM2 28h3v1h-3zM6 28h5v1h-5zM15 28h1v1h-1zM17 28h1v1h-1zM24 28h1v1h-1zM28 28h3v1h-3zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h3v1h-3zM10 29h1v1h-1zM12 29h2v1h-2zM15 29h2v1h-2zM18 29h1v1h-1zM21 29h1v1h-1zM24 29h3v1h-3zM28 29h1v1h-1zM31 29h3v1h-3zM35 29h2v1h-2zM2 30h1v1h-1zM7 30h3v1h-3zM11 30h1v1h-1zM13 30h1v1h-1zM17 30h1v1h-1zM21 30h2v1h-2zM25 30h3v1h-3zM29 30h8v1h-8zM38 30h1v1h-1zM10 31h3v1h-3zM14 31h1v1h-1zM16 31h1v1h-1zM19 31h6v1h-6zM26 31h2v1h-2zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h1v1h-1zM13 32h3v1h-3zM17 32h5v1h-5zM25 32h3v1h-3zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM15 33h1v1h-1zM18 33h1v1h-1zM21 33h3v1h-3zM25 33h1v1h-1zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h3v1h-3zM18 34h1v1h-1zM20 34h1v1h-1zM22 34h2v1h-2zM25 34h1v1h-1zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h5v1h-5zM22 35h4v1h-4zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM14 36h3v1h-3zM19 36h2v1h-2zM24 36h2v1h-2zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM13 37h1v1h-1zM17 37h1v1h-1zM19 37h1v1h-1zM24 37h3v1h-3zM28 37h2v1h-2zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h2v1h-2zM18 38h1v1h-1zM21 38h2v1h-2zM25 38h2v1h-2zM30 38h2v1h-2zM33 38h1v1h-1zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="img" aria-label="The current setup: masses on a plate that can be dragged, a firework that explodes into two pieces, or a person walking along a boat, with the centre of mass marked."></canvas>
+      <div class="viewbar" id="runBar"><button type="button" class="spin attn" id="go">Launch</button><button type="button" class="spin" id="back">Start over</button></div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setup</h2>
+        <div class="seg" role="group" aria-label="Setup" id="modeSeg">
+          <button type="button" data-m="plate" aria-pressed="true">Masses on a plate</button>
+          <button type="button" data-m="fire" aria-pressed="false">Exploding firework</button>
+          <button type="button" data-m="boat" aria-pressed="false">Walking on a boat</button>
+        </div>
+        <p class="hint" id="modeHint"></p>
+      </section>
+
+      <section id="plateCtl">
+        <h2>Masses</h2>
+        <div class="btnrow"><button type="button" class="btn" id="addM">Add a mass</button><button type="button" class="btn" id="delM">Remove the selected mass</button></div>
+        <div><div class="slider-head"><label for="sMass">Selected mass</label><output id="oMass" for="sMass"></output></div><input type="range" id="sMass" min="0.1" max="5" step="0.1"></div>
+        <p class="hint">Drag a mass to move it (keyboard: Tab to the plate, then 1 to 4 to select, arrows to move).</p>
+      </section>
+
+      <section id="fireCtl" hidden>
+        <h2>Firework</h2>
+        <div><div class="slider-head"><label for="sRatio">Mass of the front piece, fraction of the total</label><output id="oRatio" for="sRatio"></output></div><input type="range" id="sRatio" min="0.1" max="0.9" step="0.05"></div>
+        <div><div class="slider-head"><label for="sKick">Speed the explosion gives the pieces apart</label><output id="oKick" for="sKick"></output></div><input type="range" id="sKick" min="0" max="20" step="1"></div>
+        <div><div class="slider-head"><label for="sAng">Direction the front piece is thrown</label><output id="oAng" for="sAng"></output></div><input type="range" id="sAng" min="-90" max="90" step="5"></div>
+      </section>
+
+      <section id="boatCtl" hidden>
+        <h2>Boat</h2>
+        <div><div class="slider-head"><label for="sPm">Person's mass</label><output id="oPm" for="sPm"></output></div><input type="range" id="sPm" min="20" max="120" step="5"></div>
+        <div><div class="slider-head"><label for="sBm">Boat's mass</label><output id="oBm" for="sBm"></output></div><input type="range" id="sBm" min="20" max="400" step="10"></div>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="formula">x_cm = Σmᵢxᵢ / Σmᵢ · M a_cm = F_external</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides the centre of mass marker, its coordinates and the predicted boat shift.</p>
+        <p class="hint">Model: point masses on a massless plate; the firework is a point mass launched at 20 m/s and 60° that splits in two at the top of its flight, with no air drag; the boat floats on water with no drag, and the person walks from one end to the other at 1 m/s relative to the boat (boat 4.0 m long).</p>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.81, CM_VERSION = 'center-of-mass@2026-10-22';
+  function centre(ms) { const M = ms.reduce((q, a) => q + a.m, 0); return { M, x: ms.reduce((q, a) => q + a.m * a.x, 0) / M, y: ms.reduce((q, a) => q + a.m * a.y, 0) / M }; }
+  // firework: launched at v0, angle th; splits at the top into a front piece (fraction f of the mass) and a back piece; the explosion gives them relative speed u
+  // along direction phi (front piece) with zero total momentum change: front gets (1 − f)u, back gets −f u
+  function firework(v0, th, f, u, phi) {
+    const vx = v0 * Math.cos(th), vy = v0 * Math.sin(th), tTop = vy / G, xTop = vx * tTop, yTop = vy * vy / (2 * G);
+    const d = [Math.cos(phi), Math.sin(phi)], a = { f, vx: vx + (1 - f) * u * d[0], vy: (1 - f) * u * d[1] }, b = { f: 1 - f, vx: vx - f * u * d[0], vy: -f * u * d[1] };
+    const land = (p) => (p.vy + Math.sqrt(p.vy * p.vy + 2 * G * yTop)) / G;   // time after the split to reach y = 0
+    a.tLand = land(a); b.tLand = land(b);
+    const at = (p, s) => { const t = Math.min(s, p.tLand); return { x: xTop + p.vx * t, y: yTop + p.vy * t - 0.5 * G * t * t }; };
+    return { vx, vy, tTop, xTop, yTop, a, b, at, whole: (t) => ({ x: vx * t, y: vy * t - 0.5 * G * t * t }), tWhole: 2 * tTop };
+  }
+  // boat: a person of mass m walks a distance L along a boat of mass M (no water drag); the boat moves back by mL/(m + M)
+  const boatShift = (m, M, L) => -m * L / (m + M);
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const HINT = { plate: 'Drag the masses on a 1.0 m × 0.6 m plate. Predict where the centre of mass is, then turn Blind off. A heavier mass pulls it toward itself.',
+    fire: 'Launch: at the top the firework splits in two. Each piece follows its own parabola, but their centre of mass carries on along the original one until a piece lands.',
+    boat: 'The person walks from the back of the boat to the front. No outside horizontal force acts, so the centre of mass of person and boat stays put and the boat slides back.' };
+  const S = { mode: 'plate', ms: [{ m: 2, x: 0.25, y: 0.3 }, { m: 1, x: 0.75, y: 0.45 }, { m: 1, x: 0.6, y: 0.12 }], sel: 0, ratio: 0.5, kick: 8, ang: 0, pm: 70, bm: 150, t: 0, run: false, blind: false };
+  const V0 = 20, TH = 60 * Math.PI / 180, LB = 4.0, WALK = 1.0;
+  const COLS = () => [T.m1, T.m2, T.m3, T.m4];
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, Hh = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      m1: g('--m1'), m2: g('--m2'), m3: g('--m3'), m4: g('--m4'), cm: g('--cm'), water: g('--water'), boat: g('--boat'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d).replace('-', '−'));
+  const FW = () => firework(V0, TH, S.ratio, S.kick, S.ang * Math.PI / 180);
+  const tEndFire = () => { const F = FW(); return F.tTop + Math.max(F.a.tLand, F.b.tLand) + 0.3; };
+  const tEndBoat = () => LB / WALK + 0.5;
+  function sync() {
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
+    $('plateCtl').hidden = S.mode !== 'plate'; $('fireCtl').hidden = S.mode !== 'fire'; $('boatCtl').hidden = S.mode !== 'boat'; $('runBar').hidden = S.mode === 'plate'; $('modeHint').textContent = HINT[S.mode];
+    $('go').textContent = S.run ? 'Pause' : S.mode === 'fire' ? 'Launch' : 'Walk';
+    const sm = S.ms[S.sel]; if (sm) { $('sMass').value = sm.m; $('oMass').textContent = `${sm.m.toFixed(1)} kg (mass ${S.sel + 1})`; }
+    $('sRatio').value = S.ratio; $('oRatio').textContent = S.ratio.toFixed(2); $('sKick').value = S.kick; $('oKick').textContent = `${S.kick} m/s`; $('sAng').value = S.ang; $('oAng').textContent = `${S.ang}° above horizontal`;
+    $('sPm').value = S.pm; $('oPm').textContent = `${S.pm} kg`; $('sBm').value = S.bm; $('oBm').textContent = `${S.bm} kg`;
+    $('addM').disabled = S.ms.length >= 4; $('delM').disabled = S.ms.length <= 1;
+  }
+  const upd = () => { sync(); draw(); readouts(); };
+  const restart = () => { S.t = 0; S.run = false; upd(); };
+  $('modeSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (b) { S.mode = b.dataset.m; restart(); } });
+  $('addM').addEventListener('click', () => { if (S.ms.length < 4) { S.ms.push({ m: 1, x: 0.5, y: 0.3 }); S.sel = S.ms.length - 1; upd(); } });
+  $('delM').addEventListener('click', () => { if (S.ms.length > 1) { S.ms.splice(S.sel, 1); S.sel = 0; upd(); } });
+  $('sMass').addEventListener('input', (e) => { S.ms[S.sel].m = +e.target.value; upd(); });
+  for (const [id, k] of [['sRatio', 'ratio'], ['sKick', 'kick'], ['sAng', 'ang'], ['sPm', 'pm'], ['sBm', 'bm']]) $(id).addEventListener('input', (e) => { S[k] = +e.target.value; restart(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
+  $('go').addEventListener('click', () => { const end = S.mode === 'fire' ? tEndFire() : tEndBoat(); if (S.t >= end) S.t = 0; if (reduce) { S.t = end; S.run = false; upd(); return; } S.run = !S.run; sync(); });
+  $('back').addEventListener('click', restart);
+  function tick(dt) { if (!S.run) return; const end = S.mode === 'fire' ? tEndFire() : tEndBoat(); S.t = Math.min(end, S.t + dt); if (S.t >= end) S.run = false; sync(); draw(); readouts(); }
+  // plate geometry
+  function plateBox() { const p = ps(), pad = 30 * p, w = Math.min(W - 2 * pad, (Hh - 2 * pad - 40 * p) / 0.6), h = w * 0.6; return { x0: (W - w) / 2, y0: 60 * p + (Hh - 60 * p - h) / 2, w, h, sc: w / 1.0 }; }
+  const toPx = (B, a) => [B.x0 + a.x * B.sc, B.y0 + B.h - a.y * B.sc];
+  let drag = -1;
+  can.addEventListener('pointerdown', (e) => { if (S.mode !== 'plate') return; const r = can.getBoundingClientRect(), B = plateBox(), px = e.clientX - r.left, py = e.clientY - r.top;
+    let best = -1, bd = 30 * ps(); S.ms.forEach((a, i) => { const [x, y] = toPx(B, a), d = Math.hypot(x - px, y - py); if (d < bd) { bd = d; best = i; } }); if (best >= 0) { drag = best; S.sel = best; can.setPointerCapture(e.pointerId); upd(); } });
+  can.addEventListener('pointermove', (e) => { if (drag < 0) return; const r = can.getBoundingClientRect(), B = plateBox(); const a = S.ms[drag]; a.x = Math.max(0, Math.min(1, (e.clientX - r.left - B.x0) / B.sc)); a.y = Math.max(0, Math.min(0.6, (B.y0 + B.h - (e.clientY - r.top)) / B.sc)); a.x = Math.round(a.x * 100) / 100; a.y = Math.round(a.y * 100) / 100; draw(); readouts(); });
+  can.addEventListener('pointerup', () => { drag = -1; });
+  can.addEventListener('keydown', (e) => {
+    if (S.mode !== 'plate') { if (e.key === ' ') { $('go').click(); e.preventDefault(); } return; }
+    if (/^[1-4]$/.test(e.key) && S.ms[+e.key - 1]) { S.sel = +e.key - 1; upd(); return; }
+    const a = S.ms[S.sel], d = { ArrowLeft: [-0.01, 0], ArrowRight: [0.01, 0], ArrowUp: [0, 0.01], ArrowDown: [0, -0.01] }[e.key]; if (!d || !a) return;
+    a.x = Math.max(0, Math.min(1, +(a.x + d[0]).toFixed(2))); a.y = Math.max(0, Math.min(0.6, +(a.y + d[1]).toFixed(2))); e.preventDefault(); draw(); readouts();
+  });
+  function boatState() { const tw = Math.min(LB / WALK, S.t), s = WALK * tw, xb = boatShift(S.pm, S.bm, s); return { s, xb, xp: xb + s - LB / 2 }; }
+  function readouts() {
+    const dd = (a, v, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${v}</dd></div>`; let h = '';
+    if (S.mode === 'plate') {
+      const C = centre(S.ms); S.ms.forEach((a, i) => { h += dd(`Mass ${i + 1}`, `${a.m.toFixed(1)} kg at (${a.x.toFixed(2)}, ${a.y.toFixed(2)}) m`, true); });
+      h += dd('Total mass', `${f(C.M, 1)} kg`) + (S.blind ? dd('Centre of mass', 'hidden in Blind') : dd('Centre of mass', `(${f(C.x, 3)}, ${f(C.y, 3)}) m`));
+    } else if (S.mode === 'fire') {
+      const F = FW(), s = S.t - F.tTop, pa = s > 0 ? F.at(F.a, s) : F.whole(S.t), pb = s > 0 ? F.at(F.b, s) : pa, cmx = S.ratio * pa.x + (1 - S.ratio) * pb.x, cmy = S.ratio * pa.y + (1 - S.ratio) * pb.y, wh = F.whole(Math.min(S.t, F.tWhole));
+      h += dd('Time', `${f(S.t, 2)} s`) + dd('Split at', `${f(F.tTop, 2)} s, ${f(F.yTop, 2)} m up`);
+      h += S.blind ? dd('Centre of mass', 'hidden in Blind', true) : dd('Centre of mass of the pieces', `(${f(cmx, 2)}, ${f(cmy, 2)}) m`, true) + dd('Unexploded firework would be at', `(${f(wh.x, 2)}, ${f(wh.y, 2)}) m`, true);
+      h += dd('Front piece lands at', `x = ${f(F.at(F.a, F.a.tLand).x, 2)} m`) + dd('Back piece lands at', `x = ${f(F.at(F.b, F.b.tLand).x, 2)} m`);
+      if (!S.blind) h += dd('Unexploded range', `${f(F.whole(F.tWhole).x, 2)} m`) + dd('Mass weighted landing point', `${f(S.ratio * F.at(F.a, F.a.tLand).x + (1 - S.ratio) * F.at(F.b, F.b.tLand).x, 2)} m`);
+    } else {
+      const b = boatState(), cm = (S.pm * b.xp + S.bm * b.xb) / (S.pm + S.bm);
+      h += dd('Person walked along the boat', `${f(b.s, 2)} m`) + dd('Boat has moved', `${f(b.xb, 3)} m`);
+      h += S.blind ? dd('Centre of mass and predicted shift', 'hidden in Blind', true) : dd('Centre of mass (person + boat)', `${f(cm, 3)} m`) + dd('Predicted boat shift −mL/(m + M)', `${f(boatShift(S.pm, S.bm, LB), 3)} m`);
+    }
+    $('out').innerHTML = h;
+  }
+  function cross(x, y, col) { const p = ps(); ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(x, y, 9 * p, 0, 7); ctx.moveTo(x - 13 * p, y); ctx.lineTo(x + 13 * p, y); ctx.moveTo(x, y - 13 * p); ctx.lineTo(x, y + 13 * p); ctx.stroke(); ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('CM', x + 12 * p, y - 8 * p); }
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh); const p = ps();
+    if (S.mode === 'plate') {
+      const B = plateBox(); ctx.fillStyle = T.grid; ctx.fillRect(B.x0, B.y0, B.w, B.h); ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(B.x0, B.y0, B.w, B.h);
+      ctx.strokeStyle = T.line; for (let i = 1; i < 10; i++) { const x = B.x0 + B.sc * i / 10; ctx.beginPath(); ctx.moveTo(x, B.y0); ctx.lineTo(x, B.y0 + B.h); ctx.stroke(); } for (let j = 1; j < 6; j++) { const y = B.y0 + B.h - B.sc * j / 10; ctx.beginPath(); ctx.moveTo(B.x0, y); ctx.lineTo(B.x0 + B.w, y); ctx.stroke(); }
+      ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('0', B.x0, B.y0 + B.h + 3); ctx.textAlign = 'right'; ctx.fillText('1.0 m', B.x0 + B.w, B.y0 + B.h + 3); ctx.textBaseline = 'bottom'; ctx.textAlign = 'left'; ctx.fillText('0.6 m', B.x0 - 2, B.y0 - 3);
+      S.ms.forEach((a, i) => { const [x, y] = toPx(B, a), r = (8 + 9 * Math.sqrt(a.m)) * p; ctx.fillStyle = COLS()[i]; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); if (i === S.sel) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.stroke(); }
+        ctx.fillStyle = T.canvas; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${a.m.toFixed(1)}`, x, y); });
+      if (!S.blind) { const C = centre(S.ms), [x, y] = toPx(B, C); cross(x, y, T.cm); }
+      return;
+    }
+    if (S.mode === 'fire') {
+      const F = FW(), xs = [0, F.whole(F.tWhole).x, F.at(F.a, F.a.tLand).x, F.at(F.b, F.b.tLand).x], xlo = Math.min(...xs) - 3, xhi = Math.max(...xs) + 3, yhi = Math.max(F.yTop, F.yTop + Math.max(F.a.vy, F.b.vy, 0) ** 2 / (2 * G)) * 1.15 + 1;
+      const gx = 30 * p, gw = W - 60 * p, gy = Hh - 40 * p, sc = Math.min(gw / (xhi - xlo), (gy - 80 * p) / yhi), X = (x) => gx + (x - xlo) * sc, Y = (y) => gy - y * sc;
+      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx + gw, gy); ctx.stroke();
+      const path = (fn, t0, t1, col, dash) => { ctx.strokeStyle = col; ctx.lineWidth = 1.5 * p; ctx.setLineDash(dash ? [5 * p, 4 * p] : []); ctx.beginPath(); for (let i = 0; i <= 120; i++) { const t = t0 + (t1 - t0) * i / 120, q = fn(t); i ? ctx.lineTo(X(q.x), Y(q.y)) : ctx.moveTo(X(q.x), Y(q.y)); } ctx.stroke(); ctx.setLineDash([]); };
+      if (!S.blind) path(F.whole, 0, F.tWhole, T.muted, true);
+      const s = S.t - F.tTop;
+      path(F.whole, 0, Math.min(S.t, F.tTop), T.ink, false);
+      if (s > 0) { path((u) => F.at(F.a, u), 0, s, T.m1, false); path((u) => F.at(F.b, u), 0, s, T.m2, false);
+        const pa = F.at(F.a, s), pb = F.at(F.b, s); ctx.fillStyle = T.m1; ctx.beginPath(); ctx.arc(X(pa.x), Y(pa.y), (4 + 6 * Math.sqrt(S.ratio)) * p, 0, 7); ctx.fill(); ctx.fillStyle = T.m2; ctx.beginPath(); ctx.arc(X(pb.x), Y(pb.y), (4 + 6 * Math.sqrt(1 - S.ratio)) * p, 0, 7); ctx.fill();
+        if (!S.blind) { ctx.strokeStyle = T.cm; ctx.lineWidth = 1; ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(X(pa.x), Y(pa.y)); ctx.lineTo(X(pb.x), Y(pb.y)); ctx.stroke(); ctx.setLineDash([]); cross(X(S.ratio * pa.x + (1 - S.ratio) * pb.x), Y(S.ratio * pa.y + (1 - S.ratio) * pb.y), T.cm); } }
+      else { const q = F.whole(S.t); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(q.x), Y(q.y), 7 * p, 0, 7); ctx.fill(); }
+      return;
+    }
+    // boat
+    const b = boatState(), wl = Hh * 0.6, sc = Math.min((W - 60 * p) / 8, 80 * p), X = (x) => W / 2 + x * sc;
+    ctx.fillStyle = T.water; ctx.fillRect(0, wl, W, Hh - wl);
+    ctx.fillStyle = T.boat; ctx.beginPath(); ctx.moveTo(X(b.xb - LB / 2), wl - 20 * p); ctx.lineTo(X(b.xb + LB / 2), wl - 20 * p); ctx.lineTo(X(b.xb + LB / 2 - 0.4), wl + 14 * p); ctx.lineTo(X(b.xb - LB / 2 + 0.4), wl + 14 * p); ctx.closePath(); ctx.fill();
+    const px = X(b.xp), py = wl - 20 * p, hh = 50 * p; ctx.strokeStyle = T.ink; ctx.lineWidth = 3 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(px - 6 * p, py); ctx.lineTo(px, py - hh * 0.45); ctx.lineTo(px + 6 * p, py); ctx.moveTo(px, py - hh * 0.45); ctx.lineTo(px, py - hh * 0.85); ctx.stroke(); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(px, py - hh, 7 * p, 0, 7); ctx.fill(); ctx.lineCap = 'butt';
+    // dock post as a fixed reference
+    ctx.fillStyle = T.gridStrong; ctx.fillRect(X(-3.6) - 4 * p, wl - 60 * p, 8 * p, 80 * p); ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('post', X(-3.6), wl - 62 * p);
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; for (let k = -4; k <= 4; k++) { ctx.beginPath(); ctx.moveTo(X(k), wl + 30 * p); ctx.lineTo(X(k), wl + 38 * p); ctx.stroke(); ctx.fillText(`${k} m`, X(k), wl + 50 * p); }
+    if (!S.blind) { const cm = (S.pm * b.xp + S.bm * b.xb) / (S.pm + S.bm); cross(X(cm), wl - 90 * p, T.cm); ctx.strokeStyle = T.cm; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(X(cm), wl - 80 * p); ctx.lineTo(X(cm), wl + 28 * p); ctx.stroke(); ctx.setLineDash([]); }
+  }
+  function init() { sync(); readouts(); }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
+  tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  let last = performance.now();
+  (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();
+})();
+</script>
+</body>
+</html>

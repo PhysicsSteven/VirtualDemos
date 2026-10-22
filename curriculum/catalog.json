@@ -532,6 +532,17 @@
      ]
     },
     {
+     "demo": "center-of-mass",
+     "title": "Center of Mass",
+     "desc": "Find the centre of mass of masses on a plate, watch a firework's pieces keep its centre of mass on the original parabola, and walk along a boat that slides back.",
+     "tags": [
+      "centre of mass",
+      "momentum conservation",
+      "internal forces",
+      "explosion"
+     ]
+    },
+    {
      "demo": "rocket",
      "title": "Rocket Propulsion",
      "desc": "Burn fuel and watch the rocket get lighter and faster: the rocket equation in deep space, then a launch against gravity, a rocket too heavy to lift off at first, and why a slow burn wastes fuel.",
