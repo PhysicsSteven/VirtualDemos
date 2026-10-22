@@ -189,3 +189,8 @@ Physics 1 uses **University Physics Volume 1** (chapters 1–17), Physics 2 uses
 - **Springs:** add an "unknown spring" option to Blind (k hidden); keep the automatic period readout visible (no forced hand timing for now). Claude's task, after Sunday's reset.
 - **Star slice:** loading the stellar models on demand is fine (it doesn't need to work as a downloaded file). Back burner with the astronomy set.
 - **Labs versus demos:** GPT's textbook map makes the first guess; Steve reviews it.
+
+### Map details (Steve, 2026-10-22, 11:13)
+- **Physics 2 = Volume 2 chapters 5–16** (starts at electric charges and fields). Volume 2 chapters 1–4 (thermodynamics) are **unassigned** until Steve checks the Physics 1 syllabus; Physics 1 may cover some of them. In the map, give thermo demos `"course": ["thermo-tbd"]`.
+- **Status label per entry** (from GPT's suggestion): add `"status": "usable" | "needs-handout" | "needs-feature" | "missing"` to each mapping entry, and in `TEXTBOOK_GAPS.md` mark each uncovered section `missing`. This gives the workload estimate.
+- **Scope:** textbook companion first (every chapter listed, gaps labelled honestly as "no activity yet"), then fill the gaps students hit most (Vol 1 motion along a line, Newton's laws with friction and inclines, work and energy, equilibrium). Calorimetry waits for the thermo decision.
