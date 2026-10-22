@@ -97,3 +97,8 @@ Main 7dab492 merged; two student/private lab packages written and 95 independent
 ## Physics I written-package checkpoint — 2026-10-22
 
 Merged main db5f27b, including Claude’s viscometer. Added full pendulum, rotational-dynamics and viscometer student/private packages. All 11 current Physics I labs now have written companions; 21 demos have notes. Inventory: PHYSICS_I_STATUS.md. Ten textbook sections remain missing and five partial; do not imply syllabus completion. Executed: 147 supported groups in 22 scoped suites, map/package contracts, 202 independent comparisons and 47 new exact control labels passed. Strict Mystery fit hiding fails for pendulum/rotational-dynamics; source requests in COLLABORATION. No browser or classroom acceptance. Evidence: validation/PHYSICS_I_COMPLETION_2026-10-22.md. No demo edits/main merge by GPT.
+
+
+## Final Physics I resource mapping — 2026-10-22
+
+Merged main 9bbb97b; four new student/private packages: impulse, measurement-and-units, estimation-and-evidence, energy-sources. Added optional standalone activities to the map, separately from the real-demo catalog. All 85 Physics I sections have scoped resource mappings, with 12 lab packages and three standalone activities. Renderer integration is supplied as a tested patch for Claude, not applied to owned generator/pages. 47 affected groups and 78 independent comparisons passed; strict Mystery hiding now passes for all four fixed demos. Source/bibliographic/acceptance limits remain documented. See validation/PHYSICS_I_GAP_ACTIVITIES_2026-10-22.md. No demo edits/main merge.

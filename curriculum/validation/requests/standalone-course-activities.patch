@@ -1,0 +1,38 @@
+--- a/tools/courses.py
++++ b/tools/courses.py
+@@ -137,0 +138,17 @@
++def activity_card(activity, unit_secs):
++    """Standalone worksheet/reading, not a fabricated demo or thumbnail."""
++    secs = sorted([s for s in activity['sections'] if (s['vol'], s['sec']) in unit_secs], key=sec_key)
++    chips = ''.join(f'<li><span class="sec">{s["vol"]}:{s["sec"]}</span> {esc(s["title"])}</li>' for s in secs)
++    href = activity['url'].removesuffix('.md') + '.html'
++    role = 'Worksheet' if activity['kind'] == 'worksheet' else 'Reading and data activity'
++    return f'''      <li class="item">
++        <div class="body" style="grid-column: 1 / -1">
++          <p class="kind"><span class="role">{role}</span></p>
++          <h3><a href="{esc(href)}">{esc(activity['title'])}</a></h3>
++          <p>{esc(activity['description'])}</p>
++          <ul class="secs" aria-label="Textbook sections">{chips}</ul>
++          <p class="links"><a class="go" href="{esc(href)}">Open student activity</a></p>
++        </div>
++      </li>'''
++
++
+@@ -140,0 +158 @@
++    activities = {a['id']: a for a in m.get('activities', [])}
+@@ -144 +162 @@
+-    n_demo = set()
++    n_demo, n_activity = set(), set()
+@@ -152,0 +171,2 @@
++        activity_names = list(dict.fromkeys(a for s in sorted(us, key=sec_key) for a in s.get('activities', [])
++                                            if a in activities and cid in activities[a]['course']))
+@@ -153,0 +174 @@
++        n_activity.update(activity_names)
+@@ -158 +179,3 @@
+-        grid = '\n'.join(card(n, demos[n], ukeys, cards, notes) for n in names) if names else '      <li class="none">No activity for this unit yet.</li>'
++        items = [card(n, demos[n], ukeys, cards, notes) for n in names]
++        items.extend(activity_card(activities[a], ukeys) for a in activity_names)
++        grid = '\n'.join(items) if items else '      <li class="none">No activity for this unit yet.</li>'
+@@ -179,0 +203,2 @@
++    if n_activity:
++        facts += f'<li><span><strong>{len(n_activity)}</strong> worksheets and readings</span></li>'

@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Impulse and Momentum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the track and cart on top, the force sensor graph below on the left; the rail on the right. */
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+
+:root { --cart: #2b60b5; --track: #9aa6b6; --sensor: #4a5563; --force: #b0452f; --vel: #1f8a5a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cart: #69a0ff; --track: #56606e; --sensor: #c3cad4; --force: #ff8a70; --vel: #4cd08f; } }
+:root[data-theme="dark"] { --cart: #69a0ff; --track: #56606e; --sensor: #c3cad4; --force: #ff8a70; --vel: #4cd08f; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.lab { font-size: 0.88rem; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 540px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Impulse and Momentum</h1>
+      <p>A cart rolls into a bumper on a force sensor and bounces back. The area under the force against time graph is the impulse, and it equals the cart's change of momentum. A soft bumper gives the same impulse with a smaller force over a longer time.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">frictionless track · sensor to 0.01 N</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/impulse.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/impulse.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM13 2h3v1h-3zM17 2h1v1h-1zM20 2h2v1h-2zM23 2h1v1h-1zM25 2h4v1h-4zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM12 3h2v1h-2zM16 3h3v1h-3zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h4v1h-4zM15 4h4v1h-4zM22 4h3v1h-3zM26 4h4v1h-4zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h1v1h-1zM14 5h1v1h-1zM19 5h1v1h-1zM21 5h3v1h-3zM27 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM14 6h1v1h-1zM16 6h1v1h-1zM19 6h1v1h-1zM21 6h1v1h-1zM27 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM12 7h2v1h-2zM16 7h1v1h-1zM18 7h3v1h-3zM23 7h1v1h-1zM25 7h1v1h-1zM27 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h3v1h-3zM15 9h4v1h-4zM23 9h1v1h-1zM26 9h4v1h-4zM2 10h1v1h-1zM5 10h6v1h-6zM12 10h2v1h-2zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h4v1h-4zM25 10h2v1h-2zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM2 11h4v1h-4zM10 11h1v1h-1zM14 11h1v1h-1zM16 11h1v1h-1zM22 11h3v1h-3zM28 11h2v1h-2zM33 11h3v1h-3zM37 11h1v1h-1zM7 12h8v1h-8zM16 12h1v1h-1zM20 12h1v1h-1zM23 12h1v1h-1zM26 12h1v1h-1zM29 12h5v1h-5zM36 12h1v1h-1zM38 12h1v1h-1zM7 13h1v1h-1zM10 13h1v1h-1zM14 13h1v1h-1zM17 13h1v1h-1zM19 13h2v1h-2zM24 13h1v1h-1zM29 13h10v1h-10zM3 14h1v1h-1zM6 14h1v1h-1zM8 14h2v1h-2zM12 14h3v1h-3zM16 14h1v1h-1zM18 14h1v1h-1zM21 14h1v1h-1zM26 14h1v1h-1zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM2 15h4v1h-4zM9 15h3v1h-3zM14 15h2v1h-2zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h3v1h-3zM7 16h2v1h-2zM10 16h1v1h-1zM12 16h1v1h-1zM14 16h2v1h-2zM17 16h1v1h-1zM19 16h1v1h-1zM21 16h4v1h-4zM27 16h1v1h-1zM29 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM3 17h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM9 17h2v1h-2zM13 17h1v1h-1zM15 17h2v1h-2zM19 17h3v1h-3zM25 17h1v1h-1zM28 17h6v1h-6zM35 17h3v1h-3zM2 18h1v1h-1zM7 18h2v1h-2zM15 18h5v1h-5zM21 18h3v1h-3zM25 18h1v1h-1zM27 18h1v1h-1zM29 18h2v1h-2zM32 18h1v1h-1zM36 18h3v1h-3zM2 19h2v1h-2zM5 19h1v1h-1zM10 19h1v1h-1zM12 19h1v1h-1zM15 19h1v1h-1zM18 19h3v1h-3zM22 19h1v1h-1zM25 19h2v1h-2zM28 19h2v1h-2zM31 19h1v1h-1zM35 19h2v1h-2zM2 20h1v1h-1zM4 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM12 20h1v1h-1zM15 20h3v1h-3zM19 20h1v1h-1zM22 20h2v1h-2zM25 20h1v1h-1zM27 20h1v1h-1zM29 20h3v1h-3zM35 20h2v1h-2zM38 20h1v1h-1zM4 21h1v1h-1zM6 21h2v1h-2zM11 21h2v1h-2zM14 21h2v1h-2zM20 21h1v1h-1zM24 21h1v1h-1zM26 21h2v1h-2zM30 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM2 22h2v1h-2zM5 22h1v1h-1zM7 22h3v1h-3zM15 22h1v1h-1zM17 22h3v1h-3zM26 22h1v1h-1zM28 22h1v1h-1zM30 22h6v1h-6zM2 23h6v1h-6zM9 23h1v1h-1zM12 23h3v1h-3zM16 23h2v1h-2zM21 23h5v1h-5zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM4 24h1v1h-1zM6 24h1v1h-1zM8 24h1v1h-1zM11 24h3v1h-3zM15 24h3v1h-3zM19 24h2v1h-2zM24 24h3v1h-3zM29 24h2v1h-2zM33 24h1v1h-1zM35 24h1v1h-1zM38 24h1v1h-1zM2 25h2v1h-2zM5 25h1v1h-1zM7 25h1v1h-1zM9 25h1v1h-1zM11 25h2v1h-2zM14 25h3v1h-3zM19 25h1v1h-1zM21 25h4v1h-4zM30 25h1v1h-1zM32 25h5v1h-5zM2 26h1v1h-1zM5 26h4v1h-4zM10 26h3v1h-3zM14 26h1v1h-1zM17 26h4v1h-4zM23 26h1v1h-1zM26 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h1v1h-1zM4 27h1v1h-1zM11 27h3v1h-3zM16 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM27 27h5v1h-5zM34 27h2v1h-2zM2 28h2v1h-2zM6 28h1v1h-1zM8 28h1v1h-1zM12 28h1v1h-1zM15 28h2v1h-2zM18 28h1v1h-1zM21 28h2v1h-2zM24 28h3v1h-3zM28 28h2v1h-2zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h2v1h-2zM7 29h1v1h-1zM10 29h1v1h-1zM12 29h1v1h-1zM16 29h2v1h-2zM22 29h1v1h-1zM24 29h2v1h-2zM28 29h1v1h-1zM31 29h3v1h-3zM35 29h3v1h-3zM2 30h1v1h-1zM6 30h1v1h-1zM8 30h2v1h-2zM11 30h2v1h-2zM14 30h3v1h-3zM22 30h1v1h-1zM26 30h2v1h-2zM29 30h8v1h-8zM10 31h1v1h-1zM13 31h1v1h-1zM16 31h1v1h-1zM20 31h3v1h-3zM24 31h1v1h-1zM26 31h2v1h-2zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h1v1h-1zM13 32h1v1h-1zM15 32h1v1h-1zM17 32h2v1h-2zM21 32h1v1h-1zM23 32h5v1h-5zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h5v1h-5zM16 33h1v1h-1zM18 33h5v1h-5zM24 33h2v1h-2zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM13 34h4v1h-4zM23 34h4v1h-4zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h3v1h-3zM15 35h2v1h-2zM18 35h1v1h-1zM20 35h1v1h-1zM23 35h1v1h-1zM26 35h1v1h-1zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM37 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM15 36h8v1h-8zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h3v1h-3zM18 37h2v1h-2zM21 37h2v1h-2zM24 37h2v1h-2zM28 37h2v1h-2zM31 37h2v1h-2zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM14 38h2v1h-2zM17 38h2v1h-2zM22 38h1v1h-1zM26 38h1v1h-1zM30 38h4v1h-4zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="img" aria-label="A cart on a track rolling into a bumper on a force sensor, and below it the force sensor reading against time with the area shaded. Space launches the cart."></canvas>
+      <div class="viewbar"><button type="button" class="spin attn" id="go">Launch the cart</button><button type="button" class="spin" id="back">Put it back</button>
+        <div class="seg" role="group" aria-label="Playback speed" id="speedSeg"><button type="button" data-s="1" aria-pressed="false">real time</button><button type="button" data-s="0.05" aria-pressed="true">×1/20</button></div></div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Bumper</h2>
+        <div class="seg" role="group" aria-label="Bumper" id="bumpSeg">
+          <button type="button" data-b="stiff" aria-pressed="true">Stiff spring</button>
+          <button type="button" data-b="soft" aria-pressed="false">Soft spring</button>
+          <button type="button" data-b="clay" aria-pressed="false">Clay</button>
+        </div>
+        <p class="hint" id="bumpHint"></p>
+      </section>
+      <section>
+        <h2>Cart</h2>
+        <div><div class="slider-head"><label for="sM">Cart mass m</label><output id="oM" for="sM"></output></div><input type="range" id="sM" min="0.25" max="1.5" step="0.05"></div>
+        <div><div class="slider-head"><label for="sV">Launch speed</label><output id="oV" for="sV"></output></div><input type="range" id="sV" min="0.1" max="1.5" step="0.05"></div>
+        <div class="inline"><span class="lab">Sensor sample rate</span>
+          <div class="seg" role="group" aria-label="Sample rate" id="rateSeg"><button type="button" data-r="200" aria-pressed="false">200 Hz</button><button type="button" data-r="1000" aria-pressed="true">1 kHz</button><button type="button" data-r="10000" aria-pressed="false">10 kHz</button></div></div>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="formula">J = ∫F dt = Δp = m(v_after − v_before)</p>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="exportRun">Export this run's F(t) CSV</button>
+          <button type="button" class="btn" id="exportCsv">Export readings CSV</button>
+          <button type="button" class="btn" id="clearRows">Clear</button>
+        </div>
+        <p class="status" id="capStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>bumper</th><th>m (kg)</th><th>v₁ (m/s)</th><th>v₂ (m/s)</th><th>area (N·s)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <p class="hint">The motion detector gives the velocity before (v₁) and after (v₂) the bounce, to 0.001 m/s, positive toward the sensor. The area is the trapezoid sum of the sampled sensor readings. Capture stores one row per run; export a run's F(t) to integrate it yourself.</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides the area, the momentum change and the peak force, leaving the graph, the velocities and the settings.</p>
+        <p class="hint">Model: a frictionless cart; the bumper pushes with F = kx while it is compressed, then unloads along a steeper line so the cart leaves with e times its speed (e is the coefficient of restitution). Each phase is simple harmonic, so F(t) is exact. Stiff spring k = 4000 N/m, e = 0.90; soft spring k = 400 N/m, e = 0.90; clay k = 1500 N/m, e = 0.10. The sensor reads the force to 0.01 N at the chosen sample rate.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  const IM_VERSION = 'impulse@2026-10-22', GAP = 0.30;   // cart starts 0.30 m from the bumper
+  const BUMPERS = { stiff: { name: 'Stiff spring', k: 4000, e: 0.9 }, soft: { name: 'Soft spring', k: 400, e: 0.9 }, clay: { name: 'Clay', k: 1500, e: 0.1 } };
+  // contact: loading F = kx (ω = √(k/m)) for a quarter period, then unloading with stiffness k/e² (ω_u = ω/e) for a quarter period
+  function contact(m, v0, b) {
+    const w = Math.sqrt(b.k / m), wu = w / b.e, xmax = v0 / w, Fmax = b.k * xmax, t1 = Math.PI / (2 * w), t2 = Math.PI / (2 * wu);
+    return { w, wu, xmax, Fmax, t1, tc: t1 + t2, vOut: -b.e * v0, J: m * (1 + b.e) * v0 };
+  }
+  // force on the sensor (magnitude) at time t after first touch
+  function force(c, t) { if (t < 0 || t > c.tc) return 0; if (t <= c.t1) return c.Fmax * Math.sin(c.w * t); return c.Fmax * Math.cos(c.wu * (t - c.t1)); }
+  // the cart's position relative to the bumper face (negative before contact) and velocity, for the whole run starting at −GAP
+  function cartState(m, v0, b, t) {
+    const c = contact(m, v0, b), tHit = GAP / v0;
+    if (t <= tHit) return { x: -GAP + v0 * t, v: v0 };
+    const u = t - tHit;
+    if (u <= c.t1) return { x: c.xmax * Math.sin(c.w * u), v: v0 * Math.cos(c.w * u) };
+    if (u <= c.tc) { const xp = c.xmax - c.Fmax / (b.k / (b.e * b.e)); const s = u - c.t1; return { x: xp + (c.xmax - xp) * Math.cos(c.wu * s), v: -(c.xmax - xp) * c.wu * Math.sin(c.wu * s) }; }
+    const xp = c.xmax * (1 - b.e * b.e); return { x: xp + c.vOut * (u - c.tc), v: c.vOut };
+  }
+  // the sensor's samples (rounded to 0.01 N) from just before the hit to just after; trapezoid area
+  function samples(m, v0, b, rate) {
+    const c = contact(m, v0, b), tHit = GAP / v0, dt = 1 / rate, t0 = tHit - 0.02, n = Math.ceil((c.tc + 0.04) * rate), out = [];
+    const phase = (Math.round(tHit * 7919) % 1000) / 1000;   // the sampling clock is not synchronised with the hit
+    for (let i = 0; i <= n; i++) { const t = t0 + (i + phase) * dt; out.push([t, Math.round(force(c, t - tHit) * 100) / 100]); }
+    return out;
+  }
+  function trapezoid(pts) { let a = 0; for (let i = 1; i < pts.length; i++) a += 0.5 * (pts[i][1] + pts[i - 1][1]) * (pts[i][0] - pts[i - 1][0]); return a; }
+  const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  function runCSV(pts, meta) {
+    const L = ['# Impulse and Momentum virtual force sensor: one run (simulated data)', `# demo version,${meta.version}`, `# bumper,${csvCell(meta.bumper)}`, `# cart_mass_kg,${meta.m}`, `# v_before_m_per_s,${meta.v1}`, `# v_after_m_per_s,${meta.v2}`, `# sample_rate_Hz,${meta.rate}`,
+      '# model,"frictionless cart; bumper loads with F = kx and unloads with stiffness k/e^2"', '# rounding,"force to 0.01 N; velocities to 0.001 m/s"', '# noise,none', 't_s,F_N'];
+    for (const [t, F] of pts) L.push(`${t.toFixed(5)},${F.toFixed(2)}`);
+    return L.join('\n') + '\n';
+  }
+  function readingsCSV(rows, meta) {
+    const L = ['# Impulse and Momentum virtual force sensor: captured readings (simulated data)', `# demo version,${meta.version}`, '# sign,"velocities positive toward the sensor; area is the force on the sensor integrated over time"', '# noise,none',
+      'row,bumper,m_kg,v_before_m_per_s,v_after_m_per_s,rate_Hz,area_N_s,peak_N,contact_ms'];
+    rows.forEach((r, i) => L.push([i + 1, r.bumper, r.m, r.v1, r.v2, r.rate, r.area, r.peak, r.tc].map(csvCell).join(',')));
+    return L.join('\n') + '\n';
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const HINT = { stiff: 'A stiff spring: a short, tall force spike.', soft: 'A soft spring: a long, low force. Same bounciness as the stiff one.', clay: 'Clay: the cart barely bounces back (e = 0.10), so the impulse is smaller.' };
+  const S = { bump: 'stiff', m: 0.5, v0: 0.6, rate: 1000, speed: 0.05, t: 0, run: false, done: false, blind: false, rows: [], pts: null };
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, Hh = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      cart: g('--cart'), track: g('--track'), sensor: g('--sensor'), force: g('--force'), vel: g('--vel'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d).replace('-', '−'));
+  const B = () => BUMPERS[S.bump], C = () => contact(S.m, S.v0, B()), tHit = () => GAP / S.v0, tEnd = () => tHit() + C().tc + Math.min(1.2, 0.3 / Math.max(0.05, B().e * S.v0));
+  function reset() { S.t = 0; S.done = false; S.run = false; S.pts = samples(S.m, S.v0, B(), S.rate); setRun(false); draw(); readouts(); }
+  function sync() {
+    for (const b of document.querySelectorAll('#bumpSeg button')) b.setAttribute('aria-pressed', String(b.dataset.b === S.bump));
+    for (const b of document.querySelectorAll('#rateSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.r === S.rate));
+    for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+    $('sM').value = S.m; $('oM').textContent = `${S.m.toFixed(2)} kg`; $('sV').value = S.v0; $('oV').textContent = `${S.v0.toFixed(2)} m/s`; $('bumpHint').textContent = HINT[S.bump];
+  }
+  const edit = () => { sync(); reset(); };
+  $('bumpSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-b]'); if (b) { S.bump = b.dataset.b; edit(); } });
+  $('rateSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-r]'); if (b) { S.rate = +b.dataset.r; const keep = S.done; sync(); S.pts = samples(S.m, S.v0, B(), S.rate); draw(); readouts(); S.done = keep; } });
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); } });
+  $('sM').addEventListener('input', (e) => { S.m = +e.target.value; edit(); });
+  $('sV').addEventListener('input', (e) => { S.v0 = +e.target.value; edit(); });
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : S.t > 0 && !S.done ? 'Resume' : 'Launch the cart'; $('go').classList.toggle('attn', !on); }
+  $('go').addEventListener('click', () => { if (S.done) reset(); if (reduce) { S.t = tEnd(); S.done = true; draw(); readouts(); return; } setRun(!S.run); });
+  $('back').addEventListener('click', reset);
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });
+  function tick(dt) {
+    if (!S.run) return;
+    // slow motion only near the hit, so the approach does not drag
+    const near = Math.abs(S.t - tHit()) < C().tc + 0.05 || (S.t > tHit() && S.t < tHit() + C().tc);
+    S.t += dt * (near ? S.speed : 1);
+    if (S.t >= tEnd()) { S.t = tEnd(); S.done = true; setRun(false); }
+    draw(); readouts();
+  }
+  function stats() {
+    const c = C(), v1 = Math.round(S.v0 * 1000) / 1000, v2 = Math.round(c.vOut * 1000) / 1000, area = trapezoid(S.pts), peak = Math.max(...S.pts.map((q) => q[1]));
+    return { c, v1, v2, area, peak };
+  }
+  function readouts() {
+    const st = stats(), dd = (a, v, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${v}</dd></div>`, shown = S.t >= tHit() + st.c.tc;
+    let h = dd('Velocity before v₁', `${f(st.v1, 3)} m/s`) + dd('Velocity after v₂', shown ? `${f(st.v2, 3)} m/s` : '—');
+    h += dd('Samples in the contact', String(S.pts.filter((q) => q[1] > 0).length)) + dd('Contact time', shown ? `${f(st.c.tc * 1000, 1)} ms` : '—');
+    if (S.blind) h += '<div class="wide"><dt>Area, peak force and momentum change</dt><dd class="ok">hidden in Blind: work them out from the graph</dd></div>';
+    else if (shown) {
+      h += dd('Area under F(t) (impulse on the sensor)', `${f(st.area, 4)} N·s`, true) + dd('Cart momentum change m(v₂ − v₁)', `${f(S.m * (st.v2 - st.v1), 4)} kg·m/s`, true);
+      h += dd('Peak force', `${f(st.peak, 2)} N`) + dd('Average force J/Δt', `${f(st.c.J / st.c.tc, 2)} N`);
+    } else h += '<div class="wide"><dt>Area and momentum change</dt><dd class="ok">launch the cart</dd></div>';
+    $('out').innerHTML = h;
+  }
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const p = ps(), cs = cartState(S.m, S.v0, B(), S.t), c = C();
+    // track: 0.40 m shown, bumper face at x = 0
+    const ty = 150 * p, x1 = W - 60 * p, sc = (x1 - 40 * p) / 0.42, X = (x) => x1 - 40 * p + x * sc;
+    ctx.strokeStyle = T.track; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(20 * p, ty); ctx.lineTo(x1 + 30 * p, ty); ctx.stroke();
+    ctx.fillStyle = T.sensor; ctx.fillRect(x1 + 6 * p, ty - 46 * p, 22 * p, 46 * p);
+    const comp = Math.max(0, cs.x), face = X(0) + comp * sc, bw = 20 * p;
+    ctx.strokeStyle = S.bump === 'clay' ? T.force : T.ink; ctx.lineWidth = 2 * p;
+    if (S.bump === 'clay') { ctx.fillStyle = T.force; ctx.globalAlpha = 0.6; ctx.fillRect(face, ty - 30 * p, x1 + 6 * p - face, 24 * p); ctx.globalAlpha = 1; }
+    else { ctx.beginPath(); const n = 8, L = x1 + 6 * p - face; for (let i = 0; i <= n; i++) { const xx = face + L * i / n, yy = ty - 18 * p + (i % 2 ? -8 : 8) * p; i ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); } ctx.stroke(); }
+    const cw = 70 * p, ch = 30 * p, cxr = X(cs.x); ctx.fillStyle = T.cart; ctx.fillRect(cxr - cw, ty - ch - 8 * p, cw, ch);
+    ctx.fillStyle = T.ink; for (const wx of [cxr - cw + 12 * p, cxr - 12 * p]) { ctx.beginPath(); ctx.arc(wx, ty - 6 * p, 6 * p, 0, 7); ctx.fill(); }
+    ctx.fillStyle = T.canvas; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${S.m.toFixed(2)} kg`, cxr - cw / 2, ty - ch / 2 - 8 * p);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('force sensor', x1 + 17 * p, ty - 56 * p);
+    // velocity arrow
+    if (Math.abs(cs.v) > 1e-6) { const L = cs.v * 60 * p, ay = ty - ch - 22 * p, ax = cxr - cw / 2; ctx.strokeStyle = T.vel; ctx.fillStyle = T.vel; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax + L, ay); ctx.stroke();
+      const s = Math.sign(L); ctx.beginPath(); ctx.moveTo(ax + L + s * 7 * p, ay); ctx.lineTo(ax + L, ay - 5 * p); ctx.lineTo(ax + L, ay + 5 * p); ctx.closePath(); ctx.fill(); ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.fillText(`${f(cs.v, 3)} m/s`, ax, ay - 12 * p); }
+    // force graph around the contact
+    const gx0 = 56 * p, gw = W - gx0 - 20 * p, gy0 = ty + 60 * p, gh = Hh - gy0 - 40 * p;
+    const t0 = tHit() - 0.2 * c.tc - 0.002, t1 = tHit() + 1.2 * c.tc + 0.002, Fh = c.Fmax * 1.15, Xg = (t) => gx0 + gw * (t - t0) / (t1 - t0), Yg = (F) => gy0 + gh - gh * F / Fh;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(gx0, gy0, gw, gh);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`force sensor (N) against time, ${S.rate >= 1000 ? S.rate / 1000 + ' kHz' : S.rate + ' Hz'} samples`, gx0, gy0 - 4);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(f(Fh, Fh < 10 ? 2 : 0), gx0 - 3, Yg(Fh)); ctx.fillText('0', gx0 - 3, Yg(0));
+    ctx.textBaseline = 'top'; ctx.fillText(`${f((t1 - t0) * 1000, 0)} ms shown`, gx0 + gw, gy0 + gh + 3);
+    const vis = S.pts.filter((q) => q[0] >= t0 && q[0] <= t1 && q[0] <= S.t);
+    if (vis.length) {
+      if (!S.blind) { ctx.fillStyle = T.force; ctx.globalAlpha = 0.18; ctx.beginPath(); ctx.moveTo(Xg(vis[0][0]), Yg(0)); for (const [t, F] of vis) ctx.lineTo(Xg(t), Yg(F)); ctx.lineTo(Xg(vis[vis.length - 1][0]), Yg(0)); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; }
+      ctx.strokeStyle = T.force; ctx.lineWidth = 1.5 * p; ctx.beginPath(); vis.forEach(([t, F], i) => (i ? ctx.lineTo(Xg(t), Yg(F)) : ctx.moveTo(Xg(t), Yg(F)))); ctx.stroke();
+      if (vis.length < 400) { ctx.fillStyle = T.force; for (const [t, F] of vis) { ctx.beginPath(); ctx.arc(Xg(t), Yg(F), 2.2 * p, 0, 7); ctx.fill(); } }
+    }
+  }
+  // ---------- readings ----------
+  function capStatus(m) { $('capStatus').textContent = m; }
+  $('capture').addEventListener('click', () => {
+    if (!S.done) { capStatus('Launch the cart and let it bounce off first.'); return; }
+    const st = stats(); S.rows.push({ bumper: S.bump, m: S.m.toFixed(2), v1: st.v1.toFixed(3), v2: st.v2.toFixed(3), rate: String(S.rate), area: st.area.toFixed(4), peak: st.peak.toFixed(2), tc: (st.c.tc * 1000).toFixed(1) }); renderRows(); capStatus(`Row ${S.rows.length} captured.`);
+  });
+  $('clearRows').addEventListener('click', () => { S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  function download(txt, name) { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} }
+  $('exportCsv').addEventListener('click', () => { if (!S.rows.length) { capStatus('No readings to export.'); return; } download(readingsCSV(S.rows, { version: IM_VERSION }), 'impulse-readings.csv'); capStatus('CSV exported.'); });
+  $('exportRun').addEventListener('click', () => { if (!S.done) { capStatus('Launch the cart and let it bounce off first.'); return; } const st = stats(); download(runCSV(S.pts, { version: IM_VERSION, bumper: B().name, m: S.m.toFixed(2), v1: st.v1.toFixed(3), v2: st.v2.toFixed(3), rate: S.rate }), 'impulse-run.csv'); capStatus('Run exported: t_s, F_N.'); });
+  function renderRows() {
+    const tb = $('rowsTbl').querySelector('tbody');
+    tb.innerHTML = S.rows.length ? S.rows.map((r, i) => `<tr><td>${i + 1}</td><td>${r.bumper}</td><td>${r.m}</td><td>${r.v1}</td><td>${r.v2}</td><td>${S.blind ? '—' : r.area}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : '<tr><td class="empty" colspan="7">No readings yet.</td></tr>';
+  }
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderRows(); } });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); renderRows(); });
+  function init() { sync(); reset(); renderRows(); }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
+  tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  let last = performance.now();
+  (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();
+})();
+</script>
+</body>
+</html>

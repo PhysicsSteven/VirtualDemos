@@ -28,6 +28,17 @@
      ]
     },
     {
+     "demo": "gravity-near-earth",
+     "title": "Gravity Near Earth",
+     "desc": "How g changes with height and latitude: from sea level to the space station and geostationary orbit, and how Earth's spin takes a little off at the equator.",
+     "tags": [
+      "g",
+      "inverse square law",
+      "latitude",
+      "weightlessness"
+     ]
+    },
+    {
      "demo": "kepler-orbits",
      "title": "Kepler's Laws",
      "desc": "Launch a planet by dragging its velocity arrow. Watch ellipses form, equal areas sweep out in equal times, and the orbit land on P² = a³/M with the real planets.",
@@ -36,6 +47,17 @@
       "equal areas",
       "P² = a³",
       "escape speed"
+     ]
+    },
+    {
+     "demo": "gps-clocks",
+     "title": "GPS Clocks and Relativity",
+     "desc": "Why a GPS satellite's clock gains 38 microseconds a day: gravity makes higher clocks run fast, speed makes moving clocks run slow.",
+     "tags": [
+      "general relativity",
+      "time dilation",
+      "GPS",
+      "gravitational redshift"
      ]
     },
     {
@@ -378,6 +400,17 @@
      ]
     },
     {
+     "demo": "elevator",
+     "title": "Elevator: Apparent Weight",
+     "desc": "Ride an elevator standing on a scale. It reads more or less than your weight only while the elevator speeds up or slows down, and zero if the cable snaps.",
+     "tags": [
+      "apparent weight",
+      "normal force",
+      "Newton's first law",
+      "free fall"
+     ]
+    },
+    {
      "demo": "circular-motion",
      "title": "Circular Motion",
      "desc": "What supplies mv²/r? Whirl a ball on a string and cut it, take a car round a flat or banked curve until it slides, and send a ball round a vertical loop, with the free body diagram for each.",
@@ -385,6 +418,17 @@
       "centripetal force",
       "banked curve",
       "vertical loop",
+      "friction"
+     ]
+    },
+    {
+     "demo": "nonuniform-circular",
+     "title": "Speeding Up on a Curve",
+     "desc": "A car speeds up or brakes on a curve: the acceleration has parts along the path and toward the centre, and the road's grip must supply both.",
+     "tags": [
+      "nonuniform circular motion",
+      "tangential acceleration",
+      "centripetal acceleration",
       "friction"
      ]
     },
@@ -477,6 +521,17 @@
      ]
     },
     {
+     "demo": "impulse",
+     "title": "Impulse and Momentum",
+     "desc": "Bounce a cart off a force sensor and show that the area under the force against time graph equals its change of momentum. Soft and stiff bumpers give the same impulse with very different forces.",
+     "tags": [
+      "impulse",
+      "momentum",
+      "force sensor",
+      "restitution"
+     ]
+    },
+    {
      "demo": "collisions",
      "title": "Collisions and Momentum",
      "desc": "Crash carts on an air track and pucks on an air table: momentum is always conserved, kinetic energy only when the bounce is elastic. Also an explosion, Newton's cradle, and why a soft bumper lowers the peak force for the same impulse.",
@@ -485,6 +540,17 @@
       "coefficient of restitution",
       "center of mass",
       "impulse"
+     ]
+    },
+    {
+     "demo": "center-of-mass",
+     "title": "Center of Mass",
+     "desc": "Find the centre of mass of masses on a plate, watch a firework's pieces keep its centre of mass on the original parabola, and walk along a boat that slides back.",
+     "tags": [
+      "centre of mass",
+      "momentum conservation",
+      "internal forces",
+      "explosion"
      ]
     },
     {

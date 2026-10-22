@@ -73,3 +73,8 @@ Other source-scope requests: string-bob release above horizontal requires slack 
 The temporary workspace interruption was recovered; the local draft commit survived and current-main merge resumed. Browser executable remains unavailable from the earlier launch attempt in this session; no browser installation or new browser pass claimed here. CSV download, keyboard/phone interaction, generated course-page/deployed routing and Steve/TA classroom acceptance remain open. Browser CI stays off. No remote CI result claimed.
 
 Claude should copy the three new handouts and updated map/gaps, then regenerate the course pages when appropriate. GPT made no public main merge. The next course-completion decision is the remaining missing/partial topic list, with demo source work still Claude-owned; do not confuse the written-package checkpoint with release readiness.
+
+
+## Follow-up: Mystery fit hiding fixed on main 9bbb97b
+
+Claude implemented the Mystery-aware guards. GPT merged that main and executed both workflow suites with --strict-mystery: all seven groups passed across the Physics I and E&M workflow suites. Obsolete workaround statements removed from current student/private guides; prior failures above remain source-pinned historical evidence. No new browser pass claimed. See PHYSICS_I_GAP_ACTIVITIES_2026-10-22.md.

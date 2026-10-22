@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Speeding Up on a Curve</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the circular track from above with the acceleration arrows on the left, the acceleration graph on the right; the rail on the right. */
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+
+:root { --road: #c9d1db; --car: #4a5563; --at: #a7740b; --ac: #2b60b5; --atot: #b0452f; --vel: #1f8a5a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --road: #3b4554; --car: #c3cad4; --at: #e2b350; --ac: #69a0ff; --atot: #ff8a70; --vel: #4cd08f; } }
+:root[data-theme="dark"] { --road: #3b4554; --car: #c3cad4; --at: #e2b350; --ac: #69a0ff; --atot: #ff8a70; --vel: #4cd08f; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.lab { font-size: 0.88rem; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 540px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Speeding Up on a Curve</h1>
+      <p>Moving on a circle at changing speed: the acceleration has a part along the path, a_t = dv/dt, and a part toward the centre, a_c = v²/r. The total is no longer toward the centre, and friction must supply all of it.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">g = 9.81 m/s²</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/nonuniform-circular.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/nonuniform-circular.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h3v1h-3zM14 2h1v1h-1zM16 2h6v1h-6zM25 2h1v1h-1zM27 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM16 3h2v1h-2zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h15v1h-15zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM14 5h2v1h-2zM18 5h1v1h-1zM20 5h2v1h-2zM25 5h5v1h-5zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM16 6h1v1h-1zM18 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM15 7h1v1h-1zM17 7h1v1h-1zM20 7h3v1h-3zM24 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM16 9h2v1h-2zM19 9h7v1h-7zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h4v1h-4zM13 10h3v1h-3zM17 10h1v1h-1zM20 10h6v1h-6zM31 10h5v1h-5zM38 10h1v1h-1zM4 11h4v1h-4zM11 11h2v1h-2zM18 11h1v1h-1zM21 11h3v1h-3zM25 11h1v1h-1zM27 11h1v1h-1zM29 11h2v1h-2zM34 11h4v1h-4zM2 12h3v1h-3zM8 12h1v1h-1zM10 12h2v1h-2zM13 12h3v1h-3zM18 12h1v1h-1zM23 12h4v1h-4zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM4 13h3v1h-3zM9 13h1v1h-1zM11 13h4v1h-4zM16 13h1v1h-1zM19 13h1v1h-1zM22 13h3v1h-3zM29 13h3v1h-3zM33 13h2v1h-2zM36 13h2v1h-2zM4 14h1v1h-1zM6 14h6v1h-6zM13 14h2v1h-2zM16 14h2v1h-2zM19 14h1v1h-1zM23 14h2v1h-2zM26 14h1v1h-1zM29 14h4v1h-4zM36 14h3v1h-3zM2 15h1v1h-1zM6 15h2v1h-2zM10 15h1v1h-1zM13 15h1v1h-1zM15 15h1v1h-1zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h3v1h-3zM6 16h1v1h-1zM8 16h3v1h-3zM14 16h4v1h-4zM20 16h1v1h-1zM22 16h6v1h-6zM29 16h1v1h-1zM32 16h6v1h-6zM3 17h2v1h-2zM6 17h2v1h-2zM9 17h1v1h-1zM11 17h1v1h-1zM13 17h1v1h-1zM16 17h2v1h-2zM21 17h3v1h-3zM26 17h1v1h-1zM30 17h5v1h-5zM36 17h1v1h-1zM38 17h1v1h-1zM3 18h3v1h-3zM7 18h4v1h-4zM13 18h1v1h-1zM18 18h1v1h-1zM22 18h3v1h-3zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM12 19h1v1h-1zM15 19h2v1h-2zM20 19h1v1h-1zM24 19h2v1h-2zM27 19h4v1h-4zM33 19h3v1h-3zM37 19h1v1h-1zM3 20h2v1h-2zM6 20h1v1h-1zM8 20h2v1h-2zM13 20h1v1h-1zM15 20h3v1h-3zM19 20h2v1h-2zM22 20h2v1h-2zM25 20h1v1h-1zM28 20h9v1h-9zM3 21h1v1h-1zM5 21h3v1h-3zM9 21h1v1h-1zM11 21h1v1h-1zM13 21h2v1h-2zM16 21h4v1h-4zM22 21h2v1h-2zM28 21h1v1h-1zM31 21h1v1h-1zM36 21h2v1h-2zM4 22h1v1h-1zM6 22h1v1h-1zM8 22h4v1h-4zM13 22h3v1h-3zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM29 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h4v1h-4zM7 23h1v1h-1zM9 23h10v1h-10zM22 23h1v1h-1zM25 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM4 24h2v1h-2zM8 24h1v1h-1zM12 24h1v1h-1zM14 24h1v1h-1zM17 24h3v1h-3zM22 24h1v1h-1zM24 24h2v1h-2zM28 24h2v1h-2zM32 24h5v1h-5zM7 25h1v1h-1zM9 25h5v1h-5zM17 25h1v1h-1zM19 25h6v1h-6zM26 25h1v1h-1zM28 25h3v1h-3zM32 25h3v1h-3zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h1v1h-1zM4 26h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM10 26h1v1h-1zM12 26h1v1h-1zM14 26h1v1h-1zM16 26h1v1h-1zM20 26h1v1h-1zM22 26h2v1h-2zM25 26h1v1h-1zM28 26h2v1h-2zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM6 27h2v1h-2zM16 27h1v1h-1zM18 27h1v1h-1zM25 27h1v1h-1zM27 27h4v1h-4zM34 27h2v1h-2zM4 28h1v1h-1zM7 28h6v1h-6zM14 28h1v1h-1zM16 28h1v1h-1zM18 28h3v1h-3zM24 28h6v1h-6zM31 28h4v1h-4zM36 28h1v1h-1zM5 29h2v1h-2zM9 29h1v1h-1zM12 29h4v1h-4zM19 29h2v1h-2zM22 29h4v1h-4zM29 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM38 29h1v1h-1zM2 30h2v1h-2zM6 30h1v1h-1zM8 30h2v1h-2zM11 30h1v1h-1zM14 30h4v1h-4zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h1v1h-1zM10 31h1v1h-1zM13 31h3v1h-3zM18 31h3v1h-3zM23 31h1v1h-1zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h2v1h-2zM15 32h4v1h-4zM20 32h1v1h-1zM22 32h1v1h-1zM25 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h7v1h-7zM23 33h2v1h-2zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM13 34h6v1h-6zM23 34h4v1h-4zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM13 35h1v1h-1zM15 35h1v1h-1zM20 35h1v1h-1zM23 35h1v1h-1zM25 35h1v1h-1zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h1v1h-1zM17 36h1v1h-1zM19 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h2v1h-2zM15 37h1v1h-1zM17 37h4v1h-4zM23 37h2v1h-2zM28 37h1v1h-1zM32 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM15 38h2v1h-2zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM33 38h1v1h-1zM36 38h3v1h-3z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="img" aria-label="A car on a circular track seen from above, with arrows for its velocity, the tangential and centripetal accelerations and the total acceleration, and a graph of the accelerations against time. Space starts or pauses."></canvas>
+      <div class="viewbar"><button type="button" class="spin attn" id="go">Go</button><button type="button" class="spin" id="back">Start over</button></div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Motion</h2>
+        <div class="seg" role="group" aria-label="Speeding up or braking" id="modeSeg"><button type="button" data-m="up" aria-pressed="true">Speeding up from rest</button><button type="button" data-m="brake" aria-pressed="false">Braking to a stop</button></div>
+        <div><div class="slider-head"><label for="sAt">Rate of change of speed |a_t|</label><output id="oAt" for="sAt"></output></div><input type="range" id="sAt" min="0.5" max="6" step="0.5"></div>
+        <div><div class="slider-head"><label for="sR">Radius of the curve r</label><output id="oR" for="sR"></output></div><input type="range" id="sR" min="20" max="200" step="10"></div>
+        <div id="rowV0"><div class="slider-head"><label for="sV0">Speed when braking starts</label><output id="oV0" for="sV0"></output></div><input type="range" id="sV0" min="5" max="30" step="1"></div>
+        <div><div class="slider-head"><label for="sMu">Road grip μs</label><output id="oMu" for="sMu"></output></div><input type="range" id="sMu" min="0.1" max="1.0" step="0.05"></div>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="formula">a = √(a_t² + (v²/r)²) ≤ μs g to keep its grip</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides the accelerations, the angle and the predicted slip time, leaving the speed, the radius and the clock.</p>
+        <p class="hint">Model: a car as a point on a flat circular road, with a constant rate of change of speed; static friction supplies the whole horizontal force, up to μs mg. When it would need more, the car slides off along a straight line at the speed it had. Shown at real speed, so large radii look slow.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.81, NU_VERSION = 'nonuniform-circular@2026-10-22';
+  // constant tangential acceleration at (signed) from speed v0 on a circle of radius r
+  function stateAt(v0, at, r, t) {
+    const tStop = at < 0 ? v0 / -at : Infinity, tt = Math.min(t, tStop), v = v0 + at * tt, s = v0 * tt + 0.5 * at * tt * tt;
+    const ac = v * v / r, aT = t < tStop ? at : 0;
+    return { v, s, th: s / r, ac, at: aT, a: Math.hypot(aT, ac), ang: Math.atan2(Math.abs(aT), ac) };
+  }
+  // first time the needed friction exceeds μs g: (v²/r)² + at² = (μs g)²; null if it never does
+  function slipTime(v0, at, r, mu) {
+    const A = mu * G; if (Math.abs(at) > A) return 0;
+    const vs = Math.sqrt(r * Math.sqrt(A * A - at * at));   // the speed at which it slips
+    if (at > 0) return vs > v0 ? (vs - v0) / at : 0;
+    return v0 > vs ? (v0 - vs) / -at : (v0 >= vs ? 0 : null);
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const S = { mode: 'up', at: 2, r: 60, v0b: 18, mu: 0.7, t: 0, run: false, slid: null, blind: false, hist: [] };
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, Hh = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      road: g('--road'), car: g('--car'), at: g('--at'), ac: g('--ac'), atot: g('--atot'), vel: g('--vel'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d).replace('-', '−'));
+  const v0 = () => (S.mode === 'up' ? 0 : S.v0b), atS = () => (S.mode === 'up' ? S.at : -S.at), tSlip = () => slipTime(v0(), atS(), S.r, S.mu);
+  const tEnd = () => { const ts = tSlip(); if (ts != null) return ts + 2.5; return S.mode === 'brake' ? S.v0b / S.at + 1 : 20; };
+  function sync() {
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
+    $('rowV0').hidden = S.mode !== 'brake'; $('sAt').value = S.at; $('oAt').textContent = `${S.at.toFixed(1)} m/s²`; $('sR').value = S.r; $('oR').textContent = `${S.r} m`; $('sV0').value = S.v0b; $('oV0').textContent = `${S.v0b} m/s`; $('sMu').value = S.mu; $('oMu').textContent = S.mu.toFixed(2);
+    $('go').textContent = S.run ? 'Pause' : 'Go';
+  }
+  const restart = () => { S.t = 0; S.run = false; S.slid = null; S.hist = []; sync(); draw(); readouts(); };
+  $('modeSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (b) { S.mode = b.dataset.m; restart(); } });
+  for (const [id, k] of [['sAt', 'at'], ['sR', 'r'], ['sV0', 'v0b'], ['sMu', 'mu']]) $(id).addEventListener('input', (e) => { S[k] = +e.target.value; restart(); });
+  $('go').addEventListener('click', () => { if (S.t >= tEnd()) restart(); if (reduce) { const ts = tSlip(), te = ts != null ? ts : tEnd() - 1; for (let i = 1; i <= 300; i++) step(te / 300); draw(); readouts(); return; } S.run = !S.run; sync(); });
+  $('back').addEventListener('click', restart);
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });
+  function step(dt) {
+    const ts = tSlip(); S.t += dt;
+    if (!S.slid && ts != null && S.t >= ts) { const q = stateAt(v0(), atS(), S.r, ts); S.slid = { t: ts, th: q.th, v: q.v }; }
+    if (!S.slid) { const q = stateAt(v0(), atS(), S.r, S.t); S.hist.push([S.t, q.at, q.ac, q.a]); }
+  }
+  function tick(dt) { if (!S.run) return; step(dt); if (S.t >= tEnd()) { S.run = false; sync(); } draw(); readouts(); }
+  function readouts() {
+    const q = stateAt(v0(), atS(), S.r, S.slid ? S.slid.t : S.t), dd = (a, v, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${v}</dd></div>`, ts = tSlip();
+    let h = dd('Time', `${f(S.t, 2)} s`) + dd('Speed', `${f(S.slid ? S.slid.v : q.v, 2)} m/s`);
+    h += dd('State', `<span style="font-family:var(--font-ui);font-size:0.9rem">${S.slid ? 'sliding off in a straight line' : q.v === 0 && S.mode === 'brake' && S.t > 0 ? 'stopped' : 'gripping the road'}</span>`, true);
+    if (S.blind) h += '<div class="wide"><dt>Accelerations and slip time</dt><dd class="ok">hidden in Blind: work them out</dd></div>';
+    else {
+      h += dd('Tangential a_t', `${f(q.at, 2)} m/s²`) + dd('Centripetal v²/r', `${f(q.ac, 2)} m/s²`) + dd('Total |a|', `${f(q.a, 2)} m/s²`) + dd('Angle of a from the centre', `${f(q.ang * 180 / Math.PI, 1)}°`);
+      h += dd('Most friction can give μs g', `${f(S.mu * G, 2)} m/s²`) + dd('Predicted slip', ts == null ? 'never' : ts === 0 ? 'at once' : `at ${f(ts, 2)} s, ${f(Math.abs(v0() + atS() * ts), 1)} m/s`);
+    }
+    $('out').innerHTML = h;
+  }
+  function arrow(x0, y0, dx, dy, col, lab) {
+    const p = ps(), L = Math.hypot(dx, dy); if (L < 3) return; const ux = dx / L, uy = dy / L, hd = Math.min(10 * p, L * 0.5), x1 = x0 + dx, y1 = y0 + dy;
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - ux * hd, y1 - uy * hd); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - ux * hd - uy * hd * 0.55, y1 - uy * hd + ux * hd * 0.55); ctx.lineTo(x1 - ux * hd + uy * hd * 0.55, y1 - uy * hd - ux * hd * 0.55); ctx.closePath(); ctx.fill();
+    if (lab) { ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = ux > 0.2 ? 'left' : ux < -0.2 ? 'right' : 'center'; ctx.textBaseline = uy > 0.2 ? 'top' : uy < -0.2 ? 'bottom' : 'middle'; ctx.fillText(lab, x1 + ux * 5 * p, y1 + uy * 5 * p); }
+  }
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const p = ps(), wide = W > 700, pw = wide ? W * 0.55 : W, ph = wide ? Hh : Hh * 0.6, cx = pw / 2, cy = ph / 2 + 20 * p, R = Math.min(pw, ph) * 0.34;
+    ctx.strokeStyle = T.road; ctx.lineWidth = 22 * p; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke(); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 3 * p, 0, 7); ctx.fill();
+    // the car goes anticlockwise from the bottom
+    let px, py, q;
+    if (S.slid) { const th = S.slid.th, bx = cx + R * Math.sin(th), by = cy + R * Math.cos(th), d = S.slid.v * (S.t - S.slid.t) * R / S.r; px = bx + d * Math.cos(th); py = by - d * Math.sin(th); q = null; }
+    else { q = stateAt(v0(), atS(), S.r, S.t); px = cx + R * Math.sin(q.th); py = cy + R * Math.cos(q.th); }
+    ctx.fillStyle = T.car; ctx.beginPath(); ctx.arc(px, py, 8 * p, 0, 7); ctx.fill();
+    if (q && !S.blind) {
+      const th = q.th, tx = Math.cos(th), ty = -Math.sin(th), nx = (cx - px) / R, ny = (cy - py) / R, k = 14 * p;
+      arrow(px, py, tx * q.v * 3 * p, ty * q.v * 3 * p, T.vel, 'v');
+      arrow(px, py, tx * q.at * k, ty * q.at * k, T.at, 'a_t'); arrow(px, py, nx * q.ac * k, ny * q.ac * k, T.ac, 'a_c'); arrow(px, py, tx * q.at * k + nx * q.ac * k, ty * q.at * k + ny * q.ac * k, T.atot, 'a');
+    }
+    if (S.slid) { ctx.fillStyle = T.atot; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('Slipped: friction cannot supply the whole acceleration', 14 * p, 54 * p); }
+    // grip circle: radius μs g, with the needed acceleration vector inside it
+    const gx = wide ? pw + 30 * p : 30 * p, gw = wide ? W - gx - 20 * p : W - 50 * p, gy0 = wide ? 70 * p : ph + 20 * p, gh = wide ? Hh - gy0 - 50 * p : Hh - gy0 - 40 * p;
+    const tmax = tEnd(), amax = Math.max(S.mu * G, ...S.hist.map((h) => h[3])) * 1.1, X = (t) => gx + gw * t / tmax, Y = (a) => gy0 + gh - gh * a / amax;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(gx, gy0, gw, gh);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('accelerations (m/s²) against time', gx, gy0 - 4);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(f(amax, 1), gx - 3, Y(amax)); ctx.fillText('0', gx - 3, Y(0)); ctx.textBaseline = 'top'; ctx.fillText(`${f(tmax, 1)} s`, gx + gw, gy0 + gh + 3);
+    ctx.strokeStyle = T.gridStrong; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(gx, Y(S.mu * G)); ctx.lineTo(gx + gw, Y(S.mu * G)); ctx.stroke(); ctx.setLineDash([]); ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillStyle = T.muted; ctx.fillText('μs g: the most friction can give', gx + 4 * p, Y(S.mu * G) - 2);
+    if (!S.blind) for (const [k, col] of [[1, T.at], [2, T.ac], [3, T.atot]]) { ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.beginPath(); S.hist.forEach((h, i) => (i ? ctx.lineTo(X(h[0]), Y(h[k])) : ctx.moveTo(X(h[0]), Y(h[k])))); ctx.stroke(); }
+  }
+  function init() { sync(); readouts(); }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
+  tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  let last = performance.now();
+  (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();
+})();
+</script>
+</body>
+</html>

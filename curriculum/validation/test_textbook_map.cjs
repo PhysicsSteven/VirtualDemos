@@ -5,6 +5,16 @@ const root = path.resolve(__dirname, '../..'), map = JSON.parse(fs.readFileSync(
 const status = new Set(['usable', 'needs-handout', 'needs-feature', 'missing']);
 const key = s => `${s.vol}:${s.sec}`, sections = new Map(map.sections.map(s => [key(s), s]));
 const demos = new Map(map.demos.map(d => [d.demo, d]));
+const activities = new Map((map.activities || []).map(a => [a.id, a]));
+assert.equal(activities.size, (map.activities || []).length, 'duplicate standalone activity');
+for (const a of activities.values()) {
+ assert(status.has(a.status)); assert(['worksheet', 'reading'].includes(a.kind));
+ assert(a.course.length && a.course.every(c => ['physics-1', 'physics-2', 'later'].includes(c)));
+ assert.equal(a.url, `curriculum/labs/students/${a.id}.md`); assert(fs.existsSync(path.join(root, a.url)));
+ assert(a.handouts.includes(a.id));
+ for (const r of a.sections) { assert(sections.has(key(r))); assert.equal(r.title, sections.get(key(r)).title); assert((sections.get(key(r)).activities || []).includes(a.id)); }
+ for (const file of a.data || []) assert(fs.existsSync(path.join(root, file)));
+}
 const catalogData = JSON.parse(fs.readFileSync(path.join(root, 'curriculum/catalog.json'), 'utf8'));
 const catalog = catalogData.subjects.flatMap(subject => subject.demos.map(d => d.demo));
 assert.equal(new Set(catalog).size, catalog.length, 'duplicate catalog entry');
@@ -19,7 +29,8 @@ for (const d of map.demos) {
  for (const r of d.sections) { assert(sections.has(key(r))); assert.equal(r.title, sections.get(key(r)).title); }
 }
 for (const s of map.sections) {
- assert(status.has(s.status)); assert.equal(s.demos.length === 0, s.status === 'missing');
+ assert(status.has(s.status)); assert.equal(s.demos.length + (s.activities || []).length === 0, s.status === 'missing');
+ for (const id of s.activities || []) { const a = activities.get(id); assert(a); assert(a.sections.some(r => key(r) === key(s))); }
  for (const name of s.demos) { const d = demos.get(name); assert(d); assert(d.sections.some(r => key(r) === key(s))); }
 }
 for (const c of map.courses) {

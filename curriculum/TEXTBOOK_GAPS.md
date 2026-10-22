@@ -1,42 +1,29 @@
 # Textbook coverage and gaps
 
-Source inventory: main `db5f27b3eeab45a0c24f9fa9981e5630a45c713c`, reviewed 2026-10-22. This is curriculum/source coverage, not collection-wide numerical or release validation.
+Source inventory: main `9bbb97b3a281e72c2f853a18f49b14e95b79e25f`, reviewed 2026-10-22, plus feature-branch student activities. The 84 catalog demos are each mapped once; 209 section records are retained. Three standalone activities are stored separately from demos.
 
-78 demos from `curriculum/catalog.json` mapped once; 209 section records. Claude’s new demos and section additions are preserved. Legacy HTML outside the catalog is not duplicated.
+## Course-page contract
 
-## Contract for course-page construction
+The schema-version-1 object contains `courses`, `sections`, `demos`, and optional `activities`. Existing demo entries and URLs/QR codes are unchanged. Activities have `id`, `title`, `kind` (`worksheet` or `reading`), `course`, textbook `sections`, `status`, `handouts`, `url` (the public Markdown file), `description` and a scope note. Reading entries can name input `data` files and `sources`.
 
-`textbook-map.json` is an object with `courses`, `sections`, and `demos` arrays. The agreed per-demo fields live in `demos`; additions are `title`, `url`, and optional `handouts` (student Markdown basenames). Unit `sections` contains `{vol, sec}` references. Join on the pair, then use section `demos` to render activity cards; deduplicate within a unit. Never infer course membership from a section citation alone: filter the demo’s `course` too. This prevents a deferred modern bench from appearing in required Physics II.
+For each course unit, join its `{vol,sec}` references to section records. Render both `section.demos` and optional `section.activities`; filter each resource's course membership and deduplicate within the unit. Check student-file existence before linking. Never add instructor links. Keep real-demo and worksheet/reading counts separate; no fake demos or thumbnails are needed for a worksheet.
 
-Courses/units/sections are ordered for rendering. Physics I puts Ch. 13 before Ch. 12, then Ch. 14–15. Physics II ends its required path at Vol. 2 Ch. 16; Vol. 3 Ch. 1–2 are optional. Vol. 2 Ch. 15 AC material is `later`/going further; the same Circuits engine also serves the required sequence. No exam dates/boundaries or durations are populated.
+Claude integration: `validation/requests/standalone-course-activities.patch` is a tested proposal for the current `tools/courses.py`. Its in-memory render passed, including direct activity links and unchanged Physics II output. The generator and generated course pages are not edited on this branch; apply/adapt the patch (`git apply --unidiff-zero`) and regenerate before claiming the standalone cards are live.
 
-Both `sections[*].status` and `demos[*].status` are explicit. Section status describes apparatus coverage; a lab’s `needs-handout` status describes its documentation package. `usable` does not mean fully validated, release-ready, or complete coverage of every example in the section. Missing sections must display “No activity yet.” Partial sections need an equally honest partial/feature-pending label.
+Physics I follows the syllabus (Ch. 13 before Ch. 12, then fluids and oscillations). Required Physics II ends at Maxwell and EM waves; Vol. 3 Ch. 1–2 optics remains optional. Durations and exam boundaries remain unpopulated. Deferred material keeps its existing later assignment.
 
-Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basename may be a planned handout, so check existence before displaying its link. No instructor links or answers belong on public course pages. Lecture demos do not require a full lab. Steve’s final lab/demo decisions override this first draft.
+## Status meanings
 
-## Current priorities
+A section's status describes scoped topic coverage from demos and/or standalone activities. A resource's status describes its package. `usable` is not full-section mastery, a physics audit of every setting, release certification or classroom acceptance. Missing means no mapped resource; partial means a known topic/feature limit. Broader limitations remain in notes even when a scoped activity is usable.
 
-- Three new Physics I lab packages are written: motion-graphs is usable within its scope; forces and stress-strain are usable after Claude fixed the four reported UI issues (2026-10-22). Pendulum (§15.4) and Rotational Dynamics (§§10.2, 10.5, 10.7, 10.8) were added on main the same day. Browser/classroom review remains open.
-- Resistivity and wire-force handouts/private guides are now written; their Mystery fits need the answer-hiding fix. All 11 current Physics I lab handouts are now written; next work is the remaining topic gaps and validation requests. The lecture demos do not need full student labs.
-- Near-surface gravity §13.2 remains missing; fixed-g projectile motion does not close this gap.
-- Moment-of-inertia calculation §10.5 is partial: discrete masses/standard formulas exist; a continuous-body integration activity is absent.
-- Chapter 1 remains worksheet material. Owner-deferred gaps include §8.5 and §13.7 (§11.4 and §14.7 were built on main 2026-10-22 after Steve said to keep filling gaps); a missing label is not authorization to build them now.
-- Thermodynamics and non-syllabus waves/sound remain later. Basic optics remains optional after Maxwell/EM waves.
+## Current Physics I checkpoint
+
+All 85 course sections have an explicit scoped mapping: 27 real demos, 12 full lab packages, two Chapter 1 worksheets and one §8.5 reading/data activity. Chapter 1 is not represented as a simulation. Impulse's new lab is complete. The four Mystery fit-hiding fixes pass their strict tests. Standalone course-card integration, browser/deployment and classroom checks remain open. [Unit inventory](PHYSICS_I_STATUS.md) and [validation](validation/PHYSICS_I_GAP_ACTIVITIES_2026-10-22.md).
 
 ## Every unmapped Volume 1/2 section
 
 | Course / priority | Volume | Section | Exact textbook title | Status |
 |---|---:|---|---|---|
-| physics-1 | 1 | 1.1 | The Scope and Scale of Physics | missing |
-| physics-1 | 1 | 1.2 | Units and Standards | missing |
-| physics-1 | 1 | 1.3 | Unit Conversion | missing |
-| physics-1 | 1 | 1.4 | Dimensional Analysis | missing |
-| physics-1 | 1 | 1.5 | Estimates and Fermi Calculations | missing |
-| physics-1 | 1 | 1.6 | Significant Figures | missing |
-| physics-1 | 1 | 1.7 | Solving Problems in Physics | missing |
-| physics-1 | 1 | 8.5 | Sources of Energy | missing |
-| physics-1 | 1 | 13.2 | Gravitation Near Earth's Surface | missing |
-| physics-1 | 1 | 13.7 | Einstein's Theory of Gravity | missing |
 | physics-2 | 2 | 7.6 | Applications of Electrostatics | missing |
 | physics-2 | 2 | 8.5 | Molecular Model of a Dielectric | missing |
 | physics-2 | 2 | 9.2 | Model of Conduction in Metals | missing |
@@ -60,16 +47,10 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 | later | 2 | 4.7 | Entropy on a Microscopic Scale | missing |
 | later | 2 | 15.6 | Transformers | missing |
 
-## Partial section coverage / missing features
+## Partial section mappings
 
 | Volume / section | Demos | Limitation |
 |---|---|---|
-| 1 / 4.4 | circular-motion | Circular Motion shows a = v²/r toward the center at constant speed; nonuniform circular motion (tangential acceleration) only in the loop. |
-| 1 / 5.2 | forces | Forces and Friction shows balanced forces at rest; constant velocity with zero net force is not set up directly. |
-| 1 / 5.4 | forces | Forces and Friction uses W = mg; apparent weight (elevator) not covered. |
-| 1 / 9.2 | collisions | Collision impulse context; a general force-time integral measurement is missing. |
-| 1 / 9.6 | collisions | Collision center-of-mass example only. |
-| 1 / 10.5 | rotation | Discrete point-mass I = Σmr² in the spinner/seesaw and supplied standard-shape coefficients are present. No continuous-body ∫r²dm derivation/integration activity; do not label that part complete. |
 | 2 / 5.5 | coulomb-sandbox | Point-charge sums only; general extended-distribution integration is missing. |
 | 2 / 6.4 | gauss-law, induction | Spherical conductor example only, not arbitrary conductors. |
 | 2 / 9.1 | circuits | Circuit-level current only, not a microscopic charge-flow experiment. |
@@ -85,29 +66,13 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 
 ## Optional optics gaps
 
-| Section | Exact title | Status |
+| Section | Title | Status |
 |---|---|---|
 | 1.1 | The Propagation of Light | missing |
 | 1.5 | Dispersion | missing |
 | 1.6 | Huygens’s Principle | missing |
 | 2.5 | The Eye | missing |
 
-## Mapping recheck, 2026-10-22
+## Sources and scope
 
-[Evidence and scope](validation/MAPPING_RECHECK_2026-10-22.md). Tides now serves Physics I §13.6; springs reference circle serves §15.3; vectors/projectiles support two-dimensional §§4.1–4.2. Rotation supports only part of §10.5. §13.2 remains missing. No demo source, course page or handout edited in this recheck.
-
-## Sources and package status
-
-Volumes 1/2 titles: owner-supplied OpenStax University Physics PDF contents. Optional Volume 3 titles: official [Chapter 1](https://openstax.org/books/university-physics-volume-3/pages/1-introduction) and [Chapter 2](https://openstax.org/books/university-physics-volume-3/pages/2-introduction) outlines. Full Volume 3 mapping remains deferred.
-
-The prior 16 aligned student/private activity packages remain preserved. Status usable describes a scoped activity that can be surfaced, not full topic coverage, release certification or classroom acceptance. The three new Physics I handouts are written; Claude’s forces/stress-strain fixes are source reviewed and their workarounds removed. Resistivity/wire-force now have handouts but remain needs-feature for Mystery-fit answer hiding. See [new lab evidence](validation/NEW_MECHANICS_LABS_2026-10-22.md). Claude should copy the updated JSON and this gap list from the feature branch and regenerate his course pages.
-
-
-## E&M bench packages, 2026-10-22
-
-[Checks and limitations](validation/EM_BENCH_LABS_2026-10-22.md). Added resistivity and current-balance student/private packages; the resistivity current check also maps to Vol. 2 §9.4. Both new benches need a small Mystery-fit answer-hiding fix, reproduced by the strict source-function test. Main’s two newer Physics I labs remain needs-handout and are next. No course-page or demo HTML edits by GPT.
-
-
-## Physics I written-package checkpoint
-
-All 11 existing Physics I labs now have student/private guides, including pendulum, rotational-dynamics and the new viscometer. The first two remain needs-feature for Mystery-fit answer hiding, with explicit Blind procedures. Viscometer scope is low-Re motion with CSV wall correction; its full empirical drag model is not independently literature validated here. The course still has 10 missing and 5 partial topic mappings. [Unit inventory](PHYSICS_I_STATUS.md) and [executed checks](validation/PHYSICS_I_COMPLETION_2026-10-22.md). No demo or generated course-page HTML edited by GPT.
+Volume 1/2 section titles follow the owner-supplied OpenStax PDFs. Optional optics uses the official Volume 3 chapter outlines. Energy activity input values are from the cited EIA Table 3.1.A 2024 row, with a stored teaching snapshot; arithmetic solutions stay private. Older source-pinned reports remain evidence for their recorded snapshots, not the latest defect status. All demo HTML remains Claude-owned and no public main merge was made by GPT.

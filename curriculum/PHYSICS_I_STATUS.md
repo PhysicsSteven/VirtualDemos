@@ -1,55 +1,41 @@
 # Physics I: current course status
 
-Snapshot: main `db5f27b3eeab45a0c24f9fa9981e5630a45c713c`, plus GPT's feature-branch handouts and tests, 2026-10-22. This is the written-package checkpoint; it is not a declaration that every syllabus topic or release gate is complete.
+Snapshot: main `9bbb97b3a281e72c2f853a18f49b14e95b79e25f` plus the feature-branch activities, 2026-10-22.
 
-**11 existing labs have full student handouts and private instructor guides.** All 21 Physics I demos have teaching notes. The 85 mapped textbook sections comprise 70 usable topic mappings, 5 partial mappings and 10 missing activities. A usable mapping supports a scoped topic, not every example or derivation in its textbook section.
+**All 85 textbook sections now have an explicit scoped resource mapping.** There are 27 real demos (12 labs and 15 lecture demos), plus two standalone foundations worksheets and one energy-sources reading/data activity. All 12 labs have student/private instructor companions. No worksheet is counted as a simulation. This is a curriculum coverage checkpoint, not full-section mastery, numerical certification of every model, or classroom release approval.
 
 ## In syllabus order
 
-The same demo may appear in several units. Ch. 13 precedes Ch. 12 as Steve specified. Links below point to student files on this branch; generated public course pages may lag until Claude copies the updated map and handouts.
+The same resource may appear in several units. Chapter 13 precedes Chapter 12 as Steve specified. Direct worksheet/readings cards need Claude's course-renderer integration described below.
 
-| Unit | Student labs | Lecture demos / short activities | Topic coverage |
-|---|---|---|---|
-| Measurements and vectors | — | [vectors](../notes/src/vectors.md) | 4 usable, 7 missing |
-| Kinematics | [motion-graphs](labs/students/motion-graphs.md), [projectile-drag](labs/students/projectile-drag.md) | [vectors](../notes/src/vectors.md), [circular-motion](../notes/src/circular-motion.md) | 10 usable, 1 partial |
-| Forces | [forces](labs/students/forces.md), [projectile-drag](labs/students/projectile-drag.md) | [circular-motion](../notes/src/circular-motion.md) | 9 usable, 2 partial |
-| Work and energy | [forces](labs/students/forces.md) | [potential-curves](../notes/src/potential-curves.md) | 8 usable, 1 missing |
-| Momentum and collisions | [collisions](labs/students/collisions.md) | [rocket](../notes/src/rocket.md) | 5 usable, 2 partial |
-| Rotation and angular momentum | [rotational-dynamics](labs/students/rotational-dynamics.md) | [rotation](../notes/src/rotation.md), [gyroscope](../notes/src/gyroscope.md) | 12 usable |
-| Gravitation and orbital mechanics | [kepler-orbits](labs/students/kepler-orbits.md) | [tides](../notes/src/tides.md) | 5 usable, 2 missing |
-| Static equilibrium and elasticity | [stress-strain](labs/students/stress-strain.md) | [rotation](../notes/src/rotation.md), [catenary](../notes/src/catenary.md), [equilibrium](../notes/src/equilibrium.md) | 4 usable |
-| Fluids | [fluids](labs/students/fluids.md), [viscometer](labs/students/viscometer.md) | — | 7 usable |
-| Oscillations | [springs](labs/students/springs.md), [pendulum](labs/students/pendulum.md) | [double-pendulum](../notes/src/double-pendulum.md) | 6 usable |
+| Unit | Student labs | Lecture demos / short activities | Worksheets and readings | Coverage |
+|---|---|---|---|---|
+| Measurements and vectors | — | [vectors](../notes/src/vectors.md) | [Measuring, Converting and Checking Units](labs/students/measurement-and-units.md), [Estimating and Reporting a Physical Result](labs/students/estimation-and-evidence.md) | 11 scoped mappings |
+| Kinematics | [motion-graphs](labs/students/motion-graphs.md), [projectile-drag](labs/students/projectile-drag.md) | [vectors](../notes/src/vectors.md), [circular-motion](../notes/src/circular-motion.md), [nonuniform-circular](../notes/src/nonuniform-circular.md) | — | 11 scoped mappings |
+| Forces | [forces](labs/students/forces.md), [projectile-drag](labs/students/projectile-drag.md) | [elevator](../notes/src/elevator.md), [circular-motion](../notes/src/circular-motion.md) | — | 11 scoped mappings |
+| Work and energy | [forces](labs/students/forces.md) | [potential-curves](../notes/src/potential-curves.md) | [Where Does Electrical Energy Come From?](labs/students/energy-sources.md) | 9 scoped mappings |
+| Momentum and collisions | [collisions](labs/students/collisions.md), [impulse](labs/students/impulse.md) | [center-of-mass](../notes/src/center-of-mass.md), [rocket](../notes/src/rocket.md) | — | 7 scoped mappings |
+| Rotation and angular momentum | [rotational-dynamics](labs/students/rotational-dynamics.md) | [rotation](../notes/src/rotation.md), [gyroscope](../notes/src/gyroscope.md) | — | 12 scoped mappings |
+| Gravitation and orbital mechanics | [kepler-orbits](labs/students/kepler-orbits.md) | [gravity-near-earth](../notes/src/gravity-near-earth.md), [tides](../notes/src/tides.md), [gps-clocks](../notes/src/gps-clocks.md) | — | 7 scoped mappings |
+| Static equilibrium and elasticity | [stress-strain](labs/students/stress-strain.md) | [rotation](../notes/src/rotation.md), [catenary](../notes/src/catenary.md), [equilibrium](../notes/src/equilibrium.md) | — | 4 scoped mappings |
+| Fluids | [fluids](labs/students/fluids.md), [viscometer](labs/students/viscometer.md) | — | — | 7 scoped mappings |
+| Oscillations | [springs](labs/students/springs.md), [pendulum](labs/students/pendulum.md) | [double-pendulum](../notes/src/double-pendulum.md) | — | 6 scoped mappings |
 
-## Remaining topic gaps
+## What changed since the earlier gap list
 
-These need worksheets, new features or new activities; finishing the existing handouts does not close them. Claude owns demo HTML. The earlier deferred list is superseded where Claude has already added a new demo (gyroscope and viscometer now cover their scoped topics).
+- Chapter 1 now has two short activities covering measurement/scale, SI conversions, dimensional checks, Fermi estimates, significant figures, uncertainty and auditable problem solving.
+- Section 8.5 now has a reading/calculation activity with a dated EIA electricity-generation input snapshot and explicit energy/power/efficiency boundaries.
+- Claude supplied elevator, nonuniform-circular, impulse, center-of-mass, gravity-near-earth and gps-clocks demos. Impulse now has its full student/private lab, with independent signed integration and sampling comparisons.
+- The strict Mystery-only fit-hiding checks now pass for pendulum, rotational-dynamics, resistivity and wire-force. Old validation reports retain their dated failures with resolution addenda.
 
-| Section | Topic | Current limit |
-|---|---|---|
-| 1.1 | The Scope and Scale of Physics | No activity yet. |
-| 1.2 | Units and Standards | No activity yet. |
-| 1.3 | Unit Conversion | No activity yet. |
-| 1.4 | Dimensional Analysis | No activity yet. |
-| 1.5 | Estimates and Fermi Calculations | No activity yet. |
-| 1.6 | Significant Figures | No activity yet. |
-| 1.7 | Solving Problems in Physics | No activity yet. |
-| 4.4 | Uniform and Nonuniform Circular Motion | Circular Motion shows a = v²/r toward the center at constant speed; nonuniform circular motion (tangential acceleration) only in the loop. |
-| 5.2 | Newton's First Law | Forces and Friction shows balanced forces at rest; constant velocity with zero net force is not set up directly. |
-| 5.4 | Mass and Weight | Forces and Friction uses W = mg; apparent weight (elevator) not covered. |
-| 8.5 | Sources of Energy | No activity yet. |
-| 9.2 | Impulse and Collisions | Collision impulse context; a general force-time integral measurement is missing. |
-| 9.6 | Center of Mass | Collision center-of-mass example only. |
-| 13.2 | Gravitation Near Earth's Surface | No activity yet. |
-| 13.7 | Einstein's Theory of Gravity | No activity yet. |
+## Integration still pending
 
-Section 10.5 retains a scope caveat despite its usable activity: mass sums, shape formulas and measured inertia do not replace a continuous-body integral derivation. The two-dimensional vector/projectile examples do not constitute a general three-dimensional motion viewer.
+The map has an optional `activities` array, referenced by `sections[*].activities`, alongside the unchanged real-demo catalog. The additive schema remains version 1. Claude's current generator does not yet consume this field. A concrete patch is supplied at [standalone-course-activities.patch](validation/requests/standalone-course-activities.patch): apply with `git apply --unidiff-zero` to `tools/courses.py`, then regenerate course pages. Patch applicability and an in-memory render were checked; the proposed renderer links all three standalone cards, keeps counts separate, and leaves Physics II output unchanged. GPT did not edit generated pages or the generator.
 
-## Source and acceptance work still open
+Direct student files are available on this branch; do not call the worksheet cards live until that integration is deployed. Instructor answers remain only in TeacherKeys.
 
-- Pendulum and rotational-dynamics have full handouts but are `needs-feature`: Mystery alone currently reveals their fitted g/I unless Blind is on. A strict source-function regression reproduces both disclosures; the procedures use Blind.
-- String-bob releases above horizontal are not a taut-string experiment. The lab limits the angle to 90°; Claude is asked to clarify the larger-angle source domain.
-- Viscometer is usable for the specified low-Re domain. It is not independent validation of the entire empirical high-Re drag curve or of the tube correction at high Re. The raw built-in fit is an apparent-viscosity comparison.
-- Browser/download/phone/keyboard checks and Steve/TA acceptance remain open. No public main merge by GPT. Private keys are in TeacherKeys only.
+## Limits that a coverage map cannot close
 
-See [executed checks and source requests](validation/PHYSICS_I_COMPLETION_2026-10-22.md) and [textbook gaps](TEXTBOOK_GAPS.md). Lecture demos retain teaching notes instead of being inflated into full student labs.
+Continuous-body inertia derivations, unrestricted three-dimensional motion, the pendulum's above-horizontal string setting and the viscometer's full high-Re empirical model retain their documented scope limits. Impulse summary CSV still includes calculated answers in Blind; the lab explicitly uses raw force CSV before final comparison. Browser/download/phone/keyboard and Steve/TA acceptance remain open. No public main merge by GPT.
+
+See [gap-closing evidence](validation/PHYSICS_I_GAP_ACTIVITIES_2026-10-22.md) and [the full map](textbook-map.json).

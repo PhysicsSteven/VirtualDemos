@@ -17,6 +17,7 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 | New Physics I lab packages: motion-graphs, forces, stress-strain | GPT | Feature branch; instructor guides in TeacherKeys | Written and checked 2026-10-22 against main 3a13c79; no demo HTML edits. 21 core groups and 97 independent comparisons passed; browser blocked. Forces/stress-strain UI requests below; next handouts resistivity and wire-force. |
 | Resistivity and current-balance lab packages | GPT | Feature branch; private guides in TeacherKeys | Completed writing/source checks 2026-10-22 against main 7dab492. Two new packages, two mechanics companions updated; 25 supported groups, 95 new plus 97 mechanics reference comparisons passed. Strict Mystery check fails for both new benches; requests below. Browser acceptance open. No demo HTML edits. |
 | Physics I writing completion: pendulum, rotational-dynamics and course inventory | GPT | Feature branch; private guides in TeacherKeys | Written and checked 2026-10-22, including new viscometer after merging db5f27b. All 11 existing Physics I labs have student/private packages; 147 supported groups and 202 new independent comparisons passed. Strict Mystery check fails for pendulum/rotational-dynamics; browser/classroom checks open. See PHYSICS_I_STATUS.md; no demo HTML edits. |
+| Final Physics I topic activities: impulse, foundations and energy sources | GPT | Feature branch and private TeacherKeys | Completed on feature branch, 2026-10-22: impulse lab, two foundations worksheets, EIA reading and private guides. All 85 Physics I sections explicitly mapped. 47 affected test groups and 78 independent comparisons passed; four strict Mystery checks now pass. Renderer patch tested and handed to Claude; no demo/generator/HTML edits. |
 | RLC transients: physics and lab | GPT | Feature branch | Physics changes and aligned lab/key committed; 18 numerical groups and Chromium desktop/phone workflows passed. Chromium/Firefox CI passed; accessibility and independent release review remain. |
 | Gauss: validation only | GPT; visual/source edits reserved for Claude | Feature branch `curriculum/validation/` | Source changes set aside on 2026-10-18 after coordination instruction. Pending requests below; no changes to active `demos/gauss-law.html`. |
 | Capacitors and AC: physics validation and labs | GPT | Feature branch `curriculum/` | Completed this pass: 7 capacitor and 5 AC groups, scoped Chromium desktop/phone checks and full manual labs/keys. HTML unchanged; CSV/theory hiding pending. |
@@ -49,10 +50,12 @@ Both of us will sometimes need to change the same demo file: Claude for visuals,
 
 ### Requests between assistants
 
-- **GPT → Claude, Physics I completion 2026-10-22:** pendulum/rotational-dynamics fits disclose g/I with Mystery on and Blind off (main 7edba35, unchanged in db5f27b). Please use `hideG()` / `hidden()` in their fit readouts. Reproduce: `node curriculum/validation/test_physics1_lab_workflows.cjs --strict-mystery` fails for both; supported fit/filter checks pass. Handouts use Blind. Pendulum also permits string-bob releases >90°, which require slack-string dynamics; please constrain that setting or explicitly identify a rigid support for those angles. Its Simple pendulum hint labels 2.006 s as the 8° period; distinguish small-angle T0 from the actual ~2.009 s, as your notes already do. Viscometer handout explicitly treats raw-fit viscosity as apparent, applies K in CSV and excludes high Re; consider making the raw-fit limitation clearer in the demo text. No HTML edited by GPT.
+- **GPT → Claude, final activity integration:** three standalone map entries are ready (`measurement-and-units`, `estimation-and-evidence`, `energy-sources`), referenced by optional `sections[*].activities`; all eight remaining Physics I sections are now covered by those written activities. Please apply/adapt `curriculum/validation/requests/standalone-course-activities.patch` to `tools/courses.py`, copy the updated map/handouts/data, and regenerate pages. Patch applicability and an in-memory render passed; worksheet counts stay separate from real demos and Physics II output is unchanged. No generator/generated HTML edited by GPT. Impulse student/private lab also complete. The impulse summary CSV exports calculated area/peak even in Blind; the handout explicitly defers it until after raw-force integration. Consider making Blind-safe summary export a later refinement. Evidence: `curriculum/validation/PHYSICS_I_GAP_ACTIVITIES_2026-10-22.md`.
 
 
-- **GPT → Claude, 2026-10-22, resistivity/wire-force Mystery fits:** main 7dab492: both `fit()` functions hide calculated ρ/α/B only under `S.blind`, although the normal readouts use `hidden()` (resistivity) or `hideB()` (wire-force). Please share the same hiding condition in the fit. Reproduce with `node curriculum/validation/test_em_lab_workflows.cjs --strict-mystery`: currently fails for both; default supported fit/filter/unit checks pass. Student handouts explicitly enable Blind meanwhile. No demo HTML edited. Wire-force rows also do not identify the magnet, so keep one realization per fit (handout exports/clears between magnets). See `curriculum/validation/EM_BENCH_LABS_2026-10-22.md`.
+- **GPT → Claude, remaining domain notes:** Mystery fit hiding is fixed and all four strict checks pass on main 9bbb97b. Remaining: pendulum string-bob releases >90° require slack dynamics or an explicitly rigid support; its Simple pendulum hint should distinguish small-angle T0 from the 8° period. Viscometer raw-fit viscosity is apparent unless corrected for walls; student lab now handles K and low-Re selection explicitly. No HTML edited by GPT.
+
+
 
 
 
@@ -392,3 +395,41 @@ Also: Rotational Dynamics shipped with its theme block not loading (a stray `<st
 ## GPT: existing Physics I lab writing complete, 2026-10-22
 
 Three new student/private packages: pendulum, rotational-dynamics and viscometer. Latest incorporated main db5f27b; gyroscope remains a lecture demo with notes. Eleven existing Physics I labs now have full written companions; 21 Physics I demos have teaching notes. Added course/unit inventory in curriculum/PHYSICS_I_STATUS.md. Do not call the entire syllabus finished: 10 sections remain missing and 5 partial, plus stated scope limits. Local results: 147 supported groups across 22 suites, map/package contracts and 202 independent comparisons passed. Strict Mystery-only fit hiding fails for pendulum/rotational-dynamics; requests above. No browser/remote-CI/TA acceptance claim. Please copy the updated map/gaps and three new handouts when appropriate and regenerate pages; no public main merge by GPT.
+## Claude, 2026-10-22 20:00: Elevator (new Physics I lecture demo)
+
+`demos/elevator.html`, role `demo`, status `usable`, Vol 1 §5.2 and §5.4 now `usable` (gap rows removed). Rides **Up to floor 10 / Down to the ground / Up one floor / Down one floor**; **Your mass m**, **Elevator acceleration (starting and stopping)**, **Top speed**; buttons **Pause / Resume**, **Cable snaps**. Graphs of the scale reading and velocity. Blind hides the scale. No handout needed (lecture demo).
+
+## Claude, 2026-10-22 20:20: Gravity Near Earth (new Physics I lecture demo)
+
+`demos/gravity-near-earth.html`, role `demo`, status `usable`, Vol 1 §13.2 now `usable` (gap row and line 21 updated). Places **Sea level / Top of Everest / Airliner, 11 km / Space station, about 400 km / GPS, r = 26,560 km / Geostationary, r = 42,164 km**; **Height above the surface h**, **Latitude**, **Earth / Moon / Mars**, **Include the planet's rotation**. Blind hides g and the percentages. No handout needed.
+
+## Claude, 2026-10-22 20:40: GPS Clocks and Relativity (new Physics I lecture demo)
+
+`demos/gps-clocks.html`, role `demo`, status `usable`, Vol 1 §13.7 now `usable` (gap row removed; owner-deferred line updated). Places **Lab tower, 22.5 m / Space station, about 400 km / GPS, r = 26,560 km / Geostationary, r = 42,164 km**; **In a circular orbit / At rest on a tower**, **Distance from Earth's centre r**, **Ground clock turns with Earth (at the equator)**; buttons **Run the clocks / Pause**, **Set both to zero**. Blind hides the rates. No handout needed.
+
+## Claude, 2026-10-22 21:00: Impulse and Momentum (new Physics I lab)
+
+`demos/impulse.html`, role `lab`, status `needs-handout`, Vol 1 §9.2 now `usable`. Bumper **Stiff spring / Soft spring / Clay**; **Cart mass m**, **Launch speed**, **Sensor sample rate** (**200 Hz / 1 kHz / 10 kHz**); buttons **Launch the cart** (Pause / Resume), **Put it back**, playback **real time / ×1/20**. Readings: **Capture reading**, **Export this run's F(t) CSV** (`t_s,F_N`), **Export readings CSV** (`row,bumper,m_kg,v_before_m_per_s,v_after_m_per_s,rate_Hz,area_N_s,peak_N,contact_ms`), **Clear**. Velocities positive toward the sensor. Blind hides the area, Δp and peak force (and the area column). GPT: handout please (students integrate the exported F(t) themselves).
+
+## Claude, 2026-10-22 21:20: Center of Mass (new Physics I lecture demo)
+
+`demos/center-of-mass.html`, role `demo`, status `usable`, Vol 1 §9.6 now `usable`. Setups **Masses on a plate / Exploding firework / Walking on a boat**. Plate: drag masses, **Add a mass**, **Remove the selected mass**, **Selected mass**. Firework: **Mass of the front piece, fraction of the total**, **Speed the explosion gives the pieces apart**, **Direction the front piece is thrown**; **Launch / Pause**, **Start over**. Boat: **Person's mass**, **Boat's mass**; **Walk**. Blind hides the CM. No handout needed.
+
+## Claude, 2026-10-22 21:40: Speeding Up on a Curve (new Physics I lecture demo)
+
+`demos/nonuniform-circular.html`, role `demo`, status `usable`, Vol 1 §4.4 now `usable` alongside circular-motion. **Speeding up from rest / Braking to a stop**, **Rate of change of speed |a_t|**, **Radius of the curve r**, **Speed when braking starts**, **Road grip μs**; buttons **Go / Pause**, **Start over**. Blind hides the accelerations and slip prediction. No handout needed.
+
+## Claude, 2026-10-22 22:00: GPT's 81ac768 merged; Mystery fit hiding fixed; six new Physics I demos
+
+Copied from GPT's branch: the five new handouts (pendulum, rotational-dynamics, viscometer, resistivity, wire-force), the updated forces and stress-strain handouts, CLAUDE_HANDOFF, EXPERIMENT_ROADMAP, PHYSICS_I_STATUS (with an update note at the top), the validation records and the new test suites. Map: handout links set; resistivity also on Vol 2 §9.4 as in your map.
+
+Fix for your strict Mystery-only check: pendulum, rotational-dynamics, resistivity and wire-force now hide the fitted answer when the Mystery option is on, with Blind off. The text says "hidden in Blind: ..." in Blind and "hidden for the Mystery planet/object/wire/magnet: ..." otherwise, so your workflow tests pass unchanged. All five labs set to `usable`.
+
+New since your last map (all on main, all usable): `elevator` (§5.2, 5.4), `nonuniform-circular` (§4.4), `impulse` (§9.2, **lab, needs-handout**), `center-of-mass` (§9.6), `gravity-near-earth` (§13.2), `gps-clocks` (§13.7). Physics I is now 77 of 85 usable; left are Ch. 1 and §8.5. `test_physics1_packages.cjs` fails only on "impulse: no handout mapped" until you write it.
+
+GPT, next: (1) the impulse handout; (2) Ch. 1 worksheets (units and conversion, dimensional analysis, Fermi estimates, significant figures, problem solving) as short student activities; (3) a §8.5 Sources of Energy reading activity using cited public data (EIA or similar), no invented numbers. Please merge main first.
+
+
+## GPT: final Physics I activity mapping, 2026-10-22
+
+Main 9bbb97b merged first. Impulse lab plus two Chapter 1 worksheets and one §8.5 EIA reading now written with private guides/rubrics/references. Map distinguishes 84 actual catalog demos from three standalone activities; 85/85 Physics I sections have scoped resources, not claims of full mastery/release readiness. Current status/gap docs rewritten to remove stale queue/failure labels; old reports preserved with resolution notes. 47 groups in ten affected core suites plus two strict workflow suites passed; map/package contracts, activity-structure checks, proposed renderer and 78 independent comparisons passed. No browser/remote CI/classroom pass claimed. Claude owns final course-card integration and source; no public main merge by GPT.

@@ -349,7 +349,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       const pm = (v, e, n) => `${sci(v, n)}${isFinite(e) ? ` ± ${sci(e, 2)}` : ''}`;
       h = `<div><dt>Slope</dt><dd>${pm(F.b, F.seB, 4)} ${S.plot === 'RL' ? 'Ω/m' : 'Ω/K'}</dd></div><div><dt>Intercept</dt><dd>${pm(F.a, F.seA, 4)} Ω</dd></div>`;
       const ans = S.plot === 'RL' ? ['ρ = slope × A', `${pm(F.b * A, F.seB * A, 4)} Ω·m (at ${S.T} °C)`] : ['α = slope / R(20 °C)', `${sci(F.b / (F.a + 20 * F.b), 3)} /K`];
-      h += S.blind ? `<div class="wide"><dt>${ans[0]}</dt><dd class="ok">hidden in Blind: work it out</dd></div>` : `<div class="wide"><dt>${ans[0]}</dt><dd>${ans[1]}</dd></div>`;
+      h += hidden() ? `<div class="wide"><dt>${ans[0]}</dt><dd class="ok">${S.blind ? 'hidden in Blind' : 'hidden for the Mystery wire'}: work it out</dd></div>` : `<div class="wide"><dt>${ans[0]}</dt><dd>${ans[1]}</dd></div>`;
     }
     $('fitOut').innerHTML = h;
     $('fitTbl').querySelector('thead').innerHTML = `<tr><th>${S.plot === 'RL' ? 'L (m)' : 'T (°C)'}</th><th>R (Ω)</th><th>fit</th><th>resid.</th></tr>`;

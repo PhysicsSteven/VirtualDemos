@@ -386,7 +386,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       if (!F) h = '<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two lengths with a bob, θ₀ ≤ 10°, on this planet.</dd></div>';
       else { const g = 4 * Math.PI ** 2 / F.b, sg = g * F.seB / F.b;
         h = `<div><dt>Slope (s²/m)</dt><dd>${f(F.b, 4)}${isFinite(F.seB) ? ` ± ${f(F.seB, 4)}` : ''}</dd></div><div><dt>Intercept (s²)</dt><dd>${f(F.a, 4)}</dd></div>`;
-        h += S.blind ? '<div class="wide"><dt>g = 4π²/slope</dt><dd class="ok">hidden in Blind: work it out</dd></div>' : `<div class="wide"><dt>g = 4π²/slope</dt><dd>${f(g, 3)}${isFinite(sg) ? ` ± ${f(sg, 3)}` : ''} m/s²</dd></div>`; }
+        h += hideG() ? `<div class="wide"><dt>g = 4π²/slope</dt><dd class="ok">${S.blind ? 'hidden in Blind' : 'hidden for the Mystery planet'}: work it out</dd></div>` : `<div class="wide"><dt>g = 4π²/slope</dt><dd>${f(g, 3)}${isFinite(sg) ? ` ± ${f(sg, 3)}` : ''} m/s²</dd></div>`; }
     } else {
       pts = S.rows.filter((r) => r.L === S.L.toFixed(2) && r.type === (S.rod ? 'rod' : 'bob') && r.gKey === S.gKey).map((r) => [cellNum(r.A), cellNum(r.T)]).filter(([a, b]) => isFinite(a) && isFinite(b));
       h = pts.length ? `<div class="wide"><dt>Points at L = ${f(S.L, 2)} m</dt><dd class="ok">${pts.length} captured; ${S.blind || S.mystery ? 'the curve is hidden' : 'the dashed curve is the exact period, the flat line T₀'}.</dd></div>` : '<div class="wide"><dt>Plot</dt><dd class="ok">Capture T at several release angles at one length.</dd></div>';

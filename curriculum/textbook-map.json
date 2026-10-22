@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": {
-    "repository_commit": "db5f27b3eeab45a0c24f9fa9981e5630a45c713c",
+    "repository_commit": "9bbb97b3a281e72c2f853a18f49b14e95b79e25f",
     "review_date": "2026-10-22",
     "textbooks": [
       {
@@ -35,10 +35,11 @@
       "needs-feature": "A required feature or topic is absent/partial; see note.",
       "missing": "No mapped activity exists for this section."
     },
-    "section_status": "Section status describes topic/apparatus coverage; demo status describes its activity package. A usable section can still have a lab needing a handout.",
+    "section_status": "Section status describes scoped topic coverage through demos and/or standalone activities. Demo and activity statuses describe their packages; usable does not mean full-section mastery or release certification.",
     "later_mapping": "beyond_book means no direct Volume 1/2 activity home, not that the demo is physically incorrect. Later entries are not promoted into courses merely because a section is related.",
     "optional_duration": "duration_minutes may be added after review; absent until estimated.",
-    "exam_metadata": "Course metadata may later hold exam_boundaries; omitted for now."
+    "exam_metadata": "Course metadata may later hold exam_boundaries; omitted for now.",
+    "activities": "Optional activities array contains standalone worksheet/reading resources, distinct from the real-demo catalog. Sections reference activities by id; render both section.demos and section.activities, filtering course membership and deduplicating within a unit."
   },
   "courses": [
     {
@@ -878,10 +879,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
+      "status": "usable",
       "demos": [],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Covered by the standalone worksheet measurement-and-units; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "activities": [
+        "measurement-and-units"
+      ]
     },
     {
       "vol": 1,
@@ -893,10 +897,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
+      "status": "usable",
       "demos": [],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Covered by the standalone worksheet measurement-and-units; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "activities": [
+        "measurement-and-units"
+      ]
     },
     {
       "vol": 1,
@@ -908,10 +915,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
+      "status": "usable",
       "demos": [],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Covered by the standalone worksheet measurement-and-units; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "activities": [
+        "measurement-and-units"
+      ]
     },
     {
       "vol": 1,
@@ -923,10 +933,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
+      "status": "usable",
       "demos": [],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Covered by the standalone worksheet measurement-and-units; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "activities": [
+        "measurement-and-units"
+      ]
     },
     {
       "vol": 1,
@@ -938,10 +951,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
+      "status": "usable",
       "demos": [],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Covered by the standalone worksheet estimation-and-evidence; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "activities": [
+        "estimation-and-evidence"
+      ]
     },
     {
       "vol": 1,
@@ -953,10 +969,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
+      "status": "usable",
       "demos": [],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Covered by the standalone worksheet estimation-and-evidence; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "activities": [
+        "estimation-and-evidence"
+      ]
     },
     {
       "vol": 1,
@@ -968,10 +987,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
+      "status": "usable",
       "demos": [],
       "unit": "measurements-vectors",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Covered by the standalone worksheet estimation-and-evidence; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "activities": [
+        "estimation-and-evidence"
+      ]
     },
     {
       "vol": 1,
@@ -1206,12 +1228,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "circular-motion"
+        "circular-motion",
+        "nonuniform-circular"
       ],
       "unit": "kinematics",
-      "note": "Circular Motion shows a = v²/r toward the center at constant speed; nonuniform circular motion (tangential acceleration) only in the loop."
+      "note": "Circular Motion covers uniform circular motion; Speeding Up on a Curve (2026-10-22, Claude) covers nonuniform motion: tangential and centripetal parts, total acceleration and its angle, slip when √(a_t² + a_c²) > μs g."
     },
     {
       "vol": 1,
@@ -1257,12 +1280,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "forces"
+        "forces",
+        "elevator"
       ],
       "unit": "forces",
-      "note": "Forces and Friction shows balanced forces at rest; constant velocity with zero net force is not set up directly."
+      "note": "Elevator (2026-10-22, Claude): at constant speed, up or down, the scale reads exactly mg: zero net force with nonzero velocity. Forces and Friction covers balanced forces at rest."
     },
     {
       "vol": 1,
@@ -1291,12 +1315,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "forces"
+        "forces",
+        "elevator"
       ],
       "unit": "forces",
-      "note": "Forces and Friction uses W = mg; apparent weight (elevator) not covered."
+      "note": "Elevator (2026-10-22, Claude): apparent weight N = m(g + a) through a ride, and weightlessness in free fall. Forces and Friction uses W = mg."
     },
     {
       "vol": 1,
@@ -1562,10 +1587,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
+      "status": "usable",
       "demos": [],
       "unit": "energy",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Covered by the standalone reading energy-sources; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "activities": [
+        "energy-sources"
+      ]
     },
     {
       "vol": 1,
@@ -1593,12 +1621,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "collisions"
+        "collisions",
+        "impulse"
       ],
       "unit": "momentum",
-      "note": "Collision impulse context; a general force-time integral measurement is missing."
+      "note": "Impulse and Momentum (2026-10-22, Claude): force sensor F(t) with sample rate choice, area = Δp, soft vs stiff bumpers (same impulse, different peak force), clay vs springs (restitution). Collisions gives the collision context."
     },
     {
       "vol": 1,
@@ -1658,12 +1687,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "collisions"
+        "collisions",
+        "center-of-mass"
       ],
       "unit": "momentum",
-      "note": "Collision center-of-mass example only."
+      "note": "Center of Mass (2026-10-22, Claude): weighted average of draggable point masses, an exploding firework whose pieces keep the CM parabola, and a person walking on a boat (CM fixed). Continuous bodies are not integrated."
     },
     {
       "vol": 1,
@@ -1908,10 +1938,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "gravity-near-earth"
+      ],
       "unit": "gravitation",
-      "note": "Fixed g in projectile/motion graphs and a Sun-centered AU orbit model do not investigate g = GM_E/(R_E+h)² or its near-surface approximation. No direct activity yet."
+      "note": "Gravity Near Earth (2026-10-22, Claude): g = GM/(R + h)² against height, the near surface approximation g₀(1 − 2h/R), rotation and latitude (effective g, plumb line tilt), sphere vs WGS 84, Moon and Mars."
     },
     {
       "vol": 1,
@@ -1988,10 +2020,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "gps-clocks"
+      ],
       "unit": "gravitation",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "GPS Clocks and Relativity (2026-10-22, Claude): gravitational time dilation and the speed effect for clocks in orbit or on a tower, the GPS +38.6 μs/day, Pound and Rebka, Schwarzschild radii. Light bending and the equivalence principle are discussion only."
     },
     {
       "vol": 1,
@@ -4386,6 +4420,26 @@
       "url": "demos/circular-motion.html"
     },
     {
+      "demo": "nonuniform-circular",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "4.4",
+          "title": "Uniform and Nonuniform Circular Motion"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Car on a flat circular road speeding up from rest or braking to a stop at constant |a_t|; radius, braking start speed, μs; v, a_t, a_c and total a arrows; accelerations against time with the μs g line; slides off when grip runs out; Blind.",
+      "handouts": [],
+      "title": "Speeding Up on a Curve",
+      "url": "demos/nonuniform-circular.html"
+    },
+    {
       "demo": "forces",
       "course": [
         "physics-1"
@@ -4473,6 +4527,31 @@
       "url": "demos/forces.html"
     },
     {
+      "demo": "elevator",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "5.2",
+          "title": "Newton's First Law"
+        },
+        {
+          "vol": 1,
+          "sec": "5.4",
+          "title": "Mass and Weight"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Person on a scale in an elevator; rides between floors with set acceleration and top speed; scale reading, N and mg arrows, scale and velocity graphs; Cable snaps (free fall, then safety brakes); Blind hides the scale for predictions.",
+      "handouts": [],
+      "title": "Elevator: Apparent Weight",
+      "url": "demos/elevator.html"
+    },
+    {
       "demo": "potential-curves",
       "course": [
         "physics-1"
@@ -4520,6 +4599,28 @@
       ]
     },
     {
+      "demo": "impulse",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "9.2",
+          "title": "Impulse and Collisions"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Cart into a bumper on a force sensor: stiff spring, soft spring or clay; cart mass and launch speed; sample rate 200 Hz/1 kHz/10 kHz; motion detector velocities; exact F(t); Capture, readings CSV and per-run F(t) CSV; Blind hides the area, Δp and peak force. Student/private instructor lab completed 2026-10-22, including signed impulse, independent force CSV integration, bumper comparison and sensor sampling. Source/core/reference checks only; browser/classroom acceptance pending.",
+      "handouts": [
+        "impulse"
+      ],
+      "title": "Impulse and Momentum",
+      "url": "demos/impulse.html"
+    },
+    {
       "demo": "collisions",
       "course": [
         "physics-1"
@@ -4565,6 +4666,26 @@
       ],
       "title": "Collisions and Momentum",
       "url": "demos/collisions.html"
+    },
+    {
+      "demo": "center-of-mass",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "9.6",
+          "title": "Center of Mass"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Masses on a plate (drag, add, remove, set mass), exploding firework (mass split, explosion speed and direction) and walking on a boat (masses); CM marker and coordinates; Blind hides the CM.",
+      "handouts": [],
+      "title": "Center of Mass",
+      "url": "demos/center-of-mass.html"
     },
     {
       "demo": "rocket",
@@ -4664,6 +4785,26 @@
       ]
     },
     {
+      "demo": "gravity-near-earth",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "13.2",
+          "title": "Gravitation Near Earth's Surface"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). g against height from sea level to geostationary orbit, latitude and rotation, Earth/Moon/Mars, spring scale reading, near surface line and its error, orbit speed and period; Blind.",
+      "handouts": [],
+      "title": "Gravity Near Earth",
+      "url": "demos/gravity-near-earth.html"
+    },
+    {
       "demo": "kepler-orbits",
       "course": [
         "physics-1"
@@ -4699,6 +4840,26 @@
       ],
       "title": "Kepler's Laws",
       "url": "demos/kepler-orbits.html"
+    },
+    {
+      "demo": "gps-clocks",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "13.7",
+          "title": "Einstein's Theory of Gravity"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Ground clock vs a second clock in orbit or on a tower; gravity and speed parts of the rate difference, net μs/day, light travel distance, the cancelling radius, Schwarzschild radii; clocks run 1 h per second; Blind.",
+      "handouts": [],
+      "title": "GPS Clocks and Relativity",
+      "url": "demos/gps-clocks.html"
     },
     {
       "demo": "tides",
@@ -4857,7 +5018,7 @@
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-22 (Claude). Glycerol, castor oil, motor oil, water or a Mystery liquid in a 40 or 100 mm tube; steel, glass or nylon balls 1 to 10 mm; gate timer between marks 0.200 m apart (0.01 s), playback ×1/×10/×100; drag from Stokes × standard drag curve × Haberman–Sayre wall factor, with buoyancy and added mass; Capture, CSV, v against d² fit for η; Reynolds number; Blind. Full student/private package written 2026-10-22 for low-Re glass balls in glycerol, with CSV wall correction and model-limit diagnostic. Core/source-fit/reference checks passed; full empirical-drag bibliographic audit and browser/classroom review remain open.",
+      "note": "New 2026-10-22 (Claude). Glycerol, castor oil, motor oil, water or a Mystery liquid in a 40 or 100 mm tube; steel, glass or nylon balls 1 to 10 mm; gate timer between marks 0.200 m apart (0.01 s), playback ×1/×10/×100; drag from Stokes × standard drag curve × Haberman–Sayre wall factor, with buoyancy and added mass; Capture, CSV, v against d² fit for η; Reynolds number; Blind. Full student/private package written 2026-10-22 for low-Re glass balls in glycerol, with CSV wall correction and model-limit diagnostic. Core/source-fit/reference checks passed; full empirical-drag bibliographic audit and browser/classroom review remain open. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind.",
       "handouts": [
         "viscometer"
       ],
@@ -4920,8 +5081,8 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-feature",
-      "note": "New 2026-10-22 (Claude). Bob on a string or uniform rod; length, release angle, mass, Earth/Moon/Mars/Mystery planet, optional air drag; RK4 motion; photogate to 0.001 s; Capture, CSV, T² against L fit for g, T against θ₀ with the exact curve; Blind. Full student/private instructor package written and numerically checked 2026-10-22. Mystery fit answer hiding requires Blind; strict source-fit check fails without it. Browser/classroom acceptance pending. String-bob lab restricted to release angles at or below 90 degrees; above-horizontal release requires slack-string dynamics or a rigid support.",
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Bob on a string or uniform rod; length, release angle, mass, Earth/Moon/Mars/Mystery planet, optional air drag; RK4 motion; photogate to 0.001 s; Capture, CSV, T² against L fit for g, T against θ₀ with the exact curve; Blind. Full student/private instructor package written and numerically checked 2026-10-22. Mystery fit answer hiding requires Blind; strict source-fit check fails without it. Browser/classroom acceptance pending. String-bob lab restricted to release angles at or below 90 degrees; above-horizontal release requires slack-string dynamics or a rigid support. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind.",
       "handouts": [
         "pendulum"
       ],
@@ -4957,8 +5118,8 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-feature",
-      "note": "New 2026-10-22 (Claude). Hanging mass on a string around a spool (1, 2, 3 cm) spins a turntable carrying nothing, a disk, a ring, two masses at an adjustable distance or a Mystery object; optional bearing friction torque; timer for a 0.500 m drop to 0.001 s; Capture, CSV, τ against α fit (slope I, intercept friction); energy and power readouts; Blind. Full student/private instructor package written and numerically checked 2026-10-22. Mystery fit answer hiding requires Blind; strict source-fit check fails without it. Browser/classroom acceptance pending.",
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Hanging mass on a string around a spool (1, 2, 3 cm) spins a turntable carrying nothing, a disk, a ring, two masses at an adjustable distance or a Mystery object; optional bearing friction torque; timer for a 0.500 m drop to 0.001 s; Capture, CSV, τ against α fit (slope I, intercept friction); energy and power readouts; Blind. Full student/private instructor package written and numerically checked 2026-10-22. Mystery fit answer hiding requires Blind; strict source-fit check fails without it. Browser/classroom acceptance pending. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind.",
       "handouts": [
         "rotational-dynamics"
       ],
@@ -5194,8 +5355,8 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-feature",
-      "note": "New 2026-10-22 (Claude). Four-wire measurement on a wire along a metre rule: nichrome, constantan, copper, mystery wire; four AWG gauges; length, current, temperature; Capture, CSV, R against L (ρ) and R against T (α) fits; Blind. Handbook ρ at 20 °C, linear in T. Student/private instructor package written and source/numerically checked 2026-10-22. Mystery fit discloses calculated answers unless Blind is explicitly on; strict regression reproduces this. See EM_BENCH_LABS_2026-10-22.md. Browser/classroom acceptance pending.",
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Four-wire measurement on a wire along a metre rule: nichrome, constantan, copper, mystery wire; four AWG gauges; length, current, temperature; Capture, CSV, R against L (ρ) and R against T (α) fits; Blind. Handbook ρ at 20 °C, linear in T. Student/private instructor package written and source/numerically checked 2026-10-22. Mystery fit discloses calculated answers unless Blind is explicitly on; strict regression reproduces this. See EM_BENCH_LABS_2026-10-22.md. Browser/classroom acceptance pending. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind.",
       "handouts": [
         "resistivity"
       ],
@@ -5373,8 +5534,8 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-feature",
-      "note": "New 2026-10-22 (Claude). Current balance lab (magnet on a balance, Δm = F/g, B from F against I, Mystery magnet), wire at an angle, loop torque with release, DC motor with commutator; Blind. Uniform field between the poles, constant current (no back emf). Student/private instructor package written and source/numerically checked 2026-10-22. Mystery fit discloses calculated answers unless Blind is explicitly on; strict regression reproduces this. See EM_BENCH_LABS_2026-10-22.md. Browser/classroom acceptance pending.",
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Current balance lab (magnet on a balance, Δm = F/g, B from F against I, Mystery magnet), wire at an angle, loop torque with release, DC motor with commutator; Blind. Uniform field between the poles, constant current (no back emf). Student/private instructor package written and source/numerically checked 2026-10-22. Mystery fit discloses calculated answers unless Blind is explicitly on; strict regression reproduces this. See EM_BENCH_LABS_2026-10-22.md. Browser/classroom acceptance pending. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind.",
       "handouts": [
         "wire-force"
       ],
@@ -6359,6 +6520,106 @@
       "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
       "title": "White Dwarf Cooling",
       "url": "demos/white-dwarf-cooling.html"
+    }
+  ],
+  "activities": [
+    {
+      "id": "measurement-and-units",
+      "title": "Measuring, Converting and Checking Units",
+      "kind": "worksheet",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "1.1",
+          "title": "The Scope and Scale of Physics"
+        },
+        {
+          "vol": 1,
+          "sec": "1.2",
+          "title": "Units and Standards"
+        },
+        {
+          "vol": 1,
+          "sec": "1.3",
+          "title": "Unit Conversion"
+        },
+        {
+          "vol": 1,
+          "sec": "1.4",
+          "title": "Dimensional Analysis"
+        }
+      ],
+      "status": "usable",
+      "handouts": [
+        "measurement-and-units"
+      ],
+      "url": "curriculum/labs/students/measurement-and-units.md",
+      "description": "Measurements, unit conversions and dimensional checks using a ruler and supplied exercises.",
+      "note": "Standalone student activity with private instructor guide and checked references; no simulation claimed. Browser/course-page integration and classroom acceptance pending."
+    },
+    {
+      "id": "estimation-and-evidence",
+      "title": "Estimating and Reporting a Physical Result",
+      "kind": "worksheet",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "1.5",
+          "title": "Estimates and Fermi Calculations"
+        },
+        {
+          "vol": 1,
+          "sec": "1.6",
+          "title": "Significant Figures"
+        },
+        {
+          "vol": 1,
+          "sec": "1.7",
+          "title": "Solving Problems in Physics"
+        }
+      ],
+      "status": "usable",
+      "handouts": [
+        "estimation-and-evidence"
+      ],
+      "url": "curriculum/labs/students/estimation-and-evidence.md",
+      "description": "Fermi estimates, uncertainty versus rounding, and a structured mechanics solution.",
+      "note": "Standalone student activity with private instructor guide and checked references; no simulation claimed. Browser/course-page integration and classroom acceptance pending."
+    },
+    {
+      "id": "energy-sources",
+      "title": "Where Does Electrical Energy Come From?",
+      "kind": "reading",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "8.5",
+          "title": "Sources of Energy"
+        }
+      ],
+      "status": "usable",
+      "handouts": [
+        "energy-sources"
+      ],
+      "url": "curriculum/labs/students/energy-sources.md",
+      "description": "Energy-conversion pathways, power and efficiency using a dated EIA electricity-generation snapshot.",
+      "note": "Standalone student activity with private instructor guide and checked references; no simulation claimed. Browser/course-page integration and classroom acceptance pending.",
+      "data": [
+        "curriculum/data/eia-electricity-2024.json"
+      ],
+      "sources": [
+        "https://www.eia.gov/electricity/annual/html/epa_03_01_a.html",
+        "https://www.eia.gov/energyexplained/electricity/electricity-in-the-us.php"
+      ]
     }
   ]
 }
