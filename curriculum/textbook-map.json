@@ -1257,12 +1257,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "forces"
+        "forces",
+        "elevator"
       ],
       "unit": "forces",
-      "note": "Forces and Friction shows balanced forces at rest; constant velocity with zero net force is not set up directly."
+      "note": "Elevator (2026-10-22, Claude): at constant speed, up or down, the scale reads exactly mg: zero net force with nonzero velocity. Forces and Friction covers balanced forces at rest."
     },
     {
       "vol": 1,
@@ -1291,12 +1292,13 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "forces"
+        "forces",
+        "elevator"
       ],
       "unit": "forces",
-      "note": "Forces and Friction uses W = mg; apparent weight (elevator) not covered."
+      "note": "Elevator (2026-10-22, Claude): apparent weight N = m(g + a) through a ride, and weightlessness in free fall. Forces and Friction uses W = mg."
     },
     {
       "vol": 1,
@@ -4470,6 +4472,31 @@
       ],
       "title": "Forces and Friction",
       "url": "demos/forces.html"
+    },
+    {
+      "demo": "elevator",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "5.2",
+          "title": "Newton's First Law"
+        },
+        {
+          "vol": 1,
+          "sec": "5.4",
+          "title": "Mass and Weight"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Person on a scale in an elevator; rides between floors with set acceleration and top speed; scale reading, N and mg arrows, scale and velocity graphs; Cable snaps (free fall, then safety brakes); Blind hides the scale for predictions.",
+      "handouts": [],
+      "title": "Elevator: Apparent Weight",
+      "url": "demos/elevator.html"
     },
     {
       "demo": "potential-curves",

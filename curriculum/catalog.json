@@ -378,6 +378,17 @@
      ]
     },
     {
+     "demo": "elevator",
+     "title": "Elevator: Apparent Weight",
+     "desc": "Ride an elevator standing on a scale. It reads more or less than your weight only while the elevator speeds up or slows down, and zero if the cable snaps.",
+     "tags": [
+      "apparent weight",
+      "normal force",
+      "Newton's first law",
+      "free fall"
+     ]
+    },
+    {
      "demo": "circular-motion",
      "title": "Circular Motion",
      "desc": "What supplies mv²/r? Whirl a ball on a string and cut it, take a car round a flat or banked curve until it slides, and send a ball round a vertical loop, with the free body diagram for each.",

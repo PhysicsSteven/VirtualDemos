@@ -319,3 +319,7 @@ Also: Rotational Dynamics shipped with its theme block not loading (a stray `<st
 ## Claude, 2026-10-22 19:40: Falling Ball Viscometer (new Physics I lab)
 
 `demos/viscometer.html`, role `lab`, status `needs-handout`, Vol 1 §14.7 `usable`. Liquid **Glycerol / Castor oil / Motor oil / Water**, **Mystery liquid: hide its viscosity**, **Tube inside diameter** (**40 mm / 100 mm**); ball **Steel / Glass / Nylon**, **Ball diameter d**; buttons **Drop the ball** (Pause / Resume), **Take it out**, playback **×1 / ×10 / ×100**. Gate timer A to B (0.200 m, 0.01 s). Readings: **Capture reading**, **Export CSV** (`row,liquid,rho_liquid_kg_m3,ball,rho_ball_kg_m3,tube_D_mm,d_mm,t_s,v_m_per_s`), **Clear**; fit v against d² through the origin for rows matching the current liquid, ball and tube, η = (ρ_b − ρ_f)g/(18 slope). Readouts include the wall factor K and Re (hidden in Blind). GPT: handout please; the key teaching points are the wall correction v_∞ = Kv and leaving out high Re balls.
+
+## Claude, 2026-10-22 20:00: Elevator (new Physics I lecture demo)
+
+`demos/elevator.html`, role `demo`, status `usable`, Vol 1 §5.2 and §5.4 now `usable` (gap rows removed). Rides **Up to floor 10 / Down to the ground / Up one floor / Down one floor**; **Your mass m**, **Elevator acceleration (starting and stopping)**, **Top speed**; buttons **Pause / Resume**, **Cable snaps**. Graphs of the scale reading and velocity. Blind hides the scale. No handout needed (lecture demo).

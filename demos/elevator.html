@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Elevator: Apparent Weight</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the shaft and car on the left, scale and speed graphs on the right of the stage; the rail on the right. */
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+
+:root { --car: #c9d1db; --person: #4a5563; --N: #2b60b5; --W: #b0452f; --cable: #6b7787; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --car: #3b4554; --person: #c3cad4; --N: #69a0ff; --W: #ff8a70; --cable: #9aa6b6; } }
+:root[data-theme="dark"] { --car: #3b4554; --person: #c3cad4; --N: #69a0ff; --W: #ff8a70; --cable: #9aa6b6; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.lab { font-size: 0.88rem; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 540px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.chips button:disabled { opacity: 0.45; cursor: default; }
+@media (max-width: 820px) { .chips button { min-height: 36px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Elevator: Apparent Weight</h1>
+      <p>Stand on a bathroom scale in an elevator. The scale reads the normal force N, not your weight mg. It reads more while the elevator speeds up going up, less while it speeds up going down, and exactly mg at any constant speed.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">floors 3.0 m apart · g = 9.81 m/s²</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/elevator.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/elevator.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM15 2h1v1h-1zM17 2h1v1h-1zM19 2h1v1h-1zM21 2h2v1h-2zM27 2h1v1h-1zM29 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM14 3h1v1h-1zM16 3h1v1h-1zM18 3h1v1h-1zM20 3h2v1h-2zM24 3h3v1h-3zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM18 4h3v1h-3zM23 4h2v1h-2zM26 4h1v1h-1zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h6v1h-6zM18 5h1v1h-1zM20 5h1v1h-1zM26 5h3v1h-3zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM18 6h2v1h-2zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM14 7h3v1h-3zM19 7h1v1h-1zM21 7h2v1h-2zM28 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM13 9h1v1h-1zM15 9h3v1h-3zM21 9h3v1h-3zM25 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM15 10h1v1h-1zM17 10h2v1h-2zM21 10h2v1h-2zM25 10h1v1h-1zM28 10h1v1h-1zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h1v1h-1zM4 11h1v1h-1zM6 11h2v1h-2zM10 11h1v1h-1zM12 11h3v1h-3zM16 11h1v1h-1zM20 11h2v1h-2zM23 11h2v1h-2zM26 11h5v1h-5zM34 11h4v1h-4zM4 12h1v1h-1zM6 12h3v1h-3zM12 12h1v1h-1zM14 12h1v1h-1zM16 12h2v1h-2zM21 12h1v1h-1zM23 12h4v1h-4zM28 12h4v1h-4zM33 12h2v1h-2zM2 13h1v1h-1zM6 13h1v1h-1zM9 13h1v1h-1zM11 13h2v1h-2zM15 13h1v1h-1zM17 13h3v1h-3zM21 13h5v1h-5zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM3 14h1v1h-1zM5 14h1v1h-1zM7 14h2v1h-2zM11 14h2v1h-2zM15 14h1v1h-1zM19 14h1v1h-1zM23 14h2v1h-2zM26 14h1v1h-1zM30 14h3v1h-3zM36 14h3v1h-3zM2 15h1v1h-1zM6 15h2v1h-2zM10 15h2v1h-2zM14 15h2v1h-2zM17 15h2v1h-2zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM3 16h2v1h-2zM8 16h1v1h-1zM13 16h1v1h-1zM15 16h3v1h-3zM19 16h1v1h-1zM22 16h1v1h-1zM25 16h5v1h-5zM33 16h5v1h-5zM4 17h2v1h-2zM9 17h3v1h-3zM13 17h1v1h-1zM15 17h3v1h-3zM19 17h4v1h-4zM24 17h1v1h-1zM26 17h1v1h-1zM30 17h1v1h-1zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h1v1h-1zM7 18h2v1h-2zM10 18h1v1h-1zM14 18h1v1h-1zM16 18h1v1h-1zM20 18h1v1h-1zM24 18h1v1h-1zM26 18h1v1h-1zM30 18h4v1h-4zM35 18h2v1h-2zM38 18h1v1h-1zM4 19h1v1h-1zM7 19h1v1h-1zM9 19h1v1h-1zM13 19h4v1h-4zM18 19h1v1h-1zM21 19h2v1h-2zM27 19h4v1h-4zM33 19h3v1h-3zM37 19h1v1h-1zM3 20h2v1h-2zM8 20h1v1h-1zM11 20h3v1h-3zM15 20h2v1h-2zM18 20h3v1h-3zM22 20h2v1h-2zM28 20h2v1h-2zM31 20h6v1h-6zM2 21h1v1h-1zM4 21h4v1h-4zM9 21h2v1h-2zM19 21h1v1h-1zM23 21h1v1h-1zM26 21h1v1h-1zM28 21h4v1h-4zM36 21h2v1h-2zM2 22h2v1h-2zM8 22h4v1h-4zM13 22h5v1h-5zM19 22h1v1h-1zM21 22h6v1h-6zM31 22h3v1h-3zM36 22h1v1h-1zM3 23h3v1h-3zM7 23h1v1h-1zM9 23h1v1h-1zM12 23h1v1h-1zM14 23h2v1h-2zM17 23h3v1h-3zM22 23h1v1h-1zM25 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM3 24h3v1h-3zM7 24h3v1h-3zM11 24h2v1h-2zM17 24h2v1h-2zM20 24h1v1h-1zM22 24h4v1h-4zM29 24h1v1h-1zM32 24h5v1h-5zM2 25h2v1h-2zM5 25h3v1h-3zM9 25h2v1h-2zM13 25h1v1h-1zM17 25h1v1h-1zM21 25h3v1h-3zM26 25h1v1h-1zM29 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h1v1h-1zM5 26h1v1h-1zM8 26h7v1h-7zM16 26h1v1h-1zM18 26h1v1h-1zM22 26h1v1h-1zM25 26h2v1h-2zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM11 27h1v1h-1zM14 27h3v1h-3zM20 27h2v1h-2zM24 27h1v1h-1zM26 27h2v1h-2zM29 27h2v1h-2zM34 27h2v1h-2zM4 28h2v1h-2zM7 28h3v1h-3zM13 28h2v1h-2zM17 28h1v1h-1zM19 28h3v1h-3zM24 28h2v1h-2zM27 28h8v1h-8zM36 28h1v1h-1zM6 29h1v1h-1zM9 29h2v1h-2zM12 29h2v1h-2zM17 29h10v1h-10zM33 29h2v1h-2zM36 29h2v1h-2zM2 30h2v1h-2zM5 30h2v1h-2zM8 30h5v1h-5zM14 30h1v1h-1zM16 30h1v1h-1zM19 30h1v1h-1zM22 30h2v1h-2zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h1v1h-1zM14 31h1v1h-1zM16 31h1v1h-1zM18 31h1v1h-1zM20 31h1v1h-1zM23 31h1v1h-1zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h1v1h-1zM14 32h2v1h-2zM17 32h3v1h-3zM22 32h1v1h-1zM25 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h3v1h-3zM17 33h1v1h-1zM19 33h2v1h-2zM24 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM17 34h1v1h-1zM20 34h1v1h-1zM24 34h3v1h-3zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM14 35h1v1h-1zM16 35h1v1h-1zM18 35h1v1h-1zM21 35h3v1h-3zM25 35h1v1h-1zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h2v1h-2zM15 36h2v1h-2zM18 36h2v1h-2zM22 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM15 37h2v1h-2zM19 37h2v1h-2zM23 37h4v1h-4zM28 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM14 38h2v1h-2zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h6v1h-6zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="img" aria-label="An elevator shaft with the car, a person standing on a scale with the normal force and weight arrows, and graphs of the scale reading and the velocity against time."></canvas>
+      <div class="viewbar"><button type="button" class="spin" id="pause">Pause</button><button type="button" class="spin" id="snap">Cable snaps</button></div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Ride</h2>
+        <div class="chips" id="trips">
+          <button type="button" data-to="10">Up to floor 10</button>
+          <button type="button" data-to="0">Down to the ground</button>
+          <button type="button" data-to="+1">Up one floor</button>
+          <button type="button" data-to="-1">Down one floor</button>
+        </div>
+        <p class="hint" id="tripHint">The car starts at rest on the ground floor.</p>
+      </section>
+
+      <section>
+        <h2>Settings</h2>
+        <div><div class="slider-head"><label for="sM">Your mass m</label><output id="oM" for="sM"></output></div><input type="range" id="sM" min="20" max="120" step="1"></div>
+        <div><div class="slider-head"><label for="sA">Elevator acceleration (starting and stopping)</label><output id="oA" for="sA"></output></div><input type="range" id="sA" min="0.2" max="3" step="0.1"></div>
+        <div><div class="slider-head"><label for="sV">Top speed</label><output id="oV" for="sV"></output></div><input type="range" id="sV" min="0.5" max="6" step="0.5"></div>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="formula">N − mg = ma (up positive) · scale shows N/g</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides the scale reading, the N arrow and the scale graph, so the class can predict each stage of the ride first.</p>
+        <p class="hint">Model: the car's acceleration is a constant ±a while it starts and stops and zero while it cruises (real elevators ramp the acceleration up and down smoothly). The scale is massless and reads instantly, in kilograms as N/g. Cable snaps: one second of free fall, then the safety brakes stop the car at a constant deceleration of at least g, more if needed to stop above the pit.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.81, FLOOR = 3.0, TOP = 10, EL_VERSION = 'elevator@2026-10-22';
+  // a trip from y0 to y1: accelerate at a to top speed vmax (or less, if the trip is short), cruise, slow at a; segments of constant acceleration
+  function trip(y0, y1, a, vmax) {
+    const D = Math.abs(y1 - y0), s = Math.sign(y1 - y0); if (!D) return [];
+    let vp = Math.min(vmax, Math.sqrt(a * D)), ta = vp / a, tc = (D - vp * ta) / vp;
+    const segs = [{ a: s * a, dur: ta }]; if (tc > 1e-12) segs.push({ a: 0, dur: tc }); segs.push({ a: -s * a, dur: ta });
+    return segs;
+  }
+  // state t seconds after the start of a list of segments
+  function stateAt(segs, y0, v0, t) {
+    let y = y0, v = v0, tt = t;
+    for (const sg of segs) { const d = Math.min(tt, sg.dur); y += v * d + 0.5 * sg.a * d * d; v += sg.a * d; tt -= d; if (tt <= 0) return { y, v, a: sg.a, done: false }; }
+    return { y, v, a: 0, done: true };
+  }
+  const duration = (segs) => segs.reduce((q, s) => q + s.dur, 0);
+  const scaleN = (m, a) => Math.max(0, m * (G + a));   // N − mg = ma; a scale cannot pull you down
+  // cable snaps at (y, v): free fall for up to 1 s (stopping early to leave room), then a constant brake that stops the car 1 m above the pit
+  function snapSegs(y, v) {
+    const yMin = 1, fallTo = (t) => y + v * t - 0.5 * G * t * t;
+    let tf = 1; while (tf > 0 && (() => { const v1 = v - G * tf, y1 = fallTo(tf); return v1 < 0 && y1 - yMin - v1 * v1 / (2 * G) < 0; })()) tf -= 0.01;
+    tf = Math.max(0, tf); const v1 = v - G * tf, y1 = fallTo(tf), segs = [{ a: -G, dur: tf }];
+    // (with top speeds up to 6 m/s the car is always moving down after the free fall second)
+    const b = Math.max(G, v1 * v1 / (2 * Math.max(0.05, y1 - yMin))); if (v1 < 0) segs.push({ a: b, dur: -v1 / b });
+    return segs;
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const S = { clock: 0, m: 60, a: 1.5, vmax: 3, y0: 0, v0: 0, segs: [], t: 0, paused: false, snapped: false, blind: false, hist: [] };
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, Hh = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      car: g('--car'), person: g('--person'), N: g('--N'), Wc: g('--W'), cable: g('--cable'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d).replace('-', '−'));
+  const now = () => stateAt(S.segs, S.y0, S.v0, S.t);
+  const moving = () => S.segs.length && !now().done;
+  function phase(st) {
+    if (S.snapped && st.a === -G) return 'free fall: the cable has snapped';
+    if (S.snapped && st.a > 0 && !st.done) return 'safety brakes stopping the car';
+    if (st.done || !S.segs.length) return 'at rest';
+    if (Math.abs(st.a) < 1e-12) return `constant speed ${st.v > 0 ? 'up' : 'down'}`;
+    return (st.a > 0) === (st.v > 0) ? `speeding up going ${st.v > 0 ? 'up' : 'down'}` : `slowing down going ${st.v > 0 ? 'up' : 'down'}`;
+  }
+  function start(target) {
+    const st = moving() ? null : now(); if (!st) return;
+    const y = Math.round(st.y / FLOOR) * FLOOR; let to = target === '+1' ? y + FLOOR : target === '-1' ? y - FLOOR : +target * FLOOR; to = Math.max(0, Math.min(TOP * FLOOR, to));
+    if (Math.abs(to - st.y) < 1e-9) return; S.y0 = st.y; S.v0 = 0; S.segs = trip(st.y, to, S.a, S.vmax); S.t = 0; S.clock = 0; S.snapped = false; S.hist = []; S.paused = false; syncBtns();
+    $('tripHint').textContent = `${Math.abs(st.y - y) < 1e-9 ? `Floor ${y / FLOOR}` : `${f(st.y, 2)} m`} to floor ${to / FLOOR}: ${f(duration(S.segs), 1)} s.`;
+    if (reduce) { const D = duration(S.segs); for (let i = 1; i <= 400; i++) { S.t = D * i / 400; S.clock = S.t; record(); } draw(); readouts(); syncBtns(); }
+  }
+  $('trips').addEventListener('click', (e) => { const b = e.target.closest('[data-to]'); if (b && !b.disabled) start(b.dataset.to); });
+  $('snap').addEventListener('click', () => { if (!moving() || S.snapped) return; const st = now(); S.y0 = st.y; S.v0 = st.v; S.segs = snapSegs(st.y, st.v); S.t = 0; S.snapped = true; S.paused = false; syncBtns(); });
+  $('pause').addEventListener('click', () => { S.paused = !S.paused; syncBtns(); });
+  function syncBtns() {
+    const mv = moving(), st = now(), y = Math.round(st.y / FLOOR);
+    for (const b of document.querySelectorAll('#trips button')) { const t = b.dataset.to; b.disabled = mv || (t === '10' || t === '+1' ? y >= TOP : y <= 0); }
+    $('snap').disabled = !mv || S.snapped; $('snap').style.opacity = $('snap').disabled ? 0.45 : 1; $('pause').textContent = S.paused ? 'Resume' : 'Pause';
+    $('sM').value = S.m; $('oM').textContent = `${S.m} kg`; $('sA').value = S.a; $('oA').textContent = `${S.a.toFixed(1)} m/s²`; $('sV').value = S.vmax; $('oV').textContent = `${S.vmax.toFixed(1)} m/s`;
+  }
+  $('sM').addEventListener('input', (e) => { S.m = +e.target.value; syncBtns(); draw(); readouts(); });
+  $('sA').addEventListener('input', (e) => { S.a = +e.target.value; syncBtns(); });
+  $('sV').addEventListener('input', (e) => { S.vmax = +e.target.value; syncBtns(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('pause').click(); e.preventDefault(); } });
+  function record() { const st = now(); S.hist.push([S.clock, st.v, scaleN(S.m, st.a) / G, st.a]); if (S.hist.length > 4000) S.hist.shift(); }
+  function tick(dt) {
+    if (S.segs.length && !S.paused && !now().done) { const steps = Math.max(1, Math.ceil(dt / 0.01)); for (let i = 0; i < steps; i++) { S.t += dt / steps; S.clock += dt / steps; record(); } if (now().done) syncBtns(); draw(); readouts(); }
+  }
+  function readouts() {
+    const st = now(), N = scaleN(S.m, st.a), dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    let h = dd('What the car is doing', `<span style="font-family:var(--font-ui);font-size:0.9rem">${phase(st)}</span>`, true);
+    h += dd('Height', `${f(st.y, 2)} m`) + dd('Velocity (up +)', `${f(st.v, 2)} m/s`) + dd('Acceleration (up +)', `${f(st.a, 2)} m/s²`) + dd('Your weight mg', `${f(S.m * G, 0)} N`);
+    h += S.blind ? '<div class="wide"><dt>Scale reading and net force</dt><dd class="ok">hidden in Blind: predict them</dd></div>'
+      : dd('Scale: normal force N', `${f(N, 0)} N`) + dd('Scale shows N/g', `${f(N / G, 1)} kg`) + dd('Net force N − mg', `${f(N - S.m * G, 0)} N`) + dd('Apparent weight / true weight', f(N / (S.m * G), 3));
+    $('out').innerHTML = h;
+  }
+  function arrow(x, y0, y1, col, lab, side) {
+    const p = ps(); if (Math.abs(y1 - y0) < 2) { ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = side > 0 ? 'left' : 'right'; ctx.textBaseline = 'middle'; ctx.fillText(`${lab} = 0`, x + side * 6 * p, y0); return; }
+    const s = Math.sign(y1 - y0), h = 8 * p; ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x, y1 - s * h); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x - h * 0.55, y1 - s * h); ctx.lineTo(x + h * 0.55, y1 - s * h); ctx.closePath(); ctx.fill();
+    ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = side > 0 ? 'left' : 'right'; ctx.textBaseline = 'middle'; ctx.fillText(lab, x + side * 6 * p, (y0 + y1) / 2);
+  }
+  function plot(x0, y0, w, h, key, label, lo, hi, col, ref) {
+    const p = ps(); ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, w, h);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(label, x0, y0 - 3);
+    const tEnd = Math.max(8, S.clock), Y = (v) => y0 + h - h * (v - lo) / (hi - lo), X = (t) => x0 + w * t / tEnd;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(String(+hi.toFixed(1)), x0 - 3, Y(hi)); ctx.fillText(String(+lo.toFixed(1)), x0 - 3, Y(lo));
+    if (ref != null) { ctx.strokeStyle = T.gridStrong; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(x0, Y(ref)); ctx.lineTo(x0 + w, Y(ref)); ctx.stroke(); ctx.setLineDash([]); ctx.fillText(String(+ref.toFixed(1)), x0 - 3, Y(ref)); }
+    if (key === 0 && S.blind) return;
+    ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.beginPath(); S.hist.forEach((q, i) => { const v = Math.max(lo, Math.min(hi, q[key])); i ? ctx.lineTo(X(q[0]), Y(v)) : ctx.moveTo(X(q[0]), Y(v)); }); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(`${f(tEnd, 0)} s`, x0 + w, y0 + h + 2);
+  }
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const p = ps(), wide = W > 620, st = now(), top = 56 * p, bot = Hh - 16 * p;
+    const shaftW = wide ? Math.min(W * 0.36, 260 * p) : W - 32 * p, shaftH = wide ? bot - top : (Hh - top) * 0.55, sx = 16 * p, sc = shaftH / (TOP * FLOOR + FLOOR + 1);
+    const yS = (y) => top + shaftH - (y + 0.5) * sc;
+    // shaft and floors
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    for (let k = 0; k <= TOP; k++) { const y = yS(k * FLOOR); ctx.beginPath(); ctx.moveTo(sx, y); ctx.lineTo(sx + shaftW * 0.18, y); ctx.stroke(); if (k % (sc * FLOOR < 22 * p ? 2 : 1) === 0) ctx.fillText(String(k), sx, y - 1); }
+    const cw = shaftW * 0.72, cx = sx + shaftW * 0.24, ch = Math.max(FLOOR * sc, 70 * p), cy = yS(st.y) - ch;
+    // cable
+    if (!S.snapped) { ctx.strokeStyle = T.cable; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx + cw / 2, top - 10 * p); ctx.lineTo(cx + cw / 2, cy); ctx.stroke(); }
+    else { ctx.strokeStyle = T.cable; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx + cw / 2, top - 10 * p); ctx.lineTo(cx + cw / 2 + 6 * p, top + 20 * p); ctx.stroke(); }
+    ctx.fillStyle = T.car; ctx.fillRect(cx, cy, cw, ch); ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5; ctx.strokeRect(cx, cy, cw, ch);
+    // person on a scale
+    const px = cx + cw * 0.35, floorY = cy + ch - 4 * p, sh = 6 * p, ph = Math.min(ch * 0.7, 60 * p);
+    ctx.fillStyle = T.ink; ctx.fillRect(px - 14 * p, floorY - sh, 28 * p, sh);
+    ctx.strokeStyle = T.person; ctx.fillStyle = T.person; ctx.lineWidth = 3 * p; ctx.lineCap = 'round';
+    const feet = floorY - sh, hip = feet - ph * 0.45, neck = feet - ph * 0.82;
+    ctx.beginPath(); ctx.moveTo(px - 6 * p, feet); ctx.lineTo(px, hip); ctx.lineTo(px + 6 * p, feet); ctx.moveTo(px, hip); ctx.lineTo(px, neck); ctx.moveTo(px - 9 * p, neck + 10 * p); ctx.lineTo(px, neck + 3 * p); ctx.lineTo(px + 9 * p, neck + 10 * p); ctx.stroke();
+    ctx.beginPath(); ctx.arc(px, neck - 7 * p, 6 * p, 0, 7); ctx.fill(); ctx.lineCap = 'butt';
+    // force arrows on the person (beside the figure): weight from the centre down, N from the feet up; 1 mg = 40 px
+    const k = 40 * p / (S.m * G), N = scaleN(S.m, st.a), ax = cx + cw * 0.72;
+    arrow(ax, hip, hip + S.m * G * k, T.Wc, 'mg', 1);
+    if (!S.blind) arrow(ax + 22 * p, feet, feet - N * k, T.N, 'N', 1);
+    // scale display
+    ctx.fillStyle = T.ink; ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(S.blind ? '?? kg' : `${f(N / G, 1)} kg`, px, floorY + 2 * p);
+    // graphs
+    const gx = wide ? sx + shaftW + 50 * p : 50 * p, gw = wide ? W - gx - 20 * p : W - 70 * p, g0 = wide ? top + 18 * p : top + shaftH + 34 * p, gh = wide ? (bot - g0 - 50 * p) / 2 : (Hh - g0 - 50 * p) / 2;
+    const r = S.m, vmx = Math.max(S.vmax, ...S.hist.map((q) => Math.abs(q[1]))) * 1.15;
+    const nh = Math.max(1.5 * r, ...S.hist.map((q) => q[2])) * 1.08;
+    plot(gx, g0, gw, gh, 2, 'scale reading (kg)', 0, nh, T.N, r);
+    plot(gx, g0 + gh + 34 * p, gw, gh, 1, 'velocity, up + (m/s)', -vmx, vmx, T.accent, 0);
+  }
+  function init() { syncBtns(); readouts(); }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
+  tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  let last = performance.now();
+  (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();
+})();
+</script>
+</body>
+</html>

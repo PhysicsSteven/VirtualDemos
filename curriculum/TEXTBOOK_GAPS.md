@@ -65,8 +65,6 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 | Volume / section | Demos | Limitation |
 |---|---|---|
 | 1 / 4.4 | circular-motion | Circular Motion shows a = v²/r toward the center at constant speed; nonuniform circular motion (tangential acceleration) only in the loop. |
-| 1 / 5.2 | forces | Forces and Friction shows balanced forces at rest; constant velocity with zero net force is not set up directly. |
-| 1 / 5.4 | forces | Forces and Friction uses W = mg; apparent weight (elevator) not covered. |
 | 1 / 9.2 | collisions | Collision impulse context; a general force-time integral measurement is missing. |
 | 1 / 9.6 | collisions | Collision center-of-mass example only. |
 | 1 / 10.5 | rotation | Discrete point-mass I = Σmr² in the spinner/seesaw and supplied standard-shape coefficients are present. No continuous-body ∫r²dm derivation/integration activity; do not label that part complete. |
