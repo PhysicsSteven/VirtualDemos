@@ -1,8 +1,8 @@
 # Textbook coverage and gaps
 
-Source inventory: main `7dab492884c004636ade7fb68d02edcc4ff172ab`, reviewed 2026-10-22. This is curriculum/source coverage, not collection-wide numerical or release validation.
+Source inventory: main `db5f27b3eeab45a0c24f9fa9981e5630a45c713c`, reviewed 2026-10-22. This is curriculum/source coverage, not collection-wide numerical or release validation.
 
-76 demos from `curriculum/catalog.json` mapped once; 209 section records. Claude’s new demos and section additions are preserved. Legacy HTML outside the catalog is not duplicated.
+78 demos from `curriculum/catalog.json` mapped once; 209 section records. Claude’s new demos and section additions are preserved. Legacy HTML outside the catalog is not duplicated.
 
 ## Contract for course-page construction
 
@@ -17,10 +17,10 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 ## Current priorities
 
 - Three new Physics I lab packages are written: motion-graphs is usable within its scope; forces and stress-strain are usable after Claude fixed the four reported UI issues (2026-10-22). Pendulum (§15.4) and Rotational Dynamics (§§10.2, 10.5, 10.7, 10.8) were added on main the same day. Browser/classroom review remains open.
-- Resistivity and wire-force handouts/private guides are now written; their Mystery fits need the answer-hiding fix. Next handouts: pendulum and rotational-dynamics. The lecture demos do not need full student labs.
+- Resistivity and wire-force handouts/private guides are now written; their Mystery fits need the answer-hiding fix. All 11 current Physics I lab handouts are now written; next work is the remaining topic gaps and validation requests. The lecture demos do not need full student labs.
 - Near-surface gravity §13.2 remains missing; fixed-g projectile motion does not close this gap.
 - Moment-of-inertia calculation §10.5 is partial: discrete masses/standard formulas exist; a continuous-body integration activity is absent.
-- Chapter 1 remains worksheet material. Owner-deferred gaps include §8.5, §11.4, §13.7 and §14.7; a missing label is not authorization to build them now.
+- Chapter 1 remains worksheet material. Owner-deferred gaps include §8.5 and §13.7 (§11.4 and §14.7 were built on main 2026-10-22 after Steve said to keep filling gaps); a missing label is not authorization to build them now.
 - Thermodynamics and non-syllabus waves/sound remain later. Basic optics remains optional after Maxwell/EM waves.
 
 ## Every unmapped Volume 1/2 section
@@ -35,10 +35,8 @@ Links: student paths are `curriculum/labs/students/<handout>.md`; a listed basen
 | physics-1 | 1 | 1.6 | Significant Figures | missing |
 | physics-1 | 1 | 1.7 | Solving Problems in Physics | missing |
 | physics-1 | 1 | 8.5 | Sources of Energy | missing |
-| physics-1 | 1 | 11.4 | Precession of a Gyroscope | missing |
 | physics-1 | 1 | 13.2 | Gravitation Near Earth's Surface | missing |
 | physics-1 | 1 | 13.7 | Einstein's Theory of Gravity | missing |
-| physics-1 | 1 | 14.7 | Viscosity and Turbulence | missing |
 | physics-2 | 2 | 7.6 | Applications of Electrostatics | missing |
 | physics-2 | 2 | 8.5 | Molecular Model of a Dielectric | missing |
 | physics-2 | 2 | 9.2 | Model of Conduction in Metals | missing |
@@ -108,3 +106,8 @@ The prior 16 aligned student/private activity packages remain preserved. Status 
 ## E&M bench packages, 2026-10-22
 
 [Checks and limitations](validation/EM_BENCH_LABS_2026-10-22.md). Added resistivity and current-balance student/private packages; the resistivity current check also maps to Vol. 2 §9.4. Both new benches need a small Mystery-fit answer-hiding fix, reproduced by the strict source-function test. Main’s two newer Physics I labs remain needs-handout and are next. No course-page or demo HTML edits by GPT.
+
+
+## Physics I written-package checkpoint
+
+All 11 existing Physics I labs now have student/private guides, including pendulum, rotational-dynamics and the new viscometer. The first two remain needs-feature for Mystery-fit answer hiding, with explicit Blind procedures. Viscometer scope is low-Re motion with CSV wall correction; its full empirical drag model is not independently literature validated here. The course still has 10 missing and 5 partial topic mappings. [Unit inventory](PHYSICS_I_STATUS.md) and [executed checks](validation/PHYSICS_I_COMPLETION_2026-10-22.md). No demo or generated course-page HTML edited by GPT.

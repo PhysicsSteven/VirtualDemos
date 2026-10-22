@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gyroscope Precession: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Gyroscope Precession</h1><ul class="meta"><li><a href="../demos/gyroscope.html">Open the demo</a></li><li>PHYS 201</li><li>15 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Torque is the rate of change of angular momentum, τ = dL/dt, a vector equation. When L is large and τ is perpendicular to it, τ changes L's direction, not its size: the axle swings round instead of falling.</li>
+<li>For a level axle, Ω = Mgd/(I_s ω_s): more spin means slower precession; a longer lever arm means faster.</li>
+<li>With no spin there is no L along the axle for the torque to turn, so the wheel simply falls.</li>
+<li>The simple formula is the fast spin limit. Released from rest, a gyroscope first dips a little and wobbles (nutation); with less spin the dip and the wobble grow and the average rate drifts from the formula.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need L = Iω as a vector along the spin axis (right hand rule) and τ = r × F. The view is oblique, from above and in front: the pivot is at the top of the post, the wheel spins on the axle, and the arrows show L (red, along the axle), the torque r × Mg (green, horizontal and perpendicular to the axle) and Mg. A gate on the floor times each full turn of the axle round the post. The <strong>Mystery wheel</strong> has the same mass and radius but hides I_s; <strong>Blind</strong> hides I_s, L and the predicted rate.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>No spin: it falls.</strong> Ask what happens first; it does what they expect.</li>
+<li><strong>Fast spin.</strong> 3000 rpm, d = 10 cm. Ask for a prediction, then release. It dips by up to 3.8°, wobbles about 8 times a second, and goes round in 3.63 s. The formula gives 3.62 s.</li>
+<li><strong>Point at the arrows.</strong> τ is horizontal and perpendicular to L; in a short time L gains a small piece along τ, which turns it sideways. Ω = τ/L.</li>
+<li><strong>Halve the spin.</strong> At 1500 rpm the period halves to 1.87 s (the formula says 1.81 s; the gap is the wobble). <strong>Smooth start</strong> releases it with exactly the steady sideways speed: no dip, no wobble, and the period matches the formula exactly.</li>
+<li><strong>Rim-heavy wheel.</strong> Same mass, the mass at the rim: I_s nearly doubles, so the precession takes 6.56 s.</li>
+<li><strong>Lab.</strong> Measure P at several spin rates (Smooth start, or 2500 rpm and above from rest), plot Ω = 2π/P against 1/ω_s, and find I_s of the Mystery wheel from the slope Mgd/I_s.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Why does the gyroscope not fall when it is spinning, and why does it fall when it is not?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> For the solid disk (0.500 kg, radius 6.0 cm) at 3000 rpm with d = 10 cm, find I_s, L, the torque and the precession period.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Which way does the axle go round? Use the arrows to explain, then predict what happens if the spin is reversed.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> What happens to the precession rate if d is doubled? If the spin is doubled? If the rim-heavy wheel is used?</p>
+<p><strong>Q5 (lab).</strong> Show that Ω against 1/ω_s is a line through the origin with slope Mgd/I_s, and find I_s for the Mystery wheel. Why should you use fast spin or the steady start for this?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The spin holds it up against gravity."</strong> The pivot holds it up: the vertical pivot force equals Mg on average. The spin changes what the torque does, not the forces.</li>
+<li><strong>"Torque always makes things rotate in the direction you'd expect from the force."</strong> τ changes L. When L is large the change is a turn of L, at right angles to the expected fall.</li>
+<li><strong>"More spin, faster precession."</strong> The opposite: Ω = τ/L.</li>
+<li><strong>"A real gyroscope starts precessing smoothly."</strong> Released from rest it first dips; the smooth motion is the average of a small fast wobble.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Rigid wheel on a massless axle, frictionless pivot at the axle's end, the spin about the axle constant. The wheel is a flat body of mass 0.500 kg and radius 6.0 cm: I_s = ½MR² = 9.00 × 10⁻⁴ kg·m² for the solid disk, 0.905MR² = 1.629 × 10⁻³ kg·m² for the rim-heavy wheel (rim between 5.4 and 6.0 cm); about a diameter I_s/2, so about the pivot I₁ = I_s/2 + Md².</li>
+<li>The motion comes from the exact Lagrangian of a heavy symmetric top. The spin ω_s about the axle and p_φ = I₁ sin²θ φ' + I_s ω_s cos θ are conserved; θ'' = sin θ (I₁ φ'² cos θ − I_s ω_s φ' + Mgd)/I₁. RK4, 0.2 ms steps; energy holds to 1 part in 10⁹ over 5 s.</li>
+<li>Steady precession at angle θ satisfies I₁ cos θ φ'² − I_s ω_s φ' + Mgd = 0; for a level axle its slow root is exactly Mgd/(I_s ω_s). <strong>Smooth start</strong> releases at that rate.</li>
+<li>Released from rest the axle dips by about 2I₁Mgd/(I_s ω_s)² and wobbles at about I_s ω_s/I₁. With fast spin the average rate is the formula to within 0.2% (3000 rpm, d = 10 cm). For slower spin or a larger d it drifts below: at 1500 rpm the period is 1.870 s against 1.811 s.</li>
+<li>The gate records the time between successive forward passes of the axle over the gate, rounded to 0.01 s. There is no added noise.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

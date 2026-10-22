@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Gyroscope Precession</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the gyroscope in an oblique 3D view with a strip of its tilt against time on the left; the rail on the right. */
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+
+:root { --wheel: #2b60b5; --axle: #4a5563; --post: #9aa6b6; --Lv: #b0452f; --tau: #1f8a5a; --trail: #a7740b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wheel: #69a0ff; --axle: #c3cad4; --post: #56606e; --Lv: #ff8a70; --tau: #4cd08f; --trail: #e2b350; } }
+:root[data-theme="dark"] { --wheel: #69a0ff; --axle: #c3cad4; --post: #56606e; --Lv: #ff8a70; --tau: #4cd08f; --trail: #e2b350; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 520px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .chips button, .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Gyroscope Precession</h1>
+      <p>A spinning wheel on an axle, supported at one end only. Gravity's torque does not tip it over: it turns the angular momentum sideways, and the axle swings round the post. Find how the precession rate depends on the spin.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">wheel 0.500 kg, radius 6.0 cm · g = 9.81 m/s²</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/gyroscope.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/gyroscope.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h3v1h-3zM14 2h1v1h-1zM19 2h3v1h-3zM24 2h1v1h-1zM26 2h2v1h-2zM29 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h1v1h-1zM15 3h4v1h-4zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h3v1h-3zM16 4h10v1h-10zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM14 5h1v1h-1zM18 5h1v1h-1zM20 5h2v1h-2zM25 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM16 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM15 7h1v1h-1zM18 7h1v1h-1zM20 7h5v1h-5zM27 7h2v1h-2zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM19 9h4v1h-4zM24 9h2v1h-2zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h4v1h-4zM15 10h1v1h-1zM20 10h2v1h-2zM24 10h3v1h-3zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h2v1h-2zM5 11h3v1h-3zM9 11h1v1h-1zM11 11h2v1h-2zM14 11h3v1h-3zM18 11h1v1h-1zM21 11h3v1h-3zM27 11h4v1h-4zM34 11h4v1h-4zM3 12h1v1h-1zM5 12h7v1h-7zM13 12h2v1h-2zM16 12h1v1h-1zM18 12h1v1h-1zM22 12h3v1h-3zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h1v1h-1zM4 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM14 13h3v1h-3zM19 13h1v1h-1zM23 13h2v1h-2zM26 13h1v1h-1zM30 13h2v1h-2zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h2v1h-2zM5 14h2v1h-2zM8 14h3v1h-3zM13 14h5v1h-5zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM2 15h1v1h-1zM4 15h4v1h-4zM9 15h1v1h-1zM14 15h6v1h-6zM21 15h1v1h-1zM24 15h2v1h-2zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h2v1h-2zM5 16h7v1h-7zM13 16h1v1h-1zM15 16h3v1h-3zM20 16h1v1h-1zM22 16h5v1h-5zM28 16h2v1h-2zM33 16h5v1h-5zM4 17h1v1h-1zM7 17h1v1h-1zM9 17h2v1h-2zM12 17h1v1h-1zM15 17h1v1h-1zM17 17h1v1h-1zM21 17h3v1h-3zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h1v1h-1zM4 18h5v1h-5zM13 18h2v1h-2zM16 18h1v1h-1zM18 18h1v1h-1zM22 18h1v1h-1zM26 18h1v1h-1zM28 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM4 19h3v1h-3zM9 19h3v1h-3zM13 19h2v1h-2zM16 19h1v1h-1zM20 19h2v1h-2zM24 19h1v1h-1zM26 19h6v1h-6zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h4v1h-4zM7 20h6v1h-6zM14 20h1v1h-1zM16 20h2v1h-2zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h2v1h-2zM31 20h6v1h-6zM3 21h1v1h-1zM5 21h3v1h-3zM9 21h2v1h-2zM12 21h1v1h-1zM14 21h1v1h-1zM16 21h4v1h-4zM21 21h3v1h-3zM25 21h2v1h-2zM28 21h1v1h-1zM30 21h2v1h-2zM36 21h2v1h-2zM2 22h3v1h-3zM6 22h4v1h-4zM12 22h2v1h-2zM19 22h1v1h-1zM22 22h5v1h-5zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM13 23h1v1h-1zM16 23h3v1h-3zM22 23h2v1h-2zM25 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h6v1h-6zM14 24h1v1h-1zM16 24h4v1h-4zM22 24h1v1h-1zM25 24h1v1h-1zM27 24h3v1h-3zM31 24h6v1h-6zM12 25h6v1h-6zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM29 25h2v1h-2zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h1v1h-1zM6 26h6v1h-6zM15 26h1v1h-1zM20 26h1v1h-1zM24 26h3v1h-3zM29 26h4v1h-4zM35 26h3v1h-3zM2 27h1v1h-1zM5 27h1v1h-1zM9 27h2v1h-2zM12 27h1v1h-1zM15 27h2v1h-2zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h5v1h-5zM34 27h2v1h-2zM5 28h1v1h-1zM7 28h2v1h-2zM10 28h3v1h-3zM14 28h1v1h-1zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h6v1h-6zM31 28h4v1h-4zM36 28h1v1h-1zM4 29h1v1h-1zM6 29h2v1h-2zM13 29h1v1h-1zM19 29h2v1h-2zM23 29h4v1h-4zM33 29h2v1h-2zM36 29h1v1h-1zM2 30h2v1h-2zM7 30h3v1h-3zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM29 30h6v1h-6zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h2v1h-2zM13 31h2v1h-2zM18 31h3v1h-3zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM13 32h2v1h-2zM16 32h3v1h-3zM20 32h1v1h-1zM22 32h4v1h-4zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM12 33h1v1h-1zM15 33h3v1h-3zM23 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h5v1h-5zM17 34h2v1h-2zM22 34h1v1h-1zM25 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM13 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM27 35h1v1h-1zM29 35h5v1h-5zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h2v1h-2zM15 36h3v1h-3zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h4v1h-4zM17 37h10v1h-10zM28 37h2v1h-2zM31 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM33 38h1v1h-1zM36 38h3v1h-3z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="img" aria-label="A spinning wheel on a horizontal axle whose far end rests on a pivot at the top of a post, drawn in perspective, with arrows for the angular momentum and the torque, and below it a trace of the axle's tilt against time. Space releases or holds, R puts it back."></canvas>
+      <div class="viewbar"><button type="button" class="spin attn" id="go">Release</button><button type="button" class="spin" id="back">Put back</button></div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="fast" aria-pressed="true">Fast spin</button>
+          <button type="button" data-p="slow" aria-pressed="false">Slow spin: wobble and dip</button>
+          <button type="button" data-p="none" aria-pressed="false">No spin: it falls</button>
+          <button type="button" data-p="smooth" aria-pressed="false">Smooth start</button>
+          <button type="button" data-p="tilt" aria-pressed="false">Axle tilted up</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Gyroscope</h2>
+        <div><div class="slider-head"><label for="sW">Spin rate</label><output id="oW" for="sW"></output></div><input type="range" id="sW" min="0" max="6000" step="100"></div>
+        <div><div class="slider-head"><label for="sD">Pivot to wheel centre d</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="0.05" max="0.2" step="0.01"></div>
+        <div><div class="slider-head"><label for="sB">Axle tilt above horizontal at release</label><output id="oB" for="sB"></output></div><input type="range" id="sB" min="-30" max="30" step="5"></div>
+        <div class="seg" role="group" aria-label="Wheel" id="wheelSeg"><button type="button" data-w="disk" aria-pressed="true">Solid disk</button><button type="button" data-w="rim" aria-pressed="false">Rim-heavy wheel</button></div>
+        <label class="check"><input type="checkbox" id="mystery"><span>Mystery wheel: hide its moment of inertia</span></label>
+        <label class="check"><input type="checkbox" id="push"><span>Start it precessing at the steady rate (no wobble)</span></label>
+        <label class="check"><input type="checkbox" id="vecs" checked><span>Show L, the torque and the change in L</span></label>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="formula">τ = r × Mg · dL/dt = τ · Ω = Mgd/(I_s ω_s)</p>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="exportCsv">Export CSV</button>
+          <button type="button" class="btn" id="clearRows">Clear</button>
+        </div>
+        <p class="status" id="capStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>spin (rpm)</th><th>d (m)</th><th>P (s)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Precession rate against one over the spin rate for the captured rows, with a least squares line and residuals."></canvas></div>
+        <dl class="readout" id="fitOut"></dl>
+        <p class="hint">A gate at the front of the post times each full turn of the axle round the post, to 0.01 s. Capture stores the spin, d and the last full turn's period P. Plot Ω = 2π/P against 1/ω_s for one d: the slope is Mgd/I_s.</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides the moments of inertia, L, the predicted precession rate and the fitted I_s, leaving the gate timer, the tilt and the settings.</p>
+        <p class="hint">Model: a rigid symmetric wheel on a massless axle, a frictionless pivot, the spin about the axle held constant (no friction in the wheel's bearing). The motion is computed from the exact equations for a heavy symmetric top (RK4, 0.2 ms steps), so the wobble (nutation) and the dip at release are real, not added. Solid disk I_s = ½MR²; rim-heavy wheel 0.905MR²; the wheel's moment about its diameter is I_s/2.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.81, MW = 0.5, RW = 0.06, GY_VERSION = 'gyroscope@2026-10-22';
+  const KS = { disk: 0.5, rim: 0.905 };   // I_s = k M R²
+  // moments of the wheel+axle about the pivot: I_s about the axle, I_1 about a horizontal line through the pivot (lamina: I_diam = I_s/2, plus Md²)
+  function tops(k, d) { const Is = k * MW * RW * RW; return { Is, I1: Is / 2 + MW * d * d, Mgd: MW * G * d }; }
+  // Heavy symmetric top. θ is the axle's angle from the upward vertical, φ its azimuth about the post. w3 = spin about the axle (conserved),
+  // pphi = I1 sin²θ φ' + Is w3 cosθ (conserved). θ'' = sinθ (I1 φ'² cosθ − Is w3 φ' + Mgd)/I1.
+  const phidot = (c, th) => (c.pphi - c.Is * c.w3 * Math.cos(th)) / (c.I1 * Math.sin(th) ** 2);
+  function deriv(c, s) { const pd = phidot(c, s.th), sn = Math.sin(s.th); return { th: s.thd, thd: sn * (c.I1 * pd * pd * Math.cos(s.th) - c.Is * c.w3 * pd + c.Mgd) / c.I1, ph: pd }; }
+  function rk4(c, s, h) {
+    const add = (a, k, f) => ({ th: a.th + f * k.th, thd: a.thd + f * k.thd, ph: a.ph + f * k.ph });
+    const k1 = deriv(c, s), k2 = deriv(c, add(s, k1, h / 2)), k3 = deriv(c, add(s, k2, h / 2)), k4 = deriv(c, add(s, k3, h));
+    return { th: s.th + h / 6 * (k1.th + 2 * k2.th + 2 * k3.th + k4.th), thd: s.thd + h / 6 * (k1.thd + 2 * k2.thd + 2 * k3.thd + k4.thd), ph: s.ph + h / 6 * (k1.ph + 2 * k2.ph + 2 * k3.ph + k4.ph) };
+  }
+  const energy = (c, s) => 0.5 * c.I1 * (s.thd ** 2 + phidot(c, s.th) ** 2 * Math.sin(s.th) ** 2) + c.Mgd * Math.cos(s.th);
+  // steady precession at fixed θ: I1 cosθ φ'² − Is w3 φ' + Mgd = 0, the slow root (exactly Mgd/(Is w3) when the axle is horizontal)
+  function steadyRate(c, th) {
+    const A = c.I1 * Math.cos(th), B = c.Is * c.w3;
+    if (Math.abs(A) < 1e-12 * B) return c.Mgd / B;
+    const disc = B * B - 4 * A * c.Mgd; if (disc < 0) return NaN;
+    return 2 * c.Mgd / (B + Math.sqrt(disc));   // = (B − √disc)/(2A), written without cancellation
+  }
+  const fastTop = (c) => c.Mgd / (c.Is * c.w3);
+  function start(k, d, rpm, beta, steady) {   // beta: tilt above horizontal at release
+    const t = tops(k, d), w3 = rpm * 2 * Math.PI / 60, th = Math.PI / 2 - beta, c = { ...t, w3 };
+    const pd = steady && w3 > 0 ? steadyRate(c, th) : 0;
+    c.pphi = c.I1 * Math.sin(th) ** 2 * (isFinite(pd) ? pd : 0) + c.Is * w3 * Math.cos(th);
+    return { c, s: { th, thd: 0, ph: 0 } };
+  }
+  function fitLine(xs, ys) {
+    const n = xs.length; if (n < 2) return null;
+    const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n;
+    let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    if (sxx < 1e-30) return null;
+    const b = sxy / sxx, a0 = my - b * mx, res = xs.map((x, i) => ys[i] - a0 - b * x), ss = res.reduce((q, r) => q + r * r, 0), s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { b, a: a0, seB: Math.sqrt(s2 / sxx), seA: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), res, n };
+  }
+  const cellNum = (s) => { const v = parseFloat(String(s).replace('−', '-')); return isFinite(v) ? v : NaN; };
+  const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  function readingsCSV(rows, meta) {
+    const L = ['# Gyroscope Precession virtual apparatus: captured readings (simulated data)', `# demo version,${meta.version}`, `# wheel_mass_kg,${MW}`, `# wheel_radius_m,${RW}`, `# g_m_per_s2,${G}`,
+      '# model,"exact heavy symmetric top; constant spin about the axle; frictionless pivot; massless axle"',
+      '# rounding,"P to 0.01 s from the gate (one full turn of the axle round the post); Omega and 1/omega_s computed from the row"', '# noise,none',
+      'row,wheel,start,tilt_deg,spin_rpm,d_m,P_s,Omega_rad_per_s,inv_spin_s'];
+    rows.forEach((r, i) => { const rpm = cellNum(r.rpm), P = cellNum(r.P);
+      L.push([i + 1, r.wheel, r.start, r.tilt, r.rpm, r.d, r.P, P > 0 ? +(2 * Math.PI / P).toPrecision(6) : '', rpm > 0 ? +(60 / (2 * Math.PI * rpm)).toPrecision(6) : ''].map(csvCell).join(',')); });
+    return L.join('\n') + '\n';
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const PRESETS = {
+    fast: { rpm: 3000, d: 0.1, beta: 0, push: false, hint: 'Released from rest with the axle level. It dips by up to 3.8°, wobbles about 8 times a second, and the axle swings round the post about once every 3.6 s.' },
+    slow: { rpm: 1200, d: 0.1, beta: 0, push: false, hint: 'Less spin, less angular momentum: the same torque turns it faster, and the dip (down to 21° below level) and the wobble are large. At the top of each wobble the axle stops for an instant (a cusp). The average rate is now 7% below Mgd/(I_s ω_s): the simple formula needs fast spin.' },
+    none: { rpm: 0, d: 0.1, beta: 0, push: false, hint: 'No spin, no angular momentum along the axle: the torque simply tips it over, like any unsupported rod.' },
+    smooth: { rpm: 1500, d: 0.1, beta: 0, push: true, hint: 'Given a sideways push at exactly the steady precession rate as it is released: no dip, no wobble. This is the motion the simple formula Ω = Mgd/(I_s ω_s) describes.' },
+    tilt: { rpm: 3000, d: 0.1, beta: 20, push: false, hint: 'The axle starts 20° above level. The torque is now Mgd sin θ, smaller, but so is the horizontal part of L that it turns, so the average rate stays within 1% of Mgd/(I_s ω_s). Released from rest it wobbles between 20° and 9°.' }
+  };
+  const S = { preset: 'fast', rpm: 3000, d: 0.1, beta: 0, wheel: 'disk', push: false, mystK: null, vecs: true, blind: false, run: false, fell: false, t: 0, sim: null, trace: [], trail: [], gate: null, lastP: null, rows: [] };
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, Hh = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      wheel: g('--wheel'), axle: g('--axle'), post: g('--post'), Lv: g('--Lv'), tau: g('--tau'), trail: g('--trail'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const kNow = () => (S.mystK != null ? S.mystK : KS[S.wheel]);
+  const hiddenI = () => S.blind || S.mystK != null;
+  function sci(v, n = 3) { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+    return `${(v / 10 ** e).toFixed(n - 1).replace('-', '−')} × 10${String(e).split('').map((c) => SUP[c]).join('')}`; }
+
+  function reset() { S.sim = start(kNow(), S.d, S.rpm, S.beta * Math.PI / 180, S.push); S.t = 0; S.fell = false; S.trace = []; S.trail = []; S.gate = null; S.lastP = null; setRun(false); draw(); readouts(); }
+  // ---------- drawing: oblique view ----------
+  const AZ = -0.55, EL = 0.32;
+  function proj(x, y, z, cx, cy, sc) { const xr = x * Math.cos(AZ) - y * Math.sin(AZ), yr = x * Math.sin(AZ) + y * Math.cos(AZ);
+    return [cx + sc * xr, cy - sc * (z * Math.cos(EL) - yr * Math.sin(EL)), yr * Math.cos(EL) + z * Math.sin(EL)]; }
+  function arrow(a, b, col, w, lab) {
+    const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy); if (L < 3) return; const ux = dx / L, uy = dy / L, h = Math.min(12, L * 0.4) * w / 2.5;
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0] - ux * h, b[1] - uy * h); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(b[0], b[1]); ctx.lineTo(b[0] - ux * h - uy * h * 0.5, b[1] - uy * h + ux * h * 0.5); ctx.lineTo(b[0] - ux * h + uy * h * 0.5, b[1] - uy * h - ux * h * 0.5); ctx.closePath(); ctx.fill();
+    if (lab) { ctx.font = `700 ${12 * ps()}px ${T.ui}`; ctx.textAlign = ux > 0.3 ? 'left' : ux < -0.3 ? 'right' : 'center'; ctx.textBaseline = uy > 0.3 ? 'top' : uy < -0.3 ? 'bottom' : 'middle'; ctx.fillText(lab, b[0] + ux * 5, b[1] + uy * 5); }
+  }
+  function draw() {
+    if (!T || !W || !S.sim) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const p = ps(), stripH = Math.min(120, Hh * 0.22) * p, sceneH = Hh - stripH - 10, sc = Math.min(W, sceneH * 1.25) / 0.5, cx = W / 2, cy = 60 * p + sceneH * 0.32;
+    const { s, c } = S.sim, e = [Math.sin(s.th) * Math.cos(s.ph), Math.sin(s.th) * Math.sin(s.ph), Math.cos(s.th)], P = (x, y, z) => proj(x, y, z, cx, cy, sc);
+    const postH = 0.22;
+    // floor ring and gate mark
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); for (let k = 0; k <= 64; k++) { const a = k / 64 * 2 * Math.PI, q = P(S.d * Math.cos(a), S.d * Math.sin(a), -postH); k ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); } ctx.stroke();
+    const g0 = P(S.d + 0.03, 0, -postH), g1 = P(S.d - 0.03, 0, -postH); ctx.strokeStyle = T.accent; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(g0[0], g0[1]); ctx.lineTo(g1[0], g1[1]); ctx.stroke();
+    ctx.fillStyle = T.accent; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('gate', g0[0] + 4, g0[1] + 2);
+    // trail of the wheel centre
+    if (!reduce && S.trail.length > 1) { ctx.strokeStyle = T.trail; ctx.lineWidth = 1.5 * p; ctx.beginPath(); S.trail.forEach((q, i) => { const r = P(...q); i ? ctx.lineTo(r[0], r[1]) : ctx.moveTo(r[0], r[1]); }); ctx.stroke(); }
+    // wheel geometry
+    const u = Math.abs(e[2]) < 0.9 ? norm(cross(e, [0, 0, 1])) : [1, 0, 0], v = cross(e, u), C = e.map((x) => x * S.d);
+    const wheelPts = []; for (let k = 0; k <= 48; k++) { const a = k / 48 * 2 * Math.PI; wheelPts.push(P(C[0] + RW * (u[0] * Math.cos(a) + v[0] * Math.sin(a)), C[1] + RW * (u[1] * Math.cos(a) + v[1] * Math.sin(a)), C[2] + RW * (u[2] * Math.cos(a) + v[2] * Math.sin(a)))); }
+    const piv = P(0, 0, 0), base = P(0, 0, -postH), wc = P(...C), aEnd = P(...e.map((x) => x * (S.d + 0.03)));
+    const wheelBehind = wc[2] > piv[2];
+    const drawPost = () => { ctx.strokeStyle = T.post; ctx.lineWidth = 8 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(base[0], base[1]); ctx.lineTo(piv[0], piv[1]); ctx.stroke(); ctx.lineCap = 'butt'; ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(piv[0], piv[1], 4 * p, 0, 7); ctx.fill(); };
+    const drawWheel = () => {
+      ctx.strokeStyle = T.axle; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(piv[0], piv[1]); ctx.lineTo(aEnd[0], aEnd[1]); ctx.stroke();
+      ctx.fillStyle = T.wheel; ctx.globalAlpha = 0.55; ctx.beginPath(); wheelPts.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = T.wheel; ctx.lineWidth = (S.wheel === 'rim' ? 5 : 2) * p; ctx.stroke();
+      // spin direction: an arc arrow on the rim
+      if (c.w3 > 0) { ctx.strokeStyle = T.canvas; ctx.lineWidth = 2 * p; ctx.beginPath(); for (let k = 6; k <= 18; k++) { const q = wheelPts[k]; k > 6 ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); } ctx.stroke(); }
+    };
+    ctx.fillStyle = T.post; const bq = P(0, 0, -postH); ctx.beginPath(); ctx.ellipse(bq[0], bq[1], 30 * p, 9 * p, 0, 0, 7); ctx.fill();
+    if (wheelBehind) { drawWheel(); drawPost(); } else { drawPost(); drawWheel(); }
+    // vectors: L along the axle (spin part), torque r × Mg horizontal, and the change of L in the next instant
+    if (S.vecs && c.w3 > 0 && !S.fell) {
+      const Lsc = 0.16, tau = cross(C, [0, 0, -MW * G]), tmag = Math.hypot(...tau) || 1;
+      arrow(wc, P(...C.map((x, i) => x + e[i] * Lsc)), T.Lv, 3 * p, 'L');
+      arrow(wc, P(...C.map((x, i) => x + tau[i] / tmag * 0.09)), T.tau, 2.5 * p, 'τ = dL/dt');
+      const mg = P(C[0], C[1], C[2] - 0.07); arrow(wc, mg, T.muted, 1.5 * p, 'Mg');
+    }
+    // strip: tilt above horizontal against time, last 4 s
+    const sx0 = 14 * p, sx1 = W - 14 * p, sy0 = Hh - stripH, sy1 = Hh - 22 * p, sm = (sy0 + sy1) / 2, span = 4, tilt = (th) => (Math.PI / 2 - th) * 180 / Math.PI;
+    const vals = S.trace.filter((q) => S.t - q[0] <= span).map((q) => q[1]).concat([S.beta]);
+    const lo = Math.max(-95, Math.floor(Math.min(...vals) - 2)), hi = Math.ceil(Math.max(...vals) + 2), Y = (v) => sy1 - (sy1 - sy0) * (v - lo) / (hi - lo || 1), X = (t) => sx1 - (sx1 - sx0) * (S.t - t) / span;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(sx0, sy0, sx1 - sx0, sy1 - sy0);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(`axle tilt above level (°), last ${span} s: ${f(hi, 0)} top, ${f(lo, 0)} bottom`, sx0, sy1 + 4);
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 1.6 * p; ctx.beginPath(); let first = true; for (const [t, v] of S.trace) { if (S.t - t > span) continue; const x = X(t), y = Y(v); first ? ctx.moveTo(x, y) : ctx.lineTo(x, y); first = false; } ctx.stroke();
+    // timer
+    ctx.fillStyle = T.ink; ctx.font = `700 ${14 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(S.fell ? 'It fell.' : `gate: ${S.lastP ? `${S.lastP.toFixed(2)} s per turn` : S.gate != null ? 'timing a full turn…' : '—'}`, 14 * p, 50 * p);
+  }
+  const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const norm = (a) => { const L = Math.hypot(...a); return a.map((x) => x / L); };
+  function readouts() {
+    const { c, s } = S.sim, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, tilt = (Math.PI / 2 - s.th) * 180 / Math.PI;
+    let h = dd('Spin ω_s', `${f(c.w3, 1)} rad/s`) + dd('Axle tilt now', `${f(tilt, 2)}°`);
+    h += dd('Gate: last full turn', S.lastP ? `${S.lastP.toFixed(2)} s` : '—') + dd('Torque Mgd sin θ', `${f(c.Mgd * Math.sin(s.th) * 1000, 1)} mN·m`);
+    if (hiddenI()) h += `<div class="wide"><dt>I, L and the predicted rate</dt><dd class="ok">${S.mystK != null && !S.blind ? 'Mystery wheel: hidden. Find I_s from your timings.' : 'hidden in Blind'}</dd></div>`;
+    else {
+      const ft = c.w3 > 0 ? fastTop(c) : NaN, sr = c.w3 > 0 ? steadyRate(c, s.th) : NaN;
+      h += dd('I_s about the axle', `${sci(c.Is)} kg·m²`) + dd('Spin L = I_s ω_s', `${sci(c.Is * c.w3)} kg·m²/s`);
+      h += dd('Predicted Ω = Mgd/(I_s ω_s)', isFinite(ft) ? `${f(ft, 3)} rad/s` : '—') + dd('Predicted period 2π/Ω', isFinite(ft) ? `${f(2 * Math.PI / ft, 2)} s` : '—');
+      h += dd('Precession rate now φ\'', `${f(phidot(c, s.th), 3)} rad/s`, true);
+    }
+    $('out').innerHTML = h;
+  }
+  // ---------- controls ----------
+  function sync() {
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#wheelSeg button')) b.setAttribute('aria-pressed', String(S.mystK == null && b.dataset.w === S.wheel));
+    $('sW').value = S.rpm; $('oW').textContent = `${S.rpm} rpm`; $('sD').value = S.d; $('oD').textContent = `${f(S.d * 100, 0)} cm`; $('sB').value = S.beta; $('oB').textContent = `${S.beta}°`;
+    $('push').checked = S.push; $('mystery').checked = S.mystK != null; $('presetHint').textContent = PRESETS[S.preset] ? PRESETS[S.preset].hint : '';
+  }
+  function applyPreset(k) { const q = PRESETS[k]; S.preset = k; S.rpm = q.rpm; S.d = q.d; S.beta = q.beta; S.push = q.push; sync(); reset(); }
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) applyPreset(b.dataset.p); });
+  const edit = () => { S.preset = 'custom'; sync(); reset(); fit(); };
+  $('sW').addEventListener('input', (e) => { S.rpm = +e.target.value; edit(); });
+  $('sD').addEventListener('input', (e) => { S.d = +e.target.value; edit(); });
+  $('sB').addEventListener('input', (e) => { S.beta = +e.target.value; edit(); });
+  $('push').addEventListener('change', (e) => { S.push = e.target.checked; edit(); });
+  $('vecs').addEventListener('change', (e) => { S.vecs = e.target.checked; draw(); });
+  $('wheelSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-w]'); if (b) { S.wheel = b.dataset.w; if (S.mystK != null) capStatus(`Mystery wheel off: it was I_s = ${S.mystK.toFixed(3)} MR² = ${sci(S.mystK * MW * RW * RW)} kg·m².`); S.mystK = null; edit(); } });
+  $('mystery').addEventListener('change', (e) => {
+    if (e.target.checked) { S.mystK = Math.round((0.35 + Math.random() * 0.55) * 1000) / 1000; capStatus('Mystery wheel: same mass and radius, unknown I_s.'); }
+    else { capStatus(`Mystery wheel off: it was I_s = ${S.mystK.toFixed(3)} MR² = ${sci(S.mystK * MW * RW * RW)} kg·m².`); S.mystK = null; }
+    edit();
+  });
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Hold' : 'Release'; $('go').classList.toggle('attn', !on); }
+  $('go').addEventListener('click', () => { if (S.fell) reset(); setRun(!S.run); });
+  $('back').addEventListener('click', reset);
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') $('go').click(); else if (e.key === 'r' || e.key === 'R') reset(); else return; e.preventDefault(); });
+  const H = 2e-4;
+  function advance(dt) {
+    const sim = S.sim, n = Math.max(1, Math.round(dt / H));
+    for (let i = 0; i < n; i++) {
+      const ph0 = sim.s.ph; sim.s = rk4(sim.c, sim.s, dt / n); S.t += dt / n;
+      // gate at φ = 0 (mod 2π): time between successive forward crossings
+      const k0 = Math.floor(ph0 / (2 * Math.PI)), k1 = Math.floor(sim.s.ph / (2 * Math.PI));
+      if (k1 > k0) { const tc = S.t - (dt / n) * (sim.s.ph - 2 * Math.PI * k1) / (sim.s.ph - ph0); if (S.gate != null) S.lastP = Math.round((tc - S.gate) * 100) / 100; S.gate = tc; }
+      if (sim.s.th > 2.6 || sim.s.th < 0.05) { S.fell = true; setRun(false); break; }
+    }
+    S.trace.push([S.t, (Math.PI / 2 - sim.s.th) * 180 / Math.PI]); while (S.trace.length && S.t - S.trace[0][0] > 4.2) S.trace.shift();
+    const e = [Math.sin(sim.s.th) * Math.cos(sim.s.ph), Math.sin(sim.s.th) * Math.sin(sim.s.ph), Math.cos(sim.s.th)]; S.trail.push(e.map((x) => x * S.d)); if (S.trail.length > 400) S.trail.shift();
+  }
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) { advance(dt); draw(); readouts(); }
+    requestAnimationFrame(frame);
+  }
+  // ---------- readings ----------
+  function capStatus(m) { $('capStatus').textContent = m; }
+  const wheelKey = () => (S.mystK != null ? 'mystery' : S.wheel);
+  $('capture').addEventListener('click', () => {
+    if (!S.lastP) { capStatus('Release it and let the gate time at least one full turn round the post.'); return; }
+    S.rows.push({ wheel: wheelKey(), start: S.push ? 'steady' : 'rest', tilt: String(S.beta), rpm: String(S.rpm), d: S.d.toFixed(2), P: S.lastP.toFixed(2) }); renderRows(); capStatus(`Row ${S.rows.length} captured.`);
+  });
+  $('clearRows').addEventListener('click', () => { S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  $('exportCsv').addEventListener('click', () => {
+    if (!S.rows.length) { capStatus('No readings to export.'); return; }
+    const txt = readingsCSV(S.rows, { version: GY_VERSION });
+    try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'gyroscope-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+    capStatus('CSV exported.');
+  });
+  function renderRows() {
+    const tb = $('rowsTbl').querySelector('tbody');
+    tb.innerHTML = S.rows.length ? S.rows.map((r, i) => `<tr title="${r.wheel}, ${r.start}, tilt ${r.tilt}°"><td>${i + 1}</td><td><input data-i="${i}" data-f="rpm" value="${r.rpm}" aria-label="spin, row ${i + 1}"></td><td>${r.d}</td><td><input data-i="${i}" data-f="P" value="${r.P}" aria-label="P, row ${i + 1}"></td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : '<tr><td class="empty" colspan="5">No readings yet. Release, let the gate time a turn, capture.</td></tr>';
+    fit();
+  }
+  $('rowsTbl').addEventListener('change', (e) => { const el = e.target; if (el.dataset.f) { S.rows[+el.dataset.i][el.dataset.f] = el.value.trim(); fit(); } });
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderRows(); } });
+  const fitCan = $('fitCan'), fctx = fitCan.getContext('2d');
+  function fit() {
+    const pts = S.rows.filter((r) => r.wheel === wheelKey() && Math.abs(cellNum(r.d) - S.d) < 1e-9).map((r) => { const rpm = cellNum(r.rpm), P = cellNum(r.P); return rpm > 0 && P > 0 ? [60 / (2 * Math.PI * rpm), 2 * Math.PI / P] : null; }).filter(Boolean);
+    const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
+    let h;
+    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two spin rates with this wheel at d = ${f(S.d * 100, 0)} cm.</dd></div>`;
+    else {
+      h = `<div><dt>Slope Mgd/I_s</dt><dd>${f(F.b, 3)} s⁻²</dd></div><div><dt>Intercept</dt><dd>${f(F.a, 4)} rad/s</dd></div>`;
+      const Is = MW * G * S.d / F.b;
+      h += hiddenI() ? '<div class="wide"><dt>I_s = Mgd/slope</dt><dd class="ok">hidden: work it out</dd></div>' : `<div class="wide"><dt>I_s = Mgd/slope</dt><dd>${sci(Is, 4)} kg·m²</dd></div>`;
+    }
+    $('fitOut').innerHTML = h; drawFit(pts, F);
+  }
+  function drawFit(pts, F) {
+    const r = fitCan.getBoundingClientRect(), w = r.width, h = r.height; if (!w || !T) return;
+    fitCan.width = Math.round(w * dpr); fitCan.height = Math.round(h * dpr); fctx.setTransform(dpr, 0, 0, dpr, 0, 0); fctx.fillStyle = T.canvas; fctx.fillRect(0, 0, w, h);
+    const L = 40, Rr = w - 8, top = 8, mainB = h - 58, resT = h - 46, resB = h - 18;
+    fctx.strokeStyle = T.line; fctx.strokeRect(L + 0.5, top + 0.5, Rr - L, mainB - top); fctx.strokeRect(L + 0.5, resT + 0.5, Rr - L, resB - resT);
+    fctx.fillStyle = T.muted; fctx.font = `10px ${T.mono}`; fctx.textAlign = 'center'; fctx.textBaseline = 'top'; fctx.fillText('1/ω_s (s)', (L + Rr) / 2, resB + 3);
+    fctx.save(); fctx.translate(10, (top + mainB) / 2); fctx.rotate(-Math.PI / 2); fctx.fillText('Ω (rad/s)', 0, 0); fctx.restore();
+    if (!pts.length) return;
+    const xh = Math.max(...pts.map((q) => q[0])) * 1.08, yh = Math.max(...pts.map((q) => q[1])) * 1.1, PX = (x) => L + (Rr - L) * x / xh, PY = (y) => mainB - (mainB - top) * y / yh;
+    fctx.textAlign = 'right'; fctx.textBaseline = 'middle'; fctx.fillText(yh.toFixed(1), L - 3, PY(yh)); fctx.fillText('0', L - 3, PY(0));
+    if (F) { fctx.strokeStyle = T.accent; fctx.lineWidth = 1.5; fctx.beginPath(); fctx.moveTo(PX(0), PY(F.a)); fctx.lineTo(PX(xh), PY(F.a + F.b * xh)); fctx.stroke(); }
+    fctx.fillStyle = T.wheel; for (const [x, y] of pts) { fctx.beginPath(); fctx.arc(PX(x), PY(y), 3.2, 0, 7); fctx.fill(); }
+    if (F) { const m = Math.max(...F.res.map(Math.abs), 1e-12), RY = (v) => (resT + resB) / 2 - (resB - resT) / 2 * 0.85 * v / m; fctx.strokeStyle = T.gridStrong; fctx.beginPath(); fctx.moveTo(L, RY(0)); fctx.lineTo(Rr, RY(0)); fctx.stroke(); fctx.fillStyle = T.wheel; pts.forEach(([x], i) => { fctx.beginPath(); fctx.arc(PX(x), RY(F.res[i]), 2.6, 0, 7); fctx.fill(); }); }
+  }
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; readouts(); fit(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); fit(); }
+  const retheme = () => { tokens(); draw(); fit(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  tokens(); new ResizeObserver(resize).observe(stage); applyPreset('fast'); renderRows(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

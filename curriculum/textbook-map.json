@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": {
-    "repository_commit": "7dab492884c004636ade7fb68d02edcc4ff172ab",
+    "repository_commit": "db5f27b3eeab45a0c24f9fa9981e5630a45c713c",
     "review_date": "2026-10-22",
     "textbooks": [
       {
@@ -1875,10 +1875,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "gyroscope"
+      ],
       "unit": "rotation",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Gyroscope Precession (2026-10-22, Claude): exact heavy symmetric top; precession rate against spin, steady start, nutation, tilt, Mystery wheel; Ω against 1/ω_s fit for I_s."
     },
     {
       "vol": 1,
@@ -2169,10 +2171,12 @@
         "physics-1"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "viscometer"
+      ],
       "unit": "fluids",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Falling Ball Viscometer (2026-10-22, Claude): Stokes drag, terminal speed, η from v against d², wall effect and Reynolds number; turbulence only as the high Re drag regime (water), no flow visualisation."
     },
     {
       "vol": 1,
@@ -4839,6 +4843,28 @@
       "url": "demos/fluids.html"
     },
     {
+      "demo": "viscometer",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "14.7",
+          "title": "Viscosity and Turbulence"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Glycerol, castor oil, motor oil, water or a Mystery liquid in a 40 or 100 mm tube; steel, glass or nylon balls 1 to 10 mm; gate timer between marks 0.200 m apart (0.01 s), playback ×1/×10/×100; drag from Stokes × standard drag curve × Haberman–Sayre wall factor, with buoyancy and added mass; Capture, CSV, v against d² fit for η; Reynolds number; Blind. Full student/private package written 2026-10-22 for low-Re glass balls in glycerol, with CSV wall correction and model-limit diagnostic. Core/source-fit/reference checks passed; full empirical-drag bibliographic audit and browser/classroom review remain open.",
+      "handouts": [
+        "viscometer"
+      ],
+      "title": "Falling Ball Viscometer",
+      "url": "demos/viscometer.html"
+    },
+    {
       "demo": "springs",
       "course": [
         "physics-1"
@@ -4894,9 +4920,11 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "New 2026-10-22 (Claude). Bob on a string or uniform rod; length, release angle, mass, Earth/Moon/Mars/Mystery planet, optional air drag; RK4 motion; photogate to 0.001 s; Capture, CSV, T² against L fit for g, T against θ₀ with the exact curve; Blind.",
-      "handouts": [],
+      "status": "needs-feature",
+      "note": "New 2026-10-22 (Claude). Bob on a string or uniform rod; length, release angle, mass, Earth/Moon/Mars/Mystery planet, optional air drag; RK4 motion; photogate to 0.001 s; Capture, CSV, T² against L fit for g, T against θ₀ with the exact curve; Blind. Full student/private instructor package written and numerically checked 2026-10-22. Mystery fit answer hiding requires Blind; strict source-fit check fails without it. Browser/classroom acceptance pending. String-bob lab restricted to release angles at or below 90 degrees; above-horizontal release requires slack-string dynamics or a rigid support.",
+      "handouts": [
+        "pendulum"
+      ],
       "title": "Pendulum",
       "url": "demos/pendulum.html"
     },
@@ -4929,11 +4957,33 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
-      "note": "New 2026-10-22 (Claude). Hanging mass on a string around a spool (1, 2, 3 cm) spins a turntable carrying nothing, a disk, a ring, two masses at an adjustable distance or a Mystery object; optional bearing friction torque; timer for a 0.500 m drop to 0.001 s; Capture, CSV, τ against α fit (slope I, intercept friction); energy and power readouts; Blind.",
-      "handouts": [],
+      "status": "needs-feature",
+      "note": "New 2026-10-22 (Claude). Hanging mass on a string around a spool (1, 2, 3 cm) spins a turntable carrying nothing, a disk, a ring, two masses at an adjustable distance or a Mystery object; optional bearing friction torque; timer for a 0.500 m drop to 0.001 s; Capture, CSV, τ against α fit (slope I, intercept friction); energy and power readouts; Blind. Full student/private instructor package written and numerically checked 2026-10-22. Mystery fit answer hiding requires Blind; strict source-fit check fails without it. Browser/classroom acceptance pending.",
+      "handouts": [
+        "rotational-dynamics"
+      ],
       "title": "Rotational Dynamics",
       "url": "demos/rotational-dynamics.html"
+    },
+    {
+      "demo": "gyroscope",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "11.4",
+          "title": "Precession of a Gyroscope"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Wheel on an axle pivoted at one end; spin 0 to 6000 rpm, pivot distance, release tilt, solid or rim-heavy wheel, Mystery wheel; exact symmetric top equations (RK4) show the dip and nutation from rest or a steady start; L, τ and Mg arrows; gate times each precession turn to 0.01 s; Capture, CSV, Ω against 1/ω_s fit gives I_s; Blind.",
+      "handouts": [],
+      "title": "Gyroscope Precession",
+      "url": "demos/gyroscope.html"
     },
     {
       "demo": "double-pendulum",

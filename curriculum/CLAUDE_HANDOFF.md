@@ -82,3 +82,8 @@ Merged main 3a13c79 into feature. Motion-graphs, forces and stress-strain now ha
 ## Resistivity and current balance — 2026-10-22
 
 Main 7dab492 merged; two student/private lab packages written and 95 independent comparisons passed. New source-fit tests pass supported row filtering/unit paths; strict Mystery-only answer hiding fails for both benches and is requested from Claude. Removed old forces/stress-strain workarounds after source fixes, reran their 14 groups and 97 reference comparisons. Total this pass: 25 supported groups, map contract (76 demos), 46 control-label checks. Browser remains unavailable; no remote CI/classroom acceptance claim. No demo edits/main merge. Evidence: validation/EM_BENCH_LABS_2026-10-22.md. Next: pendulum and rotational-dynamics.
+
+
+## Physics I written-package checkpoint — 2026-10-22
+
+Merged main db5f27b, including Claude’s viscometer. Added full pendulum, rotational-dynamics and viscometer student/private packages. All 11 current Physics I labs now have written companions; 21 demos have notes. Inventory: PHYSICS_I_STATUS.md. Ten textbook sections remain missing and five partial; do not imply syllabus completion. Executed: 147 supported groups in 22 scoped suites, map/package contracts, 202 independent comparisons and 47 new exact control labels passed. Strict Mystery fit hiding fails for pendulum/rotational-dynamics; source requests in COLLABORATION. No browser or classroom acceptance. Evidence: validation/PHYSICS_I_COMPLETION_2026-10-22.md. No demo edits/main merge by GPT.

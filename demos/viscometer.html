@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Falling Ball Viscometer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the tube with its timing marks on the left; the rail on the right. */
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+
+:root { --fluid: #e9c46a; --glass: #9aa6b6; --ball: #4a5563; --mark: #b0452f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fluid: #8a6d1f; --glass: #56606e; --ball: #c3cad4; --mark: #ff8a70; } }
+:root[data-theme="dark"] { --fluid: #8a6d1f; --glass: #56606e; --ball: #c3cad4; --mark: #ff8a70; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.lab { font-size: 0.88rem; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 540px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Falling Ball Viscometer</h1>
+      <p>Drop a ball into a tall tube of liquid. It quickly reaches a terminal speed, where weight balances buoyancy and drag. Time it between two marks and use Stokes' law to measure the liquid's viscosity, then find where Stokes' law stops working.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">marks 0.200 m apart · 20 °C · g = 9.81 m/s²</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/viscometer.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/viscometer.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM14 2h3v1h-3zM21 2h5v1h-5zM27 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h2v1h-2zM14 3h1v1h-1zM17 3h2v1h-2zM20 3h2v1h-2zM24 3h3v1h-3zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h3v1h-3zM17 4h1v1h-1zM21 4h1v1h-1zM23 4h3v1h-3zM27 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM12 5h2v1h-2zM16 5h1v1h-1zM19 5h1v1h-1zM22 5h2v1h-2zM25 5h1v1h-1zM27 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h3v1h-3zM15 6h3v1h-3zM21 6h1v1h-1zM23 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM13 7h3v1h-3zM24 7h2v1h-2zM28 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h4v1h-4zM16 9h2v1h-2zM19 9h2v1h-2zM24 9h1v1h-1zM26 9h4v1h-4zM2 10h1v1h-1zM5 10h7v1h-7zM21 10h1v1h-1zM23 10h4v1h-4zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM4 11h1v1h-1zM7 11h1v1h-1zM9 11h8v1h-8zM18 11h1v1h-1zM20 11h1v1h-1zM23 11h1v1h-1zM26 11h1v1h-1zM28 11h2v1h-2zM31 11h1v1h-1zM33 11h3v1h-3zM37 11h1v1h-1zM2 12h1v1h-1zM7 12h2v1h-2zM11 12h2v1h-2zM15 12h1v1h-1zM17 12h2v1h-2zM20 12h4v1h-4zM25 12h2v1h-2zM29 12h5v1h-5zM36 12h1v1h-1zM38 12h1v1h-1zM4 13h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM14 13h3v1h-3zM18 13h5v1h-5zM24 13h2v1h-2zM31 13h8v1h-8zM5 14h4v1h-4zM14 14h1v1h-1zM16 14h3v1h-3zM26 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM6 15h2v1h-2zM9 15h1v1h-1zM12 15h2v1h-2zM15 15h4v1h-4zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h3v1h-3zM6 16h3v1h-3zM10 16h1v1h-1zM12 16h2v1h-2zM16 16h2v1h-2zM20 16h3v1h-3zM27 16h3v1h-3zM31 16h2v1h-2zM34 16h3v1h-3zM38 16h1v1h-1zM2 17h1v1h-1zM4 17h1v1h-1zM6 17h1v1h-1zM11 17h2v1h-2zM15 17h1v1h-1zM21 17h1v1h-1zM23 17h3v1h-3zM29 17h2v1h-2zM33 17h1v1h-1zM35 17h3v1h-3zM2 18h1v1h-1zM4 18h1v1h-1zM8 18h4v1h-4zM13 18h1v1h-1zM17 18h1v1h-1zM19 18h3v1h-3zM23 18h5v1h-5zM29 18h1v1h-1zM32 18h1v1h-1zM36 18h3v1h-3zM7 19h1v1h-1zM9 19h1v1h-1zM13 19h1v1h-1zM16 19h1v1h-1zM19 19h1v1h-1zM24 19h1v1h-1zM28 19h2v1h-2zM31 19h1v1h-1zM35 19h2v1h-2zM3 20h2v1h-2zM8 20h3v1h-3zM12 20h2v1h-2zM15 20h2v1h-2zM18 20h2v1h-2zM21 20h1v1h-1zM23 20h1v1h-1zM25 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM31 20h1v1h-1zM35 20h2v1h-2zM38 20h1v1h-1zM4 21h2v1h-2zM7 21h1v1h-1zM10 21h2v1h-2zM13 21h3v1h-3zM17 21h2v1h-2zM20 21h3v1h-3zM24 21h1v1h-1zM27 21h1v1h-1zM29 21h2v1h-2zM32 21h4v1h-4zM38 21h1v1h-1zM3 22h3v1h-3zM8 22h2v1h-2zM11 22h3v1h-3zM18 22h2v1h-2zM21 22h1v1h-1zM25 22h2v1h-2zM28 22h1v1h-1zM30 22h6v1h-6zM4 23h1v1h-1zM9 23h1v1h-1zM11 23h4v1h-4zM16 23h2v1h-2zM19 23h1v1h-1zM21 23h2v1h-2zM24 23h2v1h-2zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM3 24h3v1h-3zM7 24h5v1h-5zM17 24h1v1h-1zM23 24h1v1h-1zM25 24h7v1h-7zM33 24h1v1h-1zM35 24h1v1h-1zM38 24h1v1h-1zM2 25h1v1h-1zM7 25h1v1h-1zM9 25h1v1h-1zM12 25h1v1h-1zM14 25h3v1h-3zM20 25h3v1h-3zM30 25h1v1h-1zM32 25h5v1h-5zM3 26h2v1h-2zM7 26h2v1h-2zM11 26h3v1h-3zM16 26h2v1h-2zM19 26h1v1h-1zM22 26h3v1h-3zM26 26h1v1h-1zM28 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h1v1h-1zM4 27h2v1h-2zM7 27h1v1h-1zM9 27h1v1h-1zM14 27h1v1h-1zM20 27h2v1h-2zM24 27h2v1h-2zM27 27h5v1h-5zM34 27h2v1h-2zM2 28h3v1h-3zM6 28h1v1h-1zM8 28h1v1h-1zM10 28h3v1h-3zM15 28h1v1h-1zM17 28h1v1h-1zM24 28h1v1h-1zM26 28h1v1h-1zM28 28h2v1h-2zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h2v1h-2zM7 29h1v1h-1zM10 29h2v1h-2zM13 29h4v1h-4zM18 29h1v1h-1zM21 29h1v1h-1zM24 29h1v1h-1zM28 29h6v1h-6zM35 29h2v1h-2zM2 30h1v1h-1zM8 30h1v1h-1zM12 30h1v1h-1zM17 30h1v1h-1zM21 30h2v1h-2zM25 30h3v1h-3zM29 30h10v1h-10zM10 31h2v1h-2zM13 31h2v1h-2zM19 31h6v1h-6zM26 31h2v1h-2zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h1v1h-1zM13 32h1v1h-1zM15 32h1v1h-1zM17 32h5v1h-5zM25 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h3v1h-3zM15 33h2v1h-2zM18 33h1v1h-1zM21 33h3v1h-3zM25 33h1v1h-1zM27 33h4v1h-4zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM14 34h1v1h-1zM18 34h1v1h-1zM20 34h1v1h-1zM22 34h2v1h-2zM25 34h1v1h-1zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h3v1h-3zM14 35h2v1h-2zM22 35h4v1h-4zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h1v1h-1zM19 36h2v1h-2zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h5v1h-5zM17 37h1v1h-1zM19 37h1v1h-1zM24 37h3v1h-3zM28 37h1v1h-1zM31 37h2v1h-2zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM14 38h1v1h-1zM16 38h1v1h-1zM18 38h1v1h-1zM21 38h2v1h-2zM26 38h1v1h-1zM30 38h1v1h-1zM33 38h1v1h-1zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="img" aria-label="A tall glass tube of liquid with two timing marks 0.200 m apart and a ball falling through it, with the gate timer. Space drops the ball, R takes it out."></canvas>
+      <div class="viewbar"><button type="button" class="spin attn" id="go">Drop the ball</button><button type="button" class="spin" id="back">Take it out</button>
+        <div class="seg" role="group" aria-label="Playback speed" id="speedSeg"><button type="button" data-s="1" aria-pressed="true">×1</button><button type="button" data-s="10" aria-pressed="false">×10</button><button type="button" data-s="100" aria-pressed="false">×100</button></div></div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Liquid</h2>
+        <div class="seg" role="group" aria-label="Liquid" id="fluidSeg">
+          <button type="button" data-f="glycerol" aria-pressed="true">Glycerol</button>
+          <button type="button" data-f="castor" aria-pressed="false">Castor oil</button>
+          <button type="button" data-f="oil" aria-pressed="false">Motor oil</button>
+          <button type="button" data-f="water" aria-pressed="false">Water</button>
+        </div>
+        <label class="check"><input type="checkbox" id="mystery"><span>Mystery liquid: hide its viscosity</span></label>
+        <div class="inline"><span class="lab">Tube inside diameter</span>
+          <div class="seg" role="group" aria-label="Tube" id="tubeSeg"><button type="button" data-t="0.04" aria-pressed="true">40 mm</button><button type="button" data-t="0.1" aria-pressed="false">100 mm</button></div></div>
+        <p class="hint" id="fluidHint"></p>
+      </section>
+
+      <section>
+        <h2>Ball</h2>
+        <div class="seg" role="group" aria-label="Ball material" id="ballSeg">
+          <button type="button" data-b="steel" aria-pressed="true">Steel</button>
+          <button type="button" data-b="glass" aria-pressed="false">Glass</button>
+          <button type="button" data-b="nylon" aria-pressed="false">Nylon</button>
+        </div>
+        <div><div class="slider-head"><label for="sD">Ball diameter d</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="1" max="10" step="0.5"></div>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="formula">Stokes: F = 6πηrv · v_t = 2(ρ_b − ρ_f)g r²/(9η)</p>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="exportCsv">Export CSV</button>
+          <button type="button" class="btn" id="clearRows">Clear</button>
+        </div>
+        <p class="status" id="capStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>d (mm)</th><th>t (s)</th><th>v (mm/s)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Terminal speed against diameter squared for the captured rows, with a least squares line through the smallest balls and residuals."></canvas></div>
+        <dl class="readout" id="fitOut"></dl>
+        <p class="hint">Capture stores the liquid, ball, tube and the gate time between the marks (0.01 s); v = 0.200 m / t. Stokes' law predicts v ∝ d², so plot v against d² for one liquid, ball and tube: η = (ρ_b − ρ_f) g / (18 × slope). The fit uses the rows that match the current settings.</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides η, the Stokes prediction, the Reynolds number and the fitted η, leaving the timer and the densities. The Mystery liquid always hides its η.</p>
+        <p class="hint">Model: drag F = 6πηrv × K(d/D) × C_D Re/24, with the standard drag curve of Clift, Grace and Weber (Oseen's 1 + 3Re/16 below Re = 0.01) and Haberman and Sayre's wall factor K for a sphere on the axis of a tube. The wall factor is a slow flow result and is applied at all Re as an approximation. The ball's motion includes buoyancy and the added mass ½ρ_f V. Densities in kg/m³: steel 7800, glass 2500, nylon 1140. Liquids at 20 °C: glycerol 1261 and η = 1.41 Pa·s; castor oil 961 and 0.986 Pa·s; motor oil (typical SAE 30) 875 and 0.29 Pa·s; water 998 and 1.00 mPa·s.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.81, LTUBE = 0.45, MARK1 = 0.15, MARK2 = 0.35, VI_VERSION = 'viscometer@2026-10-22';
+  const FLUIDS = { glycerol: { name: 'Glycerol', rho: 1261, eta: 1.41 }, castor: { name: 'Castor oil', rho: 961, eta: 0.986 }, oil: { name: 'Motor oil', rho: 875, eta: 0.29 }, water: { name: 'Water', rho: 998, eta: 1.002e-3 } };
+  const BALLS = { steel: { name: 'Steel', rho: 7800 }, glass: { name: 'Glass', rho: 2500 }, nylon: { name: 'Nylon', rho: 1140 } };
+  // Haberman and Sayre (1958): drag on a sphere on the axis of a tube, relative to unbounded Stokes drag; λ = d/D
+  const wallK = (lam) => (1 - 0.75857 * lam ** 5) / (1 - 2.1050 * lam + 2.0865 * lam ** 3 - 1.7068 * lam ** 5 + 0.72603 * lam ** 6);
+  // C_D Re/24: the standard drag curve for a sphere (Clift, Grace and Weber 1978), with Oseen's 1 + 3Re/16 below Re = 0.01; held at its Re = 1.2 × 10⁴ value above
+  function dragCorr(Re) {
+    if (Re <= 0.01) return 1 + 3 * Re / 16;
+    const w = Math.log10(Math.min(Re, 1.2e4));
+    if (Re <= 20) return 1 + 0.1315 * Re ** (0.82 - 0.05 * w);
+    if (Re <= 260) return 1 + 0.1935 * Re ** 0.6305;
+    const lcd = Re <= 1500 ? 1.6435 - 1.1242 * w + 0.1558 * w * w : -2.4571 + 2.5558 * w - 0.9295 * w * w + 0.1049 * w ** 3;
+    return 10 ** lcd * Re / 24;
+  }
+  const reynolds = (rhoF, v, d, eta) => rhoF * Math.abs(v) * d / eta;
+  // drag magnitude at speed |v| (opposes the motion)
+  function drag(v, d, fl, D) {
+    const u = Math.abs(v); if (u === 0) return 0;
+    const Re = reynolds(fl.rho, u, d, fl.eta), K = wallK(d / D), stokes = 3 * Math.PI * fl.eta * d * u;
+    return stokes * K * dragCorr(Re);
+  }
+  const stokesV = (d, rhoB, fl) => (rhoB - fl.rho) * G * d * d / (18 * fl.eta);
+  // terminal velocity (signed: positive downward) by bisection on |v|
+  function terminal(d, rhoB, fl, D) {
+    const V = Math.PI * d ** 3 / 6, Fnet = (rhoB - fl.rho) * V * G, sgn = Math.sign(Fnet); if (!sgn) return 0;
+    let lo = 0, hi = 1; while (drag(hi, d, fl, D) < Math.abs(Fnet)) hi *= 2;
+    for (let i = 0; i < 200; i++) { const m = (lo + hi) / 2; if (drag(m, d, fl, D) < Math.abs(Fnet)) lo = m; else hi = m; }
+    return sgn * (lo + hi) / 2;
+  }
+  // equation of motion, x downward: (m + ½ m_f) dv/dt = (m − m_f) g − drag·sign(v)
+  function accel(v, d, rhoB, fl, D) { const V = Math.PI * d ** 3 / 6; return ((rhoB - fl.rho) * V * G - Math.sign(v) * drag(v, d, fl, D)) / ((rhoB + 0.5 * fl.rho) * V); }
+  function rk4(s, h, d, rhoB, fl, D) {
+    const f = (v) => accel(v, d, rhoB, fl, D);
+    const k1v = f(s.v), k2v = f(s.v + h / 2 * k1v), k3v = f(s.v + h / 2 * k2v), k4v = f(s.v + h * k3v);
+    return { x: s.x + h / 6 * (s.v + 2 * (s.v + h / 2 * k1v) + 2 * (s.v + h / 2 * k2v) + (s.v + h * k3v)), v: s.v + h / 6 * (k1v + 2 * k2v + 2 * k3v + k4v) };
+  }
+  // response time: time constant of the approach to terminal speed, linearised about v_t
+  function respTime(d, rhoB, fl, D) { const vt = terminal(d, rhoB, fl, D), V = Math.PI * d ** 3 / 6, e = Math.abs(vt) * 1e-6 + 1e-12; const dF = (drag(Math.abs(vt) + e, d, fl, D) - drag(Math.abs(vt) - e, d, fl, D)) / (2 * e); return (rhoB + 0.5 * fl.rho) * V / dF; }
+  // the run: released at rest at the top (x = 0), or at the bottom if it floats; returns gate crossing times
+  function gateTimes(d, rhoB, fl, D) {
+    const up = rhoB < fl.rho, tau = respTime(d, rhoB, fl, D), h = Math.min(tau / 20, 1e-3); let s = { x: 0, v: 0 }, t = 0, t1 = null;
+    const pos = (x) => (up ? LTUBE - d / 2 + x : x);   // depth below the surface: a floating ball starts resting on the bottom
+    const marks = up ? [MARK2, MARK1] : [MARK1, MARK2];
+    while (t < 1e5) {
+      const n = rk4(s, h, d, rhoB, fl, D), p0 = pos(s.x), p1 = pos(n.x);
+      for (const [i, mk] of marks.entries()) if ((p0 - mk) * (p1 - mk) <= 0 && p0 !== p1) { const tc = t + h * (mk - p0) / (p1 - p0); if (i === 0 && t1 == null) t1 = tc; else if (i === 1 && t1 != null) return { t1, t2: tc, dt: tc - t1, up }; }
+      s = n; t += h;
+      if (Math.abs(accel(s.v, d, rhoB, fl, D)) * tau < 1e-12 * Math.abs(s.v)) {   // at terminal speed: finish analytically
+        const vt = s.v, p = pos(s.x); const at = (mk) => t + (mk - p) / vt;   // depth changes at v_t in both cases
+        const tA = t1 != null ? t1 : at(marks[0]); return { t1: tA, t2: at(marks[1]), dt: at(marks[1]) - tA, up };
+      }
+    }
+    return null;
+  }
+  function fitLine(xs, ys) {
+    const n = xs.length; if (n < 2) return null;
+    const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n;
+    let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    if (sxx < 1e-30) return null;
+    const b = sxy / sxx, a0 = my - b * mx, res = xs.map((x, i) => ys[i] - a0 - b * x), ss = res.reduce((q, r) => q + r * r, 0), s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { b, a: a0, seB: Math.sqrt(s2 / sxx), seA: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), res, n };
+  }
+  // fit through the origin: v = c d²
+  function fitOrigin(xs, ys) { const n = xs.length; if (n < 1) return null; let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += xs[i] * xs[i]; sxy += xs[i] * ys[i]; } if (!sxx) return null; const b = sxy / sxx, res = xs.map((x, i) => ys[i] - b * x); const ss = res.reduce((q, r) => q + r * r, 0); return { b, a: 0, res, n, seB: n > 1 ? Math.sqrt(ss / (n - 1) / sxx) : NaN }; }
+  const cellNum = (s) => { const v = parseFloat(String(s).replace('−', '-')); return isFinite(v) ? v : NaN; };
+  const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  function readingsCSV(rows, meta) {
+    const L = ['# Falling Ball Viscometer virtual apparatus: captured readings (simulated data)', `# demo version,${meta.version}`, `# mark_spacing_m,${MARK2 - MARK1}`, `# g_m_per_s2,${G}`, '# temperature_C,20',
+      '# model,"Stokes drag times the Clift-Grace-Weber standard drag curve and the Haberman-Sayre wall factor; buoyancy and added mass included"',
+      '# rounding,"t to 0.01 s between the marks; v computed from the row"', '# noise,none',
+      'row,liquid,rho_liquid_kg_m3,ball,rho_ball_kg_m3,tube_D_mm,d_mm,t_s,v_m_per_s'];
+    rows.forEach((r, i) => { const t = cellNum(r.t); L.push([i + 1, r.liquid, r.rhoF, r.ball, r.rhoB, r.D, r.d, r.t, t > 0 ? +((MARK2 - MARK1) / t).toPrecision(6) : ''].map(csvCell).join(',')); });
+    return L.join('\n') + '\n';
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const HINT = { glycerol: 'Glycerol: thick and dense. Steel balls of a few millimetres fall slowly enough for Stokes\' law to work well.', castor: 'Castor oil: a little less viscous than glycerol and less dense.', oil: 'Motor oil: much thinner. Bigger balls start to fall too fast for Stokes\' law.', water: 'Water: about 1400 times less viscous than glycerol. Every ball here falls far too fast for Stokes\' law; see what the timings give.' };
+  const S = { fluid: 'glycerol', myst: null, D: 0.04, ball: 'steel', d: 3, speed: 1, run: false, done: false, t: 0, s: { x: 0, v: 0 }, gate: null, t1: null, blind: false, rows: [] };
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, Hh = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      fluid: g('--fluid'), glass: g('--glass'), ball: g('--ball'), mark: g('--mark'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const FL = () => (S.myst ? { name: 'Mystery liquid', ...S.myst } : FLUIDS[S.fluid]), rhoB = () => BALLS[S.ball].rho, dm = () => S.d / 1000;
+  const hidden = () => S.blind || !!S.myst;
+  const up = () => rhoB() < FL().rho;
+  function g3(v) { if (!isFinite(v)) return '—'; const a = Math.abs(v); return a >= 100 ? v.toFixed(0) : a >= 10 ? v.toFixed(1) : a >= 1 ? v.toFixed(2) : v.toPrecision(3); }
+
+  function reset() { S.run = false; S.done = false; S.t = 0; S.s = { x: 0, v: 0 }; S.gate = gateTimes(dm(), rhoB(), FL(), S.D); S.t1 = null; setRun(false); draw(); readouts(); }
+  // ---------- drawing ----------
+  function depth() { return up() ? LTUBE - dm() / 2 + S.s.x : S.s.x; }   // x is positive down; a floating ball starts on the bottom and x goes negative
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const p = ps(), top = 70 * p, bot = Hh - 30 * p, sc = (bot - top) / (LTUBE + 0.03), tw = Math.max(46 * p, Math.min(W * 0.32, S.D * sc)), cx = W * 0.42;
+    const yOf = (z) => top + 0.03 * sc + z * sc;
+    ctx.fillStyle = T.fluid; ctx.globalAlpha = 0.75; ctx.fillRect(cx - tw / 2, yOf(0), tw, LTUBE * sc); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.glass; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(cx - tw / 2, top); ctx.lineTo(cx - tw / 2, yOf(LTUBE)); ctx.lineTo(cx + tw / 2, yOf(LTUBE)); ctx.lineTo(cx + tw / 2, top); ctx.stroke();
+    // ruler
+    ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    for (let k = 0; k <= 45; k++) { const y = yOf(k / 100), L = k % 10 === 0 ? 10 : k % 5 === 0 ? 7 : 4; ctx.beginPath(); ctx.moveTo(cx + tw / 2 + 4, y); ctx.lineTo(cx + tw / 2 + 4 + L * p, y); ctx.stroke(); if (k % 10 === 0) ctx.fillText(`${k} cm`, cx + tw / 2 + 16 * p, y); }
+    // marks
+    ctx.strokeStyle = T.mark; ctx.lineWidth = 2 * p; ctx.fillStyle = T.mark; ctx.textAlign = 'right';
+    for (const [z, lab] of [[MARK1, 'mark A'], [MARK2, 'mark B']]) { const y = yOf(z); ctx.beginPath(); ctx.moveTo(cx - tw / 2 - 10 * p, y); ctx.lineTo(cx + tw / 2, y); ctx.stroke(); ctx.fillText(lab, cx - tw / 2 - 14 * p, y); }
+    // ball, drawn at least 6 px across
+    const r = Math.max(3 * p, dm() / 2 * sc), y = yOf(Math.max(0, Math.min(LTUBE, depth())));
+    ctx.fillStyle = T.ball; ctx.beginPath(); ctx.arc(cx, y, r, 0, 7); ctx.fill();
+    ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`tube ${S.D * 1000} mm wide, to scale`, cx, yOf(LTUBE) + 6 * p);
+    // timer
+    ctx.fillStyle = T.ink; ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const tx = 14 * p, ty = 54 * p;
+    let txt = 'timer: —'; if (S.t1 != null) txt = S.done ? `timer: ${S.gate.dt.toFixed(2)} s from A to B` : `timer: ${(S.t - S.t1).toFixed(2)} s`;
+    ctx.fillText(txt, tx, ty); ctx.font = `${12 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.fillText(`t = ${S.t.toFixed(2)} s since release${S.speed > 1 ? `, shown ×${S.speed}` : ''}`, tx, ty + 20 * p);
+    if (up()) { ctx.fillStyle = T.mark; ctx.fillText('lighter than the liquid: it rises', tx, ty + 38 * p); }
+  }
+  function readouts() {
+    const fl = FL(), d = dm(), vt = terminal(d, rhoB(), fl, S.D), dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    let h = dd('Ball density', `${rhoB()} kg/m³`) + dd('Liquid density', `${fl.rho} kg/m³`);
+    h += dd('Speed now', `${g3(Math.abs(S.s.v) * 1000)} mm/s`) + dd('Timer A to B', S.done ? `${S.gate.dt.toFixed(2)} s` : '—');
+    if (hidden()) h += `<div class="wide"><dt>η, terminal speed, Stokes prediction, Re</dt><dd class="ok">${S.myst && !S.blind ? 'Mystery liquid: hidden. Measure it.' : 'hidden in Blind'}</dd></div>`;
+    else {
+      const vs = stokesV(d, rhoB(), fl), Re = reynolds(fl.rho, vt, d, fl.eta);
+      h += dd('Viscosity η', fl.eta >= 0.1 ? `${f(fl.eta, 3)} Pa·s` : `${f(fl.eta * 1000, 2)} mPa·s`) + dd('Reynolds number at v_t', g3(Re));
+      h += dd('Terminal speed v_t', `${g3(Math.abs(vt) * 1000)} mm/s`) + dd('Stokes\' law alone', `${g3(Math.abs(vs) * 1000)} mm/s`);
+      h += dd('Wall factor K(d/D)', f(wallK(d / S.D), 3)) + dd('Reaches v_t in about', `${g3(5 * respTime(d, rhoB(), fl, S.D) * 1000)} ms`);
+    }
+    $('out').innerHTML = h;
+  }
+  // ---------- controls ----------
+  function sync() {
+    for (const b of document.querySelectorAll('#fluidSeg button')) b.setAttribute('aria-pressed', String(!S.myst && b.dataset.f === S.fluid));
+    for (const b of document.querySelectorAll('#ballSeg button')) b.setAttribute('aria-pressed', String(b.dataset.b === S.ball));
+    for (const b of document.querySelectorAll('#tubeSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.t === S.D));
+    for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+    $('sD').value = S.d; $('oD').textContent = `${S.d.toFixed(1)} mm`; $('mystery').checked = !!S.myst; $('fluidHint').textContent = S.myst ? `Mystery liquid: density ${S.myst.rho} kg/m³, viscosity hidden.` : HINT[S.fluid];
+  }
+  const edit = () => { sync(); reset(); fit(); };
+  $('fluidSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (!b) return; if (S.myst) capStatus(`Mystery liquid off: it was η = ${S.myst.eta.toFixed(3)} Pa·s.`); S.myst = null; S.fluid = b.dataset.f; edit(); });
+  $('ballSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-b]'); if (b) { S.ball = b.dataset.b; edit(); } });
+  $('tubeSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-t]'); if (b) { S.D = +b.dataset.t; edit(); } });
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); draw(); } });
+  $('sD').addEventListener('input', (e) => { S.d = +e.target.value; edit(); });
+  $('mystery').addEventListener('change', (e) => {
+    if (e.target.checked) { S.myst = { eta: Math.round((0.3 + Math.random() * 2.2) * 1000) / 1000, rho: 1050 + 10 * Math.round(Math.random() * 25) }; capStatus('Mystery liquid: η hidden.'); }
+    else { capStatus(`Mystery liquid off: it was η = ${S.myst.eta.toFixed(3)} Pa·s.`); S.myst = null; }
+    edit();
+  });
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : S.t > 0 && !S.done ? 'Resume' : 'Drop the ball'; $('go').classList.toggle('attn', !on); }
+  $('go').addEventListener('click', () => {
+    if (S.done || (!S.run && S.t === 0)) { reset(); if (reduce) { S.t = S.gate.t2; S.t1 = S.gate.t1; S.done = true; const vt = terminal(dm(), rhoB(), FL(), S.D); S.s = { x: up() ? MARK1 - (LTUBE - dm() / 2) : MARK2, v: vt }; draw(); readouts(); return; } }
+    setRun(!S.run);
+  });
+  $('back').addEventListener('click', reset);
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') $('go').click(); else if (e.key === 'r' || e.key === 'R') reset(); else return; e.preventDefault(); });
+  function advance(dt) {
+    // the timer shows the exact gate times; the drawn motion integrates the same equation
+    const fl = FL(), d = dm(), tau = respTime(d, rhoB(), fl, S.D), h = Math.min(tau / 20, 1e-3), vt = terminal(d, rhoB(), fl, S.D), tEnd = S.t + dt;
+    while (S.t < tEnd) {
+      const step = S.t > 40 * tau ? tEnd - S.t : Math.min(h, tEnd - S.t);   // at terminal speed: one exact step to the end of the frame
+      if (S.t > 40 * tau) { S.s = { x: S.s.x + vt * step, v: vt }; } else S.s = rk4(S.s, step, d, rhoB(), fl, S.D);
+      S.t += step;
+      if (S.t1 == null && S.t >= S.gate.t1) S.t1 = S.gate.t1;
+      if (S.t >= S.gate.t2) { S.done = true; break; }
+      const z = depth(); if (z > LTUBE - dm() / 2 + 1e-12 || z < 0) break;
+    }
+    const z = depth(); if (S.done || z > LTUBE - dm() / 2 + 1e-12 || z < 0) { setRun(false); }
+  }
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) { advance(dt * S.speed); draw(); readouts(); }
+    requestAnimationFrame(frame);
+  }
+  // ---------- readings ----------
+  function capStatus(m) { $('capStatus').textContent = m; }
+  const key = () => `${S.myst ? 'mystery' : S.fluid}|${S.ball}|${S.D}`;
+  $('capture').addEventListener('click', () => {
+    if (!S.done) { capStatus('Drop the ball and let it pass both marks first.'); return; }
+    const fl = FL(); S.rows.push({ key: key(), liquid: S.myst ? 'mystery' : S.fluid, rhoF: String(fl.rho), ball: S.ball, rhoB: String(rhoB()), D: String(S.D * 1000), d: S.d.toFixed(1), t: S.gate.dt.toFixed(2) });
+    renderRows(); capStatus(`Row ${S.rows.length} captured.`);
+  });
+  $('clearRows').addEventListener('click', () => { S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  $('exportCsv').addEventListener('click', () => {
+    if (!S.rows.length) { capStatus('No readings to export.'); return; }
+    const txt = readingsCSV(S.rows, { version: VI_VERSION });
+    try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'viscometer-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+    capStatus('CSV exported.');
+  });
+  function renderRows() {
+    const tb = $('rowsTbl').querySelector('tbody');
+    tb.innerHTML = S.rows.length ? S.rows.map((r, i) => { const t = cellNum(r.t); return `<tr title="${r.liquid}, ${r.ball}, tube ${r.D} mm"><td>${i + 1}</td><td><input data-i="${i}" data-f="d" value="${r.d}" aria-label="d, row ${i + 1}"></td><td><input data-i="${i}" data-f="t" value="${r.t}" aria-label="t, row ${i + 1}"></td><td>${t > 0 ? g3(200 / t) : '—'}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`; }).join('')
+      : '<tr><td class="empty" colspan="5">No readings yet. Drop a ball, let it pass both marks, capture.</td></tr>';
+    fit();
+  }
+  $('rowsTbl').addEventListener('change', (e) => { const el = e.target; if (el.dataset.f) { S.rows[+el.dataset.i][el.dataset.f] = el.value.trim(); renderRows(); } });
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderRows(); } });
+  const fitCan = $('fitCan'), fctx = fitCan.getContext('2d');
+  function fit() {
+    const pts = S.rows.filter((r) => r.key === key()).map((r) => { const d = cellNum(r.d), t = cellNum(r.t); return d > 0 && t > 0 ? [(d / 1000) ** 2, 0.2 / t] : null; }).filter(Boolean).sort((a, b) => a[0] - b[0]);
+    const F = pts.length >= 1 ? fitOrigin(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
+    let h;
+    if (!F || pts.length < 2) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two ball sizes with this liquid, ball and tube.</dd></div>`;
+    else {
+      const eta = Math.abs(rhoB() - FL().rho) * G / (18 * F.b);
+      h = `<div class="wide"><dt>Slope of v against d² (through the origin)</dt><dd>${g3(F.b)} m⁻¹s⁻¹</dd></div>`;
+      h += hidden() ? '<div class="wide"><dt>η = (ρ_b − ρ_f) g/(18 × slope)</dt><dd class="ok">hidden: work it out</dd></div>' : `<div class="wide"><dt>η = (ρ_b − ρ_f) g/(18 × slope)</dt><dd>${eta >= 0.1 ? `${f(eta, 3)} Pa·s` : `${f(eta * 1000, 3)} mPa·s`}</dd></div>`;
+    }
+    $('fitOut').innerHTML = h; drawFit(pts, F && pts.length >= 2 ? F : null);
+  }
+  function drawFit(pts, F) {
+    const r = fitCan.getBoundingClientRect(), w = r.width, h = r.height; if (!w || !T) return;
+    fitCan.width = Math.round(w * dpr); fitCan.height = Math.round(h * dpr); fctx.setTransform(dpr, 0, 0, dpr, 0, 0); fctx.fillStyle = T.canvas; fctx.fillRect(0, 0, w, h);
+    const L = 40, Rr = w - 8, top = 8, mainB = h - 58, resT = h - 46, resB = h - 18;
+    fctx.strokeStyle = T.line; fctx.strokeRect(L + 0.5, top + 0.5, Rr - L, mainB - top); fctx.strokeRect(L + 0.5, resT + 0.5, Rr - L, resB - resT);
+    fctx.fillStyle = T.muted; fctx.font = `10px ${T.mono}`; fctx.textAlign = 'center'; fctx.textBaseline = 'top'; fctx.fillText('d² (mm²)', (L + Rr) / 2, resB + 3);
+    fctx.save(); fctx.translate(10, (top + mainB) / 2); fctx.rotate(-Math.PI / 2); fctx.fillText('v (mm/s)', 0, 0); fctx.restore();
+    if (!pts.length) return;
+    const xh = Math.max(...pts.map((q) => q[0])) * 1.08, yh = Math.max(...pts.map((q) => q[1])) * 1.1, PX = (x) => L + (Rr - L) * x / xh, PY = (y) => mainB - (mainB - top) * y / yh;
+    fctx.textAlign = 'right'; fctx.textBaseline = 'middle'; fctx.fillText(g3(yh * 1000), L - 3, PY(yh)); fctx.fillText('0', L - 3, PY(0));
+    fctx.textAlign = 'right'; fctx.textBaseline = 'bottom'; fctx.fillText(g3(xh * 1e6), Rr - 2, mainB - 2);
+    if (F) { fctx.strokeStyle = T.accent; fctx.lineWidth = 1.5; fctx.beginPath(); fctx.moveTo(PX(0), PY(0)); fctx.lineTo(PX(xh), PY(F.b * xh)); fctx.stroke(); }
+    fctx.fillStyle = T.ball; for (const [x, y] of pts) { fctx.beginPath(); fctx.arc(PX(x), PY(y), 3.2, 0, 7); fctx.fill(); }
+    if (F) { const m = Math.max(...F.res.map(Math.abs), 1e-15), RY = (v) => (resT + resB) / 2 - (resB - resT) / 2 * 0.85 * v / m; fctx.strokeStyle = T.gridStrong; fctx.beginPath(); fctx.moveTo(L, RY(0)); fctx.lineTo(Rr, RY(0)); fctx.stroke(); fctx.fillStyle = T.ball; pts.forEach(([x], i) => { fctx.beginPath(); fctx.arc(PX(x), RY(F.res[i]), 2.6, 0, 7); fctx.fill(); }); }
+  }
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; readouts(); fit(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); fit(); }
+  const retheme = () => { tokens(); draw(); fit(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  tokens(); new ResizeObserver(resize).observe(stage); sync(); reset(); renderRows(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
