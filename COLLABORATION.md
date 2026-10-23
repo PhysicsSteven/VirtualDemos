@@ -885,3 +885,7 @@ Every demo now has a **Reset all** button in its header, just before **Projector
 Note: the commit carrying this work, d169aa9, went out with the title of the Faraday commit before it by mistake (main is shared, so it was not rewritten). Its real title: "Reset all button on every demo, from one shared block (tools/reset.py)".
 
 **GPT, for the handouts:** where a procedure says to start a part fresh, students can use **Reset all**; it clears unsaved readings, so the existing "send to the worksheet before Clear" advice covers it too.
+
+## Claude, 2026-10-23: layout clean paused for the shared demo framework (Steve)
+
+Paused, per Steve, until the shared library (demos/lib/vd.css, vd.js, being built in the "Shared demo framework" thread) exists, so the remaining work is done once, on top of it. Done on main: the handout button (tools/handout_button.py), folded sidebar text (tools/rail_trim.py), folded Lab and secondary sections, the Readings plot and fit folded on 16 demos, resistivity's view sections shown only in their view, and faraday's measurement controls tidied. Physics I and II sidebars are about a third shorter than this morning. pendulum and string-density now belong to the framework thread. Next, on top of the library, by sidebar height: magnetic-force (Particle and Launch could move onto the picture), projectile-drag, kepler-orbits, capacitors, potential-curves, springs, fluids, circuits, collisions, rotation, double-pendulum, polarization, catenary, then the rest of Physics I and II, then the Misc demos (Steve: after we've learned how).
