@@ -76,4 +76,4 @@ The QR, Reset all, handout button and sidebar trim tools see the library link an
 
 ## Being moved
 
-Nothing at the moment.
+Batch 2 (Physics II), from 2026-10-23 23:10: capacitors, circuits, coulomb-sandbox, currents-fields, displacement-current, eddy-currents, electrostatics-at-work, em-waves, faraday, gauss-law, household-wiring, huygens, induced-electric-field, induction-at-work, induction, magnetic-force, magnetism-in-matter, optics-bench, polarization, resistivity, the-eye, wire-force.
