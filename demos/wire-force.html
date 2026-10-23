@@ -119,6 +119,24 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 .plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+/* vd-knobs: an instrument panel in the picture; each range input inside it is shown as a knob (layout redesign) */
+.instr { position: absolute; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 14px; padding: 8px 12px; border-radius: 10px; background: #2c3542; color: #e3e8ef; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
+.instr > [hidden] { display: none !important; }
+.instr .kctl { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 84px; }
+.instr .kctl label, .instr .kctl .klab { font-size: 0.72rem; font-weight: 700; color: #c9d0d9; text-align: center; max-width: 120px; line-height: 1.2; min-height: 2.4em; display: flex; align-items: flex-end; justify-content: center; }
+.instr .kctl output { font-family: var(--font-mono); font-weight: 600; font-size: 0.9rem; color: #7ee0a0; background: #0b1a12; border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
+.instr input[type="range"] { display: none; }
+.vdknob { position: relative; width: 44px; height: 44px; border-radius: 50%; cursor: grab; touch-action: none; flex: none;
+  background: radial-gradient(circle at 38% 32%, #8b96a4, #4a5462 62%, #39414d); box-shadow: 0 0 0 3px #232a34, 0 2px 4px rgba(0, 0, 0, 0.5); }
+.vdknob::before { content: ""; position: absolute; left: 50%; top: 4px; width: 3px; height: 13px; margin-left: -1.5px; border-radius: 2px; background: #f1f4f8; transform: rotate(var(--a, 0deg)); transform-origin: 50% 18px; }
+.vdknob:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.scene { position: absolute; inset: 0; }
+.instr { left: 12px; bottom: 12px; right: 12px; justify-content: center; width: fit-content; margin: 0 auto; }
+@media (max-width: 820px) {
+  main.bench .stage { height: auto; max-height: none; }
+  .scene { position: relative; inset: auto; height: 420px; max-height: 80vh; }
+  .instr { position: static; margin: 8px; width: auto; }
+}
 @media (max-width: 820px) {
   html, body { height: auto; } .app { height: auto; }
   .bench { grid-template-columns: minmax(0, 1fr); }
@@ -145,9 +163,18 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 
   <main class="bench">
     <div class="stage" id="stage">
+      <div class="scene" id="scene">
       <canvas id="can" tabindex="0" role="img" aria-label="Current balance: a wire between magnet poles on an electronic balance. Loop: a coil seen from above between the poles, with the forces on its sides and its magnetic moment. Space starts or stops the loop."></canvas>
       <div class="viewbar" id="loopBar" hidden><button type="button" class="spin" id="spin">Release the loop</button><button type="button" class="spin" id="reset">Start over</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
+      </div>
+      <div class="instr" id="instr" role="group" aria-label="Supply and apparatus">
+        <div class="kctl"><label for="sI">Current I</label><input type="range" id="sI" min="-5" max="5" step="0.1"><output id="oI" for="sI"></output></div>
+        <div id="rowL" class="kctl"><label for="sL">Length of wire in the field L</label><input type="range" id="sL" min="1" max="8" step="0.5"><output id="oL" for="sL"></output></div>
+        <div id="rowTh" class="kctl"><label for="sTh">Angle between the wire and B</label><input type="range" id="sTh" min="0" max="90" step="5"><output id="oTh" for="sTh"></output></div>
+        <div id="rowN" class="kctl"><label for="sN">Turns N</label><input type="range" id="sN" min="1" max="100" step="1"><output id="oN" for="sN"></output></div>
+        <div class="kctl"><label for="sB">Magnet field B</label><input type="range" id="sB" min="0.02" max="0.5" step="0.01"><output id="oB" for="sB"></output></div>
+      </div>
     </div>
 
     <aside class="rail">
@@ -164,11 +191,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 
       <section>
         <h2>Settings</h2>
-        <div><div class="slider-head"><label for="sI">Current I</label><output id="oI" for="sI"></output></div><input type="range" id="sI" min="-5" max="5" step="0.1"></div>
-        <div id="rowL"><div class="slider-head"><label for="sL">Length of wire in the field L</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="1" max="8" step="0.5"></div>
-        <div id="rowTh"><div class="slider-head"><label for="sTh">Angle between the wire and B</label><output id="oTh" for="sTh"></output></div><input type="range" id="sTh" min="0" max="90" step="5"></div>
-        <div id="rowN"><div class="slider-head"><label for="sN">Turns N</label><output id="oN" for="sN"></output></div><input type="range" id="sN" min="1" max="100" step="1"></div>
-        <div><div class="slider-head"><label for="sB">Magnet field B</label><output id="oB" for="sB"></output></div><input type="range" id="sB" min="0.02" max="0.5" step="0.01"></div>
+        <p class="hint">Turn the knobs on the panel in the picture (or focus one and use the arrow keys).</p>
         <label class="check"><input type="checkbox" id="mystery"><span>Mystery magnet: hide B</span></label>
         <label class="check" id="rowComm"><input type="checkbox" id="comm"><span>Commutator (reverse the current every half turn)</span></label>
       </section>
@@ -439,7 +462,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   }
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); fit(); });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
-  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); fit(); }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); fit(); }
   const retheme = () => { tokens(); draw(); fit(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
@@ -447,7 +470,30 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
-  tokens(); new ResizeObserver(resize).observe(stage); applyPreset('balance'); renderRows(); resize();
+  /* vd-knobs: every range input inside .instr gets a knob that drives it (one step every 15° of turn, arrow keys, Page Up/Down for
+     ten steps, Home/End, mouse wheel). The input stays the source of truth, so the demo's own code is unchanged; the knob dispatches
+     'input' events and redraws its mark whenever the value changes, even when the demo sets it. */
+  (function knobs() {
+    const DEG = 15, all = [];
+    for (const inp of document.querySelectorAll('.instr input[type="range"]')) {
+      const k = document.createElement('div'), lab = document.querySelector(`label[for="${inp.id}"]`);
+      k.className = 'vdknob'; k.tabIndex = 0; k.setAttribute('role', 'slider'); k.setAttribute('aria-label', lab ? lab.textContent.trim() : inp.id);
+      k.setAttribute('aria-valuemin', inp.min); k.setAttribute('aria-valuemax', inp.max); inp.tabIndex = -1; inp.setAttribute('aria-hidden', 'true');
+      inp.insertAdjacentElement('afterend', k);
+      const st = () => +inp.step || 1, out = inp.id && document.querySelector(`output[for="${inp.id}"]`);
+      const set = (n) => { const v = Math.max(+inp.min, Math.min(+inp.max, +inp.value + n * st())), r = +(Math.round(v / st()) * st()).toFixed(6); if (r !== +inp.value) { inp.value = r; inp.dispatchEvent(new Event('input', { bubbles: true })); } };
+      let last = null, acc = 0;
+      const ang = (e) => { const r = k.getBoundingClientRect(); return Math.atan2(e.clientY - r.top - r.height / 2, e.clientX - r.left - r.width / 2) * 180 / Math.PI; };
+      k.addEventListener('pointerdown', (e) => { k.setPointerCapture(e.pointerId); last = ang(e); acc = 0; k.focus(); e.preventDefault(); });
+      k.addEventListener('pointermove', (e) => { if (last === null) return; const a = ang(e); let d = a - last; d -= 360 * Math.round(d / 360); last = a; acc += d; const n = Math.trunc(acc / DEG); if (n) { acc -= n * DEG; set(n); } });
+      const end = () => { last = null; }; k.addEventListener('pointerup', end); k.addEventListener('pointercancel', end);
+      k.addEventListener('wheel', (e) => { e.preventDefault(); set(e.deltaY < 0 ? 1 : -1); }, { passive: false });
+      k.addEventListener('keydown', (e) => { const n = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1, PageUp: 10, PageDown: -10, Home: -1e9, End: 1e9 }[e.key]; if (!n) return; set(n); e.preventDefault(); });
+      all.push({ inp, k, out, shown: null });
+    }
+    (function show() { for (const o of all) { if (o.inp.value !== o.shown) { o.shown = o.inp.value; o.k.style.setProperty('--a', `${(Math.round((+o.inp.value - +o.inp.min) / (+o.inp.step || 1)) * DEG) % 360}deg`); o.k.setAttribute('aria-valuenow', o.inp.value); } if (o.out) o.k.setAttribute('aria-valuetext', o.out.textContent); } requestAnimationFrame(show); })();
+  })();
+  tokens(); new ResizeObserver(resize).observe($('scene')); applyPreset('balance'); renderRows(); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();
