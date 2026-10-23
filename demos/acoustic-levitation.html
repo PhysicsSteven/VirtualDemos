@@ -489,7 +489,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
         let m = i; while (m > 0 && U[m - 1] >= U[m]) m--;
         const den = U[i - 1] - 2 * U[i] + U[i + 1], dz = zs[1] - zs[0];
         const off = den > 0 ? 0.5 * (U[i - 1] - U[i + 1]) / den : 0;
-        out.push({ z: zs[i] + off * dz, i, depth: Math.min(U[j] - U[i], U[m] - U[i]), edge: j === n - 1 || m === 0, stiff: den / (dz * dz) });
+        out.push({ z: zs[i] + off * dz, i, depth: Math.min(U[j] - U[i], U[m] - U[i]), edge: j === n - 1 || m === 0, top: j === n - 1, bottom: m === 0, stiff: den / (dz * dz) });
       }
     }
     return out;
@@ -624,13 +624,19 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
       C.Uac[i] = gk.K1 * p2 - gk.K2 * absG2(o);
       C.Ut[i] = C.Uac[i] + W * C.za[i];
     }
-    let Fup = 0;
+    /* F_max: the largest upward push on the axis away from its ends (a quarter of a trap spacing), the same stretch where a trap counts */
+    let Fup = 0; const zLo = C.za[0] + C.spacing / 4, zHi = C.za[n - 1] - C.spacing / 4;
     for (let i = 1; i < n - 1; i++) {
       C.Fz[i] = -(C.Ut[i + 1] - C.Ut[i - 1]) / (2 * AXIS_DZ);
-      const fa = -(C.Uac[i + 1] - C.Uac[i - 1]) / (2 * AXIS_DZ); if (fa > Fup) Fup = fa;
+      const fa = -(C.Uac[i + 1] - C.Uac[i - 1]) / (2 * AXIS_DZ); if (fa > Fup && C.za[i] >= zLo && C.za[i] <= zHi) Fup = fa;
     }
     C.Fz[0] = C.Fz[1]; C.Fz[n - 1] = C.Fz[n - 2];
-    const traps = axisTraps(C.za, C.Ut).filter((t) => !t.edge && t.depth > 0);
+    /* A trap counts if it lies at least a quarter of a trap spacing inside the ends of the computed axis (wells right at an end,
+       beside the bowls or at the edge of one emitter's near field, stay out). A well whose barrier on one side is the end of the
+       axis (U + Wz rises all the way there) still holds the bead: to leave that way it must climb at least to the end value, so its
+       depth is a lower bound (edge true). Leaving those out hid the only trap just above the threshold, where F_max/W passes 1 and
+       no trap above it is deeper, so the readout said falls with F_max/W = 1.003 (2026-10-23). */
+    const traps = axisTraps(C.za, C.Ut).filter((t) => t.depth > 0 && t.z >= zLo && t.z <= zHi);
     // nodes: minima of |p|² on the axis (pressure nodes)
     const nodes = []; for (let i = 1; i < n - 1; i++) if (C.P2[i] < C.P2[i - 1] && C.P2[i] <= C.P2[i + 1]) nodes.push(C.za[i]);
     for (const t of traps) { let best = null; for (const z of nodes) if (best === null || Math.abs(z - t.z) < Math.abs(best - t.z)) best = z; t.node = best; }
